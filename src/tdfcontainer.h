@@ -45,6 +45,7 @@ class TDFWriter
 #include <map>
 
 #include "autopointers.h"
+#include "utils/mixins.hh"
 
 class Node;
 typedef RefcountedPointer<Node> PNode;
@@ -55,7 +56,8 @@ typedef RefcountedPointer<DataLeaf> PDataLeaf;
 
 class Tokenizer;
 
-class Node: public RefcountedContainer {
+class Node: public RefcountedContainer , public SL::NonCopyable
+{
 		friend class DataList;
 	protected:
 		DataList *parent;
@@ -70,7 +72,7 @@ class Node: public RefcountedContainer {
 
 		// Sets the name, and updates parent if present
 		bool SetName( const wxString &name_ );
-		Node(): parent( NULL ), list_prev( NULL ), list_next( NULL ) {}
+		Node(): parent( NULL ), list_prev( NULL ), list_next( NULL ), name( wxEmptyString ) {}
 		virtual ~Node();
 		DataList* Parent() const;// parent list
 		//void SetParent(DataList *parent_);
@@ -281,7 +283,7 @@ class Tokenizer {
 inline Tokenizer &operator >>( Tokenizer &tokenizer, Token &token ) {
 	token = tokenizer.TakeToken();
 	return tokenizer;
-};
+}
 
 PDataList ParseTDF( std::istream &s, int *error_count = NULL );
 

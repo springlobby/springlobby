@@ -3,6 +3,7 @@
 
 #include <wx/string.h>
 #include <vector>
+#include "utils/mixins.hh"
 
 const int CACHE_VERSION     = 11;
 const int SETTINGS_VERSION  = 22;
@@ -72,7 +73,7 @@ public:
 };
 
 //! @brief Class used to store and restore application settings.
-class Settings
+class Settings : public SL::NonCopyable
 {
   public:
 
@@ -767,8 +768,6 @@ class Settings
     bool m_portable_mode;
 
     std::map<wxString, wxString> m_spring_versions;
-
-    Settings( const Settings& );
 
 	wxPathList GetConfigFileSearchPathes();
 };

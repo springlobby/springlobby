@@ -6,7 +6,7 @@
 #include <wx/dialog.h>
 #include <wx/timer.h>
 #include <wx/panel.h>
-
+#include "mixins.hh"
 
 const unsigned SL_MAIN_ICON = 1;
 const unsigned SS_MAIN_ICON = 2;
@@ -152,7 +152,7 @@ protected:
 
 /** \brief used to display server messages when no chatwindow has focus
  */
-class ServerMessageBox : public wxDialog
+class ServerMessageBox : public wxDialog, public SL::NonCopyable
 {
 public:
 	ServerMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
@@ -163,12 +163,8 @@ public:
     virtual void AppendMessage(const wxString& message);
 
 protected:
-
 	wxBoxSizer* topsizer;
 	wxListCtrl* m_messages;
-
-	ServerMessageBox( const ServerMessageBox& );
-
 };
 
 /** \brief displays user action notifications */
@@ -217,7 +213,7 @@ protected:
 /** \brief A generic Credits dialog
  * See showCredits() for modal use
  */
-class CreditsDialog: public wxDialog
+class CreditsDialog: public wxDialog, public SL::NonCopyable
 {
 public:
 	CreditsDialog(wxWindow* parent,wxString title, int whichIcon);

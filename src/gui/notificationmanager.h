@@ -5,8 +5,9 @@ class ToasterBox;
 
 #include "../utils/uievents.h"
 #include "../utils/isink.h"
+#include "../utils/mixins.hh"
 
-class NotificationManager : public OnQuitSink < NotificationManager >
+class NotificationManager : public OnQuitSink < NotificationManager > , public SL::NonCopyable
 {
     public:
         virtual ~NotificationManager();

@@ -8,7 +8,7 @@
 namespace SLGlobals {
     const wxString nosection_name = _T("none");
     const wxString nostyle_name = _T("none");
-};
+}
 
 //! enum that lets us differentiate option types at runtime
 /*! opt_undefined will be returned/set if the type could not be determined, others respectively */

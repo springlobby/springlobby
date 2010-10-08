@@ -7,6 +7,7 @@
 
 #include "nonportable.h"
 #include "iunitsync.h"
+#include "utils/mixins.hh"
 
 class wxString;
 class wxImage;
@@ -236,7 +237,7 @@ typedef const char* (USYNC_CALL_CONV *lpGetStrKeyStrValPtr)(const char* key, con
  * so often there is a need for running multiple unitsync methods while
  * holding a single lock continuously.
  */
-class SpringUnitSyncLib
+class SpringUnitSyncLib : public SL::NonCopyable
 {
   public:
 

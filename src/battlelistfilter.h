@@ -5,7 +5,7 @@
 
 #include "battlelisttab.h"
 #include "battle.h"
-
+#include "utils/mixins.hh"
 ///////////////////////////////////////////////////////////////////////////
 
 class BattleListTab;
@@ -21,7 +21,7 @@ class wxStaticText;
 
 /** \brief The panel contained in BattleListTab used to filter for diff info of battles
  * \todo DOCMEMORE */
-class BattleListFilter : public wxPanel
+class BattleListFilter : public wxPanel, public SL::NonCopyable
 {
 	public:
     BattleListFilter( wxWindow* parent, wxWindowID id, BattleListTab* parentBattleListTab, const wxPoint& pos, const wxSize& size, long style );
@@ -164,7 +164,7 @@ class BattleListFilter : public wxPanel
 		static bool StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex = NULL, StringTransformFunction additional_transform = NULL, bool case_sensitive = false);
 
 	protected:
-		DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 };
 
 enum

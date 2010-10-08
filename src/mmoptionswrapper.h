@@ -11,7 +11,9 @@ struct GameOptions;
 
 class wxFileConfig;
 
-class mmSectionTree {
+//! \todo needs deep copy
+class mmSectionTree
+{
 
     public:
         mmSectionTree();

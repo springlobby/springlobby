@@ -3,6 +3,7 @@
 
 #include <wx/fileconf.h>
 #include <map>
+#include "../utils/mixins.hh"
 
 class wxFileInputStream;
 
@@ -10,7 +11,7 @@ typedef wxFileConfig
 	slConfigBaseType;
 
 //! a proxy class to wxFileConfig with additional global config values replacing first tier default values
-class slConfig : public slConfigBaseType
+class slConfig : public slConfigBaseType, public SL::NonCopyable
 {
 	public:
 		slConfig ( const wxString& appName = wxEmptyString,

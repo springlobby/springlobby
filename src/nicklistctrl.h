@@ -3,6 +3,7 @@
 
 #include "customvirtlistctrl.h"
 #include "usermenu.h"
+#include "utils/mixins.hh"
 
 class User;
 class UserList;
@@ -10,7 +11,7 @@ class Ui;
 class ChatPanelMenu;
 class UserMenu;
 
-class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
+class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >, public SL::NonCopyable
 {
   protected:
     typedef SL_GENERIC::UserMenu<ChatPanelMenu> UserMenu;

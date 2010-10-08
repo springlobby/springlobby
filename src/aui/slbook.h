@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_SLBOOK_H
 
 #include <wx/aui/aui.h>
+#include "../utils/mixins.hh"
 
 class ChatPanelMenu;
 
@@ -30,10 +31,6 @@ class SLNotebook : public wxAuiNotebook {
             \note koshi: turns out it isn't strictly necessary on at least wxGTK
         **/
         void FitChildPages();
-
-    protected:
-        bool m_autosave_prespective;
-
 };
 
 class ChatPanel;
@@ -41,7 +38,7 @@ class ChatPanel;
 /** \brief SLNotebook derived class that only accepts ChatPanel pages
     Provides a common context menu for all tab headers that has a the repective Chatpanel's context menu as a submenu
 **/
-class SLChatNotebook : public SLNotebook {
+class SLChatNotebook : public SLNotebook, public SL::NonCopyable {
 
     public:
         SLChatNotebook (wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxAUI_NB_DEFAULT_STYLE);

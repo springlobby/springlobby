@@ -3,7 +3,7 @@
 
 #include <wx/string.h>
 #include <wx/colour.h>
-
+#include "utils/mixins.hh"
 class Server;
 
 const unsigned int SYNC_UNKNOWN = 0;
@@ -202,7 +202,7 @@ class User : public CommonUser
     int m_statusicon_idx;
     int m_sideicon_idx;
 
-    //! copy-semantics?
+	//! copy-semantics?
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_USER_H

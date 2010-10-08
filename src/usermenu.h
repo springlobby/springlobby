@@ -4,6 +4,7 @@
 #include <wx/menu.h>
 #include <map>
 #include <vector>
+#include "utils/mixins.hh"
 
 //static const long GROUP_ID  = wxNewId();
 static const long GROUP_ID_NEW  = wxNewId();
@@ -13,7 +14,7 @@ static const long GROUP_ID_REMOVE  = wxNewId();
 
 namespace SL_GENERIC {
 template < class EventHandler_ >
-class UserMenu : public wxMenu
+class UserMenu : public wxMenu, public SL::NonCopyable
 {
     protected:
         typedef EventHandler_

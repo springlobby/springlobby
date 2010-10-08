@@ -2,11 +2,12 @@
 #define SIMPLEMPFRAME_H
 
 #include "customizedframe.h"
+#include "../utils/mixins.hh"
 
 class TASServer;
 class SimpleBattlelistCtrl;
 
-class SimpleMPFrame : public CustomizedFrame
+class SimpleMPFrame : public CustomizedFrame, public SL::NonCopyable
 {
 public:
 	SimpleMPFrame( wxWindow* parent );
