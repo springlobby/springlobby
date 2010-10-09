@@ -179,7 +179,7 @@ wxRect MapCtrl::GetMinimapRect() const
 }
 
 
-wxRect MapCtrl::GetStartRect( int index )
+wxRect MapCtrl::GetStartRect( int index ) const
 {
     BattleStartRect sr = m_battle->GetStartRect( index );
     if ( !sr.IsOk() ) return wxRect();
@@ -187,7 +187,7 @@ wxRect MapCtrl::GetStartRect( int index )
 }
 
 
-wxRect MapCtrl::GetStartRect( const BattleStartRect& sr )
+wxRect MapCtrl::GetStartRect( const BattleStartRect& sr ) const
 {
     int x1,y1,x2,y2;
     if ( !sr.exist || sr.todelete ) return wxRect();
@@ -202,7 +202,7 @@ wxRect MapCtrl::GetStartRect( const BattleStartRect& sr )
 }
 
 
-void MapCtrl::Accumulate( wxImage& image )
+void MapCtrl::Accumulate( wxImage& image ) const
 {
     if (!image.IsOk()) return;
 
@@ -243,7 +243,7 @@ void MapCtrl::Accumulate( wxImage& image )
 }
 
 
-double MapCtrl::GetStartRectMetalFraction( int index )
+double MapCtrl::GetStartRectMetalFraction( int index ) const
 {
     BattleStartRect sr = m_battle->GetStartRect( index );
     if ( !sr.IsOk() ) return 0.0;
@@ -251,7 +251,7 @@ double MapCtrl::GetStartRectMetalFraction( int index )
 }
 
 
-double MapCtrl::GetStartRectMetalFraction( const BattleStartRect& sr )
+double MapCtrl::GetStartRectMetalFraction( const BattleStartRect& sr ) const
 {
     // todo: this really is *logic*, not rendering code, so it
     // should go in some other layer sometime (SpringUnitSync?).
@@ -278,14 +278,14 @@ double MapCtrl::GetStartRectMetalFraction( const BattleStartRect& sr )
 }
 
 
-unsigned int MapCtrl::GetNewRectIndex()
+unsigned int MapCtrl::GetNewRectIndex() const
 {
     ASSERT_LOGIC ( m_battle, _T("getting a rectangle index not in a battle"));
 	return m_battle->GetNextFreeRectIdx();
 }
 
 
-BattleStartRect MapCtrl::GetBattleRect( int x1, int y1, int x2, int y2, int ally )
+BattleStartRect MapCtrl::GetBattleRect( int x1, int y1, int x2, int y2, int ally ) const
 {
     BattleStartRect br;
     wxRect mr = GetMinimapRect();
@@ -620,7 +620,7 @@ void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& co
 }
 
 
-wxRect MapCtrl::GetRefreshRect()
+wxRect MapCtrl::GetRefreshRect() const
 {
     int width, height;
     GetClientSize( &width, &height );
@@ -628,7 +628,7 @@ wxRect MapCtrl::GetRefreshRect()
 }
 
 
-wxRect MapCtrl::GetDownloadRect()
+wxRect MapCtrl::GetDownloadRect() const
 {
     int width, height;
     GetClientSize( &width, &height );
@@ -829,7 +829,7 @@ wxRect MapCtrl::GetUserRect( const User& user, bool selected )
 }
 
 
-MapCtrl::RectangleArea MapCtrl::GetUserRectArea( const wxRect& userrect, int x, int y )
+MapCtrl::RectangleArea MapCtrl::GetUserRectArea( const wxRect& userrect, int x, int y ) const
 {
     x = x - userrect.x;
     y = y - userrect.y;
@@ -856,7 +856,7 @@ MapCtrl::RectangleArea MapCtrl::GetUserRectArea( const wxRect& userrect, int x, 
 }
 
 
-void MapCtrl::DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font )
+void MapCtrl::DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font ) const
 {
     dc.SetTextForeground( outline );
     dc.DrawText( str, x, y );
