@@ -17,9 +17,9 @@ const wxString m_configActionNames[] = { _T("none"),_T("highlight"),_T("notify_l
 
 //!same for tooltips
 const wxString m_actionTooltips[] = { _("no action at all"), _("highlight user in nick list and battles he participates in"),
-    _("popup a message box when user logs in/out from  the server"), _T("you won't see message by these users in normal channels"),
+	_("popup a message box when user logs in/out from  the server"), _("you won't see message by these users in normal channels"),
     _("ignore private messages of these users, no pm window will open if any of these try to contact you privately"),
-    _T("automatically kick users from battles hosted by yourself"), _("popup a message box when user hosts a new battle"),
+	_("automatically kick users from battles hosted by yourself"), _("popup a message box when user hosts a new battle"),
     _("popup a message box when user changes away status") };
 
 
