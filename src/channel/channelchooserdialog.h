@@ -2,11 +2,12 @@
 #define SPRINGLOBBY_CHANNELCHOOSERDIALOG_H_INCLUDED
 
 #include <wx/dialog.h>
+#include "../gui/windowattributespickle.h"
 
 class ChannelChooserPanel;
 class wxBoxSizer;
 
-class ChannelChooserDialog : public wxDialog
+class ChannelChooserDialog : public wxDialog, public WindowAttributesPickle
 {
     public:
         ChannelChooserDialog(wxWindow* parent, wxWindowID id, const wxString& title,
@@ -26,9 +27,9 @@ class ChannelChooserDialog : public wxDialog
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

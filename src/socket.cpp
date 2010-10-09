@@ -8,7 +8,6 @@
 #endif // _MSC_VER
 
 #include <wx/socket.h>
-#include <wx/thread.h>
 #include <wx/string.h>
 #include <wx/log.h>
 #include <stdexcept>
@@ -64,30 +63,23 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 
 
 //! @brief Constructor
-Socket::Socket( iNetClass& netclass, bool blocking ):
-  m_block(blocking),
-  m_net_class(netclass),
-  m_rate(-1),
-  m_sent(0)
+Socket::Socket( iNetClass& netclass, bool wait_on_connect, bool blocking  ) :
+    m_sock( NULL ),
+    m_events( NULL ),
+    m_connecting( false ),
+    m_wait_on_connect( wait_on_connect ),
+    m_blocking(blocking),
+    m_net_class(netclass),
+	m_udp_private_port(0),
+    m_rate(-1),
+    m_sent(0)
 {
-  m_connecting = false;
-
-  m_sock = 0;
-  m_events = 0;
-
-  //resetting the ping state vars.
-  m_ping_msg = wxEmptyString;
-  m_ping_int = 0;
-  m_ping_t = 0;
-
 }
 
 
 //! @brief Destructor
 Socket::~Socket()
 {
-  _EnablePingThread( false );
-
   LOCK_SOCKET;
 	if ( m_sock ) m_sock->Destroy();
   delete m_events;
@@ -97,31 +89,34 @@ Socket::~Socket()
 //! @brief Creates an TCP socket and sets it up.
 wxSocketClient* Socket::_CreateSocket()
 {
-  wxSocketClient* sock = new wxSocketClient();
+    wxSocketClient* sock = new wxSocketClient();
 
-  sock->SetClientData( (void*)this );
-  if ( !m_block ) {
-    if ( m_events == 0 ) m_events = new SocketEvents( m_net_class );
-    sock->SetFlags( wxSOCKET_NOWAIT );
+    sock->SetClientData( (void*)this );
+    if ( !m_blocking )
+    {
+        if ( m_events == 0 )
+            m_events = new SocketEvents( m_net_class );
+        sock->SetFlags( wxSOCKET_NOWAIT );
 
-    sock->SetEventHandler(*m_events, SOCKET_ID);
-    sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
-    sock->Notify(true);
-  } else {
-    if ( m_events != 0 ) {
-      delete m_events;
-      m_events = 0;
+        sock->SetEventHandler(*m_events, SOCKET_ID);
+        sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
+        sock->Notify(true);
     }
-  }
-  return sock;
+    else
+    {
+		// blocking mode _must_ block, and end blocking as soon as data arrives otherwise other blocking but no gui block
+		// mode will wait for timeout before unlocking
+		sock->SetFlags( wxSOCKET_BLOCK );
+		delete m_events;
+		m_events = 0;
+    }
+    return sock;
 }
 
 //! @brief Connect to remote host.
-//! @note This turns off the ping thread.
 void Socket::Connect( const wxString& addr, const int port )
 {
   LOCK_SOCKET;
-  _EnablePingThread( false ); // Turn off ping thread.
 
   wxIPV4address wxaddr;
   m_connecting = true;
@@ -132,7 +127,7 @@ void Socket::Connect( const wxString& addr, const int port )
 
   if ( m_sock != 0 ) m_sock->Destroy();
   m_sock = _CreateSocket();
-  m_sock->Connect( wxaddr, m_block );
+  m_sock->Connect( wxaddr, m_wait_on_connect );
   m_sock->SetTimeout( 40 );
 }
 
@@ -143,12 +138,10 @@ void Socket::SetTimeout( const int seconds )
 }
 
 //! @brief Disconnect from remote host if connected.
-//! @note This turns off the ping thread.
 void Socket::Disconnect( )
 {
   if ( m_sock ) m_sock->SetTimeout( 0 );
   m_net_class.OnDisconnected( this );
-  _EnablePingThread( false );
   m_buffer = "";
 
   if ( m_sock )
@@ -341,66 +334,11 @@ wxString Socket::GetLocalAddress() const
 }
 
 
-//! @brief Set ping info to be used by the ping thread.
-//! @note Set msg to an empty string to turn off the ping thread.
-//! @note This has to be set every time the socket connects.
-void Socket::SetPingInfo( const wxString& msg, unsigned int interval )
-{
-  LOCK_SOCKET;
-  m_ping_msg = msg;
-  m_ping_int = interval;
-  _EnablePingThread( _ShouldEnablePingThread() );
-}
-
-
-void Socket::_EnablePingThread( bool enable )
-{
-
-  if ( !enable ) {
-    if ( m_ping_t ) {
-
-      // Reset values to be sure.
-      m_ping_int = 0;
-      m_ping_msg = wxEmptyString;
-
-      m_ping_t->Wait();
-      delete m_ping_t;
-
-      m_ping_t = 0;
-    }
-  } else {
-    if ( !m_ping_t ) {
-      m_ping_t = new PingThread( *this );
-      m_ping_t->Init();
-    }
-  }
-}
-
-
-//! @brief Check if we should enable or dsable the ping htread.
-//! @see Socket::_EnablePingThread
-bool Socket::_ShouldEnablePingThread() const
-{
-  return ( (m_ping_msg != wxEmptyString) );
-}
-
-
 //! @brief Set the maximum upload ratio.
 void Socket::SetSendRateLimit( int Bps )
 {
   m_rate = Bps;
 }
-
-
-//! @brief Ping remote host with custom protocol message.
-//! @note Called from separate thread
-void Socket::Ping()
-{
-  // Dont log here, else it may crash.
-  // wxLogMessage( _T("Sent ping.") );
-  if ( m_ping_msg != wxEmptyString ) Send( m_ping_msg );
-}
-
 
 
 void Socket::OnTimer( int mselapsed )
@@ -414,36 +352,4 @@ void Socket::OnTimer( int mselapsed )
   } else {
     m_sent = 0;
   }
-}
-
-PingThread::PingThread( Socket& sock ):
-  m_sock(sock)
-{
-}
-
-
-void PingThread::Init()
-{
-  Create();
-  SetPriority( WXTHREAD_MAX_PRIORITY );
-  Run();
-}
-
-
-void* PingThread::Entry()
-{
-  int milliseconds = m_sock.GetPingInterval();
-
-  while ( !TestDestroy() )
-  {
-    if ( !m_sock.GetPingEnabled() ) break;
-    m_sock.Ping();
-    // break if woken
-    if(!Sleep(milliseconds))break;
-  }
-  return 0;
-}
-
-void PingThread::OnExit()
-{
 }

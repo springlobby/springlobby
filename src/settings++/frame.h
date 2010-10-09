@@ -1,8 +1,8 @@
 /**
     This file is part of springsettings,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 
@@ -20,12 +20,14 @@
 
 
 #include <wx/frame.h>
+#include "../gui/windowattributespickle.h"
 class wxNotebook;
 class tab_simple;
 class tab_ui;
 class tab_render_detail;
 class tab_quality_video;
 class audio_panel;
+class hotkey_panel;
 class abstract_panel;
 class wxMenu;
 class wxCommanEvent;
@@ -39,7 +41,7 @@ class wxNotebookEvent;
 class PathOptionPanel;
 class wxIcon;
 
-class settings_frame : public wxFrame
+class settings_frame : public wxFrame, public WindowAttributesPickle
 {
 	private:
 		DECLARE_EVENT_TABLE();
@@ -51,6 +53,8 @@ class settings_frame : public wxFrame
 		void handleExternExit();
 		void switchToExpertMode();
 		void buildGuiFromErrorPanel();
+	void OnSetFocus(wxFocusEvent&);
+	void OnKillFocus(wxFocusEvent&);
 
 	private:
 		tab_simple* simpleTab;
@@ -58,6 +62,7 @@ class settings_frame : public wxFrame
 		audio_panel* audioTab;
 		tab_render_detail* detailTab;
 		tab_quality_video* qualityTab;
+		hotkey_panel* hotkeyTab;
 
 		wxMenu* menuFile;
 		wxMenu* menuMode;
@@ -74,10 +79,12 @@ class settings_frame : public wxFrame
 		void initMenuBar();
 		void handleExit();
 		bool alreadyCalled;
+		bool m_has_focus;
 
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_HOTKEY = 1014,
 			ID_UI = 1013,
 			ID_QUALITY_VIDEO = 1012,
 			ID_RENDER_DETAIL = 1011,
@@ -98,6 +105,8 @@ class settings_frame : public wxFrame
 		void resetSettings();
 		void updateAllControls();
 
+		bool saveSettingsAbstract(); //do not call abstract_panel::SaveSettings directly, call this instead!
+		bool settingsChangedAbstract(); //do not query abstract_panel::settingschanged directly, use this instead!
 };
 
 

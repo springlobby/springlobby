@@ -26,6 +26,7 @@
 #include "settings.h"
 #include "utils/customdialogs.h"
 #include "utils/tasutil.h"
+#include "utils/uievents.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentwrapper.h"
@@ -51,20 +52,17 @@ void ServerEvents::OnDisconnected( bool wasonline )
     wxLogDebugFunc( _T("") );
     m_serv.SetRequiredSpring (_T(""));
     ui().OnDisconnected( m_serv, wasonline );
-#ifndef NO_TORRENT_SYSTEM
-    try // settings may be already destroyed
-    {
-        if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().DisconnectFromP2PSystem();
-    }
-    catch (GlobalDestroyedError e)
-    {
-    }
-#endif
 }
 
 
 void ServerEvents::OnLogin()
 {
+}
+
+
+void ServerEvents::OnLoginInfoComplete()
+{
+    wxLogDebugFunc( _T("") );
 	wxString nick = m_serv.GetMe().GetNick();
 	wxArrayString highlights = sett().GetHighlightedWords();
 	if ( highlights.Index( nick ) == -1 )
@@ -72,21 +70,12 @@ void ServerEvents::OnLogin()
 		highlights.Add( nick );
 		sett().SetHighlightedWords( highlights );
 	}
-}
-
-
-void ServerEvents::OnLoginInfoComplete()
-{
-    wxLogDebugFunc( _T("") );
     //m_serv.RequestChannels();
     std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
     for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.begin(); itor != autojoin.end(); itor++ )
     {
         m_serv.JoinChannel( itor->name, itor->password );
     }
-#ifndef NO_TORRENT_SYSTEM
-    if ( sett().GetTorrentSystemAutoStartMode() == 0 ) torrent().ConnectToP2PSystem();
-#endif
     ui().OnLoggedIn( );
 }
 
@@ -125,8 +114,9 @@ void ServerEvents::OnMotd( const wxString& msg )
 
 void ServerEvents::OnPong( wxLongLong ping_time )
 {
-    //wxLongLong is non-POD and cannot be passed to wxFormat as such. use c-string rep instead. converting to long might loose precision
-    ui().OnServerMessage( m_serv, wxString::Format( _("ping reply took %s ms"), ping_time.ToString().c_str() ) );
+	//wxLongLong is non-POD and cannot be passed to wxFormat as such. use c-string rep instead. converting to long might loose precision
+	UiEvents::StatusData data( wxString::Format( _("ping: %s ms"), ping_time.ToString().c_str() ), 2 );
+	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 }
 
 
@@ -184,7 +174,8 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
                 {
                     battle.SetInGame( status.in_game );
                     if ( status.in_game ) battle.StartSpring();
-                    else ui().OnBattleInfoUpdated( battle );
+					else
+						BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(user.GetBattle(),wxString()) );
                 }
             }
             }catch(...){}
@@ -350,7 +341,7 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
         Battle& battle = m_serv.GetBattle( battleid );
         User& user = battle.GetUser( nick );
 
-        if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
+		//if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
 
         status.color_index = user.BattleStatus().color_index;
         battle.OnUserBattleStatusUpdated( user, status );
@@ -361,7 +352,7 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
 }
 
 
-void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
+void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick, const wxString& userScriptPassword )
 {
     try
     {
@@ -370,6 +361,7 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick )
         Battle& battle = m_serv.GetBattle( battleid );
 
         battle.OnUserAdded( user );
+		user.BattleStatus().scriptPassword = userScriptPassword;
         ui().OnUserJoinedBattle( battle, user );
 				try
 				{
@@ -396,6 +388,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     {
         Battle& battle = m_serv.GetBattle( battleid );
         User& user = battle.GetUser( nick );
+		user.BattleStatus().scriptPassword.Clear();
         battle.OnUserRemoved( user );
         ui().OnUserLeftBattle( battle, user );
     }
@@ -427,7 +420,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
             battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
         }
 
-        ui().OnBattleInfoUpdated( battle );
+		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
     }
     catch (assert_exception) {}
 }
@@ -438,7 +431,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-
+		battle.m_script_tags[param] = value;
         wxString key = param;
         if ( key.Left( 5 ) == _T("game/") )
         {
@@ -508,7 +501,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        ui().OnBattleInfoUpdated( battle );
+		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
     }
     catch ( assert_exception ) {}
 }
@@ -644,7 +637,8 @@ void ServerEvents::OnChannelAction( const wxString& channel, const wxString& who
     wxLogDebugFunc( _T("") );
     try
     {
-        m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), action );
+		if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
+			m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), action );
     }
     catch (std::runtime_error &except)
     {
@@ -701,18 +695,22 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        ui().OnSaidBattle( battle, nick, msg );
+		if ( ( m_serv.GetMe().GetNick() ==  nick ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, nick ) )
+		{
+			ui().OnSaidBattle( battle, nick, msg );
+		}
         battle.GetAutoHost().OnSaidBattle( nick, msg );
     }
     catch (assert_exception) {}
 }
 
-void ServerEvents::OnBattleAction( int battleid, const wxString& nick, const wxString& msg )
+void ServerEvents::OnBattleAction( int /*battleid*/, const wxString& nick, const wxString& msg )
 {
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
-        ui().OnBattleAction( battle, nick, msg );
+		UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+				UiEvents::OnBattleActionData( nick, msg )
+			);
     }
     catch (assert_exception) {}
 }
@@ -770,8 +768,8 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-				User& user = battle.GetUser( nick );
-				ui().OnUserLeftBattle( battle, user );
+		User& user = battle.GetUser( nick );
+		ui().OnUserLeftBattle( battle, user );
         battle.OnUserRemoved( user );
     }
     catch (std::runtime_error &except)
@@ -791,6 +789,10 @@ void ServerEvents::OnRing( const wxString& from )
     ui().OnRing( from );
 }
 
+void ServerEvents::OnServerBroadcast( const wxString& message )
+{
+	ui().OnServerBroadcast( m_serv, message );
+}
 
 void ServerEvents::OnServerMessage( const wxString& message )
 {
@@ -846,13 +848,20 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
         user.BattleStatus().udpport=udpport;
         wxLogMessage(_T("set to %s %d "),user.BattleStatus().ip.c_str(),user.BattleStatus().udpport);
 
-        if (sett().GetShowIPAddresses())ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,wxString::Format(_(" has ip=%s"),ip.c_str()));
+		if (sett().GetShowIPAddresses()) {
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( username,wxString::Format(_(" has ip=%s"),ip.c_str()) )
+				);
+		}
 
         if (m_serv.GetCurrentBattle()->GetNatType() != NAT_None && (udpport==0))
         {
             // todo: better warning message
             //something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
-            ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( username,_(" does not really support nat traversal") )
+				);
+
         }
         m_serv.GetCurrentBattle()->CheckBan(user);
     }

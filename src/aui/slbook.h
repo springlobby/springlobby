@@ -23,6 +23,8 @@ class SLNotebook : public wxAuiNotebook {
         wxString SavePerspective();
         bool LoadPerspective(const wxString& layout);
 
+		void AdvanceSelection( bool forward );
+
         /** \brief call fitinside for each child page
             useful after loading perspectives, since that does not generate OnSize events
             \note koshi: turns out it isn't strictly necessary on at least wxGTK
@@ -55,9 +57,10 @@ class SLChatNotebook : public SLNotebook {
 
         //prohibit adding other panels
         bool AddPage(wxWindow* , const wxString& , bool , const wxBitmap& );
-        void DeleteChatPage( size_t i );
+		bool DeleteChatPage( size_t i );
 
         ChatPanelMenu* m_ch_menu;
+        ChatPanel* m_cur_page;
 
         DECLARE_EVENT_TABLE();
 };
@@ -70,7 +73,7 @@ void SaveNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
     SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by

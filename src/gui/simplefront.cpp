@@ -21,19 +21,13 @@
 #include <wx/frame.h>
 #include "wxgradientbutton.h"
 #include "../customizations.h"
-
+#include "../simpleinterface/simplempframe.h"
 
 SimpleFront::SimpleFront( wxWindow* parent )
-: wxFrame( parent, wxID_ANY, _T(""), wxDefaultPosition, wxSize( -1,-1 ), wxCAPTION|wxCLOSE_BOX|wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL ),
+: CustomizedFrame( parent ),
 m_settings_frame( 0 ),
 m_skirmish( 0 )
 {
-    SetIcon( SLcustomizations().GetAppIcon() );
-    SetTitle( SLcustomizations().GetModname() );
-
-    this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-	this->SetExtraStyle( wxFRAME_EX_METAL );
-
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	bSizer1->Add( 0, 0, 1, wxEXPAND, 5 );
 
@@ -94,9 +88,7 @@ m_skirmish( 0 )
 	m_advanced->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnAdvanced ), NULL, m_skirmish );
 	m_start->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SkirmishDialog::OnStart ), NULL, m_skirmish );
 
-    SetSize( SLcustomizations().GetBackgroundSize() );
-    Layout();
-    PushEventHandler( new wxBackgroundBitmap( SLcustomizations().GetBackground() ) );
+	Layout();
 
 }
 
@@ -134,9 +126,8 @@ void SimpleFront::ShowSP( bool show )
 
 void SimpleFront::OnMultiplayer( wxCommandEvent&  )
 {
-    ui().FirstRunWelcome();
-	ui().mw().ShowTab( MainWindow::PAGE_JOIN );
-	Close();
+	SimpleMPFrame* f = new SimpleMPFrame( this );
+	f->Show(true);
 }
 
 void SimpleFront::OnSettings( wxCommandEvent&  )

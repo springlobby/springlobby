@@ -32,7 +32,8 @@
 #include "channel/channel.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
-#include "utils/platform.h"
+#include "utils/uievents.h"
+#include "updater/updatehelper.h"
 #include "utils/misc.h"
 #include "ui.h"
 #include "server.h"
@@ -43,12 +44,13 @@
 #include "chatlog.h"
 #include "chatpanelmenu.h"
 #include "utils/customdialogs.h"
+#include "gui/pastedialog.h"
 #include "settings.h"
 #include "uiutils.h"
 #include "Helper/wxtextctrlhist.h"
 
 #ifndef DISABLE_SOUND
-#include "sdlsound.h"
+#include "alsound.h"
 #endif
 #include "useractions.h"
 #include "usermenu.h"
@@ -57,10 +59,10 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 	EVT_TEXT_ENTER( CHAT_TEXT, ChatPanel::OnSay )
 	EVT_TEXT_PASTE( CHAT_TEXT, ChatPanel::OnPaste )
-	EVT_BUTTON( CHAT_CHAN_OPTS, ChatPanel::OnChanOpts )
-	EVT_BUTTON( CHAT_SEND, ChatPanel::OnSay )
-	EVT_TEXT_URL( CHAT_LOG,  ChatPanel::OnLinkEvent )
-	EVT_MENU ( wxID_ANY, ChatPanel::OnMenuItem )
+	EVT_BUTTON(		CHAT_CHAN_OPTS, ChatPanel::OnChanOpts )
+	EVT_BUTTON(		CHAT_SEND, ChatPanel::OnSay )
+	EVT_TEXT_URL(	CHAT_LOG,  ChatPanel::OnLinkEvent )
+	EVT_MENU (		wxID_ANY, ChatPanel::OnMenuItem )
 
 END_EVENT_TABLE()
 
@@ -249,8 +251,9 @@ void ChatPanel::CreateControls( )
 		else if ( m_type == CPT_Server && m_server ) numusers = m_server->GetNumUsers();
     m_usercount_label = new wxStaticText( m_nick_panel, wxID_ANY, wxString::Format( _("%d users"), numusers ) );
     CreatePopup();//ensures m_popup_menu is constructed
-    assert ( m_popup_menu->GetUserMenu() );
-    m_nicklist = new NickListCtrl( m_nick_panel, true, m_popup_menu->GetUserMenu() );
+	//SL_GENERIC::UserMenu<ChatPanelMenu>* usermenu  = m_popup_menu->GetUserMenu();
+	assert ( m_popup_menu->GetUserMenu() );
+	m_nicklist = new NickListCtrl( m_nick_panel, true, m_popup_menu->GetUserMenu() );
 
    // m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
    // m_nick_filter->Disable();
@@ -278,17 +281,21 @@ void ChatPanel::CreateControls( )
 	if ( m_type == CPT_Channel ) {
 	  m_chatlog_text->SetToolTip( TE(_("right click for options (like autojoin)" ) ) );
 	  m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
+	} else if ( m_type == CPT_User ) {
+		if ( m_user )
+		{
+			m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, icons().GetBitmap(icons().GetUserBattleStateIcon(m_user->GetStatus()) ), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
+		}
 	} else {
 	  m_chan_opts_button = 0;
 	}
-
 
 	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 	// Adding elements to sizers
-	if ( m_type == CPT_Channel )
-    m_say_sizer->Add( m_chan_opts_button );
+	if ( m_type == CPT_Channel ) m_say_sizer->Add( m_chan_opts_button );
+	if ( m_type == CPT_User ) m_say_sizer->Add( m_chan_opts_button );
 	m_say_sizer->Add( m_say_text, 1, wxEXPAND );
 	m_say_sizer->Add( m_say_button );
 	m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
@@ -351,7 +358,7 @@ const User* ChatPanel::GetSelectedUser() const
 
 const User& ChatPanel::GetMe()  const
 {
-	return ui().GetServer().GetMe();
+	return serverSelector().GetServer().GetMe();
 }
 
 void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const wxFont& fon )
@@ -389,16 +396,34 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 void ChatPanel::OutputLine( const ChatLine& line )
 {
-  #ifdef __WXMSW__
-    wxWindowUpdateLocker noUpdates(m_chatlog_text);
-  #endif
+  int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);
+  int end = m_chatlog_text->GetScrollRange(wxVERTICAL);
+  int thumb = m_chatlog_text->GetScrollThumb(wxVERTICAL);
+#ifndef __WXMSW__
+  float original_pos = (float)(pos+thumb) / (float)end;
+#else
+  int size = m_chatlog_text->GetSize().GetHeight();
+  float original_pos = (float)(pos+size) / (float)end; // wxmsw is retarded and reports thumb size as 0 always
+#endif
+  if ( original_pos < 0.0f ) original_pos = 0.0f;
+  if ( original_pos > 1.0f ) original_pos = 1.0f; // this is necessary because the code in windows isn't 100% right because thumb always returns 0
+  long original_line = 0;
+#ifndef __WXMSW__
+  if (original_pos < 1.0f )
+  {
+	  original_line = (long)(original_pos *(float)m_chatlog_text->GetNumberOfLines()); // GetNumberOfLines is expensive, only call when necessary
+	  m_chatlog_text->Freeze();
+  }
+#else
+	 wxWindowUpdateLocker noUpdates(m_chatlog_text); // use the automatic one in windows
+#endif
 
   m_chatlog_text->SetDefaultStyle( line.timestyle );
   m_chatlog_text->AppendText( line.time );
 
   m_chatlog_text->SetDefaultStyle( line.chatstyle );
 
-
+#ifndef __WXOSX_COCOA__
 	if ( sett().GetUseIrcColors() )
 	{
 		wxString m1;
@@ -426,13 +451,13 @@ void ChatPanel::OutputLine( const ChatLine& line )
 			{
 				if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58))
 				{
-					color = (m1.GetChar(1) - 48)*10+(m1.GetChar(2) - 48);
+					color = (int(m1.GetChar(1)) - 48)*10+(int(m1.GetChar(2)) - 48);
 					_2chars = true;
 					m1 = m1.Mid(3);
 					}
 				else
 				{
-					color = m1.GetChar(1) -48;
+					color = int(m1.GetChar(1)) -48;
 					_2chars = false;
 					m1 = m1.Mid(2);
 					}
@@ -480,6 +505,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
 	}
 	else
+#endif
 	{
 		m_chatlog_text->AppendText( line.chat );
 	}
@@ -493,12 +519,30 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		int end = 0;
 		for ( int i = 0; i < 20; i++ ) end += m_chatlog_text->GetLineLength( i ) + 1;
 		m_chatlog_text->Remove( 0, end );
-	}
-  #ifdef __WXMSW__
-  m_chatlog_text->ScrollLines( 10 ); // to prevent for weird empty space appended
-  m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );// scroll to the bottom
-  #endif
+  }
+
+  if (original_pos < 1.0f)
+  {
+#ifndef __WXMSW__
+	  wxString linetext = m_chatlog_text->GetLineText(original_line);
+	  long zoomto = m_chatlog_text->GetValue().Find(linetext);
+	  m_chatlog_text->ShowPosition( zoomto ); // wxgtk is retarded and always autoscrolls
+#endif
+  }
+  else
+  {
+	m_chatlog_text->ScrollLines(10); // wx is retarded, necessary to show the latest line
+#ifdef __WXMSW__
+	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
+#endif
+  }
   this->Refresh();
+#ifndef __WXMSW__
+ if (original_pos < 1.0f)
+  {
+	m_chatlog_text->Thaw();
+  }
+#endif
 }
 
 
@@ -514,8 +558,7 @@ void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
 void ChatPanel::OnChanOpts( wxCommandEvent& /*unused*/ )
 {
   CreatePopup();
-  if ( (m_chan_opts_button == 0) || (m_popup_menu == 0) )
-    return;
+  if ( (m_chan_opts_button == 0) || (m_popup_menu == 0) ) return;
   m_chan_opts_button->PopupMenu(m_popup_menu->GetMenu());
 }
 
@@ -596,11 +639,16 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 
 
 	if ( req_user ) {
-     ui().mw().RequestUserAttention();
-     #ifndef DISABLE_SOUND
-     if ( sett().GetChatPMSoundNotificationEnabled() && ( ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) )
-        sound().pm();
-     #endif
+		bool inactive = ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ;
+		ui().mw().RequestUserAttention();
+		if ( sett().GetUseNotificationPopups() && inactive )
+			UiEvents::GetNotificationEventSender().SendEvent(
+					UiEvents::NotficationData( wxNullBitmap,
+											   wxString::Format( _T("%s:\n%s"), who.c_str(), message.Left(50).c_str() ) ) );
+		#ifndef DISABLE_SOUND
+			if ( sett().GetChatPMSoundNotificationEnabled() && inactive )
+				sound().pm();
+		#endif
 	}
 }
 
@@ -766,7 +814,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
   wxStringTokenizer tkz( message, _T("\n") );
 	while ( tkz.HasMoreTokens() )
 	{
-	  wxString msg = tkz.GetNextToken().Trim();
+	  wxString msg = tkz.GetNextToken();
 	  OutputLine( _T(" ") + msg, sett().GetChatColorServer(), f );
 	}
 	OutputLine( _( " ** Set by " ) + who, sett().GetChatColorServer(), f );
@@ -774,7 +822,12 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 
 void ChatPanel::UserStatusUpdated( User& who )
 {
-	if ( !m_show_nick_list || ( m_nicklist == 0 ) ) return;
+  if ( ( m_type == CPT_User ) && ( m_user == &who ) )
+  {
+	m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(who.GetStatus(),false, who.GetBattle() != 0 ) ) );
+
+  }
+  if ( !m_show_nick_list || ( m_nicklist == 0 ) ) return;
   try
   {
 		m_nicklist->UserUpdated( who );
@@ -819,9 +872,15 @@ void ChatPanel::SetServer( Server* serv )
 	if (( serv == 0 ) && ( m_server != 0 ) ){
 	  StatusMessage( _( "Chat closed." ) );
 	  m_server->uidata.panel = 0;
+	  if ( m_nicklist ) {
+		  m_nicklist->StopTimer();
+		  m_nicklist->Clear();
+	  }
 	}
 	else if ( serv != 0 ){
 	   serv->uidata.panel = this;
+	   if ( m_nicklist )
+		   m_nicklist->StartTimer();
 	}
 	m_server = serv;
 
@@ -843,11 +902,14 @@ void ChatPanel::SetUser( const User* usr )
 	{
 	  StatusMessage( _( "Chat closed." ) );
 	  m_user->uidata.panel = 0;
+	  m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().ICON_EMPTY) );
 	}
 	else if ( usr != 0 ) usr->uidata.panel = this;
-
 	m_user = usr;
-
+	if ( m_user )
+	{
+		m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(m_user->GetStatus(),false, m_user->GetBattle() != 0 ) ) );
+	}
 //	if ( m_user )
 //        m_chat_log.SetTarget( sett().GetDefaultServer(), usr->GetNick() );
 }
@@ -881,11 +943,25 @@ void ChatPanel::_SetChannel( Channel* channel )
 
 void ChatPanel::Say( const wxString& message )
 {
+	static const unsigned int flood_threshold = 5;
 	wxLogDebugFunc( message );
 	wxStringTokenizer lines( message, _T( '\n' ) );
-	if ( lines.CountTokens() > 5 ) {
-		int answer = customMessageBox ( SL_MAIN_ICON, wxString::Format( _( "Are you sure you want to paste %d lines?" ), lines.CountTokens() ), _( "Flood warning" ), wxYES_NO );
-		if ( answer == wxNO ) return;
+	if ( lines.CountTokens() > flood_threshold ) {
+		PasteDialog dl ( this, wxString::Format(
+			_( "Are you sure you want to paste %d lines?" ), lines.CountTokens() ) );
+		switch ( dl.ShowModal() ) {
+			case wxID_NO :
+				return;
+			case PasteDialog::pasteButtonReturnCode : {
+				wxString url = Paste2Pastebin( message );
+				if ( url != wxEmptyString && wxStringTokenizer( url, _T( '\n' )).CountTokens() <= flood_threshold ) {
+					Say( url );
+					return;
+				}
+			}
+			default:
+				break;
+		}
 	}
 	while ( lines.HasMoreTokens() ) {
 		wxString line = lines.GetNextToken();
@@ -896,6 +972,7 @@ void ChatPanel::Say( const wxString& message )
 		}
 
 		if ( line == _T( "/ver" ) ) {
+			//!this instance is not replaced with GetAppname for sake of help/debug online
 			OutputLine( _( " You have SpringLobby v" ) + GetSpringLobbyVersion(), sett().GetChatColorNormal() , sett().GetChatFont() );
 			return;
 		}
@@ -1034,7 +1111,8 @@ wxString ChatPanel::FindUrl( const long pos ) const
         end++;
 
     wxString ret = m_chatlog_text->GetRange( start, end );
-    if ( ret.StartsWith( _T("http://") ) )
+	//! \todo there's prolly some smarter way to capture a more flexible range of url types
+	if ( ret.StartsWith( _T("http://") ) ||  ret.StartsWith( _T("https://") ) || ret.StartsWith( _T("ftp://") ))
         return ret;
     else
         return _T("");

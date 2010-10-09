@@ -12,6 +12,7 @@
 class wxImage;
 
 extern const wxEventType UnitSyncAsyncOperationCompletedEvt;
+const wxEventType wxUnitsyncReloadEvent = wxNewEventType();
 
 struct UnitSyncMod
 {
@@ -55,11 +56,19 @@ struct GameOptions;
 
  /** UnitSync interface definition.
  */
-class IUnitSync
+class IUnitSync : public wxEvtHandler
 {
   public:
-    IUnitSync() { }
-    virtual ~IUnitSync() { }
+		virtual void OnReload( wxCommandEvent& event ) = 0;
+	IUnitSync()
+	{
+		Connect( wxUnitsyncReloadEvent, wxCommandEventHandler( IUnitSync::OnReload ), NULL, this );
+	}
+
+	virtual ~IUnitSync()
+	{
+		Disconnect( wxUnitsyncReloadEvent, wxCommandEventHandler( IUnitSync::OnReload ), NULL, this );
+	}
 
     enum GameFeature
     {
@@ -128,16 +137,16 @@ class IUnitSync
      */
     virtual int GetModIndex( const wxString& name ) = 0;
 
-    /** Fetch the name of a mod archive by the mod index.
-     */
-    virtual wxString GetModArchive( int index ) = 0;
-
     /** Get the options for a mod by name.
      */
     virtual GameOptions GetModOptions( const wxString& name ) = 0;
     /**@}*/
 
     virtual wxArrayString GetModDeps( const wxString& name ) = 0;
+
+	/** Un-loads current mod in unitsync.
+	  */
+	virtual void UnSetCurrentMod() = 0;
 
     virtual int GetNumMaps() = 0;
     virtual wxArrayString GetMapList() = 0;
@@ -149,7 +158,6 @@ class IUnitSync
     virtual UnitSyncMap GetMap( int index ) = 0;
     virtual UnitSyncMap GetMapEx( const wxString& mapname ) = 0;
     virtual UnitSyncMap GetMapEx( int index ) = 0;
-    virtual wxString GetMapArchive( int index ) = 0;
     virtual GameOptions GetMapOptions( const wxString& name ) = 0;
     virtual wxArrayString GetMapDeps( const wxString& name ) = 0;
 
@@ -164,6 +172,7 @@ class IUnitSync
     virtual wxArrayString GetSides( const wxString& modname  ) = 0;
     virtual wxImage GetSidePicture( const wxString& modname, const wxString& SideName ) =0;
     virtual wxImage GetImage( const wxString& modname, const wxString& image_path ) =0;
+	virtual wxString GetTextfileAsString( const wxString& modname, const wxString& file_path ) =0;
 
     virtual int GetNumUnits( const wxString& modname ) = 0;
     virtual wxArrayString GetUnitsList( const wxString& modname ) = 0;
@@ -213,6 +222,11 @@ class IUnitSync
     virtual GameOptions GetModCustomizations( const wxString& modname ) = 0;
     virtual GameOptions GetSkirmishOptions( const wxString& modname, const wxString& skirmish_name ) = 0;
 
+	//! this only generates a wxUnitsyncReloadEvent type wxCommandEvent and appends it to itself
+	virtual void AddReloadEvent() = 0;
+
+	virtual wxArrayString FindFilesVFS( const wxString& pattern ) = 0;
+
     private:
         IUnitSync( const IUnitSync& );
 };
@@ -255,9 +269,9 @@ class UnitSyncAsyncOps
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

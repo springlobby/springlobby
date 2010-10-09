@@ -87,25 +87,25 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
 
     wxBoxSizer* m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-// see http://trac.springlobby.info/ticket/649
+// see http://projects.springlobby.info/issues/show/649
 //  m_reset_btn = new wxButton( this, SP_RESET, _("Reset"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
 //  m_buttons_sizer->Add( m_reset_btn, 0, wxALL, 5 );
 
     m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
     m_color_btn = new  ColorButton( this, SP_COLOUR, sett().GetBattleLastColour(), wxDefaultPosition, wxSize(30, CONTROL_HEIGHT) );
-    m_buttons_sizer->Add( m_color_btn, 0, wxALL, 0 );
+	m_buttons_sizer->Add( m_color_btn, 0, wxALIGN_CENTER_VERTICAL|wxALL, 0 );
 
     m_spectator_check = new wxCheckBox( this, SP_SPECTATE, _("Spectate only") );
-    m_buttons_sizer->Add( m_spectator_check, 0, wxALL, 5 );
+	m_buttons_sizer->Add( m_spectator_check, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     m_random_check = new wxCheckBox( this, SP_RANDOM, _("Random start positions") );
-    m_buttons_sizer->Add( m_random_check, 0, wxALL, 5 );
+	m_buttons_sizer->Add( m_random_check, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     m_start_btn = new wxButton( this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
-    m_buttons_sizer->Add( m_start_btn, 0, wxALL, 5 );
+	m_buttons_sizer->Add( m_start_btn, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
-    m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
     SetScrollRate( SCROLL_RATE, SCROLL_RATE );
     this->SetSizer( m_main_sizer );
@@ -131,19 +131,15 @@ void SinglePlayerTab::UpdateMinimap()
 
 void SinglePlayerTab::ReloadMaplist()
 {
-    m_map_pick->Clear();
+	m_map_pick->Clear();
 
-    //applies RefineMapname to every new element
-    TransformedArrayString maplist ( usync().GetMapList(), &RefineMapname ) ;
-    //maplist.Sort(CompareStringIgnoreCase);
-
-    m_map_pick->Append( maplist );
+    m_map_pick->Append( usync().GetMapList() );
 
     m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
 
     if ( m_battle.GetHostMapName() != wxEmptyString )
     {
-        m_map_pick->SetStringSelection( RefineMapname( m_battle.GetHostMapName() ) );
+		m_map_pick->SetStringSelection( m_battle.GetHostMapName());
         if ( m_map_pick->GetStringSelection() == wxEmptyString )
             SetMap( m_mod_pick->GetCount()-1 );
     }
@@ -263,19 +259,21 @@ void SinglePlayerTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 void SinglePlayerTab::OnModSelect( wxCommandEvent& /*unused*/ )
 {
     unsigned int index = (unsigned int)m_mod_pick->GetCurrentSelection();
+    size_t num_bots = m_battle.GetNumBots();
     SetMod( index );
+    if( num_bots != m_battle.GetNumBots() )
+        customMessageBoxNoModal( SL_MAIN_ICON, _("Incompatible bots have been removed after game selection changed."), _("Bots removed") );
 }
 
 
 void SinglePlayerTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
     wxLogDebugFunc( _T("") );
-    MapSelectDialog dlg( (wxWindow*)&ui().mw() );
 
-    if ( dlg.ShowModal() == wxID_OK && dlg.GetSelectedMap() != NULL )
+	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
     {
-        wxLogDebugFunc( dlg.GetSelectedMap()->name );
-        const wxString mapname = RefineMapname( dlg.GetSelectedMap()->name );
+		wxLogDebugFunc( mapSelectDialog().GetSelectedMap()->name );
+		const wxString mapname = mapSelectDialog().GetSelectedMap()->name;
         const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
         if ( idx != wxNOT_FOUND ) SetMap( idx );
     }
@@ -290,12 +288,13 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& /*unused*/ )
         UserBattleStatus bs;
         bs.owner = m_battle.GetMe().GetNick();
         bs.aishortname = dlg.GetAIShortName();
+        bs.airawname = dlg.GetAiRawName();
         bs.aiversion = dlg.GetAIVersion();
         bs.aitype = dlg.GetAIType();
         bs.team = m_battle.GetFreeTeam();
         bs.ally = m_battle.GetFreeAlly();
         bs.colour = m_battle.GetNewColour();
-        User& bot = m_battle.OnBotAdded( _T("Bot") + TowxString( bs.team ), bs  );
+		User& bot = m_battle.OnBotAdded( dlg.GetNick(), bs  );
         ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
         m_minimap->UpdateMinimap();
     }
@@ -357,18 +356,14 @@ void SinglePlayerTab::OnColorButton( wxCommandEvent& /*unused*/ )
 
 void SinglePlayerTab::Update( const wxString& Tag )
 {
-  long type;
-  Tag.BeforeFirst( '_' ).ToLong( &type );
-  wxString key = Tag.AfterFirst( '_' );
-  wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
-  long longval;
-  value.ToLong( &longval );
-  if ( type == OptionsWrapper::PrivateOptions )
-  {
-    if ( key == _T("mapname") )
-    {
-        if ( key == _T("mapname") )
-        {
+    long type;
+    Tag.BeforeFirst( '_' ).ToLong( &type );
+    wxString key = Tag.AfterFirst( '_' );
+    wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
+    long longval;
+    value.ToLong( &longval );
+    if ( type == OptionsWrapper::PrivateOptions ) {
+        if ( key == _T("mapname") ) {
             m_addbot_btn->Enable( false );
             try
             {
@@ -378,8 +373,21 @@ void SinglePlayerTab::Update( const wxString& Tag )
             }
             catch (...) {}
         }
+        else if ( key == _T("modname") ) {
+            try
+            {
+//                int pln = m_battle.GetNumUsers();
+//                int botn = m_battle.GetNumBots();
+                UpdateMinimap();
+//                pln -= m_battle.GetNumUsers();
+//                botn -= m_battle.GetNumBots();
+//                assert( pln == 0 );
+//                assert( botn == 0 );
+
+            }
+            catch (...) {}
+        }
     }
-	}
 }
 
 void SinglePlayerTab::UpdatePresetList()

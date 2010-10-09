@@ -54,13 +54,50 @@ void SLInsertionSort( ContainerType& data, const Comparator& cmp )
     }
 }
 
+namespace SlQuickSort {
+
+template< class ContainerType, class Comparator >
+size_t partition(ContainerType& a, size_t p, size_t r, const Comparator& cmp) {
+  typename Comparator::ObjType x = a[r];
+  size_t j = p - 1;
+  for (size_t i = p; i < r; i++) {
+
+    if ( !cmp(x , a[i]) ) {
+      j = j + 1;
+      typename Comparator::ObjType temp = a[j];
+      a[j] = a[i];
+      a[i] = temp;
+    }
+  }
+  a[r] = a[j + 1];
+  a[j + 1] = x;
+
+  return (j + 1);
+}
+
+template< class ContainerType, class Comparator >
+void quickSort(ContainerType& a, size_t p, size_t r, const Comparator& cmp ) {
+    if (p < r) {
+        size_t q = partition(a, p, r, cmp);
+        quickSort(a, p, q - 1, cmp);
+        quickSort(a, q + 1, r, cmp);
+    }
+}
+
+template< class ContainerType, class Comparator >
+void Sort(ContainerType& a, const Comparator& cmp ) {
+    quickSort( a, 0, a.size() - 1, cmp );
+}
+
+} //end namespace Sl_Quicksort
+
 #endif // SPRINGLOBBY_SORTUTIL_H_INCLUDED
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

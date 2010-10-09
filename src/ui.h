@@ -13,6 +13,7 @@ class Battle;
 class SinglePlayerBattle;
 class OfflineBattle;
 class ChatPanel;
+class ReconnectDialog;
 
 //this removes the necessity to drag wx/event.h into almost every other file for a single type
 //if it's too "hackish" for someone's taste, just include that header again and remove this (koshi)
@@ -24,7 +25,9 @@ typedef int AlertEventType;
 
 extern const wxEventType torrentSystemStatusUpdateEvt;
 
+#include "utils/battleevents.h"
 #include <wx/string.h>
+#include <wx/timer.h>
 
 //! @brief UI main class
 class Ui
@@ -39,9 +42,6 @@ class Ui
         SavegamePlayback
     };
 
-    Server& GetServer();
-    const Server& GetServer() const;
-    bool    GetServerStatus() const;
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
 
@@ -54,12 +54,15 @@ class Ui
     void Disconnect();
     void Reconnect();
     void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
+	void AddServerWindow( const wxString& servername );
+	void ReopenServerTab();
 
     void ConnectionFailurePrompt();
-    void SwitchToNextServer();
+	wxString GetNextServer();
 
     bool DoRegister( const wxString& servername, const wxString& username, const wxString& password, wxString& reason );
 
+	bool IsConnecting() const;
     bool IsConnected() const;
     void JoinChannel( const wxString& name, const wxString& password );
 
@@ -107,14 +110,15 @@ class Ui
 
     void OnUnknownCommand( Server& server, const wxString& command, const wxString& params );
     void OnMotd( Server& server, const wxString& message );
+	void OnServerBroadcast( Server& server, const wxString& message );
     void OnServerMessage( Server& server, const wxString& message );
 
     void OnBattleOpened( IBattle& battle );
     void OnBattleClosed( IBattle& battle );
     void OnUserJoinedBattle( IBattle& battle, User& user );
     void OnUserLeftBattle( IBattle& battle, User& user );
-    void OnBattleInfoUpdated( IBattle& battle );
-    void OnBattleInfoUpdated( IBattle& battle, const wxString& Tag );
+	void OnBattleInfoUpdated( BattleEvents::BattleEventData data );
+//    void OnBattleInfoUpdated( IBattle& battle, const wxString& Tag );
     void OnBattleStarted( Battle& battle );
 
     void OnJoinedBattle( Battle& battle );
@@ -123,7 +127,7 @@ class Ui
     void OnRequestBattleStatus( IBattle& battle );
 
     void OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& msg );
-    void OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg );
+//    void OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg );
 
     void OnSpringStarting();
     void OnSpringTerminated( long exit_code );
@@ -155,6 +159,8 @@ class Ui
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
+	wxTimer m_reconnect_delay_timer;
+	ReconnectDialog* m_reconnect_dialog;
 
     wxString m_last_used_backup_server;
 
@@ -163,9 +169,14 @@ class Ui
     bool m_first_update_trigger;
 
     bool m_ingame;
+	bool m_recconecting_wait;
+
+	EventReceiverFunc<Ui, BattleEvents::BattleEventData, &Ui::OnBattleInfoUpdated>
+		m_battle_info_updatedSink;
 
     //! does actual work, called from downloadmap/mod
-    void DownloadFileP2P( const wxString& hash, const wxString& name );
+    void DownloadFileP2P( const wxString& name );
+	void DownloadFileWebsite( const wxString& name );
 
     private:
         Ui( const Ui& );
@@ -174,14 +185,29 @@ class Ui
 
 Ui& ui();
 
+class ServerSelector;
+ServerSelector& serverSelector();
+
+#include "globalsmanager.h"
+class ServerSelector {
+public:
+	Server& GetServer();
+	const Server& GetServer() const;
+	void SetCurrentServer(Server* server);
+	bool    GetServerStatus() const;
+protected:
+	ServerSelector();
+	Server* m_serv;
+	friend class GlobalObjectHolder<ServerSelector, LineInfo<ServerSelector> >;
+};
 
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

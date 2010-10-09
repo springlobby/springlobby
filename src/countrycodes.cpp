@@ -8,7 +8,7 @@ static std::map<wxString,wxString> m_cc_table;
 void InitTable()
 {
   if (!m_cc_table.empty()) return;
- m_cc_table[_T("AD")] = _(" Andorra");
+m_cc_table[_T("AD")] = _(" Andorra");
 m_cc_table[_T("AE")] = _("United Arab Emirates");
 m_cc_table[_T("AF")] = _("Afghanistan");
 m_cc_table[_T("AG")] = _("Antigua and Barbuda");
@@ -22,6 +22,7 @@ m_cc_table[_T("AR")] = _("Argentina");
 m_cc_table[_T("AS")] = _("American Samoa");
 m_cc_table[_T("AT")] = _("Austria");
 m_cc_table[_T("AU")] = _("Australia");
+m_cc_table[_T("AX")] = _("Åland Islands");
 m_cc_table[_T("AW")] = _("Aruba");
 m_cc_table[_T("AZ")] = _("Azerbaijan");
 m_cc_table[_T("BA")] = _("Bosnia and Herzegovina");
@@ -230,7 +231,7 @@ m_cc_table[_T("TW")] = _("Taiwan");
 m_cc_table[_T("TZ")] = _("Tanzania");
 m_cc_table[_T("UA")] = _("Ukraine");
 m_cc_table[_T("UG")] = _("Uganda");
-m_cc_table[_T("GB")] = _("United Kingdom (Great Britain)");
+m_cc_table[_T("GB")] = _("United Kingdom");
 m_cc_table[_T("UM")] = _("US Minor Outlying Islands");
 m_cc_table[_T("US")] = _("United States");
 m_cc_table[_T("UY")] = _("Uruguay");

@@ -41,6 +41,9 @@ class MainChatTab : public wxScrolledWindow
     void OnUserConnected( User& user );
     void OnUserDisconnected( User& user );
 
+	void BroadcastMessage( const wxString& message );
+	ChatPanel* GetCurrentPanel();
+
     void ChangeUnreadChannelColour( const wxColour& colour );
     void ChangeUnreadPMColour( const wxColour& colour );
 
@@ -50,6 +53,8 @@ class MainChatTab : public wxScrolledWindow
 
     void LoadPerspective( const wxString& perspective_name = wxEmptyString );
     void SavePerspective( const wxString& perspective_name = wxEmptyString );
+
+	void AdvanceSelection( bool forward );
 
   protected:
 
@@ -74,9 +79,9 @@ class MainChatTab : public wxScrolledWindow
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

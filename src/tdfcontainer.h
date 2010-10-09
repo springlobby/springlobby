@@ -185,7 +185,7 @@ struct Token {
 
 	wxString pos_string;// for error reporting
 
-	bool IsEOF() {
+	bool IsEOF() const {
 		return ( type == type_eof );
 	}
 	Token(): type( type_eof )
@@ -196,25 +196,33 @@ struct Token {
 
 class Tokenizer {
 		/// todo: clean up, move to CPP file
-		struct IncludeCacheEntry {// simple reference counted pointer to stream.
-			wxString name;/// used for error reporting
-			int line, column;
 
+		/// simple reference counted pointer to stream.
+		struct IncludeCacheEntry {
+			wxString name; ///< used for error reporting
+			int line;
+			int column;
 			std::istream *stream;
 			//bool must_delete;
 			int *refcount;
+
 			IncludeCacheEntry( std::istream *stream_, bool must_delete_ = false ):
+					line( 1 ),
+					column( 1 ),
 					stream( stream_ ),
 					refcount( NULL )
 			{
-				line = 1;
-				column = 1;
 				if ( must_delete_ ) {
 					refcount = new int;
 					( *refcount ) = 1;
 				}
 			}
-			IncludeCacheEntry( const IncludeCacheEntry &other ) {
+			IncludeCacheEntry( const IncludeCacheEntry &other ):
+					line( other.line ),
+					column( other.column ),
+					stream( other.stream ),
+					refcount( other.refcount )
+			{
 				stream = other.stream;
 				refcount = other.refcount;
 				if ( refcount )( *refcount ) += 1;
@@ -265,7 +273,7 @@ class Tokenizer {
 
 		void ReportError( const Token &t, const wxString &err );
 
-		int NumErrors() {
+		int NumErrors() const {
 			return errors;
 		}
 };
@@ -298,9 +306,9 @@ void TDFWriter::Append( const wxString &name, T begin, T end ) {
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

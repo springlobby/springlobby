@@ -89,6 +89,7 @@ class PlaybackTab : public wxScrolledWindow, public SpringTerminatedSink< Playba
     void OnDeselect( wxListEvent& event );
 
     void OnSpringTerminated( GlobalEvents::GlobalEventData data );
+	void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
 
   protected:
     PlaybackListFilter<ThisType>* m_filter;
@@ -118,6 +119,8 @@ class PlaybackTab : public wxScrolledWindow, public SpringTerminatedSink< Playba
 
     void AskForceWatch( PlaybackType& rep  ) const;
 
+	EventReceiverFunc<ThisType, GlobalEvents::GlobalEventData, &ThisType::OnUnitsyncReloaded> OnUsync_reload;
+
     DECLARE_EVENT_TABLE();
 };
 
@@ -138,9 +141,9 @@ enum
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

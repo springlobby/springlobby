@@ -19,7 +19,8 @@ User::User( Server& serv )
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User( const wxString& nick, Server& serv )
@@ -28,7 +29,8 @@ User::User( const wxString& nick, Server& serv )
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User( const wxString& nick, const wxString& country, const int& cpu, Server& serv)
@@ -37,7 +39,8 @@ User::User( const wxString& nick, const wxString& country, const int& cpu, Serve
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( country ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User( const wxString& nick )
@@ -46,7 +49,8 @@ User::User( const wxString& nick )
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User( const wxString& nick, const wxString& country, const int& cpu )
@@ -55,7 +59,8 @@ User::User( const wxString& nick, const wxString& country, const int& cpu )
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( country ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User()
@@ -64,7 +69,8 @@ User::User()
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) )
+    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::~User(){
@@ -137,7 +143,7 @@ void User::SetCountry( const wxString& country )
 void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 {
 
-  // total 16 members to update.
+  // total 17 members to update.
 
   m_bstatus.team = status.team;
   m_bstatus.ally = status.ally;
@@ -149,6 +155,7 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
   m_bstatus.spectator = status.spectator;
   m_bstatus.ready = status.ready;
   if( !status.aishortname.IsEmpty() ) m_bstatus.aishortname = status.aishortname;
+  if( !status.airawname.IsEmpty() ) m_bstatus.airawname = status.airawname;
   if( !status.aiversion.IsEmpty() ) m_bstatus.aiversion = status.aiversion;
   if( !status.aitype > 0 ) m_bstatus.aitype = status.aitype;
   if( !status.owner.IsEmpty() ) m_bstatus.owner = status.owner;
@@ -192,13 +199,14 @@ wxString User::GetRankName(UserStatus::RankContainer rank)
           case UserStatus::RANK_5: return _("Experienced");
           case UserStatus::RANK_6: return _("Highly experienced");
           case UserStatus::RANK_7: return _("Veteran");
+		  case UserStatus::RANK_8: return _("Badly needs to get laid");
           default:                 return _("Unknown");
       }
 }
 
 float User::GetBalanceRank()
 {
-  return 1.0 + 0.1 * float( GetStatus().rank - UserStatus::RANK_1 ) / float( UserStatus::RANK_7 - UserStatus::RANK_1 );
+  return 1.0 + 0.1 * float( GetStatus().rank - UserStatus::RANK_1 ) / float( UserStatus::RANK_8 - UserStatus::RANK_1 );
 }
 
 wxString User::GetClan()

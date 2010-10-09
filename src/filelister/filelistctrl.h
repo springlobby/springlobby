@@ -3,57 +3,60 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-#include "filelistfilter.h"
-
-#include "../customlistctrl.h"
-#include <wx/intl.h>
+#include "../customvirtlistctrl.h"
 
 class wxMenu;
 class wxListEvent;
 class wxCommandEvent;
 class FileListDialog;
+class PlasmaResourceInfo;
 
 /** \brief list currently available torrents on tracker */
-class FileListCtrl : public CustomListCtrl
+class FileListCtrl : public CustomVirtListCtrl< const PlasmaResourceInfo* ,FileListCtrl>
 {
   public:
-    FileListCtrl( wxWindow* parent, FileListDialog* fld );
+    FileListCtrl( FileListDialog* fld );
     ~FileListCtrl();
 
-    typedef std::vector<wxString> HashVector;
-
-    void Sort();
+    typedef std::vector<wxString> InternalNameVector;
 
     void OnListRightClick( wxListEvent& event );
-    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
-    void OnColClick( wxListEvent& event );
-    void GetSelectedHashes(HashVector&);
-    void SetColumnWidths();
-    virtual void HighlightItem( long item );
+//    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
+//    void OnColClick( wxListEvent& event );
+    void GetSelectedHashes(InternalNameVector&);
+    bool AddFile( DataType info );
+
+    //these are overloaded to use list in virtual style
+    wxString GetItemText(long item, long column) const;
+    int GetItemColumnImage(long item, long column) const;
+    wxListItemAttr * GetItemAttr(long item) const;
 
   protected:
-    static int wxCALLBACK CompareNameUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareNameDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareHashUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareHashDOWN(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareTypeUP(long item1, long item2, long sortData);
-    static int wxCALLBACK CompareTypeDOWN(long item1, long item2, long sortData);
 
+    //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
+    //! utils func for comparing user status, so the CompareOneCrit doesn't get too crowded
+    static int CompareUserStatus( DataType u1, DataType u2 );
+    //! required per base clase
+    virtual void Sort( );
+
+    int GetIndexFromData( const DataType& data ) const;
+
+  protected:
     wxMenu* m_popup;
-//    Ui& m_ui;
-//    static Ui* m_ui_for_sort;
 
     FileListDialog* m_parent_dialog;
-    static FileListDialog* s_parent_dialog;
+
+    enum
+    {
+        FILELIST_COL_CLICK = wxID_HIGHEST,
+
+    };
 
     DECLARE_EVENT_TABLE()
 };
 
-enum
-{
-    FILELIST_COL_CLICK = wxID_HIGHEST,
 
-};
 
 #endif
 
@@ -61,9 +64,9 @@ enum
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

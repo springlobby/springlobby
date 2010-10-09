@@ -44,12 +44,10 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
 
 
   protected:
-    static int wxCALLBACK CompareStatusDOWN(long item1, long item2, long sortData);
-
     static int CompareStatus( DataType u1, DataType u2 );
     static int ComparePlayer( DataType u1, DataType u2 );
 
-    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
     int GetIndexFromData( const DataType& data ) const;
 
     wxMenu* m_popup;
@@ -65,9 +63,9 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

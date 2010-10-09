@@ -18,7 +18,7 @@ SinglePlayerBattle::SinglePlayerBattle( MainSinglePlayerTab& msptab ):
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();
-  CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
+    CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
 }
 
 
@@ -34,14 +34,14 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   if ( (update & HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
   if ( (update & HI_Map_Changed) != 0 )
   {
-    SetLocalMap( usync().GetMapEx( usync().GetMapIndex( m_host_map.name ) ) );
-    CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, GetHostMapName() );
+	LoadMap();
     m_sptab.ReloadMapOptContrls();
+    Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::PrivateOptions , _T("mapname") ) );
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
-    for ( unsigned int num = 1; num < GetNumBots(); num++ ) KickPlayer( GetUser( num ) ); // remove all bots
-    CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, GetHostModName() );
+    RemoveUnfittingBots();
+	LoadMod();
     wxString presetname = sett().GetModDefaultPresetName( GetHostModName() );
     if ( !presetname.IsEmpty() )
     {
@@ -49,14 +49,14 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
       SendHostInfo( HI_Send_All_opts );
     }
     m_sptab.ReloadModOptContrls();
-    Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::PrivateOptions , _T("mapname") ) );
+    Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::PrivateOptions , _T("modname") ) );
   }
   if ( (update & HI_Send_All_opts) != 0 )
   {
     for ( int i = 0; i < (int)OptionsWrapper::LastOption; i++)
     {
-      std::map<wxString,wxString> options = CustomBattleOptions().getOptionsMap( (OptionsWrapper::GameOption)i );
-      for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
+      const std::map<wxString,wxString>& options = CustomBattleOptions().getOptionsMap( (OptionsWrapper::GameOption)i );
+      for ( std::map<wxString,wxString>::const_iterator itor = options.begin(); itor != options.end(); ++itor )
       {
         Update(  wxString::Format(_T("%d_%s"), i , itor->first.c_str() ) );
       }
@@ -64,6 +64,20 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   }
 }
 
+void SinglePlayerBattle::RemoveUnfittingBots()
+{
+    wxArrayString old_ais = usync().GetAIList( m_previous_local_mod_name );
+    wxArrayString new_ais = usync().GetAIList( m_local_mod.name );
+    for ( size_t i = 0; i < old_ais.GetCount(); ++i) {
+        if ( new_ais.Index(old_ais[i]) == wxNOT_FOUND  ) {
+            for( size_t j = 0; j < GetNumUsers(); ++j  ) {
+                User& u = GetUser( j );
+                if ( u.GetBattleStatus().airawname == old_ais[i] )
+                    KickPlayer( u );
+            }
+        }
+    }
+}
 
 void SinglePlayerBattle::Update( const wxString& Tag )
 {

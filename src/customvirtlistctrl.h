@@ -5,11 +5,8 @@
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
 #else
-//disabled until further fixes
     #include "Helper/listctrl.h"
     typedef SL_Extern::wxGenericListCtrl ListBaseType;
-//    #include <wx/listctrl.h>
-//    typedef wxListCtrl ListBaseType;
 #endif
 
 #include <wx/timer.h>
@@ -24,6 +21,15 @@
 #include "useractions.h"
 #include "Helper/sortutil.h"
 #include "utils/isink.h"
+
+const wxEventType ListctrlDoSortEventType = wxNewEventType();
+
+class ListctrlSortEvent : public wxCommandEvent {
+public:
+	ListctrlSortEvent( int event_id = wxNewId() )
+	 : wxCommandEvent( ListctrlDoSortEventType, event_id )
+	{}
+};
 
 class SLTipWindow;
 
@@ -42,7 +48,10 @@ public:
         DataType;
 
 protected:
-    typedef UserActions::ActionType ActionType;
+	typedef CustomVirtListCtrl< DataImp, ListCtrlImp >
+		BaseType;
+	typedef UserActions::ActionType
+		ActionType;
     //! used to display tooltips for a certain amount of time
     wxTimer m_tiptimer;
     //! used to block sorting while mouse is moving
@@ -58,8 +67,17 @@ protected:
 
     struct colInfo {
         colInfo(int n, wxString l, wxString t, bool c, int s):
-            col_num(n),label(l),tip(t),can_resize(c),size(s) {}
-        colInfo(){}
+            col_num(n),
+			label(l),
+            tip(t),
+            can_resize(c),
+            size(s)
+		{}
+        colInfo():
+            col_num(0),
+            can_resize(false),
+            size(0)
+		{}
 
         int col_num;
         wxString label;
@@ -135,39 +153,41 @@ protected:
     /** generic comparator that gets it's real functionality
      * in derived classes via comapre callbakc func that
      * performs the actual comparison of two items **/
-    template < class ObjImp >
+	template < class ObjImp >
     struct ItemComparator
     {
         typedef ObjImp ObjType;
         SortOrder& m_order;
-        typedef int (*CmpFunc)  ( ObjType u1, ObjType u2, int, int );
+		typedef int (ListCtrlImp::*CmpFunc)  ( ObjType u1, ObjType u2, int, int ) const;
         CmpFunc m_cmp_func;
         const unsigned int m_num_criteria;
+		const BaseType* m_listctrl;
 
         /** \param order SortOrder map that defines which columns should be sorted in what directions
          * \param func the comparison callback func. Should return -1,0,1 for less,equal,greater
          * \param num_criteria set to 1,2 to limit sub-ordering
          * \todo make order const reference to eliminate assumption about existence of entries
          */
-        ItemComparator( SortOrder& order,CmpFunc func, const unsigned int num_criteria = 3 )
+		ItemComparator( const BaseType* listctrl, SortOrder& order,CmpFunc func, const unsigned int num_criteria = 3 )
             :m_order(order),
             m_cmp_func(func),
-            m_num_criteria(num_criteria)
+			m_num_criteria(num_criteria),
+			m_listctrl( listctrl )
         {}
 
         bool operator () ( ObjType u1, ObjType u2 ) const
         {
-            int res = m_cmp_func( u1, u2, m_order[0].col, m_order[0].direction );
+			int res = (m_listctrl->asImp().*m_cmp_func)( u1, u2, m_order[0].col, m_order[0].direction );
             if ( res != 0 )
                 return res < 0;
 
             if ( m_num_criteria > 1 ) {
-                res = m_cmp_func( u1, u2, m_order[1].col, m_order[1].direction );
+				res = (m_listctrl->asImp().*m_cmp_func)( u1, u2, m_order[1].col, m_order[1].direction );
                 if ( res != 0 )
                     return res < 0;
 
                 if ( m_num_criteria > 2 ) {
-                    res = m_cmp_func( u1, u2, m_order[2].col, m_order[2].direction );
+					res = (m_listctrl->asImp().*m_cmp_func)( u1, u2, m_order[2].col, m_order[2].direction );
                     if ( res != 0 )
                         return res < 0;
                 }
@@ -199,7 +219,7 @@ public:
      */
 
 public:
-    CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
+	CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
                     const wxSize& sz,long style, const wxString& name, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
                     UserActions::ActionType hlaction = UserActions::ActHighlight, bool periodic_sort = false, unsigned int periodic_sort_interval = 5000 /*miliseconds*/);
 
@@ -300,10 +320,10 @@ public:
      void ReverseOrder();
 
      void OnQuit( GlobalEvents::GlobalEventData data );
+	 void StartTimer();
+	 void StopTimer();
 
 protected:
-    typedef CustomVirtListCtrl< DataImp, ListCtrlImp >
-        BaseType;
     typedef std::vector< DataImp >
         DataVector;
     typedef typename DataVector::iterator
@@ -325,14 +345,16 @@ protected:
     //! the Comparator object passed to the SLInsertionSort function
     ItemComparator<DataType> m_comparator;
 
-    bool RemoveItem( const DataImp item );
-    bool AddItem( const DataImp item );
+    bool RemoveItem( const DataImp& item );
+    bool AddItem( const DataImp& item );
 
     long m_periodic_sort_timer_id;
     wxTimer m_periodic_sort_timer;
     bool m_periodic_sort;
     unsigned int m_periodic_sort_interval;
     void OnPeriodicSort( wxTimerEvent& evt );
+	//! this is the sink for a custom event that can be used for async sort
+	void OnSortEvent( wxCommandEvent& evt );
 
 public:
     DECLARE_EVENT_TABLE()
@@ -365,9 +387,9 @@ public:
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

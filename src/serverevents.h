@@ -1,34 +1,20 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 #define SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 
-//almost only needed for NAtType enum def
-#include "battle.h"
+#include "iserverevents.h"
 #include <wx/event.h>
 #include <wx/longlong.h>
 
 class Ui;
 struct UserStatus;
 struct UserBattleStatus;
-class Server;
-
-// FIXME this is defined elsewhere, should use a different kind of type so we could use forward decl
-typedef int Sockerror;
-
-typedef int Protocolerror;
-
-struct MessageSpamCheck
-{
-  time_t lastmessage;
-  unsigned int count;
-};
-
 class Battle;
 
 //! @brief Class that implements server event behaviour.
-class ServerEvents : public wxEvtHandler
+class ServerEvents : public IServerEvents, public wxEvtHandler
 {
   public:
-    ServerEvents( Server& serv) : m_serv(serv) {}
+    ServerEvents( Server& serv) : m_serv(serv), m_autolaunch(false), m_autoclose(false) {}
     ~ServerEvents() {}
 
   // Uicontrol interface
@@ -55,14 +41,14 @@ class ServerEvents : public wxEvtHandler
                          bool haspass, int rank, const wxString& maphash, const wxString& map,
                          const wxString& title, const wxString& mod );
 
-    void OnUserJoinedBattle( int battleid, const wxString& nick );
+	void OnUserJoinedBattle( int battleid, const wxString& nick, const wxString& userScriptPassword );
     void OnUserLeftBattle( int battleid, const wxString& nick );
     void OnBattleInfoUpdated( int battleid, int spectators, bool locked, const wxString& maphash, const wxString& map );
     void OnSetBattleInfo( int battleid, const wxString& param, const wxString& value );
     void OnBattleInfoUpdated( int battleid );
     void OnBattleClosed( int battleid );
 
-    void OnJoinedBattle( int battleid, const wxString& hash );
+	void OnJoinedBattle( int battleid, const wxString& hash );
     void OnHostedBattle( int battleid );
 
     void OnStartHostedBattle( int battleid );
@@ -100,6 +86,7 @@ class ServerEvents : public wxEvtHandler
     void OnRing( const wxString& from );
 
     void OnServerMessage( const wxString& message );
+	void OnServerBroadcast( const wxString& message );
     void OnServerMessageBox( const wxString& message );
     void OnChannelMessage( const wxString& channel, const wxString& msg );
 
@@ -144,9 +131,9 @@ class ServerEvents : public wxEvtHandler
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

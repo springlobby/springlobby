@@ -6,17 +6,17 @@
 class wxAuiManagerDupe {
     public:
         wxAuiManagerDupe(wxWindow* /*managed_wnd*/ = NULL, unsigned int /*flags*/ = 0 ) {}
-        bool AddPane(wxWindow* /*window*/, int /*direction*/ = wxLEFT, const wxString& /*caption */= wxEmptyString) { return false; }
-        bool DetachPane(wxWindow* /*window*/) { return false; }
-        void UnInit() {}
-        wxString SavePerspective() { return wxEmptyString; }
-        bool LoadPerspective(const wxString& /*perspective*/, bool /*update*/ = true) { return false; }
+        bool AddPane(wxWindow* /*window*/, int /*direction*/ = wxLEFT, const wxString& /*caption */= wxEmptyString) const { return false; }
+        bool DetachPane(wxWindow* /*window*/) const { return false; }
+        void UnInit() const {}
+        wxString SavePerspective() const { return wxEmptyString; }
+        bool LoadPerspective(const wxString& /*perspective*/, bool /*update*/ = true) const { return false; }
 };
 
 class AuiManagerContainer
 {
   public:
-    AuiManagerContainer() {}
+    AuiManagerContainer() : manager(NULL) {}
 
     typedef wxAuiManager
         ManagerType;
@@ -32,9 +32,9 @@ AuiManagerContainer& GetAui();
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

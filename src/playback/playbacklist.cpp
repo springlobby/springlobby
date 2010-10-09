@@ -13,10 +13,10 @@ ListImp& playbacklist()
 
 template <class PlaybackImp>
 typename PlaybackList<PlaybackImp>::PlaybackType&
-    PlaybackList<PlaybackImp>::AddPlayback( const PlaybackType& replay )
+	PlaybackList<PlaybackImp>::AddPlayback( const size_t index )
 {
-    m_replays[replay.id] = replay;
-    return m_replays[replay.id];
+	m_replays[index] = PlaybackType( index );
+	return m_replays[index];
 }
 
 template <class PlaybackImp>

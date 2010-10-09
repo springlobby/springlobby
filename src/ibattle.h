@@ -20,28 +20,34 @@ class wxTimer;
 
 struct BattleStartRect
 {
-    BattleStartRect()
+    BattleStartRect() :
+        toadd(false),
+        todelete(false),
+        toresize(false),
+        exist(false),
+        ally(-1),
+        top(-1),
+        left(-1),
+        right(-1),
+        bottom(-1)
     {
-        toadd = false;
-        todelete = false;
-        exist = false;
-        toresize = false;
     }
+
     bool toadd;
     bool todelete;
     bool toresize;
     bool exist;
-
-    bool IsOk()
-    {
-        return exist && !todelete;
-    }
 
     int ally;
     int top;
     int left;
     int right;
     int bottom;
+
+    bool IsOk() const
+    {
+        return exist && !todelete;
+    }
 };
 
 
@@ -64,7 +70,7 @@ enum BattleType
 struct BattleOptions
 {
 	BattleOptions() :
-		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),isproxy(false),lockexternalbalancechanges(false),
+		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),proxyhost(_T("")),userelayhost(false),lockexternalbalancechanges(false),
 		nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
 		guilistactiv(false) {}
 
@@ -73,7 +79,8 @@ struct BattleOptions
 	BattleType battletype;
 	bool ispassworded;
 	int rankneeded;
-	bool isproxy;
+	wxString proxyhost;
+	bool userelayhost;
 	bool lockexternalbalancechanges;
 
 	wxString founder;
@@ -187,8 +194,9 @@ public:
     virtual wxString GetHostMapName() const;
     virtual wxString GetHostMapHash() const;
 
-    virtual void SetIsProxy( bool value );
-    virtual bool IsProxy();
+	virtual void SetProxy( const wxString& proxyhost );
+	virtual wxString GetProxy();
+	virtual bool IsProxy();
 
     virtual bool IsSynced();
 
@@ -208,12 +216,12 @@ public:
     virtual bool MapExists() const;
     virtual bool ModExists() const;
 
-    virtual BattleStartRect GetStartRect( unsigned int allyno );
+    virtual BattleStartRect GetStartRect( unsigned int allyno ) const;
     User& OnUserAdded( User& user );
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
-    bool IsEveryoneReady();
+	bool IsEveryoneReady() const;
 
     void ForceSide( User& user, int side );
     void ForceAlly( User& user, int ally );
@@ -231,9 +239,9 @@ public:
     virtual void StartRectResized( unsigned int allyno );
     virtual void StartRectAdded( unsigned int allyno );
     virtual void ClearStartRects();
-    virtual unsigned int GetNumRects();
-	virtual unsigned int GetLastRectIdx();
-	virtual unsigned int GetNextFreeRectIdx();
+    virtual unsigned int GetNumRects() const;
+	virtual unsigned int GetLastRectIdx() const;
+	virtual unsigned int GetNextFreeRectIdx() const;
 
     virtual int GetFreeTeam( bool excludeme = false );
 
@@ -257,10 +265,8 @@ public:
 
     virtual void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
-    virtual OptionsWrapper& CustomBattleOptions()
-    {
-        return m_opt_wrap;
-    }
+    virtual OptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
+    virtual const OptionsWrapper& CustomBattleOptions() const { return m_opt_wrap; }
 
     virtual bool LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );
@@ -278,9 +284,14 @@ public:
 
 	User& GetFounder() const { return GetUser( m_opts.founder ); }
 
-		bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
+	bool IsFull() const { return GetMaxPlayers() == GetNumActivePlayers(); }
 
 		virtual unsigned int GetNumPlayers() const;
+		virtual unsigned int GetNumActivePlayers() const;
+
+		virtual unsigned int GetNumReadyPlayers() const { return m_players_ready; }
+		virtual unsigned int GetNumSyncedPlayers() const { return m_players_sync; }
+		virtual unsigned int GetNumOkPlayers() const { return m_players_ok; }
 
 		virtual int GetBattleId() const { return m_opts.battleid; }
 
@@ -378,6 +389,8 @@ public:
 		virtual std::map<int, int> GetAllySizes() { return m_ally_sizes; }
 		virtual std::map<int, int> GetTeamSizes() { return m_teams_sizes; }
 
+		std::map<wxString, wxString> m_script_tags; // extra script tags to reload in the case of map/mod reload
+
 protected:
 
     void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
@@ -396,6 +409,7 @@ protected:
     UnitSyncMod m_local_mod;
     UnitSyncMap m_host_map;
     UnitSyncMod m_host_mod;
+    wxString m_previous_local_mod_name;
 
     std::map<wxString, int> m_restricted_units;
 
@@ -411,8 +425,9 @@ protected:
 
     std::map<wxString, time_t> m_ready_up_map; // player name -> time counting from join/unspect
 
-    int m_players_ready;
-    int m_players_sync;
+	unsigned int m_players_ready;
+	unsigned int m_players_sync;
+	unsigned int m_players_ok; // players which are ready and in sync
     std::map<int, int> m_teams_sizes; // controlteam -> number of people in
     std::map<int, int> m_ally_sizes; // allyteam -> number of people in
 
@@ -435,9 +450,9 @@ protected:
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

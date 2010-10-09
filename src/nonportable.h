@@ -7,7 +7,6 @@
   #define USYNC_CALL_CONV __stdcall
   #define SPRING_BIN _T("spring.exe")
   #define DOS_TXT true
-  #define SL_DUMMY_COL //for custom virt listctrls
 #elif defined(__WXGTK__) || defined(__WXX11__)
   #define SPRING_VERSION_PARAM _T("-V")
   #define CHOOSE_EXE _("Any file (*)|*")
@@ -26,9 +25,9 @@
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

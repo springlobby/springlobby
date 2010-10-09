@@ -62,7 +62,7 @@ const UserListctrl::UserDataMap& UserListctrl::GetUserData() const
     return m_userdata;
 }
 
-void UserListctrl::AddUser( const UserData userdata )
+void UserListctrl::AddUser( const UserData& userdata )
 {
     SetSelectionRestorePoint();
 
@@ -94,7 +94,7 @@ void UserListctrl::Sort()
   }
 }
 
-void UserListctrl::SetTipWindowText( const long /*unused*/, const wxPoint /*unused*/){}
+void UserListctrl::SetTipWindowText( const long /*unused*/, const wxPoint& /*unused*/){}
 
 wxArrayString UserListctrl::GetUserNicks( ) const
 {
@@ -146,7 +146,7 @@ void UserListctrl::RemoveUsers( const UserDataMap& userdata )
 
 }
 
-UserListctrl::UserDataMapIter UserListctrl::FindData( const UserData userdata )
+UserListctrl::UserDataMapIter UserListctrl::FindData( const UserData& userdata )
 {
     for ( UserDataMapIter it = m_userdata.begin(); it != m_userdata.end(); ++it)
     {
@@ -156,7 +156,7 @@ UserListctrl::UserDataMapIter UserListctrl::FindData( const UserData userdata )
     return m_userdata.end();
 }
 
-bool UserListctrl::IsInList( const UserData userdata )
+bool UserListctrl::IsInList( const UserData& userdata )
 {
     UserDataMapConstIter it = FindData( userdata );
     return ( it != m_userdata.end() );

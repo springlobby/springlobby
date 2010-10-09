@@ -139,6 +139,17 @@ protected:
 
 };
 
+class AutocloseMessageBox : public TimedMessageBox {
+public:
+	AutocloseMessageBox(wxWindow *parent, const wxString& message,
+			const wxString& caption = wxMessageBoxCaptionStr,
+			unsigned int delay = 3000, // miliseconds
+			long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
+	virtual ~AutocloseMessageBox();
+protected:
+	void OnUnlock( wxTimerEvent& evt );
+};
+
 /** \brief used to display server messages when no chatwindow has focus
  */
 class ServerMessageBox : public wxDialog
@@ -235,9 +246,9 @@ int GetSingleChoiceIndex( const wxString& message,
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

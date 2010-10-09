@@ -19,7 +19,7 @@ SLArtProvider::SLArtProvider()
     m_fixed_tab_width = 100;
     m_tab_ctrl_height = 0;
 
-#ifdef __WXMAC__
+#if defined(__WXMAC__) && defined(__WXOSX_CARBON__)
     wxBrush toolbarbrush;
     toolbarbrush.MacSetTheme( kThemeBrushToolbarBackground );
     wxColour base_colour = toolbarbrush.GetColour();

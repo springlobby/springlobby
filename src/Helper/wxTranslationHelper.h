@@ -29,8 +29,8 @@ public:
 	bool Load();
 	void Save();
 
-	const wxString & GetSearchPath();
-	void SetSearchPath( wxString& value );
+	const wxString & GetSearchPath() const;
+	void SetSearchPath( const wxString& value );
 
 private:
     wxApp& m_App;
@@ -45,9 +45,9 @@ private:
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

@@ -2,6 +2,7 @@
 #include "conversion.h"
 
 #include <wx/arrstr.h>
+#include <wx/tokenzr.h>
 
 int ConvertWXArrayToC(const wxArrayString& aChoices, wxString **choices)
 {
@@ -20,4 +21,11 @@ TransformedArrayString::TransformedArrayString( const wxArrayString& original, w
 {
     for ( size_t i = 0; i < original.Count(); i++ )
         Add( trans_op( original[i] ) );
+}
+
+StringtokenizerVectorized::StringtokenizerVectorized( wxStringTokenizer tokenizer )
+{
+    reserve( tokenizer.CountTokens() );
+    while ( tokenizer.HasMoreTokens() )
+        push_back( tokenizer.GetNextToken() );
 }

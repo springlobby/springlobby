@@ -6,7 +6,7 @@
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -40,6 +40,8 @@ class Springsettings : public wxApp
 
         long m_log_verbosity;
         bool m_log_console;
+		bool m_log_file;
+		wxString m_log_file_path;
         bool m_log_window_show;
         bool m_crash_handle_disable;
 

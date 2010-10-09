@@ -108,11 +108,6 @@ void UserActions::UpdateUI()
     {
       ui().mw().GetJoinTab().GetBattleRoomTab().UpdateHighlights();
     } catch(...){}
-
-    try
-    {
-      ui().mw().GetOptionsTab().GetGroupOptionsPanel().Update();
-    } catch(...){}
 }
 
 wxArrayString UserActions::GetGroupNames() const
@@ -153,14 +148,16 @@ void UserActions::ChangeAction( const wxString& group, const ActionType action, 
     UpdateUI();
 }
 
-UserActions::ActionType UserActions::GetGroupAction( const wxString& group )
+UserActions::ActionType UserActions::GetGroupAction( const wxString& group ) const
 {
-    return m_groupActions[group];
+	const GroupActionMap::const_iterator res = m_groupActions.find(group);
+    return res->second;
 }
 
-wxString UserActions::GetGroupOfUser( const wxString& user )
+wxString UserActions::GetGroupOfUser( const wxString& user ) const
 {
-    return m_peopleGroup[ user ];
+	const PeopleGroupMap::const_iterator res = m_peopleGroup.find(user);
+    return res->second;
 }
 
 void UserActions::SetGroupColor( const wxString& group, const wxColour& color )

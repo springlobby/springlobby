@@ -6,7 +6,7 @@ d     This file is part of springsettings,
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -31,22 +31,22 @@ d     This file is part of springsettings,
 #include <wx/combobox.h>
 #include <wx/button.h>
 
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 #include "presets.h"
 #include "frame.h"
 #include "../settings.h"
 #include "../springunitsynclib.h"
 
-const wxString infoTextContent= _("These options let you roughly control Spring's rendering.\n"
-									"For more speed try lowering the settings.\n"
-									"Full control over all settings is available in the\n"
-									"\"Expert mode\", either click on the button on the\n"
-									"right or use the \"Mode\" menu in the top menubar.\n"
-									"You can go back to this mode at any time by choosing\n"
-									"\"Simple mode\" from the \"Mode\" menu.\n"
-									"If you encounter error messages concerning graphics\n"
-									"when running Spring it might be necessary to disable\n "
-									"some options in expert mode.\n");
+const wxString infoTextContent= _("These options let you roughly control Spring's rendering.\n\
+									For more speed try lowering the settings.\n\
+									Full control over all settings is available in the\n\
+									\"Expert mode\", either click on the button on the\n\
+									right or use the \"Mode\" menu in the top menubar.\n\
+									You can go back to this mode at any time by choosing\n\
+									\"Simple mode\" from the \"Mode\" menu.\n\
+									If you encounter error messages concerning graphics\n\
+									when running Spring it might be necessary to disable\n \
+									some options in expert mode.\n");
 
 const wxString renderQuality_CBX_lbl = _("Graphics quality");
 const wxString renderDetail_CBX_lbl = _("Graphics detail");
@@ -96,10 +96,10 @@ void tab_simple::initOptSizer(wxFlexGridSizer* sizer ) {
 
 	sizer->Add(new wxStaticText(this, -1,  videoMode_CBX_lbl ), 0,wxALL);
 	getSetUpResolutionCBX();
-	videoMode_CBX->SetToolTip(_("Select the resolution fitting your monitor(s).\n"
-			"Selecting a dual screen resolution will automatically enable dual screen mode.\n"
-			"If the appropiate resolution is not available you can set it manually in expert mode.\n"
-			"Please also contact the author so it can be added in future releases."));
+	videoMode_CBX->SetToolTip(_("Select the resolution fitting your monitor(s).\n\
+			Selecting a dual screen resolution will automatically enable dual screen mode.\n\
+			If the appropiate resolution is not available you can set it manually in expert mode.\n\
+			Please also contact the author so it can be added in future releases."));
 	sizer->Add(videoMode_CBX, 0, wxBOTTOM, 15);
 
 	sizer->Add(new wxStaticText(this, -1, (AO_SLI[1].lbl)), 0, wxTOP, 15);

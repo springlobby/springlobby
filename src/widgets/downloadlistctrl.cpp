@@ -13,8 +13,9 @@ END_EVENT_TABLE()
 
 WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID /*unused*/, const wxString& /*unused*/,
                     long /*unused*/, const wxPoint&/*unused*/, const wxSize& /*unused*/)
-    : WidgetDownloadListctrl::BaseType(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"), 3, &CompareOneCrit)
+	: WidgetDownloadListctrl::BaseType(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
+									   wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("WidgetDownloadListCtrl"),
+									   3, &WidgetDownloadListctrl::CompareOneCrit)
 {
     const int as = wxLIST_AUTOSIZE;
 #if defined(__WXMSW__)
@@ -45,7 +46,7 @@ WidgetDownloadListctrl::~WidgetDownloadListctrl()
     //dtor
 }
 
-int WidgetDownloadListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+int WidgetDownloadListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
         case 0: return dir * u1.name.CmpNoCase( u2.name );
@@ -58,7 +59,7 @@ int WidgetDownloadListctrl::CompareOneCrit( DataType u1, DataType u2, int col, i
     }
 }
 
-void WidgetDownloadListctrl::AddWidget( const Widget widget )
+void WidgetDownloadListctrl::AddWidget( const Widget& widget )
 {
     if ( AddItem( widget ) )
         return;

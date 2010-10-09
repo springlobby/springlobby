@@ -57,35 +57,16 @@ class BattleListFilter : public wxPanel
     BUTTON_MODE_BIGGER,
     BUTTON_MODE_SMALLER
   };
+
 	protected:
 
     wxString _GetButtonSign(ButtonMode value);
 		ButtonMode _GetNextMode(ButtonMode value);
-		ButtonMode _GetButtonMode(wxString sign);
+		ButtonMode _GetButtonMode(const wxString& sign);
 		bool _IntCompare(int a,int b,ButtonMode mode);
 
     /** A function callback used to transform an input string. */
     typedef wxString (*StringTransformFunction)(const wxString& input);
-
-    /** Test whether an input string matches a filter string.
-     *  The filter will be tried as both a fixed string, and as a regular expression.
-     *
-     * @param input The input string to test.
-     *
-     * @param filter_string A fixed string to match against.
-     *
-     * @param filter_regex A regular expression object pointer.  If
-     * the expression is valid, it will be used to match the input if
-     * the fixed string does not.
-     *
-     * @param additional_transform A function that should be called to
-     * generate an additional <em>input</em> string.
-     *
-     * @param case_sensitive @c true if the comparison should be done case-sensitively.
-     *
-     * @return @c true if the input or generated input matches the filter string, and @c false otherwise.
-     */
-    bool StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex = NULL, StringTransformFunction additional_transform = NULL, bool case_sensitive = false);
 
     bool m_activ;
 
@@ -161,7 +142,29 @@ class BattleListFilter : public wxPanel
 
         wxCheckBox* m_filter_highlighted;
 
-    DECLARE_EVENT_TABLE();
+	public:
+		/** Test whether an input string matches a filter string.
+		*  The filter will be tried as both a fixed string, and as a regular expression.
+		*
+		* @param input The input string to test.
+		*
+		* @param filter_string A fixed string to match against.
+		*
+		* @param filter_regex A regular expression object pointer.  If
+		* the expression is valid, it will be used to match the input if
+		* the fixed string does not.
+		*
+		* @param additional_transform A function that should be called to
+		* generate an additional <em>input</em> string.
+		*
+		* @param case_sensitive @c true if the comparison should be done case-sensitively.
+		*
+		* @return @c true if the input or generated input matches the filter string, and @c false otherwise.
+		*/
+		static bool StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex = NULL, StringTransformFunction additional_transform = NULL, bool case_sensitive = false);
+
+	protected:
+		DECLARE_EVENT_TABLE();
 };
 
 enum
@@ -192,9 +195,9 @@ enum
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

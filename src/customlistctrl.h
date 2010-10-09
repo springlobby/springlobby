@@ -88,7 +88,7 @@ protected:
     //! list should be sorted
     bool m_dirty_sort;
 
-    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 
     ColumnMap m_column_map;
 
@@ -177,9 +177,9 @@ public:
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

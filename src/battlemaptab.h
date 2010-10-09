@@ -21,7 +21,6 @@ class wxListCtrl;
 class wxChoice;
 class wxRadioBox;
 class wxMouseEvent;
-class MapSelectDialog;
 
 /** \brief select map, draw startboxes (in sp define startpos)
  * \todo DOCMEMORE */
@@ -57,7 +56,6 @@ class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< Battl
     wxButton* m_browse_btn;
     wxRadioBox* m_start_radios;
     wxListCtrl* m_map_opts_list;
-    MapSelectDialog* m_map_dlg;
 
     enum {
       BMAP_MAP_SEL = wxID_HIGHEST,
@@ -73,9 +71,9 @@ class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< Battl
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

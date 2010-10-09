@@ -6,7 +6,7 @@
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -30,7 +30,7 @@
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 
 void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
 

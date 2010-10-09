@@ -7,8 +7,10 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <wx/log.h>
+#include <wx/tokenzr.h>
+#include <wx/sstream.h>
 #include <vector>
-
+#include "curlhelper.h"
 
 double LevenshteinDistance(wxString s, wxString t)
 {
@@ -56,3 +58,64 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
     if (minDistanceIndex == -1) return _T("");
     return a[minDistanceIndex];
 }
+
+
+wxString Paste2Pastebin( const wxString& message )
+{
+	#ifndef __WXMAC__
+	wxStringOutputStream response;
+	wxStringOutputStream rheader;
+	CURL *curl_handle;
+	curl_handle = curl_easy_init();
+	struct curl_slist* m_pHeaders = NULL;
+	struct curl_httppost*   m_pPostHead = NULL;
+	struct curl_httppost*   m_pPostTail = NULL;
+	static const char* url = "http://pastebin.com/api_public.php";
+	// these header lines will overwrite/add to cURL defaults
+	m_pHeaders = curl_slist_append(m_pHeaders, "Expect:") ;
+
+	//we need to keep these buffers around for curl op duration
+	wxCharBuffer message_buffer = message.mb_str();
+	wxCharBuffer nick_buffer = sett().GetServerAccountNick( sett().GetDefaultServer() ).mb_str();
+
+	curl_formadd(&m_pPostHead,
+				 &m_pPostTail,
+				 CURLFORM_COPYNAME, "paste_code",
+				 CURLFORM_COPYCONTENTS, (const char*)message_buffer,
+				 CURLFORM_END);
+	curl_formadd(&m_pPostHead,
+				 &m_pPostTail,
+				 CURLFORM_COPYNAME, "paste_subdomain",
+				 CURLFORM_COPYCONTENTS, "sl",
+				 CURLFORM_END);
+	curl_formadd(&m_pPostHead,
+				 &m_pPostTail,
+				 CURLFORM_COPYNAME, "paste_name",
+				 CURLFORM_COPYCONTENTS, (const char*)nick_buffer,
+				 CURLFORM_END);
+	curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
+	curl_easy_setopt(curl_handle, CURLOPT_URL, url );
+//	curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&response);
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEHEADER, (void *)&rheader);
+	curl_easy_setopt(curl_handle, CURLOPT_POST, TRUE);
+	curl_easy_setopt(curl_handle, CURLOPT_HTTPPOST, m_pPostHead);
+
+	CURLcode ret = curl_easy_perform(curl_handle);
+
+	wxLogError( rheader.GetString()  );
+
+  /* cleanup curl stuff */
+	curl_easy_cleanup(curl_handle);
+	curl_formfree(m_pPostHead);
+
+	wxString szResponse;
+	if(ret == CURLE_OK)
+		return response.GetString();
+	else
+	#endif
+		return wxEmptyString;
+}
+
+

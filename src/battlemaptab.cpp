@@ -47,8 +47,7 @@ END_EVENT_TABLE()
 
 BattleMapTab::BattleMapTab( wxWindow* parent, Battle* battle )
     : wxScrolledWindow( parent, -1 ),
-    m_battle( battle ),
-    m_map_dlg( 0 )
+	m_battle( battle )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battlemaptab" ) );
 
@@ -124,9 +123,6 @@ BattleMapTab::~BattleMapTab()
 {
 	if ( GetAui().manager )
         GetAui().manager->DetachPane( this );
-    if ( m_map_dlg ) {
-        m_map_dlg->EndModal( 0 );
-    }
 }
 
 void BattleMapTab::OnMouseWheel( wxMouseEvent& event )
@@ -162,7 +158,7 @@ void BattleMapTab::Update()
 	m_map_opts_list->SetItem( 4, 1, wxString::Format( _T( "%d" ), map.info.extractorRadius ) );
 	m_map_opts_list->SetItem( 5, 1, wxString::Format( _T( "%.3f" ), map.info.maxMetal ) );
 
-	int index = m_map_combo->FindString( RefineMapname( map.name ) );
+	int index = m_map_combo->FindString( map.name );
 	if ( index == wxNOT_FOUND ) return;
 	m_map_combo->SetSelection( index );
 }
@@ -204,7 +200,7 @@ void BattleMapTab::ReloadMaplist()
 // maplist.Sort(CompareStringIgnoreCase);
 
 	size_t nummaps = maplist.Count();
-	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( RefineMapname( maplist[i] ), i );
+	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( maplist[i], i );
 }
 
 
@@ -254,18 +250,17 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	wxLogDebugFunc( _T( "" ) );
-	m_map_dlg = new MapSelectDialog ( ( wxWindow* )&ui().mw() );
 
-	if ( m_map_dlg->ShowModal() == wxID_OK && m_map_dlg->GetSelectedMap() != NULL )
+	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
 	{
-		wxString mapname = m_map_dlg->GetSelectedMap()->name;
+		wxString mapname = mapSelectDialog().GetSelectedMap()->name;
 		wxLogDebugFunc( mapname );
 		if ( !m_battle->IsFounderMe() )
 		{
 			m_battle->DoAction( _T( "suggests " ) + mapname  );
 			return;
 		}
-		const int idx = m_map_combo->FindString( RefineMapname( mapname ), true /*case sensitive*/ );
+		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
 		if ( idx != wxNOT_FOUND )
             SetMap( idx );
 	}

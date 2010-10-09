@@ -21,7 +21,8 @@ struct UserStatus
       RANK_4,
       RANK_5,
       RANK_6,
-      RANK_7
+	  RANK_7,
+	  RANK_8
     };
 
   bool in_game;
@@ -42,7 +43,7 @@ struct UserPosition
 
 struct UserBattleStatus
 {
-  // when adding something to this struct, also modify User::UpdateBattleStatus()
+  //!!! when adding something to this struct, also modify User::UpdateBattleStatus() !!
   // total 17 members here
   int team;
   int ally;
@@ -54,15 +55,17 @@ struct UserBattleStatus
   bool spectator;
   bool ready;
   bool isfromdemo;
-	UserPosition pos; // for startpos = 4
-	// bot-only stuff
-	wxString owner;
-	wxString aishortname;
-	wxString aiversion;
-	int aitype;
+  UserPosition pos; // for startpos = 4
+  // bot-only stuff
+  wxString owner;
+  wxString aishortname;
+  wxString airawname;
+  wxString aiversion;
+  int aitype;
   // for nat holepunching
   wxString ip;
   unsigned int udpport;
+  wxString scriptPassword;
   bool IsBot() const { return !aishortname.IsEmpty(); }
   UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), isfromdemo(false), aitype(-1), udpport(0) {}
   bool operator == ( const UserBattleStatus& s ) const
@@ -206,9 +209,9 @@ class User : public CommonUser
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 
