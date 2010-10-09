@@ -15,19 +15,19 @@ class IconImageList : public wxImageList
   public:
     IconImageList();
 
-    int GetUserListStateIcon( const UserStatus& us, bool chanop, bool inbroom );
-    int GetUserBattleStateIcon( const UserStatus& us );
+	int GetUserListStateIcon( const UserStatus& us, bool chanop, bool inbroom ) const;
+	int GetUserBattleStateIcon( const UserStatus& us ) const;
 
-	int GetRankLimitIcon(  int rank, bool showlowest = true );
-	int GetRankIcon( const unsigned int& rank, const bool& showlowest = true );
-    int GetFlagIcon( const wxString& flagname );
+	int GetRankLimitIcon(  int rank, bool showlowest = true ) const;
+	int GetRankIcon( const unsigned int& rank, const bool& showlowest = true ) const;
+	int GetFlagIcon( const wxString& flagname ) const;
     int GetBattleStatusIcon( const IBattle& battle ) const;
     wxString GetBattleStatus(const IBattle& battle) const;
-    int GetHostIcon( const bool& spectator = false );
-    int GetColourIcon( const int& num );
+	int GetHostIcon( const bool& spectator = false ) const;
+	int GetColourIcon( const int& num );
     void SetColourIcon( const int& num, const wxColour& colour );
     int GetSideIcon( const wxString& modname, int side );
-    int GetReadyIcon( const bool& spectator, const bool& ready, const unsigned int& sync, const bool& bot );
+	int GetReadyIcon( const bool& spectator, const bool& ready, const unsigned int& sync, const bool& bot );
 
     int ICON_NONE;
 
