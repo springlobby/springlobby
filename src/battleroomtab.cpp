@@ -1170,7 +1170,7 @@ void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )
 	GetChatPanel().DidAction( nick, msg );
 }
 
-void BattleRoomTab::OnHostNew( wxCommandEvent& event )
+void BattleRoomTab::OnHostNew( wxCommandEvent& /*event*/ )
 {
 	if ( !ui().IsConnected() )
 	{

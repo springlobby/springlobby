@@ -80,13 +80,13 @@ public:
     virtual void Nullify()
     {
         public_ptr = NULL;
-    };
+	}
     virtual void Destroy()
     {
         public_ptr = NULL;
         delete private_ptr;
         private_ptr = NULL;
-    };
+	}
     T &GetInstance()
     {
         if ( constructing ) throw GlobalRecursiveError();

@@ -1127,7 +1127,7 @@ namespace
       GetMapExAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, int evtHandlerId )
         : GetMapImageAsyncResult( usync, mapname, evtHandlerId, 3 ) {}
   };
-};
+}
 
 
 void SpringUnitSync::PrefetchMap( const wxString& mapname )

@@ -23,6 +23,6 @@ int	spring_command::GetType() const
 	return this->type_id;
 }
 
-void spring_command::Exec(wxObject *obj, wxEvtHandler *client)
+void spring_command::Exec(wxObject */*obj*/, wxEvtHandler */*client*/)
 {
 }

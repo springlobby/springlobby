@@ -246,9 +246,9 @@ struct GameOptions
 class UnitSyncAsyncOps
 {
   public:
-    UnitSyncAsyncOps( wxEvtHandler* evtHandler ) {
-      m_id = usync().RegisterEvtHandler( evtHandler );
-    }
+	UnitSyncAsyncOps( wxEvtHandler* evtHandler )
+		: m_id( usync().RegisterEvtHandler( evtHandler ) )
+	{}
     ~UnitSyncAsyncOps() {
       usync().UnregisterEvtHandler( m_id );
     }

@@ -51,7 +51,7 @@ namespace
 			return a->GetPriority() < b->GetPriority();
 		}
 	};
-};
+}
 
 
 bool WorkItem::Cancel()

@@ -625,7 +625,7 @@ bool wxCmd::Load(wxConfigBase *p, const wxString &key)
 
 void wxCmdArray::Remove(size_t n)
 {
-    if (n < 0 || n >= GetCount())
+	if ( n >= GetCount())
         return;
 
     // first, delete the memory associated with the n-th wxCmd
@@ -1536,7 +1536,7 @@ void wxKeyConfigPanel::AddProfiles(const wxKeyProfileArray &arr)
         m_pKeyProfiles->Append(arr.Item(i)->GetName(), (void *)copy);
     }
 
-    SetSelProfile(arr.GetSelProfileIdx() >= 0 ? arr.GetSelProfileIdx() : 0);
+	SetSelProfile( arr.GetSelProfileIdx() );
 }
 
 void wxKeyConfigPanel::RemoveAllProfiles()

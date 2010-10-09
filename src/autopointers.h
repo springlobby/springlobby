@@ -8,10 +8,12 @@
 class Lockable {
 public:
     int lock_count;
-    Lockable():lock_count(0) {}
-    ;
-    virtual ~Lockable() {}
-    ;
+	Lockable():lock_count(0)
+	{}
+
+	virtual ~Lockable()
+	{}
+
     bool Locked() const {
         return lock_count>0;
     }
@@ -33,7 +35,7 @@ public:
     }
     inline ~StaticLocker() {
         T->UnLock();
-    };
+	}
 };
 
 class Locker {
@@ -44,7 +46,7 @@ class Locker {
     }
     inline ~Locker() {
         lock.UnLock();
-    };
+	}
 };
 
 class RefcountedContainer {
@@ -53,7 +55,7 @@ public:
 
     RefcountedContainer() {
     	//ref_lock.Lock();
-    	};
+		}
     /*
     RefcountedContainer* operator new( size_t zSiz){
     	RefcountedContainer* tmp=new RefcountedContainer();
@@ -107,11 +109,11 @@ explicit RefcountedPointer(RefcountedPointer<U> p){
         else {
             ///error("RefcountedPointer copy : null (cast)");
         }
-    };
+	}
     /* */
     ~RefcountedPointer() {
         Dispose();
-    };
+	}
     RefcountedPointer<T, TDestroy> &operator= (const RefcountedPointer &p) throw() {
         if (this != &p) {
             Dispose();
