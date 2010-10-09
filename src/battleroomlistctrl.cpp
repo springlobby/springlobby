@@ -201,8 +201,8 @@ void BattleroomListCtrl::SetBattle( IBattle* battle )
 	for ( unsigned int i = 0; i < side_vector.size(); i++ )
 	{
 		wxMenuItem* side = side_vector[i];
-		m_popup->Destroy( side );
-//		delete side;
+		m_popup->Remove( side );
+		m_sides->Destroy( side ); // delete side;
 		Disconnect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
 	}
 	m_data.clear();

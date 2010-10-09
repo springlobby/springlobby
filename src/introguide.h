@@ -31,20 +31,19 @@ private:
 
 	wxTextCtrl* m_text_stuff;
 #if wxUSE_TOGGLEBTN
-	wxToggleButton* SpringDescription;
-	wxToggleButton* InstallingContent;
-	wxToggleButton* SingleDescription;
-	wxToggleButton* MultiDescription;
-	wxToggleButton* GraphicTroubles;
-	wxToggleButton* WikiLinks;
+	typedef wxToggleButton
+		ButtonType;
 #else
-	wxCheckBox* SpringDescription;
-	wxCheckBox* InstallingContent;
-	wxCheckBox* SingleDescription;
-	wxCheckBox* MultiDescription;
-	wxCheckBox* GraphicTroubles;
-	wxCheckBox* WikiLinks;
+	typedef wxCheckBox
+		ButtonType;
 #endif
+	ButtonType* SpringDescription;
+	ButtonType* InstallingContent;
+	ButtonType* SingleDescription;
+	ButtonType* MultiDescription;
+	ButtonType* GraphicTroubles;
+	ButtonType* WikiLinks;
+
 	enum
 	{
 		TEXT_DISPLAY = wxID_HIGHEST,
@@ -56,7 +55,7 @@ private:
 		HELP_LINKS
 	};
 
-	DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 };
 
 #endif // INTROGUIDE_H

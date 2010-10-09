@@ -100,7 +100,7 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 	m_filter_sizer->Fit( this );
 
 
-	if ( m_filter_name_expression != NULL ) { delete m_filter_name_expression; }
+	delete m_filter_name_expression;
 	m_filter_name_expression = new wxRegEx( m_filter_name_edit->GetValue(),wxRE_ICASE );
 	m_filter_type_choice_value = -1;
 	wxCommandEvent dummy;
@@ -132,7 +132,7 @@ void FileListFilter::OnChange( wxCommandEvent&  )
 
 void FileListFilter::OnChangeName( wxCommandEvent& event )
 {
-	if ( m_filter_name_expression != NULL ) { delete m_filter_name_expression; }
+	delete m_filter_name_expression;
 	m_filter_name_expression = new wxRegEx( m_filter_name_edit->GetValue(),wxRE_ICASE );
 	OnChange( event );
 }

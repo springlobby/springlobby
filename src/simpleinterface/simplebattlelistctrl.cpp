@@ -97,7 +97,7 @@ void SimpleBattlelistCtrl::Sort()
 	}
 }
 
-int SimpleBattlelistCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
+int SimpleBattlelistCtrl::CompareOneCrit( DataType /*u1*/, DataType /*u2*/, int /*col*/, int /*dir*/ ) const
 {
 	return 0;
 }

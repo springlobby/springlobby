@@ -3,6 +3,7 @@
 
 #include <wx/scrolwin.h>
 #include "utils/isink.h"
+#include "utils/mixins.hh"
 
 class User;
 class Ui;
@@ -25,7 +26,7 @@ class wxToggleButton;
 class wxFlexGridSizer;
 /** \brief The panel containing a BattleListCtrl and a BattleListFilter
  * \todo DOCME */
-class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleListTab>
+class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleListTab>, public SL::NonCopyable
 {
   friend class BattleListFilter;
   public:
@@ -110,7 +111,7 @@ class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
         BATTLE_LIST_FILTER_ACTIV
     };
 
-    DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 };
 
 

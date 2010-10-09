@@ -36,6 +36,7 @@
 #include <wx/cmdline.h>
 #include <wx/frame.h>
 
+#include "../globalsmanager.h"
 #include "../springunitsynclib.h"
 
 IMPLEMENT_APP(Springsettings)
@@ -80,7 +81,10 @@ bool Springsettings::OnInit()
 
 int Springsettings::OnExit()
 {
-	susynclib().Unload();
+	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
+
+	SetEvtHandlerEnabled(false);
+	DestroyGlobals();
 	return 0;
 }
 

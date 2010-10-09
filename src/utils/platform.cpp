@@ -9,6 +9,7 @@
 #include <wx/textfile.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
+#include <wx/app.h>
 
 #ifdef __WXMSW__
  #include <wx/msw/registry.h>
@@ -60,7 +61,7 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, const wxSt
     if ( showgui && verbosity != 0 )
     {
         ///gui window logging
-        loggerwin = new wxLogWindow( (wxWindow*) parent, _T("SpringLobby error console"), showgui );
+		loggerwin = new wxLogWindow( (wxWindow*) parent, IdentityString( _("%s error console") ), showgui );
         logChain = new wxLogChain( loggerwin );
     }
 
@@ -369,4 +370,26 @@ CwdGuard::CwdGuard( const wxString& new_cwd )
 CwdGuard::~CwdGuard()
 {
     wxSetWorkingDirectory( m_old_cwd );
+}
+
+wxString GetAppName( const bool lowerCase )
+{
+	wxString name = wxTheApp->GetAppName();
+	if ( lowerCase )
+		name.MakeLower();
+	return name;
+}
+
+wxString IdentityString(const wxString format, bool lowerCase )
+{
+	return wxString::Format( format, GetAppName( lowerCase ).c_str() );
+}
+
+wxString GetConfigfileDir()
+{
+	#ifdef __WXMSW__
+		return wxStandardPaths::Get().GetUserDataDir();
+	#else
+		return wxString::Format( _T("%s/.%s"), wxStandardPaths::Get().GetUserConfigDir().c_str(), GetAppName(true).c_str() );
+	#endif //__WXMSW__
 }

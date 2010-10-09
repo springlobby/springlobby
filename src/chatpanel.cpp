@@ -397,12 +397,12 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 void ChatPanel::OutputLine( const ChatLine& line )
 {
   int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);
-  int size = m_chatlog_text->GetSize().GetHeight();
   int end = m_chatlog_text->GetScrollRange(wxVERTICAL);
   int thumb = m_chatlog_text->GetScrollThumb(wxVERTICAL);
 #ifndef __WXMSW__
   float original_pos = (float)(pos+thumb) / (float)end;
 #else
+  int size = m_chatlog_text->GetSize().GetHeight();
   float original_pos = (float)(pos+size) / (float)end; // wxmsw is retarded and reports thumb size as 0 always
 #endif
   if ( original_pos < 0.0f ) original_pos = 0.0f;
@@ -451,13 +451,13 @@ void ChatPanel::OutputLine( const ChatLine& line )
 			{
 				if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58))
 				{
-					color = (m1.GetChar(1) - 48)*10+(m1.GetChar(2) - 48);
+					color = (int(m1.GetChar(1)) - 48)*10+(int(m1.GetChar(2)) - 48);
 					_2chars = true;
 					m1 = m1.Mid(3);
 					}
 				else
 				{
-					color = m1.GetChar(1) -48;
+					color = int(m1.GetChar(1)) -48;
 					_2chars = false;
 					m1 = m1.Mid(2);
 					}
@@ -972,6 +972,7 @@ void ChatPanel::Say( const wxString& message )
 		}
 
 		if ( line == _T( "/ver" ) ) {
+			//!this instance is not replaced with GetAppname for sake of help/debug online
 			OutputLine( _( " You have SpringLobby v" ) + GetSpringLobbyVersion(), sett().GetChatColorNormal() , sett().GetChatFont() );
 			return;
 		}
@@ -1110,7 +1111,8 @@ wxString ChatPanel::FindUrl( const long pos ) const
         end++;
 
     wxString ret = m_chatlog_text->GetRange( start, end );
-    if ( ret.StartsWith( _T("http://") ) )
+	//! \todo there's prolly some smarter way to capture a more flexible range of url types
+	if ( ret.StartsWith( _T("http://") ) ||  ret.StartsWith( _T("https://") ) || ret.StartsWith( _T("ftp://") ))
         return ret;
     else
         return _T("");

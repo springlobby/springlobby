@@ -45,6 +45,7 @@ class TDFWriter
 #include <map>
 
 #include "autopointers.h"
+#include "utils/mixins.hh"
 
 class Node;
 typedef RefcountedPointer<Node> PNode;
@@ -55,7 +56,8 @@ typedef RefcountedPointer<DataLeaf> PDataLeaf;
 
 class Tokenizer;
 
-class Node: public RefcountedContainer {
+class Node: public RefcountedContainer , public SL::NonCopyable
+{
 		friend class DataList;
 	protected:
 		DataList *parent;
@@ -70,7 +72,7 @@ class Node: public RefcountedContainer {
 
 		// Sets the name, and updates parent if present
 		bool SetName( const wxString &name_ );
-		Node(): parent( NULL ), list_prev( NULL ), list_next( NULL ) {}
+		Node(): parent( NULL ), list_prev( NULL ), list_next( NULL ), name( wxEmptyString ) {}
 		virtual ~Node();
 		DataList* Parent() const;// parent list
 		//void SetParent(DataList *parent_);
@@ -185,7 +187,7 @@ struct Token {
 
 	wxString pos_string;// for error reporting
 
-	bool IsEOF() {
+	bool IsEOF() const {
 		return ( type == type_eof );
 	}
 	Token(): type( type_eof )
@@ -196,25 +198,33 @@ struct Token {
 
 class Tokenizer {
 		/// todo: clean up, move to CPP file
-		struct IncludeCacheEntry {// simple reference counted pointer to stream.
-			wxString name;/// used for error reporting
-			int line, column;
 
+		/// simple reference counted pointer to stream.
+		struct IncludeCacheEntry {
+			wxString name; ///< used for error reporting
+			int line;
+			int column;
 			std::istream *stream;
 			//bool must_delete;
 			int *refcount;
+
 			IncludeCacheEntry( std::istream *stream_, bool must_delete_ = false ):
+					line( 1 ),
+					column( 1 ),
 					stream( stream_ ),
 					refcount( NULL )
 			{
-				line = 1;
-				column = 1;
 				if ( must_delete_ ) {
 					refcount = new int;
 					( *refcount ) = 1;
 				}
 			}
-			IncludeCacheEntry( const IncludeCacheEntry &other ) {
+			IncludeCacheEntry( const IncludeCacheEntry &other ):
+					line( other.line ),
+					column( other.column ),
+					stream( other.stream ),
+					refcount( other.refcount )
+			{
 				stream = other.stream;
 				refcount = other.refcount;
 				if ( refcount )( *refcount ) += 1;
@@ -265,7 +275,7 @@ class Tokenizer {
 
 		void ReportError( const Token &t, const wxString &err );
 
-		int NumErrors() {
+		int NumErrors() const {
 			return errors;
 		}
 };
@@ -273,7 +283,7 @@ class Tokenizer {
 inline Tokenizer &operator >>( Tokenizer &tokenizer, Token &token ) {
 	token = tokenizer.TakeToken();
 	return tokenizer;
-};
+}
 
 PDataList ParseTDF( std::istream &s, int *error_count = NULL );
 

@@ -11,6 +11,7 @@
 #include "userlist.h"
 #include "tdfcontainer.h"
 #include "utils/isink.h"
+#include "utils/mixins.hh"
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
@@ -20,28 +21,34 @@ class wxTimer;
 
 struct BattleStartRect
 {
-    BattleStartRect()
+    BattleStartRect() :
+        toadd(false),
+        todelete(false),
+        toresize(false),
+        exist(false),
+        ally(-1),
+        top(-1),
+        left(-1),
+        right(-1),
+        bottom(-1)
     {
-        toadd = false;
-        todelete = false;
-        exist = false;
-        toresize = false;
     }
+
     bool toadd;
     bool todelete;
     bool toresize;
     bool exist;
-
-    bool IsOk()
-    {
-        return exist && !todelete;
-    }
 
     int ally;
     int top;
     int left;
     int right;
     int bottom;
+
+    bool IsOk() const
+    {
+        return exist && !todelete;
+    }
 };
 
 
@@ -98,7 +105,7 @@ struct BattleOptions
 	bool guilistactiv;
 };
 
-class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle >
+class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle > , public SL::NonCopyable
 {
 public:
 

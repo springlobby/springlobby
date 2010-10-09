@@ -32,6 +32,7 @@
 #include "iunitsync.h"
 #include "user.h"
 #include "battle.h"
+#include "defines.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
 #include "utils/uievents.h"
@@ -50,12 +51,14 @@
 #include "mapselectdialog.h"
 #include "mmoptionwindows.h"
 #include "aui/auimanager.h"
+#include "hostbattledialog.h"
 
 BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 
 	EVT_BUTTON              ( BROOM_START,                  BattleRoomTab::OnStart                  )
 	EVT_BUTTON              ( BROOM_LEAVE,                  BattleRoomTab::OnLeave                  )
 	EVT_BUTTON              ( BROOM_ADDBOT,                 BattleRoomTab::OnAddBot                 )
+	EVT_BUTTON              ( BROOM_HOST_NEW,               BattleRoomTab::OnHostNew                )
 
 	EVT_CHECKBOX            ( BROOM_IMREADY,                BattleRoomTab::OnImReady                )
 	EVT_CHECKBOX            ( BROOM_SPEC,                   BattleRoomTab::OnImSpec                 )
@@ -166,6 +169,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 
 	m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 
+	m_host_new_btn = new wxButton( this, BROOM_HOST_NEW, _( "Host new" ), wxDefaultPosition, wxDefaultSize );
+	m_host_new_btn->SetToolTip( TE( _( "Host a new battle" ) ) );
 	m_leave_btn = new wxButton( this, BROOM_LEAVE, _( "Leave" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_leave_btn->SetToolTip( TE( _( "Leave the battle and return to the battle list" ) ) );
 	m_start_btn = new wxButton( this, BROOM_START, _( "Start" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
@@ -284,9 +289,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	//m_info1_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	int side_sel_width = m_side_sel->GetWidestItemWidth();
 	wxBoxSizer* m_side_sel_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_side_sel_sizer->SetMinSize( side_sel_width, CONTROL_HEIGHT );
+	#ifndef HAVE_WX29
+		int side_sel_width = m_side_sel->GetWidestItemWidth();
+		m_side_sel_sizer->SetMinSize( side_sel_width, CONTROL_HEIGHT );
+	#endif
 	m_side_sel_sizer->Add( m_side_sel, 1, wxEXPAND );
 
 	// Put widgets in place
@@ -329,6 +336,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
 	m_top_sizer->Add( m_info_sizer, 0, wxEXPAND | wxALL, 2 );
 
+	m_buttons_sizer->AddStretchSpacer();
+	m_buttons_sizer->Add( m_host_new_btn, 0, wxEXPAND | wxALL, 2 );
 	m_buttons_sizer->AddStretchSpacer();
 	m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
 	m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
@@ -418,9 +427,11 @@ void BattleRoomTab::PrintAllySetup()
 	if ( m_battle )
 	{
 		std::map<int, int> allysizes = m_battle->GetAllySizes();
-		for ( std::map<int, int>::iterator itor = allysizes.begin(); itor != allysizes.end(); itor++ )
+		for ( std::map<int, int>::const_iterator itor = allysizes.begin(); itor != allysizes.end(); ++itor )
 		{
-			if ( itor != allysizes.begin() ) setupstring += _T("v");
+			if ( itor != allysizes.begin() )
+                setupstring += _T("v");
+			setupstring += wxString::Format( _T("(%d) ") , itor->first );
 			setupstring += TowxString( itor->second );
 		}
 	}
@@ -1110,6 +1121,8 @@ void BattleRoomTab::SetBattle( Battle* battle )
 			m_autolock_chk->Disable();
 		}
 
+		m_host_new_btn->Show( false );
+
 		RegenerateOptionsList();
 
 		ReloadMaplist();
@@ -1117,6 +1130,10 @@ void BattleRoomTab::SetBattle( Battle* battle )
 		UpdateBattleInfo( wxString::Format( _T( "%d_mapname" ), OptionsWrapper::PrivateOptions ) );
 		UpdateBattleInfo();
 		UpdateStatsLabels();
+	}
+	else
+	{
+		m_host_new_btn->Show( true );
 	}
 }
 
@@ -1153,6 +1170,24 @@ void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )
 	wxString nick = data.Count() > 0 ? data[0] : wxString(wxEmptyString);
 	wxString msg = data.Count() > 1 ? data[1] : wxString(wxEmptyString);
 	GetChatPanel().DidAction( nick, msg );
+}
+
+void BattleRoomTab::OnHostNew( wxCommandEvent& /*event*/ )
+{
+	if ( !ui().IsConnected() )
+	{
+		wxLogWarning( _T( "Trying to host while offline" ) );
+		customMessageBoxNoModal( SL_MAIN_ICON, _( "You cannot host a game while being offline. Please connect to a lobby server." ), _( "Not Online." ), wxOK );
+		ui().ShowConnectWindow();
+		return;
+	}
+	if ( !ui().IsSpringCompatible() )
+	{
+		wxLogWarning( _T( "Hosting is disabled due to the incompatible version " ) );
+		customMessageBoxNoModal( SL_MAIN_ICON, _( "Hosting is disabled due to the incompatible version you're using" ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
+		return;
+	}
+	HostBattleDialog::Run( this );
 }
 
 //void BattleRoomTab::MaximizeSizer()

@@ -28,9 +28,10 @@ extern const wxEventType torrentSystemStatusUpdateEvt;
 #include "utils/battleevents.h"
 #include <wx/string.h>
 #include <wx/timer.h>
+#include "utils/mixins.hh"
 
 //! @brief UI main class
-class Ui
+class Ui : public SL::NonCopyable
 {
   public:
 
@@ -177,9 +178,6 @@ class Ui
     //! does actual work, called from downloadmap/mod
     void DownloadFileP2P( const wxString& name );
 	void DownloadFileWebsite( const wxString& name );
-
-    private:
-        Ui( const Ui& );
 
 };
 

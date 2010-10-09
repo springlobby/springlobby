@@ -18,6 +18,7 @@
 //#include <wx/txtstrm.h>
 //#include <wx/wfstream.h>
 #include <wx/textfile.h>
+#include <wx/sstream.h>
 #include <cmath>
 #include <stdexcept>
 #include <clocale>
@@ -1126,7 +1127,7 @@ namespace
       GetMapExAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, int evtHandlerId )
         : GetMapImageAsyncResult( usync, mapname, evtHandlerId, 3 ) {}
   };
-};
+}
 
 
 void SpringUnitSync::PrefetchMap( const wxString& mapname )
@@ -1235,6 +1236,24 @@ void SpringUnitSync::GetMapExAsync( const wxString& mapname, int evtHandlerId )
   m_cache_thread.DoWork( work, 200 /* higher prio then GetMinimapAsync */ );
 }
 
+wxString SpringUnitSync::GetTextfileAsString( const wxString& modname, const wxString& file_path )
+{
+	susynclib().SetCurrentMod( modname );
+
+	int ini = susynclib().OpenFileVFS ( file_path );
+	if ( !ini )
+		return wxEmptyString;
+
+	int FileSize = susynclib().FileSizeVFS(ini);
+	if (FileSize == 0) {
+		susynclib().CloseFileVFS(ini);
+		return wxEmptyString;
+	}
+
+	uninitialized_array<char> FileContent(FileSize);
+	susynclib().ReadFileVFS(ini, FileContent, FileSize);
+	return wxString( FileContent, wxConvAuto(), size_t( FileSize ) );
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// EvtHandlerCollection code

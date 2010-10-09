@@ -240,7 +240,7 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
 #endif
 }
 
-void CustomListCtrl::SetTipWindowText( const long /*unused*/, const wxPoint position)
+void CustomListCtrl::SetTipWindowText( const long /*unused*/, const wxPoint& position)
 {
   int column = getColumnFromPosition(position);
   if (column >= int(m_colinfovec.size()) || column < 0)

@@ -4,6 +4,7 @@
 #include "../userlist.h"
 #include <set>
 #include <wx/regex.h>
+#include "../utils/mixins.hh"
 
 class Channel;
 class Server;
@@ -16,7 +17,7 @@ struct UiChannelData {
   ChatPanel* panel;
 };
 
-class Channel : public UserList
+class Channel : public UserList, public SL::NonCopyable
 {
   public:
 

@@ -40,12 +40,12 @@ OptionsWrapper::~OptionsWrapper()
 {
 }
 
-bool OptionsWrapper::loadMapOptions(wxString mapname)
+bool OptionsWrapper::loadMapOptions( const wxString& mapname)
 {
 	return loadOptions(MapOption,mapname);
 }
 
-OptionType OptionsWrapper::GetSingleOptionType (wxString key) const
+OptionType OptionsWrapper::GetSingleOptionType ( const wxString& key) const
 {
 	OptionType type = opt_undefined;
 	for ( int g = 0; g < LastOption; g++ )
@@ -160,7 +160,7 @@ bool OptionsWrapper::loadOptions( GameOption modmapFlag, const wxString& name, c
 	return true;
 }
 
-OptionsWrapper::GameOption OptionsWrapper::GetSection( wxString& key ) const
+OptionsWrapper::GameOption OptionsWrapper::GetSection( const wxString& key ) const
 {
 	GameOption ret = LastOption;
 	bool found = false;
@@ -177,7 +177,7 @@ OptionsWrapper::GameOption OptionsWrapper::GetSection( wxString& key ) const
 	return ret;
 }
 
-bool OptionsWrapper::keyExists(wxString key ) const
+bool OptionsWrapper::keyExists( const wxString& key ) const
 {
 	bool found = false;
 	for ( int flag = 0; flag < PrivateOptions; flag++ )
@@ -189,7 +189,7 @@ bool OptionsWrapper::keyExists(wxString key ) const
 	return found;
 }
 
-bool OptionsWrapper::keyExists(wxString key, GameOption modmapFlag, bool showError, OptionType& optType) const
+bool OptionsWrapper::keyExists( const wxString& key, const GameOption modmapFlag, bool showError, OptionType& optType ) const
 {
 	wxString duplicateKeyError = _T("Please contact the mod's author and tell him\n\
 										to use unique keys in his ModOptions.lua");
@@ -308,14 +308,14 @@ std::map<wxString,wxString> OptionsWrapper::getOptionsMap( GameOption modmapFlag
 	return map;
 }
 
-bool OptionsWrapper::setSingleOption(wxString key,wxString value,GameOption modmapFlag)
+bool OptionsWrapper::setSingleOption( const wxString& key, const wxString& value,GameOption modmapFlag)
 {
 	OptionType optType = opt_undefined;
 	keyExists( key, modmapFlag, false, optType );
 	return setSingleOptionTypeSwitch(key,value,modmapFlag,optType);
 }
 
-bool OptionsWrapper::setSingleOption(wxString key,wxString value)
+bool OptionsWrapper::setSingleOption( const wxString& key, const wxString& value )
 {
 	OptionType optType = opt_undefined;
 	if (keyExists(key,ModOption,false,optType))
@@ -326,7 +326,7 @@ bool OptionsWrapper::setSingleOption(wxString key,wxString value)
 		return false;
 }
 
-wxString OptionsWrapper::getSingleValue(wxString key) const
+wxString OptionsWrapper::getSingleValue( const wxString& key) const
 {
 	for ( int g = 0; g < LastOption; g++ )
 	{
@@ -346,7 +346,7 @@ static inline typename MapType::mapped_type GetItem( const MapType& map, const t
         return typename MapType::mapped_type();
 }
 
-wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) const
+wxString OptionsWrapper::getSingleValue( const wxString& key, GameOption modmapFlag) const
 {
 	OptionType optType = opt_undefined;
 
@@ -376,7 +376,7 @@ wxString OptionsWrapper::getSingleValue(wxString key, GameOption modmapFlag) con
 	return wxEmptyString;
 }
 
-wxString OptionsWrapper::getDefaultValue(wxString key, GameOption modmapFlag) const
+wxString OptionsWrapper::getDefaultValue( const wxString& key, GameOption modmapFlag) const
 {
 	OptionType optType = opt_undefined;
 	wxString ret;
@@ -419,7 +419,7 @@ wxString OptionsWrapper::getDefaultValue(wxString key, GameOption modmapFlag) co
 	return ret;
 }
 
-bool  OptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType)
+bool  OptionsWrapper::setSingleOptionTypeSwitch( const wxString& key, const wxString& value, GameOption modmapFlag, OptionType optType)
 {
 	GameOptions& gameoptions = m_opts[modmapFlag];
 	switch (optType)
@@ -502,7 +502,7 @@ bool  OptionsWrapper::setSingleOptionTypeSwitch(wxString key, wxString value, Ga
 	return true;
 }
 
-wxString OptionsWrapper::GetNameListOptValue(wxString key, GameOption flag) const
+wxString OptionsWrapper::GetNameListOptValue( const wxString& key, GameOption flag) const
 {
 	OptionType optType;
 	if ( keyExists(key,flag,false, optType) )
@@ -522,7 +522,7 @@ wxString OptionsWrapper::GetNameListOptValue(wxString key, GameOption flag) cons
 	return wxEmptyString;
 }
 
-wxString OptionsWrapper::GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag) const
+wxString OptionsWrapper::GetNameListOptItemKey( const wxString& optkey, const wxString& itemname, GameOption flag) const
 {
 	OptionType optType;
 	if ( keyExists(optkey,flag,false, optType) )
@@ -682,7 +682,7 @@ wxString mmSectionTree::FindParentpath ( const wxString& parent_key )
         return _T("");
 }
 
-void mmSectionTree::AddSection( const mmOptionSection section)
+void mmSectionTree::AddSection( const mmOptionSection& section)
 {
     m_section_map[section.key] = section;
     wxString name = section.section;

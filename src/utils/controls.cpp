@@ -20,8 +20,9 @@ const wxChar* TooltipEnable(const wxChar* input)
 			if (!main_app_has_focus) return _T("");
 			return sett().GetShowTooltips() ? input : _T("");
     #else
-			if (!main_app_has_focus) return _T("").wc_str();
-			return sett().GetShowTooltips() ? input : _T("").wc_str();
+			wxString dummy = wxEmptyString;
+			if (!main_app_has_focus) return dummy.wc_str();
+			return sett().GetShowTooltips() ? input : dummy.wc_str();
     #endif
 }
 

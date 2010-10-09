@@ -28,7 +28,7 @@ class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
 
     void OnListRightClick( wxListEvent& event );
 
-    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 	bool AddTorrentInfo(const DataType& info);
 	bool RemoveTorrentInfo(const DataType& info);
 	void UpdateTorrentInfo(const DataType& info);

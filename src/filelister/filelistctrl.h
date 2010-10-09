@@ -21,7 +21,7 @@ class FileListCtrl : public CustomVirtListCtrl< const PlasmaResourceInfo* ,FileL
     typedef std::vector<wxString> InternalNameVector;
 
     void OnListRightClick( wxListEvent& event );
-//    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+//    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 //    void OnColClick( wxListEvent& event );
     void GetSelectedHashes(InternalNameVector&);
     bool AddFile( DataType info );
@@ -49,7 +49,7 @@ class FileListCtrl : public CustomVirtListCtrl< const PlasmaResourceInfo* ,FileL
 
     enum
     {
-        FILELIST_COL_CLICK = wxID_HIGHEST,
+		FILELIST_COL_CLICK = wxID_HIGHEST
 
     };
 

@@ -13,9 +13,11 @@
     class wxGauge;
 #endif
 
+#include "mixins.hh"
+
 class wxStaticText;
 
-class ActivityNoticePanel: public wxPanel
+class ActivityNoticePanel: public wxPanel, public SL::NonCopyable
 {
     public:
         ActivityNoticePanel(wxWindow* parent,const wxString& notice, const wxSize& panel_size = wxSize(190,6), const wxSize& gauge_size = wxSize(80,5) );

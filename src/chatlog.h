@@ -5,28 +5,101 @@
 #include <wx/file.h>
 #include <wx/arrstr.h>
 
+/** Handles chat-log operations for a single chat room on a server.
+ */
 class ChatLog
 {
   public:
+    /** Constructor.  Prepares the %ChatLog to accept log messages for
+     * the given chat room or channel on the given server.
+     *
+     * @param server Alias or hostname for the server on which the
+     * chat room or channel is located.
+     *
+     * @param room Name of the chat room or channel this object will
+     * accept messages for.
+     */
     ChatLog(const wxString& server,const wxString& room);
+
+    /** Destructor.  Calls CloseSession if the log file is currently
+     * opened.
+     */
     ~ChatLog();
+
+    /** Append a time-stamped message to the log file.  Retrieves a
+     * time-stamp string from LogTime.
+     *
+     * @note This does nothing, successfully, if chat logging is
+     * disabled.
+     *
+     * @param text Message text to log.
+     *
+     * @return @c false if an error was encountered while writing to
+     * the log file, and @c true otherwise.
+     *
+     * @see LogEnabled LogTime
+     */
     bool AddMessage(const wxString& text);
+
+    /** Check if chat logging is enabled.
+     *
+     * @return @c true if chat logging is enabled, and @c false if it
+     * is not.
+     */
     bool LogEnabled();
+
+    /** Get a string, representing the current time-of-day, suitable
+     * for prepending to messages.  This is used by AddMessage.
+     *
+     * @return a string including hours and minutes.
+     *
+     * @see AddMessage
+     */
     wxString LogTime();
+
     void OpenInEditor();
     const wxArrayString& GetLastLines( ) const;
-//    void SetTarget( const wxString& server,const wxString& room );
+
   protected:
-    bool CreateFolder(const wxString& server);
+    /** Closes the current "session" in the log file by appending a
+     * session-closed notice to end before closing the file.
+     *
+     * @post The file is closed, and any further calls to AddMessage
+     * will reopen the log file, starting a new session.
+     */
+    void CloseSession();
+
+
+    /** Get the path (filename) to the current log file.
+     *
+     * @return A platform-specific logfile path string.
+     */
+    wxString GetCurrentLogfilePath() const;
+
+
+    /** Write a line of text to the output file, without any further
+     * formatting.
+     *
+     * @param text The line to write.
+     *
+     * @return @c true if the line was successfully written, and @c
+     * false otherwise.
+     */
     bool WriteLine(const wxString& text);
-    bool OpenLogFile(const wxString& server,const wxString& room);
-    wxString _GetPath();
-    wxFile m_logfile;
+
+    /** Create the directory in which the current logfile is saved.
+     *
+     * @return @c true on success, @c false on failure.
+     */
+    bool CreateCurrentLogFolder();
+    bool OpenLogFile();
+
     wxString m_server;
     wxString m_room;
-    wxString m_current_logfile_path;
+
     bool m_active;
-    static bool m_parent_dir_exists;
+    wxFile m_logfile;
+
     wxArrayString m_last_lines;
 
     void FillLastLineArray();

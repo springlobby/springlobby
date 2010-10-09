@@ -13,7 +13,7 @@ class WidgetDownloadListctrl : public CustomVirtListCtrl<Widget,WidgetDownloadLi
                     const wxSize& sz = wxDefaultSize);
         virtual ~WidgetDownloadListctrl();
 
-        void AddWidget( const Widget widget );
+        void AddWidget( const Widget& widget );
         Widget& GetSelectedWidget();
 
         //these are overloaded to use list in virtual style

@@ -5,6 +5,7 @@
 
 #include <wx/intl.h>
 #include <vector>
+#include "utils/mixins.hh"
 
 class wxColour;
 class wxImage;
@@ -50,7 +51,7 @@ void OpenWebBrowser( const wxString& url );
 
 class wxDateTime;
 //! measures time diff between ctor and dtor, shows result in msg box
-struct TimerMessageBox {
+struct TimerMessageBox: public SL::NonCopyable {
 	//! msg_format must contain exactly one %s to be filled with the elapsed time
 	TimerMessageBox( const wxString& msg_format );
 	~TimerMessageBox();

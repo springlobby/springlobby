@@ -1,5 +1,9 @@
+#ifndef SL_TOASTERBOX_HH
+#define SL_TOASTERBOX_HH
+
 #include "ToasterBoxWindow.h"
 #include "ToasterBoxWindowList.h"
+#include "../utils/mixins.hh"
 /*
   The toasterbox class should stay resident in memory.
   It creates and displays popups and handles the
@@ -57,3 +61,5 @@ protected:
     bool shrink;
 	StackDirection m_stack_direction;
 };
+
+#endif //SL_TOASTERBOX_HH

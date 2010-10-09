@@ -31,6 +31,7 @@
 
 #include "../images/springlobby.xpm"
 #include "../utils/conversion.h"
+#include "../customizations.h"
 
 #ifdef HAVE_WX29
 	//in < 29 this is defined in wxDialogBase, which seems to have disappeared
@@ -45,7 +46,8 @@ END_EVENT_TABLE()
 PasteDialog::PasteDialog( wxWindow *parent, const wxString& message )
 	: wxDialog(parent,-1,_( "Flood warning" ),wxDefaultPosition,wxDefaultSize,wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE)
 {
-	SetIcon( wxIcon(springlobby_xpm) );
+	//! \todo use image from customizations
+	SetIcon( SLcustomizations().GetAppIcon() );
 
 //******** copied from wxsource/generic/msgdlgg.cpp with small modifications***********************************************************
 	wxBoxSizer *topsizer = new wxBoxSizer( wxVERTICAL );

@@ -63,17 +63,17 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 
 
 //! @brief Constructor
-Socket::Socket( iNetClass& netclass, bool wait_on_connect, bool blocking  )
-    : m_wait_on_connect( wait_on_connect ),
+Socket::Socket( iNetClass& netclass, bool wait_on_connect, bool blocking  ) :
+    m_sock( NULL ),
+    m_events( NULL ),
+    m_connecting( false ),
+    m_wait_on_connect( wait_on_connect ),
     m_blocking(blocking),
     m_net_class(netclass),
+	m_udp_private_port(0),
     m_rate(-1),
     m_sent(0)
 {
-    m_connecting = false;
-
-    m_sock = 0;
-    m_events = 0;
 }
 
 
@@ -107,11 +107,8 @@ wxSocketClient* Socket::_CreateSocket()
 		// blocking mode _must_ block, and end blocking as soon as data arrives otherwise other blocking but no gui block
 		// mode will wait for timeout before unlocking
 		sock->SetFlags( wxSOCKET_BLOCK );
-        if ( m_events != 0 )
-        {
-            delete m_events;
-            m_events = 0;
-        }
+		delete m_events;
+		m_events = 0;
     }
     return sock;
 }
