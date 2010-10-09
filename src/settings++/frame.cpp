@@ -31,6 +31,7 @@
 #include "tab_quality_video.h"
 #include "tab_abstract.h"
 #include "tab_audio.h"
+#include "hotkeys/hotkey_panel.h"
 #include "tab_ui.h"
 #include "tab_simple.h"
 #include "ctrlconstants.h"
@@ -46,8 +47,9 @@ const wxString qualityTabCap= _("Render quality / Video mode");
 const wxString detailTabCap = _("Render detail");
 const wxString uiTabCap= _("UI options");
 const wxString audioTabCap = _("Audio");
-const wxString expertModeWarning = _("Changes made on Quality/Detail tab in expert mode"
-									"\n will be lost if you change simple options again.\n"
+const wxString hotkeyTabCap = _("Hotkeys");
+const wxString expertModeWarning = _("Changes made on Quality/Detail tab in expert mode\n"
+									"will be lost if you change simple options again.\n"
 									"Also these changes WILL NOT be reflected by the \n"
 									"selected choices on the Combined options tab.\n"
 									"(this message can be disabled in the \"File\" menu)");
@@ -62,6 +64,12 @@ END_EVENT_TABLE()
 settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& pa_size)
 	: wxFrame(parent, id, title, position, pa_size),
 	WindowAttributesPickle( _T("SETTINGSFRAME"), this, wxSize( DEFSETT_SW_WIDTH, DEFSETT_SW_HEIGHT ) ),
+	simpleTab(0),
+	uiTab(0),
+	audioTab(0),
+	detailTab(0),
+	qualityTab(0),
+	hotkeyTab(0),
 	m_has_focus(true)
 {
 	alreadyCalled = false;
@@ -130,12 +138,12 @@ void settings_frame::handleExternExit()
 {
 	if ( !alreadyCalled){
 		alreadyCalled = true;
-		if (abstract_panel::settingsChanged)
+		if (settingsChangedAbstract())
 		{
 			int choice = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"), wxYES|wxNO |wxICON_QUESTION);
 			if ( choice == wxYES)
 			{
-				abstract_panel::saveSettings();
+				saveSettingsAbstract();
 				if (simpleTab!=0)
 					simpleTab->saveCbxChoices();
 			}
@@ -146,12 +154,12 @@ void settings_frame::handleExternExit()
 }
 
 void settings_frame::handleExit() {
-    if (abstract_panel::settingsChanged)
+    if (settingsChangedAbstract())
     {
     	int action = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION );
         switch (action) {
         case wxYES:
-        	if (abstract_panel::saveSettings())
+        	if (saveSettingsAbstract())
         				 (abstract_panel::settingsChanged) = false;
         	if (simpleTab!=0)
         			simpleTab->saveCbxChoices();
@@ -181,12 +189,13 @@ void settings_frame::CreateGUIControls()
 							    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
 							    uiTab = new tab_ui(notebook,ID_UI);
 							    audioTab = new audio_panel(notebook,ID_AUDIO);
-                                simpleTab = 0;
+                                hotkeyTab = new hotkey_panel(notebook, ID_HOTKEY);
+								simpleTab = 0;
 								notebook->AddPage(uiTab, uiTabCap);
 								notebook->AddPage(qualityTab, qualityTabCap);
 								notebook->AddPage(detailTab, detailTabCap);
 								notebook->AddPage(audioTab,audioTabCap);
-
+								notebook->AddPage(hotkeyTab,hotkeyTabCap);
 						break;
                     default:
 					case SET_MODE_SIMPLE:
@@ -247,7 +256,7 @@ void settings_frame::initMenuBar() {
 void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 	switch (event.GetId()) {
 		case ID_MENUITEM_SAVE:
-			if (abstract_panel::saveSettings())
+			if (saveSettingsAbstract())
 			 (abstract_panel::settingsChanged) = false;
 			if (simpleTab!=0)
         			simpleTab->saveCbxChoices();
@@ -275,13 +284,14 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				if (notebook->GetSelection()!=1)
 					notebook->SetSelection(0);
 
+				notebook->DeletePage(5);
 				notebook->DeletePage(4);
 				notebook->DeletePage(3);
 				notebook->DeletePage(2);
 				qualityTab = 0;
 				detailTab = 0;
 				audioTab = 0;
-
+				hotkeyTab = 0;
 				SetTitle(_("SpringSettings (simple mode)"));
 				if (!sett().getDisableWarning()){
 					customMessageBox(SS_MAIN_ICON,expertModeWarning, _("Hint"), wxOK);
@@ -323,11 +333,13 @@ void settings_frame::switchToExpertMode()
 	menuMode->Check(ID_MENUITEM_EXPERT,true);
 
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
-    	detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
-    	audioTab = new audio_panel(notebook,ID_AUDIO);
+    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
+    audioTab = new audio_panel(notebook,ID_AUDIO);
+	hotkeyTab = new hotkey_panel(notebook,ID_HOTKEY);
 	notebook->AddPage(qualityTab, qualityTabCap);
 	notebook->AddPage(detailTab, detailTabCap);
 	notebook->AddPage(audioTab,audioTabCap);
+	notebook->AddPage(hotkeyTab,hotkeyTabCap);
 
 	notebook->DeletePage(0);
 	simpleTab = 0;
@@ -336,6 +348,7 @@ void settings_frame::switchToExpertMode()
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);
 	audioTab->updateControls(UPDATE_ALL);
+	hotkeyTab->UpdateControls(UPDATE_ALL);
 }
 
 void settings_frame::updateAllControls()
@@ -350,6 +363,8 @@ void settings_frame::updateAllControls()
 		qualityTab->updateControls(UPDATE_ALL);
 	if (audioTab)
 		audioTab->updateControls(UPDATE_ALL);
+	if (hotkeyTab)
+		hotkeyTab->UpdateControls(UPDATE_ALL);
 }
 void settings_frame::OnClose(wxCloseEvent& /*unused*/)
 {
@@ -358,4 +373,20 @@ void settings_frame::OnClose(wxCloseEvent& /*unused*/)
 	}
 }
 
+bool settings_frame::saveSettingsAbstract()
+{
+	if ( hotkeyTab )
+		hotkeyTab->SaveSettings();
 
+	return abstract_panel::saveSettings();
+}
+
+bool settings_frame::settingsChangedAbstract()
+{
+	bool rc = false;
+
+	rc |= ( hotkeyTab && hotkeyTab->HasProfileBeenModifiedOrSelected() );
+	rc |= abstract_panel::settingsChanged;
+
+	return rc;
+}

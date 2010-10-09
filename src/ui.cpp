@@ -504,7 +504,7 @@ void Ui::ConsoleHelp( const wxString& topic )
     }
     if ( topic == wxEmptyString )
     {
-        panel->ClientMessage( _("SpringLobby commands help.") );
+		panel->ClientMessage( IdentityString( _("%s commands help.") ) );
         panel->ClientMessage( _T("") );
         panel->ClientMessage( _("Global commands:") );
         panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
@@ -519,9 +519,9 @@ void Ui::ConsoleHelp( const wxString& topic )
         panel->ClientMessage( _("  \"/part\" - Leaves current channel.") );
         panel->ClientMessage( _("  \"/p\" - Alias to /part.") );
         panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
-        panel->ClientMessage( _("  \"/sayver\" - Says what version of springlobby you have in chat.") );
+		panel->ClientMessage( IdentityString( _("  \"/sayver\" - Says what version of %s you have in chat.") ) );
         panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
-        panel->ClientMessage( _("  \"/ver\" - Displays what version of SpringLobby you have.") );
+		panel->ClientMessage( IdentityString( _("  \"/ver\" - Displays what version of %s you have.") ) );
         panel->ClientMessage( _("  \"/clear\" - Clears all text from current chat panel") );
         panel->ClientMessage( _T("") );
         panel->ClientMessage( _("Chat commands:") );
@@ -942,7 +942,7 @@ void Ui::OnMotd( Server& server, const wxString& message )
     if ( server.uidata.panel != 0 ) server.uidata.panel->Motd( message );
 }
 
-void Ui::OnServerBroadcast( Server& server, const wxString& message )
+void Ui::OnServerBroadcast( Server& /*server*/, const wxString& message )
 {
 	if ( m_main_win == 0 ) return;
 	mw().GetChatTab().BroadcastMessage( message );
@@ -1335,8 +1335,11 @@ void Ui::FirstRunWelcome()
 #endif
 
         wxLogMessage( _T("first time startup"));
-		wxMessageBox(_("Hi ") + wxGetUserName() + _(",\nIt looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration."), _("Welcome"),
-                     wxOK | wxICON_INFORMATION, &mw() );
+		wxMessageBox( wxString::Format( _("Hi %s,\nIt looks like this is your first time using %s. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration."),
+										wxGetUserName().c_str(),
+										GetAppName().c_str() ),
+					  _("Welcome"),
+					  wxOK | wxICON_INFORMATION, &mw() );
 
 		IntroGuide* intro = new IntroGuide();
 		intro->Show();
@@ -1386,7 +1389,11 @@ void Ui::CheckForUpdates()
     if ( !latestVersion.IsSameAs(myVersion, false) )
     {
         #ifdef __WXMSW__
-        int answer = customMessageBox(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg + _("\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."), _("Not up to date"), wxYES_NO);
+		int answer = customMessageBox(SL_MAIN_ICON,
+									  wxString::Format( _("Your %s version is not up to date.\n\n%s\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."),
+														GetAppName().c_str(),
+														msg.c_str() ),
+									  _("Not up to date"), wxYES_NO);
         if (answer == wxYES)
         {
             wxString command = _T("\"") + wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("springlobby_updater.exe\"");
@@ -1400,7 +1407,7 @@ void Ui::CheckForUpdates()
             else
             {//this will also happen if updater exe is not present so we don't really ne special check for existance of it
                 customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser.") + msg, _("Updater error.") );
-                OpenWebBrowser( _T("http://springlobby.info/wiki/springlobby/Install#Windows-Binary") );
+				OpenWebBrowser( _T("http://projects.springlobby.info/wiki/springlobby/Install#Windows-Binary") );
                 OpenWebBrowser( GetDownloadUrl( latestVersion ) );
 
             }

@@ -220,7 +220,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 	{
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
 		customMessageBox( SL_MAIN_ICON,
-		                  _( "SpringLobby is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ),
+						  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
 		                  _( "Spring error" ), wxOK );
 	}
 }

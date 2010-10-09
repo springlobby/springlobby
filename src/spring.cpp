@@ -121,11 +121,7 @@ bool Spring::Run( Battle& battle )
 	{
     // -m, --minimise          Start minimised
     // -q [T], --quit=[T]      Quit immediately on game over or after T seconds
-    #ifndef __WXMSW__
-    cmd = _T("--minimise");
-    #else
-    cmd = _T("/minimise");
-    #endif
+	cmd = _T("--minimise");
 	}
 	cmd += _T(" \"") + path +  _T("\"");
 

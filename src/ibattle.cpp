@@ -1057,19 +1057,24 @@ void IBattle::AddUserFromDemo( User& user )
 	UserList::AddUser( m_internal_user_list[user.GetNick()] );
 }
 
-void IBattle::SetIsProxy( bool value )
+void IBattle::SetProxy( const wxString& value )
 {
-    m_opts.isproxy = value;
+	m_opts.proxyhost = value;
 }
 
 bool IBattle::IsProxy()
 {
-    return m_opts.isproxy;
+	return !m_opts.proxyhost.IsEmpty();
+}
+
+wxString IBattle::GetProxy()
+{
+	return m_opts.proxyhost;
 }
 
 bool IBattle::IsFounderMe()
 {
-    return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
+	return ( ( m_opts.founder == GetMe().GetNick() ) || ( IsProxy()  && !m_generating_script ) );
 }
 
 bool IBattle::IsFounder( const User& user ) const

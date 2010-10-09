@@ -9,7 +9,6 @@ INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 SET(springlobbySrc
 	src/utils/activitynotice.cpp
 	src/chatpanelmenu.cpp
-	src/customizations.cpp
 	src/gui/gradientpanel.cpp
 	src/gui/wxgradientbutton.cpp
 	src/gui/skirmish_dialog.cpp
@@ -137,6 +136,16 @@ SET(SettingsSrc
 	src/settings++/tab_render_detail.cpp
 	src/settings++/tab_simple.cpp
 	src/settings++/tab_ui.cpp
+	src/settings++/hotkeys/AddSelectionCmdDlgBase.cpp
+	src/settings++/hotkeys/AddSelectionCmdDlg.cpp
+	src/settings++/hotkeys/commandlist.cpp
+	src/settings++/hotkeys/hotkey_panel.cpp
+	src/settings++/hotkeys/hotkey_parser.cpp
+	src/settings++/hotkeys/KeynameConverter.cpp
+	src/settings++/hotkeys/spring_command.cpp
+	src/settings++/hotkeys/SpringDefaultProfile.cpp
+	src/wxkeybinder/keybinder.cpp
+	src/wxkeybinder/menuutils.cpp
 )
 
 SET( curlSRC
@@ -148,6 +157,7 @@ SET(StandAloneSettings
 )
 
 SET(SLSharedWithSettings
+	src/customizations.cpp
 	src/uiutils.cpp
 	src/updater/versionchecker.cpp
 	src/updater/updatehelper.cpp
@@ -169,6 +179,7 @@ SET(SLSharedWithSettings
 	src/thread.cpp
 	src/gui/windowattributespickle.cpp
 	src/gui/spinctl/generic/spinctlg.cpp
+	src/Helper/slconfig.cpp
 )
 
 SET( updaterSrc
@@ -177,6 +188,7 @@ SET( updaterSrc
 	src/updater/updaterapp.cpp
 	src/utils/activitynotice.cpp
 	src/utils/misc.cpp
+	src/customizations.cpp
 )
 
 FILE( GLOB header "src/*.h" )

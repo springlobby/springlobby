@@ -16,10 +16,14 @@ class Customizations {
         wxIcon m_app_ico;
         wxBitmap m_background;
         wxString m_help_url;
+		bool m_active;
+
+		bool KeyExists( const wxString& key ) const;
     public:
         ~Customizations() {}
 
         bool Init( const wxString& modname );
+		bool Active() const;
 
         const wxString& GetModname() const;
         const wxString& GetHelpUrl() const;
@@ -27,6 +31,12 @@ class Customizations {
         const wxBitmap& GetBackground() const;
         wxSize GetBackgroundSize() const;
         const OptionsWrapper& GetCustomizations() const;
+
+		bool Provides( const wxString& key ) const;
+
+		wxString GetIntroText() const;
+
+		static const wxString IntroKey;// ( _T("intro_file") );
 
     friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
 };

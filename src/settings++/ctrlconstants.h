@@ -234,8 +234,7 @@ const Control RO_SLI[] = {
 																								"higher value = greater range = more units rendered at the same time")}	},
 	{_("Max simultaneous particles"),     _T("MaxParticles"),        ID_RO_SLI_7,	_T("4000")	, {_("limits how many particles are displayed at the same time")}},
 	{_("Max nano simultaneous particles"),     _T("MaxNanoParticles"),        ID_RO_SLI_8,	_T("10000")	, {_("limits how many particles are displayed at the same time")}}
-	//{_("Max texture stages (SM3)"), _T("SM3MaxTextureStages"), ID_RO_SLI_8,	"6"	, {_("Decrease this if you are having bad perfomance on maps in sm3 format,\n"
-	// not needed atm																				"increase if sm3 maps look ugly.")}}
+	//  not needed atm {_("Max texture stages (SM3)"), _T("SM3MaxTextureStages"), ID_RO_SLI_8,	"6"	, {_("Decrease this if you are having bad perfomance on maps in sm3 format,\nincrease if sm3 maps look ugly.")}}
 };
 
 const category_sizes_map_type RO_SLI_entry ( _T("RO_SLI"), sizeof(RO_SLI) / Control_size );
@@ -276,7 +275,7 @@ const Control AO_SLI[] = {
 	{_("Unit reply volume"),     _T("snd_volunitreply"),       ID_AO_SLI_3,	_T("100") , {_("reply volume relative to master volume")}},
 	{_("Battle volume"),     _T("snd_volbattle"),       ID_AO_SLI_4,	_T("100") , {_("battle volume relative to global volume")}},
 	{_("User interface volume"),     _T("snd_volui"),       ID_AO_SLI_5,	_T("100") , {_("ui volume relative to global volume")}},
-	{_("Air Absorbtion factor"),     _T("snd_airAbsorption"),       ID_AO_SLI_6,	_T("0") , {_("How much far sounds will have high frequencies dampened")}}
+	{_("Air Absorbtion factor"),     _T("snd_airAbsorption"),       ID_AO_SLI_6,	_T("0") , {_("How far sounds will have high frequencies dampened")}}
 
 };
 
@@ -324,8 +323,7 @@ const Control UI_CBOX[] = {
 										{_("requires \"Enable LuaWidgets\" to be set.\nWill be displayed in the bottom right corner")}},
 //TODO is there even a reason that it should be disabled?
 	{_("Fix rendering on alt-tab"),                        _T("FixAltTab"),           ID_WINDOWP_UI_CBOX_14,	_T("1"), {_("Do not change if not needed")}},
-	{_("Disallow helper AI's"),                            _T("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_15,	_T("0"), {_("Disables Economy AI, etc.\n"
-																														"If enabled might screw with LuaUi.")}},
+	{_("Disallow helper AI's"),                            _T("NoHelperAIs"),         ID_WINDOWP_UI_CBOX_15,	_T("0"), {_("Disables Economy AI, etc.\nIf enabled might screw with LuaUi.")}},
 	{_("Enable scroll on window edge"),					_T("WindowedEdgeMove"),	ID_WINDOWP_UI_CBOX_16,	_T("1"), {_("Scroll the screen when mouse reaches the screen's edge.")}},
 	{_("Invert Mouse"),									_T("InvertMouse"),			ID_WINDOWP_UI_CBOX_17,	_T("0"), {_("Inverts the Mouse Y-axis in FPS mode")}},
 	{_("Use Hardware Cursor"),									_T("HardwareCursor"),			ID_WINDOWP_UI_CBOX_18,	_T("0"), {_("Use native OS mouse cursor (hardware accelerated)")}},

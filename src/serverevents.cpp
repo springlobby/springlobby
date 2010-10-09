@@ -341,7 +341,7 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
         Battle& battle = m_serv.GetBattle( battleid );
         User& user = battle.GetUser( nick );
 
-        if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
+		//if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
 
         status.color_index = user.BattleStatus().color_index;
         battle.OnUserBattleStatusUpdated( user, status );
@@ -637,7 +637,8 @@ void ServerEvents::OnChannelAction( const wxString& channel, const wxString& who
     wxLogDebugFunc( _T("") );
     try
     {
-        m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), action );
+		if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
+			m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), action );
     }
     catch (std::runtime_error &except)
     {
@@ -694,7 +695,10 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-        ui().OnSaidBattle( battle, nick, msg );
+		if ( ( m_serv.GetMe().GetNick() ==  nick ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, nick ) )
+		{
+			ui().OnSaidBattle( battle, nick, msg );
+		}
         battle.GetAutoHost().OnSaidBattle( nick, msg );
     }
     catch (assert_exception) {}

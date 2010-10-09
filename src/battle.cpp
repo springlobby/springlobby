@@ -605,20 +605,24 @@ void Battle::StartHostedBattle()
 			}
 			if ( IsProxy() )
 			{
-				wxString hostscript = spring().WriteScriptTxt( *this );
-				try
+				if ( UserExists( GetProxy() ) && !GetUser(GetProxy()).Status().in_game )
 				{
-					wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
-					if ( !wxFile::Access( path, wxFile::write ) ) {
-							wxLogError( _T("Access denied to script.txt.") );
-					}
+					// DON'T set m_generating_script here, it will trick the script generating code to think we're the host
+					wxString hostscript = spring().WriteScriptTxt( *this );
+					try
+					{
+						wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
+						if ( !wxFile::Access( path, wxFile::write ) ) {
+								wxLogError( _T("Access denied to script.txt.") );
+						}
 
-					wxFile f( path, wxFile::write );
-					f.Write( hostscript );
-					f.Close();
+						wxFile f( path, wxFile::write );
+						f.Write( hostscript );
+						f.Close();
 
-				} catch (...) {}
-				m_serv.SendScriptToProxy( hostscript );
+					} catch (...) {}
+					m_serv.SendScriptToProxy( hostscript );
+				}
 			}
 			if( IsFounderMe() && GetAutoLockOnStart() )
 			{
@@ -628,6 +632,10 @@ void Battle::StartHostedBattle()
 			sett().SetLastHostMap( GetServer().GetCurrentBattle()->GetHostMapName() );
 			sett().SaveSettings();
 			if ( !IsProxy() ) GetServer().StartHostedBattle();
+			else if ( UserExists( GetProxy() ) && GetUser(GetProxy()).Status().in_game ) // relayhost is already ingame, let's try to join it
+			{
+				StartSpring();
+			}
 		}
 	}
 }
@@ -638,7 +646,10 @@ void Battle::StartSpring()
 	{
 		GetMe().BattleStatus().ready = false;
 		SendMyBattleStatus();
+		// set m_generating_script, this will make the script.txt writer realize we're just clients even if using a relayhost
+		m_generating_script = true;
 		GetMe().Status().in_game = spring().Run( *this );
+		m_generating_script = false;
 		GetMe().SendMyUserStatus();
 	}
 	ui().OnBattleStarted( *this );

@@ -7,6 +7,7 @@
 #include "user.h"
 #include "utils/conversion.h"
 #include "utils/misc.h"
+#include "utils/platform.h"
 
 #include <wx/tokenzr.h>
 
@@ -268,7 +269,7 @@ void AutoHost::OnUserAdded( User& user )
 	// do nothing if autohost functionality is disabled
 	if ( !m_enabled )
 		return;
-	m_battle.DoAction( _T( "Hi " ) + user.GetNick() + _T( ", this battle is in SpringLobby autohost mode. For help say !help" ) );
+	m_battle.DoAction( wxString::Format( _T( "Hi %s, this battle is in %s autohost mode. For help say !help" ), user.GetNick().c_str(), GetAppName().c_str() ) );
 }
 
 

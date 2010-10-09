@@ -87,7 +87,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
 
     wxBoxSizer* m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-// see http://trac.springlobby.info/ticket/649
+// see http://projects.springlobby.info/issues/show/649
 //  m_reset_btn = new wxButton( this, SP_RESET, _("Reset"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0 );
 //  m_buttons_sizer->Add( m_reset_btn, 0, wxALL, 5 );
 

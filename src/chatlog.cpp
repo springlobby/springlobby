@@ -18,6 +18,7 @@
 #include "ui.h"
 
 #include "utils/customdialogs.h"
+#include "utils/platform.h"
 
 
 ChatLog::ChatLog( const wxString& server, const wxString& room ):
@@ -189,7 +190,7 @@ pread(int fd, void* buffer, size_t size, off_t offset)
 static inline off_t
 next_read_position(off_t last_read_position, size_t read_size, size_t read_overlap)
 {
-    return std::max(static_cast<long signed int>(last_read_position - read_size - read_overlap), (ssize_t) 0);
+    return std::max(static_cast<long signed int>(last_read_position - read_size - read_overlap), (long signed int) 0);
 }
 
 /** Find an arbitrary number of delimited strings at the end of a file.  This
@@ -279,7 +280,7 @@ find_tail_sequences(int fd, const char* bytes, size_t bytes_length, size_t count
 
 void ChatLog::FillLastLineArray()
 {
-    int fd ( open(static_cast<const char*>(GetCurrentLogfilePath().fn_str()), O_RDONLY) );
+	int fd ( open(GetCurrentLogfilePath().mb_str(), O_RDONLY) );
     if ( fd < 0 )
     {
 	wxLogError(_T("%s: failed to open log file."), __PRETTY_FUNCTION__);

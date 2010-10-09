@@ -28,8 +28,6 @@ ReconnectDialog::ReconnectDialog()
 
 	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	wxStaticText* m_static_text = new wxStaticText( this, wxID_ANY, _( "Couldn't estabilish a connection with the server\nWhat would you like to do?" ), wxDefaultPosition, wxDefaultSize, 0 );
-
 	wxBoxSizer* m_buttons_sizer;
 	m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -44,12 +42,12 @@ ReconnectDialog::ReconnectDialog()
 	wxButton* m_cancel_btn = new wxButton( this, CONNECT_CANCEL, _( "Do nothing" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttons_sizer->Add( m_cancel_btn, 0, wxALL, 5 );
 
-	m_main_sizer->Add( m_static_text, 0, wxEXPAND | wxHORIZONTAL, 5 );
-	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
+	m_main_sizer->Add( CreateTextSizer( _( "Couldn't estabilish a connection with the server\nWhat would you like to do?" ) ), 1, wxALL | wxEXPAND | wxCENTER, 10 );
+	m_main_sizer->Add( m_buttons_sizer, 1, wxALL | wxEXPAND | wxCENTER, 10 );
 
-	this->SetSizer( m_main_sizer );
-	this->Layout();
-	this->Raise();
+	SetSizer( m_main_sizer );
+	SetAutoLayout( true );
+	Raise();
 	m_next_btn->SetFocus();
 }
 
