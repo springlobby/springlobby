@@ -2,6 +2,7 @@
 
 #include <wx/panel.h>
 #include <wx/dcclient.h>
+#include <wx/dcbuffer.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/intl.h>
@@ -1006,7 +1007,7 @@ void MapCtrl::DrawUserPositions( wxDC& dc )
 void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
     wxLogDebugFunc( _T("") );
-    wxPaintDC dc( this );
+	wxAutoBufferedPaintDC dc( this );
 
     DrawBackground( dc );
 
