@@ -73,7 +73,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
     else {
         if (!PostMinGW44( m_newexe ) ) {
             customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser."), _("Updater error.") );
-            OpenWebBrowser( _T("http://springlobby.info/wiki/springlobby/Install#Windows-Binary") );
+			OpenWebBrowser( _T("http://projects.springlobby.info/wiki/springlobby/Install#Windows-Binary") );
             OpenWebBrowser( GetDownloadUrl( m_latest_version ) );
         }
         if ( !UpdateExe( m_newexe , false ) ) {
