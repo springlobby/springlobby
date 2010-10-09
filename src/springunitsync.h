@@ -122,24 +122,24 @@ class SpringUnitSync : public IUnitSync
     SpringUnitSync();
     ~SpringUnitSync();
 
-    int GetNumMods();
-    wxArrayString GetModList();
-    bool ModExists( const wxString& modname );
-    bool ModExists( const wxString& modname, const wxString& hash );
+	int GetNumMods() const;
+	wxArrayString GetModList() const;
+	bool ModExists( const wxString& modname ) const;
+	bool ModExists( const wxString& modname, const wxString& hash ) const;
     bool ModExistsCheckHash( const wxString& hash ) const;
-    UnitSyncMod GetMod( const wxString& modname );
+	UnitSyncMod GetMod( const wxString& modname );
 	UnitSyncMod GetMod( int index );
 	//! this functions returns index CUSTOM ALPHBETICALLY SORTED, DO NOT USE TO ACCESS UNITSYNC DIRECTLY
 	//! use m_unsorted_mod_array for real unitsync index
-    int GetModIndex( const wxString& name );
+	int GetModIndex( const wxString& name ) const;
     GameOptions GetModOptions( const wxString& name );
-    wxArrayString GetModDeps( const wxString& name );
+	wxArrayString GetModDeps( const wxString& name ) const;
 
-    int GetNumMaps();
-    wxArrayString GetMapList();
-    wxArrayString GetModValidMapList( const wxString& modname );
-    bool MapExists( const wxString& mapname );
-    bool MapExists( const wxString& mapname, const wxString& hash );
+	int GetNumMaps() const;
+	wxArrayString GetMapList() const;
+	wxArrayString GetModValidMapList( const wxString& modname ) const;
+	bool MapExists( const wxString& mapname ) const;
+	bool MapExists( const wxString& mapname, const wxString& hash ) const;
 
     UnitSyncMap GetMap( const wxString& mapname );
 	UnitSyncMap GetMap( int index );
@@ -154,30 +154,30 @@ class SpringUnitSync : public IUnitSync
 		void SetDefaultNick( const wxString& nick );
 	//! this functions returns index CUSTOM ALPHBETICALLY SORTED, DO NOT USE TO ACCESS UNITSYNC DIRECTLY
 	//! use m_unsorted_map_array for real unitsync index
-    int GetMapIndex( const wxString& name );
+	int GetMapIndex( const wxString& name ) const;
 
     wxArrayString GetSides( const wxString& modname  );
-    wxImage GetSidePicture( const wxString& modname, const wxString& SideName );
-    wxImage GetImage( const wxString& modname, const wxString& image_path );
+	wxImage GetSidePicture( const wxString& modname, const wxString& SideName ) const;
+	wxImage GetImage( const wxString& modname, const wxString& image_path ) const;
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );
     void FreeUnitSyncLib();
 
-    bool IsLoaded();
+	bool IsLoaded() const;
 
-    wxString GetSpringVersion();
+	wxString GetSpringVersion() const;
     //! function wich checks if the version returned from unitsync matches a table of supported feature
-    bool VersionSupports( GameFeature feature );
+	bool VersionSupports( GameFeature feature ) const;
 
 	void UnSetCurrentMod();
 
-    wxArrayString GetAIList( const wxString& modname );
-    wxArrayString GetAIInfos( int index );
+	wxArrayString GetAIList( const wxString& modname ) const;
+	wxArrayString GetAIInfos( int index ) const;
     GameOptions GetAIOptions( const wxString& modname, int index );
 
 
-    int GetNumUnits( const wxString& modname );
-    wxArrayString GetUnitsList( const wxString& modname );
+	int GetNumUnits( const wxString& modname ) const;
+	wxArrayString GetUnitsList( const wxString& modname );
 
     /// get minimap with native width x height
     wxImage GetMinimap( const wxString& mapname );
@@ -199,11 +199,11 @@ class SpringUnitSync : public IUnitSync
 
     void SetSpringDataPath( const wxString& path );
 
-    wxArrayString GetPlaybackList( bool ReplayType = true ); //savegames otehrwise
+	wxArrayString GetPlaybackList( bool ReplayType = true ) const; //savegames otehrwise
 
-    bool FileExists( const wxString& name );
+	bool FileExists( const wxString& name ) const;
 
-    wxString GetArchivePath( const wxString& name );
+	wxString GetArchivePath( const wxString& name ) const;
 
     /// schedule a map for prefetching
     void PrefetchMap( const wxString& mapname );
@@ -220,7 +220,7 @@ class SpringUnitSync : public IUnitSync
     void GetHeightmapAsync( const wxString& mapname, int width, int height, int evtHandlerId );
     void GetMapExAsync( const wxString& mapname, int evtHandlerId );
 
-    wxArrayString GetScreenshotFilenames();
+	wxArrayString GetScreenshotFilenames() const;
 
     virtual GameOptions GetModCustomizations( const wxString& modname );
     virtual GameOptions GetSkirmishOptions( const wxString& modname, const wxString& skirmish_name );
@@ -228,7 +228,7 @@ class SpringUnitSync : public IUnitSync
 	virtual void OnReload( wxCommandEvent& event );
 	virtual void AddReloadEvent(  );
 
-	wxArrayString FindFilesVFS( const wxString& pattern );
+	wxArrayString FindFilesVFS( const wxString& pattern ) const;
 
   private:
 
@@ -268,7 +268,7 @@ class SpringUnitSync : public IUnitSync
     wxString GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod );
 
     //! returns an array where each element is a line of the file
-    wxArrayString GetCacheFile( const wxString& path );
+	wxArrayString GetCacheFile( const wxString& path ) const;
     //! write a file where each element of the array is a line
     void SetCacheFile( const wxString& path, const wxArrayString& data );
 
