@@ -29,7 +29,6 @@
 #include <wx/statbmp.h>
 #include <wx/listctrl.h>
 
-#include "../images/springlobby.xpm"
 #include "../utils/conversion.h"
 #include "../customizations.h"
 
