@@ -339,9 +339,10 @@ wxString IconImageList::GetBattleStatus( const IBattle& battle ) const
 }
 
 
-int IconImageList::GetColourIcon( const int& num )
+int IconImageList::GetColourIcon( const int& num )  const
 {
-    if ( m_player_colour_icons[num] != 0 ) return m_player_colour_icons[num];
+	PlayerColourMap::const_iterator it = m_player_colour_icons.find( num );
+	if ( it != m_player_colour_icons.end() && it->second != 0 ) return it->second;
     else return -1;
 }
 
