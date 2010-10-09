@@ -74,6 +74,8 @@ void ServerEvents::OnLoginInfoComplete()
     std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
 	for ( std::vector<ChannelJoinInfo>::const_iterator itor = autojoin.begin(); itor != autojoin.end(); ++itor )
     {
+		if ( itor->name.IsEmpty() )
+			continue;
 		Channel& chan = m_serv._AddChannel( itor->name );
 		chan.SetPassword( itor->password );
 		ui().OnJoinedChannelSuccessful( chan, false );
