@@ -69,7 +69,8 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     /** Show the channel list dialog. */
     void ShowChannelChooser();
 
-    void OnMenuAbout( wxCommandEvent& event );
+	//! cannot be const while using static event tables (function pointer sig don't match)
+	void OnMenuAbout( wxCommandEvent& event );
     void OnMenuJoin( wxCommandEvent& event );
     void OnMenuChat( wxCommandEvent& event );
     void OnMenuConnect( wxCommandEvent& event );
@@ -86,12 +87,12 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 	void OnMenuFirstStart( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
     void OnMenuAutojoinChannels( wxCommandEvent& event );
-    void OnReportBug( wxCommandEvent& event );
-    void OnShowDocs( wxCommandEvent& event );
+	void OnReportBug( wxCommandEvent& event );
+	void OnShowDocs( wxCommandEvent& event );
     void OnShowSettingsPP( wxCommandEvent& event );
     void OnMenuSelectLocale( wxCommandEvent& event );
     void OnShowChannelChooser( wxCommandEvent& event );
-    void OnShowScreenshots( wxCommandEvent& event );
+	void OnShowScreenshots( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
@@ -122,7 +123,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 
     void FocusBattleRoomTab();
 
-	bool HasFocus();
+	bool HasFocus() const;
 
 
 
@@ -154,8 +155,8 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     ReplayTab* m_replay_tab;
     SavegameTab* m_savegame_tab;
 
-    wxBitmap GetTabIcon( const unsigned char* data, size_t size  );
-    wxString AddPerspectivePostfix( const wxString& pers_name );
+	wxBitmap GetTabIcon( const unsigned char* data, size_t size  ) const;
+	wxString AddPerspectivePostfix( const wxString& pers_name ) const;
 
     wxLogWindow* m_log_win;
     wxLogChain* m_log_chain;

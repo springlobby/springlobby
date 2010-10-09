@@ -141,6 +141,12 @@ MainWindow& Ui::mw()
     return *m_main_win;
 }
 
+const MainWindow& Ui::mw() const
+{
+	ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
+	return *m_main_win;
+}
+
 
 bool Ui::IsMainWindowCreated() const
 {
@@ -405,13 +411,13 @@ void Ui::DownloadFileWebsite( const wxString& name )
 //!
 //! @return true if OK button was pressed
 //! @note this does not return until the user pressed any of the buttons or closed the dialog.
-bool Ui::Ask( const wxString& heading, const wxString& question )
+bool Ui::Ask( const wxString& heading, const wxString& question ) const
 {
     int answer = customMessageBox( SL_MAIN_ICON, question, heading, wxYES_NO );
     return ( answer == wxYES );
 }
 
-
+//! cannot be const because parent window cannot be const
 bool Ui::AskPassword( const wxString& heading, const wxString& message, wxString& password )
 {
     wxPasswordEntryDialog pw_dlg( &mw(), message, heading, password );
@@ -431,7 +437,7 @@ bool Ui::AskText( const wxString& heading, const wxString& question, wxString& a
 }
 
 
-void Ui::ShowMessage( const wxString& heading, const wxString& message )
+void Ui::ShowMessage( const wxString& heading, const wxString& message ) const
 {
     if ( m_main_win == 0 ) return;
     serverMessageBox( SL_MAIN_ICON, message, heading, wxOK);
