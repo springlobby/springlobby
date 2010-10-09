@@ -94,6 +94,7 @@ void Battle::OnRequestBattleStatus()
     bs.ally = GetFreeAlly( true );
     bs.spectator = false;
     bs.colour = sett().GetBattleLastColour();
+    bs.side = sett().GetBattleLastSideSel( GetHostModName() );
     // theres some highly annoying bug with color changes on player join/leave.
     if ( !bs.colour.IsOk() ) bs.colour = GetFreeColour( GetMe() );
 
@@ -1153,3 +1154,4 @@ void Battle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData data )
 	IBattle::OnUnitsyncReloaded( data );
 	if ( m_is_self_in ) SendMyBattleStatus();
 }
+

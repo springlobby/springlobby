@@ -791,6 +791,7 @@ void BattleRoomTab::OnSideSel( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	m_battle->ForceSide( m_battle->GetMe(), m_side_sel->GetSelection() );
+	sett().SetBattleLastSideSel( m_battle->GetHostModName(), m_side_sel->GetSelection() );
 }
 
 

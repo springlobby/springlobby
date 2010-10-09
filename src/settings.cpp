@@ -1646,6 +1646,16 @@ void Settings::SetBattleLastAutoAnnounceDescription( bool value )
 	m_config->Write( _T( "/Hosting/AutoAnnounceDescription" ) , value );
 }
 
+void Settings::SetBattleLastSideSel( const wxString& modname, int sidenum )
+{
+	m_config->Write(_T("/Battle/Sides/" + modname), sidenum);
+}
+
+int Settings::GetBattleLastSideSel( const wxString& modname )
+{
+	return m_config->Read( _T("/Battle/Sides/" + modname), 0l );
+}
+
 void Settings::SetMapLastStartPosType( const wxString& mapname, const wxString& startpostype )
 {
 	m_config->Write( _T( "/Hosting/MapLastValues/" ) + mapname + _T( "/startpostype" ), startpostype );
@@ -2549,3 +2559,4 @@ wxString Settings::GetUikeys( const wxString& index )
 }
 
 //END OF Hotkeys stuff (for springsettings)
+
