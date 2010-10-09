@@ -76,13 +76,14 @@ class Ui : public SL::NonCopyable
     void DownloadMap( const wxString& hash, const wxString& name );
     void DownloadMod( const wxString& hash, const wxString& name );
 
-    bool Ask( const wxString& heading, const wxString& question );
-    bool AskText( const wxString& heading, const wxString& question, wxString& answer, long style = wxOK | wxCANCEL | wxCENTRE );
-    bool AskPassword( const wxString& heading, const wxString& message, wxString& password );
-    void ShowMessage( const wxString& heading, const wxString& message );
+	bool Ask( const wxString& heading, const wxString& question ) const;
+	bool AskText( const wxString& heading, const wxString& question, wxString& answer, long style = wxOK | wxCANCEL | wxCENTRE );
+	bool AskPassword( const wxString& heading, const wxString& message, wxString& password );
+	void ShowMessage( const wxString& heading, const wxString& message ) const;
     //void OnAlertEvent( AlertEventType ); //TODO alert system
 
     MainWindow& mw();
+	const MainWindow& mw() const;
 
     bool IsMainWindowCreated() const;
 
@@ -93,6 +94,7 @@ class Ui : public SL::NonCopyable
     void OnDisconnected( Server& server, bool wasonline );
 
     void OnJoinedChannelSuccessful( Channel& chan );
+	void OnJoinedChannelSuccessful( Channel& chan, bool focusTab );
     void OnUserJoinedChannel( Channel& chan, User& user );
     void OnChannelJoin( Channel& chan, User& user );
     void OnUserLeftChannel( Channel& chan, User& user, const wxString& reason );

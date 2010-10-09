@@ -41,8 +41,8 @@ class UserListctrl : public CustomListCtrl
 
         void HighlightItem( long item );
 
-        bool IsInList( const UserData& userdata );
-        UserDataMapIter FindData( const UserData& userdata );
+		bool IsInList( const UserData& userdata );//cannot be const
+		UserDataMapIter FindData( const UserData& userdata );
 
         static int wxCALLBACK ComparePlayernameUP(long item1, long item2, long sortData);
         static int wxCALLBACK ComparePlayernameDOWN(long item1, long item2, long sortData);

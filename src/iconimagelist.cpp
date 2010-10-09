@@ -201,7 +201,7 @@ IconImageList& icons()
 }
 
 
-int IconImageList::GetUserListStateIcon( const UserStatus& us, bool chanop, bool inbroom )
+int IconImageList::GetUserListStateIcon( const UserStatus& us, bool chanop, bool inbroom ) const
 {
     if ( us.bot )
     {
@@ -233,7 +233,7 @@ int IconImageList::GetUserListStateIcon( const UserStatus& us, bool chanop, bool
 }
 
 
-int IconImageList::GetUserBattleStateIcon( const UserStatus& us )
+int IconImageList::GetUserBattleStateIcon( const UserStatus& us )const
 {
     if ( us.bot ) return ICON_BOT;
     if (us.moderator )
@@ -249,7 +249,7 @@ int IconImageList::GetUserBattleStateIcon( const UserStatus& us )
     return ICON_NOSTATE;
 }
 
-int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest )
+int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest )const
  {
 	 if ( !showlowest && rank == UserStatus::RANK_1 )
 		 return ICON_RANK_NONE;
@@ -267,7 +267,7 @@ int IconImageList::GetRankIcon( const unsigned int& rank, const bool& showlowest
 	}
 }
 
-int IconImageList::GetRankLimitIcon( int rank,  bool showlowest )
+int IconImageList::GetRankLimitIcon( int rank,  bool showlowest )const
 {
     if ( !showlowest && rank == UserStatus::RANK_1 )
         return ICON_RANK_NONE;
@@ -282,7 +282,7 @@ int IconImageList::GetRankLimitIcon( int rank,  bool showlowest )
 }
 
 
-int IconImageList::GetFlagIcon( const wxString& flagname )
+int IconImageList::GetFlagIcon( const wxString& flagname )const
 {
     return ICON_FLAGS_BASE + GetFlagIndex( flagname );
 }
@@ -339,14 +339,15 @@ wxString IconImageList::GetBattleStatus( const IBattle& battle ) const
 }
 
 
-int IconImageList::GetColourIcon( const int& num )
+int IconImageList::GetColourIcon( const int& num )  const
 {
-    if ( m_player_colour_icons[num] != 0 ) return m_player_colour_icons[num];
+	PlayerColourMap::const_iterator it = m_player_colour_icons.find( num );
+	if ( it != m_player_colour_icons.end() && it->second != 0 ) return it->second;
     else return -1;
 }
 
 
-int IconImageList::GetHostIcon( const bool& spectator )
+int IconImageList::GetHostIcon( const bool& spectator ) const
 {
     return spectator?ICON_HOST_SPECTATOR:ICON_HOST;
 }

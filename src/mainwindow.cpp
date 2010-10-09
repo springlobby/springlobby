@@ -245,7 +245,7 @@ MainWindow::MainWindow( )
 	UpdateMainAppHasFocus(m_has_focus);
 }
 
-wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size )
+wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size ) const
 {
     if ( sett().GetUseTabIcons() )
         return charArr2wxBitmap( data , size );
@@ -346,7 +346,7 @@ void MainWindow::OnKillFocus(wxFocusEvent&)
 	UpdateMainAppHasFocus(m_has_focus);
 }
 
-bool MainWindow::HasFocus()
+bool MainWindow::HasFocus() const
 {
 	return m_has_focus;
 }
@@ -447,7 +447,7 @@ void MainWindow::OpenChannelChat( Channel& channel, bool doFocus )
     ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
     if ( doFocus )
         m_func_tabs->SetSelection( PAGE_CHAT );
-    m_chat_tab->AddChatPanel( channel );
+	m_chat_tab->AddChatPanel( channel, doFocus );
 }
 
 
@@ -664,7 +664,7 @@ void MainWindow::OnChannelListStart( )
     m_channel_chooser->ClearChannels();
 }
 
-wxString MainWindow::AddPerspectivePostfix( const wxString& pers_name )
+wxString MainWindow::AddPerspectivePostfix( const wxString& pers_name ) const
 {
     wxString perspective_name  = pers_name.IsEmpty() ? sett().GetLastPerspectiveName() : pers_name;
     if ( m_join_tab &&  m_join_tab->UseBattlePerspective() )

@@ -904,7 +904,7 @@ long BattleRoomTab::AddMMOptionsToList( long pos, OptionsWrapper::GameOption opt
 {
 	if ( !m_battle ) return -1;
 	OptionsWrapper::wxStringTripleVec optlist = m_battle->CustomBattleOptions().getOptions( optFlag );
-	for ( OptionsWrapper::wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); it++ )
+	for ( OptionsWrapper::wxStringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
 	{
 		m_opts_list->InsertItem( pos, it->second.first );
 		wxString tag = wxString::Format( _T( "%d_" ), optFlag ) + it->first;
@@ -1033,7 +1033,7 @@ void BattleRoomTab::OnOptionActivate( wxListEvent& event )
 	long index = event.GetIndex();
 	if ( index == 0 ) return;
 	wxString tag;
-	for ( OptionListMap::iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); itor++ )
+	for ( OptionListMap::const_iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); ++itor )
 	{
 		if ( itor->second == index )
 		{

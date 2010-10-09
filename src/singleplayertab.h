@@ -35,7 +35,7 @@ class SinglePlayerTab: public  wxScrolledWindow , public UnitsyncReloadedSink< S
 
     SinglePlayerBattle& GetBattle() { return m_battle; }
 
-    bool ValidSetup();
+	bool ValidSetup() const;
 
     void OnMapSelect( wxCommandEvent& event );
     void OnModSelect( wxCommandEvent& event );

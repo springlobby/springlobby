@@ -214,7 +214,7 @@ TorrentWrapper::~TorrentWrapper()
 	//save torrents to resume
 	std::vector<wxString> toResume;
 	TorrenthandleInfoMap infomap = GetHandleInfoMap();
-	TorrenthandleInfoMap::iterator it = infomap.begin();
+	TorrenthandleInfoMap::const_iterator it = infomap.begin();
 	for ( ; it != infomap.end(); ++it )
 	{
 		PlasmaResourceInfo info = it->first;
@@ -465,7 +465,7 @@ void TorrentWrapper::HandleCompleted()
 	int num_completed = 0;
 	{
 	TorrenthandleInfoMap infohandle = GetHandleInfoMap();
-	TorrenthandleInfoMap::iterator it = infohandle.begin();
+	TorrenthandleInfoMap::const_iterator it = infohandle.begin();
 
 	for ( ; it != infohandle.end(); ++it )
 	{

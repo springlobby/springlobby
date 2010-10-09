@@ -102,7 +102,8 @@ class ChatPanel : public wxPanel, public SL::NonCopyable
 
     void SetBattle( Battle* battle );
 
-    void Say( const wxString& message );
+	//! @returns true on success ( blank line ), false otherwise
+	bool Say( const wxString& message );
     void Part();
     void FocusInputBox();
 

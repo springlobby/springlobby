@@ -48,7 +48,7 @@ class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
 	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 	int GetIndexFromData( const DataType& data ) const;
 
-	bool IsTorrentActive(const DataType& info);
+	bool IsTorrentActive(const DataType& info) const;
 
 	wxMenu* m_popup;
 

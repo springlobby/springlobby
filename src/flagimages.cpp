@@ -18,7 +18,7 @@ int GetFlagIndex( const wxString& flag )
 	if ( flag.IsEmpty() )
 		return FLAG_NONE;
 
-	NameToPosMap::iterator itor = m_name_to_pos.find( flag );
+	NameToPosMap::const_iterator itor = m_name_to_pos.find( flag );
 	if ( itor != m_name_to_pos.end() ) return itor->second;
 
 	wxLogMessage( _T( "%s flag not found!" ), flag.c_str() );

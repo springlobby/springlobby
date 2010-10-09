@@ -172,7 +172,7 @@ void CustomVirtListCtrl<T,L>::OnDeselected( wxListEvent& event )
 }
 
 template < class T, class L >
-long CustomVirtListCtrl<T,L>::GetSelectedIndex()
+long CustomVirtListCtrl<T,L>::GetSelectedIndex() const
 {
   return m_selected_index ;
 }

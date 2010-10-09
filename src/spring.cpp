@@ -395,7 +395,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			tdf.Append( _T("NumRestrictions"), units.size());
 			tdf.EnterSection( _T("RESTRICT") );
 				int restrictcount = 0;
-				for ( std::map<wxString, int>::iterator itor = units.begin(); itor != units.end(); itor++ )
+				for ( std::map<wxString, int>::const_iterator itor = units.begin(); itor != units.end(); itor++ )
 				{
 						tdf.Append(_T("Unit") + TowxString( restrictcount ), itor->first );
 						tdf.Append(_T("Limit") + TowxString( restrictcount ), itor->second );

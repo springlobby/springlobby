@@ -110,7 +110,6 @@ wxString Paste2Pastebin( const wxString& message )
 	curl_easy_cleanup(curl_handle);
 	curl_formfree(m_pPostHead);
 
-	wxString szResponse;
 	if(ret == CURLE_OK)
 		return response.GetString();
 	else

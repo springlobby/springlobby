@@ -72,8 +72,13 @@ void ServerEvents::OnLoginInfoComplete()
 	}
     //m_serv.RequestChannels();
     std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
-    for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.begin(); itor != autojoin.end(); itor++ )
+	for ( std::vector<ChannelJoinInfo>::const_iterator itor = autojoin.begin(); itor != autojoin.end(); ++itor )
     {
+		if ( itor->name.IsEmpty() )
+			continue;
+		Channel& chan = m_serv._AddChannel( itor->name );
+		chan.SetPassword( itor->password );
+		ui().OnJoinedChannelSuccessful( chan, false );
         m_serv.JoinChannel( itor->name, itor->password );
     }
     ui().OnLoggedIn( );
@@ -566,7 +571,6 @@ void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, c
     wxLogDebugFunc( _T("") );
     if ( success )
     {
-
         Channel& chan = m_serv._AddChannel( channel );
         chan.SetPassword( m_serv.m_channel_pw[channel] );
         ui().OnJoinedChannelSuccessful( chan );
