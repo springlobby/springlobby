@@ -152,7 +152,7 @@ int IBattle::ColourDifference(const wxColour &a, const wxColour &b)  const// ret
 
 }
 
-int IBattle::GetFreeTeam( bool excludeme )
+int IBattle::GetFreeTeam( bool excludeme ) const
 {
     int lowest = 0;
     bool changed = true;
@@ -1062,17 +1062,17 @@ void IBattle::SetProxy( const wxString& value )
 	m_opts.proxyhost = value;
 }
 
-bool IBattle::IsProxy()
+bool IBattle::IsProxy() const
 {
 	return !m_opts.proxyhost.IsEmpty();
 }
 
-wxString IBattle::GetProxy()
+wxString IBattle::GetProxy() const
 {
 	return m_opts.proxyhost;
 }
 
-bool IBattle::IsFounderMe()
+bool IBattle::IsFounderMe() const
 {
 	return ( ( m_opts.founder == GetMe().GetNick() ) || ( IsProxy()  && !m_generating_script ) );
 }

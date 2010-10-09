@@ -127,7 +127,7 @@ void UserListctrl::RemoveUsers( const UserDataMap& userdata )
     std::vector<UserDataMapIter> todelete;
     for ( UserDataMapConstIter it = userdata.begin(); it != userdata.end(); ++it)
     {
-        UserDataMapIter data = FindData( it->second );
+		UserDataMapIter data = FindData( it->second );
         if ( data != m_userdata.end() )
         {
             todelete.push_back( data );
@@ -148,7 +148,7 @@ void UserListctrl::RemoveUsers( const UserDataMap& userdata )
 
 UserListctrl::UserDataMapIter UserListctrl::FindData( const UserData& userdata )
 {
-    for ( UserDataMapIter it = m_userdata.begin(); it != m_userdata.end(); ++it)
+	for ( UserDataMapIter it = m_userdata.begin(); it != m_userdata.end(); ++it)
     {
         if ( it->second.first == userdata.first )
             return it;
@@ -158,7 +158,7 @@ UserListctrl::UserDataMapIter UserListctrl::FindData( const UserData& userdata )
 
 bool UserListctrl::IsInList( const UserData& userdata )
 {
-    UserDataMapConstIter it = FindData( userdata );
+	UserDataMapIter it = FindData( userdata );
     return ( it != m_userdata.end() );
 }
 

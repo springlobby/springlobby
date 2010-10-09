@@ -61,7 +61,7 @@ public:
     ActionType GetGroupAction( const wxString& group ) const;
     wxString GetGroupOfUser( const wxString& user ) const;
     void SetGroupColor( const wxString& group, const wxColour& color );
-    wxColour GetGroupColor( const wxString& group );
+	wxColour GetGroupColor( const wxString& group ) const;
     bool IsKnown( const wxString& name, bool outputWarning = false ) const;
 
 protected:

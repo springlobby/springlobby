@@ -75,7 +75,7 @@ bool OptionsWrapper::loadAIOptions( const wxString& modname, int aiindex,const w
 	return true;
 }
 
-int OptionsWrapper::GetAIOptionIndex( const wxString& nick )
+int OptionsWrapper::GetAIOptionIndex( const wxString& nick ) const
 {
 	std::map<wxString,int>::const_iterator itor = m_ais_indexes.find(nick);
 	int pos = -1;
