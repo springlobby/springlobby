@@ -6,6 +6,8 @@ class wxFrame;
 class wxString;
 class wxLogChain;
 
+#include <wx/string.h>
+
 /**
     let origin be /path/to/some/dir and destination /some/other/path
     this will copy dir (and everything below that recursively to /some/other/path/dir
@@ -26,22 +28,39 @@ bool IsUACenabled();
 
     \return Logwindow pointer (may be 0), useful if parent frame should be created _after_ logging is set up
 **/
-wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity, wxLogChain* logChain );
+wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, const wxString& logfilepath, bool showgui, bool logcrash, int verbosity, wxLogChain* logChain );
 
-wxString GetSpringLobbyVersion();
 wxString GetExecutableFolder();
 wxString GetLibExtension();
 wxString GetHostCPUSpeed();
+
+//! set new cwd in ctor, reset to old in dtor
+class CwdGuard {
+    wxString m_old_cwd;
+    public:
+        CwdGuard( const wxString& new_cwd );
+        ~CwdGuard();
+};
 
 #ifdef __WXMSW__
 bool IsPreVistaWindows();
 #endif
 
+//! simply return wxApp::GetAppName with letter lowercased on demand
+wxString GetAppName( const bool lowerCase = false );
+wxString GetConfigfileDir();
+
+/**
+  \in Format string with a single %s
+  \out wxString with %s replaced with GetAppName()
+  **/
+wxString IdentityString(const wxString format, bool lowerCase = false );
+
 #endif // SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
     SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by

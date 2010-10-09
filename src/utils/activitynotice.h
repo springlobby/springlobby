@@ -6,11 +6,18 @@
 #include <wx/panel.h>
 #include <wx/timer.h>
 #include <wx/dialog.h>
-#include <wx/gauge.h> //cannot forward this cause msw mixes up the types otherwise
+
+#ifdef __WXMSW__
+    #include <wx/gauge.h> //cannot forward this cause msw mixes up the types otherwise
+#else
+    class wxGauge;
+#endif
+
+#include "mixins.hh"
 
 class wxStaticText;
 
-class ActivityNoticePanel: public wxPanel
+class ActivityNoticePanel: public wxPanel, public SL::NonCopyable
 {
     public:
         ActivityNoticePanel(wxWindow* parent,const wxString& notice, const wxSize& panel_size = wxSize(190,6), const wxSize& gauge_size = wxSize(80,5) );
@@ -58,7 +65,7 @@ ScopedActivityNotice scopedActivityNotice(wxWindow* parent,const wxString& notic
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
     SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by

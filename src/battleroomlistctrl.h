@@ -51,7 +51,7 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     wxListItemAttr * GetItemAttr(long item) const;
 
   protected:
-		static int CompareLobbyStatus( const DataType user1, const DataType user2 );
+	static int CompareLobbyStatus( const DataType user1, const DataType user2 );
     static int CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle );
     static int CompareSide(const DataType user1, const DataType user2);
     static int CompareColor(const DataType user1, const DataType user2);
@@ -66,7 +66,6 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     wxString GetSelectedUserNick();
 
     IBattle* m_battle;
-    static IBattle* s_battle;
 
     typedef SL_GENERIC::UserMenu<BattleroomListCtrl> UserMenu;
     UserMenu* m_popup;
@@ -79,13 +78,25 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
 
     wxMenuItem* m_handicap_item;
 
-    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 
     virtual void Sort();
 
     bool m_ro;
     bool m_showingame;
-    static bool s_showingame;
+
+	// if -1 then it's not set
+	int m_status_column_index;
+	int m_ingame_column_index;
+	int m_faction_column_index;
+	int m_colour_column_index;
+	int m_country_column_index;
+	int m_rank_column_index;
+	int m_nick_column_index;
+	int m_team_column_index;
+	int m_ally_column_index;
+	int m_cpu_column_index;
+	int m_resourcebonus_column_index;
 
     enum {
       BRLIST_LIST = wxID_HIGHEST,
@@ -100,7 +111,7 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
       BRLIST_ADDTOGROUP
     };
 
-    DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 
 };
 
@@ -110,9 +121,9 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

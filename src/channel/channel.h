@@ -4,6 +4,7 @@
 #include "../userlist.h"
 #include <set>
 #include <wx/regex.h>
+#include "../utils/mixins.hh"
 
 class Channel;
 class Server;
@@ -16,7 +17,7 @@ struct UiChannelData {
   ChatPanel* panel;
 };
 
-class Channel : public UserList
+class Channel : public UserList, public SL::NonCopyable
 {
   public:
 
@@ -88,9 +89,9 @@ class Channel : public UserList
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

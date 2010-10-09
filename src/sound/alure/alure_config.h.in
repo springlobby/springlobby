@@ -1,0 +1,36 @@
+/* Define to the version of the library being built */
+#define ALURE_VER_MAJOR ${LIB_MAJOR_VERSION}
+#define ALURE_VER_MINOR ${LIB_MINOR_VERSION}
+
+/* Define if we have GCC's constructor attribute */
+#cmakedefine HAVE_GCC_CONSTRUCTOR
+
+/* Define if we have GCC's visibility attribute */
+#cmakedefine HAVE_GCC_VISIBILITY
+
+/* Define if we have windows.h */
+#cmakedefine HAVE_WINDOWS_H
+
+/* Define if we have pthread_np.h */
+#cmakedefine HAVE_PTHREAD_NP_H
+
+/* Define if we have nanosleep */
+#cmakedefine HAVE_NANOSLEEP
+
+/* Define if we have fseeko */
+#cmakedefine HAVE_FSEEKO
+
+/* Define if we have sndfile */
+//#cmakedefine HAS_SNDFILE
+
+/* Define if we have vorbisfile */
+//#cmakedefine HAS_VORBISFILE
+
+/* Define if we have FLAC */
+//#cmakedefine HAS_FLAC
+
+/* Define if we have MPG123 */
+//#cmakedefine HAS_MPG123
+
+/* Define if we have GStreamer */
+#cmakedefine HAS_GSTREAMER

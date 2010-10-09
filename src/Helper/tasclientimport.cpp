@@ -9,6 +9,7 @@
 #include <wx/log.h>
 
 #include "../settings.h"
+#include "../utils/platform.h"
 
 #include <wx/msw/registry.h>
 
@@ -43,7 +44,7 @@ bool ImportAutojoins()
 {
     wxString sep = wxFileName::GetPathSeparator();
     wxString fname = sett().GetLobbyWriteDir();
-    fname.Replace( _T("SpringLobby") , wxEmptyString );
+	fname.Replace( GetAppName() , wxEmptyString );
 
     fname = fname + sep + _T("var") + sep + _T("perform.dat");
     if ( wxFileName::FileExists( fname ) ) {

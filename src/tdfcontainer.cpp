@@ -65,14 +65,13 @@ void Tokenizer::EnterStream( std::istream &stream_, const wxString &name ) {
 	skip_eol = false;
 	include_stack.push_back( IncludeCacheEntry( &stream_, false ) );
 	include_stack.back().name = name;
-	include_stack.back().line = 1;
-	include_stack.back().column = 1;
-};
+}
+
 void Tokenizer::UnwindStack() {
 	while ( ( !include_stack.empty() ) && include_stack.back().stream && ( !include_stack.back().stream->good() ) ) {
 		include_stack.pop_back();
 	}
-};
+}
 
 char Tokenizer::PeekNextChar() {
 	UnwindStack();
@@ -103,11 +102,12 @@ char Tokenizer::GetNextChar() {
 	}
 
 	return c;
-};
+}
+
 bool Tokenizer::Good() {
 	UnwindStack();
 	return !include_stack.empty();
-};
+}
 
 void Tokenizer::ReadToken( Token &token ) {
 start:
@@ -212,7 +212,7 @@ start:
 			token.type = Token::type_entry_name;
 			return;
 	}
-};
+}
 
 void Tokenizer::SkipSpaces() {
 	while ( Good() && IsWhitespace( PeekNextChar() ) ) {
@@ -231,11 +231,11 @@ Token Tokenizer::GetToken( int i ) {
 	}
 
 	return token_buffer[p];
-};
+}
 
 void Tokenizer::Step( int i ) {
 	buffer_pos += i;
-};
+}
 
 Node::~Node() {
 	//if(parent)parent->Remove(name);

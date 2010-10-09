@@ -3,9 +3,11 @@
 
 #include <wx/menu.h>
 #include "usermenu.h"
+#include "utils/mixins.hh"
 
 //! seperating this into a friend class enables us to re-use it in the tab header right click evt
-class ChatPanelMenu : public wxEvtHandler {
+class ChatPanelMenu : public wxEvtHandler , public SL::NonCopyable
+{
     public:
         typedef SL_GENERIC::UserMenu<ChatPanelMenu>
             UserMenu;
@@ -72,6 +74,7 @@ class ChatPanelMenu : public wxEvtHandler {
         void OnMenuItem( wxCommandEvent& event );
 
         wxMenu* GetMenu();
+		ChatPanelMenu::UserMenu* GetUserMenuNoCreate();
 
     protected:
         void CreateNickListMenu();
@@ -147,7 +150,7 @@ static const long CHAT_MENU_LOG_OPEN                = wxNewId();
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
     SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by

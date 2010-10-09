@@ -13,7 +13,7 @@ class WidgetDownloadListctrl : public CustomVirtListCtrl<Widget,WidgetDownloadLi
                     const wxSize& sz = wxDefaultSize);
         virtual ~WidgetDownloadListctrl();
 
-        void AddWidget( const Widget widget );
+        void AddWidget( const Widget& widget );
         Widget& GetSelectedWidget();
 
         //these are overloaded to use list in virtual style
@@ -25,7 +25,7 @@ class WidgetDownloadListctrl : public CustomVirtListCtrl<Widget,WidgetDownloadLi
         void Sort();
 
     protected:
-        static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+		int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 
         void HighlightItem( long item );
         void OnActivateItem( wxListEvent& event );

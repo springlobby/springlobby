@@ -17,7 +17,7 @@ struct Replay
     time_t date;
     wxString date_string;
     OfflineBattle battle;
-    Replay():id(0),playernum(0),can_watch(false),duration(0),size(0){};
+	Replay( const size_t idx = 0):id(idx),playernum(0),can_watch(false),duration(0),size(0){};
 
     bool Equals( const Replay& other ) const { return Filename == other.Filename; }
 };
@@ -28,7 +28,7 @@ struct Savegame
     int playernum;
     bool can_watch;
     int duration; //in seconds
-    int size; //in bytes
+	unsigned long size; //in bytes
     wxString MapName;
     wxString ModName;
     wxString SpringVersion;
@@ -36,7 +36,7 @@ struct Savegame
     time_t date;
     wxString date_string;
     OfflineBattle battle;
-    Savegame():id(0),playernum(0),can_watch(false),duration(0),size(0){};
+	Savegame(const size_t idx = 0):id(idx),playernum(0),can_watch(false),duration(0),size(0){};
 
     bool Equals( const Savegame& other ) const { return Filename == other.Filename; }
 };

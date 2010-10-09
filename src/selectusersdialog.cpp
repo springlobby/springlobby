@@ -114,7 +114,7 @@ void SelectUsersDialog::PopulateUsersList()
 {
   ClearList();
   if ( ui().IsConnected() ) {
-    const UserList& userlist = ui().GetServer().GetUserList();
+	const UserList& userlist = serverSelector().GetServer().GetUserList();
 
     wxWindowUpdateLocker noUpdates(m_user_list);
     for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i) {

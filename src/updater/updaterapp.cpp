@@ -128,7 +128,12 @@ int UpdaterApp::OnExit()
 void UpdaterApp::OnFatalException()
 {
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-    crashreport().GenerateReport(wxDebugReport::Context_Exception);
+    #if wxUSE_STACKWALKER
+        CrashReport::instance().GenerateReport();
+    #else
+        EXCEPTION_POINTERS* p = new EXCEPTION_POINTERS; //lets hope this'll never get called
+        CrashReport::instance().GenerateReport(p);
+    #endif
 #else
     wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
 #endif

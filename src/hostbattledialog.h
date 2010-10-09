@@ -3,7 +3,7 @@
 
 
 #include <wx/dialog.h>
-
+#include "gui/windowattributespickle.h"
 class wxStaticText;
 class wxTextCtrl;
 class wxChoice;
@@ -17,12 +17,15 @@ class wxBitmapButton;
 class wxCheckBox;
 class wxMenu;
 
-class HostBattleDialog : public wxDialog
+class HostBattleDialog : public wxDialog, public WindowAttributesPickle
 {
 	public:
 		HostBattleDialog( wxWindow* parent );
 
 		void ReloadModList();
+
+		//! this shows an instance and handles everything wrt data feeding and input handling
+		static void Run( wxWindow* parent );
 
 
 	protected:
@@ -43,7 +46,7 @@ class HostBattleDialog : public wxDialog
 		wxChoice* m_mod_pic;
 		wxStaticText* m_pwd_lbl;
 		wxTextCtrl* m_pwd_text;
-
+		wxChoice* m_rank_direction;
 		wxStaticText* m_port_lbl;
 		wxTextCtrl* m_port_text;
         wxTextCtrl* m_relayhost_name;
@@ -67,6 +70,8 @@ class HostBattleDialog : public wxDialog
 		wxStaticBitmap* m_rank5_img;
 		wxRadioButton* m_rank6_radio;
 		wxStaticBitmap* m_rank6_img;
+		wxRadioButton* m_rank7_radio;
+		wxStaticBitmap* m_rank7_img;
 
 		wxStaticLine* m_buttons_sep;
 		wxButton* m_cancel_btn;
@@ -101,9 +106,9 @@ class HostBattleDialog : public wxDialog
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

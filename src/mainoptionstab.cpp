@@ -24,6 +24,7 @@
 #include "utils/debug.h"
 #include "utils/controls.h"
 #include "utils/conversion.h"
+#include "utils/platform.h"
 
 #ifndef NO_TORRENT_SYSTEM
 #include "torrentoptionspanel.h"
@@ -66,7 +67,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
 
 #ifndef NO_TORRENT_SYSTEM
     m_torrent_opts = new TorrentOptionsPanel( m_tabs );
-    m_tabs->AddPage( m_torrent_opts, _("P2P"), true, charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) ) );
+	m_tabs->AddPage( m_torrent_opts, _("Downloads"), true, charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) ) );
 #endif
 
     m_chat_opts = new ChatOptionsTab( m_tabs );
@@ -157,4 +158,28 @@ void MainOptionsTab::LoadPerspective( const wxString& perspective_name  )
 void MainOptionsTab::SavePerspective( const wxString& perspective_name )
 {
     SaveNotebookPerspective( m_tabs, perspective_name );
+}
+
+OptionsDialog::OptionsDialog( wxWindow* parent )
+	: wxDialog( parent, -1, IdentityString(_("%s Preferences") ), wxDefaultPosition, wxSize( 700,430 ), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX ),
+	WindowAttributesPickle( _T("preferences"), this, wxSize( 700,430 ) )
+{
+	m_options = new MainOptionsTab( this );
+	m_main_sizer = new wxBoxSizer( wxVERTICAL );
+	m_main_sizer->Add( m_options, 1, wxEXPAND | wxALL, 0 );
+	SetSizer( m_main_sizer );
+	Layout();
+}
+
+void OptionsDialog::SetSelection( const unsigned int page )
+{
+	m_options->SetSelection( page );
+}
+
+bool OptionsDialog::Show( bool show )
+{
+	if( !show )
+		SaveAttributes();
+	return wxDialog::Show( show );
+
 }

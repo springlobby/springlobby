@@ -7,31 +7,22 @@
 INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 
 SET(springlobbySrc
-	src/updater/updatermainwindow.cpp
-	src/updater/updatehelper.cpp
 	src/utils/activitynotice.cpp
 	src/chatpanelmenu.cpp
-	src/customizations.cpp
 	src/gui/gradientpanel.cpp
 	src/gui/wxgradientbutton.cpp
 	src/gui/skirmish_dialog.cpp
 	src/gui/wxbackgroundimage.cpp
 	src/gui/simplefront.cpp
+	src/gui/statusbar.cpp
 	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
-	src/utils/debug.cpp
-	src/utils/platform.cpp
-	src/utils/conversion.cpp
+	src/gui/pastedialog.cpp
 	src/utils/tasutil.cpp
-	src/utils/sltipwin.cpp
-	src/utils/controls.cpp
-	src/utils/globalevents.cpp
 	src/utils/networkevents.cpp
-	src/utils/uievents.cpp
 	src/utils/md5.c
 	src/updater/updater.cpp
-	src/updater/versionchecker.cpp
 	src/Helper/TextCompletionDatabase.cpp
 	src/Helper/imageviewer.cpp
 	src/Helper/slhtmlwindow.cpp
@@ -68,13 +59,13 @@ SET(springlobbySrc
 	src/chatpanel.cpp
 	src/connectwindow.cpp
 	src/countrycodes.cpp
-	src/crashreport.cpp
 	src/customlistctrl.cpp
 	src/flagimages.cpp
 	src/groupoptionspanel.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
 	src/iconimagelist.cpp
+	src/introguide.cpp
 	src/lobbyoptionstab.cpp
 	src/mainchattab.cpp
 	src/mainjoinbattletab.cpp
@@ -86,52 +77,55 @@ SET(springlobbySrc
 	src/mapgridctrl.cpp
 	src/mapselectdialog.cpp
 	src/mmoptionwindows.cpp
-	src/mmoptionmodel.cpp
-	src/mmoptionswrapper.cpp
 	src/nicklistctrl.cpp
 	src/offlinebattle.cpp
 	src/playback/replaylist.cpp
 	src/playback/savegamelist.cpp
-	src/sdlsound.cpp
+	src/alsound.cpp
 	src/selectusersdialog.cpp
 	src/server.cpp
+	src/reconnectdialog.cpp
 	src/serverevents.cpp
-	src/settings.cpp
 	src/singleplayerbattle.cpp
 	src/singleplayertab.cpp
 	src/socket.cpp
-	src/spinctld.cpp
 	src/spring.cpp
 	src/springlobbyapp.cpp
 	src/springoptionstab.cpp
 	src/springprocess.cpp
-	src/springunitsync.cpp
-	src/springunitsynclib.cpp
 	src/tasserver.cpp
 	src/tdfcontainer.cpp
-	src/thread.cpp
 	src/torrentlistctrl.cpp
 	src/torrentoptionspanel.cpp
 	src/torrentwrapper.cpp
 	src/ui.cpp
-	src/uiutils.cpp
 	src/user.cpp
 	src/useractions.cpp
 	src/userlist.cpp
 	src/userlistctrl.cpp
+	src/utils/downloader.cpp
+	src/utils/plasmaresourceinfo.cpp
+	src/utils/battleevents.cpp
 	src/widgets/downloadlistctrl.cpp
 	src/widgets/downloaddialog.cpp
 	src/widgets/downloadpanel.cpp
 	src/widgets/infopanel.cpp
 	src/widgets/widget.cpp
-	src/globalsmanager.cpp
 	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
-
+	src/simpleinterface/simpleserverevents.cpp
+	src/simpleinterface/customizedframe.cpp
+	src/simpleinterface/simplempframe.cpp
+	src/simpleinterface/simplebattlelistctrl.cpp
+	src/toasterbox/ToasterBox.cpp
+	src/toasterbox/ToasterBoxWindow.cpp
+	src/toasterbox/ToasterBoxWindowList.cpp
+	src/gui/notificationmanager.cpp
+	src/pingthread.cpp
+	src/iserverevents.cpp
 )
 
 SET(SettingsSrc
-	src/utils/customdialogs.cpp
 	src/settings++/frame.cpp
 	src/settings++/helpmenufunctions.cpp
 	src/settings++/panel_pathoption.cpp
@@ -142,42 +136,81 @@ SET(SettingsSrc
 	src/settings++/tab_render_detail.cpp
 	src/settings++/tab_simple.cpp
 	src/settings++/tab_ui.cpp
+	src/settings++/hotkeys/AddSelectionCmdDlgBase.cpp
+	src/settings++/hotkeys/AddSelectionCmdDlg.cpp
+	src/settings++/hotkeys/commandlist.cpp
+	src/settings++/hotkeys/hotkey_panel.cpp
+	src/settings++/hotkeys/hotkey_parser.cpp
+	src/settings++/hotkeys/KeynameConverter.cpp
+	src/settings++/hotkeys/spring_command.cpp
+	src/settings++/hotkeys/SpringDefaultProfile.cpp
+	src/wxkeybinder/keybinder.cpp
+	src/wxkeybinder/menuutils.cpp
+)
+
+SET( curlSRC
+	src/utils/curlhelper.cpp
 )
 
 SET(StandAloneSettings
-	src/settings.cpp
-	src/uiutils.cpp
 	src/settings++/Main.cpp
 )
 
 SET(SLSharedWithSettings
-	src/utils/debug.cpp
-	src/utils/platform.cpp
-	src/utils/conversion.cpp
-	src/utils/sltipwin.cpp
-	src/utils/controls.cpp
+	src/customizations.cpp
+	src/uiutils.cpp
 	src/updater/versionchecker.cpp
+	src/updater/updatehelper.cpp
+	src/utils/controls.cpp
+	src/utils/conversion.cpp
+	src/utils/customdialogs.cpp
+	src/utils/debug.cpp
+	src/utils/globalevents.cpp
+	src/utils/platform.cpp
+	src/utils/sltipwin.cpp
+	src/utils/uievents.cpp
 	src/crashreport.cpp
+	src/globalsmanager.cpp
+	src/mmoptionmodel.cpp
+	src/mmoptionswrapper.cpp
+	src/settings.cpp
 	src/springunitsynclib.cpp
 	src/springunitsync.cpp
 	src/thread.cpp
-	src/spinctld.cpp
-	src/globalsmanager.cpp
-	src/utils/globalevents.cpp
-	src/mmoptionmodel.cpp
-	src/mmoptionswrapper.cpp
+	src/gui/windowattributespickle.cpp
+	src/gui/spinctl/generic/spinctlg.cpp
+	src/Helper/slconfig.cpp
 )
 
 SET( updaterSrc
 	src/updater/updatermainwindow.cpp
 	src/updater/updater.cpp
 	src/updater/updaterapp.cpp
-	src/updater/updatehelper.cpp
-	src/settings.cpp
-	src/utils/customdialogs.cpp
 	src/utils/activitynotice.cpp
-	src/utils/platform.cpp
 	src/utils/misc.cpp
-	src/uiutils.cpp
+	src/customizations.cpp
 )
 
+FILE( GLOB header "src/*.h" )
+FILE( GLOB header2 "src/*/*.h" )
+
+#grep -lR cpp\"$ src/* | sed -e "s/\.h/\.cpp/g"
+SET( templatesources
+	src/battleroommmoptionstab.cpp
+	src/customvirtlistctrl.cpp
+	src/httpdownloader.cpp
+	src/playback/playbackfilter.cpp
+	src/playback/playbacklist.cpp
+	src/playback/playbacklistctrl.cpp
+	src/playback/playbackthread.cpp
+	src/playback/playbacktab.cpp
+	src/utils/stringserializer.cpp
+)
+LIST( APPEND header ${header2} ${templatesources} )
+set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )
+
+IF( WIN32 )
+	LIST( APPEND SLSharedWithSettings src/stacktrace.c )
+ELSE( WIN32 )
+	LIST( APPEND SLSharedWithSettings src/stacktrace.cpp )
+ENDIF( WIN32 )

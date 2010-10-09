@@ -40,3 +40,4 @@ test.txt
 test/*
 src/images/updater/*
 *.fbp.bak
+CMakeLists.txt.user*

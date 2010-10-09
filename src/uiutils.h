@@ -5,6 +5,7 @@
 
 #include <wx/intl.h>
 #include <vector>
+#include "utils/mixins.hh"
 
 class wxColour;
 class wxImage;
@@ -13,8 +14,6 @@ class wxBitmap;
 
 #define wxDefaultBitmap wxBitmap()
 
-wxString RefineMapname( const wxString& mapname );
-wxString RefineModname( const wxString& modname );
 wxString RTFtoText( const wxString& rtfinput );
 bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff = 10 );
 
@@ -50,6 +49,17 @@ void CopyToClipboard( const wxString& text );
 //! open either plattform default browser or binary saved in settings with given url
 void OpenWebBrowser( const wxString& url );
 
+class wxDateTime;
+//! measures time diff between ctor and dtor, shows result in msg box
+struct TimerMessageBox: public SL::NonCopyable {
+	//! msg_format must contain exactly one %s to be filled with the elapsed time
+	TimerMessageBox( const wxString& msg_format );
+	~TimerMessageBox();
+	wxDateTime* m_start;
+	wxString m_msg_format;
+};
+
+
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
@@ -57,9 +67,9 @@ void OpenWebBrowser( const wxString& url );
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

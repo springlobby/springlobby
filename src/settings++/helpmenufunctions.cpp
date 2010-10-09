@@ -4,6 +4,7 @@
 #include "../images/springsettings.xpm"
 
 #include "../utils/customdialogs.h"
+#include "../utils/platform.h"
 #include "../updater/updatehelper.h"
 #include <wx/intl.h>
 #include "se_utils.h"
@@ -13,10 +14,17 @@
 
 void showAbout()
 {
-    std::string ver = std::string("0.2.1 revision ") + VERSION;
     wxAboutDialogInfo info;
-    info.SetName(_T("SpringSettings"));
-    info.SetVersion(_T("0.2.1"));//WX_STRING(ver));
+	if ( IsSettingsStandAlone() )
+	{
+		info.SetName(_T("SpringSettings"));
+		info.SetVersion(_T("0.2.1"));
+	}
+	else
+	{
+		info.SetName( GetAppName() );
+		info.SetVersion(GetSpringLobbyVersion());
+	}
     info.SetDescription(_("SpringSettings is a graphical frontend to the Settings of the Spring engine"));
     info.SetCopyright(_T("(C) 2007-2008 koshi <koshi@springlobby.info>"));
     info.SetIcon(wxIcon(springsettings_xpm));
@@ -26,6 +34,7 @@ void showAbout()
 void showCredits()
 {
 	CreditsDialog dlg(CustomMessageBoxBase::getSettingspointer(),_T("Credits"),SS_MAIN_ICON);
+	dlg.AddCredit(_("Very Bad Soldier"),_T("wrote the excellent hotkey editor"));
 	dlg.AddCredit(_("Kloot"),_T("wrote Settings++ from which SpringSettings originated"));
 	dlg.AddCredit(_("The SpringLobby team"),_("thanks for inviting me in, code to re-use, infrastructure and help in general"));
 	dlg.AddCredit(_("everyone reporting bugs/suggestions"),_T(""));

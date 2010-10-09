@@ -6,7 +6,7 @@
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -26,7 +26,7 @@
 #include <wx/spinctrl.h>
 #include <wx/log.h>
 
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 #include "../utils/debug.h"
 #include "se_utils.h"
 
@@ -34,8 +34,8 @@
 void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer) {
 	// i < "sizeof"(MO_SLI)
 	sizer->Add(5,10,0);
-	sizer->Add(new wxStaticText(this, -1, _("Setting a slider to 0 will exclude that\n"
-											"mode from being cycled through ingame.")) , 0,wxBOTTOM,15);
+	sizer->Add(new wxStaticText(this, -1, _("Setting a slider to 0 will exclude that\n\
+											mode from being cycled through ingame.")) , 0,wxBOTTOM,15);
 	for (int i = 0; i < ctrl_scroll_slider_size; i++) {
 		//set to dummy value
 		ctrl_scroll_slider[i] = new wxSlider(this, MO_SLI[i].id, 0, 0, 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);

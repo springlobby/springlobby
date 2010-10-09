@@ -6,7 +6,7 @@
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -36,6 +36,7 @@
 #include <wx/cmdline.h>
 #include <wx/frame.h>
 
+#include "../globalsmanager.h"
 #include "../springunitsynclib.h"
 
 IMPLEMENT_APP(Springsettings)
@@ -43,6 +44,7 @@ IMPLEMENT_APP(Springsettings)
 Springsettings::Springsettings()
     :  m_log_verbosity( 3 ),
     m_log_console( true ),
+	m_log_file( false ),
     m_log_window_show( false ),
     m_crash_handle_disable( false )
 {
@@ -62,7 +64,7 @@ bool Springsettings::OnInit()
     //initialize all loggers
 	//TODO non-constant parameters
 	wxLogChain* logchain  = 0;
-    wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
+	wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 
     SetSettingsStandAlone( true );
     settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
@@ -79,18 +81,26 @@ bool Springsettings::OnInit()
 
 int Springsettings::OnExit()
 {
-	susynclib().Unload();
+	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
+
+	SetEvtHandlerEnabled(false);
+	DestroyGlobals();
 	return 0;
 }
 
 //! @brief is called when the app crashes
 void Springsettings::OnFatalException()
 {
-  #if wxUSE_DEBUGREPORT && defined(HAVE_WX28) && defined(ENABLE_DEBUG_REPORT)
-  crashreport().GenerateReport(wxDebugReport::Context_Exception);
-  #else
-  wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease enable wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR );
-  #endif
+#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
+    #if wxUSE_STACKWALKER
+        CrashReport::instance().GenerateReport();
+    #else
+        EXCEPTION_POINTERS* p = new EXCEPTION_POINTERS; //lets hope this'll never get called
+        CrashReport::instance().GenerateReport(p);
+    #endif
+#else
+    wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
+#endif
 }
 
 void Springsettings::OnInitCmdLine(wxCmdLineParser& parser)
@@ -100,9 +110,8 @@ void Springsettings::OnInitCmdLine(wxCmdLineParser& parser)
         {
             { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
             { wxCMD_LINE_SWITCH, _T("nc"), _T("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-        #if wxUSE_STD_IOSTREAM
             { wxCMD_LINE_SWITCH, _T("cl"), _T("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-        #endif
+			{ wxCMD_LINE_OPTION, _T("fl"), _T("file-logging"),  _("dumps application log to a file ( enter path )"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
             { wxCMD_LINE_SWITCH, _T("gl"), _T("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
             //{ wxCMD_LINE_OPTION, _T("c"), _T("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
             { wxCMD_LINE_OPTION, _T("l"), _T("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
@@ -132,7 +141,10 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
   #if wxUSE_CMDLINE_PARSER
     if ( !parser.Parse(true) )
     {
-        m_log_console = parser.Found(_T("console-logging"));
+#if wxUSE_STD_IOSTREAM
+		m_log_console = parser.Found(_T("console-logging"));
+#endif
+		m_log_file = parser.Found(_T("file-logging"), &m_log_file_path);
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
 

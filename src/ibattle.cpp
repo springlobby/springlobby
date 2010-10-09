@@ -11,8 +11,10 @@
 #include "utils/math.h"
 #include "uiutils.h"
 #include "settings.h"
-#include "ui.h"
+#include "ui.h" //only required for preset stuff
+#include "spring.h"
 #include "springunitsynclib.h"
+#include "springlobbyapp.h"
 
 #include <list>
 #include <algorithm>
@@ -29,8 +31,9 @@ IBattle::IBattle():
   m_previous_local_mod_name( wxEmptyString ),
   m_ingame(false),
   m_generating_script(false),
-	m_players_ready(0),
-	m_players_sync(0),
+  m_players_ready(0),
+  m_players_sync(0),
+  m_players_ok(0),
   m_is_self_in(false),
 	m_timer ( 0 )
 {
@@ -39,6 +42,7 @@ IBattle::IBattle():
 
 IBattle::~IBattle()
 {
+	if ( m_is_self_in ) usync().UnSetCurrentMod();
 	if ( m_timer ) m_timer->Stop();
 	delete m_timer;
 }
@@ -222,15 +226,19 @@ User& IBattle::OnUserAdded( User& user )
     	 pos = GetFreePosition();
     	 UserPositionChanged( user );
     }
-		if ( !bs.spectator )
-		{
-			PlayerJoinedAlly( bs.ally );
-			PlayerJoinedTeam( bs.team );
-		}
-		if ( bs.spectator && IsFounderMe() ) m_opts.spectators++;
-		if ( bs.ready && !bs.IsBot() ) m_players_ready++;
-		if ( bs.sync && !bs.IsBot() ) m_players_sync++;
-		if ( !bs.spectator && !bs.IsBot() && ( !bs.ready || !bs.sync ) ) m_ready_up_map[user.GetNick()] = time(0);
+	if ( !bs.spectator )
+	{
+		PlayerJoinedAlly( bs.ally );
+		PlayerJoinedTeam( bs.team );
+	}
+	if ( bs.spectator && IsFounderMe() ) m_opts.spectators++;
+	if ( !bs.spectator && !bs.IsBot() )
+	{
+		if ( bs.ready ) m_players_ready++;
+		if ( bs.sync) m_players_sync++;
+		if ( !bs.ready || !bs.sync ) m_ready_up_map[user.GetNick()] = time(0);
+		if ( bs.ready && bs.sync ) m_players_ok++;
+	}
     return user;
 }
 
@@ -253,65 +261,47 @@ unsigned int IBattle::GetNumPlayers() const
 		return GetNumUsers() - GetNumBots();
 }
 
+unsigned int IBattle::GetNumActivePlayers() const
+{
+		return GetNumPlayers() - m_opts.spectators;
+}
+
 void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
 
     UserBattleStatus previousstatus = user.BattleStatus();
 
     user.UpdateBattleStatus( status );
-
-		if ( !previousstatus.spectator )
+	unsigned int oldspeccount = m_opts.spectators;
+	m_opts.spectators = 0;
+	m_players_sync = 0;
+	m_players_ready = 0;
+	m_players_ok = 0;
+	m_teams_sizes.clear();
+	m_ally_sizes.clear();
+	for ( unsigned int i = 0; i < GetNumUsers(); i++ )
+	{
+		User& loopuser = GetUser( i );
+		UserBattleStatus& loopstatus = loopuser.BattleStatus();
+		if ( loopstatus.spectator ) m_opts.spectators++;
+		if ( !loopstatus.IsBot() )
 		{
-			PlayerLeftAlly( previousstatus.ally );
-			PlayerLeftTeam( previousstatus.team );
-		}
-		if ( !status.spectator )
-		{
-			PlayerJoinedAlly( status.ally );
-			PlayerJoinedTeam( status.team );
-		}
-
-    if ( IsFounderMe() )
-    {
-			if ( status.spectator != previousstatus.spectator )
+			if ( !loopstatus.spectator )
 			{
-					if ( status.spectator )
-					{
-							m_opts.spectators++;
-					}
-					else
-					{
-							m_opts.spectators--;
-					}
-					SendHostInfo( HI_Spectators );
+				if ( loopstatus.ready && loopstatus.spectator ) m_players_ready++;
+				if ( loopstatus.sync ) m_players_sync++;
+				if ( loopstatus.ready && loopstatus.sync ) m_players_ok++;
+				PlayerJoinedTeam( loopstatus.team );
+				PlayerJoinedAlly( loopstatus.ally );
 			}
+		}
 	}
-
+	if ( oldspeccount != m_opts.spectators  )
+	{
+		if ( IsFounderMe() ) SendHostInfo( HI_Spectators );
+	}
 	if ( !status.IsBot() )
 	{
-
-		if ( !previousstatus.spectator && !status.spectator && (  previousstatus.ready != status.ready ) )
-		{
-			 if ( status.ready ) m_players_ready++;
-			 else m_players_ready--;
-		}
-
-		if ( previousstatus.spectator ) // coming from spectator
-		{
-			 if ( status.ready ) m_players_ready++;
-		}
-
-		if ( status.spectator ) // becoming spectator
-		{
-			if ( previousstatus.ready ) m_players_ready--;
-		}
-
-		if ( ( previousstatus.sync != status.sync ) )
-		{
-			 if ( status.sync ) m_players_sync++;
-			 else m_players_sync--;
-		}
-
 		if ( ( status.ready && status.sync ) || status.spectator )
 		{
 			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
@@ -334,14 +324,8 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 bool IBattle::ShouldAutoStart() const
 {
 	if ( GetInGame() ) return false;
-	if ( !IsLocked() && (  ( GetNumPlayers() - m_opts.spectators ) ) < m_opts.maxplayers ) return false; // proceed checking for ready players only if the battle is full or locked
-	for ( unsigned int i = 0; i < GetNumUsers(); i++ )
-	{
-		User& usr = GetUser( i );
-		UserBattleStatus& status = usr.BattleStatus();
-		if ( status.IsBot() ) continue;
-		if ( !status.spectator && ( !status.sync || !status.ready ) ) return false;
-	}
+	if ( !IsLocked() && ( GetNumActivePlayers() < m_opts.maxplayers ) ) return false; // proceed checking for ready & symc players only if the battle is full or locked
+	if ( !IsEveryoneReady() ) return false;
 	return true;
 }
 
@@ -353,10 +337,12 @@ void IBattle::OnUserRemoved( User& user )
         PlayerLeftTeam( bs.team );
         PlayerLeftAlly( bs.ally );
     }
-    if ( bs.ready && !bs.IsBot() )
-        m_players_ready--;
-    if ( bs.sync && !bs.IsBot() )
-        m_players_sync--;
+	if ( !bs.spectator && !bs.IsBot() )
+	{
+		if ( bs.ready ) m_players_ready--;
+		if ( bs.sync ) m_players_sync--;
+		if ( bs.ready && bs.sync ) m_players_ok--;
+	}
     if ( IsFounderMe() && bs.spectator )
     {
         m_opts.spectators--;
@@ -364,10 +350,6 @@ void IBattle::OnUserRemoved( User& user )
     }
     if ( &user == &GetMe() )
     {
-        if ( m_timer )
-            m_timer->Stop();
-        delete m_timer;
-        m_timer = 0;
         OnSelfLeftBattle();
     }
     UserList::RemoveUser( user.GetNick() );
@@ -384,16 +366,19 @@ void IBattle::OnUserRemoved( User& user )
 }
 
 
-bool IBattle::IsEveryoneReady()
+bool IBattle::IsEveryoneReady() const
 {
-    for (user_map_t::size_type i = 0; i < GetNumUsers(); i++)
-    {
-				User& usr = GetUser(i);
-				if ( usr.BattleStatus().IsBot() ) continue;
-        UserBattleStatus& bs = usr.BattleStatus();
-        if ( !bs.ready && !bs.spectator ) return false;
-    }
-    return true;
+	for ( unsigned int i = 0; i < GetNumPlayers(); i++ )
+	{
+		User& usr = GetUser( i );
+		UserBattleStatus& status = usr.BattleStatus();
+		if ( status.IsBot() ) continue;
+		if ( status.spectator ) continue;
+		if ( &usr == &GetMe() ) continue;
+		if ( !status.ready ) return false;
+		if ( !status.sync ) return false;
+	}
+	return true;
 }
 
 
@@ -723,11 +708,14 @@ void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
     m_map_loaded = false;
     m_host_map.name = mapname;
     m_host_map.hash = hash;
-    if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
-    else m_map_exists = usync().MapExists( m_host_map.name );
-    #ifndef __WXMSW__
-		if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
-		#endif
+	if ( !m_host_map.hash.IsEmpty() )
+		m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+	else
+		m_map_exists = usync().MapExists( m_host_map.name );
+	#ifndef __WXMSW__ //!TODO why not on win?
+		if ( m_map_exists && !spring().IsRunning() )
+			usync().PrefetchMap( m_host_map.name );
+	#endif
   }
 }
 
@@ -737,10 +725,13 @@ void IBattle::SetLocalMap(const UnitSyncMap& map)
   if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
     m_local_map = map;
     m_map_loaded = true;
-    if ( !m_host_map.hash.IsEmpty() ) m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
-    else m_map_exists = usync().MapExists( m_host_map.name );
+	if ( !m_host_map.hash.IsEmpty() )
+		m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+	else
+		m_map_exists = usync().MapExists( m_host_map.name );
     #ifndef __WXMSW__
-    if ( m_map_exists && !ui().IsSpringRunning() ) usync().PrefetchMap( m_host_map.name );
+		if ( m_map_exists && !spring().IsRunning() )
+			usync().PrefetchMap( m_host_map.name );
     #endif
     if ( IsFounderMe() ) // save all rects infos
     {
@@ -757,6 +748,8 @@ const UnitSyncMap& IBattle::LoadMap()
     try {
       ASSERT_EXCEPTION( m_map_exists, _T("Map does not exist.") );
       m_local_map = usync().GetMapEx( m_host_map.name );
+	  bool options_loaded = CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, m_host_map.name );
+	  ASSERT_EXCEPTION( options_loaded, _T("couldn't load the map options") );
       m_map_loaded = true;
 
     } catch (...) {}
@@ -810,6 +803,8 @@ const UnitSyncMod& IBattle::LoadMod()
     try {
       ASSERT_EXCEPTION( m_mod_exists, _T("Mod does not exist.") );
       m_local_mod = usync().GetMod( m_host_mod.name );
+	  bool options_loaded = CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, m_host_mod.name );
+	  ASSERT_EXCEPTION( options_loaded, _T("couldn't load the mod options") );
       m_mod_loaded = true;
     } catch (...) {}
   }
@@ -871,13 +866,27 @@ std::map<wxString,int> IBattle::RestrictedUnits() const
 
 void IBattle::OnSelfLeftBattle()
 {
-    susynclib().UnSetCurrentMod(); //left battle
+	if ( m_timer ) m_timer->Stop();
+	delete m_timer;
+	m_timer = 0;
     m_is_self_in = false;
+	for( size_t j = 0; j < GetNumUsers(); ++j  )
+	{
+		User& u = GetUser( j );
+		if ( u.GetBattleStatus().IsBot() )
+		{
+			OnUserRemoved( u );
+			ui().OnUserLeftBattle( *this, u );
+			j--;
+		}
+	}
     ClearStartRects();
     m_teams_sizes.clear();
     m_ally_sizes.clear();
     m_players_ready = 0;
     m_players_sync = 0;
+	m_players_ok = 0;
+	usync().UnSetCurrentMod(); //left battle
 }
 
 void IBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
@@ -935,11 +944,11 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
         }
       }
 
-			for( unsigned int j = 0; j <= GetLastRectIdx(); ++j ) {
-			    if ( GetStartRect( j ).IsOk() )
-                    RemoveStartRect(j); // remove all rects that might come from map presets
-			}
-			SendHostInfo( IBattle::HI_StartRects );
+		for( unsigned int j = 0; j <= GetLastRectIdx(); ++j ) {
+			if ( GetStartRect( j ).IsOk() )
+				RemoveStartRect(j); // remove all rects that might come from map presets
+		}
+		SendHostInfo( IBattle::HI_StartRects );
 
       unsigned int rectcount = s2l( options[_T("numrects")] );
       for ( unsigned int loadrect = 0; loadrect < rectcount; loadrect++)
@@ -1048,19 +1057,24 @@ void IBattle::AddUserFromDemo( User& user )
 	UserList::AddUser( m_internal_user_list[user.GetNick()] );
 }
 
-void IBattle::SetIsProxy( bool value )
+void IBattle::SetProxy( const wxString& value )
 {
-    m_opts.isproxy = value;
+	m_opts.proxyhost = value;
 }
 
 bool IBattle::IsProxy()
 {
-    return m_opts.isproxy;
+	return !m_opts.proxyhost.IsEmpty();
+}
+
+wxString IBattle::GetProxy()
+{
+	return m_opts.proxyhost;
 }
 
 bool IBattle::IsFounderMe()
 {
-    return ( ( m_opts.founder == GetMe().GetNick() ) || ( m_opts.isproxy  && !m_generating_script ) );
+	return ( ( m_opts.founder == GetMe().GetNick() ) || ( IsProxy()  && !m_generating_script ) );
 }
 
 bool IBattle::IsFounder( const User& user ) const
@@ -1165,15 +1179,22 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
                 status.spectator = player->GetInt( _T("Spectator"), 0 );
                 opts.spectators += user.BattleStatus().spectator;
                 status.team = player->GetInt( _T("Team") );
-								if ( !status.spectator )
-								{
-									PlayerJoinedTeam( status.team );
-								}
+				if ( !status.spectator )
+				{
+					PlayerJoinedTeam( status.team );
+				}
                 status.sync = true;
                 status.ready = true;
                 if ( status.spectator ) m_opts.spectators++;
-								if ( status.ready && !bot.ok() ) m_players_ready++;
-								if ( status.sync && !bot.ok() ) m_players_sync++;
+				else
+				{
+					if ( !bot.ok() )
+					{
+						if ( status.ready) m_players_ready++;
+						if ( status.sync ) m_players_sync++;
+						if ( status.sync && status.ready ) m_players_ok++;
+					}
+				}
 
                 //! (koshi) changed this from ServerRankContainer to RankContainer
                 user.Status().rank = (UserStatus::RankContainer)player->GetInt( _T("Rank"), -1 );

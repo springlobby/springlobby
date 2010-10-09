@@ -232,9 +232,9 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
 	this->Layout();
 	m_filter_sizer->Fit( this );
 
-    if (m_filter_map_expression != NULL) { delete m_filter_map_expression; }
+    delete m_filter_map_expression;
     m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
-    if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
+    delete m_filter_mod_expression;
     m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
 
     wxCommandEvent dummy;
@@ -320,10 +320,10 @@ bool PlaybackListFilter<PlaybackTabType>::FilterPlayback( const typename Playbac
     //Strings Plain Text & RegEx Check (Case insensitiv)
 
     //Map:
-    if ( !RefineMapname(battle.GetHostMapName() ).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) && !m_filter_map_expression->Matches(RefineMapname(battle.GetHostMapName() )) ) return false;
+    if ( !battle.GetHostMapName().Upper().Contains( m_filter_map_edit->GetValue().Upper() ) && !m_filter_map_expression->Matches(battle.GetHostMapName()) ) return false;
 
     //Mod:
-    if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !RefineModname( battle.GetHostModName() ).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(RefineModname(battle.GetHostModName())) ) return false;
+    if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(battle.GetHostModName()) ) return false;
 
     if ( (!m_filter_filesize_edit->GetValue().IsEmpty() ) && !_IntCompare( playback.size , 1024 * s2l( m_filter_filesize_edit->GetValue()) , m_filter_filesize_mode) ) return false;
 
@@ -344,7 +344,7 @@ template <class PlaybackTabType>
 void PlaybackListFilter<PlaybackTabType>::OnChangeMap ( wxCommandEvent& event )
 {
   if ( m_filter_map_edit == NULL ) return;
-  if (m_filter_map_expression != NULL) { delete m_filter_map_expression; }
+  delete m_filter_map_expression;
   m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(),wxRE_ICASE);
   OnChange(event);
 }
@@ -353,7 +353,7 @@ template <class PlaybackTabType>
 void PlaybackListFilter<PlaybackTabType>::OnChangeMod ( wxCommandEvent& event )
 {
   if ( m_filter_mod_edit == NULL ) return;
-  if (m_filter_mod_expression != NULL) { delete m_filter_mod_expression; }
+  delete m_filter_mod_expression;
   m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(),wxRE_ICASE);
   OnChange(event);
 }

@@ -58,8 +58,8 @@ public:
     void DeleteGroup(const wxString& name );
     void RemoveUser(const wxString& name );
     void ChangeAction( const wxString& group, const ActionType action, bool add = true );
-    ActionType GetGroupAction( const wxString& group );
-    wxString GetGroupOfUser( const wxString& user ) ;
+    ActionType GetGroupAction( const wxString& group ) const;
+    wxString GetGroupOfUser( const wxString& user ) const;
     void SetGroupColor( const wxString& group, const wxColour& color );
     wxColour GetGroupColor( const wxString& group );
     bool IsKnown( const wxString& name, bool outputWarning = false ) const;
@@ -96,9 +96,9 @@ UserActions& useractions();
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

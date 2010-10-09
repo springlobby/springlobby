@@ -24,12 +24,13 @@
 					<Add option="`pkg-config --cflags libtorrent-rasterbar`" />
 					<Add option="-Wno-strict-aliasing" />
 					<Add option='-DVERSION=\\&quot;cb-Unix-Debug\\&quot;' />
-					<Add option="-DNO_DEBUG_REPORT_UPLOAD" />
+					<Add option="-DENABLE_DEBUG_REPORT" />
 					<Add option="-DDISABLE_SOUND" />
 				</Compiler>
 				<Linker>
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
+					<Add library="curl" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
@@ -41,21 +42,24 @@
 				<Option object_output="obj/GNU/Profile/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="-cl -nc -f $HOME/.springlobby/testing.conf" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="`wx-config --cflags`" />
 					<Add option="`pkg-config --cflags libtorrent`" />
 					<Add option="`sdl-config --cflags`" />
 					<Add option='-DVERSION=\\&quot;0.0.1-git-cb\\&quot;' />
+					<Add option="-DNDEBUG" />
+					<Add option="-DDISABLE_SOUND" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="`wx-config --libs`" />
 					<Add option="`pkg-config --libs libtorrent-rasterbar`" />
+					<Add option="`sdl-config --libs`" />
+					<Add library="curl" />
 				</Linker>
 				<ExtraCommands>
 					<Add before="tools/test-susynclib.awk src/springunitsynclib.cpp" />
@@ -209,6 +213,9 @@
 			<Add option="-Wall" />
 			<Add directory="src" />
 		</Compiler>
+		<Linker>
+			<Add library="curl" />
+		</Linker>
 		<Unit filename="src/Helper/TextCompletionDatabase.cpp" />
 		<Unit filename="src/Helper/TextCompletionDatabase.hpp" />
 		<Unit filename="src/Helper/colorbutton.cpp" />
@@ -257,6 +264,13 @@
 		<Unit filename="src/battleoptionstab.h" />
 		<Unit filename="src/battleroomlistctrl.cpp" />
 		<Unit filename="src/battleroomlistctrl.h" />
+		<Unit filename="src/battleroommmoptionstab.cpp">
+			<Option target="GNU | Profile" />
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+			<Option target="GNU | Debug (wx29)" />
+			<Option target="GNU | RealDebug" />
+		</Unit>
 		<Unit filename="src/battleroommmoptionstab.h" />
 		<Unit filename="src/battleroomtab.cpp" />
 		<Unit filename="src/battleroomtab.h" />
@@ -288,6 +302,16 @@
 		<Unit filename="src/crashreport.h" />
 		<Unit filename="src/crc.cpp" />
 		<Unit filename="src/crc.h" />
+		<Unit filename="src/curl/base.cpp" />
+		<Unit filename="src/curl/base.h" />
+		<Unit filename="src/curl/curlthread.cpp" />
+		<Unit filename="src/curl/curlthread.h" />
+		<Unit filename="src/curl/ftp.cpp" />
+		<Unit filename="src/curl/ftp.h" />
+		<Unit filename="src/curl/http.cpp" />
+		<Unit filename="src/curl/http.h" />
+		<Unit filename="src/curl/utils.cpp" />
+		<Unit filename="src/curl/utils.h" />
 		<Unit filename="src/customizations.cpp" />
 		<Unit filename="src/customizations.h" />
 		<Unit filename="src/customlistctrl.cpp" />
@@ -309,10 +333,19 @@
 		<Unit filename="src/groupoptionspanel.h" />
 		<Unit filename="src/gui/gradientpanel.cpp" />
 		<Unit filename="src/gui/gradientpanel.h" />
+		<Unit filename="src/gui/notificationmanager.cpp" />
+		<Unit filename="src/gui/notificationmanager.h" />
 		<Unit filename="src/gui/simplefront.cpp" />
 		<Unit filename="src/gui/simplefront.h" />
 		<Unit filename="src/gui/skirmish_dialog.cpp" />
 		<Unit filename="src/gui/skirmish_dialog.h" />
+		<Unit filename="src/gui/statusbar.cpp" />
+		<Unit filename="src/gui/statusbar.h" />
+		<Unit filename="src/gui/windowattributespickle.cpp" />
+		<Unit filename="src/gui/windowattributespickle.h" />
+		<Unit filename="src/gui/spinctl/generic/spinctlg.cpp" />
+		<Unit filename="src/gui/spinctl/generic/spinctlg.h" />
+		<Unit filename="src/gui/spinctl/spinctrl.h" />
 		<Unit filename="src/gui/wxbackgroundimage.cpp" />
 		<Unit filename="src/gui/wxbackgroundimage.h" />
 		<Unit filename="src/gui/wxgradientbutton.cpp" />
@@ -391,6 +424,8 @@
 		<Unit filename="src/nicklistctrl.h" />
 		<Unit filename="src/nonportable.h" />
 		<Unit filename="src/offlinebattle.cpp" />
+		<Unit filename="src/pingthread.cpp" />
+		<Unit filename="src/pingthread.h" />
 		<Unit filename="src/playback/playbackfilter.h" />
 		<Unit filename="src/playback/playbackfiltervalues.h" />
 		<Unit filename="src/playback/playbacklist.h" />
@@ -405,8 +440,13 @@
 		<Unit filename="src/playback/savegamelist.h" />
 		<Unit filename="src/poolmanager.cpp" />
 		<Unit filename="src/poolmanager.h" />
-		<Unit filename="src/sdlsound.cpp" />
-		<Unit filename="src/sdlsound.h" />
+		<Unit filename="src/sdlsound.h">
+			<Option target="GNU | Profile" />
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+			<Option target="GNU | Debug (wx29)" />
+			<Option target="GNU | RealDebug" />
+		</Unit>
 		<Unit filename="src/selectusersdialog.cpp" />
 		<Unit filename="src/selectusersdialog.h" />
 		<Unit filename="src/server.cpp" />
@@ -445,8 +485,6 @@
 		<Unit filename="src/socket.h" />
 		<Unit filename="src/sounds/pm_sound.h" />
 		<Unit filename="src/sounds/ring_sound.h" />
-		<Unit filename="src/spinctld.cpp" />
-		<Unit filename="src/spinctld.h" />
 		<Unit filename="src/spring.cpp" />
 		<Unit filename="src/spring.h" />
 		<Unit filename="src/springlobby.rc">
@@ -464,6 +502,8 @@
 		<Unit filename="src/springunitsync.h" />
 		<Unit filename="src/springunitsynclib.cpp" />
 		<Unit filename="src/springunitsynclib.h" />
+		<Unit filename="src/stacktrace.cpp" />
+		<Unit filename="src/stacktrace.h" />
 		<Unit filename="src/tasserver.cpp" />
 		<Unit filename="src/tasserver.h" />
 		<Unit filename="src/tasservertokentable.h" />
@@ -471,6 +511,12 @@
 		<Unit filename="src/tdfcontainer.h" />
 		<Unit filename="src/thread.cpp" />
 		<Unit filename="src/thread.h" />
+		<Unit filename="src/toasterbox/ToasterBox.cpp" />
+		<Unit filename="src/toasterbox/ToasterBox.h" />
+		<Unit filename="src/toasterbox/ToasterBoxWindow.cpp" />
+		<Unit filename="src/toasterbox/ToasterBoxWindow.h" />
+		<Unit filename="src/toasterbox/ToasterBoxWindowList.cpp" />
+		<Unit filename="src/toasterbox/ToasterBoxWindowList.h" />
 		<Unit filename="src/torrentlistctrl.cpp" />
 		<Unit filename="src/torrentlistctrl.h" />
 		<Unit filename="src/torrentoptionspanel.cpp" />
@@ -511,10 +557,13 @@
 		<Unit filename="src/utils/controls.h" />
 		<Unit filename="src/utils/conversion.cpp" />
 		<Unit filename="src/utils/conversion.h" />
+		<Unit filename="src/utils/crtpbase.h" />
 		<Unit filename="src/utils/customdialogs.cpp" />
 		<Unit filename="src/utils/customdialogs.h" />
 		<Unit filename="src/utils/debug.cpp" />
 		<Unit filename="src/utils/debug.h" />
+		<Unit filename="src/utils/downloader.cpp" />
+		<Unit filename="src/utils/downloader.h" />
 		<Unit filename="src/utils/events.h" />
 		<Unit filename="src/utils/globalevents.cpp" />
 		<Unit filename="src/utils/globalevents.h" />
@@ -529,10 +578,22 @@
 		<Unit filename="src/utils/misc.h" />
 		<Unit filename="src/utils/networkevents.cpp" />
 		<Unit filename="src/utils/networkevents.h" />
+		<Unit filename="src/utils/plasmaresourceinfo.cpp" />
+		<Unit filename="src/utils/plasmaresourceinfo.h" />
 		<Unit filename="src/utils/platform.cpp" />
 		<Unit filename="src/utils/platform.h" />
 		<Unit filename="src/utils/sltipwin.cpp" />
 		<Unit filename="src/utils/sltipwin.h" />
+		<Unit filename="src/utils/stack.cpp">
+			<Option target="GNU | Profile" />
+			<Option target="Win32 | Debug" />
+			<Option target="Win32 | Profile" />
+		</Unit>
+		<Unit filename="src/utils/stack.h" />
+		<Unit filename="src/utils/stringserializer.cpp">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="src/utils/stringserializer.h" />
 		<Unit filename="src/utils/tasutil.cpp" />
 		<Unit filename="src/utils/tasutil.h" />
 		<Unit filename="src/utils/uievents.cpp" />

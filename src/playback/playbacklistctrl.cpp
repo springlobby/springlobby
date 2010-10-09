@@ -19,6 +19,7 @@ BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, PlaybackListCtrl::BaseType, Playba
   EVT_MENU                 ( RLIST_DLMAP, PlaybackListCtrl::OnDLMap )
   EVT_MENU                 ( RLIST_DLMOD, PlaybackListCtrl::OnDLMod )
   EVT_LIST_COL_CLICK       ( RLIST_LIST, ParentType::OnColClick )
+  EVT_KEY_DOWN			   ( PlaybackListCtrl::OnChar )
 
 END_EVENT_TABLE()
 
@@ -27,8 +28,8 @@ template<class T,class L> SortOrder CustomVirtListCtrl<T,L>::m_sortorder = SortO
 template <class PlaybackType>
 PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
   PlaybackListCtrl::BaseType(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-                _T("PlaybackListCtrl"), 4, &CompareOneCrit )
+							wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
+							_T("PlaybackListCtrl"), 4, &PlaybackListCtrl::CompareOneCrit )
 {
 #ifdef __WXMSW__
     const int hd = wxLIST_AUTOSIZE_USEHEADER;
@@ -125,7 +126,7 @@ void PlaybackListCtrl<PlaybackType>::Sort()
 }
 
 template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
         case 0: return dir * compareSimple( u1->date, u2->date );
@@ -141,7 +142,7 @@ int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, in
 }
 
 template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, const wxPoint position)
+void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
     if ( item_hit < 0 || item_hit >= (long)m_data.size() )
         return;
@@ -166,7 +167,7 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
                 m_tiptext = replay.MapName;
                 break;
             case 3: //playernum
-                m_tiptext = RefineModname(replay.ModName);
+                m_tiptext = replay.ModName;
                 break;
             case 4: // spring version
                 m_tiptext = replay.SpringVersion;
@@ -262,6 +263,16 @@ int PlaybackListCtrl<PlaybackType>::GetIndexFromData( const DataType& data ) con
     }
     wxLogError( _T("didn't find the battle.") );
     return -1;
+}
+
+template <class PlaybackType>
+void PlaybackListCtrl<PlaybackType>::OnChar(wxKeyEvent & event)
+{
+	const int keyCode = event.GetKeyCode();
+	if ( keyCode == WXK_DELETE )
+		RemovePlayback( ParentType::GetSelectedIndex() );
+	else
+		event.Skip();
 }
 
 /////!TODO get rid of this in favor of the functionality in base class

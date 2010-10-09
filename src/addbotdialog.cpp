@@ -28,18 +28,15 @@ BEGIN_EVENT_TABLE( AddBotDialog, wxDialog )
 END_EVENT_TABLE()
 
 
-AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplayer):
-  wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxDefaultSize, wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE ),
-  m_battle( battle ),
-  m_sp(singleplayer)
+AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplayer)
+	: wxDialog( parent, wxID_ANY, _("Add bot"), wxDefaultPosition, wxDefaultSize, wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE ),
+	WindowAttributesPickle( _T("ADDBOTDIALOG"), this, wxSize(-1, 255) ),
+	m_battle( battle ),
+	m_sp(singleplayer)
 {
-  wxSize size = sett().GetWindowSize( _T("ADDBOTDIALOG"), wxSize(-1, 255) );
-  wxPoint pos = sett().GetWindowPos( _T("ADDBOTDIALOG"), wxPoint( -1, -1 ) );
-  SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
-
   //this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
-  m_main_sizer = new wxBoxSizer( wxVERTICAL );
+	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
 	wxBoxSizer* m_nick_sizer;
 	m_nick_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -54,18 +51,18 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
 	m_main_sizer->Add( m_nick_sizer, 0, wxEXPAND, 5 );
 
-  wxBoxSizer* m_ai_sizer;
-  m_ai_sizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* m_ai_sizer;
+	m_ai_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-  m_ai_lbl = new wxStaticText( this, wxID_ANY, _("AI:"), wxDefaultPosition, wxDefaultSize, 0 );
-  m_ai_sizer->Add( m_ai_lbl, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
+	m_ai_lbl = new wxStaticText( this, wxID_ANY, _("AI:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_ai_sizer->Add( m_ai_lbl, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-  m_ai = new wxChoice( this, ADDBOT_AI );
-  m_ai->SetToolTip( TE(_("Choose the AI library to use with this bot.") ) );
+	m_ai = new wxChoice( this, ADDBOT_AI );
+	m_ai->SetToolTip( TE(_("Choose the AI library to use with this bot.") ) );
 
-  m_ai_sizer->Add( m_ai, 2, wxALL, 5 );
+	m_ai_sizer->Add( m_ai, 2, wxALL, 5 );
 
-  m_main_sizer->Add( m_ai_sizer, 0, wxEXPAND, 5 );
+	m_main_sizer->Add( m_ai_sizer, 0, wxEXPAND, 5 );
 
 	if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
 	{
@@ -100,36 +97,31 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 		 m_main_sizer->AddStretchSpacer();
 	}
 
+	m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND );
 
-  m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-  m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND );
+	wxBoxSizer* m_buttons_sizer;
+	m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-  wxBoxSizer* m_buttons_sizer;
-  m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
+	m_cancel_btn = new wxButton( this, ADDBOT_CANCEL, _("Cancel"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT), 0 );
+	m_buttons_sizer->Add( m_cancel_btn, 0, wxALL );
 
-  m_cancel_btn = new wxButton( this, ADDBOT_CANCEL, _("Cancel"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT), 0 );
-  m_buttons_sizer->Add( m_cancel_btn, 0, wxALL );
+	m_buttons_sizer->Add( 0, 0, 1, wxEXPAND );
 
-  m_buttons_sizer->Add( 0, 0, 1, wxEXPAND );
+	m_add_btn = new wxButton( this, ADDBOT_ADD, _("Add Bot"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT), 0 );
+	m_buttons_sizer->Add( m_add_btn, 0, wxALL );
 
-  m_add_btn = new wxButton( this, ADDBOT_ADD, _("Add Bot"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT), 0 );
-  m_buttons_sizer->Add( m_add_btn, 0, wxALL );
+	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
 
-  m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
+	this->SetSizer( m_main_sizer );
+	this->Layout();
 
-  this->SetSizer( m_main_sizer );
-  this->Layout();
-
-  ReloadAIList();
+	ReloadAIList();
 }
 
 
 AddBotDialog::~AddBotDialog()
-{
-    sett().SetWindowSize( _T("ADDBOTDIALOG"), GetSize() );
-    sett().SetWindowPos( _T("ADDBOTDIALOG"), GetPosition() );
-    sett().SaveSettings();
-}
+{}
 
 wxString AddBotDialog::GetNick()
 {

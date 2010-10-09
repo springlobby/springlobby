@@ -7,6 +7,7 @@
 
 #include "chatlog.h"
 #include "Helper/TextCompletionDatabase.hpp"
+#include "utils/mixins.hh"
 
 class wxCommandEvent;
 class wxSizeEvent;
@@ -63,7 +64,7 @@ struct ChatLine
  * The nick list is optional and can be removed by setting show_nick_list in the
  * constructor to false.
  */
-class ChatPanel : public wxPanel
+class ChatPanel : public wxPanel, public SL::NonCopyable
 {
   public:
 
@@ -199,7 +200,7 @@ class ChatPanel : public wxPanel
 
     friend class ChatPanelMenu; //menu needs access to members
 
-    DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 };
 
 enum
@@ -213,9 +214,9 @@ enum
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

@@ -3,6 +3,7 @@
 
 #include <wx/scrolwin.h>
 #include "utils/isink.h"
+#include "utils/mixins.hh"
 
 class User;
 class Ui;
@@ -25,7 +26,7 @@ class wxToggleButton;
 class wxFlexGridSizer;
 /** \brief The panel containing a BattleListCtrl and a BattleListFilter
  * \todo DOCME */
-class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleListTab>
+class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleListTab>, public SL::NonCopyable
 {
   friend class BattleListFilter;
   public:
@@ -110,7 +111,7 @@ class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
         BATTLE_LIST_FILTER_ACTIV
     };
 
-    DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 };
 
 
@@ -118,9 +119,9 @@ class BattleListTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

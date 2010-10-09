@@ -73,7 +73,7 @@ void AutojoinChannelDialog::OnOk( wxCommandEvent& /*unused*/ )
 		wxString key = line.AfterFirst( _T(' ') );
 		sett().AddChannelJoin( chan, key );
 	}
-
+	sett().SaveSettings();
 	this->Show( false );
 }
 

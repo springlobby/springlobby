@@ -3,9 +3,10 @@
 
 #include <wx/string.h>
 #include <vector>
+#include "utils/mixins.hh"
 
-const int CACHE_VERSION     = 10;
-const int SETTINGS_VERSION  = 17;
+const int CACHE_VERSION     = 11;
+const int SETTINGS_VERSION  = 22;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -18,8 +19,8 @@ const unsigned int DEFSETT_MW_TOP = 50;
 const unsigned int DEFSETT_MW_LEFT = 50;
 const unsigned int DEFSETT_SPRING_PORT = 8452;
 
-const int SET_MODE_EXPERT = 5000;
-const int SET_MODE_SIMPLE = 5001;
+const long SET_MODE_EXPERT = 5000;
+const long SET_MODE_SIMPLE = 5001;
 const unsigned int DEFSETT_SW_WIDTH = 770;
 const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
@@ -33,10 +34,9 @@ const unsigned int SPRING_MAX_ALLIES = 16;
  */
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
-#include <wx/config.h>
-#include <wx/fileconf.h>
 #include "useractions.h"
 #include "Helper/sortutil.h"
+#include "Helper/slconfig.h"
 
 class wxWindow;
 class wxConfigBase;
@@ -61,22 +61,19 @@ struct ChannelJoinInfo
 	wxString password;
 };
 
-class SL_WinConf : public wxFileConfig
+//!convenience class for saving and displaying a choice of discrete screen pos
+class ScreenPosition : public wxArrayString
 {
-    public:
-			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& /*conv*/):
-			wxFileConfig( appName, vendorName, strLocal, strGlobal, style)
-			{
-			}
-
-			SL_WinConf( wxFileInputStream& in );
-    protected:
-			bool DoWriteLong(const wxString& key, long lValue);
+public:
+	ScreenPosition(){ Add(_("Bottom right"));Add(_("Bottom left"));Add(_("Top right"));Add(_("Top left"));}
+	static const size_t bottom_right	= 0;
+	static const size_t bottom_left		= 1;
+	static const size_t top_right		= 2;
+	static const size_t top_left		= 3;
 };
 
-
 //! @brief Class used to store and restore application settings.
-class Settings
+class Settings : public SL::NonCopyable
 {
   public:
 
@@ -89,13 +86,6 @@ class Settings
     static bool m_user_defined_config;
     static wxString m_user_defined_config_path;
 
-    /// used to import default configs from a file in windows
-    #ifdef __WXMSW__
-        void SetDefaultConfigs( SL_WinConf& conf );
-    #else
-        void SetDefaultConfigs( wxConfig& conf );
-    #endif
-
     /// list all entries subkeys of a parent group
     wxArrayString GetGroupList( const wxString& base_key );
     /// list all groups subkeys of a parent group
@@ -103,7 +93,7 @@ class Settings
     /// counts all groups subkeys of a parent group
     unsigned int GetGroupCount( const wxString& base_key );
 
-    bool IsPortableMode();
+    bool IsPortableMode() const;
     void SetPortableMode( bool mode );
 
     /** Initialize all settings to default.
@@ -311,8 +301,11 @@ class Settings
     wxSize  GetWindowSize( const wxString& window, const wxSize& def );
     void    SetWindowSize( const wxString& window, const wxSize& size  );
 
-    wxPoint  GetWindowPos( const wxString& window, const wxPoint& def );
+	wxPoint GetWindowPos( const wxString& window, const wxPoint& def );
     void    SetWindowPos( const wxString& window, const wxPoint& pos );
+
+	bool	GetWindowMaximized( const wxString& window );
+	void	GetWindowMaximized( const wxString& window, bool maximized );
 
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
@@ -328,6 +321,7 @@ class Settings
 
     void SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width );
     int GetColumnWidth( const wxString& list_name, const int column );
+	void NukeColumnWidths();
     //! used to signal unset column width in Get...
     static const int columnWidthUnset = -3;
     static const int columnWidthMinimum = 5;
@@ -346,11 +340,18 @@ class Settings
 
     void TranslateSavedColumWidths();
 
-    wxString GetEditorPath( );
+	wxString GetEditorPath();
     void SetEditorPath( const wxString& path );
 
     void SetAutoloadedChatlogLinesCount( const int count );
-    int GetAutoloadedChatlogLinesCount( );
+	int GetAutoloadedChatlogLinesCount();
+
+	void SetUseNotificationPopups( const bool use );
+	bool GetUseNotificationPopups();
+	void SetNotificationPopupPosition( const size_t index );
+	size_t GetNotificationPopupPosition();
+	void SetNotificationPopupDisplayTime( const unsigned int seconds );
+	unsigned int GetNotificationPopupDisplayTime( );
     /*@}*/
 
     /* ================================================================ */
@@ -384,7 +385,7 @@ class Settings
     void ConvertOldSpringDirsOptions();
 
 		void RefreshSpringVersionList();
-    std::map<wxString, wxString> GetSpringVersionList(); /// index -> version
+    std::map<wxString, wxString> GetSpringVersionList() const; /// index -> version
     wxString GetCurrentUsedSpringIndex();
     void SetUsedSpringIndex( const wxString& index );
     void DeleteSpringVersionbyIndex( const wxString& index );
@@ -394,6 +395,7 @@ class Settings
     bool GetSearchSpringOnlyInSLPath();
 
     /// convenience wrappers to get current used version paths
+	wxString GetCurrentUsedUikeys();
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
     wxString GetCurrentUsedSpringBinary();
@@ -408,6 +410,7 @@ class Settings
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync();
+	wxString AutoFindUikeys();
 
     //!@brief returns config file path spring should use, returns empty for default
     wxString GetForcedSpringConfigFilePath();
@@ -621,14 +624,12 @@ class Settings
     int GetTorrentThrottledDownloadRate();
     void SetTorrentThrottledDownloadRate( int speed );
 
-    int GetTorrentSystemAutoStartMode();
-    void SetTorrentSystemAutoStartMode( int mode );
-
     void SetTorrentMaxConnections( int connections );
     int GetTorrentMaxConnections();
 
-    void SetTorrentListToResume( const wxArrayString& list );
-    wxArrayString GetTorrentListToResume();
+	void SetTorrentListToResume( const std::vector<wxString>& list );
+	std::vector<wxString> GetTorrentListToResume();
+	void ClearTorrentListToResume();
 
     /** Get the path to the directory where *.torrent files are stored.
      */
@@ -662,6 +663,8 @@ class Settings
     bool GetAutosavePerspective( );
     wxArrayString GetPerspectives();
     bool PerspectiveExists( const wxString& perspective_name );
+	bool DoResetPerspectives();
+	void SetDoResetPerspectives( bool do_it );
 
     void RemoveLayouts();
 
@@ -681,8 +684,8 @@ class Settings
     /** @name SpringSettings
      * @{
      */
-    int getMode();
-    void setMode( int );
+	long getMode();
+	void setMode( long );
     bool getDisableWarning();
     void setDisableWarning( bool );
     wxString getSimpleRes();
@@ -722,7 +725,7 @@ class Settings
     void SetMapSelectorFilterRadio( const unsigned int val );
     /**@}*/
   /* ============================================================== */
-    /** @name Relayed Hosts
+	/** @name Relay Hosts
     * @{
     */
 
@@ -730,25 +733,43 @@ class Settings
     void SetLastRelayedHost(wxString relhost);
 
     /**@}*/
+  /* ============================================================== */
+	/** @name Hotkeys
+    * @{
+    */
+
+	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, bool unbind = false );
+	wxString GetHotkey( const wxString& profileName, const wxString& command, const wxString& index );
+	wxArrayString GetHotkeyProfiles();
+	wxArrayString GetHotkeyProfileCommands( const wxString& profileName );
+	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& command );
+	void DeleteHotkeyProfiles();
+	wxString GetUikeys( const wxString& index );
+
+    /**@}*/
+
+	//! you are absolutely forbidden to use this
+	template < class T >
+	T Get( wxString setting, const T def )
+	{
+		return m_config->Read( setting, def );
+	}
+
+	//setting to spam the server messages in all channels
+	bool GetBroadcastEverywhere();
+	void SetBroadcastEverywhere(bool value);
 
   protected:
     bool IsSpringBin( const wxString& path );
 
-    #ifdef __WXMSW__
-    SL_WinConf* m_config; //!< wxConfig object to store and restore  all settings in.
-    #elif defined(__WXMAC__)
-    wxFileConfig* m_config; //!< wxConfig object to store and restore  all settings in.
-    #else
-    wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
-    #endif
+	slConfig* m_config; //!< wxConfig object to store and restore  all settings in.
 
     wxString m_chosen_path;
     bool m_portable_mode;
 
     std::map<wxString, wxString> m_spring_versions;
 
-    Settings( const Settings& );
-
+	wxPathList GetConfigFileSearchPathes();
 };
 
 Settings& sett();
@@ -757,9 +778,9 @@ Settings& sett();
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

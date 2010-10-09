@@ -1,11 +1,8 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
-#ifdef __WXMAC__
-	#include <wx/bitmap.h>
-#endif
-
 #include "flagimages.h"
 #include "flagimagedata.h"
 
+#include <wx/bitmap.h>
 #include <wx/imaglist.h>
 #include <wx/log.h>
 

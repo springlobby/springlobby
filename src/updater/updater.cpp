@@ -73,19 +73,25 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
     else {
         if (!PostMinGW44( m_newexe ) ) {
             customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser."), _("Updater error.") );
-            OpenWebBrowser( _T("http://springlobby.info/wiki/springlobby/Install#Windows-Binary") );
+			OpenWebBrowser( _T("http://projects.springlobby.info/wiki/springlobby/Install#Windows-Binary") );
             OpenWebBrowser( GetDownloadUrl( m_latest_version ) );
         }
         if ( !UpdateExe( m_newexe , false ) ) {
-            customMessageBox(SL_MAIN_ICON, wxString::Format( _("There was an error while trying to replace the current executable version.\n Please manually copy springlobby.exe from: %s\n to: %s\n"), m_newexe.c_str(), m_currentexe.c_str() ), _("Error"));
+			customMessageBox(SL_MAIN_ICON,
+							 wxString::Format( _("There was an error while trying to replace the current executable version.\n Please manually copy springlobby.exe from: %s\n to: %s\n"),
+											   m_newexe.c_str(),
+											   m_currentexe.c_str() ),
+							 _("Error") );
         }
         else {
             bool locale_ok = UpdateLocale( m_newexe, false );
             if ( locale_ok ) {
-                customMessageBox(SL_MAIN_ICON, _("Update complete. \nPlease restart SpringLobby now."), _("Success"));
+				customMessageBox(SL_MAIN_ICON, IdentityString( _("Update complete. \nPlease restart %s now.") ), _("Success"));
             }
             else {
-                customMessageBox(SL_MAIN_ICON, _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby. \nPlease restart SpringLobby now."), _("Partial success"));
+				customMessageBox(SL_MAIN_ICON,
+								 IdentityString( _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby. \nPlease restart %s now.") ),
+								 _("Partial success") );
             }
             wxRmdir( m_newexe );
         }
@@ -124,7 +130,7 @@ bool UpdaterClass::UpdateExe( const wxString& newexe, bool /*unused*/ ) {
 
 bool UpdaterClass::PostMinGW44( const wxString& newdir )
 {
-    wxString current = TowxString(VERSION);
+	wxString current = GetSpringLobbyVersion(false);
     long minor = std::numeric_limits<long>::max();
     bool convert_ok = current.AfterLast( '.' ).ToLong( &minor );
     wxLogMessage( wxString::Format( _T("Got minor rev %d"), minor ) );

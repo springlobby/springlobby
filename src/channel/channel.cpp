@@ -9,7 +9,7 @@
 #include "../user.h"
 #include "../utils/tasutil.h"
 #include "../utils/debug.h"
-#include "../utils/platform.h"
+#include "../updater/updatehelper.h"
 #include <wx/regex.h>
 #include <wx/log.h>
 #include "../chatpanel.h"
@@ -17,7 +17,8 @@
 Channel::Channel( Server& serv )
     : m_serv(serv),
     m_do_ban_regex(false),
-    m_do_unban_regex(false)
+    m_do_unban_regex(false),
+	m_userdata(NULL)
 {}
 
 Channel::~Channel() {
@@ -133,7 +134,8 @@ void Channel::CheckBanned(const wxString& name){
       if(!m_ban_regex_msg.empty())m_serv.SayPrivate(name,m_ban_regex_msg);
     }
   }
-};
+}
+
 bool Channel::IsBanned(const wxString& name){
   if(name==_T("ChanServ"))return false;
   if(m_banned_users.count(name)>0)return true;
@@ -141,7 +143,7 @@ bool Channel::IsBanned(const wxString& name){
     if(m_ban_regex.Matches(name)&&!(m_do_unban_regex&&m_unban_regex.IsValid()&&m_unban_regex.Matches(name)))return true;
   }
   return false;
-};
+}
 
 
 void Channel::RemoveUser( const wxString& nick )
@@ -169,6 +171,7 @@ bool Channel::ExecuteSayCommand( const wxString& in )
     uidata.panel = 0;
     return true;
   } else if ( param == _T("/sayver") ) {
+	  //!this instance is not replaced with GetAppname for sake of help/debug online
     DoAction( _T("is using SpringLobby v") + GetSpringLobbyVersion() );
     return true;
   } else if(subcmd==_T("/userban")){

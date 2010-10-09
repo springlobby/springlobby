@@ -26,7 +26,7 @@ class PlaybackList : public wxEvtHandler
     //!loads replays between two indices
 //    virtual void LoadPlaybacks( const unsigned int from, const unsigned int to) = 0;
 
-    PlaybackType& AddPlayback( const PlaybackType& replay );
+	PlaybackType& AddPlayback( const size_t index );
     void AddPlayback( PlaybackType* replay );
     void RemovePlayback( playback_id_t const& id );
 
@@ -44,7 +44,7 @@ class PlaybackList : public wxEvtHandler
 
 
   protected:
-    PlaybackList() {};
+    PlaybackList() : m_fails(0) {};
 
     playback_map_t m_replays;
 

@@ -34,15 +34,14 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   if ( (update & HI_Restrictions) != 0 ) m_sptab.ReloadRestrictions();
   if ( (update & HI_Map_Changed) != 0 )
   {
-    SetLocalMap( usync().GetMapEx( usync().GetMapIndex( m_host_map.name ) ) );
-    CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, GetHostMapName() );
+	LoadMap();
     m_sptab.ReloadMapOptContrls();
     Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::PrivateOptions , _T("mapname") ) );
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
     RemoveUnfittingBots();
-    CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, GetHostModName() );
+	LoadMod();
     wxString presetname = sett().GetModDefaultPresetName( GetHostModName() );
     if ( !presetname.IsEmpty() )
     {
