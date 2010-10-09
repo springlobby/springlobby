@@ -5,6 +5,7 @@
 
 #include "nonportable.h" //pulls in the SL_DUMMY_COL define if applicable
 #include "settings.h"
+#include "defines.h"
 #include "iconimagelist.h"
 #include "utils/customdialogs.h"
 #include "uiutils.h"
@@ -14,8 +15,11 @@
 
 #include <algorithm>
 
-
-BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
+#ifdef HAVE_WX29
+	wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
+#else
+	BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
+#endif
 #if wxUSE_TIPWINDOW
   EVT_MOTION(CustomVirtListCtrl::OnMouseMotion)
   EVT_TIMER(IDD_TIP_TIMER, CustomVirtListCtrl::OnTimer)
@@ -52,7 +56,7 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
     m_bg_color( GetBackgroundColour() ),
     m_dirty_sort(false),
     m_sort_criteria_count( sort_criteria_count ),
-    m_comparator( m_sortorder, func ),
+	m_comparator( this,m_sortorder, func ),
     m_periodic_sort_timer_id( wxNewId() ),
     m_periodic_sort_timer( this, m_periodic_sort_timer_id ),
     m_periodic_sort( periodic_sort ),
@@ -69,14 +73,7 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
     SetImageList( &icons(), wxIMAGE_LIST_STATE );
     m_sortorder = sett().GetSortOrder( name );
 
-    if ( m_periodic_sort )
-    {
-        wxTimerEvent a;
-        wxEventType evt_type = a.GetEventType();
-        Connect( m_periodic_sort_timer_id, evt_type,   wxTimerEventHandler( ThisType::OnPeriodicSort ) );
-        bool started = m_periodic_sort_timer.Start( m_periodic_sort_interval );
-        assert( started );
-    }
+	StartTimer();
 	Connect( ListctrlDoSortEventType, wxCommandEventHandler( ThisType::OnSortEvent ), NULL, this );
 
 }
@@ -90,11 +87,28 @@ void CustomVirtListCtrl<T,L>::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
 }
 
 template < class T, class L >
+void CustomVirtListCtrl<T,L>::StartTimer()
+{
+	if ( m_periodic_sort )
+	{
+		Connect( m_periodic_sort_timer_id, wxTimerEvent().GetEventType(),   wxTimerEventHandler( ThisType::OnPeriodicSort ) );
+		bool started = m_periodic_sort_timer.Start( m_periodic_sort_interval );
+		assert( started );
+	}
+}
+
+template < class T, class L >
+void CustomVirtListCtrl<T,L>::StopTimer()
+{
+	m_periodic_sort_timer.Stop();
+	Disconnect( m_periodic_sort_timer_id, wxTimerEvent().GetEventType(),   wxTimerEventHandler( ThisType::OnPeriodicSort ) );
+}
+
+template < class T, class L >
 CustomVirtListCtrl<T,L>::~CustomVirtListCtrl()
 {
-    m_periodic_sort_timer.Stop();
-    Disconnect( m_periodic_sort_timer_id, wxTimerEvent().GetEventType(),   wxTimerEventHandler( ThisType::OnPeriodicSort ) );
-    sett().SetSortOrder( m_name, m_sortorder );
+	StopTimer();
+	sett().SetSortOrder( m_name, m_sortorder );
 }
 
 template < class T, class L >
@@ -544,7 +558,7 @@ void CustomVirtListCtrl<T,L>::ReverseOrder()
 }
 
 template < class T, class L >
-bool CustomVirtListCtrl<T,L>::AddItem( const T item )
+bool CustomVirtListCtrl<T,L>::AddItem( const T& item )
 {
     if ( GetIndexFromData( item ) != -1 )
         return false;
@@ -558,7 +572,7 @@ bool CustomVirtListCtrl<T,L>::AddItem( const T item )
 }
 
 template < class T, class L >
-bool CustomVirtListCtrl<T,L>::RemoveItem( const T item )
+bool CustomVirtListCtrl<T,L>::RemoveItem( const T& item )
 {
     int index = GetIndexFromData( item );
 
@@ -576,8 +590,9 @@ template < class T, class L >
 wxString CustomVirtListCtrl<T,L>::OnGetItemText(long item, long column) const
 {
     assert( item < (long)m_data.size() );
-    assert( column < m_columnCount );
-    return asImp().GetItemText(item, column);
+    //assert( column < m_columnCount );
+	column = clamp( column, long(0), long(m_columnCount) );
+   return asImp().GetItemText(item, column);
 }
 
 template < class T, class L >

@@ -49,3 +49,11 @@ INCLUDE_DIRECTORIES(/opt/mingw32/include/drmingw/include  )
 SET( PKG_CONFIG_EXECUTABLE /opt/mingw32/bin/pkg-config )
 ADD_DEFINITIONS( -DCURL_STATICLIB -DWXUSINGDLL -D__WXMSW__ -mthreads)
 
+SET( LOCALE_INSTALL_DIR "${CMAKE_BINARY_DIR}/locale" CACHE STRING
+	"message catalogs will installed here" FORCE )
+SET( CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE STRING
+	"install prefix" FORCE )
+SET( CURL_CFLAGS "-I/opt/mingw32/include" )
+SET( CURL_STATIC_LIBRARY_DIRS "/opt/mingw32/lib")
+SET( CURL_STATIC_LDFLAGS "-L/opt/mingw32/lib;-lcurl;-lws2_32")
+SET( CURL_INCLUDE_DIR "/opt/mingw32/include")

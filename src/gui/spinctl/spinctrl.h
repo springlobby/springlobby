@@ -65,7 +65,7 @@ public:
     virtual void SetSelection(long from, long to) = 0;
 
 private:
-    DECLARE_NO_COPY_CLASS(SlSpinCtrlBase);
+	DECLARE_NO_COPY_CLASS(SlSpinCtrlBase)
 };
 
 // ----------------------------------------------------------------------------

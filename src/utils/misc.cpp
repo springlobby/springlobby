@@ -8,11 +8,9 @@
 #include <wx/arrstr.h>
 #include <wx/log.h>
 #include <wx/tokenzr.h>
-
+#include <wx/sstream.h>
 #include <vector>
-
-#include "../curl/http.h"
-
+#include "curlhelper.h"
 
 double LevenshteinDistance(wxString s, wxString t)
 {
@@ -64,6 +62,7 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
 
 wxString Paste2Pastebin( const wxString& message )
 {
+	#ifndef __WXMAC__
 	wxStringOutputStream response;
 	wxStringOutputStream rheader;
 	CURL *curl_handle;
@@ -115,6 +114,7 @@ wxString Paste2Pastebin( const wxString& message )
 	if(ret == CURLE_OK)
 		return response.GetString();
 	else
+	#endif
 		return wxEmptyString;
 }
 

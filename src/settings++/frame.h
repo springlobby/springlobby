@@ -27,6 +27,7 @@ class tab_ui;
 class tab_render_detail;
 class tab_quality_video;
 class audio_panel;
+class hotkey_panel;
 class abstract_panel;
 class wxMenu;
 class wxCommanEvent;
@@ -43,7 +44,7 @@ class wxIcon;
 class settings_frame : public wxFrame, public WindowAttributesPickle
 {
 	private:
-		DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 
 	public:
 		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition,
@@ -52,6 +53,8 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		void handleExternExit();
 		void switchToExpertMode();
 		void buildGuiFromErrorPanel();
+	void OnSetFocus(wxFocusEvent&);
+	void OnKillFocus(wxFocusEvent&);
 
 	private:
 		tab_simple* simpleTab;
@@ -59,6 +62,7 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		audio_panel* audioTab;
 		tab_render_detail* detailTab;
 		tab_quality_video* qualityTab;
+		hotkey_panel* hotkeyTab;
 
 		wxMenu* menuFile;
 		wxMenu* menuMode;
@@ -75,10 +79,12 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		void initMenuBar();
 		void handleExit();
 		bool alreadyCalled;
+		bool m_has_focus;
 
 		enum
 		{
 			////GUI Enum Control ID Start
+			ID_HOTKEY = 1014,
 			ID_UI = 1013,
 			ID_QUALITY_VIDEO = 1012,
 			ID_RENDER_DETAIL = 1011,
@@ -99,6 +105,8 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		void resetSettings();
 		void updateAllControls();
 
+		bool saveSettingsAbstract(); //do not call abstract_panel::SaveSettings directly, call this instead!
+		bool settingsChangedAbstract(); //do not query abstract_panel::settingschanged directly, use this instead!
 };
 
 

@@ -67,7 +67,9 @@ public:
     {
         GlobalObjectHolder<T,I>::count += 1;
         assert( (GlobalObjectHolder<T,I>::count) == 1 );
+#if wxUSE_LOG_DEBUG
 		wxLogDebug( _T("GOBAL_LINE: ") + i.m ) ;
+#endif
         if ( RegisterSelf() )
         {
             private_ptr = new T;
@@ -78,13 +80,13 @@ public:
     virtual void Nullify()
     {
         public_ptr = NULL;
-    };
+	}
     virtual void Destroy()
     {
         public_ptr = NULL;
         delete private_ptr;
         private_ptr = NULL;
-    };
+	}
     T &GetInstance()
     {
         if ( constructing ) throw GlobalRecursiveError();

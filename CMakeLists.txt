@@ -28,11 +28,13 @@ SET( CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a" )
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
 #----------------------------------------------------------------------------------------------------
-EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
-        OUTPUT_VARIABLE SPRINGLOBBY_GIT_REV
-        ERROR_VARIABLE GIT_ERROR
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-		)
+if(NOT DEFINED SPRINGLOBBY_REV)
+  EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
+    OUTPUT_VARIABLE SPRINGLOBBY_REV
+    ERROR_VARIABLE GIT_ERROR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+endif(NOT DEFINED SPRINGLOBBY_REV)
 
 INCLUDE(cmake/package_config.cmake)
 INCLUDE(cmake/sources.list)
@@ -40,10 +42,10 @@ INCLUDE(cmake/sources.list)
 FIND_PACKAGE( PkgConfig )
 
 #if nothing went wrong we have the file and can define HAVE_CONFIG_H
-IF ( EXISTS ${springlobby_BINARY_DIR}/config.h OR  EXISTS ${springlobby_SOURCE_DIR}/config.h )
+IF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h  )
     ADD_DEFINITIONS( -DHAVE_CONFIG_H )
     INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
-ENDIF ( EXISTS ${springlobby_BINARY_DIR}/config.h OR  EXISTS ${springlobby_SOURCE_DIR}/config.h )
+ENDIF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h  )
 
 
 #----------------------------------------------------------------------------------------------------
@@ -67,7 +69,7 @@ SET( ENABLE_DEBUG_REPORT
 	"Enable automatic uploading of crash information (requires libcurl)" )
 
 SET( SPRINGLOBBY_REV
-	${SPRINGLOBBY_GIT_REV} CACHE STRING
+	"${SPRINGLOBBY_REV}" CACHE STRING
 	"The revision string used in packages etc." )
 SET( LOCALE_INSTALL_DIR
 	${CMAKE_INSTALL_PREFIX}/share/locale CACHE STRING
@@ -136,21 +138,23 @@ IF( ENABLE_DEBUG_REPORT )
 	LIST( APPEND SLSharedWithSettings ${curlSRC} )
 ENDIF( ENABLE_DEBUG_REPORT )
 
-pkg_check_modules( CURL REQUIRED libcurl )
-IF( NOT CURL_FOUND )
-	MESSAGE( FATAL_ERROR "required library libCURL not found" )
-ELSE( NOT CURL_FOUND )
+
+	
+IF(WIN32)
+	ADD_DEFINITIONS( ${CURL_CFLAGS}  )
+	LINK_DIRECTORIES( ${CURL_STATIC_LIBRARY_DIRS} )
+	LINK_LIBRARIES( ${CURL_STATIC_LDFLAGS} )
 	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
-	IF(WIN32)
-		ADD_DEFINITIONS( ${CURL_CFLAGS}  )
-		LINK_DIRECTORIES( ${CURL_STATIC_LIBRARY_DIRS} )
-		LINK_LIBRARIES( ${CURL_STATIC_LDFLAGS} )
-	ELSE(WIN32)
-		ADD_DEFINITIONS( ${CURL_CFLAGS} )
-		LINK_DIRECTORIES( ${CURL_LIB_DIRS} )
-		LINK_LIBRARIES( ${CURL_LDFLAGS} )
-	ENDIF(WIN32)
-ENDIF( NOT CURL_FOUND )
+ELSE(WIN32)
+	pkg_check_modules( CURL REQUIRED libcurl )
+	IF( NOT CURL_FOUND )
+		MESSAGE( FATAL_ERROR "required library libCURL not found" )
+	ENDIF( NOT CURL_FOUND )
+	ADD_DEFINITIONS( ${CURL_CFLAGS} )
+	LINK_DIRECTORIES( ${CURL_LIB_DIRS} )
+	LINK_LIBRARIES( ${CURL_LDFLAGS} )
+	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
+ENDIF(WIN32)
 #----------------------------------------------------------------------------------------------------
 # libtorrent-rasterbar dependency check
 #----------------------------------------------------------------------------------------------------
@@ -165,6 +169,15 @@ IF( OPTION_TORRENT_SYSTEM )
 	    ELSE()
 		    MESSAGE( FATAL_ERROR "libtorrent-rasterbar library not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
 	    ENDIF()
+	    FIND_PACKAGE( Boost COMPONENTS system )
+	    IF( Boost_FOUND )
+		    link_directories( ${Boost_LIB_DIR} )
+		    INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+		    SET( SL_BOOST_LIBS boost_system-mt )
+	    ELSE()
+		    MESSAGE( FATAL_ERROR "boost library not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
+	    ENDIF()
+
 	ELSE( NOT WIN32)
 		link_directories( ${boost_LIB_DIR} )
 		INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
@@ -225,9 +238,12 @@ IF(WIN32)
        TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES} )
 ENDIF(WIN32)
 
+#only enable if debugging is necessary
+#ADD_EXECUTABLE(versiontest WIN32 MACOSX_BUNDLE src/versiontest.cpp )
+
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} )
-TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} )
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} )
+TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} )
 
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
@@ -265,5 +281,9 @@ add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
                         cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
                         cmake "-DCMAKE_CXX_FLAGS:STRING=-O0". && ${CMAKE_MAKE_PROGRAM}
 					)
+add_custom_target( version
+				${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR}/cmake/config.h ${springlobby_BINARY_DIR}/springlobby_config.h
+				)
 add_dependencies( distcheck dist )
 add_dependencies( springlobby alure )
+add_dependencies( springlobby version )

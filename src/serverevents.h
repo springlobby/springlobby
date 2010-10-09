@@ -14,7 +14,7 @@ class Battle;
 class ServerEvents : public IServerEvents, public wxEvtHandler
 {
   public:
-    ServerEvents( Server& serv) : m_serv(serv) {}
+    ServerEvents( Server& serv) : m_serv(serv), m_autolaunch(false), m_autoclose(false) {}
     ~ServerEvents() {}
 
   // Uicontrol interface
@@ -41,14 +41,14 @@ class ServerEvents : public IServerEvents, public wxEvtHandler
                          bool haspass, int rank, const wxString& maphash, const wxString& map,
                          const wxString& title, const wxString& mod );
 
-    void OnUserJoinedBattle( int battleid, const wxString& nick );
+	void OnUserJoinedBattle( int battleid, const wxString& nick, const wxString& userScriptPassword );
     void OnUserLeftBattle( int battleid, const wxString& nick );
     void OnBattleInfoUpdated( int battleid, int spectators, bool locked, const wxString& maphash, const wxString& map );
     void OnSetBattleInfo( int battleid, const wxString& param, const wxString& value );
     void OnBattleInfoUpdated( int battleid );
     void OnBattleClosed( int battleid );
 
-    void OnJoinedBattle( int battleid, const wxString& hash );
+	void OnJoinedBattle( int battleid, const wxString& hash );
     void OnHostedBattle( int battleid );
 
     void OnStartHostedBattle( int battleid );
@@ -86,6 +86,7 @@ class ServerEvents : public IServerEvents, public wxEvtHandler
     void OnRing( const wxString& from );
 
     void OnServerMessage( const wxString& message );
+	void OnServerBroadcast( const wxString& message );
     void OnServerMessageBox( const wxString& message );
     void OnChannelMessage( const wxString& channel, const wxString& msg );
 

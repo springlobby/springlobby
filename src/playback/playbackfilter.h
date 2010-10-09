@@ -105,7 +105,7 @@ class PlaybackListFilter : public wxPanel
         wxRegEx*    m_filter_mod_expression;
 
 
-    DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 };
 
 enum

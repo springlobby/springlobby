@@ -2,7 +2,7 @@
 
 #don't write when git errored out resulting in unset version (ie when compiling from tarball)
 IF ( NOT GIT_ERROR )
-    CONFIGURE_FILE( ${springlobby_SOURCE_DIR}/cmake/config.h ${springlobby_BINARY_DIR}/config.h )
+    CONFIGURE_FILE( ${springlobby_SOURCE_DIR}/cmake/config.h ${springlobby_BINARY_DIR}/springlobby_config.h )
 ENDIF ( NOT GIT_ERROR )
 
 SET( PACKAGE_NAME springlobby )

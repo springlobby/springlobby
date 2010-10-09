@@ -1,7 +1,7 @@
 #include "updatehelper.h"
 
 #ifdef HAVE_CONFIG_H
-	#include "config.h"
+	#include "springlobby_config.h"
 #endif //HAVE_CONFIG_H
 
 #ifndef VERSION

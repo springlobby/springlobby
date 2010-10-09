@@ -30,7 +30,7 @@
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 
 void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer) {
 

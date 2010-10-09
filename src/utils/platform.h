@@ -28,7 +28,7 @@ bool IsUACenabled();
 
     \return Logwindow pointer (may be 0), useful if parent frame should be created _after_ logging is set up
 **/
-wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, bool showgui, bool logcrash, int verbosity, wxLogChain* logChain );
+wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, const wxString& logfilepath, bool showgui, bool logcrash, int verbosity, wxLogChain* logChain );
 
 wxString GetExecutableFolder();
 wxString GetLibExtension();
@@ -46,6 +46,15 @@ class CwdGuard {
 bool IsPreVistaWindows();
 #endif
 
+//! simply return wxApp::GetAppName with letter lowercased on demand
+wxString GetAppName( const bool lowerCase = false );
+wxString GetConfigfileDir();
+
+/**
+  \in Format string with a single %s
+  \out wxString with %s replaced with GetAppName()
+  **/
+wxString IdentityString(const wxString format, bool lowerCase = false );
 
 #endif // SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 

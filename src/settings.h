@@ -3,9 +3,10 @@
 
 #include <wx/string.h>
 #include <vector>
+#include "utils/mixins.hh"
 
 const int CACHE_VERSION     = 11;
-const int SETTINGS_VERSION  = 21;
+const int SETTINGS_VERSION  = 22;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
@@ -18,8 +19,8 @@ const unsigned int DEFSETT_MW_TOP = 50;
 const unsigned int DEFSETT_MW_LEFT = 50;
 const unsigned int DEFSETT_SPRING_PORT = 8452;
 
-const int SET_MODE_EXPERT = 5000;
-const int SET_MODE_SIMPLE = 5001;
+const long SET_MODE_EXPERT = 5000;
+const long SET_MODE_SIMPLE = 5001;
 const unsigned int DEFSETT_SW_WIDTH = 770;
 const unsigned int DEFSETT_SW_HEIGHT = 580;
 const unsigned int DEFSETT_SW_TOP = 50;
@@ -33,10 +34,9 @@ const unsigned int SPRING_MAX_ALLIES = 16;
  */
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
 
-#include <wx/config.h>
-#include <wx/fileconf.h>
 #include "useractions.h"
 #include "Helper/sortutil.h"
+#include "Helper/slconfig.h"
 
 class wxWindow;
 class wxConfigBase;
@@ -72,22 +72,8 @@ public:
 	static const size_t top_left		= 3;
 };
 
-class SL_WinConf : public wxFileConfig
-{
-    public:
-			SL_WinConf ( const wxString& appName, const wxString& vendorName, const wxString& strLocal, const wxString& strGlobal, long style, const wxMBConv& /*conv*/):
-			wxFileConfig( appName, vendorName, strLocal, strGlobal, style)
-			{
-			}
-
-			SL_WinConf( wxFileInputStream& in );
-    protected:
-			bool DoWriteLong(const wxString& key, long lValue);
-};
-
-
 //! @brief Class used to store and restore application settings.
-class Settings
+class Settings : public SL::NonCopyable
 {
   public:
 
@@ -100,13 +86,6 @@ class Settings
     static bool m_user_defined_config;
     static wxString m_user_defined_config_path;
 
-    /// used to import default configs from a file in windows
-    #ifdef __WXMSW__
-        void SetDefaultConfigs( SL_WinConf& conf );
-    #else
-        void SetDefaultConfigs( wxConfig& conf );
-    #endif
-
     /// list all entries subkeys of a parent group
     wxArrayString GetGroupList( const wxString& base_key );
     /// list all groups subkeys of a parent group
@@ -114,7 +93,7 @@ class Settings
     /// counts all groups subkeys of a parent group
     unsigned int GetGroupCount( const wxString& base_key );
 
-    bool IsPortableMode();
+    bool IsPortableMode() const;
     void SetPortableMode( bool mode );
 
     /** Initialize all settings to default.
@@ -406,7 +385,7 @@ class Settings
     void ConvertOldSpringDirsOptions();
 
 		void RefreshSpringVersionList();
-    std::map<wxString, wxString> GetSpringVersionList(); /// index -> version
+    std::map<wxString, wxString> GetSpringVersionList() const; /// index -> version
     wxString GetCurrentUsedSpringIndex();
     void SetUsedSpringIndex( const wxString& index );
     void DeleteSpringVersionbyIndex( const wxString& index );
@@ -416,6 +395,7 @@ class Settings
     bool GetSearchSpringOnlyInSLPath();
 
     /// convenience wrappers to get current used version paths
+	wxString GetCurrentUsedUikeys();
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
     wxString GetCurrentUsedSpringBinary();
@@ -430,6 +410,7 @@ class Settings
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync();
+	wxString AutoFindUikeys();
 
     //!@brief returns config file path spring should use, returns empty for default
     wxString GetForcedSpringConfigFilePath();
@@ -703,8 +684,8 @@ class Settings
     /** @name SpringSettings
      * @{
      */
-    int getMode();
-    void setMode( int );
+	long getMode();
+	void setMode( long );
     bool getDisableWarning();
     void setDisableWarning( bool );
     wxString getSimpleRes();
@@ -744,7 +725,7 @@ class Settings
     void SetMapSelectorFilterRadio( const unsigned int val );
     /**@}*/
   /* ============================================================== */
-    /** @name Relayed Hosts
+	/** @name Relay Hosts
     * @{
     */
 
@@ -752,25 +733,43 @@ class Settings
     void SetLastRelayedHost(wxString relhost);
 
     /**@}*/
+  /* ============================================================== */
+	/** @name Hotkeys
+    * @{
+    */
+
+	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, bool unbind = false );
+	wxString GetHotkey( const wxString& profileName, const wxString& command, const wxString& index );
+	wxArrayString GetHotkeyProfiles();
+	wxArrayString GetHotkeyProfileCommands( const wxString& profileName );
+	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& command );
+	void DeleteHotkeyProfiles();
+	wxString GetUikeys( const wxString& index );
+
+    /**@}*/
+
+	//! you are absolutely forbidden to use this
+	template < class T >
+	T Get( wxString setting, const T def )
+	{
+		return m_config->Read( setting, def );
+	}
+
+	//setting to spam the server messages in all channels
+	bool GetBroadcastEverywhere();
+	void SetBroadcastEverywhere(bool value);
 
   protected:
     bool IsSpringBin( const wxString& path );
 
-    #ifdef __WXMSW__
-    SL_WinConf* m_config; //!< wxConfig object to store and restore  all settings in.
-    #elif defined(__WXMAC__)
-    wxFileConfig* m_config; //!< wxConfig object to store and restore  all settings in.
-    #else
-    wxConfigBase* m_config; //!< wxConfig object to store and restore  all settings in.
-    #endif
+	slConfig* m_config; //!< wxConfig object to store and restore  all settings in.
 
     wxString m_chosen_path;
     bool m_portable_mode;
 
     std::map<wxString, wxString> m_spring_versions;
 
-    Settings( const Settings& );
-
+	wxPathList GetConfigFileSearchPathes();
 };
 
 Settings& sett();

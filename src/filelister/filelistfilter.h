@@ -62,7 +62,7 @@ class FileListFilter : public wxPanel
 		wxCheckBox* m_filter_ondisk;
 
 
-    DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 };
 
 enum

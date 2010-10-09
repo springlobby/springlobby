@@ -3,7 +3,7 @@
 
 #include <wx/string.h>
 #include <wx/colour.h>
-
+#include "utils/mixins.hh"
 class Server;
 
 const unsigned int SYNC_UNKNOWN = 0;
@@ -21,7 +21,8 @@ struct UserStatus
       RANK_4,
       RANK_5,
       RANK_6,
-      RANK_7
+	  RANK_7,
+	  RANK_8
     };
 
   bool in_game;
@@ -54,16 +55,17 @@ struct UserBattleStatus
   bool spectator;
   bool ready;
   bool isfromdemo;
-	UserPosition pos; // for startpos = 4
-	// bot-only stuff
-	wxString owner;
-	wxString aishortname;
-	wxString airawname;
-	wxString aiversion;
-	int aitype;
+  UserPosition pos; // for startpos = 4
+  // bot-only stuff
+  wxString owner;
+  wxString aishortname;
+  wxString airawname;
+  wxString aiversion;
+  int aitype;
   // for nat holepunching
   wxString ip;
   unsigned int udpport;
+  wxString scriptPassword;
   bool IsBot() const { return !aishortname.IsEmpty(); }
   UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), isfromdemo(false), aitype(-1), udpport(0) {}
   bool operator == ( const UserBattleStatus& s ) const
@@ -200,7 +202,7 @@ class User : public CommonUser
     int m_statusicon_idx;
     int m_sideicon_idx;
 
-    //! copy-semantics?
+	//! copy-semantics?
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_USER_H

@@ -18,6 +18,7 @@
 //#include <wx/txtstrm.h>
 //#include <wx/wfstream.h>
 #include <wx/textfile.h>
+#include <wx/sstream.h>
 #include <cmath>
 #include <stdexcept>
 #include <clocale>
@@ -81,14 +82,24 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
 }
 
 
+static int CompareStringNoCase(const wxString& first, const wxString& second)
+{
+	return first.CmpNoCase(second);
+}
+
+
 void SpringUnitSync::PopulateArchiveList()
 {
   m_maps_list.clear();
   m_mods_list.clear();
-  m_mod_array.Empty();
-  m_map_array.Empty();
+  m_mod_array.Clear();
+  m_map_array.Clear();
+  m_unsorted_mod_array.Clear();
+  m_unsorted_map_array.Clear();
   m_map_image_cache.Clear();
   m_mapinfo_cache.Clear();
+  m_maps_unchained_hash.clear();
+  m_mods_unchained_hash.clear();
 
   int numMaps = susynclib().GetMapCount();
   for ( int i = 0; i < numMaps; i++ )
@@ -143,6 +154,10 @@ void SpringUnitSync::PopulateArchiveList()
       wxLogError( _T("Found mod with hash collision: ") + name + _T(" hash: ") + hash );
     }
   }
+  m_unsorted_mod_array = m_mod_array;
+  m_unsorted_map_array = m_map_array;
+  m_map_array.Sort(CompareStringNoCase);
+  m_mod_array.Sort(CompareStringNoCase);
 }
 
 
@@ -206,12 +221,9 @@ wxArrayString SpringUnitSync::GetModList()
 
 int SpringUnitSync::GetModIndex( const wxString& name )
 {
-  wxLogDebugFunc( _T("name = \"") + name + _T("\"") );
-  try
-  {
-    return susynclib().GetModIndex( name );
-  } catch (...){}
-  return -1;
+	int result = m_mod_array.Index( name );
+	if ( result == wxNOT_FOUND ) result = -1;
+	return result;
 }
 
 
@@ -254,9 +266,8 @@ UnitSyncMod SpringUnitSync::GetMod( int index )
 {
   wxLogDebugFunc( _T("") );
   UnitSyncMod m;
-  susynclib().GetPrimaryModCount();
-  m.name = susynclib().GetPrimaryModName( index );
-  m.hash = susynclib().GetPrimaryModChecksum( index );
+  m.name = m_mod_array[index];
+  m.hash = m_mods_list[m.name];
 
   return m;
  }
@@ -412,7 +423,7 @@ wxArrayString SpringUnitSync::GetMapDeps( const wxString& mapname )
 	wxArrayString ret;
 	try
 	{
-		ret = susynclib().GetMapDeps( GetMapIndex( mapname ) );
+		ret = susynclib().GetMapDeps( m_unsorted_map_array.Index( mapname ) );
 	}
 	catch( unitsync_assert ) {}
 	return ret;
@@ -433,27 +444,6 @@ int SpringUnitSync::GetMapIndex( const wxString& name )
   int result = m_map_array.Index( name );
   if ( result == wxNOT_FOUND ) result = -1;
   return result;
-}
-
-
-wxString SpringUnitSync::GetModArchive( int index )
-{
-  wxLogDebugFunc( _T("") );
-
-  return susynclib().GetPrimaryModArchive( index );
-}
-
-
-wxString SpringUnitSync::GetMapArchive( int index )
-{
-  wxLogDebugFunc( _T("") );
-
-  int count = susynclib().GetMapArchiveCount( index );
-
-  if ( count > 0 )
-    return susynclib().GetMapArchiveName( 0 );
-  else
-    return _T("");
 }
 
 
@@ -498,7 +488,7 @@ wxArrayString SpringUnitSync::GetModDeps( const wxString& modname )
 	wxArrayString ret;
 	try
 	{
-		ret = susynclib().GetModDeps( GetModIndex( modname ) );
+		ret = susynclib().GetModDeps( m_unsorted_mod_array.Index( modname ) );
 	}
 	catch( unitsync_assert ) {}
 	return ret;
@@ -612,6 +602,14 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname )
   return ret;
 }
 
+void SpringUnitSync::UnSetCurrentMod()
+{
+	try
+	{
+		susynclib().UnSetCurrentMod();
+	} catch( unitsync_assert ) {}
+}
+
 wxArrayString SpringUnitSync::GetAIInfos( int index )
 {
 	wxArrayString ret;
@@ -639,7 +637,7 @@ int SpringUnitSync::GetNumUnits( const wxString& modname )
 {
   wxLogDebugFunc( _T("") );
 
-  susynclib().AddAllArchives( susynclib().GetPrimaryModArchive( susynclib().GetModIndex( modname ) ) );
+  susynclib().AddAllArchives( susynclib().GetPrimaryModArchive( m_unsorted_mod_array.Index( modname ) ) );
   susynclib().ProcessUnitsNoChecksum();
 
   return susynclib().GetUnitCount();
@@ -657,7 +655,7 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
   } catch(...)
   {
     susynclib().SetCurrentMod( modname );
-    while ( susynclib().ProcessUnitsNoChecksum() );
+    while ( susynclib().ProcessUnitsNoChecksum() ) {}
     unsigned int unitcount = susynclib().GetUnitCount();
     for ( unsigned int i = 0; i < unitcount; i++ )
     {
@@ -833,7 +831,7 @@ MapInfo SpringUnitSync::_GetMapInfoEx( const wxString& mapname )
       }
       catch (...)
       {
-        info = susynclib().GetMapInfoEx( mapname, 1 );
+		info = susynclib().GetMapInfoEx( m_unsorted_map_array.Index(mapname), 1 );
 
         cache.Add ( info.author );
         cache.Add( TowxString( info.tidalStrength ) );
@@ -899,7 +897,7 @@ void SpringUnitSync::SetSpringDataPath( const wxString& path )
 
 wxString SpringUnitSync::GetFileCachePath( const wxString& name, const wxString& hash, bool IsMod )
 {
-  LOCK_UNITSYNC;
+//  LOCK_UNITSYNC;
 
   wxString ret = m_cache_path;
   if ( !name.IsEmpty() ) ret << name;
@@ -1129,7 +1127,7 @@ namespace
       GetMapExAsyncWorkItem( SpringUnitSync* usync, const wxString& mapname, int evtHandlerId )
         : GetMapImageAsyncResult( usync, mapname, evtHandlerId, 3 ) {}
   };
-};
+}
 
 
 void SpringUnitSync::PrefetchMap( const wxString& mapname )
@@ -1238,6 +1236,24 @@ void SpringUnitSync::GetMapExAsync( const wxString& mapname, int evtHandlerId )
   m_cache_thread.DoWork( work, 200 /* higher prio then GetMinimapAsync */ );
 }
 
+wxString SpringUnitSync::GetTextfileAsString( const wxString& modname, const wxString& file_path )
+{
+	susynclib().SetCurrentMod( modname );
+
+	int ini = susynclib().OpenFileVFS ( file_path );
+	if ( !ini )
+		return wxEmptyString;
+
+	int FileSize = susynclib().FileSizeVFS(ini);
+	if (FileSize == 0) {
+		susynclib().CloseFileVFS(ini);
+		return wxEmptyString;
+	}
+
+	uninitialized_array<char> FileContent(FileSize);
+	susynclib().ReadFileVFS(ini, FileContent, FileSize);
+	return wxString( FileContent, wxConvAuto(), size_t( FileSize ) );
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// EvtHandlerCollection code

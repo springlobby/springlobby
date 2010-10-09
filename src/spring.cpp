@@ -46,7 +46,7 @@ BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
     EVT_COMMAND ( PROC_SPRING, wxEVT_SPRING_EXIT, Spring::OnTerminated )
 
-END_EVENT_TABLE();
+END_EVENT_TABLE()
 
 #define FIRST_UDP_SOURCEPORT 8300
 
@@ -66,14 +66,13 @@ Spring::Spring() :
 
 Spring::~Spring()
 {
-    if ( m_process != 0 )
-        delete m_process;
+    delete m_process;
 }
 
 
 bool Spring::IsRunning() const
 {
-    return m_process != 0;
+	return m_running;
 }
 
 bool Spring::RunReplay ( const wxString& filename )
@@ -122,11 +121,7 @@ bool Spring::Run( Battle& battle )
 	{
     // -m, --minimise          Start minimised
     // -q [T], --quit=[T]      Quit immediately on game over or after T seconds
-    #ifndef __WXMSW__
-    cmd = _T("--minimise");
-    #else
-    cmd = _T("/minimise");
-    #endif
+	cmd = _T("--minimise");
 	}
 	cmd += _T(" \"") + path +  _T("\"");
 
@@ -288,7 +283,13 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			}
 			tdf.Append( _T("IsHost"), battle.IsFounderMe() );
 
-			tdf.Append(_T("MyPlayerName"), battle.GetMe().GetNick() );
+			User& me = battle.GetMe();
+			tdf.Append(_T("MyPlayerName"), me.GetNick() );
+
+			if ( !me.BattleStatus().scriptPassword.IsEmpty() )
+			{
+				tdf.Append( _T("MyPasswd"), me.BattleStatus().scriptPassword );
+			}
 
 			if ( !battle.IsFounderMe() )
 			{
@@ -447,6 +448,10 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							tdf.Append( _T("Spectator"), status.spectator );
 							tdf.Append( _T("Rank"), (int)user.GetRank() );
 							tdf.Append( _T("IsFromDemo"), int(status.isfromdemo) );
+							if ( !status.scriptPassword.IsEmpty() )
+							{
+								tdf.Append( _T("Password"), status.scriptPassword );
+							}
 							if ( !status.spectator )
 							{
 								tdf.Append( _T("Team"), teams_to_sorted_teams[status.team] );
@@ -562,7 +567,6 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 			tdf.AppendLineBreak();
 
-
 			unsigned int maxiter = std::max( NumUsers, battle.GetLastRectIdx() + 1 );
 			std::set<int> parsedallys;
 			for ( unsigned int i = 0; i < maxiter; i++ )
@@ -571,25 +575,31 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					User& usr = battle.GetUser( i );
 					UserBattleStatus& status = usr.BattleStatus();
 					BattleStartRect sr = battle.GetStartRect( i );
-					if ( status.spectator && !sr.IsOk() ) continue;
+					if ( status.spectator && !sr.IsOk() )
+						continue;
 					int ally = status.ally;
-					if ( status.spectator ) ally = i;
-					if ( parsedallys.find( ally ) != parsedallys.end() ) continue; // skip duplicates
+					if ( status.spectator )
+						ally = i;
+					if ( parsedallys.find( ally ) != parsedallys.end() )
+						continue; // skip duplicates
 					sr = battle.GetStartRect( ally );
 					parsedallys.insert( ally );
 
 					tdf.EnterSection( _T("ALLYTEAM") + TowxString( ally ) );
 						tdf.Append( _T("NumAllies"), 0 );
-						if ( sr.IsOk() )
+						if ( startpostype == IBattle::ST_Choose )
 						{
-								const char* old_locale = std::setlocale(LC_NUMERIC, "C");
+							if ( sr.IsOk() )
+							{
+									const char* old_locale = std::setlocale(LC_NUMERIC, "C");
 
-								tdf.Append( _T("StartRectLeft"), wxString::Format( _T("%.3f"), sr.left / 200.0 ) );
-								tdf.Append( _T("StartRectTop"), wxString::Format( _T("%.3f"), sr.top / 200.0 ) );
-								tdf.Append( _T("StartRectRight"), wxString::Format( _T("%.3f"), sr.right / 200.0 ) );
-								tdf.Append( _T("StartRectBottom"), wxString::Format( _T("%.3f"), sr.bottom / 200.0 ) );
+									tdf.Append( _T("StartRectLeft"), wxString::Format( _T("%.3f"), sr.left / 200.0 ) );
+									tdf.Append( _T("StartRectTop"), wxString::Format( _T("%.3f"), sr.top / 200.0 ) );
+									tdf.Append( _T("StartRectRight"), wxString::Format( _T("%.3f"), sr.right / 200.0 ) );
+									tdf.Append( _T("StartRectBottom"), wxString::Format( _T("%.3f"), sr.bottom / 200.0 ) );
 
-								std::setlocale(LC_NUMERIC, old_locale);
+									std::setlocale(LC_NUMERIC, old_locale);
+							}
 						}
 					tdf.LeaveSection();
 			}

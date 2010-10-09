@@ -2,6 +2,7 @@
 #define THREAD_H
 #include <wx/thread.h>
 #include <vector>
+#include "utils/mixins.hh"
 
 /// joinable thread, with overridden Sleep and Wait methods.
 /// Sleep wakes up when you call Wait()
@@ -33,12 +34,12 @@ class WorkItemQueue;
 
 /** @brief Abstraction of a piece of work to be done by WorkerThread
     Inherit this class to define concrete work items. */
-class WorkItem
+class WorkItem : public SL::NonCopyable
 {
   public:
 
     /** @brief Construct a new WorkItem */
-    WorkItem() : m_priority(0), m_toBeDeleted(true) {}
+    WorkItem() : m_priority(0), m_toBeDeleted(true), m_queue(NULL) {}
 
     /** @brief Destructor */
     virtual ~WorkItem() {}

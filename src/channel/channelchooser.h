@@ -2,6 +2,7 @@
 #define CHANNELCHOOSERPANEL_H
 
 #include <wx/scrolwin.h>
+#include "../utils/mixins.hh"
 
 class ChannelListctrl;
 class wxBoxSizer;
@@ -9,7 +10,7 @@ class wxButton;
 class wxTextCtrl;
 class wxStaticText;
 
-class ChannelChooserPanel : public wxScrolledWindow
+class ChannelChooserPanel : public wxScrolledWindow, public SL::NonCopyable
 {
     public:
         ChannelChooserPanel(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition,

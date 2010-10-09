@@ -36,7 +36,7 @@
 #include "../utils/customdialogs.h"
 #include "../springunitsynclib.h"
 
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 #include "se_utils.h"
 #include "../settings.h"
 #include "presets.h"
@@ -494,6 +494,16 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
             choice.ToLong( &val );
 		    (intSettings)[W4_CONTROLS[4].key]= val;
 		    break;
+		}
+
+		case ID_SHADOW_CHOICES:
+		{
+			int choiceIndex = comboBox->GetCurrentSelection();
+
+			//really off = -1, off = 0, on = 1
+			//const wxString SHADOW_CHOICES[] = { _T("disabled"), _T("off"), _T("on") };
+			(intSettings)[QA_CBOX[0].key] = choiceIndex - 1;
+			break;
 		}
 
 		case ID_SIMPLE_QUAL_CBX:

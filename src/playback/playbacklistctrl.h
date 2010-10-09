@@ -52,7 +52,7 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, Playback
     void OnDLMod( wxCommandEvent& event );
     void OnColClick( wxListEvent& event );
 
-    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 
     virtual void HighlightItem( long /*unused*/ ){};
 
@@ -67,7 +67,8 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, Playback
     using ParentType::GetDataFromIndex;
 
   protected:
-    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
+	void OnChar(wxKeyEvent & event);
 
     virtual void Sort();
 

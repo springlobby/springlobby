@@ -55,7 +55,6 @@
 #include "playback/playbacktab.h"
 #include "defines.h"
 #include "customizations.h"
-#include "curl/http.h"
 #include "alsound.h"
 #include "mapselectdialog.h"
 
@@ -82,11 +81,12 @@ SpringLobbyApp::SpringLobbyApp()
     m_translationhelper( NULL ),
     m_log_verbosity( 3 ),
     m_log_console( true ),
+	m_log_file( false ),
     m_log_window_show( false ),
     m_crash_handle_disable( false ),
-    m_start_simple_interface( false )
+	m_start_simple_interface( false ),
+	m_appname( _T("SpringLobby") )
 {
-    SetAppName( _T("springlobby") );
 }
 
 SpringLobbyApp::~SpringLobbyApp()
@@ -112,7 +112,8 @@ bool SpringLobbyApp::OnInit()
 {
     //this triggers the Cli Parser amongst other stuff
     if (!wxApp::OnInit())
-        return false;
+		return false;
+	SetAppName( m_appname );
 
     if (!m_crash_handle_disable) {
     #if wxUSE_ON_FATAL_EXCEPTION
@@ -127,13 +128,12 @@ bool SpringLobbyApp::OnInit()
 
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;
-    wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
+	wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
-    wxCurlBase::Init();
 
 
 #ifdef __WXMSW__
@@ -150,8 +150,8 @@ bool SpringLobbyApp::OnInit()
     m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
     m_translationhelper->Load();
 
-    if ( !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) )
-        wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
+	if ( !wxDirExists( GetConfigfileDir() ) )
+		wxMkdir( GetConfigfileDir() );
 
 #ifdef __WXMSW__
 	sett().SetSearchSpringOnlyInSLPath( sett().GetSearchSpringOnlyInSLPath() );
@@ -182,23 +182,24 @@ bool SpringLobbyApp::OnInit()
 	#endif
 
 
-    CacheAndSettingsSetup();
+	CacheAndSettingsSetup();
 
-    if ( !m_customizer_modname.IsEmpty() ) {
-        if ( SLcustomizations().Init( m_customizer_modname ) ) {
-            if ( m_start_simple_interface ) {
-                SimpleFront* sp = new SimpleFront( 0 );
-                SetTopWindow( sp );
-                sp->Show();
-                return true;
-            }
-        }
-        else {
-            customMessageBox( 0, _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
+	if ( !m_customizer_modname.IsEmpty() ) {
+		if ( SLcustomizations().Init( m_customizer_modname ) ) {
+			if ( m_start_simple_interface ) {
+				SimpleFront* sp = new SimpleFront( 0 );
+				SetTopWindow( sp );
+				sp->Show();
+				return true;
+			}
+			ui().mw().SetIcon( SLcustomizations().GetAppIcon() );
+		}
+		else {
+			customMessageBox( 3, _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
 //            wxLogError( _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
-            exit( OnExit() );//for some twisted reason returning false here does not termiante the app
-        }
-    }
+			exit( OnExit() );//for some twisted reason returning false here does not terminate the app
+		}
+	}
 
 	notificationManager(); //needs to be initialized too
     ui().ShowMainWindow();
@@ -244,8 +245,6 @@ int SpringLobbyApp::OnExit()
     {
         wxDELETE(m_translationhelper);
     }
-
-    wxCurlBase::Shutdown();
 
   	m_timer->Stop();
 
@@ -302,13 +301,13 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
     {
         { wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
         { wxCMD_LINE_SWITCH, STR("nc"), STR("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-    #if wxUSE_STD_IOSTREAM
+		{ wxCMD_LINE_OPTION, STR("fl"), STR("file-logging"),  _("dumps application log to a file ( enter path )"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
         { wxCMD_LINE_SWITCH, STR("cl"), STR("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-    #endif
         { wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
         { wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-        { wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("Load lobby customizations from game archive. Expects the shortname."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("Load lobby customizations from game archive. Expects the long name."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  _("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_SWITCH, STR("s"), STR("simple"),  _("Start with the simple interface."), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_NONE }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
@@ -327,6 +326,7 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
     {
         m_log_console = parser.Found(_T("console-logging"));
         m_log_window_show = parser.Found(_T("gui-logging"));
+		m_log_file = parser.Found(_T("file-logging"), &m_log_file_path);
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
         m_start_simple_interface = parser.Found(_T("simple"));
 
@@ -347,6 +347,9 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
             m_log_verbosity = m_log_window_show ? 3 : 5;
         if ( !parser.Found(_T("customize"), &m_customizer_modname ) )
             m_customizer_modname = _T("");
+		if ( !parser.Found(_T("name"), &m_appname ) )
+			m_appname = _T("SpringLobby");
+
 
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage
@@ -364,30 +367,12 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
 void SpringLobbyApp::CacheAndSettingsSetup()
 {
-    if( sett().IsFirstRun() )
-    {
-        wxString defaultconfigpath = GetExecutableFolder() + wxFileName::GetPathSeparator() + _T("springlobby.global.conf");
-        if (  wxFileName::FileExists( defaultconfigpath ) )
-        {
-            wxFileInputStream instream( defaultconfigpath );
-
-            if ( instream.IsOk() )
-            {
-                #ifdef __WXMSW__
-                SL_WinConf defaultconf( instream );
-                #else
-                wxConfig defaultconf( instream );
-                #endif
-                sett().SetDefaultConfigs( defaultconf );
-            }
-        }
-    }
-
     SetSettingsStandAlone( false );
 
-    if ( sett().IsFirstRun() && !wxDirExists( wxStandardPaths::Get().GetUserDataDir() ) )
+	const wxString userConfigDir = GetConfigfileDir();
+	if ( sett().IsFirstRun() && !wxDirExists( userConfigDir ) )
     {
-        wxMkdir( wxStandardPaths::Get().GetUserDataDir() );
+		wxMkdir( userConfigDir );
     }
     if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
     {
@@ -482,7 +467,21 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			if( settversion < 19 )
 			{
 				//the dummy column hack was removed on win
-					sett().NukeColumnWidths();
+				sett().NukeColumnWidths();
+			}
+			if ( settversion < 22 )
+			{
+				if ( m_translationhelper )
+				{
+					// add locale's language code to autojoin
+					if ( m_translationhelper->GetLocale() )
+					{
+						wxString localecode = m_translationhelper->GetLocale()->GetCanonicalName();
+						if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
+						if ( localecode == _T("en") ) // we'll skip en for now, maybe in the future we'll reactivate it
+							sett().AddChannelJoin( localecode, _T("") );
+					}
+				}
 			}
     }
 
@@ -493,6 +492,15 @@ void SpringLobbyApp::CacheAndSettingsSetup()
     {
         sett().AddChannelJoin( _T("main"), _T("") );
         sett().AddChannelJoin( _T("newbies"), _T("") );
+		if ( m_translationhelper )
+		{
+			if ( m_translationhelper->GetLocale() )
+			{
+				wxString localecode = m_translationhelper->GetLocale()->GetCanonicalName();
+				if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
+				sett().AddChannelJoin( localecode, _T("") ); // add locale's language code to autojoin
+			}
+		}
     }
 
     if ( sett().ShouldAddDefaultGroupSettings() )

@@ -5,6 +5,7 @@
 #include "../uiutils.h"
 #include "../ui.h"
 #include "../settings.h"
+#include "../spring.h"
 #include "../mainwindow.h"
 #include "../images/springlobby_64.png.h"
 
@@ -28,6 +29,7 @@ NotificationManager::NotificationManager()
     m_toasterbox->SetPopupBackgroundColor(0,0,0);
     m_toasterbox->SetPopupTextColor(255,255,255);
 //    m_toasterbox->SetPopupScrollSpeed(pScrollSpeed);
+	//! \todo use image from customizations
 	wxBitmap nmp ( charArr2wxBitmap( springlobby_64_png, sizeof(springlobby_64_png) ) );
 //    wxBitmap icon (  ) );
     m_toasterbox->SetPopupBitmap( nmp );
@@ -41,7 +43,9 @@ NotificationManager::~NotificationManager()
 void NotificationManager::ShowNotification( UiEvents::NotficationData data )
 {
     //call this before showing everytime to accout for desktop resolution changes
-	if ( m_toasterbox ) {
+	const bool spring_running = spring().IsRunning();
+	const bool disable_if_ingame = sett().Get<bool>( _T("/GUI/NotificationPopupDisableIngame"), true );
+	if ( m_toasterbox &&  ! ( disable_if_ingame && spring_running ) ) {
 		SetPopupPosition();
 		m_toasterbox->SetPopupText( data.second, false);
 		m_toasterbox->Play();

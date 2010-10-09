@@ -3,13 +3,15 @@
 
 #include <wx/string.h>
 #include <wx/toplevel.h>
+#include "../utils/mixins.hh"
+
 class wxSize;
 //! automagically load/save window size and position in ctor/dtor
-class WindowAttributesPickle
+class WindowAttributesPickle : public SL::NonCopyable
 {
 public:
 	WindowAttributesPickle( const wxString& name, wxTopLevelWindow* window, const wxSize& default_size );
-	~WindowAttributesPickle();
+	virtual ~WindowAttributesPickle();
 protected:
 	void SaveAttributes();
 	void LoadAttributes();

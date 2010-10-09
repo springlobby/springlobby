@@ -59,6 +59,7 @@ class tab_quality_video : public abstract_panel
 		void CreateGUIControls();
 
 		wxComboBox* ctrl_waterQ_CBox;
+		wxComboBox* ctrl_shadows_CBox;
 		wxCheckBox** ctrl_vo_Boxes;
 		static const int ctrl_vo_Boxes_size = 3;
 		wxTextCtrl* ctrl_x_res;

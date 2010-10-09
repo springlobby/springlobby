@@ -14,14 +14,13 @@
 #include <wx/file.h>
 #include <wx/log.h>
 #include <wx/platinfo.h>
-#include <curl/curl.h>
-#include <curl/types.h>
-#include <curl/easy.h>
+#include <wx/sstream.h>
 
+#include "utils/curlhelper.h"
+#include "utils/platform.h"
 #include "updater/updatehelper.h"
 #include "utils/conversion.h"
 #include "settings.h"
-#include "curl/http.h"
 #include "stacktrace.h"
 #include "springunitsync.h"
 
@@ -121,7 +120,7 @@ void SpringDebugReport::AddVFSFile( const wxString& fn, const wxString& id )
 }
 
 SpringDebugReport::SpringDebugReport()
-	: NetDebugReport( "http://infologs.springzine.net/upload" )
+	: NetDebugReport( "http://infologs.springrts.com/upload" )
 {
 	wxString tmp_filename = wxPathOnly( wxFileName::CreateTempFileName(_T("dummy")) ) + wxFileName::GetPathSeparator() + _T("settings.txt");
 	wxCopyFile( sett().GetCurrentUsedSpringConfigFilePath(), tmp_filename );
@@ -135,6 +134,8 @@ SpringDebugReport::SpringDebugReport()
 	wxString info;
 	info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
 	AddText( _T("platform.txt"), info, _T("Platform") );
+	AddText( _T("client.txt"), _T( "SpringLobby " ) + GetSpringLobbyVersion(), _T("Client") );
+	AddText( _T("appname.txt"), GetAppName(), _T("Application Name"));
 }
 
 #if wxUSE_STACKWALKER

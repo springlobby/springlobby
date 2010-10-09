@@ -33,9 +33,10 @@ BEGIN_EVENT_TABLE(BattleListCtrl, BattleListCtrl::BaseType )
 END_EVENT_TABLE()
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent )
-    : CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 4, &CompareOneCrit,
-            true /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),
+	: CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
+													wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
+													_T("BattleListCtrl"), 4, &BattleListCtrl::CompareOneCrit,
+													true /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),
     m_popup( 0 )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
@@ -77,8 +78,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 
 BattleListCtrl::~BattleListCtrl()
 {
-    if ( m_popup )
-        delete m_popup;
+    delete m_popup;
 }
 
 wxString BattleListCtrl::GetItemText(long item, long column) const
@@ -132,7 +132,7 @@ int BattleListCtrl::GetItemColumnImage(long item, long column) const
         	}catch(...){}
 					break;
         }
-        case 2: return icons().GetRankIcon( battle.GetRankNeeded(), false );
+		case 2: return icons().GetRankLimitIcon( battle.GetRankNeeded(), false );
         case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
         case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
     }
@@ -236,7 +236,7 @@ void BattleListCtrl::Sort()
     }
 }
 
-int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
         case 0: return dir * CompareStatus( u1, u2 );

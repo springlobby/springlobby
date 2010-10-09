@@ -352,27 +352,23 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
 	this->Layout();
 	m_filter_sizer->Fit( this );
 
-	if ( m_filter_map_expression != NULL ) {
-		delete m_filter_map_expression;
-	}
+	delete m_filter_map_expression;
 	m_filter_map_expression = new wxRegEx( m_filter_map_edit->GetValue(), wxRE_ICASE );
-	if ( m_filter_mod_expression != NULL ) {
-		delete m_filter_mod_expression;
-	}
+
+	delete m_filter_mod_expression;
 	m_filter_mod_expression = new wxRegEx( m_filter_mod_edit->GetValue(), wxRE_ICASE );
-	if ( m_filter_description_expression != NULL ) {
-		delete m_filter_description_expression;
-	}
+
+	delete m_filter_description_expression;
 	m_filter_description_expression = new wxRegEx( m_filter_description_edit->GetValue(), wxRE_ICASE );
-	if ( m_filter_host_expression != NULL ) {
-		delete m_filter_host_expression;
-	}
+
+	delete m_filter_host_expression;
 	m_filter_host_expression = new wxRegEx( m_filter_host_edit->GetValue(), wxRE_ICASE );
+
 	wxCommandEvent dummy;
 	OnChange( dummy );
 }
 
-BattleListFilter::ButtonMode BattleListFilter::_GetButtonMode( const wxString sign )
+BattleListFilter::ButtonMode BattleListFilter::_GetButtonMode( const wxString& sign )
 {
 	if ( sign == _T( "<" ) )
 		return BattleListFilter::BUTTON_MODE_SMALLER;

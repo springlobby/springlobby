@@ -15,7 +15,9 @@ void WindowAttributesPickle::LoadAttributes()
 	wxPoint pos = sett().GetWindowPos( m_name, wxDefaultPosition );
 	wxSize size = sett().GetWindowSize( m_name, m_default_size );
 	m_window->SetSize( pos.x , pos.y, size.GetWidth(), size.GetHeight() );
-	m_window->Maximize( sett().GetWindowMaximized( m_name ) );
+	#ifndef __WXMAC__
+		m_window->Maximize( sett().GetWindowMaximized( m_name ) );
+	#endif
 }
 
 WindowAttributesPickle::~WindowAttributesPickle()
@@ -27,6 +29,8 @@ void WindowAttributesPickle::SaveAttributes()
 {
 	sett().SetWindowSize( m_name, m_window->GetSize() );
 	sett().SetWindowPos( m_name, m_window->GetPosition() );
-	sett().GetWindowMaximized( m_name, m_window->IsMaximized() );
+	#ifndef __WXMAC__
+		sett().GetWindowMaximized( m_name, m_window->IsMaximized() );
+	#endif
 	sett().SaveSettings();
 }

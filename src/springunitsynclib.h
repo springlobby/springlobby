@@ -7,6 +7,7 @@
 
 #include "nonportable.h"
 #include "iunitsync.h"
+#include "utils/mixins.hh"
 
 class wxString;
 class wxImage;
@@ -58,6 +59,22 @@ typedef const char* (USYNC_CALL_CONV *GetWritableDataDirectoryPtr)();
 typedef int (USYNC_CALL_CONV *GetMapCountPtr)();
 typedef unsigned int (USYNC_CALL_CONV *GetMapChecksumPtr)(int);
 typedef const char* (USYNC_CALL_CONV *GetMapNamePtr)(int);
+typedef const char*  (USYNC_CALL_CONV *GetMapDescriptionPtr)(int);
+typedef const char*  (USYNC_CALL_CONV *GetMapAuthorPtr)(int);
+typedef int          (USYNC_CALL_CONV *GetMapWidthPtr)(int);
+typedef int          (USYNC_CALL_CONV *GetMapHeightPtr)(int);
+typedef int          (USYNC_CALL_CONV *GetMapTidalStrengthPtr)(int);
+typedef int          (USYNC_CALL_CONV *GetMapWindMinPtr)(int);
+typedef int          (USYNC_CALL_CONV *GetMapWindMaxPtr)(int);
+typedef int          (USYNC_CALL_CONV *GetMapGravityPtr)(int);
+typedef int          (USYNC_CALL_CONV *GetMapResourceCountPtr)(int);
+typedef const char*  (USYNC_CALL_CONV *GetMapResourceNamePtr)(int, int);
+typedef float        (USYNC_CALL_CONV *GetMapResourceMaxPtr)(int, int);
+typedef int          (USYNC_CALL_CONV *GetMapResourceExtractorRadiusPtr)(int, int);
+typedef int          (USYNC_CALL_CONV *GetMapPosCountPtr)(int);
+typedef float        (USYNC_CALL_CONV *GetMapPosXPtr)(int, int);
+typedef float        (USYNC_CALL_CONV *GetMapPosZPtr)(int, int);
+
 typedef int (USYNC_CALL_CONV *GetMapInfoExPtr)(const char*, SpringMapInfo*, int);
 typedef void* (USYNC_CALL_CONV *GetMinimapPtr)(const char*, int);
 typedef int (USYNC_CALL_CONV *GetInfoMapSizePtr)(const char*, const char*, int*, int*);
@@ -220,7 +237,7 @@ typedef const char* (USYNC_CALL_CONV *lpGetStrKeyStrValPtr)(const char* key, con
  * so often there is a need for running multiple unitsync methods while
  * holding a single lock continuously.
  */
-class SpringUnitSyncLib
+class SpringUnitSyncLib : public SL::NonCopyable
 {
   public:
 
@@ -298,7 +315,7 @@ class SpringUnitSyncLib
      * @param version will get author if >=1.
      * @note Throws assert_exception if unsuccessful.
      */
-    MapInfo GetMapInfoEx( const wxString& mapName, int version );
+    MapInfo GetMapInfoEx( int index, int version );
 
     /**
      * @brief Get minimap.
@@ -484,11 +501,6 @@ class SpringUnitSyncLib
     wxString m_current_mod;
 
     /**
-     * Loads a function pointer from unitsync.
-     */
-    void* _GetLibFuncPtr( const wxString& name );
-
-    /**
      * Loads the unitsync library from path.
      * @note this function is not threadsafe if called from code not locked.
      * @see Load()
@@ -534,6 +546,21 @@ class SpringUnitSyncLib
     GetMapCountPtr m_get_map_count;
     GetMapChecksumPtr m_get_map_checksum;
     GetMapNamePtr m_get_map_name;
+    GetMapDescriptionPtr m_get_map_description;
+    GetMapAuthorPtr m_get_map_author;
+    GetMapWidthPtr m_get_map_width;
+    GetMapHeightPtr m_get_map_height;
+    GetMapTidalStrengthPtr m_get_map_tidalStrength;
+    GetMapWindMinPtr m_get_map_windMin;
+    GetMapWindMaxPtr m_get_map_windMax;
+    GetMapGravityPtr m_get_map_gravity;
+    GetMapResourceCountPtr m_get_map_resource_count;
+    GetMapResourceNamePtr m_get_map_resource_name;
+    GetMapResourceMaxPtr m_get_map_resource_max;
+    GetMapResourceExtractorRadiusPtr m_get_map_resource_extractorRadius;
+    GetMapPosCountPtr m_get_map_pos_count;
+    GetMapPosXPtr m_get_map_pos_x;
+    GetMapPosZPtr m_get_map_pos_z;
     GetMapInfoExPtr m_get_map_info_ex;
     GetMinimapPtr m_get_minimap;
     GetInfoMapSizePtr m_get_infomap_size;
@@ -593,7 +620,7 @@ class SpringUnitSyncLib
     GetMapOptionCountPtr m_get_map_option_count;
     GetCustomOptionCountPtr m_get_custom_option_count;
     GetModOptionCountPtr m_get_mod_option_count;
-		GetSkirmishAIOptionCountPtr m_get_skirmish_ai_option_count;
+    GetSkirmishAIOptionCountPtr m_get_skirmish_ai_option_count;
     GetOptionKeyPtr m_get_option_key;
     GetOptionNamePtr m_get_option_name;
     GetOptionDescPtr m_get_option_desc;

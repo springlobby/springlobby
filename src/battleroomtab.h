@@ -52,6 +52,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void UpdateBattleInfo( const wxString& Tag );
 
 		void OnStart( wxCommandEvent& event );
+		void OnHostNew( wxCommandEvent& event );
 		void OnLeave( wxCommandEvent& event );
 		void OnBalance( wxCommandEvent& event );
 		void OnFixTeams( wxCommandEvent& event );
@@ -110,6 +111,10 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 		void PrintAllySetup();
 
+		void RegenerateOptionsList();
+
+		void UpdateStatsLabels();
+
 	protected:
 
 		long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
@@ -119,6 +124,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		Battle* m_battle;
 		UnitSyncMap m_map;
 
+		long m_mod_opts_index;
 		long m_map_opts_index;
 
 		OptionListMap m_opt_list_map;
@@ -147,6 +153,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxStaticText* m_player_count_lbl;
 		wxStaticText* m_spec_count_lbl;
 		wxStaticText* m_ally_setup_lbl;
+		wxStaticText* m_ok_count_lbl;
 
 		MapCtrl * m_minimap;
 
@@ -168,6 +175,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxButton* m_delete_btn;
 		wxButton* m_default_btn;
 		wxButton* m_browse_map_btn;
+		wxButton* m_host_new_btn;
 
 		wxMenu* m_manage_users_mnu;
 		wxMenuItem* m_lock_balance_mnu;
@@ -220,10 +228,11 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 			BROOM_AUTOSPECT,
 			BROOM_AUTOSTART,
 			BROOM_AUTOCONTROL,
-			BROOM_AUTOPASTE
+			BROOM_AUTOPASTE,
+			BROOM_HOST_NEW
 		};
 
-		DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H

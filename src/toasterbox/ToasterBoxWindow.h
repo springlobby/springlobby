@@ -4,6 +4,8 @@
 #include <wx/timer.h>
 #include <wx/wx.h>
 #include <wx/defs.h>
+#include "../utils/mixins.hh"
+
 #if wxUSE_POPUPWIN
 	#include <wx/popupwin.h>
 	typedef wxPopupWindow
@@ -14,7 +16,7 @@
 		ToasterBase;
 #endif
 
-class ToasterBoxWindow: public ToasterBase, public wxTimer
+class ToasterBoxWindow: public ToasterBase, public wxTimer , public SL::NonCopyable
 {
   public:
     ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2);

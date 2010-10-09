@@ -13,6 +13,7 @@ class Battle;
 class SinglePlayerBattle;
 class OfflineBattle;
 class ChatPanel;
+class ReconnectDialog;
 
 //this removes the necessity to drag wx/event.h into almost every other file for a single type
 //if it's too "hackish" for someone's taste, just include that header again and remove this (koshi)
@@ -26,9 +27,11 @@ extern const wxEventType torrentSystemStatusUpdateEvt;
 
 #include "utils/battleevents.h"
 #include <wx/string.h>
+#include <wx/timer.h>
+#include "utils/mixins.hh"
 
 //! @brief UI main class
-class Ui
+class Ui : public SL::NonCopyable
 {
   public:
 
@@ -52,12 +55,15 @@ class Ui
     void Disconnect();
     void Reconnect();
     void DoConnect( const wxString& servername, const wxString& username, const wxString& password );
+	void AddServerWindow( const wxString& servername );
+	void ReopenServerTab();
 
     void ConnectionFailurePrompt();
-    void SwitchToNextServer();
+	wxString GetNextServer();
 
     bool DoRegister( const wxString& servername, const wxString& username, const wxString& password, wxString& reason );
 
+	bool IsConnecting() const;
     bool IsConnected() const;
     void JoinChannel( const wxString& name, const wxString& password );
 
@@ -105,6 +111,7 @@ class Ui
 
     void OnUnknownCommand( Server& server, const wxString& command, const wxString& params );
     void OnMotd( Server& server, const wxString& message );
+	void OnServerBroadcast( Server& server, const wxString& message );
     void OnServerMessage( Server& server, const wxString& message );
 
     void OnBattleOpened( IBattle& battle );
@@ -153,6 +160,8 @@ class Ui
     Server* m_serv;
     MainWindow* m_main_win;
     ConnectWindow* m_con_win;
+	wxTimer m_reconnect_delay_timer;
+	ReconnectDialog* m_reconnect_dialog;
 
     wxString m_last_used_backup_server;
 
@@ -161,6 +170,7 @@ class Ui
     bool m_first_update_trigger;
 
     bool m_ingame;
+	bool m_recconecting_wait;
 
 	EventReceiverFunc<Ui, BattleEvents::BattleEventData, &Ui::OnBattleInfoUpdated>
 		m_battle_info_updatedSink;
@@ -168,9 +178,6 @@ class Ui
     //! does actual work, called from downloadmap/mod
     void DownloadFileP2P( const wxString& name );
 	void DownloadFileWebsite( const wxString& name );
-
-    private:
-        Ui( const Ui& );
 
 };
 

@@ -306,7 +306,6 @@ void BattleListTab::SetFilterActiv( bool activ )
 	m_battle_list->MarkDirtySort();
 }
 
-
 void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 {
 	if ( !ui().IsConnected() )
@@ -335,104 +334,7 @@ void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 		}
 	}
 
-	HostBattleDialog dlg( this );
-	if ( dlg.ShowModal() == wxID_OK )
-	{
-		BattleOptions bo;
-		bo.description = sett().GetLastHostDescription();
-		bo.port = sett().GetLastHostPort();
-		bo.nattype = NatType( sett().GetLastHostNATSetting() );
-
-		if ( bo.nattype == NAT_None && sett().GetTestHostPort() )
-		{
-			switch ( ui().TestHostPort( bo.port ) )
-			{
-				case Server::porttest_pass :
-					break; // success
-				case Server::porttest_pass_WX26 :
-					wxLogWarning( _T( "hosting port %d: test aborted (wx26)" ), bo.port  );
-					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "Your using wxWidgets prior to version 2.8,\n "
-					                         "port testing is not supported.\n Hosting may or may not work." ), bo.port ) );
-					sett().SetTestHostPort( false ); // no need to have it checked anymore
-					break;
-
-				case Server::porttest_unreachable :
-					wxLogWarning( _T( "hosting port %d: test undetermined" ), bo.port  );
-					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "The server used for testing your port %d "
-					                         "is unreachable. \nHosting may or may not work with this setting." ), bo.port ) );
-					break; //inconclusive test shouldn't hinder hosting imo (koshi)
-
-				case Server::porttest_timeout :
-				case Server::porttest_socketNotOk :
-				case Server::porttest_socketError :
-					wxLogWarning( _T( "hosting port %d: test unsuccessful, closing battle" ), bo.port  );
-					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "Battle not started because the port you selected (%d) "
-					                         "is unable to recieve incoming packets\n checks your router & firewall configuration again or change port "
-					                         "in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n "
-					                         "option in the hosting settings." ), bo.port ) );
-					return;
-				default:
-					wxLogWarning( _T( "unknonw port forward test result" ) );
-					break;
-
-			}
-			if ( !ui().TestHostPort( bo.port ) )
-			{
-				wxLogWarning( _T( "hosting port %d: test unsuccessful, closing battle" ), bo.port  );
-				customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n option in the hosting settings." ), bo.port ) );
-				return;
-			}
-		}
-
-		// Get selected mod from unitsync.
-		UnitSyncMod mod;
-		try
-		{
-			mod = usync().GetMod( sett().GetLastHostMod() );
-			bo.modhash = mod.hash;
-			bo.modname = mod.name;
-		}
-		catch ( ... )
-		{
-			wxLogWarning( _T( "can't host: mod not found" ) );
-			customMessageBoxNoModal( SL_MAIN_ICON, _( "Battle not started beacuse the mod you selected could not be found. " ), _( "Error starting battle." ), wxOK );
-			return;
-		}
-
-		UnitSyncMap map;
-		wxString mname = sett().GetLastHostMap();
-		try {
-			if ( usync().MapExists( mname ) )
-				map = usync().GetMap( mname );
-			else if ( usync().GetNumMaps() <= 0 )
-			{
-				wxLogWarning( _T( "no maps found" ) );
-				customMessageBoxNoModal( SL_MAIN_ICON, _( "Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly." ), _( "No maps found" ), wxOK );
-				return;
-			}
-			else
-			{
-				map = usync().GetMap( 0 );
-			}
-		}
-		catch ( ... )
-		{
-			wxLogWarning( _T( "no maps found" ) );
-			customMessageBoxNoModal( SL_MAIN_ICON, _( "Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly." ), _( "No maps found" ), wxOK );
-			return;
-		}
-		bo.maphash = map.hash;
-		bo.mapname = map.name;
-
-		bo.rankneeded = sett().GetLastRankLimit();
-
-		bo.maxplayers = sett().GetLastHostPlayerNum();
-
-		bo.isproxy = sett().GetLastHostRelayedMode();
-		if ( bo.isproxy ) bo.nattype = NAT_None;
-		bo.relayhost = sett().GetLastRelayedHost();
-		serverSelector().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
-	}
+	HostBattleDialog::Run( this );
 }
 
 
@@ -560,9 +462,14 @@ void BattleListTab::DoJoin( Battle& battle )
 
 	if ( battle.IsPassworded() )
 	{
-		wxPasswordEntryDialog pw( this, _( "Battle password" ), _( "Enter password" ) );
+		wxPasswordEntryDialog pw( this, _( "Battle password" ), _( "Enter password (spaces will be stripped)" ) );
 		pw.SetFocus();
-		if ( pw.ShowModal() == wxID_OK ) battle.Join( pw.GetValue() );
+		if ( pw.ShowModal() == wxID_OK )
+		{
+			wxString password = pw.GetValue();
+			password.Replace(_T(" "), _T(""));
+			battle.Join( password );
+		}
 	}
 	else
 	{

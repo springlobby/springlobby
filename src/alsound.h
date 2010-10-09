@@ -2,7 +2,11 @@
 #define SPRINGLOBBY_HEADERGUARD_SDLSOUND_H
 
 #ifndef DISABLE_SOUND
+#ifdef __WXMAC__
+#include <al.h>
+#else
 #include <AL/al.h>
+#endif
 class ALsound
 {
 	public:
@@ -41,4 +45,3 @@ ALsound& sound();
     You should have received a copy of the GNU General Public License
     along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
 **/
-

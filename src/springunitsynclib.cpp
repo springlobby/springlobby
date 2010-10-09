@@ -50,7 +50,20 @@ void SpringUnitSyncLib::Load( const wxString& path, const wxString& ForceConfigF
 {
   LOCK_UNITSYNC;
 
+#ifdef __WXMSW__
+  //Dirty Hack to make the first character upper char
+  //unitsync failed to initialize for me given a path like
+  //"d:\Games\Spring\unitsync.dll"
+  //but worked for "D:\Games\Spring\unitsync.dll"
+  wxString g = path;
+  if ( g.find( wxT( ":\\" ) ) == 1 )
+  {
+	  g.SetChar( 0, wxToupper( g.at(0) ) );
+  }
+  _Load( g );
+#else
   _Load( path );
+#endif
 
   if ( !ForceConfigFilePath.IsEmpty() )
   {
@@ -63,220 +76,264 @@ void SpringUnitSyncLib::Load( const wxString& path, const wxString& ForceConfigF
   _Init();
 }
 
+template < class FunctionPointerType >
+void GetLibFuncPtr( const wxDynamicLibrary* libhandle, const wxString& name, FunctionPointerType& p )
+{
+	ASSERT_LOGIC( libhandle != 0, _T("Unitsync not loaded") );
+	if ( libhandle->HasSymbol( name ) ){
+		//see http://www.mr-edd.co.uk/blog/supressing_gcc_warnings
+		#ifdef __GNUC__
+		__extension__
+		#endif
+			p = reinterpret_cast<FunctionPointerType>( libhandle->GetSymbol( name ) );
+
+		if ( !p )
+			wxLogMessage( _T("Couldn't load %s from unitsync library"),name.c_str() );
+	}
+	else {
+		p = NULL;
+		wxLogMessage( _T("Couldn't load %s from unitsync library"), name.c_str() );
+	}
+}
 
 void SpringUnitSyncLib::_Load( const wxString& path )
 {
-  if ( _IsLoaded() && path == m_path ) return;
+	if ( _IsLoaded() && path == m_path ) return;
 
-  _Unload();
+	_Unload();
 
-  m_path = path;
+	m_path = path;
 
-  // Load the library.
-  wxLogMessage( _T("Loading from: %s"), path.c_str() );
+	// Load the library.
+	wxLogMessage( _T("Loading from: %s"), path.c_str() );
 
-  // Check if library exists
-  if ( !wxFileName::FileExists( path ) )
-  {
-    wxLogError( _T("File not found: %s"), path.c_str() );
-    ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
-  }
+	// Check if library exists
+	if ( !wxFileName::FileExists( path ) )
+	{
+		wxLogError( _T("File not found: %s"), path.c_str() );
+		ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
+	}
 
-  {
-    wxLog *currentarget = wxLog::GetActiveTarget();
-    wxLog *templogger = new wxLogGui();
-    wxLog::SetActiveTarget( templogger );
-    try {
-  #ifdef __WXMSW__
-      wxSetWorkingDirectory( path.BeforeLast('\\') );
-  #endif
-      m_libhandle = new wxDynamicLibrary( path );
-      if ( !m_libhandle->IsLoaded() ) {
-        delete m_libhandle;
-        m_libhandle = 0;
-      }
-    } catch(...) {
-      m_libhandle = 0;
-    }
-    wxLog::SetActiveTarget( currentarget );
-    delete templogger;
-  }
+	{
+		wxLog *currentarget = wxLog::GetActiveTarget();
+		wxLog *templogger = new wxLogGui();
+		wxLog::SetActiveTarget( templogger );
+		try {
+#ifdef __WXMSW__
+			wxSetWorkingDirectory( path.BeforeLast('\\') );
+#endif
+			m_libhandle = new wxDynamicLibrary( path );
+			if ( !m_libhandle->IsLoaded() ) {
+				delete m_libhandle;
+				m_libhandle = 0;
+			}
+		} catch(...) {
+			m_libhandle = 0;
+		}
+		wxLog::SetActiveTarget( currentarget );
+		delete templogger;
+	}
 
-  ASSERT_EXCEPTION( m_libhandle != 0, _T("Couldn't load the unitsync library") );
+	ASSERT_EXCEPTION( m_libhandle != 0, _T("Couldn't load the unitsync library") );
 
-  // Load all function from library.
-  try {
-    m_init = (InitPtr)_GetLibFuncPtr(_T("Init"));
-    m_uninit = (UnInitPtr)_GetLibFuncPtr(_T("UnInit"));
-    m_get_next_error = (GetNextErrorPtr)_GetLibFuncPtr(_T("GetNextError"));
-    m_get_writeable_data_dir = (GetWritableDataDirectoryPtr)_GetLibFuncPtr(_T("GetWritableDataDirectory"));
+	// Load all function from library.
+	try {
+		GetLibFuncPtr( m_libhandle, _T("Init"),								m_init );
+		GetLibFuncPtr( m_libhandle, _T("UnInit"),							m_uninit );
+		GetLibFuncPtr( m_libhandle, _T("GetNextError"),						m_get_next_error );
+		GetLibFuncPtr( m_libhandle, _T("GetWritableDataDirectory"),			m_get_writeable_data_dir );
 
-    m_get_map_count = (GetMapCountPtr)_GetLibFuncPtr(_T("GetMapCount"));
-    m_get_map_checksum = (GetMapChecksumPtr)_GetLibFuncPtr(_T("GetMapChecksum"));
-    m_get_map_name = (GetMapNamePtr)_GetLibFuncPtr(_T("GetMapName"));
-    m_get_map_info_ex = (GetMapInfoExPtr)_GetLibFuncPtr(_T("GetMapInfoEx"));
-    m_get_minimap = (GetMinimapPtr)_GetLibFuncPtr(_T("GetMinimap"));
-    m_get_infomap_size = (GetInfoMapSizePtr)_GetLibFuncPtr(_T("GetInfoMapSize"));
-    m_get_infomap = (GetInfoMapPtr)_GetLibFuncPtr(_T("GetInfoMap"));
+		GetLibFuncPtr( m_libhandle, _T("GetMapCount"),						m_get_map_count );
+		GetLibFuncPtr( m_libhandle, _T("GetMapChecksum"),					m_get_map_checksum );
+		GetLibFuncPtr( m_libhandle, _T("GetMapName"),						m_get_map_name );
 
-    m_get_mod_checksum = (GetPrimaryModChecksumPtr)_GetLibFuncPtr(_T("GetPrimaryModChecksum"));
-    m_get_mod_index = (GetPrimaryModIndexPtr)_GetLibFuncPtr(_T("GetPrimaryModIndex"));
-    m_get_mod_name = (GetPrimaryModNamePtr)_GetLibFuncPtr(_T("GetPrimaryModName"));
-    m_get_mod_count = (GetPrimaryModCountPtr)_GetLibFuncPtr(_T("GetPrimaryModCount"));
-    m_get_mod_archive = (GetPrimaryModArchivePtr)_GetLibFuncPtr(_T("GetPrimaryModArchive"));
+		try {
+			GetLibFuncPtr( m_libhandle, _T("GetMapDescription"),			m_get_map_description );
+			GetLibFuncPtr( m_libhandle, _T("GetMapAuthor"),					m_get_map_author );
+			GetLibFuncPtr( m_libhandle, _T("GetMapWidth"),					m_get_map_width );
+			GetLibFuncPtr( m_libhandle, _T("GetMapHeight"),					m_get_map_height );
+			GetLibFuncPtr( m_libhandle, _T("GetMapTidalStrength"),			m_get_map_tidalStrength );
+			GetLibFuncPtr( m_libhandle, _T("GetMapWindMin"),				m_get_map_windMin );
+			GetLibFuncPtr( m_libhandle, _T("GetMapWindMax"),				m_get_map_windMax );
+			GetLibFuncPtr( m_libhandle, _T("GetMapGravity"),				m_get_map_gravity );
+			GetLibFuncPtr( m_libhandle, _T("GetMapResourceCount"),			m_get_map_resource_count );
+			GetLibFuncPtr( m_libhandle, _T("GetMapResourceName"),			m_get_map_resource_name );
+			GetLibFuncPtr( m_libhandle, _T("GetMapResourceMax"),			m_get_map_resource_max );
+			GetLibFuncPtr( m_libhandle, _T("GetMapResourceExtractorRadius"),m_get_map_resource_extractorRadius );
+			GetLibFuncPtr( m_libhandle, _T("GetMapPosCount"),				m_get_map_pos_count );
+			GetLibFuncPtr( m_libhandle, _T("GetMapPosX"),					m_get_map_pos_x );
+			GetLibFuncPtr( m_libhandle, _T("GetMapPosZ"),					m_get_map_pos_z );
+			wxLogMessage(_T("Using new style map-info fetching (GetMap*() functions)."));
+		}
+		catch ( ... )
+		{
+			m_get_map_name = NULL;
+			wxLogMessage(_T("Using old style map-info fetching (GetMapInfoEx())."));
+		}
 
-    m_get_side_count = (GetSideCountPtr)_GetLibFuncPtr(_T("GetSideCount"));
-    m_get_side_name = (GetSideNamePtr)_GetLibFuncPtr(_T("GetSideName"));
+		GetLibFuncPtr( m_libhandle, _T("GetMapInfoEx"),						m_get_map_info_ex );
+		GetLibFuncPtr( m_libhandle, _T("GetMinimap"),						m_get_minimap );
+		GetLibFuncPtr( m_libhandle, _T("GetInfoMapSize"),					m_get_infomap_size );
+		GetLibFuncPtr( m_libhandle, _T("GetInfoMap"),						m_get_infomap );
 
-    m_add_all_archives = (AddAllArchivesPtr)_GetLibFuncPtr(_T("AddAllArchives"));
-    m_remove_all_archives = (RemoveAllArchivesPtr)_GetLibFuncPtr(_T("RemoveAllArchives"));
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModChecksum"),			m_get_mod_checksum );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModIndex"),				m_get_mod_index );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModName"),				m_get_mod_name );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModCount"),				m_get_mod_count );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModArchive"),				m_get_mod_archive );
 
-    m_get_unit_count = (GetUnitCountPtr)_GetLibFuncPtr(_T("GetUnitCount"));
-    m_get_unit_name = (GetUnitNamePtr)_GetLibFuncPtr(_T("GetUnitName"));
-    m_get_unit_full_name = (GetFullUnitNamePtr)_GetLibFuncPtr(_T("GetFullUnitName"));
-    m_proc_units_nocheck = (ProcessUnitsNoChecksumPtr)_GetLibFuncPtr(_T("ProcessUnitsNoChecksum"));
+		GetLibFuncPtr( m_libhandle, _T("GetSideCount"),						m_get_side_count );
+		GetLibFuncPtr( m_libhandle, _T("GetSideName"),						m_get_side_name );
 
-    m_init_find_vfs = (InitFindVFSPtr)_GetLibFuncPtr(_T("InitFindVFS"));
-    m_find_files_vfs = (FindFilesVFSPtr)_GetLibFuncPtr(_T("FindFilesVFS"));
-    m_open_file_vfs = (OpenFileVFSPtr)_GetLibFuncPtr(_T("OpenFileVFS"));
-    m_file_size_vfs = (FileSizeVFSPtr)_GetLibFuncPtr(_T("FileSizeVFS"));
-    m_read_file_vfs = (ReadFileVFSPtr)_GetLibFuncPtr(_T("ReadFileVFS"));
-    m_close_file_vfs = (CloseFileVFSPtr)_GetLibFuncPtr(_T("CloseFileVFS"));
+		GetLibFuncPtr( m_libhandle, _T("AddAllArchives"),					m_add_all_archives );
+		GetLibFuncPtr( m_libhandle, _T("RemoveAllArchives"),				m_remove_all_archives );
 
-    m_get_spring_version = (GetSpringVersionPtr)_GetLibFuncPtr(_T("GetSpringVersion"));
+		GetLibFuncPtr( m_libhandle, _T("GetUnitCount"),						m_get_unit_count );
+		GetLibFuncPtr( m_libhandle, _T("GetUnitName"),						m_get_unit_name );
+		GetLibFuncPtr( m_libhandle, _T("GetFullUnitName"),					m_get_unit_full_name );
+		GetLibFuncPtr( m_libhandle, _T("ProcessUnitsNoChecksum"),			m_proc_units_nocheck );
 
-    m_process_units = (ProcessUnitsPtr)_GetLibFuncPtr(_T("ProcessUnits"));
-    m_add_archive = (AddArchivePtr)_GetLibFuncPtr(_T("AddArchive"));
-    m_get_archive_checksum = (GetArchiveChecksumPtr)_GetLibFuncPtr(_T("GetArchiveChecksum"));
-    m_get_archive_path = (GetArchivePathPtr)_GetLibFuncPtr(_T("GetArchivePath"));
+		GetLibFuncPtr( m_libhandle, _T("InitFindVFS"),						m_init_find_vfs );
+		GetLibFuncPtr( m_libhandle, _T("FindFilesVFS"),						m_find_files_vfs );
+		GetLibFuncPtr( m_libhandle, _T("OpenFileVFS"),						m_open_file_vfs );
+		GetLibFuncPtr( m_libhandle, _T("FileSizeVFS"),						m_file_size_vfs );
+		GetLibFuncPtr( m_libhandle, _T("ReadFileVFS"),						m_read_file_vfs );
+		GetLibFuncPtr( m_libhandle, _T("CloseFileVFS"),						m_close_file_vfs );
 
-    m_get_map_archive_count = (GetMapArchiveCountPtr)_GetLibFuncPtr(_T("GetMapArchiveCount"));
-    m_get_map_archive_name = (GetMapArchiveNamePtr)_GetLibFuncPtr(_T("GetMapArchiveName"));
-    m_get_map_checksum = (GetMapChecksumPtr)_GetLibFuncPtr(_T("GetMapChecksum"));
-    m_get_map_checksum_from_name = (GetMapChecksumFromNamePtr)_GetLibFuncPtr(_T("GetMapChecksumFromName"));
+		GetLibFuncPtr( m_libhandle, _T("GetSpringVersion"),					m_get_spring_version );
 
-    m_get_primary_mod_short_name = (GetPrimaryModShortNamePtr)_GetLibFuncPtr(_T("GetPrimaryModShortName"));
-    m_get_primary_mod_version = (GetPrimaryModVersionPtr)_GetLibFuncPtr(_T("GetPrimaryModVersion"));
-    m_get_primary_mod_mutator = (GetPrimaryModMutatorPtr)_GetLibFuncPtr(_T("GetPrimaryModMutator"));
-    m_get_primary_mod_game = (GetPrimaryModGamePtr)_GetLibFuncPtr(_T("GetPrimaryModGame"));
-    m_get_primary_mod_short_game = (GetPrimaryModShortGamePtr)_GetLibFuncPtr(_T("GetPrimaryModShortGame"));
-    m_get_primary_mod_description = (GetPrimaryModDescriptionPtr)_GetLibFuncPtr(_T("GetPrimaryModDescription"));
-    m_get_primary_mod_archive = (GetPrimaryModArchivePtr)_GetLibFuncPtr(_T("GetPrimaryModArchive"));
-    m_get_primary_mod_archive_count = (GetPrimaryModArchiveCountPtr)_GetLibFuncPtr(_T("GetPrimaryModArchiveCount"));
-    m_get_primary_mod_archive_list = (GetPrimaryModArchiveListPtr)_GetLibFuncPtr(_T("GetPrimaryModArchiveList"));
-    m_get_primary_mod_checksum_from_name = (GetPrimaryModChecksumFromNamePtr)_GetLibFuncPtr(_T("GetPrimaryModChecksumFromName"));
+		GetLibFuncPtr( m_libhandle, _T("ProcessUnits"),						m_process_units );
+		GetLibFuncPtr( m_libhandle, _T("AddArchive"),						m_add_archive );
+		GetLibFuncPtr( m_libhandle, _T("GetArchiveChecksum"),				m_get_archive_checksum );
+		GetLibFuncPtr( m_libhandle, _T("GetArchivePath"),					m_get_archive_path );
 
-    m_get_mod_valid_map_count = (GetModValidMapCountPtr)_GetLibFuncPtr(_T("GetModValidMapCount"));
-    m_get_valid_map = (GetModValidMapPtr)_GetLibFuncPtr(_T("GetModValidMap"));
+		GetLibFuncPtr( m_libhandle, _T("GetMapArchiveCount"),				m_get_map_archive_count );
+		GetLibFuncPtr( m_libhandle, _T("GetMapArchiveName"),				m_get_map_archive_name );
+		GetLibFuncPtr( m_libhandle, _T("GetMapChecksum"),					m_get_map_checksum );
+		GetLibFuncPtr( m_libhandle, _T("GetMapChecksumFromName"),			m_get_map_checksum_from_name );
 
-    m_get_luaai_count = (GetLuaAICountPtr)_GetLibFuncPtr(_T("GetLuaAICount"));
-    m_get_luaai_name = (GetLuaAINamePtr)_GetLibFuncPtr(_T("GetLuaAIName"));
-    m_get_luaai_desc = (GetLuaAIDescPtr)_GetLibFuncPtr(_T("GetLuaAIDesc"));
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModShortName"),			m_get_primary_mod_short_name );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModVersion"),				m_get_primary_mod_version );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModMutator"),				m_get_primary_mod_mutator );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModGame"),				m_get_primary_mod_game );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModShortGame"),			m_get_primary_mod_short_game );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModDescription"),			m_get_primary_mod_description );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModArchive"),				m_get_primary_mod_archive );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModArchiveCount"),		m_get_primary_mod_archive_count );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModArchiveList"),			m_get_primary_mod_archive_list );
+		GetLibFuncPtr( m_libhandle, _T("GetPrimaryModChecksumFromName"),	m_get_primary_mod_checksum_from_name );
 
-    m_get_map_option_count = (GetMapOptionCountPtr)_GetLibFuncPtr(_T("GetMapOptionCount"));
-    m_get_custom_option_count = (GetCustomOptionCountPtr)_GetLibFuncPtr(_T("GetCustomOptionCount"));
-    m_get_mod_option_count = (GetModOptionCountPtr)_GetLibFuncPtr(_T("GetModOptionCount"));
-    m_get_skirmish_ai_option_count = (GetSkirmishAIOptionCountPtr)_GetLibFuncPtr(_T("GetSkirmishAIOptionCount"));
-    m_get_option_key = (GetOptionKeyPtr)_GetLibFuncPtr(_T("GetOptionKey"));
-    m_get_option_name = (GetOptionNamePtr)_GetLibFuncPtr(_T("GetOptionName"));
-    m_get_option_desc = (GetOptionDescPtr)_GetLibFuncPtr(_T("GetOptionDesc"));
-    m_get_option_type = (GetOptionTypePtr)_GetLibFuncPtr(_T("GetOptionType"));
-    m_get_option_section = (GetOptionSectionPtr)_GetLibFuncPtr(_T("GetOptionSection"));
-    m_get_option_style = (GetOptionStylePtr)_GetLibFuncPtr(_T("GetOptionStyle"));
-    m_get_option_bool_def = (GetOptionBoolDefPtr)_GetLibFuncPtr(_T("GetOptionBoolDef"));
-    m_get_option_number_def = (GetOptionNumberDefPtr)_GetLibFuncPtr(_T("GetOptionNumberDef"));
-    m_get_option_number_min = (GetOptionNumberMinPtr)_GetLibFuncPtr(_T("GetOptionNumberMin"));
-    m_get_option_number_max = (GetOptionNumberMaxPtr)_GetLibFuncPtr(_T("GetOptionNumberMax"));
-    m_get_option_number_step = (GetOptionNumberStepPtr)_GetLibFuncPtr(_T("GetOptionNumberStep"));
-    m_get_option_string_def = (GetOptionStringDefPtr)_GetLibFuncPtr(_T("GetOptionStringDef"));
-    m_get_option_string_max_len = (GetOptionStringMaxLenPtr)_GetLibFuncPtr(_T("GetOptionStringMaxLen"));
-    m_get_option_list_count = (GetOptionListCountPtr)_GetLibFuncPtr(_T("GetOptionListCount"));
-    m_get_option_list_def = (GetOptionListDefPtr)_GetLibFuncPtr(_T("GetOptionListDef"));
-    m_get_option_list_item_key = (GetOptionListItemKeyPtr)_GetLibFuncPtr(_T("GetOptionListItemKey"));
-    m_get_option_list_item_name = (GetOptionListItemNamePtr)_GetLibFuncPtr(_T("GetOptionListItemName"));
-    m_get_option_list_item_desc = (GetOptionListItemDescPtr)_GetLibFuncPtr(_T("GetOptionListItemDesc"));
+		GetLibFuncPtr( m_libhandle, _T("GetModValidMapCount"),				m_get_mod_valid_map_count );
+		GetLibFuncPtr( m_libhandle, _T("GetModValidMap"),					m_get_valid_map );
 
-    m_set_spring_config_file_path = (SetSpringConfigFilePtr)_GetLibFuncPtr(_T("SetSpringConfigFile"));
-    m_get_spring_config_file_path = (GetSpringConfigFilePtr)_GetLibFuncPtr(_T("GetSpringConfigFile"));
+		GetLibFuncPtr( m_libhandle, _T("GetLuaAICount"),					m_get_luaai_count );
+		GetLibFuncPtr( m_libhandle, _T("GetLuaAIName"),						m_get_luaai_name );
+		GetLibFuncPtr( m_libhandle, _T("GetLuaAIDesc"),						m_get_luaai_desc );
 
-    m_open_archive = (OpenArchivePtr)_GetLibFuncPtr(_T("OpenArchive"));
-    m_close_archive = (CloseArchivePtr)_GetLibFuncPtr(_T("CloseArchive"));
-    m_find_Files_archive = (FindFilesArchivePtr)_GetLibFuncPtr(_T("FindFilesArchive"));
-    m_open_archive_file = (OpenArchiveFilePtr)_GetLibFuncPtr(_T("OpenArchiveFile"));
-    m_read_archive_file = (ReadArchiveFilePtr)_GetLibFuncPtr(_T("ReadArchiveFile"));
-    m_close_archive_file = (CloseArchiveFilePtr)_GetLibFuncPtr(_T("CloseArchiveFile"));
-    m_size_archive_file = (SizeArchiveFilePtr)_GetLibFuncPtr(_T("SizeArchiveFile"));
+		GetLibFuncPtr( m_libhandle, _T("GetMapOptionCount"),				m_get_map_option_count );
+		GetLibFuncPtr( m_libhandle, _T("GetCustomOptionCount"),				m_get_custom_option_count );
+		GetLibFuncPtr( m_libhandle, _T("GetModOptionCount"),				m_get_mod_option_count );
+		GetLibFuncPtr( m_libhandle, _T("GetSkirmishAIOptionCount"),			m_get_skirmish_ai_option_count );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionKey"),						m_get_option_key );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionName"),					m_get_option_name );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionDesc"),					m_get_option_desc );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionType"),					m_get_option_type );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionSection"),					m_get_option_section );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionStyle"),					m_get_option_style );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionBoolDef"),					m_get_option_bool_def );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionNumberDef"),				m_get_option_number_def );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionNumberMin"),				m_get_option_number_min );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionNumberMax"),				m_get_option_number_max );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionNumberStep"),				m_get_option_number_step );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionStringDef"),				m_get_option_string_def );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionStringMaxLen"),			m_get_option_string_max_len );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionListCount"),				m_get_option_list_count );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionListDef"),					m_get_option_list_def );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionListItemKey"),				m_get_option_list_item_key );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionListItemName"),			m_get_option_list_item_name );
+		GetLibFuncPtr( m_libhandle, _T("GetOptionListItemDesc"),			m_get_option_list_item_desc );
 
-    m_set_spring_config_float = (SetSpringConfigFloatPtr)_GetLibFuncPtr(_T("SetSpringConfigFloat"));
-    m_get_spring_config_float = (GetSpringConfigFloatPtr)_GetLibFuncPtr(_T("GetSpringConfigFloat"));
-    m_get_spring_config_int = (GetSpringConfigIntPtr)_GetLibFuncPtr(_T("GetSpringConfigInt"));
-    m_get_spring_config_string = (GetSpringConfigStringPtr)_GetLibFuncPtr(_T("GetSpringConfigString"));
-    m_set_spring_config_string = (SetSpringConfigStringPtr)_GetLibFuncPtr(_T("SetSpringConfigString"));
-    m_set_spring_config_int = (SetSpringConfigIntPtr)_GetLibFuncPtr(_T("SetSpringConfigInt"));
+		GetLibFuncPtr( m_libhandle, _T("SetSpringConfigFile"),				m_set_spring_config_file_path );
+		GetLibFuncPtr( m_libhandle, _T("GetSpringConfigFile"),				m_get_spring_config_file_path );
 
-		m_get_skirmish_ai_count = (GetSkirmishAICountPtr)_GetLibFuncPtr(_T("GetSkirmishAICount"));
-		m_get_skirmish_ai_info_count = (GetSkirmishAIInfoCountPtr)_GetLibFuncPtr(_T("GetSkirmishAIInfoCount"));
-		m_get_skirmish_ai_info_key = (GetInfoKeyPtr)_GetLibFuncPtr(_T("GetInfoKey"));
-		m_get_skirmish_ai_info_value = (GetInfoValuePtr)_GetLibFuncPtr(_T("GetInfoValue"));
-		m_get_skirmish_ai_info_description = (GetInfoDescriptionPtr)_GetLibFuncPtr(_T("GetInfoDescription"));
+		GetLibFuncPtr( m_libhandle, _T("OpenArchive"),						m_open_archive );
+		GetLibFuncPtr( m_libhandle, _T("CloseArchive"),						m_close_archive );
+		GetLibFuncPtr( m_libhandle, _T("FindFilesArchive"),					m_find_Files_archive );
+		GetLibFuncPtr( m_libhandle, _T("OpenArchiveFile"),					m_open_archive_file );
+		GetLibFuncPtr( m_libhandle, _T("ReadArchiveFile"),					m_read_archive_file );
+		GetLibFuncPtr( m_libhandle, _T("CloseArchiveFile"),					m_close_archive_file );
+		GetLibFuncPtr( m_libhandle, _T("SizeArchiveFile"),					m_size_archive_file );
 
-    // begin lua parser calls
+		GetLibFuncPtr( m_libhandle, _T("SetSpringConfigFloat"),				m_set_spring_config_float );
+		GetLibFuncPtr( m_libhandle, _T("GetSpringConfigFloat"),				m_get_spring_config_float );
+		GetLibFuncPtr( m_libhandle, _T("GetSpringConfigInt"),				m_get_spring_config_int );
+		GetLibFuncPtr( m_libhandle, _T("GetSpringConfigString"),			m_get_spring_config_string );
+		GetLibFuncPtr( m_libhandle, _T("SetSpringConfigString"),			m_set_spring_config_string );
+		GetLibFuncPtr( m_libhandle, _T("SetSpringConfigInt"),				m_set_spring_config_int );
 
-    m_parser_close = (lpClosePtr)_GetLibFuncPtr(_T("lpClose"));
-    m_parser_open_file = (lpOpenFilePtr)_GetLibFuncPtr(_T("lpOpenFile"));
-    m_parser_open_source = (lpOpenSourcePtr)_GetLibFuncPtr(_T("lpOpenSource"));
-    m_parser_execute = (lpExecutePtr)_GetLibFuncPtr(_T("lpExecute"));
-    m_parser_error_log = (lpErrorLogPtr)_GetLibFuncPtr(_T("lpErrorLog"));
+		GetLibFuncPtr( m_libhandle, _T("GetSkirmishAICount"),				m_get_skirmish_ai_count );
+		GetLibFuncPtr( m_libhandle, _T("GetSkirmishAIInfoCount"),			m_get_skirmish_ai_info_count );
+		GetLibFuncPtr( m_libhandle, _T("GetInfoKey"),						m_get_skirmish_ai_info_key );
+		GetLibFuncPtr( m_libhandle, _T("GetInfoValue"),						m_get_skirmish_ai_info_value );
+		GetLibFuncPtr( m_libhandle, _T("GetInfoDescription"),				m_get_skirmish_ai_info_description );
 
-    m_parser_add_table_int = (lpAddTableIntPtr)_GetLibFuncPtr(_T("lpAddTableInt"));
-    m_parser_add_table_string = (lpAddTableStrPtr)_GetLibFuncPtr(_T("lpAddTableStr"));
-    m_parser_end_table = (lpEndTablePtr)_GetLibFuncPtr(_T("lpEndTable"));
-    m_parser_add_int_key_int_value = (lpAddIntKeyIntValPtr)_GetLibFuncPtr(_T("lpAddIntKeyIntVal"));
-    m_parser_add_string_key_int_value = (lpAddStrKeyIntValPtr)_GetLibFuncPtr(_T("lpAddStrKeyIntVal"));
-    m_parser_add_int_key_bool_value = (lpAddIntKeyBoolValPtr)_GetLibFuncPtr(_T("lpAddIntKeyBoolVal"));
-    m_parser_add_string_key_bool_value = (lpAddStrKeyBoolValPtr)_GetLibFuncPtr(_T("lpAddStrKeyBoolVal"));
-    m_parser_add_int_key_float_value = (lpAddIntKeyFloatValPtr)_GetLibFuncPtr(_T("lpAddIntKeyFloatVal"));
-    m_parser_add_string_key_float_value = (lpAddStrKeyFloatValPtr)_GetLibFuncPtr(_T("lpAddStrKeyFloatVal"));
-    m_parser_add_int_key_string_value = (lpAddIntKeyStrValPtr)_GetLibFuncPtr(_T("lpAddIntKeyStrVal"));
-    m_parser_add_string_key_string_value = (lpAddStrKeyStrValPtr)_GetLibFuncPtr(_T("lpAddStrKeyStrVal"));
+		// begin lua parser calls
 
-    m_parser_root_table = (lpRootTablePtr)_GetLibFuncPtr(_T("lpRootTable"));
-    m_parser_root_table_expression = (lpRootTableExprPtr)_GetLibFuncPtr(_T("lpRootTableExpr"));
-    m_parser_sub_table_int = (lpSubTableIntPtr)_GetLibFuncPtr(_T("lpSubTableInt"));
-    m_parser_sub_table_string = (lpSubTableStrPtr)_GetLibFuncPtr(_T("lpSubTableStr"));
-    m_parser_sub_table_expression = (lpSubTableExprPtr)_GetLibFuncPtr(_T("lpSubTableExpr"));
-    m_parser_pop_table = (lpPopTablePtr)_GetLibFuncPtr(_T("lpPopTable"));
+		GetLibFuncPtr( m_libhandle, _T("lpClose"),							m_parser_close );
+		GetLibFuncPtr( m_libhandle, _T("lpOpenFile"),						m_parser_open_file );
+		GetLibFuncPtr( m_libhandle, _T("lpOpenSource"),						m_parser_open_source );
+		GetLibFuncPtr( m_libhandle, _T("lpExecute"),						m_parser_execute );
+		GetLibFuncPtr( m_libhandle, _T("lpErrorLog"),						m_parser_error_log );
 
-    m_parser_key_int_exists = (lpGetKeyExistsIntPtr)_GetLibFuncPtr(_T("lpGetKeyExistsInt"));
-    m_parser_key_string_exists = (lpGetKeyExistsStrPtr)_GetLibFuncPtr(_T("lpGetKeyExistsStr"));
+		GetLibFuncPtr( m_libhandle, _T("lpAddTableInt"),					m_parser_add_table_int );
+		GetLibFuncPtr( m_libhandle, _T("lpAddTableStr"),					m_parser_add_table_string );
+		GetLibFuncPtr( m_libhandle, _T("lpEndTable"),						m_parser_end_table );
+		GetLibFuncPtr( m_libhandle, _T("lpAddIntKeyIntVal"),				m_parser_add_int_key_int_value );
+		GetLibFuncPtr( m_libhandle, _T("lpAddStrKeyIntVal"),				m_parser_add_string_key_int_value );
+		GetLibFuncPtr( m_libhandle, _T("lpAddIntKeyBoolVal"),				m_parser_add_int_key_bool_value );
+		GetLibFuncPtr( m_libhandle, _T("lpAddStrKeyBoolVal"),				m_parser_add_string_key_bool_value );
+		GetLibFuncPtr( m_libhandle, _T("lpAddIntKeyFloatVal"),				m_parser_add_int_key_float_value );
+		GetLibFuncPtr( m_libhandle, _T("lpAddStrKeyFloatVal"),				m_parser_add_string_key_float_value );
+		GetLibFuncPtr( m_libhandle, _T("lpAddIntKeyStrVal"),				m_parser_add_int_key_string_value );
+		GetLibFuncPtr( m_libhandle, _T("lpAddStrKeyStrVal"),				m_parser_add_string_key_string_value );
 
-    m_parser_int_key_get_type = (lpGetIntKeyTypePtr)_GetLibFuncPtr(_T("lpGetIntKeyType"));
-    m_parser_string_key_get_type = (lpGetStrKeyTypePtr)_GetLibFuncPtr(_T("lpGetStrKeyType"));
+		GetLibFuncPtr( m_libhandle, _T("lpRootTable"),						m_parser_root_table );
+		GetLibFuncPtr( m_libhandle, _T("lpRootTableExpr"),					m_parser_root_table_expression );
+		GetLibFuncPtr( m_libhandle, _T("lpSubTableInt"),					m_parser_sub_table_int );
+		GetLibFuncPtr( m_libhandle, _T("lpSubTableStr"),					m_parser_sub_table_string );
+		GetLibFuncPtr( m_libhandle, _T("lpSubTableExpr"),					m_parser_sub_table_expression );
+		GetLibFuncPtr( m_libhandle, _T("lpPopTable"),						m_parser_pop_table );
 
-    m_parser_int_key_get_list_count = (lpGetIntKeyListCountPtr)_GetLibFuncPtr(_T("lpGetIntKeyListCount"));
-    m_parser_int_key_get_list_entry = (lpGetIntKeyListEntryPtr)_GetLibFuncPtr(_T("lpGetIntKeyListEntry"));
-    m_parser_string_key_get_list_count = (lpGetStrKeyListCountPtr)_GetLibFuncPtr(_T("lpGetStrKeyListCount"));
-    m_parser_string_key_get_list_entry = (lpGetStrKeyListEntryPtr)_GetLibFuncPtr(_T("lpGetStrKeyListEntry"));
+		GetLibFuncPtr( m_libhandle, _T("lpGetKeyExistsInt"),				m_parser_key_int_exists );
+		GetLibFuncPtr( m_libhandle, _T("lpGetKeyExistsStr"),				m_parser_key_string_exists );
 
-    m_parser_int_key_get_int_value = (lpGetIntKeyIntValPtr)_GetLibFuncPtr(_T("lpGetIntKeyIntVal"));
-    m_parser_string_key_get_int_value = (lpGetStrKeyIntValPtr)_GetLibFuncPtr(_T("lpGetStrKeyIntVal"));
-    m_parser_int_key_get_bool_value = (lpGetIntKeyBoolValPtr)_GetLibFuncPtr(_T("lpGetIntKeyBoolVal"));
-    m_parser_string_key_get_bool_value = (lpGetStrKeyBoolValPtr)_GetLibFuncPtr(_T("lpGetStrKeyBoolVal"));
-    m_parser_int_key_get_float_value = (lpGetIntKeyFloatValPtr)_GetLibFuncPtr(_T("lpGetIntKeyFloatVal"));
-    m_parser_string_key_get_float_value = (lpGetStrKeyFloatValPtr)_GetLibFuncPtr(_T("lpGetStrKeyFloatVal"));
-    m_parser_int_key_get_string_value = (lpGetIntKeyStrValPtr)_GetLibFuncPtr(_T("lpGetIntKeyStrVal"));
-    m_parser_string_key_get_string_value = (lpGetStrKeyStrValPtr)_GetLibFuncPtr(_T("lpGetStrKeyStrVal"));
+		GetLibFuncPtr( m_libhandle, _T("lpGetIntKeyType"),					m_parser_int_key_get_type );
+		GetLibFuncPtr( m_libhandle, _T("lpGetStrKeyType"),					m_parser_string_key_get_type );
 
-    // only when we end up here unitsync was succesfully loaded.
-    m_loaded = true;
-  }
-  catch ( ... )
-  {
-    // don't uninit unitsync in _Unload -- it hasn't been init'ed yet
-    m_uninit = NULL;
-    _Unload();
-    ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
-  }
+		GetLibFuncPtr( m_libhandle, _T("lpGetIntKeyListCount"),				m_parser_int_key_get_list_count );
+		GetLibFuncPtr( m_libhandle, _T("lpGetIntKeyListEntry"),				m_parser_int_key_get_list_entry );
+		GetLibFuncPtr( m_libhandle, _T("lpGetStrKeyListCount"),				m_parser_string_key_get_list_count );
+		GetLibFuncPtr( m_libhandle, _T("lpGetStrKeyListEntry"),				m_parser_string_key_get_list_entry );
+
+		GetLibFuncPtr( m_libhandle, _T("lpGetIntKeyIntVal"),				m_parser_int_key_get_int_value );
+		GetLibFuncPtr( m_libhandle, _T("lpGetStrKeyIntVal"),				m_parser_string_key_get_int_value );
+		GetLibFuncPtr( m_libhandle, _T("lpGetIntKeyBoolVal"),				m_parser_int_key_get_bool_value );
+		GetLibFuncPtr( m_libhandle, _T("lpGetStrKeyBoolVal"),				m_parser_string_key_get_bool_value );
+		GetLibFuncPtr( m_libhandle, _T("lpGetIntKeyFloatVal"),				m_parser_int_key_get_float_value );
+		GetLibFuncPtr( m_libhandle, _T("lpGetStrKeyFloatVal"),				m_parser_string_key_get_float_value );
+		GetLibFuncPtr( m_libhandle, _T("lpGetIntKeyStrVal"),				m_parser_int_key_get_string_value );
+		GetLibFuncPtr( m_libhandle, _T("lpGetStrKeyStrVal"),				m_parser_string_key_get_string_value );
+
+		// only when we end up here unitsync was succesfully loaded.
+		m_loaded = true;
+	}
+	catch ( ... )
+	{
+		// don't uninit unitsync in _Unload -- it hasn't been init'ed yet
+		m_uninit = NULL;
+		_Unload();
+		ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
+	}
 }
 
 
@@ -399,20 +456,6 @@ bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature )
     default: return false;
   }
 }
-
-
-void* SpringUnitSyncLib::_GetLibFuncPtr( const wxString& name )
-{
-  ASSERT_LOGIC( m_libhandle != 0, _T("Unitsync not loaded") );
-  if ( m_libhandle->HasSymbol( name ) ){
-    void* ptr = m_libhandle->GetSymbol( name );
-    if ( !ptr ) wxLogMessage( _T("Couldn't load %s from unitsync library"),name.c_str() );
-    return ptr;
-  }
-  wxLogMessage( _T("Couldn't load %s from unitsync library"), name.c_str() );
-  return 0;
-}
-
 
 void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out )
 {
@@ -590,24 +633,65 @@ wxArrayString SpringUnitSyncLib::GetMapDeps( int index )
 }
 
 
-MapInfo SpringUnitSyncLib::GetMapInfoEx( const wxString& mapName, int version )
+MapInfo SpringUnitSyncLib::GetMapInfoEx( int index, int version )
 {
-  InitLib( m_get_map_info_ex );
+  if (m_get_map_description == NULL) {
+    // old fetch method
+    InitLib( m_get_map_info_ex );
 
-  char tmpdesc[256];
-  char tmpauth[256];
+    const wxString& mapName =  WX_STRINGC( m_get_map_name( index ) );
 
-  MapInfo info;
+    char tmpdesc[256];
+    char tmpauth[256];
 
-  SpringMapInfo tm;
-  tm.description = &tmpdesc[0];
-  tm.author = &tmpauth[0];
+    MapInfo info;
 
-  bool result = m_get_map_info_ex( mapName.mb_str( wxConvUTF8 ), &tm, version );
-  ASSERT_EXCEPTION( result, _T("Failed to get map infos") );
-  _ConvertSpringMapInfo( tm, info );
+    SpringMapInfo tm;
+    tm.description = &tmpdesc[0];
+    tm.author = &tmpauth[0];
 
-  return info;
+    bool result = m_get_map_info_ex( mapName.mb_str( wxConvUTF8 ), &tm, version );
+    ASSERT_EXCEPTION( result, _T("Failed to get map infos") );
+    _ConvertSpringMapInfo( tm, info );
+
+    return info;
+  } else {
+    // new fetch method
+	InitLib( m_get_map_description )
+
+    MapInfo info;
+
+    info.description = WX_STRINGC(m_get_map_description( index));
+    info.tidalStrength = m_get_map_tidalStrength(index);
+    info.gravity = m_get_map_gravity(index);
+
+    const int resCount = m_get_map_resource_count(index);
+    if (resCount > 0) {
+      const int resourceIndex = 0;
+      info.maxMetal = m_get_map_resource_max(index, resourceIndex);
+      info.extractorRadius = m_get_map_resource_extractorRadius(index, resourceIndex);
+    } else {
+      info.maxMetal = 0.0f;
+      info.extractorRadius = 0.0f;
+    }
+
+    info.minWind = m_get_map_windMin(index);
+    info.maxWind = m_get_map_windMax(index);
+
+    info.width = m_get_map_width(index);
+    info.height = m_get_map_height(index);
+    const int posCount = m_get_map_pos_count(index);
+    for (int p = 0; p < posCount; ++p) {
+      StartPos sp;
+      sp.x = m_get_map_pos_x(index, p);
+      sp.y = m_get_map_pos_z(index, p);
+      info.positions.push_back(sp);
+    }
+
+    info.author = WX_STRINGC(m_get_map_author(index));
+
+    return info;
+  }
 }
 
 

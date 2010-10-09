@@ -140,6 +140,8 @@ class TASServer : public Server
 
     void SendScriptToClients( const wxString& script );
 
+	void SetRelayIngamePassword( const User& user );
+
     void RequestSpringUpdate();
 
     wxArrayString GetRelayHostList() ;

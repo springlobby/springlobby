@@ -59,7 +59,7 @@ class MainOptionsTab : public wxScrolledWindow
 		wxBoxSizer* m_button_sizer;
 
 		enum {
-			OPTIONS_TABS = wxID_HIGHEST,
+			OPTIONS_TABS = wxID_HIGHEST
 		};
 
 		DECLARE_EVENT_TABLE()

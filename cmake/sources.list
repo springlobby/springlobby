@@ -9,7 +9,6 @@ INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR} ${Settings_SOURCE_DIR} )
 SET(springlobbySrc
 	src/utils/activitynotice.cpp
 	src/chatpanelmenu.cpp
-	src/customizations.cpp
 	src/gui/gradientpanel.cpp
 	src/gui/wxgradientbutton.cpp
 	src/gui/skirmish_dialog.cpp
@@ -66,6 +65,7 @@ SET(springlobbySrc
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
 	src/iconimagelist.cpp
+	src/introguide.cpp
 	src/lobbyoptionstab.cpp
 	src/mainchattab.cpp
 	src/mainjoinbattletab.cpp
@@ -84,6 +84,7 @@ SET(springlobbySrc
 	src/alsound.cpp
 	src/selectusersdialog.cpp
 	src/server.cpp
+	src/reconnectdialog.cpp
 	src/serverevents.cpp
 	src/singleplayerbattle.cpp
 	src/singleplayertab.cpp
@@ -135,13 +136,20 @@ SET(SettingsSrc
 	src/settings++/tab_render_detail.cpp
 	src/settings++/tab_simple.cpp
 	src/settings++/tab_ui.cpp
+	src/settings++/hotkeys/AddSelectionCmdDlgBase.cpp
+	src/settings++/hotkeys/AddSelectionCmdDlg.cpp
+	src/settings++/hotkeys/commandlist.cpp
+	src/settings++/hotkeys/hotkey_panel.cpp
+	src/settings++/hotkeys/hotkey_parser.cpp
+	src/settings++/hotkeys/KeynameConverter.cpp
+	src/settings++/hotkeys/spring_command.cpp
+	src/settings++/hotkeys/SpringDefaultProfile.cpp
+	src/wxkeybinder/keybinder.cpp
+	src/wxkeybinder/menuutils.cpp
 )
 
 SET( curlSRC
-	src/curl/base.cpp
-	src/curl/http.cpp
-	src/curl/ftp.cpp
-	src/curl/curlthread.cpp
+	src/utils/curlhelper.cpp
 )
 
 SET(StandAloneSettings
@@ -149,6 +157,7 @@ SET(StandAloneSettings
 )
 
 SET(SLSharedWithSettings
+	src/customizations.cpp
 	src/uiutils.cpp
 	src/updater/versionchecker.cpp
 	src/updater/updatehelper.cpp
@@ -170,6 +179,7 @@ SET(SLSharedWithSettings
 	src/thread.cpp
 	src/gui/windowattributespickle.cpp
 	src/gui/spinctl/generic/spinctlg.cpp
+	src/Helper/slconfig.cpp
 )
 
 SET( updaterSrc
@@ -178,6 +188,7 @@ SET( updaterSrc
 	src/updater/updaterapp.cpp
 	src/utils/activitynotice.cpp
 	src/utils/misc.cpp
+	src/customizations.cpp
 )
 
 FILE( GLOB header "src/*.h" )

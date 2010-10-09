@@ -29,7 +29,7 @@
 #include <wx/defs.h>
 #include <wx/slider.h>
 
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 
 void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL,wxFlexGridSizer* sizerR ) {
 	const int extrema[] = {

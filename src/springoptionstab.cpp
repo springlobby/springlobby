@@ -59,11 +59,11 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 {
 	m_dontsearch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Search only in current installed path"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
+	m_oldlaunch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Use old launch method"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+	m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
 #ifndef __WXMSW__
 	m_dontsearch_chkbox->Disable();
-#else
-    m_oldlaunch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Use old launch method"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-    m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
+	m_oldlaunch_chkbox->Disable();
 #endif
 	/* ================================
 	 * Spring executable
@@ -117,9 +117,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 	m_main_sizer->Add( m_dontsearch_chkbox, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_sync_box_sizer, 0, wxEXPAND | wxALL, 5 );
-#ifdef __WXMSW__
-    m_main_sizer->Add( m_dontsearch_chkbox, 0, wxEXPAND | wxALL, 5 );
-#endif
+	m_main_sizer->Add( m_oldlaunch_chkbox, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->AddStretchSpacer();
 
@@ -157,10 +155,8 @@ SpringOptionsTab::~SpringOptionsTab()
 
 void SpringOptionsTab::DoRestore()
 {
-#ifdef __WXMSW__
 	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
     m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
-#endif
 	m_sync_edit->SetValue( sett().GetCurrentUsedUnitSync() );
 	m_exec_edit->SetValue( sett().GetCurrentUsedSpringBinary() );
 }
@@ -213,10 +209,8 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
 	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
-#ifdef __WXMSW__
 	sett().SetSearchSpringOnlyInSLPath( m_dontsearch_chkbox->IsChecked() );
 	sett().SetOldSpringLaunchMethod( m_oldlaunch_chkbox->IsChecked() );
-#endif
 
 	if ( sett().IsFirstRun() ) return;
 
@@ -226,7 +220,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 	{
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
 		customMessageBox( SL_MAIN_ICON,
-		                  _( "SpringLobby is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ),
+						  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
 		                  _( "Spring error" ), wxOK );
 	}
 }
@@ -248,12 +242,24 @@ void SpringOptionsTab::OnDontSearch( wxCommandEvent& /*unused*/ )
 		m_exec_box->Disable();
 		m_sync_box->Disable();
 		m_auto_btn->Disable();
+		m_exec_edit->Disable();
+		m_exec_browse_btn->Disable();
+		m_exec_find_btn->Disable();
+		m_sync_edit->Disable();
+		m_sync_browse_btn->Disable();
+		m_sync_find_btn->Disable();
 		m_datadir_btn->Disable();
 	}
 	else {
 		m_exec_box->Enable();
 		m_sync_box->Enable();
 		m_auto_btn->Enable();
+		m_exec_edit->Enable();
+		m_exec_browse_btn->Enable();
+		m_exec_find_btn->Enable();
+		m_sync_edit->Enable();
+		m_sync_browse_btn->Enable();
+		m_sync_find_btn->Enable();
 		m_datadir_btn->Enable();
 	}
 }

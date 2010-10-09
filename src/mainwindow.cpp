@@ -37,6 +37,7 @@
 #include "mainwindow.h"
 #include "settings.h"
 #include "ui.h"
+#include "introguide.h"
 #include "server.h"
 #include "utils/debug.h"
 #include "utils/platform.h"
@@ -59,7 +60,6 @@
 #include "user.h"
 #include "mapselectdialog.h"
 
-#include "images/springlobby.xpm"
 #include "images/chat_icon.png.h"
 #include "images/join_icon.png.h"
 #include "images/single_player_icon.png.h"
@@ -71,11 +71,13 @@
 
 #include "settings++/frame.h"
 #include "utils/customdialogs.h"
+#include "utils/platform.h"
 
 #include "updater/updatehelper.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
 #include "Helper/imageviewer.h"
+#include "customizations.h"
 
 #if defined(__WXMSW__)
     #include <wx/msw/winundef.h>
@@ -106,7 +108,11 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_CHANNELCHOOSER,		MainWindow::OnShowChannelChooser	)
   EVT_MENU( MENU_SCREENSHOTS,			MainWindow::OnShowScreenshots		)
   EVT_MENU( MENU_PREFERENCES,			MainWindow::OnMenuPreferences		)
-
+  EVT_MENU( MENU_RENAME,				MainWindow::OnMenuRename			)
+  EVT_MENU( MENU_GENERAL_HELP,			MainWindow::OnMenuFirstStart		)
+  EVT_MENU( MENU_SERVER_TAB,			MainWindow::OnMenuServerTab			)
+  EVT_SET_FOCUS(                        MainWindow::OnSetFocus              )
+  EVT_KILL_FOCUS(                       MainWindow::OnKillFocus             )
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
   EVT_CLOSE( MainWindow::OnClose )
 END_EVENT_TABLE()
@@ -114,21 +120,24 @@ END_EVENT_TABLE()
 MainWindow::TabNames MainWindow::m_tab_names;
 
 MainWindow::MainWindow( )
-	: wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(50, 50) ),
-	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(450, 340) ),
+	: wxFrame( (wxFrame*)0, -1, GetAppName(), wxPoint(50, 50) ),
+	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(720, 576) ),
 	m_opts_dialog(NULL),
     m_autojoin_dialog(NULL),
     m_channel_chooser(NULL),
-    m_log_win(NULL)
+	m_log_win(NULL),
+	m_has_focus(true)
 {
 	assert( !wxGetApp().IsSimple() );
-	SetIcon( wxIcon(springlobby_xpm) );
+	//! \todo use customised icon
+	SetIcon( SLcustomizations().GetAppIcon() );
 
 	GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
 	wxMenu *menuServer = new wxMenu;
 	menuServer->Append(MENU_CONNECT, _("&Connect..."));
 	menuServer->Append(MENU_DISCONNECT, _("&Disconnect"));
+	menuServer->Append(MENU_SERVER_TAB, _("&Reopen server panel"));
 	menuServer->AppendSeparator();
 #ifndef NDEBUG
 	//this is a prime spot to add experimental stuff, or stubs used to test things not really meant to be in mainwindow
@@ -140,7 +149,7 @@ MainWindow::MainWindow( )
 	m_menuEdit = new wxMenu;
 	m_menuEdit->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels"));
 	m_menuEdit->Append(MENU_PREFERENCES, _("&Preferences"));
-	m_settings_menu = new wxMenuItem( m_menuTools, MENU_SETTINGSPP, _("&Spring settings"), wxEmptyString, wxITEM_NORMAL );
+	m_settings_menu = new wxMenuItem( m_menuEdit, MENU_SETTINGSPP, _("&Spring settings"), wxEmptyString, wxITEM_NORMAL );
 	m_menuEdit->Append (m_settings_menu);
 
 
@@ -156,6 +165,7 @@ MainWindow::MainWindow( )
 	m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
 	m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel &list"));
 	m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
+	m_menuTools->Append(MENU_RENAME, _("Change &username"));
 	m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
 	m_menuTools->AppendSeparator();
 	m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
@@ -168,6 +178,7 @@ MainWindow::MainWindow( )
 
 
 	wxMenu *menuHelp = new wxMenu;
+	menuHelp->Append(MENU_GENERAL_HELP, _("&Help, tutorial and FAQ"));
 	menuHelp->Append(MENU_ABOUT, _("&About"));
 	menuHelp->Append(MENU_SELECT_LOCALE, _("&Change language"));
 	menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
@@ -230,6 +241,8 @@ MainWindow::MainWindow( )
 	SetStatusBar( m_statusbar );
     // re-enable eventhandling
     SetEvtHandlerEnabled( true );
+
+	UpdateMainAppHasFocus(m_has_focus);
 }
 
 wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size )
@@ -304,11 +317,8 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 		forceSettingsFrameClose();
 		freeStaticBox();
 
-		if ( m_autojoin_dialog )
-		{
-			delete m_autojoin_dialog;
-			m_autojoin_dialog = 0;
-		}
+		delete m_autojoin_dialog;
+		m_autojoin_dialog = 0;
 
 		sett().SaveSettings();
 		if ( m_log_win ) {
@@ -322,6 +332,23 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 		}
 	}
 	Destroy();
+}
+
+void MainWindow::OnSetFocus(wxFocusEvent&)
+{
+	m_has_focus = true;
+	UpdateMainAppHasFocus(m_has_focus);
+}
+
+void MainWindow::OnKillFocus(wxFocusEvent&)
+{
+	m_has_focus = false;
+	UpdateMainAppHasFocus(m_has_focus);
+}
+
+bool MainWindow::HasFocus()
+{
+	return m_has_focus;
 }
 
 void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
@@ -504,9 +531,9 @@ void MainWindow::OnMenuChat( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 {
     wxAboutDialogInfo info;
-	info.SetName(_T("SpringLobby"));
+	info.SetName( GetAppName() );
 	info.SetVersion (GetSpringLobbyVersion());
-	info.SetDescription(_("SpringLobby is a cross-plattform lobby client for the RTS Spring engine"));
+	info.SetDescription( IdentityString( _("%s is a cross-plattform lobby client for the Spring RTS engine") ) );
 	//info.SetCopyright(_T("");
 	info.SetLicence(_T("GPL"));
 	info.AddDeveloper(_T("BrainDamage"));
@@ -520,7 +547,9 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 	info.AddTranslator(_T("lejocelyn (french)"));
 	info.AddTranslator(_T("Suprano (german)"));
     info.AddTranslator(_T("tc- (swedish)"));
-	info.SetIcon(wxIcon(springlobby_xpm));
+	info.AddTranslator(_("The numerous contributors from launchpad.net"));
+	//! \todo customisations
+	info.SetIcon( SLcustomizations().GetAppIcon() );
 	wxAboutBox(info);
 }
 
@@ -535,12 +564,13 @@ void MainWindow::OnMenuDisconnect( wxCommandEvent& /*unused*/ )
   ui().Disconnect();
 }
 
+void MainWindow::OnMenuServerTab( wxCommandEvent& /*unused*/ )
+{
+  ui().ReopenServerTab();
+}
+
 void MainWindow::OnMenuSaveOptions( wxCommandEvent& /*unused*/ )
 {
-	wxString text;
-	if ( ui().AskText(wxEmptyString,wxEmptyString,text) ){
-		wxMessageBox( Paste2Pastebin( text ) );
-	}
   sett().SaveSettings();
 }
 
@@ -576,7 +606,7 @@ void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnReportBug( wxCommandEvent& /*unused*/ )
 {
-	OpenWebBrowser( _T("http://springlobby.info/projects/springlobby/issues/new") );
+	OpenWebBrowser( _T("http://projects.springlobby.info/projects/springlobby/issues/new") );
 }
 
 
@@ -591,7 +621,7 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 
   if ( newsel == 0 || newsel == 1 )
   {
-    if ( !ui().IsConnected() && ui().IsMainWindowCreated() ) ui().Connect();
+	if ( !ui().IsConnected() && ui().IsMainWindowCreated() ) ui().Connect();
   }
 }
 
@@ -612,8 +642,10 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuSelectLocale( wxCommandEvent& /*unused*/ )
 {
     if ( wxGetApp().SelectLanguage() ) {
-        customMessageBoxNoModal( SL_MAIN_ICON, _("You need to restart SpringLobby for the language change to take effect."),
-                                    _("Restart required"), wxICON_EXCLAMATION | wxOK );
+		customMessageBoxNoModal( SL_MAIN_ICON,
+								 IdentityString( _("You need to restart %s for the language change to take effect.") ),
+								 _("Restart required"),
+								 wxICON_EXCLAMATION | wxOK );
     }
 }
 
@@ -668,7 +700,7 @@ void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
 	sett().SetDoResetPerspectives( true );
 	sett().SaveSettings();
-	customMessageBoxNoModal( SL_MAIN_ICON, _("Please restart SpringLobby now"), wxEmptyString );
+	customMessageBoxNoModal( SL_MAIN_ICON, IdentityString( _("Please restart %s now") ), wxEmptyString );
 }
 
 const MainWindow::TabNames& MainWindow::GetTabNames()
@@ -716,4 +748,17 @@ void MainWindow::OnMenuPreferences( wxCommandEvent& /*event*/ )
 {
 	m_opts_dialog = new OptionsDialog( this );
 	m_opts_dialog->Show();
+}
+
+void MainWindow::OnMenuRename( wxCommandEvent& /*event*/ )
+{
+	wxString new_username;
+	if ( ui().AskText( _("Rename"), _("Enter new nickname"), new_username ) )
+		serverSelector().GetServer().ExecuteSayCommand( _T("/rename ") + new_username );
+}
+
+void MainWindow::OnMenuFirstStart( wxCommandEvent& /*event*/ )
+{
+	IntroGuide* intro = new IntroGuide();
+	intro->Show();
 }

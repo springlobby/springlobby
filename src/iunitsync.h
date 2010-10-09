@@ -137,16 +137,16 @@ class IUnitSync : public wxEvtHandler
      */
     virtual int GetModIndex( const wxString& name ) = 0;
 
-    /** Fetch the name of a mod archive by the mod index.
-     */
-    virtual wxString GetModArchive( int index ) = 0;
-
     /** Get the options for a mod by name.
      */
     virtual GameOptions GetModOptions( const wxString& name ) = 0;
     /**@}*/
 
     virtual wxArrayString GetModDeps( const wxString& name ) = 0;
+
+	/** Un-loads current mod in unitsync.
+	  */
+	virtual void UnSetCurrentMod() = 0;
 
     virtual int GetNumMaps() = 0;
     virtual wxArrayString GetMapList() = 0;
@@ -158,7 +158,6 @@ class IUnitSync : public wxEvtHandler
     virtual UnitSyncMap GetMap( int index ) = 0;
     virtual UnitSyncMap GetMapEx( const wxString& mapname ) = 0;
     virtual UnitSyncMap GetMapEx( int index ) = 0;
-    virtual wxString GetMapArchive( int index ) = 0;
     virtual GameOptions GetMapOptions( const wxString& name ) = 0;
     virtual wxArrayString GetMapDeps( const wxString& name ) = 0;
 
@@ -173,6 +172,7 @@ class IUnitSync : public wxEvtHandler
     virtual wxArrayString GetSides( const wxString& modname  ) = 0;
     virtual wxImage GetSidePicture( const wxString& modname, const wxString& SideName ) =0;
     virtual wxImage GetImage( const wxString& modname, const wxString& image_path ) =0;
+	virtual wxString GetTextfileAsString( const wxString& modname, const wxString& file_path ) =0;
 
     virtual int GetNumUnits( const wxString& modname ) = 0;
     virtual wxArrayString GetUnitsList( const wxString& modname ) = 0;
@@ -246,9 +246,9 @@ struct GameOptions
 class UnitSyncAsyncOps
 {
   public:
-    UnitSyncAsyncOps( wxEvtHandler* evtHandler ) {
-      m_id = usync().RegisterEvtHandler( evtHandler );
-    }
+	UnitSyncAsyncOps( wxEvtHandler* evtHandler )
+		: m_id( usync().RegisterEvtHandler( evtHandler ) )
+	{}
     ~UnitSyncAsyncOps() {
       usync().UnregisterEvtHandler( m_id );
     }

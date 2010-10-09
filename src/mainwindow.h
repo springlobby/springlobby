@@ -40,6 +40,7 @@ class OptionsDialog;
 class ReplayTraits;
 template < class Traits >
 class PlaybackTab;
+class wxFocusEvent;
 
 class SavegameTraits;
 template < class Traits >
@@ -73,6 +74,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void OnMenuChat( wxCommandEvent& event );
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
+	void OnMenuServerTab( wxCommandEvent& event );
     void OnMenuSaveOptions( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
     void OnMenuVersion ( wxCommandEvent& event );
@@ -80,6 +82,8 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void OnMenuLoadLayout( wxCommandEvent& event );
     void OnMenuResetLayout( wxCommandEvent& event );
 	void OnMenuPreferences( wxCommandEvent& event );
+	void OnMenuRename( wxCommandEvent& event );
+	void OnMenuFirstStart( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
     void OnMenuAutojoinChannels( wxCommandEvent& event );
     void OnReportBug( wxCommandEvent& event );
@@ -93,6 +97,8 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
     void OnChannelListStart( );
     void OnClose( wxCloseEvent& );
+	void OnSetFocus(wxFocusEvent&);
+	void OnKillFocus(wxFocusEvent&);
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
     MainChatTab& GetChatTab();
@@ -115,6 +121,10 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void SavePerspectives( const wxString& perspective_name = wxEmptyString );
 
     void FocusBattleRoomTab();
+
+	bool HasFocus();
+
+
 
   protected:
 
@@ -150,13 +160,16 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     wxLogWindow* m_log_win;
     wxLogChain* m_log_chain;
 
+	bool m_has_focus;
+
     enum {
-        MENU_SETTINGSPP,
         MENU_ABOUT = wxID_ABOUT,
         MENU_QUIT = wxID_EXIT,
 
         MENU_CONNECT = wxID_HIGHEST,
+		MENU_SETTINGSPP,
         MENU_DISCONNECT,
+		MENU_SERVER_TAB,
         MENU_SAVE_OPTIONS,
         MENU_JOIN,
         MENU_USYNC,
@@ -175,7 +188,9 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
         MENU_RESET_LAYOUT,
         MENU_DEFAULT_LAYOUT,
 		MENU_SCREENSHOTS,
-		MENU_PREFERENCES
+		MENU_PREFERENCES,
+		MENU_RENAME,
+		MENU_GENERAL_HELP
     };
 
         class TabNames : public wxArrayString
@@ -223,6 +238,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
         static const TabNames& GetTabNames();
 
     protected:
+
         DECLARE_EVENT_TABLE()
 };
 

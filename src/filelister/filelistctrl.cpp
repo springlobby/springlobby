@@ -25,9 +25,9 @@ END_EVENT_TABLE()
 const int fileListDialogID = wxNewId();
 
 FileListCtrl::FileListCtrl( FileListDialog* parent  )
-    : FileListCtrl::BaseType( parent, fileListDialogID, wxDefaultPosition, wxDefaultSize,
+	: FileListCtrl::BaseType( parent, fileListDialogID, wxDefaultPosition, wxDefaultSize,
             wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT , _T("FileListCtrl"), 2,
-            &CompareOneCrit, false/*no highlights*/, UserActions::ActHighlight, false /*periodic sort*/ ),
+			&FileListCtrl::CompareOneCrit, false/*no highlights*/, UserActions::ActHighlight, false /*periodic sort*/ ),
     m_parent_dialog( parent )
 {
 #if defined(__WXMAC__)
@@ -117,7 +117,7 @@ int FileListCtrl::GetIndexFromData(const DataType& data) const
   *
   * @todo: document this function
   */
-int FileListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int dir)
+int FileListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int dir) const
 {
     if ( ! ( u1 && u2 ) )
         return 0;

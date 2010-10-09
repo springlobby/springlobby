@@ -393,17 +393,26 @@ void TorrentWrapper::SetIngameStatus( bool status )
     if ( status == ingame ) return; // no change needed
     ingame = status;
     if ( ingame )
+	{
         m_maintenance_thread.Pause();
+	}
     else
+	{
         m_maintenance_thread.Resume();
+	}
 
     try
     {
         TorrenthandleVector torrentList = m_torr->get_torrents();
         if ( ingame ) // going ingame, pause all torrents (or throttle speeds) and disable dht
         {
-            if ( sett().GetTorrentSystemSuspendMode() == 0 ) for ( unsigned int i = 0; i < torrentList.size(); i++)
-                torrentList[i].pause();
+			if ( sett().GetTorrentSystemSuspendMode() == 0 )
+			{
+				for ( unsigned int i = 0; i < torrentList.size(); i++)
+				{
+				   torrentList[i].pause();
+				}
+			}
             else
             {
                 m_torr->set_upload_rate_limit(sett().GetTorrentThrottledUploadRate() * 1024);
@@ -414,7 +423,13 @@ void TorrentWrapper::SetIngameStatus( bool status )
         else// game closed, resume all torrents (or reset normal speed) and reactivate dht
         {
             m_torr->start_dht();
-            if ( sett().GetTorrentSystemSuspendMode() == 0 ) for ( unsigned int i = 0; i < torrentList.size(); i++) torrentList[i].resume();
+			if ( sett().GetTorrentSystemSuspendMode() == 0 )
+			{
+				for ( unsigned int i = 0; i < torrentList.size(); i++)
+				{
+					torrentList[i].resume();
+				}
+			}
             else
             {
                 m_torr->set_upload_rate_limit(sett().GetTorrentUploadRate() * 1024);

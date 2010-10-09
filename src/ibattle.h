@@ -11,6 +11,7 @@
 #include "userlist.h"
 #include "tdfcontainer.h"
 #include "utils/isink.h"
+#include "utils/mixins.hh"
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
@@ -20,28 +21,34 @@ class wxTimer;
 
 struct BattleStartRect
 {
-    BattleStartRect()
+    BattleStartRect() :
+        toadd(false),
+        todelete(false),
+        toresize(false),
+        exist(false),
+        ally(-1),
+        top(-1),
+        left(-1),
+        right(-1),
+        bottom(-1)
     {
-        toadd = false;
-        todelete = false;
-        exist = false;
-        toresize = false;
     }
+
     bool toadd;
     bool todelete;
     bool toresize;
     bool exist;
-
-    bool IsOk()
-    {
-        return exist && !todelete;
-    }
 
     int ally;
     int top;
     int left;
     int right;
     int bottom;
+
+    bool IsOk() const
+    {
+        return exist && !todelete;
+    }
 };
 
 
@@ -64,7 +71,7 @@ enum BattleType
 struct BattleOptions
 {
 	BattleOptions() :
-		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),isproxy(false),lockexternalbalancechanges(false),
+		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),proxyhost(_T("")),userelayhost(false),lockexternalbalancechanges(false),
 		nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
 		guilistactiv(false) {}
 
@@ -73,7 +80,8 @@ struct BattleOptions
 	BattleType battletype;
 	bool ispassworded;
 	int rankneeded;
-	bool isproxy;
+	wxString proxyhost;
+	bool userelayhost;
 	bool lockexternalbalancechanges;
 
 	wxString founder;
@@ -97,7 +105,7 @@ struct BattleOptions
 	bool guilistactiv;
 };
 
-class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle >
+class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle > , public SL::NonCopyable
 {
 public:
 
@@ -187,8 +195,9 @@ public:
     virtual wxString GetHostMapName() const;
     virtual wxString GetHostMapHash() const;
 
-    virtual void SetIsProxy( bool value );
-    virtual bool IsProxy();
+	virtual void SetProxy( const wxString& proxyhost );
+	virtual wxString GetProxy();
+	virtual bool IsProxy();
 
     virtual bool IsSynced();
 
@@ -213,7 +222,7 @@ public:
     void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
     void OnUserRemoved( User& user );
 
-    bool IsEveryoneReady();
+	bool IsEveryoneReady() const;
 
     void ForceSide( User& user, int side );
     void ForceAlly( User& user, int ally );
@@ -276,9 +285,14 @@ public:
 
 	User& GetFounder() const { return GetUser( m_opts.founder ); }
 
-		bool IsFull() const { return GetMaxPlayers() == ( GetNumUsers() - GetSpectators() ); }
+	bool IsFull() const { return GetMaxPlayers() == GetNumActivePlayers(); }
 
 		virtual unsigned int GetNumPlayers() const;
+		virtual unsigned int GetNumActivePlayers() const;
+
+		virtual unsigned int GetNumReadyPlayers() const { return m_players_ready; }
+		virtual unsigned int GetNumSyncedPlayers() const { return m_players_sync; }
+		virtual unsigned int GetNumOkPlayers() const { return m_players_ok; }
 
 		virtual int GetBattleId() const { return m_opts.battleid; }
 
@@ -412,8 +426,9 @@ protected:
 
     std::map<wxString, time_t> m_ready_up_map; // player name -> time counting from join/unspect
 
-    int m_players_ready;
-    int m_players_sync;
+	unsigned int m_players_ready;
+	unsigned int m_players_sync;
+	unsigned int m_players_ok; // players which are ready and in sync
     std::map<int, int> m_teams_sizes; // controlteam -> number of people in
     std::map<int, int> m_ally_sizes; // allyteam -> number of people in
 

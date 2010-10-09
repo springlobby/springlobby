@@ -43,6 +43,7 @@
 #include "images/rank4.xpm"
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
+#include "images/rank7.xpm"
 #include "images/arrow_refresh.png.h"
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
@@ -104,7 +105,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 
 	topsizer->Add( mod_choice_button_sizer, 0,  wxEXPAND|wxALL ,1 );
 
-	m_pwd_lbl = new wxStaticText( this, wxID_ANY, _( "Password" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_pwd_lbl = new wxStaticText( this, wxID_ANY, _( "Password\n(no spaces)" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_pwd_lbl->Wrap( -1 );
 	topsizer->Add( m_pwd_lbl, 1, wxALL| wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -181,7 +182,13 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_pl_nat_sizer->Add( m_nat_radios, 1, wxALL | wxEXPAND, 5 );
 
 	wxStaticBoxSizer* m_rank_box;
-	m_rank_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Minimum Rank needed" ) ), wxVERTICAL );
+	m_rank_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Rank requirement" ) ), wxVERTICAL );
+	wxArrayString rankFilterChoices;
+	rankFilterChoices.Add(_("At least"));
+	rankFilterChoices.Add(_("No greater than"));
+	m_rank_direction = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, rankFilterChoices, 0 );
+	m_rank_direction->SetToolTip( TE( _( "Select the type of rank enforcement." ) ) );
+	m_rank_box->Add(m_rank_direction);
 
 	wxFlexGridSizer* m_rank_sizer;
 	m_rank_sizer = new wxFlexGridSizer( 2, 6, 0, 0 );
@@ -229,6 +236,12 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_rank6_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank6_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
 	m_rank_sizer->Add( m_rank6_img, 0, wxALL, 5 );
 
+	m_rank7_radio = new wxRadioButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_rank_sizer->Add( m_rank7_radio, 0, wxALL, 5 );
+
+	m_rank7_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank7_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
+	m_rank_sizer->Add( m_rank7_img, 0, wxALL, 5 );
+
 	m_rank_box->Add( m_rank_sizer, 1, wxEXPAND, 5 );
 
 	m_pl_nat_sizer->Add( m_rank_box, 1, wxALL | wxEXPAND, 5 );
@@ -267,7 +280,6 @@ void HostBattleDialog::ReloadModList()
 	m_mod_pic->Clear();
 
 	wxArrayString modlist = usync().GetModList();
-	//modlist.Sort(CompareStringIgnoreCase);
 
 	size_t nummods = modlist.Count();
 	for ( size_t i = 0; i < nummods; i++ ) m_mod_pic->Insert( modlist[i], i );
@@ -291,7 +303,9 @@ void HostBattleDialog::OnOk( wxCommandEvent& /*unused*/ )
 	if ( m_desc_text->GetValue().IsEmpty() ) m_desc_text->SetValue( _T( "(none)" ) );
 	sett().SetLastHostDescription( m_desc_text->GetValue() );
 	sett().SetLastHostMod( m_mod_pic->GetString( m_mod_pic->GetSelection() ) );
-	sett().SetLastHostPassword( m_pwd_text->GetValue() );
+	wxString password = m_pwd_text->GetValue();
+	password.Replace(_T(" "), _T(""));
+	sett().SetLastHostPassword( password );
 	long tmp = DEFSETT_SPRING_PORT;
 	m_port_text->GetValue().ToLong( &tmp );
 	sett().SetLastHostPort( tmp );
@@ -316,14 +330,17 @@ void HostBattleDialog::OnCancel( wxCommandEvent& /*unused*/ )
 
 int HostBattleDialog::GetSelectedRank()
 {
-	if ( m_rank0_radio->GetValue() ) return 0;
-	if ( m_rank1_radio->GetValue() ) return 1;
-	if ( m_rank2_radio->GetValue() ) return 2;
-	if ( m_rank3_radio->GetValue() ) return 3;
-	if ( m_rank4_radio->GetValue() ) return 4;
-	if ( m_rank5_radio->GetValue() ) return 5;
-	if ( m_rank6_radio->GetValue() ) return 6;
-	return 000;
+	int ret = 0;
+	if ( m_rank0_radio->GetValue() ) ret = 0;
+	if ( m_rank1_radio->GetValue() ) ret = 1;
+	if ( m_rank2_radio->GetValue() ) ret = 2;
+	if ( m_rank3_radio->GetValue() ) ret = 3;
+	if ( m_rank4_radio->GetValue() ) ret = 4;
+	if ( m_rank5_radio->GetValue() ) ret = 5;
+	if ( m_rank6_radio->GetValue() ) ret = 6;
+	if ( m_rank7_radio->GetValue() ) ret = 7;
+	if ( m_rank_direction->GetSelection() > 0 ) ret = -ret -1;
+	return ret;
 }
 
 void HostBattleDialog::OnNatChange( wxCommandEvent& /*unused*/  )
@@ -361,5 +378,108 @@ void HostBattleDialog::OnRelayChoice( wxCommandEvent& event )
 void HostBattleDialog::OnUseRelay( wxCommandEvent&  )
 {
     m_relayed_host_pick->Show( m_relayed_host_check->IsChecked() );
+	m_port_text->Enable( !m_relayed_host_check->IsChecked() && m_nat_radios->GetSelection() == 0 );
+	m_nat_radios->Enable( !m_relayed_host_check->IsChecked() );
     Layout();
+}
+
+void HostBattleDialog::Run( wxWindow* parent )
+{
+	HostBattleDialog dlg( parent );
+	if ( dlg.ShowModal() == wxID_OK )
+	{
+		BattleOptions bo;
+		bo.description = sett().GetLastHostDescription();
+		bo.port = sett().GetLastHostPort();
+		bo.nattype = NatType( sett().GetLastHostNATSetting() );
+
+		if ( bo.nattype == NAT_None && sett().GetTestHostPort() )
+		{
+			switch ( ui().TestHostPort( bo.port ) )
+			{
+				case Server::porttest_pass :
+					break; // success
+				case Server::porttest_pass_WX26 :
+					wxLogWarning( _T( "hosting port %d: test aborted (wx26)" ), bo.port  );
+					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "Your using wxWidgets prior to version 2.8,\n "
+											 "port testing is not supported.\n Hosting may or may not work." ), bo.port ) );
+					sett().SetTestHostPort( false ); // no need to have it checked anymore
+					break;
+
+				case Server::porttest_unreachable :
+					wxLogWarning( _T( "hosting port %d: test undetermined" ), bo.port  );
+					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "The server used for testing your port %d "
+											 "is unreachable. \nHosting may or may not work with this setting." ), bo.port ) );
+					break; //inconclusive test shouldn't hinder hosting imo (koshi)
+
+				case Server::porttest_timeout :
+				case Server::porttest_socketNotOk :
+				case Server::porttest_socketError :
+					wxLogWarning( _T( "hosting port %d: test unsuccessful, closing battle" ), bo.port  );
+					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "Battle not started because the port you selected (%d) "
+											 "is unable to-f /home/kosh/.springlobby/testing.conf recieve incoming packets\n checks your router & firewall configuration again or change port "
+											 "in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n "
+											 "option in the hosting settings." ), bo.port ) );
+					return;
+				default:
+					wxLogWarning( _T( "unknonw port forward test result" ) );
+					break;
+
+			}
+			if ( !ui().TestHostPort( bo.port ) )
+			{
+				wxLogWarning( _T( "hosting port %d: test unsuccessful, closing battle" ), bo.port  );
+				customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "Battle not started because the port you selected (%d) is unable to recieve incoming packets\n checks your router & firewall configuration again or change port in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n option in the hosting settings." ), bo.port ) );
+				return;
+			}
+		}
+
+		// Get selected mod from unitsync.
+		UnitSyncMod mod;
+		try
+		{
+			mod = usync().GetMod( sett().GetLastHostMod() );
+			bo.modhash = mod.hash;
+			bo.modname = mod.name;
+		}
+		catch ( ... )
+		{
+			wxLogWarning( _T( "can't host: mod not found" ) );
+			customMessageBoxNoModal( SL_MAIN_ICON, _( "Battle not started beacuse the mod you selected could not be found. " ), _( "Error starting battle." ), wxOK );
+			return;
+		}
+
+		UnitSyncMap map;
+		wxString mname = sett().GetLastHostMap();
+		try {
+			if ( usync().MapExists( mname ) )
+				map = usync().GetMap( mname );
+			else if ( usync().GetNumMaps() <= 0 )
+			{
+				wxLogWarning( _T( "no maps found" ) );
+				customMessageBoxNoModal( SL_MAIN_ICON, _( "Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly." ), _( "No maps found" ), wxOK );
+				return;
+			}
+			else
+			{
+				map = usync().GetMap( 0 );
+			}
+		}
+		catch ( ... )
+		{
+			wxLogWarning( _T( "no maps found" ) );
+			customMessageBoxNoModal( SL_MAIN_ICON, _( "Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly." ), _( "No maps found" ), wxOK );
+			return;
+		}
+		bo.maphash = map.hash;
+		bo.mapname = map.name;
+
+		bo.rankneeded = sett().GetLastRankLimit();
+
+		bo.maxplayers = sett().GetLastHostPlayerNum();
+		bo.userelayhost = sett().GetLastHostRelayedMode();
+		if ( bo.userelayhost ) bo.nattype = NAT_None;
+		bo.relayhost = sett().GetLastRelayedHost();
+		serverSelector().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
+	}
 }
