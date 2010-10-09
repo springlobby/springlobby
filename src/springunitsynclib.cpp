@@ -457,20 +457,6 @@ bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature )
   }
 }
 
-
-void* SpringUnitSyncLib:: GetLibFuncPtr( m_libhandle,  const wxString& name )
-{
-  ASSERT_LOGIC( m_libhandle != 0, _T("Unitsync not loaded") );
-  if ( m_libhandle->HasSymbol( name ) ){
-    void* ptr = m_libhandle->GetSymbol( name );
-    if ( !ptr ) wxLogMessage( _T("Couldn't load %s from unitsync library"),name.c_str() );
-    return ptr;
-  }
-  wxLogMessage( _T("Couldn't load %s from unitsync library"), name.c_str() );
-  return 0;
-}
-
-
 void SpringUnitSyncLib::_ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out )
 {
   out.author = WX_STRINGC(in.author);
