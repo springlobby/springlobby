@@ -764,14 +764,18 @@ static inline bool IsAutoJoinChannel( Channel& chan )
 //! @todo Check if a pannel allready exists for this channel
 void Ui::OnJoinedChannelSuccessful( Channel& chan )
 {
-    if ( m_main_win == 0 ) return;
-    wxLogDebugFunc( _T("") );
-
-    chan.uidata.panel = 0;
-
-    mw().OpenChannelChat( chan, !sett().GetAutoConnect() || !IsAutoJoinChannel( chan ) );
+	OnJoinedChannelSuccessful( chan, !sett().GetAutoConnect() || !IsAutoJoinChannel( chan ) );
 }
 
+void Ui::OnJoinedChannelSuccessful( Channel& chan, bool focusTab )
+{
+	if ( m_main_win == 0 ) return;
+	wxLogDebugFunc( _T("") );
+
+	chan.uidata.panel = 0;
+
+	mw().OpenChannelChat( chan, focusTab );
+}
 
 //! @brief Called when something is said in a channel
 void Ui::OnChannelSaid( Channel& channel, User& user, const wxString& message )

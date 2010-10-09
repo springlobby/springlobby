@@ -93,6 +93,7 @@ class Ui : public SL::NonCopyable
     void OnDisconnected( Server& server, bool wasonline );
 
     void OnJoinedChannelSuccessful( Channel& chan );
+	void OnJoinedChannelSuccessful( Channel& chan, bool focusTab );
     void OnUserJoinedChannel( Channel& chan, User& user );
     void OnChannelJoin( Channel& chan, User& user );
     void OnUserLeftChannel( Channel& chan, User& user, const wxString& reason );

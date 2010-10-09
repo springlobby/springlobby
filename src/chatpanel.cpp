@@ -1097,7 +1097,7 @@ void ChatPanel::OnUserConnected()
 
 void ChatPanel::FocusInputBox()
 {
-    m_say_text->SetFocus();
+	m_say_text->SetFocus();
 }
 
 wxString ChatPanel::FindUrl( const long pos ) const
