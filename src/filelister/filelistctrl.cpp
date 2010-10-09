@@ -2,64 +2,51 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-#ifdef _MSC_VER
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif // NOMINMAX
-#include <winsock2.h>
-#endif // _MSC_VER
+
+#include "filelistctrl.h"
 
 #include <wx/intl.h>
 #include <wx/menu.h>
-#include <wx/string.h>
 
-#include "filelistctrl.h"
 #include "filelistdialog.h"
 #include "../utils/conversion.h"
 #include "../iconimagelist.h"
 #include "../uiutils.h"
+#include "../utils/downloader.h"
 
+template<> SortOrder FileListCtrl::BaseType::m_sortorder = SortOrder( ) ;
 
-BEGIN_EVENT_TABLE( FileListCtrl, CustomListCtrl )
+BEGIN_EVENT_TABLE( FileListCtrl, FileListCtrl::BaseType )
 
 	EVT_LIST_ITEM_RIGHT_CLICK( FILELIST_COL_CLICK, FileListCtrl::OnListRightClick )
-	EVT_LIST_COL_CLICK( FILELIST_COL_CLICK, FileListCtrl::OnColClick )
-	#if wxUSE_TIPWINDOW
-	#if !defined(__WXMSW__) /* && !defined(__WXMAC__) */ //disables tooltips on msw /* and mac */
-	EVT_MOTION( FileListCtrl::OnMouseMotion )
-	#endif
-	#endif
+
 END_EVENT_TABLE()
 
-FileListDialog* FileListCtrl::s_parent_dialog = 0;
+const int fileListDialogID = wxNewId();
 
-FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
-		CustomListCtrl( parent, FILELIST_COL_CLICK, wxDefaultPosition, wxDefaultSize,
-                wxSUNKEN_BORDER | wxLC_REPORT | wxLC_ALIGN_LEFT, _T("FileListCtrl"), 3 ),
-        m_parent_dialog( fld )
+FileListCtrl::FileListCtrl( FileListDialog* parent  )
+	: FileListCtrl::BaseType( parent, fileListDialogID, wxDefaultPosition, wxDefaultSize,
+            wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT , _T("FileListCtrl"), 2,
+			&FileListCtrl::CompareOneCrit, false/*no highlights*/, UserActions::ActHighlight, false /*periodic sort*/ ),
+    m_parent_dialog( parent )
 {
-    wxListItem col;
+#if defined(__WXMAC__)
+	const int widths [4] = { 250, 150, 50, 50 };
+#else
+	const int widths [4] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
+#endif
 
-	col.SetText( _( "Name" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 0, col, _( "Name" ) );
+	AddColumn( 0, widths[0], _( "Name" ), _( "Name" ) );
+	AddColumn( 1, widths[1], _( "Size" ), _( "Size" ) );
+	AddColumn( 2, widths[2], _( "Type" ), _( "Type" ) );
+	AddColumn( 3, widths[3], _( "Depends" ), _( "has dependencies?" ) );
 
-	col.SetText( _( "Type" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 1, col, _( "Type" ) );
-
-	col.SetText( _( "Hash" ) );
-	col.SetImage( icons().ICON_NONE );
-	InsertColumn( 2, col, _( "Hash" ) );
-
-	m_sortorder[0].col = 0;
-	m_sortorder[0].direction = true;
-	m_sortorder[1].col = 1;
-	m_sortorder[1].direction = true;
-	m_sortorder[2].col = 2;
-	m_sortorder[2].direction = true;
-
-	//Sort( );
+	if ( m_sortorder.size() == 0 ) {
+		m_sortorder[0].col = 0;
+		m_sortorder[0].direction = -1;
+		m_sortorder[1].col = 1;
+		m_sortorder[1].direction = 1;
+	}
 
 //  m_popup = new wxMenu( _T("") );
 //  // &m enables shortcout "alt + m" and underlines m
@@ -67,56 +54,136 @@ FileListCtrl::FileListCtrl( wxWindow* parent, FileListDialog* fld  ):
 //  m_popup->Append( BLIST_DLMOD, _("Download m&od") );
 }
 
-void FileListCtrl::SetColumnWidths()
-{
-#if defined(__WXMAC__)
-// on mac, autosize does not work at all
-	SetColumnWidth( 0, 250 );
-	SetColumnWidth( 1, 60 );
-	SetColumnWidth( 2, 150 );
-
-#else
-	SetColumnWidth( 0, wxLIST_AUTOSIZE );
-	SetColumnWidth( 1, wxLIST_AUTOSIZE );
-	SetColumnWidth( 2, wxLIST_AUTOSIZE );
-#endif
-}
-
 FileListCtrl::~FileListCtrl()
 {
 	//delete m_popup;
 }
 
-
 void FileListCtrl::OnListRightClick( wxListEvent& /*unused*/ )
 {
-	//PopupMenu( m_popup );
+//	PopupMenu( m_popup );
 }
 
-void FileListCtrl::OnColClick( wxListEvent& event )
+void FileListCtrl::Sort()
 {
-	if ( event.GetColumn() == -1 ) return;
-	wxListItem col;
-	GetColumn( m_sortorder[0].col, col );
-	col.SetImage( icons().ICON_NONE );
-	SetColumn( m_sortorder[0].col, col );
-
-	int i;
-	for ( i = 0; m_sortorder[i].col != event.GetColumn() && i < 3; ++i ) {}
-	if ( i > 2 ) { i = 2; }
-	for ( ; i > 0; i-- ) { m_sortorder[i] = m_sortorder[i-1]; }
-	m_sortorder[0].col = event.GetColumn();
-	m_sortorder[0].direction = !m_sortorder[0].direction;
-
-
-	GetColumn( m_sortorder[0].col, col );
-	col.SetImage( ( m_sortorder[0].direction )?icons().ICON_UP:icons().ICON_DOWN );
-	SetColumn( m_sortorder[0].col, col );
-
-	Sort();
+    if ( m_data.size() > 0 )
+	{
+		SaveSelection();
+		SlQuickSort::Sort ( m_data, m_comparator );
+		RestoreSelection();
+	}
 }
 
-void FileListCtrl::GetSelectedHashes(HashVector& hashes)
+bool FileListCtrl::AddFile( DataType info )
+{
+    return AddItem( info );
+}
+
+/** @brief GetIndexFromData
+  *
+  * we use a static seekpos here cause a lot of sequential index gettings expected
+  */
+int FileListCtrl::GetIndexFromData(const DataType& data) const
+{
+	static long seekpos;
+	seekpos = clamp( seekpos, 0l , ( long )m_data.size() );
+	int index = seekpos;
+
+	for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )
+	{
+		if ( data == *f_idx )
+		{
+			seekpos = index;
+			return seekpos;
+		}
+		index++;
+	}
+	//it's ok to init with seekpos, if it had changed this would not be reached
+	int r_index = seekpos - 1;
+	for ( DataRevCIter r_idx = m_data.rbegin() + ( m_data.size() - seekpos ); r_idx != m_data.rend() ; ++r_idx )
+	{
+		if ( data == *r_idx )
+		{
+			seekpos = r_index;
+			return seekpos;
+		}
+		r_index--;
+	}
+
+	return -1;
+}
+
+/** @brief CompareOneCrit
+  *
+  * @todo: document this function
+  */
+int FileListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int dir) const
+{
+    if ( ! ( u1 && u2 ) )
+        return 0;
+	switch ( col ) {
+		case 0:
+			return dir * u2->m_name.CmpNoCase( u2->m_name ) ;
+		case 1:
+			return dir * compareSimple( u2->m_size_KB, u1->m_size_KB );
+		case 2:
+			return dir * compareSimple( u2->m_type, u1->m_type );
+		case 3:
+			return dir * compareSimple( u2->m_dependencies.Count(), u1->m_dependencies.Count() );
+		default:
+			return 0;
+	}
+}
+
+/** @brief GetItemAttr
+  *
+  * @todo: document this function
+  */
+wxListItemAttr * FileListCtrl::GetItemAttr(long ) const
+{
+    //currently no highlighting
+    return 0;
+}
+
+/** @brief GetItemColumnImage
+  *
+  * @todo: document this function
+  */
+int FileListCtrl::GetItemColumnImage(long , long ) const
+{
+    //no images for any item
+    return -1;
+}
+
+/** @brief GetItemText
+  *
+  * @todo: document this function
+  */
+wxString FileListCtrl::GetItemText(long item, long column) const
+{
+    const DataType info = m_data[item];
+    if ( !info )
+        return wxEmptyString;
+
+    switch ( column ) {
+		case 0: return info->m_name;
+		case 1: return TowxString( info->m_size_KB );
+		case 2: switch ( info->m_type ) {
+                    case PlasmaResourceInfo::map: return _("map");
+                    case PlasmaResourceInfo::mod: return _("mod");
+                    default: return _("unknown");
+                }
+		case 3: return TowxString( info->m_dependencies.Count() );
+        default: return wxEmptyString;
+    }
+	return wxEmptyString;
+}
+
+/** @brief GetSelectedHashes
+  *
+  * @todo: document this function
+  */
+void FileListCtrl::GetSelectedHashes(InternalNameVector& names)
 {
 	long item = -1;
 	for ( long i = 0; i < GetSelectedItemCount(); ++i )
@@ -124,131 +191,10 @@ void FileListCtrl::GetSelectedHashes(HashVector& hashes)
 		item = GetNextItem( item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED );
 		if ( item == -1 ) // means nothing was found
             return;
-		hashes.push_back( TowxString<unsigned int>( GetItemData(item) ) );
+		names.push_back( m_data[item]->m_name );
 	}
 }
 
 
-void FileListCtrl::Sort()
-{
-	bool changed = false;
-    s_parent_dialog = m_parent_dialog;
-//  if (!m_ui_for_sort || !m_ui_for_sort->GetServerStatus()  ) return;
-//SortItems(( true )?&CompareNameUP:&CompareNameDOWN , 0 );
-	for ( int i = 3; i >= 0; i-- )
-	{
-		switch ( m_sortorder[ i ].col )
-		{
-			case 0 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareNameUP:&CompareNameDOWN , 0 );
-				break;
-			case 1 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareTypeUP:&CompareTypeDOWN , 0 );
-				break;
-			case 2 :
-				changed = SortItems(( m_sortorder[ i ].direction )?&CompareHashUP:&CompareHashDOWN , 0 );
-				break;
-            default:
-                break;
-		}
-	}
-}
-
-
-int wxCALLBACK FileListCtrl::CompareNameUP( long item1, long item2, long /*unused*/ )
-{
-  TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
-  TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
-  wxString name1 = row1.ok() ? row1->name.Upper() : _T("");
-  wxString name2 = row2.ok() ? row2->name.Upper() : _T("");
-  return name1.Cmp(name2);
-}
-
-
-int wxCALLBACK FileListCtrl::CompareNameDOWN( long item1, long item2, long /*unused*/ )
-{
-    TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
-    TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
-    wxString name1 = row1.ok() ? row1->name.Upper() : _T("");
-    wxString name2 = row2.ok() ? row2->name.Upper() : _T("");
-    return name2.Cmp(name1);
-}
-
-
-int wxCALLBACK FileListCtrl::CompareTypeUP( long item1, long item2, long /*unused*/ )
-{
-    TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
-    TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
-
-    wxString name1 = row1.ok() ? (row1->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
-    wxString name2 = row2.ok() ? (row2->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
-
-    return name1.Cmp(name2);
-}
-
-
-int wxCALLBACK FileListCtrl::CompareTypeDOWN( long item1, long item2, long /*unused*/ )
-{
-    TorrentTable::PRow row1=s_parent_dialog->RowByHash(TowxString<long>(item1));
-    TorrentTable::PRow row2=s_parent_dialog->RowByHash(TowxString<long>(item2));
-
-    wxString name1 = row1.ok() ? (row1->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
-    wxString name2 = row2.ok() ? (row2->type == IUnitSync::map ? _("Map") : _("Mod")) : _T("");
-
-    return name2.Cmp(name1);
-}
-
-
-int wxCALLBACK FileListCtrl::CompareHashUP( long item1, long item2, long /*unused*/ )
-{
-  if ( item1 < item2 )
-		return -1;
-	if ( item1 > item2 )
-		return 1;
-
-	return 0;
-}
-
-
-
-int wxCALLBACK FileListCtrl::CompareHashDOWN( long item1, long item2, long /*unused*/ )
-{
-  if ( item1 > item2 )
-    return -1;
-	if ( item1 < item2 )
-    return 1;
-
-	return 0;
-}
-
-void FileListCtrl::SetTipWindowText( const long /*unused*/, const wxPoint position)
-{
-//    long item = GetItemData( item_hit );
-//			Ui* ui = m_ui_for_sort;
-//			Battle& battle = ui->GetServer().battles_iter->GetBattle(item);
-    int column = getColumnFromPosition( position );
-    switch ( column )
-    {
-//			case 0: // status
-//			m_tiptext = icons().GetBattleStatus(battle);
-//				break;
-//			case 1: // country
-//				m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
-//				break;
-//			case 2: // rank_min
-//				m_tiptext = m_colinfovec[column].first;
-//				break;
-
-
-        default:
-            m_tiptext = _T( "" );
-            break;
-    }
-}
-
-void FileListCtrl::HighlightItem( long /*unused*/ )
-{
-
-}
 
 #endif

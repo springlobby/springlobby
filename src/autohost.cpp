@@ -7,6 +7,7 @@
 #include "user.h"
 #include "utils/conversion.h"
 #include "utils/misc.h"
+#include "utils/platform.h"
 
 #include <wx/tokenzr.h>
 
@@ -24,7 +25,7 @@ void AutoHost::SetEnabled( const bool enabled )
 	m_enabled = enabled;
 }
 
-bool AutoHost::GetEnabled()
+bool AutoHost::GetEnabled() const
 {
 	return m_enabled;
 }
@@ -61,7 +62,7 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 	}
 	else if ( command == _T( "!help" ) ) {
 		m_battle.DoAction( _T( "The following commands are available ( <> = mandatory value, {} = optional value ):" ) );
-		m_battle.DoAction( _T( "!addbox <allynumber> <topx> <topy> <bottomx> <bottomy>: adds a <allynumber> start restriction to the given coordinates, coordinates range from 0 to 200." ) );
+		m_battle.DoAction( _T( "!addbox <topx> <topy> <bottomx> <bottomy> {allynumber}: adds a <allynumber> start restriction to the given coordinates, coordinates range from 0 to 200." ) );
 		m_battle.DoAction( _T( "!balance {number}: tries to put players into allyteams by how many start boxes there are, uses {number} allyteams if present." ) );
 		m_battle.DoAction( _T( "!cbalance {number}: see !balance but tries to put clanmates together first." ) );
 		m_battle.DoAction( _T( "!fixcolors: changes players duplicate colours so they are unique." ) );
@@ -191,15 +192,23 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 		long bottomrightx;
 		long bottomrighty;
 		wxArrayString values = wxStringTokenize( params, _T( " " ) );
-		if ( values.GetCount() != 5 ) m_battle.DoAction( _T( "has recieved an invalid number of params for !addbox" ) );
+		int numvalues = values.GetCount();
+		if ( numvalues > 4 || numvalues < 3 ) m_battle.DoAction( _T( "has recieved an invalid number of params for !addbox" ) );
 		else
 		{
-			bool valueok = values[0].ToLong( &allynumber );
-			valueok = valueok && values[1].ToLong( &topleftx );
-			valueok = valueok && values[2].ToLong( &toplefty );
-			valueok = valueok && values[3].ToLong( &bottomrightx );
-			valueok = valueok && values[4].ToLong( &bottomrighty );
-			valueok = valueok && ( allynumber > 0 );
+			bool valueok = values[0].ToLong( &topleftx );
+			valueok = valueok && values[1].ToLong( &toplefty );
+			valueok = valueok && values[2].ToLong( &bottomrightx );
+			valueok = valueok && values[3].ToLong( &bottomrighty );
+			if ( numvalues == 5 )
+			{
+				valueok = valueok && values[4].ToLong( &allynumber );
+				valueok = valueok && ( allynumber > 0 );
+			}
+			else
+			{
+				allynumber = m_battle.GetNextFreeRectIdx();
+			}
 			valueok = valueok && ( topleftx >= 0 ) && ( topleftx <= 200 );
 			valueok = valueok && ( toplefty >= 0 ) && ( toplefty <= 200 );
 			valueok = valueok && ( bottomrightx >= 0 ) && ( bottomrightx <= 200 );
@@ -260,7 +269,7 @@ void AutoHost::OnUserAdded( User& user )
 	// do nothing if autohost functionality is disabled
 	if ( !m_enabled )
 		return;
-	m_battle.DoAction( _T( "Hi " ) + user.GetNick() + _T( ", this battle is in SpringLobby autohost mode. For help say !help" ) );
+	m_battle.DoAction( wxString::Format( _T( "Hi %s, this battle is in %s autohost mode. For help say !help" ), user.GetNick().c_str(), GetAppName().c_str() ) );
 }
 
 
@@ -288,7 +297,8 @@ void AutoHost::StartBattle()
 
 	m_battle.GetMe().BattleStatus().ready = true;
 
-	if ( !m_battle.IsEveryoneReady() ) {
+	if ( !m_battle.IsEveryoneReady() )
+	{
 		m_battle.DoAction( _T( "Some players are not ready yet." ) );
 		return;
 	}

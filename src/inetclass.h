@@ -14,6 +14,7 @@ class iNetClass
     virtual void OnConnected( Socket* sock ) = 0;
     virtual void OnDisconnected( Socket* sock ) = 0;
     virtual void OnDataReceived( Socket* sock ) = 0;
+	virtual void Ping() = 0;
 };
 
 class FakeNetClass : public iNetClass
@@ -26,15 +27,16 @@ class FakeNetClass : public iNetClass
     void OnConnected( Socket* /*unused*/ ) {}
     void OnDisconnected( Socket* /*unused*/ ) {}
     void OnDataReceived( Socket* /*unused*/ ) {}
+	void Ping() {}
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_INETCLASS_H
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

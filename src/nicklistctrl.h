@@ -3,6 +3,7 @@
 
 #include "customvirtlistctrl.h"
 #include "usermenu.h"
+#include "utils/mixins.hh"
 
 class User;
 class UserList;
@@ -41,7 +42,7 @@ class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
   protected:
 
     //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
-    static int CompareOneCrit( DataType u1, DataType u2, int col, int dir );
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
     //! utils func for comparing user status, so the CompareOneCrit doesn't get too crowded
     static int CompareUserStatus( DataType u1, DataType u2 );
     //! required per base clase
@@ -65,9 +66,9 @@ class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

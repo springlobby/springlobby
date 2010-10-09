@@ -6,10 +6,11 @@ class SkirmishDialog;
 class wxBoxSizer;
 class wxGradientButton;
 
-#include <wx/frame.h>
+#include "../simpleinterface/customizedframe.h"
+#include "../utils/mixins.hh"
 
 //! substitute for MainWindow when SpringLobby runs in simple mode
-class SimpleFront : public wxFrame
+class SimpleFront : public CustomizedFrame, public SL::NonCopyable
 {
 protected:
 	// Handlers for SimpleFrontBase events.

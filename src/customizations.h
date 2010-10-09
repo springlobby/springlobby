@@ -16,17 +16,27 @@ class Customizations {
         wxIcon m_app_ico;
         wxBitmap m_background;
         wxString m_help_url;
+		bool m_active;
+
+		bool KeyExists( const wxString& key ) const;
     public:
         ~Customizations() {}
 
         bool Init( const wxString& modname );
+		bool Active() const;
 
-        wxString GetModname();
-        wxString GetHelpUrl();
-        wxIcon GetAppIcon();
-        wxBitmap GetBackground();
-        wxSize GetBackgroundSize();
-        const OptionsWrapper& GetCustomizations();
+        const wxString& GetModname() const;
+        const wxString& GetHelpUrl() const;
+        const wxIcon& GetAppIcon() const;
+        const wxBitmap& GetBackground() const;
+        wxSize GetBackgroundSize() const;
+        const OptionsWrapper& GetCustomizations() const;
+
+		bool Provides( const wxString& key ) const;
+
+		wxString GetIntroText() const;
+
+		static const wxString IntroKey;// ( _T("intro_file") );
 
     friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
 };
@@ -37,7 +47,7 @@ Customizations& SLcustomizations();
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
     SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by

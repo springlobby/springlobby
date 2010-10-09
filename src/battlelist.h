@@ -2,9 +2,9 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLELIST_H
 
 #include <map>
+#include "utils/mixins.hh"
 
 class Battle;
-
 
 /** \brief encapsulates a <battle_id_t, Battle*> map
  */
@@ -29,11 +29,11 @@ class BattleList
 };
 
 /** BattleList_Iter gives us the posibility to get Battles out of the list without the rights to change the list */
-class BattleList_Iter
+class BattleList_Iter : public SL::NonCopyable
 {
   public:
-    BattleList_Iter(BattleList* battlelist) : m_battlelist( battlelist ) {};
-    ~BattleList_Iter() {};
+	BattleList_Iter(BattleList* battlelist) : m_battlelist( battlelist ) {}
+	~BattleList_Iter() {}
     void IteratorBegin();
     Battle* GetBattle();
     bool EOL();
@@ -51,9 +51,9 @@ class BattleList_Iter
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

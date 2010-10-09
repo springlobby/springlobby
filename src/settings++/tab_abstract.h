@@ -1,8 +1,8 @@
 /**
     This file is part of springsettings,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 
@@ -29,6 +29,7 @@ class wxPoint;
 class wxSize;
 class wxCloseEvent;
 class wxSpinEvent;
+class SlSpinDoubleEvent;
 
 
 typedef std::map<wxString,int> intMap;
@@ -82,6 +83,7 @@ class abstract_panel : public wxScrolledWindow
 		virtual void updateControls(int what_to_update);
 		static bool loadValuesIntoMap();
 		void OnSpinControlChange(wxSpinEvent& event);
+		void OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event);
     protected:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();

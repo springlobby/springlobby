@@ -202,21 +202,21 @@ void MainChatTab::RejoinChannels()
 			bool alreadyin = false;
 			try
 			{
-				ui().GetServer().GetChannel( name ).GetMe();
+				serverSelector().GetServer().GetChannel( name ).GetMe();
 				alreadyin = true;
 			}
 			catch ( ... ) {}
 			if ( !alreadyin )
 			{
-				ui().GetServer().JoinChannel( name, _T( "" ) );
-				tmp->SetChannel( &ui().GetServer().GetChannel( name ) );
+				serverSelector().GetServer().JoinChannel( name, _T( "" ) );
+				tmp->SetChannel( &serverSelector().GetServer().GetChannel( name ) );
 			}
 
 		} else if ( tmp->GetPanelType() == CPT_User )
 		{
 
 			wxString name = m_chat_tabs->GetPageText( i );
-			if ( ui().GetServer().UserExists( name ) ) tmp->SetUser( &ui().GetServer().GetUser( name ) );
+			if ( serverSelector().GetServer().UserExists( name ) ) tmp->SetUser( &serverSelector().GetServer().GetUser( name ) );
 
 		}
 	}
@@ -247,7 +247,8 @@ ChatPanel* MainChatTab::AddChatPanel( Server& server, const wxString& name )
 {
 
 	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-		if ( m_chat_tabs->GetPageText( i ) == name ) {
+		//if ( m_chat_tabs->GetPageText( i ) == name ) {
+		if ( true ) { // wipe all old server tabs
 			ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
 			if ( tmp->GetPanelType() == CPT_Server ) {
 				m_chat_tabs->DeletePage( i );
@@ -280,6 +281,26 @@ ChatPanel* MainChatTab::AddChatPanel( const User& user )
 	if ( selection > 0 ) m_chat_tabs->SetSelection( selection );
 	return chat;
 }
+
+
+void MainChatTab::BroadcastMessage( const wxString& message )
+{
+	// spam the message in all channels
+	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
+	{
+		ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
+		tmp->StatusMessage( message );
+	}
+}
+
+
+ChatPanel* MainChatTab::GetCurrentPanel()
+{
+	int sel = m_chat_tabs->GetSelection();
+	if ( sel < 0 ) return 0;
+	return ( ChatPanel* )m_chat_tabs->GetPage( sel );
+}
+
 
 void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 {
@@ -335,7 +356,7 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
 wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
 {
 	wxImage ret = img.ConvertToImage();
-	wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
+	wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
 	double bright = origcolour.value - 0.1 * origcolour.value;
 	bright = clamp( bright, 0.0, 1.0 );
@@ -389,4 +410,9 @@ void MainChatTab::LoadPerspective( const wxString& perspective_name  )
 void MainChatTab::SavePerspective( const wxString& perspective_name )
 {
     SaveNotebookPerspective( m_chat_tabs, perspective_name );
+}
+
+void MainChatTab::AdvanceSelection( bool forward )
+{
+	m_chat_tabs->AdvanceSelection( forward );
 }

@@ -18,10 +18,9 @@
 
 Server::Server():
 battles_iter(new BattleList_Iter(&m_battles)),
-m_sock(0),
 m_keepalive(15)
 {
-	m_sock = new Socket( *this, false );
+	m_sock = new Socket( *this, false, false );
 }
 
 Server::~Server()

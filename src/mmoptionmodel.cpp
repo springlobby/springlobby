@@ -57,13 +57,9 @@ mmOptionFloat::mmOptionFloat(wxString name_, wxString key_, wxString description
 	def(def_),value(def_),stepping(stepping_),min(min_),max(max_)
 {}
 
-mmOptionFloat::mmOptionFloat():mmOptionModel()
-{
-	value = 0.0;
-	min = value;
-	max = value;
-	stepping = value;
-}
+mmOptionFloat::mmOptionFloat() : mmOptionModel(),
+	def(0.0), value(0.0), stepping(0.0), min(0.0), max(0.0)
+{}
 
 mmOptionString::mmOptionString(wxString name_, wxString key_, wxString description_, wxString def_, unsigned int max_len_,
                                wxString section_ , wxString style_):

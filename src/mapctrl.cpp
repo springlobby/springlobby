@@ -9,10 +9,6 @@
 #include <stdexcept>
 #include <wx/log.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/math.h"
@@ -1462,7 +1458,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         {
             if ( m_mdown_area == Refreshing )
             {
-                GetGlobalEventSender(GlobalEvents::UnitSyncReloadRequest).SendEvent( 0 ); // request an unitsync reload
+				usync().AddReloadEvent();
                 m_battle->Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
                 UpdateMinimap();
             }

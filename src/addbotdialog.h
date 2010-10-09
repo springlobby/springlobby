@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_ADDBOTDIALOG_H
 
 #include <wx/dialog.h>
+#include "gui/windowattributespickle.h"
 #include <map>
 
 class wxTextCtrl;
@@ -17,7 +18,7 @@ class wxListEvent;
 
 /** \brief used in SP/MP BattletAB to present choice of AIs to add
  * \todo DOCMEMORE */
-class AddBotDialog : public wxDialog
+class AddBotDialog : public wxDialog, public WindowAttributesPickle
 {
   public:
 
@@ -76,7 +77,7 @@ class AddBotDialog : public wxDialog
       ADDBOT_ADD = wxID_HIGHEST,
       ADDBOT_CANCEL,
       ADDBOT_AI,
-      ADDBOT_OPTIONLIST,
+	  ADDBOT_OPTIONLIST
     };
 
     DECLARE_EVENT_TABLE()
@@ -88,9 +89,9 @@ class AddBotDialog : public wxDialog
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

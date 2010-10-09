@@ -11,6 +11,8 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/math.h"
+#include "utils/uievents.h"
+#include "utils/battleevents.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "useractions.h"
@@ -45,8 +47,6 @@ Battle::Battle( Server& serv, int id ) :
 
 Battle::~Battle()
 {
-    if ( m_is_self_in )
-        susynclib().UnSetCurrentMod();
 }
 
 
@@ -64,13 +64,13 @@ void Battle::SendHostInfo( const wxString& Tag )
 
 void Battle::Update()
 {
-    ui().OnBattleInfoUpdated( *this );
+	BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(this,wxString()) );
 }
 
 
 void Battle::Update( const wxString& Tag )
 {
-    ui().OnBattleInfoUpdated( *this, Tag );
+	BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(this,Tag) );
 }
 
 
@@ -84,8 +84,6 @@ void Battle::Join( const wxString& password )
 void Battle::Leave()
 {
     m_serv.LeaveBattle( m_opts.battleid );
-    m_is_self_in = false;
-    susynclib().UnSetCurrentMod( );
 }
 
 
@@ -214,10 +212,18 @@ User& Battle::OnUserAdded( User& user )
     {
         if ( CheckBan( user ) ) return user;
 
-        if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+		if ( ( &user != &GetMe() ) && !user.BattleStatus().IsBot() && ( m_opts.rankneeded != UserStatus::RANK_1 ) && !user.BattleStatus().spectator )
         {
-					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
-					ForceSpectator( user, true );
+			 if ( m_opts.rankneeded > UserStatus::RANK_1 && user.GetStatus().rank < m_opts.rankneeded )
+			 {
+				DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+				ForceSpectator( user, true );
+			 }
+			 else if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
+			 {
+				 DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+				 ForceSpectator( user, true );
+			 }
         }
 
         m_ah.OnUserAdded( user );
@@ -231,10 +237,18 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 {
     if ( IsFounderMe() )
     {
-			if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded > UserStatus::RANK_1 ) && ( user.GetStatus().rank < m_opts.rankneeded ))
+			if ( ( &user != &GetMe() ) && !status.IsBot() && ( m_opts.rankneeded != UserStatus::RANK_1 ) && !status.spectator )
 			{
+				if ( m_opts.rankneeded > UserStatus::RANK_1 && user.GetStatus().rank < m_opts.rankneeded )
+				{
 					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
 					ForceSpectator( user, true );
+				}
+				else if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
+				{
+					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+					ForceSpectator( user, true );
+				}
 			}
 			UserBattleStatus previousstatus = user.BattleStatus();
 			if ( m_opts.lockexternalbalancechanges )
@@ -254,7 +268,9 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 		IBattle::OnUserBattleStatusUpdated( user, status );
     if ( status.handicap != 0 )
     {
-        ui().OnBattleAction( *this, wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap );
+		UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+				UiEvents::OnBattleActionData( wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap )
+			);
     }
 		if ( IsFounderMe() )
 		{
@@ -262,7 +278,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			{
 				if ( sett().GetBattleLastAutoStartState() )
 				{
-					if ( !ui().IsSpringRunning() ) StartHostedBattle();
+					if ( !spring().IsRunning() ) StartHostedBattle();
 				}
 			}
 		}
@@ -344,28 +360,41 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
 							m_serv.BattleKickPlayer( m_opts.battleid, user );
 						}
 						catch( assert_exception ) {}
-            ui().OnBattleAction(*this,wxString(_T(" ")),nick+_T(" banned"));
-            //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" banned") )
+				);
+
+			//m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
             return true;
         }
         if ( cmd_name == _T("/unban") )
         {
             wxString nick=cmd.AfterFirst(' ');
             m_banned_users.erase(nick);
-            ui().OnBattleAction(*this,wxString(_T(" ")),nick+_T(" unbanned"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" unbanned") )
+				);
             //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
             return true;
         }
         if ( cmd_name == _T("/banlist") )
         {
-            ui().OnBattleAction(*this,wxString(_T(" ")),_T("banlist:"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , _T("banlist:") )
+				);
+
             for (std::set<wxString>::iterator i=m_banned_users.begin();i!=m_banned_users.end();++i)
             {
-                ui().OnBattleAction(*this,wxString(_T("  ")), *i);
+				UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+						UiEvents::OnBattleActionData( wxString(_T(" ")) , *i )
+					);
             }
             for (std::set<wxString>::iterator i=m_banned_ips.begin();i!=m_banned_ips.end();++i)
             {
-                ui().OnBattleAction(*this,wxString(_T("  ")), *i);
+				UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+						UiEvents::OnBattleActionData( wxString(_T(" ")) , *i )
+					);
+
             }
             return true;
         }
@@ -374,7 +403,10 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
             wxString nick=cmd.AfterFirst(' ');
             m_banned_users.erase(nick);
             m_banned_ips.erase(nick);
-            ui().OnBattleAction(*this,wxString(_T(" ")),nick+_T(" unbanned"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" unbanned") )
+				);
+
             //m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
             return true;
         }
@@ -382,14 +414,19 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
         {
             wxString nick=cmd.AfterFirst(' ');
             m_banned_users.insert(nick);
-            ui().OnBattleAction(*this,wxString(_T(" ")),nick+_T(" banned"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" banned") )
+				);
+
             if (UserExists(nick))
             {
                 User &user=GetUser(nick);
                 if (!user.BattleStatus().ip.empty())
                 {
                     m_banned_ips.insert(user.BattleStatus().ip);
-                    ui().OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" banned"));
+					UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+							UiEvents::OnBattleActionData( wxString(_T(" ")) , user.BattleStatus().ip+_T(" banned") )
+						);
                 }
                 m_serv.BattleKickPlayer( m_opts.battleid, user );
             }
@@ -412,12 +449,16 @@ bool Battle::CheckBan(User &user)
                 || useractions().DoActionOnUser(UserActions::ActAutokick, user.GetNick() ) )
         {
             KickPlayer(user);
-            ui().OnBattleAction(*this,wxString(_T(" ")),user.GetNick()+_T(" is banned, kicking"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , user.GetNick()+_T(" is banned, kicking") )
+				);
             return true;
         }
         else if (m_banned_ips.count(user.BattleStatus().ip)>0)
         {
-            ui().OnBattleAction(*this,wxString(_T(" ")),user.BattleStatus().ip+_T(" is banned, kicking"));
+			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , user.BattleStatus().ip+_T(" is banned, kicking") )
+				);
             KickPlayer(user);
             return true;
         }
@@ -564,20 +605,24 @@ void Battle::StartHostedBattle()
 			}
 			if ( IsProxy() )
 			{
-				wxString hostscript = spring().WriteScriptTxt( *this );
-				try
+				if ( UserExists( GetProxy() ) && !GetUser(GetProxy()).Status().in_game )
 				{
-					wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
-					if ( !wxFile::Access( path, wxFile::write ) ) {
-							wxLogError( _T("Access denied to script.txt.") );
-					}
+					// DON'T set m_generating_script here, it will trick the script generating code to think we're the host
+					wxString hostscript = spring().WriteScriptTxt( *this );
+					try
+					{
+						wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
+						if ( !wxFile::Access( path, wxFile::write ) ) {
+								wxLogError( _T("Access denied to script.txt.") );
+						}
 
-					wxFile f( path, wxFile::write );
-					f.Write( hostscript );
-					f.Close();
+						wxFile f( path, wxFile::write );
+						f.Write( hostscript );
+						f.Close();
 
-				} catch (...) {}
-				m_serv.SendScriptToProxy( hostscript );
+					} catch (...) {}
+					m_serv.SendScriptToProxy( hostscript );
+				}
 			}
 			if( IsFounderMe() && GetAutoLockOnStart() )
 			{
@@ -587,6 +632,10 @@ void Battle::StartHostedBattle()
 			sett().SetLastHostMap( GetServer().GetCurrentBattle()->GetHostMapName() );
 			sett().SaveSettings();
 			if ( !IsProxy() ) GetServer().StartHostedBattle();
+			else if ( UserExists( GetProxy() ) && GetUser(GetProxy()).Status().in_game ) // relayhost is already ingame, let's try to join it
+			{
+				StartSpring();
+			}
 		}
 	}
 }
@@ -597,7 +646,10 @@ void Battle::StartSpring()
 	{
 		GetMe().BattleStatus().ready = false;
 		SendMyBattleStatus();
+		// set m_generating_script, this will make the script.txt writer realize we're just clients even if using a relayhost
+		m_generating_script = true;
 		GetMe().Status().in_game = spring().Run( *this );
+		m_generating_script = false;
 		GetMe().SendMyUserStatus();
 	}
 	ui().OnBattleStarted( *this );
@@ -702,7 +754,7 @@ struct Alliance
     std::vector<User *>players;
     float ranksum;
     int allynum;
-    Alliance(): ranksum(0) {}
+    Alliance(): ranksum(0), allynum(-1) {}
     Alliance(int i): ranksum(0), allynum(i) {}
     void AddPlayer( User *player )
     {
@@ -727,7 +779,7 @@ struct ControlTeam
     std::vector<User*> players;
     float ranksum;
     int teamnum;
-    ControlTeam(): ranksum(0) {}
+    ControlTeam(): ranksum(0), teamnum(-1) {}
     ControlTeam( int i ): ranksum(0), teamnum(i) {}
     void AddPlayer( User *player )
     {
@@ -785,7 +837,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     //size_t i;
     //int num_alliances;
     std::vector<Alliance>alliances;
-    if ( numallyteams == 0 ) // 0 == use num start rects
+	if ( numallyteams == 0 || numallyteams == -1 ) // 0 or 1 -> use num start rects
     {
         int ally = 0;
         for ( unsigned int i = 0; i < GetNumRects(); ++i )
@@ -941,7 +993,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     //int num_alliances;
     std::vector<ControlTeam> control_teams;
 
-    if ( numcontrolteams == 0 ) numcontrolteams = GetNumUsers() - GetSpectators(); // 0 == use num players, will use comshare only if no available team slots
+	if ( numcontrolteams == 0 || numcontrolteams == -1 ) numcontrolteams = GetNumUsers() - GetSpectators(); // 0 or -1 -> use num players, will use comshare only if no available team slots
     IBattle::StartType position_type = (IBattle::StartType)s2l( CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) );
     if ( ( position_type == ST_Fixed ) || ( position_type == ST_Random ) ) // if fixed start pos type or random, use max teams = start pos count
     {
@@ -1094,4 +1146,10 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
             ForceAlly( *control_teams[i].players[j], control_teams[i].teamnum );
         }
     }
+}
+
+void Battle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData data )
+{
+	IBattle::OnUnitsyncReloaded( data );
+	if ( m_is_self_in ) SendMyBattleStatus();
 }

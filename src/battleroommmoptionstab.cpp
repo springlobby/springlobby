@@ -18,7 +18,7 @@
 #include "utils/math.h"
 #include "mmoptionswrapper.h"
 #include "battle.h"
-#include "spinctld.h"
+#include "gui/spinctl/spinctrl.h"
 #include "utils/customdialogs.h"
 #include "server.h"
 #include "settings.h"
@@ -29,25 +29,25 @@
 const char sep = *("_");
 const wxString wxsep = _T("_");
 
+
+// note that the SpinCtrlDouble change is hadnled explicitly via the control calling the right handler
 BEGIN_EVENT_TABLE_TEMPLATE1( BattleroomMMOptionsTab, wxPanel, BattleType)
 	EVT_COMBOBOX					(wxID_ANY, BattleroomMMOptionsTab::OnComBoxChange)
 	EVT_CHECKBOX					(wxID_ANY, BattleroomMMOptionsTab::OnChkBoxChange)
 	EVT_TEXT_ENTER					(wxID_ANY,  BattleroomMMOptionsTab::OnTextCtrlChange)
-	EVT_SPINCTRL					(wxID_ANY,  BattleroomMMOptionsTab::OnSpinCtrlChange)
 
 //  EVT_BUTTON( BOPTS_LOADPRES, BattleroomMMOptionsTab::OnLoadPreset )
 //  EVT_BUTTON( BOPTS_SAVEPRES, BattleroomMMOptionsTab::OnSavePreset )
 //  EVT_BUTTON( BOPTS_DELETEPRES, BattleroomMMOptionsTab::OnDeletePreset )
 //  EVT_BUTTON( BOPTS_SETDEFAULTPRES, BattleroomMMOptionsTab::OnSetModDefaultPreset )
-  EVT_BUTTON( wxID_ANY, BattleroomMMOptionsTab::OnButton )
 
+  EVT_BUTTON( wxID_ANY, BattleroomMMOptionsTab::OnButton )
 END_EVENT_TABLE()
 
 template < class BattleType >
 BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType* battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
 : wxScrolledWindow( parent, id, pos, size, style | wxHSCROLL ),m_battle(battle)
 {
-
   GetAui().manager->AddPane( this, wxLEFT, _T("battleroommmoptionstab") );
 
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -213,10 +213,11 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
         if ( it->second.section == section.key )
         {
 			mmOptionFloat current = it->second;
-			wxSpinCtrlDbl* tempspin = new wxSpinCtrlDbl();
+			SlSpinCtrlDouble<ThisType>* tempspin = new SlSpinCtrlDouble<ThisType>();
 			tempspin->Create(this, FLOAT_START_ID+ctrl_count, _T(""),
-					wxDefaultPosition, wxDefaultSize, 0, double(current.min), double(current.max),
-					double(current.value),double(current.stepping), wxSPINCTRLDBL_AUTODIGITS, current.key);
+					wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, double(current.min), double(current.max),
+					double(current.value),double(current.stepping), current.key);
+            tempspin->SetSnapToTicks( true );
 			tempspin->SetToolTip(TE(current.description));
 			m_name_info_map[pref+current.key] = current.description;
 			tempspin->Enable(enable);
@@ -360,10 +361,10 @@ void BattleroomMMOptionsTab<BattleType>::OnTextCtrlChange(wxCommandEvent& event)
 }
 
 template < class BattleType >
-void BattleroomMMOptionsTab<BattleType>::OnSpinCtrlChange(wxSpinEvent& event)
+void BattleroomMMOptionsTab<BattleType>::OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event)
 {
 	if ( !m_battle ) return;
-	wxSpinCtrlDbl* box = (wxSpinCtrlDbl*) event.GetEventObject();
+	SlSpinCtrlDouble<ThisType>* box = (SlSpinCtrlDouble<ThisType>*) event.GetEventObject();
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
@@ -417,7 +418,7 @@ void BattleroomMMOptionsTab<BattleType>::UpdateOptControls(wxString controlName)
 	 if ( m_spinctrl_map.find(controlName) != m_spinctrl_map.end() )
 	{
 		wxString value = m_battle->CustomBattleOptions().getSingleValue( optKey, (OptionsWrapper::GameOption)gameoption );
-		wxSpinCtrlDbl* cur = m_spinctrl_map[controlName] ;
+		SlSpinCtrlDouble<ThisType>* cur = m_spinctrl_map[controlName] ;
 		double l_val;
 		value.ToDouble(&l_val);
 		cur->SetValue(l_val);
@@ -597,7 +598,7 @@ void BattleroomMMOptionsTab<BattleType>::SetBattle( BattleType* battle )
 	m_default_btn->Enable(m_battle);
 	for ( chkBoxMap::iterator itor = m_chkbox_map.begin(); itor != m_chkbox_map.end(); itor++ ) itor->second->Enable(m_battle);
 	for ( comboBoxMap::iterator itor = m_combox_map.begin(); itor != m_combox_map.end(); itor++ ) itor->second->Enable(m_battle);
-	for ( spinCtrlMap::iterator itor = m_spinctrl_map.begin(); itor != m_spinctrl_map.end(); itor++ ) itor->second->Enable(m_battle);
+	for ( typename spinCtrlMap::iterator itor = m_spinctrl_map.begin(); itor != m_spinctrl_map.end(); itor++ ) itor->second->Enable(m_battle);
 	for ( textCtrlMap::iterator itor = m_textctrl_map.begin(); itor != m_textctrl_map.end(); itor++ ) itor->second->Enable(m_battle);
 	for ( buttonMap::iterator itor = m_button_map.begin(); itor != m_button_map.end(); itor++ ) itor->second->Enable(m_battle);
 
@@ -621,3 +622,4 @@ BattleType* BattleroomMMOptionsTab<BattleType>::GetBattle()
 {
 	return m_battle;
 }
+

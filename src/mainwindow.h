@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
 
 #include <wx/frame.h>
+#include "gui/windowattributespickle.h"
 
 class Ui;
 class Channel;
@@ -34,19 +35,19 @@ class WidgetDownloadDialog;
 class wxLogWindow;
 class wxLogChain;
 class wxCloseEvent;
-
+class Statusbar;
+class OptionsDialog;
 class ReplayTraits;
 template < class Traits >
 class PlaybackTab;
+class wxFocusEvent;
 
 class SavegameTraits;
 template < class Traits >
 class SavegameTab;
 
-
-
 //! @brief wxFrame that contains the main window of the client.
-class MainWindow : public wxFrame
+class MainWindow : public wxFrame, public WindowAttributesPickle
 {
   public:
     MainWindow( );
@@ -73,16 +74,17 @@ class MainWindow : public wxFrame
     void OnMenuChat( wxCommandEvent& event );
     void OnMenuConnect( wxCommandEvent& event );
     void OnMenuDisconnect( wxCommandEvent& event );
+	void OnMenuServerTab( wxCommandEvent& event );
     void OnMenuSaveOptions( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
     void OnMenuVersion ( wxCommandEvent& event );
     void OnMenuSaveLayout( wxCommandEvent& event );
     void OnMenuLoadLayout( wxCommandEvent& event );
     void OnMenuResetLayout( wxCommandEvent& event );
+	void OnMenuPreferences( wxCommandEvent& event );
+	void OnMenuRename( wxCommandEvent& event );
+	void OnMenuFirstStart( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
-    void OnMenuStartTorrent( wxCommandEvent& event );
-    void OnMenuStopTorrent( wxCommandEvent& event );
-    void OnMenuOpen( wxMenuEvent& event );
     void OnMenuAutojoinChannels( wxCommandEvent& event );
     void OnReportBug( wxCommandEvent& event );
     void OnShowDocs( wxCommandEvent& event );
@@ -95,6 +97,8 @@ class MainWindow : public wxFrame
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
     void OnChannelListStart( );
     void OnClose( wxCloseEvent& );
+	void OnSetFocus(wxFocusEvent&);
+	void OnKillFocus(wxFocusEvent&);
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
     MainChatTab& GetChatTab();
@@ -108,7 +112,6 @@ class MainWindow : public wxFrame
     #endif
     ChatPanel* GetActiveChatPanel();
     ChatPanel* GetChannelChatPanel( const wxString& channel );
-    MainOptionsTab& GetOptionsTab();
 
     void SetTabIcons();
 
@@ -119,11 +122,17 @@ class MainWindow : public wxFrame
 
     void FocusBattleRoomTab();
 
+	bool HasFocus();
+
+
+
   protected:
 
     wxMenuItem* m_settings_menu;
     wxMenuBar* m_menubar;
     wxMenu* m_menuTools;
+	wxMenu* m_menuEdit;
+	Statusbar* m_statusbar;
 
     wxBoxSizer* m_main_sizer;
     SLNotebook* m_func_tabs;
@@ -132,10 +141,10 @@ class MainWindow : public wxFrame
     BattleListTab* m_list_tab;
     MainJoinBattleTab* m_join_tab;
     MainSinglePlayerTab* m_sp_tab;
-    MainOptionsTab* m_opts_tab;
     #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab* m_torrent_tab;
     #endif
+	OptionsDialog* m_opts_dialog;
 
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
@@ -151,13 +160,16 @@ class MainWindow : public wxFrame
     wxLogWindow* m_log_win;
     wxLogChain* m_log_chain;
 
+	bool m_has_focus;
+
     enum {
-        MENU_SETTINGSPP,
         MENU_ABOUT = wxID_ABOUT,
         MENU_QUIT = wxID_EXIT,
 
         MENU_CONNECT = wxID_HIGHEST,
+		MENU_SETTINGSPP,
         MENU_DISCONNECT,
+		MENU_SERVER_TAB,
         MENU_SAVE_OPTIONS,
         MENU_JOIN,
         MENU_USYNC,
@@ -175,7 +187,10 @@ class MainWindow : public wxFrame
         MENU_LOAD_LAYOUT,
         MENU_RESET_LAYOUT,
         MENU_DEFAULT_LAYOUT,
-        MENU_SCREENSHOTS
+		MENU_SCREENSHOTS,
+		MENU_PREFERENCES,
+		MENU_RENAME,
+		MENU_GENERAL_HELP
     };
 
         class TabNames : public wxArrayString
@@ -192,7 +207,6 @@ class MainWindow : public wxFrame
                 #ifndef NO_TORRENT_SYSTEM
                     Add( _("Downloads") );
                 #endif
-                    Add( _("Options") );
                 }
         };
         static TabNames m_tab_names;
@@ -208,9 +222,6 @@ class MainWindow : public wxFrame
 
         #ifndef NO_TORRENT_SYSTEM
         static const unsigned int PAGE_TORRENT = 6;
-        static const unsigned int PAGE_OPTOS = 7;
-        #else
-        static const unsigned int PAGE_OPTOS   = 6;
         #endif
 
         static const unsigned int OPT_PAGE_SPRING   = 0;
@@ -228,7 +239,6 @@ class MainWindow : public wxFrame
 
     protected:
 
-
         DECLARE_EVENT_TABLE()
 };
 
@@ -241,9 +251,9 @@ class MainWindow : public wxFrame
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

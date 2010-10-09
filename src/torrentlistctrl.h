@@ -28,11 +28,10 @@ class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
 
     void OnListRightClick( wxListEvent& event );
 
-    virtual void SetTipWindowText( const long item_hit, const wxPoint position);
+    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 	bool AddTorrentInfo(const DataType& info);
 	bool RemoveTorrentInfo(const DataType& info);
 	void UpdateTorrentInfo(const DataType& info);
-	void RefreshTorrentStatus();
 
     virtual void HighlightItem( long item );
 
@@ -46,7 +45,7 @@ class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
     wxListItemAttr* GetItemAttr(long ) const {return 0;}
 
   protected:
-	static int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) ;
+	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 	int GetIndexFromData( const DataType& data ) const;
 
 	bool IsTorrentActive(const DataType& info);
@@ -70,9 +69,9 @@ class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

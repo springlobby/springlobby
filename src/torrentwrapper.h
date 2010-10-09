@@ -10,33 +10,32 @@
 //#endif
 
 #include <wx/arrstr.h>
+#include <wx/event.h>
 
 #include <map>
+#include <vector>
+#include <queue>
 
-#include "inetclass.h"
-#include "mutexwrapper.h"
 #include "iunitsync.h"
 #include "thread.h"
+#include "mutexwrapper.h"
+#include "utils/plasmaresourceinfo.h"
 
-#include "autopointers.h"
-
-#define DEFAULT_P2P_COORDINATOR_PORT 8202
-#define DEFAULT_P2P_TRACKER_PORT 8201
 /*
 namespace libtorrent{ class session; };
 namespace libtorrent { struct torrent_handle; };
 */
 class TorrentWrapper;
+class PlasmaInterface;
 
 namespace P2P {
 enum FileStatus
 {
-    /// Dont change values. Bit arithmetics is used in TorrentTable::Row
-    not_stored=0, /// file is not on disk and not downloading
-    queued=1, /// file is not on disk and queued for download
-    leeching=2,/// file is being downloaded
-    stored=128,/// file is on disk
-    seeding=129/// file is on disk and being seeded
+	not_stored	= 0, /// file is not on disk and not downloading
+	queued		= 1, /// file is not on disk and queued for download
+	leeching	= 2, /// file is being downloaded
+	paused		= 3, /// file currently not downloading but has valid handle
+	complete	= 4  /// file is on disk / dl completed
 };
 }
 
@@ -45,21 +44,17 @@ struct TorrentInfos
     float numcopies;
     wxString name;
     unsigned int downloaded;
-    unsigned int uploaded;
     P2P::FileStatus downloadstatus;
     float progress;
     float inspeed;
-    float outspeed;
     unsigned int filesize;
-    wxString hash;
+
     int eta;
 
 	//default constructor
-	TorrentInfos() : numcopies(-1.f), downloaded(0), uploaded(0), downloadstatus(P2P::not_stored), progress(0.f), inspeed(0.f), outspeed(0.f), filesize(0), eta(0) {}
+	TorrentInfos() : numcopies(-1.f), downloaded(0), downloadstatus(P2P::not_stored), progress(0.f), inspeed(0.f), filesize(0), eta(0) {}
 };
 
-
-#define TorrentTable_validate
 
 class TorrentMaintenanceThread : public Thread
 {
@@ -76,116 +71,17 @@ class TorrentMaintenanceThread : public Thread
 		TorrentWrapper& m_parent;
 };
 
-class TorrentTable
-{
+class TorrentWrapper;
+class ResourceInfoWorkItem : public WorkItem {
 public:
-
-    bool IsConsistent();
-
-    TorrentTable():
-    m_seed_count(0),
-    m_leech_count(0)
-    {
-    }
-
-class Row: public RefcountedContainer
-    {
-        /// If you want to modify row's keys, you need to remove it from table first,
-        /// then re-insert
-    public:
-        wxString hash;/// key, unitsync hash
-        wxString name;/// key, unitsync name
-        libtorrent::torrent_handle handle;/// key
-        IUnitSync::MediaType type;
-        wxString infohash; /// torrent sha1 infohash in b64
-        //bool ondisk;
-
-        P2P::FileStatus status;
-        bool is_open;
-        Row():
-                type(IUnitSync::map),
-                status(P2P::not_stored)
-        {
-        }
-        bool HasFullFileLocal()
-        {
-            return status & P2P::stored;
-        }
-        void SetHasFullFileLocal(bool b=true)
-        {
-            if (b)
-            {
-                if ( !status & P2P::stored )
-                    status=P2P::stored;
-            }
-            else
-            {
-                if ( status & P2P::stored )
-                    status=P2P::not_stored;
-            }
-        }
-    };
-    typedef RefcountedPointer<Row> PRow;
-
-
-		struct TransferredData
-		{
-			unsigned int failed_check_counts;
-			unsigned int sentdata;
-			TransferredData(): failed_check_counts(0), sentdata(0) {}
-		};
-
-		// deletes all stored infos
-		void FlushData();
-
-    void InsertRow(PRow row);
-    void RemoveRow(PRow row);
-
-    /// row must be already inserted
-    void AddSeedRequest(PRow row);
-    void RemoveSeedRequest(PRow row);
-    void SetRowHandle(PRow row, const libtorrent::torrent_handle &handle);
-    void AddRowToDependencyCheckQueue(PRow row);
-    void RemoveRowFromDependencyCheckQueue(PRow row);
-    void RemoveRowHandle( PRow row );
-    void SetRowStatus( PRow row, P2P::FileStatus status );
-    void SetRowTransferredData( PRow row, TransferredData data );
-
-    bool IsSeedRequest(PRow row);
-
-/// Following methods return NULL if not found!
-    PRow RowByHash(const wxString &hash);
-    PRow RowByName(const wxString &name);
-    PRow RowByHandle(libtorrent::torrent_handle handle);
-    std::map<wxString, TorrentTable::PRow> RowsByHash();
-    std::set<PRow> SeedRequestsByRow();
-    std::map<libtorrent::torrent_handle, PRow> RowByTorrentHandles();
-    std::set<PRow> QueuedTorrentsByRow();
-    std::map<TorrentTable::PRow, TransferredData> TransferredDataByRow();
-    std::set<TorrentTable::PRow> DependencyCheckQueuebyRow();
-
-    unsigned int GetOpenSeedsCount();
-    unsigned int GetOpenLeechsCount();
-
-private:
-
-
-#ifdef TorrentTable_validate
-    std::set<PRow> all_torrents;
-#endif
-    std::map<wxString, PRow> hash_index;
-    std::map<wxString, PRow> name_index;
-    std::map<libtorrent::torrent_handle, PRow> handle_index;
-    std::set<PRow> seed_requests;
-    std::set<PRow> queued_torrents;
-    std::map<TorrentTable::PRow, TorrentTable::TransferredData>  seed_sent_data;
-		std::set<TorrentTable::PRow> dep_check_queue;
-
-    unsigned int m_seed_count;
-    unsigned int m_leech_count;
+	ResourceInfoWorkItem( const  wxString& name, TorrentWrapper* tor );
+	void Run();
+protected:
+	wxString m_name;
+	TorrentWrapper* m_TorrentWrapper;
 };
 
-class TorrentWrapper : public iNetClass
+class TorrentWrapper
 {
 public:
 
@@ -194,63 +90,54 @@ public:
 
     enum DownloadRequestStatus
     {
-        success,
-        not_connected,
-        paused_ingame,
-        duplicate_request,
-        file_not_found,
-        torrent_join_failed,
-        scheduled_in_cue,
-        missing_in_table
+		success					= 0,
+//		paused_ingame			= 1,
+		file_not_found			= 2,
+		torrent_join_failed		= 3,
+		remote_file_dl_failed	= 4,
+		corrupt_torrent_file	= 5,
+		no_seeds_found			= 6
     };
 
     /// gui interface
-
-    bool ConnectToP2PSystem(const unsigned int tracker_no = 0);
-    void DisconnectFromP2PSystem();
-    bool IsConnectedToP2PSystem();
-    bool IsFileInSystem( const wxString& hash );
-    bool RemoveTorrentByHash( const wxString& hash );
-	P2P::FileStatus GetTorrentStatusByHash(const wxString& hash);
-    int GetTorrentSystemStatus();
-
-    ///HashToTorrentData& GetSystemFileList();
+	bool IsFileInSystem( const wxString& name );
+    bool RemoveTorrentByName( const wxString& name );
+	int GetTorrentSystemStatus() const;
 
     /// lobby interface
     void SetIngameStatus( bool status );
-    DownloadRequestStatus RequestFileByHash( const wxString& hash );
-    DownloadRequestStatus RequestFileByName( const wxString& name );
+
+	//! will add name to a queue that's processed from a worker thread, to avoid GUI blocking
+    void RequestFileByName( const wxString& name );
+
+	//! remove all torrents that have seed status
+    void ClearFinishedTorrents();
+	//! insert a downloaded torrent file/resource info into the libt session
+	DownloadRequestStatus AddTorrent( const PlasmaResourceInfo& info );
+
     void UpdateSettings();
-    void UpdateFromTimer( int mselapsed );
     std::map<wxString,TorrentInfos> CollectGuiInfos();
-    void SendMessageToCoordinator( const wxString& message );
 
-    /// threaded maintenance tasks
-    void JoinRequestedTorrents();
-    void RemoveUnneededTorrents();
-    void TryToJoinQueuedTorrents();
-    void SearchAndGetQueuedDependencies();
-		void ResumeFromList();
-
-    TorrentTable &GetTorrentTable()
-    {
-				ScopedLocker<TorrentTable> l_torrent_table(m_torrent_table);
-        return l_torrent_table.Get();
-    }
+	//! threaded maintenance tasks
+	void RemoveInvalidTorrents();
+	void HandleCompleted();
+    void ResumeFromList();
 
 private:
+	P2P::FileStatus getP2PStatusFromHandle( const libtorrent::torrent_handle& handle ) const;
 
-    void CreateTorrent( const wxString& uhash, const wxString& name, IUnitSync::MediaType type );
-    DownloadRequestStatus RequestFileByRow( const TorrentTable::PRow& row );
-    DownloadRequestStatus QueueFileByRow( const TorrentTable::PRow& row );
-    bool RemoveTorrentByRow( const TorrentTable::PRow& row );
-    bool JoinTorrent( const TorrentTable::PRow& row, bool IsSeed );
-    bool DownloadTorrentFileFromTracker( const wxString& hash );
+    typedef std::vector<libtorrent::torrent_handle>
+        TorrenthandleVector;
+    //! internal
+    typedef std::map<PlasmaResourceInfo,libtorrent::torrent_handle>
+        TorrenthandleInfoMap;
+	MutexWrapper<TorrenthandleInfoMap> m_handleInfo_map;
 
-    void ReceiveandExecute( const wxString& msg );
-    void OnConnected( Socket* sock );
-    void OnDisconnected( Socket* sock );
-    void OnDataReceived( Socket* sock );
+	TorrenthandleInfoMap& GetHandleInfoMap()
+	{
+		ScopedLocker<TorrenthandleInfoMap> l_torrent_table(m_handleInfo_map);
+		return l_torrent_table.Get();
+	}
 
     wxString m_buffer;
 
@@ -259,20 +146,14 @@ private:
 
     wxArrayString m_tracker_urls;
 
-    MutexWrapper<TorrentTable> m_torrent_table;
-
     TorrentMaintenanceThread m_maintenance_thread;
 
     libtorrent::session* m_torr;
-    Socket* m_socket_class;
-
-
-    //!we set this when trying a tracker and waiting for connection to be established
-    bool m_is_connecting;
-
-    unsigned int m_connected_tracker_index;
 
     bool m_started;
+
+	WorkerThread m_info_download_thread;
+
 
 };
 
@@ -285,9 +166,9 @@ TorrentWrapper& torrent();
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

@@ -2,11 +2,11 @@
     This file is part of springsettings,
     Copyright (C) 2007
     Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
+    cross-plattform/UI adaptation and currently maintained by koshi (Rene Milk)
     visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -27,20 +27,20 @@
 #include <wx/defs.h>
 #include <wx/slider.h>
 #include <wx/log.h>
+#include "../gui/spinctl/spinctrl.h"
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
-#include <wx/spinctrl.h>
 #include <wx/textctrl.h>
 
 #include "../utils/customdialogs.h"
 #include "../springunitsynclib.h"
 
-#include "Defs.hpp"
+#include "ctrlconstants.h"
 #include "se_utils.h"
 #include "../settings.h"
 #include "presets.h"
-#include "../spinctld.h"
+
 #include "../utils/debug.h"
 
 intMap abstract_panel::intSettings;
@@ -496,6 +496,16 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		    break;
 		}
 
+		case ID_SHADOW_CHOICES:
+		{
+			int choiceIndex = comboBox->GetCurrentSelection();
+
+			//really off = -1, off = 0, on = 1
+			//const wxString SHADOW_CHOICES[] = { _T("disabled"), _T("off"), _T("on") };
+			(intSettings)[QA_CBOX[0].key] = choiceIndex - 1;
+			break;
+		}
+
 		case ID_SIMPLE_QUAL_CBX:
 		{
 
@@ -557,18 +567,23 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
             break;
 	}
 }
+
+void abstract_panel::OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event)
+{
+	if (event.GetId()==ID_W4_BumpWaterAnisotropy)
+	{
+		SlSpinCtrlDouble<abstract_panel>* aniso = (SlSpinCtrlDouble<abstract_panel>*) event.GetEventObject();
+		(floatSettings)[W4_CONTROLS[6].key] = aniso->GetValue();
+		settingsChanged = true;
+	}
+}
+
 void abstract_panel::OnSpinControlChange(wxSpinEvent& event)
 {
 	if (event.GetId()==ID_WINDOWP_UI_MW_SPD)
 	{
 		wxSpinCtrl* zoom = (wxSpinCtrl*) event.GetEventObject();
 		(intSettings)[UI_ZOOM[0].key] = zoom->GetValue();
-		settingsChanged = true;
-	}
-	if (event.GetId()==ID_W4_BumpWaterAnisotropy)
-	{
-		wxSpinCtrlDbl* aniso = (wxSpinCtrlDbl*) event.GetEventObject();
-		(floatSettings)[W4_CONTROLS[6].key] = aniso->GetValue();
 		settingsChanged = true;
 	}
 }
@@ -600,12 +615,14 @@ bool abstract_panel::saveSettings() {
 void abstract_panel::updateControls(int /*unused*/)
 {}
 
+// note that the SpinCtrlDouble change is hadnled explicitly via the control calling the right handler
 BEGIN_EVENT_TABLE(abstract_panel, wxPanel)
-	EVT_SLIDER(wxID_ANY,            abstract_panel::OnSliderMove)
-	EVT_TEXT(wxID_ANY,              abstract_panel::OnTextUpdate)
-	EVT_CHECKBOX(wxID_ANY,          abstract_panel::OnCheckBoxTick)
-	EVT_RADIOBUTTON(wxID_ANY,       abstract_panel::OnRadioButtonToggle)
+	EVT_SLIDER              (wxID_ANY,  abstract_panel::OnSliderMove)
+	EVT_TEXT                (wxID_ANY,  abstract_panel::OnTextUpdate)
+	EVT_CHECKBOX            (wxID_ANY,  abstract_panel::OnCheckBoxTick)
+	EVT_RADIOBUTTON         (wxID_ANY,  abstract_panel::OnRadioButtonToggle)
 //	EVT_IDLE(                       abstract_panel::update)
-	EVT_SPINCTRL(wxID_ANY, 				abstract_panel::OnSpinControlChange)
-	EVT_COMBOBOX(wxID_ANY, 		abstract_panel::OnComboBoxChange)
+	EVT_SPINCTRL            (wxID_ANY, 	abstract_panel::OnSpinControlChange)
+
+	EVT_COMBOBOX            (wxID_ANY, 	abstract_panel::OnComboBoxChange)
  END_EVENT_TABLE()

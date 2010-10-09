@@ -1,18 +1,12 @@
 #http://www.cmake.org/Wiki/CMake:CPackConfiguration
 
 #don't write when git errored out resulting in unset version (ie when compiling from tarball)
-IF ( NOT GIT_ERROR)
-    CONFIGURE_FILE( ${springlobby_SOURCE_DIR}/cmake/config.h ${springlobby_BINARY_DIR}/config.h )
-ENDIF ( NOT GIT_ERROR)
+IF ( NOT GIT_ERROR )
+    CONFIGURE_FILE( ${springlobby_SOURCE_DIR}/cmake/config.h ${springlobby_BINARY_DIR}/springlobby_config.h )
+ENDIF ( NOT GIT_ERROR )
 
 SET( PACKAGE_NAME springlobby )
 SET( PACKAGE_VERSION ${SPRINGLOBBY_REV} )
-
-#if nothing went wrong we have the file and can define HAVE_CONFIG_H
-IF ( EXISTS ${springlobby_BINARY_DIR}/config.h )
-    ADD_DEFINITIONS( -DHAVE_CONFIG_H )
-    INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
-ENDIF ( EXISTS ${springlobby_BINARY_DIR}/config.h )
 
 IF (WIN32)
     SET(CPACK_GENERATOR "ZIP")
@@ -27,7 +21,10 @@ IF (WIN32)
 		INSTALL(FILES ${wxWidgets_LIB_DIR}/${file}.dll DESTINATION . )
  	ENDFOREACH( file )
 	SET( BASEPATH /opt/mingw32/ )
-	INSTALL(FILES ${BASEPATH}/i586-pc-mingw32/bin/mingwm10.dll DESTINATION . )
+	INSTALL(FILES
+		${BASEPATH}/i586-pc-mingw32/bin/mingwm10.dll
+		${BASEPATH}/bin/OpenAL32_sl.dll
+		DESTINATION . )
 	
 ELSE (WIN32)
     SET(CPACK_CMAKE_GENERATOR "Unix Makefiles")

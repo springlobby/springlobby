@@ -16,8 +16,12 @@
 #include "settings.h"
 
 ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/ )
-    : m_chatpanel(parent),
+	: m_chatpanel(parent),
+	m_user_menu( 0 ),
+	m_menu_all( 0 ),
+	displayjoinitem( 0 ),
     m_autorejoin( 0 ),
+	m_append_menu( 0 ),
     m_withChanserv( addChanServ )
 {}
 
@@ -26,7 +30,7 @@ wxMenu* ChatPanelMenu::GetMenu()
 {
     m_menu_all = new wxMenu();
     CreateNickListMenu();
-    m_append_menu = new wxMenuItem( m_menu_all, CHAT_MENU_DISABLE_APPEND, _( "Disable text appending (workaround for autoscroll)" ), wxEmptyString, wxITEM_CHECK );
+	m_append_menu = new wxMenuItem( m_menu_all, CHAT_MENU_DISABLE_APPEND, _( "Disable text appending" ), wxEmptyString, wxITEM_CHECK );
     m_menu_all->Append( m_append_menu );
     m_append_menu->Check( m_chatpanel->m_disable_append );
 
@@ -164,7 +168,7 @@ void ChatPanelMenu::CreateNickListMenu()
 	bool moderator = false;
 	try
 	{
-		moderator = ui().GetServer().GetMe().GetStatus().moderator;
+		moderator = serverSelector().GetServer().GetMe().GetStatus().moderator;
 	}catch(...){}
 	if ( moderator ) {
 		wxMenuItem* modingameitem = new wxMenuItem( m_user_menu, CHAT_MENU_US_MODERATOR_INGAME, _( "Ingame time" ), wxEmptyString, wxITEM_NORMAL );
@@ -238,6 +242,10 @@ ChatPanelMenu::UserMenu* ChatPanelMenu::GetUserMenu()
     return m_user_menu;
 }
 
+ChatPanelMenu::UserMenu* ChatPanelMenu::GetUserMenuNoCreate()
+{
+	return m_user_menu;
+}
 
 void ChatPanelMenu::OnUserMenuCopyLink( wxCommandEvent& /*unused*/ )
 {
@@ -511,6 +519,10 @@ void ChatPanelMenu::OnUserMenuJoinSame( wxCommandEvent& /*unused*/ )
 		return;
 	}
 
+	if ( battle->IsLocked() ) {
+		customMessageBoxNoModal( SL_MAIN_ICON, _( "The battle you requested to join is locked." ) );
+		return;
+	}
 	wxString password;
 	if ( battle->IsPassworded() ) {
 		if ( !ui().AskPassword( _( "Battle password" ), _( "This battle is password protected, enter the password." ), password ) ) return;
@@ -631,13 +643,13 @@ void ChatPanelMenu::OnUserMenuDeop( wxCommandEvent& /*unused*/ )
 
 void ChatPanelMenu::OnUserMenuModeratorIngame( wxCommandEvent& /*unused*/ )
 {
-	ui().GetServer().RequestInGameTime( m_chatpanel->GetSelectedUser()->GetNick() );
+	serverSelector().GetServer().RequestInGameTime( m_chatpanel->GetSelectedUser()->GetNick() );
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorCurrentIP( wxCommandEvent& /*unused*/ )
 {
-	ui().GetServer().ModeratorGetIP( m_chatpanel->GetSelectedUser()->GetNick() );
+	serverSelector().GetServer().ModeratorGetIP( m_chatpanel->GetSelectedUser()->GetNick() );
 }
 
 
@@ -645,7 +657,7 @@ void ChatPanelMenu::OnUserMenuModeratorKick( wxCommandEvent& /*unused*/ )
 {
 	wxString reason;
 	if ( !ui().AskText( _( "Kick user" ), _( "Reason:" ), reason ) ) return;
-	ui().GetServer().ModeratorKick( m_chatpanel->GetSelectedUser()->GetNick(), reason );
+	serverSelector().GetServer().ModeratorKick( m_chatpanel->GetSelectedUser()->GetNick(), reason );
 }
 
 
@@ -667,50 +679,50 @@ void ChatPanelMenu::OnUserMenuModeratorMute( wxCommandEvent& /*unused*/ )
 	if ( !ui().AskText( _( "Mute user" ), _( "Duration:" ), duration ) ) return;
 	long int dur = 0;
 	duration.ToLong( &dur, dur );
-	ui().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), ( int ) dur, true );
+	serverSelector().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), ( int ) dur, true );
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorMute5( wxCommandEvent& /*unused*/ )
 {
-	ui().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), 5, true );
+	serverSelector().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), 5, true );
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorMute10( wxCommandEvent& /*unused*/ )
 {
-	ui().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), 10, true );
+	serverSelector().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), 10, true );
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorMute30( wxCommandEvent& /*unused*/ )
 {
-	ui().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), 30, true );
+	serverSelector().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), 30, true );
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorMute120( wxCommandEvent& /*unused*/ )
 {
-	ui().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), 120, true );
+	serverSelector().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), 120, true );
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorMute1440( wxCommandEvent& /*unused*/ )
 {
-	ui().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), 1440, true );
+	serverSelector().GetServer().ModeratorMute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick(), 1440, true );
 }
 
 
 
 void ChatPanelMenu::OnUserMenuModeratorUnmute( wxCommandEvent& /*unused*/ )
 {
-	ui().GetServer().ModeratorUnmute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick() );
+	serverSelector().GetServer().ModeratorUnmute( m_chatpanel->m_channel->GetName(), m_chatpanel->GetSelectedUser()->GetNick() );
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorRing( wxCommandEvent& /*unused*/ )
 {
-	ui().GetServer().Ring( m_chatpanel->GetSelectedUser()->GetNick() );
+	serverSelector().GetServer().Ring( m_chatpanel->GetSelectedUser()->GetNick() );
 }
 
 void ChatPanelMenu::OnMenuToggleAppend( wxCommandEvent& /*unused*/ )

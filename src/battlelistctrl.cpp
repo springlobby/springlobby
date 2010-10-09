@@ -33,9 +33,10 @@ BEGIN_EVENT_TABLE(BattleListCtrl, BattleListCtrl::BaseType )
 END_EVENT_TABLE()
 
 BattleListCtrl::BattleListCtrl( wxWindow* parent )
-    : CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
-            wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("BattleListCtrl"), 4, &CompareOneCrit,
-            true /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),
+	: CustomVirtListCtrl< IBattle *,BattleListCtrl>(parent, BLIST_LIST, wxDefaultPosition, wxDefaultSize,
+													wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
+													_T("BattleListCtrl"), 4, &BattleListCtrl::CompareOneCrit,
+													true /*highlight*/, UserActions::ActHighlight, true /*periodic sort*/ ),
     m_popup( 0 )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
@@ -77,8 +78,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 
 BattleListCtrl::~BattleListCtrl()
 {
-    if ( m_popup )
-        delete m_popup;
+    delete m_popup;
 }
 
 wxString BattleListCtrl::GetItemText(long item, long column) const
@@ -96,8 +96,8 @@ wxString BattleListCtrl::GetItemText(long item, long column) const
         default: return wxEmptyString;
 
         case 3: return ( opts.description );
-        case 4: return ( RefineMapname( battle.GetHostMapName() ) );
-        case 5: return ( RefineModname( battle.GetHostModName() ) );
+		case 4: return ( battle.GetHostMapName() );
+		case 5: return ( battle.GetHostModName() );
         case 6: return ( opts.founder );
         case 7: return ( wxString::Format(_T("%d"), int(battle.GetSpectators())) );
         case 8: return ( wxString::Format(_T("%d"), int(battle.GetNumUsers()) - int(battle.GetSpectators()) ) );
@@ -132,7 +132,7 @@ int BattleListCtrl::GetItemColumnImage(long item, long column) const
         	}catch(...){}
 					break;
         }
-        case 2: return icons().GetRankIcon( battle.GetRankNeeded(), false );
+		case 2: return icons().GetRankLimitIcon( battle.GetRankNeeded(), false );
         case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
         case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
     }
@@ -236,7 +236,7 @@ void BattleListCtrl::Sort()
     }
 }
 
-int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
+int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
         case 0: return dir * CompareStatus( u1, u2 );
@@ -250,8 +250,8 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
         }
         case 2: return dir * compareSimple( u1->GetRankNeeded(), u2->GetRankNeeded() );
         case 3: return dir * u1->GetDescription().CmpNoCase( u2->GetDescription() );
-        case 4: return dir * RefineMapname( u1->GetHostMapName() ).CmpNoCase( RefineMapname( u2->GetHostMapName() ) );
-        case 5: return dir * RefineModname( u1->GetHostModName() ).CmpNoCase( RefineModname( u2->GetHostModName() ) );
+		case 4: return dir * u1->GetHostMapName().CmpNoCase( u2->GetHostMapName() );
+		case 5: return dir * u1->GetHostModName().CmpNoCase( u2->GetHostModName() );
         case 6:
         {
         	try
@@ -340,10 +340,10 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& posit
             m_tiptext = battle.GetDescription();
             break;
         case 4: //map
-            m_tiptext = RefineMapname(battle.GetHostMapName());
+			m_tiptext = battle.GetHostMapName();
             break;
         case 5: //mod
-            m_tiptext = RefineModname(battle.GetHostModName());
+			m_tiptext = battle.GetHostModName();
             break;
         case 6: // host
 					try

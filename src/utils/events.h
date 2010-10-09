@@ -2,6 +2,7 @@
 #define EVENTS_H_INCLUDED
 
 #include <assert.h>
+#include "../utils/mixins.hh"
 
 #ifndef my_assert
 #define my_assert(x) assert(x)
@@ -21,14 +22,14 @@ class ListNodeBare {
 			prev = a;
 			next->prev = this;
 			prev->next = this;
-		};
+		}
 		inline void ConnectPrevTo( ListNodeBare *a ) {/// connecting prev to itself is equivalent to disconnect.
 			Disconnect();
 			next = a;
 			prev = a->prev;
 			next->prev = this;
 			prev->next = this;
-		};
+		}
 		inline void StepNext() {/// moves itself forward in the ring
 			ListNodeBare *a = next;
 
@@ -73,11 +74,11 @@ class ListNodeBare {
 				// we're not connected,must be so on both ends.
 				my_assert( next == this );
 			};
-		};
-		ListNodeBare() {
-			prev = this;
-			next = this;
-		};
+		}
+		ListNodeBare()
+			: prev( this ),
+			next( this )
+		{}
 		~ListNodeBare() {
 			Disconnect();
 		}
@@ -88,13 +89,23 @@ class ListNodeBare {
 			next->prev = this;
 			prev->next = this;
 		}
+
+		ListNodeBare& operator= ( const ListNodeBare &a ) {
+			if( this != &a ) {
+				next = a.next;
+				prev = const_cast<ListNodeBare *>( &a );
+				next->prev = this;
+				prev->next = this;
+			}
+			return *this;
+		}
 };
 
 /// A base class for event receivers
 template<class TParamType>
 class EventReceiverFuncBase: public ListNodeBare {
 	public:
-		virtual void OnEvent( TParamType /*param*/ ) {};
+		virtual void OnEvent( TParamType /*param*/ ) {}
 };
 
 /// use EventSender::SendEvent to send events.
@@ -105,7 +116,7 @@ class EventSender: public EventReceiverFuncBase<TParamType> {
 			/// you may want to put assert(0) here, or log a message.
 			/// This method is only called when you have multiple senders sharing same event list.
 			/// Which happens when you unnecessarily make a copy of sender.
-		};
+		}
 		void SendEvent( TParamType param ) {
 			//std::cout<<"SendEvent called "<<std::endl;
 			//ListNodeBare *pt=next;
@@ -125,7 +136,7 @@ class EventSender: public EventReceiverFuncBase<TParamType> {
 
 /// Use EventReceiverFunc<base_class, parameter_type, &base_class::method> to make event receiver adaptor
 template < class TReceiverType, class TParamType, void ( TReceiverType::*TMethod )( TParamType ) >
-class EventReceiverFunc: public EventReceiverFuncBase<TParamType>
+class EventReceiverFunc: public EventReceiverFuncBase<TParamType>, public SL::NonCopyable
 {
 		TReceiverType *receiver_obj;
 	public:
@@ -201,9 +212,9 @@ class EventReceiverFuncAux: public EventReceiverFuncBase<TParamType>
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

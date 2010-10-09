@@ -8,11 +8,13 @@
 class Lockable {
 public:
     int lock_count;
-    Lockable():lock_count(0) {}
-    ;
-    virtual ~Lockable() {}
-    ;
-    bool Locked() {
+	Lockable():lock_count(0)
+	{}
+
+	virtual ~Lockable()
+	{}
+
+    bool Locked() const {
         return lock_count>0;
     }
     void Lock() {
@@ -33,7 +35,7 @@ public:
     }
     inline ~StaticLocker() {
         T->UnLock();
-    };
+	}
 };
 
 class Locker {
@@ -44,7 +46,7 @@ class Locker {
     }
     inline ~Locker() {
         lock.UnLock();
-    };
+	}
 };
 
 class RefcountedContainer {
@@ -53,7 +55,7 @@ public:
 
     RefcountedContainer() {
     	//ref_lock.Lock();
-    	};
+		}
     /*
     RefcountedContainer* operator new( size_t zSiz){
     	RefcountedContainer* tmp=new RefcountedContainer();
@@ -107,11 +109,11 @@ explicit RefcountedPointer(RefcountedPointer<U> p){
         else {
             ///error("RefcountedPointer copy : null (cast)");
         }
-    };
+	}
     /* */
     ~RefcountedPointer() {
         Dispose();
-    };
+	}
     RefcountedPointer<T, TDestroy> &operator= (const RefcountedPointer &p) throw() {
         if (this != &p) {
             Dispose();
@@ -254,9 +256,9 @@ class BidirectionalConnector{
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

@@ -2,11 +2,11 @@
 #define SPRINGLOBBY_WIDGETDOWNLOADDIALOG_H_INCLUDED
 
 #include <wx/dialog.h>
-
+#include "../gui/windowattributespickle.h"
 class wxBoxSizer;
 class WidgetDownloadPanel;
 
-class WidgetDownloadDialog : public wxDialog
+class WidgetDownloadDialog : public wxDialog, public WindowAttributesPickle
 {
     public:
         WidgetDownloadDialog(wxWindow* parent, wxWindowID id, const wxString& title,

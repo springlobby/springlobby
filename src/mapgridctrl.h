@@ -32,7 +32,7 @@ class MapGridCtrl : public wxPanel
 			SortKey_Wind,        // minWind + maxWind
 			SortKey_Area,        // width * height
 			SortKey_AspectRatio, // max(width/height, height/width)
-			SortKey_PosCount,
+			SortKey_PosCount
 		};
 
 		MapGridCtrl( wxWindow* parent, wxSize size = wxDefaultSize, wxWindowID id = -1 );
@@ -188,16 +188,16 @@ class MapGridCtrl : public wxPanel
 		/// this is displayed for maps whose minimap has not yet been loaded
 		wxBitmap m_img_minimap_loading;
 
-		DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 

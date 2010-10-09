@@ -8,8 +8,10 @@
 #include "userlist.h"
 #include "battlelist.h"
 #include "inetclass.h"
+#include "utils/mixins.hh"
 
 class ServerEvents;
+class SimpleServerEvents;
 class Channel;
 class Ui;
 struct BattleOptions;
@@ -25,10 +27,11 @@ typedef int HostInfo;
 
 
 //! @brief Abstract baseclass that is used to implement a server protocol.
-class Server : public iNetClass
+class Server : public iNetClass, public SL::NonCopyable
 {
   public:
-    friend class ServerEvents;
+	friend class ServerEvents;
+	friend class SimpleServerEvents;
 
     enum PortTestCode {
       porttest_pass_WX26    = 0,
@@ -141,8 +144,6 @@ class Server : public iNetClass
 
     void SetRequiredSpring( const wxString& version ) { m_required_spring_ver = version; }
 
-    virtual void Ping() = 0;
-
     virtual void OnConnected( Socket* sock ) = 0;
     virtual void OnDisconnected( Socket* sock ) = 0;
     virtual void OnDataReceived( Socket* sock ) = 0;
@@ -181,10 +182,12 @@ class Server : public iNetClass
 
     virtual void RequestSpringUpdate();
 
+	virtual void SetRelayIngamePassword( const User& user ) = 0;
+
     virtual wxArrayString GetRelayHostList() ;
 
   protected:
-    Socket* m_sock;
+	Socket* m_sock;
     int m_keepalive;
     wxString m_user;
     wxString m_pass;
@@ -215,17 +218,15 @@ class Server : public iNetClass
     virtual void SendCmd( const wxString& command, const wxString& param ) = 0;
     virtual void RelayCmd( const wxString& command, const wxString& param ) = 0;
 
-    private:
-        Server( const Server& );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVER_H
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-09
+    Copyright (C) 2007-2010
 
-    springsettings is free software: you can redistribute it and/or modify
+    SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 
