@@ -430,7 +430,7 @@ void IBattle::ResizeStartRect( unsigned int allyno )
 
 void IBattle::StartRectRemoved( unsigned int allyno )
 {
-	std::map<unsigned int,BattleStartRect>::iterator rect_it = m_rects.find(allyno);
+	std::map<unsigned int,BattleStartRect>::const_iterator rect_it = m_rects.find(allyno);
 	if( rect_it == m_rects.end() )
 		return;
 
@@ -554,14 +554,14 @@ void IBattle::ForceColour( User& user, const wxColour& col )
 
 void IBattle::PlayerJoinedTeam( int team )
 {
-	std::map<int, int>::iterator itor = m_teams_sizes.find( team );
+	std::map<int, int>::const_iterator itor = m_teams_sizes.find( team );
 	if ( itor == m_teams_sizes.end() ) m_teams_sizes[team] = 1;
 	else m_teams_sizes[team] = m_teams_sizes[team] + 1;
 }
 
 void IBattle::PlayerJoinedAlly( int ally )
 {
-	std::map<int, int>::iterator iter = m_ally_sizes.find( ally );
+	std::map<int, int>::const_iterator iter = m_ally_sizes.find( ally );
 	if ( iter == m_ally_sizes.end() ) m_ally_sizes[ally] = 1;
 	else m_ally_sizes[ally] = m_ally_sizes[ally] + 1;
 }
@@ -922,7 +922,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
     std::map<wxString,wxString> options = sett().GetHostingPreset( m_preset, i );
     if ( (OptionsWrapper::GameOption)i != OptionsWrapper::PrivateOptions )
     {
-      for ( std::map<wxString,wxString>::iterator itor = options.begin(); itor != options.end(); itor++ )
+	  for ( std::map<wxString,wxString>::const_iterator itor = options.begin(); itor != options.end(); itor++ )
       {
             wxLogWarning( itor->first + _T(" ::: ") + itor->second );
             CustomBattleOptions().setSingleOption( itor->first, itor->second, (OptionsWrapper::GameOption)i );
@@ -1013,7 +1013,7 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       opts[_T("numrects")] = TowxString( validrectcount );
 
       wxString restrictionsstring;
-      for ( std::map<wxString, int>::iterator itor = m_restricted_units.begin(); itor != m_restricted_units.end(); itor++ )
+	  for ( std::map<wxString, int>::const_iterator itor = m_restricted_units.begin(); itor != m_restricted_units.end(); itor++ )
       {
         restrictionsstring << itor->first << _T('=') << TowxString(itor->second) << _T('\t');
       }

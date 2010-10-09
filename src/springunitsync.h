@@ -55,7 +55,7 @@ class MostRecentlyUsedCache
     bool TryGet( const TKey& name, TValue& img )
     {
       wxCriticalSectionLocker lock(m_lock);
-      typename IteratorMap::iterator it = m_iterator_map.find( name );
+	  typename IteratorMap::iterator it = m_iterator_map.find( name );
       if ( it == m_iterator_map.end() ) {
         ++m_cache_misses;
         return false;

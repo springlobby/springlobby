@@ -72,7 +72,7 @@ void ServerEvents::OnLoginInfoComplete()
 	}
     //m_serv.RequestChannels();
     std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
-    for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.begin(); itor != autojoin.end(); itor++ )
+	for ( std::vector<ChannelJoinInfo>::const_iterator itor = autojoin.begin(); itor != autojoin.end(); ++itor )
     {
 		Channel& chan = m_serv._AddChannel( itor->name );
 		chan.SetPassword( itor->password );

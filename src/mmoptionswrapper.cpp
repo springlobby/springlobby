@@ -77,7 +77,7 @@ bool OptionsWrapper::loadAIOptions( const wxString& modname, int aiindex,const w
 
 int OptionsWrapper::GetAIOptionIndex( const wxString& nick )
 {
-	std::map<wxString,int>::iterator itor = m_ais_indexes.find(nick);
+	std::map<wxString,int>::const_iterator itor = m_ais_indexes.find(nick);
 	int pos = -1;
 	if ( itor != m_ais_indexes.end() ) pos = itor->second;
 	wxLogDebugFunc( _T("bot name: ") + nick + _T(" option index: ") + TowxString( pos ) );
@@ -240,7 +240,7 @@ bool OptionsWrapper::keyExists( const wxString& key, const GameOption modmapFlag
 
 bool  OptionsWrapper::setOptions(wxStringPairVec* options, GameOption modmapFlag)
 {
-	for (wxStringPairVec::iterator it = options->begin(); it != options->end(); ++it)
+	for (wxStringPairVec::const_iterator it = options->begin(); it != options->end(); ++it)
 	{
 		wxString key = it->first;
 		wxString value = it->second;
@@ -534,7 +534,7 @@ wxString OptionsWrapper::GetNameListOptItemKey( const wxString& optkey, const wx
                 return wxEmptyString;
 
             GameOptions tempOpt = optIt->second;
-			for (ListItemVec::iterator it = (tempOpt.list_map)[optkey].listitems.begin(); it != (tempOpt.list_map)[optkey].listitems.end(); ++it)
+			for (ListItemVec::const_iterator it = (tempOpt.list_map)[optkey].listitems.begin(); it != (tempOpt.list_map)[optkey].listitems.end(); ++it)
 			{
 				if (it->name == itemname)
 					return it->key;
@@ -577,7 +577,7 @@ void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSy
 
     // map child-key <-> parent-key
     typedef std::map<wxString,wxString> RelationMap;
-    typedef std::map<wxString,wxString>::iterator RelationMapIter;
+	typedef std::map<wxString,wxString>::iterator RelationMapIter;
     RelationMap relation_map;
 
     //setup relation map

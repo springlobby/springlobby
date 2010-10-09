@@ -1613,7 +1613,7 @@ void TASServer::SendHostInfo( HostInfo update )
         wxString cmd;
 
         OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-        for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+		for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
         {
 			wxString newcmd = _T("game/mapoptions/") + it->first + _T("=") + it->second.second + _T("\t");
 			if ( cmd.size() + newcmd.size() > 900 ) // should be 1024 add margin for relayhost name and command itself
@@ -1625,7 +1625,7 @@ void TASServer::SendHostInfo( HostInfo update )
 			cmd << newcmd;
         }
         OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-        for (OptionsWrapper::wxStringTripleVec::iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+		for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
         {
 			wxString newcmd = _T("game/modoptions/") + it->first + _T("=") + it->second.second + _T("\t");
 			if ( cmd.size() + newcmd.size() > 900 )// should be 1024 add margin for relayhost name and command itself
@@ -1637,7 +1637,7 @@ void TASServer::SendHostInfo( HostInfo update )
 			cmd << newcmd;
         }
         OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
-        for (OptionsWrapper::wxStringTripleVec::iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+		for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
         {
 			wxString newcmd = _T("game/") + it->first + _T("=") + it->second.second + _T("\t");
 			if ( cmd.size() + newcmd.size() > 900 )// should be 1024 add margin for relayhost name and command itself
@@ -1698,7 +1698,7 @@ void TASServer::SendHostInfo( HostInfo update )
         {
             wxString msg;
             wxString scriptmsg;
-            for ( std::map<wxString, int>::iterator itor = units.begin(); itor != units.end(); itor++ )
+			for ( std::map<wxString, int>::const_iterator itor = units.begin(); itor != units.end(); itor++ )
             {
             	 msg << itor->first + _T(" ");
             	 scriptmsg << _T("game/restrict/") + itor->first + _T("=") + TowxString(itor->second) + _T('\t'); // this is a serious protocol abuse, but on the other hand, the protocol fucking suck and it's unmaintained so it will do for now
