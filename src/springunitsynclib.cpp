@@ -77,7 +77,7 @@ void SpringUnitSyncLib::Load( const wxString& path, const wxString& ForceConfigF
 }
 
 template < class FunctionPointerType >
-void GetLibFuncPtr( const wxDynamicLibrary* libhandle, const wxString& name, FunctionPointerType p )
+void GetLibFuncPtr( const wxDynamicLibrary* libhandle, const wxString& name, FunctionPointerType& p )
 {
 	ASSERT_LOGIC( libhandle != 0, _T("Unitsync not loaded") );
 	if ( libhandle->HasSymbol( name ) ){
