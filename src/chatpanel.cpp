@@ -958,6 +958,11 @@ void ChatPanel::Say( const wxString& message )
 					Say( url );
 					return;
 				}
+				else {
+					customMessageBoxNoModal( SL_MAIN_ICON, _("Failed to post to pastebin.com.") );
+					m_say_text->SetValue( message );
+					return;
+				}
 			}
 			default:
 				break;
