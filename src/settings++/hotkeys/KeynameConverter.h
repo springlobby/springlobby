@@ -17,7 +17,6 @@ public:
 	static void initialize();
 
 	static wxString spring2wxKeybinder( const wxString& keystring, bool reverse = false );
-	static bool compareSpring2wxKeybinder( const wxString& springkey, const wxString& kbkey );
 	static wxString normalizeSpringKey( const wxString& springKey );
 
 private:
@@ -35,7 +34,7 @@ private:
 	KeynameConverter();
 
 	static wxString convert( const wxString& keystring, bool reverse = false );
-	static wxString modifier2String( const KeynameConverter::ModifierList& mod, bool addAny = false );
+	static wxString modifier2String( const KeynameConverter::ModifierList& mod );
 	static ModifierList stringToKeyModifier(const wxString &keyModifier);
 	static wxString discardModifier( const wxString& keystring );
 

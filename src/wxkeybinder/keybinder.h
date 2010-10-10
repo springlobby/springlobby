@@ -25,6 +25,7 @@
 #include "wx/combobox.h"
 #include "wx/app.h"
 #include "wx/hashset.h"
+#include "wx/checkbox.h"
 
 // The maximum number of shortcuts associated with each wxCmd.
 #define wxCMD_MAX_SHORTCUTS             10
@@ -126,10 +127,7 @@ public:
     }
 
     wxKeyBind(const wxString &key, size_t orderIndex = 0) {
-		Set( StringToKeyModifier(key),
-			StringToKeyCode( wxKeyBind::discardModifier( key ) ),//.AfterLast('+')).AfterLast('-'));,
-			orderIndex
-			);
+		Set( key, orderIndex );
     }
 
     virtual void DeepCopy(const wxKeyBind &p) {
@@ -151,6 +149,13 @@ public:
 		m_nOrderIndex = orderIndex;
     }
 
+	void Set(const wxString& key, size_t orderIndex) {
+		Set( StringToKeyModifier(key),
+					StringToKeyCode( wxKeyBind::discardModifier( key ) ),//.AfterLast('+')).AfterLast('-'));,
+					orderIndex
+					);
+    }
+
     //! Sets the key binding keycode and flags.
     //! \note This function is like #DeepCopy but uses a reference instead
     //!       of a pointer allowing such syntaxes:
@@ -163,8 +168,23 @@ public:
     bool MatchKey(const wxKeyEvent &key) const;
 
     //! Returns TRUE if the given wxKeyBind object is equivalent to this.
+	// It takes the ANY-modifier into account. ANY+c matches c and CTRL+c
     bool Match(const wxKeyBind &key) const {
-		if (m_nFlags == key.m_nFlags && m_nKeyCode == key.m_nKeyCode)
+		if ( m_nKeyCode != key.m_nKeyCode ) {
+			return false; //if keycodes differ, never match
+		}
+
+		if ( (m_nFlags && wxACCEL_ANY) || (key.m_nFlags && wxACCEL_ANY) ) {
+			return true;	//match if one of the keys has ANY modifier
+		}
+
+		if (m_nFlags == key.m_nFlags)
+            return TRUE;
+        return FALSE;
+    }
+
+	bool MatchKeyCode(const wxKeyBind &key) const {
+		if (m_nKeyCode == key.m_nKeyCode)
             return TRUE;
         return FALSE;
     }
@@ -201,7 +221,6 @@ public:
 
 
 public:     // static utilities
-
     static wxString NumpadKeyCodeToString(int keyCode);
     static wxString KeyCodeToString(int keyCode);
     static wxString KeyModifierToString(int keyModifier);
@@ -423,7 +442,9 @@ public:
 
     wxKeyBind *GetShortcut(int n)                { return &m_keyShortcut[n]; }
     const wxKeyBind *GetShortcut(int n) const    { return &m_keyShortcut[n]; }
-	const wxKeyBind *GetShortcut(const wxString& keystring) const { 
+	
+	//gets the EXACT shortcut
+	wxKeyBind *GetShortcut(const wxString& keystring) { 
 		for(int i=0; i < m_nShortcuts; ++i)
 		{
 			if ( m_keyShortcut[i].GetStr() == keystring )
@@ -1123,6 +1144,7 @@ private:
 #define wxKEYBINDER_CATEGORIES_ID           wxKEYBINDER_BASEID+8
 #define wxKEYBINDER_ADD_PROFILEBTN_ID       wxKEYBINDER_BASEID+9
 #define wxKEYBINDER_REMOVE_PROFILEBTN_ID    wxKEYBINDER_BASEID+10
+#define wxKEYBINDER_ANY_MODIFIER_ID         wxKEYBINDER_BASEID+11
 
 #define wxKEYBINDER_SELECTED_POSTFIX        wxT(" (selected)")
 
@@ -1304,7 +1326,7 @@ public:     // keyprofile utilities (to call BEFORE ShowModal):
 	virtual void RemoveAllProfiles();
 
 	virtual void SelectCommand( const wxString& cmd );
-
+	virtual void SelectKeyString( const wxString& keyStr );
 public:     // output-access utilities (to call AFTER ShowModal)
 
     //! Returns the n-th key profile of the profile combo box.
@@ -1378,6 +1400,7 @@ protected:      // event handlers
     void OnRemoveAllKey(wxCommandEvent &event);
     void OnAddProfile(wxCommandEvent &event);
     void OnRemoveProfile(wxCommandEvent &event);
+	void OnAnyModifier(wxCommandEvent &event);
 
     //! Handles the notifications received from the wxKeyMonitorTextCtrl.
     void OnKeyPressed(wxCommandEvent &event);
@@ -1465,6 +1488,8 @@ protected:      // the subwindows of this dialog
     wxButton *m_pAssignBtn;
     wxButton *m_pRemoveBtn;
     wxButton *m_pRemoveAllBtn;
+
+	wxCheckBox *m_pAnyModCbx;
 
     // used when wxKEYBINDER_USE_TREECTRL is in the build flags
     wxTreeCtrl *m_pCommandsTree;
