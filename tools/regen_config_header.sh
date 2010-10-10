@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#regen on bbot releases would screw with version
+if [ "x${BUILDBOT_RELEASE}" != "x" ] ; then
+	echo "not regenerating version on buildbot release"
+	exit 0
+fi
+
 set -u
 
 SOURCE_HEADER="${1}"
