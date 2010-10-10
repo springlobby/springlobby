@@ -107,7 +107,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
   m_chat_log(sett().GetDefaultServer(), chan_prefix + chan.GetName()),
   m_icon_index( 2 ),
   m_imagelist( imaglist ),
-  m_disable_append( false )
+  m_disable_append( false ),
+  m_topic_set( false )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + chan.GetName() );
 	wxLogDebugFunc( _T( "wxWindow* parent, Channel& chan" ) );
@@ -134,7 +135,8 @@ ChatPanel::ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist 
   m_chat_log(sett().GetDefaultServer(), user.GetNick()),
   m_icon_index( 3 ),
   m_imagelist( imaglist ),
-  m_disable_append( false )
+  m_disable_append( false ),
+  m_topic_set( false )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-pm-") + user.GetNick() );
 	CreateControls( );
@@ -159,7 +161,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  ):
   m_chat_log(sett().GetDefaultServer(), _T( "_SERVER" )),
   m_icon_index( 1 ),
   m_imagelist( imaglist ),
-  m_disable_append( false )
+  m_disable_append( false ),
+  m_topic_set( false )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-server") );
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
@@ -183,7 +186,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Battle* battle ):
   m_type( CPT_Battle ),
   m_popup_menu( 0 ),
   m_chat_log(sett().GetDefaultServer(), _T( "_BATTLE_" ) + wxDateTime::Now().Format( _T( "%Y_%m_%d__%H_%M_%S" ) )),
-  m_disable_append( false )
+  m_disable_append( false ),
+  m_topic_set( false )
 {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
 	if ( m_battle )
@@ -797,26 +801,28 @@ void ChatPanel::Parted( User& who, const wxString& message )
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 {
 	/*
-	int pos = refined.Find( _T("\\n") ); // serch for the \n string
-	while ( pos != -1 )
-	{
-	  if ( refined.Mid( pos - 1, 3 ) == _T("\\\n") ) continue; // the string \\n means escaped \n
-	  refined = refined.Left ( pos -1 ) + _T("\n") + refined.Right( pos +1 ); // replace the /n string with the carriage return char
-	  pos = refined.Find( _T("\\n") );
-	}
-	*/
+ int pos = refined.Find( _T("\\n") ); // serch for the \n string
+ while ( pos != -1 )
+ {
+   if ( refined.Mid( pos - 1, 3 ) == _T("\\\n") ) continue; // the string \\n means escaped \n
+   refined = refined.Left ( pos -1 ) + _T("\n") + refined.Right( pos +1 ); // replace the /n string with the carriage return char
+   pos = refined.Find( _T("\\n") );
+ }
+ */
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
-  // change the image of the tab to show new events
-  SetIconHighlight( highlight_say );
-  OutputLine( _( " ** Channel topic:" ), sett().GetChatColorServer(), f );
-  wxStringTokenizer tkz( message, _T("\n") );
+	// change the image of the tab to show new events
+	if ( m_topic_set )
+		SetIconHighlight( highlight_say );
+	OutputLine( _( " ** Channel topic:" ), sett().GetChatColorServer(), f );
+	wxStringTokenizer tkz( message, _T("\n") );
 	while ( tkz.HasMoreTokens() )
 	{
-	  wxString msg = tkz.GetNextToken();
-	  OutputLine( _T(" ") + msg, sett().GetChatColorServer(), f );
+		wxString msg = tkz.GetNextToken();
+		OutputLine( _T(" ") + msg, sett().GetChatColorServer(), f );
 	}
 	OutputLine( _( " ** Set by " ) + who, sett().GetChatColorServer(), f );
+	m_topic_set = true;
 }
 
 void ChatPanel::UserStatusUpdated( User& who )
@@ -858,6 +864,10 @@ void ChatPanel::SetChannel( Channel* chan )
 //		m_chat_log.SetTarget( sett().GetDefaultServer(), chan->GetName() );
 	}
 	m_channel = chan;
+
+	//set back to false so when we rejoin this channel SetTopic doesn;t update the chan icon
+	if ( !m_channel )
+		m_topic_set = false;
 }
 
 const Server* ChatPanel::GetServer()  const

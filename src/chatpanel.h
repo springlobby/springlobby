@@ -201,6 +201,9 @@ class ChatPanel : public wxPanel, public SL::NonCopyable
 
     friend class ChatPanelMenu; //menu needs access to members
 
+	//used to avoid marking channel as changed when it's just been created.
+	bool m_topic_set;
+
 	DECLARE_EVENT_TABLE()
 };
 
