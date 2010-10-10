@@ -36,6 +36,10 @@
     #define wxID_INVALID                -1
 #endif
 
+#ifndef wxACCEL_ANY
+	#define wxACCEL_ANY wxACCEL_ALT|wxACCEL_CMD|wxACCEL_CTRL|wxACCEL_NORMAL|wxACCEL_SHIFT
+#endif
+
 // define the following to true to enable lots of debug messages
 #define wxKEYBINDER_DEBUG_MSG            0
 #if wxKEYBINDER_DEBUG_MSG
