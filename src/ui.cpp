@@ -770,7 +770,9 @@ static inline bool IsAutoJoinChannel( Channel& chan )
 //! @todo Check if a pannel allready exists for this channel
 void Ui::OnJoinedChannelSuccessful( Channel& chan )
 {
-	OnJoinedChannelSuccessful( chan, !sett().GetAutoConnect() || !IsAutoJoinChannel( chan ) );
+	bool doFocus = !sett().GetAutoConnect() || !IsAutoJoinChannel( chan );
+	bool panel_exists = mw().GetChannelChatPanel( chan.GetName() ) != NULL;
+	OnJoinedChannelSuccessful( chan, !panel_exists && doFocus );
 }
 
 void Ui::OnJoinedChannelSuccessful( Channel& chan, bool focusTab )
