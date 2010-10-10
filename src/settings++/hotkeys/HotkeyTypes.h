@@ -126,7 +126,7 @@ public:
 
 	void clear();
 
-	const key_binding key_binding::operator-(const key_binding &other) const;
+	const key_binding operator-(const key_binding &other) const;
 
 	const key_binding_c2k& getC2K() const;
 	const key_binding_k2c& getK2C() const;

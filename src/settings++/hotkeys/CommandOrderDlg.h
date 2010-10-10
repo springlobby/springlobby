@@ -4,7 +4,7 @@
 #include "HotkeyForms.h"
 #include "HotkeyTypes.h"
 #include <wx/string.h>
-#include "keybinder.h"
+#include "../../wxkeybinder/keybinder.h"
 
 
 class CommandOrderDlg : public CommandOrderDlgBase 

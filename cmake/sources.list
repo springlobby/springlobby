@@ -136,16 +136,15 @@ SET(SettingsSrc
 	src/settings++/tab_render_detail.cpp
 	src/settings++/tab_simple.cpp
 	src/settings++/tab_ui.cpp
-	src/settings++/hotkeys/AddSelectionCmdDlgBase.cpp
+	src/settings++/hotkeys/HotkeyForms.cpp
 	src/settings++/hotkeys/AddSelectionCmdDlg.cpp
 	src/settings++/hotkeys/commandlist.cpp
 	src/settings++/hotkeys/hotkey_panel.cpp
 	src/settings++/hotkeys/hotkey_parser.cpp
 	src/settings++/hotkeys/KeynameConverter.cpp
-	src/settings++/hotkeys/spring_command.cpp
+	src/settings++/hotkeys/wxSpringCommand.cpp
 	src/settings++/hotkeys/SpringDefaultProfile.cpp
 	src/wxkeybinder/keybinder.cpp
-	src/wxkeybinder/menuutils.cpp
 )
 
 SET( curlSRC
