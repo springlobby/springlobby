@@ -144,6 +144,8 @@ SET(SettingsSrc
 	src/settings++/hotkeys/KeynameConverter.cpp
 	src/settings++/hotkeys/wxSpringCommand.cpp
 	src/settings++/hotkeys/SpringDefaultProfile.cpp
+	src/settings++/hotkeys/HotkeyTypes.cpp
+	src/settings++/hotkeys/CommandOrderDlg.cpp
 	src/wxkeybinder/keybinder.cpp
 )
 
