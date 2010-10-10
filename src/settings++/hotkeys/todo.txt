@@ -7,6 +7,8 @@
 -make keystring match regarding any-modifier (when searching for duplicate keys -> GetCmdsBindTo() )
 -listbox changes selection when any-checkbox is clicked
 -title of order window
+-add button gets disabled when clicking commands in listbox and command has no bound keys
+-refactor keyprofile class to keep track of order indices (instead of deep inside wxCmd)
 
 -buildfiles
 -unify spelling

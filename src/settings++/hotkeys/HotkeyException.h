@@ -15,7 +15,10 @@ public:
 #endif
 
 	const char* what() const { return "Use HotkeyException::getMessage() instead"; };
-	const wxString& getMessage();
+	const wxString& getMessage() const
+	{
+		return this->m_message;
+	}
 
 private:
 	const wxString	m_message;

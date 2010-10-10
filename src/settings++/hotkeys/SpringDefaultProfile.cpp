@@ -5,7 +5,7 @@ key_binding		SpringDefaultProfile::m_bindings;
 
 void SpringDefaultProfile::initialize()
 {
-	if ( SpringDefaultProfile::m_bindings.getC2K().size() > 0 )
+	if ( SpringDefaultProfile::m_bindings.getBinds().size() > 0 )
 	{
 		//is already initialized
 		return;
@@ -37,6 +37,7 @@ void SpringDefaultProfile::initialize()
 	SpringDefaultProfile::addBinding( _T("cloak"), _T("k") );
 	SpringDefaultProfile::addBinding( _T("controlunit"), _T("Any+c") );
 	SpringDefaultProfile::addBinding( _T("createvideo"), _T("Ctrl+Shift+f10") );
+
 	SpringDefaultProfile::addBinding( _T("debug"), _T("Alt+b") );
 	SpringDefaultProfile::addBinding( _T("decguiopacity"), _T("Shift+,") );
 	SpringDefaultProfile::addBinding( _T("decreaseViewRadius"), _T("Any+end") );
