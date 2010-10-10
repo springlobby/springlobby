@@ -36,6 +36,7 @@
     #define wxID_INVALID                -1
 #endif
 
+#define wxACCEL_ANY   0x0008   // hold any key down
 // define the following to true to enable lots of debug messages
 #define wxKEYBINDER_DEBUG_MSG            0
 #if wxKEYBINDER_DEBUG_MSG
