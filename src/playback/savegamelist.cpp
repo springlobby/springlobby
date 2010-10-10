@@ -40,7 +40,7 @@ void SavegameList::LoadPlaybacks( const wxArrayString& filenames )
     }
 }
 
-bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& ret )
+bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& ret ) const
 {
     //wxLogMessage(_T("GetSavegameInfos %s"), SavegamePath.c_str());
     //wxLOG_Info  ( STD_STRING( SavegamePath ) );
@@ -63,7 +63,7 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
     return true;
 }
 
-wxString SavegameList::GetScriptFromSavegame ( const wxString& SavegamePath  )
+wxString SavegameList::GetScriptFromSavegame ( const wxString& SavegamePath  ) const
 {
 	// blatantly copied from spring source
 	std::ifstream file(SavegamePath.mb_str(), std::ios::in|std::ios::binary);

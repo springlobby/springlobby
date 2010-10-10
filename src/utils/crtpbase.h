@@ -3,6 +3,8 @@
 
 template <class Derived>
 class CRTPbase {
+	public:
+		virtual ~CRTPbase(){}
 	protected:
 		Derived& asImp () { return static_cast<Derived&>(*this); }
 		const Derived& asImp () const { return static_cast<const Derived&>(*this); }

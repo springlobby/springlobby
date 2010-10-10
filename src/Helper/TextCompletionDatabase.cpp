@@ -48,7 +48,7 @@ TextCompletionDatabase::Size() {
 void
 TextCompletionDatabase::Insert_Mapping( const wxString& abbreviation, const wxString& mapping ) {
 
-	HashMap_String_String::iterator iter = hm.find( abbreviation );
+	HashMap_String_String::const_iterator iter = hm.find( abbreviation );
 
 	if ( iter == hm.end() ) {
 		hm[abbreviation] = mapping;
@@ -116,7 +116,7 @@ TextCompletionDatabase::GetMapping( wxString abbreviation ) {
 
 	// std::cout << "Abbr: (" << abbreviation.char_str() << ")" << std::endl;
 
-	for ( HashMap_String_String::iterator iter = hm.begin() ; iter != hm.end() ; ++iter ) {
+	for ( HashMap_String_String::const_iterator iter = hm.begin() ; iter != hm.end() ; ++iter ) {
 		// std::cout << "iter->first: (" << iter->first.char_str() << ")" << std::endl;
 		if ( regex_Abbreviations.Matches( iter->first ) ) {
 			// std::cout << "Match found!" << std::endl;

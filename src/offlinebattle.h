@@ -13,7 +13,7 @@ class OfflineBattle : public IBattle
 			~OfflineBattle (){};
 			User& GetMe() { return m_me; }
             const User& GetMe() const { return m_me; }
-			bool IsFounderMe() { return true; }
+			bool IsFounderMe() const { return true; }
 			void StartSpring();
 
 	protected:

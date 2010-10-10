@@ -107,7 +107,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
   m_chat_log(sett().GetDefaultServer(), chan_prefix + chan.GetName()),
   m_icon_index( 2 ),
   m_imagelist( imaglist ),
-  m_disable_append( false )
+  m_disable_append( false ),
+  m_topic_set( false )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + chan.GetName() );
 	wxLogDebugFunc( _T( "wxWindow* parent, Channel& chan" ) );
@@ -134,7 +135,8 @@ ChatPanel::ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist 
   m_chat_log(sett().GetDefaultServer(), user.GetNick()),
   m_icon_index( 3 ),
   m_imagelist( imaglist ),
-  m_disable_append( false )
+  m_disable_append( false ),
+  m_topic_set( false )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-pm-") + user.GetNick() );
 	CreateControls( );
@@ -159,7 +161,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  ):
   m_chat_log(sett().GetDefaultServer(), _T( "_SERVER" )),
   m_icon_index( 1 ),
   m_imagelist( imaglist ),
-  m_disable_append( false )
+  m_disable_append( false ),
+  m_topic_set( false )
 {
   GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-server") );
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
@@ -183,7 +186,8 @@ ChatPanel::ChatPanel( wxWindow* parent, Battle* battle ):
   m_type( CPT_Battle ),
   m_popup_menu( 0 ),
   m_chat_log(sett().GetDefaultServer(), _T( "_BATTLE_" ) + wxDateTime::Now().Format( _T( "%Y_%m_%d__%H_%M_%S" ) )),
-  m_disable_append( false )
+  m_disable_append( false ),
+  m_topic_set( false )
 {
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
 	if ( m_battle )
@@ -565,8 +569,7 @@ void ChatPanel::OnChanOpts( wxCommandEvent& /*unused*/ )
 
 void ChatPanel::OnSay( wxCommandEvent& /*unused*/ )
 {
-	Say( m_say_text->GetValue() );
-  m_say_text->SetValue( _T( "" ) );
+	if ( Say( m_say_text->GetValue() ) ) m_say_text->SetValue( _T( "" ) );
 }
 
 void ChatPanel::OnPaste( wxClipboardTextEvent& event )
@@ -798,26 +801,28 @@ void ChatPanel::Parted( User& who, const wxString& message )
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 {
 	/*
-	int pos = refined.Find( _T("\\n") ); // serch for the \n string
-	while ( pos != -1 )
-	{
-	  if ( refined.Mid( pos - 1, 3 ) == _T("\\\n") ) continue; // the string \\n means escaped \n
-	  refined = refined.Left ( pos -1 ) + _T("\n") + refined.Right( pos +1 ); // replace the /n string with the carriage return char
-	  pos = refined.Find( _T("\\n") );
-	}
-	*/
+ int pos = refined.Find( _T("\\n") ); // serch for the \n string
+ while ( pos != -1 )
+ {
+   if ( refined.Mid( pos - 1, 3 ) == _T("\\\n") ) continue; // the string \\n means escaped \n
+   refined = refined.Left ( pos -1 ) + _T("\n") + refined.Right( pos +1 ); // replace the /n string with the carriage return char
+   pos = refined.Find( _T("\\n") );
+ }
+ */
 	wxFont f = m_chatlog_text->GetFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
-  // change the image of the tab to show new events
-  SetIconHighlight( highlight_say );
-  OutputLine( _( " ** Channel topic:" ), sett().GetChatColorServer(), f );
-  wxStringTokenizer tkz( message, _T("\n") );
+	// change the image of the tab to show new events
+	if ( m_topic_set )
+		SetIconHighlight( highlight_say );
+	OutputLine( _( " ** Channel topic:" ), sett().GetChatColorServer(), f );
+	wxStringTokenizer tkz( message, _T("\n") );
 	while ( tkz.HasMoreTokens() )
 	{
-	  wxString msg = tkz.GetNextToken();
-	  OutputLine( _T(" ") + msg, sett().GetChatColorServer(), f );
+		wxString msg = tkz.GetNextToken();
+		OutputLine( _T(" ") + msg, sett().GetChatColorServer(), f );
 	}
 	OutputLine( _( " ** Set by " ) + who, sett().GetChatColorServer(), f );
+	m_topic_set = true;
 }
 
 void ChatPanel::UserStatusUpdated( User& who )
@@ -859,6 +864,10 @@ void ChatPanel::SetChannel( Channel* chan )
 //		m_chat_log.SetTarget( sett().GetDefaultServer(), chan->GetName() );
 	}
 	m_channel = chan;
+
+	//set back to false so when we rejoin this channel SetTopic doesn;t update the chan icon
+	if ( !m_channel )
+		m_topic_set = false;
 }
 
 const Server* ChatPanel::GetServer()  const
@@ -941,7 +950,7 @@ void ChatPanel::_SetChannel( Channel* channel )
 
 }
 
-void ChatPanel::Say( const wxString& message )
+bool ChatPanel::Say( const wxString& message )
 {
 	static const unsigned int flood_threshold = 5;
 	wxLogDebugFunc( message );
@@ -951,12 +960,16 @@ void ChatPanel::Say( const wxString& message )
 			_( "Are you sure you want to paste %d lines?" ), lines.CountTokens() ) );
 		switch ( dl.ShowModal() ) {
 			case wxID_NO :
-				return;
+				return true;
 			case PasteDialog::pasteButtonReturnCode : {
 				wxString url = Paste2Pastebin( message );
 				if ( url != wxEmptyString && wxStringTokenizer( url, _T( '\n' )).CountTokens() <= flood_threshold ) {
 					Say( url );
-					return;
+					return true;
+				}
+				else {
+					customMessageBoxNoModal( SL_MAIN_ICON, _("Failed to post to pastebin.com.") );
+					return false;
 				}
 			}
 			default:
@@ -968,31 +981,31 @@ void ChatPanel::Say( const wxString& message )
 		wxLogMessage( _T( "line: %s" ), line.c_str() );
 
 		if ( line.Find( '/' ) == 0 ) {
-			if ( ui().ExecuteSayCommand( line ) ) return;
+			if ( ui().ExecuteSayCommand( line ) ) return true;
 		}
 
 		if ( line == _T( "/ver" ) ) {
 			//!this instance is not replaced with GetAppname for sake of help/debug online
 			OutputLine( _( " You have SpringLobby v" ) + GetSpringLobbyVersion(), sett().GetChatColorNormal() , sett().GetChatFont() );
-			return;
+			return true;
 		}
 
 		if ( line == _T( "/clear" ) ) {
             m_chatlog_text->SetValue( _T("") );
-			return;
+			return true;
 		}
 
 		if ( m_type == CPT_Channel ) {
 
 			if ( m_channel == 0 ) {
 				OutputLine( _( " You are not in channel or channel does not exist." ), sett().GetChatColorError(), sett().GetChatFont() );
-				return;
+				return true;
 			}
 			if ( line.StartsWith( _T( "/" ) ) ) {
-				if ( m_channel->ExecuteSayCommand( line ) ) return;
-				if ( m_channel->GetServer().ExecuteSayCommand( line ) ) return;
+				if ( m_channel->ExecuteSayCommand( line ) ) return true;
+				if ( m_channel->GetServer().ExecuteSayCommand( line ) ) return true;
 				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
-				return;
+				return true;
 			}
 			m_channel->Say( line );
 
@@ -1000,13 +1013,13 @@ void ChatPanel::Say( const wxString& message )
 
 			if ( m_battle == 0 ) {
 				OutputLine( _( " You are not in battle or battle does not exist, use /help for a list of available commands." ), sett().GetChatColorError(), sett().GetChatFont() );
-				return;
+				return true;
 			}
 			if ( line.StartsWith( _T( "/" ) ) ) {
-				if ( m_battle->ExecuteSayCommand( line ) ) return;
-				if ( m_battle->GetServer().ExecuteSayCommand( line ) ) return;
+				if ( m_battle->ExecuteSayCommand( line ) ) return true;
+				if ( m_battle->GetServer().ExecuteSayCommand( line ) ) return true;
 				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
-				return;
+				return true;
 			}
 			m_battle->Say( line );
 
@@ -1014,23 +1027,23 @@ void ChatPanel::Say( const wxString& message )
 
 			if ( m_user == 0 ) {
 				OutputLine( _( " User is offline." ), sett().GetChatColorError(), sett().GetChatFont() );
-				return;
+				return true;
 			}
 			if ( line.StartsWith( _T( "/" ) ) ) {
-				if ( m_user->ExecuteSayCommand( line ) ) return;
-				if ( m_user->GetServer().ExecuteSayCommand( line ) ) return;
+				if ( m_user->ExecuteSayCommand( line ) ) return true;
+				if ( m_user->GetServer().ExecuteSayCommand( line ) ) return true;
 				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
-				return;
+				return true;
 			}
 			m_user->Say( line );
 
 		} else if ( m_type == CPT_Server ) {
-			if ( m_server == 0 ) return;
+			if ( m_server == 0 ) return true;
 
 			if ( line.StartsWith( _T( "/" ) ) ) {
-				if ( m_server->ExecuteSayCommand( line ) ) return;
+				if ( m_server->ExecuteSayCommand( line ) ) return true;
 				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
-				return;
+				return true;
 			}
 
             //we need to disable the channel tab if leaving manually
@@ -1050,6 +1063,7 @@ void ChatPanel::Say( const wxString& message )
 			OutputLine( _( " Sent: \"" ) + line + _( "\"" ), sett().GetChatColorNormal(), sett().GetChatFont() );
 		}
 	}
+	return true;
 }
 
 void ChatPanel::Part()
@@ -1093,7 +1107,7 @@ void ChatPanel::OnUserConnected()
 
 void ChatPanel::FocusInputBox()
 {
-    m_say_text->SetFocus();
+	m_say_text->SetFocus();
 }
 
 wxString ChatPanel::FindUrl( const long pos ) const

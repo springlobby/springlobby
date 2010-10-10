@@ -150,8 +150,6 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxStaticText* m_wind_lbl;
 		wxStaticText* m_tidal_lbl;
 		wxStaticText* m_size_lbl;
-		wxStaticText* m_player_count_lbl;
-		wxStaticText* m_spec_count_lbl;
 		wxStaticText* m_ally_setup_lbl;
 		wxStaticText* m_ok_count_lbl;
 
@@ -232,7 +230,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 			BROOM_HOST_NEW
 		};
 
-		DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H

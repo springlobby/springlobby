@@ -15,19 +15,19 @@ class IconImageList : public wxImageList
   public:
     IconImageList();
 
-    int GetUserListStateIcon( const UserStatus& us, bool chanop, bool inbroom );
-    int GetUserBattleStateIcon( const UserStatus& us );
+	int GetUserListStateIcon( const UserStatus& us, bool chanop, bool inbroom ) const;
+	int GetUserBattleStateIcon( const UserStatus& us ) const;
 
-	int GetRankLimitIcon(  int rank, bool showlowest = true );
-	int GetRankIcon( const unsigned int& rank, const bool& showlowest = true );
-    int GetFlagIcon( const wxString& flagname );
+	int GetRankLimitIcon(  int rank, bool showlowest = true ) const;
+	int GetRankIcon( const unsigned int& rank, const bool& showlowest = true ) const;
+	int GetFlagIcon( const wxString& flagname ) const;
     int GetBattleStatusIcon( const IBattle& battle ) const;
     wxString GetBattleStatus(const IBattle& battle) const;
-    int GetHostIcon( const bool& spectator = false );
-    int GetColourIcon( const int& num );
+	int GetHostIcon( const bool& spectator = false ) const;
+	int GetColourIcon( const int& num ) const;
     void SetColourIcon( const int& num, const wxColour& colour );
     int GetSideIcon( const wxString& modname, int side );
-    int GetReadyIcon( const bool& spectator, const bool& ready, const unsigned int& sync, const bool& bot );
+	int GetReadyIcon( const bool& spectator, const bool& ready, const unsigned int& sync, const bool& bot );
 
     int ICON_NONE;
 
@@ -108,7 +108,9 @@ class IconImageList : public wxImageList
   protected:
     std::map<wxString, int> m_cached_side_icons;
     // why map? because i already included and didn't want to include more stuff, it's not time-critical code anyway
-    std::map<unsigned int, unsigned int> m_player_colour_icons;
+	typedef std::map<unsigned int, unsigned int>
+		PlayerColourMap;
+	PlayerColourMap m_player_colour_icons;
 
 	std::vector<int> m_rank_requirements;
 	int m_minimum_rank_requirement_border;

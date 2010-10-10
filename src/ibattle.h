@@ -11,6 +11,7 @@
 #include "userlist.h"
 #include "tdfcontainer.h"
 #include "utils/isink.h"
+#include "utils/mixins.hh"
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
@@ -104,7 +105,7 @@ struct BattleOptions
 	bool guilistactiv;
 };
 
-class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle >
+class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle > , public SL::NonCopyable
 {
 public:
 
@@ -195,12 +196,12 @@ public:
     virtual wxString GetHostMapHash() const;
 
 	virtual void SetProxy( const wxString& proxyhost );
-	virtual wxString GetProxy();
-	virtual bool IsProxy();
+	virtual wxString GetProxy() const;
+	virtual bool IsProxy() const;
 
-    virtual bool IsSynced();
+	virtual bool IsSynced(); //cannot be const
 
-    virtual bool IsFounderMe();
+	virtual bool IsFounderMe() const;
     virtual bool IsFounder( const User& user ) const;
 
     virtual int GetMyPlayerNum() const;
@@ -243,7 +244,7 @@ public:
 	virtual unsigned int GetLastRectIdx() const;
 	virtual unsigned int GetNextFreeRectIdx() const;
 
-    virtual int GetFreeTeam( bool excludeme = false );
+	virtual int GetFreeTeam( bool excludeme = false ) const;
 
     virtual User& GetMe() = 0;
     virtual const User& GetMe() const = 0;

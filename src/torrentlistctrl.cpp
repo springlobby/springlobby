@@ -242,7 +242,7 @@ int TorrentListCtrl::GetIndexFromData( const DataType& data ) const
     return -1;
 }
 
-bool TorrentListCtrl::IsTorrentActive(const DataType& info)
+bool TorrentListCtrl::IsTorrentActive(const DataType& info) const
 {
 	 return (info.downloadstatus == P2P::leeching
 		  || info.downloadstatus == P2P::queued);

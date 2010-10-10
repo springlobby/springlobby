@@ -86,7 +86,7 @@ class MapCtrl : public wxPanel
     int LoadMinimap();
     void FreeMinimap();
 
-    BattleStartRect GetBattleRect( int x1, int y1, int x2, int y2, int ally = -1 );
+	BattleStartRect GetBattleRect( int x1, int y1, int x2, int y2, int ally = -1 ) const;
 
     /** Get the rect occupied by the minimap.
      *
@@ -103,13 +103,13 @@ class MapCtrl : public wxPanel
      */
     wxRect GetDrawableRect() const;
 
-    wxRect GetStartRect( int index );
-    wxRect GetStartRect( const BattleStartRect& sr );
-    void Accumulate( wxImage& image );
-    double GetStartRectMetalFraction( int index );
-    double GetStartRectMetalFraction( const BattleStartRect& sr );
+	wxRect GetStartRect( int index ) const;
+	wxRect GetStartRect( const BattleStartRect& sr ) const;
+	void Accumulate( wxImage& image ) const;
+	double GetStartRectMetalFraction( int index ) const;
+	double GetStartRectMetalFraction( const BattleStartRect& sr ) const;
 
-    void DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font );
+	void DrawOutlinedText( wxDC& dc, const wxString& str, int x, int y, const wxColour& outline, const wxColour& font ) const;
 
     /** Get the relative (range: [0.0,1.0]) x- and y- coordinates of
      * the user's start position.
@@ -124,20 +124,20 @@ class MapCtrl : public wxPanel
     wxPoint GetTranslatedScaledUserMapPosition(const User& user) const;
 
     wxRect GetUserRect( const User& user, bool selected );
-    RectangleArea GetUserRectArea( const wxRect& userrect, int x, int y );
+	RectangleArea GetUserRectArea( const wxRect& userrect, int x, int y ) const;
 
-    wxRect GetUserSideRect() { return wxRect( 37, 20, 16, 16 ); }
-    wxRect GetUserHandicapRect() { return wxRect( 40, 55, 16, 16 ); }
-    wxRect GetUserCloseRect() { return wxRect( 59, 4, 14, 14 ); }
-    wxRect GetUserUpAllyButtonRect() { return wxRect( 61, 35, 12, 8 ); }
-    wxRect GetUserDownAllyButtonRect() { return wxRect( 61, 43, 12, 8 ); }
-    wxRect GetUserUpHandicapButtonRect() { return wxRect( 61, 52, 12, 8 ); }
-    wxRect GetUserDownHandicapButtonRect() { return wxRect( 61, 60, 12, 8 ); }
+	wxRect GetUserSideRect() const { return wxRect( 37, 20, 16, 16 ); }
+	wxRect GetUserHandicapRect()const  { return wxRect( 40, 55, 16, 16 ); }
+	wxRect GetUserCloseRect() const { return wxRect( 59, 4, 14, 14 ); }
+	wxRect GetUserUpAllyButtonRect() const { return wxRect( 61, 35, 12, 8 ); }
+	wxRect GetUserDownAllyButtonRect() const { return wxRect( 61, 43, 12, 8 ); }
+	wxRect GetUserUpHandicapButtonRect() const { return wxRect( 61, 52, 12, 8 ); }
+	wxRect GetUserDownHandicapButtonRect() const { return wxRect( 61, 60, 12, 8 ); }
 
-    wxRect GetRefreshRect();
-    wxRect GetDownloadRect();
+	wxRect GetRefreshRect() const;
+	wxRect GetDownloadRect() const;
 
-    unsigned int GetNewRectIndex();
+	unsigned int GetNewRectIndex() const;
 
     void RequireImages();
 
@@ -210,12 +210,12 @@ class MapCtrl : public wxPanel
       IM_Minimap,  // must be first one
       IM_Metalmap, // entries must be consecutively numbered (without gaps)
       IM_Heightmap,
-      IM_Count,    // must be last one
+	  IM_Count     // must be last one
     };
 
     InfoMap m_current_infomap;
 
-  DECLARE_EVENT_TABLE();
+  DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAPCTRL_H
