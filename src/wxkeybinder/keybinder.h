@@ -642,7 +642,7 @@ protected:
 
     //! The array of wxCmd-derived classes.
     wxCmdArray m_arrCmd;
-	unsigned m_nNextOderIndex;
+	size_t m_nNextOderIndex;
     //! The array of windows attached to this keybinder.
     //! These info are very important when deleting the keybinder
     //! (which can automatically #Detach() himself).
