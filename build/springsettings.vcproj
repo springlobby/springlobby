@@ -530,6 +530,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\customizations.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\customizations.h"
+				>
+			</File>
+			<File
 				RelativePath="E:\Users\devkid\Projects\Other\springlobby\src\utils\debug.cpp"
 				>
 			</File>
@@ -619,6 +627,14 @@
 			</File>
 			<File
 				RelativePath="E:\Users\devkid\Projects\Other\springlobby\src\settings++\settings.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Helper\slconfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Helper\slconfig.h"
 				>
 			</File>
 			<File

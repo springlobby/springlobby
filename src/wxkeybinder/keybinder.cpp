@@ -2257,8 +2257,7 @@ void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
     // actually add the new shortcut key
     // (if there are already the max. number of shortcuts for
     // this command, the shortcut won't be added).
-	const wxString& keystr = m_pKeyField->GetValue();
-	sel->AddShortcut(keystr, 1 + this->GetSelProfile()->GetHighestOrderIndex(keystr));
+	m_kBinder.AddShortcut( sel->GetId(), m_pKeyField->GetValue() );
 
     // now the user has modified the currently selected profile...
     m_bProfileHasBeenModified = TRUE;
@@ -2303,7 +2302,7 @@ void wxKeyConfigPanel::OnRemoveKey(wxCommandEvent &)
 	m_bProfileModifiedOrChanged = TRUE;
 
     // remove the selected shortcut
-    GetSelCmd()->RemoveShortcut(m_pBindings->GetSelection());
+	m_kBinder.RemoveShortcut( GetSelCmd()->GetId(), m_pBindings->GetStringSelection() );
 
     // and update the list of the key bindings
     FillInBindings();
@@ -2328,7 +2327,7 @@ void wxKeyConfigPanel::OnRemoveAllKey(wxCommandEvent &)
 	m_bProfileModifiedOrChanged = TRUE;
 
     // remove the selected shortcut
-    GetSelCmd()->RemoveAllShortcuts();
+	m_kBinder.RemoveAllShortcuts( GetSelCmd()->GetId() );
 
     // and update the list of the key bindings
     FillInBindings();

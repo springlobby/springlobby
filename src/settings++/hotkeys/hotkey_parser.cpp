@@ -158,25 +158,17 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 
 	//check all default bindings if they still exist in current profile
 	//do unbind if not
-	const key_binding::key_binding_k2c unbinds = (SpringDefaultProfile::getBindings() - springbindings).getK2C();
-	for( key_binding::key_binding_k2c::const_iterator iter = unbinds.begin(); iter != unbinds.end(); ++iter )
+	const key_binding::key_binding_map unbinds = (SpringDefaultProfile::getBindings() - springbindings).getBinds();
+	for( key_binding::key_binding_map::const_iterator iter = unbinds.begin(); iter != unbinds.end(); ++iter )
 	{
-		const command_set::command_list& cmdList = iter->second.getCommands();
-		for( command_set::command_list::const_iterator iiter = cmdList.begin(); iiter != cmdList.end(); ++iiter )
-		{
-			newFile.AddLine( wxT("unbind\t\t") + iter->first + wxT("\t") + iiter->command );
-		}
+		newFile.AddLine( wxT("unbind\t\t") + iter->second.first + wxT('\t') + iter->second.second );
 	}
 
-	//add binds, should be ordered by orderIdx
-	const key_binding::key_binding_k2c dobinds = (springbindings - SpringDefaultProfile::getBindings()).getK2C();
-	for( key_binding::key_binding_k2c::const_iterator iter = dobinds.begin(); iter != dobinds.end(); ++iter )
+	//add binds, should be ordered
+	const key_binding::key_binding_map dobinds = (springbindings - SpringDefaultProfile::getBindings()).getBinds();
+	for( key_binding::key_binding_map::const_iterator iter = dobinds.begin(); iter != dobinds.end(); ++iter )
 	{
-		const command_set::command_list& cmdList = iter->second.getCommands();
-		for( command_set::command_list::const_iterator iiter = cmdList.begin(); iiter != cmdList.end(); ++iiter )
-		{
-			newFile.AddLine( wxT("bind\t\t") + iter->first + wxT("\t") + iiter->command );
-		}
+		newFile.AddLine( wxT("bind\t\t") + iter->second.first + wxT("\t") + iter->second.second );
 	}
 	newFile.Write();
 

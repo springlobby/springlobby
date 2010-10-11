@@ -36,6 +36,7 @@
     #define wxID_INVALID                -1
 #endif
 
+#define wxACCEL_ANY   0x0008   // hold any key down
 // define the following to true to enable lots of debug messages
 #define wxKEYBINDER_DEBUG_MSG            0
 #if wxKEYBINDER_DEBUG_MSG
@@ -115,7 +116,7 @@ public:
 
     wxKeyBind() {
         m_nKeyCode = m_nFlags = -1;
-		m_nOrderIndex = 1;
+		m_nOrderIndex = 0;
     }
 
     wxKeyBind(int flags, int keycode, size_t orderIndex = 0) {
@@ -440,7 +441,10 @@ public:
     // Getters
     // ---------------------
 
-    wxKeyBind *GetShortcut(int n)                { return &m_keyShortcut[n]; }
+    wxKeyBind *GetShortcut(int n) { 
+		return &m_keyShortcut[n]; 
+	}
+
     const wxKeyBind *GetShortcut(int n) const    { return &m_keyShortcut[n]; }
 	
 	//gets the EXACT shortcut
@@ -638,7 +642,7 @@ protected:
 
     //! The array of wxCmd-derived classes.
     wxCmdArray m_arrCmd;
-
+	unsigned m_nNextOderIndex;
     //! The array of windows attached to this keybinder.
     //! These info are very important when deleting the keybinder
     //! (which can automatically #Detach() himself).
@@ -692,7 +696,7 @@ protected:
 
 public:
 
-    wxKeyBinder() {}
+	wxKeyBinder() : m_nNextOderIndex(1) {}
     wxKeyBinder(const wxKeyBinder &tocopy) { DeepCopy(tocopy); }
     virtual ~wxKeyBinder() { DetachAll(); }
 
@@ -706,7 +710,7 @@ public:     // miscellaneous
     //! Deep copies the given object.
     void DeepCopy(const wxKeyBinder &p) {
         m_arrCmd.DeepCopy(p.m_arrCmd);
-
+		m_nNextOderIndex = p.m_nNextOderIndex;
         // NEVER COPY THE ARRAY OF THE ATTACHED WINDOWs:
         // WE ARE NOT ATTACHED TO THE WINDOWS OF THE GIVEN BINDER !!
         // m_arrAttachedWnd = p->m_arrAttachedWnd;
@@ -720,6 +724,7 @@ public:     // miscellaneous
     //! Resets everything associated with this class.
     void Reset() {
         m_arrCmd.Clear();
+		m_nNextOderIndex = 1;
     }
 
     //! Updates all the commands contained.
@@ -783,6 +788,14 @@ public:     // miscellaneous
         wxCmd *p = GetCmd(id);
 		if (p) {
 			p->AddShortcut(key, orderIndex);
+			m_nNextOderIndex = std::max( m_nNextOderIndex, orderIndex + 1 );
+		}
+    }
+
+	void AddShortcut(int id, const wxString &key) {
+        wxCmd *p = GetCmd(id);
+		if (p) {
+			p->AddShortcut(key, m_nNextOderIndex++);
 		}
     }
 
@@ -790,22 +803,48 @@ public:     // miscellaneous
         wxCmd *p = GetCmd(id);
         if (p) {
 			p->AddShortcut(key);
+			m_nNextOderIndex = std::max( m_nNextOderIndex, key.GetOrderIndex() + 1 );
 		}
+    }
+
+	void RemoveAllShortcuts(int id) {
+		wxCmd *p = GetCmd(id);
+        if (!p) {
+			return;
+		}
+
+		while( p->GetShortcutCount() > 0 )
+		{
+			this->RemoveShortcut( id, p->GetShortcut( 0 )->GetStr() );
+		}
+	}
+
+	void RemoveShortcut(int id, const wxString &key) {
+        wxCmd *p = GetCmd(id);
+        if (!p) {
+			return;
+		}
+		const size_t remOrderIdx = p->GetShortcut(key)->GetOrderIndex();
+		p->RemoveShortcut( key );
+
+		//decrease all order indices after the removed one
+		for (int i=0; i < (int)m_arrCmd.GetCount(); ++i)
+		{
+			for( int j=0; j < m_arrCmd.Item(i)->GetShortcutCount(); ++j )
+			{
+				const size_t curOrderIdx = m_arrCmd.Item(i)->GetShortcut(j)->GetOrderIndex();
+				if ( curOrderIdx >= remOrderIdx )
+				{
+					m_arrCmd.Item(i)->GetShortcut(j)->SetOrderIndex( curOrderIdx - 1 );
+				}
+			}
+		}
+
+		--m_nNextOderIndex;
     }
 
     // Getters
     // -------------------
-	size_t GetHighestOrderIndex(const wxString& keystring) const {
-		size_t res = 0;
-		CmdSet cmds = GetCmdBindsTo(keystring);
-		for( CmdSet::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
-		{
-			res = std::max( res, (*iter)->GetShortcut(keystring)->GetOrderIndex() );
-		}
-
-		return res;
-	}
-
     int GetCmdCount() const {
         return m_arrCmd.GetCount();
     }

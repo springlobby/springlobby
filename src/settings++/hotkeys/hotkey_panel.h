@@ -38,7 +38,6 @@ public:
 
 	bool HasProfileBeenModifiedOrSelected() const;
 	void ResetProfileBeenModifiedOrSelected();
-	static unsigned getShortcutCountFromBinding( const key_binding& bindings );
 	//static bool isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey );
 
 private:

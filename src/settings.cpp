@@ -2508,12 +2508,12 @@ void Settings::SetBroadcastEverywhere(bool value)
 // oderidx == -1 means unbind
 void Settings::SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx )
 {
-	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/") + key + _T("/") + wxString::Format(wxT("%i"),orderIdx), command );
+	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/") + wxString::Format(wxT("%i"),orderIdx) + _T("/") + key, command );
 }
 
 wxString Settings::GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key )
 {
-	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/") + key + _T("/") + orderIdx, _T("") );
+	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/") + orderIdx + _T("/") + key, _T("") );
 }
 
 wxArrayString Settings::GetHotkeyProfiles()
@@ -2521,14 +2521,14 @@ wxArrayString Settings::GetHotkeyProfiles()
 	return GetGroupList( _T( "/HotkeyProfiles/" ) );
 }
 
-wxArrayString Settings::GetHotkeyProfileKeys( const wxString& profileName )
+wxArrayString Settings::GetHotkeyProfileOrderIndices( const wxString& profileName )
 {
 	return GetGroupList( _T( "/HotkeyProfiles/" ) + profileName + _T("/") );
 }
 
-wxArrayString Settings::GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& key )
+wxArrayString Settings::GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& orderIdx )
 {
-	return GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/") + key + _T("/") );
+	return GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/") + orderIdx + _T("/") );
 }
 
 void Settings::DeleteHotkeyProfiles()

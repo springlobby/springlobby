@@ -741,8 +741,8 @@ class Settings : public SL::NonCopyable
 	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx );
 	wxString GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key );
 	wxArrayString GetHotkeyProfiles();
-	wxArrayString GetHotkeyProfileKeys( const wxString& profileName );
-	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& command );
+	wxArrayString GetHotkeyProfileOrderIndices( const wxString& profileName );
+	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& orderIdx );
 	void DeleteHotkeyProfiles();
 	wxString GetUikeys( const wxString& index );
 

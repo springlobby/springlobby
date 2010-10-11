@@ -26,7 +26,7 @@
 #include "HotkeyException.h"
 
 hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
-													: wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
+													try : wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
 													m_uikeys_manager(sett().GetCurrentUsedUikeys() )
 {
 	try
@@ -67,10 +67,15 @@ hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &tit
 	}
 	catch( const HotkeyException& ex )
 	{
-		customMessageBox(SS_MAIN_ICON, TowxString(ex.what()), _("Hotkey Error"), wxOK | wxICON_HAND );
+		customMessageBox(SS_MAIN_ICON, ex.getMessage(), _("Hotkey Error"), wxOK | wxICON_HAND );
+		throw;
 	}
 }
-
+catch( const HotkeyException& ex )
+{
+	customMessageBox(SS_MAIN_ICON, ex.getMessage(), _("Hotkey Error"), wxOK | wxICON_HAND );
+	throw;
+}
 
 hotkey_panel::~hotkey_panel(void)
 {
@@ -109,7 +114,7 @@ void hotkey_panel::OnAddCommand( const wxString& cmd )
 	}
 	catch( const HotkeyException& ex )
 	{
-		customMessageBox(SS_MAIN_ICON, TowxString(ex.what()), _("Add Command Error"), wxOK | wxICON_HAND );
+		customMessageBox(SS_MAIN_ICON, ex.getMessage(), _("Add Command Error"), wxOK | wxICON_HAND );
 	}
 
 	//auto-select new command (even try after exception)
@@ -182,16 +187,12 @@ void hotkey_panel::SaveSettings()
 			{
 				const key_binding removedBinds = defaultBinds - profileBinds;
 				
-				const key_binding::key_binding_k2c& delCmds = removedBinds.getK2C();
+				const key_binding::key_binding_map& delCmds = removedBinds.getBinds();
 				int orderIdx = -1;
-				for( key_binding::key_binding_k2c::const_iterator iter = delCmds.begin(); iter != delCmds.end(); ++iter )
+				for( key_binding::key_binding_map::const_iterator iter = delCmds.begin(); iter != delCmds.end(); ++iter )
 				{
 					//check now if this default key binding has been deleted from this profile
-					const command_set::command_list& cmds = iter->second.getCommands();
-					for( command_set::command_list::const_iterator iiter = cmds.begin(); iiter != cmds.end(); ++iiter )
-					{
-						sett().SetHotkey( profile.GetName(), iiter->command, iter->first, orderIdx-- );
-					}
+					sett().SetHotkey( profile.GetName(), iter->second.second, iter->second.first, orderIdx-- );
 				}
 			}
 
@@ -199,16 +200,11 @@ void hotkey_panel::SaveSettings()
 			{
 				const key_binding addedBinds = profileBinds - defaultBinds;
 				
-				const key_binding::key_binding_k2c& addCmds = addedBinds.getK2C();
-				for( key_binding::key_binding_k2c::const_iterator iter = addCmds.begin(); iter != addCmds.end(); ++ iter )
+				const key_binding::key_binding_map& addCmds = addedBinds.getBinds();
+				for( key_binding::key_binding_map::const_iterator iter = addCmds.begin(); iter != addCmds.end(); ++ iter )
 				{
-					const command_set::command_list& cmds = iter->second.getCommands();
-					unsigned orderIdx = 1;
-					for( command_set::command_list::const_iterator iiter = cmds.begin(); iiter != cmds.end(); ++iiter )
-					{
-						//only write non-default bindings to settings
-						sett().SetHotkey( profile.GetName(), iiter->command, iter->first, orderIdx++ );
-					}
+					//only write non-default bindings to settings
+					sett().SetHotkey( profile.GetName(), iter->second.second, iter->second.first, iter->first );
 				}
 			}
 		}
@@ -225,7 +221,7 @@ void hotkey_panel::SaveSettings()
 	}
 	catch( const HotkeyException& ex )
 	{
-		customMessageBox(SS_MAIN_ICON, TowxString(ex.what()), _("Hotkey SaveSettings error"), wxOK | wxICON_HAND );
+		customMessageBox(SS_MAIN_ICON, ex.getMessage(), _("Hotkey SaveSettings error"), wxOK | wxICON_HAND );
 	}
 }
 
@@ -266,38 +262,13 @@ void hotkey_panel::addCommandToAllPanelProfiles( const CommandList::Command& cmd
 
 void hotkey_panel::putKeybindingsToProfile( wxKeyProfile& profile, const key_binding& bindings )
 {
-	const key_binding::key_binding_k2c& keys = bindings.getK2C();
-	for( key_binding::key_binding_k2c::const_iterator iter = keys.begin(); iter != keys.end(); ++iter )
+	const key_binding::key_binding_map& keys = bindings.getBinds();
+	for( key_binding::key_binding_map::const_iterator iter = keys.begin(); iter != keys.end(); ++iter )
 	{
-		const command_set::command_list& cmdList = iter->second.getCommands();
-		for( command_set::command_list::const_iterator iiter = cmdList.begin(); iiter != cmdList.end(); ++iiter )
-		{
-			wxCmd& cmd = *(profile.GetCmd( CommandList::getCommandByName(iiter->command).m_id ));		
-
-			cmd.AddShortcut( KeynameConverter::spring2wxKeybinder( iter->first ), iiter->orderIdx );
-		}
+		profile.AddShortcut( CommandList::getCommandByName(iter->second.second).m_id,
+								KeynameConverter::spring2wxKeybinder( iter->second.first ),
+								iter->first );
 	}
-/*				
-	for( key_binding::const_iterator iter = bindings.begin(); iter != bindings.end(); ++iter )
-	{
-		wxCmd& cmd = *(profile.GetCmd( CommandList::getCommandByName(iter->first).m_id ));
-
-		const key_set& keys = iter->second;
-		for( key_set::const_iterator iiter = keys.begin(); iiter != keys.end(); iiter++ )
-		{
-			cmd.AddShortcut( KeynameConverter::spring2wxKeybinder( (*iiter) ) );
-		}
-	}*/
-}
-
-unsigned hotkey_panel::getShortcutCountFromBinding( const key_binding& bindings )
-{
-	unsigned count = 0;
-	for ( key_binding::key_binding_k2c::const_iterator iter = bindings.getK2C().begin(); iter != bindings.getK2C().end(); ++iter )
-	{
-		count += iter->second.getCommands().size();
-	}
-	return count;
 }
 
 wxString hotkey_panel::getNextFreeProfileName()
@@ -378,28 +349,30 @@ key_binding_collection hotkey_panel::getProfilesFromSettings( )
 		coll[profName] = SpringDefaultProfile::getBindings();
 
 		//add keybindings
-		wxArrayString keys = sett().GetHotkeyProfileKeys( profName );
-		for( size_t k=0; k < keys.GetCount(); ++k )
+		wxArrayString orderIdxs = sett().GetHotkeyProfileOrderIndices( profName );
+		for( size_t k=0; k < orderIdxs.GetCount(); ++k )
 		{
-			wxString key = keys.Item(k);
-			wxArrayString orderIdxs = sett().GetHotkeyProfileCommandKeys( profName, key );
-			for( size_t j=0; j < orderIdxs.GetCount(); ++j )
+			wxString idx = orderIdxs.Item(k);
+			wxArrayString keys = sett().GetHotkeyProfileCommandKeys( profName, idx );
+			for( size_t j=0; j < keys.GetCount(); ++j )
 			{
-				const wxString& cmd = sett().GetHotkey( profName, orderIdxs.Item(j), key );
-				long orderIdx = 0;
-				if ( orderIdxs.Item(j).ToLong( &orderIdx ) == false )
-				{
-					throw HotkeyException( _("Error parsing springsettings hotkey profile. Invalid order index: ") + orderIdxs.Item(j) );
-				}
+				const wxString& cmd = sett().GetHotkey( profName, idx, keys.Item(j) );
 
-				const wxString& springKey = KeynameConverter::spring2wxKeybinder( key, true );
-				if ( orderIdx < 0 )
+				const wxString& springKey = KeynameConverter::spring2wxKeybinder( keys.Item(j), true );
+				
+				long lIdx = 0;
+				if ( idx.ToLong( &lIdx ) == false )
+				{
+					throw HotkeyException( _("Error parsing springsettings hotkey profile. Invalid order index: ") + idx );
+				}
+				
+				if ( lIdx < 0 )
 				{
 					coll[profName].unbind( cmd, springKey );
 				}
 				else
 				{
-					coll[profName].bind( cmd, springKey );
+					coll[profName].bind( cmd, springKey, lIdx );
 				}
 			}
 		}
@@ -410,7 +383,7 @@ key_binding_collection hotkey_panel::getProfilesFromSettings( )
 
 void hotkey_panel::UpdateControls(int /*unused*/)
 {
-	this->updateTreeView();
+ 	this->updateTreeView();
 
 	//Fetch the profiles
 	this->m_pKeyConfigPanel->RemoveAllProfiles();
@@ -431,34 +404,14 @@ void hotkey_panel::UpdateControls(int /*unused*/)
 			wxKeyProfile profile = buildNewProfile(profName, wxT("User hotkey profile"),false);
 
 			//add keybindings
-			const key_binding::key_binding_k2c& cmds = piter->second.getK2C();
-			for( key_binding::key_binding_k2c::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
+			const key_binding::key_binding_map& cmds = piter->second.getBinds();
+			for( key_binding::key_binding_map::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
 			{
-				const command_set::command_list& cmds = iter->second.getCommands();
-				for( command_set::command_list::const_iterator iiter = cmds.begin(); iiter != cmds.end(); ++iiter )
-				{
-					wxCmd* const pCmd = profile.GetCmd( CommandList::getCommandByName(iiter->command).m_id );
-				
-					if ( pCmd == NULL )
-					{
-						throw HotkeyException(_("Command not found while building tree view!"));
-					}
+				profile.AddShortcut( CommandList::getCommandByName(iter->second.second).m_id,
+									  KeynameConverter::spring2wxKeybinder( iter->second.first ), 
+									  iter->first );
+			}
 
-			//		wxCmd* pCmd = profile.GetCmd( CommandList::getCommandByName( iiter->command ).m_id );
-					pCmd->AddShortcut( KeynameConverter::spring2wxKeybinder( iter->first ), iiter->orderIdx );
-				}
-			}
-/*
-			for( key_binding::const_iterator citer = piter->second.begin(); citer != piter->second.end(); ++citer )
-			{
-				const wxString cmd = citer->first;
-				for ( key_set::const_iterator kiter = citer->second.begin(); kiter != citer->second.end(); ++kiter )
-				{
-					wxCmd* pCmd = profile.GetCmd( CommandList::getCommandByName(cmd).m_id );
-					pCmd->AddShortcut( KeynameConverter::spring2wxKeybinder( (*kiter) ) );
-				}
-			}
-*/
 			this->m_pKeyConfigPanel->AddProfile( profile );
 
 			getBindingsFromProfile( *this->m_pKeyConfigPanel->GetProfile(1) );
@@ -490,10 +443,10 @@ void hotkey_panel::updateTreeView()
 			const wxString profName = piter->first;
 
 			//add keybindings
-			const key_binding::key_binding_c2k& cmds = piter->second.getC2K();
-			for( key_binding::key_binding_c2k::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
+			const key_binding::key_binding_map& cmds = piter->second.getBinds();
+			for( key_binding::key_binding_map::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
 			{
-				const CommandList::Command& cmd = CommandList::getCommandByName( iter->first );
+				const CommandList::Command& cmd = CommandList::getCommandByName( iter->second.second );
 				ctrlMap[ cmd.m_category ][ cmd.m_command ] = cmd.m_id;
 			}
 			/*for( key_binding::const_iterator citer = piter->second.begin(); citer != piter->second.end(); ++citer )
@@ -505,12 +458,12 @@ void hotkey_panel::updateTreeView()
 	}
 
 	{	//3. from uikeys.txt
-		const key_binding::key_binding_c2k& uikeys = this->m_uikeys_manager.getBindings().getC2K();
+		const key_binding::key_binding_map& uikeys = this->m_uikeys_manager.getBindings().getBinds();
 
 		//key_binding_collection profiles = hotkey_panel::getProfilesFromSettings();
-		for( key_binding::key_binding_c2k::const_iterator iter = uikeys.begin(); iter != uikeys.end(); ++iter )
+		for( key_binding::key_binding_map::const_iterator iter = uikeys.begin(); iter != uikeys.end(); ++iter )
 		{
-			const CommandList::Command& cmd = CommandList::getCommandByName( iter->first );
+			const CommandList::Command& cmd = CommandList::getCommandByName( iter->second.second );
 			ctrlMap[ cmd.m_category ][ cmd.m_command ] = cmd.m_id;
 		}
 	}
