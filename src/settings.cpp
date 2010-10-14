@@ -2505,15 +2505,30 @@ void Settings::SetBroadcastEverywhere(bool value)
 }
 
 //Hotkeys stuff (for springsettings)
+void Settings::SetHotkeyKeySym( const wxString& profileName, const wxString& symName, const wxString& keyStr )
+{
+	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/KeySyms/") + symName, keyStr);
+}
+
+wxString Settings::GetHotkeyKeySym( const wxString& profileName, const wxString& symName )
+{
+	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/KeySyms/") + symName, _T("") );
+}
+
+wxArrayString Settings::GetHotkeyKeySymNames( const wxString& profileName )
+{
+	return GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/KeySyms/") );
+}
+
 // oderidx == -1 means unbind
 void Settings::SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx )
 {
-	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/") + wxString::Format(wxT("%i"),orderIdx) + _T("/") + key, command );
+	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/Bindings/") + wxString::Format(wxT("%i"),orderIdx) + _T("/") + key, command );
 }
 
 wxString Settings::GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key )
 {
-	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/") + orderIdx + _T("/") + key, _T("") );
+	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/Bindings/") + orderIdx + _T("/") + key, _T("") );
 }
 
 wxArrayString Settings::GetHotkeyProfiles()
@@ -2523,12 +2538,12 @@ wxArrayString Settings::GetHotkeyProfiles()
 
 wxArrayString Settings::GetHotkeyProfileOrderIndices( const wxString& profileName )
 {
-	return GetGroupList( _T( "/HotkeyProfiles/" ) + profileName + _T("/") );
+	return GetGroupList( _T( "/HotkeyProfiles/" ) + profileName + _T("/Bindings/") );
 }
 
 wxArrayString Settings::GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& orderIdx )
 {
-	return GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/") + orderIdx + _T("/") );
+	return GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/Bindings/") + orderIdx + _T("/") );
 }
 
 void Settings::DeleteHotkeyProfiles()

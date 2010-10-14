@@ -64,6 +64,21 @@ wxString KeynameConverter::discardModifier( const wxString& keystring )
 	return result;
 }
 
+wxString KeynameConverter::convertHexValueToKey( const wxString& hexStr )
+{
+	wxString res = hexStr;
+	if ( hexStr.StartsWith( wxT("0x") ) )
+	{
+		long value = 0;
+		if ( hexStr.ToLong( &value, 16 ) )
+		{
+			res = wxChar( value );
+			res.MakeLower();
+		}
+	}
+	return res;
+}
+
 wxString KeynameConverter::normalizeSpringKey( const wxString& springKey )
 {
 	//get modifiers
@@ -100,15 +115,9 @@ wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool r
 	{
 		kbKey = pCurKeyMap->find( key )->second;
 	}
-	else if ( key.StartsWith( wxT("0x") ) && key.size() == 4 )
+	else if ( key.StartsWith( wxT("0x") ) )
 	{
-		//raw key code - e.g. 0xa4
-		const wxString tmp = key.substr( 2, 2 );
-		std::stringstream str;
-		str << std::hex << tmp.ToAscii();
-		unsigned int c = 0x00;
-		str >> c;
-		kbKey << c;
+		kbKey = key;
 	}
 	else
 	{
@@ -129,7 +138,6 @@ wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList
 {
 	wxString modString;
 
-	bool modFound = false;
 	if ( mod.find( ANY ) != mod.end() )
 	{
 		modString += wxT("Any+");

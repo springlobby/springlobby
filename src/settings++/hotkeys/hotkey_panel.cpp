@@ -193,6 +193,9 @@ key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
 		}
 	}
 
+	//add keysyms
+	binding.setKeySyms( profile.GetKeySyms() );
+
 	return binding;
 }
 /*
@@ -248,6 +251,14 @@ void hotkey_panel::SaveSettings()
 				{
 					//only write non-default bindings to settings
 					sett().SetHotkey( profile.GetName(), iter->second, iter->first, orderIdx++ );
+				}
+			}
+
+			//add key symbols
+			{
+				for( key_sym_map::const_iterator iter = profileBinds.getKeySyms().begin(); iter != profileBinds.getKeySyms().end(); ++iter )
+				{
+					sett().SetHotkeyKeySym( profile.GetName(), iter->first, iter->second );
 				}
 			}
 		}
@@ -311,6 +322,8 @@ void hotkey_panel::putKeybindingsToProfile( wxKeyProfile& profile, const key_bin
 		profile.AddShortcut( CommandList::getCommandByName(iter->second).m_id,
 								KeynameConverter::spring2wxKeybinder( iter->first ) );
 	}
+
+	profile.SetKeySyms( bindings.getKeySyms() );
 }
 
 wxString hotkey_panel::getNextFreeProfileName()
@@ -368,7 +381,6 @@ void hotkey_panel::selectProfileFromUikeys()
 		this->putKeybindingsToProfile( profile, curBinding );	
 		this->m_pKeyConfigPanel->AddProfile( profile, true );
 
-
 		customMessageBox(SS_MAIN_ICON, _("Your current hotkey configuration does not match any known profile.\n A new profile with the name '" + profName + _("' has been created.")), 
 			_("New hotkey profile found"), wxOK );
 
@@ -378,7 +390,7 @@ void hotkey_panel::selectProfileFromUikeys()
 	this->m_pKeyConfigPanel->SetSelProfile( foundIdx );
 }
 
-key_binding_collection hotkey_panel::getProfilesFromSettings( )
+key_binding_collection hotkey_panel::getProfilesFromSettings()
 {
 	key_binding_collection coll;
 
@@ -402,7 +414,6 @@ key_binding_collection hotkey_panel::getProfilesFromSettings( )
 
 				const wxString& springKey = KeynameConverter::spring2wxKeybinder( keys.Item(j), true );
 				
-				//TODO: command have to be bind in final order
 				long lIdx = 0;
 				if ( idx.ToLong( &lIdx ) == false )
 				{
@@ -418,6 +429,14 @@ key_binding_collection hotkey_panel::getProfilesFromSettings( )
 					coll[profName].bind( cmd, springKey );
 				}
 			}
+		}
+
+		//add keySyms
+		wxArrayString keySyms = sett().GetHotkeyKeySymNames( profName );
+		for( size_t k=0; k < keySyms.GetCount(); ++k )
+		{
+			const wxString& value = sett().GetHotkeyKeySym( profName, keySyms.Item(k) );
+			coll[profName].addKeySym( keySyms.Item(k), value );
 		}
 	}
 
@@ -444,15 +463,9 @@ void hotkey_panel::UpdateControls(int /*unused*/)
 		{
 			wxString profName = piter->first;
 
+			//create profile and add bindings
 			wxKeyProfile profile = buildNewProfile(profName, wxT("User hotkey profile"),false);
-
-			//add keybindings
-			const key_commands_sorted& cmds = piter->second.getBinds();
-			for( key_commands_sorted::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
-			{
-				profile.AddShortcut( CommandList::getCommandByName(iter->second).m_id,
-									  KeynameConverter::spring2wxKeybinder( iter->first ) );
-			}
+			this->putKeybindingsToProfile( profile, piter->second );
 
 			this->m_pKeyConfigPanel->AddProfile( profile );
 
@@ -491,11 +504,6 @@ void hotkey_panel::updateTreeView()
 				const CommandList::Command& cmd = CommandList::getCommandByName( iter->second );
 				ctrlMap[ cmd.m_category ][ cmd.m_command ] = cmd.m_id;
 			}
-			/*for( key_binding::const_iterator citer = piter->second.begin(); citer != piter->second.end(); ++citer )
-			{
-				const CommandList::Command& cmd = CommandList::getCommandByName( citer->first );
-				ctrlMap[ cmd.m_category ][ cmd.m_command ] = cmd.m_id;
-			}*/
 		}
 	}
 

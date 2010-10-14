@@ -19,6 +19,8 @@ public:
 	static wxString spring2wxKeybinder( const wxString& keystring, bool reverse = false );
 	static wxString normalizeSpringKey( const wxString& springKey );
 
+	static wxString convertHexValueToKey( const wxString& hexStr );
+
 private:
 	enum Modifier
 	{

@@ -369,6 +369,18 @@ wxString wxKeyBind::KeyCodeToString(int keyCode)
 
 int wxKeyBind::StringToKeyCode(const wxString &keyName)
 {
+	if ( keyName.StartsWith(wxT("0x")) )
+	{
+		long value = 0;
+		if ( !keyName.ToLong( &value, 16 ) )
+		{
+			//error
+			return (int)keyName.GetChar(0);
+		}
+
+		return static_cast<int>( value );
+	}
+
     // a function key ?
     if (keyName.StartsWith(wxT("F")) && keyName.Len() > 1) {
 

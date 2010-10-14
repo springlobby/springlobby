@@ -651,8 +651,10 @@ protected:
 
     //! The array of wxCmd-derived classes.
     wxCmdArray m_arrCmd;
+	key_sym_map	m_keySyms;
 	unsigned m_nNextOderIndex;	
-	unsigned m_nNextOderIndexAny;	
+	unsigned m_nNextOderIndexAny;
+
 
     //! The array of windows attached to this keybinder.
     //! These info are very important when deleting the keybinder
@@ -724,6 +726,7 @@ public:     // miscellaneous
         m_arrCmd.DeepCopy(p.m_arrCmd);
 		m_nNextOderIndex = p.m_nNextOderIndex;
 		m_nNextOderIndexAny = p.m_nNextOderIndex;
+		m_keySyms = p.m_keySyms;
         // NEVER COPY THE ARRAY OF THE ATTACHED WINDOWs:
         // WE ARE NOT ATTACHED TO THE WINDOWS OF THE GIVEN BINDER !!
         // m_arrAttachedWnd = p->m_arrAttachedWnd;
@@ -737,6 +740,7 @@ public:     // miscellaneous
     //! Resets everything associated with this class.
     void Reset() {
         m_arrCmd.Clear();
+		m_keySyms.clear();
 		m_nNextOderIndex = 1;
 		m_nNextOderIndexAny = 1;
     }
@@ -793,6 +797,14 @@ public:     // miscellaneous
 
     // Add functions
     // -------------------
+
+	void SetKeySyms( const key_sym_map& keySyms ) {
+		this->m_keySyms = keySyms;
+	}
+
+	const key_sym_map& GetKeySyms() const {
+		return this->m_keySyms;
+	}
 
     void AddCmd(wxCmd *p) {
         m_arrCmd.Add(p);

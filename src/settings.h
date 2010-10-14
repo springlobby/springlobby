@@ -737,6 +737,10 @@ class Settings
     * @{
     */
 
+	void SetHotkeyKeySym( const wxString& profileName, const wxString& symName, const wxString& keyStr );
+	wxString GetHotkeyKeySym( const wxString& profileName, const wxString& symName );
+	wxArrayString GetHotkeyKeySymNames( const wxString& profileName );
+
 	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx );
 	wxString GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key );
 	wxArrayString GetHotkeyProfiles();

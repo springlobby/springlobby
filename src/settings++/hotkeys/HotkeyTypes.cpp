@@ -15,7 +15,8 @@ void key_binding::bind( const wxString& cmd, const wxString& keyString )
 		return;
 	}
 
-	const wxString normKey = KeynameConverter::normalizeSpringKey( keyString );	
+	wxString normKey = resolveKeySymName( KeynameConverter::normalizeSpringKey( keyString ) );
+
 	if ( normKey.StartsWith( wxT("Any+") ) )
 	{
 		m_groupsAny[ normKey ].push_back( cmd );
@@ -26,45 +27,52 @@ void key_binding::bind( const wxString& cmd, const wxString& keyString )
 		m_groups[ normKey ].push_back( cmd );
 		m_keyCmdSet.insert( std::make_pair( normKey, cmd ) );
 	}
-		
-/*
-	if ( this->m_binds.find(keyOrder) != this->m_binds.end() )
-	{
-		const size_t size = this->m_binds.size();
-		for( unsigned i = 1; i <= size; ++i )
-		{
-			if ( i >= keyOrder )
-			{
-				this->m_binds[i+1] = this->m_binds[i];
-			}
-		}
-		++this->m_nextOrderIdx;
-	}
-	else
-	{
-		this->m_nextOrderIdx = std::max( this->m_nextOrderIdx, keyOrder );
-	}
-
-	this->m_binds[keyOrder] = key_command(normKey, cmd);
-	this->m_c2k[cmd].insert( normKey );
-	this->m_isNormalized = false;*/
 }
 
-/*
-void key_binding::bind( const wxString& cmd, const wxString& keyString )
+void key_binding::addKeySym( const wxString& name, const wxString& keyString )
 {
-	this->bind( cmd, keyString, m_nextOrderIdx++ );
-}*/
-/*
-void key_binding::bind( const command_set& cmds, const wxString& keyString )
+	this->m_keySyms[name] = keyString;
+	this->m_keySymsRev[KeynameConverter::convertHexValueToKey( keyString )] = name;
+}
+
+const wxString key_binding::resolveKeySymName( const wxString& symName ) const
 {
-	const command_set::command_list& cmdList = cmds.getCommands();
-	for( command_set::command_list::const_iterator iter = cmdList.begin(); iter != cmdList.end(); ++iter )
+	key_sym_map::const_iterator iter = this->m_keySyms.find( symName );
+	if ( iter == this->m_keySyms.end() )
 	{
-		this->bind( iter->command, keyString, iter->orderIdx );
+		return symName;
+	}
+
+	wxString key = KeynameConverter::convertHexValueToKey( iter->second );
+	return key;
+}
+
+const wxString& key_binding::resolveKeySymKey( const wxString& key ) const
+{
+	key_sym_map::const_iterator iter = this->m_keySymsRev.find( key );
+	if ( iter == this->m_keySymsRev.end() )
+	{
+		return key;
+	}
+
+	return iter->second;
+}
+
+void key_binding::setKeySyms( const key_sym_map& keySyms )
+{
+	this->m_keySyms = keySyms;
+	
+	//update reverse map
+	for( key_sym_map::const_iterator iter = keySyms.begin(); iter != keySyms.end(); ++iter )
+	{
+		this->m_keySymsRev[KeynameConverter::convertHexValueToKey(iter->second)] = iter->first;
 	}
 }
-*/
+
+const key_sym_map& key_binding::getKeySyms() const
+{
+	return this->m_keySyms;
+}
 
 key_commands_sorted key_binding::getBinds() const
 {
@@ -128,7 +136,7 @@ void key_binding::unbind( const wxString& cmd, const wxString& keyString )
 
 bool key_binding::exists( const wxString& command, const wxString& key )
 {
-	const wxString& normKey = KeynameConverter::normalizeSpringKey( key );
+	const wxString& normKey = resolveKeySymName( KeynameConverter::normalizeSpringKey( key ) ); 
 
 	bool found = false;
 	if ( normKey.StartsWith( wxT("Any+") ) )
@@ -155,16 +163,19 @@ void key_binding::clear()
 	this->m_groupsAny.clear();
 	this->m_keyCmdSetAny.clear();
 	this->m_keyCmdSet.clear();
+	this->m_keySyms.clear();
 }
 
 bool key_binding::operator==(const key_binding& other) const
 {
-	return ( this->m_groups == other.m_groups ) && ( this->m_groupsAny == other.m_groupsAny );
+	return ( this->m_groups == other.m_groups ) && ( this->m_groupsAny == other.m_groupsAny ) &&
+		( this->m_keySyms == other.m_keySyms );
 }
 
 const key_binding key_binding::operator-(const key_binding& other) const
 {
 	key_binding resBind;
+	resBind.m_keySyms = this->m_keySyms;
 
 	//normal keys
 	for( KeyGroupMap::const_iterator iter = m_groups.begin(); iter != m_groups.end(); ++iter )
@@ -205,99 +216,4 @@ const key_binding key_binding::operator-(const key_binding& other) const
 
 	return resBind;
 }
-/*
-const key_binding::key_binding_map& key_binding::getBinds() const
-{
-	return this->m_binds;
-}*/
-/*
-void key_binding::normalize()
-{
-	if ( this->m_isNormalized )
-		return;
 
-
-
-	typedef std::vector<NormCommand>							NormCmdList;
-	typedef std::map<wxString, NormCmdList>						KeyMap;
-	typedef std::set<wxString>									KeyList;
-
-	KeyList anyKeys;
-	KeyMap normBinds;
-	for( unsigned i = 1; i <= this->m_binds.size(); ++i )
-	{
-		bool any = false;
-		wxString keyString = this->m_binds[i].first;
-		if ( keyString.StartsWith( wxT("Any+") ) )
-		{
-			anyKeys.insert( keyString );
-			keyString = keyString.AfterLast( wxT('+') );
-			any = true;
-		}
-		
-		normBinds[ keyString ].push_back( NormCommand( this->m_binds[i].second, any ) );
-	}
-
-	//backup binds and clear
-	key_binding_map bindBak = this->m_binds;
-	this->m_binds.clear();
-
-	//get all keys BEFORE the ANY-keys
-	for( KeyMap::const_iterator iter = normBinds.begin(); iter != normBinds.end(); ++iter )
-	{
-		const NormCmdList& normCmds = iter->second;
-
-		for( NormCmdList::const_iterator iter2 = normCmds.begin(); iter2 != normCmds.end(); ++iter2 )
-		{
-			if ( iter2->any )
-			{
-				break;
-			}
-
-			this->bind( iter2->command, iter->first );
-		}
-	}
-
-	//add the ANY-keys
-	for( KeyMap::const_iterator iter = normBinds.begin(); iter != normBinds.end(); ++iter )
-	{
-		const NormCmdList& normCmds = iter->second;
-
-		for( NormCmdList::const_iterator iter2 = normCmds.begin(); iter2 != normCmds.end(); ++iter2 )
-		{
-			if ( iter2->any )
-			{
-				this->bind( iter2->command, wxT("Any+") + iter->first );
-				break;
-			}
-		}
-	}
-
-	//get all keys AFTER the ANY-keys
-	for( KeyMap::const_iterator iter = normBinds.begin(); iter != normBinds.end(); ++iter )
-	{
-		const NormCmdList& normCmds = iter->second;
-
-		bool anyFound = false;
-		for( NormCmdList::const_iterator iter2 = normCmds.begin(); iter2 != normCmds.end(); ++iter2 )
-		{
-			if ( anyFound )
-			{
-				this->bind( iter2->command, iter->first );
-			}
-			else if ( iter2->any )
-			{
-				anyFound = true;
-			}
-		}
-	}
-
-	this->m_isNormalized = true;
-}
-*/
-/*
-const key_binding::key_binding_k2c& key_binding::getK2C() const
-{
-	return this->m_k2c;
-}
-*/

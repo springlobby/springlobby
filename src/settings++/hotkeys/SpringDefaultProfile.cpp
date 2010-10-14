@@ -10,17 +10,17 @@ void SpringDefaultProfile::initialize()
 		//is already initialized
 		return;
 	}
-/*
+
 	SpringDefaultProfile::addBinding( _T("LastMsgPos"), _T("Any+f3") );
 	SpringDefaultProfile::addBinding( _T("NoSound"), _T("Any+f6") );
 	SpringDefaultProfile::addBinding( _T("ShowMetalMap"), _T("Any+f4") );
 	SpringDefaultProfile::addBinding( _T("ShowPathMap"), _T("Any+f2") );
 	SpringDefaultProfile::addBinding( _T("aiselect"), _T("Ctrl+q") );
 	SpringDefaultProfile::addBinding( _T("areaattack"), _T("Alt+Shift+a") );
-	SpringDefaultProfile::addBinding( _T("areaattack"), _T("Alt+a") );*/
+	SpringDefaultProfile::addBinding( _T("areaattack"), _T("Alt+a") );
 	SpringDefaultProfile::addBinding( _T("attack"), _T("Shift+a") );
 	SpringDefaultProfile::addBinding( _T("attack"), _T("a") );
-/*	SpringDefaultProfile::addBinding( _T("buildfacing dec"), _T("Shift+]") );
+	SpringDefaultProfile::addBinding( _T("buildfacing dec"), _T("Shift+]") );
 	SpringDefaultProfile::addBinding( _T("buildfacing dec"), _T("]") );
 	SpringDefaultProfile::addBinding( _T("buildfacing inc"), _T("Shift+[") );
 	SpringDefaultProfile::addBinding( _T("buildfacing inc"), _T("[") );
@@ -167,7 +167,7 @@ void SpringDefaultProfile::initialize()
 	SpringDefaultProfile::addBinding( _T("viewta"), _T("Ctrl+f2") );
 	SpringDefaultProfile::addBinding( _T("viewtw"), _T("Ctrl+f3") );
 	SpringDefaultProfile::addBinding( _T("wait"), _T("w") );
-	SpringDefaultProfile::addBinding( _T("wait queued"), _T("Shift+w") );*/
+	SpringDefaultProfile::addBinding( _T("wait queued"), _T("Shift+w") );
 }
 
 void SpringDefaultProfile::addBinding( const wxString& command, const wxString& key )
