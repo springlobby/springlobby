@@ -55,6 +55,14 @@ class ToasterNotification : public INotification
 //#else
 //#endif
 
+class LibnotifyNotification : public INotification
+{
+	public:
+		LibnotifyNotification(wxWindow* parent);
+		virtual ~LibnotifyNotification();
+		virtual void Show(const wxBitmap& icon, const size_t pos, const UiEvents::NotficationData& data );
+};
+
 NotificationManager& notificationManager();
 
 #endif // NOTIFICATIONMANAGER_H

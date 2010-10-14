@@ -7,7 +7,31 @@
 #include "../settings.h"
 #include "../spring.h"
 #include "../mainwindow.h"
+#include "../utils/platform.h"
 #include "../images/springlobby_64.png.h"
+
+#include <libnotify/notify.h>
+
+#include <unistd.h>
+
+
+LibnotifyNotification::LibnotifyNotification(wxWindow* ){}
+LibnotifyNotification::~LibnotifyNotification(){}
+
+void LibnotifyNotification::Show(const wxBitmap& icon, const size_t pos, const UiEvents::NotficationData& data )
+{
+	NotifyNotification *n;
+	notify_init("Test");
+	n = notify_notification_new ( GetAppName().mb_str(),data.second.mb_str(), NULL, NULL);
+	notify_notification_set_timeout (n, sett().GetNotificationPopupDisplayTime()*1000);
+
+	notify_notification_set_icon_from_pixbuf(n,icon.GetPixbuf() );
+	if (!notify_notification_show (n, NULL)) {
+	   g_error("Failed to send notification.\n");
+
+	}
+	g_object_unref(G_OBJECT(n));
+}
 
 NotificationManager& notificationManager()
 {
@@ -18,7 +42,7 @@ NotificationManager& notificationManager()
 
 NotificationManager::NotificationManager()
 	: m_showNotificationSink( this, &UiEvents::GetNotificationEventSender( ) ),
-	m_notification_wrapper( new ToasterNotification( &ui().mw() ) )
+	m_notification_wrapper( new LibnotifyNotification( &ui().mw() ) )
 {
 }
 
