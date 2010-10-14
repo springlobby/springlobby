@@ -158,17 +158,17 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 
 	//check all default bindings if they still exist in current profile
 	//do unbind if not
-	const key_binding::key_binding_map unbinds = (SpringDefaultProfile::getBindings() - springbindings).getBinds();
-	for( key_binding::key_binding_map::const_iterator iter = unbinds.begin(); iter != unbinds.end(); ++iter )
+	const key_commands_sorted unbinds = (SpringDefaultProfile::getBindings() - springbindings).getBinds();
+	for( key_commands_sorted::const_iterator iter = unbinds.begin(); iter != unbinds.end(); ++iter )
 	{
-		newFile.AddLine( wxT("unbind\t\t") + iter->second.first + wxT('\t') + iter->second.second );
+		newFile.AddLine( wxT("unbind\t\t") + iter->first + wxT("\t\t") + iter->second );
 	}
 
 	//add binds, should be ordered
-	const key_binding::key_binding_map dobinds = (springbindings - SpringDefaultProfile::getBindings()).getBinds();
-	for( key_binding::key_binding_map::const_iterator iter = dobinds.begin(); iter != dobinds.end(); ++iter )
+	const key_commands_sorted dobinds = (springbindings - SpringDefaultProfile::getBindings()).getBinds();
+	for( key_commands_sorted::const_iterator iter = dobinds.begin(); iter != dobinds.end(); ++iter )
 	{
-		newFile.AddLine( wxT("bind\t\t") + iter->second.first + wxT("\t") + iter->second.second );
+		newFile.AddLine( wxT("bind\t\t") + iter->first + wxT("\t\t") + iter->second );
 	}
 	newFile.Write();
 
@@ -191,7 +191,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 			//restore backup
 			if ( wxRenameFile( prevFilenameBak, this->m_filename ) == false )
 			{
-				msg += _(" Restoring backup failed also.");
+				msg += _(" Restoring backup failed also. Good luck!");
 			}
 			throw HotkeyException( msg );
 		}

@@ -29,9 +29,7 @@
 #include "menuutils.h"
 #include "wx/config.h"
 #include "wx/tokenzr.h"
-
-#include "CommandOrderDlg.h"
-
+#include <list>
 
 // class definition for wxKeyProfile
 IMPLEMENT_CLASS(wxKeyProfile, wxKeyBinder)
@@ -434,12 +432,15 @@ wxString wxKeyBind::KeyModifierToString(int keyModifier)
 
     if (keyModifier & wxACCEL_ANY)
         result += wxT("Any+");
-    if (keyModifier & wxACCEL_CTRL)
-        result += wxT("Ctrl+");
-    if (keyModifier & wxACCEL_ALT)
-        result += wxT("Alt+");
-    if (keyModifier & wxACCEL_SHIFT)
-        result += wxT("Shift+");
+	else
+	{
+		if (keyModifier & wxACCEL_CTRL)
+			result += wxT("Ctrl+");
+		if (keyModifier & wxACCEL_ALT)
+			result += wxT("Alt+");
+		if (keyModifier & wxACCEL_SHIFT)
+			result += wxT("Shift+");
+	}
 
     return result;
 }
@@ -920,6 +921,121 @@ bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key, bool bCleanOld) c
     }
 
     return b;
+}
+
+#include <wx/wfstream.h>
+#include <iostream>
+void wxKeyBinder::PrintOrdering() const
+{
+	wxFileOutputStream outstream( wxT("D:\\out.txt") );
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	{
+		wxCmd& curr = *m_arrCmd.Item(i);
+
+		for( int j=0; j < curr.GetShortcutCount(); ++j )
+		{
+			wxKeyBind& kb = *curr.GetShortcut( j );
+			wxLogError( wxT("%d - %s - %s"), kb.GetOrderIndex(), curr.GetName(), kb.GetStr() );
+		}
+	}
+	wxLogError( wxT("-----------------") );
+}
+
+void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
+{
+	PrintOrdering();
+	
+	typedef std::set<size_t>	IdxList;
+	IdxList idxList;
+	IdxList idxListAny;
+	{
+		for( CommandOrderDlg::ListIndexCmdMap::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
+		{
+			if ( !iter->second.any )
+				idxList.insert( iter->second.globalSortIdx );
+			else
+				idxListAny.insert( iter->second.globalSortIdx );
+		}
+	}
+
+	//give new sort indices to non-any keys we dont want to modify
+	size_t nextId = 1;
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	{
+		wxCmd& curr = *m_arrCmd.Item(i);
+		for( int j=0; j < curr.GetShortcutCount(); ++j )
+		{
+			wxKeyBind& kb = *curr.GetShortcut( j );
+			if ( kb.HasAnyModifier() )
+				continue;
+
+			IdxList::const_iterator fiter = idxList.find( kb.GetOrderIndex() );
+			if ( fiter != idxList.end() )
+				continue;
+
+			kb.SetOrderIndex( nextId++ );
+		}
+	}
+
+	//give new sort indices to any keys we dont want to modify
+	size_t nextIdAny = 1;
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	{
+		wxCmd& curr = *m_arrCmd.Item(i);
+		for( int j=0; j < curr.GetShortcutCount(); ++j )
+		{
+			wxKeyBind& kb = *curr.GetShortcut( j );
+			if ( !kb.HasAnyModifier() )
+				continue;
+
+			IdxList::const_iterator fiter = idxListAny.find( kb.GetOrderIndex() );
+			if ( fiter != idxListAny.end() )
+				continue;
+
+			kb.SetOrderIndex( nextIdAny++ );
+		}
+	}
+
+	typedef std::map<size_t, size_t>	SortLookup;
+	SortLookup sortLook;
+	SortLookup sortLookAny;
+	{	//build sort lookup maps for the keys which we will change
+		for( CommandOrderDlg::ListIndexCmdMap::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
+		{
+			if ( !iter->second.any )
+				sortLook[ iter->second.globalSortIdx ] = nextId++;
+			else
+				sortLookAny[ iter->second.globalSortIdx ] = nextIdAny++;
+		}
+	}
+
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	{
+		wxCmd& curr = *m_arrCmd.Item(i);
+		for( int j=0; j < curr.GetShortcutCount(); ++j )
+		{
+			wxKeyBind& kb = *curr.GetShortcut( j );
+			size_t newIdx = 0;
+			if ( kb.HasAnyModifier() )
+			{
+				SortLookup::const_iterator fiter = sortLookAny.find( kb.GetOrderIndex() );
+				if ( fiter == sortLookAny.end() )
+					continue;
+				newIdx = fiter->second;
+			}
+			else
+			{
+				SortLookup::const_iterator fiter = sortLook.find( kb.GetOrderIndex() );
+				if ( fiter == sortLook.end() )
+					continue;
+				newIdx = fiter->second;
+			}
+
+			kb.SetOrderIndex( newIdx );
+		}
+	}
+
+	PrintOrdering();
 }
 
 bool wxKeyBinder::Load(wxConfigBase *p, const wxString &key)
@@ -1779,32 +1895,22 @@ void wxKeyConfigPanel::UpdateButtons()
 		this->m_pAnyModCbx->SetValue(state);
 	}	
 
-	const int selIdx = m_pBindings->GetSelection();
-	if ( selIdx == wxNOT_FOUND )
-	{
-		return;
-	}
+	bool enableAddBtn = false;
+	// is the assign button to be enabled ?
+	enableAddBtn = IsSelectedValidCmd() && m_pKeyField->IsValidKeyComb();
 
-	CmdSet cmds = m_kBinder.GetCmdBindsTo(m_pBindings->GetStringSelection());
+	// must the "Currently assigned to" field be updated ?
+	if (m_pKeyField->IsValidKeyComb()) {
+		//check if binding already existing
+		if ( this->GetSelProfile()->HasBindingStrict( m_pKeyField->GetValue(), this->GetSelCmdStr() ) )
+			enableAddBtn = false;
 
-	assert( cmds.size() > 0 );
-
-	CommandOrderDlg dlg( m_pBindings->GetStringSelection(), cmds, this );
-	
-
-    // is the assign button to be enabled ?
-    bool b = IsSelectedValidCmd() && m_pKeyField->IsValidKeyComb();
-    m_pAssignBtn->Enable(b);
-
-    // must the "Currently assigned to" field be updated ?
-    if (m_pKeyField->IsValidKeyComb()) {
-        //wxCmd *p = m_kBinder.GetCmdBindTo(m_pKeyField->GetValue());
 		CmdSet cmds = m_kBinder.GetCmdBindsTo(m_pKeyField->GetValue());
 
 		if ( cmds.size() == 0 )
 		{
-            str = wxT("None");
-            m_pCurrCmd = NULL;
+			str = wxT("None");
+			m_pCurrCmd = NULL;
 		}
 		else
 		{
@@ -1815,11 +1921,11 @@ void wxKeyConfigPanel::UpdateButtons()
 				{
 					str += wxT(",");
 				}
-				m_pCurrCmd = (*iter); //dirty, lets look what happens
+				m_pCurrCmd = (*iter);
 				str += (*iter)->GetName();
 			}
 		}
-    }
+	}
 
 	const wxString::size_type maxSize = 20;
 	if ( str.length() > maxSize )
@@ -1830,6 +1936,7 @@ void wxKeyConfigPanel::UpdateButtons()
 	}
 
     m_pCurrCmdField->SetLabel(str);
+	m_pAssignBtn->Enable(enableAddBtn);
 }
 
 void wxKeyConfigPanel::UpdateDesc()
@@ -2074,6 +2181,10 @@ void wxKeyConfigPanel::OnBindingDblClick(wxCommandEvent &)
 	CommandOrderDlg dlg( m_pBindings->GetStringSelection(), cmds, this );
 	if ( dlg.ShowModal() == wxID_OK )
 	{
+		CommandOrderDlg::ListIndexCmdMap cmdList = dlg.getOrderedCommands();
+
+		this->m_kBinder.CommitOrdering( cmdList );
+
 		// now the user has modified the currently selected profile...
 		m_bProfileHasBeenModified = TRUE;
 		m_bProfileModifiedOrChanged = TRUE;
@@ -2203,17 +2314,17 @@ void wxKeyConfigPanel::OnAnyModifier(wxCommandEvent &)
     wxCmd *sel = GetSelCmd();
 	wxKeyBind& kb = *sel->GetShortcut(shortcut);
 
-	wxString newKeyStr = kb.GetStr();
+	int newMods = kb.GetModifiers();
 	if ( m_pAnyModCbx->IsChecked() )
 	{
-		newKeyStr = wxT("Any+") + newKeyStr;
+		newMods |= wxACCEL_ANY;
 	}
 	else
 	{
-		newKeyStr = newKeyStr.After(wxT('+'));
+		newMods = ( newMods & ~wxACCEL_ANY );
 	}
 
-	kb.Set( newKeyStr, kb.GetOrderIndex() );
+	kb.Set( newMods, kb.GetKeyCode(), kb.GetOrderIndex() );
 
     // now the user has modified the currently selected profile...
     m_bProfileHasBeenModified = TRUE;
@@ -2224,7 +2335,7 @@ void wxKeyConfigPanel::OnAnyModifier(wxCommandEvent &)
     m_pKeyField->Clear();
 
 	//select previously selected key
-	this->SelectKeyString( newKeyStr ); 
+	this->SelectKeyString( kb.GetStr() ); 
 
 #ifdef wxKEYBINDER_AUTO_SAVE
 	ApplyChanges();

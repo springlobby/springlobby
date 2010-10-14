@@ -133,22 +133,21 @@ wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList
 	if ( mod.find( ANY ) != mod.end() )
 	{
 		modString += wxT("Any+");
-		modFound = true;
 	}
-	if ( mod.find( CTRL ) != mod.end() )
+	else
 	{
-		modString += wxT("Ctrl+");
-		modFound = true;
-	}
-	if ( mod.find( SHIFT ) != mod.end() )
-	{
-		modString += wxT("Shift+");
-		modFound = true;
-	}
-	if ( mod.find( ALT ) != mod.end() )
-	{
-		modString += wxT("Alt+");
-		modFound = true;
+		if ( mod.find( CTRL ) != mod.end() )
+		{
+			modString += wxT("Ctrl+");
+		}
+		if ( mod.find( SHIFT ) != mod.end() )
+		{
+			modString += wxT("Shift+");
+		}
+		if ( mod.find( ALT ) != mod.end() )
+		{
+			modString += wxT("Alt+");
+		}
 	}
 
 	return modString;
