@@ -48,11 +48,11 @@ const wxString detailTabCap = _("Render detail");
 const wxString uiTabCap= _("UI options");
 const wxString audioTabCap = _("Audio");
 const wxString hotkeyTabCap = _("Hotkeys");
-const wxString expertModeWarning = _("Changes made on Quality/Detail tab in expert mode\n\
-									will be lost if you change simple options again.\n\
-									Also these changes WILL NOT be reflected by the \n\
-									selected choices on the Combined options tab.\n\
-									(this message can be disabled in the \"File\" menu)");
+const wxString expertModeWarning = _("Changes made on Quality/Detail tab in expert mode\n"
+									"will be lost if you change simple options again.\n"
+									"Also these changes WILL NOT be reflected by the \n"
+									"selected choices on the Combined options tab.\n"
+									"(this message can be disabled in the \"File\" menu)");
 
 BEGIN_EVENT_TABLE(settings_frame,wxFrame)
 	EVT_CLOSE(settings_frame::OnClose)
