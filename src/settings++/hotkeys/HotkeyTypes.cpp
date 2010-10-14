@@ -205,7 +205,7 @@ const key_binding key_binding::operator-(const key_binding& other) const
 			KeyGroupMap::const_iterator findIter = other.m_groupsAny.find( iter->first );
 			if ( ( diffs ) ||
 				 ( findIter == other.m_groupsAny.end() ) ||
-				 ( findIter->second.size() < (idx - 1) ) ||
+				 ( findIter->second.size() < (idx + 1) ) ||
 				 ( findIter->second[idx] != iter->second[idx] ) )
 			{
 				resBind.bind( iter->second[ idx ], iter->first );

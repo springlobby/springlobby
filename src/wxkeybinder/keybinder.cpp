@@ -2316,6 +2316,9 @@ void wxKeyConfigPanel::OnAnyModifier(wxCommandEvent &)
 {
 	if ( GetSelProfile()->IsNotEditable() )
 	{
+		//revert checkbox state
+		m_pAnyModCbx->SetValue( !m_pAnyModCbx->GetValue() );
+		
         wxMessageBox(wxT("This profile cannot be changed."),
                     wxT("Warning"));
 		return;
