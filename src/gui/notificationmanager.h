@@ -1,30 +1,46 @@
 #ifndef NOTIFICATIONMANAGER_H
 #define NOTIFICATIONMANAGER_H
 
-class ToasterBox;
 
 #include "../utils/uievents.h"
 #include "../utils/isink.h"
 #include "../utils/mixins.hh"
-class INotification;
+#include <wx/timer.h>
+#include <wx/event.h>
+#include <vector>
 
-class NotificationManager : public OnQuitSink < NotificationManager > , public SL::NonCopyable
+class INotification;
+class ToasterBox;
+
+class NotificationManager : public OnQuitSink < NotificationManager > , public SL::NonCopyable, public wxEvtHandler
 {
     public:
         virtual ~NotificationManager();
 
-        void ShowNotification( UiEvents::NotficationData data );
+		void OnShowNotification( UiEvents::NotficationData data );
+
 		void OnQuit( GlobalEvents::GlobalEventData data );
 
     protected:
         NotificationManager();
 		INotification* m_notification_wrapper;
 
+		wxTimer m_rate_limit_timer;
+		const unsigned int m_rate_limit_ms;
+		typedef std::vector<UiEvents::NotficationData>
+			EventDataBuffer;
+		EventDataBuffer m_eventDataBuffer;
+
+		void OnTimer( wxTimerEvent& /*event*/ );
+		void ShowNotification( const UiEvents::NotficationData& data );
+
         //make globals holder have access to ctor
         template <class PB, class I >
         friend class GlobalObjectHolder;
 
-        EventReceiverFunc< NotificationManager, UiEvents::NotficationData, &NotificationManager::ShowNotification> m_showNotificationSink;
+		EventReceiverFunc< NotificationManager, UiEvents::NotficationData, &NotificationManager::OnShowNotification> m_showNotificationSink;
+
+		DECLARE_EVENT_TABLE()
 
 };
 
