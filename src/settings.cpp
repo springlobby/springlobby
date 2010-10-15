@@ -2505,6 +2505,21 @@ void Settings::SetBroadcastEverywhere(bool value)
 }
 
 //Hotkeys stuff (for springsettings)
+void Settings::SetHotkeyKeySymSet( const wxString& profileName, const wxString& setName, const wxString& keyStr )
+{
+	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/KeySets/") + setName, keyStr);
+}
+
+wxString Settings::GetHotkeyKeySymSet( const wxString& profileName, const wxString& setName )
+{
+	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/KeySets/") + setName, _T("") );
+}
+
+wxArrayString Settings::GetHotkeyKeySymSetNames( const wxString& profileName )
+{
+	return GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/KeySets/") );
+}
+
 void Settings::SetHotkeyKeySym( const wxString& profileName, const wxString& symName, const wxString& keyStr )
 {
 	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/KeySyms/") + symName, keyStr);

@@ -195,6 +195,7 @@ key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
 
 	//add keysyms
 	binding.setKeySyms( profile.GetKeySyms() );
+	binding.setKeySymsSet( profile.GetKeySymsSet() );
 
 	return binding;
 }
@@ -261,6 +262,14 @@ void hotkey_panel::SaveSettings()
 					sett().SetHotkeyKeySym( profile.GetName(), iter->first, iter->second );
 				}
 			}
+
+			//add key set symbols
+			{
+				for( key_sym_set_map::const_iterator iter = profileBinds.getKeySymsSet().begin(); iter != profileBinds.getKeySymsSet().end(); ++iter )
+				{
+					sett().SetHotkeyKeySymSet( profile.GetName(), iter->first, iter->second );
+				}
+			}
 		}
 
 		sett().SaveSettings();
@@ -324,6 +333,7 @@ void hotkey_panel::putKeybindingsToProfile( wxKeyProfile& profile, const key_bin
 	}
 
 	profile.SetKeySyms( bindings.getKeySyms() );
+	profile.SetKeySymsSet( bindings.getKeySymsSet() );
 }
 
 wxString hotkey_panel::getNextFreeProfileName()
@@ -437,6 +447,14 @@ key_binding_collection hotkey_panel::getProfilesFromSettings()
 		{
 			const wxString& value = sett().GetHotkeyKeySym( profName, keySyms.Item(k) );
 			coll[profName].addKeySym( keySyms.Item(k), value );
+		}
+
+		//add keySets
+		wxArrayString keySymsSet = sett().GetHotkeyKeySymSetNames( profName );
+		for( size_t k=0; k < keySymsSet.GetCount(); ++k )
+		{
+			const wxString& value = sett().GetHotkeyKeySymSet( profName, keySymsSet.Item(k) );
+			coll[profName].addKeySymSet( keySymsSet.Item(k), value );
 		}
 	}
 

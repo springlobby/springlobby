@@ -1,6 +1,7 @@
 -"meta" as possible keycode
 -keyset
 -handle unknown keysymbols in bind from uikeys.txt
+-when assign key new key should be selected in listbox
 
 -keysymb editor -> context menu?
 -better method to show orderDlg instead of dblClick? -> context menu?
@@ -9,6 +10,7 @@
 -save custom commands to springsettings.conf to keep them even when not used in any profile
 -colorize commands that have changed hotkeys compared to default
 -hide empty commands with checkbox
+-disable all edit-button when default profile is selected instead of show msgbox "cant edit"?
 
 -unify spelling
 -cleanup type mess (hotkeytypes etc)

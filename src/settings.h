@@ -736,6 +736,9 @@ class Settings
 	/** @name Hotkeys
     * @{
     */
+	void SetHotkeyKeySymSet( const wxString& profileName, const wxString& symName, const wxString& keyStr );
+	wxString GetHotkeyKeySymSet( const wxString& profileName, const wxString& symName );
+	wxArrayString GetHotkeyKeySymSetNames( const wxString& profileName );
 
 	void SetHotkeyKeySym( const wxString& profileName, const wxString& symName, const wxString& keyStr );
 	wxString GetHotkeyKeySym( const wxString& profileName, const wxString& symName );

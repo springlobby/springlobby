@@ -37,15 +37,22 @@ public:
 
 	const key_binding key_binding::operator-(const key_binding &other) const;
 
+
+	void setKeySymsSet( const key_sym_set_map& keySyms );
 	void setKeySyms( const key_sym_map& keySyms );
 	const key_sym_map& getKeySyms() const;
+	const key_sym_map& getKeySymsSet() const;
+
 	key_commands_sorted getBinds() const;
 	//const key_binding_k2c& getK2C() const;
 
+	wxString resolveKeySymKeyAndSet( const wxString& key ) const;
 	wxString resolveKeySymKey( const wxString& key ) const;
 	bool operator==( const key_binding& other ) const;
 
 private:
+	const wxString resolveKeySymSetName( const wxString& symName ) const;
+	const wxString resolveKeySymSetKey( const wxString& key ) const;
 	const wxString resolveKeySymName( const wxString& symName ) const;
 
 	//define different "views" onto the bindings
@@ -59,8 +66,8 @@ private:
 	key_sym_map													m_keySyms;
 	key_sym_map													m_keySymsRev;
 
-	key_sym_set_map												m_keySymSet;
-	key_sym_set_map												m_keySymSetRev;
+	key_sym_set_map												m_keySymsSet;
+	key_sym_set_map												m_keySymsSetRev;
 	//key_binding_map		m_binds;
 	//key_binding_c2k		m_c2k; //for faster lookups. keep this in sync with m_binds
 	//unsigned			m_nextOrderIdx;

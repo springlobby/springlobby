@@ -15,7 +15,17 @@ void key_binding::bind( const wxString& cmd, const wxString& keyString )
 		return;
 	}
 
-	wxString normKey = resolveKeySymName( KeynameConverter::normalizeSpringKey( keyString ) );
+	wxString normKey;
+	if ( keyString.StartsWith( wxT("&") ) )
+	{
+		//key set
+		normKey = resolveKeySymSetName( KeynameConverter::normalizeSpringKey( keyString.SubString( 1, keyString.size() + 1 ) ) );
+	}
+	else
+	{
+		//normal key
+		normKey = resolveKeySymName( KeynameConverter::normalizeSpringKey( keyString ) );
+	}
 
 	if ( normKey.StartsWith( wxT("Any+") ) )
 	{
@@ -31,13 +41,44 @@ void key_binding::bind( const wxString& cmd, const wxString& keyString )
 
 void key_binding::addKeySymSet( const wxString& name, const wxString& keyString )
 {
+	const wxString normName = name.Lower();
+	const wxString normKey = this->resolveKeySymName( KeynameConverter::normalizeSpringKey( keyString ) );
+	this->m_keySymsSet[normName] = normKey;
+	this->m_keySymsSetRev[normKey] = normName;
 }
 
 void key_binding::addKeySym( const wxString& name, const wxString& keyString )
 {
-	const wxString normName = name.Lower();
+/*	const wxString normName = name.Lower();
 	this->m_keySyms[normName] = keyString;
 	this->m_keySymsRev[KeynameConverter::convertHexValueToKey( keyString )] = normName;
+*/
+	const wxString normName = name.Lower();
+	const wxString normKey = KeynameConverter::normalizeSpringKey( keyString );
+	this->m_keySyms[normName] = normKey;
+	this->m_keySymsRev[KeynameConverter::convertHexValueToKey( keyString )] = normName;
+}
+
+const wxString key_binding::resolveKeySymSetName( const wxString& symName ) const
+{
+	key_sym_set_map::const_iterator iter = this->m_keySymsSet.find( symName );
+	if ( iter == this->m_keySymsSet.end() )
+	{
+		return symName;
+	}
+
+	return iter->second;
+}
+
+const wxString key_binding::resolveKeySymSetKey( const wxString& key ) const
+{
+	key_sym_set_map::const_iterator iter = this->m_keySymsSetRev.find( key );
+	if ( iter == this->m_keySymsSetRev.end() )
+	{
+		return key;
+	}
+
+	return wxT("&") + iter->second;
 }
 
 const wxString key_binding::resolveKeySymName( const wxString& symName ) const
@@ -52,6 +93,13 @@ const wxString key_binding::resolveKeySymName( const wxString& symName ) const
 	return KeynameConverter::modifier2String( modList ) + KeynameConverter::convertHexValueToKey( iter->second );
 }
 
+wxString key_binding::resolveKeySymKeyAndSet( const wxString& key ) const
+{
+	wxString res = resolveKeySymSetKey( key );
+	
+	return resolveKeySymKey(res);
+}
+
 wxString key_binding::resolveKeySymKey( const wxString& key ) const
 {
 	key_sym_map::const_iterator iter = this->m_keySymsRev.find( KeynameConverter::discardModifier( key ) );
@@ -64,20 +112,37 @@ wxString key_binding::resolveKeySymKey( const wxString& key ) const
 	return KeynameConverter::modifier2String( modList ) + iter->second;
 }
 
+void key_binding::setKeySymsSet( const key_sym_set_map& keySymsSet )
+{
+	this->m_keySymsSet = keySymsSet;
+	
+	//update reverse map
+	for( key_sym_set_map::const_iterator iter = m_keySymsSet.begin(); iter != m_keySymsSet.end(); ++iter )
+	{
+		this->m_keySymsSetRev[iter->second] = iter->first;
+	}
+}
+
 void key_binding::setKeySyms( const key_sym_map& keySyms )
 {
 	this->m_keySyms = keySyms;
 	
 	//update reverse map
-	for( key_sym_map::const_iterator iter = keySyms.begin(); iter != keySyms.end(); ++iter )
+	for( key_sym_map::const_iterator iter = m_keySyms.begin(); iter != m_keySyms.end(); ++iter )
 	{
-		this->m_keySymsRev[KeynameConverter::convertHexValueToKey(iter->second)] = iter->first;
+		//hex convert is needed here (data could come from wxProfile which stores raw keys (0x62 etc))
+		this->m_keySymsRev[KeynameConverter::convertHexValueToKey( iter->second )] = iter->first;
 	}
 }
 
 const key_sym_map& key_binding::getKeySyms() const
 {
 	return this->m_keySyms;
+}
+
+const key_sym_map& key_binding::getKeySymsSet() const
+{
+	return this->m_keySymsSet;
 }
 
 key_commands_sorted key_binding::getBinds() const
@@ -170,18 +235,22 @@ void key_binding::clear()
 	this->m_keyCmdSetAny.clear();
 	this->m_keyCmdSet.clear();
 	this->m_keySyms.clear();
+	this->m_keySymsSet.clear();
 }
 
 bool key_binding::operator==(const key_binding& other) const
 {
 	return ( this->m_groups == other.m_groups ) && ( this->m_groupsAny == other.m_groupsAny ) &&
-		( this->m_keySyms == other.m_keySyms );
+		( this->m_keySyms == other.m_keySyms ) && ( this->m_keySymsSet == other.m_keySymsSet );
 }
 
 const key_binding key_binding::operator-(const key_binding& other) const
 {
-	key_binding resBind;
-	resBind.m_keySyms = this->m_keySyms;
+	key_binding resBind = (*this);
+	resBind.m_groups.clear();
+	resBind.m_groupsAny.clear();
+	resBind.m_keyCmdSet.clear();
+	resBind.m_keyCmdSetAny.clear();
 
 	//normal keys
 	for( KeyGroupMap::const_iterator iter = m_groups.begin(); iter != m_groups.end(); ++iter )

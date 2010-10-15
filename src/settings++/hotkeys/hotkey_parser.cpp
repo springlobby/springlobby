@@ -102,6 +102,10 @@ bool hotkey_parser::processLine( const wxString& line )
 	{
 		this->m_bindings.addKeySym( key, action );
 	}
+	else if ( cmd == wxT("keyset") )
+	{
+		this->m_bindings.addKeySymSet( key, action );
+	}
 	else
 	{
 		wxLogWarning( _( "skipping uikeys.txt line (unknown token '" ) + cmd + wxT("'): ") + line );
@@ -168,19 +172,27 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 		keySymRev[ KeynameConverter::convertHexValueToKey( iter->second ) ] = iter->first;
 	}
 
+	//add keysyms
+	key_sym_map keySymSetRev;
+	for( key_sym_set_map::const_iterator iter = springbindings.getKeySymsSet().begin(); iter != springbindings.getKeySymsSet().end(); ++iter )
+	{
+		newFile.AddLine( wxT("keyset\t\t") + iter->first + wxT("\t\t") + springbindings.resolveKeySymKey(iter->second ) );
+		keySymSetRev[ iter->second ] = iter->first;
+	}
+
 	//check all default bindings if they still exist in current profile
 	//do unbind if not
 	const key_commands_sorted unbinds = (SpringDefaultProfile::getBindings() - springbindings).getBinds();
 	for( key_commands_sorted::const_iterator iter = unbinds.begin(); iter != unbinds.end(); ++iter )
 	{
-		newFile.AddLine( wxT("unbind\t\t") + springbindings.resolveKeySymKey( iter->first ) + wxT("\t\t") + iter->second );
+		newFile.AddLine( wxT("unbind\t\t") + springbindings.resolveKeySymKeyAndSet( iter->first ) + wxT("\t\t") + iter->second );
 	}
 
 	//add binds, should be ordered
 	const key_commands_sorted dobinds = (springbindings - SpringDefaultProfile::getBindings()).getBinds();
 	for( key_commands_sorted::const_iterator iter = dobinds.begin(); iter != dobinds.end(); ++iter )
 	{
-		newFile.AddLine( wxT("bind\t\t") + springbindings.resolveKeySymKey( iter->first ) + wxT("\t\t") + iter->second );
+		newFile.AddLine( wxT("bind\t\t") + springbindings.resolveKeySymKeyAndSet( iter->first ) + wxT("\t\t") + iter->second );
 	}
 	newFile.Write();
 

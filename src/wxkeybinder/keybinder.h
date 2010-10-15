@@ -652,6 +652,7 @@ protected:
     //! The array of wxCmd-derived classes.
     wxCmdArray m_arrCmd;
 	key_sym_map	m_keySyms;
+	key_sym_set_map	m_keySymsSet;
 	unsigned m_nNextOderIndex;	
 	unsigned m_nNextOderIndexAny;
 
@@ -727,6 +728,7 @@ public:     // miscellaneous
 		m_nNextOderIndex = p.m_nNextOderIndex;
 		m_nNextOderIndexAny = p.m_nNextOderIndex;
 		m_keySyms = p.m_keySyms;
+        m_keySymsSet = p.m_keySymsSet;
         // NEVER COPY THE ARRAY OF THE ATTACHED WINDOWs:
         // WE ARE NOT ATTACHED TO THE WINDOWS OF THE GIVEN BINDER !!
         // m_arrAttachedWnd = p->m_arrAttachedWnd;
@@ -741,6 +743,7 @@ public:     // miscellaneous
     void Reset() {
         m_arrCmd.Clear();
 		m_keySyms.clear();
+		m_keySymsSet.clear();
 		m_nNextOderIndex = 1;
 		m_nNextOderIndexAny = 1;
     }
@@ -802,8 +805,16 @@ public:     // miscellaneous
 		this->m_keySyms = keySyms;
 	}
 
+	void SetKeySymsSet( const key_sym_set_map& keySymsSet ) {
+		this->m_keySymsSet = keySymsSet;
+	}
+
 	const key_sym_map& GetKeySyms() const {
 		return this->m_keySyms;
+	}
+
+	const key_sym_set_map& GetKeySymsSet() const {
+		return this->m_keySymsSet;
 	}
 
     void AddCmd(wxCmd *p) {
