@@ -10,29 +10,12 @@
 #include "../utils/platform.h"
 #include "../images/springlobby_64.png.h"
 
-#include <libnotify/notify.h>
-
-#include <unistd.h>
-
-
-LibnotifyNotification::LibnotifyNotification(wxWindow* ){}
-LibnotifyNotification::~LibnotifyNotification(){}
-
-void LibnotifyNotification::Show(const wxBitmap& icon, const size_t pos, const UiEvents::NotficationData& data )
-{
-	NotifyNotification *n;
-	notify_init("Test");
-	n = notify_notification_new ( GetAppName().mb_str(),data.second.mb_str(), NULL, NULL);
-	notify_notification_set_timeout (n, sett().GetNotificationPopupDisplayTime()*1000);
-
-	notify_notification_set_icon_from_pixbuf(n,icon.GetPixbuf() );
-	if (!notify_notification_show (n, NULL)) {
-	   g_error("Failed to send notification.\n");
-
-	}
-	g_object_unref(G_OBJECT(n));
-}
-
+#ifdef HAVE_LIBNOTIFY
+	#include "libnotify.h"
+	typedef LibnotifyNotification NotificationWrapperType;
+#else
+	typedef ToasterNotification NotificationWrapperType;
+#endif
 NotificationManager& notificationManager()
 {
     static LineInfo<NotificationManager> m( AT );
@@ -42,7 +25,7 @@ NotificationManager& notificationManager()
 
 NotificationManager::NotificationManager()
 	: m_showNotificationSink( this, &UiEvents::GetNotificationEventSender( ) ),
-	m_notification_wrapper( new LibnotifyNotification( &ui().mw() ) )
+	m_notification_wrapper( new NotificationWrapperType( &ui().mw() ) )
 {
 }
 
@@ -53,7 +36,7 @@ NotificationManager::~NotificationManager()
 
 void NotificationManager::ShowNotification( UiEvents::NotficationData data )
 {
-    //call this before showing everytime to accout for desktop resolution changes
+
 	const bool spring_running = spring().IsRunning();
 	const bool disable_if_ingame = sett().Get<bool>( _T("/GUI/NotificationPopupDisableIngame"), true );
 	if ( m_notification_wrapper &&  ! ( disable_if_ingame && spring_running ) ) {
@@ -81,6 +64,7 @@ void ToasterNotification::Show(const wxBitmap& icon, const size_t pos, const UiE
 {
 	m_toasterbox->SetPopupPauseTime(sett().GetNotificationPopupDisplayTime()*1000);
 	m_toasterbox->SetPopupBitmap( icon );
+	//call this before showing everytime to accout for desktop resolution changes
 	SetPopupPosition( pos );
 	m_toasterbox->SetPopupText( data.second, false);
 	m_toasterbox->Play();
