@@ -2402,8 +2402,13 @@ void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
 
     // and update the list of the key bindings
     FillInBindings();
-    m_pKeyField->Clear();
+    
+	//select the new key
+	this->SelectKeyString( m_pKeyField->GetValue() ); 
 
+	m_pKeyField->Clear();
+
+	
 #ifdef wxKEYBINDER_AUTO_SAVE
 	ApplyChanges();
 #endif
