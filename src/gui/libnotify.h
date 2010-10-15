@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_LIBNOTIFY_H
 #define SPRINGLOBBY_LIBNOTIFY_H
 
-#include "notificationmanager.h"
+#include "inotification.h"
 
 class LibnotifyNotification : public INotification
 {
@@ -31,7 +31,6 @@ void LibnotifyNotification::Show(const wxBitmap& icon, const size_t pos, const U
 	}
 	g_object_unref(G_OBJECT(n));
 }
-
 
 #endif // SPRINGLOBBY_LIBNOTIFY_H
 

@@ -28,28 +28,6 @@ class NotificationManager : public OnQuitSink < NotificationManager > , public S
 
 };
 
-class wxWindow;
-class ScreenPosition;
-class INotification
-{
-	public:
-		INotification(){};
-		virtual ~INotification(){};
-		virtual void Show(const wxBitmap& icon, const size_t pos, const UiEvents::NotficationData& data ) = 0;
-};
-
-class ToasterNotification : public INotification
-{
-	public:
-		ToasterNotification(wxWindow* parent);
-		virtual ~ToasterNotification();
-		virtual void Show(const wxBitmap& icon, const size_t pos, const UiEvents::NotficationData& data );
-	protected:
-		void SetPopupPosition( const size_t pos );
-		int m_width,m_height,m_x_offset,m_y_offset;
-		ToasterBox* m_toasterbox;
-};
-
 NotificationManager& notificationManager();
 
 #endif // NOTIFICATIONMANAGER_H

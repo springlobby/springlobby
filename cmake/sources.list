@@ -10,6 +10,7 @@ SET(springlobbySrc
 	src/utils/activitynotice.cpp
 	src/chatpanelmenu.cpp
 	src/gui/gradientpanel.cpp
+	src/gui/toasternotification.cpp
 	src/gui/wxgradientbutton.cpp
 	src/gui/skirmish_dialog.cpp
 	src/gui/wxbackgroundimage.cpp
