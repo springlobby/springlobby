@@ -1,5 +1,4 @@
 -"meta" as possible keycode
--keyset
 -handle unknown keysymbols in bind from uikeys.txt
 -when assign key new key should be selected in listbox
 

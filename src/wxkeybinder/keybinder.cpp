@@ -970,6 +970,10 @@ void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
 		}
 	}
 
+	typedef std::map<size_t, size_t>	SortLookup;
+	SortLookup sortLook;
+	SortLookup sortLookAny;
+
 	//give new sort indices to non-any keys we dont want to modify
 	size_t nextId = 1;
 	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
@@ -985,7 +989,7 @@ void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
 			if ( fiter != idxList.end() )
 				continue;
 
-			kb.SetOrderIndex( nextId++ );
+			sortLook[ kb.GetOrderIndex() ] = nextId++;
 		}
 	}
 
@@ -1004,13 +1008,10 @@ void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
 			if ( fiter != idxListAny.end() )
 				continue;
 
-			kb.SetOrderIndex( nextIdAny++ );
+			sortLookAny[ kb.GetOrderIndex() ] = nextIdAny++;
 		}
 	}
 
-	typedef std::map<size_t, size_t>	SortLookup;
-	SortLookup sortLook;
-	SortLookup sortLookAny;
 	{	//build sort lookup maps for the keys which we will change
 		for( CommandOrderDlg::ListIndexCmdMap::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
 		{
@@ -1030,17 +1031,11 @@ void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
 			size_t newIdx = 0;
 			if ( kb.HasAnyModifier() )
 			{
-				SortLookup::const_iterator fiter = sortLookAny.find( kb.GetOrderIndex() );
-				if ( fiter == sortLookAny.end() )
-					continue;
-				newIdx = fiter->second;
+				newIdx = sortLookAny.find( kb.GetOrderIndex() )->second;
 			}
 			else
 			{
-				SortLookup::const_iterator fiter = sortLook.find( kb.GetOrderIndex() );
-				if ( fiter == sortLook.end() )
-					continue;
-				newIdx = fiter->second;
+				newIdx = sortLook.find( kb.GetOrderIndex() )->second;
 			}
 
 			kb.SetOrderIndex( newIdx );
