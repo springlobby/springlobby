@@ -651,11 +651,11 @@ protected:
 
     //! The array of wxCmd-derived classes.
     wxCmdArray m_arrCmd;
+
 	key_sym_map	m_keySyms;
 	key_sym_set_map	m_keySymsSet;
-	unsigned m_nNextOderIndex;	
-	unsigned m_nNextOderIndexAny;
-
+	size_t m_nNextOderIndex;	
+	size_t m_nNextOderIndexAny;
 
     //! The array of windows attached to this keybinder.
     //! These info are very important when deleting the keybinder

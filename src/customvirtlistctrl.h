@@ -21,6 +21,7 @@
 #include "useractions.h"
 #include "Helper/sortutil.h"
 #include "utils/isink.h"
+#include "utils/mixins.hh"
 
 const wxEventType ListctrlDoSortEventType = wxNewEventType();
 
@@ -41,7 +42,7 @@ class SLTipWindow;
  * \tparam the type of stored data
  */
 template < class DataImp, class ListCtrlImp >
-class CustomVirtListCtrl : public ListBaseType, public OnQuitSink<CustomVirtListCtrl<DataImp,ListCtrlImp> >
+class CustomVirtListCtrl : public ListBaseType, public OnQuitSink<CustomVirtListCtrl<DataImp,ListCtrlImp> >, public SL::NonCopyable
 {
 public:
     typedef DataImp

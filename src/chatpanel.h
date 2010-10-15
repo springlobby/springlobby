@@ -7,6 +7,7 @@
 
 #include "chatlog.h"
 #include "Helper/TextCompletionDatabase.hpp"
+#include "utils/mixins.hh"
 
 class wxCommandEvent;
 class wxSizeEvent;
@@ -63,7 +64,7 @@ struct ChatLine
  * The nick list is optional and can be removed by setting show_nick_list in the
  * constructor to false.
  */
-class ChatPanel : public wxPanel
+class ChatPanel : public wxPanel, public SL::NonCopyable
 {
   public:
 
@@ -199,7 +200,7 @@ class ChatPanel : public wxPanel
 
     friend class ChatPanelMenu; //menu needs access to members
 
-    DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 };
 
 enum

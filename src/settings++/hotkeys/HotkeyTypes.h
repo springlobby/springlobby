@@ -35,7 +35,7 @@ public:
 	bool exists( const wxString& command, const wxString& key );
 	bool isEmpty() const;
 
-	const key_binding key_binding::operator-(const key_binding &other) const;
+	const key_binding operator-(const key_binding &other) const;
 
 
 	void setKeySymsSet( const key_sym_set_map& keySyms );

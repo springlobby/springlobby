@@ -10,7 +10,6 @@ if [ $# -ne 1 ] ; then
 fi
 
 version=$1
-tarball=springlobby-${version}.tar.bz2
 
 if [ ! -d rpm/home:accAgon/SpringLobby ] ; then
     ( cd rpm ; osc co home:accAgon SpringLobby )
@@ -18,9 +17,9 @@ fi
 
 cd rpm/home:accAgon/SpringLobby
 osc up
-find . -name springlobby-0.0.1.\*.tar.bz2 -exec osc rm {} \;
-sed -i 's/^\(%define app_version\) .*/\1 '${version}'/' springlobby.spec
-cp /usr/local/www/springlobby.info/tarballs/${tarball} .
-osc add ${tarball}
+echo "<services><service name=\"set_version\"><param name=\"basename\">springlobby</param><param name=\"version\">" > _service
+echo $version >> _service
+echo "</param><param name=\"file\">springlobby.spec</param></service><service name=\"tar_scm\"><param name=\"url\">git://springlobby.info/git/buildbot/springlobby.git</param><param name=\"filename\">springlobby.tar</param><param name=\"revision\">master</param><param name=\"scm\">git</param><param name=\"version\">" >> _service
+echo $version >> _service
+echo "</param></service></services>" >> _service
 osc ci -m "autobuild ${version}"
-

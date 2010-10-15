@@ -35,7 +35,7 @@ public:
     void OnTextEnter(wxCommandEvent& event);
     void OnChar( wxKeyEvent &event );
     void OnKillFocus(wxFocusEvent& event);
-    SlSpinCtrlGenericBase *m_spin;;
+	SlSpinCtrlGenericBase *m_spin;
 
 private:
     DECLARE_EVENT_TABLE()

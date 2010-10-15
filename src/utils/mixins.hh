@@ -1,24 +1,18 @@
-#ifndef SIMPLEMPFRAME_H
-#define SIMPLEMPFRAME_H
+#ifndef SPRINGLOBBY_HEADERGUARD_MIXINS_HH
+#define SPRINGLOBBY_HEADERGUARD_MIXINS_HH
 
-#include "customizedframe.h"
-#include "../utils/mixins.hh"
+namespace SL {
+	class NonCopyable {
+		protected:
+			NonCopyable(){}
+			~NonCopyable(){}
+		private:
+			NonCopyable( const NonCopyable& );
+			NonCopyable& operator = ( const NonCopyable& );
+	};
+}
 
-class TASServer;
-class SimpleBattlelistCtrl;
-
-class SimpleMPFrame : public CustomizedFrame, public SL::NonCopyable
-{
-public:
-	SimpleMPFrame( wxWindow* parent );
-	~SimpleMPFrame();
-
-protected:
-	TASServer* m_serv;
-	SimpleBattlelistCtrl* m_battlelist;
-};
-
-#endif // SIMPLEMPFRAME_H
+#endif // SPRINGLOBBY_HEADERGUARD_MIXINS_HH
 
 /**
 	This file is part of SpringLobby,
@@ -28,7 +22,7 @@ protected:
 	it under the terms of the GNU General Public License version 2 as published by
 	the Free Software Foundation.
 
-	springsettings is distributed in the hope that it will be useful,
+	SpringLobby is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
@@ -36,3 +30,4 @@ protected:
 	You should have received a copy of the GNU General Public License
 	along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
 **/
+

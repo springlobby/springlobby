@@ -11,10 +11,10 @@ class HotkeyException : public std::exception
 public:
 	HotkeyException( const wxString& message ) : m_message( message ) {}
 #ifndef __WXMSW__
-	virtual ~HotkeyException() throws {};
+	virtual ~HotkeyException() throw() {}
 #endif
 
-	const char* what() const { return "Use HotkeyException::getMessage() instead"; };
+	const char* what() const throw() { return "Use HotkeyException::getMessage() instead"; };
 	const wxString& getMessage() const
 	{
 		return this->m_message;

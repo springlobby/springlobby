@@ -55,7 +55,7 @@ private:
 		HELP_LINKS
 	};
 
-	DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 };
 
 #endif // INTROGUIDE_H

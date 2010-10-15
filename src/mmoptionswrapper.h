@@ -11,7 +11,9 @@ struct GameOptions;
 
 class wxFileConfig;
 
-class mmSectionTree {
+//! \todo needs deep copy
+class mmSectionTree
+{
 
     public:
         mmSectionTree();
@@ -66,7 +68,7 @@ public:
 	OptionsWrapper();
 	virtual ~OptionsWrapper();
 	//! just calls loadOptions(MapOption,mapname)
-	bool loadMapOptions(wxString mapname);
+	bool loadMapOptions(const wxString& mapname);
 
 	bool loadAIOptions( const wxString& modname, int aiindex, const wxString& ainick );
 
@@ -90,19 +92,19 @@ public:
 	 * \param optType will contain the corresponding OptionType if key is found, opt_undefined otherwise
 	 * \return true if key is found, false otherwise
 	 */
-	bool keyExists(wxString key,GameOption flag,bool showError, OptionType& optType) const;
+	bool keyExists(const wxString& key, const GameOption flag, const bool showError, OptionType& optType) const;
 	//! checks if given key can be found in all containers
 	/*!
 	 * \param key the key that should be checked for existance in containers
 	 * \return true if key is found, false otherwise
 	 */
-	bool keyExists(wxString key ) const;
+	bool keyExists(const wxString& key ) const;
 	//! checks which container this key belongs to
 	/*!
 	 * \param key the key that should be checked for existance in containers
 	 * \return they container section
 	 */
-	GameOption GetSection( wxString& key ) const;
+	GameOption GetSection( const wxString& key ) const;
 	//! given a vector of key/value pairs sets the appropiate options to new values
 	/*!	Every new value is tested for meeting boundary conditions, type, etc.
 	 * If test fails error is logged and false is returned.
@@ -129,30 +131,30 @@ public:
 	/*! searches all containers for key
 	 * \return value of key if key found, "" otherwise
 	 */
-	wxString getSingleValue(wxString key) const;
+	wxString getSingleValue(const wxString& key) const;
 	//! returns value of specified key
 	/*! searches containers of type flag for key
 	 * \return value of key if key found, "" otherwise
 	 */
 
-	wxString getSingleValue(wxString key, GameOption flag) const;
+	wxString getSingleValue(const wxString& key, GameOption flag) const;
 
-	wxString getDefaultValue(wxString key, GameOption flag) const;
+	wxString getDefaultValue(const wxString& key, GameOption flag) const;
 
 	//! sets a single option in specified container
 	/*! \return true if success, false otherwise */
-	bool setSingleOption(wxString key, wxString value, GameOption modmapFlag);
+	bool setSingleOption(const wxString& key, const wxString& value, GameOption modmapFlag);
 	//! same as before, but tries all containers
-	bool setSingleOption(wxString key, wxString value);
+	bool setSingleOption(const wxString& key, const wxString& value);
 
 	//! returns the option type of specified key (all containers are tried)
-	OptionType GetSingleOptionType (wxString key) const;
+	OptionType GetSingleOptionType (const wxString& key) const;
 
 	//!returns the cbx_choice associated w current listoption
-	wxString GetNameListOptValue(wxString key, GameOption flag) const;
+	wxString GetNameListOptValue(const wxString& key, GameOption flag) const;
 
 	//! returns the listitem key associated with listitem name
-	wxString GetNameListOptItemKey(wxString optkey, wxString itemname, GameOption flag) const;
+	wxString GetNameListOptItemKey(const wxString& optkey, const wxString& itemname, GameOption flag) const;
 
 	GameOptionsMap m_opts;
 
@@ -163,7 +165,7 @@ public:
 	bool MergeOptions( const OptionsWrapper& other, GameOption merge_into );
 protected:
 	//! used for code clarity in setOptions()
-	bool setSingleOptionTypeSwitch(wxString key, wxString value, GameOption modmapFlag, OptionType optType);
+	bool setSingleOptionTypeSwitch(const wxString& key, const wxString& value, GameOption modmapFlag, OptionType optType);
 
 	mmSectionTreeMap m_sections;
 

@@ -7,7 +7,6 @@
 
 class CmdSet;
 
-
 class CommandOrderDlg : public CommandOrderDlgBase 
 {
 public:

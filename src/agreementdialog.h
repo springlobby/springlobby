@@ -27,7 +27,7 @@ class AgreementDialog : public wxDialog
 
     enum {
         AGREE_YES = wxID_HIGHEST,
-        AGREE_NO,
+		AGREE_NO
     };
 
     DECLARE_EVENT_TABLE()

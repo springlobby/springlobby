@@ -384,3 +384,12 @@ wxString IdentityString(const wxString format, bool lowerCase )
 {
 	return wxString::Format( format, GetAppName( lowerCase ).c_str() );
 }
+
+wxString GetConfigfileDir()
+{
+	#ifdef __WXMSW__
+		return wxStandardPaths::Get().GetUserDataDir();
+	#else
+		return wxString::Format( _T("%s/.%s"), wxStandardPaths::Get().GetUserConfigDir().c_str(), GetAppName(true).c_str() );
+	#endif //__WXMSW__
+}

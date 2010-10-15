@@ -427,9 +427,11 @@ void BattleRoomTab::PrintAllySetup()
 	if ( m_battle )
 	{
 		std::map<int, int> allysizes = m_battle->GetAllySizes();
-		for ( std::map<int, int>::iterator itor = allysizes.begin(); itor != allysizes.end(); itor++ )
+		for ( std::map<int, int>::const_iterator itor = allysizes.begin(); itor != allysizes.end(); ++itor )
 		{
-			if ( itor != allysizes.begin() ) setupstring += _T("v");
+			if ( itor != allysizes.begin() )
+                setupstring += _T("v");
+			setupstring += wxString::Format( _T("(%d) ") , itor->first );
 			setupstring += TowxString( itor->second );
 		}
 	}
@@ -1170,7 +1172,7 @@ void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )
 	GetChatPanel().DidAction( nick, msg );
 }
 
-void BattleRoomTab::OnHostNew( wxCommandEvent& event )
+void BattleRoomTab::OnHostNew( wxCommandEvent& /*event*/ )
 {
 	if ( !ui().IsConnected() )
 	{

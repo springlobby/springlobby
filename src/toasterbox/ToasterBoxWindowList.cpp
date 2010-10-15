@@ -11,4 +11,4 @@
 #include "ToasterBoxWindowList.h"
 #include <wx/listimpl.cpp>
 
-WX_DEFINE_LIST(ToasterBoxWindowList);
+WX_DEFINE_LIST(ToasterBoxWindowList)

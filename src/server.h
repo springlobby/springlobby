@@ -8,6 +8,7 @@
 #include "userlist.h"
 #include "battlelist.h"
 #include "inetclass.h"
+#include "utils/mixins.hh"
 
 class ServerEvents;
 class SimpleServerEvents;
@@ -26,7 +27,7 @@ typedef int HostInfo;
 
 
 //! @brief Abstract baseclass that is used to implement a server protocol.
-class Server : public iNetClass
+class Server : public iNetClass, public SL::NonCopyable
 {
   public:
 	friend class ServerEvents;
@@ -217,8 +218,6 @@ class Server : public iNetClass
     virtual void SendCmd( const wxString& command, const wxString& param ) = 0;
     virtual void RelayCmd( const wxString& command, const wxString& param ) = 0;
 
-    private:
-        Server( const Server& );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVER_H

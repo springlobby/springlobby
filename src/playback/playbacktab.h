@@ -121,7 +121,7 @@ class PlaybackTab : public wxScrolledWindow, public SpringTerminatedSink< Playba
 
 	EventReceiverFunc<ThisType, GlobalEvents::GlobalEventData, &ThisType::OnUnitsyncReloaded> OnUsync_reload;
 
-    DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 };
 
 enum

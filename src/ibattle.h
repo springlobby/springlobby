@@ -11,6 +11,7 @@
 #include "userlist.h"
 #include "tdfcontainer.h"
 #include "utils/isink.h"
+#include "utils/mixins.hh"
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
@@ -104,7 +105,7 @@ struct BattleOptions
 	bool guilistactiv;
 };
 
-class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle >
+class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle > , public SL::NonCopyable
 {
 public:
 
