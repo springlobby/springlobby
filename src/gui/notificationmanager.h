@@ -10,7 +10,6 @@
 #include <vector>
 
 class INotification;
-class ToasterBox;
 
 class NotificationManager : public OnQuitSink < NotificationManager > , public SL::NonCopyable, public wxEvtHandler
 {
