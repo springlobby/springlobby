@@ -29,33 +29,39 @@ void key_binding::bind( const wxString& cmd, const wxString& keyString )
 	}
 }
 
+void key_binding::addKeySymSet( const wxString& name, const wxString& keyString )
+{
+}
+
 void key_binding::addKeySym( const wxString& name, const wxString& keyString )
 {
-	this->m_keySyms[name] = keyString;
-	this->m_keySymsRev[KeynameConverter::convertHexValueToKey( keyString )] = name;
+	const wxString normName = name.Lower();
+	this->m_keySyms[normName] = keyString;
+	this->m_keySymsRev[KeynameConverter::convertHexValueToKey( keyString )] = normName;
 }
 
 const wxString key_binding::resolveKeySymName( const wxString& symName ) const
 {
-	key_sym_map::const_iterator iter = this->m_keySyms.find( symName );
+	key_sym_map::const_iterator iter = this->m_keySyms.find( KeynameConverter::discardModifier( symName ) );
 	if ( iter == this->m_keySyms.end() )
 	{
 		return symName;
 	}
 
-	wxString key = KeynameConverter::convertHexValueToKey( iter->second );
-	return key;
+	KeynameConverter::ModifierList modList = KeynameConverter::stringToKeyModifier( symName );
+	return KeynameConverter::modifier2String( modList ) + KeynameConverter::convertHexValueToKey( iter->second );
 }
 
-const wxString& key_binding::resolveKeySymKey( const wxString& key ) const
+wxString key_binding::resolveKeySymKey( const wxString& key ) const
 {
-	key_sym_map::const_iterator iter = this->m_keySymsRev.find( key );
+	key_sym_map::const_iterator iter = this->m_keySymsRev.find( KeynameConverter::discardModifier( key ) );
 	if ( iter == this->m_keySymsRev.end() )
 	{
 		return key;
 	}
 
-	return iter->second;
+	KeynameConverter::ModifierList modList = KeynameConverter::stringToKeyModifier( key );
+	return KeynameConverter::modifier2String( modList ) + iter->second;
 }
 
 void key_binding::setKeySyms( const key_sym_map& keySyms )

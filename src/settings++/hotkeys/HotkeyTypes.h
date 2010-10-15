@@ -16,6 +16,7 @@ typedef std::set<wxString>						key_set;
 typedef std::map<wxString, key_set>				key_binding_c2k;
 typedef std::vector<wxString>					command_list_sorted;
 typedef std::map<wxString, wxString>			key_sym_map;
+typedef std::map<wxString, wxString>			key_sym_set_map;
 
 class key_binding
 {
@@ -29,6 +30,7 @@ public:
 	void clear();
 
 	void addKeySym( const wxString& name, const wxString& keyString );
+	void addKeySymSet( const wxString& name, const wxString& keyString );
 
 	bool exists( const wxString& command, const wxString& key );
 	bool isEmpty() const;
@@ -40,7 +42,7 @@ public:
 	key_commands_sorted getBinds() const;
 	//const key_binding_k2c& getK2C() const;
 
-	const wxString& resolveKeySymKey( const wxString& key ) const;
+	wxString resolveKeySymKey( const wxString& key ) const;
 	bool operator==( const key_binding& other ) const;
 
 private:
@@ -56,6 +58,9 @@ private:
 
 	key_sym_map													m_keySyms;
 	key_sym_map													m_keySymsRev;
+
+	key_sym_set_map												m_keySymSet;
+	key_sym_set_map												m_keySymSetRev;
 	//key_binding_map		m_binds;
 	//key_binding_c2k		m_c2k; //for faster lookups. keep this in sync with m_binds
 	//unsigned			m_nextOrderIdx;
