@@ -42,10 +42,15 @@
 ///  2010-08-13 : First release of V41 Snarl API implementation
 /// </VersionHistory>
 
+
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "SnarlInterface.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
 namespace Snarl {
 namespace V41 {
@@ -247,6 +252,22 @@ LONG32 SnarlInterface::Notify(LPCWSTR className, LPCWSTR packetData)
 	return result;
 }
 
+typedef int errno_t;
+const size_t _TRUNCATE  = 0;
+
+//#include <algorithm>
+int strncat_s(
+	char *strDest,
+	size_t bufferSizeInBytes,
+	const char *strSource,
+	size_t /*count*/
+ )
+{
+	size_t dceo = ( bufferSizeInBytes < strlen(strSource) ? bufferSizeInBytes  : strlen(strSource) );
+	strncat(strDest, strSource, dceo );
+	return EINVAL;
+}
+
 LONG32 SnarlInterface::EZUpdate(LONG32 msgToken, LPCSTR title /* = NULL */, LPCSTR text /* = NULL */, LONG32 timeout /* = -1 */, LPCSTR icon /* = NULL */)
 {
 	SnarlMessage msg;
@@ -272,7 +293,7 @@ LONG32 SnarlInterface::EZUpdate(LONG32 msgToken, LPCSTR title /* = NULL */, LPCS
 	}
 	if (timeout != -1) {
 		char tmp[32];
-		_itoa_s(timeout, tmp, 10);
+		_itoa(timeout, tmp, 10);
 		
 		err |= strncat_s(pData, SnarlPacketDataSize, (pData[0] != NULL) ? "#?timeout::" : "timeout::", _TRUNCATE);
 		err |= strncat_s(pData, SnarlPacketDataSize, tmp, _TRUNCATE);
@@ -416,7 +437,7 @@ LPCTSTR SnarlInterface::GetIconsPath()
 
 	size_t nLen = 0;
 	// TODO: _tcsnlen MAX_PATH
-	if (nLen = _tcsnlen(szPath, MAX_PATH))
+	if (nLen = strlen(szPath))
 	{
 		nLen += 10 + 1; // etc\\icons\\ + NULL
 		szIconPath = AllocateString(nLen);
@@ -504,12 +525,13 @@ void SnarlInterface::PackData(BYTE* data, LPCSTR format, ...)
 	va_start(args, format);
 	
 	// Get size of buffer
-	cchStrTextLen = _vscprintf(format, args) + 1; // + NULL
+
+	cchStrTextLen = vfprintf( tmpfile(), format, args ) + 1; // + NULL
 	if (cchStrTextLen <= 1)
 		return;
 
 	// Create formated string - _TRUNCATE will ensure zero terminated
-	_vsnprintf_s((char*)data, SnarlPacketDataSize, _TRUNCATE, format, args);
+	_vsnprintf((char*)data, SnarlPacketDataSize, format, args);
 
 	va_end(args);
 }

@@ -1,8 +1,9 @@
-﻿#ifndef SNARL_INTERFACE_V41
+#ifndef SNARL_INTERFACE_V41
 #define SNARL_INTERFACE_V41
 
 #include <tchar.h>
 #include <windows.h>
+
 #include <cstdio>
 
 #ifndef SMTO_NOTIMEOUTIFNOTHUNG
