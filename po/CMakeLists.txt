@@ -39,9 +39,31 @@ ELSE(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
   MESSAGE(STATUS "Found xgettext: ${XGETTEXT}")
   SET(MESSAGES_POT_FILE ${springlobby_SOURCE_DIR}/po/springlobby.pot)
   ADD_CUSTOM_TARGET(
-    update-pot ALL 
+    update-potfile ALL 
     COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C -o ${MESSAGES_POT_FILE} ${springlobbySrc} ${templatesources}
 #     DEPENDS springlobby
     WORKING_DIRECTORY ${springlobby_SOURCE_DIR}
   )
 ENDIF(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
+
+FIND_PROGRAM( MSGMERGE NAMES "msgmerge" )
+IF(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
+  MESSAGE(STATUS "Warning: msgmerge not found - will not update po files")
+ELSE(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
+  MESSAGE(STATUS "Found msgmerge: ${MSGMERGE}")
+
+  ADD_CUSTOM_TARGET( update-po ALL )
+	FILE(GLOB PO_FILES  ${CMAKE_SOURCE_DIR}/po/*.po)
+	SET( POTFILE ${springlobby_SOURCE_DIR}/po/springlobby.pot )
+
+	FOREACH(_poFile ${PO_FILES})
+			ADD_CUSTOM_COMMAND(TARGET update-po
+						COMMAND ${MSGMERGE} -vU ${_poFile} ${POTFILE} 
+						DEPENDS ${_poFile})
+	ENDFOREACH(_poFile ${PO_FILES})
+  
+ENDIF(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
+
+ADD_CUSTOM_TARGET( update-translations )
+add_dependencies( update-translations update-potfile )
+add_dependencies( update-translations update-po )
