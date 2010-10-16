@@ -19,7 +19,8 @@ public:
 		CTRL,
 		ALT,
 		SHIFT,
-		ANY
+		ANY,
+		META
 	};
 	typedef std::set<Modifier>				ModifierList;
 

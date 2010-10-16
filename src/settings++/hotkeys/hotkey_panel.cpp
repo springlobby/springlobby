@@ -196,6 +196,7 @@ key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
 	//add keysyms
 	binding.setKeySyms( profile.GetKeySyms() );
 	binding.setKeySymsSet( profile.GetKeySymsSet() );
+	binding.setMetaKey( profile.GetMetaKey() );
 
 	return binding;
 }
@@ -270,6 +271,12 @@ void hotkey_panel::SaveSettings()
 					sett().SetHotkeyKeySymSet( profile.GetName(), iter->first, iter->second );
 				}
 			}
+
+			//add meta
+			if ( defaultBinds.getMetaKey() != profileBinds.getMetaKey() )
+			{
+				sett().SetHotkeyMeta( profile.GetName(), profileBinds.getMetaKey() );
+			}
 		}
 
 		sett().SaveSettings();
@@ -334,6 +341,7 @@ void hotkey_panel::putKeybindingsToProfile( wxKeyProfile& profile, const key_bin
 
 	profile.SetKeySyms( bindings.getKeySyms() );
 	profile.SetKeySymsSet( bindings.getKeySymsSet() );
+	profile.SetMetaKey( bindings.getMetaKey() );
 }
 
 wxString hotkey_panel::getNextFreeProfileName()
@@ -377,7 +385,7 @@ void hotkey_panel::selectProfileFromUikeys()
 		const wxKeyProfile& profile = *profileArr.Item(i);
 		const key_binding proBinds = hotkey_panel::getBindingsFromProfile( profile );
 
-		if ( curBinding == proBinds ) //hotkey_panel::compareBindings( curBinding, proBinds ) )
+ 		if ( curBinding == proBinds )
 		{
 			foundIdx = i;
 			break;

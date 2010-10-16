@@ -29,6 +29,9 @@ public:
 	void unbind( const wxString& cmd, const wxString& keyString );
 	void clear();
 
+	void setMetaKey( const wxString& key );
+	const wxString& getMetaKey() const;
+
 	void addKeySym( const wxString& name, const wxString& keyString );
 	void addKeySymSet( const wxString& name, const wxString& keyString );
 
@@ -68,6 +71,8 @@ private:
 
 	key_sym_set_map												m_keySymsSet;
 	key_sym_set_map												m_keySymsSetRev;
+
+	wxString													m_meta;
 	//key_binding_map		m_binds;
 	//key_binding_c2k		m_c2k; //for faster lookups. keep this in sync with m_binds
 	//unsigned			m_nextOrderIdx;

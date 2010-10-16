@@ -8,6 +8,16 @@ key_binding::key_binding() //: m_nextOrderIdx(1)
 {
 }
 
+void key_binding::setMetaKey( const wxString& key )
+{
+	this->m_meta = key;
+}
+
+const wxString& key_binding::getMetaKey() const
+{
+	return this->m_meta;
+}
+
 void key_binding::bind( const wxString& cmd, const wxString& keyString )
 {
 	if ( this->exists( cmd, keyString ) )
@@ -194,6 +204,9 @@ void key_binding::unbind( const wxString& cmd, const wxString& keyString )
 		key_binding::KeyGroupMap::iterator iter = m_groupsAny.find( normKey );
 		assert( iter != m_groupsAny.end() ); //we can assert this, since we checked for exists() at the beginning
 		iter->second.erase( std::find(iter->second.begin(), iter->second.end(), cmd) );
+
+		if ( iter->second.size() == 0 )
+			m_groupsAny.erase( iter->first );
 	}
 	else
 	{
@@ -202,6 +215,9 @@ void key_binding::unbind( const wxString& cmd, const wxString& keyString )
 		key_binding::KeyGroupMap::iterator iter = m_groups.find( normKey );
 		assert( iter != m_groups.end() ); //we can assert this, since we checked for exists() at the beginning
 		iter->second.erase( std::find(iter->second.begin(), iter->second.end(), cmd) );
+
+		if ( iter->second.size() == 0 )
+			m_groups.erase( iter->first );
 	}
 }
 
@@ -236,12 +252,14 @@ void key_binding::clear()
 	this->m_keyCmdSet.clear();
 	this->m_keySyms.clear();
 	this->m_keySymsSet.clear();
+	this->m_meta.clear();
 }
 
 bool key_binding::operator==(const key_binding& other) const
 {
 	return ( this->m_groups == other.m_groups ) && ( this->m_groupsAny == other.m_groupsAny ) &&
-		( this->m_keySyms == other.m_keySyms ) && ( this->m_keySymsSet == other.m_keySymsSet );
+		( this->m_keySyms == other.m_keySyms ) && ( this->m_keySymsSet == other.m_keySymsSet ) &&
+		( this->m_meta == other.m_meta );
 }
 
 const key_binding key_binding::operator-(const key_binding& other) const

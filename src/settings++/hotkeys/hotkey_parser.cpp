@@ -73,7 +73,7 @@ bool hotkey_parser::processLine( const wxString& line )
 
 		if ( cmd == wxT("fakemeta") )
 		{
-			this->m_bindings.bind( cmd, key );
+			this->m_bindings.setMetaKey( key );
 			return true;
 		}
 	}
@@ -180,6 +180,12 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 		keySymSetRev[ iter->second ] = iter->first;
 	}
 
+	//add fakemeta
+	if ( SpringDefaultProfile::getBindings().getMetaKey() != springbindings.getMetaKey() )
+	{
+		newFile.AddLine( wxT("fakemeta\t\t") + springbindings.getMetaKey() );		
+	}
+
 	//check all default bindings if they still exist in current profile
 	//do unbind if not
 	const key_commands_sorted unbinds = (SpringDefaultProfile::getBindings() - springbindings).getBinds();
@@ -194,6 +200,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	{
 		newFile.AddLine( wxT("bind\t\t") + springbindings.resolveKeySymKeyAndSet( iter->first ) + wxT("\t\t") + iter->second );
 	}
+
 	newFile.Write();
 
 	const wxString prevFilenameBak = this->m_filename + wxT(".bak");

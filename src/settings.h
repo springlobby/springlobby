@@ -737,6 +737,9 @@ class Settings : public SL::NonCopyable
 	/** @name Hotkeys
     * @{
     */
+	void SetHotkeyMeta( const wxString& profileName, const wxString& keyStr );
+	wxString GetHotkeyMeta( const wxString& profileName );
+
 	void SetHotkeyKeySymSet( const wxString& profileName, const wxString& symName, const wxString& keyStr );
 	wxString GetHotkeyKeySymSet( const wxString& profileName, const wxString& symName );
 	wxArrayString GetHotkeyKeySymSetNames( const wxString& profileName );

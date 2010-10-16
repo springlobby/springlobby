@@ -1,5 +1,3 @@
--"meta" as possible keycode
-
 -keysymb editor -> context menu?
 -better method to show orderDlg instead of dblClick? -> context menu?
 -commandline options to switch profiles
@@ -11,5 +9,4 @@
 
 -unify spelling
 -cleanup type mess (hotkeytypes etc)
--merge koshis hotkeytab
 -ö doesnt work http://projects.springlobby.info/issues/1443

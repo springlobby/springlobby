@@ -40,7 +40,8 @@
     #define wxID_INVALID                -1
 #endif
 
-#define wxACCEL_ANY   0x0008   // hold any key down
+#define wxACCEL_ANY    0x0008   // hold any key down
+#define wxACCEL_META   0x0010   // virtual meta
 
 // define the following to true to enable lots of debug messages
 #define wxKEYBINDER_DEBUG_MSG            0
@@ -652,6 +653,7 @@ protected:
     //! The array of wxCmd-derived classes.
     wxCmdArray m_arrCmd;
 
+	wxString m_metaKey;
 	key_sym_map	m_keySyms;
 	key_sym_set_map	m_keySymsSet;
 	size_t m_nNextOderIndex;	
@@ -725,6 +727,7 @@ public:     // miscellaneous
     //! Deep copies the given object.
     void DeepCopy(const wxKeyBinder &p) {
         m_arrCmd.DeepCopy(p.m_arrCmd);
+		m_metaKey = p.m_metaKey;
 		m_nNextOderIndex = p.m_nNextOderIndex;
 		m_nNextOderIndexAny = p.m_nNextOderIndex;
 		m_keySyms = p.m_keySyms;
@@ -744,6 +747,7 @@ public:     // miscellaneous
         m_arrCmd.Clear();
 		m_keySyms.clear();
 		m_keySymsSet.clear();
+		m_metaKey.clear();
 		m_nNextOderIndex = 1;
 		m_nNextOderIndexAny = 1;
     }
@@ -800,6 +804,13 @@ public:     // miscellaneous
 
     // Add functions
     // -------------------
+	void SetMetaKey( const wxString& key ) {
+		this->m_metaKey = key;
+	}
+
+	const wxString& GetMetaKey() const {
+		return this->m_metaKey;
+	}
 
 	void SetKeySyms( const key_sym_map& keySyms ) {
 		this->m_keySyms = keySyms;
@@ -1232,6 +1243,7 @@ private:
 #define wxKEYBINDER_ADD_PROFILEBTN_ID       wxKEYBINDER_BASEID+9
 #define wxKEYBINDER_REMOVE_PROFILEBTN_ID    wxKEYBINDER_BASEID+10
 #define wxKEYBINDER_ANY_MODIFIER_ID         wxKEYBINDER_BASEID+11
+#define wxKEYBINDER_META_MODIFIER_ID         wxKEYBINDER_BASEID+12
 
 #define wxKEYBINDER_SELECTED_POSTFIX        wxT(" (selected)")
 
@@ -1488,6 +1500,7 @@ protected:      // event handlers
     void OnAddProfile(wxCommandEvent &event);
     void OnRemoveProfile(wxCommandEvent &event);
 	void OnAnyModifier(wxCommandEvent &event);
+	void OnMetaModifier(wxCommandEvent &);
 
     //! Handles the notifications received from the wxKeyMonitorTextCtrl.
     void OnKeyPressed(wxCommandEvent &event);
@@ -1577,6 +1590,7 @@ protected:      // the subwindows of this dialog
     wxButton *m_pRemoveAllBtn;
 
 	wxCheckBox *m_pAnyModCbx;
+	wxCheckBox *m_pMetaModCbx;
 
     // used when wxKEYBINDER_USE_TREECTRL is in the build flags
     wxTreeCtrl *m_pCommandsTree;

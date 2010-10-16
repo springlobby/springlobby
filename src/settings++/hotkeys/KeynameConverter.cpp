@@ -156,6 +156,10 @@ wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList
 		{
 			modString += wxT("Alt+");
 		}
+		if ( mod.find( META ) != mod.end() )
+		{
+			modString += wxT("Meta+");
+		}
 	}
 
 	return modString;
@@ -186,6 +190,11 @@ KeynameConverter::ModifierList KeynameConverter::stringToKeyModifier(const wxStr
 	if (str.Contains(wxT("ANY+")))
 	{
 		modifiers.insert( ANY );
+	}
+
+	if (str.Contains(wxT("META+")))
+	{
+		modifiers.insert( META );
 	}
 
 	return modifiers;

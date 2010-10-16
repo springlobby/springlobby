@@ -168,6 +168,8 @@ void SpringDefaultProfile::initialize()
 	SpringDefaultProfile::addBinding( _T("viewtw"), _T("Ctrl+f3") );
 	SpringDefaultProfile::addBinding( _T("wait"), _T("w") );
 	SpringDefaultProfile::addBinding( _T("wait queued"), _T("Shift+w") );
+
+	SpringDefaultProfile::m_bindings.setMetaKey( _T("space") );
 }
 
 void SpringDefaultProfile::addBinding( const wxString& command, const wxString& key )
