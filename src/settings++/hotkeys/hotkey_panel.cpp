@@ -464,6 +464,13 @@ key_binding_collection hotkey_panel::getProfilesFromSettings()
 			const wxString& value = sett().GetHotkeyKeySymSet( profName, keySymsSet.Item(k) );
 			coll[profName].addKeySymSet( keySymsSet.Item(k), value );
 		}
+
+		//add meta
+		wxString meta = sett().GetHotkeyMeta( profName );
+		if ( meta.size() > 0 )
+		{
+			coll[profName].setMetaKey( meta );
+		}
 	}
 
 	return coll;
