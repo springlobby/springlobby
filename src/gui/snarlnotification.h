@@ -14,7 +14,7 @@ class SnarlNotification : public INotification
 
 	protected:
 		ToasterNotification* m_fallback_wrapper;
-		SnarlInterface m_snarl_interface;
+		Snarl::V41::SnarlInterface m_snarl_interface;
 
 };
 

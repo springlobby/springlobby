@@ -15,7 +15,7 @@
 	typedef LibnotifyNotification NotificationWrapperType;
 #elif defined(__WXMSW__)
 	#include "snarlnotification.h"
-	typedef
+	typedef SnarlNotification NotificationWrapperType;
 #else
 	#include "toasternotification.h"
 	typedef ToasterNotification NotificationWrapperType;
