@@ -37,10 +37,10 @@ IF(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
   MESSAGE(STATUS "Warning: xgettext not found - will not update springlobby.pot")
 ELSE(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
   MESSAGE(STATUS "Found xgettext: ${XGETTEXT}")
-  SET(MESSAGES_POT_FILE ${SPRINGLOBBY_SOURCE_DIR}/po/springlobby.pot)
+  SET(MESSAGES_POT_FILE ${springlobby_SOURCE_DIR}/po/springlobby.pot)
   ADD_CUSTOM_TARGET(
     update-pot ALL 
-    COMMAND ${XGETTEXT} -k_ -C -o ${MESSAGES_POT_FILE} ${springlobbySrc} ${templatesources}
+    COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C -o ${MESSAGES_POT_FILE} ${springlobbySrc} ${templatesources}
 #     DEPENDS springlobby
     WORKING_DIRECTORY ${springlobby_SOURCE_DIR}
   )
