@@ -2,7 +2,7 @@
 # Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
 # This file is distributed under the same license as the springlobby package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
@@ -102,8 +102,9 @@ msgid "None"
 msgstr "Brak"
 
 #: src/autobalancedialog.cpp:48
+#, fuzzy
 msgid "Fair"
-msgstr ""
+msgstr "Targi"
 
 #: src/autobalancedialog.cpp:49
 msgid "Always"
@@ -111,12 +112,10 @@ msgstr "Zawsze"
 
 #: src/autobalancedialog.cpp:50
 msgid ""
-"Put members of same clan ( users having same clantag, like '[smurfzor]Alice' "
-"and '[smurfzor]Bob' ) together into same alliance. \n"
+"Put members of same clan ( users having same clantag, like '[smurfzor]Alice' and '[smurfzor]Bob' ) together into same alliance. \n"
 "None: nothing special for clans.\n"
 "Fair: put clanmembers into alliance, unless this makes alliances unfair.\n"
-"Always: always put clanmembers into alliance, even if that alliance is "
-"unfair."
+"Always: always put clanmembers into alliance, even if that alliance is unfair."
 msgstr ""
 
 #: src/autobalancedialog.cpp:52
@@ -168,8 +167,9 @@ msgid "players"
 msgstr "Gracze:"
 
 #: src/battlelistctrl.cpp:62
+#, fuzzy
 msgid "max"
-msgstr ""
+msgstr "max"
 
 #: src/battlelistctrl.cpp:192 src/playback/playbacklistctrl.cpp:65
 msgid "Download &map"
@@ -277,8 +277,9 @@ msgid "Players:"
 msgstr "Gracze:"
 
 #: src/battlelisttab.cpp:132 src/battlelisttab.cpp:134
+#, fuzzy
 msgid " Filter "
-msgstr ""
+msgstr "Filtr"
 
 #: src/battlelisttab.cpp:139 src/battlelisttab.cpp:141
 msgid " Battle infos "
@@ -307,8 +308,7 @@ msgid "%d battles displayed"
 msgstr ""
 
 #: src/battlelisttab.cpp:302
-msgid ""
-"You cannot host a game while being offline. Please connect to a lobby server."
+msgid "You cannot host a game while being offline. Please connect to a lobby server."
 msgstr ""
 
 #: src/battlelisttab.cpp:302
@@ -328,9 +328,7 @@ msgid "Spring error"
 msgstr ""
 
 #: src/battlelisttab.cpp:315
-msgid ""
-"You already are running a Spring instance, close it first in order to be "
-"able to host a new game"
+msgid "You already are running a Spring instance, close it first in order to be able to host a new game"
 msgstr ""
 
 #: src/battlelisttab.cpp:321 src/battlelisttab.cpp:495
@@ -361,10 +359,8 @@ msgstr ""
 #: src/battlelisttab.cpp:361 src/battlelisttab.cpp:371
 #, c-format
 msgid ""
-"Battle not started because the port you selected (%d) is unable to recieve "
-"incoming packets\n"
-" checks your router & firewall configuration again or change port in the "
-"dialog.\n"
+"Battle not started because the port you selected (%d) is unable to recieve incoming packets\n"
+" checks your router & firewall configuration again or change port in the dialog.\n"
 "\n"
 "If everything else fails, enable the Hole Punching NAT Traversal\n"
 " option in the hosting settings."
@@ -379,9 +375,7 @@ msgid "Error starting battle."
 msgstr ""
 
 #: src/battlelisttab.cpp:399 src/battlelisttab.cpp:410
-msgid ""
-"Couldn't find any maps in your spring installation. This could happen when "
-"you set the Spring settings incorrectly."
+msgid "Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."
 msgstr ""
 
 #: src/battlelisttab.cpp:399 src/battlelisttab.cpp:410
@@ -389,9 +383,7 @@ msgid "No maps found"
 msgstr "Nie znaleziono żadnych map"
 
 #: src/battlelisttab.cpp:488
-msgid ""
-"Joining battles is disabled due to the incompatible spring version you're "
-"using."
+msgid "Joining battles is disabled due to the incompatible spring version you're using."
 msgstr ""
 
 #: src/battlelisttab.cpp:495
@@ -402,9 +394,7 @@ msgid ""
 msgstr ""
 
 #: src/battlelisttab.cpp:508
-msgid ""
-"You already are running a Spring instance, close it first in order to be "
-"able to join another battle."
+msgid "You already are running a Spring instance, close it first in order to be able to join another battle."
 msgstr ""
 
 #: src/battlelisttab.cpp:513 src/playback/playbacktab.cpp:325
@@ -508,8 +498,9 @@ msgstr "Pozycja startowa"
 
 #: src/battlemaptab.cpp:109 src/battleroomtab.cpp:388
 #: src/mmoptionswrapper.cpp:117
+#, fuzzy
 msgid "Fixed"
-msgstr ""
+msgstr "Stałe"
 
 #: src/battleoptionstab.cpp:52
 msgid "Unit restrictions"
@@ -535,7 +526,7 @@ msgstr "Udostępnić wszystkie jednostki."
 
 #: src/battleoptionstab.cpp:83
 msgid "<<"
-msgstr ""
+msgstr "<<"
 
 #: src/battleoptionstab.cpp:84
 msgid "Enable all units."
@@ -575,8 +566,9 @@ msgid "ally"
 msgstr "Sojusznik"
 
 #: src/battleroomlistctrl.cpp:85
+#, fuzzy
 msgid "cpu"
-msgstr ""
+msgstr "cpu"
 
 #: src/battleroomlistctrl.cpp:86
 msgid "Resource Bonus"
@@ -627,8 +619,9 @@ msgid "AI (bot)\n"
 msgstr "Dodaj bota"
 
 #: src/battleroomlistctrl.cpp:707
+#, fuzzy
 msgid "Human\n"
-msgstr ""
+msgstr "Człowieka \\ n"
 
 #: src/battleroomlistctrl.cpp:710
 #, fuzzy
@@ -810,9 +803,7 @@ msgid "Color"
 msgstr "Kolor"
 
 #: src/battleroomtab.cpp:153
-msgid ""
-"A preview of the selected map.  You can see the starting positions, or (if "
-"set) starting boxes."
+msgid "A preview of the selected map.  You can see the starting positions, or (if set) starting boxes."
 msgstr ""
 
 #: src/battleroomtab.cpp:163 src/chatpanel.cpp:412
@@ -852,9 +843,7 @@ msgid "Autolock on start"
 msgstr ""
 
 #: src/battleroomtab.cpp:178
-msgid ""
-"Automatically locks the battle when the game starts and unlock when it's "
-"finished."
+msgid "Automatically locks the battle when the game starts and unlock when it's finished."
 msgstr ""
 
 #: src/battleroomtab.cpp:182
@@ -866,9 +855,7 @@ msgid "Autohost"
 msgstr ""
 
 #: src/battleroomtab.cpp:186
-msgid ""
-"Toggle autohost mode.  This allows players to control your battle using "
-"commands like '!balance' and '!start'."
+msgid "Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'."
 msgstr ""
 
 #: src/battleroomtab.cpp:190
@@ -900,9 +887,7 @@ msgid "Balance teams"
 msgstr ""
 
 #: src/battleroomtab.cpp:200
-msgid ""
-"Automatically balance players into control teams, by default none shares "
-"control"
+msgid "Automatically balance players into control teams, by default none shares control"
 msgstr ""
 
 #: src/battleroomtab.cpp:210
@@ -1426,15 +1411,11 @@ msgstr ""
 #: src/chatpanel.cpp:1129 src/chatpanel.cpp:1143 src/chatpanel.cpp:1157
 #: src/chatpanel.cpp:1167
 #, c-format
-msgid ""
-" Error: Command (%s) does not exist, use /help for a list of available "
-"commands."
+msgid " Error: Command (%s) does not exist, use /help for a list of available commands."
 msgstr ""
 
 #: src/chatpanel.cpp:1137
-msgid ""
-" You are not in battle or battle does not exist, use /help for a list of "
-"available commands."
+msgid " You are not in battle or battle does not exist, use /help for a list of available commands."
 msgstr ""
 
 #: src/chatpanel.cpp:1151
@@ -1602,9 +1583,7 @@ msgid "Connect to lobby server"
 msgstr ""
 
 #: src/connectwindow.cpp:65
-msgid ""
-"Server to connect to. You can connect to any server you like by typing in "
-"hostaddress:port format."
+msgid "Server to connect to. You can connect to any server you like by typing in hostaddress:port format."
 msgstr ""
 
 #: src/connectwindow.cpp:71 src/connectwindow.cpp:158
@@ -1621,9 +1600,7 @@ msgid "Autoconnect next time"
 msgstr ""
 
 #: src/connectwindow.cpp:75
-msgid ""
-"remember connection details and automatically connect to server on next "
-"lobby startup"
+msgid "remember connection details and automatically connect to server on next lobby startup"
 msgstr ""
 
 #: src/connectwindow.cpp:83
@@ -2938,8 +2915,7 @@ msgid "Relay battle to an Autohost"
 msgstr ""
 
 #: src/hostbattledialog.cpp:121
-msgid ""
-"host and control game on remote server, helps if you have trouble hosting"
+msgid "host and control game on remote server, helps if you have trouble hosting"
 msgstr ""
 
 #: src/hostbattledialog.cpp:127 src/playback/playbacklistctrl.cpp:44
@@ -3111,8 +3087,7 @@ msgid "Autoconnect"
 msgstr "Połącz ponownie"
 
 #: src/lobbyoptionstab.cpp:71
-msgid ""
-"If checked, SpringLobby will automatically log on to the last used server"
+msgid "If checked, SpringLobby will automatically log on to the last used server"
 msgstr ""
 
 #: src/lobbyoptionstab.cpp:72
@@ -3125,10 +3100,8 @@ msgstr ""
 
 #: src/lobbyoptionstab.cpp:78
 msgid ""
-"By default SpringLobby will send some statistics (OS,SpringLobby version) to "
-"server,\n"
-"to both make helping you in case of problems easier and inform of critical "
-"updates.\n"
+"By default SpringLobby will send some statistics (OS,SpringLobby version) to server,\n"
+"to both make helping you in case of problems easier and inform of critical updates.\n"
 "Uncheck to disable."
 msgstr ""
 
@@ -3141,9 +3114,7 @@ msgid "Automatic updates"
 msgstr ""
 
 #: src/lobbyoptionstab.cpp:90
-msgid ""
-"SpringLobby can check at startup if a newer version is available and "
-"automatically download it for you."
+msgid "SpringLobby can check at startup if a newer version is available and automatically download it for you."
 msgstr ""
 
 #: src/lobbyoptionstab.cpp:91
@@ -3169,8 +3140,7 @@ msgstr ""
 #: src/lobbyoptionstab.cpp:111
 msgid ""
 "\"Match exact\" will complete a word if there is one and only one match.\n"
-"\"Match nearest\" will select the (first) match that has closest Levenshtein "
-"distance"
+"\"Match nearest\" will select the (first) match that has closest Levenshtein distance"
 msgstr ""
 
 #: src/lobbyoptionstab.cpp:113
@@ -3568,9 +3538,7 @@ msgid "Popular maps"
 msgstr ""
 
 #: src/mapselectdialog.cpp:86
-msgid ""
-"Shows only maps which are currently being player on the server. You must be "
-"online to use this."
+msgid "Shows only maps which are currently being player on the server. You must be online to use this."
 msgstr ""
 
 #: src/mapselectdialog.cpp:88
@@ -3753,9 +3721,7 @@ msgstr ""
 
 #: src/playback/playbacktab.cpp:311
 #, c-format
-msgid ""
-"No compatible installed spring version has been found, this replay requires "
-"version: %s\n"
+msgid "No compatible installed spring version has been found, this replay requires version: %s\n"
 msgstr ""
 
 #: src/playback/playbacktab.cpp:312 src/ui.cpp:654
@@ -4052,8 +4018,7 @@ msgid "Hint"
 msgstr ""
 
 #: src/settings++/helpmenufunctions.cpp:27
-msgid ""
-"SpringSettings is a graphical frontend to the Settings of the Spring engine"
+msgid "SpringSettings is a graphical frontend to the Settings of the Spring engine"
 msgstr ""
 
 #: src/settings++/helpmenufunctions.cpp:38
@@ -4065,8 +4030,7 @@ msgid "The SpringLobby team"
 msgstr ""
 
 #: src/settings++/helpmenufunctions.cpp:39
-msgid ""
-"thanks for inviting me in, code to re-use, infrastructure and help in general"
+msgid "thanks for inviting me in, code to re-use, infrastructure and help in general"
 msgstr ""
 
 #: src/settings++/helpmenufunctions.cpp:40
@@ -4292,10 +4256,8 @@ msgstr ""
 #: src/settings++/tab_simple.cpp:99
 msgid ""
 "Select the resolution fitting your monitor(s).\n"
-"Selecting a dual screen resolution will automatically enable dual screen "
-"mode.\n"
-"If the appropiate resolution is not available you can set it manually in "
-"expert mode.\n"
+"Selecting a dual screen resolution will automatically enable dual screen mode.\n"
+"If the appropiate resolution is not available you can set it manually in expert mode.\n"
 "Please also contact the author so it can be added in future releases."
 msgstr ""
 
@@ -4384,12 +4346,9 @@ msgstr ""
 #: src/springlobbyapp.cpp:160
 msgid ""
 ",\n"
-"It looks like this is your first time using SpringLobby. I have guessed a "
-"configuration that I think will work for you but you should review it, "
-"especially the Spring configuration. \n"
+"It looks like this is your first time using SpringLobby. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration. \n"
 "\n"
-"When you are done you can go to the File menu, connect to a server, and "
-"enjoy a nice game of Spring :)"
+"When you are done you can go to the File menu, connect to a server, and enjoy a nice game of Spring :)"
 msgstr ""
 
 #: src/springlobbyapp.cpp:160
@@ -4490,9 +4449,7 @@ msgid ""
 msgstr ""
 
 #: src/springoptionstab.cpp:277
-msgid ""
-"Do you want to change spring's datadir location? (select yes only if you "
-"know what you're doing)"
+msgid "Do you want to change spring's datadir location? (select yes only if you know what you're doing)"
 msgstr ""
 
 #: src/springoptionstab.cpp:277
@@ -4522,9 +4479,7 @@ msgid "Timeout assumed, disconnecting"
 msgstr ""
 
 #: src/tasserver.cpp:491
-msgid ""
-"Failed to punch through NAT, playing this battle might not work for you or "
-"for other players."
+msgid "Failed to punch through NAT, playing this battle might not work for you or for other players."
 msgstr ""
 
 #: src/tdfcontainer.cpp:126
@@ -4628,9 +4583,7 @@ msgid "maximum number of concurrent connections"
 msgstr ""
 
 #: src/torrentwrapper.cpp:442
-msgid ""
-"Tried all known trackers for torrent system. No connection could be "
-"established"
+msgid "Tried all known trackers for torrent system. No connection could be established"
 msgstr ""
 
 #: src/torrentwrapper.cpp:443
@@ -4686,9 +4639,7 @@ msgid "  \"/back\" - Resets your away status."
 msgstr ""
 
 #: src/ui.cpp:503
-msgid ""
-"  \"/changepassword oldpassword newpassword\" - Changes the current active "
-"account's password."
+msgid "  \"/changepassword oldpassword newpassword\" - Changes the current active account's password."
 msgstr ""
 
 #: src/ui.cpp:504
@@ -4696,14 +4647,11 @@ msgid "  \"/channels\" - Lists currently active channels."
 msgstr ""
 
 #: src/ui.cpp:505
-msgid ""
-"  \"/help [topic]\" - Put topic if you want to know more specific "
-"information about a command."
+msgid "  \"/help [topic]\" - Put topic if you want to know more specific information about a command."
 msgstr ""
 
 #: src/ui.cpp:506
-msgid ""
-"  \"/join channel [password] [,channel2 [password2]]\" - Joins a channel."
+msgid "  \"/join channel [password] [,channel2 [password2]]\" - Joins a channel."
 msgstr ""
 
 #: src/ui.cpp:507
@@ -4715,9 +4663,7 @@ msgid "  \"/ingame\" - Shows how much time you have in game."
 msgstr ""
 
 #: src/ui.cpp:509
-msgid ""
-"  \"/msg username [text]\" - Sends a private message containing text to "
-"username."
+msgid "  \"/msg username [text]\" - Sends a private message containing text to username."
 msgstr ""
 
 #: src/ui.cpp:510
@@ -4757,9 +4703,7 @@ msgid "  \"/me action\" - Say IRC style action message."
 msgstr ""
 
 #: src/ui.cpp:521
-msgid ""
-"If you are missing any commands, go to #springlobby and try to type it "
-"there :)"
+msgid "If you are missing any commands, go to #springlobby and try to type it there :)"
 msgstr ""
 
 #: src/ui.cpp:526
@@ -4783,9 +4727,7 @@ msgstr ""
 
 #: src/ui.cpp:653
 #, c-format
-msgid ""
-"No compatible installed spring version has been found, this server requires "
-"version: %s\n"
+msgid "No compatible installed spring version has been found, this server requires version: %s\n"
 msgstr ""
 
 #: src/ui.cpp:656
@@ -4848,8 +4790,7 @@ msgstr ""
 msgid ""
 ". Should it be downloaded?                                     \n"
 " Selecting \"no\" will remove the missing map from the preset.\n"
-"                                    Please reselect the preset after "
-"download finished"
+"                                    Please reselect the preset after download finished"
 msgstr ""
 
 #: src/ui.cpp:1303
@@ -4890,8 +4831,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"Would you like for me to autodownload the new version? Changes will take "
-"effect next you launch the lobby again."
+"Would you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."
 msgstr ""
 
 #: src/updater/updater.cpp:54
@@ -4994,9 +4934,7 @@ msgid "Unknown"
 msgstr ""
 
 #: src/useractions.cpp:179
-msgid ""
-"To prevent logical inconsistencies, adding a user to more than one group is "
-"not allowed"
+msgid "To prevent logical inconsistencies, adding a user to more than one group is not allowed"
 msgstr ""
 
 #: src/useractions.cpp:180
@@ -5050,9 +4988,7 @@ msgid "popup a message box when user logs in/out from  the server"
 msgstr ""
 
 #: src/useractions.h:21
-msgid ""
-"ignore private messages of these users, no pm window will open if any of "
-"these try to contact you privately"
+msgid "ignore private messages of these users, no pm window will open if any of these try to contact you privately"
 msgstr ""
 
 #: src/useractions.h:22
@@ -5129,7 +5065,6 @@ msgstr ""
 msgid "Widget files have not been removed."
 msgstr ""
 
-#, fuzzy
 #~ msgid "Grouping size"
 #~ msgstr "Opcje"
 
@@ -5154,44 +5089,36 @@ msgstr ""
 #~ msgid "Force start?"
 #~ msgstr "Wymuszony start?"
 
-#, fuzzy
 #~ msgid "Channel name"
 #~ msgstr "kanał"
 
 #~ msgid "_SERVER"
 #~ msgstr "_SERWER"
 
-#, fuzzy
 #~ msgid "off"
 #~ msgstr "Wyłącz"
 
-#, fuzzy
 #~ msgid "Not online"
 #~ msgstr "Rozłącz"
 
-#, fuzzy
 #~ msgid "Only the host can change the game options"
 #~ msgstr "Tylko host może rozpocząć bitwe"
 
 #~ msgid "Only the host can start the battle."
 #~ msgstr "Tylko host może rozpocząć bitwe"
 
-#, fuzzy
 #~ msgid "Only the host can use those functions."
 #~ msgstr "Tylko host może rozpocząć bitwe"
 
-#, fuzzy
 #~ msgid "Only the host can toggle autohost mode."
 #~ msgstr "Tylko host może rozpocząć bitwe"
 
 #~ msgid "Select all"
 #~ msgstr "Zaznacz wszystko"
 
-#, fuzzy
 #~ msgid "Add user"
 #~ msgstr "(%d użytkowników)"
 
-#, fuzzy
 #~ msgid "Normal game"
 #~ msgstr "Normalny"
 
