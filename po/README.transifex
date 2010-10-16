@@ -4,8 +4,8 @@ Transifex.net Token Verification
 The list of tokens bellow guarantee the respective users to be able to enable 
 submission on components using the following repository url:
 
-git://springlobby.info/git/buildbot/springlobby.git
+git://github.com/springlobby/springlobby.git
 
 Tokens:
 
-fLbS8HdEPTQ66LFR4hMChKzj3E2tUq57 / koshi
+FMPPnMrhBkwJuVVbeup6QzchVFgvsJCh / koshi
