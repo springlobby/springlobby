@@ -262,7 +262,7 @@ const Control VO_SLI[] = {
 const category_sizes_map_type VO_SLI_entry ( _T("VO_SLI"), sizeof(VO_SLI) / Control_size );
 
 const Control VO_SLI_EXT[] = {
-	{_(""), _T("FSAA"), -1, _T("0"), {_("")}}
+	{_T(""), _T("FSAA"), -1, _T("0"), {_T("")}}
 };
 
 const category_sizes_map_type VO_SLI_EXT_entry ( _T("VO_SLI_EXT"), sizeof(VO_SLI_EXT) / Control_size );
@@ -344,15 +344,15 @@ const Control MO_SLI[] = {
 const category_sizes_map_type MO_SLI_entry ( _T("MO_SLI"), sizeof(MO_SLI) / Control_size );
 
 const Control MO_SLI_EXT[] = {
-	{_(""), _T("OverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
+	{_T(""), _T("OverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
 													"Can be changed ingame.")}},
-	{_(""), _T("RotOverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
+	{_T(""), _T("RotOverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
 													"Can be changed ingame.")}},
-	{_(""), _T("TWEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n"
+	{_T(""), _T("TWEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n"
 												"Can be changed ingame.")}},
-	{_(""), _T("FPSEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n"
+	{_T(""), _T("FPSEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n"
 												"Can be changed ingame.")}},
-	{_(""), _T("CamFreeEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
+	{_T(""), _T("CamFreeEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
 												"Can be changed ingame.")}},
 };
 
@@ -403,8 +403,8 @@ const Control MO_RBUT[] = {
 const category_sizes_map_type MO_RBUT_entry ( _T("MO_RBUT"), sizeof(MO_RBUT) / Control_size );
 
 const Control RC_TEXT[] = {
-	{_(""), _T("XResolution"), -1,	_T("1024"), {_("screen width")}},
-	{_(""), _T("YResolution"), -1,	_T("768") , {_("screen height")}}
+	{_T(""), _T("XResolution"), -1,	_T("1024"), {_("screen width")}},
+	{_T(""), _T("YResolution"), -1,	_T("768") , {_("screen height")}}
 };
 
 const category_sizes_map_type RC_TEXT_entry ( _T("RC_TEXT"), sizeof(RC_TEXT) / Control_size );
@@ -412,19 +412,19 @@ const category_sizes_map_type RC_TEXT_entry ( _T("RC_TEXT"), sizeof(RC_TEXT) / C
 
 const Control W4_CONTROLS[] = {
     //booleans = checkboxes
-    {_("Blur reflection"), _T("BumpWaterBlurReflection"), ID_W4_BumpWaterBlurReflection , _T("1"), {_("")}},
+	{_("Blur reflection"), _T("BumpWaterBlurReflection"), ID_W4_BumpWaterBlurReflection , _T("1"), {_T("")}},
     {_("Use depth texture"), _T("BumpWaterUseDepthTexture"), ID_W4_BumpWaterUseDepthTexture , _T("1"), {_("enables smoother blending on coastlines")}},
     {_("Shore waves"), _T("BumpWaterShoreWaves"), ID_W4_BumpWaterShoreWaves , _T("0"), {_("Enables shorewaves")}},
     {_("Reflection"), _T("BumpWaterReflection"), ID_W4_BumpWaterReflection , _T("1"), {_("Turn on water reflections")}},
     // select boxes
-    {_("Reflection texture size"), _T("BumpWaterTexSizeReflection"), ID_W4_BumpWaterTexSizeReflection , _T("128"), {_("")}},
+	{_("Reflection texture size"), _T("BumpWaterTexSizeReflection"), ID_W4_BumpWaterTexSizeReflection , _T("128"), {_T("")}},
     {_("Refraction"), _T("BumpWaterRefraction"), ID_W4_BumpWaterRefraction , _T("1"), {_("Turn on water refractions.\n(0:=off, 1:=screencopy(fast), 2:=own rendering pass(slow)).")}},
     // spin control
-    {_("Anisotropy"), _T("BumpWaterAnisotropy"), ID_W4_BumpWaterAnisotropy , _T("0"), {_("")}},
-    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
-    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
-    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
-    //     {_(""), _T(""), ID_W4_ , _T(""), {_("")}},
+	{_("Anisotropy"), _T("BumpWaterAnisotropy"), ID_W4_BumpWaterAnisotropy , _T("0"), {_T("")}},
+	//     {_T(""), _T(""), ID_W4_ , _T(""), {_T("")}},
+	//     {_T(""), _T(""), ID_W4_ , _T(""), {_T("")}},
+	//     {_T(""), _T(""), ID_W4_ , _T(""), {_T("")}},
+	//     {_T(""), _T(""), ID_W4_ , _T(""), {_T("")}},
 
 };
 

@@ -578,6 +578,9 @@ class Settings : public SL::NonCopyable
     bool GetBattleLastAutoAnnounceDescription();
     void SetBattleLastAutoAnnounceDescription( bool value );
 
+    void SetBattleLastSideSel( const wxString& modname, int sidenum );
+    int GetBattleLastSideSel( const wxString& modname );
+
     struct SettStartBox
     {
     	int ally;

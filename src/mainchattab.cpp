@@ -223,14 +223,15 @@ void MainChatTab::RejoinChannels()
 }
 
 
-ChatPanel* MainChatTab::AddChatPanel( Channel& channel )
+ChatPanel* MainChatTab::AddChatPanel( Channel& channel, bool doFocus )
 {
 
 	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
 		if ( m_chat_tabs->GetPageText( i ) == channel.GetName() ) {
 			ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
 			if ( tmp->GetPanelType() == CPT_Channel ) {
-				m_chat_tabs->SetSelection( i );
+				if ( doFocus )
+					m_chat_tabs->SetSelection( i );
 				tmp->SetChannel( &channel );
 				return tmp;
 			}
@@ -238,8 +239,9 @@ ChatPanel* MainChatTab::AddChatPanel( Channel& channel )
 	}
 
 	ChatPanel* chat = new ChatPanel( m_chat_tabs, channel, m_imagelist );
-	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), true, wxBitmap( channel_xpm ) );
-	chat->FocusInputBox();
+	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), doFocus, wxBitmap( channel_xpm ) );
+	if ( doFocus )
+		chat->FocusInputBox();
 	return chat;
 }
 

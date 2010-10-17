@@ -23,8 +23,8 @@ class SavegameList : public PlaybackList<Savegame>
     template <class PB, class I >
     friend class GlobalObjectHolder;
 
-    bool GetSavegameInfos ( const wxString& SavegamePath, Savegame& ret );
-    wxString GetScriptFromSavegame ( const wxString& SavegamePath );
+	bool GetSavegameInfos ( const wxString& SavegamePath, Savegame& ret ) const;
+	wxString GetScriptFromSavegame ( const wxString& SavegamePath ) const;
     BattleOptions GetBattleOptsFromScript( const wxString& script_ );
 
     //! load mod/map options

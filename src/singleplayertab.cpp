@@ -222,7 +222,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
 }
 
 
-bool SinglePlayerTab::ValidSetup()
+bool SinglePlayerTab::ValidSetup() const
 {
     if ( (unsigned int)m_mod_pick->GetSelection() >= m_mod_pick->GetCount()-1 )
     {
