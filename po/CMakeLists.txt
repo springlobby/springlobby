@@ -40,7 +40,7 @@ ELSE(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
   SET(MESSAGES_POT_FILE ${springlobby_SOURCE_DIR}/po/springlobby.pot)
   ADD_CUSTOM_TARGET(
     update-potfile ALL 
-    COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C -o ${MESSAGES_POT_FILE} ${springlobbySrc} ${templatesources}
+    COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C -o ${MESSAGES_POT_FILE} ${springlobbySrc} ${updaterSrc} ${header} ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings}
 #     DEPENDS springlobby
     WORKING_DIRECTORY ${springlobby_SOURCE_DIR}
   )
