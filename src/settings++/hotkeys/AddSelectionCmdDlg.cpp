@@ -2,8 +2,7 @@
 #include "../../utils/customdialogs.h"
 
 
-AddSelectionCmdDlg::AddSelectionCmdDlg( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) :
-											AddSelectionCmdDlgBase( parent, id, title, pos, size, style )
+AddSelectionCmdDlg::AddSelectionCmdDlg( wxWindow* parent ) : AddSelectionCmdDlgBase( parent )
 {
 }
 
@@ -264,7 +263,7 @@ wxString AddSelectionCmdDlg::getConditionsAndSelectString() const
 	}
 
 	//Source filter
-	if ( this->m_radioBtnSrcMap->GetValue() )
+	if ( this->m_radioBtnSelAll->GetValue() )
 	{
 		str += wxT("_SelectAll");
 	}
