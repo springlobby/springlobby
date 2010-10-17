@@ -5,6 +5,7 @@
 #include <wx/colour.h>
 #include <wx/log.h>
 //#include "utils.h"
+#include "utils/conversion.h"
 
 class wxColour;
 /// Todo: add TDFContainer class.
