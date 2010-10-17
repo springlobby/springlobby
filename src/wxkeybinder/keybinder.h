@@ -27,6 +27,10 @@
 #include "wx/hashset.h"
 #include "wx/checkbox.h"
 
+
+#include "CommandOrderDlg.h"
+
+
 // The maximum number of shortcuts associated with each wxCmd.
 #define wxCMD_MAX_SHORTCUTS             10
 
@@ -36,7 +40,9 @@
     #define wxID_INVALID                -1
 #endif
 
-#define wxACCEL_ANY   0x0008   // hold any key down
+#define wxACCEL_ANY    0x0008   // hold any key down
+#define wxACCEL_META   0x0010   // virtual meta
+
 // define the following to true to enable lots of debug messages
 #define wxKEYBINDER_DEBUG_MSG            0
 #if wxKEYBINDER_DEBUG_MSG
@@ -169,13 +175,13 @@ public:
     bool MatchKey(const wxKeyEvent &key) const;
 
     //! Returns TRUE if the given wxKeyBind object is equivalent to this.
-	// It takes the ANY-modifier into account. ANY+c matches c and CTRL+c
-    bool Match(const wxKeyBind &key) const {
+	// It takes the ANY-modifier into account. ANY+c matches c and CTRL+c (if strict == false)
+    bool Match(const wxKeyBind &key, bool strict = false) const {
 		if ( m_nKeyCode != key.m_nKeyCode ) {
 			return false; //if keycodes differ, never match
 		}
 
-		if ( (m_nFlags && wxACCEL_ANY) || (key.m_nFlags && wxACCEL_ANY) ) {
+		if ( !strict && ( (m_nFlags & wxACCEL_ANY) || (key.m_nFlags & wxACCEL_ANY) ) ) {
 			return true;	//match if one of the keys has ANY modifier
 		}
 
@@ -209,6 +215,10 @@ public:
     int GetModifiers() const {
         return m_nFlags;
     }
+
+	bool HasAnyModifier() const {
+		return ( m_nFlags & wxACCEL_ANY) != 0;
+	}
 
     // Returns the string which describes this key combination.
     wxString GetStr() const {
@@ -414,9 +424,9 @@ public:
     //! which contains the given shortcut key (if there is such
     //! a shortcut registered in this class); otherwise it is
     //! left untouched.
-    bool IsBindTo(const wxKeyBind &key, int *n = NULL) const {
+    bool IsBindTo(const wxKeyBind &key, bool strict = false, int *n = NULL) const {
         for (int i=0; i < m_nShortcuts; i++) {
-            if (m_keyShortcut[i].Match(key)) {
+            if (m_keyShortcut[i].Match(key, strict)) {
                 if (n) *n = i;
                 return TRUE;
             }
@@ -642,7 +652,13 @@ protected:
 
     //! The array of wxCmd-derived classes.
     wxCmdArray m_arrCmd;
-	size_t m_nNextOderIndex;
+
+	wxString m_metaKey;
+	key_sym_map	m_keySyms;
+	key_sym_set_map	m_keySymsSet;
+	size_t m_nNextOderIndex;	
+	size_t m_nNextOderIndexAny;
+
     //! The array of windows attached to this keybinder.
     //! These info are very important when deleting the keybinder
     //! (which can automatically #Detach() himself).
@@ -658,6 +674,7 @@ protected:
 
 protected:
 
+	void PrintOrdering() const;
 
     //! Returns the index of the first command with the given ID.
     int FindCmd(int id) const {
@@ -671,7 +688,7 @@ protected:
     //! given key binding.
     int FindCmdBindTo(const wxKeyBind &key, int *n = NULL) const {
         for (int i=0; i < (int)m_arrCmd.GetCount(); i++)
-            if (m_arrCmd.Item(i)->IsBindTo(key, n))
+            if (m_arrCmd.Item(i)->IsBindTo(key, false, n))
                 return i;
         return -1;
     }
@@ -679,7 +696,7 @@ protected:
     IdSet FindCmdBindsTo(const wxKeyBind &key, int *n = NULL) const {
         IdSet binds;
 		for (int i=0; i < (int)m_arrCmd.GetCount(); i++)
-            if (m_arrCmd.Item(i)->IsBindTo(key, n))
+            if (m_arrCmd.Item(i)->IsBindTo(key, false, n))
 				binds.insert( i );
         return binds;
     }
@@ -696,7 +713,7 @@ protected:
 
 public:
 
-	wxKeyBinder() : m_nNextOderIndex(1) {}
+	wxKeyBinder() : m_nNextOderIndex(1), m_nNextOderIndexAny(1) {}
     wxKeyBinder(const wxKeyBinder &tocopy) { DeepCopy(tocopy); }
     virtual ~wxKeyBinder() { DetachAll(); }
 
@@ -710,7 +727,11 @@ public:     // miscellaneous
     //! Deep copies the given object.
     void DeepCopy(const wxKeyBinder &p) {
         m_arrCmd.DeepCopy(p.m_arrCmd);
+		m_metaKey = p.m_metaKey;
 		m_nNextOderIndex = p.m_nNextOderIndex;
+		m_nNextOderIndexAny = p.m_nNextOderIndex;
+		m_keySyms = p.m_keySyms;
+        m_keySymsSet = p.m_keySymsSet;
         // NEVER COPY THE ARRAY OF THE ATTACHED WINDOWs:
         // WE ARE NOT ATTACHED TO THE WINDOWS OF THE GIVEN BINDER !!
         // m_arrAttachedWnd = p->m_arrAttachedWnd;
@@ -724,7 +745,11 @@ public:     // miscellaneous
     //! Resets everything associated with this class.
     void Reset() {
         m_arrCmd.Clear();
+		m_keySyms.clear();
+		m_keySymsSet.clear();
+		m_metaKey.clear();
 		m_nNextOderIndex = 1;
+		m_nNextOderIndexAny = 1;
     }
 
     //! Updates all the commands contained.
@@ -775,35 +800,49 @@ public:     // miscellaneous
     //! Loads from the given wxConfig object a set of keybindings.
     bool Load(wxConfigBase *p, const wxString &key = wxEmptyString);
 
-
+	void CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds );
 
     // Add functions
     // -------------------
+	void SetMetaKey( const wxString& key ) {
+		this->m_metaKey = key;
+	}
+
+	const wxString& GetMetaKey() const {
+		return this->m_metaKey;
+	}
+
+	void SetKeySyms( const key_sym_map& keySyms ) {
+		this->m_keySyms = keySyms;
+	}
+
+	void SetKeySymsSet( const key_sym_set_map& keySymsSet ) {
+		this->m_keySymsSet = keySymsSet;
+	}
+
+	const key_sym_map& GetKeySyms() const {
+		return this->m_keySyms;
+	}
+
+	const key_sym_set_map& GetKeySymsSet() const {
+		return this->m_keySymsSet;
+	}
 
     void AddCmd(wxCmd *p) {
         m_arrCmd.Add(p);
     }
 
-    void AddShortcut(int id, const wxString &key, size_t orderIndex) {
-        wxCmd *p = GetCmd(id);
+    void AddShortcut(int id, const wxString &key) {
+        const bool anyMod = ( wxKeyBind::StringToKeyModifier( key ) & wxACCEL_ANY ) != 0;
+		wxCmd *p = GetCmd(id);
 		if (p) {
-			p->AddShortcut(key, orderIndex);
-			m_nNextOderIndex = std::max( m_nNextOderIndex, orderIndex + 1 );
-		}
-    }
+			size_t id = 0;
+			if ( !anyMod )
+				id = m_nNextOderIndex++;
+			else
+				id = m_nNextOderIndexAny++;
 
-	void AddShortcut(int id, const wxString &key) {
-        wxCmd *p = GetCmd(id);
-		if (p) {
-			p->AddShortcut(key, m_nNextOderIndex++);
-		}
-    }
-
-    void AddShortcut(int id, const wxKeyBind &key) {
-        wxCmd *p = GetCmd(id);
-        if (p) {
-			p->AddShortcut(key);
-			m_nNextOderIndex = std::max( m_nNextOderIndex, key.GetOrderIndex() + 1 );
+			p->AddShortcut(key, id);
 		}
     }
 
@@ -820,6 +859,8 @@ public:     // miscellaneous
 	}
 
 	void RemoveShortcut(int id, const wxString &key) {
+		const bool anyMod = ( wxKeyBind::StringToKeyModifier( key ) & wxACCEL_ANY ) != 0;
+
         wxCmd *p = GetCmd(id);
         if (!p) {
 			return;
@@ -832,6 +873,12 @@ public:     // miscellaneous
 		{
 			for( int j=0; j < m_arrCmd.Item(i)->GetShortcutCount(); ++j )
 			{
+				const bool curAny = ( m_arrCmd.Item(i)->GetShortcut(j)->GetModifiers() & wxACCEL_ANY ) != 0; 
+				if ( anyMod ^ curAny )
+				{
+					continue;
+				}
+
 				const size_t curOrderIdx = m_arrCmd.Item(i)->GetShortcut(j)->GetOrderIndex();
 				if ( curOrderIdx >= remOrderIdx )
 				{
@@ -889,6 +936,18 @@ public:     // miscellaneous
 
         return cmds;
     }
+
+	//strict matching. match exact even on any-modifier (a does not match any+a)
+	bool HasBindingStrict(const wxString &key, const wxString& cmd) {
+		for (int i=0; i < (int)m_arrCmd.GetCount(); i++) { 
+			if ( cmd != m_arrCmd.Item(i)->GetName() )
+				continue;
+
+			if (m_arrCmd.Item(i)->IsBindTo(key, true))
+				return true;
+		}
+		return false;
+	}
 
 
     wxKeyBind *GetShortcut(int id, int n) const {
@@ -1184,6 +1243,7 @@ private:
 #define wxKEYBINDER_ADD_PROFILEBTN_ID       wxKEYBINDER_BASEID+9
 #define wxKEYBINDER_REMOVE_PROFILEBTN_ID    wxKEYBINDER_BASEID+10
 #define wxKEYBINDER_ANY_MODIFIER_ID         wxKEYBINDER_BASEID+11
+#define wxKEYBINDER_META_MODIFIER_ID         wxKEYBINDER_BASEID+12
 
 #define wxKEYBINDER_SELECTED_POSTFIX        wxT(" (selected)")
 
@@ -1440,6 +1500,7 @@ protected:      // event handlers
     void OnAddProfile(wxCommandEvent &event);
     void OnRemoveProfile(wxCommandEvent &event);
 	void OnAnyModifier(wxCommandEvent &event);
+	void OnMetaModifier(wxCommandEvent &);
 
     //! Handles the notifications received from the wxKeyMonitorTextCtrl.
     void OnKeyPressed(wxCommandEvent &event);
@@ -1529,6 +1590,7 @@ protected:      // the subwindows of this dialog
     wxButton *m_pRemoveAllBtn;
 
 	wxCheckBox *m_pAnyModCbx;
+	wxCheckBox *m_pMetaModCbx;
 
     // used when wxKEYBINDER_USE_TREECTRL is in the build flags
     wxTreeCtrl *m_pCommandsTree;

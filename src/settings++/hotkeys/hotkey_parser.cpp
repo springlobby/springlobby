@@ -73,13 +73,13 @@ bool hotkey_parser::processLine( const wxString& line )
 
 		if ( cmd == wxT("fakemeta") )
 		{
-			this->m_bindings.bind( cmd, key );
+			this->m_bindings.setMetaKey( key );
 			return true;
 		}
 	}
 
 	const wxString& cmd = tokLine[0];
-	const wxString& key = KeynameConverter::normalizeSpringKey( tokLine[1] );
+	const wxString& key = tokLine[1];
 
 	//append all following tokens to the action string for stuff like "buildspacing inc"
 	wxString action; 
@@ -91,12 +91,20 @@ bool hotkey_parser::processLine( const wxString& line )
 
 	if ( cmd == wxT("bind") )
 	{
-		this->m_bindings.bind( action, key );
+		this->m_bindings.bind( action, KeynameConverter::normalizeSpringKey( key ) );
 		return true;
 	}
 	else if ( cmd == wxT("unbind") )
 	{
-		this->m_bindings.unbind( action, key );
+		this->m_bindings.unbind( action, KeynameConverter::normalizeSpringKey( key ) );
+	}
+	else if ( cmd == wxT("keysym") )
+	{
+		this->m_bindings.addKeySym( key, action );
+	}
+	else if ( cmd == wxT("keyset") )
+	{
+		this->m_bindings.addKeySymSet( key, action );
 	}
 	else
 	{
@@ -156,20 +164,43 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	}
 	oldFile.Close();
 
+	//add keysyms
+	key_sym_map keySymRev;
+	for( key_sym_map::const_iterator iter = springbindings.getKeySyms().begin(); iter != springbindings.getKeySyms().end(); ++iter )
+	{
+		newFile.AddLine( wxT("keysym\t\t") + iter->first + wxT("\t\t") + iter->second );
+		keySymRev[ KeynameConverter::convertHexValueToKey( iter->second ) ] = iter->first;
+	}
+
+	//add keysyms
+	key_sym_map keySymSetRev;
+	for( key_sym_set_map::const_iterator iter = springbindings.getKeySymsSet().begin(); iter != springbindings.getKeySymsSet().end(); ++iter )
+	{
+		newFile.AddLine( wxT("keyset\t\t") + iter->first + wxT("\t\t") + springbindings.resolveKeySymKey(iter->second ) );
+		keySymSetRev[ iter->second ] = iter->first;
+	}
+
+	//add fakemeta
+	if ( SpringDefaultProfile::getBindings().getMetaKey() != springbindings.getMetaKey() )
+	{
+		newFile.AddLine( wxT("fakemeta\t\t") + springbindings.getMetaKey() );		
+	}
+
 	//check all default bindings if they still exist in current profile
 	//do unbind if not
-	const key_binding::key_binding_map unbinds = (SpringDefaultProfile::getBindings() - springbindings).getBinds();
-	for( key_binding::key_binding_map::const_iterator iter = unbinds.begin(); iter != unbinds.end(); ++iter )
+	const key_commands_sorted unbinds = (SpringDefaultProfile::getBindings() - springbindings).getBinds();
+	for( key_commands_sorted::const_iterator iter = unbinds.begin(); iter != unbinds.end(); ++iter )
 	{
-		newFile.AddLine( wxT("unbind\t\t") + iter->second.first + wxT('\t') + iter->second.second );
+		newFile.AddLine( wxT("unbind\t\t") + springbindings.resolveKeySymKeyAndSet( iter->first ) + wxT("\t\t") + iter->second );
 	}
 
 	//add binds, should be ordered
-	const key_binding::key_binding_map dobinds = (springbindings - SpringDefaultProfile::getBindings()).getBinds();
-	for( key_binding::key_binding_map::const_iterator iter = dobinds.begin(); iter != dobinds.end(); ++iter )
+	const key_commands_sorted dobinds = (springbindings - SpringDefaultProfile::getBindings()).getBinds();
+	for( key_commands_sorted::const_iterator iter = dobinds.begin(); iter != dobinds.end(); ++iter )
 	{
-		newFile.AddLine( wxT("bind\t\t") + iter->second.first + wxT("\t") + iter->second.second );
+		newFile.AddLine( wxT("bind\t\t") + springbindings.resolveKeySymKeyAndSet( iter->first ) + wxT("\t\t") + iter->second );
 	}
+
 	newFile.Write();
 
 	const wxString prevFilenameBak = this->m_filename + wxT(".bak");
@@ -191,7 +222,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 			//restore backup
 			if ( wxRenameFile( prevFilenameBak, this->m_filename ) == false )
 			{
-				msg += _(" Restoring backup failed also.");
+				msg += _(" Restoring backup failed also. Good luck!");
 			}
 			throw HotkeyException( msg );
 		}

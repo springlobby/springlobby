@@ -1,9 +1,9 @@
 #include "CommandOrderDlg.h"
 #include "../../utils/customdialogs.h"
-
+#include "keybinder.h"
 
 CommandOrderDlg::CommandOrderDlg( const wxString& key, const CmdSet& cmds, wxWindow* parent ) :
-						CommandOrderDlgBase( parent ), m_key( key ), m_cmds( cmds ) 
+						CommandOrderDlgBase( parent ), m_key( key ), m_cmds( cmds ), m_normKeyCount(0)
 {
 }
 
@@ -13,66 +13,78 @@ void CommandOrderDlg::OnInitDialog( wxInitDialogEvent& )
 
 	this->fillCommandList();
 
-	this->SetTitle( this->GetTitle() + wxT(" - ") + this->m_key );
+	this->SetTitle( this->GetTitle() + wxT(" - Configure Key: ") + this->m_key );
+}
+
+const CommandOrderDlg::ListIndexCmdMap& CommandOrderDlg::getOrderedCommands() const
+{
+	return this->m_prioCmdMap;
 }
 
 void CommandOrderDlg::fillCommandList()
 {
 	this->m_listBoxCommands->Clear();
 
-	for( CommandOrderMap::const_iterator iter = this->m_cmdOrderMap.begin(); iter != this->m_cmdOrderMap.end(); ++iter )
+	for( size_t i=0; i < this->m_prioCmdMap.size(); ++i )
 	{
-		this->m_listBoxCommands->Append( iter->second ); 
-	}	
-}
-
-unsigned int CommandOrderDlg::getOrderIndexByCommand( const wxString& cmd ) const
-{
-	for( CommandOrderMap::const_iterator iter = this->m_cmdOrderMap.begin(); iter != this->m_cmdOrderMap.end(); ++iter )
-	{
-		if ( iter->second == cmd )
+		wxString text = this->m_prioCmdMap[i].command;
+		if ( this->m_prioCmdMap[i].any )
 		{
-			return iter->first;
+			text = wxT("(Any) ") + text;
 		}
-	}
 
-	return 0; //not found
+		this->m_listBoxCommands->Append( text ); 
+	}	
 }
 
 void CommandOrderDlg::updateOrderMap()
 {
-	for ( CmdSet::const_iterator iter = m_cmds.begin(); iter != m_cmds.end(); ++iter )
-	{		
-		for( int i = 0; i < (*iter)->GetShortcutCount(); ++i )
+	typedef std::map<size_t, wxString> SortedCmds;
+	
+	size_t listIdx = 0;
+	m_normKeyCount = 0;
+
+	{	//add "normal"-keys first (do not show normal keys when user clicked an ANY-key)
+		if ( !this->m_key.StartsWith( wxT("Any+") ) )
 		{
-			const wxKeyBind* pKb = (*iter)->GetShortcut( i );
-			const wxString& keyString = pKb->GetStr();
-			if ( keyString == m_key )
+			SortedCmds tmp;
+			for ( CmdSet::const_iterator iter = m_cmds.begin(); iter != m_cmds.end(); ++iter )
+			{		
+				for( int i = 0; i < (*iter)->GetShortcutCount(); ++i )
+				{
+					const wxKeyBind* pKb = (*iter)->GetShortcut( i );
+					if ( !pKb->HasAnyModifier() && pKb->Match(this->m_key ) )
+					{
+						tmp[pKb->GetOrderIndex()] = (*iter)->GetName();
+						++m_normKeyCount;
+					}
+				}
+			}
+
+			for( SortedCmds::const_iterator iter = tmp.begin(); iter != tmp.end(); ++iter )
 			{
-				this->m_cmdOrderMap[pKb->GetOrderIndex()] = (*iter)->GetName();
+				this->m_prioCmdMap[listIdx++] = CmdInfo( iter->second, false, iter->first );
 			}
 		}
 	}
-}
 
-void CommandOrderDlg::saveOrderMapToProfile()
-{
-	for ( CmdSet::const_iterator iter = m_cmds.begin(); iter != m_cmds.end(); ++iter )
-	{	
-		const unsigned orderIdx = this->getOrderIndexByCommand( (*iter)->GetName() );
-		if ( orderIdx == 0 )
-		{
-			continue;
+	{	//add "any"-keys
+		SortedCmds tmp;
+		for ( CmdSet::const_iterator iter = m_cmds.begin(); iter != m_cmds.end(); ++iter )
+		{		
+			for( int i = 0; i < (*iter)->GetShortcutCount(); ++i )
+			{
+				const wxKeyBind* pKb = (*iter)->GetShortcut( i );
+				if ( pKb->HasAnyModifier() && pKb->Match( this->m_key ) )
+				{
+					tmp[pKb->GetOrderIndex()] = (*iter)->GetName();
+				}
+			}
 		}
 
-		for( int i = 0; i < (*iter)->GetShortcutCount(); ++i )
+		for( SortedCmds::const_iterator iter = tmp.begin(); iter != tmp.end(); ++iter )
 		{
-			wxKeyBind* pKb = (*iter)->GetShortcut( i );
-			const wxString& keyString = pKb->GetStr();
-			if ( keyString == m_key )
-			{
-				pKb->SetOrderIndex( orderIdx );
-			}
+			this->m_prioCmdMap[listIdx++] = CmdInfo( iter->second, true, iter->first );
 		}
 	}
 }
@@ -86,10 +98,16 @@ void CommandOrderDlg::OnButtonUpClick( wxCommandEvent& )
 		return;
 	}
 
-	//remember to convert to 1-based order indices
-	const wxString tmp = this->m_cmdOrderMap[selIdx];
-	this->m_cmdOrderMap[selIdx] = this->m_cmdOrderMap[selIdx+1];
-	this->m_cmdOrderMap[selIdx+1] = tmp;
+	if ( selIdx == static_cast<int>( m_normKeyCount ) )
+	{
+		//we cant move up the command into "normal"-area
+		return;
+	}
+
+	assert( selIdx > 0 );
+	const CmdInfo tmp = this->m_prioCmdMap[selIdx-1];
+	this->m_prioCmdMap[selIdx-1] = this->m_prioCmdMap[selIdx];
+	this->m_prioCmdMap[selIdx] = tmp;
 
 	this->fillCommandList();
 	this->m_listBoxCommands->Select( selIdx - 1 );
@@ -104,10 +122,16 @@ void CommandOrderDlg::OnButtonDownClick( wxCommandEvent& )
 		return;
 	}
 
+	if ( ( selIdx + 1) == static_cast<int>( m_normKeyCount ) )
+	{
+		//we cant move up the any-command into "any"-area
+		return;
+	}
+
 	//remember to convert to 1-based order indices
-	const wxString tmp = this->m_cmdOrderMap[selIdx+1];
-	this->m_cmdOrderMap[selIdx+1] = this->m_cmdOrderMap[selIdx+2];
-	this->m_cmdOrderMap[selIdx+2] = tmp;
+	const CmdInfo tmp = this->m_prioCmdMap[selIdx];
+	this->m_prioCmdMap[selIdx] = this->m_prioCmdMap[selIdx+1];
+	this->m_prioCmdMap[selIdx+1] = tmp;
 
 	this->fillCommandList();
 	this->m_listBoxCommands->Select( selIdx + 1 );
@@ -115,7 +139,5 @@ void CommandOrderDlg::OnButtonDownClick( wxCommandEvent& )
 
 void CommandOrderDlg::OnButtonOkClick( wxCommandEvent& )
 {
-	this->saveOrderMapToProfile();
-
 	this->EndModal( wxID_OK );
 }

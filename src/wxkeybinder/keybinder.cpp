@@ -29,7 +29,7 @@
 #include "menuutils.h"
 #include "wx/config.h"
 #include "wx/tokenzr.h"
-
+#include <list>
 #include "../settings++/hotkeys/CommandOrderDlg.h"
 
 
@@ -111,6 +111,7 @@ BEGIN_EVENT_TABLE(wxKeyConfigPanel, wxPanel)
     EVT_BUTTON(wxKEYBINDER_REMOVE_PROFILEBTN_ID, wxKeyConfigPanel::OnRemoveProfile)
 	EVT_LISTBOX_DCLICK(wxKEYBINDER_BINDINGS_BOX_ID, wxKeyConfigPanel::OnBindingDblClick)
     EVT_CHECKBOX(wxKEYBINDER_ANY_MODIFIER_ID, wxKeyConfigPanel::OnAnyModifier)
+	EVT_CHECKBOX(wxKEYBINDER_META_MODIFIER_ID, wxKeyConfigPanel::OnMetaModifier)
 	
     // during idle cycles, wxKeyConfigPanel checks if the wxKeyMonitorTextCtrl
     // associated must be cleared...
@@ -371,6 +372,18 @@ wxString wxKeyBind::KeyCodeToString(int keyCode)
 
 int wxKeyBind::StringToKeyCode(const wxString &keyName)
 {
+	if ( keyName.StartsWith(wxT("0x")) )
+	{
+		long value = 0;
+		if ( !keyName.ToLong( &value, 16 ) )
+		{
+			//error
+			return (int)keyName.GetChar(0);
+		}
+
+		return static_cast<int>( value );
+	}
+
     // a function key ?
     if (keyName.StartsWith(wxT("F")) && keyName.Len() > 1) {
 
@@ -434,12 +447,17 @@ wxString wxKeyBind::KeyModifierToString(int keyModifier)
 
     if (keyModifier & wxACCEL_ANY)
         result += wxT("Any+");
-    if (keyModifier & wxACCEL_CTRL)
-        result += wxT("Ctrl+");
-    if (keyModifier & wxACCEL_ALT)
-        result += wxT("Alt+");
-    if (keyModifier & wxACCEL_SHIFT)
-        result += wxT("Shift+");
+	else
+	{
+		if (keyModifier & wxACCEL_CTRL)
+			result += wxT("Ctrl+");
+		if (keyModifier & wxACCEL_ALT)
+			result += wxT("Alt+");
+		if (keyModifier & wxACCEL_SHIFT)
+			result += wxT("Shift+");
+		if (keyModifier & wxACCEL_META)
+			result += wxT("Meta+");
+	}
 
     return result;
 }
@@ -463,6 +481,9 @@ int wxKeyBind::StringToKeyModifier(const wxString &keyModifier)
 
 	if (str.Contains(wxT("ANY+")))
         mod |= wxACCEL_ANY;
+
+	if (str.Contains(wxT("META+")))
+        mod |= wxACCEL_META;
 
     return mod;
 }
@@ -671,78 +692,6 @@ void wxBinderEvtHandler::OnChar(wxKeyEvent &p)
 }
 
 
-
-
-/*
-// ----------------------------------------------------------------------------
-// wxBinderApp
-// ----------------------------------------------------------------------------
-
-int wxBinderApp::FilterEvent(wxEvent &ev)
-{
-    wxEvtHandler *client = m_pGlobalHdl;
-    wxEvtHandler *top = GetTopWindow();
-
-    wxWindow *focused = wxWindow::FindFocus();
-
-    if (!client) client=top;
-    if (client != top) return -1;
-
-    wxASSERT(client);
-    wxEventType t = ev.GetEventType();
-    if (t == wxEVT_KEY_DOWN) {
-
-        if (focused != NULL && focused != client &&
-            GetTopLevelParent(focused) != client) {
-
-            wxKBLogDebug(wxT("wxBinderApp::FilterEvent - discarding this keypress because our ")
-                    wxT("main frame does not have the focus..."));
-            return -1;
-        }
-
-        // pass this event to our keybinder
-        m_pGlobalBinder->OnChar((wxKeyEvent &)ev, client);
-        return ev.GetSkipped();
-    }
-
-    return -1;
-}
-
-// static
-wxWindow *wxBinderApp::GetTopLevelParent(wxWindow *wnd)
-{
-    if (wnd->IsTopLevel())
-        return wnd;
-    if (wnd->GetParent())
-        return GetTopLevelParent(wnd->GetParent());
-
-    return FALSE;
-}
-
-// static
-bool wxBinderApp::IsChildOf(wxWindow *parent, wxWindow *child)
-{
-    if (parent == child)
-        return TRUE;
-
-    for (wxWindowList::compatibility_iterator node = parent->GetChildren().GetFirst();
-        node;
-        node = node->GetNext())
-    {
-        // recursively check each child
-        wxWindow *win = (wxWindow *)node->GetData();
-
-        if (win && IsChildOf(win, child))
-            return TRUE;
-    }
-
-    return FALSE;
-}
-*/
-
-
-
-
 // ----------------------------------------------------------------------------
 // wxKeyBinder
 // ----------------------------------------------------------------------------
@@ -920,6 +869,116 @@ bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key, bool bCleanOld) c
     }
 
     return b;
+}
+
+#include <wx/wfstream.h>
+#include <iostream>
+void wxKeyBinder::PrintOrdering() const
+{
+	wxFileOutputStream outstream( wxT("D:\\out.txt") );
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	{
+		wxCmd& curr = *m_arrCmd.Item(i);
+
+		for( int j=0; j < curr.GetShortcutCount(); ++j )
+		{
+			wxKeyBind& kb = *curr.GetShortcut( j );
+			wxLogError( wxT("%d - %s - %s"), kb.GetOrderIndex(), curr.GetName(), kb.GetStr() );
+		}
+	}
+	wxLogError( wxT("-----------------") );
+}
+
+void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
+{
+	PrintOrdering();
+	
+	typedef std::set<size_t>	IdxList;
+	IdxList idxList;
+	IdxList idxListAny;
+	{
+		for( CommandOrderDlg::ListIndexCmdMap::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
+		{
+			if ( !iter->second.any )
+				idxList.insert( iter->second.globalSortIdx );
+			else
+				idxListAny.insert( iter->second.globalSortIdx );
+		}
+	}
+
+	typedef std::map<size_t, size_t>	SortLookup;
+	SortLookup sortLook;
+	SortLookup sortLookAny;
+
+	//give new sort indices to non-any keys we dont want to modify
+	size_t nextId = 1;
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	{
+		wxCmd& curr = *m_arrCmd.Item(i);
+		for( int j=0; j < curr.GetShortcutCount(); ++j )
+		{
+			wxKeyBind& kb = *curr.GetShortcut( j );
+			if ( kb.HasAnyModifier() )
+				continue;
+
+			IdxList::const_iterator fiter = idxList.find( kb.GetOrderIndex() );
+			if ( fiter != idxList.end() )
+				continue;
+
+			sortLook[ kb.GetOrderIndex() ] = nextId++;
+		}
+	}
+
+	//give new sort indices to any keys we dont want to modify
+	size_t nextIdAny = 1;
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	{
+		wxCmd& curr = *m_arrCmd.Item(i);
+		for( int j=0; j < curr.GetShortcutCount(); ++j )
+		{
+			wxKeyBind& kb = *curr.GetShortcut( j );
+			if ( !kb.HasAnyModifier() )
+				continue;
+
+			IdxList::const_iterator fiter = idxListAny.find( kb.GetOrderIndex() );
+			if ( fiter != idxListAny.end() )
+				continue;
+
+			sortLookAny[ kb.GetOrderIndex() ] = nextIdAny++;
+		}
+	}
+
+	{	//build sort lookup maps for the keys which we will change
+		for( CommandOrderDlg::ListIndexCmdMap::const_iterator iter = cmds.begin(); iter != cmds.end(); ++iter )
+		{
+			if ( !iter->second.any )
+				sortLook[ iter->second.globalSortIdx ] = nextId++;
+			else
+				sortLookAny[ iter->second.globalSortIdx ] = nextIdAny++;
+		}
+	}
+
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	{
+		wxCmd& curr = *m_arrCmd.Item(i);
+		for( int j=0; j < curr.GetShortcutCount(); ++j )
+		{
+			wxKeyBind& kb = *curr.GetShortcut( j );
+			size_t newIdx = 0;
+			if ( kb.HasAnyModifier() )
+			{
+				newIdx = sortLookAny.find( kb.GetOrderIndex() )->second;
+			}
+			else
+			{
+				newIdx = sortLook.find( kb.GetOrderIndex() )->second;
+			}
+
+			kb.SetOrderIndex( newIdx );
+		}
+	}
+
+	PrintOrdering();
 }
 
 bool wxKeyBinder::Load(wxConfigBase *p, const wxString &key)
@@ -1252,7 +1311,8 @@ void wxKeyConfigPanel::BuildCtrls()
     m_pRemoveBtn = new wxButton(this, wxKEYBINDER_REMOVE_KEY_ID, wxT("&Remove"));
     m_pRemoveAllBtn = new wxButton(this, wxKEYBINDER_REMOVEALL_KEY_ID, wxT("Remove all"));
 
-	m_pAnyModCbx = new wxCheckBox(this, wxKEYBINDER_ANY_MODIFIER_ID, wxT("\"Any\" modifier") );
+	m_pAnyModCbx = new wxCheckBox(this, wxKEYBINDER_ANY_MODIFIER_ID, wxT("Any") );
+	m_pMetaModCbx = new wxCheckBox(this, wxKEYBINDER_META_MODIFIER_ID, wxT("Meta") );
 
     m_pCurrCmdField = new wxStaticText( this, -1, wxT(""), wxDefaultPosition,
         wxSize(-1, 20), wxSIMPLE_BORDER | wxST_NO_AUTORESIZE | wxALIGN_CENTRE);
@@ -1345,6 +1405,7 @@ wxSizer *wxKeyConfigPanel::BuildColumn2()
 
 	wxBoxSizer *extraMods = new wxBoxSizer(wxHORIZONTAL);
     extraMods->Add(m_pAnyModCbx, 1, wxGROW | wxALL, 5);
+	extraMods->Add(m_pMetaModCbx, 1, wxGROW | wxALL, 5);
 	column2->Add(extraMods, 0, wxGROW);
 
     wxBoxSizer *removebtns = new wxBoxSizer(wxHORIZONTAL);
@@ -1767,6 +1828,7 @@ void wxKeyConfigPanel::UpdateButtons()
     m_pRemoveBtn->Enable(m_pBindings->GetSelection() >= 0);
     m_pRemoveAllBtn->Enable(m_pBindings->GetCount() > 0);
 	m_pAnyModCbx->Enable(m_pBindings->GetSelection() >= 0);
+	m_pMetaModCbx->Enable(m_pBindings->GetSelection() >= 0);
 
 	const wxString& curSelKey = m_pBindings->GetStringSelection();
 	if ( curSelKey.size() > 0 )
@@ -1777,34 +1839,31 @@ void wxKeyConfigPanel::UpdateButtons()
 			state = true;
 		}
 		this->m_pAnyModCbx->SetValue(state);
+
+		bool metaState = false;
+		if ( curSelKey.Contains(wxT("Meta+")) )
+		{
+			metaState = true;
+		}
+		this->m_pMetaModCbx->SetValue(metaState);
 	}	
 
-	const int selIdx = m_pBindings->GetSelection();
-	if ( selIdx == wxNOT_FOUND )
-	{
-		return;
-	}
+	bool enableAddBtn = false;
+	// is the assign button to be enabled ?
+	enableAddBtn = IsSelectedValidCmd() && m_pKeyField->IsValidKeyComb();
 
-	CmdSet cmds = m_kBinder.GetCmdBindsTo(m_pBindings->GetStringSelection());
+	// must the "Currently assigned to" field be updated ?
+	if (m_pKeyField->IsValidKeyComb()) {
+		//check if binding already existing
+		if ( this->GetSelProfile()->HasBindingStrict( m_pKeyField->GetValue(), this->GetSelCmdStr() ) )
+			enableAddBtn = false;
 
-	assert( cmds.size() > 0 );
-
-	CommandOrderDlg dlg( m_pBindings->GetStringSelection(), cmds, this );
-	
-
-    // is the assign button to be enabled ?
-    bool b = IsSelectedValidCmd() && m_pKeyField->IsValidKeyComb();
-    m_pAssignBtn->Enable(b);
-
-    // must the "Currently assigned to" field be updated ?
-    if (m_pKeyField->IsValidKeyComb()) {
-        //wxCmd *p = m_kBinder.GetCmdBindTo(m_pKeyField->GetValue());
 		CmdSet cmds = m_kBinder.GetCmdBindsTo(m_pKeyField->GetValue());
 
 		if ( cmds.size() == 0 )
 		{
-            str = wxT("None");
-            m_pCurrCmd = NULL;
+			str = wxT("None");
+			m_pCurrCmd = NULL;
 		}
 		else
 		{
@@ -1815,11 +1874,11 @@ void wxKeyConfigPanel::UpdateButtons()
 				{
 					str += wxT(",");
 				}
-				m_pCurrCmd = (*iter); //dirty, lets look what happens
+				m_pCurrCmd = (*iter);
 				str += (*iter)->GetName();
 			}
 		}
-    }
+	}
 
 	const wxString::size_type maxSize = 20;
 	if ( str.length() > maxSize )
@@ -1830,6 +1889,7 @@ void wxKeyConfigPanel::UpdateButtons()
 	}
 
     m_pCurrCmdField->SetLabel(str);
+	m_pAssignBtn->Enable(enableAddBtn);
 }
 
 void wxKeyConfigPanel::UpdateDesc()
@@ -2074,6 +2134,10 @@ void wxKeyConfigPanel::OnBindingDblClick(wxCommandEvent &)
 	CommandOrderDlg dlg( m_pBindings->GetStringSelection(), cmds, this );
 	if ( dlg.ShowModal() == wxID_OK )
 	{
+		CommandOrderDlg::ListIndexCmdMap cmdList = dlg.getOrderedCommands();
+
+		this->m_kBinder.CommitOrdering( cmdList );
+
 		// now the user has modified the currently selected profile...
 		m_bProfileHasBeenModified = TRUE;
 		m_bProfileModifiedOrChanged = TRUE;
@@ -2189,10 +2253,13 @@ void wxKeyConfigPanel::OnProfileSelected(wxCommandEvent &e)
     }
 }
 
-void wxKeyConfigPanel::OnAnyModifier(wxCommandEvent &)
+void wxKeyConfigPanel::OnMetaModifier(wxCommandEvent &)
 {
 	if ( GetSelProfile()->IsNotEditable() )
 	{
+		//revert checkbox state
+		m_pMetaModCbx->SetValue( !m_pAnyModCbx->GetValue() );
+		
         wxMessageBox(wxT("This profile cannot be changed."),
                     wxT("Warning"));
 		return;
@@ -2203,17 +2270,17 @@ void wxKeyConfigPanel::OnAnyModifier(wxCommandEvent &)
     wxCmd *sel = GetSelCmd();
 	wxKeyBind& kb = *sel->GetShortcut(shortcut);
 
-	wxString newKeyStr = kb.GetStr();
-	if ( m_pAnyModCbx->IsChecked() )
+	int newMods = kb.GetModifiers();
+	if ( m_pMetaModCbx->IsChecked() )
 	{
-		newKeyStr = wxT("Any+") + newKeyStr;
+		newMods |= wxACCEL_META;
 	}
 	else
 	{
-		newKeyStr = newKeyStr.After(wxT('+'));
+		newMods = ( newMods & ~wxACCEL_META );
 	}
 
-	kb.Set( newKeyStr, kb.GetOrderIndex() );
+	kb.Set( newMods, kb.GetKeyCode(), kb.GetOrderIndex() );
 
     // now the user has modified the currently selected profile...
     m_bProfileHasBeenModified = TRUE;
@@ -2224,7 +2291,52 @@ void wxKeyConfigPanel::OnAnyModifier(wxCommandEvent &)
     m_pKeyField->Clear();
 
 	//select previously selected key
-	this->SelectKeyString( newKeyStr ); 
+	this->SelectKeyString( kb.GetStr() ); 
+
+#ifdef wxKEYBINDER_AUTO_SAVE
+	ApplyChanges();
+#endif
+}
+
+void wxKeyConfigPanel::OnAnyModifier(wxCommandEvent &)
+{
+	if ( GetSelProfile()->IsNotEditable() )
+	{
+		//revert checkbox state
+		m_pAnyModCbx->SetValue( !m_pAnyModCbx->GetValue() );
+		
+        wxMessageBox(wxT("This profile cannot be changed."),
+                    wxT("Warning"));
+		return;
+	}
+
+	wxString shortcut = m_pBindings->GetStringSelection();
+
+    wxCmd *sel = GetSelCmd();
+	wxKeyBind& kb = *sel->GetShortcut(shortcut);
+
+	int newMods = kb.GetModifiers();
+	if ( m_pAnyModCbx->IsChecked() )
+	{
+		newMods |= wxACCEL_ANY;
+	}
+	else
+	{
+		newMods = ( newMods & ~wxACCEL_ANY );
+	}
+
+	kb.Set( newMods, kb.GetKeyCode(), kb.GetOrderIndex() );
+
+    // now the user has modified the currently selected profile...
+    m_bProfileHasBeenModified = TRUE;
+	m_bProfileModifiedOrChanged = TRUE;
+
+    // and update the list of the key bindings
+    FillInBindings();
+    m_pKeyField->Clear();
+
+	//select previously selected key
+	this->SelectKeyString( kb.GetStr() ); 
 
 #ifdef wxKEYBINDER_AUTO_SAVE
 	ApplyChanges();
@@ -2281,8 +2393,13 @@ void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
 
     // and update the list of the key bindings
     FillInBindings();
-    m_pKeyField->Clear();
+    
+	//select the new key
+	this->SelectKeyString( m_pKeyField->GetValue() ); 
 
+	m_pKeyField->Clear();
+
+	
 #ifdef wxKEYBINDER_AUTO_SAVE
 	ApplyChanges();
 #endif

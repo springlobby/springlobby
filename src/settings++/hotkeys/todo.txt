@@ -1,28 +1,12 @@
--"meta" as possible keycode
--"any" checkbox?
--order of binds/unbinds for multiple keys
--colorize commands that have changed hotkeys compared to default
+-keysymb editor -> context menu?
+-better method to show orderDlg instead of dblClick? -> context menu?
 -commandline options to switch profiles
--keysym
--make keystring match regarding any-modifier (when searching for duplicate keys -> GetCmdsBindTo() )
--listbox changes selection when any-checkbox is clicked
--title of order window
--add button gets disabled when clicking commands in listbox and command has no bound keys
--refactor keyprofile class to keep track of order indices (instead of deep inside wxCmd)
-
--buildfiles
--unify spelling
-
 -save profile to springsettings.conf even when same as spring default (?)
 -save custom commands to springsettings.conf to keep them even when not used in any profile
+-colorize commands that have changed hotkeys compared to default
+-hide empty commands with checkbox
+-disable all edit-button when default profile is selected instead of show msgbox "cant edit"?
 
-
-
-[18:56:53] <_koshi_> ich hab beim umschalten auf expert mode uebrigens gestern immer zwei boxen mit 'profile created' bekommen
-[18:57:11] <_koshi_> das koennte heissen, das der schon gemerged ist
-[18:57:16] <_koshi_> ansonsten wuesste ich nicht
-[18:57:26] <_koshi_> ist das git gui aus dem msys installer?
-[18:57:46] <[x]very_bad_soldier> kapier ich nich, 2mal profile created? einmal beim start und einmal beim umschalten auf expert?
-[18:57:47] <[x]very_bad_soldier> ja
-[18:58:07] <_koshi_> ne, beide hineteinander beim switch auf expert
-[18:58:26] <[x]very_bad_soldier> hm, interessant. muss ich mir angucken, danke für den tip
+-unify spelling
+-cleanup type mess (hotkeytypes etc)
+-ö doesnt work http://projects.springlobby.info/issues/1443
