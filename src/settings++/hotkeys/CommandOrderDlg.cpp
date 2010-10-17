@@ -1,6 +1,6 @@
 #include "CommandOrderDlg.h"
 #include "../../utils/customdialogs.h"
-#include "keybinder.h"
+#include "../../wxkeybinder/keybinder.h"
 
 CommandOrderDlg::CommandOrderDlg( const wxString& key, const CmdSet& cmds, wxWindow* parent ) :
 						CommandOrderDlgBase( parent ), m_key( key ), m_cmds( cmds ), m_normKeyCount(0)
