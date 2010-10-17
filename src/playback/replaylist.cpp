@@ -35,7 +35,7 @@ void ReplayList::LoadPlaybacks( const wxArrayString& filenames )
     }
 }
 
-bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
+bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret ) const
 {
     //wxLogMessage(_T("GetReplayInfos %s"), ReplayPath.c_str());
     //wxLOG_Info  ( STD_STRING( ReplayPath ) );
@@ -70,7 +70,7 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret )
 
 #define SEEK(x) if(replay.Seek(x)==wxInvalidOffset)return script;
 
-wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath  )
+wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath  ) const
 {
 
 	wxString script;
@@ -99,7 +99,7 @@ wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath  )
 }
 #undef SEEK
 #define SEEK(x) if(replay.Seek(x)==wxInvalidOffset)return;
-void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath )
+void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath ) const
 {
     try
     {

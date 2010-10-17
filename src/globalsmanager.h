@@ -97,6 +97,16 @@ public:
     {
         return GetInstance();
     }
+	const T &GetInstance() const
+	{
+		if ( constructing ) throw GlobalRecursiveError();
+		if ( !public_ptr ) throw GlobalDestroyedError();
+		return *public_ptr;
+	}
+	operator const T&() const
+	{
+		return GetInstance();
+	}
 };
 template<class T, class I >
 int GlobalObjectHolder<T,I>::count = 0;

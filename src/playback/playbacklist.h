@@ -34,9 +34,9 @@ class PlaybackList : public wxEvtHandler
 
     ///Playback& GetPlayback( int const index ) ;
 
-    bool PlaybackExists( playback_id_t const& id );
+	bool PlaybackExists( playback_id_t const& id ) const;
     bool DeletePlayback( playback_id_t const& id );
-    typename playback_map_t::size_type GetNumPlaybacks();
+	typename playback_map_t::size_type GetNumPlaybacks() const;
 
     void RemoveAll();
 

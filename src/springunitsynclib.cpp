@@ -399,19 +399,19 @@ void SpringUnitSyncLib::_Unload()
 }
 
 
-bool SpringUnitSyncLib::IsLoaded()
+bool SpringUnitSyncLib::IsLoaded() const
 {
   return m_loaded;
 }
 
 
-bool SpringUnitSyncLib::_IsLoaded()
+bool SpringUnitSyncLib::_IsLoaded() const
 {
   return m_loaded;
 }
 
 
-void SpringUnitSyncLib::AssertUnitsyncOk()
+void SpringUnitSyncLib::AssertUnitsyncOk() const
 {
 	UNITSYNC_EXCEPTION( m_loaded, _T("Unitsync not loaded.") );
 	UNITSYNC_EXCEPTION( m_get_next_error, _T("Function was not in unitsync library.") );
@@ -419,7 +419,7 @@ void SpringUnitSyncLib::AssertUnitsyncOk()
 }
 
 
-wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
+wxArrayString SpringUnitSyncLib::GetUnitsyncErrors() const
 {
   wxArrayString ret;
   try
@@ -443,7 +443,7 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors()
 }
 
 
-bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature )
+bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature ) const
 {
   LOCK_UNITSYNC;
 

@@ -141,6 +141,12 @@ MainWindow& Ui::mw()
     return *m_main_win;
 }
 
+const MainWindow& Ui::mw() const
+{
+	ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
+	return *m_main_win;
+}
+
 
 bool Ui::IsMainWindowCreated() const
 {
@@ -405,13 +411,13 @@ void Ui::DownloadFileWebsite( const wxString& name )
 //!
 //! @return true if OK button was pressed
 //! @note this does not return until the user pressed any of the buttons or closed the dialog.
-bool Ui::Ask( const wxString& heading, const wxString& question )
+bool Ui::Ask( const wxString& heading, const wxString& question ) const
 {
     int answer = customMessageBox( SL_MAIN_ICON, question, heading, wxYES_NO );
     return ( answer == wxYES );
 }
 
-
+//! cannot be const because parent window cannot be const
 bool Ui::AskPassword( const wxString& heading, const wxString& message, wxString& password )
 {
     wxPasswordEntryDialog pw_dlg( &mw(), message, heading, password );
@@ -431,7 +437,7 @@ bool Ui::AskText( const wxString& heading, const wxString& question, wxString& a
 }
 
 
-void Ui::ShowMessage( const wxString& heading, const wxString& message )
+void Ui::ShowMessage( const wxString& heading, const wxString& message ) const
 {
     if ( m_main_win == 0 ) return;
     serverMessageBox( SL_MAIN_ICON, message, heading, wxOK);
@@ -624,7 +630,7 @@ bool Ui::IsSpringCompatible()
       customMessageBoxNoModal(SL_MAIN_ICON,  _("Couldn't get your spring versions from any unitsync library.\n\nOnline play is currently disabled."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
       return false;
     }
-    for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ )
+	for ( std::map<wxString, wxString>::const_iterator itor = versionlist.begin(); itor != versionlist.end(); ++itor )
     {
       if ( itor->second == neededversion )
       {
@@ -639,7 +645,7 @@ bool Ui::IsSpringCompatible()
     }
     wxString message = wxString::Format( _("No compatible installed spring version has been found, this server requires version: %s\n"), neededversion.c_str() );
     message << _("Your current installed versions are:");
-    for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) message << _T(" ") << itor->second;
+	for ( std::map<wxString, wxString>::const_iterator itor = versionlist.begin(); itor != versionlist.end(); ++itor ) message << _T(" ") << itor->second;
     message << _T("\n") << _("Online play is currently disabled.");
     customMessageBoxNoModal (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
     wxLogWarning ( _T("no spring version supported by the server found") );
@@ -764,14 +770,20 @@ static inline bool IsAutoJoinChannel( Channel& chan )
 //! @todo Check if a pannel allready exists for this channel
 void Ui::OnJoinedChannelSuccessful( Channel& chan )
 {
-    if ( m_main_win == 0 ) return;
-    wxLogDebugFunc( _T("") );
-
-    chan.uidata.panel = 0;
-
-    mw().OpenChannelChat( chan, !sett().GetAutoConnect() || !IsAutoJoinChannel( chan ) );
+	bool doFocus = !sett().GetAutoConnect() || !IsAutoJoinChannel( chan );
+	bool panel_exists = mw().GetChannelChatPanel( chan.GetName() ) != NULL;
+	OnJoinedChannelSuccessful( chan, !panel_exists && doFocus );
 }
 
+void Ui::OnJoinedChannelSuccessful( Channel& chan, bool focusTab )
+{
+	if ( m_main_win == 0 ) return;
+	wxLogDebugFunc( _T("") );
+
+	chan.uidata.panel = 0;
+
+	mw().OpenChannelChat( chan, focusTab );
+}
 
 //! @brief Called when something is said in a channel
 void Ui::OnChannelSaid( Channel& channel, User& user, const wxString& message )

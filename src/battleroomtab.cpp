@@ -147,10 +147,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_color_lbl = new wxStaticText( m_player_panel, -1, _( "Color" ) );
 	m_side_lbl = new wxStaticText( m_player_panel, -1, _( "Side" ) );
 
-	m_player_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Players: %d" ), 0 ) );
-	m_spec_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Spectators: %d" ), 0 ) );
 	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Setup: %s" ), _T("") ) );
-	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Unready/Unsynced: %d" ), 0 ) );
+	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Unready: %d" ), 0 ) );
 
 	m_size_lbl = new wxStaticText( this, -1, _T( "" ) );
 	m_wind_lbl = new wxStaticText( this, -1, _T( "" ) );
@@ -309,8 +307,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_player_sett_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->AddStretchSpacer();
 	m_player_sett_sizer->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
-	m_player_sett_sizer->Add( m_player_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT  | wxALL, 2 );
-	m_player_sett_sizer->Add( m_spec_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ok_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 
 	m_players_sizer->Add( m_players, 1, wxEXPAND );
@@ -426,14 +422,27 @@ void BattleRoomTab::PrintAllySetup()
 	wxString setupstring;
 	if ( m_battle )
 	{
+		setupstring += _T("<") + TowxString( m_battle->GetSpectators() ) + _T("> ");
+		setupstring += _T(" [") + TowxString( m_battle->GetNumActivePlayers() ) + _T("]: ");
+		wxString alliancesstring;
+		int previousalliancesize = 0;
+		bool ffamode = true;
 		std::map<int, int> allysizes = m_battle->GetAllySizes();
+		if ( allysizes.size() < 3 ) ffamode = false;
 		for ( std::map<int, int>::const_iterator itor = allysizes.begin(); itor != allysizes.end(); ++itor )
 		{
 			if ( itor != allysizes.begin() )
-                setupstring += _T("v");
-			setupstring += wxString::Format( _T("(%d) ") , itor->first );
-			setupstring += TowxString( itor->second );
+			{
+				alliancesstring += _T("v");
+				if (previousalliancesize != itor->second) ffamode = false;
+			}
+			else previousalliancesize = itor->second;
+			alliancesstring += TowxString( itor->second );
+			//this takes space needlessy
+			//alliancesstring += wxString::Format( _T("(%d)") , itor->first );
 		}
+		if ( !ffamode ) setupstring += alliancesstring;
+		else setupstring += wxString::Format(_("%d way FFA"), previousalliancesize);
 	}
 	m_ally_setup_lbl->SetLabel( wxString::Format( _( "Setup: %s" ), setupstring.c_str() ) );
 	Layout();
@@ -514,9 +523,7 @@ BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 
 void BattleRoomTab::UpdateStatsLabels()
 {
-	m_player_count_lbl->SetLabel( wxString::Format( _( "Players: %d" ), m_battle->GetNumActivePlayers() ) );
-	m_spec_count_lbl->SetLabel( wxString::Format( _( "Spectators: %d" ), m_battle->GetSpectators() ) );
-	m_ok_count_lbl->SetLabel( wxString::Format( _( "Unready/Unsynced: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ) );
+	m_ok_count_lbl->SetLabel( wxString::Format( _( "Unready: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ) );
 	PrintAllySetup();
 }
 
@@ -784,6 +791,7 @@ void BattleRoomTab::OnSideSel( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	m_battle->ForceSide( m_battle->GetMe(), m_side_sel->GetSelection() );
+	sett().SetBattleLastSideSel( m_battle->GetHostModName(), m_side_sel->GetSelection() );
 }
 
 
@@ -896,7 +904,7 @@ long BattleRoomTab::AddMMOptionsToList( long pos, OptionsWrapper::GameOption opt
 {
 	if ( !m_battle ) return -1;
 	OptionsWrapper::wxStringTripleVec optlist = m_battle->CustomBattleOptions().getOptions( optFlag );
-	for ( OptionsWrapper::wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); it++ )
+	for ( OptionsWrapper::wxStringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
 	{
 		m_opts_list->InsertItem( pos, it->second.first );
 		wxString tag = wxString::Format( _T( "%d_" ), optFlag ) + it->first;
@@ -1025,7 +1033,7 @@ void BattleRoomTab::OnOptionActivate( wxListEvent& event )
 	long index = event.GetIndex();
 	if ( index == 0 ) return;
 	wxString tag;
-	for ( OptionListMap::iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); itor++ )
+	for ( OptionListMap::const_iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); ++itor )
 	{
 		if ( itor->second == index )
 		{
@@ -1199,3 +1207,4 @@ void BattleRoomTab::OnHostNew( wxCommandEvent& /*event*/ )
 //	Layout();
 //	Refresh();
 //}
+

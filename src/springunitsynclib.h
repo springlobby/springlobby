@@ -269,21 +269,21 @@ class SpringUnitSyncLib : public SL::NonCopyable
     /**
      * Returns true if the library is loaded.
      */
-    bool IsLoaded();
+	bool IsLoaded() const;
 
     /**
      * Gets last error from unitsync library
      * @note throws unitsync_assert in case of error
      * @note this method should only be used after using directly an unitsync call to catch it's errors
      */
-    void AssertUnitsyncOk();
+	void AssertUnitsyncOk() const;
 
     /**
      * Get list of errors from unitsync library in an array
      */
-    wxArrayString GetUnitsyncErrors();
+	wxArrayString GetUnitsyncErrors() const;
 
-    bool VersionSupports( IUnitSync::GameFeature feature );
+	bool VersionSupports( IUnitSync::GameFeature feature ) const;
 
 
     int GetModIndex( const wxString& name );
@@ -527,7 +527,7 @@ class SpringUnitSyncLib : public SL::NonCopyable
     /**
      * Returns true if the library is loaded. Internal.
      */
-    bool _IsLoaded();
+	bool _IsLoaded() const;
 
     void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
 

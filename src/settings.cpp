@@ -1130,7 +1130,7 @@ void Settings::SetLastHostRelayedMode( bool value )
 void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<wxString, wxString> options )
 {
 	m_config->DeleteGroup( _T( "/Hosting/Preset/" ) + name + _T( "/" ) + TowxString( optiontype ) );
-	for ( std::map<wxString, wxString>::iterator it = options.begin(); it != options.end(); ++it )
+	for ( std::map<wxString, wxString>::const_iterator it = options.begin(); it != options.end(); ++it )
 	{
 		m_config->Write( _T( "/Hosting/Preset/" ) + name + _T( "/" ) + TowxString( optiontype ) + _T( "/" ) + it->first , it->second );
 	}
@@ -1646,6 +1646,16 @@ void Settings::SetBattleLastAutoAnnounceDescription( bool value )
 	m_config->Write( _T( "/Hosting/AutoAnnounceDescription" ) , value );
 }
 
+void Settings::SetBattleLastSideSel( const wxString& modname, int sidenum )
+{
+	m_config->Write(_T("/Battle/Sides/" + modname), sidenum);
+}
+
+int Settings::GetBattleLastSideSel( const wxString& modname )
+{
+	return m_config->Read( _T("/Battle/Sides/" + modname), 0l );
+}
+
 void Settings::SetMapLastStartPosType( const wxString& mapname, const wxString& startpostype )
 {
 	m_config->Write( _T( "/Hosting/MapLastValues/" ) + mapname + _T( "/startpostype" ), startpostype );
@@ -1655,7 +1665,7 @@ void Settings::SetMapLastRectPreset( const wxString& mapname, std::vector<Settin
 {
 	wxString basepath = _T( "/Hosting/MapLastValues/" ) + mapname + _T( "/Rects" );
 	m_config->DeleteGroup( basepath );
-	for ( std::vector<Settings::SettStartBox>::iterator itor = rects.begin(); itor != rects.end(); itor++ )
+	for ( std::vector<Settings::SettStartBox>::const_iterator itor = rects.begin(); itor != rects.end(); ++itor )
 	{
 		SettStartBox box = *itor;
 		wxString additionalpath = basepath + _T( "/Rect" ) + TowxString( box.ally ) + _T( "/" );
@@ -2583,3 +2593,4 @@ wxString Settings::GetUikeys( const wxString& index )
 }
 
 //END OF Hotkeys stuff (for springsettings)
+

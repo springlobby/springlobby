@@ -52,9 +52,9 @@ class ReplayList : public PlaybackList<Replay>
     template <class PB, class T>
     friend class GlobalObjectHolder;
 
-    bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret );
-    wxString GetScriptFromReplay ( const wxString& ReplayPath );
-    BattleOptions GetBattleOptsFromScript( const wxString& script_ );
+	bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret ) const;
+	wxString GetScriptFromReplay ( const wxString& ReplayPath ) const;
+	BattleOptions GetBattleOptsFromScript( const wxString& script_ ) const;
 
     //! load mod/map options
     void LoadMMOpts( const wxString& sectionname, IBattle& battle, const PDataList& node );
@@ -62,7 +62,7 @@ class ReplayList : public PlaybackList<Replay>
     void LoadMMOpts( IBattle& battle, const PDataList& node );
 
     //! saves relevant infos from header into replay struct
-    void GetHeaderInfo( Replay& rep, const wxString& ReplayPath );
+	void GetHeaderInfo( Replay& rep, const wxString& ReplayPath ) const;
 
 };
 

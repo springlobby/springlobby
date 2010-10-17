@@ -22,7 +22,7 @@ class SinglePlayerBattle: public IBattle
 //    unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
 //    void UpdateBot( unsigned int index, int ally, int posx, int posy, int side );
 
-    bool IsFounderMe() { return true; }
+	bool IsFounderMe() const { return true; }
 
     User& GetMe() { return m_me; }
     const User& GetMe() const { return m_me; }

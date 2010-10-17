@@ -257,7 +257,7 @@ void AddBotDialog::ShowAIOptions()
 long AddBotDialog::AddMMOptionsToList( long pos, int optFlag )
 {
 	OptionsWrapper::wxStringTripleVec optlist = m_battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optFlag );
-	for ( OptionsWrapper::wxStringTripleVec::iterator it = optlist.begin(); it != optlist.end(); ++it )
+	for ( OptionsWrapper::wxStringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
 	{
 		m_opts_list->InsertItem( pos, it->second.first );
 		wxString tag = wxString::Format( _T( "%d_" ), optFlag ) + it->first;
@@ -296,7 +296,7 @@ void AddBotDialog::OnOptionActivate( wxListEvent& event )
 {
 	long index = event.GetIndex();
 	wxString tag;
-	for ( OptionListMap::iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); itor++ )
+	for ( OptionListMap::const_iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); ++itor )
 	{
 		if ( itor->second == index )
 		{

@@ -290,7 +290,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 				return;
 			}
 			bool versionfound = false;
-			for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) {
+			for ( std::map<wxString, wxString>::const_iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) {
 				if ( itor->second == rep.SpringVersion ) {
 					if ( sett().GetCurrentUsedSpringIndex() != itor->first ) {
 						wxLogMessage( _T( "%s requires version: %s, switching to profile: %s" ), type.c_str(), rep.SpringVersion.c_str(), itor->first.c_str() );
@@ -305,7 +305,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 			if ( !versionfound ) {
 				wxString message = wxString::Format( _( "No compatible installed spring version has been found, this %s requires version: %s\n" ), type.c_str(), rep.SpringVersion.c_str() );
 				message << _( "Your current installed versions are:" );
-				for ( std::map<wxString, wxString>::iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) message << _T( " " ) << itor->second;
+				for ( std::map<wxString, wxString>::const_iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) message << _T( " " ) << itor->second;
 				customMessageBox( SL_MAIN_ICON, message, _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 				wxLogWarning ( _T( "no spring version supported by this replay found" ) );
 				AskForceWatch( rep );

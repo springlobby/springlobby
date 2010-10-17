@@ -26,7 +26,7 @@ void PlaybackList<PlaybackImp>::RemovePlayback( playback_id_t const& id )
 }
 
 template <class PlaybackImp>
-typename PlaybackList<PlaybackImp>::playback_map_t::size_type PlaybackList<PlaybackImp>::GetNumPlaybacks()
+typename PlaybackList<PlaybackImp>::playback_map_t::size_type PlaybackList<PlaybackImp>::GetNumPlaybacks() const
 {
     return m_replays.size();
 }
@@ -44,7 +44,7 @@ typename PlaybackList<PlaybackImp>::PlaybackType&
 }
 
 template <class PlaybackImp>
-bool PlaybackList<PlaybackImp>::PlaybackExists( playback_id_t const& id )
+bool PlaybackList<PlaybackImp>::PlaybackExists( playback_id_t const& id ) const
 {
     return m_replays.find(id) != m_replays.end();
 }

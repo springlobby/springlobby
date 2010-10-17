@@ -102,7 +102,8 @@ class ChatPanel : public wxPanel, public SL::NonCopyable
 
     void SetBattle( Battle* battle );
 
-    void Say( const wxString& message );
+	//! @returns true on success ( blank line ), false otherwise
+	bool Say( const wxString& message );
     void Part();
     void FocusInputBox();
 
@@ -199,6 +200,9 @@ class ChatPanel : public wxPanel, public SL::NonCopyable
     wxString m_url_at_pos; //! the mouse event sink sets this
 
     friend class ChatPanelMenu; //menu needs access to members
+
+	//used to avoid marking channel as changed when it's just been created.
+	bool m_topic_set;
 
 	DECLARE_EVENT_TABLE()
 };
