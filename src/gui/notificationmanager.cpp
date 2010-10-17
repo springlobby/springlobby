@@ -36,10 +36,10 @@ NotificationManager& notificationManager()
 }
 
 NotificationManager::NotificationManager()
-	: m_showNotificationSink( this, &UiEvents::GetNotificationEventSender( ) ),
-	m_notification_wrapper( new NotificationWrapperType( &ui().mw() ) ),
+	: m_notification_wrapper( new NotificationWrapperType( &ui().mw() ) ),
 	m_rate_limit_timer( this, this_timer_id ),
-	m_rate_limit_ms( 2000 )
+	m_rate_limit_ms( 2000 ),
+	m_showNotificationSink( this, &UiEvents::GetNotificationEventSender( ) )
 {
 }
 
@@ -72,9 +72,6 @@ void NotificationManager::ShowNotification( const UiEvents::NotficationData& dat
 
 void NotificationManager::OnTimer( wxTimerEvent& /*event*/ )
 {
-	const bool spring_running = spring().IsRunning();
-	const bool disable_if_ingame = sett().Get<bool>( _T("/GUI/NotificationPopupDisableIngame"), true );
-
 	UiEvents::NotficationData data;
 	if ( m_eventDataBuffer.size() > 0 ) {
 		if ( m_eventDataBuffer.size() == 1 )
