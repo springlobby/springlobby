@@ -1,4 +1,11 @@
+-support for:
+unbindall
+unbindkeyset <keyset>
+unbindaction <action>
+-support hex-values (not only as keysym)
+
 -keysymb editor -> context menu?
+-meta editor -> context menu?
 -better method to show orderDlg instead of dblClick? -> context menu?
 -commandline options to switch profiles
 -save profile to springsettings.conf even when same as spring default (?)
@@ -8,5 +15,6 @@
 -disable all edit-button when default profile is selected instead of show msgbox "cant edit"?
 
 -unify spelling
+-crlf
 -cleanup type mess (hotkeytypes etc)
 -ö doesnt work http://projects.springlobby.info/issues/1443
