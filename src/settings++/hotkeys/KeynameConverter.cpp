@@ -64,27 +64,19 @@ wxString KeynameConverter::discardModifier( const wxString& keystring )
 	return result;
 }
 
-bool KeynameConverter::compareSpring2wxKeybinder( const wxString& springkey, const wxString& kbKey )
+wxString KeynameConverter::convertHexValueToKey( const wxString& hexStr )
 {
-	KeynameConverter::ModifierList springMods = stringToKeyModifier( springkey );
-	KeynameConverter::ModifierList kbMods = stringToKeyModifier( kbKey );
-
-	//delete if existing
-	springMods.erase( ANY );
-
-	if ( springMods != kbMods )
+	wxString res = hexStr;
+	if ( hexStr.StartsWith( wxT("0x") ) )
 	{
-		return false;
+		long value = 0;
+		if ( hexStr.ToLong( &value, 16 ) )
+		{
+			res = wxChar( value );
+			res.MakeLower();
+		}
 	}
-
-	const wxString k1 = KeynameConverter::spring2wxKeybinder( KeynameConverter::discardModifier( springkey ) );
-	const wxString k2 = KeynameConverter::discardModifier( kbKey );
-	if ( k1 != k2 )
-	{
-		return false;
-	}
-
-	return true;
+	return res;
 }
 
 wxString KeynameConverter::normalizeSpringKey( const wxString& springKey )
@@ -100,7 +92,7 @@ wxString KeynameConverter::normalizeSpringKey( const wxString& springKey )
 		key = wxT("esc");
 	}
 
-	return KeynameConverter::modifier2String( modifiers, true ) + key;
+	return KeynameConverter::modifier2String( modifiers ) + key;
 }
 
 wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool reverse )
@@ -123,15 +115,9 @@ wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool r
 	{
 		kbKey = pCurKeyMap->find( key )->second;
 	}
-	else if ( key.StartsWith( wxT("0x") ) && key.size() == 4 )
+	else if ( key.StartsWith( wxT("0x") ) )
 	{
-		//raw key code - e.g. 0xa4
-		const wxString tmp = key.substr( 2, 2 );
-		std::stringstream str;
-		str << std::hex << tmp.ToAscii();
-		unsigned int c = 0x00;
-		str >> c;
-		kbKey << c;
+		kbKey = key;
 	}
 	else
 	{
@@ -145,33 +131,35 @@ wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool r
 		}
 	}
 
-	return KeynameConverter::modifier2String( modifiers, reverse ) + kbKey;
+	return KeynameConverter::modifier2String( modifiers ) + kbKey;
 }
 
-wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList& mod, bool addAny )
+wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList& mod )
 {
 	wxString modString;
 
-	bool modFound = false;
-	if ( mod.find( CTRL ) != mod.end() )
+	if ( mod.find( ANY ) != mod.end() )
 	{
-		modString += wxT("Ctrl+");
-		modFound = true;
+		modString += wxT("Any+");
 	}
-	if ( mod.find( SHIFT ) != mod.end() )
+	else
 	{
-		modString += wxT("Shift+");
-		modFound = true;
-	}
-	if ( mod.find( ALT ) != mod.end() )
-	{
-		modString += wxT("Alt+");
-		modFound = true;
-	}
-
-	if ( !modFound && addAny )
-	{
-		modString = wxT("Any+") + modString;
+		if ( mod.find( CTRL ) != mod.end() )
+		{
+			modString += wxT("Ctrl+");
+		}
+		if ( mod.find( SHIFT ) != mod.end() )
+		{
+			modString += wxT("Shift+");
+		}
+		if ( mod.find( ALT ) != mod.end() )
+		{
+			modString += wxT("Alt+");
+		}
+		if ( mod.find( META ) != mod.end() )
+		{
+			modString += wxT("Meta+");
+		}
 	}
 
 	return modString;
@@ -202,6 +190,11 @@ KeynameConverter::ModifierList KeynameConverter::stringToKeyModifier(const wxStr
 	if (str.Contains(wxT("ANY+")))
 	{
 		modifiers.insert( ANY );
+	}
+
+	if (str.Contains(wxT("META+")))
+	{
+		modifiers.insert( META );
 	}
 
 	return modifiers;

@@ -287,3 +287,4 @@ add_custom_target( version
 add_dependencies( distcheck dist )
 add_dependencies( springlobby alure )
 add_dependencies( springlobby version )
+#add_dependencies( versiontest version )

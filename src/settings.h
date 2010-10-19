@@ -740,12 +740,22 @@ class Settings : public SL::NonCopyable
 	/** @name Hotkeys
     * @{
     */
+	void SetHotkeyMeta( const wxString& profileName, const wxString& keyStr );
+	wxString GetHotkeyMeta( const wxString& profileName );
 
-	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, bool unbind = false );
-	wxString GetHotkey( const wxString& profileName, const wxString& command, const wxString& index );
+	void SetHotkeyKeySymSet( const wxString& profileName, const wxString& symName, const wxString& keyStr );
+	wxString GetHotkeyKeySymSet( const wxString& profileName, const wxString& symName );
+	wxArrayString GetHotkeyKeySymSetNames( const wxString& profileName );
+
+	void SetHotkeyKeySym( const wxString& profileName, const wxString& symName, const wxString& keyStr );
+	wxString GetHotkeyKeySym( const wxString& profileName, const wxString& symName );
+	wxArrayString GetHotkeyKeySymNames( const wxString& profileName );
+
+	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx );
+	wxString GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key );
 	wxArrayString GetHotkeyProfiles();
-	wxArrayString GetHotkeyProfileCommands( const wxString& profileName );
-	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& command );
+	wxArrayString GetHotkeyProfileOrderIndices( const wxString& profileName );
+	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& orderIdx );
 	void DeleteHotkeyProfiles();
 	wxString GetUikeys( const wxString& index );
 

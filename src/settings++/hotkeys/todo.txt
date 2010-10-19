@@ -1,12 +1,12 @@
--"meta" as possible keycode
--"any" checkbox?
--order of binds/unbinds for multiple keys
+-keysymb editor -> context menu?
+-better method to show orderDlg instead of dblClick? -> context menu?
+-commandline options to switch profiles
+-save profile to springsettings.conf even when same as spring default (?)
+-save custom commands to springsettings.conf to keep them even when not used in any profile
 -colorize commands that have changed hotkeys compared to default
+-hide empty commands with checkbox
+-disable all edit-button when default profile is selected instead of show msgbox "cant edit"?
 
--buildfiles
--new/delete memmanagment?
 -unify spelling
--make SPRINGSETTINGS define in keybinder cmake default
-
--save profiles to springsettings.conf even when same as spring default (?)
--save custom commands to springsettings.conf to keep them even when not used in any profile (?)
+-cleanup type mess (hotkeytypes etc)
+-ö doesnt work http://projects.springlobby.info/issues/1443

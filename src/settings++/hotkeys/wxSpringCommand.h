@@ -3,11 +3,11 @@
 
 #include "../../wxkeybinder/keybinder.h"
 
-class spring_command : public wxCmd
+class wxSpringCommand : public wxCmd
 {
 public:
-	spring_command( const wxString& name, const wxString& description, int id );
-	~spring_command(void);
+	wxSpringCommand( const wxString& name, const wxString& description, int id );
+	~wxSpringCommand(void);
 
 	virtual wxCmd*	Clone() const;
 	virtual int		GetType() const;
