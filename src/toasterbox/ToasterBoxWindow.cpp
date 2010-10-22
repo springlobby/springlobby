@@ -12,7 +12,7 @@
 #include "ToasterBoxWindow.h"
 #include "../gui/wxbackgroundimage.h"
 #include "../images/notif_bg.png.h"
-#include "../uiutils.h""
+#include "../uiutils.h"
 
 #ifndef __WXMSW__
 	typedef wxClientDC DCType;

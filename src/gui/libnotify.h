@@ -17,7 +17,7 @@ class LibnotifyNotification : public INotification
 LibnotifyNotification::LibnotifyNotification(wxWindow* ){}
 LibnotifyNotification::~LibnotifyNotification(){}
 
-void LibnotifyNotification::Show(const wxBitmap& icon, const size_t pos, const UiEvents::NotficationData& data )
+void LibnotifyNotification::Show(const wxBitmap& icon, const size_t /*pos*/, const UiEvents::NotficationData& data )
 {
 	NotifyNotification *n;
 	notify_init("Test");

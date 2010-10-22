@@ -17,7 +17,7 @@ ToasterNotification::ToasterNotification( wxWindow* parent )
 //	m_toasterbox->SetPopupScrollSpeed(pScrollSpeed);
 }
 
-void ToasterNotification::Show(const wxBitmap& icon, const size_t pos, const UiEvents::NotficationData& data )
+void ToasterNotification::Show(const wxBitmap& /*icon*/, const size_t pos, const UiEvents::NotficationData& data )
 {
 	m_toasterbox->SetPopupPauseTime(sett().GetNotificationPopupDisplayTime()*1000);
 //	m_toasterbox->SetPopupBitmap( icon );
