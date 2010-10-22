@@ -213,7 +213,8 @@ set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )
 
 IF( WIN32 )
 	LIST( APPEND SLSharedWithSettings src/stacktrace.c )
-	LIST( APPEND springlobbySrc src/gui/snarl/SnarlInterface.cpp src/gui/snarlnotification.cpp)
+	#snarl's currently not functional on win
+	#LIST( APPEND springlobbySrc src/gui/snarl/SnarlInterface.cpp src/gui/snarlnotification.cpp)
 ELSE( WIN32 )
 	LIST( APPEND SLSharedWithSettings src/stacktrace.cpp )
 ENDIF( WIN32 )
