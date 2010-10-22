@@ -1,13 +1,32 @@
 #include "notificationmanager.h"
 
-#include "../toasterbox/ToasterBox.h"
 #include "../globalsmanager.h"
 #include "../uiutils.h"
 #include "../ui.h"
 #include "../settings.h"
 #include "../spring.h"
 #include "../mainwindow.h"
+#include "../utils/platform.h"
 #include "../images/springlobby_64.png.h"
+#include "inotification.h"
+
+#ifdef HAVE_LIBNOTIFY
+	#include "libnotify.h"
+	typedef LibnotifyNotification NotificationWrapperType;
+//#elif defined(__WXMSW__) //this is currently completely screwed
+//	#include "snarlnotification.h"
+//	typedef SnarlNotification NotificationWrapperType;
+#else
+	#include "toasternotification.h"
+	typedef ToasterNotification NotificationWrapperType;
+#endif
+
+const int this_timer_id = wxNewId();
+
+BEGIN_EVENT_TABLE(NotificationManager, wxEvtHandler)
+	EVT_TIMER(this_timer_id, NotificationManager::OnTimer)
+END_EVENT_TABLE()
+
 
 NotificationManager& notificationManager()
 {
@@ -17,73 +36,54 @@ NotificationManager& notificationManager()
 }
 
 NotificationManager::NotificationManager()
-	: m_showNotificationSink( this, &UiEvents::GetNotificationEventSender( ) ),
-	m_width(300),
-	m_height(80),
-	m_x_offset(30),
-	m_y_offset(30)
+	: m_notification_wrapper( new NotificationWrapperType( &ui().mw() ) ),
+	m_rate_limit_timer( this, this_timer_id ),
+	m_rate_limit_ms( 2000 ),
+	m_showNotificationSink( this, &UiEvents::GetNotificationEventSender( ) )
 {
-	m_toasterbox = new ToasterBox(&ui().mw());
-	m_toasterbox->SetPopupSize(m_width, m_height );
-
-    m_toasterbox->SetPopupBackgroundColor(0,0,0);
-    m_toasterbox->SetPopupTextColor(255,255,255);
-//    m_toasterbox->SetPopupScrollSpeed(pScrollSpeed);
-	//! \todo use image from customizations
-	wxBitmap nmp ( charArr2wxBitmap( springlobby_64_png, sizeof(springlobby_64_png) ) );
-//    wxBitmap icon (  ) );
-    m_toasterbox->SetPopupBitmap( nmp );
 }
 
 NotificationManager::~NotificationManager()
 {
-    delete m_toasterbox;
+	m_rate_limit_timer.Stop();
+	delete m_notification_wrapper;
 }
 
-void NotificationManager::ShowNotification( UiEvents::NotficationData data )
+void NotificationManager::OnShowNotification( UiEvents::NotficationData data )
+{	
+	if ( m_rate_limit_timer.IsRunning() ) {
+		m_eventDataBuffer.push_back( data );
+		return;
+	}
+	ShowNotification( data );
+	m_rate_limit_timer.Start( m_rate_limit_ms, wxTIMER_ONE_SHOT );
+}
+
+void NotificationManager::ShowNotification( const UiEvents::NotficationData& data )
 {
-    //call this before showing everytime to accout for desktop resolution changes
 	const bool spring_running = spring().IsRunning();
 	const bool disable_if_ingame = sett().Get<bool>( _T("/GUI/NotificationPopupDisableIngame"), true );
-	if ( m_toasterbox &&  ! ( disable_if_ingame && spring_running ) ) {
-		SetPopupPosition();
-		m_toasterbox->SetPopupText( data.second, false);
-		m_toasterbox->Play();
+	if ( m_notification_wrapper &&  ! ( disable_if_ingame && spring_running ) ) {
+		//! \todo use image from customizations
+		wxBitmap nmp ( charArr2wxBitmap( springlobby_64_png, sizeof(springlobby_64_png) ) );
+		m_notification_wrapper->Show( nmp, sett().GetNotificationPopupPosition(), data );
 	}
 }
 
-void NotificationManager::SetPopupPosition()
+void NotificationManager::OnTimer( wxTimerEvent& /*event*/ )
 {
-	m_toasterbox->SetPopupPauseTime(sett().GetNotificationPopupDisplayTime()*1000);
-    int dim_x = wxSystemSettings::GetMetric( wxSYS_SCREEN_X );
-    int dim_y = wxSystemSettings::GetMetric( wxSYS_SCREEN_Y );
-	switch ( sett().GetNotificationPopupPosition() )
-	{
-		case ScreenPosition::bottom_left :
-			m_toasterbox->SetPopupPosition( 0 + m_x_offset, dim_y - m_height - m_y_offset );
-			m_toasterbox->SetStackDirection( ToasterBox::StackUp );
-			break;
-		case ScreenPosition::top_left :
-			m_toasterbox->SetPopupPosition( 0 + m_x_offset, 0 + m_y_offset );
-			m_toasterbox->SetStackDirection( ToasterBox::StackDown );
-			break;
-		case ScreenPosition::top_right :
-			m_toasterbox->SetPopupPosition( dim_x - m_width - m_x_offset, 0 + m_y_offset );
-			m_toasterbox->SetStackDirection( ToasterBox::StackDown );
-			break;
-		default://bottom_right
-			m_toasterbox->SetPopupPosition( dim_x - m_width - m_x_offset, dim_y - m_height - m_y_offset );
-			m_toasterbox->SetStackDirection( ToasterBox::StackUp );
-			break;
+	UiEvents::NotficationData data;
+	if ( m_eventDataBuffer.size() > 0 ) {
+		if ( m_eventDataBuffer.size() == 1 )
+			data = m_eventDataBuffer.front();
+		else
+			data.second = wxString::Format( _("%d more events"), m_eventDataBuffer.size() );
+		m_eventDataBuffer.clear();
+		ShowNotification( data );
 	}
 }
 
 void NotificationManager::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
 {
-	if ( m_toasterbox )
-	{
-		m_toasterbox->CleanList();
-	}
-	delete m_toasterbox;
-	m_toasterbox = 0;
+	delete m_notification_wrapper;
 }
