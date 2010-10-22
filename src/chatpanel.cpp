@@ -49,9 +49,6 @@
 #include "uiutils.h"
 #include "Helper/wxtextctrlhist.h"
 
-#ifndef DISABLE_SOUND
-#include "alsound.h"
-#endif
 #include "useractions.h"
 #include "usermenu.h"
 
@@ -644,14 +641,10 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 	if ( req_user ) {
 		bool inactive = ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ;
 		ui().mw().RequestUserAttention();
-		if ( sett().GetUseNotificationPopups() && inactive )
+		if ( inactive )
 			UiEvents::GetNotificationEventSender().SendEvent(
-					UiEvents::NotficationData( wxNullBitmap,
+					UiEvents::NotficationData( UiEvents::PrivateMessage,
 											   wxString::Format( _T("%s:\n%s"), who.c_str(), message.Left(50).c_str() ) ) );
-		#ifndef DISABLE_SOUND
-			if ( sett().GetChatPMSoundNotificationEnabled() && inactive )
-				sound().pm();
-		#endif
 	}
 }
 

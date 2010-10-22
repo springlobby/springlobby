@@ -681,10 +681,10 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 	wxString disconnect_msg = wxString::Format(_("disconnected from server: %s"), server.GetServerName().c_str() );
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
 			UiEvents::StatusData( disconnect_msg, 1 ) );
-	if ( sett().GetUseNotificationPopups() && !wxTheApp->IsActive() )
+	if ( !wxTheApp->IsActive() )
 	{
 		UiEvents::GetNotificationEventSender().SendEvent(
-				UiEvents::NotficationData( wxNullBitmap, disconnect_msg ) );
+				UiEvents::NotficationData( UiEvents::ServerConnection, disconnect_msg ) );
 	}
     if ( server.uidata.panel )
     {
@@ -1256,10 +1256,10 @@ void Ui::OnRing( const wxString& from )
     if ( m_main_win == 0 ) return;
     m_main_win->RequestUserAttention();
 
-	if ( sett().GetUseNotificationPopups() && !wxTheApp->IsActive() )
+	if ( !wxTheApp->IsActive() )
 	{
 		UiEvents::GetNotificationEventSender().SendEvent(
-				UiEvents::NotficationData( wxNullBitmap, wxString::Format(_("%s:\nring!"),from.c_str()) ) );
+				UiEvents::NotficationData( UiEvents::ServerConnection, wxString::Format(_("%s:\nring!"),from.c_str()) ) );
 	}
 
 #ifndef DISABLE_SOUND
