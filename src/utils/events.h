@@ -112,6 +112,10 @@ class EventReceiverFuncBase: public ListNodeBare {
 template<class TParamType>
 class EventSender: public EventReceiverFuncBase<TParamType> {
 	public:
+		EventSender()
+			:m_enabled(true)
+		{}
+
 		void OnEvent( TParamType /*param */) {
 			/// you may want to put assert(0) here, or log a message.
 			/// This method is only called when you have multiple senders sharing same event list.
@@ -124,7 +128,7 @@ class EventSender: public EventReceiverFuncBase<TParamType> {
 			//my_assert(pt->prev==end);
 			EventReceiverFuncBase<TParamType> iterator_node;
 			iterator_node.ConnectNextTo( end );
-			while ( iterator_node.next != end ) {
+			while ( m_enabled && ( iterator_node.next != end ) ) {
 
 				iterator_node.SanityCheck();
 
@@ -132,6 +136,14 @@ class EventSender: public EventReceiverFuncBase<TParamType> {
 				iterator_node.StepNext();
 			}
 		}
+
+		void Enable( bool enable = true )
+		{
+			m_enabled = enable;
+		}
+
+	protected:
+		bool m_enabled;
 };
 
 /// Use EventReceiverFunc<base_class, parameter_type, &base_class::method> to make event receiver adaptor
