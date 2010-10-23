@@ -50,7 +50,8 @@ NotificationManager::NotificationManager()
 NotificationManager::~NotificationManager()
 {
 	m_rate_limit_timer.Stop();
-	delete m_notification_wrapper;
+//	delete m_notification_wrapper;//this segfaults on app exit.. please do tell me why
+	m_notification_wrapper = 0;
 }
 
 void NotificationManager::OnShowNotification( UiEvents::NotficationData data )
