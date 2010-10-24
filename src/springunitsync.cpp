@@ -522,7 +522,7 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
     return GetImage( modname, ImgName );
 }
 
-wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image_path ) const
+wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent  ) const
 {
   wxLogDebugFunc( _T("") );
 
@@ -545,10 +545,13 @@ wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image
 
 	cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
 	cache.InitAlpha();
-	for ( int x = 0; x < cache.GetWidth(); x++ )
-		for ( int y = 0; y < cache.GetHeight(); y++ )
-			if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 )
-                cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
+	if ( useWhiteAsTransparent )
+	{
+		for ( int x = 0; x < cache.GetWidth(); x++ )
+			for ( int y = 0; y < cache.GetHeight(); y++ )
+				if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 )
+					cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
+	}
     return cache;
 }
 
