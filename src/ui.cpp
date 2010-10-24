@@ -1001,6 +1001,16 @@ void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
     else user.uidata.panel->Said( user.GetNick(), message );
 }
 
+void Ui::OnUserSaidEx( User& user, const wxString& action, bool fromme )
+{
+	if ( m_main_win == 0 ) return;
+	if ( user.uidata.panel == 0 )
+	{
+		mw().OpenPrivateChat( user );
+	}
+	if ( fromme ) user.uidata.panel->DidAction ( serverSelector().GetServer().GetMe().GetNick(), action );
+	else user.uidata.panel->DidAction( user.GetNick(), action );
+}
 
 void Ui::OnBattleOpened( IBattle& battle )
 {

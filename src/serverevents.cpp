@@ -666,6 +666,20 @@ void ServerEvents::OnPrivateMessage( const wxString& user, const wxString& messa
     }
 }
 
+void ServerEvents::OnPrivateMessageEx( const wxString& user, const wxString& action, bool fromme )
+{
+	wxLogDebugFunc( _T("") );
+	try
+	{
+		User& who = m_serv.GetUser( user );
+		if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, who.GetNick() ) )
+			ui().OnUserSaidEx( who, action, fromme );
+	}
+	catch (std::runtime_error &except)
+	{
+	}
+}
+
 void ServerEvents::OnChannelList( const wxString& channel, const int& numusers, const wxString& topic )
 {
     ui().mw().OnChannelList( channel, numusers, topic );

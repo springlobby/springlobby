@@ -76,6 +76,7 @@ class SimpleServerEvents : public IServerEvents, public wxEvtHandler
     void OnUserJoinChannel( const wxString& channel, const wxString& who );
 
     void OnPrivateMessage( const wxString& user, const wxString& message, bool fromme = false );
+	void OnPrivateMessageEx( const wxString& user, const wxString& action, bool fromme = false );
 
     void OnRequestBattleStatus( int battleid );
     void OnSaidBattle( int battleid, const wxString& nick, const wxString& msg );

@@ -862,6 +862,11 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 				}
         m_se->OnPrivateMessage( nick, params, false );
     }
+	else if ( cmd == _T("SAIDPRIVATEEX") )
+	{
+		nick = GetWordParam( params );
+		m_se->OnPrivateMessageEx( nick, params, false );
+	}
     else if ( cmd == _T("JOINBATTLE") )
     {
         id = GetIntParam( params );
