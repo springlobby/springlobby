@@ -517,9 +517,13 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 	wxString ImgName = _T("SidePics");
 	ImgName += _T("/");
 	ImgName += SideName.Upper();
-	ImgName += _T(".bmp");
+	ImgName += ;
 
-    return GetImage( modname, ImgName );
+	try {
+		return GetImage( modname, ImgName + _T(".png"), false );
+	}
+	catch ( assert_exception& e){}
+	return GetImage( modname, ImgName + _T(".bmp"), true );
 }
 
 wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent  ) const
