@@ -128,8 +128,6 @@ MainWindow::MainWindow( )
 	m_log_win(NULL),
 	m_has_focus(true)
 {
-	assert( !wxGetApp().IsSimple() );
-	//! \todo use customised icon
 	SetIcon( SLcustomizations().GetAppIcon() );
 
 	GetAui().manager = new AuiManagerContainer::ManagerType( this );
