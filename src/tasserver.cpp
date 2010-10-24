@@ -813,6 +813,11 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         }
         m_se->OnPrivateMessage( nick, params, true );
     }
+	else if ( cmd == _T("SAYPRIVATEEX") )
+	{
+		nick = GetWordParam( params );
+		m_se->OnPrivateMessageEx( nick, params, true );
+	}
     else if ( cmd == _T("SAIDPRIVATE") )
     {
         nick = GetWordParam( params );
