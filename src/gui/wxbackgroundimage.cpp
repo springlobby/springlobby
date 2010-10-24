@@ -28,7 +28,7 @@ bool wxBackgroundBitmap::ProcessEvent(wxEvent &Event)
             wxWindow * TempWindow = wxDynamicCast(Event.GetEventObject(),wxWindow);
             if(TempWindow)
             {
-                wxBufferedPaintDC DC(TempWindow);
+                wxAutoBufferedPaintDC DC(TempWindow);
                 int w, h;
                 TempWindow->GetClientSize(&w, &h);
 				wxSize current( w,h);
@@ -71,3 +71,4 @@ bool wxBackgroundBitmap::ProcessEvent(wxEvent &Event)
 }
 
 #endif
+
