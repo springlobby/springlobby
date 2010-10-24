@@ -666,6 +666,12 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
   // change the image of the tab to show new events
 	SetIconHighlight( highlight_say );
 	OutputLine( _T( " * " ) + who + _T( " " ) + action, sett().GetChatColorAction(), sett().GetChatFont() );
+	if ( m_type == CPT_User && ( ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) )
+	{
+		UiEvents::GetNotificationEventSender().SendEvent(
+				UiEvents::NotficationData( UiEvents::PrivateMessage,
+										   wxString::Format( _T("%s \n%s"), who.c_str(), action.Left(50).c_str() ) ) );
+	}
 }
 
 //! @brief Output motd sent by server
