@@ -517,7 +517,6 @@ wxImage SpringUnitSync::GetSidePicture( const wxString& modname, const wxString&
 	wxString ImgName = _T("SidePics");
 	ImgName += _T("/");
 	ImgName += SideName.Upper();
-	ImgName += ;
 
 	try {
 		return GetImage( modname, ImgName + _T(".png"), false );
