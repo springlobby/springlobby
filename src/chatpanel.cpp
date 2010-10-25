@@ -472,7 +472,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
 			}else if(c == 2)//Bold
 			{
-				bold = not bold;
+				bold = !bold;
 				m1 = m1.Mid(1);
 			}else if(c == 0x0F) //Reset formatting
 			{
@@ -1263,3 +1263,4 @@ void ChatPanel::LoadLastLines()
         m_chatlog_text->AppendText( _T( "\n" ) );
     }
 }
+
