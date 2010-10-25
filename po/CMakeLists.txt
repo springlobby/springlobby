@@ -9,7 +9,7 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
         SET(catalogname springlobby)
 
-        ADD_CUSTOM_TARGET(translations )
+        ADD_CUSTOM_TARGET(translations ALL)
 
         FILE(GLOB PO_FILES  ${CMAKE_SOURCE_DIR}/po/*.po)
 		
