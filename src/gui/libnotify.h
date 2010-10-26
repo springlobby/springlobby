@@ -26,7 +26,7 @@ void LibnotifyNotification::Show(const wxBitmap& icon, const size_t /*pos*/, con
 
 	notify_notification_set_icon_from_pixbuf(n,icon.GetPixbuf() );
 	if (!notify_notification_show (n, NULL)) {
-	   g_error("Failed to send notification.\n");
+//	   g_error("Failed to send notification.\n");
 
 	}
 	g_object_unref(G_OBJECT(n));
@@ -50,3 +50,4 @@ void LibnotifyNotification::Show(const wxBitmap& icon, const size_t /*pos*/, con
 	You should have received a copy of the GNU General Public License
 	along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
 **/
+
