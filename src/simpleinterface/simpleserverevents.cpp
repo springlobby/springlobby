@@ -214,6 +214,10 @@ void SimpleServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, c
     }
 }
 
+void SimpleServerEvents::OnPrivateMessageEx( const wxString& /*user*/, const wxString& /*action*/, bool /*fromme*/ )
+{
+
+}
 
 void SimpleServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
 {

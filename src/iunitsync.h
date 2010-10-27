@@ -171,7 +171,7 @@ class IUnitSync : public wxEvtHandler
 
 	virtual wxArrayString GetSides( const wxString& modname  ) = 0;
 	virtual wxImage GetSidePicture( const wxString& modname, const wxString& SideName )  const = 0;
-	virtual wxImage GetImage( const wxString& modname, const wxString& image_path ) const = 0;
+	virtual wxImage GetImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent = true ) const = 0;
 	virtual wxString GetTextfileAsString( const wxString& modname, const wxString& file_path ) =0;
 
 	virtual int GetNumUnits( const wxString& modname ) const = 0;

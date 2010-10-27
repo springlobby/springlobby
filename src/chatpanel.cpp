@@ -49,9 +49,6 @@
 #include "uiutils.h"
 #include "Helper/wxtextctrlhist.h"
 
-#ifndef DISABLE_SOUND
-#include "alsound.h"
-#endif
 #include "useractions.h"
 #include "usermenu.h"
 
@@ -475,7 +472,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
 			}else if(c == 2)//Bold
 			{
-				bold = not bold;
+				bold = !bold;
 				m1 = m1.Mid(1);
 			}else if(c == 0x0F) //Reset formatting
 			{
@@ -644,14 +641,10 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 	if ( req_user ) {
 		bool inactive = ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ;
 		ui().mw().RequestUserAttention();
-		if ( sett().GetUseNotificationPopups() && inactive )
+		if ( inactive )
 			UiEvents::GetNotificationEventSender().SendEvent(
-					UiEvents::NotficationData( wxNullBitmap,
+					UiEvents::NotficationData( UiEvents::PrivateMessage,
 											   wxString::Format( _T("%s:\n%s"), who.c_str(), message.Left(50).c_str() ) ) );
-		#ifndef DISABLE_SOUND
-			if ( sett().GetChatPMSoundNotificationEnabled() && inactive )
-				sound().pm();
-		#endif
 	}
 }
 
@@ -673,6 +666,12 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
   // change the image of the tab to show new events
 	SetIconHighlight( highlight_say );
 	OutputLine( _T( " * " ) + who + _T( " " ) + action, sett().GetChatColorAction(), sett().GetChatFont() );
+	if ( m_type == CPT_User && ( ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) )
+	{
+		UiEvents::GetNotificationEventSender().SendEvent(
+				UiEvents::NotficationData( UiEvents::PrivateMessage,
+										   wxString::Format( _T("%s \n%s"), who.c_str(), action.Left(50).c_str() ) ) );
+	}
 }
 
 //! @brief Output motd sent by server
@@ -1264,3 +1263,4 @@ void ChatPanel::LoadLastLines()
         m_chatlog_text->AppendText( _T( "\n" ) );
     }
 }
+

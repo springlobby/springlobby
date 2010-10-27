@@ -69,11 +69,11 @@ bool Customizations::Init(const wxString& modname)
     bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
     if ( ret ) {
         wxString icon_img_path = m_customs.getSingleValue( _T("icon") );
-        wxBitmap icon_bmp (usync().GetImage( m_modname, icon_img_path ) );
+		wxBitmap icon_bmp (usync().GetImage( m_modname, icon_img_path, false ) );
         m_app_ico.CopyFromBitmap( icon_bmp );
 
         wxString bg_img_path = m_customs.getSingleValue( _T("bg_image") );
-        m_background = wxBitmap( usync().GetImage( m_modname, bg_img_path ) );
+		m_background = wxBitmap( usync().GetImage( m_modname, bg_img_path, false ) );
 
         m_help_url = m_customs.getSingleValue( _T("help_url") );
     }

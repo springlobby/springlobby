@@ -10,6 +10,10 @@
 #include "../images/springlobby_64.png.h"
 #include "inotification.h"
 
+#ifndef DISABLE_SOUND
+	#include "../alsound.h"
+#endif
+
 #ifdef HAVE_LIBNOTIFY
 	#include "libnotify.h"
 	typedef LibnotifyNotification NotificationWrapperType;
@@ -46,7 +50,8 @@ NotificationManager::NotificationManager()
 NotificationManager::~NotificationManager()
 {
 	m_rate_limit_timer.Stop();
-	delete m_notification_wrapper;
+//	delete m_notification_wrapper;//this segfaults on app exit.. please do tell me why
+	m_notification_wrapper = 0;
 }
 
 void NotificationManager::OnShowNotification( UiEvents::NotficationData data )
@@ -61,13 +66,19 @@ void NotificationManager::OnShowNotification( UiEvents::NotficationData data )
 
 void NotificationManager::ShowNotification( const UiEvents::NotficationData& data )
 {
-	const bool spring_running = spring().IsRunning();
-	const bool disable_if_ingame = sett().Get<bool>( _T("/GUI/NotificationPopupDisableIngame"), true );
-	if ( m_notification_wrapper &&  ! ( disable_if_ingame && spring_running ) ) {
-		//! \todo use image from customizations
-		wxBitmap nmp ( charArr2wxBitmap( springlobby_64_png, sizeof(springlobby_64_png) ) );
-		m_notification_wrapper->Show( nmp, sett().GetNotificationPopupPosition(), data );
+	if ( sett().GetUseNotificationPopups() ) {
+		const bool spring_running = spring().IsRunning();
+		const bool disable_if_ingame = sett().Get<bool>( _T("/GUI/NotificationPopupDisableIngame"), true );
+		if ( m_notification_wrapper &&  ! ( disable_if_ingame && spring_running ) ) {
+			//! \todo use image from customizations
+			wxBitmap nmp ( charArr2wxBitmap( springlobby_64_png, sizeof(springlobby_64_png) ) );
+			m_notification_wrapper->Show( nmp, sett().GetNotificationPopupPosition(), data );
+		}
 	}
+	#ifndef DISABLE_SOUND
+		if ( sett().GetChatPMSoundNotificationEnabled() )
+			sound().pm();
+	#endif
 }
 
 void NotificationManager::OnTimer( wxTimerEvent& /*event*/ )

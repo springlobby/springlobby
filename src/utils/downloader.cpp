@@ -109,16 +109,18 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
     curl_easy_setopt(curl_handle, CURLOPT_READFUNCTION, wxcurl_stream_read);
     curl_easy_setopt(curl_handle, CURLOPT_READDATA, (void*)&req);
 
-    CURLcode ret = curl_easy_perform(curl_handle);
-	assert( ret == CURLE_OK );
-	//wxMessageBox( rheader.GetString()  );
+	const CURLcode ret = curl_easy_perform(curl_handle);
+	/* cleanup curl stuff */
+	curl_easy_cleanup(curl_handle);
 
-  /* cleanup curl stuff */
-    curl_easy_cleanup(curl_handle);
+	PlasmaResourceInfo info;
+	if( ret == CURLE_OK ) {
+		info.m_type = PlasmaResourceInfo::unknown;
+		return info;
+	}
 
     m_buffers[index] = response.GetString();
 
-	PlasmaResourceInfo info;
 	try {
 		info = ParseResourceInfoData( index );
 	}
@@ -274,14 +276,16 @@ void FetchResourceListWorkItem::Run()
 	curl_easy_setopt(curl_handle, CURLOPT_READDATA, (void*)&req);
 
 	CURLcode ret = curl_easy_perform(curl_handle);
-	assert( ret == CURLE_OK );
-
-  /* cleanup curl stuff */
+	/* cleanup curl stuff */
 	curl_easy_cleanup(curl_handle);
 
-	m_interface->ParseResourceListData( response.GetString() );
-
-    GetGlobalEventSender( GlobalEvents::PlasmaResourceListParsed ).SendEvent( 0 );
+	if ( ret == CURLE_OK ) {
+		GetGlobalEventSender( GlobalEvents::PlasmaResourceListFailedDownload ).SendEvent( 0 );
+	}
+	else {
+		m_interface->ParseResourceListData( response.GetString() );
+		GetGlobalEventSender( GlobalEvents::PlasmaResourceListParsed ).SendEvent( 0 );
+	}
 
 }
 void PlasmaInterface::ParseResourceListData( const wxString& buffer )

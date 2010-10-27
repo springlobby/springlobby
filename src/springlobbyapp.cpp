@@ -251,6 +251,7 @@ int SpringLobbyApp::OnExit()
   	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
     SetEvtHandlerEnabled(false);
+	UiEvents::GetNotificationEventSender().Enable( false );
     DestroyGlobals();
 
     return 0;

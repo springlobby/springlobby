@@ -39,7 +39,7 @@ ELSE(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
   MESSAGE(STATUS "Found xgettext: ${XGETTEXT}")
   SET(MESSAGES_POT_FILE ${springlobby_SOURCE_DIR}/po/springlobby.pot)
   ADD_CUSTOM_TARGET(
-    update-potfile ALL 
+    update-potfile  
     COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C -o ${MESSAGES_POT_FILE} ${springlobbySrc} ${updaterSrc} ${header} ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings}
 #     DEPENDS springlobby
     WORKING_DIRECTORY ${springlobby_SOURCE_DIR}
@@ -52,7 +52,7 @@ IF(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
 ELSE(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
   MESSAGE(STATUS "Found msgmerge: ${MSGMERGE}")
 
-  ADD_CUSTOM_TARGET( update-po ALL )
+  ADD_CUSTOM_TARGET( update-po )
 	FILE(GLOB PO_FILES  ${CMAKE_SOURCE_DIR}/po/*.po)
 	SET( POTFILE ${springlobby_SOURCE_DIR}/po/springlobby.pot )
 

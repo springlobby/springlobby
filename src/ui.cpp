@@ -681,10 +681,10 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 	wxString disconnect_msg = wxString::Format(_("disconnected from server: %s"), server.GetServerName().c_str() );
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
 			UiEvents::StatusData( disconnect_msg, 1 ) );
-	if ( sett().GetUseNotificationPopups() && !wxTheApp->IsActive() )
+	if ( !wxTheApp->IsActive() )
 	{
 		UiEvents::GetNotificationEventSender().SendEvent(
-				UiEvents::NotficationData( wxNullBitmap, disconnect_msg ) );
+				UiEvents::NotficationData( UiEvents::ServerConnection, disconnect_msg ) );
 	}
     if ( server.uidata.panel )
     {
@@ -1001,6 +1001,16 @@ void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
     else user.uidata.panel->Said( user.GetNick(), message );
 }
 
+void Ui::OnUserSaidEx( User& user, const wxString& action, bool fromme )
+{
+	if ( m_main_win == 0 ) return;
+	if ( user.uidata.panel == 0 )
+	{
+		mw().OpenPrivateChat( user );
+	}
+	if ( fromme ) user.uidata.panel->DidAction ( serverSelector().GetServer().GetMe().GetNick(), action );
+	else user.uidata.panel->DidAction( user.GetNick(), action );
+}
 
 void Ui::OnBattleOpened( IBattle& battle )
 {
@@ -1256,10 +1266,10 @@ void Ui::OnRing( const wxString& from )
     if ( m_main_win == 0 ) return;
     m_main_win->RequestUserAttention();
 
-	if ( sett().GetUseNotificationPopups() && !wxTheApp->IsActive() )
+	if ( !wxTheApp->IsActive() )
 	{
 		UiEvents::GetNotificationEventSender().SendEvent(
-				UiEvents::NotficationData( wxNullBitmap, wxString::Format(_("%s:\nring!"),from.c_str()) ) );
+				UiEvents::NotficationData( UiEvents::ServerConnection, wxString::Format(_("%s:\nring!"),from.c_str()) ) );
 	}
 
 #ifndef DISABLE_SOUND

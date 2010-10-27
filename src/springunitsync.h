@@ -158,7 +158,7 @@ class SpringUnitSync : public IUnitSync
 
     wxArrayString GetSides( const wxString& modname  );
 	wxImage GetSidePicture( const wxString& modname, const wxString& SideName ) const;
-	wxImage GetImage( const wxString& modname, const wxString& image_path ) const;
+	wxImage GetImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent = true ) const;
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );
     void FreeUnitSyncLib();
