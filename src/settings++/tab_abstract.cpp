@@ -591,16 +591,16 @@ void abstract_panel::OnSpinControlChange(wxSpinEvent& event)
 //TODO inquire about floatsettings
 bool abstract_panel::saveSettings() {
     try {
-	    for (intMap::iterator i = intSettings.begin(); i != intSettings.end();++i)
+		for (intMap::const_iterator i = intSettings.begin(); i != intSettings.end();++i)
 	    {
 	        configHandler.SetSpringConfigInt(i->first,i->second);
 	    }
-//	    for (stringMap::iterator s = stringSettings.begin(); s != stringSettings.end();++s)
+//	    for (stringMap::const_iterator s = stringSettings.begin(); s != stringSettings.end();++s)
 //	    {
 //	    	//not used
 //	        //configHandler.SetSpringConfigString(s->first,s->second);
 //	    }
-	    for (floatMap::iterator f = floatSettings.begin(); f != floatSettings.end();++f)
+		for (floatMap::const_iterator f = floatSettings.begin(); f != floatSettings.end();++f)
 	    {
 	        configHandler.SetSpringConfigFloat(f->first,f->second);
 	    }

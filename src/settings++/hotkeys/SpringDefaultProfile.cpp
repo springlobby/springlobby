@@ -1,12 +1,11 @@
 #include "SpringDefaultProfile.h"
 #include "KeynameConverter.h"
 
-key_binding		SpringDefaultProfile::m_mappingC2K;
-key_binding		SpringDefaultProfile::m_mappingK2C;
+key_binding		SpringDefaultProfile::m_bindings;
 
 void SpringDefaultProfile::initialize()
 {
-	if ( SpringDefaultProfile::m_mappingK2C.size() > 0 )
+	if ( SpringDefaultProfile::m_bindings.isEmpty() == false )
 	{
 		//is already initialized
 		return;
@@ -38,6 +37,7 @@ void SpringDefaultProfile::initialize()
 	SpringDefaultProfile::addBinding( _T("cloak"), _T("k") );
 	SpringDefaultProfile::addBinding( _T("controlunit"), _T("Any+c") );
 	SpringDefaultProfile::addBinding( _T("createvideo"), _T("Ctrl+Shift+f10") );
+
 	SpringDefaultProfile::addBinding( _T("debug"), _T("Alt+b") );
 	SpringDefaultProfile::addBinding( _T("decguiopacity"), _T("Shift+,") );
 	SpringDefaultProfile::addBinding( _T("decreaseViewRadius"), _T("Any+end") );
@@ -168,25 +168,18 @@ void SpringDefaultProfile::initialize()
 	SpringDefaultProfile::addBinding( _T("viewtw"), _T("Ctrl+f3") );
 	SpringDefaultProfile::addBinding( _T("wait"), _T("w") );
 	SpringDefaultProfile::addBinding( _T("wait queued"), _T("Shift+w") );
+
+	SpringDefaultProfile::m_bindings.setMetaKey( _T("space") );
 }
 
 void SpringDefaultProfile::addBinding( const wxString& command, const wxString& key )
 {
-	const wxString normKey = KeynameConverter::normalizeSpringKey( key );
-	SpringDefaultProfile::m_mappingK2C[normKey].insert( command );
-	SpringDefaultProfile::m_mappingC2K[command].insert( normKey );
+	SpringDefaultProfile::m_bindings.bind( command, key );
 }
 
-const key_binding& SpringDefaultProfile::getAllBindingsK2C()
+const key_binding& SpringDefaultProfile::getBindings()
 {
 	SpringDefaultProfile::initialize();
 
-	return SpringDefaultProfile::m_mappingK2C;
-}
-
-const key_binding& SpringDefaultProfile::getAllBindingsC2K()
-{
-	SpringDefaultProfile::initialize();
-
-	return SpringDefaultProfile::m_mappingC2K;
+	return SpringDefaultProfile::m_bindings;
 }

@@ -34,7 +34,7 @@ class GroupOptionsPanel : public wxPanel
       HIGHLIGHT_COLOR,
       USERS_LIST,
       ADD_USER,
-      REMOVE_USER,
+	  REMOVE_USER
     };
 
     wxListBox* m_group_list;

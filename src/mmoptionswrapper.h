@@ -11,7 +11,9 @@ struct GameOptions;
 
 class wxFileConfig;
 
-class mmSectionTree {
+//! \todo needs deep copy
+class mmSectionTree
+{
 
     public:
         mmSectionTree();
@@ -70,7 +72,7 @@ public:
 
 	bool loadAIOptions( const wxString& modname, int aiindex, const wxString& ainick );
 
-	int GetAIOptionIndex( const wxString& nick );
+	int GetAIOptionIndex( const wxString& nick ) const;
 
 	//! load corresponding options through unitsync calls
 	/*!

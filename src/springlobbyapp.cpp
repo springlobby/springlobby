@@ -251,6 +251,7 @@ int SpringLobbyApp::OnExit()
   	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
     SetEvtHandlerEnabled(false);
+	UiEvents::GetNotificationEventSender().Enable( false );
     DestroyGlobals();
 
     return 0;
@@ -309,7 +310,7 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 		{ wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("Load lobby customizations from game archive. Expects the long name."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  _("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_SWITCH, STR("s"), STR("simple"),  _("Start with the simple interface."), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-        { wxCMD_LINE_NONE }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
+		{ wxCMD_LINE_NONE, STR(""), STR(""),  _T(""), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL }//this is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
 
     parser.SetDesc( cmdLineDesc );

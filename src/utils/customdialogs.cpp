@@ -357,7 +357,7 @@ void actNotifBox( int whichIcon , const wxString& message,const wxString& captio
 {
 	if ( sett().GetUseNotificationPopups() )
 	{
-		UiEvents::GetNotificationEventSender().SendEvent( UiEvents::NotficationData( wxBitmap(springlobby_xpm), message ) );
+		UiEvents::GetNotificationEventSender().SendEvent( UiEvents::NotficationData( UiEvents::UserAction, message ) );
 	}
 	else
 	{

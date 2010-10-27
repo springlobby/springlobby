@@ -17,6 +17,7 @@ SinglePlayerBattle::SinglePlayerBattle( MainSinglePlayerTab& msptab ):
   m_me( User( usync().IsLoaded() ? usync().GetDefaultNick() : _T("invalid") ) )
 {
 	OnUserAdded( m_me );
+	m_me.BattleStatus().side = sett().GetBattleLastSideSel( GetHostModName() );
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();
     CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
 }
@@ -157,3 +158,4 @@ bool NoGuiSinglePlayerBattle::AddBot( const wxString& name, int ai_team_id, cons
     }
     return false;
 }
+

@@ -20,7 +20,14 @@ namespace UiEvents {
 
     EventSender<UiEventData> &GetUiEventSender( UiEventsTypes cmd );
 
-    typedef std::pair< wxBitmap, wxString >
+	enum EventType {
+		PrivateMessage,
+		ServerConnection,
+		Battleroom,
+		UserAction
+	};
+
+	typedef std::pair< EventType, wxString >
         NotficationData;
 
     EventSender<NotficationData> &GetNotificationEventSender();

@@ -138,7 +138,7 @@ void User::SetCountry( const wxString& country )
 {
     m_country = country;
     m_flagicon_idx = icons().GetFlagIcon( country );
-};
+}
 
 void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 {

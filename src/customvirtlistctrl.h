@@ -21,6 +21,7 @@
 #include "useractions.h"
 #include "Helper/sortutil.h"
 #include "utils/isink.h"
+#include "utils/mixins.hh"
 
 const wxEventType ListctrlDoSortEventType = wxNewEventType();
 
@@ -41,7 +42,7 @@ class SLTipWindow;
  * \tparam the type of stored data
  */
 template < class DataImp, class ListCtrlImp >
-class CustomVirtListCtrl : public ListBaseType, public OnQuitSink<CustomVirtListCtrl<DataImp,ListCtrlImp> >
+class CustomVirtListCtrl : public ListBaseType, public OnQuitSink<CustomVirtListCtrl<DataImp,ListCtrlImp> >, public SL::NonCopyable
 {
 public:
     typedef DataImp
@@ -232,11 +233,11 @@ public:
      * \todo insert debug asserts to catch that
      * @{
      */
-    long GetSelectedIndex();
+	long GetSelectedIndex() const;
     void SetSelectedIndex(const long newindex);
     DataType GetDataFromIndex ( const  long index );
     const DataType GetDataFromIndex ( const  long index ) const;
-    DataType GetSelectedData();
+	DataType GetSelectedData();
     /** @}
      */
 
@@ -265,7 +266,7 @@ public:
     //!Override to have tooltip timer cancelled automatically
     bool PopupMenu(wxMenu* menu, const wxPoint& pos = wxDefaultPosition);
     //! does nothing
-    void noOp(wxMouseEvent& event);
+	void noOp(wxMouseEvent& event);
     //! automatically get saved column width if already saved, otherwise use parameter and save new width
     virtual bool SetColumnWidth(int col, int& width);
     //! reset columns with current set size (only effects columns with auto-size)

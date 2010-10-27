@@ -14,31 +14,35 @@
 class KeynameConverter
 {
 public:
-	static void initialize();
-
-	static wxString spring2wxKeybinder( const wxString& keystring, bool reverse = false );
-	static bool compareSpring2wxKeybinder( const wxString& springkey, const wxString& kbkey );
-	static wxString normalizeSpringKey( const wxString& springKey );
-
-private:
 	enum Modifier
 	{
 		CTRL,
 		ALT,
 		SHIFT,
-		ANY
+		ANY,
+		META
 	};
-
 	typedef std::set<Modifier>				ModifierList;
+
+	static void initialize();
+
+	static wxString spring2wxKeybinder( const wxString& keystring, bool reverse = false );
+	static wxString normalizeSpringKey( const wxString& springKey );
+
+	static wxString convertHexValueToKey( const wxString& hexStr );
+
+	static wxString modifier2String( const KeynameConverter::ModifierList& mod );
+	static ModifierList stringToKeyModifier(const wxString &keyModifier);
+	static wxString discardModifier( const wxString& keystring );
+
+private:
+
 	typedef std::map<wxString, wxString>	KeyMap;
 
 	KeynameConverter();
 
 	static wxString convert( const wxString& keystring, bool reverse = false );
-	static wxString modifier2String( const KeynameConverter::ModifierList& mod, bool addAny = false );
-	static ModifierList stringToKeyModifier(const wxString &keyModifier);
-	static wxString discardModifier( const wxString& keystring );
-
+	
 	static void addMapping( const wxString& springKey, const wxString& keybinderKey );
 	
 	static KeynameConverter::KeyMap			m_spring2keybinder;

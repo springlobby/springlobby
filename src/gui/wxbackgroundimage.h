@@ -12,10 +12,11 @@ ToolBar->PushEventHandler(ToolBarBackground);
 class wxBackgroundBitmap : public wxEvtHandler {
     typedef wxEvtHandler Inherited;
 public:
-    wxBackgroundBitmap(const wxBitmap &B) : wxEvtHandler(), Bitmap(B)  { }
+	wxBackgroundBitmap(const wxBitmap &B) : wxEvtHandler(), Bitmap(B), m_lastSize(wxDefaultSize)  { }
     virtual bool        ProcessEvent(wxEvent &Event);
 protected:
     wxBitmap            Bitmap;
+	wxSize m_lastSize;
 };
 
 //copied from http://forum.wxwidgets.org/viewtopic.php?t=10019

@@ -730,7 +730,7 @@ void ChatPanelMenu::OnMenuToggleAppend( wxCommandEvent& /*unused*/ )
   m_chatpanel->m_disable_append = m_append_menu->IsChecked();
   if ( !m_chatpanel->m_disable_append )
   {
-    for ( std::vector<ChatLine>::iterator iter = m_chatpanel->m_buffer.begin(); iter < m_chatpanel->m_buffer.end() ; iter++ )
+	for ( std::vector<ChatLine>::const_iterator iter = m_chatpanel->m_buffer.begin(); iter < m_chatpanel->m_buffer.end() ; ++iter )
         m_chatpanel->OutputLine( *iter );
     m_chatpanel->m_buffer.clear();
   }

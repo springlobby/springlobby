@@ -32,7 +32,7 @@ class MapGridCtrl : public wxPanel
 			SortKey_Wind,        // minWind + maxWind
 			SortKey_Area,        // width * height
 			SortKey_AspectRatio, // max(width/height, height/width)
-			SortKey_PosCount,
+			SortKey_PosCount
 		};
 
 		MapGridCtrl( wxWindow* parent, wxSize size = wxDefaultSize, wxWindowID id = -1 );
@@ -59,7 +59,7 @@ class MapGridCtrl : public wxPanel
 			m_mouseover_map = NULL; // can't be sure pointer will stay valid
 			m_selected_map = NULL;
 
-			for (MapMap::iterator it = m_maps_filtered.begin(); it != m_maps_filtered.end(); ++it) {
+			for (MapMap::const_iterator it = m_maps_filtered.begin(); it != m_maps_filtered.end(); ++it) {
 				if ( pred( it->second ) ) maps.push_back( it->first );
 			}
 
@@ -188,7 +188,7 @@ class MapGridCtrl : public wxPanel
 		/// this is displayed for maps whose minimap has not yet been loaded
 		wxBitmap m_img_minimap_loading;
 
-		DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H

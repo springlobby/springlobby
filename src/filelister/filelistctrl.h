@@ -49,7 +49,7 @@ class FileListCtrl : public CustomVirtListCtrl< const PlasmaResourceInfo* ,FileL
 
     enum
     {
-        FILELIST_COL_CLICK = wxID_HIGHEST,
+		FILELIST_COL_CLICK = wxID_HIGHEST
 
     };
 

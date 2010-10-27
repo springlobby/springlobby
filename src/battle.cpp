@@ -94,6 +94,7 @@ void Battle::OnRequestBattleStatus()
     bs.ally = GetFreeAlly( true );
     bs.spectator = false;
     bs.colour = sett().GetBattleLastColour();
+    bs.side = sett().GetBattleLastSideSel( GetHostModName() );
     // theres some highly annoying bug with color changes on player join/leave.
     if ( !bs.colour.IsOk() ) bs.colour = GetFreeColour( GetMe() );
 
@@ -190,7 +191,7 @@ void Battle::LoadMapDefaults( const wxString& mapname )
 	SendHostInfo( IBattle::HI_StartRects );
 
 	std::vector<Settings::SettStartBox> savedrects = sett().GetMapLastRectPreset( mapname );
-	for ( std::vector<Settings::SettStartBox>::iterator itor = savedrects.begin(); itor != savedrects.end(); itor++ )
+	for ( std::vector<Settings::SettStartBox>::const_iterator itor = savedrects.begin(); itor != savedrects.end(); ++itor )
 	{
 		AddStartRect( itor->ally, itor->topx, itor->topy, itor->bottomx, itor->bottomy );
 	}
@@ -383,7 +384,7 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
 					UiEvents::OnBattleActionData( wxString(_T(" ")) , _T("banlist:") )
 				);
 
-            for (std::set<wxString>::iterator i=m_banned_users.begin();i!=m_banned_users.end();++i)
+			for (std::set<wxString>::const_iterator i=m_banned_users.begin();i!=m_banned_users.end();++i)
             {
 				UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
 						UiEvents::OnBattleActionData( wxString(_T(" ")) , *i )
@@ -669,7 +670,7 @@ void Battle::OnTimer( wxTimerEvent&  )
 		if ( status.IsBot() || status.spectator ) continue;
 		if ( status.sync && status.ready ) continue;
 		if ( &usr == &GetMe() ) continue;
-		std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( usr.GetNick() );
+		std::map<wxString, time_t>::const_iterator itor = m_ready_up_map.find( usr.GetNick() );
 		if ( itor != m_ready_up_map.end() )
 		{
 			if ( ( now - itor->second ) > autospect_trigger_time )
@@ -766,7 +767,7 @@ struct Alliance
     }
     void AddAlliance( Alliance &other )
     {
-        for ( std::vector<User *>::iterator i = other.players.begin(); i != other.players.end(); ++i ) AddPlayer( *i );
+		for ( std::vector<User *>::const_iterator i = other.players.begin(); i != other.players.end(); ++i ) AddPlayer( *i );
     }
     bool operator < ( const Alliance &other ) const
     {
@@ -791,7 +792,7 @@ struct ControlTeam
     }
     void AddTeam( ControlTeam &other )
     {
-        for ( std::vector<User*>::iterator i = other.players.begin(); i != other.players.end(); ++i ) AddPlayer( *i );
+		for ( std::vector<User*>::const_iterator i = other.players.begin(); i != other.players.end(); ++i ) AddPlayer( *i );
     }
     bool operator < (const ControlTeam &other) const
     {
@@ -880,13 +881,13 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
 
     // remove players in the same team so only one remains
     std::map< int, User*> dedupe_teams;
-    for ( std::vector<User*>::iterator it = players_sorted.begin(); it != players_sorted.end(); it++ )
+	for ( std::vector<User*>::const_iterator it = players_sorted.begin(); it != players_sorted.end(); ++it )
     {
         dedupe_teams[(*it)->BattleStatus().team] = *it;
     }
     players_sorted.clear();
     players_sorted.reserve( dedupe_teams.size() );
-    for ( std::map<int, User*>::iterator it = dedupe_teams.begin(); it != dedupe_teams.end(); it++ )
+	for ( std::map<int, User*>::const_iterator it = dedupe_teams.begin(); it != dedupe_teams.end(); ++it )
     {
         players_sorted.push_back( it->second );
     }
@@ -910,7 +911,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
 
     if ( support_clans )
     {
-        std::map<wxString, Alliance>::iterator clan_it = clan_alliances.begin();
+		std::map<wxString, Alliance>::iterator clan_it = clan_alliances.begin();
         while ( clan_it != clan_alliances.end() )
         {
             Alliance &clan = (*clan_it).second;
@@ -1153,3 +1154,4 @@ void Battle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData data )
 	IBattle::OnUnitsyncReloaded( data );
 	if ( m_is_self_in ) SendMyBattleStatus();
 }
+

@@ -3,6 +3,7 @@
 
 #include <wx/string.h>
 #include <vector>
+#include "utils/mixins.hh"
 
 const int CACHE_VERSION     = 11;
 const int SETTINGS_VERSION  = 22;
@@ -72,7 +73,7 @@ public:
 };
 
 //! @brief Class used to store and restore application settings.
-class Settings
+class Settings : public SL::NonCopyable
 {
   public:
 
@@ -577,6 +578,9 @@ class Settings
     bool GetBattleLastAutoAnnounceDescription();
     void SetBattleLastAutoAnnounceDescription( bool value );
 
+    void SetBattleLastSideSel( const wxString& modname, int sidenum );
+    int GetBattleLastSideSel( const wxString& modname );
+
     struct SettStartBox
     {
     	int ally;
@@ -736,12 +740,22 @@ class Settings
 	/** @name Hotkeys
     * @{
     */
+	void SetHotkeyMeta( const wxString& profileName, const wxString& keyStr );
+	wxString GetHotkeyMeta( const wxString& profileName );
 
-	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, bool unbind = false );
-	wxString GetHotkey( const wxString& profileName, const wxString& command, const wxString& index );
+	void SetHotkeyKeySymSet( const wxString& profileName, const wxString& symName, const wxString& keyStr );
+	wxString GetHotkeyKeySymSet( const wxString& profileName, const wxString& symName );
+	wxArrayString GetHotkeyKeySymSetNames( const wxString& profileName );
+
+	void SetHotkeyKeySym( const wxString& profileName, const wxString& symName, const wxString& keyStr );
+	wxString GetHotkeyKeySym( const wxString& profileName, const wxString& symName );
+	wxArrayString GetHotkeyKeySymNames( const wxString& profileName );
+
+	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx );
+	wxString GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key );
 	wxArrayString GetHotkeyProfiles();
-	wxArrayString GetHotkeyProfileCommands( const wxString& profileName );
-	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& command );
+	wxArrayString GetHotkeyProfileOrderIndices( const wxString& profileName );
+	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& orderIdx );
 	void DeleteHotkeyProfiles();
 	wxString GetUikeys( const wxString& index );
 
@@ -767,8 +781,6 @@ class Settings
     bool m_portable_mode;
 
     std::map<wxString, wxString> m_spring_versions;
-
-    Settings( const Settings& );
 
 	wxPathList GetConfigFileSearchPathes();
 };

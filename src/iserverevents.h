@@ -88,6 +88,7 @@ class IServerEvents
 	virtual void OnUserJoinChannel( const wxString& channel, const wxString& who ) = 0;
 
 	virtual void OnPrivateMessage( const wxString& user, const wxString& message, bool fromme = false ) = 0;
+	virtual void OnPrivateMessageEx( const wxString& user, const wxString& action, bool fromme = false ) = 0;
 
 	virtual void OnRequestBattleStatus( int battleid ) = 0;
 	virtual void OnSaidBattle( int battleid, const wxString& nick, const wxString& msg ) = 0;

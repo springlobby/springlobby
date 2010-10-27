@@ -29,7 +29,6 @@
 #include <wx/statbmp.h>
 #include <wx/listctrl.h>
 
-#include "../images/springlobby.xpm"
 #include "../utils/conversion.h"
 #include "../customizations.h"
 
@@ -71,6 +70,7 @@ PasteDialog::PasteDialog( wxWindow *parent, const wxString& message )
 		wxButton* but = new wxButton( this, ID_PASTE_BUTTON, _("Use pastebin") );
 		sizerBtn->Add( but, 0, wxALL, 10 );
 		topsizer->Add(sizerBtn, 0, wxALIGN_CENTRE| wxALL, 10 );
+		but->SetFocus();
 	}
 
 
