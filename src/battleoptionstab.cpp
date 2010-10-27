@@ -144,7 +144,7 @@ void BattleOptionsTab::ReloadRestrictions()
 	} catch ( ... ) {}
 	std::map<wxString, int> units = m_battle->RestrictedUnits();
 
-	for ( std::map<wxString, int>::iterator itor = units.begin(); itor != units.end(); itor++ )
+	for ( std::map<wxString, int>::const_iterator itor = units.begin(); itor != units.end(); ++itor )
 		Restrict( itor->first, itor->second );
 }
 

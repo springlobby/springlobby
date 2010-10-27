@@ -23,7 +23,7 @@ class SelectUsersDialog : public wxDialog
     {
       FILTER_TEXT = 1000,
       NICK_LIST,
-      NAME_TEXT,
+	  NAME_TEXT
     };
 
     wxPanel* m_users_panel;

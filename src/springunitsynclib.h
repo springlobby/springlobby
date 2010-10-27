@@ -7,6 +7,7 @@
 
 #include "nonportable.h"
 #include "iunitsync.h"
+#include "utils/mixins.hh"
 
 class wxString;
 class wxImage;
@@ -236,7 +237,7 @@ typedef const char* (USYNC_CALL_CONV *lpGetStrKeyStrValPtr)(const char* key, con
  * so often there is a need for running multiple unitsync methods while
  * holding a single lock continuously.
  */
-class SpringUnitSyncLib
+class SpringUnitSyncLib : public SL::NonCopyable
 {
   public:
 
@@ -268,21 +269,21 @@ class SpringUnitSyncLib
     /**
      * Returns true if the library is loaded.
      */
-    bool IsLoaded();
+	bool IsLoaded() const;
 
     /**
      * Gets last error from unitsync library
      * @note throws unitsync_assert in case of error
      * @note this method should only be used after using directly an unitsync call to catch it's errors
      */
-    void AssertUnitsyncOk();
+	void AssertUnitsyncOk() const;
 
     /**
      * Get list of errors from unitsync library in an array
      */
-    wxArrayString GetUnitsyncErrors();
+	wxArrayString GetUnitsyncErrors() const;
 
-    bool VersionSupports( IUnitSync::GameFeature feature );
+	bool VersionSupports( IUnitSync::GameFeature feature ) const;
 
 
     int GetModIndex( const wxString& name );
@@ -500,11 +501,6 @@ class SpringUnitSyncLib
     wxString m_current_mod;
 
     /**
-     * Loads a function pointer from unitsync.
-     */
-    void* _GetLibFuncPtr( const wxString& name );
-
-    /**
      * Loads the unitsync library from path.
      * @note this function is not threadsafe if called from code not locked.
      * @see Load()
@@ -531,7 +527,7 @@ class SpringUnitSyncLib
     /**
      * Returns true if the library is loaded. Internal.
      */
-    bool _IsLoaded();
+	bool _IsLoaded() const;
 
     void _ConvertSpringMapInfo( const SpringMapInfo& in, MapInfo& out );
 

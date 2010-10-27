@@ -1,12 +1,16 @@
+#ifndef SL_TOASTERBOX_HH
+#define SL_TOASTERBOX_HH
+
 #include "ToasterBoxWindow.h"
 #include "ToasterBoxWindowList.h"
+#include "../utils/mixins.hh"
 /*
   The toasterbox class should stay resident in memory.
   It creates and displays popups and handles the
   "stacking".
 */
 
-class NotificationManager;
+class ToasterNotification;
 
 class ToasterBox : public wxTimer
 {
@@ -18,7 +22,7 @@ class ToasterBox : public wxTimer
     void SetPopupPosition(int pos);
     void SetPopupPauseTime(int milliseconds){pauseTime = milliseconds;}
     void SetPopupBitmap(wxString _bitmapFile){bitmapFile = _bitmapFile;}
-    void SetPopupBitmap(wxBitmap& bitmap){ m_bitmap = bitmap; }
+	void SetPopupBitmap(const wxBitmap& bitmap){ m_bitmap = bitmap; }
     void SetPopupBackgroundColor(int r, int g, int b);
     void SetPopupTextColor(int r, int g, int b);
     void SetPopupScrollSpeed(int _sleepTime){sleepTime = _sleepTime;}
@@ -36,7 +40,7 @@ class ToasterBox : public wxTimer
 	void SetStackDirection( StackDirection dir );
 
 protected:
-	friend class NotificationManager;
+	friend class ToasterNotification;
 	ToasterBox(wxWindow* _parent=(wxWindow *)NULL);
 
   private:
@@ -57,3 +61,5 @@ protected:
     bool shrink;
 	StackDirection m_stack_direction;
 };
+
+#endif //SL_TOASTERBOX_HH

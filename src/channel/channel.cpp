@@ -134,7 +134,8 @@ void Channel::CheckBanned(const wxString& name){
       if(!m_ban_regex_msg.empty())m_serv.SayPrivate(name,m_ban_regex_msg);
     }
   }
-};
+}
+
 bool Channel::IsBanned(const wxString& name){
   if(name==_T("ChanServ"))return false;
   if(m_banned_users.count(name)>0)return true;
@@ -142,7 +143,7 @@ bool Channel::IsBanned(const wxString& name){
     if(m_ban_regex.Matches(name)&&!(m_do_unban_regex&&m_unban_regex.IsValid()&&m_unban_regex.Matches(name)))return true;
   }
   return false;
-};
+}
 
 
 void Channel::RemoveUser( const wxString& nick )

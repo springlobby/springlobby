@@ -28,9 +28,10 @@ extern const wxEventType torrentSystemStatusUpdateEvt;
 #include "utils/battleevents.h"
 #include <wx/string.h>
 #include <wx/timer.h>
+#include "utils/mixins.hh"
 
 //! @brief UI main class
-class Ui
+class Ui : public SL::NonCopyable
 {
   public:
 
@@ -75,13 +76,14 @@ class Ui
     void DownloadMap( const wxString& hash, const wxString& name );
     void DownloadMod( const wxString& hash, const wxString& name );
 
-    bool Ask( const wxString& heading, const wxString& question );
-    bool AskText( const wxString& heading, const wxString& question, wxString& answer, long style = wxOK | wxCANCEL | wxCENTRE );
-    bool AskPassword( const wxString& heading, const wxString& message, wxString& password );
-    void ShowMessage( const wxString& heading, const wxString& message );
+	bool Ask( const wxString& heading, const wxString& question ) const;
+	bool AskText( const wxString& heading, const wxString& question, wxString& answer, long style = wxOK | wxCANCEL | wxCENTRE );
+	bool AskPassword( const wxString& heading, const wxString& message, wxString& password );
+	void ShowMessage( const wxString& heading, const wxString& message ) const;
     //void OnAlertEvent( AlertEventType ); //TODO alert system
 
     MainWindow& mw();
+	const MainWindow& mw() const;
 
     bool IsMainWindowCreated() const;
 
@@ -92,6 +94,7 @@ class Ui
     void OnDisconnected( Server& server, bool wasonline );
 
     void OnJoinedChannelSuccessful( Channel& chan );
+	void OnJoinedChannelSuccessful( Channel& chan, bool focusTab );
     void OnUserJoinedChannel( Channel& chan, User& user );
     void OnChannelJoin( Channel& chan, User& user );
     void OnUserLeftChannel( Channel& chan, User& user, const wxString& reason );
@@ -107,6 +110,7 @@ class Ui
     void OnUserOffline( User& user );
     void OnUserStatusChanged( User& user );
     void OnUserSaid( User& user, const wxString& message, bool me = false );
+	void OnUserSaidEx( User& user, const wxString& action, bool me = false );
 
     void OnUnknownCommand( Server& server, const wxString& command, const wxString& params );
     void OnMotd( Server& server, const wxString& message );
@@ -177,9 +181,6 @@ class Ui
     //! does actual work, called from downloadmap/mod
     void DownloadFileP2P( const wxString& name );
 	void DownloadFileWebsite( const wxString& name );
-
-    private:
-        Ui( const Ui& );
 
 };
 

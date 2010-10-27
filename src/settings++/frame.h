@@ -44,7 +44,7 @@ class wxIcon;
 class settings_frame : public wxFrame, public WindowAttributesPickle
 {
 	private:
-		DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 
 	public:
 		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition,

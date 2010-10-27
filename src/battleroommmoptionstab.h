@@ -131,7 +131,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		wxButton* getButton( const wxWindowID id, const wxString& name );
 
 
-		DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 };
 
 enum

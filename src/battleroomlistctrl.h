@@ -111,7 +111,7 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
       BRLIST_ADDTOGROUP
     };
 
-    DECLARE_EVENT_TABLE();
+	DECLARE_EVENT_TABLE()
 
 };
 

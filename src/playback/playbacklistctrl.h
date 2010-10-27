@@ -35,7 +35,11 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, Playback
     using ParentType::m_colinfovec;
     using ParentType::m_tooltip_delay;
     using ParentType::m_tooltip_duration;
-    using ParentType::DataVector;
+	using ParentType::RemoveItem;
+	using ParentType::AddItem;
+	using ParentType::compareSimple;
+	using ParentType::SetItemCount;
+//    using ParentType::DataVector;
     typedef typename ParentType::DataVector::const_iterator
         DataCIter; //! TODO (koshi) i'd be mighty thankful if some could explain to me why the import with using ParentType::DataCIter doesn't work here;
     using ParentType::getColumnFromPosition;

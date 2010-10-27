@@ -72,10 +72,17 @@ void ServerEvents::OnLoginInfoComplete()
 	}
     //m_serv.RequestChannels();
     std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
-    for ( std::vector<ChannelJoinInfo>::iterator itor = autojoin.begin(); itor != autojoin.end(); itor++ )
+	for ( std::vector<ChannelJoinInfo>::const_iterator itor = autojoin.begin(); itor != autojoin.end(); ++itor )
     {
+		if ( itor->name.IsEmpty() )
+			continue;
+		Channel& chan = m_serv._AddChannel( itor->name );
+		chan.SetPassword( itor->password );
+		ui().OnJoinedChannelSuccessful( chan, itor == autojoin.begin() );
+	}
+	for ( std::vector<ChannelJoinInfo>::const_iterator itor = autojoin.begin(); itor != autojoin.end(); ++itor )
         m_serv.JoinChannel( itor->name, itor->password );
-    }
+
     ui().OnLoggedIn( );
 }
 
@@ -566,7 +573,6 @@ void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, c
     wxLogDebugFunc( _T("") );
     if ( success )
     {
-
         Channel& chan = m_serv._AddChannel( channel );
         chan.SetPassword( m_serv.m_channel_pw[channel] );
         ui().OnJoinedChannelSuccessful( chan );
@@ -658,6 +664,20 @@ void ServerEvents::OnPrivateMessage( const wxString& user, const wxString& messa
     catch (std::runtime_error &except)
     {
     }
+}
+
+void ServerEvents::OnPrivateMessageEx( const wxString& user, const wxString& action, bool fromme )
+{
+	wxLogDebugFunc( _T("") );
+	try
+	{
+		User& who = m_serv.GetUser( user );
+		if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, who.GetNick() ) )
+			ui().OnUserSaidEx( who, action, fromme );
+	}
+	catch (std::runtime_error &except)
+	{
+	}
 }
 
 void ServerEvents::OnChannelList( const wxString& channel, const int& numusers, const wxString& topic )

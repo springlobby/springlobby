@@ -10,6 +10,9 @@
 #include <wx/region.h>
 #include <wx/dcbuffer.h>
 #include "ToasterBoxWindow.h"
+#include "../gui/wxbackgroundimage.h"
+#include "../images/notif_bg.png.h"
+#include "../uiutils.h"
 
 #ifndef __WXMSW__
 	typedef wxClientDC DCType;
@@ -47,6 +50,9 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2)
 
 	ToasterBase::Connect( wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)& ToasterBoxWindow::OnEraseBackground);
 	ToasterBase::Connect( wxEVT_PAINT, (wxObjectEventFunction)& ToasterBoxWindow::OnPaint);
+#ifndef __WXMSW__
+	PushEventHandler( new wxBackgroundBitmap( charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png) ) ) );
+#endif
 }
 
 void ToasterBoxWindow::SetPopupBitmap(wxBitmap& bitmap)
@@ -189,16 +195,17 @@ void ToasterBoxWindow::DrawText()
 {
 	DCType dc( this );
 #ifdef __WXMSW__
-	dc.SetBackground( *wxBLACK_BRUSH );
-	dc.Clear();
+//	dc.SetBackground( *wxBLACK_BRUSH );
+//	dc.Clear();
+	dc.DrawBitmap(charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png) ), 0, 0, false);
 #endif
   //width and height of text
   wxCoord w = 0, h = 0;
   //where we will set the text
-  wxCoord x = 5, y = 0;
+  wxCoord x = 0, y = 0;
   //border from sides and top to text (in pixels)
   int border_right = 7;
-  int border_left = sbm.GetBitmap().GetWidth() + 4;
+  int border_left = sbm.GetBitmap().GetWidth() + 102;
   //how much space between text lines
   int textPadding = 4;
   //how much can we have on a line?
@@ -207,7 +214,8 @@ void ToasterBoxWindow::DrawText()
   float textLines = 1;
   //the popupText after our transformations (if we do any)
   wxString pText = GetPopupText();
-
+	wxFont outFont( 9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD );
+	dc.SetFont( outFont );
 
   dc.GetTextExtent(pText, &w, &h);
 
