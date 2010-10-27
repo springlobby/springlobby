@@ -26,6 +26,7 @@
 #include "math.h"
 #include "../crashreport.h"
 
+
 wxString GetLibExtension()
 {
     return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
@@ -379,36 +380,10 @@ wxString GetAppName( const bool lowerCase )
 		name.MakeLower();
 	return name;
 }
-#include <boost/format.hpp>
-
-//! a wxString extension class to boost::format
-struct wxFormat : public boost::format
-{
-	wxFormat( const wxString& format )
-		: boost::format( STD_STRING( format ) )
-	{}
-
-	wxString str() const
-	{
-		return TowxString( boost::format::str() );
-	}
-
-	//! conversion operator to wxString
-	operator wxString () const
-	{
-		return str();
-	}
-
-	//! overload the base class % operator to accept wxString input (and return our own type again
-	wxFormat&  operator%(const wxString& x)
-	{
-		return static_cast<wxFormat&>( boost::format::operator % ( STD_STRING( x ) ) );
-	}
-};
 
 wxString IdentityString(const wxString format, bool lowerCase )
 {
-	return wxFormat( format ) %  GetAppName( lowerCase ) ;
+//	return wxFormat( format ) %  GetAppName( lowerCase ) ;
 }
 
 wxString GetConfigfileDir()

@@ -29,3 +29,4 @@ StringtokenizerVectorized::StringtokenizerVectorized( wxStringTokenizer tokenize
     while ( tokenizer.HasMoreTokens() )
         push_back( tokenizer.GetNextToken() );
 }
+

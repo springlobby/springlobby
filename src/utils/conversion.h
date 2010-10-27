@@ -103,6 +103,55 @@ class StringtokenizerVectorized : public std::vector<wxString> {
     public:
         StringtokenizerVectorized( wxStringTokenizer tokenizer );
 };
+
+#include <boost/format.hpp>
+
+//! a wxString extension class to boost::format
+struct wxFormat : public boost::format
+{
+	wxFormat( const wxString& format )
+		: boost::format( STD_STRING( format ) )
+	{}
+
+	wxString str() const
+	{
+		return TowxString( boost::format::str() );
+	}
+
+	//! conversion operator to wxString
+	operator wxString () const
+	{
+		return str();
+	}
+
+	//! overload the base class % operator to accept wxString input (and return our own type again)
+	template <class T>
+	wxFormat&  operator%(const T& x)
+	{
+		return static_cast<wxFormat&>( boost::format::operator % ( x ) );
+	}
+	//! this signature is needed to be able to specialize on wxChar and apply conversion
+	template <class T>
+	wxFormat&  operator%(const T* x)
+	{
+		return static_cast<wxFormat&>( boost::format::operator % ( x ) );
+	}
+
+};
+
+template <>
+inline wxFormat&  wxFormat::operator%(const wxString& x)
+{
+	return static_cast<wxFormat&>( boost::format::operator % ( STD_STRING(x) ) );
+}
+
+template <>
+inline wxFormat&  wxFormat::operator%(const wxChar* x)
+{
+	return operator % ( wxString(x) );
+}
+
+
 #endif // SPRINGLOBBY_HEADERGUARD_CONVERSION_H
 
 /**
