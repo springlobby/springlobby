@@ -1614,7 +1614,7 @@ void TASServer::SendHostInfo( HostInfo update )
     if ( ( update & ( IBattle::HI_Map | IBattle::HI_Locked | IBattle::HI_Spectators ) ) > 0 )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
-        wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
+		wxString cmd = wxFormat( _T("%d %d ") ) % battle.GetSpectators() % battle.IsLocked();
         cmd += MakeHashSigned( battle.LoadMap().hash ) + _T(" ");
         cmd += battle.LoadMap().name;
 
@@ -1675,27 +1675,27 @@ void TASServer::SendHostInfo( HostInfo update )
             if ( !sr.exist ) continue;
             if ( sr.todelete )
             {
-                if ( !battle.IsProxy() ) SendCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
-                else RelayCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
+				if ( !battle.IsProxy() ) SendCmd( _T("REMOVESTARTRECT"), wxFormat( _T("%d") ) % i );
+				else RelayCmd( _T("REMOVESTARTRECT"), wxFormat( _T("%d" ) ) % i );
                 battle.StartRectRemoved( i );
             }
             else if ( sr.toadd )
             {
-                if ( !battle.IsProxy() ) SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
-                else RelayCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
+				if ( !battle.IsProxy() ) SendCmd( _T("ADDSTARTRECT"), wxFormat( _T("%d %d %d %d %d") ) % sr.ally % sr.left % sr.top % sr.right % sr.bottom );
+				else RelayCmd( _T("ADDSTARTRECT"), wxFormat( _T("%d %d %d %d %d") ) % sr.ally % sr.left % sr.top % sr.right % sr.bottom );
                 battle.StartRectAdded( i );
             }
             else if ( sr.toresize )
             {
                 if ( !battle.IsProxy() )
                 {
-                  SendCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
-                  SendCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
+				  SendCmd( _T("REMOVESTARTRECT"), wxFormat( _T("%d") ) % i );
+				  SendCmd( _T("ADDSTARTRECT"), wxFormat( _T("%d %d %d %d %d") ) % sr.ally % sr.left % sr.top % sr.right % sr.bottom );
                 }
                 else
                 {
-                  RelayCmd( _T("REMOVESTARTRECT"), wxString::Format( _T("%d"), i ) );
-                  RelayCmd( _T("ADDSTARTRECT"), wxString::Format( _T("%d %d %d %d %d"), sr.ally, sr.left, sr.top, sr.right, sr.bottom ) );
+				  RelayCmd( _T("REMOVESTARTRECT"), wxFormat( _T("%d") ) % i );
+				  RelayCmd( _T("ADDSTARTRECT"), wxFormat( _T("%d %d %d %d %d") ) % sr.ally % sr.left % sr.top % sr.right % sr.bottom );
                 }
                 battle.StartRectResized( i );
             }
@@ -1850,7 +1850,7 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
     tascl.color.blue = bs.colour.Blue();
     tascl.color.zero = 0;
     //MYBATTLESTATUS battlestatus myteamcolor
-    SendCmd( _T("MYBATTLESTATUS"), wxString::Format( _T("%d %d"), tasbs.data, tascl.data ) );
+	SendCmd( _T("MYBATTLESTATUS"), wxFormat( _T("%d %d") ) % tasbs.data % tascl.data );
 }
 
 
@@ -1867,7 +1867,7 @@ void TASServer::SendMyUserStatus()
     taus.tasdata.moderator = us.moderator;
     taus.tasdata.bot = us.bot;
 
-    SendCmd( _T("MYSTATUS"), wxString::Format( _T("%d"), taus.byte ) );
+	SendCmd( _T("MYSTATUS"), wxFormat( _T("%d") ) % taus.byte );
 }
 
 
