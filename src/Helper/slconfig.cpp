@@ -32,7 +32,7 @@ void slConfig::SetupGlobalconfig()
 	SetRecordDefaults( true );
 	#ifdef __WXMSW__
 		wxString p (wxFileName::GetPathSeparator());
-		wxString global_config_path = wxString::Format( _T("%s%s%s.global.conf"),
+		wxString global_config_path = wxFormat( _T("%s%s%s.global.conf"),
 													   GetExecutableFolder().c_str(),
 													   p.c_str(),
 													   ::GetAppName( true ).c_str()
