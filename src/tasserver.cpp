@@ -1956,13 +1956,13 @@ void TASServer::ForceTeam( int battleid, User& user, int team )
 		}
     if ( !GetBattle(battleid).IsFounderMe() )
     {
-				DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" changes to team #") + wxString::Format( _T("%d"), team + 1 ) + _T(".") );
+				DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" changes to team #") + ( wxFormat( _T("%d") ) % ( team + 1 ) ) + _T(".") );
         return;
     }
 
     //FORCETEAMNO username teamno
-    if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCETEAMNO"), user.GetNick() + wxString::Format(_T(" %d"), team ) );
-    else RelayCmd( _T("FORCETEAMNO"), user.GetNick() + wxString::Format(_T(" %d"), team ) );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCETEAMNO"), user.GetNick() + wxFormat(_T(" %d") ) % team );
+	else RelayCmd( _T("FORCETEAMNO"), user.GetNick() + wxFormat(_T(" %d") ) % team );
 }
 
 
@@ -1996,13 +1996,13 @@ void TASServer::ForceAlly( int battleid, User& user, int ally )
 
     if ( !GetBattle(battleid).IsFounderMe() )
     {
-			DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" changes to ally #") + wxString::Format( _T("%d"), ally + 1 ) + _T(".") );
+			DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" changes to ally #") + (wxFormat( _T("%d") ) % ( ally + 1 ) ) + _T(".") );
 			return;
     }
 
     //FORCEALLYNO username teamno
-    if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCEALLYNO"), user.GetNick() + wxString::Format( _T(" %d"), ally ) );
-    else RelayCmd( _T("FORCEALLYNO"), user.GetNick() + wxString::Format( _T(" %d"), ally ) );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCEALLYNO"), user.GetNick() + wxFormat( _T(" %d") ) % ally );
+	else RelayCmd( _T("FORCEALLYNO"), user.GetNick() + wxFormat( _T(" %d") ) % ally );
 }
 
 
@@ -2044,8 +2044,8 @@ void TASServer::ForceColour( int battleid, User& user, const wxColour& col )
     tascl.color.blue = col.Blue();
     tascl.color.zero = 0;
     //FORCETEAMCOLOR username color
-    if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCETEAMCOLOR"), user.GetNick() + _T(" ") + wxString::Format( _T("%d"), tascl.data ) );
-    else RelayCmd( _T("FORCETEAMCOLOR"), user.GetNick() + _T(" ") + wxString::Format( _T("%d"), tascl.data ) );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCETEAMCOLOR"), user.GetNick() + _T(" ") + wxFormat( _T("%d") ) % tascl.data );
+	else RelayCmd( _T("FORCETEAMCOLOR"), user.GetNick() + _T(" ") + wxFormat( _T("%d") ) % tascl.data );
 }
 
 
@@ -2151,13 +2151,13 @@ void TASServer::SetHandicap( int battleid, User& user, int handicap)
 
     if ( !GetBattle(battleid).IsFounderMe() )
     {
-        DoActionBattle( battleid, _T("thinks ") + user.GetNick() + _T(" should get a ") + wxString::Format( _T("%d"), handicap) + _T("% resource bonus") );
+		DoActionBattle( battleid, _T("thinks ") + user.GetNick() + _T(" should get a ") + (wxFormat( _T("%d") ) % handicap) + _T("% resource bonus") );
         return;
     }
 
     //HANDICAP username value
-    if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("HANDICAP"), user.GetNick() + wxString::Format( _T(" %d"), handicap ) );
-    else RelayCmd( _T("HANDICAP"), user.GetNick() + wxString::Format( _T(" %d"), handicap ) );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("HANDICAP"), user.GetNick() + wxFormat( _T(" %d") ) % handicap );
+	else RelayCmd( _T("HANDICAP"), user.GetNick() + wxFormat( _T(" %d") ) % handicap );
 }
 
 
@@ -2187,7 +2187,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
     wxString ailib;
     ailib += status.aishortname;
     if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
-    SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
+	SendCmd( _T("ADDBOT"), nick + ( wxFormat( _T(" %d %d ") ) % tasbs.data % tascl.data ) + ailib );
 }
 
 
@@ -2242,8 +2242,8 @@ void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
     tascl.color.blue = status.colour.Blue();
     tascl.color.zero = 0;
     //UPDATEBOT name battlestatus teamcolor
-    if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("UPDATEBOT"), bot.GetNick() + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
-    else RelayCmd( _T("UPDATEBOT"), bot.GetNick() + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("UPDATEBOT"), bot.GetNick() + wxFormat( _T(" %d %d") ) % tasbs.data % tascl.data );
+	else RelayCmd( _T("UPDATEBOT"), bot.GetNick() + wxFormat( _T(" %d %d") ) % tasbs.data % tascl.data );
 }
 
 void TASServer::SendScriptToProxy( const wxString& script )
@@ -2456,7 +2456,7 @@ int TASServer::TestOpenPort( unsigned int port ) const
     connect_to_server.SetTimeout( 10 );
 
     if ( !connect_to_server.Connect( _T("zjt3.com") ) ) return porttest_unreachable;
-    connect_to_server.GetInputStream(wxString::Format( _T("/porttest.php?port=%u"), port));
+	connect_to_server.GetInputStream(wxFormat( _T("/porttest.php?port=%u") ) % port);
 
     if (udp_socket.IsOk())
     {
