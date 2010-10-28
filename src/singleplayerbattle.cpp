@@ -19,7 +19,7 @@ SinglePlayerBattle::SinglePlayerBattle( MainSinglePlayerTab& msptab ):
 	OnUserAdded( m_me );
 	m_me.BattleStatus().side = sett().GetBattleLastSideSel( GetHostModName() );
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();
-    CustomBattleOptions().setSingleOption( _T("startpostype"), wxString::Format(_T("%d"), ST_Pick), OptionsWrapper::EngineOption );
+	CustomBattleOptions().setSingleOption( _T("startpostype"), wxFormat(_T("%d") ) % ST_Pick, OptionsWrapper::EngineOption );
 }
 
 
@@ -37,7 +37,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   {
 	LoadMap();
     m_sptab.ReloadMapOptContrls();
-    Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::PrivateOptions , _T("mapname") ) );
+	Update(  wxFormat(_T("%d_%s") ) % OptionsWrapper::PrivateOptions % _T("mapname") );
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
@@ -50,7 +50,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
       SendHostInfo( HI_Send_All_opts );
     }
     m_sptab.ReloadModOptContrls();
-    Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::PrivateOptions , _T("modname") ) );
+	Update(  wxFormat(_T("%d_%s") ) % OptionsWrapper::PrivateOptions % _T("modname") );
   }
   if ( (update & HI_Send_All_opts) != 0 )
   {
@@ -59,7 +59,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
       const std::map<wxString,wxString>& options = CustomBattleOptions().getOptionsMap( (OptionsWrapper::GameOption)i );
       for ( std::map<wxString,wxString>::const_iterator itor = options.begin(); itor != options.end(); ++itor )
       {
-        Update(  wxString::Format(_T("%d_%s"), i , itor->first.c_str() ) );
+		Update(  wxFormat(_T("%d_%s") ) % i % itor->first );
       }
     }
   }

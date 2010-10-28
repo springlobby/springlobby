@@ -803,7 +803,7 @@ void SimpleServerEvents::OnClientIPPort( const wxString &username, const wxStrin
         wxLogMessage(_T("set to %s %d "),user.BattleStatus().ip.c_str(),user.BattleStatus().udpport);
 
 //        if (sett().GetShowIPAddresses())
-//			ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,wxString::Format(_(" has ip=%s"),ip.c_str()));
+//			ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,wxFormat(_(" has ip=%s"),ip.c_str()));
 
         if (m_serv.GetCurrentBattle()->GetNatType() != NAT_None && (udpport==0))
         {
@@ -852,7 +852,7 @@ void SimpleServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
 
 void SimpleServerEvents::OnMutelistBegin( const wxString& /*channel*/ )
 {
-//    mutelistWindow( _("Begin mutelist for ") + channel, wxString::Format( _("%s mutelist"), channel.c_str() ) );
+//    mutelistWindow( _("Begin mutelist for ") + channel, wxFormat( _("%s mutelist"), channel.c_str() ) );
 }
 
 void SimpleServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxString& mutee, const wxString& description )
@@ -864,7 +864,7 @@ void SimpleServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxStr
 	if ( mutetime == _T("indefinite") )
 		message << _(" indefinite time remaining");
 	else if ( mutetime.ToLong(&time) )
-		message << wxString::Format( _(" %d minutes remaining"), time/60 + 1 );
+		message << wxFormat( _(" %d minutes remaining") ) % ( time/60 + 1 );
 	else
 		message << mutetime;
 	if ( !desc.IsEmpty() )
@@ -910,7 +910,7 @@ void SimpleServerEvents::OnFileDownload( bool /*autolaunch*/, bool /*autoclose*/
 //	wxString refinedurl;
 //	if ( url.Find(_T("http://")) != wxNOT_FOUND ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
 //	else refinedurl = url;
-//	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
+//	bool result = ui().Ask( _("Download update"), wxFormat( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
 //	if ( result )
 //	{
 //		m_autoclose = autoclose;
