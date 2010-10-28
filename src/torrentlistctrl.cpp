@@ -218,17 +218,17 @@ wxString TorrentListCtrl::GetItemText(long item, long column) const
 	switch ( column ) {
         default: return wxEmptyString;
         case 0: return infos.name;
-        case 1: return infos.numcopies > 0 ? wxString::Format(_T("%.2f"), infos.numcopies ) : na_str;
+		case 1: return infos.numcopies > 0 ? (wxFormat(_T("%.2f") ) % infos.numcopies).str() : na_str;
 		case 2:
 			if(infos.downloadstatus == P2P::not_stored) return _("not found");
 			else if(infos.downloadstatus == P2P::queued) return _("queued");
 			else if(infos.downloadstatus == P2P::leeching) return _("downloading");
 			else if(infos.downloadstatus == P2P::complete) return _("complete");
 			else return wxEmptyString;
-		case 3: return infos.progress > -0.01 ? wxString::Format(_T("%.2f"), infos.progress * 100 ) : na_str;
-		case 4: return infos.inspeed > -0.01 ? wxString::Format(_T("%.2f"), infos.inspeed*kfactor ) : na_str;
+		case 3: return infos.progress > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.progress * 100 )).str() : na_str;
+		case 4: return infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
 		case 5: return infos.eta > -1 ? wxTimeSpan::Seconds(infos.eta).Format( _T("%H:%M:%S") ) : _T("inf.") ;
-		case 6: return infos.filesize > 0 ? wxString::Format(_T("%.2f"), infos.filesize*mfactor) : na_str;
+		case 6: return infos.filesize > 0 ? (wxFormat(_T("%.2f") ) % ( infos.filesize*mfactor)).str() : na_str;
 	}
 }
 
