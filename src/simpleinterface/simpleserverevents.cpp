@@ -373,7 +373,7 @@ void SimpleServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool
         {
             battle.SendMyBattleStatus();
             battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, map );
-            battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
+			battle.Update( wxFormat( _T("%d_mapname") ) % OptionsWrapper::PrivateOptions );
         }
 
 //        ui().OnBattleInfoUpdated( battle );
@@ -396,13 +396,13 @@ void SimpleServerEvents::OnSetBattleInfo( int battleid, const wxString& param, c
             {
                 key = key.AfterFirst( '/' );
                 battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::MapOption );
-								battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::MapOption, key.c_str() ) );
+								battle.Update( wxFormat(_T("%d_%s") ) % OptionsWrapper::MapOption % key );
             }
             else if ( key.Left( 11 ) == _T( "modoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
 								battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption );
-                battle.Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::ModOption,  key.c_str() ) );
+				battle.Update(  wxFormat(_T("%d_%s") ) % OptionsWrapper::ModOption %  key );
             }
             else if ( key.Left( 8 ) == _T( "restrict" ) )
             {
@@ -443,7 +443,7 @@ void SimpleServerEvents::OnSetBattleInfo( int battleid, const wxString& param, c
             else
             {
 				battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption );
-				battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::EngineOption, key.c_str() ) );
+				battle.Update( wxFormat(_T("%d_%s") ) % OptionsWrapper::EngineOption % key );
             }
         }
     }
@@ -485,7 +485,7 @@ void SimpleServerEvents::OnBattleDisableUnit( int battleid, const wxString& unit
     {
         Battle& battle = m_serv.GetBattle( battleid );
         battle.RestrictUnit( unitname, count );
-        battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+		battle.Update( wxFormat( _T("%d_restrictions") ) % OptionsWrapper::PrivateOptions );
     }
     catch ( assert_exception ) {}
 }
@@ -498,7 +498,7 @@ void SimpleServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitn
     {
         Battle& battle = m_serv.GetBattle( battleid );
         battle.UnrestrictUnit( unitname );
-        battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+		battle.Update( wxFormat( _T("%d_restrictions") ) % OptionsWrapper::PrivateOptions );
     }
     catch ( assert_exception ) {}
 }
@@ -511,7 +511,7 @@ void SimpleServerEvents::OnBattleEnableAllUnits( int battleid )
     {
         Battle& battle = m_serv.GetBattle( battleid );
         battle.UnrestrictAllUnits();
-        battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+		battle.Update( wxFormat( _T("%d_restrictions") ) % OptionsWrapper::PrivateOptions );
     }
     catch ( assert_exception ) {}
 }
@@ -672,7 +672,7 @@ void SimpleServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int lef
         Battle& battle = m_serv.GetBattle( battleid );
         battle.AddStartRect( allyno, left, top, right, bottom );
         battle.StartRectAdded( allyno );
-        battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
+		battle.Update( wxFormat( _T("%d_mapname") ) % OptionsWrapper::PrivateOptions );
     }
     catch (assert_exception) {}
 }
@@ -685,7 +685,7 @@ void SimpleServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
         Battle& battle = m_serv.GetBattle( battleid );
         battle.RemoveStartRect( allyno );
         battle.StartRectRemoved( allyno );
-        battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
+		battle.Update( wxFormat( _T("%d_mapname") ) % OptionsWrapper::PrivateOptions );
     }
     catch (assert_exception) {}
 }

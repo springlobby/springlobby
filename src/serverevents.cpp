@@ -122,7 +122,7 @@ void ServerEvents::OnMotd( const wxString& msg )
 void ServerEvents::OnPong( wxLongLong ping_time )
 {
 	//wxLongLong is non-POD and cannot be passed to wxFormat as such. use c-string rep instead. converting to long might loose precision
-	UiEvents::StatusData data( wxString::Format( _("ping: %s ms"), ping_time.ToString().c_str() ), 2 );
+	UiEvents::StatusData data( wxFormat( _("ping: %s ms") ) % ping_time.ToString(), 2 );
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 }
 
@@ -424,7 +424,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
         {
             battle.SendMyBattleStatus();
             battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, map );
-            battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
+			battle.Update( wxFormat( _T("%d_mapname") ) % OptionsWrapper::PrivateOptions );
         }
 
 		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
@@ -447,13 +447,13 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             {
                 key = key.AfterFirst( '/' );
                 battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::MapOption );
-								battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::MapOption, key.c_str() ) );
+								battle.Update( wxFormat(_T("%d_%s") ) % OptionsWrapper::MapOption % key );
             }
             else if ( key.Left( 11 ) == _T( "modoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
 								battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption );
-                battle.Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::ModOption,  key.c_str() ) );
+				battle.Update(  wxFormat(_T("%d_%s") ) % OptionsWrapper::ModOption % key );
             }
             else if ( key.Left( 8 ) == _T( "restrict" ) )
             {
@@ -494,7 +494,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             else
             {
 							battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption );
-							battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::EngineOption, key.c_str() ) );
+							battle.Update( wxFormat(_T("%d_%s") ) % OptionsWrapper::EngineOption % key );
             }
         }
     }
@@ -536,7 +536,7 @@ void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname, 
     {
         Battle& battle = m_serv.GetBattle( battleid );
         battle.RestrictUnit( unitname, count );
-        battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+		battle.Update( wxFormat( _T("%d_restrictions") ) % OptionsWrapper::PrivateOptions );
     }
     catch ( assert_exception ) {}
 }
@@ -549,7 +549,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
     {
         Battle& battle = m_serv.GetBattle( battleid );
         battle.UnrestrictUnit( unitname );
-        battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+		battle.Update( wxFormat( _T("%d_restrictions") ) % OptionsWrapper::PrivateOptions );
     }
     catch ( assert_exception ) {}
 }
@@ -562,7 +562,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
     {
         Battle& battle = m_serv.GetBattle( battleid );
         battle.UnrestrictAllUnits();
-        battle.Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+		battle.Update( wxFormat( _T("%d_restrictions") ) % OptionsWrapper::PrivateOptions );
     }
     catch ( assert_exception ) {}
 }
@@ -743,7 +743,7 @@ void ServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int left, int
         Battle& battle = m_serv.GetBattle( battleid );
         battle.AddStartRect( allyno, left, top, right, bottom );
         battle.StartRectAdded( allyno );
-        battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
+		battle.Update( wxFormat( _T("%d_mapname") ) % OptionsWrapper::PrivateOptions );
     }
     catch (assert_exception) {}
 }
@@ -756,7 +756,7 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
         Battle& battle = m_serv.GetBattle( battleid );
         battle.RemoveStartRect( allyno );
         battle.StartRectRemoved( allyno );
-        battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
+		battle.Update( wxFormat( _T("%d_mapname") ) % OptionsWrapper::PrivateOptions );
     }
     catch (assert_exception) {}
 }
@@ -870,7 +870,7 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
 
 		if (sett().GetShowIPAddresses()) {
 			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
-					UiEvents::OnBattleActionData( username,wxString::Format(_(" has ip=%s"),ip.c_str()) )
+					UiEvents::OnBattleActionData( username, wxFormat( _(" has ip=%s") ) % ip )
 				);
 		}
 
@@ -924,7 +924,7 @@ void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
 
 void ServerEvents::OnMutelistBegin( const wxString& channel )
 {
-    mutelistWindow( _("Begin mutelist for ") + channel, wxString::Format( _("%s mutelist"), channel.c_str() ) );
+	mutelistWindow( _("Begin mutelist for ") + channel, wxFormat( _("%s mutelist") ) % channel );
 }
 
 void ServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxString& mutee, const wxString& description )
@@ -934,7 +934,7 @@ void ServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxString& m
     wxString mutetime = GetWordParam( desc );
 		long time;
 		if ( mutetime == _T("indefinite") ) message << _(" indefinite time remaining");
-		else if ( mutetime.ToLong(&time) ) message << wxString::Format( _(" %d minutes remaining"), time/60 + 1 );
+		else if ( mutetime.ToLong(&time) ) message << wxFormat( _(" %d minutes remaining") ) % ( time/60 + 1 );
 		else message << mutetime;
 		if ( !desc.IsEmpty() )  message << _T(", ") << desc;
     mutelistWindow( message );
@@ -978,7 +978,9 @@ void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool /*disco
 	wxString refinedurl;
 	if ( url.Find(_T("http://")) != wxNOT_FOUND ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
 	else refinedurl = url;
-	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
+	bool result = ui().Ask( _("Download update"), wxFormat( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed.") )
+															   % url
+															   % description );
 	if ( result )
 	{
 		m_autoclose = autoclose;
