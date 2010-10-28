@@ -143,7 +143,7 @@ void BattleroomMMOptionsTab<BattleType>::setupOptionsSizer( wxBoxSizer* parent_s
     wxBoxSizer* section_sizer = new wxBoxSizer( wxVERTICAL );
     if ( setupOptionsSectionSizer( dummy, section_sizer, optFlag ) == 0 ) {
         if ( num_options == 0 ) {
-            wxString name = wxString::Format( _T("%d"),optFlag) + wxsep + _T("no_opts");
+			wxString name = wxFormat( _T("%d%sno_opts") ) %optFlag % wxsep;
             wxStaticText* none_found = new wxStaticText( this, wxID_ANY, _("no options available"),
                                             wxDefaultPosition, wxDefaultSize, 0, name  );
             m_statictext_map[name] = none_found;
@@ -172,7 +172,7 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const mmOptionS
 {
 	if ( !m_battle ) return -1;
     const int col_gap = 35;
-	wxString pref = wxString::Format( _T("%d"),optFlag) + wxsep;
+	wxString pref = wxFormat( _T("%d%s") ) % optFlag % wxsep;
 	OptionsWrapper optWrap = m_battle->CustomBattleOptions();
 	bool enable = m_battle->IsFounderMe();
 	wxFlexGridSizer* cbxSizer =  new wxFlexGridSizer( 4, 2, 10, 10 );
@@ -368,7 +368,7 @@ void BattleroomMMOptionsTab<BattleType>::OnSpinCtrlDoubleChange(SlSpinDoubleEven
 	wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-	if(m_battle->CustomBattleOptions().setSingleOption( key,wxString::Format( _T("%f"),box->GetValue() ), (OptionsWrapper::GameOption)gameoption ) )
+	if(m_battle->CustomBattleOptions().setSingleOption( key,wxFormat( _T("%f") ) % box->GetValue(), (OptionsWrapper::GameOption)gameoption ) )
 	{
 		if (m_battle->IsFounderMe())
 		{
@@ -447,7 +447,7 @@ template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::OnReloadControls(OptionsWrapper::GameOption flag)
 {
 	if ( !m_battle ) return;
-	wxString pref = wxString::Format( _T("%d"),flag) + wxsep;
+	wxString pref = wxFormat( _T("%d%s") ) % flag % wxsep;
 
 	//purgin existing keys from map
 	RemovePrefixed(m_chkbox_map,pref);
