@@ -189,17 +189,19 @@ wxString PlaybackListCtrl<PlaybackType>::GetItemText(long item, long column) con
         return wxEmptyString;
 
     const PlaybackType& replay = *m_data[item];
-    wxString duration = wxString::Format(_T("%02ld:%02ld:%02ld"), replay.duration / 3600,
-                        (replay.duration%3600)/60, (replay.duration%60)/60 ) ;
+	wxString duration = wxFormat(_T("%02ld:%02ld:%02ld") )
+									% (replay.duration / 3600)
+									% ((replay.duration%3600)/60)
+									% ((replay.duration%60)/60 ) ;
 
     switch ( column ) {
         case 0: return replay.date_string;
         case 1: return replay.battle.GetHostModName();
         case 2: return replay.battle.GetHostMapName();
-        case 3: return wxString::Format(_T("%d"),replay.battle.GetNumUsers() - replay.battle.GetSpectators() );
+		case 3: return wxFormat(_T("%d") ) % ( replay.battle.GetNumUsers() - replay.battle.GetSpectators() );
         case 4: return duration;
         case 5: return replay.SpringVersion;
-        case 6: return wxString::Format( _T("%d KB"),replay.size/1024 );
+		case 6: return wxFormat( _T("%d KB") ) % ( replay.size/1024 );
         case 7: return replay.Filename.AfterLast( wxFileName::GetPathSeparator() );
 
         default: return wxEmptyString;
