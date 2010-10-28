@@ -132,7 +132,7 @@ wxString GetHostCPUSpeed()
     //so i'll hardcode some value here and hope bd doesn't hit me with a stick :P
     for (int i = 0; i< 16; ++i)
     {
-        wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\")+	wxString::Format(_T("%d"), i));
+        wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\")+	wxFormat(_T("%d"), i));
         long tmp;
         if ( programreg.QueryValue( _T("~MHz"), &tmp ) )
         {
@@ -266,13 +266,13 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite )
                     }
                     //make backup
                     if ( !wxRenameFile( to + filename, to + filename + _T(".old") ) ) {
-                        wxLogError( wxString::Format( _T("could not rename %s, copydir aborted"), (to + filename).c_str() ) );
+						wxLogError( _T("could not rename %s, copydir aborted"), (to + filename).c_str() );
                         return false;
                     }
                 }
                 //do the actual copy
                 if ( !wxCopyFile(from + filename, to + filename, overwrite) ) {
-                    wxLogError( wxString::Format( _T("could not copy %s to %s, copydir aborted"), (from + filename).c_str(), (to + filename).c_str() ) );
+					wxLogError( _T("could not copy %s to %s, copydir aborted"), (from + filename).c_str(), (to + filename).c_str() );
                     return false;
                 }
             }
@@ -391,6 +391,6 @@ wxString GetConfigfileDir()
 	#ifdef __WXMSW__
 		return wxStandardPaths::Get().GetUserDataDir();
 	#else
-		return wxString::Format( _T("%s/.%s"), wxStandardPaths::Get().GetUserConfigDir().c_str(), GetAppName(true).c_str() );
+		return wxFormat( _T("%s/.%s") ) % wxStandardPaths::Get().GetUserConfigDir() % GetAppName(true);
 	#endif //__WXMSW__
 }
