@@ -99,9 +99,9 @@ wxString BattleListCtrl::GetItemText(long item, long column) const
 		case 4: return ( battle.GetHostMapName() );
 		case 5: return ( battle.GetHostModName() );
         case 6: return ( opts.founder );
-        case 7: return ( wxString::Format(_T("%d"), int(battle.GetSpectators())) );
-        case 8: return ( wxString::Format(_T("%d"), int(battle.GetNumUsers()) - int(battle.GetSpectators()) ) );
-        case 9: return ( wxString::Format(_T("%d"), int(battle.GetMaxPlayers())) );
+		case 7: return wxFormat(_T("%d") ) % int(battle.GetSpectators());
+		case 8: return wxFormat(_T("%d") ) % (int(battle.GetNumUsers()) - int(battle.GetSpectators()));
+		case 9: return wxFormat(_T("%d") ) % int(battle.GetMaxPlayers());
     }
 }
 
