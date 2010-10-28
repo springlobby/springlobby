@@ -80,7 +80,7 @@ void FileListDialog::UpdateList( GlobalEvents::GlobalEventData )
 //        if ( !m_filter->DoFilterResource( *i ) )
             m_filelistctrl->AddFile( &(*i) );
     }
-    m_filecount->SetLabel( wxString::Format( _("%u files displayed"), m_filelistctrl->GetItemCount() ) );
+	m_filecount->SetLabel( wxFormat( _("%u files displayed") ) % m_filelistctrl->GetItemCount() );
     m_filelistctrl->SortList();
 }
 

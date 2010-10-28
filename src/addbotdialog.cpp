@@ -46,7 +46,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
 	int bot = m_battle.GetNumBots()+1;
 
-	m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _T("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_nick = new wxTextCtrl( this, wxID_ANY, wxFormat( _T("Bot%d") ) % bot, wxDefaultPosition, wxDefaultSize, 0 );
 	m_nick_sizer->Add( m_nick, 2, wxALL, 5 );
 
 	m_main_sizer->Add( m_nick_sizer, 0, wxEXPAND, 5 );
@@ -166,7 +166,7 @@ wxString AddBotDialog::RefineAIName( const wxString& name )
   wxString ret2;
   int i = 2;
   do {
-    ret2 = ret + wxString::Format( _T(" (%d)"), i );
+	ret2 = ret + wxFormat( _T(" (%d)") ) % i;
     i++;
   } while ( m_ai->FindString( ret2 ) != wxNOT_FOUND );
   return ret2;
@@ -260,7 +260,7 @@ long AddBotDialog::AddMMOptionsToList( long pos, int optFlag )
 	for ( OptionsWrapper::wxStringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
 	{
 		m_opts_list->InsertItem( pos, it->second.first );
-		wxString tag = wxString::Format( _T( "%d_" ), optFlag ) + it->first;
+		wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it->first;
 		m_opt_list_map[ tag ] = pos;
 		UpdateOption( tag );
 		pos++;
