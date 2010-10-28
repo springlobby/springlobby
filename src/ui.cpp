@@ -1412,9 +1412,9 @@ void Ui::CheckForUpdates()
     {
         #ifdef __WXMSW__
 		int answer = customMessageBox(SL_MAIN_ICON,
-									  wxFormat( _("Your %s version is not up to date.\n\n%s\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."),
-														GetAppName().c_str(),
-														msg.c_str() ),
+									  wxFormat( _("Your %s version is not up to date.\n\n%s\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again.") )
+														% GetAppName()
+														% msg,
 									  _("Not up to date"), wxYES_NO);
         if (answer == wxYES)
         {

@@ -32,11 +32,10 @@ void slConfig::SetupGlobalconfig()
 	SetRecordDefaults( true );
 	#ifdef __WXMSW__
 		wxString p (wxFileName::GetPathSeparator());
-		wxString global_config_path = wxFormat( _T("%s%s%s.global.conf"),
-													   GetExecutableFolder().c_str(),
-													   p.c_str(),
-													   ::GetAppName( true ).c_str()
-													   );
+		wxString global_config_path = wxFormat( _T("%s%s%s.global.conf") )
+													   % GetExecutableFolder()
+													   % p
+													   % ::GetAppName( true );
 	#else
 		wxString global_config_path = IdentityString( _T("/etc/default/%s.conf"), true );
 	#endif //__WXMSW__

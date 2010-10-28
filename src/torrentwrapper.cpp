@@ -626,7 +626,7 @@ void DisplayError( const wxString& resourcename, TorrentWrapper::DownloadRequest
 	msg = wxFormat(_("Downloading %s failed with reason:\n%s") ) % resourcename % msg;
 	wxString title = _("Download failure");
 #ifdef __WXMSW__
-	UiEvents::StatusData data( wxFormat(_("Downloading %s failed"), resourcename.c_str() ), 1 );
+	UiEvents::StatusData data( wxFormat(_("Downloading %s failed") ) % resourcename, 1 );
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 #else
 	wxMutexGuiLocker locker;
