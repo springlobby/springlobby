@@ -152,7 +152,7 @@ void MainTorrentTab::OnUpdate()
 
 	m_torrent_list->SaveSelection();
     info_map = torrent().CollectGuiInfos();
-	m_incoming_lbl->SetLabel( wxString::Format(_("Total Incoming: %.2f KB/s"), (info_map[wxString(_T("global"))].inspeed/ float(1024)) ) );
+	m_incoming_lbl->SetLabel( wxFormat(_("Total Incoming: %.2f KB/s") ) % (info_map[wxString(_T("global"))].inspeed/ float(1024)) ) ;
     for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
     {
 		if (iter->first == wxString(_T("global")))
