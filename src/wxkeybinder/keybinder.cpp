@@ -31,7 +31,7 @@
 #include "wx/tokenzr.h"
 #include <list>
 #include "../settings++/hotkeys/CommandOrderDlg.h"
-
+#include "../utils/conversion.h"
 
 // class definition for wxKeyProfile
 IMPLEMENT_CLASS(wxKeyProfile, wxKeyBinder)
@@ -606,10 +606,10 @@ bool wxCmd::Save(wxConfigBase *p, const wxString &key, bool bCleanOld) const
         shortcuts += GetShortcut(j)->GetStr() + wxT("|");
 
     // write the entry in the format NAME|DESC|SHORTCUT1|SHORTCUT2...|SHORTCUTn
-    wxString value = wxString::Format(wxT("%s|%s|%s"),
-                                    GetName().c_str(),
-                                    GetDescription().c_str(),
-                                    shortcuts.c_str());
+	wxString value = wxFormat(wxT("%s|%s|%s") )
+									% GetName()
+									% GetDescription()
+									% shortcuts;
 
     // does the given key already exists ?
     if (bCleanOld && p->Exists(key))
@@ -861,8 +861,11 @@ bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key, bool bCleanOld) c
         wxCmd *curr = m_arrCmd.Item(i);
 
         // write the key in the format: bindID-typeID
-        wxString keyname = wxString::Format(wxT("%s%s%d-type%d"),
-            basekey.c_str(), wxCMD_CONFIG_PREFIX, curr->GetId(), curr->GetType());
+		wxString keyname = wxFormat(wxT("%s%s%d-type%d") )
+									% basekey
+									% wxCMD_CONFIG_PREFIX
+									% curr->GetId()
+									% curr->GetType();
 
         // save this wxCmd...
         b &= curr->Save(cfg, keyname);
@@ -1109,7 +1112,7 @@ bool wxKeyProfileArray::Save(wxConfigBase *cfg, const wxString &key, bool bClean
 
         // save all our elements into a subkey of the given key
         b &= Item(i)->Save(cfg, basekey + wxKEYPROFILE_CONFIG_PREFIX +
-                                    wxString::Format(wxT("%d"), (int)i), bCleanOld);
+									wxFormat(wxT("%d") ) % (int)i, bCleanOld);
 
     // if required, remove any previously stored key profile...
     if (bCleanOld) {
@@ -2183,9 +2186,9 @@ void wxKeyConfigPanel::OnProfileSelected(wxCommandEvent &e)
 
             // NB: m_nCurrentProf now retains the old profile index
             int choice = wxMessageBox(
-                wxString::Format(wxT("The previous profile (named \"%s\") has been modified.\n")
-                        wxT("Do you want to save the changes to that profile ?"),
-                        GetProfile(m_nCurrentProf)->GetName().c_str()),
+                wxFormat(wxT("The previous profile (named \"%s\") has been modified.\n")
+							wxT("Do you want to save the changes to that profile ?") )
+							% GetProfile(m_nCurrentProf)->GetName(),
                 wxT("Warning"), wxYES_NO | wxICON_QUESTION);
 
             if (choice == wxYES) {
@@ -2360,8 +2363,8 @@ void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
     if (sel->GetShortcutCount() >= wxCMD_MAX_SHORTCUTS) {
 
         // sorry...
-        wxMessageBox(wxString::Format(wxT("Cannot add more than %d shortcuts ")
-                    wxT("to a single command..."), wxCMD_MAX_SHORTCUTS),
+        wxMessageBox(wxFormat(wxT("Cannot add more than %d shortcuts ")
+					wxT("to a single command...") ) % wxCMD_MAX_SHORTCUTS,
                     wxT("Cannot add another shortcut"));
         return;
     }
