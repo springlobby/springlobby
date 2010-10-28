@@ -118,6 +118,11 @@ struct wxFormat : public boost::format
 		return TowxString( boost::format::str() );
 	}
 
+	wxString c_str() const
+	{
+		return TowxString( boost::format::str() ).c_str();
+	}
+
 	//! conversion operator to wxString
 	operator wxString () const
 	{
