@@ -250,7 +250,7 @@ void ChatPanel::CreateControls( )
     unsigned int numusers = 0;
 		if ( m_type == CPT_Channel ) numusers = GetChannel()->GetNumUsers();
 		else if ( m_type == CPT_Server && m_server ) numusers = m_server->GetNumUsers();
-    m_usercount_label = new wxStaticText( m_nick_panel, wxID_ANY, wxString::Format( _("%d users"), numusers ) );
+	m_usercount_label = new wxStaticText( m_nick_panel, wxID_ANY, wxFormat( _("%d users") ) % numusers );
     CreatePopup();//ensures m_popup_menu is constructed
 	//SL_GENERIC::UserMenu<ChatPanelMenu>* usermenu  = m_popup_menu->GetUserMenu();
 	assert ( m_popup_menu->GetUserMenu() );
@@ -644,7 +644,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 		if ( inactive )
 			UiEvents::GetNotificationEventSender().SendEvent(
 					UiEvents::NotficationData( UiEvents::PrivateMessage,
-											   wxString::Format( _T("%s:\n%s"), who.c_str(), message.Left(50).c_str() ) ) );
+											   wxFormat( _T("%s:\n%s") ) % who % message.Left(50) ) );
 	}
 }
 
@@ -670,7 +670,7 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
 	{
 		UiEvents::GetNotificationEventSender().SendEvent(
 				UiEvents::NotficationData( UiEvents::PrivateMessage,
-										   wxString::Format( _T("%s \n%s"), who.c_str(), action.Left(50).c_str() ) ) );
+										   wxFormat( _T("%s \n%s") ) % who % action.Left(50) ) );
 	}
 }
 
@@ -739,7 +739,7 @@ void ChatPanel::Joined( User& who )
 		unsigned int numusers = 0;
 		if ( m_type == CPT_Channel ) numusers = GetChannel()->GetNumUsers();
 		else if ( m_type == CPT_Server && m_server ) numusers = m_server->GetNumUsers();
-		m_usercount_label->SetLabel( wxString::Format( _("%d users"), numusers ) );
+		m_usercount_label->SetLabel( wxFormat( _("%d users") ) % numusers );
 		m_nicklist->AddUser( who );
 	}
 	// Also add the User to the TextCompletionDatabase
@@ -754,7 +754,7 @@ void ChatPanel::OnChannelJoin( User& who )
 		unsigned int numusers = 0;
 		if ( m_type == CPT_Channel ) numusers = GetChannel()->GetNumUsers();
 		else if ( m_type == CPT_Server && m_server ) numusers = m_server->GetNumUsers();
-		m_usercount_label->SetLabel( wxString::Format( _("%d users"), numusers ) );
+		m_usercount_label->SetLabel( wxFormat( _("%d users") ) % numusers );
 		m_nicklist->AddUser( who );
 	}
 
@@ -790,7 +790,7 @@ void ChatPanel::Parted( User& who, const wxString& message )
 		unsigned int numusers = 0;
 		if ( m_type == CPT_Channel ) numusers = GetChannel()->GetNumUsers();
 		else if ( m_type == CPT_Server && m_server ) numusers = m_server->GetNumUsers();
-		m_usercount_label->SetLabel( wxString::Format( _("%d users"), numusers ) );
+		m_usercount_label->SetLabel( wxFormat( _("%d users") ) % numusers );
 		m_nicklist->RemoveUser( who );
 	}
 	// Also remove the User from the TextCompletionDatabase
@@ -955,8 +955,8 @@ bool ChatPanel::Say( const wxString& message )
 	wxLogDebugFunc( message );
 	wxStringTokenizer lines( message, _T( '\n' ) );
 	if ( lines.CountTokens() > flood_threshold ) {
-		PasteDialog dl ( this, wxString::Format(
-			_( "Are you sure you want to paste %d lines?" ), lines.CountTokens() ) );
+		PasteDialog dl ( this, wxFormat(
+			_( "Are you sure you want to paste %d lines?" ) ) % lines.CountTokens() );
 		switch ( dl.ShowModal() ) {
 			case wxID_NO :
 				return true;
@@ -1003,7 +1003,7 @@ bool ChatPanel::Say( const wxString& message )
 			if ( line.StartsWith( _T( "/" ) ) ) {
 				if ( m_channel->ExecuteSayCommand( line ) ) return true;
 				if ( m_channel->GetServer().ExecuteSayCommand( line ) ) return true;
-				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+				OutputLine( wxFormat( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ) ) % line, sett().GetChatColorError(), sett().GetChatFont() );
 				return true;
 			}
 			m_channel->Say( line );
@@ -1017,7 +1017,7 @@ bool ChatPanel::Say( const wxString& message )
 			if ( line.StartsWith( _T( "/" ) ) ) {
 				if ( m_battle->ExecuteSayCommand( line ) ) return true;
 				if ( m_battle->GetServer().ExecuteSayCommand( line ) ) return true;
-				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+				OutputLine( wxFormat( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ) ) % line, sett().GetChatColorError(), sett().GetChatFont() );
 				return true;
 			}
 			m_battle->Say( line );
@@ -1031,7 +1031,7 @@ bool ChatPanel::Say( const wxString& message )
 			if ( line.StartsWith( _T( "/" ) ) ) {
 				if ( m_user->ExecuteSayCommand( line ) ) return true;
 				if ( m_user->GetServer().ExecuteSayCommand( line ) ) return true;
-				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+				OutputLine( wxFormat( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ) ) % line, sett().GetChatColorError(), sett().GetChatFont() );
 				return true;
 			}
 			m_user->Say( line );
@@ -1041,7 +1041,7 @@ bool ChatPanel::Say( const wxString& message )
 
 			if ( line.StartsWith( _T( "/" ) ) ) {
 				if ( m_server->ExecuteSayCommand( line ) ) return true;
-				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str() ), sett().GetChatColorError(), sett().GetChatFont() );
+				OutputLine( wxFormat( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ) ) % line, sett().GetChatColorError(), sett().GetChatFont() );
 				return true;
 			}
 
