@@ -1614,7 +1614,7 @@ void TASServer::SendHostInfo( HostInfo update )
     if ( ( update & ( IBattle::HI_Map | IBattle::HI_Locked | IBattle::HI_Spectators ) ) > 0 )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
-		wxString cmd = wxFormat( _T("%d %d ") ) % battle.GetSpectators() % battle.IsLocked();
+		wxString cmd = wxFormat( _T("%d %d ") ) % battle.GetSpectators() % int(battle.IsLocked());
         cmd += MakeHashSigned( battle.LoadMap().hash ) + _T(" ");
         cmd += battle.LoadMap().name;
 
@@ -1867,7 +1867,7 @@ void TASServer::SendMyUserStatus()
     taus.tasdata.moderator = us.moderator;
     taus.tasdata.bot = us.bot;
 
-	SendCmd( _T("MYSTATUS"), wxFormat( _T("%d") ) % taus.byte );
+	SendCmd( _T("MYSTATUS"), wxString::Format( _T("%d"), taus.byte ) );
 }
 
 
