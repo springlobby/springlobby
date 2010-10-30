@@ -383,7 +383,7 @@ wxString GetAppName( const bool lowerCase )
 
 wxString IdentityString(const wxString format, bool lowerCase )
 {
-//	return wxFormat( format ) %  GetAppName( lowerCase ) ;
+	return wxFormat( format ) %  GetAppName( lowerCase ) ;
 }
 
 wxString GetConfigfileDir()
