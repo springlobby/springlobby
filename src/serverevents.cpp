@@ -791,7 +791,7 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
     {
         Battle& battle = m_serv.GetBattle( battleid );
 		User& user = battle.GetUser( nick );
-		bool isbot = battleuser.BattleStatus().IsBot();
+		bool isbot = user.BattleStatus().IsBot();
 		ui().OnUserLeftBattle( battle, user, isbot );
         battle.OnUserRemoved( user );
     }
