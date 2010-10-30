@@ -576,7 +576,8 @@ void Ui::OnUpdate( int mselapsed )
             mw().ShowTab( sett().GetStartTab() );
         }
 #ifdef __WXMSW__
-        if ( sett().GetAutoUpdate() )
+		//don't ask for updates on first run, that's a bit much for a newbie
+		if ( sett().GetAutoUpdate() && !sett().IsFirstRun() )
             CheckForUpdates();
 #endif
     }
