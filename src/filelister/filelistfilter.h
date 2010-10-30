@@ -20,7 +20,7 @@ class wxButton;
 class wxRegEx;
 class wxStaticText;
 class Battle;
-struct PlasmaResourceInfo;
+class PlasmaResourceInfo;
 
 
 ///////////////////////////////////////////////////////////////////////////////

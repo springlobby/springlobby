@@ -32,7 +32,7 @@
 //	int winningAllyTeam;    ///< The ally team that won the game, -1 if unknown.
 //};
 
-class Replay;
+struct Replay;
 
 template <class PB, class I>
 class GlobalObjectHolder;

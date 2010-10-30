@@ -3,7 +3,7 @@
 
 #include "playbacklist.h"
 
-class Savegame;
+struct Savegame;
 
 template <class PB, class T>
 class GlobalObjectHolder;

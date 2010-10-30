@@ -3,7 +3,7 @@
 
 #include <wx/scrolwin.h>
 
-class Widget;
+struct Widget;
 class wxGridSizer;
 class wxBoxSizer;
 class wxButton;
