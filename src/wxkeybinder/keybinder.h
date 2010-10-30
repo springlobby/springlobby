@@ -836,13 +836,13 @@ public:     // miscellaneous
         const bool anyMod = ( wxKeyBind::StringToKeyModifier( key ) & wxACCEL_ANY ) != 0;
 		wxCmd *p = GetCmd(id);
 		if (p) {
-			size_t id = 0;
+			size_t new_id = 0;
 			if ( !anyMod )
-				id = m_nNextOderIndex++;
+				new_id = m_nNextOderIndex++;
 			else
-				id = m_nNextOderIndexAny++;
+				new_id = m_nNextOderIndexAny++;
 
-			p->AddShortcut(key, id);
+			p->AddShortcut(key, new_id);
 		}
     }
 
