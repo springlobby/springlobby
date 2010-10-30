@@ -724,7 +724,7 @@ void Ui::ConnectionFailurePrompt()
 		}
 		case wxID_NO: // switch to next server in the list
 		{
-			wxString m_last_used_backup_server = GetNextServer();
+			m_last_used_backup_server = GetNextServer();
 			wxString current_server = sett().GetDefaultServer();
 			sett().SetDefaultServer( m_last_used_backup_server );// temp set backup server as default
 			Connect();
