@@ -134,7 +134,7 @@ void SingleOptionDialog::OnOk( wxCommandEvent& /*unused*/ )
 	{
 	    double d = m_spinctrl->GetValue() ;
 		value = wxFormat( _T("%f") ) % d;
-		wxLogMessage( _T("Got VALUE: %s -- %f"), value, d );
+		wxLogMessage( _T("Got VALUE: %s -- %f"), value.c_str(), d );
 	}
 	else if ( m_checkbox ) value = TowxString( m_checkbox->GetValue() );
 	m_battle.CustomBattleOptions().setSingleOption( key, value, optFlag );
