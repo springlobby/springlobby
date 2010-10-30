@@ -168,9 +168,9 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
 
     ICON_CHANNEL_OPTIONS = Add( wxBitmap(channel_options_xpm) );
 
-    SetColourIcon( 0, wxColour( 255,   0,   0 ) );
-    SetColourIcon( 1, wxColour(   0, 255,   0 ) );
-    SetColourIcon( 2, wxColour(   0,   0, 255 ) );
+//	SetColourIcon( wxColour( 255,   0,   0 ) );
+//	SetColourIcon( wxColour(   0, 255,   0 ) );
+//	SetColourIcon( wxColour(   0,   0, 255 ) );
 
 
   //ICON_FIXCOLOURS_PALETTE = Add( wxBitmap(fixcolours_palette_xpm) );
@@ -336,10 +336,16 @@ wxString IconImageList::GetBattleStatus( const IBattle& battle ) const
     // return _T("Game has unknown status");
 }
 
-
-int IconImageList::GetColourIcon( const int& num )  const
+wxString getColourIconKey( const wxColour& colour  )
 {
-	PlayerColourMap::const_iterator it = m_player_colour_icons.find( num );
+	return colour.GetAsString(wxC2S_HTML_SYNTAX).AfterFirst('#');
+}
+
+int IconImageList::GetColourIcon( const wxColour& colour )  const
+{
+	const wxString key = getColourIconKey(colour);
+	PlayerColourMap::const_iterator it = m_player_colour_icons.find( key );
+//	wxLogError( _T("color key SET %s"), key.c_str());
 	if ( it != m_player_colour_icons.end() && it->second != 0 ) return it->second;
     else return -1;
 }
@@ -351,14 +357,13 @@ int IconImageList::GetHostIcon( const bool& spectator ) const
 }
 
 
-void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
+void IconImageList::SetColourIcon( const wxColour& colour )
 {
-	ColourIcon icon( colour );
+	const wxString key = getColourIconKey(colour);
+//	wxLogError( _T("color key SET %s"), key.c_str());
 
-	if ( m_player_colour_icons[num] != 0 )
-		Replace( m_player_colour_icons[num], icon );
-	else
-		m_player_colour_icons[num] = Add( icon );
+	if ( m_player_colour_icons.find( key ) == m_player_colour_icons.end() )
+		m_player_colour_icons[key] = Add( getColourIcon(colour) );
 }
 
 

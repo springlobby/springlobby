@@ -4,12 +4,12 @@
 #define SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
 #include <wx/intl.h>
-#include <wx/bitmap.h>
 #include <vector>
 #include "utils/mixins.hh"
 
 class wxColour;
 class wxImage;
+class wxBitmap;
 
 wxString RTFtoText( const wxString& rtfinput );
 bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff = 10 );
@@ -32,10 +32,7 @@ wxBitmap charArr2wxBitmap(const unsigned char * arg, int size);
 wxBitmap charArr2wxBitmapWithBlending(const unsigned char * arg, int size,
             const unsigned char * text, int text_size);
 
-class ColourIcon : public wxBitmap {
-	public:
-		ColourIcon( const wxColour& colour );
-};
+wxBitmap getColourIcon( const wxColour& colour );
 
 //! shrinks/expands image by removing/duplicating rows/columns from the center of the image
 wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height );

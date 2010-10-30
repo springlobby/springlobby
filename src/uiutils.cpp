@@ -129,7 +129,6 @@ wxColour GetColorFromFloatStrng( const wxString& color_ )
 		tmp_string.ToDouble( &float_color );
 		decimal_colors[i] = clamp( static_cast<unsigned char>(float_color*256), static_cast<unsigned char>(0), static_cast<unsigned char>(255) );
 	}
-	wxLogError( _T("color %s | %d,%d,%d"), color_.c_str(), decimal_colors[0], decimal_colors[1], decimal_colors[2]);
 	wxColour final_c( decimal_colors[0], decimal_colors[1], decimal_colors[2] );
 	delete[] decimal_colors;
 	return final_c;
@@ -499,7 +498,7 @@ void OpenWebBrowser( const wxString& url )
     }
 }
 
-ColourIcon::ColourIcon( const wxColour& colour )
+wxBitmap getColourIcon( const wxColour& colour )
 {
 	wxImage img( colourbox_xpm );
 
@@ -512,7 +511,8 @@ ColourIcon::ColourIcon( const wxColour& colour )
 	img.Replace( 2, 2, 2, r>255?255:r, g>255?255:g, b>255?255:b );
 	/*r = colour.Red()-60; g = colour.Green()-60; b = colour.Blue()-60;
 	img.Replace( 200, 200, 200, r<0?0:r, g<0?0:g, b<0?0:b );*/
-	static_cast<wxBitmap>(*this) = wxBitmap(img);
+	return wxBitmap(img);
+//	assert( IsOk() );
 }
 
 #include <wx/datetime.h>
