@@ -120,7 +120,7 @@ class Ui : public SL::NonCopyable
     void OnBattleOpened( IBattle& battle );
     void OnBattleClosed( IBattle& battle );
     void OnUserJoinedBattle( IBattle& battle, User& user );
-    void OnUserLeftBattle( IBattle& battle, User& user );
+    void OnUserLeftBattle( IBattle& battle, User& user, bool isbot );
 	void OnBattleInfoUpdated( BattleEvents::BattleEventData data );
 //    void OnBattleInfoUpdated( IBattle& battle, const wxString& Tag );
     void OnBattleStarted( Battle& battle );
