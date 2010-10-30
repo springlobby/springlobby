@@ -19,7 +19,6 @@
 
 
 #include "../images/springsettings.xpm"
-#include "../images/springlobby.xpm"
 #include "../utils/conversion.h"
 #include "../defines.h"
 #include "../settings.h"

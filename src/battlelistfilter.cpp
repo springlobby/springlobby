@@ -67,7 +67,7 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
     m_filter_map_edit( 0 ),
     m_filter_map_expression( 0 ),
     m_filter_mod_edit( 0 ), m_filter_mod_expression( 0 ),
-    m_filter_highlighted( false )
+	m_filter_highlighted( 0 )
 
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battlelistfilter" ) );

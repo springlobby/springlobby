@@ -18,8 +18,8 @@ class ScopedLocker
 {
   private:
   MutexWrapper<T> &mw;
-  ScopedLocker(const ScopedLocker<T> &other){}/// prevent copying
-  ScopedLocker&  operator= (const ScopedLocker& other){}/// and assignment
+  ScopedLocker(const ScopedLocker<T> &/*other*/){}/// prevent copying
+  ScopedLocker&  operator= (const ScopedLocker& /*other*/){}/// and assignment
   public:
   explicit ScopedLocker(MutexWrapper<T> &mw_):mw(mw_){
     mw.Lock();
