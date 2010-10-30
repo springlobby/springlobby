@@ -1045,8 +1045,8 @@ public:     // miscellaneous
     bool Save(wxConfigBase *p, const wxString &key = wxEmptyString, bool bCleanOld = FALSE) const;
     bool Load(wxConfigBase *p, const wxString &key = wxEmptyString);
 
-	bool IsNotDeletable() const		{ return m_notDeletable; };
-	bool IsNotEditable() const		{ return m_notEditable; };
+	bool IsNotDeletable() const		{ return m_notDeletable; }
+	bool IsNotEditable() const		{ return m_notEditable; }
 private:
     DECLARE_CLASS(wxKeyProfile)
 };

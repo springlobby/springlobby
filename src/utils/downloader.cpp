@@ -208,7 +208,7 @@ void PlasmaInterface::downloadFile(const wxString& host, const wxString& remote_
     FileDownloading.Connect( host, 80);
 
     wxInputStream* httpstream = FileDownloading.GetInputStream( _T("/") + remote_path );
-    wxLogDebug( _T("downloading file ") + host + _T("/") + remote_path );
+	wxLogDebug( _T("downloading file %s/%s"),host,remote_path );
 
     if ( httpstream )
     {

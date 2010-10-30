@@ -63,7 +63,7 @@ public:
     */
 
     virtual ~RefcountedContainer() {}
-    ;
+
     RefcountedContainer* NewCopy() {
         return new RefcountedContainer(*this);
     }
@@ -94,7 +94,7 @@ public:
         else {
            // error("RefcountedPointer copy : null");
         }
-    };
+	}
 
     /* */
 template<class U>

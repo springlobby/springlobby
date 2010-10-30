@@ -8,7 +8,7 @@ class MutexWrapper;
 
 class AbstractMutexWrapper{
   public:
-  virtual ~AbstractMutexWrapper(){};
+  virtual ~AbstractMutexWrapper(){}
   virtual void Lock()=0;
   virtual void UnLock()=0;
 };

@@ -6,7 +6,7 @@
 class assert_exception : public std::runtime_error
 {
   public:
-   assert_exception(std::string msg) : std::runtime_error(msg) {};
+   assert_exception(std::string msg) : std::runtime_error(msg) {}
 };
 
 #ifndef __WXDEBUG__

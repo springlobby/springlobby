@@ -17,7 +17,7 @@ class wxDynamicLibrary;
 class unitsync_assert : public std::runtime_error
 {
   public:
-   unitsync_assert(std::string msg) : std::runtime_error(msg) {};
+   unitsync_assert(std::string msg) : std::runtime_error(msg) {}
 };
 
 #define UNITSYNC_EXCEPTION(cond,msg) if(!(cond))\

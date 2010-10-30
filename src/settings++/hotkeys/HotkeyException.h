@@ -12,7 +12,7 @@ public:
 	HotkeyException( const wxString& message ) : m_message( message ) {}
 	virtual ~HotkeyException() throw() {}
 
-	const char* what() const throw() { return "Use HotkeyException::getMessage() instead"; };
+	const char* what() const throw() { return "Use HotkeyException::getMessage() instead"; }
 	const wxString& getMessage() const
 	{
 		return this->m_message;
