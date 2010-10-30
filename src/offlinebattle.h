@@ -10,7 +10,7 @@ class OfflineBattle : public IBattle
 			OfflineBattle ( );
 			OfflineBattle ( const OfflineBattle&  );
 			OfflineBattle& operator = ( const OfflineBattle&  );
-			~OfflineBattle (){};
+			~OfflineBattle (){}
 			User& GetMe() { return m_me; }
             const User& GetMe() const { return m_me; }
 			bool IsFounderMe() const { return true; }

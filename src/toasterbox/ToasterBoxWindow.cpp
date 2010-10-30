@@ -131,7 +131,7 @@ void ToasterBoxWindow::SetPopupBackgroundColor(int r, int g, int b)
   if(wxColor(r,g,b).Ok())
     SetBackgroundColour(wxColor(r,g,b));
   else
-    wxLogDebug(_T("invalid color"));
+	wxLogDebug(_T("%s: %d,%d,%d"), _T("invalid color"), r, g, b);
 }
 
 void ToasterBoxWindow::SetPopupTextColor(int r, int g, int b)
@@ -143,7 +143,7 @@ void ToasterBoxWindow::SetPopupTextColor(int r, int g, int b)
 //private functions
 void ToasterBoxWindow::ScrollUp()
 {
-  wxLogDebug(_T("Raising"));
+  wxLogDebug(_T("%s"), _T("Raising"));
   SetSize(dialogTop.x, dialogTop.y, GetSize().GetWidth(),GetSize().GetHeight()	);
   Show(true);
 //
@@ -169,7 +169,7 @@ void ToasterBoxWindow::ScrollUp()
 
 void ToasterBoxWindow::ScrollDown( )
 {
-  wxLogDebug(_T("Lowering"));
+  wxLogDebug(_T("%s"), _T("Lowering"));
 //
 //  //walk down the Y value
 //  int windowSize = GetSize().GetHeight();
@@ -188,7 +188,7 @@ void ToasterBoxWindow::ScrollDown( )
   if(parent2)
     parent2->Notify();
   else
-    wxLogDebug(_T("not valid parent"));
+	wxLogDebug(_T("%s"), _T("not valid parent"));
 }
 #include "../settings.h"
 void ToasterBoxWindow::DrawText()
