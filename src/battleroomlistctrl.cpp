@@ -528,7 +528,7 @@ int BattleroomListCtrl::CompareLobbyStatus( const DataType user1, const DataType
 	return 0;
 }
 
-int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle )
+int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2, const IBattle* battle )
 {
   int status1 = 0;
   if ( user1->BattleStatus().IsBot() )
@@ -539,7 +539,7 @@ int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2
   {
   	try
   	{
-    if ( &m_battle->GetFounder() != user1 )
+	if ( &battle->GetFounder() != user1 )
       status1 = 1;
 		}catch(...){}
     if ( user1->BattleStatus().ready )
@@ -559,7 +559,7 @@ int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2
   {
   	try
   	{
-    if ( &m_battle->GetFounder() != user2 )
+	if ( &battle->GetFounder() != user2 )
       status2 = 1;
 		}catch(...){}
     if ( user2->BattleStatus().ready )
