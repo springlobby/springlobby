@@ -62,10 +62,21 @@
 #define wxKEYBINDER_MULTICMD_PER_KEY
 #endif
 
+#ifdef __WXMSW__
+class wxMswKeyConverter
+{
+public:
+	static wxChar ConvertUsToLocal( const wxChar& c );
+	static wxChar ConvertLocalToUs( const wxChar& c );
+
+protected:
+	static HKL m_usLayout; //save a handle to the us layout for key conversion
+};
+#endif
+
 // defined later...
 class wxConfigBase;
 class wxKeyBinder;
-
 
 
 //! Identifies a keypress, that is a key binding.
@@ -233,7 +244,7 @@ public:
 
 public:     // static utilities
     static wxString NumpadKeyCodeToString(int keyCode);
-    static wxString KeyCodeToString(int keyCode);
+    static wxString KeyCodeToString(int keyCode, bool inputUs = false, bool outputUs = false);
     static wxString KeyModifierToString(int keyModifier);
 
     static int StringToKeyCode(const wxString &keyName);
@@ -1216,7 +1227,7 @@ public:
 
     //! Returns TRUE if this window is containing a valid key combination.
     bool IsValidKeyComb() const {
-        return !GetValue().IsEmpty() && GetValue().Last() != '+';
+        return !GetValue().IsEmpty(); //we allow '+' (&& GetValue().Last() != '+';)
     }
 
 private:

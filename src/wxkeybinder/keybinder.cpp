@@ -132,7 +132,34 @@ int wxCmd::m_nCmdTypes = 0;
 wxCmd::wxCmdType wxCmd::m_arrCmdType[];
 
 
+#ifdef __WXMSW__
+HKL wxMswKeyConverter::m_usLayout = 0;
 
+wxChar wxMswKeyConverter::ConvertUsToLocal( const wxChar& c )
+{
+	if ( !wxMswKeyConverter::m_usLayout )
+		wxMswKeyConverter::m_usLayout = LoadKeyboardLayout( _T("00000409"), 0 );
+
+	//spring uses us-keyboard layout symbols
+	//so convert those first to windows virtual keys
+	//and then back to characters with correct local layout
+	SHORT vkcode = ( 0x00FF & VkKeyScanEx( c, wxMswKeyConverter::m_usLayout ) );
+	return static_cast<wxChar>( MapVirtualKey( vkcode, MAPVK_VK_TO_CHAR ) );
+}
+
+wxChar wxMswKeyConverter::ConvertLocalToUs( const wxChar& c )
+{
+	if ( !wxMswKeyConverter::m_usLayout )
+		wxMswKeyConverter::m_usLayout = LoadKeyboardLayout( _T("00000409"), 0 );
+
+	//translate local keyboard layout back to us layout
+	//as used by spring
+	SHORT vkcode = ( 0x00FF & VkKeyScan( c ) );
+	return static_cast<wxChar>( MapVirtualKeyEx( vkcode, MAPVK_VK_TO_CHAR, wxMswKeyConverter::m_usLayout ) );
+}
+
+
+#endif
 
 // ----------------------------------------------------------------------------
 // wxKeyBind STATIC utilities
@@ -216,7 +243,8 @@ wxString wxKeyBind::NumpadKeyCodeToString(int keyCode)
     return res;
 }
 
-wxString wxKeyBind::KeyCodeToString(int keyCode)
+
+wxString wxKeyBind::KeyCodeToString(int keyCode, bool inputUs, bool outputUs)
 {
     wxString res;
 
@@ -351,7 +379,27 @@ wxString wxKeyBind::KeyCodeToString(int keyCode)
 #endif
 							)
         {
+#if defined(__WXMSW__)
+			UINT transkey = keyCode;
+			if ( inputUs )
+			{
+				transkey = wxMswKeyConverter::ConvertUsToLocal( keyCode );
+				wxChar k = wxMswKeyConverter::ConvertLocalToUs( transkey );
+				k++;
+			}
+
+			if ( transkey )
+				res << (wxChar)transkey;
+			else
+				res << (wxChar)keyCode; //error in translation, use current char
+#elif defined(__WXGTK__)
+			if ( outputUs )
+			{
+				//TODO: Get the source event in parameter list and convert scancode to us keyboard char
+			}
+#else
             res << (wxChar)keyCode;
+#endif
             break;
 
         } else if ((res=NumpadKeyCodeToString(keyCode)) != wxEmptyString) {
@@ -506,7 +554,17 @@ int wxKeyBind::GetKeyModifier(wxKeyEvent &event)
 wxString wxKeyBind::GetKeyStrokeString(wxKeyEvent &event)
 {
     // key stroke string = key modifiers (Ctrl, Alt or Shift) + key code
-	const wxString str = KeyCodeToString(event.GetKeyCode());
+	event.GetRawKeyCode();
+
+	bool inputUs = false;
+	bool outputUs = false;
+#if defined(__WXMSW__) && !wxCHECK_VERSION(3, 0, 0) //TODO: check version (3?). we will probably get already local ascii chars in that version.
+	inputUs = true;
+#elif defined( __WXGTK__ )
+	outputUs = true;
+#endif
+
+	const wxString str = KeyCodeToString(event.GetKeyCode(), inputUs);
 	int mods = GetKeyModifier(event);
 
 	//delete modifiers if the actual key is a modifier key

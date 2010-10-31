@@ -158,7 +158,7 @@ key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
 					continue;
 
 				tmpSorted[ keys->GetOrderIndex() ] = std::make_pair( 
-					KeynameConverter::spring2wxKeybinder( keys->GetStr(),true ),
+					KeynameConverter::spring2wxKeybinder( keys->GetStr(), true ),
 					cmd.GetName() );
 			}
 		}
@@ -430,7 +430,7 @@ key_binding_collection hotkey_panel::getProfilesFromSettings()
 			{
 				const wxString& cmd = sett().GetHotkey( profName, idx, keys.Item(j) );
 
-				const wxString& springKey = KeynameConverter::spring2wxKeybinder( keys.Item(j), true );
+				const wxString& springKey = keys.Item(j); //KeynameConverter::spring2wxKeybinder( keys.Item(j), true );
 				
 				long lIdx = 0;
 				if ( idx.ToLong( &lIdx ) == false )
