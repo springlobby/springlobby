@@ -24,8 +24,8 @@ class IconImageList : public wxImageList
     int GetBattleStatusIcon( const IBattle& battle ) const;
     wxString GetBattleStatus(const IBattle& battle) const;
 	int GetHostIcon( const bool& spectator = false ) const;
-	int GetColourIcon( const int& num ) const;
-    void SetColourIcon( const int& num, const wxColour& colour );
+	int GetColourIcon( const wxColour& colour ) const;
+	void SetColourIcon( const wxColour& colour );
     int GetSideIcon( const wxString& modname, int side );
 	int GetReadyIcon( const bool& spectator, const bool& ready, const unsigned int& sync, const bool& bot );
 
@@ -108,7 +108,7 @@ class IconImageList : public wxImageList
   protected:
     std::map<wxString, int> m_cached_side_icons;
     // why map? because i already included and didn't want to include more stuff, it's not time-critical code anyway
-	typedef std::map<unsigned int, unsigned int>
+	typedef std::map<wxString, unsigned int>
 		PlayerColourMap;
 	PlayerColourMap m_player_colour_icons;
 
