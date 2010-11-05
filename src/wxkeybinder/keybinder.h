@@ -43,6 +43,26 @@
 #define wxACCEL_ANY    0x0008   // hold any key down
 #define wxACCEL_META   0x0010   // virtual meta
 
+enum WXK_JOYSTICK_KEYS
+{
+	WXK_JOYDOWN = 0x0500,
+	WXK_JOYLEFT,
+	WXK_JOYRIGHT,
+	WXK_JOYUP,
+	WXK_JOYW,
+	WXK_JOYX,
+	WXK_JOYY,
+	WXK_JOYZ,
+	WXK_JOY0,
+	WXK_JOY1,
+	WXK_JOY2,
+	WXK_JOY3,
+	WXK_JOY4,
+	WXK_JOY5,
+	WXK_JOY6,
+	WXK_JOY7
+};
+
 // define the following to true to enable lots of debug messages
 #define wxKEYBINDER_DEBUG_MSG            0
 #if wxKEYBINDER_DEBUG_MSG

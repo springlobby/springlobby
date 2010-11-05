@@ -362,7 +362,38 @@ wxString wxKeyBind::KeyCodeToString(int keyCode, bool inputUs)
 	case WXK_PAUSE:
 		res << wxT("PAUSE"); break;			//pause added
 #endif
-
+	case WXK_JOYLEFT:
+		res << wxT("JOYLEFT"); break;
+	case WXK_JOYRIGHT:
+		res << wxT("JOYRIGHT"); break;
+	case WXK_JOYUP:
+		res << wxT("JOYUP"); break;
+	case WXK_JOYDOWN:
+		res << wxT("JOYDOWN"); break;
+	case WXK_JOYW:
+		res << wxT("JOYW"); break;
+	case WXK_JOYX:
+		res << wxT("JOYX"); break;
+	case WXK_JOYY:
+		res << wxT("JOYY"); break;
+	case WXK_JOYZ:
+		res << wxT("JOYY"); break;
+	case WXK_JOY0:
+		res << wxT("JOY0"); break;
+	case WXK_JOY1:
+		res << wxT("JOY1"); break;
+	case WXK_JOY2:
+		res << wxT("JOY2"); break;
+	case WXK_JOY3:
+		res << wxT("JOY3"); break;
+	case WXK_JOY4:
+		res << wxT("JOY4"); break;
+	case WXK_JOY5:
+		res << wxT("JOY5"); break;
+	case WXK_JOY6:
+		res << wxT("JOY6"); break;
+	case WXK_JOY7:
+		res << wxT("JOY7"); break;
     case WXK_CONTROL:
         res << wxT("CTRL"); break;
     case WXK_SHIFT:
@@ -485,6 +516,23 @@ int wxKeyBind::StringToKeyCode(const wxString &keyName)
 	if (keyName == wxT("= (numpad)")) return WXK_NUMPAD_EQUAL;
 	if (keyName == wxT("ENTER (numpad)")) return WXK_NUMPAD_ENTER;
 
+	if (keyName == wxT("JOYLEFT")) return WXK_JOYLEFT;
+	if (keyName == wxT("JOYRIGHT")) return WXK_JOYRIGHT;
+	if (keyName == wxT("JOYUP")) return WXK_JOYUP;
+	if (keyName == wxT("JOYDOWN")) return WXK_JOYDOWN;
+	if (keyName == wxT("JOYW")) return WXK_JOYW;
+	if (keyName == wxT("JOYX")) return WXK_JOYX;
+	if (keyName == wxT("JOYY")) return WXK_JOYY;
+	if (keyName == wxT("JOYZ")) return WXK_JOYZ;
+	if (keyName == wxT("JOY0")) return WXK_JOY0;
+	if (keyName == wxT("JOY1")) return WXK_JOY1;
+	if (keyName == wxT("JOY2")) return WXK_JOY2;
+	if (keyName == wxT("JOY3")) return WXK_JOY3;
+	if (keyName == wxT("JOY4")) return WXK_JOY4;
+	if (keyName == wxT("JOY5")) return WXK_JOY5;
+	if (keyName == wxT("JOY6")) return WXK_JOY6;
+	if (keyName == wxT("JOY7")) return WXK_JOY7;
+	
 	// it should be an ASCII key...
     return (int)keyName.GetChar(0);
 }
