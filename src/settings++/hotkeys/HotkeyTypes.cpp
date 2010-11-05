@@ -59,10 +59,6 @@ void key_binding::addKeySymSet( const wxString& name, const wxString& keyString 
 
 void key_binding::addKeySym( const wxString& name, const wxString& keyString )
 {
-/*	const wxString normName = name.Lower();
-	this->m_keySyms[normName] = keyString;
-	this->m_keySymsRev[KeynameConverter::convertHexValueToKey( keyString )] = normName;
-*/
 	const wxString normName = name.Lower();
 	const wxString normKey = KeynameConverter::normalizeSpringKey( keyString );
 	this->m_keySyms[normName] = normKey;

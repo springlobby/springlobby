@@ -86,7 +86,15 @@ wxString KeynameConverter::normalizeSpringKey( const wxString& springKey )
 	KeynameConverter::ModifierList modifiers = stringToKeyModifier( springKey );
 
 	wxString key = KeynameConverter::discardModifier( springKey );
-	key.MakeLower();
+
+	if ( key.StartsWith( wxT("0x") ) )
+	{
+		key = KeynameConverter::convertHexValueToKey( key );
+	}
+	else
+	{
+		key.MakeLower();
+	}
 
 	if ( key == wxT("escape") )
 	{
@@ -132,10 +140,10 @@ wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool r
 		}
 		else
 		{
-#endif
 			kbKey = key;
-#ifdef __WXMSW__
 		}
+#else
+			kbKey = key;
 #endif
 
 		if ( reverse )
