@@ -29,6 +29,7 @@
 #include "menuutils.h"
 #include "wx/config.h"
 #include "wx/tokenzr.h"
+#include "wx/menu.h"
 #include <list>
 #include "../settings++/hotkeys/CommandOrderDlg.h"
 
@@ -109,9 +110,6 @@ BEGIN_EVENT_TABLE(wxKeyConfigPanel, wxPanel)
     EVT_BUTTON(wxKEYBINDER_REMOVEALL_KEY_ID, wxKeyConfigPanel::OnRemoveAllKey)
     EVT_BUTTON(wxKEYBINDER_ADD_PROFILEBTN_ID, wxKeyConfigPanel::OnAddProfile)
     EVT_BUTTON(wxKEYBINDER_REMOVE_PROFILEBTN_ID, wxKeyConfigPanel::OnRemoveProfile)
-	EVT_LISTBOX_DCLICK(wxKEYBINDER_BINDINGS_BOX_ID, wxKeyConfigPanel::OnBindingDblClick)
-    EVT_CHECKBOX(wxKEYBINDER_ANY_MODIFIER_ID, wxKeyConfigPanel::OnAnyModifier)
-	EVT_CHECKBOX(wxKEYBINDER_META_MODIFIER_ID, wxKeyConfigPanel::OnMetaModifier)
 	
     // during idle cycles, wxKeyConfigPanel checks if the wxKeyMonitorTextCtrl
     // associated must be cleared...
@@ -1377,6 +1375,7 @@ bool wxKeyConfigPanel::Create(wxWindow* parent,
 //    main->SetSizeHints(this);
     SetSizerAndFit(main);
 
+	m_pBindings->Connect(wxEVT_CONTEXT_MENU, wxContextMenuEventHandler(wxKeyConfigPanel::OnContextMenuKeyList),NULL,this);  
     // set up the controls: the user of the panel must call one of the
     // ImportXXXX() functions to enable the use of the panel !!!!
     GetMainCtrl()->SetFocus();
@@ -1413,9 +1412,6 @@ void wxKeyConfigPanel::BuildCtrls()
     m_pAssignBtn = new wxButton(this, wxKEYBINDER_ASSIGN_KEY_ID, wxT("&Add"));
     m_pRemoveBtn = new wxButton(this, wxKEYBINDER_REMOVE_KEY_ID, wxT("&Remove"));
     m_pRemoveAllBtn = new wxButton(this, wxKEYBINDER_REMOVEALL_KEY_ID, wxT("Remove all"));
-
-	m_pAnyModCbx = new wxCheckBox(this, wxKEYBINDER_ANY_MODIFIER_ID, wxT("Any") );
-	m_pMetaModCbx = new wxCheckBox(this, wxKEYBINDER_META_MODIFIER_ID, wxT("Meta") );
 
     m_pCurrCmdField = new wxStaticText( this, -1, wxT(""), wxDefaultPosition,
         wxSize(-1, 20), wxSIMPLE_BORDER | wxST_NO_AUTORESIZE | wxALIGN_CENTRE);
@@ -1505,11 +1501,6 @@ wxSizer *wxKeyConfigPanel::BuildColumn2()
     wxBoxSizer *column2 = new wxBoxSizer(wxVERTICAL);
     column2->Add(new wxStaticText(this, -1, wxT("Current shortcuts:")), 0, wxGROW | wxALL, 5);
     column2->Add(m_pBindings, 2, wxGROW | wxRIGHT | wxLEFT, 5);
-
-	wxBoxSizer *extraMods = new wxBoxSizer(wxHORIZONTAL);
-    extraMods->Add(m_pAnyModCbx, 1, wxGROW | wxALL, 5);
-	extraMods->Add(m_pMetaModCbx, 1, wxGROW | wxALL, 5);
-	column2->Add(extraMods, 0, wxGROW);
 
     wxBoxSizer *removebtns = new wxBoxSizer(wxHORIZONTAL);
     removebtns->Add(m_pRemoveBtn, 1, wxGROW | wxALL, 5);
@@ -1930,26 +1921,6 @@ void wxKeyConfigPanel::UpdateButtons()
     // is the remove button to be enabled ?
     m_pRemoveBtn->Enable(m_pBindings->GetSelection() >= 0);
     m_pRemoveAllBtn->Enable(m_pBindings->GetCount() > 0);
-	m_pAnyModCbx->Enable(m_pBindings->GetSelection() >= 0);
-	m_pMetaModCbx->Enable(m_pBindings->GetSelection() >= 0);
-
-	const wxString& curSelKey = m_pBindings->GetStringSelection();
-	if ( curSelKey.size() > 0 )
-	{
-		bool state = false;
-		if ( curSelKey.StartsWith(wxT("Any+")) )
-		{
-			state = true;
-		}
-		this->m_pAnyModCbx->SetValue(state);
-
-		bool metaState = false;
-		if ( curSelKey.Contains(wxT("Meta+")) )
-		{
-			metaState = true;
-		}
-		this->m_pMetaModCbx->SetValue(metaState);
-	}	
 
 	bool enableAddBtn = false;
 	// is the assign button to be enabled ?
@@ -2220,16 +2191,16 @@ void wxKeyConfigPanel::OnBindingSelected(wxCommandEvent &)
     UpdateButtons();
 }
 
-void wxKeyConfigPanel::OnBindingDblClick(wxCommandEvent &)
+void wxKeyConfigPanel::OnBindingDblClick()
 {
     wxKBLogDebug(wxT("wxKeyConfigPanel::OnBindingDblClick"));
-
+/*
 	const int selIdx = m_pBindings->GetSelection();
 	if ( selIdx == wxNOT_FOUND )
 	{
 		return;
 	}
-
+*/
 	CmdSet cmds = m_kBinder.GetCmdBindsTo(m_pBindings->GetStringSelection());
 
 	assert( cmds.size() > 0 );
@@ -2356,31 +2327,21 @@ void wxKeyConfigPanel::OnProfileSelected(wxCommandEvent &e)
     }
 }
 
-void wxKeyConfigPanel::OnMetaModifier(wxCommandEvent &)
+void wxKeyConfigPanel::OnMetaModifier()
 {
-	if ( GetSelProfile()->IsNotEditable() )
-	{
-		//revert checkbox state
-		m_pMetaModCbx->SetValue( !m_pAnyModCbx->GetValue() );
-		
-        wxMessageBox(wxT("This profile cannot be changed."),
-                    wxT("Warning"));
-		return;
-	}
-
 	wxString shortcut = m_pBindings->GetStringSelection();
 
     wxCmd *sel = GetSelCmd();
 	wxKeyBind& kb = *sel->GetShortcut(shortcut);
 
 	int newMods = kb.GetModifiers();
-	if ( m_pMetaModCbx->IsChecked() )
+	if ( shortcut.StartsWith(wxT("Meta+") ) )
 	{
-		newMods |= wxACCEL_META;
+		newMods = ( newMods & ~wxACCEL_META );
 	}
 	else
 	{
-		newMods = ( newMods & ~wxACCEL_META );
+		newMods |= wxACCEL_META;		
 	}
 
 	kb.Set( newMods, kb.GetKeyCode(), kb.GetOrderIndex() );
@@ -2401,31 +2362,21 @@ void wxKeyConfigPanel::OnMetaModifier(wxCommandEvent &)
 #endif
 }
 
-void wxKeyConfigPanel::OnAnyModifier(wxCommandEvent &)
+void wxKeyConfigPanel::OnAnyModifier()
 {
-	if ( GetSelProfile()->IsNotEditable() )
-	{
-		//revert checkbox state
-		m_pAnyModCbx->SetValue( !m_pAnyModCbx->GetValue() );
-		
-        wxMessageBox(wxT("This profile cannot be changed."),
-                    wxT("Warning"));
-		return;
-	}
-
 	wxString shortcut = m_pBindings->GetStringSelection();
 
     wxCmd *sel = GetSelCmd();
 	wxKeyBind& kb = *sel->GetShortcut(shortcut);
 
 	int newMods = kb.GetModifiers();
-	if ( m_pAnyModCbx->IsChecked() )
+	if ( shortcut.StartsWith(wxT("Any+") ) )
 	{
-		newMods |= wxACCEL_ANY;
+		newMods = ( newMods & ~wxACCEL_ANY );
 	}
 	else
 	{
-		newMods = ( newMods & ~wxACCEL_ANY );
+		newMods |= wxACCEL_ANY;
 	}
 
 	kb.Set( newMods, kb.GetKeyCode(), kb.GetOrderIndex() );
@@ -2637,4 +2588,52 @@ void wxKeyConfigPanel::OnKeyPressed(wxCommandEvent &)
     // before this event, maybe that now there is one.... this means
     // that the "Assign" could be enabled...
     UpdateButtons();
+}
+
+void wxKeyConfigPanel::OnContextMenuKeyList(wxContextMenuEvent &)
+{
+	//TODO: select the item under the cursor so the user does not have first to select an item by left-clicking before the context menu
+	if ( GetSelProfile()->IsNotEditable() )
+	{
+        wxMessageBox(wxT("This profile cannot be changed."),
+                    wxT("Warning"));
+		return;
+	}
+
+	int selId = this->m_pBindings->GetSelection();
+	if ( selId == wxNOT_FOUND )
+		return;
+
+	const wxString& curSelKey = m_pBindings->GetStringSelection();
+
+	// create menu 
+	wxMenu menu;
+	wxMenuItem* pItemSort = menu.Append( wxKEYBINDER_SORT_EDIT_ID, wxT("Edit key priorities"), wxT("Specify the bind order for this key here"));
+
+	wxMenuItem* pItemAny = menu.AppendCheckItem( wxKEYBINDER_ANY_MODIFIER_ID, wxT("Any"), wxT("Toggles the key's Any-modifier"));
+	pItemAny->Check( curSelKey.StartsWith( wxT("Any+") ) );
+
+	wxMenuItem* pItemMeta = menu.AppendCheckItem( wxKEYBINDER_META_MODIFIER_ID, wxT("Meta"), wxT("Toggles the key's Meta-modifier"));
+	pItemMeta->Check( curSelKey.StartsWith( wxT("Meta+") ) );
+	
+	menu.Connect( wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxKeyConfigPanel::OnBindingsCmdMenuSelected, NULL, this);
+
+	// and then display
+	PopupMenu(&menu);
+}
+
+void wxKeyConfigPanel::OnBindingsCmdMenuSelected(wxCommandEvent &evt)
+{
+//	void *data=static_cast<wxMenu *>(evt.GetEventObject())->GetClientData();
+	switch(evt.GetId()) {
+		case wxKEYBINDER_ANY_MODIFIER_ID:
+			this->OnAnyModifier();
+			break;
+		case wxKEYBINDER_META_MODIFIER_ID:
+			this->OnMetaModifier();
+			break;
+		case wxKEYBINDER_SORT_EDIT_ID:
+			this->OnBindingDblClick();
+			break;
+	}
 }

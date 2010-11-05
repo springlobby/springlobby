@@ -1274,7 +1274,8 @@ private:
 #define wxKEYBINDER_ADD_PROFILEBTN_ID       wxKEYBINDER_BASEID+9
 #define wxKEYBINDER_REMOVE_PROFILEBTN_ID    wxKEYBINDER_BASEID+10
 #define wxKEYBINDER_ANY_MODIFIER_ID         wxKEYBINDER_BASEID+11
-#define wxKEYBINDER_META_MODIFIER_ID         wxKEYBINDER_BASEID+12
+#define wxKEYBINDER_META_MODIFIER_ID        wxKEYBINDER_BASEID+12
+#define wxKEYBINDER_SORT_EDIT_ID			wxKEYBINDER_BASEID+13
 
 #define wxKEYBINDER_SELECTED_POSTFIX        wxT(" (selected)")
 
@@ -1511,6 +1512,7 @@ public:     // miscellaneous
 	void ResetProfileBeenModifiedOrSelected();
 
 protected:      // event handlers
+	void OnContextMenuKeyList(wxContextMenuEvent &event);
 
     //! Updates the wxKeyMonitorTextCtrl control...
     void OnIdle(wxIdleEvent &event);
@@ -1519,7 +1521,6 @@ protected:      // event handlers
     void OnListCommandSelected(wxCommandEvent &event);
 
     void OnBindingSelected(wxCommandEvent &event);
-	void OnBindingDblClick(wxCommandEvent &);
     void OnProfileSelected(wxCommandEvent &event);
     void OnCategorySelected(wxCommandEvent &event);
 
@@ -1530,11 +1531,14 @@ protected:      // event handlers
     void OnRemoveAllKey(wxCommandEvent &event);
     void OnAddProfile(wxCommandEvent &event);
     void OnRemoveProfile(wxCommandEvent &event);
-	void OnAnyModifier(wxCommandEvent &event);
-	void OnMetaModifier(wxCommandEvent &);
+	void OnBindingsCmdMenuSelected(wxCommandEvent &event);
 
     //! Handles the notifications received from the wxKeyMonitorTextCtrl.
     void OnKeyPressed(wxCommandEvent &event);
+
+	void OnAnyModifier();
+	void OnMetaModifier();
+	void OnBindingDblClick();
 
 
 protected:      // build functions; these ones can be overridden to
@@ -1619,9 +1623,6 @@ protected:      // the subwindows of this dialog
     wxButton *m_pAssignBtn;
     wxButton *m_pRemoveBtn;
     wxButton *m_pRemoveAllBtn;
-
-	wxCheckBox *m_pAnyModCbx;
-	wxCheckBox *m_pMetaModCbx;
 
     // used when wxKEYBINDER_USE_TREECTRL is in the build flags
     wxTreeCtrl *m_pCommandsTree;
