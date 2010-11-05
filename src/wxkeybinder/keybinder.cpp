@@ -244,7 +244,7 @@ wxString wxKeyBind::NumpadKeyCodeToString(int keyCode)
 }
 
 
-wxString wxKeyBind::KeyCodeToString(int keyCode, bool inputUs, bool outputUs)
+wxString wxKeyBind::KeyCodeToString(int keyCode, bool inputUs)
 {
     wxString res;
 
@@ -557,11 +557,8 @@ wxString wxKeyBind::GetKeyStrokeString(wxKeyEvent &event)
 	event.GetRawKeyCode();
 
 	bool inputUs = false;
-	bool outputUs = false;
 #if defined(__WXMSW__) && !wxCHECK_VERSION(3, 0, 0) //TODO: check version (3?). we will probably get already local ascii chars in that version.
 	inputUs = true;
-#elif defined( __WXGTK__ )
-	outputUs = true;
 #endif
 
 	const wxString str = KeyCodeToString(event.GetKeyCode(), inputUs);

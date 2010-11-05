@@ -244,7 +244,7 @@ public:
 
 public:     // static utilities
     static wxString NumpadKeyCodeToString(int keyCode);
-    static wxString KeyCodeToString(int keyCode, bool inputUs = false, bool outputUs = false);
+    static wxString KeyCodeToString(int keyCode, bool inputUs = false);
     static wxString KeyModifierToString(int keyModifier);
 
     static int StringToKeyCode(const wxString &keyName);
