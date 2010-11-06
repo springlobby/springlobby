@@ -992,7 +992,7 @@ void wxKeyBinder::PrintOrdering() const
 
 void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
 {
-	PrintOrdering();
+	//PrintOrdering();
 	
 	typedef std::set<size_t>	IdxList;
 	IdxList idxList;
@@ -1079,7 +1079,7 @@ void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
 		}
 	}
 
-	PrintOrdering();
+	//PrintOrdering();
 }
 
 bool wxKeyBinder::Load(wxConfigBase *p, const wxString &key)
