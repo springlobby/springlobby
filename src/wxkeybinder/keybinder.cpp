@@ -1628,6 +1628,7 @@ void wxKeyConfigPanel::FillCommandTree()
 		}
 	}
 
+	m_pCommandsTree->SortChildren( rootid );
 
 	//try to select the previously selected command
 	SelectCommand( prevSelCmd );
