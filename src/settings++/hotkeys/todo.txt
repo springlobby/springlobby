@@ -1,4 +1,3 @@
--meta editor -> context menu?
 -commandline options to switch profiles
 
 -save profile to springsettings.conf even when same as spring default (?)
