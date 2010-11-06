@@ -230,7 +230,11 @@ wxString wxKeyBind::NumpadKeyCodeToString(int keyCode)
 }
 
 
-wxString wxKeyBind::KeyCodeToString(int keyCode, bool inputUs)
+wxString wxKeyBind::KeyCodeToString(int keyCode, bool 
+#if defined(__WXMSW__)
+                                                 inputUs
+#endif
+                                                  )
 {
     wxString res;
 

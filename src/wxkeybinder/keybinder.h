@@ -774,7 +774,7 @@ protected:
 public:
 
 	wxKeyBinder() : m_nNextOderIndex(1), m_nNextOderIndexAny(1) {}
-    wxKeyBinder(const wxKeyBinder &tocopy) { DeepCopy(tocopy); }
+	wxKeyBinder(const wxKeyBinder &tocopy) : wxObject() { DeepCopy(tocopy); }
     virtual ~wxKeyBinder() { DetachAll(); }
 
 
@@ -1081,7 +1081,7 @@ public:
         : m_strName(name), m_strDescription(desc),
 			m_notDeletable(notDeletable), m_notEditable(notEditable) {}
 
-    wxKeyProfile(const wxKeyProfile &tocopy)
+	wxKeyProfile(const wxKeyProfile &tocopy) : wxKeyBinder()
         { DeepCopy(tocopy); }
 
 	wxKeyProfile(const wxKeyProfile &tocopy,
