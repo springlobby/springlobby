@@ -2609,9 +2609,12 @@ void wxKeyConfigPanel::OnCommandsCmdMenuSelected(wxCommandEvent &evt)
 	}
 }
 
-void wxKeyConfigPanel::OnContextMenuKeyList(wxContextMenuEvent &)
+void wxKeyConfigPanel::OnContextMenuKeyList(wxContextMenuEvent &ev)
 {
-	//TODO: select the item under the cursor so the user does not have first to select an item by left-clicking before the context menu
+	//select the item under the cursor
+	wxPoint cPos = this->m_pBindings->ScreenToClient( ev.GetPosition() );
+	this->m_pBindings->Select( cPos.y / this->m_pBindings->GetCharHeight() );
+
 	if ( GetSelProfile()->IsNotEditable() )
 	{
         wxMessageBox(wxT("This profile cannot be changed."),
@@ -2627,14 +2630,15 @@ void wxKeyConfigPanel::OnContextMenuKeyList(wxContextMenuEvent &)
 
 	// create menu 
 	wxMenu menu;
-	menu.Append( wxKEYBINDER_SORT_EDIT_ID, wxT("Edit key priorities"), wxT("Specify the bind order for this key here"));
-
 	wxMenuItem* pItemAny = menu.AppendCheckItem( wxKEYBINDER_ANY_MODIFIER_ID, wxT("Any"), wxT("Toggles the key's Any-modifier"));
 	pItemAny->Check( curSelKey.StartsWith( wxT("Any+") ) );
 
 	wxMenuItem* pItemMeta = menu.AppendCheckItem( wxKEYBINDER_META_MODIFIER_ID, wxT("Meta"), wxT("Toggles the key's Meta-modifier"));
 	pItemMeta->Check( curSelKey.StartsWith( wxT("Meta+") ) );
 	
+	menu.AppendSeparator();
+	menu.Append( wxKEYBINDER_SORT_EDIT_ID, wxT("Edit key priorities"), wxT("Specify the bind order for this key here"));
+
 	menu.Connect( wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxKeyConfigPanel::OnBindingsCmdMenuSelected, NULL, this);
 
 	// and then display
