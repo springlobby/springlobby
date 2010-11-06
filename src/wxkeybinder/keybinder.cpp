@@ -1339,6 +1339,7 @@ bool wxKeyConfigPanel::Create(wxWindow* parent,
     if (!wxPanel::Create(parent, id, pos, size, style, name))
         return false;
 
+	m_eFilterState = FS_ALL;
     m_bProfileHasBeenModified = FALSE;
 	m_bProfileModifiedOrChanged = FALSE;
 
@@ -1396,11 +1397,13 @@ void wxKeyConfigPanel::BuildCtrls()
         // use a wxTreeCtrl to show the commands hierarchy
         m_pCommandsTree = new wxTreeCtrl(this, wxKEYBINDER_COMMANDS_BOX_ID, wxDefaultPosition,
                                     wxSize(-1, 200), wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
-    } else {
+		m_pCommandsTree->Connect(wxEVT_CONTEXT_MENU, wxContextMenuEventHandler(wxKeyConfigPanel::OnContextMenuCmdList),NULL,this);  
+	} else {
 
         // use a combobox + a listbox
         m_pCommandsList = new wxListBox(this, wxKEYBINDER_COMMANDS_BOX_ID, wxDefaultPosition,
                                     wxDefaultSize, (int)0, (const wxString *)NULL);
+		
         m_pCategories = new wxComboBox(this, wxKEYBINDER_CATEGORIES_ID,
                                 wxEmptyString, wxDefaultPosition, wxDefaultSize,
                                 0, NULL, wxCB_READONLY);
@@ -1567,25 +1570,58 @@ wxSizer *wxKeyConfigPanel::BuildMain(wxSizer *column1, wxSizer *column2, bool bA
 // ----------------------------------------------------------------------------
 void wxKeyConfigPanel::ImportRawList(const ControlMap& itemMap, const wxString &rootname)
 {
+	m_commandMap = itemMap;
+	m_sRootName = rootname;
+
+	FillCommandTree();
+}
+
+void wxKeyConfigPanel::FillCommandTree()
+{
 	if (!IsUsingTreeCtrl())
 	{
 		//not supported
 		return;
 	}
 
+	const wxString& prevSelCmd = this->GetSelCmdStr();
+
 	// do some std things...
     Reset();
 
-	AddRootIfMissing(rootname);
+	AddRootIfMissing(m_sRootName);
 
 	wxTreeItemId rootid = m_pCommandsTree->GetRootItem();
 
-	for( ControlMap::const_iterator iter = itemMap.begin(); iter != itemMap.end(); ++iter )
+	for( ControlMap::const_iterator iter = m_commandMap.begin(); iter != m_commandMap.end(); ++iter )
 	{
 		wxTreeItemId newId = m_pCommandsTree->AppendItem(rootid, iter->first);
 
 		for( CommandList::const_iterator iiter = iter->second.begin(); iiter != iter->second.end(); ++iiter )
 		{
+			bool add = false;
+			if ( this->m_eFilterState == FS_ALL )
+			{
+				add = true;
+			}
+			else if ( this->m_eFilterState == FS_HIDE_EMPTY )
+			{
+				if ( m_kBinder.ContainsCommand( iiter->first ) )
+					add = true;
+			}
+			else if ( this->m_eFilterState == FS_DIFF_ONLY )
+			{
+				const wxKeyProfile* pDefaultProf = GetProfile(0);
+
+				const wxKeyProfile* pCurProf = this->GetSelProfile();
+
+				if ( (*pCurProf->GetCommandByName( iiter->first )) != (*pDefaultProf->GetCommandByName( iiter->first )) )
+					add = true;
+			}
+
+			if ( !add )
+				continue;
+
 			wxExTreeItemData *treedata = new wxExTreeItemData(iiter->second);
 			m_pCommandsTree->AppendItem(newId, iiter->first, -1, -1, treedata );
 			m_pCommandsTree->SortChildren(newId);
@@ -1593,85 +1629,12 @@ void wxKeyConfigPanel::ImportRawList(const ControlMap& itemMap, const wxString &
 	}
 
 
-    // expand the root (just for aesthetic/comfort reasons)...
+	//try to select the previously selected command
+	SelectCommand( prevSelCmd );
+
+	// expand the root (just for aesthetic/comfort reasons)...
     m_pCommandsTree->Expand(m_pCommandsTree->GetRootItem());
 }
-
-/*
-void wxKeyConfigPanel::ImportMenuBarCmd(wxMenuBar *p, const wxString &rootname)
-{
-    // do some std things...
-    Reset();
-
-    // the wxKeyBinder class can easily generate a tree structure...
-    if (IsUsingTreeCtrl()) {
-
-        AddRootIfMissing(rootname);
-
-        wxMenuTreeWalker wlkr;
-        wlkr.FillTreeCtrl(p, m_pCommandsTree, rootname);
-
-        // expand the root (just for aesthetic/comfort reasons)...
-        m_pCommandsTree->Expand(m_pCommandsTree->GetRootItem());
-
-    } else {
-
-        wxMenuComboListWalker wlkr;
-        wlkr.FillComboListCtrl(p, m_pCategories);
-
-        // select the first item (just for aesthetic/comfort reasons)...
-        m_pCategories->SetSelection(0);
-
-        wxCommandEvent fake;
-        OnCategorySelected(fake);
-    }
-}
-*/
-void wxKeyConfigPanel::ImportKeyProfileCmd(const wxKeyProfile &toimport,
-                                           const wxString &rootname)
-{
-    // do some std things...
-    Reset();
-
-    if (IsUsingTreeCtrl()) {
-
-        AddRootIfMissing(rootname);
-        wxTreeItemId rootid = m_pCommandsTree->GetRootItem();
-
-        // scan all the commands of the key binder...
-        const wxCmdArray *arr = toimport.GetArray();
-        for (int i=0; i < (int)arr->GetCount(); i++) {
-
-            // to each tree branch attach a wxTreeItemData containing
-            // the ID of the menuitem which it represents...
-            wxExTreeItemData *treedata = new wxExTreeItemData(arr->Item(i)->GetId());
-
-            // create the new item in the tree ctrl
-            m_pCommandsTree->AppendItem(rootid, arr->Item(i)->GetName(), -1, -1, treedata);
-        }
-
-        // expand the root (just for aesthetic/comfort reasons)...
-        m_pCommandsTree->Expand(m_pCommandsTree->GetRootItem());
-
-    } else {
-
-        const wxCmdArray *arr = toimport.GetArray();
-        for (size_t i=0; i < arr->GetCount(); i++) {
-
-            // create a list of items containing as untyped client data
-            // (void*) the INT which is their ID...
-            m_pCommandsList->Append(arr->Item(i)->GetName(),
-                                    (void*)(arr->Item(i)->GetId()));
-        }
-
-        // in the categories combobox just add a generic title
-        m_pCategories->Append(wxT("Generic"));
-    }
-}
-
-
-
-
 
 // ----------------------------------------------------------------------------
 // wxKeyConfigPanel - MISCELLANEOUS functions
@@ -2314,6 +2277,8 @@ void wxKeyConfigPanel::OnProfileSelected(wxCommandEvent &e)
 		m_bProfileModifiedOrChanged = TRUE;
 	}
 
+	this->FillCommandTree();
+
     // call other event handlers
     if (IsUsingTreeCtrl()) {
 
@@ -2447,7 +2412,8 @@ void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
 
     // and update the list of the key bindings
     FillInBindings();
-    
+   	FillCommandTree();
+
 	//select the new key
 	this->SelectKeyString( m_pKeyField->GetValue() ); 
 
@@ -2478,6 +2444,7 @@ void wxKeyConfigPanel::OnRemoveKey(wxCommandEvent &)
     // and update the list of the key bindings
     FillInBindings();
     UpdateButtons();
+	FillCommandTree();
 
 #ifdef wxKEYBINDER_AUTO_SAVE
 	ApplyChanges();
@@ -2503,6 +2470,7 @@ void wxKeyConfigPanel::OnRemoveAllKey(wxCommandEvent &)
     // and update the list of the key bindings
     FillInBindings();
     UpdateButtons();
+	FillCommandTree();
 
 #ifdef wxKEYBINDER_AUTO_SAVE
 	ApplyChanges();
@@ -2590,6 +2558,57 @@ void wxKeyConfigPanel::OnKeyPressed(wxCommandEvent &)
     UpdateButtons();
 }
 
+void wxKeyConfigPanel::OnContextMenuCmdList(wxContextMenuEvent &)
+{
+	wxMenu menu;
+	wxMenuItem* pItemAll = menu.AppendRadioItem( wxKEYBINDER_FILTER_ALL_ID, wxT("Show all commands"), wxT(""));
+	wxMenuItem* pItemHideEmpty = menu.AppendRadioItem( wxKEYBINDER_FILTER_HIDE_EMPTY_ID, wxT("Hide empty commands"), wxT(""));
+	wxMenuItem* pItemOnlyDiff = menu.AppendRadioItem( wxKEYBINDER_FILTER_ONLY_DIFF_ID, wxT("Show only differences"), wxT("Only shows commands that got changed in comparison to the default bindigns"));
+	
+	switch( this->m_eFilterState )
+	{
+	case FS_ALL:
+		pItemAll->Check(true);
+		break;
+	case FS_HIDE_EMPTY:
+		pItemHideEmpty->Check(true);
+		break;
+	case FS_DIFF_ONLY:
+		pItemOnlyDiff->Check(true);
+		break;
+	}
+
+	menu.AppendSeparator();
+	wxMenuItem* pItemMeta = menu.Append( wxKEYBINDER_META_EDIT_ID, wxT("Edit Meta key"), wxT("Change your Meta-key here"));
+	if ( GetSelProfile()->IsNotEditable() )
+		pItemMeta->Enable(false);
+	
+	menu.Connect( wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxKeyConfigPanel::OnCommandsCmdMenuSelected, NULL, this);
+
+	// and then display
+	PopupMenu(&menu);
+}
+
+void wxKeyConfigPanel::OnCommandsCmdMenuSelected(wxCommandEvent &evt)
+{
+	switch(evt.GetId()) {
+		case wxKEYBINDER_FILTER_ALL_ID:
+			this->m_eFilterState = FS_ALL;
+			this->FillCommandTree();
+			break;
+		case wxKEYBINDER_FILTER_HIDE_EMPTY_ID:
+			this->m_eFilterState = FS_HIDE_EMPTY;
+			this->FillCommandTree();
+			break;
+		case wxKEYBINDER_FILTER_ONLY_DIFF_ID:
+			this->m_eFilterState = FS_DIFF_ONLY;
+			this->FillCommandTree();
+			break;
+		case wxKEYBINDER_META_EDIT_ID:
+			break;
+	}
+}
+
 void wxKeyConfigPanel::OnContextMenuKeyList(wxContextMenuEvent &)
 {
 	//TODO: select the item under the cursor so the user does not have first to select an item by left-clicking before the context menu
@@ -2608,7 +2627,7 @@ void wxKeyConfigPanel::OnContextMenuKeyList(wxContextMenuEvent &)
 
 	// create menu 
 	wxMenu menu;
-	wxMenuItem* pItemSort = menu.Append( wxKEYBINDER_SORT_EDIT_ID, wxT("Edit key priorities"), wxT("Specify the bind order for this key here"));
+	menu.Append( wxKEYBINDER_SORT_EDIT_ID, wxT("Edit key priorities"), wxT("Specify the bind order for this key here"));
 
 	wxMenuItem* pItemAny = menu.AppendCheckItem( wxKEYBINDER_ANY_MODIFIER_ID, wxT("Any"), wxT("Toggles the key's Any-modifier"));
 	pItemAny->Check( curSelKey.StartsWith( wxT("Any+") ) );
