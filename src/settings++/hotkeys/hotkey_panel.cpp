@@ -196,7 +196,7 @@ key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
 	//add keysyms
 	binding.setKeySyms( profile.GetKeySyms() );
 	binding.setKeySymsSet( profile.GetKeySymsSet() );
-	binding.setMetaKey( profile.GetMetaKey() );
+	binding.setMetaKey( KeynameConverter::spring2wxKeybinder( profile.GetMetaKey(), true ) );
 
 	return binding;
 }
@@ -341,7 +341,7 @@ void hotkey_panel::putKeybindingsToProfile( wxKeyProfile& profile, const key_bin
 
 	profile.SetKeySyms( bindings.getKeySyms() );
 	profile.SetKeySymsSet( bindings.getKeySymsSet() );
-	profile.SetMetaKey( bindings.getMetaKey() );
+	profile.SetMetaKey( KeynameConverter::spring2wxKeybinder( bindings.getMetaKey() ) );
 }
 
 wxString hotkey_panel::getNextFreeProfileName()

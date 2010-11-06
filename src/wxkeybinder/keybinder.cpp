@@ -32,6 +32,7 @@
 #include "wx/menu.h"
 #include <list>
 #include "../settings++/hotkeys/CommandOrderDlg.h"
+#include "../settings++/hotkeys/ChangeMetaDlg.h"
 
 
 // class definition for wxKeyProfile
@@ -2559,6 +2560,11 @@ void wxKeyConfigPanel::OnCommandsCmdMenuSelected(wxCommandEvent &evt)
 			this->FillCommandTree();
 			break;
 		case wxKEYBINDER_META_EDIT_ID:
+			ChangeMetaDlg dlg( GetSelProfile()->GetMetaKey(), this );
+			if ( dlg.ShowModal() )
+			{
+				GetSelProfile()->SetMetaKey( dlg.GetNewMetaKey() );
+			}
 			break;
 	}
 }
