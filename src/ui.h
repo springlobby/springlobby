@@ -110,6 +110,7 @@ class Ui : public SL::NonCopyable
     void OnUserOffline( User& user );
     void OnUserStatusChanged( User& user );
     void OnUserSaid( User& user, const wxString& message, bool me = false );
+	void OnUserSaidEx( User& user, const wxString& action, bool me = false );
 
     void OnUnknownCommand( Server& server, const wxString& command, const wxString& params );
     void OnMotd( Server& server, const wxString& message );

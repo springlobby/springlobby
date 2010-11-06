@@ -291,7 +291,7 @@ wxString AddSelectionCmdDlg::getCommandString() const
 	return this->getSourceString() + this->getConditionsAndSelectString();
 }
 
-void AddSelectionCmdDlg::OnButtonAddClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnButtonAddClick( wxCommandEvent& /*event*/ )
 {
 	const wxString valResult = this->validateInputFields();
 	
@@ -322,210 +322,210 @@ void AddSelectionCmdDlg::controlCheckBoxEnable( wxCheckBox* pCheckbClicked, wxCh
 	}
 }
 
-void AddSelectionCmdDlg::OnRadioBtnSrcMapClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnRadioBtnSrcMapClick( wxCommandEvent& /*event*/ )
 {
 	this->m_textCtrlSrcMouseDist->Enable( false );
 	this->m_checkBoxSrcDistCyl->Enable( false );
 }
 
-void AddSelectionCmdDlg::OnRadioBtnSrcViewClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnRadioBtnSrcViewClick( wxCommandEvent& /*event*/ )
 {
 	this->m_textCtrlSrcMouseDist->Enable( false );
 	this->m_checkBoxSrcDistCyl->Enable( false );
 }
 
-void AddSelectionCmdDlg::OnRadioBtnSrcSelClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnRadioBtnSrcSelClick( wxCommandEvent& /*event*/ )
 {
 	this->m_textCtrlSrcMouseDist->Enable( false );
 	this->m_checkBoxSrcDistCyl->Enable( false );
 }
 
-void AddSelectionCmdDlg::OnRadioBtnSrcDistClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnRadioBtnSrcDistClick( wxCommandEvent& /*event*/ )
 {
 	this->m_textCtrlSrcMouseDist->Enable( true );
 	this->m_checkBoxSrcDistCyl->Enable( true );
 }
 
-void AddSelectionCmdDlg::OnRadioBtnSelAllClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnRadioBtnSelAllClick( wxCommandEvent& /*event*/ )
 {
 	this->m_textCtrlSelCount->Enable( false );
 	this->m_textCtrlSelPerc->Enable( false );
 }
 
-void AddSelectionCmdDlg::OnRadioBtnSelCountClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnRadioBtnSelCountClick( wxCommandEvent& /*event*/ )
 {
 	this->m_textCtrlSelCount->Enable( true );
 	this->m_textCtrlSelPerc->Enable( false );
 }
 
-void AddSelectionCmdDlg::OnRadioBtnSelOneClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnRadioBtnSelOneClick( wxCommandEvent& /*event*/ )
 {
 	this->m_textCtrlSelCount->Enable( false );
 	this->m_textCtrlSelPerc->Enable( false );
 }
 
-void AddSelectionCmdDlg::OnRadioBtnSelPercClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnRadioBtnSelPercClick( wxCommandEvent& /*event*/ )
 {
 	this->m_textCtrlSelCount->Enable( false );
 	this->m_textCtrlSelPerc->Enable( true );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondRelHealthIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondRelHealthIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxRelHealthInc, this->m_checkBoxRelHealthEx, m_textCtrlRelHealth );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondRelHealthExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondRelHealthExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxRelHealthEx, this->m_checkBoxRelHealthInc, m_textCtrlRelHealth );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondWeapRangeIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondWeapRangeIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxWeapRangeInc, this->m_checkBoxWeapRangeEx, m_textCtrlWeapRange );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondWeapRangeExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondWeapRangeExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxWeapRangeEx, this->m_checkBoxWeapRangeInc, m_textCtrlWeapRange );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondAbsHealthIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondAbsHealthIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxAbsHealthInc, this->m_checkBoxAbsHealthEx, m_textCtrlAbsHealth );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondAbsHealthExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondAbsHealthExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxAbsHealthEx, this->m_checkBoxAbsHealthInc, m_textCtrlAbsHealth );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondNameIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondNameIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxNameInc, this->m_checkBoxNameEx, m_textCtrlName );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondNameExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondNameExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxNameEx, this->m_checkBoxNameInc, m_textCtrlName );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondCategoryIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondCategoryIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxCategoryInc, this->m_checkBoxCategoryEx, m_textCtrlCategory );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondCategoryExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondCategoryExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxCategoryEx, this->m_checkBoxCategoryInc, m_textCtrlCategory );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondBuilderIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondBuilderIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxBuilderInc, this->m_checkBoxBuilderEx, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondBuilderExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondBuilderExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxBuilderEx, this->m_checkBoxBuilderInc, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondBuildingIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondBuildingIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxBuildingInc, this->m_checkBoxBuildingEx, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondBuildingExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondBuildingExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxBuildingEx, this->m_checkBoxBuildingInc, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondComIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondComIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxComInc, this->m_checkBoxComEx, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondComExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondComExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxComEx, this->m_checkBoxComInc, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondTypeSelIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondTypeSelIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxTypeSelInc, this->m_checkBoxTypeSelEx, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondTypeSelExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondTypeSelExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxTypeSelEx, this->m_checkBoxTypeSelInc, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondAirIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondAirIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxAirInc, this->m_checkBoxAirEx, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondAirExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondAirExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxAirEx, this->m_checkBoxAirInc, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondWeaponsIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondWeaponsIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxWeaponsInc, this->m_checkBoxWeaponsEx, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondWeaponsExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondWeaponsExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxWeaponsEx, this->m_checkBoxWeaponsInc, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondIdleIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondIdleIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxIdleInc, this->m_checkBoxIdleEx, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondIdleExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondIdleExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxIdleEx, this->m_checkBoxIdleInc, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondRadarIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondRadarIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxRadarInc, this->m_checkBoxRadarEx, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondRadarExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondRadarExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxRadarEx, this->m_checkBoxRadarInc, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondTransIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondTransIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxTransInc, this->m_checkBoxTransEx, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondTransExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondTransExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxTransEx, this->m_checkBoxTransInc, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondHotkeyIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondHotkeyIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxHotkeyInc, this->m_checkBoxHotkeyEx, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondHotkeyExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondHotkeyExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxHotkeyEx, this->m_checkBoxHotkeyInc, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondWaitingIncClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondWaitingIncClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxWaitingInc, this->m_checkBoxWaitingEx, NULL );
 }
 
-void AddSelectionCmdDlg::OnCheckBoxCondWaitingExClick( wxCommandEvent& )
+void AddSelectionCmdDlg::OnCheckBoxCondWaitingExClick( wxCommandEvent& /*event*/ )
 {
 	AddSelectionCmdDlg::controlCheckBoxEnable( this->m_checkBoxWaitingEx, this->m_checkBoxWaitingInc, NULL );
 }

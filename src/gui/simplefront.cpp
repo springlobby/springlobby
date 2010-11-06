@@ -37,8 +37,8 @@ m_skirmish( 0 )
 //	m_sp->SetDefault();
 	m_button_sizer->Add( m_sp, 0, wxALL, 5 );
 
-	m_mp = new wxGradientButton( this, wxID_ANY, _("Multiplayer"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_button_sizer->Add( m_mp, 0, wxALL, 5 );
+//	m_mp = new wxGradientButton( this, wxID_ANY, _("Multiplayer"), wxDefaultPosition, wxDefaultSize, 0 );
+//	m_button_sizer->Add( m_mp, 0, wxALL, 5 );
 
 	m_settings = new wxGradientButton( this, wxID_ANY, _("Settings"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_button_sizer->Add( m_settings, 0, wxALL, 5 );
@@ -79,7 +79,7 @@ m_skirmish( 0 )
 
 	// Connect Events
 	m_sp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnSingleplayer ), NULL, this );
-	m_mp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnMultiplayer ), NULL, this );
+//	m_mp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnMultiplayer ), NULL, this );
 	m_settings->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnSettings ), NULL, this );
 	m_help->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnHelp ), NULL, this );
 	m_exit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnExit ), NULL, this );
@@ -95,7 +95,7 @@ m_skirmish( 0 )
 SimpleFront::~SimpleFront()
 {
     m_sp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnSingleplayer ), NULL, this );
-	m_mp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnMultiplayer ), NULL, this );
+//	m_mp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnMultiplayer ), NULL, this );
 	m_settings->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnSettings ), NULL, this );
 	m_help->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnHelp ), NULL, this );
 	m_exit->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SimpleFront::OnExit ), NULL, this );

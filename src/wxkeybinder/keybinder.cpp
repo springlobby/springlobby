@@ -972,7 +972,7 @@ void wxKeyBinder::PrintOrdering() const
 		for( int j=0; j < curr.GetShortcutCount(); ++j )
 		{
 			wxKeyBind& kb = *curr.GetShortcut( j );
-			wxLogError( wxT("%d - %s - %s"), kb.GetOrderIndex(), curr.GetName(), kb.GetStr() );
+			wxLogError( wxT("%d - %s - %s"), kb.GetOrderIndex(), curr.GetName().c_str(), kb.GetStr().c_str() );
 		}
 	}
 	wxLogError( wxT("-----------------") );

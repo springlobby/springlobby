@@ -21,18 +21,25 @@ bool wxBackgroundBitmap::ProcessEvent(wxEvent &Event)
     }
     else if(Event.GetEventType() == wxEVT_PAINT)
     {
+
         bool TransactionIsOk = false;
         if(Bitmap.IsOk())
         {
             wxWindow * TempWindow = wxDynamicCast(Event.GetEventObject(),wxWindow);
             if(TempWindow)
             {
-                wxBufferedPaintDC DC(TempWindow);
+                wxAutoBufferedPaintDC DC(TempWindow);
                 int w, h;
                 TempWindow->GetClientSize(&w, &h);
-                wxImage TempImage = Bitmap.ConvertToImage();
-                TempImage.Rescale(w,h);
-                DC.DrawBitmap(wxBitmap(TempImage), 0, 0, false);
+				wxSize current( w,h);
+				if ( current != m_lastSize )
+				{
+					wxImage TempImage = Bitmap.ConvertToImage();
+					TempImage.Rescale(w,h);
+					Bitmap = wxBitmap( TempImage );
+				}
+				DC.DrawBitmap(Bitmap, 0, 0, false);
+				m_lastSize = current;
                 TransactionIsOk = true;
             }
         }
@@ -64,3 +71,4 @@ bool wxBackgroundBitmap::ProcessEvent(wxEvent &Event)
 }
 
 #endif
+

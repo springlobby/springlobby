@@ -10,6 +10,7 @@ SET(springlobbySrc
 	src/utils/activitynotice.cpp
 	src/chatpanelmenu.cpp
 	src/gui/gradientpanel.cpp
+	src/gui/toasternotification.cpp
 	src/gui/wxgradientbutton.cpp
 	src/gui/skirmish_dialog.cpp
 	src/gui/wxbackgroundimage.cpp
@@ -212,6 +213,8 @@ set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )
 
 IF( WIN32 )
 	LIST( APPEND SLSharedWithSettings src/stacktrace.c )
+	#snarl's currently not functional on win
+	#LIST( APPEND springlobbySrc src/gui/snarl/SnarlInterface.cpp src/gui/snarlnotification.cpp)
 ELSE( WIN32 )
 	LIST( APPEND SLSharedWithSettings src/stacktrace.cpp )
 ENDIF( WIN32 )

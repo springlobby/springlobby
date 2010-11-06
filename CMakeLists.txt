@@ -189,6 +189,16 @@ ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF( OPTION_TORRENT_SYSTEM )
 
+IF( NOT WIN32)
+	pkg_check_modules( LIBNOTIFY libnotify )
+	IF( LIBNOTIFY_FOUND )
+		INCLUDE_DIRECTORIES( ${LIBNOTIFY_INCLUDE_DIRS} )
+		LINK_LIBRARIES( ${LIBNOTIFY_LIBRARIES} )
+		ADD_DEFINITIONS( -DHAVE_LIBNOTIFY )
+	ENDIF( LIBNOTIFY_FOUND )
+ENDIF( NOT WIN32)
+
+
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
@@ -239,7 +249,7 @@ IF(WIN32)
 ENDIF(WIN32)
 
 #only enable if debugging is necessary
-ADD_EXECUTABLE(versiontest WIN32 MACOSX_BUNDLE src/versiontest.cpp )
+#ADD_EXECUTABLE(versiontest WIN32 MACOSX_BUNDLE src/versiontest.cpp )
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
 TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} )
@@ -287,4 +297,4 @@ add_custom_target( version
 add_dependencies( distcheck dist )
 add_dependencies( springlobby alure )
 add_dependencies( springlobby version )
-add_dependencies( versiontest version )
+#add_dependencies( versiontest version )
