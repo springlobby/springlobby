@@ -409,11 +409,6 @@ wxString wxKeyBind::KeyCodeToString(int keyCode, bool inputUs)
 				res << (wxChar)transkey;
 			else
 				res << (wxChar)keyCode; //error in translation, use current char
-#elif defined(__WXGTK__)
-			if ( outputUs )
-			{
-				//TODO: Get the source event in parameter list and convert scancode to us keyboard char
-			}
 #else
             res << (wxChar)keyCode;
 #endif
