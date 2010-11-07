@@ -982,7 +982,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
         ai = GetSentenceParam( params );
         if ( ai.IsEmpty() ) {
-			wxLogWarning( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id );
+            wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
             ai = _T("INVALID|INVALID");
         }
         if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
@@ -1382,7 +1382,7 @@ void TASServer::ModeratorSetChannelKey( const wxString& channel, const wxString&
 
 void TASServer::ModeratorMute( const wxString& channel, const wxString& nick, int duration, bool byip )
 {
-	SendCmd( _T("MUTE"), (wxFormat( _T("%s %s %d") ) % channel % nick % duration ) + (byip?_T(" ip"):_T("") ) );
+    SendCmd( _T("MUTE"), channel + _T(" ") + nick + _T(" ") + wxString::Format( _T("%d"), duration) + (byip?_T(" ip"):_T("") )  );
 }
 
 
@@ -1467,11 +1467,11 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     }*/
     wxLogMessage(_T("hosting with nat type %d"),nat_type);
 
-	wxString cmd = wxFormat( _T("0 %d ") ) % nat_type;
+    wxString cmd = wxString::Format( _T("0 %d "), nat_type );
     cmd += (password.IsEmpty())?_T("*"):password;
-	cmd += wxFormat( _T(" %d %d ") ) % bo.port % bo.maxplayers;
+    cmd += wxString::Format( _T(" %d %d "), bo.port, bo.maxplayers );
     cmd += MakeHashSigned( bo.modhash );
-	cmd += wxFormat( _T(" %d ") ) % bo.rankneeded;
+    cmd += wxString::Format( _T(" %d "), bo.rankneeded );
     cmd += MakeHashSigned( bo.maphash ) + _T(" ");
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
@@ -1557,7 +1557,7 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
     {
         wxLogMessage( _T("battle doesnt exist") );
     }
-    //SendCmd( _T("JOINBATTLE"), wxFormat( _T("%d"), battleid ) + _T(" ") + password );
+    //SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d"), battleid ) + _T(" ") + password );
 }
 
 
@@ -1567,10 +1567,7 @@ void TASServer::FinalizeJoinBattle()
     {
 		srand ( time(NULL) );
 		wxString randomScriptPassword = wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF);
-		SendCmd( _T("JOINBATTLE"), wxFormat( _T("%d %s %s") )
-											% m_finalize_join_battle_id
-											% m_finalize_join_battle_pw
-											% randomScriptPassword );
+		SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d %s %s"), m_finalize_join_battle_id, m_finalize_join_battle_pw.c_str(), randomScriptPassword.c_str()  ) );
         m_do_finalize_join_battle=false;
     }
 }
