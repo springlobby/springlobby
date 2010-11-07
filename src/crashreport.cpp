@@ -109,7 +109,7 @@ void SpringDebugReport::AddVFSFile( const wxString& fn, const wxString& id )
 {
 	wxString dir = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
 	AddFile( dir + fn, id );
-	return;
+	return;//TODO: wtf is there a return here?
 	wxArrayString res = usync().FindFilesVFS( fn );
 	if ( res.Count() > 0 ) {
 		AddFile( res[0], id );

@@ -44,7 +44,7 @@ class PlaybackList : public wxEvtHandler
 
 
   protected:
-    PlaybackList() : m_fails(0) {};
+	PlaybackList() : m_fails(0) {}
 
     playback_map_t m_replays;
 

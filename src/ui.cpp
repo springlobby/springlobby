@@ -576,7 +576,8 @@ void Ui::OnUpdate( int mselapsed )
             mw().ShowTab( sett().GetStartTab() );
         }
 #ifdef __WXMSW__
-        if ( sett().GetAutoUpdate() )
+		//don't ask for updates on first run, that's a bit much for a newbie
+		if ( sett().GetAutoUpdate() && !sett().IsFirstRun() )
             CheckForUpdates();
 #endif
     }
@@ -724,7 +725,7 @@ void Ui::ConnectionFailurePrompt()
 		}
 		case wxID_NO: // switch to next server in the list
 		{
-			wxString m_last_used_backup_server = GetNextServer();
+			m_last_used_backup_server = GetNextServer();
 			wxString current_server = sett().GetDefaultServer();
 			sett().SetDefaultServer( m_last_used_backup_server );// temp set backup server as default
 			Connect();
@@ -1087,7 +1088,7 @@ void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
 }
 
 
-void Ui::OnUserLeftBattle( IBattle& battle, User& user )
+void Ui::OnUserLeftBattle( IBattle& battle, User& user, bool isbot )
 {
     if ( m_main_win == 0 ) return;
     user.SetSideiconIndex( -1 ); //just making sure he's not running around with some icon still set
@@ -1098,15 +1099,15 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user )
         if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle )
         {
             mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
-						OnBattleInfoUpdated( std::make_pair(&battle,wxString()) );
-			if ( &user == &serverSelector().GetServer().GetMe() )
+		 OnBattleInfoUpdated( std::make_pair(&battle,wxString()) );
+		if ( &user == &serverSelector().GetServer().GetMe() )
             {
                 mw().GetJoinTab().LeaveCurrentBattle();
             }
         }
     }
     catch (...) {}
-    if ( user.BattleStatus().IsBot() ) return;
+    if ( isbot ) return;
 	for ( int i = 0; i < serverSelector().GetServer().GetNumChannels(); i++ )
     {
 		Channel& chan = serverSelector().GetServer().GetChannel( i );
@@ -1443,3 +1444,4 @@ void Ui::CheckForUpdates()
         customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date") );
     */
 }
+

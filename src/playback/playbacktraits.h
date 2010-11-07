@@ -1,7 +1,7 @@
 #ifndef PLAYBACKTRAITS_H_INCLUDED
 #define PLAYBACKTRAITS_H_INCLUDED
 
-class Replay;
+struct Replay;
 class ReplayList;
 
 class ReplayTraits {
@@ -15,7 +15,7 @@ class ReplayTraits {
         static const bool IsReplayType = true;
 };
 
-class Savegame;
+struct Savegame;
 class SavegameList;
 
 class SavegameTraits {

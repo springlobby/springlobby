@@ -561,7 +561,7 @@ void BattleRoomTab::UpdateUser( User& user )
 		m_ready_chk->Enable();
 	}
 
-	icons().SetColourIcon( bs.team, user.BattleStatus().colour );
+	icons().SetColourIcon( user.BattleStatus().colour );
 	m_color_sel->SetColor( user.BattleStatus().colour );
 }
 

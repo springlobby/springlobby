@@ -76,8 +76,6 @@
 #include "images/no2_icon.png.h"
 #include "images/warning_small.png.h"
 
-#include "images/colourbox.xpm"
-
 #include "images/unknown_flag.xpm"
 
 #include "images/channel_options.xpm"
@@ -170,9 +168,9 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
 
     ICON_CHANNEL_OPTIONS = Add( wxBitmap(channel_options_xpm) );
 
-    SetColourIcon( 0, wxColour( 255,   0,   0 ) );
-    SetColourIcon( 1, wxColour(   0, 255,   0 ) );
-    SetColourIcon( 2, wxColour(   0,   0, 255 ) );
+//	SetColourIcon( wxColour( 255,   0,   0 ) );
+//	SetColourIcon( wxColour(   0, 255,   0 ) );
+//	SetColourIcon( wxColour(   0,   0, 255 ) );
 
 
   //ICON_FIXCOLOURS_PALETTE = Add( wxBitmap(fixcolours_palette_xpm) );
@@ -338,10 +336,15 @@ wxString IconImageList::GetBattleStatus( const IBattle& battle ) const
     // return _T("Game has unknown status");
 }
 
-
-int IconImageList::GetColourIcon( const int& num )  const
+wxString getColourIconKey( const wxColour& colour  )
 {
-	PlayerColourMap::const_iterator it = m_player_colour_icons.find( num );
+	return colour.GetAsString(wxC2S_HTML_SYNTAX).AfterFirst('#');
+}
+
+int IconImageList::GetColourIcon( const wxColour& colour )  const
+{
+	const wxString key = getColourIconKey(colour);
+	PlayerColourMap::const_iterator it = m_player_colour_icons.find( key );
 	if ( it != m_player_colour_icons.end() && it->second != 0 ) return it->second;
     else return -1;
 }
@@ -353,22 +356,11 @@ int IconImageList::GetHostIcon( const bool& spectator ) const
 }
 
 
-void IconImageList::SetColourIcon( const int& num, const wxColour& colour )
+void IconImageList::SetColourIcon( const wxColour& colour )
 {
-    wxImage img( colourbox_xpm );
-
-    img.Replace( 1, 1, 1, colour.Red(), colour.Green(), colour.Blue() );
-
-    int r,g,b;
-    r = colour.Red()+80;
-    g = colour.Green()+80;
-    b = colour.Blue()+80;
-    img.Replace( 2, 2, 2, r>255?255:r, g>255?255:g, b>255?255:b );
-
-    /*r = colour.Red()-60; g = colour.Green()-60; b = colour.Blue()-60;
-    img.Replace( 200, 200, 200, r<0?0:r, g<0?0:g, b<0?0:b );*/
-    if ( m_player_colour_icons[num] != 0 ) Replace( m_player_colour_icons[num], wxBitmap( img ) );
-    else m_player_colour_icons[num] = Add( wxBitmap( img ) );
+	const wxString key = getColourIconKey(colour);
+	if ( m_player_colour_icons.find( key ) == m_player_colour_icons.end() )
+		m_player_colour_icons[key] = Add( getColourIcon(colour) );
 }
 
 

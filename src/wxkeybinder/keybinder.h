@@ -714,7 +714,7 @@ protected:
 public:
 
 	wxKeyBinder() : m_nNextOderIndex(1), m_nNextOderIndexAny(1) {}
-    wxKeyBinder(const wxKeyBinder &tocopy) { DeepCopy(tocopy); }
+	wxKeyBinder(const wxKeyBinder &tocopy):wxObject(tocopy) { DeepCopy(tocopy); }
     virtual ~wxKeyBinder() { DetachAll(); }
 
 
@@ -836,13 +836,13 @@ public:     // miscellaneous
         const bool anyMod = ( wxKeyBind::StringToKeyModifier( key ) & wxACCEL_ANY ) != 0;
 		wxCmd *p = GetCmd(id);
 		if (p) {
-			size_t id = 0;
+			size_t new_id = 0;
 			if ( !anyMod )
-				id = m_nNextOderIndex++;
+				new_id = m_nNextOderIndex++;
 			else
-				id = m_nNextOderIndexAny++;
+				new_id = m_nNextOderIndexAny++;
 
-			p->AddShortcut(key, id);
+			p->AddShortcut(key, new_id);
 		}
     }
 
@@ -1006,6 +1006,7 @@ public:
 			m_notDeletable(notDeletable), m_notEditable(notEditable) {}
 
     wxKeyProfile(const wxKeyProfile &tocopy)
+		:wxKeyBinder()
         { DeepCopy(tocopy); }
 
 	wxKeyProfile(const wxKeyProfile &tocopy,
@@ -1044,8 +1045,8 @@ public:     // miscellaneous
     bool Save(wxConfigBase *p, const wxString &key = wxEmptyString, bool bCleanOld = FALSE) const;
     bool Load(wxConfigBase *p, const wxString &key = wxEmptyString);
 
-	bool IsNotDeletable() const		{ return m_notDeletable; };
-	bool IsNotEditable() const		{ return m_notEditable; };
+	bool IsNotDeletable() const		{ return m_notDeletable; }
+	bool IsNotEditable() const		{ return m_notEditable; }
 private:
     DECLARE_CLASS(wxKeyProfile)
 };

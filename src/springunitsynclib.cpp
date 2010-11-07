@@ -82,7 +82,7 @@ void GetLibFuncPtr( const wxDynamicLibrary* libhandle, const wxString& name, Fun
 	ASSERT_LOGIC( libhandle != 0, _T("Unitsync not loaded") );
 	if ( libhandle->HasSymbol( name ) ){
 		//see http://www.mr-edd.co.uk/blog/supressing_gcc_warnings
-		#ifdef __GNUC__
+		#if defined(__GNUC__) || defined (__clang__)
 		__extension__
 		#endif
 			p = reinterpret_cast<FunctionPointerType>( libhandle->GetSymbol( name ) );

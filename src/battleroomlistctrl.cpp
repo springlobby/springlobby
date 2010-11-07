@@ -231,6 +231,9 @@ IBattle& BattleroomListCtrl::GetBattle()
 
 void BattleroomListCtrl::AddUser( User& user )
 {
+	//first time setting is necessary to have color in replay/savegame used controls
+	if ( !user.BattleStatus().spectator )
+		icons().SetColourIcon( user.BattleStatus().colour );
     if ( AddItem( &user ) )
         return;
 
@@ -248,7 +251,7 @@ void BattleroomListCtrl::RemoveUser( User& user )
 void BattleroomListCtrl::UpdateUser( User& user )
 {
     if ( !user.BattleStatus().spectator )
-        icons().SetColourIcon( user.BattleStatus().team, user.BattleStatus().colour );
+		icons().SetColourIcon( user.BattleStatus().colour );
     wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
     ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
     user.SetSideiconIndex( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
@@ -292,7 +295,7 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 			return icons().ICON_BOT;
 	}
 	 if ( column == m_ingame_column_index ) return user.GetStatusIconIndex();
-	 if ( column == m_colour_column_index ) return is_spec ? -1 : icons().GetColourIcon( user.BattleStatus().team );
+	 if ( column == m_colour_column_index ) return is_spec ? -1 : icons().GetColourIcon( user.BattleStatus().colour );
 	 if ( column == m_country_column_index ) return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry() );
 	 if ( column == m_rank_column_index ) return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
 	 if ( column == m_faction_column_index ) return is_spec ? -1 : user.GetSideiconIndex();
@@ -528,7 +531,7 @@ int BattleroomListCtrl::CompareLobbyStatus( const DataType user1, const DataType
 	return 0;
 }
 
-int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle )
+int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2, const IBattle* battle )
 {
   int status1 = 0;
   if ( user1->BattleStatus().IsBot() )
@@ -539,7 +542,7 @@ int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2
   {
   	try
   	{
-    if ( &m_battle->GetFounder() != user1 )
+	if ( &battle->GetFounder() != user1 )
       status1 = 1;
 		}catch(...){}
     if ( user1->BattleStatus().ready )
@@ -559,7 +562,7 @@ int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2
   {
   	try
   	{
-    if ( &m_battle->GetFounder() != user2 )
+	if ( &battle->GetFounder() != user2 )
       status2 = 1;
 		}catch(...){}
     if ( user2->BattleStatus().ready )

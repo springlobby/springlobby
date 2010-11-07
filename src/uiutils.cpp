@@ -21,6 +21,7 @@
 #include "utils/debug.h"
 #include "utils/customdialogs.h"
 #include "settings.h"
+#include "images/colourbox.xpm"
 
 
 wxString RTFtoText( const wxString& rtfinput )
@@ -116,19 +117,21 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
 
 
 
-wxColour GetColorFromFloatStrng( const wxString& color )
+wxColour GetColorFromFloatStrng( const wxString& color_ )
 {
-    wxString c = color;
-    float r = 0, g = 0, b = 0;
-    r = FromwxString<double>(c.BeforeFirst( ' ' ));
-    c = c.AfterFirst( ' ' );
-    g = FromwxString<double>( c.BeforeFirst( ' ' ));
-    c = c.AfterFirst( ' ' );
-    b = FromwxString<double>(c.BeforeFirst( ' ' ));
-    r = clamp( r, 0.f, 1.f  );
-    g = clamp( g, 0.f, 1.f  );
-    b = clamp( b, 0.f, 1.f  );
-    return wxColour( (unsigned char)(r*256), (unsigned char)(g*256), (unsigned char)(b*256) );
+	wxString colorstring = color_;
+	wxString tmp_string;
+	unsigned char* decimal_colors = new unsigned char[3];
+	for ( size_t i = 0; i < 3; ++i) {
+		tmp_string = colorstring.BeforeFirst( ' ' );
+		colorstring = colorstring.AfterFirst( ' ' );
+		double float_color = 0;
+		tmp_string.ToDouble( &float_color );
+		decimal_colors[i] = clamp( static_cast<unsigned char>(float_color*256), static_cast<unsigned char>(0), static_cast<unsigned char>(255) );
+	}
+	wxColour final_c( decimal_colors[0], decimal_colors[1], decimal_colors[2] );
+	delete[] decimal_colors;
+	return final_c;
 }
 
 /**
@@ -495,6 +498,22 @@ void OpenWebBrowser( const wxString& url )
     }
 }
 
+wxBitmap getColourIcon( const wxColour& colour )
+{
+	wxImage img( colourbox_xpm );
+
+	img.Replace( 1, 1, 1, colour.Red(), colour.Green(), colour.Blue() );
+
+	int r,g,b;
+	r = colour.Red()+80;
+	g = colour.Green()+80;
+	b = colour.Blue()+80;
+	img.Replace( 2, 2, 2, r>255?255:r, g>255?255:g, b>255?255:b );
+	/*r = colour.Red()-60; g = colour.Green()-60; b = colour.Blue()-60;
+	img.Replace( 200, 200, 200, r<0?0:r, g<0?0:g, b<0?0:b );*/
+	return wxBitmap(img);
+//	assert( IsOk() );
+}
 
 #include <wx/datetime.h>
 #include "utils/customdialogs.h"
