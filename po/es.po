@@ -11,6 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2010-01-02 04:01+0000\n"
 "Last-Translator: Federico Vera <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2766,8 +2767,7 @@ msgid "Ignore PM"
 msgstr ""
 
 #: src/groupoptionspanel.cpp:108
-msgid ""
-"Ignore anything said in private chat by any of the users in this group"
+msgid "Ignore anything said in private chat by any of the users in this group"
 msgstr ""
 
 #: src/groupoptionspanel.cpp:112
@@ -2898,8 +2898,7 @@ msgid "Host new battle"
 msgstr ""
 
 #: src/hostbattledialog.cpp:63
-msgid ""
-"A short description of the game, this will show up in the battle list."
+msgid "A short description of the game, this will show up in the battle list."
 msgstr ""
 "Una descripción corta del juego, esta aparecerá en la lista de batallas."
 
@@ -3437,8 +3436,7 @@ msgid "Name of user"
 msgstr "Nombre de usuario"
 
 #: src/mainwindow.cpp:460
-msgid ""
-"SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
+msgid "SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
 msgstr ""
 
 #: src/mainwindow.cpp:515
@@ -3458,8 +3456,7 @@ msgid "Manually &Stop Torrent System"
 msgstr ""
 
 #: src/mainwindow.cpp:609
-msgid ""
-"You need to restart SpringLobby for the language change to take effect."
+msgid "You need to restart SpringLobby for the language change to take effect."
 msgstr ""
 
 #: src/mainwindow.cpp:610
@@ -4260,15 +4257,13 @@ msgid " (current)"
 msgstr " (actual)"
 
 #: src/settings++/tab_simple.cpp:88
-msgid ""
-"Sets all quality options to predefined values according to your choice."
+msgid "Sets all quality options to predefined values according to your choice."
 msgstr ""
 "Fijar todos los valores de calidad de las opciones predefinidas de acuerdo a "
 "tus cambios."
 
 #: src/settings++/tab_simple.cpp:94
-msgid ""
-"Sets all detail options to predefined values according to your choice."
+msgid "Sets all detail options to predefined values according to your choice."
 msgstr ""
 "Fijar todos los valores de detgalle de las opciones predefinidas de acuerdo "
 "a tus cambios."
@@ -4738,8 +4733,8 @@ msgstr ""
 
 #: src/ui.cpp:521
 msgid ""
-"If you are missing any commands, go to #springlobby and try to type it there "
-":)"
+"If you are missing any commands, go to #springlobby and try to type it "
+"there :)"
 msgstr ""
 
 #: src/ui.cpp:526
@@ -5132,7 +5127,8 @@ msgstr ""
 #~ msgstr "¿Descargar contenido OTA?"
 
 #~ msgid "Create a folder in a custom path (you'll get prompted for the path)"
-#~ msgstr "Crear una carpeta en la ruta definida (tendrás que escribir la ruta)"
+#~ msgstr ""
+#~ "Crear una carpeta en la ruta definida (tendrás que escribir la ruta)"
 
 #~ msgid "Active chat channels:"
 #~ msgstr "Activar canales de chat:"

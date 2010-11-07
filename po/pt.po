@@ -11,6 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2010-01-02 03:00+0000\n"
 "Last-Translator: almufadado <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2792,8 +2793,7 @@ msgid "Ignore PM"
 msgstr ""
 
 #: src/groupoptionspanel.cpp:108
-msgid ""
-"Ignore anything said in private chat by any of the users in this group"
+msgid "Ignore anything said in private chat by any of the users in this group"
 msgstr ""
 
 #: src/groupoptionspanel.cpp:112
@@ -2922,8 +2922,7 @@ msgid "Host new battle"
 msgstr "Criar nova batalha"
 
 #: src/hostbattledialog.cpp:63
-msgid ""
-"A short description of the game, this will show up in the battle list."
+msgid "A short description of the game, this will show up in the battle list."
 msgstr "Uma descrição curta do jogo que irá aparecer na lista das batalhas."
 
 #: src/hostbattledialog.cpp:78
@@ -3451,8 +3450,7 @@ msgid "Name of user"
 msgstr ""
 
 #: src/mainwindow.cpp:460
-msgid ""
-"SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
+msgid "SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
 msgstr ""
 
 #: src/mainwindow.cpp:515
@@ -3472,8 +3470,7 @@ msgid "Manually &Stop Torrent System"
 msgstr ""
 
 #: src/mainwindow.cpp:609
-msgid ""
-"You need to restart SpringLobby for the language change to take effect."
+msgid "You need to restart SpringLobby for the language change to take effect."
 msgstr ""
 
 #: src/mainwindow.cpp:610
@@ -4266,13 +4263,11 @@ msgid " (current)"
 msgstr ""
 
 #: src/settings++/tab_simple.cpp:88
-msgid ""
-"Sets all quality options to predefined values according to your choice."
+msgid "Sets all quality options to predefined values according to your choice."
 msgstr ""
 
 #: src/settings++/tab_simple.cpp:94
-msgid ""
-"Sets all detail options to predefined values according to your choice."
+msgid "Sets all detail options to predefined values according to your choice."
 msgstr ""
 
 #: src/settings++/tab_simple.cpp:99
@@ -4742,8 +4737,8 @@ msgstr ""
 
 #: src/ui.cpp:521
 msgid ""
-"If you are missing any commands, go to #springlobby and try to type it there "
-":)"
+"If you are missing any commands, go to #springlobby and try to type it "
+"there :)"
 msgstr ""
 
 #: src/ui.cpp:526
@@ -5115,11 +5110,11 @@ msgstr ""
 #~ msgstr "Número inválido"
 
 #~ msgid ""
-#~ "There are two or more bots on the same team.  Because bots don't know how to "
-#~ "share, this won't work."
+#~ "There are two or more bots on the same team.  Because bots don't know how "
+#~ "to share, this won't work."
 #~ msgstr ""
-#~ "Existem dois ou mais robôs na mesma equipa. Isto não irá funcionar porque os "
-#~ "robôs não sabem partilhar."
+#~ "Existem dois ou mais robôs na mesma equipa. Isto não irá funcionar porque "
+#~ "os robôs não sabem partilhar."
 
 #~ msgid "Force start?"
 #~ msgstr "Forçar o início?"

@@ -11,6 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2009-12-30 15:02+0000\n"
 "Last-Translator: nanker <Unknown>\n"
 "Language-Team: Danish <da@li.org>\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -763,8 +764,7 @@ msgstr ""
 
 #: src/battleroomtab.cpp:119
 msgid "Players with the same team number share control of their units."
-msgstr ""
-"Spillere med det samme holdnummer deler kontrollen over deres enheder."
+msgstr "Spillere med det samme holdnummer deler kontrollen over deres enheder."
 
 #: src/battleroomtab.cpp:121
 msgid "Players with the same ally number work together to achieve victory."
@@ -2753,8 +2753,7 @@ msgid "Ignore PM"
 msgstr ""
 
 #: src/groupoptionspanel.cpp:108
-msgid ""
-"Ignore anything said in private chat by any of the users in this group"
+msgid "Ignore anything said in private chat by any of the users in this group"
 msgstr ""
 
 #: src/groupoptionspanel.cpp:112
@@ -2883,8 +2882,7 @@ msgid "Host new battle"
 msgstr "Vær vært for nyt slag"
 
 #: src/hostbattledialog.cpp:63
-msgid ""
-"A short description of the game, this will show up in the battle list."
+msgid "A short description of the game, this will show up in the battle list."
 msgstr "En kort beskrivelse af slaget, som vil blive vist på slaglisten."
 
 #: src/hostbattledialog.cpp:78
@@ -3052,8 +3050,7 @@ msgstr "Spil er påbegyndt, lukket og fuldt optaget."
 
 #: src/iconimagelist.cpp:296
 msgid "Game is in progress, closed, full and password-protected."
-msgstr ""
-"Spil er påbegyndt, lukket, fuldt optaget og beskyttet af adgangskode."
+msgstr "Spil er påbegyndt, lukket, fuldt optaget og beskyttet af adgangskode."
 
 #: src/lobbyoptionstab.cpp:41 src/lobbyoptionstab.cpp:42
 msgid "Web Browser"
@@ -3417,8 +3414,7 @@ msgid "Name of user"
 msgstr "Brugernavn"
 
 #: src/mainwindow.cpp:460
-msgid ""
-"SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
+msgid "SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
 msgstr ""
 
 #: src/mainwindow.cpp:515
@@ -3438,8 +3434,7 @@ msgid "Manually &Stop Torrent System"
 msgstr ""
 
 #: src/mainwindow.cpp:609
-msgid ""
-"You need to restart SpringLobby for the language change to take effect."
+msgid "You need to restart SpringLobby for the language change to take effect."
 msgstr "Du skal genstarte SpringLobby for at sproget virker."
 
 #: src/mainwindow.cpp:610
@@ -3551,8 +3546,7 @@ msgstr "Senest spillede kort"
 
 #: src/mapselectdialog.cpp:90
 msgid "Shows only maps you played recently. (Based on your replays.)"
-msgstr ""
-"Vis kun kort som du har spillet fornyligt. (baseret på dine repalys.)"
+msgstr "Vis kun kort som du har spillet fornyligt. (baseret på dine repalys.)"
 
 #: src/mapselectdialog.cpp:93
 msgid "Filter"
@@ -4240,13 +4234,11 @@ msgid " (current)"
 msgstr " (denne)"
 
 #: src/settings++/tab_simple.cpp:88
-msgid ""
-"Sets all quality options to predefined values according to your choice."
+msgid "Sets all quality options to predefined values according to your choice."
 msgstr ""
 
 #: src/settings++/tab_simple.cpp:94
-msgid ""
-"Sets all detail options to predefined values according to your choice."
+msgid "Sets all detail options to predefined values according to your choice."
 msgstr ""
 
 #: src/settings++/tab_simple.cpp:99
@@ -4722,8 +4714,8 @@ msgstr ""
 
 #: src/ui.cpp:521
 msgid ""
-"If you are missing any commands, go to #springlobby and try to type it there "
-":)"
+"If you are missing any commands, go to #springlobby and try to type it "
+"there :)"
 msgstr ""
 
 #: src/ui.cpp:526
