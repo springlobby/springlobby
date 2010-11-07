@@ -757,6 +757,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\settings++\hotkeys\ChangeMetaDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\settings++\hotkeys\ChangeMetaDlg.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\settings++\hotkeys\commandlist.cpp"
 					>
 				</File>
@@ -850,6 +858,14 @@
 				</File>
 				<File
 					RelativePath="D:\Users\devkid\Projekte\Other\springlobby\src\wxkeybinder\menuutils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\wxkeybinder\wxKeyMonitorTextCtrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\wxkeybinder\wxKeyMonitorTextCtrl.h"
 					>
 				</File>
 			</Filter>

@@ -61,10 +61,13 @@ bool hotkey_parser::processLine( const wxString& line )
 		if ( tokLine[0] == wxT("unbindall") )
 		{
 			this->m_bindings.clear();
-			return true;
 		}
-		wxLogWarning( wxT( "skipping uikeys.txt line: " ) + line );
-		return false;
+		else
+		{
+			wxLogWarning( wxT( "skipping uikeys.txt line: " ) + line );
+			return false;
+		}
+		return true;
 	}
 	else if ( tokLine.size() == 2 ) 
 	{	//fakemeta=
@@ -74,8 +77,21 @@ bool hotkey_parser::processLine( const wxString& line )
 		if ( cmd == wxT("fakemeta") )
 		{
 			this->m_bindings.setMetaKey( key );
-			return true;
 		}
+		else if ( cmd == wxT("unbindkeyset") )
+		{
+			this->m_bindings.unbindAllKeys( key );
+		}
+		else if ( cmd == wxT("unbindaction") )
+		{
+			this->m_bindings.unbindAllCmds( key );
+		}
+		else
+		{
+			wxLogWarning( wxT( "skipping uikeys.txt line: " ) + line );
+			return false;
+		}
+		return true;
 	}
 
 	const wxString& cmd = tokLine[0];

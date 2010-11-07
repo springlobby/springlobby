@@ -1,6 +1,7 @@
 #include "KeynameConverter.h"
 
 #include <sstream>
+#include "../../wxkeybinder/keybinder.h"
 
 KeynameConverter::KeyMap		KeynameConverter::m_spring2keybinder;
 KeynameConverter::KeyMap		KeynameConverter::m_keybinder2spring;
@@ -85,7 +86,15 @@ wxString KeynameConverter::normalizeSpringKey( const wxString& springKey )
 	KeynameConverter::ModifierList modifiers = stringToKeyModifier( springKey );
 
 	wxString key = KeynameConverter::discardModifier( springKey );
-	key.MakeLower();
+
+	if ( key.StartsWith( wxT("0x") ) )
+	{
+		key = KeynameConverter::convertHexValueToKey( key );
+	}
+	else
+	{
+		key.MakeLower();
+	}
 
 	if ( key == wxT("escape") )
 	{
@@ -121,14 +130,26 @@ wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool r
 	}
 	else
 	{
-		if ( reverse )
+#ifdef __WXMSW__
+		if ( key.size() == 1 )
 		{
-			kbKey = key.Lower();
+			if ( reverse )
+				kbKey = wxMswKeyConverter::ConvertLocalToUs( key[0] );
+			else
+				kbKey = wxMswKeyConverter::ConvertUsToLocal( key[0] );
 		}
 		else
 		{
-			kbKey = key.Upper();
+			kbKey = key;
 		}
+#else
+			kbKey = key;
+#endif
+
+		if ( reverse )
+			kbKey.MakeLower();
+		else
+			kbKey.MakeUpper();
 	}
 
 	return KeynameConverter::modifier2String( modifiers ) + kbKey;

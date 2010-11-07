@@ -59,10 +59,6 @@ void key_binding::addKeySymSet( const wxString& name, const wxString& keyString 
 
 void key_binding::addKeySym( const wxString& name, const wxString& keyString )
 {
-/*	const wxString normName = name.Lower();
-	this->m_keySyms[normName] = keyString;
-	this->m_keySymsRev[KeynameConverter::convertHexValueToKey( keyString )] = normName;
-*/
 	const wxString normName = name.Lower();
 	const wxString normKey = KeynameConverter::normalizeSpringKey( keyString );
 	this->m_keySyms[normName] = normKey;
@@ -187,6 +183,54 @@ bool key_binding::isEmpty() const
 		return true;
 	}
 	return false;
+}
+
+void key_binding::unbindAllCmds( const wxString& cmd )
+{
+	key_command_set keyCmdSetCopy = m_keyCmdSet;
+	key_command_set keyCmdSetAnyCopy = m_keyCmdSetAny;
+
+	for ( key_command_set::const_iterator iter = keyCmdSetCopy.begin(); iter != keyCmdSetCopy.end(); ++iter )
+	{
+		if ( iter->second == cmd )
+		{
+			this->unbind( iter->second, iter->first );
+		}
+	}
+
+	for ( key_command_set::const_iterator iter = keyCmdSetAnyCopy.begin(); iter != keyCmdSetAnyCopy.end(); ++iter )
+	{
+		if ( iter->second == cmd )
+		{
+			this->unbind( iter->second, iter->first );
+		}
+	}
+}
+
+void key_binding::unbindAllKeys( const wxString& key )
+{
+	if ( !key.StartsWith( wxT("Any+") ) )
+	{
+		key_command_set keyCmdSetCopy = m_keyCmdSet;
+		for ( key_command_set::const_iterator iter = keyCmdSetCopy.begin(); iter != keyCmdSetCopy.end(); ++iter )
+		{
+			if ( iter->first == key )
+			{
+				this->unbind( iter->second, iter->first );
+			}
+		}
+	}
+	else
+	{
+		key_command_set keyCmdSetAnyCopy = m_keyCmdSetAny;
+		for ( key_command_set::const_iterator iter = keyCmdSetAnyCopy.begin(); iter != keyCmdSetAnyCopy.end(); ++iter )
+		{
+			if ( iter->first == key )
+			{
+				this->unbind( iter->second, iter->first );
+			}
+		}
+	}
 }
 
 void key_binding::unbind( const wxString& cmd, const wxString& keyString )

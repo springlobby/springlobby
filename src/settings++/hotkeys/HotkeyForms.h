@@ -22,6 +22,7 @@
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/listbox.h>
+#include "../../wxkeybinder/wxKeyMonitorTextCtrl.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -186,12 +187,36 @@ class CommandOrderDlgBase : public wxDialog
 		virtual void OnInitDialog( wxInitDialogEvent& event ){ event.Skip(); }
 		virtual void OnButtonUpClick( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnButtonDownClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnButtonOkClick( wxCommandEvent& event ){ event.Skip(); }
 		
 	
 	public:
 		CommandOrderDlgBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Change Order"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION );
 		~CommandOrderDlgBase();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class ChangeMetaDlgBase
+///////////////////////////////////////////////////////////////////////////////
+class ChangeMetaDlgBase : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText24;
+		wxTextCtrl* m_textCtrlCurKey;
+		wxStaticText* m_staticText23;
+		wxKeyMonitorTextCtrl* m_ctrlNewKey;
+		wxButton* m_buttonOk;
+		wxButton* m_buttonCancel;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnInitDialog( wxInitDialogEvent& event ){ event.Skip(); }
+		
+	
+	public:
+		ChangeMetaDlgBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Change Meta key"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
+		~ChangeMetaDlgBase();
 	
 };
 
