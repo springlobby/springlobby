@@ -26,5 +26,5 @@ ZIPFILEBASE=$(echo $(basename $1))
 TOPLEVELDIR=${ZIPFILEBASE%".zip"}
 unzip ${ZIPFILE}
 rm ${ZIPFILE}
-cd ${TOPLEVELDIR} && ${STRIP} *.dll && zip -r ${ZIPFILE} * locale/\* || exit 1
+cd ${TOPLEVELDIR} && ${STRIP} boost*.dll wx*.dll mingwm10.dll && zip -r ${ZIPFILE} * locale/\* || exit 1
 exit 0
