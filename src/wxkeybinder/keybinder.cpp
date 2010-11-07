@@ -119,6 +119,16 @@ wxCmd::wxCmdType wxCmd::m_arrCmdType[];
 
 
 #ifdef __WXMSW__
+#ifdef __MINGW32__
+#define MAPVK_VK_TO_VSC     (0)
+#define MAPVK_VSC_TO_VK     (1)
+#define MAPVK_VK_TO_CHAR    (2)
+#define MAPVK_VSC_TO_VK_EX  (3)
+#if(WINVER >= 0x0600)
+#define MAPVK_VK_TO_VSC_EX  (4)
+#endif /* WINVER >= 0x0600 */
+#endif
+
 HKL wxMswKeyConverter::m_usLayout = 0;
 
 wxChar wxMswKeyConverter::ConvertUsToLocal( const wxChar& c )
