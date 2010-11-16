@@ -374,10 +374,14 @@ CwdGuard::~CwdGuard()
 
 wxString GetAppName( const bool lowerCase )
 {
+#ifdef SL_QT_MODE
+	return _T("fnord");
+#else
 	wxString name = wxTheApp->GetAppName();
 	if ( lowerCase )
 		name.MakeLower();
 	return name;
+#endif
 }
 
 wxString IdentityString(const wxString format, bool lowerCase )
