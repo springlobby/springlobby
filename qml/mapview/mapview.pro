@@ -33,7 +33,18 @@ SOURCES += main.cpp \
     ../../src/utils/platform.cpp \
     ../../src/utils/misc.cpp \
     ../../src/utils/curlhelper.cpp \
-    stringdummy.cpp
+    stringdummy.cpp \
+    ../../src/springunitsync.cpp \
+    ../../src/springprocess.cpp \
+    ../../src/thread.cpp \
+    ../../src/utils/uievents.cpp \
+    ../../src/utils/globalevents.cpp \
+    ../../src/mmoptionswrapper.cpp \
+    ../../src/mmoptionmodel.cpp \
+    ../../src/uiutils.cpp \
+    ../../src/utils/customdialogs.cpp \
+    ../../src/customizations.cpp \
+    ../../src/utils/conversion.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -47,7 +58,19 @@ HEADERS += \
     ../../src/utils/platform.h \
     ../../src/utils/misc.h \
     ../../src/utils/curlhelper.h \
-    stringdummy.h
+    stringdummy.h \
+    ../../src/springunitsync.h \
+    ../../src/springprocess.h \
+    ../../src/iunitsync.h \
+    ../../src/thread.h \
+    ../../src/utils/uievents.h \
+    ../../src/utils/globalevents.h \
+    ../../src/mmoptionswrapper.h \
+    ../../src/mmoptionmodel.h \
+    ../../src/uiutils.h \
+    ../../src/utils/customdialogs.h \
+    ../../src/customizations.h \
+    ../../src/utils/conversion.h
 
 INCLUDEPATH += ../../src
 DEFINES += SL_QT_MODE
