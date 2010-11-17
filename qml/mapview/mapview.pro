@@ -70,9 +70,21 @@ HEADERS += \
     ../../src/uiutils.h \
     ../../src/utils/customdialogs.h \
     ../../src/customizations.h \
-    ../../src/utils/conversion.h
+    ../../src/utils/conversion.h \
+    ../../src/Helper/qtargparser/QtArg/xorarg.hpp \
+    ../../src/Helper/qtargparser/QtArg/visitor.hpp \
+    ../../src/Helper/qtargparser/QtArg/multiarg.hpp \
+    ../../src/Helper/qtargparser/QtArg/helpiface.hpp \
+    ../../src/Helper/qtargparser/QtArg/help.hpp \
+    ../../src/Helper/qtargparser/QtArg/exceptions.hpp \
+    ../../src/Helper/qtargparser/QtArg/cmdlineiface.hpp \
+    ../../src/Helper/qtargparser/QtArg/cmdlinecontext.hpp \
+    ../../src/Helper/qtargparser/QtArg/cmdline.hpp \
+    ../../src/Helper/qtargparser/QtArg/argconstraint.hpp \
+    ../../src/Helper/qtargparser/QtArg/arg.hpp
 
 INCLUDEPATH += ../../src
+INCLUDEPATH += ../../src/Helper/qtargparser
 DEFINES += SL_QT_MODE
 
 unix {
@@ -81,3 +93,14 @@ unix {
 		LIBS += $$system(wx-config --libs)
 		QMAKE_CXXFLAGS += $$system(wx-config --cppflags)
 }
+
+OTHER_FILES += \
+    ../../src/Helper/qtargparser/QtArg/XorArg \
+    ../../src/Helper/qtargparser/QtArg/Visitor \
+    ../../src/Helper/qtargparser/QtArg/MultiArg \
+    ../../src/Helper/qtargparser/QtArg/Help \
+    ../../src/Helper/qtargparser/QtArg/Exceptions \
+    ../../src/Helper/qtargparser/QtArg/CmdLineContext \
+    ../../src/Helper/qtargparser/QtArg/CmdLine \
+    ../../src/Helper/qtargparser/QtArg/ArgConstraint \
+    ../../src/Helper/qtargparser/QtArg/Arg
