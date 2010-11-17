@@ -45,7 +45,8 @@ SOURCES += main.cpp \
     ../../src/utils/customdialogs.cpp \
     ../../src/customizations.cpp \
     ../../src/utils/conversion.cpp \
-    ../../src/qt/imageprovider.cpp
+    ../../src/qt/imageprovider.cpp \
+    ../../src/qt/converters.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -83,7 +84,8 @@ HEADERS += \
     ../../src/Helper/qtargparser/QtArg/cmdline.hpp \
     ../../src/Helper/qtargparser/QtArg/argconstraint.hpp \
     ../../src/Helper/qtargparser/QtArg/arg.hpp \
-    ../../src/qt/imageprovider.h
+    ../../src/qt/imageprovider.h \
+    ../../src/qt/converters.h
 
 INCLUDEPATH += ../../src
 INCLUDEPATH += ../../src/Helper/qtargparser
