@@ -99,7 +99,7 @@ Thread::ExitCode Thread::Wait() {
 
 wxThreadError Thread::Run() {
 	m_must_exit = false;
-	run();
+	return wxThread::Run();
 }
 
 bool Thread::TestDestroy() {
@@ -204,7 +204,6 @@ void* WorkerThread::Entry()
 	}
 
 	wxLogMessage( _T( "WorkerThread stopped" ) );
-	exit();
 	return 0;
 }
 
