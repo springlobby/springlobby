@@ -1,0 +1,18 @@
+This is QtArg version 1.0.0.
+
+QtArg is a small C++ library based on the Qt 4
+for parsing command line arguments.
+
+
+COMPILING QTARG
+
+Just run build.rb which is a Ruby program.
+
+
+REQUIREMENTS
+
+For compiling QtArg you should have installed:
+ * Qt 4 framework (http://qt.nokia.com/)
+ * Ruby programming language (http://www.ruby-lang.org/en/)
+ * mxx_ru Ruby gem (http://rubyforge.org/projects/mxx-ru/)
+
