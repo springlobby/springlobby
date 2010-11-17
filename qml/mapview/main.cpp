@@ -11,6 +11,7 @@
 #include <utils/conversion.h>
 #include <iostream>
 #include <customizations.h>
+#include <qt/imageprovider.h>
 
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
@@ -33,48 +34,75 @@
 #include <QtArg/XorArg>
 #include <QtArg/CmdLine>
 #include <QtArg/Help>
-
-// Qt include.
+#include <QDeclarativeEngine>
 #include <QtCore/QDebug>
 
+bool CmdInit()
+{
+	PwdGuard pwd_guard;//makes us invulnerabel to cwd changes in usync loading
+	QtArgCmdLine cmd;
+	QtArg config_file( 'f', "config-file", "absolute path to config file", false, true );
+	QtArg customization( 'c', "customize", "Load lobby customizations from game archive. Expects the long name.", false, true );
+	QtArgDefaultHelpPrinter helpPrinter( "Testing help printing.\n" );
+	QtArgHelp help( &cmd );
+	help.setPrinter( &helpPrinter );
+	cmd.addArg( config_file );
+	cmd.addArg( customization );
+	try {
+			cmd.parse();
+	}
+	catch( const QtHelpHasPrintedEx & x )
+	{
+	}
+	catch( const QtArgBaseException & x )
+	{
+			qDebug() << x.what();
+			return false;
+	}
+	Settings::m_user_defined_config = config_file.isPresent();
+
+	if ( Settings::m_user_defined_config ) {
+		Settings::m_user_defined_config_path = TowxString( config_file.value().toString().toStdString() );
+		 wxFileName fn ( Settings::m_user_defined_config_path );
+		 if ( ! fn.IsAbsolute() ) {
+			 wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
+			 return false;
+		 }
+		 if ( ! fn.IsFileWritable() ) {
+			 wxLogError ( _T("path for parameter \"config-file\" must be writeable") );
+			 return false;
+		 }
+		 qDebug() << Settings::m_user_defined_config_path.mb_str();
+	}
+
+#ifdef __WXMSW__
+	sett().SetSearchSpringOnlyInSLPath( sett().GetSearchSpringOnlyInSLPath() );
+#endif
+	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
+	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
+
+	if ( !wxDirExists( GetConfigfileDir() ) )
+		wxMkdir( GetConfigfileDir() );
+
+	usync().ReloadUnitSyncLib();
+
+	if ( customization.isPresent() ) {
+		QString ko = customization.value().toString();
+		qDebug() << ko;
+		wxString kko = TowxString( ko.toStdString() );
+				wxLogError( kko.c_str() );
+		if ( !SLcustomizations().Init( kko ) )
+			return false;
+	}
+
+	return true;
+}
 
 int main(int argc, char *argv[])
 {
 		QApplication app(argc, argv);
-		QtArgCmdLine cmd;
-		QtArg config_file( 'f', "config-file", "absolute path to config file", false, true );
-		QtArg customization( 'c', "customize", "Load lobby customizations from game archive. Expects the long name.", false, true );
-		QtArgDefaultHelpPrinter helpPrinter( "Testing help printing.\n" );
-		QtArgHelp help( &cmd );
-		help.setPrinter( &helpPrinter );
-		cmd.addArg( config_file );
-		cmd.addArg( customization );
-		try {
-				cmd.parse();
-		}
-		catch( const QtHelpHasPrintedEx & x )
-		{
-		}
-		catch( const QtArgBaseException & x )
-		{
-				qDebug() << x.what();
-				return -1;
-		}
-		Settings::m_user_defined_config = config_file.isPresent();
-
-		if ( Settings::m_user_defined_config ) {
-			Settings::m_user_defined_config_path = TowxString( config_file.value().toString().toStdString() );
-			 wxFileName fn ( Settings::m_user_defined_config_path );
-			 if ( ! fn.IsAbsolute() ) {
-				 wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
-				 return false;
-			 }
-			 if ( ! fn.IsFileWritable() ) {
-				 wxLogError ( _T("path for parameter \"config-file\" must be writeable") );
-				 return false;
-			 }
-			 qDebug() << Settings::m_user_defined_config_path.mb_str();
-		}
+		if ( !CmdInit() )
+			return -1;
 
 		wxLogChain* logchain = 0;
 		wxLog::SetActiveTarget( new wxLogChain( new wxLogStream( &std::cout ) ) );
@@ -102,27 +130,10 @@ int main(int argc, char *argv[])
 		view.setAttribute(Qt::WA_NoSystemBackground);
 		view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
 		view.setFocus();
-		if ( !wxDirExists( GetConfigfileDir() ) )
-			wxMkdir( GetConfigfileDir() );
-
-	#ifdef __WXMSW__
-		sett().SetSearchSpringOnlyInSLPath( sett().GetSearchSpringOnlyInSLPath() );
-	#endif
-		sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
-		sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
 
 		view.setSource(QString("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
-		usync().ReloadUnitSyncLib();
-
-
-		if ( customization.isPresent() ) {
-			QString ko = customization.value().toString();
-			qDebug() << ko;
-			wxString kko = TowxString( ko.toStdString() );
-					wxLogError( kko.c_str() );
-			if ( !SLcustomizations().Init( kko ) )
-				return -1;
-		}
+		QDeclarativeEngine engine;
+		   engine.addImageProvider(QLatin1String("images"), new ImageProvider);
 
 		QStringList maps;
 		wxString mapname;
