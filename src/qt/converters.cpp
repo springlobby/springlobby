@@ -233,3 +233,98 @@ wxOrientation wxQtConvertOrientation( Qt::Orientation qtOrientation )
 	return static_cast< wxOrientation >( -1 );
 }
 
+#include "wx/bitmap.h"
+#include "wx/image.h"
+
+#include <QtGui/QPixmap>
+#include <QtGui/QBitmap>
+#include <QtGui/QLabel>
+
+//wxImage wxQtConvertImage( QImage qtImage )
+//{
+//	bool hasAlpha = qtImage.hasAlphaChannel();
+
+//	int numPixels = qtImage.height() * qtImage.width();
+
+//	//Convert to ARGB32 for scanLine
+//	qtImage = qtImage.convertToFormat(QImage::Format_ARGB32);
+
+//	unsigned char *data = (unsigned char *)malloc(sizeof(char) * 3 * numPixels);
+//	unsigned char *startData = data;
+
+//	unsigned char *alpha = NULL;
+//	if (hasAlpha)
+//		alpha = (unsigned char *)malloc(sizeof(char) * numPixels);
+
+//	unsigned char *startAlpha = alpha;
+
+//	for (int y = 0; y < qtImage.height(); y++)
+//	{
+//		QRgb *line = (QRgb*)qtImage.scanLine(y);
+
+//		for (int x = 0; x < qtImage.width(); x++)
+//		{
+//			QRgb colour = line[x];
+
+//			data[0] = qRed(colour);
+//			data[1] = qGreen(colour);
+//			data[2] = qBlue(colour);
+
+//			if (hasAlpha)
+//			{
+//				alpha[0] = qAlpha(colour);
+//				alpha++;
+//			}
+//			data += 3;
+//		}
+//	}
+//	if (hasAlpha)
+//		return wxImage(wxQtConvertSize(qtImage.size()), startData, startAlpha);
+//	else
+//		return wxImage(wxQtConvertSize(qtImage.size()), startData);
+//}
+
+QImage wxQtConvertImage( const wxImage &image )
+{
+	bool hasAlpha = image.HasAlpha();
+	bool hasMask = image.HasMask();
+	wxSize size ( image.GetWidth(), image.GetHeight() );
+	QImage qtImage( wxQtConvertSize( size ),
+				   ( (hasAlpha || hasMask ) ? QImage::Format_ARGB32 : QImage::Format_RGB32 ) );
+
+	unsigned char *data = image.GetData();
+	unsigned char *alpha = hasAlpha ? image.GetAlpha() : NULL;
+	QRgb colour;
+
+	QRgb maskedColour;
+	if ( hasMask )
+	{
+		unsigned char r, g, b;
+		image.GetOrFindMaskColour( &r, &g, &b );
+		maskedColour = ( r << 16 ) + ( g << 8 ) + b;
+	}
+
+	for (int y = 0; y < image.GetHeight(); y++)
+	{
+		for (int x = 0; x < image.GetWidth(); x++)
+		{
+			if (hasAlpha)
+			{
+				colour = alpha[0] << 24;
+				alpha++;
+			}
+			else
+				colour = 0;
+
+			colour += (data[0] << 16) + (data[1] << 8) + data[2];
+
+			if ( hasMask && colour != maskedColour )
+				colour += 0xFF000000; // 255 << 24
+
+			qtImage.setPixel(x, y, colour);
+
+			data += 3;
+		}
+	}
+	return qtImage;
+}

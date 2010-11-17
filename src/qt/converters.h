@@ -59,6 +59,11 @@ void wxMissingImplementation( const char fileName[], unsigned lineNumber,
 #define wxMISSING_IMPLEMENTATION( feature )\
 	wxMissingImplementation( __FILE__, __LINE__, feature )
 
+class QImage;
+class wxImage;
+QImage wxQtConvertImage( const wxImage &image );
+//wxImage wxQtConvertImage( QImage qtImage );
+
 
 /** ****************************************************** **/
 
