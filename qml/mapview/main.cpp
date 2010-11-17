@@ -26,6 +26,8 @@
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/socket.h>
 
+#include <QStringList>
+
 int main(int argc, char *argv[])
 {
 
@@ -68,10 +70,17 @@ int main(int argc, char *argv[])
 		view.setSource(QString("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
 		usync().ReloadUnitSyncLib();
 
+		QStringList maps;
+		wxString mapname;
+		foreach (mapname, usync().GetMapList() ) {
+			maps.append( QString(mapname.mb_str()) );
+		}
+
 		QString de( sett().GetCachePath().mb_str() );
 		StringDummy test(de );
 		QDeclarativeContext* ctxt = view.rootContext();
 		ctxt->setContextProperty("myAwesomeString", &test );
+		ctxt->setContextProperty("myModel", QVariant::fromValue(maps) );
 
 		view.show();
 
