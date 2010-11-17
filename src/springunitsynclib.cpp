@@ -98,6 +98,9 @@ void GetLibFuncPtr( const wxDynamicLibrary* libhandle, const wxString& name, Fun
 
 void SpringUnitSyncLib::_Load( const wxString& path )
 {
+#ifdef SL_QT_MODE
+	wxLogNull nullLog;
+#endif
 	if ( _IsLoaded() && path == m_path ) return;
 
 	_Unload();
