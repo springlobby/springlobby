@@ -42,6 +42,15 @@ class CwdGuard {
         ~CwdGuard();
 };
 
+//! remember pwd in ctor and reset in dtor
+class PwdGuard {
+	wxString m_old_pwd;
+	public:
+		PwdGuard( );
+		~PwdGuard();
+};
+
+
 #ifdef __WXMSW__
 bool IsPreVistaWindows();
 #endif

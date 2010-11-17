@@ -372,6 +372,15 @@ CwdGuard::~CwdGuard()
     wxSetWorkingDirectory( m_old_cwd );
 }
 
+PwdGuard::PwdGuard(  )
+	: m_old_pwd( wxGetCwd() )
+{}
+
+PwdGuard::~PwdGuard()
+{
+	wxSetWorkingDirectory( m_old_pwd );
+}
+
 wxString GetAppName( const bool lowerCase )
 {
 #ifdef SL_QT_MODE
