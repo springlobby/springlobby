@@ -249,7 +249,7 @@ class SpringUnitSync : public IUnitSync
     wxString m_cache_path;
 
     mutable wxCriticalSection m_lock;
-    WorkerThread m_cache_thread;
+	WorkerThread* m_cache_thread;
     EvtHandlerCollection m_evt_handlers;
 
     /// this cache facilitates async image fetching (image is stored in cache

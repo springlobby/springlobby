@@ -53,22 +53,26 @@ SpringUnitSync::SpringUnitSync()
   , m_tiny_minimap_cache( 200, _T("m_tiny_minimap_cache") ) // takes at most 30k per image (   100x100 24 bpp minimap )
   , m_mapinfo_cache( 1000000, _T("m_mapinfo_cache") )       // this one is just misused as thread safe std::map ...
   , m_sides_cache( 200, _T("m_sides_cache") )               // another misuse
+  , m_cache_thread( NULL )
 {
-  m_cache_thread.Create();
-  m_cache_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
-  m_cache_thread.Run();
+
 }
 
 
 SpringUnitSync::~SpringUnitSync()
 {
-  m_cache_thread.Wait();
+  m_cache_thread->Wait();
 }
 
 
 bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
 {
    LOCK_UNITSYNC;
+   m_cache_thread = new WorkerThread();
+   m_cache_thread->Create();
+   m_cache_thread->SetPriority( WXTHREAD_MIN_PRIORITY );
+   m_cache_thread->Run();
+
    UiEvents::ScopedStatusMessage staus(_("loading unitsync"), 0);
    wxLogDebugFunc( _T("") );
    bool ret = _LoadUnitSyncLib( unitsyncloc );
@@ -1152,20 +1156,25 @@ void SpringUnitSync::PrefetchMap( const wxString& mapname )
                  | wxChar(mapname[length * 3/4]);
   const int priority = -hash;
 
+  if (! m_cache_thread )
+  {
+	  wxLogError( _T("cache thread not initialised") );
+	  return;
+  }
   {
     CacheMinimapWorkItem* work;
 
     work = new CacheMinimapWorkItem( mapname );
-    m_cache_thread.DoWork( work, priority );
+	m_cache_thread->DoWork( work, priority );
   }
   {
     CacheMapWorkItem* work;
 
     work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetMetalmap );
-    m_cache_thread.DoWork( work, priority );
+	m_cache_thread->DoWork( work, priority );
 
     work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetHeightmap );
-    m_cache_thread.DoWork( work, priority );
+	m_cache_thread->DoWork( work, priority );
   }
 }
 
@@ -1186,10 +1195,15 @@ void SpringUnitSync::PostEvent( int evtHandlerId, wxEvent& evt )
 
 void SpringUnitSync::_GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int evtHandlerId )
 {
+	if (! m_cache_thread )
+	{
+		wxLogError( _T("cache thread not initialised") );
+		return;
+	}
   GetMapImageAsyncWorkItem* work;
 
   work = new GetMapImageAsyncWorkItem( this, mapname, evtHandlerId, loadMethod );
-  m_cache_thread.DoWork( work, 100 );
+  m_cache_thread->DoWork( work, 100 );
 }
 
 void SpringUnitSync::GetMinimapAsync( const wxString& mapname, int evtHandlerId )
@@ -1201,11 +1215,15 @@ void SpringUnitSync::GetMinimapAsync( const wxString& mapname, int evtHandlerId 
 void SpringUnitSync::GetMinimapAsync( const wxString& mapname, int width, int height, int evtHandlerId )
 {
   wxLogDebugFunc( mapname + _T(" size: ") + TowxString(width) + _T("x") + TowxString(height) );
-
+  if (! m_cache_thread )
+  {
+	  wxLogError( _T("cache thread not initialised") );
+	  return;
+  }
   GetScaledMapImageAsyncWorkItem* work;
 
   work = new GetScaledMapImageAsyncWorkItem( this, mapname, width, height, evtHandlerId, &SpringUnitSync::GetMinimap );
-  m_cache_thread.DoWork( work, 100 );
+  m_cache_thread->DoWork( work, 100 );
 }
 
 void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int evtHandlerId )
@@ -1233,11 +1251,16 @@ void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int /*width*/, 
 void SpringUnitSync::GetMapExAsync( const wxString& mapname, int evtHandlerId )
 {
   wxLogDebugFunc( mapname );
+  if (! m_cache_thread )
+  {
+	  wxLogError( _T("cache thread not initialised") );
+	  return;
+  }
 
   GetMapExAsyncWorkItem* work;
 
   work = new GetMapExAsyncWorkItem( this, mapname, evtHandlerId );
-  m_cache_thread.DoWork( work, 200 /* higher prio then GetMinimapAsync */ );
+  m_cache_thread->DoWork( work, 200 /* higher prio then GetMinimapAsync */ );
 }
 
 wxString SpringUnitSync::GetTextfileAsString( const wxString& modname, const wxString& file_path )
