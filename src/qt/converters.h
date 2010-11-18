@@ -62,7 +62,7 @@ void wxMissingImplementation( const char fileName[], unsigned lineNumber,
 class QImage;
 class wxImage;
 QImage wxQtConvertImage( const wxImage &image );
-//wxImage wxQtConvertImage( QImage qtImage );
+wxImage wxQtConvertImage( QImage qtImage );
 
 
 /** ****************************************************** **/

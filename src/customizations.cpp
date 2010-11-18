@@ -6,7 +6,10 @@
 
 #include <wx/image.h>
 #include <wx/msgdlg.h>
-
+#ifdef SL_QT_MODE
+#include <QImage>
+#include <qt/converters.h>
+#endif
 const wxString Customizations::IntroKey = wxString ( _T("intro_file") );
 
 /** @brief GetBackground
@@ -69,11 +72,19 @@ bool Customizations::Init(const wxString& modname)
     bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
     if ( ret ) {
         wxString icon_img_path = m_customs.getSingleValue( _T("icon") );
+		wxString bg_img_path = m_customs.getSingleValue( _T("bg_image") );
+#ifdef SL_QT_MODE
+		wxBitmap icon_bmp ( wxQtConvertImage( usync().GetQImage( m_modname, icon_img_path, false ) ) );
+		m_background_image = wxQtConvertImage ( usync().GetQImage( m_modname, bg_img_path, false ) );
+#else
 		wxBitmap icon_bmp (usync().GetImage( m_modname, icon_img_path, false ) );
-        m_app_ico.CopyFromBitmap( icon_bmp );
+		m_background_image =  usync().GetImage( m_modname, bg_img_path, false );
+#endif
 
-        wxString bg_img_path = m_customs.getSingleValue( _T("bg_image") );
-		m_background = wxBitmap( usync().GetImage( m_modname, bg_img_path, false ) );
+
+        m_app_ico.CopyFromBitmap( icon_bmp );
+		m_background = wxBitmap( m_background_image );
+		assert( m_background_image.IsOk() );
 
         m_help_url = m_customs.getSingleValue( _T("help_url") );
     }

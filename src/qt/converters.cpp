@@ -240,49 +240,49 @@ wxOrientation wxQtConvertOrientation( Qt::Orientation qtOrientation )
 #include <QtGui/QBitmap>
 #include <QtGui/QLabel>
 
-//wxImage wxQtConvertImage( QImage qtImage )
-//{
-//	bool hasAlpha = qtImage.hasAlphaChannel();
+wxImage wxQtConvertImage( QImage qtImage )
+{
+	bool hasAlpha = qtImage.hasAlphaChannel();
 
-//	int numPixels = qtImage.height() * qtImage.width();
+	int numPixels = qtImage.height() * qtImage.width();
 
-//	//Convert to ARGB32 for scanLine
-//	qtImage = qtImage.convertToFormat(QImage::Format_ARGB32);
+	//Convert to ARGB32 for scanLine
+	qtImage = qtImage.convertToFormat(QImage::Format_ARGB32);
 
-//	unsigned char *data = (unsigned char *)malloc(sizeof(char) * 3 * numPixels);
-//	unsigned char *startData = data;
+	unsigned char *data = (unsigned char *)malloc(sizeof(char) * 3 * numPixels);
+	unsigned char *startData = data;
 
-//	unsigned char *alpha = NULL;
-//	if (hasAlpha)
-//		alpha = (unsigned char *)malloc(sizeof(char) * numPixels);
+	unsigned char *alpha = NULL;
+	if (hasAlpha)
+		alpha = (unsigned char *)malloc(sizeof(char) * numPixels);
 
-//	unsigned char *startAlpha = alpha;
+	unsigned char *startAlpha = alpha;
 
-//	for (int y = 0; y < qtImage.height(); y++)
-//	{
-//		QRgb *line = (QRgb*)qtImage.scanLine(y);
+	for (int y = 0; y < qtImage.height(); y++)
+	{
+		QRgb *line = (QRgb*)qtImage.scanLine(y);
 
-//		for (int x = 0; x < qtImage.width(); x++)
-//		{
-//			QRgb colour = line[x];
+		for (int x = 0; x < qtImage.width(); x++)
+		{
+			QRgb colour = line[x];
 
-//			data[0] = qRed(colour);
-//			data[1] = qGreen(colour);
-//			data[2] = qBlue(colour);
+			data[0] = qRed(colour);
+			data[1] = qGreen(colour);
+			data[2] = qBlue(colour);
 
-//			if (hasAlpha)
-//			{
-//				alpha[0] = qAlpha(colour);
-//				alpha++;
-//			}
-//			data += 3;
-//		}
-//	}
-//	if (hasAlpha)
-//		return wxImage(wxQtConvertSize(qtImage.size()), startData, startAlpha);
-//	else
-//		return wxImage(wxQtConvertSize(qtImage.size()), startData);
-//}
+			if (hasAlpha)
+			{
+				alpha[0] = qAlpha(colour);
+				alpha++;
+			}
+			data += 3;
+		}
+	}
+	if (hasAlpha)
+		return wxImage(qtImage.width(), qtImage.height(), startData, startAlpha);
+	else
+		return wxImage(qtImage.width(), qtImage.height(), startData);
+}
 
 QImage wxQtConvertImage( const wxImage &image )
 {

@@ -113,6 +113,7 @@ int main(int argc, char *argv[])
 		wxSocketBase::Initialize();
 
 		QDeclarativeView view;
+		view.engine()->addImageProvider("images", new ImageProvider);
 		// Visual initialization
  #ifdef USE_OPENGL
 		QGLFormat format = QGLFormat::defaultFormat();
@@ -131,10 +132,6 @@ int main(int argc, char *argv[])
 		view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
 		view.setFocus();
 
-		view.setSource(QString("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
-		QDeclarativeEngine engine;
-		   engine.addImageProvider(QLatin1String("images"), new ImageProvider);
-
 		QStringList maps;
 		wxString mapname;
 		foreach (mapname, usync().GetMapList() ) {
@@ -146,7 +143,7 @@ int main(int argc, char *argv[])
 		QDeclarativeContext* ctxt = view.rootContext();
 		ctxt->setContextProperty("myAwesomeString", &test );
 		ctxt->setContextProperty("myModel", QVariant::fromValue(maps) );
-
+		view.setSource(QString("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
 		view.show();
 
 

@@ -550,8 +550,11 @@ wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image
 	susynclib().ReadFileVFS(ini, FileContent, FileSize);
 	wxMemoryInputStream FileContentStream( FileContent, FileSize );
 
-	cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
+	bool hu = cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
+//	assert( hu );
+//	int* u=0;*u=9;
 	cache.InitAlpha();
+//	assert(cache.GetWidth()>0 );
 	if ( useWhiteAsTransparent )
 	{
 		for ( int x = 0; x < cache.GetWidth(); x++ )
@@ -561,7 +564,44 @@ wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image
 	}
     return cache;
 }
+#ifdef SL_QT_MODE
+#include <QImage>
+QImage SpringUnitSync::GetQImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent  ) const
+{
+	QImage cache;
 
+	susynclib().SetCurrentMod( modname );
+
+	int ini = susynclib().OpenFileVFS ( image_path );
+	ASSERT_EXCEPTION( ini, _T("cannot find side image") );
+
+	int FileSize = susynclib().FileSizeVFS(ini);
+	if (FileSize == 0) {
+		susynclib().CloseFileVFS(ini);
+		ASSERT_EXCEPTION( FileSize, _T("image has size 0") );
+	}
+
+	uninitialized_array<char> FileContent(FileSize);
+	QByteArray cache_data;
+	cache_data.resize(FileSize);
+	susynclib().ReadFileVFS(ini, cache_data.data(), FileSize);
+
+	bool hu = cache.loadFromData( cache_data );
+	assert( hu );
+	return cache;
+////	int* u=0;*u=9;
+//	cache.InitAlpha();
+//	assert(cache.GetWidth()>0 );
+//	if ( useWhiteAsTransparent )
+//	{
+//		for ( int x = 0; x < cache.GetWidth(); x++ )
+//			for ( int y = 0; y < cache.GetHeight(); y++ )
+//				if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 )
+//					cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
+//	}
+//	return cache;
+}
+#endif
 
 wxArrayString SpringUnitSync::GetAIList( const wxString& modname ) const
 {

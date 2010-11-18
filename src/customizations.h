@@ -6,6 +6,7 @@
 #include <wx/string.h>
 #include <wx/icon.h>
 #include <wx/bitmap.h>
+#include <wx/image.h>
 
 class Customizations {
     protected:
@@ -15,6 +16,7 @@ class Customizations {
         OptionsWrapper m_customs;
         wxIcon m_app_ico;
         wxBitmap m_background;
+		wxImage m_background_image;
         wxString m_help_url;
 		bool m_active;
 
@@ -29,6 +31,7 @@ class Customizations {
         const wxString& GetHelpUrl() const;
         const wxIcon& GetAppIcon() const;
         const wxBitmap& GetBackground() const;
+		wxImage GetBackgroundImage() const { return m_background_image; }
         wxSize GetBackgroundSize() const;
         const OptionsWrapper& GetCustomizations() const;
 

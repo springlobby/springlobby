@@ -21,7 +21,9 @@ class SpringUnitSyncLib;
 
 typedef std::map<wxString,wxString> LocalArchivesVector;
 
-
+#ifdef SL_QT_MODE
+class QImage;
+#endif
 /// Thread safe MRU cache (works like a std::map but has maximum size)
 template<typename TKey, typename TValue>
 class MostRecentlyUsedCache
@@ -159,6 +161,9 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetSides( const wxString& modname  );
 	wxImage GetSidePicture( const wxString& modname, const wxString& SideName ) const;
 	wxImage GetImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent = true ) const;
+#ifdef SL_QT_MODE
+	QImage GetQImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent = true ) const;
+#endif
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );
     void FreeUnitSyncLib();

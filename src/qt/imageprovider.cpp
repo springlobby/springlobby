@@ -17,17 +17,28 @@
 
 
 #include "imageprovider.h"
+#include <customizations.h>
+#include <qt/converters.h>
+#include <wx/image.h>
+#include <QDebug>
 
 QImage ImageProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
 {
 	int width = 100;
 	int height = 50;
 
-	if (size)
-		*size = QSize(width, height);
+
 //	QImage pixmap(requestedSize.width() > 0 ? requestedSize.width() : width,
 //				   requestedSize.height() > 0 ? requestedSize.height() : height);
 //	pixmap.fill(QColor(id).rgba());
 
-	return QImage();
+	wxImage h = SLcustomizations().GetBackgroundImage();
+//	wxSize k_size = SLcustomizations().GetBackgroundSize();
+//	assert( k_size != wxDefaultSize );
+	if (size)
+		*size = QSize(h.GetWidth(), h.GetHeight() );
+	qDebug() << h.GetWidth() << h.GetHeight() ;
+	QImage q = wxQtConvertImage( h );
+	assert( !q.isNull() );
+	return q;
 }
