@@ -2,16 +2,20 @@ import Qt 4.7
 import "views"
 
 Rectangle {
-	width: 800
-	height: 800
+	width: 900
+	height: 600
+	Image {
+		source: "image://images/background"
+		anchors.fill: parent
+	}
 
 	Component {
 		id: mapDelegate
 		Rectangle {
-			x: ListView.isCurrentItem ? 20 : 10
+			x: ListView.isCurrentItem ? parent.x + 10 : parent.x
 			id: albumDelegateRec
 			height: 30
-			width: 400
+			width: parent.width
 			property bool isCurrent: ListView.isCurrentItem
 			opacity: isCurrent ? 1.0 : 0.8
 			Behavior on opacity {
@@ -29,7 +33,7 @@ Rectangle {
 					color: "#0e7fb3";
 				}
 			}
-			//			scale: activeFocus ? 1.0 : 0.8
+			scale: activeFocus ? 1.0 : 0.95
 			Text {
 				id: mapname
 				anchors.fill: parent
@@ -38,43 +42,54 @@ Rectangle {
 				verticalAlignment:Text.AlignVCenter
 				text: modelData
 				color: "white"
+				smooth: true
 			}
 			MouseArea{
 				anchors.fill: parent
 				onClicked: {
-					list.currentIndex = index
+					ListView.view.currentIndex = index
 					}
 			}
-
 			Behavior on x {
 				PropertyAnimation{ easing.type: Easing.Linear; duration: 300 }
 			}
-			Behavior on isCurrent {
-
+			Behavior on scale {
+				PropertyAnimation{ easing.type: Easing.Linear; duration: 300 }
 			}
 		}
 	}
 
-	Minimap {
-		id: minimap
-		width: 800
-		height: 800
-	}
-
-	ListView {
-		id: list
-		delegate: mapDelegate
-		model: myModel
-		anchors.fill: parent
-//		highlight: highl
-		highlightFollowsCurrentItem: false
-		focus: true
-		keyNavigationWraps :true
-		anchors.margins: 10
-		spacing: 5
-
-		onCurrentIndexChanged: {
-			minimap.load( myModel[currentIndex] )
+	Item {
+		Minimap {
+			id: minimap
+			anchors.margins: 10
+			anchors.left: parent.left
+			anchors.top: parent.top
+			width: 276
+			height: 276
 		}
+
+		ListView {
+			id: list
+			delegate: mapDelegate
+			model: myModel
+			anchors.left:  minimap.left
+			anchors.top: minimap.bottom
+			width: parent.width -25
+			height:  parent.height - minimap.height - 15
+			anchors.horizontalCenter: minimap.horizontalCenter
+			highlightFollowsCurrentItem: true
+			focus: true
+			keyNavigationWraps :true
+			anchors.margins: 10
+			spacing: 5
+			onCurrentIndexChanged: {
+				minimap.load( myModel[currentIndex] )
+			}
+		}
+		anchors.left: parent.left
+		anchors.margins: 10
+		width:  350
+		height: parent.height
 	}
 }

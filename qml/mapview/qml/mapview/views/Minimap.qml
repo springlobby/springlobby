@@ -1,18 +1,31 @@
 import Qt 4.7
 
 Item {
-	Image {
-		id: imgBG
-		source: ""
+	Rectangle {
+		color: "black"
+		radius: 5
 		anchors.fill: parent
-		Behavior on opacity { PropertyAnimation{} }
+		opacity: 0.6
 	}
-	Image {
-		id: imgBG2
-		anchors.fill: parent
-		source: ""
-		Behavior on opacity { PropertyAnimation{} }
-	}
+		Image {
+			id: imgBG
+			source: ""
+			width: parent.width - 20
+			height: parent.height - 20
+			anchors.centerIn: parent
+			Behavior on opacity { PropertyAnimation{} }
+		}
+
+		Image {
+			id: imgBG2
+			width: parent.width - 20
+			height: parent.height - 20
+			anchors.centerIn: parent
+			source: ""
+			Behavior on opacity { PropertyAnimation{} }
+		}
+
+
 	property bool activeImage: false
 	function load( mapname ) {
 		if ( activeImage ) {
