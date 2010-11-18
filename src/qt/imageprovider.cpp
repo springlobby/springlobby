@@ -25,25 +25,33 @@
 
 QImage ImageProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
 {
-	int width = 100;
-	int height = 50;
+	int width = requestedSize.width() > 0 ? requestedSize.width() : 1024;
+	int height = requestedSize.height() > 0 ? requestedSize.height() : 1024;
 
+	wxImage h = SLcustomizations().GetBackgroundImage();
+	wxSize k_size = SLcustomizations().GetBackgroundSize();
 
-//	QImage pixmap(requestedSize.width() > 0 ? requestedSize.width() : width,
-//				   requestedSize.height() > 0 ? requestedSize.height() : height);
-//	pixmap.fill(QColor(id).rgba());
-
-//	wxImage h = SLcustomizations().GetBackgroundImage();
-	wxImage h = usync().GetMinimap( TowxString( id.toStdString() ) );
-//	wxSize k_size = SLcustomizations().GetBackgroundSize();
-//	assert( k_size != wxDefaultSize );
 	if (size)
-		*size = requestedSize;
-	qDebug() << h.GetWidth() << h.GetHeight() ;
+		*size = wxQtConvertSize( k_size );
+	qDebug() << height << width ;
 	QImage q = wxQtConvertImage( h );
 
 //	q = q.scaled(requestedSize);
 	assert( !q.isNull() );
 
-	return q;
+	return q.scaled( *size );
+}
+
+
+QImage MinimapImageProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
+{
+	int width = requestedSize.width() > 0 ? requestedSize.width() : 1024;
+	int height = requestedSize.height() > 0 ? requestedSize.height() : 1024;
+
+	wxImage h = usync().GetMinimap( TowxString( id.toStdString() ), width, height );
+	if (size)
+		*size = QSize(width,height);
+	QImage q = wxQtConvertImage( h );
+	assert( !q.isNull() );
+	return q.scaled( width, height );
 }

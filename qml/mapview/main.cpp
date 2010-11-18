@@ -113,6 +113,7 @@ int main(int argc, char *argv[])
 		wxSocketBase::Initialize();
 
 		QDeclarativeView view;
+		view.engine()->addImageProvider("minimaps", new MinimapImageProvider);
 		view.engine()->addImageProvider("images", new ImageProvider);
 		// Visual initialization
  #ifdef USE_OPENGL

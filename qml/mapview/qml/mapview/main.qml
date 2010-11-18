@@ -1,4 +1,5 @@
 import Qt 4.7
+import "views"
 
 Rectangle {
 	width: 800
@@ -54,18 +55,11 @@ Rectangle {
 		}
 	}
 
-		Image {
-			id: imgBG
-			//use the dummy image provider which currently always returns the bg image
-			source: ""
-			Behavior on opacity { PropertyAnimation{} }
-		}
-		Image {
-			id: imgBG2
-			//use the dummy image provider which currently always returns the bg image
-			source: ""
-			Behavior on opacity { PropertyAnimation{} }
-		}
+	Minimap {
+		id: minimap
+		width: 800
+		height: 800
+	}
 
 	ListView {
 		id: list
@@ -80,16 +74,7 @@ Rectangle {
 		spacing: 5
 
 		onCurrentIndexChanged: {
-			if ( currentIndex % 2 ) {
-				imgBG2.opacity = 0.0
-				imgBG.source = "image://images/" + myModel[currentIndex]
-				imgBG.opacity = 1.0
-			}
-			else {
-				imgBG.opacity = 0.0
-				imgBG2.source = "image://images/" + myModel[currentIndex]
-				imgBG2.opacity = 1.0
-			}
+			minimap.load( myModel[currentIndex] )
 		}
 	}
 }
