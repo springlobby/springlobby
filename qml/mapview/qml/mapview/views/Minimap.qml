@@ -7,24 +7,12 @@ Item {
 		anchors.fill: parent
 		opacity: 0.6
 	}
-		Image {
-			id: imgBG
-			source: ""
-			width: parent.width - 20
-			height: parent.height - 20
-			anchors.centerIn: parent
-			Behavior on opacity { PropertyAnimation{} }
-		}
-
-		Image {
-			id: imgBG2
-			width: parent.width - 20
-			height: parent.height - 20
-			anchors.centerIn: parent
-			source: ""
-			Behavior on opacity { PropertyAnimation{} }
-		}
-
+	MinimapImage {
+		id: imgBG
+	}
+	MinimapImage {
+		id: imgBG2
+	}
 
 	property bool activeImage: false
 	function load( mapname ) {

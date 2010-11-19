@@ -94,9 +94,14 @@ DEFINES += SL_QT_MODE
 unix {
 		CONFIG += link_pkgconfig
 		PKGCONFIG += libcurl
-		LIBS += $$system(wx-config --libs)
-		QMAKE_CXXFLAGS += $$system(wx-config --cppflags)
 }
+                LIBS += $$system(wx-config --libs --unicode=yes)
+                QMAKE_CXXFLAGS += $$system(wx-config --cxxflags)
+
+#win only
+#QMAKE_CXXFLAGS += -DCURL_STATICLIB
+#LIBS += -lcurl -lmswsock -L/cygdrive/c/wx/lib/gcc_lib
+#INCLUDEPATH += C:\MinGW32\include
 
 OTHER_FILES += \
     ../../src/Helper/qtargparser/QtArg/XorArg \

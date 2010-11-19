@@ -28,6 +28,7 @@
 #include <wx/wfstream.h>
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/socket.h>
+#include <wx/log.h>
 
 #include <QStringList>
 #include <QtArg/Arg>
@@ -115,6 +116,7 @@ int main(int argc, char *argv[])
 		QDeclarativeView view;
 		view.engine()->addImageProvider("minimaps", new MinimapImageProvider);
 		view.engine()->addImageProvider("images", new ImageProvider);
+		view.engine()->addImportPath("qml/mapview/");
 		// Visual initialization
  #ifdef USE_OPENGL
 		QGLFormat format = QGLFormat::defaultFormat();
@@ -144,7 +146,8 @@ int main(int argc, char *argv[])
 		QDeclarativeContext* ctxt = view.rootContext();
 		ctxt->setContextProperty("myAwesomeString", &test );
 		ctxt->setContextProperty("myModel", QVariant::fromValue(maps) );
-		view.setSource(QString("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
+		view.setSource(QUrl("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
+
 		view.show();
 
 
