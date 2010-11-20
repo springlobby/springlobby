@@ -6,6 +6,7 @@ Image {
 	source: "../images/menu_button.png"
 	property string text
 	Text {
+		id: but_text
 		anchors.horizontalCenter: parent.horizontalCenter
 		text: parent.text
 		color: "white"
@@ -14,5 +15,11 @@ Image {
 		font.pixelSize: 22
 		anchors.verticalCenter: parent.verticalCenter
 		anchors.verticalCenterOffset: -3
+	}
+	MouseArea {
+		anchors.fill: parent
+		hoverEnabled: true
+		onEntered: { but_text.color = "red" }
+		onExited: { but_text.color = "white"  }
 	}
 }

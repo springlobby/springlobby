@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
 		QRect d = app.desktop()->screenGeometry();
 		d.height();
 
-//		view.showFullScreen();
+		view.showFullScreen();
 		view.show();
 
 

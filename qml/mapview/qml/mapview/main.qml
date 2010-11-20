@@ -3,7 +3,7 @@ import "views"
 
 Rectangle {
 	width: 1680
-	height: 1080
+	height: 1050
 	anchors.fill: parent
 	Background {}
 //	MinimapList {
