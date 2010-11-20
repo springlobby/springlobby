@@ -58,6 +58,7 @@ bool IsPreVistaWindows();
 //! simply return wxApp::GetAppName with letter lowercased on demand
 wxString GetAppName( const bool lowerCase = false );
 wxString GetConfigfileDir();
+wxString GetUserDataDir();
 
 /**
   \in Format string with a single %s

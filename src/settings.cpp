@@ -76,8 +76,8 @@ Settings::Settings()
 	if ( !wxFileName::FileExists( m_chosen_path ) )
 	{
 		// if directory doesn't exist, try to create it
-		if ( !IsPortableMode() && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
-			wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir(), 0755 );
+		if ( !IsPortableMode() && !wxFileName::DirExists( GetUserDataDir() ) )
+			wxFileName::Mkdir( GetUserDataDir(), 0755 );
 
 		wxFileOutputStream outstream( m_chosen_path );
 
