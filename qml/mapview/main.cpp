@@ -151,8 +151,7 @@ int main(int argc, char *argv[])
 		d.height();
 
 		view.showFullScreen();
-		view.show();
-
+//		view.show();
 
 	return app.exec();
 }
