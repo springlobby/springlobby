@@ -92,16 +92,21 @@ INCLUDEPATH += ../../src/Helper/qtargparser
 DEFINES += SL_QT_MODE
 
 unix {
-		CONFIG += link_pkgconfig
-		PKGCONFIG += libcurl
+	CONFIG += link_pkgconfig
+	PKGCONFIG += libcurl
+	LIBS += $$system(wx-config --libs --unicode=yes) 
+	#QMAKE_CXXFLAGS += $$system(wx-config --cxxflags)
 }
-                LIBS += $$system(wx-config --libs --unicode=yes)
-                QMAKE_CXXFLAGS += $$system(wx-config --cxxflags)
 
-#win only
-#QMAKE_CXXFLAGS += -DCURL_STATICLIB
-#LIBS += -lcurl -lmswsock -L/cygdrive/c/wx/lib/gcc_lib
-#INCLUDEPATH += C:\MinGW32\include
+win32 {
+	LIBS += $$system(i686-pc-mingw32-wx-config --libs)
+	QMAKE_CXXFLAGS += $$system(i686-pc-mingw32-wx-config --cxxflags) -g -gstabs
+	#QMAKE_CXXFLAGS += -DCURL_STATICLIB
+	LIBS += -lcurl -lgcrypt -liconv -L/opt/mingw/usr/i686-pc-mingw32/lib -lgpg-error -lidn -lwldap32 -lws2_32 -lgcrypt -liconv -L/opt/mingw/usr/i686-pc-mingw32/lib -lgpg-error -lz -lgnutls -lws2_32 -lgcrypt -liconv -L/opt/mingw/usr/i686-pc-mingw32/lib -lgpg-error
+
+	#INCLUDEPATH += C:\MinGW32\include
+}
+
 
 OTHER_FILES += \
     ../../src/Helper/qtargparser/QtArg/XorArg \
