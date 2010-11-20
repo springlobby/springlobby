@@ -1,6 +1,7 @@
 #include <QtGui/QApplication>
 #include "qmlapplicationviewer.h"
 #include <QDeclarativeContext>
+#include <QDesktopWidget>
 #include <QtOpenGL/QGLWidget>
 #include <stringdummy.h>
 #include <springunitsync.h>
@@ -147,7 +148,10 @@ int main(int argc, char *argv[])
 		ctxt->setContextProperty("myAwesomeString", &test );
 		ctxt->setContextProperty("myModel", QVariant::fromValue(maps) );
 		view.setSource(QUrl("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
+		QRect d = app.desktop()->screenGeometry();
+		d.height();
 
+//		view.showFullScreen();
 		view.show();
 
 

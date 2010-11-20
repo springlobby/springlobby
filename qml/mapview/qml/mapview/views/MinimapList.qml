@@ -77,8 +77,4 @@ Item {
 			minimap.load( myModel[currentIndex] )
 		}
 	}
-	anchors.left: parent.left
-	anchors.margins: 10
-	width:  350
-	height: parent.height
 }
