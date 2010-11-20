@@ -3,7 +3,6 @@
 #include <QDeclarativeContext>
 #include <QDesktopWidget>
 #include <QtOpenGL/QGLWidget>
-#include <stringdummy.h>
 #include <springunitsync.h>
 #define USE_OPENGL
 
@@ -143,9 +142,7 @@ int main(int argc, char *argv[])
 		}
 
 		QString de( sett().GetCachePath().mb_str() );
-		StringDummy test(de );
 		QDeclarativeContext* ctxt = view.rootContext();
-		ctxt->setContextProperty("myAwesomeString", &test );
 		ctxt->setContextProperty("myModel", QVariant::fromValue(maps) );
 		view.setSource(QUrl("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
 		QRect d = app.desktop()->screenGeometry();
