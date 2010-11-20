@@ -103,54 +103,54 @@ bool CmdInit()
 
 int main(int argc, char *argv[])
 {
-		QApplication app(argc, argv);
-		if ( !CmdInit() )
-			return -1;
+	QApplication app(argc, argv);
+	if ( !CmdInit() )
+		return -1;
 
-		wxLogChain* logchain = 0;
-		wxLog::SetActiveTarget( new wxLogChain( new wxLogStream( &std::cout ) ) );
+	wxLogChain* logchain = 0;
+	wxLog::SetActiveTarget( new wxLogChain( new wxLogStream( &std::cout ) ) );
 
-		//this needs to called _before_ mainwindow instance is created
-		wxInitAllImageHandlers();
-		wxFileSystem::AddHandler(new wxZipFSHandler);
-		wxSocketBase::Initialize();
+	//this needs to called _before_ mainwindow instance is created
+	wxInitAllImageHandlers();
+	wxFileSystem::AddHandler(new wxZipFSHandler);
+	wxSocketBase::Initialize();
 
-		QDeclarativeView view;
-		view.engine()->addImageProvider("minimaps", new MinimapImageProvider);
-		view.engine()->addImageProvider("images", new ImageProvider);
-		view.engine()->addImportPath("qml/mapview/");
-		// Visual initialization
- #ifdef USE_OPENGL
-		QGLFormat format = QGLFormat::defaultFormat();
-		 #ifdef Q_WS_MAC
-				format.setSampleBuffers(true);
-		 #else
-				format.setSampleBuffers(false);
-		 #endif
-		QGLWidget *glWidget = new QGLWidget(format, &view);
-		view.setViewport(glWidget);
-		view.setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
- #endif
+	QDeclarativeView view;
+	view.engine()->addImageProvider("minimaps", new MinimapImageProvider);
+	view.engine()->addImageProvider("images", new ImageProvider);
+	view.engine()->addImportPath("qml/mapview/");
+	// Visual initialization
+#ifdef USE_OPENGL
+	QGLFormat format = QGLFormat::defaultFormat();
+	 #ifdef Q_WS_MAC
+			format.setSampleBuffers(true);
+	 #else
+			format.setSampleBuffers(false);
+	 #endif
+	QGLWidget *glWidget = new QGLWidget(format, &view);
+	view.setViewport(glWidget);
+	view.setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
+#endif
 
-		view.setAttribute(Qt::WA_OpaquePaintEvent);
-		view.setAttribute(Qt::WA_NoSystemBackground);
-		view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
-		view.setFocus();
+	view.setAttribute(Qt::WA_OpaquePaintEvent);
+	view.setAttribute(Qt::WA_NoSystemBackground);
+	view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
+	view.setFocus();
 
-		QStringList maps;
-		wxString mapname;
-		foreach (mapname, usync().GetMapList() ) {
-			maps.append( QString(mapname.mb_str()) );
-		}
+	QStringList maps;
+	wxString mapname;
+	foreach (mapname, usync().GetMapList() ) {
+		maps.append( QString(mapname.mb_str()) );
+	}
 
-		QString de( sett().GetCachePath().mb_str() );
-		QDeclarativeContext* ctxt = view.rootContext();
-		ctxt->setContextProperty("myModel", QVariant::fromValue(maps) );
-		view.setSource(QUrl("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
-		QRect d = app.desktop()->screenGeometry();
-		d.height();
+	QString de( sett().GetCachePath().mb_str() );
+	QDeclarativeContext* ctxt = view.rootContext();
+	ctxt->setContextProperty("myModel", QVariant::fromValue(maps) );
+	view.setSource(QUrl("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
+	QRect d = app.desktop()->screenGeometry();
+	d.height();
 
-		view.showFullScreen();
+	view.showFullScreen();
 //		view.show();
 
 	return app.exec();
