@@ -66,11 +66,11 @@ bool CmdInit()
 		Settings::m_user_defined_config_path = TowxString( config_file.value().toString().toStdString() );
 		 wxFileName fn ( Settings::m_user_defined_config_path );
 		 if ( ! fn.IsAbsolute() ) {
-			 wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
+			 qDebug() << "path for parameter \"config-file\" must be absolute";
 			 return false;
 		 }
 		 if ( ! fn.IsFileWritable() ) {
-			 wxLogError ( _T("path for parameter \"config-file\" must be writeable") );
+			 qDebug() << "path for parameter \"config-file\" must be writeable";
 			 return false;
 		 }
 		 qDebug() << Settings::m_user_defined_config_path.mb_str();
@@ -92,8 +92,10 @@ bool CmdInit()
 		qDebug() << ko;
 		wxString kko = TowxString( ko.toStdString() );
 				wxLogError( kko.c_str() );
-		if ( !SLcustomizations().Init( kko ) )
+		if ( !SLcustomizations().Init( kko ) ) {
+			qDebug() << "init false";
 			return false;
+		}
 	}
 
 	return true;
