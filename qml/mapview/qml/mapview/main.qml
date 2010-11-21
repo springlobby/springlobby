@@ -9,16 +9,6 @@ Rectangle {
 	id: rootElement
 	Background { id: bgImage }
 	Logo { id: logoImage }
-//	MinimapList {
-//		id: minimapList
-//		width:  350
-//		anchors.right: parent.right
-//		anchors.margins: 10
-
-//		height: parent.height
-//		focus: true
-//		opacity: 0.1
-//	}
 
 	Item {
 		Rectangle {
@@ -33,8 +23,10 @@ Rectangle {
 		anchors.left: mainMenu.right
 		anchors.top: logoImage.bottom
 		anchors.margins: 30
+		clip: true
 
 		Browser {	id: webBrowser }
+		Skirmish { id: skirmishView }
 	}
 
 

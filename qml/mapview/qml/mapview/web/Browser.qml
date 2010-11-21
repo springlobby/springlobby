@@ -8,7 +8,6 @@ Item {
 	anchors.margins: 12
 	anchors.horizontalCenter: parent.horizontalCenter
 	clip: true
-
 	Item { id: headerSpace; width: parent.width; height: 1 }
 
 	Header {
@@ -49,8 +48,7 @@ Item {
 	]
 	transitions: [
 		Transition {
-			AnchorAnimation{  easing.type: Easing.OutBounce; duration: 1000  }
-			PropertyAnimation { duration:  1000 }
+			AnchorAnimation{  easing.type: Easing.InOutQuad; duration: 1000  }
 		}
 	]
 	state:  "Offscreen"
