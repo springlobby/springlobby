@@ -1,5 +1,6 @@
 import Qt 4.7
 import "views"
+import "web"
 
 Rectangle {
 	width: 1680
@@ -16,5 +17,15 @@ Rectangle {
 //		focus: true
 //		opacity: 0.1
 //	}
+
+	Browser {
+		opacity: 0.0
+
+		Behavior on opacity {
+			PropertyAnimation{ duration: 4000 }
+		}
+		id: webBrowser
+	}
+
 	MenuContainer {}
 }

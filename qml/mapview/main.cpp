@@ -12,6 +12,7 @@
 #include <iostream>
 #include <customizations.h>
 #include <qt/imageprovider.h>
+#include <qt/converters.h>
 
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
@@ -20,7 +21,6 @@
 #include <wx/filefn.h>
 #include <wx/image.h>
 #include <wx/cmdline.h>
-#include <wx/choicdlg.h>
 #include <wx/filename.h>
 #include <wx/dirdlg.h>
 #include <wx/tooltip.h>
@@ -30,13 +30,14 @@
 #include <wx/socket.h>
 #include <wx/log.h>
 
-#include <QStringList>
 #include <QtArg/Arg>
 #include <QtArg/XorArg>
 #include <QtArg/CmdLine>
 #include <QtArg/Help>
 #include <QDeclarativeEngine>
 #include <QtCore/QDebug>
+#include <QStringList>
+#include <QIcon>
 
 bool CmdInit()
 {
@@ -107,6 +108,8 @@ int main(int argc, char *argv[])
 	if ( !CmdInit() )
 		return -1;
 
+//	QIcon icon( wxBitmap(SLcustomizations().GetAppIcon()).GetHandle() );
+//	app.setWindowIcon( icon );
 	wxLogChain* logchain = 0;
 	wxLog::SetActiveTarget( new wxLogChain( new wxLogStream( &std::cout ) ) );
 
@@ -143,7 +146,7 @@ int main(int argc, char *argv[])
 		maps.append( QString(mapname.mb_str()) );
 	}
 
-	QString de( sett().GetCachePath().mb_str() );
+	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 	QDeclarativeContext* ctxt = view.rootContext();
 	ctxt->setContextProperty("myModel", QVariant::fromValue(maps) );
 	view.setSource(QUrl("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc

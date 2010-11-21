@@ -6,10 +6,18 @@ Column {
 	anchors.leftMargin: 0.08 * parent.width
 	spacing: 20
 	anchors.verticalCenter:  parent.verticalCenter
-	Repeater {
-		model: 6
-		MenuButton{ text: "I'm item " + index }
+
+	MenuButton{ text: "Skirmish" }
+	MenuButton{ text: "Play online" }
+	MenuButton{ text: "Settings" }
+	MenuButton{ text: "Update" }
+	MenuButton{ text: "How to play" }
+	MenuButton{ text: "Website"
+		onClicked :{
+			webBrowser.opacity = 1.0
+		}
 	}
+	MenuButton{ text: "Quit"; onClicked: Qt.quit() }
 
 	add: Transition {
 			 NumberAnimation {

@@ -4,11 +4,13 @@ Image {
 	id: menu_button
 	width: 217
 	height: 49
-	property string text
+	property alias text: but_text.text
+	signal clicked()
+	property alias mouseAreaButton: mouseAreaButton
+
 	Text {
 		id: but_text
 		anchors.horizontalCenter: parent.horizontalCenter
-		text: parent.text
 		color: "white"
 		font.weight: Font.Bold
 		font.capitalization: Font.AllUppercase
@@ -17,12 +19,21 @@ Image {
 		anchors.verticalCenterOffset: -3
 	}
 	MouseArea {
+		id: mouseAreaButton
 		anchors.fill: parent
 		hoverEnabled: true
 		onEntered: { parent.state = "rollover" }
 		onExited: { parent.state = "plain"  }
-//		onClicked: { parent.state = "clicked"  }
+		onClicked: { parent.state = "clicked"
+			butTimer.start()
+			menu_button.clicked() }
+
 	}
+	Timer {
+		id: butTimer
+			interval: 100; running: false; repeat: false
+			onTriggered: parent.state = "plain"
+		}
 	states: [
 		State {
 			name: "plain"
@@ -38,7 +49,8 @@ Image {
 		}
 	]
 	state: "plain"
-//	transitions: [
+
+	//	transitions: [
 //		Transition {
 
 //		}
