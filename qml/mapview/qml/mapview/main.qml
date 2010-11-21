@@ -6,7 +6,9 @@ Rectangle {
 	width: 1680
 	height: 1050
 	anchors.fill: parent
-	Background {}
+	id: rootElement
+	Background { id: bgImage }
+	Logo { id: logoImage }
 //	MinimapList {
 //		id: minimapList
 //		width:  350
@@ -18,14 +20,23 @@ Rectangle {
 //		opacity: 0.1
 //	}
 
-	Browser {
-		opacity: 0.0
-
-		Behavior on opacity {
-			PropertyAnimation{ duration: 4000 }
+	Item {
+		Rectangle {
+			anchors.fill: parent
+			color: "black"
+			opacity: 0.1
+			radius: 10
 		}
-		id: webBrowser
+		id: mainContainer
+		width: parent.width * 0.7 ;
+		height: parent.height * 0.7
+		anchors.left: mainMenu.right
+		anchors.top: logoImage.bottom
+		anchors.margins: 30
+
+		Browser {	id: webBrowser }
 	}
 
-	MenuContainer {}
+
+	MenuContainer { id: mainMenu}
 }

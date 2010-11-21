@@ -96,7 +96,7 @@ Item {
 
     states: State {
         name: "visible"
-        when: container.orientation == Qt.Vertical ? scrollArea.movingVertically : scrollArea.movingHorizontally
+		when: container.orientation == Qt.Vertical ? scrollArea.movingVertically : scrollArea.movingHorizontally
         PropertyChanges { target: container; opacity: 1.0 }
     }
 

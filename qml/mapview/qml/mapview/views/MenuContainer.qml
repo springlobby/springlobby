@@ -14,7 +14,7 @@ Column {
 	MenuButton{ text: "How to play" }
 	MenuButton{ text: "Website"
 		onClicked :{
-			webBrowser.opacity = 1.0
+			webBrowser.state = "Onscreen"
 		}
 	}
 	MenuButton{ text: "Quit"; onClicked: Qt.quit() }

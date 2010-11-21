@@ -1,13 +1,14 @@
 import Qt 4.7
 
-Rectangle {
+Item {
 	property string urlString : "http://www.evolutionrts.info/"
+	id: webBrowser
+	width: parent.width - 24
+	height: parent.height - 24
+	anchors.margins: 12
+	anchors.horizontalCenter: parent.horizontalCenter
+	clip: true
 
-	width: parent.width * 0.7 ; height: parent.height * 0.7
-	color: "#343434"
-	anchors.bottom: parent.bottom
-	anchors.right: parent.right
-	anchors.margins: 0.08 * parent.width
 	Item { id: headerSpace; width: parent.width; height: 1 }
 
 	Header {
@@ -17,6 +18,7 @@ Rectangle {
 	}
 	FlickableWebView {
 		id: webView
+		height: parent.height - 10
 		url: webBrowser.urlString
 		onProgressChanged: header.urlChanged = false
 		anchors { top: headerSpace.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
@@ -31,4 +33,25 @@ Rectangle {
 		scrollArea: webView; height: 8; orientation: Qt.Horizontal
 		anchors { right: parent.right; rightMargin: 8; left: parent.left; bottom: parent.bottom }
 	}
+
+	states: [
+		State {
+			name: "Offscreen"
+			PropertyChanges { target: webBrowser; 	anchors.topMargin:  4000 }
+			AnchorChanges { target: webBrowser; anchors {top: mainContainer.bottom } }
+
+		},
+		State {
+			name: "Onscreen"
+			AnchorChanges { target: webBrowser; anchors {top: mainContainer.top } }
+			PropertyChanges { target: webBrowser; 	anchors.topMargin:  12 }
+		}
+	]
+	transitions: [
+		Transition {
+			AnchorAnimation{  easing.type: Easing.OutBounce; duration: 1000  }
+			PropertyAnimation { duration:  1000 }
+		}
+	]
+	state:  "Offscreen"
 }
