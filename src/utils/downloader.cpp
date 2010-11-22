@@ -114,7 +114,7 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 	curl_easy_cleanup(curl_handle);
 
 	PlasmaResourceInfo info;
-	if( ret == CURLE_OK ) {
+	if( ret != CURLE_OK ) {
 		info.m_type = PlasmaResourceInfo::unknown;
 		return info;
 	}
@@ -279,7 +279,7 @@ void FetchResourceListWorkItem::Run()
 	/* cleanup curl stuff */
 	curl_easy_cleanup(curl_handle);
 
-	if ( ret == CURLE_OK ) {
+	if ( ret != CURLE_OK ) {
 		GetGlobalEventSender( GlobalEvents::PlasmaResourceListFailedDownload ).SendEvent( 0 );
 	}
 	else {
