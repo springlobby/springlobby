@@ -36,6 +36,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
+#include <boost/cstdint.hpp>
 
 #include <fstream>
 
@@ -523,8 +524,7 @@ void TorrentWrapper::HandleCompleted()
 std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 {
     std::map<wxString,TorrentInfos> ret;
-    try
-    {
+    try {
 		const TorrenthandleInfoMap& infomap = GetHandleInfoMap();
         TorrentInfos globalinfos;
         libtorrent::session_status session_status = m_torr->status();
@@ -537,8 +537,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
         ret[wxString(_T("global"))] = globalinfos;
 
 		const TorrenthandleVector torrentList = m_torr->get_torrents();
-		for ( TorrenthandleInfoMap::const_iterator i = infomap.begin(); i != infomap.end(); ++i )
-        {
+		for ( TorrenthandleInfoMap::const_iterator i = infomap.begin(); i != infomap.end(); ++i ) {
 			try {
 				TorrentInfos CurrentTorrent;
 				libtorrent::torrent_handle handle = i->second;
@@ -550,16 +549,18 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 				CurrentTorrent.numcopies = torrent_status.distributed_copies;
 				CurrentTorrent.filesize = handle.get_torrent_info().total_size();
 
-				int eta_seconds = -1;
-				if ( CurrentTorrent.progress > 0 && CurrentTorrent.inspeed > 0)
-					eta_seconds = int (  (CurrentTorrent.filesize - CurrentTorrent.downloaded ) / CurrentTorrent.inspeed );
+				boost::int64_t eta_seconds = -1;
+				if ( CurrentTorrent.progress > 0 && CurrentTorrent.inspeed > 0) {
+					eta_seconds =  (CurrentTorrent.filesize - (CurrentTorrent.downloaded - torrent_status.total_failed_bytes)) / CurrentTorrent.inspeed;
+				}
 
 				CurrentTorrent.eta = eta_seconds;
 				CurrentTorrent.downloadstatus = getP2PStatusFromHandle( handle );
 				ret[CurrentTorrent.name] = CurrentTorrent;
 			}
-			catch ( libtorrent::invalid_handle& h )
-			{}
+			catch ( libtorrent::invalid_handle& h ) {
+			    wxLogWarning(_T("%s"), h.what());//XXX should this be translated(_T)?
+			}
         }
     }
     catch (std::exception& e)
