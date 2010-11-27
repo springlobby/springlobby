@@ -32,6 +32,7 @@
 #include "userlist.h"
 #include "battle.h"
 #include "singleplayerbattle.h"
+#include "qt/noguisingleplayerbattle.h"
 #include "offlinebattle.h"
 #include "user.h"
 #include "iunitsync.h"

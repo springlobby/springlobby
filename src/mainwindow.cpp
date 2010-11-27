@@ -269,8 +269,10 @@ void MainWindow::SetTabIcons()
 
 void MainWindow::forceSettingsFrameClose()
 {
+#ifndef SL_QT_MODE
 	if (se_frame_active && se_frame != 0)
 		se_frame->handleExternExit();
+#endif
 }
 
 void MainWindow::SetLogWin( wxLogWindow* log, wxLogChain* logchain  )
@@ -625,10 +627,12 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
 {
+#ifndef SL_QT_MODE
 	se_frame = new settings_frame(this,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
 	  	    		wxDefaultSize);
 	se_frame_active = true;
 	se_frame->Show();
+#endif
 }
 
 void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
@@ -639,12 +643,14 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuSelectLocale( wxCommandEvent& /*unused*/ )
 {
+#ifndef SL_QT_MODE
     if ( wxGetApp().SelectLanguage() ) {
 		customMessageBoxNoModal( SL_MAIN_ICON,
 								 IdentityString( _("You need to restart %s for the language change to take effect.") ),
 								 _("Restart required"),
 								 wxICON_EXCLAMATION | wxOK );
     }
+#endif
 }
 
 void MainWindow::OnShowChannelChooser( wxCommandEvent& /*unused*/ )

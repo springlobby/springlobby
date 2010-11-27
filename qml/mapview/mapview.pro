@@ -26,27 +26,143 @@ symbian:TARGET.UID3 = 0xE1BC102A
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
-    ../../src/springunitsynclib.cpp \
-    ../../src/globalsmanager.cpp \
-    ../../src/settings.cpp \
-    ../../src/Helper/slconfig.cpp \
-    ../../src/utils/platform.cpp \
-    ../../src/utils/misc.cpp \
-    ../../src/utils/curlhelper.cpp \
-    stringdummy.cpp \
-    ../../src/springunitsync.cpp \
-    ../../src/springprocess.cpp \
-    ../../src/thread.cpp \
-    ../../src/utils/uievents.cpp \
-    ../../src/utils/globalevents.cpp \
-    ../../src/mmoptionswrapper.cpp \
-    ../../src/mmoptionmodel.cpp \
-    ../../src/uiutils.cpp \
-    ../../src/utils/customdialogs.cpp \
-    ../../src/customizations.cpp \
-    ../../src/utils/conversion.cpp \
     ../../src/qt/imageprovider.cpp \
-    ../../src/qt/converters.cpp
+    ../../src/qt/converters.cpp \
+    ../../src/qt/skirmishmodel.cpp \
+    ../../src/qt/noguisingleplayerbattle.cpp \
+    ../../src/Helper/TextCompletionDatabase.cpp \
+	../../src/utils/activitynotice.cpp \
+	../../src/chatpanelmenu.cpp \
+	../../src/gui/gradientpanel.cpp \
+	../../src/gui/toasternotification.cpp \
+	../../src/gui/wxgradientbutton.cpp \
+	../../src/gui/wxbackgroundimage.cpp \
+	../../src/gui/statusbar.cpp \
+	../../src/aui/slbook.cpp \
+	../../src/utils/math.cpp \
+	../../src/utils/misc.cpp \
+	../../src/gui/pastedialog.cpp \
+	../../src/utils/tasutil.cpp \
+	../../src/utils/networkevents.cpp \
+	../../src/utils/md5.c \
+	../../src/Helper/imageviewer.cpp \
+	../../src/Helper/slhtmlwindow.cpp \
+	../../src/channel/channelchooser.cpp \
+	../../src/channel/channelchooserdialog.cpp \
+	../../src/Helper/wxtextctrlhist.cpp \
+	../../src/Helper/colorbutton.cpp \
+	../../src/filelister/filelistctrl.cpp \
+	../../src/filelister/filelistdialog.cpp \
+	../../src/filelister/filelistfilter.cpp \
+	../../src/aui/auimanager.cpp \
+	../../src/aui/artprovider.cpp \
+	../../src/autobalancedialog.cpp \
+	../../src/autohost.cpp \
+	../../src/channel/autojoinchanneldialog.cpp \
+	../../src/addbotdialog.cpp \
+	../../src/agreementdialog.cpp \
+	../../src/base64.cpp \
+	../../src/battle.cpp \
+	../../src/battlelist.cpp \
+	../../src/battlelistctrl.cpp \
+	../../src/battlelistfilter.cpp \
+	../../src/battlelisttab.cpp \
+	../../src/battlemaptab.cpp \
+	../../src/battleoptionstab.cpp \
+	../../src/battleroomlistctrl.cpp \
+	../../src/battleroomtab.cpp \
+	../../src/crc.cpp \
+	../../src/channel/channel.cpp \
+	../../src/channel/channellist.cpp \
+	../../src/channel/channellistctrl.cpp \
+	../../src/chatlog.cpp \
+	../../src/chatoptionstab.cpp \
+	../../src/chatpanel.cpp \
+	../../src/connectwindow.cpp \
+	../../src/countrycodes.cpp \
+	../../src/customlistctrl.cpp \
+	../../src/flagimages.cpp \
+	../../src/groupoptionspanel.cpp \
+	../../src/hostbattledialog.cpp \
+	../../src/ibattle.cpp \
+	../../src/iconimagelist.cpp \
+	../../src/introguide.cpp \
+	../../src/lobbyoptionstab.cpp \
+	../../src/mainchattab.cpp \
+	../../src/mainjoinbattletab.cpp \
+	../../src/mainoptionstab.cpp \
+	../../src/mainsingleplayertab.cpp \
+	../../src/maintorrenttab.cpp \
+	../../src/mainwindow.cpp \
+	../../src/mapctrl.cpp \
+	../../src/mapgridctrl.cpp \
+	../../src/mapselectdialog.cpp \
+	../../src/mmoptionwindows.cpp \
+	../../src/nicklistctrl.cpp \
+	../../src/offlinebattle.cpp \
+	../../src/playback/replaylist.cpp \
+	../../src/playback/savegamelist.cpp \
+	../../src/alsound.cpp \
+	../../src/selectusersdialog.cpp \
+	../../src/server.cpp \
+	../../src/reconnectdialog.cpp \
+	../../src/serverevents.cpp \
+	../../src/singleplayerbattle.cpp \
+	../../src/singleplayertab.cpp \
+	../../src/socket.cpp \
+	../../src/spring.cpp \
+	../../src/springoptionstab.cpp \
+	../../src/springprocess.cpp \
+	../../src/tasserver.cpp \
+	../../src/tdfcontainer.cpp \
+	../../src/torrentlistctrl.cpp \
+	../../src/torrentoptionspanel.cpp \
+	../../src/torrentwrapper.cpp \
+	../../src/ui.cpp \
+	../../src/user.cpp \
+	../../src/useractions.cpp \
+	../../src/userlist.cpp \
+	../../src/userlistctrl.cpp \
+	../../src/utils/downloader.cpp \
+	../../src/utils/plasmaresourceinfo.cpp \
+	../../src/utils/battleevents.cpp \
+	../../src/widgets/downloadlistctrl.cpp \
+	../../src/widgets/downloaddialog.cpp \
+	../../src/widgets/downloadpanel.cpp \
+	../../src/widgets/infopanel.cpp \
+	../../src/widgets/widget.cpp \
+	../../src/Helper/tasclientimport.cpp \
+	../../src/simpleinterface/simpleserverevents.cpp \
+	../../src/toasterbox/ToasterBox.cpp \
+	../../src/toasterbox/ToasterBoxWindow.cpp \
+	../../src/toasterbox/ToasterBoxWindowList.cpp \
+	../../src/gui/notificationmanager.cpp \
+	../../src/pingthread.cpp \
+	../../src/iserverevents.cpp \
+	../../src/utils/curlhelper.cpp \
+	../../src/customizations.cpp \
+	../../src/uiutils.cpp \
+	../../src/updater/versionchecker.cpp \
+	../../src/updater/updatehelper.cpp \
+	../../src/utils/controls.cpp \
+	../../src/utils/conversion.cpp \
+	../../src/utils/customdialogs.cpp \
+	../../src/utils/debug.cpp \
+	../../src/utils/globalevents.cpp \
+	../../src/utils/platform.cpp \
+	../../src/utils/sltipwin.cpp \
+	../../src/utils/uievents.cpp \
+	../../src/crashreport.cpp \
+	../../src/globalsmanager.cpp \
+	../../src/mmoptionmodel.cpp \
+	../../src/mmoptionswrapper.cpp \
+	../../src/settings.cpp \
+	../../src/springunitsynclib.cpp \
+	../../src/springunitsync.cpp \
+	../../src/thread.cpp \
+	../../src/gui/windowattributespickle.cpp \
+	../../src/gui/spinctl/generic/spinctlg.cpp \
+	../../src/Helper/slconfig.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -60,7 +176,6 @@ HEADERS += \
     ../../src/utils/platform.h \
     ../../src/utils/misc.h \
     ../../src/utils/curlhelper.h \
-    stringdummy.h \
     ../../src/springunitsync.h \
     ../../src/springprocess.h \
     ../../src/iunitsync.h \
@@ -85,11 +200,44 @@ HEADERS += \
     ../../src/Helper/qtargparser/QtArg/argconstraint.hpp \
     ../../src/Helper/qtargparser/QtArg/arg.hpp \
     ../../src/qt/imageprovider.h \
-    ../../src/qt/converters.h
+    ../../src/qt/converters.h \
+    ../../src/qt/skirmishmodel.h \
+    ../../src/user.h \
+    ../../src/ibattle.h \
+    ../../src/iconimagelist.h \
+    ../../src/userlist.h \
+    ../../src/chatpanel.h \
+    ../../src/spring.h \
+    ../../src/ui.h \
+    ../../src/tdfcontainer.h \
+    ../../src/qt/noguisingleplayerbattle.h \
+    ../../src/battle.h \
+    ../../src/Helper/TextCompletionDatabase.hpp \
+    ../../src/channel/channel.h \
+    ../../src/chatlog.h \
+    ../../src/aui/auimanager.h \
+    ../../src/flagimages.h \
+    ../../src/flagimagedata.h \
+    ../../src/server.h \
+    ../../src/mainwindow.h \
+    ../../src/chatpanelmenu.h \
+    ../../src/nicklistctrl.h \
+    ../../src/tasserver.h \
+    ../../src/utils/battleevents.h \
+    ../../src/battlelisttab.h \
+    ../../src/autohost.h \
+    ../../src/gui/pastedialog.h \
+    ../../src/Helper/wxtextctrlhist.h \
+    ../../src/mainchattab.h \
+    ../../src/reconnectdialog.h \
+    ../../src/mainjoinbattletab.h \
+    ../../src/battleroomtab.h
 
 INCLUDEPATH += ../../src
 INCLUDEPATH += ../../src/Helper/qtargparser
 DEFINES += SL_QT_MODE
+DEFINES += NO_TORRENT_SYSTEM
+DEFINES += DISABLE_SOUND
 
 unix {
 	CONFIG += link_pkgconfig
@@ -117,4 +265,5 @@ OTHER_FILES += \
     ../../src/Helper/qtargparser/QtArg/ArgConstraint \
     ../../src/Helper/qtargparser/QtArg/Arg \
     images/menu_button.png \
-    images/logo.png
+    images/logo.png \
+    ../../src/iconimagelist.
