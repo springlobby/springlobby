@@ -31,7 +31,7 @@ Item {
 				anchors.centerIn: parent
 				horizontalAlignment: Text.AlignHCenter
 				verticalAlignment:Text.AlignVCenter
-				text: modelData
+				text: display
 				color: "white"
 				smooth: true
 			}
@@ -74,7 +74,7 @@ Item {
 		anchors.margins: 10
 		spacing: 5
 		onCurrentIndexChanged: {
-			minimap.load( myModel[currentIndex] )
+			minimap.load( myModel.name(currentIndex) )
 		}
 	}
 }

@@ -1,7 +1,10 @@
 #include "skirmishmodel.h"
+
 #include "../customizations.h"
 #include "../springunitsync.h"
 #include "../springunitsynclib.h"
+
+#include <cstdlib>
 
 SkirmishModel::SkirmishModel(QObject *parent)
 	: QAbstractListModel(parent),
@@ -35,6 +38,24 @@ SkirmishModel::SkirmishModel(QObject *parent)
 			break;
 		}
 	}
+
+	optFlag = OptionsWrapper::SkirmishOptions;
+	mmOptionList suggested_maps;
+	mmOptionList suggested_sides;
+	OptionsWrapper map_op = m_skirmishes.begin()->second;
+	for ( IUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin(); it != map_op.m_opts[optFlag].list_map.end(); ++it) {
+		mmOptionList current = it->second;
+		if ( _T("suggested_maps") == current.key ) {
+			suggested_maps = current;
+		}
+		else if ( _T("suggested_sides") == current.key ) {
+			suggested_sides = current;
+		}
+	}
+	std::srand(time(NULL));
+
+	//MaplistModel
+
 }
 
 int SkirmishModel::rowCount(const QModelIndex &parent ) const
