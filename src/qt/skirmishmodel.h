@@ -16,10 +16,35 @@
 **/
 
 
-#include "stringdummy.h"
+#ifndef SKIRMISHMODEL_H
+#define SKIRMISHMODEL_H
 
-StringDummy::StringDummy(const QString& s, QObject *parent) :
-	QObject(parent),
-	string_(s)
+#include <QAbstractListModel>
+#include "../mmoptionswrapper.h"
+#include <qt/noguisingleplayerbattle.h>
+
+class SkirmishModel : public QAbstractListModel
 {
-}
+    Q_OBJECT
+public:
+    explicit SkirmishModel(QObject *parent = 0);
+	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+signals:
+
+public slots:
+
+private:
+	OptionsWrapper m_mod_customs;
+
+	NoGuiSinglePlayerBattle m_battle;
+
+	typedef std::map< wxString, OptionsWrapper >
+		SkirmishMap;
+
+	SkirmishMap m_skirmishes;
+
+};
+
+#endif // SKIRMISHMODEL_H

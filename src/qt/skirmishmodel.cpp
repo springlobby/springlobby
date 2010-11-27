@@ -1,0 +1,48 @@
+#include "skirmishmodel.h"
+#include "../customizations.h"
+#include "../springunitsync.h"
+#include "../springunitsynclib.h"
+
+SkirmishModel::SkirmishModel(QObject *parent)
+	: QAbstractListModel(parent),
+	m_mod_customs( SLcustomizations().GetCustomizations() )
+{
+	m_battle.SetHostMod( SLcustomizations().GetModname(), wxEmptyString );
+	m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, SLcustomizations().GetModname() );
+	const wxString sk_dir = m_mod_customs.getSingleValue( _T("skirmish_directory"), OptionsWrapper::ModCustomizations );
+
+	//this block populates the radiobox and loads the skirmish options into the map
+	OptionsWrapper::GameOption optFlag = OptionsWrapper::ModCustomizations;
+	for ( IUnitSync::OptionMapListConstIter it = m_mod_customs.m_opts[optFlag].list_map.begin(); it != m_mod_customs.m_opts[optFlag].list_map.end(); ++it) {
+		mmOptionList current = it->second;
+		if ( _T("scenarios") == current.key ) {
+
+			wxString tooltip;
+			int i = 0;
+			for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor )
+			{
+				tooltip+= _T("\n") + itor->name + _T(": ") + itor->desc;
+				OptionsWrapper temp;
+				wxString filename = sk_dir + _T("/") + itor->key + _T(".lua") ;
+				temp.loadOptions( OptionsWrapper::SkirmishOptions, SLcustomizations().GetModname(), filename );
+				m_skirmishes[current.cbx_choices[i]] =  temp;
+				i++;
+			}
+//            m_scenario_choice->SetToolTip(TE(tooltip));
+
+//            m_scenario_choice->SetName(current.key);
+
+			break;
+		}
+	}
+}
+
+int SkirmishModel::rowCount(const QModelIndex &parent ) const
+{
+	return m_skirmishes.size();
+}
+
+QVariant SkirmishModel::data(const QModelIndex &index, int role ) const
+{
+
+}
