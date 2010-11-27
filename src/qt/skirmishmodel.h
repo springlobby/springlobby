@@ -40,7 +40,7 @@ private:
 
 	NoGuiSinglePlayerBattle m_battle;
 
-	typedef std::map< wxString, OptionsWrapper >
+	typedef std::vector< std::pair<wxString, OptionsWrapper> >
 		SkirmishMap;
 
 	SkirmishMap m_skirmishes;

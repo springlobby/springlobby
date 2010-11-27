@@ -28,7 +28,7 @@ SkirmishModel::SkirmishModel(QObject *parent)
 				OptionsWrapper temp;
 				wxString filename = sk_dir + _T("/") + itor->key + _T(".lua") ;
 				temp.loadOptions( OptionsWrapper::SkirmishOptions, SLcustomizations().GetModname(), filename );
-				m_skirmishes[current.cbx_choices[i]] =  temp;
+				m_skirmishes.push_back( std::make_pair( itor->name, temp ) );
 				i++;
 			}
 //            m_scenario_choice->SetToolTip(TE(tooltip));
@@ -65,5 +65,9 @@ int SkirmishModel::rowCount(const QModelIndex &parent ) const
 
 QVariant SkirmishModel::data(const QModelIndex &index, int role ) const
 {
-
+	int row =  index.row();
+	if ( !index.isValid() || row >= m_skirmishes.size() )
+		   return QVariant();
+	wxString name = m_skirmishes[row].first;
+	return QVariant::fromValue( QString(name.mb_str()) );
 }

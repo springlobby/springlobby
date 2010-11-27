@@ -32,6 +32,7 @@ public:
 	explicit MaplistModel(const wxArrayString& map_names, QObject *parent = 0);
 	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+	void reload( const wxArrayString& map_names );
 
 public slots:
 	QString name(int index) const;

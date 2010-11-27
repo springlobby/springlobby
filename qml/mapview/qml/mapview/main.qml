@@ -25,7 +25,7 @@ Rectangle {
 		anchors.margins: 30
 		clip: true
 
-		Browser {	id: webBrowser }
+//		Browser {	id: webBrowser }
 		Skirmish { id: skirmishView }
 	}
 

@@ -5,6 +5,30 @@ Item {
 	width: parent.width - 24
 	height: parent.height - 24
 	anchors.horizontalCenter: parent.horizontalCenter
+
+	ListView {
+
+		id: skirmishList
+		delegate: SkirmishDelegate{
+			max_width: parent.width - minimapList.width - width
+			max_height: parent.height
+		}
+		model: skirmishModel
+		anchors.left:  parent.left
+		anchors.top: parent.top
+		width: parent.width - 350
+		height:  parent.height - 15
+		anchors.horizontalCenter: parent.horizontalCenter
+		highlightFollowsCurrentItem: true
+		focus: true
+		keyNavigationWraps :true
+		anchors.leftMargin: 10
+		anchors.topMargin: 30
+		spacing: 5
+		onCurrentIndexChanged: {
+//			minimap.load( skirmishModel.name(currentIndex) )
+		}
+	}
 	MinimapList {
 		id: minimapList
 		width:  350

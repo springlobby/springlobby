@@ -14,6 +14,7 @@
 #include <qt/imageprovider.h>
 #include <qt/converters.h>
 #include <qt/maplistmodel.h>
+#include <qt/skirmishmodel.h>
 
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
@@ -141,23 +142,19 @@ int main(int argc, char *argv[])
 	view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
 	view.setFocus();
 
-	QStringList maps;
-	wxString mapname;
-	foreach (mapname, usync().GetMapList() ) {
-		maps.append( QString(mapname.mb_str()) );
-	}
-
 	MaplistModel maplist_model( usync().GetMapList() );
+	SkirmishModel skirmish_model;
 
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 	QDeclarativeContext* ctxt = view.rootContext();
 	ctxt->setContextProperty("myModel", &maplist_model );
+	ctxt->setContextProperty("skirmishModel", &skirmish_model );
 	view.setSource(QUrl("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
 	QRect d = app.desktop()->screenGeometry();
 	d.height();
 
-	view.showFullScreen();
-//	view.show();
+//	view.showFullScreen();
+	view.show();
 
 	return app.exec();
 }

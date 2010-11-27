@@ -23,6 +23,12 @@
 MaplistModel::MaplistModel(const wxArrayString& map_names, QObject *parent )
 	:QAbstractListModel( parent )
 {
+	reload( map_names );
+}
+
+void MaplistModel::reload( const wxArrayString& map_names )
+{
+	m_map_names.clear();
 	wxString mapname;
 	foreach (mapname, map_names ) {
 		m_map_names.append( QString(mapname.mb_str()) );
