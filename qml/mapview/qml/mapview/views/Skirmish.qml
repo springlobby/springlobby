@@ -11,7 +11,7 @@ Item {
 		id: skirmishList
 		delegate: SkirmishDelegate{
 			max_width: parent.width - minimapList.width - width
-			max_height: parent.height
+			max_height: height
 		}
 		model: skirmishModel
 		anchors.left:  parent.left
@@ -20,7 +20,7 @@ Item {
 		height:  parent.height - 15
 		anchors.horizontalCenter: parent.horizontalCenter
 		highlightFollowsCurrentItem: true
-		focus: true
+		focus: false
 		keyNavigationWraps :true
 		anchors.leftMargin: 10
 		anchors.topMargin: 30
