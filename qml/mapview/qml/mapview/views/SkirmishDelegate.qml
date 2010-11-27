@@ -24,7 +24,7 @@ Item {
 
 	Text {
 		id: name
-		text:  display
+		text:  skirmish_name
 		color: "black"
 		anchors.centerIn: parent
 	}
@@ -43,7 +43,7 @@ Item {
 			radius: 5
 		}
 		Text {
-			text:  display
+			text:  description
 			anchors.margins: 15
 			anchors.fill: parent
 		}
