@@ -298,7 +298,7 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
         #define STR
     #endif
 
-    wxCmdLineEntryDesc cmdLineDesc[] =
+    static const wxCmdLineEntryDesc cmdLineDesc[] =
     {
         { wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
         { wxCMD_LINE_SWITCH, STR("nc"), STR("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
@@ -307,10 +307,10 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
         { wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
         { wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("Load lobby customizations from game archive. Expects the long name."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  _("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-        { wxCMD_LINE_SWITCH, STR("s"), STR("simple"),  _("Start with the simple interface."), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_NONE, STR(""), STR(""),  _T(""), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL }//this is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
+        { wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("load lobby customizations from game archive. Expects the long name."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_OPTION, STR("n"), STR("name"),  _("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_SWITCH, STR("s"), STR("simple"),  _("start with the simple interface."), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+        { wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL } //this is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
 
     parser.SetDesc( cmdLineDesc );
