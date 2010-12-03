@@ -252,8 +252,9 @@ find_tail_sequences(int fd, const char* bytes, size_t bytes_length, size_t count
 			    out.Insert(wxString(L'\0', 0), 0);
 			    wxLogMessage(_T("ChatLog::find_tail_sequences: fetching write buffer for %lu bytes"), sizeof(wxChar) * (line_length + 1));
 
-			    wxConvUTF8.MB2WC(out[0].GetWriteBuf(sizeof(wxChar) * (line_length + 1)), source, line_length);
-			    out[0].UngetWriteBuf(line_length);
+			    wxStringBufferLength outzero_buf(out[0], sizeof(wxChar) * (line_length + 1));
+			    wxConvUTF8.ToWChar(outzero_buf, line_length, source);
+			    outzero_buf.SetLength(line_length);
 
 			    ++count_added;
 			}
