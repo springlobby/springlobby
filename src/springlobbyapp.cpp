@@ -58,8 +58,6 @@
 #include "alsound.h"
 #include "mapselectdialog.h"
 
-#include "gui/simplefront.h"
-
 #include <wx/debugrpt.h>
 #include "utils/misc.h"
 
@@ -84,7 +82,6 @@ SpringLobbyApp::SpringLobbyApp()
 	m_log_file( false ),
     m_log_window_show( false ),
     m_crash_handle_disable( false ),
-	m_start_simple_interface( false ),
 	m_appname( _T("SpringLobby") )
 {
 }
@@ -169,10 +166,8 @@ bool SpringLobbyApp::OnInit()
 
 	sett().RefreshSpringVersionList();
 
-	//!currently we cannot use the dialog in simple, because it uses Ui and therefore creates mainwindow
-	if ( !m_start_simple_interface )
-		//this should take off the firstload time considerably *ie nil it :P )
-		mapSelectDialog();
+	//this should take off the firstload time considerably *ie nil it :P )
+	mapSelectDialog();
 	//unitsync first load, NEEDS to be blocking
 	usync().ReloadUnitSyncLib();
 
@@ -186,12 +181,6 @@ bool SpringLobbyApp::OnInit()
 
 	if ( !m_customizer_modname.IsEmpty() ) {
 		if ( SLcustomizations().Init( m_customizer_modname ) ) {
-			if ( m_start_simple_interface ) {
-				SimpleFront* sp = new SimpleFront( 0 );
-				SetTopWindow( sp );
-				sp->Show();
-				return true;
-			}
 			ui().mw().SetIcon( SLcustomizations().GetAppIcon() );
 		}
 		else {
@@ -309,7 +298,6 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
         { wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("load lobby customizations from game archive. Expects the long name."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_OPTION, STR("n"), STR("name"),  _("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-        { wxCMD_LINE_SWITCH, STR("s"), STR("simple"),  _("start with the simple interface."), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL } //this is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
 
@@ -329,7 +317,6 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_log_window_show = parser.Found(_T("gui-logging"));
 		m_log_file = parser.Found(_T("file-logging"), &m_log_file_path);
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
-        m_start_simple_interface = parser.Found(_T("simple"));
 
         Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
         if ( Settings::m_user_defined_config ) {
