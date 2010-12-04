@@ -114,6 +114,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void RegenerateOptionsList();
 
 		void UpdateStatsLabels();
+		void UpdateMapInfoSummary();
 
 	protected:
 
@@ -147,9 +148,9 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxStaticText* m_ally_lbl;
 		wxStaticText* m_side_lbl;
 		wxStaticText* m_color_lbl;
-		wxStaticText* m_wind_lbl;
-		wxStaticText* m_tidal_lbl;
-		wxStaticText* m_size_lbl;
+//		wxStaticText* m_wind_lbl;
+//		wxStaticText* m_tidal_lbl;
+//		wxStaticText* m_size_lbl;
 		wxStaticText* m_ally_setup_lbl;
 		wxStaticText* m_ok_count_lbl;
 

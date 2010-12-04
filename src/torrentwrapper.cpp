@@ -559,7 +559,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 				ret[CurrentTorrent.name] = CurrentTorrent;
 			}
 			catch ( libtorrent::invalid_handle& h ) {
-			    wxLogWarning(_T("%s"), h.what());//XXX should this be translated(_T)?
+			    wxLogWarning(_T("%s"), h.what());
 			}
         }
     }
