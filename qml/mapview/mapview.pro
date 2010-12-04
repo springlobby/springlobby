@@ -163,7 +163,8 @@ SOURCES += main.cpp \
 	../../src/gui/windowattributespickle.cpp \
 	../../src/gui/spinctl/generic/spinctlg.cpp \
 	../../src/Helper/slconfig.cpp \
-    ../../src/qt/maplistmodel.cpp
+    ../../src/qt/maplistmodel.cpp \
+    ../../src/qt/qerrorwindow.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -233,7 +234,8 @@ HEADERS += \
     ../../src/reconnectdialog.h \
     ../../src/mainjoinbattletab.h \
     ../../src/battleroomtab.h \
-    ../../src/qt/maplistmodel.h
+    ../../src/qt/maplistmodel.h \
+    ../../src/qt/qerrorwindow.h
 
 INCLUDEPATH += ../../src
 INCLUDEPATH += ../../src/Helper/qtargparser

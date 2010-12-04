@@ -15,6 +15,7 @@
 #include <qt/converters.h>
 #include <qt/maplistmodel.h>
 #include <qt/skirmishmodel.h>
+#include <qt/qerrorwindow.h>
 
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
@@ -150,8 +151,16 @@ int main(int argc, char *argv[])
 	ctxt->setContextProperty("myModel", &maplist_model );
 	ctxt->setContextProperty("skirmishModel", &skirmish_model );
 	view.setSource(QUrl("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
-	QRect d = app.desktop()->screenGeometry();
-	d.height();
+
+//	QRect d = app.desktop()->screenGeometry();
+
+	QList<QDeclarativeError> errors = view.errors();
+	if ( errors.size() )
+	{
+		QErrorWindow error_window ( errors );
+		return error_window.exec();
+	}
+
 
 	view.showFullScreen();
 //	view.show();
