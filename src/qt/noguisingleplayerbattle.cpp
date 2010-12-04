@@ -23,6 +23,7 @@ void NoGuiSinglePlayerBattle::StartSpring()
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();
+	SetFounder( m_me.GetNick() );
 }
 
 int NoGuiSinglePlayerBattle::GetAiIndex( const wxString& name )
