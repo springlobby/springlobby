@@ -26,8 +26,7 @@ ChatLog::ChatLog( const wxString& server, const wxString& room ):
     m_server( server ),
     m_room( room ),
     m_active ( LogEnabled() ),
-    m_logfile ( ),
-    m_last_lines ( 0 )
+    m_logfile ( )
 {
 #ifdef __WXMSW__
 	m_server.Replace( wxT( ":" ), wxT( "_" ) ) ;
