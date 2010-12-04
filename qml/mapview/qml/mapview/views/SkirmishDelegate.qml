@@ -48,7 +48,33 @@ Item {
 			anchors.fill: parent
 		}
 		clip: true
+		Item {
+			id: startButton
+			width: 80
+			height: 30
+			anchors.horizontalCenter: parent.horizontalCenter
+			anchors.bottom: parent.bottom
+			anchors.margins: 10
+			Rectangle {
+				color: "#00c4ff"
+				anchors.fill: parent
+				radius: 5
+				border.color: "#110101"
+				Text{
+					text: "Play"
+					font.pointSize: 12
+					anchors.centerIn: parent
+				}
+				MouseArea{
+					anchors.fill: parent
+					onClicked: {
+						skirmishModel.run( ListView.view.currentIndex, 0, 0 )
+					}
+				}
+			}
+		}
 	}
+
 
 	states: [
 		State {

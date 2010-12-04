@@ -84,3 +84,62 @@ QVariant SkirmishModel::data(const QModelIndex &index, int role ) const
 		}
 	}
 }
+
+void SkirmishModel::run( const int id, const int side, const int map )
+{
+	assert( id < m_skirmishes.size() );
+	OptionsWrapper& opts = m_skirmishes.at(id).second;
+	// this overwrites any modoptions with those found in the skirmish definition
+	m_battle.CustomBattleOptions().MergeOptions( opts, OptionsWrapper::ModOption );
+
+	//now add AIs
+	OptionsWrapper::GameOption optFlag = OptionsWrapper::SkirmishOptions;
+	// we need to store Sides for AIs first, so we can later add them in batch w/o needing to remember a mapping
+	std::vector<wxString> ai_sides;
+	for ( IUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
+		mmOptionList current = it->second;
+		if ( current.key == _T("ai_sides") ) {
+
+			for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor ) {
+				ai_sides.push_back( itor->name );
+			}
+		break;
+		}
+	}
+
+	wxString default_ai = m_mod_customs.getSingleValue( _T("default_ai" ) );
+	std::vector<wxString> ai_names ( ai_sides.size(), default_ai );
+	for ( IUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
+		mmOptionList current = it->second;
+		if ( current.key == _T("ai_names") ) {
+			for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor) {
+				size_t idx = FromwxString<size_t>( itor->key );
+				if ( idx < ai_sides.size() )
+					ai_names[idx] = itor->name;
+			}
+		break;
+		}
+	}
+
+	for ( IUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
+		mmOptionList current = it->second;
+		if ( current.key == _T("ai_team_ids") ) {
+
+			size_t i = 0;
+			for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor, ++i ) {
+				ASSERT_EXCEPTION( i < ai_sides.size(), _T("The setup is listing more AI opponents than AI sides") );
+				wxString ai = ai_names.size() > i ? ai_names[i] : default_ai;
+				m_battle.AddBot( ai, FromwxString<int>( itor->name ), ai_sides[i] );
+			}
+		break;
+		}
+	}
+
+	User& me = m_battle.GetMe();
+	me.BattleStatus().side = side;
+
+//    if ( m_map_random->IsChecked() )
+//        m_map->SetSelection( std::rand() % ( m_map->GetCount() ) ); //if anyone complains about this not being a uniform distribution imma invoke stab-over-tcp ((c) BD )
+	m_battle.SetHostMap( usync().GetMapList()[map] , _T("") );
+	m_battle.StartSpring();
+}

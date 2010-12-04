@@ -28,8 +28,8 @@ public:
 		: QDeclarativeImageProvider(QDeclarativeImageProvider::Image)
 	  { }
 
-	  virtual QImage requestImage ( const QString & id, QSize * size, const QSize & requestedSize );
-		QDeclarativeImageProvider::ImageType imageType () const { return QDeclarativeImageProvider::Image; }
+	virtual QImage requestImage ( const QString & id, QSize * size, const QSize & requestedSize );
+	QDeclarativeImageProvider::ImageType imageType () const { return QDeclarativeImageProvider::Image; }
 };
 
 class MinimapImageProvider : public QDeclarativeImageProvider
