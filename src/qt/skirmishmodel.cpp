@@ -71,9 +71,9 @@ QVariant SkirmishModel::data(const QModelIndex &index, int role ) const
 	int row =  index.row();
 	if ( !index.isValid() || row >= m_skirmishes.size() )
 		   return QVariant();
+	const OptionsWrapper& opts = m_skirmishes[row].second;
 	switch ( role ) {
 		case Description: {
-			const OptionsWrapper& opts = m_skirmishes[row].second;
 			wxString desc = opts.getSingleValue( _T("description") );
 			return QVariant::fromValue( QString(desc.mb_str()) );
 		}
