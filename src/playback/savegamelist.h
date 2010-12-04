@@ -28,9 +28,9 @@ class SavegameList : public PlaybackList<Savegame>
     BattleOptions GetBattleOptsFromScript( const wxString& script_ );
 
     //! load mod/map options
-    void LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const PDataList& node );
+	void LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const SL::PDataList& node );
     //! load engine options
-    void LoadMMOpts( OfflineBattle& battle, const PDataList& node );
+	void LoadMMOpts( OfflineBattle& battle, const SL::PDataList& node );
 
     //! saves relevant infos from header into replay struct
     void GetHeaderInfo( Savegame& rep, const wxString& SavegamePath );
