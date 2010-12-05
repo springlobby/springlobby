@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 ### to be called from project root
 ### no input arguments

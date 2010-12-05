@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /usr/bin/env bash
 
 echo " not working as it should. \
  for now do the export to png manually in gimp "
