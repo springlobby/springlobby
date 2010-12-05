@@ -268,6 +268,5 @@ OTHER_FILES += \
     ../../src/Helper/qtargparser/QtArg/CmdLine \
     ../../src/Helper/qtargparser/QtArg/ArgConstraint \
     ../../src/Helper/qtargparser/QtArg/Arg \
-    images/menu_button.png \
-    images/logo.png \
+	images/* \
     ../../src/iconimagelist.

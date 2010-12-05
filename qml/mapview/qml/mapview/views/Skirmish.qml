@@ -40,6 +40,11 @@ Item {
 		opacity: 1
 	}
 
+	function run(  )
+	{
+		skirmishModel.run( skirmishList.currentIndex, 0, minimapList.currentIndex )
+	}
+
 	states: [
 		State {
 			name: "Offscreen"

@@ -68,7 +68,7 @@ Item {
 				MouseArea{
 					anchors.fill: parent
 					onClicked: {
-						skirmishModel.run( ListView.view.currentIndex, 0, 0 )
+						skirmishView.run()
 					}
 				}
 			}

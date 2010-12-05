@@ -77,4 +77,6 @@ Item {
 			minimap.load( myModel.name(currentIndex) )
 		}
 	}
+
+	property alias currentIndex: list.currentIndex
 }
