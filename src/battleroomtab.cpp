@@ -150,9 +150,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Setup: %s" ), _T("") ) );
 	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Unready: %d" ), 0 ) );
 
-	m_size_lbl = new wxStaticText( this, -1, _T( "" ) );
-	m_wind_lbl = new wxStaticText( this, -1, _T( "" ) );
-	m_tidal_lbl = new wxStaticText( this, -1, _T( "" ) );
+	//XXX not needed ?
+//	m_size_lbl = new wxStaticText( this, -1, _T( "" ) );
+//	m_wind_lbl = new wxStaticText( this, -1, _T( "" ) );
+//	m_tidal_lbl = new wxStaticText( this, -1, _T( "" ) );
 
 	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, _T( "" ), wxDefaultPosition, wxDefaultSize );
 
@@ -415,6 +416,7 @@ void BattleRoomTab::UpdateBattleInfo()
 	if ( !m_battle ) return;
 	m_lock_chk->SetValue( m_battle->IsLocked() );
 	m_minimap->UpdateMinimap();
+	UpdateMapInfoSummary();
 }
 
 void BattleRoomTab::PrintAllySetup()
@@ -472,25 +474,12 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 		}
 		m_opts_list->SetItem( index, 1, value );
 	}
-	else if ( type == OptionsWrapper::PrivateOptions )
+	else// if ( type == OptionsWrapper::PrivateOptions )
 	{
 		if ( key == _T( "mapname" ) ) // the map has been changed
 		{
-			try   // updates map info summary
-			{
-				ASSERT_EXCEPTION( m_battle->MapExists(), _( "Map does not exist." ) );
-				UnitSyncMap map = m_battle->LoadMap();
-				m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ] , 1, wxString::Format( _T( "%.0fx%.0f" ), map.info.width / 512.0, map.info.height / 512.0 ) );
-				m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, wxString::Format( _T( "%d-%d" ), map.info.minWind, map.info.maxWind ) );
-				m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, wxString::Format( _T( "%d" ), map.info.tidalStrength ) );
-				//    m_opts_list->SetItem( 0, 1,  );
-			}
-			catch ( ... )
-			{
-				m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ], 1, _T( "?x?" ) );
-				m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, _T( "?-?" ) );
-				m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, _T( "?" ) );
-			}
+		    UpdateMapInfoSummary();
+
 			wxString mapname =m_battle->GetHostMapName();
 			int index_ = m_map_combo->FindString( mapname );
 			if ( index_ != wxNOT_FOUND )
@@ -519,6 +508,21 @@ BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 {
 	ASSERT_LOGIC( m_players != 0, _T( "m_players = 0" ) );
 	return *m_players;
+}
+
+void BattleRoomTab::UpdateMapInfoSummary() {
+    try {
+        ASSERT_EXCEPTION( m_battle->MapExists(), _( "Map does not exist." ) );
+        UnitSyncMap map = m_battle->LoadMap();
+        m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ] , 1, wxString::Format( _T( "%.0fx%.0f" ), map.info.width / 512.0, map.info.height / 512.0 ) );
+        m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, wxString::Format( _T( "%d-%d" ), map.info.minWind, map.info.maxWind ) );
+        m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, wxString::Format( _T( "%d" ), map.info.tidalStrength ) );
+        //    m_opts_list->SetItem( 0, 1,  );
+    } catch ( ... ) {
+        m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ], 1, _T( "?x?" ) );
+        m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, _T( "?-?" ) );
+        m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, _T( "?" ) );
+    }
 }
 
 void BattleRoomTab::UpdateStatsLabels()

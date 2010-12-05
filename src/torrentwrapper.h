@@ -16,6 +16,8 @@
 #include <vector>
 #include <queue>
 
+#include <boost/cstdint.hpp>
+
 #include "iunitsync.h"
 #include "thread.h"
 #include "mutexwrapper.h"
@@ -43,11 +45,11 @@ struct TorrentInfos
 {
     float numcopies;
     wxString name;
-    unsigned int downloaded;
+    boost::int64_t downloaded;
     P2P::FileStatus downloadstatus;
     float progress;
-    float inspeed;
-    unsigned int filesize;
+    int inspeed;
+    boost::int64_t filesize;
 
     int eta;
 
