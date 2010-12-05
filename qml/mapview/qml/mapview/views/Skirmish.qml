@@ -7,9 +7,9 @@ Item {
 	anchors.horizontalCenter: parent.horizontalCenter
 
 	ListView {
-
 		id: skirmishList
 		delegate: SkirmishDelegate{
+			id: skirmishDelegate
 			max_width: parent.width - minimapList.width - width
 			max_height: height
 		}
@@ -42,7 +42,7 @@ Item {
 
 	function run(  )
 	{
-		skirmishModel.run( skirmishList.currentIndex, 0, minimapList.currentIndex )
+		skirmishModel.run( skirmishList.currentIndex, skirmishList.currentItem.current_side, minimapList.currentIndex )
 	}
 
 	states: [

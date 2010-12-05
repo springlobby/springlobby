@@ -15,6 +15,7 @@
 #include <qt/converters.h>
 #include <qt/maplistmodel.h>
 #include <qt/skirmishmodel.h>
+#include <qt/sidemodel.h>
 #include <qt/qerrorwindow.h>
 
 #include <wx/intl.h>
@@ -145,11 +146,13 @@ int main(int argc, char *argv[])
 
 	MaplistModel maplist_model( usync().GetMapList() );
 	SkirmishModel skirmish_model;
+	SideModel side_model( SLcustomizations().GetModname() );
 
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 	QDeclarativeContext* ctxt = view.rootContext();
 	ctxt->setContextProperty("myModel", &maplist_model );
 	ctxt->setContextProperty("skirmishModel", &skirmish_model );
+	ctxt->setContextProperty("sideModel", &side_model );
 	view.setSource(QUrl("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
 
 //	QRect d = app.desktop()->screenGeometry();

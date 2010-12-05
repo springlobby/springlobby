@@ -164,7 +164,8 @@ SOURCES += main.cpp \
 	../../src/gui/spinctl/generic/spinctlg.cpp \
 	../../src/Helper/slconfig.cpp \
     ../../src/qt/maplistmodel.cpp \
-    ../../src/qt/qerrorwindow.cpp
+    ../../src/qt/qerrorwindow.cpp \
+    ../../src/qt/sidemodel.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -235,7 +236,8 @@ HEADERS += \
     ../../src/mainjoinbattletab.h \
     ../../src/battleroomtab.h \
     ../../src/qt/maplistmodel.h \
-    ../../src/qt/qerrorwindow.h
+    ../../src/qt/qerrorwindow.h \
+    ../../src/qt/sidemodel.h
 
 INCLUDEPATH += ../../src
 INCLUDEPATH += ../../src/Helper/qtargparser

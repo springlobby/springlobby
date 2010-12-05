@@ -18,7 +18,7 @@ Item {
 			anchors.fill: parent
 			onClicked: {
 				ListView.view.currentIndex = index
-				}
+			}
 		}
 	}
 
@@ -73,6 +73,11 @@ Item {
 				}
 			}
 		}
+		SideList {
+			id: sideList
+			anchors.bottom: startButton.top
+			anchors.margins: 10
+		}
 	}
 
 
@@ -100,5 +105,7 @@ Item {
 		}
 	]
 	state: ListView.isCurrentItem ? "active" : "inactive"
+
+	property alias current_side: sideList.currentIndex
 
 }
