@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #regen on bbot releases would screw with version
 if [ "x${BUILDBOT_RELEASE}" != "x" ] ; then
