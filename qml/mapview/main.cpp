@@ -42,6 +42,7 @@
 #include <QtCore/QDebug>
 #include <QStringList>
 #include <QIcon>
+#include <Phonon>
 
 bool CmdInit()
 {
@@ -147,6 +148,10 @@ int main(int argc, char *argv[])
 	MaplistModel maplist_model( usync().GetMapList() );
 	SkirmishModel skirmish_model;
 	SideModel side_model( SLcustomizations().GetModname() );
+	Phonon::MediaObject *music =
+			 Phonon::createPlayer(Phonon::MusicCategory,
+								  Phonon::MediaSource("images/bg_music.ogg"));
+		 music->play();
 
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 	QDeclarativeContext* ctxt = view.rootContext();
