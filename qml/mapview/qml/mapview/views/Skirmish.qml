@@ -9,7 +9,6 @@ Item {
 	ListView {
 		id: skirmishList
 		delegate: SkirmishDelegate{
-			id: skirmishDelegate
 			max_width: parent.width - minimapList.width - width
 			max_height: height
 		}

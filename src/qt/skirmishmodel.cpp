@@ -140,6 +140,7 @@ void SkirmishModel::run( const int id, const int side, const int map )
 
 //    if ( m_map_random->IsChecked() )
 //        m_map->SetSelection( std::rand() % ( m_map->GetCount() ) ); //if anyone complains about this not being a uniform distribution imma invoke stab-over-tcp ((c) BD )
-	m_battle.SetHostMap( usync().GetMapList()[map] , _T("") );
+	UnitSyncMap mapname = usync().GetMap( map );
+	m_battle.SetHostMap( mapname.name, mapname.hash );
 	m_battle.StartSpring();
 }

@@ -39,7 +39,7 @@ public:
 signals:
 
 public slots:
-	void run( const int id, const int side, const int map = 0 );
+	void run( const int id, const int side, const int map );
 
 private:
 	OptionsWrapper m_mod_customs;
