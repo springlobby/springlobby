@@ -166,7 +166,7 @@ MainWindow::MainWindow( )
 	m_menuTools->Append(MENU_RENAME, _("Change &username"));
 	m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
 	m_menuTools->AppendSeparator();
-	m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+	m_menuTools->Append(MENU_USYNC, _("&Reload maps/games"));
 
 
 #ifndef NO_TORRENT_SYSTEM

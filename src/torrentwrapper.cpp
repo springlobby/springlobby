@@ -489,7 +489,7 @@ void TorrentWrapper::HandleCompleted()
 				bool ok = wxCopyFile( source_path, dest_filename );
 				if ( !ok )
 				{
-					wxString msg = wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
+					wxString msg = wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/games afterwards"),
 								source_path.c_str(), dest_filename.c_str() );
 					wxLogError( _T("DL: File copy from %s to %s failed."), source_path.c_str(), dest_filename.c_str() );
 					wxMutexGuiLocker locker;

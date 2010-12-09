@@ -68,7 +68,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
     m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT), wxBU_EXACTFIT );
     m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
-    m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
+	m_mod_lbl = new wxStaticText( this, -1, _("Game:") );
     m_ctrl_sizer->Add( m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_mod_pick = new wxChoice( this, SP_MOD_PICK );

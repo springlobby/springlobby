@@ -51,16 +51,16 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
     const int widths[10] = {hd,hd,hd,170,140,130,110,hd,hd,hd};
 #endif
 
-    AddColumn( 0, widths[0], _T("Status"), _T("Status") );
-    AddColumn( 1, widths[1], _T("Country"), _T("Country") );
-    AddColumn( 2, widths[2], _T("Rank"), _T("Minimum rank to join") );
-    AddColumn( 3, widths[3], _("Description"), _T("Game description") );
-    AddColumn( 4, widths[4], _("Map"), _T("Mapname") );
-    AddColumn( 5, widths[5], _("Mod"), _T("Modname") );
-    AddColumn( 6, widths[6], _("Host"), _T("Name of the Host") );
-    AddColumn( 7, widths[7], _("Spectators"), _T("Number of Spectators") );
-    AddColumn( 8, widths[8], _("Players"), _T("Number of Players joined") );
-    AddColumn( 9, widths[9], _("Max"), _T("Maximum number of Players that can join") );
+	AddColumn( 0, widths[0], _("Status"), _("Status") );
+	AddColumn( 1, widths[1], _("Country"), _("Country") );
+	AddColumn( 2, widths[2], _("Rank"), _("Minimum rank to join") );
+	AddColumn( 3, widths[3], _("Description"), _("Battle description") );
+	AddColumn( 4, widths[4], _("Map"), _("Mapname") );
+	AddColumn( 5, widths[5], _("Game"), _("Gamename") );
+	AddColumn( 6, widths[6], _("Host"), _("Name of the Host") );
+	AddColumn( 7, widths[7], _("Spectators"), _("Number of Spectators") );
+	AddColumn( 8, widths[8], _("Players"), _("Number of Players joined") );
+	AddColumn( 9, widths[9], _("Max"), _("Maximum number of Players that can join") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[0].col = 0;
