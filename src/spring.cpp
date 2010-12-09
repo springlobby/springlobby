@@ -129,9 +129,6 @@ bool Spring::Run( Battle& battle )
 	cmd = _T("--minimise");
 	}
 	cmd += _T(" \"") + path +  _T("\"");
-#ifdef SL_QT_MODE
-		QMessageBox:: warning ( NULL, "CMD", QString(cmd.mb_str()));
-#endif
 
 	return LaunchSpring( cmd );
 }
@@ -168,6 +165,10 @@ bool Spring::Run( NoGuiSinglePlayerBattle& battle )
 
   wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
 
+  wxString cmd = _T("\"") + path + _T("\"");
+		#ifdef SL_QT_MODE
+				QMessageBox:: warning ( NULL, "CMD", QString(cmd.mb_str()));
+		#endif
   try
   {
 
@@ -186,7 +187,7 @@ bool Spring::Run( NoGuiSinglePlayerBattle& battle )
     return false;
   }
 
-  return LaunchSpring( _T("\"") + path + _T("\"") );
+  return LaunchSpring( cmd );
 }
 
 bool Spring::Run( OfflineBattle& battle )
