@@ -126,6 +126,7 @@ int main(int argc, char *argv[])
 	QDeclarativeView view;
 	view.engine()->addImageProvider("minimaps", new MinimapImageProvider);
 	view.engine()->addImageProvider("images", new ImageProvider);
+	view.engine()->addImageProvider("side", new SideImageProvider);
 	view.engine()->addImportPath("qml/mapview/");
 	// Visual initialization
 #ifdef USE_OPENGL
@@ -148,10 +149,10 @@ int main(int argc, char *argv[])
 	MaplistModel maplist_model( usync().GetMapList() );
 	SkirmishModel skirmish_model;
 	SideModel side_model( SLcustomizations().GetModname() );
-	Phonon::MediaObject *music =
-			 Phonon::createPlayer(Phonon::MusicCategory,
-								  Phonon::MediaSource("images/bg_music.ogg"));
-		 music->play();
+//	Phonon::MediaObject *music =
+//			 Phonon::createPlayer(Phonon::MusicCategory,
+//								  Phonon::MediaSource("images/bg_music.ogg"));
+//		 music->play();
 
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 	QDeclarativeContext* ctxt = view.rootContext();
@@ -170,8 +171,8 @@ int main(int argc, char *argv[])
 	}
 
 
-	view.showFullScreen();
-//	view.show();
+//	view.showFullScreen();
+	view.show();
 
 	return app.exec();
 }

@@ -43,4 +43,16 @@ public:
 		QDeclarativeImageProvider::ImageType imageType () const { return QDeclarativeImageProvider::Image; }
 };
 
+
+class SideImageProvider : public QDeclarativeImageProvider
+{
+public:
+	SideImageProvider()
+		: QDeclarativeImageProvider(QDeclarativeImageProvider::Image)
+	  { }
+
+	  virtual QImage requestImage ( const QString & id, QSize * size, const QSize & requestedSize );
+		QDeclarativeImageProvider::ImageType imageType () const { return QDeclarativeImageProvider::Image; }
+};
+
 #endif // IMAGEPROVIDER_H

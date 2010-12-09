@@ -13,6 +13,16 @@ Item {
 			color: "#d4dbd3"
 			radius:  5
 
+			Image {
+				id: sideImage
+				width: 32
+				height: 32
+				source: "image://side/" + display
+				anchors.verticalCenter: parent.verticalCenter
+				anchors.leftMargin: 5
+				anchors.left: parent.left
+			}
+
 			Text {
 				id: side_name
 				text: display
