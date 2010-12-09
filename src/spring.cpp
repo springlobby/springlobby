@@ -43,6 +43,10 @@
 #endif
 #include "globalsmanager.h"
 
+#ifdef SL_QT_MODE
+	 #include <QMessageBox>
+#endif
+
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
     EVT_COMMAND ( PROC_SPRING, wxEVT_SPRING_EXIT, Spring::OnTerminated )
@@ -125,6 +129,9 @@ bool Spring::Run( Battle& battle )
 	cmd = _T("--minimise");
 	}
 	cmd += _T(" \"") + path +  _T("\"");
+#ifdef SL_QT_MODE
+		QMessageBox:: warning ( NULL, "CMD", QString(cmd.mb_str()));
+#endif
 
 	return LaunchSpring( cmd );
 }
