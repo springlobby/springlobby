@@ -73,7 +73,7 @@ getDataSubdirForType(const IUnitSync::MediaType type)
     case IUnitSync::map:
         return _T("maps");
     case IUnitSync::mod:
-        return _T("mods");
+		return _T("games");
     default:
         ASSERT_EXCEPTION(false, _T("Unhandled IUnitSync::MediaType value"));
     }
