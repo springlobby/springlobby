@@ -45,8 +45,8 @@ QImage ImageProvider::requestImage ( const QString & id, QSize * size, const QSi
 
 QImage MinimapImageProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
 {
-	int width = requestedSize.width() > 0 ? requestedSize.width() : 16;
-	int height = requestedSize.height() > 0 ? requestedSize.height() : 16;
+	int width = requestedSize.width() > 0 ? requestedSize.width() : 1024;
+	int height = requestedSize.height() > 0 ? requestedSize.height() : 1024;
 
 	wxImage h = usync().GetMinimap( TowxString( id.toStdString() ), width, height );
 	if (size)
@@ -58,8 +58,8 @@ QImage MinimapImageProvider::requestImage ( const QString & id, QSize * size, co
 
 QImage SideImageProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
 {
-	int width = requestedSize.width() > 0 ? requestedSize.width() : 1024;
-	int height = requestedSize.height() > 0 ? requestedSize.height() : 1024;
+	int width = requestedSize.width() > 0 ? requestedSize.width() : 16;
+	int height = requestedSize.height() > 0 ? requestedSize.height() : 16;
 	const wxString& modname = SLcustomizations().GetModname();
 
 	wxImage h = usync().GetSidePicture( modname, TowxString( id.toStdString() ) );
