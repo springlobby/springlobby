@@ -166,9 +166,7 @@ bool Spring::Run( NoGuiSinglePlayerBattle& battle )
   wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
 
   wxString cmd = _T("\"") + path + _T("\"");
-		#ifdef SL_QT_MODE
-				QMessageBox:: warning ( NULL, "CMD", QString(cmd.mb_str()));
-		#endif
+
   try
   {
 
@@ -231,6 +229,9 @@ bool Spring::LaunchSpring( const wxString& params  )
   cmd += _T("\" ") + configfileflags + params;
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
   wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
+#ifdef SL_QT_MODE
+		QMessageBox:: warning ( NULL, "CMD", QString(cmd.mb_str()));
+#endif
   if ( sett().UseOldSpringLaunchMethod() )
   {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
