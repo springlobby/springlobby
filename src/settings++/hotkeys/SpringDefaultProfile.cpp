@@ -147,7 +147,7 @@ void SpringDefaultProfile::initialize()
 	SpringDefaultProfile::addBinding( _T("specteam 7"), _T("8") );
 	SpringDefaultProfile::addBinding( _T("specteam 8"), _T("9") );
 	SpringDefaultProfile::addBinding( _T("specteam 9"), _T("0") );
-	SpringDefaultProfile::addBinding( _T("speedup"), _T("Any++") );
+	//SpringDefaultProfile::addBinding( _T("speedup"), _T("Any++") ); makes no sense for me. its the same as Any+= effectively
 	SpringDefaultProfile::addBinding( _T("speedup"), _T("Any+=") );
 	SpringDefaultProfile::addBinding( _T("speedup"), _T("Any+insert") );
 	SpringDefaultProfile::addBinding( _T("speedup"), _T("Any+numpad+") );
