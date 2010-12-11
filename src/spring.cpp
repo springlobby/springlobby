@@ -44,7 +44,8 @@
 #include "globalsmanager.h"
 
 #ifdef SL_QT_MODE
-	 #include <QMessageBox>
+	#include <QMessageBox>
+	#include <QProcess>
 #endif
 
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
@@ -229,10 +230,14 @@ bool Spring::LaunchSpring( const wxString& params  )
   cmd += _T("\" ") + configfileflags + params;
   cmd.Replace( _T("\\\\"), _T("\\") );
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
-  wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
+
 #ifdef SL_QT_MODE
-		QMessageBox:: warning ( NULL, "CMD", QString(cmd.mb_str()));
-#endif
+	QMessageBox:: warning ( NULL, "CMD", QString(cmd.mb_str()));
+	QProcess* process = new QProcess;
+	process->setWorkingDirectory(QString(sett().GetCurrentUsedDataDir().mb_str()));
+	process->start(QString(cmd.mb_str()));
+#else
+  wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
   if ( sett().UseOldSpringLaunchMethod() )
   {
     if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
@@ -245,7 +250,7 @@ bool Spring::LaunchSpring( const wxString& params  )
     m_process->SetCommand( cmd );
     m_process->Run();
   }
-
+#endif
   m_running = true;
   return true;
 }
