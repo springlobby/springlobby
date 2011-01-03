@@ -531,6 +531,12 @@ void BattleRoomTab::UpdateStatsLabels()
 	PrintAllySetup();
 }
 
+void BattleRoomTab::UpdateMyInfo() {
+    if ( !m_battle ) return;
+    m_players->UpdateUser(m_battle->GetMe());
+    m_players->RefreshVisibleItems();
+}
+
 void BattleRoomTab::UpdateUser( User& user )
 {
 	if ( !m_battle ) return;

@@ -115,6 +115,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 		void UpdateStatsLabels();
 		void UpdateMapInfoSummary();
+		void UpdateMyInfo();
 
 	protected:
 

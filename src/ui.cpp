@@ -461,6 +461,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     {
 		serverSelector().GetServer().GetMe().Status().away = true;
 		serverSelector().GetServer().GetMe().SendMyUserStatus();
+		mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
         return true;
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/back") )
@@ -469,6 +470,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
         {
 			serverSelector().GetServer().GetMe().Status().away = false;
 			serverSelector().GetServer().GetMe().SendMyUserStatus();
+			mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
             return true;
         }
     }
