@@ -505,7 +505,7 @@ void Ui::ConsoleHelp( const wxString& topic )
     ChatPanel* panel = GetActiveChatPanel();
     if ( panel == 0 )
     {
-        ShowMessage( _("Help error"), _("Type /help in a chat box.") );
+		ShowMessage( _("Help error"), _("Type /help in a chat box. (A bug currently prevents this from working in battleroom") );
         return;
     }
     if ( topic == wxEmptyString )
