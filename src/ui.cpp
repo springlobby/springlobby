@@ -1275,6 +1275,30 @@ void Ui::OnRing( const wxString& from )
 				UiEvents::NotficationData( UiEvents::ServerConnection, wxString::Format(_("%s:\nring!"),from.c_str()) ) );
 	}
 
+    if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
+        wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
+        if(! usync().MapExists(host_map_name)) {
+
+            map_infos info_map = torrent().CollectGuiInfos();
+            bool dling = false;
+
+            for(map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter){
+                if(iter->first == wxString(_T("global")))
+                    continue;
+                else if(iter->first == host_map_name) {
+                    serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(wxString::Format(
+                            _("/me downloading map eta: %d s"), iter->second.eta)
+                    );
+                    dling = true;
+                }
+            }
+            if(! dling) { //XXX is it possible to get eta from web dl in sl?, anyone using it instead torrent system?
+                serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(
+                        _("/me is not downloading map with SL torrent system"));
+            }
+        }
+    }
+
 #ifndef DISABLE_SOUND
     if ( sett().GetChatPMSoundNotificationEnabled() )
         sound().ring();

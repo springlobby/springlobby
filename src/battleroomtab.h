@@ -124,7 +124,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void SplitSizerHorizontally( const bool horizontal );
 
 		Battle* m_battle;
-		UnitSyncMap m_map;
+//		UnitSyncMap m_map; //not needed
 
 		long m_mod_opts_index;
 		long m_map_opts_index;
