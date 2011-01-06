@@ -98,7 +98,7 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
     m_pHeaders = curl_slist_append(m_pHeaders, "Expect:") ;
 
     curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
-    curl_easy_setopt(curl_handle, CURLOPT_URL, "http://planet-wars.eu/PlasmaServer/Service.asmx" );
+	curl_easy_setopt(curl_handle, CURLOPT_URL, "http://zero-k.info/ContentService.asmx" );
 	//curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);
     curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
@@ -264,7 +264,7 @@ void FetchResourceListWorkItem::Run()
 	m_pHeaders = curl_slist_append(m_pHeaders, "Expect:") ;
 
 	curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
-	curl_easy_setopt(curl_handle, CURLOPT_URL, "http://planet-wars.eu/PlasmaServer/Service.asmx" );
+	curl_easy_setopt(curl_handle, CURLOPT_URL, "http://zero-k.info/ContentService.asmx" );
 	//curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 1L);
 	curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
 	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, wxcurl_stream_write);
