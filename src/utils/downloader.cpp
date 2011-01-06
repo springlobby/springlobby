@@ -38,7 +38,7 @@ const wxString s_soap_service_url = _T("http://zero-k.info/ContentService.asmx?o
 const wxString s_soap_querytemplate = _T("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" \
 "<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n"\
 "   <soap12:Body>\n"\
-"       <DownloadFile xmlns=\"http://planet-wars.eu/PlasmaServer/\">\n"\
+"       <DownloadFile xmlns=\"http://tempuri.org/\">\n"\
 "           <internalName>REALNAME</internalName>\n"\
 "       </DownloadFile>\n"\
 "   </soap12:Body>\n"\
@@ -47,7 +47,7 @@ const wxString s_soap_querytemplate = _T("<?xml version=\"1.0\" encoding=\"utf-8
 const wxString s_soap_querytemplate_resourcelist = _T("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" \
 "<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\n"\
 "   <soap12:Body>\n"\
-"       <GetResourceList xmlns=\"http://planet-wars.eu/PlasmaServer/\" />\n"\
+"       <GetResourceList xmlns=\"http://tempuri.org/\" />\n"\
 "   </soap12:Body>\n"\
 "</soap12:Envelope>\0");
 
@@ -63,8 +63,8 @@ PlasmaInterface& plasmaInterface()
   * @todo: document this function
   */
 PlasmaInterface::PlasmaInterface()
-    : m_host ( _T("planet-wars.eu") ),
-    m_remote_path ( _T("/PlasmaServer/Service.asmx") )
+	: m_host ( _T("zero-k.info") ),
+	m_remote_path ( _T("ContentService.asmx") )
 {
 	m_worker_thread.Create();
 	m_worker_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
@@ -94,7 +94,7 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
     struct curl_slist* m_pHeaders = NULL;
     // these header lines will overwrite/add to cURL defaults
     m_pHeaders = curl_slist_append(m_pHeaders, "Content-Type: text/xml;charset=UTF-8");//default is formurl-encoded with cURL-POST, that's bad for us
-    m_pHeaders = curl_slist_append(m_pHeaders, "SOAPAction: \"http://planet-wars.eu/PlasmaServer/DownloadFile\"");
+	m_pHeaders = curl_slist_append(m_pHeaders, "SOAPAction: \"http://tempuri.org/DownloadFile\"");
     m_pHeaders = curl_slist_append(m_pHeaders, "Expect:") ;
 
     curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);
@@ -113,21 +113,26 @@ PlasmaResourceInfo PlasmaInterface::GetResourceInfo(const wxString& name)
 	/* cleanup curl stuff */
 	curl_easy_cleanup(curl_handle);
 
+	m_buffers[index] = response.GetString();
+
 	PlasmaResourceInfo info;
 	if( ret != CURLE_OK ) {
+		wxLogError( _T("dl curl error:\n%s"), m_buffers[index].c_str() );
 		info.m_type = PlasmaResourceInfo::unknown;
 		return info;
 	}
 
-    m_buffers[index] = response.GetString();
-
 	try {
 		info = ParseResourceInfoData( index );
+		return info;
 	}
-	catch (...){
-		info.m_type = PlasmaResourceInfo::unknown;
+	catch (assert_exception& a){
+		wxLogError( WX_STRINGC( a.what() ) );
 	}
+	catch ( ... ) {}
+	info.m_type = PlasmaResourceInfo::unknown;
 	return info;
+
 }
 
 PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_index )
@@ -232,7 +237,7 @@ bool PlasmaInterface::DownloadTorrentFile( PlasmaResourceInfo& info, const wxStr
 {
     wxString dl_target = destination_directory + wxFileName::GetPathSeparator() + info.m_torrent_filename;
     try {
-        downloadFile( m_host, _T("PlasmaServer/Resources/") + info.m_torrent_filename, dl_target );
+		downloadFile( m_host, _T("Resources/") + info.m_torrent_filename, dl_target );
         info.m_local_torrent_filepath = dl_target;
     }
     catch ( std::exception& e ) {
