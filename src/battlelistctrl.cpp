@@ -203,7 +203,7 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
             m_popup->Append( BLIST_DLMAP, _("Download &map") );
 
         if ( mod_missing )
-            m_popup->Append( BLIST_DLMOD, _("Download m&od") );
+			m_popup->Append( BLIST_DLMOD, _("Download &game") );
 
         if ( map_missing || mod_missing )
             PopupMenu( m_popup );

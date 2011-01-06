@@ -96,7 +96,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	wxArrayString m_mod_picChoices;
 	wxBoxSizer* mod_choice_button_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_mod_pic = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mod_picChoices, 0 );
-	m_mod_pic->SetToolTip( TE( _( "Select the mod to play with." ) ) );
+	m_mod_pic->SetToolTip( TE( _( "Select the game to play." ) ) );
 	mod_choice_button_sizer->Add( m_mod_pic, 0, wxALL , 5 );
 
     wxBitmap mp = charArr2wxBitmap( arrow_refresh_png, sizeof( arrow_refresh_png ) );
@@ -444,7 +444,7 @@ void HostBattleDialog::Run( wxWindow* parent )
 		}
 		catch ( ... )
 		{
-			wxLogWarning( _T( "can't host: mod not found" ) );
+			wxLogWarning( _T( "can't host: game not found" ) );
 			customMessageBoxNoModal( SL_MAIN_ICON, _( "Battle not started beacuse the game you selected could not be found. " ), _( "Error starting battle." ), wxOK );
 			return;
 		}
