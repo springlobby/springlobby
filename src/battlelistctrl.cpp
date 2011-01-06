@@ -275,6 +275,10 @@ int BattleListCtrl::CompareStatus( DataType u1, DataType u2 )
 
   int b1 = 0, b2 = 0;
 
+  if ( battle1.GetNumActivePlayers() == 0 )
+  	b1 += 2000;
+  if ( battle2.GetNumActivePlayers() == 0 )
+  	b2 += 2000;
   if ( battle1.GetInGame() )
     b1 += 1000;
   if ( battle2.GetInGame() )
@@ -404,3 +408,4 @@ int BattleListCtrl::GetIndexFromData( const DataType& data ) const
 
     return -1;
 }
+
