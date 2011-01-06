@@ -978,6 +978,8 @@ void ServerEvents::OnScriptEnd( int battleid )
 
 void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool /*disconnectonrefuse*/, const wxString& FileName, const wxString& url, const wxString& description )
 {
+	if ( sett().IgnoreOfferfile() )
+		return;
 	wxString refinedurl;
 	if ( url.Find(_T("http://")) != wxNOT_FOUND ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
 	else refinedurl = url;
@@ -1057,4 +1059,3 @@ void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 
   }
 }
-
