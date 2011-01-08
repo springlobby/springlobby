@@ -26,10 +26,10 @@ WidgetDownloadListctrl::WidgetDownloadListctrl(wxWindow* parent, wxWindowID /*un
     const int widths [column_count] = { as, as, as, as };
 #endif
 
-    AddColumn( 0, widths[0], _("Name"), _T("Name") );
-    AddColumn( 1, widths[1], _T("Author"), _T("Author") );
-    AddColumn( 2, widths[2], _T("Mods"), _T("Compatible mods") );
-    AddColumn( 3, widths[3], _T("Downloads"), _T("Downloads") );
+	AddColumn( 0, widths[0], _("Name"), _("Name") );
+	AddColumn( 1, widths[1], _("Author"), _("Author") );
+	AddColumn( 2, widths[2], _("Games"), _("Compatible games") );
+	AddColumn( 3, widths[3], _("Downloads"), _("Downloads") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[2].col = 2;

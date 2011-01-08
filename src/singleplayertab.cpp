@@ -68,7 +68,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
     m_select_btn = new wxButton( this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT), wxBU_EXACTFIT );
     m_ctrl_sizer->Add( m_select_btn, 0, wxBOTTOM|wxRIGHT|wxTOP, 5 );
 
-    m_mod_lbl = new wxStaticText( this, -1, _("Mod:") );
+	m_mod_lbl = new wxStaticText( this, -1, _("Game:") );
     m_ctrl_sizer->Add( m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     m_mod_pick = new wxChoice( this, SP_MOD_PICK );
@@ -226,15 +226,15 @@ bool SinglePlayerTab::ValidSetup() const
 {
     if ( (unsigned int)m_mod_pick->GetSelection() >= m_mod_pick->GetCount()-1 )
     {
-        wxLogWarning( _T("no mod selected") );
-        customMessageBox(SL_MAIN_ICON, _("You have to select a mod first."), _("Gamesetup error") );
+		wxLogWarning( _T("no game selected") );
+		customMessageBox(SL_MAIN_ICON, _("You have to select a game first."), _("Game setup error") );
         return false;
     }
 
     if ( (unsigned int)m_map_pick->GetSelection() >= m_map_pick->GetCount()-1 )
     {
         wxLogWarning( _T("no map selected") );
-        customMessageBox(SL_MAIN_ICON, _("You have to select a map first."), _("Gamesetup error") );
+		customMessageBox(SL_MAIN_ICON, _("You have to select a map first."), _("Game setup error") );
         return false;
     }
 

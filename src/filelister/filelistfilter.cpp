@@ -49,7 +49,7 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 	wxBoxSizer* m_filter_body_row1_sizer;
 	m_filter_body_row1_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_filter_name_text = new wxStaticText( this, wxID_ANY, _T( "Filename:" ), wxDefaultPosition, wxSize( -1,-1 ), 0 );
+	m_filter_name_text = new wxStaticText( this, wxID_ANY, _( "Filename:" ), wxDefaultPosition, wxSize( -1,-1 ), 0 );
 	m_filter_name_text->Wrap( -1 );
 	m_filter_name_text->SetMinSize( wxSize( 90,-1 ) );
 
@@ -66,7 +66,7 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 	wxBoxSizer* m_filter_type_sizer;
 	m_filter_type_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_filter_type_text = new wxStaticText( this, wxID_ANY, _T( "Filetype:" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_filter_type_text = new wxStaticText( this, wxID_ANY, _( "Filetype:" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_filter_type_text->Wrap( -1 );
 	m_filter_type_sizer->Add( m_filter_type_text, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -80,8 +80,8 @@ FileListFilter::FileListFilter( wxWindow* parent, wxWindowID id, FileListDialog*
 	wxArrayString m_filter_type_choiceChoices;
 
 	m_filter_type_choiceChoices.Add( firstChoice );
-	m_filter_type_choiceChoices.Add( _T( "Map" ) );
-	m_filter_type_choiceChoices.Add( _T( "Mod" ) );
+	m_filter_type_choiceChoices.Add( _( "Map" ) );
+	m_filter_type_choiceChoices.Add( _( "Game" ) );
 
 	m_filter_type_choice = new wxChoice( this, FILE_FILTER_TYPE_CHOICE, wxDefaultPosition, wxDefaultSize, m_filter_type_choiceChoices, wxSIMPLE_BORDER );
 

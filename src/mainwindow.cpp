@@ -166,7 +166,7 @@ MainWindow::MainWindow( )
 	m_menuTools->Append(MENU_RENAME, _("Change &username"));
 	m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
 	m_menuTools->AppendSeparator();
-	m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+	m_menuTools->Append(MENU_USYNC, _("&Reload maps/games"));
 
 
 #ifndef NO_TORRENT_SYSTEM
@@ -425,6 +425,7 @@ ChatPanel* MainWindow::GetActiveChatPanel()
 {
   unsigned int index = m_func_tabs->GetSelection();
   if ( index == PAGE_CHAT ) return m_chat_tab->GetActiveChatPanel();
+  //! TODO (koshi) this doesn't work when in broom an and sending "/help (ShowMessage() )
   if ( index == PAGE_JOIN ) return m_join_tab->GetActiveChatPanel();
   return 0;
 }
