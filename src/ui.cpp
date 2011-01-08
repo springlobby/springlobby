@@ -1286,10 +1286,16 @@ void Ui::OnRing( const wxString& from )
                 if(iter->first == wxString(_T("global")))
                     continue;
                 else if(iter->first == host_map_name) {
-                    serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(wxString::Format(
-                            _("/me downloading map eta: %d s"), iter->second.eta)
-                    );
+                    int eta = iter->second.eta;
+
+                    if(eta <= 0) {
+                        serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(_("/me torrent system don't have seeds"));
+                    } else {
+                        serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(wxString::Format(
+                                _("/me downloading map eta: %d s"), eta)
+                        );
                     dling = true;
+                    }
                 }
             }
             if(! dling) { //XXX is it possible to get eta from web dl in sl?, anyone using it instead torrent system?
