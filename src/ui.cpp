@@ -1289,7 +1289,7 @@ void Ui::OnRing( const wxString& from )
                     int eta = iter->second.eta;
 
                     if(eta <= 0) {
-                        serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(_("/me torrent system don't have seeds"));
+						serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(_("/me map is not available for automatic downloading."));
                     } else {
                         serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(wxString::Format(
                                 _("/me downloading map eta: %d s"), eta)
@@ -1298,7 +1298,7 @@ void Ui::OnRing( const wxString& from )
                     }
                 }
             }
-            if(! dling) { //XXX is it possible to get eta from web dl in sl?, anyone using it instead torrent system?
+            if(! dling) { //XXX is it possible to get eta from web dl in sl?, anyone using it instead torrent system? //there is no direct from-web downloading in SL currently
                 serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(
                         _("/me is not downloading map with SL torrent system"));
             }
