@@ -31,6 +31,7 @@
 #endif
 #include <libtorrent/extensions/metadata_transfer.hpp>
 #include <libtorrent/extensions/ut_pex.hpp>
+#include <libtorrent/alert_types.hpp>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -577,6 +578,18 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 void TorrentWrapper::RemoveInvalidTorrents()
 {
+	//remove failed webseeds
+	std::auto_ptr<libtorrent::alert> alert = m_torr->pop_alert();
+	while ( alert.get() )
+	{
+		libtorrent::url_seed_alert* url_alert = libtorrent::alert_cast<libtorrent::url_seed_alert>(alert.get());
+		if( url_alert )
+		{
+			url_alert->handle.remove_url_seed( url_alert->url );
+		}
+		alert = m_torr->pop_alert();
+	}
+
 	TorrenthandleInfoMap& infomap = GetHandleInfoMap();
 	TorrenthandleInfoMap::iterator it = infomap.begin();
 	for ( ; it != infomap.end(); )
