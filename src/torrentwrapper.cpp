@@ -151,7 +151,10 @@ TorrentWrapper::TorrentWrapper():
         m_started(false)
 {
     wxLogMessage(_T("TorrentWrapper::TorrentWrapper()"));
+	libtorrent::session_settings settings;
+	settings.user_agent="SL";
     m_torr = new libtorrent::session( libtorrent::fingerprint("SL", 0, 0, 0, 0), 0 );
+	m_torr->set_settings( settings );
     try
     {
         m_torr->add_extension(&libtorrent::create_metadata_plugin);
