@@ -46,8 +46,8 @@ private:
 	void updateTreeView();
 
 	static key_binding_collection getProfilesFromSettings();
-	//static bool compareBindings( const key_binding& springBindings, const key_binding& kbBindings );
 	static key_binding getBindingsFromProfile( const wxKeyProfile& profile );
+	static wxArrayString sortArrayStringNumerical( const wxArrayString& arr );
 	wxKeyProfile buildNewProfile( const wxString& name, const wxString& description, bool readOnly );
 	void putKeybindingsToProfile( wxKeyProfile& profile, const key_binding& bindings );
 	void addCommandToAllPanelProfiles( const CommandList::Command& cmd );
