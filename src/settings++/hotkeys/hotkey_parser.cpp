@@ -37,15 +37,16 @@ hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : m_filename( uike
 	wxString line;
 	for ( line = uiFile.GetFirstLine(); !uiFile.Eof(); line = uiFile.GetNextLine() )
 	{
-		if ( line.Trim().StartsWith( wxT("//") ) )
-		{
-			continue;
+		//look for comments
+		int cmtPos = line.Find(wxT("//"));
+		if (cmtPos != -1) {
+			line.Truncate(cmtPos);	//comment found. cut it.
 		}
 
+		line = line.Trim();
+
 		if ( line.size() == 0 )
-		{
 			continue;
-		}
 
 		this->processLine( line );
 	}
