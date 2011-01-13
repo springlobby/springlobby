@@ -408,6 +408,29 @@ void hotkey_panel::selectProfileFromUikeys()
 	this->m_pKeyConfigPanel->SetSelProfile( foundIdx );
 }
 
+wxArrayString hotkey_panel::sortArrayStringNumerical( const wxArrayString& arr )
+{	
+	//we get the array here ordered as strings. e.g. "1","10","2","3","4"
+	//but we actually do want it ordered as numbers "1","2","3",..."9","10","11","12"
+	std::list<long> sortList;
+	for( size_t k=0; k < arr.GetCount(); ++k )
+	{
+		wxString idx = arr.Item(k);
+		long v = 0;
+		idx.ToLong( &v );
+		sortList.push_back( v );
+	}
+	sortList.sort(); //sort it numerically
+
+	wxArrayString sortArr;
+	for( std::list<long>::const_iterator iter = sortList.begin(); iter != sortList.end(); ++iter )
+	{
+		sortArr.Add( wxString::Format(wxT("%i"),(*iter)) );
+	}
+
+	return sortArr;
+}
+
 key_binding_collection hotkey_panel::getProfilesFromSettings()
 {
 	key_binding_collection coll;
@@ -421,7 +444,7 @@ key_binding_collection hotkey_panel::getProfilesFromSettings()
 		coll[profName] = SpringDefaultProfile::getBindings();
 
 		//add keybindings
-		wxArrayString orderIdxs = sett().GetHotkeyProfileOrderIndices( profName );
+		wxArrayString orderIdxs = hotkey_panel::sortArrayStringNumerical( sett().GetHotkeyProfileOrderIndices( profName ) );
 		for( size_t k=0; k < orderIdxs.GetCount(); ++k )
 		{
 			wxString idx = orderIdxs.Item(k);
