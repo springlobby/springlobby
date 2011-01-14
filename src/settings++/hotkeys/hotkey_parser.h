@@ -19,6 +19,7 @@ public:
 	
 	void writeBindingsToFile( const key_binding& springbindings );
 
+	bool isDontTouchMode() const;
 	//void dumpIncludeSourceCode( const wxString& filename );
 
 private:
@@ -31,6 +32,8 @@ private:
 	key_binding			m_bindings;
 	
 	wxString			m_filename;
+
+	bool				m_dontTouch;
 };
 
 #endif

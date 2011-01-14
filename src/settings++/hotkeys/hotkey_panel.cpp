@@ -213,6 +213,9 @@ bool hotkey_panel::isDefaultBinding( const wxString& command, const wxString& sp
 */
 void hotkey_panel::SaveSettings()
 {
+	if ( this->m_uikeys_manager.isDontTouchMode() )
+		return;
+
 	try
 	{
 		sett().DeleteHotkeyProfiles();
@@ -394,15 +397,22 @@ void hotkey_panel::selectProfileFromUikeys()
 
 	if ( foundIdx == noProfileFound )
 	{
-		const wxString profName = this->getNextFreeProfileName();
-		wxKeyProfile profile = buildNewProfile( profName, wxT("User hotkey profile"), false );
-		this->putKeybindingsToProfile( profile, curBinding );	
-		this->m_pKeyConfigPanel->AddProfile( profile, true );
+		if ( !this->m_uikeys_manager.isDontTouchMode() )
+		{
+			const wxString profName = this->getNextFreeProfileName();
+			wxKeyProfile profile = buildNewProfile( profName, wxT("User hotkey profile"), false );
+			this->putKeybindingsToProfile( profile, curBinding );	
+			this->m_pKeyConfigPanel->AddProfile( profile, true );
 
-		customMessageBox(SS_MAIN_ICON, _("Your current hotkey configuration does not match any known profile.\n A new profile with the name '" + profName + _("' has been created.")), 
-			_("New hotkey profile found"), wxOK );
+			customMessageBox(SS_MAIN_ICON, _("Your current hotkey configuration does not match any known profile.\n A new profile with the name '" + profName + _("' has been created.")), 
+				_("New hotkey profile found"), wxOK );
 
-		foundIdx = this->m_pKeyConfigPanel->GetProfiles().GetCount() - 1;
+			foundIdx = this->m_pKeyConfigPanel->GetProfiles().GetCount() - 1;
+		}
+		else
+		{
+			foundIdx = 0;
+		}
 	}
 
 	this->m_pKeyConfigPanel->SetSelProfile( foundIdx );
@@ -579,6 +589,9 @@ void hotkey_panel::updateTreeView()
 
 bool hotkey_panel::HasProfileBeenModifiedOrSelected() const
 {
+	if ( this->m_uikeys_manager.isDontTouchMode() )
+		return false;
+
 	return this->m_pKeyConfigPanel->HasProfileBeenModifiedOrSelected();
 }
 
