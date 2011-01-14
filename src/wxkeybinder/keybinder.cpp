@@ -413,11 +413,7 @@ wxString wxKeyBind::KeyCodeToString(int keyCode, bool
 #if defined(__WXMSW__)
 			UINT transkey = keyCode;
 			if ( inputUs )
-			{
 				transkey = wxMswKeyConverter::ConvertUsToLocal( keyCode );
-				wxChar k = wxMswKeyConverter::ConvertLocalToUs( transkey );
-				k++;
-			}
 
 			if ( transkey )
 				res << (wxChar)transkey;
