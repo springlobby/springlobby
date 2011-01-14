@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <wx/log.h>
 
 #include "HotkeyTypes.h"
 #include "HotkeyException.h"
@@ -301,9 +302,39 @@ void key_binding::clear()
 
 bool key_binding::operator==(const key_binding& other) const
 {
-	return ( this->m_groups == other.m_groups ) && ( this->m_groupsAny == other.m_groupsAny ) &&
-		( this->m_keySyms == other.m_keySyms ) && ( this->m_keySymsSet == other.m_keySymsSet ) &&
-		( this->m_meta == other.m_meta );
+	const bool groups = this->m_groups == other.m_groups;
+	const bool groupsAny = this->m_groupsAny == other.m_groupsAny;
+	const bool keySyms = this->m_keySyms == other.m_keySyms;
+	const bool keySymsSet = this->m_keySymsSet == other.m_keySymsSet;
+	const bool meta = this->m_meta == other.m_meta;
+
+#ifdef __WXDEBUG__
+	if ( !groups )
+	{
+		for( key_binding::KeyGroupMap::const_iterator iter = this->m_groups.begin(); iter != this->m_groups.end(); ++iter )
+		{
+			key_binding::KeyGroupMap::const_iterator fiter = other.m_groups.find( iter->first );
+
+			if ( fiter != other.m_groups.end() )
+			{
+				if ( iter->second != fiter->second )
+				{
+					wxLogWarning( wxT("Difference in hotkey group: ") + iter->first );
+
+					const std::vector<wxString> cmdsA = iter->second;
+					const std::vector<wxString> cmdsB = fiter->second;
+
+					int i=0;
+					++i;
+				}
+			}
+			else
+				wxLogWarning( wxT("Group ") + iter->first + wxT(" not found in other group!") ); 
+		}
+	}
+#endif
+
+	return groups && groupsAny && keySyms && keySymsSet && meta;
 }
 
 const key_binding key_binding::operator-(const key_binding& other) const
