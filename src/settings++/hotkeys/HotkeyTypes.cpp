@@ -332,6 +332,30 @@ bool key_binding::operator==(const key_binding& other) const
 				wxLogWarning( wxT("Group ") + iter->first + wxT(" not found in other group!") ); 
 		}
 	}
+
+	if ( !groupsAny )
+	{
+		for( key_binding::KeyGroupMap::const_iterator iter = this->m_groupsAny.begin(); iter != this->m_groupsAny.end(); ++iter )
+		{
+			key_binding::KeyGroupMap::const_iterator fiter = other.m_groupsAny.find( iter->first );
+
+			if ( fiter != other.m_groupsAny.end() )
+			{
+				if ( iter->second != fiter->second )
+				{
+					wxLogWarning( wxT("Difference in hotkey groupAny: ") + iter->first );
+
+					const std::vector<wxString> cmdsA = iter->second;
+					const std::vector<wxString> cmdsB = fiter->second;
+
+					int i=0;
+					++i;
+				}
+			}
+			else
+				wxLogWarning( wxT("GroupAny ") + iter->first + wxT(" not found in other group!") ); 
+		}
+	}
 #endif
 
 	return groups && groupsAny && keySyms && keySymsSet && meta;
