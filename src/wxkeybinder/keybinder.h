@@ -121,6 +121,8 @@ protected:
 
 	size_t m_nOrderIndex;
 
+	static const int m_usLayoutBitMask; //when this bit is set, it is an US key
+	
 	static wxString discardModifier( const wxString& keystring )
 	{
 		wxString result;
@@ -150,6 +152,7 @@ protected:
 	}
 
 public:
+	static const wxString m_usMarker; //use this to mark keystrings as us-layout
 
     wxKeyBind() {
         m_nKeyCode = m_nFlags = -1;
