@@ -161,6 +161,9 @@ wxChar wxMswKeyConverter::ConvertLocalToUs( const wxChar& c )
 // wxKeyBind STATIC utilities
 // ----------------------------------------------------------------------------
 
+const int wxKeyBind::m_usLayoutBitMask = ( 1 << (8 * sizeof(int) - 1) );
+const wxString wxKeyBind::m_usMarker = wxT("[us]");
+
 wxString wxKeyBind::NumpadKeyCodeToString(int keyCode)
 {
     wxString res;
@@ -404,7 +407,13 @@ wxString wxKeyBind::KeyCodeToString(int keyCode, bool
 	default:
 
         // ASCII chars...
-		if (keyCode < 256
+		if ( keyCode & m_usLayoutBitMask && !inputUs ) 
+		{
+			//this is a keycode in us layout. we could not find an equivalent in local layout. so just use it
+			//and mark it as uslayout
+			res << (wxChar)(keyCode & ~m_usLayoutBitMask) << wxKeyBind::m_usMarker;
+		}
+		else if (keyCode < 256
 #ifndef wxKEYBINDER_ALLOW_NON_ALPHANUM_KEYS
 							&& wxIsalnum(keyCode)
 #endif
@@ -413,11 +422,7 @@ wxString wxKeyBind::KeyCodeToString(int keyCode, bool
 #if defined(__WXMSW__)
 			UINT transkey = keyCode;
 			if ( inputUs )
-			{
 				transkey = wxMswKeyConverter::ConvertUsToLocal( keyCode );
-				wxChar k = wxMswKeyConverter::ConvertLocalToUs( transkey );
-				k++;
-			}
 
 			if ( transkey )
 				res << (wxChar)transkey;
@@ -529,7 +534,11 @@ int wxKeyBind::StringToKeyCode(const wxString &keyName)
 	if (keyName == wxT("JOY7")) return WXK_JOY7;
 	
 	// it should be an ASCII key...
-    return (int)keyName.GetChar(0);
+	int rc = static_cast<int>( keyName.GetChar(0) );
+	if ( keyName.EndsWith( wxKeyBind::m_usMarker.Upper() ) )
+		rc |= wxKeyBind::m_usLayoutBitMask;
+
+    return rc;
 }
 
 wxString wxKeyBind::KeyModifierToString(int keyModifier)

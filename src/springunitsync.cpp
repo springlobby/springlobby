@@ -151,7 +151,7 @@ void SpringUnitSync::PopulateArchiveList()
       m_mod_array.Add( name );
     } catch (...)
     {
-      wxLogError( _T("Found mod with hash collision: ") + name + _T(" hash: ") + hash );
+	  wxLogError( _T("Found game with hash collision: ") + name + _T(" hash: ") + hash );
     }
   }
   m_unsorted_mod_array = m_mod_array;

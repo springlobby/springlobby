@@ -120,7 +120,7 @@ bool WidgetDownloadPanel::PopulateList()
                     else if ( name == _T("Changelog") ) {
                         w.changelog = item->GetNodeContent();
                     }
-                    else if ( name == _T("Mods") ) {
+					else if ( name == _T("Mods") ) {// NOT a "Mod" occurence to replace!
                         w.mods = item->GetNodeContent();
                     }
                     else if ( name == _T("Description") ) {

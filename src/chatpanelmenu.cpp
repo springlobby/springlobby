@@ -514,8 +514,8 @@ void ChatPanelMenu::OnUserMenuJoinSame( wxCommandEvent& /*unused*/ )
 	if ( battle == 0 ) return;
 
 	if ( !usync().ModExists( battle->GetHostModName() ) ) {
-		customMessageBoxNoModal( SL_MAIN_ICON, _( "You don't have the mod " ) + battle->GetHostModName()
-														 + _( " . Please download it first" ), _( "Mod unavailable" ) );
+		customMessageBoxNoModal( SL_MAIN_ICON, _( "You don't have the game " ) + battle->GetHostModName()
+														 + _( " . Please download it first" ), _( "Game unavailable" ) );
 		return;
 	}
 

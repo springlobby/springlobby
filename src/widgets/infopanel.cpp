@@ -66,7 +66,7 @@ void WidgetInfoPanel::Create()
     wxStaticText* author = new wxStaticText( this, -1, m_widget.author );
     m_grid_sizer->Add( author );
 
-    wxStaticText* mods_lbl = new wxStaticText( this, -1, _("Suitable mods") );
+	wxStaticText* mods_lbl = new wxStaticText( this, -1, _("Suitable games") );
     m_grid_sizer->Add( mods_lbl );
     wxStaticText* mods = new wxStaticText( this, -1, m_widget.mods );
     m_grid_sizer->Add( mods );

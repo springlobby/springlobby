@@ -73,7 +73,7 @@ getDataSubdirForType(const IUnitSync::MediaType type)
     case IUnitSync::map:
         return _T("maps");
     case IUnitSync::mod:
-        return _T("mods");
+		return _T("games");
     default:
         ASSERT_EXCEPTION(false, _T("Unhandled IUnitSync::MediaType value"));
     }
@@ -151,7 +151,10 @@ TorrentWrapper::TorrentWrapper():
         m_started(false)
 {
     wxLogMessage(_T("TorrentWrapper::TorrentWrapper()"));
+	libtorrent::session_settings settings;
+	settings.user_agent="SL";
     m_torr = new libtorrent::session( libtorrent::fingerprint("SL", 0, 0, 0, 0), 0 );
+	m_torr->set_settings( settings );
     try
     {
         m_torr->add_extension(&libtorrent::create_metadata_plugin);
@@ -489,7 +492,7 @@ void TorrentWrapper::HandleCompleted()
 				bool ok = wxCopyFile( source_path, dest_filename );
 				if ( !ok )
 				{
-					wxString msg = wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
+					wxString msg = wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/games afterwards"),
 								source_path.c_str(), dest_filename.c_str() );
 					wxLogError( _T("DL: File copy from %s to %s failed."), source_path.c_str(), dest_filename.c_str() );
 					wxMutexGuiLocker locker;

@@ -461,6 +461,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     {
 		serverSelector().GetServer().GetMe().Status().away = true;
 		serverSelector().GetServer().GetMe().SendMyUserStatus();
+		mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
         return true;
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/back") )
@@ -469,6 +470,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
         {
 			serverSelector().GetServer().GetMe().Status().away = false;
 			serverSelector().GetServer().GetMe().SendMyUserStatus();
+			mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
             return true;
         }
     }
@@ -505,7 +507,7 @@ void Ui::ConsoleHelp( const wxString& topic )
     ChatPanel* panel = GetActiveChatPanel();
     if ( panel == 0 )
     {
-        ShowMessage( _("Help error"), _("Type /help in a chat box.") );
+		ShowMessage( _("Help error"), _("Type /help in a chat box. (A bug currently prevents this from working in battleroom") );
         return;
     }
     if ( topic == wxEmptyString )
@@ -1272,6 +1274,36 @@ void Ui::OnRing( const wxString& from )
 		UiEvents::GetNotificationEventSender().SendEvent(
 				UiEvents::NotficationData( UiEvents::ServerConnection, wxString::Format(_("%s:\nring!"),from.c_str()) ) );
 	}
+
+    if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
+        wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
+        if(! usync().MapExists(host_map_name)) {
+
+            map_infos info_map = torrent().CollectGuiInfos();
+            bool dling = false;
+
+            for(map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter){
+                if(iter->first == wxString(_T("global")))
+                    continue;
+                else if(iter->first == host_map_name) {
+                    int eta = iter->second.eta;
+
+                    if(eta <= 0) {
+						serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(_("/me map is not available for automatic downloading."));
+                    } else {
+                        serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(wxString::Format(
+                                _("/me downloading map eta: %d s"), eta)
+                        );
+                    dling = true;
+                    }
+                }
+            }
+            if(! dling) { //XXX is it possible to get eta from web dl in sl?, anyone using it instead torrent system? //there is no direct from-web downloading in SL currently
+                serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(
+                        _("/me is not downloading map with SL torrent system"));
+            }
+        }
+    }
 
 #ifndef DISABLE_SOUND
     if ( sett().GetChatPMSoundNotificationEnabled() )

@@ -83,7 +83,7 @@ void MainSinglePlayerTab::OnUnitSyncReloaded()
 		GetSinglePlayerTab().ResetUsername();
 		wxLogMessage( _T( "Reloading map list" ) );
 		GetSinglePlayerTab().ReloadMaplist();
-		wxLogMessage( _T( "Reloading mod list" ) );
+		wxLogMessage( _T( "Reloading game list" ) );
 		GetSinglePlayerTab().ReloadModlist();
 		wxLogMessage( _T( "Reloading minimap" ) );
 		GetSinglePlayerTab().UpdateMinimap();
