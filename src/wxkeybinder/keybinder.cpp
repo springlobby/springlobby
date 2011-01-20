@@ -407,13 +407,16 @@ wxString wxKeyBind::KeyCodeToString(int keyCode, bool
 	default:
 
         // ASCII chars...
+#if defined(__WXMSW__)
 		if ( keyCode & m_usLayoutBitMask && !inputUs ) 
 		{
 			//this is a keycode in us layout. we could not find an equivalent in local layout. so just use it
 			//and mark it as uslayout
 			res << (wxChar)(keyCode & ~m_usLayoutBitMask) << wxKeyBind::m_usMarker;
 		}
-		else if (keyCode < 256
+		else 
+#endif
+		if (keyCode < 256
 #ifndef wxKEYBINDER_ALLOW_NON_ALPHANUM_KEYS
 							&& wxIsalnum(keyCode)
 #endif
