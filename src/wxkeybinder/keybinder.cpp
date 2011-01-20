@@ -407,7 +407,11 @@ wxString wxKeyBind::KeyCodeToString(int keyCode, bool
 	default:
 
         // ASCII chars...
-		if ( keyCode & m_usLayoutBitMask && !inputUs ) 
+		if ( keyCode & m_usLayoutBitMask
+#if defined(__WXMSW__)
+				&& !inputUs
+#endif
+				)
 		{
 			//this is a keycode in us layout. we could not find an equivalent in local layout. so just use it
 			//and mark it as uslayout
