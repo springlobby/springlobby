@@ -1275,6 +1275,7 @@ void Ui::OnRing( const wxString& from )
 				UiEvents::NotficationData( UiEvents::ServerConnection, wxString::Format(_("%s:\nring!"),from.c_str()) ) );
 	}
 
+#ifndef NO_TORRENT_SYSTEM
     if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
         wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
         if(! usync().MapExists(host_map_name)) {
@@ -1304,6 +1305,7 @@ void Ui::OnRing( const wxString& from )
             }
         }
     }
+#endif
 
 #ifndef DISABLE_SOUND
     if ( sett().GetChatPMSoundNotificationEnabled() )
