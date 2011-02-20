@@ -12,6 +12,14 @@
 #include <winsock2.h>
 #endif // _MSC_VER
 
+#include "torrentwrapper.h"
+
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <boost/format.hpp>
+#include <boost/cstdint.hpp>
+
 #include "settings.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
@@ -19,6 +27,7 @@
 #include "base64.h"
 #include "updater/updatehelper.h"
 
+#define WITH_SHIPPED_GEOIP_H
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
 #include <libtorrent/bencode.hpp>
@@ -32,13 +41,8 @@
 #endif
 #include <libtorrent/extensions/metadata_transfer.hpp>
 #include <libtorrent/extensions/ut_pex.hpp>
-#include <libtorrent/alert_types.hpp>
 
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/format.hpp>
-#include <boost/cstdint.hpp>
+#include <libtorrent/alert_types.hpp>
 
 #include <fstream>
 
@@ -52,7 +56,6 @@
 #include <wx/app.h>
 #include <wx/event.h>
 
-#include "torrentwrapper.h"
 #include "utils/customdialogs.h"
 #include "utils/downloader.h"
 #include "utils/uievents.h"
@@ -579,6 +582,7 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 void TorrentWrapper::RemoveInvalidTorrents()
 {
+	#if LIBTORRENT_VERSION_MINOR > 14
 	//remove failed webseeds
 	std::auto_ptr<libtorrent::alert> alert = m_torr->pop_alert();
 	while ( alert.get() )
@@ -590,6 +594,7 @@ void TorrentWrapper::RemoveInvalidTorrents()
 		}
 		alert = m_torr->pop_alert();
 	}
+	#endif
 
 	TorrenthandleInfoMap& infomap = GetHandleInfoMap();
 	TorrenthandleInfoMap::iterator it = infomap.begin();
