@@ -164,7 +164,7 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
             wxXmlNode* url = links->GetChildren();
             while ( url ) {
 				wxString seed_url = url->GetNodeContent();
-				seed_url.Replace(_T(" "),_T("%20"))
+				seed_url.Replace(_T(" "),_T("%20"));
 				info.m_webseeds.Add( seed_url );
                 url = url->GetNext();
             }
