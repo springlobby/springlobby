@@ -17,6 +17,7 @@
 #include "utils/debug.h"
 #include "socket.h"
 #include "base64.h"
+#include "updater/updatehelper.h"
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
@@ -155,7 +156,7 @@ TorrentWrapper::TorrentWrapper():
 {
     wxLogMessage(_T("TorrentWrapper::TorrentWrapper()"));
 	libtorrent::session_settings settings;
-	settings.user_agent="SL";
+	settings.user_agent= std::string("SL") + STD_STRING(GetSpringLobbyVersion(true));
     m_torr = new libtorrent::session( libtorrent::fingerprint("SL", 0, 0, 0, 0), 0 );
 	m_torr->set_settings( settings );
     try
