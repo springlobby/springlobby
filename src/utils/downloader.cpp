@@ -163,7 +163,9 @@ PlasmaResourceInfo PlasmaInterface::ParseResourceInfoData( const int buffer_inde
 			ASSERT_EXCEPTION( links, _T("Plasma: XMLparser: no webseed section") );
             wxXmlNode* url = links->GetChildren();
             while ( url ) {
-                info.m_webseeds.Add( url->GetNodeContent() );
+				wxString seed_url = url->GetNodeContent();
+				seed_url.Replace(_T(" "),_T("%20"))
+				info.m_webseeds.Add( seed_url );
                 url = url->GetNext();
             }
             wxXmlNode* next = links->GetNext();

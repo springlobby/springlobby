@@ -52,8 +52,6 @@
 #include <wx/app.h>
 #include <wx/event.h>
 
-#include <curl/curl.h>
-
 #include "torrentwrapper.h"
 #include "utils/customdialogs.h"
 #include "utils/downloader.h"
@@ -386,11 +384,8 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaRe
 
         libtorrent::torrent_handle tor = m_torr->add_torrent(p);
 		GetHandleInfoMap()[info] = tor;
-		for ( size_t i = 0; i < num_webseeds; ++ i ) {
-			std::string seed_url = STD_STRING( info.m_webseeds[i] );
-			seed_url = std::string( curl_easy_escape( NULL, seed_url.c_str(), seed_url.size() ) );
-			tor.add_url_seed( seed_url );
-		}
+        for ( size_t i = 0; i < num_webseeds; ++ i )
+            tor.add_url_seed( STD_STRING( info.m_webseeds[i] ) );
         return success;
     }
     catch (std::exception& e) {
