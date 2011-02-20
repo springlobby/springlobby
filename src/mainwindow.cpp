@@ -492,7 +492,7 @@ void MainWindow::ShowChannelChooser()
         return;
 
     if ( !ui().IsConnected() )
-        customMessageBox( SL_MAIN_ICON, _("You need to be connected to server to view channel list"), _("Not connected") );
+        customMessageBox( SL_MAIN_ICON, _("You need to be connected to a server to view the channel list"), _("Not connected") );
     else {
         m_channel_chooser->ClearChannels();
 		serverSelector().GetServer().RequestChannels();
@@ -688,7 +688,7 @@ void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 {
 	wxArrayString layouts = sett().GetPerspectives();
-	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
+	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to load?"), _("Layout manager"), layouts );
 	if ( result > layouts.GetCount() )
         return;
 
