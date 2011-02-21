@@ -309,18 +309,22 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
     }
     else if ( subcmd == _T("/changepassword") )
     {
-		if ( arrayparams.GetCount() < 2 ) return false;
+		if ( arrayparams.GetCount() < 1 ) return false;
 		wxString oldpassword = sett().GetServerAccountPass( GetServerName() );
-		wxString newpassword;
+		wxString newpassword = GetPasswordHash( params );
 		if  ( oldpassword.IsEmpty() || !sett().GetServerAccountSavePass(GetServerName()) )
 		{
-			oldpassword = GetPasswordHash(arrayparams[1]);
-			newpassword = GetPasswordHash( arrayparams[2] );
+			m_se->OnServerMessage(_("There is no saved password for this account, please use /changepassword2"));
+			return true;
 		}
-		else
-		{
-			newpassword = GetPasswordHash( params );
-		}
+        SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
+        return true;
+    }
+    else if ( subcmd == _T("/changepassword2") )
+    {
+		if ( arrayparams.GetCount() != 2 ) return false;
+		wxString oldpassword = GetPasswordHash(arrayparams[1]);
+		wxString newpassword = GetPasswordHash( arrayparams[2] );
         SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
         return true;
     }
@@ -2587,3 +2591,4 @@ IBattle::GameType IntToGameType( int gt )
     };
     return IBattle::GT_ComContinue;
 }
+
