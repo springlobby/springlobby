@@ -27,7 +27,6 @@
 #include "base64.h"
 #include "updater/updatehelper.h"
 
-#define WITH_SHIPPED_GEOIP_H
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
 #include <libtorrent/bencode.hpp>
