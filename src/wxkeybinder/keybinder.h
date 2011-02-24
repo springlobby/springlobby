@@ -1465,7 +1465,7 @@ public:     // output-access utilities (to call AFTER ShowModal)
 
     //! Returns the n-th key profile of the profile combo box.
     wxKeyProfile *GetProfile(int n) const
-        { wxASSERT(m_pKeyProfiles); return (wxKeyProfile *)m_pKeyProfiles->GetClientData((unsigned int)n); }
+        { wxASSERT(m_pKeyProfiles); return (wxKeyProfile *)static_cast<wxItemContainer*>(m_pKeyProfiles)->GetClientData(n); }
 
     //! Returns the currently selected key profile using #GetSelProfileIdx().
     //! This is the profile owned by the profile combo box.
