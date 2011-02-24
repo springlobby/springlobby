@@ -827,7 +827,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 
 void ChatPanel::UserStatusUpdated( User& who )
 {
-  if ( ( m_type == CPT_User ) && ( m_user == &who ) )
+  if ( ( m_type == CPT_User ) && ( m_user == &who ) && ( m_chan_opts_button != 0 ) )
   {
 	m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(who.GetStatus(),false, who.GetBattle() != 0 ) ) );
 
@@ -911,13 +911,13 @@ void ChatPanel::SetUser( const User* usr )
 	{
 	  StatusMessage( _( "Chat closed." ) );
 	  m_user->uidata.panel = 0;
-	  m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().ICON_EMPTY) );
+	  if (m_chan_opts_button != 0) m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().ICON_EMPTY) );
 	}
 	else if ( usr != 0 ) usr->uidata.panel = this;
 	m_user = usr;
 	if ( m_user )
 	{
-		m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(m_user->GetStatus(),false, m_user->GetBattle() != 0 ) ) );
+		if (m_chan_opts_button != 0)  m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(m_user->GetStatus(),false, m_user->GetBattle() != 0 ) ) );
 	}
 //	if ( m_user )
 //        m_chat_log.SetTarget( sett().GetDefaultServer(), usr->GetNick() );
