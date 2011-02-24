@@ -53,7 +53,7 @@ class NoGuiSinglePlayerBattle : public IBattle {
         NoGuiSinglePlayerBattle ();
         virtual ~NoGuiSinglePlayerBattle () {}
         void StartSpring();
-        bool IsFounderMe() { return true; }
+		virtual bool IsFounderMe() { return true; }
         User& GetMe() { return m_me; }
         const User& GetMe() const { return m_me; }
 

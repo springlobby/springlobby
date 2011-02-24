@@ -354,7 +354,7 @@ void SinglePlayerTab::OnColorButton( wxCommandEvent& /*unused*/ )
     UpdateMinimap();
 }
 
-void SinglePlayerTab::Update( const wxString& Tag )
+void SinglePlayerTab::UpdateTag( const wxString& Tag )
 {
     long type;
     Tag.BeforeFirst( '_' ).ToLong( &type );

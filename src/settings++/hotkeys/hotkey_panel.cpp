@@ -592,7 +592,7 @@ bool hotkey_panel::HasProfileBeenModifiedOrSelected() const
 	if ( this->m_uikeys_manager.isDontTouchMode() )
 		return false;
 
-	return this->m_pKeyConfigPanel->HasProfileBeenModifiedOrSelected();
+	return this->m_pKeyConfigPanel &&  this->m_pKeyConfigPanel ->HasProfileBeenModifiedOrSelected();
 }
 
 void hotkey_panel::ResetProfileBeenModifiedOrSelected()

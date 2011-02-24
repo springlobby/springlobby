@@ -152,12 +152,12 @@ void MainSinglePlayerTab::ReloadPresetList()
 }
 
 
-void MainSinglePlayerTab::Update( const wxString& Tag )
+void MainSinglePlayerTab::UpdateTag( const wxString& Tag )
 {
 
 	try
 	{
-		GetSinglePlayerTab().Update( Tag );
+		GetSinglePlayerTab().UpdateTag( Tag );
 	} catch ( ... ) {}
 
 	try
