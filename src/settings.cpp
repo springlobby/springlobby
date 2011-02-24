@@ -9,6 +9,7 @@
 	#include <wx/msw/registry.h>
 #endif
 #include "Helper/slconfig.h"
+#include "defines.h" //to get HAVEWX??
 
 #include <wx/filename.h>
 #include <wx/filefn.h>
@@ -22,6 +23,9 @@
 #include <wx/wfstream.h>
 #include <wx/settings.h>
 #include <wx/tokenzr.h>
+#ifdef HAVE_WX29
+	#include <wx/colourdata.h>
+#endif
 
 #include "nonportable.h"
 #include "utils/conversion.h"
