@@ -281,22 +281,23 @@ void ChatPanel::CreateControls( )
                                    wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	if ( m_type == CPT_Channel ) {
 	  m_chatlog_text->SetToolTip( TE(_("right click for options (like autojoin)" ) ) );
-	  m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
+	  //m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
 	} else if ( m_type == CPT_User ) {
 		if ( m_user )
 		{
-			m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, icons().GetBitmap(icons().GetUserBattleStateIcon(m_user->GetStatus()) ), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
+			//m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, icons().GetBitmap(icons().GetUserBattleStateIcon(m_user->GetStatus()) ), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
 		}
 	} else {
-	  m_chan_opts_button = 0;
+
 	}
+	m_chan_opts_button = 0;
 
 	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 	// Adding elements to sizers
-	if ( m_type == CPT_Channel ) m_say_sizer->Add( m_chan_opts_button );
-	if ( m_type == CPT_User ) m_say_sizer->Add( m_chan_opts_button );
+	//if ( m_type == CPT_Channel ) m_say_sizer->Add( m_chan_opts_button );
+	//if ( m_type == CPT_User ) m_say_sizer->Add( m_chan_opts_button );
 	m_say_sizer->Add( m_say_text, 1, wxEXPAND );
 	m_say_sizer->Add( m_say_button );
 	m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
