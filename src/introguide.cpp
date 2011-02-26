@@ -39,8 +39,8 @@ IntroGuide::IntroGuide()
 	if ( SLcustomizations().Provides( Customizations::IntroKey ) )
 		SpringOverview = SLcustomizations().GetIntroText();
 	else {
-		SpringOverview << _("Spring is just an engine, alone it won't do much, mods are games that run on the engine.\n");
-		SpringOverview << _("You will need to install at least a map and a mod in order to play.\n\n");
+		SpringOverview << _("Spring is just an engine, alone it won't do much, games are games that run on the engine.\n");
+		SpringOverview << _("You will need to install at least a map and a game in order to play.\n\n");
 		SpringOverview << _("As a user, you can extend functionality downloading small scripts (LuaUI Widgets) and activate them ingame trough the F11-button list.\n\n");
 		SpringOverview << _("For players with previous RTS experience, one tricky part of spring is that fog of war is present, but not visualized by default ingame until you press the \"L\" button.\n\n");
 		SpringOverview << _("For developers, spring is highly customizable, with a scripting engine, you'd want to check out the forum/wiki to get started.\n"); // spring overview
@@ -52,10 +52,10 @@ IntroGuide::IntroGuide()
 	InstallOverview << _("Windows XP: Spring's installation path.\n");
 	InstallOverview << _("Windows Vista/Windows 7: C:\\Users\\username\\App Data\\local\\spring (This folder is default insibie, change your file manager settings to display it).\n");
 	InstallOverview << _("Linux: ~/.spring (this folder is default invisible, you might want to create a visible link using \"ln -s ~/.spring ~/spring\").\n");
-	InstallOverview << _("As obvious as it could be, maps belong to the maps subdirectory, mods to the mods subdirectory, and widgets to LuaUI\\Widgets subdirectory.\n\n");
-	InstallOverview << _("In order for the lobby to detect correctly a freshly installed map/mod, you'll need to trigger a refresh, to do it click on tools->Reload map/mod list."); // installing content
-	SinglePlayer << _("Select in order, first the mod, then the map.\n");
-	SinglePlayer << _("You'll need to add at least one bot to play, if the mod ship it's own AI, it's highly recommended to use that since bots are not compatible with all mods.\n");
+	InstallOverview << _("As obvious as it could be, maps belong to the maps subdirectory, games to the games subdirectory, and widgets to LuaUI\\Widgets subdirectory.\n\n");
+	InstallOverview << _("In order for the lobby to detect correctly a freshly installed map/game, you'll need to trigger a refresh, to do it click on tools->Reload map/game list."); // installing content
+	SinglePlayer << _("Select in order, first the game, then the map.\n");
+	SinglePlayer << _("You'll need to add at least one bot to play, if the game ship it's own AI, it's highly recommended to use that since bots are not compatible with all games.\n");
 	SinglePlayer << _("You can drag both the bot and yourself(the sun icon) anywhere, map's default start positions will snap on.\n");
 	SinglePlayer << _("You can change alliances (same number equals to allied players) and color by hovering the icon.\n");
 	SinglePlayer << _("Bonus number is a resource multiplier bonus, if the bot feels too weak, try increasing the number on the bot or add more of them, if it feels too strong, do on yourself.\n");
@@ -63,7 +63,7 @@ IntroGuide::IntroGuide()
 	MultiPlayer << _("The lobby has an irc-like chat for talk and a battlelist\n");
 	MultiPlayer << _("You can get a list of available chat commands using /help\n");
 	MultiPlayer << _("Asking questions such as \"Is anyone here\" or \"Can anyone help me\" is actually considered rude if you don't specify your problem.\n");
-	MultiPlayer << _("It's also highly recommended to avoid asking questions such as \"what is the best mod\" since it's a very touchy subject for many players.\n");
+	MultiPlayer << _("It's also highly recommended to avoid asking questions such as \"what is the best game\" since it's a very touchy subject for many players.\n");
 	MultiPlayer << _("In order to play online, you'll NEED the latest STABLE OFFICIAL RELEASE, older or newer or development versions won't work.\n\n\n");
 	MultiPlayer << _("Joining a battle:\n");
 	MultiPlayer << _("In order to join a battle, simply double click on it on the list, and the lobby will prompt you for downloading the necessary files.\n");
@@ -72,8 +72,8 @@ IntroGuide::IntroGuide()
 	MultiPlayer << _("When two or more players have the same ally number, they will be allied together.\n");
 	MultiPlayer << _("The host has possibility to override your values anytime with the exception of spectator.\n");
 	MultiPlayer << _("If you are not a spectator, you will have to press the ready button once you're ready to play.");
-	MultiPlayer << _("The unsynced status (the ! status icon) appears when you lack the map or the mod, or they are corrupted, you might need a list refresh to update them (tools->reload map/mod list).\n");
-	MultiPlayer << _("If you are insecure about the gameplay of a mod, it's suggested that you activate the spectator button at first, so you'll be able to observe other players to learn.\n");
+	MultiPlayer << _("The unsynced status (the ! status icon) appears when you lack the map or the game, or they are corrupted, you might need a list refresh to update them (tools->reload map/game list).\n");
+	MultiPlayer << _("If you are insecure about the gameplay of a game, it's suggested that you activate the spectator button at first, so you'll be able to observe other players to learn.\n");
 	MultiPlayer << _("The game will start when the host decides so, just sit down and wait (don't forget to press ready).\n");
 	MultiPlayer << _("Some hosts are automatically controlled (autohosts), they can be controlled trough a list of chat commands ( for the list, send !help in the chat).\n\n\n");
 	MultiPlayer << _("Hosting a battle:\n");
@@ -85,7 +85,7 @@ IntroGuide::IntroGuide()
 	GraphicProblems << _("Before considering \"But XYZ game works fine!\", remember that most games on Windows uses DirectX, while Spring uses OpenGL, also the OpenGL spec is rather large, and certain bugs appear only with very specific conditions.\n");
 	GraphicProblems << _("That being said, the first thing you should do open the Spring settings editor, and lower the graphic detail, some video cards don't work well with some advanced options.\n");
 	GraphicProblems << _("If the problem persists, try to update your video drivers to the latest version (as weird as it may sound, ATI users might actually want to try older versions too, see the forums for an explanation).\n");
-	GraphicProblems << _("If your map/models are white or generally untextured, and you're using Linux, there's a solution at  http://springrts.com/phpbb/viewtopic.php?f=20&t=20809.\n\n");
+	GraphicProblems << _("If your map/gameels are white or generally untextured, and you're using Linux, there's a solution at  http://springrts.com/phpbb/viewtopic.php?f=20&t=20809.\n\n");
 	GraphicProblems << _("If you're using an integrated card, chances are you're simply unable to run smoothly Spring, because of the high requirements which those chips can't provide.\n\n");
 	GraphicProblems << _("For further help, visit the help section of the forums at http://springrts.com ."); // graphic problems
 	UsefulLinks << _("Main website: http://springrts.com\n");
@@ -110,8 +110,8 @@ IntroGuide::IntroGuide()
 
 	SpringDescription = new ButtonType( this, SPRING_DESC, _( "Spring overview" ) );
 	InstallingContent = new ButtonType( this, INSTALL_DESC, _( "Installing content" ) );
-	SingleDescription = new ButtonType( this, SINGLE_DESC, _( "Singleplayer mode" ) );
-	MultiDescription = new ButtonType( this, MULTI_DESC, _( "Multiplayer mode" ) );
+	SingleDescription = new ButtonType( this, SINGLE_DESC, _( "Singleplayer gamee" ) );
+	MultiDescription = new ButtonType( this, MULTI_DESC, _( "Multiplayer gamee" ) );
 	GraphicTroubles = new ButtonType( this, GRAPHIC_TROUB, _( "Graphic and performance problems" ) );
 	WikiLinks = new ButtonType( this, HELP_LINKS, _( "Useful links" ) );
 

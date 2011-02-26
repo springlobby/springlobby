@@ -43,6 +43,7 @@ class SinglePlayerBattle: public IBattle
 
 };
 
+
 #endif // SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERBATTLE_H
 
 /**

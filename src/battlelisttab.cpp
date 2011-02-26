@@ -93,7 +93,7 @@ BattleListTab::BattleListTab( wxWindow* parent )
 	m_map_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_data_sizer->Add( m_map_text, 0, wxALL, 5 );
 
-	m_mod_lbl = new wxStaticText( this, wxID_ANY, _( "Mod:" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_mod_lbl = new wxStaticText( this, wxID_ANY, _( "Game:" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_data_sizer->Add( m_mod_lbl, 0, wxALL, 5 );
 
 	m_mod_text = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -443,7 +443,7 @@ void BattleListTab::DoJoin( Battle& battle )
 
 	if ( !battle.ModExists() )
 	{
-		if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the mod before you can join this game.\n\n" ) + downloadProc, _( "Mod not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+		if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the game before you can join this game.\n\n" ) + downloadProc, _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 			wxString modhash = battle.GetHostModHash();
 			wxString modname = battle.GetHostModName();
 			ui().DownloadMod ( modhash, modname );

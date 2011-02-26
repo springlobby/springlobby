@@ -131,16 +131,36 @@ wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool r
 	else
 	{
 #ifdef __WXMSW__
-		if ( key.size() == 1 )
+		if ( reverse )
 		{
-			if ( reverse )
-				kbKey = wxMswKeyConverter::ConvertLocalToUs( key[0] );
+			if ( key.EndsWith( wxKeyBind::m_usMarker ) )
+				kbKey = key[0];
+			else if ( key.size() > 1 )
+				kbKey = key;
 			else
-				kbKey = wxMswKeyConverter::ConvertUsToLocal( key[0] );
+			{
+				kbKey = wxMswKeyConverter::ConvertLocalToUs( key[0] );
+				if ( kbKey[0] == 0x00 )
+				{
+					//when this happens its bad. it means we were able to translate us->local but the reverse ways fails for whatever reason
+					kbKey = key[0];
+				}
+			}
 		}
 		else
 		{
-			kbKey = key;
+			if ( key.size() == 1 )
+			{
+				kbKey = wxMswKeyConverter::ConvertUsToLocal( key[0] );
+				if ( kbKey[0] == 0x00 )
+				{
+					//we could not convert this key to local layout. so take the us-key and mark it as such
+					kbKey = key[0];
+					kbKey += wxKeyBind::m_usMarker;
+				}
+			}
+			else
+				kbKey = key;
 		}
 #else
 			kbKey = key;

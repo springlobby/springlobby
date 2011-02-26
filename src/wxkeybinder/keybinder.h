@@ -121,6 +121,8 @@ protected:
 
 	size_t m_nOrderIndex;
 
+	static const int m_usLayoutBitMask; //when this bit is set, it is an US key
+
 	static wxString discardModifier( const wxString& keystring )
 	{
 		wxString result;
@@ -150,6 +152,7 @@ protected:
 	}
 
 public:
+	static const wxString m_usMarker; //use this to mark keystrings as us-layout
 
     wxKeyBind() {
         m_nKeyCode = m_nFlags = -1;
@@ -175,7 +178,7 @@ public:
     }
 
 	virtual bool operator!=( const wxKeyBind& other ) const {
-		return !((*this) == other); 
+		return !((*this) == other);
 	}
 
 	virtual bool operator==( const wxKeyBind& other ) const {
@@ -511,14 +514,14 @@ public:
     // Getters
     // ---------------------
 
-    wxKeyBind *GetShortcut(int n) { 
-		return &m_keyShortcut[n]; 
+    wxKeyBind *GetShortcut(int n) {
+		return &m_keyShortcut[n];
 	}
 
     const wxKeyBind *GetShortcut(int n) const    { return &m_keyShortcut[n]; }
-	
+
 	//gets the EXACT shortcut
-	wxKeyBind *GetShortcut(const wxString& keystring) { 
+	wxKeyBind *GetShortcut(const wxString& keystring) {
 		for(int i=0; i < m_nShortcuts; ++i)
 		{
 			if ( m_keyShortcut[i].GetStr() == keystring )
@@ -526,7 +529,7 @@ public:
 				return &m_keyShortcut[i];
 			}
 		}
-		return NULL; 
+		return NULL;
 	}
 
     wxAcceleratorEntry GetAccelerator(int n) const {
@@ -716,7 +719,7 @@ protected:
 	wxString m_metaKey;
 	key_sym_map	m_keySyms;
 	key_sym_set_map	m_keySymsSet;
-	size_t m_nNextOderIndex;	
+	size_t m_nNextOderIndex;
 	size_t m_nNextOderIndexAny;
 
     //! The array of windows attached to this keybinder.
@@ -933,7 +936,7 @@ public:     // miscellaneous
 		{
 			for( int j=0; j < m_arrCmd.Item(i)->GetShortcutCount(); ++j )
 			{
-				const bool curAny = ( m_arrCmd.Item(i)->GetShortcut(j)->GetModifiers() & wxACCEL_ANY ) != 0; 
+				const bool curAny = ( m_arrCmd.Item(i)->GetShortcut(j)->GetModifiers() & wxACCEL_ANY ) != 0;
 				if ( anyMod ^ curAny )
 				{
 					continue;
@@ -999,7 +1002,7 @@ public:     // miscellaneous
 
 	//strict matching. match exact even on any-modifier (a does not match any+a)
 	bool HasBindingStrict(const wxString &key, const wxString& cmd) {
-		for (int i=0; i < (int)m_arrCmd.GetCount(); i++) { 
+		for (int i=0; i < (int)m_arrCmd.GetCount(); i++) {
 			if ( cmd != m_arrCmd.Item(i)->GetName() )
 				continue;
 
@@ -1010,7 +1013,7 @@ public:     // miscellaneous
 	}
 
 	const wxCmd* GetCommandByName( const wxString& cmdName ) const {
-		for (int i=0; i < (int)m_arrCmd.GetCount(); i++) { 
+		for (int i=0; i < (int)m_arrCmd.GetCount(); i++) {
 			if ( m_arrCmd.Item(i)->GetName() == cmdName )
 				return m_arrCmd.Item(i);
 		}
@@ -1019,7 +1022,7 @@ public:     // miscellaneous
 
 	bool ContainsCommand( const wxString& cmdName ) const {
 		const wxCmd* pCmd = GetCommandByName( cmdName );
-		
+
 		if ( pCmd && pCmd->GetShortcutCount() > 0 )
 			return true;
 
@@ -1462,7 +1465,7 @@ public:     // output-access utilities (to call AFTER ShowModal)
 
     //! Returns the n-th key profile of the profile combo box.
     wxKeyProfile *GetProfile(int n) const
-        { wxASSERT(m_pKeyProfiles); return (wxKeyProfile *)m_pKeyProfiles->GetClientData(n); }
+        { wxASSERT(m_pKeyProfiles); return (wxKeyProfile *)static_cast<wxItemContainer*>(m_pKeyProfiles)->GetClientData(n); }
 
     //! Returns the currently selected key profile using #GetSelProfileIdx().
     //! This is the profile owned by the profile combo box.
@@ -1666,3 +1669,4 @@ private:
 
 
 #endif // __KEYBINDER_G__
+

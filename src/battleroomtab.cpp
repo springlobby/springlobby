@@ -260,7 +260,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_preset_btns_sizer->Add( m_delete_btn, 0, wxEXPAND );
 
 	m_default_btn = new wxButton( this, BROOM_SETDEFAULTPRES, _( "Set default" ), wxDefaultPosition, wxDefaultSize );
-	m_default_btn->SetToolTip( TE( _( "Use the current set of options as mod's default." ) ) );
+	m_default_btn->SetToolTip( TE( _( "Use the current set of options as game's default." ) ) );
 
 	m_preset_btns_sizer->Add( m_default_btn, 0, wxEXPAND );
 
@@ -529,6 +529,12 @@ void BattleRoomTab::UpdateStatsLabels()
 {
 	m_ok_count_lbl->SetLabel( wxString::Format( _( "Unready: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ) );
 	PrintAllySetup();
+}
+
+void BattleRoomTab::UpdateMyInfo() {
+    if ( !m_battle ) return;
+    m_players->UpdateUser(m_battle->GetMe());
+    m_players->RefreshVisibleItems();
 }
 
 void BattleRoomTab::UpdateUser( User& user )
@@ -963,7 +969,7 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	wxArrayString choices = m_battle->GetPresetList();
-	int result = wxGetSingleChoiceIndex( _( "Pick an existing option set from the list" ), _( "Set mod default preset" ), choices );
+	int result = wxGetSingleChoiceIndex( _( "Pick an existing option set from the list" ), _( "Set game default preset" ), choices );
 	if ( result < 0 ) return;
 	sett().SetModDefaultPresetName( m_battle->GetHostModName(), choices[result] );
 }

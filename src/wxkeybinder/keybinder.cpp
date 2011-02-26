@@ -98,7 +98,7 @@ BEGIN_EVENT_TABLE(wxKeyConfigPanel, wxPanel)
     EVT_BUTTON(wxKEYBINDER_REMOVEALL_KEY_ID, wxKeyConfigPanel::OnRemoveAllKey)
     EVT_BUTTON(wxKEYBINDER_ADD_PROFILEBTN_ID, wxKeyConfigPanel::OnAddProfile)
     EVT_BUTTON(wxKEYBINDER_REMOVE_PROFILEBTN_ID, wxKeyConfigPanel::OnRemoveProfile)
-	
+
     // during idle cycles, wxKeyConfigPanel checks if the wxKeyMonitorTextCtrl
     // associated must be cleared...
 
@@ -160,6 +160,9 @@ wxChar wxMswKeyConverter::ConvertLocalToUs( const wxChar& c )
 // ----------------------------------------------------------------------------
 // wxKeyBind STATIC utilities
 // ----------------------------------------------------------------------------
+
+const int wxKeyBind::m_usLayoutBitMask = ( 1 << (8 * sizeof(int) - 1) );
+const wxString wxKeyBind::m_usMarker = wxT("[us]");
 
 wxString wxKeyBind::NumpadKeyCodeToString(int keyCode)
 {
@@ -240,7 +243,7 @@ wxString wxKeyBind::NumpadKeyCodeToString(int keyCode)
 }
 
 
-wxString wxKeyBind::KeyCodeToString(int keyCode, bool 
+wxString wxKeyBind::KeyCodeToString(int keyCode, bool
 #if defined(__WXMSW__)
                                                  inputUs
 #endif
@@ -404,6 +407,15 @@ wxString wxKeyBind::KeyCodeToString(int keyCode, bool
 	default:
 
         // ASCII chars...
+#if defined(__WXMSW__)
+		if ( keyCode & m_usLayoutBitMask && !inputUs )
+		{
+			//this is a keycode in us layout. we could not find an equivalent in local layout. so just use it
+			//and mark it as uslayout
+			res << (wxChar)(keyCode & ~m_usLayoutBitMask) << wxKeyBind::m_usMarker;
+		}
+		else
+#endif
 		if (keyCode < 256
 #ifndef wxKEYBINDER_ALLOW_NON_ALPHANUM_KEYS
 							&& wxIsalnum(keyCode)
@@ -413,11 +425,7 @@ wxString wxKeyBind::KeyCodeToString(int keyCode, bool
 #if defined(__WXMSW__)
 			UINT transkey = keyCode;
 			if ( inputUs )
-			{
 				transkey = wxMswKeyConverter::ConvertUsToLocal( keyCode );
-				wxChar k = wxMswKeyConverter::ConvertLocalToUs( transkey );
-				k++;
-			}
 
 			if ( transkey )
 				res << (wxChar)transkey;
@@ -527,9 +535,13 @@ int wxKeyBind::StringToKeyCode(const wxString &keyName)
 	if (keyName == wxT("JOY5")) return WXK_JOY5;
 	if (keyName == wxT("JOY6")) return WXK_JOY6;
 	if (keyName == wxT("JOY7")) return WXK_JOY7;
-	
+
 	// it should be an ASCII key...
-    return (int)keyName.GetChar(0);
+	int rc = static_cast<int>( keyName.GetChar(0) );
+	if ( keyName.EndsWith( wxKeyBind::m_usMarker.Upper() ) )
+		rc |= wxKeyBind::m_usLayoutBitMask;
+
+    return rc;
 }
 
 wxString wxKeyBind::KeyModifierToString(int keyModifier)
@@ -974,7 +986,7 @@ bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key, bool bCleanOld) c
 void wxKeyBinder::PrintOrdering() const
 {
 	wxFileOutputStream outstream( wxT("D:\\out.txt") );
-	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++)
 	{
 		wxCmd& curr = *m_arrCmd.Item(i);
 
@@ -990,7 +1002,7 @@ void wxKeyBinder::PrintOrdering() const
 void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
 {
 	//PrintOrdering();
-	
+
 	typedef std::set<size_t>	IdxList;
 	IdxList idxList;
 	IdxList idxListAny;
@@ -1010,7 +1022,7 @@ void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
 
 	//give new sort indices to non-any keys we dont want to modify
 	size_t nextId = 1;
-	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++)
 	{
 		wxCmd& curr = *m_arrCmd.Item(i);
 		for( int j=0; j < curr.GetShortcutCount(); ++j )
@@ -1029,7 +1041,7 @@ void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
 
 	//give new sort indices to any keys we dont want to modify
 	size_t nextIdAny = 1;
-	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++)
 	{
 		wxCmd& curr = *m_arrCmd.Item(i);
 		for( int j=0; j < curr.GetShortcutCount(); ++j )
@@ -1056,7 +1068,7 @@ void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
 		}
 	}
 
-	for (size_t i=0; i < m_arrCmd.GetCount(); i++) 
+	for (size_t i=0; i < m_arrCmd.GetCount(); i++)
 	{
 		wxCmd& curr = *m_arrCmd.Item(i);
 		for( int j=0; j < curr.GetShortcutCount(); ++j )
@@ -1339,7 +1351,7 @@ bool wxKeyConfigPanel::Create(wxWindow* parent,
 //    main->SetSizeHints(this);
     SetSizerAndFit(main);
 
-	m_pBindings->Connect(wxEVT_CONTEXT_MENU, wxContextMenuEventHandler(wxKeyConfigPanel::OnContextMenuKeyList),NULL,this);  
+	m_pBindings->Connect(wxEVT_CONTEXT_MENU, wxContextMenuEventHandler(wxKeyConfigPanel::OnContextMenuKeyList),NULL,this);
     // set up the controls: the user of the panel must call one of the
     // ImportXXXX() functions to enable the use of the panel !!!!
     GetMainCtrl()->SetFocus();
@@ -1360,13 +1372,13 @@ void wxKeyConfigPanel::BuildCtrls()
         // use a wxTreeCtrl to show the commands hierarchy
         m_pCommandsTree = new wxTreeCtrl(this, wxKEYBINDER_COMMANDS_BOX_ID, wxDefaultPosition,
                                     wxSize(-1, 200), wxTR_HAS_BUTTONS | wxSUNKEN_BORDER);
-		m_pCommandsTree->Connect(wxEVT_CONTEXT_MENU, wxContextMenuEventHandler(wxKeyConfigPanel::OnContextMenuCmdList),NULL,this);  
+		m_pCommandsTree->Connect(wxEVT_CONTEXT_MENU, wxContextMenuEventHandler(wxKeyConfigPanel::OnContextMenuCmdList),NULL,this);
 	} else {
 
         // use a combobox + a listbox
         m_pCommandsList = new wxListBox(this, wxKEYBINDER_COMMANDS_BOX_ID, wxDefaultPosition,
                                     wxDefaultSize, (int)0, (const wxString *)NULL);
-		
+
         m_pCategories = new wxComboBox(this, wxKEYBINDER_CATEGORIES_ID,
                                 wxEmptyString, wxDefaultPosition, wxDefaultSize,
                                 0, NULL, wxCB_READONLY);
@@ -1634,7 +1646,7 @@ void wxKeyConfigPanel::RemoveAllProfiles()
 	// with the AddXXXXX functions we created wxKeyProfiles which we
     // then added into the m_pKeyProfiles combobox... we now must delete them.
     for (size_t i=0; i < m_pKeyProfiles->GetCount(); i++) {
-        wxKeyProfile *data = (wxKeyProfile *)m_pKeyProfiles->GetClientData(i);
+        wxKeyProfile *data = (wxKeyProfile *)static_cast<wxItemContainer*>(m_pKeyProfiles)->GetClientData(i);
 
         // we can delete the client data safely because wxComboBox will leave
         // the client data field untouched...
@@ -2157,7 +2169,7 @@ void wxKeyConfigPanel::OnCategorySelected(wxCommandEvent &ev)
     int sel = m_pCategories->GetSelection();
     if (sel == -1) return;
 
-    wxExComboItemData *data = (wxExComboItemData*)m_pCategories->GetClientObject(sel);
+    wxExComboItemData *data = (wxExComboItemData*)static_cast<wxItemContainer*>(m_pCategories)->GetClientObject(sel);
     wxArrayString &arr = data->GetCmdNameArr();
 
     // clear the old elements & insert the new ones
@@ -2270,7 +2282,7 @@ void wxKeyConfigPanel::OnMetaModifier()
 	}
 	else
 	{
-		newMods |= wxACCEL_META;		
+		newMods |= wxACCEL_META;
 	}
 
 	kb.Set( newMods, kb.GetKeyCode(), kb.GetOrderIndex() );
@@ -2284,7 +2296,7 @@ void wxKeyConfigPanel::OnMetaModifier()
     m_pKeyField->Clear();
 
 	//select previously selected key
-	this->SelectKeyString( kb.GetStr() ); 
+	this->SelectKeyString( kb.GetStr() );
 
 #ifdef wxKEYBINDER_AUTO_SAVE
 	ApplyChanges();
@@ -2319,7 +2331,7 @@ void wxKeyConfigPanel::OnAnyModifier()
     m_pKeyField->Clear();
 
 	//select previously selected key
-	this->SelectKeyString( kb.GetStr() ); 
+	this->SelectKeyString( kb.GetStr() );
 
 #ifdef wxKEYBINDER_AUTO_SAVE
 	ApplyChanges();
@@ -2379,11 +2391,11 @@ void wxKeyConfigPanel::OnAssignKey(wxCommandEvent &)
    	FillCommandTree();
 
 	//select the new key
-	this->SelectKeyString( m_pKeyField->GetValue() ); 
+	this->SelectKeyString( m_pKeyField->GetValue() );
 
 	m_pKeyField->Clear();
 
-	
+
 #ifdef wxKEYBINDER_AUTO_SAVE
 	ApplyChanges();
 #endif
@@ -2493,7 +2505,7 @@ void wxKeyConfigPanel::OnRemoveProfile(wxCommandEvent &)
     }
 
     // delete the keyprofile associated with that item...
-	wxKeyProfile* pCurProfile = (wxKeyProfile*)m_pKeyProfiles->GetClientData(m_nCurrentProf);
+	wxKeyProfile* pCurProfile = (wxKeyProfile*)static_cast<wxItemContainer*>(m_pKeyProfiles)->GetClientData(m_nCurrentProf);
 
 	if ( pCurProfile->IsNotDeletable() ) {
 		wxMessageBox(wxT("This profile is not deletable."),
@@ -2528,7 +2540,7 @@ void wxKeyConfigPanel::OnContextMenuCmdList(wxContextMenuEvent &)
 	wxMenuItem* pItemAll = menu.AppendRadioItem( wxKEYBINDER_FILTER_ALL_ID, wxT("Show all commands"), wxT(""));
 	wxMenuItem* pItemHideEmpty = menu.AppendRadioItem( wxKEYBINDER_FILTER_HIDE_EMPTY_ID, wxT("Hide empty commands"), wxT(""));
 	wxMenuItem* pItemOnlyDiff = menu.AppendRadioItem( wxKEYBINDER_FILTER_ONLY_DIFF_ID, wxT("Show only differences"), wxT("Only shows commands that got changed in comparison to the default bindigns"));
-	
+
 	switch( this->m_eFilterState )
 	{
 	case FS_ALL:
@@ -2546,7 +2558,7 @@ void wxKeyConfigPanel::OnContextMenuCmdList(wxContextMenuEvent &)
 	wxMenuItem* pItemMeta = menu.Append( wxKEYBINDER_META_EDIT_ID, wxT("Edit Meta key"), wxT("Change your Meta-key here"));
 	if ( GetSelProfile()->IsNotEditable() )
 		pItemMeta->Enable(false);
-	
+
 	menu.Connect( wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&wxKeyConfigPanel::OnCommandsCmdMenuSelected, NULL, this);
 
 	// and then display
@@ -2597,14 +2609,14 @@ void wxKeyConfigPanel::OnContextMenuKeyList(wxContextMenuEvent &ev)
 
 	const wxString& curSelKey = m_pBindings->GetStringSelection();
 
-	// create menu 
+	// create menu
 	wxMenu menu;
 	wxMenuItem* pItemAny = menu.AppendCheckItem( wxKEYBINDER_ANY_MODIFIER_ID, wxT("Any"), wxT("Toggles the key's Any-modifier"));
 	pItemAny->Check( curSelKey.StartsWith( wxT("Any+") ) );
 
 	wxMenuItem* pItemMeta = menu.AppendCheckItem( wxKEYBINDER_META_MODIFIER_ID, wxT("Meta"), wxT("Toggles the key's Meta-modifier"));
 	pItemMeta->Check( curSelKey.StartsWith( wxT("Meta+") ) );
-	
+
 	menu.AppendSeparator();
 	menu.Append( wxKEYBINDER_SORT_EDIT_ID, wxT("Edit key priorities"), wxT("Specify the bind order for this key here"));
 
@@ -2629,3 +2641,4 @@ void wxKeyConfigPanel::OnBindingsCmdMenuSelected(wxCommandEvent &evt)
 			break;
 	}
 }
+

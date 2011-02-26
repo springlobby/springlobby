@@ -101,7 +101,6 @@ SET(springlobbySrc
 	src/user.cpp
 	src/useractions.cpp
 	src/userlist.cpp
-	src/userlistctrl.cpp
 	src/utils/downloader.cpp
 	src/utils/plasmaresourceinfo.cpp
 	src/utils/battleevents.cpp

@@ -3,11 +3,6 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-//#ifdef _MSC_VER
-/// MSVC can not compile std::pair used in bimap with forward decl only.
-/// GCC cant compile TorrentTable::Row either.
-#include <libtorrent/torrent_handle.hpp>
-//#endif
 
 #include <wx/arrstr.h>
 #include <wx/event.h>
@@ -23,6 +18,7 @@
 #include "mutexwrapper.h"
 #include "utils/plasmaresourceinfo.h"
 
+#include <libtorrent/torrent_handle.hpp>
 /*
 namespace libtorrent{ class session; };
 namespace libtorrent { struct torrent_handle; };

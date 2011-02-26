@@ -12,11 +12,20 @@
 #include <winsock2.h>
 #endif // _MSC_VER
 
+#include "torrentwrapper.h"
+
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <boost/format.hpp>
+#include <boost/cstdint.hpp>
+
 #include "settings.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
 #include "socket.h"
 #include "base64.h"
+#include "updater/updatehelper.h"
 
 #include <libtorrent/entry.hpp>
 #include <libtorrent/session.hpp>
@@ -32,11 +41,7 @@
 #include <libtorrent/extensions/metadata_transfer.hpp>
 #include <libtorrent/extensions/ut_pex.hpp>
 
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/format.hpp>
-#include <boost/cstdint.hpp>
+#include <libtorrent/alert_types.hpp>
 
 #include <fstream>
 
@@ -50,7 +55,6 @@
 #include <wx/app.h>
 #include <wx/event.h>
 
-#include "torrentwrapper.h"
 #include "utils/customdialogs.h"
 #include "utils/downloader.h"
 #include "utils/uievents.h"
@@ -73,7 +77,7 @@ getDataSubdirForType(const IUnitSync::MediaType type)
     case IUnitSync::map:
         return _T("maps");
     case IUnitSync::mod:
-        return _T("mods");
+		return _T("games");
     default:
         ASSERT_EXCEPTION(false, _T("Unhandled IUnitSync::MediaType value"));
     }
@@ -151,7 +155,10 @@ TorrentWrapper::TorrentWrapper():
         m_started(false)
 {
     wxLogMessage(_T("TorrentWrapper::TorrentWrapper()"));
+	libtorrent::session_settings settings;
+	settings.user_agent= std::string("SL") + STD_STRING(GetSpringLobbyVersion(true));
     m_torr = new libtorrent::session( libtorrent::fingerprint("SL", 0, 0, 0, 0), 0 );
+	m_torr->set_settings( settings );
     try
     {
         m_torr->add_extension(&libtorrent::create_metadata_plugin);
@@ -489,7 +496,7 @@ void TorrentWrapper::HandleCompleted()
 				bool ok = wxCopyFile( source_path, dest_filename );
 				if ( !ok )
 				{
-					wxString msg = wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards"),
+					wxString msg = wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/games afterwards"),
 								source_path.c_str(), dest_filename.c_str() );
 					wxLogError( _T("DL: File copy from %s to %s failed."), source_path.c_str(), dest_filename.c_str() );
 					wxMutexGuiLocker locker;
@@ -574,6 +581,20 @@ std::map<wxString,TorrentInfos> TorrentWrapper::CollectGuiInfos()
 
 void TorrentWrapper::RemoveInvalidTorrents()
 {
+	#if LIBTORRENT_VERSION_MINOR > 14
+	//remove failed webseeds
+	std::auto_ptr<libtorrent::alert> alert = m_torr->pop_alert();
+	while ( alert.get() )
+	{
+		libtorrent::url_seed_alert* url_alert = libtorrent::alert_cast<libtorrent::url_seed_alert>(alert.get());
+		if( url_alert )
+		{
+			url_alert->handle.remove_url_seed( url_alert->url );
+		}
+		alert = m_torr->pop_alert();
+	}
+	#endif
+
 	TorrenthandleInfoMap& infomap = GetHandleInfoMap();
 	TorrenthandleInfoMap::iterator it = infomap.begin();
 	for ( ; it != infomap.end(); )
