@@ -166,7 +166,7 @@ MainWindow::MainWindow( )
 	m_menuTools->Append(MENU_RENAME, _("Change &username"));
 	m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
 	m_menuTools->AppendSeparator();
-	m_menuTools->Append(MENU_USYNC, _("&Reload maps/mods"));
+	m_menuTools->Append(MENU_USYNC, _("&Reload maps/games"));
 
 
 #ifndef NO_TORRENT_SYSTEM
@@ -425,6 +425,7 @@ ChatPanel* MainWindow::GetActiveChatPanel()
 {
   unsigned int index = m_func_tabs->GetSelection();
   if ( index == PAGE_CHAT ) return m_chat_tab->GetActiveChatPanel();
+  //! TODO (koshi) this doesn't work when in broom an and sending "/help (ShowMessage() )
   if ( index == PAGE_JOIN ) return m_join_tab->GetActiveChatPanel();
   return 0;
 }
@@ -491,7 +492,7 @@ void MainWindow::ShowChannelChooser()
         return;
 
     if ( !ui().IsConnected() )
-        customMessageBox( SL_MAIN_ICON, _("You need to be connected to server to view channel list"), _("Not connected") );
+        customMessageBox( SL_MAIN_ICON, _("You need to be connected to a server to view the channel list"), _("Not connected") );
     else {
         m_channel_chooser->ClearChannels();
 		serverSelector().GetServer().RequestChannels();
@@ -687,7 +688,7 @@ void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
 void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
 {
 	wxArrayString layouts = sett().GetPerspectives();
-	unsigned int result = wxGetSingleChoiceIndex( _("Which profile fo you want to load?"), _("Layout manager"), layouts );
+	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to load?"), _("Layout manager"), layouts );
 	if ( result > layouts.GetCount() )
         return;
 

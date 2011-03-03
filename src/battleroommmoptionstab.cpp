@@ -76,7 +76,7 @@ BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType* battle,
   m_preset_sizer->Add( m_delete_btn, 0, wxALL, 5 );
 
   m_default_btn = new wxButton( this, BOPTS_SETDEFAULTPRES, _("Set default..."), wxDefaultPosition, wxDefaultSize, 0 );
-  m_default_btn->SetToolTip( TE(_("Use the current set of options as mod's default.")) );
+  m_default_btn->SetToolTip( TE(_("Use the current set of options as game's default.")) );
 
   m_preset_sizer->Add( m_default_btn, 0, wxALL, 5 );
 
@@ -84,7 +84,7 @@ BattleroomMMOptionsTab<BattleType>::BattleroomMMOptionsTab(  BattleType* battle,
 
     m_map_mod_container = new wxBoxSizer( wxVERTICAL );
 
-	m_mod_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Mod Options") ), wxVERTICAL );
+	m_mod_options_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Game Options") ), wxVERTICAL );
 	m_mod_layout = new wxBoxSizer( wxVERTICAL);
 	setupOptionsSizer(m_mod_layout,OptionsWrapper::ModOption);
 	m_mod_options_sizer->Add( m_mod_layout, 1, wxEXPAND, 5 );
@@ -540,7 +540,7 @@ void BattleroomMMOptionsTab<BattleType>::OnSetModDefaultPreset( wxCommandEvent& 
 {
 	if ( !m_battle ) return;
   wxArrayString choices = m_battle->GetPresetList();
-	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set mod default preset"), choices );
+	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set game default preset"), choices );
 	if ( result < 0 ) return;
   sett().SetModDefaultPresetName( m_battle->GetHostModName(), choices[result] );
 }

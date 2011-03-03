@@ -29,7 +29,6 @@ class SpringLobbyApp : public wxApp, public OnQuitSink<SpringLobbyApp>
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
 	void OnQuit( GlobalEvents::GlobalEventData data );
-	bool IsSimple() const {return m_start_simple_interface;}
 
   protected:
 
@@ -47,7 +46,6 @@ class SpringLobbyApp : public wxApp, public OnQuitSink<SpringLobbyApp>
 	wxString m_log_file_path;
     bool m_log_window_show;
     bool m_crash_handle_disable;
-    bool m_start_simple_interface;
     wxString m_customizer_modname;
 	wxString m_appname;
 

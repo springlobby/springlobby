@@ -136,8 +136,3 @@ void CommandOrderDlg::OnButtonDownClick( wxCommandEvent& )
 	this->fillCommandList();
 	this->m_listBoxCommands->Select( selIdx + 1 );
 }
-
-void CommandOrderDlg::OnButtonOkClick( wxCommandEvent& )
-{
-	this->EndModal( wxID_OK );
-}

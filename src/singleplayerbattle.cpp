@@ -82,7 +82,7 @@ void SinglePlayerBattle::RemoveUnfittingBots()
 
 void SinglePlayerBattle::Update( const wxString& Tag )
 {
-  m_sptab.Update( Tag );
+  m_sptab.UpdateTag( Tag );
 }
 
 void SinglePlayerBattle::StartSpring()

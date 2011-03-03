@@ -287,7 +287,7 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
 	wxBoxSizer* m_filter_mod_sizer;
 	m_filter_mod_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_filter_mod_text = new wxStaticText( this, wxID_ANY, _( "Mod:" ), wxDefaultPosition, wxSize( -1, -1 ), 0 );
+	m_filter_mod_text = new wxStaticText( this, wxID_ANY, _( "Game:" ), wxDefaultPosition, wxSize( -1, -1 ), 0 );
 	m_filter_mod_text->Wrap( -1 );
 	m_filter_mod_text->SetMinSize( wxSize( 90, -1 ) );
 
@@ -304,7 +304,7 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
 	wxBoxSizer* m_filter_only_mod_sizer;
 	m_filter_only_mod_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_filter_mod_show = new wxCheckBox( this, BATTLE_FILTER_MOD_SHOW, _( "Only mods i have" ), wxDefaultPosition, wxSize( -1, -1 ), 0 );
+	m_filter_mod_show = new wxCheckBox( this, BATTLE_FILTER_MOD_SHOW, _( "Only games I have" ), wxDefaultPosition, wxSize( -1, -1 ), 0 );
 	m_filter_mod_show->SetValue( f_values.mod_show );
 	m_filter_mod_show->SetMinSize( wxSize( 140, -1 ) );
 

@@ -11,6 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2008-08-22 06:20+0000\n"
 "Last-Translator: Roman Skrzypiński <romano473@gmail.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -102,8 +103,9 @@ msgid "None"
 msgstr "Brak"
 
 #: src/autobalancedialog.cpp:48
+#, fuzzy
 msgid "Fair"
-msgstr ""
+msgstr "Targi"
 
 #: src/autobalancedialog.cpp:49
 msgid "Always"
@@ -168,8 +170,9 @@ msgid "players"
 msgstr "Gracze:"
 
 #: src/battlelistctrl.cpp:62
+#, fuzzy
 msgid "max"
-msgstr ""
+msgstr "max"
 
 #: src/battlelistctrl.cpp:192 src/playback/playbacklistctrl.cpp:65
 msgid "Download &map"
@@ -277,8 +280,9 @@ msgid "Players:"
 msgstr "Gracze:"
 
 #: src/battlelisttab.cpp:132 src/battlelisttab.cpp:134
+#, fuzzy
 msgid " Filter "
-msgstr ""
+msgstr "Filtr"
 
 #: src/battlelisttab.cpp:139 src/battlelisttab.cpp:141
 msgid " Battle infos "
@@ -508,8 +512,9 @@ msgstr "Pozycja startowa"
 
 #: src/battlemaptab.cpp:109 src/battleroomtab.cpp:388
 #: src/mmoptionswrapper.cpp:117
+#, fuzzy
 msgid "Fixed"
-msgstr ""
+msgstr "Stałe"
 
 #: src/battleoptionstab.cpp:52
 msgid "Unit restrictions"
@@ -535,7 +540,7 @@ msgstr "Udostępnić wszystkie jednostki."
 
 #: src/battleoptionstab.cpp:83
 msgid "<<"
-msgstr ""
+msgstr "<<"
 
 #: src/battleoptionstab.cpp:84
 msgid "Enable all units."
@@ -575,8 +580,9 @@ msgid "ally"
 msgstr "Sojusznik"
 
 #: src/battleroomlistctrl.cpp:85
+#, fuzzy
 msgid "cpu"
-msgstr ""
+msgstr "cpu"
 
 #: src/battleroomlistctrl.cpp:86
 msgid "Resource Bonus"
@@ -627,8 +633,9 @@ msgid "AI (bot)\n"
 msgstr "Dodaj bota"
 
 #: src/battleroomlistctrl.cpp:707
+#, fuzzy
 msgid "Human\n"
-msgstr ""
+msgstr "Człowieka \\ n"
 
 #: src/battleroomlistctrl.cpp:710
 #, fuzzy
@@ -5129,7 +5136,6 @@ msgstr ""
 msgid "Widget files have not been removed."
 msgstr ""
 
-#, fuzzy
 #~ msgid "Grouping size"
 #~ msgstr "Opcje"
 
@@ -5154,44 +5160,36 @@ msgstr ""
 #~ msgid "Force start?"
 #~ msgstr "Wymuszony start?"
 
-#, fuzzy
 #~ msgid "Channel name"
 #~ msgstr "kanał"
 
 #~ msgid "_SERVER"
 #~ msgstr "_SERWER"
 
-#, fuzzy
 #~ msgid "off"
 #~ msgstr "Wyłącz"
 
-#, fuzzy
 #~ msgid "Not online"
 #~ msgstr "Rozłącz"
 
-#, fuzzy
 #~ msgid "Only the host can change the game options"
 #~ msgstr "Tylko host może rozpocząć bitwe"
 
 #~ msgid "Only the host can start the battle."
 #~ msgstr "Tylko host może rozpocząć bitwe"
 
-#, fuzzy
 #~ msgid "Only the host can use those functions."
 #~ msgstr "Tylko host może rozpocząć bitwe"
 
-#, fuzzy
 #~ msgid "Only the host can toggle autohost mode."
 #~ msgstr "Tylko host może rozpocząć bitwe"
 
 #~ msgid "Select all"
 #~ msgstr "Zaznacz wszystko"
 
-#, fuzzy
 #~ msgid "Add user"
 #~ msgstr "(%d użytkowników)"
 
-#, fuzzy
 #~ msgid "Normal game"
 #~ msgstr "Normalny"
 

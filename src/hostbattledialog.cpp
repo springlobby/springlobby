@@ -89,14 +89,14 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	topsizer->Add( m_desc_check, 0, wxLEFT, 5 );
 //	topsizer->Add( desc_sizer , 0, wxEXPAND | wxALL, 0 );
 
-	m_mod_lbl = new wxStaticText( this, wxID_ANY, _( "Mod" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_mod_lbl = new wxStaticText( this, wxID_ANY, _( "Game" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_mod_lbl->Wrap( -1 );
 	topsizer->Add( m_mod_lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_mod_picChoices;
 	wxBoxSizer* mod_choice_button_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_mod_pic = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mod_picChoices, 0 );
-	m_mod_pic->SetToolTip( TE( _( "Select the mod to play with." ) ) );
+	m_mod_pic->SetToolTip( TE( _( "Select the game to play." ) ) );
 	mod_choice_button_sizer->Add( m_mod_pic, 0, wxALL , 5 );
 
     wxBitmap mp = charArr2wxBitmap( arrow_refresh_png, sizeof( arrow_refresh_png ) );
@@ -297,7 +297,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& /*unused*/ )
 {
 	if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
 		wxLogWarning( _T( "no mod selected" ) );
-		customMessageBox( SL_MAIN_ICON, _( "You have to select a mod first." ), _( "No mod selected." ), wxOK );
+		customMessageBox( SL_MAIN_ICON, _( "You have to select a game first." ), _( "No game selected." ), wxOK );
 		return;
 	}
 	if ( m_desc_text->GetValue().IsEmpty() ) m_desc_text->SetValue( _T( "(none)" ) );
@@ -447,8 +447,8 @@ void HostBattleDialog::Run( wxWindow* parent )
 		}
 		catch ( ... )
 		{
-			wxLogWarning( _T( "can't host: mod not found" ) );
-			customMessageBoxNoModal( SL_MAIN_ICON, _( "Battle not started beacuse the mod you selected could not be found. " ), _( "Error starting battle." ), wxOK );
+			wxLogWarning( _T( "can't host: game not found" ) );
+			customMessageBoxNoModal( SL_MAIN_ICON, _( "Battle not started beacuse the game you selected could not be found. " ), _( "Error starting battle." ), wxOK );
 			return;
 		}
 

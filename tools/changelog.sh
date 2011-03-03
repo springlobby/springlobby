@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 GIT_DIR=$(git rev-parse --git-dir 2>/dev/null)
 if [ -z "$GIT_DIR" ]; then

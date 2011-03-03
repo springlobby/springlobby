@@ -37,7 +37,6 @@ protected:
 	virtual void OnInitDialog( wxInitDialogEvent& event );
 	virtual void OnButtonUpClick( wxCommandEvent& event );
 	virtual void OnButtonDownClick( wxCommandEvent& event );
-	virtual void OnButtonOkClick( wxCommandEvent& event );
 
 	const wxString								m_key;
 	const CmdSet&								m_cmds;

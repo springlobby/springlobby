@@ -114,6 +114,8 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void RegenerateOptionsList();
 
 		void UpdateStatsLabels();
+		void UpdateMapInfoSummary();
+		void UpdateMyInfo();
 
 	protected:
 
@@ -122,7 +124,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void SplitSizerHorizontally( const bool horizontal );
 
 		Battle* m_battle;
-		UnitSyncMap m_map;
+//		UnitSyncMap m_map; //not needed
 
 		long m_mod_opts_index;
 		long m_map_opts_index;
@@ -147,9 +149,9 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxStaticText* m_ally_lbl;
 		wxStaticText* m_side_lbl;
 		wxStaticText* m_color_lbl;
-		wxStaticText* m_wind_lbl;
-		wxStaticText* m_tidal_lbl;
-		wxStaticText* m_size_lbl;
+//		wxStaticText* m_wind_lbl;
+//		wxStaticText* m_tidal_lbl;
+//		wxStaticText* m_size_lbl;
 		wxStaticText* m_ally_setup_lbl;
 		wxStaticText* m_ok_count_lbl;
 

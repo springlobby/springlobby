@@ -40,7 +40,7 @@ PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
 #endif
 
     AddColumn( 0, widths[0], _("Date"), _("Date of recording") );
-    AddColumn( 1, widths[1], _("Mod"), _("Modname") );
+	AddColumn( 1, widths[1], _("Game"), _("Game name") );
     AddColumn( 2, widths[2], _("Map"), _("Mapname") );
     AddColumn( 3, widths[3], _("Players"), _("Number of players") );
     AddColumn( 4, widths[4], _("Duration"), _T("Duration") );

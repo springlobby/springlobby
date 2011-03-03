@@ -344,11 +344,11 @@ void settings_frame::switchToExpertMode()
 	notebook->DeletePage(0);
 	simpleTab = 0;
 	SetTitle(_("SpringSettings (expert mode)"));
-	uiTab->updateControls(UPDATE_ALL);
+	/*uiTab->updateControls(UPDATE_ALL);
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);
 	audioTab->updateControls(UPDATE_ALL);
-	hotkeyTab->UpdateControls(UPDATE_ALL);
+	hotkeyTab->UpdateControls(UPDATE_ALL);*/
 }
 
 void settings_frame::updateAllControls()

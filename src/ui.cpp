@@ -461,6 +461,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
     {
 		serverSelector().GetServer().GetMe().Status().away = true;
 		serverSelector().GetServer().GetMe().SendMyUserStatus();
+		mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
         return true;
     }
     else if ( cmd.BeforeFirst(' ').Lower() == _T("/back") )
@@ -469,6 +470,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
         {
 			serverSelector().GetServer().GetMe().Status().away = false;
 			serverSelector().GetServer().GetMe().SendMyUserStatus();
+			mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
             return true;
         }
     }
@@ -505,7 +507,7 @@ void Ui::ConsoleHelp( const wxString& topic )
     ChatPanel* panel = GetActiveChatPanel();
     if ( panel == 0 )
     {
-        ShowMessage( _("Help error"), _("Type /help in a chat box.") );
+		ShowMessage( _("Help error"), _("Type /help in a chat box. (A bug currently prevents this from working in battleroom") );
         return;
     }
     if ( topic == wxEmptyString )
@@ -515,7 +517,8 @@ void Ui::ConsoleHelp( const wxString& topic )
         panel->ClientMessage( _("Global commands:") );
         panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
         panel->ClientMessage( _("  \"/back\" - Resets your away status.") );
-        panel->ClientMessage( _("  \"/changepassword oldpassword newpassword\" - Changes the current active account's password.") );
+        panel->ClientMessage( _("  \"/changepassword2 newpassword\" - Changes the current active account's password, needs the old password saved in login box") );
+        panel->ClientMessage( _("  \"/changepassword oldpassword newpassword\" - Changes the current active account's password, password cannot contain spaces") );
         panel->ClientMessage( _("  \"/channels\" - Lists currently active channels.") );
         panel->ClientMessage( _("  \"/help [topic]\" - Put topic if you want to know more specific information about a command.") );
 		panel->ClientMessage( _("  \"/join channel [password]\" - Joins a channel.") );
@@ -1272,6 +1275,38 @@ void Ui::OnRing( const wxString& from )
 		UiEvents::GetNotificationEventSender().SendEvent(
 				UiEvents::NotficationData( UiEvents::ServerConnection, wxFormat(_("%s:\nring!") ) % from ) );
 	}
+
+#ifndef NO_TORRENT_SYSTEM
+    if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
+        wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
+        if(! usync().MapExists(host_map_name)) {
+
+            map_infos info_map = torrent().CollectGuiInfos();
+            bool dling = false;
+
+            for(map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter){
+                if(iter->first == wxString(_T("global")))
+                    continue;
+                else if(iter->first == host_map_name) {
+                    int eta = iter->second.eta;
+
+                    if(eta <= 0) {
+						serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(_("/me map is not available for automatic downloading."));
+                    } else {
+                        serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(wxString::Format(
+                                _("/me downloading map eta: %d s"), eta)
+                        );
+                    dling = true;
+                    }
+                }
+            }
+            if(! dling) { //XXX is it possible to get eta from web dl in sl?, anyone using it instead torrent system? //there is no direct from-web downloading in SL currently
+                serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(
+                        _("/me is not downloading map with SL torrent system"));
+            }
+        }
+    }
+#endif
 
 #ifndef DISABLE_SOUND
     if ( sett().GetChatPMSoundNotificationEnabled() )

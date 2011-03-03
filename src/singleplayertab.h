@@ -30,7 +30,7 @@ class SinglePlayerTab: public  wxScrolledWindow , public UnitsyncReloadedSink< S
     void UpdateMinimap();
     void ReloadMaplist();
     void ReloadModlist();
-    void Update( const wxString& Tag );
+	void UpdateTag( const wxString& Tag );
     void UpdatePresetList();
 
     SinglePlayerBattle& GetBattle() { return m_battle; }
