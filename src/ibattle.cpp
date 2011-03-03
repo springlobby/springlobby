@@ -876,7 +876,7 @@ void IBattle::OnSelfLeftBattle()
 		if ( u.GetBattleStatus().IsBot() )
 		{
 			OnUserRemoved( u );
-			ui().OnUserLeftBattle( *this, u );
+			ui().OnUserLeftBattle( *this, u, true );
 			j--;
 		}
 	}
@@ -1279,5 +1279,4 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
     }
     SetBattleOptions( opts );
 }
-
 

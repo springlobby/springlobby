@@ -395,9 +395,11 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     {
         Battle& battle = m_serv.GetBattle( battleid );
         User& user = battle.GetUser( nick );
+        // this is necessary since the user will be deleted when the gui function is called
+        bool isbot = user.BattleStatus().IsBot();
 		user.BattleStatus().scriptPassword.Clear();
         battle.OnUserRemoved( user );
-        ui().OnUserLeftBattle( battle, user );
+        ui().OnUserLeftBattle( battle, user, isbot );
     }
     catch (std::runtime_error &except)
     {
@@ -789,7 +791,8 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
     {
         Battle& battle = m_serv.GetBattle( battleid );
 		User& user = battle.GetUser( nick );
-		ui().OnUserLeftBattle( battle, user );
+		bool isbot = user.BattleStatus().IsBot();
+		ui().OnUserLeftBattle( battle, user, isbot );
         battle.OnUserRemoved( user );
     }
     catch (std::runtime_error &except)
@@ -975,6 +978,8 @@ void ServerEvents::OnScriptEnd( int battleid )
 
 void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool /*disconnectonrefuse*/, const wxString& FileName, const wxString& url, const wxString& description )
 {
+	if ( sett().IgnoreOfferfile() )
+		return;
 	wxString refinedurl;
 	if ( url.Find(_T("http://")) != wxNOT_FOUND ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
 	else refinedurl = url;

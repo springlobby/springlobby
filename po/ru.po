@@ -11,6 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2010-01-03 22:54+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2810,8 +2811,7 @@ msgid "Ignore PM"
 msgstr "Пропускать личное"
 
 #: src/groupoptionspanel.cpp:108
-msgid ""
-"Ignore anything said in private chat by any of the users in this group"
+msgid "Ignore anything said in private chat by any of the users in this group"
 msgstr ""
 "Пропускать всё сказанное в личном разговоре пользователями из этой игруппы"
 
@@ -2941,8 +2941,7 @@ msgid "Host new battle"
 msgstr "Создать новое сражение"
 
 #: src/hostbattledialog.cpp:63
-msgid ""
-"A short description of the game, this will show up in the battle list."
+msgid "A short description of the game, this will show up in the battle list."
 msgstr "Краткое описание игры, которое будет отображаться в списке сражений."
 
 #: src/hostbattledialog.cpp:78
@@ -3489,8 +3488,7 @@ msgid "Name of user"
 msgstr "Имя пользователя"
 
 #: src/mainwindow.cpp:460
-msgid ""
-"SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
+msgid "SpringLobby is a cross-plattform lobby client for the RTS Spring engine"
 msgstr ""
 
 #: src/mainwindow.cpp:515
@@ -3510,8 +3508,7 @@ msgid "Manually &Stop Torrent System"
 msgstr "&Остановить систему потоков (torrents)"
 
 #: src/mainwindow.cpp:609
-msgid ""
-"You need to restart SpringLobby for the language change to take effect."
+msgid "You need to restart SpringLobby for the language change to take effect."
 msgstr ""
 
 #: src/mainwindow.cpp:610
@@ -4339,14 +4336,12 @@ msgid " (current)"
 msgstr " (текущее)"
 
 #: src/settings++/tab_simple.cpp:88
-msgid ""
-"Sets all quality options to predefined values according to your choice."
+msgid "Sets all quality options to predefined values according to your choice."
 msgstr ""
 "Устанавливает все настройки качество на значения относительно Вашего выбора"
 
 #: src/settings++/tab_simple.cpp:94
-msgid ""
-"Sets all detail options to predefined values according to your choice."
+msgid "Sets all detail options to predefined values according to your choice."
 msgstr ""
 "Устанавливает все настройки деталей на значения относительно Вашего выбора"
 
@@ -4860,8 +4855,8 @@ msgstr "  \"/me action\" - Сказать о действии в стиле IRC.
 
 #: src/ui.cpp:521
 msgid ""
-"If you are missing any commands, go to #springlobby and try to type it there "
-":)"
+"If you are missing any commands, go to #springlobby and try to type it "
+"there :)"
 msgstr ""
 "Если Вы потеряли какие-то команды, идите на #springlobby и попробуйте ввеси "
 "их там :)"
@@ -5169,8 +5164,7 @@ msgstr "нет действий для всех"
 
 #: src/useractions.h:19
 msgid "highlight user in nick list and battles he participates in"
-msgstr ""
-"подсвечивать имя пользователя в списке и сражениях, в которых он есть"
+msgstr "подсвечивать имя пользователя в списке и сражениях, в которых он есть"
 
 #: src/useractions.h:20
 msgid "popup a message box when user logs in/out from  the server"
@@ -5285,8 +5279,8 @@ msgstr ""
 #~ "Пожалуйста, введите между 0 и 100."
 
 #~ msgid ""
-#~ "There are two or more bots on the same team.  Because bots don't know how to "
-#~ "share, this won't work."
+#~ "There are two or more bots on the same team.  Because bots don't know how "
+#~ "to share, this won't work."
 #~ msgstr ""
 #~ "Два или более ботов в одной команде. Так как боты не умеют обмениваться, "
 #~ "этого не будет происходить."
@@ -5340,7 +5334,8 @@ msgstr ""
 
 #~ msgid "sets the maximum distance at which trees will still be rendered"
 #~ msgstr ""
-#~ "установка максимального расстояния, на котором будут оставаться видны деревья"
+#~ "установка максимального расстояния, на котором будут оставаться видны "
+#~ "деревья"
 
 #~ msgid "Terrain detail"
 #~ msgstr "Детали поверхности"
@@ -5482,15 +5477,15 @@ msgstr ""
 #~ "If supported, it speeds up the dynamic loading of terrain textures -> "
 #~ "smoother camera movement"
 #~ msgstr ""
-#~ "Если есть поддержка этого, то ускорится загрузка изображения поверхности -> "
-#~ "более гладкое движение камеры"
+#~ "Если есть поддержка этого, то ускорится загрузка изображения поверхности -"
+#~ "> более гладкое движение камеры"
 
 #~ msgid "Compress textures"
 #~ msgstr "Сжатие текстур"
 
 #~ msgid ""
-#~ "Runtime texture compression. (Ideal for graphic cards with small amount of "
-#~ "vram)"
+#~ "Runtime texture compression. (Ideal for graphic cards with small amount "
+#~ "of vram)"
 #~ msgstr ""
 #~ "Сжатие текстур в процессе. (Идеально для видеокарт с маленьким размером "
 #~ "виртуальной памяти)"
@@ -5790,8 +5785,8 @@ msgstr ""
 #~ msgstr ""
 #~ "Хотите ли Вы скачать OTA данные?\n"
 #~ "Вам нужно это для игры в TA моды.\n"
-#~ "Вам нужна собственная копия Total Annihilation для разрешённого скачивания "
-#~ "этого."
+#~ "Вам нужна собственная копия Total Annihilation для разрешённого "
+#~ "скачивания этого."
 
 #~ msgid "Download OTA content?"
 #~ msgstr "Загрузить OTA данные?"
@@ -5816,15 +5811,17 @@ msgstr ""
 #~ "SpringLobby. \n"
 #~ "\n"
 #~ "Вы не сможете играть в этом сражении. \n"
-#~ "Обновите Ваш wxwidgets до 2.8 или новее для включения поддержки NAT обхода."
+#~ "Обновите Ваш wxwidgets до 2.8 или новее для включения поддержки NAT "
+#~ "обхода."
 
 #~ msgid ""
 #~ "Cannot save an options set without a name\n"
-#~ "Please write one in the list or chose an existing to overwrite and try again."
+#~ "Please write one in the list or chose an existing to overwrite and try "
+#~ "again."
 #~ msgstr ""
 #~ "Невозможно сохранить настройки без имени\n"
-#~ "Пожалуйста, введите имя или выберите из списка для перезаписи и попробуйте "
-#~ "снова."
+#~ "Пожалуйста, введите имя или выберите из списка для перезаписи и "
+#~ "попробуйте снова."
 
 #~ msgid ""
 #~ "No options set is selected to set as default\n"
@@ -5880,7 +5877,8 @@ msgstr ""
 #~ "Please enter password needed to join this channel, leave blank for no "
 #~ "passwrd."
 #~ msgstr ""
-#~ "Пожалуйста дайте пароль для канала, или оставте место если пароль не нужен."
+#~ "Пожалуйста дайте пароль для канала, или оставте место если пароль не "
+#~ "нужен."
 
 #~ msgid "&Edit"
 #~ msgstr "&Изменить"

@@ -11,9 +11,6 @@ class wxColour;
 class wxImage;
 class wxBitmap;
 
-
-#define wxDefaultBitmap wxBitmap()
-
 wxString RTFtoText( const wxString& rtfinput );
 bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff = 10 );
 
@@ -34,6 +31,8 @@ wxImage charArr2wxImage(const unsigned char * arg, int size);
 wxBitmap charArr2wxBitmap(const unsigned char * arg, int size);
 wxBitmap charArr2wxBitmapWithBlending(const unsigned char * arg, int size,
             const unsigned char * text, int text_size);
+
+wxBitmap getColourIcon( const wxColour& colour );
 
 //! shrinks/expands image by removing/duplicating rows/columns from the center of the image
 wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height );

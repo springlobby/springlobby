@@ -100,7 +100,7 @@ bool OptionsWrapper::loadOptions( GameOption modmapFlag, const wxString& name, c
 			}
 			catch(...)
 			{
-				wxLogError(_T("Could not load map Options"));
+				wxLogError(_T("Could not load map options"));
 				return false;
 			}
 			break;
@@ -113,7 +113,7 @@ bool OptionsWrapper::loadOptions( GameOption modmapFlag, const wxString& name, c
 			}
 			catch(...)
 			{
-				wxLogError(_T("Could not load mod Options"));
+				wxLogError(_T("Could not load game options"));
 				return false;
 			}
 			break;
@@ -191,7 +191,7 @@ bool OptionsWrapper::keyExists( const wxString& key ) const
 
 bool OptionsWrapper::keyExists( const wxString& key, const GameOption modmapFlag, bool showError, OptionType& optType ) const
 {
-	wxString duplicateKeyError = _T("Please contact the mod's author and tell him\n\
+	wxString duplicateKeyError = _T("Please contact the game's author and tell him\n\
 										to use unique keys in his ModOptions.lua");
 	bool exists = false;
 	optType = opt_undefined;

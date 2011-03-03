@@ -26,6 +26,8 @@ public:
 	typedef std::map<unsigned, key_command>		key_binding_map;
 
 	void bind( const wxString& cmd, const wxString& keyString );
+	void unbindAllCmds( const wxString& cmd );
+	void unbindAllKeys( const wxString& key );
 	void unbind( const wxString& cmd, const wxString& keyString );
 	void clear();
 
@@ -59,7 +61,7 @@ private:
 	const wxString resolveKeySymName( const wxString& symName ) const;
 
 	//define different "views" onto the bindings
-	typedef std::map<wxString, command_list_sorted >			KeyGroupMap;
+	typedef std::map<wxString, command_list_sorted>				KeyGroupMap;
 	KeyGroupMap													m_groups;
 	KeyGroupMap													m_groupsAny;
 

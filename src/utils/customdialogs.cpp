@@ -19,7 +19,6 @@
 
 
 #include "../images/springsettings.xpm"
-#include "../images/springlobby.xpm"
 #include "../utils/conversion.h"
 #include "../defines.h"
 #include "../settings.h"
@@ -290,7 +289,8 @@ ServerMessageBox::ServerMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
         long style, const wxPoint& pos )
 			: wxDialog(parent,-1,caption,pos,wxDefaultSize,style|wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE|wxEXPAND)
 {
-	SetIcon(*icon);
+	if( icon )
+		SetIcon(*icon);
 
     m_messages = new wxListCtrl(this,-1,wxDefaultPosition,wxDefaultSize,wxLC_NO_HEADER|wxLC_REPORT);
     m_messages->InsertColumn(0,_T(""));

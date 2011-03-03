@@ -3,11 +3,6 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-//#ifdef _MSC_VER
-/// MSVC can not compile std::pair used in bimap with forward decl only.
-/// GCC cant compile TorrentTable::Row either.
-#include <libtorrent/torrent_handle.hpp>
-//#endif
 
 #include <wx/arrstr.h>
 #include <wx/event.h>
@@ -16,11 +11,14 @@
 #include <vector>
 #include <queue>
 
+#include <boost/cstdint.hpp>
+
 #include "iunitsync.h"
 #include "thread.h"
 #include "mutexwrapper.h"
 #include "utils/plasmaresourceinfo.h"
 
+#include <libtorrent/torrent_handle.hpp>
 /*
 namespace libtorrent{ class session; };
 namespace libtorrent { struct torrent_handle; };
@@ -43,11 +41,11 @@ struct TorrentInfos
 {
     float numcopies;
     wxString name;
-    unsigned int downloaded;
+    boost::int64_t downloaded;
     P2P::FileStatus downloadstatus;
     float progress;
-    float inspeed;
-    unsigned int filesize;
+    int inspeed;
+    boost::int64_t filesize;
 
     int eta;
 

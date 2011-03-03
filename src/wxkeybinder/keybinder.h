@@ -43,6 +43,26 @@
 #define wxACCEL_ANY    0x0008   // hold any key down
 #define wxACCEL_META   0x0010   // virtual meta
 
+enum WXK_JOYSTICK_KEYS
+{
+	WXK_JOYDOWN = 0x0500,
+	WXK_JOYLEFT,
+	WXK_JOYRIGHT,
+	WXK_JOYUP,
+	WXK_JOYW,
+	WXK_JOYX,
+	WXK_JOYY,
+	WXK_JOYZ,
+	WXK_JOY0,
+	WXK_JOY1,
+	WXK_JOY2,
+	WXK_JOY3,
+	WXK_JOY4,
+	WXK_JOY5,
+	WXK_JOY6,
+	WXK_JOY7
+};
+
 // define the following to true to enable lots of debug messages
 #define wxKEYBINDER_DEBUG_MSG            0
 #if wxKEYBINDER_DEBUG_MSG
@@ -62,10 +82,21 @@
 #define wxKEYBINDER_MULTICMD_PER_KEY
 #endif
 
+#ifdef __WXMSW__
+class wxMswKeyConverter
+{
+public:
+	static wxChar ConvertUsToLocal( const wxChar& c );
+	static wxChar ConvertLocalToUs( const wxChar& c );
+
+protected:
+	static HKL m_usLayout; //save a handle to the us layout for key conversion
+};
+#endif
+
 // defined later...
 class wxConfigBase;
 class wxKeyBinder;
-
 
 
 //! Identifies a keypress, that is a key binding.
@@ -89,6 +120,8 @@ protected:
     int m_nKeyCode;
 
 	size_t m_nOrderIndex;
+
+	static const int m_usLayoutBitMask; //when this bit is set, it is an US key
 
 	static wxString discardModifier( const wxString& keystring )
 	{
@@ -119,6 +152,7 @@ protected:
 	}
 
 public:
+	static const wxString m_usMarker; //use this to mark keystrings as us-layout
 
     wxKeyBind() {
         m_nKeyCode = m_nFlags = -1;
@@ -142,6 +176,20 @@ public:
         m_nKeyCode = p.m_nKeyCode;
 		m_nOrderIndex = p.m_nOrderIndex;
     }
+
+	virtual bool operator!=( const wxKeyBind& other ) const {
+		return !((*this) == other);
+	}
+
+	virtual bool operator==( const wxKeyBind& other ) const {
+		if ( this->m_nFlags != other.m_nFlags )
+			return false;
+		if ( this->m_nKeyCode != other.m_nKeyCode )
+			return false;
+		//Check order index also?
+
+		return true;
+	}
 
     virtual ~wxKeyBind() {}
 
@@ -233,7 +281,7 @@ public:
 
 public:     // static utilities
     static wxString NumpadKeyCodeToString(int keyCode);
-    static wxString KeyCodeToString(int keyCode);
+    static wxString KeyCodeToString(int keyCode, bool inputUs = false);
     static wxString KeyModifierToString(int keyModifier);
 
     static int StringToKeyCode(const wxString &keyName);
@@ -346,6 +394,21 @@ public:
             m_keyShortcut[i].DeepCopy(cmd->m_keyShortcut[i]);
     }
 
+	virtual bool operator!=( const wxCmd& other ) const {
+		return !( (*this) == other );
+	}
+
+	virtual bool operator==( const wxCmd& other ) const {
+		if ( this->m_nId != other.m_nId ) //also check m_strName?
+			return false;
+
+		for (int i=0; i < m_nShortcuts; i++)
+            if ( m_keyShortcut[i] != other.m_keyShortcut[i] )
+				return false;
+
+		return true;
+	}
+
     virtual wxCmd *Clone() const = 0;
 
     // Destructor
@@ -451,14 +514,14 @@ public:
     // Getters
     // ---------------------
 
-    wxKeyBind *GetShortcut(int n) { 
-		return &m_keyShortcut[n]; 
+    wxKeyBind *GetShortcut(int n) {
+		return &m_keyShortcut[n];
 	}
 
     const wxKeyBind *GetShortcut(int n) const    { return &m_keyShortcut[n]; }
-	
+
 	//gets the EXACT shortcut
-	wxKeyBind *GetShortcut(const wxString& keystring) { 
+	wxKeyBind *GetShortcut(const wxString& keystring) {
 		for(int i=0; i < m_nShortcuts; ++i)
 		{
 			if ( m_keyShortcut[i].GetStr() == keystring )
@@ -466,7 +529,7 @@ public:
 				return &m_keyShortcut[i];
 			}
 		}
-		return NULL; 
+		return NULL;
 	}
 
     wxAcceleratorEntry GetAccelerator(int n) const {
@@ -656,7 +719,7 @@ protected:
 	wxString m_metaKey;
 	key_sym_map	m_keySyms;
 	key_sym_set_map	m_keySymsSet;
-	size_t m_nNextOderIndex;	
+	size_t m_nNextOderIndex;
 	size_t m_nNextOderIndexAny;
 
     //! The array of windows attached to this keybinder.
@@ -714,7 +777,7 @@ protected:
 public:
 
 	wxKeyBinder() : m_nNextOderIndex(1), m_nNextOderIndexAny(1) {}
-    wxKeyBinder(const wxKeyBinder &tocopy) { DeepCopy(tocopy); }
+	wxKeyBinder(const wxKeyBinder &tocopy):wxObject(tocopy) { DeepCopy(tocopy); }
     virtual ~wxKeyBinder() { DetachAll(); }
 
 
@@ -836,13 +899,13 @@ public:     // miscellaneous
         const bool anyMod = ( wxKeyBind::StringToKeyModifier( key ) & wxACCEL_ANY ) != 0;
 		wxCmd *p = GetCmd(id);
 		if (p) {
-			size_t id = 0;
+			size_t new_id = 0;
 			if ( !anyMod )
-				id = m_nNextOderIndex++;
+				new_id = m_nNextOderIndex++;
 			else
-				id = m_nNextOderIndexAny++;
+				new_id = m_nNextOderIndexAny++;
 
-			p->AddShortcut(key, id);
+			p->AddShortcut(key, new_id);
 		}
     }
 
@@ -873,7 +936,7 @@ public:     // miscellaneous
 		{
 			for( int j=0; j < m_arrCmd.Item(i)->GetShortcutCount(); ++j )
 			{
-				const bool curAny = ( m_arrCmd.Item(i)->GetShortcut(j)->GetModifiers() & wxACCEL_ANY ) != 0; 
+				const bool curAny = ( m_arrCmd.Item(i)->GetShortcut(j)->GetModifiers() & wxACCEL_ANY ) != 0;
 				if ( anyMod ^ curAny )
 				{
 					continue;
@@ -939,7 +1002,7 @@ public:     // miscellaneous
 
 	//strict matching. match exact even on any-modifier (a does not match any+a)
 	bool HasBindingStrict(const wxString &key, const wxString& cmd) {
-		for (int i=0; i < (int)m_arrCmd.GetCount(); i++) { 
+		for (int i=0; i < (int)m_arrCmd.GetCount(); i++) {
 			if ( cmd != m_arrCmd.Item(i)->GetName() )
 				continue;
 
@@ -949,6 +1012,22 @@ public:     // miscellaneous
 		return false;
 	}
 
+	const wxCmd* GetCommandByName( const wxString& cmdName ) const {
+		for (int i=0; i < (int)m_arrCmd.GetCount(); i++) {
+			if ( m_arrCmd.Item(i)->GetName() == cmdName )
+				return m_arrCmd.Item(i);
+		}
+		return NULL;
+	}
+
+	bool ContainsCommand( const wxString& cmdName ) const {
+		const wxCmd* pCmd = GetCommandByName( cmdName );
+
+		if ( pCmd && pCmd->GetShortcutCount() > 0 )
+			return true;
+
+		return false;
+	}
 
     wxKeyBind *GetShortcut(int id, int n) const {
         wxCmd *p = GetCmd(id);
@@ -1006,6 +1085,7 @@ public:
 			m_notDeletable(notDeletable), m_notEditable(notEditable) {}
 
     wxKeyProfile(const wxKeyProfile &tocopy)
+		:wxKeyBinder()
         { DeepCopy(tocopy); }
 
 	wxKeyProfile(const wxKeyProfile &tocopy,
@@ -1044,8 +1124,8 @@ public:     // miscellaneous
     bool Save(wxConfigBase *p, const wxString &key = wxEmptyString, bool bCleanOld = FALSE) const;
     bool Load(wxConfigBase *p, const wxString &key = wxEmptyString);
 
-	bool IsNotDeletable() const		{ return m_notDeletable; };
-	bool IsNotEditable() const		{ return m_notEditable; };
+	bool IsNotDeletable() const		{ return m_notDeletable; }
+	bool IsNotEditable() const		{ return m_notEditable; }
 private:
     DECLARE_CLASS(wxKeyProfile)
 };
@@ -1183,47 +1263,6 @@ public:
 
 
 
-//! A special text control where the user keypresses are displayed
-//! as the contained text.
-//! This class is used by wxKeyConfigPanel class to allow the user
-//! to input a shortcut key which can be associated with a wxCmd.
-//!
-//! Example: the user presses CTRL+SHIFT+A inside this window;
-//!          the wxKeyMonitorTextCtrl displays exactly the string
-//!          "Ctrl+Shift+A"
-//!
-class wxKeyMonitorTextCtrl : public wxTextCtrl
-{
-public:
-    wxKeyMonitorTextCtrl(
-        wxWindow* parent,
-        wxWindowID id,
-        const wxString& value = wxEmptyString,
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxDefaultSize,
-        long style = wxTE_PROCESS_ENTER,
-        const wxValidator& validator = wxDefaultValidator,
-        const wxString& name = wxTextCtrlNameStr) :
-        wxTextCtrl(parent, id, value, pos, size, style, validator, name) {}
-
-    virtual ~wxKeyMonitorTextCtrl() {}
-
-public:
-
-    //! Handles the keypresses and changes accordingly
-    //! the text displayed in text ctrl.
-    void OnKey(wxKeyEvent &);
-
-    //! Returns TRUE if this window is containing a valid key combination.
-    bool IsValidKeyComb() const {
-        return !GetValue().IsEmpty() && GetValue().Last() != '+';
-    }
-
-private:
-    DECLARE_CLASS(wxKeyMonitorTextCtrl)
-    DECLARE_EVENT_TABLE()
-};
-
 
 
 
@@ -1243,7 +1282,12 @@ private:
 #define wxKEYBINDER_ADD_PROFILEBTN_ID       wxKEYBINDER_BASEID+9
 #define wxKEYBINDER_REMOVE_PROFILEBTN_ID    wxKEYBINDER_BASEID+10
 #define wxKEYBINDER_ANY_MODIFIER_ID         wxKEYBINDER_BASEID+11
-#define wxKEYBINDER_META_MODIFIER_ID         wxKEYBINDER_BASEID+12
+#define wxKEYBINDER_META_MODIFIER_ID        wxKEYBINDER_BASEID+12
+#define wxKEYBINDER_SORT_EDIT_ID			wxKEYBINDER_BASEID+13
+#define wxKEYBINDER_META_EDIT_ID			wxKEYBINDER_BASEID+14
+#define wxKEYBINDER_FILTER_HIDE_EMPTY_ID	wxKEYBINDER_BASEID+15
+#define wxKEYBINDER_FILTER_ONLY_DIFF_ID		wxKEYBINDER_BASEID+16
+#define wxKEYBINDER_FILTER_ALL_ID			wxKEYBINDER_BASEID+17
 
 #define wxKEYBINDER_SELECTED_POSTFIX        wxT(" (selected)")
 
@@ -1387,15 +1431,6 @@ public:     // import commands (to call BEFORE ShowModal):
    // virtual void ImportMenuBarCmd(wxMenuBar *menuitems,
    //                             const wxString &rootname = wxT("Menu bar"));
 
-    //! Adds to the tree of user-editable commands, the raw list of
-    //! the commmands contained in the n-th key profile.
-    //! Instead of a tree structure (like the one generated by
-    //! #ImportMenuBarCmd), this function creates a raw list of the
-    //! commands contained in the key binder since a wxKeyBinder does
-    //! not contain hierarchical info about the keybindings.
-    virtual void ImportKeyProfileCmd(const wxKeyProfile &toimport,
-                                const wxString &rootname = wxT("Commands"));
-
 	//! Additions by vbs
 	WX_DECLARE_STRING_HASH_MAP( int, CommandList );
 	WX_DECLARE_STRING_HASH_MAP( CommandList, ControlMap );
@@ -1430,7 +1465,7 @@ public:     // output-access utilities (to call AFTER ShowModal)
 
     //! Returns the n-th key profile of the profile combo box.
     wxKeyProfile *GetProfile(int n) const
-        { wxASSERT(m_pKeyProfiles); return (wxKeyProfile *)m_pKeyProfiles->GetClientData(n); }
+        { wxASSERT(m_pKeyProfiles); return (wxKeyProfile *)static_cast<wxItemContainer*>(m_pKeyProfiles)->GetClientData(n); }
 
     //! Returns the currently selected key profile using #GetSelProfileIdx().
     //! This is the profile owned by the profile combo box.
@@ -1480,6 +1515,8 @@ public:     // miscellaneous
 	void ResetProfileBeenModifiedOrSelected();
 
 protected:      // event handlers
+	void OnContextMenuKeyList(wxContextMenuEvent &event);
+	void OnContextMenuCmdList(wxContextMenuEvent &event);
 
     //! Updates the wxKeyMonitorTextCtrl control...
     void OnIdle(wxIdleEvent &event);
@@ -1488,7 +1525,6 @@ protected:      // event handlers
     void OnListCommandSelected(wxCommandEvent &event);
 
     void OnBindingSelected(wxCommandEvent &event);
-	void OnBindingDblClick(wxCommandEvent &);
     void OnProfileSelected(wxCommandEvent &event);
     void OnCategorySelected(wxCommandEvent &event);
 
@@ -1499,11 +1535,15 @@ protected:      // event handlers
     void OnRemoveAllKey(wxCommandEvent &event);
     void OnAddProfile(wxCommandEvent &event);
     void OnRemoveProfile(wxCommandEvent &event);
-	void OnAnyModifier(wxCommandEvent &event);
-	void OnMetaModifier(wxCommandEvent &);
+	void OnBindingsCmdMenuSelected(wxCommandEvent &event);
+	void OnCommandsCmdMenuSelected(wxCommandEvent &event);
 
     //! Handles the notifications received from the wxKeyMonitorTextCtrl.
     void OnKeyPressed(wxCommandEvent &event);
+
+	void OnAnyModifier();
+	void OnMetaModifier();
+	void OnBindingDblClick();
 
 
 protected:      // build functions; these ones can be overridden to
@@ -1520,6 +1560,7 @@ protected:      // utilities
     virtual void UpdateButtons();
     virtual void UpdateDesc();
     virtual void FillInBindings();
+	virtual void FillCommandTree();
     virtual void Reset();
     virtual void AddRootIfMissing(const wxString &rootname);
 
@@ -1551,6 +1592,17 @@ protected:      // utilities
 	wxTreeItemId FindTreeItem( wxTreeItemId root, const wxString& sSearchFor );
 
 protected:      // members
+
+	enum FilterState
+	{
+		FS_ALL,
+		FS_DIFF_ONLY,
+		FS_HIDE_EMPTY
+	};
+
+	FilterState  m_eFilterState;
+	ControlMap	 m_commandMap;
+	wxString	 m_sRootName;
 
     //! If TRUE, a keyprofiles combobox will be shown to allow the
     //! user to choose the keyprofile to modify.
@@ -1589,9 +1641,6 @@ protected:      // the subwindows of this dialog
     wxButton *m_pRemoveBtn;
     wxButton *m_pRemoveAllBtn;
 
-	wxCheckBox *m_pAnyModCbx;
-	wxCheckBox *m_pMetaModCbx;
-
     // used when wxKEYBINDER_USE_TREECTRL is in the build flags
     wxTreeCtrl *m_pCommandsTree;
 
@@ -1620,3 +1669,4 @@ private:
 
 
 #endif // __KEYBINDER_G__
+

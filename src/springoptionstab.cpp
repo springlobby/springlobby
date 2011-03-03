@@ -298,6 +298,7 @@ void SpringOptionsTab::SetupUserFolders()
 	if ( dir.IsEmpty() ||
 	        ( !tryCreateDirectory( dir, 0775 ) ||
 	          ( !tryCreateDirectory( dir + sep + _T( "mods" ), 0775 ) ||
+				!tryCreateDirectory( dir + sep + _T( "games" ), 0775 ) ||
 	            !tryCreateDirectory( dir + sep + _T( "maps" ), 0775 ) ||
 	            !tryCreateDirectory( dir + sep + _T( "base" ), 0775 ) ||
 	            !tryCreateDirectory( dir + sep + _T( "demos" ), 0775 ) ||

@@ -152,10 +152,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions=" /Zm1000"
+				AdditionalOptions=" /Zm1000 /MP"
 				Optimization="2"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="E:\Users\devkid\Projects\Other\springlobby;E:\Users\devkid\Projects\Other\springlobby\build;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\mswu&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include\msvc&quot;;&quot;E:\Users\devkid\Projects\Other\springlobby\src\settings++\hotkeys&quot;"
+				AdditionalIncludeDirectories="E:\Users\devkid\Projects\Other\springlobby;E:\Users\devkid\Projects\Other\springlobby\build;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\lib\vc_dll\mswu&quot;;&quot;D:\Programme\Develop\wxWidgets-2.8.11\include\msvc&quot;;&quot;E:\Users\devkid\Projects\Other\springlobby\src\settings++\hotkeys&quot;;E:\Users\devkid\Projects\Other\springlobby\src\wxkeybinder"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_RC_MSVC;WXUSINGDLL;__WXMSW__;_WIN32_WINNT=0x0501;DISABLE_SOUND;NO_TORRENT_SYSTEM;&quot;LOCALE_INSTALL_DIR=\&quot;C:/Program Files (x86)/springlobby/share/locale\&quot;&quot;;CMAKE_INTDIR=\&quot;Release\&quot;"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -757,6 +757,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\settings++\hotkeys\ChangeMetaDlg.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\settings++\hotkeys\ChangeMetaDlg.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\settings++\hotkeys\commandlist.cpp"
 					>
 				</File>
@@ -850,6 +858,14 @@
 				</File>
 				<File
 					RelativePath="D:\Users\devkid\Projekte\Other\springlobby\src\wxkeybinder\menuutils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\wxkeybinder\wxKeyMonitorTextCtrl.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\wxkeybinder\wxKeyMonitorTextCtrl.h"
 					>
 				</File>
 			</Filter>

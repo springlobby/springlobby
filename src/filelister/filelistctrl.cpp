@@ -170,7 +170,7 @@ wxString FileListCtrl::GetItemText(long item, long column) const
 		case 1: return TowxString( info->m_size_KB );
 		case 2: switch ( info->m_type ) {
                     case PlasmaResourceInfo::map: return _("map");
-                    case PlasmaResourceInfo::mod: return _("mod");
+					case PlasmaResourceInfo::mod: return _("game");
                     default: return _("unknown");
                 }
 		case 3: return TowxString( info->m_dependencies.Count() );

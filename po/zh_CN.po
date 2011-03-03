@@ -1,21 +1,21 @@
-# Simplified Chinese translation for springlobby
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
-# This file is distributed under the same license as the springlobby package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+#
+# Jie <lililjlj@gmail.com>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
 "POT-Creation-Date: 2009-06-29 11:52+0200\n"
-"PO-Revision-Date: 2008-09-15 13:38+0000\n"
-"Last-Translator: rainofchaos <rainofchaos@gmail.com>\n"
-"Language-Team: Simplified Chinese <zh_CN@li.org>\n"
+"PO-Revision-Date: 2010-07-08 14:24+1000\n"
+"Last-Translator: Jie <lililjlj@gmail.com>\n"
+"Language-Team: Simplified Chinese <18n-translation@lists.linux.net.cn>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: UTF-8\n"
 "X-Launchpad-Export-Date: 2008-09-20 21:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 
 #: src/addbotdialog.cpp:28
 msgid "Add bot"
@@ -35,10 +35,9 @@ msgstr "选择该AI所使用的库文件。"
 
 #: src/addbotdialog.cpp:70
 msgid "property"
-msgstr ""
+msgstr "特性"
 
 #: src/addbotdialog.cpp:74
-#, fuzzy
 msgid "value"
 msgstr "值"
 
@@ -124,14 +123,12 @@ msgstr ""
 "总是：总是将同派别成员归入同一联盟，无论联盟实力悬殊与否。"
 
 #: src/autobalancedialog.cpp:52
-#, fuzzy
 msgid "Number of allies"
-msgstr "玩家数量"
+msgstr "同盟玩家数量"
 
 #: src/autobalancedialog.cpp:55
-#, fuzzy
 msgid "Auto select"
-msgstr "重新连接"
+msgstr "自动选取"
 
 #: src/autobalancedialog.cpp:67 src/connectwindow.cpp:85
 #: src/mmoptionwindows.cpp:106
@@ -163,18 +160,16 @@ msgid "Host"
 msgstr "主机"
 
 #: src/battlelistctrl.cpp:60
-#, fuzzy
 msgid "spectators"
-msgstr "旁观者:"
+msgstr "旁观者"
 
 #: src/battlelistctrl.cpp:61
-#, fuzzy
 msgid "players"
-msgstr "玩家："
+msgstr "玩家"
 
 #: src/battlelistctrl.cpp:62
 msgid "max"
-msgstr ""
+msgstr "最高"
 
 #: src/battlelistctrl.cpp:192 src/playback/playbacklistctrl.cpp:65
 msgid "Download &map"
@@ -189,9 +184,8 @@ msgid "Spectators:"
 msgstr "旁观者:"
 
 #: src/battlelistctrl.cpp:330
-#, fuzzy
 msgid "Active Players:"
-msgstr "玩家："
+msgstr "活跃玩家："
 
 #: src/battlelistfilter.cpp:83
 msgid "Host:"
@@ -210,9 +204,8 @@ msgid "Passworded"
 msgstr "有密码的"
 
 #: src/battlelistfilter.cpp:116
-#, fuzzy
 msgid "Highlighted only"
-msgstr "高亮显示"
+msgstr "仅高亮显示者"
 
 #: src/battlelistfilter.cpp:126
 msgid "Rank Limit:"
@@ -283,27 +276,24 @@ msgid "Players:"
 msgstr "玩家："
 
 #: src/battlelisttab.cpp:132 src/battlelisttab.cpp:134
-#, fuzzy
 msgid " Filter "
-msgstr "文件"
+msgstr " 过滤"
 
 #: src/battlelisttab.cpp:139 src/battlelisttab.cpp:141
-#, fuzzy
 msgid " Battle infos "
-msgstr "游戏列表"
+msgstr " 战斗信息"
 
 #: src/battlelisttab.cpp:145
-#, fuzzy
 msgid "Activated"
-msgstr "已开始"
+msgstr "已启动"
 
 #: src/battlelisttab.cpp:150
 msgid "0 battles displayed"
-msgstr ""
+msgstr "显示 0 场战斗"
 
 #: src/battlelisttab.cpp:154
 msgid "Host new..."
-msgstr "主建新游戏"
+msgstr "建立新游戏"
 
 #: src/battlelisttab.cpp:157
 msgid "Join"
@@ -312,7 +302,7 @@ msgstr "加入"
 #: src/battlelisttab.cpp:180
 #, c-format
 msgid "%d battles displayed"
-msgstr ""
+msgstr "%d 战斗现实"
 
 #: src/battlelisttab.cpp:302
 msgid ""
@@ -434,7 +424,6 @@ msgid "Do you want me to take you to the download page?"
 msgstr "你想要前往下载页面吗？"
 
 #: src/battlelisttab.cpp:515 src/playback/playbacktab.cpp:327
-#, fuzzy
 msgid ""
 "Should i try to download it for you?\n"
 "You can see the progress in the \"Download Manager\" tab."
@@ -475,9 +464,8 @@ msgid "Enter password"
 msgstr "输入密码"
 
 #: src/battlemaptab.cpp:66
-#, fuzzy
 msgid "Select"
-msgstr "选择..."
+msgstr "选择"
 
 #: src/battlemaptab.cpp:83 src/battleroomtab.cpp:238
 #: src/mapselectdialog.cpp:148
@@ -528,9 +516,8 @@ msgstr "在游戏中选择"
 
 #: src/battlemaptab.cpp:102 src/battlemaptab.cpp:109
 #: src/mmoptionswrapper.cpp:120
-#, fuzzy
 msgid "Chose before game"
-msgstr "在游戏中选择"
+msgstr "在游戏之前选择"
 
 #: src/battlemaptab.cpp:105 src/battlemaptab.cpp:112
 msgid "Startpositions"
@@ -554,18 +541,16 @@ msgid "Units in this list will be available in the game."
 msgstr "在这个清单中的单位将在游戏中可用"
 
 #: src/battleoptionstab.cpp:76
-#, fuzzy
 msgid "Disable selected units."
-msgstr "允许所有单位。"
+msgstr "禁止所选单位。"
 
 #: src/battleoptionstab.cpp:80
-#, fuzzy
 msgid "Re-enable selected units."
-msgstr "允许所有单位。"
+msgstr "再次允许所选单位。"
 
 #: src/battleoptionstab.cpp:83
 msgid "<<"
-msgstr ""
+msgstr "<<"
 
 #: src/battleoptionstab.cpp:84
 msgid "Enable all units."
@@ -581,10 +566,9 @@ msgstr "该列表中的单位将不能在游戏中使用"
 
 #: src/battleoptionstab.cpp:238
 msgid "How many units of this type do you wish to allow?"
-msgstr ""
+msgstr "类型的单位最大数量？"
 
 #: src/battleoptionstab.cpp:238
-#, fuzzy
 msgid "Unit restriction"
 msgstr "单位限制"
 
@@ -595,12 +579,10 @@ msgid "Nickname"
 msgstr "昵称"
 
 #: src/battleroomlistctrl.cpp:83
-#, fuzzy
 msgid "team"
 msgstr "队伍"
 
 #: src/battleroomlistctrl.cpp:84
-#, fuzzy
 msgid "ally"
 msgstr "联盟"
 
@@ -635,7 +617,7 @@ msgstr "设置资源加成"
 #: src/battleroomlistctrl.cpp:145 src/battleroomlistctrl.cpp:328
 #: src/battleroomlistctrl.cpp:337 src/battleroomtab.cpp:126
 msgid "Spectator"
-msgstr "观看者"
+msgstr "旁观者"
 
 #: src/battleroomlistctrl.cpp:150 src/battleroomlistctrl.cpp:332
 #: src/battleroomlistctrl.cpp:342
@@ -652,110 +634,94 @@ msgid "Please enter a value between 0 and 100"
 msgstr "请输入介于0与100之间的一个值"
 
 #: src/battleroomlistctrl.cpp:705
-#, fuzzy
 msgid "AI (bot)\n"
-msgstr "添加AI"
+msgstr " AI \n"
 
 #: src/battleroomlistctrl.cpp:707
-#, fuzzy
 msgid "Human\n"
-msgstr "阿曼"
+msgstr "人类\n"
 
 #: src/battleroomlistctrl.cpp:710
-#, fuzzy
 msgid "Spectator\n"
-msgstr "观看者"
+msgstr "旁观者\n"
 
 #: src/battleroomlistctrl.cpp:712
-#, fuzzy
 msgid "Player\n"
-msgstr "玩家:"
+msgstr "玩家\n"
 
 #: src/battleroomlistctrl.cpp:715
-#, fuzzy
 msgid "Host\n"
-msgstr "主机"
+msgstr "主机\n"
 
 #: src/battleroomlistctrl.cpp:717
-#, fuzzy
 msgid "Client\n"
-msgstr "客户端"
+msgstr "客户端\n"
 
 #: src/battleroomlistctrl.cpp:720
-#, fuzzy
 msgid "Ready\n"
-msgstr "总是"
+msgstr "准备好了\n"
 
 #: src/battleroomlistctrl.cpp:722
-#, fuzzy
 msgid "Not ready\n"
-msgstr "未就绪"
+msgstr "未就绪\n"
 
 #: src/battleroomlistctrl.cpp:725
-#, fuzzy
 msgid "In sync"
-msgstr "启用 垂直同步"
+msgstr "同步"
 
 #: src/battleroomlistctrl.cpp:727
 msgid "Not in sync"
-msgstr ""
+msgstr "未同步"
 
 #: src/battleroomlistctrl.cpp:779 src/chatpanel.cpp:1724
 msgid "Enter name"
-msgstr ""
+msgstr "输入名称"
 
 #: src/battleroomlistctrl.cpp:780 src/chatpanel.cpp:1725
 msgid ""
 "Please enter the name for the new group.\n"
 "After clicking ok you will be taken to adjust its settings."
-msgstr ""
+msgstr "请键入新组的名称。点击OK之后可以改变设定。"
 
 #: src/battleroommmoptionstab.cpp:54 src/battleroomtab.cpp:204
 msgid "Manage Presets"
-msgstr ""
+msgstr "管理预设"
 
 #: src/battleroommmoptionstab.cpp:57
-#, fuzzy
 msgid "Set name."
-msgstr "设置权限..."
+msgstr "设置名称"
 
 #: src/battleroommmoptionstab.cpp:61
 msgid "Load..."
 msgstr "载入..."
 
 #: src/battleroommmoptionstab.cpp:62
-#, fuzzy
 msgid "Load a saved set of options."
-msgstr "载入已储存的单位限制配置"
+msgstr "载入保存的配置"
 
 #: src/battleroommmoptionstab.cpp:66
-#, fuzzy
 msgid "Save..."
 msgstr "保存..."
 
 #: src/battleroommmoptionstab.cpp:67 src/battleroomtab.cpp:215
-#, fuzzy
 msgid "Save a set of options."
-msgstr "保存单位限制配置"
+msgstr "保存为一个配置"
 
 #: src/battleroommmoptionstab.cpp:71
-#, fuzzy
 msgid "Delete..."
-msgstr "选择..."
+msgstr "删除..."
 
 #: src/battleroommmoptionstab.cpp:72 src/battleroomtab.cpp:220
-#, fuzzy
 msgid "Delete a set of options."
-msgstr "保存单位限制配置"
+msgstr "删除一个配置."
 
 #: src/battleroommmoptionstab.cpp:76
-#, fuzzy
 msgid "Set default..."
-msgstr "默认"
+msgstr "作为默认..."
 
 #: src/battleroommmoptionstab.cpp:77 src/battleroomtab.cpp:225
 msgid "Use the current set of options as mod's default."
-msgstr ""
+msgstr "使用现在的设定作为此mod默认"
 
 #: src/battleroommmoptionstab.cpp:85
 msgid "Mod Options"
@@ -766,15 +732,14 @@ msgid "Map Options"
 msgstr "地图选项"
 
 #: src/battleroommmoptionstab.cpp:151
-#, fuzzy
 msgid "no options available"
-msgstr "不可用"
+msgstr "无选项可用"
 
 #: src/battleroommmoptionstab.cpp:493
 msgid ""
 "Cannot load an options set without a name\n"
 "Please select one from the list and try again."
-msgstr ""
+msgstr "无法读取无名称的一系列设定。请从列表选择一个再试。"
 
 #: src/battleroommmoptionstab.cpp:493 src/battleroommmoptionstab.cpp:510
 #: src/battleroomtab.cpp:786 src/ui.cpp:862
@@ -783,32 +748,30 @@ msgstr "错误"
 
 #: src/battleroommmoptionstab.cpp:506 src/battleroomtab.cpp:783
 msgid "Enter preset name"
-msgstr ""
+msgstr "输入预设名称"
 
 #: src/battleroommmoptionstab.cpp:506 src/battleroomtab.cpp:783
 msgid ""
 "Enter a name to save the current set of options\n"
 "If a preset with the same name already exist, it will be overwritten"
-msgstr ""
+msgstr "输入一个名称保存为当前设定，假如已经有一个同名预设存在，将被覆盖"
 
 #: src/battleroommmoptionstab.cpp:510 src/battleroomtab.cpp:786
 msgid "Cannot save an options set without a name."
-msgstr ""
+msgstr "无法保存一个未命名的配置"
 
 #: src/battleroommmoptionstab.cpp:521 src/battleroommmoptionstab.cpp:530
 #: src/battleroomtab.cpp:796 src/battleroomtab.cpp:804
 msgid "Pick an existing option set from the list"
-msgstr ""
+msgstr "从列表中选取一个现存配置"
 
 #: src/battleroommmoptionstab.cpp:521 src/battleroomtab.cpp:796
-#, fuzzy
 msgid "Delete preset"
-msgstr "反射的"
+msgstr "删除预设"
 
 #: src/battleroommmoptionstab.cpp:530 src/battleroomtab.cpp:804
-#, fuzzy
 msgid "Set mod default preset"
-msgstr "默认"
+msgstr "设置为此 mod 默认预设"
 
 #: src/battleroomtab.cpp:119
 msgid "Players with the same team number share control of their units."
@@ -836,7 +799,7 @@ msgstr "我准备好了"
 
 #: src/battleroomtab.cpp:129
 msgid "Click this if you are content with the battle settings."
-msgstr "如果你满意战斗的设置，请点击此处。"
+msgstr "如果你满意战斗的设置，请点击此处。 "
 
 #: src/battleroomtab.cpp:143
 msgid "Color"
@@ -867,11 +830,11 @@ msgstr "开始战斗"
 
 #: src/battleroomtab.cpp:168
 msgid "Player Management"
-msgstr ""
+msgstr "玩家管理"
 
 #: src/battleroomtab.cpp:169
 msgid "Various functions to make team games simplers to setup"
-msgstr ""
+msgstr "各种功能使得游戏易于设置"
 
 #: src/battleroomtab.cpp:171
 msgid "Add Bot..."
@@ -883,13 +846,13 @@ msgstr "增加一个电脑控制的玩家进入游戏"
 
 #: src/battleroomtab.cpp:174 src/battleroomtab.cpp:176
 msgid "Autolock on start"
-msgstr ""
+msgstr "开始后自动锁定"
 
 #: src/battleroomtab.cpp:178
 msgid ""
 "Automatically locks the battle when the game starts and unlock when it's "
 "finished."
-msgstr ""
+msgstr "游戏开始时自动锁定，结束时自动解锁"
 
 #: src/battleroomtab.cpp:182
 msgid "Prevent additional players from joining the battle"
@@ -897,27 +860,26 @@ msgstr "阻止更多其他玩家进入该战斗"
 
 #: src/battleroomtab.cpp:186
 msgid "Autohost"
-msgstr ""
+msgstr "自动架设"
 
 #: src/battleroomtab.cpp:186
 msgid ""
 "Toggle autohost mode.  This allows players to control your battle using "
 "commands like '!balance' and '!start'."
 msgstr ""
+"切换自动建立模式。这样玩家可以控制使用'!balance' 和 '!start'等命令自己的游戏"
 
 #: src/battleroomtab.cpp:190
-#, fuzzy
 msgid "Lock Balance"
-msgstr "平衡"
+msgstr "锁定平衡"
 
 #: src/battleroomtab.cpp:190
 msgid "When activated, prevents anyone but the host to change team and ally"
-msgstr ""
+msgstr "激活后阻止主机之外任何玩家改变队伍或盟友"
 
 #: src/battleroomtab.cpp:194
-#, fuzzy
 msgid "Balance alliances"
-msgstr "只有主机可以平衡联盟实力。"
+msgstr "平衡联盟"
 
 #: src/battleroomtab.cpp:194
 msgid "Automatically balance players into two or more alliances"
@@ -932,39 +894,34 @@ msgid "Make player colors unique"
 msgstr "使玩家的颜色不重复"
 
 #: src/battleroomtab.cpp:200
-#, fuzzy
 msgid "Balance teams"
-msgstr "平衡"
+msgstr "平衡队伍"
 
 #: src/battleroomtab.cpp:200
-#, fuzzy
 msgid ""
 "Automatically balance players into control teams, by default none shares "
 "control"
-msgstr "自动平衡分配到两个或多个联盟"
+msgstr "自动平衡分配到两个或多个联盟，默认不分享控制权"
 
 #: src/battleroomtab.cpp:210
 msgid "Load battle preset"
-msgstr ""
+msgstr "读取战斗预设"
 
 #: src/battleroomtab.cpp:214
-#, fuzzy
 msgid "Save"
-msgstr "保存..."
+msgstr "保存"
 
 #: src/battleroomtab.cpp:219 src/playback/playbacktab.cpp:140
-#, fuzzy
 msgid "Delete"
-msgstr "反射的"
+msgstr "删除"
 
 #: src/battleroomtab.cpp:224
-#, fuzzy
 msgid "Set default"
-msgstr "默认"
+msgstr "设为默认"
 
 #: src/battleroomtab.cpp:235
 msgid "Activate an element to quickly change it"
-msgstr ""
+msgstr "激活一个元素快速改变它"
 
 #: src/battleroomtab.cpp:392
 msgid "Boxes"
@@ -991,22 +948,20 @@ msgid "Map does not exist."
 msgstr "地图不存在。"
 
 #: src/battleroomtab.cpp:548
-#, fuzzy
 msgid ""
 "Some Players are not ready yet\n"
 "Do you want to force start?"
 msgstr ""
 "有些玩家还没准备好。\n"
-"闹铃提示这些玩家？"
+"需要强制开始吗？"
 
 #: src/battleroomtab.cpp:548
 msgid "Not ready"
 msgstr "未就绪"
 
 #: src/channel/autojoinchanneldialog.cpp:25
-#, fuzzy
 msgid "Edit auto-joined channels"
-msgstr "(&A) 自动加入频道"
+msgstr "修改自动加入频道选项"
 
 #: src/channel/autojoinchanneldialog.cpp:34
 msgid ""
@@ -1014,35 +969,34 @@ msgid ""
 "channelname password\n"
 "(passwords for existing channels are not displayed)"
 msgstr ""
+"每一行添加一个频道，就像：\n"
+"频道名 密码\n"
+"（已经存在的频道密码不显示）"
 
 #: src/channel/channelchooser.cpp:23
 msgid "Double click to join"
-msgstr ""
+msgstr "双击加入"
 
 #: src/channel/channelchooser.cpp:30
-#, fuzzy
 msgid "Find channel:"
-msgstr "加入频道..."
+msgstr "寻找频道："
 
 #: src/channel/channelchooserdialog.cpp:13 src/mainwindow.cpp:221
-#, fuzzy
 msgid "Choose channels to join"
-msgstr "加入频道的名称"
+msgstr "选择要加入的频道"
 
 #: src/channel/channellistctrl.cpp:28
-#, fuzzy
 msgid "Channel"
 msgstr "频道"
 
 #: src/channel/channellistctrl.cpp:29
-#, fuzzy
 msgid "# users"
-msgstr "(%d 名用户）"
+msgstr "# 名用户"
 
 #: src/channel/channellistctrl.cpp:114
 #, c-format
 msgid "Displaying %d out of %d channels"
-msgstr ""
+msgstr "显示 %d %d 频道"
 
 #: src/chatlog.cpp:44
 msgid "### Session Closed at ["
@@ -1155,7 +1109,6 @@ msgid "Notification"
 msgstr "通知"
 
 #: src/chatoptionstab.cpp:256
-#, fuzzy
 msgid ""
 "[19:35] ** Server ** Connected to Server.\n"
 "[22:30] <Dude> hi everyone\n"
@@ -1189,7 +1142,7 @@ msgstr "行为"
 
 #: src/chatoptionstab.cpp:289
 msgid "Enable Irc colors in chat messages"
-msgstr ""
+msgstr "在信息中开启IRC色彩"
 
 #: src/chatoptionstab.cpp:294
 msgid "Play notification sounds"
@@ -1229,9 +1182,9 @@ msgstr "#"
 
 #: src/chatpanel.cpp:295 src/chatpanel.cpp:897 src/chatpanel.cpp:913
 #: src/chatpanel.cpp:938
-#, fuzzy, c-format
+#, c-format
 msgid "%d users"
-msgstr "(%d 名用户）"
+msgstr "%d 用户"
 
 #: src/chatpanel.cpp:323
 msgid "right click for options (like autojoin)"
@@ -1243,7 +1196,7 @@ msgstr "发送"
 
 #: src/chatpanel.cpp:385
 msgid "Disable text appending (workaround for autoscroll)"
-msgstr ""
+msgstr "禁止文字推进(自动滚动)"
 
 #: src/chatpanel.cpp:389
 msgid "Copy"
@@ -1251,7 +1204,7 @@ msgstr "复制"
 
 #: src/chatpanel.cpp:395
 msgid "Copy link location"
-msgstr ""
+msgstr "复制链接"
 
 #: src/chatpanel.cpp:399
 msgid "Clear"
@@ -1266,9 +1219,8 @@ msgid "Display Join/Leave Messages"
 msgstr "显示 加入/离开 信息"
 
 #: src/chatpanel.cpp:421
-#, fuzzy
 msgid "Show mute list"
-msgstr "显示工具提示"
+msgstr "显示静音列表"
 
 #: src/chatpanel.cpp:427
 msgid "Channel info"
@@ -1351,9 +1303,8 @@ msgid "Admin"
 msgstr "管理员"
 
 #: src/chatpanel.cpp:498
-#, fuzzy
 msgid "User"
-msgstr "禁言用户"
+msgstr "用户"
 
 #: src/chatpanel.cpp:508
 msgid "Open Chat"
@@ -1456,16 +1407,12 @@ msgid " left the "
 msgstr " 离开 "
 
 #: src/chatpanel.cpp:966
-#, fuzzy
 msgid " ** Channel topic:"
-msgstr "频道信息"
+msgstr " ** 频道主题："
 
 #: src/chatpanel.cpp:973
-#, fuzzy
 msgid " ** Set by "
-msgstr ""
-"\n"
-" * 设置由 "
+msgstr "** 设置"
 
 #: src/chatpanel.cpp:1000 src/chatpanel.cpp:1025 src/chatpanel.cpp:1051
 msgid "Chat closed."
@@ -1659,9 +1606,8 @@ msgid "Duration:"
 msgstr "持续时间："
 
 #: src/chatpanel.cpp:1734
-#, fuzzy
 msgid "couldn't add user"
-msgstr "无法启动浏览器。"
+msgstr "无法添加用户"
 
 #: src/connectwindow.cpp:42
 msgid "Connect to lobby server"
@@ -1745,20 +1691,20 @@ msgid ""
 "The entered nickname contains invalid characters like )? &%.\n"
 " Please try again"
 msgstr ""
+"输入的昵称包含不可用字符，比如 )? &%。\n"
+" 请再试。"
 
 #: src/connectwindow.cpp:292
-#, fuzzy
 msgid "Invalid nickname"
-msgstr "无效的数字"
+msgstr "无效的用户名"
 
 #: src/connectwindow.cpp:299
-#, fuzzy
 msgid ""
 "Registration failed, the reason was:\n"
 "Password / confirmation mismatch (or empty passwort)"
 msgstr ""
 "注册失败，原因是：\n"
-"密码与确认不匹配"
+"密码与确认不匹配（或者空密码）"
 
 #: src/connectwindow.cpp:299 src/ui.cpp:251
 msgid "Registration failed."
@@ -2756,244 +2702,220 @@ msgstr "上一次生成的Spring启动脚本"
 #: src/mapselectdialog.cpp:259 src/selectusersdialog.cpp:73
 #: src/torrentlistctrl.cpp:40 src/widgets/downloadlistctrl.cpp:26
 #: src/widgets/infopanel.cpp:60
-#, fuzzy
 msgid "Name"
-msgstr "游戏"
+msgstr "名称"
 
 #: src/filelister/filelistctrl.cpp:47 src/filelister/filelistctrl.cpp:49
 msgid "Type"
-msgstr ""
+msgstr "输入"
 
 #: src/filelister/filelistctrl.cpp:51 src/filelister/filelistctrl.cpp:53
 msgid "Hash"
-msgstr ""
+msgstr "Hash"
 
 #: src/filelister/filelistdialog.cpp:30
-#, fuzzy
 msgid "Search and download files"
-msgstr "搜索文件"
+msgstr "搜索及下载文件"
 
 #: src/filelister/filelistdialog.cpp:33
 msgid "Files displayed"
-msgstr ""
+msgstr "文件显示"
 
 #: src/filelister/filelistdialog.cpp:58
-#, fuzzy
 msgid "Download selected"
-msgstr "下载完毕"
+msgstr "下载选定的"
 
 #: src/filelister/filelistdialog.cpp:104
 #, c-format
 msgid "%u files displayed"
-msgstr ""
+msgstr "%u 文件已经显示"
 
 #: src/filelister/filelistdialog.cpp:146
-#, fuzzy
 msgid "unknown hash "
-msgstr "未知"
+msgstr "未知 hash"
 
 #: src/groupoptionspanel.cpp:54 src/groupoptionspanel.cpp:167
 #: src/widgets/infopanel.cpp:94
-#, fuzzy
 msgid "Remove"
-msgstr "移除..."
+msgstr "移除"
 
 #: src/groupoptionspanel.cpp:56
 msgid "Remove an existing group"
-msgstr ""
+msgstr "移除一个现存的组"
 
 #: src/groupoptionspanel.cpp:60
-#, fuzzy
 msgid "Rename.."
-msgstr "移除..."
+msgstr "重命名.."
 
 #: src/groupoptionspanel.cpp:62
 msgid "Rename an existing group"
-msgstr ""
+msgstr "重命名一个现存的组"
 
 #: src/groupoptionspanel.cpp:69
-#, fuzzy
 msgid "Add New.."
-msgstr "添加AI..."
+msgstr "添加新的.."
 
 #: src/groupoptionspanel.cpp:70
 msgid "Add new group"
-msgstr ""
+msgstr "添加组"
 
 #: src/groupoptionspanel.cpp:83
-#, fuzzy
 msgid "Group Actions"
-msgstr "动作"
+msgstr "组行为"
 
 #: src/groupoptionspanel.cpp:88
 msgid "Notify login/logout"
-msgstr ""
+msgstr "提示登陆/登出"
 
 #: src/groupoptionspanel.cpp:90
 msgid "Notify when users of this group go online or offline"
-msgstr ""
+msgstr "在此组用户上线或离线时通知"
 
 #: src/groupoptionspanel.cpp:94
-#, fuzzy
 msgid "Ignore Chat"
-msgstr "公众聊天"
+msgstr "忽略聊天信息"
 
 #: src/groupoptionspanel.cpp:96
 msgid "Ignore anything said in channel by any of the users in this group"
-msgstr ""
+msgstr "忽略任何此分组内用户在频道发出的言语"
 
 #: src/groupoptionspanel.cpp:100
-#, fuzzy
 msgid "Notify Hosted Battles"
-msgstr "主建新战斗"
+msgstr "通知新架设的游戏"
 
 #: src/groupoptionspanel.cpp:102
 msgid "Notify when users of this group hosts a battle"
-msgstr ""
+msgstr "当此分组的用户建立游戏时提示"
 
 #: src/groupoptionspanel.cpp:106 src/springlobbyapp.cpp:440
 #: src/springlobbyapp.cpp:441
 msgid "Ignore PM"
-msgstr ""
+msgstr "忽略私人信息"
 
 #: src/groupoptionspanel.cpp:108
 msgid "Ignore anything said in private chat by any of the users in this group"
-msgstr ""
+msgstr "忽略任何此分组内用户发出的非公共信息"
 
 #: src/groupoptionspanel.cpp:112
 msgid "Notify Status Change"
-msgstr ""
+msgstr "提示状态改变"
 
 #: src/groupoptionspanel.cpp:114
 msgid "Notify when the status of a users in this group changes"
-msgstr ""
+msgstr "当此分组内用户状态改变时提示"
 
 #: src/groupoptionspanel.cpp:118
 msgid "Autokick"
-msgstr ""
+msgstr "自动踢出"
 
 #: src/groupoptionspanel.cpp:120
 msgid "Auto kick any of the users in this group from battles hosted"
-msgstr ""
+msgstr "建立的游戏中自动踢出此分组内的用户"
 
 #: src/groupoptionspanel.cpp:126
 msgid "Highlight battles and the names of users in this group"
-msgstr ""
+msgstr "高亮战斗和此组中的玩家名称"
 
 #: src/groupoptionspanel.cpp:133
-#, fuzzy
 msgid "Highlight Color"
-msgstr "高亮文本"
+msgstr "高亮色彩"
 
 #: src/groupoptionspanel.cpp:138 src/groupoptionspanel.cpp:140
 msgid "Select highlight color"
-msgstr ""
+msgstr "选择高亮色彩"
 
 #: src/groupoptionspanel.cpp:151
 msgid "Users in group"
-msgstr ""
+msgstr "组中的用户"
 
 #: src/groupoptionspanel.cpp:162
-#, fuzzy
 msgid "Add.."
-msgstr "添加AI..."
+msgstr "添加.."
 
 #: src/groupoptionspanel.cpp:163
 msgid "Add users to group"
-msgstr ""
+msgstr "添加用户到组"
 
 #: src/groupoptionspanel.cpp:169
-#, fuzzy
 msgid "Remove users from group"
-msgstr "移除用户帐户"
+msgstr "从组中移除用户"
 
 #: src/groupoptionspanel.cpp:263
-#, fuzzy
 msgid "Name of new group:"
-msgstr "用户名"
+msgstr "新租的名称："
 
 #: src/groupoptionspanel.cpp:263
 msgid "Add New Group"
-msgstr ""
+msgstr "添加新组"
 
 #: src/Helper/imageviewer.cpp:85
 msgid "previous"
-msgstr ""
+msgstr "前一个"
 
 #: src/Helper/imageviewer.cpp:88
 msgid "next"
-msgstr ""
+msgstr "下一个"
 
 #: src/Helper/imageviewer.cpp:92
-#, fuzzy
 msgid "delete"
-msgstr "反射的"
+msgstr "删除"
 
 #: src/Helper/imageviewer.cpp:96
 msgid "save as"
-msgstr ""
+msgstr "保存为"
 
 #: src/Helper/imageviewer.cpp:146
 msgid "couldn't remove file"
-msgstr ""
+msgstr "无法移除文件"
 
 #: src/Helper/imageviewer.cpp:160
-#, fuzzy
 msgid "Choose a filename"
-msgstr "在游戏中选择"
+msgstr "选择一个文件名"
 
 #: src/Helper/imageviewer.cpp:167
-#, fuzzy
 msgid "File successfully saved"
-msgstr ""
-"\n"
-"成功的被保存到：\n"
+msgstr "文件成功保存"
 
 #: src/Helper/imageviewer.cpp:167 src/updater/updater.cpp:111
 #: src/updater/updater.cpp:114 src/widgets/infopanel.cpp:159
 #: src/widgets/infopanel.cpp:171
-#, fuzzy
 msgid "Success"
-msgstr "设置权限..."
+msgstr "成功"
 
 #: src/Helper/imageviewer.cpp:170
-#, fuzzy
 msgid "Couldn't save file"
-msgstr "无法保存\n"
+msgstr "无法保存为文件"
 
 #: src/Helper/wxTranslationHelper.cpp:96 src/springlobbyapp.cpp:439
-#, fuzzy
 msgid "Default"
 msgstr "默认"
 
 #: src/Helper/wxTranslationHelper.cpp:127
 #, c-format
 msgid "SEARCHING FOR %s"
-msgstr ""
+msgstr "搜索 %s"
 
 #: src/Helper/wxTranslationHelper.cpp:144
 msgid "Array of language names and identifiers should have the same size."
-msgstr ""
+msgstr "排列语言/标示列表应有同样尺寸。"
 
 #: src/Helper/wxTranslationHelper.cpp:145
-#, fuzzy
 msgid "Select the language"
-msgstr "频道信息"
+msgstr "选择语言"
 
 #: src/Helper/wxTranslationHelper.cpp:146
-#, fuzzy
 msgid "Language"
-msgstr "血统模式"
+msgstr "语言"
 
 #: src/Helper/wxTranslationHelper.cpp:156
 #, c-format
 msgid "wxTranslationHelper: Path Prefix = \"%s\""
-msgstr ""
+msgstr "wxTranslationHelper: Path Prefix = \"%s\""
 
 #: src/Helper/wxTranslationHelper.cpp:159
 #, c-format
 msgid "wxTranslationHelper: Catalog Name = \"%s\""
-msgstr ""
+msgstr "wxTranslationHelper: Catalog Name = \"%s\""
 
 #: src/hostbattledialog.cpp:47
 msgid "Host new battle"
@@ -3025,12 +2947,12 @@ msgstr "测试防火墙"
 
 #: src/hostbattledialog.cpp:120
 msgid "Relay battle to an Autohost"
-msgstr ""
+msgstr "交递给自动架设游戏"
 
 #: src/hostbattledialog.cpp:121
 msgid ""
 "host and control game on remote server, helps if you have trouble hosting"
-msgstr ""
+msgstr "使用远程服务器建立和控制游戏——如果有建立游戏的问题这是一个解决方案"
 
 #: src/hostbattledialog.cpp:127 src/playback/playbacklistctrl.cpp:44
 msgid "Number of players"
@@ -3046,12 +2968,11 @@ msgstr "穿孔"
 
 #: src/hostbattledialog.cpp:141
 msgid "NAT traversal"
-msgstr "NAT穿越阻挡"
+msgstr "NAT穿越"
 
 #: src/hostbattledialog.cpp:147
-#, fuzzy
 msgid "NAT traversal to use."
-msgstr "NAT穿越阻挡"
+msgstr "使用NAT穿越。"
 
 #: src/hostbattledialog.cpp:152
 msgid "Minimum Rank needed"
@@ -3078,19 +2999,20 @@ msgstr ""
 "成功的被保存到：\n"
 
 #: src/httpdownloader.cpp:78
-#, fuzzy
 msgid ""
 "\n"
 "successfully unzipped in:\n"
 msgstr ""
 "\n"
-"成功的被保存到：\n"
+"成功的（zip）解压到：\n"
 
 #: src/httpdownloader.cpp:79
 msgid ""
 "\n"
 " unzipping failed, please correct manually"
 msgstr ""
+"\n"
+"（zip）解压失败，请手动纠正"
 
 #: src/httpdownloader.cpp:99
 msgid "Could not save\n"
@@ -3109,73 +3031,72 @@ msgid ""
 "\n"
 "Error number: "
 msgstr ""
+"\n"
+"错误号码："
 
 #: src/iconimagelist.cpp:281
 msgid "Game is open."
-msgstr ""
+msgstr "游戏开放。"
 
 #: src/iconimagelist.cpp:282
 msgid "Game is password-protected."
-msgstr ""
+msgstr "游戏有密码保护"
 
 #: src/iconimagelist.cpp:283
 msgid "Game is full."
-msgstr ""
+msgstr "游戏满员。"
 
 #: src/iconimagelist.cpp:284
 msgid "Game is full and password-protected."
-msgstr ""
+msgstr "游戏满员且密码保护。"
 
 #: src/iconimagelist.cpp:285
-#, fuzzy
 msgid "Game is closed."
-msgstr "聊天被关闭。"
+msgstr "游戏关闭。"
 
 #: src/iconimagelist.cpp:286
 msgid "Game is closed and password-protected."
-msgstr ""
+msgstr "游戏关闭且密码保护。"
 
 #: src/iconimagelist.cpp:287
 msgid "Game is closed and full."
-msgstr ""
+msgstr "游戏满员且关闭。"
 
 #: src/iconimagelist.cpp:288
 msgid "Game is closed, full and password-protected."
-msgstr ""
+msgstr "游戏关闭、满员且密码保护。"
 
 #: src/iconimagelist.cpp:289
-#, fuzzy
 msgid "Game is in progress."
-msgstr "正在传输中： "
+msgstr "游戏进行中"
 
 #: src/iconimagelist.cpp:290
 msgid "Game is in progress and password-protected."
-msgstr ""
+msgstr "游戏进行中且密码保护。"
 
 #: src/iconimagelist.cpp:291
-#, fuzzy
 msgid "Game is in progress and full."
-msgstr "正在传输中： "
+msgstr "游戏进行中（满员）"
 
 #: src/iconimagelist.cpp:292
 msgid "Game is in progress, full and password-protected."
-msgstr ""
+msgstr "游戏进行中，满员且密码保护。"
 
 #: src/iconimagelist.cpp:293
 msgid "Game is in progress and closed."
-msgstr ""
+msgstr "游戏进行中（关闭）"
 
 #: src/iconimagelist.cpp:294
 msgid "Game is in progress, closed and password-protected."
-msgstr ""
+msgstr "游戏进行中，关闭且密码保护。"
 
 #: src/iconimagelist.cpp:295
 msgid "Game is in progress, closed and full."
-msgstr ""
+msgstr "游戏进行中，关闭且满员。"
 
 #: src/iconimagelist.cpp:296
 msgid "Game is in progress, closed, full and password-protected."
-msgstr ""
+msgstr "游戏进行中，关闭、满员且密码保护。"
 
 #: src/lobbyoptionstab.cpp:41 src/lobbyoptionstab.cpp:42
 msgid "Web Browser"
@@ -3207,23 +3128,21 @@ msgid "Use a file dialog to find the web browser"
 msgstr "使用一个文件对话框来查找网络浏览器"
 
 #: src/lobbyoptionstab.cpp:70
-#, fuzzy
 msgid "Autoconnect"
-msgstr "重新连接"
+msgstr "自动连接"
 
 #: src/lobbyoptionstab.cpp:71
 msgid ""
 "If checked, SpringLobby will automatically log on to the last used server"
-msgstr ""
+msgstr "选中则SpringLobby自动连接到上次使用的服务器"
 
 #: src/lobbyoptionstab.cpp:72
-#, fuzzy
 msgid "Autoconnect on lobby start"
-msgstr "连接到对战大厅服务器"
+msgstr "SpringLobby启动后自动连接"
 
 #: src/lobbyoptionstab.cpp:77
 msgid "Report statistics"
-msgstr ""
+msgstr "报告统计信息"
 
 #: src/lobbyoptionstab.cpp:78
 msgid ""
@@ -3233,42 +3152,43 @@ msgid ""
 "updates.\n"
 "Uncheck to disable."
 msgstr ""
+"默认情况下SpringLobby会发送数据(操作系统，SpringLobby版本)到服务器\n"
+"这样可以帮助判断错误和提醒重要更新\n"
+"不建议禁止"
 
 #: src/lobbyoptionstab.cpp:79
 msgid "report statistics"
-msgstr ""
+msgstr "报告统计信息"
 
 #: src/lobbyoptionstab.cpp:89
 msgid "Automatic updates"
-msgstr ""
+msgstr "自动升级"
 
 #: src/lobbyoptionstab.cpp:90
 msgid ""
 "SpringLobby can check at startup if a newer version is available and "
 "automatically download it for you."
-msgstr ""
+msgstr "SpringLobby可以在启动时检查新版本，并自动下载"
 
 #: src/lobbyoptionstab.cpp:91
 msgid "automatically check for updates"
-msgstr ""
+msgstr "自动检查升级"
 
 #: src/lobbyoptionstab.cpp:99
-#, fuzzy
 msgid "Tooltips"
-msgstr "工具(&T)"
+msgstr "工具提示"
 
 #: src/lobbyoptionstab.cpp:100
-#, fuzzy
 msgid "Show Tooltips?"
-msgstr "显示工具提示"
+msgstr "显示工具提示？"
 
 #: src/lobbyoptionstab.cpp:103
 msgid "Requires SpringLobby restart to take effect."
-msgstr ""
+msgstr "需要SpringLobby重新启动生效。"
 
 #: src/lobbyoptionstab.cpp:110
 msgid "Tab completion method"
-msgstr ""
+msgstr "Tab 补齐方式"
 
 #: src/lobbyoptionstab.cpp:111
 msgid ""
@@ -3276,42 +3196,40 @@ msgid ""
 "\"Match nearest\" will select the (first) match that has closest Levenshtein "
 "distance"
 msgstr ""
+"\"精确匹配\" 会自动完成一个词——只有一个匹配的情况下。\n"
+"\"匹配最接近的\"选择编辑距离最近的一项"
 
 #: src/lobbyoptionstab.cpp:113
-#, fuzzy
 msgid "Match exact"
-msgstr "捕捉AI异常"
+msgstr "精确匹配"
 
 #: src/lobbyoptionstab.cpp:114
 msgid "Match nearest"
-msgstr ""
+msgstr "匹配最接近的"
 
 #: src/lobbyoptionstab.cpp:123
-#, fuzzy
 msgid "Tab icons"
-msgstr "地图选项"
+msgstr "标签页图标"
 
 #: src/lobbyoptionstab.cpp:124
 msgid "Show big icons in mainwindow tabs?"
-msgstr ""
+msgstr "在主窗口标签页显示大图标？"
 
 #: src/lobbyoptionstab.cpp:129
-#, fuzzy
 msgid "Start tab"
-msgstr "初始金属"
+msgstr "初始标签页"
 
 #: src/lobbyoptionstab.cpp:132
 msgid "Select which tab to show at startup"
-msgstr ""
+msgstr "选择启动时显示的标签页"
 
 #: src/lobbyoptionstab.cpp:207
 msgid "Choose a web browser executable"
 msgstr "选择一个网络浏览器执行文件"
 
 #: src/mainchattab.cpp:158 src/mainchattab.cpp:162
-#, fuzzy
 msgid "Disconnected from server, chat closed."
-msgstr "服务器传来未知答案"
+msgstr "从服务器端断开，交谈关闭"
 
 #: src/mainjoinbattletab.cpp:51
 msgid "Battle list"
@@ -3327,7 +3245,6 @@ msgid "Options"
 msgstr "选项"
 
 #: src/mainjoinbattletab.cpp:142 src/mainsingleplayertab.cpp:43
-#, fuzzy
 msgid "Unit Restrictions"
 msgstr "单位限制"
 
@@ -3344,13 +3261,12 @@ msgid "Chat"
 msgstr "聊天"
 
 #: src/mainoptionstab.cpp:72
-#, fuzzy
 msgid "General"
-msgstr "塞内加尔"
+msgstr "通用"
 
 #: src/mainoptionstab.cpp:75
 msgid "Groups"
-msgstr ""
+msgstr "组"
 
 #: src/mainoptionstab.cpp:77
 msgid "Restore"
@@ -3393,13 +3309,12 @@ msgid "Search file"
 msgstr "搜索文件"
 
 #: src/maintorrenttab.cpp:79
-#, fuzzy
 msgid "Download Lua widgets"
-msgstr "启用 Lua图形界面插件"
+msgstr "下载 Lua widget —界面插件"
 
 #: src/maintorrenttab.cpp:115
 msgid "Lua widget downloader"
-msgstr ""
+msgstr "Lua widget —界面插件下载管理"
 
 #: src/maintorrenttab.cpp:153
 msgid "not available"
@@ -3445,7 +3360,7 @@ msgstr "总共下载： %.2f KB/s"
 
 #: src/mainwindow.cpp:114
 msgid "SpringLobby"
-msgstr "Spring游戏大厅"
+msgstr "Spring游戏大厅——SpringLobby"
 
 #: src/mainwindow.cpp:124
 msgid "&Connect..."
@@ -3456,9 +3371,8 @@ msgid "&Disconnect"
 msgstr "(&D) 断开"
 
 #: src/mainwindow.cpp:128
-#, fuzzy
 msgid "&Save options"
-msgstr "图形界面选项"
+msgstr "(&S) 保存选项"
 
 #: src/mainwindow.cpp:131
 msgid "&Quit"
@@ -3469,9 +3383,8 @@ msgid "&Join channel..."
 msgstr "(&J) 加入频道..."
 
 #: src/mainwindow.cpp:146
-#, fuzzy
 msgid "Channel &list"
-msgstr "频道信息"
+msgstr "(&L) 频道列表"
 
 #: src/mainwindow.cpp:147
 msgid "Open private &chat..."
@@ -3483,7 +3396,7 @@ msgstr "(&A) 自动加入频道"
 
 #: src/mainwindow.cpp:149
 msgid "&View screenshots"
-msgstr ""
+msgstr "(&V) 察看截图"
 
 #: src/mainwindow.cpp:151
 msgid "&Reload maps/mods"
@@ -3502,9 +3415,8 @@ msgid "&About"
 msgstr "(&A) 关于"
 
 #: src/mainwindow.cpp:163
-#, fuzzy
 msgid "&Change language"
-msgstr "频道信息"
+msgstr "(&C) 选择语言"
 
 #: src/mainwindow.cpp:164
 msgid "&Report a bug..."
@@ -3528,12 +3440,11 @@ msgstr "帮助(&H)"
 
 #: src/mainwindow.cpp:420
 msgid "You need to be connected to server to view channel list"
-msgstr ""
+msgstr "您需要连接到服务器察看频道列表"
 
 #: src/mainwindow.cpp:420
-#, fuzzy
 msgid "Not connected"
-msgstr "状态：已连接"
+msgstr "未连接"
 
 #: src/mainwindow.cpp:434
 msgid "Join channel..."
@@ -3557,12 +3468,11 @@ msgstr "SpringLobby 是一个供RTS Spring 引擎使用的跨平台游戏大厅�
 
 #: src/mainwindow.cpp:515
 msgid "There were no screenshots found in your spring data directory."
-msgstr ""
+msgstr "在您的Spring数据目录没有发现截图"
 
 #: src/mainwindow.cpp:515
-#, fuzzy
 msgid "No files found"
-msgstr "没有找到地图"
+msgstr "没有找到文件"
 
 #: src/mainwindow.cpp:547
 msgid "Manually &Start Torrent System"
@@ -3574,56 +3484,52 @@ msgstr "手动 (&S) 停止 Torrent 系统"
 
 #: src/mainwindow.cpp:609
 msgid "You need to restart SpringLobby for the language change to take effect."
-msgstr ""
+msgstr "您需要重新启动SpringLobby以便改变界面语言"
 
 #: src/mainwindow.cpp:610
 msgid "Restart required"
-msgstr ""
+msgstr "需要重新启动程序"
 
 #: src/mainwindow.cpp:632 src/mainwindow.cpp:640 src/mainwindow.cpp:649
 msgid "Layout manager"
-msgstr ""
+msgstr "登出管理"
 
 #: src/mainwindow.cpp:632
 msgid "Enter a profile name"
-msgstr ""
+msgstr "输入档案名称"
 
 #: src/mainwindow.cpp:640
 msgid "Which profile fo you want to load?"
-msgstr ""
+msgstr "您要使用哪个档案？"
 
 #: src/mainwindow.cpp:649
-#, fuzzy
 msgid "Which profile do you want to be default?"
-msgstr "你想要移除哪个用户帐户？"
+msgstr "您要使用哪个档案作为默认？"
 
 #: src/mainwindow.h:173
 msgid "Multiplayer"
-msgstr ""
+msgstr "多人游戏"
 
 #: src/mainwindow.h:174
 msgid "Singleplayer"
-msgstr ""
+msgstr "单人游戏"
 
 #: src/mainwindow.h:175
-#, fuzzy
 msgid "Savegames"
-msgstr "保存..."
+msgstr "进度"
 
 #: src/mainwindow.h:176
-#, fuzzy
 msgid "Replays"
-msgstr "总是"
+msgstr "回放"
 
 #: src/mainwindow.h:178
-#, fuzzy
 msgid "Downloads"
 msgstr "下载"
 
 #: src/mapctrl.cpp:586
 #, c-format
 msgid "Metal: %.1f%%"
-msgstr ""
+msgstr "金属： %.1f%%"
 
 #: src/mapctrl.cpp:691 src/mapctrl.cpp:692
 msgid "Refresh"
@@ -3649,92 +3555,85 @@ msgstr "加成：%d%%"
 
 #: src/mapselectdialog.cpp:66
 msgid "Select map (click and drag to scroll)"
-msgstr ""
+msgstr "选择地图 （点击并托拽）"
 
 #: src/mapselectdialog.cpp:69
 msgid "Vertical sort key"
-msgstr ""
+msgstr "垂直清理键"
 
 #: src/mapselectdialog.cpp:75
 msgid "Horizontal sort key"
-msgstr ""
+msgstr "水平清理键"
 
 #: src/mapselectdialog.cpp:81
 msgid "Show"
-msgstr ""
+msgstr "显示"
 
 #: src/mapselectdialog.cpp:82
 msgid "All maps"
-msgstr ""
+msgstr "全部地图"
 
 #: src/mapselectdialog.cpp:83
 msgid "Shows all available maps"
-msgstr ""
+msgstr "显示全部可用地图"
 
 #: src/mapselectdialog.cpp:85
 msgid "Popular maps"
-msgstr ""
+msgstr "常用地图"
 
 #: src/mapselectdialog.cpp:86
 msgid ""
 "Shows only maps which are currently being player on the server. You must be "
 "online to use this."
-msgstr ""
+msgstr "仅仅显示有玩家在服务器的地图，您必须在线才可以使用。"
 
 #: src/mapselectdialog.cpp:88
 msgid "Recently played maps"
-msgstr ""
+msgstr "最近玩过的地图"
 
 #: src/mapselectdialog.cpp:90
 msgid "Shows only maps you played recently. (Based on your replays.)"
-msgstr ""
+msgstr "仅仅显示您最近玩的地图。(基于您的回放)"
 
 #: src/mapselectdialog.cpp:93
-#, fuzzy
 msgid "Filter"
-msgstr "文件"
+msgstr "过滤"
 
 #: src/mapselectdialog.cpp:95
 msgid "Shows only maps which contain this text in their name or description."
-msgstr ""
+msgstr "仅仅显示名称或描述中包含此文字的地图"
 
 #: src/mapselectdialog.cpp:98
-#, fuzzy
 msgid "Map details"
-msgstr "金属含量"
+msgstr "地图细节"
 
 #: src/mapselectdialog.cpp:161
-#, fuzzy
 msgid "Start positions"
-msgstr "出生位置"
+msgstr "起始位置"
 
 #: src/mapselectdialog.cpp:264
-#, fuzzy
 msgid "Minimum wind"
-msgstr "最低需求级别"
+msgstr "最低风力"
 
 #: src/mapselectdialog.cpp:265
 msgid "Maximum wind"
-msgstr ""
+msgstr "最大风力"
 
 #: src/mapselectdialog.cpp:266
-#, fuzzy
 msgid "Average wind"
-msgstr "大众级新兵"
+msgstr "平均风力"
 
 #: src/mapselectdialog.cpp:267
 msgid "Size (map area)"
-msgstr ""
+msgstr "尺寸（地图范围）"
 
 #: src/mapselectdialog.cpp:268
-#, fuzzy
 msgid "Aspect ratio"
-msgstr "观看者"
+msgstr "方向性比例"
 
 #: src/mapselectdialog.cpp:269
-#, fuzzy
 msgid "Number of start positions"
-msgstr "随机出生位置"
+msgstr "起始位置数量"
 
 #: src/mmoptionswrapper.cpp:116
 msgid "Start Position Type"
@@ -3755,23 +3654,20 @@ msgstr ""
 "3：游戏开始前在大厅中选择"
 
 #: src/mmoptionswrapper.cpp:119
-#, fuzzy
 msgid "Chose in game"
 msgstr "在游戏中选择"
 
 #: src/mmoptionswrapper.cpp:126
-#, fuzzy
 msgid "List of restricted units"
-msgstr "限制单位"
+msgstr "限制单位列表"
 
 #: src/mmoptionswrapper.cpp:127
 msgid "Map name"
-msgstr ""
+msgstr "地图名称"
 
 #: src/mmoptionwindows.cpp:36
-#, fuzzy
 msgid "Change option"
-msgstr "图形界面选项"
+msgstr "改变选项"
 
 #: src/nicklistctrl.cpp:56
 msgid "s"
@@ -3798,63 +3694,52 @@ msgid "App Bundles (*.app)|*.app|Any File (*.*)|*.*"
 msgstr "程序包 (*.app)|*.app|所有文件 (*.*)|*.*"
 
 #: src/playback/playbackfilter.cpp:59
-#, fuzzy
 msgid "Filter settings"
-msgstr "保存设置"
+msgstr "过滤设置"
 
 #: src/playback/playbackfilter.cpp:163
-#, fuzzy
 msgid "Filesize in KB:"
-msgstr "文件大小（MB)"
+msgstr "文件大小（KB计量)"
 
 #: src/playback/playbackfilter.cpp:189
-#, fuzzy
 msgid "Duration (hh:mm:ss):"
-msgstr "持续时间："
+msgstr "持续时间 (时:分:秒):"
 
 #: src/playback/playbacklistctrl.cpp:41
-#, fuzzy
 msgid "Date"
-msgstr "反射的"
+msgstr "日期"
 
 #: src/playback/playbacklistctrl.cpp:41
 msgid "Date of recording"
-msgstr ""
+msgstr "记录日期"
 
 #: src/playback/playbacklistctrl.cpp:42
-#, fuzzy
 msgid "Modname"
-msgstr "模式"
+msgstr "Mod名称"
 
 #: src/playback/playbacklistctrl.cpp:43
-#, fuzzy
 msgid "Mapname"
-msgstr "巴拿马"
+msgstr "地图名"
 
 #: src/playback/playbacklistctrl.cpp:44
-#, fuzzy
 msgid "Players"
-msgstr "玩家："
+msgstr "玩家"
 
 #: src/playback/playbacklistctrl.cpp:45
-#, fuzzy
 msgid "Duration"
-msgstr "持续时间："
+msgstr "持续时间"
 
 #: src/playback/playbacklistctrl.cpp:46
-#, fuzzy
 msgid "Spring Version"
-msgstr "Spring运行错误"
+msgstr "Spring 版本"
 
 #: src/playback/playbacklistctrl.cpp:47
-#, fuzzy
 msgid "Filesize"
-msgstr "文件大小（MB)"
+msgstr "文件大小"
 
 #: src/playback/playbacklistctrl.cpp:47
-#, fuzzy
 msgid "Filesize in kilobyte"
-msgstr "文件大小（MB)"
+msgstr "文件大小（kilobyte计量)"
 
 #: src/playback/playbacklistctrl.cpp:48 src/settings++/frame.cpp:228
 msgid "File"
@@ -3862,38 +3747,33 @@ msgstr "文件"
 
 #: src/playback/playbacktab.cpp:137
 msgid "Watch"
-msgstr ""
+msgstr "观看"
 
 #: src/playback/playbacktab.cpp:143
 msgid "Reload list"
-msgstr ""
+msgstr "重新读取列表"
 
 #: src/playback/playbacktab.cpp:290
-#, fuzzy
 msgid "Couldn't get your spring versions from any unitsync library."
-msgstr ""
-"无法从UnitSync库中获取你的Spring版本。\n"
-"\n"
-"在线游戏将被禁用。"
+msgstr "无法从UnitSync库中获取你的Spring版本。"
 
 #: src/playback/playbacktab.cpp:311
 #, c-format
 msgid ""
 "No compatible installed spring version has been found, this replay requires "
 "version: %s\n"
-msgstr ""
+msgstr "不兼容的spring版本。这个回放要求：%s\n"
 
 #: src/playback/playbacktab.cpp:312 src/ui.cpp:654
 msgid "Your current installed versions are:"
-msgstr ""
+msgstr "当前安装版本是："
 
 #: src/playback/playbacktab.cpp:333
-#, fuzzy
 msgid ""
 "You need to download the mod before you can watch this replay.\n"
 "\n"
 msgstr ""
-"在你能够加入该游戏前，你需要下载模组。\n"
+"在你观看该游戏前，你必须下载模组。\n"
 "\n"
 
 #: src/playback/playbacktab.cpp:345
@@ -3904,62 +3784,64 @@ msgid ""
 "You need to download the map to be able to watch this replay.\n"
 "\n"
 msgstr ""
+"找不到需要的地图\n"
+"可能是tasclient写入了错误的地图hash\n"
+"如果您确认有此地图，点击 否\n"
+"您需要下载地图才可以看\n"
+"\n"
 
 #: src/playback/playbacktab.cpp:366
 msgid ""
 "I don't think you will be able to watch this replay.\n"
 "Try anyways? (MIGHT CRASH!)"
 msgstr ""
+"我可不认为你能看这个回放。\n"
+"试验吗？（可能崩溃的！）"
 
 #: src/playback/playbacktab.cpp:366
-#, fuzzy
 msgid "Invalid replay"
-msgstr "无效的端口"
+msgstr "无效的回放"
 
 #: src/playback/playbacktab.cpp:383
 msgid "Could not delete Replay: "
-msgstr ""
+msgstr "无法删除回放："
 
 #: src/selectusersdialog.cpp:51
 msgid "Filter names"
-msgstr ""
+msgstr "过滤名称"
 
 #: src/selectusersdialog.cpp:56
 msgid "Enter text filter to filter the online users list"
-msgstr ""
+msgstr "输入文字，以便过滤在线玩家列表"
 
 #: src/selectusersdialog.h:67
-#, fuzzy
 msgid "Select Users"
-msgstr "全选"
+msgstr "选择用户"
 
 #: src/serverevents.cpp:126
 #, c-format
 msgid "ping reply took %s ms"
-msgstr ""
+msgstr "ping返回用了%s 毫秒（ms ）"
 
 #: src/serverevents.cpp:143
-#, fuzzy
 msgid " is online"
-msgstr " 用户不在线。"
+msgstr " 在线"
 
 #: src/serverevents.cpp:165
 msgid " is now "
-msgstr ""
+msgstr " 现在"
 
 #: src/serverevents.cpp:188
 msgid "OnUserStatus() failed ! (exception)"
 msgstr "OnUserStatus() 失败！（异常）"
 
 #: src/serverevents.cpp:217
-#, fuzzy
 msgid " just went offline"
-msgstr " 用户不在线。"
+msgstr " 刚刚离线"
 
 #: src/serverevents.cpp:252
-#, fuzzy
 msgid " opened battle "
-msgstr " 加入 "
+msgstr " 开放的游戏"
 
 #: src/serverevents.cpp:572
 msgid "Join channel failed"
@@ -3996,30 +3878,29 @@ msgstr "被主机踢出"
 
 #: src/serverevents.cpp:886
 msgid "Begin mutelist for "
-msgstr ""
+msgstr "开始静音列表"
 
 #: src/serverevents.cpp:886
-#, fuzzy, c-format
+#, c-format
 msgid "%s mutelist"
-msgstr "游戏列表"
+msgstr "%s 静音列表"
 
 #: src/serverevents.cpp:893
 msgid " indefinite time remaining"
-msgstr ""
+msgstr " 剩余时间不确定"
 
 #: src/serverevents.cpp:895
 #, c-format
 msgid " %d minutes remaining"
-msgstr ""
+msgstr " %d 剩余"
 
 #: src/serverevents.cpp:901
 msgid "End mutelist for "
-msgstr ""
+msgstr "结束静音列表"
 
 #: src/serverevents.cpp:934
-#, fuzzy
 msgid "Download update"
-msgstr "下载完毕"
+msgstr "下载更新"
 
 #: src/serverevents.cpp:934
 #, c-format
@@ -4027,56 +3908,52 @@ msgid ""
 "Would you like to download %s ? The file offers the following updates:\n"
 "%s"
 msgstr ""
+"您想要下载%s 吗？包含以下更新\n"
+"%s"
 
 #: src/serverevents.cpp:940
 msgid ""
 "Download started in the background, please be patient\n"
 "you will be notified on operation completed."
 msgstr ""
+"下载开始，请耐心\n"
+"结束后会有提示"
 
 #: src/serverevents.cpp:940
-#, fuzzy
 msgid "Download started"
-msgstr "下载完毕"
+msgstr "下载开始"
 
 #: src/serverevents.cpp:947
 msgid "You refused a mandatory update, you will be disconnected now."
-msgstr ""
+msgstr "您拒绝了一个强制性更新，将会自动断线。"
 
 #: src/serverevents.cpp:947
-#, fuzzy
 msgid "Disconnecting"
-msgstr "断开连接"
+msgstr "正在断开连接"
 
 #: src/serverevents.cpp:955
-#, fuzzy
 msgid ""
 "There was an error downloading for the latest version.\n"
 "Please update manually from http://springrts.com"
 msgstr ""
-"检查最新版本时发生错误。\n"
-"请稍候尝试。\n"
-"如果问题依然存在，请使用 帮助 -> 报告Bug。"
+"下载最新版本时发生错误。\n"
+"请手动前往 http://springrts.com"
 
 #: src/serverevents.cpp:962
-#, fuzzy
 msgid "Couldn't launch installer. File location is: "
-msgstr "无法启动浏览器。地址是： "
+msgstr "无法运行安装程序。文件地址是： "
 
 #: src/serverevents.cpp:962
-#, fuzzy
 msgid "Couldn't launch installer."
-msgstr "无法启动浏览器。"
+msgstr "无法启动安装程序。"
 
 #: src/serverevents.cpp:967
-#, fuzzy
 msgid "Download complete, location is: "
-msgstr "下载完毕"
+msgstr "下载完毕，位置是："
 
 #: src/serverevents.cpp:967
-#, fuzzy
 msgid "Download complete."
-msgstr "下载完毕"
+msgstr "下载完毕。"
 
 #: src/settings++/frame.cpp:44
 msgid "Combined Options"
@@ -4233,19 +4110,19 @@ msgstr "致命错误"
 
 #: src/settings++/Main.cpp:101 src/springlobbyapp.cpp:273
 msgid "show this help message"
-msgstr ""
+msgstr "显示帮助信息"
 
 #: src/settings++/Main.cpp:102 src/springlobbyapp.cpp:274
 msgid "don't use the crash handler (useful for debugging)"
-msgstr ""
+msgstr "不使用崩溃处理(debug需要)"
 
 #: src/settings++/Main.cpp:103 src/springlobbyapp.cpp:275
 msgid "shows application log to the console(if available)"
-msgstr ""
+msgstr "现实应用程序日志 (假如可用)"
 
 #: src/settings++/Main.cpp:104 src/springlobbyapp.cpp:276
 msgid "enables application log window"
-msgstr ""
+msgstr "开启应用程序日志窗口"
 
 #: src/settings++/Main.cpp:105 src/springlobbyapp.cpp:281
 msgid ""
@@ -4397,7 +4274,7 @@ msgstr "深度缓冲"
 
 #: src/settings++/tab_quality_video.cpp:271
 msgid "Bump-mapped Water"
-msgstr ""
+msgstr "水面凹凸贴图"
 
 #: src/settings++/tab_render_detail.cpp:64
 msgid "Rendering detail levels"
@@ -4495,9 +4372,8 @@ msgid "Zoom"
 msgstr "缩放"
 
 #: src/singleplayerbattle.cpp:18
-#, fuzzy
 msgid "Player"
-msgstr "玩家:"
+msgstr "玩家"
 
 #: src/singleplayertab.cpp:55
 msgid ""
@@ -4512,14 +4388,12 @@ msgid "Add bot..."
 msgstr "添加AI..."
 
 #: src/singleplayertab.cpp:98
-#, fuzzy
 msgid "Spectate only"
-msgstr "观看者"
+msgstr "仅旁观者"
 
 #: src/singleplayertab.cpp:101
-#, fuzzy
 msgid "Random start positions"
-msgstr "随机出生位置"
+msgstr "随机起始位置"
 
 #: src/singleplayertab.cpp:141 src/singleplayertab.cpp:165
 msgid "-- Select one --"
@@ -4539,8 +4413,8 @@ msgid ""
 " The game will be over pretty fast.\n"
 " "
 msgstr ""
-"不添加AI并继续？\n"
-" 游戏将会非常快的结束。\n"
+"不添加AI而继续？\n"
+" 游戏将很快结束。\n"
 " "
 
 #: src/singleplayertab.cpp:242
@@ -4581,20 +4455,20 @@ msgid ""
 "By default SpringLobby reports some usage statistics.\n"
 "You can disable that on options tab --> General."
 msgstr ""
+"默认SpringLobby报告一些使用数据。\n"
+"可以在 选项 标签 —>常规 里关闭。"
 
 #: src/springlobbyapp.cpp:164
-#, fuzzy
 msgid "Notice"
-msgstr "无"
+msgstr "提示"
 
 #: src/springlobbyapp.cpp:180
 msgid "Should I try to import (some) TASClient settings?\n"
-msgstr ""
+msgstr "导入TASClient设定吗？\n"
 
 #: src/springlobbyapp.cpp:180
-#, fuzzy
 msgid "Import settings?"
-msgstr "路径设置"
+msgstr "导入设置？"
 
 #: src/springlobbyapp.cpp:247
 msgid ""
@@ -4610,28 +4484,25 @@ msgstr ""
 
 #: src/springlobbyapp.cpp:278
 msgid "only run update, quit immediately afterwards"
-msgstr ""
+msgstr "仅仅运行更新，然后直接退出"
 
 #: src/springlobbyapp.cpp:442 src/springlobbyapp.cpp:443
-#, fuzzy
 msgid "Ignore chat"
-msgstr "公众聊天"
+msgstr "忽略聊天信息"
 
 #: src/springlobbyapp.cpp:444 src/springlobbyapp.cpp:445
-#, fuzzy
 msgid "Battle Autokick"
-msgstr "游戏列表"
+msgstr "战斗自动踢出"
 
 #: src/springlobbyapp.cpp:446 src/springlobbyapp.cpp:447
 #: src/springlobbyapp.cpp:448 src/springlobbyapp.cpp:449
 #: src/springlobbyapp.cpp:450
-#, fuzzy
 msgid "Friends"
-msgstr "查找"
+msgstr "朋友"
 
 #: src/springoptionstab.cpp:55
 msgid "Search only in current installed path"
-msgstr ""
+msgstr "仅仅搜索现在安装的路径"
 
 #: src/springoptionstab.cpp:63
 msgid "Spring executable"
@@ -4655,7 +4526,7 @@ msgstr "自动配置"
 
 #: src/springoptionstab.cpp:81
 msgid "Change Datadir path"
-msgstr ""
+msgstr "改变数据文件路径"
 
 #: src/springoptionstab.cpp:180
 msgid "Choose a Spring executable"
@@ -4681,16 +4552,14 @@ msgstr ""
 "你可能需要再次检查你的UnitSync设置。"
 
 #: src/springoptionstab.cpp:277
-#, fuzzy
 msgid ""
 "Do you want to change spring's datadir location? (select yes only if you "
 "know what you're doing)"
-msgstr "什么都不做（只有在你知道你在做什么的时候才选择它）"
+msgstr "您想改变Spring的数据目录位置？（只有在你知道你在做什么的时候才选择它）"
 
 #: src/springoptionstab.cpp:277
-#, fuzzy
 msgid "Data dir wizard"
-msgstr "首次使用向导"
+msgstr "数据目录向导"
 
 #: src/springoptionstab.cpp:281
 msgid "Choose a folder"
@@ -4714,7 +4583,7 @@ msgstr "服务器传来未知答案"
 
 #: src/tasserver.cpp:480
 msgid "Timeout assumed, disconnecting"
-msgstr ""
+msgstr "判断为超时，正在断开连接"
 
 #: src/tasserver.cpp:491
 msgid ""
@@ -4724,24 +4593,23 @@ msgstr "无法穿越NAT，你或其他玩家可能无法参与这场战斗。"
 
 #: src/tdfcontainer.cpp:126
 msgid "line "
-msgstr ""
+msgstr "行"
 
 #: src/tdfcontainer.cpp:126
 msgid " , column "
-msgstr ""
+msgstr "，列"
 
 #: src/torrentlistctrl.cpp:44
 msgid "numcopies"
 msgstr ""
 
 #: src/torrentlistctrl.cpp:48
-#, fuzzy
 msgid "MB downloaded"
-msgstr "上传兆字节"
+msgstr "兆字节—下载量"
 
 #: src/torrentlistctrl.cpp:52
 msgid "MB uploaded"
-msgstr "上传兆字节"
+msgstr "兆字节—上传量"
 
 #: src/torrentlistctrl.cpp:56
 msgid "status"
@@ -4749,7 +4617,7 @@ msgstr "状态"
 
 #: src/torrentlistctrl.cpp:60
 msgid "% complete"
-msgstr "进度       %c"
+msgstr "%c 完成"
 
 #: src/torrentlistctrl.cpp:64
 msgid "KB/s up"
@@ -4827,12 +4695,11 @@ msgstr "最大同时连接数量"
 msgid ""
 "Tried all known trackers for torrent system. No connection could be "
 "established"
-msgstr ""
+msgstr "尝试了所有已知的 tracker ，但是没法连接。"
 
 #: src/torrentwrapper.cpp:443
-#, fuzzy
 msgid "Torrent system failure"
-msgstr "Torrent系统自动开始"
+msgstr "Torrent系统失败"
 
 #: src/ui.cpp:168
 msgid "Server password"
@@ -4903,58 +4770,51 @@ msgid ""
 msgstr "  /help [话题]  如果你想了解有关一个指令的更多详细信息，请将话题写入。"
 
 #: src/ui.cpp:506
-#, fuzzy
 msgid ""
 "  \"/join channel [password] [,channel2 [password2]]\" - Joins a channel."
-msgstr "  /join 频道名 [密码] [,频道名2 [密码2]...]  加入一个/多个频道。"
+msgstr "  \"/join 频道名 [密码] [,频道名2 [密码2]...]\"  加入一个频道。"
 
 #: src/ui.cpp:507
 msgid "  \"/j\" - Alias to /join."
-msgstr "  /j  等于 /join。"
+msgstr "  /j  同于 /join"
 
 #: src/ui.cpp:508
-#, fuzzy
 msgid "  \"/ingame\" - Shows how much time you have in game."
-msgstr "  /ingame  显示你在游戏中的时间长度。"
+msgstr "  \"/ingame\"  显示你在游戏中的时间长度。"
 
 #: src/ui.cpp:509
-#, fuzzy
 msgid ""
 "  \"/msg username [text]\" - Sends a private message containing text to "
 "username."
-msgstr "  /msg 用户名 [消息文本]  向某个用户发送私人消息。"
+msgstr "  \"/msg 用户名 [消息文本]\"  向某个用户发送私人消息。"
 
 #: src/ui.cpp:510
-#, fuzzy
 msgid "  \"/part\" - Leaves current channel."
-msgstr "  /channels  列举所有当前活动的频道。"
+msgstr "  \"/part\" - 离开当前频道。"
 
 #: src/ui.cpp:511
-#, fuzzy
 msgid "  \"/p\" - Alias to /part."
-msgstr "  /j  等于 /join。"
+msgstr "  \"/p\" 同于 /part"
 
 #: src/ui.cpp:512
 msgid "  \"/rename newalias\" - Changes your nickname to newalias."
-msgstr "  /rename 新用户名  将你的昵称修改为新的用户名。"
+msgstr "  \"/rename 新用户名\"  将你的昵称修改为新的用户名。"
 
 #: src/ui.cpp:513
-#, fuzzy
 msgid "  \"/sayver\" - Says what version of springlobby you have in chat."
-msgstr "  /sayver  告诉用户你正在使用的Spring大厅版本号。"
+msgstr "  \"/sayver\"  告诉用户你正在使用的Spring大厅版本号。"
 
 #: src/ui.cpp:514
 msgid "  \"/testmd5 text\" - Returns md5-b64 hash of given text."
-msgstr "  /testmd5 文本  返回给定文本的MD5哈希值。"
+msgstr "  \"/testmd5 文本\"  返回给定文本的md5-b64 Hash。"
 
 #: src/ui.cpp:515
-#, fuzzy
 msgid "  \"/ver\" - Displays what version of SpringLobby you have."
-msgstr "  /ver  显示你拥有的Spring大厅版本号。"
+msgstr "   \"/ver\" - 显示你拥有的Spring大厅版本号。"
 
 #: src/ui.cpp:516
 msgid "  \"/clear\" - Clears all text from current chat panel"
-msgstr ""
+msgstr "  \"/clear\" - 清除当前聊天面板上的所有文字"
 
 #: src/ui.cpp:518
 msgid "Chat commands:"
@@ -4962,7 +4822,7 @@ msgstr "聊天命令："
 
 #: src/ui.cpp:519
 msgid "  \"/me action\" - Say IRC style action message."
-msgstr "  /me 行为  发送IRC样式的行为消息。"
+msgstr "  \"/me action\"  发送IRC样式的行为消息。"
 
 #: src/ui.cpp:521
 msgid ""
@@ -4983,7 +4843,6 @@ msgid "\" was not found. Type \"/help topics\" only for available topics."
 msgstr "”未被找到。输入“/help 话题名”时仅限可用的话题。"
 
 #: src/ui.cpp:637
-#, fuzzy
 msgid ""
 "Couldn't get your spring versions from any unitsync library.\n"
 "\n"
@@ -4998,17 +4857,15 @@ msgstr ""
 msgid ""
 "No compatible installed spring version has been found, this server requires "
 "version: %s\n"
-msgstr ""
+msgstr "没有找到匹配的Spring版本，服务器需要%s\n"
 
 #: src/ui.cpp:656
-#, fuzzy
 msgid "Online play is currently disabled."
-msgstr "在线游戏将被禁用。"
+msgstr "在线游戏关闭"
 
 #: src/ui.cpp:689
-#, fuzzy
 msgid "Disconnected from server."
-msgstr "服务器传来未知答案"
+msgstr "服务器端断开"
 
 #: src/ui.cpp:701
 msgid ""
@@ -5016,11 +4873,13 @@ msgid ""
 "Would you like to try again with the same server?\n"
 "No to switch to next server in the list"
 msgstr ""
+"与服务器的连接无法建立\n"
+"您要再试着连接此服务器吗？\n"
+"否在切换到列表里的下一个服务器"
 
 #: src/ui.cpp:701
-#, fuzzy
 msgid "Connection failure"
-msgstr "连接超时"
+msgstr "连接失败"
 
 #: src/ui.cpp:862
 msgid "no active chat panels open."
@@ -5056,7 +4915,7 @@ msgstr "Spring设置错误"
 
 #: src/ui.cpp:1300
 msgid "The selected preset requires the map "
-msgstr ""
+msgstr "选择的预设需要这个地图"
 
 #: src/ui.cpp:1300
 msgid ""
@@ -5065,19 +4924,21 @@ msgid ""
 "                                    Please reselect the preset after "
 "download finished"
 msgstr ""
+".下载吗？                                     \n"
+"选择 \"否\" 将移除预设中的地图\n"
+"                                    请在下载结束后再次选择此预设"
 
 #: src/ui.cpp:1303
 msgid "Map missing"
-msgstr ""
+msgstr "地图缺失"
 
 #: src/uiutils.h:18
-#, fuzzy
 msgid "Choose color"
-msgstr "选择文件夹"
+msgstr "选择色彩"
 
 #: src/uiutils.h:20
 msgid "Choose color (only first 16 will be saved)"
-msgstr ""
+msgstr "选择颜色(前16个会被保存)"
 
 #: src/updater/updater.cpp:45
 msgid ""
@@ -5112,15 +4973,17 @@ msgid ""
 "Would you like for me to autodownload the new version? Changes will take "
 "effect next you launch the lobby again."
 msgstr ""
+"\n"
+"\n"
+"需要自动下载新版本吗？重新启动后将会使用。"
 
 #: src/updater/updater.cpp:54
-#, fuzzy
 msgid "Not up to date"
 msgstr "不是最新的"
 
 #: src/updater/updater.cpp:61
 msgid "SpringLobby -- downloading update"
-msgstr ""
+msgstr "SpringLobby -- 下载更新"
 
 #: src/updater/updater.cpp:67
 msgid "Not up to Date"
@@ -5131,33 +4994,35 @@ msgid ""
 "Unable to write to the lobby installation directory.\n"
 "Please update manually or enable write permissions for the current user."
 msgstr ""
+"无法写入lobby安装路径。\n"
+"请手动更新或者给与当前用户写权限。"
 
 #: src/updater/updater.cpp:95
-#, fuzzy
 msgid ""
 "There was an error downloading for the latest version.\n"
 "Please try again later.\n"
 "If the problem persists, please use Help->Report Bug to report this bug."
 msgstr ""
-"检查最新版本时发生错误。\n"
+"下载最新版本时发生错误。\n"
 "请稍候尝试。\n"
 "如果问题依然存在，请使用 帮助 -> 报告Bug。"
 
 #: src/updater/updater.cpp:100 src/updater/updater.cpp:103
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "There was an error while trying to replace the current executable version\n"
 " manual copy is necessary from: %s\n"
 " to: %s\n"
 "Please use Help->Report Bug to report this bug."
 msgstr ""
-"检查最新版本时发生错误。\n"
-"请稍候尝试。\n"
-"如果问题依然存在，请使用 帮助 -> 报告Bug。"
+"替代当前执行文件本时发生错误。\n"
+"需要手动复制 %s\n"
+"到 %s\n"
+"请使用 帮助 -> 报告Bug。"
 
 #: src/updater/updater.cpp:111 src/updater/updater.cpp:114
 msgid "Update complete. The changes will be available next lobby start."
-msgstr ""
+msgstr "更新完成。下次启动即应用。"
 
 #: src/updater/updater.cpp:121 src/updater/updater.cpp:124
 msgid ""
@@ -5165,28 +5030,29 @@ msgid ""
 "Some translation files could not be updated.\n"
 "Please report this in #springlobby after restarting."
 msgstr ""
+"二进制升级成功。\n"
+"有些翻译文件无法升级。\n"
+"请报告#springlobby "
 
 #: src/updater/updater.cpp:121 src/updater/updater.cpp:124
 msgid "Partial success"
-msgstr ""
+msgstr "部分成功"
 
 #: src/user.cpp:77
-#, fuzzy
 msgid "away"
-msgstr "总是"
+msgstr "离开"
 
 #: src/user.cpp:77
 msgid "back"
-msgstr ""
+msgstr "返回"
 
 #: src/user.cpp:79
-#, fuzzy
 msgid "ingame"
-msgstr "昵称"
+msgstr "游戏中"
 
 #: src/user.cpp:79
 msgid "back from game"
-msgstr ""
+msgstr "从游戏中返回"
 
 #: src/user.cpp:185
 msgid "Newbie"
@@ -5217,7 +5083,6 @@ msgid "Veteran"
 msgstr "老鸟"
 
 #: src/user.cpp:193
-#, fuzzy
 msgid "Unknown"
 msgstr "未知"
 
@@ -5225,145 +5090,133 @@ msgstr "未知"
 msgid ""
 "To prevent logical inconsistencies, adding a user to more than one group is "
 "not allowed"
-msgstr ""
+msgstr "为防止逻辑不一致，添加一个用户到多个组是不允许的"
 
 #: src/useractions.cpp:180
 msgid "Cannot add user to group"
-msgstr ""
+msgstr "无法添加用户到组"
 
 #: src/useractions.h:11
-#, fuzzy
 msgid "none"
 msgstr "无"
 
 #: src/useractions.h:11
-#, fuzzy
 msgid "highlight"
-msgstr "高亮显示"
+msgstr "高亮"
 
 #: src/useractions.h:11
 msgid "notify login/out"
-msgstr ""
+msgstr "提示登陆/登出"
 
 #: src/useractions.h:11
 msgid "ignore chat"
-msgstr ""
+msgstr "忽略聊天信息"
 
 #: src/useractions.h:11
 msgid "ignore pm"
-msgstr ""
+msgstr "忽略个人信息"
 
 #: src/useractions.h:12
 msgid "autokick"
-msgstr ""
+msgstr "自动踢出"
 
 #: src/useractions.h:12
-#, fuzzy
 msgid "notify hosted battle"
-msgstr "加入同一战斗"
+msgstr "提示建立游戏"
 
 #: src/useractions.h:12
 msgid "notify status change"
-msgstr ""
+msgstr "提示状态改变"
 
 #: src/useractions.h:19
-#, fuzzy
 msgid "no action at all"
-msgstr "没有活动的聊天面板开启"
+msgstr "没有活动"
 
 #: src/useractions.h:19
 msgid "highlight user in nick list and battles he participates in"
-msgstr ""
+msgstr "高亮用户昵称列表和参与的战斗"
 
 #: src/useractions.h:20
 msgid "popup a message box when user logs in/out from  the server"
-msgstr ""
+msgstr "用户登陆或登出服务器用则弹出信息框"
 
 #: src/useractions.h:21
 msgid ""
 "ignore private messages of these users, no pm window will open if any of "
 "these try to contact you privately"
-msgstr ""
+msgstr "忽略私人信息"
 
 #: src/useractions.h:22
 msgid "popup a message box when user hosts a new battle"
-msgstr ""
+msgstr "用户建立新游戏则弹出信息框"
 
 #: src/useractions.h:23
 msgid "popup a message box when user changes away status"
-msgstr ""
+msgstr "用户状态改变则弹出信息框"
 
 #: src/usermenu.h:23
 msgid "Create new group..."
-msgstr ""
+msgstr "建立新组"
 
 #: src/usermenu.h:29
-#, fuzzy
 msgid "Add to group..."
-msgstr "添加AI..."
+msgstr "添加到组..."
 
 #: src/usermenu.h:30
-#, fuzzy
 msgid "Remove from group"
-msgstr "移除用户帐户"
+msgstr "从组中移除"
 
 #: src/widgets/downloaddialog.cpp:14
 msgid "widgets"
-msgstr ""
+msgstr "widget界面插件"
 
 #: src/widgets/infopanel.cpp:36
 msgid "getting infos"
-msgstr ""
+msgstr "获取信息"
 
 #: src/widgets/infopanel.cpp:65
-#, fuzzy
 msgid "Author"
-msgstr "奥地利"
+msgstr "作者"
 
 #: src/widgets/infopanel.cpp:70
 msgid "Suitable mods"
-msgstr ""
+msgstr "合适的模组"
 
 #: src/widgets/infopanel.cpp:75
-#, fuzzy
 msgid "Current version"
-msgstr "你的Spring版本"
+msgstr "当前版本"
 
 #: src/widgets/infopanel.cpp:80
-#, fuzzy
 msgid "# downloaded"
-msgstr "上传兆字节"
+msgstr "# 已下载"
 
 #: src/widgets/infopanel.cpp:85
-#, fuzzy
 msgid "Published on"
-msgstr "发布新文件"
+msgstr "发布于"
 
 #: src/widgets/infopanel.cpp:122
-#, fuzzy
 msgid "Changelog"
-msgstr "取消"
+msgstr "改动"
 
 #: src/widgets/infopanel.cpp:127
-#, fuzzy
 msgid "Screenshots"
-msgstr "屏幕分辨率"
+msgstr "屏幕截图"
 
 #: src/widgets/infopanel.cpp:159
 msgid "Widget files have been installed."
-msgstr ""
+msgstr "界面插件文件安装完成"
 
 #: src/widgets/infopanel.cpp:162
 msgid "Widget files have not been installed."
-msgstr ""
+msgstr "界面插件文件没有安装"
 
 #: src/widgets/infopanel.cpp:171
 msgid "Widget files have been removed."
-msgstr ""
+msgstr "界面插件文件已经移除"
 
 #: src/widgets/infopanel.cpp:174
 msgid "Widget files have not been removed."
-msgstr ""
+msgstr "界面插件文件没有移除"
 
 #, fuzzy
 #~ msgid "Grouping size"

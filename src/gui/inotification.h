@@ -11,8 +11,8 @@ class wxBitmap;
 class INotification
 {
 	public:
-		INotification(){};
-		virtual ~INotification(){};
+		INotification(){}
+		virtual ~INotification(){}
 		virtual void Show(const wxBitmap& icon, const size_t pos, const UiEvents::NotficationData& data ) = 0;
 };
 

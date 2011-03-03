@@ -17,7 +17,7 @@
 #include "../../utils/conversion.h"
 
 
-hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : m_filename( uikeys_filename )
+hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : m_filename( uikeys_filename ), m_dontTouch( false )
 {
 	//we will read the uikeys.txt now to get the key profile
 	//1. Fill the profile with spring's default bindings
@@ -37,15 +37,21 @@ hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : m_filename( uike
 	wxString line;
 	for ( line = uiFile.GetFirstLine(); !uiFile.Eof(); line = uiFile.GetNextLine() )
 	{
-		if ( line.Trim().StartsWith( wxT("//") ) )
+		if ( line.Trim().StartsWith( wxT("//SPRINGSETTINGS DO NOT TOUCH") ) )
 		{
-			continue;
+			this->m_dontTouch = true;
 		}
 
-		if ( line.size() == 0 )
-		{
-			continue;
+		//look for comments
+		int cmtPos = line.Find(wxT("//"));
+		if (cmtPos != -1) {
+			line.Truncate(cmtPos);	//comment found. cut it.
 		}
+
+		line = line.Trim();
+
+		if ( line.size() == 0 )
+			continue;
 
 		this->processLine( line );
 	}
@@ -61,10 +67,13 @@ bool hotkey_parser::processLine( const wxString& line )
 		if ( tokLine[0] == wxT("unbindall") )
 		{
 			this->m_bindings.clear();
-			return true;
 		}
-		wxLogWarning( wxT( "skipping uikeys.txt line: " ) + line );
-		return false;
+		else
+		{
+			wxLogWarning( wxT( "skipping uikeys.txt line: " ) + line );
+			return false;
+		}
+		return true;
 	}
 	else if ( tokLine.size() == 2 ) 
 	{	//fakemeta=
@@ -74,8 +83,21 @@ bool hotkey_parser::processLine( const wxString& line )
 		if ( cmd == wxT("fakemeta") )
 		{
 			this->m_bindings.setMetaKey( key );
-			return true;
 		}
+		else if ( cmd == wxT("unbindkeyset") )
+		{
+			this->m_bindings.unbindAllKeys( key );
+		}
+		else if ( cmd == wxT("unbindaction") )
+		{
+			this->m_bindings.unbindAllCmds( key );
+		}
+		else
+		{
+			wxLogWarning( wxT( "skipping uikeys.txt line: " ) + line );
+			return false;
+		}
+		return true;
 	}
 
 	const wxString& cmd = tokLine[0];
@@ -227,4 +249,9 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 			throw HotkeyException( msg );
 		}
 	}
+}
+
+bool hotkey_parser::isDontTouchMode() const
+{
+	return this->m_dontTouch;
 }

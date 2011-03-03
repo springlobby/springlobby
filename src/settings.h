@@ -608,6 +608,7 @@ class Settings : public SL::NonCopyable
     /**@}*/
 
     bool GetDisableSpringVersionCheck();
+	bool IgnoreOfferfile();
 
     /* ================================================================ */
     /** @name Torrent System

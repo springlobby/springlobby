@@ -150,9 +150,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Setup: %s" ), _T("") ) );
 	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, wxString::Format( _( "Unready: %d" ), 0 ) );
 
-	m_size_lbl = new wxStaticText( this, -1, _T( "" ) );
-	m_wind_lbl = new wxStaticText( this, -1, _T( "" ) );
-	m_tidal_lbl = new wxStaticText( this, -1, _T( "" ) );
+	//XXX not needed ?
+//	m_size_lbl = new wxStaticText( this, -1, _T( "" ) );
+//	m_wind_lbl = new wxStaticText( this, -1, _T( "" ) );
+//	m_tidal_lbl = new wxStaticText( this, -1, _T( "" ) );
 
 	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, _T( "" ), wxDefaultPosition, wxDefaultSize );
 
@@ -259,7 +260,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_preset_btns_sizer->Add( m_delete_btn, 0, wxEXPAND );
 
 	m_default_btn = new wxButton( this, BROOM_SETDEFAULTPRES, _( "Set default" ), wxDefaultPosition, wxDefaultSize );
-	m_default_btn->SetToolTip( TE( _( "Use the current set of options as mod's default." ) ) );
+	m_default_btn->SetToolTip( TE( _( "Use the current set of options as game's default." ) ) );
 
 	m_preset_btns_sizer->Add( m_default_btn, 0, wxEXPAND );
 
@@ -415,6 +416,7 @@ void BattleRoomTab::UpdateBattleInfo()
 	if ( !m_battle ) return;
 	m_lock_chk->SetValue( m_battle->IsLocked() );
 	m_minimap->UpdateMinimap();
+	UpdateMapInfoSummary();
 }
 
 void BattleRoomTab::PrintAllySetup()
@@ -472,25 +474,12 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 		}
 		m_opts_list->SetItem( index, 1, value );
 	}
-	else if ( type == OptionsWrapper::PrivateOptions )
+	else// if ( type == OptionsWrapper::PrivateOptions )
 	{
 		if ( key == _T( "mapname" ) ) // the map has been changed
 		{
-			try   // updates map info summary
-			{
-				ASSERT_EXCEPTION( m_battle->MapExists(), _( "Map does not exist." ) );
-				UnitSyncMap map = m_battle->LoadMap();
-				m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ] , 1, wxString::Format( _T( "%.0fx%.0f" ), map.info.width / 512.0, map.info.height / 512.0 ) );
-				m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, wxString::Format( _T( "%d-%d" ), map.info.minWind, map.info.maxWind ) );
-				m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, wxString::Format( _T( "%d" ), map.info.tidalStrength ) );
-				//    m_opts_list->SetItem( 0, 1,  );
-			}
-			catch ( ... )
-			{
-				m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ], 1, _T( "?x?" ) );
-				m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, _T( "?-?" ) );
-				m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, _T( "?" ) );
-			}
+		    UpdateMapInfoSummary();
+
 			wxString mapname =m_battle->GetHostMapName();
 			int index_ = m_map_combo->FindString( mapname );
 			if ( index_ != wxNOT_FOUND )
@@ -521,10 +510,31 @@ BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 	return *m_players;
 }
 
+void BattleRoomTab::UpdateMapInfoSummary() {
+    try {
+        ASSERT_EXCEPTION( m_battle->MapExists(), _( "Map does not exist." ) );
+        UnitSyncMap map = m_battle->LoadMap();
+        m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ] , 1, wxString::Format( _T( "%.0fx%.0f" ), map.info.width / 512.0, map.info.height / 512.0 ) );
+        m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, wxString::Format( _T( "%d-%d" ), map.info.minWind, map.info.maxWind ) );
+        m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, wxString::Format( _T( "%d" ), map.info.tidalStrength ) );
+        //    m_opts_list->SetItem( 0, 1,  );
+    } catch ( ... ) {
+        m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ], 1, _T( "?x?" ) );
+        m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, _T( "?-?" ) );
+        m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, _T( "?" ) );
+    }
+}
+
 void BattleRoomTab::UpdateStatsLabels()
 {
 	m_ok_count_lbl->SetLabel( wxString::Format( _( "Unready: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ) );
 	PrintAllySetup();
+}
+
+void BattleRoomTab::UpdateMyInfo() {
+    if ( !m_battle ) return;
+    m_players->UpdateUser(m_battle->GetMe());
+    m_players->RefreshVisibleItems();
 }
 
 void BattleRoomTab::UpdateUser( User& user )
@@ -561,7 +571,7 @@ void BattleRoomTab::UpdateUser( User& user )
 		m_ready_chk->Enable();
 	}
 
-	icons().SetColourIcon( bs.team, user.BattleStatus().colour );
+	icons().SetColourIcon( user.BattleStatus().colour );
 	m_color_sel->SetColor( user.BattleStatus().colour );
 }
 
@@ -959,7 +969,7 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	wxArrayString choices = m_battle->GetPresetList();
-	int result = wxGetSingleChoiceIndex( _( "Pick an existing option set from the list" ), _( "Set mod default preset" ), choices );
+	int result = wxGetSingleChoiceIndex( _( "Pick an existing option set from the list" ), _( "Set game default preset" ), choices );
 	if ( result < 0 ) return;
 	sett().SetModDefaultPresetName( m_battle->GetHostModName(), choices[result] );
 }

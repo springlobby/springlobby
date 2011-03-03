@@ -8,7 +8,7 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 
-struct PlasmaResourceInfo : public StringSerializer<PlasmaResourceInfo>
+class PlasmaResourceInfo : public StringSerializer<PlasmaResourceInfo>
 {
 
 	public:

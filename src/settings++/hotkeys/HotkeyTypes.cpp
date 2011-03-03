@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <wx/log.h>
 
 #include "HotkeyTypes.h"
 #include "HotkeyException.h"
@@ -59,10 +60,6 @@ void key_binding::addKeySymSet( const wxString& name, const wxString& keyString 
 
 void key_binding::addKeySym( const wxString& name, const wxString& keyString )
 {
-/*	const wxString normName = name.Lower();
-	this->m_keySyms[normName] = keyString;
-	this->m_keySymsRev[KeynameConverter::convertHexValueToKey( keyString )] = normName;
-*/
 	const wxString normName = name.Lower();
 	const wxString normKey = KeynameConverter::normalizeSpringKey( keyString );
 	this->m_keySyms[normName] = normKey;
@@ -189,6 +186,54 @@ bool key_binding::isEmpty() const
 	return false;
 }
 
+void key_binding::unbindAllCmds( const wxString& cmd )
+{
+	key_command_set keyCmdSetCopy = m_keyCmdSet;
+	key_command_set keyCmdSetAnyCopy = m_keyCmdSetAny;
+
+	for ( key_command_set::const_iterator iter = keyCmdSetCopy.begin(); iter != keyCmdSetCopy.end(); ++iter )
+	{
+		if ( iter->second == cmd )
+		{
+			this->unbind( iter->second, iter->first );
+		}
+	}
+
+	for ( key_command_set::const_iterator iter = keyCmdSetAnyCopy.begin(); iter != keyCmdSetAnyCopy.end(); ++iter )
+	{
+		if ( iter->second == cmd )
+		{
+			this->unbind( iter->second, iter->first );
+		}
+	}
+}
+
+void key_binding::unbindAllKeys( const wxString& key )
+{
+	if ( !key.StartsWith( wxT("Any+") ) )
+	{
+		key_command_set keyCmdSetCopy = m_keyCmdSet;
+		for ( key_command_set::const_iterator iter = keyCmdSetCopy.begin(); iter != keyCmdSetCopy.end(); ++iter )
+		{
+			if ( iter->first == key )
+			{
+				this->unbind( iter->second, iter->first );
+			}
+		}
+	}
+	else
+	{
+		key_command_set keyCmdSetAnyCopy = m_keyCmdSetAny;
+		for ( key_command_set::const_iterator iter = keyCmdSetAnyCopy.begin(); iter != keyCmdSetAnyCopy.end(); ++iter )
+		{
+			if ( iter->first == key )
+			{
+				this->unbind( iter->second, iter->first );
+			}
+		}
+	}
+}
+
 void key_binding::unbind( const wxString& cmd, const wxString& keyString )
 {
 	if ( !this->exists( cmd, keyString ) )
@@ -257,9 +302,63 @@ void key_binding::clear()
 
 bool key_binding::operator==(const key_binding& other) const
 {
-	return ( this->m_groups == other.m_groups ) && ( this->m_groupsAny == other.m_groupsAny ) &&
-		( this->m_keySyms == other.m_keySyms ) && ( this->m_keySymsSet == other.m_keySymsSet ) &&
-		( this->m_meta == other.m_meta );
+	const bool groups = this->m_groups == other.m_groups;
+	const bool groupsAny = this->m_groupsAny == other.m_groupsAny;
+	const bool keySyms = this->m_keySyms == other.m_keySyms;
+	const bool keySymsSet = this->m_keySymsSet == other.m_keySymsSet;
+	const bool meta = this->m_meta == other.m_meta;
+
+#ifdef __WXDEBUG__
+	if ( !groups )
+	{
+		for( key_binding::KeyGroupMap::const_iterator iter = this->m_groups.begin(); iter != this->m_groups.end(); ++iter )
+		{
+			key_binding::KeyGroupMap::const_iterator fiter = other.m_groups.find( iter->first );
+
+			if ( fiter != other.m_groups.end() )
+			{
+				if ( iter->second != fiter->second )
+				{
+					wxLogWarning( wxT("Difference in hotkey group: ") + iter->first );
+
+					const std::vector<wxString> cmdsA = iter->second;
+					const std::vector<wxString> cmdsB = fiter->second;
+
+					int i=0;
+					++i;
+				}
+			}
+			else
+				wxLogWarning( wxT("Group ") + iter->first + wxT(" not found in other group!") ); 
+		}
+	}
+
+	if ( !groupsAny )
+	{
+		for( key_binding::KeyGroupMap::const_iterator iter = this->m_groupsAny.begin(); iter != this->m_groupsAny.end(); ++iter )
+		{
+			key_binding::KeyGroupMap::const_iterator fiter = other.m_groupsAny.find( iter->first );
+
+			if ( fiter != other.m_groupsAny.end() )
+			{
+				if ( iter->second != fiter->second )
+				{
+					wxLogWarning( wxT("Difference in hotkey groupAny: ") + iter->first );
+
+					const std::vector<wxString> cmdsA = iter->second;
+					const std::vector<wxString> cmdsB = fiter->second;
+
+					int i=0;
+					++i;
+				}
+			}
+			else
+				wxLogWarning( wxT("GroupAny ") + iter->first + wxT(" not found in other group!") ); 
+		}
+	}
+#endif
+
+	return groups && groupsAny && keySyms && keySymsSet && meta;
 }
 
 const key_binding key_binding::operator-(const key_binding& other) const
