@@ -21,7 +21,7 @@ void LibnotifyNotification::Show(const wxBitmap& icon, const size_t /*pos*/, con
 {
 	NotifyNotification *n;
 	notify_init("Test");
-	#if defined(LIBNOTIFY_MINOR_VERSION) && LIBNOTIFY_MINOR_VERSION  > 6
+	#if defined(NOTIFY_CHECK_VERSION) && NOTIFY_CHECK_VERSION(0,7,0)
 		n = notify_notification_new ( GetAppName().mb_str(),data.second.mb_str(), NULL );
 	#else
 		n = notify_notification_new ( GetAppName().mb_str(),data.second.mb_str(), NULL, NULL );

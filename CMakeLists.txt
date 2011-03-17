@@ -60,6 +60,9 @@ SET( OPTION_SOUND
 SET( OPTION_TRANSLATION_SUPPORT
 	1 CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
+SET( OPTION_NOTIFY
+	1 CACHE BOOL
+	"Enables libnotify support for popup status messages (requires libnotify)" )
 SET( BUILD_SHARED_LIBS
 	1 CACHE BOOL
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
@@ -190,15 +193,18 @@ ELSE( OPTION_TORRENT_SYSTEM )
 	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
 ENDIF( OPTION_TORRENT_SYSTEM )
 
-IF( NOT WIN32)
+#----------------------------------------------------------------------------------------------------
+# libnotify dependency check
+#----------------------------------------------------------------------------------------------------
+
+IF( OPTION_NOTIFY AND NOT WIN32 )
 	pkg_check_modules( LIBNOTIFY libnotify )
 	IF( LIBNOTIFY_FOUND )
 		INCLUDE_DIRECTORIES( ${LIBNOTIFY_INCLUDE_DIRS} )
 		LINK_LIBRARIES( ${LIBNOTIFY_LIBRARIES} )
 		ADD_DEFINITIONS( -DHAVE_LIBNOTIFY )
 	ENDIF( LIBNOTIFY_FOUND )
-ENDIF( NOT WIN32)
-
+ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
