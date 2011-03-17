@@ -14,6 +14,18 @@ class LibnotifyNotification : public INotification
 
 #include <libnotify/notify.h>
 
+#ifndef NOTIFY_CHECK_VERSION
+	#ifndef NOTIFY_VERSION_MAJOR
+		#define NOTIFY_CHECK_VERSION(major,minor,micro) 0
+	#else
+		#define NOTIFY_CHECK_VERSION(major,minor,micro) \
+			(NOTIFY_VERSION_MAJOR > (major) || \
+			(NOTIFY_VERSION_MAJOR == (major) && NOTIFY_VERSION_MINOR > (minor)) || \
+			(NOTIFY_VERSION_MAJOR == (major) && NOTIFY_VERSION_MINOR == (minor) && \
+			NOTIFY_VERSION_MICRO >= (micro)))
+	#endif
+#endif
+
 LibnotifyNotification::LibnotifyNotification(wxWindow* ){}
 LibnotifyNotification::~LibnotifyNotification(){}
 
@@ -21,7 +33,7 @@ void LibnotifyNotification::Show(const wxBitmap& icon, const size_t /*pos*/, con
 {
 	NotifyNotification *n;
 	notify_init("Test");
-	#if defined(NOTIFY_CHECK_VERSION) && NOTIFY_CHECK_VERSION(0,7,0)
+	#if NOTIFY_CHECK_VERSION(0,7,0)
 		n = notify_notification_new ( GetAppName().mb_str(),data.second.mb_str(), NULL );
 	#else
 		n = notify_notification_new ( GetAppName().mb_str(),data.second.mb_str(), NULL, NULL );
