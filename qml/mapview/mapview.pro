@@ -23,7 +23,10 @@ symbian:TARGET.UID3 = 0xE1BC102A
 # MOBILITY variable. 
 # CONFIG += mobility
 # MOBILITY +=
-QT += phonon
+QT += phonon multimedia
+QT += webkit
+# PKGCONFIG += vorbis vorbisfile
+# LIBS += -lvorbisfile -lvorbis -logg
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
@@ -253,10 +256,13 @@ unix {
 }
 
 win32 {
+	CONFIG += release
 	LIBS += $$system(i686-pc-mingw32-wx-config --libs)
 	QMAKE_CXXFLAGS += $$system(i686-pc-mingw32-wx-config --cxxflags)
+	INCLUDEPATH += -I/opt/mingw_head/usr/i686-pc-mingw32/include/phonon
 	#QMAKE_CXXFLAGS += -DCURL_STATICLIB
-	LIBS += -lcurl -lgcrypt -liconv -L/opt/mingw/usr/i686-pc-mingw32/lib -lgpg-error -lidn -lwldap32 -lws2_32 -lgcrypt -liconv -L/opt/mingw/usr/i686-pc-mingw32/lib -lgpg-error -lz -lgnutls -lws2_32 -liphlpapi -lgcrypt -liconv -L/opt/mingw/usr/i686-pc-mingw32/lib -lgpg-error
+	LIBS += -L/opt/mingw_head/usr/i686-pc-mingw32/lib -L/opt/mingw_head/usr/i686-pc-mingw32/plugins/phonon_backend -L/opt/mingw_head/usr/i686-pc-mingw32/bin
+	LIBS += -lphonon4 -lphonon_ds94 -lcurl -lgcrypt -liconv -lgpg-error -lidn -lwldap32 -lws2_32 -lgcrypt -liconv -lgpg-error -lz -lgnutls -lws2_32 -liphlpapi -lgcrypt -liconv -lgpg-error
 }
 
 

@@ -42,8 +42,9 @@
 #include <QtCore/QDebug>
 #include <QStringList>
 #include <QIcon>
-#include <Phonon/MediaSource>
-#include <Phonon/MediaObject>
+#include <QDir>
+
+#include <QtMultimedia>
 
 bool CmdInit()
 {
@@ -108,9 +109,25 @@ bool CmdInit()
 	return true;
 }
 
+#if 0
+#include <vorbis/vorbisfile.h>
+ OggVorbis_File m_vf;
+//  if (ov_fopen(m_name.toLocal8Bit().data(), &m_vf) < 0) {
+// qWarning("Input does not appear to be an Ogg bitstream");
+// return false;
+// }
+
+ 
+//     vorbis_info *vi = ov_info(&m_vf, -1);
+#endif
+
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
+	QCoreApplication::addLibraryPath( QCoreApplication::applicationDirPath() );
+	app.setOrganizationName("SpringLobby");
+	app.setOrganizationDomain("SpringLobby.info");
+	app.setApplicationName("awesomeFrontEnd");
 	if ( !CmdInit() )
 		return -1;
 
@@ -150,11 +167,36 @@ int main(int argc, char *argv[])
 	MaplistModel maplist_model( usync().GetMapList() );
 	SkirmishModel skirmish_model;
 	SideModel side_model( SLcustomizations().GetModname() );
-	Phonon::MediaObject *music =
-			 Phonon::createPlayer(Phonon::MusicCategory,
-								  Phonon::MediaSource("images/bg_music.ogg"));
-		 music->play();
+	
+ QFile inputFile;     // class member.
+ QAudioOutput* audio; // class member.
+ QString m_name("images/bg_music.wav");
+ inputFile.setFileName(m_name);
+ inputFile.open(QIODevice::ReadOnly);
+ 
 
+
+	qWarning() << QAudioDeviceInfo::defaultOutputDevice().supportedCodecs ();
+ QAudioFormat m_format;
+ // Set up the format, eg.
+ m_format.setChannels(2);
+m_format.setFrequency(44000);
+m_format.setCodec("audio/pcm");
+m_format.setByteOrder(QAudioFormat::LittleEndian);
+m_format.setSampleSize(16);
+m_format.setSampleType(QAudioFormat::SignedInt);
+
+
+ QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+ if (!info.isFormatSupported(m_format)) {
+     qWarning()<<"ogg audio format not supported by backend, cannot play audio.";
+     return 0;
+ }
+
+ audio = new QAudioOutput(m_format, &app);
+//  connect(audio,SIGNAL(stateChanged(QAudio::State)),SLOT(finishedPlaying(QAudio::State)));
+ audio->start(&inputFile);
+    
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 	QDeclarativeContext* ctxt = view.rootContext();
 	ctxt->setContextProperty("myModel", &maplist_model );
