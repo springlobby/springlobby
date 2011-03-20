@@ -307,20 +307,20 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
         Disconnect();
         return true;
     }
-    else if ( subcmd == _T("/changepassword") )
+    else if ( subcmd == _T("/changepassword2") )
     {
 		if ( arrayparams.GetCount() < 1 ) return false;
 		wxString oldpassword = sett().GetServerAccountPass( GetServerName() );
 		wxString newpassword = GetPasswordHash( params );
 		if  ( oldpassword.IsEmpty() || !sett().GetServerAccountSavePass(GetServerName()) )
 		{
-			m_se->OnServerMessage(_("There is no saved password for this account, please use /changepassword2"));
+			m_se->OnServerMessage(_("There is no saved password for this account, please use /changepassword"));
 			return true;
 		}
         SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
         return true;
     }
-    else if ( subcmd == _T("/changepassword2") )
+    else if ( subcmd == _T("/changepassword") )
     {
 		if ( arrayparams.GetCount() != 2 ) return false;
 		wxString oldpassword = GetPasswordHash(arrayparams[1]);
