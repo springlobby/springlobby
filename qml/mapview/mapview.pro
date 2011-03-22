@@ -23,8 +23,7 @@ symbian:TARGET.UID3 = 0xE1BC102A
 # MOBILITY variable. 
 # CONFIG += mobility
 # MOBILITY +=
-QT += phonon multimedia
-QT += webkit
+QT += phonon opengl webkit
 # PKGCONFIG += vorbis vorbisfile
 # LIBS += -lvorbisfile -lvorbis -logg
 
@@ -244,9 +243,7 @@ HEADERS += \
 
 INCLUDEPATH += ../../src
 INCLUDEPATH += ../../src/Helper/qtargparser
-DEFINES += SL_QT_MODE
-DEFINES += NO_TORRENT_SYSTEM
-DEFINES += DISABLE_SOUND
+DEFINES += SL_QT_MODE NO_TORRENT_SYSTEM DISABLE_SOUND
 
 unix {
 	CONFIG += link_pkgconfig
@@ -259,7 +256,6 @@ win32 {
 	CONFIG += release
 	LIBS += $$system(i686-pc-mingw32-wx-config --libs)
 	QMAKE_CXXFLAGS += $$system(i686-pc-mingw32-wx-config --cxxflags)
-	INCLUDEPATH += -I/opt/mingw_head/usr/i686-pc-mingw32/include/phonon
 	#QMAKE_CXXFLAGS += -DCURL_STATICLIB
 	LIBS += -L/opt/mingw_head/usr/i686-pc-mingw32/lib -L/opt/mingw_head/usr/i686-pc-mingw32/plugins/phonon_backend -L/opt/mingw_head/usr/i686-pc-mingw32/bin
 	LIBS += -lphonon4 -lphonon_ds94 -lcurl -lgcrypt -liconv -lgpg-error -lidn -lwldap32 -lws2_32 -lgcrypt -liconv -lgpg-error -lz -lgnutls -lws2_32 -liphlpapi -lgcrypt -liconv -lgpg-error
