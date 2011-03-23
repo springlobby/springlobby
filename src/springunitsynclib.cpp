@@ -145,6 +145,8 @@ void SpringUnitSyncLib::_Load( const wxString& path )
 		GetLibFuncPtr( m_libhandle, _T("UnInit"),							m_uninit );
 		GetLibFuncPtr( m_libhandle, _T("GetNextError"),						m_get_next_error );
 		GetLibFuncPtr( m_libhandle, _T("GetWritableDataDirectory"),			m_get_writeable_data_dir );
+		GetLibFuncPtr( m_libhandle, _T("GetDataDirectory"),					m_get_data_dir_by_index );
+		GetLibFuncPtr( m_libhandle, _T("GetDataDirectoryCount"),			m_get_data_dir_count );
 
 		GetLibFuncPtr( m_libhandle, _T("GetMapCount"),						m_get_map_count );
 		GetLibFuncPtr( m_libhandle, _T("GetMapChecksum"),					m_get_map_checksum );
@@ -574,6 +576,20 @@ wxString SpringUnitSyncLib::GetSpringDataDir()
   InitLib( m_get_writeable_data_dir );
 
   return WX_STRINGC( m_get_writeable_data_dir() );
+}
+
+int SpringUnitSyncLib::GetSpringDataDirCount()
+{
+	InitLib( m_get_data_dir_count);
+
+	return m_get_data_dir_count();
+}
+
+wxString SpringUnitSyncLib::GetSpringDataDirByIndex( const int index )
+{
+	InitLib( m_get_data_dir_by_index );
+
+	return WX_STRINGC( m_get_data_dir_by_index( index ) );
 }
 
 wxString SpringUnitSyncLib::GetConfigFilePath()
