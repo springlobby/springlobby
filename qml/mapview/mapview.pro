@@ -23,7 +23,7 @@ symbian:TARGET.UID3 = 0xE1BC102A
 # MOBILITY variable. 
 # CONFIG += mobility
 # MOBILITY +=
-QT += phonon opengl webkit
+QT += multimedia opengl webkit
 # PKGCONFIG += vorbis vorbisfile
 # LIBS += -lvorbisfile -lvorbis -logg
 
@@ -167,7 +167,10 @@ SOURCES += main.cpp \
 	../../src/Helper/slconfig.cpp \
     ../../src/qt/maplistmodel.cpp \
     ../../src/qt/qerrorwindow.cpp \
-    ../../src/qt/sidemodel.cpp
+    ../../src/qt/sidemodel.cpp \
+    ../../src/qt/sound/GEInterfaces.cpp \
+    ../../src/qt/sound/GEAudioOut.cpp \
+    ../../src/qt/sound/GEAudioBuffer.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -239,7 +242,10 @@ HEADERS += \
     ../../src/battleroomtab.h \
     ../../src/qt/maplistmodel.h \
     ../../src/qt/qerrorwindow.h \
-    ../../src/qt/sidemodel.h
+    ../../src/qt/sidemodel.h \
+    ../../src/qt/sound/GEInterfaces.h \
+    ../../src/qt/sound/GEAudioOut.h \
+    ../../src/qt/sound/GEAudioBuffer.h
 
 INCLUDEPATH += ../../src
 INCLUDEPATH += ../../src/Helper/qtargparser

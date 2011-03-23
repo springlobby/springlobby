@@ -10,7 +10,6 @@
 
 #include <QtCore/qobject.h>
 #include <QtCore/qfile.h>
-#include <QtMultimedia>
 #include <QtCore/qtimer.h>
 #include <QtCore/qstring.h>
 #include <QThread>

@@ -8,7 +8,7 @@
 #include <QtCore/qstring.h>
 //#include <QtMultimedia/qaudiooutput.h>
 //#include <QtMultimedia/qaudioformat.h>
-#include <QAudioOutput>
+#include <QtMultimedia/QAudioOutput>
 
 #include "GEAudioOut.h"
 
