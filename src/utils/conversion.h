@@ -58,6 +58,14 @@ static inline T FromwxString(const wxString& arg){
   return (T)ret;
 }
 
+#ifdef SL_QT_MODE
+#include <QString>
+//template<>
+static inline QString ToQString(const wxString& arg){
+  return QString( arg.mbc_str() );
+}
+#endif
+
 #define WX_STRINGC(v) wxString(v,wxConvUTF8)
 
 static inline long s2l( const wxString& arg )

@@ -4,7 +4,8 @@
 #include <QDesktopWidget>
 #include <QtOpenGL/QGLWidget>
 #include <springunitsync.h>
-//#define USE_OPENGL
+#include <springunitsynclib.h>
+#define USE_OPENGL
 
 #include <settings.h>
 #include <utils/platform.h>
@@ -34,6 +35,8 @@
 #include <wx/socket.h>
 #include <wx/log.h>
 
+#include <QtMultimedia/QAudioOutput>
+
 #include <QtArg/Arg>
 #include <QtArg/XorArg>
 #include <QtArg/CmdLine>
@@ -43,8 +46,6 @@
 #include <QStringList>
 #include <QIcon>
 #include <QDir>
-
-#include <QtMultimedia>
 
 bool CmdInit()
 {
@@ -109,18 +110,6 @@ bool CmdInit()
 	return true;
 }
 
-#if 0
-#include <vorbis/vorbisfile.h>
- OggVorbis_File m_vf;
-//  if (ov_fopen(m_name.toLocal8Bit().data(), &m_vf) < 0) {
-// qWarning("Input does not appear to be an Ogg bitstream");
-// return false;
-// }
-
- 
-//     vorbis_info *vi = ov_info(&m_vf, -1);
-#endif
-
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
@@ -141,12 +130,17 @@ int main(int argc, char *argv[])
 	wxFileSystem::AddHandler(new wxZipFSHandler);
 	wxSocketBase::Initialize();
 
+
 	QDeclarativeView view;
-	view.engine()->addImageProvider("minimaps", new MinimapImageProvider);
-	view.engine()->addImageProvider("images", new ImageProvider);
-	view.engine()->addImageProvider("side", new SideImageProvider);
-	view.engine()->addImportPath("qml/mapview/");
+	QString qmldir = SLcustomizations().QmlDir();
+	qDebug() << "qmldir" << qmldir;
+	view.engine()->addImportPath( qmldir );
+
 	// Visual initialization
+	view.engine()->addImageProvider("minimaps", new MinimapImageProvider);
+	view.engine()->addImageProvider("graphics", new GraphicsProvider);
+	view.engine()->addImageProvider("sides", new SideImageProvider);
+
 #ifdef USE_OPENGL
 	QGLFormat format = QGLFormat::defaultFormat();
 	 #ifdef Q_WS_MAC
@@ -167,42 +161,13 @@ int main(int argc, char *argv[])
 	MaplistModel maplist_model( usync().GetMapList() );
 	SkirmishModel skirmish_model;
 	SideModel side_model( SLcustomizations().GetModname() );
-	
- QFile inputFile;     // class member.
- QAudioOutput* audio; // class member.
- QString m_name("images/bg_music.wav");
- inputFile.setFileName(m_name);
- inputFile.open(QIODevice::ReadOnly);
- 
-
-
-	qWarning() << QAudioDeviceInfo::defaultOutputDevice().supportedCodecs ();
- QAudioFormat m_format;
- // Set up the format, eg.
- m_format.setChannels(2);
-m_format.setFrequency(44000);
-m_format.setCodec("audio/pcm");
-m_format.setByteOrder(QAudioFormat::LittleEndian);
-m_format.setSampleSize(16);
-m_format.setSampleType(QAudioFormat::SignedInt);
-
-
- QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
- if (!info.isFormatSupported(m_format)) {
-     qWarning()<<"ogg audio format not supported by backend, cannot play audio.";
-     return 0;
- }
-
- audio = new QAudioOutput(m_format, &app);
-//  connect(audio,SIGNAL(stateChanged(QAudio::State)),SLOT(finishedPlaying(QAudio::State)));
- audio->start(&inputFile);
-    
+	    
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 	QDeclarativeContext* ctxt = view.rootContext();
 	ctxt->setContextProperty("myModel", &maplist_model );
 	ctxt->setContextProperty("skirmishModel", &skirmish_model );
 	ctxt->setContextProperty("sideModel", &side_model );
-	view.setSource(QUrl("qml/mapview/main.qml"));//usync resets pwd, figure out how to put qml in qrc
+	view.setSource(QUrl(qmldir + "/main.qml"));//usync resets pwd, figure out how to put qml in qrc
 
 //	QRect d = app.desktop()->screenGeometry();
 

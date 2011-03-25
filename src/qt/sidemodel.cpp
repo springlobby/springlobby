@@ -24,7 +24,7 @@ SideModel::SideModel(const wxString& modname, QObject *parent) :
 {
 	wxString name;
 	foreach( name, usync().GetSides( modname ) )
-		m_sidenames.append( QString( name.mbc_str() ) );
+		m_sidenames.append( ToQString( name ) );
 }
 
 int SideModel::rowCount(const QModelIndex &parent ) const

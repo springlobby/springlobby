@@ -21,10 +21,10 @@
 
 #include <QDeclarativeImageProvider>
 
-class ImageProvider : public QDeclarativeImageProvider
+class GraphicsProvider : public QDeclarativeImageProvider
 {
 public:
-	ImageProvider()
+	GraphicsProvider()
 		: QDeclarativeImageProvider(QDeclarativeImageProvider::Image)
 	  { }
 

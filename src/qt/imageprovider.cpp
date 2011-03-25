@@ -23,23 +23,25 @@
 #include <wx/image.h>
 #include <QDebug>
 
-QImage ImageProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
+QImage GraphicsProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
 {
 	int width = requestedSize.width() > 0 ? requestedSize.width() : 1024;
 	int height = requestedSize.height() > 0 ? requestedSize.height() : 1024;
 
-	wxImage h = SLcustomizations().GetBackgroundImage();
-	wxSize k_size = SLcustomizations().GetBackgroundSize();
+//	wxImage h = SLcustomizations().GetBackgroundImage();
+//	wxSize k_size = SLcustomizations().GetBackgroundSize();
 
-	if (size)
-		*size = wxQtConvertSize( k_size );
-	qDebug() << height << width ;
-	QImage q = wxQtConvertImage( h );
+//	if (size)
+//		*size = wxQtConvertSize( k_size );
+//	qDebug() << height << width ;
+//	QImage q = wxQtConvertImage( h );
 
-//	q = q.scaled(requestedSize);
-	assert( !q.isNull() );
+////	q = q.scaled(requestedSize);
+//	assert( !q.isNull() );
 
-	return q.scaled( *size );
+//	return q.scaled( *size );
+
+	return QImage( SLcustomizations().GraphicsDir() + "/" + id );
 }
 
 
@@ -62,10 +64,11 @@ QImage SideImageProvider::requestImage ( const QString & id, QSize * size, const
 	int height = requestedSize.height() > 0 ? requestedSize.height() : 16;
 	const wxString& modname = SLcustomizations().GetModname();
 
+	qDebug() << "SIDEIMAGE requested: " << id;
 	wxImage h = usync().GetSidePicture( modname, TowxString( id.toStdString() ) );
 	if (size)
 		*size = QSize(width,height);
 	QImage q = wxQtConvertImage( h );
-	assert( !q.isNull() );
+//	assert( !q.isNull() );
 	return q.scaled( width, height );
 }

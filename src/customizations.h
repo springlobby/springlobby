@@ -8,6 +8,10 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 
+#ifdef SL_QT_MODE
+	#include <QString>
+#endif
+
 class Customizations {
     protected:
         Customizations();
@@ -15,8 +19,6 @@ class Customizations {
         wxString m_modname;
         OptionsWrapper m_customs;
         wxIcon m_app_ico;
-        wxBitmap m_background;
-		wxImage m_background_image;
         wxString m_help_url;
 		bool m_active;
 
@@ -30,9 +32,7 @@ class Customizations {
         const wxString& GetModname() const;
         const wxString& GetHelpUrl() const;
         const wxIcon& GetAppIcon() const;
-        const wxBitmap& GetBackground() const;
-		wxImage GetBackgroundImage() const { return m_background_image; }
-        wxSize GetBackgroundSize() const;
+
         const OptionsWrapper& GetCustomizations() const;
 
 		bool Provides( const wxString& key ) const;
@@ -42,6 +42,18 @@ class Customizations {
 		static const wxString IntroKey;// ( _T("intro_file") );
 
     friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
+
+#ifdef SL_QT_MODE
+	private:
+		QString DataBasePath();
+		QString dataBasePath_;
+
+	public:
+		QString QmlDir();
+		QString GraphicsDir();
+		QString SoundsDir();
+		QString MusicDir();
+#endif
 };
 
 Customizations& SLcustomizations();

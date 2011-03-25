@@ -7,24 +7,10 @@
 #include <wx/image.h>
 #include <wx/msgdlg.h>
 #ifdef SL_QT_MODE
-#include <QImage>
-#include <qt/converters.h>
+	#include <QImage>
+	#include <qt/converters.h>
 #endif
 const wxString Customizations::IntroKey = wxString ( _T("intro_file") );
-
-/** @brief GetBackground
-  *
-  * @todo: document this function
-  */
-const wxBitmap& Customizations::GetBackground() const
-{
-    return m_background;
-}
-
-wxSize Customizations::GetBackgroundSize() const
-{
-    return wxSize( m_background.GetWidth(), m_background.GetHeight() );
-}
 
 const OptionsWrapper& Customizations::GetCustomizations() const
 {
@@ -75,17 +61,10 @@ bool Customizations::Init(const wxString& modname)
 		wxString bg_img_path = m_customs.getSingleValue( _T("bg_image") );
 #ifdef SL_QT_MODE
 		wxBitmap icon_bmp ( wxQtConvertImage( usync().GetQImage( m_modname, icon_img_path, false ) ) );
-		m_background_image = wxQtConvertImage ( usync().GetQImage( m_modname, bg_img_path, false ) );
 #else
 		wxBitmap icon_bmp (usync().GetImage( m_modname, icon_img_path, false ) );
-		m_background_image =  usync().GetImage( m_modname, bg_img_path, false );
 #endif
-
-
         m_app_ico.CopyFromBitmap( icon_bmp );
-		m_background = wxBitmap( m_background_image );
-		assert( m_background_image.IsOk() );
-
         m_help_url = m_customs.getSingleValue( _T("help_url") );
     }
 	m_active =  ret;
@@ -137,3 +116,40 @@ Customizations& SLcustomizations()
     return s_customizations;
 }
 
+#ifdef SL_QT_MODE
+#include <QDir>
+QString Customizations::DataBasePath()
+{
+	static bool cached = false;
+	if ( cached )
+		return dataBasePath_;
+
+	for ( int i = 0; i < susynclib().GetSpringDataDirCount(); ++i ) {
+		QDir data ( ToQString( susynclib().GetSpringDataDirByIndex(i) ) );
+		data.cd( "lobby/SpringLobby/customizations/evo" );
+		if ( data.exists() ) {
+			dataBasePath_ = data.absolutePath();
+			break;
+		}
+	}
+	assert( dataBasePath_ != QString() );
+	return dataBasePath_ ;
+}
+
+QString Customizations::QmlDir()
+{
+	return QDir( DataBasePath() + "/" + "qml" ).absolutePath();
+}
+QString Customizations::GraphicsDir()
+{
+	return QDir( DataBasePath() + "/" + "graphics" ).absolutePath();
+}
+QString Customizations::SoundsDir()
+{
+	return QDir( DataBasePath() + "/" + "sounds" ).absolutePath();
+}
+QString Customizations::MusicDir()
+{
+	return QDir( DataBasePath() + "/" + "music" ).absolutePath();
+}
+#endif
