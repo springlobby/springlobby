@@ -138,6 +138,11 @@ int main(int argc, char *argv[])
 	qDebug() << "qmldir" << qmldir;
 	view.engine()->addImportPath( qmldir );
 
+#ifdef __WXMSW__
+	//for webkit declarative plugin
+	view.engine()->addImportPath( QDir( QCoreApplication::applicationDirPath() + "/imports").absolutePath() );
+#endif
+
 	// Visual initialization
 	view.engine()->addImageProvider("minimaps", new MinimapImageProvider);
 	view.engine()->addImageProvider("graphics", new GraphicsProvider);
