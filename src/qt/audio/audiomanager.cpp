@@ -78,14 +78,26 @@ void AudioManager::run()
 	}
 	ogg_stream_ = new COggStream(ogg_stream_id_);
 
+	const float volume = 50.5f;
+
 	assert( ogg_stream_ );
 
-	ogg_stream_->Play( filename.toStdString(), 70.5f );
+	alSource3f(ogg_stream_id_,	AL_POSITION,       0.0f, 0.0f, 0.0f);
+	alSourcef(ogg_stream_id_,	AL_GAIN,            volume);
+	alSource3f(ogg_stream_id_,	AL_VELOCITY,       0.0f,  0.0f,  0.0f);
+	alSource3f(ogg_stream_id_,	AL_DIRECTION,      0.0f,  0.0f,  0.0f);
+	alSourcef(ogg_stream_id_,	AL_ROLLOFF_FACTOR,  0.0f);
+	alSourcei(ogg_stream_id_,	AL_SOURCE_RELATIVE, AL_TRUE);
+	alSourcei(ogg_stream_id_,	AL_BUFFER, AL_NONE);
+
+	ogg_stream_->Play( filename.toStdString(), volume );
+	ogg_stream_->Update();
 
 	CheckError("AudioManager::play");
 
-	while( !ogg_stream_->IsFinished() ) {
-		sleep( 50 );
+	while( true ) {
+		msleep( 50 );
 		ogg_stream_->Update();
 	}
+	qDebug() << "playback finished";
 }
