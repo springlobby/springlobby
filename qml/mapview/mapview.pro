@@ -274,9 +274,9 @@ win32 {
 	CONFIG += release
 	LIBS += $$system(i686-pc-mingw32-wx-config --libs)
 	QMAKE_CXXFLAGS += $$system(i686-pc-mingw32-wx-config --cxxflags)
-	#QMAKE_CXXFLAGS += -DCURL_STATICLIB
+	QMAKE_CXXFLAGS += -DAL_LIBTYPE_STATIC
 	LIBS += -lz -lgnutls -lws2_32 -liphlpapi -lgcrypt -liconv -lgpg-error -lqmlwebkitplugin
-	LIBS += -lidn -lwldap32 -lSDL -lSDL_sound -lvorbisenc -lvorbisfile -lOpenAL32 -lvorbis -logg  
+	LIBS += -lOpenAL32 -lidn -lwldap32 -lSDL -lSDL_sound -lvorbisenc -lvorbisfile -luuid  -lvorbis -logg
 }
 
 
