@@ -23,6 +23,9 @@
 #include <assert.h>
 #include <AL/alc.h>
 #include <QDebug>
+#include <QDir>
+#include <QFileInfoList>
+#include <customizations.h>
 
 /* some pieces cobbled together from spring's SoundSource.cpp  */
 
@@ -35,11 +38,6 @@ AudioManager::~AudioManager()
 {
 	alDeleteSources(1, &ogg_stream_id_);
 	CheckError("CSoundSource::~CSoundSource");
-}
-
-void AudioManager::enqueue( const QString& fn )
-{
-	filename = fn;
 }
 
 void AudioManager::run()
@@ -76,6 +74,14 @@ void AudioManager::run()
 		alSourcef(ogg_stream_id_, AL_REFERENCE_DISTANCE, 2.f );
 		CheckError("CSoundSource::CSoundSource");
 	}
+
+	getMusicFilenames();
+	if ( music_filenames.size() == 0 )
+	{
+		qDebug() << "no music found";
+		return;
+	}
+
 	ogg_stream_ = new COggStream(ogg_stream_id_);
 
 	const float volume = 50.5f;
@@ -90,7 +96,8 @@ void AudioManager::run()
 	alSourcei(ogg_stream_id_,	AL_SOURCE_RELATIVE, AL_TRUE);
 	alSourcei(ogg_stream_id_,	AL_BUFFER, AL_NONE);
 
-	ogg_stream_->Play( filename.toStdString(), volume );
+	ogg_stream_->Play( music_filenames[0].toStdString(), volume );
+	music_filenames.pop_front();
 	ogg_stream_->Update();
 
 	CheckError("AudioManager::play");
@@ -98,6 +105,31 @@ void AudioManager::run()
 	while( true ) {
 		msleep( 50 );
 		ogg_stream_->Update();
+		if ( ogg_stream_->IsFinished() )
+		{
+			if ( music_filenames.size() == 0 ) //meaning we've played all music once
+				getMusicFilenames();//refill queue
+			if ( music_filenames.size() == 0 ) //someone removed music at runtime, bad
+				return;
+			ogg_stream_->Play( music_filenames[0].toStdString(), volume );
+			music_filenames.pop_front();
+		}
 	}
 	qDebug() << "playback finished";
+}
+
+
+void AudioManager::getMusicFilenames()
+{
+	music_filenames.clear();
+
+	QDir music_dir ( SLcustomizations().MusicDir() );
+	QFileInfo current_file;
+	foreach( current_file, music_dir.entryInfoList( ) )
+	{
+		qDebug() << current_file.absoluteFilePath() ;
+		music_filenames.append( current_file.absoluteFilePath() );
+	}
+
+
 }

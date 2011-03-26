@@ -21,6 +21,7 @@
 
 #include <QThread>
 #include <AL/al.h>
+#include <QList>
 
 class COggStream;
 
@@ -31,16 +32,18 @@ public:
     explicit AudioManager(QObject *parent = 0);
 	~AudioManager();
 
-	void enqueue( const QString& filename );
 	void run();
+
 signals:
 
 public slots:
 
 private:
+	void getMusicFilenames();
+
 	COggStream* ogg_stream_;
 	ALuint ogg_stream_id_;
-	QString filename;
+	QList<QString> music_filenames;
 
 };
 

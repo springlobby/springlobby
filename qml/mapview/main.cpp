@@ -35,8 +35,6 @@
 #include <wx/socket.h>
 #include <wx/log.h>
 
-#include <QtMultimedia/QAudioOutput>
-
 #include <QtArg/Arg>
 #include <QtArg/XorArg>
 #include <QtArg/CmdLine>
@@ -170,7 +168,6 @@ int main(int argc, char *argv[])
 	SideModel side_model( SLcustomizations().GetModname() );
 
 	AudioManager* audio_manager = new AudioManager(&app);
-	audio_manager->enqueue( SLcustomizations().MusicDir() + "/bg_music.ogg" );
 	audio_manager->start();
 	    
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
