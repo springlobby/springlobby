@@ -47,6 +47,8 @@
 #include <QIcon>
 #include <QDir>
 
+#include "qt/audio/audiomanager.h"
+
 bool CmdInit()
 {
 	PwdGuard pwd_guard;//makes us invulnerabel to cwd changes in usync loading
@@ -161,6 +163,9 @@ int main(int argc, char *argv[])
 	MaplistModel maplist_model( usync().GetMapList() );
 	SkirmishModel skirmish_model;
 	SideModel side_model( SLcustomizations().GetModname() );
+
+	AudioManager* audio_manager = new AudioManager(&app);
+	audio_manager->play( SLcustomizations().MusicDir() + "/bg_music.ogg" );
 	    
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 	QDeclarativeContext* ctxt = view.rootContext();
