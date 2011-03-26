@@ -118,6 +118,7 @@ Customizations& SLcustomizations()
 
 #ifdef SL_QT_MODE
 #include <QDir>
+#include <QDebug>
 QString Customizations::DataBasePath()
 {
 	static bool cached = false;
@@ -126,9 +127,10 @@ QString Customizations::DataBasePath()
 
 	for ( int i = 0; i < susynclib().GetSpringDataDirCount(); ++i ) {
 		QDir data ( ToQString( susynclib().GetSpringDataDirByIndex(i) ) );
-		data.cd( "lobby/SpringLobby/customizations/evo" );
-		if ( data.exists() ) {
+		qDebug() << "Data checking: " << data.absolutePath();
+		if ( data.cd( "lobby/SpringLobby/customizations/evo" ) ) {
 			dataBasePath_ = data.absolutePath();
+			qDebug() << "Data found: " << dataBasePath_;
 			break;
 		}
 	}

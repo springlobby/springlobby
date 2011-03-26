@@ -51,9 +51,7 @@ double LevenshteinDistance(wxString s, wxString t);
  */
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance = 0 );
 
-
 wxString Paste2Pastebin( const wxString& message );
-
 
 #endif // SPRINGLOBBY_HEADERGUARD_MISC_H
 

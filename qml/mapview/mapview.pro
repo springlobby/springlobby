@@ -275,8 +275,8 @@ win32 {
 	LIBS += $$system(i686-pc-mingw32-wx-config --libs)
 	QMAKE_CXXFLAGS += $$system(i686-pc-mingw32-wx-config --cxxflags)
 	#QMAKE_CXXFLAGS += -DCURL_STATICLIB
-	LIBS += -L/opt/mingw_head/usr/i686-pc-mingw32/lib -L/opt/mingw_head/usr/i686-pc-mingw32/plugins/phonon_backend -L/opt/mingw_head/usr/i686-pc-mingw32/bin
-	LIBS += -lphonon4 -lphonon_ds94 -lcurl -lgcrypt -liconv -lgpg-error -lidn -lwldap32 -lws2_32 -lgcrypt -liconv -lgpg-error -lz -lgnutls -lws2_32 -liphlpapi -lgcrypt -liconv -lgpg-error
+	LIBS += -lz -lgnutls -lws2_32 -liphlpapi -lgcrypt -liconv -lgpg-error -lqmlwebkitplugin
+	LIBS += -lidn -lwldap32 -lSDL -lSDL_sound -lvorbisenc -lvorbisfile -lOpenAL32 -lvorbis -logg  
 }
 
 
