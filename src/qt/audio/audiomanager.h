@@ -19,19 +19,20 @@
 #ifndef AUDIOMANAGER_H
 #define AUDIOMANAGER_H
 
-#include <QObject>
+#include <QThread>
 #include <AL/al.h>
 
 class COggStream;
 
-class AudioManager : public QObject
+class AudioManager : public QThread
 {
     Q_OBJECT
 public:
     explicit AudioManager(QObject *parent = 0);
 	~AudioManager();
 
-	void play( const QString& filename );
+	void enqueue( const QString& filename );
+	void run();
 signals:
 
 public slots:
@@ -39,6 +40,7 @@ public slots:
 private:
 	COggStream* ogg_stream_;
 	ALuint ogg_stream_id_;
+	QString filename;
 
 };
 

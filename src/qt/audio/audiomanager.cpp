@@ -27,7 +27,7 @@
 /* some pieces cobbled together from spring's SoundSource.cpp  */
 
 AudioManager::AudioManager(QObject *parent) :
-    QObject(parent)
+	QThread(parent)
 {
 	alGetError();
 	//*
@@ -99,7 +99,13 @@ AudioManager::~AudioManager()
 	CheckError("CSoundSource::~CSoundSource");
 }
 
-void AudioManager::play( const QString& filename )
+void AudioManager::enqueue( const QString& fn )
+{
+filename = fn;
+
+}
+
+void AudioManager::run()
 {
 	assert( ogg_stream_ );
 
@@ -107,4 +113,6 @@ void AudioManager::play( const QString& filename )
 
 	CheckError("AudioManager::play");
 
+	while( !ogg_stream_->IsFinished() )
+		sleep( 5000 );
 }

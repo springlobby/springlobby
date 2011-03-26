@@ -165,7 +165,8 @@ int main(int argc, char *argv[])
 	SideModel side_model( SLcustomizations().GetModname() );
 
 	AudioManager* audio_manager = new AudioManager(&app);
-	audio_manager->play( SLcustomizations().MusicDir() + "/bg_music.ogg" );
+	audio_manager->enqueue( SLcustomizations().MusicDir() + "/bg_music.ogg" );
+	audio_manager->start();
 	    
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 	QDeclarativeContext* ctxt = view.rootContext();
