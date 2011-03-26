@@ -168,9 +168,14 @@ SOURCES += main.cpp \
     ../../src/qt/maplistmodel.cpp \
     ../../src/qt/qerrorwindow.cpp \
     ../../src/qt/sidemodel.cpp \
-    ../../src/qt/sound/GEInterfaces.cpp \
-    ../../src/qt/sound/GEAudioOut.cpp \
-    ../../src/qt/sound/GEAudioBuffer.cpp
+    ../../src/qt/audio/audiomanager.cpp \
+    ../../src/qt/audio/VorbisShared.cpp \
+    ../../src/qt/audio/OggStream.cpp \
+    ../../src/qt/audio/GEInterfaces.cpp \
+    ../../src/qt/audio/GEAudioOut.cpp \
+    ../../src/qt/audio/GEAudioBuffer.cpp \
+    ../../src/qt/audio/ALShared.cpp \
+    ../../src/qt/FileHandler.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -243,13 +248,20 @@ HEADERS += \
     ../../src/qt/maplistmodel.h \
     ../../src/qt/qerrorwindow.h \
     ../../src/qt/sidemodel.h \
-    ../../src/qt/sound/GEInterfaces.h \
-    ../../src/qt/sound/GEAudioOut.h \
-    ../../src/qt/sound/GEAudioBuffer.h
+    ../../src/qt/audio/audiomanager.h \
+    ../../src/qt/audio/VorbisShared.h \
+    ../../src/qt/audio/OggStream.h \
+    ../../src/qt/audio/GEInterfaces.h \
+    ../../src/qt/audio/GEAudioOut.h \
+    ../../src/qt/audio/GEAudioBuffer.h \
+    ../../src/qt/audio/ALShared.h \
+    ../../src/qt/FileHandler.h
 
 INCLUDEPATH += ../../src
 INCLUDEPATH += ../../src/Helper/qtargparser
 DEFINES += SL_QT_MODE NO_TORRENT_SYSTEM DISABLE_SOUND
+
+PKGCONFIG += openal sdl_sound sdl vorbis ogg vorbisfile
 
 unix {
 	CONFIG += link_pkgconfig
