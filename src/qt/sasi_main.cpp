@@ -29,7 +29,7 @@
 
 #include <QDebug>
 
-#include "qt/sasi_app.h"
+#include "sasi_app.h"
 
 bool CmdInit()
 {

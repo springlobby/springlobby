@@ -1,4 +1,5 @@
-# Add more folders to ship with the application, here
+include(qmlapplicationviewer.pri)
+
 # Additional import path used to resolve QML modules in Creator's code model
 QML_IMPORT_PATH =
 
@@ -174,10 +175,6 @@ SOURCES += sasi_main.cpp \
     FileHandler.cpp \
     sasi_app.cpp
 
-# Please do not modify the following two lines. Required for deployment.
-include(qmlapplicationviewer/qmlapplicationviewer.pri)
-qtcAddDeployment()
-
 HEADERS += \
     ../springunitsynclib.h \
     ../globalsmanager.h \
@@ -255,7 +252,7 @@ HEADERS += \
     FileHandler.h \
     sasi_app.h
 
-INCLUDEPATH += ../../src
+INCLUDEPATH += ..
 INCLUDEPATH += ../Helper/qtargparser
 DEFINES += SL_QT_MODE NO_TORRENT_SYSTEM DISABLE_SOUND
 
@@ -287,6 +284,4 @@ OTHER_FILES += \
     ../Helper/qtargparser/QtArg/CmdLineContext \
     ../Helper/qtargparser/QtArg/CmdLine \
     ../Helper/qtargparser/QtArg/ArgConstraint \
-    ../Helper/qtargparser/QtArg/Arg \
-	images/* \
-    ../iconimagelist.
+    ../Helper/qtargparser/QtArg/Arg 
