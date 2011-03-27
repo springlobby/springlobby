@@ -175,7 +175,8 @@ SOURCES += main.cpp \
     ../../src/qt/audio/GEAudioOut.cpp \
     ../../src/qt/audio/GEAudioBuffer.cpp \
     ../../src/qt/audio/ALShared.cpp \
-    ../../src/qt/FileHandler.cpp
+    ../../src/qt/FileHandler.cpp \
+    ../../src/qt/sasi_app.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -255,7 +256,8 @@ HEADERS += \
     ../../src/qt/audio/GEAudioOut.h \
     ../../src/qt/audio/GEAudioBuffer.h \
     ../../src/qt/audio/ALShared.h \
-    ../../src/qt/FileHandler.h
+    ../../src/qt/FileHandler.h \
+    ../../src/qt/sasi_app.h
 
 INCLUDEPATH += ../../src
 INCLUDEPATH += ../../src/Helper/qtargparser
