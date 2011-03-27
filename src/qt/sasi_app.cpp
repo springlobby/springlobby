@@ -38,7 +38,12 @@
 #include "sidemodel.h"
 #include "qerrorwindow.h"
 
-#define USE_OPENGL
+#if defined(Q_WS_X11) && !defined(NDEBUG)
+	//QGlWidget segfaults in debug builds..
+	#define USE_OPENGL 0
+#else
+	#define USE_OPENGL 1
+#endif
 
 SasiApp::SasiApp(int argc, char *argv[])
 	: QApplication(argc,argv)
@@ -80,7 +85,7 @@ int SasiApp::exec()
 	view.engine()->addImageProvider("graphics", new GraphicsProvider);
 	view.engine()->addImageProvider("sides", new SideImageProvider);
 
-#ifdef USE_OPENGL
+#if USE_OPENGL
 	QGLFormat format = QGLFormat::defaultFormat();
 	#ifdef Q_WS_MAC
 		format.setSampleBuffers(true);

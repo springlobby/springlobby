@@ -132,7 +132,9 @@ QString Customizations::DataBasePath()
 		return dataBasePath_;
 
 	QList<QString> checked_paths;
-	QString sub_path( "lobby/SpringLobby/customizations/evo" );
+	QString sub_path( "lobby/SpringLobby/customizations/" );
+	QString modname = ToQString( m_modname );
+	sub_path.append( modname.toLower() );
 	for ( int i = 0; i < susynclib().GetSpringDataDirCount(); ++i ) {
 		QDir data ( ToQString( susynclib().GetSpringDataDirByIndex(i) ) );
 		qDebug() << "Data checking: " << data.absolutePath();
