@@ -1,6 +1,7 @@
 #include(qmlapplicationviewer.pri)
 
 # Additional import path used to resolve QML modules in Creator's code model
+include(qml.local.pri)
 QML_IMPORT_PATH =
 
 # Avoid auto screen rotation
@@ -163,7 +164,6 @@ SOURCES += sasi_main.cpp \
 	../gui/spinctl/generic/spinctlg.cpp \
 	../Helper/slconfig.cpp \
     maplistmodel.cpp \
-    qerrorwindow.cpp \
     sidemodel.cpp \
     audio/audiomanager.cpp \
     audio/VorbisShared.cpp \
@@ -291,4 +291,3 @@ CONFIG(debug, debug|release) {
 } else {
 	DESTDIR = ../qt-build/release
 }
-

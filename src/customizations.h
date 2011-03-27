@@ -10,6 +10,7 @@
 
 #ifdef SL_QT_MODE
 	#include <QString>
+	#include <QList>
 #endif
 
 class Customizations {
@@ -44,6 +45,14 @@ class Customizations {
     friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
 
 #ifdef SL_QT_MODE
+		struct DataException : public std::exception {
+			const QList<QString> errors_;
+			DataException( const QList<QString>& errors )
+				:errors_(errors)
+			{}
+			virtual ~DataException() throw() {}
+		};
+
 	private:
 		QString DataBasePath();
 		QString dataBasePath_;
