@@ -69,6 +69,7 @@ class Socket
     SockError Error( ) const;
 
     void SetSendRateLimit( int Bps = -1 );
+    int GetSendRateLimit() {return m_rate;}
     void OnTimer( int mselapsed );
 
     void SetTimeout( const int seconds );
