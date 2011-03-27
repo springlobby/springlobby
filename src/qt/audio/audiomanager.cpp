@@ -19,7 +19,8 @@
 #include "audiomanager.h"
 #include "OggStream.h"
 #include "ALShared.h"
-
+#include "SoundBuffer.h"
+#include "FileHandler.h"
 #include <assert.h>
 #include <AL/alc.h>
 #include <QDebug>
@@ -30,14 +31,31 @@
 /* some pieces cobbled together from spring's SoundSource.cpp  */
 
 AudioManager::AudioManager(QObject *parent) :
-	QThread(parent)
+	QThread(parent),
+	ogg_stream_( 0 ),
+	master_volume_( 0.5f ),
+	device_( 0 )
 {
+	SoundBuffer::Initialise();
 }
 
 AudioManager::~AudioManager()
 {
 	alDeleteSources(1, &ogg_stream_id_);
+	alcCloseDevice( device_ );
 	CheckError("CSoundSource::~CSoundSource");
+}
+
+void AudioManager::setupAlSource( const ALuint id, const float volume )
+{
+	alSourcef(id,	AL_REFERENCE_DISTANCE, 2.f );
+	alSource3f(id,	AL_POSITION,       0.0f, 0.0f, 0.0f);
+	alSourcef(id,	AL_GAIN,            volume);
+	alSource3f(id,	AL_VELOCITY,       0.0f,  0.0f,  0.0f);
+	alSource3f(id,	AL_DIRECTION,      0.0f,  0.0f,  0.0f);
+	alSourcef(id,	AL_ROLLOFF_FACTOR,  0.0f);
+	alSourcei(id,	AL_SOURCE_RELATIVE, AL_TRUE);
+	alSourcei(id,	AL_BUFFER, AL_NONE);
 }
 
 void AudioManager::run()
@@ -45,16 +63,16 @@ void AudioManager::run()
 	qDebug() << "AudioManager ctor";
 	alGetError();
 
-	ALCdevice* device = alcOpenDevice(0);//default device
+	device_ = alcOpenDevice(0);//default device
 
-	if (device == NULL)
+	if (device_ == NULL)
 	{
 		qDebug()  <<  "Could not open a sound device, disabling sounds";
 		CheckError("CSound::InitAL");
 	}
 	else
 	{
-		ALCcontext *context = alcCreateContext(device, NULL);
+		ALCcontext *context = alcCreateContext(device_, NULL);
 		if (context != NULL)
 		{
 			alcMakeContextCurrent(context);
@@ -62,19 +80,18 @@ void AudioManager::run()
 		}
 		else
 		{
-			alcCloseDevice(device);
+			alcCloseDevice(device_);
 			qDebug()  << "Could not create OpenAL audio context";
 		}
 	}
 
-	alGenSources(1, &ogg_stream_id_);
+	alGenSources(8, sources_);
+	ogg_stream_id_ = sources_[0];
 	if (!CheckError("CSoundSource::CSoundSource")) {
 		ogg_stream_id_ = 0;
-	} else {
-		alSourcef(ogg_stream_id_, AL_REFERENCE_DISTANCE, 2.f );
-		CheckError("CSoundSource::CSoundSource");
 	}
 
+	loadAllSounds();
 	getMusicFilenames();
 	if ( music_filenames.size() == 0 )
 	{
@@ -83,20 +100,13 @@ void AudioManager::run()
 	}
 
 	ogg_stream_ = new COggStream(ogg_stream_id_);
-
-	const float volume = 50.5f;
-
 	assert( ogg_stream_ );
+	setupAlSource( ogg_stream_id_, master_volume_*0.25 );
+	tmp_id = sources_[1];
+	setupAlSource( tmp_id, master_volume_ );
+	alListenerf(AL_GAIN, master_volume_ );
 
-	alSource3f(ogg_stream_id_,	AL_POSITION,       0.0f, 0.0f, 0.0f);
-	alSourcef(ogg_stream_id_,	AL_GAIN,            volume);
-	alSource3f(ogg_stream_id_,	AL_VELOCITY,       0.0f,  0.0f,  0.0f);
-	alSource3f(ogg_stream_id_,	AL_DIRECTION,      0.0f,  0.0f,  0.0f);
-	alSourcef(ogg_stream_id_,	AL_ROLLOFF_FACTOR,  0.0f);
-	alSourcei(ogg_stream_id_,	AL_SOURCE_RELATIVE, AL_TRUE);
-	alSourcei(ogg_stream_id_,	AL_BUFFER, AL_NONE);
-
-	ogg_stream_->Play( music_filenames[0].toStdString(), volume );
+	ogg_stream_->Play( music_filenames[0].toStdString(), master_volume_ /*this has no effect actually*/ );
 	music_filenames.pop_front();
 	ogg_stream_->Update();
 
@@ -111,7 +121,7 @@ void AudioManager::run()
 				getMusicFilenames();//refill queue
 			if ( music_filenames.size() == 0 ) //someone removed music at runtime, bad
 				return;
-			ogg_stream_->Play( music_filenames[0].toStdString(), volume );
+			ogg_stream_->Play( music_filenames[0].toStdString(), master_volume_ );
 			music_filenames.pop_front();
 		}
 	}
@@ -125,11 +135,77 @@ void AudioManager::getMusicFilenames()
 
 	QDir music_dir ( SLcustomizations().MusicDir() );
 	QFileInfo current_file;
-	foreach( current_file, music_dir.entryInfoList( ) )
+	QStringList nameFilter;
+	nameFilter << "*.ogg" ;
+	foreach( current_file, music_dir.entryInfoList( nameFilter, QDir::Files ) )
 	{
 		qDebug() << current_file.absoluteFilePath() ;
 		music_filenames.append( current_file.absoluteFilePath() );
 	}
+}
+
+size_t AudioManager:: loadSound( const QString& q_path )
+{
+	const std::string path = q_path.toStdString();
+	const size_t id = SoundBuffer::GetId(path);
+
+	if (id > 0) {
+		return id; // file is loaded already
+	}
+
+	CFileHandler file(path);
+	if (!file.FileExists()) {
+		qDebug() << "Unable to open audio file: " << path.c_str();
+		return 0;
+	}
+
+	std::vector<boost::uint8_t> buf(file.FileSize());
+	file.Read(&buf[0], file.FileSize());
+
+	boost::shared_ptr<SoundBuffer> buffer(new SoundBuffer());
+	bool success = false;
+	const std::string ending = file.GetFileExt();
+	if (ending == "wav")
+		success = buffer->LoadWAV(path, buf, false);
+	else if (ending == "ogg")
+		success = buffer->LoadVorbis(path, buf, false);
+	else
+		qDebug() << "CSound::LoadALBuffer: unknown audio format: " << ending.c_str();
+
+	CheckError("CSound::LoadALBuffer");
+	if (!success) {
+		qDebug() << "Failed to load file: " << path.c_str();
+		return 0;
+	}
+
+	return SoundBuffer::Insert(buffer);
+}
 
 
+void AudioManager::playSound( const QString filename ) const
+{
+	ALuint tmp_id2 = sources_[1];
+	BufferIdMapType::const_iterator buffer_it = fn_to_bufferID_map.find( filename );
+	if ( buffer_it == fn_to_bufferID_map.end() )
+	{
+		qDebug() << "cannot find (maybe not loaded?) sound: " << filename;
+		return;
+	}
+	boost::shared_ptr<SoundBuffer> buffer = SoundBuffer::GetById( buffer_it->second );
+
+	alSourcei(tmp_id2, AL_BUFFER, buffer->GetId());
+	alSourcePlay(tmp_id2);
+	CheckError("alSourcePlay(tmp_id)");
+}
+
+void AudioManager::loadAllSounds()
+{
+	QDir sound_dir( SLcustomizations().SoundsDir() );
+	QStringList nameFilter;
+		nameFilter << "*.wav" << "*.raw";
+	QFileInfo current_file;
+	foreach( current_file, sound_dir.entryInfoList( nameFilter, QDir::Files ) )
+	{
+		fn_to_bufferID_map[current_file.fileName()] = loadSound( current_file.absoluteFilePath() );
+	}
 }

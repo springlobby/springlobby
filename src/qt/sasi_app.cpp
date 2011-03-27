@@ -75,6 +75,9 @@ int SasiApp::exec()
 	qDebug() << "qmldir" << qmldir;
 	view.engine()->addImportPath( qmldir );
 
+	AudioManager* audio_manager = new AudioManager(this);
+	audio_manager->start();
+
 #ifdef __WXMSW__
 	//for webkit declarative plugin
 	view.engine()->addImportPath( QDir( QCoreApplication::applicationDirPath() + "/imports").absolutePath() );
@@ -106,14 +109,12 @@ int SasiApp::exec()
 	SkirmishModel skirmish_model;
 	SideModel side_model( SLcustomizations().GetModname() );
 
-	AudioManager* audio_manager = new AudioManager(this);
-	audio_manager->start();
-
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), this, SLOT(quit()));
 	QDeclarativeContext* ctxt = view.rootContext();
 	ctxt->setContextProperty("myModel", &maplist_model );
 	ctxt->setContextProperty("skirmishModel", &skirmish_model );
 	ctxt->setContextProperty("sideModel", &side_model );
+	ctxt->setContextProperty("audioManager", audio_manager );
 	view.setSource(QUrl(qmldir + "/main.qml"));//usync resets pwd, figure out how to put qml in qrc
 
 	//	QRect d = app.desktop()->screenGeometry();

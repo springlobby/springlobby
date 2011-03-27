@@ -21,7 +21,9 @@
 
 #include <QThread>
 #include <AL/al.h>
+#include <AL/alc.h>
 #include <QList>
+#include <map>
 
 class COggStream;
 
@@ -37,13 +39,26 @@ public:
 signals:
 
 public slots:
+	void playSound( const QString filename ) const;
 
 private:
+	size_t loadSound( const QString& path );
+	void loadAllSounds();
 	void getMusicFilenames();
+	void setupAlSource( const ALuint id, const float volume );
 
 	COggStream* ogg_stream_;
 	ALuint ogg_stream_id_;
+	ALuint sources_[8];
+	ALuint tmp_id;
 	QList<QString> music_filenames;
+	float master_volume_;
+
+	typedef std::map<QString,size_t>
+		BufferIdMapType;
+	BufferIdMapType fn_to_bufferID_map;
+
+	ALCdevice* device_;
 
 };
 

@@ -11,6 +11,8 @@
 #include <limits.h>
 #include <boost/regex.hpp>
 
+#include <QFileInfo>
+
 using std::string;
 
 
@@ -216,8 +218,7 @@ bool CFileHandler::LoadStringData(string& data)
 
 std::string CFileHandler::GetFileExt() const
 {
-	assert(false);
-	return std::string();//filesystem.GetExtension(filename);
+	return QFileInfo( QString(filename.c_str()) ).suffix().toStdString();
 }
 
 /******************************************************************************/

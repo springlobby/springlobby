@@ -2,7 +2,6 @@
 
 # Additional import path used to resolve QML modules in Creator's code model
 include(qml.local.pri)
-QML_IMPORT_PATH =
 
 # Avoid auto screen rotation
 #DEFINES += ORIENTATIONLOCK
@@ -173,7 +172,8 @@ SOURCES += sasi_main.cpp \
     audio/GEAudioBuffer.cpp \
     audio/ALShared.cpp \
     FileHandler.cpp \
-    sasi_app.cpp
+    sasi_app.cpp \
+    audio/SoundBuffer.cpp
 
 HEADERS += \
     ../springunitsynclib.h \
@@ -250,7 +250,8 @@ HEADERS += \
     audio/GEAudioBuffer.h \
     audio/ALShared.h \
     FileHandler.h \
-    sasi_app.h
+    sasi_app.h \
+    audio/SoundBuffer.h
 
 INCLUDEPATH += ..
 INCLUDEPATH += ../Helper/qtargparser
