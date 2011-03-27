@@ -122,7 +122,7 @@ Customizations& SLcustomizations()
 #include <QDir>
 #include <QDebug>
 #include <QMessageBox>
-#include "qerrorwindow.h"
+#include "qt/qerrorwindow.h"
 #include <QCoreApplication>
 
 QString Customizations::DataBasePath()
