@@ -9,6 +9,7 @@
 #ifdef SL_QT_MODE
 	#include <QImage>
 	#include <qt/converters.h>
+
 #endif
 const wxString Customizations::IntroKey = wxString ( _T("intro_file") );
 
@@ -117,25 +118,39 @@ Customizations& SLcustomizations()
 }
 
 #ifdef SL_QT_MODE
+
 #include <QDir>
 #include <QDebug>
+#include <QMessageBox>
+#include "qerrorwindow.h"
+#include <QCoreApplication>
+
 QString Customizations::DataBasePath()
 {
 	static bool cached = false;
 	if ( cached )
 		return dataBasePath_;
 
+	QList<QString> checked_paths;
+	QString sub_path( "lobby/SpringLobby/customizations/evo" );
 	for ( int i = 0; i < susynclib().GetSpringDataDirCount(); ++i ) {
 		QDir data ( ToQString( susynclib().GetSpringDataDirByIndex(i) ) );
 		qDebug() << "Data checking: " << data.absolutePath();
-		if ( data.cd( "lobby/SpringLobby/customizations/evo" ) ) {
+		checked_paths.append( data.absolutePath().append("/").append( sub_path ) );
+		if ( data.cd( sub_path ) ) {
 			dataBasePath_ = data.absolutePath();
 			qDebug() << "Data found: " << dataBasePath_;
 			break;
 		}
+
 	}
-	assert( dataBasePath_ != QString() );
-	return dataBasePath_ ;
+	if( dataBasePath_ != QString() )
+		return dataBasePath_ ;
+
+	checked_paths.prepend( QString("Couldn't find customization data in any of these directories:\n ") );
+	throw DataException( checked_paths );
+
+	return QString();
 }
 
 QString Customizations::QmlDir()

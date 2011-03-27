@@ -38,6 +38,8 @@
 #include "sidemodel.h"
 #include "qerrorwindow.h"
 
+#define USE_OPENGL
+
 SasiApp::SasiApp(int argc, char *argv[])
 	: QApplication(argc,argv)
 {
@@ -54,7 +56,17 @@ int SasiApp::exec()
 {
 
 	QDeclarativeView view;
-	QString qmldir = SLcustomizations().QmlDir();
+	QString qmldir;
+	try {
+		qmldir = SLcustomizations().QmlDir();
+	}
+	catch ( Customizations::DataException& e )
+	{
+		//for some fucked up reason the strings get internally fucked up w/o the hardcopy
+		QList<QString> copy = e.errors_;
+		QErrorWindow error_win ( copy );
+		return error_win.exec();
+	}
 	qDebug() << "qmldir" << qmldir;
 	view.engine()->addImportPath( qmldir );
 

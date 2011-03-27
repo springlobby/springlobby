@@ -16,25 +16,51 @@
 **/
 
 
-#ifndef QERRORWINDOW_H
-#define QERRORWINDOW_H
+#ifndef SPRINGLOBBY_HEADERGUARD_QERRORWINDOW_H
+#define SPRINGLOBBY_HEADERGUARD_QERRORWINDOW_H
 
 #include <QDialog>
-
-template <class T>
-class QList;
-class QDeclarativeError;
+#include <QTextEdit>
+#include <QList>
+#include <QBoxLayout>
 
 class QErrorWindow : public QDialog
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-	QErrorWindow(const QList<QDeclarativeError>& errors, QWidget *parent = 0);
-
-signals:
-
-public slots:
-
+	template <class T>
+	explicit QErrorWindow(const QList<T>& errors, QWidget *parent = 0);
 };
 
-#endif // QERRORWINDOW_H
+namespace {
+	template <class T>
+	void appendErrorToTextEdit( const T& error, QTextEdit* text )
+	{
+		text->append( error.toString() );
+	}
+
+	template <>
+	void appendErrorToTextEdit( const QString& error, QTextEdit* text )
+	{
+		QString f = error;
+		text->append( f );
+	}
+}
+
+template <class T>
+QErrorWindow::QErrorWindow(const QList<T>& errors, QWidget *parent) :
+	QDialog(parent)
+{
+	setFixedSize(800,600);
+	QVBoxLayout* layout = new QVBoxLayout(this);
+	QTextEdit* text = new QTextEdit(this);
+	T error;
+	foreach( error, errors )
+	{
+		appendErrorToTextEdit( error, text );
+	}
+	layout->addWidget(text,1);
+	setLayout(layout);
+}
+
+#endif // SPRINGLOBBY_HEADERGUARD_QERRORWINDOW_H

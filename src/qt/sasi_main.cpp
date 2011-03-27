@@ -1,7 +1,8 @@
 //#include "qmlapplicationviewer.h"
 
+#include "sasi_app.h"
+
 #include <springunitsync.h>
-#define USE_OPENGL
 
 #include <settings.h>
 #include <utils/platform.h>
@@ -28,8 +29,7 @@
 #include <QtArg/Help>
 
 #include <QDebug>
-
-#include "sasi_app.h"
+#include <QMessageBox>
 
 bool CmdInit()
 {
@@ -51,6 +51,7 @@ bool CmdInit()
 	catch( const QtArgBaseException & x )
 	{
 			qDebug() << x.what();
+			QMessageBox::critical( 0, "Fatal error", QString("Parsing command line failed:\n").append(x.what()) );
 			return false;
 	}
 	Settings::m_user_defined_config = config_file.isPresent();
@@ -60,10 +61,12 @@ bool CmdInit()
 		 wxFileName fn ( Settings::m_user_defined_config_path );
 		 if ( ! fn.IsAbsolute() ) {
 			 qDebug() << "path for parameter \"config-file\" must be absolute";
+			 QMessageBox::critical( 0, "Fatal error", QString("path for parameter \"config-file\" must be absolute") );
 			 return false;
 		 }
 		 if ( ! fn.IsFileWritable() ) {
 			 qDebug() << "path for parameter \"config-file\" must be writeable";
+			 QMessageBox::critical( 0, "Fatal error", QString("path for parameter \"config-file\" must be writable") );
 			 return false;
 		 }
 		 qDebug() << Settings::m_user_defined_config_path.mb_str();
@@ -86,6 +89,7 @@ bool CmdInit()
 		wxLogError( customization_value_wx.c_str() );
 		if ( !SLcustomizations().Init( customization_value_wx ) ) {
 			qDebug() << "init false";
+			QMessageBox::critical( 0, "Fatal error", QString("loading customizations failed for ").append( customization_value ) );
 			return false;
 		}
 	}
