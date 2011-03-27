@@ -1,4 +1,4 @@
-include(qmlapplicationviewer.pri)
+#include(qmlapplicationviewer.pri)
 
 # Additional import path used to resolve QML modules in Creator's code model
 QML_IMPORT_PATH =
@@ -20,7 +20,7 @@ symbian:TARGET.UID3 = 0xE1BC102A
 # MOBILITY variable. 
 # CONFIG += mobility
 # MOBILITY +=
-QT += multimedia opengl webkit
+QT += multimedia opengl webkit declarative
 # PKGCONFIG += vorbis vorbisfile
 # LIBS += -lvorbisfile -lvorbis -logg
 
@@ -256,7 +256,7 @@ INCLUDEPATH += ..
 INCLUDEPATH += ../Helper/qtargparser
 DEFINES += SL_QT_MODE NO_TORRENT_SYSTEM DISABLE_SOUND
 
-PKGCONFIG += openal sdl_sound sdl vorbis ogg vorbisfile
+PKGCONFIG += openal sdl vorbis ogg vorbisfile
 
 unix {
 	CONFIG += link_pkgconfig
@@ -285,3 +285,10 @@ OTHER_FILES += \
     ../Helper/qtargparser/QtArg/CmdLine \
     ../Helper/qtargparser/QtArg/ArgConstraint \
     ../Helper/qtargparser/QtArg/Arg 
+
+CONFIG(debug, debug|release) {
+	DESTDIR = ../qt-build/debug
+} else {
+	DESTDIR = ../qt-build/release
+}
+
