@@ -2249,8 +2249,8 @@ void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 
 void TASServer::SendScriptToProxy( const wxString& script )
 {
-  int time = script.Lenght() / socket.GetSendRateLimit(); // calculate time in seconds to upload script
-  DoActionBattle(wxString::Format(_T("is preparing to start the game, game will start in approximately %d seconds"),time));
+  int time = script.Len() / m_sock->GetSendRateLimit(); // calculate time in seconds to upload script
+  DoActionBattle( m_battle_id, wxString::Format(_T("is preparing to start the game, game will start in approximately %d seconds"),time));
   RelayCmd( _T("CLEANSCRIPT") );
   wxStringTokenizer tkzr( script, _T("\n") );
   while ( tkzr.HasMoreTokens() )
