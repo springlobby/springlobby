@@ -167,9 +167,6 @@ SOURCES += sasi_main.cpp \
     audio/audiomanager.cpp \
     audio/VorbisShared.cpp \
     audio/OggStream.cpp \
-    audio/GEInterfaces.cpp \
-    audio/GEAudioOut.cpp \
-    audio/GEAudioBuffer.cpp \
     audio/ALShared.cpp \
     FileHandler.cpp \
     sasi_app.cpp \
@@ -246,9 +243,6 @@ HEADERS += \
     audio/audiomanager.h \
     audio/VorbisShared.h \
     audio/OggStream.h \
-    audio/GEInterfaces.h \
-    audio/GEAudioOut.h \
-    audio/GEAudioBuffer.h \
     audio/ALShared.h \
     FileHandler.h \
     sasi_app.h \
