@@ -201,6 +201,8 @@ class SpringUnitSync : public IUnitSync
 
 	bool ReloadUnitSyncLib(  );
 	void ReloadUnitSyncLib( GlobalEvents::GlobalEventData /*data*/ ) { ReloadUnitSyncLib(); }
+	bool FastLoadUnitSyncLib( const wxString& unitsyncloc );
+	bool FastLoadUnitSyncLibInit();
 
     void SetSpringDataPath( const wxString& path );
 

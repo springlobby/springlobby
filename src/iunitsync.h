@@ -201,6 +201,8 @@ class IUnitSync : public wxEvtHandler
 
     virtual bool ReloadUnitSyncLib(  ) = 0;
     virtual void ReloadUnitSyncLib( GlobalEvents::GlobalEventData data ) = 0;
+	virtual bool FastLoadUnitSyncLib( const wxString& unitsyncloc ) = 0;
+	virtual bool FastLoadUnitSyncLibInit() = 0;
 
 	virtual wxArrayString GetPlaybackList( bool ReplayType = true ) const = 0; //savegames otherwise
 

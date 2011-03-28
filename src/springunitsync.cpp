@@ -64,6 +64,53 @@ SpringUnitSync::~SpringUnitSync()
   m_cache_thread->Wait();
 }
 
+static int CompareStringNoCase(const wxString& first, const wxString& second)
+{
+	return first.CmpNoCase(second);
+}
+
+bool SpringUnitSync::FastLoadUnitSyncLib( const wxString& unitsyncloc )
+{
+	LOCK_UNITSYNC;
+	if (!_LoadUnitSyncLib( unitsyncloc ))
+		return false;
+
+	m_mods_list.clear();
+	m_mod_array.Clear();
+	m_unsorted_mod_array.Clear();
+	m_mods_unchained_hash.clear();
+
+	const int numMods = susynclib().GetPrimaryModCount();
+	wxString name, hash;
+	for ( int i = 0; i < numMods; i++ )
+	{
+	  try
+	  {
+	   name = susynclib().GetPrimaryModName( i );
+	   m_mods_list[name] = _T("fakehash");
+	   m_mod_array.Add( name );
+	  } catch (...) { continue; }
+	}
+	m_unsorted_mod_array = m_mod_array;
+	return true;
+}
+bool SpringUnitSync::FastLoadUnitSyncLibInit()
+{
+	LOCK_UNITSYNC;
+	m_cache_thread = new WorkerThread();
+	m_cache_thread->Create();
+	m_cache_thread->SetPriority( WXTHREAD_MIN_PRIORITY );
+	m_cache_thread->Run();
+
+	UiEvents::ScopedStatusMessage staus(_("loading unitsync"), 0);
+	wxLogDebugFunc( _T("") );
+	if ( IsLoaded() )
+	{
+	   m_cache_path = sett().GetCachePath();
+	   PopulateArchiveList();
+	}
+	return true;
+}
 
 bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
 {
@@ -84,13 +131,6 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
    }
    return ret;
 }
-
-
-static int CompareStringNoCase(const wxString& first, const wxString& second)
-{
-	return first.CmpNoCase(second);
-}
-
 
 void SpringUnitSync::PopulateArchiveList()
 {

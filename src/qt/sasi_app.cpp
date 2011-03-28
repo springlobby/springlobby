@@ -31,6 +31,12 @@
 #include <customizations.h>
 #include <springunitsynclib.h>
 
+#include <wx/fs_zip.h> //filesystem zip handler
+#include <wx/socket.h>
+#include <wx/filename.h>
+
+#include <iostream>
+
 #include "audio/audiomanager.h"
 #include "imageprovider.h"
 #include "converters.h"
@@ -60,6 +66,22 @@ SasiApp::SasiApp(int argc, char *argv[])
 
 int SasiApp::exec()
 {		
+	QSplashScreen* splash = 0;
+	QPixmap splash_pixmap;
+	if ( splash_pixmap.load( SLcustomizations().GraphicsDir() + "/splash.png" ) )
+	{
+		splash = new QSplashScreen(splash_pixmap);
+		splash->show();
+	}
+	wxLogChain* logchain = 0;
+	wxLog::SetActiveTarget( new wxLogChain( new wxLogStream( &std::cout ) ) );
+
+	//this needs to called _before_ mainwindow instance is created
+	wxInitAllImageHandlers();
+	wxFileSystem::AddHandler(new wxZipFSHandler);
+	wxSocketBase::Initialize();
+
+	usync().FastLoadUnitSyncLibInit( );
 	QDeclarativeView view;
 	QString qmldir;
 	try {
@@ -71,14 +93,6 @@ int SasiApp::exec()
 		QList<QString> copy = e.errors_;
 		QErrorWindow error_win ( copy );
 		return error_win.exec();
-	}
-
-	QSplashScreen* splash = 0;
-	QPixmap splash_pixmap;
-	if ( splash_pixmap.load( SLcustomizations().GraphicsDir() + "/splash.png" ) )
-	{
-		splash = new QSplashScreen(splash_pixmap);
-		splash->show();
 	}
 
 	qDebug() << "qmldir" << qmldir;

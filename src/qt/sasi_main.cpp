@@ -10,23 +10,14 @@
 #include <customizations.h>
 
 #include <wx/intl.h>
-#include <wx/msgdlg.h>
-#include <wx/timer.h>
-#include <wx/stdpaths.h>
-#include <wx/filefn.h>
-#include <wx/image.h>
-#include <wx/dirdlg.h>
-#include <wx/tooltip.h>
-#include <wx/file.h>
-#include <wx/wfstream.h>
-#include <wx/fs_zip.h> //filesystem zip handler
-#include <wx/socket.h>
 #include <wx/log.h>
+#include <wx/filename.h>
 
 #include <QtArg/Arg>
 #include <QtArg/XorArg>
 #include <QtArg/CmdLine>
 #include <QtArg/Help>
+#include <QSplashScreen>
 
 #include <QDebug>
 #include <QMessageBox>
@@ -36,7 +27,7 @@ bool CmdInit()
 	PwdGuard pwd_guard;//makes us invulnerabel to cwd changes in usync loading
 	QtArgCmdLine cmd;
 	QtArg config_file( 'f', "config-file", "absolute path to config file", false, true );
-	QtArg customization( 'c', "customize", "Load lobby customizations from game archive. Expects the long name.", false, true );
+	QtArg customization( 'c', "customize", "Load lobby customizations from game archive. Expects the long name.", true, true );
 	QtArgDefaultHelpPrinter helpPrinter( "Testing help printing.\n" );
 	QtArgHelp help( &cmd );
 	help.setPrinter( &helpPrinter );
@@ -81,7 +72,7 @@ bool CmdInit()
 	if ( !wxDirExists( GetConfigfileDir() ) )
 		wxMkdir( GetConfigfileDir() );
 
-	usync().ReloadUnitSyncLib();
+	usync().FastLoadUnitSyncLib( sett().GetCurrentUsedUnitSync() );
 
 	if ( customization.isPresent() ) {
 		QString customization_value = customization.value().toString();
@@ -93,24 +84,14 @@ bool CmdInit()
 			return false;
 		}
 	}
-
 	return true;
 }
 
 int main(int argc, char *argv[])
 {
 	SasiApp app(argc, argv);
-
 	if ( !CmdInit() )
-		return -1;
-	wxLogChain* logchain = 0;
-	wxLog::SetActiveTarget( new wxLogChain( new wxLogStream( &std::cout ) ) );
-
-	//this needs to called _before_ mainwindow instance is created
-	wxInitAllImageHandlers();
-	wxFileSystem::AddHandler(new wxZipFSHandler);
-	wxSocketBase::Initialize();
-
+		return 1;
 	return app.exec();
 }
 
