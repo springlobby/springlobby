@@ -238,6 +238,13 @@ class IUnitSync : public wxEvtHandler
 
     private:
         IUnitSync( const IUnitSync& );
+#ifdef	SL_QT_MODE
+	protected:
+		typedef std::map< std::pair<wxString,wxString>, wxString> ShortnameVersionToNameMap;
+		ShortnameVersionToNameMap m_shortname_to_name_map;
+	public:
+		virtual wxString GetNameForShortname( const wxString& shortname, const wxString& version ) const = 0;
+#endif
 };
 
 IUnitSync& usync();

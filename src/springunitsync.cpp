@@ -68,7 +68,7 @@ static int CompareStringNoCase(const wxString& first, const wxString& second)
 {
 	return first.CmpNoCase(second);
 }
-
+#include <QDebug>
 bool SpringUnitSync::FastLoadUnitSyncLib( const wxString& unitsyncloc )
 {
 	LOCK_UNITSYNC;
@@ -84,12 +84,18 @@ bool SpringUnitSync::FastLoadUnitSyncLib( const wxString& unitsyncloc )
 	wxString name, hash;
 	for ( int i = 0; i < numMods; i++ )
 	{
-	  try
-	  {
-	   name = susynclib().GetPrimaryModName( i );
-	   m_mods_list[name] = _T("fakehash");
-	   m_mod_array.Add( name );
-	  } catch (...) { continue; }
+		try
+		{
+			name = susynclib().GetPrimaryModName( i );
+			m_mods_list[name] = _T("fakehash");
+			m_mod_array.Add( name );
+			#ifdef	SL_QT_MODE
+				qDebug() << "shortname : " << ToQString( susynclib().GetPrimaryModShortName( i ) );
+				m_shortname_to_name_map[
+						std::make_pair(susynclib().GetPrimaryModShortName( i ),
+									   susynclib().GetPrimaryModVersion( i )) ] = name;
+			#endif
+		} catch (...) { continue; }
 	}
 	m_unsorted_mod_array = m_mod_array;
 	return true;
@@ -1386,3 +1392,14 @@ void EvtHandlerCollection::PostEvent( int evtHandlerId, wxEvent& evt )
   EvtHandlerMap::iterator it = m_items.find( evtHandlerId );
   if ( it != m_items.end() ) wxPostEvent( it->second, evt );
 }
+
+#ifdef	SL_QT_MODE
+wxString SpringUnitSync::GetNameForShortname( const wxString& shortname, const wxString& version) const
+{
+	ShortnameVersionToNameMap::const_iterator it
+			=  m_shortname_to_name_map.find( std::make_pair(shortname,version) );
+	if ( it != m_shortname_to_name_map.end() )
+		return it->second;
+	return wxEmptyString;
+}
+#endif

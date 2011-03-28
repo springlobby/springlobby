@@ -27,7 +27,7 @@ class Customizations {
     public:
         ~Customizations() {}
 
-        bool Init( const wxString& modname );
+		bool Init( const wxString& shortname, const wxString& version );
 		bool Active() const;
 
         const wxString& GetModname() const;
@@ -56,6 +56,7 @@ class Customizations {
 	private:
 		QString DataBasePath();
 		QString dataBasePath_;
+		QString m_shortname;
 
 	public:
 		QString QmlDir();

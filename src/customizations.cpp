@@ -49,18 +49,18 @@ const wxString& Customizations::GetModname() const
   *
   * @todo: document this function
   */
-bool Customizations::Init(const wxString& modname)
+bool Customizations::Init(const wxString& shortname,const wxString& version )
 {
 	//!TODO require blocking usync init if it's not loaded
-    m_modname = modname;
+	m_modname = usync().GetNameForShortname( shortname, version );
     if ( !usync().ModExists( m_modname ) )
         return false;
     susynclib().SetCurrentMod( m_modname );
     bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
     if ( ret ) {
         wxString icon_img_path = m_customs.getSingleValue( _T("icon") );
-		wxString bg_img_path = m_customs.getSingleValue( _T("bg_image") );
 #ifdef SL_QT_MODE
+		m_shortname = ToQString( shortname );
 		wxBitmap icon_bmp ( wxQtConvertImage( usync().GetQImage( m_modname, icon_img_path, false ) ) );
 #else
 		wxBitmap icon_bmp (usync().GetImage( m_modname, icon_img_path, false ) );
@@ -133,8 +133,7 @@ QString Customizations::DataBasePath()
 
 	QList<QString> checked_paths;
 	QString sub_path( "lobby/SpringLobby/customizations/" );
-	QString modname = ToQString( m_modname );
-	sub_path.append( modname.toLower() );
+	sub_path.append( m_shortname );
 	for ( int i = 0; i < susynclib().GetSpringDataDirCount(); ++i ) {
 		QDir data ( ToQString( susynclib().GetSpringDataDirByIndex(i) ) );
 		qDebug() << "Data checking: " << data.absolutePath();

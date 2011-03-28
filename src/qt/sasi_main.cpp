@@ -28,12 +28,14 @@ bool CmdInit()
 	PwdGuard pwd_guard;//makes us invulnerabel to cwd changes in usync loading
 	QtArgCmdLine cmd;
 	QtArg config_file( 'f', "config-file", "absolute path to config file", false, true );
-	QtArg customization( 'c', "customize", "Load lobby customizations from game archive. Expects the long name.", true, true );
+	QtArg customization( 'c', "customize", "Load lobby customizations from game archive. Expects the shortname.", true, true );
+	QtArg version( 'r', "version", "Load lobby customizations from game archive given shortname and this version.", true, true );
 	QtArgDefaultHelpPrinter helpPrinter( "Testing help printing.\n" );
 	QtArgHelp help( &cmd );
 	help.setPrinter( &helpPrinter );
 	cmd.addArg( config_file );
 	cmd.addArg( customization );
+	cmd.addArg( version );
 	try {
 			cmd.parse();
 	}
@@ -75,15 +77,15 @@ bool CmdInit()
 
 	usync().FastLoadUnitSyncLib( sett().GetCurrentUsedUnitSync() );
 
-	if ( customization.isPresent() ) {
-		QString customization_value = customization.value().toString();
-		wxString customization_value_wx = TowxString( customization_value.toStdString() );
-		wxLogError( customization_value_wx.c_str() );
-		if ( !SLcustomizations().Init( customization_value_wx ) ) {
-			qDebug() << "init false";
-			QMessageBox::critical( 0, "Fatal error", QString("loading customizations failed for ").append( customization_value ) );
-			return false;
-		}
+	QString customization_value = customization.value().toString();
+	QString version_value = version.value().toString();
+	qDebug() << QString( "shortname: %1\tversion: %2").arg( customization_value ).arg( version.value().toString() );
+	if ( !SLcustomizations().Init( TowxString( customization_value.toStdString() ),
+								  TowxString( version_value.toStdString() ) ) )
+	{
+		qDebug() << "init false";
+		QMessageBox::critical( 0, "Fatal error", QString("loading customizations failed for ").append( customization_value ) );
+		return false;
 	}
 	return true;
 }

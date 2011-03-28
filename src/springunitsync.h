@@ -290,6 +290,10 @@ class SpringUnitSync : public IUnitSync
     wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int width, int height );
 
     void _GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int evtHandlerId );
+#ifdef	SL_QT_MODE
+public:
+	wxString GetNameForShortname( const wxString& shortname, const wxString& version ) const;
+#endif
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
