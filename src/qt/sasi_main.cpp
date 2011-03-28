@@ -2,10 +2,9 @@
 
 #include "sasi_app.h"
 
-#include <springunitsync.h>
-
-#include <settings.h>
 #include <utils/platform.h>
+#include <springunitsync.h>
+#include <settings.h>
 #include <utils/conversion.h>
 #include <customizations.h>
 #include <globalsmanager.h>
@@ -57,7 +56,6 @@ bool CmdInit()
 
 #ifdef __WXMSW__
 	sett().SetSearchSpringOnlyInSLPath( false );
-	sett().SetPortableMode( false );
 #endif
 //	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
 //	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
