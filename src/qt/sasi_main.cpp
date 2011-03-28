@@ -52,14 +52,17 @@ bool CmdInit()
 
 	if ( Settings::m_user_defined_config ) {
 		Settings::m_user_defined_config_path = TowxString( config_file.value().toString().toStdString() );
-		 qDebug() << Settings::m_user_defined_config_path.mb_str();
+		qDebug() << ToQString( Settings::m_user_defined_config_path );
 	}
 
 #ifdef __WXMSW__
-	sett().SetSearchSpringOnlyInSLPath( sett().GetSearchSpringOnlyInSLPath() );
+	sett().SetSearchSpringOnlyInSLPath( false );
+	sett().SetPortableMode( false );
 #endif
-	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
-	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
+//	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
+//	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
+
+	qDebug() << "current used usync path" << ToQString(sett().GetCurrentUsedUnitSync()) ;
 
 	if ( !wxDirExists( GetConfigfileDir() ) )
 		wxMkdir( GetConfigfileDir() );
