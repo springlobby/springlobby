@@ -64,16 +64,24 @@ Settings::Settings()
 	wxString userfilepath = IdentityString( GetConfigfileDir() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
 	wxString localfilepath =  IdentityString( GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
 
-	if ( !wxFileName::FileExists( localfilepath ) || !wxFileName::IsFileWritable( localfilepath ) )
+	if ( m_user_defined_config && wxFileName::IsFileWritable( m_user_defined_config_path ) )
 	{
-	    //either local conf file soes not exist, or it exists but is not writable
-		m_chosen_path = userfilepath;
+		m_chosen_path = m_user_defined_config_path;
 		SetPortableMode( false );
 	}
 	else
 	{
-		m_chosen_path = localfilepath; // portable mode, use only current app paths
-		SetPortableMode ( true );
+		if ( !wxFileName::FileExists( localfilepath ) || !wxFileName::IsFileWritable( localfilepath ) )
+		{
+			//either local conf file soes not exist, or it exists but is not writable
+			m_chosen_path = userfilepath;
+			SetPortableMode( false );
+		}
+		else
+		{
+			m_chosen_path = localfilepath; // portable mode, use only current app paths
+			SetPortableMode ( true );
+		}
 	}
 
 	// if it doesn't exist, try to create it
