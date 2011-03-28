@@ -52,17 +52,6 @@ bool CmdInit()
 
 	if ( Settings::m_user_defined_config ) {
 		Settings::m_user_defined_config_path = TowxString( config_file.value().toString().toStdString() );
-		 wxFileName fn ( Settings::m_user_defined_config_path );
-		 if ( ! fn.IsAbsolute() ) {
-			 qDebug() << "path for parameter \"config-file\" must be absolute";
-			 QMessageBox::critical( 0, "Fatal error", QString("path for parameter \"config-file\" must be absolute") );
-			 return false;
-		 }
-		 if ( ! fn.IsFileWritable() ) {
-			 qDebug() << "path for parameter \"config-file\" must be writeable";
-			 QMessageBox::critical( 0, "Fatal error", QString("path for parameter \"config-file\" must be writable") );
-			 return false;
-		 }
 		 qDebug() << Settings::m_user_defined_config_path.mb_str();
 	}
 
