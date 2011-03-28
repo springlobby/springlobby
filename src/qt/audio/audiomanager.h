@@ -41,6 +41,8 @@ signals:
 public slots:
 	void playSound( const QString filename ) ;
 	void toggleActive();
+	bool isActive() const { return active_; }
+	void doQuit() { quitting_time_ = true; }
 
 private:
 	size_t loadSound( const QString& path );
@@ -63,6 +65,7 @@ private:
 
 	ALCdevice* device_;
 	bool active_;
+	bool quitting_time_;
 
 };
 

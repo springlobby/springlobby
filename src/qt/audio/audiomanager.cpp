@@ -27,6 +27,7 @@
 #include <QDir>
 #include <QFileInfoList>
 #include <customizations.h>
+#include <settings.h>
 
 /* some pieces cobbled together from spring's SoundSource.cpp  */
 
@@ -36,7 +37,8 @@ AudioManager::AudioManager(QObject *parent) :
 	no_busy_sources_( 0 ),
 	master_volume_( 0.5f ),
 	device_( 0 ),
-	active_( true )
+	active_( sett().Get( _T("sasi/audio_enabled"), true ) ),
+	quitting_time_( false )
 {
 	SoundBuffer::Initialise();
 	qDebug() << "AudioManager ctor";
@@ -92,6 +94,7 @@ AudioManager::~AudioManager()
 	alDeleteSources(1, &ogg_stream_id_);
 	alcCloseDevice( device_ );
 	CheckError("CSoundSource::~CSoundSource");
+	sett().Set( _T("sasi/audio_enabled"), active_ );
 }
 
 void AudioManager::setupAlSource( const ALuint id, const float volume )
@@ -117,7 +120,7 @@ void AudioManager::run()
 		CheckError("AudioManager::play");
 	}
 
-	while( true ) {
+	while( !quitting_time_ ) {
 		if ( !active_ )// no need to update that often if we're nto active
 		{
 			sleep( 1 );

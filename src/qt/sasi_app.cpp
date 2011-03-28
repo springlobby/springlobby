@@ -97,8 +97,8 @@ int SasiApp::exec()
 		return error_win.exec();
 	}
 
-	AudioManager* audio_manager = new AudioManager(this);
-	audio_manager->start();
+	AudioManager audio_manager (this);
+	audio_manager.start();
 
 	view.engine()->addImportPath( qmldir );
 #ifdef __WXMSW__
@@ -130,13 +130,14 @@ int SasiApp::exec()
 	SideModel side_model( SLcustomizations().GetModname() );
 
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), this, SLOT(quit()));
+	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &audio_manager, SLOT(doQuit()));
 	QDeclarativeContext* ctxt = view.rootContext();
 	ctxt->setContextProperty("maplistModel", &maplist_model );
 	ctxt->setContextProperty("skirmishModel", &skirmish_model );
 	ctxt->setContextProperty("sideModel", &side_model );
-	ctxt->setContextProperty("audioManager", audio_manager );
+	ctxt->setContextProperty("audioManager", &audio_manager );
 
-	const int sleep_seconds = 0;
+	const int sleep_seconds = -1;
 	for ( int i = sleep_seconds; i > 0; i-- ) {
 		splash->showMessage( QString("sleeping for %1 seconds, just to show you this").arg( i ), Qt::AlignHCenter | Qt::AlignBottom );
 		processEvents();
@@ -157,5 +158,7 @@ int SasiApp::exec()
 	}
 	view.show();
 	view.setFocus();
-	return QApplication::exec();
+	int ret = QApplication::exec();
+	audio_manager.wait( 5 /*seconds*/ );
+	return ret;
 }

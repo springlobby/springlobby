@@ -8,6 +8,7 @@
 #include <utils/platform.h>
 #include <utils/conversion.h>
 #include <customizations.h>
+#include <globalsmanager.h>
 
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -92,6 +93,9 @@ int main(int argc, char *argv[])
 	SasiApp app(argc, argv);
 	if ( !CmdInit() )
 		return 1;
-	return app.exec();
+	int ret = app.exec();
+	sett().SaveSettings();
+	DestroyGlobals();
+	return ret;
 }
 
