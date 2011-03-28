@@ -20,7 +20,7 @@
 #include "OggStream.h"
 #include "ALShared.h"
 #include "SoundBuffer.h"
-#include "FileHandler.h"
+#include "../FileHandler.h"
 #include <assert.h>
 #include <AL/alc.h>
 #include <QDebug>
