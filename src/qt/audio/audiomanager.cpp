@@ -33,33 +33,11 @@
 AudioManager::AudioManager(QObject *parent) :
 	QThread(parent),
 	ogg_stream_( 0 ),
+	no_busy_sources_( 0 ),
 	master_volume_( 0.5f ),
 	device_( 0 )
 {
 	SoundBuffer::Initialise();
-}
-
-AudioManager::~AudioManager()
-{
-	alDeleteSources(1, &ogg_stream_id_);
-	alcCloseDevice( device_ );
-	CheckError("CSoundSource::~CSoundSource");
-}
-
-void AudioManager::setupAlSource( const ALuint id, const float volume )
-{
-	alSourcef(id,	AL_REFERENCE_DISTANCE, 2.f );
-	alSource3f(id,	AL_POSITION,       0.0f, 0.0f, 0.0f);
-	alSourcef(id,	AL_GAIN,            volume);
-	alSource3f(id,	AL_VELOCITY,       0.0f,  0.0f,  0.0f);
-	alSource3f(id,	AL_DIRECTION,      0.0f,  0.0f,  0.0f);
-	alSourcef(id,	AL_ROLLOFF_FACTOR,  0.0f);
-	alSourcei(id,	AL_SOURCE_RELATIVE, AL_TRUE);
-	alSourcei(id,	AL_BUFFER, AL_NONE);
-}
-
-void AudioManager::run()
-{
 	qDebug() << "AudioManager ctor";
 	alGetError();
 
@@ -105,8 +83,31 @@ void AudioManager::run()
 	tmp_id = sources_[1];
 	setupAlSource( tmp_id, master_volume_ );
 	alListenerf(AL_GAIN, master_volume_ );
+}
 
+AudioManager::~AudioManager()
+{
+	alDeleteSources(1, &ogg_stream_id_);
+	alcCloseDevice( device_ );
+	CheckError("CSoundSource::~CSoundSource");
+}
+
+void AudioManager::setupAlSource( const ALuint id, const float volume )
+{
+	alSourcef(id,	AL_REFERENCE_DISTANCE, 2.f );
+	alSource3f(id,	AL_POSITION,       0.0f, 0.0f, 0.0f);
+	alSourcef(id,	AL_GAIN,            volume);
+	alSource3f(id,	AL_VELOCITY,       0.0f,  0.0f,  0.0f);
+	alSource3f(id,	AL_DIRECTION,      0.0f,  0.0f,  0.0f);
+	alSourcef(id,	AL_ROLLOFF_FACTOR,  0.0f);
+	alSourcei(id,	AL_SOURCE_RELATIVE, AL_TRUE);
+	alSourcei(id,	AL_BUFFER, AL_NONE);
+}
+
+void AudioManager::run()
+{
 	ogg_stream_->Play( music_filenames[0].toStdString(), master_volume_ /*this has no effect actually*/ );
+	no_busy_sources_++;
 	music_filenames.pop_front();
 	ogg_stream_->Update();
 
@@ -120,11 +121,15 @@ void AudioManager::run()
 			if ( music_filenames.size() == 0 ) //meaning we've played all music once
 				getMusicFilenames();//refill queue
 			if ( music_filenames.size() == 0 ) //someone removed music at runtime, bad
+			{
+				no_busy_sources_--;
 				return;
+			}
 			ogg_stream_->Play( music_filenames[0].toStdString(), master_volume_ );
 			music_filenames.pop_front();
 		}
 	}
+	no_busy_sources_--;
 	qDebug() << "playback finished";
 }
 
@@ -182,8 +187,11 @@ size_t AudioManager:: loadSound( const QString& q_path )
 }
 
 
-void AudioManager::playSound( const QString filename ) const
+void AudioManager::playSound( const QString filename )
 {
+	if ( no_busy_sources_ >= max_sounds_ )
+		return;
+	no_busy_sources_++;
 	ALuint tmp_id2 = sources_[1];
 	BufferIdMapType::const_iterator buffer_it = fn_to_bufferID_map.find( filename );
 	if ( buffer_it == fn_to_bufferID_map.end() )
@@ -196,6 +204,7 @@ void AudioManager::playSound( const QString filename ) const
 	alSourcei(tmp_id2, AL_BUFFER, buffer->GetId());
 	alSourcePlay(tmp_id2);
 	CheckError("alSourcePlay(tmp_id)");
+	no_busy_sources_--;
 }
 
 void AudioManager::loadAllSounds()

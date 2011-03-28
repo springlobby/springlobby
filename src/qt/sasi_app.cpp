@@ -38,7 +38,7 @@
 #include "sidemodel.h"
 #include "qerrorwindow.h"
 
-#if defined(Q_WS_X11) && !defined(NDEBUG)
+#if defined(Q_WS_X11) && !defined(QT_NO_DEBUG)
 	//QGlWidget segfaults in debug builds..
 	#define USE_OPENGL 0
 #else
@@ -111,7 +111,7 @@ int SasiApp::exec()
 
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), this, SLOT(quit()));
 	QDeclarativeContext* ctxt = view.rootContext();
-	ctxt->setContextProperty("myModel", &maplist_model );
+	ctxt->setContextProperty("maplistModel", &maplist_model );
 	ctxt->setContextProperty("skirmishModel", &skirmish_model );
 	ctxt->setContextProperty("sideModel", &side_model );
 	ctxt->setContextProperty("audioManager", audio_manager );

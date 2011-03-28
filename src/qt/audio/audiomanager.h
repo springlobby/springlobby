@@ -39,7 +39,7 @@ public:
 signals:
 
 public slots:
-	void playSound( const QString filename ) const;
+	void playSound( const QString filename ) ;
 
 private:
 	size_t loadSound( const QString& path );
@@ -49,7 +49,9 @@ private:
 
 	COggStream* ogg_stream_;
 	ALuint ogg_stream_id_;
-	ALuint sources_[8];
+	static const size_t max_sounds_ = 8;
+	ALuint sources_[max_sounds_];
+	size_t no_busy_sources_;
 	ALuint tmp_id;
 	QList<QString> music_filenames;
 	float master_volume_;
