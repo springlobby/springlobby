@@ -68,9 +68,10 @@ int SasiApp::exec()
 {		
 	QSplashScreen* splash = 0;
 	QPixmap splash_pixmap;
+	QWidget* show_screen = desktop()->screen( 0 );
 	if ( splash_pixmap.load( SLcustomizations().GraphicsDir() + "/splash.png" ) )
 	{
-		splash = new QSplashScreen(splash_pixmap);
+		splash = new QSplashScreen(show_screen,splash_pixmap);
 		splash->show();
 	}
 	wxLogChain* logchain = 0;
@@ -82,7 +83,8 @@ int SasiApp::exec()
 	wxSocketBase::Initialize();
 
 	usync().FastLoadUnitSyncLibInit( );
-	QDeclarativeView view;
+
+	QDeclarativeView view(show_screen);
 	QString qmldir;
 	try {
 		qmldir = SLcustomizations().QmlDir();
@@ -95,12 +97,10 @@ int SasiApp::exec()
 		return error_win.exec();
 	}
 
-	qDebug() << "qmldir" << qmldir;
-	view.engine()->addImportPath( qmldir );
-
 	AudioManager* audio_manager = new AudioManager(this);
 	audio_manager->start();
 
+	view.engine()->addImportPath( qmldir );
 #ifdef __WXMSW__
 	//for webkit declarative plugin
 	view.engine()->addImportPath( QDir( QCoreApplication::applicationDirPath() + "/imports").absolutePath() );
@@ -110,7 +110,6 @@ int SasiApp::exec()
 	view.engine()->addImageProvider("minimaps", new MinimapImageProvider);
 	view.engine()->addImageProvider("graphics", new GraphicsProvider);
 	view.engine()->addImageProvider("sides", new SideImageProvider);
-
 #if USE_OPENGL
 	QGLFormat format = QGLFormat::defaultFormat();
 	#ifdef Q_WS_MAC
@@ -122,11 +121,9 @@ int SasiApp::exec()
 	view.setViewport(glWidget);
 	view.setViewportUpdateMode(QGraphicsView::MinimalViewportUpdate);
 #endif
-
 	view.setAttribute(Qt::WA_OpaquePaintEvent);
 	view.setAttribute(Qt::WA_NoSystemBackground);
 	view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
-	view.setFocus();
 
 	MaplistModel maplist_model( usync().GetMapList() );
 	SkirmishModel skirmish_model;
@@ -138,9 +135,19 @@ int SasiApp::exec()
 	ctxt->setContextProperty("skirmishModel", &skirmish_model );
 	ctxt->setContextProperty("sideModel", &side_model );
 	ctxt->setContextProperty("audioManager", audio_manager );
-	view.setSource(QUrl(qmldir + "/main.qml"));//usync resets pwd, figure out how to put qml in qrc
 
-	//	QRect d = app.desktop()->screenGeometry();
+	const int sleep_seconds = 2;
+	for ( int i = sleep_seconds; i > 0; i-- ) {
+		splash->showMessage( QString("sleeping for %1 seconds, just to show you this").arg( i ), Qt::AlignHCenter | Qt::AlignBottom );
+		processEvents();
+		sleep( 1 );
+		processEvents();
+	}
+
+	//	view.showFullScreen();
+	if ( splash )
+		splash->finish(&view);
+	view.setSource(QUrl(qmldir + "/main.qml"));//usync resets pwd, figure out how to put qml in qrc
 
 	QList<QDeclarativeError> errors = view.errors();
 	if ( errors.size() )
@@ -148,12 +155,7 @@ int SasiApp::exec()
 		QErrorWindow error_window ( errors );
 		return error_window.exec();
 	}
-
-
-	//	view.showFullScreen();
 	view.show();
-	if ( splash )
-		splash->finish(&view);
-
+	view.setFocus();
 	return QApplication::exec();
 }

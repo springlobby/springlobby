@@ -79,7 +79,7 @@ AudioManager::AudioManager(QObject *parent) :
 
 	ogg_stream_ = new COggStream(ogg_stream_id_);
 	assert( ogg_stream_ );
-	setupAlSource( ogg_stream_id_, master_volume_*0.25 );
+	setupAlSource( ogg_stream_id_, master_volume_*0.1 );
 	tmp_id = sources_[1];
 	setupAlSource( tmp_id, master_volume_ );
 	alListenerf(AL_GAIN, master_volume_ );
