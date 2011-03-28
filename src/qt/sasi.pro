@@ -20,7 +20,7 @@ symbian:TARGET.UID3 = 0xE1BC102A
 # MOBILITY variable. 
 # CONFIG += mobility
 # MOBILITY +=
-QT += multimedia opengl webkit declarative
+QT += opengl webkit declarative
 # PKGCONFIG += vorbis vorbisfile
 # LIBS += -lvorbisfile -lvorbis -logg
 
