@@ -40,6 +40,7 @@ signals:
 
 public slots:
 	void playSound( const QString filename ) ;
+	void toggleActive();
 
 private:
 	size_t loadSound( const QString& path );
@@ -61,6 +62,7 @@ private:
 	BufferIdMapType fn_to_bufferID_map;
 
 	ALCdevice* device_;
+	bool active_;
 
 };
 

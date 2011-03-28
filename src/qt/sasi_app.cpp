@@ -136,7 +136,7 @@ int SasiApp::exec()
 	ctxt->setContextProperty("sideModel", &side_model );
 	ctxt->setContextProperty("audioManager", audio_manager );
 
-	const int sleep_seconds = 2;
+	const int sleep_seconds = 0;
 	for ( int i = sleep_seconds; i > 0; i-- ) {
 		splash->showMessage( QString("sleeping for %1 seconds, just to show you this").arg( i ), Qt::AlignHCenter | Qt::AlignBottom );
 		processEvents();

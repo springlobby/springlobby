@@ -35,7 +35,8 @@ AudioManager::AudioManager(QObject *parent) :
 	ogg_stream_( 0 ),
 	no_busy_sources_( 0 ),
 	master_volume_( 0.5f ),
-	device_( 0 )
+	device_( 0 ),
+	active_( true )
 {
 	SoundBuffer::Initialise();
 	qDebug() << "AudioManager ctor";
@@ -69,6 +70,11 @@ AudioManager::AudioManager(QObject *parent) :
 		ogg_stream_id_ = 0;
 	}
 
+	setupAlSource( ogg_stream_id_, master_volume_*0.1 );
+	for ( int i = 1; i < max_sounds_; ++i )
+		setupAlSource( sources_[i], master_volume_ );
+	alListenerf(AL_GAIN, master_volume_ );
+
 	loadAllSounds();
 	getMusicFilenames();
 	if ( music_filenames.size() == 0 )
@@ -79,10 +85,6 @@ AudioManager::AudioManager(QObject *parent) :
 
 	ogg_stream_ = new COggStream(ogg_stream_id_);
 	assert( ogg_stream_ );
-	setupAlSource( ogg_stream_id_, master_volume_*0.1 );
-	tmp_id = sources_[1];
-	setupAlSource( tmp_id, master_volume_ );
-	alListenerf(AL_GAIN, master_volume_ );
 }
 
 AudioManager::~AudioManager()
@@ -106,14 +108,22 @@ void AudioManager::setupAlSource( const ALuint id, const float volume )
 
 void AudioManager::run()
 {
-	ogg_stream_->Play( music_filenames[0].toStdString(), master_volume_ /*this has no effect actually*/ );
-	no_busy_sources_++;
-	music_filenames.pop_front();
-	ogg_stream_->Update();
-
-	CheckError("AudioManager::play");
+	if ( active_ && ogg_stream_ )
+	{
+		ogg_stream_->Play( music_filenames[0].toStdString(), master_volume_ /*this has no effect actually*/ );
+		no_busy_sources_++;
+		music_filenames.pop_front();
+		ogg_stream_->Update();
+		CheckError("AudioManager::play");
+	}
 
 	while( true ) {
+		if ( !active_ )// no need to update that often if we're nto active
+		{
+			sleep( 1 );
+			continue;
+		}
+
 		msleep( 50 );
 		ogg_stream_->Update();
 		if ( ogg_stream_->IsFinished() )
@@ -189,7 +199,7 @@ size_t AudioManager:: loadSound( const QString& q_path )
 
 void AudioManager::playSound( const QString filename )
 {
-	if ( no_busy_sources_ >= max_sounds_ )
+	if ( !active_ || no_busy_sources_ >= max_sounds_ )
 		return;
 	no_busy_sources_++;
 	ALuint tmp_id2 = sources_[1];
@@ -217,4 +227,24 @@ void AudioManager::loadAllSounds()
 	{
 		fn_to_bufferID_map[current_file.fileName()] = loadSound( current_file.absoluteFilePath() );
 	}
+}
+
+
+void AudioManager::toggleActive()
+{
+	if ( ogg_stream_ )
+		ogg_stream_->TogglePause();
+
+	if ( active_ )
+	{
+		for ( int i = 0; i < max_sounds_; ++i )
+			alSourcePause(i);
+	}
+	else
+	{
+		for ( int i = 0; i < max_sounds_; ++i )
+			alSourcePlay(i);
+	}
+
+	active_ = !active_;
 }
