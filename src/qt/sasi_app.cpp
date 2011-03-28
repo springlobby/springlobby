@@ -26,6 +26,7 @@
 #include <QtDeclarative/QDeclarativeView>
 #include <QDesktopWidget>
 #include <QtOpenGL/QGLWidget>
+#include <QSplashScreen>
 
 #include <customizations.h>
 #include <springunitsynclib.h>
@@ -58,8 +59,7 @@ SasiApp::SasiApp(int argc, char *argv[])
 }
 
 int SasiApp::exec()
-{
-
+{		
 	QDeclarativeView view;
 	QString qmldir;
 	try {
@@ -72,6 +72,15 @@ int SasiApp::exec()
 		QErrorWindow error_win ( copy );
 		return error_win.exec();
 	}
+
+	QSplashScreen* splash = 0;
+	QPixmap splash_pixmap;
+	if ( splash_pixmap.load( SLcustomizations().GraphicsDir() + "/splash.png" ) )
+	{
+		splash = new QSplashScreen(splash_pixmap);
+		splash->show();
+	}
+
 	qDebug() << "qmldir" << qmldir;
 	view.engine()->addImportPath( qmldir );
 
@@ -129,6 +138,8 @@ int SasiApp::exec()
 
 	//	view.showFullScreen();
 	view.show();
+	if ( splash )
+		splash->finish(&view);
 
 	return QApplication::exec();
 }
