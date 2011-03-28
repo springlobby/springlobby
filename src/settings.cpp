@@ -903,7 +903,7 @@ wxString Settings::GetCurrentUsedDataDir()
 wxString Settings::GetCurrentUsedSpringBinary()
 {
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "spring.exe" );
-#ifdef __WXMSW__
+#if defined(__WXMSW__) && !defined(SL_QT_MODE)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "spring.exe" );
 #endif
 	else return GetSpringBinary( GetCurrentUsedSpringIndex() );
@@ -913,7 +913,7 @@ wxString Settings::GetCurrentUsedSpringBinary()
 wxString Settings::GetCurrentUsedUnitSync()
 {
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "unitsync" ) + GetLibExtension();
-#ifdef __WXMSW__
+#if defined(__WXMSW__) && !defined(SL_QT_MODE)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "unitsync" ) + GetLibExtension();
 #endif
 	else return GetUnitSync( GetCurrentUsedSpringIndex() );
@@ -922,7 +922,7 @@ wxString Settings::GetCurrentUsedUnitSync()
 wxString Settings::GetCurrentUsedUikeys()
 {
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "uikeys.txt" );
-#ifdef __WXMSW__
+#if defined(__WXMSW__) && !defined(SL_QT_MODE)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "uikeys.txt" );
 #endif
 	else return GetUikeys( GetCurrentUsedSpringIndex() );
