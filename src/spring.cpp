@@ -50,7 +50,7 @@
 
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
-    EVT_COMMAND ( PROC_SPRING, wxEVT_SPRING_EXIT, Spring::OnTerminated )
+	EVT_COMMAND ( PROC_SPRING, wxEVT_SPRING_EXIT, Spring::OnTerminated )
 
 END_EVENT_TABLE()
 
@@ -64,6 +64,9 @@ Spring& spring()
 }
 
 Spring::Spring() :
+	#ifdef SL_QT_MODE
+		qt_process_( 0 ),
+	#endif
         m_process(0),
         m_wx_process(0),
         m_running(false)
@@ -233,9 +236,11 @@ bool Spring::LaunchSpring( const wxString& params  )
 
 #ifdef SL_QT_MODE
 	QMessageBox:: warning ( NULL, "CMD", QString(cmd.mb_str()));
-	QProcess* process = new QProcess;
-	process->setWorkingDirectory(QString(sett().GetCurrentUsedDataDir().mb_str()));
-	process->start(QString(cmd.mb_str()));
+	qt_process_ = new QProcess;
+	qt_process_->setWorkingDirectory(QString(sett().GetCurrentUsedDataDir().mb_str()));
+	qt_process_->start(QString(cmd.mb_str()));
+	connect( qt_process_, SIGNAL(finished(int, QProcess::ExitStatus )), this, SLOT( OnStopped(int, QProcess::ExitStatus ) ) );
+	connect( qt_process_, SIGNAL(started()), this, SLOT( OnStarted() ) );
 #else
   wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
   if ( sett().UseOldSpringLaunchMethod() )
@@ -255,6 +260,18 @@ bool Spring::LaunchSpring( const wxString& params  )
   return true;
 }
 
+#ifdef SL_QT_MODE
+void Spring::OnStopped( int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/ )
+{
+	m_running = false;
+	emit springStopped( );
+}
+void Spring::OnStarted()
+{
+	m_running = true;
+	emit springStarted();
+}
+#endif
 
 
 void Spring::OnTerminated( wxCommandEvent& event )

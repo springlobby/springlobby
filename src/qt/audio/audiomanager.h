@@ -40,7 +40,9 @@ signals:
 
 public slots:
 	void playSound( const QString filename ) ;
-	void toggleActive();
+	bool toggleActive();
+	void pause();
+	void resume();
 	bool isActive() const { return active_; }
 	void doQuit() { quitting_time_ = true; }
 

@@ -232,22 +232,29 @@ void AudioManager::loadAllSounds()
 	}
 }
 
-
-void AudioManager::toggleActive()
+void AudioManager::pause()
 {
-	if ( ogg_stream_ )
+	if ( active_ && ogg_stream_ )
 		ogg_stream_->TogglePause();
+	for ( int i = 0; i < max_sounds_; ++i )
+		alSourcePause(i);
+	active_ = false;
+}
 
+void AudioManager::resume()
+{
+	if ( !active_ && ogg_stream_ )
+		ogg_stream_->TogglePause();
+	for ( int i = 0; i < max_sounds_; ++i )
+		alSourcePlay(i);
+	active_ = true;
+}
+
+bool AudioManager::toggleActive()
+{
 	if ( active_ )
-	{
-		for ( int i = 0; i < max_sounds_; ++i )
-			alSourcePause(i);
-	}
+		pause();
 	else
-	{
-		for ( int i = 0; i < max_sounds_; ++i )
-			alSourcePlay(i);
-	}
-
-	active_ = !active_;
+		resume();
+	return active_;
 }

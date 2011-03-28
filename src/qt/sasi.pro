@@ -173,7 +173,8 @@ SOURCES += sasi_main.cpp \
     audio/ALShared.cpp \
     FileHandler.cpp \
     sasi_app.cpp \
-    audio/SoundBuffer.cpp
+    audio/SoundBuffer.cpp \
+    qsettings.cpp
 
 HEADERS += \
     ../springunitsynclib.h \
@@ -251,7 +252,8 @@ HEADERS += \
     audio/ALShared.h \
     FileHandler.h \
     sasi_app.h \
-    audio/SoundBuffer.h
+    audio/SoundBuffer.h \
+    qsettings.h
 
 INCLUDEPATH += ..
 INCLUDEPATH += ../Helper/qtargparser

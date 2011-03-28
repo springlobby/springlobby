@@ -44,6 +44,12 @@
 #include "skirmishmodel.h"
 #include "sidemodel.h"
 #include "qerrorwindow.h"
+#include <spring.h>
+
+#ifdef __WXMSW__
+	#include <windows.h>
+	void sleep(int n) { Sleep(1000 * n); }
+#endif
 
 #if defined(Q_WS_X11) && !defined(QT_NO_DEBUG)
 	//QGlWidget segfaults in debug builds..
@@ -129,6 +135,9 @@ int SasiApp::exec()
 	SkirmishModel skirmish_model;
 	SideModel side_model( SLcustomizations().GetModname() );
 
+	spring().connect( &spring(), SIGNAL(springStarted()), &audio_manager, SLOT(pause()));
+	spring().connect( &spring(), SIGNAL(springStopped()), &audio_manager, SLOT(resume()));
+
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), this, SLOT(quit()));
 	QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &audio_manager, SLOT(doQuit()));
 	QDeclarativeContext* ctxt = view.rootContext();
@@ -138,11 +147,10 @@ int SasiApp::exec()
 	ctxt->setContextProperty("audioManager", &audio_manager );
 
 	const int sleep_seconds = -1;
-	for ( int i = sleep_seconds; i > 0; i-- ) {
+	for ( int i = sleep_seconds; splash && i > 0; i-- ) {
 		splash->showMessage( QString("sleeping for %1 seconds, just to show you this").arg( i ), Qt::AlignHCenter | Qt::AlignBottom );
 		processEvents();
 		sleep( 1 );
-		processEvents();
 	}
 
 	//	view.showFullScreen();
