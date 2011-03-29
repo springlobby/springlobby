@@ -52,9 +52,9 @@ class Customizations {
 			{}
 			virtual ~DataException() throw() {}
 		};
+		QString DataBasePath();
 
 	private:
-		QString DataBasePath();
 		QString dataBasePath_;
 		QString m_shortname;
 

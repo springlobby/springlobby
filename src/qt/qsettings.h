@@ -16,8 +16,8 @@
 **/
 
 
-#ifndef QSETTINGS_H
-#define QSETTINGS_H
+#ifndef SPRINGLOBBY_HEADERGUARD_QSETTINGS_H
+#define SPRINGLOBBY_HEADERGUARD_QSETTINGS_H
 
 class QSettings
 {
@@ -25,4 +25,26 @@ public:
     QSettings();
 };
 
-#endif // QSETTINGS_H
+#include <QAbstractListModel>
+#include <QStringList>
+#include <QString>
+
+class PresetModel : public QAbstractListModel
+{
+	Q_OBJECT
+public:
+	explicit PresetModel(QObject *parent = 0);
+	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+public slots:
+	QString name(int index) const;
+
+private:
+	void reload();
+	typedef QStringList
+		ContainerType;
+	ContainerType preset_names_;
+};
+
+#endif // SPRINGLOBBY_HEADERGUARD_QSETTINGS_H
