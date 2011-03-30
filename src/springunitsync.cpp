@@ -68,7 +68,7 @@ static int CompareStringNoCase(const wxString& first, const wxString& second)
 {
 	return first.CmpNoCase(second);
 }
-#include <QDebug>
+
 bool SpringUnitSync::FastLoadUnitSyncLib( const wxString& unitsyncloc )
 {
 	LOCK_UNITSYNC;
@@ -89,12 +89,9 @@ bool SpringUnitSync::FastLoadUnitSyncLib( const wxString& unitsyncloc )
 			name = susynclib().GetPrimaryModName( i );
 			m_mods_list[name] = _T("fakehash");
 			m_mod_array.Add( name );
-			#ifdef	SL_QT_MODE
-				qDebug() << "shortname : " << ToQString( susynclib().GetPrimaryModShortName( i ) );
-				m_shortname_to_name_map[
-						std::make_pair(susynclib().GetPrimaryModShortName( i ),
-									   susynclib().GetPrimaryModVersion( i )) ] = name;
-			#endif
+			m_shortname_to_name_map[
+					std::make_pair(susynclib().GetPrimaryModShortName( i ),
+								   susynclib().GetPrimaryModVersion( i )) ] = name;
 		} catch (...) { continue; }
 	}
 	m_unsorted_mod_array = m_mod_array;
@@ -150,6 +147,7 @@ void SpringUnitSync::PopulateArchiveList()
   m_mapinfo_cache.Clear();
   m_maps_unchained_hash.clear();
   m_mods_unchained_hash.clear();
+  m_shortname_to_name_map.clear();
 
   int numMaps = susynclib().GetMapCount();
   for ( int i = 0; i < numMaps; i++ )
@@ -199,6 +197,9 @@ void SpringUnitSync::PopulateArchiveList()
       if ( !unchainedhash.IsEmpty() )  m_mods_unchained_hash[name] = unchainedhash;
       if ( !archivename.IsEmpty() ) m_mods_archive_name[name] = archivename;
       m_mod_array.Add( name );
+	  m_shortname_to_name_map[
+			  std::make_pair(susynclib().GetPrimaryModShortName( i ),
+							 susynclib().GetPrimaryModVersion( i )) ] = name;
     } catch (...)
     {
 	  wxLogError( _T("Found game with hash collision: ") + name + _T(" hash: ") + hash );
@@ -1393,7 +1394,6 @@ void EvtHandlerCollection::PostEvent( int evtHandlerId, wxEvent& evt )
   if ( it != m_items.end() ) wxPostEvent( it->second, evt );
 }
 
-#ifdef	SL_QT_MODE
 wxString SpringUnitSync::GetNameForShortname( const wxString& shortname, const wxString& version) const
 {
 	ShortnameVersionToNameMap::const_iterator it
@@ -1402,4 +1402,3 @@ wxString SpringUnitSync::GetNameForShortname( const wxString& shortname, const w
 		return it->second;
 	return wxEmptyString;
 }
-#endif
