@@ -23,25 +23,9 @@
 #include <wx/image.h>
 #include <QDebug>
 
-QImage GraphicsProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
+QImage GraphicsProvider::requestImage ( const QString & id, QSize * /*size*/, const QSize & requestedSize )
 {
-	int width = requestedSize.width() > 0 ? requestedSize.width() : 1024;
-	int height = requestedSize.height() > 0 ? requestedSize.height() : 1024;
-
-//	wxImage h = SLcustomizations().GetBackgroundImage();
-//	wxSize k_size = SLcustomizations().GetBackgroundSize();
-
-//	if (size)
-//		*size = wxQtConvertSize( k_size );
-//	qDebug() << height << width ;
-//	QImage q = wxQtConvertImage( h );
-
-////	q = q.scaled(requestedSize);
-//	assert( !q.isNull() );
-
-//	return q.scaled( *size );
-
-	return QImage( SLcustomizations().GraphicsDir() + "/" + id );
+	return QImage( SLcustomizations().GraphicsDir() + "/" + id ).scaled( requestedSize );
 }
 
 

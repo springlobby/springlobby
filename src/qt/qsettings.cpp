@@ -51,7 +51,7 @@ void PresetModel::reload()
 	}
 }
 
-int PresetModel::rowCount(const QModelIndex &parent ) const
+int PresetModel::rowCount(const QModelIndex &/*parent*/ ) const
 {
 	return preset_names_.size();
 }

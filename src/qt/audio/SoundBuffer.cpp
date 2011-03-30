@@ -29,7 +29,7 @@ size_t VorbisRead(void* ptr, size_t size, size_t nmemb, void* datasource)
 	return maxRead;
 };
 
-int	VorbisClose(void* datasource)
+int	VorbisClose(void* /*datasource*/)
 {
 	return 0; // nothing to be done here
 };
@@ -279,7 +279,7 @@ size_t SoundBuffer::Insert(boost::shared_ptr<SoundBuffer> buffer)
 	return bufId;
 };
 
-bool SoundBuffer::AlGenBuffer(const std::string& file, ALenum format, const boost::uint8_t* data, size_t datalength, int rate)
+bool SoundBuffer::AlGenBuffer(const std::string& /*file*/, ALenum format, const boost::uint8_t* data, size_t datalength, int rate)
 {
 	alGenBuffers(1, &id);
 	alBufferData(id, format, (ALvoid*) data, datalength, rate);

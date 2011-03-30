@@ -74,7 +74,7 @@ COggStream::~COggStream()
 }
 
 // open an Ogg stream from a given file and start playing it
-void COggStream::Play(const std::string& path, float volume)
+void COggStream::Play(const std::string& path, float /*volume*/)
 {
 	if (!stopped) {
 		// we're already playing another stream
@@ -104,7 +104,7 @@ void COggStream::Play(const std::string& path, float volume)
 		vorbisComment = ov_comment(&oggStream, -1);
 		vorbisTags.resize(vorbisComment->comments);
 
-		for (unsigned i = 0; i < vorbisComment->comments; ++i) {
+		for (int i = 0; i < vorbisComment->comments; ++i) {
 			vorbisTags[i] = std::string(vorbisComment->user_comments[i], vorbisComment->comment_lengths[i]);
 		}
 
@@ -301,7 +301,7 @@ bool COggStream::DecodeStream(ALuint buffer)
 	int section = 0;
 	int result = 0;
 
-	while (size < BUFFER_SIZE) {
+	while (size < int(BUFFER_SIZE) ) {
 		result = ov_read(&oggStream, pcm + size, BUFFER_SIZE - size, 0, 2, 1, &section);
 
 		if (result > 0) {

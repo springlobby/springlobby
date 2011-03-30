@@ -61,7 +61,7 @@ SkirmishModel::SkirmishModel(QObject *parent)
 
 }
 
-int SkirmishModel::rowCount(const QModelIndex &parent ) const
+int SkirmishModel::rowCount(const QModelIndex &/*parent*/ ) const
 {
 	return m_skirmishes.size();
 }
@@ -69,7 +69,7 @@ int SkirmishModel::rowCount(const QModelIndex &parent ) const
 QVariant SkirmishModel::data(const QModelIndex &index, int role ) const
 {
 	int row =  index.row();
-	if ( !index.isValid() || row >= m_skirmishes.size() )
+	if ( !index.isValid() || row >= int(m_skirmishes.size()) )
 		   return QVariant();
 	const OptionsWrapper& opts = m_skirmishes[row].second;
 	switch ( role ) {
@@ -87,7 +87,7 @@ QVariant SkirmishModel::data(const QModelIndex &index, int role ) const
 
 void SkirmishModel::run( const int id, const int side, const int map )
 {
-	assert( id < m_skirmishes.size() );
+	assert( id < int(m_skirmishes.size()) );
 	OptionsWrapper& opts = m_skirmishes.at(id).second;
 	// this overwrites any modoptions with those found in the skirmish definition
 	m_battle.CustomBattleOptions().MergeOptions( opts, OptionsWrapper::ModOption );

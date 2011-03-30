@@ -73,7 +73,7 @@ AudioManager::AudioManager(QObject *parent) :
 	}
 
 	setupAlSource( ogg_stream_id_, master_volume_*0.1 );
-	for ( int i = 1; i < max_sounds_; ++i )
+	for ( int i = 1; i < int(max_sounds_); ++i )
 		setupAlSource( sources_[i], master_volume_ );
 	alListenerf(AL_GAIN, master_volume_ );
 
@@ -236,7 +236,7 @@ void AudioManager::pause()
 {
 	if ( active_ && ogg_stream_ )
 		ogg_stream_->TogglePause();
-	for ( int i = 0; i < max_sounds_; ++i )
+	for ( int i = 0; i < int(max_sounds_); ++i )
 		alSourcePause(i);
 	active_ = false;
 }
@@ -245,7 +245,7 @@ void AudioManager::resume()
 {
 	if ( !active_ && ogg_stream_ )
 		ogg_stream_->TogglePause();
-	for ( int i = 0; i < max_sounds_; ++i )
+	for ( int i = 0; i < int(max_sounds_); ++i )
 		alSourcePlay(i);
 	active_ = true;
 }
