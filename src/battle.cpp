@@ -625,7 +625,7 @@ void Battle::StartHostedBattle()
 					m_serv.SendScriptToProxy( hostscript );
 				}
 			}
-			if( IsFounderMe() && GetAutoLockOnStart() )
+			if( GetAutoLockOnStart() )
 			{
 				SetIsLocked( true );
 				SendHostInfo( IBattle::HI_Locked );
