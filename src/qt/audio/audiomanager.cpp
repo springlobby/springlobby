@@ -72,9 +72,9 @@ AudioManager::AudioManager(QObject *parent) :
 		ogg_stream_id_ = 0;
 	}
 
-	setupAlSource( ogg_stream_id_, master_volume_*0.1 );
+	setupAlSource( ogg_stream_id_, master_volume_*1 );
 	for ( int i = 1; i < int(max_sounds_); ++i )
-		setupAlSource( sources_[i], master_volume_ );
+		setupAlSource( sources_[i], master_volume_*0.3 );
 	alListenerf(AL_GAIN, master_volume_ );
 
 	loadAllSounds();
@@ -128,8 +128,9 @@ void AudioManager::run()
 		}
 
 		msleep( 50 );
-		ogg_stream_->Update();
-		if ( ogg_stream_->IsFinished() )
+		if( ogg_stream_ )
+			ogg_stream_->Update();
+		if ( ogg_stream_ && ogg_stream_->IsFinished() )
 		{
 			if ( music_filenames.size() == 0 ) //meaning we've played all music once
 				getMusicFilenames();//refill queue

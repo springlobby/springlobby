@@ -25,7 +25,7 @@
 
 QImage GraphicsProvider::requestImage ( const QString & id, QSize * /*size*/, const QSize & requestedSize )
 {
-	return QImage( SLcustomizations().GraphicsDir() + "/" + id ).scaled( requestedSize );
+	return QImage( SLcustomizations().GraphicsDir() + "/" + id );//.scaled( requestedSize );
 }
 
 

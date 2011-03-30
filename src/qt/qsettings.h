@@ -33,6 +33,7 @@ public:
 
 public slots:
 	QString name(int index) const;
+	void use(int index) const;
 
 private:
 	void reload();

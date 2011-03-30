@@ -38,10 +38,6 @@ void PresetModel::reload()
 {
 	preset_names_.clear();
 	QDir preset_dir( SLcustomizations().DataBasePath() + "/presets/" );
-//	wxString mapname;
-//	foreach (mapname, map_names ) {
-//		m_map_names.append( QString(mapname.mb_str()) );
-//	}
 	QStringList nameFilter;
 		nameFilter << "*.conf";
 	QFileInfo current_file;
@@ -69,4 +65,9 @@ QString PresetModel::name(int index) const
 	if ( index < preset_names_.size() )
 		return preset_names_[index];
 	return QString();
+}
+
+void PresetModel::use(int index) const
+{
+
 }
