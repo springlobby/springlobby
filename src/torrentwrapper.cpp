@@ -40,6 +40,7 @@
 #endif
 #include <libtorrent/extensions/metadata_transfer.hpp>
 #include <libtorrent/extensions/ut_pex.hpp>
+#include <libtorrent/extensions/smart_ban.hpp>
 
 #include <libtorrent/alert_types.hpp>
 
@@ -175,6 +176,14 @@ TorrentWrapper::TorrentWrapper():
     {
         wxLogError( TowxString( e.what() ) );
     }
+	try
+	{
+		m_torr->add_extension(&libtorrent::create_smart_ban_plugin);
+	}
+	catch (std::exception& e)
+	{
+		wxLogError( TowxString( e.what() ) );
+	}
     //these extensions proved o be too problematic on win so i flat out disable them
     #ifndef __WXMSW__
         try
