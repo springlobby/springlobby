@@ -44,6 +44,7 @@
 #include "skirmishmodel.h"
 #include "sidemodel.h"
 #include "qerrorwindow.h"
+#include <qsettings.h>
 #include <spring.h>
 
 #ifdef __WXMSW__
@@ -134,6 +135,7 @@ int SasiApp::exec()
 	MaplistModel maplist_model( usync().GetMapList() );
 	SkirmishModel skirmish_model;
 	SideModel side_model( SLcustomizations().GetModname() );
+	PresetModel preset_model(this);
 
 	spring().connect( &spring(), SIGNAL(springStarted()), &audio_manager, SLOT(pause()));
 	spring().connect( &spring(), SIGNAL(springStopped()), &audio_manager, SLOT(resume()));
@@ -145,6 +147,7 @@ int SasiApp::exec()
 	ctxt->setContextProperty("skirmishModel", &skirmish_model );
 	ctxt->setContextProperty("sideModel", &side_model );
 	ctxt->setContextProperty("audioManager", &audio_manager );
+	ctxt->setContextProperty("presetModel", &preset_model );
 
 	const int sleep_seconds = -1;
 	for ( int i = sleep_seconds; splash && i > 0; i-- ) {

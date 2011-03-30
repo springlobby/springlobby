@@ -19,12 +19,6 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_QSETTINGS_H
 #define SPRINGLOBBY_HEADERGUARD_QSETTINGS_H
 
-class QSettings
-{
-public:
-    QSettings();
-};
-
 #include <QAbstractListModel>
 #include <QStringList>
 #include <QString>
@@ -46,5 +40,13 @@ private:
 		ContainerType;
 	ContainerType preset_names_;
 };
+
+
+class QSettings
+{
+public:
+	QSettings();
+};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_QSETTINGS_H
