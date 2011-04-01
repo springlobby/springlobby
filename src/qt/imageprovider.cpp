@@ -24,9 +24,14 @@
 #include <wx/image.h>
 #include <QDebug>
 
-QImage GraphicsProvider::requestImage ( const QString & id, QSize * /*size*/, const QSize & requestedSize )
+QImage GraphicsProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
 {
-	return QImage( SLcustomizations().GraphicsDir() + "/" + id );//.scaled( requestedSize );
+	QImage img( SLcustomizations().GraphicsDir() + "/" + id );//.scaled( requestedSize );
+	int width = requestedSize.width() > 0 ? requestedSize.width() : img.width();
+	int height = requestedSize.height() > 0 ? requestedSize.height() : img.height();
+	if (size)
+		*size = QSize(width,height);
+	return img.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
 }
 
 
