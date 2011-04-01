@@ -414,6 +414,8 @@ class Settings : public SL::NonCopyable
 
     //!@brief returns config file path spring should use, returns empty for default
     wxString GetForcedSpringConfigFilePath();
+	//! use in game customized mode or externally forced via cli arg
+	void SetForcedSpringConfigFilePath( const wxString& path );
 
     /*@}*/
 
@@ -784,6 +786,7 @@ class Settings : public SL::NonCopyable
 	slConfig* m_config; //!< wxConfig object to store and restore  all settings in.
 
     wxString m_chosen_path;
+	wxString m_forced_springconfig_path;
     bool m_portable_mode;
 
     std::map<wxString, wxString> m_spring_versions;

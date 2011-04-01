@@ -57,6 +57,10 @@ bool CmdInit()
 #ifdef __WXMSW__
 	sett().SetSearchSpringOnlyInSLPath( false );
 #endif
+	QString shortname_value = customization.value().toString();
+	//must go BEFORE usync loading
+	QString configFilePath = GetConfigFilePath( shortname_value );
+	sett().SetForcedSpringConfigFilePath( TowxString( configFilePath.toStdString() ) );
 //	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
 //	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
 
@@ -67,14 +71,13 @@ bool CmdInit()
 
 	usync().FastLoadUnitSyncLib( sett().GetCurrentUsedUnitSync() );
 
-	QString customization_value = customization.value().toString();
 	QString version_value = version.value().toString();
-	qDebug() << QString( "shortname: %1\tversion: %2").arg( customization_value ).arg( version.value().toString() );
-	if ( !SLcustomizations().Init( TowxString( customization_value.toStdString() ),
+	qDebug() << QString( "shortname: %1\tversion: %2").arg( shortname_value ).arg( version.value().toString() );
+	if ( !SLcustomizations().Init( TowxString( shortname_value.toStdString() ),
 								  TowxString( version_value.toStdString() ) ) )
 	{
 		qDebug() << "init false";
-		QMessageBox::critical( 0, "Fatal error", QString("loading customizations failed for ").append( customization_value ) );
+		QMessageBox::critical( 0, "Fatal error", QString("loading customizations failed for ").append( shortname_value ) );
 		return false;
 	}
 	return true;

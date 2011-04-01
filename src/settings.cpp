@@ -59,6 +59,7 @@ Settings& sett()
 }
 
 Settings::Settings()
+	:m_forced_springconfig_path(wxEmptyString)
 {
 #if defined(__WXMSW__) || defined(__WXMAC__)
 	wxString userfilepath = IdentityString( GetConfigfileDir() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
@@ -968,12 +969,17 @@ void Settings::SetSpringBinary( const wxString& index, const wxString& path )
 	m_config->Write( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), path );
 }
 
+void Settings::SetForcedSpringConfigFilePath( const wxString& path )
+{
+	m_forced_springconfig_path = path;
+}
+
 wxString Settings::GetForcedSpringConfigFilePath()
 {
 	if ( IsPortableMode() )
         return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "springsettings.cfg" );
 	else
-        return _T( "" );
+		return m_forced_springconfig_path;
 }
 
 // ===================================================
