@@ -598,8 +598,6 @@ wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image
 	wxMemoryInputStream FileContentStream( FileContent, FileSize );
 
 	bool hu = cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
-//	assert( hu );
-//	int* u=0;*u=9;
 	cache.InitAlpha();
 //	assert(cache.GetWidth()>0 );
 	if ( useWhiteAsTransparent )
@@ -636,17 +634,6 @@ QImage SpringUnitSync::GetQImage( const wxString& modname, const wxString& image
 	bool hu = cache.loadFromData( cache_data );
 	assert( hu );
 	return cache;
-////	int* u=0;*u=9;
-//	cache.InitAlpha();
-//	assert(cache.GetWidth()>0 );
-//	if ( useWhiteAsTransparent )
-//	{
-//		for ( int x = 0; x < cache.GetWidth(); x++ )
-//			for ( int y = 0; y < cache.GetHeight(); y++ )
-//				if ( cache.GetBlue( x, y ) == 255 && cache.GetGreen( x, y ) == 255 && cache.GetRed( x, y ) == 255 )
-//					cache.SetAlpha( x, y, 0 ); // set pixel to be transparent
-//	}
-//	return cache;
 }
 #endif
 
