@@ -50,5 +50,9 @@ QImage SideImageProvider::requestImage ( const QString & id, QSize * size, const
 	if (size)
 		*size = QSize(width,height);
 
-	return QImage ( SLcustomizations().GraphicsDir() + "/sidepics/" + id + ".png" ).scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+	QImage img;
+	if ( !img.load( SLcustomizations().GraphicsDir() + "/sidepics/" + id + ".png" ) )
+		img.load( SLcustomizations().GraphicsDir() + "/sidepics/" + id.toLower() + ".png" );
+
+	return img.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
 }
