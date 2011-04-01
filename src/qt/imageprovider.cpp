@@ -18,6 +18,7 @@
 
 #include "imageprovider.h"
 #include <customizations.h>
+#include <springunitsync.h>
 #include <qt/converters.h>
 #include <utils/conversion.h>
 #include <wx/image.h>
@@ -39,20 +40,15 @@ QImage MinimapImageProvider::requestImage ( const QString & id, QSize * size, co
 		*size = QSize(width,height);
 	QImage q = wxQtConvertImage( h );
 	assert( !q.isNull() );
-	return q.scaled( width, height );
+	return q.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
 }
 
 QImage SideImageProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
 {
 	int width = requestedSize.width() > 0 ? requestedSize.width() : 16;
 	int height = requestedSize.height() > 0 ? requestedSize.height() : 16;
-	const wxString& modname = SLcustomizations().GetModname();
-
-	qDebug() << "SIDEIMAGE requested: " << id;
-	wxImage h = usync().GetSidePicture( modname, TowxString( id.toStdString() ) );
 	if (size)
 		*size = QSize(width,height);
-	QImage q = wxQtConvertImage( h );
-//	assert( !q.isNull() );
-	return q.scaled( width, height );
+
+	return QImage ( SLcustomizations().GraphicsDir() + "/sidepics/" + id + ".png" ).scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
 }
