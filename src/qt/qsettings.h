@@ -22,6 +22,8 @@
 #include <QAbstractListModel>
 #include <QStringList>
 #include <QString>
+#include <map>
+#include <string>
 
 class PresetModel : public QAbstractListModel
 {
@@ -42,11 +44,22 @@ private:
 	ContainerType preset_names_;
 };
 
-
+//! essential config read stuff from engine
 class QSettings
 {
 public:
 	QSettings();
+	bool load( const QString& filename );
+	void commit();
+
+private:
+
+	// helper functions
+	void Read(FILE* file);
+	void AppendLine(char* line);
+
+	QString filename_;
+	std::map<std::string, std::string> data_;
 };
 
 
