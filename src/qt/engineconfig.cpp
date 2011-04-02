@@ -16,7 +16,7 @@
 **/
 
 
-#include "qsettings.h"
+#include "engineconfig.h"
 
 #include <QDir>
 #include <QDebug>

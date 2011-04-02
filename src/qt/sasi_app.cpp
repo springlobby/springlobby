@@ -44,7 +44,7 @@
 #include "skirmishmodel.h"
 #include "sidemodel.h"
 #include "qerrorwindow.h"
-#include <qsettings.h>
+#include "engineconfig.h"
 #include <spring.h>
 
 #ifdef __WXMSW__

@@ -171,7 +171,7 @@ SOURCES += sasi_main.cpp \
     FileHandler.cpp \
     sasi_app.cpp \
     audio/SoundBuffer.cpp \
-    qsettings.cpp
+    engineconfig.cpp
 
 HEADERS += \
     ../springunitsynclib.h \
@@ -247,7 +247,7 @@ HEADERS += \
     FileHandler.h \
     sasi_app.h \
     audio/SoundBuffer.h \
-    qsettings.h
+    engineconfig.h
 
 INCLUDEPATH += ..
 INCLUDEPATH += ../Helper/qtargparser
