@@ -25,6 +25,8 @@
 #include <map>
 #include <string>
 
+class EngineConfig;
+
 class PresetModel : public QAbstractListModel
 {
 	Q_OBJECT
@@ -39,27 +41,30 @@ public slots:
 
 private:
 	void reload();
-	typedef QStringList
+	typedef QList<std::pair<EngineConfig,QString> >
 		ContainerType;
-	ContainerType preset_names_;
+	ContainerType presets_;
 };
 
 //! essential config read stuff from engine
-class QSettings
+class EngineConfig
 {
 public:
-	QSettings();
+	EngineConfig();
+	EngineConfig( const QString& filename );
 	bool load( const QString& filename );
-	void commit();
+	void commit() const;
+	QString filename();
 
 private:
-
 	// helper functions
 	void Read(FILE* file);
 	void AppendLine(char* line);
 
 	QString filename_;
-	std::map<std::string, std::string> data_;
+	typedef std::map<std::string, std::string>
+		DataContainerType;
+	DataContainerType data_;
 };
 
 

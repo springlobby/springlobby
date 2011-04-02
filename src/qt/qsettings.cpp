@@ -21,6 +21,7 @@
 #include <QDir>
 
 #include <customizations.h>
+#include <springunitsynclib.h>
 
 /**
  * @brief POSIX file locking class
@@ -73,12 +74,18 @@ ScopedFileLock::~ScopedFileLock()
 #endif
 }
 
-QSettings::QSettings()
+EngineConfig::EngineConfig()
 {
 }
 
-bool QSettings::load( const QString& filename )
+EngineConfig::EngineConfig( const QString& filename )
 {
+	load( filename );
+}
+
+bool EngineConfig::load( const QString& filename )
+{
+	data_.clear();
 	filename_ = filename;
 	FILE* file;
 
@@ -94,9 +101,12 @@ bool QSettings::load( const QString& filename )
 	return true;
 }
 
-void QSettings::commit()
+void EngineConfig::commit() const
 {
-
+	foreach( DataContainerType::value_type entry, data_ )
+	{
+		susynclib().SetSpringConfigString( TowxString( entry.first ), TowxString( entry.second ) );
+	}
 }
 
 char* Strip(char* begin, char* end)
@@ -107,7 +117,7 @@ char* Strip(char* begin, char* end)
 		return begin;
 }
 
-void QSettings::Read(FILE* file)
+void EngineConfig::Read(FILE* file)
 {
 	char buf[500];
 		rewind(file);
@@ -115,7 +125,7 @@ void QSettings::Read(FILE* file)
 			AppendLine(buf);
 }
 
-void QSettings::AppendLine(char* line)
+void EngineConfig::AppendLine(char* line)
 {
 	char* line_stripped = Strip(line, strchr(line, '\0'));
 
@@ -146,38 +156,42 @@ PresetModel::PresetModel(QObject *parent )
 
 void PresetModel::reload()
 {
-	preset_names_.clear();
+	presets_.clear();
 	QDir preset_dir( SLcustomizations().DataBasePath() + "/presets/" );
 	QStringList nameFilter;
 		nameFilter << "*.conf";
 	QFileInfo current_file;
 	foreach( current_file, preset_dir.entryInfoList( nameFilter, QDir::Files ) )
 	{
-		 preset_names_.append( current_file.fileName().replace(".conf","") );
+		 presets_.append( std::make_pair<EngineConfig,QString>( EngineConfig( current_file.absoluteFilePath() ),
+															current_file.fileName().replace(".conf","") ) );
 	}
 }
 
 int PresetModel::rowCount(const QModelIndex &/*parent*/ ) const
 {
-	return preset_names_.size();
+	return presets_.size();
 }
 
 QVariant PresetModel::data(const QModelIndex &index, int /*role*/ ) const
 {
 	int row =  index.row();
-	if ( !index.isValid() || row >= preset_names_.size() )
+	if ( !index.isValid() || row >= presets_.size() )
 		   return QVariant();
-	return QVariant::fromValue(preset_names_[row]);
+	return QVariant::fromValue(presets_[row].second);
 }
 
 QString PresetModel::name(int index) const
 {
-	if ( index < preset_names_.size() )
-		return preset_names_[index];
+	if ( index < presets_.size() )
+		return presets_[index].second;
 	return QString();
 }
 
 void PresetModel::use(int index) const
 {
-
+	if ( index < presets_.size() )
+		throw std::runtime_error("void PresetModel::use(int index) const OOB");
+	const EngineConfig& config = presets_[index].first;
+	config.commit();
 }
