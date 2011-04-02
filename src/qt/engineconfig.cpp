@@ -191,6 +191,13 @@ QString PresetModel::name(int index) const
 
 void PresetModel::use(int index) const
 {
+	static bool first_use = true;
+
+	if ( first_use )
+	{
+		first_use = false;
+		return;// we don't want to commit when the model is first loaded
+	}
 	if ( index < presets_.size() )
 	{
 		const EngineConfig& config = presets_[index].first;
