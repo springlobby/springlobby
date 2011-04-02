@@ -19,6 +19,7 @@
 #include "qsettings.h"
 
 #include <QDir>
+#include <QDebug>
 
 #include <customizations.h>
 #include <springunitsynclib.h>
@@ -191,7 +192,10 @@ QString PresetModel::name(int index) const
 void PresetModel::use(int index) const
 {
 	if ( index < presets_.size() )
-		throw std::runtime_error("void PresetModel::use(int index) const OOB");
-	const EngineConfig& config = presets_[index].first;
-	config.commit();
+	{
+		const EngineConfig& config = presets_[index].first;
+		config.commit();
+	}
+	else
+		qDebug() << "void PresetModel::use(int index) const OOB " << index;
 }
