@@ -50,7 +50,7 @@ bool CmdInit()
 	Settings::m_user_defined_config = config_file.isPresent();
 
 	if ( Settings::m_user_defined_config ) {
-		Settings::m_user_defined_config_path = TowxString( config_file.value().toString().toStdString() );
+		Settings::m_user_defined_config_path = TowxString( config_file.value().toString() );
 		qDebug() << ToQString( Settings::m_user_defined_config_path );
 	}
 
@@ -60,7 +60,7 @@ bool CmdInit()
 	QString shortname_value = customization.value().toString();
 	//must go BEFORE usync loading
 	QString configFilePath = GetConfigFilePath( shortname_value );
-	sett().SetForcedSpringConfigFilePath( TowxString( configFilePath.toStdString() ) );
+	sett().SetForcedSpringConfigFilePath( TowxString( configFilePath ) );
 //	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
 //	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
 
@@ -73,8 +73,8 @@ bool CmdInit()
 
 	QString version_value = version.value().toString();
 	qDebug() << QString( "shortname: %1\tversion: %2").arg( shortname_value ).arg( version.value().toString() );
-	if ( !SLcustomizations().Init( TowxString( shortname_value.toStdString() ),
-								  TowxString( version_value.toStdString() ) ) )
+	if ( !SLcustomizations().Init( TowxString( shortname_value ),
+								  TowxString( version_value ) ) )
 	{
 		qDebug() << "init false";
 		QMessageBox::critical( 0, "Fatal error", QString("loading customizations failed for ").append( shortname_value ) );

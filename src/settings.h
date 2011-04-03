@@ -771,7 +771,7 @@ class Settings : public SL::NonCopyable
 		return m_config->Read( setting, def );
 	}
 	template < class T >
-	T Set( wxString setting, const T val )
+	bool Set( wxString setting, const T val )
 	{
 		return m_config->Write( setting, val );
 	}

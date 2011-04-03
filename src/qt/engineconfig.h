@@ -38,12 +38,14 @@ public:
 public slots:
 	QString name(int index) const;
 	void use(int index) const;
+	int lastSessionIndex() const;
 
 private:
 	void reload();
 	typedef QList<std::pair<EngineConfig,QString> >
 		ContainerType;
 	ContainerType presets_;
+	int last_sessions_index_;
 };
 
 //! essential config read stuff from engine
@@ -51,8 +53,8 @@ class EngineConfig
 {
 public:
 	EngineConfig();
-	EngineConfig( const QString& filename );
-	bool load( const QString& filename );
+	EngineConfig( const QString& filename, const QString& id );
+	bool load( const QString& filename, const QString& id );
 	void commit() const;
 	QString filename();
 
@@ -62,6 +64,7 @@ private:
 	void AppendLine(char* line);
 
 	QString filename_;
+	QString id_;
 	typedef std::map<std::string, std::string>
 		DataContainerType;
 	DataContainerType data_;

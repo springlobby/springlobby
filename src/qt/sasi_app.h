@@ -23,10 +23,14 @@
 
 class SasiApp : public QApplication
 {
+	Q_OBJECT
 public:
 	explicit SasiApp(int argc, char *argv[]);
 
 	int exec();
+
+signals:
+	void appLoaded();
 };
 
 #endif // SASI_APP_H

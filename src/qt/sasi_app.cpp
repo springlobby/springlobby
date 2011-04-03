@@ -159,7 +159,8 @@ int SasiApp::exec()
 	//	view.showFullScreen();
 	if ( splash )
 		splash->finish(&view);
-	view.setSource(QUrl(qmldir + "/main.qml"));//usync resets pwd, figure out how to put qml in qrc
+	view.setSource(QUrl(qmldir + "/main.qml"));
+	QObject::connect(this, SIGNAL(appLoaded()), (QObject*)view.rootObject(), SLOT(onAppLoaded()));
 
 	QList<QDeclarativeError> errors = view.errors();
 	if ( errors.size() )
@@ -169,6 +170,7 @@ int SasiApp::exec()
 	}
 	view.show();
 	view.setFocus();
+	emit appLoaded();
 	int ret = QApplication::exec();
 	audio_manager.wait( 5 /*seconds*/ );
 	return ret;

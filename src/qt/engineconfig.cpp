@@ -23,6 +23,7 @@
 
 #include <customizations.h>
 #include <springunitsynclib.h>
+#include <settings.h>
 
 /**
  * @brief POSIX file locking class
@@ -79,15 +80,16 @@ EngineConfig::EngineConfig()
 {
 }
 
-EngineConfig::EngineConfig( const QString& filename )
+EngineConfig::EngineConfig( const QString& filename, const QString& id )
 {
-	load( filename );
+	load( filename, id );
 }
 
-bool EngineConfig::load( const QString& filename )
+bool EngineConfig::load( const QString& filename, const QString& id )
 {
 	data_.clear();
 	filename_ = filename;
+	id_ = id;
 	FILE* file;
 
 	if ((file = fopen(filename_.toStdString().c_str(), "r"))) {
@@ -108,6 +110,9 @@ void EngineConfig::commit() const
 	{
 		susynclib().SetSpringConfigString( TowxString( entry.first ), TowxString( entry.second ) );
 	}
+	wxString id = TowxString( id_ );
+	wxString key = _T("sasi/last_used_preset");
+	sett().Set( key, id );
 }
 
 char* Strip(char* begin, char* end)
@@ -157,6 +162,8 @@ PresetModel::PresetModel(QObject *parent )
 
 void PresetModel::reload()
 {
+	wxString key = _T("sasi/last_used_preset");
+	QString last_id = ToQString( sett().Get( key, wxEmptyString ) );
 	presets_.clear();
 	QDir preset_dir( SLcustomizations().DataBasePath() + "/presets/" );
 	QStringList nameFilter;
@@ -164,9 +171,17 @@ void PresetModel::reload()
 	QFileInfo current_file;
 	foreach( current_file, preset_dir.entryInfoList( nameFilter, QDir::Files ) )
 	{
-		 presets_.append( std::make_pair<EngineConfig,QString>( EngineConfig( current_file.absoluteFilePath() ),
-															current_file.fileName().replace(".conf","") ) );
+		QString id = current_file.fileName().replace(".conf","");
+		presets_.append( std::make_pair<EngineConfig,QString>( EngineConfig( current_file.absoluteFilePath(), id ),
+															id ) );
+		if ( id == last_id )
+			last_sessions_index_ = presets_.size() - 1;
 	}
+}
+
+int PresetModel::lastSessionIndex() const
+{
+	return last_sessions_index_;
 }
 
 int PresetModel::rowCount(const QModelIndex &/*parent*/ ) const
