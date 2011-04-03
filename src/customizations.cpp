@@ -136,14 +136,11 @@ QString Customizations::DataBasePath()
 	sub_path.append( m_shortname );
 	for ( int i = 0; i < susynclib().GetSpringDataDirCount(); ++i ) {
 		QDir data ( ToQString( susynclib().GetSpringDataDirByIndex(i) ) );
-		qDebug() << "Data checking: " << data.absolutePath();
 		checked_paths.append( data.absolutePath().append("/").append( sub_path ) );
 		if ( data.cd( sub_path ) ) {
 			dataBasePath_ = data.absolutePath();
-			qDebug() << "Data found: " << dataBasePath_;
 			break;
 		}
-
 	}
 	if( dataBasePath_ != QString() )
 		return dataBasePath_ ;

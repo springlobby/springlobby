@@ -70,5 +70,33 @@ private:
 	DataContainerType data_;
 };
 
+class ScreenResolutionModel : public QAbstractListModel
+{
+	Q_OBJECT
+public:
+	explicit ScreenResolutionModel(QObject *parent = 0);
+	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+public slots:
+	QString name(int index) const;
+	void use(int index) const;
+	int lastSessionIndex() const;
+
+private:
+	struct ScreenResolution {
+		ScreenResolution( const int w, const int h, const bool dual )
+			:width(w),height(h),dualscreen(dual) {}
+		const int width;
+		const int height;
+		const bool dualscreen;
+		QString toString() const;
+	};
+	void reload();
+	typedef QList<ScreenResolution>
+		ContainerType;
+	ContainerType resolutions_;
+	int last_sessions_index_;
+};
 
 #endif // SPRINGLOBBY_HEADERGUARD_ENGINECONFIG_H

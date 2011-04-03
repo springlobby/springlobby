@@ -24,6 +24,7 @@
 #include <customizations.h>
 #include <springunitsynclib.h>
 #include <settings.h>
+#include "../settings++/presets.h"
 
 /**
  * @brief POSIX file locking class
@@ -152,8 +153,6 @@ void EngineConfig::AppendLine(char* line)
 	}
 }
 
-
-
 PresetModel::PresetModel(QObject *parent )
 	:QAbstractListModel( parent )
 {
@@ -221,3 +220,78 @@ void PresetModel::use(int index) const
 	else
 		qDebug() << "void PresetModel::use(int index) const OOB " << index;
 }
+
+ScreenResolutionModel::ScreenResolutionModel(QObject *parent )
+	:QAbstractListModel( parent )
+{
+	reload( );
+}
+
+void ScreenResolutionModel::reload()
+{
+	wxString key = _T("sasi/last_used_resolution");
+	QString last_id = ToQString( sett().Get( key, wxEmptyString ) );
+	resolutions_.clear();
+	for ( int i = 0; i < vl_Resolution_Str_size; ++i )
+	{
+		ScreenResolution res( vl_Resolution_X[i], vl_Resolution_Y[i], i > vl_Resolution_startOfDualScreenRes);
+		QString id = res.toString();
+		resolutions_.append( res );
+		if ( id == last_id )
+			last_sessions_index_ = resolutions_.size() - 1;
+	}
+}
+
+int ScreenResolutionModel::lastSessionIndex() const
+{
+	return last_sessions_index_;
+}
+
+int ScreenResolutionModel::rowCount(const QModelIndex &/*parent*/ ) const
+{
+	return resolutions_.size();
+}
+
+QVariant ScreenResolutionModel::data(const QModelIndex &index, int /*role*/ ) const
+{
+	int row =  index.row();
+	if ( !index.isValid() || row >= resolutions_.size() )
+		   return QVariant();
+	return QVariant::fromValue(resolutions_[row].toString());
+}
+
+QString ScreenResolutionModel::name(int index) const
+{
+	if ( index < resolutions_.size() )
+		return resolutions_[index].toString();
+	return QString();
+}
+
+QString ScreenResolutionModel::ScreenResolution::toString() const
+{
+	return QString( "%1 x %2").arg( width ).arg( height );
+}
+
+void ScreenResolutionModel::use(int index) const
+{
+	static bool first_use = true;
+
+	if ( first_use )
+	{
+		first_use = false;
+		return;// we don't want to commit when the model is first loaded
+	}
+	if ( index < resolutions_.size() )
+	{
+		const ScreenResolution& res = resolutions_[index];
+		susynclib().SetSpringConfigInt( _T("XResolution"), res.width );
+		susynclib().SetSpringConfigInt( _T("YResolution"), res.height );
+		susynclib().SetSpringConfigInt( _T("DualScreenMode"), res.dualscreen );
+		wxString id = TowxString( res.toString() );
+		wxString key = _T("sasi/last_used_resolution");
+		sett().Set( key, id );
+	}
+	else
+		qDebug() << "void ScreenResolutionModel::use(int index) const OOB " << index;
+}
+
