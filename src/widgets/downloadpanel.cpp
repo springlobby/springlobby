@@ -79,19 +79,18 @@ void WidgetDownloadPanel::OnSelect( wxListEvent& event )
 
 bool WidgetDownloadPanel::PopulateList()
 {
-    bool success = true;
+	bool success = false;
 	wxHTTP http;
 
 	http.SetTimeout(6);
-	http.Connect(_T("spring.vsync.de"));
+	http.Connect(_T("widgetdb.springrts.de"));
         // PHP file sending XML content
-	wxInputStream *httpStream = http.GetInputStream(_T("/luaManager/lua_manager.php?m=0"));
+	wxInputStream *httpStream = http.GetInputStream(_T("/lua_manager.php?m=0"));
 
 	if (http.GetError() == wxPROTO_NOERR)
 	{
 		wxXmlDocument xml(*httpStream);
-
-		wxXmlNode *node = xml.GetRoot()->GetChildren();
+		wxXmlNode *node = xml.GetRoot() ? xml.GetRoot()->GetChildren() : NULL;
 		while (node)
 		{
 		    int id = FromwxString<long>( node->GetPropVal( _T("ID"), TowxString( invalid_id ) ) );
@@ -151,10 +150,9 @@ bool WidgetDownloadPanel::PopulateList()
             }
 
 			node = node->GetNext();
+			success = true;
 		}
 	}
-	else
-		success = false;
 
 	http.Close();
 	wxDELETE(httpStream);

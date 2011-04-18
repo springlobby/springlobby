@@ -54,12 +54,12 @@ wxArrayString Widget::GetImageFilenames() const
 
 bool Widget::GetImageInfos()
 {
-    bool success = true;
+	bool success = false;
 	wxHTTP http;
 
 	http.SetTimeout(6);
-	http.Connect(_T("spring.vsync.de"));
-    wxString query_url = _T("/luaManager/lua_manager.php?m=4&id=") + TowxString( n_id );
+	http.Connect(_T("widgetdb.springrts.de"));
+	wxString query_url = _T("/lua_manager.php?m=4&id=") + TowxString( n_id );
         // PHP file sending XML content
 	wxInputStream *httpStream = http.GetInputStream( query_url );
 
@@ -67,7 +67,7 @@ bool Widget::GetImageInfos()
 	{
                 // will crash here, if xml content is not formatted PERFECTLY
 		wxXmlDocument xml(*httpStream);
-		wxXmlNode *node = xml.GetRoot()->GetChildren();
+		wxXmlNode *node = xml.GetRoot() ? xml.GetRoot()->GetChildren() : NULL;
 		while (node)
 		{
 		    int id = FromwxString<long>( node->GetPropVal( _T("ID"), TowxString( invalid_id ) ) );
@@ -87,11 +87,9 @@ bool Widget::GetImageInfos()
             }
 
 			node = node->GetNext();
+			success = true;
 		}
 	}
-	else
-		success = false;
-
 	http.Close();
 	wxDELETE(httpStream);
 
@@ -146,13 +144,13 @@ bool Widget::DownloadImages()
 
 bool Widget::GetFileInfos()
 {
-    bool success = true;
+	bool success = false;
     unsigned int file_present_count = 0;
     wxString sep ( wxFileName::GetPathSeparator() );
 	wxHTTP http;
 
 	http.SetTimeout(6);
-	http.Connect(_T("spring.vsync.de"));
+	http.Connect(_T("widgetdb.springrts.de"));
     wxString query_url = _T("/luaManager/lua_manager.php?m=1&id=") + TowxString( w_id );
         // PHP file sending XML content
 	wxInputStream *httpStream = http.GetInputStream( query_url );
@@ -161,7 +159,7 @@ bool Widget::GetFileInfos()
                 // will crash here, if xml content is not formatted PERFECTLY
 		wxXmlDocument xml(*httpStream);
 
-		wxXmlNode *node = xml.GetRoot()->GetChildren();
+		wxXmlNode *node = xml.GetRoot() ? xml.GetRoot()->GetChildren() : NULL;
 		while (node)
 		{
 		    int id = FromwxString<long>( node->GetPropVal( _T("ID"), TowxString( invalid_id ) ) );
@@ -189,10 +187,9 @@ bool Widget::GetFileInfos()
             }
 
 			node = node->GetNext();
+			success = true;
 		}
 	}
-	else
-		success = false;
 
 	http.Close();
 	wxDELETE(httpStream);
