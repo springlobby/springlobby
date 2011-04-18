@@ -10,6 +10,7 @@ const int SETTINGS_VERSION  = 22;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
+const wxString widgetDownloader_baseUrl = _T("widgetdb.springrts.de");
 const wxString BattlePostfix = _T("_battle");
 const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
 const bool DEFSETT_SAVE_PASSWORD = false;
