@@ -58,7 +58,7 @@ bool Widget::GetImageInfos()
 	wxHTTP http;
 
 	http.SetTimeout(6);
-	http.Connect(_T("widgetdb.springrts.de"));
+	http.Connect(widgetDownloader_baseUrl);
 	wxString query_url = _T("/lua_manager.php?m=4&id=") + TowxString( n_id );
         // PHP file sending XML content
 	wxInputStream *httpStream = http.GetInputStream( query_url );
@@ -150,8 +150,8 @@ bool Widget::GetFileInfos()
 	wxHTTP http;
 
 	http.SetTimeout(6);
-	http.Connect(_T("widgetdb.springrts.de"));
-    wxString query_url = _T("/luaManager/lua_manager.php?m=1&id=") + TowxString( w_id );
+	http.Connect(widgetDownloader_baseUrl);
+	wxString query_url = _T("/lua_manager.php?m=1&id=") + TowxString( w_id );
         // PHP file sending XML content
 	wxInputStream *httpStream = http.GetInputStream( query_url );
 	if (http.GetError() == wxPROTO_NOERR)

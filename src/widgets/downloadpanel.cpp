@@ -15,6 +15,7 @@
 #include "../utils/conversion.h"
 #include "downloadlistctrl.h"
 #include "infopanel.h"
+#include "../settings.h"
 
 const int invalid_id = -1;
 const unsigned int max_short_desc_length = 50;
@@ -83,7 +84,7 @@ bool WidgetDownloadPanel::PopulateList()
 	wxHTTP http;
 
 	http.SetTimeout(6);
-	http.Connect(_T("widgetdb.springrts.de"));
+	http.Connect(widgetDownloader_baseUrl);
         // PHP file sending XML content
 	wxInputStream *httpStream = http.GetInputStream(_T("/lua_manager.php?m=0"));
 
