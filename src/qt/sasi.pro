@@ -288,3 +288,6 @@ CONFIG(debug, debug|release) {
 } else {
 	DESTDIR = ../qt-build/release
 }
+
+INSTALLS += sasi
+sasi.path = $(DESTDIR)/sasi
