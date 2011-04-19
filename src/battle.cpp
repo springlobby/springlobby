@@ -283,7 +283,8 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				}
 			}
 		}
-		ui().OnUserBattleStatus( *this, user );
+	void ShouldAutoUnspec();
+	ui().OnUserBattleStatus( *this, user );
 }
 
 
@@ -291,6 +292,7 @@ void Battle::OnUserRemoved( User& user )
 {
     m_ah.OnUserRemoved(user);
     IBattle::OnUserRemoved( user );
+	void ShouldAutoUnspec();
 }
 
 
@@ -1153,5 +1155,22 @@ void Battle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData data )
 {
 	IBattle::OnUnitsyncReloaded( data );
 	if ( m_is_self_in ) SendMyBattleStatus();
+}
+
+void Battle::ShouldAutoUnspec()
+{
+	if ( m_auto_unspec && !IsLocked() && GetMe().BattleStatus().spectator )
+	{
+		if ( GetNumActivePlayers() < m_opts.maxplayers )
+		{
+			ForceSpectator(GetMe(),false);
+		}
+	}
+}
+
+void Battle::SetAutoUnspec(bool value)
+{
+	m_auto_unspec = value;
+	ShouldAutoUnspec();
 }
 

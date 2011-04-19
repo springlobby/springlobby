@@ -106,6 +106,10 @@ class Battle : public IBattle
 
 	void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
 
+	void SetAutoUnspec(bool value);
+
+  void ShouldAutoUnspec();
+
   protected:
     // Battle variables
 

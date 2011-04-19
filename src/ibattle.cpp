@@ -29,6 +29,7 @@ IBattle::IBattle():
   m_map_exists(false),
   m_mod_exists(false),
   m_previous_local_mod_name( wxEmptyString ),
+  m_auto_unspec(false),
   m_ingame(false),
   m_generating_script(false),
   m_players_ready(0),
