@@ -283,7 +283,8 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				}
 			}
 		}
-	void ShouldAutoUnspec();
+	if ( !GetMe().BattleStatus().spectator ) SetAutoUnspec(false); // we don't need auto unspec anymore
+	ShouldAutoUnspec();
 	ui().OnUserBattleStatus( *this, user );
 }
 
@@ -292,7 +293,7 @@ void Battle::OnUserRemoved( User& user )
 {
     m_ah.OnUserRemoved(user);
     IBattle::OnUserRemoved( user );
-	void ShouldAutoUnspec();
+	ShouldAutoUnspec();
 }
 
 

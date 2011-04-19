@@ -557,6 +557,7 @@ void BattleRoomTab::UpdateUser( User& user )
 	m_ally_sel->SetSelection( bs.ally );
 	m_side_sel->SetSelection( bs.side );
 	m_spec_chk->SetValue( bs.spectator );
+	m_auto_unspec_chk->SetValue( m_battle->GetAutoUnspec() );
 	m_ready_chk->SetValue( bs.ready );
 	// Enable or disable widgets' sensitivity as appropriate.
 	if ( bs.spectator )
@@ -773,11 +774,6 @@ void BattleRoomTab::OnAutounSpec( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnImSpec( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	if (!m_battle->GetMe().BattleStatus().spectator)// we're a player going to spec, disable auto-unspec button
-	{
-		m_auto_unspec_chk->SetValue(false);
-		m_battle->SetAutoUnspec(false);
-	}
 	m_battle->ForceSpectator( m_battle->GetMe(), m_spec_chk->GetValue() );
 }
 
