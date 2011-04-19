@@ -615,7 +615,7 @@ void Settings::ConvertOldChannelSettings()
 
 bool Settings::ShouldAddDefaultChannelSettings()
 {
-	return !m_config->HasSection( _T( "/Channels" ) );
+	return IsFirstRun() && !m_config->HasSection( _T( "/Channels" ) );
 }
 
 /************* SPRINGLOBBY WINDOW POS/SIZE   ******************/
