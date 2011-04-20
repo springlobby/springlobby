@@ -203,9 +203,9 @@ void Settings::SetSettingsVersion()
 }
 
 
-unsigned int Settings::GetSettingsVersion()
+int Settings::GetSettingsVersion()
 {
-	return m_config->Read( _T( "/General/SettingsVersion" ), 0l );
+	return m_config->Read( _T( "/General/SettingsVersion" ), SETTINGS_VERSION );
 }
 
 
