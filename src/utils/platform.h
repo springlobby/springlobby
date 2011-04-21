@@ -66,10 +66,7 @@ wxString GetUserDataDir();
   **/
 wxString IdentityString(const wxString format, bool lowerCase = false );
 
-#ifdef SL_QT_MODE
-class QString;
-QString GetConfigFilePath( const QString& shortname );
-#endif
+wxString GetCustomizedEngineConfigFilePath();
 
 #endif // SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 

@@ -59,8 +59,7 @@ bool CmdInit()
 #endif
 	QString shortname_value = customization.value().toString();
 	//must go BEFORE usync loading
-	QString configFilePath = GetConfigFilePath( shortname_value );
-	sett().SetForcedSpringConfigFilePath( TowxString( configFilePath ) );
+	sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
 //	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
 //	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
 

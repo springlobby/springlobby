@@ -439,20 +439,9 @@ wxString GetConfigfileDir()
 	#endif //__WXMSW__
 }
 
-#ifdef SL_QT_MODE
-
-QString GetConfigFilePath( const QString& shortname )
+wxString GetCustomizedEngineConfigFilePath()
 {
-	QDir dir( ToQString( wxStandardPaths::Get().GetUserConfigDir() ) );
-#ifdef __WXMSW__
-	if ( !dir.cd( shortname ) )
-		dir.mkpath( shortname );
-#else
-	if ( !dir.cd( "."+shortname ) )
-		dir.mkpath( "."+shortname );
-#endif
-
-	return QFileInfo( dir, "engine.cfg" ).absoluteFilePath();
+	const wxString path = GetConfigfileDir() + wxFileName::GetPathSeparator() + _T("engine.cfg");
+	return path;
 }
 
-#endif

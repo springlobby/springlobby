@@ -169,6 +169,10 @@ bool SpringLobbyApp::OnInit()
 
 	//this should take off the firstload time considerably *ie nil it :P )
 	mapSelectDialog();
+	if ( !m_customizer_modshortname.IsEmpty() )
+	{//this needsto happen before usync load
+		sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
+	}
 	//unitsync first load, NEEDS to be blocking
 	usync().ReloadUnitSyncLib();
 
