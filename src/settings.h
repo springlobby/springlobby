@@ -106,7 +106,7 @@ class Settings : public SL::NonCopyable
 
     //! Sets/Gets settings revision number
     void SetSettingsVersion();
-    unsigned int GetSettingsVersion();
+	int GetSettingsVersion();
 
     //! should we sayex/pm bot?
     void SetReportStats(const bool value);

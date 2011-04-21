@@ -8,6 +8,7 @@
 #include <wx/log.h>
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
+#include <wx/filename.h>
 
 #include "KeynameConverter.h"
 #include "SpringDefaultProfile.h"
@@ -159,7 +160,7 @@ const key_binding& hotkey_parser::getBindings() const
 
 void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 {
-	const wxString newTmpFilename = this->m_filename + wxT(".tmp");
+	const wxString newTmpFilename = wxFileName::CreateTempFileName( _T("uikeys."));
 	wxTextFile newFile( newTmpFilename );
 
 	//open new file for writing
