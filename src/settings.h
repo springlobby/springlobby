@@ -114,6 +114,7 @@ class Settings : public SL::NonCopyable
 
     void SetAutoUpdate( const bool value );
     bool GetAutoUpdate();
+	bool IsSelfUpdateDisabled();
 
     wxString GetLobbyWriteDir();
 

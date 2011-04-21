@@ -172,7 +172,8 @@ MainWindow::MainWindow( )
 #ifndef NO_TORRENT_SYSTEM
 	m_menuTools->AppendSeparator();
 #endif
-	m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
+	if (!sett().IsSelfUpdateDisabled() )
+		m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
 
 
 	wxMenu *menuHelp = new wxMenu;
