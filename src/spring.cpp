@@ -231,7 +231,7 @@ bool Spring::LaunchSpring( const wxString& params  )
         cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
   #endif
   cmd += _T("\" ") + configfileflags + params;
-  cmd.Replace( _T("\\\\"), _T("\\") );
+  
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
 
 #ifdef SL_QT_MODE

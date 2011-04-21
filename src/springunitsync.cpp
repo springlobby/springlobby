@@ -61,7 +61,8 @@ SpringUnitSync::SpringUnitSync()
 
 SpringUnitSync::~SpringUnitSync()
 {
-  m_cache_thread->Wait();
+	if ( m_cache_thread )
+	  m_cache_thread->Wait();
 }
 
 static int CompareStringNoCase(const wxString& first, const wxString& second)
@@ -597,9 +598,8 @@ wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image
 	susynclib().ReadFileVFS(ini, FileContent, FileSize);
 	wxMemoryInputStream FileContentStream( FileContent, FileSize );
 
-	bool hu = cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
+	cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
 	cache.InitAlpha();
-//	assert(cache.GetWidth()>0 );
 	if ( useWhiteAsTransparent )
 	{
 		for ( int x = 0; x < cache.GetWidth(); x++ )
