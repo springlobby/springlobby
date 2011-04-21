@@ -41,6 +41,7 @@
 #include "../images/springsettings.xpm"
 #include "helpmenufunctions.h"
 #include "se_utils.h"
+#include "../customizations.h"
 
 const wxString simpleTabCap= _("Combined Options");
 const wxString qualityTabCap= _("Render quality / Video mode");
@@ -72,6 +73,9 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	hotkeyTab(0),
 	m_has_focus(true)
 {
+	if ( SLcustomizations().Active() )
+		SetIcon( SLcustomizations().GetAppIcon() );
+
 	alreadyCalled = false;
 	parentWindow = parent;
 
@@ -79,7 +83,7 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
         usync().ReloadUnitSyncLib();
 
 	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
-	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, _T("Tahoma")));
+//	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, _T("Tahoma")));
 
 	settingsIcon  = new wxIcon(springsettings_xpm);
 

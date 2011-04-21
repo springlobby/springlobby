@@ -35,9 +35,12 @@
 #include <wx/log.h>
 #include <wx/cmdline.h>
 #include <wx/frame.h>
+#include <wx/filename.h>
 
+#include "../utils/customdialogs.h"
 #include "../globalsmanager.h"
 #include "../springunitsynclib.h"
+#include "../customizations.h"
 
 IMPLEMENT_APP(Springsettings)
 
@@ -46,20 +49,43 @@ Springsettings::Springsettings()
     m_log_console( true ),
 	m_log_file( false ),
     m_log_window_show( false ),
-    m_crash_handle_disable( false )
-{
-    SetAppName( _T("springsettings") );
+	m_crash_handle_disable( false ),
+	m_appname( _T("SpringSettings") )
+{}
+
+#if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
+LONG __stdcall filter(EXCEPTION_POINTERS* p){
+	#if wxUSE_STACKWALKER
+		CrashReport::instance().GenerateReport();
+	#else
+		CrashReport::instance().GenerateReport(p);
+	#endif
+	return 0; //must return 0 here or we'll end in an inf loop of dbg reports
 }
+#endif
 
 bool Springsettings::OnInit()
 {
+	wxSetEnv( _T("UBUNTU_MENUPROXY"), _T("0") );
     //this triggers the Cli Parser amongst other stuff
     if (!wxApp::OnInit())
         return false;
 
-    #if wxUSE_ON_FATAL_EXCEPTION
-      if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
-    #endif
+	SetAppName( m_appname );
+
+	if ( !wxDirExists( GetConfigfileDir() ) )
+		wxMkdir( GetConfigfileDir() );
+
+	if (!m_crash_handle_disable) {
+	#if wxUSE_ON_FATAL_EXCEPTION
+		wxHandleFatalExceptions( true );
+	#endif
+	#if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
+		//this undocumented function acts as a workaround for the dysfunctional
+		// wxUSE_ON_FATAL_EXCEPTION on msw when mingw is used (or any other non SEH-capable compiler )
+		SetUnhandledExceptionFilter(filter);
+	#endif
+	}
 
     //initialize all loggers
 	//TODO non-constant parameters
@@ -67,6 +93,21 @@ bool Springsettings::OnInit()
 	wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 
     SetSettingsStandAlone( true );
+
+	if ( !m_customizer_modshortname.IsEmpty() )
+	{//this needsto happen before usync load
+		sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
+	}
+	//unitsync first load, NEEDS to be blocking
+	usync().ReloadUnitSyncLib();
+	if ( !m_customizer_modshortname.IsEmpty() ) {
+		if ( !SLcustomizations().Init( m_customizer_modshortname, m_customizer_modversion ) ) {
+			customMessageBox( 3, _("Couldn't load customizations for ") + m_customizer_modshortname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
+//            wxLogError( _("Couldn't load customizations for ") + m_customizer_modshortname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
+			exit( OnExit() );//for some twisted reason returning false here does not terminate the app
+		}
+	}
+
     settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
     		wxDefaultSize);
     SetTopWindow(frame);
@@ -118,7 +159,10 @@ void Springsettings::OnInitCmdLine(wxCmdLineParser& parser)
 		{ wxCMD_LINE_SWITCH, STR("cl"), STR("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, STR("fl"), STR("file-logging"),  _("dumps application log to a file ( enter path )"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-		//{ wxCMD_LINE_OPTION, STR("c"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
+		{ wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
+		{ wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("load lobby customizations from game archive. Expects the shortname."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("r"), STR("version"),  _("load lobby customizations from game archive with shortname and version."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  _("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL } //this is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
 	};
@@ -142,11 +186,33 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
 
-        if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
-            m_log_verbosity = 3;
+		Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
+		if ( Settings::m_user_defined_config ) {
+			 wxFileName fn ( Settings::m_user_defined_config_path );
+			 if ( ! fn.IsAbsolute() ) {
+				 wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
+				 return false;
+			 }
+			 if ( ! fn.IsFileWritable() ) {
+				 wxLogError ( _T("path for parameter \"config-file\" must be writeable") );
+				 return false;
+			 }
+		}
 
-        if ( parser.Found(_T("help")) )
-            return false; // not a syntax error, but program should stop if user asked for command line usage
+		if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
+			m_log_verbosity = m_log_window_show ? 3 : 5;
+		if ( parser.Found(_T("customize"), &m_customizer_modshortname ) )
+		{
+			if (!parser.Found(_T("version"), &m_customizer_modversion ) )
+			{
+				wxLogError( _T("You need to specify a version parameter in addition to shortname to use customizations.") );
+				return false;
+			}
+		}
+		else
+			m_customizer_modshortname = _T("");
+		if ( !parser.Found(_T("name"), &m_appname ) )
+			m_appname = _T("SpringLobby");
 
         return true;
     }
