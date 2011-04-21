@@ -35,6 +35,7 @@
 #include <wx/log.h>
 #include <wx/cmdline.h>
 #include <wx/frame.h>
+#include <wx/filename.h>
 
 #include "../utils/customdialogs.h"
 #include "../globalsmanager.h"
@@ -101,9 +102,6 @@ bool Springsettings::OnInit()
 	usync().ReloadUnitSyncLib();
 	if ( !m_customizer_modshortname.IsEmpty() ) {
 		if ( !SLcustomizations().Init( m_customizer_modshortname, m_customizer_modversion ) ) {
-
-		}
-		else {
 			customMessageBox( 3, _("Couldn't load customizations for ") + m_customizer_modshortname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
 //            wxLogError( _("Couldn't load customizations for ") + m_customizer_modshortname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
 			exit( OnExit() );//for some twisted reason returning false here does not terminate the app
@@ -161,6 +159,7 @@ void Springsettings::OnInitCmdLine(wxCmdLineParser& parser)
 		{ wxCMD_LINE_SWITCH, STR("cl"), STR("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, STR("fl"), STR("file-logging"),  _("dumps application log to a file ( enter path )"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
 		{ wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("load lobby customizations from game archive. Expects the shortname."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, STR("r"), STR("version"),  _("load lobby customizations from game archive with shortname and version."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  _("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
@@ -186,6 +185,19 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
 		m_log_file = parser.Found(_T("file-logging"), &m_log_file_path);
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
+
+		Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
+		if ( Settings::m_user_defined_config ) {
+			 wxFileName fn ( Settings::m_user_defined_config_path );
+			 if ( ! fn.IsAbsolute() ) {
+				 wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
+				 return false;
+			 }
+			 if ( ! fn.IsFileWritable() ) {
+				 wxLogError ( _T("path for parameter \"config-file\" must be writeable") );
+				 return false;
+			 }
+		}
 
 		if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
 			m_log_verbosity = m_log_window_show ? 3 : 5;
