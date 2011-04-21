@@ -63,6 +63,7 @@ SpringUnitSync::~SpringUnitSync()
 {
 	if ( m_cache_thread )
 	  m_cache_thread->Wait();
+	delete m_cache_thread;
 }
 
 static int CompareStringNoCase(const wxString& first, const wxString& second)
