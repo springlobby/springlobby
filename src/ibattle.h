@@ -394,8 +394,8 @@ public:
 
 protected:
 
-    void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
-    void LoadScriptMMOpts( const PDataList& node );
+		void LoadScriptMMOpts( const wxString& sectionname, const SL::PDataList& node );
+		void LoadScriptMMOpts( const SL::PDataList& node );
 
 		void PlayerLeftTeam( int team );
 		void PlayerLeftAlly( int ally );

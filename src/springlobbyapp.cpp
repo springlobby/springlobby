@@ -169,6 +169,10 @@ bool SpringLobbyApp::OnInit()
 
 	//this should take off the firstload time considerably *ie nil it :P )
 	mapSelectDialog();
+	if ( !m_customizer_modshortname.IsEmpty() )
+	{//this needsto happen before usync load
+		sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
+	}
 	//unitsync first load, NEEDS to be blocking
 	usync().ReloadUnitSyncLib();
 
@@ -180,13 +184,13 @@ bool SpringLobbyApp::OnInit()
 
 	CacheAndSettingsSetup();
 
-	if ( !m_customizer_modname.IsEmpty() ) {
-		if ( SLcustomizations().Init( m_customizer_modname ) ) {
+	if ( !m_customizer_modshortname.IsEmpty() ) {
+		if ( SLcustomizations().Init( m_customizer_modshortname, m_customizer_modversion ) ) {
 			ui().mw().SetIcon( SLcustomizations().GetAppIcon() );
 		}
 		else {
-			customMessageBox( 3, _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
-//            wxLogError( _("Couldn't load customizations for ") + m_customizer_modname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
+			customMessageBox( 3, _("Couldn't load customizations for ") + m_customizer_modshortname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
+//            wxLogError( _("Couldn't load customizations for ") + m_customizer_modshortname + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
 			exit( OnExit() );//for some twisted reason returning false here does not terminate the app
 		}
 	}
@@ -297,7 +301,8 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
         { wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
         { wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-        { wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("load lobby customizations from game archive. Expects the long name."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("load lobby customizations from game archive. Expects the shortname."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("r"), STR("version"),  _("load lobby customizations from game archive with shortname and version."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_OPTION, STR("n"), STR("name"),  _("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
         { wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL } //this is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
@@ -334,8 +339,16 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
         if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
             m_log_verbosity = m_log_window_show ? 3 : 5;
-        if ( !parser.Found(_T("customize"), &m_customizer_modname ) )
-            m_customizer_modname = _T("");
+		if ( parser.Found(_T("customize"), &m_customizer_modshortname ) )
+		{
+			if (!parser.Found(_T("version"), &m_customizer_modversion ) )
+			{
+				wxLogError( _T("You need to specify a version parameter in addition to shortname to use customizations.") );
+				return false;
+			}
+		}
+		else
+			m_customizer_modshortname = _T("");
 		if ( !parser.Found(_T("name"), &m_appname ) )
 			m_appname = _T("SpringLobby");
 

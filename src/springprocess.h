@@ -1,8 +1,16 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRINGPROCESS_H
 #define SPRINGLOBBY_HEADERGUARD_SPRINGPROCESS_H
 
-#include <wx/thread.h>
-#include <wx/string.h>
+#ifdef SL_QT_MODE
+	#include "thread.h"
+	typedef Thread SpringProcessBase;
+	//wxThread segfaults in mutex when used from qt..
+#else
+	#include <wx/thread.h>
+	#include <wx/string.h>
+	typedef wxThread SpringProcessBase;
+#endif
+
 #include <wx/process.h>
 
 BEGIN_DECLARE_EVENT_TYPES()
@@ -11,7 +19,7 @@ END_DECLARE_EVENT_TYPES()
 
 class Spring;
 
-class SpringProcess: public wxThread
+class SpringProcess: public SpringProcessBase
 {
   public:
     SpringProcess( Spring& sp );

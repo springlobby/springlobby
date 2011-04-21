@@ -236,7 +236,7 @@ Token Tokenizer::GetToken( int i ) {
 void Tokenizer::Step( int i ) {
 	buffer_pos += i;
 }
-
+namespace SL {
 Node::~Node() {
 	//if(parent)parent->Remove(name);
 }
@@ -712,12 +712,12 @@ void DataLeaf::Load( Tokenizer &f ) {
 		f.ReportError( t, _T( "; expected" ) );
 	}
 }
+} // end namespace SL
 
-
-PDataList ParseTDF( std::istream &s, int *error_count ) {
+SL::PDataList ParseTDF( std::istream &s, int *error_count ) {
 	Tokenizer t;
 	t.EnterStream( s );
-	PDataList result( new DataList );
+	SL::PDataList result( new SL::DataList );
 	result->Load( t );
 	if ( error_count ) {
 		*error_count = t.NumErrors();

@@ -44,8 +44,6 @@ ALsound::ALsound()
 	alListenerfv(AL_ORIENTATION,alori);
 	//*
 
-	alureInitDevice(0, 0);
-
 	alGenSources(m_num_sources,m_sources);
 	if(alGetError()!=AL_NO_ERROR)
 	{

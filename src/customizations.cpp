@@ -6,22 +6,12 @@
 
 #include <wx/image.h>
 #include <wx/msgdlg.h>
+#ifdef SL_QT_MODE
+	#include <QImage>
+	#include <qt/converters.h>
 
+#endif
 const wxString Customizations::IntroKey = wxString ( _T("intro_file") );
-
-/** @brief GetBackground
-  *
-  * @todo: document this function
-  */
-const wxBitmap& Customizations::GetBackground() const
-{
-    return m_background;
-}
-
-wxSize Customizations::GetBackgroundSize() const
-{
-    return wxSize( m_background.GetWidth(), m_background.GetHeight() );
-}
 
 const OptionsWrapper& Customizations::GetCustomizations() const
 {
@@ -59,22 +49,23 @@ const wxString& Customizations::GetModname() const
   *
   * @todo: document this function
   */
-bool Customizations::Init(const wxString& modname)
+bool Customizations::Init(const wxString& shortname,const wxString& version )
 {
 	//!TODO require blocking usync init if it's not loaded
-    m_modname = modname;
+	m_modname = usync().GetNameForShortname( shortname, version );
     if ( !usync().ModExists( m_modname ) )
         return false;
     susynclib().SetCurrentMod( m_modname );
     bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
     if ( ret ) {
         wxString icon_img_path = m_customs.getSingleValue( _T("icon") );
+#ifdef SL_QT_MODE
+		m_shortname = ToQString( shortname );
+		wxBitmap icon_bmp ( wxQtConvertImage( usync().GetQImage( m_modname, icon_img_path, false ) ) );
+#else
 		wxBitmap icon_bmp (usync().GetImage( m_modname, icon_img_path, false ) );
+#endif
         m_app_ico.CopyFromBitmap( icon_bmp );
-
-        wxString bg_img_path = m_customs.getSingleValue( _T("bg_image") );
-		m_background = wxBitmap( usync().GetImage( m_modname, bg_img_path, false ) );
-
         m_help_url = m_customs.getSingleValue( _T("help_url") );
     }
 	m_active =  ret;
@@ -126,3 +117,54 @@ Customizations& SLcustomizations()
     return s_customizations;
 }
 
+#ifdef SL_QT_MODE
+
+#include <QDir>
+#include <QDebug>
+#include <QMessageBox>
+#include "qt/qerrorwindow.h"
+#include <QCoreApplication>
+
+QString Customizations::DataBasePath()
+{
+	static bool cached = false;
+	if ( cached )
+		return dataBasePath_;
+
+	QList<QString> checked_paths;
+	QString sub_path( "lobby/SpringLobby/customizations/" );
+	sub_path.append( m_shortname );
+	for ( int i = 0; i < susynclib().GetSpringDataDirCount(); ++i ) {
+		QDir data ( ToQString( susynclib().GetSpringDataDirByIndex(i) ) );
+		checked_paths.append( data.absolutePath().append("/").append( sub_path ) );
+		if ( data.cd( sub_path ) ) {
+			dataBasePath_ = data.absolutePath();
+			break;
+		}
+	}
+	if( dataBasePath_ != QString() )
+		return dataBasePath_ ;
+
+	checked_paths.prepend( QString("Couldn't find customization data in any of these directories:\n ") );
+	throw DataException( checked_paths );
+
+	return QString();
+}
+
+QString Customizations::QmlDir()
+{
+	return QDir( DataBasePath() + "/" + "qml" ).absolutePath();
+}
+QString Customizations::GraphicsDir()
+{
+	return QDir( DataBasePath() + "/" + "graphics" ).absolutePath();
+}
+QString Customizations::SoundsDir()
+{
+	return QDir( DataBasePath() + "/" + "sounds" ).absolutePath();
+}
+QString Customizations::MusicDir()
+{
+	return QDir( DataBasePath() + "/" + "music" ).absolutePath();
+}
+#endif

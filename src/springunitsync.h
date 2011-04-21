@@ -21,7 +21,9 @@ class SpringUnitSyncLib;
 
 typedef std::map<wxString,wxString> LocalArchivesVector;
 
-
+#ifdef SL_QT_MODE
+class QImage;
+#endif
 /// Thread safe MRU cache (works like a std::map but has maximum size)
 template<typename TKey, typename TValue>
 class MostRecentlyUsedCache
@@ -159,6 +161,9 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetSides( const wxString& modname  );
 	wxImage GetSidePicture( const wxString& modname, const wxString& SideName ) const;
 	wxImage GetImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent = true ) const;
+#ifdef SL_QT_MODE
+	QImage GetQImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent = true ) const;
+#endif
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );
     void FreeUnitSyncLib();
@@ -196,6 +201,8 @@ class SpringUnitSync : public IUnitSync
 
 	bool ReloadUnitSyncLib(  );
 	void ReloadUnitSyncLib( GlobalEvents::GlobalEventData /*data*/ ) { ReloadUnitSyncLib(); }
+	bool FastLoadUnitSyncLib( const wxString& unitsyncloc );
+	bool FastLoadUnitSyncLibInit();
 
     void SetSpringDataPath( const wxString& path );
 
@@ -249,7 +256,7 @@ class SpringUnitSync : public IUnitSync
     wxString m_cache_path;
 
     mutable wxCriticalSection m_lock;
-    WorkerThread m_cache_thread;
+	WorkerThread* m_cache_thread;
     EvtHandlerCollection m_evt_handlers;
 
     /// this cache facilitates async image fetching (image is stored in cache
@@ -283,6 +290,9 @@ class SpringUnitSync : public IUnitSync
     wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int width, int height );
 
     void _GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int evtHandlerId );
+
+public:
+	wxString GetNameForShortname( const wxString& shortname, const wxString& version ) const;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H

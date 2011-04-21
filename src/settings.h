@@ -106,7 +106,7 @@ class Settings : public SL::NonCopyable
 
     //! Sets/Gets settings revision number
     void SetSettingsVersion();
-    unsigned int GetSettingsVersion();
+	int GetSettingsVersion();
 
     //! should we sayex/pm bot?
     void SetReportStats(const bool value);
@@ -114,6 +114,7 @@ class Settings : public SL::NonCopyable
 
     void SetAutoUpdate( const bool value );
     bool GetAutoUpdate();
+	bool IsSelfUpdateDisabled();
 
     wxString GetLobbyWriteDir();
 
@@ -415,6 +416,8 @@ class Settings : public SL::NonCopyable
 
     //!@brief returns config file path spring should use, returns empty for default
     wxString GetForcedSpringConfigFilePath();
+	//! use in game customized mode or externally forced via cli arg
+	void SetForcedSpringConfigFilePath( const wxString& path );
 
     /*@}*/
 
@@ -769,6 +772,11 @@ class Settings : public SL::NonCopyable
 	{
 		return m_config->Read( setting, def );
 	}
+	template < class T >
+	bool Set( wxString setting, const T val )
+	{
+		return m_config->Write( setting, val );
+	}
 
 	//setting to spam the server messages in all channels
 	bool GetBroadcastEverywhere();
@@ -780,6 +788,7 @@ class Settings : public SL::NonCopyable
 	slConfig* m_config; //!< wxConfig object to store and restore  all settings in.
 
     wxString m_chosen_path;
+	wxString m_forced_springconfig_path;
     bool m_portable_mode;
 
     std::map<wxString, wxString> m_spring_versions;

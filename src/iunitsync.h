@@ -9,6 +9,10 @@
 #include "mmoptionmodel.h"
 #include "utils/globalevents.h"
 
+#ifdef SL_QT_MODE
+class QImage;
+#endif
+
 class wxImage;
 
 extern const wxEventType UnitSyncAsyncOperationCompletedEvt;
@@ -172,6 +176,9 @@ class IUnitSync : public wxEvtHandler
 	virtual wxArrayString GetSides( const wxString& modname  ) = 0;
 	virtual wxImage GetSidePicture( const wxString& modname, const wxString& SideName )  const = 0;
 	virtual wxImage GetImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent = true ) const = 0;
+#ifdef SL_QT_MODE
+	virtual QImage GetQImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent = true ) const = 0;
+#endif
 	virtual wxString GetTextfileAsString( const wxString& modname, const wxString& file_path ) =0;
 
 	virtual int GetNumUnits( const wxString& modname ) const = 0;
@@ -194,6 +201,8 @@ class IUnitSync : public wxEvtHandler
 
     virtual bool ReloadUnitSyncLib(  ) = 0;
     virtual void ReloadUnitSyncLib( GlobalEvents::GlobalEventData data ) = 0;
+	virtual bool FastLoadUnitSyncLib( const wxString& unitsyncloc ) = 0;
+	virtual bool FastLoadUnitSyncLibInit() = 0;
 
 	virtual wxArrayString GetPlaybackList( bool ReplayType = true ) const = 0; //savegames otherwise
 
@@ -229,6 +238,12 @@ class IUnitSync : public wxEvtHandler
 
     private:
         IUnitSync( const IUnitSync& );
+
+	protected:
+		typedef std::map< std::pair<wxString,wxString>, wxString> ShortnameVersionToNameMap;
+		ShortnameVersionToNameMap m_shortname_to_name_map;
+	public:
+		virtual wxString GetNameForShortname( const wxString& shortname, const wxString& version ) const = 0;
 };
 
 IUnitSync& usync();
