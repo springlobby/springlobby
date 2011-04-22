@@ -569,10 +569,16 @@ AutocloseMessageBox::AutocloseMessageBox( wxWindow *parent, const wxString& mess
 										  unsigned int delay,
 										  long style, const wxPoint& pos )
 	: TimedMessageBox( new wxIcon( SLcustomizations().GetAppIcon() ), parent, message, caption, delay, style, pos )
+	,delay_timerID( wxNewId() )
 {
-	wxWindowID delay_timerID = wxNewId();
 	m_delay_timer.SetOwner( this, delay_timerID );
 	Connect( delay_timerID, wxEVT_TIMER, wxTimerEventHandler( AutocloseMessageBox::OnUnlock) );
+	wxSizer* topsizer = GetSizer();
+	wxSizer *sizerBtn = CreateSeparatedButtonSizer(wxCANCEL);
+	topsizer->Add(sizerBtn, 0,  wxALL|wxALIGN_CENTRE, 10 );
+	topsizer->SetSizeHints( this );
+	topsizer->Fit( this );
+	Layout();
 }
 
 void AutocloseMessageBox::OnUnlock( wxTimerEvent& /*evt*/ )
@@ -583,4 +589,11 @@ void AutocloseMessageBox::OnUnlock( wxTimerEvent& /*evt*/ )
 AutocloseMessageBox::~AutocloseMessageBox()
 {
 
+}
+
+void AutocloseMessageBox::EndModal( int retCode )
+{
+	Disconnect( delay_timerID, wxEVT_TIMER, wxTimerEventHandler( AutocloseMessageBox::OnUnlock) );
+	m_delay_timer.Stop();
+	TimedMessageBox::EndModal( retCode );
 }
