@@ -125,22 +125,23 @@ bool Springsettings::OnInit()
 	}
 	else if ( !m_engine_config_filepath.IsEmpty() )
 	{
-		if ( !wxFileName::IsAbsolute( m_engine_config_filepath ) )
+
+		if ( !wxFileName( m_engine_config_filepath ).IsAbsolute() )
 		{
-			wxLogError( _T(" custom engine config filename is not an sbolute path"), m_engine_config_filepath.c_str() );
+			customMessageBox( SS_MAIN_ICON, wxString::Format( _T(" custom engine config filename is not an sbolute path"), m_engine_config_filepath.c_str() ) );
 			return false;
 		}
 		if ( !wxFile::Exists( m_engine_config_filepath ) )
 		{
-			if ( !wxFile().Open(m_engine_config_filepath,wxFile::write) );
+			if ( !wxFile(m_engine_config_filepath,wxFile::write).Write(wxString()) )
 			{
-				wxLogError( _T("cannot open custom engine config filename for wrtiting"), m_engine_config_filepath.c_str() );
+				customMessageBox( SS_MAIN_ICON, wxString::Format( _T("cannot open custom engine config filename for wrtiting"), m_engine_config_filepath.c_str() ) );
 				return false;
 			}
 		}
 		if( !wxFileName::IsFileWritable( m_engine_config_filepath ) )
 		{
-			wxLogError( _T("given custom engine config filename is not writeable"), m_engine_config_filepath.c_str() );
+			customMessageBox( SS_MAIN_ICON, wxString::Format( _T("given custom engine config filename is not writeable"), m_engine_config_filepath.c_str() ) );
 			return false;
 		}
 		sett().SetForcedSpringConfigFilePath( m_engine_config_filepath );
@@ -149,7 +150,7 @@ bool Springsettings::OnInit()
 	usync().ReloadUnitSyncLib();
 	if ( !m_customizer_archive_name.IsEmpty() ) {
 		if ( !SLcustomizations().Init( m_customizer_archive_name ) ) {
-			customMessageBox( 3, _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
+			customMessageBox( SL_MAIN_ICON, _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
 //            wxLogError( _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
 			exit( OnExit() );//for some twisted reason returning false here does not terminate the app
 		}
