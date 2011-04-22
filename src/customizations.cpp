@@ -49,13 +49,10 @@ const wxString& Customizations::GetModname() const
   *
   * @todo: document this function
   */
-bool Customizations::Init(const wxString& shortname,const wxString& version )
+bool Customizations::Init(const wxString& archive_name )
 {
 	//!TODO require blocking usync init if it's not loaded
-	m_modname = usync().GetNameForShortname( shortname, version );
-    if ( !usync().ModExists( m_modname ) )
-        return false;
-    susynclib().SetCurrentMod( m_modname );
+	m_modname = archive_name;
     bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
     if ( ret ) {
         wxString icon_img_path = m_customs.getSingleValue( _T("icon") );

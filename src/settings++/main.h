@@ -44,8 +44,7 @@ class Springsettings : public wxApp
 		wxString m_log_file_path;
         bool m_log_window_show;
         bool m_crash_handle_disable;
-		wxString m_customizer_modshortname;
-		wxString m_customizer_modversion;
+		wxString m_customizer_archive_name;
 		wxString m_appname;
 
 };

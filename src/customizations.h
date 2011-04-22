@@ -27,7 +27,7 @@ class Customizations {
     public:
         ~Customizations() {}
 
-		bool Init( const wxString& shortname, const wxString& version );
+		bool Init( const wxString& archive_name );
 		bool Active() const;
 
         const wxString& GetModname() const;
