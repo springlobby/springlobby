@@ -68,6 +68,30 @@ wxString IdentityString(const wxString format, bool lowerCase = false );
 
 wxString GetCustomizedEngineConfigFilePath();
 
+#ifdef __WXMSW__
+#include <wx/msw/registry.h>
+template < typename T >
+T GetRegkeyVal( const wxRegKey& reg, const wxString& name, const T def )
+{
+	T val = def;
+	if ( reg.QueryValue( name, &val ) )
+		return val;
+	else
+		return def;
+}
+
+template < >
+wxString GetRegkeyVal( const wxRegKey& reg, const wxString& name, const wxString def )
+{
+	wxString val = def;
+	if ( reg.QueryValue( name, val ) )
+		return val;
+	else
+		return def;
+}
+#endif
+
+
 #endif // SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 
 /**
