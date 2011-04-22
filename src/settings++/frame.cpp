@@ -297,7 +297,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				detailTab = 0;
 				audioTab = 0;
 				hotkeyTab = 0;
-				SetTitle(_("SpringSettings (simple mode)"));
+				SetTitle(GetAppName() + _("(simple mode)"));
 				if (!sett().getDisableWarning()){
 					customMessageBox(SS_MAIN_ICON,expertModeWarning, _("Hint"), wxOK);
 				}
@@ -348,7 +348,7 @@ void settings_frame::switchToExpertMode()
 
 	notebook->DeletePage(0);
 	simpleTab = 0;
-	SetTitle(_("SpringSettings (expert mode)"));
+	SetTitle(GetAppName() + _("(expert mode)"));
 	/*uiTab->updateControls(UPDATE_ALL);
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);
