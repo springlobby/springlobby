@@ -630,8 +630,7 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
 {
 #ifndef SL_QT_MODE
-	se_frame = new settings_frame(this,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
-	  	    		wxDefaultSize);
+	se_frame = new settings_frame(this,wxT("SpringSettings"));
 	se_frame_active = true;
 	se_frame->Show();
 #endif

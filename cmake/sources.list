@@ -109,7 +109,6 @@ SET(springlobbySrc
 	src/widgets/downloadpanel.cpp
 	src/widgets/infopanel.cpp
 	src/widgets/widget.cpp
-	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
 	src/toasterbox/ToasterBox.cpp
 	src/toasterbox/ToasterBoxWindow.cpp
@@ -156,6 +155,7 @@ SET(StandAloneSettings
 
 SET(SLSharedWithSettings
 	src/customizations.cpp
+	src/Helper/wxTranslationHelper.cpp
 	src/uiutils.cpp
 	src/updater/versionchecker.cpp
 	src/updater/updatehelper.cpp

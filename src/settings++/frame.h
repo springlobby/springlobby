@@ -47,8 +47,7 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		DECLARE_EVENT_TABLE()
 
 	public:
-		settings_frame(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Project2"), const wxPoint& pos = wxDefaultPosition,
-				const wxSize& size = wxDefaultSize);
+		settings_frame(wxWindow *parent, const wxString &title, wxWindowID id = wxNewId());
 		virtual ~settings_frame();
 		void handleExternExit();
 		void switchToExpertMode();

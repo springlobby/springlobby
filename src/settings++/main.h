@@ -25,10 +25,14 @@
 
 #include <wx/app.h>
 
+class wxLocale;
+class wxTranslationHelper;
+
 class Springsettings : public wxApp
 {
 	public:
         Springsettings();
+		~Springsettings();
 		bool OnInit();
 		int OnExit();
 		virtual void OnFatalException();
@@ -37,6 +41,8 @@ class Springsettings : public wxApp
         virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
     protected:
+
+		wxTranslationHelper* m_translationhelper;
 
         long m_log_verbosity;
         bool m_log_console;

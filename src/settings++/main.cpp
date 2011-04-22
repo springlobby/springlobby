@@ -41,17 +41,24 @@
 #include "../globalsmanager.h"
 #include "../springunitsynclib.h"
 #include "../customizations.h"
+#include "../Helper/wxTranslationHelper.h"
 
 IMPLEMENT_APP(Springsettings)
 
 Springsettings::Springsettings()
-    :  m_log_verbosity( 3 ),
+	:  m_translationhelper(NULL),
+	m_log_verbosity( 3 ),
     m_log_console( true ),
 	m_log_file( false ),
     m_log_window_show( false ),
 	m_crash_handle_disable( false ),
 	m_appname( _T("SpringSettings") )
 {}
+
+Springsettings::~Springsettings()
+{
+	delete m_translationhelper;
+}
 
 #if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
 LONG __stdcall filter(EXCEPTION_POINTERS* p){
@@ -91,6 +98,22 @@ bool Springsettings::OnInit()
 	//TODO non-constant parameters
 	wxLogChain* logchain  = 0;
 	wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
+	//this needs to called _before_ mainwindow instance is created
+	wxInitAllImageHandlers();
+
+#ifdef __WXMSW__
+	wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
+#else
+	#if defined(LOCALE_INSTALL_DIR)
+		wxString path ( _T(LOCALE_INSTALL_DIR) );
+	#else
+		// use a dummy name here, we're only interested in the base path
+		wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"),wxStandardPaths::ResourceCat_Messages);
+		path = path.Left( path.First(_T("noneWH") ) );
+	#endif
+#endif
+	m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
+	m_translationhelper->Load();
 
     SetSettingsStandAlone( true );
 
@@ -108,8 +131,7 @@ bool Springsettings::OnInit()
 		}
 	}
 
-    settings_frame* frame = new settings_frame(NULL,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
-    		wxDefaultSize);
+	settings_frame* frame = new settings_frame(NULL,GetAppName());
     SetTopWindow(frame);
     frame->Show();
 

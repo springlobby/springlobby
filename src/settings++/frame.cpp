@@ -42,6 +42,7 @@
 #include "helpmenufunctions.h"
 #include "se_utils.h"
 #include "../customizations.h"
+#include "../utils/platform.h"
 
 const wxString simpleTabCap= _("Combined Options");
 const wxString qualityTabCap= _("Render quality / Video mode");
@@ -62,8 +63,8 @@ BEGIN_EVENT_TABLE(settings_frame,wxFrame)
   EVT_KILL_FOCUS( settings_frame::OnKillFocus )
 END_EVENT_TABLE()
 
-settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& pa_size)
-	: wxFrame(parent, id, title, position, pa_size),
+settings_frame::settings_frame(wxWindow *parent, const wxString &title, wxWindowID id)
+	: wxFrame(parent, id, title ),
 	WindowAttributesPickle( _T("SETTINGSFRAME"), this, wxSize( DEFSETT_SW_WIDTH, DEFSETT_SW_HEIGHT ) ),
 	simpleTab(0),
 	uiTab(0),
@@ -71,10 +72,13 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	detailTab(0),
 	qualityTab(0),
 	hotkeyTab(0),
+	settingsIcon( new wxIcon(springsettings_xpm) ),
 	m_has_focus(true)
 {
 	if ( SLcustomizations().Active() )
 		SetIcon( SLcustomizations().GetAppIcon() );
+	else
+		SetIcon(*settingsIcon);
 
 	alreadyCalled = false;
 	parentWindow = parent;
@@ -82,10 +86,9 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	if ( !usync().IsLoaded() )
         usync().ReloadUnitSyncLib();
 
-	notebook = new wxNotebook(this, ID_OPTIONS, wxPoint(0,0),TAB_SIZE, wxNB_TOP|wxNB_NOPAGETHEME);
+	notebook = new wxNotebook(this, ID_OPTIONS);
 //	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, _T("Tahoma")));
 
-	settingsIcon  = new wxIcon(springsettings_xpm);
 
     if (abstract_panel::loadValuesIntoMap())
 	{
@@ -95,10 +98,8 @@ settings_frame::settings_frame(wxWindow *parent, wxWindowID id, const wxString &
 	else
 	{
 		notebook->AddPage(new PathOptionPanel(notebook,this),_("Error!"));
-		SetTitle(_T("SpringSettings"));
 	}
 
-     SetIcon(*settingsIcon);
      Layout();
      Center();
 
