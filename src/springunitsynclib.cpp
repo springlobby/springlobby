@@ -87,8 +87,9 @@ void GetLibFuncPtr( const wxDynamicLibrary* libhandle, const wxString& name, Fun
 		#endif
 			p = reinterpret_cast<FunctionPointerType>( libhandle->GetSymbol( name ) );
 
-		if ( !p )
+		if ( !p ) {
 			wxLogMessage( _T("Couldn't load %s from unitsync library"),name.c_str() );
+		}
 	}
 	else {
 		p = NULL;
