@@ -87,8 +87,9 @@ void GetLibFuncPtr( const wxDynamicLibrary* libhandle, const wxString& name, Fun
 		#endif
 			p = reinterpret_cast<FunctionPointerType>( libhandle->GetSymbol( name ) );
 
-		if ( !p )
+		if ( !p ) {
 			wxLogMessage( _T("Couldn't load %s from unitsync library"),name.c_str() );
+		}
 	}
 	else {
 		p = NULL;
@@ -495,7 +496,7 @@ void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
   {
     wxLogDebugFunc( modname );
     if ( !m_current_mod.IsEmpty() ) _RemoveAllArchives();
-    m_add_all_archives( m_get_mod_archive( m_get_mod_index( modname.mb_str( wxConvUTF8 ) ) ) );
+	m_add_all_archives( m_get_mod_archive( m_get_mod_index( modname.mb_str( wxConvUTF8 ) ) ) );
     m_current_mod = modname;
   }
 }
@@ -1118,12 +1119,13 @@ int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
   return m_get_map_option_count( name.mb_str( wxConvUTF8 ) );
 }
 
-int SpringUnitSyncLib::GetCustomOptionCount( const wxString& modname, const wxString& filename )
+int SpringUnitSyncLib::GetCustomOptionCount( const wxString& archive_name, const wxString& filename )
 {
     InitLib( m_get_custom_option_count );
-    ASSERT_EXCEPTION( !modname.IsEmpty(), _T("passing void XXXname to unitsync") );
-    _SetCurrentMod( modname );
-    return m_get_custom_option_count( filename.mb_str( wxConvUTF8 ) );
+	ASSERT_EXCEPTION( !archive_name.IsEmpty(), _T("passing void archive_name to unitsync") );
+	_RemoveAllArchives();
+	m_add_all_archives( archive_name.mb_str( wxConvUTF8 ) );
+	return m_get_custom_option_count( filename.mb_str( wxConvUTF8 ) );
 }
 
 

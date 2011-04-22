@@ -242,8 +242,9 @@ find_tail_sequences(int fd, const char* bytes, size_t bytes_length, size_t count
 			    source = new char[ line_length + 1];
 			    memset(source, 0, line_length + 1);
 
-			    if ( pread(fd, source, line_length, this_found_pos + bytes_length) < (ssize_t) line_length )
-				wxLogWarning(_T("ChatLog::find_tail_sequences: Read-byte count less than expected"));
+				if ( pread(fd, source, line_length, this_found_pos + bytes_length) < (ssize_t) line_length ) {
+					wxLogWarning(_T("ChatLog::find_tail_sequences: Read-byte count less than expected"));
+				}
 			} else {
 			    source = buf + i + bytes_length;
 			}

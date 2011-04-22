@@ -39,8 +39,11 @@ void TDFWriter::Append( const wxString &name, wxString value ) {
 }
 
 void TDFWriter::Close() {
-	while ( m_depth > 0 )LeaveSection();
-	if ( m_depth < 0 )wxLogWarning( _T( "error in TDFWriter usage: more LeaveSection() calls than EnterSection(). Please contact springlobby developers" ) );
+	while ( m_depth > 0 )
+		LeaveSection();
+	if ( m_depth < 0 ) {
+		wxLogWarning( _T( "error in TDFWriter usage: more LeaveSection() calls than EnterSection(). Please contact springlobby developers" ) );
+	}
 }
 
 void TDFWriter::AppendLineBreak() {

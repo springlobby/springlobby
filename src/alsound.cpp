@@ -79,15 +79,17 @@ ALsound::~ALsound()
 
 void ALsound::ring() const
 {
-	if (alurePlaySource(m_sources[1], 0, 0) == AL_FALSE)
+	if (alurePlaySource(m_sources[1], 0, 0) == AL_FALSE) {
 		wxLogError( TowxString(alureGetErrorString()) );
+	}
 }
 
 
 void ALsound::pm() const
 {
-	if (alurePlaySource(m_sources[0], 0, 0) == AL_FALSE)
+	if (alurePlaySource(m_sources[0], 0, 0) == AL_FALSE) {
 		wxLogError( TowxString(alureGetErrorString()) );
+	}
 }
 
 #endif
