@@ -2223,9 +2223,7 @@ void Settings::SetMapSelectorFilterRadio( const unsigned int val )
 
 long Settings::getMode()
 {
-	long mode;
-	m_config->Read( _T( "/SpringSettings/mode" ), &mode, SET_MODE_SIMPLE );
-	return mode;
+	return m_config->Read( _T( "/SpringSettings/mode" ), SET_MODE_SIMPLE );
 }
 
 void Settings::setMode( long mode )
@@ -2235,9 +2233,7 @@ void Settings::setMode( long mode )
 
 bool Settings::getDisableWarning()
 {
-	bool tmp;
-	m_config->Read( _T( "/SpringSettings/disableWarning" ), &tmp, false );
-	return tmp;
+	return m_config->Read( _T( "/SpringSettings/disableWarning" ), 0l );
 }
 
 void Settings::setDisableWarning( bool disable )

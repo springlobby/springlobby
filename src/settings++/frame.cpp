@@ -279,6 +279,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 
 		case ID_MENUITEM_SIMPLE:
 			if (sett().getMode()==SET_MODE_EXPERT)
+			{
 				sett().setMode(SET_MODE_SIMPLE);
 
 				simpleTab = new tab_simple(this,notebook,ID_SIMPLE);
@@ -301,6 +302,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				if (!sett().getDisableWarning()){
 					customMessageBox(SS_MAIN_ICON,expertModeWarning, _("Hint"), wxOK);
 				}
+			}
 		  break;
 
 		case ID_MENUITEM_EXPERT:
