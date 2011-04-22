@@ -71,7 +71,7 @@ wxString GetCustomizedEngineConfigFilePath();
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
 template < typename T >
-T GetRegkeyVal( const wxRegKey& reg, const wxString& name, const T def )
+static T GetRegkeyVal( const wxRegKey& reg, const wxString& name, const T def )
 {
 	T val = def;
 	if ( reg.QueryValue( name, &val ) )
