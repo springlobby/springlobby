@@ -52,6 +52,7 @@ class Springsettings : public wxApp
         bool m_crash_handle_disable;
 		wxString m_customizer_archive_name;
 		wxString m_appname;
+		wxString m_engine_config_filepath;
 
 };
 
