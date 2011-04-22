@@ -151,7 +151,7 @@ SET( curlSRC
 )
 
 SET(StandAloneSettings
-	src/settings++/Main.cpp
+	src/settings++/main.cpp
 )
 
 SET(SLSharedWithSettings
