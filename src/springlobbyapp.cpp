@@ -88,7 +88,6 @@ SpringLobbyApp::SpringLobbyApp()
 
 SpringLobbyApp::~SpringLobbyApp()
 {
-	delete m_translationhelper;
     delete m_timer;
 }
 

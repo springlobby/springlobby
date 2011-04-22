@@ -58,9 +58,8 @@ Springsettings::Springsettings()
 {}
 
 Springsettings::~Springsettings()
-{
-	delete m_translationhelper;
-}
+{}
+
 
 #if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
 LONG __stdcall filter(EXCEPTION_POINTERS* p){
@@ -72,6 +71,20 @@ LONG __stdcall filter(EXCEPTION_POINTERS* p){
 	return 0; //must return 0 here or we'll end in an inf loop of dbg reports
 }
 #endif
+
+void Springsettings::OnFatalException()
+{
+#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
+	#if wxUSE_STACKWALKER
+		CrashReport::instance().GenerateReport();
+	#else
+		EXCEPTION_POINTERS* p = new EXCEPTION_POINTERS; //lets hope this'll never get called
+		CrashReport::instance().GenerateReport(p);
+	#endif
+#else
+	wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
+#endif
+}
 
 bool Springsettings::OnInit()
 {
@@ -169,26 +182,16 @@ bool Springsettings::OnInit()
 
 int Springsettings::OnExit()
 {
+	if(m_translationhelper)
+	{
+		wxDELETE(m_translationhelper);
+	}
+
 	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
 	SetEvtHandlerEnabled(false);
 	DestroyGlobals();
 	return 0;
-}
-
-//! @brief is called when the app crashes
-void Springsettings::OnFatalException()
-{
-#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-    #if wxUSE_STACKWALKER
-        CrashReport::instance().GenerateReport();
-    #else
-        EXCEPTION_POINTERS* p = new EXCEPTION_POINTERS; //lets hope this'll never get called
-        CrashReport::instance().GenerateReport(p);
-    #endif
-#else
-    wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
-#endif
 }
 
 void Springsettings::OnInitCmdLine(wxCmdLineParser& parser)
