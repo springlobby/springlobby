@@ -35,6 +35,7 @@
 #include <wx/log.h>
 #include <wx/cmdline.h>
 #include <wx/frame.h>
+#include <wx/stdpaths.h>
 #include <wx/filename.h>
 
 #include "../utils/customdialogs.h"
