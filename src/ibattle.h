@@ -420,6 +420,8 @@ protected:
 
     bool m_ingame;
 
+    bool m_auto_unspec; // unspec as soon as there's a free slot
+
     bool m_generating_script;
 
     std::map<unsigned int,BattleStartRect> m_rects;
