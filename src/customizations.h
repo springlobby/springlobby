@@ -13,6 +13,7 @@
 	#include <QList>
 #endif
 
+//! single global instance to get all customizsations from
 class Customizations {
     protected:
         Customizations();
@@ -39,6 +40,9 @@ class Customizations {
 		bool Provides( const wxString& key ) const;
 
 		wxString GetIntroText() const;
+
+		//! if key is found bitmap is changed and true returned
+		bool GetBitmap( const wxString& key, wxBitmap& bitmap );
 
 		static const wxString IntroKey;// ( _T("intro_file") );
 

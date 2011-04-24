@@ -55,13 +55,12 @@ bool Customizations::Init(const wxString& archive_name )
 	m_modname = archive_name;
     bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
     if ( ret ) {
-        wxString icon_img_path = m_customs.getSingleValue( _T("icon") );
 #ifdef SL_QT_MODE
 		m_shortname = ToQString( shortname );
-		wxBitmap icon_bmp ( wxQtConvertImage( usync().GetQImage( m_modname, icon_img_path, false ) ) );
-#else
-		wxBitmap icon_bmp (usync().GetImage( m_modname, icon_img_path, false ) );
 #endif
+		wxBitmap icon_bmp( wxNullBitmap );
+		GetBitmap( _T("icon"), icon_bmp );
+
         m_app_ico.CopyFromBitmap( icon_bmp );
         m_help_url = m_customs.getSingleValue( _T("help_url") );
     }
@@ -78,6 +77,25 @@ bool Customizations::Init(const wxString& archive_name )
 	 m_active( false )
 {
 
+}
+
+bool Customizations::GetBitmap( const wxString& key, wxBitmap& bitmap )
+{
+	if ( Provides( key ) )
+	{
+		const wxString path = m_customs.getSingleValue( key );
+#ifdef SL_QT_MODE
+		wxBitmap icon_bmp ( wxQtConvertImage( usync().GetQImage( m_modname, path, false ) ) );
+#else
+		wxBitmap icon_bmp (usync().GetImage( m_modname, path, false ) );
+#endif
+		if( icon_bmp.IsOk() )
+		{
+			bitmap = icon_bmp;
+			return true;
+		}
+	}
+	return false;//either loaded bmp was kaput or key not found
 }
 
 bool Customizations::Active() const

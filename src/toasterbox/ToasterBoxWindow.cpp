@@ -13,6 +13,7 @@
 #include "../gui/wxbackgroundimage.h"
 #include "../images/notif_bg.png.h"
 #include "../uiutils.h"
+#include "../customizations.h"
 
 #ifndef __WXMSW__
 	typedef wxClientDC DCType;
@@ -28,30 +29,27 @@ long ToasterBoxWindow::count = 0;
 //END_EVENT_TABLE ()
 
 ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2)
-	:  ToasterBase(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR)
+	:  ToasterBase(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR),
+	  startTime( wxGetLocalTime() ),
+	  parent2( _parent2 ),
+	  sleepTime( 10 ),
+	  step( 4 ),
+	  pauseTime( 1700 ),
+	  textColor( *wxWHITE ),
+	  popupText( _T("Change Me!") ),
+	m_background_bitmap( charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png) ) )
 {
-  startTime = wxGetLocalTime();
-  parent2 = _parent2;
-  sleepTime = 10;
-  step = 4;
-  pauseTime = 1700;
-  textColor = *wxWHITE;
-  popupText = _T("Change Me!");
-  //the size we want the dialog to be
-  wxSize dialogSize(150, 170);
-  count++;
-
-
-  bottomRight = wxPoint(wxGetDisplaySize().GetWidth(),
-    wxGetDisplaySize().GetHeight());
-
-  SetSize(bottomRight.x, bottomRight.y,
-    dialogSize.GetWidth(), dialogSize.GetHeight());
+	bool loaded = SLcustomizations().GetBitmap( _T("notification_background"), m_background_bitmap );
+	count++;
+	//the size we want the dialog to be
+	wxSize dialogSize(150, 170);
+	bottomRight = wxPoint(wxGetDisplaySize().GetWidth(),wxGetDisplaySize().GetHeight());
+	SetSize(bottomRight.x, bottomRight.y, dialogSize.GetWidth(), dialogSize.GetHeight());
 
 	ToasterBase::Connect( wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)& ToasterBoxWindow::OnEraseBackground);
 	ToasterBase::Connect( wxEVT_PAINT, (wxObjectEventFunction)& ToasterBoxWindow::OnPaint);
 #ifndef __WXMSW__
-	PushEventHandler( new wxBackgroundBitmap( charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png) ) ) );
+	PushEventHandler( new wxBackgroundBitmap( m_background_bitmap ) );
 #endif
 }
 
@@ -197,7 +195,7 @@ void ToasterBoxWindow::DrawText()
 #ifdef __WXMSW__
 //	dc.SetBackground( *wxBLACK_BRUSH );
 //	dc.Clear();
-	dc.DrawBitmap(charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png) ), 0, 0, false);
+	dc.DrawBitmap(m_background_bitmap, 0, 0, false);
 #endif
   //width and height of text
   wxCoord w = 0, h = 0;

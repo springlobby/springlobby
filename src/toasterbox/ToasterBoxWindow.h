@@ -47,6 +47,7 @@ class ToasterBoxWindow: public ToasterBase, public wxTimer , public SL::NonCopya
     //how long the box hangs around for
     int pauseTime;
     wxStaticBitmap sbm;
+	wxBitmap m_background_bitmap;
     wxColour textColor;
     wxPanel *pn;
     wxString popupText, bitmapFile;
