@@ -17,16 +17,17 @@ class wxButton;
 class wxBitmapButton;
 class wxCheckBox;
 class wxMenu;
+class wxScrolledWindow;
 
-class HostBattleDialog : public wxDialog, public WindowAttributesPickle
+class HostBattleDialog : public wxDialog//, public WindowAttributesPickle
 {
 	public:
 		HostBattleDialog( wxWindow* parent );
 
 		void ReloadModList();
-		int GetSelectedRank();
 
 	protected:
+		int GetSelectedRank();
 
 		void OnOk           ( wxCommandEvent& event );
 		void OnCancel       ( wxCommandEvent& event );
@@ -36,6 +37,7 @@ class HostBattleDialog : public wxDialog, public WindowAttributesPickle
 		void OnUseRelay     ( wxCommandEvent& event );
 		void OnPickRelayHost( wxCommandEvent& event );
 
+		wxScrolledWindow* m_panel;
 		wxStaticText* m_desc_lbl;
 		wxTextCtrl* m_desc_text;
 		wxStaticText* m_mod_lbl;
