@@ -39,7 +39,7 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2)
 	  popupText( _T("Change Me!") ),
 	m_background_bitmap( charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png) ) )
 {
-	bool loaded = SLcustomizations().GetBitmap( _T("notification_background"), m_background_bitmap );
+	SLcustomizations().GetBitmap( _T("notification_background"), m_background_bitmap );
 	count++;
 	//the size we want the dialog to be
 	wxSize dialogSize(150, 170);
