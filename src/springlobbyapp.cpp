@@ -174,7 +174,12 @@ bool SpringLobbyApp::OnInit()
 		sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
 	}
 	//unitsync first load, NEEDS to be blocking
-	usync().ReloadUnitSyncLib();
+	const bool usync_loaded = usync().ReloadUnitSyncLib();
+	if ( !sett().IsFirstRun() && !usync_loaded )
+	{
+		customMessageBox( SL_MAIN_ICON, _("Please check that the file given in Preferences->Spring is a proper, readable unitsync library"),
+						 _("Coulnd't load required unitsync library"), wxOK );
+	}
 
 	#ifndef DISABLE_SOUND
 		//sound sources/buffer init
@@ -189,7 +194,7 @@ bool SpringLobbyApp::OnInit()
 			ui().mw().SetIcon( SLcustomizations().GetAppIcon() );
 		}
 		else {
-			customMessageBox( 3, _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
+			customMessageBox( SL_MAIN_ICON, _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
 //            wxLogError( _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
 			exit( OnExit() );//for some twisted reason returning false here does not terminate the app
 		}

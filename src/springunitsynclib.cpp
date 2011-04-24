@@ -3,6 +3,7 @@
 #include <wx/filename.h>
 #include <wx/dynlib.h>
 #include <wx/image.h>
+#include <wx/file.h>
 #include <wx/log.h>
 #include <stdexcept>
 #include <cmath>
@@ -116,6 +117,12 @@ void SpringUnitSyncLib::_Load( const wxString& path )
 	{
 		wxLogError( _T("File not found: %s"), path.c_str() );
 		ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
+	}
+	// Check if library readable
+	if ( !wxFile().Open( path ) )
+	{
+		wxLogError( _T("couldn read unitsync from %s"), path.c_str() );
+		ASSERT_EXCEPTION( false, _T("Unitsync lib at given location is present, but not readable.") );
 	}
 
 	{
