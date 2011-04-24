@@ -44,9 +44,15 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 	m_nick_lbl = new wxStaticText( this, wxID_ANY, _("Nickname:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_nick_sizer->Add( m_nick_lbl, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-	int bot = m_battle.GetNumBots()+1;
+	int bot = 1;
+	wxString botname = wxString::Format( _T("Bot%d"), bot );
+	while ( m_battle.UserExists( botname ) )
+	{
+		bot++;
+		botname = wxString::Format( _T("Bot%d"), bot );
+	}
 
-	m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _T("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_nick = new wxTextCtrl( this, wxID_ANY, botname, wxDefaultPosition, wxDefaultSize, 0 );
 	m_nick_sizer->Add( m_nick, 2, wxALL, 5 );
 
 	m_main_sizer->Add( m_nick_sizer, 0, wxEXPAND, 5 );
@@ -115,8 +121,8 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
 	this->SetSizer( m_main_sizer );
 	this->Layout();
-
 	ReloadAIList();
+	m_add_btn->SetFocus();
 }
 
 
