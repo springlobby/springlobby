@@ -383,7 +383,8 @@ void HostBattleDialog::OnUseRelay( wxCommandEvent&  )
     Layout();
 }
 
-void HostBattleDialog::Run( wxWindow* parent )
+namespace SL{
+void RunHostBattleDialog( wxWindow* parent )
 {
 	HostBattleDialog dlg( parent );
 	if ( dlg.ShowModal() == wxID_OK )
@@ -483,3 +484,4 @@ void HostBattleDialog::Run( wxWindow* parent )
 		serverSelector().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
 	}
 }
+} //end namespace SL

@@ -51,7 +51,7 @@
 #include "mapselectdialog.h"
 #include "mmoptionwindows.h"
 #include "aui/auimanager.h"
-#include "hostbattledialog.h"
+#include "hostbattledialog_public.h"
 
 BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 
@@ -1205,7 +1205,7 @@ void BattleRoomTab::OnHostNew( wxCommandEvent& /*event*/ )
 		customMessageBoxNoModal( SL_MAIN_ICON, _( "Hosting is disabled due to the incompatible version you're using" ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 		return;
 	}
-	HostBattleDialog::Run( this );
+	SL::RunHostBattleDialog( this );
 }
 
 //void BattleRoomTab::MaximizeSizer()
