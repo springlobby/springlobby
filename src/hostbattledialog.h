@@ -19,7 +19,7 @@ class wxCheckBox;
 class wxMenu;
 class wxScrolledWindow;
 
-class HostBattleDialog : public wxDialog//, public WindowAttributesPickle
+class HostBattleDialog : public wxDialog, public WindowHintsPickle
 {
 	public:
 		HostBattleDialog( wxWindow* parent );

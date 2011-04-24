@@ -61,19 +61,19 @@ END_EVENT_TABLE()
 
 HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	: wxDialog( parent, -1, _( "Host new battle" ), wxDefaultPosition, wxSize( 410, 441 ), wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE ),
-//	WindowAttributesPickle( _T("hostbattledialog"), this, wxSize( 410, 441 ) ),
+	WindowHintsPickle ( _T("hostbattledialog"), this, wxSize( 410, 441 ) ),
     m_last_relayhost( sett().GetLastRelayedHost() )
 {
-	this->SetSizeHints( GetSize(), wxDefaultSize );
+//	this->SetSizeHints( GetSize(), wxDefaultSize );
 
 	m_panel = new wxScrolledWindow( this );
-		m_panel ->SetSizeHints( GetSize(), wxDefaultSize );
+//		m_panel ->SetSizeHints( GetSize(), wxDefaultSize );
 	wxBoxSizer* all_sizer = new wxBoxSizer( wxVERTICAL );
 
 	wxFlexGridSizer* topsizer = new wxFlexGridSizer( 2,  0, 10);
 //	topsizer->AddGrowableCol( 1, 1 );
 
-	SetSizeHints( wxDefaultSize, wxDefaultSize );
+//	SetSizeHints( wxDefaultSize, wxDefaultSize );
 	wxBoxSizer* m_main_sizer;
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
