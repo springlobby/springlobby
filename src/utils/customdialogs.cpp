@@ -583,7 +583,7 @@ AutocloseMessageBox::AutocloseMessageBox( wxWindow *parent, const wxString& mess
 
 void AutocloseMessageBox::OnUnlock( wxTimerEvent& /*evt*/ )
 {
-	EndModal(0);
+	EndModal(wxID_OK);
 }
 
 AutocloseMessageBox::~AutocloseMessageBox()
