@@ -60,7 +60,7 @@
 #include "utils/downloader.h"
 #include "utils/uievents.h"
 #include "globalsmanager.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "utils/globalevents.h"
 
 #ifdef __WXMSW__
@@ -68,19 +68,19 @@
 #endif
 
 /** Get the name of the Spring data subdirectory that corresponds to a
- * given IUnitSync::MediaType value.
+ * given SpringUnitSync::MediaType value.
  */
 inline wxString
-getDataSubdirForType(const IUnitSync::MediaType type)
+getDataSubdirForType(const SpringUnitSync::MediaType type)
 {
     switch ( type)
     {
-    case IUnitSync::map:
+    case SpringUnitSync::map:
         return _T("maps");
-    case IUnitSync::mod:
+    case SpringUnitSync::mod:
 		return _T("games");
     default:
-        ASSERT_EXCEPTION(false, _T("Unhandled IUnitSync::MediaType value"));
+        ASSERT_EXCEPTION(false, _T("Unhandled SpringUnitSync::MediaType value"));
     }
 }
 
@@ -358,10 +358,10 @@ int TorrentWrapper::GetTorrentSystemStatus() const
 ////               lobby interface                  ////
 ////////////////////////////////////////////////////////
 
-IUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t ) {
+SpringUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t ) {
     switch ( t ) {
-        case PlasmaResourceInfo::map: return IUnitSync::map;
-        default: return IUnitSync::mod;
+        case PlasmaResourceInfo::map: return SpringUnitSync::map;
+        default: return SpringUnitSync::mod;
     }
 
 }

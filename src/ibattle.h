@@ -5,7 +5,7 @@
 #include <wx/string.h>
 #include <wx/event.h>
 
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "user.h"
 #include "mmoptionswrapper.h"
 #include "userlist.h"

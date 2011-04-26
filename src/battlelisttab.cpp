@@ -28,7 +28,7 @@
 #include "hostbattledialog_public.h"
 #include "server.h"
 #include "settings.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "mapctrl.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"

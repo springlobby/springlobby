@@ -6,7 +6,7 @@
 #include <stdexcept>
 
 #include "nonportable.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "utils/mixins.hh"
 
 class wxString;
@@ -285,7 +285,7 @@ class SpringUnitSyncLib : public SL::NonCopyable
      */
 	wxArrayString GetUnitsyncErrors() const;
 
-	bool VersionSupports( IUnitSync::GameFeature feature ) const;
+	bool VersionSupports( SpringUnitSync::GameFeature feature ) const;
 
 
     int GetModIndex( const wxString& name );

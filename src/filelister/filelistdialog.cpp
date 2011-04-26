@@ -4,7 +4,7 @@
 #include "filelistctrl.h"
 #include "filelistfilter.h"
 
-#include "../iunitsync.h"
+#include "../springunitsync.h"
 #include "../utils/conversion.h"
 #include "../utils/downloader.h"
 #include <wx/sizer.h>

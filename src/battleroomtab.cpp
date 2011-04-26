@@ -29,7 +29,7 @@
 
 #include "battleroomtab.h"
 #include "ui.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "user.h"
 #include "battle.h"
 #include "defines.h"

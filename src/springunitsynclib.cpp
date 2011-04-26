@@ -456,16 +456,16 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors() const
 }
 
 
-bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature ) const
+bool SpringUnitSyncLib::VersionSupports( SpringUnitSync::GameFeature feature ) const
 {
   LOCK_UNITSYNC;
 
   switch (feature)
   {
-    case IUnitSync::USYNC_Sett_Handler: return m_set_spring_config_string;
-    case IUnitSync::USYNC_GetInfoMap:   return m_get_infomap_size;
-    case IUnitSync::USYNC_GetDataDir:   return m_get_writeable_data_dir;
-    case IUnitSync::USYNC_GetSkirmishAI:   return m_get_skirmish_ai_count;
+    case SpringUnitSync::USYNC_Sett_Handler: return m_set_spring_config_string;
+    case SpringUnitSync::USYNC_GetInfoMap:   return m_get_infomap_size;
+    case SpringUnitSync::USYNC_GetDataDir:   return m_get_writeable_data_dir;
+    case SpringUnitSync::USYNC_GetSkirmishAI:   return m_get_skirmish_ai_count;
     default: return false;
   }
 }

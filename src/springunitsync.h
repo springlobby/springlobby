@@ -4,13 +4,66 @@
 #include <list>
 #include <map>
 
-#include "iunitsync.h"
 #include "thread.h"
 
 #include "utils/conversion.h" //remove after MRU impl moved to cpp
 #include "utils/debug.h" //remove after MRU impl moved to cpp
 #include <wx/log.h>//remove after MRU impl moved to cpp
 
+#include <wx/image.h>
+#include <wx/event.h>
+
+#include "mmoptionmodel.h"
+#include "utils/globalevents.h"
+
+#ifdef SL_QT_MODE
+class QImage;
+#endif
+
+class wxImage;
+
+extern const wxEventType UnitSyncAsyncOperationCompletedEvt;
+const wxEventType wxUnitsyncReloadEvent = wxNewEventType();
+
+struct UnitSyncMod
+{
+  UnitSyncMod() : name(_T("")),hash(_T("")) { }
+  wxString name;
+  wxString hash;
+};
+
+struct StartPos
+{
+  int x;
+  int y;
+};
+
+struct MapInfo
+{
+  wxString description;
+  int tidalStrength;
+  int gravity;
+  float maxMetal;
+  int extractorRadius;
+  int minWind;
+  int maxWind;
+
+  int width;
+  int height;
+  std::vector<StartPos> positions;
+
+  wxString author;
+};
+
+struct UnitSyncMap
+{
+  UnitSyncMap() : name(_T("")),hash(_T("")) { }
+  wxString name;
+  wxString hash;
+  MapInfo info;
+};
+
+struct GameOptions;
 
 class wxCriticalSection;
 class wxDynamicLibrary;
@@ -118,11 +171,45 @@ class EvtHandlerCollection
     int m_last_id;
 };
 
-class SpringUnitSync : public IUnitSync
+class SpringUnitSync : public wxEvtHandler
 {
-  public:
-    SpringUnitSync();
-    ~SpringUnitSync();
+//private:
+
+public:
+	SpringUnitSync();
+	virtual ~SpringUnitSync();
+
+	enum GameFeature
+	{
+	  USYNC_Sett_Handler,
+	  USYNC_GetInfoMap,
+	  USYNC_GetDataDir,
+	  USYNC_GetSkirmishAI
+	};
+
+	enum MediaType
+	{
+	  map,
+	  mod
+	};
+
+	typedef std::map<wxString,mmOptionBool> OptionMapBool;
+	typedef std::map<wxString,mmOptionFloat> OptionMapFloat;
+	typedef std::map<wxString,mmOptionString> OptionMapString;
+	typedef std::map<wxString,mmOptionList> OptionMapList;
+	typedef std::map<wxString,mmOptionSection> OptionMapSection;
+
+	typedef std::map<wxString,mmOptionBool>::iterator OptionMapBoolIter;
+	typedef std::map<wxString,mmOptionFloat>::iterator OptionMapFloatIter;
+	typedef std::map<wxString,mmOptionString>::iterator OptionMapStringIter;
+	typedef std::map<wxString,mmOptionList>::iterator OptionMapListIter;
+	typedef std::map<wxString,mmOptionSection>::iterator OptionMapSectionIter;
+
+	typedef std::map<wxString,mmOptionBool>::const_iterator OptionMapBoolConstIter;
+	typedef std::map<wxString,mmOptionFloat>::const_iterator OptionMapFloatConstIter;
+	typedef std::map<wxString,mmOptionString>::const_iterator OptionMapStringConstIter;
+	typedef std::map<wxString,mmOptionList>::const_iterator OptionMapListConstIter;
+	typedef std::map<wxString,mmOptionSection>::const_iterator OptionMapSectionConstIter;
 
 	int GetNumMods() const;
 	wxArrayString GetModList() const;
@@ -238,6 +325,8 @@ class SpringUnitSync : public IUnitSync
 	wxArrayString FindFilesVFS( const wxString& pattern ) const;
 
   private:
+	typedef std::map< std::pair<wxString,wxString>, wxString> ShortnameVersionToNameMap;
+	ShortnameVersionToNameMap m_shortname_to_name_map;
 
     LocalArchivesVector m_maps_list; /// mapname -> hash
     LocalArchivesVector m_mods_list; /// modname -> hash
@@ -294,6 +383,41 @@ class SpringUnitSync : public IUnitSync
 public:
 	wxString GetNameForShortname( const wxString& shortname, const wxString& version ) const;
 };
+
+SpringUnitSync& usync();
+
+struct GameOptions
+{
+  SpringUnitSync::OptionMapBool bool_map;
+  SpringUnitSync::OptionMapFloat float_map;
+  SpringUnitSync::OptionMapString string_map;
+  SpringUnitSync::OptionMapList list_map;
+  SpringUnitSync::OptionMapSection section_map;
+};
+
+/// Helper class for managing async operations safely
+class UnitSyncAsyncOps
+{
+  public:
+	UnitSyncAsyncOps( wxEvtHandler* evtHandler )
+		: m_id( usync().RegisterEvtHandler( evtHandler ) )
+	{}
+	~UnitSyncAsyncOps() {
+	  usync().UnregisterEvtHandler( m_id );
+	}
+
+	void GetMinimap( const wxString& mapname )                 { usync().GetMinimapAsync( mapname, m_id ); }
+	void GetMinimap( const wxString& mapname, int w, int h )   { usync().GetMinimapAsync( mapname, w, h, m_id ); }
+	void GetMetalmap( const wxString& mapname )                { usync().GetMetalmapAsync( mapname, m_id ); }
+	void GetMetalmap( const wxString& mapname, int w, int h )  { usync().GetMetalmapAsync( mapname, w, h, m_id ); }
+	void GetHeightmap( const wxString& mapname )               { usync().GetHeightmapAsync( mapname, m_id ); }
+	void GetHeightmap( const wxString& mapname, int w, int h ) { usync().GetHeightmapAsync( mapname, w, h, m_id ); }
+	void GetMapEx( const wxString& mapname )                   { usync().GetMapExAsync( mapname, m_id ); }
+
+  private:
+	int m_id;
+};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 

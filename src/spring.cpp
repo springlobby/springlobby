@@ -35,7 +35,7 @@
 #include "qt/noguisingleplayerbattle.h"
 #include "offlinebattle.h"
 #include "user.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "nonportable.h"
 #include "tdfcontainer.h"
 #ifndef NO_TORRENT_SYSTEM
@@ -498,7 +498,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					tdf.LeaveSection();
 					player_to_number[&user] = i;
 			}
-			if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+			if ( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
 			{
 				for ( unsigned int i = 0; i < NumUsers; i++ )
 				{
@@ -541,7 +541,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					parsedteams.insert( status.team );
 
 					tdf.EnterSection( _T("TEAM") + TowxString( teams_to_sorted_teams[status.team] ) );
-						if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
+						if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
 						{
 								tdf.Append( _T("AIDLL"), status.aishortname );
 								tdf.Append( _T("TeamLeader"), player_to_number[&battle.GetUser( status.owner )] ); // bot owner is the team leader

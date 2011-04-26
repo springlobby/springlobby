@@ -47,7 +47,7 @@
 #include "battlelisttab.h"
 #include "mainsingleplayertab.h"
 #include "mainoptionstab.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "uiutils.h"
 #include "utils/misc.h"
 #include "chatpanel.h"

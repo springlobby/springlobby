@@ -1,7 +1,7 @@
 #ifndef MMOPTIONSORAPPER_H_
 #define MMOPTIONSORAPPER_H_
 
-#include "iunitsync.h"
+#include "springunitsync.h"
 
 #include <vector>
 #include <utility>
@@ -159,7 +159,7 @@ public:
 	GameOptionsMap m_opts;
 
 	//! after loading sections into map, parse them into tree
-	void ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map );
+	void ParseSectionMap( mmSectionTree& section_tree, const SpringUnitSync::OptionMapSection& section_map );
 
 	//! Merge this another wrapper's options into this one, with the other'soptions taking precendence
 	bool MergeOptions( const OptionsWrapper& other, GameOption merge_into );

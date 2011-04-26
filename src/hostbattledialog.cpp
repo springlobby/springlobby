@@ -28,7 +28,7 @@
 
 
 #include "settings.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "user.h"
 #include "uiutils.h"
 #include "utils/controls.h"

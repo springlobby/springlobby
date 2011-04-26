@@ -909,7 +909,7 @@ wxString Settings::GetCurrentUsedDataDir()
 	wxString dir;
 	if ( susynclib().IsLoaded() )
 	{
-		if ( susynclib().VersionSupports( IUnitSync::USYNC_GetDataDir ) ) dir = susynclib().GetSpringDataDir();
+		if ( susynclib().VersionSupports( SpringUnitSync::USYNC_GetDataDir ) ) dir = susynclib().GetSpringDataDir();
 		else dir = susynclib().GetSpringConfigString( _T( "SpringData" ), _T( "" ) );
 	}
 #ifdef __WXMSW__

@@ -40,7 +40,7 @@
 const wxEventType UnitSyncAsyncOperationCompletedEvt = wxNewEventType();
 
 
-IUnitSync& usync()
+SpringUnitSync& usync()
 {
     static LineInfo<SpringUnitSync> m( AT );
     static GlobalObjectHolder<SpringUnitSync, LineInfo<SpringUnitSync> > m_sync( m );
@@ -55,12 +55,13 @@ SpringUnitSync::SpringUnitSync()
   , m_mapinfo_cache( 1000000, _T("m_mapinfo_cache") )       // this one is just misused as thread safe std::map ...
   , m_sides_cache( 200, _T("m_sides_cache") )               // another misuse
 {
-
+	Connect( wxUnitsyncReloadEvent, wxCommandEventHandler( SpringUnitSync::OnReload ), NULL, this );
 }
 
 
 SpringUnitSync::~SpringUnitSync()
 {
+	Disconnect( wxUnitsyncReloadEvent, wxCommandEventHandler( SpringUnitSync::OnReload ), NULL, this );
 	if ( m_cache_thread )
 	  m_cache_thread->Wait();
 	delete m_cache_thread;

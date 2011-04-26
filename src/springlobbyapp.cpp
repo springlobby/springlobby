@@ -39,7 +39,7 @@
 #include "utils/controls.h"
 #include "utils/platform.h"
 #include "ui.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "channel/channel.h"
 #include "utils/customdialogs.h"
 #include "utils/downloader.h"

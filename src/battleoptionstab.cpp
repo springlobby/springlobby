@@ -20,7 +20,7 @@
 #include <wx/numdlg.h>
 
 #include "battleoptionstab.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "ibattle.h"
 #include "utils/controls.h"
 #include "server.h"
