@@ -1,20 +1,17 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 #define SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 
-#include <list>
-#include <map>
-
 #include "thread.h"
+#include "mmoptionmodel.h"
+#include "utils/globalevents.h"
+#include "springunitsync_data.h"
+#include "mru_cache.h"
 
-#include "utils/conversion.h" //remove after MRU impl moved to cpp
-#include "utils/debug.h" //remove after MRU impl moved to cpp
-#include <wx/log.h>//remove after MRU impl moved to cpp
+#include <map>
 
 #include <wx/image.h>
 #include <wx/event.h>
 
-#include "mmoptionmodel.h"
-#include "utils/globalevents.h"
 
 #ifdef SL_QT_MODE
 class QImage;
@@ -25,133 +22,17 @@ class wxImage;
 extern const wxEventType UnitSyncAsyncOperationCompletedEvt;
 const wxEventType wxUnitsyncReloadEvent = wxNewEventType();
 
-struct UnitSyncMod
-{
-  UnitSyncMod() : name(_T("")),hash(_T("")) { }
-  wxString name;
-  wxString hash;
-};
-
-struct StartPos
-{
-  int x;
-  int y;
-};
-
-struct MapInfo
-{
-  wxString description;
-  int tidalStrength;
-  int gravity;
-  float maxMetal;
-  int extractorRadius;
-  int minWind;
-  int maxWind;
-
-  int width;
-  int height;
-  std::vector<StartPos> positions;
-
-  wxString author;
-};
-
-struct UnitSyncMap
-{
-  UnitSyncMap() : name(_T("")),hash(_T("")) { }
-  wxString name;
-  wxString hash;
-  MapInfo info;
-};
-
 struct GameOptions;
 
-class wxCriticalSection;
 class wxDynamicLibrary;
 class wxImage;
 struct CachedMapInfo;
 struct SpringMapInfo;
 class SpringUnitSyncLib;
 
-typedef std::map<wxString,wxString> LocalArchivesVector;
-
 #ifdef SL_QT_MODE
 class QImage;
 #endif
-/// Thread safe MRU cache (works like a std::map but has maximum size)
-template<typename TKey, typename TValue>
-class MostRecentlyUsedCache
-{
-  public:
-    //! name parameter might be used to identify stats in dgb output
-    MostRecentlyUsedCache(int max_size, const wxString& name = _T("") )
-    : m_size(0), m_max_size(max_size), m_cache_hits(0), m_cache_misses(0), m_name(name)
-    {
-    }
-
-    ~MostRecentlyUsedCache()
-    {
-      wxLogDebugFunc( m_name + _T("cache hits: ") + TowxString( m_cache_hits ) );
-      wxLogDebugFunc( m_name + _T("cache misses: ") + TowxString( m_cache_misses ) );
-    }
-
-    void Add( const TKey& name, const TValue& img )
-    {
-      wxCriticalSectionLocker lock(m_lock);
-      while ( m_size >= m_max_size ) {
-        --m_size;
-        m_iterator_map.erase( m_items.back().first );
-        m_items.pop_back();
-      }
-      ++m_size;
-      m_items.push_front( CacheItem( name, img ) );
-      m_iterator_map[name] = m_items.begin();
-    }
-
-    bool TryGet( const TKey& name, TValue& img )
-    {
-      wxCriticalSectionLocker lock(m_lock);
-	  typename IteratorMap::iterator it = m_iterator_map.find( name );
-      if ( it == m_iterator_map.end() ) {
-        ++m_cache_misses;
-        return false;
-      }
-      // reinsert at front, so that most recently used items are always at front
-      m_items.push_front( *it->second );
-      m_items.erase( it->second );
-      it->second = m_items.begin();
-      // return image
-      img = it->second->second;
-      ++m_cache_hits;
-      return true;
-    }
-
-    void Clear()
-    {
-      wxCriticalSectionLocker lock(m_lock);
-      m_size = 0;
-      m_items.clear();
-      m_iterator_map.clear();
-    }
-
-  private:
-    typedef std::pair<TKey, TValue> CacheItem;
-    typedef std::list<CacheItem> CacheItemList;
-    typedef std::map<TKey, typename CacheItemList::iterator> IteratorMap;
-
-    mutable wxCriticalSection m_lock;
-    CacheItemList m_items;
-    IteratorMap m_iterator_map;
-    int m_size;
-    const int m_max_size;
-    int m_cache_hits;
-    int m_cache_misses;
-    const wxString m_name;
-};
-
-typedef MostRecentlyUsedCache<wxString,wxImage> MostRecentlyUsedImageCache;
-typedef MostRecentlyUsedCache<wxString,MapInfo> MostRecentlyUsedMapInfoCache;
-typedef MostRecentlyUsedCache<wxString,wxArrayString> MostRecentlyUsedArrayStringCache;
-
 
 /// Thread safe mapping from evtHandlerId to wxEvtHandler*
 class EvtHandlerCollection
