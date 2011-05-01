@@ -26,6 +26,7 @@ SLArtProvider::SLArtProvider()
 #else
     wxColour base_colour = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
 #endif
+	m_active_colour = base_colour;
 
     // the base_colour is too pale to use as our base colour,
     // so darken it a bit --
@@ -675,3 +676,15 @@ void SLArtProvider::SetMeasuringFont(const wxFont& font)
     m_measuring_font = font;
 }
 
+void SLArtProvider::SetColour(const wxColour& colour)
+{
+	m_base_colour = colour;
+	m_border_pen = wxPen(m_base_colour.ChangeLightness(75));
+	m_base_colour_pen = wxPen(m_base_colour);
+	m_base_colour_brush = wxBrush(m_base_colour);
+}
+
+void SLArtProvider::SetActiveColour(const wxColour& colour)
+{
+	m_active_colour = colour;
+}
