@@ -679,9 +679,15 @@ void SLArtProvider::SetMeasuringFont(const wxFont& font)
 void SLArtProvider::SetColour(const wxColour& colour)
 {
 	m_base_colour = colour;
-	m_border_pen = wxPen(m_base_colour.ChangeLightness(75));
+	#ifdef HAVE_WX29
+		m_border_pen = wxPen(m_base_colour.ChangeLightness(75));
+	#else
+		//!todo
+		m_border_pen = wxPen(m_base_colour);
+	#endif
 	m_base_colour_pen = wxPen(m_base_colour);
 	m_base_colour_brush = wxBrush(m_base_colour);
+
 }
 
 void SLArtProvider::SetActiveColour(const wxColour& colour)
