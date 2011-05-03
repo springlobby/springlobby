@@ -81,6 +81,10 @@ void Channel::Leave()
   m_serv.PartChannel( m_name );
 }
 
+void Channel::Rejoin()
+{
+	m_serv.JoinChannel( m_name, m_password );
+}
 
 
 void Channel::Joined( User& who )

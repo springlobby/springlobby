@@ -41,6 +41,7 @@ class Channel : public UserList, public SL::NonCopyable
     void Say( const wxString& message );
     void DoAction( const wxString& action );
     void Leave();
+	void Rejoin();
 
     void Said( User& who, const wxString& message );
 
