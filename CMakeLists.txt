@@ -38,6 +38,7 @@ endif(NOT DEFINED SPRINGLOBBY_REV)
 
 INCLUDE(cmake/package_config.cmake)
 INCLUDE(cmake/sources.list)
+
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
 
@@ -279,6 +280,8 @@ ELSE (WIN32)
     install(FILES src/springlobby.desktop DESTINATION
 	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 ENDIF (WIN32)
+
+INCLUDE(cmake/compat_flags.cmake)
 
 add_custom_target(pack
 					${CMAKE_MAKE_PROGRAM} package
