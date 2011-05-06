@@ -46,8 +46,8 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent,IBattle* battle )
 	wxBoxSizer* m_main_sizer;
 	m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	wxBoxSizer* m_main_options_sizer;
-	m_main_options_sizer = new wxBoxSizer( wxVERTICAL );
+//	wxBoxSizer* m_main_options_sizer;
+//	m_main_options_sizer = new wxBoxSizer( wxVERTICAL );
 
 	wxStaticBoxSizer* m_restr_box;
 	m_restr_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Unit restrictions" ) ), wxVERTICAL );
