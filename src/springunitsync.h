@@ -1,6 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 #define SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 
+#include "globalsmanager.h"
 #include "thread.h"
 #include "mmoptionmodel.h"
 #include "utils/globalevents.h"
@@ -54,10 +55,11 @@ class EvtHandlerCollection
 
 class SpringUnitSync : public wxEvtHandler
 {
-//private:
+private:
+	SpringUnitSync();
+	friend class GlobalObjectHolder<SpringUnitSync, LineInfo<SpringUnitSync> >;
 
 public:
-	SpringUnitSync();
 	virtual ~SpringUnitSync();
 
 	enum GameFeature
