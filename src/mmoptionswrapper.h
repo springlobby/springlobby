@@ -6,6 +6,7 @@
 #include <vector>
 #include <utility>
 #include <wx/string.h>
+#include <boost/shared_ptr.hpp>
 
 struct GameOptions;
 
@@ -33,7 +34,7 @@ class mmSectionTree
         typedef std::map< wxString, mmOptionSection > SectionMap;
         SectionMap m_section_map;
         typedef wxFileConfig ConfigType;
-        ConfigType* m_tree;
+		boost::shared_ptr<ConfigType> m_tree;
 
         void AddSection ( const wxString& path, const mmOptionSection& section );
         wxString FindParentpath ( const wxString& parent_key );

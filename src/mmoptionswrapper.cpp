@@ -615,18 +615,11 @@ void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const SpringU
 }
 
 mmSectionTree::mmSectionTree()
-    : m_tree ( 0 )
-{
-    m_tree = new ConfigType(  _T("SL-temp"), wxEmptyString, wxFileName::CreateTempFileName( _T("springlobby-") ) );
-}
+	: m_tree ( new wxFileConfig( _T("SL-temp"), wxEmptyString, wxFileName::CreateTempFileName( _T("springlobby-tree_") ) ) )
+{}
 
 mmSectionTree::~mmSectionTree()
 {
-    //! \todo wth does this segfault?
-//    if ( m_tree ) {
-//        delete m_tree;
-//        m_tree = 0;
-//    }
     #ifndef NDEBUG
         m_tree->Flush();
     #else //no need to clutter tempfile directory if we're not debugging
