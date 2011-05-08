@@ -41,9 +41,10 @@ class GlobalRecursiveError: public std::runtime_error
 class IGlobalObjectHolder
 {
 	public:
-			bool RegisterSelf();
-			virtual void Nullify() = 0;
-			virtual void Destroy() = 0;
+		virtual ~IGlobalObjectHolder(){}
+		bool RegisterSelf();
+		virtual void Nullify() = 0;
+		virtual void Destroy() = 0;
 };
 
 void DestroyGlobals();
