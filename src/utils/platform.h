@@ -42,6 +42,15 @@ class CwdGuard {
         ~CwdGuard();
 };
 
+//! remember pwd in ctor and reset in dtor
+class PwdGuard {
+	wxString m_old_pwd;
+	public:
+		PwdGuard( );
+		~PwdGuard();
+};
+
+
 #ifdef __WXMSW__
 bool IsPreVistaWindows();
 #endif
@@ -49,12 +58,39 @@ bool IsPreVistaWindows();
 //! simply return wxApp::GetAppName with letter lowercased on demand
 wxString GetAppName( const bool lowerCase = false );
 wxString GetConfigfileDir();
+wxString GetUserDataDir();
 
 /**
   \in Format string with a single %s
   \out wxString with %s replaced with GetAppName()
   **/
 wxString IdentityString(const wxString format, bool lowerCase = false );
+
+wxString GetCustomizedEngineConfigFilePath();
+
+#ifdef __WXMSW__
+#include <wx/msw/registry.h>
+template < typename T >
+static T GetRegkeyVal( const wxRegKey& reg, const wxString& name, const T def )
+{
+	T val = def;
+	if ( reg.QueryValue( name, &val ) )
+		return val;
+	else
+		return def;
+}
+
+template < >
+wxString GetRegkeyVal( const wxRegKey& reg, const wxString& name, const wxString def )
+{
+	wxString val = def;
+	if ( reg.QueryValue( name, val ) )
+		return val;
+	else
+		return def;
+}
+#endif
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 

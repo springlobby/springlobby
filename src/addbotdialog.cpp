@@ -14,7 +14,7 @@
 #include "utils/controls.h"
 #include "uiutils.h"
 #include "battle.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "mmoptionwindows.h"
 #include "utils/conversion.h"
 
@@ -44,9 +44,15 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 	m_nick_lbl = new wxStaticText( this, wxID_ANY, _("Nickname:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_nick_sizer->Add( m_nick_lbl, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-	int bot = m_battle.GetNumBots()+1;
+	int bot = 1;
+	wxString botname = wxString::Format( _T("Bot%d"), bot );
+	while ( m_battle.UserExists( botname ) )
+	{
+		bot++;
+		botname = wxString::Format( _T("Bot%d"), bot );
+	}
 
-	m_nick = new wxTextCtrl( this, wxID_ANY, wxString::Format( _T("Bot%d"), bot ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_nick = new wxTextCtrl( this, wxID_ANY, botname, wxDefaultPosition, wxDefaultSize, 0 );
 	m_nick_sizer->Add( m_nick, 2, wxALL, 5 );
 
 	m_main_sizer->Add( m_nick_sizer, 0, wxEXPAND, 5 );
@@ -64,7 +70,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
 	m_main_sizer->Add( m_ai_sizer, 0, wxEXPAND, 5 );
 
-	if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+	if ( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
 	{
 		m_ai_infos_lst = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
 		wxListItem col;
@@ -115,8 +121,8 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
 	this->SetSizer( m_main_sizer );
 	this->Layout();
-
 	ReloadAIList();
+	m_add_btn->SetFocus();
 }
 
 
@@ -155,7 +161,7 @@ int AddBotDialog::GetAIType()
 wxString AddBotDialog::RefineAIName( const wxString& name )
 {
   wxString ret = name;
-  if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+  if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
   {
 		if ( ret.Find(_T('.')) != wxNOT_FOUND ) ret = ret.BeforeLast(_T('.'));
 		if ( ret.Find(_T('/')) != wxNOT_FOUND ) ret = ret.AfterLast(_T('/'));
@@ -224,7 +230,7 @@ void AddBotDialog::OnSelectBot( wxCommandEvent& /*unused*/ )
 void AddBotDialog::ShowAIInfo()
 {
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
-  if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) return;
+  if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) return;
   m_ai_infos_lst->DeleteAllItems();
   wxArrayString info = usync().GetAIInfos( GetAIType() );
   int count = info.GetCount();
@@ -243,7 +249,7 @@ void AddBotDialog::ShowAIInfo()
 
 void AddBotDialog::ShowAIOptions()
 {
-  if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) return;
+  if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) return;
   m_opts_list->DeleteAllItems();
   m_opt_list_map.clear();
   m_battle.CustomBattleOptions().loadAIOptions( m_battle.GetHostModName(), GetAIType(), GetNick() );

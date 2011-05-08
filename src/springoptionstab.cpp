@@ -31,7 +31,7 @@
 
 #include "nonportable.h"
 #include "ui.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "utils/controls.h"
 #include "utils/platform.h"
 #include "utils/uievents.h"

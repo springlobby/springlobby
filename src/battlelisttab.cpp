@@ -25,10 +25,10 @@
 #include "utils/conversion.h"
 #include "utils/controls.h"
 #include "uiutils.h"
-#include "hostbattledialog.h"
+#include "hostbattledialog_public.h"
 #include "server.h"
 #include "settings.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "mapctrl.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"
@@ -334,7 +334,7 @@ void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 		}
 	}
 
-	HostBattleDialog::Run( this );
+	SL::RunHostBattleDialog( this );
 }
 
 

@@ -1265,3 +1265,11 @@ void ChatPanel::LoadLastLines()
     }
 }
 
+void ChatPanel::OnLogin( OnLoginSink<ChatPanel>::EventDataType /*data*/ )
+{
+	if ( m_type == CPT_Channel && m_channel )
+	{
+		m_channel->Rejoin();
+	}
+}
+

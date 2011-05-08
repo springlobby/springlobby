@@ -233,8 +233,13 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 	if ( m_reconnect_delay_timer.IsRunning() ) {
 		m_recconecting_wait = true;
 		AutocloseMessageBox m( &mw(), _("Waiting for reconnect"), wxMessageBoxCaptionStr, s_reconnect_delay_ms );
-		m.ShowModal();
+		int res = m.ShowModal();
 		m_recconecting_wait = false;
+		if ( res == wxID_CANCEL )
+		{
+			m_reconnect_delay_timer.Stop();
+			return;
+		}
 	}
 
     wxString host;

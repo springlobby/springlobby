@@ -30,6 +30,7 @@ IBattle::IBattle():
   m_mod_exists(false),
   m_previous_local_mod_name( wxEmptyString ),
   m_ingame(false),
+  m_auto_unspec(false),
   m_generating_script(false),
   m_players_ready(0),
   m_players_sync(0),
@@ -1095,22 +1096,22 @@ int IBattle::GetMyPlayerNum() const
 }
 
 
-void IBattle::LoadScriptMMOpts( const wxString& sectionname, const PDataList& node )
+void IBattle::LoadScriptMMOpts( const wxString& sectionname, const SL::PDataList& node )
 {
-		if ( !node.ok() ) return;
-    PDataList section ( node->Find(sectionname) );
+	if ( !node.ok() ) return;
+	SL::PDataList section ( node->Find(sectionname) );
     if ( !section.ok() ) return;
     OptionsWrapper& opts = CustomBattleOptions();
-    for ( PNode n = section->First(); n != section->Last(); n = section->Next( n ) )
+	for ( SL::PNode n = section->First(); n != section->Last(); n = section->Next( n ) )
     {
 				if ( !n.ok() ) continue;
         opts.setSingleOption( n->Name(), section->GetString( n->Name() ) );
     }
 }
 
-void IBattle::LoadScriptMMOpts( const PDataList& node )
+void IBattle::LoadScriptMMOpts( const SL::PDataList& node )
 {
-		if ( !node.ok() ) return;
+	if ( !node.ok() ) return;
     OptionsWrapper& opts = CustomBattleOptions();
     typedef std::map<wxString,wxString> optMap;
     optMap options = opts.getOptionsMap(OptionsWrapper::EngineOption);
@@ -1126,9 +1127,9 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 
     BattleOptions opts;
     std::stringstream ss ( (const char *)GetScript().mb_str(wxConvUTF8) );// no need to convert wxstring-->std::string-->std::stringstream, convert directly.
-    PDataList script( ParseTDF(ss) );
+	SL::PDataList script( ParseTDF(ss) );
 
-    PDataList replayNode ( script->Find(_T("GAME") ) );
+	SL::PDataList replayNode ( script->Find(_T("GAME") ) );
     if ( replayNode.ok() )
     {
 
@@ -1168,8 +1169,8 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
         //[PLAYERX] sections
         for ( int i = 0; i < playernum ; ++i )
         {
-            PDataList player ( replayNode->Find( _T("PLAYER") + TowxString(i) ) );
-            PDataList bot ( replayNode->Find( _T("AI") + TowxString(i) ) );
+			SL::PDataList player ( replayNode->Find( _T("PLAYER") + TowxString(i) ) );
+			SL::PDataList bot ( replayNode->Find( _T("AI") + TowxString(i) ) );
             if ( player.ok() || bot.ok() )
             {
 								if ( bot.ok() ) player = bot;
@@ -1204,7 +1205,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
                 	status.aishortname = bot->GetString( _T("ShortName" ) );
                 	status.aiversion = bot->GetString( _T("Version" ) );
                 	int ownerindex = bot->GetInt( _T("Host" ) );
-                	PDataList aiowner ( replayNode->Find( _T("PLAYER") + TowxString(ownerindex) ) );
+					SL::PDataList aiowner ( replayNode->Find( _T("PLAYER") + TowxString(ownerindex) ) );
                 	if ( aiowner.ok() )
                 	{
                 		status.owner = aiowner->GetString( _T("Name") );
@@ -1214,7 +1215,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
                 IBattle::TeamInfoContainer teaminfos = parsed_teams[user.BattleStatus().team];
                 if ( !teaminfos.exist )
                 {
-									PDataList team( replayNode->Find( _T("TEAM") + TowxString( user.BattleStatus().team ) ) );
+									SL::PDataList team( replayNode->Find( _T("TEAM") + TowxString( user.BattleStatus().team ) ) );
 									if ( team.ok() )
 									{
 											teaminfos.exist = true;
@@ -1245,7 +1246,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 										IBattle::AllyInfoContainer allyinfos = parsed_allies[user.BattleStatus().ally];
 										if ( !allyinfos.exist )
 										{
-												PDataList ally( replayNode->Find( _T("ALLYTEAM") + TowxString( user.BattleStatus().ally ) ) );
+												SL::PDataList ally( replayNode->Find( _T("ALLYTEAM") + TowxString( user.BattleStatus().ally ) ) );
 												if ( ally.ok() )
 												{
 													allyinfos.exist = true;

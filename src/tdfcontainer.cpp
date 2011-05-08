@@ -39,8 +39,11 @@ void TDFWriter::Append( const wxString &name, wxString value ) {
 }
 
 void TDFWriter::Close() {
-	while ( m_depth > 0 )LeaveSection();
-	if ( m_depth < 0 )wxLogWarning( _T( "error in TDFWriter usage: more LeaveSection() calls than EnterSection(). Please contact springlobby developers" ) );
+	while ( m_depth > 0 )
+		LeaveSection();
+	if ( m_depth < 0 ) {
+		wxLogWarning( _T( "error in TDFWriter usage: more LeaveSection() calls than EnterSection(). Please contact springlobby developers" ) );
+	}
 }
 
 void TDFWriter::AppendLineBreak() {
@@ -236,7 +239,7 @@ Token Tokenizer::GetToken( int i ) {
 void Tokenizer::Step( int i ) {
 	buffer_pos += i;
 }
-
+namespace SL {
 Node::~Node() {
 	//if(parent)parent->Remove(name);
 }
@@ -712,12 +715,12 @@ void DataLeaf::Load( Tokenizer &f ) {
 		f.ReportError( t, _T( "; expected" ) );
 	}
 }
+} // end namespace SL
 
-
-PDataList ParseTDF( std::istream &s, int *error_count ) {
+SL::PDataList ParseTDF( std::istream &s, int *error_count ) {
 	Tokenizer t;
 	t.EnterStream( s );
-	PDataList result( new DataList );
+	SL::PDataList result( new SL::DataList );
 	result->Load( t );
 	if ( error_count ) {
 		*error_count = t.NumErrors();

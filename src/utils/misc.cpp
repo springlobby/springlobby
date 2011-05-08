@@ -59,9 +59,9 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
     return a[minDistanceIndex];
 }
 
-
 wxString Paste2Pastebin( const wxString& message )
 {
+	#ifndef SL_QT_MODE
 	#ifndef __WXMAC__
 	wxStringOutputStream response;
 	wxStringOutputStream rheader;
@@ -114,7 +114,9 @@ wxString Paste2Pastebin( const wxString& message )
 		return response.GetString();
 	else
 	#endif
-		return wxEmptyString;
+	#endif
+
+	return wxEmptyString;
 }
 
 

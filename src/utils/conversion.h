@@ -45,9 +45,9 @@ inline wxString TowxString(const wxChar *arg){
   return wxString(arg);
 }
 
-static inline wxString TowxString(){
-  return wxString();
-}
+//static inline wxString TowxString(){
+//  return wxString();
+//}
 
 template<class T>
 static inline T FromwxString(const wxString& arg){
@@ -57,6 +57,20 @@ static inline T FromwxString(const wxString& arg){
   s >> ret;
   return (T)ret;
 }
+
+#ifdef SL_QT_MODE
+#include <QString>
+template<>
+inline wxString TowxString(QString arg){
+  return wxString(arg.toStdString().c_str(),wxConvUTF8);
+}
+
+
+//template<>
+static inline QString ToQString(const wxString& arg){
+  return QString( arg.mbc_str() );
+}
+#endif
 
 #define WX_STRINGC(v) wxString(v,wxConvUTF8)
 

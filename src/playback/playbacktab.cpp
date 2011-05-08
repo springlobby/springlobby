@@ -20,7 +20,7 @@
 #include "../utils/debug.h"
 #include "../uiutils.h"
 #include "../settings.h"
-#include "../iunitsync.h"
+#include "../springunitsync.h"
 #include "../mapctrl.h"
 #include "../battleroomlistctrl.h"
 

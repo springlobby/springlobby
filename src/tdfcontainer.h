@@ -48,14 +48,15 @@ class TDFWriter
 #include "autopointers.h"
 #include "utils/mixins.hh"
 
+class Tokenizer;
+
+namespace SL {
 class Node;
 typedef RefcountedPointer<Node> PNode;
 class DataList;
 typedef RefcountedPointer<DataList> PDataList;
 class DataLeaf;
 typedef RefcountedPointer<DataLeaf> PDataLeaf;
-
-class Tokenizer;
 
 class Node: public RefcountedContainer , public SL::NonCopyable
 {
@@ -156,6 +157,7 @@ class DataLeaf: public Node {
 		virtual void Save( TDFWriter &f );
 		virtual void Load( Tokenizer &f );
 };
+} // end namespace SL
 
 inline bool IsLetter( char c ) {
 	return ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) || ( c == '_' );
@@ -286,7 +288,7 @@ inline Tokenizer &operator >>( Tokenizer &tokenizer, Token &token ) {
 	return tokenizer;
 }
 
-PDataList ParseTDF( std::istream &s, int *error_count = NULL );
+SL::PDataList ParseTDF( std::istream &s, int *error_count = NULL );
 
 //Defintions to not clutter up the class declaration
 template<class T> void TDFWriter:: Append( const wxString &name, T value )

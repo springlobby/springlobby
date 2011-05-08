@@ -15,7 +15,7 @@
 
 #include "battleroomlistctrl.h"
 #include "iconimagelist.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "battle.h"
 #include "ibattle.h"
 #include "uiutils.h"
@@ -339,7 +339,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 		else { //!TODO could prolly be cached
 			wxString botname = user.BattleStatus().aishortname;
 			if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
-			if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+			if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
 			{
 				if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
 				if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));

@@ -26,7 +26,7 @@
 #include "base64.h"
 #include "utils/md5.h"
 #include "tasserver.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "user.h"
 #include "utils/debug.h"
 #include "utils/tasutil.h"
@@ -989,7 +989,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
             wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
             ai = _T("INVALID|INVALID");
         }
-        if( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+        if( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
         {
 			if (ai.Find(_T('|')) != -1)
 			{
@@ -2187,7 +2187,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
     wxString msg;
     wxString ailib;
     ailib += status.aishortname;
-    if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
+    if ( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
     SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
 }
 
@@ -2249,6 +2249,8 @@ void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 
 void TASServer::SendScriptToProxy( const wxString& script )
 {
+  int time = script.Len() / m_sock->GetSendRateLimit(); // calculate time in seconds to upload script
+  DoActionBattle( m_battle_id, wxString::Format(_T("is preparing to start the game, game will start in approximately %d seconds"),time));
   RelayCmd( _T("CLEANSCRIPT") );
   wxStringTokenizer tkzr( script, _T("\n") );
   while ( tkzr.HasMoreTokens() )

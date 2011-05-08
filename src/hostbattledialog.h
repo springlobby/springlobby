@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_HOSTBATTLEDIALOG_H
 
 
+
 #include <wx/dialog.h>
 #include "gui/windowattributespickle.h"
 class wxStaticText;
@@ -16,19 +17,17 @@ class wxButton;
 class wxBitmapButton;
 class wxCheckBox;
 class wxMenu;
+class wxScrolledWindow;
 
-class HostBattleDialog : public wxDialog, public WindowAttributesPickle
+class HostBattleDialog : public wxDialog, public WindowHintsPickle
 {
 	public:
 		HostBattleDialog( wxWindow* parent );
 
 		void ReloadModList();
 
-		//! this shows an instance and handles everything wrt data feeding and input handling
-		static void Run( wxWindow* parent );
-
-
 	protected:
+		int GetSelectedRank();
 
 		void OnOk           ( wxCommandEvent& event );
 		void OnCancel       ( wxCommandEvent& event );
@@ -36,10 +35,9 @@ class HostBattleDialog : public wxDialog, public WindowAttributesPickle
 		void OnReloadMods   ( wxCommandEvent& event );
 		void OnRelayChoice	( wxCommandEvent& event );
 		void OnUseRelay     ( wxCommandEvent& event );
-        void OnPickRelayHost( wxCommandEvent& event );
+		void OnPickRelayHost( wxCommandEvent& event );
 
-		int GetSelectedRank();
-
+		wxScrolledWindow* m_panel;
 		wxStaticText* m_desc_lbl;
 		wxTextCtrl* m_desc_text;
 		wxStaticText* m_mod_lbl;
@@ -49,7 +47,7 @@ class HostBattleDialog : public wxDialog, public WindowAttributesPickle
 		wxChoice* m_rank_direction;
 		wxStaticText* m_port_lbl;
 		wxTextCtrl* m_port_text;
-        wxTextCtrl* m_relayhost_name;
+		wxTextCtrl* m_relayhost_name;
 //    entirely disabled until functionality is in server
 //    wxCheckBox* m_port_test_check;
 		wxCheckBox* m_relayed_host_check;
@@ -81,7 +79,7 @@ class HostBattleDialog : public wxDialog, public WindowAttributesPickle
 		wxMenu* m_relayhost_list;
 		wxButton* m_relayed_host_pick;
 
-        wxBitmapButton* m_refresh_btn;
+		wxBitmapButton* m_refresh_btn;
 
 
 		enum {
@@ -100,6 +98,7 @@ class HostBattleDialog : public wxDialog, public WindowAttributesPickle
 
 		DECLARE_EVENT_TABLE()
 };
+
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_HOSTBATTLEDIALOG_H

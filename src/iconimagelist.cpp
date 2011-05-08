@@ -14,7 +14,7 @@
 #include "user.h"
 #include "battle.h"
 //#include "utils.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 
 #include "images/bot.xpm"
 #include "images/bot_broom.png.h"

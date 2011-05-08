@@ -32,9 +32,10 @@
 #include "userlist.h"
 #include "battle.h"
 #include "singleplayerbattle.h"
+#include "qt/noguisingleplayerbattle.h"
 #include "offlinebattle.h"
 #include "user.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "nonportable.h"
 #include "tdfcontainer.h"
 #ifndef NO_TORRENT_SYSTEM
@@ -42,9 +43,14 @@
 #endif
 #include "globalsmanager.h"
 
+#ifdef SL_QT_MODE
+	#include <QMessageBox>
+	#include <QProcess>
+#endif
+
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
-    EVT_COMMAND ( PROC_SPRING, wxEVT_SPRING_EXIT, Spring::OnTerminated )
+	EVT_COMMAND ( PROC_SPRING, wxEVT_SPRING_EXIT, Spring::OnTerminated )
 
 END_EVENT_TABLE()
 
@@ -58,6 +64,9 @@ Spring& spring()
 }
 
 Spring::Spring() :
+	#ifdef SL_QT_MODE
+		qt_process_( 0 ),
+	#endif
         m_process(0),
         m_wx_process(0),
         m_running(false)
@@ -173,6 +182,8 @@ bool Spring::Run( NoGuiSinglePlayerBattle& battle )
 
   wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
 
+  wxString cmd = _T("\"") + path + _T("\"");
+
   try
   {
 
@@ -191,7 +202,7 @@ bool Spring::Run( NoGuiSinglePlayerBattle& battle )
     return false;
   }
 
-  return LaunchSpring( _T("\"") + path + _T("\"") );
+  return LaunchSpring( cmd );
 }
 
 bool Spring::Run( OfflineBattle& battle )
@@ -233,7 +244,17 @@ bool Spring::LaunchSpring( const wxString& params  )
         cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
   #endif
   cmd += _T("\" ") + configfileflags + params;
+  
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
+
+#ifdef SL_QT_MODE
+	QMessageBox:: warning ( NULL, "CMD", QString(cmd.mb_str()));
+	qt_process_ = new QProcess;
+	qt_process_->setWorkingDirectory(QString(sett().GetCurrentUsedDataDir().mb_str()));
+	qt_process_->start(QString(cmd.mb_str()));
+	connect( qt_process_, SIGNAL(finished(int, QProcess::ExitStatus )), this, SLOT( OnStopped(int, QProcess::ExitStatus ) ) );
+	connect( qt_process_, SIGNAL(started()), this, SLOT( OnStarted() ) );
+#else
   wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
   if ( sett().UseOldSpringLaunchMethod() )
   {
@@ -247,11 +268,23 @@ bool Spring::LaunchSpring( const wxString& params  )
     m_process->SetCommand( cmd );
     m_process->Run();
   }
-
+#endif
   m_running = true;
   return true;
 }
 
+#ifdef SL_QT_MODE
+void Spring::OnStopped( int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/ )
+{
+	m_running = false;
+	emit springStopped( );
+}
+void Spring::OnStarted()
+{
+	m_running = true;
+	emit springStarted();
+}
+#endif
 
 
 void Spring::OnTerminated( wxCommandEvent& event )
@@ -478,7 +511,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					tdf.LeaveSection();
 					player_to_number[&user] = i;
 			}
-			if ( usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) )
+			if ( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
 			{
 				for ( unsigned int i = 0; i < NumUsers; i++ )
 				{
@@ -521,7 +554,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					parsedteams.insert( status.team );
 
 					tdf.EnterSection( _T("TEAM") + TowxString( teams_to_sorted_teams[status.team] ) );
-						if ( !usync().VersionSupports( IUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
+						if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
 						{
 								tdf.Append( _T("AIDLL"), status.aishortname );
 								tdf.Append( _T("TeamLeader"), player_to_number[&battle.GetUser( status.owner )] ); // bot owner is the team leader

@@ -3,7 +3,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H
 
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/panel.h>

@@ -13,7 +13,6 @@
 #include "../utils/customdialogs.h"
 #include "../settings.h"
 #include "../springunitsynclib.h"
-//#include "../utils/.h"
 
 static bool standalonemode = true;
 
@@ -39,7 +38,7 @@ void openUrl( const wxString& url )
 	if ( !wxLaunchDefaultBrowser( url ) )
 	{
 		wxLogWarning( _( "can't launch default browser" ) );
-		customMessageBox( SL_MAIN_ICON, _( "Couldn't launch browser. URL is: " ) + url, _( "Couldn't launch browser." )  );
+		customMessageBox( SS_MAIN_ICON, _( "Couldn't launch browser. URL is: " ) + url, _( "Couldn't launch browser." )  );
 	}
 }
 

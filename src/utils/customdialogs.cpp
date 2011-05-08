@@ -17,8 +17,6 @@
 #include <wx/app.h>
 #include <wx/choicdlg.h>
 
-
-#include "../images/springsettings.xpm"
 #include "../utils/conversion.h"
 #include "../defines.h"
 #include "../settings.h"
@@ -163,7 +161,7 @@ void CustomMessageBoxBase::setLobbypointer(wxWindow* arg)
 			 parent = CustomMessageBoxBase::getLobbypointer();
 			 break;
 		 case SS_MAIN_ICON:
-			 icon = new wxIcon(springsettings_xpm);
+			 icon = new wxIcon( SLcustomizations().GetAppIcon() );
 			 parent = CustomMessageBoxBase::getSettingspointer();
 			 break;
 		 default:
@@ -264,16 +262,21 @@ CreditsDialog::CreditsDialog(wxWindow* parent,wxString title,int whichIcon) : wx
 	wxIcon* icon = 0;
 	wxWindow* dummy = 0;
 	getIcon( whichIcon, icon, dummy );
-	SetIcon(*icon);
+	SetIcon(SLcustomizations().GetAppIcon());
 }
 
 void CreditsDialog::AddCredit(wxString person,wxString message)
 {
-	wxFont* heavyFont = new wxFont(10, wxDEFAULT, wxNORMAL, wxBOLD);
-	text_ctrl->SetDefaultStyle(wxTextAttr(wxNullColour,wxNullColour,*heavyFont));
-	text_ctrl->AppendText(person + _T(": "));
-	text_ctrl->SetDefaultStyle(wxTextAttr(wxNullColour,wxNullColour,*wxNORMAL_FONT));
-	text_ctrl->AppendText(message + _T("\n\n"));
+	wxFont heavyFont (10, wxDEFAULT, wxNORMAL, wxBOLD);
+	text_ctrl->SetDefaultStyle(wxTextAttr(wxNullColour,wxNullColour,heavyFont));
+	text_ctrl->AppendText(person);
+	if ( !message.IsEmpty() )
+	{
+		text_ctrl->AppendText(_T(": "));
+		text_ctrl->SetDefaultStyle(wxTextAttr(wxNullColour,wxNullColour,*wxNORMAL_FONT));
+		text_ctrl->AppendText(message );
+	}
+	text_ctrl->AppendText(_T("\n\n"));
 }
 
 CreditsDialog::~CreditsDialog()
@@ -566,18 +569,31 @@ AutocloseMessageBox::AutocloseMessageBox( wxWindow *parent, const wxString& mess
 										  unsigned int delay,
 										  long style, const wxPoint& pos )
 	: TimedMessageBox( new wxIcon( SLcustomizations().GetAppIcon() ), parent, message, caption, delay, style, pos )
+	,delay_timerID( wxNewId() )
 {
-	wxWindowID delay_timerID = wxNewId();
 	m_delay_timer.SetOwner( this, delay_timerID );
 	Connect( delay_timerID, wxEVT_TIMER, wxTimerEventHandler( AutocloseMessageBox::OnUnlock) );
+	wxSizer* topsizer = GetSizer();
+	wxSizer *sizerBtn = CreateSeparatedButtonSizer(wxCANCEL);
+	topsizer->Add(sizerBtn, 0,  wxALL|wxALIGN_CENTRE, 10 );
+	topsizer->SetSizeHints( this );
+	topsizer->Fit( this );
+	Layout();
 }
 
 void AutocloseMessageBox::OnUnlock( wxTimerEvent& /*evt*/ )
 {
-	EndModal(0);
+	EndModal(wxID_OK);
 }
 
 AutocloseMessageBox::~AutocloseMessageBox()
 {
 
+}
+
+void AutocloseMessageBox::EndModal( int retCode )
+{
+	Disconnect( delay_timerID, wxEVT_TIMER, wxTimerEventHandler( AutocloseMessageBox::OnUnlock) );
+	m_delay_timer.Stop();
+	TimedMessageBox::EndModal( retCode );
 }

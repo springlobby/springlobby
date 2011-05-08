@@ -13,26 +13,6 @@
 
 #include <wx/msw/registry.h>
 
-template < typename T >
-T GetVal( const wxRegKey& reg, const wxString& name, const T def )
-{
-    T val = def;
-    if ( reg.QueryValue( name, &val ) )
-        return val;
-    else
-        return def;
-}
-
-template < >
-wxString GetVal( const wxRegKey& reg, const wxString& name, const wxString def )
-{
-    wxString val = def;
-    if ( reg.QueryValue( name, val ) )
-        return val;
-    else
-        return def;
-}
-
 wxString GetChan( const wxString& token )
 {
     wxString ret = token.AfterFirst('#');
@@ -67,11 +47,11 @@ bool ImportTASClientSettings()
 {
     wxRegKey base( _T("HKEY_CURRENT_USER\\Software\\TASClient\\Preferences") );
 
-    sett().SetAutoConnect( GetVal( base, _T("ConnectOnStartup"), (long) sett().GetAutoConnect() ) );
-    sett().SetChatPMSoundNotificationEnabled( GetVal( base, _T("DisableAllSounds"), (long) sett().GetChatPMSoundNotificationEnabled() ) );
-    sett().SetServerAccountPass( sett().GetDefaultServer(),  GetVal( base, _T("Password"), sett().GetServerAccountPass( sett().GetDefaultServer() ) ) );
-    sett().SetServerAccountSavePass( sett().GetDefaultServer() ,  GetVal( base, _T("RememberPasswords"), (long) sett().GetServerAccountSavePass( sett().GetDefaultServer() ) ) );
-    sett().SetServerAccountNick( sett().GetDefaultServer()  , GetVal( base, _T("Username"), sett().GetServerAccountNick( sett().GetDefaultServer()  ) ) );
+	sett().SetAutoConnect( GetRegkeyVal( base, _T("ConnectOnStartup"), (long) sett().GetAutoConnect() ) );
+	sett().SetChatPMSoundNotificationEnabled( GetRegkeyVal( base, _T("DisableAllSounds"), (long) sett().GetChatPMSoundNotificationEnabled() ) );
+	sett().SetServerAccountPass( sett().GetDefaultServer(),  GetRegkeyVal( base, _T("Password"), sett().GetServerAccountPass( sett().GetDefaultServer() ) ) );
+	sett().SetServerAccountSavePass( sett().GetDefaultServer() ,  GetRegkeyVal( base, _T("RememberPasswords"), (long) sett().GetServerAccountSavePass( sett().GetDefaultServer() ) ) );
+	sett().SetServerAccountNick( sett().GetDefaultServer()  , GetRegkeyVal( base, _T("Username"), sett().GetServerAccountNick( sett().GetDefaultServer()  ) ) );
 
     bool ret = ImportAutojoins();
 
@@ -83,7 +63,6 @@ bool ImportTASClientSettings()
 
 bool TASClientPresent()
 {
-    wxRegKey base( _T("HKEY_CURRENT_USER\\Software\\TASClient\\Preferences") );
-    return base.Exists();
+	return wxRegKey( _T("HKEY_CURRENT_USER\\Software\\TASClient\\Preferences") ).Exists();
 }
 #endif

@@ -6,6 +6,7 @@
 #include "gradientpanel.h"
 #include "../mmoptionswrapper.h"
 #include "../singleplayerbattle.h"
+#include "qt/noguisingleplayerbattle.h"
 
 class wxRadioBox;
 class wxChoice;

@@ -13,6 +13,7 @@ namespace GlobalEvents {
 	  OnSpringStarted,
       UpdateFinished,
       OnQuit,
+	  OnLogin,
       PlasmaResourceListParsed,
 	  PlasmaResourceListFailedDownload,
 	  BattleSyncReload,

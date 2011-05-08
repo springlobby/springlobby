@@ -47,7 +47,7 @@
 #include "battlelisttab.h"
 #include "mainsingleplayertab.h"
 #include "mainoptionstab.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "uiutils.h"
 #include "utils/misc.h"
 #include "chatpanel.h"
@@ -172,7 +172,8 @@ MainWindow::MainWindow( )
 #ifndef NO_TORRENT_SYSTEM
 	m_menuTools->AppendSeparator();
 #endif
-	m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
+	if (!sett().IsSelfUpdateDisabled() )
+		m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
 
 
 	wxMenu *menuHelp = new wxMenu;
@@ -269,8 +270,10 @@ void MainWindow::SetTabIcons()
 
 void MainWindow::forceSettingsFrameClose()
 {
+#ifndef SL_QT_MODE
 	if (se_frame_active && se_frame != 0)
 		se_frame->handleExternExit();
+#endif
 }
 
 void MainWindow::SetLogWin( wxLogWindow* log, wxLogChain* logchain  )
@@ -626,10 +629,11 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
 {
-	se_frame = new settings_frame(this,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
-	  	    		wxDefaultSize);
+#ifndef SL_QT_MODE
+	se_frame = new settings_frame(this,wxT("SpringSettings"));
 	se_frame_active = true;
 	se_frame->Show();
+#endif
 }
 
 void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
@@ -640,12 +644,14 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuSelectLocale( wxCommandEvent& /*unused*/ )
 {
+#ifndef SL_QT_MODE
     if ( wxGetApp().SelectLanguage() ) {
 		customMessageBoxNoModal( SL_MAIN_ICON,
 								 IdentityString( _("You need to restart %s for the language change to take effect.") ),
 								 _("Restart required"),
 								 wxICON_EXCLAMATION | wxOK );
     }
+#endif
 }
 
 void MainWindow::OnShowChannelChooser( wxCommandEvent& /*unused*/ )

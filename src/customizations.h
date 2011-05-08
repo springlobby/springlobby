@@ -6,7 +6,14 @@
 #include <wx/string.h>
 #include <wx/icon.h>
 #include <wx/bitmap.h>
+#include <wx/image.h>
 
+#ifdef SL_QT_MODE
+	#include <QString>
+	#include <QList>
+#endif
+
+//! single global instance to get all customizsations from
 class Customizations {
     protected:
         Customizations();
@@ -14,7 +21,6 @@ class Customizations {
         wxString m_modname;
         OptionsWrapper m_customs;
         wxIcon m_app_ico;
-        wxBitmap m_background;
         wxString m_help_url;
 		bool m_active;
 
@@ -22,23 +28,46 @@ class Customizations {
     public:
         ~Customizations() {}
 
-        bool Init( const wxString& modname );
+		bool Init( const wxString& archive_name );
 		bool Active() const;
 
         const wxString& GetModname() const;
         const wxString& GetHelpUrl() const;
         const wxIcon& GetAppIcon() const;
-        const wxBitmap& GetBackground() const;
-        wxSize GetBackgroundSize() const;
+
         const OptionsWrapper& GetCustomizations() const;
 
 		bool Provides( const wxString& key ) const;
 
 		wxString GetIntroText() const;
 
+		//! if key is found bitmap is changed and true returned
+		bool GetBitmap( const wxString& key, wxBitmap& bitmap );
+
 		static const wxString IntroKey;// ( _T("intro_file") );
 
     friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
+
+#ifdef SL_QT_MODE
+		struct DataException : public std::exception {
+			const QList<QString> errors_;
+			DataException( const QList<QString>& errors )
+				:errors_(errors)
+			{}
+			virtual ~DataException() throw() {}
+		};
+		QString DataBasePath();
+
+	private:
+		QString dataBasePath_;
+		QString m_shortname;
+
+	public:
+		QString QmlDir();
+		QString GraphicsDir();
+		QString SoundsDir();
+		QString MusicDir();
+#endif
 };
 
 Customizations& SLcustomizations();
