@@ -729,7 +729,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 					if ( UserExists( _T("insanebot") ) ) SayPrivate( _T("insanebot"), reportstring );
 					if ( UserExists( _T("SL_bot") ) ) SayPrivate( _T("SL_bot"), reportstring );
 				}
-				if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
+				if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!lm") );
         m_se->OnLoginInfoComplete();
     }
     else if ( cmd == _T("REMOVEUSER") )
@@ -810,7 +810,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         nick = GetWordParam( params );
         if ( ( ( nick == m_relay_host_bot ) || ( nick == m_relay_host_manager ) ) && params.StartsWith( _T("!") ) ) return; // drop the message
-        if ( ( nick == _T("RelayHostManagerList") ) && ( params == _T("!listmanagers") ) ) return;// drop the message
+        if ( ( nick == _T("RelayHostManagerList") ) && ( params == _T("!lm") ) ) return;// drop the message
         if ( nick == _T("SL_bot") || ( nick == _T("insanebot") ) )
         {
         	if ( params.StartsWith( _T("stats.report") ) ) return;
@@ -2491,7 +2491,7 @@ void TASServer::RequestSpringUpdate()
 
 wxArrayString TASServer::GetRelayHostList()
 {
-	if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
+	if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!lm") );
 	wxArrayString ret;
 	for ( unsigned int i = 0; i < m_relay_host_manager_list.GetCount(); i++ )
 	{
