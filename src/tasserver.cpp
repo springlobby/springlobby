@@ -726,7 +726,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 					wxString wxversion = wxVERSION_STRING;
 					wxversion.Replace( _T(" "), _T("") );
 					wxString reportstring = _T("stats.report ") + version + _T(" ") + wxversion + _T(" ") + os + aux;
-					if ( UserExists( _T("insanebot") ) ) SayPrivate( _T("insanebot"), reportstring );
 					if ( UserExists( _T("SL_bot") ) ) SayPrivate( _T("SL_bot"), reportstring );
 				}
 				if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!lm") );
@@ -811,7 +810,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         nick = GetWordParam( params );
         if ( ( ( nick == m_relay_host_bot ) || ( nick == m_relay_host_manager ) ) && params.StartsWith( _T("!") ) ) return; // drop the message
         if ( ( nick == _T("RelayHostManagerList") ) && ( params == _T("!lm") ) ) return;// drop the message
-        if ( nick == _T("SL_bot") || ( nick == _T("insanebot") ) )
+        if ( nick == _T("SL_bot") )
         {
         	if ( params.StartsWith( _T("stats.report") ) ) return;
         }
