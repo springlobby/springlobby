@@ -2249,7 +2249,13 @@ void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 
 void TASServer::SendScriptToProxy( const wxString& script )
 {
-  int time = script.Len() / m_sock->GetSendRateLimit(); // calculate time in seconds to upload script
+  wxArrayString strings = wxStringTokenize( script, _T("\n") );
+  int relaylenghtprefix = 10 + 1 + m_relay_host_bot.Len() + 2; // SAYPRIVATE + space + botname + space + exclamation mark lenght
+  int lenght = script.size();
+  lenght += relaylenghtprefix + 11 + 1; // CLEANSCRIPT command size
+  lenght += strings.GetCount() * ( relaylenghtprefix + 16 + 1 ); // num lines * APPENDSCRIPTLINE + space command size ( \n is already counted in script.size)
+  lenght += relaylenghtprefix + 9 + 1; // STARTGAME command size
+  int time = lenght / m_sock->GetSendRateLimit(); // calculate time in seconds to upload script
   DoActionBattle( m_battle_id, wxString::Format(_T("is preparing to start the game, game will start in approximately %d seconds"),time));
   RelayCmd( _T("CLEANSCRIPT") );
   wxStringTokenizer tkzr( script, _T("\n") );
