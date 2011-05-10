@@ -565,8 +565,16 @@ void BattleRoomTab::UpdateUser( User& user )
 		m_side_sel->Disable();
 		m_ally_sel->Disable();
 		m_team_sel->Disable();
-		if ( m_battle->GetBattleType() != BT_Replay ) m_ready_chk->Disable();
-		else m_ready_chk->Enable();
+		if ( m_battle->GetBattleType() != BT_Replay )
+		{
+		    m_auto_unspec_chk->Enable();
+		    m_ready_chk->Disable();
+		}
+		else
+		{
+		    m_ready_chk->Enable();
+		    m_auto_unspec_chk->Disable();
+		}
 	}
 	else
 	{
@@ -574,6 +582,7 @@ void BattleRoomTab::UpdateUser( User& user )
 		m_ally_sel->Enable();
 		m_team_sel->Enable();
 		m_ready_chk->Enable();
+		m_auto_unspec_chk->Disable();
 	}
 
 	icons().SetColourIcon( user.BattleStatus().colour );
