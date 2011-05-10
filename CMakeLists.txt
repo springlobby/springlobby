@@ -143,7 +143,7 @@ IF( ENABLE_DEBUG_REPORT )
 ENDIF( ENABLE_DEBUG_REPORT )
 
 
-	
+
 IF(WIN32)
 	ADD_DEFINITIONS( ${CURL_CFLAGS}  )
 	LINK_DIRECTORIES( ${CURL_STATIC_LIBRARY_DIRS} )
@@ -200,9 +200,12 @@ ENDIF( OPTION_TORRENT_SYSTEM )
 
 IF( OPTION_NOTIFY AND NOT WIN32 )
 	pkg_check_modules( LIBNOTIFY libnotify )
+	pkg_check_modules( GLIB glib-2.0 )
 	IF( LIBNOTIFY_FOUND )
 		INCLUDE_DIRECTORIES( ${LIBNOTIFY_INCLUDE_DIRS} )
 		LINK_LIBRARIES( ${LIBNOTIFY_LIBRARIES} )
+		INCLUDE_DIRECTORIES( ${GLIB_INCLUDE_DIRS} )
+		LINK_LIBRARIES( ${GLIB_LIBRARIES} )
 		ADD_DEFINITIONS( -DHAVE_LIBNOTIFY )
 	ENDIF( LIBNOTIFY_FOUND )
 ENDIF( OPTION_NOTIFY AND NOT WIN32 )
@@ -308,3 +311,4 @@ add_dependencies( distcheck dist )
 add_dependencies( springlobby alure )
 add_dependencies( springlobby version )
 #add_dependencies( versiontest version )
+
