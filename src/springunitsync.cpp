@@ -682,7 +682,7 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname ) const
 			{
 				 ret.Add( _T( "LuaAI:" ) +  susynclib().GetLuaAIName( i ) );
 			}
-		} catch (...) {}
+		} CATCH_ANY
 	}
 
   return ret;

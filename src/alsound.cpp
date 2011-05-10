@@ -42,6 +42,7 @@ ALsound::ALsound()
 	alListenerfv(AL_POSITION,alpos);
 	alListenerfv(AL_VELOCITY,alvel);
 	alListenerfv(AL_ORIENTATION,alori);
+	alureInitDevice(0, 0);
 	//*
 
 	alGenSources(m_num_sources,m_sources);
