@@ -861,7 +861,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         }
         if ( nick == _T("RelayHostManagerList") )
 				{
-					if  ( params.StartsWith(_T("managerlist ")) )
+					if  ( params.StartsWith(_T("list ")) )
 					{
 						 wxString list = params.AfterFirst( _T(' ') );
 						 m_relay_host_manager_list = wxStringTokenize( list, _T("\t") );
