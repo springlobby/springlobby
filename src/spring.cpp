@@ -244,7 +244,7 @@ bool Spring::LaunchSpring( const wxString& params  )
         cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
   #endif
   cmd += _T("\" ") + configfileflags + params;
-  
+
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
 
 #ifdef SL_QT_MODE
@@ -415,6 +415,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				if ( ( startpostype == IBattle::ST_Random ) || ( startpostype == IBattle::ST_Fixed ) )
 				{
 					tdf.Append( _T("startpostype"), IBattle::ST_Pick );
+					tdf.Append( _T("relayhoststartpostype"), startpostype ); // also save the original wanted setting
 				}
 				else tdf.Append( _T("startpostype"), startpostype );
 			}
