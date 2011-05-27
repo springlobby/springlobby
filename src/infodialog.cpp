@@ -72,8 +72,6 @@ InfoDialog::InfoDialog(wxWindow* parent )
 		wxString dummy_fn = path + wxFileName::GetPathSeparator() + _T("dummy.txt");
 		const bool wx = wxFileName::IsDirWritable( path );
 		boost::filesystem::path bpath( STD_STRING(path) );
-//		bpath.
-//		bpath.
 		bool posix = access(STD_STRING(path).c_str(), WRITABLE) == 0;
 		bool tried = false;
 		try{
