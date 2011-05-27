@@ -191,7 +191,7 @@ bool SpringLobbyApp::OnInit()
 
 	if ( !m_customizer_archive_name.IsEmpty() ) {
 		if ( SLcustomizations().Init( m_customizer_archive_name ) ) {
-			ui().mw().SetIcon( SLcustomizations().GetAppIcon() );
+			ui().mw().SetIcons( SLcustomizations().GetAppIconBundle() );
 		}
 		else {
 			customMessageBox( SL_MAIN_ICON, _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );

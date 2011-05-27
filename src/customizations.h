@@ -7,6 +7,7 @@
 #include <wx/icon.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
+#include <wx/iconbndl.h>
 
 #ifdef SL_QT_MODE
 	#include <QString>
@@ -20,7 +21,7 @@ class Customizations {
 
         wxString m_modname;
         OptionsWrapper m_customs;
-        wxIcon m_app_ico;
+		wxIconBundle m_app_icons;
         wxString m_help_url;
 		bool m_active;
 
@@ -33,7 +34,7 @@ class Customizations {
 
         const wxString& GetModname() const;
         const wxString& GetHelpUrl() const;
-        const wxIcon& GetAppIcon() const;
+		const wxIconBundle& GetAppIconBundle() const;
 
         const OptionsWrapper& GetCustomizations() const;
 

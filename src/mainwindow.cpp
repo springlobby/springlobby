@@ -130,7 +130,7 @@ MainWindow::MainWindow( )
 	m_log_win(NULL),
 	m_has_focus(true)
 {
-	SetIcon( SLcustomizations().GetAppIcon() );
+	SetIcons( SLcustomizations().GetAppIconBundle() );
 
 	GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
@@ -554,7 +554,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
     info.AddTranslator(_T("tc- (swedish)"));
 	info.AddTranslator(_("The numerous contributors from launchpad.net"));
 	//! \todo customisations
-	info.SetIcon( SLcustomizations().GetAppIcon() );
+	info.SetIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
 	wxAboutBox(info);
 }
 

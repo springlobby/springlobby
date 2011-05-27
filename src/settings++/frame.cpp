@@ -75,10 +75,7 @@ settings_frame::settings_frame(wxWindow *parent, const wxString &title, wxWindow
 	settingsIcon( new wxIcon(springsettings_xpm) ),
 	m_has_focus(true)
 {
-	if ( SLcustomizations().Active() )
-		SetIcon( SLcustomizations().GetAppIcon() );
-	else
-		SetIcon(*settingsIcon);
+	SetIcons( SLcustomizations().GetAppIconBundle() );
 
 	alreadyCalled = false;
 	parentWindow = parent;
