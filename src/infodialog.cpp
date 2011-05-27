@@ -25,14 +25,12 @@
 #include <fstream>
 #include <utility>
 #include <wx/filename.h>
-#include <wx/stattext.h>
-#include <boost/filesystem.hpp>
 #include "nonportable.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
 #include "utils/math.h"
 #include "utils/platform.h"
-
+#include <wx/textctrl.h>
 #ifdef __unix__
 # include <unistd.h>
 # define WRITABLE W_OK
@@ -62,17 +60,15 @@ InfoDialog::InfoDialog(wxWindow* parent )
 //	paths.push_back( std::make_pair( , _T("")));
 //	paths.push_back( std::make_pair( , _T("")));
 
-
-
+	wxTextCtrl* out = new wxTextCtrl( this, wxNewId(), _T( "" ), wxDefaultPosition, wxDefaultSize,
+									 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	for ( size_t i =0; i < paths.size(); ++i )
 	{
-		wxStaticBoxSizer* pathbox = new wxStaticBoxSizer(wxVERTICAL, this,
-				wxString::Format( _T("%s (%s)"), paths[i].second.c_str(), paths[i].first.c_str()) );
+		*out << wxString::Format( _T("%s (%s)\n"), paths[i].second.c_str(), paths[i].first.c_str());
 		wxString path = paths[i].first;
 		wxString dummy_fn = path + wxFileName::GetPathSeparator() + _T("dummy.txt");
 		const bool wx = wxFileName::IsDirWritable( path );
-		boost::filesystem::path bpath( STD_STRING(path) );
-		bool posix = access(STD_STRING(path).c_str(), WRITABLE) == 0;
+		const bool posix = access(STD_STRING(path).c_str(), WRITABLE) == 0;
 		bool tried = false;
 		try{
 			std::ofstream of;
@@ -83,21 +79,14 @@ InfoDialog::InfoDialog(wxWindow* parent )
 				of << "fhreuohgeiuhguie";
 				of.flush();
 				of.close();
-				tried = true;
+				tried = wxRemoveFile(dummy_fn);
 			}
 		}
 		catch (...){}
-
-		wxString h = wxString::Format( _T("WX: %s POSIX: %s TRY: %s "), BtS(wx).c_str(), BtS(posix).c_str(), BtS(tried).c_str() );
-		wxStaticText* t = new wxStaticText( this, wxNewId(), h );
-		pathbox->Add( t , 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-
-
-		main_sizer->Add( pathbox, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+		*out << wxString::Format( _T("\tWX: %s POSIX: %s TRY: %s\n"), BtS(wx).c_str(), BtS(posix).c_str(), BtS(tried).c_str() );
 	}
-	wxString h = wxString::Format( _T("Portable mode: %s "), BtS(sett().IsPortableMode()).c_str() );
-	wxStaticText* t = new wxStaticText( this, wxNewId(), h );
-	main_sizer->Add( t, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	*out << wxString::Format( _T("Portable mode: %s\n"), BtS(sett().IsPortableMode()).c_str() );
+	main_sizer->Add( out, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	SetSizer( main_sizer );
 	Layout();
 }
