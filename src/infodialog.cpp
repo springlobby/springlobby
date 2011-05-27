@@ -30,6 +30,7 @@
 #include "utils/debug.h"
 #include "utils/math.h"
 #include "utils/platform.h"
+#include "updater/updatehelper.h"
 #include <wx/textctrl.h>
 #ifdef __unix__
 # include <unistd.h>
@@ -41,7 +42,7 @@
 # error "os not supported"
 #endif
 
-inline wxString BtS( bool y ) { return y ? wxString(_T("Yes")) : wxString(_T("No")) ; }
+inline wxString BtS( bool q, std::string y = "yes", std::string n = "no" ) { return q ? TowxString(y) : TowxString(n) ; }
 
 InfoDialog::InfoDialog(wxWindow* parent )
 	:wxDialog(parent,wxID_ANY, _("path shit"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX)
@@ -85,7 +86,18 @@ InfoDialog::InfoDialog(wxWindow* parent )
 		catch (...){}
 		*out << wxString::Format( _T("\tWX: %s POSIX: %s TRY: %s\n"), BtS(wx).c_str(), BtS(posix).c_str(), BtS(tried).c_str() );
 	}
+	*out << wxString::Format( _T("Global config: %s (%s %s )\n"),
+							 sett().GlobalConfigPath().c_str(),
+							 BtS(wxFileName::FileExists(sett().GlobalConfigPath()), "exists", "missing").c_str(),
+							 BtS(wxFileName::IsFileWritable(sett().GlobalConfigPath()), "writable", "").c_str()  );
+	*out << wxString::Format( _T("Local config: %s (%s writable)\n"),
+							 sett().FinalConfigPath().c_str(),
+							 BtS(wxFileName::IsFileWritable(sett().FinalConfigPath()), "", "not" ).c_str() );
 	*out << wxString::Format( _T("Portable mode: %s\n"), BtS(sett().IsPortableMode()).c_str() );
+
+
+	*out << _T( "Version " ) + GetSpringLobbyVersion()
+			<< wxString( wxVERSION_STRING ) + _T(" on ") + wxPlatformInfo::Get().GetOperatingSystemIdName() + _T( "\n" ) ;
 	main_sizer->Add( out, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	SetSizer( main_sizer );
 	Layout();
