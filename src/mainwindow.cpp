@@ -529,30 +529,31 @@ void MainWindow::OnMenuChat( wxCommandEvent& /*unused*/ )
   }
 
 }
-
+#include "infodialog.h"
 void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 {
-    wxAboutDialogInfo info;
-	info.SetName( GetAppName() );
-	info.SetVersion (GetSpringLobbyVersion());
-	info.SetDescription( IdentityString( _("%s is a cross-plattform lobby client for the Spring RTS engine") ) );
-	//info.SetCopyright(_T("");
-	info.SetLicence(_T("GPL"));
-	info.AddDeveloper(_T("BrainDamage"));
-	info.AddDeveloper(_T("dizekat"));
-	info.AddDeveloper(_T("insaneinside"));
-	info.AddDeveloper(_T("Kaot"));
-	info.AddDeveloper(_T("koshi"));
-	info.AddDeveloper(_T("semi_"));
-	info.AddDeveloper(_T("tc-"));
-    info.AddTranslator(_T("chaosch (simplified chinese)"));
-	info.AddTranslator(_T("lejocelyn (french)"));
-	info.AddTranslator(_T("Suprano (german)"));
-    info.AddTranslator(_T("tc- (swedish)"));
-	info.AddTranslator(_("The numerous contributors from launchpad.net"));
-	//! \todo customisations
-	info.SetIcon( SLcustomizations().GetAppIcon() );
-	wxAboutBox(info);
+//    wxAboutDialogInfo info;
+//	info.SetName( GetAppName() );
+//	info.SetVersion (GetSpringLobbyVersion());
+//	info.SetDescription( IdentityString( _("%s is a cross-plattform lobby client for the Spring RTS engine") ) );
+//	//info.SetCopyright(_T("");
+//	info.SetLicence(_T("GPL"));
+//	info.AddDeveloper(_T("BrainDamage"));
+//	info.AddDeveloper(_T("dizekat"));
+//	info.AddDeveloper(_T("insaneinside"));
+//	info.AddDeveloper(_T("Kaot"));
+//	info.AddDeveloper(_T("koshi"));
+//	info.AddDeveloper(_T("semi_"));
+//	info.AddDeveloper(_T("tc-"));
+//    info.AddTranslator(_T("chaosch (simplified chinese)"));
+//	info.AddTranslator(_T("lejocelyn (french)"));
+//	info.AddTranslator(_T("Suprano (german)"));
+//    info.AddTranslator(_T("tc- (swedish)"));
+//	info.AddTranslator(_("The numerous contributors from launchpad.net"));
+//	//! \todo customisations
+//	info.SetIcon( SLcustomizations().GetAppIcon() );
+//	wxAboutBox(info);
+	InfoDialog( this ).ShowModal();
 }
 
 void MainWindow::OnMenuConnect( wxCommandEvent& /*unused*/ )
