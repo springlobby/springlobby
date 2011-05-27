@@ -26,7 +26,7 @@
 #include <utility>
 #include <wx/filename.h>
 #include <wx/stattext.h>
-//#include <boost/filesystem.hpp>
+#include <boost/filesystem.hpp>
 #include "nonportable.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
@@ -71,7 +71,8 @@ InfoDialog::InfoDialog(wxWindow* parent )
 		wxString path = paths[i].first;
 		wxString dummy_fn = path + wxFileName::GetPathSeparator() + _T("dummy.txt");
 		const bool wx = wxFileName::IsDirWritable( path );
-//		boost::filesystem::path bpath( STD_STRING(path) );
+		boost::filesystem::path bpath( STD_STRING(path) );
+//		bpath.
 //		bpath.
 		bool posix = access(STD_STRING(path).c_str(), WRITABLE) == 0;
 		bool tried = false;
@@ -96,7 +97,9 @@ InfoDialog::InfoDialog(wxWindow* parent )
 
 		main_sizer->Add( pathbox, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	}
-
+	wxString h = wxString::Format( _T("Portable mode: %s "), BtS(sett().IsPortableMode()).c_str() );
+	wxStaticText* t = new wxStaticText( this, wxNewId(), h );
+	main_sizer->Add( t, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	SetSizer( main_sizer );
 	Layout();
 }
