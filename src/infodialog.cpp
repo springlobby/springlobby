@@ -32,6 +32,7 @@
 #include "utils/platform.h"
 #include "updater/updatehelper.h"
 #include <wx/textctrl.h>
+#include <wx/app.h>
 #ifdef __unix__
 # include <unistd.h>
 # define WRITABLE W_OK
@@ -45,7 +46,7 @@
 inline wxString BtS( bool q, std::string y = "yes", std::string n = "no" ) { return q ? TowxString(y) : TowxString(n) ; }
 
 InfoDialog::InfoDialog(wxWindow* parent )
-	:wxDialog(parent,wxID_ANY, _("path shit"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX)
+	:wxDialog(parent,wxID_ANY, _("path shit"), wxDefaultPosition, wxSize(620,400), wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX)
 {
 	wxBoxSizer* main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -57,10 +58,6 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	paths.push_back( std::make_pair( sett().GetCachePath(), _T("CachePath")) );
 	paths.push_back( std::make_pair( sett().GetCurrentUsedDataDir(), _T("CurrentUsedDataDir")) );
 	paths.push_back( std::make_pair( GetExecutableFolder() , _T("ExecutableFolder")));
-//	paths.push_back( std::make_pair( , _T("")));
-//	paths.push_back( std::make_pair( , _T("")));
-//	paths.push_back( std::make_pair( , _T("")));
-
 	wxTextCtrl* out = new wxTextCtrl( this, wxNewId(), _T( "" ), wxDefaultPosition, wxDefaultSize,
 									 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	for ( size_t i =0; i < paths.size(); ++i )
@@ -97,7 +94,9 @@ InfoDialog::InfoDialog(wxWindow* parent )
 
 
 	*out << _T( "Version " ) + GetSpringLobbyVersion()
-			<< wxString( wxVERSION_STRING ) + _T(" on ") + wxPlatformInfo::Get().GetOperatingSystemIdName() + _T( "\n" ) ;
+			<< wxString( wxVERSION_STRING ) + _T(" on ") + wxPlatformInfo::Get().GetOperatingSystemIdName() + _T( "\ncl: " ) ;
+	for ( int i = 0; i < wxTheApp->argc; ++i )
+		*out << wxTheApp->argv[i] << _T(" ");
 	main_sizer->Add( out, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	SetSizer( main_sizer );
 	Layout();
