@@ -3,6 +3,8 @@
 #include "customizations.h"
 #include "springunitsynclib.h"
 #include "images/springlobby.xpm"
+#include "images/springlobby_64.png.h"
+#include "uiutils.h"
 
 #include <wx/image.h>
 #include <wx/frame.h>
@@ -63,7 +65,13 @@ bool Customizations::Init(const wxString& archive_name )
 		{
 			wxIcon tmp;
 			tmp.CopyFromBitmap( icon_bmp );
-			m_app_icons.AddIcon( tmp );
+			m_app_icons = wxIconBundle( tmp );//replacing current
+			int i = 1;
+			while( GetBitmap( wxString::Format(_T("icon%d"), i ), icon_bmp ) )
+			{
+				tmp.CopyFromBitmap( icon_bmp );
+				m_app_icons.AddIcon( tmp );
+			}
 		}
         m_help_url = m_customs.getSingleValue( _T("help_url") );
     }
@@ -79,7 +87,7 @@ bool Customizations::Init(const wxString& archive_name )
 	 : m_app_icons(wxIcon(springlobby_xpm)),
 	 m_active( false )
 {
-
+	m_app_icons.AddIcon( charArr2wxIcon( springlobby_64_png, sizeof(springlobby_64_png) ) );
 }
 
 bool Customizations::GetBitmap( const wxString& key, wxBitmap& bitmap )
