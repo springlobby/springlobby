@@ -13,7 +13,7 @@
 
 #include <boost/cstdint.hpp>
 
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "thread.h"
 #include "mutexwrapper.h"
 #include "utils/plasmaresourceinfo.h"

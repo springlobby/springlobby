@@ -40,6 +40,7 @@
 #endif
 #include <libtorrent/extensions/metadata_transfer.hpp>
 #include <libtorrent/extensions/ut_pex.hpp>
+#include <libtorrent/extensions/smart_ban.hpp>
 
 #include <libtorrent/alert_types.hpp>
 
@@ -59,7 +60,7 @@
 #include "utils/downloader.h"
 #include "utils/uievents.h"
 #include "globalsmanager.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "utils/globalevents.h"
 
 #ifdef __WXMSW__
@@ -67,19 +68,19 @@
 #endif
 
 /** Get the name of the Spring data subdirectory that corresponds to a
- * given IUnitSync::MediaType value.
+ * given SpringUnitSync::MediaType value.
  */
 inline wxString
-getDataSubdirForType(const IUnitSync::MediaType type)
+getDataSubdirForType(const SpringUnitSync::MediaType type)
 {
     switch ( type)
     {
-    case IUnitSync::map:
+    case SpringUnitSync::map:
         return _T("maps");
-    case IUnitSync::mod:
+    case SpringUnitSync::mod:
 		return _T("games");
     default:
-        ASSERT_EXCEPTION(false, _T("Unhandled IUnitSync::MediaType value"));
+        ASSERT_EXCEPTION(false, _T("Unhandled SpringUnitSync::MediaType value"));
     }
 }
 
@@ -175,6 +176,14 @@ TorrentWrapper::TorrentWrapper():
     {
         wxLogError( TowxString( e.what() ) );
     }
+	try
+	{
+		m_torr->add_extension(&libtorrent::create_smart_ban_plugin);
+	}
+	catch (std::exception& e)
+	{
+		wxLogError( TowxString( e.what() ) );
+	}
     //these extensions proved o be too problematic on win so i flat out disable them
     #ifndef __WXMSW__
         try
@@ -349,10 +358,10 @@ int TorrentWrapper::GetTorrentSystemStatus() const
 ////               lobby interface                  ////
 ////////////////////////////////////////////////////////
 
-IUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t ) {
+SpringUnitSync::MediaType convertMediaType( const PlasmaResourceInfo::ResourceType& t ) {
     switch ( t ) {
-        case PlasmaResourceInfo::map: return IUnitSync::map;
-        default: return IUnitSync::mod;
+        case PlasmaResourceInfo::map: return SpringUnitSync::map;
+        default: return SpringUnitSync::mod;
     }
 
 }

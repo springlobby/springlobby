@@ -50,7 +50,7 @@ const int vl_ShadowMapSize[3] = 		{ 1024,		4096,	8192 	}; //shadowmapsize
 const int vl_TreeRadius[3] = 			{ 600,		1900,	3000 	}; //tree view distance
 const int vl_GroundDetail[3] =			{ 20, 		70,		120		}; //terrain detail
 const int vl_UnitLodDist[3] =			{ 100,		350,	1000		}; //unit LOD distance
-const int vl_GrassDetail[3] = 			{ 0,		5,		10		}; //grass detail
+const int vl_GrassDetail[3] = 			{ 0,		15,		30		}; //grass detail
 const int vl_GroundDecals[3] = 			{ 0,		0,		1		}; // ground decals
 const int vl_UnitIconDist[3] = 			{ 100,		550,	1000	}; // unit icon distance
 const int vl_MaxParticles[3] = 			{ 100,		4000,	20000	};
@@ -137,3 +137,4 @@ const presetValues<int, 5> prVal_W4[prVal_W4_size] = { pr_w4_BumpWaterReflection
     pr_w4_BumpWaterUseDepthTexture, pr_w4_BumpWaterTexSizeReflection, pr_w4_BumpWaterBlurReflection };
 
 #endif /*PRESETS_H_*/
+

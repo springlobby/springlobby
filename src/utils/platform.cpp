@@ -26,6 +26,10 @@
 #include "math.h"
 #include "../crashreport.h"
 
+#ifdef SL_QT_MODE
+	#include <QCoreApplication>
+	#include <QDir>
+#endif
 
 wxString GetLibExtension()
 {
@@ -373,9 +377,22 @@ CwdGuard::~CwdGuard()
     wxSetWorkingDirectory( m_old_cwd );
 }
 
+PwdGuard::PwdGuard(  )
+	: m_old_pwd( wxGetCwd() )
+{}
+
+PwdGuard::~PwdGuard()
+{
+	wxSetWorkingDirectory( m_old_pwd );
+}
+
 wxString GetAppName( const bool lowerCase )
 {
-	wxString name = wxTheApp->GetAppName();
+#ifdef SL_QT_MODE
+	wxString name = TowxString( QCoreApplication::applicationName );
+#else
+	wxString name = wxTheApp->GetAppName();//this would segfault in qt mode
+#endif
 	if ( lowerCase )
 		name.MakeLower();
 	return name;
@@ -386,11 +403,45 @@ wxString IdentityString(const wxString format, bool lowerCase )
 	return wxFormat( format ) %  GetAppName( lowerCase ) ;
 }
 
+//! this follows the wx implementation to the letter, just substituting our own app name function
+wxString AppendAppName(const wxString& dir)
+{
+	wxString subdir(dir);
+
+	// empty string indicates that an error has occurred, don't touch it then
+	if ( !subdir.empty() )
+	{
+		const wxString appname = GetAppName();
+		if ( !appname.empty() )
+		{
+			const wxChar ch = *(subdir.end() - 1);
+			if ( !wxFileName::IsPathSeparator(ch) && ch != _T('.') )
+				subdir += wxFileName::GetPathSeparator();
+
+			subdir += appname;
+		}
+	}
+
+	return subdir;
+}
+
+wxString GetUserDataDir()
+{
+	return AppendAppName( wxStandardPaths::Get().GetUserConfigDir() );
+}
+
 wxString GetConfigfileDir()
 {
 	#ifdef __WXMSW__
-		return wxStandardPaths::Get().GetUserDataDir();
+		return GetUserDataDir();
 	#else
 		return wxFormat( _T("%s/.%s") ) % wxStandardPaths::Get().GetUserConfigDir() % GetAppName(true);
 	#endif //__WXMSW__
 }
+
+wxString GetCustomizedEngineConfigFilePath()
+{
+	const wxString path = GetConfigfileDir() + wxFileName::GetPathSeparator() + _T("engine.cfg");
+	return path;
+}
+

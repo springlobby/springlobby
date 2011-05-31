@@ -146,8 +146,10 @@ public:
 			unsigned int delay = 3000, // miliseconds
 			long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
 	virtual ~AutocloseMessageBox();
+	virtual void EndModal( int retCode );
 protected:
 	void OnUnlock( wxTimerEvent& evt );
+	wxWindowID delay_timerID;
 };
 
 /** \brief used to display server messages when no chatwindow has focus

@@ -1,6 +1,6 @@
 #include "mmoptionswrapper.h"
 
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "utils/conversion.h"
 #include "utils/customdialogs.h"
 #include "utils/debug.h"
@@ -264,19 +264,19 @@ OptionsWrapper::wxStringTripleVec OptionsWrapper::getOptions( GameOption modmapF
     GameOptionsMapCIter optIt = m_opts.find((int)modmapFlag);
     if ( optIt != m_opts.end() ) {
         const GameOptions& gameoptions = optIt->second;
-        for (IUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it) {
+        for (SpringUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it) {
             list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name , TowxString(it->second.value) ) ) );
         }
 
-        for (IUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it) {
+        for (SpringUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it) {
             list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, it->second.value) ) );
         }
 
-        for (IUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it) {
+        for (SpringUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it) {
             list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, TowxString(it->second.value) ) ) );
         }
 
-        for (IUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it) {
+        for (SpringUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it) {
             list.push_back( wxStringTriple( (*it).first, wxStringPair ( it->second.name, it->second.value ) ) );
         }
     }
@@ -289,19 +289,19 @@ std::map<wxString,wxString> OptionsWrapper::getOptionsMap( GameOption modmapFlag
     GameOptionsMapCIter optIt = m_opts.find((int)modmapFlag);
     if ( optIt != m_opts.end() ) {
         const GameOptions& gameoptions = optIt->second;
-        for (IUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it) {
+        for (SpringUnitSync::OptionMapBoolConstIter it = gameoptions.bool_map.begin(); it != gameoptions.bool_map.end(); ++it) {
             map[it->first] =  TowxString(it->second.value);
         }
 
-        for (IUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it) {
+        for (SpringUnitSync::OptionMapStringConstIter it = gameoptions.string_map.begin(); it != gameoptions.string_map.end(); ++it) {
             map[it->first] = it->second.value;
         }
 
-        for (IUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it) {
+        for (SpringUnitSync::OptionMapFloatConstIter it = gameoptions.float_map.begin(); it != gameoptions.float_map.end(); ++it) {
             map[it->first] = TowxString(it->second.value);
         }
 
-        for (IUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it) {
+        for (SpringUnitSync::OptionMapListConstIter it = gameoptions.list_map.begin(); it != gameoptions.list_map.end(); ++it) {
             map[it->first] = it->second.value;
         }
     }
@@ -553,26 +553,26 @@ bool OptionsWrapper::MergeOptions( const OptionsWrapper& other, GameOption merge
         const GameOptions& other_opts = other_it->second;
         //const GameOption other_id = (const GameOption)other_it->first; //TODO (koshi) what was this supposed to be used for?
 
-        for (IUnitSync::OptionMapBoolConstIter it = other_opts.bool_map.begin(); it != other_opts.bool_map.end();++it ) {
+        for (SpringUnitSync::OptionMapBoolConstIter it = other_opts.bool_map.begin(); it != other_opts.bool_map.end();++it ) {
             m_opts[merge_into].bool_map[it->first] = it->second;
         }
 
-        for ( IUnitSync::OptionMapFloatConstIter it = other_opts.float_map.begin(); it != other_opts.float_map.end(); ++it ) {
+        for ( SpringUnitSync::OptionMapFloatConstIter it = other_opts.float_map.begin(); it != other_opts.float_map.end(); ++it ) {
             m_opts[merge_into].float_map[it->first] = it->second;
         }
 
-        for ( IUnitSync::OptionMapListConstIter it = other_opts.list_map.begin(); it != other_opts.list_map.end(); ++it ){
+        for ( SpringUnitSync::OptionMapListConstIter it = other_opts.list_map.begin(); it != other_opts.list_map.end(); ++it ){
             m_opts[merge_into].list_map[it->first] = it->second;
         }
 
-        for ( IUnitSync::OptionMapStringConstIter it = other_opts.string_map.begin(); it != other_opts.string_map.end(); ++it ) {
+        for ( SpringUnitSync::OptionMapStringConstIter it = other_opts.string_map.begin(); it != other_opts.string_map.end(); ++it ) {
             m_opts[merge_into].string_map[it->first] = it->second;
         }
     }
     return true;
 }
 
-void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSync::OptionMapSection& section_map )
+void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const SpringUnitSync::OptionMapSection& section_map )
 {
 
     // map child-key <-> parent-key
@@ -581,7 +581,7 @@ void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSy
     RelationMap relation_map;
 
     //setup relation map
-    for ( IUnitSync::OptionMapSectionConstIter it = section_map.begin(); it != section_map.end(); ++it )
+    for ( SpringUnitSync::OptionMapSectionConstIter it = section_map.begin(); it != section_map.end(); ++it )
     {
         relation_map[it->second.key] = it->second.section;
     }
@@ -596,7 +596,7 @@ void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSy
         if ( relation_map.find(rit->second) == relation_map.end() )
         {
             //either we already added this sections parent or it's a root section
-            IUnitSync::OptionMapSectionConstIter section = section_map.find(rit->first);
+            SpringUnitSync::OptionMapSectionConstIter section = section_map.find(rit->first);
             assert ( section != section_map.end() );
                 section_tree.AddSection( section->second );
 
@@ -615,18 +615,11 @@ void OptionsWrapper::ParseSectionMap( mmSectionTree& section_tree, const IUnitSy
 }
 
 mmSectionTree::mmSectionTree()
-    : m_tree ( 0 )
-{
-    m_tree = new ConfigType(  _T("SL-temp"), wxEmptyString, wxFileName::CreateTempFileName( _T("springlobby-") ) );
-}
+	: m_tree ( new wxFileConfig( _T("SL-temp"), wxEmptyString, wxFileName::CreateTempFileName( _T("springlobby-tree_") ) ) )
+{}
 
 mmSectionTree::~mmSectionTree()
 {
-    //! \todo wth does this segfault?
-//    if ( m_tree ) {
-//        delete m_tree;
-//        m_tree = 0;
-//    }
     #ifndef NDEBUG
         m_tree->Flush();
     #else //no need to clutter tempfile directory if we're not debugging

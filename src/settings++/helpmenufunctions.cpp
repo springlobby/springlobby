@@ -17,8 +17,11 @@ void showAbout()
     wxAboutDialogInfo info;
 	if ( IsSettingsStandAlone() )
 	{
-		info.SetName(_T("SpringSettings"));
-		info.SetVersion(_T("0.2.1"));
+		wxString name ( GetAppName() );
+		if ( GetAppName() != _T("SpringSettings") )
+			name += _T(" (SpringSettings)");
+		info.SetName(name);
+		info.SetVersion(_T("0.2.2"));
 	}
 	else
 	{
@@ -26,7 +29,7 @@ void showAbout()
 		info.SetVersion(GetSpringLobbyVersion());
 	}
     info.SetDescription(_("SpringSettings is a graphical frontend to the Settings of the Spring engine"));
-    info.SetCopyright(_T("(C) 2007-2008 koshi <koshi@springlobby.info>"));
+	info.SetCopyright(_T("(C) 2007-2011 koshi <koshi@springlobby.info>"));
     info.SetIcon(wxIcon(springsettings_xpm));
     wxAboutBox(info);
 }
@@ -34,19 +37,20 @@ void showAbout()
 void showCredits()
 {
 	CreditsDialog dlg(CustomMessageBoxBase::getSettingspointer(),_T("Credits"),SS_MAIN_ICON);
+	dlg.AddCredit(_("koshi"),_T("Principal Author"));
 	dlg.AddCredit(_("Very Bad Soldier"),_T("wrote the excellent hotkey editor"));
 	dlg.AddCredit(_("Kloot"),_T("wrote Settings++ from which SpringSettings originated"));
-	dlg.AddCredit(_("The SpringLobby team"),_("thanks for inviting me in, code to re-use, infrastructure and help in general"));
+	dlg.AddCredit(_("The SpringLobby team"),_T(""));
 	dlg.AddCredit(_("everyone reporting bugs/suggestions"),_T(""));
 	dlg.ShowModal();
 }
 
 void openNewTicket()
 {
-	openUrl(_T("http://trac.springlobby.info/newticket?component=springsettings%2Fsettings%2B%2B&owner=koshi"));
+	openUrl(_T("http://projects.springlobby.info/projects/springlobby/issues/new"));
 }
 
 void openContactPage()
 {
-	openUrl(_T("http://trac.springlobby.info/wiki/Contact"));
+	openUrl(_T("http://projects.springlobby.info/projects/springlobby/wiki/Contact"));
 }

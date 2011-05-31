@@ -47,12 +47,13 @@
 #include "battlelisttab.h"
 #include "mainsingleplayertab.h"
 #include "mainoptionstab.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "uiutils.h"
 #include "utils/misc.h"
 #include "chatpanel.h"
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
+#include "infodialog.h"
 #ifndef NO_TORRENT_SYSTEM
 	#include "maintorrenttab.h"
 	#include "torrentwrapper.h"
@@ -99,6 +100,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SETTINGSPP,			MainWindow::OnShowSettingsPP		)
   EVT_MENU( MENU_VERSION,				MainWindow::OnMenuVersion			)
   EVT_MENU( MENU_ABOUT,					MainWindow::OnMenuAbout				)
+  EVT_MENU( MENU_PATHINFO,				MainWindow::OnMenuPathInfo			)
   EVT_MENU( MENU_SAVE_LAYOUT,			MainWindow::OnMenuSaveLayout		)
   EVT_MENU( MENU_LOAD_LAYOUT,			MainWindow::OnMenuLoadLayout		)
   EVT_MENU( MENU_RESET_LAYOUT,			MainWindow::OnMenuResetLayout		)
@@ -128,7 +130,7 @@ MainWindow::MainWindow( )
 	m_log_win(NULL),
 	m_has_focus(true)
 {
-	SetIcon( SLcustomizations().GetAppIcon() );
+	SetIcons( SLcustomizations().GetAppIconBundle() );
 
 	GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
@@ -172,12 +174,14 @@ MainWindow::MainWindow( )
 #ifndef NO_TORRENT_SYSTEM
 	m_menuTools->AppendSeparator();
 #endif
-	m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
+	if (!sett().IsSelfUpdateDisabled() )
+		m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
 
 
 	wxMenu *menuHelp = new wxMenu;
 	menuHelp->Append(MENU_GENERAL_HELP, _("&Help, tutorial and FAQ"));
 	menuHelp->Append(MENU_ABOUT, _("&About"));
+	menuHelp->Append(MENU_PATHINFO, _("&System Info"));
 	menuHelp->Append(MENU_SELECT_LOCALE, _("&Change language"));
 	menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
 	menuHelp->Append(MENU_DOC, _("&Documentation"));
@@ -269,8 +273,10 @@ void MainWindow::SetTabIcons()
 
 void MainWindow::forceSettingsFrameClose()
 {
+#ifndef SL_QT_MODE
 	if (se_frame_active && se_frame != 0)
 		se_frame->handleExternExit();
+#endif
 }
 
 void MainWindow::SetLogWin( wxLogWindow* log, wxLogChain* logchain  )
@@ -548,7 +554,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
     info.AddTranslator(_T("tc- (swedish)"));
 	info.AddTranslator(_("The numerous contributors from launchpad.net"));
 	//! \todo customisations
-	info.SetIcon( SLcustomizations().GetAppIcon() );
+	info.SetIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
 	wxAboutBox(info);
 }
 
@@ -626,10 +632,11 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
 {
-	se_frame = new settings_frame(this,wxID_ANY,wxT("SpringSettings"),wxDefaultPosition,
-	  	    		wxDefaultSize);
+#ifndef SL_QT_MODE
+	se_frame = new settings_frame(this,wxT("SpringSettings"));
 	se_frame_active = true;
 	se_frame->Show();
+#endif
 }
 
 void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
@@ -640,12 +647,14 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuSelectLocale( wxCommandEvent& /*unused*/ )
 {
+#ifndef SL_QT_MODE
     if ( wxGetApp().SelectLanguage() ) {
 		customMessageBoxNoModal( SL_MAIN_ICON,
 								 IdentityString( _("You need to restart %s for the language change to take effect.") ),
 								 _("Restart required"),
 								 wxICON_EXCLAMATION | wxOK );
     }
+#endif
 }
 
 void MainWindow::OnShowChannelChooser( wxCommandEvent& /*unused*/ )
@@ -760,4 +769,9 @@ void MainWindow::OnMenuFirstStart( wxCommandEvent& /*event*/ )
 {
 	IntroGuide* intro = new IntroGuide();
 	intro->Show();
+}
+
+void MainWindow::OnMenuPathInfo( wxCommandEvent& /*event*/ )
+{
+	InfoDialog( this ).ShowModal();
 }

@@ -42,9 +42,8 @@ ALsound::ALsound()
 	alListenerfv(AL_POSITION,alpos);
 	alListenerfv(AL_VELOCITY,alvel);
 	alListenerfv(AL_ORIENTATION,alori);
-	//*
-
 	alureInitDevice(0, 0);
+	//*
 
 	alGenSources(m_num_sources,m_sources);
 	if(alGetError()!=AL_NO_ERROR)
@@ -81,15 +80,17 @@ ALsound::~ALsound()
 
 void ALsound::ring() const
 {
-	if (alurePlaySource(m_sources[1], 0, 0) == AL_FALSE)
+	if (alurePlaySource(m_sources[1], 0, 0) == AL_FALSE) {
 		wxLogError( TowxString(alureGetErrorString()) );
+	}
 }
 
 
 void ALsound::pm() const
 {
-	if (alurePlaySource(m_sources[0], 0, 0) == AL_FALSE)
+	if (alurePlaySource(m_sources[0], 0, 0) == AL_FALSE) {
 		wxLogError( TowxString(alureGetErrorString()) );
+	}
 }
 
 #endif

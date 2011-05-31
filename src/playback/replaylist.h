@@ -57,9 +57,9 @@ class ReplayList : public PlaybackList<Replay>
 	BattleOptions GetBattleOptsFromScript( const wxString& script_ ) const;
 
     //! load mod/map options
-    void LoadMMOpts( const wxString& sectionname, IBattle& battle, const PDataList& node );
+	void LoadMMOpts( const wxString& sectionname, IBattle& battle, const SL::PDataList& node );
     //! load engine options
-    void LoadMMOpts( IBattle& battle, const PDataList& node );
+	void LoadMMOpts( IBattle& battle, const SL::PDataList& node );
 
     //! saves relevant infos from header into replay struct
 	void GetHeaderInfo( Replay& rep, const wxString& ReplayPath ) const;

@@ -21,6 +21,7 @@
 #include <map>
 
 #include "useractions.h"
+#include "utils/mixins.hh"
 
 class SLTipWindow;
 
@@ -30,7 +31,7 @@ class SLTipWindow;
  * Some of the provided functionality only makes sense for single-select lists (see grouping) \n
  * Note: Tooltips are a bitch and anyone shoudl feel to revise them (koshi)
  */
-class CustomListCtrl : public ListBaseType
+class CustomListCtrl : public ListBaseType, public SL::NonCopyable
 {
 protected:
     typedef UserActions::ActionType ActionType;

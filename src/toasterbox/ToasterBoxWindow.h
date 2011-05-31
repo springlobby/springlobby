@@ -42,16 +42,21 @@ class ToasterBoxWindow: public ToasterBase, public wxTimer , public SL::NonCopya
     void DrawText();
     void Notify();
 
-    wxPoint bottomRight, dialogTop;
-    int sleepTime, step;
+	long startTime;
+	wxTimer *parent2;
+	int sleepTime;
+	int step;
     //how long the box hangs around for
     int pauseTime;
-    wxStaticBitmap sbm;
-    wxColour textColor;
+	wxColour textColor;
+	wxString popupText;
+	wxBitmap m_background_bitmap;
+
+	wxStaticBitmap sbm;
     wxPanel *pn;
-    wxString popupText, bitmapFile;
-    wxTimer *parent2;
-    long startTime;
+	wxString bitmapFile;
+	wxPoint bottomRight, dialogTop;
+
     //should we attempt to shrink the text
     //if it's too big for the popup?
     bool shrink;

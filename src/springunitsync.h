@@ -1,102 +1,39 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 #define SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 
-#include <list>
+#include "globalsmanager.h"
+#include "thread.h"
+#include "mmoptionmodel.h"
+#include "utils/globalevents.h"
+#include "springunitsync_data.h"
+#include "mru_cache.h"
+
 #include <map>
 
-#include "iunitsync.h"
-#include "thread.h"
-
-#include "utils/conversion.h" //remove after MRU impl moved to cpp
-#include "utils/debug.h" //remove after MRU impl moved to cpp
-#include <wx/log.h>//remove after MRU impl moved to cpp
+#include <wx/image.h>
+#include <wx/event.h>
 
 
-class wxCriticalSection;
+#ifdef SL_QT_MODE
+class QImage;
+#endif
+
+class wxImage;
+
+extern const wxEventType UnitSyncAsyncOperationCompletedEvt;
+const wxEventType wxUnitsyncReloadEvent = wxNewEventType();
+
+struct GameOptions;
+
 class wxDynamicLibrary;
 class wxImage;
 struct CachedMapInfo;
 struct SpringMapInfo;
 class SpringUnitSyncLib;
 
-typedef std::map<wxString,wxString> LocalArchivesVector;
-
-
-/// Thread safe MRU cache (works like a std::map but has maximum size)
-template<typename TKey, typename TValue>
-class MostRecentlyUsedCache
-{
-  public:
-    //! name parameter might be used to identify stats in dgb output
-    MostRecentlyUsedCache(int max_size, const wxString& name = _T("") )
-    : m_size(0), m_max_size(max_size), m_cache_hits(0), m_cache_misses(0), m_name(name)
-    {
-    }
-
-    ~MostRecentlyUsedCache()
-    {
-      wxLogDebugFunc( m_name + _T("cache hits: ") + TowxString( m_cache_hits ) );
-      wxLogDebugFunc( m_name + _T("cache misses: ") + TowxString( m_cache_misses ) );
-    }
-
-    void Add( const TKey& name, const TValue& img )
-    {
-      wxCriticalSectionLocker lock(m_lock);
-      while ( m_size >= m_max_size ) {
-        --m_size;
-        m_iterator_map.erase( m_items.back().first );
-        m_items.pop_back();
-      }
-      ++m_size;
-      m_items.push_front( CacheItem( name, img ) );
-      m_iterator_map[name] = m_items.begin();
-    }
-
-    bool TryGet( const TKey& name, TValue& img )
-    {
-      wxCriticalSectionLocker lock(m_lock);
-	  typename IteratorMap::iterator it = m_iterator_map.find( name );
-      if ( it == m_iterator_map.end() ) {
-        ++m_cache_misses;
-        return false;
-      }
-      // reinsert at front, so that most recently used items are always at front
-      m_items.push_front( *it->second );
-      m_items.erase( it->second );
-      it->second = m_items.begin();
-      // return image
-      img = it->second->second;
-      ++m_cache_hits;
-      return true;
-    }
-
-    void Clear()
-    {
-      wxCriticalSectionLocker lock(m_lock);
-      m_size = 0;
-      m_items.clear();
-      m_iterator_map.clear();
-    }
-
-  private:
-    typedef std::pair<TKey, TValue> CacheItem;
-    typedef std::list<CacheItem> CacheItemList;
-    typedef std::map<TKey, typename CacheItemList::iterator> IteratorMap;
-
-    mutable wxCriticalSection m_lock;
-    CacheItemList m_items;
-    IteratorMap m_iterator_map;
-    int m_size;
-    const int m_max_size;
-    int m_cache_hits;
-    int m_cache_misses;
-    const wxString m_name;
-};
-
-typedef MostRecentlyUsedCache<wxString,wxImage> MostRecentlyUsedImageCache;
-typedef MostRecentlyUsedCache<wxString,MapInfo> MostRecentlyUsedMapInfoCache;
-typedef MostRecentlyUsedCache<wxString,wxArrayString> MostRecentlyUsedArrayStringCache;
-
+#ifdef SL_QT_MODE
+class QImage;
+#endif
 
 /// Thread safe mapping from evtHandlerId to wxEvtHandler*
 class EvtHandlerCollection
@@ -116,11 +53,46 @@ class EvtHandlerCollection
     int m_last_id;
 };
 
-class SpringUnitSync : public IUnitSync
+class SpringUnitSync : public wxEvtHandler
 {
-  public:
-    SpringUnitSync();
-    ~SpringUnitSync();
+private:
+	SpringUnitSync();
+	friend class GlobalObjectHolder<SpringUnitSync, LineInfo<SpringUnitSync> >;
+
+public:
+	virtual ~SpringUnitSync();
+
+	enum GameFeature
+	{
+	  USYNC_Sett_Handler,
+	  USYNC_GetInfoMap,
+	  USYNC_GetDataDir,
+	  USYNC_GetSkirmishAI
+	};
+
+	enum MediaType
+	{
+	  map,
+	  mod
+	};
+
+	typedef std::map<wxString,mmOptionBool> OptionMapBool;
+	typedef std::map<wxString,mmOptionFloat> OptionMapFloat;
+	typedef std::map<wxString,mmOptionString> OptionMapString;
+	typedef std::map<wxString,mmOptionList> OptionMapList;
+	typedef std::map<wxString,mmOptionSection> OptionMapSection;
+
+	typedef std::map<wxString,mmOptionBool>::iterator OptionMapBoolIter;
+	typedef std::map<wxString,mmOptionFloat>::iterator OptionMapFloatIter;
+	typedef std::map<wxString,mmOptionString>::iterator OptionMapStringIter;
+	typedef std::map<wxString,mmOptionList>::iterator OptionMapListIter;
+	typedef std::map<wxString,mmOptionSection>::iterator OptionMapSectionIter;
+
+	typedef std::map<wxString,mmOptionBool>::const_iterator OptionMapBoolConstIter;
+	typedef std::map<wxString,mmOptionFloat>::const_iterator OptionMapFloatConstIter;
+	typedef std::map<wxString,mmOptionString>::const_iterator OptionMapStringConstIter;
+	typedef std::map<wxString,mmOptionList>::const_iterator OptionMapListConstIter;
+	typedef std::map<wxString,mmOptionSection>::const_iterator OptionMapSectionConstIter;
 
 	int GetNumMods() const;
 	wxArrayString GetModList() const;
@@ -159,6 +131,9 @@ class SpringUnitSync : public IUnitSync
     wxArrayString GetSides( const wxString& modname  );
 	wxImage GetSidePicture( const wxString& modname, const wxString& SideName ) const;
 	wxImage GetImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent = true ) const;
+#ifdef SL_QT_MODE
+	QImage GetQImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent = true ) const;
+#endif
 
     bool LoadUnitSyncLib( const wxString& unitsyncloc );
     void FreeUnitSyncLib();
@@ -196,6 +171,8 @@ class SpringUnitSync : public IUnitSync
 
 	bool ReloadUnitSyncLib(  );
 	void ReloadUnitSyncLib( GlobalEvents::GlobalEventData /*data*/ ) { ReloadUnitSyncLib(); }
+	bool FastLoadUnitSyncLib( const wxString& unitsyncloc );
+	bool FastLoadUnitSyncLibInit();
 
     void SetSpringDataPath( const wxString& path );
 
@@ -231,6 +208,8 @@ class SpringUnitSync : public IUnitSync
 	wxArrayString FindFilesVFS( const wxString& pattern ) const;
 
   private:
+	typedef std::map< std::pair<wxString,wxString>, wxString> ShortnameVersionToNameMap;
+	ShortnameVersionToNameMap m_shortname_to_name_map;
 
     LocalArchivesVector m_maps_list; /// mapname -> hash
     LocalArchivesVector m_mods_list; /// modname -> hash
@@ -249,7 +228,7 @@ class SpringUnitSync : public IUnitSync
     wxString m_cache_path;
 
     mutable wxCriticalSection m_lock;
-    WorkerThread m_cache_thread;
+	WorkerThread* m_cache_thread;
     EvtHandlerCollection m_evt_handlers;
 
     /// this cache facilitates async image fetching (image is stored in cache
@@ -283,7 +262,45 @@ class SpringUnitSync : public IUnitSync
     wxImage _GetScaledMapImage( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int width, int height );
 
     void _GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int evtHandlerId );
+
+public:
+	wxString GetNameForShortname( const wxString& shortname, const wxString& version ) const;
 };
+
+SpringUnitSync& usync();
+
+struct GameOptions
+{
+  SpringUnitSync::OptionMapBool bool_map;
+  SpringUnitSync::OptionMapFloat float_map;
+  SpringUnitSync::OptionMapString string_map;
+  SpringUnitSync::OptionMapList list_map;
+  SpringUnitSync::OptionMapSection section_map;
+};
+
+/// Helper class for managing async operations safely
+class UnitSyncAsyncOps
+{
+  public:
+	UnitSyncAsyncOps( wxEvtHandler* evtHandler )
+		: m_id( usync().RegisterEvtHandler( evtHandler ) )
+	{}
+	~UnitSyncAsyncOps() {
+	  usync().UnregisterEvtHandler( m_id );
+	}
+
+	void GetMinimap( const wxString& mapname )                 { usync().GetMinimapAsync( mapname, m_id ); }
+	void GetMinimap( const wxString& mapname, int w, int h )   { usync().GetMinimapAsync( mapname, w, h, m_id ); }
+	void GetMetalmap( const wxString& mapname )                { usync().GetMetalmapAsync( mapname, m_id ); }
+	void GetMetalmap( const wxString& mapname, int w, int h )  { usync().GetMetalmapAsync( mapname, w, h, m_id ); }
+	void GetHeightmap( const wxString& mapname )               { usync().GetHeightmapAsync( mapname, m_id ); }
+	void GetHeightmap( const wxString& mapname, int w, int h ) { usync().GetHeightmapAsync( mapname, w, h, m_id ); }
+	void GetMapEx( const wxString& mapname )                   { usync().GetMapExAsync( mapname, m_id ); }
+
+  private:
+	int m_id;
+};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGUNITSYNC_H
 

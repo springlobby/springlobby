@@ -3,6 +3,7 @@
 #include <wx/filename.h>
 #include <wx/dynlib.h>
 #include <wx/image.h>
+#include <wx/file.h>
 #include <wx/log.h>
 #include <stdexcept>
 #include <cmath>
@@ -87,8 +88,9 @@ void GetLibFuncPtr( const wxDynamicLibrary* libhandle, const wxString& name, Fun
 		#endif
 			p = reinterpret_cast<FunctionPointerType>( libhandle->GetSymbol( name ) );
 
-		if ( !p )
+		if ( !p ) {
 			wxLogMessage( _T("Couldn't load %s from unitsync library"),name.c_str() );
+		}
 	}
 	else {
 		p = NULL;
@@ -98,6 +100,9 @@ void GetLibFuncPtr( const wxDynamicLibrary* libhandle, const wxString& name, Fun
 
 void SpringUnitSyncLib::_Load( const wxString& path )
 {
+#ifdef SL_QT_MODE
+	wxLogNull nullLog;
+#endif
 	if ( _IsLoaded() && path == m_path ) return;
 
 	_Unload();
@@ -112,6 +117,12 @@ void SpringUnitSyncLib::_Load( const wxString& path )
 	{
 		wxLogError( _T("File not found: %s"), path.c_str() );
 		ASSERT_EXCEPTION( false, _T("Failed to load Unitsync lib.") );
+	}
+	// Check if library readable
+	if ( !wxFile().Open( path ) )
+	{
+		wxLogError( _T("couldn read unitsync from %s"), path.c_str() );
+		ASSERT_EXCEPTION( false, _T("Unitsync lib at given location is present, but not readable.") );
 	}
 
 	{
@@ -142,6 +153,8 @@ void SpringUnitSyncLib::_Load( const wxString& path )
 		GetLibFuncPtr( m_libhandle, _T("UnInit"),							m_uninit );
 		GetLibFuncPtr( m_libhandle, _T("GetNextError"),						m_get_next_error );
 		GetLibFuncPtr( m_libhandle, _T("GetWritableDataDirectory"),			m_get_writeable_data_dir );
+		GetLibFuncPtr( m_libhandle, _T("GetDataDirectory"),					m_get_data_dir_by_index );
+		GetLibFuncPtr( m_libhandle, _T("GetDataDirectoryCount"),			m_get_data_dir_count );
 
 		GetLibFuncPtr( m_libhandle, _T("GetMapCount"),						m_get_map_count );
 		GetLibFuncPtr( m_libhandle, _T("GetMapChecksum"),					m_get_map_checksum );
@@ -443,16 +456,16 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors() const
 }
 
 
-bool SpringUnitSyncLib::VersionSupports( IUnitSync::GameFeature feature ) const
+bool SpringUnitSyncLib::VersionSupports( SpringUnitSync::GameFeature feature ) const
 {
   LOCK_UNITSYNC;
 
   switch (feature)
   {
-    case IUnitSync::USYNC_Sett_Handler: return m_set_spring_config_string;
-    case IUnitSync::USYNC_GetInfoMap:   return m_get_infomap_size;
-    case IUnitSync::USYNC_GetDataDir:   return m_get_writeable_data_dir;
-    case IUnitSync::USYNC_GetSkirmishAI:   return m_get_skirmish_ai_count;
+    case SpringUnitSync::USYNC_Sett_Handler: return m_set_spring_config_string;
+    case SpringUnitSync::USYNC_GetInfoMap:   return m_get_infomap_size;
+    case SpringUnitSync::USYNC_GetDataDir:   return m_get_writeable_data_dir;
+    case SpringUnitSync::USYNC_GetSkirmishAI:   return m_get_skirmish_ai_count;
     default: return false;
   }
 }
@@ -490,7 +503,7 @@ void SpringUnitSyncLib::_SetCurrentMod( const wxString& modname )
   {
     wxLogDebugFunc( modname );
     if ( !m_current_mod.IsEmpty() ) _RemoveAllArchives();
-    m_add_all_archives( m_get_mod_archive( m_get_mod_index( modname.mb_str( wxConvUTF8 ) ) ) );
+	m_add_all_archives( m_get_mod_archive( m_get_mod_index( modname.mb_str( wxConvUTF8 ) ) ) );
     m_current_mod = modname;
   }
 }
@@ -571,6 +584,20 @@ wxString SpringUnitSyncLib::GetSpringDataDir()
   InitLib( m_get_writeable_data_dir );
 
   return WX_STRINGC( m_get_writeable_data_dir() );
+}
+
+int SpringUnitSyncLib::GetSpringDataDirCount()
+{
+	InitLib( m_get_data_dir_count);
+
+	return m_get_data_dir_count();
+}
+
+wxString SpringUnitSyncLib::GetSpringDataDirByIndex( const int index )
+{
+	InitLib( m_get_data_dir_by_index );
+
+	return WX_STRINGC( m_get_data_dir_by_index( index ) );
 }
 
 wxString SpringUnitSyncLib::GetConfigFilePath()
@@ -1099,12 +1126,13 @@ int SpringUnitSyncLib::GetMapOptionCount( const wxString& name )
   return m_get_map_option_count( name.mb_str( wxConvUTF8 ) );
 }
 
-int SpringUnitSyncLib::GetCustomOptionCount( const wxString& modname, const wxString& filename )
+int SpringUnitSyncLib::GetCustomOptionCount( const wxString& archive_name, const wxString& filename )
 {
     InitLib( m_get_custom_option_count );
-    ASSERT_EXCEPTION( !modname.IsEmpty(), _T("passing void XXXname to unitsync") );
-    _SetCurrentMod( modname );
-    return m_get_custom_option_count( filename.mb_str( wxConvUTF8 ) );
+	ASSERT_EXCEPTION( !archive_name.IsEmpty(), _T("passing void archive_name to unitsync") );
+	_RemoveAllArchives();
+	m_add_all_archives( archive_name.mb_str( wxConvUTF8 ) );
+	return m_get_custom_option_count( filename.mb_str( wxConvUTF8 ) );
 }
 
 

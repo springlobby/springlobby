@@ -5,7 +5,7 @@
 #include <wx/string.h>
 
 #include "ibattle.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 
 class wxPanel;
 class wxBitmap;

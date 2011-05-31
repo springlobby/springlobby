@@ -59,29 +59,38 @@ Settings& sett()
 }
 
 Settings::Settings()
+	:m_forced_springconfig_path(wxEmptyString)
 {
 #if defined(__WXMSW__) || defined(__WXMAC__)
 	wxString userfilepath = IdentityString( GetConfigfileDir() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
 	wxString localfilepath =  IdentityString( GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
 
-	if ( !wxFileName::FileExists( localfilepath ) || !wxFileName::IsFileWritable( localfilepath ) )
+	if ( m_user_defined_config && wxFileName::IsFileWritable( m_user_defined_config_path ) )
 	{
-	    //either local conf file soes not exist, or it exists but is not writable
-		m_chosen_path = userfilepath;
+		m_chosen_path = m_user_defined_config_path;
 		SetPortableMode( false );
 	}
 	else
 	{
-		m_chosen_path = localfilepath; // portable mode, use only current app paths
-		SetPortableMode ( true );
+		if ( !wxFileName::FileExists( localfilepath ) || !wxFileName::IsFileWritable( localfilepath ) )
+		{
+			//either local conf file soes not exist, or it exists but is not writable
+			m_chosen_path = userfilepath;
+			SetPortableMode( false );
+		}
+		else
+		{
+			m_chosen_path = localfilepath; // portable mode, use only current app paths
+			SetPortableMode ( true );
+		}
 	}
 
 	// if it doesn't exist, try to create it
 	if ( !wxFileName::FileExists( m_chosen_path ) )
 	{
 		// if directory doesn't exist, try to create it
-		if ( !IsPortableMode() && !wxFileName::DirExists( wxStandardPaths::Get().GetUserDataDir() ) )
-			wxFileName::Mkdir( wxStandardPaths::Get().GetUserDataDir(), 0755 );
+		if ( !IsPortableMode() && !wxFileName::DirExists( GetUserDataDir() ) )
+			wxFileName::Mkdir( GetUserDataDir(), 0755 );
 
 		wxFileOutputStream outstream( m_chosen_path );
 
@@ -103,11 +112,12 @@ Settings::Settings()
 			exit( -1 );
 		}
 	}
+	m_final_config_path = m_chosen_path;
 	m_config = new slConfig( instream );
 #else
 	wxString localpath = wxFormat( _T( "%s/%s.conf" ) ) % GetConfigfileDir() % GetAppName( true );
-	wxString path = m_user_defined_config ? m_user_defined_config_path : localpath;
-	m_config = new slConfig( GetAppName(), wxEmptyString, path );
+	m_final_config_path = m_user_defined_config ? m_user_defined_config_path : localpath;
+	m_config = new slConfig( GetAppName(), wxEmptyString, m_final_config_path );
 	SetPortableMode ( false );
 #endif
 	m_config->SetRecordDefaults( true );
@@ -195,9 +205,9 @@ void Settings::SetSettingsVersion()
 }
 
 
-unsigned int Settings::GetSettingsVersion()
+int Settings::GetSettingsVersion()
 {
-	return m_config->Read( _T( "/General/SettingsVersion" ), 0l );
+	return m_config->Read( _T( "/General/SettingsVersion" ), SETTINGS_VERSION );
 }
 
 
@@ -729,10 +739,11 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 	pl.Add( wxFileName::GetCwd() );
 	pl.Add( sp.GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) );
 	pl.Add( wxFileName::GetHomeDir() );
+#ifndef SL_QT_MODE
 	pl.Add( sp.GetUserDataDir().BeforeLast( sep ) );
 	pl.Add( sp.GetDataDir().BeforeLast( sep ) );
 	pl.Add( sp.GetResourcesDir().BeforeLast( sep ) );
-
+#endif
 	pl.Add( wxGetOSDirectory() );
 
 #ifdef __WXMSW__
@@ -740,6 +751,20 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 	//maybe add more here like:
 	//Appdata + \Spring
 	//Mydocs + \Spring
+
+	//http://projects.springlobby.info/issues/1530
+	wxRegKey base( _T("HKLM\\Software\\Spring") );
+	wxString usync_keyval = GetRegkeyVal( base, _T("SpringEngineHelper"), wxString() );
+	if ( usync_keyval != wxEmptyString )
+	{
+		pl.Add( usync_keyval.BeforeLast( sep ) );
+	}
+	wxString binary_keyval = GetRegkeyVal( base, _T("SpringEngine"), wxString() );
+	if ( binary_keyval != wxEmptyString )
+	{
+		pl.Add( binary_keyval.BeforeLast( sep ) );
+	}
+
 #endif
 
 	for ( size_t i = 0; i < pl.GetCount(); i++ )
@@ -885,7 +910,7 @@ wxString Settings::GetCurrentUsedDataDir()
 	wxString dir;
 	if ( susynclib().IsLoaded() )
 	{
-		if ( susynclib().VersionSupports( IUnitSync::USYNC_GetDataDir ) ) dir = susynclib().GetSpringDataDir();
+		if ( susynclib().VersionSupports( SpringUnitSync::USYNC_GetDataDir ) ) dir = susynclib().GetSpringDataDir();
 		else dir = susynclib().GetSpringConfigString( _T( "SpringData" ), _T( "" ) );
 	}
 #ifdef __WXMSW__
@@ -902,7 +927,7 @@ wxString Settings::GetCurrentUsedDataDir()
 wxString Settings::GetCurrentUsedSpringBinary()
 {
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "spring.exe" );
-#ifdef __WXMSW__
+#if defined(__WXMSW__) && !defined(SL_QT_MODE)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "spring.exe" );
 #endif
 	else return GetSpringBinary( GetCurrentUsedSpringIndex() );
@@ -912,7 +937,7 @@ wxString Settings::GetCurrentUsedSpringBinary()
 wxString Settings::GetCurrentUsedUnitSync()
 {
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "unitsync" ) + GetLibExtension();
-#ifdef __WXMSW__
+#if defined(__WXMSW__)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "unitsync" ) + GetLibExtension();
 #endif
 	else return GetUnitSync( GetCurrentUsedSpringIndex() );
@@ -921,7 +946,7 @@ wxString Settings::GetCurrentUsedUnitSync()
 wxString Settings::GetCurrentUsedUikeys()
 {
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "uikeys.txt" );
-#ifdef __WXMSW__
+#if defined(__WXMSW__)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "uikeys.txt" );
 #endif
 	else return GetUikeys( GetCurrentUsedSpringIndex() );
@@ -959,12 +984,17 @@ void Settings::SetSpringBinary( const wxString& index, const wxString& path )
 	m_config->Write( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), path );
 }
 
+void Settings::SetForcedSpringConfigFilePath( const wxString& path )
+{
+	m_forced_springconfig_path = path;
+}
+
 wxString Settings::GetForcedSpringConfigFilePath()
 {
 	if ( IsPortableMode() )
         return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "springsettings.cfg" );
 	else
-        return _T( "" );
+		return m_forced_springconfig_path;
 }
 
 // ===================================================
@@ -2194,9 +2224,7 @@ void Settings::SetMapSelectorFilterRadio( const unsigned int val )
 
 long Settings::getMode()
 {
-	long mode;
-	m_config->Read( _T( "/SpringSettings/mode" ), &mode, SET_MODE_SIMPLE );
-	return mode;
+	return m_config->Read( _T( "/SpringSettings/mode" ), SET_MODE_SIMPLE );
 }
 
 void Settings::setMode( long mode )
@@ -2206,9 +2234,7 @@ void Settings::setMode( long mode )
 
 bool Settings::getDisableWarning()
 {
-	bool tmp;
-	m_config->Read( _T( "/SpringSettings/disableWarning" ), &tmp, false );
-	return tmp;
+	return m_config->Read( _T( "/SpringSettings/disableWarning" ), 0l );
 }
 
 void Settings::setDisableWarning( bool disable )
@@ -2601,4 +2627,9 @@ wxString Settings::GetUikeys( const wxString& index )
 bool Settings::IgnoreOfferfile()
 {
 	return m_config->Read( _T("/IgnoreOfferfile"), 0l);
+}
+
+bool Settings::IsSelfUpdateDisabled()
+{
+	return m_config->Read( _T( "/General/SelfUpdateDisabled" ), 0l );
 }

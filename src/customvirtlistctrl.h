@@ -1,7 +1,7 @@
 #ifndef CUSTOMVIRTLISTITEM_H_
 #define CUSTOMVIRTLISTITEM_H_
 
-#ifndef __WXMSW__
+#if defined(SL_QT_MODE) || !defined(__WXMSW__)
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
 #else

@@ -53,6 +53,8 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 //		size_t GetNumberOfGroups(bool bRecursive = false) const;
 //		size_t GetNumberOfEntries(bool bRecursive = false) const;
 
+		wxString GlobalConfigPath() const;
+
 		class PathGuard {
 				slConfig* m_config;
 				const wxString m_old_path;

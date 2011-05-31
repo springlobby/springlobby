@@ -109,7 +109,6 @@ SET(springlobbySrc
 	src/widgets/downloadpanel.cpp
 	src/widgets/infopanel.cpp
 	src/widgets/widget.cpp
-	src/Helper/wxTranslationHelper.cpp
 	src/Helper/tasclientimport.cpp
 	src/toasterbox/ToasterBox.cpp
 	src/toasterbox/ToasterBoxWindow.cpp
@@ -151,11 +150,12 @@ SET( curlSRC
 )
 
 SET(StandAloneSettings
-	src/settings++/Main.cpp
+	src/settings++/main.cpp
 )
 
 SET(SLSharedWithSettings
 	src/customizations.cpp
+	src/Helper/wxTranslationHelper.cpp
 	src/uiutils.cpp
 	src/updater/versionchecker.cpp
 	src/updater/updatehelper.cpp
@@ -175,6 +175,7 @@ SET(SLSharedWithSettings
 	src/springunitsynclib.cpp
 	src/springunitsync.cpp
 	src/thread.cpp
+	src/infodialog.cpp
 	src/gui/windowattributespickle.cpp
 	src/gui/spinctl/generic/spinctlg.cpp
 	src/Helper/slconfig.cpp

@@ -40,7 +40,7 @@
 const wxEventType UnitSyncAsyncOperationCompletedEvt = wxNewEventType();
 
 
-IUnitSync& usync()
+SpringUnitSync& usync()
 {
     static LineInfo<SpringUnitSync> m( AT );
     static GlobalObjectHolder<SpringUnitSync, LineInfo<SpringUnitSync> > m_sync( m );
@@ -49,26 +49,83 @@ IUnitSync& usync()
 
 
 SpringUnitSync::SpringUnitSync()
-  : m_map_image_cache( 3, _T("m_map_image_cache") )         // may take about 3M per image ( 1024x1024 24 bpp minimap )
+  : m_cache_thread( NULL )
+  , m_map_image_cache( 3, _T("m_map_image_cache") )         // may take about 3M per image ( 1024x1024 24 bpp minimap )
   , m_tiny_minimap_cache( 200, _T("m_tiny_minimap_cache") ) // takes at most 30k per image (   100x100 24 bpp minimap )
   , m_mapinfo_cache( 1000000, _T("m_mapinfo_cache") )       // this one is just misused as thread safe std::map ...
   , m_sides_cache( 200, _T("m_sides_cache") )               // another misuse
 {
-  m_cache_thread.Create();
-  m_cache_thread.SetPriority( WXTHREAD_MIN_PRIORITY );
-  m_cache_thread.Run();
+	Connect( wxUnitsyncReloadEvent, wxCommandEventHandler( SpringUnitSync::OnReload ), NULL, this );
 }
 
 
 SpringUnitSync::~SpringUnitSync()
 {
-  m_cache_thread.Wait();
+	Disconnect( wxUnitsyncReloadEvent, wxCommandEventHandler( SpringUnitSync::OnReload ), NULL, this );
+	if ( m_cache_thread )
+	  m_cache_thread->Wait();
+	delete m_cache_thread;
 }
 
+static int CompareStringNoCase(const wxString& first, const wxString& second)
+{
+	return first.CmpNoCase(second);
+}
+
+bool SpringUnitSync::FastLoadUnitSyncLib( const wxString& unitsyncloc )
+{
+	LOCK_UNITSYNC;
+	if (!_LoadUnitSyncLib( unitsyncloc ))
+		return false;
+
+	m_mods_list.clear();
+	m_mod_array.Clear();
+	m_unsorted_mod_array.Clear();
+	m_mods_unchained_hash.clear();
+
+	const int numMods = susynclib().GetPrimaryModCount();
+	wxString name, hash;
+	for ( int i = 0; i < numMods; i++ )
+	{
+		try
+		{
+			name = susynclib().GetPrimaryModName( i );
+			m_mods_list[name] = _T("fakehash");
+			m_mod_array.Add( name );
+			m_shortname_to_name_map[
+					std::make_pair(susynclib().GetPrimaryModShortName( i ),
+								   susynclib().GetPrimaryModVersion( i )) ] = name;
+		} catch (...) { continue; }
+	}
+	m_unsorted_mod_array = m_mod_array;
+	return true;
+}
+bool SpringUnitSync::FastLoadUnitSyncLibInit()
+{
+	LOCK_UNITSYNC;
+	m_cache_thread = new WorkerThread();
+	m_cache_thread->Create();
+	m_cache_thread->SetPriority( WXTHREAD_MIN_PRIORITY );
+	m_cache_thread->Run();
+
+	UiEvents::ScopedStatusMessage staus(_("loading unitsync"), 0);
+	wxLogDebugFunc( _T("") );
+	if ( IsLoaded() )
+	{
+	   m_cache_path = sett().GetCachePath();
+	   PopulateArchiveList();
+	}
+	return true;
+}
 
 bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
 {
    LOCK_UNITSYNC;
+   m_cache_thread = new WorkerThread();
+   m_cache_thread->Create();
+   m_cache_thread->SetPriority( WXTHREAD_MIN_PRIORITY );
+   m_cache_thread->Run();
+
    UiEvents::ScopedStatusMessage staus(_("loading unitsync"), 0);
    wxLogDebugFunc( _T("") );
    bool ret = _LoadUnitSyncLib( unitsyncloc );
@@ -80,13 +137,6 @@ bool SpringUnitSync::LoadUnitSyncLib( const wxString& unitsyncloc )
    }
    return ret;
 }
-
-
-static int CompareStringNoCase(const wxString& first, const wxString& second)
-{
-	return first.CmpNoCase(second);
-}
-
 
 void SpringUnitSync::PopulateArchiveList()
 {
@@ -100,6 +150,7 @@ void SpringUnitSync::PopulateArchiveList()
   m_mapinfo_cache.Clear();
   m_maps_unchained_hash.clear();
   m_mods_unchained_hash.clear();
+  m_shortname_to_name_map.clear();
 
   int numMaps = susynclib().GetMapCount();
   for ( int i = 0; i < numMaps; i++ )
@@ -149,6 +200,9 @@ void SpringUnitSync::PopulateArchiveList()
       if ( !unchainedhash.IsEmpty() )  m_mods_unchained_hash[name] = unchainedhash;
       if ( !archivename.IsEmpty() ) m_mods_archive_name[name] = archivename;
       m_mod_array.Add( name );
+	  m_shortname_to_name_map[
+			  std::make_pair(susynclib().GetPrimaryModShortName( i ),
+							 susynclib().GetPrimaryModVersion( i )) ] = name;
     } catch (...)
     {
 	  wxLogError( _T("Found game with hash collision: ") + name + _T(" hash: ") + hash );
@@ -557,7 +611,33 @@ wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image
 	}
     return cache;
 }
+#ifdef SL_QT_MODE
+#include <QImage>
+QImage SpringUnitSync::GetQImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent  ) const
+{
+	QImage cache;
 
+	susynclib().SetCurrentMod( modname );
+
+	int ini = susynclib().OpenFileVFS ( image_path );
+	ASSERT_EXCEPTION( ini, _T("cannot find side image") );
+
+	int FileSize = susynclib().FileSizeVFS(ini);
+	if (FileSize == 0) {
+		susynclib().CloseFileVFS(ini);
+		ASSERT_EXCEPTION( FileSize, _T("image has size 0") );
+	}
+
+	uninitialized_array<char> FileContent(FileSize);
+	QByteArray cache_data;
+	cache_data.resize(FileSize);
+	susynclib().ReadFileVFS(ini, cache_data.data(), FileSize);
+
+	bool hu = cache.loadFromData( cache_data );
+	assert( hu );
+	return cache;
+}
+#endif
 
 wxArrayString SpringUnitSync::GetAIList( const wxString& modname ) const
 {
@@ -602,7 +682,7 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname ) const
 			{
 				 ret.Add( _T( "LuaAI:" ) +  susynclib().GetLuaAIName( i ) );
 			}
-		} catch (...) {}
+		} CATCH_ANY
 	}
 
   return ret;
@@ -1152,20 +1232,25 @@ void SpringUnitSync::PrefetchMap( const wxString& mapname )
                  | wxChar(mapname[length * 3/4]);
   const int priority = -hash;
 
+  if (! m_cache_thread )
+  {
+	  wxLogError( _T("cache thread not initialised") );
+	  return;
+  }
   {
     CacheMinimapWorkItem* work;
 
     work = new CacheMinimapWorkItem( mapname );
-    m_cache_thread.DoWork( work, priority );
+	m_cache_thread->DoWork( work, priority );
   }
   {
     CacheMapWorkItem* work;
 
     work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetMetalmap );
-    m_cache_thread.DoWork( work, priority );
+	m_cache_thread->DoWork( work, priority );
 
     work = new CacheMapWorkItem( this, mapname, &SpringUnitSync::GetHeightmap );
-    m_cache_thread.DoWork( work, priority );
+	m_cache_thread->DoWork( work, priority );
   }
 }
 
@@ -1186,10 +1271,15 @@ void SpringUnitSync::PostEvent( int evtHandlerId, wxEvent& evt )
 
 void SpringUnitSync::_GetMapImageAsync( const wxString& mapname, wxImage (SpringUnitSync::*loadMethod)(const wxString&), int evtHandlerId )
 {
+	if (! m_cache_thread )
+	{
+		wxLogError( _T("cache thread not initialised") );
+		return;
+	}
   GetMapImageAsyncWorkItem* work;
 
   work = new GetMapImageAsyncWorkItem( this, mapname, evtHandlerId, loadMethod );
-  m_cache_thread.DoWork( work, 100 );
+  m_cache_thread->DoWork( work, 100 );
 }
 
 void SpringUnitSync::GetMinimapAsync( const wxString& mapname, int evtHandlerId )
@@ -1201,11 +1291,15 @@ void SpringUnitSync::GetMinimapAsync( const wxString& mapname, int evtHandlerId 
 void SpringUnitSync::GetMinimapAsync( const wxString& mapname, int width, int height, int evtHandlerId )
 {
   wxLogDebugFunc( mapname + _T(" size: ") + TowxString(width) + _T("x") + TowxString(height) );
-
+  if (! m_cache_thread )
+  {
+	  wxLogError( _T("cache thread not initialised") );
+	  return;
+  }
   GetScaledMapImageAsyncWorkItem* work;
 
   work = new GetScaledMapImageAsyncWorkItem( this, mapname, width, height, evtHandlerId, &SpringUnitSync::GetMinimap );
-  m_cache_thread.DoWork( work, 100 );
+  m_cache_thread->DoWork( work, 100 );
 }
 
 void SpringUnitSync::GetMetalmapAsync( const wxString& mapname, int evtHandlerId )
@@ -1233,11 +1327,16 @@ void SpringUnitSync::GetHeightmapAsync( const wxString& mapname, int /*width*/, 
 void SpringUnitSync::GetMapExAsync( const wxString& mapname, int evtHandlerId )
 {
   wxLogDebugFunc( mapname );
+  if (! m_cache_thread )
+  {
+	  wxLogError( _T("cache thread not initialised") );
+	  return;
+  }
 
   GetMapExAsyncWorkItem* work;
 
   work = new GetMapExAsyncWorkItem( this, mapname, evtHandlerId );
-  m_cache_thread.DoWork( work, 200 /* higher prio then GetMinimapAsync */ );
+  m_cache_thread->DoWork( work, 200 /* higher prio then GetMinimapAsync */ );
 }
 
 wxString SpringUnitSync::GetTextfileAsString( const wxString& modname, const wxString& file_path )
@@ -1282,4 +1381,13 @@ void EvtHandlerCollection::PostEvent( int evtHandlerId, wxEvent& evt )
   wxCriticalSectionLocker lock(m_lock);
   EvtHandlerMap::iterator it = m_items.find( evtHandlerId );
   if ( it != m_items.end() ) wxPostEvent( it->second, evt );
+}
+
+wxString SpringUnitSync::GetNameForShortname( const wxString& shortname, const wxString& version) const
+{
+	ShortnameVersionToNameMap::const_iterator it
+			=  m_shortname_to_name_map.find( std::make_pair(shortname,version) );
+	if ( it != m_shortname_to_name_map.end() )
+		return it->second;
+	return wxEmptyString;
 }

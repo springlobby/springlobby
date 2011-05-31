@@ -79,7 +79,7 @@ class ListNodeBare {
 			: prev( this ),
 			next( this )
 		{}
-		~ListNodeBare() {
+		virtual ~ListNodeBare() {
 			Disconnect();
 		}
 

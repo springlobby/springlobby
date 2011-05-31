@@ -21,7 +21,7 @@
 #include <stdexcept>
 
 #include "battlemaptab.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "ui.h"
 #include "user.h"
 #include "battle.h"

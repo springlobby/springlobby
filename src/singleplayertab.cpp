@@ -19,7 +19,7 @@
 #include "utils/conversion.h"
 #include "uiutils.h"
 #include "ui.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "addbotdialog.h"
 #include "server.h"
 #include "settings.h"

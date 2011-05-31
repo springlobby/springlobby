@@ -9,6 +9,7 @@
 
 class wxColour;
 class wxImage;
+class wxIcon;
 class wxBitmap;
 
 wxString RTFtoText( const wxString& rtfinput );
@@ -31,6 +32,8 @@ wxImage charArr2wxImage(const unsigned char * arg, int size);
 wxBitmap charArr2wxBitmap(const unsigned char * arg, int size);
 wxBitmap charArr2wxBitmapWithBlending(const unsigned char * arg, int size,
             const unsigned char * text, int text_size);
+//! png array data to Icon
+wxIcon charArr2wxIcon(const unsigned char * arg, int size);
 
 wxBitmap getColourIcon( const wxColour& colour );
 

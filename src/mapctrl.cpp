@@ -14,7 +14,7 @@
 #include "utils/math.h"
 #include "uiutils.h"
 #include "mapctrl.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "user.h"
 #include "ui.h"
 #include "server.h"
@@ -1555,7 +1555,7 @@ void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
     {
         m_minimap = new wxBitmap( usync().GetMinimap( m_mapname, w, h ) );
         // this ensures metalmap and heightmap aren't loaded in battlelist
-        if (m_draw_start_types && usync().VersionSupports(IUnitSync::USYNC_GetInfoMap))
+        if (m_draw_start_types && usync().VersionSupports(SpringUnitSync::USYNC_GetInfoMap))
             m_async.GetMetalmap( m_mapname, w, h );
     }
     else if ( m_metalmap == NULL )

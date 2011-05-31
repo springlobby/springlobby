@@ -24,10 +24,11 @@
 #include <wx/menu.h>
 #include <wx/image.h>
 #include <wx/bmpbuttn.h>
+#include <wx/scrolwin.h>
 
 
 #include "settings.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "user.h"
 #include "uiutils.h"
 #include "utils/controls.h"
@@ -60,28 +61,32 @@ END_EVENT_TABLE()
 
 HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	: wxDialog( parent, -1, _( "Host new battle" ), wxDefaultPosition, wxSize( 410, 441 ), wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE ),
-	WindowAttributesPickle( _T("hostbattledialog"), this, wxSize( 410, 441 ) ),
+	WindowHintsPickle ( _T("hostbattledialog"), this, wxSize( 410, 441 ) ),
     m_last_relayhost( sett().GetLastRelayedHost() )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+//	this->SetSizeHints( GetSize(), wxDefaultSize );
+
+	m_panel = new wxScrolledWindow( this );
+//		m_panel ->SetSizeHints( GetSize(), wxDefaultSize );
+	wxBoxSizer* all_sizer = new wxBoxSizer( wxVERTICAL );
 
 	wxFlexGridSizer* topsizer = new wxFlexGridSizer( 2,  0, 10);
 //	topsizer->AddGrowableCol( 1, 1 );
 
-	SetSizeHints( wxDefaultSize, wxDefaultSize );
+//	SetSizeHints( wxDefaultSize, wxDefaultSize );
 	wxBoxSizer* m_main_sizer;
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_desc_lbl = new wxStaticText( this, wxID_ANY, _( "Description" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_desc_lbl = new wxStaticText( m_panel, wxID_ANY, _( "Description" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_desc_lbl->Wrap( -1 );
 	topsizer->Add( m_desc_lbl, 1, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 //    wxBoxSizer* desc_sizer = new wxBoxSizer( wxVERTICAL );
-	m_desc_text = new wxTextCtrl( this, wxID_ANY, sett().GetLastHostDescription(), wxDefaultPosition, wxDefaultSize, 0 );
+	m_desc_text = new wxTextCtrl( m_panel, wxID_ANY, sett().GetLastHostDescription(), wxDefaultPosition, wxDefaultSize, 0 );
 	m_desc_text->SetToolTip( TE( _( "A short description of the game, this will show up in the battle list." ) ) );
 	topsizer ->Add( m_desc_text, 1, wxALL | wxEXPAND, 5 );
 
-    m_desc_check = new wxCheckBox( this, wxID_ANY, _( "Autopaste description" ) );
+	m_desc_check = new wxCheckBox( m_panel, wxID_ANY, _( "Autopaste description" ) );
 	m_desc_check->SetValue( sett().GetBattleLastAutoAnnounceDescription() );
 	m_desc_check->SetToolTip( TE( _( "Automatically write the battle description when a user joins." ) ) );
 
@@ -89,47 +94,47 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	topsizer->Add( m_desc_check, 0, wxLEFT, 5 );
 //	topsizer->Add( desc_sizer , 0, wxEXPAND | wxALL, 0 );
 
-	m_mod_lbl = new wxStaticText( this, wxID_ANY, _( "Game" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_mod_lbl = new wxStaticText( m_panel, wxID_ANY, _( "Game" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_mod_lbl->Wrap( -1 );
 	topsizer->Add( m_mod_lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
 	wxArrayString m_mod_picChoices;
 	wxBoxSizer* mod_choice_button_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_mod_pic = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mod_picChoices, 0 );
+	m_mod_pic = new wxChoice( m_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mod_picChoices, 0 );
 	m_mod_pic->SetToolTip( TE( _( "Select the game to play." ) ) );
 	mod_choice_button_sizer->Add( m_mod_pic, 0, wxALL , 5 );
 
     wxBitmap mp = charArr2wxBitmap( arrow_refresh_png, sizeof( arrow_refresh_png ) );
-	m_refresh_btn = new wxBitmapButton( this, BTN_REFRESH, mp );
+	m_refresh_btn = new wxBitmapButton( m_panel, BTN_REFRESH, mp );
 	mod_choice_button_sizer->Add( m_refresh_btn, 0, wxEXPAND|wxTOP|wxBOTTOM, 5 );
 
 	topsizer->Add( mod_choice_button_sizer, 0,  wxEXPAND|wxALL ,1 );
 
-	m_pwd_lbl = new wxStaticText( this, wxID_ANY, _( "Password\n(no spaces)" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_pwd_lbl = new wxStaticText( m_panel, wxID_ANY, _( "Password\n(no spaces)" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_pwd_lbl->Wrap( -1 );
 	topsizer->Add( m_pwd_lbl, 1, wxALL| wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_pwd_text = new wxTextCtrl( this, wxID_ANY, sett().GetLastHostPassword(), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
+	m_pwd_text = new wxTextCtrl( m_panel, wxID_ANY, sett().GetLastHostPassword(), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
 	m_pwd_text->SetToolTip( TE( _( "Password needed to join game. Keep empty for no password" ) ) );
 	topsizer->Add( m_pwd_text, 1, wxALL| wxEXPAND, 5 );
 
-	m_port_lbl = new wxStaticText( this, wxID_ANY, _( "Port" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_port_lbl = new wxStaticText( m_panel, wxID_ANY, _( "Port" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_port_lbl->Wrap( -1 );
 	topsizer->Add( m_port_lbl, 1, wxALL| wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_port_text = new wxTextCtrl( this, wxID_ANY, wxFormat( _T( "%d" ) ) % sett().GetLastHostPort(), wxDefaultPosition, wxDefaultSize, 0 );
+	m_port_text = new wxTextCtrl( m_panel, wxID_ANY, wxFormat( _T( "%d" ) ) % sett().GetLastHostPort(), wxDefaultPosition, wxDefaultSize, 0 );
 	m_port_text->SetToolTip( TE( _( "UDP port to host game on. Default is 8452." ) ) );
 	topsizer->Add( m_port_text, 1, wxALL| wxEXPAND, 5 );
 
-//	m_port_test_check = new wxCheckBox( this, wxID_ANY, _("Test firewall"), wxDefaultPosition, wxDefaultSize, 0 );
+//	m_port_test_check = new wxCheckBox( m_panel, wxID_ANY, _("Test firewall"), wxDefaultPosition, wxDefaultSize, 0 );
 //	m_port_test_check->SetValue( sett().GetTestHostPort() );
 //	m_port_sizer->Add( m_port_test_check, 1, wxALL|wxEXPAND, 5 );
 
 
 
-	m_relayed_host_check = new wxCheckBox( this, CHK_USE_RELAY, _( "Use relayhost" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_relayed_host_check = new wxCheckBox( m_panel, CHK_USE_RELAY, _( "Use relayhost" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_check->SetToolTip( TE( _( "host and control game on remote server, helps if you have trouble hosting" ) ) );
-	m_relayed_host_pick = new wxButton( this, PICK_RELAYHOST, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+	m_relayed_host_pick = new wxButton( m_panel, PICK_RELAYHOST, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_pick->SetLabel( m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost );
 
 	m_relayhost_list = new wxMenu();
@@ -157,10 +162,10 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_main_sizer->Add( topsizer, 0, wxEXPAND, 0 );
 
 	wxStaticBoxSizer* m_players_box;
-	m_players_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Number of players" ) ), wxVERTICAL );
+	m_players_box = new wxStaticBoxSizer( new wxStaticBox( m_panel, -1, _( "Number of players" ) ), wxVERTICAL );
 
 	m_players_box->SetMinSize( wxSize( -1, 60 ) );
-	m_players_slide = new wxSlider( this, wxID_ANY, sett().GetLastHostPlayerNum(), 2, SPRING_MAX_USERS, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS | wxSL_BOTH | wxSL_HORIZONTAL | wxSL_LABELS );
+	m_players_slide = new wxSlider( m_panel, wxID_ANY, sett().GetLastHostPlayerNum(), 2, SPRING_MAX_USERS, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS | wxSL_BOTH | wxSL_HORIZONTAL | wxSL_LABELS );
 	m_players_slide->SetToolTip( TE( _( "The maximum number of players to allow in the battle." ) ) );
 	m_players_box->Add( m_players_slide, 0, wxALL | wxEXPAND, 5 );
 
@@ -171,7 +176,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 
 	wxString m_nat_radiosChoices[] = { _( "None" ), _( "Hole punching" )/*, _("Fixed source ports")*/ };
 	int m_nat_radiosNChoices = sizeof( m_nat_radiosChoices ) / sizeof( wxString );
-	m_nat_radios = new wxRadioBox( this, CHOSE_NAT, _( "NAT traversal" ), wxDefaultPosition, wxDefaultSize, m_nat_radiosNChoices, m_nat_radiosChoices, 1, wxRA_SPECIFY_COLS );
+	m_nat_radios = new wxRadioBox( m_panel, CHOSE_NAT, _( "NAT traversal" ), wxDefaultPosition, wxDefaultSize, m_nat_radiosNChoices, m_nat_radiosChoices, 1, wxRA_SPECIFY_COLS );
 	m_nat_radios->SetSelection( sett().GetLastHostNATSetting() );
 
 	//m_nat_radios->Enable( false );
@@ -182,11 +187,11 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_pl_nat_sizer->Add( m_nat_radios, 1, wxALL | wxEXPAND, 5 );
 
 	wxStaticBoxSizer* m_rank_box;
-	m_rank_box = new wxStaticBoxSizer( new wxStaticBox( this, -1, _( "Rank requirement" ) ), wxVERTICAL );
+	m_rank_box = new wxStaticBoxSizer( new wxStaticBox( m_panel, -1, _( "Rank requirement" ) ), wxVERTICAL );
 	wxArrayString rankFilterChoices;
 	rankFilterChoices.Add(_("At least"));
 	rankFilterChoices.Add(_("No greater than"));
-	m_rank_direction = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, rankFilterChoices, 0 );
+	m_rank_direction = new wxChoice( m_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, rankFilterChoices, 0 );
 	m_rank_direction->SetToolTip( TE( _( "Select the type of rank enforcement." ) ) );
 	m_rank_box->Add(m_rank_direction);
 
@@ -194,52 +199,52 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_rank_sizer = new wxFlexGridSizer( 2, 6, 0, 0 );
 	m_rank_sizer->SetFlexibleDirection( wxBOTH );
 
-	m_rank0_radio = new wxRadioButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
+	m_rank0_radio = new wxRadioButton( m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
 	m_rank_sizer->Add( m_rank0_radio, 0, wxALL, 5 );
 
-	m_rank0_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank0_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
+	m_rank0_img = new wxStaticBitmap( m_panel, wxID_ANY, wxBitmap( rank0_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
 	m_rank_sizer->Add( m_rank0_img, 0, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-	m_rank1_radio = new wxRadioButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_rank1_radio = new wxRadioButton( m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_rank_sizer->Add( m_rank1_radio, 0, wxALL, 5 );
 
-	m_rank1_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank1_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
+	m_rank1_img = new wxStaticBitmap( m_panel, wxID_ANY, wxBitmap( rank1_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
 	m_rank_sizer->Add( m_rank1_img, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL | wxALL, 2 );
 
-	m_rank2_radio = new wxRadioButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_rank2_radio = new wxRadioButton( m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_rank_sizer->Add( m_rank2_radio, 0, wxALL, 5 );
 
-	m_rank2_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank2_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
+	m_rank2_img = new wxStaticBitmap( m_panel, wxID_ANY, wxBitmap( rank2_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
 	m_rank_sizer->Add( m_rank2_img, 0, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 2 );
 
-	m_rank3_radio = new wxRadioButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_rank3_radio = new wxRadioButton( m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_rank_sizer->Add( m_rank3_radio, 0, wxALL, 5 );
 
-	m_rank3_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank3_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
+	m_rank3_img = new wxStaticBitmap( m_panel, wxID_ANY, wxBitmap( rank3_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
 	m_rank_sizer->Add( m_rank3_img, 0, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 2 );
 
-	m_rank4_radio = new wxRadioButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_rank4_radio = new wxRadioButton( m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_rank_sizer->Add( m_rank4_radio, 0, wxALL, 5 );
 
-	m_rank4_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank4_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
+	m_rank4_img = new wxStaticBitmap( m_panel, wxID_ANY, wxBitmap( rank4_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
 	m_rank_sizer->Add( m_rank4_img, 0, wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL | wxALL, 2 );
 
-	m_rank5_radio = new wxRadioButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_rank5_radio = new wxRadioButton( m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_rank_sizer->Add( m_rank5_radio, 0, wxALL, 5 );
 
-	m_rank5_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank5_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
+	m_rank5_img = new wxStaticBitmap( m_panel, wxID_ANY, wxBitmap( rank5_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
 	m_rank_sizer->Add( m_rank5_img, 0, wxALL | wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL, 5 );
 
-	m_rank6_radio = new wxRadioButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_rank6_radio = new wxRadioButton( m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_rank_sizer->Add( m_rank6_radio, 0, wxALL, 5 );
 
-	m_rank6_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank6_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
+	m_rank6_img = new wxStaticBitmap( m_panel, wxID_ANY, wxBitmap( rank6_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
 	m_rank_sizer->Add( m_rank6_img, 0, wxALL, 5 );
 
-	m_rank7_radio = new wxRadioButton( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_rank7_radio = new wxRadioButton( m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_rank_sizer->Add( m_rank7_radio, 0, wxALL, 5 );
 
-	m_rank7_img = new wxStaticBitmap( this, wxID_ANY, wxBitmap( rank7_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
+	m_rank7_img = new wxStaticBitmap( m_panel, wxID_ANY, wxBitmap( rank7_xpm ), wxDefaultPosition, wxSize( 16, 16 ), 0 );
 	m_rank_sizer->Add( m_rank7_img, 0, wxALL, 5 );
 
 	m_rank_box->Add( m_rank_sizer, 1, wxEXPAND, 5 );
@@ -249,26 +254,28 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_main_sizer->Add( m_pl_nat_sizer, 0, wxEXPAND, 5 );
 	m_main_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-	m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	m_buttons_sep = new wxStaticLine( m_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	m_main_sizer->Add( m_buttons_sep, 0, wxALL | wxEXPAND, 2 );
 
 	wxBoxSizer* m_buttons_sizer;
 	m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_cancel_btn = new wxButton( this, HOST_CANCEL, _( "Cancel" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_cancel_btn = new wxButton( m_panel, HOST_CANCEL, _( "Cancel" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 	m_buttons_sizer->Add( m_cancel_btn, 0, wxALL, 5 );
 
-	m_host_btn = new wxButton( this, HOST_OK, _( "Host" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_host_btn = new wxButton( m_panel, HOST_OK, _( "Host" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_host_btn->SetToolTip( TE( _( "Start hosting the battle." ) ) );
 
 	m_buttons_sizer->Add( m_host_btn, 0, wxALL, 5 );
 
 	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND, 5 );
 
-	this->SetSizer( m_main_sizer );
+	m_panel->SetSizer( m_main_sizer );
+	all_sizer->Add( m_panel, 1, wxEXPAND, 0 );
+	this->SetSizer( all_sizer );
+	m_panel->SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	this->Layout();
-
 	m_host_btn->SetFocus();
 
 	ReloadModList();
@@ -383,7 +390,8 @@ void HostBattleDialog::OnUseRelay( wxCommandEvent&  )
     Layout();
 }
 
-void HostBattleDialog::Run( wxWindow* parent )
+namespace SL{
+void RunHostBattleDialog( wxWindow* parent )
 {
 	HostBattleDialog dlg( parent );
 	if ( dlg.ShowModal() == wxID_OK )
@@ -486,3 +494,4 @@ void HostBattleDialog::Run( wxWindow* parent )
 		serverSelector().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
 	}
 }
+} //end namespace SL

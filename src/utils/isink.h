@@ -91,6 +91,29 @@ class BattleSyncReloadSink : public CRTPbase<Derived> {
 			: m_BattleSyncReloadSink( this, &GetGlobalEventSender( GlobalEvents::BattleSyncReload) )
 		{}
 };
+
+template <class Derived >
+class OnLoginSink : public CRTPbase<Derived> {
+	protected:
+		typedef GlobalEvents::GlobalEventData
+			EventDataType;
+		typedef OnLoginSink<Derived>
+			BaseType;
+		using CRTPbase<Derived>::asImp;
+
+	public:
+		void OnLogin( EventDataType data ) { asImp().OnLogin( data ); }
+
+	protected:
+		typedef EventReceiverFunc<OnLoginSink, EventDataType, &OnLoginSink::OnLogin>
+			EventReceiverFunction;
+		EventReceiverFunction m_OnLoginSink;
+
+	public:
+		OnLoginSink()
+			: m_OnLoginSink( this, &GetGlobalEventSender( GlobalEvents::OnLogin) )
+		{}
+};
 #endif // SPRINGLOBBY_HEADERGUARD_ISINK_H
 
 /**

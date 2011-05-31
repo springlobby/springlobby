@@ -6,7 +6,7 @@
 #include <stdexcept>
 
 #include "nonportable.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "utils/mixins.hh"
 
 class wxString;
@@ -55,6 +55,8 @@ typedef int (USYNC_CALL_CONV *InitPtr)(bool, int);
 typedef void (USYNC_CALL_CONV *UnInitPtr)();
 typedef const char* (USYNC_CALL_CONV *GetNextErrorPtr)();
 typedef const char* (USYNC_CALL_CONV *GetWritableDataDirectoryPtr)();
+typedef const char* (USYNC_CALL_CONV *GetDataDirectoryPtr)(int);
+typedef int (USYNC_CALL_CONV *GetDataDirectoryCountPtr)();
 
 typedef int (USYNC_CALL_CONV *GetMapCountPtr)();
 typedef unsigned int (USYNC_CALL_CONV *GetMapChecksumPtr)(int);
@@ -283,7 +285,7 @@ class SpringUnitSyncLib : public SL::NonCopyable
      */
 	wxArrayString GetUnitsyncErrors() const;
 
-	bool VersionSupports( IUnitSync::GameFeature feature ) const;
+	bool VersionSupports( SpringUnitSync::GameFeature feature ) const;
 
 
     int GetModIndex( const wxString& name );
@@ -301,6 +303,8 @@ class SpringUnitSyncLib : public SL::NonCopyable
     std::map<wxString, wxString> GetSpringVersionList(const std::map<wxString, wxString>& usync_paths);
 
     wxString GetSpringDataDir();
+	int GetSpringDataDirCount();
+	wxString GetSpringDataDirByIndex( const int index );
     wxString GetConfigFilePath();
 
     int GetMapCount();
@@ -542,6 +546,8 @@ class SpringUnitSyncLib : public SL::NonCopyable
     UnInitPtr m_uninit;
     GetNextErrorPtr m_get_next_error;
     GetWritableDataDirectoryPtr m_get_writeable_data_dir;
+	GetDataDirectoryPtr m_get_data_dir_by_index;
+	GetDataDirectoryCountPtr m_get_data_dir_count;
 
     GetMapCountPtr m_get_map_count;
     GetMapChecksumPtr m_get_map_checksum;

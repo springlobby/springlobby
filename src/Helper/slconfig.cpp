@@ -27,18 +27,24 @@ slConfig::slConfig( wxInputStream& in, const wxMBConv& conv )
 }
 #endif // wxUSE_STREAMS
 
-void slConfig::SetupGlobalconfig()
+wxString slConfig::GlobalConfigPath() const
 {
-	SetRecordDefaults( true );
-	#ifdef __WXMSW__
-		wxString p (wxFileName::GetPathSeparator());
+#ifdef __WXMSW__
+	wxString p (wxFileName::GetPathSeparator());
 		wxString global_config_path = wxFormat( _T("%s%s%s.global.conf") )
 													   % GetExecutableFolder()
 													   % p
 													   % ::GetAppName( true );
-	#else
-		wxString global_config_path = IdentityString( _T("/etc/default/%s.conf"), true );
-	#endif //__WXMSW__
+#else
+	wxString global_config_path = IdentityString( _T("/etc/default/%s.conf"), true );
+#endif //__WXMSW__
+	return global_config_path;
+}
+
+void slConfig::SetupGlobalconfig()
+{
+	SetRecordDefaults( true );
+	const wxString global_config_path = GlobalConfigPath();
 
 	if (  wxFileName::FileExists( global_config_path ) )
 	{

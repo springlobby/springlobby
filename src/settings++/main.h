@@ -25,10 +25,14 @@
 
 #include <wx/app.h>
 
+class wxLocale;
+class wxTranslationHelper;
+
 class Springsettings : public wxApp
 {
 	public:
         Springsettings();
+		~Springsettings();
 		bool OnInit();
 		int OnExit();
 		virtual void OnFatalException();
@@ -38,12 +42,17 @@ class Springsettings : public wxApp
 
     protected:
 
+		wxTranslationHelper* m_translationhelper;
+
         long m_log_verbosity;
         bool m_log_console;
 		bool m_log_file;
 		wxString m_log_file_path;
         bool m_log_window_show;
         bool m_crash_handle_disable;
+		wxString m_customizer_archive_name;
+		wxString m_appname;
+		wxString m_engine_config_filepath;
 
 };
 

@@ -32,6 +32,7 @@
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
 #include <wx/textctrl.h>
+#include <wx/display.h>
 
 #include "../utils/customdialogs.h"
 #include "../springunitsynclib.h"
@@ -42,6 +43,7 @@
 #include "presets.h"
 
 #include "../utils/debug.h"
+
 
 intMap abstract_panel::intSettings;
 //stringMap abstract_panel::stringSettings;
@@ -116,6 +118,12 @@ bool abstract_panel::loadValuesIntoMap()
 {
 	try
 	{
+		//special treatment for resolution that'll set proper defaults for res
+		wxDisplay display(0);
+		wxRect display_rect ( display.GetGeometry() );
+		const int current_x_res = configHandler.GetSpringConfigInt(RC_TEXT[0].key,display_rect.width);
+		const int current_y_res = configHandler.GetSpringConfigInt(RC_TEXT[1].key,display_rect.height);
+
 		for (int i = 0; i< intControls_size;++i)
 		{
 			intSettings[intControls[i].key] = configHandler.GetSpringConfigInt(intControls[i].key,fromString(intControls[i].def));

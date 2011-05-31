@@ -41,3 +41,4 @@ test/*
 src/images/updater/*
 *.fbp.bak
 CMakeLists.txt.user*
+src/qt-build/

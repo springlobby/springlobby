@@ -5,7 +5,7 @@
 #include <wx/string.h>
 #include <wx/event.h>
 
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "user.h"
 #include "mmoptionswrapper.h"
 #include "userlist.h"
@@ -257,7 +257,7 @@ public:
     virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );
 
     virtual UserPosition GetFreePosition() ;
-    virtual int GetFreeAlly( bool excludeme = false ) const;
+	virtual int GetFreeAlly( bool excludeme = false ) const;
 
     virtual void RestrictUnit( const wxString& unitname, int count = 0 );
     virtual void UnrestrictUnit( const wxString& unitname );
@@ -394,8 +394,8 @@ public:
 
 protected:
 
-    void LoadScriptMMOpts( const wxString& sectionname, const PDataList& node );
-    void LoadScriptMMOpts( const PDataList& node );
+		void LoadScriptMMOpts( const wxString& sectionname, const SL::PDataList& node );
+		void LoadScriptMMOpts( const SL::PDataList& node );
 
 		void PlayerLeftTeam( int team );
 		void PlayerLeftAlly( int ally );
@@ -419,6 +419,8 @@ protected:
     BattleOptions m_opts;
 
     bool m_ingame;
+
+    bool m_auto_unspec; // unspec as soon as there's a free slot
 
     bool m_generating_script;
 

@@ -78,6 +78,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 	void OnMenuServerTab( wxCommandEvent& event );
     void OnMenuSaveOptions( wxCommandEvent& event );
     void OnMenuQuit( wxCommandEvent& event );
+	void OnMenuPathInfo( wxCommandEvent& event );
     void OnMenuVersion ( wxCommandEvent& event );
     void OnMenuSaveLayout( wxCommandEvent& event );
     void OnMenuLoadLayout( wxCommandEvent& event );
@@ -191,7 +192,8 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 		MENU_SCREENSHOTS,
 		MENU_PREFERENCES,
 		MENU_RENAME,
-		MENU_GENERAL_HELP
+		MENU_GENERAL_HELP,
+		MENU_PATHINFO
     };
 
         class TabNames : public wxArrayString

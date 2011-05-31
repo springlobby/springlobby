@@ -29,7 +29,7 @@
 
 #include "battleroomtab.h"
 #include "ui.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "user.h"
 #include "battle.h"
 #include "defines.h"
@@ -51,7 +51,7 @@
 #include "mapselectdialog.h"
 #include "mmoptionwindows.h"
 #include "aui/auimanager.h"
-#include "hostbattledialog.h"
+#include "hostbattledialog_public.h"
 
 BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 
@@ -62,6 +62,7 @@ BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 
 	EVT_CHECKBOX            ( BROOM_IMREADY,                BattleRoomTab::OnImReady                )
 	EVT_CHECKBOX            ( BROOM_SPEC,                   BattleRoomTab::OnImSpec                 )
+	EVT_CHECKBOX            ( BROOM_UNSPEC,                 BattleRoomTab::OnAutounSpec             )
 	EVT_COMBOBOX            ( BROOM_TEAMSEL,                BattleRoomTab::OnTeamSel                )
 	EVT_COMBOBOX            ( BROOM_ALLYSEL,                BattleRoomTab::OnAllySel                )
 	EVT_BUTTON              ( BROOM_COLOURSEL,              BattleRoomTab::OnColourSel              )
@@ -139,6 +140,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_side_sel->SetToolTip( TE( _( "Select your faction" ) ) );
 	m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _( "Spectator" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_spec_chk->SetToolTip( TE( _( "Spectate (watch) the battle instead of playing" ) ) );
+	m_auto_unspec_chk = new wxCheckBox( m_player_panel, BROOM_UNSPEC, _( "Auto un-spectate" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+	m_auto_unspec_chk->SetToolTip( TE( _( "automatically unspec when there's a free slot" ) ) );
 	m_ready_chk = new wxCheckBox( m_player_panel, BROOM_IMREADY, _( "I'm ready" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_ready_chk->SetToolTip( TE( _( "Click this if you are content with the battle settings." ) ) );
 
@@ -305,6 +308,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_player_sett_sizer->Add( m_side_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
 	m_player_sett_sizer->Add( m_side_sel_sizer, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->Add( m_spec_chk, 0, wxEXPAND | wxALL, 2 );
+	m_player_sett_sizer->Add( m_auto_unspec_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->AddStretchSpacer();
 	m_player_sett_sizer->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
@@ -557,6 +561,7 @@ void BattleRoomTab::UpdateUser( User& user )
 	m_ally_sel->SetSelection( bs.ally );
 	m_side_sel->SetSelection( bs.side );
 	m_spec_chk->SetValue( bs.spectator );
+	m_auto_unspec_chk->SetValue( m_battle->GetAutoUnspec() );
 	m_ready_chk->SetValue( bs.ready );
 	// Enable or disable widgets' sensitivity as appropriate.
 	if ( bs.spectator )
@@ -762,6 +767,12 @@ void BattleRoomTab::OnAutoSpec( wxCommandEvent& /*unused*/ )
 	trigger = trigger * 60;
 	m_autospec_mnu->Check( trigger > 0 );
 	sett().SetBattleLastAutoSpectTime( trigger );
+}
+
+void BattleRoomTab::OnAutounSpec( wxCommandEvent& /*unused*/ )
+{
+	if ( !m_battle ) return;
+	m_battle->SetAutoUnspec( m_auto_unspec_chk->GetValue() );
 }
 
 void BattleRoomTab::OnImSpec( wxCommandEvent& /*unused*/ )
@@ -1209,7 +1220,7 @@ void BattleRoomTab::OnHostNew( wxCommandEvent& /*event*/ )
 		customMessageBoxNoModal( SL_MAIN_ICON, _( "Hosting is disabled due to the incompatible version you're using" ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 		return;
 	}
-	HostBattleDialog::Run( this );
+	SL::RunHostBattleDialog( this );
 }
 
 //void BattleRoomTab::MaximizeSizer()

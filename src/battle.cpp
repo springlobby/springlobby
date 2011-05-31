@@ -4,7 +4,7 @@
 //
 #include "battle.h"
 #include "ui.h"
-#include "iunitsync.h"
+#include "springunitsync.h"
 #include "server.h"
 #include "user.h"
 #include "utils/misc.h"
@@ -283,7 +283,9 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				}
 			}
 		}
-		ui().OnUserBattleStatus( *this, user );
+	if ( !GetMe().BattleStatus().spectator ) SetAutoUnspec(false); // we don't need auto unspec anymore
+	ShouldAutoUnspec();
+	ui().OnUserBattleStatus( *this, user );
 }
 
 
@@ -291,6 +293,7 @@ void Battle::OnUserRemoved( User& user )
 {
     m_ah.OnUserRemoved(user);
     IBattle::OnUserRemoved( user );
+	ShouldAutoUnspec();
 }
 
 
@@ -625,7 +628,7 @@ void Battle::StartHostedBattle()
 					m_serv.SendScriptToProxy( hostscript );
 				}
 			}
-			if( IsFounderMe() && GetAutoLockOnStart() )
+			if( GetAutoLockOnStart() )
 			{
 				SetIsLocked( true );
 				SendHostInfo( IBattle::HI_Locked );
@@ -1153,5 +1156,22 @@ void Battle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData data )
 {
 	IBattle::OnUnitsyncReloaded( data );
 	if ( m_is_self_in ) SendMyBattleStatus();
+}
+
+void Battle::ShouldAutoUnspec()
+{
+	if ( m_auto_unspec && !IsLocked() && GetMe().BattleStatus().spectator )
+	{
+		if ( GetNumActivePlayers() < m_opts.maxplayers )
+		{
+			ForceSpectator(GetMe(),false);
+		}
+	}
+}
+
+void Battle::SetAutoUnspec(bool value)
+{
+	m_auto_unspec = value;
+	ShouldAutoUnspec();
 }
 

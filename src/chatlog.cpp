@@ -26,8 +26,7 @@ ChatLog::ChatLog( const wxString& server, const wxString& room ):
     m_server( server ),
     m_room( room ),
     m_active ( LogEnabled() ),
-    m_logfile ( ),
-    m_last_lines ( 0 )
+    m_logfile ( )
 {
 #ifdef __WXMSW__
 	m_server.Replace( wxT( ":" ), wxT( "_" ) ) ;
@@ -243,8 +242,9 @@ find_tail_sequences(int fd, const char* bytes, size_t bytes_length, size_t count
 			    source = new char[ line_length + 1];
 			    memset(source, 0, line_length + 1);
 
-			    if ( pread(fd, source, line_length, this_found_pos + bytes_length) < (ssize_t) line_length )
-				wxLogWarning(_T("ChatLog::find_tail_sequences: Read-byte count less than expected"));
+				if ( pread(fd, source, line_length, this_found_pos + bytes_length) < (ssize_t) line_length ) {
+					wxLogWarning(_T("ChatLog::find_tail_sequences: Read-byte count less than expected"));
+				}
 			} else {
 			    source = buf + i + bytes_length;
 			}
@@ -252,7 +252,7 @@ find_tail_sequences(int fd, const char* bytes, size_t bytes_length, size_t count
 			if (  strncmp(source, "##", 2) != 0 ) {
 			    out.Insert(wxString(L'\0', 0), 0);
 			    wxLogMessage(_T("ChatLog::find_tail_sequences: fetching write buffer for %lu bytes"), sizeof(wxChar) * (line_length + 1));
-			    #ifndef HAVE_WX28
+			    #if !defined(HAVE_WX28) || defined(SL_QT_MODE)
 			    	wxStringBufferLength outzero_buf(out[0], sizeof(wxChar) * (line_length + 1));
 			    	wxConvUTF8.ToWChar(outzero_buf, line_length, source);
 			    	outzero_buf.SetLength(line_length);

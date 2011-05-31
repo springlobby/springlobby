@@ -62,6 +62,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void OnLock( wxCommandEvent& event );
 		void OnAutoHost( wxCommandEvent& event );
 		void OnImSpec( wxCommandEvent& event );
+		void OnAutounSpec( wxCommandEvent& event );
 		void OnTeamSel( wxCommandEvent& event );
 		void OnAllySel( wxCommandEvent& event );
 		void OnColourSel( wxCommandEvent& event );
@@ -187,6 +188,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 		wxCheckBox* m_ready_chk;
 		wxCheckBox* m_spec_chk;
+		wxCheckBox* m_auto_unspec_chk;
 		wxCheckBox* m_lock_chk;
 		wxCheckBox* m_autolock_chk;
 
@@ -201,6 +203,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 			BROOM_LOCK_BALANCE,
 			BROOM_MANAGE_MENU,
 			BROOM_SPEC,
+			BROOM_UNSPEC,
 			BROOM_TEAMSEL,
 			BROOM_ALLYSEL,
 			BROOM_COLOURSEL,

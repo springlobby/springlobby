@@ -1,15 +1,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MIXINS_HH
 #define SPRINGLOBBY_HEADERGUARD_MIXINS_HH
 
+#include <boost/noncopyable.hpp>
+
 namespace SL {
-	class NonCopyable {
-		protected:
-			NonCopyable(){}
-			~NonCopyable(){}
-		private:
-			NonCopyable( const NonCopyable& );
-			NonCopyable& operator = ( const NonCopyable& );
-	};
+	typedef boost::noncopyable  NonCopyable;
 }
 
 #endif // SPRINGLOBBY_HEADERGUARD_MIXINS_HH

@@ -21,7 +21,11 @@ void LibnotifyNotification::Show(const wxBitmap& icon, const size_t /*pos*/, con
 {
 	NotifyNotification *n;
 	notify_init("Test");
-	n = notify_notification_new ( GetAppName().mb_str(),data.second.mb_str(), NULL, NULL);
+	#if !defined(NOTIFY_VERSION_MINOR) || (NOTIFY_VERSION_MAJOR == 0 && NOTIFY_VERSION_MINOR < 7) 
+		n = notify_notification_new ( GetAppName().mb_str(),data.second.mb_str(), NULL, NULL );
+	#else
+		n = notify_notification_new ( GetAppName().mb_str(),data.second.mb_str(), NULL );
+	#endif
 	notify_notification_set_timeout (n, sett().GetNotificationPopupDisplayTime()*1000);
 
 	notify_notification_set_icon_from_pixbuf(n,icon.GetPixbuf() );

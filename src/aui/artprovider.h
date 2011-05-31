@@ -63,12 +63,16 @@ public:
                  const wxAuiNotebookPageArray& pages,
                  const wxSize& required_bmp_size);
 
+	virtual void SetColour(const wxColour& colour);
+	virtual void SetActiveColour(const wxColour& colour);
+
 protected:
 
     wxFont m_normal_font;
     wxFont m_selected_font;
     wxFont m_measuring_font;
     wxColour m_base_colour;
+	wxColour m_active_colour;
     wxPen m_base_colour_pen;
     wxPen m_border_pen;
     wxBrush m_base_colour_brush;
