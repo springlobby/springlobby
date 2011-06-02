@@ -38,7 +38,7 @@
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
 const wxEventType UnitSyncAsyncOperationCompletedEvt = wxNewEventType();
-
+const wxEventType wxUnitsyncReloadEvent = wxNewEventType();
 
 SpringUnitSync& usync()
 {

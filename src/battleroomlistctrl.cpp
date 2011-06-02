@@ -145,7 +145,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 
 		for ( unsigned int i = 0; i < SPRING_MAX_TEAMS; i++ )
 		{
-			wxMenuItem* team = new wxMenuItem( m_teams, BRLIST_TEAM + i, wxFormat( _T("%d") ) % i+1, wxEmptyString, wxITEM_NORMAL );
+			wxMenuItem* team = new wxMenuItem( m_teams, BRLIST_TEAM + i, wxFormat( _T("%d") ) % (i+1), wxEmptyString, wxITEM_NORMAL );
 			m_teams->Append( team );
 			Connect( BRLIST_TEAM + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnTeamSelect ) );
 		}
@@ -154,7 +154,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 		wxMenu* m_allies = new wxMenu();
 		for ( unsigned int i = 0; i < SPRING_MAX_ALLIES; i++ )
 		{
-			wxMenuItem* ally = new wxMenuItem( m_allies, BRLIST_ALLY + i, wxFormat( _T("%d") ) % i+1, wxEmptyString, wxITEM_NORMAL );
+			wxMenuItem* ally = new wxMenuItem( m_allies, BRLIST_ALLY + i, wxFormat( _T("%d") ) % (i+1), wxEmptyString, wxITEM_NORMAL );
 			m_allies->Append( ally );
 			Connect( BRLIST_ALLY + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnAllySelect ) );
 		}
