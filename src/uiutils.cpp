@@ -8,6 +8,7 @@
 #include <wx/bitmap.h>
 #include <wx/log.h>
 #include <wx/image.h>
+#include <wx/icon.h>
 #include <wx/clipbrd.h>
 #include <wx/cmndata.h>
 #include <wx/colordlg.h>
@@ -191,6 +192,13 @@ wxImage BlendImage( const wxImage& foreground, const wxImage& background, bool b
     }
     wxLogDebugFunc(_T("cannot blend without alpha"));
     return background;
+}
+
+wxIcon charArr2wxIcon(const unsigned char * arg, int size)
+{
+	wxIcon ic;
+	ic.CopyFromBitmap( charArr2wxBitmap( arg, size ) );
+	return ic;
 }
 
 wxBitmap charArr2wxBitmap(const unsigned char * arg, int size)

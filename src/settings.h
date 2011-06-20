@@ -782,6 +782,9 @@ class Settings : public SL::NonCopyable
 	bool GetBroadcastEverywhere();
 	void SetBroadcastEverywhere(bool value);
 
+	wxString GlobalConfigPath() const { return m_config ? m_config->GlobalConfigPath() : wxString(); }
+	wxString FinalConfigPath() const { return m_final_config_path; }
+
   protected:
     bool IsSpringBin( const wxString& path );
 
@@ -794,6 +797,8 @@ class Settings : public SL::NonCopyable
     std::map<wxString, wxString> m_spring_versions;
 
 	wxPathList GetConfigFileSearchPathes();
+
+	wxString m_final_config_path;
 };
 
 Settings& sett();

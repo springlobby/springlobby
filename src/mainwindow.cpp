@@ -53,6 +53,7 @@
 #include "chatpanel.h"
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
+#include "infodialog.h"
 #ifndef NO_TORRENT_SYSTEM
 	#include "maintorrenttab.h"
 	#include "torrentwrapper.h"
@@ -99,6 +100,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_SETTINGSPP,			MainWindow::OnShowSettingsPP		)
   EVT_MENU( MENU_VERSION,				MainWindow::OnMenuVersion			)
   EVT_MENU( MENU_ABOUT,					MainWindow::OnMenuAbout				)
+  EVT_MENU( MENU_PATHINFO,				MainWindow::OnMenuPathInfo			)
   EVT_MENU( MENU_SAVE_LAYOUT,			MainWindow::OnMenuSaveLayout		)
   EVT_MENU( MENU_LOAD_LAYOUT,			MainWindow::OnMenuLoadLayout		)
   EVT_MENU( MENU_RESET_LAYOUT,			MainWindow::OnMenuResetLayout		)
@@ -128,7 +130,7 @@ MainWindow::MainWindow( )
 	m_log_win(NULL),
 	m_has_focus(true)
 {
-	SetIcon( SLcustomizations().GetAppIcon() );
+	SetIcons( SLcustomizations().GetAppIconBundle() );
 
 	GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
@@ -179,6 +181,7 @@ MainWindow::MainWindow( )
 	wxMenu *menuHelp = new wxMenu;
 	menuHelp->Append(MENU_GENERAL_HELP, _("&Help, tutorial and FAQ"));
 	menuHelp->Append(MENU_ABOUT, _("&About"));
+	menuHelp->Append(MENU_PATHINFO, _("&System Info"));
 	menuHelp->Append(MENU_SELECT_LOCALE, _("&Change language"));
 	menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
 	menuHelp->Append(MENU_DOC, _("&Documentation"));
@@ -551,7 +554,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
     info.AddTranslator(_T("tc- (swedish)"));
 	info.AddTranslator(_("The numerous contributors from launchpad.net"));
 	//! \todo customisations
-	info.SetIcon( SLcustomizations().GetAppIcon() );
+	info.SetIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
 	wxAboutBox(info);
 }
 
@@ -766,4 +769,9 @@ void MainWindow::OnMenuFirstStart( wxCommandEvent& /*event*/ )
 {
 	IntroGuide* intro = new IntroGuide();
 	intro->Show();
+}
+
+void MainWindow::OnMenuPathInfo( wxCommandEvent& /*event*/ )
+{
+	InfoDialog( this ).ShowModal();
 }

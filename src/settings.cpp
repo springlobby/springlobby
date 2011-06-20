@@ -112,11 +112,12 @@ Settings::Settings()
 			exit( -1 );
 		}
 	}
+	m_final_config_path = m_chosen_path;
 	m_config = new slConfig( instream );
 #else
 	wxString localpath = wxString::Format( _T( "%s/%s.conf" ), GetConfigfileDir().c_str(), GetAppName( true ).c_str() );
-	wxString path = m_user_defined_config ? m_user_defined_config_path : localpath;
-	m_config = new slConfig( GetAppName(), wxEmptyString, path );
+	m_final_config_path = m_user_defined_config ? m_user_defined_config_path : localpath;
+	m_config = new slConfig( GetAppName(), wxEmptyString, m_final_config_path );
 	SetPortableMode ( false );
 #endif
 	m_config->SetRecordDefaults( true );
