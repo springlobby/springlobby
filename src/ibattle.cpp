@@ -22,6 +22,7 @@
 #include <set>
 
 const unsigned int TIMER_ID         = 102;
+const unsigned int RUNNING_TIMER_ID         = 103;
 
 IBattle::IBattle():
   m_map_loaded(false),
@@ -36,7 +37,8 @@ IBattle::IBattle():
   m_players_sync(0),
   m_players_ok(0),
   m_is_self_in(false),
-	m_timer ( 0 )
+	m_timer ( 0 ),
+	m_start_time(0)
 {
 }
 
@@ -1279,5 +1281,19 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 
     }
     SetBattleOptions( opts );
+}
+
+void iBattle::SetInGame(bool ingame)
+{
+	m_ingame = ingame;
+	if (m_ingame) m_start_time = wxGetLocalTime();
+	else m_start_time = 0;
+}
+
+long iBattle::GetBattleRunningTime()
+{
+	if (!GetInGame()) return -1;
+	if (m_start_time == 0 ) return -1;
+	return wxGetLocalTime() - m_start_time;
 }
 

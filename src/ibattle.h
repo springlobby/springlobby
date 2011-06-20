@@ -299,7 +299,7 @@ public:
 		virtual bool GetGUIListActiv() const { return m_opts.guilistactiv; }
 		virtual void SetGUIListActiv(bool Activ) { m_opts.guilistactiv = Activ; }
 
-		virtual void SetInGame( bool ingame ) { m_ingame = ingame; }
+		virtual void SetInGame( bool ingame );
 		virtual bool GetInGame() const { return m_ingame; }
 
 		virtual void SetBattleType( BattleType type ) { m_opts.battletype = type; }
@@ -392,6 +392,8 @@ public:
 
 		std::map<wxString, wxString> m_script_tags; // extra script tags to reload in the case of map/mod reload
 
+		virtual long GetBattleRunningTime(); // returns -1 if not started
+
 protected:
 
 		void LoadScriptMMOpts( const wxString& sectionname, const SL::PDataList& node );
@@ -447,6 +449,8 @@ protected:
     UserVec m_internal_user_list; /// to store users from savegame/replay
 
     wxTimer* m_timer;
+
+    long m_start_time;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_IBATTLE_H
