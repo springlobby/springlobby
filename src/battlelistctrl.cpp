@@ -46,9 +46,9 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 
 #if defined(__WXMAC__)
 /// on mac, autosize does not work at all
-    const int widths[10] = {20,20,20,170,140,130,110,28,28,28};
+    const int widths[11] = {20,20,20,170,140,130,110,28,28,28,30};
 #else
-    const int widths[10] = {hd,hd,hd,170,140,130,110,hd,hd,hd};
+    const int widths[11] = {hd,hd,hd,170,140,130,110,hd,hd,hd,hd};
 #endif
 
 	AddColumn( 0, widths[0], _("Status"), _("Status") );
@@ -61,6 +61,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 	AddColumn( 7, widths[7], _("Spectators"), _("Number of Spectators") );
 	AddColumn( 8, widths[8], _("Players"), _("Number of Players joined") );
 	AddColumn( 9, widths[9], _("Max"), _("Maximum number of Players that can join") );
+	AddColumn( 10, widths[10], _("Running"), _("How long the game has been running for") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[0].col = 0;
@@ -102,6 +103,7 @@ wxString BattleListCtrl::GetItemText(long item, long column) const
         case 7: return ( wxString::Format(_T("%d"), int(battle.GetSpectators())) );
         case 8: return ( wxString::Format(_T("%d"), int(battle.GetNumUsers()) - int(battle.GetSpectators()) ) );
         case 9: return ( wxString::Format(_T("%d"), int(battle.GetMaxPlayers())) );
+        case 10: return ( wxDateTime(battle.GetBattleRunningTime()).FormatISOTime() );
     }
 }
 
@@ -263,6 +265,7 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
         case 7: return dir * compareSimple( u1->GetSpectators(), u2->GetSpectators() );
         case 8: return dir * ComparePlayer( u1, u2 );
         case 9: return dir * compareSimple( u1->GetMaxPlayers(), u2->GetMaxPlayers() );
+        case 10: return dir * compareSimple( u1->GetBattleRunningTime(), u2->GetBattleRunningTime());
         default: return 0;
     }
     return 0; // simply to avoid compiler warning
@@ -369,10 +372,12 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& posit
                 if ( !battle.GetUser(i).BattleStatus().spectator ) m_tiptext << _T("\n") << battle.GetUser(i).GetNick();
             }
             break;
-        case 9: //may player
+        case 9: //max player
             m_tiptext = (m_colinfovec[column].tip);
             break;
-
+        case 10: //running time
+            m_tiptext = (m_colinfovec[column].tip);
+            break;
         default: m_tiptext = _T("");
             break;
     }
