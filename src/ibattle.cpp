@@ -22,7 +22,6 @@
 #include <set>
 
 const unsigned int TIMER_ID         = 102;
-const unsigned int RUNNING_TIMER_ID         = 103;
 
 IBattle::IBattle():
   m_map_loaded(false),
@@ -1292,8 +1291,8 @@ void iBattle::SetInGame(bool ingame)
 
 long iBattle::GetBattleRunningTime()
 {
-	if (!GetInGame()) return -1;
-	if (m_start_time == 0 ) return -1;
+	if (!GetInGame()) return 0;
+	if (m_start_time == 0 ) return 0;
 	return wxGetUTCTime() - m_start_time;
 }
 

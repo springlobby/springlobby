@@ -392,7 +392,7 @@ public:
 
 		std::map<wxString, wxString> m_script_tags; // extra script tags to reload in the case of map/mod reload
 
-		virtual long GetBattleRunningTime(); // returns -1 if not started
+		virtual long GetBattleRunningTime(); // returns 0 if not started
 
 protected:
 
