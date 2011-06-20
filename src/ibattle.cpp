@@ -1286,7 +1286,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 void iBattle::SetInGame(bool ingame)
 {
 	m_ingame = ingame;
-	if (m_ingame) m_start_time = wxGetLocalTime();
+	if (m_ingame) m_start_time = wxGetUTCTime();
 	else m_start_time = 0;
 }
 
@@ -1294,6 +1294,6 @@ long iBattle::GetBattleRunningTime()
 {
 	if (!GetInGame()) return -1;
 	if (m_start_time == 0 ) return -1;
-	return wxGetLocalTime() - m_start_time;
+	return wxGetUTCTime() - m_start_time;
 }
 
