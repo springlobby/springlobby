@@ -1282,14 +1282,14 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
     SetBattleOptions( opts );
 }
 
-void iBattle::SetInGame(bool ingame)
+void IBattle::SetInGame(bool ingame)
 {
 	m_ingame = ingame;
 	if (m_ingame) m_start_time = wxGetUTCTime();
 	else m_start_time = 0;
 }
 
-long iBattle::GetBattleRunningTime()
+long IBattle::GetBattleRunningTime() const
 {
 	if (!GetInGame()) return 0;
 	if (m_start_time == 0 ) return 0;
