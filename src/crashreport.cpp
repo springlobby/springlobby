@@ -151,7 +151,7 @@ SpringDebugReport::SpringDebugReport()
 #else
 	bool online = true; // TODO (BrainDamage#1#): check if being online
 #endif
-	NetDebugReport* report = new NetDebugReport( "http://debug.springzine.net/upload" ) ;
+	NetDebugReport* report = new NetDebugReport( "http://debug.springlobby.info/upload" ) ;
 //	NetDebugReport* report = new NetDebugReport( "http://localhost/upload" ) ;
 
 	// add all standard files: currently this means just a minidump and an
