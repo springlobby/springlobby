@@ -415,7 +415,6 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 				if ( ( startpostype == IBattle::ST_Random ) || ( startpostype == IBattle::ST_Fixed ) )
 				{
 					tdf.Append( _T("startpostype"), IBattle::ST_Pick );
-					tdf.Append( _T("relayhoststartpostype"), startpostype ); // also save the original wanted setting
 				}
 				else tdf.Append( _T("startpostype"), startpostype );
 			}
@@ -431,6 +430,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 
 			tdf.EnterSection(_T("modoptions"));
+				tdf.Append( _T("relayhoststartpostype"), startpostype ); // also save the original wanted setting
 				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
 				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
 				{
