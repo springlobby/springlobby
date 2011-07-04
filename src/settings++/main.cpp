@@ -256,7 +256,7 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
 			m_customizer_archive_name = _T("");
 		const bool do_appname = parser.Found(_T("name"), &m_appname );
 		if ( !do_appname )
-			m_appname = _T("SpringLobby");
+			m_appname = _T("SpringSettings");
 
 		if ( parser.Found(_T("engine-config"), &m_engine_config_filepath)
 				&& ( do_appname || do_custom ) )
