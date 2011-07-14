@@ -16,7 +16,7 @@ SkirmishModel::SkirmishModel(QObject *parent)
 
 	//this block populates the radiobox and loads the skirmish options into the map
 	OptionsWrapper::GameOption optFlag = OptionsWrapper::ModCustomizations;
-	for ( IUnitSync::OptionMapListConstIter it = m_mod_customs.m_opts[optFlag].list_map.begin(); it != m_mod_customs.m_opts[optFlag].list_map.end(); ++it) {
+	for ( SpringUnitSync::OptionMapListConstIter it = m_mod_customs.m_opts[optFlag].list_map.begin(); it != m_mod_customs.m_opts[optFlag].list_map.end(); ++it) {
 		mmOptionList current = it->second;
 		if ( _T("scenarios") == current.key ) {
 
@@ -40,18 +40,19 @@ SkirmishModel::SkirmishModel(QObject *parent)
 	}
 
 	optFlag = OptionsWrapper::SkirmishOptions;
-	mmOptionList suggested_maps;
-	mmOptionList suggested_sides;
-	OptionsWrapper map_op = m_skirmishes.begin()->second;
-	for ( IUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin(); it != map_op.m_opts[optFlag].list_map.end(); ++it) {
-		mmOptionList current = it->second;
-		if ( _T("suggested_maps") == current.key ) {
-			suggested_maps = current;
-		}
-		else if ( _T("suggested_sides") == current.key ) {
-			suggested_sides = current;
-		}
-	}
+//	mmOptionList suggested_maps;
+//	mmOptionList suggested_sides;
+//	assert( m_skirmishes.size() );
+//	OptionsWrapper map_op = m_skirmishes.begin()->second;
+//	for ( SpringUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin(); it != map_op.m_opts[optFlag].list_map.end(); ++it) {
+//		mmOptionList current = it->second;
+//		if ( _T("suggested_maps") == current.key ) {
+//			suggested_maps = current;
+//		}
+//		else if ( _T("suggested_sides") == current.key ) {
+//			suggested_sides = current;
+//		}
+//	}
 	std::srand(time(NULL));
 
 	QHash<int, QByteArray> roles;
@@ -96,7 +97,7 @@ void SkirmishModel::run( const int id, const int side, const int map )
 	OptionsWrapper::GameOption optFlag = OptionsWrapper::SkirmishOptions;
 	// we need to store Sides for AIs first, so we can later add them in batch w/o needing to remember a mapping
 	std::vector<wxString> ai_sides;
-	for ( IUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
+	for ( SpringUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
 		mmOptionList current = it->second;
 		if ( current.key == _T("ai_sides") ) {
 
@@ -109,7 +110,7 @@ void SkirmishModel::run( const int id, const int side, const int map )
 
 	wxString default_ai = m_mod_customs.getSingleValue( _T("default_ai" ) );
 	std::vector<wxString> ai_names ( ai_sides.size(), default_ai );
-	for ( IUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
+	for ( SpringUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
 		mmOptionList current = it->second;
 		if ( current.key == _T("ai_names") ) {
 			for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor) {
@@ -121,7 +122,7 @@ void SkirmishModel::run( const int id, const int side, const int map )
 		}
 	}
 
-	for ( IUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
+	for ( SpringUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
 		mmOptionList current = it->second;
 		if ( current.key == _T("ai_team_ids") ) {
 

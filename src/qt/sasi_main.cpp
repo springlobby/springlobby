@@ -28,13 +28,13 @@ bool CmdInit()
 	QtArgCmdLine cmd;
 	QtArg config_file( 'f', "config-file", "absolute path to config file", false, true );
 	QtArg customization( 'c', "customize", "Load lobby customizations from game archive. Expects the shortname.", true, true );
-	QtArg version( 'r', "version", "Load lobby customizations from game archive given shortname and this version.", true, true );
+	QtArg shortname( 's', "shortname", "Load lobby customizations from game archive. Expects the shortname.", true, true );
 	QtArgDefaultHelpPrinter helpPrinter( "Testing help printing.\n" );
 	QtArgHelp help( &cmd );
 	help.setPrinter( &helpPrinter );
 	cmd.addArg( config_file );
 	cmd.addArg( customization );
-	cmd.addArg( version );
+	cmd.addArg( shortname );
 	try {
 			cmd.parse();
 	}
@@ -57,7 +57,8 @@ bool CmdInit()
 #ifdef __WXMSW__
 	sett().SetSearchSpringOnlyInSLPath( false );
 #endif
-	QString shortname_value = customization.value().toString();
+	QString customization_value = customization.value().toString();
+	QString shortname_value = shortname.value().toString();
 	//must go BEFORE usync loading
 	sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
 //	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
@@ -70,10 +71,8 @@ bool CmdInit()
 
 	usync().FastLoadUnitSyncLib( sett().GetCurrentUsedUnitSync() );
 
-	QString version_value = version.value().toString();
-	qDebug() << QString( "shortname: %1\tversion: %2").arg( shortname_value ).arg( version.value().toString() );
-	if ( !SLcustomizations().Init( TowxString( shortname_value ),
-								  TowxString( version_value ) ) )
+	qDebug() << QString( "shortname: %1").arg( shortname_value );
+	if ( !SLcustomizations().Init( TowxString( customization_value), shortname_value ) )
 	{
 		qDebug() << "init false";
 		QMessageBox::critical( 0, "Fatal error", QString("loading customizations failed for ").append( shortname_value ) );

@@ -171,7 +171,8 @@ SOURCES += sasi_main.cpp \
     FileHandler.cpp \
     sasi_app.cpp \
     audio/SoundBuffer.cpp \
-    engineconfig.cpp
+    engineconfig.cpp \
+    ../infodialog.cpp
 
 HEADERS += \
     ../springunitsynclib.h \
@@ -291,3 +292,4 @@ CONFIG(debug, debug|release) {
 
 INSTALLS += sasi
 sasi.path = $(DESTDIR)/sasi
+

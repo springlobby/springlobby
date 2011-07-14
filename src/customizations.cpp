@@ -57,9 +57,6 @@ bool Customizations::Init(const wxString& archive_name )
 	m_modname = archive_name;
     bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
     if ( ret ) {
-#ifdef SL_QT_MODE
-		m_shortname = ToQString( shortname );
-#endif
 		wxBitmap icon_bmp( wxNullBitmap );
 		if ( GetBitmap( _T("icon"), icon_bmp ) )
 		{
@@ -150,6 +147,12 @@ Customizations& SLcustomizations()
 #include <QMessageBox>
 #include "qt/qerrorwindow.h"
 #include <QCoreApplication>
+
+bool Customizations::Init( const wxString& archive_name, const QString& shortname )
+{
+	m_shortname = shortname;
+	return Init( archive_name );
+}
 
 QString Customizations::DataBasePath()
 {

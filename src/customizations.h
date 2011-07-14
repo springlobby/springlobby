@@ -50,6 +50,8 @@ class Customizations {
     friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
 
 #ifdef SL_QT_MODE
+		bool Init( const wxString& archive_name, const QString& shortname );
+
 		struct DataException : public std::exception {
 			const QList<QString> errors_;
 			DataException( const QList<QString>& errors )
