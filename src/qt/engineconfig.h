@@ -87,9 +87,9 @@ private:
 	struct ScreenResolution {
 		ScreenResolution( const int w, const int h, const bool dual )
 			:width(w),height(h),dualscreen(dual) {}
-		const int width;
-		const int height;
-		const bool dualscreen;
+		/*const */int width;
+		/*const */int height;
+		/*const */bool dualscreen;
 		QString toString() const;
 	};
 	void reload();

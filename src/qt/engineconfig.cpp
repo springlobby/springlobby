@@ -212,7 +212,7 @@ void PresetModel::use(int index) const
 		first_use = false;
 		return;// we don't want to commit when the model is first loaded
 	}
-	if ( index < presets_.size() )
+	if ( index > -1 && index < presets_.size() )
 	{
 		const EngineConfig& config = presets_[index].first;
 		config.commit();
@@ -234,7 +234,7 @@ void ScreenResolutionModel::reload()
 	resolutions_.clear();
 	for ( int i = 0; i < vl_Resolution_Str_size; ++i )
 	{
-		ScreenResolution res( vl_Resolution_X[i], vl_Resolution_Y[i], i > vl_Resolution_startOfDualScreenRes);
+		const ScreenResolution res( vl_Resolution_X[i], vl_Resolution_Y[i], i > vl_Resolution_startOfDualScreenRes);
 		QString id = res.toString();
 		resolutions_.append( res );
 		if ( id == last_id )
