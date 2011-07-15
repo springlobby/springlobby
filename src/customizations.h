@@ -64,12 +64,14 @@ class Customizations {
 	private:
 		QString dataBasePath_;
 		QString m_shortname;
+		wxString m_archive;
 
 	public:
 		QString QmlDir();
 		QString GraphicsDir();
 		QString SoundsDir();
 		QString MusicDir();
+		const wxString& Archive() const;
 #endif
 };
 
