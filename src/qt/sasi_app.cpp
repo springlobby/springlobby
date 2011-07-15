@@ -28,8 +28,18 @@
 #include <QtOpenGL/QGLWidget>
 #include <QSplashScreen>
 
-#include <customizations.h>
-#include <springunitsynclib.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/filename.h>
+
+#include <QtArg/Arg>
+#include <QtArg/XorArg>
+#include <QtArg/CmdLine>
+#include <QtArg/Help>
+#include <QSplashScreen>
+
+#include <QDebug>
+#include <QMessageBox>
 
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/socket.h>
@@ -37,6 +47,14 @@
 
 #include <iostream>
 
+#include <customizations.h>
+#include <springunitsynclib.h>
+#include <utils/platform.h>
+#include <springunitsync.h>
+#include <settings.h>
+#include <utils/conversion.h>
+#include <customizations.h>
+#include <globalsmanager.h>
 #include "audio/audiomanager.h"
 #include "imageprovider.h"
 #include "converters.h"
@@ -65,7 +83,6 @@ SasiApp::SasiApp(int argc, char *argv[])
 	QCoreApplication::addLibraryPath( QCoreApplication::applicationDirPath() );
 	setOrganizationName("SpringLobby");
 	setOrganizationDomain("SpringLobby.info");
-	setApplicationName("saSi");
 
 //	QIcon icon( wxBitmap(SLcustomizations().GetAppIcon()) );
 //	setWindowIcon( icon );
@@ -175,5 +192,69 @@ int SasiApp::exec()
 	emit appLoaded();
 	int ret = QApplication::exec();
 	audio_manager.wait( 5 /*seconds*/ );
+	sett().SaveSettings();
 	return ret;
+}
+
+bool SasiApp::CmdInit()
+{
+	PwdGuard pwd_guard;//makes us invulnerabel to cwd changes in usync loading
+	QtArgCmdLine cmd;
+	QtArg config_file( 'f', "config-file", "absolute path to config file", false, true );
+	QtArg customization( 'c', "customize", "Load lobby customizations from special archive.", true, true );
+	QtArg shortname( 's', "shortname", "shortname.", true, true );
+	QtArg version( 'r', "revision", "revision.", true, true );
+	QtArg appname( 'n', "name", "name", true, true );
+	QtArgDefaultHelpPrinter helpPrinter( "Testing help printing.\n" );
+	QtArgHelp help( &cmd );
+	help.setPrinter( &helpPrinter );
+	cmd.addArg( config_file );
+	cmd.addArg( customization );
+	cmd.addArg( shortname );
+	cmd.addArg( version );
+	cmd.addArg( appname );
+	try {
+			cmd.parse();
+	}
+	catch( const QtHelpHasPrintedEx & x ) {	}
+	catch( const QtArgBaseException & x )
+	{
+			qDebug() << x.what();
+			QMessageBox::critical( 0, "Fatal error", QString("Parsing command line failed:\n").append(x.what()) );
+			return false;
+	}
+	Settings::m_user_defined_config = config_file.isPresent();
+
+	if ( Settings::m_user_defined_config ) {
+		Settings::m_user_defined_config_path = TowxString( config_file.value().toString() );
+		qDebug() << ToQString( Settings::m_user_defined_config_path );
+	}
+
+#ifdef __WXMSW__
+	sett().SetSearchSpringOnlyInSLPath( false );
+#endif
+	QString customization_value = customization.value().toString();
+	QString shortname_value = shortname.value().toString();
+	QString version_value = version.value().toString();
+	setApplicationName(appname.value().toString());
+	//must go BEFORE usync loading
+	sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
+//	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
+//	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
+
+	qDebug() << "current used usync path" << ToQString(sett().GetCurrentUsedUnitSync()) ;
+
+	if ( !wxDirExists( GetConfigfileDir() ) )
+		wxMkdir( GetConfigfileDir() );
+
+	usync().FastLoadUnitSyncLib( sett().GetCurrentUsedUnitSync() );
+
+	qDebug() << QString( "shortname: %1").arg( shortname_value );
+	if ( !SLcustomizations().Init( TowxString(customization_value), shortname_value, version_value ) )
+	{
+		qDebug() << "init false";
+		QMessageBox::critical( 0, "Fatal error", QString("loading customizations failed for ").append( shortname_value ) );
+		return false;
+	}
+	return true;
 }

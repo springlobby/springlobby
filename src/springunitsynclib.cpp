@@ -46,7 +46,6 @@ SpringUnitSyncLib& susynclib()
   return lib.GetInstance();
 }
 
-
 void SpringUnitSyncLib::Load( const wxString& path, const wxString& ForceConfigFilePath )
 {
   LOCK_UNITSYNC;
@@ -73,7 +72,6 @@ void SpringUnitSyncLib::Load( const wxString& path, const wxString& ForceConfigF
         m_set_spring_config_file_path( ForceConfigFilePath.mb_str() );
     }
   }
-
   _Init();
 }
 

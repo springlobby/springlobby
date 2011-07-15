@@ -281,7 +281,7 @@ void ScreenResolutionModel::use(int index) const
 		first_use = false;
 		return;// we don't want to commit when the model is first loaded
 	}
-	if ( index < resolutions_.size() )
+	if ( index > 0 && index < resolutions_.size() )
 	{
 		const ScreenResolution& res = resolutions_[index];
 		susynclib().SetSpringConfigInt( _T("XResolution"), res.width );
