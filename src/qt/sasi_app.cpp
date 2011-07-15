@@ -149,9 +149,10 @@ int SasiApp::exec()
 	view.setAttribute(Qt::WA_NoSystemBackground);
 	view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
 
+	//reordering will prolly break stuff like sides list
 	MaplistModel maplist_model( usync().GetMapList() );
-	SkirmishModel skirmish_model;
 	SideModel side_model( SLcustomizations().GetModname() );
+	SkirmishModel skirmish_model;
 	PresetModel preset_model(this);
 	ScreenResolutionModel screenres_model(this);
 

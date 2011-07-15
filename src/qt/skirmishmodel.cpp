@@ -27,7 +27,7 @@ SkirmishModel::SkirmishModel(QObject *parent)
 				tooltip+= _T("\n") + itor->name + _T(": ") + itor->desc;
 				OptionsWrapper temp;
 				wxString filename = sk_dir + _T("/") + itor->key + _T(".lua") ;
-				temp.loadOptions( OptionsWrapper::SkirmishOptions, SLcustomizations().GetModname(), filename );
+				temp.loadOptions( OptionsWrapper::SkirmishOptions, SLcustomizations().Archive(), filename );
 				m_skirmishes.push_back( std::make_pair( itor->name, temp ) );
 				i++;
 			}
@@ -59,7 +59,6 @@ SkirmishModel::SkirmishModel(QObject *parent)
 	roles[Description] = "description";
 	roles[Name] = "skirmish_name";
 	setRoleNames(roles);
-
 }
 
 int SkirmishModel::rowCount(const QModelIndex &/*parent*/ ) const

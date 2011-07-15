@@ -1387,5 +1387,6 @@ wxString SpringUnitSync::GetNameForShortname( const wxString& shortname, const w
 			=  m_shortname_to_name_map.find( std::make_pair(shortname,version) );
 	if ( it != m_shortname_to_name_map.end() )
 		return it->second;
+	assert( false );
 	return wxEmptyString;
 }

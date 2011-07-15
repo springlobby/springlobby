@@ -47,12 +47,18 @@ const wxString& Customizations::GetModname() const
     return m_modname;
 }
 
+const wxString& Customizations::Archive() const
+{
+	return m_archive;
+}
+
 /** @brief Init
   *
   * @todo: document this function
   */
 bool Customizations::Init(const wxString& archive_name )
 {
+	m_archive = archive_name;
 	//!TODO require blocking usync init if it's not loaded
 	bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, archive_name );
     if ( ret ) {
