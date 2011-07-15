@@ -26,6 +26,7 @@ class SasiApp : public QApplication
 	Q_OBJECT
 public:
 	explicit SasiApp(int argc, char *argv[]);
+	bool CmdInit();
 
 	int exec();
 

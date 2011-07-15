@@ -54,8 +54,7 @@ const wxString& Customizations::GetModname() const
 bool Customizations::Init(const wxString& archive_name )
 {
 	//!TODO require blocking usync init if it's not loaded
-	m_modname = archive_name;
-    bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, m_modname );
+	bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, archive_name );
     if ( ret ) {
 		wxBitmap icon_bmp( wxNullBitmap );
 		if ( GetBitmap( _T("icon"), icon_bmp ) )
@@ -148,10 +147,12 @@ Customizations& SLcustomizations()
 #include "qt/qerrorwindow.h"
 #include <QCoreApplication>
 
-bool Customizations::Init( const wxString& archive_name, const QString& shortname )
+bool Customizations::Init( const wxString& archive_name, const QString& shortname, const QString& version )
 {
 	m_shortname = shortname;
-	return Init( archive_name );
+	bool init_success = Init( archive_name );
+	m_modname = usync().GetNameForShortname( TowxString(shortname), TowxString(version) );
+	return init_success;
 }
 
 QString Customizations::DataBasePath()

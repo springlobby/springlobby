@@ -84,7 +84,7 @@ bool SpringUnitSync::FastLoadUnitSyncLib( const wxString& unitsyncloc )
 	m_mods_unchained_hash.clear();
 
 	const int numMods = susynclib().GetPrimaryModCount();
-	wxString name, hash;
+	wxString name;
 	for ( int i = 0; i < numMods; i++ )
 	{
 		try
@@ -613,10 +613,9 @@ wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image
 }
 #ifdef SL_QT_MODE
 #include <QImage>
-QImage SpringUnitSync::GetQImage( const wxString& modname, const wxString& image_path, bool useWhiteAsTransparent  ) const
+QImage SpringUnitSync::GetQImage( const wxString& modname, const wxString& image_path, bool /*useWhiteAsTransparent*/  ) const
 {
 	QImage cache;
-
 	susynclib().SetCurrentMod( modname );
 
 	int ini = susynclib().OpenFileVFS ( image_path );
@@ -628,7 +627,6 @@ QImage SpringUnitSync::GetQImage( const wxString& modname, const wxString& image
 		ASSERT_EXCEPTION( FileSize, _T("image has size 0") );
 	}
 
-	uninitialized_array<char> FileContent(FileSize);
 	QByteArray cache_data;
 	cache_data.resize(FileSize);
 	susynclib().ReadFileVFS(ini, cache_data.data(), FileSize);

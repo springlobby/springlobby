@@ -389,7 +389,7 @@ PwdGuard::~PwdGuard()
 wxString GetAppName( const bool lowerCase )
 {
 #ifdef SL_QT_MODE
-	wxString name = TowxString( QCoreApplication::applicationName );
+	wxString name = TowxString( QCoreApplication::applicationName() );
 #else
 	wxString name = wxTheApp->GetAppName();//this would segfault in qt mode
 #endif
@@ -407,7 +407,6 @@ wxString IdentityString(const wxString format, bool lowerCase )
 wxString AppendAppName(const wxString& dir)
 {
 	wxString subdir(dir);
-
 	// empty string indicates that an error has occurred, don't touch it then
 	if ( !subdir.empty() )
 	{
@@ -417,11 +416,9 @@ wxString AppendAppName(const wxString& dir)
 			const wxChar ch = *(subdir.end() - 1);
 			if ( !wxFileName::IsPathSeparator(ch) && ch != _T('.') )
 				subdir += wxFileName::GetPathSeparator();
-
 			subdir += appname;
 		}
 	}
-
 	return subdir;
 }
 
