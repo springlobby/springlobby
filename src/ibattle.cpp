@@ -868,6 +868,7 @@ std::map<wxString,int> IBattle::RestrictedUnits() const
 
 void IBattle::OnSelfLeftBattle()
 {
+	GetMe().BattleStatus().spectator = false; // always reset back yourself to player when rejoining
 	if ( m_timer ) m_timer->Stop();
 	delete m_timer;
 	m_timer = 0;
