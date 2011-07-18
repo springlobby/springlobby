@@ -19,8 +19,7 @@ SkirmishModel::SkirmishModel(QObject *parent)
 	for ( SpringUnitSync::OptionMapListConstIter it = m_mod_customs.m_opts[optFlag].list_map.begin(); it != m_mod_customs.m_opts[optFlag].list_map.end(); ++it) {
 		mmOptionList current = it->second;
 		if ( _T("scenarios") == current.key ) {
-
-			wxString tooltip;
+			wxString tooltip;//use?
 			int i = 0;
 			for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor )
 			{
@@ -31,10 +30,6 @@ SkirmishModel::SkirmishModel(QObject *parent)
 				m_skirmishes.push_back( std::make_pair( itor->name, temp ) );
 				i++;
 			}
-//            m_scenario_choice->SetToolTip(TE(tooltip));
-
-//            m_scenario_choice->SetName(current.key);
-
 			break;
 		}
 	}
@@ -70,17 +65,16 @@ QVariant SkirmishModel::data(const QModelIndex &index, int role ) const
 {
 	int row =  index.row();
 	if ( !index.isValid() || row >= int(m_skirmishes.size()) )
-		   return QVariant();
+		return QVariant();
 	const OptionsWrapper& opts = m_skirmishes[row].second;
 	switch ( role ) {
 		case Description: {
-			wxString desc = opts.getSingleValue( _T("description") );
+			const wxString desc = opts.getSingleValue( _T("description") );
 			return QVariant::fromValue( QString(desc.mb_str()) );
 		}
 		case Name:
 		default: {
-			wxString name = m_skirmishes[row].first;
-			return QVariant::fromValue( QString(name.mb_str()) );
+			return FromwxString<QVariant>( m_skirmishes[row].first );
 		}
 	}
 }
@@ -97,41 +91,39 @@ void SkirmishModel::run( const int id, const int side, const int map )
 	// we need to store Sides for AIs first, so we can later add them in batch w/o needing to remember a mapping
 	std::vector<wxString> ai_sides;
 	for ( SpringUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
-		mmOptionList current = it->second;
+		const mmOptionList current = it->second;
 		if ( current.key == _T("ai_sides") ) {
-
-			for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor ) {
+			for ( ListItemVec::const_iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor ) {
 				ai_sides.push_back( itor->name );
 			}
-		break;
+			break;
 		}
 	}
 
 	wxString default_ai = m_mod_customs.getSingleValue( _T("default_ai" ) );
 	std::vector<wxString> ai_names ( ai_sides.size(), default_ai );
 	for ( SpringUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
-		mmOptionList current = it->second;
+		const mmOptionList current = it->second;
 		if ( current.key == _T("ai_names") ) {
-			for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor) {
-				size_t idx = FromwxString<size_t>( itor->key );
+			for ( ListItemVec::const_iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor) {
+				const size_t idx = FromwxString<size_t>( itor->key );
 				if ( idx < ai_sides.size() )
 					ai_names[idx] = itor->name;
 			}
-		break;
+			break;
 		}
 	}
 
 	for ( SpringUnitSync::OptionMapListConstIter it = opts.m_opts[optFlag].list_map.begin(); it != opts.m_opts[optFlag].list_map.end(); ++it) {
-		mmOptionList current = it->second;
+		const mmOptionList current = it->second;
 		if ( current.key == _T("ai_team_ids") ) {
-
 			size_t i = 0;
-			for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor, ++i ) {
+			for ( ListItemVec::const_iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor, ++i ) {
 				ASSERT_EXCEPTION( i < ai_sides.size(), _T("The setup is listing more AI opponents than AI sides") );
-				wxString ai = ai_names.size() > i ? ai_names[i] : default_ai;
+				const wxString ai = ai_names.size() > i ? ai_names[i] : default_ai;
 				m_battle.AddBot( ai, FromwxString<int>( itor->name ), ai_sides[i] );
 			}
-		break;
+			break;
 		}
 	}
 

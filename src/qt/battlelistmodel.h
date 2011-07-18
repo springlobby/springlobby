@@ -16,31 +16,30 @@
 **/
 
 
-#ifndef SASI_APP_H
-#define SASI_APP_H
+#ifndef BATTLELISTMODEL_H
+#define BATTLELISTMODEL_H
 
-#include <QApplication>
+#include <QAbstractListModel>
+#include <QList>
 
-class BattlelistModel;
+class wxString;
+class TASServer;
+class Battle;
 
-class SasiApp : public QApplication
+class BattlelistModel : public QAbstractListModel
 {
 	Q_OBJECT
 public:
-	explicit SasiApp(int argc, char *argv[]);
-	bool CmdInit();
-	~SasiApp();
-
-	int exec();
-
-signals:
-	void appLoaded();
-
-public slots:
-	void Update();
+	explicit BattlelistModel( const wxString& modname, QObject *parent = 0);
+	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+	void reload();
+	~BattlelistModel();
 
 private:
-	BattlelistModel* bl_model;
+	const wxString& m_modname;
+	TASServer* m_server;
+	QList<Battle*> m_battles;
 };
 
-#endif // SASI_APP_H
+#endif // BATTLELISTMODEL_H

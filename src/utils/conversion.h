@@ -50,7 +50,7 @@ inline wxString TowxString(const wxChar *arg){
 //}
 
 template<class T>
-static inline T FromwxString(const wxString& arg){
+inline T FromwxString(const wxString& arg){
   std::stringstream s;
   s << STD_STRING(arg);
   int64_t ret;
@@ -60,6 +60,12 @@ static inline T FromwxString(const wxString& arg){
 
 #ifdef SL_QT_MODE
 #include <QString>
+#include <QVariant>
+template<>
+inline QVariant FromwxString(const wxString& arg) {
+	return QVariant::fromValue( QString(arg.mb_str()) );
+}
+
 template<>
 inline wxString TowxString(QString arg){
   return wxString(arg.toStdString().c_str(),wxConvUTF8);
