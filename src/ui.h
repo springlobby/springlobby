@@ -186,22 +186,6 @@ class Ui : public SL::NonCopyable
 
 Ui& ui();
 
-class ServerSelector;
-ServerSelector& serverSelector();
-
-#include "globalsmanager.h"
-class ServerSelector {
-public:
-	Server& GetServer();
-	const Server& GetServer() const;
-	void SetCurrentServer(Server* server);
-	bool    GetServerStatus() const;
-protected:
-	ServerSelector();
-	Server* m_serv;
-	friend class GlobalObjectHolder<ServerSelector, LineInfo<ServerSelector> >;
-};
-
 #endif // SPRINGLOBBY_HEADERGUARD_UI_H
 
 /**

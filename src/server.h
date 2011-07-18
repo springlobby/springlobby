@@ -184,7 +184,7 @@ class Server : public iNetClass, public SL::NonCopyable
 
 	virtual void SetRelayIngamePassword( const User& user ) = 0;
 
-    virtual wxArrayString GetRelayHostList() ;
+	virtual wxArrayString GetRelayHostList();
 
   protected:
 	Socket* m_sock;
@@ -219,6 +219,23 @@ class Server : public iNetClass, public SL::NonCopyable
     virtual void RelayCmd( const wxString& command, const wxString& param ) = 0;
 
 };
+
+class ServerSelector;
+ServerSelector& serverSelector();
+
+#include "globalsmanager.h"
+class ServerSelector {
+public:
+	Server& GetServer();
+	const Server& GetServer() const;
+	void SetCurrentServer(Server* server);
+	bool    GetServerStatus() const;
+protected:
+	ServerSelector();
+	Server* m_serv;
+	friend class GlobalObjectHolder<ServerSelector, LineInfo<ServerSelector> >;
+};
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVER_H
 

@@ -198,3 +198,37 @@ wxArrayString Server::GetRelayHostList()
 	}
 	return ret;
 }
+
+ServerSelector::ServerSelector()
+	: m_serv(0)
+{}
+
+bool ServerSelector::GetServerStatus() const
+{
+	return (bool)(m_serv);
+}
+
+Server& ServerSelector::GetServer()
+{
+	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
+	return *m_serv;
+}
+
+const Server& ServerSelector::GetServer() const
+{
+	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
+	return *m_serv;
+}
+
+void ServerSelector::SetCurrentServer(Server* server)
+{
+	m_serv = server;
+	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
+}
+
+ServerSelector& serverSelector()
+{
+	static LineInfo<ServerSelector> m( AT );
+	static GlobalObjectHolder<ServerSelector,LineInfo<ServerSelector> > m_selector( m );
+	return m_selector;
+}
