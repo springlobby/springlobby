@@ -21,17 +21,26 @@
 
 #include <QApplication>
 
+class BattlelistModel;
+
 class SasiApp : public QApplication
 {
 	Q_OBJECT
 public:
 	explicit SasiApp(int argc, char *argv[]);
 	bool CmdInit();
+	~SasiApp();
 
 	int exec();
 
 signals:
 	void appLoaded();
+
+public slots:
+	void Update();
+
+private:
+	BattlelistModel* bl_model;
 };
 
 #endif // SASI_APP_H

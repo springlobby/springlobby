@@ -20,6 +20,7 @@
 
 #include <QDeclarativeEngine>
 #include <QIcon>
+#include <QTimer>
 #include <QDir>
 #include <QDebug>
 #include <QDeclarativeContext>
@@ -27,22 +28,18 @@
 #include <QDesktopWidget>
 #include <QtOpenGL/QGLWidget>
 #include <QSplashScreen>
-
-#include <wx/intl.h>
-#include <wx/log.h>
-#include <wx/filename.h>
+#include <QMessageBox>
 
 #include <QtArg/Arg>
 #include <QtArg/XorArg>
 #include <QtArg/CmdLine>
 #include <QtArg/Help>
-#include <QSplashScreen>
-
-#include <QDebug>
-#include <QMessageBox>
 
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/socket.h>
+#include <wx/filename.h>
+#include <wx/intl.h>
+#include <wx/log.h>
 #include <wx/filename.h>
 
 #include <iostream>
@@ -64,6 +61,8 @@
 #include "qerrorwindow.h"
 #include "engineconfig.h"
 #include <spring.h>
+#include "battlelistmodel.h"
+#include "server.h"
 
 #ifdef __WXMSW__
 	#include <windows.h>
@@ -86,6 +85,11 @@ SasiApp::SasiApp(int argc, char *argv[])
 
 //	QIcon icon( wxBitmap(SLcustomizations().GetAppIcon()) );
 //	setWindowIcon( icon );
+}
+
+SasiApp::~SasiApp()
+{
+	delete bl_model;
 }
 
 int SasiApp::exec()
@@ -155,6 +159,7 @@ int SasiApp::exec()
 	SkirmishModel skirmish_model;
 	PresetModel preset_model(this);
 	ScreenResolutionModel screenres_model(this);
+	bl_model = new BattlelistModel( SLcustomizations().GetModname(), this );
 
 	spring().connect( &spring(), SIGNAL(springStarted()), &audio_manager, SLOT(pause()));
 	spring().connect( &spring(), SIGNAL(springStopped()), &audio_manager, SLOT(resume()));
@@ -168,6 +173,7 @@ int SasiApp::exec()
 	ctxt->setContextProperty("audioManager", &audio_manager );
 	ctxt->setContextProperty("presetModel", &preset_model );
 	ctxt->setContextProperty("screenresModel", &screenres_model );
+	ctxt->setContextProperty("battlelistModel", bl_model);
 
 	const int sleep_seconds = -1;
 	for ( int i = sleep_seconds; splash && i > 0; i-- ) {
@@ -188,9 +194,15 @@ int SasiApp::exec()
 		QErrorWindow error_window ( errors );
 		return error_window.exec();
 	}
+
+	QTimer *timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
+	timer->start(100);
+
 	view.show();
 	view.setFocus();
 	emit appLoaded();
+
 	int ret = QApplication::exec();
 	audio_manager.wait( 5 /*seconds*/ );
 	sett().SaveSettings();
@@ -258,4 +270,13 @@ bool SasiApp::CmdInit()
 		return false;
 	}
 	return true;
+}
+
+void SasiApp::Update()
+{
+	static unsigned int count = 0;
+	serverSelector().GetServer().Update( 100 );
+	count++;
+	if ( count % 11 == 0 )
+		bl_model->reload();
 }
