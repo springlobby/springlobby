@@ -29,7 +29,7 @@ Battle& BattleList::GetFirstBattle()
 */
 
 
-BattleList::battle_map_t::size_type BattleList_Iter::GetNumBattles()
+BattleList::battle_map_t::size_type BattleList_Iter::GetNumBattles() const
 {
   return (m_battlelist)?(m_battlelist->m_battles.size()):0;
 }
@@ -42,13 +42,12 @@ void BattleList_Iter::IteratorBegin()
 
 Battle* BattleList_Iter::GetBattle()
 {
-
   Battle* battle = m_iterator->second;
   if ( m_battlelist && m_iterator != m_battlelist->m_battles.end() ) ++m_iterator;
   return battle;
 }
 
-bool BattleList_Iter::EOL()
+bool BattleList_Iter::EOL() const
 {
   return ( m_battlelist && m_iterator == m_battlelist->m_battles.end() )?true:false;
 }

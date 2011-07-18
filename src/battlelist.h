@@ -36,11 +36,11 @@ class BattleList_Iter : public SL::NonCopyable
 	~BattleList_Iter() {}
     void IteratorBegin();
     Battle* GetBattle();
-    bool EOL();
+	bool EOL() const;
     Battle& GetBattle( BattleList::battle_id_t const& id );
     //Battle& GetFirstBattle();
     bool BattleExists( BattleList::battle_id_t const& id );
-    BattleList::battle_map_t::size_type GetNumBattles();
+	BattleList::battle_map_t::size_type GetNumBattles() const;
   private:
     BattleList::battle_iter_t m_iterator;
     BattleList* m_battlelist;
