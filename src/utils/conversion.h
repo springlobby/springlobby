@@ -62,8 +62,12 @@ inline T FromwxString(const wxString& arg){
 #include <QString>
 #include <QVariant>
 template<>
+inline QString FromwxString(const wxString& arg) {
+        return QString(arg.mb_str());
+}
+template<>
 inline QVariant FromwxString(const wxString& arg) {
-	return QVariant::fromValue( QString(arg.mb_str()) );
+        return QVariant::fromValue( FromwxString<QString>( arg ) );
 }
 
 template<>

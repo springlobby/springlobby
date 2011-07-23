@@ -20,7 +20,7 @@ symbian:TARGET.UID3 = 0xE1BC102A
 # MOBILITY variable. 
 # CONFIG += mobility
 # MOBILITY +=
-QT += opengl webkit declarative
+QT += network opengl webkit declarative
 # PKGCONFIG += vorbis vorbisfile
 # LIBS += -lvorbisfile -lvorbis -logg
 
@@ -250,7 +250,8 @@ HEADERS += \
     sasi_app.h \
     audio/SoundBuffer.h \
     engineconfig.h \
-    battlelistmodel.h
+    battlelistmodel.h \
+    ../socket.h
 
 INCLUDEPATH += ..
 INCLUDEPATH += ../Helper/qtargparser
@@ -294,6 +295,7 @@ CONFIG(debug, debug|release) {
 
 INSTALLS += sasi
 sasi.path = $(DESTDIR)/sasi
+
 
 
 

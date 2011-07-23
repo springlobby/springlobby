@@ -31,7 +31,70 @@
 
 #define LOCK_SOCKET wxCriticalSectionLocker criticalsection_lock(m_lock)
 
+wxString _GetHandle()
+{
+        wxString handle;
+        #ifdef __WXMSW__
 
+    IP_ADAPTER_INFO AdapterInfo[16];       // Allocate information for 16 cards
+    DWORD dwBufLen = sizeof(AdapterInfo);  // Save memory size of buffer
+
+    DWORD dwStatus = GetAdaptersInfo ( AdapterInfo, &dwBufLen); // Get info
+                if (dwStatus != NO_ERROR) return _T(""); // Check status
+    for (unsigned int i=0; i<std::min( (unsigned int)6, (unsigned int)AdapterInfo[0].AddressLength); i++)
+    {
+        handle += TowxString(((unsigned int)AdapterInfo[0].Address[i])&255);
+        if (i != 5) handle += _T(':');
+    }
+        #elif defined(__WXGTK__) && defined(linux)
+        int sock = socket (AF_INET, SOCK_DGRAM, 0);
+        if (sock < 0)
+        {
+                return _T(""); //not a valid socket
+        }
+        struct ifreq dev; //container for the hw data
+        struct if_nameindex *NameList = if_nameindex(); //container for the interfaces list
+        if (NameList == NULL)
+        {
+                close(sock);
+                return _T(""); //cannot list the interfaces
+        }
+
+        int pos = 0;
+        std::string InterfaceName;
+        do
+        {
+                if (NameList[pos].if_index == 0)
+                {
+                        close(sock);
+                        if_freenameindex(NameList);
+                        return _T(""); // no valid interfaces found
+                }
+                InterfaceName = NameList[pos].if_name;
+                pos++;
+        } while (InterfaceName.substr(0,2) == "lo" || InterfaceName.substr(0,3) == "sit");
+
+        if_freenameindex(NameList); //free the memory
+
+        strcpy (dev.ifr_name, InterfaceName.c_str()); //select from the name
+        if (ioctl(sock, SIOCGIFHWADDR, &dev) < 0) //get the interface data
+        {
+                close(sock);
+                return _T(""); //cannot list the interfaces
+        }
+
+    for (int i=0; i<6; i++)
+    {
+        handle += TowxString(((unsigned int)dev.ifr_hwaddr.sa_data[i])&255);
+        if (i != 5) handle += _T(':');
+    }
+        close(sock);
+        #endif
+        return handle;
+}
+
+
+#ifndef SL_QT_MODE
 BEGIN_EVENT_TABLE(SocketEvents, wxEvtHandler)
 
 EVT_SOCKET(SOCKET_ID, SocketEvents::OnSocketEvent)
@@ -66,6 +129,7 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 Socket::Socket( iNetClass& netclass, bool wait_on_connect, bool blocking  ) :
     m_sock( NULL ),
     m_events( NULL ),
+    m_handle( _GetHandle() ),
     m_connecting( false ),
     m_wait_on_connect( wait_on_connect ),
     m_blocking(blocking),
@@ -232,68 +296,6 @@ wxString Socket::Receive()
 	return ret;
 }
 
-wxString Socket::GetHandle()
-{
-	wxString handle;
-	#ifdef __WXMSW__
-
-    IP_ADAPTER_INFO AdapterInfo[16];       // Allocate information for 16 cards
-    DWORD dwBufLen = sizeof(AdapterInfo);  // Save memory size of buffer
-
-    DWORD dwStatus = GetAdaptersInfo ( AdapterInfo, &dwBufLen); // Get info
-		if (dwStatus != NO_ERROR) return _T(""); // Check status
-    for (unsigned int i=0; i<std::min( (unsigned int)6, (unsigned int)AdapterInfo[0].AddressLength); i++)
-    {
-        handle += TowxString(((unsigned int)AdapterInfo[0].Address[i])&255);
-        if (i != 5) handle += _T(':');
-    }
-	#elif defined(__WXGTK__) && defined(linux)
-	int sock = socket (AF_INET, SOCK_DGRAM, 0);
-	if (sock < 0)
-	{
-		return _T(""); //not a valid socket
-	}
-	struct ifreq dev; //container for the hw data
-	struct if_nameindex *NameList = if_nameindex(); //container for the interfaces list
-	if (NameList == NULL)
-	{
-		close(sock);
-		return _T(""); //cannot list the interfaces
-	}
-
-	int pos = 0;
-	std::string InterfaceName;
-	do
-	{
-		if (NameList[pos].if_index == 0)
-		{
-			close(sock);
-			if_freenameindex(NameList);
-			return _T(""); // no valid interfaces found
-		}
-		InterfaceName = NameList[pos].if_name;
-		pos++;
-	} while (InterfaceName.substr(0,2) == "lo" || InterfaceName.substr(0,3) == "sit");
-
-	if_freenameindex(NameList); //free the memory
-
-	strcpy (dev.ifr_name, InterfaceName.c_str()); //select from the name
-	if (ioctl(sock, SIOCGIFHWADDR, &dev) < 0) //get the interface data
-	{
-		close(sock);
-		return _T(""); //cannot list the interfaces
-	}
-
-    for (int i=0; i<6; i++)
-    {
-        handle += TowxString(((unsigned int)dev.ifr_hwaddr.sa_data[i])&255);
-        if (i != 5) handle += _T(':');
-    }
-	close(sock);
-	#endif
-	return handle;
-}
-
 //! @brief Get curent socket state
 SockState Socket::State( )
 {
@@ -353,3 +355,156 @@ void Socket::OnTimer( int mselapsed )
     m_sent = 0;
   }
 }
+
+#else
+#include <QHostAddress>
+
+
+// Socket interface
+
+void Socket::Connect( const wxString& _addr, const int port )
+{
+    const QString address = FromwxString<QString>( _addr );
+    if ( m_sock )
+        m_sock->abort();
+    delete m_sock;
+    m_sock = _CreateSocket();
+    connect( m_sock, SIGNAL( readyRead() ), this, SLOT( OnDataIncoming() ) );
+    connect( m_sock, SIGNAL( connected() ), this, SLOT( OnConnected() ) );
+    connect( m_sock, SIGNAL( disconnected() ), this, SLOT( OnDisconnected() ) );
+    m_sock->connectToHost( address, port );
+//    if (m_wait_on_connect)
+    {
+        bool con = m_sock->waitForConnected( 40000 /*40sec*/ );
+        assert( con );
+    }
+}
+
+void Socket::Disconnect( )
+{
+    m_net_class.OnDisconnected( this );
+    if(m_sock)
+        m_sock->disconnect();
+}
+
+bool Socket::Send( const wxString& _data )
+{
+    const QString data = FromwxString<QString>( _data );
+    m_sock->write( data.toUtf8() );
+    return true;//!TODO
+}
+
+wxString Socket::Receive()
+{
+//    QDataStream in(m_sock);
+//    in.setVersion(QDataStream::Qt_4_0);
+
+//    if (m_blockSize == 0) {
+//        if (m_sock->bytesAvailable() < (int)sizeof(quint16))
+//            return wxString();
+//        in >> m_blockSize;
+//    }
+
+//    if (m_sock->bytesAvailable() < m_blockSize)
+//        return wxString();
+
+    QString ret;
+//    in >> ret;
+    while ( m_sock->canReadLine() )
+       // Emit messages from the socket and remove utf8 right-to-left mark so text doesnt get messed up (QChar(0x202E))
+       ret += QString::fromUtf8( m_sock->readLine() ).replace(QChar(0x202E),"");
+
+    qDebug() << "NET: " << ret;
+    return TowxString( ret );
+}
+
+//! used in plasmaservice, otherwise getting garbeld responses
+wxString Socket::ReceiveSpecial()
+{
+    return Receive();
+}
+
+wxString Socket::GetLocalAddress() const
+{
+    if ( m_sock && ( m_sock->state() == QAbstractSocket::ConnectedState ) )
+        return TowxString( m_sock->localAddress().toString() );
+    else
+        return wxString();
+}
+
+SockState Socket::State( )
+{
+    if ( m_sock == 0 ) return SS_Closed;
+
+    LOCK_SOCKET;
+    if ( m_sock->state() == QAbstractSocket::ConnectedState )
+    {
+        return SS_Open;
+    } else {
+        if ( m_sock->state() == QAbstractSocket::ConnectingState  ) {
+            return SS_Connecting;
+        } else {
+            return SS_Closed;
+        }
+    }
+}
+
+SockError Socket::Error( ) const
+{
+    return (SockError)-1;
+}
+//!is there an equiv on qtsocket??
+void Socket::SetSendRateLimit( int /*Bps*/ ){}
+
+void Socket::OnTimer( int mselapsed ){}
+
+void Socket::SetTimeout( const int /*seconds*/ ){}
+
+QTcpSocket* Socket::_CreateSocket() const
+{
+    return new QTcpSocket();
+}
+
+Socket::Socket( iNetClass& netclass, bool wait_on_connect, bool blocking)
+    : QObject( 0 ),
+      m_sock(0),
+      m_handle( _GetHandle() ),
+      m_wait_on_connect( wait_on_connect ),
+      m_blocking(blocking),
+      m_net_class(netclass),
+      m_udp_private_port(0),
+      m_rate(-1),
+      m_sent(0),
+      m_blockSize(0)
+{
+}
+
+Socket::~Socket()
+{
+    if (m_sock)
+        m_sock->disconnect();
+    delete m_sock;
+}
+
+void Socket::OnDataIncoming()
+{
+    if (!m_sock)
+        return;
+    m_net_class.OnDataReceived( this );
+}
+
+void Socket::OnDisconnected()
+{
+    if (!m_sock)
+        return;
+    m_net_class.OnDisconnected( this );
+}
+
+void Socket::OnConnected()
+{
+    if (!m_sock)
+        return;
+    m_net_class.OnConnected( this );
+}
+
+#endif
