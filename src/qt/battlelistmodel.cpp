@@ -23,58 +23,58 @@
 #include <settings.h>
 
 BattlelistModel::BattlelistModel(const wxString& modname, QObject *parent)
-	: QAbstractListModel(parent),
-	  m_modname( modname ),
-	  m_server( 0 )
+    : QAbstractListModel(parent),
+      m_modname( modname ),
+      m_server( 0 )
 {
-	m_server = new TASServer( IServerEvents::simple );
-	serverSelector().SetCurrentServer( m_server );
-	const wxString servername = sett().GetDefaultServer();
-	const wxString username = sett().GetServerAccountNick( servername );
-	const wxString password = sett().GetServerAccountPass( servername );
+    m_server = new TASServer( IServerEvents::simple );
+    serverSelector().SetCurrentServer( m_server );
+    const wxString servername = sett().GetDefaultServer();
+    const wxString username = sett().GetServerAccountNick( servername );
+    const wxString password = sett().GetServerAccountPass( servername );
 
-	serverSelector().GetServer().SetUsername( username );
-	serverSelector().GetServer().SetPassword( password );
-	if ( sett().GetServerAccountSavePass( servername ) )
-	{
-		if ( serverSelector().GetServer().IsPasswordHash(password) ) sett().SetServerAccountPass( servername, password );
-		else sett().SetServerAccountPass( servername, serverSelector().GetServer().GetPasswordHash( password ) );
-	}
-	else
-	{
-		sett().SetServerAccountPass( servername, _T("") );
-	}
-	const wxString host = sett().GetServerHost( servername );
-	const int port = sett().GetServerPort( servername );
-	serverSelector().GetServer().Connect( servername, host, port );
+    serverSelector().GetServer().SetUsername( username );
+    serverSelector().GetServer().SetPassword( password );
+    if ( sett().GetServerAccountSavePass( servername ) )
+    {
+        if ( serverSelector().GetServer().IsPasswordHash(password) ) sett().SetServerAccountPass( servername, password );
+        else sett().SetServerAccountPass( servername, serverSelector().GetServer().GetPasswordHash( password ) );
+    }
+    else
+    {
+        sett().SetServerAccountPass( servername, _T("") );
+    }
+    const wxString host = sett().GetServerHost( servername );
+    const int port = sett().GetServerPort( servername );
+    serverSelector().GetServer().Connect( servername, host, port );
 }
 
 BattlelistModel::~BattlelistModel()
 {
-	serverSelector().GetServer().Disconnect();
+    serverSelector().GetServer().Disconnect();
 }
 
 int BattlelistModel::rowCount(const QModelIndex&/*parent*/ ) const
 {
-	return m_battles.size();
+    return m_battles.size();
 }
 
 QVariant BattlelistModel::data(const QModelIndex &index, int role ) const
 {
-	int row =  index.row();
-	if ( !index.isValid() || row >= m_battles.size() )
-		   return QVariant();
-	return FromwxString<QVariant>( m_battles[row]->GetDescription() );
+    int row =  index.row();
+    if ( !index.isValid() || row >= m_battles.size() )
+        return QVariant();
+    return FromwxString<QVariant>( m_battles[row]->GetDescription() );
 }
 
 void BattlelistModel::reload()
 {
-	m_battles.clear();
-	BattleList_Iter* iter = (serverSelector().GetServer().battles_iter);
-	if ( !iter )
-		return;
-	iter->IteratorBegin();
-	while( !(iter->EOL()) ) {
-		m_battles.append( iter->GetBattle() );
-	}
+    m_battles.clear();
+    BattleList_Iter* iter = (serverSelector().GetServer().battles_iter);
+    if ( !iter )
+        return;
+    iter->IteratorBegin();
+    while( !(iter->EOL()) ) {
+        m_battles.append( iter->GetBattle() );
+    }
 }
