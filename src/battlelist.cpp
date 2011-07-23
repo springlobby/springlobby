@@ -9,17 +9,15 @@ BattleList::BattleList()
 {
 }
 
-#include <QDebug>
+
 void BattleList::AddBattle( Battle& battle )
 {
   m_battles[battle.GetBattleId()] = &battle;
-  qDebug() << "+1";
 }
 
 
 void BattleList::RemoveBattle( battle_id_t const& id ) {
   m_battles.erase(id);
-  qDebug() << "+1";
 }
 
 

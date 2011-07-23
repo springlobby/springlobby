@@ -39,7 +39,6 @@ int BattlelistModel::rowCount(const QModelIndex&/*parent*/ ) const
 
 QVariant BattlelistModel::data(const QModelIndex &index, int role ) const
 {
-//    return QVariant::fromValue( QString( " OTTO " ) );
     int row =  index.row();
     if ( !index.isValid() || row >= m_battles.size() || !(m_battles[row]) )
         return QVariant();
@@ -48,7 +47,7 @@ QVariant BattlelistModel::data(const QModelIndex &index, int role ) const
                 + _T(" - ") + battle.GetHostMapName()
                 + _T(" - ") + battle.GetFounder().GetNick()  );
 }
-#include <QDebug>
+
 void BattlelistModel::reload()
 {
     m_battles.clear();

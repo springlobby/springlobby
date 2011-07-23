@@ -373,10 +373,9 @@ void Socket::Connect( const wxString& _addr, const int port )
     connect( m_sock, SIGNAL( connected() ), this, SLOT( OnConnected() ) );
     connect( m_sock, SIGNAL( disconnected() ), this, SLOT( OnDisconnected() ) );
     m_sock->connectToHost( address, port );
-//    if (m_wait_on_connect)
+    if (m_wait_on_connect)
     {
-        bool con = m_sock->waitForConnected( 40000 /*40sec*/ );
-        assert( con );
+        m_sock->waitForConnected( 40000 /*40sec*/ );
     }
 }
 
@@ -396,26 +395,10 @@ bool Socket::Send( const wxString& _data )
 
 wxString Socket::Receive()
 {
-//    QDataStream in(m_sock);
-//    in.setVersion(QDataStream::Qt_4_0);
-
-//    if (m_blockSize == 0) {
-//        if (m_sock->bytesAvailable() < (int)sizeof(quint16))
-//            return wxString();
-//        in >> m_blockSize;
-//    }
-
-//    if (m_sock->bytesAvailable() < m_blockSize)
-//        return wxString();
-
     LOCK_SOCKET;
     QString ret;
-//    in >> ret;
     while ( m_sock->canReadLine() )
-       // Emit messages from the socket and remove utf8 right-to-left mark so text doesnt get messed up (QChar(0x202E))
-       ret += QString::fromUtf8( m_sock->readLine() ).replace(QChar(0x202E),"");
-
-//    qDebug() << "NET: " << ret;
+       ret += QString::fromUtf8( m_sock->readLine() );
     return TowxString( ret );
 }
 
@@ -437,7 +420,6 @@ SockState Socket::State( )
 {
     if ( m_sock == 0 ) return SS_Closed;
 
-    LOCK_SOCKET;
     if ( m_sock->state() == QAbstractSocket::ConnectedState )
     {
         return SS_Open;
