@@ -27,6 +27,13 @@ BattlelistModel::BattlelistModel(const wxString& modname, QObject *parent)
     : QAbstractListModel(parent),
       m_modname( modname )
 {
+    QHash<int, QByteArray> roles;
+    roles[Description] = "description";
+    roles[Mapname] = "mapname";
+    roles[Founder] = "founder";
+    roles[PlayerCurrent] = "playerCurrent";
+    roles[PlayerMax] = "playerMax";
+    setRoleNames(roles);
 }
 
 BattlelistModel::~BattlelistModel()
@@ -43,22 +50,38 @@ QVariant BattlelistModel::data(const QModelIndex &index, int role ) const
     if ( !index.isValid() || row >= m_battles.size() || !(m_battles[row]) )
         return QVariant();
     const Battle& battle = *m_battles[row];
-    return FromwxString<QVariant>( battle.GetHostModName()
-                + _T(" - ") + battle.GetHostMapName()
-                + _T(" - ") + battle.GetFounder().GetNick()  );
+    switch ( role ) {
+        case Mapname:{
+            return FromwxString<QVariant>( battle.GetHostMapName() );
+        }
+        case Founder:
+            return FromwxString<QVariant>( battle.GetFounder().GetNick() );
+        case PlayerMax:
+            return QVariant::fromValue( battle.GetMaxPlayers() );
+        case PlayerCurrent:
+            return QVariant::fromValue( battle.GetNumPlayers() );
+        case Description:
+        default: {
+            return FromwxString<QVariant>( battle.GetDescription()  );
+        }
+    }
 }
 
 void BattlelistModel::reload()
 {
     m_battles.clear();
+    reset();
     BattleList_Iter* iter = (serverSelector().GetServer().battles_iter);
     if ( !iter )
         return;
     iter->IteratorBegin();
-    beginInsertRows(QModelIndex(), 0, iter->GetNumBattles() );
+
     while( !(iter->EOL()) ) {
-        m_battles.append( iter->GetBattle() );
+        Battle* battle = iter->GetBattle();
+        if ( battle && battle->GetHostModName().Contains( _T("Evolu") ) )
+            m_battles.append( battle );
     }
+    beginInsertRows(QModelIndex(), 0, m_battles.size() );
     endInsertRows();
 }
 
