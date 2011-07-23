@@ -2320,19 +2320,19 @@ void TASServer::OnDisconnected( Socket* /*unused*/ )
 
 void TASServer::OnDataReceived( Socket* sock )
 {
-		if ( sock == 0 ) return;
-		m_last_net_packet = time( 0 );
+    if ( sock == 0 ) return;
+    m_last_net_packet = time( 0 );
     wxString data = sock->Receive();
-		m_buffer << data;
-		m_buffer.Replace( _T("\r\n"), _T("\n") );
-		int returnpos = m_buffer.Find( _T("\n") );
-		while ( returnpos != -1 )
-		{
-			wxString cmd = m_buffer.Left( returnpos );
-			m_buffer = m_buffer.Mid( returnpos + 1 );
-			ExecuteCommand( cmd );
-			returnpos = m_buffer.Find( _T("\n") );
-		}
+    m_buffer << data;
+    m_buffer.Replace( _T("\r\n"), _T("\n") );
+    int returnpos = m_buffer.Find( _T("\n") );
+    while ( returnpos != -1 )
+    {
+        wxString cmd = m_buffer.Left( returnpos );
+        m_buffer = m_buffer.Mid( returnpos + 1 );
+        ExecuteCommand( cmd );
+        returnpos = m_buffer.Find( _T("\n") );
+    }
 }
 
 

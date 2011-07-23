@@ -6,11 +6,7 @@
 #include <wx/event.h>
 
 class iNetClass;
-class Socket;
-class wxSocketEvent;
-class wxSocketClient;
 class wxCriticalSection;
-
 class PingThread;
 
 enum SockState
@@ -28,21 +24,13 @@ enum SockError
   SE_Connect_Host_Failed
 };
 
-#define SOCKET_ID 100
+const int SOCKET_ID = 100;
 
+#ifndef SL_QT_MODE
 
-class SocketEvents: public wxEvtHandler
-{
-  public:
-    SocketEvents( iNetClass& netclass ): m_net_class(netclass) {}
-    void OnSocketEvent(wxSocketEvent& event);
-  protected:
-    iNetClass& m_net_class;
-  DECLARE_EVENT_TABLE()
-};
-
-typedef void (*socket_callback)(Socket*);
-
+class SocketEvents;
+class wxSocketEvent;
+class wxSocketClient;
 
 //! @brief Class that implements a TCP client socket.
 class Socket
@@ -63,7 +51,7 @@ class Socket
     wxString ReceiveSpecial();
 
     wxString GetLocalAddress() const;
-    wxString GetHandle();
+    wxString GetHandle() const {return m_handle;}
 
     SockState State( );
     SockError Error( ) const;
@@ -83,7 +71,7 @@ class Socket
 
     wxCriticalSection m_lock;
 
-    wxString m_ping_msg;
+    wxString m_ping_msg,m_handle;
 
     bool m_connecting;
     bool m_wait_on_connect;
@@ -100,6 +88,81 @@ class Socket
     bool _Send( const wxString& data );
 };
 
+class SocketEvents: public wxEvtHandler
+{
+  public:
+    SocketEvents( iNetClass& netclass ): m_net_class(netclass) {}
+    void OnSocketEvent(wxSocketEvent& event);
+  protected:
+    iNetClass& m_net_class;
+  DECLARE_EVENT_TABLE()
+};
+
+typedef void (*socket_callback)(Socket*);
+
+#else
+
+#include <QTcpSocket>
+//! @brief Class that implements a TCP client socket.
+class Socket : public QObject
+{
+    Q_OBJECT
+
+   public:
+    Socket( iNetClass& netclass, bool wait_on_connect = false, bool blocking = false );
+    ~Socket();
+
+    // Socket interface
+
+    void Connect( const wxString& addr, const int port );
+    void Disconnect( );
+
+    bool Send( const wxString& data );
+
+    //! used in plasmaservice, otherwise getting garbeld responses
+    wxString ReceiveSpecial();
+
+    wxString GetLocalAddress() const;
+    wxString GetHandle() const {return m_handle;}
+
+    SockState State( );
+    SockError Error( ) const;
+
+    void SetSendRateLimit( int Bps = -1 );
+    int GetSendRateLimit() {return m_rate;}
+    void OnTimer( int mselapsed );
+
+    void SetTimeout( const int seconds );
+    wxString Receive();
+
+private slots:
+    void OnDataIncoming();
+    void OnConnected();
+    void OnDisconnected();
+
+
+    protected:
+
+  // Socket variables
+    QTcpSocket* m_sock;
+
+    wxCriticalSection m_lock;
+
+    wxString m_ping_msg,m_handle;
+
+    bool m_wait_on_connect;
+    bool m_blocking;
+    iNetClass& m_net_class;
+
+    unsigned int m_udp_private_port;
+    int m_rate;
+    int m_sent;
+    quint16 m_blockSize;
+
+    QTcpSocket* _CreateSocket() const;
+};
+
+#endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_SOCKET_H
 
