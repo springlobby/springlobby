@@ -34,6 +34,10 @@ public:
 	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 	void reload();
 	~BattlelistModel();
+        enum Roles {
+                         Description = Qt::UserRole + 1,
+                         Mapname,Founder,PlayerMax,PlayerCurrent
+                 };
 public slots:
         int battle_count();
 private:

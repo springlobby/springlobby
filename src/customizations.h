@@ -72,6 +72,7 @@ class Customizations {
 		QString SoundsDir();
 		QString MusicDir();
 		const wxString& Archive() const;
+                const QString& GetModshortname() const;
 #endif
 };
 

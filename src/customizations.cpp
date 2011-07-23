@@ -203,4 +203,10 @@ QString Customizations::MusicDir()
 {
 	return QDir( DataBasePath() + "/" + "music" ).absolutePath();
 }
+
+const QString& Customizations::GetModshortname() const
+{
+    return m_shortname;
+}
+
 #endif

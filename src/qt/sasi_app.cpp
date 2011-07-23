@@ -183,7 +183,11 @@ int SasiApp::exec()
     SkirmishModel skirmish_model;
     PresetModel preset_model(this);
     ScreenResolutionModel screenres_model(this);
-    bl_model = new BattlelistModel( SLcustomizations().GetModname(), this );
+
+    //! TODO switch bakc to modname
+    wxString modname = SLcustomizations().GetModname();
+    bl_model = new BattlelistModel( modname.SubString(0,10), this );
+
     serverSelector().GetServer().Update( 100 );
 
     spring().connect( &spring(), SIGNAL(springStarted()), &audio_manager, SLOT(pause()));
