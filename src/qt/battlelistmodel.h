@@ -23,7 +23,6 @@
 #include <QList>
 
 class wxString;
-class TASServer;
 class Battle;
 
 class BattlelistModel : public QAbstractListModel
@@ -35,10 +34,10 @@ public:
 	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 	void reload();
 	~BattlelistModel();
-
+public slots:
+        int battle_count();
 private:
 	const wxString& m_modname;
-	TASServer* m_server;
 	QList<Battle*> m_battles;
 };
 

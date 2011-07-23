@@ -63,6 +63,8 @@
 #include <spring.h>
 #include "battlelistmodel.h"
 #include "server.h"
+#include <tasserver.h>
+#include <iserverevents.h>
 
 #ifdef __WXMSW__
 #include <windows.h>
@@ -90,6 +92,7 @@ SasiApp::SasiApp(int argc, char *argv[])
 SasiApp::~SasiApp()
 {
     delete bl_model;
+    delete m_server;
 }
 
 int SasiApp::exec()
@@ -153,6 +156,27 @@ int SasiApp::exec()
     view.setAttribute(Qt::WA_NoSystemBackground);
     view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
 
+    m_server = new TASServer( IServerEvents::simple );
+    serverSelector().SetCurrentServer( m_server );
+    const wxString servername = sett().GetDefaultServer();
+    const wxString username = sett().GetServerAccountNick( servername );
+    const wxString password = sett().GetServerAccountPass( servername );
+
+    serverSelector().GetServer().SetUsername( username );
+    serverSelector().GetServer().SetPassword( password );
+    if ( sett().GetServerAccountSavePass( servername ) )
+    {
+        if ( serverSelector().GetServer().IsPasswordHash(password) ) sett().SetServerAccountPass( servername, password );
+        else sett().SetServerAccountPass( servername, serverSelector().GetServer().GetPasswordHash( password ) );
+    }
+    else
+    {
+        sett().SetServerAccountPass( servername, _T("") );
+    }
+    const wxString host = sett().GetServerHost( servername );
+    const int port = sett().GetServerPort( servername );
+    serverSelector().GetServer().Connect( servername, host, port );
+
     //reordering will prolly break stuff like sides list
     MaplistModel maplist_model( usync().GetMapList() );
     SideModel side_model( SLcustomizations().GetModname() );
@@ -160,6 +184,7 @@ int SasiApp::exec()
     PresetModel preset_model(this);
     ScreenResolutionModel screenres_model(this);
     bl_model = new BattlelistModel( SLcustomizations().GetModname(), this );
+    serverSelector().GetServer().Update( 100 );
 
     spring().connect( &spring(), SIGNAL(springStarted()), &audio_manager, SLOT(pause()));
     spring().connect( &spring(), SIGNAL(springStopped()), &audio_manager, SLOT(resume()));
@@ -204,6 +229,7 @@ int SasiApp::exec()
     emit appLoaded();
 
     int ret = QApplication::exec();
+    serverSelector().GetServer().Disconnect();
     audio_manager.wait( 5 /*seconds*/ );
     sett().SaveSettings();
     return ret;
