@@ -408,13 +408,14 @@ wxString Socket::Receive()
 //    if (m_sock->bytesAvailable() < m_blockSize)
 //        return wxString();
 
+    LOCK_SOCKET;
     QString ret;
 //    in >> ret;
     while ( m_sock->canReadLine() )
        // Emit messages from the socket and remove utf8 right-to-left mark so text doesnt get messed up (QChar(0x202E))
        ret += QString::fromUtf8( m_sock->readLine() ).replace(QChar(0x202E),"");
 
-    qDebug() << "NET: " << ret;
+//    qDebug() << "NET: " << ret;
     return TowxString( ret );
 }
 

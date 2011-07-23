@@ -22,6 +22,7 @@
 #include <QApplication>
 
 class BattlelistModel;
+class TASServer;
 
 class SasiApp : public QApplication
 {
@@ -41,6 +42,7 @@ public slots:
 
 private:
 	BattlelistModel* bl_model;
+        TASServer* m_server;
 };
 
 #endif // SASI_APP_H

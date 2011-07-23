@@ -18,41 +18,19 @@
 
 #include "battlelistmodel.h"
 
-#include <tasserver.h>
+
 #include <iserverevents.h>
 #include <settings.h>
+#include <server.h>
 
 BattlelistModel::BattlelistModel(const wxString& modname, QObject *parent)
     : QAbstractListModel(parent),
-      m_modname( modname ),
-      m_server( 0 )
+      m_modname( modname )
 {
-    m_server = new TASServer( IServerEvents::simple );
-    serverSelector().SetCurrentServer( m_server );
-    const wxString servername = sett().GetDefaultServer();
-    const wxString username = sett().GetServerAccountNick( servername );
-    const wxString password = sett().GetServerAccountPass( servername );
-
-    serverSelector().GetServer().SetUsername( username );
-    serverSelector().GetServer().SetPassword( password );
-    if ( sett().GetServerAccountSavePass( servername ) )
-    {
-        if ( serverSelector().GetServer().IsPasswordHash(password) ) sett().SetServerAccountPass( servername, password );
-        else sett().SetServerAccountPass( servername, serverSelector().GetServer().GetPasswordHash( password ) );
-    }
-    else
-    {
-        sett().SetServerAccountPass( servername, _T("") );
-    }
-    const wxString host = sett().GetServerHost( servername );
-    const int port = sett().GetServerPort( servername );
-    serverSelector().GetServer().Connect( servername, host, port );
 }
 
 BattlelistModel::~BattlelistModel()
-{
-    serverSelector().GetServer().Disconnect();
-}
+{}
 
 int BattlelistModel::rowCount(const QModelIndex&/*parent*/ ) const
 {
@@ -61,12 +39,16 @@ int BattlelistModel::rowCount(const QModelIndex&/*parent*/ ) const
 
 QVariant BattlelistModel::data(const QModelIndex &index, int role ) const
 {
+//    return QVariant::fromValue( QString( " OTTO " ) );
     int row =  index.row();
-    if ( !index.isValid() || row >= m_battles.size() )
+    if ( !index.isValid() || row >= m_battles.size() || !(m_battles[row]) )
         return QVariant();
-    return FromwxString<QVariant>( m_battles[row]->GetDescription() );
+    const Battle& battle = *m_battles[row];
+    return FromwxString<QVariant>( battle.GetHostModName()
+                + _T(" - ") + battle.GetHostMapName()
+                + _T(" - ") + battle.GetFounder().GetNick()  );
 }
-
+#include <QDebug>
 void BattlelistModel::reload()
 {
     m_battles.clear();
@@ -74,7 +56,15 @@ void BattlelistModel::reload()
     if ( !iter )
         return;
     iter->IteratorBegin();
+    beginInsertRows(QModelIndex(), 0, iter->GetNumBattles() );
     while( !(iter->EOL()) ) {
         m_battles.append( iter->GetBattle() );
     }
+    endInsertRows();
+}
+
+int BattlelistModel::battle_count()
+{
+    BattleList_Iter* iter = (serverSelector().GetServer().battles_iter);
+    return iter ? iter->GetNumBattles() : -1;
 }

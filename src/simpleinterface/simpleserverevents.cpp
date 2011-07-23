@@ -5,7 +5,7 @@
 
 #ifdef _MSC_VER
 #ifndef NOMINMAX
-    #define NOMINMAX
+#define NOMINMAX
 #endif // NOMINMAX
 #include <winsock2.h>
 #endif // _MSC_VER
@@ -31,15 +31,15 @@
 
 
 BEGIN_EVENT_TABLE(SimpleServerEvents, wxEvtHandler)
-	EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  SimpleServerEvents::OnSpringDownloadEvent)
-	EVT_COMMAND(wxID_ANY, httpDownloadEvtFailed,    SimpleServerEvents::OnSpringDownloadEvent)
+EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  SimpleServerEvents::OnSpringDownloadEvent)
+EVT_COMMAND(wxID_ANY, httpDownloadEvtFailed,    SimpleServerEvents::OnSpringDownloadEvent)
 END_EVENT_TABLE()
 
 void SimpleServerEvents::OnConnected( const wxString& /*server_name*/, const wxString& server_ver, bool /*supported*/, const wxString& server_spring_ver, bool /*unused*/ )
 {
     wxLogDebugFunc( server_ver + _T(" ") + server_spring_ver );
     m_serv.SetRequiredSpring( server_spring_ver );
-//    ui().OnConnected( m_serv, server_name, server_ver, supported );
+    //    ui().OnConnected( m_serv, server_name, server_ver, supported );
     m_serv.Login();
 }
 
@@ -48,7 +48,7 @@ void SimpleServerEvents::OnDisconnected( bool /*wasonline*/ )
 {
     wxLogDebugFunc( _T("") );
     m_serv.SetRequiredSpring (_T(""));
-//    ui().OnDisconnected( m_serv, wasonline );
+    //    ui().OnDisconnected( m_serv, wasonline );
 }
 
 
@@ -60,14 +60,14 @@ void SimpleServerEvents::OnLogin()
 void SimpleServerEvents::OnLoginInfoComplete()
 {
     wxLogDebugFunc( _T("") );
-	wxString nick = m_serv.GetMe().GetNick();
-	wxArrayString highlights = sett().GetHighlightedWords();
-	if ( highlights.Index( nick ) == -1 )
-	{
-		highlights.Add( nick );
-		sett().SetHighlightedWords( highlights );
-	}
-//    ui().OnLoggedIn( );
+    wxString nick = m_serv.GetMe().GetNick();
+    wxArrayString highlights = sett().GetHighlightedWords();
+    if ( highlights.Index( nick ) == -1 )
+    {
+        highlights.Add( nick );
+        sett().SetHighlightedWords( highlights );
+    }
+    //    ui().OnLoggedIn( );
 }
 
 void SimpleServerEvents::OnLogout()
@@ -91,18 +91,18 @@ void SimpleServerEvents::OnPong( wxLongLong /*ping_time*/ )
 void SimpleServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu, const wxString& id )
 {
     wxLogDebugFunc( _T("") );
-	try {
+    try {
         ASSERT_LOGIC( !m_serv.UserExists( nick ), _T("New user from server, but already exists!") );
     }
-	catch (...) {
+    catch (...) {
         return;
     }
 
-	User& user = m_serv._AddUser( nick );
-	user.SetCountry( country );
-	user.SetCpu( cpu );
-	user.SetID( id );
-//	ui().OnUserOnline( user );
+    User& user = m_serv._AddUser( nick );
+    user.SetCountry( country );
+    user.SetCpu( cpu );
+    user.SetID( id );
+    //	ui().OnUserOnline( user );
 }
 
 
@@ -119,28 +119,28 @@ void SimpleServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
         user.SetStatus( status );
 
         wxLogMessage( _T("calling ui().OnUserStatusChanged( user ) ") );
-//        ui().OnUserStatusChanged( user );
+        //        ui().OnUserStatusChanged( user );
         wxLogMessage( _T("updating battles ") );
 
         if ( user.GetBattle() != 0 )
         {
             Battle& battle = *user.GetBattle();
-			try {
-				if ( battle.GetFounder().GetNick() == user.GetNick() ) {
-					if ( status.in_game != battle.GetInGame() )
-					{
-						battle.SetInGame( status.in_game );
-//						if ( status.in_game )
-//							battle.StartSpring();
-//						else
-//							*/ui().OnBattleInfoUpdated( battle );
-					}
-				}
-			}
-			catch(...){}
+            try {
+                if ( battle.GetFounder().GetNick() == user.GetNick() ) {
+                    if ( status.in_game != battle.GetInGame() )
+                    {
+                        battle.SetInGame( status.in_game );
+                        //						if ( status.in_game )
+                        //							battle.StartSpring();
+                        //						else
+                        //							*/ui().OnBattleInfoUpdated( battle );
+                    }
+                }
+            }
+            catch(...){}
         }
     }
-	catch (...) {
+    catch (...) {
         wxLogWarning( _("OnUserStatus() failed ! (exception)") );
     }
 }
@@ -151,35 +151,35 @@ void SimpleServerEvents::OnUserQuit( const wxString& nick )
     try
     {
         User &user=m_serv.GetUser( nick );
-				Battle* userbattle = user.GetBattle();
-				if ( userbattle )
-				{
-					int battleid = userbattle->GetID();
-					try
-					{
-						if ( &userbattle->GetFounder() == &user )
-						{
-							for ( int i = 0; i < int(userbattle->GetNumUsers()); i ++ )
-							{
-								User& battleuser = userbattle->GetUser( i );
-								OnUserLeftBattle( battleid, battleuser.GetNick() );
-							}
-							 OnBattleClosed( battleid );
-						}
-						else OnUserLeftBattle( battleid, user.GetNick() );
-					}catch(...){}
-				}
-//        ui().OnUserOffline( user );
+        Battle* userbattle = user.GetBattle();
+        if ( userbattle )
+        {
+            int battleid = userbattle->GetID();
+            try
+            {
+                if ( &userbattle->GetFounder() == &user )
+                {
+                    for ( int i = 0; i < int(userbattle->GetNumUsers()); i ++ )
+                    {
+                        User& battleuser = userbattle->GetUser( i );
+                        OnUserLeftBattle( battleid, battleuser.GetNick() );
+                    }
+                    OnBattleClosed( battleid );
+                }
+                else OnUserLeftBattle( battleid, user.GetNick() );
+            }catch(...){}
+        }
+        //        ui().OnUserOffline( user );
         m_serv._RemoveUser( nick );
     }
     catch (std::runtime_error &except)
-	{ }
+    { }
 }
-
+#include <QDebug>
 void SimpleServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
-                                   const wxString& host, int port, int maxplayers,
-                                   bool haspass, int rank, const wxString& maphash, const wxString& map,
-                                   const wxString& title, const wxString& mod )
+                                         const wxString& host, int port, int maxplayers,
+                                         bool haspass, int rank, const wxString& maphash, const wxString& map,
+                                         const wxString& title, const wxString& mod )
 {
     wxLogDebugFunc( _T("") );
     try
@@ -202,7 +202,7 @@ void SimpleServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, c
         battle.SetDescription( title );
         battle.SetHostMod( mod, wxEmptyString );
 
-		BattleEvents::GetBattleEventSender( BattleEvents::AddBattle ).SendEvent( std::make_pair(&battle,wxString()) );
+        BattleEvents::GetBattleEventSender( BattleEvents::AddBattle ).SendEvent( std::make_pair(&battle,wxString()) );
         if ( user.Status().in_game )
         {
             battle.SetInGame( true );
@@ -211,6 +211,7 @@ void SimpleServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, c
     }
     catch (std::runtime_error &except)
     {
+        qDebug() << except.what();
     }
 }
 
@@ -237,7 +238,7 @@ void SimpleServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
             battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, battle.GetHostModName() );
         }
 
-//        ui().OnJoinedBattle( battle );
+        //        ui().OnJoinedBattle( battle );
     }
     catch (std::runtime_error &except)
     {
@@ -252,15 +253,15 @@ void SimpleServerEvents::OnHostedBattle( int battleid )
     {
         Battle& battle = m_serv.GetBattle( battleid );
 
-				if ( battle.GetBattleType() == BT_Played )
-				{
-					battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, battle.GetHostMapName() );
-					battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, battle.GetHostModName() );
-				}
-				else
-				{
-					battle.GetBattleFromScript( true );
-				}
+        if ( battle.GetBattleType() == BT_Played )
+        {
+            battle.CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, battle.GetHostMapName() );
+            battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, battle.GetHostModName() );
+        }
+        else
+        {
+            battle.GetBattleFromScript( true );
+        }
 
 
         wxString presetname = sett().GetModDefaultPresetName( battle.GetHostModName() );
@@ -273,7 +274,7 @@ void SimpleServerEvents::OnHostedBattle( int battleid )
 
         m_serv.SendHostInfo( IBattle::HI_Send_All_opts );
 
-//        ui().OnHostedBattle( battle );
+        //        ui().OnHostedBattle( battle );
     }
     catch (assert_exception) {}
 }
@@ -295,8 +296,8 @@ void SimpleServerEvents::OnClientBattleStatus( int battleid, const wxString& nic
         Battle& battle = m_serv.GetBattle( battleid );
         User& user = battle.GetUser( nick );
 
-		if ( battle.IsFounderMe() )
-			AutoCheckCommandSpam( battle, user );
+        if ( battle.IsFounderMe() )
+            AutoCheckCommandSpam( battle, user );
 
         status.color_index = user.BattleStatus().color_index;
         battle.OnUserBattleStatusUpdated( user, status );
@@ -316,20 +317,20 @@ void SimpleServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick,
         Battle& battle = m_serv.GetBattle( battleid );
 
         battle.OnUserAdded( user );
-		user.BattleStatus().scriptPassword = userScriptPassword;
-//        ui().OnUserJoinedBattle( battle, user );
-		try
-		{
-			if ( &user == &battle.GetFounder() )
-			{
-					if ( user.Status().in_game )
-					{
-							battle.SetInGame( true );
-							battle.StartSpring();
-					}
-			}
-		}
-		catch(...){}
+        user.BattleStatus().scriptPassword = userScriptPassword;
+        //        ui().OnUserJoinedBattle( battle, user );
+        try
+        {
+            if ( &user == &battle.GetFounder() )
+            {
+                if ( user.Status().in_game )
+                {
+                    battle.SetInGame( true );
+                    battle.StartSpring();
+                }
+            }
+        }
+        catch(...){}
     }
     catch (std::runtime_error &except)
     {
@@ -344,9 +345,9 @@ void SimpleServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     {
         Battle& battle = m_serv.GetBattle( battleid );
         User& user = battle.GetUser( nick );
-		user.BattleStatus().scriptPassword.Empty();
+        user.BattleStatus().scriptPassword.Empty();
         battle.OnUserRemoved( user );
-//        ui().OnUserLeftBattle( battle, user );
+        //        ui().OnUserLeftBattle( battle, user );
     }
     catch (std::runtime_error &except)
     {
@@ -376,7 +377,7 @@ void SimpleServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool
             battle.Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
         }
 
-//        ui().OnBattleInfoUpdated( battle );
+        //        ui().OnBattleInfoUpdated( battle );
     }
     catch (assert_exception) {}
 }
@@ -387,7 +388,7 @@ void SimpleServerEvents::OnSetBattleInfo( int battleid, const wxString& param, c
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-		battle.m_script_tags[param] = value;
+        battle.m_script_tags[param] = value;
         wxString key = param;
         if ( key.Left( 5 ) == _T("game/") )
         {
@@ -396,54 +397,54 @@ void SimpleServerEvents::OnSetBattleInfo( int battleid, const wxString& param, c
             {
                 key = key.AfterFirst( '/' );
                 battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::MapOption );
-								battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::MapOption, key.c_str() ) );
+                battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::MapOption, key.c_str() ) );
             }
             else if ( key.Left( 11 ) == _T( "modoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
-								battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption );
+                battle.CustomBattleOptions().setSingleOption( key, value, OptionsWrapper::ModOption );
                 battle.Update(  wxString::Format(_T("%d_%s"), OptionsWrapper::ModOption,  key.c_str() ) );
             }
             else if ( key.Left( 8 ) == _T( "restrict" ) )
             {
-            	OnBattleDisableUnit( battleid, key.AfterFirst(_T('/')), s2l(value) );
+                OnBattleDisableUnit( battleid, key.AfterFirst(_T('/')), s2l(value) );
             }
             else if ( key.Left( 4 ) == _T( "team" ) && key.Find( _T("startpos") ) != wxNOT_FOUND )
             {
-            	 int team = s2l( key.BeforeFirst(_T('/')).Mid( 4 ) );
-				 if ( key.Find( _T("startposx") ) != wxNOT_FOUND )
-				 {
-					 int numusers = battle.GetNumUsers();
-					 for ( int i = 0; i < numusers; i++ )
-					 {
-						 User& usr = battle.GetUser( i );
-						 UserBattleStatus& status = usr.BattleStatus();
-						 if ( status.team == team )
-						 {
-							 status.pos.x = s2l( value );
-							 battle.OnUserBattleStatusUpdated( usr, status );
-						 }
-					 }
-				 }
-				 else if ( key.Find( _T("startposy") ) != wxNOT_FOUND )
-				 {
-					 int numusers = battle.GetNumUsers();
-					 for ( int i = 0; i < numusers; i++ )
-					 {
-						 User& usr = battle.GetUser( i );
-						 UserBattleStatus& status = usr.BattleStatus();
-						 if ( status.team == team )
-						 {
-							 status.pos.y = s2l( value );
-							 battle.OnUserBattleStatusUpdated( usr, status );
-						 }
-					 }
-				 }
+                int team = s2l( key.BeforeFirst(_T('/')).Mid( 4 ) );
+                if ( key.Find( _T("startposx") ) != wxNOT_FOUND )
+                {
+                    int numusers = battle.GetNumUsers();
+                    for ( int i = 0; i < numusers; i++ )
+                    {
+                        User& usr = battle.GetUser( i );
+                        UserBattleStatus& status = usr.BattleStatus();
+                        if ( status.team == team )
+                        {
+                            status.pos.x = s2l( value );
+                            battle.OnUserBattleStatusUpdated( usr, status );
+                        }
+                    }
+                }
+                else if ( key.Find( _T("startposy") ) != wxNOT_FOUND )
+                {
+                    int numusers = battle.GetNumUsers();
+                    for ( int i = 0; i < numusers; i++ )
+                    {
+                        User& usr = battle.GetUser( i );
+                        UserBattleStatus& status = usr.BattleStatus();
+                        if ( status.team == team )
+                        {
+                            status.pos.y = s2l( value );
+                            battle.OnUserBattleStatusUpdated( usr, status );
+                        }
+                    }
+                }
             }
             else
             {
-				battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption );
-				battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::EngineOption, key.c_str() ) );
+                battle.CustomBattleOptions().setSingleOption( key,  value, OptionsWrapper::EngineOption );
+                battle.Update( wxString::Format(_T("%d_%s"), OptionsWrapper::EngineOption, key.c_str() ) );
             }
         }
     }
@@ -456,8 +457,8 @@ void SimpleServerEvents::OnBattleInfoUpdated( int /*battleid*/ )
     wxLogDebugFunc( _T("") );
     try
     {
-//        Battle& battle = m_serv.GetBattle( battleid );
-//        ui().OnBattleInfoUpdated( battle );
+        //        Battle& battle = m_serv.GetBattle( battleid );
+        //        ui().OnBattleInfoUpdated( battle );
     }
     catch ( assert_exception ) {}
 }
@@ -468,9 +469,9 @@ void SimpleServerEvents::OnBattleClosed( int battleid )
     wxLogDebugFunc( _T("") );
     try
     {
-//        Battle& battle = m_serv.GetBattle( battleid );
+        //        Battle& battle = m_serv.GetBattle( battleid );
 
-//        ui().OnBattleClosed( battle );
+        //        ui().OnBattleClosed( battle );
 
         m_serv._RemoveBattle( battleid );
     }
@@ -524,11 +525,11 @@ void SimpleServerEvents::OnJoinChannelResult( bool success, const wxString& chan
     {
         Channel& chan = m_serv._AddChannel( channel );
         chan.SetPassword( m_serv.m_channel_pw[channel] );
-//        ui().OnJoinedChannelSuccessful( chan );
+        //        ui().OnJoinedChannelSuccessful( chan );
     }
     else
     {
-//        ui().ShowMessage( _("Join channel failed"), _("Could not join channel ") + channel + _(" because: ") + reason );
+        //        ui().ShowMessage( _("Join channel failed"), _("Could not join channel ") + channel + _(" because: ") + reason );
     }
 }
 
@@ -604,9 +605,9 @@ void SimpleServerEvents::OnPrivateMessage( const wxString& /*user*/, const wxStr
     wxLogDebugFunc( _T("") );
     try
     {
-//        User& who = m_serv.GetUser( user );
-//        if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, who.GetNick() ) )
-//            ui().OnUserSaid( who, message, fromme );
+        //        User& who = m_serv.GetUser( user );
+        //        if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, who.GetNick() ) )
+        //            ui().OnUserSaid( who, message, fromme );
     }
     catch (std::runtime_error &except)
     {
@@ -615,7 +616,7 @@ void SimpleServerEvents::OnPrivateMessage( const wxString& /*user*/, const wxStr
 
 void SimpleServerEvents::OnChannelList( const wxString& /*channel*/, const int& /*numusers*/, const wxString& /*topic*/ )
 {
-//    ui().mw().OnChannelList( channel, numusers, topic );
+    //    ui().mw().OnChannelList( channel, numusers, topic );
 }
 
 
@@ -636,8 +637,8 @@ void SimpleServerEvents::OnRequestBattleStatus( int /*battleid*/ )
 {
     try
     {
-//        Battle& battle = m_serv.GetBattle( battleid );
-//        ui().OnRequestBattleStatus( battle );
+        //        Battle& battle = m_serv.GetBattle( battleid );
+        //        ui().OnRequestBattleStatus( battle );
     }
     catch (assert_exception) {}
 }
@@ -648,7 +649,7 @@ void SimpleServerEvents::OnSaidBattle( int battleid, const wxString& nick, const
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-//        ui().OnSaidBattle( battle, nick, msg );
+        //        ui().OnSaidBattle( battle, nick, msg );
         battle.GetAutoHost().OnSaidBattle( nick, msg );
     }
     catch (assert_exception) {}
@@ -658,8 +659,8 @@ void SimpleServerEvents::OnBattleAction( int /*battleid*/, const wxString& /*nic
 {
     try
     {
-//        Battle& battle = m_serv.GetBattle( battleid );
-//        ui().OnBattleAction( battle, nick, msg );
+        //        Battle& battle = m_serv.GetBattle( battleid );
+        //        ui().OnBattleAction( battle, nick, msg );
     }
     catch (assert_exception) {}
 }
@@ -700,7 +701,7 @@ void SimpleServerEvents::OnBattleAddBot( int battleid, const wxString& nick, Use
         battle.OnBotAdded( nick, status );
         User& bot = battle.GetUser( nick );
         ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
-//        ui().OnUserJoinedBattle( battle, bot );
+        //        ui().OnUserJoinedBattle( battle, bot );
     }
     catch (assert_exception) {}
 }
@@ -717,8 +718,8 @@ void SimpleServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
-		User& user = battle.GetUser( nick );
-//		ui().OnUserLeftBattle( battle, user );
+        User& user = battle.GetUser( nick );
+        //		ui().OnUserLeftBattle( battle, user );
         battle.OnUserRemoved( user );
     }
     catch (std::runtime_error &except)
@@ -729,60 +730,60 @@ void SimpleServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
 
 void SimpleServerEvents::OnAcceptAgreement( const wxString& /*agreement*/ )
 {
-//    ui().OnAcceptAgreement( agreement );
+    //    ui().OnAcceptAgreement( agreement );
 }
 
 
 void SimpleServerEvents::OnRing( const wxString& /*from*/ )
 {
-//    ui().OnRing( from );
+    //    ui().OnRing( from );
 }
 
 
 void SimpleServerEvents::OnServerBroadcast( const wxString& /*message*/ )
 {
-//    ui().OnServerBroadcast( m_serv, message );
+    //    ui().OnServerBroadcast( m_serv, message );
 }
 
 void SimpleServerEvents::OnServerMessage( const wxString& /*message*/ )
 {
-//    ui().OnServerMessage( m_serv, message );
+    //    ui().OnServerMessage( m_serv, message );
 }
 
 
 void SimpleServerEvents::OnServerMessageBox( const wxString& /*message*/ )
 {
-//    ui().ShowMessage( _("Server Message"), message );
+    //    ui().ShowMessage( _("Server Message"), message );
 }
 
 
 void SimpleServerEvents::OnChannelMessage( const wxString& /*channel*/, const wxString& /*msg*/ )
 {
-//    ui().OnChannelMessage( channel, msg );
+    //    ui().OnChannelMessage( channel, msg );
 }
 
 
 void SimpleServerEvents::OnHostExternalUdpPort( const unsigned int udpport )
 {
-	if ( !m_serv.GetCurrentBattle() )
-		return;
-	if ( m_serv.GetCurrentBattle()->GetNatType() == NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == NAT_Fixed_source_ports )
-		m_serv.GetCurrentBattle()->SetHostPort( udpport );
+    if ( !m_serv.GetCurrentBattle() )
+        return;
+    if ( m_serv.GetCurrentBattle()->GetNatType() == NAT_Hole_punching || m_serv.GetCurrentBattle()->GetNatType() == NAT_Fixed_source_ports )
+        m_serv.GetCurrentBattle()->SetHostPort( udpport );
 }
 
 
 void SimpleServerEvents::OnMyInternalUdpSourcePort( const unsigned int udpport )
 {
-	if ( !m_serv.GetCurrentBattle() )
-		return;
+    if ( !m_serv.GetCurrentBattle() )
+        return;
     m_serv.GetCurrentBattle()->SetMyInternalUdpSourcePort(udpport);
 }
 
 
 void SimpleServerEvents::OnMyExternalUdpSourcePort( const unsigned int udpport )
 {
-	if ( !m_serv.GetCurrentBattle() )
-		return;
+    if ( !m_serv.GetCurrentBattle() )
+        return;
     m_serv.GetCurrentBattle()->SetMyExternalUdpSourcePort(udpport);
 }
 
@@ -809,7 +810,7 @@ void SimpleServerEvents::OnClientIPPort( const wxString &username, const wxStrin
         {
             // todo: better warning message
             //something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
-//            ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
+            //            ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,_(" does not really support nat traversal"));
         }
         m_serv.GetCurrentBattle()->CheckBan(user);
     }
@@ -828,9 +829,9 @@ void SimpleServerEvents::OnKickedFromBattle()
 
 void SimpleServerEvents::OnRedirect( const wxString& address,  unsigned int port, const wxString& /*CurrentNick*/, const wxString& /*CurrentPassword*/ )
 {
-	wxString name = address + _T(":") + TowxString(port);
+    wxString name = address + _T(":") + TowxString(port);
     sett().SetServer( name, address, port );
-//    ui().DoConnect( name, CurrentNick, CurrentPassword );
+    //    ui().DoConnect( name, CurrentNick, CurrentPassword );
 }
 
 
@@ -845,8 +846,8 @@ void SimpleServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
     m_spam_check[nick] = info;
     if ( info.count == 7 )
     {
-			battle.DoAction( _T("is autokicking ") + nick + _T(" due to command spam.") );
-			battle.KickPlayer( user );
+        battle.DoAction( _T("is autokicking ") + nick + _T(" due to command spam.") );
+        battle.KickPlayer( user );
     }
 }
 
@@ -860,131 +861,131 @@ void SimpleServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxStr
     wxString message = mutee;
     wxString desc = description;
     wxString mutetime = GetWordParam( desc );
-	long time;
-	if ( mutetime == _T("indefinite") )
-		message << _(" indefinite time remaining");
-	else if ( mutetime.ToLong(&time) )
-		message << wxFormat( _(" %d minutes remaining") ) % ( time/60 + 1 );
-	else
-		message << mutetime;
-	if ( !desc.IsEmpty() )
-		message << _T(", ") << desc;
-//    mutelistWindow( message );
+    long time;
+    if ( mutetime == _T("indefinite") )
+        message << _(" indefinite time remaining");
+    else if ( mutetime.ToLong(&time) )
+        message << wxString::Format( _(" %d minutes remaining"), time/60 + 1 );
+    else
+        message << mutetime;
+    if ( !desc.IsEmpty() )
+        message << _T(", ") << desc;
+    //    mutelistWindow( message );
 }
 
 void SimpleServerEvents::OnMutelistEnd( const wxString& /*channel*/ )
 {
-//    mutelistWindow( _("End mutelist for ") + channel );
+    //    mutelistWindow( _("End mutelist for ") + channel );
 }
 
 void SimpleServerEvents::OnScriptStart( int battleid )
 {
-	if ( !m_serv.BattleExists( battleid ) )
-	{
-			return;
-	}
-	m_serv.GetBattle( battleid ).ClearScript();
+    if ( !m_serv.BattleExists( battleid ) )
+    {
+        return;
+    }
+    m_serv.GetBattle( battleid ).ClearScript();
 }
 
 void SimpleServerEvents::OnScriptLine( int battleid, const wxString& line )
 {
-	if ( !m_serv.BattleExists( battleid ) )
-	{
-			return;
-	}
-	m_serv.GetBattle( battleid ).AppendScriptLine( line );
+    if ( !m_serv.BattleExists( battleid ) )
+    {
+        return;
+    }
+    m_serv.GetBattle( battleid ).AppendScriptLine( line );
 }
 
 void SimpleServerEvents::OnScriptEnd( int battleid )
 {
-	if ( !m_serv.BattleExists( battleid ) )
-	{
-			return;
-	}
-	m_serv.GetBattle( battleid ).GetBattleFromScript( true );
+    if ( !m_serv.BattleExists( battleid ) )
+    {
+        return;
+    }
+    m_serv.GetBattle( battleid ).GetBattleFromScript( true );
 }
 
 
 void SimpleServerEvents::OnFileDownload( bool /*autolaunch*/, bool /*autoclose*/, bool /*disconnectonrefuse*/, const wxString& /*FileName*/, const wxString& /*url*/, const wxString& /*description*/ )
 {
-//	wxString refinedurl;
-//	if ( url.Find(_T("http://")) != wxNOT_FOUND ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
-//	else refinedurl = url;
-//	bool result = ui().Ask( _("Download update"), wxFormat( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
-//	if ( result )
-//	{
-//		m_autoclose = autoclose;
-//		m_autolaunch = autolaunch;
-//		wxString filename;
-//		if ( FileName != _T("*") ) filename = FileName;
-//		else filename = _T("Spring installer.exe");
-//		m_savepath = sett().GetCurrentUsedDataDir() + filename;
-//		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
-//	//	OpenWebBrowser( url );
-//		//new HttpDownloaderThread<SimpleServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
-//	}
+    //	wxString refinedurl;
+    //	if ( url.Find(_T("http://")) != wxNOT_FOUND ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
+    //	else refinedurl = url;
+    //	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
+    //	if ( result )
+    //	{
+    //		m_autoclose = autoclose;
+    //		m_autolaunch = autolaunch;
+    //		wxString filename;
+    //		if ( FileName != _T("*") ) filename = FileName;
+    //		else filename = _T("Spring installer.exe");
+    //		m_savepath = sett().GetCurrentUsedDataDir() + filename;
+    //		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
+    //	//	OpenWebBrowser( url );
+    //		//new HttpDownloaderThread<SimpleServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
+    //	}
 }
 
 void SimpleServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 {
-	int code = event.GetInt();
-	wxLogMessage(event.GetString());
-  if ( code != 0)
-  {
-  	 customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\n"), _("Error"));
-		wxString err;
-    switch (code)
+    int code = event.GetInt();
+    wxLogMessage(event.GetString());
+    if ( code != 0)
     {
-      case wxPROTO_NETERR:
-        err = _("Network Error");
-        break;
-      case wxPROTO_PROTERR:
-        err = _("Negotiation error");
-        break;
-      case wxPROTO_CONNERR:
-        err = _T("Failed to connect to server");
-        break;
-      case wxPROTO_INVVAL:
-        err = _("Invalid Value");
-        break;
-      case wxPROTO_NOHNDLR:
-        err = _("No Handler");
-        break;
-      case wxPROTO_NOFILE:
-        err = _("File doesn't exit");
-        break;
-      case wxPROTO_ABRT:
-        err = _("Action Aborted");
-        break;
-      case wxPROTO_RCNCT:
-        err = _("Reconnection Error");
-        break;
-      default:
-        err = _("Unknown Error");
-        break;
+        customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\n"), _("Error"));
+        wxString err;
+        switch (code)
+        {
+        case wxPROTO_NETERR:
+            err = _("Network Error");
+            break;
+        case wxPROTO_PROTERR:
+            err = _("Negotiation error");
+            break;
+        case wxPROTO_CONNERR:
+            err = _T("Failed to connect to server");
+            break;
+        case wxPROTO_INVVAL:
+            err = _("Invalid Value");
+            break;
+        case wxPROTO_NOHNDLR:
+            err = _("No Handler");
+            break;
+        case wxPROTO_NOFILE:
+            err = _("File doesn't exit");
+            break;
+        case wxPROTO_ABRT:
+            err = _("Action Aborted");
+            break;
+        case wxPROTO_RCNCT:
+            err = _("Reconnection Error");
+            break;
+        default:
+            err = _("Unknown Error");
+            break;
+        }
+
+        wxLogDebugFunc(_T("Error connecting! Error is: ") + err);
+        customMessageBoxNoModal(SL_MAIN_ICON, _T("Error connecting! (") + err + _T(")\nPlease update manually from http://springrts.com"), _T(""));
+
     }
+    else
+    {
+        wxString text =  _("Download complete, location is: ") + m_savepath;
+        if ( m_autoclose ) text += _("\nlobby will get closed now.");
+        customMessageBox(SL_MAIN_ICON, text, _("Download complete.")  );
+        if ( m_autolaunch )
+        {
+            if ( !wxExecute( _T("\"") + m_savepath + _T("\""), wxEXEC_ASYNC ) )
+            {
+                customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch installer. File location is: ") + m_savepath, _("Couldn't launch installer.")  );
+            }
+        }
+        if ( m_autoclose )
+        {
+            //				ui().mw().Close();
+        }
 
-    wxLogDebugFunc(_T("Error connecting! Error is: ") + err);
-    customMessageBoxNoModal(SL_MAIN_ICON, _T("Error connecting! (") + err + _T(")\nPlease update manually from http://springrts.com"), _T(""));
-
-  }
-  else
-  {
-			wxString text =  _("Download complete, location is: ") + m_savepath;
-			if ( m_autoclose ) text += _("\nlobby will get closed now.");
-			customMessageBox(SL_MAIN_ICON, text, _("Download complete.")  );
-			if ( m_autolaunch )
-			{
-				if ( !wxExecute( _T("\"") + m_savepath + _T("\""), wxEXEC_ASYNC ) )
-				{
-						customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch installer. File location is: ") + m_savepath, _("Couldn't launch installer.")  );
-				}
-			}
-			if ( m_autoclose )
-			{
-//				ui().mw().Close();
-			}
-
-  }
+    }
 }
 
