@@ -505,8 +505,9 @@ void TorrentWrapper::HandleCompleted()
 				bool ok = wxCopyFile( source_path, dest_filename );
 				if ( !ok )
 				{
-					wxString msg = wxString::Format( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/games afterwards"),
-								source_path.c_str(), dest_filename.c_str() );
+					wxString msg = wxFormat( _("File copy from %s to %s failed.\nPlease copy manually and reload maps/mods afterwards") )
+												% source_path
+												% dest_filename;
 					wxLogError( _T("DL: File copy from %s to %s failed."), source_path.c_str(), dest_filename.c_str() );
 					wxMutexGuiLocker locker;
 					#ifdef __WXMSW__
@@ -523,7 +524,7 @@ void TorrentWrapper::HandleCompleted()
 					wxRemoveFile( source_path );
 					wxLogDebug( _T("DL complete: %s"), info.m_name.c_str() );
 					wxMutexGuiLocker locker;
-					UiEvents::StatusData data( wxString::Format( _("Download completed: %s"), info.m_name.c_str() ), 1 );
+					UiEvents::StatusData data( wxFormat( _("Download completed: %s") ) % info.m_name, 1 );
 					UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 					num_completed++;
 				}
@@ -653,10 +654,10 @@ void DisplayError( const wxString& resourcename, TorrentWrapper::DownloadRequest
 		case TorrentWrapper::torrent_join_failed: msg = _("The downloaded .torrent file was unusable."); break;
 		default: msg = _("Unknown"); break;
 	}
-	msg = wxString::Format(_("Downloading %s failed with reason:\n%s"), resourcename.c_str(), msg.c_str() );
+	msg = wxFormat(_("Downloading %s failed with reason:\n%s") ) % resourcename % msg;
 	wxString title = _("Download failure");
 #ifdef __WXMSW__
-	UiEvents::StatusData data( wxString::Format(_("Downloading %s failed"), resourcename.c_str() ), 1 );
+	UiEvents::StatusData data( wxFormat(_("Downloading %s failed") ) % resourcename, 1 );
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 #else
 	wxMutexGuiLocker locker;

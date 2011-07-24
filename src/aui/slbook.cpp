@@ -325,7 +325,7 @@ wxString SLNotebook::SavePerspective() {
 
 		if ((int)page_idx == m_curpage) tabs += wxT("*");
 		else if ((int)p == tabframe->m_tabs->GetActivePage()) tabs += wxT("+");
-		tabs += wxString::Format(wxT("%u"), page_idx);
+		tabs += (wxFormat(wxT("%u") ) % page_idx).str();
      }
   }
   tabs += wxT("@");
