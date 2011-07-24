@@ -1,6 +1,6 @@
 #include "iserverevents.h"
 #include "serverevents.h"
-#include "simpleinterface/simpleserverevents.h"
+#include "qt/simpleserverevents.h"
 
 IServerEvents* IServerEvents::getInstance( Server& server, ServerEventsMode mode  )
 {

@@ -49,7 +49,7 @@ const wxString& Customizations::GetModname() const
 
 const wxString& Customizations::Archive() const
 {
-	return m_archive;
+        return m_archive;
 }
 
 /** @brief Init
