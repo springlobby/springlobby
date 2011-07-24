@@ -65,7 +65,7 @@ ScopedActivityNotice scopedActivityNotice(wxWindow* parent,const wxString& notic
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-2010
+    Copyright (C) 2007-2011
 
     SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
