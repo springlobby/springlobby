@@ -111,7 +111,7 @@ SET(springlobbySrc
 	src/gui/notificationmanager.cpp
 	src/pingthread.cpp
 	src/iserverevents.cpp
-	src/simpleinterface/simpleserverevents.cpp
+	src/qt/simpleserverevents.cpp
 )
 
 SET(SettingsSrc
