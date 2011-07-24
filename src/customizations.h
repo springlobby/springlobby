@@ -21,9 +21,10 @@ class Customizations {
 
         wxString m_modname;
         OptionsWrapper m_customs;
-		wxIconBundle m_app_icons;
+        wxIconBundle m_app_icons;
         wxString m_help_url;
-		bool m_active;
+        wxString m_archive;
+        bool m_active;
 
 		bool KeyExists( const wxString& key ) const;
     public:
@@ -34,7 +35,8 @@ class Customizations {
 
         const wxString& GetModname() const;
         const wxString& GetHelpUrl() const;
-		const wxIconBundle& GetAppIconBundle() const;
+        const wxString& Archive() const;
+        const wxIconBundle& GetAppIconBundle() const;
 
         const OptionsWrapper& GetCustomizations() const;
 
@@ -64,14 +66,12 @@ class Customizations {
 	private:
 		QString dataBasePath_;
 		QString m_shortname;
-		wxString m_archive;
 
 	public:
 		QString QmlDir();
 		QString GraphicsDir();
 		QString SoundsDir();
 		QString MusicDir();
-		const wxString& Archive() const;
                 const QString& GetModshortname() const;
 #endif
 };

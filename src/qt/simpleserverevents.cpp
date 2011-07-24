@@ -175,7 +175,7 @@ void SimpleServerEvents::OnUserQuit( const wxString& nick )
     catch (std::runtime_error &except)
     { }
 }
-#include <QDebug>
+
 void SimpleServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
                                          const wxString& host, int port, int maxplayers,
                                          bool haspass, int rank, const wxString& maphash, const wxString& map,
@@ -211,7 +211,6 @@ void SimpleServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, c
     }
     catch (std::runtime_error &except)
     {
-        qDebug() << except.what();
     }
 }
 

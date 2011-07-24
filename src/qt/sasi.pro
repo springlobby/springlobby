@@ -131,7 +131,7 @@ SOURCES += sasi_main.cpp \
 	../widgets/infopanel.cpp \
 	../widgets/widget.cpp \
 	../Helper/tasclientimport.cpp \
-	../simpleinterface/simpleserverevents.cpp \
+	simpleserverevents.cpp \
 	../toasterbox/ToasterBox.cpp \
 	../toasterbox/ToasterBoxWindow.cpp \
 	../toasterbox/ToasterBoxWindowList.cpp \
@@ -209,6 +209,7 @@ HEADERS += \
     imageprovider.h \
     converters.h \
     skirmishmodel.h \
+	simpleserverevents.h \
     ../user.h \
     ../ibattle.h \
     ../iconimagelist.h \
