@@ -226,7 +226,7 @@ void ConnectWindow::OnServerChange( wxCommandEvent&  )
 		{
 			if ( !sett().ServerExists( HostAddress ) )
 			{
-				HostAddress+= _T(":") + wxString::Format(_T("%d"), DEFSETT_DEFAULT_SERVER_PORT );
+				HostAddress+= wxFormat(_T(":%d") ) % DEFSETT_DEFAULT_SERVER_PORT;
 			}
 		}
     m_nick_text->SetValue(  sett().GetServerAccountNick( HostAddress ) );
@@ -242,7 +242,7 @@ void ConnectWindow::OnOk(wxCommandEvent& )
 		{
 			if ( !sett().ServerExists( HostAddress ) )
 			{
-				HostAddress += _T(":") + wxString::Format(_T("%d"), DEFSETT_DEFAULT_SERVER_PORT );
+				HostAddress += wxFormat(_T(":%d") ) % DEFSETT_DEFAULT_SERVER_PORT;
 			}
 		}
     if ( m_tabs->GetSelection() <= 0 )

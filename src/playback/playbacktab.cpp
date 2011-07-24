@@ -303,7 +303,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 			if ( !ReplayTraits::IsReplayType )
                 versionfound = true; // quick hack to bypass spring version check
 			if ( !versionfound ) {
-				wxString message = wxString::Format( _( "No compatible installed spring version has been found, this %s requires version: %s\n" ), type.c_str(), rep.SpringVersion.c_str() );
+				wxString message = wxFormat( _( "No compatible installed spring version has been found, this %s requires version: %s\n" ) ) % type% rep.SpringVersion;
 				message << _( "Your current installed versions are:" );
 				for ( std::map<wxString, wxString>::const_iterator itor = versionlist.begin(); itor != versionlist.end(); itor++ ) message << _T( " " ) << itor->second;
 				customMessageBox( SL_MAIN_ICON, message, _( "Spring error" ), wxICON_EXCLAMATION | wxOK );

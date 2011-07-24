@@ -115,7 +115,7 @@ Settings::Settings()
 	m_final_config_path = m_chosen_path;
 	m_config = new slConfig( instream );
 #else
-	wxString localpath = wxString::Format( _T( "%s/%s.conf" ), GetConfigfileDir().c_str(), GetAppName( true ).c_str() );
+	wxString localpath = wxFormat( _T( "%s/%s.conf" ) ) % GetConfigfileDir() % GetAppName( true );
 	m_final_config_path = m_user_defined_config ? m_user_defined_config_path : localpath;
 	m_config = new slConfig( GetAppName(), wxEmptyString, m_final_config_path );
 	SetPortableMode ( false );
@@ -376,7 +376,7 @@ void Settings::ConvertOldServerSettings()
 	int count = m_config->Read( _T( "/Servers/Count" ), 0l );
 	for ( int i = 0; i < count; i++ )
 	{
-		wxString server_name = m_config->Read( wxString::Format( _T( "/Servers/Server%d" ), i ), _T( "" ) );
+		wxString server_name = m_config->Read( wxFormat( _T( "/Servers/Server%d" ) ) % i, _T( "" ) );
 		if ( server_name == _T( "TAS Server" ) ) server_name = DEFSETT_DEFAULT_SERVER_NAME;
 		servers.Add( server_name );
 		m_saved_nicks[server_name] = m_config->Read( _T( "/Server/" ) + server_name + _T( "/nick" ), _T( "" ) );
@@ -552,8 +552,8 @@ void Settings::AddChannelJoin( const wxString& channel , const wxString& key )
 {
 	int index = GetNumChannelsJoin();
 
-	m_config->Write( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Name" ), index ), channel );
-	m_config->Write( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Password" ), index ), key );
+	m_config->Write( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Name" ) ) % index, channel );
+	m_config->Write( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Password" ) ) % index, key );
 }
 
 
@@ -578,7 +578,7 @@ int Settings::GetChannelJoinIndex( const wxString& name )
 	int ret = -1;
 	for ( int i = 0; i < numchannels; i++ )
 	{
-		if ( m_config->Read( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Name" ), i ), _T( "" ) ) == name ) ret = i;
+		if ( m_config->Read( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Name" ) ) % i, _T( "" ) ) == name ) ret = i;
 	}
 	return ret;
 }
@@ -2418,13 +2418,13 @@ void Settings::SetShowXallTabs( bool show )
 
 void Settings::SavePerspective( const wxString& notebook_name, const wxString& perspective_name, const wxString& layout_string )
 {
-    wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), perspective_name.c_str(), notebook_name.c_str() );
+	wxString entry = wxFormat( _T( "/GUI/AUI/%s/%s" ) ) % perspective_name % notebook_name;
     m_config->Write( entry, layout_string );
 }
 
 wxString Settings::LoadPerspective( const wxString& notebook_name, const wxString& perspective_name )
 {
-    wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), perspective_name.c_str(), notebook_name.c_str() );
+	wxString entry = wxFormat( _T( "/GUI/AUI/%s/%s" ) ) % perspective_name % notebook_name;
     return m_config->Read( entry , _T("") );
 }
 
@@ -2588,7 +2588,7 @@ wxArrayString Settings::GetHotkeyKeySymNames( const wxString& profileName )
 // oderidx == -1 means unbind
 void Settings::SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx )
 {
-	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/Bindings/") + wxString::Format(wxT("%i"),orderIdx) + _T("/") + key, command );
+	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/Bindings/") + (wxFormat(wxT("%i") ) % orderIdx) + _T("/") + key, command );
 }
 
 wxString Settings::GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key )

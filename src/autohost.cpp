@@ -175,7 +175,7 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 			if ( result )
 			{
 				OptionsWrapper::GameOption section = m_battle.CustomBattleOptions().GetSection( key );
-				m_battle.SendHostInfo( wxString::Format( _T( "%d_%s" ), section, key.c_str() ) );
+				m_battle.SendHostInfo( wxFormat( _T( "%d_%s" ) ) % section % key );
 				m_battle.DoAction( _T( "has set option " ) + key + _T( " to value " ) + value );
 			}
 			else m_battle.DoAction( _T( "cannot set option " ) + key + _T( " to value " ) + value + _T( ", reason: invalid value." ) );
@@ -269,7 +269,7 @@ void AutoHost::OnUserAdded( User& user )
 	// do nothing if autohost functionality is disabled
 	if ( !m_enabled )
 		return;
-	m_battle.DoAction( wxString::Format( _T( "Hi %s, this battle is in %s autohost mode. For help say !help" ), user.GetNick().c_str(), GetAppName().c_str() ) );
+	m_battle.DoAction( wxFormat( _T( "Hi %s, this battle is in %s autohost mode. For help say !help" ) ) % user.GetNick() % GetAppName() );
 }
 
 

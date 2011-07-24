@@ -21,10 +21,7 @@ class QImage;
 class wxImage;
 
 extern const wxEventType UnitSyncAsyncOperationCompletedEvt;
-const wxEventType wxUnitsyncReloadEvent = wxNewEventType();
-
 struct GameOptions;
-
 class wxDynamicLibrary;
 class wxImage;
 struct CachedMapInfo;
@@ -306,13 +303,13 @@ class UnitSyncAsyncOps
 
 /**
     This file is part of SpringLobby,
-    Copyright (C) 2007-2010
+    Copyright (C) 2007-2011
 
     SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
 
-    springsettings is distributed in the hope that it will be useful,
+    SpringLobby is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.

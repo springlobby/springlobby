@@ -78,9 +78,9 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
         }
         if ( !UpdateExe( m_newexe , false ) ) {
 			customMessageBox(SL_MAIN_ICON,
-							 wxString::Format( _("There was an error while trying to replace the current executable version.\n Please manually copy springlobby.exe from: %s\n to: %s\n"),
-											   m_newexe.c_str(),
-											   m_currentexe.c_str() ),
+							 wxFormat( _("There was an error while trying to replace the current executable version.\n Please manually copy springlobby.exe from: %s\n to: %s\n") )
+											   % m_newexe
+											   % m_currentexe,
 							 _("Error") );
         }
         else {
@@ -133,7 +133,7 @@ bool UpdaterClass::PostMinGW44( const wxString& newdir )
 	wxString current = GetSpringLobbyVersion(false);
     long minor = std::numeric_limits<long>::max();
     bool convert_ok = current.AfterLast( '.' ).ToLong( &minor );
-    wxLogMessage( wxString::Format( _T("Got minor rev %d"), minor ) );
+	wxLogMessage( (wxFormat( _T("Got minor rev %d") ) % minor ).c_str() );
     if ( minor > 43 || !convert_ok   ) //0.43 was the last build on old mingw
         return true; //all is well, we're already on a mingw4.4 build
     wxString base = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() ;
