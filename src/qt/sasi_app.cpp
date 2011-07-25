@@ -23,6 +23,7 @@
 #include <QTimer>
 #include <QDir>
 #include <QDebug>
+#include <QtDeclarative>
 #include <QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeView>
 #include <QDesktopWidget>
@@ -65,6 +66,7 @@
 #include "server.h"
 #include <tasserver.h>
 #include <iserverevents.h>
+#include "qbattleroom.h"
 
 #ifdef __WXMSW__
 #include <windows.h>
@@ -114,6 +116,8 @@ int SasiApp::exec()
     wxSocketBase::Initialize();
 
     usync().FastLoadUnitSyncLibInit( );
+
+	qmlRegisterType<QBattleroom>("Sasi", 1, 0, "Battleroom");
 
     QDeclarativeView view(show_screen);
     QString qmldir;
@@ -227,7 +231,7 @@ int SasiApp::exec()
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
     timer->start(100);
-
+	bl_model->reload();
     view.show();
     view.setFocus();
     emit appLoaded();
@@ -307,6 +311,6 @@ void SasiApp::Update()
     static unsigned int count = 0;
     serverSelector().GetServer().Update( 100 );
     count++;
-    if ( count % 11 == 0 )
-        bl_model->reload();
+	if ( count % 113 == 0 )
+		bl_model->reload();
 }

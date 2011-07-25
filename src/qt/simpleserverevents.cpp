@@ -111,16 +111,10 @@ void SimpleServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
     wxLogDebugFunc( _T("") );
     try
     {
-        wxLogMessage( _T("calling m_serv.GetUser( nick ) ") );
         User& user = m_serv.GetUser( nick );
-        wxLogMessage( _T("calling user.SetStatus( status ) ") );
 
 //        UserStatus oldStatus = user.GetStatus();
         user.SetStatus( status );
-
-        wxLogMessage( _T("calling ui().OnUserStatusChanged( user ) ") );
-        //        ui().OnUserStatusChanged( user );
-        wxLogMessage( _T("updating battles ") );
 
         if ( user.GetBattle() != 0 )
         {
@@ -317,7 +311,6 @@ void SimpleServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick,
 
         battle.OnUserAdded( user );
         user.BattleStatus().scriptPassword = userScriptPassword;
-        //        ui().OnUserJoinedBattle( battle, user );
         try
         {
             if ( &user == &battle.GetFounder() )

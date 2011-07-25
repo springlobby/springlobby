@@ -92,7 +92,7 @@ class Battle : public IBattle
 
     void UserPositionChanged( const User& user );
 
-    int GetID() { return m_id; }
+	int GetID() const { return m_id; }
 
     void SaveMapDefaults();
     void LoadMapDefaults( const wxString& mapname );
