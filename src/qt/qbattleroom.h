@@ -16,33 +16,33 @@
 **/
 
 
-#ifndef BATTLELISTMODEL_H
-#define BATTLELISTMODEL_H
+#ifndef QBATTLEROOM_H
+#define QBATTLEROOM_H
 
-#include <QAbstractListModel>
-#include <QList>
-
-class wxString;
+#include <QDeclarativeItem>
 class Battle;
-
-class BattlelistModel : public QAbstractListModel
+class QBattleroom : public QDeclarativeItem
 {
-	Q_OBJECT
+    Q_OBJECT
+	Q_PROPERTY(int battleId READ battleId WRITE setBattleId NOTIFY battleIdChanged)
+	Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
 public:
-	explicit BattlelistModel( const wxString& modname, QObject *parent = 0);
-	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-	void reload();
-	~BattlelistModel();
-        enum Roles {
-                         Description = Qt::UserRole + 1,
-						 Mapname,Founder,PlayerMax,PlayerCurrent,BattleId
-                 };
+	explicit QBattleroom(QDeclarativeItem *parent = 0);
+
+	int battleId() const;
+	void setBattleId( int id );
+	QString description()const;
+
+signals:
+	void battleIdChanged();
+	void descriptionChanged();
+
 public slots:
-        int battle_count();
+	void say(const QString& text );
+
 private:
-	const wxString& m_modname;
-	QList<Battle*> m_battles;
+	Battle* m_battle;
+	int m_battle_id;
 };
 
-#endif // BATTLELISTMODEL_H
+#endif // QBATTLEROOM_H

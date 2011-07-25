@@ -33,6 +33,7 @@ BattlelistModel::BattlelistModel(const wxString& modname, QObject *parent)
     roles[Founder] = "founder";
     roles[PlayerCurrent] = "playerCurrent";
     roles[PlayerMax] = "playerMax";
+	roles[BattleId] = "battleId";
     setRoleNames(roles);
 }
 
@@ -60,6 +61,8 @@ QVariant BattlelistModel::data(const QModelIndex &index, int role ) const
             return QVariant::fromValue( battle.GetMaxPlayers() );
         case PlayerCurrent:
             return QVariant::fromValue( battle.GetNumPlayers() );
+		case BattleId:
+			return QVariant::fromValue( battle.GetID() );
         case Description:
         default: {
             return FromwxString<QVariant>( battle.GetDescription()  );

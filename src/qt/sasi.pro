@@ -173,7 +173,8 @@ SOURCES += sasi_main.cpp \
     audio/SoundBuffer.cpp \
     engineconfig.cpp \
     ../infodialog.cpp \
-    battlelistmodel.cpp
+    battlelistmodel.cpp \
+    qbattleroom.cpp
 
 HEADERS += \
     ../springunitsynclib.h \
@@ -252,7 +253,8 @@ HEADERS += \
     audio/SoundBuffer.h \
     engineconfig.h \
     battlelistmodel.h \
-    ../socket.h
+    ../socket.h \
+    qbattleroom.h
 
 INCLUDEPATH += ..
 INCLUDEPATH += ../Helper/qtargparser
@@ -296,7 +298,3 @@ CONFIG(debug, debug|release) {
 
 INSTALLS += sasi
 sasi.path = $(DESTDIR)/sasi
-
-
-
-

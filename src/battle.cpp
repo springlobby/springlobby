@@ -285,7 +285,9 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 		}
 	if ( !GetMe().BattleStatus().spectator ) SetAutoUnspec(false); // we don't need auto unspec anymore
 	ShouldAutoUnspec();
+#ifndef SL_QT_MODE
 	ui().OnUserBattleStatus( *this, user );
+#endif
 }
 
 
