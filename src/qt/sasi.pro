@@ -254,7 +254,8 @@ HEADERS += \
     engineconfig.h \
     battlelistmodel.h \
     ../socket.h \
-    qbattleroom.h
+    qbattleroom.h \
+    ../iserverevents.h
 
 INCLUDEPATH += ..
 INCLUDEPATH += ../Helper/qtargparser

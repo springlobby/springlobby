@@ -12,6 +12,7 @@
 
 class ServerEvents;
 class SimpleServerEvents;
+class IServerEvents;
 class Channel;
 class Ui;
 struct BattleOptions;
@@ -185,6 +186,8 @@ class Server : public iNetClass, public SL::NonCopyable
 	virtual void SetRelayIngamePassword( const User& user ) = 0;
 
 	virtual wxArrayString GetRelayHostList();
+
+	virtual const IServerEvents* serverEvents() const = 0;
 
   protected:
 	Socket* m_sock;

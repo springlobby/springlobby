@@ -642,6 +642,7 @@ void SimpleServerEvents::OnSaidBattle( int battleid, const wxString& nick, const
     {
         Battle& battle = m_serv.GetBattle( battleid );
         //        ui().OnSaidBattle( battle, nick, msg );
+		emit saidBattle( battleid, FromwxString<QString>( nick ), FromwxString<QString>( msg ) );
         battle.GetAutoHost().OnSaidBattle( nick, msg );
     }
     catch (assert_exception) {}

@@ -252,14 +252,14 @@ bool SasiApp::CmdInit()
     QtArg shortname( 's', "shortname", "shortname.", true, true );
     QtArg version( 'r', "revision", "revision.", true, true );
     QtArg appname( 'n', "name", "name", true, true );
-    QtArgDefaultHelpPrinter helpPrinter( "Testing help printing.\n" );
-    QtArgHelp help( &cmd );
-    help.setPrinter( &helpPrinter );
     cmd.addArg( config_file );
     cmd.addArg( customization );
     cmd.addArg( shortname );
     cmd.addArg( version );
     cmd.addArg( appname );
+	QtArgDefaultHelpPrinter helpPrinter( "Testing help printing.\n" );
+	QtArgHelp help( &cmd );
+	help.setPrinter( &helpPrinter );
     try {
         cmd.parse();
     }
