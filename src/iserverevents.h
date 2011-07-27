@@ -19,8 +19,17 @@ typedef int Sockerror;
 
 typedef int Protocolerror;
 
+#ifdef SL_QT_MODE
+#include <QObject>
+class IServerEvents : public QObject
+{
+	Q_OBJECT
+signals:
+	void saidBattle( int battleid, const QString& nick, const QString& msg );
+#else
 class IServerEvents
 {
+#endif
   public:
 	IServerEvents( ) {}
 	virtual ~IServerEvents() {}

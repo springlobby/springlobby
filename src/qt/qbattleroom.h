@@ -20,29 +20,40 @@
 #define QBATTLEROOM_H
 
 #include <QDeclarativeItem>
+#include <QStringList>
+#include <map>
+
 class Battle;
+
 class QBattleroom : public QDeclarativeItem
 {
     Q_OBJECT
 	Q_PROPERTY(int battleId READ battleId WRITE setBattleId NOTIFY battleIdChanged)
 	Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
+	Q_PROPERTY(QString chatText READ chatText NOTIFY chatTextChanged)
 public:
 	explicit QBattleroom(QDeclarativeItem *parent = 0);
 
 	int battleId() const;
 	void setBattleId( int id );
 	QString description()const;
+	QString chatText()const;
 
 signals:
 	void battleIdChanged();
 	void descriptionChanged();
+	void chatTextChanged();
 
 public slots:
 	void say(const QString& text );
+	void onSaidBattle( int battleid, const QString& nick, const QString& msg );
 
 private:
 	Battle* m_battle;
 	int m_battle_id;
+	typedef std::map< int, QStringList >
+		ChatMapType;
+	ChatMapType m_chats;
 };
 
 #endif // QBATTLEROOM_H

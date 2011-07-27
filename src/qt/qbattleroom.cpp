@@ -18,6 +18,7 @@
 
 #include "qbattleroom.h"
 #include <server.h>
+#include <simpleserverevents.h>
 #include <utils/conversion.h>
 #include <battle.h>
 
@@ -26,6 +27,13 @@ QBattleroom::QBattleroom(QDeclarativeItem *parent) :
 	m_battle(0),
 	m_battle_id(-1)
 {
+	const IServerEvents* events = serverSelector().GetServer().serverEvents();
+	assert( events );
+	if ( events )
+	{
+		connect( events,  SIGNAL(saidBattle( int, const QString&, const QString& )),
+				 this, SLOT(onSaidBattle( int, const QString&, const QString& )));
+	}
 }
 
 void QBattleroom::setBattleId( int id )
@@ -61,4 +69,16 @@ void QBattleroom::say(const QString& text )
 	if (!m_battle)
 		return;
 	m_battle->Say( TowxString( text ) );
+}
+
+void QBattleroom::onSaidBattle( int battleid, const QString& nick, const QString& msg )
+{
+	m_chats[battleid] << QString( "<%1> %2" ).arg( nick, msg );
+	emit chatTextChanged();
+}
+
+QString QBattleroom::chatText() const
+{
+	const ChatMapType::const_iterator it = m_chats.find( m_battle_id );
+	return m_battle && (it!=m_chats.end()) ? it->second.join("<br/>") : QString();
 }
