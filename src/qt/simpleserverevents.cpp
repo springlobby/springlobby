@@ -37,7 +37,7 @@ END_EVENT_TABLE()
 
 void SimpleServerEvents::OnConnected( const wxString& /*server_name*/, const wxString& server_ver, bool /*supported*/, const wxString& server_spring_ver, bool /*unused*/ )
 {
-    wxLogDebugFunc( server_ver + _T(" ") + server_spring_ver );
+	//wxLogDebugFunc( server_ver + _T(" ") + server_spring_ver );
     m_serv.SetRequiredSpring( server_spring_ver );
     //    ui().OnConnected( m_serv, server_name, server_ver, supported );
     m_serv.Login();
@@ -46,7 +46,7 @@ void SimpleServerEvents::OnConnected( const wxString& /*server_name*/, const wxS
 
 void SimpleServerEvents::OnDisconnected( bool /*wasonline*/ )
 {
-    wxLogDebugFunc( _T("") );
+
     m_serv.SetRequiredSpring (_T(""));
     //    ui().OnDisconnected( m_serv, wasonline );
 }
@@ -59,7 +59,7 @@ void SimpleServerEvents::OnLogin()
 
 void SimpleServerEvents::OnLoginInfoComplete()
 {
-    wxLogDebugFunc( _T("") );
+
     wxString nick = m_serv.GetMe().GetNick();
     wxArrayString highlights = sett().GetHighlightedWords();
     if ( highlights.Index( nick ) == -1 )
@@ -90,7 +90,6 @@ void SimpleServerEvents::OnPong( wxLongLong /*ping_time*/ )
 
 void SimpleServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu, const wxString& id )
 {
-    wxLogDebugFunc( _T("") );
     try {
         ASSERT_LOGIC( !m_serv.UserExists( nick ), _T("New user from server, but already exists!") );
     }
@@ -108,7 +107,7 @@ void SimpleServerEvents::OnNewUser( const wxString& nick, const wxString& countr
 
 void SimpleServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         User& user = m_serv.GetUser( nick );
@@ -135,13 +134,13 @@ void SimpleServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
         }
     }
     catch (...) {
-        wxLogWarning( _("OnUserStatus() failed ! (exception)") );
+		//wxLogWarning( _("OnUserStatus() failed ! (exception)") );
     }
 }
 
 void SimpleServerEvents::OnUserQuit( const wxString& nick )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         User &user=m_serv.GetUser( nick );
@@ -175,7 +174,7 @@ void SimpleServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, c
                                          bool haspass, int rank, const wxString& maphash, const wxString& map,
                                          const wxString& title, const wxString& mod )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         ASSERT_EXCEPTION( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
@@ -215,7 +214,7 @@ void SimpleServerEvents::OnPrivateMessageEx( const wxString& /*user*/, const wxS
 
 void SimpleServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
@@ -241,7 +240,7 @@ void SimpleServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
 
 void SimpleServerEvents::OnHostedBattle( int battleid )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
@@ -275,7 +274,7 @@ void SimpleServerEvents::OnHostedBattle( int battleid )
 
 void SimpleServerEvents::OnStartHostedBattle( int battleid )
 {
-    wxLogDebugFunc( _T("") );
+
     Battle& battle = m_serv.GetBattle( battleid );
     battle.SetInGame( true );
     battle.StartSpring();
@@ -305,7 +304,7 @@ void SimpleServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick,
 {
     try
     {
-        wxLogDebugFunc( _T("") );
+
         User& user = m_serv.GetUser( nick );
         Battle& battle = m_serv.GetBattle( battleid );
 
@@ -332,7 +331,7 @@ void SimpleServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick,
 
 void SimpleServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
@@ -350,7 +349,7 @@ void SimpleServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
 
 void SimpleServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, const wxString& maphash, const wxString& map )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
@@ -376,7 +375,7 @@ void SimpleServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool
 
 void SimpleServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const wxString& value )
 {
-    wxLogDebugFunc( param + _T(", ") + value );
+	//wxLogDebugFunc( param + _T(", ") + value );
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
@@ -446,7 +445,7 @@ void SimpleServerEvents::OnSetBattleInfo( int battleid, const wxString& param, c
 
 void SimpleServerEvents::OnBattleInfoUpdated( int /*battleid*/ )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         //        Battle& battle = m_serv.GetBattle( battleid );
@@ -458,7 +457,7 @@ void SimpleServerEvents::OnBattleInfoUpdated( int /*battleid*/ )
 
 void SimpleServerEvents::OnBattleClosed( int battleid )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         //        Battle& battle = m_serv.GetBattle( battleid );
@@ -473,7 +472,7 @@ void SimpleServerEvents::OnBattleClosed( int battleid )
 
 void SimpleServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname, int count )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
@@ -486,7 +485,7 @@ void SimpleServerEvents::OnBattleDisableUnit( int battleid, const wxString& unit
 
 void SimpleServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
@@ -499,7 +498,7 @@ void SimpleServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitn
 
 void SimpleServerEvents::OnBattleEnableAllUnits( int battleid )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
@@ -512,7 +511,7 @@ void SimpleServerEvents::OnBattleEnableAllUnits( int battleid )
 
 void SimpleServerEvents::OnJoinChannelResult( bool success, const wxString& channel, const wxString& /*reason*/ )
 {
-    wxLogDebugFunc( _T("") );
+
     if ( success )
     {
         Channel& chan = m_serv._AddChannel( channel );
@@ -528,7 +527,7 @@ void SimpleServerEvents::OnJoinChannelResult( bool success, const wxString& chan
 
 void SimpleServerEvents::OnChannelSaid( const wxString& channel, const wxString& who, const wxString& message )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
@@ -542,7 +541,7 @@ void SimpleServerEvents::OnChannelSaid( const wxString& channel, const wxString&
 
 void SimpleServerEvents::OnChannelJoin( const wxString& channel, const wxString& who )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         m_serv.GetChannel( channel ).OnChannelJoin( m_serv.GetUser( who ) );
@@ -555,7 +554,7 @@ void SimpleServerEvents::OnChannelJoin( const wxString& channel, const wxString&
 
 void SimpleServerEvents::OnChannelPart( const wxString& channel, const wxString& who, const wxString& message )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         m_serv.GetChannel( channel ).Left( m_serv.GetUser( who ), message );
@@ -568,7 +567,7 @@ void SimpleServerEvents::OnChannelPart( const wxString& channel, const wxString&
 
 void SimpleServerEvents::OnChannelTopic( const wxString& channel, const wxString& who, const wxString& message, int /*unused*/ )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         m_serv.GetChannel( channel ).SetTopic( message, who );
@@ -581,7 +580,7 @@ void SimpleServerEvents::OnChannelTopic( const wxString& channel, const wxString
 
 void SimpleServerEvents::OnChannelAction( const wxString& channel, const wxString& who, const wxString& action )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), action );
@@ -594,7 +593,7 @@ void SimpleServerEvents::OnChannelAction( const wxString& channel, const wxStrin
 
 void SimpleServerEvents::OnPrivateMessage( const wxString& /*user*/, const wxString& /*message*/, bool /*fromme*/ )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         //        User& who = m_serv.GetUser( user );
@@ -614,7 +613,7 @@ void SimpleServerEvents::OnChannelList( const wxString& /*channel*/, const int& 
 
 void SimpleServerEvents::OnUserJoinChannel( const wxString& channel, const wxString& who )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
@@ -687,7 +686,7 @@ void SimpleServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 
 void SimpleServerEvents::OnBattleAddBot( int battleid, const wxString& nick, UserBattleStatus status )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
@@ -707,7 +706,7 @@ void SimpleServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, 
 
 void SimpleServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
 {
-    wxLogDebugFunc( _T("") );
+
     try
     {
         Battle& battle = m_serv.GetBattle( battleid );
@@ -782,10 +781,10 @@ void SimpleServerEvents::OnMyExternalUdpSourcePort( const unsigned int udpport )
 
 void SimpleServerEvents::OnClientIPPort( const wxString &username, const wxString &ip, unsigned int udpport )
 {
-    wxLogMessage(_T("OnClientIPPort(%s,%s,%d)"),username.c_str(),ip.c_str(),udpport);
+	//wxLogMessage(_T("OnClientIPPort(%s,%s,%d)"),username.c_str(),ip.c_str(),udpport);
     if ( !m_serv.GetCurrentBattle() )
     {
-        wxLogMessage(_T("GetCurrentBattle() returned null"));
+		//wxLogMessage(_T("GetCurrentBattle() returned null"));
         return;
     }
     try
@@ -794,7 +793,7 @@ void SimpleServerEvents::OnClientIPPort( const wxString &username, const wxStrin
 
         user.BattleStatus().ip=ip;
         user.BattleStatus().udpport=udpport;
-        wxLogMessage(_T("set to %s %d "),user.BattleStatus().ip.c_str(),user.BattleStatus().udpport);
+		//wxLogMessage(_T("set to %s %d "),user.BattleStatus().ip.c_str(),user.BattleStatus().udpport);
 
 //        if (sett().GetShowIPAddresses())
 //			ui().OnBattleAction(*m_serv.GetCurrentBattle(),username,wxFormat(_(" has ip=%s"),ip.c_str()));
@@ -809,7 +808,7 @@ void SimpleServerEvents::OnClientIPPort( const wxString &username, const wxStrin
     }
     catch (std::runtime_error)
     {
-        wxLogMessage(_T("runtime_error inside OnClientIPPort()"));
+		//wxLogMessage(_T("runtime_error inside OnClientIPPort()"));
     }
 }
 
@@ -901,28 +900,28 @@ void SimpleServerEvents::OnScriptEnd( int battleid )
 
 void SimpleServerEvents::OnFileDownload( bool /*autolaunch*/, bool /*autoclose*/, bool /*disconnectonrefuse*/, const wxString& /*FileName*/, const wxString& /*url*/, const wxString& /*description*/ )
 {
-    //	wxString refinedurl;
-    //	if ( url.Find(_T("http://")) != wxNOT_FOUND ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
-    //	else refinedurl = url;
-    //	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
-    //	if ( result )
-    //	{
-    //		m_autoclose = autoclose;
-    //		m_autolaunch = autolaunch;
-    //		wxString filename;
-    //		if ( FileName != _T("*") ) filename = FileName;
-    //		else filename = _T("Spring installer.exe");
-    //		m_savepath = sett().GetCurrentUsedDataDir() + filename;
-    //		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
-    //	//	OpenWebBrowser( url );
-    //		//new HttpDownloaderThread<SimpleServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
-    //	}
+//	wxString refinedurl;
+//	if ( url.Find(_T("http://")) != wxNOT_FOUND ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
+//	else refinedurl = url;
+//	bool result = ui().Ask( _("Download update"), wxFormat( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
+//	if ( result )
+//	{
+//		m_autoclose = autoclose;
+//		m_autolaunch = autolaunch;
+//		wxString filename;
+//		if ( FileName != _T("*") ) filename = FileName;
+//		else filename = _T("Spring installer.exe");
+//		m_savepath = sett().GetCurrentUsedDataDir() + filename;
+//		//wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
+//	//	OpenWebBrowser( url );
+//		//new HttpDownloaderThread<SimpleServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
+//	}
 }
 
 void SimpleServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 {
     int code = event.GetInt();
-    wxLogMessage(event.GetString());
+	//wxLogMessage(event.GetString());
     if ( code != 0)
     {
         customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\n"), _("Error"));
@@ -958,7 +957,7 @@ void SimpleServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
             break;
         }
 
-        wxLogDebugFunc(_T("Error connecting! Error is: ") + err);
+		//wxLogDebugFunc(_T("Error connecting! Error is: ") + err);
         customMessageBoxNoModal(SL_MAIN_ICON, _T("Error connecting! (") + err + _T(")\nPlease update manually from http://springrts.com"), _T(""));
 
     }
