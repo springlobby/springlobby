@@ -64,7 +64,6 @@ class wxImage;
 QImage wxQtConvertImage( const wxImage &image );
 wxImage wxQtConvertImage( QImage qtImage );
 
-
 /** ****************************************************** **/
 
 #endif // CONVERTERS_H

@@ -174,7 +174,8 @@ SOURCES += sasi_main.cpp \
     engineconfig.cpp \
     ../infodialog.cpp \
     battlelistmodel.cpp \
-    qbattleroom.cpp
+    qbattleroom.cpp \
+    qminimap.cpp
 
 HEADERS += \
     ../springunitsynclib.h \
@@ -255,7 +256,8 @@ HEADERS += \
     battlelistmodel.h \
     ../socket.h \
     qbattleroom.h \
-    ../iserverevents.h
+    ../iserverevents.h \
+    qminimap.h
 
 INCLUDEPATH += ..
 INCLUDEPATH += ../Helper/qtargparser

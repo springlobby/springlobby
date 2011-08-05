@@ -40,10 +40,10 @@ QImage MinimapImageProvider::requestImage ( const QString & id, QSize * size, co
 	int width = requestedSize.width() > 0 ? requestedSize.width() : 1024;
 	int height = requestedSize.height() > 0 ? requestedSize.height() : 1024;
 
-	wxImage h = usync().GetMinimap( TowxString( id ), width, height );
+	const wxImage h = usync().GetMinimap( TowxString( id ), width, height );
 	if (size)
 		*size = QSize(width,height);
-	QImage q = wxQtConvertImage( h );
+	const QImage q = wxQtConvertImage( h );
 	assert( !q.isNull() );
 	return q.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
 }
