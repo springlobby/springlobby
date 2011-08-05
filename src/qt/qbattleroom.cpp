@@ -80,5 +80,5 @@ void QBattleroom::onSaidBattle( int battleid, const QString& nick, const QString
 QString QBattleroom::chatText() const
 {
 	const ChatMapType::const_iterator it = m_chats.find( m_battle_id );
-	return m_battle && (it!=m_chats.end()) ? it->second.join("<br/>") : QString();
+	return m_battle && (it!=m_chats.end()) ? it->second.join("\n") : QString();
 }

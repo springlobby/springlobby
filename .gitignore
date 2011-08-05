@@ -43,3 +43,4 @@ src/images/updater/*
 CMakeLists.txt.user*
 src/qt-build/
 attic/
+moc_*.cpp

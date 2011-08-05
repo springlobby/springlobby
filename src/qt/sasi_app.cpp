@@ -67,6 +67,7 @@
 #include <tasserver.h>
 #include <iserverevents.h>
 #include "qbattleroom.h"
+#include "qminimap.h"
 
 #ifdef __WXMSW__
 #include <windows.h>
@@ -86,6 +87,9 @@ SasiApp::SasiApp(int argc, char *argv[])
     QCoreApplication::addLibraryPath( QCoreApplication::applicationDirPath() );
     setOrganizationName("SpringLobby");
     setOrganizationDomain("SpringLobby.info");
+
+	qmlRegisterType<QBattleroom>("Sasi", 1, 0, "Battleroom");
+	qmlRegisterType<QMinimap>("Sasi", 1, 0, "ExtendedMinimap");
 
     //	QIcon icon( wxBitmap(SLcustomizations().GetAppIcon()) );
     //	setWindowIcon( icon );
@@ -116,8 +120,6 @@ int SasiApp::exec()
     wxSocketBase::Initialize();
 
     usync().FastLoadUnitSyncLibInit( );
-
-	qmlRegisterType<QBattleroom>("Sasi", 1, 0, "Battleroom");
 
     QDeclarativeView view(show_screen);
     QString qmldir;
