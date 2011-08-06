@@ -25,6 +25,10 @@ const wxChar* TooltipEnable(const wxChar* input)
 			return sett().GetShowTooltips() ? input : dummy.wc_str();
     #endif
 }
+const wxChar* TooltipEnable(const wxString input)
+{
+	return TooltipEnable( input.c_str() );
+}
 
 int GetMaxStringWidth( const wxWindow& win, const wxArrayString& strings )
 {
