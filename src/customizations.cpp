@@ -1,4 +1,4 @@
-/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2011 The SpringLobby Team. All rights reserved. */
 
 #include "customizations.h"
 #include "springunitsynclib.h"

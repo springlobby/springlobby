@@ -6,6 +6,7 @@ class wxColour;
 class wxArrayString;
 
 #include <wx/intl.h>
+#include "../defines.h"
 
 #ifdef __WXMSW__
     static const int CONTROL_HEIGHT = 22;
@@ -37,6 +38,9 @@ void UpdateMainAppHasFocus( bool focus );
     it outputs empty string if tooltips are disabled in SL settings
 */
 const wxChar* TooltipEnable(const wxChar* input);
+#if defined(HAVE_WX29)
+const wxChar* TooltipEnable(const wxString input);
+#endif
 
 int GetMaxStringWidth( const wxWindow& win, const wxArrayString& strings );
 
