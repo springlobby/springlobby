@@ -213,7 +213,6 @@ int Settings::GetSettingsVersion()
 
 wxString Settings::GetLobbyWriteDir()
 {
-	wxString sep = sep;
 	wxString path = GetCurrentUsedDataDir() + sep + _T( "lobby" );
 	if ( !wxFileName::DirExists( path ) )
 	{
@@ -296,7 +295,6 @@ void Settings::SetWebBrowserPath( const wxString& path )
 
 wxString Settings::GetCachePath()
 {
-	wxString sep = sep;
 	wxString path = GetCurrentUsedDataDir() + sep + _T( "cache" ) + sep;
 	if ( !wxFileName::DirExists( path ) )
 	{
