@@ -411,6 +411,7 @@ class Settings : public SL::NonCopyable
 	wxString GetCurrentUsedUikeys();
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
+    wxString GetCurrentUsedBundle();
     wxString GetCurrentUsedSpringBinary();
     //!@brief returns config file path unitsync uses, returns empty if unitsync isn't loaded
     wxString GetCurrentUsedSpringConfigFilePath();

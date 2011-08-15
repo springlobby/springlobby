@@ -924,7 +924,7 @@ wxString Settings::GetUnitSyncPathInSameBundle()
 wxString Settings::GetBinariesPathInForeignBundle()
 {
 	// both spring & unitsync binaries share same path in bundles
-	return GetBundle( GetCurrentUsedSpringIndex() ) + sep + _T("Contents") + sep + _T("MacOS");
+	return GetCurrentUsedBundle() + sep + _T("Contents") + sep + _T("MacOS");
 }
 
 bool Settings::IsInsideSpringBundle()
@@ -985,6 +985,11 @@ wxString Settings::GetCurrentUsedUnitSync()
 	else return GetBinariesPathInForeignBundle() + sep + _T("spring") sep + _T("libunitsync.dylib");
 #endif
 	else return GetUnitSync( GetCurrentUsedSpringIndex() );
+}
+
+wxString Settings::GetCurrentUsedBundle()
+{
+	return GetBundle( GetCurrentUsedSpringIndex() );
 }
 
 wxString Settings::GetCurrentUsedUikeys()
