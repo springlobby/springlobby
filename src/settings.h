@@ -396,11 +396,6 @@ class Settings : public SL::NonCopyable
     void SetSearchSpringOnlyInSLPath( bool value );
     bool GetSearchSpringOnlyInSLPath();
 
-	/// convenience functions since paths in bundles are hardcoded, only meaningful on mac
-	wxString GetSpringPathInSameBundle();
-	wxString GetUnitSyncPathInSameBundle();
-	wxString GetBinariesPathInForeignBundle();
-
 	bool IsInsideSpringBundle();
 
 	// enable-disable loading the spring exec from same bundle
