@@ -62,7 +62,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 {
 	m_dontsearch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Search only in current installed path"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
-	m_oldlaunch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Use old launch method"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
+	m_oldlaunch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Use alternative launch method (DO NOT TOUCH THIS UNLESS YOU KNOW WHAT YOU'RE DOING)"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 	m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
 	m_forcebundle_chkbox = new wxCheckBox( this, SPRING_FORCEBUNDLE, _("Use the Spring version in the current bundle"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 	m_forcebundle_chkbox->SetValue( sett().GetUseSpringPathFromBundle() );
