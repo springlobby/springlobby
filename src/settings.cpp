@@ -919,6 +919,9 @@ bool Settings::IsInsideSpringBundle()
 
 bool Settings::GetUseSpringPathFromBundle()
 {
+	#ifndef __WXMAC__
+		return false;
+	#endif
 	return m_config->Read(_T("/Spring/UseSpringPathFromBundle"), IsInsideSpringBundle());
 }
 
