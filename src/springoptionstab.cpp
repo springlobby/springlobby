@@ -71,9 +71,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 	m_dontsearch_chkbox->Disable();
 	m_oldlaunch_chkbox->Disable();
 #endif
-#ifndef __WXMAC__
-	m_forcebundle_chkbox->Disable();
-#endif
+	if (!sett().GetBundleMode()) m_forcebundle_chkbox->Disable();
 	/* ================================
 	 * Spring executable
 	 */
@@ -104,12 +102,15 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 	m_bundle_browse_btn = new wxButton( this, SPRING_BUNDLEBROWSE, _( "Browse" ) );
 	m_bundle_find_btn = new wxButton( this, SPRING_BUNDLEFIND, _( "Find" ) );
 
-	#ifdef __WXMAC__
+	if (sett().GetBundleMode())
+	{
 		m_exec_box->Disable();
 		m_sync_box->Disable();
-	#else
+	}
+	else
+	{
 		m_bundle_box->Disable();
-	#endif
+	}
 
 	m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _( "Auto Configure" ) );
 	m_datadir_btn = new wxButton( this, SPRING_DATADIR, _( "Change Datadir path" ) );

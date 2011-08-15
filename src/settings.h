@@ -396,6 +396,8 @@ class Settings : public SL::NonCopyable
     void SetSearchSpringOnlyInSLPath( bool value );
     bool GetSearchSpringOnlyInSLPath();
 
+	//!@brief if false, lobby tries to load spring & unitsync as sep paths, otherwise, searches for a bundle containing both
+	bool GetBundleMode();
 	bool IsInsideSpringBundle();
 
 	// enable-disable loading the spring exec from same bundle

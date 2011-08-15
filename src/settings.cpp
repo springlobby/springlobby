@@ -915,12 +915,21 @@ bool Settings::IsInsideSpringBundle()
 	return wxFileName::FileExists(GetExecutableFolder() + sep + _T("spring")) && wxFileName::FileExists(GetExecutableFolder() + sep + _T("unitsync") + GetLibExtension());
 }
 
+bool Settings::GetBundleMode()
+{
+	#ifndef __WXMAC__
+		return false;
+	#endif
+	return m_config->Read(_T("/Spring/EnableBundleMode"), true);
+}
+
 
 bool Settings::GetUseSpringPathFromBundle()
 {
 	#ifndef __WXMAC__
 		return false;
 	#endif
+	if ( !GetBundleMode() ) return false;
 	return m_config->Read(_T("/Spring/UseSpringPathFromBundle"), IsInsideSpringBundle());
 }
 
@@ -998,18 +1007,14 @@ wxString Settings::GetCurrentUsedSpringConfigFilePath()
 
 wxString Settings::GetUnitSync( const wxString& index )
 {
-	#ifdef __WXMAC__
-	return GetBundle( index )+ sep + _T("Contents") + sep + _T("MacOS") + sep + _T("libunitsync") +  + GetLibExtension();
-	#endif
+	if ( GetBundleMode() ) return GetBundle( index )+ sep + _T("Contents") + sep + _T("MacOS") + sep + _T("libunitsync") +  + GetLibExtension();
 	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/UnitSyncPath" ), AutoFindUnitSync() );
 }
 
 
 wxString Settings::GetSpringBinary( const wxString& index )
 {
-	#ifdef __WXMAC__
-	return GetBundle( index )+ sep + _T("Contents") + sep + _T("MacOS") + sep + _T("spring");
-	#endif
+	if ( GetBundleMode() )  return GetBundle( index )+ sep + _T("Contents") + sep + _T("MacOS") + sep + _T("spring");
 	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), AutoFindSpringBin() );
 }
 
