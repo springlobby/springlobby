@@ -915,6 +915,7 @@ wxString Settings::GetSpringPathInSameBundle()
 	return GetExecutableFolder() + sep + _T("spring");
 }
 
+
 wxString Settings::GetUnitSyncPathInSameBundle()
 {
 	return GetExecutableFolder() + sep + _T("unitsync.dylib")
@@ -929,6 +930,17 @@ wxString Settings::GetBinariesPathInForeignBundle()
 bool Settings::IsInsideSpringBundle()
 {
 	return wxFileName::FileExists(GetSpringPathInSameBundle()) && wxFileName::FileExists(GetUnitSyncPathInSameBundle());
+}
+
+
+bool Settings::GetUseSpringPathFromBundle()
+{
+	return m_config->Read(_T("/Spring/UseSpringPathFromBundle"), IsInsideSpringBundle());
+}
+
+void Settings::SetUseSpringPathFromBundle( bool value )
+{
+	m_config->Write(_T("/Spring/UseSpringPathFromBundle"), value );
 }
 
 wxString Settings::GetCurrentUsedDataDir()
@@ -956,7 +968,7 @@ wxString Settings::GetCurrentUsedSpringBinary()
 #if defined(__WXMSW__) && !defined(SL_QT_MODE)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sep + _T( "spring.exe" );
 #else if defined(__WXMAC__)
-	else if ( IsInsideSpringBundle() ) return GetSpringPathInSameBundle();
+	else if ( GetUseSpringPathFromBundle() ) return GetSpringPathInSameBundle();
 	else return GetBinariesPathInForeignBundle() + sep + _T("spring");
 #endif
 	else return GetSpringBinary( GetCurrentUsedSpringIndex() );
@@ -969,7 +981,7 @@ wxString Settings::GetCurrentUsedUnitSync()
 #if defined(__WXMSW__)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sep + _T( "unitsync" ) + GetLibExtension();
 #else if defined(__WXMAC__)
-	else if ( IsInsideSpringBundle() ) return GetUnitSyncPathInSameBundle();
+	else if ( GetUseSpringPathFromBundle() ) return GetUnitSyncPathInSameBundle();
 	else return GetBinariesPathInForeignBundle() + sep + _T("spring") sep + _T("libunitsync.dylib");
 #endif
 	else return GetUnitSync( GetCurrentUsedSpringIndex() );

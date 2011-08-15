@@ -403,6 +403,10 @@ class Settings : public SL::NonCopyable
 
 	bool IsInsideSpringBundle();
 
+	// enable-disable loading the spring exec from same bundle
+	bool GetUseSpringPathFromBundle();
+	void SetUseSpringPathFromBundle( bool value );
+
     /// convenience wrappers to get current used version paths
 	wxString GetCurrentUsedUikeys();
     wxString GetCurrentUsedDataDir();
