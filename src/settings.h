@@ -396,6 +396,13 @@ class Settings : public SL::NonCopyable
     void SetSearchSpringOnlyInSLPath( bool value );
     bool GetSearchSpringOnlyInSLPath();
 
+	/// convenience functions since paths in bundles are hardcoded, only meaningful on mac
+	wxString GetSpringPathInSameBundle();
+	wxString GetUnitSyncPathInSameBundle();
+	wxString GetBinariesPathInForeignBundle();
+
+	bool IsInsideSpringBundle();
+
     /// convenience wrappers to get current used version paths
 	wxString GetCurrentUsedUikeys();
     wxString GetCurrentUsedDataDir();
@@ -406,12 +413,17 @@ class Settings : public SL::NonCopyable
 
     wxString GetUnitSync( const wxString& index );
     wxString GetSpringBinary( const wxString& index );
+    //!@brief meaningful only on mac
+    wxString GetSpringBundle(const wxString& index );
 
     void SetUnitSync( const wxString& index, const wxString& path );
     void SetSpringBinary( const wxString& index, const wxString& path );
+    //!@brief meaningful only on mac
+    void SetBundle( const wxString& index, const wxString& path );
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync();
+    wxString AutoFindBundle();
 	wxString AutoFindUikeys();
 
     //!@brief returns config file path spring should use, returns empty for default
