@@ -870,9 +870,9 @@ void Settings::RefreshSpringVersionList()
 	for ( int i = 0; i < count; i++ )
 	{
 		wxString groupname = list[i];
-		usync_paths[groupname] = m_config->Read( _T( "/Spring/Paths/" ) + groupname + _T( "/UnitSyncPath" ), _T( "" ) );
+		usync_paths[groupname] = GetUnitSync( groupname );
 	}
-	if ( sett().GetSearchSpringOnlyInSLPath() )
+	if ( sett().GetSearchSpringOnlyInSLPath() || sett().GetUseSpringPathFromBundle() )
 	{
 		usync_paths.clear();
 		usync_paths[sett().GetCurrentUsedSpringIndex()] = sett().GetCurrentUsedUnitSync();
