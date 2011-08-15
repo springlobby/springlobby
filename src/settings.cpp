@@ -733,7 +733,6 @@ void Settings::SetWindowPos( const wxString& window, const wxPoint& pos )
 wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 {
 	wxPathList ret;
-	wxChar sep = sep;
 	wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
 	pl.Add( wxFileName::GetCwd() );
@@ -913,7 +912,7 @@ void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 
 bool Settings::IsInsideSpringBundle()
 {
-	return wxFileName::FileExists(GetSpringPathInSameBundle()) && wxFileName::FileExists(GetUnitSyncPathInSameBundle());
+	return wxFileName::FileExists(GetExecutableFolder() + sep + _T("spring")) && wxFileName::FileExists(GetExecutableFolder() + sep + _T("unitsync") + GetLibExtension());
 }
 
 
@@ -954,7 +953,7 @@ wxString Settings::GetCurrentUsedSpringBinary()
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sep + _T( "spring.exe" );
 #if defined(__WXMSW__) && !defined(SL_QT_MODE)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sep + _T( "spring.exe" );
-#else if defined(__WXMAC__)
+#elif defined(__WXMAC__)
 	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sep + _T("spring");
 #endif
 	else return GetSpringBinary( GetCurrentUsedSpringIndex() );
@@ -966,7 +965,7 @@ wxString Settings::GetCurrentUsedUnitSync()
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sep + _T( "unitsync" ) + GetLibExtension();
 #if defined(__WXMSW__)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sep + _T( "unitsync" ) + GetLibExtension();
-#else if defined(__WXMAC__)
+#elif defined(__WXMAC__)
 	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sep + _T("unitsync") + GetLibExtension();
 #endif
 	else return GetUnitSync( GetCurrentUsedSpringIndex() );
@@ -1014,9 +1013,9 @@ wxString Settings::GetSpringBinary( const wxString& index )
 	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), AutoFindSpringBin() );
 }
 
-void Settings::GetBundle( const wxString& index )
+wxString Settings::GetBundle( const wxString& index )
 {
-	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBundlePath" ), AutoFindSpringBundle() );
+	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBundlePath" ), AutoFindBundle() );
 }
 
 void Settings::SetUnitSync( const wxString& index, const wxString& path )

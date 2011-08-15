@@ -414,7 +414,7 @@ class Settings : public SL::NonCopyable
     wxString GetUnitSync( const wxString& index );
     wxString GetSpringBinary( const wxString& index );
     //!@brief meaningful only on mac
-    wxString GetSpringBundle(const wxString& index );
+    wxString GetBundle(const wxString& index );
 
     void SetUnitSync( const wxString& index, const wxString& path );
     void SetSpringBinary( const wxString& index, const wxString& path );
