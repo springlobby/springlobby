@@ -23,6 +23,7 @@ class SpringOptionsTab : public wxScrolledWindow
 
     void OnBrowseExec( wxCommandEvent& event );
     void OnBrowseSync( wxCommandEvent& event );
+    void OnBrowseBundle( wxCommandEvent& event );
 
     void OnApply( wxCommandEvent& event );
     void OnRestore( wxCommandEvent& event );
@@ -30,10 +31,12 @@ class SpringOptionsTab : public wxScrolledWindow
     void OnAutoConf( wxCommandEvent& event );
     void OnFindExec( wxCommandEvent& event );
     void OnFindSync( wxCommandEvent& event );
+    void OnFindBundle( wxCommandEvent& event );
 
     void OnDataDir( wxCommandEvent& event );
 
     void OnDontSearch( wxCommandEvent& event );
+    void OnForceBundle( wxCommandEvent& event );
 
   protected:
 
@@ -41,11 +44,14 @@ class SpringOptionsTab : public wxScrolledWindow
 
     wxStaticText* m_exec_loc_text;
     wxStaticText* m_sync_loc_text;
+    wxStaticText* m_bundle_loc_text;
 
     wxButton* m_exec_browse_btn;
     wxButton* m_exec_find_btn;
     wxButton* m_sync_browse_btn;
     wxButton* m_sync_find_btn;
+    wxButton* m_bundle_browse_btn;
+    wxButton* m_bundle_find_btn;
     wxButton* m_datadir_btn;
 
     wxButton* m_auto_btn;
@@ -54,37 +60,48 @@ class SpringOptionsTab : public wxScrolledWindow
     wxRadioButton* m_exec_spec_radio;
     wxRadioButton* m_sync_def_radio;
     wxRadioButton* m_sync_spec_radio;
+    wxRadioButton* m_bundle_def_radio;
+    wxRadioButton* m_bundle_spec_radio;
 
     wxTextCtrl* m_exec_edit;
     wxTextCtrl* m_sync_edit;
+    wxTextCtrl* m_bundle_edit;
 
     wxStaticBox* m_exec_box;
     wxStaticBox* m_sync_box;
+    wxStaticBox* m_bundle_box;
     wxStaticBox* m_web_box;
     wxStaticBoxSizer* m_exec_box_sizer;
     wxStaticBoxSizer* m_sync_box_sizer;
+    wxStaticBoxSizer* m_bundle_box_sizer;
 
 
     wxBoxSizer* m_main_sizer;
     wxBoxSizer* m_aconf_sizer;
     wxBoxSizer* m_exec_loc_sizer;
     wxBoxSizer* m_sync_loc_sizer;
+    wxBoxSizer* m_bundle_loc_sizer;
 
     wxCheckBox* m_dontsearch_chkbox;
+    wxCheckBox* m_forcebundle_chkbox;
     wxCheckBox* m_oldlaunch_chkbox;
 
     enum {
         SPRING_EXECBROWSE = wxID_HIGHEST,
         SPRING_SYNCBROWSE,
+        SPRING_BUNDLEBROWSE,
         SPRING_WEBBROWSE,
         SPRING_DEFEXE,
         SPRING_DEFUSYNC,
+        SPRING_DEFBUNDLE,
         SPRING_DEFWEB,
         SPRING_AUTOCONF,
         SPRING_EXECFIND,
         SPRING_SYNCFIND,
+        SPRING_BUNDLEFIND,
         SPRING_DATADIR,
-        SPRING_DONTSEARCH
+        SPRING_DONTSEARCH,
+        SPRING_FORCEBUNDLE
     };
 
     DECLARE_EVENT_TABLE()
