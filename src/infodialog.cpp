@@ -33,7 +33,7 @@
 #include "updater/updatehelper.h"
 #include <wx/textctrl.h>
 #include <wx/app.h>
-#ifdef __unix__
+#ifdef __unix__ || defined(__APPLE__)
 # include <unistd.h>
 # define WRITABLE W_OK
 #elif __WIN32__ || _MSC_VER
