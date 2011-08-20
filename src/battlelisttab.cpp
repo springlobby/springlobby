@@ -1,4 +1,4 @@
-/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2011 The SpringLobby Team. All rights reserved. */
 
 #include <wx/intl.h>
 #include <wx/stattext.h>
@@ -188,7 +188,7 @@ void BattleListTab::OnConnected()
 void BattleListTab::SetNumDisplayed()
 {
 	int num = m_battle_list->GetItemCount();
-	m_battle_num->SetLabel( wxString::Format( _( "%d battles displayed" ), num ) );
+	m_battle_num->SetLabel( wxFormat( _( "%d battles displayed" ) ) % num );
 }
 
 void BattleListTab::SelectBattle( IBattle* battle )
@@ -200,8 +200,8 @@ void BattleListTab::SelectBattle( IBattle* battle )
 	{
 		m_map_text->SetLabel( m_sel_battle->GetHostMapName() );
 		m_mod_text->SetLabel( m_sel_battle->GetHostModName() );
-		m_players_text->SetLabel( wxString::Format( _T( "%d / %d" ), int( m_sel_battle->GetNumUsers() ) - int( m_sel_battle->GetSpectators() ), int( m_sel_battle->GetMaxPlayers() ) ) );
-		m_spec_text->SetLabel( wxString::Format( _T( "%d" ), m_sel_battle->GetSpectators() ) );
+		m_players_text->SetLabel( wxFormat( _T( "%d / %d" ) ) % (int( m_sel_battle->GetNumUsers() ) - int( m_sel_battle->GetSpectators() )) % int( m_sel_battle->GetMaxPlayers() ) );
+		m_spec_text->SetLabel( wxFormat( _T( "%d" ) ) % m_sel_battle->GetSpectators() );
 		for ( unsigned int i = 0; i < m_sel_battle->GetNumUsers(); i++ )
 		{
 			User& usr = m_sel_battle->GetUser( i );

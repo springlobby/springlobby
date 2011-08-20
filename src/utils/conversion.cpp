@@ -1,4 +1,4 @@
-/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2011 The SpringLobby Team. All rights reserved. */
 #include "conversion.h"
 
 #include <wx/arrstr.h>
@@ -29,3 +29,4 @@ StringtokenizerVectorized::StringtokenizerVectorized( wxStringTokenizer tokenize
     while ( tokenizer.HasMoreTokens() )
         push_back( tokenizer.GetNextToken() );
 }
+

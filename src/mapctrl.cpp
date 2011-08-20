@@ -1,4 +1,4 @@
-/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2011 The SpringLobby Team. All rights reserved. */
 
 #include <wx/panel.h>
 #include <wx/dcclient.h>
@@ -570,18 +570,18 @@ void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& co
     if ( index != -1 )
     {
         int twidth, theight, tx, ty;
-        wxString strIndex = wxString::Format( _T("%d"), index + 1 );
+		wxString strIndex = wxFormat( _T("%d") ) % ( index + 1 );
         dc.GetTextExtent( strIndex, &twidth, &theight );
         dc.SetTextForeground( col );
         tx = sr.x + sr.width / 2 - twidth / 2;
         ty = sr.y + sr.height / 2 - theight / 2 - 1;
         DrawOutlinedText( dc, strIndex, tx, ty, wxColour( 50, 50, 50), *wxWHITE );
-        //dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
+        //dc.DrawText( wxFormat( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
 
         const double metal = GetStartRectMetalFraction( index );
         if ( metal != 0.0 )
         {
-            wxString strMetal = wxString::Format( _("Metal: %.1f%%"), metal * 100.0 );
+			wxString strMetal = wxFormat( _("Metal: %.1f%%") ) % ( metal * 100.0 );
             dc.GetTextExtent( strMetal, &twidth, &theight );
             // don't cramp it in rect, but only display it if it actually fits
             if (sr.height >= 6 * theight && sr.width > twidth)
@@ -753,8 +753,8 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
             int y = (int)( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8;
             dc.DrawBitmap( *m_start_ally, x+mr.x, y+mr.y, true );
             wxCoord w, h;
-            dc.GetTextExtent( wxString::Format(_T("%d"), i+1 ), &w, &h );
-            dc.DrawText( wxString::Format(_T("%d"), i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
+			dc.GetTextExtent( wxFormat(_T("%d") ) % ( i+1 ), &w, &h );
+			dc.DrawText( wxFormat(_T("%d") ) % ( i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
         }
     }
     else
@@ -902,8 +902,8 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool /*unused*/ )
 
         /* Draw the Ally Number numeric select */
         wxRect updownallyrect = GetUserUpAllyButtonRect();
-        DrawOutlinedText( dc, wxString::Format( _("ally:   %d"), user.BattleStatus().ally + 1 ), r.x+3, r.y+updownallyrect.y, wxColour(50,50,50), *wxWHITE );
-        //dc.DrawText( wxString::Format( _("ally: %d"), bot.BattleStatus().ally + 1 ), r.x+4, r.y+40 );
+		DrawOutlinedText( dc, wxFormat( _("ally:   %d") ) % ( user.BattleStatus().ally + 1 ), r.x+3, r.y+updownallyrect.y, wxColour(50,50,50), *wxWHITE );
+        //dc.DrawText( wxFormat( _("ally: %d"), bot.BattleStatus().ally + 1 ), r.x+4, r.y+40 );
 
         if ( m_rect_area == UpAllyButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
         else if ( m_rect_area == DownAllyButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
@@ -913,7 +913,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool /*unused*/ )
         wxRect updownhandicaprect = GetUserUpHandicapButtonRect();
         wxFont b( 6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
         dc.SetFont( b );
-        DrawOutlinedText( dc, wxString::Format( _("bonus: %d%%"), user.BattleStatus().handicap ), r.x+3, r.y+updownhandicaprect.y+2, wxColour(50,50,50), *wxWHITE );
+		DrawOutlinedText( dc, wxFormat( _("bonus: %d%%") ) % user.BattleStatus().handicap, r.x+3, r.y+updownhandicaprect.y+2, wxColour(50,50,50), *wxWHITE );
         dc.SetFont( f );
 
         if ( m_rect_area == UpHandicapButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownhandicaprect.x, r.y+updownhandicaprect.y, true );
@@ -943,7 +943,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool /*unused*/ )
         dc.DrawBitmap( *img, r.x+ USER_BOX_ICON_PADDING, r.y+USER_BOX_ICON_PADDING, true );
 
         int w, h;
-        wxString allystr = wxString::Format( _T("%d"), user.BattleStatus().ally + 1 );
+		wxString allystr = wxFormat( _T("%d") ) % ( user.BattleStatus().ally + 1 );
         dc.GetTextExtent( allystr, &w, &h );
 
         DrawOutlinedText( dc, allystr, r.width - w - 3 + r.x, r.height - h - 1 + r.y, wxColour(50,50,50), *wxWHITE );
@@ -1459,7 +1459,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
             if ( m_mdown_area == Refreshing )
             {
 				usync().AddReloadEvent();
-                m_battle->Update( wxString::Format( _T("%d_mapname"), OptionsWrapper::PrivateOptions ) );
+				m_battle->Update( wxFormat( _T("%d_mapname") ) % OptionsWrapper::PrivateOptions );
                 UpdateMinimap();
             }
             else if ( m_mdown_area == Download )

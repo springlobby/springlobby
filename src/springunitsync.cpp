@@ -38,7 +38,7 @@
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
 
 const wxEventType UnitSyncAsyncOperationCompletedEvt = wxNewEventType();
-
+const wxEventType wxUnitsyncReloadEvent = wxNewEventType();
 
 SpringUnitSync& usync()
 {
@@ -1006,7 +1006,7 @@ wxArrayString SpringUnitSync::GetCacheFile( const wxString& path ) const
   wxArrayString ret;
   wxTextFile file( path );
   file.Open();
-  ASSERT_EXCEPTION( file.IsOpened() , wxString::Format( _T("cache file( %s ) not found"), path.c_str() ) );
+  ASSERT_EXCEPTION( file.IsOpened() , wxFormat( _T("cache file( %s ) not found") ) % path );
   unsigned int linecount = file.GetLineCount();
   for ( unsigned int count = 0; count < linecount; count ++ )
   {

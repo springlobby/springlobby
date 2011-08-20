@@ -535,6 +535,6 @@ TimerMessageBox::TimerMessageBox( const wxString& msg_format  )
 TimerMessageBox::~TimerMessageBox()
 {
 	wxTimeSpan diff = wxDateTime::Now().Subtract( *m_start );
-	customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( m_msg_format, diff.Format().c_str() ) );
+	customMessageBoxNoModal( SL_MAIN_ICON, wxFormat( m_msg_format ) % diff.Format() );
 	delete m_start;
 }

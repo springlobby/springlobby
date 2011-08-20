@@ -970,7 +970,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
       	RestrictUnit( unitinfo.BeforeLast(_T('=')), s2l( unitinfo.AfterLast(_T('=')) ) );
       }
       SendHostInfo( HI_Restrictions );
-      Update( wxString::Format( _T("%d_restrictions"), OptionsWrapper::PrivateOptions ) );
+	  Update( wxFormat( _T("%d_restrictions") ) % OptionsWrapper::PrivateOptions );
 
     }
   }

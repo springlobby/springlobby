@@ -1,4 +1,4 @@
-/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2011 The SpringLobby Team. All rights reserved. */
 
 #include "slbook.h"
 #include "../settings.h"
@@ -325,7 +325,7 @@ wxString SLNotebook::SavePerspective() {
 
 		if ((int)page_idx == m_curpage) tabs += wxT("*");
 		else if ((int)p == tabframe->m_tabs->GetActivePage()) tabs += wxT("+");
-		tabs += wxString::Format(wxT("%u"), page_idx);
+		tabs += (wxFormat(wxT("%u") ) % page_idx).str();
      }
   }
   tabs += wxT("@");

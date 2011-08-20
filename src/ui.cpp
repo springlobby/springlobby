@@ -1,4 +1,4 @@
-/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2011 The SpringLobby Team. All rights reserved. */
 //
 // Class: Ui
 //
@@ -652,7 +652,7 @@ bool Ui::IsSpringCompatible()
         return true;
       }
     }
-    wxString message = wxString::Format( _("No compatible installed spring version has been found, this server requires version: %s\n"), neededversion.c_str() );
+	wxString message = wxFormat( _("No compatible installed spring version has been found, this server requires version: %s\n") ) % neededversion;
     message << _("Your current installed versions are:");
 	for ( std::map<wxString, wxString>::const_iterator itor = versionlist.begin(); itor != versionlist.end(); ++itor ) message << _T(" ") << itor->second;
     message << _T("\n") << _("Online play is currently disabled.");
@@ -687,7 +687,7 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 
     mw().GetChatTab().LeaveChannels();
 
-	wxString disconnect_msg = wxString::Format(_("disconnected from server: %s"), server.GetServerName().c_str() );
+	wxString disconnect_msg = wxFormat(_("disconnected from server: %s") ) % server.GetServerName();
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
 			UiEvents::StatusData( disconnect_msg, 1 ) );
 	if ( !wxTheApp->IsActive() )
@@ -895,7 +895,7 @@ void Ui::OnChannelList( const wxString& channel, const int& numusers )
         ShowMessage( _("error"), _("no active chat panels open.") );
         return;
     }
-    panel->StatusMessage( channel + wxString::Format( _("(%d users)"), numusers) );
+	panel->StatusMessage( wxFormat( _("%s (%d users)") ) % channel % numusers );
 }
 
 
@@ -1278,7 +1278,7 @@ void Ui::OnRing( const wxString& from )
 	if ( !wxTheApp->IsActive() )
 	{
 		UiEvents::GetNotificationEventSender().SendEvent(
-				UiEvents::NotficationData( UiEvents::ServerConnection, wxString::Format(_("%s:\nring!"),from.c_str()) ) );
+				UiEvents::NotficationData( UiEvents::ServerConnection, wxFormat(_("%s:\nring!") ) % from ) );
 	}
 
 #ifndef NO_TORRENT_SYSTEM
@@ -1398,9 +1398,9 @@ void Ui::FirstRunWelcome()
 #endif
 
         wxLogMessage( _T("first time startup"));
-		wxMessageBox( wxString::Format( _("Hi %s,\nIt looks like this is your first time using %s. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration."),
-										wxGetUserName().c_str(),
-										GetAppName().c_str() ),
+		wxMessageBox( wxFormat( _("Hi %s,\nIt looks like this is your first time using %s. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration.") )
+										% wxGetUserName()
+										% GetAppName(),
 					  _("Welcome"),
 					  wxOK | wxICON_INFORMATION, &mw() );
 
@@ -1453,9 +1453,9 @@ void Ui::CheckForUpdates()
     {
         #ifdef __WXMSW__
 		int answer = customMessageBox(SL_MAIN_ICON,
-									  wxString::Format( _("Your %s version is not up to date.\n\n%s\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again."),
-														GetAppName().c_str(),
-														msg.c_str() ),
+									  wxFormat( _("Your %s version is not up to date.\n\n%s\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again.") )
+														% GetAppName()
+														% msg,
 									  _("Not up to date"), wxYES_NO);
         if (answer == wxYES)
         {

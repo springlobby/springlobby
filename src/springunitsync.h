@@ -21,10 +21,7 @@ class QImage;
 class wxImage;
 
 extern const wxEventType UnitSyncAsyncOperationCompletedEvt;
-const wxEventType wxUnitsyncReloadEvent = wxNewEventType();
-
 struct GameOptions;
-
 class wxDynamicLibrary;
 class wxImage;
 struct CachedMapInfo;

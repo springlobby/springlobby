@@ -1,7 +1,6 @@
-/* Copyright (C) 2007-2009 The SpringLobby Team. All rights reserved. */
+/* Copyright (C) 2007-2011 The SpringLobby Team. All rights reserved. */
 #include "controls.h"
 #include "../settings.h"
-#include "../defines.h"
 #include <wx/gdicmn.h>
 #include <wx/window.h>
 #include <wx/tooltip.h>
@@ -17,13 +16,25 @@ void UpdateMainAppHasFocus( bool focus )
 const wxChar* TooltipEnable(const wxChar* input)
 {
 	#if !defined(HAVE_WX29) || defined(__WXOSX_COCOA__)
-			if (!main_app_has_focus) return _T("");
-			return sett().GetShowTooltips() ? input : _T("");
+		if (!main_app_has_focus) return _T("");
+		return sett().GetShowTooltips() ? input : _T("");
     #else
-			wxString dummy = wxEmptyString;
-			if (!main_app_has_focus) return dummy.wc_str();
-			return sett().GetShowTooltips() ? input : dummy.wc_str();
+		wxString dummy = wxEmptyString;
+		if (!main_app_has_focus) return dummy.wc_str();
+		return sett().GetShowTooltips() ? input : dummy.wc_str();
     #endif
+}
+const wxChar* TooltipEnable(const wxString input)
+{
+	//i know this duplicates the above function, but I couldn't figure out a proper conversion from wxString -> wxChar* in 2.9.x
+	#if !defined(HAVE_WX29) || defined(__WXOSX_COCOA__)
+		if (!main_app_has_focus) return _T("");
+		return sett().GetShowTooltips() ? input.wc_str() : _T("");
+	#else
+		wxString dummy = wxEmptyString;
+		if (!main_app_has_focus) return dummy.wc_str();
+		return sett().GetShowTooltips() ? input.wc_str() : dummy.wc_str();
+	#endif
 }
 
 int GetMaxStringWidth( const wxWindow& win, const wxArrayString& strings )

@@ -502,7 +502,7 @@ TimedMessageBox::TimedMessageBox(wxIcon* icon ,wxWindow *parent, const wxString&
     }
 
     m_delay_sizer = new wxBoxSizer( wxHORIZONTAL);
-    m_delay_notif = new wxStaticText( this, -1, wxString::Format( _("Please standby %d seconds"), delay / 1000 ) );
+	m_delay_notif = new wxStaticText( this, -1, wxFormat( _("Please standby %d seconds") ) % ( delay / 1000 ) );
     m_delay_sizer->Add( m_delay_notif, 0, center_flag | wxALL, 10 );
     topsizer-> Add( m_delay_sizer );
 
@@ -546,7 +546,7 @@ void TimedMessageBox::OnUpdate( wxTimerEvent&  )
 {
     m_display_hits++;
     int remainder = ( m_delay - ( m_display_hits * m_update_interval ) ) / 1000;
-    m_delay_notif->SetLabel( wxString::Format( _("Please standby %d seconds"), remainder ) );
+	m_delay_notif->SetLabel( wxFormat( _("Please standby %d seconds") ) % remainder );
 }
 
 void TimedMessageBox::OnClose( wxCloseEvent&  )
