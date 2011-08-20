@@ -1005,7 +1005,7 @@ wxString Settings::GetCurrentUsedSpringConfigFilePath()
 
 wxString Settings::GetUnitSync( const wxString& index )
 {
-	if ( GetBundleMode() ) return GetBundle( index )+ sep + _T("Contents") + sep + _T("MacOS") + sep + _T("libunitsync") +  + GetLibExtension();
+	if ( GetBundleMode() ) return GetBundle( index )+ sep + _T("Contents") + sep + _T("MacOS") + sep + _T("libunitsync") +  GetLibExtension();
 	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/UnitSyncPath" ), AutoFindUnitSync() );
 }
 
