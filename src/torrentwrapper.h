@@ -3,6 +3,7 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
+#define BOOST_FILESYSTEM_VERSION 2
 
 #include <wx/arrstr.h>
 #include <wx/event.h>
