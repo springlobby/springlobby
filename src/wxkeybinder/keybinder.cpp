@@ -1670,7 +1670,7 @@ wxTreeItemId wxKeyConfigPanel::FindTreeItem( wxTreeItemId root, const wxString& 
 	while( item.IsOk() )
 	{
 		wxString sData = m_pCommandsTree->GetItemText(item);
-		if( sSearchFor.CompareTo(sData) == 0 )
+		if( sSearchFor.Cmp(sData) == 0 )
 		{
 			return item;
 		}
