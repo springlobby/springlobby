@@ -386,7 +386,7 @@ const wxString WR_COMBOX_CHOICES[] = {
 };
 
 const Control MO_CBOX[] = {
-	{_("Invert mouse y-axis"),             _T("InvertMouse"),      ID_WINDOWC_MO_CBOX_0,	_T("1"), {_("swap up/down with down/up")}},
+	{_("Invert mouse y-axis"),             _T("InvertMouse"),      ID_WINDOWC_MO_CBOX_0,	_T("0"), {_("swap up/down with down/up")}},
 	{_("Mini-map 3-button mouse support"), _T("MiniMapFullProxy"), ID_WINDOWC_MO_CBOX_1,	_T("1"), {_("if you don't want to able to use that button, disable it here")}}
 };
 
