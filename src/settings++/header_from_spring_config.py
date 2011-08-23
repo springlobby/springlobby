@@ -6,7 +6,7 @@ except:
 	import json
 import sys
 from jinja2 import Environment, FileSystemLoader
-conversion_map = { 'bool':bool, 'int':int, 'std::string':str, 'float':float }
+conversion_map = { 'bool':int, 'int':int, 'std::string':str, 'float':float }
 
 def spring_default_config(input_fn):
 	inputdata = json.load(open(input_fn))
@@ -31,4 +31,4 @@ def output(defaults,output_fn):
 
 if __name__ == '__main__':
 	d = spring_default_config( sys.argv[1] )
-	output(d,'ctrlconstants.h.out')
+	output(d,'ctrlconstants.h')
