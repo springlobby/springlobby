@@ -14,3 +14,5 @@ git checkout master
 git fetch ${who}
 git merge ${who}/master
 git push origin master
+git fetch --tags origin
+git push --tags github master
