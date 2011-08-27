@@ -963,9 +963,7 @@ wxString Settings::GetCurrentUsedDataDir()
 wxString Settings::GetCurrentUsedSpringBinary()
 {
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sep + _T( "spring.exe" );
-#if !defined(SL_QT_MODE)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sep + _T( "spring.exe" );
-#endif
 	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sep + _T("spring");
 	else return GetSpringBinary( GetCurrentUsedSpringIndex() );
 }
