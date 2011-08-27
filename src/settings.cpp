@@ -887,13 +887,13 @@ void Settings::SetUsedSpringIndex( const wxString& index )
 	m_config->Write( _T( "/Spring/CurrentIndex" ), index );
 }
 
+
 bool Settings::GetSearchSpringOnlyInSLPath()
 {
-	bool defaultval = false;
-#ifdef __WXMSW__
-	defaultval = true;
+#ifndef __WXMSW__
+	return false;
 #endif
-	return m_config->Read( _T( "/Spring/SearchSpringOnlyInSLPath" ), defaultval );
+	return m_config->Read( _T( "/Spring/SearchSpringOnlyInSLPath" ), true );
 }
 
 void Settings::SetSearchSpringOnlyInSLPath( bool value )
@@ -910,7 +910,12 @@ void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 
 bool Settings::IsInsideSpringBundle()
 {
-	return wxFileName::FileExists(GetExecutableFolder() + sep + _T("spring")) && wxFileName::FileExists(GetExecutableFolder() + sep + _T("unitsync") + GetLibExtension());
+	#ifdef __WXMSW__
+		#define BIN_EXT _T(".exe")
+	#else
+		#define BIN_EXT _T("")
+	#endif
+	return wxFileName::FileExists(GetExecutableFolder() + sep + _T("spring") + BIN_EXT) && wxFileName::FileExists(GetExecutableFolder() + sep + _T("unitsync") + GetLibExtension());
 }
 
 bool Settings::GetBundleMode()
@@ -958,11 +963,10 @@ wxString Settings::GetCurrentUsedDataDir()
 wxString Settings::GetCurrentUsedSpringBinary()
 {
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sep + _T( "spring.exe" );
-#if defined(__WXMSW__) && !defined(SL_QT_MODE)
+#if !defined(SL_QT_MODE)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sep + _T( "spring.exe" );
-#elif defined(__WXMAC__)
-	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sep + _T("spring");
 #endif
+	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sep + _T("spring");
 	else return GetSpringBinary( GetCurrentUsedSpringIndex() );
 }
 
@@ -970,11 +974,8 @@ wxString Settings::GetCurrentUsedSpringBinary()
 wxString Settings::GetCurrentUsedUnitSync()
 {
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sep + _T( "unitsync" ) + GetLibExtension();
-#if defined(__WXMSW__)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sep + _T( "unitsync" ) + GetLibExtension();
-#elif defined(__WXMAC__)
 	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sep + _T("unitsync") + GetLibExtension();
-#endif
 	else return GetUnitSync( GetCurrentUsedSpringIndex() );
 }
 
@@ -986,9 +987,7 @@ wxString Settings::GetCurrentUsedBundle()
 wxString Settings::GetCurrentUsedUikeys()
 {
 	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sep + _T( "uikeys.txt" );
-#if defined(__WXMSW__)
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sep + _T( "uikeys.txt" );
-#endif
 	else return GetUikeys( GetCurrentUsedSpringIndex() );
 }
 
