@@ -38,6 +38,10 @@ class SpringOptionsTab : public wxScrolledWindow
     void OnDontSearch( wxCommandEvent& event );
     void OnForceBundle( wxCommandEvent& event );
 
+    void EnableSpringBox(bool enabled);
+    void EnableUnitsyncBox(bool enabled);
+    void EnableBundleBox(bool enabled);
+
   protected:
 
 		void SetupUserFolders();

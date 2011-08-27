@@ -104,12 +104,12 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 
 	if (sett().GetBundleMode())
 	{
-		m_exec_box->Disable();
-		m_sync_box->Disable();
+		EnableSpringBox(false);
+		EnableUnitsyncBox(false);
 	}
 	else
 	{
-		m_bundle_box->Disable();
+		EnableBundleBox(false);
 	}
 
 	m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _( "Auto Configure" ) );
@@ -169,8 +169,8 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 
 	if ( sett().IsPortableMode() || sett().GetSearchSpringOnlyInSLPath() )
 	{
-		m_exec_box->Disable();
-		m_sync_box->Disable();
+		EnableSpringBox(false);
+		EnableUnitsyncBox(false);
 		m_auto_btn->Disable();
 		m_bundle_box->Disable();
 		m_datadir_btn->Disable();
@@ -197,6 +197,32 @@ SpringOptionsTab::~SpringOptionsTab()
 
 }
 
+void SpringOptionsTab::EnableSpringBox(bool enabled)
+{
+		m_exec_box->Enable(enabled);
+		m_exec_loc_text->Enable(enabled);
+		m_exec_edit->Enable(enabled);
+		m_exec_browse_btn->Enable(enabled);
+		m_exec_find_btn->Enable(enabled);
+}
+
+void SpringOptionsTab::EnableUnitsyncBox(bool enabled)
+{
+		m_sync_box->Enable(enabled);
+		m_sync_loc_text->Enable(enabled);
+		m_sync_edit->Enable(enabled);
+		m_sync_browse_btn->Enable(enabled);
+		m_sync_find_btn->Enable(enabled);
+}
+
+void SpringOptionsTab::EnableBundleBox(bool enabled)
+{
+		m_bundle_box->Enable(enabled);
+		m_bundle_edit->Enable(enabled);
+		m_bundle_loc_text->Enable(enabled);
+		m_bundle_browse_btn->Enable(enabled);
+		m_bundle_find_btn->Enable(enabled);
+}
 
 void SpringOptionsTab::DoRestore()
 {
@@ -302,35 +328,20 @@ void SpringOptionsTab::OnDataDir( wxCommandEvent& /*unused*/ )
 void SpringOptionsTab::OnDontSearch( wxCommandEvent& /*unused*/ )
 {
 	if ( m_dontsearch_chkbox->IsChecked() ) {
-		m_exec_box->Disable();
-		m_sync_box->Disable();
-		m_auto_btn->Disable();
-		m_exec_edit->Disable();
-		m_exec_browse_btn->Disable();
-		m_exec_find_btn->Disable();
-		m_sync_edit->Disable();
-		m_sync_browse_btn->Disable();
-		m_sync_find_btn->Disable();
+		EnableSpringBox(false);
+		EnableUnitsyncBox(false);
 		m_datadir_btn->Disable();
 	}
 	else {
-		m_exec_box->Enable();
-		m_sync_box->Enable();
-		m_auto_btn->Enable();
-		m_exec_edit->Enable();
-		m_exec_browse_btn->Enable();
-		m_exec_find_btn->Enable();
-		m_sync_edit->Enable();
-		m_sync_browse_btn->Enable();
-		m_sync_find_btn->Enable();
+		EnableSpringBox(true);
+		EnableUnitsyncBox(true);
 		m_datadir_btn->Enable();
 	}
 }
 
 void SpringOptionsTab::OnForceBundle( wxCommandEvent& /*unused*/ )
 {
-	if ( m_forcebundle_chkbox->IsChecked() ) m_bundle_box->Disable();
-	else m_bundle_box->Enable();
+	EnableBundleBox(!m_forcebundle_chkbox->IsChecked());
 }
 
 /** Try to create the named directory, if it doesn't exist.
