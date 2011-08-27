@@ -45,6 +45,12 @@
     #include "utils/customdialogs.h"
 #endif
 
+#ifdef __WXMSW__
+	#define BIN_EXT _T(".exe")
+#else
+	#define BIN_EXT _T("")
+#endif
+
 bool Settings::m_user_defined_config = false;
 wxString Settings::m_user_defined_config_path = wxEmptyString;
 wxChar sep = wxFileName::GetPathSeparator();
@@ -910,11 +916,6 @@ void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 
 bool Settings::IsInsideSpringBundle()
 {
-	#ifdef __WXMSW__
-		#define BIN_EXT _T(".exe")
-	#else
-		#define BIN_EXT _T("")
-	#endif
 	return wxFileName::FileExists(GetExecutableFolder() + sep + _T("spring") + BIN_EXT) && wxFileName::FileExists(GetExecutableFolder() + sep + _T("unitsync") + GetLibExtension());
 }
 
@@ -962,9 +963,9 @@ wxString Settings::GetCurrentUsedDataDir()
 
 wxString Settings::GetCurrentUsedSpringBinary()
 {
-	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sep + _T( "spring.exe" );
-	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sep + _T( "spring.exe" );
-	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sep + _T("spring");
+	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sep + _T( "spring" ) + BIN_EXT;
+	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sep + _T( "spring" ) +  + BIN_EXT;
+	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sep + _T("spring") + BIN_EXT;
 	else return GetSpringBinary( GetCurrentUsedSpringIndex() );
 }
 
