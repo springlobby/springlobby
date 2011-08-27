@@ -67,7 +67,6 @@ Settings& sett()
 Settings::Settings()
 	:m_forced_springconfig_path(wxEmptyString)
 {
-#if defined(__WXMSW__) || defined(__WXMAC__)
 	wxString userfilepath = IdentityString( GetConfigfileDir() + sep + _T( "%s.conf" ), true );
 	wxString localfilepath =  IdentityString( GetExecutableFolder() + sep + _T( "%s.conf" ), true );
 
@@ -120,12 +119,6 @@ Settings::Settings()
 	}
 	m_final_config_path = m_chosen_path;
 	m_config = new slConfig( instream );
-#else
-	wxString localpath = wxFormat( _T( "%s/%s.conf" ) ) % GetConfigfileDir() % GetAppName( true );
-	m_final_config_path = m_user_defined_config ? m_user_defined_config_path : localpath;
-	m_config = new slConfig( GetAppName(), wxEmptyString, m_final_config_path );
-	SetPortableMode ( false );
-#endif
 	m_config->SetRecordDefaults( true );
 }
 
@@ -140,7 +133,6 @@ void Settings::SaveSettings()
 	SetCacheVersion();
 	SetSettingsVersion();
 	m_config->Flush();
-#if defined(__WXMSW__) || defined(__WXMAC__)
 	wxFileOutputStream outstream( m_chosen_path );
 
 	if ( !outstream.IsOk() )
@@ -149,7 +141,6 @@ void Settings::SaveSettings()
 	}
 
 	m_config->Save( outstream );
-#endif
 }
 
 wxArrayString Settings::GetGroupList( const wxString& base_key )
