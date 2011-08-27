@@ -263,7 +263,7 @@ void SpringOptionsTab::OnBrowseBundle( wxCommandEvent& /*unused*/ )
 	wxFileDialog pick( this, _( "Choose a Spring executable" ),
 	                   wxPathOnly( sett().GetCurrentUsedBundle() ),
 	                   _T("Spring.App"), wxString(_("App bundle")) + _T("(*.App)||.App") );
-	if ( pick.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pick.GetPath() );
+	if ( pick.ShowModal() == wxID_OK ) m_bundle_edit->SetValue( pick.GetPath() );
 }
 
 void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
