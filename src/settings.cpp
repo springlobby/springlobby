@@ -53,7 +53,7 @@
 
 bool Settings::m_user_defined_config = false;
 wxString Settings::m_user_defined_config_path = wxEmptyString;
-wxChar sep = wxFileName::GetPathSeparator();
+const wxChar sep = wxFileName::GetPathSeparator();
 
 const wxColour defaultHLcolor ( 255, 0, 0 );
 
@@ -948,6 +948,8 @@ wxString Settings::GetCurrentUsedDataDir()
 	if ( dir.IsEmpty() )
         dir = wxFileName::GetHomeDir() + sep + _T( ".spring" ); // fallback
 #endif
+	wxString stripped;
+	if ( dir.EndsWith(wxString(sep),&stripped) ) return stripped;
 	return dir;
 }
 
