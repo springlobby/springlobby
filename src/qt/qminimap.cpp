@@ -40,7 +40,7 @@ void QMinimap::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option
 	if (!m_battle)
 		return;
 	const IBattle::StartType position_type =
-			IBattle::StartType(s2l( CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) ));
+			IBattle::StartType(s2l( m_battle->CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) ));
 	switch ( position_type ) {
 		case IBattle::ST_Fixed:
 		case IBattle::ST_Pick:
@@ -93,7 +93,7 @@ void QMinimap::setBattleId( int id )
 		return;
 	}
 	const wxString mapname = m_battle->GetHostMapName();
-	m_map = m_battle->LoadMap();
+	m_battle->LoadMap();
 	const QRectF bounds = boundingRect();
 	const int width = bounds.width();
 	const int height = bounds.height();
