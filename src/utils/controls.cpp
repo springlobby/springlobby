@@ -27,9 +27,11 @@ const wxChar* TooltipEnable(const wxChar* input)
 const wxChar* TooltipEnable(const wxString input)
 {
 	//i know this duplicates the above function, but I couldn't figure out a proper conversion from wxString -> wxChar* in 2.9.x
+	//and now it's completely useless to branch here?
 	#if !defined(HAVE_WX29) || defined(__WXOSX_COCOA__)
-		if (!main_app_has_focus) return _T("");
-		return sett().GetShowTooltips() ? input.wc_str() : _T("");
+		wxString dummy = wxEmptyString;
+		if (!main_app_has_focus) return dummy.wc_str();
+		return sett().GetShowTooltips() ? input.wc_str() : dummy.wc_str();
 	#else
 		wxString dummy = wxEmptyString;
 		if (!main_app_has_focus) return dummy.wc_str();

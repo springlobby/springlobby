@@ -9,7 +9,7 @@ const int CACHE_VERSION     = 11;
 const int SETTINGS_VERSION  = 22;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
-const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("taspringmaster.clan-sy.com");
+const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("lobby.springrts.com");
 const wxString widgetDownloader_baseUrl = _T("widgetdb.springrts.de");
 const wxString BattlePostfix = _T("_battle");
 const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
@@ -396,22 +396,36 @@ class Settings : public SL::NonCopyable
     void SetSearchSpringOnlyInSLPath( bool value );
     bool GetSearchSpringOnlyInSLPath();
 
+	//!@brief if false, lobby tries to load spring & unitsync as sep paths, otherwise, searches for a bundle containing both
+	bool GetBundleMode();
+	bool IsInsideSpringBundle();
+
+	// enable-disable loading the spring exec from same bundle
+	bool GetUseSpringPathFromBundle();
+	void SetUseSpringPathFromBundle( bool value );
+
     /// convenience wrappers to get current used version paths
 	wxString GetCurrentUsedUikeys();
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
+    wxString GetCurrentUsedBundle();
     wxString GetCurrentUsedSpringBinary();
     //!@brief returns config file path unitsync uses, returns empty if unitsync isn't loaded
     wxString GetCurrentUsedSpringConfigFilePath();
 
     wxString GetUnitSync( const wxString& index );
     wxString GetSpringBinary( const wxString& index );
+    //!@brief meaningful only on mac
+    wxString GetBundle(const wxString& index );
 
     void SetUnitSync( const wxString& index, const wxString& path );
     void SetSpringBinary( const wxString& index, const wxString& path );
+    //!@brief meaningful only on mac
+    void SetBundle( const wxString& index, const wxString& path );
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync();
+    wxString AutoFindBundle();
 	wxString AutoFindUikeys();
 
     //!@brief returns config file path spring should use, returns empty for default

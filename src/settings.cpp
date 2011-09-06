@@ -45,8 +45,16 @@
     #include "utils/customdialogs.h"
 #endif
 
+#ifdef __WXMSW__
+	#define BIN_EXT _T(".exe")
+#else
+	#define BIN_EXT _T("")
+#endif
+
 bool Settings::m_user_defined_config = false;
 wxString Settings::m_user_defined_config_path = wxEmptyString;
+const wxChar sep = wxFileName::GetPathSeparator();
+const wxString sepstring = wxString(sep);
 
 
 const wxColour defaultHLcolor ( 255, 0, 0 );
@@ -61,9 +69,8 @@ Settings& sett()
 Settings::Settings()
 	:m_forced_springconfig_path(wxEmptyString)
 {
-#if defined(__WXMSW__) || defined(__WXMAC__)
-	wxString userfilepath = IdentityString( GetConfigfileDir() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
-	wxString localfilepath =  IdentityString( GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "%s.conf" ), true );
+	wxString userfilepath = IdentityString( GetConfigfileDir() + sepstring + _T( "%s.conf" ), true );
+	wxString localfilepath =  IdentityString( GetExecutableFolder() + sepstring + _T( "%s.conf" ), true );
 
 	if ( m_user_defined_config && wxFileName::IsFileWritable( m_user_defined_config_path ) )
 	{
@@ -114,12 +121,6 @@ Settings::Settings()
 	}
 	m_final_config_path = m_chosen_path;
 	m_config = new slConfig( instream );
-#else
-	wxString localpath = wxFormat( _T( "%s/%s.conf" ) ) % GetConfigfileDir() % GetAppName( true );
-	m_final_config_path = m_user_defined_config ? m_user_defined_config_path : localpath;
-	m_config = new slConfig( GetAppName(), wxEmptyString, m_final_config_path );
-	SetPortableMode ( false );
-#endif
 	m_config->SetRecordDefaults( true );
 }
 
@@ -134,7 +135,6 @@ void Settings::SaveSettings()
 	SetCacheVersion();
 	SetSettingsVersion();
 	m_config->Flush();
-#if defined(__WXMSW__) || defined(__WXMAC__)
 	wxFileOutputStream outstream( m_chosen_path );
 
 	if ( !outstream.IsOk() )
@@ -143,7 +143,6 @@ void Settings::SaveSettings()
 	}
 
 	m_config->Save( outstream );
-#endif
 }
 
 wxArrayString Settings::GetGroupList( const wxString& base_key )
@@ -213,13 +212,12 @@ int Settings::GetSettingsVersion()
 
 wxString Settings::GetLobbyWriteDir()
 {
-	wxString sep = wxFileName::GetPathSeparator();
-	wxString path = GetCurrentUsedDataDir() + sep + _T( "lobby" );
+	wxString path = GetCurrentUsedDataDir() + sepstring + _T( "lobby" );
 	if ( !wxFileName::DirExists( path ) )
 	{
 		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
 	}
-	path += sep + _T( "SpringLobby" ) + sep;
+	path += sepstring + _T( "SpringLobby" ) + sepstring;
 	if ( !wxFileName::DirExists( path ) )
 	{
 		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
@@ -296,13 +294,12 @@ void Settings::SetWebBrowserPath( const wxString& path )
 
 wxString Settings::GetCachePath()
 {
-	wxString sep = wxFileName::GetPathSeparator();
-	wxString path = GetCurrentUsedDataDir() + sep + _T( "cache" ) + sep;
+	wxString path = GetCurrentUsedDataDir() + sepstring + _T( "cache" ) + sep;
 	if ( !wxFileName::DirExists( path ) )
 	{
 		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
 	}
-	path += _T( "SpringLobby" ) + sep;
+	path += _T( "SpringLobby" ) + sepstring;
 	if ( !wxFileName::DirExists( path ) )
 	{
 		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
@@ -733,11 +730,10 @@ void Settings::SetWindowPos( const wxString& window, const wxPoint& pos )
 wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 {
 	wxPathList ret;
-	wxChar sep = wxFileName::GetPathSeparator();
 	wxStandardPathsBase& sp = wxStandardPathsBase::Get();
 
 	pl.Add( wxFileName::GetCwd() );
-	pl.Add( sp.GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() ) );
+	pl.Add( sp.GetExecutablePath().BeforeLast( sep ) );
 	pl.Add( wxFileName::GetHomeDir() );
 #ifndef SL_QT_MODE
 	pl.Add( sp.GetUserDataDir().BeforeLast( sep ) );
@@ -747,7 +743,7 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 	pl.Add( wxGetOSDirectory() );
 
 #ifdef __WXMSW__
-	pl.Add( sp.GetDocumentsDir() + sep + wxT("My Games") + sep + wxT("Spring") );
+	pl.Add( sp.GetDocumentsDir() + sepstring + wxT("My Games") + sepstring + wxT("Spring") );
 	//maybe add more here like:
 	//Appdata + \Spring
 	//Mydocs + \Spring
@@ -770,13 +766,13 @@ wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
 	for ( size_t i = 0; i < pl.GetCount(); i++ )
 	{
 		wxString path = pl[i];
-		if ( !path.EndsWith( wxString(sep) ) )
-            path += sep;
+		if ( !path.EndsWith( sepstring ) )
+            path += sepstring;
 		ret.Add( path );
-		ret.Add( path + _T( "Spring" ) + sep );
-		ret.Add( path + _T( "spring" ) + sep );
-		ret.Add( path + _T( "games" ) + sep + _T( "Spring" ) + sep );
-		ret.Add( path + _T( "games" ) + sep + _T( "spring" ) + sep );
+		ret.Add( path + _T( "Spring" ) + sepstring );
+		ret.Add( path + _T( "spring" ) + sepstring );
+		ret.Add( path + _T( "games" ) + sepstring + _T( "Spring" ) + sepstring );
+		ret.Add( path + _T( "games" ) + sepstring + _T( "spring" ) + sepstring );
 	}
 	return ret;
 }
@@ -822,16 +818,22 @@ wxPathList Settings::GetConfigFileSearchPathes()
 
 wxString Settings::AutoFindUnitSync()
 {
-	wxPathList pl = GetConfigFileSearchPathes();;
+	wxPathList pl = GetConfigFileSearchPathes();
 	wxString retpath = pl.FindValidPath( _T( "unitsync" ) + GetLibExtension() );
 	if ( retpath.IsEmpty() )
 		retpath = pl.FindValidPath( _T( "libunitsync" ) + GetLibExtension() );
 	return retpath;
 }
 
+wxString Settings::AutoFindBundle()
+{
+	wxPathList pl = GetConfigFileSearchPathes();
+	return pl.FindValidPath( _T( "Spring.app" ) );
+}
+
 wxString Settings::AutoFindUikeys()
 {
-	wxPathList pl = GetConfigFileSearchPathes();;
+	wxPathList pl = GetConfigFileSearchPathes();
 	return pl.FindValidPath( _T( "uikeys.txt" ) );
 }
 
@@ -864,9 +866,9 @@ void Settings::RefreshSpringVersionList()
 	for ( int i = 0; i < count; i++ )
 	{
 		wxString groupname = list[i];
-		usync_paths[groupname] = m_config->Read( _T( "/Spring/Paths/" ) + groupname + _T( "/UnitSyncPath" ), _T( "" ) );
+		usync_paths[groupname] = GetUnitSync( groupname );
 	}
-	if ( sett().GetSearchSpringOnlyInSLPath() )
+	if ( sett().GetSearchSpringOnlyInSLPath() || sett().GetUseSpringPathFromBundle() )
 	{
 		usync_paths.clear();
 		usync_paths[sett().GetCurrentUsedSpringIndex()] = sett().GetCurrentUsedUnitSync();
@@ -884,13 +886,13 @@ void Settings::SetUsedSpringIndex( const wxString& index )
 	m_config->Write( _T( "/Spring/CurrentIndex" ), index );
 }
 
+
 bool Settings::GetSearchSpringOnlyInSLPath()
 {
-	bool defaultval = false;
-#ifdef __WXMSW__
-	defaultval = true;
+#ifndef __WXMSW__
+	return false;
 #endif
-	return m_config->Read( _T( "/Spring/SearchSpringOnlyInSLPath" ), defaultval );
+	return m_config->Read( _T( "/Spring/SearchSpringOnlyInSLPath" ), true );
 }
 
 void Settings::SetSearchSpringOnlyInSLPath( bool value )
@@ -905,6 +907,34 @@ void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 }
 
 
+bool Settings::IsInsideSpringBundle()
+{
+	return wxFileName::FileExists(GetExecutableFolder() + sepstring + _T("spring") + BIN_EXT) && wxFileName::FileExists(GetExecutableFolder() + sepstring + _T("unitsync") + GetLibExtension());
+}
+
+bool Settings::GetBundleMode()
+{
+	#ifndef __WXMAC__
+		return false;
+	#endif
+	return m_config->Read(_T("/Spring/EnableBundleMode"), true);
+}
+
+
+bool Settings::GetUseSpringPathFromBundle()
+{
+	#ifndef __WXMAC__
+		return false;
+	#endif
+	if ( !GetBundleMode() ) return false;
+	return m_config->Read(_T("/Spring/UseSpringPathFromBundle"), IsInsideSpringBundle());
+}
+
+void Settings::SetUseSpringPathFromBundle( bool value )
+{
+	m_config->Write(_T("/Spring/UseSpringPathFromBundle"), value );
+}
+
 wxString Settings::GetCurrentUsedDataDir()
 {
 	wxString dir;
@@ -918,37 +948,40 @@ wxString Settings::GetCurrentUsedDataDir()
         dir = GetExecutableFolder(); // fallback
 #else
 	if ( dir.IsEmpty() )
-        dir = wxFileName::GetHomeDir() + wxFileName::GetPathSeparator() + _T( ".spring" ); // fallback
+        dir = wxFileName::GetHomeDir() + sepstring + _T( ".spring" ); // fallback
 #endif
+	wxString stripped;
+	if ( dir.EndsWith(sepstring,&stripped) ) return stripped;
 	return dir;
 }
 
 
 wxString Settings::GetCurrentUsedSpringBinary()
 {
-	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "spring.exe" );
-#if defined(__WXMSW__) && !defined(SL_QT_MODE)
-	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "spring.exe" );
-#endif
+	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sepstring + _T( "spring" ) + BIN_EXT;
+	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sepstring + _T( "spring" ) +  + BIN_EXT;
+	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sepstring + _T("spring") + BIN_EXT;
 	else return GetSpringBinary( GetCurrentUsedSpringIndex() );
 }
 
 
 wxString Settings::GetCurrentUsedUnitSync()
 {
-	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "unitsync" ) + GetLibExtension();
-#if defined(__WXMSW__)
-	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "unitsync" ) + GetLibExtension();
-#endif
+	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sepstring + _T( "unitsync" ) + GetLibExtension();
+	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sepstring + _T( "unitsync" ) + GetLibExtension();
+	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sepstring + _T("unitsync") + GetLibExtension();
 	else return GetUnitSync( GetCurrentUsedSpringIndex() );
+}
+
+wxString Settings::GetCurrentUsedBundle()
+{
+	return GetBundle( GetCurrentUsedSpringIndex() );
 }
 
 wxString Settings::GetCurrentUsedUikeys()
 {
-	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "uikeys.txt" );
-#if defined(__WXMSW__)
-	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + wxFileName::GetPathSeparator() + _T( "uikeys.txt" );
-#endif
+	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sepstring + _T( "uikeys.txt" );
+	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sepstring + _T( "uikeys.txt" );
 	else return GetUikeys( GetCurrentUsedSpringIndex() );
 }
 
@@ -965,13 +998,20 @@ wxString Settings::GetCurrentUsedSpringConfigFilePath()
 
 wxString Settings::GetUnitSync( const wxString& index )
 {
+	if ( GetBundleMode() ) return GetBundle( index )+ sepstring + _T("Contents") + sepstring + _T("MacOS") + sepstring + _T("libunitsync") +  GetLibExtension();
 	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/UnitSyncPath" ), AutoFindUnitSync() );
 }
 
 
 wxString Settings::GetSpringBinary( const wxString& index )
 {
+	if ( GetBundleMode() )  return GetBundle( index )+ sepstring + _T("Contents") + sepstring + _T("MacOS") + sepstring + _T("spring");
 	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), AutoFindSpringBin() );
+}
+
+wxString Settings::GetBundle( const wxString& index )
+{
+	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBundlePath" ), AutoFindBundle() );
 }
 
 void Settings::SetUnitSync( const wxString& index, const wxString& path )
@@ -984,6 +1024,11 @@ void Settings::SetSpringBinary( const wxString& index, const wxString& path )
 	m_config->Write( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), path );
 }
 
+void Settings::SetBundle( const wxString& index, const wxString& path )
+{
+	m_config->Write( _T( "/Spring/Paths/" ) + index + _T( "/SpringBundlePath" ), path );
+}
+
 void Settings::SetForcedSpringConfigFilePath( const wxString& path )
 {
 	m_forced_springconfig_path = path;
@@ -992,7 +1037,7 @@ void Settings::SetForcedSpringConfigFilePath( const wxString& path )
 wxString Settings::GetForcedSpringConfigFilePath()
 {
 	if ( IsPortableMode() )
-        return GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "springsettings.cfg" );
+        return GetCurrentUsedDataDir() + sepstring + _T( "springsettings.cfg" );
 	else
 		return m_forced_springconfig_path;
 }
@@ -2392,7 +2437,7 @@ void Settings::TranslateSavedColumWidths()
 wxString Settings::GetEditorPath( )
 {
     #if defined(__WXMSW__)
-        wxString def = wxGetOSDirectory() + wxFileName::GetPathSeparator() + _T("system32") + wxFileName::GetPathSeparator() + _T("notepad.exe");
+        wxString def = wxGetOSDirectory() + sepstring + _T("system32") + sepstring + _T("notepad.exe");
         if ( !wxFile::Exists( def ) )
             def = wxEmptyString;
     #else
@@ -2633,3 +2678,4 @@ bool Settings::IsSelfUpdateDisabled()
 {
 	return m_config->Read( _T( "/General/SelfUpdateDisabled" ), 0l );
 }
+

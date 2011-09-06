@@ -202,18 +202,24 @@ void Springsettings::OnInitCmdLine(wxCmdLineParser& parser)
 		#define STR
 	#endif
 
+	#ifndef HAVE_WX29
+		#define CSTR
+	#else
+		#define CSTR .c_str()
+	#endif
+
 	static const wxCmdLineEntryDesc cmdLineDesc[] =
 	{
-		{ wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-		{ wxCMD_LINE_SWITCH, STR("nc"), STR("no-crash-handler"), _("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_SWITCH, STR("cl"), STR("console-logging"),  _("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, STR("fl"), STR("file-logging"),  _("dumps application log to a file ( enter path )"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  _("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  _("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-		{ wxCMD_LINE_OPTION, STR("e"), STR("engine-config"),  _("override default choice for engine config-file, needs absolute path"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-		{ wxCMD_LINE_OPTION, STR("c"), STR("customize"),  _("load lobby customizations from given archive. Expects the archive filename."), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  _("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  _("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_SWITCH, STR("h"), STR("help"), wxString(_("show this help message"))CSTR, wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+		{ wxCMD_LINE_SWITCH, STR("nc"), STR("no-crash-handler"), wxString(_("don't use the crash handler (useful for debugging)"))CSTR, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_SWITCH, STR("cl"), STR("console-logging"),  wxString(_("shows application log to the console(if available)"))CSTR, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("fl"), STR("file-logging"),  wxString(_("dumps application log to a file ( enter path )"))CSTR, wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  wxString(_("enables application log window"))CSTR, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  wxString(_("override default choice for config-file"))CSTR, wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
+		{ wxCMD_LINE_OPTION, STR("e"), STR("engine-config"),  wxString(_("override default choice for engine config-file, needs absolute path"))CSTR, wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
+		{ wxCMD_LINE_OPTION, STR("c"), STR("customize"),  wxString(_("load lobby customizations from given archive. Expects the archive filename."))CSTR, wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  wxString(_("overrides default application name"))CSTR, wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  wxString(_("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"))CSTR, wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL } //this is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
 	};
 
@@ -256,7 +262,7 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
 			m_customizer_archive_name = _T("");
 		const bool do_appname = parser.Found(_T("name"), &m_appname );
 		if ( !do_appname )
-			m_appname = _T("SpringLobby");
+			m_appname = _T("SpringSettings");
 
 		if ( parser.Found(_T("engine-config"), &m_engine_config_filepath)
 				&& ( do_appname || do_custom ) )
@@ -274,3 +280,4 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
   return true;
   #endif
 }
+
