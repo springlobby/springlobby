@@ -90,4 +90,4 @@ done
 
 ARCHIVE_NAME=${BUNDLENAME}-MacOSX-10.6-SnowLeopard.zip
 zip -r9 ${OUTPUTDIR}/${ARCHIVE_NAME} ${OUTPUTDIR}/${BUNDLE_NAME}
-rsync -a ${ARCHIVE_NAME} buildbot@springlobby.info:/usr/local/www/springlobby.info/macosx/${builds}/
+rsync --port 50 -a ${ARCHIVE_NAME} buildbot@springlobby.info:/usr/local/www/springlobby.info/macosx/${builds}/
