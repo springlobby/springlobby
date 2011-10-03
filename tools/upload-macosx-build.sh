@@ -9,12 +9,7 @@ set -e
 cd $(dirname $0)/../${1}
 DEVELOPER=${2}
 
-if [ x$3 == x ]; then
-	VERSION=`cat CMakeCache.txt | egrep SPRINGLOBBY_REV | egrep -o [0-9]+.[0-9]+`
-else
-	VERSION=${3}
-fi
-
+VERSION="$(git describe --tags)"
 
 OUTPUTDIR=/tmp/springlobby/${VERSION}/
 
@@ -90,4 +85,5 @@ done
 
 ARCHIVE_NAME=${BUNDLENAME}-MacOSX-10.6-SnowLeopard.zip
 zip -r9 ${OUTPUTDIR}/${ARCHIVE_NAME} ${OUTPUTDIR}/${BUNDLE_NAME}
-rsync --port 50 -a ${OUTPUTDIR}/${ARCHIVE_NAME} buildbot@springlobby.info:/usr/local/www/springlobby.info/macosx/${DEVELOPER}/
+rsync --port 50 -azv --bwlimit 50  ${OUTPUTDIR}/${ARCHIVE_NAME} buildbot@springlobby.info:/usr/local/www/springlobby.info/macosx/${DEVELOPER}/
+rm -rf ${OUTPUTDIR}
