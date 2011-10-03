@@ -31,8 +31,12 @@
 	#include <QDir>
 #endif
 
+//!This is only ever used for unitsync and on daftalx notice it should actually be .dylib (wx returns .bundle )
 wxString GetLibExtension()
 {
+#ifdef __APPLE__
+	return wxString("dylib");
+#endif
     return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
 }
 
