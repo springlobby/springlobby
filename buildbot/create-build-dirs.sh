@@ -3,6 +3,8 @@
 set -e
 cd $(dirname ${0})/..
 
+git submodule update --init
+
 DIR=build-${1}
 shift
 REV=${1}
