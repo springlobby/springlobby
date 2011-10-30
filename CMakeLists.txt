@@ -254,6 +254,7 @@ ELSE (WIN32)
 ENDIF (WIN32)
 
 INCLUDE(cmake/compat_flags.cmake)
+INCLUDE_DIRECTORIES( ${springlobby_SOURCE_DIR}/src )
 
 add_custom_target(pack
 					${CMAKE_MAKE_PROGRAM} package

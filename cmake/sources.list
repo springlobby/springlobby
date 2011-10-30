@@ -54,21 +54,17 @@ SET(springlobbySrc
 	src/channel/channellist.cpp
 	src/channel/channellistctrl.cpp
 	src/chatlog.cpp
-	src/chatoptionstab.cpp
 	src/chatpanel.cpp
 	src/connectwindow.cpp
 	src/countrycodes.cpp
 	src/customlistctrl.cpp
 	src/flagimages.cpp
-	src/groupoptionspanel.cpp
 	src/hostbattledialog.cpp
 	src/ibattle.cpp
 	src/iconimagelist.cpp
 	src/introguide.cpp
-	src/lobbyoptionstab.cpp
 	src/mainchattab.cpp
 	src/mainjoinbattletab.cpp
-	src/mainoptionstab.cpp
 	src/mainsingleplayertab.cpp
 	src/maintorrenttab.cpp
 	src/mainwindow.cpp
@@ -90,12 +86,10 @@ SET(springlobbySrc
 	src/socket.cpp
 	src/spring.cpp
 	src/springlobbyapp.cpp
-	src/springoptionstab.cpp
 	src/springprocess.cpp
 	src/tasserver.cpp
 	src/tdfcontainer.cpp
 	src/downloader/downloadlistctrl.cpp
-	src/downloadoptionspanel.cpp
 	src/ui.cpp
 	src/user.cpp
 	src/useractions.cpp
@@ -115,6 +109,12 @@ SET(springlobbySrc
 	src/iserverevents.cpp
 	src/simpleinterface/simpleserverevents.cpp
 	src/downloader/prdownloader.cpp
+	src/options/downloadoptionspanel.cpp
+	src/options/mainoptionstab.cpp
+	src/options/springoptionstab.cpp
+	src/options/groupoptionspanel.cpp
+	src/options/lobbyoptionstab.cpp
+	src/options/chatoptionstab.cpp
 )
 
 #currently unused

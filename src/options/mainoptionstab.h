@@ -3,7 +3,8 @@
 
 #include <wx/scrolwin.h>
 #include <wx/dialog.h>
-#include "gui/windowattributespickle.h"
+#include <gui/windowattributespickle.h>
+
 class Ui;
 class wxCommandEvent;
 class wxBoxSizer;

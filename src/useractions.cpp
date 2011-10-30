@@ -14,8 +14,8 @@
 #include "battlelisttab.h"
 #include "battleroomtab.h"
 #include "chatpanel.h"
-#include "mainoptionstab.h"
-#include "groupoptionspanel.h"
+#include <options/mainoptionstab.h>
+#include <options/groupoptionspanel.h>
 #include "globalsmanager.h"
 
 UserActions& useractions()
