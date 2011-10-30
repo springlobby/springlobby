@@ -225,11 +225,13 @@ IF(WIN32)
        TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES} )
 ENDIF(WIN32)
 
+Add_Subdirectory(src/downloader/lib)
+
 #only enable if debugging is necessary
 #ADD_EXECUTABLE(versiontest WIN32 MACOSX_BUNDLE src/versiontest.cpp )
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} )
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} ${RAPID_LIB})
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} )
 
 IF(MINGW)
@@ -276,5 +278,6 @@ add_custom_target( version
 add_dependencies( distcheck dist )
 add_dependencies( springlobby alure )
 add_dependencies( springlobby version )
+add_dependencies( springlobby ${RAPID_LIB} )
 #add_dependencies( versiontest version )
 

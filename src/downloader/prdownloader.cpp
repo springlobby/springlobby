@@ -19,10 +19,16 @@
 #include "prdownloader.h"
 
 #include "../globalsmanager.h"
-
+#include "lib/src/pr-downloader.h"
 
 PrDownloader::PrDownloader()
 {
+	downloadInit();
+}
+
+PrDownloader::~PrDownloader()
+{
+	downloadShutdown();
 }
 
 void PrDownloader::ClearFinished()

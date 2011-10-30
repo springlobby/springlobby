@@ -46,12 +46,13 @@ class PrDownloader
 {
 public:
     PrDownloader();
+	~PrDownloader();
 
-void ClearFinished();
-void UpdateSettings();
-void RemoveTorrentByName( const wxString& name );
-void RequestFileByName( const wxString& name );
-void SetIngameStatus( bool ingame );
+	void ClearFinished();
+	void UpdateSettings();
+	void RemoveTorrentByName( const wxString& name );
+	void RequestFileByName( const wxString& name );
+	void SetIngameStatus( bool ingame );
 };
 
 PrDownloader& prDownloader();
