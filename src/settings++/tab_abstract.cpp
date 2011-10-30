@@ -121,8 +121,8 @@ bool abstract_panel::loadValuesIntoMap()
 		//special treatment for resolution that'll set proper defaults for res
 		wxDisplay display(0);
 		wxRect display_rect ( display.GetGeometry() );
-		const int current_x_res = configHandler.GetSpringConfigInt(RC_TEXT[0].key,display_rect.width);
-		const int current_y_res = configHandler.GetSpringConfigInt(RC_TEXT[1].key,display_rect.height);
+//		const int current_x_res = configHandler.GetSpringConfigInt(RC_TEXT[0].key,display_rect.width);
+//		const int current_y_res = configHandler.GetSpringConfigInt(RC_TEXT[1].key,display_rect.height);
 
 		for (int i = 0; i< intControls_size;++i)
 		{
@@ -491,7 +491,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 
 		case ID_W4_BumpWaterTexSizeReflection:
 		{
-            int choiceIndex=0;
+            int choiceIndex = 0;
 			for (unsigned int i =1; i<sizeof(W4_TEXSIZE_CHOICES)/sizeof(W4_TEXSIZE_CHOICES[0]);++i)
 			{
 				if (choice==W4_TEXSIZE_CHOICES[i])

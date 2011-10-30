@@ -115,7 +115,7 @@ void SimpleServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
         User& user = m_serv.GetUser( nick );
         wxLogMessage( _T("calling user.SetStatus( status ) ") );
 
-        UserStatus oldStatus = user.GetStatus();
+//        UserStatus oldStatus = user.GetStatus();
         user.SetStatus( status );
 
         wxLogMessage( _T("calling ui().OnUserStatusChanged( user ) ") );
