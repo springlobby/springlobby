@@ -202,7 +202,7 @@ FILE( GLOB header2 "src/*/*.h" )
 SET( templatesources
 	src/battleroommmoptionstab.cpp
 	src/customvirtlistctrl.cpp
-	src/httpdownloader.cpp
+	src/downloader/httpdownloader.cpp
 	src/playback/playbackfilter.cpp
 	src/playback/playbacklist.cpp
 	src/playback/playbacklistctrl.cpp

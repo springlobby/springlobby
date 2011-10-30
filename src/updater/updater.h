@@ -2,7 +2,7 @@
 #define SPRINGLOBBY_UPDATER_H_INCLUDED
 
 #include <wx/event.h>
-#include "../httpdownloader.h"
+#include <downloader/httpdownloader.h>
 
 class UpdaterClass : public wxEvtHandler
 {
