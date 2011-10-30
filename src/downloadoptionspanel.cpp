@@ -16,10 +16,10 @@
 #include <wx/radiobut.h>
 #include <wx/button.h>
 
-#include "torrentoptionspanel.h"
+#include "downloadoptionspanel.h"
 #include "aui/auimanager.h"
 #include "settings.h"
-#include "torrentwrapper.h"
+#include "downloader/prdownloader.h"
 #include "utils/conversion.h"
 #include "utils/controls.h"
 
@@ -114,7 +114,7 @@ void TorrentOptionsPanel::OnApply( wxCommandEvent& /*unused*/ )
     // if mode == pause selected --> m_gamestart_throttle->GetValue() == 0
     sett().SetTorrentSystemSuspendMode( m_gamestart_throttle->GetValue() );
 
-    torrent().UpdateSettings();
+	prDownloader().UpdateSettings();
 }
 
 void TorrentOptionsPanel::OnRestore( wxCommandEvent& /*unused*/ )

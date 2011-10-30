@@ -52,9 +52,6 @@ ENDIF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${spri
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise springlobby
 #----------------------------------------------------------------------------------------------------
-SET( OPTION_TORRENT_SYSTEM
-	1 CACHE BOOL
-	"Enables the builtin map/mod p2p downloader (requires libtorrent-rasterbar library)" )
 SET( OPTION_SOUND
 	1 CACHE BOOL
 	"Enables sound notification functionality (requires openAL libraries)" )
@@ -159,6 +156,44 @@ ELSE(WIN32)
 	LINK_LIBRARIES( ${CURL_LDFLAGS} )
 	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
 ENDIF(WIN32)
+<<<<<<< HEAD
+#----------------------------------------------------------------------------------------------------
+# libtorrent-rasterbar dependency check
+#----------------------------------------------------------------------------------------------------
+
+IF( OPTION_TORRENT_SYSTEM )
+	IF( NOT WIN32)
+	    SET ( LIBTORRENT_MIN_VERSION 0.14 )
+	    pkg_check_modules( LIBTORRENT libtorrent-rasterbar>=${LIBTORRENT_MIN_VERSION} )
+	    IF( LIBTORRENT_FOUND )
+		    INCLUDE_DIRECTORIES( ${LIBTORRENT_INCLUDE_DIRS} )
+		    LINK_LIBRARIES( ${LIBTORRENT_LIBRARIES} )
+		    ADD_DEFINITIONS( ${LIBTORRENT_CFLAGS} )
+	    ELSE()
+		    MESSAGE( FATAL_ERROR "libtorrent-rasterbar library not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
+	    ENDIF()
+	    FIND_PACKAGE( Boost COMPONENTS system )
+	    IF( Boost_FOUND )
+		    link_directories( ${Boost_LIB_DIR} )
+		    INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+		    SET( SL_BOOST_LIBS boost_system )
+	    ELSE()
+		    MESSAGE( FATAL_ERROR "boost library not found! Please install the package or toggle OPTION_TORRENT_SYSTEM to OFF")
+	    ENDIF()
+
+	ELSE( NOT WIN32)
+		link_directories( ${boost_LIB_DIR} )
+		INCLUDE_DIRECTORIES( ${boost_INCLUDE_DIR} )
+		ADD_DEFINITIONS( -mthreads  )
+		LINK_LIBRARIES( -mthreads torrent-rasterbar ${Boost_LIBRARIES} z ws2_32 mswsock  )
+	ENDIF( NOT WIN32)
+	LIST( APPEND SLSharedWithSettings ${curlSRC} )
+	ADD_DEFINITIONS( -DTORRENT_DISABLE_GEO_IP )
+ELSE( OPTION_TORRENT_SYSTEM )
+	ADD_DEFINITIONS( -DNO_TORRENT_SYSTEM )
+ENDIF( OPTION_TORRENT_SYSTEM )
+=======
+>>>>>>> this removes all torrent dependencies and replaces torrentwrapper with a stand-in for pr-downloader
 
 #----------------------------------------------------------------------------------------------------
 # libnotify dependency check
@@ -195,7 +230,10 @@ IF(WIN32)
 	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
 # If we don't build for windows, include some source code checks as pre-build step.
-    ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+	FIND_PROGRAM(AWKBIN awk)
+	IF(AWKBIN)
+		ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND ${AWKBIN} -f tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+	ENDIF(AWKBIN)
 ENDIF(WIN32)
 
 #----------------------------------------------------------------------------------------------------
@@ -219,6 +257,7 @@ cmake_policy(SET CMP0006 OLD)
 
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${header} ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${SpringSettings_RC_FILE} )
+set_target_properties(springsettings PROPERTIES COMPILE_FLAGS -DSPRINGSETTINGS_STANDALONE )
 #the updater needs to be build for windows only
 IF(WIN32)
        ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${SLSharedWithSettings} ${updater_RC_FILE} )

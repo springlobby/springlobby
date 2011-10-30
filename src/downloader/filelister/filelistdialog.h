@@ -4,7 +4,6 @@
 #ifndef NO_TORRENT_SYSTEM
 
 #include <wx/dialog.h>
-#include "../torrentwrapper.h"
 #include "../utils/globalevents.h"
 
 class wxBoxSizer;

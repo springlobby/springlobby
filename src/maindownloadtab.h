@@ -10,14 +10,12 @@ class wxStaticText;
 class wxButton;
 class TorrentListCtrl;
 class Ui;
-struct TorrentInfos;
+struct DownloadInfo;
 class wxBoxSizer;
-class FileListDialog;
 class ColorButton;
 class WidgetDownloadDialog;
-class PlasmaInterface;
 
-typedef std::map<wxString,TorrentInfos> map_infos;
+typedef std::map<wxString,DownloadInfo> map_infos;
 typedef map_infos::iterator map_infos_iter;
 
 class MainTorrentTab: public wxScrolledWindow
@@ -65,7 +63,6 @@ class MainTorrentTab: public wxScrolledWindow
         void OnClearFinished( wxCommandEvent& event );
 
         wxBoxSizer* m_mainbox;
-        FileListDialog* m_download_dialog;
 
 	private:
 

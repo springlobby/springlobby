@@ -1,0 +1,4 @@
+#!/bin/bash
+
+rm build-qt
+ln -s $1 build-qt

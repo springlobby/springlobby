@@ -27,7 +27,7 @@
 #include "utils/platform.h"
 
 #ifndef NO_TORRENT_SYSTEM
-#include "torrentoptionspanel.h"
+#include "downloadoptionspanel.h"
 #endif
 
 #include "lobbyoptionstab.h"

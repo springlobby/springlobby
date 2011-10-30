@@ -38,9 +38,6 @@
 #include "springunitsync.h"
 #include "nonportable.h"
 #include "tdfcontainer.h"
-#ifndef NO_TORRENT_SYSTEM
-#include "torrentwrapper.h"
-#endif
 #include "globalsmanager.h"
 
 #ifdef SL_QT_MODE

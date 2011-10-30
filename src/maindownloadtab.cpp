@@ -5,7 +5,7 @@
 #include <winsock2.h>
 #endif // _MSC_VER
 
-#include "maintorrenttab.h"
+#include "maindownloadtab.h"
 
 #ifndef NO_TORRENT_SYSTEM
 
@@ -15,16 +15,14 @@
 #include <wx/button.h>
 #include <wx/msgdlg.h>
 
-#include "torrentlistctrl.h"
-#include "torrentwrapper.h"
+#include "downloader/downloadlistctrl.h"
 #include "utils/conversion.h"
 #include "utils/controls.h"
 #include "Helper/colorbutton.h"
-#include "filelister/filelistdialog.h"
+//#include "downloader/filelister/filelistdialog.h"
+#include "downloader/prdownloader.h"
 #include "widgets/downloaddialog.h"
 #include "aui/auimanager.h"
-#include "utils/downloader.h"
-
 
 BEGIN_EVENT_TABLE( MainTorrentTab, wxPanel )
 	//(*EventTable(MainTorrentTab)
@@ -38,8 +36,7 @@ END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab( wxWindow* parent )
     : wxScrolledWindow( parent ),
-    m_widgets_dialog( NULL ),
-    m_download_dialog ( new FileListDialog( this ) )
+    m_widgets_dialog( NULL )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "maintorrenttab" ) );
 
@@ -87,29 +84,26 @@ MainTorrentTab::MainTorrentTab( wxWindow* parent )
 	SetSizer( m_mainbox );
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
-	info_map = torrent().CollectGuiInfos();
+//	info_map = torrent().CollectGuiInfos();
 
-	m_torrent_list->Layout();
+//	m_torrent_list->Layout();
 
-	for ( map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter )
-	{
-	    if (iter->first == wxString(_T("global")))
-            continue;
-		m_torrent_list->AddTorrentInfo( iter->second );
-	}
+//	for ( map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter )
+//	{
+//	    if (iter->first == wxString(_T("global")))
+//            continue;
+//		m_torrent_list->AddTorrentInfo( iter->second );
+//	}
 
     Layout();
 }
 
 MainTorrentTab::~MainTorrentTab()
-{
-	delete m_download_dialog;
-	m_download_dialog = 0;
-}
+{}
 
 void MainTorrentTab::OnClearFinished( wxCommandEvent& /*event*/ )
 {
-    torrent().ClearFinishedTorrents();
+    prDownloader().ClearFinished();
     m_torrent_list->Clear();
 }
 
@@ -126,56 +120,16 @@ void MainTorrentTab::OnDLWidgets( wxCommandEvent& /*unused*/ )
 
 void MainTorrentTab::OnUpdate()
 {
-		m_but_cancel->Enable();
-//		m_but_publish->Enable();
-//		m_but_download->Enable();
 
-	switch ( torrent().GetTorrentSystemStatus() )
-	{
-		case 0:
-			m_status_color->SetColor( wxColour( 255, 0, 0 ) ); //not connected
-			m_status_color_text->SetLabel( _( "Status: not connected" ) );
-			break;
-		case 1:
-			m_status_color->SetColor( wxColour( 0, 255, 0 ) ); //connected
-			m_status_color_text->SetLabel( _( "Status: connected" ) );
-			break;
-		case 2:
-			m_status_color->SetColor( wxColour( 0, 0, 255 ) ); //ingame
-			m_status_color_text->SetLabel( _( "Status: throttled or paused (ingame)" ) );
-			break;
-		default:
-			m_status_color->SetColor( wxColour( 255, 255, 255 ) ); //unknown
-			m_status_color_text->SetLabel( _( "Status: unknown" ) );
-			break;
-	}
-
-	m_torrent_list->SaveSelection();
-    info_map = torrent().CollectGuiInfos();
-	m_incoming_lbl->SetLabel( wxFormat(_("Total Incoming: %.2f KB/s") ) % (info_map[wxString(_T("global"))].inspeed/ float(1024)) ) ;
-    for (map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter)
-    {
-		if (iter->first == wxString(_T("global")))
-            continue; //skip global torrent stats
-		m_torrent_list->UpdateTorrentInfo(iter->second);
-    }
-
-    Layout();
-    m_torrent_list->RestoreSelection();
 }
 
 
 void MainTorrentTab::OnCancelButton( wxCommandEvent& /*unused*/ )
 {
-	if ( m_torrent_list->GetSelectedIndex() != -1 ) {
-		torrent().RemoveTorrentByName(m_torrent_list->GetSelectedData().name );
-		m_torrent_list->RemoveTorrentInfo(m_torrent_list->GetSelectedData());
-	}
+
 }
 
 void MainTorrentTab::OnDownloadDialog( wxCommandEvent& /*unused*/ )
-{
-	m_download_dialog->Show();
-}
+{}
 
 #endif

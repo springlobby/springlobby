@@ -42,11 +42,8 @@
 #include "springunitsync.h"
 #include "channel/channel.h"
 #include "utils/customdialogs.h"
-#include "utils/downloader.h"
 #include "settings++/se_utils.h"
-#ifndef NO_TORRENT_SYSTEM
-#include "torrentwrapper.h"
-#endif
+#include "downloader/prdownloader.h"
 #include "updater/updater.h"
 #include "globalsmanager.h"
 #include "gui/notificationmanager.h"
@@ -216,13 +213,6 @@ bool SpringLobbyApp::OnInit()
     m_timer->Start( TIMER_INTERVAL );
 
     ui().mw().SetLogWin( loggerwin, logchain );
-
-#ifndef NO_TORRENT_SYSTEM
-    plasmaInterface();
-//    plasmaInterface().InitResourceList();
-//	plasmaInterface().FetchResourceList();
-#endif
-
 
     return true;
 }

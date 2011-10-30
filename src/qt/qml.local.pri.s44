@@ -1,0 +1,5 @@
+QML_IMPORT_PATH += "/share/spring/data/lobby/SpringLobby/customizations/S44/qml"
+OTHER_FILES += /share/spring/data/lobby/SpringLobby/customizations/S44/qml/*.qml \
+	/share/spring/data/lobby/SpringLobby/customizations/S44/qml/views/*.qml \
+	/share/spring/data/lobby/SpringLobby/customizations/S44/qml/web/*.qml \
+    ../../../../../spring/data/lobby/SpringLobby/customizations/S44/qml/views/Settings.qml

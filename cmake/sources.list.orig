@@ -29,9 +29,6 @@ SET(springlobbySrc
 	src/channel/channelchooserdialog.cpp
 	src/Helper/wxtextctrlhist.cpp
 	src/Helper/colorbutton.cpp
-	src/filelister/filelistctrl.cpp
-	src/filelister/filelistdialog.cpp
-	src/filelister/filelistfilter.cpp
 	src/aui/auimanager.cpp
 	src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
@@ -70,7 +67,7 @@ SET(springlobbySrc
 	src/mainjoinbattletab.cpp
 	src/mainoptionstab.cpp
 	src/mainsingleplayertab.cpp
-	src/maintorrenttab.cpp
+	src/maindownloadtab.cpp
 	src/mainwindow.cpp
 	src/mapctrl.cpp
 	src/mapgridctrl.cpp
@@ -79,7 +76,7 @@ SET(springlobbySrc
 	src/nicklistctrl.cpp
 	src/offlinebattle.cpp
 	src/playback/replaylist.cpp
-	src/playback/savegamelist.cpp
+	#src/playback/savegamelist.cpp
 	src/alsound.cpp
 	src/selectusersdialog.cpp
 	src/server.cpp
@@ -113,8 +110,11 @@ SET(springlobbySrc
 	src/gui/notificationmanager.cpp
 	src/pingthread.cpp
 	src/iserverevents.cpp
+<<<<<<< HEAD
+=======
 	src/simpleinterface/simpleserverevents.cpp
 	src/downloader/prdownloader.cpp
+>>>>>>> this removes all torrent dependencies and replaces torrentwrapper with a stand-in for pr-downloader
 )
 
 #currently unused

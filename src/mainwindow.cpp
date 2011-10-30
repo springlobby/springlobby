@@ -55,8 +55,7 @@
 #include "playback/playbacktab.h"
 #include "infodialog.h"
 #ifndef NO_TORRENT_SYSTEM
-	#include "maintorrenttab.h"
-	#include "torrentwrapper.h"
+    #include "maindownloadtab.h"
 #endif
 #include "user.h"
 #include "mapselectdialog.h"

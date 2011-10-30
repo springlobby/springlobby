@@ -13,12 +13,10 @@
 #include <wx/menu.h>
 #include <wx/datetime.h>
 
-#include "torrentlistctrl.h"
-#include "torrentwrapper.h"
-//#include "utils/.h"
-#include "iconimagelist.h"
-
-#include "utils/conversion.h"
+#include "downloadlistctrl.h"
+#include "prdownloader.h"
+#include "../iconimagelist.h"
+#include "../utils/conversion.h"
 
 static const wxString na_str = wxString(_("N/A"));
 
@@ -123,28 +121,28 @@ void TorrentListCtrl::UpdateTorrentInfo(const DataType& info)
 void TorrentListCtrl::OnListRightClick( wxListEvent& event )
 {
 	int idx = event.GetIndex();
-    if ( idx < (long)m_data.size() && idx > -1 ) {
+//    if ( idx < (long)m_data.size() && idx > -1 ) {
 
-        DataType dt = m_data[idx];
-		delete m_popup;
-        m_popup = new wxMenu( _T("") );
-		if(dt.downloadstatus == P2P::not_stored)
-		{
-			m_popup->Append( TLIST_CANCEL, _("Cancel download") );
-			m_popup->Append( TLIST_RETRY, _("Retry download") );
-		}
-		else if(dt.downloadstatus == P2P::queued || dt.downloadstatus == P2P::leeching)
-			m_popup->Append( TLIST_CANCEL, _("Cancel download") );
-		else if(dt.downloadstatus == P2P::complete)
-			m_popup->Append( TLIST_CANCEL, _("Remove download (keeping downloaded file)") );
+//        DataType dt = m_data[idx];
+//		delete m_popup;
+//        m_popup = new wxMenu( _T("") );
+//		if(dt.downloadstatus == P2P::not_stored)
+//		{
+//			m_popup->Append( TLIST_CANCEL, _("Cancel download") );
+//			m_popup->Append( TLIST_RETRY, _("Retry download") );
+//		}
+//		else if(dt.downloadstatus == P2P::queued || dt.downloadstatus == P2P::leeching)
+//			m_popup->Append( TLIST_CANCEL, _("Cancel download") );
+//		else if(dt.downloadstatus == P2P::complete)
+//			m_popup->Append( TLIST_CANCEL, _("Remove download (keeping downloaded file)") );
 
-        PopupMenu( m_popup );
-    }
+//        PopupMenu( m_popup );
+//    }
 }
 
 void TorrentListCtrl::OnCancel(wxCommandEvent &/*event*/)
 {
-	torrent().RemoveTorrentByName(GetSelectedData().name);
+	prDownloader().RemoveTorrentByName(GetSelectedData().name);
 	RemoveTorrentInfo(GetSelectedData());
 }
 
@@ -152,9 +150,9 @@ void TorrentListCtrl::OnCancel(wxCommandEvent &/*event*/)
 void TorrentListCtrl::OnRetry(wxCommandEvent &/*event*/)
 {
 	DataType info( GetSelectedData() );
-	torrent().RemoveTorrentByName( info.name );
+	prDownloader().RemoveTorrentByName( info.name );
 	RemoveTorrentInfo( info );
-	torrent().RequestFileByName( info.name );
+	prDownloader().RequestFileByName( info.name );
 }
 
 
@@ -213,7 +211,7 @@ wxString TorrentListCtrl::GetItemText(long item, long column) const
 	float kfactor = 1/float(1024);
 	float mfactor = 1/float(1024*1024);
 
-	const TorrentInfos& infos = m_data[item];
+	const DataType& infos = m_data[item];
 
 	switch ( column ) {
         default: return wxEmptyString;

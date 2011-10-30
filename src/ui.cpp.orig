@@ -44,8 +44,8 @@
 #include "mainsingleplayertab.h"
 #include "crashreport.h"
 #ifndef NO_TORRENT_SYSTEM
-#include "maintorrenttab.h"
-#include "torrentwrapper.h"
+#include "maindownloadtab.h"
+#include "downloader/prdownloader.h"
 #endif
 
 #include "agreementdialog.h"
@@ -70,40 +70,6 @@ Ui& ui()
     static LineInfo<Ui> m( AT );
     static GlobalObjectHolder<Ui,LineInfo<Ui> > m_ui( m );
     return m_ui;
-}
-
-ServerSelector::ServerSelector()
-	: m_serv(0)
-{}
-
-bool ServerSelector::GetServerStatus() const
-{
-	return (bool)(m_serv);
-}
-
-Server& ServerSelector::GetServer()
-{
-	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
-	return *m_serv;
-}
-
-const Server& ServerSelector::GetServer() const
-{
-	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
-	return *m_serv;
-}
-
-void ServerSelector::SetCurrentServer(Server* server)
-{
-	m_serv = server;
-	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
-}
-
-ServerSelector& serverSelector()
-{
-	static LineInfo<ServerSelector> m( AT );
-	static GlobalObjectHolder<ServerSelector,LineInfo<ServerSelector> > m_selector( m );
-	return m_selector;
 }
 
 Ui::Ui() :
@@ -393,7 +359,16 @@ void Ui::DownloadMod( const wxString& /*hash*/, const wxString& name )
 void Ui::DownloadFileP2P( const wxString& name )
 {
 	if ( usync().IsLoaded() )
+<<<<<<< HEAD
+    {
+        wxFormat msg(_("Queued download of %s"));
+        UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
+                    UiEvents::StatusData( (msg % name).str(), 1 ) );
+		torrent().RequestFileByName( name );
+    }
+=======
 		prDownloader().RequestFileByName( name );
+>>>>>>> this removes all torrent dependencies and replaces torrentwrapper with a stand-in for pr-downloader
 	else
 	{
 		customMessageBoxNoModal( SL_MAIN_ICON, _("To use the integrated downloader the unitsync library needs to be loaded.\n" \
@@ -1402,16 +1377,7 @@ void Ui::FirstRunWelcome()
 		IntroGuide* intro = new IntroGuide();
 		intro->Show();
 
-		// copy uikeys.txt
-		wxPathList pl;
-		pl.AddEnvList( _T("%ProgramFiles%") );
-		pl.AddEnvList( _T("XDG_DATA_DIRS") );
-		pl = sett().GetAdditionalSearchPaths( pl );
-		wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
-		if ( !uikeyslocation.IsEmpty() )
-		{
-			wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
-		}
+        CopyUikeys( sett().GetCurrentUsedDataDir() );
 
     #ifdef __WXMSW__
         if ( TASClientPresent() &&

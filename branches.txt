@@ -1,0 +1,13 @@
+  TODO:
+    exceptions: expand caught exceptions with mor debug info
+    paint-locker: actually useful??
+    stacktrace: realtion to dbg-report?
+    variable_saytext: status?
+      webconncet-win,  webconncet-win2: ??
+
+    
+    
+  Notes:
+      gl-test: renderer in channelchooser menu item in mainwindow
+      html-test: html-conatiner in mainwindow/torrent
+      

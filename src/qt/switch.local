@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+rm qml.local.pri 
+ln -s qml.local.pri.${1} qml.local.pri

@@ -3,8 +3,8 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-#include "customvirtlistctrl.h"
-#include "torrentwrapper.h"
+#include "../customvirtlistctrl.h"
+#include "prdownloader.h"
 #include <map>
 
 //struct TorrentInfos;
@@ -18,7 +18,7 @@ class Ui;
 /** \brief list all currently active (queued,lecching,seeding) torrents with their infos
  * the list is newly populated every n-seconds from Ui::OnUpdate()
  */
-class TorrentListCtrl : public CustomVirtListCtrl<TorrentInfos, TorrentListCtrl>
+class TorrentListCtrl : public CustomVirtListCtrl<DownloadInfo, TorrentListCtrl>
 {
   public:
     TorrentListCtrl( wxWindow* parent );

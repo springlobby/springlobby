@@ -28,9 +28,6 @@
 #include "utils/tasutil.h"
 #include "utils/uievents.h"
 
-#ifndef NO_TORRENT_SYSTEM
-#include "torrentwrapper.h"
-#endif
 #include "globalsmanager.h"
 
 BEGIN_EVENT_TABLE(ServerEvents, wxEvtHandler)
