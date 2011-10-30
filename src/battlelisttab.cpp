@@ -444,12 +444,7 @@ void BattleListTab::DoJoin( Battle& battle )
 		}
 	}
 
-#ifdef NO_TORRENT_SYSTEM
-	wxString downloadProc = _( "Do you want me to take you to the download page?" );
-#else
-	wxString downloadProc = _( "Should i try to download it for you?\nYou can see the progress in the \"Download Manager\" tab." );
-#endif
-
+	const wxString downloadProc = _( "Should i try to download it for you?\nYou can see the progress in the \"Download Manager\" tab." );
 	if ( !battle.ModExists() )
 	{
 		if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the game before you can join this game.\n\n" ) + downloadProc, _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {

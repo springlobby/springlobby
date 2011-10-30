@@ -19,11 +19,24 @@
 #include "Helper/colorbutton.h"
 //#include "downloader/filelister/filelistdialog.h"
 #include "downloader/prdownloader.h"
+#include "widgets/downloaddialog.h"
 #include "aui/auimanager.h"
 
 BEGIN_EVENT_TABLE( MainDownloadTab, wxPanel )
 	//(*EventTable(MainTorrentTab)
 	//*)
+<<<<<<< HEAD
+	EVT_BUTTON      ( ID_BUTTON_CANCEL,     MainTorrentTab::OnCancelButton      )
+	EVT_BUTTON      ( ID_BUTTON_CLEAR,      MainTorrentTab::OnClearFinished     )
+//	EVT_BUTTON      ( ID_DOWNLOAD_DIALOG,   MainTorrentTab::OnDownloadDialog    )
+	EVT_BUTTON      ( ID_BUTTON_WIDGETS,    MainTorrentTab::OnDLWidgets         )
+
+END_EVENT_TABLE()
+
+MainTorrentTab::MainTorrentTab( wxWindow* parent )
+    : wxScrolledWindow( parent ),
+    m_widgets_dialog( NULL )
+=======
 	EVT_BUTTON      ( ID_BUTTON_CANCEL,     MainDownloadTab::OnCancelButton      )
 	EVT_BUTTON      ( ID_BUTTON_CLEAR,      MainDownloadTab::OnClearFinished     )
 //	EVT_BUTTON      ( ID_DOWNLOAD_DIALOG,   MainDownloadTab::OnDownloadDialog    )
@@ -31,6 +44,7 @@ END_EVENT_TABLE()
 
 MainDownloadTab::MainDownloadTab( wxWindow* parent )
 	: wxScrolledWindow( parent )
+>>>>>>> rename torrent occurences, remove ifdefs
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "maintorrenttab" ) );
 
@@ -68,8 +82,6 @@ MainDownloadTab::MainDownloadTab( wxWindow* parent )
 	m_buttonbox->Add( m_but_clear, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
 //	m_but_download = new wxButton( this, ID_DOWNLOAD_DIALOG, _( "Search file" ) );
 //	m_buttonbox->Add( m_but_download, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
-	m_but_widgets = new wxButton( this, ID_BUTTON_WIDGETS, _( "Download Lua widgets" ) );
-	m_buttonbox->Add( m_but_widgets, 1, wxALL | wxALIGN_RIGHT | wxALIGN_BOTTOM, 5 );
 
 	m_mainbox->Add( m_buttonbox, 0, wxALL, 5 );
 
@@ -99,7 +111,22 @@ void MainDownloadTab::OnClearFinished( wxCommandEvent& /*event*/ )
 	m_dl_listctrl->Clear();
 }
 
+<<<<<<< HEAD
+void MainTorrentTab::OnDLWidgets( wxCommandEvent& /*unused*/ )
+{
+	if ( m_widgets_dialog && m_widgets_dialog->IsShown() ) {
+		m_widgets_dialog->SetFocus();
+	}
+	else {
+		m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _( "Lua widget downloader" ) );
+		m_widgets_dialog->Show( true );
+	}
+}
+
+void MainTorrentTab::OnUpdate()
+=======
 void MainDownloadTab::OnUpdate()
+>>>>>>> rename torrent occurences, remove ifdefs
 {
 
 }

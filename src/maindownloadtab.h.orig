@@ -36,7 +36,6 @@ class MainDownloadTab: public wxScrolledWindow
             ID_OUTGOING_LBL,
             ID_INCOMING_LBL,
             ID_DOWNLOAD_DIALOG,
-            ID_BUTTON_WIDGETS,
             ID_BUTTON_CLEAR
         };
 
@@ -48,11 +47,17 @@ class MainDownloadTab: public wxScrolledWindow
 		wxButton* m_but_clear;
 		//wxButton* m_but_download;
 		ColorButton* m_status_color;
+<<<<<<< HEAD
+		TorrentListCtrl* m_torrent_list;
+        WidgetDownloadDialog* m_widgets_dialog;
+=======
 		DownloadListCtrl* m_dl_listctrl;
+>>>>>>> rename torrent occurences, remove ifdefs
 
         map_infos info_map;
         void OnCancelButton( wxCommandEvent& event );
 		void OnDownloadDialog( wxCommandEvent& event );
+        void OnDLWidgets( wxCommandEvent& event );
         void OnClearFinished( wxCommandEvent& event );
 
         wxBoxSizer* m_mainbox;

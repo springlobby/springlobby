@@ -25,11 +25,7 @@
 #include "utils/controls.h"
 #include "utils/conversion.h"
 #include "utils/platform.h"
-
-#ifndef NO_TORRENT_SYSTEM
 #include "downloadoptionspanel.h"
-#endif
-
 #include "lobbyoptionstab.h"
 #include "images/torrentoptionspanel_icon.png.h"
 #include "images/spring.xpm"
@@ -65,10 +61,8 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
     m_spring_opts = new SpringOptionsTab( m_tabs );
     m_tabs->AddPage( m_spring_opts, _("Spring"), true, wxIcon(spring_xpm) );
 
-#ifndef NO_TORRENT_SYSTEM
     m_torrent_opts = new TorrentOptionsPanel( m_tabs );
 	m_tabs->AddPage( m_torrent_opts, _("Downloads"), true, charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) ) );
-#endif
 
     m_chat_opts = new ChatOptionsTab( m_tabs );
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, wxIcon(userchat_xpm) );
@@ -115,9 +109,7 @@ void MainOptionsTab::OnApply( wxCommandEvent& event )
 {
 	m_spring_opts->OnApply( event );
 	m_chat_opts->OnApply( event );
-#ifndef NO_TORRENT_SYSTEM
 	m_torrent_opts->OnApply( event );
-#endif
 	m_lobby_opts->OnApply( event );
 
 	sett().SaveSettings();
@@ -127,9 +119,7 @@ void MainOptionsTab::OnRestore( wxCommandEvent& event )
 {
 	m_spring_opts->OnRestore( event );
 	m_chat_opts->OnRestore( event );
-#ifndef NO_TORRENT_SYSTEM
 	m_torrent_opts->OnRestore( event );
-#endif
 
 	m_lobby_opts->OnRestore ( event );
 }

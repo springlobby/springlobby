@@ -1,8 +1,6 @@
 #ifndef SPRINGLOBBY_HEADER_GUARD_TORRENTOPTIONSPANEL_H_INCLUDED
 #define SPRINGLOBBY_HEADER_GUARD_TORRENTOPTIONSPANEL_H_INCLUDED
 
-#ifndef NO_TORRENT_SYSTEM
-
 #include <wx/scrolwin.h>
 
 class wxCheckBox;
@@ -54,8 +52,6 @@ class TorrentOptionsPanel: public wxScrolledWindow
 
         DECLARE_EVENT_TABLE()
 };
-
-#endif
 
 #endif // SPRINGLOBBY_HEADER_GUARD_TORRENTOPTIONSPANEL_H_INCLUDED
 

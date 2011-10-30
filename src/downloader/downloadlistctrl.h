@@ -1,8 +1,6 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_TORRENTLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_TORRENTLISTCTRL_H
 
-#ifndef NO_TORRENT_SYSTEM
-
 #include "../customvirtlistctrl.h"
 #include "prdownloader.h"
 #include <map>
@@ -18,11 +16,11 @@ class Ui;
 /** \brief list all currently active (queued,lecching,seeding) torrents with their infos
  * the list is newly populated every n-seconds from Ui::OnUpdate()
  */
-class TorrentListCtrl : public CustomVirtListCtrl<DownloadInfo, TorrentListCtrl>
+class DownloadListCtrl : public CustomVirtListCtrl<DownloadInfo, DownloadListCtrl>
 {
   public:
-    TorrentListCtrl( wxWindow* parent );
-    ~TorrentListCtrl();
+	DownloadListCtrl( wxWindow* parent );
+	~DownloadListCtrl();
 
     void Sort();
 
@@ -60,10 +58,6 @@ class TorrentListCtrl : public CustomVirtListCtrl<DownloadInfo, TorrentListCtrl>
 
     DECLARE_EVENT_TABLE()
 };
-
-
-
-#endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_TORRENTLISTCTRL_H
 

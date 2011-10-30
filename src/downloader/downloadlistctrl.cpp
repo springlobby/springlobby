@@ -1,7 +1,5 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
-#ifndef NO_TORRENT_SYSTEM
-
 #ifdef _MSC_VER
 #ifndef NOMINMAX
     #define NOMINMAX
@@ -20,25 +18,25 @@
 
 static const wxString na_str = wxString(_("N/A"));
 
-template<> SortOrder TorrentListCtrl::BaseType::m_sortorder = SortOrder();
+template<> SortOrder DownloadListCtrl::BaseType::m_sortorder = SortOrder();
 
-BEGIN_EVENT_TABLE( TorrentListCtrl, TorrentListCtrl::BaseType )
+BEGIN_EVENT_TABLE( DownloadListCtrl, DownloadListCtrl::BaseType )
 
-	EVT_LIST_ITEM_RIGHT_CLICK	( TLIST_CLICK, TorrentListCtrl::OnListRightClick )
-	//EVT_LIST_COL_CLICK			( TLIST_CLICK, TorrentListCtrl::OnColClick )
-	EVT_MENU					( TLIST_CANCEL, TorrentListCtrl::OnCancel )
-	EVT_MENU					( TLIST_RETRY, TorrentListCtrl::OnRetry )
+	EVT_LIST_ITEM_RIGHT_CLICK	( TLIST_CLICK, DownloadListCtrl::OnListRightClick )
+	//EVT_LIST_COL_CLICK			( TLIST_CLICK, DownloadListCtrl::OnColClick )
+	EVT_MENU					( TLIST_CANCEL, DownloadListCtrl::OnCancel )
+	EVT_MENU					( TLIST_RETRY, DownloadListCtrl::OnRetry )
 	#if wxUSE_TIPWINDOW
 	#ifndef __WXMSW__ //disables tooltips on win
-	EVT_MOTION( TorrentListCtrl::OnMouseMotion )
+	EVT_MOTION( DownloadListCtrl::OnMouseMotion )
 	#endif
 	#endif
 END_EVENT_TABLE()
 
-TorrentListCtrl::TorrentListCtrl( wxWindow* parent )
-:	TorrentListCtrl::BaseType( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
+DownloadListCtrl::DownloadListCtrl( wxWindow* parent )
+:	DownloadListCtrl::BaseType( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
 							   wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-							   _T("TorrentListCtrl"), 10, &TorrentListCtrl::CompareOneCrit )
+							   _T("TorrentListCtrl"), 10, &DownloadListCtrl::CompareOneCrit )
 , m_popup(0)
 {
 #if defined(__WXMAC__)
@@ -74,14 +72,14 @@ TorrentListCtrl::TorrentListCtrl( wxWindow* parent )
 }
 
 
-TorrentListCtrl::~TorrentListCtrl()
+DownloadListCtrl::~DownloadListCtrl()
 {
   delete m_popup;
   m_popup = 0;
 }
 
 
-bool TorrentListCtrl::AddTorrentInfo(const DataType& info)
+bool DownloadListCtrl::AddTorrentInfo(const DataType& info)
 {
 	if(AddItem(info))
 		return true;
@@ -89,7 +87,7 @@ bool TorrentListCtrl::AddTorrentInfo(const DataType& info)
 }
 
 
-bool TorrentListCtrl::RemoveTorrentInfo(const DataType& info)
+bool DownloadListCtrl::RemoveTorrentInfo(const DataType& info)
 {
 	if(RemoveItem(info))
 	{
@@ -101,7 +99,7 @@ bool TorrentListCtrl::RemoveTorrentInfo(const DataType& info)
 }
 
 
-void TorrentListCtrl::UpdateTorrentInfo(const DataType& info)
+void DownloadListCtrl::UpdateTorrentInfo(const DataType& info)
 {
 	int index = GetIndexFromData(info);
 
@@ -118,7 +116,7 @@ void TorrentListCtrl::UpdateTorrentInfo(const DataType& info)
 }
 
 
-void TorrentListCtrl::OnListRightClick( wxListEvent& event )
+void DownloadListCtrl::OnListRightClick( wxListEvent& event )
 {
 	int idx = event.GetIndex();
 //    if ( idx < (long)m_data.size() && idx > -1 ) {
@@ -140,14 +138,14 @@ void TorrentListCtrl::OnListRightClick( wxListEvent& event )
 //    }
 }
 
-void TorrentListCtrl::OnCancel(wxCommandEvent &/*event*/)
+void DownloadListCtrl::OnCancel(wxCommandEvent &/*event*/)
 {
 	prDownloader().RemoveTorrentByName(GetSelectedData().name);
 	RemoveTorrentInfo(GetSelectedData());
 }
 
 
-void TorrentListCtrl::OnRetry(wxCommandEvent &/*event*/)
+void DownloadListCtrl::OnRetry(wxCommandEvent &/*event*/)
 {
 	DataType info( GetSelectedData() );
 	prDownloader().RemoveTorrentByName( info.name );
@@ -156,7 +154,7 @@ void TorrentListCtrl::OnRetry(wxCommandEvent &/*event*/)
 }
 
 
-void TorrentListCtrl::Sort()
+void DownloadListCtrl::Sort()
 {
 	if ( m_data.size() > 0 )
     {
@@ -167,17 +165,17 @@ void TorrentListCtrl::Sort()
 }
 
 
-void TorrentListCtrl::SetTipWindowText( const long /*item_hit*/, const wxPoint& /*position*/)
+void DownloadListCtrl::SetTipWindowText( const long /*item_hit*/, const wxPoint& /*position*/)
 {
     m_tiptext = _T("");
 }
 
-void TorrentListCtrl::HighlightItem( long /*item*/ )
+void DownloadListCtrl::HighlightItem( long /*item*/ )
 {
 
 }
 
-int TorrentListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
+int DownloadListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
         case 0: return dir * u1.name.CmpNoCase( u2.name );
@@ -191,18 +189,18 @@ int TorrentListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir 
     }
 }
 
-int TorrentListCtrl::GetItemColumnImage(long /*item*/, long /*column*/) const
+int DownloadListCtrl::GetItemColumnImage(long /*item*/, long /*column*/) const
 {
     return -1;
 }
 
-int TorrentListCtrl::GetItemImage(long /*item*/) const
+int DownloadListCtrl::GetItemImage(long /*item*/) const
 {
     return -1;
 }
 
 
-wxString TorrentListCtrl::GetItemText(long item, long column) const
+wxString DownloadListCtrl::GetItemText(long item, long column) const
 {
 
     if ( item > (long)m_data.size() || item < 0 )
@@ -230,7 +228,7 @@ wxString TorrentListCtrl::GetItemText(long item, long column) const
 	}
 }
 
-int TorrentListCtrl::GetIndexFromData( const DataType& data ) const
+int DownloadListCtrl::GetIndexFromData( const DataType& data ) const
 {
     DataCIter it = m_data.begin();
     for ( int i = 0; it != m_data.end(); ++it , ++i) {
@@ -240,10 +238,8 @@ int TorrentListCtrl::GetIndexFromData( const DataType& data ) const
     return -1;
 }
 
-bool TorrentListCtrl::IsTorrentActive(const DataType& info) const
+bool DownloadListCtrl::IsTorrentActive(const DataType& info) const
 {
 	 return (info.downloadstatus == P2P::leeching
 		  || info.downloadstatus == P2P::queued);
 }
-
-#endif

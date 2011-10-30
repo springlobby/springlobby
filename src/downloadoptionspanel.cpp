@@ -1,5 +1,3 @@
-#ifndef NO_TORRENT_SYSTEM
-
 #ifdef _MSC_VER
 #ifndef NOMINMAX
     #define NOMINMAX
@@ -127,5 +125,3 @@ void TorrentOptionsPanel::OnRestore( wxCommandEvent& /*unused*/ )
     m_gamestart_throttle_down->SetValue( TowxString( sett().GetTorrentThrottledDownloadRate( ) ) );
     m_gamestart_throttle->SetValue( sett().GetTorrentSystemSuspendMode() );
 }
-
-#endif

@@ -316,12 +316,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 			if ( watchable )
 				rep.battle.StartSpring();
 			else {
-#ifdef NO_TORRENT_SYSTEM
-				wxString downloadProc = _( "Do you want me to take you to the download page?" );
-#else
 				wxString downloadProc = _( "Should i try to download it for you?\nYou can see the progress in the \"Download Manager\" tab." );
-#endif
-
 				OfflineBattle& battle = rep.battle;
 
 				if ( !battle.ModExists() ) {

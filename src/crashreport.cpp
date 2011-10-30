@@ -187,11 +187,6 @@ SpringDebugReport::SpringDebugReport()
 #endif
 
 	wxString SlBuildFlags;
-	#ifdef NO_TORRENT_SYSTEM
-		SlBuildFlags += _T("torrent=0\n");
-	#else
-		SlBuildFlags += _T("torrent=1\n");
-	#endif
 	#ifdef DISABLE_SOUND
 		SlBuildFlags += _T("sound=0");
 	#else

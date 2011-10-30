@@ -120,7 +120,7 @@ bool Spring::Run( Battle& battle )
     return false;
   }
 
-  #ifndef NO_TORRENT_SYSTEM
+  #if 0 //TODO: BD, isn't this SUPER obsolete
   wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetFounder().GetNick() + _T("|");
   for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
   {

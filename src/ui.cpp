@@ -43,10 +43,8 @@
 #include "mainjoinbattletab.h"
 #include "mainsingleplayertab.h"
 #include "crashreport.h"
-#ifndef NO_TORRENT_SYSTEM
-#include "maintorrenttab.h"
-#include "torrentwrapper.h"
-#endif
+#include "maindownloadtab.h"
+#include "downloader/prdownloader.h"
 
 #include "agreementdialog.h"
 #ifdef __WXMSW__
@@ -373,21 +371,13 @@ void Ui::Quit()
 
 void Ui::DownloadMap( const wxString& /*hash*/, const wxString& name )
 {
-#ifndef NO_TORRENT_SYSTEM
-    DownloadFileP2P( name );
-#else
-	DownloadFileWebsite( name );
-#endif
+	DownloadFileP2P( name );
 }
 
 
 void Ui::DownloadMod( const wxString& /*hash*/, const wxString& name )
 {
-#ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( name );
-#else
-	DownloadFileWebsite( name );
-#endif
 }
 
 void Ui::DownloadFileP2P( const wxString& name )
@@ -588,14 +578,12 @@ void Ui::OnUpdate( int mselapsed )
 #endif
     }
 
-#ifndef NO_TORRENT_SYSTEM
     if (m_upd_counter_torrent % 20 == 0 )
     {
-        mw().GetTorrentTab().OnUpdate();
+		mw().GetDownloadTab().OnUpdate();
     }
 //    prDownloader().UpdateFromTimer( mselapsed );
     m_upd_counter_torrent++;
-#endif
 }
 
 
@@ -1276,7 +1264,6 @@ void Ui::OnRing( const wxString& from )
 				UiEvents::NotficationData( UiEvents::ServerConnection, wxFormat(_("%s:\nring!") ) % from ) );
 	}
 
-#ifndef NO_TORRENT_SYSTEM
     if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
         wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
 //        if(! usync().MapExists(host_map_name)) {//TODO
@@ -1306,7 +1293,6 @@ void Ui::OnRing( const wxString& from )
 //            }
 //        }
     }
-#endif
 
 #ifndef DISABLE_SOUND
     if ( sett().GetChatPMSoundNotificationEnabled() )

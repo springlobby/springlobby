@@ -43,10 +43,15 @@
 #include "mainjoinbattletab.h"
 #include "mainsingleplayertab.h"
 #include "crashreport.h"
+<<<<<<< HEAD
 #ifndef NO_TORRENT_SYSTEM
+#include "maintorrenttab.h"
+#include "torrentwrapper.h"
+#endif
+=======
 #include "maindownloadtab.h"
 #include "downloader/prdownloader.h"
-#endif
+>>>>>>> rename torrent occurences, remove ifdefs
 
 #include "agreementdialog.h"
 #ifdef __WXMSW__
@@ -70,6 +75,40 @@ Ui& ui()
     static LineInfo<Ui> m( AT );
     static GlobalObjectHolder<Ui,LineInfo<Ui> > m_ui( m );
     return m_ui;
+}
+
+ServerSelector::ServerSelector()
+	: m_serv(0)
+{}
+
+bool ServerSelector::GetServerStatus() const
+{
+	return (bool)(m_serv);
+}
+
+Server& ServerSelector::GetServer()
+{
+	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
+	return *m_serv;
+}
+
+const Server& ServerSelector::GetServer() const
+{
+	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
+	return *m_serv;
+}
+
+void ServerSelector::SetCurrentServer(Server* server)
+{
+	m_serv = server;
+	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
+}
+
+ServerSelector& serverSelector()
+{
+	static LineInfo<ServerSelector> m( AT );
+	static GlobalObjectHolder<ServerSelector,LineInfo<ServerSelector> > m_selector( m );
+	return m_selector;
 }
 
 Ui::Ui() :
@@ -339,39 +378,22 @@ void Ui::Quit()
 
 void Ui::DownloadMap( const wxString& /*hash*/, const wxString& name )
 {
-#ifndef NO_TORRENT_SYSTEM
-    DownloadFileP2P( name );
-#else
-	DownloadFileWebsite( name );
-#endif
+	DownloadFileP2P( name );
 }
 
 
 void Ui::DownloadMod( const wxString& /*hash*/, const wxString& name )
 {
-#ifndef NO_TORRENT_SYSTEM
     DownloadFileP2P( name );
-#else
-	DownloadFileWebsite( name );
-#endif
 }
 
 void Ui::DownloadFileP2P( const wxString& name )
 {
 	if ( usync().IsLoaded() )
-<<<<<<< HEAD
-    {
-        wxFormat msg(_("Queued download of %s"));
-        UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
-                    UiEvents::StatusData( (msg % name).str(), 1 ) );
-		torrent().RequestFileByName( name );
-    }
-=======
 		prDownloader().RequestFileByName( name );
->>>>>>> this removes all torrent dependencies and replaces torrentwrapper with a stand-in for pr-downloader
 	else
 	{
-		customMessageBoxNoModal( SL_MAIN_ICON, _("To use the integrated downloader the unitsync library needs to be loaded.\n" \
+		customMessageBoxNoModal( SL_MAIN_ICON, _("To use the integrated downloader the unitsync library needs to be loaded.\n"
 												 "Please check for correct path in Edit->Preferences->Spring"), _("Unitsync not loaded") );
 	}
 }
@@ -563,14 +585,12 @@ void Ui::OnUpdate( int mselapsed )
 #endif
     }
 
-#ifndef NO_TORRENT_SYSTEM
     if (m_upd_counter_torrent % 20 == 0 )
     {
-        mw().GetTorrentTab().OnUpdate();
+		mw().GetDownloadTab().OnUpdate();
     }
 //    prDownloader().UpdateFromTimer( mselapsed );
     m_upd_counter_torrent++;
-#endif
 }
 
 
@@ -1251,7 +1271,6 @@ void Ui::OnRing( const wxString& from )
 				UiEvents::NotficationData( UiEvents::ServerConnection, wxFormat(_("%s:\nring!") ) % from ) );
 	}
 
-#ifndef NO_TORRENT_SYSTEM
     if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
         wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
 //        if(! usync().MapExists(host_map_name)) {//TODO
@@ -1281,7 +1300,6 @@ void Ui::OnRing( const wxString& from )
 //            }
 //        }
     }
-#endif
 
 #ifndef DISABLE_SOUND
     if ( sett().GetChatPMSoundNotificationEnabled() )
@@ -1377,7 +1395,16 @@ void Ui::FirstRunWelcome()
 		IntroGuide* intro = new IntroGuide();
 		intro->Show();
 
-        CopyUikeys( sett().GetCurrentUsedDataDir() );
+		// copy uikeys.txt
+		wxPathList pl;
+		pl.AddEnvList( _T("%ProgramFiles%") );
+		pl.AddEnvList( _T("XDG_DATA_DIRS") );
+		pl = sett().GetAdditionalSearchPaths( pl );
+		wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+		if ( !uikeyslocation.IsEmpty() )
+		{
+			wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
+		}
 
     #ifdef __WXMSW__
         if ( TASClientPresent() &&
