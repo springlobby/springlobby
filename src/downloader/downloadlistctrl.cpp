@@ -36,23 +36,22 @@ END_EVENT_TABLE()
 DownloadListCtrl::DownloadListCtrl( wxWindow* parent )
 :	DownloadListCtrl::BaseType( parent, TLIST_CLICK, wxDefaultPosition, wxDefaultSize,
 							   wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-							   _T("TorrentListCtrl"), 10, &DownloadListCtrl::CompareOneCrit )
+                               _T("DownloadListCtrl"), 3, &DownloadListCtrl::CompareOneCrit )
 , m_popup(0)
 {
 #if defined(__WXMAC__)
 /// on mac, autosize does not work at all
-    const int widths[10] = { 200, 80, 100, 80, 80, 80, 80, 80, 80, 80 };
+    const int widths[9] = { 200, 100, 80, 80, 80, 80, 80, 80, 80 };
 #else
-	const int widths[10] = { 200, wxLIST_AUTOSIZE_USEHEADER, wxLIST_AUTOSIZE_USEHEADER, wxLIST_AUTOSIZE_USEHEADER, 80, wxLIST_AUTOSIZE_USEHEADER, 80, 80, 80, wxLIST_AUTOSIZE_USEHEADER };
+    const int widths[9] = { 200, wxLIST_AUTOSIZE_USEHEADER, wxLIST_AUTOSIZE_USEHEADER, 80, wxLIST_AUTOSIZE_USEHEADER, 80, 80, 80, wxLIST_AUTOSIZE_USEHEADER };
 #endif
 
 	AddColumn(0, widths[0], _T("Name"), _T("Name"));
-	AddColumn(1, widths[1], _T("Numcopies"), _T("# complete copies"));
-	AddColumn(2, widths[2], _T("Status"), _T("Status"));
-	AddColumn(3, widths[3], _T("% complete"), _T("% complete"));
-	AddColumn(4, widths[4], _T("KB/s down"), _T("KB/s download"));
-	AddColumn(5, widths[5], _T("ETA"), _T("Estimated time remaining"));
-	AddColumn(6, widths[6], _T("Filesize (MB)"), _T("Filesize"));
+    AddColumn(1, widths[1], _T("Status"), _T("Status"));
+    AddColumn(2, widths[2], _T("% complete"), _T("% complete"));
+    AddColumn(3, widths[3], _T("KB/s down"), _T("KB/s download"));
+    AddColumn(4, widths[4], _T("ETA"), _T("Estimated time remaining"));
+    AddColumn(5, widths[5], _T("Filesize (MB)"), _T("Filesize"));
 
 
 // sortorder: name --> percent completed --> mb donwloaded

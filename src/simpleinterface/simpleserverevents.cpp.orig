@@ -13,7 +13,6 @@
 #include <wx/intl.h>
 #include <stdexcept>
 
-#include "../channel/channel.h"
 #include <channel/channel.h>
 #include "../user.h"
 #include "../utils/debug.h"

@@ -20,7 +20,7 @@
 #include "uiutils.h"
 #include "ui.h"
 #include "springunitsync.h"
-#include "addbotdialog.h"
+#include "hosting/addbotdialog.h"
 #include "server.h"
 #include "settings.h"
 #include "Helper/colorbutton.h"

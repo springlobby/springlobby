@@ -29,9 +29,6 @@ SET(springlobbySrc
 	src/channel/channelchooserdialog.cpp
 	src/Helper/wxtextctrlhist.cpp
 	src/Helper/colorbutton.cpp
-	src/filelister/filelistctrl.cpp
-	src/filelister/filelistdialog.cpp
-	src/filelister/filelistfilter.cpp
 	src/aui/auimanager.cpp
 	src/aui/artprovider.cpp
 	src/autobalancedialog.cpp
@@ -66,7 +63,7 @@ SET(springlobbySrc
 	src/mainchattab.cpp
 	src/mainjoinbattletab.cpp
 	src/mainsingleplayertab.cpp
-	src/maintorrenttab.cpp
+	src/maindownloadtab.cpp
 	src/mainwindow.cpp
 	src/mapctrl.cpp
 	src/mapgridctrl.cpp
@@ -95,11 +92,6 @@ SET(springlobbySrc
 	src/useractions.cpp
 	src/userlist.cpp
 	src/utils/battleevents.cpp
-	src/widgets/downloadlistctrl.cpp
-	src/widgets/downloaddialog.cpp
-	src/widgets/downloadpanel.cpp
-	src/widgets/infopanel.cpp
-	src/widgets/widget.cpp
 	src/Helper/tasclientimport.cpp
 	src/toasterbox/ToasterBox.cpp
 	src/toasterbox/ToasterBoxWindow.cpp
@@ -115,6 +107,16 @@ SET(springlobbySrc
 	src/options/groupoptionspanel.cpp
 	src/options/lobbyoptionstab.cpp
 	src/options/chatoptionstab.cpp
+	src/hosting/addbotdialog.cpp
+	src/hosting/autobalancedialog.cpp
+	src/hosting/battlemaptab.cpp
+	src/hosting/battleoptionstab.cpp
+	src/hosting/battleroomlistctrl.cpp
+	src/hosting/battleroomtab.cpp
+	src/hosting/hostbattledialog.cpp
+	src/hosting/mainjoinbattletab.cpp
+	src/hosting/mainsingleplayertab.cpp
+	src/hosting/mmoptionwindows.cpp
 )
 
 #currently unused
@@ -200,7 +202,7 @@ FILE( GLOB header2 "src/*/*.h" )
 
 #grep -lR cpp\"$ src/* | sed -e "s/\.h/\.cpp/g"
 SET( templatesources
-	src/battleroommmoptionstab.cpp
+	src/hosting/battleroommmoptionstab.cpp
 	src/customvirtlistctrl.cpp
 	src/downloader/httpdownloader.cpp
 	src/playback/playbackfilter.cpp

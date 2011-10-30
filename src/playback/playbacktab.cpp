@@ -22,7 +22,7 @@
 #include "../settings.h"
 #include "../springunitsync.h"
 #include "../mapctrl.h"
-#include "../battleroomlistctrl.h"
+#include <hosting/battleroomlistctrl.h>
 
 #include "playbackfilter.h"
 #include "../iconimagelist.h"

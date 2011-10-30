@@ -4,7 +4,7 @@
 #include <wx/log.h>
 
 #include "singleplayerbattle.h"
-#include "mainsingleplayertab.h"
+#include "hosting/mainsingleplayertab.h"
 #include "server.h"
 #include "ui.h"
 #include "settings.h"
