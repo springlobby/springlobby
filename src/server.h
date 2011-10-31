@@ -6,7 +6,7 @@
 
 #include "channel/channellist.h"
 #include "userlist.h"
-#include "battlelist.h"
+#include "battlelist/battlelist.h"
 #include "inetclass.h"
 #include "utils/mixins.hh"
 

@@ -3,7 +3,7 @@
 
 #include <set>
 
-#include "autohost.h"
+#include "hosting/autohost.h"
 #include "ibattle.h"
 
 class Ui;

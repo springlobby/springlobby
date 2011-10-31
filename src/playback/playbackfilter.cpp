@@ -18,7 +18,7 @@
 #include "replaylist.h"
 //#include "PlaybackListFiltervalues.h"
 #include "playbackfiltervalues.h"
-#include "../battlelistctrl.h"
+#include "../battlelist/battlelistctrl.h"
 #include "../battle.h"
 #include "../uiutils.h"
 #include "../utils/tasutil.h"

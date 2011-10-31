@@ -14,10 +14,11 @@ SET(springlobbySrc
 	src/gui/wxgradientbutton.cpp
 	src/gui/wxbackgroundimage.cpp
 	src/gui/statusbar.cpp
+	src/gui/pastedialog.cpp
 	src/aui/slbook.cpp
+	
 	src/utils/math.cpp
 	src/utils/misc.cpp
-	src/gui/pastedialog.cpp
 	src/utils/tasutil.cpp
 	src/utils/networkevents.cpp
 	src/utils/md5.c
@@ -25,27 +26,22 @@ SET(springlobbySrc
 	src/Helper/TextCompletionDatabase.cpp
 	src/Helper/imageviewer.cpp
 	src/Helper/slhtmlwindow.cpp
-	src/channel/channelchooser.cpp
-	src/channel/channelchooserdialog.cpp
 	src/Helper/wxtextctrlhist.cpp
 	src/Helper/colorbutton.cpp
+	src/channel/channelchooser.cpp
+	src/channel/channelchooserdialog.cpp
+	src/channel/autojoinchanneldialog.cpp
 	src/aui/auimanager.cpp
 	src/aui/artprovider.cpp
-	src/autobalancedialog.cpp
 	src/autohost.cpp
-	src/channel/autojoinchanneldialog.cpp
-	src/addbotdialog.cpp
 	src/agreementdialog.cpp
 	src/base64.cpp
 	src/battle.cpp
-	src/battlelist.cpp
-	src/battlelistctrl.cpp
-	src/battlelistfilter.cpp
-	src/battlelisttab.cpp
-	src/battlemaptab.cpp
-	src/battleoptionstab.cpp
-	src/battleroomlistctrl.cpp
-	src/battleroomtab.cpp
+	src/battlelist/battlelist.cpp
+	src/battlelist/battlelistctrl.cpp
+	src/battlelist/battlelistfilter.cpp
+	src/battlelist/battlelisttab.cpp
+
 	src/crc.cpp
 	src/channel/channel.cpp
 	src/channel/channellist.cpp
@@ -56,19 +52,15 @@ SET(springlobbySrc
 	src/countrycodes.cpp
 	src/customlistctrl.cpp
 	src/flagimages.cpp
-	src/hostbattledialog.cpp
 	src/ibattle.cpp
 	src/iconimagelist.cpp
 	src/introguide.cpp
 	src/mainchattab.cpp
-	src/mainjoinbattletab.cpp
-	src/mainsingleplayertab.cpp
 	src/maindownloadtab.cpp
 	src/mainwindow.cpp
 	src/mapctrl.cpp
 	src/mapgridctrl.cpp
 	src/mapselectdialog.cpp
-	src/mmoptionwindows.cpp
 	src/nicklistctrl.cpp
 	src/offlinebattle.cpp
 	src/playback/replaylist.cpp
@@ -109,6 +101,7 @@ SET(springlobbySrc
 	src/options/chatoptionstab.cpp
 	src/hosting/addbotdialog.cpp
 	src/hosting/autobalancedialog.cpp
+	src/hosting/autohost.cpp
 	src/hosting/battlemaptab.cpp
 	src/hosting/battleoptionstab.cpp
 	src/hosting/battleroomlistctrl.cpp
@@ -126,27 +119,27 @@ SET( filelistSrc
 	src/downloader/filelister/filelistfilter.cpp )
 
 SET(SettingsSrc
-	src/settings++/frame.cpp
-	src/settings++/helpmenufunctions.cpp
-	src/settings++/panel_pathoption.cpp
-	src/settings++/se_utils.cpp
-	src/settings++/tab_abstract.cpp
-	src/settings++/tab_audio.cpp
-	src/settings++/tab_quality_video.cpp
-	src/settings++/tab_render_detail.cpp
-	src/settings++/tab_simple.cpp
-	src/settings++/tab_ui.cpp
-	src/settings++/hotkeys/HotkeyForms.cpp
-	src/settings++/hotkeys/AddSelectionCmdDlg.cpp
-	src/settings++/hotkeys/commandlist.cpp
-	src/settings++/hotkeys/hotkey_panel.cpp
-	src/settings++/hotkeys/hotkey_parser.cpp
-	src/settings++/hotkeys/KeynameConverter.cpp
-	src/settings++/hotkeys/wxSpringCommand.cpp
-	src/settings++/hotkeys/SpringDefaultProfile.cpp
-	src/settings++/hotkeys/HotkeyTypes.cpp
-	src/settings++/hotkeys/CommandOrderDlg.cpp
-	src/settings++/hotkeys/ChangeMetaDlg.cpp
+	src/springsettings/frame.cpp
+	src/springsettings/helpmenufunctions.cpp
+	src/springsettings/panel_pathoption.cpp
+	src/springsettings/se_utils.cpp
+	src/springsettings/tab_abstract.cpp
+	src/springsettings/tab_audio.cpp
+	src/springsettings/tab_quality_video.cpp
+	src/springsettings/tab_render_detail.cpp
+	src/springsettings/tab_simple.cpp
+	src/springsettings/tab_ui.cpp
+	src/springsettings/hotkeys/HotkeyForms.cpp
+	src/springsettings/hotkeys/AddSelectionCmdDlg.cpp
+	src/springsettings/hotkeys/commandlist.cpp
+	src/springsettings/hotkeys/hotkey_panel.cpp
+	src/springsettings/hotkeys/hotkey_parser.cpp
+	src/springsettings/hotkeys/KeynameConverter.cpp
+	src/springsettings/hotkeys/wxSpringCommand.cpp
+	src/springsettings/hotkeys/SpringDefaultProfile.cpp
+	src/springsettings/hotkeys/HotkeyTypes.cpp
+	src/springsettings/hotkeys/CommandOrderDlg.cpp
+	src/springsettings/hotkeys/ChangeMetaDlg.cpp
 	src/wxkeybinder/keybinder.cpp
 	src/wxkeybinder/wxKeyMonitorTextCtrl.cpp
 )
@@ -156,7 +149,7 @@ SET( curlSRC
 )
 
 SET(StandAloneSettings
-	src/settings++/main.cpp
+	src/springsettings/main.cpp
 )
 
 SET(SLSharedWithSettings
@@ -169,7 +162,6 @@ SET(SLSharedWithSettings
 	src/utils/conversion.cpp
 	src/utils/customdialogs.cpp
 	src/utils/debug.cpp
-	src/utils/pathlistfactory.cpp
 	src/utils/globalevents.cpp
 	src/utils/platform.cpp
 	src/utils/sltipwin.cpp

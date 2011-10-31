@@ -9,10 +9,10 @@
 //for updating ui, anybody feel free to replace with fancy events stuff :P
 #include "ui.h"
 #include "mainwindow.h"
-#include "hosting/mainjoinbattletab.h"
 #include "mainchattab.h"
-#include "battlelisttab.h"
+#include "hosting/mainjoinbattletab.h"
 #include "hosting/battleroomtab.h"
+#include "battlelist/battlelisttab.h"
 #include "chatpanel.h"
 #include <options/mainoptionstab.h>
 #include <options/groupoptionspanel.h>

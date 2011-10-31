@@ -36,7 +36,7 @@
 #include "updater/updatehelper.h"
 #include "uiutils.h"
 #include "chatpanel.h"
-#include "battlelisttab.h"
+#include "battlelist/battlelisttab.h"
 #include "hosting/battleroomtab.h"
 #include "hosting/mainjoinbattletab.h"
 #include "hosting/mainsingleplayertab.h"

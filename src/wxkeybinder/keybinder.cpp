@@ -31,9 +31,9 @@
 #include "wx/tokenzr.h"
 #include "wx/menu.h"
 #include <list>
-#include "../settings++/hotkeys/CommandOrderDlg.h"
+#include "../springsettings/hotkeys/CommandOrderDlg.h"
 #include "../utils/conversion.h"
-#include "../settings++/hotkeys/ChangeMetaDlg.h"
+#include "../springsettings/hotkeys/ChangeMetaDlg.h"
 
 
 // class definition for wxKeyProfile

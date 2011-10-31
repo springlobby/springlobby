@@ -42,7 +42,7 @@
 #include "springunitsync.h"
 #include "channel/channel.h"
 #include "utils/customdialogs.h"
-#include "settings++/se_utils.h"
+#include "springsettings/se_utils.h"
 #include "downloader/prdownloader.h"
 #include "updater/updater.h"
 #include "globalsmanager.h"

@@ -41,11 +41,11 @@
 #include "server.h"
 #include "utils/debug.h"
 #include "utils/platform.h"
-#include "battlelisttab.h"
+#include "battlelist/battlelisttab.h"
 #include "mainchattab.h"
 #include "hosting/mainjoinbattletab.h"
 #include "hosting/mainsingleplayertab.h"
-#include "battlelisttab.h"
+#include "battlelist/battlelisttab.h"
 #include "options/mainoptionstab.h"
 #include "springunitsync.h"
 #include "uiutils.h"
@@ -69,7 +69,7 @@
 #include "images/broom_tab_icon.png.h"
 #include "images/floppy_icon.png.h"
 
-#include "settings++/frame.h"
+#include "springsettings/frame.h"
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
 
