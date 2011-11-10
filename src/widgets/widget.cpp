@@ -14,7 +14,11 @@
 #include <wx/protocol/http.h>
 #include <wx/xml/xml.h>
 
+<<<<<<< HEAD
 #include "../utils/misc.h"
+=======
+//#include "../utils/.h"
+>>>>>>> Revert "removed widget downloader"
 #include "../settings.h"
 #include "../springunitsync.h"
 
@@ -107,7 +111,10 @@ bool Widget::DownloadImages()
         wxString fileurl = it->url;
         fileurl.Replace( _T("http://") , _T("") );
         wxString destpath = sett().GetCachePath() + fileurl.AfterLast(_T('/'));
+<<<<<<< HEAD
         tryCreateDirectory(destpath);
+=======
+>>>>>>> Revert "removed widget downloader"
         it->local_path = destpath;
 
         if ( wxFileExists( destpath ) ) // no need to redownload images
@@ -228,8 +235,14 @@ bool Widget::Install()
         {
             try
             {
+<<<<<<< HEAD
                 const wxString c_path(destpath.BeforeLast( sep_c ));
                 tryCreateDirectory( c_path, 0755, wxPATH_MKDIR_FULL );
+=======
+                if ( !wxFileName::DirExists( destpath.BeforeLast( sep_c ) ) ) {
+                    wxFileName::Mkdir( destpath.BeforeLast( sep_c ), 0755, wxPATH_MKDIR_FULL );
+                }
+>>>>>>> Revert "removed widget downloader"
                 wxFileOutputStream outs( destpath );
                 httpstream->Read(outs);
                 outs.Close();
@@ -247,6 +260,10 @@ bool Widget::Install()
     }
     is_installed = true;
     return true;
+<<<<<<< HEAD
+=======
+
+>>>>>>> Revert "removed widget downloader"
 }
 
 bool Widget::Remove()

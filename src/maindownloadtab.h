@@ -13,6 +13,7 @@ class wxBoxSizer;
 class ColorButton;
 class WidgetDownloadDialog;
 
+
 typedef std::map<wxString,DownloadInfo> map_infos;
 typedef map_infos::iterator map_infos_iter;
 
@@ -36,8 +37,8 @@ class MainDownloadTab: public wxScrolledWindow
             ID_OUTGOING_LBL,
             ID_INCOMING_LBL,
             ID_DOWNLOAD_DIALOG,
-            ID_BUTTON_WIDGETS,
-            ID_BUTTON_CLEAR
+            ID_BUTTON_CLEAR,
+            ID_BUTTON_WIDGETS
         };
 
         wxStaticText* m_incoming;
@@ -49,10 +50,12 @@ class MainDownloadTab: public wxScrolledWindow
 		//wxButton* m_but_download;
 		ColorButton* m_status_color;
 		DownloadListCtrl* m_dl_listctrl;
+        WidgetDownloadDialog* m_widgets_dialog;
 
         map_infos info_map;
         void OnCancelButton( wxCommandEvent& event );
 		void OnDownloadDialog( wxCommandEvent& event );
+        void OnDLWidgets( wxCommandEvent& event );
         void OnClearFinished( wxCommandEvent& event );
 
         wxBoxSizer* m_mainbox;

@@ -19,6 +19,7 @@
 #include "Helper/colorbutton.h"
 //#include "downloader/filelister/filelistdialog.h"
 #include "downloader/prdownloader.h"
+#include "widgets/downloaddialog.h"
 #include "aui/auimanager.h"
 
 BEGIN_EVENT_TABLE( MainDownloadTab, wxPanel )
@@ -27,10 +28,12 @@ BEGIN_EVENT_TABLE( MainDownloadTab, wxPanel )
 	EVT_BUTTON      ( ID_BUTTON_CANCEL,     MainDownloadTab::OnCancelButton      )
 	EVT_BUTTON      ( ID_BUTTON_CLEAR,      MainDownloadTab::OnClearFinished     )
 //	EVT_BUTTON      ( ID_DOWNLOAD_DIALOG,   MainDownloadTab::OnDownloadDialog    )
+    EVT_BUTTON      ( ID_BUTTON_WIDGETS,    MainDownloadTab::OnDLWidgets         )
 END_EVENT_TABLE()
 
 MainDownloadTab::MainDownloadTab( wxWindow* parent )
-	: wxScrolledWindow( parent )
+    : wxScrolledWindow( parent ),
+      m_widgets_dialog( NULL )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "maintorrenttab" ) );
 
@@ -112,3 +115,14 @@ void MainDownloadTab::OnCancelButton( wxCommandEvent& /*unused*/ )
 
 void MainDownloadTab::OnDownloadDialog( wxCommandEvent& /*unused*/ )
 {}
+
+void MainDownloadTab::OnDLWidgets( wxCommandEvent& /*unused*/ )
+{
+       if ( m_widgets_dialog && m_widgets_dialog->IsShown() ) {
+               m_widgets_dialog->SetFocus();
+       }
+       else {
+               m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _( "Lua widget downloader" ) );
+               m_widgets_dialog->Show( true );
+       }
+}
