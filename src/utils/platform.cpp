@@ -35,7 +35,7 @@
 wxString GetLibExtension()
 {
 #ifdef __APPLE__
-	return wxString("dylib");
+    return wxString(".dylib");
 #endif
     return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
 }
