@@ -54,9 +54,9 @@ bool IBattle::IsSynced()
     LoadMod();
     LoadMap();
     bool synced = true;
-    if ( !m_host_map.hash.IsEmpty() ) synced = synced && (m_local_map.hash == m_host_map.hash);
+    if ( !m_host_map.hash!=0 ) synced = synced && (m_local_map.hash == m_host_map.hash);
     if ( !m_host_map.name.IsEmpty() ) synced = synced && (m_local_map.name == m_host_map.name);
-    if ( !m_host_mod.hash.IsEmpty() ) synced = synced && (m_local_mod.hash == m_host_mod.hash);
+    if ( !m_host_mod.hash!=0 ) synced = synced && (m_local_mod.hash == m_host_mod.hash);
     if ( !m_host_mod.name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod.name);
     return synced;
 }
