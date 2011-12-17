@@ -17,7 +17,6 @@ SET(springlobbySrc
 	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
-	src/utils/pathlistfactory.cpp
 	src/gui/pastedialog.cpp
 	src/utils/tasutil.cpp
 	src/utils/networkevents.cpp
@@ -159,6 +158,7 @@ SET(SLSharedWithSettings
 	src/utils/conversion.cpp
 	src/utils/customdialogs.cpp
 	src/utils/debug.cpp
+	src/utils/pathlistfactory.cpp
 	src/utils/globalevents.cpp
 	src/utils/platform.cpp
 	src/utils/sltipwin.cpp
