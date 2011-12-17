@@ -4,6 +4,7 @@
 #include <wx/string.h>
 #include <vector>
 #include "utils/mixins.hh"
+#include "utils/pathlistfactory.h"
 
 const int CACHE_VERSION     = 11;
 const int SETTINGS_VERSION  = 22;
@@ -382,11 +383,8 @@ class Settings : public SL::NonCopyable
      * @{
      */
 
-		wxPathList GetAdditionalSearchPaths( wxPathList& pl );
-
     void ConvertOldSpringDirsOptions();
-
-		void RefreshSpringVersionList();
+    void RefreshSpringVersionList();
     std::map<wxString, wxString> GetSpringVersionList() const; /// index -> version
     wxString GetCurrentUsedSpringIndex();
     void SetUsedSpringIndex( const wxString& index );
@@ -405,7 +403,7 @@ class Settings : public SL::NonCopyable
 	void SetUseSpringPathFromBundle( bool value );
 
     /// convenience wrappers to get current used version paths
-	wxString GetCurrentUsedUikeys();
+    wxString GetCurrentUsedUikeys();
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
     wxString GetCurrentUsedBundle();
@@ -424,7 +422,7 @@ class Settings : public SL::NonCopyable
     void SetBundle( const wxString& index, const wxString& path );
 
     wxString AutoFindSpringBin();
-    wxString AutoFindUnitSync();
+    wxString AutoFindUnitSync( 	wxPathList pl = PathlistFactory::ConfigFileSearchPaths() ) const;
     wxString AutoFindBundle();
 	wxString AutoFindUikeys();
 
@@ -809,8 +807,6 @@ class Settings : public SL::NonCopyable
     bool m_portable_mode;
 
     std::map<wxString, wxString> m_spring_versions;
-
-	wxPathList GetConfigFileSearchPathes();
 
 	wxString m_final_config_path;
 };

@@ -17,6 +17,7 @@ SET(springlobbySrc
 	src/aui/slbook.cpp
 	src/utils/math.cpp
 	src/utils/misc.cpp
+	src/utils/pathlistfactory.cpp
 	src/gui/pastedialog.cpp
 	src/utils/tasutil.cpp
 	src/utils/networkevents.cpp

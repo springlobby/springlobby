@@ -44,6 +44,7 @@
 #ifdef SL_DUMMY_COL
     #include "utils/customdialogs.h"
 #endif
+#include "utils/pathlistfactory.h"
 
 #ifdef __WXMSW__
 	#define BIN_EXT _T(".exe")
@@ -81,7 +82,7 @@ Settings::Settings()
 	{
 		if ( !wxFileName::FileExists( localfilepath ) || !wxFileName::IsFileWritable( localfilepath ) )
 		{
-			//either local conf file soes not exist, or it exists but is not writable
+            //either local conf file does not exist, or it exists but is not writable
 			m_chosen_path = userfilepath;
 			SetPortableMode( false );
 		}
@@ -727,56 +728,6 @@ void Settings::SetWindowPos( const wxString& window, const wxPoint& pos )
 
 // ========================================================
 
-wxPathList Settings::GetAdditionalSearchPaths( wxPathList& pl )
-{
-	wxPathList ret;
-	wxStandardPathsBase& sp = wxStandardPathsBase::Get();
-
-	pl.Add( wxFileName::GetCwd() );
-	pl.Add( sp.GetExecutablePath().BeforeLast( sep ) );
-	pl.Add( wxFileName::GetHomeDir() );
-#ifndef SL_QT_MODE
-	pl.Add( sp.GetUserDataDir().BeforeLast( sep ) );
-	pl.Add( sp.GetDataDir().BeforeLast( sep ) );
-	pl.Add( sp.GetResourcesDir().BeforeLast( sep ) );
-#endif
-	pl.Add( wxGetOSDirectory() );
-
-#ifdef __WXMSW__
-	pl.Add( sp.GetDocumentsDir() + sepstring + wxT("My Games") + sepstring + wxT("Spring") );
-	//maybe add more here like:
-	//Appdata + \Spring
-	//Mydocs + \Spring
-
-	//http://projects.springlobby.info/issues/1530
-	wxRegKey base( _T("HKLM\\Software\\Spring") );
-	wxString usync_keyval = GetRegkeyVal( base, _T("SpringEngineHelper"), wxString() );
-	if ( usync_keyval != wxEmptyString )
-	{
-		pl.Add( usync_keyval.BeforeLast( sep ) );
-	}
-	wxString binary_keyval = GetRegkeyVal( base, _T("SpringEngine"), wxString() );
-	if ( binary_keyval != wxEmptyString )
-	{
-		pl.Add( binary_keyval.BeforeLast( sep ) );
-	}
-
-#endif
-
-	for ( size_t i = 0; i < pl.GetCount(); i++ )
-	{
-		wxString path = pl[i];
-		if ( !path.EndsWith( sepstring ) )
-            path += sepstring;
-		ret.Add( path );
-		ret.Add( path + _T( "Spring" ) + sepstring );
-		ret.Add( path + _T( "spring" ) + sepstring );
-		ret.Add( path + _T( "games" ) + sepstring + _T( "Spring" ) + sepstring );
-		ret.Add( path + _T( "games" ) + sepstring + _T( "spring" ) + sepstring );
-	}
-	return ret;
-}
-
 wxString Settings::AutoFindSpringBin()
 {
 	wxPathList pl;
@@ -784,41 +735,13 @@ wxString Settings::AutoFindSpringBin()
 	pl.AddEnvList( _T( "%ProgramFiles%" ) );
 	pl.AddEnvList( _T( "PATH" ) );
 
-	pl = GetAdditionalSearchPaths( pl );
+    pl = PathlistFactory::AdditionalSearchPaths( pl );
 
 	return pl.FindValidPath( SPRING_BIN );
 }
 
-
-wxPathList Settings::GetConfigFileSearchPathes()
+wxString Settings::AutoFindUnitSync(wxPathList pl) const
 {
-	wxPathList pl;
-
-	pl.AddEnvList( _T( "%ProgramFiles%" ) );
-
-	pl.AddEnvList( _T( "LDPATH" ) );
-	pl.AddEnvList( _T( "LD_LIBRARY_PATH" ) );
-
-	pl.Add( _T( "/usr/local/lib/spring" ) );
-	pl.Add( _T( "/usr/local/lib64" ) );
-	pl.Add( _T( "/usr/local/games" ) );
-	pl.Add( _T( "/usr/local/games/lib" ) );
-	pl.Add( _T( "/usr/local/lib" ) );
-	pl.Add( _T( "/usr/lib64" ) );
-	pl.Add( _T( "/usr/lib" ) );
-	pl.Add( _T( "/usr/lib/spring" ) );
-	pl.Add( _T( "/usr/games" ) );
-	pl.Add( _T( "/usr/games/lib64" ) );
-	pl.Add( _T( "/usr/games/lib" ) );
-
-	pl = GetAdditionalSearchPaths( pl );
-
-	return pl;
-}
-
-wxString Settings::AutoFindUnitSync()
-{
-	wxPathList pl = GetConfigFileSearchPathes();
 	wxString retpath = pl.FindValidPath( _T( "unitsync" ) + GetLibExtension() );
 	if ( retpath.IsEmpty() )
 		retpath = pl.FindValidPath( _T( "libunitsync" ) + GetLibExtension() );
@@ -827,13 +750,13 @@ wxString Settings::AutoFindUnitSync()
 
 wxString Settings::AutoFindBundle()
 {
-	wxPathList pl = GetConfigFileSearchPathes();
+    wxPathList pl = PathlistFactory::ConfigFileSearchPaths();
 	return pl.FindValidPath( _T( "Spring.app" ) );
 }
 
 wxString Settings::AutoFindUikeys()
 {
-	wxPathList pl = GetConfigFileSearchPathes();
+    wxPathList pl = PathlistFactory::ConfigFileSearchPaths();
 	return pl.FindValidPath( _T( "uikeys.txt" ) );
 }
 
@@ -964,10 +887,9 @@ wxString Settings::GetCurrentUsedSpringBinary()
 	else return GetSpringBinary( GetCurrentUsedSpringIndex() );
 }
 
-
 wxString Settings::GetCurrentUsedUnitSync()
 {
-	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sepstring + _T( "unitsync" ) + GetLibExtension();
+    if ( IsPortableMode() ) return AutoFindUnitSync( PathlistFactory::fromSinglePath( GetCurrentUsedDataDir() ) );
 	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sepstring + _T( "unitsync" ) + GetLibExtension();
 	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sepstring + _T("unitsync") + GetLibExtension();
 	else return GetUnitSync( GetCurrentUsedSpringIndex() );
