@@ -394,16 +394,6 @@ void SpringOptionsTab::SetupUserFolders()
 	{
 		usync().SetSpringDataPath( dir );
 	}
-
-	// copy uikeys.txt
-	wxPathList pl;
-	pl.AddEnvList( _T( "%ProgramFiles%" ) );
-	pl.AddEnvList( _T( "XDG_DATA_DIRS" ) );
-	pl = sett().GetAdditionalSearchPaths( pl );
-	wxString uikeyslocation = pl.FindValidPath( _T( "uikeys.txt" ) );
-	if ( !uikeyslocation.IsEmpty() )
-	{
-		wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T( "uikeys.txt" ), false );
-	}
+    CopyUikeys( sett().GetCurrentUsedDataDir() );
 }
 

@@ -30,6 +30,7 @@
 	#include <QCoreApplication>
 	#include <QDir>
 #endif
+#include "pathlistfactory.h"
 
 //!This is only ever used for unitsync and on daftalx notice it should actually be .dylib (wx returns .bundle )
 wxString GetLibExtension()
@@ -449,3 +450,12 @@ wxString GetCustomizedEngineConfigFilePath()
 	return path;
 }
 
+//! copy uikeys.txt
+void CopyUikeys( wxString currentDatadir )
+{
+    wxString uikeyslocation = PathlistFactory::UikeysLocations().FindValidPath( _T("uikeys.txt") );
+    if ( !uikeyslocation.IsEmpty() )
+    {
+        wxCopyFile( uikeyslocation, currentDatadir + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
+    }
+}

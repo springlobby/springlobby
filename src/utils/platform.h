@@ -91,6 +91,8 @@ wxString GetRegkeyVal( const wxRegKey& reg, const wxString& name, const wxString
 }
 #endif
 
+//!
+void CopyUikeys(wxString currentDatadir);
 
 #endif // SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 
