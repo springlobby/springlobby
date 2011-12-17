@@ -227,6 +227,7 @@ void Springsettings::OnInitCmdLine(wxCmdLineParser& parser)
 	parser.SetSwitchChars (_T("-"));
 
 	#undef STR
+    #undef CSTR
 }
 
 //! @brief parses the command line and sets global app options like log verbosity or log target
