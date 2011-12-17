@@ -870,6 +870,8 @@ wxString Settings::GetCurrentUsedDataDir()
 	if ( dir.IsEmpty() )
         dir = GetExecutableFolder(); // fallback
 #else
+    if ( IsPortableMode() )
+        dir = GetExecutableFolder();
 	if ( dir.IsEmpty() )
         dir = wxFileName::GetHomeDir() + sepstring + _T( ".spring" ); // fallback
 #endif
