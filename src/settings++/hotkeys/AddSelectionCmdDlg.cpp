@@ -126,11 +126,11 @@ wxString AddSelectionCmdDlg::getConditionsAndSelectString() const
 
 	if ( this->m_checkBoxComInc->GetValue() )
 	{
-		str += wxT("_Commander");
+		str += wxT("_ManualFireUnit");
 	}
 	else if ( this->m_checkBoxComEx->GetValue() )
 	{
-		str += wxT("_Not_Commander");
+		str += wxT("_Not_ManualFireUnit");
 	}
 
 	if ( this->m_checkBoxTransInc->GetValue() )
