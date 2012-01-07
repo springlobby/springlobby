@@ -27,7 +27,7 @@ wxString AddSelectionCmdDlg::validateInputFields()
 	}
 	else if ( this->m_radioBtnSelPerc->GetValue() )
 	{
-		if ( this->m_textCtrlSelCount->GetLabel().ToLong( &dummy ) == false || dummy < 0 || dummy > 100 )
+		if ( this->m_textCtrlSelPerc->GetLabel().ToLong( &dummy ) == false || dummy < 0 || dummy > 100 )
 		{
 			return _("Invalid value for selection percentage!");
 		}
