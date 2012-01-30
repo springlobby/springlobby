@@ -68,6 +68,7 @@
 #include <iserverevents.h>
 #include "qbattleroom.h"
 #include "qminimap.h"
+#include "missionmodel.h"
 
 #ifdef __WXMSW__
 #include <windows.h>
@@ -106,6 +107,13 @@ int SasiApp::exec()
     QSplashScreen* splash = 0;
     QPixmap splash_pixmap;
     QWidget* show_screen = desktop()->screen( 0 );
+    try {
+        QString graphic_dir = SLcustomizations().GraphicsDir() ;
+    }
+    catch ( std::exception& e ) {
+            qDebug() << e.what();
+            throw e;
+    }
     if ( splash_pixmap.load( SLcustomizations().GraphicsDir() + "/splash.png" ) )
     {
         splash = new QSplashScreen(show_screen,splash_pixmap);
@@ -189,6 +197,7 @@ int SasiApp::exec()
     SkirmishModel skirmish_model;
     PresetModel preset_model(this);
     ScreenResolutionModel screenres_model(this);
+    MissionModel mission_model(this);
 
     //! TODO switch bakc to modname
     wxString modname = SLcustomizations().GetModname();
@@ -208,6 +217,7 @@ int SasiApp::exec()
     ctxt->setContextProperty("audioManager", &audio_manager );
     ctxt->setContextProperty("presetModel", &preset_model );
     ctxt->setContextProperty("screenresModel", &screenres_model );
+    ctxt->setContextProperty("missionModel", &mission_model );
     ctxt->setContextProperty("battlelistModel", bl_model);
 
     const int sleep_seconds = -1;

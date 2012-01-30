@@ -125,11 +125,7 @@ SOURCES += sasi_main.cpp \
 	../utils/downloader.cpp \
 	../utils/plasmaresourceinfo.cpp \
 	../utils/battleevents.cpp \
-	../widgets/downloadlistctrl.cpp \
-	../widgets/downloaddialog.cpp \
-	../widgets/downloadpanel.cpp \
-	../widgets/infopanel.cpp \
-	../widgets/widget.cpp \
+    ../utils/pathlistfactory.cpp \
 	../Helper/tasclientimport.cpp \
 	simpleserverevents.cpp \
 	../toasterbox/ToasterBox.cpp \
@@ -175,7 +171,8 @@ SOURCES += sasi_main.cpp \
     ../infodialog.cpp \
     battlelistmodel.cpp \
     qbattleroom.cpp \
-    qminimap.cpp
+    qminimap.cpp \
+    missionmodel.cpp
 
 HEADERS += \
     ../springunitsynclib.h \
@@ -257,7 +254,8 @@ HEADERS += \
     ../socket.h \
     qbattleroom.h \
     ../iserverevents.h \
-    qminimap.h
+    qminimap.h \
+    missionmodel.h
 
 INCLUDEPATH += ..
 INCLUDEPATH += ../Helper/qtargparser

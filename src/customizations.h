@@ -59,6 +59,7 @@ class Customizations {
 			DataException( const QList<QString>& errors )
 				:errors_(errors)
 			{}
+            const char* what() const throw() ;
 			virtual ~DataException() throw() {}
 		};
 		QString DataBasePath();

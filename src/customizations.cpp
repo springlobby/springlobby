@@ -209,4 +209,15 @@ const QString& Customizations::GetModshortname() const
     return m_shortname;
 }
 
+const char* Customizations::DataException::what() const throw()
+{
+    std::stringstream out;
+    QString s;
+    foreach ( s, errors_ ) {
+        out << s.toStdString() << std::endl;
+        qDebug() << s;
+    }
+    return out.str().c_str();
+}
+
 #endif
