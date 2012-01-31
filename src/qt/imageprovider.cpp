@@ -61,3 +61,22 @@ QImage SideImageProvider::requestImage ( const QString & id, QSize * size, const
 
 	return img.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
 }
+
+QImage VfsImageProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
+{
+    int width = requestedSize.width() > 0 ? requestedSize.width() : 1024;
+    int height = requestedSize.height() > 0 ? requestedSize.height() : 1024;
+
+    wxImage h;
+    try {
+        h = usync().GetImage( SLcustomizations().GetModname(), TowxString( id ), false );
+    }
+    catch ( std::exception& e ) {
+    }
+
+    if (size)
+        *size = QSize(width,height);
+
+    const QImage q = wxQtConvertImage( h );
+    return q.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+}

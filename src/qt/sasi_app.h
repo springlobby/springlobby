@@ -38,11 +38,11 @@ signals:
 	void appLoaded();
 
 public slots:
-	void Update();
+//	void Update();
 
 private:
-	BattlelistModel* bl_model;
-        TASServer* m_server;
+//	BattlelistModel* bl_model;
+//  TASServer* m_server;
 };
 
 #endif // SASI_APP_H

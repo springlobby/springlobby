@@ -105,6 +105,8 @@ typedef int (USYNC_CALL_CONV *OpenFileVFSPtr)(const char*);
 typedef int (USYNC_CALL_CONV *FileSizeVFSPtr)(int);
 typedef int (USYNC_CALL_CONV *ReadFileVFSPtr)(int, void*, int);
 typedef void (USYNC_CALL_CONV *CloseFileVFSPtr)(int);
+typedef int (USYNC_CALL_CONV *InitDirListVFSPtr)(const char*, const char*, const char*);
+typedef int (USYNC_CALL_CONV *InitSubDirsVFSPtr)(const char*, const char*, const char*);
 
 typedef void (USYNC_CALL_CONV *SetSpringConfigFilePtr)(const char*);
 typedef const char * (USYNC_CALL_CONV *GetSpringConfigFilePtr)();
@@ -377,6 +379,8 @@ class SpringUnitSyncLib : public SL::NonCopyable
      * @return wxarraystring of results
      */
     wxArrayString FindFilesVFS( const wxString& name );
+    wxArrayString DirListVFS(const wxString& path , const wxString &pattern, const wxString &modes = _T("Mmb") );
+    wxArrayString SubDirsVFS(const wxString& path , const wxString &pattern, const wxString &modes = _T("Mmb") );
     int OpenFileVFS( const wxString& name );
     int FileSizeVFS( int handle );
     int ReadFileVFS( int handle, void* buffer, int bufferLength );
@@ -488,6 +492,7 @@ class SpringUnitSyncLib : public SL::NonCopyable
 
 
   protected:
+    wxArrayString FindVFSCommon(int handle );
     SpringUnitSyncLib( const SpringUnitSyncLib& );
     //! Keeps track if unitsync is loaded or not.
     bool m_loaded;
@@ -595,6 +600,8 @@ class SpringUnitSyncLib : public SL::NonCopyable
     FileSizeVFSPtr m_file_size_vfs;
     ReadFileVFSPtr m_read_file_vfs;
     CloseFileVFSPtr m_close_file_vfs;
+    InitDirListVFSPtr m_init_dirlist_vfs;
+    InitSubDirsVFSPtr m_init_subdirs_vfs;
 
     GetSpringVersionPtr m_get_spring_version;
 

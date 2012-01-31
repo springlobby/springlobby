@@ -55,4 +55,15 @@ public:
 		QDeclarativeImageProvider::ImageType imageType () const { return QDeclarativeImageProvider::Image; }
 };
 
+class VfsImageProvider : public QDeclarativeImageProvider
+{
+public:
+    VfsImageProvider()
+        : QDeclarativeImageProvider(QDeclarativeImageProvider::Image)
+      { }
+
+      virtual QImage requestImage ( const QString & id, QSize * size, const QSize & requestedSize );
+        QDeclarativeImageProvider::ImageType imageType () const { return QDeclarativeImageProvider::Image; }
+};
+
 #endif // IMAGEPROVIDER_H

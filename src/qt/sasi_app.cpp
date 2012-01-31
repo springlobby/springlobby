@@ -98,8 +98,8 @@ SasiApp::SasiApp(int argc, char *argv[])
 
 SasiApp::~SasiApp()
 {
-    delete bl_model;
-    delete m_server;
+//    delete bl_model;
+//    delete m_server;
 }
 
 int SasiApp::exec()
@@ -119,15 +119,9 @@ int SasiApp::exec()
         splash = new QSplashScreen(show_screen,splash_pixmap);
         splash->show();
     }
-    wxLogChain* logchain = 0;
-    wxLog::SetActiveTarget( new wxLogChain( new wxLogStream( &std::cout ) ) );
 
-    //this needs to called _before_ mainwindow instance is created
-    wxInitAllImageHandlers();
-    wxFileSystem::AddHandler(new wxZipFSHandler);
-    wxSocketBase::Initialize();
-
-    usync().FastLoadUnitSyncLibInit( );
+//    usync().FastLoadUnitSyncLibInit( );
+    usync().ReloadUnitSyncLib( );
 
     QDeclarativeView view(show_screen);
     QString qmldir;
@@ -155,6 +149,7 @@ int SasiApp::exec()
     view.engine()->addImageProvider("minimaps", new MinimapImageProvider);
     view.engine()->addImageProvider("graphics", new GraphicsProvider);
     view.engine()->addImageProvider("sides", new SideImageProvider);
+    view.engine()->addImageProvider("vfs", new VfsImageProvider);
 #if USE_OPENGL
     QGLFormat format = QGLFormat::defaultFormat();
 #ifdef Q_WS_MAC
@@ -170,27 +165,29 @@ int SasiApp::exec()
     view.setAttribute(Qt::WA_NoSystemBackground);
     view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
 
-    m_server = new TASServer( IServerEvents::simple );
-    serverSelector().SetCurrentServer( m_server );
-    const wxString servername = sett().GetDefaultServer();
-    const wxString username = sett().GetServerAccountNick( servername );
-    const wxString password = sett().GetServerAccountPass( servername );
+//    m_server = new TASServer( IServerEvents::simple );
+//    serverSelector().SetCurrentServer( m_server );
+//    const wxString servername = sett().GetDefaultServer();
+//    const wxString username = sett().GetServerAccountNick( servername );
+//    const wxString password = sett().GetServerAccountPass( servername );
 
-    serverSelector().GetServer().SetUsername( username );
-    serverSelector().GetServer().SetPassword( password );
-    if ( sett().GetServerAccountSavePass( servername ) )
-    {
-        if ( serverSelector().GetServer().IsPasswordHash(password) ) sett().SetServerAccountPass( servername, password );
-        else sett().SetServerAccountPass( servername, serverSelector().GetServer().GetPasswordHash( password ) );
-    }
-    else
-    {
-        sett().SetServerAccountPass( servername, _T("") );
-    }
-    const wxString host = sett().GetServerHost( servername );
-    const int port = sett().GetServerPort( servername );
-    serverSelector().GetServer().Connect( servername, host, port );
+//    serverSelector().GetServer().SetUsername( username );
+//    serverSelector().GetServer().SetPassword( password );
+//    if ( sett().GetServerAccountSavePass( servername ) )
+//    {
+//        if ( serverSelector().GetServer().IsPasswordHash(password) ) sett().SetServerAccountPass( servername, password );
+//        else sett().SetServerAccountPass( servername, serverSelector().GetServer().GetPasswordHash( password ) );
+//    }
+//    else
+//    {
+//        sett().SetServerAccountPass( servername, _T("") );
+//    }
+//    const wxString host = sett().GetServerHost( servername );
+//    const int port = sett().GetServerPort( servername );
+//    serverSelector().GetServer().Connect( servername, host, port );
 
+
+    usync().GetMod( SLcustomizations().GetModname() );
     //reordering will prolly break stuff like sides list
     MaplistModel maplist_model( usync().GetMapList() );
     SideModel side_model( SLcustomizations().GetModname() );
@@ -199,11 +196,11 @@ int SasiApp::exec()
     ScreenResolutionModel screenres_model(this);
     MissionModel mission_model(this);
 
-    //! TODO switch bakc to modname
-    wxString modname = SLcustomizations().GetModname();
-    bl_model = new BattlelistModel( modname.SubString(0,10), this );
+//    //! TODO switch bakc to modname
+//    wxString modname = SLcustomizations().GetModname();
+//    bl_model = new BattlelistModel( modname.SubString(0,10), this );
 
-    serverSelector().GetServer().Update( 100 );
+//    serverSelector().GetServer().Update( 100 );
 
     spring().connect( &spring(), SIGNAL(springStarted()), &audio_manager, SLOT(pause()));
     spring().connect( &spring(), SIGNAL(springStopped()), &audio_manager, SLOT(resume()));
@@ -218,7 +215,7 @@ int SasiApp::exec()
     ctxt->setContextProperty("presetModel", &preset_model );
     ctxt->setContextProperty("screenresModel", &screenres_model );
     ctxt->setContextProperty("missionModel", &mission_model );
-    ctxt->setContextProperty("battlelistModel", bl_model);
+//    ctxt->setContextProperty("battlelistModel", bl_model);
 
     const int sleep_seconds = -1;
     for ( int i = sleep_seconds; splash && i > 0; i-- ) {
@@ -240,16 +237,16 @@ int SasiApp::exec()
         return error_window.exec();
     }
 
-    QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
-    timer->start(100);
-	bl_model->reload();
+//    QTimer *timer = new QTimer(this);
+//    connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
+//    timer->start(100);
+//	bl_model->reload();
     view.show();
     view.setFocus();
     emit appLoaded();
 
     int ret = QApplication::exec();
-    serverSelector().GetServer().Disconnect();
+//    serverSelector().GetServer().Disconnect();
     audio_manager.wait( 5 /*seconds*/ );
     sett().SaveSettings();
     return ret;
@@ -306,6 +303,14 @@ bool SasiApp::CmdInit()
     if ( !wxDirExists( GetConfigfileDir() ) )
         wxMkdir( GetConfigfileDir() );
 
+    wxLogChain* logchain = 0;
+    wxLog::SetActiveTarget( new wxLogChain( new wxLogStream( &std::cout ) ) );
+
+    //this needs to called _before_ mainwindow instance is created
+    wxInitAllImageHandlers();
+    wxFileSystem::AddHandler(new wxZipFSHandler);
+    wxSocketBase::Initialize();
+
     usync().FastLoadUnitSyncLib( sett().GetCurrentUsedUnitSync() );
 
     qDebug() << QString( "shortname: %1").arg( shortname_value );
@@ -318,11 +323,11 @@ bool SasiApp::CmdInit()
     return true;
 }
 
-void SasiApp::Update()
-{
-    static unsigned int count = 0;
-    serverSelector().GetServer().Update( 100 );
-    count++;
-	if ( count % 113 == 0 )
-		bl_model->reload();
-}
+//void SasiApp::Update()
+//{
+//    static unsigned int count = 0;
+//    serverSelector().GetServer().Update( 100 );
+//    count++;
+//	if ( count % 113 == 0 )
+//		bl_model->reload();
+//}

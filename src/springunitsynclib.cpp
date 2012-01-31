@@ -210,6 +210,8 @@ void SpringUnitSyncLib::_Load( const wxString& path )
 		GetLibFuncPtr( m_libhandle, _T("FileSizeVFS"),						m_file_size_vfs );
 		GetLibFuncPtr( m_libhandle, _T("ReadFileVFS"),						m_read_file_vfs );
 		GetLibFuncPtr( m_libhandle, _T("CloseFileVFS"),						m_close_file_vfs );
+        GetLibFuncPtr( m_libhandle, _T("InitDirListVFS"),					m_init_dirlist_vfs );
+        GetLibFuncPtr( m_libhandle, _T("InitSubDirsVFS"),					m_init_subdirs_vfs );
 
 		GetLibFuncPtr( m_libhandle, _T("GetSpringVersion"),					m_get_spring_version );
 
@@ -352,9 +354,11 @@ void SpringUnitSyncLib::_Init()
 {
   if ( _IsLoaded() && m_init != NULL )
   {
+#ifndef SL_QT_MODE //log stuff segfaults otherwise
     wxLog *currentarget = wxLog::GetActiveTarget();
     wxLog *templogger = new wxLogGui();
     wxLog::SetActiveTarget( templogger );
+#endif
 
     m_current_mod = wxEmptyString;
     m_init( true, 1 );
@@ -365,8 +369,10 @@ void SpringUnitSyncLib::_Init()
     	wxLogError( _T("%s"), errors[i].c_str() );
     }
 
+#ifndef SL_QT_MODE
     wxLog::SetActiveTarget( currentarget );
     delete templogger;
+#endif
   }
 }
 
@@ -1023,23 +1029,44 @@ int SpringUnitSyncLib::ProcessUnitsNoChecksum()
 }
 
 
+wxArrayString SpringUnitSyncLib::FindVFSCommon( int handle)
+{
+    wxArrayString ret;
+    //thanks to assbars awesome edit we now get different invalid values from init and find
+    if ( handle != -1 ) {
+        do
+        {
+            char buffer[1025];
+            handle = m_find_files_vfs( handle, &buffer[0], 1024 );
+            buffer[1024] = 0;
+            ret.Add( WX_STRINGC( &buffer[0] ) );
+        }while ( handle );
+    }
+    return ret;
+}
+
+wxArrayString SpringUnitSyncLib::DirListVFS( const wxString& path, const wxString& patterns, const wxString& modes )
+{
+    InitLib( m_find_files_vfs );
+    UNITSYNC_EXCEPTION( m_init_dirlist_vfs, _T("Function was not in unitsync library.") );
+    int handle = m_init_dirlist_vfs( path.mb_str(wxConvUTF8), patterns.mb_str(wxConvUTF8), modes.mb_str(wxConvUTF8) );
+    return FindVFSCommon(handle);
+}
+
+wxArrayString SpringUnitSyncLib::SubDirsVFS( const wxString& path, const wxString& patterns, const wxString& modes )
+{
+    InitLib( m_find_files_vfs );
+    UNITSYNC_EXCEPTION( m_init_subdirs_vfs, _T("Function was not in unitsync library.") );
+    int handle = m_init_subdirs_vfs( path.mb_str(wxConvUTF8), patterns.mb_str(wxConvUTF8), modes.mb_str(wxConvUTF8) );
+    return FindVFSCommon(handle);
+}
+
 wxArrayString SpringUnitSyncLib::FindFilesVFS( const wxString& name )
 {
-  InitLib( m_find_files_vfs );
+    InitLib( m_find_files_vfs );
 	UNITSYNC_EXCEPTION( m_init_find_vfs, _T("Function was not in unitsync library.") );
 	int handle = m_init_find_vfs( name.mb_str(wxConvUTF8) );
-	wxArrayString ret;
-	//thanks to assbars awesome edit we now get different invalid values from init and find
-	if ( handle != -1 ) {
-		do
-		{
-			char buffer[1025];
-			handle = m_find_files_vfs( handle, &buffer[0], 1024 );
-			buffer[1024] = 0;
-			ret.Add( WX_STRINGC( &buffer[0] ) );
-		}while ( handle );
-	}
-  return ret;
+    return FindVFSCommon(handle);
 }
 
 
@@ -1724,5 +1751,6 @@ float SpringUnitSyncLib::GetKeyValue( const wxString& key, float defval )
 {
 	InitLib( m_parser_string_key_get_float_value );
 
-	return m_parser_string_key_get_float_value( key.mb_str(), defval );
+    return m_parser_string_key_get_float_value( key.mb_str(), defval );
 }
+

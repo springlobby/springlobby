@@ -1,29 +1,40 @@
 #include "missionmodel.h"
-#include "springunitsync.h"
+#include "springunitsynclib.h"
 #include "customizations.h"
 
-#include <boost/algorithm/string.hpp>
+#include <QDebug>
 
 MissionModel::MissionModel(QObject *parent) :
     QAbstractListModel(parent)
 {
-    wxString fn = _T("Mission/*.txt");
-    wxArrayString res = usync().FindFilesVFS( fn );
+    wxString mission_dir;
+    wxArrayString mission_dirs = susynclib().SubDirsVFS( _T("missions"), _T("*"), _T("M") );//only mod vfs part
 
-    foreach( fn, res ) {
-        wxString content = usync().GetTextfileAsString(  SLcustomizations().GetModname(), fn );
-        wxString title = content.BeforeFirst( '\n' );
-        wxString intro = content.AfterFirst( '\n' );
-        wxString image = fn;
-        image.Replace( _T(".txt"), _T(".png") );
-        wxString script = fn;
-        script.Replace( _T(".txt"), _T(".script") );
-        Mission m;
-        m.intro = ToQString( intro );
-        m.title = ToQString( title );
-        m.script = ToQString( script );
-        m.image = ToQString( image );
-        m_missions.append( m );
+    foreach( mission_dir, mission_dirs ) {
+        try {
+            const wxArrayString mission_pics = susynclib().DirListVFS( mission_dir, _T("*.png") );
+            if ( mission_pics.size() < 1 )
+                continue;
+            const wxString image = mission_pics[0];
+            const wxArrayString mission_scripts = susynclib().DirListVFS( mission_dir, _T("*.script") );
+            if ( mission_scripts.size() < 1 )
+                continue;
+            const wxString script = mission_scripts[0];
+            const wxArrayString mission_txt = susynclib().DirListVFS( mission_dir, _T("*.txt") );
+            if ( mission_txt.size() < 1 )
+                continue;
+            const wxString content = usync().GetTextfileAsString(  SLcustomizations().GetModname(), mission_txt[0] );
+            const wxString title = content.BeforeFirst( '\n' );
+            const wxString intro = content.AfterFirst( '\n' );
+
+            Mission m;
+            m.intro = ToQString( intro );
+            m.title = ToQString( title );
+            m.script = ToQString( script );
+            m.image = ToQString( image );
+            qDebug() << m.title << " " << m.script << " " << ToQString( mission_dir );
+            m_missions.append( m );
+        } catch ( std::exception& e ) { continue; }
     }
 
     QHash<int, QByteArray> roles;
