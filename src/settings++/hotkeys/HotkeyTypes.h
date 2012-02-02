@@ -55,6 +55,8 @@ public:
 	wxString resolveKeySymKey( const wxString& key ) const;
 	bool operator==( const key_binding& other ) const;
 
+	bool isCmd1MatchingCmd2( const wxString& cmd1, const wxString& cmd2 );
+
 private:
 	const wxString resolveKeySymSetName( const wxString& symName ) const;
 	const wxString resolveKeySymSetKey( const wxString& key ) const;

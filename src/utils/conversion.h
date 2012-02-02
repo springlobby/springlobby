@@ -133,9 +133,12 @@ class StringtokenizerVectorized : public std::vector<wxString> {
 //! a wxString extension class to boost::format
 struct wxFormat : public boost::format
 {
-	wxFormat( const wxString& format )
+    explicit wxFormat( const wxString& format )
 		: boost::format( STD_STRING( format ) )
 	{}
+    explicit wxFormat( const std::string& format )
+        : boost::format( format )
+    {}
 
 	wxString str() const
 	{

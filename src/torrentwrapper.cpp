@@ -490,7 +490,7 @@ void TorrentWrapper::HandleCompleted()
 		libtorrent::torrent_handle handle = it->second;
 		if ( handle.is_valid() && handle.is_seed() )
 		{
-			wxString dest_filename = sett().GetCurrentUsedDataDir() +
+			wxString dest_filename = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() +
 									 getDataSubdirForType( convertMediaType( info.m_type ) ) +
 									 wxFileName::GetPathSeparator() +
 									 TowxString( handle.get_torrent_info().file_at( 0 ).path.string() );

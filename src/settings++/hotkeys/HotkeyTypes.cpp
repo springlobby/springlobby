@@ -193,7 +193,7 @@ void key_binding::unbindAllCmds( const wxString& cmd )
 
 	for ( key_command_set::const_iterator iter = keyCmdSetCopy.begin(); iter != keyCmdSetCopy.end(); ++iter )
 	{
-		if ( iter->second == cmd )
+		if ( key_binding::isCmd1MatchingCmd2( cmd, iter->second ) )
 		{
 			this->unbind( iter->second, iter->first );
 		}
@@ -201,7 +201,7 @@ void key_binding::unbindAllCmds( const wxString& cmd )
 
 	for ( key_command_set::const_iterator iter = keyCmdSetAnyCopy.begin(); iter != keyCmdSetAnyCopy.end(); ++iter )
 	{
-		if ( iter->second == cmd )
+		if ( key_binding::isCmd1MatchingCmd2( cmd, iter->second ) )
 		{
 			this->unbind( iter->second, iter->first );
 		}
@@ -409,3 +409,14 @@ const key_binding key_binding::operator-(const key_binding& other) const
 	return resBind;
 }
 
+bool key_binding::isCmd1MatchingCmd2( const wxString& cmd1, const wxString& cmd2 )
+{
+	int cmd1SepPos = cmd1.Find( _T(' ') );
+	int cmd2SepPos = cmd2.Find( _T(' ') );
+
+	if ( (cmd1SepPos != wxNOT_FOUND) || ((cmd1SepPos == wxNOT_FOUND) && (cmd2SepPos == wxNOT_FOUND)) )
+		return cmd1 == cmd2; //simple compare
+
+	//cmd1 has no params, cmd2 has params. like "specteam" and "specteam 5"
+	return ( cmd2.substr(0, cmd2SepPos) == cmd1 ); //just compare "specteam" and "specteam"
+}

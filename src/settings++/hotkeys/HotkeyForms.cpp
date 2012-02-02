@@ -191,7 +191,7 @@ AddSelectionCmdDlgBase::AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id,
 	
 	fgSizer6->Add( m_checkBoxComEx, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
-	m_staticText17 = new wxStaticText( this, wxID_ANY, wxT("Commander"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText17 = new wxStaticText( this, wxID_ANY, wxT("Manual Fire Unit"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText17->Wrap( -1 );
 	fgSizer6->Add( m_staticText17, 0, wxALL, 5 );
 	

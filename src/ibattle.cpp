@@ -54,10 +54,10 @@ bool IBattle::IsSynced()
     LoadMod();
     LoadMap();
     bool synced = true;
-    if ( !m_host_map.hash.IsEmpty() ) synced = synced && (m_local_map.hash == m_host_map.hash);
-    if ( !m_host_map.name.IsEmpty() ) synced = synced && (m_local_map.name == m_host_map.name);
-    if ( !m_host_mod.hash.IsEmpty() ) synced = synced && (m_local_mod.hash == m_host_mod.hash);
-    if ( !m_host_mod.name.IsEmpty() ) synced = synced && (m_local_mod.name == m_host_mod.name);
+    if ( !m_host_map.hash.IsEmpty() && m_host_map.hash != '0' && m_host_map.hash != m_local_map.hash ) synced = false;
+    else if ( !m_host_map.name.IsEmpty() && m_local_map.name != m_host_map.name) synced = false;
+    else if ( !m_host_mod.hash.IsEmpty() && m_host_mod.hash != '0' && m_host_mod.hash != m_local_mod.hash ) synced = false;
+    else if ( !m_host_mod.name.IsEmpty() && m_local_mod.name != m_host_mod.name) synced = false;
     return synced;
 }
 
@@ -710,7 +710,7 @@ void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
     m_map_loaded = false;
     m_host_map.name = mapname;
     m_host_map.hash = hash;
-	if ( !m_host_map.hash.IsEmpty() )
+	if ( !m_host_map.hash.IsEmpty() && m_host_map.hash != '0' )
 		m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
 	else
 		m_map_exists = usync().MapExists( m_host_map.name );
@@ -727,7 +727,7 @@ void IBattle::SetLocalMap(const UnitSyncMap& map)
   if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
     m_local_map = map;
     m_map_loaded = true;
-	if ( !m_host_map.hash.IsEmpty() )
+	if ( !m_host_map.hash.IsEmpty() && m_host_map.hash != '0' )
 		m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
 	else
 		m_map_exists = usync().MapExists( m_host_map.name );
@@ -779,7 +779,7 @@ void IBattle::SetHostMod( const wxString& modname, const wxString& hash )
     m_mod_loaded = false;
     m_host_mod.name = modname;
     m_host_mod.hash = hash;
-    if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );
+    if ( !m_host_mod.hash.IsEmpty() && m_host_mod.hash != '0' ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );
     else m_mod_exists = usync().ModExists( m_host_mod.name );
   }
 }
@@ -792,7 +792,7 @@ void IBattle::SetLocalMod( const UnitSyncMod& mod )
     m_previous_local_mod_name = m_local_mod.name;
     m_local_mod = mod;
     m_mod_loaded = true;
-    if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );
+    if ( !m_host_mod.hash.IsEmpty() && m_host_mod.hash != '0' ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );
     else m_mod_exists = usync().ModExists( m_host_mod.name );
   }
 }
@@ -894,9 +894,9 @@ void IBattle::OnSelfLeftBattle()
 
 void IBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
-  if ( !m_host_mod.hash.IsEmpty() ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash);
+  if ( !m_host_mod.hash.IsEmpty() && m_host_mod.hash != '0' ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash);
   else m_mod_exists = usync().ModExists( m_host_mod.name );
-  if ( !m_host_map.hash.IsEmpty() )  m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+  if ( !m_host_map.hash.IsEmpty() && m_host_map.hash != '0' )  m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
   else  m_map_exists = usync().MapExists( m_host_map.name );
 }
 

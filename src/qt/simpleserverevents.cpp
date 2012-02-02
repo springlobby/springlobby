@@ -112,7 +112,7 @@ void SimpleServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
     {
         User& user = m_serv.GetUser( nick );
 
-        UserStatus oldStatus = user.GetStatus();
+//        UserStatus oldStatus = user.GetStatus();
         user.SetStatus( status );
 
         if ( user.GetBattle() != 0 )
@@ -853,16 +853,16 @@ void SimpleServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxStr
     wxString message = mutee;
     wxString desc = description;
     wxString mutetime = GetWordParam( desc );
-	long time;
-	if ( mutetime == _T("indefinite") )
-		message << _(" indefinite time remaining");
-	else if ( mutetime.ToLong(&time) )
-		message << wxFormat( _(" %d minutes remaining") ) % ( time/60 + 1 );
-	else
-		message << mutetime;
-	if ( !desc.IsEmpty() )
-		message << _T(", ") << desc;
-//    mutelistWindow( message );
+    long time;
+    if ( mutetime == _T("indefinite") )
+        message << _(" indefinite time remaining");
+    else if ( mutetime.ToLong(&time) )
+        message << wxString::Format( _(" %d minutes remaining"), time/60 + 1 );
+    else
+        message << mutetime;
+    if ( !desc.IsEmpty() )
+        message << _T(", ") << desc;
+    //    mutelistWindow( message );
 }
 
 void SimpleServerEvents::OnMutelistEnd( const wxString& /*channel*/ )

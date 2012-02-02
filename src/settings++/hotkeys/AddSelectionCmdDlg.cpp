@@ -27,7 +27,7 @@ wxString AddSelectionCmdDlg::validateInputFields()
 	}
 	else if ( this->m_radioBtnSelPerc->GetValue() )
 	{
-		if ( this->m_textCtrlSelCount->GetLabel().ToLong( &dummy ) == false || dummy < 0 || dummy > 100 )
+		if ( this->m_textCtrlSelPerc->GetLabel().ToLong( &dummy ) == false || dummy < 0 || dummy > 100 )
 		{
 			return _("Invalid value for selection percentage!");
 		}
@@ -126,11 +126,11 @@ wxString AddSelectionCmdDlg::getConditionsAndSelectString() const
 
 	if ( this->m_checkBoxComInc->GetValue() )
 	{
-		str += wxT("_Commander");
+		str += wxT("_ManualFireUnit");
 	}
 	else if ( this->m_checkBoxComEx->GetValue() )
 	{
-		str += wxT("_Not_Commander");
+		str += wxT("_Not_ManualFireUnit");
 	}
 
 	if ( this->m_checkBoxTransInc->GetValue() )

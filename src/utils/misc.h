@@ -44,7 +44,6 @@ class uninitialized_array
  */
 double LevenshteinDistance(wxString s, wxString t);
 
-
 /**
  * @brief Gets the closest match for s in a, using LevenshteinDistance.
  * @param distance If not NULL, *distance is set to the edit distance from s to the return value.
