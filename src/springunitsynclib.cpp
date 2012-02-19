@@ -1033,6 +1033,7 @@ wxArrayString SpringUnitSyncLib::FindVFSCommon( int handle)
 {
     wxArrayString ret;
     //thanks to assbars awesome edit we now get different invalid values from init and find
+    //error in init is -1, error in find 0
     if ( handle != -1 ) {
         do
         {
@@ -1332,6 +1333,11 @@ int SpringUnitSyncLib::OpenArchive( const wxString& name )
   return m_open_archive( name.mb_str( wxConvUTF8 ) );
 }
 
+void SpringUnitSyncLib::AddArchive(const wxString &name)
+{
+    InitLib( m_add_archive );
+    m_add_archive( name.mb_str( wxConvUTF8 ) );
+}
 
 void SpringUnitSyncLib::CloseArchive( int archive )
 {

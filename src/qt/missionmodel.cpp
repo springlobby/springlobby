@@ -1,28 +1,32 @@
 #include "missionmodel.h"
 #include "springunitsynclib.h"
 #include "customizations.h"
-
+#include "exceptions.h"
+#include <utils/conversion.h>
 #include <QDebug>
+
 
 MissionModel::MissionModel(QObject *parent) :
     QAbstractListModel(parent)
 {
     wxString mission_dir;
-    wxArrayString mission_dirs = susynclib().SubDirsVFS( _T("missions"), _T("*"), _T("M") );//only mod vfs part
+    std::string md = SLcustomizations().DataBasePath().append( "/missions/" ).toStdString();
+    wxArrayString mission_dirs = susynclib().SubDirsVFS( TowxString(md), _T("*"), _T("r") );//only raw vfs part
 
     foreach( mission_dir, mission_dirs ) {
-        try {
-            const wxArrayString mission_pics = susynclib().DirListVFS( mission_dir, _T("*.png") );
+//        try
+        {
+            const wxArrayString mission_pics = susynclib().DirListVFS( mission_dir, _T("*.png"), _T("r") );
             if ( mission_pics.size() < 1 )
-                continue;
+                throw content_exception( QString( "mission pic in ").append(ToQString(mission_dir)).toStdString() );
             const wxString image = mission_pics[0];
-            const wxArrayString mission_scripts = susynclib().DirListVFS( mission_dir, _T("*.script") );
+            const wxArrayString mission_scripts = susynclib().DirListVFS( mission_dir, _T("*.script"), _T("r") );
             if ( mission_scripts.size() < 1 )
-                continue;
+                throw content_exception( QString( "mission script in ").append(ToQString(mission_dir)).toStdString() );
             const wxString script = mission_scripts[0];
-            const wxArrayString mission_txt = susynclib().DirListVFS( mission_dir, _T("*.txt") );
+            const wxArrayString mission_txt = susynclib().DirListVFS( mission_dir, _T("*.txt"), _T("r") );
             if ( mission_txt.size() < 1 )
-                continue;
+                throw content_exception( QString( "mission description in ").append(ToQString(mission_dir)).toStdString() );
             const wxString content = usync().GetTextfileAsString(  SLcustomizations().GetModname(), mission_txt[0] );
             const wxString title = content.BeforeFirst( '\n' );
             const wxString intro = content.AfterFirst( '\n' );
@@ -34,7 +38,8 @@ MissionModel::MissionModel(QObject *parent) :
             m.image = ToQString( image );
             qDebug() << m.title << " " << m.script << " " << ToQString( mission_dir );
             m_missions.append( m );
-        } catch ( std::exception& e ) { continue; }
+        }
+//        catch ( std::exception& e ) { continue; }
     }
 
     QHash<int, QByteArray> roles;

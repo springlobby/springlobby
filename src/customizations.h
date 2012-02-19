@@ -32,7 +32,7 @@ class Customizations {
     public:
         ~Customizations() {}
 
-		bool Init( const wxString& archive_name );
+        bool Init( const wxString& );
 		bool Active() const;
 
         const wxString& GetModname() const;

@@ -172,7 +172,8 @@ SOURCES += sasi_main.cpp \
     battlelistmodel.cpp \
     qbattleroom.cpp \
     qminimap.cpp \
-    missionmodel.cpp
+    missionmodel.cpp \
+    exceptions.cpp
 
 HEADERS += \
     ../springunitsynclib.h \
@@ -255,7 +256,8 @@ HEADERS += \
     qbattleroom.h \
     ../iserverevents.h \
     qminimap.h \
-    missionmodel.h
+    missionmodel.h \
+    exceptions.h
 
 INCLUDEPATH += ..
 INCLUDEPATH += .

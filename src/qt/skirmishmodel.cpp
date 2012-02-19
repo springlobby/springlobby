@@ -10,35 +10,26 @@ SkirmishModel::SkirmishModel(QObject *parent)
 	: QAbstractListModel(parent),
 	m_mod_customs( SLcustomizations().GetCustomizations() )
 {
-	m_battle.SetHostMod( SLcustomizations().GetModname(), wxEmptyString );
-	m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, SLcustomizations().GetModname() );
-	const wxString sk_dir = m_mod_customs.getSingleValue( _T("skirmish_directory"), OptionsWrapper::ModCustomizations );
-
+    m_battle.SetHostMod( SLcustomizations().Archive(), wxEmptyString );
+    bool loaded = m_battle.CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, SLcustomizations().Archive() );
+    assert ( loaded );
 	//this block populates the radiobox and loads the skirmish options into the map
-	OptionsWrapper::GameOption optFlag = OptionsWrapper::ModCustomizations;
-	for ( SpringUnitSync::OptionMapListConstIter it = m_mod_customs.m_opts[optFlag].list_map.begin(); it != m_mod_customs.m_opts[optFlag].list_map.end(); ++it) {
-		mmOptionList current = it->second;
-		if ( _T("scenarios") == current.key ) {
-			wxString tooltip;//use?
-			int i = 0;
-			for ( ListItemVec::iterator itor = current.listitems.begin(); itor != current.listitems.end(); ++itor )
-			{
-				tooltip+= _T("\n") + itor->name + _T(": ") + itor->desc;
-				OptionsWrapper temp;
-				wxString filename = sk_dir + _T("/") + itor->key + _T(".lua") ;
-				temp.loadOptions( OptionsWrapper::SkirmishOptions, SLcustomizations().Archive(), filename );
-				m_skirmishes.push_back( std::make_pair( itor->name, temp ) );
-				i++;
-			}
-			break;
-		}
+    std::string md = SLcustomizations().DataBasePath().append( "/skirmish/" ).toStdString();
+    wxArrayString skirmishes = susynclib().DirListVFS( TowxString(md), _T("*.lua"), _T("r") );//only raw vfs part
+
+    foreach ( const wxString skirmish_file, skirmishes )
+    {
+        wxString skirmish_name = skirmish_file.AfterLast('/').BeforeLast('.');
+        OptionsWrapper temp;
+        loaded = temp.loadOptions( OptionsWrapper::SkirmishOptions, SLcustomizations().Archive(),
+                                   wxString(_T("skirmish/")) + skirmish_name + wxString(_T(".lua")) );
+        assert( loaded );
+        m_skirmishes.push_back( std::make_pair( skirmish_name, temp ) );
 	}
 
-	optFlag = OptionsWrapper::SkirmishOptions;
 //    {
 //        mmOptionList suggested_maps;
 //        mmOptionList suggested_sides;
-//    //	assert( m_skirmishes.size() );
 //        OptionsWrapper map_op = m_skirmishes.begin()->second;
 //        for ( SpringUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin();
 //              it != map_op.m_opts[optFlag].list_map.end(); ++it) {

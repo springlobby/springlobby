@@ -107,23 +107,7 @@ int SasiApp::exec()
     QSplashScreen* splash = 0;
     QPixmap splash_pixmap;
     QWidget* show_screen = desktop()->screen( 0 );
-    try {
-        QString graphic_dir = SLcustomizations().GraphicsDir() ;
-    }
-    catch ( std::exception& e ) {
-            qDebug() << e.what();
-            throw e;
-    }
-    if ( splash_pixmap.load( SLcustomizations().GraphicsDir() + "/splash.png" ) )
-    {
-        splash = new QSplashScreen(show_screen,splash_pixmap);
-        splash->show();
-    }
 
-//    usync().FastLoadUnitSyncLibInit( );
-    usync().ReloadUnitSyncLib( );
-
-    QDeclarativeView view(show_screen);
     QString qmldir;
     try {
         qmldir = SLcustomizations().QmlDir();
@@ -135,6 +119,17 @@ int SasiApp::exec()
         QErrorWindow error_win ( copy );
         return error_win.exec();
     }
+
+    if ( splash_pixmap.load( SLcustomizations().GraphicsDir() + "/splash.png" ) )
+    {
+        splash = new QSplashScreen(show_screen,splash_pixmap);
+        splash->show();
+    }
+
+//    usync().FastLoadUnitSyncLibInit( );
+    usync().ReloadUnitSyncLib( );
+
+    QDeclarativeView view(show_screen);
 
     AudioManager audio_manager (this);
     audio_manager.start();
@@ -187,14 +182,15 @@ int SasiApp::exec()
 //    serverSelector().GetServer().Connect( servername, host, port );
 
 
-    usync().GetMod( SLcustomizations().GetModname() );
+    UnitSyncMod mod = usync().GetMod( SLcustomizations().Archive() );
+    usync().GetSides(SLcustomizations().Archive() );
     //reordering will prolly break stuff like sides list
     MaplistModel maplist_model( usync().GetMapList() );
-    SideModel side_model( SLcustomizations().GetModname() );
+    MissionModel mission_model(this);
     SkirmishModel skirmish_model;
     PresetModel preset_model(this);
     ScreenResolutionModel screenres_model(this);
-    MissionModel mission_model(this);
+    SideModel side_model( SLcustomizations().GetModname() );
 
 //    //! TODO switch bakc to modname
 //    wxString modname = SLcustomizations().GetModname();

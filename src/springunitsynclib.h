@@ -417,6 +417,7 @@ class SpringUnitSyncLib : public SL::NonCopyable
     wxString GetOptionListItemDesc( int optIndex, int itemIndex );
 
     int OpenArchive( const wxString& name );
+    void AddArchive( const wxString& name );
     void CloseArchive( int archive );
     int FindFilesArchive( int archive, int cur, wxString& nameBuf );
     int OpenArchiveFile( int archive, const wxString& name );

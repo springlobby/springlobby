@@ -49,18 +49,19 @@ const wxString& Customizations::GetModname() const
 
 const wxString& Customizations::Archive() const
 {
-        return m_archive;
+    return m_archive;
 }
 
 /** @brief Init
   *
   * @todo: document this function
   */
-bool Customizations::Init(const wxString& archive_name )
+bool Customizations::Init( const wxString& archive_name )
 {
-	m_archive = archive_name;
+    m_archive = archive_name;
+    susynclib().AddArchive( m_archive );
 	//!TODO require blocking usync init if it's not loaded
-	bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, archive_name );
+    bool ret = m_customs.loadOptions( OptionsWrapper::ModCustomizations, m_archive );
     if ( ret ) {
 		wxBitmap icon_bmp( wxNullBitmap );
 		if ( GetBitmap( _T("icon"), icon_bmp ) )
@@ -98,9 +99,9 @@ bool Customizations::GetBitmap( const wxString& key, wxBitmap& bitmap )
 	{
 		const wxString path = m_customs.getSingleValue( key );
 #ifdef SL_QT_MODE
-		wxBitmap icon_bmp ( wxQtConvertImage( usync().GetQImage( m_modname, path, false ) ) );
+        wxBitmap icon_bmp ( wxQtConvertImage( usync().GetQImage( m_archive, path, false ) ) );
 #else
-		wxBitmap icon_bmp (usync().GetImage( m_modname, path, false ) );
+        wxBitmap icon_bmp (usync().GetImage( m_archive, path, false ) );
 #endif
 		if( icon_bmp.IsOk() )
 		{
@@ -131,7 +132,7 @@ wxString Customizations::GetIntroText() const
 {
 	if ( !m_active )
 		return wxEmptyString;
-	return usync().GetTextfileAsString( m_modname, m_customs.getSingleValue( IntroKey ) );
+    return usync().GetTextfileAsString( m_archive, m_customs.getSingleValue( IntroKey ) );
 }
 
 /** @brief SLcustomizations
@@ -156,8 +157,8 @@ Customizations& SLcustomizations()
 bool Customizations::Init( const QString& shortname, const QString& version )
 {
 	m_shortname = shortname;
-    QString base_dir = DataBasePath();
-    bool init_success = Init( TowxString(base_dir) );
+    QString archive( m_shortname + "_Gui.sdd" );
+    bool init_success = Init( TowxString(archive) );
 	m_modname = usync().GetNameForShortname( TowxString(shortname), TowxString(version) );
 	return init_success;
 }
@@ -169,8 +170,7 @@ QString Customizations::DataBasePath()
 		return dataBasePath_;
 
 	QList<QString> checked_paths;
-	QString sub_path( "lobby/SpringLobby/customizations/" );
-	sub_path.append( m_shortname );
+    QString sub_path = "games/" + ToQString( m_archive );
 	for ( int i = 0; i < susynclib().GetSpringDataDirCount(); ++i ) {
 		QDir data ( ToQString( susynclib().GetSpringDataDirByIndex(i) ) );
 		checked_paths.append( data.absolutePath().append("/").append( sub_path ) );
