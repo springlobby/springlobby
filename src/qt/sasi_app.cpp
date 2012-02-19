@@ -257,12 +257,10 @@ bool SasiApp::CmdInit()
     PwdGuard pwd_guard;//makes us invulnerabel to cwd changes in usync loading
     QtArgCmdLine cmd;
     QtArg config_file( 'f', "config-file", "absolute path to config file", false, true );
-    QtArg customization( 'c', "customize", "Load lobby customizations from special archive.", true, true );
     QtArg shortname( 's', "shortname", "shortname.", true, true );
     QtArg version( 'r', "revision", "revision.", true, true );
     QtArg appname( 'n', "name", "name", true, true );
     cmd.addArg( config_file );
-    cmd.addArg( customization );
     cmd.addArg( shortname );
     cmd.addArg( version );
     cmd.addArg( appname );
@@ -289,7 +287,6 @@ bool SasiApp::CmdInit()
 #ifdef __WXMSW__
     sett().SetSearchSpringOnlyInSLPath( false );
 #endif
-    QString customization_value = customization.value().toString();
     QString shortname_value = shortname.value().toString();
     QString version_value = version.value().toString();
     setApplicationName(appname.value().toString());
@@ -314,7 +311,7 @@ bool SasiApp::CmdInit()
     usync().FastLoadUnitSyncLib( sett().GetCurrentUsedUnitSync() );
 
     qDebug() << QString( "shortname: %1").arg( shortname_value );
-    if ( !SLcustomizations().Init( TowxString(customization_value), shortname_value, version_value ) )
+    if ( !SLcustomizations().Init( shortname_value, version_value ) )
     {
         qDebug() << "init false";
         QMessageBox::critical( 0, "Fatal error", QString("loading customizations failed for ").append( shortname_value ) );

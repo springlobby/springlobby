@@ -35,19 +35,22 @@ SkirmishModel::SkirmishModel(QObject *parent)
 	}
 
 	optFlag = OptionsWrapper::SkirmishOptions;
-	mmOptionList suggested_maps;
-	mmOptionList suggested_sides;
-	assert( m_skirmishes.size() );
-	OptionsWrapper map_op = m_skirmishes.begin()->second;
-	for ( SpringUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin(); it != map_op.m_opts[optFlag].list_map.end(); ++it) {
-		mmOptionList current = it->second;
-		if ( _T("suggested_maps") == current.key ) {
-			suggested_maps = current;
-		}
-		else if ( _T("suggested_sides") == current.key ) {
-			suggested_sides = current;
-		}
-	}
+//    {
+//        mmOptionList suggested_maps;
+//        mmOptionList suggested_sides;
+//    //	assert( m_skirmishes.size() );
+//        OptionsWrapper map_op = m_skirmishes.begin()->second;
+//        for ( SpringUnitSync::OptionMapListConstIter it = map_op.m_opts[optFlag].list_map.begin();
+//              it != map_op.m_opts[optFlag].list_map.end(); ++it) {
+//            mmOptionList current = it->second;
+//            if ( _T("suggested_maps") == current.key ) {
+//                suggested_maps = current;
+//            }
+//            else if ( _T("suggested_sides") == current.key ) {
+//                suggested_sides = current;
+//            }
+//        }
+//    }
 	std::srand(time(NULL));
 
 	QHash<int, QByteArray> roles;

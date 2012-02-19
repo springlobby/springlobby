@@ -153,10 +153,11 @@ Customizations& SLcustomizations()
 #include "qt/qerrorwindow.h"
 #include <QCoreApplication>
 
-bool Customizations::Init( const wxString& archive_name, const QString& shortname, const QString& version )
+bool Customizations::Init( const QString& shortname, const QString& version )
 {
 	m_shortname = shortname;
-	bool init_success = Init( archive_name );
+    QString base_dir = DataBasePath();
+    bool init_success = Init( TowxString(base_dir) );
 	m_modname = usync().GetNameForShortname( TowxString(shortname), TowxString(version) );
 	return init_success;
 }

@@ -36,15 +36,11 @@ END_EVENT_TABLE()
 IntroGuide::IntroGuide()
 	: wxFrame( (wxFrame*)&ui().mw(), -1, _("Newbies guide"), wxPoint(50, 50), wxSize(800,600) )
 {
-	if ( SLcustomizations().Provides( Customizations::IntroKey ) )
-		SpringOverview = SLcustomizations().GetIntroText();
-	else {
-		SpringOverview << _("Spring is just an engine, alone it won't do much, games are games that run on the engine.\n");
-		SpringOverview << _("You will need to install at least a map and a game in order to play.\n\n");
-		SpringOverview << _("As a user, you can extend functionality downloading small scripts (LuaUI Widgets) and activate them ingame trough the F11-button list.\n\n");
-		SpringOverview << _("For players with previous RTS experience, one tricky part of spring is that fog of war is present, but not visualized by default ingame until you press the \"L\" button.\n\n");
-		SpringOverview << _("For developers, spring is highly customizable, with a scripting engine, you'd want to check out the forum/wiki to get started.\n"); // spring overview
-	}
+    SpringOverview << _("Spring is just an engine, alone it won't do much, games are games that run on the engine.\n");
+    SpringOverview << _("You will need to install at least a map and a game in order to play.\n\n");
+    SpringOverview << _("As a user, you can extend functionality downloading small scripts (LuaUI Widgets) and activate them ingame trough the F11-button list.\n\n");
+    SpringOverview << _("For players with previous RTS experience, one tricky part of spring is that fog of war is present, but not visualized by default ingame until you press the \"L\" button.\n\n");
+    SpringOverview << _("For developers, spring is highly customizable, with a scripting engine, you'd want to check out the forum/wiki to get started.\n"); // spring overview
 
 	InstallOverview << _("If you skip the automatic content installer for some reason, you can still download and install content manually.\n");
 	InstallOverview << _("The most popular download site is http://www.springfiles.com .\n");

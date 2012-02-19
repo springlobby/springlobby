@@ -27,6 +27,8 @@ class Customizations {
         bool m_active;
 
 		bool KeyExists( const wxString& key ) const;
+        bool Provides( const wxString& key ) const;
+
     public:
         ~Customizations() {}
 
@@ -40,19 +42,16 @@ class Customizations {
 
         const OptionsWrapper& GetCustomizations() const;
 
-		bool Provides( const wxString& key ) const;
-
 		wxString GetIntroText() const;
 
 		//! if key is found bitmap is changed and true returned
 		bool GetBitmap( const wxString& key, wxBitmap& bitmap );
 
 		static const wxString IntroKey;// ( _T("intro_file") );
-
-    friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
+        friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
 
 #ifdef SL_QT_MODE
-		bool Init( const wxString& archive_name, const QString& shortname, const QString& version );
+        bool Init(const QString& shortname, const QString& version );
 
 		struct DataException : public std::exception {
 			const QList<QString> errors_;
@@ -72,8 +71,8 @@ class Customizations {
 		QString QmlDir();
 		QString GraphicsDir();
 		QString SoundsDir();
-		QString MusicDir();
-                const QString& GetModshortname() const;
+        QString MusicDir();
+        const QString& GetModshortname() const;
 #endif
 };
 
