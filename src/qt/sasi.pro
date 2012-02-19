@@ -266,7 +266,7 @@ PKGCONFIG += openal sdl vorbis ogg vorbisfile
 
 unix {
 	CONFIG += link_pkgconfig
-	PKGCONFIG += libcurl
+        PKGCONFIG += libcurl libsdl
 	LIBS += $$system(wx-config --libs --unicode=yes) 
 	QMAKE_CXXFLAGS += $$system(wx-config --cxxflags)
 }
