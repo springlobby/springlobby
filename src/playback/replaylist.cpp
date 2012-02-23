@@ -35,7 +35,20 @@ void ReplayList::LoadPlaybacks( const wxArrayString& filenames )
     }
 }
 
-bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret ) const
+
+#define SEEK(x) if(replay.Seek(x)==wxInvalidOffset)return 0;
+int replayVersion( const wxString& ReplayPath )
+{
+    wxFile replay( ReplayPath, wxFile::read );
+    if ( !replay.IsOpened() ) return 0;
+    SEEK( 16 );
+    int version = 0;
+    replay.Read( &version, 4);
+    return version;
+}
+#undef SEEK
+
+bool ReplayList::GetReplayInfos (const wxString& ReplayPath, Replay& ret ) const
 {
     //wxLogMessage(_T("GetReplayInfos %s"), ReplayPath.c_str());
     //wxLOG_Info  ( STD_STRING( ReplayPath ) );
@@ -55,12 +68,13 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret ) cons
 
     ret.MapName = FileName.BeforeLast(_T('_'));
 
-    ret.battle.SetScript( GetScriptFromReplay( ReplayPath ) );
+    const int replay_version = replayVersion( ReplayPath );
+    ret.battle.SetScript( GetScriptFromReplay( ReplayPath, replay_version ) );
     //wxLogMessage(_T("Script: %s"), script.c_str());
 
     if ( ret.battle.GetScript().IsEmpty() ) return false;
 
-    GetHeaderInfo( ret, ReplayPath );
+    GetHeaderInfo( ret, ReplayPath, replay_version );
     ret.battle.GetBattleFromScript( false );
     ret.ModName = ret.battle.GetHostModName();
     ret.battle.SetBattleType( BT_Replay );
@@ -69,8 +83,7 @@ bool ReplayList::GetReplayInfos ( const wxString& ReplayPath, Replay& ret ) cons
 }
 
 #define SEEK(x) if(replay.Seek(x)==wxInvalidOffset)return script;
-
-wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath  ) const
+wxString ReplayList::GetScriptFromReplay (const wxString& ReplayPath  , const int version) const
 {
 
 	wxString script;
@@ -78,10 +91,11 @@ wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath  ) const
     {
         wxFile replay( ReplayPath, wxFile::read );
         if ( !replay.IsOpened() ) return script;
-		SEEK( 20 );
+        SEEK( 20 );
         int headerSize=0 ;
         replay.Read( &headerSize, 4);
-		SEEK( 64 );
+        const int seek = 64 + (version < 5 ? 0 : 240);
+		SEEK( seek );
 		wxFileOffset scriptSize=0;
         replay.Read( &scriptSize, 4);
 		scriptSize = clamp( wxFileOffset(scriptSize), wxFileOffset(0), replay.Length() );
@@ -99,12 +113,13 @@ wxString ReplayList::GetScriptFromReplay ( const wxString& ReplayPath  ) const
 }
 #undef SEEK
 #define SEEK(x) if(replay.Seek(x)==wxInvalidOffset)return;
-void ReplayList::GetHeaderInfo( Replay& rep, const wxString& ReplayPath ) const
+void ReplayList::GetHeaderInfo(Replay& rep, const wxString& ReplayPath , const int version) const
 {
     try
     {
         wxFile replay( ReplayPath, wxFile::read );
-		SEEK( 72 );
+        const int seek = 72 + (version < 5 ? 0 : 240);
+        SEEK( seek );
         int gametime = 0 ;
         replay.Read( &gametime, 4);
         rep.duration = gametime;
