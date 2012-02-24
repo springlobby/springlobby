@@ -444,6 +444,11 @@ const User& TASServer::GetMe() const {
     return GetUser( m_user );
 }
 
+wxString Useragent()
+{
+	return sett().Get( _T("Useragent"), GetAppName() ) + _T(" ") +
+		sett().Get( _T("Userversion"), GetSpringLobbyVersion(false) );
+}
 
 void TASServer::Login()
 {
@@ -454,8 +459,8 @@ void TASServer::Login()
 	localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
-    SendCmd ( _T("LOGIN"), m_user + _T(" ") + pass + _T(" ") +
-			  GetHostCPUSpeed() + _T(" ") + localaddr + _T(" SpringLobby ") + GetSpringLobbyVersion(false) + protocol  + _T("\ta sp"));
+    wxFormat login_cmd( _T("%s %s %s %s %s\t%s\ta sp") );
+    SendCmd ( _T("LOGIN"), (login_cmd % m_user % pass % GetHostCPUSpeed() % localaddr % Useragent() % protocol).str() );
 	m_id_transmission = true;
 }
 
