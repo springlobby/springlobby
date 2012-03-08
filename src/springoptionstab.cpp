@@ -294,6 +294,8 @@ void SpringOptionsTab::OnBrowseBundle( wxCommandEvent& /*unused*/ )
 
 void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
+    const bool reload_usync =
+            sett().GetUnitSync( sett().GetCurrentUsedSpringIndex() ) != m_sync_edit->GetValue();
 	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
 	sett().SetBundle( sett().GetCurrentUsedSpringIndex(), m_bundle_edit->GetValue() );
@@ -305,7 +307,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 
 	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
 	sett().RefreshSpringVersionList();
-	if ( !usync().LoadUnitSyncLib( sett().GetCurrentUsedUnitSync() ) )
+    if ( reload_usync && !usync().LoadUnitSyncLib( sett().GetCurrentUsedUnitSync() ) )
 	{
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
 		customMessageBox( SL_MAIN_ICON,
