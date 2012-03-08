@@ -1060,3 +1060,12 @@ void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 
   }
 }
+
+void ServerEvents::OnForceJoinBattle(int battleid, const wxString &scriptPW)
+{
+    if ( m_serv.GetCurrentBattle() )
+        m_serv.GetCurrentBattle()->Leave();
+    m_serv.JoinBattle( battleid, scriptPW );
+    UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
+            UiEvents::StatusData( _("Automatically moved to new battle"), 1 ) );
+}
