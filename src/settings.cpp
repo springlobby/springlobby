@@ -1281,7 +1281,7 @@ void Settings::SetDisplayJoinLeave( bool display, const wxString& channel  )
 
 bool Settings::GetDisplayJoinLeave( const wxString& channel  )
 {
-	return m_config->Read( _T( "/Channels/DisplayJoinLeave/" ) +  channel, true );
+    return m_config->Read( _T( "/Channels/DisplayJoinLeave/" ) +  channel, 0l );
 }
 
 
