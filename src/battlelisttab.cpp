@@ -13,7 +13,7 @@
 #if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
 #endif
-
+#include <set>
 
 #include "aui/auimanager.h"
 #include "battlelisttab.h"
@@ -402,12 +402,21 @@ void BattleListTab::DoJoin( Battle& battle )
 {
 	if ( !ui().IsSpringCompatible() )
 	{
-		wxLogWarning( _T( "trying to join battles with imcompatible spring version" ) );
+        wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
 		customMessageBox( SL_MAIN_ICON, _( "Joining battles is disabled due to the incompatible spring version you're using." ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 		return;
 	}
 
 	Battle* curbattle = ui().mw().GetJoinTab().GetCurrentBattle();
+
+    //handle matchmakers
+    const std::set<int> cpus = sett().KnownMatchmakerCPU();
+    if ( cpus.find(battle.GetFounder().GetCpu()) != cpus.end() )
+    {
+        const wxString msg(_( "You are about to join a matchmaking battleroom.\n The host might move you to another battle at any time. In case of problems please contact the host or a lobby moderator.\nDo you want to continue?" ));
+        if ( !ui().Ask( _( "Matchmaker detected" ), msg ) )
+            return;
+    }
 
 	if ( curbattle != 0 && curbattle->GetID() == battle.GetID() )
 	{

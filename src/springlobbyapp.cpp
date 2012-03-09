@@ -491,6 +491,7 @@ void SpringLobbyApp::CacheAndSettingsSetup()
             if ( settversion < 23 )
             {
                 sett().ConvertLists();
+                sett().AddKnownMatchmakerCPU(6667);
             }
     }
 
