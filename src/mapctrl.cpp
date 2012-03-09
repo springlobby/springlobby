@@ -581,7 +581,8 @@ void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& co
         const double metal = GetStartRectMetalFraction( index );
         if ( metal != 0.0 )
         {
-			wxString strMetal = wxFormat( _("Metal: %.1f%%") ) % ( metal * 100.0 );
+            wxString strMetal = wxFormat( _("Metal: %.1f%%") )
+                    % ( std::isnan(metal) ? 0.0 :  metal * 100.0 );
             dc.GetTextExtent( strMetal, &twidth, &theight );
             // don't cramp it in rect, but only display it if it actually fits
             if (sr.height >= 6 * theight && sr.width > twidth)
