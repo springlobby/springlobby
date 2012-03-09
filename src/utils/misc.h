@@ -52,6 +52,20 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
 
 wxString Paste2Pastebin( const wxString& message );
 
+
+/** Try to create the named directory, if it doesn't exist.
+ *
+ * @param name Path to directory that should exist or be created
+ *
+ * @param perm Value of @p perm parameter for wxFileName::Mkdir.
+ *
+ * @param flags Value of @p flags parameter for wxFileName::Mkdir.
+ *
+ * @return @c true if the directory already exists, or the return
+ * value of wxFileName::Mkdir if it does not.
+ */
+bool tryCreateDirectory( const wxString& name, int perm = 0775, int flags = 0 );
+
 #endif // SPRINGLOBBY_HEADERGUARD_MISC_H
 
 /**

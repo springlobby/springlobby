@@ -20,6 +20,7 @@
 
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
+#include "utils/misc.h"
 
 
 ChatLog::ChatLog( const wxString& server, const wxString& room ):
@@ -71,15 +72,14 @@ bool ChatLog::AddMessage( const wxString& text )
 bool ChatLog::CreateCurrentLogFolder()
 {
     wxString path ( wxFileName(GetCurrentLogfilePath()).GetPath() );
-    if ( !( wxDirExists(path) || wxMkdir(path, 0777) ) ) {
-	wxLogWarning( _T( "can't create logging folder: %s" ), path.c_str() );
-	customMessageBox( SL_MAIN_ICON,
-			  _( "Couldn't create folder. \nBe sure that there isn't a write protection.\n" ) + path
-			  + _( "Log function is disabled until restart SpringLobby." ), _( "Log Warning" ) );
-	m_active = false;
-	return false;
+    if ( !tryCreateDirectory( path ) ) {
+        wxLogWarning( _T( "can't create logging folder: %s" ), path.c_str() );
+        customMessageBox( SL_MAIN_ICON,
+                  _( "Couldn't create folder. \nBe sure that there isn't a write protection.\n" ) + path
+                  + _( "Log function is disabled until restart SpringLobby." ), _( "Log Warning" ) );
+        m_active = false;
+        return false;
     }
-
     return true;
 }
 

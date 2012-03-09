@@ -35,6 +35,7 @@
 #include "utils/controls.h"
 #include "utils/platform.h"
 #include "utils/uievents.h"
+#include "utils/misc.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "mainwindow.h"
@@ -344,26 +345,6 @@ void SpringOptionsTab::OnDontSearch( wxCommandEvent& /*unused*/ )
 void SpringOptionsTab::OnForceBundle( wxCommandEvent& /*unused*/ )
 {
 	EnableBundleBox(!m_forcebundle_chkbox->IsChecked());
-}
-
-/** Try to create the named directory, if it doesn't exist.
- *
- * @param name Path to directory that should exist or be created.
- *
- * @param perm Value of @p perm parameter for wxFileName::Mkdir.
- *
- * @param flags Value of @p flags parameter for wxFileName::Mkdir.
- *
- * @return @c true if the directory already exists, or the return
- * value of wxFileName::Mkdir if it does not.
- */
-inline bool
-tryCreateDirectory( const wxString& name, int perm = 0775, int flags = 0 )
-{
-	if ( wxFileName::DirExists( name ) )
-		return true;
-	else
-		return wxFileName::Mkdir( name, perm, flags );
 }
 
 void SpringOptionsTab::SetupUserFolders()

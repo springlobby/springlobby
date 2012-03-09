@@ -9,6 +9,7 @@
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 #include <wx/sstream.h>
+#include <wx/filename.h>
 #include <vector>
 #include "curlhelper.h"
 
@@ -119,4 +120,21 @@ wxString Paste2Pastebin( const wxString& message )
 	return wxEmptyString;
 }
 
-
+/** Try to create the named directory, if it doesn't exist.
+ *
+ * @param name Path to directory that should exist or be created.
+ *
+ * @param perm Value of @p perm parameter for wxFileName::Mkdir.
+ *
+ * @param flags Value of @p flags parameter for wxFileName::Mkdir.
+ *
+ * @return @c true if the directory already exists, or the return
+ * value of wxFileName::Mkdir if it does not.
+ */
+bool tryCreateDirectory( const wxString& name, int perm, int flags )
+{
+    if ( wxFileName::DirExists( name ) )
+        return true;
+    else
+        return wxFileName::Mkdir( name, perm, flags );
+}

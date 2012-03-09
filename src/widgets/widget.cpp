@@ -14,7 +14,7 @@
 #include <wx/protocol/http.h>
 #include <wx/xml/xml.h>
 
-//#include "../utils/.h"
+#include "../utils/misc.h"
 #include "../settings.h"
 #include "../springunitsync.h"
 
@@ -107,6 +107,7 @@ bool Widget::DownloadImages()
         wxString fileurl = it->url;
         fileurl.Replace( _T("http://") , _T("") );
         wxString destpath = sett().GetCachePath() + fileurl.AfterLast(_T('/'));
+        tryCreateDirectory(destpath);
         it->local_path = destpath;
 
         if ( wxFileExists( destpath ) ) // no need to redownload images
@@ -227,9 +228,8 @@ bool Widget::Install()
         {
             try
             {
-                if ( !wxFileName::DirExists( destpath.BeforeLast( sep_c ) ) ) {
-                    wxFileName::Mkdir( destpath.BeforeLast( sep_c ), 0755, wxPATH_MKDIR_FULL );
-                }
+                const wxString c_path(destpath.BeforeLast( sep_c ));
+                tryCreateDirectory( c_path, 0755, wxPATH_MKDIR_FULL );
                 wxFileOutputStream outs( destpath );
                 httpstream->Read(outs);
                 outs.Close();
@@ -247,7 +247,6 @@ bool Widget::Install()
     }
     is_installed = true;
     return true;
-
 }
 
 bool Widget::Remove()
