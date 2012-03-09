@@ -488,6 +488,10 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 					}
 				}
 			}
+            if ( settversion < 23 )
+            {
+                sett().ConvertLists();
+            }
     }
 
     if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )

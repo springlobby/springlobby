@@ -7,7 +7,7 @@
 #include "utils/pathlistfactory.h"
 
 const int CACHE_VERSION     = 11;
-const int SETTINGS_VERSION  = 22;
+const int SETTINGS_VERSION  = 23;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("lobby.springrts.com");
@@ -797,6 +797,9 @@ class Settings : public SL::NonCopyable
 	wxString GlobalConfigPath() const { return m_config ? m_config->GlobalConfigPath() : wxString(); }
 	wxString FinalConfigPath() const { return m_final_config_path; }
 
+    //! move weirdly saved lists to sane form
+    void ConvertLists();
+
   protected:
     bool IsSpringBin( const wxString& path );
 
@@ -809,6 +812,9 @@ class Settings : public SL::NonCopyable
     std::map<wxString, wxString> m_spring_versions;
 
 	wxString m_final_config_path;
+
+    void setFromList(const wxArrayString& list, const wxString& path);
+    wxArrayString getFromList(const wxString& path);
 };
 
 Settings& sett();

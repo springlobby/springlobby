@@ -440,7 +440,8 @@ void ChatOptionsTab::DoRestore()
 	m_irc_colors->SetValue( sett().GetUseIrcColors() );
 	wxString highlightstring;
 	wxArrayString highlights = sett().GetHighlightedWords();
-	for ( unsigned int i = 0; i < highlights.GetCount(); i++ ) highlightstring << highlights[i] << _T( ";" );
+    for ( unsigned int i = 0; i < highlights.GetCount(); i++ )
+        highlightstring << highlights[i] << _T( ";" );
 	m_highlight_words->SetValue( highlightstring );
 	m_highlight_req->SetValue( sett().GetRequestAttOnHighlight() );
 #ifndef DISABLE_SOUND

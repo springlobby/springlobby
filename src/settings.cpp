@@ -1521,21 +1521,36 @@ bool Settings::GetUseIrcColors()
 	return m_config->Read( _T( "/Chat/UseIrcColors" ), true );
 }
 
+void Settings::setFromList(const wxArrayString& list, const wxString& path)
+{
+    wxString string;
+    for ( unsigned int i = 0; i < list.GetCount(); i++ )
+        string << list[i] << _T( ";" );
+    m_config->Write( path, string );
+}
+
+wxArrayString Settings::getFromList(const wxString& path)
+{
+    return wxStringTokenize( m_config->Read( path, wxString() ), _T(";") );
+}
 
 void Settings::SetHighlightedWords( const wxArrayString& words )
 {
-	if ( m_config->Exists( _T( "/Chat/HighlightedWords" ) ) ) // flush existing entries
-		m_config->DeleteGroup( _T( "/Chat/HighlightedWords" ) );
-
-	for ( unsigned int i = 0; i < words.GetCount(); i++ )
-	{
-		m_config->Write( _T( "/Chat/HighlightedWords/" ) + words[i], words[i] );
-	}
+    setFromList( words, _T("/Chat/HighlightedWords") );
 }
 
 wxArrayString Settings::GetHighlightedWords()
 {
-	return GetEntryList( _T( "/Chat/HighlightedWords" ) );
+    return getFromList( _T("/Chat/HighlightedWords") );
+}
+
+void Settings::ConvertLists()
+{
+    const wxArrayString current_hl = GetEntryList( _T( "/Chat/HighlightedWords" ) );
+    m_config->DeleteGroup( _T( "/Chat/HighlightedWords" ) );
+    SaveSettings();
+    SetHighlightedWords( current_hl );
+    SaveSettings();
 }
 
 void Settings::SetRequestAttOnHighlight( const bool req )
@@ -2510,7 +2525,7 @@ bool Settings::GetBroadcastEverywhere()
 
 void Settings::SetBroadcastEverywhere(bool value)
 {
-	m_config->Write( _T("/Chat/BroadcastEverywhere"), value);
+    m_config->Write( _T("/Chat/BroadcastEverywhere"), value);
 }
 
 //Hotkeys stuff (for springsettings)
