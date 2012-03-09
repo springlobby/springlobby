@@ -21,6 +21,7 @@
 #include "utils/controls.h"
 #include "Helper/colorbutton.h"
 #include "filelister/filelistdialog.h"
+#include "widgets/downloaddialog.h"
 #include "aui/auimanager.h"
 #include "utils/downloader.h"
 
@@ -31,11 +32,13 @@ BEGIN_EVENT_TABLE( MainTorrentTab, wxPanel )
 	EVT_BUTTON      ( ID_BUTTON_CANCEL,     MainTorrentTab::OnCancelButton      )
 	EVT_BUTTON      ( ID_BUTTON_CLEAR,      MainTorrentTab::OnClearFinished     )
 //	EVT_BUTTON      ( ID_DOWNLOAD_DIALOG,   MainTorrentTab::OnDownloadDialog    )
+	EVT_BUTTON      ( ID_BUTTON_WIDGETS,    MainTorrentTab::OnDLWidgets         )
 
 END_EVENT_TABLE()
 
 MainTorrentTab::MainTorrentTab( wxWindow* parent )
     : wxScrolledWindow( parent ),
+    m_widgets_dialog( NULL ),
     m_download_dialog ( new FileListDialog( this ) )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "maintorrenttab" ) );
@@ -108,6 +111,17 @@ void MainTorrentTab::OnClearFinished( wxCommandEvent& /*event*/ )
 {
     torrent().ClearFinishedTorrents();
     m_torrent_list->Clear();
+}
+
+void MainTorrentTab::OnDLWidgets( wxCommandEvent& /*unused*/ )
+{
+	if ( m_widgets_dialog && m_widgets_dialog->IsShown() ) {
+		m_widgets_dialog->SetFocus();
+	}
+	else {
+		m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _( "Lua widget downloader" ) );
+		m_widgets_dialog->Show( true );
+	}
 }
 
 void MainTorrentTab::OnUpdate()
