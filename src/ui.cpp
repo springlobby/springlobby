@@ -361,7 +361,7 @@ void Ui::DownloadFileP2P( const wxString& name )
 #ifndef NO_TORRENT_SYSTEM
 	if ( usync().IsLoaded() )
     {
-        wxFormat msg("Queued download of %s");
+        wxFormat msg(_("Queued download of %s"));
         UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
                     UiEvents::StatusData( (msg % name).str(), 1 ) );
 		torrent().RequestFileByName( name );
