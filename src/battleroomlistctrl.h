@@ -10,7 +10,7 @@ class Ui;
 struct BattleBot;
 class wxIcon;
 
-/** \brief display participants of battle and their info (ally,team,color,cpu...)
+/** \brief display participants of battle and their info (ally,team,color,...)
  * \todo DOCMEMORE */
 class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl >
 {
@@ -58,7 +58,6 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
     static int CompareRank(const DataType user1, const DataType user2);
     static int CompareTeam(const DataType user1, const DataType user2);
     static int CompareAlly(const DataType user1, const DataType user2);
-    static int CompareCpu(const DataType user1, const DataType user2);
     static int CompareHandicap(const DataType user1, const DataType user2);
 
 //    wxString GetCellContentsString( long row_number, int column );
@@ -95,7 +94,6 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
 	int m_nick_column_index;
 	int m_team_column_index;
 	int m_ally_column_index;
-	int m_cpu_column_index;
 	int m_resourcebonus_column_index;
 
     enum {

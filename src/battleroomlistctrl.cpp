@@ -75,7 +75,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 	m_nick_column_index(-1),
 	m_team_column_index(-1),
 	m_ally_column_index(-1),
-	m_cpu_column_index(-1),
 	m_resourcebonus_column_index(-1)
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
@@ -121,9 +120,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 	count++;
     AddColumn( count, widths[count], _("Ally"), _T("Ally number") );
 	m_ally_column_index = count;
-	count++;
-    AddColumn( count, widths[count], _("CPU"), _T("CPU speed (might not be accurate)") );
-	m_cpu_column_index = count;
 	count++;
     AddColumn( count, widths[count], _("Resource Bonus"), _T("Resource Bonus") );
 	m_resourcebonus_column_index = count;
@@ -326,29 +322,24 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 		}
 		return _T("");
 	}
-	if ( column == m_nick_column_index ) return is_bot ? user.GetNick() + _T(" (") + user.BattleStatus().owner + _T(")") : user.GetNick();
+    if ( column == m_nick_column_index )  {
+        if ( is_bot ) {
+            wxString botname = user.BattleStatus().aishortname;
+            if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
+            if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+            {
+                if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
+                if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));
+                if ( botname.Find(_T('\\')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('\\'));
+                if ( botname.Find(_T("LuaAI:")) != wxNOT_FOUND ) botname = botname.AfterFirst(_T(':'));
+            }
+            return (wxFormat(_T("%s - %s (%s)")) % user.GetNick() % botname % user.BattleStatus().owner);
+        }
+        else
+            return user.GetNick();
+    }
 	if ( column == m_team_column_index ) return is_spec ? _T("") : (wxFormat( _T("%d") ) % ( user.BattleStatus().team + 1 ) ).c_str();
 	if ( column == m_ally_column_index ) return is_spec ? _T("") : (wxFormat( _T("%d") ) % ( user.BattleStatus().ally + 1 ) ).c_str();
-	if ( column == m_cpu_column_index ) {
-		if (!is_bot ) {
-			if ( user.GetCpu() > 0 )
-				return wxFormat( _T("%.1f GHz") ) % ( user.GetCpu() / 1000.0 );
-			else
-				return _T("n/a");//0 cpu in replays for example
-		}
-		else { //!TODO could prolly be cached
-			wxString botname = user.BattleStatus().aishortname;
-			if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
-			if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
-			{
-				if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
-				if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));
-				if ( botname.Find(_T('\\')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('\\'));
-				if ( botname.Find(_T("LuaAI:")) != wxNOT_FOUND ) botname = botname.AfterFirst(_T(':'));
-			}
-			return botname;
-		}
-	}
 	if ( column == m_resourcebonus_column_index ) return is_spec ? _T("") : (wxFormat( _T("%d%%") ) % user.BattleStatus().handicap ).c_str();
 	if ( column == m_country_column_index ) return _T("");
 
@@ -496,7 +487,6 @@ int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int di
 	if ( col == m_nick_column_index ) return dir * u1->GetNick().CmpNoCase( u2->GetNick() );
 	if ( col == m_team_column_index ) return dir * CompareTeam( u1, u2 );
 	if ( col == m_ally_column_index ) return dir * CompareAlly( u1, u2 );
-	if ( col == m_cpu_column_index ) return dir * CompareCpu( u1, u2 );
 	if ( col == m_resourcebonus_column_index ) return dir * CompareHandicap( u1, u2 );
 	return 0;
 }
@@ -714,43 +704,6 @@ int BattleroomListCtrl::CompareAlly(const DataType user1, const DataType user2)
   return 0;
 }
 
-int BattleroomListCtrl::CompareCpu(const DataType user1, const DataType user2)
-{
-	if ( !user1 && !user2 ) return 0;
-	else if ( !user1 ) return 1;
-	else if ( !user2 ) return -1;
-
-  if ( user1->BattleStatus().IsBot() )
-  {
-    wxString ailib1 = user1->BattleStatus().aishortname.Upper() + _T(" ") + user1->BattleStatus().aiversion.Upper();
-    if ( user2->BattleStatus().IsBot() )
-    {
-      wxString ailib2 = user2->BattleStatus().aishortname.Upper() + _T(" ") + user2->BattleStatus().aiversion.Upper();
-      if ( ailib1 < ailib2 )
-        return -1;
-      if ( ailib1 > ailib2 )
-        return 1;
-      return 0;
-    } else {
-      return 1;
-    }
-  }
-  else
-  {
-    int cpu1 = user1->GetCpu();
-    if ( user1->BattleStatus().IsBot() )
-    {
-      return -1;
-    } else {
-      int cpu2 = user2->GetCpu();
-      if ( cpu1 < cpu2 )
-        return -1;
-      if ( cpu1 > cpu2 )
-        return 1;
-      return 0;
-    }
-  }
-}
 
 int BattleroomListCtrl::CompareHandicap(const DataType user1, const DataType user2)
 {
@@ -895,10 +848,6 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 		else if ( column == m_nick_column_index ) //name
 		{
 			m_tiptext = user.BattleStatus().IsBot() ?user.GetNick() : user.GetNick();
-		}
-		else if ( column == m_cpu_column_index ) // cpu
-		{
-			m_tiptext = user.BattleStatus().IsBot() ? ( user.BattleStatus().aishortname + _T(" ") + user.BattleStatus().aiversion ) : m_colinfovec[column].tip;
 		}
 		else m_tiptext = m_colinfovec[column].tip;
     }
