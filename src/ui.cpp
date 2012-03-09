@@ -360,7 +360,12 @@ void Ui::DownloadFileP2P( const wxString& name )
 {
 #ifndef NO_TORRENT_SYSTEM
 	if ( usync().IsLoaded() )
+    {
+        wxFormat msg("Queued download of %s");
+        UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
+                    UiEvents::StatusData( (msg % name).str(), 1 ) );
 		torrent().RequestFileByName( name );
+    }
 	else
 	{
 		customMessageBoxNoModal( SL_MAIN_ICON, _("To use the integrated downloader the unitsync library needs to be loaded.\n" \
