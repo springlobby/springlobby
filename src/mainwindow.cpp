@@ -208,7 +208,7 @@ MainWindow::MainWindow( )
 	m_list_tab = new BattleListTab( m_func_tabs );
 	m_join_tab = new MainJoinBattleTab( m_func_tabs );
 	m_sp_tab = new MainSinglePlayerTab( m_func_tabs );
-	m_savegame_tab = new SavegameTab( m_func_tabs );
+//	m_savegame_tab = new SavegameTab( m_func_tabs );
 	m_replay_tab = new ReplayTab ( m_func_tabs );
 #ifndef NO_TORRENT_SYSTEM
 	m_torrent_tab = new MainTorrentTab( m_func_tabs);
@@ -219,7 +219,7 @@ MainWindow::MainWindow( )
     m_func_tabs->InsertPage( PAGE_LIST,     m_list_tab,     m_tab_names[PAGE_LIST],     false  );
     m_func_tabs->InsertPage( PAGE_JOIN,     m_join_tab,     m_tab_names[PAGE_JOIN],     false );
     m_func_tabs->InsertPage( PAGE_SINGLE,   m_sp_tab,       m_tab_names[PAGE_SINGLE],   false );
-    m_func_tabs->InsertPage( PAGE_SAVEGAME, m_savegame_tab, m_tab_names[PAGE_SAVEGAME], false );
+//    m_func_tabs->InsertPage( PAGE_SAVEGAME, m_savegame_tab, m_tab_names[PAGE_SAVEGAME], false );
     m_func_tabs->InsertPage( PAGE_REPLAY,   m_replay_tab,   m_tab_names[PAGE_REPLAY],   false );
 #ifndef NO_TORRENT_SYSTEM
     m_func_tabs->InsertPage( PAGE_TORRENT,  m_torrent_tab,  m_tab_names[PAGE_TORRENT],  false );
@@ -414,11 +414,11 @@ MainWindow::ReplayTab& MainWindow::GetReplayTab()
     return *m_replay_tab;
 }
 
-MainWindow::SavegameTab& MainWindow::GetSavegameTab()
-{
-    ASSERT_EXCEPTION( m_replay_tab != 0, _T("m_replay_tab = 0") );
-    return *m_savegame_tab;
-}
+//MainWindow::SavegameTab& MainWindow::GetSavegameTab()
+//{
+//    ASSERT_EXCEPTION( m_replay_tab != 0, _T("m_replay_tab = 0") );
+//    return *m_savegame_tab;
+//}
 
 #ifndef NO_TORRENT_SYSTEM
 MainTorrentTab& MainWindow::GetTorrentTab()

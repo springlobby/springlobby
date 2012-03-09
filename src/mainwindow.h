@@ -42,9 +42,9 @@ template < class Traits >
 class PlaybackTab;
 class wxFocusEvent;
 
-class SavegameTraits;
-template < class Traits >
-class SavegameTab;
+//class SavegameTraits;
+//template < class Traits >
+//class SavegameTab;
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame, public WindowAttributesPickle
@@ -55,8 +55,8 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 
     typedef PlaybackTab<ReplayTraits>
         ReplayTab;
-    typedef PlaybackTab<SavegameTraits>
-        SavegameTab;
+//    typedef PlaybackTab<SavegameTraits>
+//        SavegameTab;
 
     // MainWindow interface
     void OpenChannelChat( Channel& channel, bool doFocus = true );
@@ -108,7 +108,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
     ReplayTab& GetReplayTab();
-    SavegameTab& GetSavegameTab();
+//    SavegameTab& GetSavegameTab();
     #ifndef NO_TORRENT_SYSTEM
     MainTorrentTab& GetTorrentTab();
     #endif
@@ -154,7 +154,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     ChannelChooserDialog* m_channel_chooser;
 
     ReplayTab* m_replay_tab;
-    SavegameTab* m_savegame_tab;
+//    SavegameTab* m_savegame_tab;
 
 	wxBitmap GetTabIcon( const unsigned char* data, size_t size  ) const;
 	wxString AddPerspectivePostfix( const wxString& pers_name ) const;
@@ -205,7 +205,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
                     Add( _("Battlelist") );
                     Add( _("Battleroom") );
                     Add( _("Singleplayer") );
-                    Add( _("Savegames") );
+//                    Add( _("Savegames") );
                     Add( _("Replays") );
                 #ifndef NO_TORRENT_SYSTEM
                     Add( _("Downloads") );
@@ -220,11 +220,11 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
         static const unsigned int PAGE_LIST    = 1;
         static const unsigned int PAGE_JOIN    = 2;
         static const unsigned int PAGE_SINGLE  = 3;
-        static const unsigned int PAGE_REPLAY  = 5;
-        static const unsigned int PAGE_SAVEGAME = 4;
+        static const unsigned int PAGE_REPLAY  = 4;
+//        static const unsigned int PAGE_SAVEGAME = 4;
 
         #ifndef NO_TORRENT_SYSTEM
-        static const unsigned int PAGE_TORRENT = 6;
+        static const unsigned int PAGE_TORRENT = 5;
         #endif
 
         static const unsigned int OPT_PAGE_SPRING   = 0;

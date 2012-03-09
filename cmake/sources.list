@@ -79,7 +79,7 @@ SET(springlobbySrc
 	src/nicklistctrl.cpp
 	src/offlinebattle.cpp
 	src/playback/replaylist.cpp
-	src/playback/savegamelist.cpp
+	#src/playback/savegamelist.cpp
 	src/alsound.cpp
 	src/selectusersdialog.cpp
 	src/server.cpp
