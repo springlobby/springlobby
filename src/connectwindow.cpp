@@ -320,4 +320,9 @@ void ConnectWindow::OnCancel(wxCommandEvent& )
     Hide();
 }
 
+void ConnectWindow::OnQuit(GlobalEvents::GlobalEventData /*data*/)
+{
+    EndModal(wxCANCEL);
+}
+
 

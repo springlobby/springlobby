@@ -64,5 +64,10 @@ void ReconnectDialog::OnCancel ( wxCommandEvent& /*event*/ )
 
 void ReconnectDialog::OnTryNext ( wxCommandEvent& /*event*/ )
 {
-	EndModal( wxID_NO );
+    EndModal( wxID_NO );
+}
+
+void ReconnectDialog::OnQuit(GlobalEvents::GlobalEventData data)
+{
+    EndModal( wxID_CANCEL );
 }

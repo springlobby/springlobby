@@ -67,10 +67,7 @@ const unsigned int TIMER_INTERVAL   = 100;
 IMPLEMENT_APP(SpringLobbyApp)
 
 BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
-
     EVT_TIMER(TIMER_ID, SpringLobbyApp::OnTimer)
-
-
 END_EVENT_TABLE()
 
 SpringLobbyApp::SpringLobbyApp()

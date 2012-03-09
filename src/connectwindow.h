@@ -3,6 +3,8 @@
 
 #include <wx/dialog.h>
 
+#include "utils/isink.h"
+
 class wxPanel;
 class wxComboBox;
 class wxBoxSizer;
@@ -16,7 +18,7 @@ class wxStaticLine;
 class Ui;
 
 //! @brief wxFrame with a connection dialog used to specify username, password, and server. It can also register a new acount.
-class ConnectWindow : public wxDialog
+class ConnectWindow : public wxDialog, public OnQuitSink<ConnectWindow>
 {
   public:
     ConnectWindow( wxWindow* parent, Ui& ui );
@@ -30,6 +32,7 @@ class ConnectWindow : public wxDialog
 
     void OnOk(wxCommandEvent& event);
     void OnCancel(wxCommandEvent& event);
+    void OnQuit( GlobalEvents::GlobalEventData data );
 
   protected:
     // ConnectWindow variables
