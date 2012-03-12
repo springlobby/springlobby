@@ -173,7 +173,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	wxTextFile oldFile( this->m_filename );
 	if ( !oldFile.Open() )
 	{
-		throw HotkeyException( _("Error opening file for writing: ") + newTmpFilename );
+        throw HotkeyException( _("Error opening file for reading: ") + m_filename );
 	}
 
 	for( size_t i = 0; i < oldFile.GetLineCount(); ++i )
@@ -232,7 +232,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	{
 		if ( wxRenameFile( this->m_filename, prevFilenameBak ) == false )
 		{
-			throw HotkeyException( _("Error renaming uikeys.txt to uikeys.txt.bak") );
+            throw HotkeyException( (wxFormat(_("Error renaming %s to %s")) % m_filename % prevFilenameBak )  );
 		}
 	}
 

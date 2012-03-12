@@ -31,7 +31,7 @@ private:
 
 	key_binding			m_bindings;
 	
-	wxString			m_filename;
+    const wxString		m_filename;
 
 	bool				m_dontTouch;
 };
