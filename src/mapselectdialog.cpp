@@ -50,8 +50,7 @@ BEGIN_EVENT_TABLE(MapSelectDialog,wxDialog)
 END_EVENT_TABLE()
 
 MapSelectDialog::MapSelectDialog( wxWindow* parent )
-    : wxDialog(parent, wxID_ANY, _("Select map (click and drag to scroll)")),
-    WindowAttributesPickle( m_dialog_name, this, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) ),
+	: WindowAttributesPickle( m_dialog_name, this, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) ),
 	m_horizontal_direction( sett().GetHorizontalSortorder() ),
 	m_vertical_direction( sett().GetVerticalSortorder() )
 {
