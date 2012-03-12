@@ -129,6 +129,7 @@ MainWindow::MainWindow( )
     m_channel_chooser(NULL),
 	m_log_win(NULL),
 	m_has_focus(true)
+	  , se_frame(0)
 {
 	SetIcons( SLcustomizations().GetAppIconBundle() );
 
