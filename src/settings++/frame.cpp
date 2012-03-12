@@ -180,7 +180,7 @@ void settings_frame::handleExit() {
     {
     	sett().SaveSettings();
         Destroy();
-#ifndef SPRINGSETTINGS_MAIN_h
+#ifndef SPRINGSETTINGS_STANDALONE
         //we can only compile this in non-standalone
         MainWindow* m = dynamic_cast<MainWindow*>(m_parent);
         if (m) {
