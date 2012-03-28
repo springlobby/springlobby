@@ -59,7 +59,7 @@ bool ReplayList::GetReplayInfos (const wxString& ReplayPath, Replay& ret ) const
 	wxString FileName = ReplayPath.AfterLast( wxFileName::GetPathSeparator() ); // strips file path
     FileName = FileName.BeforeLast( _T('.') ); //strips the file extension;
 
-    ret.date_string = FileName.BeforeFirst(_T('_'));
+    wxString date_string = FileName.BeforeFirst(_T('_'));
     FileName = FileName.AfterFirst(_T('_'));
 
     FileName = FileName.AfterFirst(_T('_')); // strips hours minutes seconds informatiom
@@ -79,6 +79,10 @@ bool ReplayList::GetReplayInfos (const wxString& ReplayPath, Replay& ret ) const
     ret.ModName = ret.battle.GetHostModName();
     ret.battle.SetBattleType( BT_Replay );
 
+    //getting this from filename seems more reliable than from demoheader
+    wxFormat date_format("%s-%s-%s");
+    ret.date_string = date_format % date_string.SubString(0,3)
+            % date_string.SubString(4,5) % date_string.SubString(6,7);
     return true;
 }
 
