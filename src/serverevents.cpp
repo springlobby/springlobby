@@ -41,7 +41,8 @@ END_EVENT_TABLE()
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool /*unused*/ )
 {
     wxLogDebugFunc( server_ver + _T(" ") + server_spring_ver );
-    m_serv.SetRequiredSpring( server_spring_ver );
+    //Server version will include patchlevel from release 89 onwards
+    m_serv.SetRequiredSpring( server_spring_ver.BeforeFirst('.') );
     ui().OnConnected( m_serv, server_name, server_ver, supported );
     m_serv.Login();
 }
