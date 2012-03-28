@@ -27,6 +27,7 @@
 #include "frame.h"
 #include "../settings.h"
 #include "../springunitsync.h"
+#include "../mainwindow.h"
 #include "tab_render_detail.h"
 #include "tab_quality_video.h"
 #include "tab_abstract.h"
@@ -178,7 +179,14 @@ void settings_frame::handleExit() {
     else
     {
     	sett().SaveSettings();
-    	Destroy();
+        Destroy();
+#ifndef SPRINGSETTINGS_STANDALONE
+        //we can only compile this in non-standalone
+        MainWindow* m = dynamic_cast<MainWindow*>(m_parent);
+        if (m) {
+            m->se_frame_active = false;
+        }
+#endif
     }
 }
 

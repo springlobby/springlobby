@@ -150,6 +150,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 
     AutojoinChannelDialog* m_autojoin_dialog;
     settings_frame* se_frame;
+    friend class settings_frame;
     bool se_frame_active;
     ChannelChooserDialog* m_channel_chooser;
 
