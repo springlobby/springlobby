@@ -379,9 +379,9 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaRe
     try {
         // the torrent_info is stored in an intrusive_ptr
 		boost::filesystem::path torfile_b_path( info.m_local_torrent_filepath.mb_str() );
-		p.ti = new libtorrent::torrent_info( torfile_b_path );
+        p.ti = new libtorrent::torrent_info( torfile_b_path.string() );
 		wxString dl_dir_path = sett().GetTorrentDataDir().GetFullPath() + wxFileName::GetPathSeparator();
-        p.save_path = boost::filesystem::path( dl_dir_path.mb_str() );
+        p.save_path = boost::filesystem::path( dl_dir_path.mb_str() ).string();
     }
     catch ( std::exception& exc ) {
             wxLogMessage( _T("torrent has invalid encoding") );
@@ -493,12 +493,12 @@ void TorrentWrapper::HandleCompleted()
 			wxString dest_filename = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() +
 									 getDataSubdirForType( convertMediaType( info.m_type ) ) +
 									 wxFileName::GetPathSeparator() +
-									 TowxString( handle.get_torrent_info().file_at( 0 ).path.string() );
+                                     TowxString( handle.get_torrent_info().file_at( 0 ).path );
 			if ( !wxFileExists( dest_filename ) )
 			{
-				wxString source_path = TowxString( handle.save_path().string() )  +
+                wxString source_path = TowxString( handle.save_path() )  +
 									   wxFileName::GetPathSeparator() +
-									   TowxString( handle.get_torrent_info().file_at( 0 ).path.string() );
+                                       TowxString( handle.get_torrent_info().file_at( 0 ).path );
 				wxString dest_path = wxPathOnly( dest_filename );
 				if ( !wxDirExists( dest_path ) )
 						wxMkdir( dest_path );
