@@ -379,7 +379,11 @@ TorrentWrapper::DownloadRequestStatus TorrentWrapper::AddTorrent( const PlasmaRe
     try {
         // the torrent_info is stored in an intrusive_ptr
 		boost::filesystem::path torfile_b_path( info.m_local_torrent_filepath.mb_str() );
+#if LIBTORRENT_VERSION_NUM < 1600
+        p.ti = new libtorrent::torrent_info( torfile_b_path );
+#else
         p.ti = new libtorrent::torrent_info( torfile_b_path.string() );
+#endif
 		wxString dl_dir_path = sett().GetTorrentDataDir().GetFullPath() + wxFileName::GetPathSeparator();
         p.save_path = boost::filesystem::path( dl_dir_path.mb_str() ).string();
     }
