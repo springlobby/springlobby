@@ -230,7 +230,10 @@ IF(WIN32)
 	SET(StandAloneSettings ${StandAloneSettings} src/settings++/settings.rc)
 ELSE(WIN32)
 # If we don't build for windows, include some source code checks as pre-build step.
-    ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+	FIND_PROGRAM(AWKBIN awk)
+	IF(AWKBIN)
+		ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND ${AWKBIN} -f tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+	ENDIF(AWKBIN)
 ENDIF(WIN32)
 
 #----------------------------------------------------------------------------------------------------
