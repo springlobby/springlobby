@@ -80,7 +80,7 @@ bool ReplayList::GetReplayInfos (const wxString& ReplayPath, Replay& ret ) const
     ret.battle.SetBattleType( BT_Replay );
 
     //getting this from filename seems more reliable than from demoheader
-    wxFormat date_format("%s-%s-%s");
+    wxFormat date_format(_T("%s-%s-%s"));
     ret.date_string = date_format % date_string.SubString(0,3)
             % date_string.SubString(4,5) % date_string.SubString(6,7);
     return true;
