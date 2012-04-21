@@ -6,8 +6,14 @@
 #include <vector>
 
 #include <wx/string.h>
+#include <wx/hashmap.h>
+#include <wx/hashset.h>
 #include "KeynameConverter.h"
 
+class wxCmd;
+//added by vbs
+WX_DECLARE_HASH_SET(int, wxIntegerHash, wxIntegerEqual, IdSet);
+WX_DECLARE_HASH_SET(wxCmd*, wxPointerHash, wxPointerEqual, CmdSet);
 
 typedef std::pair<wxString, wxString>			key_command;
 typedef std::set<key_command>					key_command_set;

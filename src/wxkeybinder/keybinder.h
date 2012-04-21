@@ -27,7 +27,7 @@
 #include "wx/hashset.h"
 #include "wx/checkbox.h"
 
-
+#include "../settings++/hotkeys/HotkeyTypes.h"
 #include "../settings++/hotkeys/CommandOrderDlg.h"
 
 
@@ -686,11 +686,9 @@ private:
     #define wxADD_KEYBINDER_SUPPORT()           /* expand to nothing */
 
 #endif
-
 //added by vbs
-WX_DECLARE_HASH_SET(int, wxIntegerHash, wxIntegerEqual, IdSet);
-WX_DECLARE_HASH_SET(wxCmd*, wxPointerHash, wxPointerEqual, CmdSet);
-
+//WX_DECLARE_HASH_SET(int, wxIntegerHash, wxIntegerEqual, IdSet);
+//WX_DECLARE_HASH_SET(wxCmd*, wxPointerHash, wxPointerEqual, CmdSet);
 
 //! This is the real keybinder. This object is an event handler which
 //! can be #Attach()ed to any wxWindow to intercept the keypresses

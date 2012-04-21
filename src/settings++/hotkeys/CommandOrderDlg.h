@@ -5,8 +5,6 @@
 #include "HotkeyTypes.h"
 #include <wx/string.h>
 
-class CmdSet;
-
 class CommandOrderDlg : public CommandOrderDlgBase 
 {
 public:
