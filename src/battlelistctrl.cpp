@@ -103,7 +103,8 @@ wxString BattleListCtrl::GetItemText(long item, long column) const
 		case 7: return wxFormat(_T("%d") ) % int(battle.GetSpectators());
 		case 8: return wxFormat(_T("%d") ) % (int(battle.GetNumUsers()) - int(battle.GetSpectators()));
 		case 9: return wxFormat(_T("%d") ) % int(battle.GetMaxPlayers());
-        case 10: return ( wxDateTime(battle.GetBattleRunningTime()).FormatISOTime() );
+        case 10: return ( wxTimeSpan(0/*h*/,0/*m*/,
+                                     battle.GetBattleRunningTime()).Format(_T("%H:%M")) );
     }
 }
 
