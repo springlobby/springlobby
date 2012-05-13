@@ -454,7 +454,7 @@ void TASServer::Login()
 {
     wxLogDebugFunc( _T("") );
     wxString pass = GetPasswordHash( m_pass );
-    wxString protocol = _T("\t") + TowxString( m_crc.GetCRC() );
+    wxString protocol = TowxString( m_crc.GetCRC() );
     wxString localaddr;
 	localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
@@ -2609,4 +2609,3 @@ IBattle::GameType IntToGameType( int gt )
     };
     return IBattle::GT_ComContinue;
 }
-
