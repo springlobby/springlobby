@@ -19,16 +19,23 @@
 #include "prdownloader.h"
 
 #include "../globalsmanager.h"
-#include "lib/src/pr-downloader.h"
+#include "lib/src/Downloader/IDownloader.h"
+
+#include <list>
 
 PrDownloader::PrDownloader()
 {
-	downloadInit();
+    IDownloader::Initialize();
+    m_game_loaders.push_back(rapidDownload);
+    m_game_loaders.push_back(httpDownload);
+    m_game_loaders.push_back(plasmaDownload);
+    m_map_loaders.push_back(httpDownload);
+    m_map_loaders.push_back(plasmaDownload);
 }
 
 PrDownloader::~PrDownloader()
 {
-	downloadShutdown();
+    IDownloader::Shutdown();
 }
 
 void PrDownloader::ClearFinished()
@@ -39,16 +46,41 @@ void PrDownloader::UpdateSettings()
 {
 }
 
-void PrDownloader::RemoveTorrentByName(const wxString &name)
+void PrDownloader::RemoveTorrentByName(const std::string &/*name*/)
 {
 }
 
-void PrDownloader::RequestFileByName(const wxString &name)
+int PrDownloader::GetWidget(const std::string &name)
+{
+    return Get(m_map_loaders, name, IDownload::CAT_LUAWIDGETS);
+}
+
+int PrDownloader::GetMap(const std::string &name)
+{
+    return Get(m_map_loaders, name, IDownload::CAT_MAPS);
+}
+
+int PrDownloader::GetGame(const std::string &name)
+{
+    return Get(m_map_loaders, name, IDownload::CAT_MODS);
+}
+
+void PrDownloader::SetIngameStatus(bool /*ingame*/)
 {
 }
 
-void PrDownloader::SetIngameStatus(bool ingame)
+bool PrDownloader::Get(std::list<IDownloader*> &loaders, const std::string &name, IDownload::category cat)
 {
+    std::list<IDownload*> results;
+    std::list<IDownloader*>::const_iterator it = loaders.begin();
+    for( ; it != m_game_loaders.end(); ++it ) {
+        (*it)->search(results, name, cat);
+        if (results.size()) {
+            m_pending_downloads.push( DownloadItem(results, *it));
+            return results.size();
+        }
+    }
+    return false;
 }
 
 PrDownloader& prDownloader()

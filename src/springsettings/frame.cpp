@@ -45,6 +45,10 @@
 #include "../customizations.h"
 #include "../utils/platform.h"
 
+#ifndef SPRINGSETTINGS_STANDALONE
+    #include "../mainwindow.h"
+#endif
+
 const wxString simpleTabCap= _("Combined Options");
 const wxString qualityTabCap= _("Render quality / Video mode");
 const wxString detailTabCap = _("Render detail");

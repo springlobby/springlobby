@@ -70,40 +70,6 @@ Ui& ui()
     return m_ui;
 }
 
-ServerSelector::ServerSelector()
-	: m_serv(0)
-{}
-
-bool ServerSelector::GetServerStatus() const
-{
-	return (bool)(m_serv);
-}
-
-Server& ServerSelector::GetServer()
-{
-	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
-	return *m_serv;
-}
-
-const Server& ServerSelector::GetServer() const
-{
-	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
-	return *m_serv;
-}
-
-void ServerSelector::SetCurrentServer(Server* server)
-{
-	m_serv = server;
-	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
-}
-
-ServerSelector& serverSelector()
-{
-	static LineInfo<ServerSelector> m( AT );
-	static GlobalObjectHolder<ServerSelector,LineInfo<ServerSelector> > m_selector( m );
-	return m_selector;
-}
-
 Ui::Ui() :
         m_serv(0),
         m_main_win(0),
@@ -371,34 +337,21 @@ void Ui::Quit()
 
 void Ui::DownloadMap( const wxString& /*hash*/, const wxString& name )
 {
-	DownloadFileP2P( name );
+    prDownloader().GetMap( STD_STRING(name) );
 }
-
 
 void Ui::DownloadMod( const wxString& /*hash*/, const wxString& name )
 {
-    DownloadFileP2P( name );
+    prDownloader().GetGame( STD_STRING(name) );
 }
 
-void Ui::DownloadFileP2P( const wxString& name )
-{
-	if ( usync().IsLoaded() )
-		prDownloader().RequestFileByName( name );
-	else
-	{
-		customMessageBoxNoModal( SL_MAIN_ICON, _("To use the integrated downloader the unitsync library needs to be loaded.\n" \
-												 "Please check for correct path in Edit->Preferences->Spring"), _("Unitsync not loaded") );
-	}
-}
-
-void Ui::DownloadFileWebsite( const wxString& name )
-{
-	wxString newname = name;
-	newname.Replace( _T(" "), _T("+") );
-	wxString url = _T("http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
-	OpenWebBrowser ( url );
-}
-
+//void Ui::DownloadFileWebsite( const wxString& name )
+//{
+//	wxString newname = name;
+//	newname.Replace( _T(" "), _T("+") );
+//	wxString url = _T("http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
+//	OpenWebBrowser ( url );
+//}
 
 //! @brief Display a dialog asking a question with OK and Canel buttons
 //!
@@ -1392,7 +1345,7 @@ void Ui::FirstRunWelcome()
 		wxPathList pl;
 		pl.AddEnvList( _T("%ProgramFiles%") );
 		pl.AddEnvList( _T("XDG_DATA_DIRS") );
-		pl = sett().GetAdditionalSearchPaths( pl );
+        pl = PathlistFactory::AdditionalSearchPaths( pl );
 		wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
 		if ( !uikeyslocation.IsEmpty() )
 		{

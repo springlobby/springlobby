@@ -142,12 +142,12 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 	OptionsDialog* m_opts_dialog;
 
     AutojoinChannelDialog* m_autojoin_dialog;
+    friend class settings_frame;
     settings_frame* se_frame;
     bool se_frame_active;
     ChannelChooserDialog* m_channel_chooser;
 
     ReplayTab* m_replay_tab;
-    SavegameTab* m_savegame_tab;
 
 	wxBitmap GetTabIcon( const unsigned char* data, size_t size  ) const;
 	wxString AddPerspectivePostfix( const wxString& pers_name ) const;

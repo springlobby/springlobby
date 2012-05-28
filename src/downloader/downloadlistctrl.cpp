@@ -149,7 +149,8 @@ void DownloadListCtrl::OnRetry(wxCommandEvent &/*event*/)
 	DataType info( GetSelectedData() );
 	prDownloader().RemoveTorrentByName( info.name );
 	RemoveTorrentInfo( info );
-	prDownloader().RequestFileByName( info.name );
+    assert(false);
+//	prDownloader().RequestFileByName( info.name );
 }
 
 
@@ -177,7 +178,7 @@ void DownloadListCtrl::HighlightItem( long /*item*/ )
 int DownloadListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
-        case 0: return dir * u1.name.CmpNoCase( u2.name );
+        case 0: return dir * (u1.name > u2.name);//TODO
         case 1: return dir * compareSimple( u1.numcopies, u2.numcopies );
 		case 2: return dir * compareSimple( u1.downloadstatus, u2.downloadstatus );
 		case 3: return dir * compareSimple( u1.progress, u2.progress );
@@ -212,7 +213,7 @@ wxString DownloadListCtrl::GetItemText(long item, long column) const
 
 	switch ( column ) {
         default: return wxEmptyString;
-        case 0: return infos.name;
+        case 0: return TowxString(infos.name);
 		case 1: return infos.numcopies > 0 ? (wxFormat(_T("%.2f") ) % infos.numcopies).str() : na_str;
 		case 2:
 			if(infos.downloadstatus == P2P::not_stored) return _("not found");

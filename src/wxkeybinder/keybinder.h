@@ -687,11 +687,6 @@ private:
 
 #endif
 
-//added by vbs
-WX_DECLARE_HASH_SET(int, wxIntegerHash, wxIntegerEqual, IdSet);
-WX_DECLARE_HASH_SET(wxCmd*, wxPointerHash, wxPointerEqual, CmdSet);
-
-
 //! This is the real keybinder. This object is an event handler which
 //! can be #Attach()ed to any wxWindow to intercept the keypresses
 //! that window receives and then to (if they match a shortcut key

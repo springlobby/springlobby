@@ -33,7 +33,6 @@ SET(springlobbySrc
 	src/channel/autojoinchanneldialog.cpp
 	src/aui/auimanager.cpp
 	src/aui/artprovider.cpp
-	src/autohost.cpp
 	src/agreementdialog.cpp
 	src/base64.cpp
 	src/battle.cpp
@@ -96,7 +95,6 @@ SET(springlobbySrc
 	src/gui/notificationmanager.cpp
 	src/pingthread.cpp
 	src/iserverevents.cpp
-	src/simpleinterface/simpleserverevents.cpp
 	src/downloader/prdownloader.cpp
 	src/options/downloadoptionspanel.cpp
 	src/options/mainoptionstab.cpp
@@ -169,6 +167,7 @@ SET(SLSharedWithSettings
 	src/utils/debug.cpp
 	src/utils/globalevents.cpp
 	src/utils/platform.cpp
+	src/utils/pathlistfactory.cpp
 	src/utils/sltipwin.cpp
 	src/utils/uievents.cpp
 	src/crashreport.cpp

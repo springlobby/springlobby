@@ -177,11 +177,6 @@ class Ui : public SL::NonCopyable
 
 	EventReceiverFunc<Ui, BattleEvents::BattleEventData, &Ui::OnBattleInfoUpdated>
 		m_battle_info_updatedSink;
-
-    //! does actual work, called from downloadmap/mod
-    void DownloadFileP2P( const wxString& name );
-	void DownloadFileWebsite( const wxString& name );
-
 };
 
 Ui& ui();

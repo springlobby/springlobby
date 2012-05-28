@@ -19,7 +19,13 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_PRDOWNLOADER_H
 #define SPRINGLOBBY_HEADERGUARD_PRDOWNLOADER_H
 
-#include <wx/string.h>
+#include <string>
+#include <queue>
+#include <list>
+
+#include "lib/src/Downloader/Download.h"
+
+class IDownloader;
 
 namespace P2P {
 enum FileStatus
@@ -34,12 +40,20 @@ enum FileStatus
 
 struct DownloadInfo{
     P2P::FileStatus downloadstatus;
-    wxString name;
+    std::string name;
     int numcopies;//TODO remove
     double progress;
     double inspeed;
     double eta;
     double filesize;
+};
+
+struct DownloadItem {
+    DownloadItem( std::list<IDownload*> item, IDownloader* loader)
+        :m_item(item), m_loader(loader)
+    {}
+    std::list<IDownload*> m_item;
+    IDownloader* m_loader;
 };
 
 class PrDownloader
@@ -50,9 +64,20 @@ public:
 
 	void ClearFinished();
 	void UpdateSettings();
-	void RemoveTorrentByName( const wxString& name );
-	void RequestFileByName( const wxString& name );
+    void RemoveTorrentByName( const std::string& name );
+    //! returns true if name found and added to dl list
+    int GetGame( const std::string& name );
+    //! returns true if name found and added to dl list
+    int GetMap( const std::string& name );
+    //! returns true if name found and added to dl list
+    int GetWidget( const std::string& name );
 	void SetIngameStatus( bool ingame );
+
+private:
+    bool Get(std::list<IDownloader*>& loaders, const std::string& name, IDownload::category cat );
+    std::queue<DownloadItem> m_pending_downloads;
+    std::list<IDownloader*> m_game_loaders;
+    std::list<IDownloader*> m_map_loaders;
 };
 
 PrDownloader& prDownloader();
