@@ -31,6 +31,7 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/misc.h"
+#include <lslutils/misc.h>
 #include "utils/globalevents.h"
 #include "utils/uievents.h"
 
@@ -596,7 +597,7 @@ wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image
 		ASSERT_EXCEPTION( FileSize, _T("image has size 0") );
 	}
 
-	uninitialized_array<char> FileContent(FileSize);
+    LSL::Util::uninitialized_array<char> FileContent(FileSize);
 	susynclib().ReadFileVFS(ini, FileContent, FileSize);
 	wxMemoryInputStream FileContentStream( FileContent, FileSize );
 
@@ -1351,7 +1352,7 @@ wxString SpringUnitSync::GetTextfileAsString( const wxString& modname, const wxS
 		return wxEmptyString;
 	}
 
-	uninitialized_array<char> FileContent(FileSize);
+    LSL::Util::uninitialized_array<char> FileContent(FileSize);
 	susynclib().ReadFileVFS(ini, FileContent, FileSize);
 	return wxString( FileContent, wxConvAuto(), size_t( FileSize ) );
 }

@@ -27,6 +27,10 @@
 
 class IDownloader;
 
+namespace LSL {
+    class WorkerThread;
+}
+
 namespace P2P {
 enum FileStatus
 {
@@ -48,13 +52,6 @@ struct DownloadInfo{
     double filesize;
 };
 
-struct DownloadItem {
-    DownloadItem( std::list<IDownload*> item, IDownloader* loader)
-        :m_item(item), m_loader(loader)
-    {}
-    std::list<IDownload*> m_item;
-    IDownloader* m_loader;
-};
 
 class PrDownloader
 {
@@ -74,10 +71,11 @@ public:
 	void SetIngameStatus( bool ingame );
 
 private:
-    bool Get(std::list<IDownloader*>& loaders, const std::string& name, IDownload::category cat );
-    std::queue<DownloadItem> m_pending_downloads;
+    //! searches given loaders for filename and pushes fitting workitems into dl_thread
+    int Get(std::list<IDownloader*>& loaders, const std::string& name, IDownload::category cat );
     std::list<IDownloader*> m_game_loaders;
     std::list<IDownloader*> m_map_loaders;
+    LSL::WorkerThread* m_dl_thread;
 };
 
 PrDownloader& prDownloader();

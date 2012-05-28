@@ -235,7 +235,7 @@ INCLUDE_DIRECTORIES(src/lsl/src)
 #ADD_EXECUTABLE(versiontest WIN32 MACOSX_BUNDLE src/versiontest.cpp )
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} "unitsync-ext" "libSpringLobbyUtils" )
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} "unitsync-ext" "libSpringLobbyUtils" "boost_thread-mt" )
 TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} "libSpringLobbyUtils" )
 
 IF(MINGW)

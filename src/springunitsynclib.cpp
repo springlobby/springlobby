@@ -12,6 +12,7 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/misc.h"
+#include <lslutils/misc.h>
 #include "globalsmanager.h"
 
 #define LOCK_UNITSYNC wxCriticalSectionLocker lock_criticalsection(m_lock)
@@ -767,7 +768,7 @@ wxImage SpringUnitSyncLib::GetMetalmap( const wxString& mapFileName )
 
   typedef unsigned char uchar;
   wxImage metalmap(width, height, false);
-  uninitialized_array<uchar> grayscale(width * height);
+  LSL::Util::uninitialized_array<uchar> grayscale(width * height);
   uchar* true_colours = metalmap.GetData();
 
   retval = m_get_infomap(mapFileName.mb_str(wxConvUTF8), "metal", grayscale, 1 /*byte per pixel*/);
@@ -797,7 +798,7 @@ wxImage SpringUnitSyncLib::GetHeightmap( const wxString& mapFileName )
   typedef unsigned char uchar;
   typedef unsigned short ushort;
   wxImage heightmap(width, height, false);
-  uninitialized_array<ushort> grayscale(width * height);
+  LSL::Util::uninitialized_array<ushort> grayscale(width * height);
   uchar* true_colours = heightmap.GetData();
 
   retval = m_get_infomap(mapFileName.mb_str(wxConvUTF8), "height", grayscale, 2 /*byte per pixel*/);

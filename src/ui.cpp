@@ -337,7 +337,9 @@ void Ui::Quit()
 
 void Ui::DownloadMap( const wxString& /*hash*/, const wxString& name )
 {
-    prDownloader().GetMap( STD_STRING(name) );
+    std::string sname = STD_STRING(name);
+    int count = prDownloader().GetMap(sname);
+    assert( count > 0 );
 }
 
 void Ui::DownloadMod( const wxString& /*hash*/, const wxString& name )

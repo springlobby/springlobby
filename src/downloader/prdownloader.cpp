@@ -21,9 +21,28 @@
 #include "../globalsmanager.h"
 #include "lib/src/Downloader/IDownloader.h"
 
+#include <lslutils/thread.h>
 #include <list>
 
+class DownloadItem : public LSL::WorkItem {
+public:
+    DownloadItem( std::list<IDownload*> item, IDownloader* loader)
+        :m_item(item), m_loader(loader)
+    {}
+
+    void Run()
+    {
+        m_loader->download( m_item );
+        m_loader->freeResult( m_item );
+    }
+
+private:
+    std::list<IDownload*> m_item;
+    IDownloader* m_loader;
+};
+
 PrDownloader::PrDownloader()
+    : m_dl_thread(new LSL::WorkerThread())
 {
     IDownloader::Initialize();
     m_game_loaders.push_back(rapidDownload);
@@ -35,6 +54,9 @@ PrDownloader::PrDownloader()
 
 PrDownloader::~PrDownloader()
 {
+    if ( m_dl_thread )
+        m_dl_thread->Wait();
+    delete m_dl_thread;
     IDownloader::Shutdown();
 }
 
@@ -69,18 +91,19 @@ void PrDownloader::SetIngameStatus(bool /*ingame*/)
 {
 }
 
-bool PrDownloader::Get(std::list<IDownloader*> &loaders, const std::string &name, IDownload::category cat)
+int PrDownloader::Get(std::list<IDownloader*> &loaders, const std::string &name, IDownload::category cat)
 {
     std::list<IDownload*> results;
     std::list<IDownloader*>::const_iterator it = loaders.begin();
     for( ; it != m_game_loaders.end(); ++it ) {
         (*it)->search(results, name, cat);
         if (results.size()) {
-            m_pending_downloads.push( DownloadItem(results, *it));
+            DownloadItem* dl_item = new DownloadItem(results, *it);
+            m_dl_thread->DoWork(dl_item);
             return results.size();
         }
     }
-    return false;
+    return 0;
 }
 
 PrDownloader& prDownloader()
