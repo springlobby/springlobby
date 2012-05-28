@@ -11,7 +11,7 @@
 
 #include "utils/debug.h"
 #include "utils/conversion.h"
-#include "utils/math.h"
+#include <lslutils/misc.h>
 #include "uiutils.h"
 #include "mapctrl.h"
 #include "springunitsync.h"
@@ -1079,8 +1079,8 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
 
             user.BattleStatus().pos.x = (int)( ( (double)(event.GetX() - mr.x) / (double)mr.width ) * (double)m_map.info.width );
             user.BattleStatus().pos.y = (int)( ( (double)(event.GetY() - mr.y) / (double)mr.height ) * (double)m_map.info.height );
-            user.BattleStatus().pos.x = clamp( user.BattleStatus().pos.x, 0, m_map.info.width );
-            user.BattleStatus().pos.y = clamp( user.BattleStatus().pos.y, 0, m_map.info.height );
+            user.BattleStatus().pos.x = LSL::Util::Clamp( user.BattleStatus().pos.x, 0, m_map.info.width );
+            user.BattleStatus().pos.y = LSL::Util::Clamp( user.BattleStatus().pos.y, 0, m_map.info.height );
 
             int x, y, index, range;
             GetClosestStartPos( user.BattleStatus().pos.x, user.BattleStatus().pos.y, index, x, y, range );

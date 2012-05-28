@@ -23,7 +23,7 @@
 #include "conversion.h"
 #include "../updater/versionchecker.h"
 #include "customdialogs.h"
-#include "math.h"
+#include <lslutils/misc.h>
 #include "../crashreport.h"
 
 #ifdef SL_QT_MODE
@@ -181,7 +181,7 @@ wxString GetHostCPUSpeed()
       }
     }
 #endif
-    return TowxString( clamp( max_cpu_speed,0,max_cpu_speed ) );
+    return TowxString( LSL::Util::Clamp( max_cpu_speed,0,max_cpu_speed ) );
 }
 
 

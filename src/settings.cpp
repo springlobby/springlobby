@@ -31,7 +31,7 @@
 #include "nonportable.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
-#include "utils/math.h"
+#include <lslutils/misc.h>
 #include "utils/platform.h"
 #include "uiutils.h"
 #include "battlelist/battlelistfiltervalues.h"
@@ -631,7 +631,7 @@ void Settings::SetWindowWidth( const wxString& window, const int value )
 {
 	m_config->Write(
 	    _T( "/GUI/" ) + window + _T( "/width" ),
-	    clamp(  value,
+	    LSL::Util::Clamp(  value,
 	            wxSystemSettings::GetMetric( wxSYS_WINDOWMIN_X ),
 	            wxSystemSettings::GetMetric( wxSYS_SCREEN_X )
 	         )
@@ -651,7 +651,7 @@ void Settings::SetWindowHeight( const wxString& window, const int value )
 {
 	m_config->Write(
 	    _T( "/GUI/" ) + window + _T( "/height" ),
-	    clamp(  value,
+	    LSL::Util::Clamp(  value,
 	            wxSystemSettings::GetMetric( wxSYS_WINDOWMIN_Y ),
 	            wxSystemSettings::GetMetric( wxSYS_SCREEN_Y )
 	         )
@@ -671,7 +671,7 @@ void Settings::SetWindowTop( const wxString& window, const int value )
 {
 	m_config->Write(
 	    _T( "/GUI/" ) + window + _T( "/top" ),
-	    clamp( value,
+	    LSL::Util::Clamp( value,
 	           0,
 	           wxSystemSettings::GetMetric( wxSYS_SCREEN_Y ) - 20
 	         )
@@ -690,7 +690,7 @@ void Settings::SetWindowLeft( const wxString& window, const int value )
 {
 	m_config->Write(
 	    _T( "/GUI/" ) + window + _T( "/left" ),
-	    clamp( value,
+	    LSL::Util::Clamp( value,
 	           0,
 	           wxSystemSettings::GetMetric( wxSYS_SCREEN_X ) - 20
 	         )

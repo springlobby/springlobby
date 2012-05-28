@@ -10,7 +10,7 @@
 #include "utils/misc.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
-#include "utils/math.h"
+#include <lslutils/misc.h>
 #include "utils/uievents.h"
 #include "utils/battleevents.h"
 #include "uiutils.h"

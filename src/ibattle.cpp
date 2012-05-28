@@ -8,7 +8,7 @@
 #include "ibattle.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
-#include "utils/math.h"
+#include <lslutils/misc.h>
 #include "uiutils.h"
 #include "settings.h"
 #include "ui.h" //only required for preset stuff
@@ -692,8 +692,8 @@ UserPosition IBattle::GetFreePosition()
     }
     if ( !taken )
     {
-      ret.x = clamp(map.info.positions[i].x, 0, map.info.width);
-      ret.y = clamp(map.info.positions[i].y, 0, map.info.height);
+      ret.x = LSL::Util::Clamp(map.info.positions[i].x, 0, map.info.width);
+      ret.y = LSL::Util::Clamp(map.info.positions[i].y, 0, map.info.height);
       return ret;
     }
   }

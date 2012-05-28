@@ -5,7 +5,7 @@
 #include <wx/filefn.h>
 
 #include "replaylist.h"
-#include "../utils/math.h"
+#include <lslutils/misc.h>
 #include "../utils/conversion.h"
 #include "../utils/customdialogs.h"
 #include "playbacktab.h"
@@ -102,7 +102,7 @@ wxString ReplayList::GetScriptFromReplay (const wxString& ReplayPath  , const in
 		SEEK( seek );
 		wxFileOffset scriptSize=0;
         replay.Read( &scriptSize, 4);
-		scriptSize = clamp( wxFileOffset(scriptSize), wxFileOffset(0), replay.Length() );
+		scriptSize = LSL::Util::Clamp( wxFileOffset(scriptSize), wxFileOffset(0), replay.Length() );
 		SEEK( headerSize );
         std::string script_a(scriptSize,0);
         replay.Read( &script_a[0], scriptSize );

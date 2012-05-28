@@ -17,7 +17,7 @@
 #include <cmath>
 
 #include "uiutils.h"
-#include "utils/math.h"
+#include <lslutils/misc.h>
 #include "utils/conversion.h"
 #include "utils/debug.h"
 #include "utils/customdialogs.h"
@@ -128,7 +128,7 @@ wxColour GetColorFromFloatStrng( const wxString& color_ )
 		colorstring = colorstring.AfterFirst( ' ' );
 		double float_color = 0;
 		tmp_string.ToDouble( &float_color );
-		decimal_colors[i] = clamp( static_cast<unsigned char>(float_color*256), static_cast<unsigned char>(0), static_cast<unsigned char>(255) );
+		decimal_colors[i] = LSL::Util::Clamp( static_cast<unsigned char>(float_color*256), static_cast<unsigned char>(0), static_cast<unsigned char>(255) );
 	}
 	wxColour final_c( decimal_colors[0], decimal_colors[1], decimal_colors[2] );
 	delete[] decimal_colors;
@@ -436,10 +436,10 @@ wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
   wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );
 
   double bright = origcolour.value - 0.1*origcolour.value;
-  bright = clamp( bright, 0.0, 1.0 );
+  bright = LSL::Util::Clamp( bright, 0.0, 1.0 );
   wxImage::HSVValue hsvdarker1( origcolour.hue, origcolour.saturation, bright );
   bright = origcolour.value - 0.5*origcolour.value;
-  bright = clamp( bright, 0.0, 1.0 );
+  bright = LSL::Util::Clamp( bright, 0.0, 1.0 );
   wxImage::HSVValue hsvdarker2( origcolour.hue, origcolour.saturation, bright );
 
   wxImage::RGBValue rgbdarker1 = wxImage::HSVtoRGB( hsvdarker1 );

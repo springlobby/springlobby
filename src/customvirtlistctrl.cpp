@@ -10,7 +10,7 @@
 #include "utils/customdialogs.h"
 #include "uiutils.h"
 #include "utils/sltipwin.h"
-#include "utils/math.h"
+#include <lslutils/misc.h>
 #include "utils/controls.h"
 
 #include <algorithm>
@@ -217,9 +217,9 @@ void CustomVirtListCtrl<T,L>::RefreshVisibleItems()
     if ( m_data.size() < 1 )
         return;
 #ifndef __WXMSW__
-    long topItemIndex = GetTopItem();
-    long range = topItemIndex + GetCountPerPage();
-    RefreshItems( topItemIndex,  clamp( range, topItemIndex, (long) m_data.size() -1 ) );
+    const long topItemIndex = GetTopItem();
+    const long range = topItemIndex + GetCountPerPage();
+    RefreshItems( topItemIndex,  LSL::Util::Clamp( range, topItemIndex, (long) m_data.size() -1 ) );
     //RefreshItems( topItemIndex,  range );
 #else
     RefreshItems( 0,  m_data.size() -1 );
@@ -506,7 +506,7 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
 
 //    for ( ; m_sortorder[i].col != event.GetColumn() && i < 4; ++i ) {}
 
-    i = clamp( i, (unsigned int)0, m_sort_criteria_count );
+    i = LSL::Util::Clamp( i, (unsigned int)0, m_sort_criteria_count );
 
     for ( ; i > 0; i--) {
         m_sortorder[i] = m_sortorder[i-1];
@@ -591,8 +591,8 @@ wxString CustomVirtListCtrl<T,L>::OnGetItemText(long item, long column) const
 {
     assert( item < (long)m_data.size() );
     //assert( column < m_columnCount );
-	column = clamp( column, long(0), long(m_columnCount) );
-   return asImp().GetItemText(item, column);
+    column = LSL::Util::Clamp( column, long(0), long(m_columnCount) );
+    return asImp().GetItemText(item, column);
 }
 
 template < class T, class L >

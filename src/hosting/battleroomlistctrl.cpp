@@ -906,7 +906,7 @@ int BattleroomListCtrl::GetIndexFromData(const DataType& data) const
 {
     const User* user = data;
     static long seekpos;
-    seekpos = clamp( seekpos, 0l , (long)m_data.size() );
+    seekpos = LSL::Util::Clamp( seekpos, 0l , (long)m_data.size() );
     int index = seekpos;
 
     for ( DataCIter f_idx = m_data.begin() + seekpos; f_idx != m_data.end() ; ++f_idx )

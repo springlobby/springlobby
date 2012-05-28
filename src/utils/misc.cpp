@@ -1,7 +1,7 @@
 /* Copyright (C) 2007-2011 The SpringLobby Team. All rights reserved. */
 #include "misc.h"
 
-#include "math.h"
+#include <lslutils/misc.h>
 #include "../settings.h"
 
 #include <wx/string.h>
@@ -30,7 +30,7 @@ double LevenshteinDistance(wxString s, wxString t)
         for (int j = 1; j <= n; ++j)
         {
             const int cost = (s[i - 1] != t[j - 1]);
-            D(i,j) = min(D(i-1,j) + 1, // deletion
+            D(i,j) = LSL::Util::Min(D(i-1,j) + 1, // deletion
                          D(i,j-1) + 1, // insertion
                          D(i-1,j-1) + cost); // substitution
         }

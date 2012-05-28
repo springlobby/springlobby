@@ -28,7 +28,7 @@
 #include "nonportable.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
-#include "utils/math.h"
+#include <lslutils/misc.h>
 #include "utils/platform.h"
 #include "updater/updatehelper.h"
 #include <wx/textctrl.h>
