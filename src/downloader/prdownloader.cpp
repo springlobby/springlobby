@@ -74,7 +74,7 @@ void PrDownloader::RemoveTorrentByName(const std::string &/*name*/)
 
 int PrDownloader::GetWidget(const std::string &name)
 {
-    return Get(m_map_loaders, name, IDownload::CAT_LUAWIDGETS);
+    return 0;//Get(m_map_loaders, name, IDownload::CAT_LUAWIDGETS);
 }
 
 int PrDownloader::GetMap(const std::string &name)
@@ -84,7 +84,7 @@ int PrDownloader::GetMap(const std::string &name)
 
 int PrDownloader::GetGame(const std::string &name)
 {
-    return Get(m_map_loaders, name, IDownload::CAT_MODS);
+    return Get(m_game_loaders, name, IDownload::CAT_MODS);
 }
 
 void PrDownloader::SetIngameStatus(bool /*ingame*/)
