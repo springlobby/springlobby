@@ -721,7 +721,7 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
 }
 
 #ifdef __WXMSW__
-	#include "battleroomtab.h"
+	#include <hosting/battleroomtab.h>
 #endif
 
 void MainWindow::LoadPerspectives( const wxString& pers_name )
