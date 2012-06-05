@@ -22,6 +22,7 @@
 #include <string>
 #include <queue>
 #include <list>
+#include <lslutils/thread.h>
 
 #include "lib/src/Downloader/Download.h"
 
@@ -52,6 +53,17 @@ struct DownloadInfo{
     double filesize;
 };
 
+class SearchItem : public LSL::WorkItem {
+public:
+    SearchItem(std::list<IDownloader*> loaders, const std::string name, IDownload::category cat);
+    void Run();
+
+private:
+    const std::list<IDownloader*> m_loaders;
+    const std::string m_name;
+    const IDownload::category m_cat;
+    int m_result_size;
+};
 
 class PrDownloader
 {
@@ -72,10 +84,12 @@ public:
 
 private:
     //! searches given loaders for filename and pushes fitting workitems into dl_thread
-    int Get(std::list<IDownloader*>& loaders, const std::string& name, IDownload::category cat );
+    int Get(std::list<IDownloader*> loaders, const std::string& name, IDownload::category cat );
     std::list<IDownloader*> m_game_loaders;
     std::list<IDownloader*> m_map_loaders;
     LSL::WorkerThread* m_dl_thread;
+
+    friend class SearchItem;
 };
 
 PrDownloader& prDownloader();

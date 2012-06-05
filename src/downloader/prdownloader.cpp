@@ -20,26 +20,51 @@
 
 #include "../globalsmanager.h"
 #include "lib/src/Downloader/IDownloader.h"
-
-#include <lslutils/thread.h>
+#include "../springunitsync.h"
 #include <list>
 
 class DownloadItem : public LSL::WorkItem {
 public:
     DownloadItem( std::list<IDownload*> item, IDownloader* loader)
-        :m_item(item), m_loader(loader)
+        : m_item(item)
+        , m_loader(loader)
     {}
 
     void Run()
     {
         m_loader->download( m_item );
         m_loader->freeResult( m_item );
+        usync().AddReloadEvent();
     }
 
 private:
     std::list<IDownload*> m_item;
     IDownloader* m_loader;
 };
+
+SearchItem::SearchItem(std::list<IDownloader*> loaders, const std::string name, IDownload::category cat)
+    : m_loaders(loaders)
+    , m_name(name)
+    , m_cat(cat)
+    , m_result_size(0)
+{}
+
+void SearchItem::Run()
+{
+    std::list<IDownload*> results;
+    std::list<IDownloader*>::const_iterator it = m_loaders.begin();
+    for( ; it != m_loaders.end(); ++it ) {
+        (*it)->search(results, m_name, m_cat);
+        if (results.size()) {
+            DownloadItem* dl_item = new DownloadItem(results, *it);
+            prDownloader().m_dl_thread->DoWork(dl_item);
+            m_result_size = results.size();
+            return;
+        }
+    }
+    return;
+}
+
 
 PrDownloader::PrDownloader()
     : m_dl_thread(new LSL::WorkerThread())
@@ -72,7 +97,7 @@ void PrDownloader::RemoveTorrentByName(const std::string &/*name*/)
 {
 }
 
-int PrDownloader::GetWidget(const std::string &name)
+int PrDownloader::GetWidget(const std::string &/*name*/)
 {
     return 0;//Get(m_map_loaders, name, IDownload::CAT_LUAWIDGETS);
 }
@@ -91,19 +116,11 @@ void PrDownloader::SetIngameStatus(bool /*ingame*/)
 {
 }
 
-int PrDownloader::Get(std::list<IDownloader*> &loaders, const std::string &name, IDownload::category cat)
+int PrDownloader::Get(std::list<IDownloader*> loaders, const std::string &name, IDownload::category cat)
 {
-    std::list<IDownload*> results;
-    std::list<IDownloader*>::const_iterator it = loaders.begin();
-    for( ; it != m_game_loaders.end(); ++it ) {
-        (*it)->search(results, name, cat);
-        if (results.size()) {
-            DownloadItem* dl_item = new DownloadItem(results, *it);
-            m_dl_thread->DoWork(dl_item);
-            return results.size();
-        }
-    }
-    return 0;
+    SearchItem* searchItem = new SearchItem(loaders, name, cat);
+    m_dl_thread->DoWork(searchItem);
+    return 1;
 }
 
 PrDownloader& prDownloader()

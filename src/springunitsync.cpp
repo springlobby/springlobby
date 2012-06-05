@@ -70,7 +70,7 @@ SpringUnitSync::~SpringUnitSync()
 
 static int CompareStringNoCase(const wxString& first, const wxString& second)
 {
-	return first.CmpNoCase(second);
+    return first.CmpNoCase(second);
 }
 
 bool SpringUnitSync::FastLoadUnitSyncLib( const wxString& unitsyncloc )
