@@ -7,6 +7,8 @@ SET(CMAKE_CXX_COMPILER /opt/mingw32/bin/i586-pc-mingw32-g++)
 SET( wxWidgets_ROOT_DIR /opt/mingw32/ )
 # here is the target environment located
 
+#this is just a compat setting for pr-downloader
+SET( MINGWLIBS /opt/mingw32/ )
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search 
 # programs in the host environment
