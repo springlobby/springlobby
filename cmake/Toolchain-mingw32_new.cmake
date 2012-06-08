@@ -9,6 +9,7 @@ SET( wxWidgets_ROOT_DIR /opt/mingw32/ )
 
 #this is just a compat setting for pr-downloader
 SET( MINGWLIBS /opt/mingw32/ CACHE INTERNAL MINGWLIB_DUMMMY_DIR FORCE  )
+SET( BUILD_SHARED_LIBS OFF CACHE INTERNAL MINGWLIB_DUMMMY_DIR FORCE  )
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search 
 # programs in the host environment
