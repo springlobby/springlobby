@@ -23,7 +23,6 @@ ENDIF(WIN32)
 # General Settings
 #----------------------------------------------------------------------------------------------------
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
-SET( CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".lib" ".a" )
 
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
@@ -52,9 +51,6 @@ ENDIF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${spri
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise springlobby
 #----------------------------------------------------------------------------------------------------
-SET( OPTION_TORRENT_SYSTEM
-	1 CACHE BOOL
-	"Enables the builtin map/mod p2p downloader (requires libtorrent-rasterbar library)" )
 SET( OPTION_SOUND
 	1 CACHE BOOL
 	"Enables sound notification functionality (requires openAL libraries)" )
@@ -143,7 +139,6 @@ IF( ENABLE_DEBUG_REPORT )
 ENDIF( ENABLE_DEBUG_REPORT )
 
 
-
 IF(WIN32)
 	ADD_DEFINITIONS( ${CURL_CFLAGS}  )
 	LINK_DIRECTORIES( ${CURL_STATIC_LIBRARY_DIRS} )
@@ -219,6 +214,7 @@ cmake_policy(SET CMP0006 OLD)
 
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${header} ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${SpringSettings_RC_FILE} )
+set_target_properties(springsettings PROPERTIES COMPILE_FLAGS -DSPRINGSETTINGS_STANDALONE )
 #the updater needs to be build for windows only
 IF(WIN32)
        ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${SLSharedWithSettings} ${updater_RC_FILE} )
