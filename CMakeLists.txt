@@ -1,8 +1,9 @@
 PROJECT(springlobby)
 
 #set minimum cmake version
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 SET(CMAKE_COLOR_MAKEFILE ON)
+SET(CROSS_COMPILING "FALSE")
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 # MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
@@ -79,47 +80,41 @@ IF( AUX_VERSION )
 	ADD_DEFINITIONS( -DAUX_VERSION="${AUX_VERSION}" )
 ENDIF( AUX_VERSION )
 
+FIND_PACKAGE(Boost 1.40.0 COMPONENTS thread REQUIRED)
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
 #----------------------------------------------------------------------------------------------------
-
-# Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
-# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
 IF(NOT CMAKE_CROSSCOMPILING)
-SET(wxWidgets_USE_LIBS base core net adv aui html xml qa)
+	# Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
+	# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
+	SET(wxWidgets_USE_LIBS base core net adv aui html xml qa)
 
-# We need the Find package for wxWidgets to work
-FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml qa)
-
-# Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
-IF(wxWidgets_FOUND)
-	# Include wxWidgets macros
-	INCLUDE(${wxWidgets_USE_FILE})
-	IF(MSVC)
-		INCLUDE_DIRECTORIES( ${wxWidgets_ROOT_DIR}/include/msvc )
-	ENDIF(MSVC)
-	IF(MINGW)
-		SET(wxWidgets_RC_DIR ${wxWidgets_ROOT_DIR}/include)
-	ENDIF(MINGW)
-	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-ELSE(wxWidgets_FOUND)
-	# For Convenience. If we cannot continue, inform the User.
-	MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
-ENDIF(wxWidgets_FOUND)
+	# We need the Find package for wxWidgets to work, but auto-find is broken in x-compile setup
+	FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml qa)
+	# Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
+	IF(wxWidgets_FOUND)
+		INCLUDE(${wxWidgets_USE_FILE})
+		INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+	ELSE(wxWidgets_FOUND)
+		# For Convenience. If we cannot continue, inform the User.
+		MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
+	ENDIF(wxWidgets_FOUND)
 ELSE (NOT CMAKE_CROSSCOMPILING)
     INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
     link_directories( ${wxWidgets_LIB_DIR} )
 ENDIF(NOT CMAKE_CROSSCOMPILING)
+
 
 #----------------------------------------------------------------------------------------------------
 # openAL libs dependency check
 #----------------------------------------------------------------------------------------------------
 
 IF ( OPTION_SOUND )
-
 	FIND_PACKAGE(OpenAL REQUIRED)
 	INCLUDE_DIRECTORIES(${OPENAL_INCLUDE_DIR})
-
 	Add_Subdirectory( ${springlobby_SOURCE_DIR}/src/sound/alure )
 	INCLUDE_DIRECTORIES( ${springlobby_SOURCE_DIR}/src/sound/alure/include )
 	LINK_LIBRARIES( ${OPENAL_LIBRARY} ${springlobby_BINARY_DIR}/src/sound/alure/libalure.a )
@@ -133,7 +128,7 @@ IF( ENABLE_DEBUG_REPORT )
 	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
 	IF( MINGW )
 		ADD_DEFINITIONS( -gstabs )
-		LINK_LIBRARIES( bfd iberty intl drmingw )
+		LINK_LIBRARIES( bfd iberty intl )
 	ENDIF( MINGW )
 	LIST( APPEND SLSharedWithSettings ${curlSRC} )
 ENDIF( ENABLE_DEBUG_REPORT )
@@ -145,7 +140,7 @@ IF(WIN32)
 	LINK_LIBRARIES( ${CURL_STATIC_LDFLAGS} )
 	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
 ELSE(WIN32)
-	pkg_check_modules( CURL REQUIRED libcurl )
+	FIND_PACKAGE( CURL REQUIRED libcurl )
 	IF( NOT CURL_FOUND )
 		MESSAGE( FATAL_ERROR "required library libCURL not found" )
 	ENDIF( NOT CURL_FOUND )
@@ -174,20 +169,34 @@ ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 
 # If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
 IF(WIN32)
-	IF(MINGW OR CMAKE_CROSSCOMPILING)
-		FIND_PROGRAM(WINDRES NAMES i586-pc-mingw32-windres windres i686-mingw32-windres DOC "path to mingw's windres executable")
-		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/springlobby.rc -o ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o)
-		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/springsettings/settings.rc -o ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o)
-		ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o COMMAND ${WINDRES} -I${springlobby_SOURCE_DIR}/src -I${wxWidgets_RC_DIR} -i${springlobby_SOURCE_DIR}/src/updater/updater.rc -o ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o)
-		SET(springlobby_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sl_icon.o )
-		SET(SpringSettings_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/ss_icon.o )
-		SET(updater_RC_FILE ${CMAKE_CURRENT_BINARY_DIR}/su_icon.o )
-	ENDIF(MINGW OR CMAKE_CROSSCOMPILING)
+	MACRO    (CreateResourceCompileCommand out_var dirIn fileIn fileOut)
+		SET( fileIn "${dirIn}/${fileIn}" )
+		SET( fileOut "${CMAKE_CURRENT_BINARY_DIR}/${fileOut}" )
+	    ADD_CUSTOM_COMMAND(
+		    OUTPUT
+			    "${fileOut}"
+		    DEPENDS
+			    "${fileIn}" 
+		    COMMAND
+			    "${CMAKE_RC_COMPILER}"
+				    "-I${dirIn}"
+				    "-i${fileIn}" 
+				    "-o" "${fileOut}"
+				    "-v"
+		    )
+	    SET_SOURCE_FILES_PROPERTIES(${fileOut} PROPERTIES
+		    GENERATED      TRUE
+		    OBJECT_DEPENDS ${fileIn}
+		    )
+	    SET(${out_var} "${fileOut}")
+	ENDMACRO (CreateResourceCompileCommand out_var dirIn fileIn fileOut)
+# 	CreateResourceCompileCommand(springlobby_RC_FILE ${springlobby_SOURCE_DIR}/src/ springlobby.rc sl_icon.o )
+	CreateResourceCompileCommand(springsettings_RC_FILE ${springlobby_SOURCE_DIR}/src/ settings.rc ss_icon.o )
+	CreateResourceCompileCommand(updater_RC_FILE ${springlobby_SOURCE_DIR}/src/updater updater.rc su_icon.o )
 
-	SET(springlobbySrc ${springlobbySrc} src/Helper/listctrl.cpp)
-	SET(springlobbySrc ${springlobbySrc} src/springlobby.rc)
-	SET(updaterSrc ${updaterSrc} src/updater/updater.rc)
-	SET(StandAloneSettings ${StandAloneSettings} src/springsettings/settings.rc)
+	SET(springlobbySrc ${springlobbySrc} ${springlobby_RC_FILE})
+	SET(updaterSrc ${updaterSrc} ${updater_RC_FILE})
+	SET(StandAloneSettings ${StandAloneSettings} ${springsettings_RC_FILE})
 ELSE(WIN32)
 # If we don't build for windows, include some source code checks as pre-build step.
     ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
@@ -207,8 +216,6 @@ ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 
 # Here we define the executable springlobby ( or on Windows springlobby.exe )
 
-#auto-remove whitespaces before/after lib paths
-cmake_policy(SET CMP0004 OLD)
 #ignore warnings about macosx app bundle output dir
 cmake_policy(SET CMP0006 OLD)
 
@@ -227,12 +234,14 @@ INCLUDE_DIRECTORIES(src/downloader/lib/src)
 Add_Subdirectory(src/lsl)
 INCLUDE_DIRECTORIES(src/lsl/src)
 
+Add_Subdirectory(doc)
+
 #only enable if debugging is necessary
 #ADD_EXECUTABLE(versiontest WIN32 MACOSX_BUNDLE src/versiontest.cpp )
 
 # Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} "unitsync-ext" "libSpringLobbyUtils" "boost_thread-mt" )
-TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} "libSpringLobbyUtils" )
+TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} "unitsync-ext" "libSpringLobbyUtils" )
+TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} "unitsync-ext"  "libSpringLobbyUtils" )
 
 IF(MINGW)
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
@@ -279,7 +288,7 @@ add_custom_target( version
 add_dependencies( distcheck dist )
 add_dependencies( springlobby alure )
 add_dependencies( springlobby version )
-add_dependencies( springlobby pr-downloader )
+add_dependencies( springlobby unitsync-ext )
 add_dependencies( springlobby libSpringLobbyUtils )
 #add_dependencies( versiontest version )
 

@@ -11,21 +11,6 @@ SET( PACKAGE_VERSION ${SPRINGLOBBY_REV} )
 IF (WIN32)
     SET(CPACK_GENERATOR "ZIP")
     SET(CPACK_PACKAGE_FILE_NAME "springlobby-${SPRINGLOBBY_REV}-win32")
-	FILE( GLOB wxdlls "${wxWidgets_LIB_DIR}/wx*.dll" )
-	FOREACH ( file ${wxdlls} )
-		INSTALL(FILES ${file} DESTINATION . )
- 	ENDFOREACH( file )
-	FOREACH ( file boost_thread-gcc44-mt-1_41
-	boost_filesystem-gcc44-mt-1_41
-	boost_system-gcc44-mt-1_41 )
-		INSTALL(FILES ${wxWidgets_LIB_DIR}/${file}.dll DESTINATION . )
- 	ENDFOREACH( file )
-	SET( BASEPATH /opt/mingw32/ )
-	INSTALL(FILES
-		${BASEPATH}/i586-pc-mingw32/bin/mingwm10.dll
-		${BASEPATH}/bin/OpenAL32.dll
-		DESTINATION . )
-	
 ELSE (WIN32)
     SET(CPACK_CMAKE_GENERATOR "Unix Makefiles")
     SET(CPACK_GENERATOR "TBZ2;TGZ")
