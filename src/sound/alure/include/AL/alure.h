@@ -1,10 +1,7 @@
 #ifndef AL_ALURE_H
 #define AL_ALURE_H
 
-#ifdef _WIN32
-#include <al.h>
-#include <alc.h>
-#elif defined(__APPLE__)
+#if defined(__APPLE__)
 #include <OpenAL/alc.h>
 #include <OpenAL/al.h>
 #else
