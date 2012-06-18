@@ -4,21 +4,7 @@ PROJECT(springlobby)
 cmake_minimum_required(VERSION 2.8)
 SET(CMAKE_COLOR_MAKEFILE ON)
 SET(CROSS_COMPILING "FALSE")
-
-# Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
-# MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
-IF(NOT MSVC)
-	IF( NOT MINGW )
-		#wxMSW generates > 9000 warnings with -wextra...
-		ADD_DEFINITIONS( -Wextra )
-	ENDIF( NOT MINGW )
-	ADD_DEFINITIONS( -Wall -Wno-strict-aliasing )
-ELSE(NOT MSVC)
-	ADD_DEFINITIONS(-D_RC_MSVC)
-ENDIF(NOT MSVC)
-IF(WIN32)
-	ADD_DEFINITIONS( -DWXUSINGDLL -D__WXMSW__ -D_WIN32_WINNT=0x0501)
-ENDIF(WIN32)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} )
 
 #----------------------------------------------------------------------------------------------------
 # General Settings
@@ -35,9 +21,6 @@ if(NOT DEFINED SPRINGLOBBY_REV)
     OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 endif(NOT DEFINED SPRINGLOBBY_REV)
-
-INCLUDE(cmake/package_config.cmake)
-INCLUDE(cmake/sources.list)
 
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
@@ -80,189 +63,38 @@ IF( AUX_VERSION )
 	ADD_DEFINITIONS( -DAUX_VERSION="${AUX_VERSION}" )
 ENDIF( AUX_VERSION )
 
-FIND_PACKAGE(Boost 1.40.0 COMPONENTS thread REQUIRED)
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
-
-#----------------------------------------------------------------------------------------------------
-# wxWidgets lib dependency check
-#----------------------------------------------------------------------------------------------------
-IF(NOT CMAKE_CROSSCOMPILING)
-	# Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
-	# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-	SET(wxWidgets_USE_LIBS base core net adv aui html xml qa)
-
-	# We need the Find package for wxWidgets to work, but auto-find is broken in x-compile setup
-	FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml qa)
-	# Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
-	IF(wxWidgets_FOUND)
-		INCLUDE(${wxWidgets_USE_FILE})
-		INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-	ELSE(wxWidgets_FOUND)
-		# For Convenience. If we cannot continue, inform the User.
-		MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
-	ENDIF(wxWidgets_FOUND)
-ELSE (NOT CMAKE_CROSSCOMPILING)
-    INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-    link_directories( ${wxWidgets_LIB_DIR} )
-ENDIF(NOT CMAKE_CROSSCOMPILING)
-
-
-#----------------------------------------------------------------------------------------------------
-# openAL libs dependency check
-#----------------------------------------------------------------------------------------------------
-
-IF ( OPTION_SOUND )
-	FIND_PACKAGE(OpenAL REQUIRED)
-	INCLUDE_DIRECTORIES(${OPENAL_INCLUDE_DIR})
-	Add_Subdirectory( ${springlobby_SOURCE_DIR}/src/sound/alure )
-	INCLUDE_DIRECTORIES( ${springlobby_SOURCE_DIR}/src/sound/alure/include )
-	LINK_LIBRARIES( ${OPENAL_LIBRARY} ${springlobby_BINARY_DIR}/src/sound/alure/libalure.a )
-ELSE ( OPTION_SOUND )
-    # Disable sound.
-    ADD_DEFINITIONS( -DDISABLE_SOUND )
-ENDIF ( OPTION_SOUND )
-
-
-IF( ENABLE_DEBUG_REPORT )
-	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
-	IF( MINGW )
-		ADD_DEFINITIONS( -gstabs )
-		LINK_LIBRARIES( bfd iberty intl )
-	ENDIF( MINGW )
-	LIST( APPEND SLSharedWithSettings ${curlSRC} )
-ENDIF( ENABLE_DEBUG_REPORT )
-
-
-IF(WIN32)
-	ADD_DEFINITIONS( ${CURL_CFLAGS}  )
-	LINK_DIRECTORIES( ${CURL_STATIC_LIBRARY_DIRS} )
-	LINK_LIBRARIES( ${CURL_STATIC_LDFLAGS} )
-	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
-ELSE(WIN32)
-	FIND_PACKAGE( CURL REQUIRED libcurl )
-	IF( NOT CURL_FOUND )
-		MESSAGE( FATAL_ERROR "required library libCURL not found" )
-	ENDIF( NOT CURL_FOUND )
-	ADD_DEFINITIONS( ${CURL_CFLAGS} )
-	LINK_DIRECTORIES( ${CURL_LIB_DIRS} )
-	LINK_LIBRARIES( ${CURL_LDFLAGS} )
-	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
-ENDIF(WIN32)
-
-#----------------------------------------------------------------------------------------------------
-# libnotify dependency check
-#----------------------------------------------------------------------------------------------------
-
-IF( OPTION_NOTIFY AND NOT WIN32 )
-	pkg_check_modules( LIBNOTIFY libnotify )
-	pkg_check_modules( GLIB glib-2.0 )
-	IF( LIBNOTIFY_FOUND )
-		INCLUDE_DIRECTORIES( ${LIBNOTIFY_INCLUDE_DIRS} )
-		LINK_LIBRARIES( ${LIBNOTIFY_LIBRARIES} )
-		INCLUDE_DIRECTORIES( ${GLIB_INCLUDE_DIRS} )
-		LINK_LIBRARIES( ${GLIB_LIBRARIES} )
-		ADD_DEFINITIONS( -DHAVE_LIBNOTIFY )
-	ENDIF( LIBNOTIFY_FOUND )
-ENDIF( OPTION_NOTIFY AND NOT WIN32 )
-
-
-# If we build for windows Systems, we also include the Resource-File containing the Manifest, Icon and other Resources.
-IF(WIN32)
-	MACRO    (CreateResourceCompileCommand out_var dirIn fileIn fileOut)
-		SET( fileIn "${dirIn}/${fileIn}" )
-		SET( fileOut "${CMAKE_CURRENT_BINARY_DIR}/${fileOut}" )
-	    ADD_CUSTOM_COMMAND(
-		    OUTPUT
-			    "${fileOut}"
-		    DEPENDS
-			    "${fileIn}" 
-		    COMMAND
-			    "${CMAKE_RC_COMPILER}"
-				    "-I${dirIn}"
-				    "-i${fileIn}" 
-				    "-o" "${fileOut}"
-				    "-v"
-		    )
-	    SET_SOURCE_FILES_PROPERTIES(${fileOut} PROPERTIES
-		    GENERATED      TRUE
-		    OBJECT_DEPENDS ${fileIn}
-		    )
-	    SET(${out_var} "${fileOut}")
-	ENDMACRO (CreateResourceCompileCommand out_var dirIn fileIn fileOut)
-# 	CreateResourceCompileCommand(springlobby_RC_FILE ${springlobby_SOURCE_DIR}/src/ springlobby.rc sl_icon.o )
-	CreateResourceCompileCommand(springsettings_RC_FILE ${springlobby_SOURCE_DIR}/src/ settings.rc ss_icon.o )
-	CreateResourceCompileCommand(updater_RC_FILE ${springlobby_SOURCE_DIR}/src/updater updater.rc su_icon.o )
-
-	SET(springlobbySrc ${springlobbySrc} ${springlobby_RC_FILE})
-	SET(updaterSrc ${updaterSrc} ${updater_RC_FILE})
-	SET(StandAloneSettings ${StandAloneSettings} ${springsettings_RC_FILE})
-ELSE(WIN32)
-# If we don't build for windows, include some source code checks as pre-build step.
-    ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-ENDIF(WIN32)
-
-#----------------------------------------------------------------------------------------------------
-# L10n support
-#----------------------------------------------------------------------------------------------------
-if( OPTION_TRANSLATION_SUPPORT )
-	include ( ${CMAKE_SOURCE_DIR}/po/CMakeLists.txt )
-endif( OPTION_TRANSLATION_SUPPORT )
-ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
-
-#----------------------------------------------------------------------------------------------------
-# Build target defintions
-#----------------------------------------------------------------------------------------------------
-
-# Here we define the executable springlobby ( or on Windows springlobby.exe )
-
-#ignore warnings about macosx app bundle output dir
-cmake_policy(SET CMP0006 OLD)
-
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${header} ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
-ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings} ${SpringSettings_RC_FILE} )
-set_target_properties(springsettings PROPERTIES COMPILE_FLAGS -DSPRINGSETTINGS_STANDALONE )
-#the updater needs to be build for windows only
-IF(WIN32)
-       ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${SLSharedWithSettings} ${updater_RC_FILE} )
-       TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES} )
-ENDIF(WIN32)
-
-#git submodules 
-Add_Subdirectory(src/downloader/lib)
-INCLUDE_DIRECTORIES(src/downloader/lib/src)
-Add_Subdirectory(src/lsl)
-INCLUDE_DIRECTORIES(src/lsl/src)
 
 Add_Subdirectory(doc)
+Add_Subdirectory(src)
 
-#only enable if debugging is necessary
-#ADD_EXECUTABLE(versiontest WIN32 MACOSX_BUNDLE src/versiontest.cpp )
+#cppcheck stuff
+find_program( CPPCHECK_BINARY NAMES cppcheck )
+IF( EXISTS ${CPPCHECK_BINARY} )
+	ADD_CUSTOM_TARGET( cppcheck )
+	FOREACH( list ${updaterSrc} ${header} ${SLSharedWithSettings} ${StandAloneSettings} ${curlSRC} ${SettingsSrc} ${springlobbySrc} )
+		FOREACH( SOURCEFILE ${list} )
+			LIST( APPEND CHECKPATHS ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCEFILE} )
+		ENDFOREACH( SOURCEFILE )
+	ENDFOREACH( list )
 
-# Here the wxWidgets Libraries are added. These are set for us by the FIND Script. If you need other Libraries, you can add them here as well.
-TARGET_LINK_LIBRARIES(springlobby ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} "unitsync-ext" "libSpringLobbyUtils" )
-TARGET_LINK_LIBRARIES(springsettings ${wxWidgets_LIBRARIES} ${SL_BOOST_LIBS} "unitsync-ext"  "libSpringLobbyUtils" )
+	ADD_CUSTOM_TARGET( cppcheck-full ${CPPCHECK_BINARY} "--xml" "--enable=all" "-f" "--quiet" "-j 3" 
+		${CHECKPATHS} "2>${CMAKE_CURRENT_BINARY_DIR}/cppcheck-full.xml" "&&" 
+			"${CMAKE_CURRENT_SOURCE_DIR}/tools/cppcheck-htmlreport" "--source-dir=${CMAKE_CURRENT_SOURCE_DIR}/" 
+				"--file=${CMAKE_CURRENT_BINARY_DIR}/cppcheck-full.xml" "--report-dir=report-full" "--title=SpringLobby - Full")
+	ADD_CUSTOM_TARGET( cppcheck-lite ${CPPCHECK_BINARY} "--xml" "-f" "--quiet" "-j 3" 
+		${CHECKPATHS} "2>${CMAKE_CURRENT_BINARY_DIR}/cppcheck-lite.xml" "&&" 
+			"${CMAKE_CURRENT_SOURCE_DIR}/tools/cppcheck-htmlreport" "--source-dir=${CMAKE_CURRENT_SOURCE_DIR}/" 
+				"--file=${CMAKE_CURRENT_BINARY_DIR}/cppcheck-lite.xml" "--report-dir=report-lite" "--title=SpringLobby - Lite")
+	add_dependencies( cppcheck cppcheck-full )
+	add_dependencies( cppcheck cppcheck-lite )
+ENDIF( EXISTS ${CPPCHECK_BINARY} )
 
-IF(MINGW)
-	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
-	TARGET_LINK_LIBRARIES( springsettings iphlpapi  )
-ENDIF(MINGW)
+IF( WIN32 )
+	LIST( APPEND SLSharedWithSettings stacktrace.c )
+ELSE( WIN32 )
+	LIST( APPEND SLSharedWithSettings stacktrace.cpp )
+ENDIF( WIN32 )
 
-IF (WIN32)
-    install(TARGETS springlobby springlobby_updater springsettings RUNTIME DESTINATION .)
-    install(FILES AUTHORS COPYING NEWS README THANKS  DESTINATION .)
-	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
-ELSE (WIN32)
-    install(TARGETS springlobby springsettings RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
-    install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
-    install(FILES src/images/springlobby.svg DESTINATION
-	    ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
-    install(FILES src/springlobby.desktop DESTINATION
-	    ${CMAKE_INSTALL_PREFIX}/share/applications)
-ENDIF (WIN32)
-
-INCLUDE(cmake/compat_flags.cmake)
-INCLUDE_DIRECTORIES( ${springlobby_SOURCE_DIR}/src )
 
 add_custom_target(pack
 					${CMAKE_MAKE_PROGRAM} package
