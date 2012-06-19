@@ -1,13 +1,14 @@
 add_sources(springlobbySrc
-	downloader/prdownloader.cpp
-	downloader/downloadlistctrl.cpp
+	prdownloader.cpp
+	downloadlistctrl.cpp
 )
 	
 #currently unused
+clear(filelistSrc)
 add_sources( filelistSrc
-	downloader/filelister/filelistctrl.cpp
-	downloader/filelister/filelistdialog.cpp
-	downloader/filelister/filelistfilter.cpp 
+	filelister/filelistctrl.cpp
+	filelister/filelistdialog.cpp
+	filelister/filelistfilter.cpp 
 )
 
 Add_Subdirectory(lib)

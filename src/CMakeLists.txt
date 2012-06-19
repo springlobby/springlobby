@@ -110,6 +110,7 @@ ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 #ignore warnings about macosx app bundle output dir
 cmake_policy(SET CMP0006 OLD)
 
+clear(springlobbySrc)
 add_sources(springlobbySrc
 	chatpanelmenu.cpp
 		
@@ -153,7 +154,6 @@ add_sources(springlobbySrc
 	springprocess.cpp
 	tasserver.cpp
 	tdfcontainer.cpp
-
 	ui.cpp
 	user.cpp
 	useractions.cpp
@@ -165,14 +165,13 @@ add_sources(springlobbySrc
 	
 	pingthread.cpp
 	iserverevents.cpp
-		
 )
 
-
+clear(curlSRC)
 add_sources( curlSRC
 	utils/curlhelper.cpp
 )
-
+clear(SLSharedWithSettings)
 add_sources(SLSharedWithSettings
 	customizations.cpp
 	Helper/wxTranslationHelper.cpp
@@ -202,6 +201,7 @@ add_sources(SLSharedWithSettings
 	Helper/slconfig.cpp
 )
 
+clear( updaterSrc)
 add_sources( updaterSrc
 	updater/updatermainwindow.cpp
 	updater/updater.cpp
@@ -215,6 +215,7 @@ FILE( GLOB header "*.h" )
 FILE( GLOB header2 "*/*.h" )
 
 #grep -lR cpp\"$ * | sed -e "s/\.h/\.cpp/g"
+clear( templatesources)
 add_sources( templatesources
 	hosting/battleroommmoptionstab.cxx
 	customvirtlistctrl.cpp
@@ -238,13 +239,20 @@ add_subdirectory(options)
 add_subdirectory(springsettings)
 add_subdirectory(utils)
 add_subdirectory(widgets)
+add_subdirectory(wxkeybinder)
+
+IF(WIN32)
+	add_sources(springlobbySrc stacktrace.c)
+ELSE(WIN32)
+	add_sources(springlobbySrc stacktrace.cpp)
+ENDIF(WIN32)
 
 LIST( APPEND header ${header2} ${templatesources} )
 set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )
 Add_Subdirectory(lsl)
 INCLUDE_DIRECTORIES(lsl/src)
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${header} ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
 #the updater needs to be build for windows only
 IF(WIN32)
 	CreateResourceCompileCommand(springlobby_RC_FILE ${springlobby_SOURCE_DIR}/src/ springlobby.rc sl_icon.o )
