@@ -70,7 +70,7 @@ IF( ENABLE_DEBUG_REPORT )
 	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
 	IF( MINGW )
 		ADD_DEFINITIONS( -gstabs )
-		LINK_LIBRARIES( bfd iberty intl )
+		LINK_LIBRARIES( bfd intl )
 	ENDIF( MINGW )
 	LIST( APPEND SLSharedWithSettings ${curlSRC} )
 ENDIF( ENABLE_DEBUG_REPORT )
@@ -113,9 +113,7 @@ cmake_policy(SET CMP0006 OLD)
 clear(springlobbySrc)
 add_sources(springlobbySrc
 	chatpanelmenu.cpp
-		
 	updater/updater.cpp
-		
 	agreementdialog.cpp
 	base64.cpp
 	battle.cpp
@@ -242,7 +240,7 @@ add_subdirectory(widgets)
 add_subdirectory(wxkeybinder)
 
 IF(WIN32)
-	add_sources(springlobbySrc stacktrace.c)
+	add_sources(springlobbySrc stacktrace.c Helper/listctrl.cpp)
 ELSE(WIN32)
 	add_sources(springlobbySrc stacktrace.cpp)
 ENDIF(WIN32)
