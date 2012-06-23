@@ -202,15 +202,6 @@ add_sources(SLSharedWithSettings
 	Helper/slconfig.cpp
 )
 
-clear( updaterSrc)
-add_sources( updaterSrc
-	updater/updatermainwindow.cpp
-	updater/updater.cpp
-	updater/updaterapp.cpp
-	utils/activitynotice.cpp
-	utils/misc.cpp
-	customizations.cpp
-)
 
 FILE( GLOB header "*.h" )
 FILE( GLOB header2 "*/*.h" )
@@ -253,24 +244,20 @@ ENDIF(WIN32)
 LIST( APPEND header ${header2} ${templatesources} )
 set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )
 
+mylink( ${EXTRA_LIB_DIRS} ${link_directories} ) 
+
 IF(WIN32)
 	CreateResourceCompileCommand(springlobby_RC_FILE ${springlobby_SOURCE_DIR}/src/ springlobby.rc sl_icon.o )
-	CreateResourceCompileCommand(updater_RC_FILE ${springlobby_SOURCE_DIR}/src/updater updater.rc su_icon.o )
 	SET(springlobbySrc ${springlobbySrc} ${springlobby_RC_FILE})
-	SET(updaterSrc ${updaterSrc} ${updater_RC_FILE})
+	add_subdirectory(updater)
 ENDIF()
 
-mylink( ${EXTRA_LIB_DIRS} ${link_directories} ) 
-# mylink(  )
-message(STATUS "LIBDIRS " ${link_directories} ${EXTRA_LIB_DIRS} )
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
 #the updater needs to be build for windows only
 IF(WIN32)
 	link_directories( ${link_directories} ${EXTRA_LIB_DIRS} )
-	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${SLSharedWithSettings} ${updater_RC_FILE} )
-	TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES} )
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
-	install(TARGETS springlobby springlobby_updater RUNTIME DESTINATION .)
+	install(TARGETS springlobby RUNTIME DESTINATION .)
     install(FILES AUTHORS COPYING NEWS README THANKS  DESTINATION .)
 	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
 ELSE (WIN32)
