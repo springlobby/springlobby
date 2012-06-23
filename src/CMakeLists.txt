@@ -1,7 +1,6 @@
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 INCLUDE(compat_flags)
-INCLUDE(SpringLobbyMacros)
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 # MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
@@ -15,9 +14,15 @@ ELSE(NOT MSVC)
 	ADD_DEFINITIONS(-D_RC_MSVC)
 ENDIF(NOT MSVC)
 
+set(Boost_USE_MULTITHREADED      ON)
+if( ${CMAKE_CROSSCOMPILING} )
+	set(Boost_USE_STATIC_LIBS       ON)
+	set(Boost_USE_STATIC_RUNTIME    ON)
+endif()
+
 FIND_PACKAGE(Boost 1.40.0 COMPONENTS thread REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
+add_to_global(link_directories ${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
 
 #----------------------------------------------------------------------------------------------------
 # L10n support
@@ -47,7 +52,7 @@ IF(NOT CMAKE_CROSSCOMPILING)
 	ENDIF(wxWidgets_FOUND)
 ELSE (NOT CMAKE_CROSSCOMPILING)
     INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-    link_directories( ${wxWidgets_LIB_DIR} )
+    add_to_global(link_directories ${wxWidgets_LIB_DIR} )
 ENDIF(NOT CMAKE_CROSSCOMPILING)
 
 
@@ -55,6 +60,7 @@ ENDIF(NOT CMAKE_CROSSCOMPILING)
 # openAL libs dependency check
 #----------------------------------------------------------------------------------------------------
 
+add_to_global(link_directories  ${springlobby_BINARY_DIR}/src/sound/alure )
 IF ( OPTION_SOUND )
 	FIND_PACKAGE(OpenAL REQUIRED)
 	INCLUDE_DIRECTORIES(${OPENAL_INCLUDE_DIR})
@@ -77,7 +83,7 @@ ENDIF( ENABLE_DEBUG_REPORT )
 
 IF(WIN32)
 	ADD_DEFINITIONS( ${CURL_CFLAGS}  )
-	LINK_DIRECTORIES( ${CURL_STATIC_LIBRARY_DIRS} )
+	add_to_global(link_directories  ${CURL_STATIC_LIBRARY_DIRS} )
 	LINK_LIBRARIES( ${CURL_STATIC_LDFLAGS} )
 	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
 ELSE(WIN32)
@@ -86,7 +92,7 @@ ELSE(WIN32)
 		MESSAGE( FATAL_ERROR "required library libCURL not found" )
 	ENDIF( NOT CURL_FOUND )
 	ADD_DEFINITIONS( ${CURL_CFLAGS} )
-	LINK_DIRECTORIES( ${CURL_LIB_DIRS} )
+	add_to_global(link_directories  ${CURL_LIB_DIRS} )
 	LINK_LIBRARIES( ${CURL_LDFLAGS} )
 	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
 ENDIF(WIN32)
@@ -106,9 +112,6 @@ IF( OPTION_NOTIFY AND NOT WIN32 )
 		ADD_DEFINITIONS( -DHAVE_LIBNOTIFY )
 	ENDIF( LIBNOTIFY_FOUND )
 ENDIF( OPTION_NOTIFY AND NOT WIN32 )
-
-#ignore warnings about macosx app bundle output dir
-cmake_policy(SET CMP0006 OLD)
 
 clear(springlobbySrc)
 add_sources(springlobbySrc
@@ -234,10 +237,12 @@ add_subdirectory(gui)
 add_subdirectory(Helper)
 add_subdirectory(hosting)
 add_subdirectory(options)
-add_subdirectory(springsettings)
 add_subdirectory(utils)
 add_subdirectory(widgets)
 add_subdirectory(wxkeybinder)
+Add_Subdirectory(lsl)
+INCLUDE_DIRECTORIES(lsl/src)
+add_subdirectory(springsettings)
 
 IF(WIN32)
 	add_sources(springlobbySrc stacktrace.c Helper/listctrl.cpp)
@@ -247,17 +252,21 @@ ENDIF(WIN32)
 
 LIST( APPEND header ${header2} ${templatesources} )
 set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )
-Add_Subdirectory(lsl)
-INCLUDE_DIRECTORIES(lsl/src)
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
-#the updater needs to be build for windows only
 IF(WIN32)
 	CreateResourceCompileCommand(springlobby_RC_FILE ${springlobby_SOURCE_DIR}/src/ springlobby.rc sl_icon.o )
 	CreateResourceCompileCommand(updater_RC_FILE ${springlobby_SOURCE_DIR}/src/updater updater.rc su_icon.o )
 	SET(springlobbySrc ${springlobbySrc} ${springlobby_RC_FILE})
 	SET(updaterSrc ${updaterSrc} ${updater_RC_FILE})
-	
+ENDIF()
+
+mylink( ${EXTRA_LIB_DIRS} ${link_directories} ) 
+# mylink(  )
+message(STATUS "LIBDIRS " ${link_directories} ${EXTRA_LIB_DIRS} )
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
+#the updater needs to be build for windows only
+IF(WIN32)
+	link_directories( ${link_directories} ${EXTRA_LIB_DIRS} )
 	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${SLSharedWithSettings} ${updater_RC_FILE} )
 	TARGET_LINK_LIBRARIES(springlobby_updater ${wxWidgets_LIBRARIES} )
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )

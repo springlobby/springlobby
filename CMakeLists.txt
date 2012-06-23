@@ -2,6 +2,12 @@ PROJECT(springlobby)
 
 #set minimum cmake version
 cmake_minimum_required(VERSION 2.8)
+
+#ignore warnings about macosx app bundle output dir
+cmake_policy(SET CMP0006 OLD)
+#don't ouch (supposedly) relative paths passed to link_directories
+cmake_policy(SET CMP0015 OLD)
+
 SET(CMAKE_COLOR_MAKEFILE ON)
 SET(CROSS_COMPILING "FALSE")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} )
@@ -36,7 +42,7 @@ ENDIF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${spri
 # Options, that can be changed be the User in order to customise springlobby
 #----------------------------------------------------------------------------------------------------
 SET( OPTION_SOUND
-	1 CACHE BOOL
+	0 CACHE BOOL
 	"Enables sound notification functionality (requires openAL libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
 	1 CACHE BOOL
@@ -45,11 +51,11 @@ SET( OPTION_NOTIFY
 	1 CACHE BOOL
 	"Enables libnotify support for popup status messages (requires libnotify)" )
 SET( BUILD_SHARED_LIBS
-	1 CACHE BOOL
+	0 CACHE BOOL
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
 
 SET( ENABLE_DEBUG_REPORT
-	1 CACHE BOOL
+	0 CACHE BOOL
 	"Enable automatic uploading of crash information (requires libcurl)" )
 
 SET( SPRINGLOBBY_REV
@@ -63,7 +69,9 @@ IF( AUX_VERSION )
 	ADD_DEFINITIONS( -DAUX_VERSION="${AUX_VERSION}" )
 ENDIF( AUX_VERSION )
 
-
+INCLUDE(SpringLobbyMacros)
+clear(link_directories)
+clear(springlobbySrc)
 Add_Subdirectory(doc)
 Add_Subdirectory(src)
 

@@ -1,6 +1,7 @@
 add_sources(springlobbySrc
 	activitynotice.cpp	
 	misc.cpp
+	curlhelper.cpp
 	tasutil.cpp
 	networkevents.cpp
 	md5.c
