@@ -126,9 +126,5 @@ add_custom_target( version
 				${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR}/cmake/config.h ${springlobby_BINARY_DIR}/springlobby_config.h
 				)
 add_dependencies( distcheck dist )
-add_dependencies( springlobby alure )
-add_dependencies( springlobby version )
-add_dependencies( springlobby unitsync-ext )
-add_dependencies( springlobby libSpringLobbyUtils )
 #add_dependencies( versiontest version )
 

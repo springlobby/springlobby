@@ -272,7 +272,12 @@ ELSE (WIN32)
 ENDIF (WIN32)
 
 
-TARGET_LINK_LIBRARIES(springlobby libsettings libSpringLobbyUtils unitsync-ext 
+TARGET_LINK_LIBRARIES(springlobby libsettings libSpringLobbyUtils pr-downloader_static 
 	${wxWidgets_LIBRARIES} 
 	${Boost_LIBRARIES})
+	
+add_dependencies( springlobby alure )
+add_dependencies( springlobby version )
+add_dependencies( springlobby pr-downloader_static )
+add_dependencies( springlobby libSpringLobbyUtils )
 

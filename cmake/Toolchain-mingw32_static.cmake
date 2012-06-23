@@ -53,7 +53,7 @@ libwx_baseu_net-2.8-i686-pc-mingw32.a  libwx_mswu_aui-2.8-i686-pc-mingw32.a   li
 libwx_baseu_xml-2.8-i686-pc-mingw32.a  libwx_mswu_core-2.8-i686-pc-mingw32.a  libwx_mswu_richtext-2.8-i686-pc-mingw32.a
 libwx_msw_aui-2.8-i686-pc-mingw32.a    libwx_mswu_gl-2.8-i686-pc-mingw32.a    libwx_mswu_xrc-2.8-i686-pc-mingw32.a
 	png tiff jpeg lzma xml2 gnutls-openssl ssh2 idn OpenAL32 nettle iconv gcrypt wldap32 gnutls 
-	expat gmp hogweed gpg-error SDL gnutls nettle curl ws2_32 intl shell32 setupapi comctl32 OpenAL32 )
+	expat gmp hogweed gpg-error SDL gnutls nettle curl ws2_32 intl shell32 setupapi comctl32 OpenAL32 z )
 SET( CURL_CFLAGS "-I/opt/mingw32/usr/i686-pc-mingw32/include" )
 # SET( CURL_STATIC_LIBRARY_DIRS "/opt/mingw32/usr/i686-pc-mingw32/lib")
 # SET( CURL_STATIC_LDFLAGS "-L/opt/mingw32/usr/i686-pc-mingw32/lib;-lcurl;-lws2_32")
