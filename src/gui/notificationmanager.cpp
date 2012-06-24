@@ -10,9 +10,7 @@
 #include "../images/springlobby_64.png.h"
 #include "inotification.h"
 
-#ifndef DISABLE_SOUND
-	#include "../alsound.h"
-#endif
+#include "sound/alsound.h"
 
 #ifdef HAVE_LIBNOTIFY
 	#include "libnotify.h"

@@ -60,18 +60,6 @@ ENDIF(NOT CMAKE_CROSSCOMPILING)
 # openAL libs dependency check
 #----------------------------------------------------------------------------------------------------
 
-add_to_global(link_directories  ${springlobby_BINARY_DIR}/src/sound/alure )
-IF ( OPTION_SOUND )
-	FIND_PACKAGE(OpenAL REQUIRED)
-	INCLUDE_DIRECTORIES(${OPENAL_INCLUDE_DIR})
-	Add_Subdirectory( ${springlobby_SOURCE_DIR}/src/sound/alure )
-	INCLUDE_DIRECTORIES( ${springlobby_SOURCE_DIR}/src/sound/alure/include )
-	LINK_LIBRARIES( ${OPENAL_LIBRARY} ${springlobby_BINARY_DIR}/src/sound/alure/libalure.a )
-ELSE ( OPTION_SOUND )
-    # Disable sound.
-    ADD_DEFINITIONS( -DDISABLE_SOUND )
-ENDIF ( OPTION_SOUND )
-
 IF( ENABLE_DEBUG_REPORT )
 	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
 	IF( MINGW )
@@ -142,7 +130,6 @@ add_sources(springlobbySrc
 	playback/replaylist.cpp
 	playback/savegamelist.cpp
 	
-	alsound.cpp
 	selectusersdialog.cpp
 	server.cpp
 	reconnectdialog.cpp
@@ -228,6 +215,7 @@ add_subdirectory(gui)
 add_subdirectory(Helper)
 add_subdirectory(hosting)
 add_subdirectory(options)
+add_subdirectory(sound)
 add_subdirectory(utils)
 add_subdirectory(widgets)
 add_subdirectory(wxkeybinder)
@@ -266,10 +254,10 @@ ENDIF (WIN32)
 
 
 TARGET_LINK_LIBRARIES(springlobby libsettings libSpringLobbyUtils pr-downloader_static 
-	${wxWidgets_LIBRARIES} 
+	${wxWidgets_LIBRARIES} ${sound_libraries}
 	${Boost_LIBRARIES})
 	
-add_dependencies( springlobby alure )
+# add_dependencies( springlobby alure )
 add_dependencies( springlobby version )
 add_dependencies( springlobby pr-downloader_static )
 add_dependencies( springlobby libSpringLobbyUtils )

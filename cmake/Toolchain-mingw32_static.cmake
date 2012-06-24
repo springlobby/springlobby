@@ -46,11 +46,12 @@ SET( LOCALE_INSTALL_DIR "${CMAKE_BINARY_DIR}/locale" CACHE STRING
 	"message catalogs will installed here" FORCE )
 SET( CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE STRING
 	"install prefix" FORCE )
-ADD_DEFINITIONS(-mthreads -D_WIN32_WINNT=0x0501  -DBOOST_THREAD_USE_LIB )
+#3/4 make linking satic possible
+ADD_DEFINITIONS(-mthreads -D_WIN32_WINNT=0x0501  -DBOOST_THREAD_USE_LIB -DAL_LIBTYPE_STATIC )
 LINK_LIBRARIES(
 	${wxWidgets_LIBRARIES}
 	png tiff jpeg lzma xml2 gnutls-openssl ssh2 idn OpenAL32 nettle iconv gcrypt wldap32 gnutls 
-	expat gmp hogweed gpg-error SDL gnutls nettle curl ws2_32 intl shell32 setupapi comctl32 OpenAL32 z )
+	expat gmp hogweed gpg-error SDL gnutls nettle curl ws2_32 intl shell32 setupapi comctl32 OpenAL32 z winmm)
 SET( CURL_CFLAGS "-I/opt/mingw32/usr/i686-pc-mingw32/include" )
 # SET( CURL_STATIC_LIBRARY_DIRS "/opt/mingw32/usr/i686-pc-mingw32/lib")
 # SET( CURL_STATIC_LDFLAGS "-L/opt/mingw32/usr/i686-pc-mingw32/lib;-lcurl;-lws2_32")

@@ -57,7 +57,7 @@
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
 #include "updater/versionchecker.h"
-#include "alsound.h"
+#include "sound/alsound.h"
 #include "globalsmanager.h"
 #include "utils/misc.h"
 

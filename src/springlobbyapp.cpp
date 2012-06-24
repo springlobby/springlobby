@@ -52,7 +52,7 @@
 #include "playback/playbacktab.h"
 #include "defines.h"
 #include "customizations.h"
-#include "alsound.h"
+#include "sound/alsound.h"
 #include "mapselectdialog.h"
 
 #include <wx/debugrpt.h>

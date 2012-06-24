@@ -166,15 +166,9 @@ ALsizei write_wrap(void *user_data, const ALubyte *buf, ALuint bytes)
 alureInt64 seek_wrap(void *user_data, alureInt64 offset, int whence)
 {
     FILE *f = (FILE*)user_data;
-#ifdef HAVE_FSEEKO
-    if(offset != (off_t)offset || fseeko(f, offset, whence) != 0)
-        return -1;
-    return ftello(f);
-#else
     if(offset != (long)offset || fseek(f, offset, whence) != 0)
         return -1;
     return ftell(f);
-#endif
 }
 
 UserFuncs Funcs = {
