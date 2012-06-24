@@ -21,7 +21,6 @@ Updater.fbp
 *.diff
 config.h
 doc/html/
-doc/*
 formbuilder.cpp
 formbuilder.h
 options.xrc
