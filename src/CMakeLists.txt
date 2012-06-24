@@ -64,9 +64,8 @@ IF( ENABLE_DEBUG_REPORT )
 	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
 	IF( MINGW )
 		ADD_DEFINITIONS( -gstabs )
-		LINK_LIBRARIES( bfd intl )
+		LINK_LIBRARIES( bfd intl drmingw )
 	ENDIF( MINGW )
-	LIST( APPEND SLSharedWithSettings ${curlSRC} )
 ENDIF( ENABLE_DEBUG_REPORT )
 
 IF(WIN32)
@@ -155,10 +154,6 @@ add_sources(springlobbySrc
 	iserverevents.cpp
 )
 
-clear(curlSRC)
-add_sources( curlSRC
-	utils/curlhelper.cpp
-)
 clear(SLSharedWithSettings)
 add_sources(SLSharedWithSettings
 	customizations.cpp
