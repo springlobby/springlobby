@@ -103,6 +103,17 @@ ELSE( WIN32 )
 	LIST( APPEND SLSharedWithSettings stacktrace.cpp )
 ENDIF( WIN32 )
 
+INCLUDE(cmake/package_config.cmake)
+IF(WIN32)
+    install(FILES AUTHORS COPYING NEWS README THANKS  DESTINATION .)
+	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
+ELSE (WIN32)
+    install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
+    install(FILES images/springlobby.svg DESTINATION
+	    ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
+    install(FILES springlobby.desktop DESTINATION
+	    ${CMAKE_INSTALL_PREFIX}/share/applications)
+ENDIF (WIN32)
 
 add_custom_target(pack
 					${CMAKE_MAKE_PROGRAM} package

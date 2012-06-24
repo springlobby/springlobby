@@ -18,10 +18,10 @@ SET( BUILD_SHARED_LIBS OFF CACHE INTERNAL MINGWLIB_DUMMMY_DIR FORCE  )
 SET(CMAKE_FIND_ROOT_PATH /opt/mingw32 )
 SET( wxWidgets_CONFIG_EXECUTABLE /opt/mingw32/usr/i686-pc-mingw32/bin/wx-config )
 SET( wxWidgets_LIBRARIES
-	libwx_baseu-2.8-i686-pc-mingw32.a      libwx_mswu_adv-2.8-i686-pc-mingw32.a   libwx_mswu_html-2.8-i686-pc-mingw32.a      libwxregexu-2.8-i686-pc-mingw32.a
-	libwx_baseu_net-2.8-i686-pc-mingw32.a  libwx_mswu_aui-2.8-i686-pc-mingw32.a   libwx_mswu_qa-2.8-i686-pc-mingw32.a
-	libwx_baseu_xml-2.8-i686-pc-mingw32.a  libwx_mswu_core-2.8-i686-pc-mingw32.a  libwx_mswu_richtext-2.8-i686-pc-mingw32.a
-	libwx_msw_aui-2.8-i686-pc-mingw32.a    libwx_mswu_gl-2.8-i686-pc-mingw32.a    libwx_mswu_xrc-2.8-i686-pc-mingw32.a 
+	libwx_baseu-2.8-i686-pc-mingw32.a      libwx_mswu_adv-2.8-i686-pc-mingw32.a   libwx_mswu_html-2.8-i686-pc-mingw32.a      
+	libwxregexu-2.8-i686-pc-mingw32.a		libwx_baseu_net-2.8-i686-pc-mingw32.a  libwx_mswu_aui-2.8-i686-pc-mingw32.a   
+	libwx_mswu_qa-2.8-i686-pc-mingw32.a 	libwx_baseu_xml-2.8-i686-pc-mingw32.a  libwx_mswu_core-2.8-i686-pc-mingw32.a  
+	libwx_mswu_richtext-2.8-i686-pc-mingw32.a
 )
 SET( wxWidgets_INCLUDE_DIRS /opt/mingw32/usr/i686-pc-mingw32/include/wx-2.8/ /opt/mingw32/usr/i686-pc-mingw32/lib/wx/include/i586-pc-mingw32-msw-unicode-release-2.8/)
 SET( wxWidgets_LIB_DIR /opt/mingw32/usr/i686-pc-mingw32/lib )
@@ -48,10 +48,7 @@ SET( CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE STRING
 	"install prefix" FORCE )
 ADD_DEFINITIONS(-mthreads -D_WIN32_WINNT=0x0501  -DBOOST_THREAD_USE_LIB )
 LINK_LIBRARIES(
-libwx_baseu-2.8-i686-pc-mingw32.a      libwx_mswu_adv-2.8-i686-pc-mingw32.a   libwx_mswu_html-2.8-i686-pc-mingw32.a      libwxregexu-2.8-i686-pc-mingw32.a
-libwx_baseu_net-2.8-i686-pc-mingw32.a  libwx_mswu_aui-2.8-i686-pc-mingw32.a   libwx_mswu_qa-2.8-i686-pc-mingw32.a
-libwx_baseu_xml-2.8-i686-pc-mingw32.a  libwx_mswu_core-2.8-i686-pc-mingw32.a  libwx_mswu_richtext-2.8-i686-pc-mingw32.a
-libwx_msw_aui-2.8-i686-pc-mingw32.a    libwx_mswu_gl-2.8-i686-pc-mingw32.a    libwx_mswu_xrc-2.8-i686-pc-mingw32.a
+	${wxWidgets_LIBRARIES}
 	png tiff jpeg lzma xml2 gnutls-openssl ssh2 idn OpenAL32 nettle iconv gcrypt wldap32 gnutls 
 	expat gmp hogweed gpg-error SDL gnutls nettle curl ws2_32 intl shell32 setupapi comctl32 OpenAL32 z )
 SET( CURL_CFLAGS "-I/opt/mingw32/usr/i686-pc-mingw32/include" )

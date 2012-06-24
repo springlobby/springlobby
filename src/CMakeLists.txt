@@ -258,15 +258,8 @@ IF(WIN32)
 	link_directories( ${link_directories} ${EXTRA_LIB_DIRS} )
 	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
 	install(TARGETS springlobby RUNTIME DESTINATION .)
-    install(FILES AUTHORS COPYING NEWS README THANKS  DESTINATION .)
-	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
 ELSE (WIN32)
     install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
-    install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
-    install(FILES images/springlobby.svg DESTINATION
-	    ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
-    install(FILES springlobby.desktop DESTINATION
-	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 	#only do this on platforms with awk expected to be installed
 	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF (WIN32)
