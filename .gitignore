@@ -25,10 +25,6 @@ doc/*
 formbuilder.cpp
 formbuilder.h
 options.xrc
-patch0.patch
-remrampatch.diff
-springlobby
-springsettings
 src/images/logo_xmas.svg
 src/images/replay_icon.xpm
 src/images/updater/

@@ -1,0 +1,13 @@
+add_sources(SettingsSrc
+	HotkeyForms.cpp
+	AddSelectionCmdDlg.cpp
+	commandlist.cpp
+	hotkey_panel.cpp
+	hotkey_parser.cpp
+	KeynameConverter.cpp
+	wxSpringCommand.cpp
+	SpringDefaultProfile.cpp
+	HotkeyTypes.cpp
+	CommandOrderDlg.cpp
+	ChangeMetaDlg.cpp
+)
