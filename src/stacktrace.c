@@ -1,5 +1,3 @@
-#ifdef __WXMSW__
-
 //we include this here so we can use our own exception filter but still benefit from drmingw report stuff
 /*
  * exchndl.c
@@ -1122,5 +1120,3 @@ LONG WINAPI DrMingwGenerateStacktrace(PEXCEPTION_POINTERS pExceptionInfo, const 
 	else
 		return EXCEPTION_CONTINUE_SEARCH;
 }
-
-#endif // __WXMSW__

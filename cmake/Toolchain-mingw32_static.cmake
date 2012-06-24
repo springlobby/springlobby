@@ -29,6 +29,7 @@ SET( wxWidgets_CONFIGURATION mswu )
 SET( wxWidgets_FOUND ON )
 SET( CMAKE_VERBOSE_MAKEFILE OFF )
 SET( wxWidgets_RC_DIR /opt/mingw32/usr/i686-pc-mingw32/include/wx-2.8)
+
 #otherwise cmake finds linux lib for win...
 SET( ENV{OPENALDIR} /opt/mingw32/ )
 SET( OPENAL_LIBRARY OpenAL32 )
@@ -40,18 +41,17 @@ SET( BOOST_ROOT /opt/mingw32/usr/i686-pc-mingw32 )
 set( EXTRA_LIB_DIRS /opt/mingw32/usr/i686-pc-mingw32/lib /opt/mingw32/usr/lib  )
 
 INCLUDE_DIRECTORIES( /opt/mingw32/usr/i686-pc-mingw32/lib/wx/include/i686-pc-mingw32-msw-unicode-release-static-2.8/ /opt/mingw32/usr/lib/gcc/i686-pc-mingw32/4.7.0/include/ /opt/mingw32/usr/i686-pc-mingw32/include )
-# INCLUDE_DIRECTORIES(/opt/mingw32/include/drmingw/include  )
 
 SET( LOCALE_INSTALL_DIR "${CMAKE_BINARY_DIR}/locale" CACHE STRING
 	"message catalogs will installed here" FORCE )
 SET( CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE STRING
 	"install prefix" FORCE )
 #3/4 make linking satic possible
-ADD_DEFINITIONS(-mthreads -D_WIN32_WINNT=0x0501  -DBOOST_THREAD_USE_LIB -DAL_LIBTYPE_STATIC )
+ADD_DEFINITIONS(-D__WXMSW__ -mthreads -D_WIN32_WINNT=0x0501  -DBOOST_THREAD_USE_LIB -DAL_LIBTYPE_STATIC )
 LINK_LIBRARIES(
 	${wxWidgets_LIBRARIES}
 	png tiff jpeg lzma xml2 gnutls-openssl ssh2 idn OpenAL32 nettle iconv gcrypt wldap32 gnutls 
-	expat gmp hogweed gpg-error SDL gnutls nettle curl ws2_32 intl shell32 setupapi comctl32 OpenAL32 z winmm)
+	expat gmp hogweed gpg-error SDL gnutls nettle curl ws2_32 intl shell32 setupapi comctl32 OpenAL32 z winmm drmingw)
 SET( CURL_CFLAGS "-I/opt/mingw32/usr/i686-pc-mingw32/include" )
 # SET( CURL_STATIC_LIBRARY_DIRS "/opt/mingw32/usr/i686-pc-mingw32/lib")
 # SET( CURL_STATIC_LDFLAGS "-L/opt/mingw32/usr/i686-pc-mingw32/lib;-lcurl;-lws2_32")
