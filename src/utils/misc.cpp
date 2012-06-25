@@ -71,7 +71,7 @@ wxString Paste2Pastebin( const wxString& message )
 	struct curl_slist* m_pHeaders = NULL;
 	struct curl_httppost*   m_pPostHead = NULL;
 	struct curl_httppost*   m_pPostTail = NULL;
-	static const char* url = "http://pastebin.com/api_public.php";
+    static const char* url = "http://paste.springfiles.com/api/create";
 	// these header lines will overwrite/add to cURL defaults
 	m_pHeaders = curl_slist_append(m_pHeaders, "Expect:") ;
 
@@ -81,17 +81,17 @@ wxString Paste2Pastebin( const wxString& message )
 
 	curl_formadd(&m_pPostHead,
 				 &m_pPostTail,
-				 CURLFORM_COPYNAME, "paste_code",
+                 CURLFORM_COPYNAME, "text",
 				 CURLFORM_COPYCONTENTS, (const char*)message_buffer,
 				 CURLFORM_END);
 	curl_formadd(&m_pPostHead,
 				 &m_pPostTail,
-				 CURLFORM_COPYNAME, "paste_subdomain",
-				 CURLFORM_COPYCONTENTS, "sl",
+                 CURLFORM_COPYNAME, "private",
+                 CURLFORM_COPYCONTENTS, "1",
 				 CURLFORM_END);
 	curl_formadd(&m_pPostHead,
 				 &m_pPostTail,
-				 CURLFORM_COPYNAME, "paste_name",
+                 CURLFORM_COPYNAME, "name",
 				 CURLFORM_COPYCONTENTS, (const char*)nick_buffer,
 				 CURLFORM_END);
 	curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, m_pHeaders);

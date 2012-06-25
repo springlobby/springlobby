@@ -42,7 +42,7 @@ ENDIF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${spri
 # Options, that can be changed be the User in order to customise springlobby
 #----------------------------------------------------------------------------------------------------
 SET( OPTION_SOUND
-	0 CACHE BOOL
+	1 CACHE BOOL
 	"Enables sound notification functionality (requires openAL libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
 	1 CACHE BOOL
@@ -55,7 +55,7 @@ SET( BUILD_SHARED_LIBS
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
 
 SET( ENABLE_DEBUG_REPORT
-	0 CACHE BOOL
+	1 CACHE BOOL
 	"Enable automatic uploading of crash information (requires libcurl)" )
 
 SET( SPRINGLOBBY_REV

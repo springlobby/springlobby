@@ -51,7 +51,12 @@ ADD_DEFINITIONS(-D__WXMSW__ -mthreads -D_WIN32_WINNT=0x0501  -DBOOST_THREAD_USE_
 LINK_LIBRARIES(
 	${wxWidgets_LIBRARIES}
 	png tiff jpeg lzma xml2 gnutls-openssl ssh2 idn OpenAL32 nettle iconv gcrypt wldap32 gnutls 
-	expat gmp hogweed gpg-error SDL gnutls nettle curl ws2_32 intl shell32 setupapi comctl32 OpenAL32 z winmm drmingw)
+	expat gmp hogweed gpg-error SDL gnutls nettle curl ws2_32 intl shell32 setupapi comctl32 OpenAL32 z winmm gmp
+	hogweed gmp)
+	SET( ASSHOLE 
+	${wxWidgets_LIBRARIES}
+	png tiff jpeg lzma xml2 gnutls-openssl ssh2 idn OpenAL32 nettle iconv gcrypt wldap32 gnutls 
+	expat gmp hogweed gpg-error SDL gnutls nettle curl ws2_32 intl shell32 setupapi comctl32 OpenAL32 z winmm gmp)
 SET( CURL_CFLAGS "-I/opt/mingw32/usr/i686-pc-mingw32/include" )
 # SET( CURL_STATIC_LIBRARY_DIRS "/opt/mingw32/usr/i686-pc-mingw32/lib")
 # SET( CURL_STATIC_LDFLAGS "-L/opt/mingw32/usr/i686-pc-mingw32/lib;-lcurl;-lws2_32")

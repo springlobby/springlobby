@@ -20,7 +20,7 @@ if( ${CMAKE_CROSSCOMPILING} )
 	set(Boost_USE_STATIC_RUNTIME    ON)
 endif()
 
-FIND_PACKAGE(Boost 1.40.0 COMPONENTS thread REQUIRED)
+FIND_PACKAGE(Boost 1.44.0 COMPONENTS thread REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 add_to_global(link_directories ${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
 
@@ -170,6 +170,7 @@ add_sources(SLSharedWithSettings
 	utils/pathlistfactory.cpp
 	utils/sltipwin.cpp
 	utils/uievents.cpp
+	utils/curlhelper.cpp
 	crashreport.cpp
 	globalsmanager.cpp
 	mmoptionmodel.cpp
@@ -183,7 +184,6 @@ add_sources(SLSharedWithSettings
 	gui/spinctl/generic/spinctlg.cpp
 	Helper/slconfig.cpp
 )
-
 
 FILE( GLOB header "*.h" )
 FILE( GLOB header2 "*/*.h" )
@@ -202,6 +202,14 @@ add_sources( templatesources
 	utils/stringserializer.cpp
 )
 
+IF(WIN32)
+	add_sources(SLSharedWithSettings stacktrace.c Helper/listctrl.cpp)
+ELSE(WIN32)
+	add_sources(SLSharedWithSettings stacktrace.cpp)
+ENDIF(WIN32)
+add_library(slcommon STATIC ${SLSharedWithSettings} )
+target_link_libraries(slcommon ${wxWidgets_LIBRARIES} ${CURL_LIBRARY} )
+
 add_subdirectory(aui)
 add_subdirectory(battlelist)
 add_subdirectory(channel)
@@ -218,11 +226,6 @@ Add_Subdirectory(lsl)
 INCLUDE_DIRECTORIES(lsl/src)
 add_subdirectory(springsettings)
 
-IF(WIN32)
-	add_sources(springlobbySrc stacktrace.c Helper/listctrl.cpp)
-ELSE(WIN32)
-	add_sources(springlobbySrc stacktrace.cpp)
-ENDIF(WIN32)
 
 LIST( APPEND header ${header2} ${templatesources} )
 set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )
@@ -231,11 +234,11 @@ mylink( ${EXTRA_LIB_DIRS} ${link_directories} )
 
 IF(WIN32)
 	CreateResourceCompileCommand(springlobby_RC_FILE ${springlobby_SOURCE_DIR}/src/ springlobby.rc sl_icon.o )
-	SET(springlobbySrc ${springlobbySrc} ${springlobby_RC_FILE})
 	add_subdirectory(updater)
 ENDIF()
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc} ${SLSharedWithSettings} ${springlobby_RC_FILE})
+
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc}  ${springlobby_RC_FILE})
 #the updater needs to be build for windows only
 IF(WIN32)
 	link_directories( ${link_directories} ${EXTRA_LIB_DIRS} )
@@ -247,13 +250,13 @@ ELSE (WIN32)
 	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF (WIN32)
 
-
-TARGET_LINK_LIBRARIES(springlobby libsettings libSpringLobbyUtils pr-downloader_static 
-	${wxWidgets_LIBRARIES} ${sound_libraries}
+message(STATUS "SOUND " ${sound_libraries})
+TARGET_LINK_LIBRARIES(springlobby slcommon libsettings libSpringLobbyUtils pr-downloader_static 
+	${wxWidgets_LIBRARIES} ${sound_libraries} openal
 	${Boost_LIBRARIES})
 	
 # add_dependencies( springlobby alure )
-add_dependencies( springlobby version )
-add_dependencies( springlobby pr-downloader_static )
-add_dependencies( springlobby libSpringLobbyUtils )
+# add_dependencies( springlobby version )
+# add_dependencies( springlobby pr-downloader_static )
+# add_dependencies( springlobby libSpringLobbyUtils )
 

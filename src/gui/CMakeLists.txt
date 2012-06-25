@@ -7,3 +7,6 @@ add_sources(springlobbySrc
 	pastedialog.cpp
 	notificationmanager.cpp
 )
+
+add_sources(SLSharedWithSettings
+	spinctl/generic/spinctlg.cpp)
