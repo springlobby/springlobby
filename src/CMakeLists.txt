@@ -252,7 +252,7 @@ ENDIF (WIN32)
 
 message(STATUS "SOUND " ${sound_libraries})
 TARGET_LINK_LIBRARIES(springlobby slcommon libsettings libSpringLobbyUtils pr-downloader_static 
-	${wxWidgets_LIBRARIES} ${sound_libraries} openal
+	${wxWidgets_LIBRARIES} ${sound_libraries} 
 	${Boost_LIBRARIES})
 	
 # add_dependencies( springlobby alure )

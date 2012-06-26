@@ -22,6 +22,6 @@ IF(WIN32)
 ELSE(WIN32)
 	install(TARGETS springsettings RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 ENDIF (WIN32)
-TARGET_LINK_LIBRARIES(springsettings libsettings libSpringLobbyUtils slcommon 
+TARGET_LINK_LIBRARIES(springsettings libsettings slcommon libSpringLobbyUtils pr-downloader_static 
 	${wxWidgets_LIBRARIES} )
 
