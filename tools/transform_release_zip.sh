@@ -26,5 +26,5 @@ ZIPFILEBASE=$(echo $(basename $1))
 TOPLEVELDIR=${ZIPFILEBASE%".zip"}
 unzip ${ZIPFILE}
 rm ${ZIPFILE}
-cd ${TOPLEVELDIR} && rm *pr-downloader* && zip -r ${ZIPFILE} * locale/\* || exit 1
+cd ${TOPLEVELDIR} && rm *pr-downloader* springsettings.exe && zip -r ${ZIPFILE} * locale/\* || exit 1
 exit 0
