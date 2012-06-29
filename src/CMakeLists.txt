@@ -20,7 +20,7 @@ if( ${CMAKE_CROSSCOMPILING} )
 	set(Boost_USE_STATIC_RUNTIME    ON)
 endif()
 
-FIND_PACKAGE(Boost 1.44.0 COMPONENTS thread REQUIRED)
+FIND_PACKAGE(Boost 1.44.0 COMPONENTS thread system REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 add_to_global(link_directories ${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
 
