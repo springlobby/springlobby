@@ -221,17 +221,14 @@ void BattleListTab::AddBattle( IBattle& battle ) {
 	if ( battle.GetGUIListActiv() || ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) ) {
 		return;
 	}
-
 	m_battle_list->AddBattle( battle );
 	battle.SetGUIListActiv( true );
 	m_battle_list->MarkDirtySort();
 	SetNumDisplayed();
 }
 
-
 void BattleListTab::RemoveBattle( IBattle& battle )
 {
-
 	if ( &battle == m_sel_battle ) {
 		m_battle_list->ResetSelection();
 		SelectBattle( 0 );
@@ -242,7 +239,6 @@ void BattleListTab::RemoveBattle( IBattle& battle )
 	battle.SetGUIListActiv( false );
 	SetNumDisplayed();
 }
-
 
 void BattleListTab::UserUpdate( User& user )
 {
@@ -258,17 +254,13 @@ void BattleListTab::UpdateBattle( IBattle& battle )
 		AddBattle( battle );
 		return;
 	}
-
 	if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
 		RemoveBattle( battle );
 		return;
 	}
-
 	m_battle_list->UpdateBattle( battle );
-
 	if ( &battle == m_sel_battle )
 		SelectBattle( m_sel_battle );
-
 }
 
 
@@ -365,7 +357,6 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& /*unused*/ )
 	sett().SetBattleFilterActivState( active );
 	SetNumDisplayed();
 }
-
 
 void BattleListTab::OnJoin( wxCommandEvent& /*unused*/ )
 {
