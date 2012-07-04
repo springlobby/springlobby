@@ -240,11 +240,12 @@ MainWindow::MainWindow( )
 	m_channel_chooser = new ChannelChooserDialog( this, -1, _("Choose channels to join") );
 
 	m_statusbar = new Statusbar( this );
-	SetStatusBar( m_statusbar );
+    SetStatusBar( m_statusbar );
     // re-enable eventhandling
     SetEvtHandlerEnabled( true );
 
 	UpdateMainAppHasFocus(m_has_focus);
+    Connect( MainwindowMessageEvent, wxCommandEventHandler( MainWindow::OnMessage ), NULL, this );
 }
 
 wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size ) const
@@ -347,7 +348,19 @@ void MainWindow::OnSetFocus(wxFocusEvent&)
 void MainWindow::OnKillFocus(wxFocusEvent&)
 {
 	m_has_focus = false;
-	UpdateMainAppHasFocus(m_has_focus);
+    UpdateMainAppHasFocus(m_has_focus);
+}
+
+void MainWindow::OnMessage(wxCommandEvent &event)
+{
+    customMessageBoxNoModal(SL_MAIN_ICON, event.GetString());
+}
+
+void MainWindow::AddMessageEvent(const wxString message)
+{
+    wxCommandEvent evt(MainwindowMessageEvent, wxNewId());
+    evt.SetString(message);
+    AddPendingEvent(evt);
 }
 
 bool MainWindow::HasFocus() const

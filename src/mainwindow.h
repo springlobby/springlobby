@@ -36,13 +36,12 @@ class wxCloseEvent;
 class Statusbar;
 class OptionsDialog;
 class ReplayTraits;
-template < class Traits >
-class PlaybackTab;
 class wxFocusEvent;
 
-//class SavegameTraits;
-//template < class Traits >
-//class SavegameTab;
+template < class Traits >
+class PlaybackTab;
+
+const wxEventType MainwindowMessageEvent = wxNewEventType();
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame, public WindowAttributesPickle
@@ -99,6 +98,8 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void OnClose( wxCloseEvent& );
 	void OnSetFocus(wxFocusEvent&);
 	void OnKillFocus(wxFocusEvent&);
+    void OnMessage( wxCommandEvent& event );
+    void AddMessageEvent( const wxString message );
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
     MainChatTab& GetChatTab();

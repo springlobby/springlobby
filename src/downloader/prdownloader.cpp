@@ -21,6 +21,10 @@
 #include "../globalsmanager.h"
 #include "lib/src/Downloader/IDownloader.h"
 #include "../springunitsync.h"
+#include "../utils/uievents.h"
+#include "../utils/conversion.h"
+#include "../ui.h"
+#include "../mainwindow.h"
 #include <list>
 
 class DownloadItem : public LSL::WorkItem {
@@ -32,9 +36,16 @@ public:
 
     void Run()
     {
-        m_loader->download( m_item );
-        m_loader->freeResult( m_item );
-        usync().AddReloadEvent();
+        if (!m_item.empty()) {
+            UiEvents::ScopedStatusMessage msg("Downloading: " + m_item.front()->name, 0);
+            //we create this in avance cause m_item gets freed
+            wxString d(_("Download complete: "));
+            d += TowxString(m_item.front()->name);
+            m_loader->download( m_item );
+            m_loader->freeResult( m_item );
+            usync().AddReloadEvent();
+            ui().mw().AddMessageEvent(d);
+        }
     }
 
 private:

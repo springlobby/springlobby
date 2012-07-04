@@ -413,7 +413,7 @@ void BattleListTab::DoJoin( Battle& battle )
     const std::set<int> cpus = sett().KnownMatchmakerCPU();
     if ( cpus.find(battle.GetFounder().GetCpu()) != cpus.end() )
     {
-        const wxString msg(_( "You are about to join a matchmaking battleroom.\n The host might move you to another battle at any time. In case of problems please contact the host or a lobby moderator.\nDo you want to continue?" ));
+        const wxString msg(_( "You are about to join a matchmaking battleroom.\nThe host might move you to another battle at any time. In case of problems please contact the host or a lobby moderator.\nDo you want to continue?" ));
         if ( !ui().Ask( _( "Matchmaker detected" ), msg ) )
             return;
     }
@@ -444,24 +444,29 @@ void BattleListTab::DoJoin( Battle& battle )
 		}
 	}
 
-	const wxString downloadProc = _( "Should i try to download it for you?\nYou can see the progress in the \"Download Manager\" tab." );
+    const wxString downloadProc = _( "Should I try to download it for you?\nYou'll be notified once it's complete" );
 	if ( !battle.ModExists() )
 	{
-		if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the game before you can join this game.\n\n" ) + downloadProc, _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+        if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the game before you can join this game.\n\n" ) + downloadProc,
+                               _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 			wxString modhash = battle.GetHostModHash();
 			wxString modname = battle.GetHostModName();
 			ui().DownloadMod ( modhash, modname );
 		}
-		return;
+        else
+            return;
 	}
 
 	if ( !battle.MapExists() )
 	{
-		if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the map to be able to play in this game.\n\n" ) + downloadProc, _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+        if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the map to be able to play in this game.\n\n" ) + downloadProc,
+                               _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 			wxString maphash = battle.GetHostMapHash();
 			wxString mapname = battle.GetHostMapName();
 			ui().DownloadMap ( maphash, mapname );
 		}
+        else
+            return;
 	}
 
 	if ( battle.IsPassworded() )

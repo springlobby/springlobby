@@ -1,4 +1,5 @@
 #include "uievents.h"
+#include "../utils/conversion.h"
 
 namespace UiEvents {
     static std::map< UiEventsTypes, EventSender<UiEventData> > UiEvents;
@@ -19,12 +20,23 @@ namespace UiEvents {
 		return StatusEvents[cmd];
 	}
 
+    inline void ScopedSend(const wxString& msg, unsigned int slot)
+    {
+        StatusData data( msg, slot );
+        GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
+    }
+
 	ScopedStatusMessage::ScopedStatusMessage( const wxString& msg, unsigned int slot )
 		: m_slot( slot )
-	{
-		StatusData data( msg, m_slot );
-		GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
-	}
+    {
+        ScopedSend(msg, slot);
+    }
+
+    ScopedStatusMessage::ScopedStatusMessage(const std::string msg, unsigned int slot)
+        : m_slot( slot )
+    {
+        ScopedSend( TowxString(msg), slot);
+    }
 
 	ScopedStatusMessage::~ScopedStatusMessage()
 	{

@@ -116,9 +116,9 @@ void DownloadListCtrl::UpdateTorrentInfo(const DataType& info)
 }
 
 
-void DownloadListCtrl::OnListRightClick( wxListEvent& event )
+void DownloadListCtrl::OnListRightClick( wxListEvent& /*event*/ )
 {
-	int idx = event.GetIndex();
+//	int idx = event.GetIndex();
 //    if ( idx < (long)m_data.size() && idx > -1 ) {
 
 //        DataType dt = m_data[idx];
