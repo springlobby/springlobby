@@ -50,6 +50,8 @@ MainDownloadTab::MainDownloadTab( wxWindow* parent )
 	m_dl_listctrl = new DownloadListCtrl( this );
 	m_listbox->Add( m_dl_listctrl, 2, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL, 5 );
 	m_mainbox->Add( m_listbox, 2, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL, 0 );
+    wxStaticText* t = new wxStaticText( this, wxID_ANY, _( "Download statistics/control currently not available." ), wxDefaultPosition, wxDefaultSize, 0 );
+    m_mainbox->Add( t, 1, wxALL | wxEXPAND | wxALIGN_CENTER, 15 );
 
 	m_incoming_lbl = new wxStaticText( this, ID_INCOMING_LBL, _( "Total Incoming: " ) );
 	m_totalbox->Add( m_incoming_lbl, 1, wxALL | wxALIGN_CENTER_HORIZONTAL, 10 );
@@ -91,6 +93,7 @@ MainDownloadTab::MainDownloadTab( wxWindow* parent )
 //	}
 
     Layout();
+    Disable();
 }
 
 MainDownloadTab::~MainDownloadTab()
