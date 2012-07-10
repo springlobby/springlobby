@@ -290,7 +290,7 @@ bool SpringUnitSync::ModExists( const wxString& modname ) const
 
 bool SpringUnitSync::ModExists( const wxString& modname, const wxString& hash ) const
 {
-  LocalArchivesVector::const_iterator itor = m_mods_list.find(modname);
+  const LocalArchivesVector::const_iterator itor = m_mods_list.find(modname);
   if ( itor == m_mods_list.end() ) return false;
   return itor->second == hash;
 }
@@ -360,7 +360,7 @@ bool SpringUnitSync::MapExists( const wxString& mapname ) const
 
 bool SpringUnitSync::MapExists( const wxString& mapname, const wxString& hash ) const
 {
-  LocalArchivesVector::const_iterator itor = m_maps_list.find(mapname);
+  const LocalArchivesVector::const_iterator itor = m_maps_list.find(mapname);
   if ( itor == m_maps_list.end() ) return false;
   return itor->second == hash;
 }

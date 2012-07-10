@@ -279,7 +279,6 @@ void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
         Battle& battle = m_serv.GetBattle( battleid );
 
         battle.SetHostMod( battle.GetHostModName(), hash );
-
         UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
         bs.spectator = false;
 

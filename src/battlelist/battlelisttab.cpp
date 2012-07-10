@@ -297,8 +297,8 @@ void BattleListTab::SetFilterActiv( bool activ )
 	sett().SetBattleFilterActivState( activ );
 	m_battle_list->MarkDirtySort();
 }
-
 void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
+
 {
 	if ( !ui().IsConnected() )
 	{
