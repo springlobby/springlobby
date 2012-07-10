@@ -54,9 +54,7 @@
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #include "infodialog.h"
-#ifndef NO_TORRENT_SYSTEM
-    #include "maindownloadtab.h"
-#endif
+#include "maindownloadtab.h"
 #include "user.h"
 #include "mapselectdialog.h"
 
@@ -169,14 +167,10 @@ MainWindow::MainWindow( )
 	m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
 	m_menuTools->AppendSeparator();
 	m_menuTools->Append(MENU_USYNC, _("&Reload maps/games"));
+    m_menuTools->AppendSeparator();
 
-
-#ifndef NO_TORRENT_SYSTEM
-	m_menuTools->AppendSeparator();
-#endif
-	if (!sett().IsSelfUpdateDisabled() )
+    if (!sett().IsSelfUpdateDisabled() )
 		m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
-
 
 	wxMenu *menuHelp = new wxMenu;
 	menuHelp->Append(MENU_GENERAL_HELP, _("&Help, tutorial and FAQ"));
@@ -210,9 +204,7 @@ MainWindow::MainWindow( )
 	m_sp_tab = new MainSinglePlayerTab( m_func_tabs );
 //	m_savegame_tab = new SavegameTab( m_func_tabs );
 	m_replay_tab = new ReplayTab ( m_func_tabs );
-#ifndef NO_TORRENT_SYSTEM
 	m_torrent_tab = new MainDownloadTab( m_func_tabs);
-#endif
 
     //use Insert so no Changepage events are triggered
     m_func_tabs->InsertPage( PAGE_CHAT,     m_chat_tab,     m_tab_names[PAGE_CHAT],     true  );
@@ -221,9 +213,7 @@ MainWindow::MainWindow( )
     m_func_tabs->InsertPage( PAGE_SINGLE,   m_sp_tab,       m_tab_names[PAGE_SINGLE],   false );
 //    m_func_tabs->InsertPage( PAGE_SAVEGAME, m_savegame_tab, m_tab_names[PAGE_SAVEGAME], false );
     m_func_tabs->InsertPage( PAGE_REPLAY,   m_replay_tab,   m_tab_names[PAGE_REPLAY],   false );
-#ifndef NO_TORRENT_SYSTEM
     m_func_tabs->InsertPage( PAGE_TORRENT,  m_torrent_tab,  m_tab_names[PAGE_TORRENT],  false );
-#endif
 
     LoadPerspectives();
 	SetTabIcons();
@@ -258,17 +248,15 @@ wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size ) const
 
 void MainWindow::SetTabIcons()
 {
-		unsigned int count = 0;
+    unsigned int count = 0;
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png)  ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( broom_tab_icon_png, sizeof(broom_tab_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( floppy_icon_png , sizeof (floppy_icon_png) ) );
     m_func_tabs->SetPageBitmap( count++, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
-#ifndef NO_TORRENT_SYSTEM
     m_func_tabs->SetPageBitmap( count++, GetTabIcon(  downloads_icon_png , sizeof (downloads_icon_png) ) );
-#endif
-		m_func_tabs->SetPageBitmap( count++, GetTabIcon( options_icon_png , sizeof (options_icon_png) ) );
+    m_func_tabs->SetPageBitmap( count++, GetTabIcon( options_icon_png , sizeof (options_icon_png) ) );
     Refresh();
 }
 
@@ -433,13 +421,12 @@ MainWindow::ReplayTab& MainWindow::GetReplayTab()
 //    return *m_savegame_tab;
 //}
 
-#ifndef NO_TORRENT_SYSTEM
 MainDownloadTab& MainWindow::GetDownloadTab()
 {
   ASSERT_EXCEPTION( m_torrent_tab  != 0, _T("m_torrent_tab = 0") );
   return *m_torrent_tab ;
 }
-#endif
+
 ChatPanel* MainWindow::GetActiveChatPanel()
 {
   unsigned int index = m_func_tabs->GetSelection();
@@ -448,7 +435,6 @@ ChatPanel* MainWindow::GetActiveChatPanel()
   if ( index == PAGE_JOIN ) return m_join_tab->GetActiveChatPanel();
   return 0;
 }
-
 
 ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
 {

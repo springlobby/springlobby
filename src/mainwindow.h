@@ -199,7 +199,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
                     Add( _("Battlelist") );
                     Add( _("Battleroom") );
                     Add( _("Singleplayer") );
-                    Add( _("Savegames") );
+//                    Add( _("Savegames") );
                     Add( _("Replays") );
 					Add( _("Downloads") );
 				}
