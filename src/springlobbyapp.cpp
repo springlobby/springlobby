@@ -58,6 +58,9 @@
 #include <wx/debugrpt.h>
 #include "utils/misc.h"
 
+#if wxUSE_UNIX
+	#include <X11/Xlib.h> 
+#endif
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
 
@@ -117,6 +120,10 @@ bool SpringLobbyApp::OnInit()
         SetUnhandledExceptionFilter(filter);
     #endif
     }
+
+    #if wxUSE_UNIX
+    const bool xinit = XInitThreads();
+    #endif
 
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;
@@ -479,6 +486,11 @@ void SpringLobbyApp::CacheAndSettingsSetup()
             {
                 sett().ConvertLists();
                 sett().AddKnownMatchmakerCPU(6667);
+            }
+            if ( settversion < 24 )
+            {
+                customMessageBoxNoModal(SL_MAIN_ICON, _(""),
+                                        _("Notice"), wxOK );
             }
     }
 
