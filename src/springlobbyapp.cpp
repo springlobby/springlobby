@@ -81,6 +81,9 @@ SpringLobbyApp::SpringLobbyApp()
     m_crash_handle_disable( false ),
 	m_appname( _T("SpringLobby") )
 {
+#if wxUSE_UNIX
+const bool xinit = XInitThreads();
+#endif
 }
 
 SpringLobbyApp::~SpringLobbyApp()
@@ -120,10 +123,6 @@ bool SpringLobbyApp::OnInit()
         SetUnhandledExceptionFilter(filter);
     #endif
     }
-
-    #if wxUSE_UNIX
-    const bool xinit = XInitThreads();
-    #endif
 
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;
