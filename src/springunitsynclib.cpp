@@ -451,13 +451,12 @@ wxArrayString SpringUnitSyncLib::GetUnitsyncErrors() const
       ret.Add( msg );
       msg = WX_STRINGC( m_get_next_error() );
     }
-    return ret;
   }
   catch ( unitsync_assert &e )
   {
     ret.Add( WX_STRINGC( e.what() ) );
-    return ret;
   }
+  return ret;
 }
 
 

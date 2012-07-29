@@ -829,17 +829,15 @@ wxString IBattle::GetHostModHash() const
 bool IBattle::MapExists() const
 {
   return m_map_exists;
-  //return usync().MapExists( m_map_name, m_map.hash );
+//  return usync().MapExists( m_map.name, m_map.hash );
 }
 
 
 bool IBattle::ModExists() const
 {
   return m_mod_exists;
-  //return usync().ModExists( m_mod_name );
+//  return usync().ModExists( m_host_mod.name, m_host_mod.hash );
 }
-
-
 
 void IBattle::RestrictUnit( const wxString& unitname, int count )
 {
