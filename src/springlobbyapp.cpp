@@ -486,11 +486,6 @@ void SpringLobbyApp::CacheAndSettingsSetup()
                 sett().ConvertLists();
                 sett().AddKnownMatchmakerCPU(6667);
             }
-            if ( settversion < 24 )
-            {
-                customMessageBoxNoModal(SL_MAIN_ICON, _(""),
-                                        _("Notice"), wxOK );
-            }
     }
 
     if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )

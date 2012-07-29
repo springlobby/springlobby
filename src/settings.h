@@ -6,6 +6,9 @@
 #include <set>
 #include "utils/mixins.hh"
 #include "utils/pathlistfactory.h"
+#include "useractions.h"
+#include "Helper/sortutil.h"
+#include "Helper/slconfig.h"
 
 const int CACHE_VERSION     = 11;
 const int SETTINGS_VERSION  = 23;
@@ -36,10 +39,6 @@ const unsigned int SPRING_MAX_ALLIES = 16;
 /** Default value for config path /General/WebBrowserUseDefault.
  */
 const bool DEFSETT_WEB_BROWSER_USE_DEFAULT = true;
-
-#include "useractions.h"
-#include "Helper/sortutil.h"
-#include "Helper/slconfig.h"
 
 class wxWindow;
 class wxConfigBase;

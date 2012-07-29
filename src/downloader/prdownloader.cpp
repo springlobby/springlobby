@@ -120,7 +120,7 @@ int PrDownloader::GetMap(const std::string &name)
 
 int PrDownloader::GetGame(const std::string &name)
 {
-    return Get(m_game_loaders, name, IDownload::CAT_MODS);
+    return Get(m_game_loaders, name, IDownload::CAT_GAMES);
 }
 
 void PrDownloader::SetIngameStatus(bool /*ingame*/)
