@@ -894,15 +894,13 @@ void IBattle::OnSelfLeftBattle()
 
 void IBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
-  if ( m_host_mod.hash != '0' )
-      m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash);
-  else
-      m_mod_exists = usync().ModExists( m_host_mod.name );
-  if ( m_host_map.hash != '0' )
-      m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
-  else
-      m_map_exists = usync().MapExists( m_host_map.name );
+  if ( !m_host_mod.hash.IsEmpty() && m_host_mod.hash != '0' ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash);
+  else m_mod_exists = usync().ModExists( m_host_mod.name );
+  if ( !m_host_map.hash.IsEmpty() && m_host_map.hash != '0' )  m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+  else  m_map_exists = usync().MapExists( m_host_map.name );
 }
+
+
 
 static wxString FixPresetName( const wxString& name )
 {
