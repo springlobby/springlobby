@@ -14,6 +14,7 @@
 #include "nicklistctrl.h"
 #include "mainwindow.h"
 #include "settings.h"
+#include "battlelist/battlelisttab.h"
 
 ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/ )
 	: m_chatpanel(parent),
@@ -513,21 +514,7 @@ void ChatPanelMenu::OnUserMenuJoinSame( wxCommandEvent& /*unused*/ )
 	Battle* battle = user->GetBattle();
 	if ( battle == 0 ) return;
 
-	if ( !usync().ModExists( battle->GetHostModName() ) ) {
-		customMessageBoxNoModal( SL_MAIN_ICON, _( "You don't have the game " ) + battle->GetHostModName()
-														 + _( " . Please download it first" ), _( "Game unavailable" ) );
-		return;
-	}
-
-	if ( battle->IsLocked() ) {
-		customMessageBoxNoModal( SL_MAIN_ICON, _( "The battle you requested to join is locked." ) );
-		return;
-	}
-	wxString password;
-	if ( battle->IsPassworded() ) {
-		if ( !ui().AskPassword( _( "Battle password" ), _( "This battle is password protected, enter the password." ), password ) ) return;
-	}
-	battle->Join( password );
+    ui().mw().GetBattleListTab().DoJoin(*battle);
 }
 
 

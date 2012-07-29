@@ -411,16 +411,8 @@ void BattleListTab::DoJoin( Battle& battle )
 
 	if ( curbattle != 0 && curbattle->GetID() == battle.GetID() )
 	{
-		if ( ui().Ask( _( "Already in this battle" ), _( "You are already in this battle.\n\nDo you want to leave it?" ) ) )
-		{
-			curbattle->Leave();
-			ui().mw().GetJoinTab().LeaveCurrentBattle();
-			return;
-		}
-		else
-		{
-			return;
-		}
+        ui().mw().GetJoinTab().FocusBattleRoomTab();
+        return;
 	}
 
 	if ( curbattle != 0 )
