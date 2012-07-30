@@ -332,8 +332,8 @@ void SinglePlayerTab::OnStart( wxCommandEvent& /*unused*/ )
 
 void SinglePlayerTab::OnRandomCheck( wxCommandEvent& /*unused*/ )
 {
-    if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Random), OptionsWrapper::EngineOption );
-    else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Pick), OptionsWrapper::EngineOption );
+    if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Random), LSL::OptionsWrapper::EngineOption );
+    else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Pick), LSL::OptionsWrapper::EngineOption );
     m_battle.SendHostInfo( IBattle::HI_StartType );
 }
 
@@ -359,10 +359,10 @@ void SinglePlayerTab::UpdateTag( const wxString& Tag )
     long type;
     Tag.BeforeFirst( '_' ).ToLong( &type );
     wxString key = Tag.AfterFirst( '_' );
-    wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
+    wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (LSL::OptionsWrapper::GameOption)type);
     long longval;
     value.ToLong( &longval );
-    if ( type == OptionsWrapper::PrivateOptions ) {
+    if ( type == LSL::OptionsWrapper::PrivateOptions ) {
         if ( key == _T("mapname") ) {
             m_addbot_btn->Enable( false );
             try

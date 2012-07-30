@@ -262,8 +262,8 @@ void AddBotDialog::ShowAIOptions()
 
 long AddBotDialog::AddMMOptionsToList( long pos, int optFlag )
 {
-	OptionsWrapper::wxStringTripleVec optlist = m_battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optFlag );
-	for ( OptionsWrapper::wxStringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
+	OptionsWrapper::wxStringTripleVec optlist = m_battle.CustomBattleOptions().getOptions( (LSL::OptionsWrapper::GameOption)optFlag );
+	for ( LSL::OptionsWrapper::wxStringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
 	{
 		m_opts_list->InsertItem( pos, it->second.first );
 		wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it->first;
@@ -278,12 +278,12 @@ long AddBotDialog::AddMMOptionsToList( long pos, int optFlag )
 void AddBotDialog::UpdateOption( const wxString& Tag )
 {
 	long index = m_opt_list_map[ Tag ];
-	OptionsWrapper::GameOption type = ( OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
+	OptionsWrapper::GameOption type = ( LSL::OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
 	wxString key = Tag.AfterFirst( '_' );
 	wxString value;
 
 	OptionType DataType = m_battle.CustomBattleOptions().GetSingleOptionType( key );
-	value = m_battle.CustomBattleOptions().getSingleValue( key, ( OptionsWrapper::GameOption )type );
+	value = m_battle.CustomBattleOptions().getSingleValue( key, ( LSL::OptionsWrapper::GameOption )type );
 	if ( m_battle.CustomBattleOptions().getDefaultValue( key, type ) == value ) m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
 	else m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD ) );
 	if ( DataType == opt_bool )
@@ -311,7 +311,7 @@ void AddBotDialog::OnOptionActivate( wxListEvent& event )
 		}
 	}
 	OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
-	OptionsWrapper::GameOption optFlag = ( OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
+	OptionsWrapper::GameOption optFlag = ( LSL::OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
 	wxString key = tag.AfterFirst( '_' );
 	OptionType type = optWrap.GetSingleOptionType( key );
 	if ( !optWrap.keyExists( key, optFlag, false, type ) ) return;

@@ -266,8 +266,8 @@ public:
 
     virtual void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
 
-    virtual OptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
-    virtual const OptionsWrapper& CustomBattleOptions() const { return m_opt_wrap; }
+    virtual LSL::OptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
+    virtual const LSL::OptionsWrapper& CustomBattleOptions() const { return m_opt_wrap; }
 
     virtual bool LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );
@@ -416,7 +416,7 @@ protected:
 
     std::map<wxString, int> m_restricted_units;
 
-    OptionsWrapper m_opt_wrap;
+    LSL::OptionsWrapper m_opt_wrap;
 
     BattleOptions m_opts;
 

@@ -1636,8 +1636,8 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         wxString cmd;
 
-        OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-		for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+        LSL::OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::MapOption );
+		for (LSL::OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
         {
 			wxString newcmd = _T("game/mapoptions/") + it->first + _T("=") + it->second.second + _T("\t");
 			if ( cmd.size() + newcmd.size() > 900 ) // should be 1024 add margin for relayhost name and command itself
@@ -1648,8 +1648,8 @@ void TASServer::SendHostInfo( HostInfo update )
 			}
 			cmd << newcmd;
         }
-        OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-		for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+        LSL::OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::ModOption );
+		for (LSL::OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
         {
 			wxString newcmd = _T("game/modoptions/") + it->first + _T("=") + it->second.second + _T("\t");
 			if ( cmd.size() + newcmd.size() > 900 )// should be 1024 add margin for relayhost name and command itself
@@ -1660,8 +1660,8 @@ void TASServer::SendHostInfo( HostInfo update )
 			}
 			cmd << newcmd;
         }
-        OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
-		for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+        LSL::OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::EngineOption );
+		for (LSL::OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
         {
 			wxString newcmd = _T("game/") + it->first + _T("=") + it->second.second + _T("\t");
 			if ( cmd.size() + newcmd.size() > 900 )// should be 1024 add margin for relayhost name and command itself
@@ -1772,17 +1772,17 @@ void TASServer::SendHostInfo( const wxString& Tag )
     long type;
     Tag.BeforeFirst( '_' ).ToLong( &type );
     wxString key = Tag.AfterFirst( '_' );
-    if ( type == OptionsWrapper::MapOption )
+    if ( type == LSL::OptionsWrapper::MapOption )
     {
-        cmd << _T("game/mapoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::MapOption );
+        cmd << _T("game/mapoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, LSL::OptionsWrapper::MapOption );
     }
-    else if ( type == OptionsWrapper::ModOption )
+    else if ( type == LSL::OptionsWrapper::ModOption )
     {
-        cmd << _T("game/modoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::ModOption );
+        cmd << _T("game/modoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, LSL::OptionsWrapper::ModOption );
     }
-    else if ( type == OptionsWrapper::EngineOption )
+    else if ( type == LSL::OptionsWrapper::EngineOption )
     {
-        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::EngineOption );
+        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, LSL::OptionsWrapper::EngineOption );
     }
     if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
     else RelayCmd( _T("SETSCRIPTTAGS"), cmd );

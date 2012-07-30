@@ -378,7 +378,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			}
 
 			long startpostype;
-			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
+			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), LSL::OptionsWrapper::EngineOption ).ToLong( &startpostype );
 
 			std::vector<StartPos> remap_positions;
 			if ( battle.IsProxy() && ( startpostype != IBattle::ST_Pick ) && ( startpostype != IBattle::ST_Choose ) )
@@ -418,8 +418,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			else tdf.Append( _T("startpostype"), startpostype );
 
 			tdf.EnterSection( _T("mapoptions") );
-				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::MapOption );
+				for (LSL::OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
 				{
 						tdf.Append(it->first,it->second.second);
 				}
@@ -428,8 +428,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 			tdf.EnterSection(_T("modoptions"));
 				tdf.Append( _T("relayhoststartpostype"), startpostype ); // also save the original wanted setting
-				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::ModOption );
+				for (LSL::OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
 				{
 						tdf.Append(it->first,it->second.second);
 				}
@@ -527,8 +527,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 									int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex( user.GetNick() );
 									if ( optionmapindex > 0 )
 									{
-										OptionsWrapper::wxStringTripleVec optlistMod_ = battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optionmapindex );
-										for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod_.begin(); it != optlistMod_.end(); ++it)
+										OptionsWrapper::wxStringTripleVec optlistMod_ = battle.CustomBattleOptions().getOptions( (LSL::OptionsWrapper::GameOption)optionmapindex );
+										for (LSL::OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod_.begin(); it != optlistMod_.end(); ++it)
 										{
 												tdf.Append(it->first,it->second.second);
 										}

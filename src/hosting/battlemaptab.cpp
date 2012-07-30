@@ -140,7 +140,7 @@ void BattleMapTab::OnMouseWheel( wxMouseEvent& event )
 void BattleMapTab::Update()
 {
 	if ( !m_battle ) return;
-	wxString value = m_battle->CustomBattleOptions().getSingleValue( _T( "startpostype" ), OptionsWrapper::EngineOption );
+	wxString value = m_battle->CustomBattleOptions().getSingleValue( _T( "startpostype" ), LSL::OptionsWrapper::EngineOption );
 	long longval;
 	value.ToLong( &longval );
 	m_start_radios->SetSelection( longval );
@@ -170,10 +170,10 @@ void BattleMapTab::Update( const wxString& Tag )
 	long type;
 	Tag.BeforeFirst( '_' ).ToLong( &type );
 	wxString key = Tag.AfterFirst( '_' );
-	wxString value = m_battle->CustomBattleOptions().getSingleValue( key, ( OptionsWrapper::GameOption )type );
+	wxString value = m_battle->CustomBattleOptions().getSingleValue( key, ( LSL::OptionsWrapper::GameOption )type );
 	long longval;
 	value.ToLong( &longval );
-	if ( type == OptionsWrapper::EngineOption )
+	if ( type == LSL::OptionsWrapper::EngineOption )
 	{
 		if ( key == _T( "startpostype" ) )
 		{
@@ -181,7 +181,7 @@ void BattleMapTab::Update( const wxString& Tag )
 			m_minimap->UpdateMinimap();
 		}
 	}
-	else if ( type == OptionsWrapper::PrivateOptions )
+	else if ( type == LSL::OptionsWrapper::PrivateOptions )
 	{
 		if ( key == _T( "mapname" ) )
 		{
@@ -272,8 +272,8 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	wxString pos = wxFormat( _T( "%d" ) ) % m_start_radios->GetSelection();
-	m_battle->CustomBattleOptions().setSingleOption( _T( "startpostype" ), pos, OptionsWrapper::EngineOption );
-	m_battle->SendHostInfo( wxFormat( _T( "%d_startpostype" ) ) % OptionsWrapper::EngineOption );
+	m_battle->CustomBattleOptions().setSingleOption( _T( "startpostype" ), pos, LSL::OptionsWrapper::EngineOption );
+	m_battle->SendHostInfo( wxFormat( _T( "%d_startpostype" ) ) % LSL::OptionsWrapper::EngineOption );
 }
 
 

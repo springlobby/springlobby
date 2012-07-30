@@ -120,7 +120,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 	protected:
 
-		long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
+		long AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOption optFlag );
 
 		void SplitSizerHorizontally( const bool horizontal );
 
