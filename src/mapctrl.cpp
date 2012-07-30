@@ -403,7 +403,7 @@ void MapCtrl::RelocateUsers()
 void MapCtrl::GetClosestStartPos( int fromx, int fromy, int& index, int& x, int& y, int& range )
 {
     if ( m_battle == 0 ) return;
-    UnitSyncMap map = m_battle->LoadMap();
+    LSL::UnitsyncMap map = m_battle->LoadMap();
 
     int newrange;
     range = -1;

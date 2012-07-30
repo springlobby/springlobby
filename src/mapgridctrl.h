@@ -40,7 +40,7 @@ class MapGridCtrl : public wxPanel
 
 		void Clear();
 		void AddMap( const wxString& mapname );
-		void AddMap( const UnitSyncMap& map );
+		void AddMap( const LSL::UnitsyncMap& map );
 
 		void CheckInBounds();
 
@@ -71,7 +71,7 @@ class MapGridCtrl : public wxPanel
 			return m_maps.size();
 		}
 
-		UnitSyncMap* GetSelectedMap() const { return m_selected_map; }
+		LSL::UnitsyncMap* GetSelectedMap() const { return m_selected_map; }
 
 		void OnPaint( wxPaintEvent& event );
 		void OnResize( wxSizeEvent& event );
@@ -92,10 +92,10 @@ class MapGridCtrl : public wxPanel
 			MapState_GotMinimap
 		};
 
-		struct MapData : UnitSyncMap
+		struct MapData : LSL::UnitsyncMap
 		{
 			MapData() : state( MapState_NoMinimap ) {}
-			void operator=( const UnitSyncMap& other ) { UnitSyncMap::operator=( other ); }
+			void operator=( const LSL::UnitsyncMap& other ) { LSL::UnitsyncMap::operator=( other ); }
 
 			wxBitmap minimap;
 			MapState state;

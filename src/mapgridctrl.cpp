@@ -232,7 +232,7 @@ void MapGridCtrl::AddMap( const wxString& mapname )
 }
 
 
-void MapGridCtrl::AddMap( const UnitSyncMap& map )
+void MapGridCtrl::AddMap( const LSL::UnitsyncMap& map )
 {
 	// no duplicates (would crash because of dangling MapData pointers in m_grid)
 	if ( m_maps.find( map.name ) != m_maps.end() ) return;

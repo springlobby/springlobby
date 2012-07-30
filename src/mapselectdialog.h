@@ -21,7 +21,7 @@ class wxChoice;
 class wxButton;
 
 class Ui;
-struct UnitSyncMap;
+struct LSL::UnitsyncMap;
 
 
 class MapSelectDialog: public wxDialog, public WindowAttributesPickle, public UnitsyncReloadedSink<MapSelectDialog>
@@ -31,7 +31,7 @@ class MapSelectDialog: public wxDialog, public WindowAttributesPickle, public Un
 		MapSelectDialog( wxWindow* parent = 0 );
 		virtual ~MapSelectDialog();
 
-		UnitSyncMap* GetSelectedMap() const;
+		LSL::UnitsyncMap* GetSelectedMap() const;
 
 		void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
 

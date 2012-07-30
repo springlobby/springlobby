@@ -675,7 +675,7 @@ int IBattle::GetFreeAlly( bool excludeme ) const
 UserPosition IBattle::GetFreePosition()
 {
 	UserPosition ret;
-  UnitSyncMap map = LoadMap();
+  LSL::UnitsyncMap map = LoadMap();
   for ( int i = 0; i < int(map.info.positions.size()); i++ )
 	{
     bool taken = false;
@@ -722,7 +722,7 @@ void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
 }
 
 
-void IBattle::SetLocalMap(const UnitSyncMap& map)
+void IBattle::SetLocalMap(const LSL::UnitsyncMap& map)
 {
   if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
     m_local_map = map;
@@ -743,7 +743,7 @@ void IBattle::SetLocalMap(const UnitSyncMap& map)
 }
 
 
-const UnitSyncMap& IBattle::LoadMap()
+const LSL::UnitsyncMap& IBattle::LoadMap()
 {
 
   if ( !m_map_loaded ) {
@@ -785,7 +785,7 @@ void IBattle::SetHostMod( const wxString& modname, const wxString& hash )
 }
 
 
-void IBattle::SetLocalMod( const UnitSyncMod& mod )
+void IBattle::SetLocalMod( const LSL::UnitsyncMod& mod )
 {
   if ( mod.name != m_local_mod.name || mod.hash != m_local_mod.hash )
   {
@@ -798,7 +798,7 @@ void IBattle::SetLocalMod( const UnitSyncMod& mod )
 }
 
 
-const UnitSyncMod& IBattle::LoadMod()
+const LSL::UnitsyncMod& IBattle::LoadMod()
 {
   if ( !m_mod_loaded )
    {
@@ -934,7 +934,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
       if ( !options[_T("mapname")].IsEmpty() )
       {
         if ( LSL::usync().MapExists( options[_T("mapname")] ) ) {
-            UnitSyncMap map = LSL::usync().GetMapEx( options[_T("mapname")] );
+            LSL::UnitsyncMap map = LSL::usync().GetMapEx( options[_T("mapname")] );
             SetLocalMap( map );
             SendHostInfo( HI_Map );
         }

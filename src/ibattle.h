@@ -190,8 +190,8 @@ public:
     /**@}*/
 
     virtual void SetHostMap( const wxString& mapname, const wxString& hash );
-    virtual void SetLocalMap( const UnitSyncMap& map );
-    virtual const UnitSyncMap& LoadMap();
+    virtual void SetLocalMap( const LSL::UnitsyncMap& map );
+    virtual const LSL::UnitsyncMap& LoadMap();
     virtual wxString GetHostMapName() const;
     virtual wxString GetHostMapHash() const;
 
@@ -209,8 +209,8 @@ public:
     virtual int GetPlayerNum( const User& user ) const;
 
     virtual void SetHostMod( const wxString& modname, const wxString& hash );
-    virtual void SetLocalMod( const UnitSyncMod& mod );
-    virtual const UnitSyncMod& LoadMod();
+    virtual void SetLocalMod( const LSL::UnitsyncMod& mod );
+    virtual const LSL::UnitsyncMod& LoadMod();
     virtual wxString GetHostModName() const;
     virtual wxString GetHostModHash() const;
 
@@ -408,10 +408,10 @@ protected:
     bool m_mod_loaded;
     bool m_map_exists;
     bool m_mod_exists;
-    UnitSyncMap m_local_map;
-    UnitSyncMod m_local_mod;
-    UnitSyncMap m_host_map;
-    UnitSyncMod m_host_mod;
+    LSL::UnitsyncMap m_local_map;
+    LSL::UnitsyncMod m_local_mod;
+    LSL::UnitsyncMap m_host_map;
+    LSL::UnitsyncMod m_host_mod;
     wxString m_previous_local_mod_name;
 
     std::map<wxString, int> m_restricted_units;

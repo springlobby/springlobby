@@ -519,7 +519,7 @@ void BattleRoomTab::UpdateMapInfoSummary()
 	try   // updates map info summary
 	{
 		ASSERT_EXCEPTION( m_battle->MapExists(), _( "Map does not exist." ) );
-		UnitSyncMap map = m_battle->LoadMap();
+		LSL::UnitsyncMap map = m_battle->LoadMap();
 		m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ] , 1, wxFormat( _T( "%.0fx%.0f" ) ) % (map.info.width / 512.0) % (map.info.height / 512.0 ) );
 		m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, wxFormat( _T( "%d-%d" ) ) % map.info.minWind % map.info.maxWind );
 		m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, wxFormat( _T( "%d" ) ) % map.info.tidalStrength );
@@ -1037,7 +1037,7 @@ void BattleRoomTab::SetMap( int index )
 	if ( !m_battle ) return;
 	try
 	{
-		UnitSyncMap map = LSL::usync().GetMapEx( index );
+		LSL::UnitsyncMap map = LSL::usync().GetMapEx( index );
 		m_battle->SetLocalMap( map );
 		m_battle->SendHostInfo( IBattle::HI_Map );
 	} catch ( ... ) {}

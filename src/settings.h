@@ -387,7 +387,7 @@ class Settings : public SL::NonCopyable
     void RefreshSpringVersionList();
     std::map<wxString, wxString> GetSpringVersionList() const; /// index -> version
     wxString GetCurrentUsedSpringIndex();
-    void SetUsedSpringIndex( const wxString& index );
+    void SetUsedSpringIndex(const wxString &index );
     void DeleteSpringVersionbyIndex( const wxString& index );
 
     /// when this mode is enabled in windows SL will search for spring files only in the current executable folder

@@ -40,7 +40,7 @@
 
 #include "../utils/customdialogs.h"
 #include "../globalsmanager.h"
-#include "../springunitsynclib.h"
+#include <lslunitsync/c_api.h>
 #include "../customizations.h"
 #include "../Helper/wxTranslationHelper.h"
 

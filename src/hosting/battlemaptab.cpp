@@ -149,7 +149,7 @@ void BattleMapTab::Update()
 
 	if ( !m_battle->MapExists() ) return;
 
-	UnitSyncMap map = m_battle->LoadMap();
+	LSL::UnitsyncMap map = m_battle->LoadMap();
 
 	m_map_opts_list->SetItem( 0, 1, wxFormat( _T( "%dx%d" ) ) % (map.info.width / 512) % (map.info.height / 512) );
 	m_map_opts_list->SetItem( 1, 1, wxFormat( _T( "%d-%d" ) ) % map.info.minWind % map.info.maxWind );
@@ -220,7 +220,7 @@ void BattleMapTab::SetMap( int index )
 	if ( !m_battle ) return;
 	try
 	{
-		UnitSyncMap map = LSL::usync().GetMapEx( index );
+		LSL::UnitsyncMap map = LSL::usync().GetMapEx( index );
 		m_battle->SetLocalMap( map );
 
 		m_battle->SendHostInfo( IBattle::HI_Map );

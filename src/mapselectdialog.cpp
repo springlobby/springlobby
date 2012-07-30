@@ -275,7 +275,7 @@ namespace {
 struct FilterPredicate
 {
 	FilterPredicate( const wxString& _searchText ) : searchText(_searchText.Lower()) {}
-	bool operator () ( const UnitSyncMap& map ) const
+	bool operator () ( const LSL::UnitsyncMap& map ) const
 	{
 		return map.name.Lower().Find( searchText ) != wxNOT_FOUND
 			|| map.info.description.Lower().Find( searchText ) != wxNOT_FOUND
@@ -294,7 +294,7 @@ void MapSelectDialog::UpdateSortAndFilter()
 	m_mapgrid->Refresh();
 }
 
-UnitSyncMap* MapSelectDialog::GetSelectedMap() const
+LSL::UnitsyncMap* MapSelectDialog::GetSelectedMap() const
 {
 	wxLogDebugFunc( _T("") );
 	return m_mapgrid->GetSelectedMap();
@@ -306,9 +306,9 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 
 	wxLogDebugFunc( mapname );
 
-	const UnitSyncMap* pMap = m_mapgrid->GetSelectedMap();
+	const LSL::UnitsyncMap* pMap = m_mapgrid->GetSelectedMap();
 	if ( pMap == NULL) return;
-	const UnitSyncMap& map = *pMap;
+	const LSL::UnitsyncMap& map = *pMap;
 
 	m_map_name->SetLabel( map.name + _T("\n\n") + map.info.description );
 

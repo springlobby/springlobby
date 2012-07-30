@@ -142,7 +142,7 @@ void Battle::DoAction( const wxString& msg )
     m_serv.DoActionBattle( m_opts.battleid, msg );
 }
 
-void Battle::SetLocalMap( const UnitSyncMap& map )
+void Battle::SetLocalMap( const LSL::UnitsyncMap& map )
 {
 	IBattle::SetLocalMap( map );
 	if ( IsFounderMe() )  LoadMapDefaults( map.name );

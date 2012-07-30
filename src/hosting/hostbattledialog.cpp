@@ -446,7 +446,7 @@ void RunHostBattleDialog( wxWindow* parent )
 		}
 
 		// Get selected mod from unitsync.
-		UnitSyncMod mod;
+		LSL::UnitsyncMod mod;
 		try
 		{
 			mod = LSL::usync().GetMod( sett().GetLastHostMod() );
@@ -460,7 +460,7 @@ void RunHostBattleDialog( wxWindow* parent )
 			return;
 		}
 
-		UnitSyncMap map;
+		LSL::UnitsyncMap map;
 		wxString mname = sett().GetLastHostMap();
 		try {
 			if ( LSL::usync().MapExists( mname ) )

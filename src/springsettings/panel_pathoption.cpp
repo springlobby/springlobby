@@ -23,6 +23,7 @@
 #include "../settings.h"
 #include "../nonportable.h"
 #include <lslunitsync/unitsync.h>
+#include <lslunitsync/c_api.h>
 #include "se_utils.h"
 
 

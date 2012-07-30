@@ -183,7 +183,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
     m_battle.SetHostMap( wxEmptyString, wxEmptyString );
   } else {
     try {
-      UnitSyncMap map = LSL::usync().GetMapEx( index );
+      LSL::UnitsyncMap map = LSL::usync().GetMapEx( index );
       m_battle.SetHostMap( map.name, map.hash );
       m_addbot_btn->Enable( true );
     } catch (...) {}
@@ -209,7 +209,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
     {
         try
         {
-            UnitSyncMod mod = LSL::usync().GetMod( index );
+            LSL::UnitsyncMod mod = LSL::usync().GetMod( index );
             m_battle.SetLocalMod( mod );
             m_battle.SetHostMod( mod.name, mod.hash );
         }

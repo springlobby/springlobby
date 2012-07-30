@@ -16,7 +16,7 @@ class Battle;
 struct BattleStartRect;
 class SinglePlayerBattle;
 class Ui;
-struct UnitSyncMap;
+struct LSL::UnitsyncMap;
 class BattleRoomTab;
 
 class MapCtrl : public wxPanel
@@ -202,7 +202,7 @@ class MapCtrl : public wxPanel
     wxBitmap* m_reload_img;
     wxBitmap* m_dl_img;
 
-    UnitSyncMap m_map;
+    LSL::UnitsyncMap m_map;
 
     User* m_user_expanded;
 

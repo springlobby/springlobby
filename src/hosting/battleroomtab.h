@@ -26,7 +26,7 @@ class wxListCtrl;
 class MapCtrl;
 class ColorButton;
 class wxBitmapComboBox;
-struct UnitSyncMap;
+struct LSL::UnitsyncMap;
 class wxToggleButton;
 class wxChoice;
 class wxListEvent;
@@ -125,7 +125,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void SplitSizerHorizontally( const bool horizontal );
 
 		Battle* m_battle;
-//		UnitSyncMap m_map; //not needed
+//		LSL::UnitsyncMap m_map; //not needed
 
 		long m_mod_opts_index;
 		long m_map_opts_index;
