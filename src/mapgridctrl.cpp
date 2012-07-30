@@ -513,9 +513,9 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 
 	wxLogDebugFunc( mapname );
 
-	// if mapname is empty, some error occurred in usync().GetMinimap...
+	// if mapname is empty, some error occurred in LSL::usync().GetMinimap...
 	if ( !mapname.empty() ) {
-		wxImage minimap( usync().GetMinimap( mapname, MINIMAP_SIZE, MINIMAP_SIZE ) );
+		wxImage minimap( LSL::usync().GetMinimap( mapname, MINIMAP_SIZE, MINIMAP_SIZE ) );
 
 		const int w = minimap.GetWidth();
 		const int h = minimap.GetHeight();
@@ -547,10 +547,10 @@ void MapGridCtrl::OnGetMapExAsyncCompleted( wxCommandEvent& event )
 
 	wxLogDebugFunc( mapname );
 
-	// if mapname is empty, some error occurred in usync().GetMapEx...
+	// if mapname is empty, some error occurred in LSL::usync().GetMapEx...
 	if ( !mapname.empty() ) {
 		try {
-			AddMap( usync().GetMapEx( mapname ) );
+			AddMap( LSL::usync().GetMapEx( mapname ) );
 		}
 		catch (...) {}
 

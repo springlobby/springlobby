@@ -14,7 +14,7 @@
 #include "utils/controls.h"
 #include "uiutils.h"
 #include "battle.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "mmoptionwindows.h"
 #include "utils/conversion.h"
 
@@ -70,7 +70,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
 	m_main_sizer->Add( m_ai_sizer, 0, wxEXPAND, 5 );
 
-	if ( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+	if ( LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
 	{
 		m_ai_infos_lst = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
 		wxListItem col;
@@ -139,7 +139,7 @@ wxString AddBotDialog::GetNick()
 
 wxString AddBotDialog::GetAIShortName()
 {
-	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
+	wxArrayString infos = LSL::usync().GetAIInfos( m_ai->GetSelection() );
 	int namepos = infos.Index( _T("shortName") );
 	if ( namepos == wxNOT_FOUND ) return m_ais[ m_ai->GetSelection() ];
 	return infos[namepos +1];
@@ -147,7 +147,7 @@ wxString AddBotDialog::GetAIShortName()
 
 wxString AddBotDialog::GetAIVersion()
 {
-	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
+	wxArrayString infos = LSL::usync().GetAIInfos( m_ai->GetSelection() );
 	int namepos = infos.Index( _T("version") );
 	if ( namepos == wxNOT_FOUND ) return _T("");
 	return infos[namepos +1];
@@ -161,7 +161,7 @@ int AddBotDialog::GetAIType()
 wxString AddBotDialog::RefineAIName( const wxString& name )
 {
   wxString ret = name;
-  if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+  if ( !LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
   {
 		if ( ret.Find(_T('.')) != wxNOT_FOUND ) ret = ret.BeforeLast(_T('.'));
 		if ( ret.Find(_T('/')) != wxNOT_FOUND ) ret = ret.AfterLast(_T('/'));
@@ -188,7 +188,7 @@ void AddBotDialog::ReloadAIList()
 {
   try
   {
-    m_ais = usync().GetAIList( m_battle.GetHostModName() );
+    m_ais = LSL::usync().GetAIList( m_battle.GetHostModName() );
   } catch (...) {}
 
   m_ai->Clear();
@@ -230,9 +230,9 @@ void AddBotDialog::OnSelectBot( wxCommandEvent& /*unused*/ )
 void AddBotDialog::ShowAIInfo()
 {
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
-  if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) return;
+  if ( !LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) return;
   m_ai_infos_lst->DeleteAllItems();
-  wxArrayString info = usync().GetAIInfos( GetAIType() );
+  wxArrayString info = LSL::usync().GetAIInfos( GetAIType() );
   int count = info.GetCount();
 	for ( int i = 0; i < count; i = i + 3 )
 	{
@@ -249,7 +249,7 @@ void AddBotDialog::ShowAIInfo()
 
 void AddBotDialog::ShowAIOptions()
 {
-  if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) return;
+  if ( !LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) return;
   m_opts_list->DeleteAllItems();
   m_opt_list_map.clear();
   m_battle.CustomBattleOptions().loadAIOptions( m_battle.GetHostModName(), GetAIType(), GetNick() );

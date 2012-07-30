@@ -588,7 +588,7 @@ bool Ui::IsSpringCompatible()
         {
           wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), neededversion.c_str(), itor->first.c_str() );
           sett().SetUsedSpringIndex( itor->first );
-		  usync().AddReloadEvent();
+		  LSL::usync().AddReloadEvent();
         }
         return true;
       }
@@ -1098,7 +1098,7 @@ void Ui::OnJoinedBattle( Battle& battle )
     if ( m_main_win == 0 ) return;
     mw().GetJoinTab().JoinBattle( battle );
     mw().FocusBattleRoomTab();
-    if ( !usync().IsLoaded() )
+    if ( !LSL::usync().IsLoaded() )
     {
         customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
     }
@@ -1221,7 +1221,7 @@ void Ui::OnRing( const wxString& from )
 
     if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
         wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
-//        if(! usync().MapExists(host_map_name)) {//TODO
+//        if(! LSL::usync().MapExists(host_map_name)) {//TODO
 
 //			map_infos info_map = prDownloader().CollectGuiInfos();
 //            bool dling = false;

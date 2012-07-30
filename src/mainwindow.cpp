@@ -47,7 +47,7 @@
 #include "hosting/mainsingleplayertab.h"
 #include "battlelist/battlelisttab.h"
 #include "options/mainoptionstab.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "uiutils.h"
 #include "utils/misc.h"
 #include "chatpanel.h"
@@ -592,12 +592,12 @@ void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
 {
-	usync().AddReloadEvent();
+	LSL::usync().AddReloadEvent();
 }
 
 void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
 {
-    wxArrayString ar = usync().GetScreenshotFilenames();
+    wxArrayString ar = LSL::usync().GetScreenshotFilenames();
     if ( ar.Count() == 0 ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _("There were no screenshots found in your spring data directory."), _("No files found") );
         return;

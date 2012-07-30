@@ -20,11 +20,11 @@
 #include <wx/numdlg.h>
 
 #include "battleoptionstab.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "ibattle.h"
 #include "utils/controls.h"
 #include "server.h"
-#include "mmoptionswrapper.h"
+#include <lslunitsync/optionswrapper.h>
 #include "aui/auimanager.h"
 
 
@@ -140,7 +140,7 @@ void BattleOptionsTab::ReloadRestrictions()
         return;
 
 	try {
-		m_allowed_list->InsertItems( usync().GetUnitsList( m_battle->GetHostModName() ), 0 );
+		m_allowed_list->InsertItems( LSL::usync().GetUnitsList( m_battle->GetHostModName() ), 0 );
 	} catch ( ... ) {}
 	std::map<wxString, int> units = m_battle->RestrictedUnits();
 

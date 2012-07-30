@@ -29,7 +29,7 @@
 
 #include "battleroomtab.h"
 #include "ui.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "user.h"
 #include "battle.h"
 #include "defines.h"
@@ -1024,7 +1024,7 @@ void BattleRoomTab::ReloadMaplist()
 	if ( !m_battle ) return;
 	m_map_combo->Clear();
 
-	wxArrayString maplist = usync().GetMapList();
+	wxArrayString maplist = LSL::usync().GetMapList();
 // maplist.Sort(CompareStringIgnoreCase);
 
 	size_t nummaps = maplist.Count();
@@ -1037,7 +1037,7 @@ void BattleRoomTab::SetMap( int index )
 	if ( !m_battle ) return;
 	try
 	{
-		UnitSyncMap map = usync().GetMapEx( index );
+		UnitSyncMap map = LSL::usync().GetMapEx( index );
 		m_battle->SetLocalMap( map );
 		m_battle->SendHostInfo( IBattle::HI_Map );
 	} catch ( ... ) {}
@@ -1050,7 +1050,7 @@ void BattleRoomTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 	{
 		try
 		{
-			m_battle->DoAction( _T( "suggests " ) + usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
+			m_battle->DoAction( _T( "suggests " ) + LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
 		}
 		catch ( ... )
 		{
@@ -1137,7 +1137,7 @@ void BattleRoomTab::SetBattle( Battle* battle )
 		m_color_sel->SetColor( m_battle->GetMe().BattleStatus().colour );
 		try
 		{
-			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+			wxArrayString sides = LSL::usync().GetSides( m_battle->GetHostModName() );
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
 			{
 				m_side_sel->Append( sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );

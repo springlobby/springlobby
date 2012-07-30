@@ -14,7 +14,7 @@
 #include <wx/textctrl.h>
 
 #include "ui.h"
-#include "mmoptionswrapper.h"
+#include <lslunitsync/optionswrapper.h>
 #include "battle.h"
 #include "utils/controls.h"
 #include <lslutils/misc.h>

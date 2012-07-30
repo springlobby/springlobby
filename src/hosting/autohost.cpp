@@ -152,10 +152,10 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 		if ( params.IsEmpty() ) m_battle.DoAction( _T( "cannot switch to void mapname" ) );
 		else
 		{
-			wxString mapname = GetBestMatch( usync().GetMapList(), params );
+			wxString mapname = GetBestMatch( LSL::usync().GetMapList(), params );
 			try
 			{
-				UnitSyncMap map = usync().GetMap( mapname );
+				UnitSyncMap map = LSL::usync().GetMap( mapname );
 				m_battle.SetLocalMap( map );
 				m_battle.DoAction( _T( "is switching to map " ) + mapname );
 				m_battle.SendHostInfo( IBattle::HI_Map );

@@ -179,7 +179,7 @@ bool Widget::GetFileInfos()
                     }
                     else if ( item_name == _T("LocalPath") ) {
                         file.local_path = item->GetNodeContent();
-                        file_present_count += usync().FileExists( file.local_path );
+                        file_present_count += LSL::usync().FileExists( file.local_path );
                     }
                     item = item->GetNext();
                 }

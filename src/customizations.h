@@ -2,7 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_CUSTOMIZATIONS_H
 
 #include "globalsmanager.h"
-#include "mmoptionswrapper.h"
+#include <lslunitsync/optionswrapper.h>
 #include <wx/string.h>
 #include <wx/icon.h>
 #include <wx/bitmap.h>
@@ -20,7 +20,7 @@ class Customizations {
         Customizations();
 
         wxString m_modname;
-        OptionsWrapper m_customs;
+        LSL::OptionsWrapper m_customs;
         wxIconBundle m_app_icons;
         wxString m_help_url;
         wxString m_archive;
@@ -40,7 +40,7 @@ class Customizations {
         const wxString& Archive() const;
         const wxIconBundle& GetAppIconBundle() const;
 
-        const OptionsWrapper& GetCustomizations() const;
+        const LSL::OptionsWrapper& GetCustomizations() const;
 
 		wxString GetIntroText() const;
 

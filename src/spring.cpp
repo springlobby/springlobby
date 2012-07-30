@@ -35,7 +35,7 @@
 #include "qt/noguisingleplayerbattle.h"
 #include "offlinebattle.h"
 #include "user.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "nonportable.h"
 #include "tdfcontainer.h"
 #include "globalsmanager.h"
@@ -230,7 +230,7 @@ bool Spring::LaunchSpring( const wxString& params  )
 
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
 		#ifdef __WXMSW__
-		if ( usync().GetSpringVersion().Find(_T("0.78.") ) != wxNOT_FOUND ) configfileflags = _T("");
+		if ( LSL::usync().GetSpringVersion().Find(_T("0.78.") ) != wxNOT_FOUND ) configfileflags = _T("");
 		#endif
   }
 
@@ -509,7 +509,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					tdf.LeaveSection();
 					player_to_number[&user] = i;
 			}
-			if ( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+			if ( LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
 			{
 				for ( unsigned int i = 0; i < NumUsers; i++ )
 				{
@@ -542,7 +542,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			tdf.AppendLineBreak();
 
 			std::set<int> parsedteams;
-			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
+			wxArrayString sides = LSL::usync().GetSides( battle.GetHostModName() );
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
@@ -552,7 +552,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					parsedteams.insert( status.team );
 
 					tdf.EnterSection( _T("TEAM") + TowxString( teams_to_sorted_teams[status.team] ) );
-						if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
+						if ( !LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
 						{
 								tdf.Append( _T("AIDLL"), status.aishortname );
 								tdf.Append( _T("TeamLeader"), player_to_number[&battle.GetUser( status.owner )] ); // bot owner is the team leader

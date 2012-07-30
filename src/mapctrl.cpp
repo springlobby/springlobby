@@ -14,7 +14,7 @@
 #include <lslutils/misc.h>
 #include "uiutils.h"
 #include "mapctrl.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "user.h"
 #include "ui.h"
 #include "server.h"
@@ -1436,7 +1436,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         {
             try
             {
-                wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+                wxArrayString sides = LSL::usync().GetSides( m_battle->GetHostModName() );
                 unsigned int sidecount = sides.GetCount();
                 if ( sidecount > 0 ) user.BattleStatus().side = (user.BattleStatus().side + 1) % sidecount;
                 else user.BattleStatus().side = 0;
@@ -1463,7 +1463,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         {
             if ( m_mdown_area == Refreshing )
             {
-				usync().AddReloadEvent();
+				LSL::usync().AddReloadEvent();
 				m_battle->Update( wxFormat( _T("%d_mapname") ) % OptionsWrapper::PrivateOptions );
                 UpdateMinimap();
             }
@@ -1558,22 +1558,22 @@ void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 
     if ( m_minimap == NULL )
     {
-        m_minimap = new wxBitmap( usync().GetMinimap( m_mapname, w, h ) );
+        m_minimap = new wxBitmap( LSL::usync().GetMinimap( m_mapname, w, h ) );
         // this ensures metalmap and heightmap aren't loaded in battlelist
-        if (m_draw_start_types && usync().VersionSupports(SpringUnitSync::USYNC_GetInfoMap))
+        if (m_draw_start_types && LSL::usync().VersionSupports(SpringUnitSync::USYNC_GetInfoMap))
             m_async.GetMetalmap( m_mapname, w, h );
     }
     else if ( m_metalmap == NULL )
     {
-        m_metalmap = new wxBitmap( usync().GetMetalmap( m_mapname, w, h ) );
+        m_metalmap = new wxBitmap( LSL::usync().GetMetalmap( m_mapname, w, h ) );
         // singleplayer mode doesn't allow startboxes anyway
-        m_metalmap_cumulative = usync().GetMetalmap( m_mapname );
+        m_metalmap_cumulative = LSL::usync().GetMetalmap( m_mapname );
         Accumulate( m_metalmap_cumulative );
         m_async.GetHeightmap( m_mapname, w, h );
     }
     else if ( m_heightmap == NULL )
     {
-        m_heightmap = new wxBitmap( usync().GetHeightmap( m_mapname, w, h ) );
+        m_heightmap = new wxBitmap( LSL::usync().GetHeightmap( m_mapname, w, h ) );
     }
 
     Refresh();

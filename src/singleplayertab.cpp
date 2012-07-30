@@ -19,14 +19,14 @@
 #include "utils/conversion.h"
 #include "uiutils.h"
 #include "ui.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "hosting/addbotdialog.h"
 #include "server.h"
 #include "settings.h"
 #include "Helper/colorbutton.h"
 #include "aui/auimanager.h"
 #include "utils/customdialogs.h"
-#include "springunitsynclib.h"
+#include <lslunitsync/c_api.h>
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
@@ -133,7 +133,7 @@ void SinglePlayerTab::ReloadMaplist()
 {
 	m_map_pick->Clear();
 
-    m_map_pick->Append( usync().GetMapList() );
+    m_map_pick->Append( LSL::usync().GetMapList() );
 
     m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
 
@@ -155,7 +155,7 @@ void SinglePlayerTab::ReloadModlist()
 {
     m_mod_pick->Clear();
 
-    wxArrayString modlist= usync().GetModList();
+    wxArrayString modlist= LSL::usync().GetModList();
     //modlist.Sort(CompareStringIgnoreCase);
 
     size_t nummods = modlist.Count();
@@ -183,7 +183,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
     m_battle.SetHostMap( wxEmptyString, wxEmptyString );
   } else {
     try {
-      UnitSyncMap map = usync().GetMapEx( index );
+      UnitSyncMap map = LSL::usync().GetMapEx( index );
       m_battle.SetHostMap( map.name, map.hash );
       m_addbot_btn->Enable( true );
     } catch (...) {}
@@ -195,7 +195,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
 
 void SinglePlayerTab::ResetUsername()
 {
-    m_battle.GetMe().SetNick( usync().GetDefaultNick() );
+    m_battle.GetMe().SetNick( LSL::usync().GetDefaultNick() );
 }
 
 void SinglePlayerTab::SetMod( unsigned int index )
@@ -209,7 +209,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
     {
         try
         {
-            UnitSyncMod mod = usync().GetMod( index );
+            UnitSyncMod mod = LSL::usync().GetMod( index );
             m_battle.SetLocalMod( mod );
             m_battle.SetHostMod( mod.name, mod.hash );
         }
@@ -367,7 +367,7 @@ void SinglePlayerTab::UpdateTag( const wxString& Tag )
             m_addbot_btn->Enable( false );
             try
             {
-                m_map_pick->SetSelection( usync().GetMapIndex( m_battle.GetHostMapName() ) );
+                m_map_pick->SetSelection( LSL::usync().GetMapIndex( m_battle.GetHostMapName() ) );
                 UpdateMinimap();
                 m_addbot_btn->Enable( true );
             }

@@ -31,7 +31,7 @@
 
 #include "nonportable.h"
 #include "ui.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "utils/controls.h"
 #include "utils/platform.h"
 #include "utils/uievents.h"
@@ -308,7 +308,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 
 	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
 	sett().RefreshSpringVersionList();
-    if ( reload_usync && !usync().LoadUnitSyncLib( sett().GetCurrentUsedUnitSync() ) )
+    if ( reload_usync && !LSL::usync().LoadUnitSyncLib( sett().GetCurrentUsedUnitSync() ) )
 	{
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
 		customMessageBox( SL_MAIN_ICON,
@@ -373,9 +373,9 @@ void SpringOptionsTab::SetupUserFolders()
 		wxMessageBox( _( "Something went wrong when creating the directories\nPlease create manually the following folders:" ) + wxString( _T( "\n" ) ) + dir +  _T( "\n" ) + dir + sep + _T( "mods\n" ) + dir + sep + _T( "maps\n" ) + dir + sep + _T( "base\n" ) );
 		return;
 	}
-	if ( usync().IsLoaded() )
+	if ( LSL::usync().IsLoaded() )
 	{
-		usync().SetSpringDataPath( dir );
+		LSL::usync().SetSpringDataPath( dir );
 	}
     CopyUikeys( sett().GetCurrentUsedDataDir() );
 }

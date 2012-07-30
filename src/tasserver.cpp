@@ -26,7 +26,7 @@
 #include "base64.h"
 #include "utils/md5.h"
 #include "tasserver.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "user.h"
 #include "utils/debug.h"
 #include "utils/tasutil.h"
@@ -993,7 +993,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
             wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
             ai = _T("INVALID|INVALID");
         }
-        if( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+        if( LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
         {
 			if (ai.Find(_T('|')) != -1)
 			{
@@ -2197,7 +2197,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
     wxString msg;
     wxString ailib;
     ailib += status.aishortname;
-    if ( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
+    if ( LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
     SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
 }
 
@@ -2496,7 +2496,7 @@ int TASServer::TestOpenPort( unsigned int port ) const
 
 void TASServer::RequestSpringUpdate()
 {
-	SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring ") + usync().GetSpringVersion() );
+	SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring ") + LSL::usync().GetSpringVersion() );
 }
 
 wxArrayString TASServer::GetRelayHostList()

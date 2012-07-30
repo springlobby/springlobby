@@ -44,7 +44,7 @@ public:
             d += TowxString(m_item.front()->name);
             m_loader->download( m_item );
             m_loader->freeResult( m_item );
-            usync().AddReloadEvent();
+            LSL::usync().AddReloadEvent();
             ui().mw().AddMessageEvent(d);
         }
     }

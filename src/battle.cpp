@@ -4,7 +4,7 @@
 //
 #include "battle.h"
 #include "ui.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "server.h"
 #include "user.h"
 #include "utils/misc.h"
@@ -17,7 +17,7 @@
 #include "settings.h"
 #include "useractions.h"
 #include "utils/customdialogs.h"
-#include "springunitsynclib.h"
+#include <lslunitsync/c_api.h>
 #include "iconimagelist.h"
 #include "spring.h"
 
@@ -127,7 +127,7 @@ void Battle::SetImReady( bool ready )
 
 /*bool Battle::HasMod()
 {
-  return usync().ModExists( m_opts.modname );
+  return LSL::usync().ModExists( m_opts.modname );
 }*/
 
 

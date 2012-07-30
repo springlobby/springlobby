@@ -66,8 +66,8 @@ void tab_simple::getSetUpResolutionCBX()
 	else
 	{
 		try{
-			x_res = susynclib().GetSpringConfigInt(RC_TEXT[0].key,fromString(RC_TEXT[0].def));
-			y_res = susynclib().GetSpringConfigInt(RC_TEXT[1].key,fromString(RC_TEXT[1].def));
+			x_res = LSL::susynclib().GetSpringConfigInt(RC_TEXT[0].key,fromString(RC_TEXT[0].def));
+			y_res = LSL::susynclib().GetSpringConfigInt(RC_TEXT[1].key,fromString(RC_TEXT[1].def));
 		}
 		catch (...)	{}
 	}

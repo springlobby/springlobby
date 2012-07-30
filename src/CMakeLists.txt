@@ -73,6 +73,8 @@ IF( ENABLE_DEBUG_REPORT )
 	ENDIF( MINGW )
 ENDIF( ENABLE_DEBUG_REPORT )
 
+ADD_DEFINITIONS( -std=c++0x )
+
 IF(WIN32)
 	ADD_DEFINITIONS( ${CURL_CFLAGS}  )
 	add_to_global(link_directories  ${CURL_STATIC_LIBRARY_DIRS} )
@@ -199,11 +201,7 @@ add_sources(SLSharedWithSettings
 	utils/curlhelper.cpp
 	crashreport.cpp
 	globalsmanager.cpp
-	mmoptionmodel.cpp
-	mmoptionswrapper.cpp
 	settings.cpp
-	springunitsynclib.cpp
-	springunitsync.cpp
 	thread.cpp
 	infodialog.cpp
 	gui/windowattributespickle.cpp
@@ -280,8 +278,6 @@ IF(WIN32)
 	install(TARGETS springlobby RUNTIME DESTINATION .)
 ELSE (WIN32)
     install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
-	#only do this on platforms with awk expected to be installed
-	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF (WIN32)
 
 TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils pr-downloader_static

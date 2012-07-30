@@ -15,7 +15,7 @@
 
 #include "battleroomlistctrl.h"
 #include "iconimagelist.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "battle.h"
 #include "ibattle.h"
 #include "uiutils.h"
@@ -207,7 +207,7 @@ void BattleroomListCtrl::SetBattle( IBattle* battle )
 	{
 		try
 		{
-			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+			wxArrayString sides = LSL::usync().GetSides( m_battle->GetHostModName() );
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
 			{
 				wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
@@ -248,7 +248,7 @@ void BattleroomListCtrl::UpdateUser( User& user )
 {
     if ( !user.BattleStatus().spectator )
 		icons().SetColourIcon( user.BattleStatus().colour );
-    wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+    wxArrayString sides = LSL::usync().GetSides( m_battle->GetHostModName() );
     ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
     user.SetSideiconIndex( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
     int index = GetIndexFromData( &user );
@@ -314,7 +314,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 
 	if ( column == m_faction_column_index ) {
 		try {
-			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+			wxArrayString sides = LSL::usync().GetSides( m_battle->GetHostModName() );
 			ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
 		}
 		catch ( ... ) {
@@ -326,7 +326,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
         if ( is_bot ) {
             wxString botname = user.BattleStatus().aishortname;
             if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
-            if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+            if ( !LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
             {
                 if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
                 if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));
@@ -801,7 +801,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 			{
 				try
 				{
-					wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+					wxArrayString sides = LSL::usync().GetSides( m_battle->GetHostModName() );
 					int side = user.BattleStatus().side;
 					if ( side < (int)sides.GetCount() ) m_tiptext = sides[side];
 				}

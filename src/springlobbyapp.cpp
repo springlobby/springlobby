@@ -39,7 +39,7 @@
 #include "utils/controls.h"
 #include "utils/platform.h"
 #include "ui.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "channel/channel.h"
 #include "utils/customdialogs.h"
 #include "springsettings/se_utils.h"
@@ -181,7 +181,7 @@ bool SpringLobbyApp::OnInit()
 		sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
 	}
 	//unitsync first load, NEEDS to be blocking
-	const bool usync_loaded = usync().ReloadUnitSyncLib();
+	const bool usync_loaded = LSL::usync().ReloadUnitSyncLib();
 	if ( !sett().IsFirstRun() && !usync_loaded )
 	{
 		customMessageBox( SL_MAIN_ICON, _("Please check that the file given in Preferences->Spring is a proper, readable unitsync library"),
@@ -444,8 +444,8 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			{
 				if( IsUACenabled() )
 				{
-					usync().ReloadUnitSyncLib();
-					if ( usync().IsLoaded() ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+					LSL::usync().ReloadUnitSyncLib();
+					if ( LSL::usync().IsLoaded() ) LSL::usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
 				}
 			}
 			if ( settversion < 12 )

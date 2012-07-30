@@ -9,12 +9,12 @@
 #include "ui.h"
 #include "settings.h"
 #include "spring.h"
-#include "springunitsynclib.h"
+#include <lslunitsync/c_api.h>
 #include "utils/conversion.h"
 
 SinglePlayerBattle::SinglePlayerBattle( MainSinglePlayerTab& msptab ):
   m_sptab(msptab),
-  m_me( User( usync().IsLoaded() ? usync().GetDefaultNick() : _T("invalid") ) )
+  m_me( User( LSL::usync().IsLoaded() ? LSL::usync().GetDefaultNick() : _T("invalid") ) )
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().side = sett().GetBattleLastSideSel( GetHostModName() );
@@ -67,8 +67,8 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
 
 void SinglePlayerBattle::RemoveUnfittingBots()
 {
-    wxArrayString old_ais = usync().GetAIList( m_previous_local_mod_name );
-    wxArrayString new_ais = usync().GetAIList( m_local_mod.name );
+    wxArrayString old_ais = LSL::usync().GetAIList( m_previous_local_mod_name );
+    wxArrayString new_ais = LSL::usync().GetAIList( m_local_mod.name );
     for ( size_t i = 0; i < old_ais.GetCount(); ++i) {
         if ( new_ais.Index(old_ais[i]) == wxNOT_FOUND  ) {
             for( size_t j = 0; j < GetNumUsers(); ++j  ) {

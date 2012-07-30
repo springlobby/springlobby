@@ -14,7 +14,7 @@
 #include "user.h"
 #include "battle.h"
 //#include "utils.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 
 #include "images/bot.xpm"
 #include "images/bot_broom.png.h"
@@ -366,14 +366,14 @@ void IconImageList::SetColourIcon( const wxColour& colour )
 
 int IconImageList::GetSideIcon( const wxString& modname, int side )
 {
-	wxArrayString sides = usync().GetSides( modname );
+	wxArrayString sides = LSL::usync().GetSides( modname );
 	wxString sidename;
 	if( side < (int)sides.GetCount() ) sidename = sides[side];
   wxString cachestring = modname + _T("_") + sidename;
   if (m_cached_side_icons.find(cachestring)  == m_cached_side_icons.end()){
     try
     {
-      int IconPosition = Add(wxBitmap( usync().GetSidePicture( modname , sidename ) ), wxNullBitmap);
+      int IconPosition = Add(wxBitmap( LSL::usync().GetSidePicture( modname , sidename ) ), wxNullBitmap);
       m_cached_side_icons[cachestring] = IconPosition;
       return IconPosition;
     } catch (...)

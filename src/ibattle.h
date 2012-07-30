@@ -5,9 +5,9 @@
 #include <wx/string.h>
 #include <wx/event.h>
 
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "user.h"
-#include "mmoptionswrapper.h"
+#include <lslunitsync/optionswrapper.h>
 #include "userlist.h"
 #include "tdfcontainer.h"
 #include "utils/isink.h"

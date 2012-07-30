@@ -37,7 +37,7 @@
 #include "battlelist/battlelistfiltervalues.h"
 #include "playback/playbackfiltervalues.h"
 #include "globalsmanager.h"
-#include "springunitsynclib.h"
+#include <lslunitsync/c_api.h>
 #include "customlistctrl.h"
 #include "springsettings/presets.h"
 #include "Helper/sortutil.h"
@@ -786,18 +786,18 @@ void Settings::RefreshSpringVersionList()
 	wxLogDebugFunc( _T( "" ) );
 	wxArrayString list = GetGroupList( _T( "/Spring/Paths" ) );
 	int count = list.GetCount();
-	std::map<wxString, wxString> usync_paths;
+    std::map<std::string, std::string> usync_paths;
 	for ( int i = 0; i < count; i++ )
 	{
-		wxString groupname = list[i];
-		usync_paths[groupname] = GetUnitSync( groupname );
+        std::string groupname = STD_STRING(list[i]);
+        usync_paths[groupname] = STD_STRING(GetUnitSync(TowxString(groupname)));
 	}
 	if ( sett().GetSearchSpringOnlyInSLPath() || sett().GetUseSpringPathFromBundle() )
 	{
 		usync_paths.clear();
-		usync_paths[sett().GetCurrentUsedSpringIndex()] = sett().GetCurrentUsedUnitSync();
+        usync_paths[STD_STRING(sett().GetCurrentUsedSpringIndex())] = STD_STRING(sett().GetCurrentUsedUnitSync());
 	}
-	m_spring_versions = susynclib().GetSpringVersionList( usync_paths );
+	m_spring_versions = LSL::susynclib().GetSpringVersionList( usync_paths );
 }
 
 wxString Settings::GetCurrentUsedSpringIndex()
@@ -862,10 +862,10 @@ void Settings::SetUseSpringPathFromBundle( bool value )
 wxString Settings::GetCurrentUsedDataDir()
 {
 	wxString dir;
-	if ( susynclib().IsLoaded() )
+	if ( LSL::susynclib().IsLoaded() )
 	{
-		if ( susynclib().VersionSupports( SpringUnitSync::USYNC_GetDataDir ) ) dir = susynclib().GetSpringDataDir();
-		else dir = susynclib().GetSpringConfigString( _T( "SpringData" ), _T( "" ) );
+        if ( LSL::susynclib().VersionSupports( LSL::Unitsync::USYNC_GetDataDir ) ) dir = LSL::susynclib().GetSpringDataDir();
+		else dir = LSL::susynclib().GetSpringConfigString( _T( "SpringData" ), _T( "" ) );
 	}
 #ifdef __WXMSW__
 	if ( dir.IsEmpty() )
@@ -915,7 +915,7 @@ wxString Settings::GetCurrentUsedSpringConfigFilePath()
 	wxString path;
 	try
 	{
-		path = susynclib().GetConfigFilePath();
+		path = LSL::susynclib().GetConfigFilePath();
 	}
 	catch ( unitsync_assert ) {}
 	return path;

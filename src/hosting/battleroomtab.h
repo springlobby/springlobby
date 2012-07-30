@@ -3,7 +3,7 @@
 
 #include <wx/scrolwin.h>
 
-#include "mmoptionswrapper.h"
+#include <lslunitsync/optionswrapper.h>
 #include "utils/isink.h"
 #include "utils/uievents.h"
 #include <map>

@@ -21,7 +21,7 @@
 #include <stdexcept>
 
 #include "battlemaptab.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "ui.h"
 #include "user.h"
 #include "battle.h"
@@ -196,7 +196,7 @@ void BattleMapTab::ReloadMaplist()
 	if ( !m_battle ) return;
 	m_map_combo->Clear();
 
-	wxArrayString maplist = usync().GetMapList();
+	wxArrayString maplist = LSL::usync().GetMapList();
 // maplist.Sort(CompareStringIgnoreCase);
 
 	size_t nummaps = maplist.Count();
@@ -220,7 +220,7 @@ void BattleMapTab::SetMap( int index )
 	if ( !m_battle ) return;
 	try
 	{
-		UnitSyncMap map = usync().GetMapEx( index );
+		UnitSyncMap map = LSL::usync().GetMapEx( index );
 		m_battle->SetLocalMap( map );
 
 		m_battle->SendHostInfo( IBattle::HI_Map );
@@ -235,7 +235,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 	{
 		try
 		{
-			m_battle->DoAction( _T( "suggests " ) + usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
+			m_battle->DoAction( _T( "suggests " ) + LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
 		}
 		catch ( ... )
 		{
