@@ -2,9 +2,8 @@
 #define SPRINGLOBBY_HEADERGUARD_PLAYBACKTHREAD
 
 #include <wx/string.h>
-#include <wx/event.h>
-#include <wx/thread.h>
 #include "../defines.h"
+#include <wx/thread.h>
 
 static const wxEventType PlaybacksLoadedEvt = wxNewEventType();
 
@@ -51,10 +50,10 @@ public:
     ~PlaybackLoader();
     void OnComplete();
     void Run();
-    wxArrayString GetPlaybackFilenames();
+    std::vector<std::string> GetPlaybackFilenames();
 
 protected:
-    wxArrayString m_filenames;
+    std::vector<std::string> m_filenames;
     ParentType* m_parent;
     ThreadType* m_thread_loader;
 

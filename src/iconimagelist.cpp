@@ -375,8 +375,9 @@ int IconImageList::GetSideIcon( const wxString& modname, int side )
     if (m_cached_side_icons.find(cachestring)  == m_cached_side_icons.end()){
         try
         {
-          int IconPosition = Add(wxBitmap( LSL::usync().GetSidePicture(
-                                               STD_STRING(modname), STD_STRING(sidename) ) ), wxNullBitmap);
+            const auto img = LSL::usync().GetSidePicture(
+                        STD_STRING(modname), STD_STRING(sidename) );
+            int IconPosition = Add(wxBitmap( img.wxbitmap() ), wxNullBitmap);
           m_cached_side_icons[cachestring] = IconPosition;
           return IconPosition;
         } catch (...)

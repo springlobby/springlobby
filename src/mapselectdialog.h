@@ -21,7 +21,9 @@ class wxChoice;
 class wxButton;
 
 class Ui;
-struct LSL::UnitsyncMap;
+namespace LSL {
+    struct UnitsyncMap;
+}
 
 
 class MapSelectDialog: public wxDialog, public WindowAttributesPickle, public UnitsyncReloadedSink<MapSelectDialog>

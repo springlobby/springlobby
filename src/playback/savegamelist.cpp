@@ -21,7 +21,7 @@ SavegameList::SavegameList()
 }
 
 
-void SavegameList::LoadPlaybacks( const wxArrayString& filenames )
+void SavegameList::LoadPlaybacks(const std::vector &filenames )
 {
     m_fails = 0;
 

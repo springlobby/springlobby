@@ -597,7 +597,9 @@ void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
 {
-    wxArrayString ar = LSL::usync().GetScreenshotFilenames();
+    wxArrayString ar;
+    for( auto i : LSL::usync().GetScreenshotFilenames())
+        ar.Add(TowxString(i));
     if ( ar.Count() == 0 ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _("There were no screenshots found in your spring data directory."), _("No files found") );
         return;

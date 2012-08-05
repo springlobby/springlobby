@@ -16,7 +16,9 @@ class Battle;
 struct BattleStartRect;
 class SinglePlayerBattle;
 class Ui;
-struct LSL::UnitsyncMap;
+namespace LSL {
+    struct UnitsyncMap;
+}
 class BattleRoomTab;
 
 class MapCtrl : public wxPanel
@@ -157,7 +159,7 @@ class MapCtrl : public wxPanel
 
     void _SetCursor();
 
-    UnitSyncAsyncOps m_async;
+    LSL::UnitSyncAsyncOps m_async;
 
     wxBitmap* m_minimap;
     wxBitmap* m_metalmap;
@@ -166,7 +168,7 @@ class MapCtrl : public wxPanel
 
     IBattle* m_battle;
 
-    wxString m_mapname;
+    std::string m_mapname;
 
     bool m_draw_start_types;
     bool m_fixed_size;

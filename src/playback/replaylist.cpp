@@ -18,7 +18,7 @@ ReplayList::ReplayList()
 {
 }
 
-void ReplayList::LoadPlaybacks( const wxArrayString& filenames )
+void ReplayList::LoadPlaybacks(const std::vector &filenames )
 {
     m_fails = 0;
 

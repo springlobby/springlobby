@@ -30,6 +30,7 @@ wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit,
         const wxString& caption = DEFAULT_COLORDLG_TITLE, const wxString& palette = _T("Default") );
 
 #define TE(v) TooltipEnable(v)
+#define TES(v) TE(TowxString(v))
 
 //! call this function everytime map app loses/acquires focus to enable/disable tooltips
 void UpdateMainAppHasFocus( bool focus );

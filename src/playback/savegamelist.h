@@ -15,7 +15,7 @@ class SavegameList : public PlaybackList<Savegame>
     typedef Savegame
         PlaybackType;
 
-   virtual  void LoadPlaybacks( const wxArrayString& filenames );
+   virtual  void LoadPlaybacks( const std::vector<std::string>& filenames );
 
   protected:
     SavegameList();

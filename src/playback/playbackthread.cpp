@@ -8,7 +8,7 @@
 //#include "../utils.h"
 #include "replaylist.h"
 #include "savegamelist.h"
-#include "../springunitsync.h"
+#include <lslunitsync/unitsync.h>
 
 template <class PlaybackTabImp >
 PlaybackLoader<PlaybackTabImp>::PlaybackLoader( ParentType* parent )
@@ -25,9 +25,9 @@ PlaybackLoader<PlaybackTabImp>::~PlaybackLoader()
 template <class PlaybackTabImp >
 void PlaybackLoader<PlaybackTabImp>::Run()
 {
-    if ( !usync().IsLoaded() ) return;
+    if ( !LSL::usync().IsLoaded() ) return;
     if ( m_thread_loader ) return; // a thread is already running
-    m_filenames = usync().GetPlaybackList( IsReplayType );
+    m_filenames = LSL::usync().GetPlaybackList( IsReplayType );
     playbacklist<ListType>().RemoveAll();
     m_thread_loader = new ThreadType();
     m_thread_loader->SetParent( this );
@@ -45,7 +45,7 @@ void PlaybackLoader<PlaybackTabImp>::OnComplete()
 }
 
 template <class PlaybackTabImp >
-wxArrayString PlaybackLoader<PlaybackTabImp>::GetPlaybackFilenames()
+std::vector<std::string> PlaybackLoader<PlaybackTabImp>::GetPlaybackFilenames()
 {
 	return m_filenames;
 }
