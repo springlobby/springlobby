@@ -16,8 +16,6 @@ class wxArrayString;
 
 static const int SCROLL_RATE = 3;
 
-#define bool2yn(b) ((b)?_("Yes"):_("No"))
-
 #ifdef __WXMSW__
     const wxString DEFAULT_COLORDLG_TITLE = _("Choose color");
 #else

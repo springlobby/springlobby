@@ -8,10 +8,12 @@
 #include "ui.h"
 #include "uiutils.h"
 #include "utils/controls.h"
+#include "utils/conversion.h"
 #include "utils/debug.h"
 #include "settings.h"
 #include "globalsmanager.h"
 #include <wx/settings.h>
+#include <lslutils/misc.h>
 
 //(*InternalHeaders(MapSelectDialog)
 #include <wx/listctrl.h>
@@ -197,8 +199,9 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
     m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
     m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
 
-	m_maps = LSL::usync().GetMapList();
-	m_replays = LSL::usync().GetPlaybackList( true ); //true meaning replays, flase meaning savegames
+    m_maps = LSL::Util::vectorToArrayString(LSL::usync().GetMapList());
+    //true meaning replays, flase meaning savegames
+    m_replays = LSL::Util::vectorToArrayString(LSL::usync().GetPlaybackList(true));
 
     const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
 	m_filter_popular->Enable( ui().IsConnected() );
@@ -274,14 +277,14 @@ static MapGridCtrl::SortKey GetSelectedSortKey( wxChoice* choice )
 namespace {
 struct FilterPredicate
 {
-	FilterPredicate( const wxString& _searchText ) : searchText(_searchText.Lower()) {}
+    FilterPredicate( const wxString& _searchText ) : searchText(STD_STRING(_searchText.Lower())) {}
 	bool operator () ( const LSL::UnitsyncMap& map ) const
 	{
-		return map.name.Lower().Find( searchText ) != wxNOT_FOUND
-			|| map.info.description.Lower().Find( searchText ) != wxNOT_FOUND
-			|| map.info.author.Lower().Find( searchText ) != wxNOT_FOUND ;
+        return boost::to_lower_copy(map.name).find(searchText) != std::string::npos
+            || boost::to_lower_copy(map.info.description).find(searchText) != std::string::npos
+            || boost::to_lower_copy(map.info.author).find(searchText) != std::string::npos;
 	}
-	wxString searchText;
+    const std::string searchText;
 };
 }
 
@@ -310,7 +313,7 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 	if ( pMap == NULL) return;
 	const LSL::UnitsyncMap& map = *pMap;
 
-	m_map_name->SetLabel( map.name + _T("\n\n") + map.info.description );
+    m_map_name->SetLabel(TowxString(map.name + "\n\n" + map.info.description));
 
 	// TODO: refactor, this is copied from battlemaptab.cpp
 	m_map_opts_list->SetItem( 0, 1, wxFormat( _T("%dx%d") ) % (map.info.width/512) % (map.info.height/512) );

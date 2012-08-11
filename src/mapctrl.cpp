@@ -76,8 +76,6 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
     EVT_MOTION( MapCtrl::OnMouseMove )
     EVT_LEFT_DOWN( MapCtrl::OnLeftDown )
     EVT_LEFT_UP( MapCtrl::OnLeftUp )
-    //  EVT_MOUSEWHEEL( MapCtrl::OnMouseWheel )
-    EVT_COMMAND( wxID_ANY, LSL::UnitSyncAsyncOperationCompletedEvt, MapCtrl::OnGetMapImageAsyncCompleted )
 END_EVENT_TABLE()
 
 /* Something to do with start box sizes. */
@@ -98,7 +96,7 @@ static inline int ReadInt24(const unsigned char* p)
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
         wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
-        m_async(this),
+        m_async(boost::bind(&MapCtrl::OnGetMapImageAsyncCompleted, this, _1)),
         m_minimap(0),
         m_metalmap(0),
         m_heightmap(0),
@@ -1549,12 +1547,8 @@ void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 }
 
 
-void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
+void MapCtrl::OnGetMapImageAsyncCompleted(const std::string mapname)
 {
-    wxLogDebugFunc( _T("") );
-
-    const std::string mapname = STD_STRING(event.GetString());
-
     if ( mapname != m_mapname ) return;
 
     const int w = m_lastsize.GetWidth();

@@ -20,6 +20,7 @@ typedef __int64 int64_t;
 
 #include <wx/string.h>
 #include <sstream>
+#include <vector>
 
 #include <wx/arrstr.h>
 
@@ -57,6 +58,11 @@ inline T FromwxString(const wxString& arg){
   s >> ret;
   return (T)ret;
 }
+
+namespace LSL { namespace Util {
+wxArrayString vectorToArrayString(const std::vector<std::string>& vec);
+std::vector<std::string> arrayStringToVector(const wxArrayString& arr);
+} }
 
 #ifdef SL_QT_MODE
 #include <QString>

@@ -571,8 +571,8 @@ bool Ui::IsSpringCompatible()
     sett().RefreshSpringVersionList();
     if ( sett().GetDisableSpringVersionCheck() ) return true;
     const std::string neededversion = STD_STRING(serverSelector().GetServer().GetRequiredSpring());
-    if ( neededversion == _T("*") ) return true; // Server accepts any version.
-    else if ( neededversion.IsEmpty() ) return false;
+    if (neededversion == "*") return true; // Server accepts any version.
+    else if ( neededversion.empty() ) return false;
     const auto versionlist = sett().GetSpringVersionList();
     if ( versionlist.size() == 0 )
     {
@@ -582,7 +582,7 @@ bool Ui::IsSpringCompatible()
     }
     for ( const auto pair : versionlist )
     {
-      if ( pair.second == neededversion )
+      if (STD_STRING(pair.second) == neededversion )
       {
         if ( sett().GetCurrentUsedSpringIndex() != pair.first )
         {

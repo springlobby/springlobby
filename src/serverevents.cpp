@@ -284,8 +284,8 @@ void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
 
         if ( !battle.IsFounderMe() || battle.IsProxy() )
         {
-            battle.CustomBattleOptions().loadOptions( LSL::OptionsWrapper::MapOption, battle.GetHostMapName() );
-            battle.CustomBattleOptions().loadOptions( LSL::OptionsWrapper::ModOption, battle.GetHostModName() );
+            battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::MapOption, STD_STRING(battle.GetHostMapName()));
+            battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::ModOption, STD_STRING(battle.GetHostModName()));
         }
 
         ui().OnJoinedBattle( battle );
@@ -305,8 +305,8 @@ void ServerEvents::OnHostedBattle( int battleid )
 
 				if ( battle.GetBattleType() == BT_Played )
 				{
-					battle.CustomBattleOptions().loadOptions( LSL::OptionsWrapper::MapOption, battle.GetHostMapName() );
-					battle.CustomBattleOptions().loadOptions( LSL::OptionsWrapper::ModOption, battle.GetHostModName() );
+                    battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::MapOption, STD_STRING(battle.GetHostMapName()));
+                    battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::ModOption, STD_STRING(battle.GetHostModName()));
 				}
 				else
 				{
@@ -423,7 +423,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
         if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
         {
             battle.SendMyBattleStatus();
-            battle.CustomBattleOptions().loadOptions( LSL::OptionsWrapper::MapOption, map );
+            battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::MapOption, STD_STRING(map));
             battle.Update( wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions ) );
         }
 
@@ -446,13 +446,13 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             if ( key.Left( 11 ) == _T( "mapoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
-                battle.CustomBattleOptions().setSingleOption( key,  value, LSL::OptionsWrapper::MapOption );
-								battle.Update( wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::MapOption, key.c_str() ) );
+                battle.CustomBattleOptions().setSingleOption(STD_STRING(key), STD_STRING(value), LSL::OptionsWrapper::MapOption );
+                battle.Update( wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::MapOption, key.c_str() ) );
             }
             else if ( key.Left( 11 ) == _T( "modoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
-								battle.CustomBattleOptions().setSingleOption( key, value, LSL::OptionsWrapper::ModOption );
+                battle.CustomBattleOptions().setSingleOption(STD_STRING(key), STD_STRING(value), LSL::OptionsWrapper::ModOption );
                 battle.Update(  wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::ModOption,  key.c_str() ) );
             }
             else if ( key.Left( 8 ) == _T( "restrict" ) )
@@ -493,8 +493,8 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             }
             else
             {
-							battle.CustomBattleOptions().setSingleOption( key,  value, LSL::OptionsWrapper::EngineOption );
-							battle.Update( wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::EngineOption, key.c_str() ) );
+                battle.CustomBattleOptions().setSingleOption( STD_STRING(key), STD_STRING(value), LSL::OptionsWrapper::EngineOption );
+                battle.Update( wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::EngineOption, key.c_str() ) );
             }
         }
     }
@@ -1040,21 +1040,20 @@ void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
   }
   else
   {
-			wxString text =  _("Download complete, location is: ") + m_savepath;
-			if ( m_autoclose ) text += _("\nlobby will get closed now.");
-			customMessageBox(SL_MAIN_ICON, text, _("Download complete.")  );
-			if ( m_autolaunch )
-			{
-				if ( !wxExecute( _T("\"") + m_savepath + _T("\""), wxEXEC_ASYNC ) )
-				{
-						customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch installer. File location is: ") + m_savepath, _("Couldn't launch installer.")  );
-				}
-			}
-			if ( m_autoclose )
-			{
-				ui().mw().Close();
-			}
-
+        wxString text =  _("Download complete, location is: ") + m_savepath;
+        if ( m_autoclose ) text += _("\nlobby will get closed now.");
+        customMessageBox(SL_MAIN_ICON, text, _("Download complete.")  );
+        if ( m_autolaunch )
+        {
+            if ( !wxExecute( _T("\"") + m_savepath + _T("\""), wxEXEC_ASYNC ) )
+            {
+                    customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch installer. File location is: ") + m_savepath, _("Couldn't launch installer.")  );
+            }
+        }
+        if ( m_autoclose )
+        {
+            ui().mw().Close();
+        }
   }
 }
 

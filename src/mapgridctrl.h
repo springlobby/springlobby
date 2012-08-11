@@ -80,8 +80,8 @@ class MapGridCtrl : public wxPanel
 		void OnLeftDown( wxMouseEvent& event );
 		void OnLeftUp( wxMouseEvent& event );
 
-		void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
-		void OnGetMapExAsyncCompleted( wxCommandEvent& event );
+        void OnGetMapImageAsyncCompleted(const std::string _mapname );
+        void OnGetMapExAsyncCompleted(const std::string _mapname );
 
 	protected:
 
@@ -145,7 +145,8 @@ class MapGridCtrl : public wxPanel
 		void SetMinimap( MapMap& maps, const wxString& mapname, const wxBitmap& minimap );
 		void SelectMap( MapData* map );
 
-		UnitSyncAsyncOps m_async;
+        LSL::UnitSyncAsyncOps m_async_image;
+        LSL::UnitSyncAsyncOps m_async_ex;
 
 		const bool m_selection_follows_mouse;
 

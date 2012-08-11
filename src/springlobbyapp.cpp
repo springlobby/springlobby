@@ -445,7 +445,7 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 				if( IsUACenabled() )
 				{
 					LSL::usync().ReloadUnitSyncLib();
-					if ( LSL::usync().IsLoaded() ) LSL::usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+                    if ( LSL::usync().IsLoaded() ) LSL::usync().SetSpringDataPath(""); // UAC is on, fix the spring data path
 				}
 			}
 			if ( settversion < 12 )

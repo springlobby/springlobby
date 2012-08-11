@@ -21,18 +21,18 @@ SavegameList::SavegameList()
 }
 
 
-void SavegameList::LoadPlaybacks(const std::vector &filenames )
+void SavegameList::LoadPlaybacks(const std::vector<std::string> &filenames )
 {
     m_fails = 0;
 
     m_replays.clear();
-    size_t size = filenames.GetCount();
-    for ( size_t i = 0; i < size; ++i)
+    const size_t size = filenames.size();
+    for (size_t i = 0; i < size; ++i)
     {
-        wxString fn = filenames[i];
+        const wxString fn = TowxString(filenames[i]);
 		Savegame& rep_ref = AddPlayback( i ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
 
-        if ( !GetSavegameInfos( filenames[i] , rep_ref ) )
+        if (!GetSavegameInfos( fn, rep_ref))
         {
 			RemovePlayback( rep_ref.id );
             m_fails++;

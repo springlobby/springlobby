@@ -62,6 +62,9 @@ struct TimerMessageBox: public SL::NonCopyable {
 	wxString m_msg_format;
 };
 
+wxString bool2yn(const bool b) {
+    return b ? _("Yes") : _("No");
+}
 
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H

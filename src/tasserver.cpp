@@ -993,7 +993,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
             wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
             ai = _T("INVALID|INVALID");
         }
-        if( LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+        if( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
         {
 			if (ai.Find(_T('|')) != -1)
 			{
@@ -1626,8 +1626,8 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
         wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
-        cmd += MakeHashSigned( battle.LoadMap().hash ) + _T(" ");
-        cmd += battle.LoadMap().name;
+        cmd += MakeHashSigned(TowxString(battle.LoadMap().hash)) + _T(" ");
+        cmd += TowxString(battle.LoadMap().name);
 
         if ( !battle.IsProxy() ) SendCmd( _T("UPDATEBATTLEINFO"), cmd );
         else RelayCmd( _T("UPDATEBATTLEINFO"), cmd );
@@ -1635,11 +1635,9 @@ void TASServer::SendHostInfo( HostInfo update )
     if ( ( update & IBattle::HI_Send_All_opts ) > 0 )
     {
         wxString cmd;
-
-        LSL::OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::MapOption );
-		for (LSL::OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+        for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::MapOption ))
         {
-			wxString newcmd = _T("game/mapoptions/") + it->first + _T("=") + it->second.second + _T("\t");
+            const wxString newcmd = TowxString("game/mapoptions/" + it.first + "=" + it.second.second + "\t");
 			if ( cmd.size() + newcmd.size() > 900 ) // should be 1024 add margin for relayhost name and command itself
 			{
 				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
@@ -1648,10 +1646,9 @@ void TASServer::SendHostInfo( HostInfo update )
 			}
 			cmd << newcmd;
         }
-        LSL::OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::ModOption );
-		for (LSL::OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+        for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::ModOption ))
         {
-			wxString newcmd = _T("game/modoptions/") + it->first + _T("=") + it->second.second + _T("\t");
+            const wxString newcmd = TowxString("game/modoptions/" + it.first + "=" + it.second.second + "\t");
 			if ( cmd.size() + newcmd.size() > 900 )// should be 1024 add margin for relayhost name and command itself
 			{
 				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
@@ -1660,10 +1657,9 @@ void TASServer::SendHostInfo( HostInfo update )
 			}
 			cmd << newcmd;
         }
-        LSL::OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::EngineOption );
-		for (LSL::OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+        for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::EngineOption ))
         {
-			wxString newcmd = _T("game/") + it->first + _T("=") + it->second.second + _T("\t");
+            const wxString newcmd = TowxString("game/" + it.first + "=" + it.second.second + "\t");
 			if ( cmd.size() + newcmd.size() > 900 )// should be 1024 add margin for relayhost name and command itself
 			{
 				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
@@ -1771,18 +1767,21 @@ void TASServer::SendHostInfo( const wxString& Tag )
 
     long type;
     Tag.BeforeFirst( '_' ).ToLong( &type );
-    wxString key = Tag.AfterFirst( '_' );
+    const wxString key = Tag.AfterFirst( '_' );
     if ( type == LSL::OptionsWrapper::MapOption )
     {
-        cmd << _T("game/mapoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, LSL::OptionsWrapper::MapOption );
+        cmd << _T("game/mapoptions/") << key << _T("=")
+            << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::OptionsWrapper::MapOption ));
     }
     else if ( type == LSL::OptionsWrapper::ModOption )
     {
-        cmd << _T("game/modoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, LSL::OptionsWrapper::ModOption );
+        cmd << _T("game/modoptions/") << key << _T("=")
+            << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::OptionsWrapper::ModOption ));
     }
     else if ( type == LSL::OptionsWrapper::EngineOption )
     {
-        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, LSL::OptionsWrapper::EngineOption );
+        cmd << _T("game/") << key << _T("=")
+            << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::OptionsWrapper::EngineOption ));
     }
     if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
     else RelayCmd( _T("SETSCRIPTTAGS"), cmd );
@@ -1795,25 +1794,24 @@ void TASServer::SendUserPosition( const User& user )
 
 	try
 	{
-			ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
-			ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
 
-			Battle& battle = GetBattle( m_battle_id );
-			ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
+        Battle& battle = GetBattle( m_battle_id );
+        ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
 
-			UserBattleStatus status = user.BattleStatus();
-			wxString msgx = _T("game/Team") + TowxString( status.team ) + _T("/StartPosX=") + TowxString( status.pos.x );
-			wxString msgy = _T("game/Team") + TowxString( status.team ) + _T("/StartPosY=") + TowxString( status.pos.y );
-			wxString netmessage = msgx + _T("\t") + msgy;
-			if ( battle.IsProxy() )
-			{
-				RelayCmd( _T("SETSCRIPTTAGS"), netmessage );
-			}
-			else
-			{
-				SendCmd( _T("SETSCRIPTTAGS"), netmessage );
-			}
-
+        UserBattleStatus status = user.BattleStatus();
+        wxString msgx = _T("game/Team") + TowxString( status.team ) + _T("/StartPosX=") + TowxString( status.pos.x );
+        wxString msgy = _T("game/Team") + TowxString( status.team ) + _T("/StartPosY=") + TowxString( status.pos.y );
+        wxString netmessage = msgx + _T("\t") + msgy;
+        if ( battle.IsProxy() )
+        {
+            RelayCmd( _T("SETSCRIPTTAGS"), netmessage );
+        }
+        else
+        {
+            SendCmd( _T("SETSCRIPTTAGS"), netmessage );
+        }
 	}
 	catch (...)
 	{
@@ -2197,7 +2195,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
     wxString msg;
     wxString ailib;
     ailib += status.aishortname;
-    if ( LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
+    if ( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
     SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
 }
 
@@ -2496,7 +2494,7 @@ int TASServer::TestOpenPort( unsigned int port ) const
 
 void TASServer::RequestSpringUpdate()
 {
-	SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring ") + LSL::usync().GetSpringVersion() );
+    SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring ") + TowxString(LSL::usync().GetSpringVersion()));
 }
 
 wxArrayString TASServer::GetRelayHostList()

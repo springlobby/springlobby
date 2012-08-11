@@ -326,7 +326,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
         if ( is_bot ) {
             wxString botname = user.BattleStatus().aishortname;
             if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
-            if ( !LSL::usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+            if ( !LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
             {
                 if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
                 if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));

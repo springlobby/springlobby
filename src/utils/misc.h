@@ -1,6 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MISC_H
 #define SPRINGLOBBY_HEADERGUARD_MISC_H
 
+#include <vector>
 
 class wxArrayString;
 class wxString;
@@ -17,6 +18,7 @@ double LevenshteinDistance(wxString s, wxString t);
  * @param distance If not NULL, *distance is set to the edit distance from s to the return value.
  */
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance = 0 );
+std::string GetBestMatch(const std::vector<std::string>& a, const std::string& s, double* distance = 0 );
 
 wxString Paste2Pastebin( const wxString& message );
 

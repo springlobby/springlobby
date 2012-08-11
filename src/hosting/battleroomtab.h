@@ -26,7 +26,6 @@ class wxListCtrl;
 class MapCtrl;
 class ColorButton;
 class wxBitmapComboBox;
-struct LSL::UnitsyncMap;
 class wxToggleButton;
 class wxChoice;
 class wxListEvent;

@@ -1,16 +1,16 @@
 /**
     This file is part of SpringLobby,
     Copyright (C) 2007-2010
-
+    
     SpringLobby is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 2 as published by
     the Free Software Foundation.
-
+    
     springsettings is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
+    
     You should have received a copy of the GNU General Public License
     along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
 **/
@@ -20,13 +20,13 @@
 
 #include "../globalsmanager.h"
 #include "lib/src/Downloader/IDownloader.h"
-#include "lib/src/FileSystem/FileSystem.h"
-#include "../springunitsync.h"
 #include "../utils/uievents.h"
 #include "../utils/conversion.h"
 #include "../ui.h"
 #include "../mainwindow.h"
 #include <list>
+
+#include <lslunitsync/unitsync.h>
 
 class DownloadItem : public LSL::WorkItem {
 public:
@@ -54,7 +54,7 @@ private:
     IDownloader* m_loader;
 };
 
-SearchItem::SearchItem(std::list<IDownloader*> loaders, const std::string& name, IDownload::category cat)
+SearchItem::SearchItem(std::list<IDownloader*> loaders, const std::string name, IDownload::category cat)
     : m_loaders(loaders)
     , m_name(name)
     , m_cat(cat)
@@ -67,7 +67,7 @@ void SearchItem::Run()
     std::list<IDownloader*>::const_iterator it = m_loaders.begin();
     for( ; it != m_loaders.end(); ++it ) {
         (*it)->search(results, m_name, m_cat);
-        if (!results.empty()) {
+        if (results.size()) {
             DownloadItem* dl_item = new DownloadItem(results, *it);
             prDownloader().m_dl_thread->DoWork(dl_item);
             m_result_size = results.size();
@@ -82,7 +82,6 @@ PrDownloader::PrDownloader()
     : m_dl_thread(new LSL::WorkerThread())
 {
     IDownloader::Initialize();
-    UpdateSettings();
     m_game_loaders.push_back(rapidDownload);
     m_game_loaders.push_back(httpDownload);
     m_game_loaders.push_back(plasmaDownload);
@@ -104,13 +103,6 @@ void PrDownloader::ClearFinished()
 
 void PrDownloader::UpdateSettings()
 {
-	if (usync().IsLoaded()) {
-		wxString path;
-		if (usync().GetSpringDataPath(path)) {
-			const std::string spath = std::string(path.mb_str());
-			fileSystem->setWritePath(spath);
-		}
-	}
 }
 
 void PrDownloader::RemoveTorrentByName(const std::string &/*name*/)

@@ -80,7 +80,7 @@ class MapCtrl : public wxPanel
     void OnLeftUp( wxMouseEvent& event );
     void OnMouseWheel( wxMouseEvent& event );
 
-    void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
+    void OnGetMapImageAsyncCompleted(const std::string mapname);
 
     void SetReadOnly( bool readonly ) { m_ro = readonly; }
 

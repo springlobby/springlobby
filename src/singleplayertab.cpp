@@ -19,14 +19,16 @@
 #include "utils/conversion.h"
 #include "uiutils.h"
 #include "ui.h"
-#include <lslunitsync/unitsync.h>
 #include "hosting/addbotdialog.h"
 #include "server.h"
 #include "settings.h"
 #include "Helper/colorbutton.h"
 #include "aui/auimanager.h"
 #include "utils/customdialogs.h"
+
 #include <lslunitsync/c_api.h>
+#include <lslunitsync/unitsync.h>
+#include <lslutils/conversion.h>
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
@@ -132,9 +134,7 @@ void SinglePlayerTab::UpdateMinimap()
 void SinglePlayerTab::ReloadMaplist()
 {
 	m_map_pick->Clear();
-
-    m_map_pick->Append( LSL::usync().GetMapList() );
-
+    m_map_pick->Append(LSL::Util::vectorToArrayString(LSL::usync().GetMapList()));
     m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
 
     if ( m_battle.GetHostMapName() != wxEmptyString )
@@ -155,14 +155,14 @@ void SinglePlayerTab::ReloadModlist()
 {
     m_mod_pick->Clear();
 
-    wxArrayString modlist= LSL::usync().GetModList();
+    const auto modlist= LSL::Util::vectorToArrayString(LSL::usync().GetModList());
     //modlist.Sort(CompareStringIgnoreCase);
 
     size_t nummods = modlist.Count();
-    for ( size_t i = 0; i < nummods; i++ ) m_mod_pick->Insert( modlist[i], i );
+    for ( size_t i = 0; i < nummods; i++ )
+        m_mod_pick->Insert( modlist[i], i );
 
     m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
-
     if ( !m_battle.GetHostModName().IsEmpty() )
     {
         m_mod_pick->SetStringSelection( m_battle.GetHostModName() );
@@ -184,7 +184,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
   } else {
     try {
       LSL::UnitsyncMap map = LSL::usync().GetMapEx( index );
-      m_battle.SetHostMap( map.name, map.hash );
+      m_battle.SetHostMap(TowxString(map.name), TowxString(map.hash));
       m_addbot_btn->Enable( true );
     } catch (...) {}
   }
@@ -195,7 +195,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
 
 void SinglePlayerTab::ResetUsername()
 {
-    m_battle.GetMe().SetNick( LSL::usync().GetDefaultNick() );
+    m_battle.GetMe().SetNick(TowxString(LSL::usync().GetDefaultNick()));
 }
 
 void SinglePlayerTab::SetMod( unsigned int index )
@@ -211,7 +211,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
         {
             LSL::UnitsyncMod mod = LSL::usync().GetMod( index );
             m_battle.SetLocalMod( mod );
-            m_battle.SetHostMod( mod.name, mod.hash );
+            m_battle.SetHostMod(TowxString(mod.name), TowxString(mod.hash));
         }
         catch (...) {}
     }
@@ -272,8 +272,7 @@ void SinglePlayerTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 
 	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
     {
-		wxLogDebugFunc( mapSelectDialog().GetSelectedMap()->name );
-		const wxString mapname = mapSelectDialog().GetSelectedMap()->name;
+        const wxString mapname = TowxString(mapSelectDialog().GetSelectedMap()->name);
         const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
         if ( idx != wxNOT_FOUND ) SetMap( idx );
     }
@@ -332,8 +331,12 @@ void SinglePlayerTab::OnStart( wxCommandEvent& /*unused*/ )
 
 void SinglePlayerTab::OnRandomCheck( wxCommandEvent& /*unused*/ )
 {
-    if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Random), LSL::OptionsWrapper::EngineOption );
-    else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Pick), LSL::OptionsWrapper::EngineOption );
+    if ( m_random_check->IsChecked() )
+        m_battle.CustomBattleOptions().setSingleOption("startpostype",
+                                                       LSL::Util::ToString(IBattle::ST_Random), LSL::OptionsWrapper::EngineOption );
+    else
+        m_battle.CustomBattleOptions().setSingleOption("startpostype",
+                                                       LSL::Util::ToString(IBattle::ST_Pick), LSL::OptionsWrapper::EngineOption );
     m_battle.SendHostInfo( IBattle::HI_StartType );
 }
 
@@ -358,16 +361,13 @@ void SinglePlayerTab::UpdateTag( const wxString& Tag )
 {
     long type;
     Tag.BeforeFirst( '_' ).ToLong( &type );
-    wxString key = Tag.AfterFirst( '_' );
-    wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (LSL::OptionsWrapper::GameOption)type);
-    long longval;
-    value.ToLong( &longval );
+    const wxString key = Tag.AfterFirst( '_' );
     if ( type == LSL::OptionsWrapper::PrivateOptions ) {
         if ( key == _T("mapname") ) {
             m_addbot_btn->Enable( false );
             try
             {
-                m_map_pick->SetSelection( LSL::usync().GetMapIndex( m_battle.GetHostMapName() ) );
+                m_map_pick->SetSelection(LSL::usync().GetMapIndex(STD_STRING(m_battle.GetHostMapName())));
                 UpdateMinimap();
                 m_addbot_btn->Enable( true );
             }

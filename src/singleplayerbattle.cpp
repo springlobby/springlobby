@@ -10,16 +10,17 @@
 #include "settings.h"
 #include "spring.h"
 #include <lslunitsync/c_api.h>
+#include <lslutils/conversion.h>
 #include "utils/conversion.h"
 
 SinglePlayerBattle::SinglePlayerBattle( MainSinglePlayerTab& msptab ):
   m_sptab(msptab),
-  m_me( User( LSL::usync().IsLoaded() ? LSL::usync().GetDefaultNick() : _T("invalid") ) )
+  m_me( User( TowxString(LSL::usync().IsLoaded() ? LSL::usync().GetDefaultNick() : "invalid")))
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().side = sett().GetBattleLastSideSel( GetHostModName() );
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();
-	CustomBattleOptions().setSingleOption( _T("startpostype"), wxFormat(_T("%d") ) % ST_Pick, LSL::OptionsWrapper::EngineOption );
+    CustomBattleOptions().setSingleOption( "startpostype", LSL::Util::ToString(ST_Pick), LSL::OptionsWrapper::EngineOption );
 }
 
 
@@ -54,12 +55,11 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   }
   if ( (update & HI_Send_All_opts) != 0 )
   {
-    for ( int i = 0; i < (int)OptionsWrapper::LastOption; i++)
+    for ( int i = 0; i < (int)LSL::OptionsWrapper::LastOption; i++)
     {
-      const std::map<wxString,wxString>& options = CustomBattleOptions().getOptionsMap( (LSL::OptionsWrapper::GameOption)i );
-      for ( std::map<wxString,wxString>::const_iterator itor = options.begin(); itor != options.end(); ++itor )
+      for (const auto pair : CustomBattleOptions().getOptionsMap( (LSL::OptionsWrapper::GameOption)i))
       {
-		Update(  wxFormat(_T("%d_%s") ) % i % itor->first );
+        Update(  wxFormat(_T("%d_%s") ) % i % pair.first );
       }
     }
   }
@@ -67,15 +67,15 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
 
 void SinglePlayerBattle::RemoveUnfittingBots()
 {
-    wxArrayString old_ais = LSL::usync().GetAIList( m_previous_local_mod_name );
-    wxArrayString new_ais = LSL::usync().GetAIList( m_local_mod.name );
-    for ( size_t i = 0; i < old_ais.GetCount(); ++i) {
-        if ( new_ais.Index(old_ais[i]) == wxNOT_FOUND  ) {
-            for( size_t j = 0; j < GetNumUsers(); ++j  ) {
-                User& u = GetUser( j );
-                if ( u.GetBattleStatus().airawname == old_ais[i] )
-                    KickPlayer( u );
-            }
+    const auto old_ais = LSL::usync().GetAIList(STD_STRING(m_previous_local_mod_name));
+    const auto new_ais = LSL::usync().GetAIList(m_local_mod.name);
+    LSL::StringVector diff(old_ais.size());
+    LSL::StringVector::iterator end = std::set_difference(old_ais.begin(), old_ais.end(), new_ais.begin(), new_ais.end(),diff.begin());
+    for(auto it = diff.begin(); it != end; ++it) {
+        for( size_t j = 0; j < GetNumUsers(); ++j  ) {
+            User& u = GetUser( j );
+            if (u.GetBattleStatus().airawname == TowxString(*it))
+                KickPlayer( u );
         }
     }
 }
