@@ -39,7 +39,7 @@
 #include <wx/filename.h>
 
 #include "../utils/customdialogs.h"
-#include "../globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include <lslunitsync/c_api.h>
 #include "../customizations.h"
 #include "../Helper/wxTranslationHelper.h"

@@ -140,7 +140,8 @@ void BattleOptionsTab::ReloadRestrictions()
         return;
 
 	try {
-		m_allowed_list->InsertItems( LSL::usync().GetUnitsList( m_battle->GetHostModName() ), 0 );
+        m_allowed_list->InsertItems(LSL::Util::vectorToArrayString(
+                                        LSL::usync().GetUnitsList(STD_STRING(m_battle->GetHostModName()))), 0);
 	} catch ( ... ) {}
 	std::map<wxString, int> units = m_battle->RestrictedUnits();
 

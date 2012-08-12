@@ -58,15 +58,15 @@
 #include "utils/platform.h"
 #include "updater/versionchecker.h"
 #include "sound/alsound.h"
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include "utils/misc.h"
 
 static const unsigned int s_reconnect_delay_ms = 6000;
 
 Ui& ui()
 {
-    static LineInfo<Ui> m( AT );
-    static GlobalObjectHolder<Ui,LineInfo<Ui> > m_ui( m );
+    static LSL::Util::LineInfo<Ui> m( AT );
+    static LSL::Util::GlobalObjectHolder<Ui, LSL::Util::LineInfo<Ui> > m_ui( m );
     return m_ui;
 }
 

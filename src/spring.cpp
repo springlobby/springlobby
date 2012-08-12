@@ -38,7 +38,7 @@
 #include <lslunitsync/unitsync.h>
 #include "nonportable.h"
 #include "tdfcontainer.h"
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 
 #include <lslutils/conversion.h>
 
@@ -57,8 +57,8 @@ END_EVENT_TABLE()
 
 Spring& spring()
 {
-    static LineInfo<Spring> m( AT );
-	static GlobalObjectHolder<Spring,LineInfo<Spring> > m_spring( m );
+    static LSL::Util::LineInfo<Spring> m( AT );
+	static LSL::Util::GlobalObjectHolder<Spring, LSL::Util::LineInfo<Spring> > m_spring( m );
 	return m_spring;
 }
 

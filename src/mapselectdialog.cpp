@@ -11,7 +11,7 @@
 #include "utils/conversion.h"
 #include "utils/debug.h"
 #include "settings.h"
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include <wx/settings.h>
 #include <lslutils/misc.h>
 

@@ -18,7 +18,7 @@
 
 #include "prdownloader.h"
 
-#include "../globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include "lib/src/Downloader/IDownloader.h"
 #include "../utils/uievents.h"
 #include "../utils/conversion.h"
@@ -137,7 +137,7 @@ int PrDownloader::Get(std::list<IDownloader*> loaders, const std::string &name, 
 
 PrDownloader& prDownloader()
 {
-    static LineInfo<PrDownloader> m( AT );
-    static GlobalObjectHolder<PrDownloader, LineInfo<PrDownloader> > s_PrDownloader( m );
+    static LSL::Util::LineInfo<PrDownloader> m( AT );
+    static LSL::Util::GlobalObjectHolder<PrDownloader, LSL::Util::LineInfo<PrDownloader> > s_PrDownloader( m );
     return s_PrDownloader;
 }

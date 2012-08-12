@@ -13,13 +13,13 @@
 #include <wx/log.h>
 #include "utils/debug.h"
 #include "utils/conversion.h"
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include <assert.h>
 
 ALsound& sound()
 {
-	static LineInfo<ALsound> m( AT );
-	static GlobalObjectHolder<ALsound,LineInfo<ALsound> > m_sound( m );
+	static LSL::Util::LineInfo<ALsound> m( AT );
+	static LSL::Util::GlobalObjectHolder<ALsound, LSL::Util::LineInfo<ALsound> > m_sound( m );
 	return m_sound;
 }
 //volatile int isdone = 0;

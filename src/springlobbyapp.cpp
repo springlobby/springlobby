@@ -45,7 +45,7 @@
 #include "springsettings/se_utils.h"
 #include "downloader/prdownloader.h"
 #include "updater/updater.h"
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include "gui/notificationmanager.h"
 #include "Helper/wxTranslationHelper.h"
 #include "playback/playbacktraits.h"
@@ -251,7 +251,7 @@ int SpringLobbyApp::OnExit()
 
     SetEvtHandlerEnabled(false);
 	UiEvents::GetNotificationEventSender().Enable( false );
-    DestroyGlobals();
+    LSL::Util::DestroyGlobals();
 
     return 0;
 }

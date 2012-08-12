@@ -1,7 +1,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CUSTOMIZATIONS_H
 #define SPRINGLOBBY_HEADERGUARD_CUSTOMIZATIONS_H
 
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include <lslunitsync/optionswrapper.h>
 #include <wx/string.h>
 #include <wx/icon.h>
@@ -48,7 +48,7 @@ class Customizations {
 		bool GetBitmap( const wxString& key, wxBitmap& bitmap );
 
 		static const wxString IntroKey;// ( _T("intro_file") );
-        friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
+        friend class LSL::Util::GlobalObjectHolder<Customizations, LSL::Util::LineInfo<Customizations> >;
 
 #ifdef SL_QT_MODE
         bool Init(const QString& shortname, const QString& version );

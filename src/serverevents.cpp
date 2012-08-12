@@ -28,7 +28,7 @@
 #include "utils/tasutil.h"
 #include "utils/uievents.h"
 
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 
 BEGIN_EVENT_TABLE(ServerEvents, wxEvtHandler)
     EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  ServerEvents::OnSpringDownloadEvent)

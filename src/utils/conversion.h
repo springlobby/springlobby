@@ -162,6 +162,12 @@ struct wxFormat : public boost::format
 		return str();
 	}
 
+    //! conversion operator to wxString
+    operator std::string () const
+    {
+        return boost::format::str();
+    }
+
 	//! overload the base class % operator to accept wxString input (and return our own type again)
 	template <class T>
 	wxFormat&  operator%(const T& x)

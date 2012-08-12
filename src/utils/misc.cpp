@@ -43,9 +43,9 @@ double LevenshteinDistance(wxString s, wxString t)
 #undef D
 }
 
-std::string GetBestMatch(const std::vector<std::string>& a, const std::string& s, double* distance = 0 )
+std::string GetBestMatch(const std::vector<std::string>& a, const std::string& s, double* distance  )
 {
-    auto arr = vectorToArrayString(a);
+    auto arr = LSL::Util::vectorToArrayString(a);
     return STD_STRING(GetBestMatch(arr, TowxString(s), distance));
 }
 

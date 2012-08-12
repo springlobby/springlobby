@@ -211,7 +211,6 @@ add_sources(SLSharedWithSettings
 
 FILE( GLOB header "*.h" )
 FILE( GLOB header2 "*/*.h" )
-# FILE( GLOB header3 "*/*/*.h" )
 
 #grep -lR cpp\"$ * | sed -e "s/\.h/\.cpp/g"
 clear( templatesources)

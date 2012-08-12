@@ -36,7 +36,7 @@
 #include "uiutils.h"
 #include "battlelist/battlelistfiltervalues.h"
 #include "playback/playbackfiltervalues.h"
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include <lslunitsync/c_api.h>
 #include <lslunitsync/unitsync.h>
 #include "customlistctrl.h"
@@ -64,8 +64,8 @@ const wxColour defaultHLcolor ( 255, 0, 0 );
 
 Settings& sett()
 {
-    static LineInfo<Settings> m( AT );
-	static GlobalObjectHolder<Settings, LineInfo<Settings> > m_sett( m );
+    static LSL::Util::LineInfo<Settings> m( AT );
+    static LSL::Util::GlobalObjectHolder<Settings, LSL::Util::LineInfo<Settings> > m_sett( m );
 	return m_sett;
 }
 

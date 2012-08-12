@@ -167,22 +167,22 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 	}
 	else if ( command == _T( "!set" ) ) {
         const std::string key = STD_STRING(params.BeforeFirst( _T( ' ' )));
-		wxString value = params.AfterFirst( _T( ' ' ) );
-		bool exists = m_battle.CustomBattleOptions().keyExists( key );
+        const std::string value = STD_STRING(params.AfterFirst( _T( ' ' ) ));
+        const bool exists = m_battle.CustomBattleOptions().keyExists( key );
 		if ( exists )
 		{
-            bool result = m_battle.CustomBattleOptions().setSingleOption( key, STD_STRING(value));
+            bool result = m_battle.CustomBattleOptions().setSingleOption( key, value);
 			if ( result )
 			{
                 auto section = m_battle.CustomBattleOptions().GetSection( key );
 				m_battle.SendHostInfo( wxFormat( _T( "%d_%s" ) ) % section % key );
-				m_battle.DoAction( _T( "has set option " ) + key + _T( " to value " ) + value );
+                m_battle.DoAction( TowxString( "has set option "  + key + " to value "  + value ));
 			}
-			else m_battle.DoAction( _T( "cannot set option " ) + key + _T( " to value " ) + value + _T( ", reason: invalid value." ) );
+            else m_battle.DoAction( TowxString( "cannot set option " + key + " to value " + value + ", reason: invalid value." ) );
 		}
 		else
 		{
-			m_battle.DoAction( _T( "cannot find option entry " ) + key );
+            m_battle.DoAction( TowxString( "cannot find option entry " + key ));
 		}
 	}
 	else if ( command == _T( "!addbox" ) ) {

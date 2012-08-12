@@ -226,7 +226,7 @@ class Server : public iNetClass, public SL::NonCopyable
 class ServerSelector;
 ServerSelector& serverSelector();
 
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 class ServerSelector {
 public:
 	Server& GetServer();
@@ -236,7 +236,7 @@ public:
 protected:
 	ServerSelector();
 	Server* m_serv;
-	friend class GlobalObjectHolder<ServerSelector, LineInfo<ServerSelector> >;
+	friend class LSL::Util::GlobalObjectHolder<ServerSelector, LSL::Util::LineInfo<ServerSelector> >;
 };
 
 

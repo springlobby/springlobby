@@ -5,7 +5,7 @@
 #include "../utils/platform.h"
 #include "../utils/globalevents.h"
 #include "../settings.h"
-#include "../globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include "../ui.h"
 #include "../uiutils.h"
 
@@ -21,8 +21,8 @@ END_EVENT_TABLE()
 
 UpdaterClass& Updater()
 {
-    static LineInfo<UpdaterClass> m( AT );
-    static GlobalObjectHolder<UpdaterClass,LineInfo<UpdaterClass> > m_upd( m );
+    static LSL::Util::LineInfo<UpdaterClass> m( AT );
+    static LSL::Util::GlobalObjectHolder<UpdaterClass, LSL::Util::LineInfo<UpdaterClass> > m_upd( m );
     return m_upd;
 }
 

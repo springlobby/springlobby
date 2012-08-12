@@ -15,7 +15,9 @@
 #include <map>
 
 #include "utils/controls.h"
+#include "utils/conversion.h"
 #include <lslutils/misc.h>
+#include <lslutils/conversion.h>
 #include <lslunitsync/optionswrapper.h>
 #include <lslunitsync/unitsync.h>
 #include "battle.h"
@@ -125,15 +127,13 @@ void BattleroomMMOptionsTab<BattleType>::setupOptionsSizer( wxBoxSizer* parent_s
 {
     if ( !m_battle )
         return;
-    const auto& sections = m_battle->CustomBattleOptions().m_opts[optFlag].section_map;
-
     unsigned int num_options = 0;
-    auto it = sections.begin();
-    for ( ; it != sections.end(); ++it )
+    for (const auto& it : m_battle->CustomBattleOptions().m_opts[optFlag].section_map)
     {
-        wxStaticBoxSizer* section_sizer = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, it->second.name ), wxVERTICAL );
+        wxStaticBoxSizer* section_sizer = new wxStaticBoxSizer(
+                    new wxStaticBox( this, wxID_ANY, TowxString(it.second.name)), wxVERTICAL );
         //only add non-empty sizer
-        if ( setupOptionsSectionSizer( it->second, section_sizer, optFlag ) ) {
+        if ( setupOptionsSectionSizer( it.second, section_sizer, optFlag ) ) {
             parent_sizer->Add( section_sizer, 0 , wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0 );
             num_options++;
         }
@@ -187,12 +187,12 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const LSL::mmOp
 
     int total_count = 0;
 	int ctrl_count = 0;
-    for (auto i = optWrap.m_opts[optFlag].bool_map.begin(); i != optWrap.m_opts[optFlag].bool_map.end();++i)
+    for (const auto i : optWrap.m_opts[optFlag].bool_map)
     {
-        if ( i->second.section == section.key )
+        if ( i.second.section == section.key )
         {
-            LSL::mmOptionBool current = i->second;
-			wxCheckBox* temp = new wxCheckBox(this,BOOL_START_ID+ctrl_count,current.name);
+            LSL::mmOptionBool current = i.second;
+            wxCheckBox* temp = new wxCheckBox(this,BOOL_START_ID+ctrl_count, TowxString(current.name));
             temp->SetToolTip(TES(current.description));
             m_name_info_map[pref+TowxString(current.key)] = TowxString(current.description);
             temp->SetName(pref+TowxString(current.key));
@@ -209,13 +209,13 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const LSL::mmOp
 
     total_count += ctrl_count;
 	ctrl_count = 0;
-    for ( auto it = optWrap.m_opts[optFlag].float_map.begin(); it != optWrap.m_opts[optFlag].float_map.end(); ++it)
+    for ( const auto it : optWrap.m_opts[optFlag].float_map)
 	{
-	    wxString seckey = it->second.section;
-	    wxString kkey = section.key ;
-        if ( it->second.section == section.key )
+//	    wxString seckey = it.second.section;
+//	    wxString kkey = section.key ;
+        if ( it.second.section == section.key )
         {
-            LSL::mmOptionFloat current = it->second;
+            const LSL::mmOptionFloat current = it.second;
 			SlSpinCtrlDouble<ThisType>* tempspin = new SlSpinCtrlDouble<ThisType>();
 			tempspin->Create(this, FLOAT_START_ID+ctrl_count, _T(""),
 					wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, double(current.min), double(current.max),
@@ -223,11 +223,11 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const LSL::mmOp
             tempspin->SetSnapToTicks( true );
             tempspin->SetToolTip(TES(current.description));
             const wxString pref_key = pref + TowxString(current.key);
-            m_name_info_map[pref_key] = current.description;
+            m_name_info_map[pref_key] = TowxString(current.description);
 			tempspin->Enable(enable);
             tempspin->SetName(pref_key);
             m_spinctrl_map[pref_key] = tempspin;
-			 wxStaticText* tempst = new wxStaticText(this,-1,current.name);
+             wxStaticText* tempst = new wxStaticText(this,-1, TowxString(current.name));
              m_statictext_map[pref_key] = tempst;
 			spinSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
 			wxBoxSizer* ct_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -240,22 +240,23 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const LSL::mmOp
 
     total_count += ctrl_count;
 	ctrl_count = 0;
-    for ( auto it = optWrap.m_opts[optFlag].list_map.begin(); it != optWrap.m_opts[optFlag].list_map.end(); ++it)
+    for (const auto it : optWrap.m_opts[optFlag].list_map)
 	{
-	    if ( it->second.section == section.key )
+        if ( it.second.section == section.key )
         {
-            LSL::mmOptionList current = it->second;
+            LSL::mmOptionList current = it.second;
 
-            int temp = int(current.cbx_choices.size()-1);
-            int index = LSL::Util::Clamp(current.cur_choice_index,0,temp);
+            const int temp = int(current.cbx_choices.size()-1);
+            const int index = LSL::Util::Clamp(current.cur_choice_index,0,temp);
             wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count,
-                                                    current.cbx_choices[index], wxDefaultPosition,
-                                                    wxDefaultSize, current.cbx_choices, wxCB_READONLY, wxDefaultValidator);
+                                                    TowxString(current.cbx_choices[index]), wxDefaultPosition,
+                                                    wxDefaultSize,
+                                                    LSL::Util::vectorToArrayString(current.cbx_choices),
+                                                    wxCB_READONLY, wxDefaultValidator);
             wxString tooltip = TowxString(current.description + std::string("\n"));
-            for ( LSL::ListItemVec::const_iterator itor = current.listitems.begin();
-                  itor != current.listitems.end(); ++itor )
+            for ( const auto itor : current.listitems)
             {
-                tooltip+= std::string("\n") + itor->name + std::string(": ") + itor->desc;
+                tooltip+= TowxString(std::string("\n") + itor.name + std::string(": ") + itor.desc);
             }
             tempchoice->SetToolTip(TE(tooltip));
             const wxString pref_key = pref + TowxString(current.key);
@@ -263,7 +264,7 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const LSL::mmOp
             tempchoice->SetName(pref_key);
             tempchoice->Enable(enable);
             m_combox_map[pref_key] = tempchoice;
-            wxStaticText* tempst = new wxStaticText(this,-1,current.name);
+            wxStaticText* tempst = new wxStaticText(this,-1, TowxString(current.name));
             m_statictext_map[pref_key] = tempst;
             cbxSizer->Add(tempst,0, wxALIGN_CENTER_VERTICAL);
             wxBoxSizer* ct_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -277,17 +278,16 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const LSL::mmOp
 
     total_count += ctrl_count;
 	ctrl_count = 0;
-    for ( auto it = optWrap.m_opts[optFlag].string_map.begin();
-          it != optWrap.m_opts[optFlag].string_map.end(); ++it)
+    for (const auto it : optWrap.m_opts[optFlag].string_map)
 	{
-	    if ( it->second.section == section.key )
+        if ( it.second.section == section.key )
         {
-            LSL::mmOptionString current = it->second;
+            const LSL::mmOptionString current = it.second;
             wxTextCtrl* temptext = new wxTextCtrl(this, STRING_START_ID+ctrl_count, TowxString(current.value), wxDefaultPosition,
                     wxDefaultSize, 0, wxDefaultValidator, TowxString(current.key));
             temptext->SetToolTip(TES(current.description));
             const wxString pref_key = pref + TowxString(current.key);
-            m_name_info_map[pref_key] = current.description;
+            m_name_info_map[pref_key] = TowxString(current.description);
             temptext->SetName(pref_key);
             temptext->Enable(enable);
             m_textctrl_map[pref_key] = temptext;
@@ -318,11 +318,11 @@ void BattleroomMMOptionsTab<BattleType>::OnChkBoxChange(wxCommandEvent& event)
 {
 	if ( !m_battle ) return;
 	wxCheckBox* box = (wxCheckBox*) event.GetEventObject();
-	wxString key = (box->GetName()).AfterFirst(sep);
+    const wxString key = (box->GetName()).AfterFirst(sep);
 	long gameoption ;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
 
-    if( m_battle->CustomBattleOptions().setSingleOption( key , (box->GetValue() ? _T("1") : _T("0")),
+    if( m_battle->CustomBattleOptions().setSingleOption( STD_STRING(key), (box->GetValue() ? "1" : "0"),
                                                          (LSL::OptionsWrapper::GameOption)gameoption ) )
 	{
         if (m_battle->IsFounderMe())
@@ -338,10 +338,10 @@ void BattleroomMMOptionsTab<BattleType>::OnComBoxChange(wxCommandEvent& event)
 	if ( !m_battle ) return;
 	wxComboBox* box = (wxComboBox*) event.GetEventObject();
 
-	wxString key = (box->GetName()).AfterFirst(sep);
+    const auto key = STD_STRING((box->GetName()).AfterFirst(sep));
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-    wxString itemKey = m_battle->CustomBattleOptions().GetNameListOptItemKey(key,  box->GetValue(),
+    const auto itemKey = m_battle->CustomBattleOptions().GetNameListOptItemKey(key, STD_STRING(box->GetValue()),
                                                                              (LSL::OptionsWrapper::GameOption)gameoption );
 
     if(m_battle->CustomBattleOptions().setSingleOption( key, itemKey,
@@ -349,7 +349,7 @@ void BattleroomMMOptionsTab<BattleType>::OnComBoxChange(wxCommandEvent& event)
 	{
         if (m_battle->IsFounderMe())
         {
-          m_battle->SendHostInfo( (wxString()<< gameoption) + wxsep + key );
+          m_battle->SendHostInfo( (wxString()<< gameoption) + wxsep + TowxString(key) );
         }
 	}
 }
@@ -359,15 +359,15 @@ void BattleroomMMOptionsTab<BattleType>::OnTextCtrlChange(wxCommandEvent& event)
 {
 	if ( !m_battle ) return;
 	wxTextCtrl* box = (wxTextCtrl*) event.GetEventObject();
-	wxString key = (box->GetName()).AfterFirst(sep);
+    const auto key = STD_STRING((box->GetName()).AfterFirst(sep));
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
-    if(m_battle->CustomBattleOptions().setSingleOption( key, box->GetValue(),
+    if(m_battle->CustomBattleOptions().setSingleOption( key, STD_STRING(box->GetValue()),
                                                         (LSL::OptionsWrapper::GameOption)gameoption ) )
 	{
 		if (m_battle->IsFounderMe())
 		{
-		  m_battle->SendHostInfo(  (wxString()<< gameoption) + wxsep + key );
+          m_battle->SendHostInfo(  (wxString()<< gameoption) + wxsep + TowxString(key));
 		}
 
 	}
@@ -378,7 +378,7 @@ void BattleroomMMOptionsTab<BattleType>::OnSpinCtrlDoubleChange(SlSpinDoubleEven
 {
 	if ( !m_battle ) return;
 	SlSpinCtrlDouble<ThisType>* box = (SlSpinCtrlDouble<ThisType>*) event.GetEventObject();
-	wxString key = (box->GetName()).AfterFirst(sep);
+    const auto key = STD_STRING((box->GetName()).AfterFirst(sep));
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
     if(m_battle->CustomBattleOptions().setSingleOption( key,wxFormat( _T("%f") ) % box->GetValue(),
@@ -386,7 +386,7 @@ void BattleroomMMOptionsTab<BattleType>::OnSpinCtrlDoubleChange(SlSpinDoubleEven
 	{
 		if (m_battle->IsFounderMe())
 		{
-		  m_battle->SendHostInfo(  (wxString()<< gameoption) + wxsep + key );
+          m_battle->SendHostInfo(  (wxString()<< gameoption) + wxsep + TowxString(key) );
 		}
 	}
 }
@@ -397,45 +397,44 @@ void BattleroomMMOptionsTab<BattleType>::UpdateOptControls(wxString controlName)
 	if ( !m_battle ) return;
 	long gameoption;
 	controlName.BeforeFirst(sep).ToLong(&gameoption);
-	wxString optKey = controlName.AfterFirst(sep);
+    const auto optKey = STD_STRING(controlName.AfterFirst(sep));
 
     if ( gameoption == LSL::OptionsWrapper::PrivateOptions )
 	{
-    if ( optKey == _T("mapname") ) OnReloadControls( LSL::OptionsWrapper::MapOption );
-    if ( optKey == _T("modname") ) OnReloadControls( LSL::OptionsWrapper::ModOption );
+    if ( optKey == "mapname" ) OnReloadControls( LSL::OptionsWrapper::MapOption );
+    if ( optKey == "modname" ) OnReloadControls( LSL::OptionsWrapper::ModOption );
     return;
 	}
 
 	if ( m_chkbox_map.find(controlName) != m_chkbox_map.end() )
 	{
-        wxString value = m_battle->CustomBattleOptions().getSingleValue( optKey, (LSL::OptionsWrapper::GameOption)gameoption );
-		wxCheckBox* cur = m_chkbox_map[controlName] ;
-		long l_val;
-		value.ToLong(&l_val);
-		cur->SetValue(l_val);
+        const long value = LSL::Util::FromString<long>(
+                    m_battle->CustomBattleOptions().getSingleValue( optKey, (LSL::OptionsWrapper::GameOption)gameoption ));
+        wxCheckBox* cur = m_chkbox_map[controlName] ;
+        cur->SetValue(value);
 	}
 
 	 if ( m_combox_map.find(controlName) != m_combox_map.end() )
-	{
-        wxString value = m_battle->CustomBattleOptions().getSingleValue( optKey, (LSL::OptionsWrapper::GameOption)gameoption );
+    {
 		wxComboBox* cur = m_combox_map[controlName];
-        cur->SetValue(m_battle->CustomBattleOptions().GetNameListOptValue( optKey, (LSL::OptionsWrapper::GameOption)gameoption));
+        cur->SetValue(TowxString((m_battle->CustomBattleOptions()
+                                 .GetNameListOptValue( optKey, (LSL::OptionsWrapper::GameOption)gameoption))));
 	}
 
 	 if ( m_textctrl_map.find(controlName) != m_textctrl_map.end() )
 	{
-        wxString value = m_battle->CustomBattleOptions().getSingleValue( optKey, (LSL::OptionsWrapper::GameOption)gameoption );
+        const wxString value = TowxString(m_battle->CustomBattleOptions()
+                                    .getSingleValue( optKey, (LSL::OptionsWrapper::GameOption)gameoption));
 		wxTextCtrl* cur = m_textctrl_map[controlName];
 		cur->SetValue(value);
 	}
 
 	 if ( m_spinctrl_map.find(controlName) != m_spinctrl_map.end() )
 	{
-        wxString value = m_battle->CustomBattleOptions().getSingleValue( optKey, (LSL::OptionsWrapper::GameOption)gameoption );
+         const long value = LSL::Util::FromString<long>(
+                     m_battle->CustomBattleOptions().getSingleValue( optKey, (LSL::OptionsWrapper::GameOption)gameoption ));
 		SlSpinCtrlDouble<ThisType>* cur = m_spinctrl_map[controlName] ;
-		double l_val;
-		value.ToDouble(&l_val);
-		cur->SetValue(l_val);
+        cur->SetValue(value);
 	}
 
 }

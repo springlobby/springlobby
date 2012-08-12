@@ -21,7 +21,7 @@ class SavegameList : public PlaybackList<Savegame>
     SavegameList();
 
     template <class PB, class I >
-    friend class GlobalObjectHolder;
+    friend class LSL::Util::GlobalObjectHolder;
 
 	bool GetSavegameInfos ( const wxString& SavegamePath, Savegame& ret ) const;
 	wxString GetScriptFromSavegame ( const wxString& SavegamePath ) const;

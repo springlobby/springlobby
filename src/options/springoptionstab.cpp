@@ -308,7 +308,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 
 	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
 	sett().RefreshSpringVersionList();
-    if ( reload_usync && !LSL::usync().LoadUnitSyncLib( sett().GetCurrentUsedUnitSync() ) )
+    if ( reload_usync && !LSL::usync().LoadUnitSyncLib(STD_STRING(sett().GetCurrentUsedUnitSync())))
 	{
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
 		customMessageBox( SL_MAIN_ICON,
@@ -375,7 +375,7 @@ void SpringOptionsTab::SetupUserFolders()
 	}
 	if ( LSL::usync().IsLoaded() )
 	{
-		LSL::usync().SetSpringDataPath( dir );
+        LSL::usync().SetSpringDataPath(STD_STRING(dir));
 	}
     CopyUikeys( sett().GetCurrentUsedDataDir() );
 }

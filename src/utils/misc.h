@@ -2,6 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_MISC_H
 
 #include <vector>
+#include <string>
 
 class wxArrayString;
 class wxString;

@@ -7,6 +7,7 @@
 #include "images/springlobby.xpm"
 #include "images/springlobby_64.png.h"
 #include "uiutils.h"
+#include "utils/conversion.h"
 
 #include <wx/image.h>
 #include <wx/frame.h>
@@ -145,8 +146,8 @@ wxString Customizations::GetIntroText() const
   */
 Customizations& SLcustomizations()
 {
-    static LineInfo<Customizations> m( AT );
-    static GlobalObjectHolder<Customizations, LineInfo<Customizations> > s_customizations( m );
+    static LSL::Util::LineInfo<Customizations> m( AT );
+    static LSL::Util::GlobalObjectHolder<Customizations, LSL::Util::LineInfo<Customizations> > s_customizations( m );
     return s_customizations;
 }
 

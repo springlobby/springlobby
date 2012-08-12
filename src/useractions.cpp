@@ -16,12 +16,12 @@
 #include "chatpanel.h"
 #include <options/mainoptionstab.h>
 #include <options/groupoptionspanel.h>
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 
 UserActions& useractions()
 {
-    static LineInfo<UserActions> m( AT );
-    static GlobalObjectHolder<UserActions,LineInfo<UserActions> > m_useractions( m );
+    static LSL::Util::LineInfo<UserActions> m( AT );
+    static LSL::Util::GlobalObjectHolder<UserActions, LSL::Util::LineInfo<UserActions> > m_useractions( m );
     return m_useractions;
 }
 

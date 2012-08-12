@@ -13,7 +13,7 @@
 #include "playbacktab.h"
 #include "playbackstructs.h"
 #include "../uiutils.h"
-#include "../globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 
 
 SavegameList::SavegameList()

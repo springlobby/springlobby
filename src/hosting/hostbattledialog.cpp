@@ -286,7 +286,8 @@ void HostBattleDialog::ReloadModList()
 {
 	m_mod_pic->Clear();
 
-	wxArrayString modlist = LSL::usync().GetModList();
+    wxArrayString modlist = LSL::Util::vectorToArrayString(
+                LSL::usync().GetModList());
 
 	size_t nummods = modlist.Count();
 	for ( size_t i = 0; i < nummods; i++ ) m_mod_pic->Insert( modlist[i], i );
@@ -449,9 +450,9 @@ void RunHostBattleDialog( wxWindow* parent )
 		LSL::UnitsyncMod mod;
 		try
 		{
-			mod = LSL::usync().GetMod( sett().GetLastHostMod() );
-			bo.modhash = mod.hash;
-			bo.modname = mod.name;
+            mod = LSL::usync().GetMod(STD_STRING(sett().GetLastHostMod()));
+            bo.modhash = TowxString(mod.hash);
+            bo.modname = TowxString(mod.name);
 		}
 		catch ( ... )
 		{
@@ -461,7 +462,7 @@ void RunHostBattleDialog( wxWindow* parent )
 		}
 
 		LSL::UnitsyncMap map;
-		wxString mname = sett().GetLastHostMap();
+        const auto mname = STD_STRING(sett().GetLastHostMap());
 		try {
 			if ( LSL::usync().MapExists( mname ) )
 				map = LSL::usync().GetMap( mname );
@@ -482,8 +483,8 @@ void RunHostBattleDialog( wxWindow* parent )
 			customMessageBoxNoModal( SL_MAIN_ICON, _( "Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly." ), _( "No maps found" ), wxOK );
 			return;
 		}
-		bo.maphash = map.hash;
-		bo.mapname = map.name;
+        bo.maphash = TowxString(map.hash);
+        bo.mapname = TowxString(map.name);
 
 		bo.rankneeded = sett().GetLastRankLimit();
 

@@ -26,7 +26,7 @@
 
 #include "frame.h"
 #include "../settings.h"
-#include "../springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "../mainwindow.h"
 #include "tab_render_detail.h"
 #include "tab_quality_video.h"

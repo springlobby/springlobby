@@ -50,7 +50,7 @@ class ReplayList : public PlaybackList<Replay>
     ReplayList();
 
     template <class PB, class T>
-    friend class GlobalObjectHolder;
+    friend class LSL::Util::GlobalObjectHolder;
 
     bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret ) const;
     wxString GetScriptFromReplay ( const wxString& ReplayPath, const int version ) const;
