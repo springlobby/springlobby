@@ -18,7 +18,7 @@
 
 #include "imageprovider.h"
 #include <customizations.h>
-#include <springunitsync.h>
+#include <lslunitsync/unitsync.h>
 #include <qt/converters.h>
 #include <utils/conversion.h>
 #include <wx/image.h>
@@ -69,7 +69,7 @@ QImage VfsImageProvider::requestImage ( const QString & id, QSize * size, const 
 
     wxImage h;
     try {
-        h = usync().GetImage( SLcustomizations().GetModname(), TowxString( id ), false );
+        h = LSL::usync().GetImage( SLcustomizations().GetModname(), TowxString( id ), false );
     }
     catch ( std::exception& e ) {
     }

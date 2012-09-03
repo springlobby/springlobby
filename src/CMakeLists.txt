@@ -200,7 +200,6 @@ add_sources(SLSharedWithSettings
 	utils/uievents.cpp
 	utils/curlhelper.cpp
 	crashreport.cpp
-	globalsmanager.cpp
 	settings.cpp
 	thread.cpp
 	infodialog.cpp

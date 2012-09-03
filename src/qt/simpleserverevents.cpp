@@ -19,7 +19,6 @@
 #include "../utils/battleevents.h"
 #include "../server.h"
 #include "../battle.h"
-#include "../httpdownloader.h"
 #include "../settings.h"
 #include "../utils/customdialogs.h"
 #include "../utils/tasutil.h"

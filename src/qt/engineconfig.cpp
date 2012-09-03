@@ -22,9 +22,10 @@
 #include <QDebug>
 
 #include <customizations.h>
-#include <springunitsynclib.h>
+#include <lslunitsync/c_api.h>
 #include <settings.h>
-#include "../settings++/presets.h"
+#include "../springsettings/presets.h"
+#include "utils/conversion.h"
 
 /**
  * @brief POSIX file locking class
@@ -109,7 +110,7 @@ void EngineConfig::commit() const
 {
 	foreach( DataContainerType::value_type entry, data_ )
 	{
-		susynclib().SetSpringConfigString( TowxString( entry.first ), TowxString( entry.second ) );
+        LSL::susynclib().SetSpringConfigString( TowxString( entry.first ), TowxString( entry.second ) );
 	}
 	wxString id = TowxString( id_ );
 	wxString key = _T("sasi/last_used_preset");
@@ -284,9 +285,9 @@ void ScreenResolutionModel::use(int index) const
 	if ( index > 0 && index < resolutions_.size() )
 	{
 		const ScreenResolution& res = resolutions_[index];
-		susynclib().SetSpringConfigInt( _T("XResolution"), res.width );
-		susynclib().SetSpringConfigInt( _T("YResolution"), res.height );
-		susynclib().SetSpringConfigInt( _T("DualScreenMode"), res.dualscreen );
+        LSL::susynclib().SetSpringConfigInt( _T("XResolution"), res.width );
+        LSL::susynclib().SetSpringConfigInt( _T("YResolution"), res.height );
+        LSL::susynclib().SetSpringConfigInt( _T("DualScreenMode"), res.dualscreen );
 		wxString id = TowxString( res.toString() );
 		wxString key = _T("sasi/last_used_resolution");
 		sett().Set( key, id );
