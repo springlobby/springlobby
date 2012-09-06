@@ -110,7 +110,7 @@ void EngineConfig::commit() const
 {
 	foreach( DataContainerType::value_type entry, data_ )
 	{
-        LSL::susynclib().SetSpringConfigString( TowxString( entry.first ), TowxString( entry.second ) );
+        LSL::susynclib().SetSpringConfigString(entry.first, entry.second);
 	}
 	wxString id = TowxString( id_ );
 	wxString key = _T("sasi/last_used_preset");
@@ -172,8 +172,8 @@ void PresetModel::reload()
 	foreach( current_file, preset_dir.entryInfoList( nameFilter, QDir::Files ) )
 	{
 		QString id = current_file.fileName().replace(".conf","");
-		presets_.append( std::make_pair<EngineConfig,QString>( EngineConfig( current_file.absoluteFilePath(), id ),
-															id ) );
+        presets_.append( std::make_pair( EngineConfig(current_file.absoluteFilePath(), id),
+                                         id ) );
 		if ( id == last_id )
 			last_sessions_index_ = presets_.size() - 1;
 	}
@@ -285,9 +285,9 @@ void ScreenResolutionModel::use(int index) const
 	if ( index > 0 && index < resolutions_.size() )
 	{
 		const ScreenResolution& res = resolutions_[index];
-        LSL::susynclib().SetSpringConfigInt( _T("XResolution"), res.width );
-        LSL::susynclib().SetSpringConfigInt( _T("YResolution"), res.height );
-        LSL::susynclib().SetSpringConfigInt( _T("DualScreenMode"), res.dualscreen );
+        LSL::susynclib().SetSpringConfigInt( "XResolution", res.width );
+        LSL::susynclib().SetSpringConfigInt( "YResolution", res.height );
+        LSL::susynclib().SetSpringConfigInt( "DualScreenMode", res.dualscreen );
 		wxString id = TowxString( res.toString() );
 		wxString key = _T("sasi/last_used_resolution");
 		sett().Set( key, id );

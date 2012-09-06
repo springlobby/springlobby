@@ -1,5 +1,6 @@
 #include "missionmodel.h"
 #include <lslunitsync/c_api.h>
+#include <lslunitsync/unitsync.h>
 #include "customizations.h"
 #include "exceptions.h"
 #include <utils/conversion.h>
@@ -10,26 +11,26 @@ MissionModel::MissionModel(QObject *parent) :
     QAbstractListModel(parent)
 {
     wxString mission_dir;
-    std::string md = SLcustomizations().DataBasePath().append( "/missions/" ).toStdString();
-    wxArrayString mission_dirs = LSL::susynclib().SubDirsVFS( TowxString(md), _T("*"), _T("r") );//only raw vfs part
+    const std::string md = SLcustomizations().DataBasePath().append("/missions/").toStdString();
+    wxArrayString mission_dirs = LSL::susynclib().SubDirsVFS(md, "*", "r");//only raw vfs part
 
     foreach( mission_dir, mission_dirs ) {
 //        try
         {
-            const wxArrayString mission_pics = LSL::susynclib().DirListVFS( mission_dir, _T("*.png"), _T("r") );
+            const auto mission_pics = LSL::susynclib().DirListVFS(mission_dir, "*.png", "r");
             if ( mission_pics.size() < 1 )
                 throw content_exception( QString( "mission pic in ").append(ToQString(mission_dir)).toStdString() );
-            const wxString image = mission_pics[0];
-            const wxArrayString mission_scripts = LSL::susynclib().DirListVFS( mission_dir, _T("*.script"), _T("r") );
+            const auto image = mission_pics[0];
+            const auto mission_scripts = LSL::susynclib().DirListVFS(mission_dir, "*.script", "r");
             if ( mission_scripts.size() < 1 )
                 throw content_exception( QString( "mission script in ").append(ToQString(mission_dir)).toStdString() );
-            const wxString script = mission_scripts[0];
-            const wxArrayString mission_txt = LSL::susynclib().DirListVFS( mission_dir, _T("*.txt"), _T("r") );
+            const auto script = mission_scripts[0];
+            const auto mission_txt = LSL::susynclib().DirListVFS(mission_dir, "*.txt", "r");
             if ( mission_txt.size() < 1 )
                 throw content_exception( QString( "mission description in ").append(ToQString(mission_dir)).toStdString() );
-            const wxString content = LSL::usync().GetTextfileAsString(  SLcustomizations().GetModname(), mission_txt[0] );
-            const wxString title = content.BeforeFirst( '\n' );
-            const wxString intro = content.AfterFirst( '\n' );
+            const auto content = LSL::usync().GetTextfileAsString(STD_STRING(SLcustomizations().GetModname()), mission_txt[0]);
+            const auto title = content.BeforeFirst( '\n' );
+            const auto intro = content.AfterFirst( '\n' );
 
             Mission m;
             m.intro = ToQString( intro );

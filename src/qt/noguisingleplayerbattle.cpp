@@ -20,7 +20,7 @@ void NoGuiSinglePlayerBattle::StartSpring()
   * @todo: document this function
   */
 NoGuiSinglePlayerBattle::NoGuiSinglePlayerBattle()
-    :  m_me( User( LSL::usync().IsLoaded() ? LSL::usync().GetDefaultNick() : _T("invalid") ) )
+    :  m_me(User(TowxString(LSL::usync().IsLoaded() ? LSL::usync().GetDefaultNick() : "invalid")))
 {
     OnUserAdded( m_me );
     m_me.BattleStatus().colour = sett().GetBattleLastColour();
@@ -32,7 +32,7 @@ int NoGuiSinglePlayerBattle::GetAiIndex( const wxString& name )
     int total = LSL::susynclib().GetSkirmishAICount( m_host_mod.name );
     for ( int i = 0; i < total; i++ )
     {
-        const wxArrayString infos = LSL::susynclib().GetAIInfo( i );
+        const auto infos = LSL::susynclib().GetAIInfo(i);
         int namepos = infos.Index( _T("shortName") );
         //        int versionpos = infos.Index( _T("version") );
         wxString ainame;
@@ -48,7 +48,7 @@ int NoGuiSinglePlayerBattle::GetAiIndex( const wxString& name )
 int NoGuiSinglePlayerBattle::GetSideIndex( const wxString& name )
 {
     const auto sides = LSL::usync().GetSides( m_host_mod.name );
-    for ( int i = 0; i < (int)sides.Count(); ++i ) {
+    for ( int i = 0; i < (int)sides.size(); ++i ) {
         if ( name.CmpNoCase( sides[i] ) == 0 )
             return i;
     }
