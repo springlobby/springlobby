@@ -38,3 +38,8 @@ CMakeLists.txt.user*
 src/qt-build/
 attic/
 moc_*.cpp
+cmake_install.cmake
+CMakeFiles/
+*.gmo
+*.a
+
