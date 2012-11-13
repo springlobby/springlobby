@@ -10,7 +10,7 @@ else
 	filename=sl_${2}.zip
 fi
 
-zip -9 -u ${filename} springlobby.exe
+zip -9 -u ${filename} src/springlobby.exe
 
 if [ ! -d /usr/local/www/springlobby.info/temp/builds/$DEVELOPER ] ; then
 	mkdir -p /usr/local/www/springlobby.info/temp/builds/$DEVELOPER

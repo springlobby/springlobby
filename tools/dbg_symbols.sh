@@ -1,8 +1,8 @@
 #!/bin/bash
 
 REV=${1}
-STRIP=/opt/mingw32/bin/i586-pc-mingw32-strip
-OBJCOPY=/opt/mingw32/bin/i586-pc-mingw32-objcopy
+STRIP=/opt/mingw32/usr/bin/i686-pc-mingw32-strip 
+OBJCOPY=/opt/mingw32/usr/bin/i686-pc-mingw32-objcopy
 
 PREF=build-msw-default
 ROOT=""
