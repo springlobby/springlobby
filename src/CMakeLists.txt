@@ -254,6 +254,9 @@ message(STATUS "SOUND " ${sound_libraries})
 TARGET_LINK_LIBRARIES(springlobby slcommon libsettings libSpringLobbyUtils pr-downloader_static 
 	${wxWidgets_LIBRARIES} ${sound_libraries} 
 	${Boost_LIBRARIES})
+IF(UNIX)
+	TARGET_LINK_LIBRARIES(springlobby X11)
+ENDIF(UNIX)
 	
 # add_dependencies( springlobby alure )
 # add_dependencies( springlobby version )
