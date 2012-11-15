@@ -38,6 +38,17 @@ struct StartPos
 
 struct MapInfo
 {
+  MapInfo () : description(_T("")),
+    tidalStrength(0),
+    gravity(0),
+    maxMetal(0.0f),
+    extractorRadius(0),
+    minWind(0),
+    maxWind(0),
+    width(0),
+    height(0),
+    author(_T(""))
+ {}
   wxString description;
   int tidalStrength;
   int gravity;

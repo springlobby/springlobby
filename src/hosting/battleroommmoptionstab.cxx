@@ -596,11 +596,11 @@ void BattleroomMMOptionsTab<BattleType>::SetBattle( BattleType* battle )
 	m_save_btn->Enable(m_battle);
 	m_delete_btn->Enable(m_battle);
 	m_default_btn->Enable(m_battle);
-	for ( chkBoxMap::iterator itor = m_chkbox_map.begin(); itor != m_chkbox_map.end(); itor++ ) itor->second->Enable(m_battle);
-	for ( comboBoxMap::iterator itor = m_combox_map.begin(); itor != m_combox_map.end(); itor++ ) itor->second->Enable(m_battle);
-	for ( typename spinCtrlMap::iterator itor = m_spinctrl_map.begin(); itor != m_spinctrl_map.end(); itor++ ) itor->second->Enable(m_battle);
-	for ( textCtrlMap::iterator itor = m_textctrl_map.begin(); itor != m_textctrl_map.end(); itor++ ) itor->second->Enable(m_battle);
-	for ( buttonMap::iterator itor = m_button_map.begin(); itor != m_button_map.end(); itor++ ) itor->second->Enable(m_battle);
+	for ( chkBoxMap::iterator itor = m_chkbox_map.begin(); itor != m_chkbox_map.end(); ++itor ) itor->second->Enable(m_battle);
+	for ( comboBoxMap::iterator itor = m_combox_map.begin(); itor != m_combox_map.end(); ++itor ) itor->second->Enable(m_battle);
+	for ( typename spinCtrlMap::iterator itor = m_spinctrl_map.begin(); itor != m_spinctrl_map.end(); ++itor ) itor->second->Enable(m_battle);
+	for ( textCtrlMap::iterator itor = m_textctrl_map.begin(); itor != m_textctrl_map.end(); ++itor ) itor->second->Enable(m_battle);
+	for ( buttonMap::iterator itor = m_button_map.begin(); itor != m_button_map.end(); ++itor ) itor->second->Enable(m_battle);
 
 	if ( m_battle )
 	{
