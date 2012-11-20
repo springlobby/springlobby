@@ -21,4 +21,4 @@ fi
 echo configuring ${DIR} with -DSPRINGLOBBY_REV="${REV}" $@
 
 cd ${DIR}
-cmake ..  -DSPRINGLOBBY_REV="${REV}" $@
+cmake -DSPRINGLOBBY_REV="${REV}" $@ ..
