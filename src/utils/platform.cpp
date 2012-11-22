@@ -321,7 +321,7 @@ bool WinExecuteAdmin( const wxString& command, const wxString& params )
 
       shExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 
-      shExecInfo.fMask = NULL;
+      shExecInfo.fMask = 0;
       shExecInfo.hwnd = NULL;
 
       //on XP this would open the real runas dialog, which apparently is its own wonder
@@ -350,7 +350,7 @@ bool WinExecute( const wxString& command, const wxString& params )
 
       shExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
     shExecInfo.lpVerb = _T("open");
-      shExecInfo.fMask = NULL;
+      shExecInfo.fMask = 0;
       shExecInfo.hwnd = NULL;
 
 #ifdef _MSC_VER //some strange compiler stupidity going on here
