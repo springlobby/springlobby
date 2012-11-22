@@ -400,8 +400,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
 {
   int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);
   int end = m_chatlog_text->GetScrollRange(wxVERTICAL);
-  int thumb = m_chatlog_text->GetScrollThumb(wxVERTICAL);
 #ifndef __WXMSW__
+  int thumb = m_chatlog_text->GetScrollThumb(wxVERTICAL);
   float original_pos = (float)(pos+thumb) / (float)end;
 #else
   int size = m_chatlog_text->GetSize().GetHeight();
@@ -409,8 +409,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
 #endif
   if ( original_pos < 0.0f ) original_pos = 0.0f;
   if ( original_pos > 1.0f ) original_pos = 1.0f; // this is necessary because the code in windows isn't 100% right because thumb always returns 0
-  long original_line = 0;
 #ifndef __WXMSW__
+  long original_line = 0;
   if (original_pos < 1.0f )
   {
 	  original_line = (long)(original_pos *(float)m_chatlog_text->GetNumberOfLines()); // GetNumberOfLines is expensive, only call when necessary
@@ -436,7 +436,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		char c;
 		int color;
 		m1 = line.chat;
-		bool _2chars = false;
 		bool bold = false;
 		wxFont font;
 		wxColor curcolor(0,0,0);
@@ -454,13 +453,11 @@ void ChatPanel::OutputLine( const ChatLine& line )
 				if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58))
 				{
 					color = (int(m1.GetChar(1)) - 48)*10+(int(m1.GetChar(2)) - 48);
-					_2chars = true;
 					m1 = m1.Mid(3);
 					}
 				else
 				{
 					color = int(m1.GetChar(1)) -48;
-					_2chars = false;
 					m1 = m1.Mid(2);
 					}
 
