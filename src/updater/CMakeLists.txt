@@ -5,7 +5,6 @@ add_sources( updaterSrc
 	updaterapp.cpp
 	../utils/activitynotice.cpp
 	../utils/misc.cpp
-	../utils/curlhelper.cpp
 )
 CreateResourceCompileCommand(updater_RC_FILE ${CMAKE_CURRENT_SOURCE_DIR} updater.rc su_icon.o )
 SET(updaterSrc ${updaterSrc} ${updater_RC_FILE})
