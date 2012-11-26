@@ -12,7 +12,7 @@
 
 wxString GetDownloadUrl( const wxString& version )
 {
-    return _T("springlobby.info/windows/springlobby-") + version + _T("-win32.zip");
+    return _T("springlobby.info/windows_static/springlobby-") + version + _T("-win32.zip");
 }
 
 wxString GetSpringLobbyVersion( bool consider_aux )
