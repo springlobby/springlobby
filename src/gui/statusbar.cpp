@@ -19,10 +19,14 @@ Statusbar::Statusbar( wxWindow* parent )
 
 void Statusbar::OnAddMessage( UiEvents::StatusData data )
 {
+#ifndef __WXMSW__
 	PushStatusText( data.first, data.second );
+#endif
 }
 
 void Statusbar::OnRemoveMessage( UiEvents::StatusData data )
 {
-	PopStatusText( data.second );
+#ifndef __WXMSW__
+  PopStatusText( data.second );
+#endif
 }
