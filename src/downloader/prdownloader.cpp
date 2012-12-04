@@ -20,6 +20,7 @@
 
 #include "../globalsmanager.h"
 #include "lib/src/Downloader/IDownloader.h"
+#include "lib/src/FileSystem/FileSystem.h"
 #include "../springunitsync.h"
 #include "../utils/uievents.h"
 #include "../utils/conversion.h"
@@ -81,6 +82,7 @@ PrDownloader::PrDownloader()
     : m_dl_thread(new LSL::WorkerThread())
 {
     IDownloader::Initialize();
+    UpdateSettings();
     m_game_loaders.push_back(rapidDownload);
     m_game_loaders.push_back(httpDownload);
     m_game_loaders.push_back(plasmaDownload);
@@ -102,6 +104,13 @@ void PrDownloader::ClearFinished()
 
 void PrDownloader::UpdateSettings()
 {
+	if (usync().IsLoaded()) {
+		wxString path;
+		if (usync().GetSpringDataPath(path)) {
+			const std::string spath = std::string(path.mb_str());
+			fileSystem->setWritePath(spath);
+		}
+	}
 }
 
 void PrDownloader::RemoveTorrentByName(const std::string &/*name*/)

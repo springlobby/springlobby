@@ -238,7 +238,7 @@ IF(WIN32)
 ENDIF()
 
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${SettingsSrc}  ${springlobby_RC_FILE})
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${springlobby_RC_FILE})
 #the updater needs to be build for windows only
 IF(WIN32)
 	link_directories( ${link_directories} ${EXTRA_LIB_DIRS} )
