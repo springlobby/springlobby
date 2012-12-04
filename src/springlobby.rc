@@ -1,6 +1,12 @@
+#ifndef _SPRINGLOBBY_RC
+#define _SPRINGLOBBY_RC
+
 #include <wx/msw/wx.rc>
 springlobby ICON "images/SpringLobby.ico"
 
 #ifndef _RC_MSVC //don't use this on visual studio - it enables all the UAC rights and XP style management on its own.
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "springlobby.exe.manifest"
 #endif
+
+#endif
+
