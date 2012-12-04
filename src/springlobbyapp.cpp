@@ -82,7 +82,7 @@ SpringLobbyApp::SpringLobbyApp()
 	m_appname( _T("SpringLobby") )
 {
 #if wxUSE_UNIX
-const bool xinit = XInitThreads();
+XInitThreads();
 #endif
 }
 
