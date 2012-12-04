@@ -171,7 +171,8 @@ public:
 	bool FastLoadUnitSyncLib( const wxString& unitsyncloc );
 	bool FastLoadUnitSyncLibInit();
 
-    void SetSpringDataPath( const wxString& path );
+	void SetSpringDataPath( const wxString& path );
+	bool GetSpringDataPath( wxString& path);
 
 	wxArrayString GetPlaybackList( bool ReplayType = true ) const; //savegames otehrwise
 
