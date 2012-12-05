@@ -250,7 +250,7 @@ ELSE (WIN32)
 	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF (WIN32)
 
-message(STATUS "SOUND " ${sound_libraries})
+message(STATUS "Sound libraries used for linking: " ${sound_libraries})
 TARGET_LINK_LIBRARIES(springlobby slcommon libsettings libSpringLobbyUtils pr-downloader_static 
 	${wxWidgets_LIBRARIES} ${sound_libraries} 
 	${Boost_LIBRARIES})
