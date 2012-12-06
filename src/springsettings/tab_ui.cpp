@@ -3,7 +3,7 @@
     Copyright (C) 2007
     Original work by Kloot
     cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
-    visit http://spring.clan-sy.com/phpbb/viewtopic.php?t=12104
+    visit http://springrts.com/phpbb/viewtopic.php?t=12104
     for more info/help
 
     SpringLobby is free software: you can redistribute it and/or modify
