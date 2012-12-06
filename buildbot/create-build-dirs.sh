@@ -19,6 +19,7 @@ else
 fi
 
 echo configuring ${DIR} with -DSPRINGLOBBY_REV="${REV}" $@
-
 cd ${DIR}
+rm -fv CMakeCache.txt
 cmake -DSPRINGLOBBY_REV="${REV}" $@ ..
+

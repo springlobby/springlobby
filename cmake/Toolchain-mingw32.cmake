@@ -1,6 +1,10 @@
 # the name of the target operating system
 SET(CMAKE_SYSTEM_NAME Windows)
-set(CMAKE_FIND_LIBRARY_SUFFIXES  ".a" )
+
+# only use static libs for linking
+set(CMAKE_FIND_LIBRARY_SUFFIXES  .a )
+#set(CMAKE_SHARED_LIBRARY_PREFIX "")
+set(CMAKE_SHARED_MODULE_SUFFIX "")
 
 # which compilers to use for C and C++
 SET(CMAKE_C_COMPILER /usr/bin/i586-mingw32msvc-gcc)

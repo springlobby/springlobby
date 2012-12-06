@@ -42,7 +42,7 @@ find_path(ALURE_INCLUDE_DIR
 
   find_library(ALURE_LIBRARY
     NAMES
-      alure alure 32
+      alure alure 32 ALURE32-static ALURE32
     PATHS
       /usr/lib
       /usr/local/lib
