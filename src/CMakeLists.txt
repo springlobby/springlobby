@@ -169,6 +169,20 @@ add_sources(springlobbySrc
 	sound/alsound.cpp
 )
 
+if   (OPTION_SOUND )
+	message(STATUS "Sound enabled!")
+	find_package(Alure)
+	if (ALURE_FOUND)
+		include_directories(${ALURE_INCLUDE_DIRS})
+	else(ALURE_FOUND)
+		message(WARNING "OPTION_SOUND enabled but libalure not found! (maybe install libalure-dev?)")
+		add_definitions( -DDISABLE_SOUND )
+	endif(ALURE_FOUND)
+else ( OPTION_SOUND )
+	# Disable sound.
+	message(STATUS "Sound disabled!")
+	add_definitions( -DDISABLE_SOUND )
+endif ( OPTION_SOUND )
 
 clear(SLSharedWithSettings)
 add_sources(SLSharedWithSettings
@@ -269,7 +283,6 @@ message(STATUS "Sound libraries used for linking: " ${sound_libraries})
 TARGET_LINK_LIBRARIES(springlobby slcommon libsettings libSpringLobbyUtils pr-downloader_static 
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
-		${sound_libraries}
 		${ALURE_LIBRARIES}
 	)
 IF(UNIX)

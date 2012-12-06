@@ -40,6 +40,8 @@ SET( ENV{OPENALDIR} /opt/mingw32/ )
 SET( OPENAL_LIBRARY OpenAL32 )
 SET( OPENAL_INCLUDE_DIR /opt/mingw32/include/AL )
 SET( OPENAL_LIBRARY /opt/mingw32/usr/i686-pc-mingw32/lib/libOpenAL32.a )
+SET( ALURE_INCLUDE_DIR /opt/mingw32/usr/i686-pc-mingw32/include/AL )
+SET( ALURE_LIBRARY /opt/mingw32/usr/i686-pc-mingw32/lib/libALURE32-static.a )
 
 set( EXTRA_LIB_DIRS /opt/mingw32/usr/i686-pc-mingw32/lib /opt/mingw32/usr/lib  )
 
