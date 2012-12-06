@@ -1,7 +1,7 @@
 #ifndef DISABLE_SOUND
 #include "alsound.h"
 
-#include "alure/include/AL/alure.h"
+#include <alure.h>
 
 #include "sound/ring_sound.h"
 #include "sound/pm_sound.h"

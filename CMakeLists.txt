@@ -42,20 +42,20 @@ ENDIF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${spri
 # Options, that can be changed be the User in order to customise springlobby
 #----------------------------------------------------------------------------------------------------
 SET( OPTION_SOUND
-	1 CACHE BOOL
+	TRUE CACHE BOOL
 	"Enables sound notification functionality (requires openAL libraries)" )
 SET( OPTION_TRANSLATION_SUPPORT
-	1 CACHE BOOL
+	TRUE CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
 SET( OPTION_NOTIFY
-	1 CACHE BOOL
+	TRUE CACHE BOOL
 	"Enables libnotify support for popup status messages (requires libnotify)" )
 SET( BUILD_SHARED_LIBS
-	0 CACHE BOOL
+	FALSE CACHE BOOL
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
 
 SET( ENABLE_DEBUG_REPORT
-	1 CACHE BOOL
+	TRUE CACHE BOOL
 	"Enable automatic uploading of crash information (requires libcurl)" )
 
 SET( SPRINGLOBBY_REV
@@ -109,9 +109,9 @@ IF(WIN32)
 	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
 ELSE (WIN32)
     install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
-    install(FILES images/springlobby.svg DESTINATION
+    install(FILES src/images/springlobby.svg DESTINATION
 	    ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
-    install(FILES springlobby.desktop DESTINATION
+    install(FILES src/springlobby.desktop DESTINATION
 	    ${CMAKE_INSTALL_PREFIX}/share/applications)
 ENDIF (WIN32)
 

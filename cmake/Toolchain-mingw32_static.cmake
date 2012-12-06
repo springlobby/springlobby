@@ -53,8 +53,8 @@ SET( CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE STRING
 ADD_DEFINITIONS(-D__WXMSW__ -mthreads -D_WIN32_WINNT=0x0501  -DBOOST_THREAD_USE_LIB -DAL_LIBTYPE_STATIC )
 LINK_LIBRARIES(
 	${wxWidgets_LIBRARIES}
-	png tiff jpeg lzma xml2 gnutls-openssl ssh2 idn OpenAL32 gcrypt wldap32 gnutls nettle
-	expat hogweed gpg-error SDL curl ws2_32 intl iconv shell32 setupapi comctl32 OpenAL32 z winmm gmp
+	png tiff jpeg lzma xml2 gnutls-openssl idn OpenAL32 gcrypt wldap32 gnutls nettle
+	expat hogweed gpg-error SDL intl iconv curl ssh2 ws2_32 shell32 setupapi comctl32 OpenAL32 z winmm gmp
 	)
 SET(CROSS_COMPILING "ON")
 
