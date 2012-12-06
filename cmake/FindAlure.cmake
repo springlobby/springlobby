@@ -35,7 +35,7 @@ IF(ALURE_INCLUDE_DIR)
         SET(ALURE_VERSION "1.1")
     ELSE(ALURE_VERSION_MATCH)
         SET(ALURE_VERSION_OK FALSE)
-        MESSAGE(FATAL_ERROR "Can not find a recent enough version of Alure. Please install ${ALURE_MIN_VERSION} or newer. Found ${ALURE_VERSION}")
+        MESSAGE(STATUS "Can not find a recent enough version of Alure. Please install ${ALURE_MIN_VERSION} or newer. Found ${ALURE_VERSION}")
     ENDIF(ALURE_VERSION_MATCH)
 ENDIF(ALURE_INCLUDE_DIR)
 
