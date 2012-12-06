@@ -152,7 +152,23 @@ add_sources(springlobbySrc
 	
 	pingthread.cpp
 	iserverevents.cpp
+	sound/alsound.cpp
 )
+
+if   (OPTION_SOUND )
+	message(STATUS "Sound enabled!")
+	find_package(Alure)
+	if (ALURE_FOUND)
+		include_directories(${ALURE_INCLUDE_DIRS})
+	else(ALURE_FOUND)
+		message(WARNING "OPTION_SOUND enabled but libalure not found! (maybe install libalure-dev?)")
+		add_definitions( -DDISABLE_SOUND )
+	endif(ALURE_FOUND)
+else ( OPTION_SOUND )
+	# Disable sound.
+	message(STATUS "Sound disabled!")
+	add_definitions( -DDISABLE_SOUND )
+endif ( OPTION_SOUND )
 
 clear(SLSharedWithSettings)
 add_sources(SLSharedWithSettings
@@ -218,7 +234,6 @@ add_subdirectory(gui)
 add_subdirectory(Helper)
 add_subdirectory(hosting)
 add_subdirectory(options)
-add_subdirectory(sound)
 add_subdirectory(utils)
 add_subdirectory(widgets)
 add_subdirectory(wxkeybinder)
