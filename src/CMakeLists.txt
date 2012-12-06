@@ -111,6 +111,7 @@ if   ( OPTION_SOUND )
 	else ( ALURE_FOUND )
 		message(WARNING "OPTION_SOUND enabled but libalure not found! (maybe install libalure-dev?)")
 		add_definitions( -DDISABLE_SOUND )
+		unset(ALURE_LIBRARIES)
 	endif ( ALURE_FOUND )
 else ( OPTION_SOUND )
 	# Disable sound.
@@ -271,8 +272,11 @@ ENDIF (WIN32)
 
 message(STATUS "Sound libraries used for linking: " ${sound_libraries})
 TARGET_LINK_LIBRARIES(springlobby slcommon libsettings libSpringLobbyUtils pr-downloader_static 
-	${wxWidgets_LIBRARIES} ${sound_libraries} 
-	${Boost_LIBRARIES})
+		${wxWidgets_LIBRARIES}
+		${Boost_LIBRARIES}
+		${sound_libraries}
+		${ALURE_LIBRARIES}
+	)
 IF(UNIX)
 	TARGET_LINK_LIBRARIES(springlobby X11)
 ENDIF(UNIX)
