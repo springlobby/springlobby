@@ -100,6 +100,24 @@ IF( OPTION_NOTIFY AND NOT WIN32 )
 	ENDIF( LIBNOTIFY_FOUND )
 ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 
+#----------------------------------------------------------------------------------------------------
+# libalure dependency check
+#----------------------------------------------------------------------------------------------------
+if   ( OPTION_SOUND )
+	message(STATUS "Sound enabled!")
+	find_package(Alure)
+	if  (  ALURE_FOUND )
+		include_directories(${ALURE_INCLUDE_DIRS})
+	else ( ALURE_FOUND )
+		message(WARNING "OPTION_SOUND enabled but libalure not found! (maybe install libalure-dev?)")
+		add_definitions( -DDISABLE_SOUND )
+	endif ( ALURE_FOUND )
+else ( OPTION_SOUND )
+	# Disable sound.
+	message(STATUS "Sound disabled!")
+	add_definitions( -DDISABLE_SOUND )
+endif ( OPTION_SOUND )
+
 clear(springlobbySrc)
 add_sources(springlobbySrc
 	chatpanelmenu.cpp
@@ -155,20 +173,6 @@ add_sources(springlobbySrc
 	sound/alsound.cpp
 )
 
-if   (OPTION_SOUND )
-	message(STATUS "Sound enabled!")
-	find_package(Alure)
-	if (ALURE_FOUND)
-		include_directories(${ALURE_INCLUDE_DIRS})
-	else(ALURE_FOUND)
-		message(WARNING "OPTION_SOUND enabled but libalure not found! (maybe install libalure-dev?)")
-		add_definitions( -DDISABLE_SOUND )
-	endif(ALURE_FOUND)
-else ( OPTION_SOUND )
-	# Disable sound.
-	message(STATUS "Sound disabled!")
-	add_definitions( -DDISABLE_SOUND )
-endif ( OPTION_SOUND )
 
 clear(SLSharedWithSettings)
 add_sources(SLSharedWithSettings
