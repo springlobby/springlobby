@@ -167,23 +167,10 @@ add_sources(springlobbySrc
 	pingthread.cpp
 	iserverevents.cpp
 )
+
 SET(springlobbySoundsrc
 	sound/alsound.cpp
 )
-if   (OPTION_SOUND )
-	message(STATUS "Sound enabled!")
-	find_package(Alure)
-	if (ALURE_FOUND)
-		include_directories(${ALURE_INCLUDE_DIRS})
-	else(ALURE_FOUND)
-		message(WARNING "OPTION_SOUND enabled but libalure not found! (maybe install libalure-dev?)")
-		add_definitions( -DDISABLE_SOUND )
-	endif(ALURE_FOUND)
-else ( OPTION_SOUND )
-	# Disable sound.
-	message(STATUS "Sound disabled!")
-	add_definitions( -DDISABLE_SOUND )
-endif ( OPTION_SOUND )
 
 clear(SLSharedWithSettings)
 add_sources(SLSharedWithSettings
@@ -268,7 +255,11 @@ IF(WIN32)
 ENDIF()
 
 
-ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE ${springlobbySrc} ${springlobby_RC_FILE} ${springlobbySoundsrc})
+ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
+		${springlobbySoundsrc}
+		${springlobbySrc}
+		${springlobby_RC_FILE}
+	)
 #the updater needs to be build for windows only
 IF(WIN32)
 	link_directories( ${link_directories} ${EXTRA_LIB_DIRS} )
@@ -280,7 +271,7 @@ ELSE (WIN32)
 	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby slcommon libsettings libSpringLobbyUtils pr-downloader_static 
+TARGET_LINK_LIBRARIES(springlobby slcommon libsettings libSpringLobbyUtils pr-downloader_static
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${ALURE_LIBRARIES}

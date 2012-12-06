@@ -1,6 +1,11 @@
 #ifndef DISABLE_SOUND
 #include "alsound.h"
 
+#ifdef WIN32
+//win32 compile uses static libs
+#define ALURE_STATIC_LIBRARY
+#endif
+
 #include <alure.h>
 
 #include "sound/ring_sound.h"
