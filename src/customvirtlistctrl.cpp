@@ -92,7 +92,7 @@ void CustomVirtListCtrl<T,L>::StartTimer()
 	if ( m_periodic_sort )
 	{
 		Connect( m_periodic_sort_timer_id, wxTimerEvent().GetEventType(),   wxTimerEventHandler( ThisType::OnPeriodicSort ) );
-		#ifdef DEBUG
+		#ifndef NDEBUG
 		bool started =
 		#endif
 		m_periodic_sort_timer.Start( m_periodic_sort_interval );
