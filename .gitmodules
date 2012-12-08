@@ -3,4 +3,4 @@
 	url = git://github.com/spring/pr-downloader.git
 [submodule "src/lsl"]
 	path = src/lsl
-	url = https://github.com/springlobby/lsl.git
+	url = git://github.com/springlobby/lsl.git
