@@ -1,6 +1,11 @@
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 INCLUDE(compat_flags)
+ADD_DEFINITIONS(-DHAVE_SPRINGLOBBY=1)
+
+if(NOT EXISTS "lsl/CMakeLists.txt")
+	EXECUTE_PROCESS(COMMAND cd ../ && git submodule update --init)
+endif(NOT EXISTS "lsl/CMakeLists.txt")
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 # MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
@@ -271,7 +276,7 @@ ELSE (WIN32)
 	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby slcommon libsettings libSpringLobbyUtils pr-downloader_static
+TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils pr-downloader_static
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${ALURE_LIBRARIES}
@@ -279,9 +284,5 @@ TARGET_LINK_LIBRARIES(springlobby slcommon libsettings libSpringLobbyUtils pr-do
 IF(UNIX)
 	TARGET_LINK_LIBRARIES(springlobby X11)
 ENDIF(UNIX)
-	
-# add_dependencies( springlobby alure )
-# add_dependencies( springlobby version )
-# add_dependencies( springlobby pr-downloader_static )
-# add_dependencies( springlobby libSpringLobbyUtils )
+
 
