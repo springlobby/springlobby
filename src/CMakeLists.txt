@@ -248,7 +248,7 @@ add_subdirectory(utils)
 add_subdirectory(widgets)
 add_subdirectory(wxkeybinder)
 
-set(OPTION_LSLSERVER FALSE)
+set(LSLSERVER OFF CACHE BOOL "disable lsl-server build" FORCE)
 Add_Subdirectory(lsl)
 INCLUDE_DIRECTORIES(lsl/src)
 add_subdirectory(springsettings)

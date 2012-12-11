@@ -11,6 +11,6 @@ add_sources( filelistSrc
 	filelister/filelistfilter.cpp 
 )
 
-set(OPTION_CONSOLETOOL OFF)
-set(OPTION_SHAREDLIB OFF)
+set(CONSOLETOOL OFF CACHE BOOL "disable console tool compile" FORCE)
+set(SHAREDLIB OFF CACHE BOOL "disable shared lib compile" FORCE)
 Add_Subdirectory(lib)
