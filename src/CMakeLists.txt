@@ -112,11 +112,14 @@ if   ( OPTION_SOUND )
 	message(STATUS "Sound enabled!")
 	find_package(Alure REQUIRED)
 	include_directories(${ALURE_INCLUDE_DIRS})
+	find_package(OpenAL REQUIRED)
 else ( OPTION_SOUND )
 	# Disable sound.
 	message(STATUS "Sound disabled!")
 	add_definitions( -DDISABLE_SOUND )
+
 	unset(ALURE_LIBRARIES)
+	unset(OPENAL_LIBRARIES)
 endif ( OPTION_SOUND )
 
 clear(springlobbySrc)
@@ -280,6 +283,7 @@ TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils pr-downloader_s
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${ALURE_LIBRARIES}
+		${OPENAL_LIBRARY}
 	)
 IF(UNIX)
 	TARGET_LINK_LIBRARIES(springlobby X11)

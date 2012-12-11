@@ -11,4 +11,6 @@ add_sources( filelistSrc
 	filelister/filelistfilter.cpp 
 )
 
+set(OPTION_CONSOLETOOL OFF)
+set(OPTION_SHAREDLIB OFF)
 Add_Subdirectory(lib)
