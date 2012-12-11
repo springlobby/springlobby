@@ -247,6 +247,8 @@ add_subdirectory(options)
 add_subdirectory(utils)
 add_subdirectory(widgets)
 add_subdirectory(wxkeybinder)
+
+set(OPTION_LSLSERVER FALSE)
 Add_Subdirectory(lsl)
 INCLUDE_DIRECTORIES(lsl/src)
 add_subdirectory(springsettings)
