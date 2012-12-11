@@ -620,11 +620,13 @@ mmSectionTree::mmSectionTree()
 
 mmSectionTree::~mmSectionTree()
 {
-    #ifndef NDEBUG
-        m_tree->Flush();
-    #else //no need to clutter tempfile directory if we're not debugging
-        m_tree->DeleteAll();
-    #endif
+	if (m_tree!=NULL) {
+		#ifndef NDEBUG
+		m_tree->Flush();
+		#else //no need to clutter tempfile directory if we're not debugging
+		m_tree->DeleteAll();
+		#endif
+	}
 }
 
 void mmSectionTree::AddSection ( const wxString& parentpath, const mmOptionSection& section )
