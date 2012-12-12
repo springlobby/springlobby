@@ -1,13 +1,14 @@
 #! /usr/bin/env bash
 
 set -e
-cd $(dirname $0)/../$1
+cd $(dirname $0)/../${1}
 pwd
+DEVELOPER=${2}
 
 if [ x$2 == x ]; then
-	filename=sl_master.zip
+	filename=sl_master_dbg.zip
 else
-	filename=sl_${2}.zip
+	filename=sl_${2}_dbg.zip
 fi
 
 zip -9 -u ${filename} src/springlobby.exe
