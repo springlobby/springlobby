@@ -11,9 +11,11 @@
 #include "../utils/customdialogs.h"
 #include "../utils/platform.h"
 
-wxTranslationHelper::wxTranslationHelper( wxApp & app,
-										 const wxString & search_path )
-: m_App(app), m_SearchPath(search_path), m_Locale(NULL)
+wxTranslationHelper::wxTranslationHelper( wxApp & app, const wxString & search_path ) :
+	m_App(app),
+	m_SearchPath(search_path),
+	m_Locale(NULL),
+	m_UseNativeConfig(false)
 {
 	if(search_path.IsEmpty())
 	{

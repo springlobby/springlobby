@@ -6,7 +6,7 @@ unsigned CommandList::m_nextCmdId = 1;
 
 void CommandList::InitializeCommandList()
 {
-	if ( CommandList::m_commands.size() > 0 )
+	if ( !CommandList::m_commands.empty() )
 	{
 		return;
 	}

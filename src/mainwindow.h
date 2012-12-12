@@ -99,7 +99,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 	void OnSetFocus(wxFocusEvent&);
 	void OnKillFocus(wxFocusEvent&);
     void OnMessage( wxCommandEvent& event );
-    void AddMessageEvent( const wxString message );
+    void AddMessageEvent( const wxString& message );
 
     void OnTabsChanged( wxAuiNotebookEvent& event );
     MainChatTab& GetChatTab();

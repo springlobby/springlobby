@@ -53,7 +53,7 @@ NotificationManager::~NotificationManager()
 }
 
 void NotificationManager::OnShowNotification( UiEvents::NotficationData data )
-{	
+{
 	if ( m_rate_limit_timer.IsRunning() ) {
 		m_eventDataBuffer.push_back( data );
 		return;
@@ -82,7 +82,7 @@ void NotificationManager::ShowNotification( const UiEvents::NotficationData& dat
 void NotificationManager::OnTimer( wxTimerEvent& /*event*/ )
 {
 	UiEvents::NotficationData data;
-	if ( m_eventDataBuffer.size() > 0 ) {
+	if ( !m_eventDataBuffer.empty() ) {
 		if ( m_eventDataBuffer.size() == 1 )
 			data = m_eventDataBuffer.front();
 		else

@@ -344,7 +344,7 @@ void MainWindow::OnMessage(wxCommandEvent &event)
     customMessageBoxNoModal(SL_MAIN_ICON, event.GetString());
 }
 
-void MainWindow::AddMessageEvent(const wxString message)
+void MainWindow::AddMessageEvent(const wxString& message)
 {
     wxCommandEvent evt(MainwindowMessageEvent, wxNewId());
     evt.SetString(message);

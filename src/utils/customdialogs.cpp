@@ -152,21 +152,21 @@ void CustomMessageBoxBase::setLobbypointer(wxWindow* arg)
 	return m_settingsWindow;
 }
 
- void getIcon( int whichIcon, wxIcon* icon, wxWindow* parent )
+ void getIcon( int whichIcon, wxIcon** icon, wxWindow** parent )
  {
 	 switch (whichIcon)
 	 {
 		 case SL_MAIN_ICON:
-			 icon = new wxIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
-			 parent = CustomMessageBoxBase::getLobbypointer();
+			 *icon = new wxIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
+			 *parent = CustomMessageBoxBase::getLobbypointer();
 			 break;
 		 case SS_MAIN_ICON:
-			 icon = new wxIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
-			 parent = CustomMessageBoxBase::getSettingspointer();
+			 *icon = new wxIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
+			 *parent = CustomMessageBoxBase::getSettingspointer();
 			 break;
 		 default:
-			 icon = new wxIcon(wxNullIcon);
-			 parent = 0;
+			 *icon = new wxIcon(wxNullIcon);
+			 *parent = NULL;
 			 break;
 
 	 }
@@ -178,7 +178,7 @@ int customMessageBox( int whichIcon , const wxString& message,const wxString& ca
 {
 	wxWindow* parent = 0;
 	wxIcon* icon = 0;
-	getIcon( whichIcon, icon, parent );
+	getIcon( whichIcon, &icon, &parent );
 	CustomMessageBox dlg(icon,parent,message,caption,style,wxPoint(x,y));
 	int re = dlg.ShowModal();
 	switch (re)
@@ -197,7 +197,7 @@ int timedMessageBox(int whichIcon , const wxString& message,
 {
 	wxWindow* parent = 0;
 	wxIcon* icon = 0;
-	getIcon( whichIcon, icon, parent );
+	getIcon( whichIcon, &icon, &parent );
 	TimedMessageBox dlg(icon,parent,message,caption,delay,style,wxPoint(x,y));
 	int re = dlg.ShowModal();
 	switch (re)
@@ -216,7 +216,7 @@ void timedMessageBoxNoModal(int whichIcon , const wxString& message,
 {
 	wxWindow* parent = 0;
 	wxIcon* icon = 0;
-	getIcon( whichIcon, icon, parent );
+	getIcon( whichIcon, &icon, &parent );
 	s_timedMessageBox = new TimedMessageBox(icon,parent,message,caption,delay,style,wxPoint(x,y));
 	s_timedMessageBox->Show( true );
 }
@@ -226,7 +226,7 @@ void customMessageBoxNoModal( int whichIcon , const wxString& message,const wxSt
 {
 	wxWindow* parent = 0;
 	wxIcon* icon = 0;
-	getIcon( whichIcon, icon, parent );
+	getIcon( whichIcon, &icon, &parent );
 	s_nonmodbox = new CustomMessageBox (icon,parent,message,caption,style,wxPoint(x,y));
 	s_nonmodbox->Show(true);
 }
@@ -261,7 +261,7 @@ CreditsDialog::CreditsDialog(wxWindow* parent,wxString title,int whichIcon) : wx
 	SetSizer(container);
 	wxIcon* icon = 0;
 	wxWindow* dummy = 0;
-	getIcon( whichIcon, icon, dummy );
+	getIcon( whichIcon, &icon, &dummy );
 	SetIcons(SLcustomizations().GetAppIconBundle());
 }
 
@@ -343,7 +343,7 @@ void serverMessageBox( int whichIcon , const wxString& message,const wxString& c
 {
 	wxWindow* parent = 0;
 	wxIcon* icon = 0;
-	getIcon( whichIcon, icon, parent );
+	getIcon( whichIcon, &icon, &parent );
 	if ( s_serverMsgBox != 0 && s_serverMsgBox->IsShown() )
 	{
 		s_serverMsgBox->AppendMessage(message);
@@ -366,7 +366,7 @@ void actNotifBox( int whichIcon , const wxString& message,const wxString& captio
 	{
 		wxWindow* parent = 0;
 		wxIcon* icon = 0;
-		getIcon( whichIcon, icon, parent );
+		getIcon( whichIcon, &icon, &parent );
 		if ( s_actNotifBox != 0 && s_actNotifBox->IsShown() )
 		{
 		    s_actNotifBox->AppendMessage(message);

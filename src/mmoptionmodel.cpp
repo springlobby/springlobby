@@ -77,15 +77,19 @@ mmOptionString::mmOptionString():mmOptionModel()
 mmOptionList::mmOptionList(wxString name_, wxString key_, wxString description_, wxString def_,
                            wxString section_ , wxString style_):
 	mmOptionModel(name_,key_,description_,opt_list,section_,style_),
-	def(def_),value(def_)
+	def(def_),
+	value(def_),
+	cur_choice_index(0)
 {
-	cur_choice_index = 0;
+
 }
 
-mmOptionList::mmOptionList():mmOptionModel()
+mmOptionList::mmOptionList():
+	mmOptionModel(),
+	def(_T("")),
+	value(_T("")),
+	cur_choice_index(0)
 {
-	value = _T("");
-	def = _T("");
 }
 
 void mmOptionList::addItem(wxString key_, wxString name_, wxString desc_)

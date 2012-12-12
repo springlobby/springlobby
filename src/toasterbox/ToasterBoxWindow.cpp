@@ -28,16 +28,18 @@ long ToasterBoxWindow::count = 0;
 //   EVT_SET_FOCUS (ToasterBoxWindow::RejectFocus)
 //END_EVENT_TABLE ()
 
-ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2)
-	:  ToasterBase(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR),
-	  startTime( wxGetLocalTime() ),
-	  parent2( _parent2 ),
-	  sleepTime( 10 ),
-	  step( 4 ),
-	  pauseTime( 1700 ),
-	  textColor( *wxWHITE ),
-	  popupText( _T("Change Me!") ),
-	m_background_bitmap( charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png) ) )
+ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
+	ToasterBase(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR),
+	startTime( wxGetLocalTime() ),
+	parent2( _parent2 ),
+	sleepTime( 10 ),
+	step( 4 ),
+	pauseTime( 1700 ),
+	textColor( *wxWHITE ),
+	popupText( _T("Change Me!") ),
+	m_background_bitmap( charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png) ) ),
+	pn(NULL),
+	shrink(false)
 {
 	SLcustomizations().GetBitmap( _T("notification_background"), m_background_bitmap );
 	count++;

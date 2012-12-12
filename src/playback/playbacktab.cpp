@@ -283,7 +283,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 			PlaybackType& rep = playbacklist<ListType>().GetPlaybackById( m_sel_replay_id );
 
 			std::map<wxString, wxString> versionlist = sett().GetSpringVersionList();
-			if ( versionlist.size() == 0 ) {
+			if ( versionlist.empty()) {
 				wxLogWarning( _T( "can't get spring version from any unitsync" ) );
 				customMessageBox( SL_MAIN_ICON,  _( "Couldn't get your spring versions from any unitsync library." ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 				AskForceWatch( rep );

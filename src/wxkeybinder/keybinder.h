@@ -365,23 +365,21 @@ public:     // static
 
 public:
 
-    wxCmd(const wxKeyBind &first, int id,
-        const wxString &name = wxEmptyString,
-        const wxString &desc = wxEmptyString) {
-        m_strName = name;
-        m_strDescription = desc;
-        m_nShortcuts = 1;
+    wxCmd(const wxKeyBind &first, int id, const wxString &name = wxEmptyString, const wxString &desc = wxEmptyString):
+        m_nShortcuts(1),
+        m_strName(name),
+        m_strDescription(desc),
+        m_nId(id)
+	{
         m_keyShortcut[0] = first;
-        m_nId = id;
     }
 
-    wxCmd(int id = wxID_INVALID,
-        const wxString &name = wxEmptyString,
-        const wxString &desc = wxEmptyString) {
-        m_strName = name;
-        m_strDescription = desc;
-        m_nId = id;
-        m_nShortcuts = 0;
+    wxCmd(int id = wxID_INVALID, const wxString &name = wxEmptyString, const wxString &desc = wxEmptyString):
+        m_nShortcuts(0),
+        m_strName(name),
+        m_strDescription(desc),
+        m_nId(id)
+    {
     }
 
     virtual void DeepCopy(const wxCmd *cmd) {

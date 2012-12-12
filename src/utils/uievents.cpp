@@ -32,7 +32,7 @@ namespace UiEvents {
         ScopedSend(msg, slot);
     }
 
-    ScopedStatusMessage::ScopedStatusMessage(const std::string msg, unsigned int slot)
+    ScopedStatusMessage::ScopedStatusMessage(const std::string& msg, unsigned int slot)
         : m_slot( slot )
     {
         ScopedSend( TowxString(msg), slot);

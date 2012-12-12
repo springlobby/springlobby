@@ -56,7 +56,7 @@ namespace UiEvents {
 	class ScopedStatusMessage {
 		public:
 			ScopedStatusMessage( const wxString& msg, unsigned int slot );
-            ScopedStatusMessage( const std::string msg, unsigned int slot );
+            ScopedStatusMessage( const std::string& msg, unsigned int slot );
 			~ScopedStatusMessage();
 		private:
 			const unsigned int m_slot;

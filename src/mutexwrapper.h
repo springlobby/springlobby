@@ -55,7 +55,9 @@ class MutexWrapper: public AbstractMutexWrapper
   T data;
   bool locked;
   public:
-    MutexWrapper():locked(false){
+    MutexWrapper():
+		locked(false)
+    {
     }
     virtual ~MutexWrapper(){
     }

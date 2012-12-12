@@ -19,7 +19,8 @@
 #include "snarlnotification.h"
 
 
-SnarlNotification::SnarlNotification(wxWindow* parent)
+SnarlNotification::SnarlNotification(wxWindow* parent):
+	m_fallback_wrapper(NULL)
 {
 	if ( Snarl::V39::SnarlInterface::IsRunning() )
 		m_snarl_interface.RegisterApp(_T("CppTest"), _T("C++ test app"), NULL);
