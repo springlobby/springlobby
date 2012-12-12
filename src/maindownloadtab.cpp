@@ -33,8 +33,8 @@ END_EVENT_TABLE()
 
 MainDownloadTab::MainDownloadTab( wxWindow* parent )
     : wxScrolledWindow( parent ),
-      m_widgets_dialog( NULL ),
-      m_incoming(false)
+      m_incoming(NULL),
+      m_widgets_dialog( NULL )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "maintorrenttab" ) );
 
