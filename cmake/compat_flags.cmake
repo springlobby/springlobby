@@ -33,7 +33,7 @@ else(WIN32)
 endif(WIN32)
 
 if(NOT CXX_STD0X_FLAGS)
-	message(FATAL "you need a c++11 compatible compiler")
+	message(FATAL_ERROR "you need a c++11 compatible compiler")
 endif()
 
 If(NOT DEFINED LTO_FLAGS)
