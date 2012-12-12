@@ -403,7 +403,7 @@ wxString GetAppName( const bool lowerCase )
 	return name;
 }
 
-wxString IdentityString(const wxString format, bool lowerCase )
+wxString IdentityString(const wxString& format, bool lowerCase )
 {
 	return wxFormat( format ) %  GetAppName( lowerCase ) ;
 }

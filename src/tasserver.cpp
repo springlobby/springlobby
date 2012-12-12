@@ -1260,7 +1260,7 @@ void TASServer::HandlePong( int replyid )
 	PingList::iterator it;
 
     bool found = false;
-	for ( it = pinglistcopy.begin(); it != pinglistcopy.end(); it++ )
+	for ( it = pinglistcopy.begin(); it != pinglistcopy.end(); ++it )
     {
         if (it->id == replyid )
         {
@@ -1718,11 +1718,11 @@ void TASServer::SendHostInfo( HostInfo update )
         std::map<wxString, int> units = battle.RestrictedUnits();
         if ( !battle.IsProxy() ) SendCmd( _T("ENABLEALLUNITS") );
         else RelayCmd( _T("ENABLEALLUNITS") );
-        if ( units.size() > 0 )
+        if ( !units.empty() )
         {
             wxString msg;
             wxString scriptmsg;
-			for ( std::map<wxString, int>::const_iterator itor = units.begin(); itor != units.end(); itor++ )
+			for ( std::map<wxString, int>::const_iterator itor = units.begin(); itor != units.end(); ++itor )
             {
             	 msg << itor->first + _T(" ");
             	 scriptmsg << _T("game/restrict/") + itor->first + _T("=") + TowxString(itor->second) + _T('\t'); // this is a serious protocol abuse, but on the other hand, the protocol fucking suck and it's unmaintained so it will do for now

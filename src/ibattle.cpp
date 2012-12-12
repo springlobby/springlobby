@@ -923,7 +923,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
     std::map<wxString,wxString> options = sett().GetHostingPreset( m_preset, i );
     if ( (OptionsWrapper::GameOption)i != OptionsWrapper::PrivateOptions )
     {
-	  for ( std::map<wxString,wxString>::const_iterator itor = options.begin(); itor != options.end(); itor++ )
+	  for ( std::map<wxString,wxString>::const_iterator itor = options.begin(); itor != options.end(); ++itor )
       {
             wxLogWarning( itor->first + _T(" ::: ") + itor->second );
             CustomBattleOptions().setSingleOption( itor->first, itor->second, (OptionsWrapper::GameOption)i );
@@ -1014,7 +1014,7 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       opts[_T("numrects")] = TowxString( validrectcount );
 
       wxString restrictionsstring;
-	  for ( std::map<wxString, int>::const_iterator itor = m_restricted_units.begin(); itor != m_restricted_units.end(); itor++ )
+	  for ( std::map<wxString, int>::const_iterator itor = m_restricted_units.begin(); itor != m_restricted_units.end(); ++itor )
       {
         restrictionsstring << itor->first << _T('=') << TowxString(itor->second) << _T('\t');
       }

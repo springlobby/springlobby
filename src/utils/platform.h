@@ -64,7 +64,7 @@ wxString GetUserDataDir();
   \in Format string with a single %s
   \out wxString with %s replaced with GetAppName()
   **/
-wxString IdentityString(const wxString format, bool lowerCase = false );
+wxString IdentityString(const wxString& format, bool lowerCase = false );
 
 wxString GetCustomizedEngineConfigFilePath();
 

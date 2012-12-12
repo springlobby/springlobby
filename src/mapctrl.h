@@ -211,9 +211,7 @@ class MapCtrl : public wxPanel
       IM_Metalmap, // entries must be consecutively numbered (without gaps)
       IM_Heightmap,
 	  IM_Count     // must be last one
-    };
-
-    InfoMap m_current_infomap;
+    } m_current_infomap;
 
   DECLARE_EVENT_TABLE()
 };

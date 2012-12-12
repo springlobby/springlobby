@@ -18,7 +18,8 @@
 
 Server::Server():
 battles_iter(new BattleList_Iter(&m_battles)),
-m_keepalive(15)
+m_keepalive(15),
+m_pass_hash(false)
 {
 	m_sock = new Socket( *this, false, false );
 }

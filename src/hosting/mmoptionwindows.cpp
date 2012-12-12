@@ -79,7 +79,7 @@ SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiont
 				int index = LSL::Util::Clamp( opt.cur_choice_index, 0, temp );
 				m_combobox = new wxComboBox( this, wxID_ANY, opt.cbx_choices[index], wxDefaultPosition, wxDefaultSize, opt.cbx_choices, wxCB_READONLY, wxDefaultValidator );
 				wxString tooltip = opt.description + _T( "\n" );
-				for ( ListItemVec::const_iterator itor = opt.listitems.begin(); itor != opt.listitems.end(); itor++ )
+				for ( ListItemVec::const_iterator itor = opt.listitems.begin(); itor != opt.listitems.end(); ++itor )
 				{
 					tooltip += _T( "\n" ) + itor->name + _T( ": " ) + itor->desc;
 				}

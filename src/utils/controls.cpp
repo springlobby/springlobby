@@ -24,7 +24,7 @@ const wxChar* TooltipEnable(const wxChar* input)
 		return sett().GetShowTooltips() ? input : dummy.wc_str();
     #endif
 }
-const wxChar* TooltipEnable(const wxString input)
+const wxChar* TooltipEnable(const wxString& input)
 {
 	//i know this duplicates the above function, but I couldn't figure out a proper conversion from wxString -> wxChar* in 2.9.x
 	//and now it's completely useless to branch here?

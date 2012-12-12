@@ -105,28 +105,32 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bo
         m_ro(readonly),
         m_sp(singleplayer),
         m_mover_rect(-2),
+		m_mdown_rect(0),
         m_rect_area(Main),
         m_last_rect_area(Main),
+		m_mdown_area(Main),
         m_maction(None),
+		m_mdown_x(0),
+		m_mdown_y(0),
         m_lastsize(-1,-1),
-        m_close_img(0),
-        m_close_hi_img(0),
-        m_start_ally(0),
-        m_start_enemy(0),
-        m_start_unused(0),
-        m_player_img(0),
-        m_bot_img(0),
-        m_nfound_img(0),
-        m_reload_img(0),
-        m_dl_img(0),
-        m_user_expanded(0),
-        m_current_infomap(IM_Minimap)
+        m_close_img(NULL),
+        m_close_hi_img(NULL),
+        m_start_ally(NULL),
+        m_start_enemy(NULL),
+        m_start_unused(NULL),
+        m_player_img(NULL),
+        m_bot_img(NULL),
+        m_nfound_img(NULL),
+        m_reload_img(NULL),
+        m_dl_img(NULL),
+        m_user_expanded(NULL),
+        m_current_infomap(InfoMap::IM_Minimap)
 {
-    SetBackgroundStyle( wxBG_STYLE_CUSTOM );
-    SetBackgroundColour( *wxLIGHT_GREY );
-		m_close_img = new wxBitmap( close_xpm );
-		m_close_hi_img = new wxBitmap( close_hi_xpm );
-    m_tmp_brect.ally = -1;
+	SetBackgroundStyle( wxBG_STYLE_CUSTOM );
+	SetBackgroundColour( *wxLIGHT_GREY );
+	m_close_img = new wxBitmap( close_xpm );
+	m_close_hi_img = new wxBitmap( close_hi_xpm );
+	m_tmp_brect.ally = -1;
 }
 
 
