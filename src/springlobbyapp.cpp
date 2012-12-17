@@ -54,6 +54,7 @@
 #include "customizations.h"
 #include "sound/alsound.h"
 #include "mapselectdialog.h"
+#include "springlobby_config.h"
 
 #include <wx/debugrpt.h>
 #include "utils/misc.h"
@@ -127,6 +128,8 @@ bool SpringLobbyApp::OnInit()
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;
 	wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
+
+	wxLogMessage( _T("SpringLobby %s started"), _T(VERSION));
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
