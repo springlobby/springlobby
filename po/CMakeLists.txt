@@ -32,6 +32,19 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
 ENDIF(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
+SET(srcfiles "")
+foreach (suffix "*.cpp" "*.hpp" "*.h" )
+	file(GLOB_RECURSE tmpfiles ../src
+			FOLLOW_SYMLINKS ${suffix} )
+	# hack: make paths relative
+	foreach(srcfile ${tmpfiles})
+		string(REPLACE "${springlobby_SOURCE_DIR}/" "" srcfile  ${srcfile})
+		list(APPEND srcfiles ${srcfile})
+	endforeach()
+	unset(tmpfiles)
+endforeach()
+list(SORT srcfiles)
+
 FIND_PROGRAM( XGETTEXT NAMES "xgettext" )
 IF(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
   MESSAGE(STATUS "Warning: xgettext not found - will not update springlobby.pot")
@@ -40,7 +53,7 @@ ELSE(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
   SET(MESSAGES_POT_FILE ${springlobby_SOURCE_DIR}/po/springlobby.pot)
   ADD_CUSTOM_TARGET(
     update-potfile  
-    COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C -o ${MESSAGES_POT_FILE} ${springlobbySrc} ${updaterSrc} ${header} ${StandAloneSettings} ${SettingsSrc} ${SLSharedWithSettings}
+    COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C --directory ${springlobby_SOURCE_DIR} --msgid-bugs-address "devel@www.springlobby.info" -o ${MESSAGES_POT_FILE} ${srcfiles}
 #     DEPENDS springlobby
     WORKING_DIRECTORY ${springlobby_SOURCE_DIR}
   )
