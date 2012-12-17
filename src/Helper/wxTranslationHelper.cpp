@@ -126,7 +126,7 @@ void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names,
                             wxFileName::GetPathSeparator() +
                             _T("LC_MESSAGES") +
                             wxFileName::GetPathSeparator() +
-                            m_App.GetAppName()+ wxT(".mo") ;
+                            m_App.GetAppName().Lower() + wxT(".mo") ;
 			wxLogInfo( _("SEARCHING FOR %s"), mo_file.GetData() );
 			if( wxFileExists( mo_file ) )
 			{
