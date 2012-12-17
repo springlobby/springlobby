@@ -744,7 +744,7 @@ wxArrayString SpringUnitSync::GetUnitsList( const wxString& modname )
   } catch(...)
   {
     susynclib().SetCurrentMod( modname );
-    while ( susynclib().ProcessUnitsNoChecksum() ) {}
+    while ( susynclib().ProcessUnitsNoChecksum() > 0 ) {}
     unsigned int unitcount = susynclib().GetUnitCount();
     for ( unsigned int i = 0; i < unitcount; i++ )
     {
