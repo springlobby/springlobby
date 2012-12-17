@@ -54,7 +54,11 @@
 #include "customizations.h"
 #include "sound/alsound.h"
 #include "mapselectdialog.h"
+#ifdef HAVE_CONFIG_H
 #include "springlobby_config.h"
+#else
+	#define VERSION "unknown"
+#endif
 
 #include <wx/debugrpt.h>
 #include "utils/misc.h"
