@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2012-12-17 18:30+0100\n"
+"POT-Creation-Date: 2012-12-17 18:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3186,6 +3186,10 @@ msgstr ""
 
 #: src/iconimagelist.cpp:333
 msgid "Game is in progress, closed, full and password-protected."
+msgstr ""
+
+#: src/infodialog.cpp:49
+msgid "path shit"
 msgstr ""
 
 #: src/introguide.cpp:37
