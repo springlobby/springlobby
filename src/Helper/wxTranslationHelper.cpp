@@ -71,7 +71,7 @@ bool wxTranslationHelper::Load()
 			m_Locale = new wxLocale;
 			m_Locale->Init( identifiers[i] );
 			m_Locale->AddCatalogLookupPathPrefix( m_SearchPath );
-			m_Locale->AddCatalog( m_App.GetAppName() );
+			m_Locale->AddCatalog( m_App.GetAppName().Lower() );
 			m_Locale->AddCatalog( _T("wxstd") );
 			return true;
 		}
