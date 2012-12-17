@@ -3,9 +3,9 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 INCLUDE(compat_flags)
 ADD_DEFINITIONS(-DHAVE_SPRINGLOBBY=1)
 
-if(NOT EXISTS "lsl/CMakeLists.txt")
-	EXECUTE_PROCESS(COMMAND cd ../ && git submodule update --init)
-endif(NOT EXISTS "lsl/CMakeLists.txt")
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
+	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
+endif()
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 # MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
