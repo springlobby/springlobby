@@ -677,15 +677,6 @@ wxArrayString SpringUnitSync::GetAIList( const wxString& modname ) const
 			if ( ret.Index( jarlist[i].BeforeLast( '/') ) == wxNOT_FOUND ) ret.Add ( jarlist[i] ); // don't add duplicates
 		}
 
-		// luaai
-		try
-		{
-			const int LuaAICount = susynclib().GetLuaAICount( modname );
-			for ( int i = 0; i < LuaAICount; i++ )
-			{
-				 ret.Add( _T( "LuaAI:" ) +  susynclib().GetLuaAIName( i ) );
-			}
-		} CATCH_ANY
 	}
 
   return ret;

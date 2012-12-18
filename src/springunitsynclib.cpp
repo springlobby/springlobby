@@ -390,10 +390,6 @@ void SpringUnitSyncLib::_Load( const wxString& path )
 		GetLibFuncPtr( m_libhandle, _T("GetModValidMapCount"),				m_get_mod_valid_map_count );
 		GetLibFuncPtr( m_libhandle, _T("GetModValidMap"),					m_get_valid_map );
 
-		GetLibFuncPtr( m_libhandle, _T("GetLuaAICount"),					m_get_luaai_count );
-		GetLibFuncPtr( m_libhandle, _T("GetLuaAIName"),						m_get_luaai_name );
-		GetLibFuncPtr( m_libhandle, _T("GetLuaAIDesc"),						m_get_luaai_desc );
-
 		GetLibFuncPtr( m_libhandle, _T("GetMapOptionCount"),				m_get_map_option_count );
 		GetLibFuncPtr( m_libhandle, _T("GetCustomOptionCount"),				m_get_custom_option_count );
 		GetLibFuncPtr( m_libhandle, _T("GetModOptionCount"),				m_get_mod_option_count );
@@ -1252,30 +1248,6 @@ void SpringUnitSyncLib::CloseFileVFS( int handle )
   m_close_file_vfs( handle );
 }
 
-
-int SpringUnitSyncLib::GetLuaAICount( const wxString& modname )
-{
-  InitLib( m_get_luaai_count );
-
-  _SetCurrentMod( modname );
-  return m_get_luaai_count();
-}
-
-
-wxString SpringUnitSyncLib::GetLuaAIName( int aiIndex )
-{
-  InitLib( m_get_luaai_name );
-
-  return WX_STRINGC(m_get_luaai_name( aiIndex ));
-}
-
-
-wxString SpringUnitSyncLib::GetLuaAIDesc( int aiIndex )
-{
-  InitLib( m_get_luaai_desc );
-
-  return WX_STRINGC( m_get_luaai_desc( aiIndex ) );
-}
 
 unsigned int SpringUnitSyncLib::GetValidMapCount( const wxString& modname )
 {
