@@ -41,9 +41,15 @@ ENDIF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${spri
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise springlobby
 #----------------------------------------------------------------------------------------------------
-SET( OPTION_SOUND
-	TRUE CACHE BOOL
-	"Enables sound notification functionality (requires openAL libraries)" )
+if(WIN32) #FIXME: remove this when static compiled alure is fixed
+	SET( OPTION_SOUND
+		FALSE CACHE BOOL
+		"sound disabled because of an alure bug" FORCE )
+else(WIN32)
+	SET( OPTION_SOUND
+		TRUE CACHE BOOL
+		"Enables sound notification functionality (requires openAL libraries)" )
+endif(WIN32)
 SET( OPTION_TRANSLATION_SUPPORT
 	TRUE CACHE BOOL
 	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
