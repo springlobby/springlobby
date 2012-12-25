@@ -2337,7 +2337,7 @@ msgstr ""
 #: src/gui/simplefront.cpp:43
 #, fuzzy
 msgid "Settings"
-msgstr "Speichere Einstellungen"
+msgstr "Einstellungen"
 
 #: src/gui/simplefront.cpp:46
 #, fuzzy
@@ -3801,17 +3801,16 @@ msgid "&Spring settings"
 msgstr "Spring Einstellungen"
 
 #: src/mainwindow.cpp:156
-#, fuzzy
 msgid "&Save layout"
-msgstr "&Speichere Optionen"
+msgstr "&Speichere Layout"
 
 #: src/mainwindow.cpp:157
 msgid "&Load layout"
-msgstr ""
+msgstr "&Lade Layout"
 
 #: src/mainwindow.cpp:158
 msgid "&Reset layout"
-msgstr ""
+msgstr "&Setze Layout zurück"
 
 #: src/mainwindow.cpp:163
 msgid "&Join channel..."
@@ -6015,7 +6014,7 @@ msgstr "Fehler!"
 
 #: src/springsettings/frame.cpp:150 src/springsettings/frame.cpp:166
 msgid "Save Spring settings before exiting?"
-msgstr "Speichere Einstellungen vor dem Speichern?"
+msgstr "Speichere Einstellungen von Spring vor dem beenden?"
 
 #: src/springsettings/frame.cpp:150 src/springsettings/frame.cpp:166
 #: src/springsettings/frame.cpp:284
