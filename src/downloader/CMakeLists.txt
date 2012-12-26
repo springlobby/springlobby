@@ -16,6 +16,7 @@ set(SHAREDLIB OFF CACHE BOOL "disable shared lib compile" FORCE)
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/CMakeLists.txt")
 	MESSAGE(FATAL_ERROR "lib/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
+else()
+	Add_Subdirectory(lib)
 endif()
 
-Add_Subdirectory(lib)
