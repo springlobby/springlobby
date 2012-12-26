@@ -19,6 +19,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_ENGINECONFIG_H
 #define SPRINGLOBBY_HEADERGUARD_ENGINECONFIG_H
 
+#ifdef SL_QT_MODE
+
 #include <QAbstractListModel>
 #include <QStringList>
 #include <QString>
@@ -99,4 +101,5 @@ private:
 	int last_sessions_index_;
 };
 
+#endif // #ifdef SL_QT_MODE
 #endif // SPRINGLOBBY_HEADERGUARD_ENGINECONFIG_H

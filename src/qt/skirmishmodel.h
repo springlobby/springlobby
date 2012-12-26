@@ -19,6 +19,8 @@
 #ifndef SKIRMISHMODEL_H
 #define SKIRMISHMODEL_H
 
+#ifdef SL_QT_MODE
+
 #include <QAbstractListModel>
 #include "../mmoptionswrapper.h"
 #include <qt/noguisingleplayerbattle.h>
@@ -53,4 +55,5 @@ private:
 
 };
 
+#endif //#ifdef SL_QT_MODE
 #endif // SKIRMISHMODEL_H

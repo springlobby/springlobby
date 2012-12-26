@@ -19,6 +19,8 @@
 #ifndef SASI_APP_H
 #define SASI_APP_H
 
+#ifdef SL_QT_MODE
+
 #include <QApplication>
 
 class BattlelistModel;
@@ -45,4 +47,5 @@ private:
 //  TASServer* m_server;
 };
 
+#endif // #ifdef SL_QT_MODE
 #endif // SASI_APP_H

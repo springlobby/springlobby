@@ -1,6 +1,8 @@
 #ifndef PlaybackListFilterValues_H_INCLUDED
 #define PlaybackListFilterValues_H_INCLUDED
 
+#include <wx/string.h>
+
 struct PlaybackListFilterValues
 {
     // checkboxes

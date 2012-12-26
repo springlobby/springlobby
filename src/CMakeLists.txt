@@ -213,6 +213,7 @@ add_sources(SLSharedWithSettings
 
 FILE( GLOB header "*.h" )
 FILE( GLOB header2 "*/*.h" )
+# FILE( GLOB header3 "*/*/*.h" )
 
 #grep -lR cpp\"$ * | sed -e "s/\.h/\.cpp/g"
 clear( templatesources)
@@ -254,8 +255,10 @@ INCLUDE_DIRECTORIES(lsl/src)
 add_subdirectory(springsettings)
 
 
-LIST( APPEND header ${header2} ${templatesources} )
-set_source_files_properties(  ${header} PROPERTIES HEADER_FILE_ONLY 1 )
+LIST( APPEND header ${header2} ${header3} )
+LIST( REMOVE_DUPLICATES header ) 
+set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
+HEADERCHECK(${header})
 
 mylink( ${EXTRA_LIB_DIRS} ${link_directories} ) 
 

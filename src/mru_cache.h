@@ -25,8 +25,12 @@
 #include <wx/string.h>
 #include <wx/thread.h>
 #include <wx/log.h>
+#include <wx/image.h>
+#include <wx/arrstr.h>
 
 #include <list>
+#include <map>
+#include <springunitsync_data.h>
 
 /// Thread safe MRU cache (works like a std::map but has maximum size)
 template<typename TKey, typename TValue>
@@ -99,8 +103,6 @@ class MostRecentlyUsedCache
 	const wxString m_name;
 };
 
-#include <wx/image.h>
-#include <wx/arrstr.h>
 typedef MostRecentlyUsedCache<wxString,wxImage> MostRecentlyUsedImageCache;
 typedef MostRecentlyUsedCache<wxString,MapInfo> MostRecentlyUsedMapInfoCache;
 typedef MostRecentlyUsedCache<wxString,wxArrayString> MostRecentlyUsedArrayStringCache;

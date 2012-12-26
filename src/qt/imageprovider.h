@@ -19,6 +19,8 @@
 #ifndef IMAGEPROVIDER_H
 #define IMAGEPROVIDER_H
 
+#ifdef SL_QT_MODE
+
 #include <QDeclarativeImageProvider>
 
 class GraphicsProvider : public QDeclarativeImageProvider
@@ -66,4 +68,5 @@ public:
         QDeclarativeImageProvider::ImageType imageType () const { return QDeclarativeImageProvider::Image; }
 };
 
+#endif //#ifdef SL_QT_MODE
 #endif // IMAGEPROVIDER_H

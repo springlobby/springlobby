@@ -3,6 +3,7 @@
 
 #include <wx/image.h>
 #include <wx/string.h>
+#include <wx/panel.h>
 
 #include "ibattle.h"
 #include "springunitsync.h"

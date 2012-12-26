@@ -1,6 +1,8 @@
 #ifndef SNARLNOTIFICATION_H
 #define SNARLNOTIFICATION_H
 
+#ifdef __WXMSW__
+
 #include "inotification.h"
 #include "snarl/SnarlInterface.h"
 
@@ -18,6 +20,7 @@ class SnarlNotification : public INotification
 
 };
 
+#endif // __WXMSW__
 #endif // SNARLNOTIFICATION_H
 
 /**

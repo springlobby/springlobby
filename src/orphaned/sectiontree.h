@@ -1,9 +1,9 @@
 #ifndef SPRINGLOBBY_SECTIONTREE_H_INCLUDED
 #define SPRINGLOBBY_SECTIONTREE_H_INCLUDED
 
-#include "wrapper/set"
-#include "wrapper/vector"
-#include "wrapper/wx/string.h"
+#include <set>
+#include <vector>
+#include <wx/string.h>
 
 class SectionTree
 {

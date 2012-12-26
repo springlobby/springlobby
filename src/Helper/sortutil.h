@@ -1,6 +1,8 @@
 #ifndef SPRINGLOBBY_SORTUTIL_H_INCLUDED
 #define SPRINGLOBBY_SORTUTIL_H_INCLUDED
 
+#include <map>
+
 //! reference sort algo implementation, not in production use
 template< class ContainerType, class Comparator >
 void SLBubbleSort( ContainerType& data, const Comparator& cmp )
@@ -57,10 +59,11 @@ void SLInsertionSort( ContainerType& data, const Comparator& cmp )
 namespace SlQuickSort {
 
 template< class ContainerType, class Comparator >
-size_t partition(ContainerType& a, size_t p, size_t r, const Comparator& cmp) {
+typename ContainerType::size_t partition(ContainerType& a, typename ContainerType::size_t p,
+                                         typename ContainerType::size_t r, const Comparator& cmp) {
   typename Comparator::ObjType x = a[r];
-  size_t j = p - 1;
-  for (size_t i = p; i < r; i++) {
+  typename ContainerType::size_t j = p - 1;
+  for (typename ContainerType::size_t i = p; i < r; i++) {
 
     if ( !cmp(x , a[i]) ) {
       j = j + 1;
@@ -76,9 +79,10 @@ size_t partition(ContainerType& a, size_t p, size_t r, const Comparator& cmp) {
 }
 
 template< class ContainerType, class Comparator >
-void quickSort(ContainerType& a, size_t p, size_t r, const Comparator& cmp ) {
+void quickSort(ContainerType& a, typename ContainerType::size_t p,
+               typename ContainerType::size_t r, const Comparator& cmp ) {
     if (p < r) {
-        size_t q = partition(a, p, r, cmp);
+        typename ContainerType::size_t q = partition(a, p, r, cmp);
         quickSort(a, p, q - 1, cmp);
         quickSort(a, q + 1, r, cmp);
     }

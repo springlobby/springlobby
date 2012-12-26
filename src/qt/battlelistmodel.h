@@ -19,6 +19,8 @@
 #ifndef BATTLELISTMODEL_H
 #define BATTLELISTMODEL_H
 
+#ifdef SL_QT_MODE
+
 #include <QAbstractListModel>
 #include <QList>
 
@@ -45,4 +47,5 @@ private:
 	QList<Battle*> m_battles;
 };
 
+#endif // #ifdef SL_QT_MODE
 #endif // BATTLELISTMODEL_H

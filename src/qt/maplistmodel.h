@@ -19,6 +19,8 @@
 #ifndef MAPLISTMODEL_H
 #define MAPLISTMODEL_H
 
+#ifdef SL_QT_MODE
+
 #include <QAbstractListModel>
 #include <QStringList>
 #include <QString>
@@ -43,4 +45,5 @@ private:
 	ContainerType m_map_names;
 };
 
+#endif // #ifdef SL_QT_MODE
 #endif // MAPLISTMODEL_H

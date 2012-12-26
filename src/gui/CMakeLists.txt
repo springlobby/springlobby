@@ -1,7 +1,5 @@
 add_sources(springlobbySrc
-	gradientpanel.cpp
 	toasternotification.cpp
-	wxgradientbutton.cpp
 	wxbackgroundimage.cpp
 	statusbar.cpp
 	pastedialog.cpp

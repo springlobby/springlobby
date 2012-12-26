@@ -1,6 +1,8 @@
 ﻿#ifndef SNARL_INTERFACE_V39
 #define SNARL_INTERFACE_V39
 
+#ifdef __WXMSW__
+
 #include <tchar.h>
 #include <windows.h>
 #include <cstdio>
@@ -223,4 +225,5 @@ namespace Snarl {
 	} // namespace V39
 } // namespace Snarl
 
+#endif // __WXMSW__
 #endif // SNARL_INTERFACE_V39

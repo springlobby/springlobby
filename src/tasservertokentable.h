@@ -7,7 +7,7 @@
 static std::map<wxString,wxString> m_command_alias;
 static std::map<wxString,wxString> m_send_command_alias;
 
-void TASServer::FillAliasMap()
+void FillAliasMap()
 {
 		m_command_alias[_T("#")] = _T("PING");
 		m_command_alias[_T("$")] = _T("PONG");

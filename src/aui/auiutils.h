@@ -4,6 +4,7 @@
 #include <wx/aui/tabmdi.h>
 #include <wx/dcbuffer.h>
 #include <wx/log.h>
+#include <wx/image.h>
 
 #ifdef __WXMSW__
 #include  <wx/msw/private.h>
@@ -13,7 +14,7 @@
 #include <wx/mac/carbon/private.h>
 #endif
 
-
+#include <wx/aui/framemanager.h>
 
 static double wxAuiBlendColour(double fg, double bg, double alpha)
 {

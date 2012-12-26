@@ -4,7 +4,7 @@
 #ifndef NO_TORRENT_SYSTEM
 
 #include <wx/dialog.h>
-#include "../utils/globalevents.h"
+#include <utils/globalevents.h>
 
 class wxBoxSizer;
 class wxButton;
