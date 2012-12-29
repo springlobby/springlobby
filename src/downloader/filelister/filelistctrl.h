@@ -3,7 +3,7 @@
 
 #ifndef NO_TORRENT_SYSTEM
 
-#include "../customvirtlistctrl.h"
+#include <customvirtlistctrl.h>
 
 class wxMenu;
 class wxListEvent;

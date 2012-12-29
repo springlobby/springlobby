@@ -106,6 +106,8 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 
 		bool saveSettingsAbstract(); //do not call abstract_panel::SaveSettings directly, call this instead!
 		bool settingsChangedAbstract(); //do not query abstract_panel::settingschanged directly, use this instead!
+
+    void doQuit();
 };
 
 

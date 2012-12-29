@@ -19,6 +19,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_QERRORWINDOW_H
 #define SPRINGLOBBY_HEADERGUARD_QERRORWINDOW_H
 
+#ifdef SL_QT_MODE
+
 #include <QDialog>
 #include <QTextEdit>
 #include <QList>
@@ -63,4 +65,5 @@ QErrorWindow::QErrorWindow(const QList<T>& errors, QWidget *parent) :
 	setLayout(layout);
 }
 
+#endif // #ifdef SL_QT_MODE
 #endif // SPRINGLOBBY_HEADERGUARD_QERRORWINDOW_H

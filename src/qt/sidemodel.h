@@ -19,6 +19,8 @@
 #ifndef SIDEMODEL_H
 #define SIDEMODEL_H
 
+#ifdef SL_QT_MODE
+
 #include <QAbstractListModel>
 #include <QList>
 
@@ -39,4 +41,5 @@ private:
 	QList<QString> m_sidenames;
 };
 
+#endif //#ifdef SL_QT_MODE
 #endif // SIDEMODEL_H

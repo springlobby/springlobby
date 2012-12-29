@@ -4,6 +4,7 @@
 #define SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
 #include <wx/intl.h>
+#include <wx/gdicmn.h>
 #include <vector>
 #include "utils/mixins.hh"
 

@@ -2,7 +2,7 @@
 #define CONVERTERS_H
 
 /** this code was copied from the wxQT branch of wxWidgets **/
-
+#ifdef SL_QT_MODE
 ///////////////////////////////////////////////////////////////////////////////
 // Name:        wx/qt/converter.h
 // Purpose:     Converter utility classes and functions
@@ -65,5 +65,5 @@ QImage wxQtConvertImage( const wxImage &image );
 wxImage wxQtConvertImage( QImage qtImage );
 
 /** ****************************************************** **/
-
+#endif //#ifdef SL_QT_MODE
 #endif // CONVERTERS_H

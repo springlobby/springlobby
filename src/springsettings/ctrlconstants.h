@@ -25,7 +25,7 @@
 //
 // FIXME: VSync Off=-1?
 
-
+#include <wx/gdicmn.h>
 
 #ifndef DEFS_HPP
 #define DEFS_HPP

@@ -160,38 +160,43 @@ void settings_frame::handleExternExit()
 	sett().SaveSettings();
 }
 
-void settings_frame::handleExit() {
-    if (settingsChangedAbstract())
-    {
-    	int action = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION );
-        switch (action) {
-        case wxYES:
-        	if (saveSettingsAbstract())
-        				 (abstract_panel::settingsChanged) = false;
-        	if (simpleTab!=0)
-        			simpleTab->saveCbxChoices();
-        case wxNO:
-	        	sett().SaveSettings();
-        	    Destroy();
-        	break;
-
-        case wxCANCEL:
-        default:
-        	break;
-        }
-    }
-    else
-    {
-    	sett().SaveSettings();
-        Destroy();
+void settings_frame::doQuit()
+{
+  sett().SaveSettings();
+  Destroy();
 #ifndef SPRINGSETTINGS_STANDALONE
-        //we can only compile this in non-standalone
-        MainWindow* m = dynamic_cast<MainWindow*>(m_parent);
-        if (m) {
-            m->se_frame_active = false;
-        }
+  //we can only compile this in non-standalone
+  MainWindow* m = dynamic_cast<MainWindow*>(m_parent);
+  if (m) {
+      m->se_frame_active = false;
+  }
 #endif
+}
+
+void settings_frame::handleExit() {
+  if (settingsChangedAbstract())
+  {
+    int action = customMessageBox(SS_MAIN_ICON,_("Save Spring settings before exiting?"), _("Confirmation needed"),wxYES_NO|wxCANCEL|wxICON_QUESTION );
+    switch (action) {
+      case wxYES:
+        if (saveSettingsAbstract())
+               (abstract_panel::settingsChanged) = false;
+        if (simpleTab!=0)
+            simpleTab->saveCbxChoices();
+      case wxNO:
+        doQuit();
+        return;
+
+      case wxCANCEL:
+      default:
+        return;
     }
+  }
+  else
+  {
+    doQuit();
+    return;
+  }
 }
 
 void settings_frame::CreateGUIControls()

@@ -1,6 +1,8 @@
 #ifndef MISSIONMODEL_H
 #define MISSIONMODEL_H
 
+#ifdef SL_QT_MODE
+
 #include <QAbstractListModel>
 #include <QList>
 
@@ -37,4 +39,5 @@ private:
     ContainerType m_missions;
 };
 
+#endif //#ifdef SL_QT_MODE
 #endif // MISSIONMODEL_H

@@ -19,7 +19,10 @@
 #ifndef QMINIMAP_H
 #define QMINIMAP_H
 
+#ifdef SL_QT_MODE
+
 #include <QDeclarativeItem>
+
 class Battle;
 class BattleStartRect;
 
@@ -53,4 +56,5 @@ protected:
 	QImage m_minimap_image;
 };
 
+#endif // #ifdef SL_QT_MODE
 #endif // QMINIMAP_H

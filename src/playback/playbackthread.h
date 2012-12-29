@@ -2,6 +2,8 @@
 #define SPRINGLOBBY_HEADERGUARD_PLAYBACKTHREAD
 
 #include <wx/string.h>
+#include <wx/event.h>
+#include <wx/thread.h>
 #include "../defines.h"
 
 static const wxEventType PlaybacksLoadedEvt = wxNewEventType();

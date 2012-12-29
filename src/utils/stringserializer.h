@@ -3,6 +3,8 @@
 
 #include "crtpbase.h"
 
+#include <vector>
+
 class wxString;
 
 template <class ImpType>

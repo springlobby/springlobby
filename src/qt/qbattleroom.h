@@ -19,6 +19,8 @@
 #ifndef QBATTLEROOM_H
 #define QBATTLEROOM_H
 
+#ifdef SL_QT_MODE
+
 #include <QDeclarativeItem>
 #include <QStringList>
 #include <map>
@@ -56,4 +58,5 @@ private:
 	ChatMapType m_chats;
 };
 
+#endif //#ifdef SL_QT_MODE
 #endif // QBATTLEROOM_H
