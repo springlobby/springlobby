@@ -28,6 +28,9 @@
 #include "../settings.h"
 #include "se_utils.h"
 #include "../defines.h"
+#include "../utils/customdialogs.h"
+#include "../customizations.h"
+#include "../Helper/wxTranslationHelper.h"
 
 #include <iostream>
 #include <wx/msgdlg.h>
@@ -38,11 +41,9 @@
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
 
-#include "../utils/customdialogs.h"
 #include <lslutils/globalsmanager.h>
 #include <lslunitsync/c_api.h>
-#include "../customizations.h"
-#include "../Helper/wxTranslationHelper.h"
+#include <lslunitsync/unitsync.h>
 
 IMPLEMENT_APP(Springsettings)
 
@@ -190,7 +191,7 @@ int Springsettings::OnExit()
 	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
 	SetEvtHandlerEnabled(false);
-	DestroyGlobals();
+  LSL::Util::DestroyGlobals();
 	return 0;
 }
 

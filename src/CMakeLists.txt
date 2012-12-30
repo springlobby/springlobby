@@ -278,7 +278,8 @@ ELSE (WIN32)
     install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils pr-downloader_static
+TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-unitsync 
+    pr-downloader_static
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${ALURE_LIBRARIES}

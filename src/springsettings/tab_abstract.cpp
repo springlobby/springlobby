@@ -126,12 +126,13 @@ bool abstract_panel::loadValuesIntoMap()
 
 		for (int i = 0; i< intControls_size;++i)
 		{
-			intSettings[intControls[i].key] = configHandler.GetSpringConfigInt(intControls[i].key,fromString(intControls[i].def));
+      intSettings[intControls[i].key]
+          = configHandler.GetSpringConfigInt(STD_STRING(intControls[i].key),fromString(intControls[i].def));
 		}
-        for (int i = 0; i< floatControls_size;++i)
-		{
-			float tmp = configHandler.GetSpringConfigFloat(floatControls[i].key,fromString(floatControls[i].def));
-			floatSettings[floatControls[i].key] = tmp;
+    for (int i = 0; i< floatControls_size;++i)
+    {
+      floatSettings[floatControls[i].key]
+          = configHandler.GetSpringConfigFloat(STD_STRING(floatControls[i].key),fromString(floatControls[i].def));
 		}
 	}
 	catch (...)
