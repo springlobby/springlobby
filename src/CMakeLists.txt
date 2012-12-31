@@ -256,10 +256,7 @@ endif()
 add_subdirectory(springsettings)
 
 
-LIST( APPEND header ${header2} ${header3} )
-LIST( REMOVE_DUPLICATES header ) 
 set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
-HEADERCHECK(${header})
 
 mylink( ${EXTRA_LIB_DIRS} ${link_directories} ) 
 
@@ -296,3 +293,4 @@ IF(UNIX)
 ENDIF(UNIX)
 
 
+add_subdirectory(tests)
