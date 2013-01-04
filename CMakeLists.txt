@@ -79,6 +79,12 @@ INCLUDE(SpringLobbyMacros)
 clear(link_directories)
 clear(springlobbySrc)
 Add_Subdirectory(doc)
+#----------------------------------------------------------------------------------------------------
+# L10n support
+#----------------------------------------------------------------------------------------------------
+if( OPTION_TRANSLATION_SUPPORT )
+        add_subdirectory(po)
+endif( OPTION_TRANSLATION_SUPPORT )
 Add_Subdirectory(src)
 
 #cppcheck stuff

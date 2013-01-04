@@ -26,12 +26,6 @@ FIND_PACKAGE(Boost 1.44.0 COMPONENTS thread system REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 add_to_global(link_directories ${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
 
-#----------------------------------------------------------------------------------------------------
-# L10n support
-#----------------------------------------------------------------------------------------------------
-if( OPTION_TRANSLATION_SUPPORT )
-	include ( ${CMAKE_SOURCE_DIR}/po/CMakeLists.txt )
-endif( OPTION_TRANSLATION_SUPPORT )
 ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 
 

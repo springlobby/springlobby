@@ -7,28 +7,28 @@ IF(NOT GETTEXT_MSGFMT_EXECUTABLE)
 ------")
 ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
-        SET(catalogname springlobby)
+	SET(catalogname springlobby)
+	FILE(GLOB PO_FILES  ${CMAKE_SOURCE_DIR}/po/*.po)
 
-        ADD_CUSTOM_TARGET(translations ALL)
+	SET(gmofiles "")
+	FOREACH(_poFile ${PO_FILES})
+		GET_FILENAME_COMPONENT(_poFileName ${_poFile} NAME)
+		STRING(REGEX REPLACE "^${catalogname}_?" "" _langCode ${_poFileName} )
+		STRING(REGEX REPLACE "\\.po$" "" _langCode ${_langCode} )
+		IF( _langCode )
+			GET_FILENAME_COMPONENT(_lang ${_poFile} NAME_WE)
+			SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${_lang}.gmo)
 
-        FILE(GLOB PO_FILES  ${CMAKE_SOURCE_DIR}/po/*.po)
-		
+			ADD_CUSTOM_COMMAND(
+				OUTPUT ${_gmoFile}
+				COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check -o ${_gmoFile} ${_poFile}
+				DEPENDS ${_poFile})
+			INSTALL(FILES ${_gmoFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_langCode}/LC_MESSAGES/ RENAME ${catalogname}.mo)
+			LIST(APPEND gmofiles ${_gmoFile})
+		ENDIF( _langCode )
 
-        FOREACH(_poFile ${PO_FILES})
-                GET_FILENAME_COMPONENT(_poFileName ${_poFile} NAME)
-                STRING(REGEX REPLACE "^${catalogname}_?" "" _langCode ${_poFileName} )
-                STRING(REGEX REPLACE "\\.po$" "" _langCode ${_langCode} )
-                IF( _langCode )
-                        GET_FILENAME_COMPONENT(_lang ${_poFile} NAME_WE)
-                        SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${_lang}.gmo)
-
-                        ADD_CUSTOM_COMMAND(TARGET translations
-                                COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check -o ${_gmoFile} ${_poFile}
-                                DEPENDS ${_poFile})
-                        INSTALL(FILES ${_gmoFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_langCode}/LC_MESSAGES/ RENAME ${catalogname}.mo)
-                ENDIF( _langCode )
-
-        ENDFOREACH(_poFile ${PO_FILES})
+	ENDFOREACH(_poFile ${PO_FILES})
+	add_custom_target(translations DEPENDS ${gmofiles})
 
 ENDIF(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
@@ -80,3 +80,4 @@ ENDIF(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
 ADD_CUSTOM_TARGET( update-translations )
 add_dependencies( update-translations update-potfile )
 add_dependencies( update-translations update-po )
+
