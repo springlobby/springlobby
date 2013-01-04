@@ -32,40 +32,35 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
 ENDIF(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
-SET(srcfiles "")
-foreach (suffix "*.cpp" "*.hpp" "*.h" )
-	file(GLOB_RECURSE tmpfiles ../src
-			FOLLOW_SYMLINKS ${suffix} )
-	# hack: make paths relative
-	foreach(srcfile ${tmpfiles})
-		string(REPLACE "${springlobby_SOURCE_DIR}/" "" srcfile  ${srcfile})
-		list(APPEND srcfiles ${srcfile})
-	endforeach()
-	unset(tmpfiles)
-endforeach()
+file(GLOB_RECURSE srcfiles RELATIVE ${springlobby_SOURCE_DIR}/ FOLLOW_SYMLINKS
+	${springlobby_SOURCE_DIR}/src/*.h
+	${springlobby_SOURCE_DIR}/src/*.cpp
+	${springlobby_SOURCE_DIR}/src/*.hpp
+)
 list(SORT srcfiles)
 
 FIND_PROGRAM( XGETTEXT NAMES "xgettext" )
+
 IF(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
-  MESSAGE(STATUS "Warning: xgettext not found - will not update springlobby.pot")
+	MESSAGE(STATUS "Warning: xgettext not found - will not update springlobby.pot")
 ELSE(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
-  MESSAGE(STATUS "Found xgettext: ${XGETTEXT}")
-  SET(MESSAGES_POT_FILE ${springlobby_SOURCE_DIR}/po/springlobby.pot)
-  ADD_CUSTOM_TARGET(
-    update-potfile  
-    COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C --directory ${springlobby_SOURCE_DIR} --msgid-bugs-address "devel@www.springlobby.info" -o ${MESSAGES_POT_FILE} ${srcfiles}
-#     DEPENDS springlobby
-    WORKING_DIRECTORY ${springlobby_SOURCE_DIR}
-  )
+	MESSAGE(STATUS "Found xgettext: ${XGETTEXT}")
+	SET(MESSAGES_POT_FILE ${springlobby_SOURCE_DIR}/po/springlobby.pot)
+	ADD_CUSTOM_TARGET(
+		update-potfile
+		COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C --directory ${springlobby_SOURCE_DIR} --msgid-bugs-address "devel@www.springlobby.info" -o ${MESSAGES_POT_FILE} ${srcfiles}
+		DEPENDS springlobby
+		WORKING_DIRECTORY ${springlobby_SOURCE_DIR}
+	)
 ENDIF(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
 
 FIND_PROGRAM( MSGMERGE NAMES "msgmerge" )
 IF(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
-  MESSAGE(STATUS "Warning: msgmerge not found - will not update po files")
+	MESSAGE(STATUS "Warning: msgmerge not found - will not update po files")
 ELSE(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
-  MESSAGE(STATUS "Found msgmerge: ${MSGMERGE}")
+	MESSAGE(STATUS "Found msgmerge: ${MSGMERGE}")
 
-  ADD_CUSTOM_TARGET( update-po )
+	ADD_CUSTOM_TARGET( update-po )
 	FILE(GLOB PO_FILES  ${CMAKE_SOURCE_DIR}/po/*.po)
 	SET( POTFILE ${springlobby_SOURCE_DIR}/po/springlobby.pot )
 
@@ -77,7 +72,6 @@ ELSE(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
   
 ENDIF(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
 
-ADD_CUSTOM_TARGET( update-translations )
-add_dependencies( update-translations update-potfile )
-add_dependencies( update-translations update-po )
+ADD_CUSTOM_TARGET( update-translations
+		DEPENDS update-potfile update-po)
 
