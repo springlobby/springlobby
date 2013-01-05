@@ -28,8 +28,7 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 		ENDIF( _langCode )
 
 	ENDFOREACH(_poFile ${PO_FILES})
-	add_custom_target(translations DEPENDS ${gmofiles})
-
+	add_custom_target(translations ALL DEPENDS ${gmofiles})
 ENDIF(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
 file(GLOB_RECURSE srcfiles RELATIVE ${springlobby_SOURCE_DIR}/ FOLLOW_SYMLINKS
