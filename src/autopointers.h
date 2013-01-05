@@ -138,7 +138,7 @@ explicit RefcountedPointer(RefcountedPointer<U> p){
                 delete data;
             }
         }
-        data=nullptr;
+        data=NULL;
     }
     T &Data() const {
         return *data;
@@ -202,7 +202,7 @@ explicit RefcountedPointer(RefcountedPointer<U> p){
 template<class T> class SingleInstance{
   T *data;
   public:
-  SingleInstance():data(nullptr){}
+  SingleInstance():data(NULL){}
   ~SingleInstance(){delete data;}
   T *Get(){
     if(!data)data=new T;
@@ -218,8 +218,8 @@ class BidirectionalConnector{
   public:
   BidirectionalConnector(SRC *self_end_):
   self_end(self_end_),
-  other_end(nullptr),
-  other(nullptr)
+  other_end(NULL),
+  other(NULL)
   {
   }
   ~BidirectionalConnector(){
@@ -227,10 +227,10 @@ class BidirectionalConnector{
   }
   void Disconnect(){
     if(other){
-      other->other_end=nullptr;
-      other->other=nullptr;
-      other=nullptr;
-      other_end=nullptr;
+      other->other_end=NULL;
+      other->other=NULL;
+      other=NULL;
+      other_end=NULL;
     }
   }
   void Connect(BidirectionalConnector<DEST,SRC> *other_){
