@@ -124,7 +124,7 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bo
         m_reload_img(NULL),
         m_dl_img(NULL),
         m_user_expanded(NULL),
-        m_current_infomap(InfoMap::IM_Minimap)
+        m_current_infomap(IM_Minimap)
 {
 	SetBackgroundStyle( wxBG_STYLE_CUSTOM );
 	SetBackgroundColour( *wxLIGHT_GREY );
