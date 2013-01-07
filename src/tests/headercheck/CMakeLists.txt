@@ -1,5 +1,8 @@
 # This file is part of the Spring engine (GPL v2 or later), see LICENSE.html
 
+OPTION(HEADERCHECK "adds build targets to check if all headers compile" OFF)
+
+if (HEADERCHECK)
 include_directories(
 		${springlobby_SOURCE_DIR}/src
 		${springlobby_SOURCE_DIR}/src/downloader/lib/src
@@ -32,4 +35,6 @@ FOREACH( HEADER ${headers} )
 ENDFOREACH( HEADER )
 
 ADD_CUSTOM_TARGET( headercheck DEPENDS ${headerchecklibs})
+
+endif()
 
