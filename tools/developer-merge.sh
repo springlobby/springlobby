@@ -13,6 +13,6 @@ who=$1
 git checkout master
 git fetch ${who}
 git merge ${who}/master
+git submodule update
 git push origin master
 git fetch --tags origin
-git push --tags github master
