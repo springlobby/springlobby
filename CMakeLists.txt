@@ -32,10 +32,14 @@ endif(NOT DEFINED SPRINGLOBBY_REV)
 FIND_PACKAGE( PkgConfig )
 
 #if nothing went wrong we have the file and can define HAVE_CONFIG_H
-IF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h  )
+IF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h)
     ADD_DEFINITIONS( -DHAVE_CONFIG_H )
     INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
-ENDIF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h  OR  EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h  )
+ELSEIF ( EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h  )
+    ADD_DEFINITIONS( -DHAVE_CONFIG_H )
+    INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR})
+ENDIF ()
+
 
 
 #----------------------------------------------------------------------------------------------------
@@ -79,6 +83,12 @@ INCLUDE(SpringLobbyMacros)
 clear(link_directories)
 clear(springlobbySrc)
 Add_Subdirectory(doc)
+#----------------------------------------------------------------------------------------------------
+# L10n support
+#----------------------------------------------------------------------------------------------------
+if( OPTION_TRANSLATION_SUPPORT )
+        add_subdirectory(po)
+endif( OPTION_TRANSLATION_SUPPORT )
 Add_Subdirectory(src)
 
 #cppcheck stuff

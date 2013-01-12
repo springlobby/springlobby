@@ -1856,14 +1856,15 @@ void Settings::ClearTorrentListToResume()
 
 wxFileName Settings::GetTorrentDir()
 {
+
 	wxFileName torrentDir( GetLobbyWriteDir() );
 	torrentDir.AppendDir( _T( "torrents" ) );
-
+/*
 	if ( !torrentDir.DirExists() )
 	{
 		if ( !torrentDir.Mkdir( 0755 ) ) torrentDir.Clear();
 	}
-
+*/
 	return torrentDir;
 }
 
@@ -1871,12 +1872,12 @@ wxFileName Settings::GetTorrentDataDir()
 {
 	wxFileName torrentDir( GetLobbyWriteDir() );
 	torrentDir.AppendDir( _T( "downloads" ) );
-
+/*
 	if ( !torrentDir.DirExists() )
 	{
 		if ( !torrentDir.Mkdir( 0755 ) ) torrentDir.Clear();
 	}
-
+*/
 	return torrentDir;
 }
 
