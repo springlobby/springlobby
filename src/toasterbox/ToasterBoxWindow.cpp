@@ -41,6 +41,7 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
 	pn(NULL),
 	shrink(false)
 {
+	SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 	SLcustomizations().GetBitmap( _T("notification_background"), m_background_bitmap );
 	count++;
 	//the size we want the dialog to be
