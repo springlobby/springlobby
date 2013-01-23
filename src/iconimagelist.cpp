@@ -179,7 +179,11 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
 
     ICON_FLAGS_BASE = AddFlagImages( *this );
 
-    ICON_EMPTY = Add( wxBitmap(empty_xpm) );//!TODO make empty_xpm proper size if it's not intend hack for msw
+	wxBitmap emptyIcon = wxBitmap(empty_xpm);
+	emptyIcon.SetHeight(16);
+	emptyIcon.SetWidth(16);
+
+    ICON_EMPTY = Add( emptyIcon );
 
 #ifdef __WXMSW__
     ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = ICON_EMPTY;
