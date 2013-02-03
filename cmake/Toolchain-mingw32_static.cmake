@@ -25,7 +25,7 @@ SET( wxWidgets_LIBRARIES
 	wx_mswu_qa-2.8-i686-pc-mingw32.a
 	wx_baseu_xml-2.8-i686-pc-mingw32.a
 	wx_mswu_core-2.8-i686-pc-mingw32.a
-	wx_mswu_richtext-2.8-i686-pc-mingw32.a
+#	wx_mswu_richtext-2.8-i686-pc-mingw32.a
 	wx_baseu-2.8-i686-pc-mingw32.a
 )
 SET( wxWidgets_INCLUDE_DIRS /opt/mingw32/usr/i686-pc-mingw32/include/wx-2.8/ /opt/mingw32/usr/i686-pc-mingw32/lib/wx/include/i586-pc-mingw32-msw-unicode-release-2.8/)
