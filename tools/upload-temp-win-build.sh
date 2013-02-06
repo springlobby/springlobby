@@ -14,8 +14,8 @@ fi
 
 zip -9 -u ${filename} src/springlobby.exe
 
-if [ ! -d /usr/local/www/springlobby.info/temp/builds/$DEVELOPER ] ; then
-	mkdir -p /usr/local/www/springlobby.info/temp/builds/$DEVELOPER
+if [ ! -d /data/www/springlobby.info/temp/builds/$DEVELOPER ] ; then
+	mkdir -p /data/www/springlobby.info/temp/builds/$DEVELOPER
 fi
 
 /usr/bin/install -m 0755 ${filename} /data/www/springlobby.info/temp/builds/$DEVELOPER/${filename}
