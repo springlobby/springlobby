@@ -2,11 +2,9 @@
 
 #ifdef HAVE_CONFIG_H
 	#include "springlobby_config.h"
-#endif //HAVE_CONFIG_H
-
-#ifndef VERSION
-	#define VERSION "unknown"
-#endif //VERSION
+#else
+        #define VERSION "unknown"
+#endif
 
 #include "../utils/conversion.h"
 

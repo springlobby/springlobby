@@ -18,6 +18,17 @@ ELSE(NOT MSVC)
 	ADD_DEFINITIONS(-D_RC_MSVC)
 ENDIF(NOT MSVC)
 
+if(WIN32)
+	add_definitions(
+		-D__WXMSW__
+		-D_WIN32_WINNT=0x0501
+		-DBOOST_THREAD_USE_LIB
+		-DAL_LIBTYPE_STATIC
+		-DSTRICT
+		-DHAVE_W32API_H
+	)
+endif(WIN32)
+
 set(Boost_USE_MULTITHREADED      ON)
 if( ${CMAKE_CROSSCOMPILING} )
 	set(Boost_USE_STATIC_LIBS       ON)
@@ -92,6 +103,7 @@ if(DEFINED CURL_CONFIG) # override CURL_LIBRARIES if curl-config is set
 
 	set(CURL_LIBRARIES "" CACHE STRING "" FORCE)
 	add_to_global(CURL_LINKFLAGS "${CURL_LINKLIBS}")
+	message(STATUS "${CURL_CONFIG} returned ${CURL_LINKFLAGS} for linking to libcurl")
 endif()
 
 
@@ -283,16 +295,7 @@ set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
 mylink( ${EXTRA_LIB_DIRS} ${link_directories} ) 
 
 IF(WIN32)
-	#CreateResourceCompileCommand(springlobby_RC_FILE ${springlobby_SOURCE_DIR}/src/ springlobby.rc sl_icon.o )
 	set(springlobby_RC_FILE springlobby.rc)
-	add_definitions(
-		-D__WXMSW__
-		-D_WIN32_WINNT=0x0501
-		-DBOOST_THREAD_USE_LIB
-		-DAL_LIBTYPE_STATIC
-		-DSTRICT
-		-DHAVE_W32API_H
-	)
 	add_subdirectory(updater)
 ENDIF()
 
@@ -304,19 +307,14 @@ ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
 	)
 #the updater needs to be build for windows only
 IF(WIN32)
-	#link_directories( ${link_directories} ${EXTRA_LIB_DIRS} )
 	TARGET_LINK_LIBRARIES( springlobby
 		iphlpapi
 		nettle
 		ws2_32
 	)
-#	set_target_properties(springlobby PROPERTIES
-#			LINK_FLAGS "${CURL_LINKFLAGS} ${WX_LD_FLAGS}"
-#			CXX_FLAGS "${WX_CXX_FLAGS}"
-#		)
 	install(TARGETS springlobby RUNTIME DESTINATION .)
 ELSE (WIN32)
-    install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 	#only do this on platforms with awk expected to be installed
 	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF (WIN32)
@@ -335,3 +333,4 @@ ENDIF(UNIX)
 
 
 add_subdirectory(tests)
+
