@@ -21,7 +21,7 @@ fi
 export CXX=/opt/mingw32/usr/bin/i686-pc-mingw32-g++
 export CC=/opt/mingw32/usr/bin/i686-pc-mingw32-gcc
 
-PARAMS="-DSPRINGLOBBY_REV=${REV}" ${@}
+PARAMS="-DSPRINGLOBBY_REV=${REV} ${@}"
 
 echo configuring ${DIR} with $PARAMS
 cd ${DIR}
