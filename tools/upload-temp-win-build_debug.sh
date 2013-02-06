@@ -17,6 +17,6 @@ if [ ! -d /usr/local/www/springlobby.info/temp/builds/$DEVELOPER ] ; then
 	mkdir -p /usr/local/www/springlobby.info/temp/builds/$DEVELOPER
 fi
 
-/usr/bin/install -m 0755 ${filename} /usr/local/www/springlobby.info/temp/builds/$DEVELOPER/${filename}
+/usr/bin/install -m 0755 ${filename} /data/www/springlobby.info/temp/builds/$DEVELOPER/${filename}
 
 echo "http://springlobby.info/temp/builds/$DEVELOPER/${filename}"
