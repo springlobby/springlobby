@@ -1218,9 +1218,9 @@ void Ui::OnRing( const wxString& from )
 		UiEvents::GetNotificationEventSender().SendEvent(
 				UiEvents::NotficationData( UiEvents::ServerConnection, wxFormat(_("%s:\nring!") ) % from ) );
 	}
-
-    if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
-        wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
+	const Battle* battle = serverSelector().GetServer().GetCurrentBattle();
+	if ( (battle != NULL) && (battle->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED)) {
+		wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
 //        if(! usync().MapExists(host_map_name)) {//TODO
 
 //			map_infos info_map = prDownloader().CollectGuiInfos();
