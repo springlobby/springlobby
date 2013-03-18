@@ -606,7 +606,10 @@ wxImage SpringUnitSync::GetImage( const wxString& modname, const wxString& image
 	wxMemoryInputStream FileContentStream( FileContent, FileSize );
 
 	cache.LoadFile( FileContentStream, wxBITMAP_TYPE_ANY, -1);
-	cache.InitAlpha();
+
+	if(!cache.HasAlpha()) {
+		cache.InitAlpha();
+	}
 	if ( useWhiteAsTransparent )
 	{
 		for ( int x = 0; x < cache.GetWidth(); x++ )
