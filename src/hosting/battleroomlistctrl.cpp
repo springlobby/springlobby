@@ -272,7 +272,7 @@ wxListItemAttr * BattleroomListCtrl::GetItemAttr(long item) const
 
 int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 {
-    if ( item == -1 || item >= (long)m_data.size())
+    if ( (item == -1) || (item >= (long)m_data.size()) || (m_battle == NULL) )
         return -1;
 
     const User& user = *GetDataFromIndex( item );
@@ -305,7 +305,7 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 
 wxString BattleroomListCtrl::GetItemText(long item, long column) const
 {
-	if ( item == -1 || item >= (long)m_data.size())
+	if ( (item == -1) || (item >= (long)m_data.size()) || (m_battle == NULL))
 		return _T("");
 
 	const User& user = *GetDataFromIndex( item );
