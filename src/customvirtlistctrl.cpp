@@ -577,16 +577,17 @@ bool CustomVirtListCtrl<T,L>::AddItem( const T& item )
 template < class T, class L >
 bool CustomVirtListCtrl<T,L>::RemoveItem( const T& item )
 {
-    int index = GetIndexFromData( item );
-
-    if ( index != -1 ) {
-        SelectionSaver<ThisType>(*this);
-        m_data.erase( m_data.begin() + index );
-        SetItemCount( m_data.size() );
-        RefreshItems( index, m_data.size() -1 );
-        return true;
-    }
-    return false;
+	int index = GetIndexFromData( item );
+	if ( (index >= 0) && (index<(long)m_data.size()) ) {
+		SelectionSaver<ThisType>(*this);
+		m_data.erase( m_data.begin() + index );
+		SetItemCount( m_data.size() );
+		if (index>(long)m_data.size()-1)
+			index--;
+		RefreshItems( index, m_data.size() -1 );
+		return true;
+	}
+	return false;
 }
 
 template < class T, class L >
