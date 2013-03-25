@@ -44,7 +44,7 @@ class MainOptionsTab : public wxScrolledWindow
 	protected:
 		wxBoxSizer* m_main_sizer;
 
-		wxImageList* m_imagelist;
+//		wxImageList* m_imagelist;
 
 		SLNotebook* m_tabs;
 
