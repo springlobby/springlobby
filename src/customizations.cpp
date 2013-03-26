@@ -2,7 +2,7 @@
 
 #include "customizations.h"
 #include "springunitsynclib.h"
-#include "images/springlobby.xpm"
+#include "images/springlobby12x12.xpm"
 #include "images/springlobby_64.png.h"
 #include "uiutils.h"
 
@@ -87,7 +87,7 @@ bool Customizations::Init( const wxString& archive_name )
   * @todo: document this function
   */
  Customizations::Customizations()
-	 : m_app_icons(wxIcon(springlobby_xpm)),
+	 : m_app_icons(wxIcon(springlobby12x12_xpm)),
 	 m_active( false )
 {
 	m_app_icons.AddIcon( charArr2wxIcon( springlobby_64_png, sizeof(springlobby_64_png) ) );
