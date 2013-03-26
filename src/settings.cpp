@@ -1672,6 +1672,8 @@ void Settings::SetBattleLastSideSel( const wxString& modname, int sidenum )
 
 int Settings::GetBattleLastSideSel( const wxString& modname )
 {
+	if (modname.IsEmpty())
+		return 0;
 	return m_config->Read( _T("/Battle/Sides/" + modname), 0l );
 }
 
