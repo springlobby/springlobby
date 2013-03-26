@@ -298,7 +298,8 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 	 if ( column == m_nick_column_index ) return -1;
 	 else
 	 {
-		wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemColumnImage") );
+		const wxString msg =  wxFormat(_("column oob in BattleroomListCtrl::OnGetItemColumnImage: %d" )) % column;
+		wxLogWarning( msg);
 		return -1;
 	 }
 }
@@ -388,8 +389,8 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 
     wxLogMessage(_T("Popup"));
     m_popup->EnableItems( !user.BattleStatus().IsBot(), GetSelectedUserNick() );//this updates groups, therefore we need to update the connection to evt handlers too
-    std::vector<long> groups_ids = m_popup->GetGroupIds();
-    for (std::vector<long>::const_iterator it = groups_ids.begin(); it != groups_ids.end(); ++it) {
+    std::vector<int> groups_ids = m_popup->GetGroupIds();
+    for (std::vector<int>::const_iterator it = groups_ids.begin(); it != groups_ids.end(); ++it) {
         Connect( *it, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuAddToGroup ), 0, this );
     }
     Connect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuCreateGroup), 0, this );
