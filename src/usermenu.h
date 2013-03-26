@@ -40,10 +40,6 @@ class UserMenu : public wxMenu, public SL::NonCopyable
             Append( m_groupsDeleteItem );
         }
 
-        ~UserMenu(){
-		printf("destructor called!\n");
-	}
-
         void EnableItems(bool isUserSelected, const wxString& nick)
         {
             if ( isUserSelected )
