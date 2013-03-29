@@ -30,6 +30,7 @@ TARGET_LINK_LIBRARIES(springsettings
 		libsettings
 		slcommon
 		lsl-utils
+		lsl-unitsync
 		${wxWidgets_LIBRARIES}
 		${CURL_LINKFLAGS}
 	)
