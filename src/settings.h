@@ -652,13 +652,14 @@ class Settings : public SL::NonCopyable
 	void ClearTorrentListToResume();
 
     /** Get the path to the directory where *.torrent files are stored.
+     * @deprecated isn't used any more!
      */
     wxFileName GetTorrentDir();
 
 
     /** Get the path to the directory where partially-downloaded
      * torrented files are stored.
-     *
+     * @deprecated isn't used any more!
      * @sa GetTorrentsFolder
      */
     wxFileName GetTorrentDataDir();

@@ -1678,6 +1678,8 @@ void Settings::SetBattleLastSideSel( const wxString& modname, int sidenum )
 
 int Settings::GetBattleLastSideSel( const wxString& modname )
 {
+	if (modname.IsEmpty())
+		return 0;
 	return m_config->Read( _T("/Battle/Sides/" + modname), 0l );
 }
 
@@ -1856,14 +1858,15 @@ void Settings::ClearTorrentListToResume()
 
 wxFileName Settings::GetTorrentDir()
 {
+
 	wxFileName torrentDir( GetLobbyWriteDir() );
 	torrentDir.AppendDir( _T( "torrents" ) );
-
+/*
 	if ( !torrentDir.DirExists() )
 	{
 		if ( !torrentDir.Mkdir( 0755 ) ) torrentDir.Clear();
 	}
-
+*/
 	return torrentDir;
 }
 
@@ -1871,12 +1874,12 @@ wxFileName Settings::GetTorrentDataDir()
 {
 	wxFileName torrentDir( GetLobbyWriteDir() );
 	torrentDir.AppendDir( _T( "downloads" ) );
-
+/*
 	if ( !torrentDir.DirExists() )
 	{
 		if ( !torrentDir.Mkdir( 0755 ) ) torrentDir.Clear();
 	}
-
+*/
 	return torrentDir;
 }
 

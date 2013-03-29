@@ -271,7 +271,10 @@ void MapSelectDialog::AppendSortKeys( wxChoice* choice )
 
 static MapGridCtrl::SortKey GetSelectedSortKey( wxChoice* choice )
 {
-	return (MapGridCtrl::SortKey) (int) (long) choice->GetClientData( choice->GetSelection() );
+	const int selection = choice->GetSelection();
+	if (selection == wxNOT_FOUND) //default to first entry
+		return MapGridCtrl::SortKey_Name;
+	return (MapGridCtrl::SortKey) (int) (long) choice->GetClientData( selection );
 }
 
 namespace {

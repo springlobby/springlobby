@@ -1222,7 +1222,7 @@ void Ui::OnRing( const wxString& from )
 
     if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
         wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
-//        if(! LSL::usync().MapExists(host_map_name)) {//TODO
+//        if(! usync().MapExists(host_map_name)) {//TODO
 
 //			map_infos info_map = prDownloader().CollectGuiInfos();
 //            bool dling = false;

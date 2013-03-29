@@ -30,15 +30,6 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 add_to_global(link_directories ${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
 
 #----------------------------------------------------------------------------------------------------
-# L10n support
-#----------------------------------------------------------------------------------------------------
-if( OPTION_TRANSLATION_SUPPORT )
-	include ( ${CMAKE_SOURCE_DIR}/po/CMakeLists.txt )
-endif( OPTION_TRANSLATION_SUPPORT )
-ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
-
-
-#----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
 #----------------------------------------------------------------------------------------------------
 IF(NOT CMAKE_CROSSCOMPILING)
@@ -51,6 +42,7 @@ IF(NOT CMAKE_CROSSCOMPILING)
 	IF(wxWidgets_FOUND)
 		INCLUDE(${wxWidgets_USE_FILE})
 		INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+		add_definitions(-DHAVE_WX)
 	ELSE(wxWidgets_FOUND)
 		# For Convenience. If we cannot continue, inform the User.
 		MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
@@ -72,8 +64,6 @@ IF( ENABLE_DEBUG_REPORT )
 		LINK_LIBRARIES( bfd intl drmingw )
 	ENDIF( MINGW )
 ENDIF( ENABLE_DEBUG_REPORT )
-
-ADD_DEFINITIONS( -std=c++0x -DHAVE_WX )
 
 IF(WIN32)
 	ADD_DEFINITIONS( ${CURL_CFLAGS}  )
@@ -210,6 +200,7 @@ add_sources(SLSharedWithSettings
 
 FILE( GLOB header "*.h" )
 FILE( GLOB header2 "*/*.h" )
+# FILE( GLOB header3 "*/*/*.h" )
 
 #grep -lR cpp\"$ * | sed -e "s/\.h/\.cpp/g"
 clear( templatesources)
@@ -254,7 +245,6 @@ add_subdirectory(springsettings)
 LIST( APPEND header ${header2} ${header3} )
 LIST( REMOVE_DUPLICATES header ) 
 set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
-HEADERCHECK(${header})
 
 mylink( ${EXTRA_LIB_DIRS} ${link_directories} ) 
 
@@ -276,10 +266,11 @@ IF(WIN32)
 	install(TARGETS springlobby RUNTIME DESTINATION .)
 ELSE (WIN32)
     install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+	#only do this on platforms with awk expected to be installed
+	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-unitsync 
-    pr-downloader_static
+TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr-downloader_static
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${ALURE_LIBRARIES}

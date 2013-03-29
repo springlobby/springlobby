@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2012-12-17 18:59+0100\n"
+"POT-Creation-Date: 2013-01-04 11:44+0100\n"
 "PO-Revision-Date: 2010-10-23 17:35+0200\n"
 "Last-Translator: frezzer1 <Unknown>\n"
 "Language-Team: french\n"
@@ -68,7 +68,7 @@ msgstr "Réussite"
 msgid "Couldn't save file"
 msgstr "Impossible de sauvegarder"
 
-#: src/Helper/wxTranslationHelper.cpp:99 src/springlobbyapp.cpp:514
+#: src/Helper/wxTranslationHelper.cpp:99 src/springlobbyapp.cpp:518
 msgid "Default"
 msgstr "Par défaut"
 
@@ -175,8 +175,8 @@ msgstr "Description"
 
 #: src/battlelist/battlelistctrl.cpp:58
 #: src/downloader/filelister/filelistfilter.cpp:83
-#: src/gui/skirmish_dialog.cpp:99 src/hosting/battleroomtab.cpp:166
-#: src/hosting/mainjoinbattletab.cpp:60 src/playback/playbacklistctrl.cpp:44
+#: src/hosting/battleroomtab.cpp:166 src/hosting/mainjoinbattletab.cpp:60
+#: src/playback/playbacklistctrl.cpp:44
 msgid "Map"
 msgstr "Carte"
 
@@ -2331,46 +2331,6 @@ msgstr "Attention Flood !"
 msgid "Use pastebin"
 msgstr ""
 
-#: src/gui/simplefront.cpp:36
-msgid "Skirmish"
-msgstr ""
-
-#: src/gui/simplefront.cpp:43
-#, fuzzy
-msgid "Settings"
-msgstr "Sauvegarder les paramètres"
-
-#: src/gui/simplefront.cpp:46
-#, fuzzy
-msgid "Help"
-msgstr "&Aide"
-
-#: src/gui/simplefront.cpp:50
-msgid "Exit"
-msgstr ""
-
-#: src/gui/simplefront.cpp:56
-msgid "Back"
-msgstr ""
-
-#: src/gui/simplefront.cpp:59
-msgid "Advanced setup"
-msgstr ""
-
-#: src/gui/simplefront.cpp:62 src/hosting/battleroomtab.cpp:178
-#: src/singleplayertab.cpp:105
-msgid "Start"
-msgstr "Démarrer"
-
-#: src/gui/skirmish_dialog.cpp:60
-msgid "Scenario"
-msgstr ""
-
-#: src/gui/skirmish_dialog.cpp:111
-#, fuzzy
-msgid "Faction"
-msgstr "Action"
-
 #: src/hosting/addbotdialog.cpp:32
 msgid "Add bot"
 msgstr "Ajouter un Bot"
@@ -2726,6 +2686,10 @@ msgstr "Heberger un nouvelle bataille"
 #: src/hosting/battleroomtab.cpp:177
 msgid "Leave the battle and return to the battle list"
 msgstr "Quitter la bataille et revenir à la liste des parties"
+
+#: src/hosting/battleroomtab.cpp:178 src/singleplayertab.cpp:105
+msgid "Start"
+msgstr "Démarrer"
 
 #: src/hosting/battleroomtab.cpp:179
 msgid "Start the battle"
@@ -4382,8 +4346,8 @@ msgid "Notify when users of this group hosts a battle"
 msgstr ""
 "Vous serez averti lorsqu'un utilisateur de ce groupe héberge une bataille."
 
-#: src/options/groupoptionspanel.cpp:107 src/springlobbyapp.cpp:515
-#: src/springlobbyapp.cpp:516
+#: src/options/groupoptionspanel.cpp:107 src/springlobbyapp.cpp:519
+#: src/springlobbyapp.cpp:520
 msgid "Ignore PM"
 msgstr "Ignorer les messages privés"
 
@@ -4797,7 +4761,7 @@ msgstr "Taille du fichier"
 msgid "Filesize in kilobyte"
 msgstr "Taille du fichier en ko"
 
-#: src/playback/playbacklistctrl.cpp:49 src/springsettings/frame.cpp:261
+#: src/playback/playbacklistctrl.cpp:49 src/springsettings/frame.cpp:266
 msgid "File"
 msgstr "Fichier"
 
@@ -5107,13 +5071,13 @@ msgstr ""
 msgid "Automatically moved to new battle"
 msgstr "Vérifier automatiquement les mises à jour"
 
-#: src/settings.cpp:2373
+#: src/settings.cpp:2374
 msgid ""
 "The way column widths are saved has changed, you may need to re-adjust your "
 "col widths manually once."
 msgstr ""
 
-#: src/settings.cpp:2373
+#: src/settings.cpp:2374
 msgid "Important"
 msgstr ""
 
@@ -5194,33 +5158,33 @@ msgstr ""
 msgid "You cannot start a spring instance while another is already running"
 msgstr "Vous ne pouvez pas lancer Spring alors qu'il est déjà lancé"
 
-#: src/springlobbyapp.cpp:183
+#: src/springlobbyapp.cpp:187
 msgid ""
 "Please check that the file given in Preferences->Spring is a proper, "
 "readable unitsync library"
 msgstr ""
 
-#: src/springlobbyapp.cpp:184
+#: src/springlobbyapp.cpp:188
 #, fuzzy
 msgid "Coulnd't load required unitsync library"
 msgstr "Choisissez une bibliothèque unitsync"
 
-#: src/springlobbyapp.cpp:200 src/springsettings/main.cpp:166
+#: src/springlobbyapp.cpp:204 src/springsettings/main.cpp:166
 msgid "Couldn't load customizations for "
 msgstr ""
 
-#: src/springlobbyapp.cpp:200 src/springsettings/main.cpp:166
+#: src/springlobbyapp.cpp:204 src/springsettings/main.cpp:166
 msgid ""
 "\n"
 "Please check that that is the correct name, passed in qoutation"
 msgstr ""
 
-#: src/springlobbyapp.cpp:200 src/springsettings/main.cpp:166
+#: src/springlobbyapp.cpp:204 src/springsettings/main.cpp:166
 #, fuzzy
 msgid "Fatal error"
 msgstr "Erreur critique"
 
-#: src/springlobbyapp.cpp:266 src/springsettings/main.cpp:85
+#: src/springlobbyapp.cpp:270 src/springsettings/main.cpp:85
 #: src/updater/updaterapp.cpp:138
 msgid ""
 "The application has generated a fatal error and will be terminated\n"
@@ -5233,37 +5197,37 @@ msgstr ""
 "\n"
 "Merci de récupérer une bibliothèque wxWidgets qui supporte wxUSE_DEBUGREPORT"
 
-#: src/springlobbyapp.cpp:266 src/springsettings/main.cpp:85
+#: src/springlobbyapp.cpp:270 src/springsettings/main.cpp:85
 #: src/updater/updaterapp.cpp:138
 msgid "Critical error"
 msgstr "Erreur critique"
 
-#: src/springlobbyapp.cpp:304 src/springsettings/main.cpp:213
+#: src/springlobbyapp.cpp:308 src/springsettings/main.cpp:213
 #: src/updater/updaterapp.cpp:159
 msgid "show this help message"
 msgstr "affiche ce message d'aide"
 
-#: src/springlobbyapp.cpp:305 src/springsettings/main.cpp:214
+#: src/springlobbyapp.cpp:309 src/springsettings/main.cpp:214
 msgid "don't use the crash handler (useful for debugging)"
 msgstr "ne pas utiliser le gestionnaire de crashs (utile pour le débogage)"
 
-#: src/springlobbyapp.cpp:306 src/springsettings/main.cpp:216
+#: src/springlobbyapp.cpp:310 src/springsettings/main.cpp:216
 msgid "dumps application log to a file ( enter path )"
 msgstr ""
 
-#: src/springlobbyapp.cpp:307 src/springsettings/main.cpp:215
+#: src/springlobbyapp.cpp:311 src/springsettings/main.cpp:215
 msgid "shows application log to the console(if available)"
 msgstr "écrire le journal de l'application dans la console (si possible)"
 
-#: src/springlobbyapp.cpp:308 src/springsettings/main.cpp:217
+#: src/springlobbyapp.cpp:312 src/springsettings/main.cpp:217
 msgid "enables application log window"
 msgstr "active l'affichage du journal de l'application dans une fenêtre"
 
-#: src/springlobbyapp.cpp:309 src/springsettings/main.cpp:218
+#: src/springlobbyapp.cpp:313 src/springsettings/main.cpp:218
 msgid "override default choice for config-file"
 msgstr ""
 
-#: src/springlobbyapp.cpp:310 src/springsettings/main.cpp:222
+#: src/springlobbyapp.cpp:314 src/springsettings/main.cpp:222
 msgid ""
 "overrides default logging verbosity, can be:\n"
 "                                0: no log\n"
@@ -5281,25 +5245,25 @@ msgstr ""
 "                                4: messages\n"
 "                                5: appels de fonction"
 
-#: src/springlobbyapp.cpp:311
+#: src/springlobbyapp.cpp:315
 msgid "load lobby customizations from game archive. Expects the shortname."
 msgstr ""
 
-#: src/springlobbyapp.cpp:312 src/springsettings/main.cpp:221
+#: src/springlobbyapp.cpp:316 src/springsettings/main.cpp:221
 msgid "overrides default application name"
 msgstr ""
 
-#: src/springlobbyapp.cpp:517 src/springlobbyapp.cpp:518
+#: src/springlobbyapp.cpp:521 src/springlobbyapp.cpp:522
 msgid "Ignore chat"
 msgstr "Ignorer le chat"
 
-#: src/springlobbyapp.cpp:519 src/springlobbyapp.cpp:520
+#: src/springlobbyapp.cpp:523 src/springlobbyapp.cpp:524
 msgid "Battle Autokick"
 msgstr "Expulsion automatique d'une bataille"
 
-#: src/springlobbyapp.cpp:521 src/springlobbyapp.cpp:522
-#: src/springlobbyapp.cpp:523 src/springlobbyapp.cpp:524
-#: src/springlobbyapp.cpp:525
+#: src/springlobbyapp.cpp:525 src/springlobbyapp.cpp:526
+#: src/springlobbyapp.cpp:527 src/springlobbyapp.cpp:528
+#: src/springlobbyapp.cpp:529
 msgid "Friends"
 msgstr "Amis"
 
@@ -5985,81 +5949,81 @@ msgstr ""
 msgid "Error!"
 msgstr "Erreur !"
 
-#: src/springsettings/frame.cpp:150 src/springsettings/frame.cpp:166
+#: src/springsettings/frame.cpp:150 src/springsettings/frame.cpp:179
 msgid "Save Spring settings before exiting?"
 msgstr "Sauvegarder les paramètres de Spring avant de sortir ?"
 
-#: src/springsettings/frame.cpp:150 src/springsettings/frame.cpp:166
-#: src/springsettings/frame.cpp:284
+#: src/springsettings/frame.cpp:150 src/springsettings/frame.cpp:179
+#: src/springsettings/frame.cpp:289
 msgid "Confirmation needed"
 msgstr "Confirmation nécessaire"
 
-#: src/springsettings/frame.cpp:220
+#: src/springsettings/frame.cpp:225
 msgid "SpringSettings (simple mode)"
 msgstr "SpringSettings (mode simple)"
 
-#: src/springsettings/frame.cpp:231
+#: src/springsettings/frame.cpp:236
 msgid "Save settings"
 msgstr "Sauvegarder les paramètres"
 
-#: src/springsettings/frame.cpp:232
+#: src/springsettings/frame.cpp:237
 msgid "Reset settings to default values"
 msgstr "Réinitialiser les paramètres aux valeurs par défaut"
 
-#: src/springsettings/frame.cpp:233
+#: src/springsettings/frame.cpp:238
 msgid "Disable expert mode warning"
 msgstr "Désactiver l'avertissement du mode expert"
 
-#: src/springsettings/frame.cpp:235
+#: src/springsettings/frame.cpp:240
 msgid "Quit"
 msgstr "Quitter"
 
-#: src/springsettings/frame.cpp:240
+#: src/springsettings/frame.cpp:245
 msgid "Simple (few options)"
 msgstr "Simple (peu d'options)"
 
-#: src/springsettings/frame.cpp:241
+#: src/springsettings/frame.cpp:246
 msgid "Expert (all options"
 msgstr "Expert (toutes les options)"
 
-#: src/springsettings/frame.cpp:244
+#: src/springsettings/frame.cpp:249
 msgid "About"
 msgstr "A propos"
 
-#: src/springsettings/frame.cpp:245
+#: src/springsettings/frame.cpp:250
 msgid "Contact"
 msgstr "Contact"
 
-#: src/springsettings/frame.cpp:246
+#: src/springsettings/frame.cpp:251
 msgid "Credits"
 msgstr "Crédits"
 
-#: src/springsettings/frame.cpp:247
+#: src/springsettings/frame.cpp:252
 msgid "Report a bug"
 msgstr "Signaler un bug"
 
-#: src/springsettings/frame.cpp:262
+#: src/springsettings/frame.cpp:267
 msgid "Mode"
 msgstr "Mode"
 
-#: src/springsettings/frame.cpp:263
+#: src/springsettings/frame.cpp:268
 msgid "Info/Help"
 msgstr "Info/Aide"
 
-#: src/springsettings/frame.cpp:284
+#: src/springsettings/frame.cpp:289
 msgid "Reset ALL settings to default values?"
 msgstr "Rétablier TOUS les paramètres aux valeurs par défaut ?"
 
-#: src/springsettings/frame.cpp:310
+#: src/springsettings/frame.cpp:315
 #, fuzzy
 msgid "(simple mode)"
 msgstr "SpringSettings (mode simple)"
 
-#: src/springsettings/frame.cpp:312
+#: src/springsettings/frame.cpp:317
 msgid "Hint"
 msgstr "Astuce"
 
-#: src/springsettings/frame.cpp:362
+#: src/springsettings/frame.cpp:367
 #, fuzzy
 msgid "(expert mode)"
 msgstr "Passer en mode expert"
@@ -7143,6 +7107,18 @@ msgstr "Le widget a été supprimé."
 #: src/widgets/infopanel.cpp:173
 msgid "Widget files have not been removed."
 msgstr "Le widget n'a pas été supprimé."
+
+#, fuzzy
+#~ msgid "Settings"
+#~ msgstr "Sauvegarder les paramètres"
+
+#, fuzzy
+#~ msgid "Help"
+#~ msgstr "&Aide"
+
+#, fuzzy
+#~ msgid "Faction"
+#~ msgstr "Action"
 
 #~ msgid "Mod"
 #~ msgstr "Mod"

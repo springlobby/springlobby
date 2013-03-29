@@ -12,16 +12,28 @@ add_sources(SettingsSrc
 add_subdirectory(hotkeys)
 
 add_sources(springlobbySrc frame.cpp)
-ADD_LIBRARY(libsettings STATIC ${SettingsSrc} )
+ADD_LIBRARY(libsettings STATIC ${SettingsSrc})
 
-ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE 	frame.cpp main.cpp ${SpringSettings_RC_FILE} )
-set_target_properties(springsettings PROPERTIES COMPILE_FLAGS -DSPRINGSETTINGS_STANDALONE )
+ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE
+		frame.cpp
+		main.cpp
+		${SpringSettings_RC_FILE}
+	)
+
 IF(WIN32)
 	CreateResourceCompileCommand(springsettings_RC_FILE ${springlobby_SOURCE_DIR}/src settings.rc ss_icon.o )
 	install(TARGETS springsettings RUNTIME DESTINATION .)
 ELSE(WIN32)
 	install(TARGETS springsettings RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 ENDIF (WIN32)
-TARGET_LINK_LIBRARIES(springsettings libsettings slcommon lsl-unitsync lsl-utils
-	${wxWidgets_LIBRARIES} )
+TARGET_LINK_LIBRARIES(springsettings
+		libsettings
+		slcommon
+		lsl-utils
+		${wxWidgets_LIBRARIES}
+		${CURL_LINKFLAGS}
+	)
 
+set_target_properties(springsettings PROPERTIES
+		COMPILE_FLAGS -DSPRINGSETTINGS_STANDALONE
+	)

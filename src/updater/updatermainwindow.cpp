@@ -10,7 +10,7 @@
 #include "../utils/activitynotice.h"
 #include "../uiutils.h"
 
-#include "../images/springlobby.xpm"
+#include "../images/springlobby12x12.xpm"
 
 class UpdaterPanel : public wxPanel {
 
@@ -74,7 +74,7 @@ END_EVENT_TABLE()
 //                wxMINIMIZE_BOX | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN  ),
     m_onDownloadComplete( this, &GetGlobalEventSender( GlobalEvents::UpdateFinished) )
 {
-    SetIcon( wxIcon(springlobby_xpm) );
+    SetIcon( wxIcon(springlobby12x12_xpm) );
 
     wxBoxSizer* top_sizer = new wxBoxSizer( wxVERTICAL );
     UpdaterPanel* panel = new UpdaterPanel( this, rev_string );

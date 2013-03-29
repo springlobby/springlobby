@@ -41,6 +41,7 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
 	pn(NULL),
 	shrink(false)
 {
+	SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 	SLcustomizations().GetBitmap( _T("notification_background"), m_background_bitmap );
 	count++;
 	//the size we want the dialog to be
@@ -205,7 +206,10 @@ void ToasterBoxWindow::DrawText()
   wxCoord x = 0, y = 0;
   //border from sides and top to text (in pixels)
   int border_right = 7;
-  int border_left = sbm.GetBitmap().GetWidth() + 102;
+  int border_left = 102;
+	if (sbm.GetBitmap().IsOk()) {
+		border_left += sbm.GetBitmap().GetWidth();
+	}
   //how much space between text lines
   int textPadding = 4;
   //how much can we have on a line?

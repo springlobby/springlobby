@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2012-12-17 18:59+0100\n"
+"POT-Creation-Date: 2013-01-04 11:44+0100\n"
 "PO-Revision-Date: 2010-07-08 14:24+1000\n"
 "Last-Translator: Jie <lililjlj@gmail.com>\n"
 "Language-Team: Simplified Chinese <18n-translation@lists.linux.net.cn>\n"
@@ -67,7 +67,7 @@ msgstr "成功"
 msgid "Couldn't save file"
 msgstr "无法保存为文件"
 
-#: src/Helper/wxTranslationHelper.cpp:99 src/springlobbyapp.cpp:514
+#: src/Helper/wxTranslationHelper.cpp:99 src/springlobbyapp.cpp:518
 msgid "Default"
 msgstr "默认"
 
@@ -172,8 +172,8 @@ msgstr "描述"
 
 #: src/battlelist/battlelistctrl.cpp:58
 #: src/downloader/filelister/filelistfilter.cpp:83
-#: src/gui/skirmish_dialog.cpp:99 src/hosting/battleroomtab.cpp:166
-#: src/hosting/mainjoinbattletab.cpp:60 src/playback/playbacklistctrl.cpp:44
+#: src/hosting/battleroomtab.cpp:166 src/hosting/mainjoinbattletab.cpp:60
+#: src/playback/playbacklistctrl.cpp:44
 msgid "Map"
 msgstr "地图"
 
@@ -2317,46 +2317,6 @@ msgstr "Flood警报"
 msgid "Use pastebin"
 msgstr ""
 
-#: src/gui/simplefront.cpp:36
-msgid "Skirmish"
-msgstr ""
-
-#: src/gui/simplefront.cpp:43
-#, fuzzy
-msgid "Settings"
-msgstr "保存设置"
-
-#: src/gui/simplefront.cpp:46
-#, fuzzy
-msgid "Help"
-msgstr "帮助(&H)"
-
-#: src/gui/simplefront.cpp:50
-msgid "Exit"
-msgstr ""
-
-#: src/gui/simplefront.cpp:56
-msgid "Back"
-msgstr ""
-
-#: src/gui/simplefront.cpp:59
-msgid "Advanced setup"
-msgstr ""
-
-#: src/gui/simplefront.cpp:62 src/hosting/battleroomtab.cpp:178
-#: src/singleplayertab.cpp:105
-msgid "Start"
-msgstr "开始"
-
-#: src/gui/skirmish_dialog.cpp:60
-msgid "Scenario"
-msgstr ""
-
-#: src/gui/skirmish_dialog.cpp:111
-#, fuzzy
-msgid "Faction"
-msgstr "动作"
-
 #: src/hosting/addbotdialog.cpp:32
 msgid "Add bot"
 msgstr "添加AI"
@@ -2704,6 +2664,10 @@ msgstr "主建新战斗"
 #: src/hosting/battleroomtab.cpp:177
 msgid "Leave the battle and return to the battle list"
 msgstr "离开战斗并返回大厅"
+
+#: src/hosting/battleroomtab.cpp:178 src/singleplayertab.cpp:105
+msgid "Start"
+msgstr "开始"
 
 #: src/hosting/battleroomtab.cpp:179
 msgid "Start the battle"
@@ -4318,8 +4282,8 @@ msgstr "通知新架设的游戏"
 msgid "Notify when users of this group hosts a battle"
 msgstr "当此分组的用户建立游戏时提示"
 
-#: src/options/groupoptionspanel.cpp:107 src/springlobbyapp.cpp:515
-#: src/springlobbyapp.cpp:516
+#: src/options/groupoptionspanel.cpp:107 src/springlobbyapp.cpp:519
+#: src/springlobbyapp.cpp:520
 msgid "Ignore PM"
 msgstr "忽略私人信息"
 
@@ -4723,7 +4687,7 @@ msgstr "文件大小"
 msgid "Filesize in kilobyte"
 msgstr "文件大小（kilobyte计量)"
 
-#: src/playback/playbacklistctrl.cpp:49 src/springsettings/frame.cpp:261
+#: src/playback/playbacklistctrl.cpp:49 src/springsettings/frame.cpp:266
 msgid "File"
 msgstr "文件"
 
@@ -5027,13 +4991,13 @@ msgstr ""
 msgid "Automatically moved to new battle"
 msgstr "自动检查升级"
 
-#: src/settings.cpp:2373
+#: src/settings.cpp:2374
 msgid ""
 "The way column widths are saved has changed, you may need to re-adjust your "
 "col widths manually once."
 msgstr ""
 
-#: src/settings.cpp:2373
+#: src/settings.cpp:2374
 msgid "Important"
 msgstr ""
 
@@ -5112,33 +5076,33 @@ msgstr ""
 msgid "You cannot start a spring instance while another is already running"
 msgstr "你不能在有另一个Spring正在执行的时候再次启动Spring"
 
-#: src/springlobbyapp.cpp:183
+#: src/springlobbyapp.cpp:187
 msgid ""
 "Please check that the file given in Preferences->Spring is a proper, "
 "readable unitsync library"
 msgstr ""
 
-#: src/springlobbyapp.cpp:184
+#: src/springlobbyapp.cpp:188
 #, fuzzy
 msgid "Coulnd't load required unitsync library"
 msgstr "选择一个unitsync库"
 
-#: src/springlobbyapp.cpp:200 src/springsettings/main.cpp:166
+#: src/springlobbyapp.cpp:204 src/springsettings/main.cpp:166
 msgid "Couldn't load customizations for "
 msgstr ""
 
-#: src/springlobbyapp.cpp:200 src/springsettings/main.cpp:166
+#: src/springlobbyapp.cpp:204 src/springsettings/main.cpp:166
 msgid ""
 "\n"
 "Please check that that is the correct name, passed in qoutation"
 msgstr ""
 
-#: src/springlobbyapp.cpp:200 src/springsettings/main.cpp:166
+#: src/springlobbyapp.cpp:204 src/springsettings/main.cpp:166
 #, fuzzy
 msgid "Fatal error"
 msgstr "致命错误"
 
-#: src/springlobbyapp.cpp:266 src/springsettings/main.cpp:85
+#: src/springlobbyapp.cpp:270 src/springsettings/main.cpp:85
 #: src/updater/updaterapp.cpp:138
 msgid ""
 "The application has generated a fatal error and will be terminated\n"
@@ -5151,37 +5115,37 @@ msgstr ""
 "\n"
 "请使用支持wxUSE_DEBUGREPORT的wxWidgets库"
 
-#: src/springlobbyapp.cpp:266 src/springsettings/main.cpp:85
+#: src/springlobbyapp.cpp:270 src/springsettings/main.cpp:85
 #: src/updater/updaterapp.cpp:138
 msgid "Critical error"
 msgstr "致命错误"
 
-#: src/springlobbyapp.cpp:304 src/springsettings/main.cpp:213
+#: src/springlobbyapp.cpp:308 src/springsettings/main.cpp:213
 #: src/updater/updaterapp.cpp:159
 msgid "show this help message"
 msgstr "显示帮助信息"
 
-#: src/springlobbyapp.cpp:305 src/springsettings/main.cpp:214
+#: src/springlobbyapp.cpp:309 src/springsettings/main.cpp:214
 msgid "don't use the crash handler (useful for debugging)"
 msgstr "不使用崩溃处理(debug需要)"
 
-#: src/springlobbyapp.cpp:306 src/springsettings/main.cpp:216
+#: src/springlobbyapp.cpp:310 src/springsettings/main.cpp:216
 msgid "dumps application log to a file ( enter path )"
 msgstr ""
 
-#: src/springlobbyapp.cpp:307 src/springsettings/main.cpp:215
+#: src/springlobbyapp.cpp:311 src/springsettings/main.cpp:215
 msgid "shows application log to the console(if available)"
 msgstr "现实应用程序日志 (假如可用)"
 
-#: src/springlobbyapp.cpp:308 src/springsettings/main.cpp:217
+#: src/springlobbyapp.cpp:312 src/springsettings/main.cpp:217
 msgid "enables application log window"
 msgstr "开启应用程序日志窗口"
 
-#: src/springlobbyapp.cpp:309 src/springsettings/main.cpp:218
+#: src/springlobbyapp.cpp:313 src/springsettings/main.cpp:218
 msgid "override default choice for config-file"
 msgstr ""
 
-#: src/springlobbyapp.cpp:310 src/springsettings/main.cpp:222
+#: src/springlobbyapp.cpp:314 src/springsettings/main.cpp:222
 msgid ""
 "overrides default logging verbosity, can be:\n"
 "                                0: no log\n"
@@ -5192,25 +5156,25 @@ msgid ""
 "                                5: function trace"
 msgstr ""
 
-#: src/springlobbyapp.cpp:311
+#: src/springlobbyapp.cpp:315
 msgid "load lobby customizations from game archive. Expects the shortname."
 msgstr ""
 
-#: src/springlobbyapp.cpp:312 src/springsettings/main.cpp:221
+#: src/springlobbyapp.cpp:316 src/springsettings/main.cpp:221
 msgid "overrides default application name"
 msgstr ""
 
-#: src/springlobbyapp.cpp:517 src/springlobbyapp.cpp:518
+#: src/springlobbyapp.cpp:521 src/springlobbyapp.cpp:522
 msgid "Ignore chat"
 msgstr "忽略聊天信息"
 
-#: src/springlobbyapp.cpp:519 src/springlobbyapp.cpp:520
+#: src/springlobbyapp.cpp:523 src/springlobbyapp.cpp:524
 msgid "Battle Autokick"
 msgstr "战斗自动踢出"
 
-#: src/springlobbyapp.cpp:521 src/springlobbyapp.cpp:522
-#: src/springlobbyapp.cpp:523 src/springlobbyapp.cpp:524
-#: src/springlobbyapp.cpp:525
+#: src/springlobbyapp.cpp:525 src/springlobbyapp.cpp:526
+#: src/springlobbyapp.cpp:527 src/springlobbyapp.cpp:528
+#: src/springlobbyapp.cpp:529
 msgid "Friends"
 msgstr "朋友"
 
@@ -5926,81 +5890,81 @@ msgstr ""
 msgid "Error!"
 msgstr "错误！"
 
-#: src/springsettings/frame.cpp:150 src/springsettings/frame.cpp:166
+#: src/springsettings/frame.cpp:150 src/springsettings/frame.cpp:179
 msgid "Save Spring settings before exiting?"
 msgstr "退出前是否保存Spring设置？"
 
-#: src/springsettings/frame.cpp:150 src/springsettings/frame.cpp:166
-#: src/springsettings/frame.cpp:284
+#: src/springsettings/frame.cpp:150 src/springsettings/frame.cpp:179
+#: src/springsettings/frame.cpp:289
 msgid "Confirmation needed"
 msgstr "需要确认"
 
-#: src/springsettings/frame.cpp:220
+#: src/springsettings/frame.cpp:225
 msgid "SpringSettings (simple mode)"
 msgstr "Spring设置（简易模式）"
 
-#: src/springsettings/frame.cpp:231
+#: src/springsettings/frame.cpp:236
 msgid "Save settings"
 msgstr "保存设置"
 
-#: src/springsettings/frame.cpp:232
+#: src/springsettings/frame.cpp:237
 msgid "Reset settings to default values"
 msgstr "重设所有选项为默认值"
 
-#: src/springsettings/frame.cpp:233
+#: src/springsettings/frame.cpp:238
 msgid "Disable expert mode warning"
 msgstr "禁用 专家模式警告"
 
-#: src/springsettings/frame.cpp:235
+#: src/springsettings/frame.cpp:240
 msgid "Quit"
 msgstr "退出"
 
-#: src/springsettings/frame.cpp:240
+#: src/springsettings/frame.cpp:245
 msgid "Simple (few options)"
 msgstr "简易（较少选项）"
 
-#: src/springsettings/frame.cpp:241
+#: src/springsettings/frame.cpp:246
 msgid "Expert (all options"
 msgstr "专家（全部选项）"
 
-#: src/springsettings/frame.cpp:244
+#: src/springsettings/frame.cpp:249
 msgid "About"
 msgstr "关于"
 
-#: src/springsettings/frame.cpp:245
+#: src/springsettings/frame.cpp:250
 msgid "Contact"
 msgstr "联系"
 
-#: src/springsettings/frame.cpp:246
+#: src/springsettings/frame.cpp:251
 msgid "Credits"
 msgstr "关于作者"
 
-#: src/springsettings/frame.cpp:247
+#: src/springsettings/frame.cpp:252
 msgid "Report a bug"
 msgstr "报告 Bug"
 
-#: src/springsettings/frame.cpp:262
+#: src/springsettings/frame.cpp:267
 msgid "Mode"
 msgstr "模式"
 
-#: src/springsettings/frame.cpp:263
+#: src/springsettings/frame.cpp:268
 msgid "Info/Help"
 msgstr "信息/帮助"
 
-#: src/springsettings/frame.cpp:284
+#: src/springsettings/frame.cpp:289
 msgid "Reset ALL settings to default values?"
 msgstr "将所有设置全部重设为默认值？"
 
-#: src/springsettings/frame.cpp:310
+#: src/springsettings/frame.cpp:315
 #, fuzzy
 msgid "(simple mode)"
 msgstr "Spring设置（简易模式）"
 
-#: src/springsettings/frame.cpp:312
+#: src/springsettings/frame.cpp:317
 msgid "Hint"
 msgstr "提示"
 
-#: src/springsettings/frame.cpp:362
+#: src/springsettings/frame.cpp:367
 #, fuzzy
 msgid "(expert mode)"
 msgstr "切换到专家模式"
@@ -7039,6 +7003,18 @@ msgstr "界面插件文件已经移除"
 #: src/widgets/infopanel.cpp:173
 msgid "Widget files have not been removed."
 msgstr "界面插件文件没有移除"
+
+#, fuzzy
+#~ msgid "Settings"
+#~ msgstr "保存设置"
+
+#, fuzzy
+#~ msgid "Help"
+#~ msgstr "帮助(&H)"
+
+#, fuzzy
+#~ msgid "Faction"
+#~ msgstr "动作"
 
 #~ msgid "Mod"
 #~ msgstr "模组"

@@ -45,20 +45,20 @@ class TDFWriter
 #include <deque>
 #include <map>
 
-#include "autopointers.h"
+#include <lslutils/autopointers.h>
 #include "utils/mixins.hh"
 
 class Tokenizer;
 
 namespace SL {
 class Node;
-typedef RefcountedPointer<Node> PNode;
+typedef LSL::RefcountedPointer<Node> PNode;
 class DataList;
-typedef RefcountedPointer<DataList> PDataList;
+typedef LSL::RefcountedPointer<DataList> PDataList;
 class DataLeaf;
-typedef RefcountedPointer<DataLeaf> PDataLeaf;
+typedef LSL::RefcountedPointer<DataLeaf> PDataLeaf;
 
-class Node: public RefcountedContainer , public SL::NonCopyable
+class Node: public LSL::RefcountedContainer , public SL::NonCopyable
 {
 		friend class DataList;
 	protected:
