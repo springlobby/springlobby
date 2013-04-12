@@ -13,6 +13,8 @@ ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${SLSharedW
 TARGET_LINK_LIBRARIES(springlobby_updater
 		${wxWidgets_LIBRARIES}
 		libsettings
+		lsl-utils
+		lsl-unitsync
 		${CURL_LIBRARIES}
 		${CURL_LINKFLAGS}
 	)

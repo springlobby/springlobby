@@ -3,21 +3,31 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 INCLUDE(compat_flags)
 ADD_DEFINITIONS(-DHAVE_SPRINGLOBBY=1)
 
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
-	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
-endif()
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
 # MSVC compiler (cl.exe) does not accept the same switches as gcc, although preprocessor definitions in the -D form will work for both
 IF(NOT MSVC)
 	IF( NOT MINGW )
 		#wxMSW generates > 9000 warnings with -wextra...
-		ADD_DEFINITIONS( -Wextra )
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wextra")
 	ENDIF( NOT MINGW )
-	ADD_DEFINITIONS( -Wall -Wno-strict-aliasing )
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-strict-aliasing")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-strict-aliasing")
 ELSE(NOT MSVC)
 	ADD_DEFINITIONS(-D_RC_MSVC)
 ENDIF(NOT MSVC)
+
+if(WIN32)
+	add_definitions(
+		-D__WXMSW__
+		-D_WIN32_WINNT=0x0501
+		-DBOOST_THREAD_USE_LIB
+		-DAL_LIBTYPE_STATIC
+		-DSTRICT
+		-DHAVE_W32API_H
+	)
+endif(WIN32)
 
 set(Boost_USE_MULTITHREADED      ON)
 if( ${CMAKE_CROSSCOMPILING} )
@@ -25,32 +35,48 @@ if( ${CMAKE_CROSSCOMPILING} )
 	set(Boost_USE_STATIC_RUNTIME    ON)
 endif()
 
-FIND_PACKAGE(Boost 1.44.0 COMPONENTS thread system REQUIRED)
+FIND_PACKAGE(Boost 1.42.0 COMPONENTS thread system REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 add_to_global(link_directories ${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
+
+ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
+
 
 #----------------------------------------------------------------------------------------------------
 # wxWidgets lib dependency check
 #----------------------------------------------------------------------------------------------------
-IF(NOT CMAKE_CROSSCOMPILING)
-	# Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
-	# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-	SET(wxWidgets_USE_LIBS base core net adv aui html xml qa)
-	# We need the Find package for wxWidgets to work, but auto-find is broken in x-compile setup
-	FIND_PACKAGE(wxWidgets REQUIRED base core net adv aui html xml qa)
-	# Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
-	IF(wxWidgets_FOUND)
-		INCLUDE(${wxWidgets_USE_FILE})
-		INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-		add_definitions(-DHAVE_WX)
-	ELSE(wxWidgets_FOUND)
-		# For Convenience. If we cannot continue, inform the User.
-		MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
-	ENDIF(wxWidgets_FOUND)
-ELSE (NOT CMAKE_CROSSCOMPILING)
-    INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-    add_to_global(link_directories ${wxWidgets_LIB_DIR} )
-ENDIF(NOT CMAKE_CROSSCOMPILING)
+# Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
+# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
+# order matters!
+SET(wxWidgets_USE_LIBS
+		net
+		aui
+		xml
+		qa
+		richtext
+		html
+		adv
+		core
+		base
+	)
+# We need the Find package for wxWidgets to work, but auto-find is broken in x-compile setup
+FIND_PACKAGE(wxWidgets REQUIRED ${wxWidgets_USE_LIBS})
+# Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
+IF(wxWidgets_FOUND)
+	INCLUDE(${wxWidgets_USE_FILE})
+	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+	add_definitions(-DHAVE_WX)
+ELSE(wxWidgets_FOUND)
+	# For Convenience. If we cannot continue, inform the User.
+	MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
+ENDIF(wxWidgets_FOUND)
+
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cppflags"
+	OUTPUT_VARIABLE WX_CXX_FLAGS
+	OUTPUT_STRIP_TRAILING_WHITESPACE )
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs"
+	OUTPUT_VARIABLE WX_LD_FLAGS
+	OUTPUT_STRIP_TRAILING_WHITESPACE )
 
 
 #----------------------------------------------------------------------------------------------------
@@ -60,26 +86,32 @@ ENDIF(NOT CMAKE_CROSSCOMPILING)
 IF( ENABLE_DEBUG_REPORT )
 	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
 	IF( MINGW )
-		ADD_DEFINITIONS( -gstabs )
-		LINK_LIBRARIES( bfd intl drmingw )
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gstabs")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -gstabs")
+		LINK_LIBRARIES( intl)
 	ENDIF( MINGW )
 ENDIF( ENABLE_DEBUG_REPORT )
 
-IF(WIN32)
-	ADD_DEFINITIONS( ${CURL_CFLAGS}  )
-	add_to_global(link_directories  ${CURL_STATIC_LIBRARY_DIRS} )
-	LINK_LIBRARIES( ${CURL_STATIC_LDFLAGS} )
-	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
-ELSE(WIN32)
-	FIND_PACKAGE( CURL REQUIRED libcurl )
-	IF( NOT CURL_FOUND )
-		MESSAGE( FATAL_ERROR "required library libCURL not found" )
-	ENDIF( NOT CURL_FOUND )
-	ADD_DEFINITIONS( ${CURL_CFLAGS} )
-	add_to_global(link_directories  ${CURL_LIB_DIRS} )
-	LINK_LIBRARIES( ${CURL_LDFLAGS} )
-	INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
-ENDIF(WIN32)
+FIND_PACKAGE( CURL REQUIRED libcurl )
+IF( NOT CURL_FOUND )
+	MESSAGE( FATAL_ERROR "required library libCURL not found" )
+ENDIF( NOT CURL_FOUND )
+
+if(DEFINED CURL_CONFIG) # override CURL_LIBRARIES if curl-config is set
+	execute_process(COMMAND ${CURL_CONFIG} "--libs"
+		OUTPUT_VARIABLE CURL_LINKFLAGS
+		OUTPUT_STRIP_TRAILING_WHITESPACE )
+
+	set(CURL_LIBRARIES "" CACHE STRING "" FORCE)
+	add_to_global(CURL_LINKFLAGS "${CURL_LINKLIBS}")
+	message(STATUS "${CURL_CONFIG} returned ${CURL_LINKFLAGS} for linking to libcurl")
+endif()
+
+
+
+ADD_DEFINITIONS( ${CURL_CFLAGS} )
+add_to_global(link_directories  ${CURL_LIB_DIRS} )
+INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
 
 #----------------------------------------------------------------------------------------------------
 # libnotify dependency check
@@ -221,8 +253,16 @@ IF(WIN32)
 ELSE(WIN32)
 	add_sources(SLSharedWithSettings stacktrace.cpp)
 ENDIF(WIN32)
-add_library(slcommon STATIC ${SLSharedWithSettings} )
-target_link_libraries(slcommon ${wxWidgets_LIBRARIES} ${CURL_LIBRARY} )
+add_library(slcommon STATIC
+		${SLSharedWithSettings}
+	)
+target_link_libraries(slcommon
+ 		${wxWidgets_LIBRARIES}
+		${CURL_LIBRARIES}
+	)
+set_target_properties(slcommon PROPERTIES
+		LINK_FLAGS "${CURL_LINKFLAGS}"
+	)
 
 add_subdirectory(aui)
 add_subdirectory(battlelist)
@@ -237,19 +277,21 @@ add_subdirectory(widgets)
 add_subdirectory(wxkeybinder)
 
 set(LSLSERVER OFF CACHE BOOL "disable lsl-server build" FORCE)
-Add_Subdirectory(lsl)
-INCLUDE_DIRECTORIES(lsl/src)
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
+	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
+else()
+	Add_Subdirectory(lsl)
+	INCLUDE_DIRECTORIES(lsl/src)
+endif()
 add_subdirectory(springsettings)
 
 
-LIST( APPEND header ${header2} ${header3} )
-LIST( REMOVE_DUPLICATES header ) 
 set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
 
 mylink( ${EXTRA_LIB_DIRS} ${link_directories} ) 
 
 IF(WIN32)
-	CreateResourceCompileCommand(springlobby_RC_FILE ${springlobby_SOURCE_DIR}/src/ springlobby.rc sl_icon.o )
+	set(springlobby_RC_FILE springlobby.rc)
 	add_subdirectory(updater)
 ENDIF()
 
@@ -261,11 +303,14 @@ ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
 	)
 #the updater needs to be build for windows only
 IF(WIN32)
-	link_directories( ${link_directories} ${EXTRA_LIB_DIRS} )
-	TARGET_LINK_LIBRARIES( springlobby iphlpapi )
+	TARGET_LINK_LIBRARIES( springlobby
+		iphlpapi
+		nettle
+		ws2_32
+	)
 	install(TARGETS springlobby RUNTIME DESTINATION .)
 ELSE (WIN32)
-    install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 	#only do this on platforms with awk expected to be installed
 	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/lsl/src/lslunitsync/unitsync.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF (WIN32)
@@ -275,9 +320,13 @@ TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr
 		${Boost_LIBRARIES}
 		${ALURE_LIBRARIES}
 		${OPENAL_LIBRARY}
+		${CURL_LIBRARIES}
+		${CURL_LINKFLAGS}
 	)
 IF(UNIX)
 	TARGET_LINK_LIBRARIES(springlobby X11)
 ENDIF(UNIX)
 
+
+add_subdirectory(tests)
 

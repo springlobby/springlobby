@@ -33,6 +33,7 @@ TARGET_LINK_LIBRARIES(springsettings
 		lsl-unitsync
 		${wxWidgets_LIBRARIES}
 		${CURL_LINKFLAGS}
+		${CMAKE_DL_LIBS}
 	)
 
 set_target_properties(springsettings PROPERTIES
