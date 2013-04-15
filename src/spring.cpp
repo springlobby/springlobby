@@ -232,7 +232,7 @@ bool Spring::LaunchSpring( const wxString& params  )
 
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
 		#ifdef __WXMSW__
-		if ( LSL::usync().GetSpringVersion().Find(_T("0.78.") ) != wxNOT_FOUND ) configfileflags = _T("");
+      if ( LSL::usync().GetSpringVersion().find("0.78.") != std::string::npos ) configfileflags = _T("");
 		#endif
   }
 
