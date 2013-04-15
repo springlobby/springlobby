@@ -37,8 +37,6 @@ endif(CXX_FLAG_CXX11)
 
 if(NOT CXX_STD0X_FLAGS)
 	message(FATAL "you need a c++11 compatible compiler")
-else()
-	add_definitions(${CXX_STD0X_FLAGS})
 endif()
 
 If(NOT DEFINED LTO_FLAGS)
