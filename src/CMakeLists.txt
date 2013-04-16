@@ -71,12 +71,30 @@ ELSE(wxWidgets_FOUND)
 	MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
 ENDIF(wxWidgets_FOUND)
 
-execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cppflags"
+if (CMAKE_CROSSCOMPILING)
+	message(STATUS "Crosscompiling: using static flags for wxwidgets")
+	set(WXSTATIC "--static")
+else()
+	set(WXSTATIC "")
+endif()
+
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cppflags" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_CXX_FLAGS
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
-execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs"
+message(STATUS "Using WX_CXX_FLAGS: ${WX_CXX_FLAGS}")
+
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cflags" "${WXSTATIC}"
+	OUTPUT_VARIABLE WX_C_FLAGS
+	OUTPUT_STRIP_TRAILING_WHITESPACE )
+message(STATUS "Using WX_C_FLAGS: ${WX_C_FLAGS}")
+
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_LD_FLAGS
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
+message(STATUS "Using WX_LD_FLAGS: ${WX_LD_FLAGS}")
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WX_CXX_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${WX_C_FLAGS}")
 
 
 #----------------------------------------------------------------------------------------------------
