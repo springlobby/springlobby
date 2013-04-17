@@ -12,7 +12,7 @@ class wxTextUrlEvent;
 class ServerMessageBox;
 class wxTextCtrl;
 class ImageViewerPanel;
-class wxHtmlWindow;
+class slHtmlWindow;
 class SLNotebook;
 
 class WidgetInfoPanel : public wxScrolledWindow
@@ -42,7 +42,7 @@ class WidgetInfoPanel : public wxScrolledWindow
 
         wxTextCtrl* m_changelog;
         ImageViewerPanel* m_imageviewer;
-        wxHtmlWindow* m_desc;
+        slHtmlWindow* m_desc;
 
         SLNotebook* m_ext_info;
         wxButton* m_update;
