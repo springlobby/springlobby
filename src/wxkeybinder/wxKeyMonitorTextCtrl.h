@@ -39,6 +39,9 @@ public:
         return !GetValue().IsEmpty(); //we allow '+' (&& GetValue().Last() != '+';)
     }
 
+protected:
+    int overflow(int i);
+
 private:
     DECLARE_CLASS(wxKeyMonitorTextCtrl)
     DECLARE_EVENT_TABLE()
