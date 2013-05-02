@@ -35,7 +35,10 @@ public:
     void OnTextEnter(wxCommandEvent& event);
     void OnChar( wxKeyEvent &event );
     void OnKillFocus(wxFocusEvent& event);
-	SlSpinCtrlGenericBase *m_spin;
+  SlSpinCtrlGenericBase *m_spin;
+
+protected:
+  int overflow(int i) { return wxTextCtrl::overflow(i); }
 
 private:
     DECLARE_EVENT_TABLE()
@@ -54,6 +57,7 @@ private:
 // for the SlSpinCtrl and SlSpinCtrlDouble classes respectively to avoid
 // function ambiguity.
 // ----------------------------------------------------------------------------
+#include <gui/spinctl/spinctrl.h>
 
 class  SlSpinCtrlGenericBase : public SlSpinCtrlBase
 {
@@ -211,6 +215,8 @@ public:
     //void SetSelection(long from, long to);
 
 protected:
+    int overflow(int i) { return wxTextCtrl::overflow(i); }
+
     // generic double valued
     double DoGetValue() const
     {

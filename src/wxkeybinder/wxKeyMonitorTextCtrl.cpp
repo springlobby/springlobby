@@ -41,3 +41,9 @@ void wxKeyMonitorTextCtrl::OnKey(wxKeyEvent &event)
         SetInsertionPointEnd();
     }
 }
+
+int wxKeyMonitorTextCtrl::overflow(int i)
+{
+  return wxTextCtrl::overflow(i);
+}
+
