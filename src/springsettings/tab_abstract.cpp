@@ -492,17 +492,15 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 
 		case ID_W4_BumpWaterTexSizeReflection:
 		{
-            int choiceIndex = 0;
+			int choiceIndex = 0;
 			for (unsigned int i =1; i<sizeof(W4_TEXSIZE_CHOICES)/sizeof(W4_TEXSIZE_CHOICES[0]);++i)
 			{
 				if (choice==W4_TEXSIZE_CHOICES[i])
 					choiceIndex = i;
 			}
 
-            long val = 128;
-            choice.ToLong( &val );
-		    (intSettings)[W4_CONTROLS[4].key]= val;
-		    break;
+			(intSettings)[W4_CONTROLS[4].key]= choiceIndex;
+			break;
 		}
 
 		case ID_SHADOW_CHOICES:
