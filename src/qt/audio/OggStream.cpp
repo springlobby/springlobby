@@ -270,7 +270,7 @@ void COggStream::Update()
 	unsigned tick = SDL_GetTicks();
 
 	if (!paused) {
-		if (UpdateBuffers()) {
+		if (UpdateBuffers()) { //FIXME: hu? ReleaseBuffers() is always called?
 			if (!IsPlaying()) {
 				// source state changed
 				if (!StartPlaying()) {

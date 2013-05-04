@@ -42,12 +42,12 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
 
 
-    const int hd = wxLIST_AUTOSIZE_USEHEADER;
 
 #if defined(__WXMAC__)
 /// on mac, autosize does not work at all
     const int widths[11] = {20,20,20,170,140,130,110,28,28,28,30};
 #else
+    const int hd = wxLIST_AUTOSIZE_USEHEADER;
     const int widths[11] = {hd,hd,hd,170,140,130,110,hd,hd,hd,hd};
 #endif
 

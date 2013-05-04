@@ -139,7 +139,7 @@ wxString AddBotDialog::GetNick()
 }
 
 
-wxString AddBotDialog::Get(const std::string section)
+wxString AddBotDialog::Get(const std::string& section)
 {
     const auto sel = m_ai->GetSelection();
     const auto infos = LSL::usync().GetAIInfos(sel);

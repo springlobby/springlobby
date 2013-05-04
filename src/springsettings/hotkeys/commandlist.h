@@ -31,7 +31,7 @@ public:
 
 	static CommandList::CommandMap getCommands()
 	{
-		CommandList::InitializeCommandList();
+		InitializeCommandList();
 
 		CommandList::CommandMap merged = m_commands;
 
@@ -45,14 +45,14 @@ public:
 
 	static const CommandList::Command& getCommandByName(const wxString& command)
 	{
-		CommandList::InitializeCommandList();
+		InitializeCommandList();
 
 		if ( m_commands.find( command ) == m_commands.end() )
 		{
 			if ( m_customCommands.find( command ) == m_customCommands.end() )
 			{
 				//add the command
-				CommandList::addCustomCommand( command );				
+				addCustomCommand( command );
 			}
 
 			return m_customCommands[command];
@@ -72,7 +72,7 @@ public:
 			descr = wxT("User-defined selection command");
 		}
 
-		CommandList::addCustomCommand( category, command, descr );
+		addCustomCommand( category, command, descr );
 	}
 
 	static void addCustomCommand(const wxString& category, const wxString& command, const wxString& description )

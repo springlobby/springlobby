@@ -145,7 +145,7 @@ void CustomVirtListCtrl<T,L>::SaveSelection()
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::RestoreSelection()
 {
-    while ( m_selected_data.size() > 0 )
+    while ( !m_selected_data.empty() )
     {
         SelectedDataType data = m_selected_data.back();
         m_selected_data.pop_back();
@@ -217,7 +217,7 @@ void CustomVirtListCtrl<T,L>::SetSelectedIndex(const long newindex)
 template < class T, class L >
 void CustomVirtListCtrl<T,L>::RefreshVisibleItems()
 {
-    if ( m_data.size() < 1 )
+    if ( m_data.empty() )
         return;
 #ifndef __WXMSW__
     const long topItemIndex = GetTopItem();

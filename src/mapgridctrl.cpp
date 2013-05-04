@@ -507,7 +507,7 @@ void MapGridCtrl::SetMinimap( MapMap& maps, const wxString& mapname, const wxBit
 }
 
 
-void MapGridCtrl::OnGetMapImageAsyncCompleted( const std::string _mapname )
+void MapGridCtrl::OnGetMapImageAsyncCompleted( const std::string& _mapname )
 {
     const wxString mapname = TowxString(_mapname);
 
@@ -539,7 +539,7 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( const std::string _mapname )
 }
 
 
-void MapGridCtrl::OnGetMapExAsyncCompleted( const std::string _mapname )
+void MapGridCtrl::OnGetMapExAsyncCompleted( const std::string& _mapname )
 {
     const wxString mapname = TowxString(_mapname);
 	// if mapname is empty, some error occurred in LSL::usync().GetMapEx...

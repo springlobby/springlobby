@@ -80,8 +80,8 @@ class MapGridCtrl : public wxPanel
 		void OnLeftDown( wxMouseEvent& event );
 		void OnLeftUp( wxMouseEvent& event );
 
-        void OnGetMapImageAsyncCompleted(const std::string _mapname );
-        void OnGetMapExAsyncCompleted(const std::string _mapname );
+        void OnGetMapImageAsyncCompleted(const std::string& _mapname );
+        void OnGetMapExAsyncCompleted(const std::string& _mapname );
 
 	protected:
 
