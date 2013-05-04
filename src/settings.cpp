@@ -919,11 +919,12 @@ wxString Settings::GetCurrentUsedUikeys()
 wxString Settings::GetCurrentUsedSpringConfigFilePath()
 {
 	wxString path;
-	try
-	{
-        path = TowxString(LSL::susynclib().GetConfigFilePath());
+	try {
+		path = TowxString(LSL::susynclib().GetConfigFilePath());
+	} catch ( std::runtime_error& e) {
+		wxLogError( wxString::Format( _T("Couldn't get SpringConfigFilePath, exception caught:\n %s"), e.what()  ) );
 	}
-    catch ( LSL::unitsync_assert ) {}
+
 	return path;
 }
 
