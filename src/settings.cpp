@@ -787,21 +787,26 @@ void Settings::RefreshSpringVersionList()
 	wxLogDebugFunc( _T( "" ) );
 	wxArrayString list = GetGroupList( _T( "/Spring/Paths" ) );
 	int count = list.GetCount();
-    std::map<std::string, std::string> usync_paths;
-	for ( int i = 0; i < count; i++ )
-	{
-        const wxString groupname = list[i];
-        usync_paths[STD_STRING(groupname)] = STD_STRING(GetUnitSync(groupname));
+	std::map<std::string, std::string> usync_paths;
+	for ( int i = 0; i < count; i++ ) {
+		const wxString groupname = list[i];
+		usync_paths[STD_STRING(groupname)] = STD_STRING(GetUnitSync(groupname));
 	}
-	if ( sett().GetSearchSpringOnlyInSLPath() || sett().GetUseSpringPathFromBundle() )
-	{
+	if ( sett().GetSearchSpringOnlyInSLPath() || sett().GetUseSpringPathFromBundle() ) {
 		usync_paths.clear();
-        usync_paths[STD_STRING(sett().GetCurrentUsedSpringIndex())] = STD_STRING(sett().GetCurrentUsedUnitSync());
+		usync_paths[STD_STRING(sett().GetCurrentUsedSpringIndex())] = STD_STRING(sett().GetCurrentUsedUnitSync());
 	}
-    const auto versions = LSL::susynclib().GetSpringVersionList( usync_paths );
-    m_spring_versions.clear();
-    for(const auto pair : versions)
-        m_spring_versions.insert(std::make_pair(TowxString(pair.first), TowxString(pair.second)));
+	m_spring_versions.clear();
+	try {
+		const auto versions = LSL::susynclib().GetSpringVersionList( usync_paths );
+		for(const auto pair : versions) {
+			m_spring_versions.insert(std::make_pair(TowxString(pair.first), TowxString(pair.second)));
+		}
+	} catch (const std::runtime_error& e) {
+		wxLogError(wxString::Format(_T("Couln't get list of spring versions: %s"), e.what()));
+	} catch ( ...) {
+		wxLogError(_T("Unknown Execption caught in Settings::RefreshSpringVersionList"));
+	}
 }
 
 wxString Settings::GetCurrentUsedSpringIndex()
