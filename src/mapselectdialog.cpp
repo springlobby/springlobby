@@ -445,14 +445,15 @@ void MapSelectDialog::OnFilterTextChanged(wxCommandEvent& /*unused*/)
 #endif
 MapSelectDialog& mapSelectDialog()
 {
-	#ifdef __WXMSW__
+/*	#ifdef __WXMSW__
 		static MapSelectDialog* m = new MapSelectDialog( &ui().mw() );
 		return *m;
 	#else
+*/
 	/* either a globals handled or directly on stack created dialog would result in sigsegv / sigabrt in dtor, no idea why */
 		static MapSelectDialog* m = new MapSelectDialog( 0 );
 		return *m;
-	#endif
+//	#endif
 }
 
 void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
