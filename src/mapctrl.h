@@ -76,6 +76,7 @@ class MapCtrl : public wxPanel
     void OnMouseMove( wxMouseEvent& event );
     void OnLeftDown( wxMouseEvent& event );
     void OnLeftUp( wxMouseEvent& event );
+    void OnRightUp( wxMouseEvent& event );
     void OnMouseWheel( wxMouseEvent& event );
 
     void OnGetMapImageAsyncCompleted( wxCommandEvent& event );

@@ -21,6 +21,7 @@
 #include "ibattle.h"
 #include "settings.h"
 #include "iconimagelist.h"
+#include "hosting/addbotdialog.h"
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
@@ -72,6 +73,7 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
     EVT_MOTION( MapCtrl::OnMouseMove )
     EVT_LEFT_DOWN( MapCtrl::OnLeftDown )
     EVT_LEFT_UP( MapCtrl::OnLeftUp )
+    EVT_RIGHT_UP( MapCtrl::OnRightUp )
     //  EVT_MOUSEWHEEL( MapCtrl::OnMouseWheel )
     EVT_COMMAND( wxID_ANY, UnitSyncAsyncOperationCompletedEvt, MapCtrl::OnGetMapImageAsyncCompleted )
 END_EVENT_TABLE()
@@ -1519,7 +1521,60 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     m_maction = None;
 
 }
+void MapCtrl::OnRightUp( wxMouseEvent& event )
+{
+    wxPoint p = event.GetPosition();
+    if ( m_battle == 0 ) return;
+    if ( p == wxDefaultPosition ) return;
 
+    long longval;
+    m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+
+    if ( longval == IBattle::ST_Pick )
+    {
+
+        if ( !m_battle->MapExists() ) return;
+
+        if ( m_maction != Moved )
+        {
+            m_map = m_battle->LoadMap();
+            wxRect mr = GetMinimapRect();
+
+            int mclx = (int)( ( (double)(event.GetX() - mr.x) / (double)mr.width ) * (double)m_map.info.width );
+            int mcly = (int)( ( (double)(event.GetY() - mr.y) / (double)mr.height ) * (double)m_map.info.height );
+            mclx = LSL::Util::Clamp( mclx, 0, m_map.info.width );
+            mcly = LSL::Util::Clamp( mcly, 0, m_map.info.height );
+
+            int x, y, index, range;
+            GetClosestStartPos( mclx, mcly, index, x, y, range );
+            if ( index != -1 )
+            {
+                if ( range < (10.0 / (double)mr.width) * (double)m_map.info.width )
+                {
+                    AddBotDialog dlg( this, m_battle[0], true );
+                    if ( dlg.ShowModal() == wxID_OK )
+                    {
+                        UserBattleStatus bs;
+                        bs.owner = m_battle->GetMe().GetNick();
+                        bs.aishortname = dlg.GetAIShortName();
+                        bs.airawname = dlg.GetAiRawName();
+                        bs.aiversion = dlg.GetAIVersion();
+                        bs.aitype = dlg.GetAIType();
+                        bs.team = m_battle->GetFreeTeam();
+                        bs.ally = m_battle->GetFreeAlly();
+                        bs.colour = m_battle->GetNewColour();
+                        User& bot = m_battle->OnBotAdded( dlg.GetNick(), bs  );
+                        ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
+                        bot.BattleStatus().pos.x = x;
+                        bot.BattleStatus().pos.y = y;
+                        RefreshRect( GetUserRect( bot, false ), false );
+                    }
+                }
+            }
+            return;
+        }
+    }
+}
 
 void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 {
