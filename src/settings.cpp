@@ -1727,6 +1727,11 @@ bool Settings::GetDisableSpringVersionCheck()
 	return ret;
 }
 
+void Settings::SetDisableSpringVersionCheck(bool disable)
+{
+    m_config->Write( _T( "/Spring/DisableVersionCheck" ), ( bool )disable );
+}
+
 wxString Settings::GetLastBattleFilterProfileName()
 {
 	return  m_config->Read( _T( "/BattleFilter/lastprofile" ), _T( "default" ) );

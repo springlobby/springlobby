@@ -624,6 +624,7 @@ class Settings : public SL::NonCopyable
     /**@}*/
 
     bool GetDisableSpringVersionCheck();
+    void SetDisableSpringVersionCheck(bool disable);
 	bool IgnoreOfferfile();
 
     /* ================================================================ */
