@@ -107,6 +107,11 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Battle* battle )
 
 	m_opts_sizer->Add( m_start_radios, 0, wxALL, 2 );
 
+	m_map_desc = new wxStaticText(this,-1,_T(""));
+    m_map_desc->Wrap(160);
+
+    m_opts_sizer->Add( m_map_desc, 0, wxALL, 2 );
+
 	m_main_sizer->Add( m_opts_sizer, 0, wxEXPAND, 5 );
 	//m_main_sizer->AddStretchSpacer();
 	SetSizer( m_main_sizer );
@@ -157,6 +162,9 @@ void BattleMapTab::Update()
 	m_map_opts_list->SetItem( 3, 1, wxFormat( _T( "%d" ) ) % map.info.gravity );
 	m_map_opts_list->SetItem( 4, 1, wxFormat( _T( "%d" ) ) % map.info.extractorRadius );
 	m_map_opts_list->SetItem( 5, 1, wxFormat( _T( "%.3f" ) ) % map.info.maxMetal );
+
+    m_map_desc->SetLabel(map.info.description);
+    m_map_desc->Wrap(160);
 
 	int index = m_map_combo->FindString( map.name );
 	if ( index == wxNOT_FOUND ) return;

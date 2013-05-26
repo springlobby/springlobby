@@ -56,6 +56,7 @@ class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< Battl
     wxButton* m_browse_btn;
     wxRadioBox* m_start_radios;
     wxListCtrl* m_map_opts_list;
+    wxStaticText* m_map_desc;
 
     enum {
       BMAP_MAP_SEL = wxID_HIGHEST,
