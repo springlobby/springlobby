@@ -18,7 +18,7 @@
 #include "utils/controls.h"
 #include "Helper/colorbutton.h"
 //#include "downloader/filelister/filelistdialog.h"
-#include "downloader/prdownloader.h"
+#include "downloader/downloadsobserver.h"
 #include "widgets/downloaddialog.h"
 #include "aui/auimanager.h"
 
@@ -94,7 +94,7 @@ MainDownloadTab::MainDownloadTab( wxWindow* parent )
 //	}
 
     Layout();
-    Disable();
+    //Disable();
 }
 
 MainDownloadTab::~MainDownloadTab()
@@ -102,13 +102,14 @@ MainDownloadTab::~MainDownloadTab()
 
 void MainDownloadTab::OnClearFinished( wxCommandEvent& /*event*/ )
 {
-    prDownloader().ClearFinished();
+    downloadsObserver().ClearFinished();
+
 	m_dl_listctrl->Clear();
 }
 
 void MainDownloadTab::OnUpdate()
 {
-
+    m_dl_listctrl->UpdateTorrentsList();
 }
 
 

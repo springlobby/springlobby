@@ -1,6 +1,7 @@
 add_sources(springlobbySrc
 	prdownloader.cpp
 	downloadlistctrl.cpp
+	downloadsobserver.cpp
 )
 	
 #currently unused

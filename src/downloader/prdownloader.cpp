@@ -26,6 +26,7 @@
 #include "../utils/conversion.h"
 #include "../ui.h"
 #include "../mainwindow.h"
+#include "downloadsobserver.h"
 #include <list>
 
 class DownloadItem : public LSL::WorkItem {
@@ -81,7 +82,7 @@ void SearchItem::Run()
 PrDownloader::PrDownloader()
     : m_dl_thread(new LSL::WorkerThread())
 {
-    IDownloader::Initialize();
+    IDownloader::Initialize(&downloadsObserver());
     UpdateSettings();
     m_game_loaders.push_back(rapidDownload);
     m_game_loaders.push_back(httpDownload);

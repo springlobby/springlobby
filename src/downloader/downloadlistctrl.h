@@ -3,6 +3,8 @@
 
 #include "../customvirtlistctrl.h"
 #include "prdownloader.h"
+#include "downloadsobserver.h"
+
 #include <map>
 
 //struct TorrentInfos;
@@ -16,7 +18,7 @@ class Ui;
 /** \brief list all currently active (queued,lecching,seeding) torrents with their infos
  * the list is newly populated every n-seconds from Ui::OnUpdate()
  */
-class DownloadListCtrl : public CustomVirtListCtrl<DownloadInfo, DownloadListCtrl>
+class DownloadListCtrl : public CustomVirtListCtrl<ObserverDownloadInfo, DownloadListCtrl>
 {
   public:
 	DownloadListCtrl( wxWindow* parent );
@@ -30,6 +32,7 @@ class DownloadListCtrl : public CustomVirtListCtrl<DownloadInfo, DownloadListCtr
 	bool AddTorrentInfo(const DataType& info);
 	bool RemoveTorrentInfo(const DataType& info);
 	void UpdateTorrentInfo(const DataType& info);
+    void UpdateTorrentsList();
 
     virtual void HighlightItem( long item );
 
