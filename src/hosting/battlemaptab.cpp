@@ -163,10 +163,10 @@ void BattleMapTab::Update()
 	m_map_opts_list->SetItem( 4, 1, wxFormat( _T( "%d" ) ) % map.info.extractorRadius );
 	m_map_opts_list->SetItem( 5, 1, wxFormat( _T( "%.3f" ) ) % map.info.maxMetal );
 
-    m_map_desc->SetLabel(map.info.description);
+    m_map_desc->SetLabel(TowxString(map.info.description));
     m_map_desc->Wrap(160);
 
-	int index = m_map_combo->FindString( ( TowxString(map.name) ); );
+	int index = m_map_combo->FindString( TowxString(map.name)  );
 	if ( index == wxNOT_FOUND ) return;
 	m_map_combo->SetSelection( index );
 }

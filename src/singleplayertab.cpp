@@ -225,7 +225,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
         for(int i=0;i<count;i++)
             m_map_opts_list->SetItem( i, 1, _T(""));
         m_map_desc->SetLabel(_T(""));
-	} 
+	}
 	else {
     try {
       	LSL::UnitsyncMap map = LSL::usync().GetMapEx( index );
@@ -237,7 +237,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
 		m_map_opts_list->SetItem( 3, 1, wxFormat( _T( "%d" ) ) % map.info.gravity );
 		m_map_opts_list->SetItem( 4, 1, wxFormat( _T( "%d" ) ) % map.info.extractorRadius );
 		m_map_opts_list->SetItem( 5, 1, wxFormat( _T( "%.3f" ) ) % map.info.maxMetal );
-		m_map_desc->SetLabel(map.info.description);
+		m_map_desc->SetLabel(TowxString(map.info.description));
 		m_map_desc->Wrap(160);
     } catch (...) {}
   }
