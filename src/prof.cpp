@@ -114,11 +114,11 @@ bool SpringLobbyApp::OnInit()
 	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
 
-    bool usync_loaded = false;
+//    bool usync_loaded = false;
 	//unitsync first load, NEEDS to be blocking
     {
         boost::timer::auto_cpu_timer t;
-        usync_loaded = usync().ReloadUnitSyncLib();
+        /*usync_loaded =*/ usync().ReloadUnitSyncLib();
     }
     DestroyGlobals();
 

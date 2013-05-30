@@ -172,3 +172,10 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
             event.Skip();
 
 }
+
+#if wxHAS_TEXT_WINDOW_STREAM
+int wxTextCtrlHist::overflow(int i)
+{
+  return wxTextCtrlBase::overflow(i);
+}
+#endif // wxHAS_TEXT_WINDOW_STREAM

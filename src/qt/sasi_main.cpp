@@ -1,5 +1,5 @@
 #include "sasi_app.h"
-#include <globalsmanager.h>
+#include <lslutils/globalsmanager.h>
 
 int main(int argc, char *argv[])
 {
@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 	if ( !app.CmdInit() )
 		return 1;
 	const int ret = app.exec();
-	DestroyGlobals();
+    LSL::Util::DestroyGlobals();
 	return ret;
 }
 

@@ -6,3 +6,5 @@ add_sources(springlobbySrc
 	wxtextctrlhist.cpp
 	colorbutton.cpp
 )
+
+include_directories(qtargparser)

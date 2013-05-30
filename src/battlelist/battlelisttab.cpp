@@ -29,7 +29,7 @@
 #include "hosting/mainjoinbattletab.h"
 #include "server.h"
 #include "settings.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "mapctrl.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"

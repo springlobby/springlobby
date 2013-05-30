@@ -30,3 +30,21 @@ StringtokenizerVectorized::StringtokenizerVectorized( wxStringTokenizer tokenize
         push_back( tokenizer.GetNextToken() );
 }
 
+namespace LSL { namespace Util {
+
+wxArrayString vectorToArrayString(const std::vector<std::string>& vec) {
+    wxArrayString arr;
+    for(const auto& s : vec)
+        arr.Add(TowxString(s));
+    return arr;
+}
+
+std::vector<std::string> arrayStringToVector(const wxArrayString& arr) {
+    std::vector<std::string> vec;
+    vec.reserve(arr.Count());
+    for(auto s : arr)
+        vec.push_back(STD_STRING(s));
+    return vec;
+}
+
+} } //end namespace LSL::Util

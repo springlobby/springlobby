@@ -44,7 +44,7 @@ class Battle : public IBattle
     void Say( const wxString& msg );
     void DoAction( const wxString& msg );
 
-    void SetLocalMap( const UnitSyncMap& map );
+    void SetLocalMap( const LSL::UnitsyncMap& map );
 
     void OnRequestBattleStatus();
     void SendMyBattleStatus();

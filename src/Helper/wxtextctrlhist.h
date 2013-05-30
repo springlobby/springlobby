@@ -16,6 +16,12 @@ class wxTextCtrlHist : public wxTextCtrl
     wxTextCtrlHist(TextCompletionDatabase& textcompletiondatabase, wxWindow* parent, wxWindowID id, const wxString& value = _T(""),
             const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
     void SetHistoryMax(int max) { history_max = max; }
+
+protected:
+#if wxHAS_TEXT_WINDOW_STREAM
+    int overflow(int i);
+#endif // wxHAS_TEXT_WINDOW_STREAM
+
   private:
     TextCompletionDatabase& textcompletiondatabase;
     wxString m_original;

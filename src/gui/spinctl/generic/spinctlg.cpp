@@ -505,6 +505,7 @@ void SlSpinCtrlGenericBase::SetSelection(long from, long to)
     m_textCtrl->SetSelection(from, to);
 }
 
+
 #endif // wxUSE_SPINBTN
 
 

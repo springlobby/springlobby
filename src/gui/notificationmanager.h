@@ -5,6 +5,7 @@
 #include "../utils/uievents.h"
 #include "../utils/isink.h"
 #include "../utils/mixins.hh"
+#include <lslutils/globalsmanager.h>
 #include <wx/timer.h>
 #include <wx/event.h>
 #include <vector>
@@ -35,7 +36,7 @@ class NotificationManager : public OnQuitSink < NotificationManager > , public S
 
         //make globals holder have access to ctor
         template <class PB, class I >
-        friend class GlobalObjectHolder;
+        friend class LSL::Util::GlobalObjectHolder;
 
 		EventReceiverFunc< NotificationManager, UiEvents::NotficationData, &NotificationManager::OnShowNotification> m_showNotificationSink;
 

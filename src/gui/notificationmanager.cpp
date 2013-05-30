@@ -1,6 +1,6 @@
 #include "notificationmanager.h"
 
-#include "../globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include "../uiutils.h"
 #include "../ui.h"
 #include "../settings.h"
@@ -32,8 +32,8 @@ END_EVENT_TABLE()
 
 NotificationManager& notificationManager()
 {
-    static LineInfo<NotificationManager> m( AT );
-    static GlobalObjectHolder<NotificationManager, LineInfo<NotificationManager> > m_manager( m );
+    static LSL::Util::LineInfo<NotificationManager> m( AT );
+    static LSL::Util::GlobalObjectHolder<NotificationManager, LSL::Util::LineInfo<NotificationManager> > m_manager( m );
     return m_manager;
 }
 

@@ -28,6 +28,9 @@
 #include "../settings.h"
 #include "se_utils.h"
 #include "../defines.h"
+#include "../utils/customdialogs.h"
+#include "../customizations.h"
+#include "../Helper/wxTranslationHelper.h"
 
 #include <iostream>
 #include <wx/msgdlg.h>
@@ -38,11 +41,9 @@
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
 
-#include "../utils/customdialogs.h"
-#include "../globalsmanager.h"
-#include "../springunitsynclib.h"
-#include "../customizations.h"
-#include "../Helper/wxTranslationHelper.h"
+#include <lslutils/globalsmanager.h>
+#include <lslunitsync/c_api.h>
+#include <lslunitsync/unitsync.h>
 
 IMPLEMENT_APP(Springsettings)
 
@@ -160,7 +161,7 @@ bool Springsettings::OnInit()
 		sett().SetForcedSpringConfigFilePath( m_engine_config_filepath );
 	}
 	//unitsync first load, NEEDS to be blocking
-	usync().ReloadUnitSyncLib();
+	LSL::usync().ReloadUnitSyncLib();
 	if ( !m_customizer_archive_name.IsEmpty() ) {
 		if ( !SLcustomizations().Init( m_customizer_archive_name ) ) {
 			customMessageBox( SL_MAIN_ICON, _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
@@ -190,7 +191,7 @@ int Springsettings::OnExit()
 	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
 	SetEvtHandlerEnabled(false);
-	DestroyGlobals();
+  LSL::Util::DestroyGlobals();
 	return 0;
 }
 

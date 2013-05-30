@@ -39,13 +39,13 @@
 #include "utils/controls.h"
 #include "utils/platform.h"
 #include "ui.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "channel/channel.h"
 #include "utils/customdialogs.h"
 #include "springsettings/se_utils.h"
 #include "downloader/prdownloader.h"
 #include "updater/updater.h"
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include "gui/notificationmanager.h"
 #include "Helper/wxTranslationHelper.h"
 #include "playback/playbacktraits.h"
@@ -181,7 +181,7 @@ bool SpringLobbyApp::OnInit()
 		sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
 	}
 	//unitsync first load, NEEDS to be blocking
-	const bool usync_loaded = usync().ReloadUnitSyncLib();
+	const bool usync_loaded = LSL::usync().ReloadUnitSyncLib();
 	if ( !sett().IsFirstRun() && !usync_loaded )
 	{
 		customMessageBox( SL_MAIN_ICON, _("Please check that the file given in Preferences->Spring is a proper, readable unitsync library"),
@@ -251,7 +251,7 @@ int SpringLobbyApp::OnExit()
 
     SetEvtHandlerEnabled(false);
 	UiEvents::GetNotificationEventSender().Enable( false );
-    DestroyGlobals();
+    LSL::Util::DestroyGlobals();
 
     return 0;
 }
@@ -444,8 +444,8 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			{
 				if( IsUACenabled() )
 				{
-					usync().ReloadUnitSyncLib();
-					if ( usync().IsLoaded() ) usync().SetSpringDataPath(_T("")); // UAC is on, fix the spring data path
+					LSL::usync().ReloadUnitSyncLib();
+                    if ( LSL::usync().IsLoaded() ) LSL::usync().SetSpringDataPath(""); // UAC is on, fix the spring data path
 				}
 			}
 			if ( settversion < 12 )

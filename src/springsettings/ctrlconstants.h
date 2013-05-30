@@ -190,7 +190,7 @@ const int UPDATE_QA_BOXES	  	                    = 2001;
 const int UPDATE_ALL			                    = 2000;
 const int UPDATE_EXPERTMODE_WARNING_ON_SIMPLETAB   = 2003;
 
-#define configHandler (susynclib())
+#define configHandler (LSL::susynclib())
 const wxSize TAB_SIZE (700,500);
 
 //#include <wx/string.h>

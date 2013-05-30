@@ -29,7 +29,7 @@
 
 #include "battleroomtab.h"
 #include "ui.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "user.h"
 #include "battle.h"
 #include "defines.h"
@@ -459,28 +459,30 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
   if ( !m_battle ) return;
 
 	long index = m_opt_list_map[ Tag ];
-	OptionsWrapper::GameOption type = ( OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
-	wxString key = Tag.AfterFirst( '_' );
-	wxString value;
-	if ( ( type == OptionsWrapper::MapOption ) || ( type == OptionsWrapper::ModOption ) || ( type == OptionsWrapper::EngineOption ) )
+    LSL::OptionsWrapper::GameOption type = ( LSL::OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
+    const auto key = STD_STRING(Tag.AfterFirst( '_' ));
+    std::string value;
+	if ( ( type == LSL::OptionsWrapper::MapOption ) || ( type == LSL::OptionsWrapper::ModOption ) || ( type == LSL::OptionsWrapper::EngineOption ) )
 	{
-		OptionType DataType = m_battle->CustomBattleOptions().GetSingleOptionType( key );
-		value = m_battle->CustomBattleOptions().getSingleValue( key, ( OptionsWrapper::GameOption )type );
-		if ( m_battle->CustomBattleOptions().getDefaultValue( key, type ) == value ) m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
-		else m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD ) );
-		if ( DataType == opt_bool )
+        LSL::Enum::OptionType DataType = m_battle->CustomBattleOptions().GetSingleOptionType( key );
+		value = m_battle->CustomBattleOptions().getSingleValue( key, ( LSL::OptionsWrapper::GameOption )type );
+        if ( m_battle->CustomBattleOptions().getDefaultValue( key, type ) == value )
+            m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
+        else
+            m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD ) );
+        if ( DataType == LSL::Enum::opt_bool )
 		{
-			value =  bool2yn( s2l( value ) ); // convert from 0/1 to literal Yes/No
+            value = STD_STRING(bool2yn(s2l(TowxString(value)))); // convert from 0/1 to literal Yes/No
 		}
-		else if ( DataType == opt_list )
+        else if ( DataType == LSL::Enum::opt_list )
 		{
 			value = m_battle->CustomBattleOptions().GetNameListOptValue( key, type ); // get the key full name not short key
 		}
-		m_opts_list->SetItem( index, 1, value );
+        m_opts_list->SetItem( index, 1, TowxString(value));
 	}
-	else// if ( type == OptionsWrapper::PrivateOptions )
+	else// if ( type == LSL::OptionsWrapper::PrivateOptions )
 	{
-		if ( key == _T( "mapname" ) ) // the map has been changed
+        if ( key == "mapname" ) // the map has been changed
 		{
 		    UpdateMapInfoSummary();
 
@@ -496,12 +498,12 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 			{
                 m_opts_list->DeleteItem( i );
 			}
-			AddMMOptionsToList( m_map_opts_index, OptionsWrapper::MapOption );
+			AddMMOptionsToList( m_map_opts_index, LSL::OptionsWrapper::MapOption );
 
 			m_minimap->UpdateMinimap();
 
 		}
-		else if ( key == _T( "restrictions" ) )
+        else if ( key == "restrictions" )
 		{
 			m_opts_list->SetItem( index, 1, bool2yn( m_battle->RestrictedUnits().size() > 0 ) );
 		}
@@ -519,7 +521,7 @@ void BattleRoomTab::UpdateMapInfoSummary()
 	try   // updates map info summary
 	{
 		ASSERT_EXCEPTION( m_battle->MapExists(), _( "Map does not exist." ) );
-		UnitSyncMap map = m_battle->LoadMap();
+		LSL::UnitsyncMap map = m_battle->LoadMap();
 		m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ] , 1, wxFormat( _T( "%.0fx%.0f" ) ) % (map.info.width / 512.0) % (map.info.height / 512.0 ) );
 		m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, wxFormat( _T( "%d-%d" ) ) % map.info.minWind % map.info.maxWind );
 		m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, wxFormat( _T( "%d" ) ) % map.info.tidalStrength );
@@ -934,14 +936,13 @@ void BattleRoomTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 	m_battle->SendMyBattleStatus(); // This should reset sync status.
 }
 
-long BattleRoomTab::AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag )
+long BattleRoomTab::AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOption optFlag )
 {
-	if ( !m_battle ) return -1;
-	OptionsWrapper::wxStringTripleVec optlist = m_battle->CustomBattleOptions().getOptions( optFlag );
-	for ( OptionsWrapper::wxStringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
+    if ( !m_battle ) return -1;
+    for (auto it : m_battle->CustomBattleOptions().getOptions(optFlag))
 	{
-		m_opts_list->InsertItem( pos, it->second.first );
-		wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it->first;
+        m_opts_list->InsertItem(pos, TowxString(it.second.first));
+        const wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it.first;
 		m_opt_list_map[ tag ] = pos;
 		UpdateBattleInfo( tag );
 		pos++;
@@ -1006,11 +1007,10 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 
 	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
 	{
-		wxString mapname = mapSelectDialog().GetSelectedMap()->name;
-		wxLogDebugFunc( mapname );
+        const wxString mapname = TowxString(mapSelectDialog().GetSelectedMap()->name);
 		if ( !m_battle->IsFounderMe() )
 		{
-			m_battle->DoAction( _T( "suggests " ) + mapname );
+            m_battle->DoAction( _T( "suggests " ) + mapname );
 			return;
 		}
 		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
@@ -1024,7 +1024,7 @@ void BattleRoomTab::ReloadMaplist()
 	if ( !m_battle ) return;
 	m_map_combo->Clear();
 
-	wxArrayString maplist = usync().GetMapList();
+    const wxArrayString maplist = LSL::Util::vectorToArrayString(LSL::usync().GetMapList());
 // maplist.Sort(CompareStringIgnoreCase);
 
 	size_t nummaps = maplist.Count();
@@ -1037,7 +1037,7 @@ void BattleRoomTab::SetMap( int index )
 	if ( !m_battle ) return;
 	try
 	{
-		UnitSyncMap map = usync().GetMapEx( index );
+		LSL::UnitsyncMap map = LSL::usync().GetMapEx( index );
 		m_battle->SetLocalMap( map );
 		m_battle->SendHostInfo( IBattle::HI_Map );
 	} catch ( ... ) {}
@@ -1050,7 +1050,7 @@ void BattleRoomTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 	{
 		try
 		{
-			m_battle->DoAction( _T( "suggests " ) + usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
+            m_battle->DoAction( _T( "suggests " ) + TowxString(LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name));
 		}
 		catch ( ... )
 		{
@@ -1075,10 +1075,10 @@ void BattleRoomTab::OnOptionActivate( wxListEvent& event )
 			break;
 		}
 	}
-	OptionsWrapper& optWrap = m_battle->CustomBattleOptions();
-	OptionsWrapper::GameOption optFlag = ( OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
-	wxString key = tag.AfterFirst( '_' );
-	OptionType type = optWrap.GetSingleOptionType( key );
+    LSL::OptionsWrapper& optWrap = m_battle->CustomBattleOptions();
+    LSL::OptionsWrapper::GameOption optFlag = ( LSL::OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
+    const auto key = STD_STRING(tag.AfterFirst( '_' ));
+    LSL::Enum::OptionType type = optWrap.GetSingleOptionType(key);
 	if ( !optWrap.keyExists( key, optFlag, false, type ) ) return;
 	SingleOptionDialog dlg( *m_battle, tag );
 	dlg.ShowModal();
@@ -1137,7 +1137,8 @@ void BattleRoomTab::SetBattle( Battle* battle )
 		m_color_sel->SetColor( m_battle->GetMe().BattleStatus().colour );
 		try
 		{
-			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+            const wxArrayString sides = LSL::Util::vectorToArrayString(
+                        LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
 			{
 				m_side_sel->Append( sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
@@ -1169,7 +1170,7 @@ void BattleRoomTab::SetBattle( Battle* battle )
 
 		ReloadMaplist();
 
-		UpdateBattleInfo( wxFormat( _T( "%d_mapname" ) ) % OptionsWrapper::PrivateOptions );
+		UpdateBattleInfo( wxFormat( _T( "%d_mapname" ) ) % LSL::OptionsWrapper::PrivateOptions );
 		UpdateBattleInfo();
 		UpdateStatsLabels();
 	}
@@ -1194,17 +1195,17 @@ void BattleRoomTab::RegenerateOptionsList()
 	pos++;
 	m_opts_list->InsertItem( pos, wxEmptyString );
 	pos++;
-	pos = AddMMOptionsToList( pos, OptionsWrapper::EngineOption );
+	pos = AddMMOptionsToList( pos, LSL::OptionsWrapper::EngineOption );
 	// AddMMOptionsToList already increments pos by itself
 	m_opts_list->InsertItem( pos, wxEmptyString );
 	pos++;
 	m_mod_opts_index = pos;
-	pos = AddMMOptionsToList( m_mod_opts_index, OptionsWrapper::ModOption );
+	pos = AddMMOptionsToList( m_mod_opts_index, LSL::OptionsWrapper::ModOption );
 	// AddMMOptionsToList already increments pos by itself
 	m_opts_list->InsertItem( pos, wxEmptyString );
 	pos++;
 	m_map_opts_index = pos;
-	pos = AddMMOptionsToList( m_map_opts_index, OptionsWrapper::MapOption );
+	pos = AddMMOptionsToList( m_map_opts_index, LSL::OptionsWrapper::MapOption );
 }
 
 void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )

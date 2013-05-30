@@ -9,14 +9,16 @@
 
 #include <wx/arrstr.h>
 #include <wx/sstream.h>
+#include <wx/log.h>
 #include <wx/wfstream.h>
 #include <wx/filename.h>
 #include <wx/protocol/http.h>
 #include <wx/xml/xml.h>
 
 #include "../utils/misc.h"
+#include "../utils/conversion.h"
 #include "../settings.h"
-#include "../springunitsync.h"
+#include <lslunitsync/unitsync.h>
 
 const int invalid_id = -1;
 
@@ -133,9 +135,9 @@ bool Widget::DownloadImages()
               //download success
 
             }
-            catch (...)
+            catch (std::exception& e)
             {
-                wxLogMessage(_T("exception on download of") + fileurl);
+                wxLogError(_T("exception on download of %s: %s"), fileurl.c_str(), TowxString(e.what()).c_str());
                 return false;
             }
         }
@@ -179,7 +181,7 @@ bool Widget::GetFileInfos()
                     }
                     else if ( item_name == _T("LocalPath") ) {
                         file.local_path = item->GetNodeContent();
-                        file_present_count += usync().FileExists( file.local_path );
+                        file_present_count += LSL::usync().FileExists(STD_STRING(file.local_path));
                     }
                     item = item->GetNext();
                 }

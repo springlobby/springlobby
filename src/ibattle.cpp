@@ -13,7 +13,8 @@
 #include "settings.h"
 #include "ui.h" //only required for preset stuff
 #include "spring.h"
-#include "springunitsynclib.h"
+#include <lslunitsync/c_api.h>
+#include <lslutils/conversion.h>
 #include "springlobbyapp.h"
 
 #include <list>
@@ -44,7 +45,7 @@ IBattle::IBattle():
 
 IBattle::~IBattle()
 {
-	if ( m_is_self_in ) usync().UnSetCurrentMod();
+	if ( m_is_self_in ) LSL::usync().UnSetCurrentMod();
 	if ( m_timer ) m_timer->Stop();
 	delete m_timer;
 }
@@ -54,10 +55,10 @@ bool IBattle::IsSynced()
     LoadMod();
     LoadMap();
     bool synced = true;
-    if ( !m_host_map.hash.IsEmpty() && m_host_map.hash != '0' && m_host_map.hash != m_local_map.hash ) synced = false;
-    else if ( !m_host_map.name.IsEmpty() && m_local_map.name != m_host_map.name) synced = false;
-    else if ( !m_host_mod.hash.IsEmpty() && m_host_mod.hash != '0' && m_host_mod.hash != m_local_mod.hash ) synced = false;
-    else if ( !m_host_mod.name.IsEmpty() && m_local_mod.name != m_host_mod.name) synced = false;
+    if ( !m_host_map.hash.empty() && m_host_map.hash != "0" && m_host_map.hash != m_local_map.hash ) synced = false;
+    else if ( !m_host_map.name.empty() && m_local_map.name != m_host_map.name) synced = false;
+    else if ( !m_host_mod.hash.empty() && m_host_mod.hash != "0" && m_host_mod.hash != m_local_mod.hash ) synced = false;
+    else if ( !m_host_mod.name.empty() && m_local_mod.name != m_host_mod.name) synced = false;
     return synced;
 }
 
@@ -675,7 +676,7 @@ int IBattle::GetFreeAlly( bool excludeme ) const
 UserPosition IBattle::GetFreePosition()
 {
 	UserPosition ret;
-  UnitSyncMap map = LoadMap();
+  LSL::UnitsyncMap map = LoadMap();
   for ( int i = 0; i < int(map.info.positions.size()); i++ )
 	{
     bool taken = false;
@@ -703,37 +704,39 @@ UserPosition IBattle::GetFreePosition()
 }
 
 
-void IBattle::SetHostMap(const wxString& mapname, const wxString& hash)
+void IBattle::SetHostMap(const wxString& _mapname, const wxString& _hash)
 {
+  const std::string mapname(STD_STRING(_mapname));
+  const std::string hash(STD_STRING(_hash));
   if ( mapname != m_host_map.name || hash != m_host_map.hash )
   {
     m_map_loaded = false;
     m_host_map.name = mapname;
     m_host_map.hash = hash;
-	if ( !m_host_map.hash.IsEmpty() && m_host_map.hash != '0' )
-		m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+    if ( !m_host_map.hash.empty() && m_host_map.hash != "0" )
+		m_map_exists = LSL::usync().MapExists( m_host_map.name, m_host_map.hash );
 	else
-		m_map_exists = usync().MapExists( m_host_map.name );
+		m_map_exists = LSL::usync().MapExists( m_host_map.name );
 	#ifndef __WXMSW__ //!TODO why not on win?
 		if ( m_map_exists && !spring().IsRunning() )
-			usync().PrefetchMap( m_host_map.name );
+			LSL::usync().PrefetchMap( m_host_map.name );
 	#endif
   }
 }
 
 
-void IBattle::SetLocalMap(const UnitSyncMap& map)
+void IBattle::SetLocalMap(const LSL::UnitsyncMap& map)
 {
   if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
     m_local_map = map;
     m_map_loaded = true;
-	if ( !m_host_map.hash.IsEmpty() && m_host_map.hash != '0' )
-		m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
+    if ( !m_host_map.hash.empty() && m_host_map.hash != "0" )
+		m_map_exists = LSL::usync().MapExists( m_host_map.name, m_host_map.hash );
 	else
-		m_map_exists = usync().MapExists( m_host_map.name );
+		m_map_exists = LSL::usync().MapExists( m_host_map.name );
     #ifndef __WXMSW__
 		if ( m_map_exists && !spring().IsRunning() )
-			usync().PrefetchMap( m_host_map.name );
+			LSL::usync().PrefetchMap( m_host_map.name );
     #endif
     if ( IsFounderMe() ) // save all rects infos
     {
@@ -743,14 +746,14 @@ void IBattle::SetLocalMap(const UnitSyncMap& map)
 }
 
 
-const UnitSyncMap& IBattle::LoadMap()
+const LSL::UnitsyncMap& IBattle::LoadMap()
 {
 
   if ( !m_map_loaded ) {
     try {
       ASSERT_EXCEPTION( m_map_exists, _T("Map does not exist.") );
-      m_local_map = usync().GetMapEx( m_host_map.name );
-	  bool options_loaded = CustomBattleOptions().loadOptions( OptionsWrapper::MapOption, m_host_map.name );
+      m_local_map = LSL::usync().GetMapEx( m_host_map.name );
+	  bool options_loaded = CustomBattleOptions().loadOptions( LSL::OptionsWrapper::MapOption, m_host_map.name );
 	  ASSERT_EXCEPTION( options_loaded, _T("couldn't load the map options") );
       m_map_loaded = true;
 
@@ -762,50 +765,56 @@ const UnitSyncMap& IBattle::LoadMap()
 
 wxString IBattle::GetHostMapName() const
 {
-  return m_host_map.name;
+  return TowxString(m_host_map.name);
 }
 
 
 wxString IBattle::GetHostMapHash() const
 {
-  return m_host_map.hash;
+  return TowxString(m_host_map.hash);
 }
 
 
-void IBattle::SetHostMod( const wxString& modname, const wxString& hash )
+void IBattle::SetHostMod( const wxString& _modname, const wxString& _hash )
 {
+    const std::string modname(STD_STRING(_modname));
+    const std::string hash(STD_STRING(_hash));
   if ( m_host_mod.name != modname || m_host_mod.hash != hash )
   {
     m_mod_loaded = false;
     m_host_mod.name = modname;
     m_host_mod.hash = hash;
-    if ( !m_host_mod.hash.IsEmpty() && m_host_mod.hash != '0' ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );
-    else m_mod_exists = usync().ModExists( m_host_mod.name );
+    if ( !m_host_mod.hash.empty() && m_host_mod.hash != "0" )
+        m_mod_exists = LSL::usync().ModExists( m_host_mod.name, m_host_mod.hash );
+    else
+        m_mod_exists = LSL::usync().ModExists( m_host_mod.name );
   }
 }
 
 
-void IBattle::SetLocalMod( const UnitSyncMod& mod )
+void IBattle::SetLocalMod( const LSL::UnitsyncMod& mod )
 {
   if ( mod.name != m_local_mod.name || mod.hash != m_local_mod.hash )
   {
-    m_previous_local_mod_name = m_local_mod.name;
+    m_previous_local_mod_name = TowxString(m_local_mod.name);
     m_local_mod = mod;
     m_mod_loaded = true;
-    if ( !m_host_mod.hash.IsEmpty() && m_host_mod.hash != '0' ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash );
-    else m_mod_exists = usync().ModExists( m_host_mod.name );
+    if ( !m_host_mod.hash.empty() && m_host_mod.hash != "0" )
+        m_mod_exists = LSL::usync().ModExists( m_host_mod.name, m_host_mod.hash );
+    else
+        m_mod_exists = LSL::usync().ModExists( m_host_mod.name );
   }
 }
 
 
-const UnitSyncMod& IBattle::LoadMod()
+const LSL::UnitsyncMod& IBattle::LoadMod()
 {
   if ( !m_mod_loaded )
    {
     try {
       ASSERT_EXCEPTION( m_mod_exists, _T("Mod does not exist.") );
-      m_local_mod = usync().GetMod( m_host_mod.name );
-	  bool options_loaded = CustomBattleOptions().loadOptions( OptionsWrapper::ModOption, m_host_mod.name );
+      m_local_mod = LSL::usync().GetMod( m_host_mod.name );
+	  bool options_loaded = CustomBattleOptions().loadOptions( LSL::OptionsWrapper::ModOption, m_host_mod.name );
 	  ASSERT_EXCEPTION( options_loaded, _T("couldn't load the mod options") );
       m_mod_loaded = true;
     } catch (...) {}
@@ -816,27 +825,27 @@ const UnitSyncMod& IBattle::LoadMod()
 
 wxString IBattle::GetHostModName() const
 {
-  return m_host_mod.name;
+  return TowxString(m_host_mod.name);
 }
 
 
 wxString IBattle::GetHostModHash() const
 {
-  return m_host_mod.hash;
+  return TowxString(m_host_mod.hash);
 }
 
 
 bool IBattle::MapExists() const
 {
   return m_map_exists;
-//  return usync().MapExists( m_map.name, m_map.hash );
+//  return LSL::usync().MapExists( m_map.name, m_map.hash );
 }
 
 
 bool IBattle::ModExists() const
 {
   return m_mod_exists;
-//  return usync().ModExists( m_host_mod.name, m_host_mod.hash );
+//  return LSL::usync().ModExists( m_host_mod.name, m_host_mod.hash );
 }
 
 void IBattle::RestrictUnit( const wxString& unitname, int count )
@@ -887,17 +896,20 @@ void IBattle::OnSelfLeftBattle()
     m_players_ready = 0;
     m_players_sync = 0;
 	m_players_ok = 0;
-	usync().UnSetCurrentMod(); //left battle
+	LSL::usync().UnSetCurrentMod(); //left battle
 }
 
 void IBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 {
-  if ( !m_host_mod.hash.IsEmpty() && m_host_mod.hash != '0' ) m_mod_exists = usync().ModExists( m_host_mod.name, m_host_mod.hash);
-  else m_mod_exists = usync().ModExists( m_host_mod.name );
-  if ( !m_host_map.hash.IsEmpty() && m_host_map.hash != '0' )  m_map_exists = usync().MapExists( m_host_map.name, m_host_map.hash );
-  else  m_map_exists = usync().MapExists( m_host_map.name );
+    if ( !m_host_mod.hash.empty() && m_host_mod.hash != "0" )
+        m_mod_exists = LSL::usync().ModExists( m_host_mod.name, m_host_mod.hash);
+    else
+        m_mod_exists = LSL::usync().ModExists( m_host_mod.name );
+    if ( !m_host_map.hash.empty() && m_host_map.hash != "0" )
+        m_map_exists = LSL::usync().MapExists( m_host_map.name, m_host_map.hash );
+    else
+        m_map_exists = LSL::usync().MapExists( m_host_map.name );
 }
-
 
 
 static wxString FixPresetName( const wxString& name )
@@ -918,23 +930,25 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
   if (preset == _T("")) return false; //preset not found
   m_preset = preset;
 
-  for ( unsigned int i = 0; i < OptionsWrapper::LastOption; i++)
+  for ( unsigned int i = 0; i < LSL::OptionsWrapper::LastOption; i++)
   {
     std::map<wxString,wxString> options = sett().GetHostingPreset( m_preset, i );
-    if ( (OptionsWrapper::GameOption)i != OptionsWrapper::PrivateOptions )
+    if ( (LSL::OptionsWrapper::GameOption)i != LSL::OptionsWrapper::PrivateOptions )
     {
 	  for ( std::map<wxString,wxString>::const_iterator itor = options.begin(); itor != options.end(); ++itor )
       {
             wxLogWarning( itor->first + _T(" ::: ") + itor->second );
-            CustomBattleOptions().setSingleOption( itor->first, itor->second, (OptionsWrapper::GameOption)i );
+            CustomBattleOptions().setSingleOption( STD_STRING(itor->first),
+                                                   STD_STRING(itor->second),
+                                                   (LSL::OptionsWrapper::GameOption)i );
       }
     }
     else
     {
       if ( !options[_T("mapname")].IsEmpty() )
       {
-        if ( usync().MapExists( options[_T("mapname")] ) ) {
-            UnitSyncMap map = usync().GetMapEx( options[_T("mapname")] );
+        if (LSL::usync().MapExists(STD_STRING(options[_T("mapname")]))) {
+            LSL::UnitsyncMap map = LSL::usync().GetMapEx(STD_STRING(options[_T("mapname")]) );
             SetLocalMap( map );
             SendHostInfo( HI_Map );
         }
@@ -968,7 +982,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
       	RestrictUnit( unitinfo.BeforeLast(_T('=')), s2l( unitinfo.AfterLast(_T('=')) ) );
       }
       SendHostInfo( HI_Restrictions );
-	  Update( wxFormat( _T("%d_restrictions") ) % OptionsWrapper::PrivateOptions );
+	  Update( wxFormat( _T("%d_restrictions") ) % LSL::OptionsWrapper::PrivateOptions );
 
     }
   }
@@ -983,18 +997,23 @@ void IBattle::SaveOptionsPreset( const wxString& name )
   m_preset = FixPresetName(name);
   if (m_preset == _T("")) m_preset = name; //new preset
 
-  for ( int i = 0; i < (int)OptionsWrapper::LastOption; i++)
+  for ( int i = 0; i < (int)LSL::OptionsWrapper::LastOption; i++)
   {
-    if ( (OptionsWrapper::GameOption)i != OptionsWrapper::PrivateOptions )
+    if ( (LSL::OptionsWrapper::GameOption)i != LSL::OptionsWrapper::PrivateOptions )
     {
-      sett().SetHostingPreset( m_preset, (OptionsWrapper::GameOption)i, CustomBattleOptions().getOptionsMap( (OptionsWrapper::GameOption)i ) );
+      const auto opts = CustomBattleOptions().getOptionsMap( (LSL::OptionsWrapper::GameOption)i );
+      std::map<wxString, wxString> wopts;
+      for( const auto pair : opts)
+          wopts.insert(std::make_pair(TowxString(pair.first), TowxString(pair.second)));
+      sett().SetHostingPreset( m_preset, (LSL::OptionsWrapper::GameOption)i, wopts);
     }
     else
     {
       std::map<wxString,wxString> opts;
       opts[_T("mapname")] = GetHostMapName();
       unsigned int validrectcount = 0;
-      if ( s2l (CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) ) == ST_Choose )
+      if ( LSL::Util::FromString<long>(
+               CustomBattleOptions().getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption ) ) == ST_Choose )
       {
         unsigned int boxcount = GetLastRectIdx();
         for ( unsigned int boxnum = 0; boxnum <= boxcount; boxnum++ )
@@ -1020,7 +1039,7 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       }
       opts[_T("restrictions")] = restrictionsstring;
 
-      sett().SetHostingPreset( m_preset, (OptionsWrapper::GameOption)i, opts );
+      sett().SetHostingPreset( m_preset, (LSL::OptionsWrapper::GameOption)i, opts );
     }
   }
   sett().SaveSettings();
@@ -1101,23 +1120,23 @@ void IBattle::LoadScriptMMOpts( const wxString& sectionname, const SL::PDataList
 	if ( !node.ok() ) return;
 	SL::PDataList section ( node->Find(sectionname) );
     if ( !section.ok() ) return;
-    OptionsWrapper& opts = CustomBattleOptions();
+    LSL::OptionsWrapper& opts = CustomBattleOptions();
 	for ( SL::PNode n = section->First(); n != section->Last(); n = section->Next( n ) )
     {
-				if ( !n.ok() ) continue;
-        opts.setSingleOption( n->Name(), section->GetString( n->Name() ) );
+        if ( !n.ok() ) continue;
+            opts.setSingleOption( STD_STRING(n->Name()), STD_STRING(section->GetString( n->Name() )) );
     }
 }
 
 void IBattle::LoadScriptMMOpts( const SL::PDataList& node )
 {
 	if ( !node.ok() ) return;
-    OptionsWrapper& opts = CustomBattleOptions();
+    LSL::OptionsWrapper& opts = CustomBattleOptions();
     typedef std::map<wxString,wxString> optMap;
-    optMap options = opts.getOptionsMap(OptionsWrapper::EngineOption);
-    for ( optMap::const_iterator i = options.begin(); i != options.end(); ++i)
+    auto options = opts.getOptionsMap(LSL::OptionsWrapper::EngineOption);
+    for (const auto i : options)
     {
-        opts.setSingleOption( i->first, node->GetString( i->first, i->second ) );
+        opts.setSingleOption( i.first, STD_STRING(node->GetString( TowxString(i.first), TowxString(i.second))));
     }
 }
 
@@ -1157,10 +1176,10 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 
 
 
-        wxArrayString sides;
+        LSL::StringVector sides;
         if ( loadmapmod )
         {
-        	sides = usync().GetSides( modname );
+            sides = LSL::usync().GetSides(STD_STRING(modname));
         }
 
 				IBattle::TeamVec parsed_teams = GetParsedTeamsVec();
@@ -1226,7 +1245,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 											teaminfos.RGBColor = GetColorFromFloatStrng( team->GetString( _T("RGBColor") ) );
 											teaminfos.SideName = team->GetString( _T("Side"), _T("") );
 											teaminfos.Handicap = team->GetInt( _T("Handicap"), 0 );
-											int sidepos = sides.Index( teaminfos.SideName );
+                                            const int sidepos = LSL::Util::IndexInSequence(sides, STD_STRING(teaminfos.SideName));
 											teaminfos.SideNum = sidepos;
 											parsed_teams[ user.BattleStatus().team ] = teaminfos;
 									}

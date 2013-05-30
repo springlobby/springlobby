@@ -6,7 +6,7 @@
 #include <wx/panel.h>
 
 #include "ibattle.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 
 class wxPanel;
 class wxBitmap;
@@ -16,7 +16,9 @@ class Battle;
 struct BattleStartRect;
 class SinglePlayerBattle;
 class Ui;
-struct UnitSyncMap;
+namespace LSL {
+    struct UnitsyncMap;
+}
 class BattleRoomTab;
 
 class MapCtrl : public wxPanel
@@ -79,7 +81,7 @@ class MapCtrl : public wxPanel
     void OnRightUp( wxMouseEvent& event );
     void OnMouseWheel( wxMouseEvent& event );
 
-    void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
+    void OnGetMapImageAsyncCompleted(const std::string mapname);
 
     void SetReadOnly( bool readonly ) { m_ro = readonly; }
 
@@ -158,7 +160,7 @@ class MapCtrl : public wxPanel
 
     void _SetCursor();
 
-    UnitSyncAsyncOps m_async;
+    LSL::UnitSyncAsyncOps m_async;
 
     wxBitmap* m_minimap;
     wxBitmap* m_metalmap;
@@ -167,7 +169,7 @@ class MapCtrl : public wxPanel
 
     IBattle* m_battle;
 
-    wxString m_mapname;
+    std::string m_mapname;
 
     bool m_draw_start_types;
     bool m_fixed_size;
@@ -203,7 +205,7 @@ class MapCtrl : public wxPanel
     wxBitmap* m_reload_img;
     wxBitmap* m_dl_img;
 
-    UnitSyncMap m_map;
+    LSL::UnitsyncMap m_map;
 
     User* m_user_expanded;
 

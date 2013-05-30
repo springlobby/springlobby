@@ -188,19 +188,19 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	oldFile.Close();
 
 	//add keysyms
-	key_sym_map keySymRev;
+	//key_sym_map keySymRev;
 	for( key_sym_map::const_iterator iter = springbindings.getKeySyms().begin(); iter != springbindings.getKeySyms().end(); ++iter )
 	{
 		newFile.AddLine( wxT("keysym\t\t") + iter->first + wxT("\t\t") + iter->second );
-		keySymRev[ KeynameConverter::convertHexValueToKey( iter->second ) ] = iter->first;
+		//keySymRev[ KeynameConverter::convertHexValueToKey( iter->second ) ] = iter->first;
 	}
 
 	//add keysyms
-	key_sym_map keySymSetRev;
+	//key_sym_map keySymSetRev;
 	for( key_sym_set_map::const_iterator iter = springbindings.getKeySymsSet().begin(); iter != springbindings.getKeySymsSet().end(); ++iter )
 	{
 		newFile.AddLine( wxT("keyset\t\t") + iter->first + wxT("\t\t") + springbindings.resolveKeySymKey(iter->second ) );
-		keySymSetRev[ iter->second ] = iter->first;
+		//keySymSetRev[ iter->second ] = iter->first;
 	}
 
 	//add fakemeta

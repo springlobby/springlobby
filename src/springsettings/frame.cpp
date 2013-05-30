@@ -26,7 +26,7 @@
 
 #include "frame.h"
 #include "../settings.h"
-#include "../springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "../mainwindow.h"
 #include "tab_render_detail.h"
 #include "tab_quality_video.h"
@@ -85,8 +85,8 @@ settings_frame::settings_frame(wxWindow *parent, const wxString &title, wxWindow
 	alreadyCalled = false;
 	parentWindow = parent;
 
-	if ( !usync().IsLoaded() )
-        usync().ReloadUnitSyncLib();
+	if ( !LSL::usync().IsLoaded() )
+        LSL::usync().ReloadUnitSyncLib();
 
 	notebook = new wxNotebook(this, ID_OPTIONS);
 //	notebook->SetFont(wxFont(8, wxSWISS, wxNORMAL,wxNORMAL, false, _T("Tahoma")));

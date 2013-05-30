@@ -2,6 +2,7 @@
 #define SL_PLAYBACKLIST_H_INCLUDED
 
 #include <map>
+#include <vector>
 #include <wx/event.h>
 
 class wxArrayString;
@@ -22,7 +23,7 @@ class PlaybackList : public wxEvtHandler
     //! @brief const iterator for playback map
     typedef typename playback_map_t::const_iterator playback_const_iter_t;
 
-    virtual void LoadPlaybacks( const wxArrayString& filenames ) = 0;
+    virtual void LoadPlaybacks( const std::vector<std::string>& filenames ) = 0;
     //!loads replays between two indices
 //    virtual void LoadPlaybacks( const unsigned int from, const unsigned int to) = 0;
 

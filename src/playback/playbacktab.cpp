@@ -20,7 +20,7 @@
 #include "../utils/debug.h"
 #include "../uiutils.h"
 #include "../settings.h"
-#include "../springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "../mapctrl.h"
 #include <hosting/battleroomlistctrl.h>
 
@@ -295,7 +295,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 					if ( sett().GetCurrentUsedSpringIndex() != itor->first ) {
 						wxLogMessage( _T( "%s requires version: %s, switching to profile: %s" ), type.c_str(), rep.SpringVersion.c_str(), itor->first.c_str() );
 						sett().SetUsedSpringIndex( itor->first );
-						usync().AddReloadEvent(); // request an unitsync reload
+                        LSL::usync().AddReloadEvent(); // request an unitsync reload
 					}
 					versionfound = true;
 				}
@@ -311,7 +311,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 				AskForceWatch( rep );
 				return;
 			}
-			rep.battle.GetMe().SetNick( usync().GetDefaultNick() );
+            rep.battle.GetMe().SetNick(TowxString(LSL::usync().GetDefaultNick()));
 			bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
 			if ( watchable )
 				rep.battle.StartSpring();

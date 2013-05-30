@@ -4,7 +4,7 @@
 //
 #include "battle.h"
 #include "ui.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "server.h"
 #include "user.h"
 #include "utils/misc.h"
@@ -17,7 +17,8 @@
 #include "settings.h"
 #include "useractions.h"
 #include "utils/customdialogs.h"
-#include "springunitsynclib.h"
+#include <lslunitsync/c_api.h>
+#include <lslutils/conversion.h>
 #include "iconimagelist.h"
 #include "spring.h"
 
@@ -127,7 +128,7 @@ void Battle::SetImReady( bool ready )
 
 /*bool Battle::HasMod()
 {
-  return usync().ModExists( m_opts.modname );
+  return LSL::usync().ModExists( m_opts.modname );
 }*/
 
 
@@ -142,10 +143,10 @@ void Battle::DoAction( const wxString& msg )
     m_serv.DoActionBattle( m_opts.battleid, msg );
 }
 
-void Battle::SetLocalMap( const UnitSyncMap& map )
+void Battle::SetLocalMap( const LSL::UnitsyncMap& map )
 {
 	IBattle::SetLocalMap( map );
-	if ( IsFounderMe() )  LoadMapDefaults( map.name );
+    if ( IsFounderMe() )  LoadMapDefaults( TowxString(map.name) );
 }
 
 User& Battle::GetMe()
@@ -161,9 +162,9 @@ const User& Battle::GetMe() const
 void Battle::SaveMapDefaults()
 {
     // save map preset
-		wxString mapname = LoadMap().name;
-		wxString startpostype = CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption );
-		sett().SetMapLastStartPosType( mapname, startpostype);
+        const wxString mapname = TowxString(LoadMap().name);
+        const std::string startpostype = CustomBattleOptions().getSingleValue( "startpostype", LSL::OptionsWrapper::EngineOption );
+        sett().SetMapLastStartPosType( mapname, TowxString(startpostype));
 		std::vector<Settings::SettStartBox> rects;
 		for( unsigned int i = 0; i <= GetLastRectIdx(); ++i )
 		{
@@ -184,8 +185,10 @@ void Battle::SaveMapDefaults()
 
 void Battle::LoadMapDefaults( const wxString& mapname )
 {
-	CustomBattleOptions().setSingleOption( _T("startpostype"), sett().GetMapLastStartPosType( mapname ), OptionsWrapper::EngineOption );
-	SendHostInfo( wxFormat( _T("%d_startpostype") ) % OptionsWrapper::EngineOption );
+    CustomBattleOptions().setSingleOption( "startpostype",
+                                           STD_STRING(sett().GetMapLastStartPosType(mapname)),
+                                           LSL::OptionsWrapper::EngineOption );
+	SendHostInfo( wxFormat( _T("%d_startpostype") ) % LSL::OptionsWrapper::EngineOption );
 
 	for( unsigned int i = 0; i <= GetLastRectIdx(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects
 	SendHostInfo( IBattle::HI_StartRects );
@@ -1000,7 +1003,8 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     std::vector<ControlTeam> control_teams;
 
 	if ( numcontrolteams == 0 || numcontrolteams == -1 ) numcontrolteams = GetNumUsers() - GetSpectators(); // 0 or -1 -> use num players, will use comshare only if no available team slots
-    IBattle::StartType position_type = (IBattle::StartType)s2l( CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ) );
+    IBattle::StartType position_type = (IBattle::StartType)
+            LSL::Util::FromString<long>(CustomBattleOptions().getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption));
     if ( ( position_type == ST_Fixed ) || ( position_type == ST_Random ) ) // if fixed start pos type or random, use max teams = start pos count
     {
       try

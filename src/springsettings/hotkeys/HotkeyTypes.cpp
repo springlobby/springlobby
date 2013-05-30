@@ -321,8 +321,8 @@ bool key_binding::operator==(const key_binding& other) const
 				{
 					wxLogWarning( wxT("Difference in hotkey group: ") + iter->first );
 
-					const std::vector<wxString> cmdsA = iter->second;
-					const std::vector<wxString> cmdsB = fiter->second;
+					//const std::vector<wxString> cmdsA = iter->second;
+					//const std::vector<wxString> cmdsB = fiter->second;
 
 					int i=0;
 					++i;
@@ -345,8 +345,8 @@ bool key_binding::operator==(const key_binding& other) const
 				{
 					wxLogWarning( wxT("Difference in hotkey groupAny: ") + iter->first );
 
-					const std::vector<wxString> cmdsA = iter->second;
-					const std::vector<wxString> cmdsB = fiter->second;
+					//const std::vector<wxString> cmdsA = iter->second;
+					//const std::vector<wxString> cmdsB = fiter->second;
 
 					int i=0;
 					++i;

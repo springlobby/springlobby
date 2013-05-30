@@ -65,17 +65,36 @@ FIND_PACKAGE(wxWidgets REQUIRED ${wxWidgets_USE_LIBS})
 IF(wxWidgets_FOUND)
 	INCLUDE(${wxWidgets_USE_FILE})
 	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+	add_definitions(-DHAVE_WX)
 ELSE(wxWidgets_FOUND)
 	# For Convenience. If we cannot continue, inform the User.
 	MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
 ENDIF(wxWidgets_FOUND)
 
-execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cppflags"
+if (CMAKE_CROSSCOMPILING)
+	message(STATUS "Crosscompiling: using static flags for wxwidgets")
+	set(WXSTATIC "--static")
+else()
+	set(WXSTATIC "")
+endif()
+
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cppflags" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_CXX_FLAGS
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
-execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs"
+message(STATUS "Using WX_CXX_FLAGS: ${WX_CXX_FLAGS}")
+
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cflags" "${WXSTATIC}"
+	OUTPUT_VARIABLE WX_C_FLAGS
+	OUTPUT_STRIP_TRAILING_WHITESPACE )
+message(STATUS "Using WX_C_FLAGS: ${WX_C_FLAGS}")
+
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_LD_FLAGS
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
+message(STATUS "Using WX_LD_FLAGS: ${WX_LD_FLAGS}")
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WX_CXX_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${WX_C_FLAGS}")
 
 
 #----------------------------------------------------------------------------------------------------
@@ -221,12 +240,7 @@ add_sources(SLSharedWithSettings
 	utils/uievents.cpp
 	utils/curlhelper.cpp
 	crashreport.cpp
-	globalsmanager.cpp
-	mmoptionmodel.cpp
-	mmoptionswrapper.cpp
 	settings.cpp
-	springunitsynclib.cpp
-	springunitsync.cpp
 	thread.cpp
 	infodialog.cpp
 	gui/windowattributespickle.cpp
@@ -316,10 +330,10 @@ IF(WIN32)
 ELSE (WIN32)
 	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 	#only do this on platforms with awk expected to be installed
-	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/lsl/src/lslunitsync/unitsync.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils pr-downloader_static
+TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr-downloader_static
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${ALURE_LIBRARIES}

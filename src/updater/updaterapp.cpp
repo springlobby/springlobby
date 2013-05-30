@@ -33,7 +33,7 @@
 #include "../utils/platform.h"
 #include "../utils/customdialogs.h"
 #include "updater.h"
-#include "../globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 
 #include "versionchecker.h"
 #include "updatermainwindow.h"
@@ -119,7 +119,7 @@ int UpdaterApp::OnExit()
   	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
     SetEvtHandlerEnabled(false);
-    DestroyGlobals();
+    LSL::Util::DestroyGlobals();
 
     return 0;
 }

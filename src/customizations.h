@@ -1,8 +1,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CUSTOMIZATIONS_H
 #define SPRINGLOBBY_HEADERGUARD_CUSTOMIZATIONS_H
 
-#include "globalsmanager.h"
-#include "mmoptionswrapper.h"
+#include <lslutils/globalsmanager.h>
+#include <lslunitsync/optionswrapper.h>
 #include <wx/string.h>
 #include <wx/icon.h>
 #include <wx/bitmap.h>
@@ -20,7 +20,7 @@ class Customizations {
         Customizations();
 
         wxString m_modname;
-        OptionsWrapper m_customs;
+        LSL::OptionsWrapper m_customs;
         wxIconBundle m_app_icons;
         wxString m_help_url;
         wxString m_archive;
@@ -40,7 +40,7 @@ class Customizations {
         const wxString& Archive() const;
         const wxIconBundle& GetAppIconBundle() const;
 
-        const OptionsWrapper& GetCustomizations() const;
+        const LSL::OptionsWrapper& GetCustomizations() const;
 
 		wxString GetIntroText() const;
 
@@ -48,7 +48,7 @@ class Customizations {
 		bool GetBitmap( const wxString& key, wxBitmap& bitmap );
 
 		static const wxString IntroKey;// ( _T("intro_file") );
-        friend class GlobalObjectHolder<Customizations, LineInfo<Customizations> >;
+        friend class LSL::Util::GlobalObjectHolder<Customizations, LSL::Util::LineInfo<Customizations> >;
 
 #ifdef SL_QT_MODE
         bool Init(const QString& shortname, const QString& version );

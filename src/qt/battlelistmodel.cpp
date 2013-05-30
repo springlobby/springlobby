@@ -53,10 +53,10 @@ QVariant BattlelistModel::data(const QModelIndex &index, int role ) const
     const Battle& battle = *m_battles[row];
     switch ( role ) {
         case Mapname:{
-            return FromwxString<QVariant>( battle.GetHostMapName() );
+            return QVariant::fromValue(STD_STRING(battle.GetHostMapName()));
         }
         case Founder:
-            return FromwxString<QVariant>( battle.GetFounder().GetNick() );
+            return QVariant::fromValue(STD_STRING(battle.GetFounder().GetNick()));
         case PlayerMax:
             return QVariant::fromValue( battle.GetMaxPlayers() );
         case PlayerCurrent:
@@ -65,7 +65,7 @@ QVariant BattlelistModel::data(const QModelIndex &index, int role ) const
 			return QVariant::fromValue( battle.GetID() );
         case Description:
         default: {
-            return FromwxString<QVariant>( battle.GetDescription()  );
+            return QVariant::fromValue(STD_STRING(battle.GetDescription()));
         }
     }
 }

@@ -35,10 +35,12 @@
 #include "qt/noguisingleplayerbattle.h"
 #include "offlinebattle.h"
 #include "user.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "nonportable.h"
 #include "tdfcontainer.h"
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
+
+#include <lslutils/conversion.h>
 
 #ifdef SL_QT_MODE
 	#include <QMessageBox>
@@ -55,8 +57,8 @@ END_EVENT_TABLE()
 
 Spring& spring()
 {
-    static LineInfo<Spring> m( AT );
-	static GlobalObjectHolder<Spring,LineInfo<Spring> > m_spring( m );
+    static LSL::Util::LineInfo<Spring> m( AT );
+	static LSL::Util::GlobalObjectHolder<Spring, LSL::Util::LineInfo<Spring> > m_spring( m );
 	return m_spring;
 }
 
@@ -230,7 +232,7 @@ bool Spring::LaunchSpring( const wxString& params  )
 
 		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
 		#ifdef __WXMSW__
-		if ( usync().GetSpringVersion().Find(_T("0.78.") ) != wxNOT_FOUND ) configfileflags = _T("");
+      if ( LSL::usync().GetSpringVersion().find("0.78.") != std::string::npos ) configfileflags = _T("");
 		#endif
   }
 
@@ -377,10 +379,10 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
                     wxLogDebugFunc( _T("") ); break;
 			}
 
-			long startpostype;
-			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
+            const long startpostype = LSL::Util::FromString<long>(
+                battle.CustomBattleOptions().getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption ));
 
-			std::vector<StartPos> remap_positions;
+            std::vector<LSL::StartPos> remap_positions;
 			if ( battle.IsProxy() && ( startpostype != IBattle::ST_Pick ) && ( startpostype != IBattle::ST_Choose ) )
 			{
 				std::set<int> parsedteams;
@@ -396,14 +398,14 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 						NumTeams++;
 				}
 
-				MapInfo infos = battle.LoadMap().info;
+                LSL::MapInfo infos = battle.LoadMap().info;
 				unsigned int nummapstartpositions = infos.positions.size();
 				unsigned int copysize = std::min( nummapstartpositions, NumTeams );
-				remap_positions = std::vector<StartPos> ( infos.positions.begin(), infos.positions.begin() + copysize ); // only add the first x positions
+                remap_positions = std::vector<LSL::StartPos> ( infos.positions.begin(), infos.positions.begin() + copysize ); // only add the first x positions
 
 				if ( startpostype == IBattle::ST_Random )
 				{
-					random_shuffle( remap_positions.begin(), remap_positions.end() ); // shuffle the positions
+                    std::random_shuffle( remap_positions.begin(), remap_positions.end() ); // shuffle the positions
 				}
 
 			}
@@ -417,21 +419,19 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			}
 			else tdf.Append( _T("startpostype"), startpostype );
 
-			tdf.EnterSection( _T("mapoptions") );
-				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+            tdf.EnterSection( _T("mapoptions") );
+                for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::MapOption ))
 				{
-						tdf.Append(it->first,it->second.second);
+                    tdf.Append(TowxString(it.first), TowxString(it.second.second));
 				}
 			tdf.LeaveSection();
 
 
 			tdf.EnterSection(_T("modoptions"));
 				tdf.Append( _T("relayhoststartpostype"), startpostype ); // also save the original wanted setting
-				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+                for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::ModOption ))
 				{
-						tdf.Append(it->first,it->second.second);
+                    tdf.Append(TowxString(it.first), TowxString(it.second.second));
 				}
 			tdf.LeaveSection();
 
@@ -509,7 +509,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					tdf.LeaveSection();
 					player_to_number[&user] = i;
 			}
-			if ( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+            if ( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
 			{
 				for ( unsigned int i = 0; i < NumUsers; i++ )
 				{
@@ -524,13 +524,12 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 								tdf.Append( _T("IsFromDemo"), int(status.isfromdemo) );
 								tdf.Append( _T("Host"), player_to_number[&battle.GetUser( status.owner )] );
 								tdf.EnterSection( _T("Options") );
-									int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex( user.GetNick() );
+                                    int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex(STD_STRING(user.GetNick()));
 									if ( optionmapindex > 0 )
-									{
-										OptionsWrapper::wxStringTripleVec optlistMod_ = battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optionmapindex );
-										for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod_.begin(); it != optlistMod_.end(); ++it)
+                                    {
+                                        for (const auto& it : battle.CustomBattleOptions().getOptions((LSL::OptionsWrapper::GameOption)optionmapindex ))
 										{
-												tdf.Append(it->first,it->second.second);
+                                            tdf.Append(TowxString(it.first), TowxString(it.second.second));
 										}
 									}
 								tdf.LeaveSection();
@@ -542,7 +541,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			tdf.AppendLineBreak();
 
 			std::set<int> parsedteams;
-			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
+            const auto sides = LSL::usync().GetSides(STD_STRING(battle.GetHostModName()));
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
@@ -552,7 +551,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					parsedteams.insert( status.team );
 
 					tdf.EnterSection( _T("TEAM") + TowxString( teams_to_sorted_teams[status.team] ) );
-						if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
+                        if ( !LSL::usync().VersionSupports(LSL::USYNC_GetSkirmishAI ) && status.IsBot() )
 						{
 								tdf.Append( _T("AIDLL"), status.aishortname );
 								tdf.Append( _T("TeamLeader"), player_to_number[&battle.GetUser( status.owner )] ); // bot owner is the team leader
@@ -580,7 +579,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 									int teamnumber = teams_to_sorted_teams[status.team];
 									if ( teamnumber < int(remap_positions.size()) ) // don't overflow
 									{
-										StartPos position = remap_positions[teamnumber];
+                                        LSL::StartPos position = remap_positions[teamnumber];
 										tdf.Append(_T("StartPosX"), position.x );
 										tdf.Append(_T("StartPosZ"), position.y );
 									}
@@ -604,7 +603,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 						tdf.Append( _T("RGBColor"), colourstring);
 
 						unsigned int side = status.side;
-						if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
+                        if ( side < sides.size() ) tdf.Append( _T("Side"), sides[side] );
 						tdf.Append( _T("Handicap"), status.handicap );
 					tdf.LeaveSection();
 			}

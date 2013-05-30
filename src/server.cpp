@@ -229,7 +229,7 @@ void ServerSelector::SetCurrentServer(Server* server)
 
 ServerSelector& serverSelector()
 {
-	static LineInfo<ServerSelector> m( AT );
-	static GlobalObjectHolder<ServerSelector,LineInfo<ServerSelector> > m_selector( m );
+    static LSL::Util::LineInfo<ServerSelector> m( AT );
+    static LSL::Util::GlobalObjectHolder<ServerSelector, LSL::Util::LineInfo<ServerSelector> > m_selector( m );
 	return m_selector;
 }

@@ -14,7 +14,7 @@
 #include <wx/textctrl.h>
 
 #include "ui.h"
-#include "mmoptionswrapper.h"
+#include <lslunitsync/optionswrapper.h>
 #include "battle.h"
 #include "utils/controls.h"
 #include <lslutils/misc.h>
@@ -29,11 +29,11 @@ SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiont
     m_spinctrl( 0 ),
     m_textctrl( 0 )
 {
-	OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
-	OptionsWrapper::GameOption optFlag = ( OptionsWrapper::GameOption )s2l( optiontag.BeforeFirst( '_' ) );
-	wxString key = optiontag.AfterFirst( '_' );
-	OptionType type = optWrap.GetSingleOptionType( key );
-	Create( (wxWindow*)&ui().mw(), wxID_ANY, _( "Change option" ), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T( "OptionDialog" ) );
+    LSL::OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
+    LSL::OptionsWrapper::GameOption optFlag = ( LSL::OptionsWrapper::GameOption )s2l( optiontag.BeforeFirst( '_' ) );
+    const auto key = STD_STRING(optiontag.AfterFirst( '_' ));
+    LSL::Enum::OptionType type = optWrap.GetSingleOptionType( key );
+    Create( (wxWindow*)&ui().mw(), wxID_ANY, _( "Change option" ), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T( "OptionDialog" ) );
 	if ( !optWrap.keyExists( key, optFlag, false, type ) )
 	{
 		EndModal( wxID_CANCEL );
@@ -46,44 +46,48 @@ SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiont
 
 	switch ( type )
 	{
-		case opt_bool:
+        case LSL::Enum::opt_bool:
 			{
-				mmOptionBool opt = optWrap.m_opts[optFlag].bool_map[key];
-				m_checkbox = new wxCheckBox( this, wxID_ANY, opt.name );
-				m_checkbox->SetToolTip( TE( opt.description ) );
+                const auto opt = optWrap.m_opts[optFlag].bool_map[key];
+                m_checkbox = new wxCheckBox( this, wxID_ANY, TowxString(opt.name));
+                m_checkbox->SetToolTip( TES( opt.description ) );
 				m_checkbox->SetValue( opt.value );
 				m_main_sizer->Add( m_checkbox, 0, wxEXPAND );
 				break;
 			}
-		case opt_float:
+        case LSL::Enum::opt_float:
 			{
-				mmOptionFloat opt = optWrap.m_opts[optFlag].float_map[key];
+                const auto opt = optWrap.m_opts[optFlag].float_map[key];
 				m_spinctrl = new SlSpinCtrlDouble<SingleOptionDialog>();
-				m_spinctrl->Create( this, wxID_ANY, _T( "" ), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, double( opt.min ), double( opt.max ), double( opt.value ), double( opt.stepping ), opt.key );
-				m_spinctrl->SetToolTip( TE( opt.description ) );
+                m_spinctrl->Create( this, wxID_ANY, _T( "" ), wxDefaultPosition, wxDefaultSize,
+                                    wxSP_ARROW_KEYS, double( opt.min ), double( opt.max ),
+                                    double( opt.value ), double( opt.stepping ), TowxString(opt.key));
+                m_spinctrl->SetToolTip( TES( opt.description ) );
 				m_main_sizer->Add( m_spinctrl, 0, wxEXPAND );
 				break;
 			}
-		case opt_string:
+        case LSL::Enum::opt_string:
 			{
-				mmOptionString opt = optWrap.m_opts[optFlag].string_map[key];
-				m_textctrl = new wxTextCtrl( this, wxID_ANY, opt.value, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, opt.key );
-				m_textctrl->SetToolTip( TE( opt.description ) );
+                const auto opt = optWrap.m_opts[optFlag].string_map[key];
+                m_textctrl = new wxTextCtrl( this, wxID_ANY, TowxString(opt.value), wxDefaultPosition,
+                                             wxDefaultSize,0, wxDefaultValidator, TowxString(opt.key));
+                m_textctrl->SetToolTip( TES( opt.description ) );
 				m_main_sizer->Add( m_textctrl, 0, wxEXPAND );
 				break;
 			}
-		case opt_list:
+        case LSL::Enum::opt_list:
 			{
-				mmOptionList opt = optWrap.m_opts[optFlag].list_map[key];
-				int temp = int( opt.cbx_choices.GetCount() - 1 );
-				int index = LSL::Util::Clamp( opt.cur_choice_index, 0, temp );
-				m_combobox = new wxComboBox( this, wxID_ANY, opt.cbx_choices[index], wxDefaultPosition, wxDefaultSize, opt.cbx_choices, wxCB_READONLY, wxDefaultValidator );
-				wxString tooltip = opt.description + _T( "\n" );
-				for ( ListItemVec::const_iterator itor = opt.listitems.begin(); itor != opt.listitems.end(); ++itor )
+                const auto opt = optWrap.m_opts[optFlag].list_map[key];
+                const int temp = int( opt.cbx_choices.size() - 1 );
+                const int index = LSL::Util::Clamp( opt.cur_choice_index, 0, temp );
+                m_combobox = new wxComboBox( this, wxID_ANY, TowxString(opt.cbx_choices[index]), wxDefaultPosition, wxDefaultSize,
+                                             LSL::Util::vectorToArrayString(opt.cbx_choices), wxCB_READONLY, wxDefaultValidator );
+                std::string tooltip = opt.description + "\n";
+                for (const auto itor : opt.listitems)
 				{
-					tooltip += _T( "\n" ) + itor->name + _T( ": " ) + itor->desc;
+                    tooltip += "\n" + itor.name + ": " + itor.desc;
 				}
-				m_combobox->SetToolTip( TE( tooltip ) );
+                m_combobox->SetToolTip( TES( tooltip ) );
 				m_main_sizer->Add( m_combobox, 0, wxEXPAND );
 				break;
 			}
@@ -125,11 +129,14 @@ void SingleOptionDialog::OnCancel( wxCommandEvent& /*unused*/ )
 
 void SingleOptionDialog::OnOk( wxCommandEvent& /*unused*/ )
 {
-	OptionsWrapper::GameOption optFlag = ( OptionsWrapper::GameOption )s2l( m_tag.BeforeFirst( '_' ) );
-	wxString key = m_tag.AfterFirst( '_' );
+    const auto optFlag = ( LSL::OptionsWrapper::GameOption )s2l( m_tag.BeforeFirst( '_' ) );
+    const auto key = STD_STRING(m_tag.AfterFirst( '_' ));
 	wxString value;
-	if ( m_textctrl ) value = m_textctrl->GetValue();
-	else if ( m_combobox ) value = m_battle.CustomBattleOptions().GetNameListOptItemKey( key, m_combobox->GetValue(), optFlag );
+    if ( m_textctrl )
+        value = m_textctrl->GetValue();
+    else if ( m_combobox )
+        value = TowxString(m_battle.CustomBattleOptions()
+                           .GetNameListOptItemKey(key, STD_STRING(m_combobox->GetValue()), optFlag));
 	else if ( m_spinctrl )
 	{
 	    double d = m_spinctrl->GetValue() ;
@@ -137,7 +144,7 @@ void SingleOptionDialog::OnOk( wxCommandEvent& /*unused*/ )
 		wxLogMessage( _T("Got VALUE: %s -- %f"), value.c_str(), d );
 	}
 	else if ( m_checkbox ) value = TowxString( m_checkbox->GetValue() );
-	m_battle.CustomBattleOptions().setSingleOption( key, value, optFlag );
+    m_battle.CustomBattleOptions().setSingleOption( key, STD_STRING(value), optFlag );
 	m_battle.SendHostInfo( m_tag );
 	EndModal( wxID_OK );
 }

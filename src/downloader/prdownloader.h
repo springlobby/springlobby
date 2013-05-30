@@ -55,7 +55,7 @@ struct DownloadInfo{
 
 class SearchItem : public LSL::WorkItem {
 public:
-    SearchItem(std::list<IDownloader*> loaders, const std::string& name, IDownload::category cat);
+    SearchItem(std::list<IDownloader*> loaders, std::string name, IDownload::category cat);
     void Run();
 
 private:

@@ -3,7 +3,7 @@
 
 #include <wx/scrolwin.h>
 
-#include "mmoptionswrapper.h"
+#include <lslunitsync/optionswrapper.h>
 #include "utils/isink.h"
 #include "utils/uievents.h"
 #include <map>
@@ -26,7 +26,6 @@ class wxListCtrl;
 class MapCtrl;
 class ColorButton;
 class wxBitmapComboBox;
-struct UnitSyncMap;
 class wxToggleButton;
 class wxChoice;
 class wxListEvent;
@@ -120,12 +119,12 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 	protected:
 
-		long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
+		long AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOption optFlag );
 
 		void SplitSizerHorizontally( const bool horizontal );
 
 		Battle* m_battle;
-//		UnitSyncMap m_map; //not needed
+//		LSL::UnitsyncMap m_map; //not needed
 
 		long m_mod_opts_index;
 		long m_map_opts_index;

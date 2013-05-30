@@ -50,7 +50,7 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 	if ( command == _T( "!start" ) ) {
 		StartBattle();
 	}
-	else if ( command == _T( "!balance" ) ) {
+    else if ( command == _T( "!balance" ) ) {
 		unsigned int num = s2l( params );
 		m_battle.Autobalance( IBattle::balance_random, false, false, num );
 		m_battle.DoAction( _T( "is auto-balancing alliances ..." ) );
@@ -152,10 +152,10 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 		if ( params.IsEmpty() ) m_battle.DoAction( _T( "cannot switch to void mapname" ) );
 		else
 		{
-			wxString mapname = GetBestMatch( usync().GetMapList(), params );
+            const wxString mapname = GetBestMatch( LSL::Util::vectorToArrayString(LSL::usync().GetMapList()), params );
 			try
 			{
-				UnitSyncMap map = usync().GetMap( mapname );
+                LSL::UnitsyncMap map = LSL::usync().GetMap(STD_STRING(mapname));
 				m_battle.SetLocalMap( map );
 				m_battle.DoAction( _T( "is switching to map " ) + mapname );
 				m_battle.SendHostInfo( IBattle::HI_Map );
@@ -166,23 +166,23 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 		}
 	}
 	else if ( command == _T( "!set" ) ) {
-		wxString key = params.BeforeFirst( _T( ' ' ) );
-		wxString value = params.AfterFirst( _T( ' ' ) );
-		bool exists = m_battle.CustomBattleOptions().keyExists( key );
+        const std::string key = STD_STRING(params.BeforeFirst( _T( ' ' )));
+        const std::string value = STD_STRING(params.AfterFirst( _T( ' ' ) ));
+        const bool exists = m_battle.CustomBattleOptions().keyExists( key );
 		if ( exists )
 		{
-			bool result = m_battle.CustomBattleOptions().setSingleOption( key, value );
+            bool result = m_battle.CustomBattleOptions().setSingleOption( key, value);
 			if ( result )
 			{
-				OptionsWrapper::GameOption section = m_battle.CustomBattleOptions().GetSection( key );
+                auto section = m_battle.CustomBattleOptions().GetSection( key );
 				m_battle.SendHostInfo( wxFormat( _T( "%d_%s" ) ) % section % key );
-				m_battle.DoAction( _T( "has set option " ) + key + _T( " to value " ) + value );
+                m_battle.DoAction( TowxString( "has set option "  + key + " to value "  + value ));
 			}
-			else m_battle.DoAction( _T( "cannot set option " ) + key + _T( " to value " ) + value + _T( ", reason: invalid value." ) );
+            else m_battle.DoAction( TowxString( "cannot set option " + key + " to value " + value + ", reason: invalid value." ) );
 		}
 		else
 		{
-			m_battle.DoAction( _T( "cannot find option entry " ) + key );
+            m_battle.DoAction( TowxString( "cannot find option entry " + key ));
 		}
 	}
 	else if ( command == _T( "!addbox" ) ) {

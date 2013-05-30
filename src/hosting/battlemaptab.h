@@ -49,7 +49,7 @@ class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< Battl
 
   protected:
     Battle* m_battle;
-    //UnitSyncMap m_map;
+    //LSL::UnitsyncMap m_map;
 
     MapCtrl* m_minimap;
     wxChoice* m_map_combo;

@@ -15,7 +15,7 @@
 
 #include "battleroomlistctrl.h"
 #include "iconimagelist.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "battle.h"
 #include "ibattle.h"
 #include "uiutils.h"
@@ -207,7 +207,8 @@ void BattleroomListCtrl::SetBattle( IBattle* battle )
 	{
 		try
 		{
-			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+            const wxArrayString sides = LSL::Util::vectorToArrayString(
+                        LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
 			{
 				wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
@@ -248,7 +249,7 @@ void BattleroomListCtrl::UpdateUser( User& user )
 {
     if ( !user.BattleStatus().spectator )
 		icons().SetColourIcon( user.BattleStatus().colour );
-    wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+    wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
     ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
     user.SetSideiconIndex( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
     int index = GetIndexFromData( &user );
@@ -272,7 +273,7 @@ wxListItemAttr * BattleroomListCtrl::GetItemAttr(long item) const
 
 int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 {
-    if ( item == -1 || item >= (long)m_data.size())
+    if ( (item == -1) || (item >= (long)m_data.size()) || (m_battle == NULL) )
         return -1;
 
     const User& user = *GetDataFromIndex( item );
@@ -298,14 +299,15 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 	 if ( column == m_nick_column_index ) return -1;
 	 else
 	 {
-		wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemColumnImage") );
+		const wxString msg =  wxFormat(_("column oob in BattleroomListCtrl::OnGetItemColumnImage: %d" )) % column;
+		wxLogWarning( msg);
 		return -1;
 	 }
 }
 
 wxString BattleroomListCtrl::GetItemText(long item, long column) const
 {
-	if ( item == -1 || item >= (long)m_data.size())
+	if ( (item == -1) || (item >= (long)m_data.size()) || (m_battle == NULL))
 		return _T("");
 
 	const User& user = *GetDataFromIndex( item );
@@ -314,8 +316,8 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 
 	if ( column == m_faction_column_index ) {
 		try {
-			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-			ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
+            auto sides = LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName()));
+            ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.size(), _T("Side index too high") );
 		}
 		catch ( ... ) {
 			return wxFormat( _T("s%d") ) % (user.BattleStatus().side + 1);
@@ -326,7 +328,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
         if ( is_bot ) {
             wxString botname = user.BattleStatus().aishortname;
             if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
-            if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+            if ( !LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
             {
                 if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
                 if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));
@@ -388,8 +390,8 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 
     wxLogMessage(_T("Popup"));
     m_popup->EnableItems( !user.BattleStatus().IsBot(), GetSelectedUserNick() );//this updates groups, therefore we need to update the connection to evt handlers too
-    std::vector<long> groups_ids = m_popup->GetGroupIds();
-    for (std::vector<long>::const_iterator it = groups_ids.begin(); it != groups_ids.end(); ++it) {
+    std::vector<int> groups_ids = m_popup->GetGroupIds();
+    for (std::vector<int>::const_iterator it = groups_ids.begin(); it != groups_ids.end(); ++it) {
         Connect( *it, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuAddToGroup ), 0, this );
     }
     Connect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuCreateGroup), 0, this );
@@ -801,9 +803,10 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 			{
 				try
 				{
-					wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-					int side = user.BattleStatus().side;
-					if ( side < (int)sides.GetCount() ) m_tiptext = sides[side];
+                    const auto sides = LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName()));
+                    const int side = user.BattleStatus().side;
+                    if ( side < (int)sides.size() )
+                        m_tiptext = TowxString(sides[side]);
 				}
 				catch (...){}
 			}

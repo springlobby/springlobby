@@ -24,7 +24,7 @@ class UserMenu : public wxMenu, public SL::NonCopyable
 
     public:
         UserMenu(wxEvtHandler * /*connectee*/, ParentType* parent, const wxString& title = wxEmptyString, long style = 0)
-        : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent),m_groupCounter(0)
+        : wxMenu( title, style ),m_groupsMenu(0), m_parent(parent)
         {
             assert ( m_parent );
             m_groupsMenu = new wxMenu();
@@ -33,15 +33,12 @@ class UserMenu : public wxMenu, public SL::NonCopyable
                                     wxCommandEventHandler( EventHandler::OnUserMenuCreateGroup ), 0, m_parent );
             m_groupsMenu->Append( m_groupsnewItem );
             m_groupsMenu->AppendSeparator();
-//            if ( !ui().IsThisMe( m_parent->GetSelectedUser() ) )
             m_groupsMenuItem = AppendSubMenu( m_groupsMenu, _("Add to group..."));
             m_groupsDeleteItem = new wxMenuItem( m_groupsMenu, GROUP_ID_REMOVE, _("Remove from group")  );
             Connect( GROUP_ID_REMOVE, wxEVT_COMMAND_MENU_SELECTED,
                                     wxCommandEventHandler( EventHandler::OnUserMenuDeleteFromGroup ), 0, m_parent );
             Append( m_groupsDeleteItem );
         }
-
-        ~UserMenu(){}
 
         void EnableItems(bool isUserSelected, const wxString& nick)
         {
@@ -62,61 +59,69 @@ class UserMenu : public wxMenu, public SL::NonCopyable
 
         }
 
-        wxString GetGroupByEvtID( const long id )
+        wxString GetGroupByEvtID( const int id )
         {
             return m_idNameMap[id];
         }
 
         //we need these to circumvent the submneu events not firing via connecting the events in the parent class
-        std::vector<long> GetGroupIds() {
-            std::vector<long> ids;
-            std::map<long, wxString>::const_iterator it = m_idNameMap.begin();
+        std::vector<int> GetGroupIds() {
+            std::vector<int> ids;
+            std::map<int, wxString>::const_iterator it = m_idNameMap.begin();
             for ( ; it != m_idNameMap.end(); ++it ) {
-                long id = it->first;
+                int id = it->first;
                 if (  id != GROUP_ID_NEW && id != GROUP_ID_REMOVE )
                     ids.push_back( id );
             }
             return ids;
         }
 
-    protected:
+private:
         wxMenu* m_groupsMenu;
         wxMenuItem* m_groupsMenuItem;
         wxMenuItem* m_groupsDeleteItem;
         wxMenuItem* m_groupsnewItem;
-        wxArrayString m_oldGroups;
         ParentType* m_parent;
-        unsigned int m_groupCounter;
-        std::map<long, wxString> m_idNameMap;
-        std::map<wxString, long> m_NameIdMap;
+        std::map<int, wxString> m_idNameMap;
+        std::map<wxString, int> m_NameIdMap;
 
-        void UpdateGroups()
-        {
-            wxArrayString groupNames = useractions().GetGroupNames();
-            bool first = m_oldGroups.GetCount() == 0;
-            if ( first )
-                m_oldGroups = wxArrayString( groupNames );
-            for ( unsigned int i = 0; i < groupNames.GetCount(); ++i)
-            {
-                if ( m_oldGroups.Index( groupNames[i] ) == wxNOT_FOUND || first )
-                {
-                    long newID = wxNewId();
-                    m_idNameMap[m_groupCounter] = groupNames[i];
-                    wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, newID,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
-                    m_groupsMenu->Append( addItem );
-//                    Connect( newID, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( EventHandler::OnUserMenuAddToGroup ), 0, m_parent );
-                    m_oldGroups.Add( groupNames[i] );
-                    m_idNameMap[newID]  = groupNames[i];
-                    m_NameIdMap[groupNames[i]]  = newID;
-                    m_groupCounter++;
-                }
-                else
-                {
-                    //wxMenuItem* old = FindItem( m_NameIdMap[groupNames[i]] );
-                    Destroy( m_NameIdMap[groupNames[i]] );
-                }
-            }
-        }
+	void UpdateGroups() {
+		wxArrayString groupNames = useractions().GetGroupNames();
+		// delete all menu items not in groupNames
+		int count = m_groupsMenu->GetMenuItemCount();
+		for ( int i = count-1; i >=0; i--) {
+			wxMenuItem *cur = m_groupsMenu->FindItemByPosition(i);
+			// skip default entries
+			if ((cur==m_groupsMenuItem) || (cur==m_groupsDeleteItem) || (cur==m_groupsnewItem)
+				|| (cur->IsSeparator()))
+				continue;
+
+			if (groupNames.Index(cur->GetLabel()) != wxNOT_FOUND)
+				continue;
+
+			const int id = cur->GetId();
+			m_NameIdMap.erase(cur->GetLabel());
+			m_idNameMap.erase(id);
+			m_groupsMenu->Delete(id);
+		}
+
+		// add all missing menu items in groupNames
+		for ( unsigned int i = 0; i < groupNames.GetCount(); ++i)
+		{
+			const int id = m_NameIdMap[groupNames[i]];
+			if (id!=0)
+				continue;
+			wxMenuItem* item = m_groupsMenu->FindItem( id );
+			if ( item == NULL) {
+				wxMenuItem* addItem = new wxMenuItem( m_groupsMenu, wxID_ANY,  groupNames[i] , wxEmptyString, wxITEM_NORMAL );
+				const int newID = addItem->GetId();
+				m_groupsMenu->Append( addItem );
+
+				m_idNameMap[newID]  = groupNames[i];
+				m_NameIdMap[groupNames[i]]  = newID;
+			}
+		}
+	}
     //DECLARE_EVENT_TABLE();
 
 };

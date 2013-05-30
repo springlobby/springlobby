@@ -44,13 +44,13 @@ class ReplayList : public PlaybackList<Replay>
     typedef Replay
         PlaybackType;
 
-   virtual  void LoadPlaybacks( const wxArrayString& filenames );
+   virtual  void LoadPlaybacks( const std::vector<std::string>& filenames );
 
   protected:
     ReplayList();
 
     template <class PB, class T>
-    friend class GlobalObjectHolder;
+    friend class LSL::Util::GlobalObjectHolder;
 
     bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret ) const;
     wxString GetScriptFromReplay ( const wxString& ReplayPath, const int version ) const;

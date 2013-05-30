@@ -3,6 +3,8 @@
 
 #include <lslutils/misc.h>
 #include "../settings.h"
+#include <lslutils/conversion.h>
+#include "conversion.h"
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
@@ -39,6 +41,12 @@ double LevenshteinDistance(wxString s, wxString t)
     wxLogMessage( _T("LevenshteinDistance('%s', '%s') = %g"), s.c_str(), t.c_str(), d );
     return d;
 #undef D
+}
+
+std::string GetBestMatch(const std::vector<std::string>& a, const std::string& s, double* distance  )
+{
+    auto arr = LSL::Util::vectorToArrayString(a);
+    return STD_STRING(GetBestMatch(arr, TowxString(s), distance));
 }
 
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance )

@@ -2,7 +2,8 @@
 
 #include "settings.h"
 #include "spring.h"
-#include "springunitsynclib.h"
+#include <lslunitsync/c_api.h>
+#include <lslunitsync/unitsync.h>
 
 /** @brief StartSpring
   *
@@ -19,7 +20,7 @@ void NoGuiSinglePlayerBattle::StartSpring()
   * @todo: document this function
   */
 NoGuiSinglePlayerBattle::NoGuiSinglePlayerBattle()
-    :  m_me( User( usync().IsLoaded() ? usync().GetDefaultNick() : _T("invalid") ) )
+    :  m_me(User(TowxString(LSL::usync().IsLoaded() ? LSL::usync().GetDefaultNick() : "invalid")))
 {
     OnUserAdded( m_me );
     m_me.BattleStatus().colour = sett().GetBattleLastColour();
@@ -28,10 +29,10 @@ NoGuiSinglePlayerBattle::NoGuiSinglePlayerBattle()
 
 int NoGuiSinglePlayerBattle::GetAiIndex( const wxString& name )
 {
-    int total = susynclib().GetSkirmishAICount( m_host_mod.name );
+    int total = LSL::susynclib().GetSkirmishAICount( m_host_mod.name );
     for ( int i = 0; i < total; i++ )
     {
-        wxArrayString infos = susynclib().GetAIInfo( i );
+        const auto infos = LSL::susynclib().GetAIInfo(i);
         int namepos = infos.Index( _T("shortName") );
         //        int versionpos = infos.Index( _T("version") );
         wxString ainame;
@@ -46,8 +47,8 @@ int NoGuiSinglePlayerBattle::GetAiIndex( const wxString& name )
 
 int NoGuiSinglePlayerBattle::GetSideIndex( const wxString& name )
 {
-    wxArrayString sides = usync().GetSides( m_host_mod.name );
-    for ( int i = 0; i < (int)sides.Count(); ++i ) {
+    const auto sides = LSL::usync().GetSides( m_host_mod.name );
+    for ( int i = 0; i < (int)sides.size(); ++i ) {
         if ( name.CmpNoCase( sides[i] ) == 0 )
             return i;
     }

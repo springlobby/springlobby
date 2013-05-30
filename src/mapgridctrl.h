@@ -3,7 +3,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H
 
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/panel.h>
@@ -40,7 +40,7 @@ class MapGridCtrl : public wxPanel
 
 		void Clear();
 		void AddMap( const wxString& mapname );
-		void AddMap( const UnitSyncMap& map );
+		void AddMap( const LSL::UnitsyncMap& map );
 
 		void CheckInBounds();
 
@@ -71,7 +71,7 @@ class MapGridCtrl : public wxPanel
 			return m_maps.size();
 		}
 
-		UnitSyncMap* GetSelectedMap() const { return m_selected_map; }
+		LSL::UnitsyncMap* GetSelectedMap() const { return m_selected_map; }
 
 		void OnPaint( wxPaintEvent& event );
 		void OnResize( wxSizeEvent& event );
@@ -80,8 +80,8 @@ class MapGridCtrl : public wxPanel
 		void OnLeftDown( wxMouseEvent& event );
 		void OnLeftUp( wxMouseEvent& event );
 
-		void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
-		void OnGetMapExAsyncCompleted( wxCommandEvent& event );
+        void OnGetMapImageAsyncCompleted(const std::string& _mapname );
+        void OnGetMapExAsyncCompleted(const std::string& _mapname );
 
 	protected:
 
@@ -92,10 +92,10 @@ class MapGridCtrl : public wxPanel
 			MapState_GotMinimap
 		};
 
-		struct MapData : UnitSyncMap
+		struct MapData : LSL::UnitsyncMap
 		{
 			MapData() : state( MapState_NoMinimap ) {}
-			void operator=( const UnitSyncMap& other ) { UnitSyncMap::operator=( other ); }
+			void operator=( const LSL::UnitsyncMap& other ) { LSL::UnitsyncMap::operator=( other ); }
 
 			wxBitmap minimap;
 			MapState state;
@@ -145,7 +145,8 @@ class MapGridCtrl : public wxPanel
 		void SetMinimap( MapMap& maps, const wxString& mapname, const wxBitmap& minimap );
 		void SelectMap( MapData* map );
 
-		UnitSyncAsyncOps m_async;
+        LSL::UnitSyncAsyncOps m_async_image;
+        LSL::UnitSyncAsyncOps m_async_ex;
 
 		const bool m_selection_follows_mouse;
 

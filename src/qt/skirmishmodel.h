@@ -22,7 +22,7 @@
 #ifdef SL_QT_MODE
 
 #include <QAbstractListModel>
-#include "../mmoptionswrapper.h"
+#include <lslunitsync/mmoptionmodel.h>
 #include <qt/noguisingleplayerbattle.h>
 
 class SkirmishModel : public QAbstractListModel

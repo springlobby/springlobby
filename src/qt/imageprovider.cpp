@@ -18,7 +18,7 @@
 
 #include "imageprovider.h"
 #include <customizations.h>
-#include <springunitsync.h>
+#include <lslunitsync/unitsync.h>
 #include <qt/converters.h>
 #include <utils/conversion.h>
 #include <wx/image.h>
@@ -40,7 +40,7 @@ QImage MinimapImageProvider::requestImage ( const QString & id, QSize * size, co
 	int width = requestedSize.width() > 0 ? requestedSize.width() : 1024;
 	int height = requestedSize.height() > 0 ? requestedSize.height() : 1024;
 
-	const wxImage h = usync().GetMinimap( TowxString( id ), width, height );
+    const wxImage h = LSL::usync().GetMinimap(id.toStdString(), width, height );
 	if (size)
 		*size = QSize(width,height);
 	const QImage q = wxQtConvertImage( h );
@@ -62,14 +62,14 @@ QImage SideImageProvider::requestImage ( const QString & id, QSize * size, const
 	return img.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
 }
 
-QImage VfsImageProvider::requestImage ( const QString & id, QSize * size, const QSize & requestedSize )
+QImage VfsImageProvider::requestImage ( const QString& id, QSize* size, const QSize & requestedSize )
 {
     int width = requestedSize.width() > 0 ? requestedSize.width() : 1024;
     int height = requestedSize.height() > 0 ? requestedSize.height() : 1024;
 
     wxImage h;
     try {
-        h = usync().GetImage( SLcustomizations().GetModname(), TowxString( id ), false );
+        h = LSL::usync().GetImage( STD_STRING(SLcustomizations().GetModname()), id.toStdString(), false );
     }
     catch ( std::exception& e ) {
     }

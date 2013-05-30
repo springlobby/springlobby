@@ -89,6 +89,7 @@ Add_Subdirectory(doc)
 if( OPTION_TRANSLATION_SUPPORT )
         add_subdirectory(po)
 endif( OPTION_TRANSLATION_SUPPORT )
+ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 Add_Subdirectory(src)
 
 #cppcheck stuff

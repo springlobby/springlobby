@@ -32,7 +32,7 @@
 
 #include "nonportable.h"
 #include "chatoptionstab.h"
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "utils/controls.h"
 #include "uiutils.h"
 #include "settings.h"
