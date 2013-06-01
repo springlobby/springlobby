@@ -10,4 +10,5 @@ add_sources(springlobbySrc
 	mainjoinbattletab.cpp
 	mainsingleplayertab.cpp
 	mmoptionwindows.cpp
+	battleroomdownloads.cpp
 )

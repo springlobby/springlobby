@@ -52,6 +52,7 @@
 #include "mmoptionwindows.h"
 #include "aui/auimanager.h"
 #include "hostbattledialog_public.h"
+#include "battleroomdownloads.h"
 
 BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 
@@ -287,7 +288,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	wxBoxSizer* m_map_select_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_info_sizer = new wxBoxSizer( wxVERTICAL );
 	m_top_sizer = new wxBoxSizer( wxHORIZONTAL );
+
 	m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
+
 	//m_info1_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -347,9 +350,15 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_buttons_sizer->Add( m_manage_players_btn, 0, wxEXPAND | wxALL, 2 );
 	m_buttons_sizer->Add( m_start_btn, 0, wxEXPAND | wxALL, 2 );
 
+    wxBoxSizer* m_bottom_sizer = new wxBoxSizer( wxVERTICAL );
+    m_downloads=new BattleRoomDownloads(this,m_battle);
+
+    m_bottom_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
+    m_bottom_sizer->Add( m_downloads, 0, wxEXPAND );
+
 	m_main_sizer->Add( m_top_sizer, 1, wxEXPAND );
 	m_main_sizer->Add( m_command_line, 0, wxEXPAND );
-	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
+	m_main_sizer->Add( m_bottom_sizer, 0, wxEXPAND );
 
 	m_splitter->SetMinimumPaneSize( 240 );
 
@@ -516,7 +525,7 @@ BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 	return *m_players;
 }
 
-void BattleRoomTab::UpdateMapInfoSummary() 
+void BattleRoomTab::UpdateMapInfoSummary()
 {
 	try   // updates map info summary
 	{
@@ -1125,6 +1134,7 @@ void BattleRoomTab::SetBattle( Battle* battle )
 	m_opts_list->Enable(m_battle);
 
 	m_minimap->SetBattle( m_battle );
+	m_downloads->SetBattle( m_battle );
 	m_players->SetBattle( m_battle );
 	m_chat->SetBattle( m_battle );
 	m_players->Clear();
@@ -1233,6 +1243,10 @@ void BattleRoomTab::OnHostNew( wxCommandEvent& /*event*/ )
 	SL::RunHostBattleDialog( this );
 }
 
+void BattleRoomTab::OnUpdate()
+{
+    m_downloads->OnUpdate();
+}
 //void BattleRoomTab::MaximizeSizer()
 //{
 //	wxSize s = GetClientSize();

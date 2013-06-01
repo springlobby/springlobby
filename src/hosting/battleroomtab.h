@@ -12,6 +12,7 @@ class Ui;
 class Battle;
 struct BattleBot;
 class BattleroomListCtrl;
+class BattleRoomDownloads;
 class User;
 class ChatPanel;
 class wxCommandEvent;
@@ -117,6 +118,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void UpdateMapInfoSummary();
 		void UpdateMyInfo();
 
+        void OnUpdate();
 	protected:
 
 		long AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOption optFlag );
@@ -156,6 +158,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxStaticText* m_ok_count_lbl;
 
 		MapCtrl * m_minimap;
+        BattleRoomDownloads* m_downloads;
 
 		wxScrolledWindow* m_player_panel;
 

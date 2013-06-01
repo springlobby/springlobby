@@ -536,6 +536,7 @@ void Ui::OnUpdate( int mselapsed )
     if (m_upd_counter_torrent % 20 == 0 )
     {
 		mw().GetDownloadTab().OnUpdate();
+		mw().GetJoinTab().OnUpdate();
     }
 //    prDownloader().UpdateFromTimer( mselapsed );
     m_upd_counter_torrent++;

@@ -219,3 +219,7 @@ void MainJoinBattleTab::FocusBattleRoomTab()
 	m_tabs->SetSelection( 0 );
 }
 
+void MainJoinBattleTab::OnUpdate()
+{
+    m_battle_tab->OnUpdate();
+}
