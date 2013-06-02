@@ -10,14 +10,14 @@
 #include <lslunitsync/unitsync.h>
 
 BattleRoomDownloads::BattleRoomDownloads(wxWindow* parent, IBattle* battle):
-    wxPanel( parent, -1, wxDefaultPosition, wxSize(-1, 80), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
+    wxPanel( parent, -1, wxDefaultPosition, wxSize(-1, 80), wxNO_BORDER ),
     m_battle(battle)
 {
     wxBoxSizer* m_main_sizer = new wxBoxSizer(wxVERTICAL);
     {
         wxBoxSizer* m_map_sizer = new wxBoxSizer(wxHORIZONTAL);
         {
-            m_map_text=new wxStaticText(this,-1,_("Map download progress"));
+            m_map_text=new wxStaticText(this,-1,_("Map: "));
             {
                 m_map_sizer->Add( m_map_text, 0, wxALL, 2 );
             }
@@ -30,7 +30,7 @@ BattleRoomDownloads::BattleRoomDownloads(wxWindow* parent, IBattle* battle):
 
         wxBoxSizer* m_mod_sizer = new wxBoxSizer( wxHORIZONTAL );
         {
-            m_mod_text=new wxStaticText(this,-1,_("Mod download progress "));
+            m_mod_text=new wxStaticText(this,-1,_("Mod: "));
             {
                 m_mod_sizer->Add( m_mod_text, 0, wxALL, 2 );
             }
