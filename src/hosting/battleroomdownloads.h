@@ -7,6 +7,7 @@ class wxGauge;
 class wxStaticText;
 class ObserverDownloadInfo;
 class IBattle;
+class wxBoxSize;
 
 class BattleRoomDownloads: public wxPanel
 {
@@ -16,15 +17,18 @@ class BattleRoomDownloads: public wxPanel
         void OnUpdate();
         void SetBattle( IBattle* battle );
     private:
+
         wxGauge* m_map_progress;
+        wxStaticText* m_map_info;
         wxStaticText* m_map_text;
 
-        wxGauge* m_mod_progress;
-        wxStaticText* m_mod_text;
+        wxGauge* m_game_progress;
+        wxStaticText* m_game_info;
+        wxStaticText* m_game_text;
 
         IBattle* m_battle;
 
-        void SetProgress(ObserverDownloadInfo obi,wxGauge* g);
+        void SetProgress(ObserverDownloadInfo obi,wxStaticText* txt,wxGauge* g);
         void NoDownload(wxGauge* g);
 };
 

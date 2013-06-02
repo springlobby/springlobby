@@ -67,7 +67,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void OnAllySel( wxCommandEvent& event );
 		void OnColourSel( wxCommandEvent& event );
 		void OnSideSel( wxCommandEvent& event );
-		void OnPresetSel( wxCommandEvent& event );
+	//	void OnPresetSel( wxCommandEvent& event );
 		void OnAutoLock( wxCommandEvent& event );
 		void OnLockBalance( wxCommandEvent& event );
 		void OnShowManagePlayersMenu( wxCommandEvent& event );
@@ -193,8 +193,6 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxCheckBox* m_auto_unspec_chk;
 		wxCheckBox* m_lock_chk;
 		wxCheckBox* m_autolock_chk;
-
-		wxListCtrl* m_opts_list;
 
 		EventReceiverFunc<BattleRoomTab, UiEvents::UiEventData, &BattleRoomTab::OnBattleActionEvent> m_BattleActionSink;
 

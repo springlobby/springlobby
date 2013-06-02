@@ -152,7 +152,7 @@ void MainJoinBattleTab::ReloadPresetList()
 {
 	try
 	{
-		GetBattleRoomTab().UpdatePresetList();
+		//GetBattleRoomTab().UpdatePresetList();
 	} catch ( ... ) {}
 	try
 	{

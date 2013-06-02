@@ -13,38 +13,58 @@ BattleRoomDownloads::BattleRoomDownloads(wxWindow* parent, IBattle* battle):
     wxPanel( parent, -1, wxDefaultPosition, wxSize(-1, 80), wxNO_BORDER ),
     m_battle(battle)
 {
-    wxBoxSizer* m_main_sizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
     {
-        wxBoxSizer* m_map_sizer = new wxBoxSizer(wxHORIZONTAL);
+        wxBoxSizer* m_map_sizer= new wxBoxSizer( wxVERTICAL ); //
         {
-            m_map_text=new wxStaticText(this,-1,_("Map: "));
+            wxBoxSizer* m_map_data_size=new wxBoxSizer( wxHORIZONTAL );
             {
-                m_map_sizer->Add( m_map_text, 0, wxALL, 2 );
+                m_map_text=new wxStaticText(this,-1,_("Map "));
+                {
+                    m_map_data_size->Add( m_map_text, 0, wxALL, 2 );
+                }
+
+                m_map_info=new wxStaticText(this,-1,_T(""),wxDefaultPosition,wxSize(-1,-1),wxALIGN_CENTRE );
+                {
+                    m_map_data_size->Add( m_map_info, 0, wxALL, 2 );
+                }
+                m_map_sizer->Add( m_map_data_size, 0, wxALL, 2 );
             }
-            m_map_progress=new wxGauge(this,-1,100);
+
+            m_map_progress=new wxGauge(this,-1,100,wxDefaultPosition, wxDefaultSize, wxGA_SMOOTH|wxGA_HORIZONTAL );
             {
-                m_map_sizer->Add( m_map_progress, 1, wxALL, 2 );
+                m_map_sizer->Add( m_map_progress, 1, wxALL|wxEXPAND, 2 );
             }
-            m_main_sizer->Add( m_map_sizer, 0, wxALL | wxEXPAND, 2 );
+
+            m_main_sizer->Add( m_map_sizer, 0, wxALL|wxEXPAND, 2 );
         }
 
-        wxBoxSizer* m_mod_sizer = new wxBoxSizer( wxHORIZONTAL );
+        wxBoxSizer* m_game_sizer= new wxBoxSizer( wxVERTICAL );
         {
-            m_mod_text=new wxStaticText(this,-1,_("Mod: "));
+            wxBoxSizer* m_game_data_size=new wxBoxSizer( wxHORIZONTAL );
             {
-                m_mod_sizer->Add( m_mod_text, 0, wxALL, 2 );
+                m_game_text=new wxStaticText(this,-1,_("Game "));
+                {
+                    m_game_data_size->Add( m_game_text, 0, wxALL, 2 );
+                }
+
+                m_game_info=new wxStaticText(this,-1,_T(""),wxDefaultPosition,wxSize(-1,-1),wxALIGN_CENTRE );
+                {
+                    m_game_data_size->Add( m_game_info, 0, wxALL, 2 );
+                }
+                m_game_sizer->Add( m_game_data_size, 0, wxALL, 2 );
             }
-            m_mod_progress=new wxGauge(this,-1,100);
+
+            m_game_progress=new wxGauge(this,-1,100,wxDefaultPosition, wxDefaultSize, wxGA_SMOOTH|wxGA_HORIZONTAL );
             {
-                m_mod_sizer->Add( m_mod_progress, 1, wxALL, 2 );
+                m_game_sizer->Add( m_game_progress, 1, wxALL|wxEXPAND, 2 );
             }
-            m_main_sizer->Add( m_mod_sizer, 0, wxALL | wxEXPAND, 2 );
+
+            m_main_sizer->Add( m_game_sizer, 0, wxALL|wxEXPAND, 2 );
         }
         SetSizer( m_main_sizer );
     }
-
 	Layout();
-
 }
 
 BattleRoomDownloads::~BattleRoomDownloads()
@@ -52,18 +72,19 @@ BattleRoomDownloads::~BattleRoomDownloads()
 
 }
 
-void BattleRoomDownloads::SetProgress(ObserverDownloadInfo obi,wxGauge* g)
+void BattleRoomDownloads::SetProgress(ObserverDownloadInfo obi,wxStaticText* txt,wxGauge* g)
 {
     g->SetRange(obi.size);
     g->SetValue(obi.progress);
-    g->SetLabel(wxString::Format(wxT("%i%%"),(int)((double)100.0*obi.progress/(double)obi.size)));
+
+    txt->SetLabel(wxString::Format(wxT("%i%%"),(int)((double)100.0*obi.progress/(double)obi.size)));
 }
 
 void BattleRoomDownloads::NoDownload(wxGauge* g)
 {
     g->SetRange(100);
     g->SetValue(0);
-    g->SetLabel(_T(""));
+    g->SetLabel(_T("NoDownload"));
 }
 
 void BattleRoomDownloads::SetBattle( IBattle* battle )
@@ -76,7 +97,7 @@ void BattleRoomDownloads::OnUpdate()
     if(!m_battle)
     {
         NoDownload(m_map_progress);
-        NoDownload(m_mod_progress);
+        NoDownload(m_game_progress);
         return;
     }
 
@@ -88,7 +109,7 @@ void BattleRoomDownloads::OnUpdate()
     {
         wxString map=m_battle->GetHostMapName();
         ObserverDownloadInfo obi=dlmap.at(map);
-        SetProgress(obi,m_map_progress);
+        SetProgress(obi,m_map_info,m_map_progress);
     }
     catch(...)
     {
@@ -97,13 +118,13 @@ void BattleRoomDownloads::OnUpdate()
 
     try
     {
-        wxString mod=m_battle->GetHostModName();
-        ObserverDownloadInfo obi=dlmap.at(mod);
-        SetProgress(obi,m_mod_progress);
+        wxString game=m_battle->GetHostModName();
+        ObserverDownloadInfo obi=dlmap.at(game);
+        SetProgress(obi,m_game_info,m_game_progress);
     }
     catch(...)
     {
-        NoDownload(m_mod_progress);
+        NoDownload(m_game_progress);
     }
 }
 

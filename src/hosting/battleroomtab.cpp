@@ -69,8 +69,6 @@ BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 	EVT_BUTTON              ( BROOM_COLOURSEL,              BattleRoomTab::OnColourSel              )
 	EVT_COMBOBOX            ( BROOM_SIDESEL,                BattleRoomTab::OnSideSel                )
 
-	EVT_COMBOBOX            ( BROOM_PRESETSEL,              BattleRoomTab::OnPresetSel              )
-	EVT_BUTTON              ( BROOM_SAVEPRES,               BattleRoomTab::OnSavePreset             )
 	EVT_BUTTON              ( BROOM_DELETEPRES,             BattleRoomTab::OnDeletePreset           )
 	EVT_BUTTON              ( BROOM_SETDEFAULTPRES,         BattleRoomTab::OnSetModDefaultPreset    )
 
@@ -242,46 +240,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	wxMenuItem* m_fix_team_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_FIXID, _( "Balance teams" ), _( "Automatically balance players into control teams, by default none shares control" ) );
 	m_manage_users_mnu->Append( m_fix_team_mnu );
 
-	wxStaticBoxSizer* m_preset_sizer;
-	m_preset_sizer = new wxStaticBoxSizer( new wxStaticBox( this, 0, _( "Manage Presets" ) ), wxVERTICAL );
-
-	wxBoxSizer* m_preset_btns_sizer;
-	m_preset_btns_sizer = new wxBoxSizer( wxHORIZONTAL );
-
-	m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, _T(""), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
-	m_options_preset_sel->SetToolTip( TE( _( "Load battle preset" ) ) );
-
-	m_preset_sizer->Add( m_options_preset_sel, 0, wxEXPAND | wxALL );
-
-	m_save_btn = new wxButton( this, BROOM_SAVEPRES, _( "Save" ), wxDefaultPosition, wxDefaultSize );
-	m_save_btn->SetToolTip( TE( _( "Save a set of options." ) ) );
-
-	m_preset_btns_sizer->Add( m_save_btn, 0, wxEXPAND );
-
-	m_delete_btn = new wxButton( this, BROOM_DELETEPRES, _( "Delete" ), wxDefaultPosition, wxDefaultSize );
-	m_delete_btn->SetToolTip( TE( _( "Delete a set of options." ) ) );
-
-	m_preset_btns_sizer->Add( m_delete_btn, 0, wxEXPAND );
-
-	m_default_btn = new wxButton( this, BROOM_SETDEFAULTPRES, _( "Set default" ), wxDefaultPosition, wxDefaultSize );
-	m_default_btn->SetToolTip( TE( _( "Use the current set of options as game's default." ) ) );
-
-	m_preset_btns_sizer->Add( m_default_btn, 0, wxEXPAND );
-
-	m_preset_sizer->Add( m_preset_btns_sizer, 0, wxEXPAND );
-
-
-	m_opts_list = new wxListCtrl( this, BROOM_OPTIONLIST, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER | wxLC_REPORT );
-	//m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
-	m_opts_list->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
-	m_opts_list->SetToolTip( TE( _( "Activate an element to quickly change it" ) ) );
-	wxListItem col;
-
-	col.SetText( _( "Option" ) );
-	m_opts_list->InsertColumn( 0, col );
-	col.SetText( _( "Value" ) );
-	m_opts_list->InsertColumn( 1, col );
-
 	// Create Sizers
 	m_players_sizer = new wxBoxSizer( wxVERTICAL );
 	m_player_sett_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -327,14 +285,15 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	//m_info1_sizer->Add( m_wind_lbl, 1, wxEXPAND );
 	//m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
 
+    m_downloads=new BattleRoomDownloads(this,m_battle);
+
 	m_info_sizer->Add( m_minimap, 0, wxEXPAND );
 	m_map_select_sizer->Add( m_map_combo, 0, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL );
 	m_map_select_sizer->Add( m_browse_map_btn, 0, wxALIGN_RIGHT );
 	m_info_sizer->Add( m_map_select_sizer, 0, wxALL );
 	//m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
 	//m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
-	m_info_sizer->Add( m_opts_list, 1, wxEXPAND | wxTOP, 4 );
-	m_info_sizer->Add( m_preset_sizer, 0, wxEXPAND, 4 );
+	m_info_sizer->Add(m_downloads,1,wxEXPAND|wxALL);
 
 
 	m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
@@ -351,10 +310,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_buttons_sizer->Add( m_start_btn, 0, wxEXPAND | wxALL, 2 );
 
     wxBoxSizer* m_bottom_sizer = new wxBoxSizer( wxVERTICAL );
-    m_downloads=new BattleRoomDownloads(this,m_battle);
+
 
     m_bottom_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
-    m_bottom_sizer->Add( m_downloads, 0, wxEXPAND );
 
 	m_main_sizer->Add( m_top_sizer, 1, wxEXPAND );
 	m_main_sizer->Add( m_command_line, 0, wxEXPAND );
@@ -367,9 +325,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
-	unsigned int widthfraction = m_opts_list->GetClientSize().GetWidth() / 3;
-	m_opts_list->SetColumnWidth( 0, widthfraction * 1.95 );
-	m_opts_list->SetColumnWidth( 1, widthfraction * 0.95 );
 
 }
 
@@ -473,21 +428,6 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
     std::string value;
 	if ( ( type == LSL::OptionsWrapper::MapOption ) || ( type == LSL::OptionsWrapper::ModOption ) || ( type == LSL::OptionsWrapper::EngineOption ) )
 	{
-        LSL::Enum::OptionType DataType = m_battle->CustomBattleOptions().GetSingleOptionType( key );
-		value = m_battle->CustomBattleOptions().getSingleValue( key, ( LSL::OptionsWrapper::GameOption )type );
-        if ( m_battle->CustomBattleOptions().getDefaultValue( key, type ) == value )
-            m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
-        else
-            m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD ) );
-        if ( DataType == LSL::Enum::opt_bool )
-		{
-            value = STD_STRING(bool2yn(s2l(TowxString(value)))); // convert from 0/1 to literal Yes/No
-		}
-        else if ( DataType == LSL::Enum::opt_list )
-		{
-			value = m_battle->CustomBattleOptions().GetNameListOptValue( key, type ); // get the key full name not short key
-		}
-        m_opts_list->SetItem( index, 1, TowxString(value));
 	}
 	else// if ( type == LSL::OptionsWrapper::PrivateOptions )
 	{
@@ -503,18 +443,11 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
                 m_map_combo->SetValue( mapname );
 
 			//delete any eventual map option from the list and add options of the new map
-			for ( int i = m_map_opts_index; i < m_opts_list->GetItemCount(); )
-			{
-                m_opts_list->DeleteItem( i );
-			}
-			AddMMOptionsToList( m_map_opts_index, LSL::OptionsWrapper::MapOption );
-
 			m_minimap->UpdateMinimap();
 
 		}
         else if ( key == "restrictions" )
 		{
-			m_opts_list->SetItem( index, 1, bool2yn( m_battle->RestrictedUnits().size() > 0 ) );
 		}
 	}
 }
@@ -527,21 +460,6 @@ BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 
 void BattleRoomTab::UpdateMapInfoSummary()
 {
-	try   // updates map info summary
-	{
-		ASSERT_EXCEPTION( m_battle->MapExists(), _( "Map does not exist." ) );
-		LSL::UnitsyncMap map = m_battle->LoadMap();
-		m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ] , 1, wxFormat( _T( "%.0fx%.0f" ) ) % (map.info.width / 512.0) % (map.info.height / 512.0 ) );
-		m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, wxFormat( _T( "%d-%d" ) ) % map.info.minWind % map.info.maxWind );
-		m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, wxFormat( _T( "%d" ) ) % map.info.tidalStrength );
-		//    m_opts_list->SetItem( 0, 1,  );
-	}
-	catch ( ... )
-	{
-		m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ], 1, _T( "?x?" ) );
-		m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, _T( "?-?" ) );
-		m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, _T( "?" ) );
-	}
 }
 
 void BattleRoomTab::UpdateStatsLabels()
@@ -839,16 +757,6 @@ void BattleRoomTab::OnSideSel( wxCommandEvent& /*unused*/ )
 	sett().SetBattleLastSideSel( m_battle->GetHostModName(), m_side_sel->GetSelection() );
 }
 
-
-void BattleRoomTab::OnPresetSel( wxCommandEvent& /*unused*/ )
-{
-	if ( !m_battle ) return;
-	wxString presetname = m_options_preset_sel->GetValue();
-	if ( presetname.IsEmpty() ) return;
-	m_battle->LoadOptionsPreset( presetname );
-	m_battle->SendHostInfo( IBattle::HI_Send_All_opts );
-}
-
 void BattleRoomTab::OnAutoLock( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
@@ -950,7 +858,6 @@ long BattleRoomTab::AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOptio
     if ( !m_battle ) return -1;
     for (auto it : m_battle->CustomBattleOptions().getOptions(optFlag))
 	{
-        m_opts_list->InsertItem(pos, TowxString(it.second.first));
         const wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it.first;
 		m_opt_list_map[ tag ] = pos;
 		UpdateBattleInfo( tag );
@@ -969,26 +876,7 @@ void BattleRoomTab::UpdateHighlights()
 void BattleRoomTab::UpdatePresetList()
 {
 	if ( !m_battle ) return;
-	m_options_preset_sel->Clear();
-	m_options_preset_sel->Append( sett().GetPresetList() );
-	m_options_preset_sel->SetStringSelection(  m_battle->GetCurrentPreset() );
 }
-
-
-void BattleRoomTab::OnSavePreset( wxCommandEvent& /*unused*/ )
-{
-	if ( !m_battle ) return;
-	wxString presetname;
-	if ( !ui().AskText( _( "Enter preset name" ), _( "Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten" ), presetname ) )
-		return;
-	if ( presetname.IsEmpty() )
-	{
-		customMessageBoxNoModal( SL_MAIN_ICON , _( "Cannot save an options set without a name." ), _( "error" ), wxICON_EXCLAMATION | wxOK );
-		return;
-	}
-	m_battle->SaveOptionsPreset( presetname );
-}
-
 
 void BattleRoomTab::OnDeletePreset( wxCommandEvent& /*unused*/ )
 {
@@ -1107,7 +995,6 @@ void BattleRoomTab::SetBattle( Battle* battle )
 	m_ally_sel->Enable(m_battle);
 	m_color_sel->Enable(m_battle);
 	m_side_sel->Enable(m_battle);
-	m_options_preset_sel->Enable(m_battle);
 
 	m_minimap->Enable(m_battle);
 
@@ -1121,17 +1008,12 @@ void BattleRoomTab::SetBattle( Battle* battle )
 	m_start_btn->Enable(m_battle);
 	m_addbot_btn->Enable(m_battle);
 	m_manage_players_btn->Enable(m_battle);
-	m_save_btn->Enable(m_battle);
-	m_delete_btn->Enable(m_battle);
-	m_default_btn->Enable(m_battle);
 	m_browse_map_btn->Enable(m_battle);
 
 	m_ready_chk->Enable(m_battle);
 	m_spec_chk->Enable(m_battle);
 	m_lock_chk->Enable(m_battle);
 	m_autolock_chk->Enable(m_battle);
-
-	m_opts_list->Enable(m_battle);
 
 	m_minimap->SetBattle( m_battle );
 	m_downloads->SetBattle( m_battle );
@@ -1142,7 +1024,6 @@ void BattleRoomTab::SetBattle( Battle* battle )
 
 	if ( m_battle )
 	{
-		m_options_preset_sel->SetStringSelection( sett().GetModDefaultPresetName( m_battle->GetHostModName() ) );
 
 		m_color_sel->SetColor( m_battle->GetMe().BattleStatus().colour );
 		try
@@ -1165,10 +1046,6 @@ void BattleRoomTab::SetBattle( Battle* battle )
 
 		if ( !m_battle->IsFounderMe() )
 		{
-			m_options_preset_sel->Disable();
-			m_save_btn->Disable();
-			m_delete_btn->Disable();
-			m_default_btn->Disable();
 			m_manage_players_btn->Disable();
 			m_lock_chk->Disable();
 			m_autolock_chk->Disable();
@@ -1192,30 +1069,7 @@ void BattleRoomTab::SetBattle( Battle* battle )
 
 void BattleRoomTab::RegenerateOptionsList()
 {
-	long pos = 0;
-	m_opts_list->DeleteAllItems();
-	m_opts_list->InsertItem( pos, _( "Size" ) );
-	m_opt_list_map[ _( "Size" ) ] = pos;
-	pos++;
-	m_opts_list->InsertItem( pos , _( "Windspeed" ) );
-	m_opt_list_map[ _( "Windspeed" ) ] = pos;
-	pos++;
-	m_opts_list->InsertItem( pos, _( "Tidal strength" ) );
-	m_opt_list_map[ _( "Tidal strength" ) ] = pos;
-	pos++;
-	m_opts_list->InsertItem( pos, wxEmptyString );
-	pos++;
-	pos = AddMMOptionsToList( pos, LSL::OptionsWrapper::EngineOption );
-	// AddMMOptionsToList already increments pos by itself
-	m_opts_list->InsertItem( pos, wxEmptyString );
-	pos++;
-	m_mod_opts_index = pos;
-	pos = AddMMOptionsToList( m_mod_opts_index, LSL::OptionsWrapper::ModOption );
-	// AddMMOptionsToList already increments pos by itself
-	m_opts_list->InsertItem( pos, wxEmptyString );
-	pos++;
-	m_map_opts_index = pos;
-	pos = AddMMOptionsToList( m_map_opts_index, LSL::OptionsWrapper::MapOption );
+
 }
 
 void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )
