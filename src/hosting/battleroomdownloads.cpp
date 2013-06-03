@@ -80,11 +80,11 @@ void BattleRoomDownloads::SetProgress(ObserverDownloadInfo obi,wxStaticText* txt
     txt->SetLabel(wxString::Format(wxT("%i%%"),(int)((double)100.0*obi.progress/(double)obi.size)));
 }
 
-void BattleRoomDownloads::NoDownload(wxGauge* g)
+void BattleRoomDownloads::NoDownload(wxStaticText* txt,wxGauge* g)
 {
     g->SetRange(100);
     g->SetValue(0);
-    g->SetLabel(_T("NoDownload"));
+    txt->SetLabel(_T("NoDownload"));
 }
 
 void BattleRoomDownloads::SetBattle( IBattle* battle )
@@ -96,8 +96,8 @@ void BattleRoomDownloads::OnUpdate()
 {
     if(!m_battle)
     {
-        NoDownload(m_map_progress);
-        NoDownload(m_game_progress);
+        NoDownload(m_map_info,m_map_progress);
+        NoDownload(m_game_info,m_game_progress);
         return;
     }
 
@@ -113,7 +113,7 @@ void BattleRoomDownloads::OnUpdate()
     }
     catch(...)
     {
-        NoDownload(m_map_progress);
+        NoDownload(m_map_info,m_map_progress);
     }
 
     try
@@ -124,7 +124,7 @@ void BattleRoomDownloads::OnUpdate()
     }
     catch(...)
     {
-        NoDownload(m_game_progress);
+        NoDownload(m_game_info,m_game_progress);
     }
 }
 

@@ -29,7 +29,7 @@ class BattleRoomDownloads: public wxPanel
         IBattle* m_battle;
 
         void SetProgress(ObserverDownloadInfo obi,wxStaticText* txt,wxGauge* g);
-        void NoDownload(wxGauge* g);
+        void NoDownload(wxStaticText* txt,wxGauge* g);
 };
 
 #endif // BATTLEROOMDOWNLOADS_H
