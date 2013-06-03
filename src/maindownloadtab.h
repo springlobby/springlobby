@@ -41,18 +41,11 @@ class MainDownloadTab: public wxScrolledWindow
             ID_BUTTON_WIDGETS
         };
 
-        wxStaticText* m_incoming;
-		wxStaticText* m_incoming_lbl;
-		wxStaticText* m_status_color_text;
-
 		wxButton* m_but_cancel;
 		wxButton* m_but_clear;
-		//wxButton* m_but_download;
-		ColorButton* m_status_color;
 		DownloadListCtrl* m_dl_listctrl;
         WidgetDownloadDialog* m_widgets_dialog;
 
-        map_infos info_map;
         void OnCancelButton( wxCommandEvent& event );
 		void OnDownloadDialog( wxCommandEvent& event );
         void OnDLWidgets( wxCommandEvent& event );
