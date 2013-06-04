@@ -97,7 +97,13 @@ BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 	EVT_MENU                ( BROOM_BALANCE,                BattleRoomTab::OnBalance                )
 	EVT_MENU                ( BROOM_FIXID,                  BattleRoomTab::OnFixTeams               )
 	EVT_MENU                ( BROOM_FIXCOLOURS,             BattleRoomTab::OnFixColours             )
-	EVT_MENU                ( BROOM_AUTOPASTE,             BattleRoomTab::OnAutoPaste             )
+	EVT_MENU                ( BROOM_AUTOPASTE,              BattleRoomTab::OnAutoPaste              )
+
+	EVT_MENU                ( BROOM_AUTOHOST_BALANCE,       BattleRoomTab::OnAutohostBalance        )
+	EVT_MENU                ( BROOM_AUTOHOST_RANDOMMAP,     BattleRoomTab::OnAutohostRandomMap      )
+	EVT_MENU                ( BROOM_AUTOHOST_FIX,           BattleRoomTab::OnAutohostFix            )
+	EVT_MENU                ( BROOM_AUTOHOST_NOTIFY,        BattleRoomTab::OnAutohostNotify         )
+
 
 	EVT_LIST_ITEM_ACTIVATED ( BROOM_OPTIONLIST,             BattleRoomTab::OnOptionActivate         )
 
@@ -177,8 +183,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_start_btn = new wxButton( this, BROOM_START, _( "Start" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_start_btn->SetToolTip( TE( _( "Start the battle" ) ) );
 
-	m_manage_players_btn = new wxButton( this, BROOM_MANAGE_MENU, _( "Player Management" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_manage_players_btn->SetToolTip( TE( _( "Various functions to make team games simplers to setup" ) ) );
+	m_manage_players_btn = new wxButton( this, BROOM_MANAGE_MENU, _( "Battle Management" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+	m_manage_players_btn->SetToolTip( TE( _( "Various functions to games simplers to setup" ) ) );
 
 	m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _( "Add Bot..." ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_addbot_btn->SetToolTip( TE( _( "Add a computer-controlled player to the game" ) ) );
@@ -188,6 +194,30 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 
 	m_lock_chk = new wxCheckBox( this, BROOM_LOCK, _( "Locked" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_lock_chk->SetToolTip( TE( _( "Prevent additional players from joining the battle" ) ) );
+
+    m_autohost_manage_mnu = new wxMenu();
+    {
+        m_balance_mnu= new wxMenuItem( m_autohost_manage_mnu, BROOM_AUTOHOST_BALANCE, _( "Balance" ), _( "Balance players" ), wxITEM_NORMAL );
+        {
+            m_autohost_manage_mnu->Append( m_balance_mnu );
+        }
+
+        m_randommap_mnu= new wxMenuItem( m_autohost_manage_mnu, BROOM_AUTOHOST_RANDOMMAP, _( "Random map" ), _( "Suggest random map" ), wxITEM_NORMAL );
+        {
+            m_autohost_manage_mnu->Append( m_randommap_mnu );
+        }
+
+        m_fix_mnu = new wxMenuItem( m_autohost_manage_mnu, BROOM_AUTOHOST_FIX, _( "Fix team" ), _( "Fix teams numbers" ), wxITEM_NORMAL );
+        {
+            m_autohost_manage_mnu->Append( m_fix_mnu );
+        }
+
+        m_notify_mnu = new wxMenuItem( m_autohost_manage_mnu, BROOM_AUTOHOST_NOTIFY, _( "Notify" ), _( "Autohost will notify you when battle finish" ), wxITEM_NORMAL );
+        {
+            m_autohost_manage_mnu->Append( m_notify_mnu );
+        }
+    }
+
 
 	m_manage_users_mnu = new wxMenu();
 
@@ -811,7 +841,11 @@ void BattleRoomTab::OnRingUnreadyUnsynced( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnShowManagePlayersMenu( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	PopupMenu( m_manage_users_mnu );
+
+	if(m_battle->IsFounderMe())
+        PopupMenu( m_manage_users_mnu );
+    else
+        PopupMenu( m_autohost_manage_mnu );
 }
 
 void BattleRoomTab::OnUserJoined( User& user )
@@ -1046,7 +1080,7 @@ void BattleRoomTab::SetBattle( Battle* battle )
 
 		if ( !m_battle->IsFounderMe() )
 		{
-			m_manage_players_btn->Disable();
+			//m_manage_players_btn->Disable();
 			m_lock_chk->Disable();
 			m_autolock_chk->Disable();
 		}
@@ -1101,6 +1135,27 @@ void BattleRoomTab::OnUpdate()
 {
     m_downloads->OnUpdate();
 }
+
+void BattleRoomTab::OnAutohostBalance( wxCommandEvent& event )
+{
+    m_battle->Say(_T("!balance"));
+}
+
+void BattleRoomTab::OnAutohostRandomMap( wxCommandEvent& event )
+{
+    m_battle->Say(_T("!map"));
+}
+
+void BattleRoomTab::OnAutohostFix( wxCommandEvent& event )
+{
+    m_battle->Say(_T("!fix"));
+}
+
+void BattleRoomTab::OnAutohostNotify( wxCommandEvent& event )
+{
+    m_battle->Say(_T("!notify"));
+}
+
 //void BattleRoomTab::MaximizeSizer()
 //{
 //	wxSize s = GetClientSize();

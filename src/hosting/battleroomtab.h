@@ -92,6 +92,12 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void OnAutoStart( wxCommandEvent& event );
 		void OnAutoSpec( wxCommandEvent& event );
 
+        void OnAutohostBalance( wxCommandEvent& event );
+        void OnAutohostRandomMap( wxCommandEvent& event );
+        void OnAutohostFix( wxCommandEvent& event );
+        void OnAutohostNotify( wxCommandEvent& event );
+
+
 		void OnBattleActionEvent( UiEvents::UiEventData data );
 
 		void OnUserJoined( User& user );
@@ -181,12 +187,18 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxButton* m_host_new_btn;
 
 		wxMenu* m_manage_users_mnu;
-		wxMenuItem* m_lock_balance_mnu;
+        wxMenuItem* m_lock_balance_mnu;
 		wxMenuItem* m_autohost_mnu;
 		wxMenuItem* m_autostart_mnu;
 		wxMenuItem* m_autospec_mnu;
 		wxMenuItem* m_autocontrol_mnu;
 		wxMenuItem* m_autopaste_mnu;
+
+        wxMenu* m_autohost_manage_mnu;
+        wxMenuItem* m_balance_mnu;
+        wxMenuItem* m_randommap_mnu;
+        wxMenuItem* m_fix_mnu;
+        wxMenuItem* m_notify_mnu;
 
 		wxCheckBox* m_ready_chk;
 		wxCheckBox* m_spec_chk;
@@ -232,7 +244,12 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 			BROOM_AUTOSTART,
 			BROOM_AUTOCONTROL,
 			BROOM_AUTOPASTE,
-			BROOM_HOST_NEW
+			BROOM_HOST_NEW,
+
+			BROOM_AUTOHOST_BALANCE,
+			BROOM_AUTOHOST_RANDOMMAP,
+			BROOM_AUTOHOST_FIX,
+			BROOM_AUTOHOST_NOTIFY,
 		};
 
 		DECLARE_EVENT_TABLE()
