@@ -11,4 +11,5 @@ add_sources(springlobbySrc
 	mainsingleplayertab.cpp
 	mmoptionwindows.cpp
 	battleroomdownloads.cpp
+	autohostmanager.cpp
 )
