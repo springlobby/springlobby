@@ -12,12 +12,12 @@ class AutohostHandler
         AutohostHandler();
         virtual ~AutohostHandler();
 
-        virtual void Balance()=0;
-        virtual void SetRandomMap()=0;
-        virtual void SetMap(wxString& map)=0;
-        virtual void ClearStartBoxes()=0;
-        virtual void AddStartBox(int posx,int posy,int w,int h)=0;
-        virtual void Notify()=0;
+        virtual void Balance(){};
+        virtual void SetRandomMap(){};
+        virtual void SetMap(wxString& map){};
+        virtual void ClearStartBoxes(){};
+        virtual void AddStartBox(int posx,int posy,int w,int h){};
+        virtual void Notify(){};
     protected:
         Battle* m_battle;
 
@@ -71,7 +71,10 @@ class AutohostManager
         ~AutohostManager();
 
         void SetBattle(Battle* bt);
+
         void RecnognizeAutohost();
+        void RecnognizeAutohost(const wxString& who, const wxString& message);
+
         AutohostType GetAutohostType();
 
         AutohostHandler& GetAutohostHandler();
@@ -81,6 +84,8 @@ class AutohostManager
     private:
         SpringieHandler m_springie;
         SpadsHandler m_spads;
+        AutohostHandler m_emptyhandler;
+
         AutohostType m_type;
         Battle* m_battle;
 };

@@ -6,6 +6,7 @@
 #include <lslunitsync/optionswrapper.h>
 #include "utils/isink.h"
 #include "utils/uievents.h"
+#include "autohostmanager.h"
 #include <map>
 
 class Ui;
@@ -94,7 +95,6 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
         void OnAutohostBalance( wxCommandEvent& event );
         void OnAutohostRandomMap( wxCommandEvent& event );
-        void OnAutohostFix( wxCommandEvent& event );
         void OnAutohostNotify( wxCommandEvent& event );
 
 
@@ -126,6 +126,8 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
         void OnUpdate();
 	protected:
+        AutohostManager autohostManager;
+        bool isFirstMessage;
 
 		long AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOption optFlag );
 
@@ -197,7 +199,6 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
         wxMenu* m_autohost_manage_mnu;
         wxMenuItem* m_balance_mnu;
         wxMenuItem* m_randommap_mnu;
-        wxMenuItem* m_fix_mnu;
         wxMenuItem* m_notify_mnu;
 
 		wxCheckBox* m_ready_chk;
@@ -248,7 +249,6 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 			BROOM_AUTOHOST_BALANCE,
 			BROOM_AUTOHOST_RANDOMMAP,
-			BROOM_AUTOHOST_FIX,
 			BROOM_AUTOHOST_NOTIFY,
 		};
 

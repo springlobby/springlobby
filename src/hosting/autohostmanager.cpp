@@ -1,6 +1,10 @@
 #include "autohostmanager.h"
 
 #include "../battle.h"
+#include "../user.h"
+
+#include "../ui.h"
+#include "../mainwindow.h"
 
 AutohostHandler::AutohostHandler():m_battle(0)
 {
@@ -122,6 +126,7 @@ void AutohostManager::SetBattle(Battle* battle)
     m_battle=battle;
     m_springie.SetBattle(battle);
     m_spads.SetBattle(battle);
+    m_emptyhandler.SetBattle(battle);
 }
 
 AutohostHandler& AutohostManager::GetAutohostHandler()
@@ -133,7 +138,7 @@ AutohostHandler& AutohostManager::GetAutohostHandler()
         case AUTOHOSTTYPE_SPADS:
             return GetSpads();
     }
-    throw "Unknown autohost";
+    return m_emptyhandler;
 }
 
 SpringieHandler& AutohostManager::GetSpringie()
@@ -148,6 +153,35 @@ SpadsHandler& AutohostManager::GetSpads()
 
 void AutohostManager::RecnognizeAutohost()
 {
+    m_type=AutohostManager::AUTOHOSTTYPE_UNKNOWN;
+}
+
+void AutohostManager::RecnognizeAutohost(const wxString& who, const wxString& message)
+{
+    if(m_battle)
+    {
+        User& founder=m_battle->GetFounder();
+        UserStatus status=founder.GetStatus();
+
+        if(status.bot)
+        {
+            wxString nick=founder.GetNick();
+            if(who.Upper() ==nick.Upper())
+            {
+                if(message.Find(_T("welcome to Springie"))!=wxNOT_FOUND)
+                {
+                    m_type=AutohostManager::AUTOHOSTTYPE_SPRINGIE;
+                    return;
+                }
+                else if(message.Find(_T("welcome to Spads0"))!=wxNOT_FOUND)
+                {
+                    m_type=AutohostManager::AUTOHOSTTYPE_SPADS;
+                    return;
+                }
+            }
+        }
+    }
+    m_type=AutohostManager::AUTOHOSTTYPE_UNKNOWN;
 }
 
 AutohostManager::AutohostType AutohostManager::GetAutohostType()

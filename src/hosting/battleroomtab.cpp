@@ -101,7 +101,6 @@ BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 
 	EVT_MENU                ( BROOM_AUTOHOST_BALANCE,       BattleRoomTab::OnAutohostBalance        )
 	EVT_MENU                ( BROOM_AUTOHOST_RANDOMMAP,     BattleRoomTab::OnAutohostRandomMap      )
-	EVT_MENU                ( BROOM_AUTOHOST_FIX,           BattleRoomTab::OnAutohostFix            )
 	EVT_MENU                ( BROOM_AUTOHOST_NOTIFY,        BattleRoomTab::OnAutohostNotify         )
 
 
@@ -126,7 +125,8 @@ const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
     : wxScrolledWindow( parent, -1 ),
 	m_battle( battle ),
-	m_BattleActionSink( this, &UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ))
+	m_BattleActionSink( this, &UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent )),
+	isFirstMessage(1)
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
 
@@ -205,11 +205,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
         m_randommap_mnu= new wxMenuItem( m_autohost_manage_mnu, BROOM_AUTOHOST_RANDOMMAP, _( "Random map" ), _( "Suggest random map" ), wxITEM_NORMAL );
         {
             m_autohost_manage_mnu->Append( m_randommap_mnu );
-        }
-
-        m_fix_mnu = new wxMenuItem( m_autohost_manage_mnu, BROOM_AUTOHOST_FIX, _( "Fix team" ), _( "Fix teams numbers" ), wxITEM_NORMAL );
-        {
-            m_autohost_manage_mnu->Append( m_fix_mnu );
         }
 
         m_notify_mnu = new wxMenuItem( m_autohost_manage_mnu, BROOM_AUTOHOST_NOTIFY, _( "Notify" ), _( "Autohost will notify you when battle finish" ), wxITEM_NORMAL );
@@ -1049,6 +1044,9 @@ void BattleRoomTab::SetBattle( Battle* battle )
 	m_lock_chk->Enable(m_battle);
 	m_autolock_chk->Enable(m_battle);
 
+    autohostManager.SetBattle(m_battle);
+    isFirstMessage=1;
+
 	m_minimap->SetBattle( m_battle );
 	m_downloads->SetBattle( m_battle );
 	m_players->SetBattle( m_battle );
@@ -1110,6 +1108,13 @@ void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )
 {
 	wxString nick = data.Count() > 0 ? data[0] : wxString(wxEmptyString);
 	wxString msg = data.Count() > 1 ? data[1] : wxString(wxEmptyString);
+
+    if(isFirstMessage)
+    {
+        isFirstMessage=0;
+        autohostManager.RecnognizeAutohost(nick, msg);
+    }
+
 	GetChatPanel().DidAction( nick, msg );
 }
 
@@ -1138,22 +1143,18 @@ void BattleRoomTab::OnUpdate()
 
 void BattleRoomTab::OnAutohostBalance( wxCommandEvent& event )
 {
-    m_battle->Say(_T("!balance"));
+    autohostManager.GetAutohostHandler().Balance();
 }
 
 void BattleRoomTab::OnAutohostRandomMap( wxCommandEvent& event )
 {
-    m_battle->Say(_T("!map"));
+    autohostManager.GetAutohostHandler().SetRandomMap();
 }
 
-void BattleRoomTab::OnAutohostFix( wxCommandEvent& event )
-{
-    m_battle->Say(_T("!fix"));
-}
 
 void BattleRoomTab::OnAutohostNotify( wxCommandEvent& event )
 {
-    m_battle->Say(_T("!notify"));
+    autohostManager.GetAutohostHandler().Notify();
 }
 
 //void BattleRoomTab::MaximizeSizer()
