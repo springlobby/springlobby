@@ -18,6 +18,7 @@ class AutohostHandler
         virtual void ClearStartBoxes(){};
         virtual void AddStartBox(int posx,int posy,int w,int h){};
         virtual void Notify(){};
+        virtual void Start(){};
     protected:
         Battle* m_battle;
 
@@ -40,6 +41,7 @@ class SpringieHandler: public AutohostHandler
         void ClearStartBoxes();
         void AddStartBox(int posx,int posy,int w,int h);
         void Notify();
+        void Start();
 };
 
 class SpadsHandler: virtual public AutohostHandler
@@ -54,6 +56,7 @@ class SpadsHandler: virtual public AutohostHandler
         void ClearStartBoxes();
         void AddStartBox(int posx,int posy,int w,int h);
         void Notify();
+        void Start();
 };
 
 class AutohostManager
