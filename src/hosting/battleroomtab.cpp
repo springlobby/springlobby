@@ -447,7 +447,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 {
   if ( !m_battle ) return;
 
-	long index = m_opt_list_map[ Tag ];
+	//long index = m_opt_list_map[ Tag ];
     LSL::OptionsWrapper::GameOption type = ( LSL::OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
     const auto key = STD_STRING(Tag.AfterFirst( '_' ));
     std::string value;

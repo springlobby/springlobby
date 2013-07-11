@@ -1,6 +1,6 @@
-#include "battleroomdownloads.h"
 #include <string>
 #include <wx/gauge.h>
+#include "battleroomdownloads.h"
 #include <wx/stattext.h>
 #include <wx/sizer.h>
 #include <wx/string.h>
@@ -33,7 +33,7 @@ BattleRoomDownloads::BattleRoomDownloads(wxWindow* parent, IBattle* battle):
 
             m_map_progress=new wxGauge(this,-1,100,wxDefaultPosition, wxDefaultSize, wxGA_SMOOTH|wxGA_HORIZONTAL );
             {
-                m_map_sizer->Add( m_map_progress, 1, wxALL|wxEXPAND, 2 );
+                m_map_sizer->Add((wxWindow*) m_map_progress, 1, wxALL|wxEXPAND, 2 );
             }
 
             m_main_sizer->Add( m_map_sizer, 0, wxALL|wxEXPAND, 2 );
