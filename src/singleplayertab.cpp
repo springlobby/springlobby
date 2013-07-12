@@ -321,14 +321,14 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& /*unused*/ )
 
 void SinglePlayerTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
-    wxLogDebugFunc( _T("") );
-
-	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
-    {
-        const wxString mapname = TowxString(mapSelectDialog().GetSelectedMap()->name);
-        const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
-        if ( idx != wxNOT_FOUND ) SetMap( idx );
-    }
+	wxLogDebugFunc( _T("") );
+	const wxString mapname = mapSelectDialog();
+	if ( !mapname.empty()) {
+	        const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
+		if ( idx != wxNOT_FOUND ) {
+			SetMap( idx );
+		}
+	}
 }
 
 

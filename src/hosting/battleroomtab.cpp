@@ -931,17 +931,18 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 	if ( !m_battle ) return;
 	wxLogDebugFunc( _T( "" ) );
 
-	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
+	const wxString mapname = mapSelectDialog();
+	if ( !mapname.empty() )
 	{
-        const wxString mapname = TowxString(mapSelectDialog().GetSelectedMap()->name);
 		if ( !m_battle->IsFounderMe() )
 		{
-            m_battle->DoAction( _T( "suggests " ) + mapname );
+			m_battle->DoAction( _T( "suggests " ) + mapname );
 			return;
 		}
 		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
-		if ( idx != wxNOT_FOUND )
-            SetMap( idx );
+		if ( idx != wxNOT_FOUND ) {
+			SetMap( idx );
+		}
 	}
 }
 

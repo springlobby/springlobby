@@ -255,9 +255,9 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 	if ( !m_battle ) return;
 	wxLogDebugFunc( _T( "" ) );
 
-	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
+	wxString mapname = mapSelectDialog();
+	if ( !mapname.empty() )
 	{
-        wxString mapname = TowxString(mapSelectDialog().GetSelectedMap()->name);
 		wxLogDebugFunc( mapname );
 		if ( !m_battle->IsFounderMe() )
 		{

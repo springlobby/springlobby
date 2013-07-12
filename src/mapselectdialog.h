@@ -105,7 +105,7 @@ class MapSelectDialog: public wxDialog, public WindowAttributesPickle, public Un
 		DECLARE_EVENT_TABLE()
 };
 
-MapSelectDialog& mapSelectDialog();
+wxString mapSelectDialog();
 #endif
 
 /**
