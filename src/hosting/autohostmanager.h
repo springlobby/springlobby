@@ -14,9 +14,9 @@ class AutohostHandler
 
         virtual void Balance(){};
         virtual void SetRandomMap(){};
-        virtual void SetMap(wxString& map){};
+        virtual void SetMap(wxString& /*map*/){};
         virtual void ClearStartBoxes(){};
-        virtual void AddStartBox(int posx,int posy,int w,int h){};
+        virtual void AddStartBox(int /*posx*/,int /*posy*/,int /*w*/,int /*h*/){};
         virtual void Notify(){};
     protected:
         Battle* m_battle;

@@ -122,11 +122,11 @@ class MyStrings : public wxArrayString
 const MyStrings<SPRING_MAX_TEAMS> team_choices;
 const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
-BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
-    : wxScrolledWindow( parent, -1 ),
+BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
+	wxScrolledWindow( parent, -1 ),
+	isFirstMessage(1),
 	m_battle( battle ),
-	m_BattleActionSink( this, &UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent )),
-	isFirstMessage(1)
+	m_BattleActionSink( this, &UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ))
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
 
@@ -1142,18 +1142,18 @@ void BattleRoomTab::OnUpdate()
     m_downloads->OnUpdate();
 }
 
-void BattleRoomTab::OnAutohostBalance( wxCommandEvent& event )
+void BattleRoomTab::OnAutohostBalance( wxCommandEvent& /*event*/ )
 {
     autohostManager.GetAutohostHandler().Balance();
 }
 
-void BattleRoomTab::OnAutohostRandomMap( wxCommandEvent& event )
+void BattleRoomTab::OnAutohostRandomMap( wxCommandEvent& /*event*/ )
 {
     autohostManager.GetAutohostHandler().SetRandomMap();
 }
 
 
-void BattleRoomTab::OnAutohostNotify( wxCommandEvent& event )
+void BattleRoomTab::OnAutohostNotify( wxCommandEvent& /*event*/ )
 {
     autohostManager.GetAutohostHandler().Notify();
 }

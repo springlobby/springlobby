@@ -98,7 +98,7 @@ void SpadsHandler::ClearStartBoxes()
 
 }
 
-void SpadsHandler::AddStartBox(int posx,int posy,int w,int h)
+void SpadsHandler::AddStartBox(int /*posx*/,int /*posy*/,int /*w*/,int /*h*/)
 {
 
 }
@@ -137,6 +137,8 @@ AutohostHandler& AutohostManager::GetAutohostHandler()
             return GetSpringie();
         case AUTOHOSTTYPE_SPADS:
             return GetSpads();
+	case AUTOHOSTTYPE_UNKNOWN:
+		return m_emptyhandler;
     }
     return m_emptyhandler;
 }
