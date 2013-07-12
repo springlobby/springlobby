@@ -71,19 +71,19 @@ Ui& ui()
 }
 
 Ui::Ui() :
-        m_serv(0),
-        m_main_win(0),
-        m_con_win(0),
+		m_serv(0),
+		m_main_win(0),
+		m_con_win(0),
 		m_reconnect_dialog(0),
-        m_upd_counter_torrent(0),
-        m_first_update_trigger(true),
+		m_upd_counter_torrent(0),
+		m_first_update_trigger(true),
 		m_ingame(false),
 		m_recconecting_wait(false),
 		m_battle_info_updatedSink( this, &BattleEvents::GetBattleEventSender( ( BattleEvents::BattleInfoUpdate ) ) )
 {
-    m_main_win = new MainWindow( );
-    CustomMessageBoxBase::setLobbypointer(m_main_win);
-    m_serv = new TASServer();
+	m_main_win = new MainWindow( );
+	CustomMessageBoxBase::setLobbypointer(m_main_win);
+	m_serv = new TASServer();
 	serverSelector().SetCurrentServer( m_serv );
 }
 
