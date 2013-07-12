@@ -215,12 +215,13 @@ int DownloadListCtrl::GetItemImage(long /*item*/) const
 wxString DownloadListCtrl::GetItemText(long item, long column) const
 {
 
-    if ( item > (long)m_data.size() || item < 0 )
-        return wxEmptyString;
+	if ( item > (long)m_data.size() || item < 0 ) {
+		return wxEmptyString;
+	}
 
-	float kfactor = 1/float(1024);
-	float mfactor = 1/float(1024*1024);
-    const int MB=1024*1024;
+	//float kfactor = 1/float(1024);
+	//float mfactor = 1/float(1024*1024);
+	const int MB=1024*1024;
 
 	const DataType& infos = m_data[item];
 
@@ -233,10 +234,11 @@ wxString DownloadListCtrl::GetItemText(long item, long column) const
 			else if(infos.downloadstatus == P2P::leeching) return _("downloading");
 			else if(infos.downloadstatus == P2P::complete) return _("complete");
 			else return wxEmptyString;*/
-			if(infos.finished)
-                return _("complete");
-            else
-                return _("downloading");
+			if (infos.finished) {
+				return _("complete");
+			} else {
+				return _("downloading");
+			}
 		case 2: return wxString::Format(wxT("%i%%"),(int)((double)100.0*infos.progress/(double)infos.size));//(wxFormat(_T("%.2f") ) % ( infos.progress * 100 )).str() : na_str;
 		case 3: return _T("");//infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
 		case 4: return _T("");//infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
@@ -246,12 +248,13 @@ wxString DownloadListCtrl::GetItemText(long item, long column) const
 
 int DownloadListCtrl::GetIndexFromData( const DataType& data ) const
 {
-    DataCIter it = m_data.begin();
-    for ( int i = 0; it != m_data.end(); ++it , ++i) {
-        if ( it->name == data.name )
-            return i;
-    }
-    return -1;
+	DataCIter it = m_data.begin();
+	for ( int i = 0; it != m_data.end(); ++it , ++i) {
+		if ( it->name == data.name ) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 bool DownloadListCtrl::IsTorrentActive(const DataType& info) const
