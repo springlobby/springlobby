@@ -1221,8 +1221,8 @@ void Ui::OnRing( const wxString& from )
 				UiEvents::NotficationData( UiEvents::ServerConnection, wxFormat(_("%s:\nring!") ) % from ) );
 	}
 
-    if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
-        wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
+//    if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
+//        wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
 //        if(! usync().MapExists(host_map_name)) {//TODO
 
 //			map_infos info_map = prDownloader().CollectGuiInfos();
@@ -1249,7 +1249,7 @@ void Ui::OnRing( const wxString& from )
 //                        _("/me is not downloading map with SL torrent system"));
 //            }
 //        }
-    }
+//    }
 
 #ifndef DISABLE_SOUND
     if ( sett().GetChatPMSoundNotificationEnabled() )
