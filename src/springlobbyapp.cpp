@@ -175,7 +175,7 @@ bool SpringLobbyApp::OnInit()
 	sett().RefreshSpringVersionList();
 
 	//this should take off the firstload time considerably *ie nil it :P )
-	mapSelectDialog();
+	//mapSelectDialog();
 	if ( !m_customizer_archive_name.IsEmpty() )
 	{//this needsto happen before usync load
 		sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
@@ -216,11 +216,6 @@ bool SpringLobbyApp::OnInit()
 		sett().SetDoResetPerspectives( false );
 		ui().mw().SavePerspectives( _T("SpringLobby-default") );
 	}
-
-	//interim fix for resize crashes on metacity and kwin
-	#ifdef __WXMSW__
-		mapSelectDialog().Reparent( &ui().mw() );
-	#endif
 
     ui().FirstRunWelcome();
     m_timer->Start( TIMER_INTERVAL );

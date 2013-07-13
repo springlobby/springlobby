@@ -122,11 +122,11 @@ MainWindow::MainWindow( )
 	: wxFrame( (wxFrame*)0, -1, GetAppName(), wxPoint(50, 50) ),
 	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(720, 576) ),
 	m_opts_dialog(NULL),
-    m_autojoin_dialog(NULL),
-    se_frame(NULL),
-    m_channel_chooser(NULL),
+	m_autojoin_dialog(NULL),
+	se_frame(NULL),
+	m_channel_chooser(NULL),
 	m_log_win(NULL),
-    m_has_focus(true)
+	m_has_focus(true)
 {
 	SetIcons( SLcustomizations().GetAppIconBundle() );
 
@@ -299,12 +299,6 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 			manager->UnInit();
 			delete manager;
 		}
-		//interim fix for resize crashes on metacity and kwin
-		#ifndef __WXMSW__
-			mapSelectDialog().Show( false );
-			mapSelectDialog().Reparent( &ui().mw() );
-			mapSelectDialog().Destroy( );
-		#endif
 
 		ui().Quit();
 		forceSettingsFrameClose();

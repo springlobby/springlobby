@@ -122,11 +122,11 @@ class MyStrings : public wxArrayString
 const MyStrings<SPRING_MAX_TEAMS> team_choices;
 const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
-BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
-    : wxScrolledWindow( parent, -1 ),
+BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
+	wxScrolledWindow( parent, -1 ),
+	isFirstMessage(1),
 	m_battle( battle ),
-	m_BattleActionSink( this, &UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent )),
-	isFirstMessage(1)
+	m_BattleActionSink( this, &UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ))
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
 
@@ -447,7 +447,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 {
   if ( !m_battle ) return;
 
-	long index = m_opt_list_map[ Tag ];
+	//long index = m_opt_list_map[ Tag ];
     LSL::OptionsWrapper::GameOption type = ( LSL::OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
     const auto key = STD_STRING(Tag.AfterFirst( '_' ));
     std::string value;
@@ -935,17 +935,18 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 	if ( !m_battle ) return;
 	wxLogDebugFunc( _T( "" ) );
 
-	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
+	const wxString mapname = mapSelectDialog();
+	if ( !mapname.empty() )
 	{
-        const wxString mapname = TowxString(mapSelectDialog().GetSelectedMap()->name);
 		if ( !m_battle->IsFounderMe() )
 		{
-            m_battle->DoAction( _T( "suggests " ) + mapname );
+			m_battle->DoAction( _T( "suggests " ) + mapname );
 			return;
 		}
 		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
-		if ( idx != wxNOT_FOUND )
-            SetMap( idx );
+		if ( idx != wxNOT_FOUND ) {
+			SetMap( idx );
+		}
 	}
 }
 
@@ -1145,18 +1146,18 @@ void BattleRoomTab::OnUpdate()
     m_downloads->OnUpdate();
 }
 
-void BattleRoomTab::OnAutohostBalance( wxCommandEvent& event )
+void BattleRoomTab::OnAutohostBalance( wxCommandEvent& /*event*/ )
 {
     autohostManager.GetAutohostHandler().Balance();
 }
 
-void BattleRoomTab::OnAutohostRandomMap( wxCommandEvent& event )
+void BattleRoomTab::OnAutohostRandomMap( wxCommandEvent& /*event*/ )
 {
     autohostManager.GetAutohostHandler().SetRandomMap();
 }
 
 
-void BattleRoomTab::OnAutohostNotify( wxCommandEvent& event )
+void BattleRoomTab::OnAutohostNotify( wxCommandEvent& /*event*/ )
 {
     autohostManager.GetAutohostHandler().Notify();
 }
