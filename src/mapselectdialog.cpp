@@ -446,10 +446,10 @@ void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/
 	AddPendingEvent( dummy );
 }
 
-wxString mapSelectDialog(){
+wxString mapSelectDialog(bool hidden){
 	wxString mapname = _T("");
-        static MapSelectDialog* m = new MapSelectDialog();
-        if ( m->ShowModal() == wxID_OK && m->GetSelectedMap() != NULL ) {
+	static MapSelectDialog* m = new MapSelectDialog();
+	if ( (!hidden) && (m->ShowModal() == wxID_OK) && (m->GetSelectedMap() != NULL) ) {
 		mapname = TowxString(m->GetSelectedMap()->name);
 	}
 	return mapname;

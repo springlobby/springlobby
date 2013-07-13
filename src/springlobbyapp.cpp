@@ -175,7 +175,8 @@ bool SpringLobbyApp::OnInit()
 	sett().RefreshSpringVersionList();
 
 	//this should take off the firstload time considerably *ie nil it :P )
-	//mapSelectDialog();
+	mapSelectDialog(true);
+
 	if ( !m_customizer_archive_name.IsEmpty() )
 	{//this needsto happen before usync load
 		sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
