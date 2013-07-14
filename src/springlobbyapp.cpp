@@ -174,8 +174,6 @@ bool SpringLobbyApp::OnInit()
 
 	sett().RefreshSpringVersionList();
 
-	//this should take off the firstload time considerably *ie nil it :P )
-	mapSelectDialog(true);
 
 	if ( !m_customizer_archive_name.IsEmpty() )
 	{//this needsto happen before usync load
@@ -223,7 +221,10 @@ bool SpringLobbyApp::OnInit()
 
     ui().mw().SetLogWin( loggerwin, logchain );
 
-    return true;
+	//this should take off the firstload time considerably *ie nil it :P )
+	mapSelectDialog(true);
+
+	return true;
 }
 
 

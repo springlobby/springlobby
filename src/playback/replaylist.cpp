@@ -58,15 +58,6 @@ bool ReplayList::GetReplayInfos (const wxString& ReplayPath, Replay& ret ) const
     ret.battle.SetPlayBackFilePath( ReplayPath );
 
 	wxString FileName = ReplayPath.AfterLast( wxFileName::GetPathSeparator() ); // strips file path
-    FileName = FileName.BeforeLast( _T('.') ); //strips the file extension;
-
-    wxString date_string = FileName.BeforeFirst(_T('_'));
-    FileName = FileName.AfterFirst(_T('_'));
-
-    wxString sec_data_string=date_string+FileName.BeforeFirst(_T('_'));
-
-    FileName = FileName.AfterFirst(_T('_')); // strips hours minutes seconds informatiom
-
     ret.SpringVersion = FileName.AfterLast(_T('_'));
 
     ret.MapName = FileName.BeforeLast(_T('_'));
@@ -82,19 +73,14 @@ bool ReplayList::GetReplayInfos (const wxString& ReplayPath, Replay& ret ) const
     ret.ModName = ret.battle.GetHostModName();
     ret.battle.SetBattleType( BT_Replay );
 
-    //getting this from filename seems more reliable than from demoheader
-    wxDateTime rdate;
+	//getting this from filename seems more reliable than from demoheader
+	wxDateTime rdate;
 
-    //! Does another way exist?
-    rdate.SetYear(wxAtoi(sec_data_string.Mid(0,4)));
-    rdate.SetMonth((wxDateTime::Month)(wxDateTime::Jan+wxAtoi(sec_data_string.Mid(4,2))-1));
-    rdate.SetDay(wxAtoi(sec_data_string.Mid(6,2)));
-    rdate.SetHour(wxAtoi(sec_data_string.Mid(8,2)));
-    rdate.SetMinute(wxAtoi(sec_data_string.Mid(10,2)));
-    rdate.SetSecond(wxAtoi(sec_data_string.Mid(12,2)));
-
-    ret.date=rdate.GetTicks(); // now it is sorted properly
-    ret.date_string=rdate.FormatISODate()+_T(" ")+rdate.FormatISOTime();
+	if (rdate.ParseFormat(FileName, _T("%Y%m%d_%H%M%S")) == NULL) {
+		wxLogError(_T("Parsing %s failed"), FileName.c_str());
+	}
+	ret.date=rdate.GetTicks(); // now it is sorted properly
+	ret.date_string=rdate.FormatISODate()+_T(" ")+rdate.FormatISOTime();
 
     //wxFormat date_format(_T("%s-%s-%s"));
    // ret.date_string = date_format % date_string.SubString(0,3)
