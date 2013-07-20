@@ -948,9 +948,11 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 	{
 		if ( !m_battle->IsFounderMe() )
 		{
-			m_battle->DoAction( _T( "suggests " ) + mapname );
+            autohostManager.GetAutohostHandler().SetMap(mapname);
+			//m_battle->DoAction( _T( "suggests " ) + mapname );
 			return;
 		}
+
 		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
 		if ( idx != wxNOT_FOUND ) {
 			SetMap( idx );
@@ -1126,6 +1128,7 @@ void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )
     {
         isFirstMessage=0;
         autohostManager.RecnognizeAutohost(nick, msg);
+        m_manage_players_btn->Enable();
     }
 
 	GetChatPanel().DidAction( nick, msg );

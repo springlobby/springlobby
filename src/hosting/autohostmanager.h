@@ -75,8 +75,8 @@ class AutohostManager
 
         void SetBattle(Battle* bt);
 
-        void RecnognizeAutohost();
-        void RecnognizeAutohost(const wxString& who, const wxString& message);
+        bool RecnognizeAutohost();
+        bool RecnognizeAutohost(const wxString& who, const wxString& message);
 
         AutohostType GetAutohostType();
 

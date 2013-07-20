@@ -163,12 +163,13 @@ SpadsHandler& AutohostManager::GetSpads()
     return m_spads;
 }
 
-void AutohostManager::RecnognizeAutohost()
+bool AutohostManager::RecnognizeAutohost()
 {
     m_type=AutohostManager::AUTOHOSTTYPE_UNKNOWN;
+    return false;
 }
 
-void AutohostManager::RecnognizeAutohost(const wxString& who, const wxString& message)
+bool AutohostManager::RecnognizeAutohost(const wxString& who, const wxString& message)
 {
     if(m_battle)
     {
@@ -183,17 +184,18 @@ void AutohostManager::RecnognizeAutohost(const wxString& who, const wxString& me
                 if(message.Find(_T("welcome to Springie"))!=wxNOT_FOUND)
                 {
                     m_type=AutohostManager::AUTOHOSTTYPE_SPRINGIE;
-                    return;
+                    return true;
                 }
                 else if(message.Find(_T("welcome to Spads0"))!=wxNOT_FOUND)
                 {
                     m_type=AutohostManager::AUTOHOSTTYPE_SPADS;
-                    return;
+                    return true;
                 }
             }
         }
     }
     m_type=AutohostManager::AUTOHOSTTYPE_UNKNOWN;
+    return false;
 }
 
 AutohostManager::AutohostType AutohostManager::GetAutohostType()
