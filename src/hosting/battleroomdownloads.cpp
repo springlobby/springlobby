@@ -13,11 +13,11 @@ BattleRoomDownloads::BattleRoomDownloads(wxWindow* parent, IBattle* battle):
     wxPanel( parent, -1, wxDefaultPosition, wxSize(-1, 80), wxNO_BORDER ),
     m_battle(battle)
 {
-    wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* m_main_sizer = new wxBoxSizer( wxHORIZONTAL );//wxVERTICAL
     {
-        wxBoxSizer* m_map_sizer= new wxBoxSizer( wxVERTICAL ); //
+        wxBoxSizer* m_map_sizer= new wxBoxSizer( wxHORIZONTAL ); //wxVERTICAL
         {
-            wxBoxSizer* m_map_data_size=new wxBoxSizer( wxHORIZONTAL );
+            wxBoxSizer* m_map_data_size=new wxBoxSizer( wxHORIZONTAL );//wxHORIZONTAL
             {
                 m_map_text=new wxStaticText(this,-1,_("Map "));
                 {
@@ -36,10 +36,10 @@ BattleRoomDownloads::BattleRoomDownloads(wxWindow* parent, IBattle* battle):
                 m_map_sizer->Add((wxWindow*) m_map_progress, 1, wxALL|wxEXPAND, 2 );
             }
 
-            m_main_sizer->Add( m_map_sizer, 0, wxALL|wxEXPAND, 2 );
+            m_main_sizer->Add( m_map_sizer, 1, wxALL|wxEXPAND, 2 );
         }
 
-        wxBoxSizer* m_game_sizer= new wxBoxSizer( wxVERTICAL );
+        wxBoxSizer* m_game_sizer= new wxBoxSizer( wxHORIZONTAL );
         {
             wxBoxSizer* m_game_data_size=new wxBoxSizer( wxHORIZONTAL );
             {
@@ -60,7 +60,7 @@ BattleRoomDownloads::BattleRoomDownloads(wxWindow* parent, IBattle* battle):
                 m_game_sizer->Add( m_game_progress, 1, wxALL|wxEXPAND, 2 );
             }
 
-            m_main_sizer->Add( m_game_sizer, 0, wxALL|wxEXPAND, 2 );
+            m_main_sizer->Add( m_game_sizer, 1, wxALL|wxEXPAND, 2 );
         }
         SetSizer( m_main_sizer );
     }
