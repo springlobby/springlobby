@@ -146,8 +146,6 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		MapCtrl * m_minimap;
         BattleRoomDownloads* m_downloads;
 
-		wxScrolledWindow* m_player_panel;
-
 		wxComboBox* m_map_combo;
 
 		BattleroomListCtrl* m_players;
@@ -155,6 +153,11 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		wxSplitterWindow* m_splitter;
 
         wxCheckBox* m_ready_chk;
+        wxStaticText* m_ally_lbl;
+        wxComboBox* m_ally_sel;
+        wxCheckBox* m_spec_chk;
+        wxCheckBox* m_auto_unspec_chk;
+
 
 		wxStaticLine* m_command_line;
 

@@ -192,10 +192,33 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
         {
             wxBoxSizer* m_left_buttons_size=new wxBoxSizer( wxHORIZONTAL );
             {
+                m_ally_lbl = new wxStaticText( this, -1, _( "Ally" ) );
+                {
+                    m_left_buttons_size->Add( m_ally_lbl, 0,  wxALIGN_CENTER|wxALL,5);
+                }
+
+                m_ally_sel = new wxComboBox( this, BROOM_ALLYSEL, _T( "1" ), wxDefaultPosition, wxSize( 50, CONTROL_HEIGHT ), ally_choices );
+                {
+                    m_ally_sel->SetToolTip( TE( _( "Players with the same ally number work together to achieve victory." ) ) );
+                    m_left_buttons_size->Add( m_ally_sel, 0, wxALL|wxEXPAND );
+                }
+
+                m_spec_chk = new wxCheckBox( this, BROOM_SPEC, _( "Spectator" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+                {
+                    m_spec_chk->SetToolTip( TE( _( "Spectate (watch) the battle instead of playing" ) ) );
+                    m_left_buttons_size->Add( m_spec_chk, 0, wxALL|wxEXPAND );
+                }
+
+                m_auto_unspec_chk = new wxCheckBox( this, BROOM_UNSPEC, _( "Auto un-spectate" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+                {
+                    m_auto_unspec_chk->SetToolTip( TE( _( "automatically unspec when there's a free slot" ) ) );
+                    m_left_buttons_size->Add( m_auto_unspec_chk, 0, wxALL|wxEXPAND );
+                }
+
                 m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _( "I'm ready" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
                 {
                     m_ready_chk->SetToolTip( TE( _( "Click this if you are content with the battle settings." ) ) );
-                    m_left_buttons_size->Add( m_ready_chk, 0, wxEXPAND );
+                    m_left_buttons_size->Add( m_ready_chk, 0, wxALL|wxEXPAND );
                 }
 
                 m_buttons_sizer->Add( m_left_buttons_size, 1, wxEXPAND );
@@ -520,35 +543,35 @@ void BattleRoomTab::UpdateUser( User& user )
 
 	UserBattleStatus& bs = user.BattleStatus();
 //	m_team_sel->SetSelection( bs.team );
-//	m_ally_sel->SetSelection( bs.ally );
+	m_ally_sel->SetSelection( bs.ally );
 //	m_side_sel->SetSelection( bs.side );
-//	m_spec_chk->SetValue( bs.spectator );
-//	m_auto_unspec_chk->SetValue( m_battle->GetAutoUnspec() );
+	m_spec_chk->SetValue( bs.spectator );
+	m_auto_unspec_chk->SetValue( m_battle->GetAutoUnspec() );
 	m_ready_chk->SetValue( bs.ready );
 	// Enable or disable widgets' sensitivity as appropriate.
 	if ( bs.spectator )
 	{
 //		m_side_sel->Disable();
-//		m_ally_sel->Disable();
+		m_ally_sel->Disable();
 //		m_team_sel->Disable();
 		if ( m_battle->GetBattleType() != BT_Replay )
 		{
-//		    m_auto_unspec_chk->Enable();
+		    m_auto_unspec_chk->Enable();
 		    m_ready_chk->Disable();
 		}
 		else
 		{
 		    m_ready_chk->Enable();
-//		    m_auto_unspec_chk->Disable();
+		    m_auto_unspec_chk->Disable();
 		}
 	}
 	else
 	{
 //		m_side_sel->Enable();
-//		m_ally_sel->Enable();
+		m_ally_sel->Enable();
 //		m_team_sel->Enable();
 		m_ready_chk->Enable();
-//		m_auto_unspec_chk->Disable();
+		m_auto_unspec_chk->Disable();
 	}
 
 //	icons().SetColourIcon( user.BattleStatus().colour );
@@ -736,24 +759,24 @@ void BattleRoomTab::OnAutoStart( wxCommandEvent& /*unused*/ )
 
 void BattleRoomTab::OnAutoSpec( wxCommandEvent& /*unused*/ )
 {
-//	if ( !m_battle ) return;
-//	int trigger = wxGetNumberFromUser( _( "Enter timeout before autospeccing a player in minutes" ), _( "Set Timeout" ), _T( "" ), sett().GetBattleLastAutoSpectTime() / 60, 1, 60, ( wxWindow* ) & ui().mw(), wxDefaultPosition );
-//	if ( trigger < 0 ) trigger = 0;
-//	trigger = trigger * 60;
-//	m_autospec_mnu->Check( trigger > 0 );
-//	sett().SetBattleLastAutoSpectTime( trigger );
+	if ( !m_battle ) return;
+	int trigger = wxGetNumberFromUser( _( "Enter timeout before autospeccing a player in minutes" ), _( "Set Timeout" ), _T( "" ), sett().GetBattleLastAutoSpectTime() / 60, 1, 60, ( wxWindow* ) & ui().mw(), wxDefaultPosition );
+	if ( trigger < 0 ) trigger = 0;
+	trigger = trigger * 60;
+	m_autospec_mnu->Check( trigger > 0 );
+	sett().SetBattleLastAutoSpectTime( trigger );
 }
 
 void BattleRoomTab::OnAutounSpec( wxCommandEvent& /*unused*/ )
 {
-//	if ( !m_battle ) return;
-//	m_battle->SetAutoUnspec( m_auto_unspec_chk->GetValue() );
+	if ( !m_battle ) return;
+	m_battle->SetAutoUnspec( m_auto_unspec_chk->GetValue() );
 }
 
 void BattleRoomTab::OnImSpec( wxCommandEvent& /*unused*/ )
 {
-//	if ( !m_battle ) return;
-//	m_battle->ForceSpectator( m_battle->GetMe(), m_spec_chk->GetValue() );
+	if ( !m_battle ) return;
+	m_battle->ForceSpectator( m_battle->GetMe(), m_spec_chk->GetValue() );
 }
 
 
@@ -768,10 +791,10 @@ void BattleRoomTab::OnTeamSel( wxCommandEvent& /*unused*/ )
 
 void BattleRoomTab::OnAllySel( wxCommandEvent& /*unused*/ )
 {
-//	if ( !m_battle ) return;
-//	unsigned long ally;
-//	m_ally_sel->GetValue().ToULong( &ally );
-//	m_battle->ForceAlly( m_battle->GetMe(), ally - 1  );
+	if ( !m_battle ) return;
+	unsigned long ally;
+	m_ally_sel->GetValue().ToULong( &ally );
+	m_battle->ForceAlly( m_battle->GetMe(), ally - 1  );
 }
 
 
@@ -1036,7 +1059,7 @@ void BattleRoomTab::SetBattle( Battle* battle )
 	m_battle = battle;
 
 //	m_team_sel->Enable(m_battle);
-//	m_ally_sel->Enable(m_battle);
+	m_ally_sel->Enable(m_battle);
 //	m_color_sel->Enable(m_battle);
 //	m_side_sel->Enable(m_battle);
 
@@ -1055,7 +1078,7 @@ void BattleRoomTab::SetBattle( Battle* battle )
 	m_browse_map_btn->Enable(m_battle);
 
 	m_ready_chk->Enable(m_battle);
-//	m_spec_chk->Enable(m_battle);
+	m_spec_chk->Enable(m_battle);
 //	m_lock_chk->Enable(m_battle);
 //	m_autolock_chk->Enable(m_battle);
 
