@@ -63,6 +63,12 @@ void SpringieHandler::Notify()
 {
     m_battle->Say(_T("!notify"));
 }
+
+void SpringieHandler::Start()
+{
+    m_battle->Say(_T("!start"));
+}
+
 //------------------------------
 
 //========================
@@ -108,6 +114,10 @@ void SpadsHandler::Notify()
     m_battle->Say(_T("!notify"));
 }
 
+void SpadsHandler::Start()
+{
+    m_battle->Say(_T("!start"));
+}
 //-------------
 
 

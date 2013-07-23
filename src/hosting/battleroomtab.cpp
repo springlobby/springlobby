@@ -585,7 +585,11 @@ void BattleRoomTab::OnStart( wxCommandEvent& /*unused*/ )
 			if ( !ui().IsSpringRunning() ) m_battle->StartSpring();
 			else customMessageBoxNoModal( SL_MAIN_ICON, _("Spring is already running."), _("Error") );
 		}
-		else customMessageBoxNoModal( SL_MAIN_ICON, _("Host is not ingame."), _("Error") );
+		else
+		{
+		    autohostManager.GetAutohostHandler().Start();
+		    //customMessageBoxNoModal( SL_MAIN_ICON, _("Host is not ingame."), _("Error") );
+		}
 	}
 }
 
