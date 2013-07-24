@@ -131,17 +131,21 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
 
 	// Create all widgets
+
+	// Creatin main sizer for split window, downloads, and buttons sizer
 	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 	{
+        //Split window for Chat and Right side window (contains map and players list)
 	    m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize( 100, 60 ) );
         {
             m_splitter->SetMinimumPaneSize( 350 );
-
+            //Chat
             m_chat = new ChatPanel( m_splitter, m_battle );
             {
 
             }
 
+            //Right side window for map stuff and player list
             m_right_side_window=new wxScrolledWindow( m_splitter , -1 );
             {
                 m_right_side_window->SetScrollRate( SCROLL_RATE, SCROLL_RATE );
@@ -263,8 +267,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
             m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
         }
 	}
-
     SplitSizerHorizontally(true);
+
 
     m_autohost_manage_mnu = new wxMenu();
     {
@@ -381,7 +385,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
-
 }
 
 
@@ -397,7 +400,7 @@ void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
 		m_splitter->Unsplit();
 	if ( horizontal )
 	{
-		m_splitter->SplitVertically(m_chat, m_right_side_window,350 );
+		m_splitter->SplitVertically(m_chat, m_right_side_window,0);
 	}
 }
 
