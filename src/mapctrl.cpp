@@ -1628,6 +1628,8 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string mapname)
         m_heightmap = new wxBitmap( LSL::usync().GetHeightmap( m_mapname, w, h ).wxbitmap());
     }
 
-    Refresh();
-    Update();
+	// never ever call a gui function here, it will crash! (in 1/100 cases)
+	//Refresh();
+	//Update();
 }
+
