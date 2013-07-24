@@ -220,7 +220,7 @@ bool SpringLobbyApp::OnInit()
     ui().FirstRunWelcome();
     m_timer->Start( TIMER_INTERVAL );
 
-    ui().mw().SetLogWin( loggerwin, logchain );
+	ui().mw().SetLogWin( loggerwin, logchain );
 
 	//this should take off the firstload time considerably *ie nil it :P )
 	mapSelectDialog(true);

@@ -52,7 +52,7 @@ BEGIN_EVENT_TABLE(MapSelectDialog,wxDialog)
 END_EVENT_TABLE()
 
 MapSelectDialog::MapSelectDialog( wxWindow* parent )
-	: WindowAttributesPickle( m_dialog_name, this, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) ),
+	: // WindowHintsPickle( m_dialog_name, this, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) ),
 	m_horizontal_direction( sett().GetHorizontalSortorder() ),
 	m_vertical_direction( sett().GetVerticalSortorder() )
 {

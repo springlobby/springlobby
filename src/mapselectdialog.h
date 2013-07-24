@@ -25,8 +25,8 @@ namespace LSL {
     struct UnitsyncMap;
 }
 
-
-class MapSelectDialog: public wxDialog, public WindowAttributesPickle, public UnitsyncReloadedSink<MapSelectDialog>
+// FIXME: WindowAttributesPickle calls SetSize which causes an wx-assertion
+class MapSelectDialog: public wxDialog, /*public WindowAttributesPickle, */ public UnitsyncReloadedSink<MapSelectDialog>
 {
 	public:
 
