@@ -1,6 +1,5 @@
 language: cpp
 compiler:
-  - clang
   - gcc
 before_script:
   - sudo apt-get install libwxgtk2.8-dev libboost-thread-dev libboost-system-dev libboost-filesystem-dev libalure-dev
