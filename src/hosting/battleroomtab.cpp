@@ -770,15 +770,22 @@ void BattleRoomTab::OnAutoSpec( wxCommandEvent& /*unused*/ )
 	sett().SetBattleLastAutoSpectTime( trigger );
 }
 
-void BattleRoomTab::OnAutounSpec( wxCommandEvent& /*unused*/ )
+void BattleRoomTab::OnAutounSpec( wxCommandEvent& event )
 {
 	if ( !m_battle ) return;
-	m_battle->SetAutoUnspec( m_auto_unspec_chk->GetValue() );
+	bool unspec = m_auto_unspec_chk->GetValue();
+	if ( unspec ) {
+		m_spec_chk->SetValue( false );
+		OnImSpec( event );
+	}
+	m_battle->SetAutoUnspec( unspec );
 }
 
-void BattleRoomTab::OnImSpec( wxCommandEvent& /*unused*/ )
+void BattleRoomTab::OnImSpec( wxCommandEvent& event )
 {
 	if ( !m_battle ) return;
+	m_auto_unspec_chk->SetValue( false );
+	OnAutounSpec( event );
 	m_battle->ForceSpectator( m_battle->GetMe(), m_spec_chk->GetValue() );
 }
 

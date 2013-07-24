@@ -52,7 +52,7 @@ BEGIN_EVENT_TABLE(MapSelectDialog,wxDialog)
 END_EVENT_TABLE()
 
 MapSelectDialog::MapSelectDialog( wxWindow* parent )
-	: WindowAttributesPickle( m_dialog_name, this, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) ),
+	: // WindowHintsPickle( m_dialog_name, this, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) ),
 	m_horizontal_direction( sett().GetHorizontalSortorder() ),
 	m_vertical_direction( sett().GetVerticalSortorder() )
 {
@@ -446,10 +446,10 @@ void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/
 	AddPendingEvent( dummy );
 }
 
-wxString mapSelectDialog(){
+wxString mapSelectDialog(bool hidden){
 	wxString mapname = _T("");
-        static MapSelectDialog* m = new MapSelectDialog();
-        if ( m->ShowModal() == wxID_OK && m->GetSelectedMap() != NULL ) {
+	static MapSelectDialog* m = new MapSelectDialog();
+	if ( (!hidden) && (m->ShowModal() == wxID_OK) && (m->GetSelectedMap() != NULL) ) {
 		mapname = TowxString(m->GetSelectedMap()->name);
 	}
 	return mapname;

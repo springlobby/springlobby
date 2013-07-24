@@ -41,7 +41,7 @@ class SpringieHandler: public AutohostHandler
         void ClearStartBoxes();
         void AddStartBox(int posx,int posy,int w,int h);
         void Notify();
-        void Start();
+	void Start();
 };
 
 class SpadsHandler: virtual public AutohostHandler

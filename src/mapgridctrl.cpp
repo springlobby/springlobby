@@ -531,7 +531,8 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( const std::string& _mapname )
 		SetMinimap( m_maps_unused, mapname, minimap_bmp );
 		SetMinimap( m_maps_filtered, mapname, minimap_bmp );
 
-		Refresh(); // TODO: use RefreshRect ?
+//	never ever call a gui function here, it will crash! (in 1/100 cases)
+//		Refresh(); // TODO: use RefreshRect ?
 	}
 
 	--m_async_minimap_fetches;
@@ -549,7 +550,8 @@ void MapGridCtrl::OnGetMapExAsyncCompleted( const std::string& _mapname )
 		}
 		catch (...) {}
 
-		Refresh();
+//	never ever call a gui function here, it will crash! (in 1/100 cases)
+//	Refresh();
 	}
 	--m_async_mapinfo_fetches;
 	UpdateAsyncFetches();

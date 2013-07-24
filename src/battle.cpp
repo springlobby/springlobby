@@ -286,7 +286,6 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 				}
 			}
 		}
-	if ( !GetMe().BattleStatus().spectator ) SetAutoUnspec(false); // we don't need auto unspec anymore
 	ShouldAutoUnspec();
 #ifndef SL_QT_MODE
 	ui().OnUserBattleStatus( *this, user );
@@ -1168,7 +1167,13 @@ void Battle::ShouldAutoUnspec()
 {
 	if ( m_auto_unspec && !IsLocked() && GetMe().BattleStatus().spectator )
 	{
-		if ( GetNumActivePlayers() < m_opts.maxplayers )
+		unsigned int numplayers = 0;
+		std::map<int, int> allysizes = GetAllySizes();
+		for ( std::map<int, int>::const_iterator itor = allysizes.begin(); itor != allysizes.end(); ++itor )
+		{
+			numplayers += itor->second;
+		}
+		if ( numplayers < m_auto_unspec_num_players )
 		{
 			ForceSpectator(GetMe(),false);
 		}
@@ -1178,6 +1183,7 @@ void Battle::ShouldAutoUnspec()
 void Battle::SetAutoUnspec(bool value)
 {
 	m_auto_unspec = value;
+	m_auto_unspec_num_players = GetNumActivePlayers();
 	ShouldAutoUnspec();
 }
 

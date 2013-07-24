@@ -32,6 +32,7 @@ IBattle::IBattle():
   m_previous_local_mod_name( wxEmptyString ),
   m_ingame(false),
   m_auto_unspec(false),
+  m_auto_unspec_num_players(0),
   m_generating_script(false),
   m_players_ready(0),
   m_players_sync(0),

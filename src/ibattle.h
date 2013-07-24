@@ -423,6 +423,7 @@ protected:
     bool m_ingame;
 
     bool m_auto_unspec; // unspec as soon as there's a free slot
+    unsigned int m_auto_unspec_num_players; // number of players in the battle when m_auto_unspec was set to true
 
     bool m_generating_script;
 
