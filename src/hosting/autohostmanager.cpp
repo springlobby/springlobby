@@ -46,7 +46,7 @@ void SpringieHandler::SetRandomMap()
 
 void SpringieHandler::SetMap(const wxString& map)
 {
-    m_battle->Say(_T("!map")+map);
+    m_battle->Say(_T("!map ")+map);
 }
 
 void SpringieHandler::ClearStartBoxes()
@@ -96,7 +96,7 @@ void SpadsHandler::SetRandomMap()
 
 void SpadsHandler::SetMap(const wxString& map)
 {
-    m_battle->Say(_T("!map")+map);
+    m_battle->Say(_T("!map ")+map);
 }
 
 void SpadsHandler::ClearStartBoxes()
