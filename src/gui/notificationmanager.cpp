@@ -48,8 +48,14 @@ NotificationManager::NotificationManager()
 NotificationManager::~NotificationManager()
 {
 	m_rate_limit_timer.Stop();
-//	delete m_notification_wrapper;//this segfaults on app exit.. please do tell me why
-	m_notification_wrapper = 0;
+	delete m_notification_wrapper;
+	m_notification_wrapper = NULL;
+}
+
+void NotificationManager::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
+{
+	delete m_notification_wrapper;
+	m_notification_wrapper = NULL;
 }
 
 void NotificationManager::OnShowNotification( UiEvents::NotficationData data )
@@ -92,7 +98,3 @@ void NotificationManager::OnTimer( wxTimerEvent& /*event*/ )
 	}
 }
 
-void NotificationManager::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
-{
-	delete m_notification_wrapper;
-}
