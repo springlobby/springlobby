@@ -7,9 +7,7 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/panel.h>
-
 class Ui;
-
 
 class MapGridCtrl : public wxPanel
 {
@@ -83,6 +81,7 @@ class MapGridCtrl : public wxPanel
         void OnGetMapImageAsyncCompleted(const std::string& _mapname );
         void OnGetMapExAsyncCompleted(const std::string& _mapname );
 
+        void OnRefresh( wxCommandEvent& event );
 	protected:
 
 		enum MapState

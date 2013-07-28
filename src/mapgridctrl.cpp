@@ -17,7 +17,6 @@
 
 #include "images/map_select_1.png.h"
 #include "images/map_select_2.png.h"
-
 /// Size of the map previews.  This should be same as size of map previews in
 /// battle list and as prefetch size in SpringUnitSync for performance reasons.
 const int MINIMAP_SIZE = 98;
@@ -31,13 +30,14 @@ const int MAX_MINIMAP_FETCHES = 2;
 /// Maximum mapinfo fetches in WorkerThread queue
 const int MAX_MAPINFO_FETCHES = 5;
 
-
 BEGIN_EVENT_TABLE( MapGridCtrl, wxPanel )
 	EVT_PAINT( MapGridCtrl::OnPaint )
 	EVT_SIZE( MapGridCtrl::OnResize )
 	EVT_MOTION( MapGridCtrl::OnMouseMove )
 	EVT_LEFT_DOWN( MapGridCtrl::OnLeftDown )
 	EVT_LEFT_UP( MapGridCtrl::OnLeftUp )
+
+	EVT_COMMAND(wxID_ANY , REFRESH_EVENT, MapGridCtrl::OnRefresh)
 //	EVT_COMMAND( 2, UnitSyncAsyncOperationCompletedEvt, MapGridCtrl::OnGetMapImageAsyncCompleted )
 //	EVT_COMMAND( 3, UnitSyncAsyncOperationCompletedEvt, MapGridCtrl::OnGetMapExAsyncCompleted )
 END_EVENT_TABLE()
@@ -532,6 +532,8 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( const std::string& _mapname )
 		SetMinimap( m_maps_filtered, mapname, minimap_bmp );
 
 //	never ever call a gui function here, it will crash! (in 1/100 cases)
+        wxCommandEvent event( REFRESH_EVENT, GetId() );
+        GetEventHandler()->ProcessEvent( event );
 //		Refresh(); // TODO: use RefreshRect ?
 	}
 
@@ -551,6 +553,8 @@ void MapGridCtrl::OnGetMapExAsyncCompleted( const std::string& _mapname )
 		catch (...) {}
 
 //	never ever call a gui function here, it will crash! (in 1/100 cases)
+    wxCommandEvent event( REFRESH_EVENT, GetId() );
+    GetEventHandler()->ProcessEvent( event );
 //	Refresh();
 	}
 	--m_async_mapinfo_fetches;
@@ -564,3 +568,12 @@ void MapGridCtrl::OnGetMapExAsyncCompleted( const std::string& _mapname )
 		wxPostEvent( this, evt );
 	}
 }
+
+void MapGridCtrl::OnRefresh( wxCommandEvent& event )
+{
+    //Update();
+    Refresh();
+
+    //Update();
+}
+

@@ -538,3 +538,5 @@ TimerMessageBox::~TimerMessageBox()
 	customMessageBoxNoModal( SL_MAIN_ICON, wxFormat( m_msg_format ) % diff.Format() );
 	delete m_start;
 }
+
+DEFINE_EVENT_TYPE(REFRESH_EVENT)

@@ -83,7 +83,10 @@ class MapCtrl : public wxPanel
 
     void OnGetMapImageAsyncCompleted(const std::string mapname);
 
+    void OnRefresh( wxCommandEvent& event );
+
     void SetReadOnly( bool readonly ) { m_ro = readonly; }
+
 
    protected:
 
@@ -208,6 +211,7 @@ class MapCtrl : public wxPanel
     LSL::UnitsyncMap m_map;
 
     User* m_user_expanded;
+
 
     enum InfoMap
     {

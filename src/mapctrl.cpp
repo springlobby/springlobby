@@ -78,6 +78,7 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
     EVT_LEFT_DOWN( MapCtrl::OnLeftDown )
     EVT_LEFT_UP( MapCtrl::OnLeftUp )
     EVT_RIGHT_UP( MapCtrl::OnRightUp )
+    EVT_COMMAND(wxID_ANY , REFRESH_EVENT, MapCtrl::OnRefresh)
 END_EVENT_TABLE()
 
 /* Something to do with start box sizes. */
@@ -1629,7 +1630,15 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string mapname)
     }
 
 	// never ever call a gui function here, it will crash! (in 1/100 cases)
+	wxCommandEvent event( REFRESH_EVENT, GetId() );
+    GetEventHandler()->ProcessEvent( event );
 	//Refresh();
 	//Update();
 }
 
+void MapCtrl::OnRefresh( wxCommandEvent& event )
+{
+    //Update();
+    Refresh();
+    Update();
+}
