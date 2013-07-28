@@ -131,69 +131,144 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battleroomtab" ) );
 
 	// Create all widgets
-	m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize( 100, 60 ) );
 
-	m_player_panel = new wxScrolledWindow( m_splitter , -1 );
-	m_player_panel->SetScrollRate( SCROLL_RATE, SCROLL_RATE );
-	m_team_sel = new wxComboBox( m_player_panel, BROOM_TEAMSEL, _T( "1" ), wxDefaultPosition, wxSize( 50, CONTROL_HEIGHT ), team_choices );
-	m_team_sel->SetToolTip( TE( _( "Players with the same team number share control of their units." ) ) );
-	m_ally_sel = new wxComboBox( m_player_panel, BROOM_ALLYSEL, _T( "1" ), wxDefaultPosition, wxSize( 50, CONTROL_HEIGHT ), ally_choices );
-	m_ally_sel->SetToolTip( TE( _( "Players with the same ally number work together to achieve victory." ) ) );
-	m_color_sel = new ColorButton( m_player_panel, BROOM_COLOURSEL, wxColour (0,0,0), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_color_sel->SetToolTip( TE( _( "Select a color to identify your units in-game" ) ) );
-	m_side_sel = new wxBitmapComboBox( m_player_panel, BROOM_SIDESEL, _T( "" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_side_sel->SetToolTip( TE( _( "Select your faction" ) ) );
-	m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _( "Spectator" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_spec_chk->SetToolTip( TE( _( "Spectate (watch) the battle instead of playing" ) ) );
-	m_auto_unspec_chk = new wxCheckBox( m_player_panel, BROOM_UNSPEC, _( "Auto un-spectate" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_auto_unspec_chk->SetToolTip( TE( _( "automatically unspec when there's a free slot" ) ) );
-	m_ready_chk = new wxCheckBox( m_player_panel, BROOM_IMREADY, _( "I'm ready" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_ready_chk->SetToolTip( TE( _( "Click this if you are content with the battle settings." ) ) );
+	// Creatin main sizer for split window, downloads, and buttons sizer
+	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
+	{
+        //Split window for Chat and Right side window (contains map and players list)
+	    m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize( 100, 60 ) );
+        {
+            m_splitter->SetMinimumPaneSize( 350 );
+            //Chat
+            m_chat = new ChatPanel( m_splitter, m_battle );
+            {
 
-	m_team_lbl = new wxStaticText( m_player_panel, -1, _( "Team" ) );
-	m_ally_lbl = new wxStaticText( m_player_panel, -1, _( "Ally" ) );
-	m_color_lbl = new wxStaticText( m_player_panel, -1, _( "Color" ) );
-	m_side_lbl = new wxStaticText( m_player_panel, -1, _( "Side" ) );
+            }
 
-	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, _( "Setup: " ) );
-	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, _( "Unready: 0" ) );
+            //Right side window for map stuff and player list
+            m_right_side_window=new wxScrolledWindow( m_splitter , -1 );
+            {
+                m_right_side_window->SetScrollRate( SCROLL_RATE, SCROLL_RATE );
+                wxBoxSizer* m_righ_side = new wxBoxSizer( wxVERTICAL );
+                {
+                    wxBoxSizer* m_map_info_sizer=new wxBoxSizer( wxVERTICAL );
+                    {
+                        m_minimap = new MapCtrl( m_right_side_window, 162, m_battle, true, true, true, false );
+                        {
+                            m_minimap->SetToolTip( TE( _( "A preview of the selected map.  You can see the starting positions, or (if set) starting boxes." ) ) );
+                            m_map_info_sizer->Add( m_minimap, 0, wxEXPAND );
+                        }
 
-	//XXX not needed ?
-//	m_size_lbl = new wxStaticText( this, -1, _T( "" ) );
-//	m_wind_lbl = new wxStaticText( this, -1, _T( "" ) );
-//	m_tidal_lbl = new wxStaticText( this, -1, _T( "" ) );
+                        wxBoxSizer* m_map_select_sizer = new wxBoxSizer( wxHORIZONTAL );
+                        {
+                            m_map_combo = new wxComboBox( m_right_side_window, BROOM_MAP_SEL, _T( "" ), wxDefaultPosition, wxDefaultSize );
+                            {
+                                m_map_select_sizer->Add( m_map_combo, 1, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL );
+                            }
+                            m_browse_map_btn = new wxButton( m_right_side_window, BROOM_MAP_BROWSE, _( "Map" ), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+                            {
+                                m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
+                                m_map_select_sizer->Add( m_browse_map_btn, 0, wxALIGN_RIGHT );
+                            }
 
-	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, _T( "" ), wxDefaultPosition, wxDefaultSize );
+                            m_map_info_sizer->Add( m_map_select_sizer, 0, wxALL| wxEXPAND );
+                        }
+                        m_righ_side->Add( m_map_info_sizer,0, wxEXPAND );
+                    }
 
-	m_minimap = new MapCtrl( this, 162, m_battle, true, true, true, false );
-	m_minimap->SetToolTip( TE( _( "A preview of the selected map.  You can see the starting positions, or (if set) starting boxes." ) ) );
+                    m_players = new BattleroomListCtrl( m_right_side_window, m_battle, false, true );
+                    {
+                        m_righ_side->Add( m_players, 1, wxEXPAND );
+                    }
 
-	m_browse_map_btn = new wxButton( this, BROOM_MAP_BROWSE, _( "Map" ), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
+                    m_right_side_window->SetSizer( m_righ_side );
+                }
+            }
+            m_main_sizer->Add( m_splitter, 1, wxEXPAND );
+        }
 
-	m_players = new BattleroomListCtrl( m_player_panel, m_battle, false, true );
-	m_chat = new ChatPanel( m_splitter, m_battle );
+        m_downloads=new BattleRoomDownloads(this,m_battle);
+        {
+            m_main_sizer->Add( m_downloads, 0, wxEXPAND );
+        }
 
-	m_command_line = new wxStaticLine( this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+        wxBoxSizer* m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
+        {
+            wxBoxSizer* m_left_buttons_size=new wxBoxSizer( wxHORIZONTAL );
+            {
+                m_ally_lbl = new wxStaticText( this, -1, _( "Ally" ) );
+                {
+                    m_left_buttons_size->Add( m_ally_lbl, 0,  wxALIGN_CENTER|wxALL,5);
+                }
 
-	m_host_new_btn = new wxButton( this, BROOM_HOST_NEW, _( "Host new" ), wxDefaultPosition, wxDefaultSize );
-	m_host_new_btn->SetToolTip( TE( _( "Host a new battle" ) ) );
-	m_leave_btn = new wxButton( this, BROOM_LEAVE, _( "Leave" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_leave_btn->SetToolTip( TE( _( "Leave the battle and return to the battle list" ) ) );
-	m_start_btn = new wxButton( this, BROOM_START, _( "Start" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_start_btn->SetToolTip( TE( _( "Start the battle" ) ) );
+                m_ally_sel = new wxComboBox( this, BROOM_ALLYSEL, _T( "1" ), wxDefaultPosition, wxSize( 50, CONTROL_HEIGHT ), ally_choices );
+                {
+                    m_ally_sel->SetToolTip( TE( _( "Players with the same ally number work together to achieve victory." ) ) );
+                    m_left_buttons_size->Add( m_ally_sel, 0, wxALL|wxEXPAND );
+                }
 
-	m_manage_players_btn = new wxButton( this, BROOM_MANAGE_MENU, _( "Battle Management" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_manage_players_btn->SetToolTip( TE( _( "Various functions to games simplers to setup" ) ) );
+                m_spec_chk = new wxCheckBox( this, BROOM_SPEC, _( "Spectator" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+                {
+                    m_spec_chk->SetToolTip( TE( _( "Spectate (watch) the battle instead of playing" ) ) );
+                    m_left_buttons_size->Add( m_spec_chk, 0, wxALL|wxEXPAND );
+                }
 
-	m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _( "Add Bot..." ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_addbot_btn->SetToolTip( TE( _( "Add a computer-controlled player to the game" ) ) );
-	m_autolock_chk = new wxCheckBox( this, BROOM_AUTOLOCK, _( "Autolock on start" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_autolock_chk->SetToolTip( TE( _( "Automatically locks the battle when the game starts and unlock when it's finished." ) ) );
-	m_autolock_chk->SetValue( sett().GetLastAutolockStatus() );
+                m_auto_unspec_chk = new wxCheckBox( this, BROOM_UNSPEC, _( "Auto un-spectate" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+                {
+                    m_auto_unspec_chk->SetToolTip( TE( _( "automatically unspec when there's a free slot" ) ) );
+                    m_left_buttons_size->Add( m_auto_unspec_chk, 0, wxALL|wxEXPAND );
+                }
 
-	m_lock_chk = new wxCheckBox( this, BROOM_LOCK, _( "Locked" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
-	m_lock_chk->SetToolTip( TE( _( "Prevent additional players from joining the battle" ) ) );
+                m_ready_chk = new wxCheckBox( this, BROOM_IMREADY, _( "I'm ready" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+                {
+                    m_ready_chk->SetToolTip( TE( _( "Click this if you are content with the battle settings." ) ) );
+                    m_left_buttons_size->Add( m_ready_chk, 0, wxALL|wxEXPAND );
+                }
+
+                m_buttons_sizer->Add( m_left_buttons_size, 1, wxEXPAND );
+            }
+
+            wxBoxSizer* m_right_buttons_size=new wxBoxSizer( wxHORIZONTAL );
+            {
+                m_right_buttons_size->AddStretchSpacer();
+
+                m_host_new_btn = new wxButton( this, BROOM_HOST_NEW, _( "Host new" ), wxDefaultPosition, wxDefaultSize );
+                {
+                    m_host_new_btn->SetToolTip( TE( _( "Host a new battle" ) ) );
+                    m_right_buttons_size->Add( m_host_new_btn, 0, wxEXPAND );
+                }
+                m_leave_btn = new wxButton( this, BROOM_LEAVE, _( "Leave" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+                {
+                    m_leave_btn->SetToolTip( TE( _( "Leave the battle and return to the battle list" ) ) );
+                    m_right_buttons_size->Add( m_leave_btn, 0, wxEXPAND );
+                }
+
+                m_addbot_btn = new wxButton( this, BROOM_ADDBOT, _( "Add Bot..." ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+                {
+                    m_addbot_btn->SetToolTip( TE( _( "Add a computer-controlled player to the game" ) ) );
+                    m_right_buttons_size->Add( m_addbot_btn, 0, wxEXPAND );
+                }
+
+                m_manage_players_btn = new wxButton( this, BROOM_MANAGE_MENU, _( "Battle Management" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+                {
+                    m_manage_players_btn->SetToolTip( TE( _( "Various functions to games simplers to setup" ) ) );
+                    m_right_buttons_size->Add( m_manage_players_btn, 0, wxEXPAND );
+                }
+
+                m_start_btn = new wxButton( this, BROOM_START, _( "Start" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+                {
+                    m_start_btn->SetToolTip( TE( _( "Start the battle" ) ) );
+                    m_right_buttons_size->Add( m_start_btn, 0, wxEXPAND );
+                }
+
+                m_buttons_sizer->Add( m_right_buttons_size, 0, wxEXPAND );
+            }
+
+            m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
+        }
+	}
+    SplitSizerHorizontally(true);
+
 
     m_autohost_manage_mnu = new wxMenu();
     {
@@ -215,142 +290,101 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
 
 
 	m_manage_users_mnu = new wxMenu();
+    {
+        m_autohost_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOHOST, _( "Autohost" ), _( "Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'." ), wxITEM_CHECK );
+        {
+            m_manage_users_mnu->Append( m_autohost_mnu );
+            m_autohost_mnu->Check( false );
+        }
 
-	m_autohost_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOHOST, _( "Autohost" ), _( "Toggle autohost mode.  This allows players to control your battle using commands like '!balance' and '!start'." ), wxITEM_CHECK );
-	m_manage_users_mnu->Append( m_autohost_mnu );
-	m_autohost_mnu->Check( false );
+        m_autopaste_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOPASTE, _( "AutoPaste Description" ), _( "Automatically paste battle's descriptoin when a new user joins" ), wxITEM_CHECK );
+        {
+            m_manage_users_mnu->Append( m_autopaste_mnu );
+            m_autopaste_mnu->Check( sett().GetBattleLastAutoAnnounceDescription() );
+        }
 
+        m_autospec_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOSPECT, _( "AutoSpect" ), _( "Automatically spectate players that don't ready up or become synced within x seconds." ), wxITEM_CHECK );
+        {
+            m_manage_users_mnu->Append( m_autospec_mnu );
+            m_autospec_mnu->Check( sett().GetBattleLastAutoSpectTime() > 0 );
+        }
 
-	m_autopaste_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOPASTE, _( "AutoPaste Description" ), _( "Automatically paste battle's descriptoin when a new user joins" ), wxITEM_CHECK );
-	m_manage_users_mnu->Append( m_autopaste_mnu );
-	m_autopaste_mnu->Check( sett().GetBattleLastAutoAnnounceDescription() );
-	m_autospec_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOSPECT, _( "AutoSpect" ), _( "Automatically spectate players that don't ready up or become synced within x seconds." ), wxITEM_CHECK );
-	m_manage_users_mnu->Append( m_autospec_mnu );
-	m_autospec_mnu->Check( sett().GetBattleLastAutoSpectTime() > 0 );
-	m_autocontrol_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOCONTROL, _( "AutoControlBalance" ), _( "Automatically balance teams and allies and fix colors when all players are ready and synced" ), wxITEM_CHECK );
-	m_manage_users_mnu->Append( m_autocontrol_mnu );
-	m_autocontrol_mnu->Check( sett().GetBattleLastAutoControlState() );
-	m_autostart_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOSTART, _( "AutoStart" ), _( "Automatically start the battle when all players are ready and synced" ), wxITEM_CHECK );
-	m_manage_users_mnu->Append( m_autostart_mnu );
-	m_autostart_mnu->Check( sett().GetBattleLastAutoStartState() );
+        m_autocontrol_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOCONTROL, _( "AutoControlBalance" ), _( "Automatically balance teams and allies and fix colors when all players are ready and synced" ), wxITEM_CHECK );
+        {
+            m_manage_users_mnu->Append( m_autocontrol_mnu );
+            m_autocontrol_mnu->Check( sett().GetBattleLastAutoControlState() );
+        }
 
-	m_lock_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_LOCK_BALANCE, _( "Lock Balance" ), _( "When activated, prevents anyone but the host to change team and ally" ), wxITEM_CHECK );
-	m_manage_users_mnu->Append( m_lock_balance_mnu );
-	m_lock_balance_mnu->Check( false );
+        m_autostart_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_AUTOSTART, _( "AutoStart" ), _( "Automatically start the battle when all players are ready and synced" ), wxITEM_CHECK );
+        {
+            m_manage_users_mnu->Append( m_autostart_mnu );
+            m_autostart_mnu->Check( sett().GetBattleLastAutoStartState() );
+        }
 
-	wxMenu* ring_menu = new wxMenu;
-	wxMenuItem* ring_unready = new wxMenuItem( ring_menu, BROOM_RING_UNREADY, _( "Ring unready" ), _( "Rings all players that don't have ready status and aren't spectators" ) );
-	ring_menu->Append( ring_unready );
-	wxMenuItem* ring_unsynced = new wxMenuItem( ring_menu, BROOM_RING_UNSYNC, _( "Ring unsynced" ), _( "Rings all players that don't have sync status and aren't spectators" ) );
-	ring_menu->Append( ring_unsynced );
-	wxMenuItem* ring_unready_unsynced = new wxMenuItem( ring_menu, BROOM_RING_UNREADY_UNSYNC, _( "Ring unready and unsynced" ), _( "Rings all players that don't have sync status or don't have ready status and aren't spectators" ) );
-	ring_menu->Append( ring_unready_unsynced );
-	m_manage_users_mnu->Append( wxID_ANY, _( "Ring ..." ), ring_menu );
+        m_lock_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_LOCK_BALANCE, _( "Lock Balance" ), _( "When activated, prevents anyone but the host to change team and ally" ), wxITEM_CHECK );
+        {
+            m_manage_users_mnu->Append( m_lock_balance_mnu );
+            m_lock_balance_mnu->Check( false );
+        }
 
-	wxMenu* spect_menu = new wxMenu;
-	wxMenuItem* spect_unready = new wxMenuItem( spect_menu, BROOM_SPECT_UNREADY, _( "Spect unready" ), _( "Force to spectate all players that don't have ready status" ) );
-	spect_menu->Append( spect_unready );
-	wxMenuItem* spect_unsynced = new wxMenuItem( spect_menu, BROOM_SPECT_UNSYNC, _( "Spect unsynced" ), _( "Force to spectate all players that don't have sync status" ) );
-	spect_menu->Append( spect_unsynced );
-	wxMenuItem* spect_unready_unsynced = new wxMenuItem( spect_menu, BROOM_SPECT_UNREADY_UNSYNC, _( "Force to spectate unready and unsynced" ), _( "Rings all players that don't have sync status or don't have ready status" ) );
-	spect_menu->Append( spect_unready_unsynced );
-	m_manage_users_mnu->Append( wxID_ANY, _( "Force spectate ..." ), spect_menu );
+        wxMenu* ring_menu = new wxMenu;
+        {
+            wxMenuItem* ring_unready = new wxMenuItem( ring_menu, BROOM_RING_UNREADY, _( "Ring unready" ), _( "Rings all players that don't have ready status and aren't spectators" ) );
+            {
+                ring_menu->Append( ring_unready );
+            }
+            wxMenuItem* ring_unsynced = new wxMenuItem( ring_menu, BROOM_RING_UNSYNC, _( "Ring unsynced" ), _( "Rings all players that don't have sync status and aren't spectators" ) );
+            {
+                ring_menu->Append( ring_unsynced );
+            }
+            wxMenuItem* ring_unready_unsynced = new wxMenuItem( ring_menu, BROOM_RING_UNREADY_UNSYNC, _( "Ring unready and unsynced" ), _( "Rings all players that don't have sync status or don't have ready status and aren't spectators" ) );
+            {
+                ring_menu->Append( ring_unready_unsynced );
+            }
 
-	wxMenuItem* m_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_BALANCE, _( "Balance alliances" ), _( "Automatically balance players into two or more alliances" ) );
-	m_manage_users_mnu->Append( m_balance_mnu );
+            m_manage_users_mnu->Append( wxID_ANY, _( "Ring ..." ), ring_menu );
+        }
 
-	wxMenuItem* m_fix_colours_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_FIXCOLOURS, _( "Fix colours" ), _( "Make player colors unique" ) );
-	m_manage_users_mnu->Append( m_fix_colours_mnu );
+        wxMenu* spect_menu = new wxMenu;
+        {
+            wxMenuItem* spect_unready = new wxMenuItem( spect_menu, BROOM_SPECT_UNREADY, _( "Spect unready" ), _( "Force to spectate all players that don't have ready status" ) );
+            {
+                spect_menu->Append( spect_unready );
+            }
+            wxMenuItem* spect_unsynced = new wxMenuItem( spect_menu, BROOM_SPECT_UNSYNC, _( "Spect unsynced" ), _( "Force to spectate all players that don't have sync status" ) );
+            {
+                spect_menu->Append( spect_unsynced );
+            }
 
-	wxMenuItem* m_fix_team_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_FIXID, _( "Balance teams" ), _( "Automatically balance players into control teams, by default none shares control" ) );
-	m_manage_users_mnu->Append( m_fix_team_mnu );
+            wxMenuItem* spect_unready_unsynced = new wxMenuItem( spect_menu, BROOM_SPECT_UNREADY_UNSYNC, _( "Force to spectate unready and unsynced" ), _( "Rings all players that don't have sync status or don't have ready status" ) );
+            {
+                spect_menu->Append( spect_unready_unsynced );
+            }
 
-	// Create Sizers
-	m_players_sizer = new wxBoxSizer( wxVERTICAL );
-	m_player_sett_sizer = new wxBoxSizer( wxHORIZONTAL );
-	wxBoxSizer* m_map_select_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_info_sizer = new wxBoxSizer( wxVERTICAL );
-	m_top_sizer = new wxBoxSizer( wxHORIZONTAL );
+            m_manage_users_mnu->Append( wxID_ANY, _( "Force spectate ..." ), spect_menu );
+        }
 
-	m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
+        wxMenuItem* m_balance_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_BALANCE, _( "Balance alliances" ), _( "Automatically balance players into two or more alliances" ) );
+        {
+            m_manage_users_mnu->Append( m_balance_mnu );
+        }
 
-	//m_info1_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_main_sizer = new wxBoxSizer( wxVERTICAL );
+        wxMenuItem* m_fix_colours_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_FIXCOLOURS, _( "Fix colours" ), _( "Make player colors unique" ) );
+        {
+            m_manage_users_mnu->Append( m_fix_colours_mnu );
+        }
 
-	wxBoxSizer* m_side_sel_sizer = new wxBoxSizer( wxHORIZONTAL );
-	#ifndef HAVE_WX29
-		int side_sel_width = m_side_sel->GetWidestItemWidth();
-		m_side_sel_sizer->SetMinSize( side_sel_width, CONTROL_HEIGHT );
-	#endif
-	m_side_sel_sizer->Add( m_side_sel, 1, wxEXPAND );
-
-	// Put widgets in place
-	m_player_sett_sizer->Add( m_team_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
-	m_player_sett_sizer->Add( m_team_sel, 0, wxEXPAND | wxALL, 2 );
-	m_player_sett_sizer->Add( m_ally_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
-	m_player_sett_sizer->Add( m_ally_sel, 0, wxEXPAND | wxALL, 2 );
-	m_player_sett_sizer->Add( m_color_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
-	m_player_sett_sizer->Add( m_color_sel, 0, wxEXPAND | wxALL, 2 );
-	m_player_sett_sizer->Add( m_side_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
-	m_player_sett_sizer->Add( m_side_sel_sizer, 0, wxEXPAND | wxALL, 2 );
-	m_player_sett_sizer->Add( m_spec_chk, 0, wxEXPAND | wxALL, 2 );
-	m_player_sett_sizer->Add( m_auto_unspec_chk, 0, wxEXPAND | wxALL, 2 );
-	m_player_sett_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
-	m_player_sett_sizer->AddStretchSpacer();
-	m_player_sett_sizer->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
-	m_player_sett_sizer->Add( m_ok_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
-
-	m_players_sizer->Add( m_players, 1, wxEXPAND );
-	m_players_sizer->Add( m_player_sett_sizer, 0, wxEXPAND );
-
-	m_player_panel->SetSizer( m_players_sizer );
-
-	SplitSizerHorizontally( sett().GetSplitBRoomHorizontally() );
-
-	//m_info1_sizer->Add( m_wind_lbl, 1, wxEXPAND );
-	//m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
-
-    m_downloads=new BattleRoomDownloads(this,m_battle);
-
-	m_info_sizer->Add( m_minimap, 0, wxEXPAND );
-	m_map_select_sizer->Add( m_map_combo, 0, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL );
-	m_map_select_sizer->Add( m_browse_map_btn, 0, wxALIGN_RIGHT );
-	m_info_sizer->Add( m_map_select_sizer, 0, wxALL );
-	//m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
-	//m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
-	m_info_sizer->Add(m_downloads,1,wxEXPAND|wxALL);
-
-
-	m_top_sizer->Add( m_splitter, 1, wxEXPAND | wxALL, 2 );
-	m_top_sizer->Add( m_info_sizer, 0, wxEXPAND | wxALL, 2 );
-
-	m_buttons_sizer->AddStretchSpacer();
-	m_buttons_sizer->Add( m_host_new_btn, 0, wxEXPAND | wxALL, 2 );
-	m_buttons_sizer->AddStretchSpacer();
-	m_buttons_sizer->Add( m_leave_btn, 0, wxEXPAND | wxALL, 2 );
-	m_buttons_sizer->Add( m_addbot_btn, 0, wxEXPAND | wxALL, 2 );
-	m_buttons_sizer->Add( m_autolock_chk, 0, wxEXPAND | wxALL, 2 );
-	m_buttons_sizer->Add( m_lock_chk, 0, wxEXPAND | wxALL, 2 );
-	m_buttons_sizer->Add( m_manage_players_btn, 0, wxEXPAND | wxALL, 2 );
-	m_buttons_sizer->Add( m_start_btn, 0, wxEXPAND | wxALL, 2 );
-
-    wxBoxSizer* m_bottom_sizer = new wxBoxSizer( wxVERTICAL );
-
-
-    m_bottom_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
-
-	m_main_sizer->Add( m_top_sizer, 1, wxEXPAND );
-	m_main_sizer->Add( m_command_line, 0, wxEXPAND );
-	m_main_sizer->Add( m_bottom_sizer, 0, wxEXPAND );
-
-	m_splitter->SetMinimumPaneSize( 240 );
+        wxMenuItem* m_fix_team_mnu = new wxMenuItem( m_manage_users_mnu, BROOM_FIXID, _( "Balance teams" ), _( "Automatically balance players into control teams, by default none shares control" ) );
+        {
+            m_manage_users_mnu->Append( m_fix_team_mnu );
+        }
+    }
 
 	SetBattle( battle );
 
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
-
 }
 
 
@@ -365,9 +399,9 @@ void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
 	if ( m_splitter->IsSplit() )
 		m_splitter->Unsplit();
 	if ( horizontal )
-		m_splitter->SplitHorizontally( m_player_panel, m_chat );
-	else
-		m_splitter->SplitVertically( m_player_panel, m_chat );
+	{
+		m_splitter->SplitVertically(m_chat, m_right_side_window,0);
+	}
 }
 
 wxString _GetStartPosStr( IBattle::StartType t )
@@ -406,14 +440,14 @@ wxString _GetGameTypeStr( IBattle::GameType t )
 
 void BattleRoomTab::UpdateBattleInfo()
 {
-	if ( !m_battle ) return;
-	m_lock_chk->SetValue( m_battle->IsLocked() );
+	//if ( !m_battle ) return;
+	//m_lock_chk->SetValue( m_battle->IsLocked() );
 	m_minimap->UpdateMinimap();
 	UpdateMapInfoSummary();
 }
 
 void BattleRoomTab::PrintAllySetup()
-{
+{/*
 	wxString setupstring;
 	if ( m_battle )
 	{
@@ -440,7 +474,7 @@ void BattleRoomTab::PrintAllySetup()
 		else setupstring += wxFormat(_("%d way FFA") ) % previousalliancesize;
 	}
 	m_ally_setup_lbl->SetLabel( wxFormat( _( "Setup: %s" ) ) % setupstring );
-	Layout();
+	Layout();*/
 }
 
 void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
@@ -489,7 +523,7 @@ void BattleRoomTab::UpdateMapInfoSummary()
 
 void BattleRoomTab::UpdateStatsLabels()
 {
-	m_ok_count_lbl->SetLabel( wxFormat( _( "Unready: %d" ) ) % ( m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ) );
+	//m_ok_count_lbl->SetLabel( wxFormat( _( "Unready: %d" ) ) % ( m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ) );
 	PrintAllySetup();
 }
 
@@ -511,18 +545,18 @@ void BattleRoomTab::UpdateUser( User& user )
 	if ( &user != &m_battle->GetMe() ) return;
 
 	UserBattleStatus& bs = user.BattleStatus();
-	m_team_sel->SetSelection( bs.team );
+//	m_team_sel->SetSelection( bs.team );
 	m_ally_sel->SetSelection( bs.ally );
-	m_side_sel->SetSelection( bs.side );
+//	m_side_sel->SetSelection( bs.side );
 	m_spec_chk->SetValue( bs.spectator );
 	m_auto_unspec_chk->SetValue( m_battle->GetAutoUnspec() );
 	m_ready_chk->SetValue( bs.ready );
 	// Enable or disable widgets' sensitivity as appropriate.
 	if ( bs.spectator )
 	{
-		m_side_sel->Disable();
+//		m_side_sel->Disable();
 		m_ally_sel->Disable();
-		m_team_sel->Disable();
+//		m_team_sel->Disable();
 		if ( m_battle->GetBattleType() != BT_Replay )
 		{
 		    m_auto_unspec_chk->Enable();
@@ -536,15 +570,15 @@ void BattleRoomTab::UpdateUser( User& user )
 	}
 	else
 	{
-		m_side_sel->Enable();
+//		m_side_sel->Enable();
 		m_ally_sel->Enable();
-		m_team_sel->Enable();
+//		m_team_sel->Enable();
 		m_ready_chk->Enable();
 		m_auto_unspec_chk->Disable();
 	}
 
-	icons().SetColourIcon( user.BattleStatus().colour );
-	m_color_sel->SetColor( user.BattleStatus().colour );
+//	icons().SetColourIcon( user.BattleStatus().colour );
+//	m_color_sel->SetColor( user.BattleStatus().colour );
 }
 
 
@@ -686,15 +720,15 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnImReady( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	m_battle->SetImReady( m_ready_chk->GetValue() );
+        m_battle->SetImReady( m_ready_chk->GetValue() );
 }
 
 
 void BattleRoomTab::OnLock( wxCommandEvent& /*unused*/ )
 {
-	if ( !m_battle ) return;
+/*	if ( !m_battle ) return;
 	m_battle->SetIsLocked( m_lock_chk->GetValue() );
-	m_battle->SendHostInfo( IBattle::HI_Locked );
+	m_battle->SendHostInfo( IBattle::HI_Locked );*/
 }
 
 
@@ -758,10 +792,10 @@ void BattleRoomTab::OnImSpec( wxCommandEvent& event )
 
 void BattleRoomTab::OnTeamSel( wxCommandEvent& /*unused*/ )
 {
-	if ( !m_battle ) return;
-	unsigned long team;
-	m_team_sel->GetValue().ToULong( &team );
-	m_battle->ForceTeam( m_battle->GetMe(), team - 1  );
+//	if ( !m_battle ) return;
+//	unsigned long team;
+//	m_team_sel->GetValue().ToULong( &team );
+//	m_battle->ForceTeam( m_battle->GetMe(), team - 1  );
 }
 
 
@@ -776,28 +810,28 @@ void BattleRoomTab::OnAllySel( wxCommandEvent& /*unused*/ )
 
 void BattleRoomTab::OnColourSel( wxCommandEvent& /*unused*/ )
 {
-		if ( !m_battle ) return;
-    User& u = m_battle->GetMe();
-    wxColour CurrentColour = u.BattleStatus().colour;
-    CurrentColour = GetColourFromUser(this, CurrentColour);
-    if ( !CurrentColour.IsOk() ) return;
-    sett().SetBattleLastColour( CurrentColour );
-    m_battle->ForceColour( u, CurrentColour );
+//		if ( !m_battle ) return;
+//    User& u = m_battle->GetMe();
+//    wxColour CurrentColour = u.BattleStatus().colour;
+//    CurrentColour = GetColourFromUser(this, CurrentColour);
+//    if ( !CurrentColour.IsOk() ) return;
+//    sett().SetBattleLastColour( CurrentColour );
+//    m_battle->ForceColour( u, CurrentColour );
 }
 
 
 void BattleRoomTab::OnSideSel( wxCommandEvent& /*unused*/ )
 {
-	if ( !m_battle ) return;
-	m_battle->ForceSide( m_battle->GetMe(), m_side_sel->GetSelection() );
-	sett().SetBattleLastSideSel( m_battle->GetHostModName(), m_side_sel->GetSelection() );
+//	if ( !m_battle ) return;
+//	m_battle->ForceSide( m_battle->GetMe(), m_side_sel->GetSelection() );
+//	sett().SetBattleLastSideSel( m_battle->GetHostModName(), m_side_sel->GetSelection() );
 }
 
 void BattleRoomTab::OnAutoLock( wxCommandEvent& /*unused*/ )
 {
-	if ( !m_battle ) return;
-	m_battle->SetAutoLockOnStart( m_autolock_chk->GetValue() );
-	sett().SetLastAutolockStatus( m_autolock_chk->GetValue() );
+//	if ( !m_battle ) return;
+//	m_battle->SetAutoLockOnStart( m_autolock_chk->GetValue() );
+//	sett().SetLastAutolockStatus( m_autolock_chk->GetValue() );
 }
 
 
@@ -899,7 +933,7 @@ long BattleRoomTab::AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOptio
     for (auto it : m_battle->CustomBattleOptions().getOptions(optFlag))
 	{
         const wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it.first;
-		m_opt_list_map[ tag ] = pos;
+		//m_opt_list_map[ tag ] = pos;
 		UpdateBattleInfo( tag );
 		pos++;
 	}
@@ -947,9 +981,11 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 	{
 		if ( !m_battle->IsFounderMe() )
 		{
-			m_battle->DoAction( _T( "suggests " ) + mapname );
+            autohostManager.GetAutohostHandler().SetMap(mapname);
+			//m_battle->DoAction( _T( "suggests " ) + mapname );
 			return;
 		}
+
 		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
 		if ( idx != wxNOT_FOUND ) {
 			SetMap( idx );
@@ -1005,14 +1041,14 @@ void BattleRoomTab::OnOptionActivate( wxListEvent& event )
 	long index = event.GetIndex();
 	if ( index == 0 ) return;
 	wxString tag;
-	for ( OptionListMap::const_iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); ++itor )
-	{
-		if ( itor->second == index )
-		{
-			tag = itor->first;
-			break;
-		}
-	}
+//	for ( OptionListMap::const_iterator itor = m_opt_list_map.begin(); itor != m_opt_list_map.end(); ++itor )
+//	{
+//		if ( itor->second == index )
+//		{
+//			tag = itor->first;
+//			break;
+//		}
+//	}
     LSL::OptionsWrapper& optWrap = m_battle->CustomBattleOptions();
     LSL::OptionsWrapper::GameOption optFlag = ( LSL::OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
     const auto key = STD_STRING(tag.AfterFirst( '_' ));
@@ -1032,14 +1068,14 @@ void BattleRoomTab::SetBattle( Battle* battle )
 {
 	m_battle = battle;
 
-	m_team_sel->Enable(m_battle);
+//	m_team_sel->Enable(m_battle);
 	m_ally_sel->Enable(m_battle);
-	m_color_sel->Enable(m_battle);
-	m_side_sel->Enable(m_battle);
+//	m_color_sel->Enable(m_battle);
+//	m_side_sel->Enable(m_battle);
 
 	m_minimap->Enable(m_battle);
 
-	m_player_panel->Enable(m_battle);
+	//m_player_panel->Enable(m_battle);
 
 	m_map_combo->Enable(m_battle);
 
@@ -1053,8 +1089,8 @@ void BattleRoomTab::SetBattle( Battle* battle )
 
 	m_ready_chk->Enable(m_battle);
 	m_spec_chk->Enable(m_battle);
-	m_lock_chk->Enable(m_battle);
-	m_autolock_chk->Enable(m_battle);
+//	m_lock_chk->Enable(m_battle);
+//	m_autolock_chk->Enable(m_battle);
 
     autohostManager.SetBattle(m_battle);
     isFirstMessage=1;
@@ -1064,19 +1100,19 @@ void BattleRoomTab::SetBattle( Battle* battle )
 	m_players->SetBattle( m_battle );
 	m_chat->SetBattle( m_battle );
 	m_players->Clear();
-	m_side_sel->Clear();
+	//m_side_sel->Clear();
 
 	if ( m_battle )
 	{
 
-		m_color_sel->SetColor( m_battle->GetMe().BattleStatus().colour );
+		//m_color_sel->SetColor( m_battle->GetMe().BattleStatus().colour );
 		try
 		{
             const wxArrayString sides = LSL::Util::vectorToArrayString(
                         LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
 			{
-				m_side_sel->Append( sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
+				//m_side_sel->Append( sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
 			}
 		}
 		catch ( ... ) {}
@@ -1090,9 +1126,9 @@ void BattleRoomTab::SetBattle( Battle* battle )
 
 		if ( !m_battle->IsFounderMe() )
 		{
-			//m_manage_players_btn->Disable();
-			m_lock_chk->Disable();
-			m_autolock_chk->Disable();
+			m_manage_players_btn->Disable();
+			//m_lock_chk->Disable();
+			//m_autolock_chk->Disable();
 		}
 
 		m_host_new_btn->Show( false );
@@ -1125,6 +1161,7 @@ void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )
     {
         isFirstMessage=0;
         autohostManager.RecnognizeAutohost(nick, msg);
+        m_manage_players_btn->Enable();
     }
 
 	GetChatPanel().DidAction( nick, msg );

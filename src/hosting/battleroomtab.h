@@ -139,42 +139,25 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		long m_mod_opts_index;
 		long m_map_opts_index;
 
-		OptionListMap m_opt_list_map;
+        wxScrolledWindow* m_right_side_window;
 
-		wxBoxSizer* m_players_sizer;
-		wxBoxSizer* m_player_sett_sizer;
-		wxBoxSizer* m_info_sizer;
-		wxBoxSizer* m_top_sizer;
-		wxBoxSizer* m_buttons_sizer;
-		wxBoxSizer* m_info1_sizer;
-		wxBoxSizer* m_main_sizer;
-
-		wxComboBox* m_team_sel;
-		wxComboBox* m_ally_sel;
-		ColorButton* m_color_sel;
 		wxBitmapComboBox* m_side_sel;
-		wxComboBox* m_options_preset_sel;
-
-		wxStaticText* m_team_lbl;
-		wxStaticText* m_ally_lbl;
-		wxStaticText* m_side_lbl;
-		wxStaticText* m_color_lbl;
-//		wxStaticText* m_wind_lbl;
-//		wxStaticText* m_tidal_lbl;
-//		wxStaticText* m_size_lbl;
-		wxStaticText* m_ally_setup_lbl;
-		wxStaticText* m_ok_count_lbl;
 
 		MapCtrl * m_minimap;
         BattleRoomDownloads* m_downloads;
-
-		wxScrolledWindow* m_player_panel;
 
 		wxComboBox* m_map_combo;
 
 		BattleroomListCtrl* m_players;
 		ChatPanel* m_chat;
 		wxSplitterWindow* m_splitter;
+
+        wxCheckBox* m_ready_chk;
+        wxStaticText* m_ally_lbl;
+        wxComboBox* m_ally_sel;
+        wxCheckBox* m_spec_chk;
+        wxCheckBox* m_auto_unspec_chk;
+
 
 		wxStaticLine* m_command_line;
 
@@ -201,11 +184,6 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
         wxMenuItem* m_randommap_mnu;
         wxMenuItem* m_notify_mnu;
 
-		wxCheckBox* m_ready_chk;
-		wxCheckBox* m_spec_chk;
-		wxCheckBox* m_auto_unspec_chk;
-		wxCheckBox* m_lock_chk;
-		wxCheckBox* m_autolock_chk;
 
 		EventReceiverFunc<BattleRoomTab, UiEvents::UiEventData, &BattleRoomTab::OnBattleActionEvent> m_BattleActionSink;
 

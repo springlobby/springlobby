@@ -197,7 +197,7 @@ int BattleroomMMOptionsTab<BattleType>::setupOptionsSectionSizer(const LSL::mmOp
             m_name_info_map[pref+TowxString(current.key)] = TowxString(current.description);
             temp->SetName(pref+TowxString(current.key));
             m_chkbox_map[pref+TowxString(current.key)] = temp;
-            temp->SetValue(TowxString(current.value));
+            temp->SetValue(current.value);
 			temp->Enable(enable);
 			wxBoxSizer* ct_sizer = new wxBoxSizer( wxHORIZONTAL );
 			ct_sizer->Add(temp, 0, wxRIGHT| wxALIGN_CENTER_VERTICAL, b_gap);
