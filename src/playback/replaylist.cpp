@@ -51,41 +51,33 @@ int replayVersion( const wxString& ReplayPath )
 
 bool ReplayList::GetReplayInfos (const wxString& ReplayPath, Replay& ret ) const
 {
-    //wxLogMessage(_T("GetReplayInfos %s"), ReplayPath.c_str());
-    //wxLOG_Info  ( STD_STRING( ReplayPath ) );
-    //TODO extract moar info
-    ret.Filename = ReplayPath;
-    ret.battle.SetPlayBackFilePath( ReplayPath );
+	const wxString FileName = ReplayPath.AfterLast( wxFileName::GetPathSeparator() ); // strips file path
+	ret.Filename = ReplayPath;
+	ret.battle.SetPlayBackFilePath( ReplayPath );
+	ret.SpringVersion = FileName.AfterLast(_T('_')).BeforeLast(_T('.'));
+	ret.MapName = FileName.BeforeLast(_T('_'));
 
-	wxString FileName = ReplayPath.AfterLast( wxFileName::GetPathSeparator() ); // strips file path
-    ret.SpringVersion = FileName.AfterLast(_T('_'));
+	const int replay_version = replayVersion( ReplayPath );
+	ret.battle.SetScript( GetScriptFromReplay( ReplayPath, replay_version ) );
 
-    ret.MapName = FileName.BeforeLast(_T('_'));
+	if ( ret.battle.GetScript().IsEmpty() ) return false;
 
-    const int replay_version = replayVersion( ReplayPath );
-    ret.battle.SetScript( GetScriptFromReplay( ReplayPath, replay_version ) );
-    //wxLogMessage(_T("Script: %s"), script.c_str());
-
-    if ( ret.battle.GetScript().IsEmpty() ) return false;
-
-    GetHeaderInfo( ret, ReplayPath, replay_version );
-    ret.battle.GetBattleFromScript( false );
-    ret.ModName = ret.battle.GetHostModName();
-    ret.battle.SetBattleType( BT_Replay );
+	GetHeaderInfo( ret, ReplayPath, replay_version );
+	ret.battle.GetBattleFromScript( false );
+	ret.ModName = ret.battle.GetHostModName();
+	ret.battle.SetBattleType( BT_Replay );
 
 	//getting this from filename seems more reliable than from demoheader
 	wxDateTime rdate;
 
 	if (rdate.ParseFormat(FileName, _T("%Y%m%d_%H%M%S")) == NULL) {
 		wxLogError(_T("Parsing %s failed"), FileName.c_str());
+		return false;
 	}
 	ret.date=rdate.GetTicks(); // now it is sorted properly
 	ret.date_string=rdate.FormatISODate()+_T(" ")+rdate.FormatISOTime();
 
-    //wxFormat date_format(_T("%s-%s-%s"));
-   // ret.date_string = date_format % date_string.SubString(0,3)
-   //         % date_string.SubString(4,5) % date_string.SubString(6,7);
-    return true;
+	return true;
 }
 
 #define SEEK(x) if(replay.Seek(x)==wxInvalidOffset)return script;
