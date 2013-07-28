@@ -428,13 +428,6 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			{
 				sett().AddChannelJoin( _T("springlobby"), _T("") );
 			}
-			if ( settversion < 8 )
-			{
-				sett().DeleteServer( _T("Backup server") );
-				sett().SetServer( _T("Backup server 1"), _T("springbackup1.servegame.com"), 8200 );
-				sett().SetServer( _T("Backup server 2"), _T("springbackup2.servegame.org"), 8200 );
-				sett().SetServer( _T("Test server"), _T("taspringmaster.servegame.com"), 8300 );
-			}
 			if ( settversion < 10 )
 			{
 				sett().ConvertOldColorSettings();
@@ -492,7 +485,13 @@ void SpringLobbyApp::CacheAndSettingsSetup()
                 sett().ConvertLists();
                 sett().AddKnownMatchmakerCPU(6667);
             }
-    }
+		if ( settversion < 24 ) {
+			sett().DeleteServer( _T("Backup server") );
+			sett().DeleteServer( _T("Backup server 1") );
+			sett().DeleteServer( _T("Backup server 2") );
+			sett().SetDefaultServerSettings();
+		}
+	}
 
     if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )
         sett().SetDefaultServerSettings();

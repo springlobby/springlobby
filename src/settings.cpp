@@ -359,7 +359,7 @@ void Settings::SetDefaultServerSettings()
 	SetServer(  DEFSETT_DEFAULT_SERVER_NAME,  DEFSETT_DEFAULT_SERVER_HOST, DEFSETT_DEFAULT_SERVER_PORT );
 	SetServer( _T( "Backup server 1" ), _T( "lobby1.springlobby.info" ), 8200 );
 	SetServer( _T( "Backup server 2" ), _T( "lobby2.springlobby.info" ), 8200 );
-//	SetServer( _T( "Test server" ), _T( "taspringmaster.servegame.com" ), 8300 );
+	SetServer( _T( "Test server" ), _T( "lobby.springrts.com" ), 7000 );
 	SetDefaultServer( DEFSETT_DEFAULT_SERVER_NAME );
 }
 

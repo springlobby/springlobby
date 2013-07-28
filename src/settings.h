@@ -11,7 +11,7 @@
 #include "Helper/slconfig.h"
 
 const int CACHE_VERSION     = 11;
-const int SETTINGS_VERSION  = 23;
+const int SETTINGS_VERSION  = 24;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("lobby.springrts.com");
