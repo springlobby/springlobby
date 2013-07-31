@@ -66,6 +66,8 @@ inline wxString bool2yn(const bool b) {
     return b ? _("Yes") : _("No");
 }
 
+DECLARE_EVENT_TYPE(REFRESH_EVENT, -1)
+
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
