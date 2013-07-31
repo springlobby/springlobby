@@ -531,10 +531,10 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( const std::string& _mapname )
 		SetMinimap( m_maps_unused, mapname, minimap_bmp );
 		SetMinimap( m_maps_filtered, mapname, minimap_bmp );
 
-//	never ever call a gui function here, it will crash! (in 1/100 cases)
-        wxCommandEvent event( REFRESH_EVENT, GetId() );
-        GetEventHandler()->ProcessEvent( event );
-//		Refresh(); // TODO: use RefreshRect ?
+		// never ever call a gui function here, it will crash! (in 1/100 cases)
+		wxCommandEvent evt( REFRESH_EVENT, GetId() );
+		evt.SetEventObject( this );
+		wxPostEvent( this, evt );
 	}
 
 	--m_async_minimap_fetches;
@@ -544,18 +544,17 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( const std::string& _mapname )
 
 void MapGridCtrl::OnGetMapExAsyncCompleted( const std::string& _mapname )
 {
-    const wxString mapname = TowxString(_mapname);
+	const wxString mapname = TowxString(_mapname);
 	// if mapname is empty, some error occurred in LSL::usync().GetMapEx...
 	if ( !mapname.empty() ) {
 		try {
-            AddMap( LSL::usync().GetMapEx(_mapname) );
+			AddMap( LSL::usync().GetMapEx(_mapname) );
 		}
 		catch (...) {}
-
-//	never ever call a gui function here, it will crash! (in 1/100 cases)
-    wxCommandEvent event( REFRESH_EVENT, GetId() );
-    GetEventHandler()->ProcessEvent( event );
-//	Refresh();
+		// never ever call a gui function here, it will crash! (in 1/100 cases)
+		wxCommandEvent evt( REFRESH_EVENT, GetId() );
+		evt.SetEventObject( this );
+		wxPostEvent( this, evt );
 	}
 	--m_async_mapinfo_fetches;
 	UpdateAsyncFetches();
@@ -571,9 +570,7 @@ void MapGridCtrl::OnGetMapExAsyncCompleted( const std::string& _mapname )
 
 void MapGridCtrl::OnRefresh( wxCommandEvent& event )
 {
-    //Update();
-    Refresh();
-
-    //Update();
+	Refresh();
+	Update();
 }
 

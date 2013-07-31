@@ -1630,10 +1630,9 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string mapname)
     }
 
 	// never ever call a gui function here, it will crash! (in 1/100 cases)
-//	wxCommandEvent event( REFRESH_EVENT, GetId() );
-//    GetEventHandler()->ProcessEvent( event );
-	//Refresh();
-	//Update();
+	wxCommandEvent evt( REFRESH_EVENT, GetId() );
+	evt.SetEventObject( this );
+	wxPostEvent( this, evt );
 }
 
 void MapCtrl::OnRefresh( wxCommandEvent& event )
