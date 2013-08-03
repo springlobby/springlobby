@@ -5,10 +5,6 @@
 #include "usermenu.h"
 #include "utils/mixins.hh"
 
-
-class ChatPanel;
-class UserMenu;
-
 //! seperating this into a friend class enables us to re-use it in the tab header right click evt
 class ChatPanelMenu : public wxEvtHandler , public SL::NonCopyable
 {

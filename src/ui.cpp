@@ -11,7 +11,7 @@
 #endif // _MSC_VER
 
 
-//#include <wx/textdlg.h>
+#include <wx/textdlg.h>
 #include <stdexcept>
 #include <wx/thread.h>
 #include <wx/intl.h>

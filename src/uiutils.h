@@ -5,7 +5,6 @@
 
 #include <wx/intl.h>
 #include <wx/gdicmn.h>
-#include <wx/event.h>
 #include <vector>
 #include "utils/mixins.hh"
 
