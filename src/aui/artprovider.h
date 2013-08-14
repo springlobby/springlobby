@@ -66,6 +66,10 @@ public:
 	virtual void SetColour(const wxColour& colour);
 	virtual void SetActiveColour(const wxColour& colour);
 
+	virtual void DrawBorder(wxDC&, wxWindow*, const wxRect&) {}
+	virtual int GetBorderWidth(wxWindow*) {return 0;}
+	virtual int GetAdditionalBorderSpace(wxWindow*) { return 0;}
+
 protected:
 
     wxFont m_normal_font;

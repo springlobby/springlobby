@@ -639,10 +639,11 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 	if ( req_user ) {
 		bool inactive = ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ;
 		ui().mw().RequestUserAttention();
-		if ( inactive )
+		if ( inactive ) {
+			const wxString msg = wxFormat( _T("%s:\n%s") ) % who % message.Left(50);
 			UiEvents::GetNotificationEventSender().SendEvent(
-					UiEvents::NotficationData( UiEvents::PrivateMessage,
-											   wxFormat( _T("%s:\n%s") ) % who % message.Left(50) ) );
+					UiEvents::NotficationData( UiEvents::PrivateMessage,msg ) );
+		}
 	}
 }
 
@@ -666,9 +667,9 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
 	OutputLine( _T( " * " ) + who + _T( " " ) + action, sett().GetChatColorAction(), sett().GetChatFont() );
 	if ( m_type == CPT_User && ( ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) )
 	{
+		const wxString msg = wxFormat( _T("%s \n%s") ) % who % action.Left(50) ;
 		UiEvents::GetNotificationEventSender().SendEvent(
-				UiEvents::NotficationData( UiEvents::PrivateMessage,
-										   wxFormat( _T("%s \n%s") ) % who % action.Left(50) ) );
+				UiEvents::NotficationData( UiEvents::PrivateMessage, msg ));
 	}
 }
 
