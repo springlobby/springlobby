@@ -323,7 +323,7 @@ wxString SLNotebook::SavePerspective() {
 
 		if (p) tabs += wxT(",");
 
-		if ((int)page_idx == m_curpage) tabs += wxT("*");
+		if ((int)page_idx == GetSelection()) tabs += wxT("*");
 		else if ((int)p == tabframe->m_tabs->GetActivePage()) tabs += wxT("+");
 		tabs += (wxFormat(wxT("%u") ) % page_idx).str();
      }
@@ -371,12 +371,12 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
      // create a new tab frame
      wxTabFrame* new_tabs = new wxTabFrame;
      new_tabs->m_tabs = new wxAuiTabCtrl(this,
-                                m_tab_id_counter++,
+				GetPageCount()+1,
                                 wxDefaultPosition,
                                 wxDefaultSize,
                                 wxNO_BORDER|wxWANTS_CHARS);
      new_tabs->m_tabs->SetArtProvider(m_tabs.GetArtProvider()->Clone());
-     new_tabs->SetTabCtrlHeight(m_tab_ctrl_height);
+     new_tabs->SetTabCtrlHeight(GetTabCtrlHeight());
      new_tabs->m_tabs->SetFlags(m_flags);
      wxAuiTabCtrl *dest_tabs = new_tabs->m_tabs;
 
@@ -418,7 +418,6 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
   m_mgr.LoadPerspective(frames);
 
   // Force refresh of selection
-  m_curpage = -1;
   SetSelection(sel_page);
 
   return true;

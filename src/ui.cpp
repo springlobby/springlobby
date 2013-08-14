@@ -1217,8 +1217,9 @@ void Ui::OnRing( const wxString& from )
 
 	if ( !wxTheApp->IsActive() )
 	{
+		const wxString msg = wxFormat(_("%s:\nring!") ) % from;
 		UiEvents::GetNotificationEventSender().SendEvent(
-				UiEvents::NotficationData( UiEvents::ServerConnection, wxFormat(_("%s:\nring!") ) % from ) );
+				UiEvents::NotficationData( UiEvents::ServerConnection, msg ) );
 	}
 
 //    if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
