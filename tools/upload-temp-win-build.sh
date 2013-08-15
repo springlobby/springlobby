@@ -4,7 +4,7 @@ set -e
 cd $(dirname $0)/../${1}
 pwd
 DEVELOPER=${2}
-/opt/mingw32/usr/bin/i686-pc-mingw32-strip src/springlobby.exe
+/opt/mingw32/usr/bin/i686-w64-mingw32-strip src/springlobby.exe
 
 if [ x$3 == x ]; then
 	filename=sl_master.zip
