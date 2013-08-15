@@ -37,9 +37,7 @@ void UpdateMainAppHasFocus( bool focus );
     it outputs empty string if tooltips are disabled in SL settings
 */
 const wxChar* TooltipEnable(const wxChar* input);
-#if defined(HAVE_WX29)
-const wxChar* TooltipEnable(const wxString input);
-#endif
+const wxChar* TooltipEnable(const wxString& input);
 
 int GetMaxStringWidth( const wxWindow& win, const wxArrayString& strings );
 
