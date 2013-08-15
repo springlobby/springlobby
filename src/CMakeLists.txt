@@ -23,7 +23,6 @@ if(WIN32)
 		-D__WXMSW__
 		-D_WIN32_WINNT=0x0501
 		-DBOOST_THREAD_USE_LIB
-		-DAL_LIBTYPE_STATIC
 		-DSTRICT
 		-DHAVE_W32API_H
 	)
@@ -74,6 +73,8 @@ ENDIF(wxWidgets_FOUND)
 if (CMAKE_CROSSCOMPILING)
 	message(STATUS "Crosscompiling: using static flags for wxwidgets")
 	set(WXSTATIC "--static")
+	#FIXME: autodetect thise flags:
+	add_definitions(-DCURL_STATICLIB -DAL_LIBTYPE_STATIC)
 else()
 	set(WXSTATIC "")
 endif()
