@@ -16,7 +16,7 @@
 #include "downloader/downloadlistctrl.h"
 #include "utils/conversion.h"
 #include "utils/controls.h"
-#include "Helper/colorbutton.h"
+#include "helper/colorbutton.h"
 //#include "downloader/filelister/filelistdialog.h"
 #include "downloader/downloadsobserver.h"
 #include "widgets/downloaddialog.h"

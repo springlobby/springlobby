@@ -17,8 +17,8 @@
 #include "../aui/slbook.h"
 #include "../utils/conversion.h"
 #include "../utils/customdialogs.h"
-#include "../Helper/imageviewer.h"
-#include "../Helper/slhtmlwindow.h"
+#include "../helper/imageviewer.h"
+#include "../helper/slhtmlwindow.h"
 
 BEGIN_EVENT_TABLE( WidgetInfoPanel, wxPanel)
     EVT_BUTTON( WidgetInfoPanel::BUT_DOWNLOAD, WidgetInfoPanel::OnDownload )

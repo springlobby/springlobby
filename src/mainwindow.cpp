@@ -74,7 +74,7 @@
 #include "updater/updatehelper.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
-#include "Helper/imageviewer.h"
+#include "helper/imageviewer.h"
 #include "customizations.h"
 
 #if defined(__WXMSW__)

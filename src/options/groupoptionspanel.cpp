@@ -17,7 +17,7 @@
 #include "settings.h"
 #include "uiutils.h"
 #include "utils/controls.h"
-#include "Helper/colorbutton.h"
+#include "helper/colorbutton.h"
 #include "selectusersdialog.h"
 
 BEGIN_EVENT_TABLE( GroupOptionsPanel, wxPanel )

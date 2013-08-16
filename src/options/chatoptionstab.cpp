@@ -38,7 +38,7 @@
 #include "settings.h"
 #include "spring.h"
 #include "mainwindow.h"
-#include "Helper/colorbutton.h"
+#include "helper/colorbutton.h"
 #include "aui/auimanager.h"
 
 BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )

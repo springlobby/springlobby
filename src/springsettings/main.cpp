@@ -30,7 +30,7 @@
 #include "../defines.h"
 #include "../utils/customdialogs.h"
 #include "../customizations.h"
-#include "../Helper/wxTranslationHelper.h"
+#include "../helper/wxTranslationHelper.h"
 
 #include <iostream>
 #include <wx/msgdlg.h>

@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "chatlog.h"
-#include "Helper/TextCompletionDatabase.hpp"
+#include "helper/TextCompletionDatabase.hpp"
 #include "utils/mixins.hh"
 #include "utils/isink.h"
 

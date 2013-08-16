@@ -226,7 +226,7 @@ SET(springlobbySoundsrc
 clear(SLSharedWithSettings)
 add_sources(SLSharedWithSettings
 	customizations.cpp
-	Helper/wxTranslationHelper.cpp
+	helper/wxTranslationHelper.cpp
 	uiutils.cpp
 	updater/versionchecker.cpp
 	updater/updatehelper.cpp
@@ -246,7 +246,7 @@ add_sources(SLSharedWithSettings
 	infodialog.cpp
 	gui/windowattributespickle.cpp
 	gui/spinctl/generic/spinctlg.cpp
-	Helper/slconfig.cpp
+	helper/slconfig.cpp
 )
 
 FILE( GLOB header "*.h" )
@@ -268,7 +268,7 @@ add_sources( templatesources
 )
 
 IF(WIN32)
-	add_sources(SLSharedWithSettings stacktrace.c Helper/listctrl.cpp)
+	add_sources(SLSharedWithSettings stacktrace.c helper/listctrl.cpp)
 ELSE(WIN32)
 	add_sources(SLSharedWithSettings stacktrace.cpp)
 ENDIF(WIN32)
@@ -288,7 +288,7 @@ add_subdirectory(battlelist)
 add_subdirectory(channel)
 add_subdirectory(downloader)
 add_subdirectory(gui)
-add_subdirectory(Helper)
+add_subdirectory(helper)
 add_subdirectory(hosting)
 add_subdirectory(options)
 add_subdirectory(utils)

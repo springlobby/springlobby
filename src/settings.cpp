@@ -8,7 +8,7 @@
 #ifdef __WXMSW__
 	#include <wx/msw/registry.h>
 #endif
-#include "Helper/slconfig.h"
+#include "helper/slconfig.h"
 #include "defines.h" //to get HAVEWX??
 
 #include <wx/filename.h>
@@ -41,7 +41,7 @@
 #include <lslunitsync/unitsync.h>
 #include "customlistctrl.h"
 #include "springsettings/presets.h"
-#include "Helper/sortutil.h"
+#include "helper/sortutil.h"
 #include "mainwindow.h"
 #ifdef SL_DUMMY_COL
     #include "utils/customdialogs.h"

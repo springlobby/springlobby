@@ -15,7 +15,7 @@
 #include "settings.h"
 #include "utils/customdialogs.h"
 #include "useractions.h"
-#include "Helper/sortutil.h"
+#include "helper/sortutil.h"
 #include "aui/auimanager.h"
 
 template<> SortOrder CustomVirtListCtrl<IBattle*,BattleListCtrl>::m_sortorder = SortOrder();

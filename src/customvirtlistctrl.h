@@ -5,7 +5,7 @@
     #include <wx/listctrl.h>
     typedef wxListCtrl ListBaseType;
 #else
-    #include "Helper/listctrl.h"
+    #include "helper/listctrl.h"
     typedef SL_Extern::wxGenericListCtrl ListBaseType;
 #endif
 
@@ -19,7 +19,7 @@
 #include <map>
 
 #include "useractions.h"
-#include "Helper/sortutil.h"
+#include "helper/sortutil.h"
 #include "utils/isink.h"
 #include "utils/mixins.hh"
 

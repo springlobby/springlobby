@@ -7,8 +7,8 @@
 #include "utils/mixins.hh"
 #include "utils/pathlistfactory.h"
 #include "useractions.h"
-#include "Helper/sortutil.h"
-#include "Helper/slconfig.h"
+#include "helper/sortutil.h"
+#include "helper/slconfig.h"
 
 const int CACHE_VERSION     = 11;
 const int SETTINGS_VERSION  = 24;

@@ -47,7 +47,7 @@
 #include "gui/pastedialog.h"
 #include "settings.h"
 #include "uiutils.h"
-#include "Helper/wxtextctrlhist.h"
+#include "helper/wxtextctrlhist.h"
 
 #include "useractions.h"
 #include "usermenu.h"

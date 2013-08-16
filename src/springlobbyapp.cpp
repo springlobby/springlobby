@@ -47,7 +47,7 @@
 #include "updater/updater.h"
 #include <lslutils/globalsmanager.h>
 #include "gui/notificationmanager.h"
-#include "Helper/wxTranslationHelper.h"
+#include "helper/wxTranslationHelper.h"
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #include "defines.h"
