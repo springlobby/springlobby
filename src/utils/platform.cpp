@@ -26,10 +26,6 @@
 #include <lslutils/misc.h>
 #include "../crashreport.h"
 
-#ifdef SL_QT_MODE
-	#include <QCoreApplication>
-	#include <QDir>
-#endif
 #include "pathlistfactory.h"
 
 //!This is only ever used for unitsync and on daftalx notice it should actually be .dylib (wx returns .bundle )
@@ -393,11 +389,7 @@ PwdGuard::~PwdGuard()
 
 wxString GetAppName( const bool lowerCase )
 {
-#ifdef SL_QT_MODE
-	wxString name = TowxString( QCoreApplication::applicationName() );
-#else
 	wxString name = wxTheApp->GetAppName();//this would segfault in qt mode
-#endif
 	if ( lowerCase )
 		name.MakeLower();
 	return name;

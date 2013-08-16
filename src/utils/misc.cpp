@@ -70,7 +70,6 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
 
 wxString Paste2Pastebin( const wxString& message )
 {
-	#ifndef SL_QT_MODE
 	#ifndef __WXMAC__
 	wxStringOutputStream response;
 	wxStringOutputStream rheader;
@@ -122,7 +121,6 @@ wxString Paste2Pastebin( const wxString& message )
 	if(ret == CURLE_OK)
 		return response.GetString();
 	else
-	#endif
 	#endif
 
 	return wxEmptyString;

@@ -9,11 +9,6 @@
 #include <wx/image.h>
 #include <wx/iconbndl.h>
 
-#ifdef SL_QT_MODE
-	#include <QString>
-	#include <QList>
-#endif
-
 //! single global instance to get all customizsations from
 class Customizations {
     protected:
@@ -50,30 +45,6 @@ class Customizations {
 		static const wxString IntroKey;// ( _T("intro_file") );
         friend class LSL::Util::GlobalObjectHolder<Customizations, LSL::Util::LineInfo<Customizations> >;
 
-#ifdef SL_QT_MODE
-        bool Init(const QString& shortname, const QString& version );
-
-		struct DataException : public std::exception {
-			const QList<QString> errors_;
-			DataException( const QList<QString>& errors )
-				:errors_(errors)
-			{}
-            const char* what() const throw() ;
-			virtual ~DataException() throw() {}
-		};
-		QString DataBasePath();
-
-	private:
-		QString dataBasePath_;
-		QString m_shortname;
-
-	public:
-		QString QmlDir();
-		QString GraphicsDir();
-		QString SoundsDir();
-        QString MusicDir();
-        const QString& GetModshortname() const;
-#endif
 };
 
 Customizations& SLcustomizations();

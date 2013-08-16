@@ -64,11 +64,6 @@ wxPathList PathlistFactory::AdditionalSearchPaths(wxPathList &pl)
     pl.Add( wxFileName::GetCwd() );
     pl.Add( sp.GetExecutablePath().BeforeLast( sep ) );
     pl.Add( wxFileName::GetHomeDir() );
-#ifndef SL_QT_MODE
-    pl.Add( sp.GetUserDataDir().BeforeLast( sep ) );
-    pl.Add( sp.GetDataDir().BeforeLast( sep ) );
-    pl.Add( sp.GetResourcesDir().BeforeLast( sep ) );
-#endif
     pl.Add( wxGetOSDirectory() );
 
 #ifdef __WXMSW__

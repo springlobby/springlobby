@@ -2,17 +2,10 @@
 #define SPRINGLOBBY_HEADERGUARD_SPRING_H
 
 #include <wx/event.h>
-#ifdef SL_QT_MODE
-	#include <QObject>
-	#include <QProcess>
-#else
-	#define Q_OBJECT
-#endif
 
 class wxCommandEvent;
 class IBattle;
 class SinglePlayerBattle;
-class NoGuiSinglePlayerBattle;
 class OfflineBattle;
 class Battle;
 class SpringProcess;
@@ -21,12 +14,8 @@ class wxString;
 
 
 class Spring:
-		#ifdef SL_QT_MODE
-		 public  QObject,
-		#endif
 		public wxEvtHandler
 {
-	Q_OBJECT
   public:
 	explicit Spring();
     ~Spring();
@@ -34,7 +23,6 @@ class Spring:
     bool IsRunning() const;
     bool Run( Battle& battle );
     bool Run( SinglePlayerBattle& battle );
-    bool Run( NoGuiSinglePlayerBattle& battle );
     bool Run( OfflineBattle& battle );
 
     //! executes spring with replay as parameter
@@ -45,17 +33,6 @@ class Spring:
 
     wxString WriteScriptTxt( IBattle& battle ) const;
     void OnTerminated( wxCommandEvent& event );
-
-#ifdef SL_QT_MODE
-public slots:
-	void OnStopped( int exitCode, QProcess::ExitStatus exitStatus );
-	void OnStarted();
-signals:
-	void springStarted();
-	void springStopped();
-private:
-	QProcess* qt_process_;
-#endif
 
   protected:
 		bool LaunchSpring( const wxString& params );

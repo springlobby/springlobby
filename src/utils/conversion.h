@@ -64,30 +64,6 @@ wxArrayString vectorToArrayString(const std::vector<std::string>& vec);
 std::vector<std::string> arrayStringToVector(const wxArrayString& arr);
 } }
 
-#ifdef SL_QT_MODE
-#include <QString>
-#include <QVariant>
-template<>
-inline QString FromwxString(const wxString& arg) {
-        return QString(arg.mb_str());
-}
-template<>
-inline QVariant FromwxString(const wxString& arg) {
-        return QVariant::fromValue( FromwxString<QString>( arg ) );
-}
-
-template<>
-inline wxString TowxString(QString arg){
-  return wxString(arg.toStdString().c_str(),wxConvUTF8);
-}
-
-
-//template<>
-static inline QString ToQString(const wxString& arg){
-  return QString( arg.mbc_str() );
-}
-#endif
-
 #define WX_STRINGC(v) wxString(v,wxConvUTF8)
 
 static inline long s2l( const wxString& arg )

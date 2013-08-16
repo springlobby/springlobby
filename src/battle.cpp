@@ -287,9 +287,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			}
 		}
 	ShouldAutoUnspec();
-#ifndef SL_QT_MODE
 	ui().OnUserBattleStatus( *this, user );
-#endif
 }
 
 

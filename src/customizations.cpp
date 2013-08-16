@@ -12,10 +12,6 @@
 #include <wx/image.h>
 #include <wx/frame.h>
 #include <wx/msgdlg.h>
-#ifdef SL_QT_MODE
-	#include <QImage>
-	#include <qt/converters.h>
-#endif
 const wxString Customizations::IntroKey = wxString ( _T("intro_file") );
 
 const LSL::OptionsWrapper& Customizations::GetCustomizations() const
@@ -102,11 +98,7 @@ bool Customizations::GetBitmap( const wxString& key, wxBitmap& bitmap )
 	if ( Provides( key ) )
 	{
     const auto path = m_customs.getSingleValue(STD_STRING(key));
-#ifdef SL_QT_MODE
-    wxBitmap icon_bmp ( wxQtConvertImage( usync().GetQImage( m_archive, path, false ) ) );
-#else
     wxBitmap icon_bmp;// (LSL::usync().GetImage(STD_STRING(m_archive), path, false ) );
-#endif
 		if( icon_bmp.IsOk() )
 		{
 			bitmap = icon_bmp;
@@ -150,79 +142,3 @@ Customizations& SLcustomizations()
     return s_customizations;
 }
 
-#ifdef SL_QT_MODE
-
-#include <QDir>
-#include <QDebug>
-#include <QMessageBox>
-#include "qt/qerrorwindow.h"
-#include <QCoreApplication>
-
-bool Customizations::Init( const QString& shortname, const QString& version )
-{
-	m_shortname = shortname;
-    QString archive( m_shortname + "_Gui.sdd" );
-    bool init_success = Init( TowxString(archive) );
-	m_modname = usync().GetNameForShortname( TowxString(shortname), TowxString(version) );
-	return init_success;
-}
-
-QString Customizations::DataBasePath()
-{
-	static bool cached = false;
-	if ( cached )
-		return dataBasePath_;
-
-	QList<QString> checked_paths;
-    QString sub_path = "games/" + ToQString( m_archive );
-	for ( int i = 0; i < susynclib().GetSpringDataDirCount(); ++i ) {
-		QDir data ( ToQString( susynclib().GetSpringDataDirByIndex(i) ) );
-		checked_paths.append( data.absolutePath().append("/").append( sub_path ) );
-		if ( data.cd( sub_path ) ) {
-			dataBasePath_ = data.absolutePath();
-			break;
-		}
-	}
-	if( dataBasePath_ != QString() )
-		return dataBasePath_ ;
-
-	checked_paths.prepend( QString("Couldn't find customization data in any of these directories:\n ") );
-	throw DataException( checked_paths );
-
-	return QString();
-}
-
-QString Customizations::QmlDir()
-{
-	return QDir( DataBasePath() + "/" + "qml" ).absolutePath();
-}
-QString Customizations::GraphicsDir()
-{
-	return QDir( DataBasePath() + "/" + "graphics" ).absolutePath();
-}
-QString Customizations::SoundsDir()
-{
-	return QDir( DataBasePath() + "/" + "sounds" ).absolutePath();
-}
-QString Customizations::MusicDir()
-{
-	return QDir( DataBasePath() + "/" + "music" ).absolutePath();
-}
-
-const QString& Customizations::GetModshortname() const
-{
-    return m_shortname;
-}
-
-const char* Customizations::DataException::what() const throw()
-{
-    std::stringstream out;
-    QString s;
-    foreach ( s, errors_ ) {
-        out << s.toStdString() << std::endl;
-        qDebug() << s;
-    }
-    return out.str().c_str();
-}
-
-#endif

@@ -6,38 +6,6 @@
 
 /// joinable thread, with overridden Sleep and Wait methods.
 /// Sleep wakes up when you call Wait()
-#ifdef SL_QT_MODE
-#include <QThread>
-
-class Thread: public QThread
-{
-//	Q_OBJECT
-  public:
-	Thread();
-	/// destructor Waits for thread to complete
-	~Thread();
-	/// overrides wxThread::Wait . Wakes up from sleep if sleeping, to prevent delay.
-	int Wait();
-	/// returns false when woken up
-	bool Sleep(int milliseconds);
-	/// call this from outside thread to wake up Sleep - ing thread
-	void WakeUp();
-
-	/// overrides wxThread::TestDestroy , which can fail on Wait
-	bool TestDestroy();
-	wxThreadError Create();
-	void SetPriority(int priority);
-	wxThreadError Run();
-protected:
-	void run();
-	virtual void* Entry() = 0;
-	void Yield();
-  protected:
-//	wxSemaphore m_thread_sleep_semaphore;
-	/// workaround for old wxWidgets bug
-	bool m_must_exit;
-};
-#else
 class Thread: public wxThread
 {
   public:
@@ -59,8 +27,6 @@ class Thread: public wxThread
     /// workaround for old wxWidgets bug
     bool m_must_exit;
 };
-#endif
-
 
 #endif // THREAD_H
 
