@@ -49,7 +49,7 @@
 #include "agreementdialog.h"
 #ifdef __WXMSW__
     #include "updater/updatehelper.h"
-    #include "Helper/tasclientimport.h"
+    #include "helper/tasclientimport.h"
     #include <wx/stdpaths.h>
 #endif
 
