@@ -7,4 +7,3 @@ add_sources(springlobbySrc
 	colorbutton.cpp
 )
 
-include_directories(qtargparser)
