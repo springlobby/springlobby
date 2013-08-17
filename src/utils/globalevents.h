@@ -5,24 +5,21 @@
 
 #include <map>
 namespace GlobalEvents {
-    enum GlobalEventsTypes
-    {
-      OnUnitsyncFirstTimeLoad,
-      OnUnitsyncReloaded,
-      OnSpringTerminated,
-	  OnSpringStarted,
-      UpdateFinished,
-      OnQuit,
-	  OnLogin,
-      PlasmaResourceListParsed,
-	  PlasmaResourceListFailedDownload,
-	  BattleSyncReload,
+	enum GlobalEventsTypes {
+		OnUnitsyncFirstTimeLoad,
+		OnUnitsyncReloaded,
+		OnSpringTerminated,
+		OnSpringStarted,
+		UpdateFinished,
+		OnQuit,
+		OnLogin,
+		PlasmaResourceListParsed,
+		PlasmaResourceListFailedDownload,
+		BattleSyncReload,
+		OnTimerUpdates
+	};
+	typedef int GlobalEventData;
 
-      OnTimerUpdates
-    };
-
-    typedef int GlobalEventData;
-
-    EventSender<GlobalEventData> &GetGlobalEventSender( GlobalEventsTypes cmd );
+	EventSender<GlobalEventData> &GetGlobalEventSender( GlobalEventsTypes cmd );
 }
 #endif // SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H
