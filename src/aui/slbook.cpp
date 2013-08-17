@@ -371,7 +371,7 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
      // create a new tab frame
      wxTabFrame* new_tabs = new wxTabFrame;
      new_tabs->m_tabs = new wxAuiTabCtrl(this,
-				GetPageCount()+1,
+                                m_tab_id_counter++,
                                 wxDefaultPosition,
                                 wxDefaultSize,
                                 wxNO_BORDER|wxWANTS_CHARS);
