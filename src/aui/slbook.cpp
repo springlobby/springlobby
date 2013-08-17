@@ -6,6 +6,7 @@
 #include "../chatpanelmenu.h"
 #include "../ui.h"
 #include "../mainwindow.h"
+#include "../defines.h"
 
 #include <wx/menu.h>
 #include <wx/scrolwin.h>
@@ -368,13 +369,18 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
      // Get pane name
      const wxString pane_name = tab_part.BeforeFirst(wxT('='));
 
-     // create a new tab frame
-     wxTabFrame* new_tabs = new wxTabFrame;
-     new_tabs->m_tabs = new wxAuiTabCtrl(this,
-                                m_tab_id_counter++,
-                                wxDefaultPosition,
-                                wxDefaultSize,
-                                wxNO_BORDER|wxWANTS_CHARS);
+	// create a new tab frame
+	wxTabFrame* new_tabs = new wxTabFrame;
+	#ifdef HAVE_WX29
+	const int nextid = m_tabIdCounter++;
+	#else
+	const int nextid = m_tab_id_counter++;
+	#endif
+	new_tabs->m_tabs = new wxAuiTabCtrl(this,
+				nextid,
+				wxDefaultPosition,
+				wxDefaultSize,
+				wxNO_BORDER|wxWANTS_CHARS);
      new_tabs->m_tabs->SetArtProvider(m_tabs.GetArtProvider()->Clone());
      new_tabs->SetTabCtrlHeight(GetTabCtrlHeight());
      new_tabs->m_tabs->SetFlags(m_flags);
