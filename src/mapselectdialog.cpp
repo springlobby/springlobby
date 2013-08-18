@@ -384,7 +384,9 @@ void MapSelectDialog::LoadPopular()
 		serverSelector().GetServer().battles_iter->IteratorBegin();
 		while ( !serverSelector().GetServer().battles_iter->EOL() ) {
 			Battle* b = serverSelector().GetServer().battles_iter->GetBattle();
-			if ( b != NULL ) m_mapgrid->AddMap( b->GetHostMapName() );
+			const wxString mapname = b->GetHostMapName();
+			assert(!mapname.empty());
+			if ( b != NULL ) m_mapgrid->AddMap( mapname );
 		}
 	}
 	catch (...) {} // ui().GetServer may throw when disconnected...

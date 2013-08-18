@@ -51,12 +51,11 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, wxSize size, wxWindowID id )
 	: wxPanel( parent, id, wxDefaultPosition, size, wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
     , m_async_image(boost::bind(&MapGridCtrl::OnGetMapImageAsyncCompleted, this, _1))
     , m_async_ex(boost::bind(&MapGridCtrl::OnGetMapExAsyncCompleted, this, _1))
+	, m_async_ops_count(0)
 	, m_selection_follows_mouse( sett().GetMapSelectorFollowsMouse() )
 	, m_size( 0, 0 )
 	, m_pos( 0, 0 )
 	, m_in_mouse_drag( false )
-	, m_async_mapinfo_fetches( 0 )
-	, m_async_minimap_fetches( 0 )
 	, m_mouseover_map( NULL )
 	, m_selected_map( NULL )
 {
@@ -80,7 +79,12 @@ MapGridCtrl::MapGridCtrl( wxWindow* parent, wxSize size, wxWindowID id )
 
 MapGridCtrl::~MapGridCtrl()
 {
-
+	Clear();
+	m_pending_mapimages.clear();
+	m_pending_mapinfos.clear();
+	m_async_ops_count = 0;
+	m_grid.clear();
+	m_maps.clear();
 }
 
 
@@ -204,55 +208,36 @@ void MapGridCtrl::Sort( SortKey vertical, SortKey horizontal, bool vertical_dire
 
 void MapGridCtrl::Clear()
 {
-	m_maps_unused.insert( m_maps.begin(), m_maps.end() );
-	m_pending_maps.clear();
-	m_maps.clear();
 	m_grid.clear();
 	m_mouseover_map = NULL; // can't be sure pointer will stay valid
 	m_selected_map = NULL;
+	m_size.x = 0;
+	m_size.y = 0;
 }
 
 
 void MapGridCtrl::AddMap( const wxString& mapname )
 {
+	assert(!mapname.empty());
 	// no duplicates (would crash because of dangling MapData pointers in m_grid)
-	if ( m_maps.find( mapname ) != m_maps.end() ) return;
-
-	// check if we still have it in m_maps_unused..
-	MapMap::iterator it = m_maps_unused.find( mapname );
-	if ( it != m_maps_unused.end() ) {
-		m_maps.insert( *it );
-		m_grid.push_back( &m_maps[mapname] );
-		m_maps_unused.erase( it );
-		UpdateGridSize();
-		return;
+	if ( m_maps.find(mapname) == m_maps.end() ) {
+		MapData m;
+		m.name = mapname.mb_str();
+		m_maps[mapname] = m;
+		m_pending_mapinfos.push_back(&m_maps[mapname]);
+		m_pending_mapimages.push_back(&m_maps[mapname]);
+		UpdateAsyncFetches();
 	}
-
-	// if not, get it from unitsync
-	FetchMapInfo( mapname );
-}
-
-
-void MapGridCtrl::AddMap( const LSL::UnitsyncMap& map )
-{
-    const wxString name = TowxString(map.name);
-	// no duplicates (would crash because of dangling MapData pointers in m_grid)
-    if ( m_maps.find(name) != m_maps.end() ) return;
-	// don't want map to exist in both m_maps and m_maps_unused.
-    m_maps_unused.erase(name);
-
-    m_maps[name] = map;
-    m_grid.push_back( &m_maps[name] );
+	m_grid.push_back( &m_maps[mapname] );
 	UpdateGridSize();
 }
-
 
 void MapGridCtrl::UpdateGridSize()
 {
 	// recalculate grid size (keep it approximately square)
-	const int width = int(sqrt( double(m_maps.size()) ) + 0.5);
+	const int width = int(sqrt( double(m_grid.size()) ) + 0.5);
 	m_size.x = width;
-	m_size.y = (m_maps.size() + width - 1) / width;
+	m_size.y = (m_grid.size() + width - 1) / width;
 	CheckInBounds();
 }
 
@@ -284,47 +269,23 @@ void MapGridCtrl::CheckInBounds()
 
 void MapGridCtrl::UpdateAsyncFetches()
 {
-	while ( m_async_mapinfo_fetches < MAX_MAPINFO_FETCHES && !m_pending_maps.empty() ) {
-		wxString mapname = m_pending_maps.back();
-		m_pending_maps.pop_back();
-		FetchMapInfo( mapname );
-	}
-
-	// no minimap fetches until all mapinfo fetches are finished
-	if ( m_async_mapinfo_fetches == 0 && m_async_minimap_fetches == 0 ) {
-		for (int y = 0; y < m_size.y; ++y) {
-			for (int x = 0; x < m_size.x; ++x) {
-				const int idx = y * m_size.x + x;
-				if ( idx >= int(m_grid.size()) ) break;
-				if ( m_grid[idx]->state == MapState_NoMinimap ) {
-					FetchMinimap( *m_grid[idx] );
-					return;
-				}
-			}
-		}
-	}
-}
-
-
-void MapGridCtrl::FetchMapInfo(const wxString& mapname)
-{
-	if ( m_async_mapinfo_fetches < MAX_MAPINFO_FETCHES ) {
-        m_async_ex.GetMapEx(STD_STRING(mapname));
-		++m_async_mapinfo_fetches;
-	}
-	else {
-        m_pending_maps.push_back(mapname);
-	}
-}
-
-
-void MapGridCtrl::FetchMinimap( MapData& map )
-{
-	// must be finished fetching mapinfos
-	if ( m_async_mapinfo_fetches == 0 && m_async_minimap_fetches < MAX_MINIMAP_FETCHES ) {
-        m_async_image.GetMinimap( map.name, MINIMAP_SIZE, MINIMAP_SIZE );
-		map.state = MapState_GetMinimap;
-		++m_async_minimap_fetches;
+	if (!m_pending_mapinfos.empty()) {
+		m_async_ops_count++;
+		MapData* m = m_pending_mapinfos.front();
+		m_pending_mapinfos.pop_front();
+		m_async_ex.GetMapEx(m->name);
+	} else if ( !m_pending_mapimages.empty() ) {
+		m_async_ops_count++;
+		MapData* m = m_pending_mapimages.front();
+		m_pending_mapimages.pop_front();
+		if (m->state != MapState_NoMinimap) //FIXME: this shouldn never happen
+			return;
+		m->state = MapState_GetMinimap;
+        m_async_image.GetMinimap( m->name, MINIMAP_SIZE, MINIMAP_SIZE );
+	} else {
+		wxCommandEvent evt( LoadingCompletedEvt, GetId() );
+		evt.SetEventObject( this );
+		wxPostEvent( this, evt );
 	}
 }
 
@@ -333,7 +294,8 @@ void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 {
 	switch ( map.state ) {
 		case MapState_NoMinimap:
-			FetchMinimap( map );
+			UpdateAsyncFetches();
+			//FetchMinimap( map );
 			// fall through, both when starting fetch and when waiting
 			// for it to finish, we want to show temporary image
 		case MapState_GetMinimap:
@@ -483,91 +445,56 @@ void MapGridCtrl::OnLeftUp( wxMouseEvent& event )
 
 void MapGridCtrl::SelectMap( MapData* map )
 {
-	m_selected_map = map;
-	if ( m_selected_map != NULL ) {
+	if ((map != NULL) && ( m_selected_map != map )) {
+		m_selected_map = map;
 		wxCommandEvent evt( MapSelectedEvt, GetId() );
 		evt.SetEventObject( this );
         evt.SetString(TowxString(m_selected_map->name));
 		wxPostEvent( this, evt );
-	}
-	Refresh();
-}
-
-
-void MapGridCtrl::SetMinimap( MapMap& maps, const wxString& mapname, const wxBitmap& minimap )
-{
-	MapMap::iterator it = maps.find( mapname );
-
-	if ( it != maps.end() ) {
-		it->second.minimap = minimap;
-		it->second.state = MapState_GotMinimap;
+		Refresh();
 	}
 }
-
 
 void MapGridCtrl::OnGetMapImageAsyncCompleted( const std::string& _mapname )
 {
-    const wxString mapname = TowxString(_mapname);
-
 	// if mapname is empty, some error occurred in LSL::usync().GetMinimap...
-	if ( !mapname.empty() ) {
-        wxImage minimap(LSL::usync().GetMinimap(_mapname, MINIMAP_SIZE, MINIMAP_SIZE).wximage());
+	assert( !_mapname.empty() );
+	const wxString mapname = TowxString(_mapname);
+	wxImage minimap(LSL::usync().GetMinimap(_mapname, MINIMAP_SIZE, MINIMAP_SIZE).wximage());
 
-		const int w = minimap.GetWidth();
-		const int h = minimap.GetHeight();
-		wxImage background( BorderInvariantResizeImage( m_img_background, w, h ) );
-		wxImage minimap_alpha( BorderInvariantResizeImage( m_img_minimap_alpha, w, h ) );
-		wxImage foreground( BorderInvariantResizeImage( m_img_foreground, w, h ) );
+	const int w = minimap.GetWidth();
+	const int h = minimap.GetHeight();
+	wxImage background( BorderInvariantResizeImage( m_img_background, w, h ) );
+	wxImage minimap_alpha( BorderInvariantResizeImage( m_img_minimap_alpha, w, h ) );
+	wxImage foreground( BorderInvariantResizeImage( m_img_foreground, w, h ) );
 
-		minimap.SetAlpha( minimap_alpha.GetAlpha(), true /* "static data" */ );
-		minimap = BlendImage( minimap, background, false );
-		minimap = BlendImage( foreground, minimap, false );
+	minimap.SetAlpha( minimap_alpha.GetAlpha(), true /* "static data" */ );
+	minimap = BlendImage( minimap, background, false );
+	minimap = BlendImage( foreground, minimap, false );
 
-		// set the minimap in all MapMaps
-		wxBitmap minimap_bmp( minimap );
-		SetMinimap( m_maps, mapname, minimap_bmp );
-		SetMinimap( m_maps_unused, mapname, minimap_bmp );
+	// set the minimap in all MapMaps
+	m_maps[mapname].minimap = wxBitmap (minimap);
+	m_maps[mapname].state = MapState_GotMinimap;
 
-		// never ever call a gui function here, it will crash! (in 1/100 cases)
-		wxCommandEvent evt( REFRESH_EVENT, GetId() );
-		evt.SetEventObject( this );
-		wxPostEvent( this, evt );
-	}
-
-	--m_async_minimap_fetches;
-	UpdateAsyncFetches();
+	// never ever call a gui function here, it will crash! (in 1/100 cases)
+	wxCommandEvent evt( REFRESH_EVENT, GetId() );
+	evt.SetEventObject( this );
+	wxPostEvent( this, evt );
 }
 
 
 void MapGridCtrl::OnGetMapExAsyncCompleted( const std::string& _mapname )
 {
-	const wxString mapname = TowxString(_mapname);
 	// if mapname is empty, some error occurred in LSL::usync().GetMapEx...
-	if ( !mapname.empty() ) {
-		try {
-			AddMap( LSL::usync().GetMapEx(_mapname) );
-		}
-		catch (...) {}
-		// never ever call a gui function here, it will crash! (in 1/100 cases)
-		wxCommandEvent evt( REFRESH_EVENT, GetId() );
-		evt.SetEventObject( this );
-		wxPostEvent( this, evt );
-	}
-	--m_async_mapinfo_fetches;
-	UpdateAsyncFetches();
+	assert(!_mapname.empty());
+	const wxString mapname = TowxString(_mapname);
+	LSL::UnitsyncMap m = LSL::usync().GetMapEx(_mapname);
+	m_maps[mapname].hash = m.hash;
+	m_maps[mapname].info = m.info;
 
-	// UpdateAsyncFetches didn't start a new one, so we finished
-	// and can raise the LoadingCompletedEvt
-	if ( m_async_mapinfo_fetches == 0 ) {
-		wxCommandEvent evt( LoadingCompletedEvt, GetId() );
-		evt.SetEventObject( this );
-		wxPostEvent( this, evt );
-	}
 }
 
-void MapGridCtrl::OnRefresh( wxCommandEvent& event )
+void MapGridCtrl::OnRefresh( wxCommandEvent& /*event*/ )
 {
 	Refresh();
-	Update();
 }
-
