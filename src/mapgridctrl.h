@@ -135,6 +135,7 @@ class MapGridCtrl : public wxPanel
 		static int ComparePosCount( const MapData* a, const MapData* b );
 		template< class Compare > void _Sort( int dimension, Compare cmp );
 
+private:
 		void UpdateGridSize();
 		void UpdateAsyncFetches();
 		void FetchMapInfo( const wxString& mapname );
@@ -152,8 +153,8 @@ class MapGridCtrl : public wxPanel
 		/// Set of maps which are queued to be fetched asynchronously.
 		std::vector< wxString > m_pending_maps;
 
-		MapMap m_maps;
-		MapMap m_maps_unused;
+		MapMap m_maps; //list of displayed maps
+		MapMap m_maps_unused; //list of not shown maps
 		MapMap m_maps_filtered;
 		std::vector< MapData* > m_grid;
 		wxSize m_size;

@@ -205,10 +205,8 @@ void MapGridCtrl::Sort( SortKey vertical, SortKey horizontal, bool vertical_dire
 void MapGridCtrl::Clear()
 {
 	m_maps_unused.insert( m_maps.begin(), m_maps.end() );
-	m_maps_unused.insert( m_maps_filtered.begin(), m_maps_filtered.end() );
 	m_pending_maps.clear();
 	m_maps.clear();
-	m_maps_filtered.clear();
 	m_grid.clear();
 	m_mouseover_map = NULL; // can't be sure pointer will stay valid
 	m_selected_map = NULL;
@@ -529,7 +527,6 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( const std::string& _mapname )
 		wxBitmap minimap_bmp( minimap );
 		SetMinimap( m_maps, mapname, minimap_bmp );
 		SetMinimap( m_maps_unused, mapname, minimap_bmp );
-		SetMinimap( m_maps_filtered, mapname, minimap_bmp );
 
 		// never ever call a gui function here, it will crash! (in 1/100 cases)
 		wxCommandEvent evt( REFRESH_EVENT, GetId() );
