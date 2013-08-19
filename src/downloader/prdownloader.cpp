@@ -29,6 +29,7 @@
 #include <list>
 
 #include <lslunitsync/unitsync.h>
+#include <settings.h>
 
 class DownloadItem : public LSL::WorkItem {
 public:
@@ -44,7 +45,7 @@ public:
             //we create this in avance cause m_item gets freed
             wxString d(_("Download complete: "));
             d += TowxString(m_item.front()->name);
-            m_loader->download( m_item );
+            m_loader->download( m_item, sett().GetHTTPMaxParallelDownloads() );
             m_loader->freeResult( m_item );
             LSL::usync().AddReloadEvent();
 
