@@ -14,7 +14,7 @@ WidgetDownloadDialog::WidgetDownloadDialog(wxWindow* parent, wxWindowID id,
 
     m_widgets_panel = new WidgetDownloadPanel( this, -1, _("widgets") );
     m_main_sizer->Add( m_widgets_panel, 1, wxALL | wxEXPAND, 5 );
-
+    
     SetSizer( m_main_sizer );
     Layout();
 }

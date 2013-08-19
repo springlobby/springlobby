@@ -23,16 +23,34 @@
 #include "windowattributespickle.h"
 #include <wx/dialog.h>
 class wxBoxSizer;
+class wxStaticText;
+class wxButton;
+class wxTextCtrl;
 class ContentSearchResultsListctrl;
+class SearchThread;
+
+
+
 class ContentDownloadDialog : public wxDialog, public WindowAttributesPickle
 {
 public:
 ContentDownloadDialog(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long int style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE , const wxString& name = wxDialogNameStr);
 virtual ~ContentDownloadDialog();
 virtual bool Show(bool show = true);
+void OnSearch( wxCommandEvent& event );
+void OnSearchCompleted( wxCommandEvent& event);
 private:
+  DECLARE_EVENT_TABLE()
   wxBoxSizer* m_main_sizer;
+  wxBoxSizer* m_searchsizer;
+	wxTextCtrl* m_searchbox;
+	wxStaticText* m_searchlabel;
+	wxButton* m_searchbutton;
 ContentSearchResultsListctrl* m_search_res_w;
+  SearchThread* m_search_thread;
+  enum{
+    SEARCH_BUTTON = wxID_HIGHEST
+  };
 };
 
 #endif // CONTENTDOWNLOADDIALOG_H

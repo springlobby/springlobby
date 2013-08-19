@@ -3,6 +3,7 @@
 
 #include <wx/dialog.h>
 #include "../gui/windowattributespickle.h"
+
 class wxBoxSizer;
 class WidgetDownloadPanel;
 
@@ -17,6 +18,7 @@ class WidgetDownloadDialog : public wxDialog, public WindowAttributesPickle
 
     protected:
         wxBoxSizer* m_main_sizer;
+	
         WidgetDownloadPanel* m_widgets_panel;
 };
 
