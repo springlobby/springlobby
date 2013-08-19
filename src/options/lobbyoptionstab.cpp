@@ -56,7 +56,10 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     m_web_browse_btn = new wxButton( this, SPRING_WEBBROWSE, _("Browse") );
     m_web_browse_btn->SetToolTip(TE(_("Use a file dialog to find the web browser")));
-
+    m_parallel_http = new wxSpinCtrl(this , wxID_ANY, wxString::Format(_T("%d"),sett().GetHTTPMaxParallelDownloads()) );
+    m_parallel_http->SetRange(1,10);
+    m_parallel_http_sizer = new wxStaticBoxSizer( wxHORIZONTAL , this,_("Parallel HTTP Connections when downloading content"));
+    m_parallel_http_sizer->Add(m_parallel_http);
     if ( sett().GetWebBrowserUseDefault() ) m_web_def_radio->SetValue( true );
     else m_web_spec_radio->SetValue( true );
 
@@ -120,6 +123,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 5 );
     m_main_sizer->Add( m_editor_box_sizer, 0, wxEXPAND | wxALL, 5 );
+    m_main_sizer->Add( m_parallel_http_sizer);
     m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 5 );
     m_main_sizer->Add( m_reportstats_sizer, 0, wxALL, 5 );
     m_main_sizer->Add( m_disable_version_check_sizer, 0, wxALL, 5 );
@@ -235,6 +239,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 	sett().SetUseNotificationPopups( m_use_notif_popups->IsChecked() );
 	sett().SetNotificationPopupPosition( m_notif_popup_pos->GetSelection() );
 	sett().SetNotificationPopupDisplayTime( m_notif_popup_time->GetValue() );
+    sett().SetHTTPMaxParallelDownloads(m_parallel_http->GetValue());
 }
 
 
@@ -264,6 +269,7 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 	m_use_notif_popups->SetValue( sett().GetUseNotificationPopups() );
 	m_notif_popup_pos->SetSelection( sett().GetNotificationPopupPosition() );
 	m_notif_popup_time->SetValue( sett().GetNotificationPopupDisplayTime() );
+    m_parallel_http->SetValue( sett().GetHTTPMaxParallelDownloads());
 }
 
 void LobbyOptionsTab::HandleWebloc( bool defloc )

@@ -270,6 +270,17 @@ void Settings::SetOldSpringLaunchMethod( bool value )
 }
 
 
+int Settings::GetHTTPMaxParallelDownloads()
+{
+	return m_config->Read(_T("/General/ParallelHTTPCount"),3);
+}
+void Settings::SetHTTPMaxParallelDownloads(int value)
+{
+	m_config->Write(_T("/General/ParallelHTTPCount"),value);
+}
+
+
+
 bool Settings::GetWebBrowserUseDefault()
 {
 	// See note on ambiguities, in wx/confbase.h near line 180.
