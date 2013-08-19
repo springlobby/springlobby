@@ -32,6 +32,7 @@ class MainOptionsTab : public wxScrolledWindow
 
 		/** \brief delegate the data setting to memeber panels */
 		void OnApply( wxCommandEvent& event );
+		void OnOk( wxCommandEvent& event );
 		void OnRestore( wxCommandEvent& event );
 
 		void OnOpenGroupsTab();
@@ -63,6 +64,8 @@ class MainOptionsTab : public wxScrolledWindow
 		enum {
 			OPTIONS_TABS = wxID_HIGHEST
 		};
+	private:
+		wxWindow* frame;
 
 		DECLARE_EVENT_TABLE()
 };

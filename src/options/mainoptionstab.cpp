@@ -39,6 +39,7 @@ BEGIN_EVENT_TABLE( MainOptionsTab, wxPanel )
 
 	EVT_BUTTON ( wxID_APPLY,    MainOptionsTab::OnApply     )
 	EVT_BUTTON ( wxID_REVERT,   MainOptionsTab::OnRestore   )
+	EVT_BUTTON ( wxID_OK,   MainOptionsTab::OnOk   )
 
 END_EVENT_TABLE()
 
@@ -50,6 +51,7 @@ END_EVENT_TABLE()
 MainOptionsTab::MainOptionsTab( wxWindow* parent )
     : wxScrolledWindow( parent, -1 )
 {
+	frame = parent;
     GetAui().manager->AddPane( this, wxLEFT, _T("mainoptionstab") );
     m_tabs = new SLNotebook( this, _T("mainoptionstab"), OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
     m_tabs->SetArtProvider(new SLArtProvider);
@@ -119,13 +121,19 @@ void MainOptionsTab::OnApply( wxCommandEvent& event )
 	sett().SaveSettings();
 }
 
+void MainOptionsTab::OnOk( wxCommandEvent& event )
+{
+	OnApply(event);
+	frame->Close();
+}
+
 void MainOptionsTab::OnRestore( wxCommandEvent& event )
 {
 	m_spring_opts->OnRestore( event );
 	m_chat_opts->OnRestore( event );
 	m_torrent_opts->OnRestore( event );
-
 	m_lobby_opts->OnRestore ( event );
+	frame->Close();
 }
 
 void MainOptionsTab::OnOpenGroupsTab()
