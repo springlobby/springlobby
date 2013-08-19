@@ -23,11 +23,11 @@
 template<> SortOrder ContentSearchResultsListctrl::BaseType::m_sortorder = SortOrder();
 
 BEGIN_EVENT_TABLE( ContentSearchResultsListctrl, ContentSearchResultsListctrl::BaseType )
-
+  
 END_EVENT_TABLE()
 
 ContentSearchResultsListctrl::ContentSearchResultsListctrl(wxWindow* parent, wxWindowID id, const wxString& name, long int style, const wxPoint& pt, const wxSize& sz):
-  ContentSearchResultsListctrl::BaseType(parent, WIDGETLISTCTRL_ID, wxDefaultPosition, wxDefaultSize,
+  ContentSearchResultsListctrl::BaseType(parent, id, wxDefaultPosition, wxDefaultSize,
 									   wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ContentSearchResultsListctrl"),
 									   3, &ContentSearchResultsListctrl::CompareOneCrit)
 {
@@ -75,6 +75,20 @@ int ContentSearchResultsListctrl::GetItemImage(long int item) const
 }
 wxString ContentSearchResultsListctrl::GetItemText(long int item, long int column) const
 {
+  if ( m_data[item] == NULL )
+      return wxEmptyString;
+  const ContentSearchResult * res = m_data[item];
+  switch ( column )
+  {
+    case 0:
+      return res->name;
+    case 1:
+      return _("TODO");
+    case 2:
+      return res->type;
+    case 3:
+      return wxString::Format(_("%d M"),res->filesize/1024/1024);
+  }
   return wxEmptyString;
 }
 void ContentSearchResultsListctrl::Sort()
@@ -110,3 +124,9 @@ int ContentSearchResultsListctrl::GetIndexFromData(ContentSearchResult*const& da
 
     return -1;
 }
+
+void ContentSearchResultsListctrl::AddContent(ContentSearchResult*& content)
+{
+  AddItem(content);
+}
+

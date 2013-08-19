@@ -26,13 +26,17 @@
 #include <wx/protocol/http.h>
 #include <wx/sstream.h>
 #include <wx/thread.h>
+#include <wx/jsonreader.h>
+#include <ui.h>
 
 #include <iostream>
 DECLARE_EVENT_TYPE(SEARCH_FINISHED, wxID_ANY);
 DEFINE_EVENT_TYPE(SEARCH_FINISHED);
 BEGIN_EVENT_TABLE( ContentDownloadDialog, wxDialog )
 	EVT_BUTTON(		SEARCH_BUTTON, ContentDownloadDialog::OnSearch )
-	EVT_COMMAND(wxID_HIGHEST,SEARCH_FINISHED,ContentDownloadDialog::OnSearchCompleted ) 
+	EVT_BUTTON(		CLOSE_BUTTON, ContentDownloadDialog::OnCloseButton )
+	EVT_COMMAND(ID_SEARCH_FINISHED,SEARCH_FINISHED,ContentDownloadDialog::OnSearchCompleted ) 
+	EVT_LIST_ITEM_ACTIVATED ( LAUNCH_DOWNLOAD ,              ContentDownloadDialog::OnListDownload      )
 END_EVENT_TABLE()
 
 class SearchThread : public wxThread 
@@ -77,7 +81,7 @@ void* SearchThread::Entry()
     if ( c == '%' )
       c = 0;
   }
-  std::cout << "Escaped search query: " << m_search_query.ToAscii().data() << std::endl;
+//   std::cout << "Escaped search query: " << m_search_query.ToAscii().data() << std::endl;
   wxHTTP get;
   get.SetTimeout(10);
   get.Connect(_("api.springfiles.com"));
@@ -92,11 +96,11 @@ void* SearchThread::Entry()
     
   }
   wxDELETE(httpStream);
-  wxCommandEvent notify(SEARCH_FINISHED,wxID_HIGHEST);
+  wxCommandEvent notify(SEARCH_FINISHED,ContentDownloadDialog::ID_SEARCH_FINISHED);
   notify.SetInt(0);
   notify.SetString(res);
   wxPostEvent(m_content_dialog,notify);
-  std::cout << "Search finished" << std::endl;
+//   std::cout << "Search finished" << std::endl;
 }
 
 SearchThread::~SearchThread()
@@ -109,7 +113,7 @@ ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, co
 {
   m_search_thread = NULL;
   m_main_sizer = new wxBoxSizer(wxVERTICAL);
-  m_search_res_w = new ContentSearchResultsListctrl(this,-1);
+  m_search_res_w = new ContentSearchResultsListctrl(this,LAUNCH_DOWNLOAD);
   m_main_sizer->Add(m_search_res_w,2,wxALL | wxEXPAND, 3);
   m_searchsizer = new wxBoxSizer( wxHORIZONTAL );
   m_searchbox = new wxTextCtrl(this,-1);
@@ -118,9 +122,13 @@ ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, co
   m_searchsizer->Add(m_searchlabel);
   m_searchsizer->Add(m_searchbox,1,wxEXPAND | wxRIGHT ,0);
   m_searchsizer->Add(m_searchbutton);
+  m_close_button = new wxButton(this,CLOSE_BUTTON,_("Close"));
+  m_searchsizer->Add(m_close_button);
   m_main_sizer->Add(m_searchsizer,0,wxEXPAND | wxTOP,1);
   SetSizer( m_main_sizer );
   Layout();
+  m_searchbutton->SetDefault();
+  
 }
 
 bool ContentDownloadDialog::Show(bool show)
@@ -133,7 +141,6 @@ ContentDownloadDialog::~ContentDownloadDialog()
   if ( m_search_thread )
   {
       m_search_thread->Wait();
-      delete m_search_thread;
   }
 }
 void ContentDownloadDialog::OnSearch(wxCommandEvent& event)
@@ -148,7 +155,47 @@ void ContentDownloadDialog::OnSearch(wxCommandEvent& event)
 void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 {
   wxString json = event.GetString();
-  std::cout << json.ToAscii().data() << std::endl;
+//   std::cout << json.ToAscii().data() << std::endl;
+  
+  wxJSONReader reader;
+  wxJSONValue root;
+  int errors = reader.Parse(json,&root);
   m_search_thread = NULL;
   m_searchbutton->Enable(true);
+  if ( errors )
+  {
+    wxMessageBox(_("Failed to parse search results"),_("Error"));
+    return;
+  }
+  const wxJSONInternalArray * a = root.AsArray();
+  m_search_res_w->Clear();
+  for ( int i = 0; i < a->GetCount(); i++ )
+  {
+    wxJSONValue val = a->Item(i);
+    wxString category = val[_("category")].AsString();
+    int size = val[_("size")].AsInt();
+    wxString name = val[_("springname")].AsString();
+//     std::cout << category.ToAscii().data() << "," << name.ToAscii().data() << "," << size << std::endl;
+    ContentSearchResult* res = new ContentSearchResult();
+    res->name = name;
+    res->filesize = size;
+    res->type = category;
+    m_search_res_w->AddContent(res);
+  }
 }
+
+void ContentDownloadDialog::OnCloseButton(wxCommandEvent& event)
+{
+    Close();
+}
+
+void ContentDownloadDialog::OnListDownload(wxListEvent& event)
+{
+    
+    const ContentSearchResult * res = m_search_res_w->GetDataFromIndex(event.GetIndex());
+    if ( res->type == _("game") )
+      ui().DownloadMod(wxEmptyString,res->name);
+    else if ( res->type == _("map") )
+      ui().DownloadMap(wxEmptyString,res->name);
+}
+

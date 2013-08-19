@@ -36,7 +36,7 @@ public:
 virtual int GetIndexFromData(ContentSearchResult*const& data) const;
 virtual void Sort();
 virtual ~ContentSearchResultsListctrl();
-
+void AddContent( DataType& content);
 public:
     enum {
 	WIDGETLISTCTRL_ID

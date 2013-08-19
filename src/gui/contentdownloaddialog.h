@@ -22,6 +22,7 @@
 
 #include "windowattributespickle.h"
 #include <wx/dialog.h>
+#include <wx/listbase.h>
 class wxBoxSizer;
 class wxStaticText;
 class wxButton;
@@ -39,8 +40,11 @@ virtual ~ContentDownloadDialog();
 virtual bool Show(bool show = true);
 void OnSearch( wxCommandEvent& event );
 void OnSearchCompleted( wxCommandEvent& event);
+void OnCloseButton( wxCommandEvent& event);
+void OnListDownload( wxListEvent& event );
 private:
   DECLARE_EVENT_TABLE()
+wxButton* m_close_button;
   wxBoxSizer* m_main_sizer;
   wxBoxSizer* m_searchsizer;
 	wxTextCtrl* m_searchbox;
@@ -48,8 +52,12 @@ private:
 	wxButton* m_searchbutton;
 ContentSearchResultsListctrl* m_search_res_w;
   SearchThread* m_search_thread;
+public:
   enum{
-    SEARCH_BUTTON = wxID_HIGHEST
+    SEARCH_BUTTON = wxID_HIGHEST,
+    ID_SEARCH_FINISHED,
+    CLOSE_BUTTON,
+    LAUNCH_DOWNLOAD,
   };
 };
 

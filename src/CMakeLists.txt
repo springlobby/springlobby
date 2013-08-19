@@ -164,7 +164,7 @@ else ( OPTION_SOUND )
 	unset(ALURE_LIBRARIES)
 	unset(OPENAL_LIBRARIES)
 endif ( OPTION_SOUND )
-
+INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/json)
 clear(springlobbySrc)
 add_sources(springlobbySrc
 	chatpanelmenu.cpp
@@ -220,6 +220,10 @@ add_sources(springlobbySrc
 	
 	pingthread.cpp
 	iserverevents.cpp
+	
+	json/jsonreader.cpp
+	json/jsonval.cpp
+	json/jsonwriter.cpp
 )
 
 SET(springlobbySoundsrc
