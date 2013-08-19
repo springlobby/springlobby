@@ -107,7 +107,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_CHANNELCHOOSER,		MainWindow::OnShowChannelChooser	)
   EVT_MENU( MENU_SCREENSHOTS,			MainWindow::OnShowScreenshots		)
   EVT_MENU( MENU_PREFERENCES,			MainWindow::OnMenuPreferences		)
-  EVT_MENU( MENU_RENAME,				MainWindow::OnMenuRename			)
+//  EVT_MENU( MENU_RENAME,				MainWindow::OnMenuRename			)
   EVT_MENU( MENU_GENERAL_HELP,			MainWindow::OnMenuFirstStart		)
   EVT_MENU( MENU_SERVER_TAB,			MainWindow::OnMenuServerTab			)
   EVT_SET_FOCUS(                        MainWindow::OnSetFocus              )
@@ -163,7 +163,7 @@ MainWindow::MainWindow( )
 	m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
 	m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel &list"));
 	m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
-	m_menuTools->Append(MENU_RENAME, _("Change &username"));
+//	m_menuTools->Append(MENU_RENAME, _("Change &username"));
 	m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
 	m_menuTools->AppendSeparator();
 	m_menuTools->Append(MENU_USYNC, _("&Reload maps/games"));
@@ -753,12 +753,14 @@ void MainWindow::OnMenuPreferences( wxCommandEvent& /*event*/ )
 	m_opts_dialog->Show();
 }
 
-void MainWindow::OnMenuRename( wxCommandEvent& /*event*/ )
+/*
+void MainWindow::OnMenuRename( wxCommandEvent& event )
 {
 	wxString new_username;
 	if ( ui().AskText( _("Rename"), _("Enter new nickname"), new_username ) )
 		serverSelector().GetServer().ExecuteSayCommand( _T("/rename ") + new_username );
 }
+*/
 
 void MainWindow::OnMenuFirstStart( wxCommandEvent& /*event*/ )
 {
