@@ -10,7 +10,8 @@ class wxStaticBox;
 class wxRadioButton;
 class wxButton;
 class wxStaticText;
-
+class wxSpinCtrl;
+class wxStaticBoxSizer;
 class TorrentOptionsPanel: public wxScrolledWindow
 {
     public:
@@ -21,18 +22,8 @@ class TorrentOptionsPanel: public wxScrolledWindow
         void OnRestore( wxCommandEvent& event );
 
     private:
-        wxTextCtrl* m_maxUp;
-        wxTextCtrl* m_maxDown;
-        wxTextCtrl* m_p2pport;
-        wxTextCtrl* m_maxConnections;
-        wxStaticBox* m_gamestart_box;
-        wxRadioButton* m_gamestart_pause;
-        wxRadioButton* m_gamestart_throttle;
-        wxTextCtrl* m_gamestart_throttle_up;
-        wxTextCtrl* m_gamestart_throttle_down;
-        wxStaticText* m_gamestart_throttle_up_lbl;
-        wxStaticText* m_gamestart_throttle_down_lbl;
-
+	wxSpinCtrl* m_parallel_http;
+	wxStaticBoxSizer* m_parallel_http_sizer;
         void EnableSettings( bool enable);
         void SetStatusDisplay();
 

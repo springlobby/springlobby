@@ -133,6 +133,9 @@ class Settings : public SL::NonCopyable
 
     bool GetShowIPAddresses();
     void SetShowIPAddresses(bool value);
+    
+    int GetHTTPMaxParallelDownloads();
+    void SetHTTPMaxParallelDownloads(int value);
     /**@}*/
 
     /* ================================================================ */
