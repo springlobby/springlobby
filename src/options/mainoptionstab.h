@@ -54,9 +54,9 @@ class MainOptionsTab : public wxScrolledWindow
 		GroupOptionsPanel* m_groups_opts;
 		LobbyOptionsTab* m_lobby_opts;
 
-		wxButton* m_ok_btn;
-		wxButton* m_cancel_btn;
 		wxButton* m_apply_btn;
+		wxButton* m_cancel_btn;
+		wxButton* m_ok_btn;
 
 		wxBoxSizer* m_button_sizer;
 

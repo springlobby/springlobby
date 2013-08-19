@@ -75,15 +75,15 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
 	m_groups_opts = new GroupOptionsPanel( m_tabs );
 	m_tabs->AddPage ( m_groups_opts, _( "Groups" ), true, wxIcon( userchat_xpm ) );
 
-	m_ok_btn = new wxButton( this, wxID_OK, _( "Ok" ) );
-	m_cancel_btn = new wxButton( this, wxID_CANCEL, _( "Cancel" ) );
 	m_apply_btn = new wxButton( this, wxID_APPLY, _( "Apply" ) );
+	m_cancel_btn = new wxButton( this, wxID_CANCEL, _( "Cancel" ) );
+	m_ok_btn = new wxButton( this, wxID_OK, _( "Ok" ) );
 
 	m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_button_sizer->AddStretchSpacer();
-	m_button_sizer->Add( m_ok_btn, 0, wxALL, 2 );
-	m_button_sizer->Add( m_cancel_btn, 0, wxALL, 2 );
 	m_button_sizer->Add( m_apply_btn, 0, wxALL, 2 );
+	m_button_sizer->Add( m_cancel_btn, 0, wxALL, 2 );
+	m_button_sizer->Add( m_ok_btn, 0, wxALL, 2 );
 
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 	m_main_sizer->Add( m_tabs, 1, wxEXPAND );
