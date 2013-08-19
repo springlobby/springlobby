@@ -71,7 +71,7 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxChoice* m_start_tab;
 		wxChoice* m_notif_popup_pos;
 		wxSpinCtrl* m_notif_popup_time;
-		wxSpinCtrl* m_parallel_http;
+		
 
     enum
     {
@@ -82,7 +82,7 @@ class LobbyOptionsTab : public wxScrolledWindow
 
 
 		DECLARE_EVENT_TABLE()
-        wxStaticBoxSizer* m_parallel_http_sizer;
+        
 };
 
 #endif // LOBBYOPTIONSTAB_H
