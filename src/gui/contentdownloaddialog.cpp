@@ -19,6 +19,7 @@
 
 #include "contentdownloaddialog.h"
 #include "contentsearchresultslistctrl.h"
+#include "utils/conversion.h"
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
 #include <wx/stattext.h>
@@ -85,7 +86,8 @@ void* SearchThread::Entry()
   wxHTTP get;
   get.SetTimeout(10);
   get.Connect(_("api.springfiles.com"));
-  wxInputStream * httpStream = get.GetInputStream(wxString("/json.php?nosensitive=on&springname=",wxMBConvUTF8())+m_search_query);
+  const wxString query = wxFormat("/json.php?nosensitive=on&logical=or&springname=%s&tag=%s")  % m_search_query % m_search_query;
+  wxInputStream * httpStream = get.GetInputStream(wxString(query,wxMBConvUTF8()));
   wxString res;
   if ( get.GetError() == wxPROTO_NOERR )
   {
@@ -101,6 +103,7 @@ void* SearchThread::Entry()
   notify.SetString(res);
   wxPostEvent(m_content_dialog,notify);
 //   std::cout << "Search finished" << std::endl;
+	return NULL;
 }
 
 SearchThread::~SearchThread()
