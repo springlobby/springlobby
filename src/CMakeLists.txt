@@ -223,7 +223,6 @@ add_sources(springlobbySrc
 	
 	json/jsonreader.cpp
 	json/jsonval.cpp
-	json/jsonwriter.cpp
 )
 
 SET(springlobbySoundsrc
