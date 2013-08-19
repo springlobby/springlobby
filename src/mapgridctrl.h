@@ -125,8 +125,8 @@ class MapGridCtrl : public wxPanel
 		template< class Compare > void _Sort( int dimension, Compare cmp );
 
 private:
-        void OnGetMapImageAsyncCompleted(const std::string& _mapname );
-        void OnGetMapExAsyncCompleted(const std::string& _mapname );
+		void OnGetMapImageAsyncCompleted(const std::string& _mapname );
+		void OnGetMapExAsyncCompleted(const std::string& _mapname );
 		void UpdateGridSize();
 		void UpdateAsyncFetches();
 		void FetchMapInfo( const wxString& mapname );
@@ -136,8 +136,8 @@ private:
 		void SetMinimap(MapData& mapdata, const wxBitmap& minimap );
 		void SelectMap( MapData* map );
 
-        LSL::UnitSyncAsyncOps m_async_image;
-        LSL::UnitSyncAsyncOps m_async_ex;
+		LSL::UnitSyncAsyncOps m_async_image;
+		LSL::UnitSyncAsyncOps m_async_ex;
 
 		int m_async_ops_count;
 

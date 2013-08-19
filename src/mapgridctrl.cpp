@@ -49,8 +49,8 @@ const wxEventType MapGridCtrl::LoadingCompletedEvt = wxNewEventType();
 
 MapGridCtrl::MapGridCtrl( wxWindow* parent, wxSize size, wxWindowID id )
 	: wxPanel( parent, id, wxDefaultPosition, size, wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE )
-    , m_async_image(boost::bind(&MapGridCtrl::OnGetMapImageAsyncCompleted, this, _1))
-    , m_async_ex(boost::bind(&MapGridCtrl::OnGetMapExAsyncCompleted, this, _1))
+	, m_async_image(boost::bind(&MapGridCtrl::OnGetMapImageAsyncCompleted, this, _1))
+	, m_async_ex(boost::bind(&MapGridCtrl::OnGetMapExAsyncCompleted, this, _1))
 	, m_async_ops_count(0)
 	, m_selection_follows_mouse( sett().GetMapSelectorFollowsMouse() )
 	, m_size( 0, 0 )
@@ -281,7 +281,7 @@ void MapGridCtrl::UpdateAsyncFetches()
 		if (m->state != MapState_NoMinimap) //FIXME: this shouldn never happen
 			return;
 		m->state = MapState_GetMinimap;
-        m_async_image.GetMinimap( m->name, MINIMAP_SIZE, MINIMAP_SIZE );
+		m_async_image.GetMinimap( m->name, MINIMAP_SIZE, MINIMAP_SIZE );
 	} else {
 		wxCommandEvent evt( LoadingCompletedEvt, GetId() );
 		evt.SetEventObject( this );
@@ -313,9 +313,9 @@ void MapGridCtrl::DrawMap( wxDC& dc, MapData& map, int x, int y )
 				dc.DrawRectangle( x - 1, y - 1, map.minimap.GetWidth() + 2, map.minimap.GetHeight() + 2 );
 			}
 			break;
-        default:
-            wxLogError( _T("unknonw map.state in MapGridCtrl::DrawMap") );
-            break;
+		default:
+			wxLogError( _T("unknonw map.state in MapGridCtrl::DrawMap") );
+			break;
 	}
 }
 
