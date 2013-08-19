@@ -188,6 +188,9 @@ add_sources(springlobbySrc
 	mapctrl.cpp
 	mapgridctrl.cpp
 	mapselectdialog.cpp
+	gui/contentdownloaddialog.cpp
+	gui/contentsearchresultslistctrl.cpp
+	contentsearchresult.cpp
 	nicklistctrl.cpp
 	offlinebattle.cpp
 	

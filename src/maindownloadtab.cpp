@@ -21,19 +21,21 @@
 #include "downloader/downloadsobserver.h"
 #include "widgets/downloaddialog.h"
 #include "aui/auimanager.h"
+#include "gui/contentdownloaddialog.h"
 
 BEGIN_EVENT_TABLE( MainDownloadTab, wxPanel )
 	//(*EventTable(MainTorrentTab)
 	//*)
 	EVT_BUTTON      ( ID_BUTTON_CANCEL,     MainDownloadTab::OnCancelButton      )
 	EVT_BUTTON      ( ID_BUTTON_CLEAR,      MainDownloadTab::OnClearFinished     )
-//	EVT_BUTTON      ( ID_DOWNLOAD_DIALOG,   MainDownloadTab::OnDownloadDialog    )
+	EVT_BUTTON      ( ID_DOWNLOAD_DIALOG,   MainDownloadTab::OnDownloadDialog    )
     EVT_BUTTON      ( ID_BUTTON_WIDGETS,    MainDownloadTab::OnDLWidgets         )
 END_EVENT_TABLE()
 
 MainDownloadTab::MainDownloadTab( wxWindow* parent )
     : wxScrolledWindow( parent ),
-      m_widgets_dialog( NULL )
+      m_widgets_dialog( NULL ),
+      m_download_dialog( NULL )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "maintorrenttab" ) );
 
@@ -49,8 +51,8 @@ MainDownloadTab::MainDownloadTab( wxWindow* parent )
 	m_buttonbox->Add( m_but_cancel, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
 	m_but_clear = new wxButton( this, ID_BUTTON_CLEAR, _( "Clear finished" ) );
 	m_buttonbox->Add( m_but_clear, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
-//	m_but_download = new wxButton( this, ID_DOWNLOAD_DIALOG, _( "Search file" ) );
-//	m_buttonbox->Add( m_but_download, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
+	m_but_download = new wxButton( this, ID_DOWNLOAD_DIALOG, _( "Search file" ) );
+	m_buttonbox->Add( m_but_download, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5 );
 //	m_but_widgets = new wxButton( this, ID_BUTTON_WIDGETS, _( "Download Lua widgets" ) );
 //	m_buttonbox->Add( m_but_widgets, 1, wxALL | wxALIGN_RIGHT | wxALIGN_BOTTOM, 5 );
 
@@ -96,7 +98,17 @@ void MainDownloadTab::OnCancelButton( wxCommandEvent& /*unused*/ )
 }
 
 void MainDownloadTab::OnDownloadDialog( wxCommandEvent& /*unused*/ )
-{}
+{
+    if ( m_download_dialog && m_download_dialog->IsShown() ) 
+    {
+	m_download_dialog->SetFocus();
+    }else{
+	
+      
+      m_download_dialog = new ContentDownloadDialog(this,wxID_ANY,_("Search for maps and games") );
+      m_download_dialog->Show(true);
+    }
+}
 
 void MainDownloadTab::OnDLWidgets( wxCommandEvent& /*unused*/ )
 {

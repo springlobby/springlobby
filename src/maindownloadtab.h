@@ -12,7 +12,7 @@ struct DownloadInfo;
 class wxBoxSizer;
 class ColorButton;
 class WidgetDownloadDialog;
-
+class ContentDownloadDialog;
 
 typedef std::map<wxString,DownloadInfo> map_infos;
 typedef map_infos::iterator map_infos_iter;
@@ -59,6 +59,8 @@ class MainDownloadTab: public wxScrolledWindow
 		//*)
 
 		DECLARE_EVENT_TABLE()
+		ContentDownloadDialog* m_download_dialog;
+		wxButton* m_but_download;
 };
 
 #endif
