@@ -53,7 +53,6 @@
 #include "defines.h"
 #include "customizations.h"
 #include "sound/alsound.h"
-#include "mapselectdialog.h"
 #ifdef HAVE_CONFIG_H
 #include "springlobby_config.h"
 #else
@@ -221,9 +220,6 @@ bool SpringLobbyApp::OnInit()
     m_timer->Start( TIMER_INTERVAL );
 
 	ui().mw().SetLogWin( loggerwin, logchain );
-
-	//this should take off the firstload time considerably *ie nil it :P )
-	mapSelectDialog(true);
 
 	return true;
 }

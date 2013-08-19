@@ -236,6 +236,9 @@ MainWindow::MainWindow( )
 
 	UpdateMainAppHasFocus(m_has_focus);
     Connect( MainwindowMessageEvent, wxCommandEventHandler( MainWindow::OnMessage ), NULL, this );
+
+        //this should take off the firstload time considerably *ie nil it :P )
+        mapSelectDialog(true, this);
 }
 
 wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size ) const

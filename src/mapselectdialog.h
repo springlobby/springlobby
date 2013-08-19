@@ -30,7 +30,7 @@ class MapSelectDialog: public wxDialog, /*public WindowAttributesPickle, */ publ
 {
 	public:
 
-		MapSelectDialog( wxWindow* parent = 0 );
+		MapSelectDialog( wxWindow* parent);
 		virtual ~MapSelectDialog();
 
 		LSL::UnitsyncMap* GetSelectedMap() const;
@@ -105,7 +105,8 @@ class MapSelectDialog: public wxDialog, /*public WindowAttributesPickle, */ publ
 		DECLARE_EVENT_TABLE()
 };
 
-wxString mapSelectDialog(bool hidden=false);
+wxString mapSelectDialog(bool hidden=false, wxWindow* parent=NULL);
+
 #endif
 
 /**

@@ -13,13 +13,14 @@
 template <class PlaybackTabImp >
 PlaybackLoader<PlaybackTabImp>::PlaybackLoader( ParentType* parent )
     : m_parent( parent ),
-    m_thread_loader( 0 )
+    m_thread_loader( NULL )
 {
 }
 
 template <class PlaybackTabImp >
 PlaybackLoader<PlaybackTabImp>::~PlaybackLoader()
 {
+	delete m_thread_loader;
 }
 
 template <class PlaybackTabImp >
@@ -38,10 +39,10 @@ void PlaybackLoader<PlaybackTabImp>::Run()
 template <class PlaybackTabImp >
 void PlaybackLoader<PlaybackTabImp>::OnComplete()
 {
-    if ( !m_parent ) return;
-        wxCommandEvent notice( PlaybacksLoadedEvt, 1 );
-    ((wxEvtHandler*)m_parent)->ProcessEvent( notice );
-    m_thread_loader = 0; // the thread object deleted itself
+	if ( m_parent == NULL ) return;
+	wxCommandEvent notice( PlaybacksLoadedEvt, 1 );
+	((wxEvtHandler*)m_parent)->ProcessEvent( notice );
+	m_thread_loader = 0; // the thread object deleted itself
 }
 
 template <class PlaybackTabImp >

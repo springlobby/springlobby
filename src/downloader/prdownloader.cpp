@@ -96,8 +96,6 @@ PrDownloader::PrDownloader()
 
 PrDownloader::~PrDownloader()
 {
-    if ( m_dl_thread )
-        m_dl_thread->Wait();
     delete m_dl_thread;
     IDownloader::Shutdown();
 }
