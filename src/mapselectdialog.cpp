@@ -296,7 +296,6 @@ void MapSelectDialog::UpdateSortAndFilter()
 	FilterPredicate predicate( m_filter_text->GetValue() );
 	m_mapgrid->Filter( predicate );
 	m_mapgrid->Sort( GetSelectedSortKey( m_vertical_choice ), GetSelectedSortKey( m_horizontal_choice ), m_vertical_direction, m_horizontal_direction );
-	m_mapgrid->CheckInBounds();
 	m_mapgrid->Refresh();
 }
 

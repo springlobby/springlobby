@@ -82,11 +82,12 @@ class MapGridCtrl : public wxPanel
 
 		struct MapData : LSL::UnitsyncMap
 		{
-			MapData() : state( MapState_NoMinimap ) {}
+			MapData() : state( MapState_NoMinimap ), priority(0)  {}
 			void operator=( const LSL::UnitsyncMap& other ) { LSL::UnitsyncMap::operator=( other ); }
 
 			wxBitmap minimap;
 			MapState state;
+			unsigned priority; //the higher the earlier data will be fetched, is increased by Draw()
 		};
 
 		typedef std::map< wxString, MapData > MapMap;
@@ -136,6 +137,7 @@ private:
 		void SetMinimap(MapData& mapdata, const wxBitmap& minimap );
 		void SelectMap( MapData* map );
 		bool IsInGrid(const std::string& mapname);
+		MapData* GetMaxPriorityMap(std::list<MapData*>& maps);
 
 		LSL::UnitSyncAsyncOps m_async_image;
 		LSL::UnitSyncAsyncOps m_async_ex;
