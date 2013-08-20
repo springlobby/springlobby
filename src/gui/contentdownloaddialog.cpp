@@ -131,6 +131,7 @@ ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, co
   SetSizer( m_main_sizer );
   Layout();
   m_searchbutton->SetDefault();
+  m_searchbox->SetFocus();
   
 }
 
