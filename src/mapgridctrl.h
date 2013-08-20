@@ -39,7 +39,6 @@ class MapGridCtrl : public wxPanel
 		void Clear();
 		void AddMap( const wxString& mapname );
 
-		void CheckInBounds();
 
 		/* ===== sorting ===== */
 		void Sort( SortKey vertical, SortKey horizontal, bool vertical_direction = false, bool horizontal_direction = false );
@@ -63,6 +62,7 @@ class MapGridCtrl : public wxPanel
 
 		LSL::UnitsyncMap* GetSelectedMap() const { return m_selected_map; }
 
+	protected:
 		void OnPaint( wxPaintEvent& event );
 		void OnResize( wxSizeEvent& event );
 
@@ -70,8 +70,8 @@ class MapGridCtrl : public wxPanel
 		void OnLeftDown( wxMouseEvent& event );
 		void OnLeftUp( wxMouseEvent& event );
 
-        void OnRefresh( wxCommandEvent& event );
-	protected:
+		void OnRefresh( wxCommandEvent& event );
+		void CheckInBounds();
 
 		enum MapState
 		{
@@ -135,6 +135,7 @@ private:
 		void DrawBackground( wxDC& dc );
 		void SetMinimap(MapData& mapdata, const wxBitmap& minimap );
 		void SelectMap( MapData* map );
+		bool IsInGrid(const std::string& mapname);
 
 		LSL::UnitSyncAsyncOps m_async_image;
 		LSL::UnitSyncAsyncOps m_async_ex;
