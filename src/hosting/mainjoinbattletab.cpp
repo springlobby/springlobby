@@ -92,7 +92,6 @@ ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
 	return 0;
 }
 
-//void MainJoinBattleTab::UpdateCurrentBattle()
 void MainJoinBattleTab::UpdateCurrentBattle()
 {
 	GetBattleRoomTab().UpdateBattleInfo();

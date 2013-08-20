@@ -47,10 +47,10 @@ public:
             d += TowxString(m_item.front()->name);
             m_loader->download( m_item, sett().GetHTTPMaxParallelDownloads() );
             m_loader->freeResult( m_item );
-            LSL::usync().AddReloadEvent();
 
-            GetGlobalEventSender(GlobalEvents::OnUnitsyncReloaded).SendEvent( 0 );
-            ui().mw().AddMessageEvent(d);
+		UiEvents::ScopedStatusMessage msgcomplete(d, 0);
+		LSL::usync().AddReloadEvent();
+		GetGlobalEventSender(GlobalEvents::OnUnitsyncReloaded).SendEvent( 0 );
         }
     }
 
