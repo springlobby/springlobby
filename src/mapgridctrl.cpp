@@ -227,6 +227,7 @@ bool MapGridCtrl::IsInGrid( const std::string& mapname) {
 
 void MapGridCtrl::AddMap( const wxString& mapname )
 {
+	assert(wxThread::IsMain());
 	assert(!mapname.empty());
 
 	const std::string _mapname(mapname.mb_str());

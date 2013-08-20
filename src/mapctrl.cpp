@@ -486,6 +486,7 @@ void MapCtrl::FreeMinimap()
 
 void MapCtrl::UpdateMinimap()
 {
+	        assert(wxThread::IsMain());
     int w, h;
     _SetCursor();
     if ( m_battle == 0 ) return;

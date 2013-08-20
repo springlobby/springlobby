@@ -65,6 +65,7 @@ static const unsigned int s_reconnect_delay_ms = 6000;
 
 Ui& ui()
 {
+	assert(wxThread::IsMain());
     static LSL::Util::LineInfo<Ui> m( AT );
     static LSL::Util::GlobalObjectHolder<Ui, LSL::Util::LineInfo<Ui> > m_ui( m );
     return m_ui;
@@ -101,8 +102,9 @@ ChatPanel* Ui::GetActiveChatPanel()
 
 MainWindow& Ui::mw()
 {
-    ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
-    return *m_main_win;
+	assert(wxThread::IsMain());
+	ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
+	return *m_main_win;
 }
 
 const MainWindow& Ui::mw() const
