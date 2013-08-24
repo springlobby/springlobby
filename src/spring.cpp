@@ -224,6 +224,7 @@ bool Spring::LaunchSpring( const wxString& params  )
     m_process->Run();
   }
   m_running = true;
+	GlobalEvent::Send(GlobalEvent::OnSpringStarted);
   return true;
 }
 
