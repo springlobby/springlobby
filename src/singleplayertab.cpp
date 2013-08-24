@@ -352,7 +352,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& /*unused*/ )
     }
 }
 
-void SinglePlayerTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void SinglePlayerTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
     try {
         ReloadMaplist();

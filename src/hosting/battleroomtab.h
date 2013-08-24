@@ -4,7 +4,7 @@
 #include <wx/scrolwin.h>
 
 #include <lslunitsync/optionswrapper.h>
-#include "utils/isink.h"
+#include "utils/globalevents.h"
 #include "utils/uievents.h"
 #include "autohostmanager.h"
 #include <map>
@@ -36,7 +36,7 @@ typedef std::map<wxString, long> OptionListMap;
 
 /** \brief container for BattleroomListCtrl, battle specific ChatPanel. Also displaying battle info summary
  * \todo DOCMEMORE */
-class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleRoomTab>
+class BattleRoomTab : public wxScrolledWindow, public GlobalEvent
 {
 	public:
 		BattleRoomTab( wxWindow* parent, Battle* battle );
@@ -112,7 +112,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 		void SortPlayerList();
 
-		void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
+		void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
 
 		void SetBattle( Battle* battle );
 

@@ -37,12 +37,14 @@ NotificationManager& notificationManager()
     return m_manager;
 }
 
-NotificationManager::NotificationManager()
-	: m_notification_wrapper( new NotificationWrapperType( &ui().mw() ) ),
+NotificationManager::NotificationManager():
+	wxEvtHandler(),
+	m_notification_wrapper( new NotificationWrapperType( &ui().mw() ) ),
 	m_rate_limit_timer( this, this_timer_id ),
 	m_rate_limit_ms( 2000 ),
 	m_showNotificationSink( this, &UiEvents::GetNotificationEventSender( ) )
 {
+	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&NotificationManager::OnQuit));
 }
 
 NotificationManager::~NotificationManager()
@@ -52,7 +54,7 @@ NotificationManager::~NotificationManager()
 	m_notification_wrapper = NULL;
 }
 
-void NotificationManager::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
+void NotificationManager::OnQuit( wxCommandEvent& /*data*/ )
 {
 	delete m_notification_wrapper;
 	m_notification_wrapper = NULL;

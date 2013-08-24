@@ -16,14 +16,15 @@
 #include "settings.h"
 #include "battlelist/battlelisttab.h"
 
-ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/ )
-	: m_chatpanel(parent),
+ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/ ):
+	wxEvtHandler(),
+	m_chatpanel(parent),
 	m_user_menu( 0 ),
 	m_menu_all( 0 ),
 	displayjoinitem( 0 ),
-    m_autorejoin( 0 ),
+	m_autorejoin( 0 ),
 	m_append_menu( 0 ),
-    m_withChanserv( addChanServ )
+	m_withChanserv( addChanServ )
 {}
 
 //!ATTENTION: _all_ event ids must be handled in ChatPanelMenu::OnMenuItem

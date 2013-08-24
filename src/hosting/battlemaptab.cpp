@@ -122,6 +122,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Battle* battle )
 
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	Layout();
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleMapTab::OnUnitsyncReloaded));
 }
 
 
@@ -281,7 +282,7 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& /*unused*/ )
 }
 
 
-void BattleMapTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void BattleMapTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	if ( !m_battle ) return;
     ReloadMaplist();

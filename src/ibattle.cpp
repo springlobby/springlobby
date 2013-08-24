@@ -25,6 +25,7 @@
 const unsigned int TIMER_ID         = 102;
 
 IBattle::IBattle():
+	wxEvtHandler(),
   m_map_loaded(false),
   m_mod_loaded(false),
   m_map_exists(false),
@@ -41,6 +42,7 @@ IBattle::IBattle():
 	m_timer ( 0 ),
 	m_start_time(0)
 {
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&IBattle::OnUnitsyncReloaded));
 }
 
 
@@ -900,7 +902,7 @@ void IBattle::OnSelfLeftBattle()
 	LSL::usync().UnSetCurrentMod(); //left battle
 }
 
-void IBattle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void IBattle::OnUnitsyncReloaded( wxEvent& /*data*/ )
 {
     if ( !m_host_mod.hash.empty() && m_host_mod.hash != "0" )
         m_mod_exists = LSL::usync().ModExists( m_host_mod.name, m_host_mod.hash);

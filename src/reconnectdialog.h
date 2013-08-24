@@ -3,17 +3,15 @@
 
 #include <wx/dialog.h>
 #include "gui/windowattributespickle.h"
-#include "utils/isink.h"
+#include "utils/globalevents.h"
 
 class wxCommandEvent;
 
-class ReconnectDialog : public wxDialog,
-        public WindowAttributesPickle,
-        public OnQuitSink<ReconnectDialog>
+class ReconnectDialog : public wxDialog, public GlobalEvent, public WindowAttributesPickle
 {
 public:
     ReconnectDialog();
-    void OnQuit( GlobalEvents::GlobalEventData data );
+    void OnQuit( wxCommandEvent& data );
 
 private:
 	void OnReconnect ( wxCommandEvent& event );

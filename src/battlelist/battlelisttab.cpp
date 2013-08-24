@@ -170,6 +170,7 @@ BattleListTab::BattleListTab( wxWindow* parent )
 	Layout();
 
 	SelectBattle( 0 );
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleListTab::OnUnitsyncReloaded));
 }
 
 
@@ -483,8 +484,9 @@ void BattleListTab::OnSelect( wxListEvent& event )
 }
 
 
-void BattleListTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void BattleListTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
+	assert(wxThread::IsMain());
 	if ( ! serverSelector().GetServerStatus() )
 		return;
 

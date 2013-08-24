@@ -201,7 +201,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 #endif
 
     ReloadServerList();
-
+	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&ConnectWindow::OnQuit));
 }
 
 
@@ -320,7 +320,7 @@ void ConnectWindow::OnCancel(wxCommandEvent& )
     Hide();
 }
 
-void ConnectWindow::OnQuit(GlobalEvents::GlobalEventData /*data*/)
+void ConnectWindow::OnQuit(wxCommandEvent& /*data*/)
 {
     EndModal(wxCANCEL);
 }

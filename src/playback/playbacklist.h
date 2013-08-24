@@ -11,6 +11,11 @@ template <class PlaybackImp>
 class PlaybackList : public wxEvtHandler
 {
   public:
+	PlaybackList():
+		wxEvtHandler(),
+		m_fails(0)
+	{}
+
     typedef PlaybackImp
         PlaybackType;
 
@@ -45,7 +50,6 @@ class PlaybackList : public wxEvtHandler
 
 
   protected:
-	PlaybackList() : m_fails(0) {}
 
     playback_map_t m_replays;
 

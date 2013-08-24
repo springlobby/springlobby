@@ -11,9 +11,10 @@
 #include <lslunitsync/unitsync.h>
 
 template <class PlaybackTabImp >
-PlaybackLoader<PlaybackTabImp>::PlaybackLoader( ParentType* parent )
-    : m_parent( parent ),
-    m_thread_loader( NULL )
+PlaybackLoader<PlaybackTabImp>::PlaybackLoader( ParentType* parent ):
+	wxEvtHandler(),
+	m_parent( parent ),
+	m_thread_loader( NULL )
 {
 }
 

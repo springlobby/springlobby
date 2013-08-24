@@ -25,6 +25,7 @@ void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 
     m_replays.clear();
     const size_t size = filenames.size();
+
     for ( size_t i = 0; i < size; ++i)
     {
 		Replay& rep_ref = AddPlayback( i ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed

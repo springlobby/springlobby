@@ -1469,7 +1469,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         {
             if ( m_mdown_area == Refreshing )
             {
-				LSL::usync().AddReloadEvent();
+//				LSL::usync().AddReloadEvent();
 				m_battle->Update( wxFormat( _T("%d_mapname") ) % LSL::OptionsWrapper::PrivateOptions );
                 UpdateMinimap();
             }
@@ -1636,7 +1636,7 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string mapname)
 	wxPostEvent( this, evt );
 }
 
-void MapCtrl::OnRefresh( wxCommandEvent& event )
+void MapCtrl::OnRefresh( wxCommandEvent& /*event*/ )
 {
     //Update();
     Refresh();

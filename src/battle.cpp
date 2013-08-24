@@ -42,6 +42,7 @@ Battle::Battle( Server& serv, int id ) :
         m_id( id )
 
 {
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
     m_opts.battleid =  m_id;
 }
 
@@ -1155,7 +1156,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     }
 }
 
-void Battle::OnUnitsyncReloaded( GlobalEvents::GlobalEventData data )
+void Battle::OnUnitsyncReloaded( wxEvent& data )
 {
 	IBattle::OnUnitsyncReloaded( data );
 	if ( m_is_self_in ) SendMyBattleStatus();

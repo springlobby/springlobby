@@ -287,9 +287,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
-	GetGlobalEventSender(GlobalEvents::OnQuit).SendEvent( 0 );
-    SetEvtHandlerEnabled(false);
-    {
+	GlobalEvent::Send(GlobalEvent::OnQuit);
+//	GlobalEvent::Disconnect(MainWindow::OnClose, GlobalEvent::)
+//	SetEvtHandlerEnabled(false);
+	{
 		wxWindowUpdateLocker lock( this );
 		SavePerspectives();
 		AuiManagerContainer::ManagerType* manager=GetAui().manager;
@@ -586,7 +587,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
 {
 	LSL::usync().AddReloadEvent();
-	GetGlobalEventSender(GlobalEvents::OnUnitsyncReloaded).SendEvent( 0 );
+	GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
 }
 
 void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )

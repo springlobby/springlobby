@@ -104,7 +104,7 @@ class Battle : public IBattle
 
 	void SetInGame( bool ingame );
 
-	void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
+	void OnUnitsyncReloaded( wxEvent& data );
 
 	void SetAutoUnspec(bool value);
 	bool GetAutoUnspec() { return m_auto_unspec; }

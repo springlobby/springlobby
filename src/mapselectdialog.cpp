@@ -165,6 +165,7 @@ MapSelectDialog::MapSelectDialog( wxWindow* parent )
 	m_map_opts_list->InsertItem( 6, _("Start positions") );
 
     Layout();
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&MapSelectDialog::OnUnitsyncReloaded));
 }
 
 MapSelectDialog::~MapSelectDialog()
@@ -441,7 +442,7 @@ void MapSelectDialog::OnFilterTextChanged(wxCommandEvent& /*unused*/)
 	UpdateSortAndFilter();
 }
 
-void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void MapSelectDialog::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	wxInitDialogEvent dummy;
 	AddPendingEvent( dummy );

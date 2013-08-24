@@ -37,8 +37,8 @@ END_EVENT_TABLE()
 template < class T, class L >
 CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,
                 long style, const wxString& name, unsigned int sort_criteria_count,
-                CompareFunction func, bool highlight, UserActions::ActionType hlaction, bool periodic_sort, unsigned int periodic_sort_interval  )
-    : ListBaseType(parent, id, pt, sz, style | wxLC_VIRTUAL),
+                CompareFunction func, bool highlight, UserActions::ActionType hlaction, bool periodic_sort, unsigned int periodic_sort_interval  ):
+	ListBaseType(parent, id, pt, sz, style | wxLC_VIRTUAL),
     m_tiptimer(this, IDD_TIP_TIMER),
     m_sort_timer(this, IDD_SORT_TIMER),
     m_tiptext(_T("")),
@@ -75,11 +75,10 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
 
 	StartTimer();
 	Connect( ListctrlDoSortEventType, wxCommandEventHandler( ThisType::OnSortEvent ), NULL, this );
-
 }
 
 template < class T, class L >
-void CustomVirtListCtrl<T,L>::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
+void CustomVirtListCtrl<T,L>::OnQuit( wxCommandEvent& /*data*/ )
 {
     m_periodic_sort_timer.Stop();
     m_dirty_sort = false;

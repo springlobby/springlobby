@@ -1,20 +1,20 @@
 /*
  * <one line to give the program's name and a brief idea of what it does.>
  * Copyright (C) 2013  <copyright holder> <email>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #include "contentdownloaddialog.h"
@@ -36,11 +36,11 @@ DEFINE_EVENT_TYPE(SEARCH_FINISHED);
 BEGIN_EVENT_TABLE( ContentDownloadDialog, wxDialog )
 	EVT_BUTTON(		SEARCH_BUTTON, ContentDownloadDialog::OnSearch )
 	EVT_BUTTON(		CLOSE_BUTTON, ContentDownloadDialog::OnCloseButton )
-	EVT_COMMAND(ID_SEARCH_FINISHED,SEARCH_FINISHED,ContentDownloadDialog::OnSearchCompleted ) 
+	EVT_COMMAND(ID_SEARCH_FINISHED,SEARCH_FINISHED,ContentDownloadDialog::OnSearchCompleted )
 	EVT_LIST_ITEM_ACTIVATED ( LAUNCH_DOWNLOAD ,              ContentDownloadDialog::OnListDownload      )
 END_EVENT_TABLE()
 
-class SearchThread : public wxThread 
+class SearchThread : public wxThread
 {
 public:
 virtual void* Entry();
@@ -65,8 +65,8 @@ void* SearchThread::Entry()
   for ( unsigned char c = 0; c < 255; c++ )
   {
     char str[2];
-    
-    
+
+
     if ( (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') )
     {
       continue;
@@ -91,11 +91,11 @@ void* SearchThread::Entry()
   wxString res;
   if ( get.GetError() == wxPROTO_NOERR )
   {
-    
+
     wxStringOutputStream out_stream(&res);
     httpStream->Read(out_stream);
-    
-    
+
+
   }
   wxDELETE(httpStream);
   wxCommandEvent notify(SEARCH_FINISHED,ContentDownloadDialog::ID_SEARCH_FINISHED);
@@ -132,7 +132,7 @@ ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, co
   Layout();
   m_searchbutton->SetDefault();
   m_searchbox->SetFocus();
-  
+
 }
 
 bool ContentDownloadDialog::Show(bool show)
@@ -147,20 +147,20 @@ ContentDownloadDialog::~ContentDownloadDialog()
       m_search_thread->Wait();
   }
 }
-void ContentDownloadDialog::OnSearch(wxCommandEvent& event)
+void ContentDownloadDialog::OnSearch(wxCommandEvent& /*event*/)
 {
   wxString search_query = _T("*")+m_searchbox->GetValue()+_T("*");//By default the user would expect that
   m_searchbutton->Enable(false);
   m_search_thread = new SearchThread(this,search_query);
   m_search_thread->Create();
   m_search_thread->Run();
-  
+
 }
 void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 {
   wxString json = event.GetString();
 //   std::cout << json.ToAscii().data() << std::endl;
-  
+
   wxJSONReader reader;
   wxJSONValue root;
   int errors = reader.Parse(json,&root);
@@ -188,14 +188,14 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
   }
 }
 
-void ContentDownloadDialog::OnCloseButton(wxCommandEvent& event)
+void ContentDownloadDialog::OnCloseButton(wxCommandEvent& /*event*/)
 {
     Close();
 }
 
 void ContentDownloadDialog::OnListDownload(wxListEvent& event)
 {
-    
+
     const ContentSearchResult * res = m_search_res_w->GetDataFromIndex(event.GetIndex());
     if ( res->type == _("game") )
       ui().DownloadMod(wxEmptyString,res->name);

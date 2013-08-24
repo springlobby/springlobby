@@ -638,8 +638,13 @@ public:
 
     //! Attaches this event handler to the given window.
     //! The given keybinder will be called on each keyevent.
-    wxBinderEvtHandler(wxKeyBinder *p, wxWindow *tg)
-        : m_pBinder(p), m_pTarget(tg) { m_pTarget->PushEventHandler(this); }
+    wxBinderEvtHandler(wxKeyBinder *p, wxWindow *tg):
+		wxEvtHandler(),
+		m_pBinder(p),
+		m_pTarget(tg)
+	{
+		m_pTarget->PushEventHandler(this);
+	}
 
     //! Removes this event handler from the window you specified
     //! during construction (the target window).

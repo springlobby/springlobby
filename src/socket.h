@@ -90,7 +90,7 @@ class Socket
 class SocketEvents: public wxEvtHandler
 {
   public:
-    SocketEvents( iNetClass& netclass ): m_net_class(netclass) {}
+    SocketEvents( iNetClass& netclass ): wxEvtHandler(), m_net_class(netclass) {}
     void OnSocketEvent(wxSocketEvent& event);
   protected:
     iNetClass& m_net_class;

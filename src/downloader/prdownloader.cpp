@@ -24,6 +24,7 @@
 #include "../utils/uievents.h"
 #include "../utils/conversion.h"
 #include "../ui.h"
+#include "../utils/globalevents.h"
 #include "../mainwindow.h"
 #include "downloadsobserver.h"
 #include <list>
@@ -50,7 +51,6 @@ public:
 
 		UiEvents::ScopedStatusMessage msgcomplete(d, 0);
 		LSL::usync().AddReloadEvent();
-		GetGlobalEventSender(GlobalEvents::OnUnitsyncReloaded).SendEvent( 0 );
         }
     }
 

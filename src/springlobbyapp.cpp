@@ -64,7 +64,7 @@
 #include "utils/misc.h"
 
 #if wxUSE_UNIX
-	#include <X11/Xlib.h> 
+	#include <X11/Xlib.h>
 #endif
 const unsigned int TIMER_ID         = 101;
 const unsigned int TIMER_INTERVAL   = 100;
@@ -112,6 +112,7 @@ LONG __stdcall filter(EXCEPTION_POINTERS* p){
 //! It will open the main window and connect default to server or open the connect window.
 bool SpringLobbyApp::OnInit()
 {
+
 	wxSetEnv( _T("UBUNTU_MENUPROXY"), _T("0") );
     //this triggers the Cli Parser amongst other stuff
     if (!wxApp::OnInit())
@@ -220,6 +221,7 @@ bool SpringLobbyApp::OnInit()
     m_timer->Start( TIMER_INTERVAL );
 
 	ui().mw().SetLogWin( loggerwin, logchain );
+	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&SpringLobbyApp::OnQuit));
 
 	return true;
 }
@@ -524,7 +526,7 @@ void SpringLobbyApp::CacheAndSettingsSetup()
     }
 }
 
-void SpringLobbyApp::OnQuit( GlobalEvents::GlobalEventData /*data*/ )
+void SpringLobbyApp::OnQuit( wxCommandEvent& /*data*/ )
 {
 	m_timer->Stop();
 }

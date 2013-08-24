@@ -57,6 +57,7 @@ Spring& spring()
 }
 
 Spring::Spring() :
+	wxEvtHandler(),
         m_process(0),
         m_wx_process(0),
         m_running(false)
@@ -226,14 +227,13 @@ bool Spring::LaunchSpring( const wxString& params  )
   return true;
 }
 
-void Spring::OnTerminated( wxCommandEvent& event )
+void Spring::OnTerminated( wxCommandEvent& /*event*/ )
 {
     wxLogDebugFunc( _T("") );
     m_running = false;
     m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
     m_wx_process = 0;
-    ui().OnSpringTerminated( event.GetExtraLong() );
-    GetGlobalEventSender(GlobalEvents::OnSpringTerminated).SendEvent( event.GetExtraLong() );
+	GlobalEvent::Send(GlobalEvent::OnSpringTerminated);
 }
 
 

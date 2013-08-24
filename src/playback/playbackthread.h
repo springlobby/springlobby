@@ -4,17 +4,13 @@
 #include <wx/string.h>
 #include "../defines.h"
 #include <wx/thread.h>
+#include <wx/event.h>
 
 static const wxEventType PlaybacksLoadedEvt = wxNewEventType();
 
-#ifdef HAVE_WX29
-#include <wx/event.h>
-    template <class PlaybackTabImp >
-    class PlaybackLoader : public wxEvtHandler
-#else
-    template <class PlaybackTabImp >
-    class PlaybackLoader
-#endif
+
+template <class PlaybackTabImp >
+class PlaybackLoader : public wxEvtHandler
 {
 protected:
     class PlaybackLoaderThread : public wxThread

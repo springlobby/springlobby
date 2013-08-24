@@ -49,10 +49,9 @@ BEGIN_EVENT_TABLE_TEMPLATE1( PlaybackTab, wxPanel, PlaybackTraits )
 END_EVENT_TABLE()
 
 template < class PlaybackTraits >
-PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent )
-	: wxScrolledWindow( parent, -1 ),
-	m_replay_loader ( 0 ),
-	OnUsync_reload( this, &GetGlobalEventSender( GlobalEvents::OnUnitsyncReloaded ) )
+PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent ):
+	wxScrolledWindow( parent, -1 ),
+	m_replay_loader ( 0 )
 {
 	wxLogMessage( _T( "PlaybackTab::PlaybackTab()" ) );
 
@@ -153,6 +152,8 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent )
 
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	Layout();
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&PlaybackTab::OnUnitsyncReloaded));
+	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&PlaybackTab::OnSpringTerminated));
 }
 
 template < class PlaybackTraits >
@@ -479,13 +480,13 @@ void PlaybackTab<PlaybackTraits>::OnReload( wxCommandEvent& /*unused*/ )
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::OnSpringTerminated( GlobalEvents::GlobalEventData /*data*/ )
+void PlaybackTab<PlaybackTraits>::OnSpringTerminated( wxCommandEvent& /*data*/ )
 {
     ReloadList();
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void PlaybackTab<PlaybackTraits>::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	ReloadList();
 }

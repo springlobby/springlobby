@@ -8,7 +8,7 @@
 #include "chatlog.h"
 #include "helper/TextCompletionDatabase.hpp"
 #include "utils/mixins.hh"
-#include "utils/isink.h"
+#include "utils/globalevents.h"
 
 class wxCommandEvent;
 class wxSizeEvent;
@@ -65,7 +65,7 @@ struct ChatLine
  * The nick list is optional and can be removed by setting show_nick_list in the
  * constructor to false.
  */
-class ChatPanel : public wxPanel, public OnLoginSink<ChatPanel>, public SL::NonCopyable
+class ChatPanel : public wxPanel, public GlobalEvent, public SL::NonCopyable
 {
   public:
 
@@ -137,7 +137,7 @@ class ChatPanel : public wxPanel, public OnLoginSink<ChatPanel>, public SL::NonC
 
     void OnMenuItem( wxCommandEvent& event );
 
-	void OnLogin( OnLoginSink<ChatPanel>::EventDataType data );
+	void OnLogin( wxCommandEvent& data );
 
   protected:
 

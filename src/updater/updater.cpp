@@ -26,8 +26,9 @@ UpdaterClass& Updater()
     return m_upd;
 }
 
-UpdaterClass::UpdaterClass()
-    : m_http_thread( 0 )
+UpdaterClass::UpdaterClass():
+	wxEvtHandler(),
+	m_http_thread( 0 )
 {
 }
 
@@ -96,7 +97,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
             wxRmdir( m_newexe );
         }
     }
-    GetGlobalEventSender( GlobalEvents::UpdateFinished ).SendEvent( 0 );
+    GlobalEvent::Send( GlobalEvent::UpdateFinished );
 }
 
 //! DO NOT use mw() global unless fromCli is false !

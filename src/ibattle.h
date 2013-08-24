@@ -10,8 +10,8 @@
 #include <lslunitsync/optionswrapper.h>
 #include "userlist.h"
 #include "tdfcontainer.h"
-#include "utils/isink.h"
 #include "utils/mixins.hh"
+#include "utils/globalevents.h"
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
@@ -105,7 +105,7 @@ struct BattleOptions
 	bool guilistactiv;
 };
 
-class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle > , public SL::NonCopyable
+class IBattle: public UserList, public GlobalEvent, public wxEvtHandler, public SL::NonCopyable
 {
 public:
 
@@ -264,7 +264,7 @@ public:
     virtual void UnrestrictAllUnits();
     virtual std::map<wxString,int> RestrictedUnits() const;
 
-    virtual void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
+    virtual void OnUnitsyncReloaded(wxEvent& event);
 
     virtual LSL::OptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
     virtual const LSL::OptionsWrapper& CustomBattleOptions() const { return m_opt_wrap; }

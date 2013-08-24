@@ -1,33 +1,34 @@
 /*
  * <one line to give the program's name and a brief idea of what it does.>
  * Copyright (C) 2013  <copyright holder> <email>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #include "contentsearchresultslistctrl.h"
 #include "../utils/conversion.h"
+#include "../utils/globalevents.h"
 
 template<> SortOrder ContentSearchResultsListctrl::BaseType::m_sortorder = SortOrder();
 
 BEGIN_EVENT_TABLE( ContentSearchResultsListctrl, ContentSearchResultsListctrl::BaseType )
-  
+
 END_EVENT_TABLE()
 
-ContentSearchResultsListctrl::ContentSearchResultsListctrl(wxWindow* parent, wxWindowID id, const wxString& name, long int style, const wxPoint& pt, const wxSize& sz):
-  ContentSearchResultsListctrl::BaseType(parent, id, wxDefaultPosition, wxDefaultSize,
+ContentSearchResultsListctrl::ContentSearchResultsListctrl(wxWindow* parent, wxWindowID id, const wxString& /*name*/, long int /*style*/, const wxPoint& /*pt*/, const wxSize& /*sz*/):
+	ContentSearchResultsListctrl::BaseType(parent, id, wxDefaultPosition, wxDefaultSize,
 									   wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT, _T("ContentSearchResultsListctrl"),
 									   3, &ContentSearchResultsListctrl::CompareOneCrit)
 {
@@ -35,7 +36,7 @@ ContentSearchResultsListctrl::ContentSearchResultsListctrl(wxWindow* parent, wxW
   AddColumn(1,wxLIST_AUTOSIZE,_("Preview"),_("Preview"));
   AddColumn(2,wxLIST_AUTOSIZE,_("Type"),_("Type"));
   AddColumn(3,wxLIST_AUTOSIZE,_("Size"),_("Size"));
-  
+
   if ( m_sortorder.size() == 0 ) {
         m_sortorder[2].col = 2;
         m_sortorder[2].direction = 1;
@@ -63,13 +64,14 @@ int ContentSearchResultsListctrl::CompareOneCrit(DataType u1,DataType u2, int co
     case 3:
       return (u1->filesize - u2->filesize)*dir;
   }
+	return -1;
 }
 
-int ContentSearchResultsListctrl::GetItemColumnImage(long int item, long int column) const
+int ContentSearchResultsListctrl::GetItemColumnImage(long int /*item*/, long int /*column*/) const
 {
   return -1;
 }
-int ContentSearchResultsListctrl::GetItemImage(long int item) const
+int ContentSearchResultsListctrl::GetItemImage(long int /*item*/) const
 {
   return -1;
 }

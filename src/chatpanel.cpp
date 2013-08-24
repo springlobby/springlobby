@@ -113,8 +113,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
 	LoadLastLines();
 	_SetChannel( &chan );
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
-
-
+	ConnectGlobalEvent(this, GlobalEvent::OnLogin, wxObjectEventFunction(&ChatPanel::OnLogin));
 }
 
 
@@ -1263,7 +1262,7 @@ void ChatPanel::LoadLastLines()
     }
 }
 
-void ChatPanel::OnLogin( OnLoginSink<ChatPanel>::EventDataType /*data*/ )
+void ChatPanel::OnLogin( wxCommandEvent& /*data*/ )
 {
 	if ( m_type == CPT_Channel && m_channel )
 	{

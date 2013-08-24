@@ -3,7 +3,7 @@
 
 #include <wx/scrolwin.h>
 #include <vector>
-#include "../utils/isink.h"
+#include "../utils/globalevents.h"
 
 class Ui;
 class MapCtrl;
@@ -29,7 +29,7 @@ template <class PlaybackType>
 class PlaybackLoader;
 
 template <class PlaybackTraitsImp>
-class PlaybackTab : public wxScrolledWindow, public SpringTerminatedSink< PlaybackTab<PlaybackTraitsImp> >
+class PlaybackTab : public GlobalEvent, public wxScrolledWindow
 {
     protected:
         friend class BattleListFilter; //! WTF?
@@ -88,8 +88,8 @@ class PlaybackTab : public wxScrolledWindow, public SpringTerminatedSink< Playba
     void Deselected();
     void OnDeselect( wxListEvent& event );
 
-    void OnSpringTerminated( GlobalEvents::GlobalEventData data );
-	void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
+    void OnSpringTerminated( wxCommandEvent& data );
+	void OnUnitsyncReloaded( wxCommandEvent& data );
 
   protected:
     PlaybackListFilter<ThisType>* m_filter;
@@ -118,8 +118,6 @@ class PlaybackTab : public wxScrolledWindow, public SpringTerminatedSink< Playba
 #endif
 
     void AskForceWatch( PlaybackType& rep  ) const;
-
-	EventReceiverFunc<ThisType, GlobalEvents::GlobalEventData, &ThisType::OnUnitsyncReloaded> OnUsync_reload;
 
 	DECLARE_EVENT_TABLE()
 };

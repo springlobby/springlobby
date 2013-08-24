@@ -20,7 +20,7 @@
 
 #include "useractions.h"
 #include "helper/sortutil.h"
-#include "utils/isink.h"
+#include "utils/globalevents.h"
 #include "utils/mixins.hh"
 
 const wxEventType ListctrlDoSortEventType = wxNewEventType();
@@ -42,7 +42,7 @@ class SLTipWindow;
  * \tparam the type of stored data
  */
 template < class DataImp, class ListCtrlImp >
-class CustomVirtListCtrl : public ListBaseType, public OnQuitSink<CustomVirtListCtrl<DataImp,ListCtrlImp> >, public SL::NonCopyable
+class CustomVirtListCtrl : public ListBaseType, public SL::NonCopyable
 {
 public:
     typedef DataImp
@@ -320,7 +320,7 @@ public:
 
      void ReverseOrder();
 
-     void OnQuit( GlobalEvents::GlobalEventData data );
+     void OnQuit( wxCommandEvent& data );
 	 void StartTimer();
 	 void StopTimer();
 

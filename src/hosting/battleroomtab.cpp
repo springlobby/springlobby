@@ -385,6 +385,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
 }
 
 
@@ -917,7 +918,7 @@ void BattleRoomTab::OnUserLeft( User& user )
 }
 
 
-void BattleRoomTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void BattleRoomTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	if ( !m_battle ) return;
 	//m_minimap->UpdateMinimap();//should happen automagically now
