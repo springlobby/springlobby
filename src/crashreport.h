@@ -11,7 +11,7 @@
 #include <sstream>
 #include <wx/arrstr.h>
 
-#if ! wxUSE_STACKWALKER
+#if ! wxUSE_STACKWALKER && __WXMSW__
 	#include <windows.h>
 #endif
 
@@ -49,7 +49,7 @@ class CrashReport
       return c;
     }
 
-    #if wxUSE_STACKWALKER
+    #if wxUSE_STACKWALKER && !__WXMSW__
         void GenerateReport();
     #else
         void GenerateReport(EXCEPTION_POINTERS* p);
@@ -84,4 +84,3 @@ class CrashReport
     You should have received a copy of the GNU General Public License
     along with SpringLobby.  If not, see <http://www.gnu.org/licenses/>.
 **/
-

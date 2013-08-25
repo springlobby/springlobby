@@ -139,7 +139,7 @@ SpringDebugReport::SpringDebugReport()
 	AddText( _T("appname.txt"), GetAppName(), _T("Application Name"));
 }
 
-#if wxUSE_STACKWALKER
+#if wxUSE_STACKWALKER && !__WXMSW__
     void CrashReport::GenerateReport()
 #else
     void CrashReport::GenerateReport(EXCEPTION_POINTERS* p)
@@ -174,7 +174,7 @@ SpringDebugReport::SpringDebugReport()
     if ( wxFile::Exists( script_file ) )
         report->AddFile( script_file, _( "Last generated spring launching script" ) );
 
-#if wxUSE_STACKWALKER
+#if wxUSE_STACKWALKER && !__WXMSW__
     StackTrace stacktrace;
 	stacktrace.Walk( 3, 20 );
 	report->AddText( _T( "stacktrace.txt" ), _T("Call stack:\n") + stacktrace.GetStackTrace(), _( "StackTrace" ) );
