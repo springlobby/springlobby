@@ -51,7 +51,6 @@ void GlobalEvent::Send(wxCommandEvent event)
 void GlobalEvent::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func)
 {
 	assert(evthandler!=NULL);
-	assert(evthandler->m_eventsLocker != NULL);
 	std::list<wxEvtHandler*>& evtlist = evts[id];
 	for(auto evt: evtlist) {
 		if (evt == evthandler) {

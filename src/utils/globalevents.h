@@ -2,9 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H
 
 
-#define protected public
 #include <wx/event.h>
-#undef protected
 
 class wxEvtHandler;
 
