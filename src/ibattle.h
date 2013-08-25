@@ -394,6 +394,11 @@ public:
 
 		virtual long GetBattleRunningTime() const; // returns 0 if not started
 
+		virtual void SetEngineName(const wxString& name){ m_engine_name = name;}
+		virtual void SetEngineVersion(const wxString& version){ m_engine_version = version;}
+		virtual wxString GetEngineName() const{ return m_engine_name;}
+		virtual wxString GetEngineVersion() const{ return m_engine_version;}
+
 protected:
 
 		void LoadScriptMMOpts( const wxString& sectionname, const SL::PDataList& node );
@@ -445,6 +450,10 @@ protected:
     /// replay&savegame stuff
     wxString m_script;
     wxString m_playback_file_path;
+
+	wxString m_engine_name;
+	wxString m_engine_version;
+
     TeamVec m_parsed_teams;
     AllyVec m_parsed_allies;
     UserVec m_internal_user_list; /// to store users from savegame/replay

@@ -459,7 +459,7 @@ void TASServer::Login()
 	localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
-    wxFormat login_cmd( _T("%s %s %s %s %s\t%s\ta m sp") );
+    wxFormat login_cmd( _T("%s %s %s %s %s\t%s\ta m sp eb") );
     SendCmd ( _T("LOGIN"), (login_cmd % m_user % pass % GetHostCPUSpeed() % localaddr % Useragent() % protocol).str() );
 	m_id_transmission = true;
 }
@@ -619,7 +619,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally, type;
     bool haspass,lanmode = false;
     wxString hash;
-    wxString nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version, topic;
+    wxString nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version, topic, engineName, engineVersion;
     //NatType ntype;
     UserStatus cstatus;
     UTASClientStatus tasstatus;
@@ -694,14 +694,39 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         map = GetSentenceParam( params );
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
-        m_se->OnBattleOpened( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
-                              haspass, rank, hash, map, title, mod );
+        m_se->OnBattleOpenedEx( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
+                              haspass, rank, hash,wxString(), wxString(), map, title, mod );
         if ( nick == m_relay_host_bot )
         {
 		   GetBattle( id ).SetProxy( m_relay_host_bot );
            JoinBattle( id, sett().GetLastHostPassword() ); // autojoin relayed host battles
         }
     }
+	else if ( cmd == _T("BATTLEOPENEDEX") )
+	{
+		id = GetIntParam( params );
+		type = GetIntParam( params );
+		nat = GetIntParam( params );
+		nick = GetWordParam( params );
+		host = GetWordParam( params );
+		port = GetIntParam( params );
+		maxplayers = GetIntParam( params );
+		haspass = GetBoolParam( params );
+		rank = GetIntParam( params );
+		hash = MakeHashUnsigned( GetWordParam( params ) );
+		engineName = GetWordParam( params );
+		engineVersion = GetWordParam( params );
+		map = GetSentenceParam( params );
+		title = GetSentenceParam( params );
+		mod = GetSentenceParam( params );
+		m_se->OnBattleOpenedEx( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
+				haspass, rank, hash, engineName, engineVersion, map, title, mod );
+		if ( nick == m_relay_host_bot )
+		{
+			GetBattle( id ).SetProxy( m_relay_host_bot );
+			JoinBattle( id, sett().GetLastHostPassword() ); // autojoin relayed host battles
+		}
+	}
     else if ( cmd == _T("JOINEDBATTLE") )
     {
         id = GetIntParam( params );

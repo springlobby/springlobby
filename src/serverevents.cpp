@@ -229,10 +229,10 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 }
 
 
-void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
-                                   const wxString& host, int port, int maxplayers,
-                                   bool haspass, int rank, const wxString& maphash, const wxString& map,
-                                   const wxString& title, const wxString& mod )
+void ServerEvents::OnBattleOpenedEx( int id, BattleType type, NatType nat, const wxString& nick,
+									const wxString& host, int port, int maxplayers,
+									bool haspass, int rank, const wxString& maphash, const wxString& engineName, const wxString& engineVersion, const wxString& map,
+									const wxString& title, const wxString& mod )
 {
     wxLogDebugFunc( _T("") );
     try
@@ -254,6 +254,8 @@ void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const w
         battle.SetHostMap( map, maphash );
         battle.SetDescription( title );
         battle.SetHostMod( mod, wxEmptyString );
+		battle.SetEngineName(engineName);
+		battle.SetEngineVersion(engineVersion);
 
         if ( useractions().DoActionOnUser( UserActions::ActNotifBattle, user.GetNick() ) )
             actNotifBox( SL_MAIN_ICON, user.GetNick() + _(" opened battle ") + title );

@@ -48,9 +48,9 @@ class IServerEvents
 	virtual void OnUserStatus( const wxString& nick, UserStatus status ) = 0;
 	virtual void OnUserQuit( const wxString& nick ) = 0;
 
-	virtual void OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
+	virtual void OnBattleOpenedEx( int id, BattleType type, NatType nat, const wxString& nick,
 						 const wxString& host, int port, int maxplayers,
-						 bool haspass, int rank, const wxString& maphash, const wxString& map,
+						 bool haspass, int rank, const wxString& maphash, const wxString& engineVersion, const wxString& engineName, const wxString& map,
 						 const wxString& title, const wxString& mod ) = 0;
 
 	virtual void OnUserJoinedBattle( int battleid, const wxString& nick, const wxString& userScriptPassword ) = 0;
