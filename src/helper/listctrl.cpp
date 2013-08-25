@@ -2114,16 +2114,17 @@ BEGIN_EVENT_TABLE(wxListTextCtrlWrapper, wxEvtHandler)
     EVT_KILL_FOCUS     (wxListTextCtrlWrapper::OnKillFocus)
 END_EVENT_TABLE()
 
+
 wxListTextCtrlWrapper::wxListTextCtrlWrapper(wxListMainWindow *owner,
                                              wxTextCtrl *text,
-                                             size_t itemEdit)
-              : m_startValue(owner->GetItemText(itemEdit)),
-                m_itemEdited(itemEdit),
-    		m_owner(owner),
+                                             size_t itemEdit):
+		wxEvtHandler(),
+		m_startValue(owner->GetItemText(itemEdit)),
+		m_owner(owner),
 		m_text(text),
+		m_itemEdited(itemEdit),
 		m_finished(false),
-		m_aboutToFinish(false),
-		wxEvtHandler()
+		m_aboutToFinish(false)
 {
 
     wxRect rectLabel = owner->GetLineLabelRect(itemEdit);
