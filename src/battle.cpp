@@ -206,7 +206,7 @@ void Battle::LoadMapDefaults( const wxString& mapname )
 User& Battle::OnUserAdded( User& user )
 {
 		user = IBattle::OnUserAdded( user );
-		if ( &user == &GetMe() )
+		if ( &user == &GetMe() && (m_timer == NULL) )
 		{
 			 m_timer = new wxTimer(this,TIMER_ID);
 			 m_timer->Start( TIMER_INTERVAL );
