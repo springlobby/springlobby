@@ -87,8 +87,8 @@ bool UpdaterApp::OnInit()
     wxLogMessage( _T("m_exe_to_update ") + m_exe_to_update);
     wxLogMessage( _T("m_version ") + m_version);
 
-#if wxUSE_ON_FATAL_EXCEPTION && !defined(__WXMAC__)
-    if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
+#if wxUSE_ON_FATAL_EXCEPTION
+    wxHandleFatalExceptions( true );
 #endif
 
     //this needs to called _before_ mainwindow instance is created
@@ -141,7 +141,7 @@ void UpdaterApp::OnFatalException()
 
 
 //! @brief Is called every 1/10 seconds to update statuses
-void UpdaterApp::OnTimer( wxTimerEvent& event )
+void UpdaterApp::OnTimer( wxTimerEvent& /*event*/ )
 {
 
 }

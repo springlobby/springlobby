@@ -17,5 +17,6 @@ TARGET_LINK_LIBRARIES(springlobby_updater
 		lsl-unitsync
 		${CURL_LIBRARIES}
 		${CURL_LINKFLAGS}
+		${CMAKE_DL_LIBS}
 	)
 install(TARGETS springlobby_updater RUNTIME DESTINATION .)

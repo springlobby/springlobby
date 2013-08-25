@@ -10,6 +10,7 @@ class wxEvtHandler;
 
 class GlobalEvent{
 public:
+	static const wxEventType OnDownloadComplete;
 	static const wxEventType OnUnitsyncFirstTimeLoad;
 	static const wxEventType OnUnitsyncReloaded;
 	static const wxEventType OnSpringTerminated;

@@ -69,10 +69,9 @@ END_EVENT_TABLE()
   *
   * @todo: document this function
   */
- UpdaterMainwindow::UpdaterMainwindow( const wxString& rev_string )
-    : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) ),
+ UpdaterMainwindow::UpdaterMainwindow( const wxString& rev_string ):
+	wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) )
 //                wxMINIMIZE_BOX | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN  ),
-    m_onDownloadComplete( this, &GetGlobalEventSender( GlobalEvents::UpdateFinished) )
 {
     SetIcon( wxIcon(springlobby12x12_xpm) );
 
@@ -85,6 +84,7 @@ END_EVENT_TABLE()
     Layout();
     Center();
     CustomMessageBoxBase::setLobbypointer( this );
+	ConnectGlobalEvent(this, GlobalEvent::OnDownloadComplete, wxObjectEventFunction(&UpdaterMainwindow::OnDownloadComplete));
 }
 
 /** @brief OnClose
@@ -101,7 +101,7 @@ void UpdaterMainwindow::OnClose(wxCloseEvent&)
     }
 }
 
-void UpdaterMainwindow::OnDownloadComplete( GlobalEvents::GlobalEventData /*data*/ )
+void UpdaterMainwindow::OnDownloadComplete( wxCommandEvent&/*data*/ )
 {
     freeStaticBox();
     Destroy();

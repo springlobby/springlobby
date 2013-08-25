@@ -4,6 +4,7 @@
 #include <map>
 
 
+const wxEventType GlobalEvent::OnDownloadComplete = wxNewEventType();
 const wxEventType GlobalEvent::OnUnitsyncFirstTimeLoad = wxNewEventType();
 const wxEventType GlobalEvent::OnUnitsyncReloaded = wxNewEventType();
 const wxEventType GlobalEvent::OnSpringTerminated = wxNewEventType();
