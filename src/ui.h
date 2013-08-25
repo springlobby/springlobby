@@ -140,6 +140,7 @@ class Ui : public wxEvtHandler, public GlobalEvent, public SL::NonCopyable
     void OnMainWindowDestruct();
 
     void OnRing( const wxString& from );
+	void OnQuit(wxCommandEvent& data);
 
     //! ask to download missing map, return true if download attempted
     bool OnPresetRequiringMap( const wxString& mapname );

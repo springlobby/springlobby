@@ -221,8 +221,6 @@ bool SpringLobbyApp::OnInit()
     m_timer->Start( TIMER_INTERVAL );
 
 	ui().mw().SetLogWin( loggerwin, logchain );
-	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&SpringLobbyApp::OnQuit));
-
 	return true;
 }
 
@@ -529,5 +527,6 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 void SpringLobbyApp::OnQuit( wxCommandEvent& /*data*/ )
 {
 	m_timer->Stop();
+	GlobalEvent::Send(GlobalEvent::OnQuit);
 }
 

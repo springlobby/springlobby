@@ -87,6 +87,7 @@ Ui::Ui() :
 	m_serv = new TASServer();
 	serverSelector().SetCurrentServer( m_serv );
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&Ui::OnSpringTerminated));
+	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&Ui::OnQuit));
 }
 
 Ui::~Ui()
@@ -1419,3 +1420,10 @@ void Ui::CheckForUpdates()
     */
 }
 
+
+void Ui::OnQuit(wxCommandEvent& /*data*/)
+{
+	Disconnect();
+	delete m_serv;
+	m_serv = NULL;
+}

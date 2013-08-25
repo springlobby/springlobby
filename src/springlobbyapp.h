@@ -2,7 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_SPRINGLOBBYAPP_H
 
 #include <wx/app.h>
-#include "utils/globalevents.h"
 
 class wxTimer;
 class wxTimerEvent;
@@ -11,7 +10,7 @@ class wxLocale;
 class wxTranslationHelper;
 
 //! @brief SpringLobby wxApp
-class SpringLobbyApp : public wxApp, public GlobalEvent
+class SpringLobbyApp : public wxApp
 {
   public:
     SpringLobbyApp();
