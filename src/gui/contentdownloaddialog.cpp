@@ -62,11 +62,12 @@ SearchThread::SearchThread(ContentDownloadDialog * content_dialog,wxString searc
 
 void* SearchThread::Entry()
 {
+
+//FIXME: convert unicode to IRI encoding
+/*
   for ( unsigned char c = 0; c < 255; c++ )
   {
     char str[2];
-
-
     if ( (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') )
     {
       continue;
@@ -77,11 +78,16 @@ void* SearchThread::Entry()
       c = '%';
     str[0] = c;
     str[1] = 0x00;
-    wxString escaped = wxString::Format(_T("%%%02x"),((int)c));
-    m_search_query.Replace(wxString(str,wxMBConvUTF8()),escaped,true);
+    const wxString escaped = wxString::Format(_T("%%%02x"),((int)c));
+	const wxString toReplace = wxString(str,wxMBConvUTF8());
+	assert(!escaped.empty());
+	assert(!toReplace.empty());
+    m_search_query.Replace(toReplace,escaped,true);
     if ( c == '%' )
       c = 0;
   }
+*/
+
 //   std::cout << "Escaped search query: " << m_search_query.ToAscii().data() << std::endl;
   wxHTTP get;
   get.SetTimeout(10);
