@@ -11,9 +11,7 @@ class UpdaterClass : public wxEvtHandler
     ~UpdaterClass();
     void CheckForUpdates();
 
-#ifdef __WXMSW__
     bool StartUpdate( const wxString& latestVersion, const wxString& exe_to_update );
-#endif
     void OnDownloadEvent( wxCommandEvent& event );
 
 protected:

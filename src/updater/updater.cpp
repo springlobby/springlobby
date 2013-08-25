@@ -37,7 +37,6 @@ UpdaterClass::~UpdaterClass()
     delete m_http_thread;
 }
 
-#ifdef __WXMSW__
 bool UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& exe_to_update )
 {
     wxString sep = wxFileName::GetPathSeparator();
@@ -62,7 +61,6 @@ bool UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& e
     //could prolly use some test on the thread here instead
     return true;
 }
-#endif
 
 
 //all messageboxes need to be modal, updater closes immeadiately when receiving the UpdateFinished event

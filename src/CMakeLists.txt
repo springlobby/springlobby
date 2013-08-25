@@ -317,8 +317,8 @@ mylink( ${EXTRA_LIB_DIRS} ${link_directories} )
 
 IF(WIN32)
 	set(springlobby_RC_FILE springlobby.rc)
-	add_subdirectory(updater)
 ENDIF()
+add_subdirectory(updater)
 
 
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
