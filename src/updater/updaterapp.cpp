@@ -156,10 +156,10 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
 
     wxCmdLineEntryDesc cmdLineDesc[] =
     {
-        { wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+		{ wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
 		{ wxCMD_LINE_OPTION, STR("f"), STR("target-exe"),  _("the SpringLobby executeable to be updated"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_MANDATORY | wxCMD_LINE_NEEDS_SEPARATOR },
 		{ wxCMD_LINE_OPTION, STR("r"), STR("target-rev"),  _("the SpringLobby revision to update to"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_MANDATORY | wxCMD_LINE_NEEDS_SEPARATOR },
-        { wxCMD_LINE_NONE }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
+		{ wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, 0 }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
 
     parser.SetDesc( cmdLineDesc );
