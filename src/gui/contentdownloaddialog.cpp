@@ -173,7 +173,7 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
   }
   const wxJSONInternalArray * a = root.AsArray();
   m_search_res_w->Clear();
-  for ( int i = 0; i < a->GetCount(); i++ )
+  for ( unsigned i = 0; i < a->GetCount(); i++ )
   {
     wxJSONValue val = a->Item(i);
     wxString category = val[_("category")].AsString();
