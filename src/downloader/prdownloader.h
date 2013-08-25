@@ -25,6 +25,7 @@
 #include <lslutils/thread.h>
 
 #include "lib/src/Downloader/Download.h"
+#include "utils/globalevents.h"
 
 class IDownloader;
 
@@ -65,7 +66,7 @@ private:
     int m_result_size;
 };
 
-class PrDownloader
+class PrDownloader: public wxEvtHandler, public GlobalEvent
 {
 public:
     PrDownloader();
@@ -81,6 +82,8 @@ public:
     //! returns true if name found and added to dl list
     int GetWidget( const std::string& name );
 	void SetIngameStatus( bool ingame );
+	void OnSpringStarted(wxCommandEvent& data);
+	void OnSpringTerminated(wxCommandEvent& data);
 
 private:
     //! searches given loaders for filename and pushes fitting workitems into dl_thread

@@ -31,7 +31,7 @@ extern const wxEventType torrentSystemStatusUpdateEvt;
 #include "utils/mixins.hh"
 
 //! @brief UI main class
-class Ui : public SL::NonCopyable
+class Ui : public wxEvtHandler, public GlobalEvent, public SL::NonCopyable
 {
   public:
 
@@ -133,8 +133,7 @@ class Ui : public SL::NonCopyable
     void OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& msg );
 //    void OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg );
 
-    void OnSpringStarting();
-    void OnSpringTerminated( long exit_code );
+    void OnSpringTerminated( wxCommandEvent& data);
 
     void OnAcceptAgreement( const wxString& agreement );
 
@@ -172,7 +171,6 @@ class Ui : public SL::NonCopyable
 
     bool m_first_update_trigger;
 
-    bool m_ingame;
 	bool m_recconecting_wait;
 
 	EventReceiverFunc<Ui, BattleEvents::BattleEventData, &Ui::OnBattleInfoUpdated>

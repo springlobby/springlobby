@@ -83,8 +83,9 @@ void SearchItem::Run()
 }
 
 
-PrDownloader::PrDownloader()
-    : m_dl_thread(new LSL::WorkerThread())
+PrDownloader::PrDownloader():
+	wxEvtHandler(),
+	m_dl_thread(new LSL::WorkerThread())
 {
     IDownloader::Initialize(&downloadsObserver());
     //UpdateSettings();
@@ -93,6 +94,8 @@ PrDownloader::PrDownloader()
     m_game_loaders.push_back(plasmaDownload);
     m_map_loaders.push_back(httpDownload);
     m_map_loaders.push_back(plasmaDownload);
+	ConnectGlobalEvent(this, GlobalEvent::OnSpringStarted, wxObjectEventFunction(&PrDownloader::OnSpringStarted));
+	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&PrDownloader::OnSpringTerminated));
 }
 
 PrDownloader::~PrDownloader()
@@ -129,9 +132,16 @@ int PrDownloader::GetGame(const std::string &name)
     return Get(m_game_loaders, name, IDownload::CAT_GAMES);
 }
 
-void PrDownloader::SetIngameStatus(bool /*ingame*/)
+void PrDownloader::OnSpringStarted(wxCommandEvent& /*data*/)
 {
+	//FIXME: pause downloads
 }
+
+void PrDownloader::OnSpringTerminated(wxCommandEvent& /*data*/)
+{
+	//FIXME: resume downloads
+}
+
 
 int PrDownloader::Get(std::list<IDownloader*> loaders, const std::string &name, IDownload::category cat)
 {

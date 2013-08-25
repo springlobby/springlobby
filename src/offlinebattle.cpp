@@ -29,7 +29,6 @@ m_me( User(_T("Spectator")) )
 void OfflineBattle::StartSpring()
 {
 	spring().Run(*this);
-	ui().OnSpringStarting();
 }
 
 OfflineBattle::OfflineBattle ( const OfflineBattle& other )

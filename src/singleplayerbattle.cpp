@@ -89,7 +89,6 @@ void SinglePlayerBattle::Update( const wxString& Tag )
 void SinglePlayerBattle::StartSpring()
 {
 	spring().Run( *this );
-	ui().OnSpringStarting();
 }
 
 

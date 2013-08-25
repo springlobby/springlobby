@@ -72,13 +72,13 @@ Ui& ui()
 }
 
 Ui::Ui() :
+		wxEvtHandler(),
 		m_serv(0),
 		m_main_win(0),
 		m_con_win(0),
 		m_reconnect_dialog(0),
 		m_upd_counter_torrent(0),
 		m_first_update_trigger(true),
-		m_ingame(false),
 		m_recconecting_wait(false),
 		m_battle_info_updatedSink( this, &BattleEvents::GetBattleEventSender( ( BattleEvents::BattleInfoUpdate ) ) )
 {
@@ -86,6 +86,7 @@ Ui::Ui() :
 	CustomMessageBoxBase::setLobbypointer(m_main_win);
 	m_serv = new TASServer();
 	serverSelector().SetCurrentServer( m_serv );
+	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&Ui::OnSpringTerminated));
 }
 
 Ui::~Ui()
@@ -1162,17 +1163,9 @@ void Ui::OnSaidBattle( IBattle& /*battle*/, const wxString& nick, const wxString
     catch (...) {}
 }
 
-void Ui::OnSpringStarting()
+void Ui::OnSpringTerminated( wxCommandEvent& data  )
 {
-  m_ingame = true;
-  prDownloader().SetIngameStatus( m_ingame );
-}
-
-
-void Ui::OnSpringTerminated( long exit_code )
-{
-    m_ingame = false;
-	prDownloader().SetIngameStatus( m_ingame );
+	const int exit_code  = data.GetInt();
 
     if ( !m_serv ) return;
 
@@ -1188,7 +1181,7 @@ void Ui::OnSpringTerminated( long exit_code )
         }
     } catch ( assert_exception ){}
 
-	if ( false && exit_code ) { // disabled for now for stability
+	if (exit_code != 0) {
 		#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 			SpringDebugReport report;
 			if ( wxDebugReportPreviewStd().Show( report ) )
