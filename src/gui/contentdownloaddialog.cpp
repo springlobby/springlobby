@@ -93,7 +93,7 @@ void* SearchThread::Entry()
   get.SetTimeout(10);
   get.Connect(_("api.springfiles.com"));
   const wxString query = wxFormat(_("/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"))  % m_search_query % m_search_query;
-  wxInputStream * httpStream = get.GetInputStream(wxString(query));
+  wxInputStream * httpStream = get.GetInputStream(wxString(query, wxMBConvUTF8()));
   wxString res;
   if ( get.GetError() == wxPROTO_NOERR )
   {
@@ -203,9 +203,12 @@ void ContentDownloadDialog::OnListDownload(wxListEvent& event)
 {
 
     const ContentSearchResult * res = m_search_res_w->GetDataFromIndex(event.GetIndex());
-    if ( res->type == _("game") )
+    if ( res->type == _("game") ) {
       ui().DownloadMod(wxEmptyString,res->name);
-    else if ( res->type == _("map") )
+    } else if ( res->type == _("map") ) {
       ui().DownloadMap(wxEmptyString,res->name);
+	} else {
+		ui().DownloadEngine(res->type,res->name);
+	}
 }
 

@@ -127,6 +127,20 @@ int PrDownloader::GetMap(const std::string &name)
     return Get(m_map_loaders, name, IDownload::CAT_MAPS);
 }
 
+int PrDownloader::GetEngine(const std::string& platform, const std::string &name)
+{
+	if (platform == "engine_linux") {
+		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_LINUX);
+	} else if (platform == "engine_linux64") {
+		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_LINUX64);
+	} else if (platform == "engine_windows") {
+		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_WINDOWS);
+	} else if (platform == "engine_macosx") {
+		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_MACOSX);
+	}
+	return -1;
+}
+
 int PrDownloader::GetGame(const std::string &name)
 {
     return Get(m_game_loaders, name, IDownload::CAT_GAMES);

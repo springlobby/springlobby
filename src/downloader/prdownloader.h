@@ -81,6 +81,8 @@ public:
     int GetMap( const std::string& name );
     //! returns true if name found and added to dl list
     int GetWidget( const std::string& name );
+    //! returns true if name found and added to dl list
+	int GetEngine(const std::string& platform, const std::string &name);
 	void SetIngameStatus( bool ingame );
 	void OnSpringStarted(wxCommandEvent& data);
 	void OnSpringTerminated(wxCommandEvent& data);

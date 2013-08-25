@@ -351,6 +351,11 @@ void Ui::DownloadMod( const wxString& /*hash*/, const wxString& name )
     prDownloader().GetGame( STD_STRING(name) );
 }
 
+void Ui::DownloadEngine(const wxString&  platform, const wxString& name)
+{
+	prDownloader().GetEngine(STD_STRING(platform), STD_STRING(name));
+}
+
 //void Ui::DownloadFileWebsite( const wxString& name )
 //{
 //	wxString newname = name;
