@@ -36,6 +36,7 @@ BEGIN_EVENT_TABLE(Battle, wxEvtHandler)
 END_EVENT_TABLE()
 
 Battle::Battle( Server& serv, int id ) :
+		IBattle(),
         m_serv(serv),
         m_ah(*this),
         m_autolock_on_start(false),
