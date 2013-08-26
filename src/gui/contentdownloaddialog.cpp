@@ -60,41 +60,35 @@ SearchThread::SearchThread(ContentDownloadDialog * content_dialog,wxString searc
   m_search_query = searchquery;
 }
 
+// convert a string to IRI: https://en.wikipedia.org/wiki/Internationalized_resource_identifier
+static wxString ConvToIRI(const wxString& str)
+{
+	std::string utf8(str.mb_str(wxMBConvUTF8()));
+	wxString escaped;
+	for (unsigned i=0; i<utf8.length(); i++) {
+		const unsigned char c = utf8[i];
+		printf("%c %d\n", c, (int)c);
+		if ( (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') ) {
+			escaped.append(c, 1);
+		} else/* if (i+1<utf8.length())*/ {
+			escaped.append(wxString::Format(_T("%%%02x"),c));
+		}
+		//FIXME: this function is incomplete! tested only with german umlauts
+	}
+	return escaped;
+}
+
 void* SearchThread::Entry()
 {
+	m_search_query = ConvToIRI(m_search_query);
 
-//FIXME: convert unicode to IRI encoding
-/*
-  for ( unsigned char c = 0; c < 255; c++ )
-  {
-    char str[2];
-    if ( (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') )
-    {
-      continue;
-    }
-    if ( c == '%' )
-      continue;
-    if ( c == 0 )
-      c = '%';
-    str[0] = c;
-    str[1] = 0x00;
-    const wxString escaped = wxString::Format(_T("%%%02x"),((int)c));
-	const wxString toReplace = wxString(str,wxMBConvUTF8());
-	assert(!escaped.empty());
-	assert(!toReplace.empty());
-    m_search_query.Replace(toReplace,escaped,true);
-    if ( c == '%' )
-      c = 0;
-  }
-*/
 
 //   std::cout << "Escaped search query: " << m_search_query.ToAscii().data() << std::endl;
   wxHTTP get;
   get.SetTimeout(10);
   get.Connect(_("api.springfiles.com"));
   const wxString query = wxFormat(_("/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"))  % m_search_query % m_search_query;
-  const wxString iri = wxString(query.mb_str(), wxMBConvUTF8());
-  wxInputStream * httpStream = get.GetInputStream(iri);
+  wxInputStream * httpStream = get.GetInputStream(query);
   wxString res;
   if ( get.GetError() == wxPROTO_NOERR )
   {
