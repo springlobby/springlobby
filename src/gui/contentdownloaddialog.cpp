@@ -93,7 +93,8 @@ void* SearchThread::Entry()
   get.SetTimeout(10);
   get.Connect(_("api.springfiles.com"));
   const wxString query = wxFormat(_("/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"))  % m_search_query % m_search_query;
-  wxInputStream * httpStream = get.GetInputStream(wxString(query, wxMBConvUTF8()));
+  const wxString iri = wxString(query.mb_str(), wxMBConvUTF8());
+  wxInputStream * httpStream = get.GetInputStream(iri);
   wxString res;
   if ( get.GetError() == wxPROTO_NOERR )
   {
