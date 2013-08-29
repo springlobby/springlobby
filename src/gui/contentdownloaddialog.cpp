@@ -196,14 +196,7 @@ void ContentDownloadDialog::OnCloseButton(wxCommandEvent& /*event*/)
 
 void ContentDownloadDialog::OnListDownload(wxListEvent& event)
 {
-
-    const ContentSearchResult * res = m_search_res_w->GetDataFromIndex(event.GetIndex());
-    if ( res->type == _("game") ) {
-      ui().DownloadMod(wxEmptyString,res->name);
-    } else if ( res->type == _("map") ) {
-      ui().DownloadMap(wxEmptyString,res->name);
-	} else {
-		ui().DownloadEngine(res->type,res->name);
-	}
+	const ContentSearchResult * res = m_search_res_w->GetDataFromIndex(event.GetIndex());
+	ui().Download(res->type, res->name, wxEmptyString);
 }
 

@@ -73,9 +73,7 @@ class Ui : public wxEvtHandler, public GlobalEvent, public SL::NonCopyable
 
     void Quit();
 
-    void DownloadMap( const wxString& hash, const wxString& name );
-    void DownloadMod( const wxString& hash, const wxString& name );
-	void DownloadEngine(const wxString& platform, const wxString& name);
+	void Download( const wxString& category, const wxString& name, const wxString& hash );
 
 	bool Ask( const wxString& heading, const wxString& question ) const;
 	bool AskText( const wxString& heading, const wxString& question, wxString& answer, long style = wxOK | wxCANCEL | wxCENTRE );

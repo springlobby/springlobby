@@ -102,7 +102,7 @@ void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
-        ui().DownloadMap( battle.GetHostMapHash(), battle.GetHostMapName() );
+        ui().Download( _T("map"), battle.GetHostMapName(), battle.GetHostMapHash() );
     }
 }
 
@@ -111,7 +111,7 @@ void PlaybackListCtrl<PlaybackType>::OnDLMod( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
-        ui().DownloadMod( battle.GetHostModHash(), battle.GetHostModName() );
+        ui().Download( _T("map"), battle.GetHostModName(), battle.GetHostModHash() );
     }
 }
 

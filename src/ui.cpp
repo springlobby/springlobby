@@ -339,21 +339,12 @@ void Ui::Quit()
         m_con_win->Close();
 }
 
-void Ui::DownloadMap( const wxString& /*hash*/, const wxString& name )
+void Ui::Download( const wxString& category, const wxString& name, const wxString& hash )
 {
-    const std::string sname = STD_STRING(name);
-    int count = prDownloader().GetMap(sname);
-    assert( count > 0 );
-}
-
-void Ui::DownloadMod( const wxString& /*hash*/, const wxString& name )
-{
-    prDownloader().GetGame( STD_STRING(name) );
-}
-
-void Ui::DownloadEngine(const wxString&  platform, const wxString& name)
-{
-	prDownloader().GetEngine(STD_STRING(platform), STD_STRING(name));
+	const std::string scat = STD_STRING(category);
+	const std::string sname = STD_STRING(name);
+	int count = prDownloader().GetDownload(scat, sname);
+	assert( count > 0 );
 }
 
 //void Ui::DownloadFileWebsite( const wxString& name )
@@ -1308,7 +1299,7 @@ bool Ui::OnPresetRequiringMap( const wxString& mapname )
                         _("Map missing"),
                         wxYES_NO ) )
     {
-        DownloadMap( _T("") , mapname );
+        Download( _T("map") , mapname, _T("") );
         return true;
     }
     return false;

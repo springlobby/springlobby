@@ -76,13 +76,7 @@ public:
 	void UpdateSettings();
     void RemoveTorrentByName( const std::string& name );
     //! returns true if name found and added to dl list
-    int GetGame( const std::string& name );
-    //! returns true if name found and added to dl list
-    int GetMap( const std::string& name );
-    //! returns true if name found and added to dl list
-    int GetWidget( const std::string& name );
-    //! returns true if name found and added to dl list
-	int GetEngine(const std::string& platform, const std::string &name);
+    int GetDownload( const std::string& category, const std::string& name );
 	void SetIngameStatus( bool ingame );
 	void OnSpringStarted(wxCommandEvent& data);
 	void OnSpringTerminated(wxCommandEvent& data);

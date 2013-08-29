@@ -435,7 +435,7 @@ void BattleListTab::DoJoin( Battle& battle )
                                _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 			wxString modhash = battle.GetHostModHash();
 			wxString modname = battle.GetHostModName();
-			ui().DownloadMod ( modhash, modname );
+			ui().Download ( _T("game"), modname, modhash);
 		}
         else
             return;
@@ -447,7 +447,7 @@ void BattleListTab::DoJoin( Battle& battle )
                                _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 			wxString maphash = battle.GetHostMapHash();
 			wxString mapname = battle.GetHostMapName();
-			ui().DownloadMap ( maphash, mapname );
+			ui().Download ( _T("map"), mapname, maphash);
 		}
         else
             return;

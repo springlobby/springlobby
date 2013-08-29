@@ -221,7 +221,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        ui().DownloadMap( dt->GetHostMapHash(), dt->GetHostMapName() );
+        ui().Download( _T("map"), dt->GetHostMapName(), dt->GetHostMapHash() );
     }
 }
 
@@ -229,7 +229,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        ui().DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
+        ui().Download(_T("game"), dt->GetHostModName(), dt->GetHostModHash() );
     }
 }
 

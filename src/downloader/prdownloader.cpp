@@ -117,33 +117,22 @@ void PrDownloader::RemoveTorrentByName(const std::string &/*name*/)
 {
 }
 
-int PrDownloader::GetWidget(const std::string &/*name*/)
+int PrDownloader::GetDownload(const std::string& category, const std::string &name)
 {
-    return 0;//Get(m_map_loaders, name, IDownload::CAT_LUAWIDGETS);
-}
-
-int PrDownloader::GetMap(const std::string &name)
-{
-    return Get(m_map_loaders, name, IDownload::CAT_MAPS);
-}
-
-int PrDownloader::GetEngine(const std::string& platform, const std::string &name)
-{
-	if (platform == "engine_linux") {
+	if (category == "map") {
+		return Get(m_map_loaders, name, IDownload::CAT_MAPS);
+	} else if (category == "game") {
+		return Get(m_game_loaders, name, IDownload::CAT_GAMES);
+	} else if (category == "engine_linux") {
 		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_LINUX);
-	} else if (platform == "engine_linux64") {
+	} else if (category == "engine_linux64") {
 		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_LINUX64);
-	} else if (platform == "engine_windows") {
+	} else if (category == "engine_windows") {
 		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_WINDOWS);
-	} else if (platform == "engine_macosx") {
+	} else if (category == "engine_macosx") {
 		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_MACOSX);
 	}
 	return -1;
-}
-
-int PrDownloader::GetGame(const std::string &name)
-{
-    return Get(m_game_loaders, name, IDownload::CAT_GAMES);
 }
 
 void PrDownloader::OnSpringStarted(wxCommandEvent& /*data*/)
