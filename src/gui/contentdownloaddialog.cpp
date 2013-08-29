@@ -67,11 +67,10 @@ static wxString ConvToIRI(const wxString& str)
 	wxString escaped;
 	for (unsigned i=0; i<utf8.length(); i++) {
 		const unsigned char c = utf8[i];
-		printf("%c %d\n", c, (int)c);
 		if ( (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') ) {
-			escaped.append(c, 1);
+			escaped.append(wxChar(c));
 		} else/* if (i+1<utf8.length())*/ {
-			escaped.append(wxString::Format(_T("%%%02x"),c));
+			escaped.append(wxString::Format(_T("%%%02x"),wxChar(c)));
 		}
 		//FIXME: this function is incomplete! tested only with german umlauts
 	}
@@ -80,14 +79,14 @@ static wxString ConvToIRI(const wxString& str)
 
 void* SearchThread::Entry()
 {
-	m_search_query = ConvToIRI(m_search_query);
+	const wxString searchescaped = ConvToIRI(m_search_query);
 
 
 //   std::cout << "Escaped search query: " << m_search_query.ToAscii().data() << std::endl;
   wxHTTP get;
   get.SetTimeout(10);
   get.Connect(_("api.springfiles.com"));
-  const wxString query = wxFormat(_("/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"))  % m_search_query % m_search_query;
+  const wxString query = wxFormat(_("/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"))  % searchescaped % searchescaped;
   wxInputStream * httpStream = get.GetInputStream(query);
   wxString res;
   if ( get.GetError() == wxPROTO_NOERR )
