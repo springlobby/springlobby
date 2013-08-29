@@ -143,6 +143,9 @@ class BattleRoomTab : public wxScrolledWindow, public GlobalEvent
 
 		wxBitmapComboBox* m_side_sel;
 
+		wxStaticText* m_ally_setup_lbl;
+
+
 		MapCtrl * m_minimap;
         BattleRoomDownloads* m_downloads;
 

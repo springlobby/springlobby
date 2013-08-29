@@ -180,6 +180,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
                     {
                         m_righ_side->Add( m_players, 1, wxEXPAND );
                     }
+		m_ally_setup_lbl = new wxStaticText( m_right_side_window, -1, _( "Setup: " ) );
+		m_righ_side->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+
+
 
                     m_right_side_window->SetSizer( m_righ_side );
                 }
@@ -448,7 +452,7 @@ void BattleRoomTab::UpdateBattleInfo()
 }
 
 void BattleRoomTab::PrintAllySetup()
-{/*
+{
 	wxString setupstring;
 	if ( m_battle )
 	{
@@ -475,7 +479,7 @@ void BattleRoomTab::PrintAllySetup()
 		else setupstring += wxFormat(_("%d way FFA") ) % previousalliancesize;
 	}
 	m_ally_setup_lbl->SetLabel( wxFormat( _( "Setup: %s" ) ) % setupstring );
-	Layout();*/
+	Layout();
 }
 
 void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
