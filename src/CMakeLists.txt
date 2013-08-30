@@ -36,7 +36,7 @@ endif()
 
 FIND_PACKAGE(Boost 1.42.0 COMPONENTS thread system REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-add_to_global(link_directories ${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
+#add_to_global(link_directories ${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
 
 ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 
@@ -129,7 +129,7 @@ endif()
 
 
 ADD_DEFINITIONS( ${CURL_CFLAGS} )
-add_to_global(link_directories  ${CURL_LIB_DIRS} )
+#add_to_global(link_directories  ${CURL_LIB_DIRS} )
 INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
 
 #----------------------------------------------------------------------------------------------------
@@ -313,7 +313,7 @@ add_subdirectory(springsettings)
 
 set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
 
-mylink( ${EXTRA_LIB_DIRS} ${link_directories} ) 
+#mylink( ${EXTRA_LIB_DIRS} ${link_directories} )
 
 IF(WIN32)
 	set(springlobby_RC_FILE springlobby.rc)

@@ -32,11 +32,11 @@ function (add_to_global varname )
     foreach (_src ${ARGN})
 		list (APPEND tmp "${_src}")
     endforeach()
-	set (${varname} ${${varname}} ${ARGN} CACHE INTERNAL "${varname}" FORCE)
+	set (${varname} ${${varname}} ${ARGN})
 endfunction()
 
 function (clear varname)
-	set (${varname} "" CACHE INTERNAL "" FORCE)
+	set (${varname} "")
 endfunction()
 
 macro(mylink var)
