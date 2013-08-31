@@ -102,7 +102,7 @@ wxPathList PathlistFactory::AdditionalSearchPaths(wxPathList &pl)
 
 // search in ~/.spring/engine/ , too
 #ifdef __WXMSW__
-	const wxString userdir = wxFileName::GetDocumentsDir() + sep + _T("My Games") + sep + _T("Spring") + sep + _T("engine");;
+	const wxString userdir = sp.GetDocumentsDir() + sep + _T("My Games") + sep + _T("Spring") + sep + _T("engine");;
 #else
 	const wxString userdir = wxFileName::GetHomeDir() + sep + _T(".spring") + sep + _T("engine");
 #endif
