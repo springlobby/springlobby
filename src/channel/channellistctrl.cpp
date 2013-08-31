@@ -18,13 +18,7 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID /*unused*/, const 
 													wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
 													_T("ChannelListCtrl"), 3, &ChannelListctrl::CompareOneCrit)
 {
-#if defined(__WXMSW__)
-    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
-#elif defined(__WXMAC__)
-    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
-#else
-    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
-#endif
+	const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
 
     AddColumn( 0, widths[0], _("Channel"), _T("Channelname") );
     AddColumn( 1, widths[1], _("# users"), _T("Users") );

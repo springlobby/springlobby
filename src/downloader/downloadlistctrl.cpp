@@ -29,9 +29,7 @@ BEGIN_EVENT_TABLE( DownloadListCtrl, DownloadListCtrl::BaseType )
 	EVT_MENU					( TLIST_CANCEL, DownloadListCtrl::OnCancel )
 	EVT_MENU					( TLIST_RETRY, DownloadListCtrl::OnRetry )
 	#if wxUSE_TIPWINDOW
-	#ifndef __WXMSW__ //disables tooltips on win
 	EVT_MOTION( DownloadListCtrl::OnMouseMotion )
-	#endif
 	#endif
 END_EVENT_TABLE()
 

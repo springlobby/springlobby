@@ -26,10 +26,6 @@
 #include <wx/checkbox.h>
 #include <wx/tokenzr.h>
 
-#ifdef __WXMSW__
-#include <wx/msw/registry.h>
-#endif
-
 #include "nonportable.h"
 #include "chatoptionstab.h"
 #include <lslunitsync/unitsync.h>

@@ -25,9 +25,6 @@
 #include <wx/scrolbar.h>        // added for scroll bar powers
 #include <wx/log.h>
 
-#ifdef __WXMSW__
-#include <wx/msw/registry.h>
-#endif
 
 #include "nonportable.h"
 #include "ui.h"
@@ -68,10 +65,10 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 	m_forcebundle_chkbox = new wxCheckBox( this, SPRING_FORCEBUNDLE, _("Use the Spring version in the current bundle"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 	m_forcebundle_chkbox->SetValue( sett().GetUseSpringPathFromBundle() );
 	if (!sett().IsInsideSpringBundle()) m_forcebundle_chkbox->Disable();
-#ifndef __WXMSW__
+
 	m_dontsearch_chkbox->Disable();
 	m_oldlaunch_chkbox->Disable();
-#endif
+
 	if (!sett().GetBundleMode()) m_forcebundle_chkbox->Disable();
 	/* ================================
 	 * Spring executable

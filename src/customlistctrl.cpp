@@ -61,13 +61,6 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
 
 void CustomListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
 {
-//#ifdef __WXMSW__ //this fixes header text misalignement
-//    item.m_mask = wxLIST_MASK_FORMAT | wxLIST_MASK_TEXT;
-//    if ( item.m_image != icons().ICON_EMPTY || item.m_image != -1 )
-//        item.m_mask = item.m_mask | wxLIST_MASK_IMAGE;
-//
-//    item.m_format = wxLIST_FORMAT_LEFT;
-//#endif
     ListBaseType::InsertColumn(i,item);
     colInfo temp(tip,modifiable);
     m_colinfovec.push_back(temp);
@@ -172,9 +165,7 @@ void CustomListCtrl::OnTimer(wxTimerEvent& /*unused*/)
       m_tipwindow = new SLTipWindow(this, m_tiptext);
       m_controlPointer = &m_tipwindow;
       m_tipwindow->SetTipWindowPtr((wxTipWindow**)m_controlPointer);
-#ifndef __WXMSW__
       m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
-#endif
       m_tiptext = wxEmptyString;
       m_tiptimer.Start(m_tooltip_duration, wxTIMER_ONE_SHOT);
   }

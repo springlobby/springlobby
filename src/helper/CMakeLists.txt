@@ -1,5 +1,4 @@
 add_sources(springlobbySrc
-	tasclientimport.cpp
 	TextCompletionDatabase.cpp
 	imageviewer.cpp
 	slhtmlwindow.cpp

@@ -29,9 +29,7 @@ ChatLog::ChatLog( const wxString& server, const wxString& room ):
     m_active ( LogEnabled() ),
     m_logfile ( )
 {
-#ifdef __WXMSW__
 	m_server.Replace( wxT( ":" ), wxT( "_" ) ) ;
-#endif
 	wxLogMessage( _T( "ChatLog::ChatLog( %s, %s )" ), m_server.c_str(), m_room.c_str() ) ;
 	m_active = OpenLogFile();
 }

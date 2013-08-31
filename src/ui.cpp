@@ -47,11 +47,9 @@
 #include "downloader/prdownloader.h"
 
 #include "agreementdialog.h"
-#ifdef __WXMSW__
-    #include "updater/updatehelper.h"
-    #include "helper/tasclientimport.h"
-    #include <wx/stdpaths.h>
-#endif
+
+#include "updater/updatehelper.h"
+#include <wx/stdpaths.h>
 
 #include "reconnectdialog.h"
 #include "utils/customdialogs.h"
@@ -526,11 +524,9 @@ void Ui::OnUpdate( int mselapsed )
         else {
             mw().ShowTab( sett().GetStartTab() );
         }
-#ifdef __WXMSW__
 		//don't ask for updates on first run, that's a bit much for a newbie
 		if ( sett().GetAutoUpdate() && !sett().IsFirstRun() )
             CheckForUpdates();
-#endif
     }
 
     if (m_upd_counter_torrent % 20 == 0 )
@@ -549,12 +545,6 @@ void Ui::OnUpdate( int mselapsed )
 void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
 {
     wxLogDebugFunc( _T("") );
-/*    if ( !IsSpringCompatible() )
-    {
-    	#ifdef __WXMSW__
-			server.RequestSpringUpdate();
-    	#endif
-    }*/
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 		mw().GetBattleListTab().OnConnected();
