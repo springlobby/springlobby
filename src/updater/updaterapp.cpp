@@ -53,13 +53,18 @@ BEGIN_EVENT_TABLE(UpdaterApp, wxApp)
 
 END_EVENT_TABLE()
 
-UpdaterApp::UpdaterApp()
-    : 	m_timer ( new wxTimer(this, TIMER_ID) ),
+UpdaterApp::UpdaterApp():
+	m_timer ( new wxTimer(this, TIMER_ID) ),
 	m_version( _T("-1") ),
-    m_updater_window( 0 ),
-	m_logstream_target( new std::ofstream( STD_STRING(wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("update.log") ).c_str() ) )
+	m_updater_window( 0 )
 {
-    SetAppName( _T("springlobby_updater") );
+	SetAppName( _T("springlobby_updater") );
+
+	const std::string filename = STD_STRING(wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("update.log") ).c_str();
+	m_logstream_target = new std::ofstream(filename);
+	if ( (!m_logstream_target->good()) || (!m_logstream_target->is_open() )) {
+		printf("Error opening %s\n", filename.c_str());
+	}
 }
 
 UpdaterApp::~UpdaterApp()
