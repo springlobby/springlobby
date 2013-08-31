@@ -56,7 +56,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     m_web_browse_btn = new wxButton( this, SPRING_WEBBROWSE, _("Browse") );
     m_web_browse_btn->SetToolTip(TE(_("Use a file dialog to find the web browser")));
-
+    
     if ( sett().GetWebBrowserUseDefault() ) m_web_def_radio->SetValue( true );
     else m_web_spec_radio->SetValue( true );
 
@@ -123,6 +123,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 5 );
     m_main_sizer->Add( m_reportstats_sizer, 0, wxALL, 5 );
     m_main_sizer->Add( m_disable_version_check_sizer, 0, wxALL, 5 );
+#ifdef __WXMSW__
     wxStaticBoxSizer* m_updater_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Automatic updates") );
 	m_updater_label = new wxStaticText ( this,
 										 -1,
@@ -134,13 +135,15 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_updater_sizer->Add( m_updater, 0, wxEXPAND|wxALL, 5);
 
     m_main_sizer->Add( m_updater_sizer, 0, wxALL, 5 );
+#endif
 
     wxStaticBoxSizer* m_show_tooltips_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tooltips") );
     m_show_tooltips = new wxCheckBox( this, -1, _("Show Tooltips?"), wxDefaultPosition, wxDefaultSize, 0 );
     m_show_tooltips->SetValue( sett().GetShowTooltips() );
-
+#ifndef __WXMSW__ // on windows this change is immediate
 	m_show_tooltips_label = new wxStaticText ( this, -1, IdentityString( _("Requires %s restart to take effect.") ) );
     m_show_tooltips_sizer->Add( m_show_tooltips_label, 1, wxEXPAND|wxALL, 5);
+#endif
     m_show_tooltips_sizer->Add( m_show_tooltips, 0, wxEXPAND|wxALL, 5);
 
     m_main_sizer->Add( m_show_tooltips_sizer, 0, wxALL, 5 );
@@ -213,7 +216,9 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
     sett().SetAutoConnect( m_autojoin->IsChecked() );
     sett().SetReportStats( m_reportstats->GetValue() );
     sett().SetDisableSpringVersionCheck(m_disable_version_check->GetValue() );
+#ifdef __WXMSW__
     sett().SetAutoUpdate( m_updater->IsChecked() );
+#endif
     bool show = m_show_tooltips->IsChecked();
     wxToolTip::Enable(show);
     sett().SetShowTooltips(show);
@@ -230,7 +235,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 	sett().SetUseNotificationPopups( m_use_notif_popups->IsChecked() );
 	sett().SetNotificationPopupPosition( m_notif_popup_pos->GetSelection() );
 	sett().SetNotificationPopupDisplayTime( m_notif_popup_time->GetValue() );
-
+    
 }
 
 
@@ -239,7 +244,9 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
     m_autojoin->SetValue( sett().GetAutoConnect() );
     m_reportstats->SetValue( sett().GetReportStats() );
     m_disable_version_check->SetValue( sett().GetDisableSpringVersionCheck() );
+#ifdef __WXMSW__
     m_updater->SetValue( sett().GetAutoUpdate() );
+#endif
     bool show = sett().GetShowTooltips();
     m_show_tooltips->SetValue(show);
     wxToolTip::Enable(show);
@@ -258,7 +265,7 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 	m_use_notif_popups->SetValue( sett().GetUseNotificationPopups() );
 	m_notif_popup_pos->SetSelection( sett().GetNotificationPopupPosition() );
 	m_notif_popup_time->SetValue( sett().GetNotificationPopupDisplayTime() );
-
+    
 }
 
 void LobbyOptionsTab::HandleWebloc( bool defloc )

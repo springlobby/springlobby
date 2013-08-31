@@ -98,3 +98,4 @@ void NotificationManager::OnTimer( wxTimerEvent& /*event*/ )
 		ShowNotification( data );
 	}
 }
+

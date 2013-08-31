@@ -165,7 +165,9 @@ void CustomListCtrl::OnTimer(wxTimerEvent& /*unused*/)
       m_tipwindow = new SLTipWindow(this, m_tiptext);
       m_controlPointer = &m_tipwindow;
       m_tipwindow->SetTipWindowPtr((wxTipWindow**)m_controlPointer);
+#ifndef __WXMSW__
       m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
+#endif
       m_tiptext = wxEmptyString;
       m_tiptimer.Start(m_tooltip_duration, wxTIMER_ONE_SHOT);
   }

@@ -26,7 +26,9 @@ BEGIN_EVENT_TABLE(BattleListCtrl, BattleListCtrl::BaseType )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
   EVT_MENU                 ( BLIST_DLMOD, BattleListCtrl::OnDLMod )
 #if wxUSE_TIPWINDOW
+#if !defined(__WXMSW__) /* && !defined(__WXMAC__) */ //disables tooltips on msw /* and mac */
   EVT_MOTION(BattleListCtrl::OnMouseMotion)
+#endif
 #endif
 END_EVENT_TABLE()
 

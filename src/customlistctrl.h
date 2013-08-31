@@ -1,8 +1,17 @@
 #ifndef CUSTOMLISTITEM_H_
 #define CUSTOMLISTITEM_H_
 
-#include <wx/listctrl.h>
-typedef wxListCtrl ListBaseType;
+#ifndef __WXMSW__
+    #include <wx/listctrl.h>
+    typedef wxListCtrl ListBaseType;
+#else
+//disabled until further fixes
+    #include <wx/msw/winundef.h>
+ //   #include "Helper/listctrl.h"
+ //   typedef SL_Extern::wxGenericListCtrl ListBaseType;
+    #include <wx/listctrl.h>
+    typedef wxListCtrl ListBaseType;
+#endif
 
 #include <wx/timer.h>
 #define IDD_TIP_TIMER 696

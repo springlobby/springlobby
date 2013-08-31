@@ -720,8 +720,10 @@ void IBattle::SetHostMap(const wxString& _mapname, const wxString& _hash)
 		m_map_exists = LSL::usync().MapExists( m_host_map.name, m_host_map.hash );
 	else
 		m_map_exists = LSL::usync().MapExists( m_host_map.name );
+	#ifndef __WXMSW__ //!TODO why not on win?
 		if ( m_map_exists && !spring().IsRunning() )
 			LSL::usync().PrefetchMap( m_host_map.name );
+	#endif
   }
 }
 
@@ -735,8 +737,10 @@ void IBattle::SetLocalMap(const LSL::UnitsyncMap& map)
 		m_map_exists = LSL::usync().MapExists( m_host_map.name, m_host_map.hash );
 	else
 		m_map_exists = LSL::usync().MapExists( m_host_map.name );
+    #ifndef __WXMSW__
 		if ( m_map_exists && !spring().IsRunning() )
 			LSL::usync().PrefetchMap( m_host_map.name );
+    #endif
     if ( IsFounderMe() ) // save all rects infos
     {
 

@@ -196,7 +196,10 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
     Layout();
     m_main_sizer->SetSizeHints( this );
+#ifdef __WXMSW__
     SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE  ) );
+#endif
+
     ReloadServerList();
 	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&ConnectWindow::OnQuit));
 }

@@ -34,7 +34,9 @@ BEGIN_EVENT_TABLE( NickListCtrl, NickListCtrl::BaseType )
 	EVT_LIST_ITEM_ACTIVATED ( NICK_LIST,    NickListCtrl::OnActivateItem    )
 	EVT_CONTEXT_MENU        (               NickListCtrl::OnShowMenu        )
 	#if wxUSE_TIPWINDOW
+	#ifndef __WXMSW__ //disables tooltips on win and mac
 	EVT_MOTION              (               NickListCtrl::OnMouseMotion     )
+	#endif
 	#endif
 END_EVENT_TABLE()
 

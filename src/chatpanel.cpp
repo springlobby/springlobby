@@ -63,7 +63,11 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 END_EVENT_TABLE()
 
-	wxString chan_prefix = _("channel_");
+	#ifdef __WXMSW__
+        wxString chan_prefix = _("channel_");
+    #else
+        wxString chan_prefix = _("#");
+    #endif
 
 /// table for irc colors
 static wxColor m_irc_colors[16]  =
@@ -368,7 +372,11 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 	wxTextAttr chatstyle( col, sett().GetChatColorBackground(), fon );
 
     ChatLine newline;
+#ifdef __WXMSW__
+    newline.chat = wxString( message.c_str() );
+#else
     newline.chat = message;
+#endif
     newline.time = _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
     newline.chatstyle = chatstyle;
     newline.timestyle = timestyle;
