@@ -1344,13 +1344,6 @@ void Ui::FirstRunWelcome()
 			wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
 		}
 
-    #ifdef __WXMSW__
-        if ( TASClientPresent() &&
-                customMessageBox(SL_MAIN_ICON, _("Should I try to import (some) TASClient settings?\n" ),_("Import settings?"), wxYES_NO ) == wxYES )
-        {
-            ImportTASClientSettings();
-        }
-    #endif
         //this ensures that for new configs there's a default perspective to fall back on
         mw().SavePerspectives( _T("SpringLobby-default") );
         mw().ShowConfigure();
