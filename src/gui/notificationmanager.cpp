@@ -73,9 +73,8 @@ void NotificationManager::OnShowNotification( UiEvents::NotficationData data )
 void NotificationManager::ShowNotification( const UiEvents::NotficationData& data )
 {
 	if ( sett().GetUseNotificationPopups() ) {
-		const bool spring_running = spring().IsRunning();
 		const bool disable_if_ingame = sett().Get<bool>( _T("/GUI/NotificationPopupDisableIngame"), true );
-		if ( m_notification_wrapper &&  ! ( disable_if_ingame && spring_running ) ) {
+		if ( m_notification_wrapper &&  ! ( disable_if_ingame && spring().IsRunning() ) ) {
 			//! \todo use image from customizations
 			wxBitmap nmp ( charArr2wxBitmap( springlobby_64_png, sizeof(springlobby_64_png) ) );
 			m_notification_wrapper->Show( nmp, sett().GetNotificationPopupPosition(), data );
