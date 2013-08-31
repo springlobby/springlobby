@@ -738,7 +738,7 @@ void Ui::OnChannelSaid( Channel& channel, User& user, const wxString& message )
     wxLogDebugFunc( _T("") );
     if ( channel.uidata.panel == 0 )
     {
-        wxLogError( _T("ud->panel NULL") );
+        wxLogError( _T("OnChannelSaid: ud->panel NULL") );
         return;
     }
     channel.uidata.panel->Said( user.GetNick(), message );
@@ -750,7 +750,7 @@ void Ui::OnChannelDidAction( Channel& channel , User& user, const wxString& acti
     wxLogDebugFunc( _T("") );
     if ( channel.uidata.panel == 0 )
     {
-        wxLogError( _T("ud->panel NULL") );
+        wxLogError( _T("OnChannelDidAction: ud->panel NULL") );
         return;
     }
     channel.uidata.panel->DidAction( user.GetNick(), action );
@@ -782,7 +782,7 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
     //wxLogDebugFunc( _T("") );
     if ( chan.uidata.panel == 0 )
     {
-        wxLogError( _T("ud->panel NULL") );
+        wxLogError( _T("OnUserJoinedChannel: ud->panel NULL") );
         return;
     }
     chan.uidata.panel->Joined( user );
@@ -794,7 +794,7 @@ void Ui::OnChannelJoin( Channel& chan, User& user )
     //wxLogDebugFunc( _T("") );
     if ( chan.uidata.panel == 0 )
     {
-        wxLogError( _T("ud->panel NULL") );
+        wxLogError( _T("OnChannelJoin: ud->panel NULL") );
         return;
     }
     chan.uidata.panel->OnChannelJoin( user );
@@ -806,7 +806,7 @@ void Ui::OnUserLeftChannel( Channel& chan, User& user, const wxString& reason )
     //wxLogDebugFunc( _T("") );
     if ( chan.uidata.panel == 0 )
     {
-        wxLogError( _T("ud->panel NULL") );
+        wxLogError( _T("OnUserLeftChannel: ud->panel NULL") );
         return;
     }
     chan.uidata.panel->Parted( user, reason );
@@ -818,7 +818,7 @@ void Ui::OnChannelTopic( Channel& channel, const wxString& user, const wxString&
     wxLogDebugFunc( _T("") );
     if ( channel.uidata.panel == 0 )
     {
-        wxLogError( _T("ud->panel NULL") );
+        wxLogError( _T("OnChannelTopic: ud->panel NULL") );
         return;
     }
     channel.uidata.panel->SetTopic( user, topic );
