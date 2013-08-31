@@ -298,8 +298,8 @@ void BattleListTab::SetFilterActiv( bool activ )
 	sett().SetBattleFilterActivState( activ );
 	m_battle_list->MarkDirtySort();
 }
-void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 
+void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 {
 	if ( !ui().IsConnected() )
 	{
@@ -308,12 +308,7 @@ void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 		ui().ShowConnectWindow();
 		return;
 	}
-	if ( !ui().IsSpringCompatible() )
-	{
-		wxLogWarning( _T( "Hosting is disabled due to the incompatible version " ) );
-		customMessageBoxNoModal( SL_MAIN_ICON, _( "Hosting is disabled due to the incompatible version you're using" ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
-		return;
-	}
+
 	Battle* battle = ui().mw().GetJoinTab().GetCurrentBattle();
 	if ( battle != 0 )
 	{
@@ -392,10 +387,11 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 
 void BattleListTab::DoJoin( Battle& battle )
 {
-	if ( !ui().IsSpringCompatible() )
+
+	if ( !ui().IsSpringCompatible(battle.GetBattleOptions().engineName, battle.GetBattleOptions().engineVersion) )
 	{
         wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
-		customMessageBox( SL_MAIN_ICON, _( "Joining battles is disabled due to the incompatible spring version you're using." ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
+//		customMessageBox( SL_MAIN_ICON, _( "Joining battles is disabled due to the incompatible spring version you're using." ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 		return;
 	}
 

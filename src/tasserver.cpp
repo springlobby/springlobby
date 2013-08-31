@@ -695,7 +695,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
         m_se->OnBattleOpenedEx( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
-                              haspass, rank, hash,wxString(), wxString(), map, title, mod );
+                              haspass, rank, hash,wxEmptyString, wxEmptyString, map, title, mod );
         if ( nick == m_relay_host_bot )
         {
 		   GetBattle( id ).SetProxy( m_relay_host_bot );
@@ -1512,6 +1512,9 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     cmd += MakeHashSigned( bo.modhash );
     cmd += wxString::Format( _T(" %d "), bo.rankneeded );
     cmd += MakeHashSigned( bo.maphash ) + _T(" ");
+	cmd += bo.engineName + _T(" ");
+	//FIXME: this is a dirty hack for https://github.com/spring/LobbyProtocol/issues/15 which breaks compatibility to other lobbies
+	cmd += bo.engineVersion.BeforeFirst(' ') +  _T(" ");
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
     cmd += bo.modname;
@@ -1519,7 +1522,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     m_delayed_open_command = _T("");
 	if ( !bo.userelayhost )
     {
-       SendCmd( _T("OPENBATTLE"), cmd );
+       SendCmd( _T("OPENBATTLEEX"), cmd );
     }
     else
     {

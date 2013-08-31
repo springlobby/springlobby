@@ -99,6 +99,8 @@ struct BattleOptions
 	wxString modhash;
 
 	wxString description;
+	wxString engineVersion;
+	wxString engineName;
 	wxString mapname;
 	wxString modname;
 
@@ -394,10 +396,10 @@ public:
 
 		virtual long GetBattleRunningTime() const; // returns 0 if not started
 
-		virtual void SetEngineName(const wxString& name){ m_engine_name = name;}
-		virtual void SetEngineVersion(const wxString& version){ m_engine_version = version;}
-		virtual wxString GetEngineName() const{ return m_engine_name;}
-		virtual wxString GetEngineVersion() const{ return m_engine_version;}
+		virtual void SetEngineName(const wxString& name){ m_opts.engineName = name;}
+		virtual void SetEngineVersion(const wxString& version){ m_opts.engineVersion = version;}
+		virtual wxString GetEngineName() const{ return m_opts.engineName;}
+		virtual wxString GetEngineVersion() const{ return m_opts.engineVersion;}
 
 protected:
 
@@ -450,9 +452,6 @@ protected:
     /// replay&savegame stuff
     wxString m_script;
     wxString m_playback_file_path;
-
-	wxString m_engine_name;
-	wxString m_engine_version;
 
     TeamVec m_parsed_teams;
     AllyVec m_parsed_allies;

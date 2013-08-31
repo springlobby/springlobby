@@ -492,6 +492,9 @@ void RunHostBattleDialog( wxWindow* parent )
 		bo.userelayhost = sett().GetLastHostRelayedMode();
 		if ( bo.userelayhost ) bo.nattype = NAT_None;
 		bo.relayhost = sett().GetLastRelayedHost();
+		bo.engineName = _T("spring");
+		bo.engineVersion = TowxString(LSL::usync().GetSpringVersion());
+
 		serverSelector().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
 	}
 }

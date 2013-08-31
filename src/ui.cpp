@@ -549,12 +549,12 @@ void Ui::OnUpdate( int mselapsed )
 void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
 {
     wxLogDebugFunc( _T("") );
-    if ( !IsSpringCompatible() )
+/*    if ( !IsSpringCompatible() )
     {
     	#ifdef __WXMSW__
 			server.RequestSpringUpdate();
     	#endif
-    }
+    }*/
 
     if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 		mw().GetBattleListTab().OnConnected();
@@ -567,13 +567,12 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 }
 
 
-bool Ui::IsSpringCompatible()
+bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 {
+	assert(engine == _T("spring"));
     sett().RefreshSpringVersionList();
     if ( sett().GetDisableSpringVersionCheck() ) return true;
-    const std::string neededversion = STD_STRING(serverSelector().GetServer().GetRequiredSpring());
-    if (neededversion == "*") return true; // Server accepts any version.
-    else if ( neededversion.empty() ) return false;
+    const std::string neededversion = STD_STRING(version);
     const auto versionlist = sett().GetSpringVersionList();
     if ( versionlist.size() == 0 )
     {

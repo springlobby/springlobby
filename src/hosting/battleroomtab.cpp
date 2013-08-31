@@ -1181,12 +1181,12 @@ void BattleRoomTab::OnHostNew( wxCommandEvent& /*event*/ )
 		ui().ShowConnectWindow();
 		return;
 	}
-	if ( !ui().IsSpringCompatible() )
+/*	if ( !ui().IsSpringCompatible() )
 	{
 		wxLogWarning( _T( "Hosting is disabled due to the incompatible version " ) );
 		customMessageBoxNoModal( SL_MAIN_ICON, _( "Hosting is disabled due to the incompatible version you're using" ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 		return;
-	}
+	}*/
 	SL::RunHostBattleDialog( this );
 }
 

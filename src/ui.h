@@ -67,7 +67,7 @@ class Ui : public wxEvtHandler, public GlobalEvent, public SL::NonCopyable
     bool IsConnected() const;
     void JoinChannel( const wxString& name, const wxString& password );
 
-    bool IsSpringCompatible();
+    bool IsSpringCompatible(const wxString& engine, const wxString& version);
 
     bool IsSpringRunning() const;
 
