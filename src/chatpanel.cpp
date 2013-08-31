@@ -391,18 +391,25 @@ void ChatPanel::OutputLine( const ChatLine& line )
 {
   int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);
   int end = m_chatlog_text->GetScrollRange(wxVERTICAL);
+#ifndef __WXMSW__
   int thumb = m_chatlog_text->GetScrollThumb(wxVERTICAL);
   float original_pos = (float)(pos+thumb) / (float)end;
-
+#else
+  int size = m_chatlog_text->GetSize().GetHeight();
+  float original_pos = (float)(pos+size) / (float)end; // wxmsw is retarded and reports thumb size as 0 always
+#endif
   if ( original_pos < 0.0f ) original_pos = 0.0f;
   if ( original_pos > 1.0f ) original_pos = 1.0f; // this is necessary because the code in windows isn't 100% right because thumb always returns 0
-
+#ifndef __WXMSW__
   long original_line = 0;
   if (original_pos < 1.0f )
   {
 	  original_line = (long)(original_pos *(float)m_chatlog_text->GetNumberOfLines()); // GetNumberOfLines is expensive, only call when necessary
 	  m_chatlog_text->Freeze();
   }
+#else
+	 wxWindowUpdateLocker noUpdates(m_chatlog_text); // use the automatic one in windows
+#endif
 
   m_chatlog_text->SetDefaultStyle( line.timestyle );
   m_chatlog_text->AppendText( line.time );
@@ -506,15 +513,26 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
   if (original_pos < 1.0f)
   {
+#ifndef __WXMSW__
 	  wxString linetext = m_chatlog_text->GetLineText(original_line);
 	  long zoomto = m_chatlog_text->GetValue().Find(linetext);
 	  m_chatlog_text->ShowPosition( zoomto ); // wxgtk is retarded and always autoscrolls
+#endif
   }
   else
   {
 	m_chatlog_text->ScrollLines(10); // wx is retarded, necessary to show the latest line
+#ifdef __WXMSW__
+	m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
+#endif
   }
   this->Refresh();
+#ifndef __WXMSW__
+ if (original_pos < 1.0f)
+  {
+	m_chatlog_text->Thaw();
+  }
+#endif
 }
 
 
