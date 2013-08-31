@@ -96,17 +96,6 @@ SpringLobbyApp::~SpringLobbyApp()
     delete m_timer;
 }
 
-#if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
-LONG __stdcall filter(EXCEPTION_POINTERS* p){
-    #if wxUSE_STACKWALKER
-        CrashReport::instance().GenerateReport();
-    #else
-        CrashReport::instance().GenerateReport(p);
-    #endif
-    return 0; //must return 0 here or we'll end in an inf loop of dbg reports
-}
-#endif
-
 //! @brief Initializes the application.
 //!
 //! It will open the main window and connect default to server or open the connect window.
@@ -122,11 +111,6 @@ bool SpringLobbyApp::OnInit()
     if (!m_crash_handle_disable) {
     #if wxUSE_ON_FATAL_EXCEPTION
         wxHandleFatalExceptions( true );
-    #endif
-    #if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
-        //this undocumented function acts as a workaround for the dysfunctional
-        // wxUSE_ON_FATAL_EXCEPTION on msw when mingw is used (or any other non SEH-capable compiler )
-        SetUnhandledExceptionFilter(filter);
     #endif
     }
 
