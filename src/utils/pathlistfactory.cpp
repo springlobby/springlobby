@@ -10,6 +10,7 @@
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
+#include  <wx/dir.h>
 
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
@@ -98,5 +99,24 @@ wxPathList PathlistFactory::AdditionalSearchPaths(wxPathList &pl)
         ret.Add( path + _T( "games" ) + sepstring + _T( "Spring" ) + sepstring );
         ret.Add( path + _T( "games" ) + sepstring + _T( "spring" ) + sepstring );
     }
-    return ret;
+
+// search in ~/.spring/engine/ , too
+#ifdef __WXMSW__
+	const wxString userdir = wxFileName::GetDocumentsDir() + sep + _T("My Games") + sep + _T("Spring") + sep + _T("engine");;
+#else
+	const wxString userdir = wxFileName::GetHomeDir() + sep + _T(".spring") + sep + _T("engine");
+#endif
+	wxDir dir(userdir);
+
+	if ( dir.IsOpened() ) {
+		wxString filename;
+		bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_DIRS|wxDIR_HIDDEN);
+		while ( cont )
+		{
+			ret.Add(userdir + sepstring + filename);
+			cont = dir.GetNext(&filename);
+		}
+	}
+
+	return ret;
 }
