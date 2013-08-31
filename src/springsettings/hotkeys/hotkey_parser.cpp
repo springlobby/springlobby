@@ -31,7 +31,7 @@ hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : m_filename( uike
 
 	if ( !uiFile.Open() )
 	{
-		wxLogWarning( _( "can't open " ) + uikeys_filename );
+		wxLogWarning( _( "hotkey_parser: can't open " ) + uikeys_filename );
 		return;
 	}
 
@@ -76,7 +76,7 @@ bool hotkey_parser::processLine( const wxString& line )
 		}
 		return true;
 	}
-	else if ( tokLine.size() == 2 ) 
+	else if ( tokLine.size() == 2 )
 	{	//fakemeta=
 		const wxString& cmd = tokLine[0];
 		const wxString& key = tokLine[1];
@@ -105,7 +105,7 @@ bool hotkey_parser::processLine( const wxString& line )
 	const wxString& key = tokLine[1];
 
 	//append all following tokens to the action string for stuff like "buildspacing inc"
-	wxString action; 
+	wxString action;
 	for( unsigned i=2; i < tokLine.size(); ++i )
 	{
 		action.append( tokLine[i] + wxT(" ") );
@@ -206,7 +206,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	//add fakemeta
 	if ( SpringDefaultProfile::getBindings().getMetaKey() != springbindings.getMetaKey() )
 	{
-		newFile.AddLine( wxT("fakemeta\t\t") + springbindings.getMetaKey() );		
+		newFile.AddLine( wxT("fakemeta\t\t") + springbindings.getMetaKey() );
 	}
 
 	//check all default bindings if they still exist in current profile
@@ -241,7 +241,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 		if ( wxRenameFile( newTmpFilename, this->m_filename ) == false )
 		{
 			wxString msg = _("Error renaming uikeys.txt.tmp to uikeys.txt.");
-			
+
 			//restore backup
 			if ( wxRenameFile( prevFilenameBak, this->m_filename ) == false )
 			{
