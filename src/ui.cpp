@@ -572,7 +572,13 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 	assert(engine == _T("spring"));
     sett().RefreshSpringVersionList();
     if ( sett().GetDisableSpringVersionCheck() ) return true;
-    const std::string neededversion = STD_STRING(version);
+	const std::string neededversion = STD_STRING(version);
+	std::string hackversion;
+	if (neededversion == "94.1") //workarrounds for https://github.com/spring/LobbyProtocol/issues/15
+		hackversion = "94";
+	else if (neededversion == "91.0")
+		hackversion = "91";
+
     const auto versionlist = sett().GetSpringVersionList();
     if ( versionlist.size() == 0 )
     {
@@ -582,7 +588,7 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
     }
     for ( const auto pair : versionlist )
     {
-      if (STD_STRING(pair.second) == neededversion )
+      if ( (STD_STRING(pair.second) == neededversion) || (STD_STRING(pair.second)==hackversion) )
       {
         if ( sett().GetCurrentUsedSpringIndex() != pair.first )
         {
