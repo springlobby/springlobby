@@ -96,11 +96,11 @@ private:
 				|| (cur->IsSeparator()))
 				continue;
 
-			if (groupNames.Index(cur->GetLabel()) != wxNOT_FOUND)
+			if (groupNames.Index(cur->GetItemLabelText()) != wxNOT_FOUND)
 				continue;
 
 			const int id = cur->GetId();
-			m_NameIdMap.erase(cur->GetLabel());
+			m_NameIdMap.erase(cur->GetItemLabelText());
 			m_idNameMap.erase(id);
 			m_groupsMenu->Delete(id);
 		}
