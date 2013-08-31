@@ -1,13 +1,6 @@
 /* Copyright (C) 2007-2011 The SpringLobby Team. All rights reserved. */
 
 
-#ifdef _MSC_VER
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif // NOMINMAX
-#include <winsock2.h>
-#endif // _MSC_VER
-
 #include <wx/string.h>
 #include <wx/regex.h>
 #include <wx/intl.h>
@@ -26,7 +19,6 @@
 #include "base64.h"
 #include "utils/md5.h"
 #include "tasserver.h"
-#include <lslunitsync/unitsync.h>
 #include "user.h"
 #include "utils/debug.h"
 #include "utils/tasutil.h"
@@ -105,25 +97,6 @@ union UTASBattleStatus
     int data;
     TASBattleStatus tasdata;
 };
-
-//! @brief struct used internallby by tasserver to convert offer file bitfields
-struct OfferFileData
-{
-	bool autoopen :
-		1;
-	bool closelobbyondownload :
-		1;
-	bool disconnectonrefuse :
-		1;
-};
-
-//! @brief Union used internally by the TASServer class to get battle status information.
-union UTASOfferFileData
-{
-    int data;
-    OfferFileData tasdata;
-};
-
 
 struct TASColor
 {
@@ -1195,16 +1168,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         m_se->OnMutelistEnd( m_current_chan_name_mutelist );
         m_current_chan_name_mutelist = _T("");
-    }
-    // OFFERFILE options {filename} {url} {description}
-    else if ( cmd == _T("OFFERFILE") )
-    {
-				UTASOfferFileData parsingdata;
-				parsingdata.data = GetIntParam( params );
-				wxString FileName = GetSentenceParam( params );
-				wxString url = GetSentenceParam( params );
-				wxString description = GetSentenceParam( params );
-				m_se->OnFileDownload( parsingdata.tasdata.autoopen, parsingdata.tasdata.closelobbyondownload, parsingdata.tasdata.disconnectonrefuse, FileName, url, description );
     }
     else if ( cmd == _T("FORCEJOINBATTLE") )
     {
@@ -2518,11 +2481,6 @@ int TASServer::TestOpenPort( unsigned int port ) const
         return porttest_socketError;
     }
     return porttest_pass;
-}
-
-void TASServer::RequestSpringUpdate()
-{
-    SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring ") + TowxString(LSL::usync().GetSpringVersion()));
 }
 
 wxArrayString TASServer::GetRelayHostList()

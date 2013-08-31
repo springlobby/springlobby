@@ -142,8 +142,6 @@ class TASServer : public Server
 
 	void SetRelayIngamePassword( const User& user );
 
-    void RequestSpringUpdate();
-
     wxArrayString GetRelayHostList() ;
 	virtual const IServerEvents* serverEvents() const { return m_se; }
   protected:
