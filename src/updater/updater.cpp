@@ -81,6 +81,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
 											   % m_newexe
 											   % m_currentexe,
 							 _("Error") );
+			GlobalEvent::Send( GlobalEvent::OnUpdateFinished );
         }
         else {
             bool locale_ok = UpdateLocale( m_newexe, false );
@@ -95,7 +96,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
             wxRmdir( m_newexe );
         }
     }
-    GlobalEvent::Send( GlobalEvent::UpdateFinished );
+    GlobalEvent::Send( GlobalEvent::OnUpdateFinished );
 }
 
 //! DO NOT use mw() global unless fromCli is false !

@@ -15,6 +15,8 @@ const wxEventType GlobalEvent::OnLogin = wxNewEventType();
 const wxEventType GlobalEvent::PlasmaResourceListParsed = wxNewEventType();
 const wxEventType GlobalEvent::PlasmaResourceListFailedDownload = wxNewEventType();
 const wxEventType GlobalEvent::BattleSyncReload = wxNewEventType();
+const wxEventType GlobalEvent::OnUpdateFinished = wxNewEventType();
+
 //const wxEventType GlobalEvent::OnTimerUpdates = wxNewEventType();
 
 //static wxEvtHandler* _evthandler=NULL;

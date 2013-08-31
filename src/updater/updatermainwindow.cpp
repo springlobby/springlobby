@@ -84,7 +84,7 @@ END_EVENT_TABLE()
     Layout();
     Center();
     CustomMessageBoxBase::setLobbypointer( this );
-	ConnectGlobalEvent(this, GlobalEvent::OnDownloadComplete, wxObjectEventFunction(&UpdaterMainwindow::OnDownloadComplete));
+	ConnectGlobalEvent(this, GlobalEvent::OnUpdateFinished, wxObjectEventFunction(&UpdaterMainwindow::OnUpdateFinished));
 }
 
 /** @brief OnClose
@@ -101,7 +101,7 @@ void UpdaterMainwindow::OnClose(wxCloseEvent&)
     }
 }
 
-void UpdaterMainwindow::OnDownloadComplete( wxCommandEvent&/*data*/ )
+void UpdaterMainwindow::OnUpdateFinished( wxCommandEvent&/*data*/ )
 {
     freeStaticBox();
     Destroy();

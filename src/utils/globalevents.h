@@ -19,6 +19,7 @@ public:
 	static const wxEventType PlasmaResourceListParsed;
 	static const wxEventType PlasmaResourceListFailedDownload;
 	static const wxEventType BattleSyncReload;
+	static const wxEventType OnUpdateFinished;
 //	static const wxEventType OnTimerUpdates;
 	static void Send(wxEventType type);
 	static void Send(wxCommandEvent event);

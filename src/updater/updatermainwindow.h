@@ -15,7 +15,7 @@ class UpdaterMainwindow : public wxFrame, public GlobalEvent {
 
         void OnClose( wxCloseEvent& evt );
 
-        void OnDownloadComplete( wxCommandEvent& /*data*/ );
+        void OnUpdateFinished( wxCommandEvent& /*data*/ );
 
     protected:
         DECLARE_EVENT_TABLE()
