@@ -169,6 +169,7 @@ PlaybackTab<PlaybackTraits>::~PlaybackTab()
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::AddAllPlaybacks( wxCommandEvent& /*unused*/ )
 {
+	assert(wxThread::IsMain());
 	const typename ListType::playback_map_t& replays =
 	    playbacklist<ListType>().GetPlaybacksMap();
 
