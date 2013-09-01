@@ -1968,7 +1968,7 @@ bool
 wxJSONReader::Strtoll( const wxString& str, wxInt64* i64 )
 {
     wxChar sign = ' ';
-    wxUint64 ui64;
+    wxUint64 ui64 = 0;
     bool r = DoStrto_ll( str, &ui64, &sign );
 
     // check overflow for signed long long
