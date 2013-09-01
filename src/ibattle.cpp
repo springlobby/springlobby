@@ -1135,7 +1135,6 @@ void IBattle::LoadScriptMMOpts( const SL::PDataList& node )
 {
 	if ( !node.ok() ) return;
     LSL::OptionsWrapper& opts = CustomBattleOptions();
-    typedef std::map<wxString,wxString> optMap;
     auto options = opts.getOptionsMap(LSL::OptionsWrapper::EngineOption);
     for (const auto i : options)
     {
