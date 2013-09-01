@@ -45,10 +45,10 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 
 #if defined(__WXMAC__)
 /// on mac, autosize does not work at all
-    const int widths[13] = {20,20,20,170,140,130,110,28,28,28,30,30,30};
+    const int widths[12] = {20,20,20,170,140,130,110,28,28,28,30,30};
 #else
     const int hd = wxLIST_AUTOSIZE_USEHEADER;
-    const int widths[13] = {hd,hd,hd,170,140,130,110,hd,hd,hd,hd,hd,hd};
+    const int widths[12] = {hd,hd,hd,170,140,130,110,hd,hd,hd,hd,hd};
 #endif
 
 	AddColumn( 0, widths[0], _("Status"), _("Status") );
@@ -62,8 +62,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 	AddColumn( 8, widths[8], _("Players"), _("Number of Players joined") );
 	AddColumn( 9, widths[9], _("Max"), _("Maximum number of Players that can join") );
 	AddColumn( 10, widths[10], _("Running"), _("How long the game has been running for") );
-	AddColumn( 11, widths[11], _("Engine"), _("Name of the used engine") );
-	AddColumn( 12, widths[12], _("Version"), _("Version of the engine") );
+	AddColumn( 11, widths[11], _("Version"), _("Version of the engine") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[0].col = 0;
@@ -107,8 +106,7 @@ wxString BattleListCtrl::GetItemText(long item, long column) const
 		case 9: return wxFormat(_T("%d") ) % int(battle.GetMaxPlayers());
         case 10: return ( wxTimeSpan(0/*h*/,0/*m*/,
                                      battle.GetBattleRunningTime()).Format(_T("%H:%M")) );
-		case 11: return battle.GetEngineName();
-		case 12: return battle.GetEngineVersion();
+		case 11: return battle.GetEngineVersion();
     }
 }
 
