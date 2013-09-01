@@ -42,7 +42,7 @@ void PlaybackLoader<PlaybackTabImp>::OnComplete()
 {
 	if ( m_parent == NULL ) return;
 	wxCommandEvent notice( PlaybacksLoadedEvt, 1 );
-	((wxEvtHandler*)m_parent)->ProcessEvent( notice );
+	m_parent->AddPendingEvent(notice );
 	m_thread_loader = 0; // the thread object deleted itself
 }
 
