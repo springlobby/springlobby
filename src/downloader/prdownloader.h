@@ -22,7 +22,6 @@
 #include <string>
 #include <queue>
 #include <list>
-#include <lslutils/thread.h>
 
 #include "lib/src/Downloader/Download.h"
 #include "utils/globalevents.h"
@@ -52,18 +51,6 @@ struct DownloadInfo{
     double inspeed;
     double eta;
     double filesize;
-};
-
-class SearchItem : public LSL::WorkItem {
-public:
-    SearchItem(std::list<IDownloader*> loaders, std::string name, IDownload::category cat);
-    void Run();
-
-private:
-    const std::list<IDownloader*> m_loaders;
-    const std::string m_name;
-    const IDownload::category m_cat;
-    int m_result_size;
 };
 
 class PrDownloader: public wxEvtHandler, public GlobalEvent

@@ -30,6 +30,7 @@
 #include <list>
 
 #include <lslunitsync/unitsync.h>
+#include <lslutils/thread.h>
 #include <settings.h>
 
 class DownloadItem : public LSL::WorkItem {
@@ -57,6 +58,18 @@ public:
 private:
     std::list<IDownload*> m_item;
     IDownloader* m_loader;
+};
+
+class SearchItem : public LSL::WorkItem {
+public:
+    SearchItem(std::list<IDownloader*> loaders, std::string name, IDownload::category cat);
+    void Run();
+
+private:
+    const std::list<IDownloader*> m_loaders;
+    const std::string m_name;
+    const IDownload::category m_cat;
+    int m_result_size;
 };
 
 SearchItem::SearchItem(std::list<IDownloader*> loaders, const std::string name, IDownload::category cat)
