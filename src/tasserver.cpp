@@ -1207,8 +1207,8 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 		wxString cmd, msg;
 		if ( m_id_transmission )
 		{
-			 GetLastID()++;
-			 msg = msg + _T("#") + TowxString( GetLastID() ) + _T(" ");
+			m_last_id++;
+			msg = msg + _T("#") + TowxString( m_last_id ) + _T(" ");
 		}
 		if ( m_token_transmission )
 		{
@@ -1241,31 +1241,22 @@ void TASServer::Ping()
 {
 	SendCmd( _T("PING") );
 	TASPingListItem pli;
-	pli.id = GetLastID();
+	pli.id = m_last_id;
 	pli.t = wxGetLocalTimeMillis();
-	GetPingList().push_back ( pli );
+	m_pinglist.push_back ( pli );
 }
 
 void TASServer::HandlePong( int replyid )
 {
-	PingList& pinglistcopy = GetPingList();
-	PingList::iterator it;
+	if (m_pinglist.empty()) //safety, shouldn't happen
+		return;
 
-    bool found = false;
-	for ( it = pinglistcopy.begin(); it != pinglistcopy.end(); ++it )
-    {
-        if (it->id == replyid )
-        {
-            found = true;
-            break;
-        }
-    }
-
-    if ( found )
-    {
-        m_se->OnPong( (wxGetLocalTimeMillis() - it->t) );
-		pinglistcopy.erase( it );
-    }
+	// server connection is tcp, we assume packets are received in order
+	TASPingListItem pli = m_pinglist.back();
+	m_pinglist.pop_back();
+	if (pli.id == replyid ) {
+		m_se->OnPong( (wxGetLocalTimeMillis() - pli.t) );
+	}
 }
 
 
@@ -2292,8 +2283,8 @@ void TASServer::OnConnected( Socket* /*unused*/ )
 	m_token_transmission = false;
 	m_relay_host_manager_list.Clear();
 	m_last_denied = _T("");
-	GetLastID() = 0;
-	GetPingList().clear();
+	m_last_id = 0;
+	m_pinglist.clear();
 }
 
 
@@ -2308,8 +2299,8 @@ void TASServer::OnDisconnected( Socket* /*unused*/ )
 	m_token_transmission = false;
 	m_buffer = _T("");
 	m_relay_host_manager_list.Clear();
-	GetLastID() = 0;
-	GetPingList().clear();
+	m_last_id = 0;
+	m_pinglist.clear();
 	m_users.Nullify();
 	if (m_se != NULL) {
 		m_se->OnDisconnected( connectionwaspresent );

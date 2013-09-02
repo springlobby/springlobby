@@ -13,7 +13,6 @@
 
 #include <wx/textdlg.h>
 #include <stdexcept>
-#include <wx/thread.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
 #include <wx/debugrpt.h>

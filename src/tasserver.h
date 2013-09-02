@@ -7,7 +7,6 @@
 
 #include "server.h"
 #include "crc.h"
-#include "mutexwrapper.h"
 
 const unsigned int FIRST_UDP_SOURCEPORT = 8300;
 
@@ -168,21 +167,9 @@ class TASServer : public Server
     time_t m_last_udp_ping;
 	time_t m_last_ping;
     time_t m_last_net_packet;
-	MutexWrapper<unsigned int> m_last_id;
-	unsigned int& GetLastID()
-	{
-		ScopedLocker<unsigned int> l_last_id(m_last_id);
-		return l_last_id.Get();
-	}
+	unsigned int m_last_id;
 
-	typedef std::list<TASPingListItem> PingList;
-	MutexWrapper<PingList> m_pinglist;
-
-	PingList& GetPingList()
-	{
-		ScopedLocker<PingList> l_pinglist(m_pinglist);
-		return l_pinglist.Get();
-	}
+	std::list<TASPingListItem> m_pinglist;
 
     unsigned long m_udp_private_port;
     unsigned long m_nat_helper_port;
