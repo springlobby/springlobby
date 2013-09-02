@@ -36,6 +36,8 @@
 
 #include "settings.h"
 
+#define PING_TIME 30
+#define PING_DELAY 5 //first ping is sent after PING_DELAY
 
 const int udp_reply_timeout=10;
 
@@ -139,7 +141,7 @@ m_id_transmission( true ),
 m_redirecting( false ),
 m_buffer(_T("")),
 m_last_udp_ping(0),
-m_last_ping(0),
+m_last_ping(time(0) - PING_TIME + PING_DELAY), //no instant ping, delay first ping for PING_DELAY seconds
 m_last_net_packet(0),
 m_udp_private_port(0),
 m_battle_id(-1),
@@ -482,7 +484,7 @@ void TASServer::Update( int mselapsed )
 
         time_t now = time( 0 );
 
-	if ((m_last_ping + 30) < now) { //Send a PING every 30 seconds
+	if ((m_last_ping + PING_TIME) < now) { //Send a PING every 30 seconds
 		m_last_ping = now;
 		Ping();
 	}
