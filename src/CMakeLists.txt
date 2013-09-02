@@ -247,7 +247,6 @@ add_sources(SLSharedWithSettings
 	utils/curlhelper.cpp
 	crashreport.cpp
 	settings.cpp
-	thread.cpp
 	infodialog.cpp
 	gui/windowattributespickle.cpp
 	gui/spinctl/generic/spinctlg.cpp
