@@ -166,6 +166,7 @@ class TASServer : public Server
     bool m_redirecting;
     wxString m_buffer;
     time_t m_last_udp_ping;
+	time_t m_last_ping;
     time_t m_last_net_packet;
 	MutexWrapper<unsigned int> m_last_id;
 	unsigned int& GetLastID()

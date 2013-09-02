@@ -218,7 +218,6 @@ add_sources(springlobbySrc
 	toasterbox/ToasterBoxWindow.cpp
 	toasterbox/ToasterBoxWindowList.cpp
 	
-	pingthread.cpp
 	iserverevents.cpp
 	
 	json/jsonreader.cpp

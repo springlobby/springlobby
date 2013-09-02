@@ -30,7 +30,6 @@
 #include "socket.h"
 #include "channel/channel.h"
 #include "tasservertokentable.h"
-#include "pingthread.h"
 
 // for SL_MAIN_ICON
 #include "utils/customdialogs.h"
@@ -132,7 +131,6 @@ NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
 TASServer::TASServer(int serverEventsMode):
-m_ping_thread(0),
 m_ser_ver(0),
 m_connected(false),
 m_online(false),
@@ -141,6 +139,7 @@ m_id_transmission( true ),
 m_redirecting( false ),
 m_buffer(_T("")),
 m_last_udp_ping(0),
+m_last_ping(0),
 m_last_net_packet(0),
 m_udp_private_port(0),
 m_battle_id(-1),
@@ -157,8 +156,9 @@ m_token_transmission( false )
 
 TASServer::~TASServer()
 {
-    Disconnect();
-    delete m_se;
+	Disconnect();
+	delete m_se;
+	m_se = NULL;
 }
 
 
@@ -471,8 +471,8 @@ void TASServer::Update( int mselapsed )
     {
         if ( IsConnected() )
         {
-            m_last_udp_ping = time( 0 );
-            m_connected = true;
+		m_last_udp_ping = time( 0 );
+		m_connected = true;
         }
         return;
     }
@@ -482,6 +482,10 @@ void TASServer::Update( int mselapsed )
 
         time_t now = time( 0 );
 
+	if ((m_last_ping + 30) < now) { //Send a PING every 30 seconds
+		m_last_ping = now;
+		Ping();
+	}
 //disabled until better timing is miplemented
 //        if ( ( m_last_net_packet > 0 ) && ( ( now - m_last_net_packet ) > PING_TIMEOUT ) )
 //        {
@@ -615,8 +619,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		if ( m_online ) return; // in case is the server sends WTF
         m_online = true;
         m_user = params;
-		m_ping_thread = new PingThread( *this, 10000 );
-		m_ping_thread->Init();
         m_se->OnLogin( );
     }
     else if ( cmd == _T("MOTD") )
@@ -2306,15 +2308,11 @@ void TASServer::OnDisconnected( Socket* /*unused*/ )
 	m_relay_host_manager_list.Clear();
 	GetLastID() = 0;
 	GetPingList().clear();
-	if ( m_ping_thread )
-	{
-		m_ping_thread->Wait();
-		delete m_ping_thread;
-		m_ping_thread = 0;
-	}
 	m_users.Nullify();
-    m_se->OnDisconnected( connectionwaspresent );
-    Server::OnDisconnected();
+	if (m_se != NULL) {
+		m_se->OnDisconnected( connectionwaspresent );
+		Server::OnDisconnected();
+	}
 }
 
 
