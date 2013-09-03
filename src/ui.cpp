@@ -508,7 +508,7 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 
 void Ui::OnUpdate( int mselapsed )
 {
-	if ( serverSelector().GetServerStatus() )
+	if ( IsConnected() && serverSelector().GetServerStatus() )
     {
 		serverSelector().GetServer().Update( mselapsed );
     }
