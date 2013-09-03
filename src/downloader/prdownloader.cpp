@@ -52,6 +52,8 @@ public:
 
 		UiEvents::ScopedStatusMessage msgcomplete(d, 0);
 		LSL::usync().AddReloadEvent();
+		GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
+
         }
     }
 
