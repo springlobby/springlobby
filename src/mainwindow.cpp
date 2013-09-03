@@ -534,6 +534,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 	info.SetDescription( IdentityString( _("%s is a cross-plattform lobby client for the Spring RTS engine") ) );
 	//info.SetCopyright(_T("");
 	info.SetLicence(_T("GPL"));
+	info.AddDeveloper(_T("abma"));
 	info.AddDeveloper(_T("BrainDamage"));
 	info.AddDeveloper(_T("dizekat"));
 	info.AddDeveloper(_T("insaneinside"));
