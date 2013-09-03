@@ -41,7 +41,7 @@ class ReplayList : public PlaybackList<Replay>
 	public:
 
 	typedef Replay PlaybackType;
-	virtual void LoadPlaybacks( const std::vector<std::string>& filenames );
+	virtual void LoadPlaybacks(const std::vector<std::string>& filenames );
 protected:
 	ReplayList();
 

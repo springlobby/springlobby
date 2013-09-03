@@ -23,11 +23,10 @@ void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 {
 	m_replays.clear();
 	const size_t size = filenames.size();
-
 	for ( size_t i = 0; i < size; ++i) {
-		Replay& rep_ref = AddPlayback( i ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
-		if ( !GetReplayInfos(TowxString(filenames[i]), rep_ref ) ) {
-			RemovePlayback( rep_ref.id );
+		PlaybackType& playback = AddPlayback(i);
+		if (!GetReplayInfos(TowxString(filenames[i]), playback)) {
+			RemovePlayback(i); //FIXME: stupid logic: always add but remove on fail, why not add on success only?
 		}
 	}
 }
@@ -46,8 +45,10 @@ int ReplayList::replayVersion(wxFile& replay ) const
 bool ReplayList::GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const
 {
 	wxFile replay(ReplayPath, wxFile::read );
-	if (!replay.IsOpened())
+	if (!replay.IsOpened()) {
+		wxLogError(_T("Couldn't open replay %s"), ReplayPath.c_str() );
 		return false;
+	}
 	const wxString FileName = ReplayPath.AfterLast( wxFileName::GetPathSeparator() ); // strips file path
 	ret.Filename = ReplayPath;
 	ret.battle.SetPlayBackFilePath( ReplayPath );
