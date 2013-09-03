@@ -50,11 +50,11 @@ protected:
 
 
 private:
-	int replayVersion( const wxString& ReplayPath ) const;
-	bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret ) const;
-	wxString GetScriptFromReplay ( const wxString& ReplayPath, const int version ) const;
+	bool GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const;
+	int replayVersion(wxFile& ReplayPath ) const;
+	wxString GetScriptFromReplay (wxFile& ReplayPath, const int version ) const;
 	//! saves relevant infos from header into replay struct
-	void GetHeaderInfo( Replay& rep, const wxString& ReplayPath, const int version ) const;
+	void GetHeaderInfo(wxFile& ReplayPath, Replay& rep,const int version ) const;
 };
 
 #endif // SPRINGLOBBY_REPLAYLIST_H_INCLUDED
