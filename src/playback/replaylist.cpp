@@ -22,17 +22,15 @@ ReplayList::ReplayList()
 void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 {
 	std::string datadir;
-	LSL::usync().GetSpringDataPath(datadir); //FIXME: all data dirs should be checked / move to lsl
 	m_replays.clear();
 	const size_t size = filenames.size();
 	for ( size_t i = 0; i < size; ++i) {
+		const wxString wfilename = TowxString(filenames[i]);
 		PlaybackType& playback = AddPlayback(i);
-		const wxString wfilename = TowxString(datadir + filenames[i]);
 		if (!GetReplayInfos(wfilename, playback)) {
 			wxLogError(_T("Couldn't open replay %s"), wfilename.c_str() );
 			RemovePlayback(i); //FIXME: stupid logic: always add but remove on fail, why not add on success only?
 		}
-
 	}
 }
 
