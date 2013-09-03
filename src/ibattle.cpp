@@ -709,6 +709,7 @@ UserPosition IBattle::GetFreePosition()
 
 void IBattle::SetHostMap(const wxString& _mapname, const wxString& _hash)
 {
+	assert(!_mapname.empty());
   const std::string mapname(STD_STRING(_mapname));
   const std::string hash(STD_STRING(_hash));
   if ( mapname != m_host_map.name || hash != m_host_map.hash )
@@ -730,6 +731,7 @@ void IBattle::SetHostMap(const wxString& _mapname, const wxString& _hash)
 
 void IBattle::SetLocalMap(const LSL::UnitsyncMap& map)
 {
+	assert(!map.name.empty());
   if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
     m_local_map = map;
     m_map_loaded = true;
@@ -751,8 +753,7 @@ void IBattle::SetLocalMap(const LSL::UnitsyncMap& map)
 
 const LSL::UnitsyncMap& IBattle::LoadMap()
 {
-
-  if ( !m_map_loaded ) {
+  if (( !m_map_loaded ) && (!m_host_map.name.empty())){
     try {
       ASSERT_EXCEPTION( m_map_exists, _T("Map does not exist: ") + TowxString(m_host_map.name) );
       m_local_map = LSL::usync().GetMapEx( m_host_map.name );
@@ -812,6 +813,7 @@ void IBattle::SetLocalMod( const LSL::UnitsyncMod& mod )
 
 const LSL::UnitsyncMod& IBattle::LoadMod()
 {
+	assert(!m_host_mod.name.empty());
   if ( !m_mod_loaded )
    {
     try {

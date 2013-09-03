@@ -13,7 +13,7 @@
 #include "playbackstructs.h"
 #include "../uiutils.h"
 #include <lslutils/globalsmanager.h>
-
+#include <lslunitsync/c_api.h>
 
 ReplayList::ReplayList()
 {
@@ -21,12 +21,15 @@ ReplayList::ReplayList()
 
 void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 {
+	std::string datadir;
+	LSL::usync().GetSpringDataPath(datadir); //FIXME: all data dirs should be checked / move to lsl
 	m_replays.clear();
 	const size_t size = filenames.size();
 	for ( size_t i = 0; i < size; ++i) {
 		PlaybackType& playback = AddPlayback(i);
-		if (!GetReplayInfos(TowxString(filenames[i]), playback)) {
-			wxLogError(_T("Couldn't open replay %s"), filenames[i].c_str() );
+		const wxString wfilename = TowxString(datadir + filenames[i]);
+		if (!GetReplayInfos(wfilename, playback)) {
+			wxLogError(_T("Couldn't open replay %s"), wfilename.c_str() );
 			RemovePlayback(i); //FIXME: stupid logic: always add but remove on fail, why not add on success only?
 		}
 
@@ -46,18 +49,19 @@ int ReplayList::replayVersion(wxFile& replay ) const
 
 bool ReplayList::GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const
 {
-	if (wxFileExists(ReplayPath)) {
+	const wxString FileName = ReplayPath.AfterLast( wxFileName::GetPathSeparator() ); // strips file path
+	ret.Filename = ReplayPath;
+	ret.battle.SetPlayBackFilePath( ReplayPath );
+	ret.SpringVersion = FileName.AfterLast(_T('_')).BeforeLast(_T('.'));
+	ret.MapName = FileName.BeforeLast(_T('_'));
+
+	if (!wxFileExists(ReplayPath)) {
 		return false;
 	}
 	wxFile replay(ReplayPath, wxFile::read );
 	if (!replay.IsOpened()) {
 		return false;
 	}
-	const wxString FileName = ReplayPath.AfterLast( wxFileName::GetPathSeparator() ); // strips file path
-	ret.Filename = ReplayPath;
-	ret.battle.SetPlayBackFilePath( ReplayPath );
-	ret.SpringVersion = FileName.AfterLast(_T('_')).BeforeLast(_T('.'));
-	ret.MapName = FileName.BeforeLast(_T('_'));
 
 	const int replay_version = replayVersion( replay );
 	ret.battle.SetScript( GetScriptFromReplay( replay, replay_version ) );
