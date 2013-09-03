@@ -204,7 +204,6 @@ void Socket::SetTimeout( const int seconds )
 void Socket::Disconnect( )
 {
   if ( m_sock ) m_sock->SetTimeout( 0 );
-  m_net_class.OnDisconnected( this );
   m_buffer = "";
 
   if ( m_sock )
@@ -212,6 +211,7 @@ void Socket::Disconnect( )
     m_sock->Destroy();
     m_sock = 0;
   }
+  m_net_class.OnDisconnected( this );
 }
 
 

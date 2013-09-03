@@ -186,7 +186,7 @@ void Ui::Disconnect()
     if ( m_serv != 0 )
     {
         if ( IsConnected() ) {
-			serverSelector().GetServer().Disconnect();
+		serverSelector().GetServer().Disconnect();
         }
     }
 }
