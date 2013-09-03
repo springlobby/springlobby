@@ -139,7 +139,7 @@ class BattleRoomTab : public wxScrolledWindow, public GlobalEvent
 		long m_mod_opts_index;
 		long m_map_opts_index;
 
-        wxScrolledWindow* m_right_side_window;
+        wxScrolledWindow* m_left_side_window;
 
 		wxBitmapComboBox* m_side_sel;
 

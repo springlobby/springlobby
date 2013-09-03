@@ -135,25 +135,23 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
 	// Creatin main sizer for split window, downloads, and buttons sizer
 	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 	{
-        //Split window for Chat and Right side window (contains map and players list)
-	    m_splitter = new wxSplitterWindow( this, -1, wxDefaultPosition, wxSize( 100, 60 ) );
+        //Split window for Chat and left side window (contains map and players list)
+	    m_splitter = new wxSplitterWindow(this);
         {
             m_splitter->SetMinimumPaneSize( 350 );
+
             //Chat
             m_chat = new ChatPanel( m_splitter, m_battle );
-            {
-
-            }
 
             //Right side window for map stuff and player list
-            m_right_side_window=new wxScrolledWindow( m_splitter , -1 );
+            m_left_side_window=new wxScrolledWindow( m_splitter );
             {
-                m_right_side_window->SetScrollRate( SCROLL_RATE, SCROLL_RATE );
-                wxBoxSizer* m_righ_side = new wxBoxSizer( wxVERTICAL );
+                m_left_side_window->SetScrollRate( SCROLL_RATE, SCROLL_RATE );
+                wxBoxSizer* m_left_side = new wxBoxSizer( wxVERTICAL );
                 {
                     wxBoxSizer* m_map_info_sizer=new wxBoxSizer( wxVERTICAL );
                     {
-                        m_minimap = new MapCtrl( m_right_side_window, 162, m_battle, true, true, true, false );
+                        m_minimap = new MapCtrl( m_left_side_window, 162, m_battle, true, true, true, false );
                         {
                             m_minimap->SetToolTip( TE( _( "A preview of the selected map.  You can see the starting positions, or (if set) starting boxes." ) ) );
                             m_map_info_sizer->Add( m_minimap, 0, wxEXPAND );
@@ -161,11 +159,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
 
                         wxBoxSizer* m_map_select_sizer = new wxBoxSizer( wxHORIZONTAL );
                         {
-                            m_map_combo = new wxComboBox( m_right_side_window, BROOM_MAP_SEL, _T( "" ), wxDefaultPosition, wxDefaultSize );
+                            m_map_combo = new wxComboBox( m_left_side_window, BROOM_MAP_SEL, _T( "" ), wxDefaultPosition, wxDefaultSize );
                             {
                                 m_map_select_sizer->Add( m_map_combo, 1, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL );
                             }
-                            m_browse_map_btn = new wxButton( m_right_side_window, BROOM_MAP_BROWSE, _( "Map" ), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+                            m_browse_map_btn = new wxButton( m_left_side_window, BROOM_MAP_BROWSE, _( "Map" ), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
                             {
                                 m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
                                 m_map_select_sizer->Add( m_browse_map_btn, 0, wxALIGN_RIGHT );
@@ -173,19 +171,19 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
 
                             m_map_info_sizer->Add( m_map_select_sizer, 0, wxALL| wxEXPAND );
                         }
-                        m_righ_side->Add( m_map_info_sizer,0, wxEXPAND );
+                        m_left_side->Add( m_map_info_sizer,0, wxEXPAND );
                     }
 
-                    m_players = new BattleroomListCtrl( m_right_side_window, m_battle, false, true );
+                    m_players = new BattleroomListCtrl( m_left_side_window, m_battle, false, true );
                     {
-                        m_righ_side->Add( m_players, 1, wxEXPAND );
+                        m_left_side->Add( m_players, 1, wxEXPAND );
                     }
-		m_ally_setup_lbl = new wxStaticText( m_right_side_window, -1, _( "Setup: " ) );
-		m_righ_side->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+		m_ally_setup_lbl = new wxStaticText( m_left_side_window, -1, _( "Setup: " ) );
+		m_left_side->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 
 
 
-                    m_right_side_window->SetSizer( m_righ_side );
+                    m_left_side_window->SetSizer( m_left_side );
                 }
             }
             m_main_sizer->Add( m_splitter, 1, wxEXPAND );
@@ -405,7 +403,7 @@ void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
 		m_splitter->Unsplit();
 	if ( horizontal )
 	{
-		m_splitter->SplitVertically(m_chat, m_right_side_window,0);
+		m_splitter->SplitVertically(m_left_side_window, m_chat);
 	}
 }
 
@@ -815,21 +813,21 @@ void BattleRoomTab::OnAllySel( wxCommandEvent& /*unused*/ )
 
 void BattleRoomTab::OnColourSel( wxCommandEvent& /*unused*/ )
 {
-//		if ( !m_battle ) return;
-//    User& u = m_battle->GetMe();
-//    wxColour CurrentColour = u.BattleStatus().colour;
-//    CurrentColour = GetColourFromUser(this, CurrentColour);
-//    if ( !CurrentColour.IsOk() ) return;
-//    sett().SetBattleLastColour( CurrentColour );
-//    m_battle->ForceColour( u, CurrentColour );
+	if ( !m_battle ) return;
+    User& u = m_battle->GetMe();
+    wxColour CurrentColour = u.BattleStatus().colour;
+    CurrentColour = GetColourFromUser(this, CurrentColour);
+    if ( !CurrentColour.IsOk() ) return;
+    sett().SetBattleLastColour( CurrentColour );
+    m_battle->ForceColour( u, CurrentColour );
 }
 
 
 void BattleRoomTab::OnSideSel( wxCommandEvent& /*unused*/ )
 {
-//	if ( !m_battle ) return;
-//	m_battle->ForceSide( m_battle->GetMe(), m_side_sel->GetSelection() );
-//	sett().SetBattleLastSideSel( m_battle->GetHostModName(), m_side_sel->GetSelection() );
+	if ( !m_battle ) return;
+	m_battle->ForceSide( m_battle->GetMe(), m_side_sel->GetSelection() );
+	sett().SetBattleLastSideSel( m_battle->GetHostModName(), m_side_sel->GetSelection() );
 }
 
 void BattleRoomTab::OnAutoLock( wxCommandEvent& /*unused*/ )
