@@ -26,8 +26,10 @@ void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 	for ( size_t i = 0; i < size; ++i) {
 		PlaybackType& playback = AddPlayback(i);
 		if (!GetReplayInfos(TowxString(filenames[i]), playback)) {
+			wxLogError(_T("Couldn't open replay %s"), filenames[i].c_str() );
 			RemovePlayback(i); //FIXME: stupid logic: always add but remove on fail, why not add on success only?
 		}
+
 	}
 }
 
@@ -44,9 +46,11 @@ int ReplayList::replayVersion(wxFile& replay ) const
 
 bool ReplayList::GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const
 {
+	if (wxFileExists(ReplayPath)) {
+		return false;
+	}
 	wxFile replay(ReplayPath, wxFile::read );
 	if (!replay.IsOpened()) {
-		wxLogError(_T("Couldn't open replay %s"), ReplayPath.c_str() );
 		return false;
 	}
 	const wxString FileName = ReplayPath.AfterLast( wxFileName::GetPathSeparator() ); // strips file path
@@ -70,7 +74,7 @@ bool ReplayList::GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const
 	//getting this from filename seems more reliable than from demoheader
 	wxDateTime rdate;
 
-	if (rdate.ParseFormat(FileName, _T("%Y%m%d_%H%M%S")) == NULL) {
+	if (rdate.ParseFormat(FileName, _T("%Y%m%d_%H%M%S")) == 0) {
 		wxLogError(_T("Parsing %s failed"), FileName.c_str());
 		return false;
 	}
