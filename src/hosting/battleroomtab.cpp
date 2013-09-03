@@ -144,7 +144,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle ):
             m_chat = new ChatPanel( m_splitter, m_battle );
 
             //Right side window for map stuff and player list
-            m_left_side_window=new wxScrolledWindow( m_splitter, wxID_ANY, wxDefaultPosition, wxSize(GetSize().x/2, GetSize().y), wxScrolledWindowStyle, wxPanelNameStr);
+            m_left_side_window=new wxScrolledWindow( m_splitter );
             {
                 m_left_side_window->SetScrollRate( SCROLL_RATE, SCROLL_RATE );
                 wxBoxSizer* m_left_side = new wxBoxSizer( wxVERTICAL );
