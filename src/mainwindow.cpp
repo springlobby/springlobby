@@ -607,7 +607,7 @@ void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnReportBug( wxCommandEvent& /*unused*/ )
 {
-	OpenWebBrowser( _T("http://projects.springlobby.info/projects/springlobby/issues/new") );
+	OpenWebBrowser( _T("https://github.com/springlobby/springlobby/issues") );
 }
 
 
