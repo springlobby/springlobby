@@ -22,19 +22,9 @@ class SavegameList : public PlaybackList<Savegame>
 
     template <class PB, class I >
     friend class LSL::Util::GlobalObjectHolder;
-
+private:
 	bool GetSavegameInfos ( const wxString& SavegamePath, Savegame& ret ) const;
 	wxString GetScriptFromSavegame ( const wxString& SavegamePath ) const;
-    BattleOptions GetBattleOptsFromScript( const wxString& script_ );
-
-    //! load mod/map options
-	void LoadMMOpts( const wxString& sectionname, OfflineBattle& battle, const SL::PDataList& node );
-    //! load engine options
-	void LoadMMOpts( OfflineBattle& battle, const SL::PDataList& node );
-
-    //! saves relevant infos from header into replay struct
-    void GetHeaderInfo( Savegame& rep, const wxString& SavegamePath );
-
 };
 
 #endif // SAVEGAMELIST_H

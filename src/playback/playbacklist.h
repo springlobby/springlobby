@@ -16,8 +16,7 @@ class PlaybackList : public wxEvtHandler
 		m_fails(0)
 	{}
 
-    typedef PlaybackImp
-        PlaybackType;
+    typedef PlaybackImp PlaybackType;
 
     typedef unsigned int playback_id_t;
 

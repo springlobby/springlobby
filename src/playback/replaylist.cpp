@@ -21,34 +21,34 @@ ReplayList::ReplayList()
 
 void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 {
-    m_fails = 0;
+	m_fails = 0;
 
-    m_replays.clear();
-    const size_t size = filenames.size();
+	m_replays.clear();
+	const size_t size = filenames.size();
 
-    for ( size_t i = 0; i < size; ++i)
-    {
+	for ( size_t i = 0; i < size; ++i) {
 		Replay& rep_ref = AddPlayback( i ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
-        if ( !GetReplayInfos(TowxString(filenames[i]), rep_ref ) )
-        {
+		if ( !GetReplayInfos(TowxString(filenames[i]), rep_ref ) ) {
 			RemovePlayback( rep_ref.id );
-            m_fails++;
-        }
-    }
+			m_fails++;
+		}
+	}
 }
 
 
-#define SEEK(x) if(replay.Seek(x)==wxInvalidOffset)return 0;
-int replayVersion( const wxString& ReplayPath )
+int ReplayList::replayVersion( const wxString& ReplayPath ) const
 {
-    wxFile replay( ReplayPath, wxFile::read );
-    if ( !replay.IsOpened() ) return 0;
-    SEEK( 16 );
-    int version = 0;
-    replay.Read( &version, 4);
-    return version;
+	wxFile replay( ReplayPath, wxFile::read );
+	if ( !replay.IsOpened() ) {
+		return 0;
+	}
+	if(replay.Seek(16)==wxInvalidOffset) {
+		return 0;
+	}
+	int version = 0;
+	replay.Read( &version, 4);
+	return version;
 }
-#undef SEEK
 
 bool ReplayList::GetReplayInfos (const wxString& ReplayPath, Replay& ret ) const
 {
@@ -61,7 +61,9 @@ bool ReplayList::GetReplayInfos (const wxString& ReplayPath, Replay& ret ) const
 	const int replay_version = replayVersion( ReplayPath );
 	ret.battle.SetScript( GetScriptFromReplay( ReplayPath, replay_version ) );
 
-	if ( ret.battle.GetScript().IsEmpty() ) return false;
+	if ( ret.battle.GetScript().IsEmpty() ) {
+		return false;
+	}
 
 	GetHeaderInfo( ret, ReplayPath, replay_version );
 	ret.battle.GetBattleFromScript( false );
@@ -81,60 +83,62 @@ bool ReplayList::GetReplayInfos (const wxString& ReplayPath, Replay& ret ) const
 	return true;
 }
 
-#define SEEK(x) if(replay.Seek(x)==wxInvalidOffset)return script;
 wxString ReplayList::GetScriptFromReplay (const wxString& ReplayPath  , const int version) const
 {
 
 	wxString script;
-    try
-    {
-        wxFile replay( ReplayPath, wxFile::read );
-        if ( !replay.IsOpened() ) return script;
-        SEEK( 20 );
-        int headerSize=0 ;
-        replay.Read( &headerSize, 4);
-        const int seek = 64 + (version < 5 ? 0 : 240);
-		SEEK( seek );
+	try
+	{
+		wxFile replay( ReplayPath, wxFile::read );
+		if ( !replay.IsOpened() ) return script;
+		if(replay.Seek(20)==wxInvalidOffset) {
+			return script;
+		}
+		int headerSize=0 ;
+		replay.Read( &headerSize, 4);
+		const int seek = 64 + (version < 5 ? 0 : 240);
+		if(replay.Seek(seek)==wxInvalidOffset) {
+			return script;
+		}
 		wxFileOffset scriptSize=0;
-        replay.Read( &scriptSize, 4);
+		replay.Read( &scriptSize, 4);
 		scriptSize = LSL::Util::Clamp( wxFileOffset(scriptSize), wxFileOffset(0), replay.Length() );
-		SEEK( headerSize );
-        std::string script_a(scriptSize,0);
-        replay.Read( &script_a[0], scriptSize );
-        script = TowxString( script_a ) ;//(script_a,scriptSize);
+		if(replay.Seek(headerSize) == wxInvalidOffset)return script;
+		std::string script_a(scriptSize,0);
+		replay.Read( &script_a[0], scriptSize );
+		script = TowxString( script_a ) ;//(script_a,scriptSize);
 
-    }
-    catch (...)
-    {
-    }
+	}
+	catch (...)
+	{
+	}
 	return script;
-
 }
-#undef SEEK
-#define SEEK(x) if(replay.Seek(x)==wxInvalidOffset)return;
+
 void ReplayList::GetHeaderInfo(Replay& rep, const wxString& ReplayPath , const int version) const
 {
-    try
-    {
-        wxFile replay( ReplayPath, wxFile::read );
-        const int seek = 72 + (version < 5 ? 0 : 240);
-        SEEK( seek );
-        int gametime = 0 ;
-        replay.Read( &gametime, 4);
-        rep.duration = gametime;
-        rep.size = replay.Length();
+	try {
+		wxFile replay( ReplayPath, wxFile::read );
+		const int seek = 72 + (version < 5 ? 0 : 240);
+		if(replay.Seek(seek)==wxInvalidOffset) {
+			return;
+		}
+		int gametime = 0 ;
+		replay.Read( &gametime, 4);
+		rep.duration = gametime;
+		rep.size = replay.Length();
 		//! \todo don't use long long? (pedantic)
 		wxLongLong_t unixtime = 0;
-		SEEK( 56 );
-        replay.Read( &unixtime, 8 );
-        wxDateTime dt;
-        dt.Set( (time_t) unixtime );
-        // todo: add 2 strings one for date other for time?
-        wxString date_string = dt.FormatISODate()+_T(" ")+dt.FormatISOTime();
-      //  rep.date = (time_t) unixtime ;
-        rep.date_string = date_string;
-    }
-    catch (...){ }
+		if(replay.Seek(56)==wxInvalidOffset) {
+			return;
+		}
+		replay.Read( &unixtime, 8 );
+		wxDateTime dt;
+		dt.Set( (time_t) unixtime );
+		// todo: add 2 strings one for date other for time?
+		wxString date_string = dt.FormatISODate()+_T(" ")+dt.FormatISOTime();
+		//  rep.date = (time_t) unixtime ;
+		rep.date_string = date_string;
+	}
+	catch (...){ }
 }
-
-#undef SEEK

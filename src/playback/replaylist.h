@@ -3,34 +3,33 @@
 
 
 #include <wx/string.h>
-#include <wx/timer.h>
-#include <wx/arrstr.h>
 
 #include "playbacklist.h"
 #include "playbacktraits.h"
-//copied from spring sources for reference
-//struct DemoFileHeader
-//{
-//	char magic[16];         ///< DEMOFILE_MAGIC
-//	int version;            ///< DEMOFILE_VERSION
-//	int headerSize;         ///< Size of the DemoFileHeader, minor version number.
-//	char versionString[16]; ///< Spring version string, e.g. "0.75b2", "0.75b2+svn4123"
-//	Uint8 gameID[16];       ///< Unique game identifier. Identical for each player of the game.
-//	Uint64 unixTime;        ///< Unix time when game was started.
-//	int scriptSize;         ///< Size of startscript.
-//	int demoStreamSize;     ///< Size of the demo stream.
-//	int gameTime;           ///< Total number of seconds game time.
-//	int wallclockTime;      ///< Total number of seconds wallclock time.
-//	int maxPlayerNum;       ///< Maximum player number which was used in this game.
-//	int numPlayers;         ///< Number of players for which stats are saved.
-//	int playerStatSize;     ///< Size of the entire player statistics chunk.
-//	int playerStatElemSize; ///< sizeof(CPlayer::Statistics)
-//	int numTeams;           ///< Number of teams for which stats are saved.
-//	int teamStatSize;       ///< Size of the entire team statistics chunk.
-//	int teamStatElemSize;   ///< sizeof(CTeam::Statistics)
-//	int teamStatPeriod;     ///< Interval (in seconds) between team stats.
-//	int winningAllyTeam;    ///< The ally team that won the game, -1 if unknown.
-//};
+/*
+copied from spring sources for reference
+struct DemoFileHeader {
+	char magic[16];         ///< DEMOFILE_MAGIC
+	int version;            ///< DEMOFILE_VERSION
+	int headerSize;         ///< Size of the DemoFileHeader, minor version number.
+	char versionString[16]; ///< Spring version string, e.g. "0.75b2", "0.75b2+svn4123"
+	Uint8 gameID[16];       ///< Unique game identifier. Identical for each player of the game.
+	Uint64 unixTime;        ///< Unix time when game was started.
+	int scriptSize;         ///< Size of startscript.
+	int demoStreamSize;     ///< Size of the demo stream.
+	int gameTime;           ///< Total number of seconds game time.
+	int wallclockTime;      ///< Total number of seconds wallclock time.
+	int maxPlayerNum;       ///< Maximum player number which was used in this game.
+	int numPlayers;         ///< Number of players for which stats are saved.
+	int playerStatSize;     ///< Size of the entire player statistics chunk.
+	int playerStatElemSize; ///< sizeof(CPlayer::Statistics)
+	int numTeams;           ///< Number of teams for which stats are saved.
+	int teamStatSize;       ///< Size of the entire team statistics chunk.
+	int teamStatElemSize;   ///< sizeof(CTeam::Statistics)
+	int teamStatPeriod;     ///< Interval (in seconds) between team stats.
+	int winningAllyTeam;    ///< The ally team that won the game, -1 if unknown.
+};
+*/
 
 struct Replay;
 
@@ -39,31 +38,23 @@ class GlobalObjectHolder;
 
 class ReplayList : public PlaybackList<Replay>
 {
-  public:
+	public:
 
-    typedef Replay
-        PlaybackType;
+	typedef Replay PlaybackType;
+	virtual void LoadPlaybacks( const std::vector<std::string>& filenames );
+protected:
+	ReplayList();
 
-   virtual  void LoadPlaybacks( const std::vector<std::string>& filenames );
+	template <class PB, class T>
+	friend class LSL::Util::GlobalObjectHolder;
 
-  protected:
-    ReplayList();
 
-    template <class PB, class T>
-    friend class LSL::Util::GlobalObjectHolder;
-
-    bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret ) const;
-    wxString GetScriptFromReplay ( const wxString& ReplayPath, const int version ) const;
-	BattleOptions GetBattleOptsFromScript( const wxString& script_ ) const;
-
-    //! load mod/map options
-	void LoadMMOpts( const wxString& sectionname, IBattle& battle, const SL::PDataList& node );
-    //! load engine options
-	void LoadMMOpts( IBattle& battle, const SL::PDataList& node );
-
-    //! saves relevant infos from header into replay struct
-    void GetHeaderInfo( Replay& rep, const wxString& ReplayPath, const int version ) const;
-
+private:
+	int replayVersion( const wxString& ReplayPath ) const;
+	bool GetReplayInfos ( const wxString& ReplayPath, Replay& ret ) const;
+	wxString GetScriptFromReplay ( const wxString& ReplayPath, const int version ) const;
+	//! saves relevant infos from header into replay struct
+	void GetHeaderInfo( Replay& rep, const wxString& ReplayPath, const int version ) const;
 };
 
 #endif // SPRINGLOBBY_REPLAYLIST_H_INCLUDED
