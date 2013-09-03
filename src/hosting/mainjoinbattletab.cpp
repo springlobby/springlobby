@@ -220,5 +220,5 @@ void MainJoinBattleTab::FocusBattleRoomTab()
 
 void MainJoinBattleTab::OnUpdate()
 {
-    m_battle_tab->OnUpdate();
+//	m_battle_tab->OnUpdate();
 }
