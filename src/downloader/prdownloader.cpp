@@ -147,6 +147,7 @@ int PrDownloader::GetDownload(const std::string& category, const std::string &na
 	} else if (category == "engine_macosx") {
 		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_MACOSX);
 	}
+	wxLogError(_T("Category %s not found"), category.c_str());
 	return -1;
 }
 
