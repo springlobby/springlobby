@@ -297,7 +297,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 					if ( sett().GetCurrentUsedSpringIndex() != itor->first ) {
 						wxLogMessage( _T( "%s requires version: %s, switching to profile: %s" ), type.c_str(), rep.SpringVersion.c_str(), itor->first.c_str() );
 						sett().SetUsedSpringIndex( itor->first );
-                        LSL::usync().AddReloadEvent(); // request an unitsync reload
+			                        LSL::usync().ReloadUnitSyncLib(); // request an unitsync reload
 					}
 					versionfound = true;
 				}

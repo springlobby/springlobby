@@ -51,7 +51,7 @@ public:
             m_loader->freeResult( m_item );
 
 		UiEvents::ScopedStatusMessage msgcomplete(d, 0);
-		LSL::usync().AddReloadEvent();
+		LSL::usync().ReloadUnitSyncLib();
 		GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
 
         }

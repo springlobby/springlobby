@@ -363,11 +363,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
-	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
 	unsigned int widthfraction = m_opts_list->GetClientSize().GetWidth() / 3;
 	m_opts_list->SetColumnWidth( 0, widthfraction * 1.95 );
 	m_opts_list->SetColumnWidth( 1, widthfraction * 0.95 );
 
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
 }
 
 
@@ -915,8 +915,7 @@ void BattleRoomTab::OnUserJoined( User& user )
 	}
 	UpdateStatsLabels();
 
-	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
-			UiEvents::StatusData( wxFormat(_("%s joined your active battle") ) % user.GetNick(), 1 ) );
+	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(UiEvents::StatusData( wxFormat(_("%s joined your active battle") ) % user.GetNick(), 1 ) );
 }
 
 
@@ -1096,7 +1095,7 @@ void BattleRoomTab::SortPlayerList()
 	m_players->SortList();
 }
 
-void BattleRoomTab::SetBattle( Battle* battle )
+void BattleRoomTab::SetBattle(Battle* battle)
 {
 	m_battle = battle;
 
@@ -1134,23 +1133,11 @@ void BattleRoomTab::SetBattle( Battle* battle )
 	m_players->SetBattle( m_battle );
 	m_chat->SetBattle( m_battle );
 	m_players->Clear();
-	m_side_sel->Clear();
 
-	if ( m_battle )
-	{
+	if ( m_battle ) {
+		RegenerateOptionsList();
 		m_options_preset_sel->SetStringSelection( sett().GetModDefaultPresetName( m_battle->GetHostModName() ) );
-
 		m_color_sel->SetColor( m_battle->GetMe().BattleStatus().colour );
-		try
-		{
-            const wxArrayString sides = LSL::Util::vectorToArrayString(
-                        LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
-			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
-			{
-				m_side_sel->Append( sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
-			}
-		}
-		catch ( ... ) {}
 		for ( UserList::user_map_t::size_type i = 0; i < m_battle->GetNumUsers(); i++ )
 		{
 			m_players->AddUser( m_battle->GetUser( i ) );
@@ -1171,8 +1158,6 @@ void BattleRoomTab::SetBattle( Battle* battle )
 		}
 
 		m_host_new_btn->Show( false );
-
-		RegenerateOptionsList();
 
 		ReloadMaplist();
 
@@ -1212,6 +1197,16 @@ void BattleRoomTab::RegenerateOptionsList()
 	pos++;
 	m_map_opts_index = pos;
 	pos = AddMMOptionsToList( m_map_opts_index, LSL::OptionsWrapper::MapOption );
+	m_side_sel->Clear();
+	if (m_battle != NULL) {
+		try {
+			const wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
+			for ( unsigned int i = 0; i < sides.GetCount(); i++ ) {
+				m_side_sel->Append( sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
+			}
+		}
+		catch ( ... ) {}
+	}
 }
 
 void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )

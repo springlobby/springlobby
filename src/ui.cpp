@@ -583,7 +583,7 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
         {
           wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), neededversion.c_str(), pair.first.c_str() );
           sett().SetUsedSpringIndex( pair.first );
-		  LSL::usync().AddReloadEvent();
+		  LSL::usync().ReloadUnitSyncLib();
         }
         return true;
       }

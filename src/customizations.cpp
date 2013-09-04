@@ -98,7 +98,7 @@ bool Customizations::GetBitmap( const wxString& key, wxBitmap& bitmap )
 	if ( Provides( key ) )
 	{
     const auto path = m_customs.getSingleValue(STD_STRING(key));
-    wxBitmap icon_bmp;// (LSL::usync().GetImage(STD_STRING(m_archive), path, false ) );
+    wxBitmap icon_bmp;
 		if( icon_bmp.IsOk() )
 		{
 			bitmap = icon_bmp;

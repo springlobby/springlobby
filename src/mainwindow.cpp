@@ -587,7 +587,7 @@ void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
 {
-	LSL::usync().AddReloadEvent();
+	LSL::usync().ReloadUnitSyncLib();
 	GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
 }
 
