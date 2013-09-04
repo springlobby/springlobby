@@ -296,7 +296,6 @@ add_subdirectory(helper)
 add_subdirectory(hosting)
 add_subdirectory(options)
 add_subdirectory(utils)
-add_subdirectory(widgets)
 add_subdirectory(wxkeybinder)
 
 set(LSLSERVER OFF CACHE BOOL "disable lsl-server build" FORCE)

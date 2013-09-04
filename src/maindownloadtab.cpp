@@ -19,7 +19,6 @@
 #include "helper/colorbutton.h"
 //#include "downloader/filelister/filelistdialog.h"
 #include "downloader/downloadsobserver.h"
-#include "widgets/downloaddialog.h"
 #include "aui/auimanager.h"
 #include "gui/contentdownloaddialog.h"
 
@@ -29,7 +28,6 @@ BEGIN_EVENT_TABLE( MainDownloadTab, wxPanel )
 	EVT_BUTTON      ( ID_BUTTON_CANCEL,     MainDownloadTab::OnCancelButton      )
 	EVT_BUTTON      ( ID_BUTTON_CLEAR,      MainDownloadTab::OnClearFinished     )
 	EVT_BUTTON      ( ID_DOWNLOAD_DIALOG,   MainDownloadTab::OnDownloadDialog    )
-    EVT_BUTTON      ( ID_BUTTON_WIDGETS,    MainDownloadTab::OnDLWidgets         )
 END_EVENT_TABLE()
 
 MainDownloadTab::MainDownloadTab( wxWindow* parent )
@@ -99,24 +97,14 @@ void MainDownloadTab::OnCancelButton( wxCommandEvent& /*unused*/ )
 
 void MainDownloadTab::OnDownloadDialog( wxCommandEvent& /*unused*/ )
 {
-    if ( m_download_dialog && m_download_dialog->IsShown() ) 
+    if ( m_download_dialog && m_download_dialog->IsShown() )
     {
 	m_download_dialog->SetFocus();
     }else{
-	
-      
+
+
       m_download_dialog = new ContentDownloadDialog(this,wxID_ANY,_("Search for maps and games") );
       m_download_dialog->Show(true);
     }
 }
 
-void MainDownloadTab::OnDLWidgets( wxCommandEvent& /*unused*/ )
-{
-       if ( m_widgets_dialog && m_widgets_dialog->IsShown() ) {
-               m_widgets_dialog->SetFocus();
-       }
-       else {
-               m_widgets_dialog = new WidgetDownloadDialog( this, wxID_ANY, _( "Lua widget downloader" ) );
-               m_widgets_dialog->Show( true );
-       }
-}
