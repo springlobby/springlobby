@@ -28,8 +28,6 @@
 #include "aui/auimanager.h"
 #include "utils/customdialogs.h"
 
-#include <lslunitsync/c_api.h>
-#include <lslunitsync/unitsync.h>
 #include <lslutils/conversion.h>
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)

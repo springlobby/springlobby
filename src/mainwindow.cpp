@@ -47,7 +47,6 @@
 #include "hosting/mainsingleplayertab.h"
 #include "battlelist/battlelisttab.h"
 #include "options/mainoptionstab.h"
-#include <lslunitsync/unitsync.h>
 #include "uiutils.h"
 #include "utils/misc.h"
 #include "chatpanel.h"

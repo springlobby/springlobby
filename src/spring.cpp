@@ -34,7 +34,6 @@
 #include "singleplayerbattle.h"
 #include "offlinebattle.h"
 #include "user.h"
-#include <lslunitsync/unitsync.h>
 #include "nonportable.h"
 #include "tdfcontainer.h"
 #include <lslutils/globalsmanager.h>

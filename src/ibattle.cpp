@@ -13,7 +13,6 @@
 #include "settings.h"
 #include "ui.h" //only required for preset stuff
 #include "spring.h"
-#include <lslunitsync/c_api.h>
 #include <lslutils/conversion.h>
 #include "springlobbyapp.h"
 

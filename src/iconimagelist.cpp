@@ -13,8 +13,6 @@
 #include "iconimagelist.h"
 #include "user.h"
 #include "battle.h"
-//#include "utils.h"
-#include <lslunitsync/unitsync.h>
 #include <lslunitsync/image.h>
 
 #include "images/bot.xpm"

@@ -14,7 +14,6 @@
 #include "utils/controls.h"
 #include "uiutils.h"
 #include "battle.h"
-#include <lslunitsync/unitsync.h>
 #include <lslutils/misc.h>
 #include <lslutils/conversion.h>
 #include "mmoptionwindows.h"

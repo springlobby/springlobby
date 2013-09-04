@@ -42,7 +42,6 @@
 #include <wx/filename.h>
 
 #include <lslutils/globalsmanager.h>
-#include <lslunitsync/c_api.h>
 #include <lslunitsync/unitsync.h>
 
 IMPLEMENT_APP(Springsettings)

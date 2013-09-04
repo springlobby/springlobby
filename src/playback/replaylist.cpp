@@ -13,7 +13,6 @@
 #include "playbackstructs.h"
 #include "../uiutils.h"
 #include <lslutils/globalsmanager.h>
-#include <lslunitsync/c_api.h>
 
 ReplayList::ReplayList()
 {

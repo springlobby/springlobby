@@ -35,7 +35,6 @@
 #include <wx/display.h>
 
 #include "../utils/customdialogs.h"
-#include <lslunitsync/c_api.h>
 #include <utils/conversion.h>
 #include "ctrlconstants.h"
 #include "se_utils.h"
@@ -43,6 +42,7 @@
 #include "presets.h"
 
 #include "../utils/debug.h"
+#include <lslunitsync/c_api.h>
 
 
 intMap abstract_panel::intSettings;
@@ -121,18 +121,18 @@ bool abstract_panel::loadValuesIntoMap()
 		//special treatment for resolution that'll set proper defaults for res
 		wxDisplay display(0);
 		wxRect display_rect ( display.GetGeometry() );
-//		const int current_x_res = configHandler.GetSpringConfigInt(RC_TEXT[0].key,display_rect.width);
-//		const int current_y_res = configHandler.GetSpringConfigInt(RC_TEXT[1].key,display_rect.height);
+//		const int current_x_res = LSL::susynclib().GetSpringConfigInt(RC_TEXT[0].key,display_rect.width);
+//		const int current_y_res = LSL::susynclib().GetSpringConfigInt(RC_TEXT[1].key,display_rect.height);
 
 		for (int i = 0; i< intControls_size;++i)
 		{
       intSettings[intControls[i].key]
-          = configHandler.GetSpringConfigInt(STD_STRING(intControls[i].key),fromString(intControls[i].def));
+          = LSL::susynclib().GetSpringConfigInt(STD_STRING(intControls[i].key),fromString(intControls[i].def));
 		}
     for (int i = 0; i< floatControls_size;++i)
     {
       floatSettings[floatControls[i].key]
-          = configHandler.GetSpringConfigFloat(STD_STRING(floatControls[i].key),fromString(floatControls[i].def));
+          = LSL::susynclib().GetSpringConfigFloat(STD_STRING(floatControls[i].key),fromString(floatControls[i].def));
 		}
 	}
 	catch (...)
@@ -600,7 +600,7 @@ bool abstract_panel::saveSettings() {
     try {
 		for (intMap::const_iterator i = intSettings.begin(); i != intSettings.end();++i)
 	    {
-            configHandler.SetSpringConfigInt(STD_STRING(i->first),i->second);
+            LSL::susynclib().SetSpringConfigInt(STD_STRING(i->first),i->second);
 	    }
 //	    for (stringMap::const_iterator s = stringSettings.begin(); s != stringSettings.end();++s)
 //	    {
@@ -609,7 +609,7 @@ bool abstract_panel::saveSettings() {
 //	    }
 		for (floatMap::const_iterator f = floatSettings.begin(); f != floatSettings.end();++f)
 	    {
-            configHandler.SetSpringConfigFloat(STD_STRING(f->first),f->second);
+            LSL::susynclib().SetSpringConfigFloat(STD_STRING(f->first),f->second);
 	    }
     } catch (...) {
     	customMessageBox(SS_MAIN_ICON,_("Could not save, unitsync not properly loaded"), _("SpringSettings Error"), wxOK|wxICON_HAND, 0);

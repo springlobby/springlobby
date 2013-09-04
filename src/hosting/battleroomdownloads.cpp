@@ -7,7 +7,6 @@
 #include "../downloader/downloadsobserver.h"
 #include <map>
 #include  "../ibattle.h"
-#include <lslunitsync/unitsync.h>
 
 class BattleRoomDownloadProgres: public wxPanel
 {

@@ -21,7 +21,6 @@
 #include <stdexcept>
 
 #include "battlemaptab.h"
-#include <lslunitsync/unitsync.h>
 #include <lslutils/conversion.h>
 #include "ui.h"
 #include "user.h"

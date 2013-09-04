@@ -4,7 +4,6 @@
 //
 #include "battle.h"
 #include "ui.h"
-#include <lslunitsync/unitsync.h>
 #include "server.h"
 #include "user.h"
 #include "utils/misc.h"
@@ -17,7 +16,6 @@
 #include "settings.h"
 #include "useractions.h"
 #include "utils/customdialogs.h"
-#include <lslunitsync/c_api.h>
 #include <lslutils/conversion.h>
 #include "iconimagelist.h"
 #include "spring.h"

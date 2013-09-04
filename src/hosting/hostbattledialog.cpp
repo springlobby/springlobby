@@ -28,7 +28,6 @@
 
 
 #include "settings.h"
-#include <lslunitsync/unitsync.h>
 #include "user.h"
 #include "uiutils.h"
 #include "utils/controls.h"

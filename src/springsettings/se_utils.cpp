@@ -12,7 +12,6 @@
 
 #include "../utils/customdialogs.h"
 #include "../settings.h"
-#include <lslunitsync/c_api.h>
 
 static bool standalonemode = true;
 

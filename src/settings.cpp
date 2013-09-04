@@ -38,7 +38,6 @@
 #include "playback/playbackfiltervalues.h"
 #include <lslutils/globalsmanager.h>
 #include <lslunitsync/c_api.h>
-#include <lslunitsync/unitsync.h>
 #include "customlistctrl.h"
 #include "springsettings/presets.h"
 #include "helper/sortutil.h"

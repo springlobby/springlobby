@@ -19,7 +19,6 @@
 #include "infodialog.h"
 
 #include <wx/sizer.h>
-#include <lslunitsync/unitsync.h>
 #include "settings.h"
 #include <vector>
 #include <fstream>

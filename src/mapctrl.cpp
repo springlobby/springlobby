@@ -11,7 +11,6 @@
 
 #include <lslutils/conversion.h>
 #include <lslutils/misc.h>
-#include <lslunitsync/unitsync.h>
 #include <lslunitsync/image.h>
 #include <lslunitsync/data.h>
 
