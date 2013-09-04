@@ -172,6 +172,7 @@ class Ui : public wxEvtHandler, public GlobalEvent, public SL::NonCopyable
     bool m_first_update_trigger;
 
 	bool m_recconecting_wait;
+	bool m_disable_autoconnect;
 
 	EventReceiverFunc<Ui, BattleEvents::BattleEventData, &Ui::OnBattleInfoUpdated>
 		m_battle_info_updatedSink;

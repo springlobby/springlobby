@@ -486,10 +486,10 @@ void MapCtrl::FreeMinimap()
 
 void MapCtrl::UpdateMinimap()
 {
-	        assert(wxThread::IsMain());
-    int w, h;
+	assert(wxThread::IsMain());
     _SetCursor();
     if ( m_battle == 0 ) return;
+    int w, h;
     GetClientSize( &w, &h );
     if ( m_battle )  //needs to be looked into, crahses with replaytab (koshi)
     {

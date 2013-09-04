@@ -644,7 +644,7 @@ void BattleRoomTab::OnStart( wxCommandEvent& /*unused*/ )
 
 void BattleRoomTab::OnLeave( wxCommandEvent& /*unused*/ )
 {
-	if ( !m_battle ) return;
+	if ( m_battle == NULL) return;
 	m_battle->Leave();
 }
 

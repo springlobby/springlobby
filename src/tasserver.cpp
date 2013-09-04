@@ -335,13 +335,14 @@ void TASServer::Disconnect()
     {
         return;
     }
-    SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
+	m_connected = false;
+	SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
 	m_sock->Disconnect();
 }
 
 bool TASServer::IsConnected()
 {
-	return (m_sock->State() == SS_Open);
+	return (m_sock->State() == SS_Open) && (m_connected);
 }
 
 
