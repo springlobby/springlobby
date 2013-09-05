@@ -2,8 +2,6 @@
 
 #include "../battle.h"
 #include "../user.h"
-
-#include "../ui.h"
 #include "../mainwindow.h"
 
 AutohostHandler::AutohostHandler():m_battle(0)

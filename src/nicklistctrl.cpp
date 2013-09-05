@@ -19,7 +19,6 @@
 #include "iconimagelist.h"
 #include "user.h"
 #include "settings.h"
-#include "ui.h"
 #include "mainwindow.h"
 #include "countrycodes.h"
 #include "chatpanel.h"

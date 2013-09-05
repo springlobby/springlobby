@@ -11,7 +11,6 @@
 #include "battle.h"
 #include "channel/channel.h"
 #include "user.h"
-#include "ui.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "chatpanel.h"

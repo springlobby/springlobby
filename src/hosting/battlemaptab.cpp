@@ -22,7 +22,6 @@
 
 #include "battlemaptab.h"
 #include <lslutils/conversion.h>
-#include "ui.h"
 #include "user.h"
 #include "battle.h"
 #include "utils/debug.h"

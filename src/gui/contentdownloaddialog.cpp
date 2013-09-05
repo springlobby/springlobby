@@ -28,7 +28,7 @@
 #include <wx/sstream.h>
 #include <wx/thread.h>
 #include <wx/jsonreader.h>
-#include <ui.h>
+#include "ui.h"
 
 #include <iostream>
 DECLARE_EVENT_TYPE(SEARCH_FINISHED, wxID_ANY);

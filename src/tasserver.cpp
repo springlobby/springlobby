@@ -25,7 +25,6 @@
 #include "utils/conversion.h"
 #include "utils/platform.h"
 #include "updater/updatehelper.h"
-#include "battle.h"
 #include "serverevents.h"
 #include "socket.h"
 #include "channel/channel.h"

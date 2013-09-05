@@ -35,7 +35,6 @@
 #include "utils/uievents.h"
 #include "updater/updatehelper.h"
 #include "utils/misc.h"
-#include "ui.h"
 #include "server.h"
 #include "user.h"
 #include "battle.h"

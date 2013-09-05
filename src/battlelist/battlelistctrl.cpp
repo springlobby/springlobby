@@ -7,7 +7,6 @@
 
 #include "user.h"
 #include "iconimagelist.h"
-#include "battle.h"
 #include "uiutils.h"
 #include "ui.h"
 #include "server.h"

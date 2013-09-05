@@ -6,8 +6,6 @@
 #include <cmath>
 #include "utils/customdialogs.h"
 
-//for updating ui, anybody feel free to replace with fancy events stuff :P
-#include "ui.h"
 #include "mainwindow.h"
 #include "mainchattab.h"
 #include "hosting/mainjoinbattletab.h"

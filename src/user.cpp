@@ -6,7 +6,6 @@
 #include "user.h"
 #include "battle.h"
 #include "server.h"
-//#include "utils.h"
 #include "chatpanel.h"
 #include "iconimagelist.h"
 

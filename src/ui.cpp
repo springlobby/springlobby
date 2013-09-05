@@ -39,7 +39,6 @@
 #include "hosting/battleroomtab.h"
 #include "hosting/mainjoinbattletab.h"
 #include "hosting/mainsingleplayertab.h"
-#include "battle.h"
 #include "mainchattab.h"
 #include "crashreport.h"
 #include "maindownloadtab.h"

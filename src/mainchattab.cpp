@@ -21,7 +21,6 @@
 #include "channel/channel.h"
 #include "user.h"
 #include "chatpanel.h"
-#include "ui.h"
 #include "server.h"
 #include "settings.h"
 #include "aui/artprovider.h"

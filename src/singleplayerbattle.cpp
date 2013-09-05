@@ -6,7 +6,6 @@
 #include "singleplayerbattle.h"
 #include "hosting/mainsingleplayertab.h"
 #include "server.h"
-#include "ui.h"
 #include "settings.h"
 #include "spring.h"
 #include <lslutils/conversion.h>

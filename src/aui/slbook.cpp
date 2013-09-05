@@ -4,7 +4,6 @@
 #include "../settings.h"
 #include "../chatpanel.h"
 #include "../chatpanelmenu.h"
-#include "../ui.h"
 #include "../mainwindow.h"
 #include "../defines.h"
 

@@ -1,6 +1,5 @@
 #include "offlinebattle.h"
 #include "spring.h"
-#include "ui.h"
 
 #include <wx/timer.h>
 

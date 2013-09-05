@@ -28,7 +28,6 @@
 #include <stdexcept>
 
 #include "battleroomtab.h"
-#include "ui.h"
 #include "user.h"
 #include "battle.h"
 #include "defines.h"

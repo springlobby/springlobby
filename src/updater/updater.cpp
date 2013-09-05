@@ -6,7 +6,6 @@
 #include "../utils/globalevents.h"
 #include "../settings.h"
 #include <lslutils/globalsmanager.h>
-#include "../ui.h"
 #include "../uiutils.h"
 
 #include <wx/stdpaths.h>

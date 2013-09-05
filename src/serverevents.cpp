@@ -21,7 +21,6 @@
 #include "utils/debug.h"
 #include "uiutils.h"
 #include "server.h"
-#include "battle.h"
 #include <downloader/httpdownloader.h>
 #include "settings.h"
 #include "utils/customdialogs.h"

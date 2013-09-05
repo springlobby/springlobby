@@ -38,7 +38,6 @@
 #include "crashreport.h"
 #include "utils/controls.h"
 #include "utils/platform.h"
-#include "ui.h"
 #include "channel/channel.h"
 #include "utils/customdialogs.h"
 #include "springsettings/se_utils.h"

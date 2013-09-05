@@ -56,7 +56,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     m_web_browse_btn = new wxButton( this, SPRING_WEBBROWSE, _("Browse") );
     m_web_browse_btn->SetToolTip(TE(_("Use a file dialog to find the web browser")));
-    
+
     if ( sett().GetWebBrowserUseDefault() ) m_web_def_radio->SetValue( true );
     else m_web_spec_radio->SetValue( true );
 
@@ -235,7 +235,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 	sett().SetUseNotificationPopups( m_use_notif_popups->IsChecked() );
 	sett().SetNotificationPopupPosition( m_notif_popup_pos->GetSelection() );
 	sett().SetNotificationPopupDisplayTime( m_notif_popup_time->GetValue() );
-    
+
 }
 
 
@@ -265,7 +265,7 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 	m_use_notif_popups->SetValue( sett().GetUseNotificationPopups() );
 	m_notif_popup_pos->SetSelection( sett().GetNotificationPopupPosition() );
 	m_notif_popup_time->SetValue( sett().GetNotificationPopupDisplayTime() );
-    
+
 }
 
 void LobbyOptionsTab::HandleWebloc( bool defloc )

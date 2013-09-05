@@ -36,7 +36,6 @@
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
-#include "ui.h"
 #include "introguide.h"
 #include "server.h"
 #include "utils/debug.h"
