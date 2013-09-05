@@ -1,3 +1,18 @@
+
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/networking/tasserver.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 #ifndef SPRINGLOBBY_HEADERGUARD_TASSERVER_H
 #define SPRINGLOBBY_HEADERGUARD_TASSERVER_H
 

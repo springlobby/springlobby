@@ -1,6 +1,20 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SOCKET_H
 #define SPRINGLOBBY_HEADERGUARD_SOCKET_H
 
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/networking/socket.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 #include <wx/string.h>
 
 #include <wx/event.h>

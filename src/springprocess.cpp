@@ -1,5 +1,19 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/spring/springprocess.cpp
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 #include "springprocess.h"
 #include "spring.h"
 #include "utils/debug.h"

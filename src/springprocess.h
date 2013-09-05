@@ -1,6 +1,21 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRINGPROCESS_H
 #define SPRINGLOBBY_HEADERGUARD_SPRINGPROCESS_H
 
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/spring/springprocess.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
+
 #include <wx/thread.h>
 #include <wx/string.h>
 typedef wxThread SpringProcessBase;
