@@ -149,7 +149,7 @@ wxString AddBotDialog::Get(const std::string& section)
 
 wxString AddBotDialog::GetAIShortName()
 {
-    return Get("shortname");
+    return Get("shortName");
 }
 
 wxString AddBotDialog::GetAIVersion()
