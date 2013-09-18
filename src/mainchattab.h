@@ -53,8 +53,6 @@ private:
 	void OnTabsChanged( wxAuiNotebookEvent& event );
 	void OnTabClose( wxAuiNotebookEvent& event );
 
-	void ChangeUnreadChannelColour( const wxColour& colour );
-	void ChangeUnreadPMColour( const wxColour& colour );
 	void LoadPerspective( const wxString& perspective_name = wxEmptyString );
 	void SavePerspective( const wxString& perspective_name = wxEmptyString );
 
