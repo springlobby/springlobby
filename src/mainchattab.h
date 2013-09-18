@@ -49,7 +49,7 @@ class MainChatTab : public wxScrolledWindow
 
     void UpdateNicklistHighlights();
 
-    wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
+    wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour ) const;
 
     void LoadPerspective( const wxString& perspective_name = wxEmptyString );
     void SavePerspective( const wxString& perspective_name = wxEmptyString );
