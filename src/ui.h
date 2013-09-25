@@ -76,7 +76,7 @@ class Ui : public wxEvtHandler, public GlobalEvent, public SL::NonCopyable
 	void Download( const wxString& category, const wxString& name, const wxString& hash );
 
 	bool Ask( const wxString& heading, const wxString& question ) const;
-	bool AskText( const wxString& heading, const wxString& question, wxString& answer, long style = wxOK | wxCANCEL | wxCENTRE );
+	bool AskText( const wxString& heading, const wxString& question, wxString& answer, bool multiline = false);
 	bool AskPassword( const wxString& heading, const wxString& message, wxString& password );
 	void ShowMessage( const wxString& heading, const wxString& message ) const;
     //void OnAlertEvent( AlertEventType ); //TODO alert system
