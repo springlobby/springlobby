@@ -583,14 +583,14 @@ void BattleRoomTab::UpdateUser( User& user )
 		    m_ready_chk->Enable();
 		    m_auto_unspec_chk->Disable();
 		}
-	}
-	else
-	{
+	} else { // we are player
 		m_side_sel->Enable();
 		m_ally_sel->Enable();
 		m_team_sel->Enable();
 		m_ready_chk->Enable();
-		m_auto_unspec_chk->Disable();
+		m_auto_unspec_chk->Disable(); //disable and uncheck unspec as we are already a player
+		m_auto_unspec_chk->SetValue(false);
+		m_battle->SetAutoUnspec(false);
 	}
 
 	icons().SetColourIcon( user.BattleStatus().colour );
