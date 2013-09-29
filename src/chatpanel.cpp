@@ -62,11 +62,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 END_EVENT_TABLE()
 
-	#ifdef __WXMSW__
-        wxString chan_prefix = _("channel_");
-    #else
-        wxString chan_prefix = _("#");
-    #endif
+wxString chan_prefix = _("channel_");
 
 /// table for irc colors
 static wxColor m_irc_colors[16]  =

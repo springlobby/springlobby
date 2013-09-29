@@ -832,9 +832,6 @@ void Settings::SetUsedSpringIndex( const wxString& index )
 
 bool Settings::GetSearchSpringOnlyInSLPath()
 {
-#ifndef __WXMSW__
-	return false;
-#endif
 	return m_config->Read( _T( "/Spring/SearchSpringOnlyInSLPath" ), true );
 }
 
