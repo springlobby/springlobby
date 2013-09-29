@@ -133,7 +133,7 @@ class Settings : public SL::NonCopyable
 
     bool GetShowIPAddresses();
     void SetShowIPAddresses(bool value);
-    
+
     int GetHTTPMaxParallelDownloads();
     void SetHTTPMaxParallelDownloads(int value);
     /**@}*/
@@ -628,7 +628,6 @@ class Settings : public SL::NonCopyable
 
     bool GetDisableSpringVersionCheck();
     void SetDisableSpringVersionCheck(bool disable);
-	bool IgnoreOfferfile();
 
     /* ================================================================ */
     /** @name Torrent System

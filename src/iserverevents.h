@@ -139,7 +139,6 @@ class IServerEvents
 	virtual void OnScriptLine( int battleid, const wxString& line ) = 0;
 	virtual void OnScriptEnd( int battleid ) = 0;
 
-	virtual void OnFileDownload( bool autolaunch, bool autoclose, bool disconnectonrefuse, const wxString& FileName, const wxString& url, const wxString& description ) = 0;
 	virtual void OnSpringDownloadEvent( wxCommandEvent& event ) = 0;
     virtual void OnForceJoinBattle( int battleid, const wxString& line ) = 0;
 

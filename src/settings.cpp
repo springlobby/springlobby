@@ -2639,11 +2639,6 @@ wxString Settings::GetUikeys( const wxString& index )
 
 //END OF Hotkeys stuff (for springsettings)
 
-bool Settings::IgnoreOfferfile()
-{
-	return m_config->Read( _T("/IgnoreOfferfile"), 0l);
-}
-
 bool Settings::IsSelfUpdateDisabled()
 {
 	return m_config->Read( _T( "/General/SelfUpdateDisabled" ), 0l );

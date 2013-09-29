@@ -113,7 +113,6 @@ class ServerEvents : public IServerEvents, public wxEvtHandler
     void OnScriptLine( int battleid, const wxString& line );
     void OnScriptEnd( int battleid );
 
-    void OnFileDownload( bool autolaunch, bool autoclose, bool disconnectonrefuse, const wxString& FileName, const wxString& url, const wxString& description );
     void OnSpringDownloadEvent( wxCommandEvent& event );
     void OnForceJoinBattle( int battleid, const wxString& line );
 

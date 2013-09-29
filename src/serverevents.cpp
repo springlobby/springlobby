@@ -974,28 +974,6 @@ void ServerEvents::OnScriptEnd( int battleid )
 	m_serv.GetBattle( battleid ).GetBattleFromScript( true );
 }
 
-
-void ServerEvents::OnFileDownload( bool autolaunch, bool autoclose, bool /*disconnectonrefuse*/, const wxString& FileName, const wxString& url, const wxString& description )
-{
-	if ( sett().IgnoreOfferfile() )
-		return;
-	wxString refinedurl;
-	if ( url.Find(_T("http://")) != wxNOT_FOUND ) refinedurl = url.AfterFirst(_T('/')).AfterFirst(_T('/'));
-	else refinedurl = url;
-	bool result = ui().Ask( _("Download update"), wxString::Format( _("Would you like to download %s ? The file offers the following updates:\n\n%s\n\nThe download will be started in the background, you will be notified on operation completed."), url.c_str(), description.c_str() ) );
-	if ( result )
-	{
-		m_autoclose = autoclose;
-		m_autolaunch = autolaunch;
-		wxString filename;
-		if ( FileName != _T("*") ) filename = FileName;
-		else filename = _T("Spring installer.exe");
-		m_savepath = sett().GetCurrentUsedDataDir() + filename;
-		wxLogMessage(_T("downloading update in: %s, from: %s"),m_savepath.c_str(),refinedurl.c_str());
-		OpenWebBrowser( url );
-		//new HttpDownloaderThread<ServerEvents>( refinedurl, m_savepath, *this, wxID_HIGHEST + 100, true, false );
-	}
-}
 void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
 {
 	int code = event.GetInt();
