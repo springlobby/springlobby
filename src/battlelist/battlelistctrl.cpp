@@ -268,6 +268,7 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
         case 8: return dir * ComparePlayer( u1, u2 );
         case 9: return dir * compareSimple( u1->GetMaxPlayers(), u2->GetMaxPlayers() );
         case 10: return dir * compareSimple( u1->GetBattleRunningTime(), u2->GetBattleRunningTime());
+		case 11: return dir * compareSimple( u1->GetEngineVersion(), u2->GetEngineVersion() );
         default: return 0;
     }
     return 0; // simply to avoid compiler warning
