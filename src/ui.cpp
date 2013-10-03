@@ -565,7 +565,6 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 {
 	assert(engine == _T("spring"));
-    sett().RefreshSpringVersionList();
     if ( sett().GetDisableSpringVersionCheck() ) return true;
 	const std::string neededversion = STD_STRING(version);
 	std::string hackversion;
