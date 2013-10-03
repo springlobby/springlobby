@@ -617,19 +617,17 @@ void BattleroomMMOptionsTab<BattleType>::SetBattle( BattleType* battle )
 	for ( textCtrlMap::iterator itor = m_textctrl_map.begin(); itor != m_textctrl_map.end(); ++itor ) itor->second->Enable(m_battle);
 	for ( buttonMap::iterator itor = m_button_map.begin(); itor != m_button_map.end(); ++itor ) itor->second->Enable(m_battle);
 
-	if ( m_battle )
-	{
+	if ( m_battle ) {
 		m_options_preset_sel->SetStringSelection( sett().GetModDefaultPresetName( m_battle->GetHostModName() ) );
-        if ( !m_battle->IsFounderMe() )
-        {
-            m_options_preset_sel->Disable();
-            m_load_btn->Disable();
-            m_save_btn->Disable();
-            m_delete_btn->Disable();
-            m_default_btn->Disable();
-            return;
-        }
-        OnReloadControls();
+		if ( !m_battle->IsFounderMe() ) {
+			m_options_preset_sel->Disable();
+			m_load_btn->Disable();
+			m_save_btn->Disable();
+			m_delete_btn->Disable();
+			m_default_btn->Disable();
+		} else {
+			OnReloadControls();
+		}
 	}
 }
 

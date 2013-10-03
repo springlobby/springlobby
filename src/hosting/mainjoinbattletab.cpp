@@ -104,30 +104,12 @@ void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
 	GetMMOptionsTab().UpdateOptControls( Tag );
 }
 
-#include <time.h>
 void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
-    wxString tmsg=_T("");
-    clock_t t=clock();
-    //PreSwitchBattlePerspective();
-    tmsg<<_T("\nPreSwitch: ")<<(int)(clock() - t)/1000;t=clock();
-
 	m_mm_opts_tab->SetBattle( &battle );
-	tmsg<<_T("\nmm_pts_tab: ")<<(int)(clock() - t)/1000;t=clock();
-
 	m_opts_tab->SetBattle( &battle );
-	tmsg<<_T("\nopts_tab: ")<<(int)(clock() - t)/1000;t=clock();
-
 	m_map_tab->SetBattle( &battle );
-	tmsg<<_T("\nmap_tab: ")<<(int)(clock() - t)/1000;t=clock();
-
 	m_battle_tab->SetBattle( &battle );
-	tmsg<<_T("\nbattle_tab: ")<<(int)(clock() - t)/1000;t=clock();
-
-	//PostSwitchBattlePerspective();
-	tmsg<<_T("\nPostSwitch: ")<<(int)(clock() - t)/1000;t=clock();
-
-    //ui().Ask(_T("Timer"),tmsg);
 }
 
 
