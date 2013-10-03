@@ -459,8 +459,8 @@ int MapCtrl::LoadMinimap()
 
         m_mapname = map;
         m_lastsize = wxSize( w, h );
-        Refresh();
-        Update();
+        //Refresh();
+        //Update();
     }
     catch (...)
     {
@@ -509,8 +509,8 @@ void MapCtrl::UpdateMinimap()
     //without this test aborts happen when unit sync is reloaded from torrent complete
     //if ( IsShownOnScreen() ) //meh, doesn't actually help
     {
-        Refresh();
-        Update();
+        //Refresh();
+        //Update();
     }
 }
 

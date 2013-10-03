@@ -816,6 +816,7 @@ void BattleRoomTab::OnAllySel( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnColourSel( wxCommandEvent& /*unused*/ )
 {
 		if ( !m_battle ) return;
+    if ( !m_battle ) return;
     User& u = m_battle->GetMe();
     wxColour CurrentColour = u.BattleStatus().colour;
     CurrentColour = GetColourFromUser(this, CurrentColour);

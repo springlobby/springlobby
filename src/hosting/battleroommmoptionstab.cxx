@@ -604,6 +604,8 @@ template < class BattleType >
 void BattleroomMMOptionsTab<BattleType>::SetBattle( BattleType* battle )
 {
 	m_battle = battle;
+
+
 	m_options_preset_sel->Enable(m_battle);
 	m_load_btn->Enable(m_battle);
 	m_save_btn->Enable(m_battle);
@@ -618,15 +620,16 @@ void BattleroomMMOptionsTab<BattleType>::SetBattle( BattleType* battle )
 	if ( m_battle )
 	{
 		m_options_preset_sel->SetStringSelection( sett().GetModDefaultPresetName( m_battle->GetHostModName() ) );
-    if ( !m_battle->IsFounderMe() )
-    {
-        m_options_preset_sel->Disable();
-        m_load_btn->Disable();
-        m_save_btn->Disable();
-        m_delete_btn->Disable();
-        m_default_btn->Disable();
-    }
-    OnReloadControls();
+        if ( !m_battle->IsFounderMe() )
+        {
+            m_options_preset_sel->Disable();
+            m_load_btn->Disable();
+            m_save_btn->Disable();
+            m_delete_btn->Disable();
+            m_default_btn->Disable();
+            return;
+        }
+        OnReloadControls();
 	}
 }
 
