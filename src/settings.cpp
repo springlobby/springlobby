@@ -373,43 +373,6 @@ void Settings::SetDefaultServerSettings()
 	SetDefaultServer( DEFSETT_DEFAULT_SERVER_NAME );
 }
 
-
-//! @brief convert old server settings format
-void Settings::ConvertOldServerSettings()
-{
-	wxArrayString servers;
-	std::map<wxString, bool> m_autosave_pass;
-	std::map<wxString, wxString> m_saved_nicks;
-	std::map<wxString, wxString> m_saved_pass;
-	std::map<wxString, wxString> m_saved_hosts;
-	std::map<wxString, int> m_saved_ports;
-	int count = m_config->Read( _T( "/Servers/Count" ), 0l );
-	for ( int i = 0; i < count; i++ )
-	{
-		wxString server_name = m_config->Read( wxFormat( _T( "/Servers/Server%d" ) ) % i, _T( "" ) );
-		if ( server_name == _T( "TAS Server" ) ) server_name = DEFSETT_DEFAULT_SERVER_NAME;
-		servers.Add( server_name );
-		m_saved_nicks[server_name] = m_config->Read( _T( "/Server/" ) + server_name + _T( "/nick" ), _T( "" ) );
-		m_saved_pass[server_name] = m_config->Read( _T( "/Server/" ) + server_name + _T( "/pass" ), _T( "" ) );
-		m_autosave_pass[server_name] = m_config->Read( _T( "/Server/" ) + server_name + _T( "/savepass" ), 0l );
-		m_saved_ports[server_name] = m_config->Read( _T( "/Server/" ) + server_name + _T( "/port" ), DEFSETT_DEFAULT_SERVER_PORT );
-		m_saved_hosts[server_name] = m_config->Read( _T( "/Server/" ) + server_name + _T( "/host" ), DEFSETT_DEFAULT_SERVER_HOST );
-	}
-	m_config->DeleteGroup( _T( "/Server" ) );
-	m_config->DeleteGroup( _T( "/Servers" ) );
-	SetDefaultServerSettings();
-	count = servers.GetCount();
-	for ( int i = 0; i < count; i++ )
-	{
-		wxString server_name = servers[i];
-		SetServer( server_name, m_saved_hosts[server_name], m_saved_ports[server_name] );
-		SetServerAccountNick( server_name, m_saved_nicks[server_name] );
-		SetServerAccountPass( server_name, m_saved_pass[server_name] );
-		SetServerAccountSavePass( server_name, m_autosave_pass[server_name] );
-	}
-
-}
-
 //! @brief Checks if the server name/alias exists in the settings
 bool Settings::ServerExists( const wxString& server_name )
 {
@@ -611,19 +574,6 @@ std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
 	return ret;
 }
 
-void Settings::ConvertOldChannelSettings()
-{
-	int numchannels = m_config->Read( _T( "/Channels/Count" ), 0l );
-	m_config->DeleteEntry( _T( "/Channels/Count" ) );
-	for ( int i = 0; i < numchannels; i++ )
-	{
-		wxString channelinfo = m_config->Read( _T( "/Channels/Channel" ) + TowxString( i ), _T( "" ) );
-		m_config->DeleteEntry( _T( "/Channels/Channel" ) + TowxString( i ) );
-		if ( channelinfo.Find( _T( " " ) ) != wxNOT_FOUND ) AddChannelJoin( channelinfo.BeforeFirst( _T( ' ' ) ), channelinfo.AfterLast( _T( ' ' ) ) );
-		else AddChannelJoin( channelinfo, _T( "" ) );
-	}
-}
-
 bool Settings::ShouldAddDefaultChannelSettings()
 {
 	return !m_config->HasSection( _T( "/Channels" ) );
@@ -772,20 +722,6 @@ wxString Settings::AutoFindUikeys()
 	return pl.FindValidPath( _T( "uikeys.txt" ) );
 }
 
-
-void Settings::ConvertOldSpringDirsOptions()
-{
-	SetUnitSync( _T( "default" ), m_config->Read( _T( "/Spring/unitsync_loc" ), _T( "" ) ) );
-	SetSpringBinary( _T( "default" ), m_config->Read( _T( "/Spring/exec_loc" ), _T( "" ) ) );
-
-    SetUsedSpringIndex(_T("default"));
-
-	m_config->DeleteEntry( _T( "/Spring/unitsync_loc" ) );
-	m_config->DeleteEntry( _T( "/Spring/use_spring_def_loc" ) );
-	m_config->DeleteEntry( _T( "/Spring/use_unitsync_def_loc" ) );
-	m_config->DeleteEntry( _T( "/Spring/dir" ) );
-	m_config->DeleteEntry( _T( "/Spring/exec_loc" ) );
-}
 
 std::map<wxString, wxString> Settings::GetSpringVersionList() const
 {
@@ -1339,43 +1275,6 @@ wxColour ConvertOldRGBFormat( wxString color )
 	return wxColour( R % 256, G % 256, B % 256 );
 }
 
-void Settings::ConvertOldColorSettings()
-{
-	SetChatColorNormal( ConvertOldRGBFormat( m_config->Read( _T( "/Chat/Colour/Normal" ), _T( "0 0 0" ) ) ) );
-	SetChatColorBackground( ConvertOldRGBFormat( m_config->Read( _T( "/Chat/Colour/Background" ), _T( "255 255 255" ) ) ) );
-	SetChatColorHighlight( ConvertOldRGBFormat( m_config->Read( _T( "/Chat/Colour/Highlight" ), _T( "255 0 0" ) ) ) );
-	SetChatColorMine( ConvertOldRGBFormat( m_config->Read( _T( "/Chat/Colour/Mine" ), _T( "138 138 138" ) ) ) );
-	SetChatColorNotification( ConvertOldRGBFormat( m_config->Read( _T( "/Chat/Colour/Notification" ), _T( "255 40 40" ) ) ) );
-	SetChatColorServer( ConvertOldRGBFormat( m_config->Read( _T( "/Chat/Colour/Server" ), _T( "0 80 128" ) ) ) );
-	SetChatColorClient( ConvertOldRGBFormat( m_config->Read( _T( "/Chat/Colour/Client" ), _T( "20 200 25" ) ) ) );
-	SetChatColorJoinPart( ConvertOldRGBFormat( m_config->Read( _T( "/Chat/Colour/JoinPart" ), _T( "66 204 66" ) ) ) );
-	SetChatColorError( ConvertOldRGBFormat( m_config->Read( _T( "/Chat/Colour/Error" ), _T( "128 0 0" ) ) ) );
-	SetChatColorTime( ConvertOldRGBFormat( m_config->Read( _T( "/Chat/Colour/Time" ), _T( "100 100 140" ) ) ) );
-	SetChatColorAction( ConvertOldRGBFormat( m_config->Read( _T( "/Chat/Colour/Action" ), _T( "230 0 255" ) ) ) );
-	SetBattleLastColour( ConvertOldRGBFormat( m_config->Read( _T( "/Hosting/MyLastColour" ), _T( "255 255 0" ) ) ) );
-
-	//convert custom color palette, note 16 colors is wx limit
-	wxArrayString palettes = GetGroupList( _T( "/CustomColors" ) );
-	for ( unsigned int j = 0; j < palettes.GetCount(); j++ )
-	{
-		wxString paletteName = palettes[j];
-		for ( int i = 0; i < 16; ++i )
-		{
-			wxColour col( ConvertOldRGBFormat( m_config->Read( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ), _T( "255 255 255" ) ) ) );
-			m_config->Write( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ), col.GetAsString( wxC2S_HTML_SYNTAX ) );
-		}
-	}
-
-	wxArrayString groups = GetGroupList( _T( "/Groups" ) );
-	for ( unsigned int j = 0; j < groups.GetCount(); j++ )
-	{
-		wxString group = groups[j];
-		wxColour col( ConvertOldRGBFormat ( m_config->Read( _T( "/Groups/" ) + group + _T( "/Opts/HLColor" ) , _T( "100 100 140" ) ) ) );
-		m_config->Write( _T( "/Groups/" ) + group + _T( "/Opts/HLColor" ), col.GetAsString( wxC2S_HTML_SYNTAX ) );
-	}
-
-}
-
 wxColour Settings::GetChatColorNormal()
 {
 	return wxColour( m_config->Read( _T( "/Chat/Colour/Normal" ), _T( "#000000" ) ) );
@@ -1524,11 +1423,6 @@ bool Settings::GetAlwaysAutoScrollOnFocusLost()
 void Settings::SetAlwaysAutoScrollOnFocusLost( bool value )
 {
 	m_config->Write( _T( "/Chat/AlwaysAutoScrollOnFocusLost" ), value );
-}
-
-void Settings::ConvertOldHiglightSettings()
-{
-	SetHighlightedWords( wxStringTokenize( m_config->Read( _T( "/Chat/HighlightedWords" ), _T( "" ) ), _T( ";" ) ) );
 }
 
 void Settings::SetUseIrcColors( bool value )
@@ -2369,36 +2263,6 @@ void Settings::SetStartTab( const int idx )
 unsigned int Settings::GetStartTab( )
 {
 	return m_config->Read( _T( "/GUI/StartTab" ) , MainWindow::PAGE_SINGLE ); //default is SP tab
-}
-
-//! simply move saved col size +1 to account for dummy col, force dummy col width to 0
-void Settings::TranslateSavedColumWidths()
-{
-#ifdef SL_DUMMY_COL
-	wxString old_path = m_config->GetPath();
-	bool old_record = m_config->IsRecordingDefaults( );
-	m_config->SetRecordDefaults( false );
-	std::vector<wxString> ctrls;
-	ctrls.push_back( _T( "NickListCtrl" ) );
-	ctrls.push_back( _T( "BattleroomListCtrl" ) );
-	ctrls.push_back( _T( "BattleListCtrl" ) );
-	ctrls.push_back( _T( "WidgetDownloadListCtrl" ) );
-	ctrls.push_back( _T( "ChannelListCtrl" ) );
-	ctrls.push_back( _T( "PlaybackListCtrl" ) );
-	for ( std::vector<wxString>::const_iterator it = ctrls.begin(); it != ctrls.end(); ++it ) {
-		m_config->SetPath( _T( "/GUI/ColumnWidths/" ) + *it );
-		unsigned int entries  = m_config->GetNumberOfEntries( false ); //do not recurse
-		for ( unsigned int i = entries; i > 0 ; --i )
-		{
-			m_config->Write( TowxString( i ), m_config->Read( TowxString( i - 1 ) , -1 ) );
-		}
-		m_config->Write( TowxString( 0 ), 0 );
-	}
-
-	m_config->SetPath( old_path );
-	m_config->SetRecordDefaults( old_record );
-	customMessageBoxNoModal( SL_MAIN_ICON, _( "The way column widths are saved has changed, you may need to re-adjust your col widths manually once." ), _( "Important" ) );
-#endif
 }
 
 wxString Settings::GetEditorPath( )

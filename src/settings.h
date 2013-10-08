@@ -11,7 +11,7 @@
 #include "helper/slconfig.h"
 
 const int CACHE_VERSION     = 11;
-const int SETTINGS_VERSION  = 24;
+const int SETTINGS_VERSION  = 25;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("lobby.springrts.com");
@@ -202,7 +202,6 @@ class Settings : public SL::NonCopyable
     /** @name Servers
      * @{
      */
-		void ConvertOldServerSettings();
     wxString GetDefaultServer();
     void SetDefaultServer( const wxString& server_name );
     void SetAutoConnect( bool do_autoconnect );
@@ -276,8 +275,6 @@ class Settings : public SL::NonCopyable
      */
 		int GetChannelJoinIndex( const wxString& name );
 
-    void ConvertOldChannelSettings();
-
     bool ShouldAddDefaultChannelSettings();
 		/**@}*/
 
@@ -344,7 +341,6 @@ class Settings : public SL::NonCopyable
     bool GetShowXallTabs();
     void SetShowXallTabs( bool show );
 
-    void TranslateSavedColumWidths();
 
 	wxString GetEditorPath();
     void SetEditorPath( const wxString& path );
@@ -386,7 +382,6 @@ class Settings : public SL::NonCopyable
      * @{
      */
 
-    void ConvertOldSpringDirsOptions();
     void RefreshSpringVersionList();
     std::map<wxString, wxString> GetSpringVersionList() const; /// index -> version
     wxString GetCurrentUsedSpringIndex();
@@ -452,8 +447,6 @@ class Settings : public SL::NonCopyable
     void SetChatPMSoundNotificationEnabled( bool enabled );
     bool GetChatPMSoundNotificationEnabled();
 
-    void ConvertOldColorSettings();
-
     wxColour GetChatColorNormal();
     void SetChatColorNormal( wxColour value );
     wxColour GetChatColorBackground();
@@ -495,8 +488,6 @@ class Settings : public SL::NonCopyable
     void SetSmartScrollEnabled(bool value);
     bool GetAlwaysAutoScrollOnFocusLost();
     void SetAlwaysAutoScrollOnFocusLost(bool value);
-
-		void ConvertOldHiglightSettings();
 
 		void SetUseIrcColors( bool value );
 		bool GetUseIrcColors();

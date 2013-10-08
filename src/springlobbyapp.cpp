@@ -369,68 +369,9 @@ void SpringLobbyApp::CacheAndSettingsSetup()
         }
     }
 
-    if ( !sett().IsFirstRun() )
-    {
-    	int settversion = sett().GetSettingsVersion();
-    	if ( settversion < 3 )
-    	{
-				sett().ConvertOldSpringDirsOptions();
-    	}
-			if ( settversion < 4 )
-			{
-				if ( sett().GetTorrentPort() == DEFSETT_SPRING_PORT ) sett().SetTorrentPort( DEFSETT_SPRING_PORT + 1 );
-			}
-			if ( settversion < 5 )
-			{
-				wxArrayString list = sett().GetServers();
-				int count = list.GetCount();
-				wxArrayString wordlist = sett().GetHighlightedWords();
-				for ( int i= 0; i < count; i++ )
-				{
-					wxString nick = sett().GetServerAccountNick( list[i] );
-					if ( wordlist.Index( nick ) == -1 )
-					{
-						wordlist.Add( nick );
-					}
-				}
-					sett().SetHighlightedWords( wordlist );
-			}
-			if ( settversion < 6 )
-			{
-				sett().ConvertOldServerSettings();
-			}
-			if ( settversion < 7 )
-			{
-				sett().AddChannelJoin( _T("springlobby"), _T("") );
-			}
-			if ( settversion < 10 )
-			{
-				sett().ConvertOldColorSettings();
-			}
-			if ( settversion < 11 )
-			{
-				if( IsUACenabled() )
-				{
-					LSL::usync().ReloadUnitSyncLib();
-                    if ( LSL::usync().IsLoaded() ) LSL::usync().SetSpringDataPath(""); // UAC is on, fix the spring data path
-				}
-			}
-			if ( settversion < 12 )
-			{
-				sett().ConvertOldChannelSettings();
-			}
-			if ( settversion < 13 )
-			{
-				sett().ConvertOldHiglightSettings();
-			}
-			if ( settversion < 15 )
-			{
-				sett().TranslateSavedColumWidths();
-			}
-			if ( settversion < 21 )
-			{
-				sett().RemoveLayouts();
-			}
+	if ( !sett().IsFirstRun() )
+	{
+		int settversion = sett().GetSettingsVersion();
 			if ( settversion < 18 )
 			{
 				//new downloader was introduced
@@ -455,26 +396,29 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 					}
 				}
 			}
-            if ( settversion < 23 )
-            {
-                sett().ConvertLists();
-                sett().AddKnownMatchmakerCPU(6667);
-            }
+			if ( settversion < 23 )
+			{
+				sett().ConvertLists();
+				sett().AddKnownMatchmakerCPU(6667);
+			}
 		if ( settversion < 24 ) {
 			sett().DeleteServer( _T("Backup server") );
 			sett().DeleteServer( _T("Backup server 1") );
 			sett().DeleteServer( _T("Backup server 2") );
 			sett().SetDefaultServerSettings();
 		}
+		if ( settversion < 25 ) {
+			sett().SetDisableSpringVersionCheck(false);
+		}
 	}
 
-    if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )
-        sett().SetDefaultServerSettings();
+	if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )
+		sett().SetDefaultServerSettings();
 
-    if ( sett().ShouldAddDefaultChannelSettings() )
-    {
-        sett().AddChannelJoin( _T("main"), _T("") );
-        sett().AddChannelJoin( _T("newbies"), _T("") );
+	if ( sett().ShouldAddDefaultChannelSettings() )
+	{
+		sett().AddChannelJoin( _T("main"), _T("") );
+		sett().AddChannelJoin( _T("newbies"), _T("") );
 		if ( m_translationhelper )
 		{
 			if ( m_translationhelper->GetLocale() )
@@ -484,23 +428,23 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 				sett().AddChannelJoin( localecode, _T("") ); // add locale's language code to autojoin
 			}
 		}
-    }
+	}
 
-    if ( sett().ShouldAddDefaultGroupSettings() )
-    {
-         sett().AddGroup( _("Default") );
-         sett().AddGroup( _("Ignore PM") );
-         useractions().ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
-         sett().AddGroup( _("Ignore chat") );
-         useractions().ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
-         sett().AddGroup( _("Battle Autokick") );
-         useractions().ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
-         sett().AddGroup( _("Friends") );
-         useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
-         useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
-         useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
-         useractions().SetGroupColor( _("Friends"), wxColour( 0, 0, 255 ) );
-    }
+	if ( sett().ShouldAddDefaultGroupSettings() )
+	{
+		 sett().AddGroup( _("Default") );
+		 sett().AddGroup( _("Ignore PM") );
+		 useractions().ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
+		 sett().AddGroup( _("Ignore chat") );
+		 useractions().ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
+		 sett().AddGroup( _("Battle Autokick") );
+		 useractions().ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
+		 sett().AddGroup( _("Friends") );
+		 useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
+		 useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
+		 useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
+		 useractions().SetGroupColor( _("Friends"), wxColour( 0, 0, 255 ) );
+	}
 }
 
 void SpringLobbyApp::OnQuit( wxCommandEvent& /*data*/ )
