@@ -10,7 +10,7 @@
 #include "helper/sortutil.h"
 #include "helper/slconfig.h"
 
-const int CACHE_VERSION     = 11;
+const int CACHE_VERSION     = 12;
 const int SETTINGS_VERSION  = 25;
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
