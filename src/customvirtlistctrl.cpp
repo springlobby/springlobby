@@ -218,14 +218,9 @@ void CustomVirtListCtrl<T,L>::RefreshVisibleItems()
 {
     if ( m_data.empty() )
         return;
-#ifndef __WXMSW__
     const long topItemIndex = GetTopItem();
     const long range = topItemIndex + GetCountPerPage();
     RefreshItems( topItemIndex,  LSL::Util::Clamp( range, topItemIndex, (long) m_data.size() -1 ) );
-    //RefreshItems( topItemIndex,  range );
-#else
-    RefreshItems( 0,  m_data.size() -1 );
-#endif
 }
 
 template < class T, class L >
@@ -238,9 +233,7 @@ void CustomVirtListCtrl<T,L>::OnTimer(wxTimerEvent& /*unused*/ )
       m_tipwindow = new SLTipWindow(this, m_tiptext);
       m_controlPointer = &m_tipwindow;
       m_tipwindow->SetTipWindowPtr((wxTipWindow**)m_controlPointer);
-#ifndef __WXMSW__
       m_tipwindow->SetBoundingRect(wxRect(1,1,50,50));
-#endif
       m_tiptext = wxEmptyString;
       m_tiptimer.Start(m_tooltip_duration, wxTIMER_ONE_SHOT);
   }
