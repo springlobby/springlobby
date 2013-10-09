@@ -40,20 +40,20 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
 
-	const int widths[12] = {20,20,20,170,140,130,110,28,28,28,30,30};
 
-	AddColumn( 0, widths[0], _("Status"), _("Status") );
-	AddColumn( 1, widths[1], _("Country"), _("Country") );
-	AddColumn( 2, widths[2], _("Rank"), _("Minimum rank to join") );
-	AddColumn( 3, widths[3], _("Description"), _("Battle description") );
-	AddColumn( 4, widths[4], _("Map"), _("Mapname") );
-	AddColumn( 5, widths[5], _("Game"), _("Gamename") );
-	AddColumn( 6, widths[6], _("Host"), _("Name of the Host") );
-	AddColumn( 7, widths[7], _("Spectators"), _("Number of Spectators") );
-	AddColumn( 8, widths[8], _("Players"), _("Number of Players joined") );
-	AddColumn( 9, widths[9], _("Max"), _("Maximum number of Players that can join") );
-	AddColumn( 10, widths[10], _("Running"), _("How long the game has been running for") );
-	AddColumn( 11, widths[11], _("Version"), _("Version of the engine") );
+
+	AddColumn( 0, wxLIST_AUTOSIZE, _("Status"), _("Status") );
+	AddColumn( 1, wxLIST_AUTOSIZE, _("Country"), _("Country") );
+	AddColumn( 2, wxLIST_AUTOSIZE, _("Rank"), _("Minimum rank to join") );
+	AddColumn( 3, wxLIST_AUTOSIZE, _("Description"), _("Battle description") );
+	AddColumn( 4, wxLIST_AUTOSIZE, _("Map"), _("Mapname") );
+	AddColumn( 5, wxLIST_AUTOSIZE, _("Game"), _("Gamename") );
+	AddColumn( 6, wxLIST_AUTOSIZE, _("Host"), _("Name of the Host") );
+	AddColumn( 7, wxLIST_AUTOSIZE, _("Spectators"), _("Number of Spectators") );
+	AddColumn( 8, wxLIST_AUTOSIZE, _("Players"), _("Number of Players joined") );
+	AddColumn( 9, wxLIST_AUTOSIZE, _("Max"), _("Maximum number of Players that can join") );
+	AddColumn( 10, wxLIST_AUTOSIZE, _("Running"), _("How long the game has been running for") );
+	AddColumn( 11, wxLIST_AUTOSIZE, _("Version"), _("Version of the engine") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[0].col = 0;

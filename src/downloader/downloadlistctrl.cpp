@@ -41,14 +41,12 @@ DownloadListCtrl::DownloadListCtrl( wxWindow* parent )
                                _T("DownloadListCtrl"), 3, &DownloadListCtrl::CompareOneCrit )
 , m_popup(0)
 {
-	const int widths[9] = { 200, 100, 80, 80, 80, 80, 80, 80, 80 };
-
-	AddColumn(0, widths[0], _T("Name"), _T("Name"));
-    AddColumn(1, widths[1], _T("Status"), _T("Status"));
-    AddColumn(2, widths[2], _T("% complete"), _T("% complete"));
-    AddColumn(3, widths[3], _T("KB/s down"), _T("KB/s download"));
-    AddColumn(4, widths[4], _T("ETA"), _T("Estimated time remaining"));
-    AddColumn(5, widths[5], _T("Filesize (MB)"), _T("Filesize"));
+	AddColumn(0, wxLIST_AUTOSIZE, _T("Name"), _T("Name"));
+    AddColumn(1, wxLIST_AUTOSIZE, _T("Status"), _T("Status"));
+    AddColumn(2, wxLIST_AUTOSIZE, _T("% complete"), _T("% complete"));
+    AddColumn(3, wxLIST_AUTOSIZE, _T("KB/s down"), _T("KB/s download"));
+    AddColumn(4, wxLIST_AUTOSIZE, _T("ETA"), _T("Estimated time remaining"));
+    AddColumn(5, wxLIST_AUTOSIZE, _T("Filesize (MB)"), _T("Filesize"));
 
 
 // sortorder: name --> percent completed --> mb donwloaded
