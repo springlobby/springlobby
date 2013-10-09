@@ -40,15 +40,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
 
-
-
-#if defined(__WXMAC__)
-/// on mac, autosize does not work at all
-    const int widths[12] = {20,20,20,170,140,130,110,28,28,28,30,30};
-#else
-    const int hd = wxLIST_AUTOSIZE_USEHEADER;
-    const int widths[12] = {hd,hd,hd,170,140,130,110,hd,hd,hd,hd,hd};
-#endif
+	const int widths[12] = {20,20,20,170,140,130,110,28,28,28,30,30};
 
 	AddColumn( 0, widths[0], _("Status"), _("Status") );
 	AddColumn( 1, widths[1], _("Country"), _("Country") );

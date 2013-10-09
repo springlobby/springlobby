@@ -77,15 +77,8 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 	GetAui().manager->AddPane( this, wxLEFT, _T("battleroomlistctrl") );
 
 	wxListItem col;
+	const int widths[11] = {20,20,20,20,170,140,130,110,28,28,28};
 
-    const int hd = wxLIST_AUTOSIZE_USEHEADER;
-
-#if defined(__WXMAC__)
-/// on mac, autosize does not work at all
-    const int widths[11] = {20,20,20,20,170,140,130,110,28,28,28}; //!TODO revise plox
-#else
-    const int widths[11] = {hd,hd,hd,hd,hd,hd,170,hd,hd,80,130};
-#endif
 	int count = 0;
     AddColumn( count, widths[count], _T("Status"), _T("Player/Bot") );
 	m_status_column_index = count;

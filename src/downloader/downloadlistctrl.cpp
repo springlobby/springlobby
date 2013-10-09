@@ -41,12 +41,7 @@ DownloadListCtrl::DownloadListCtrl( wxWindow* parent )
                                _T("DownloadListCtrl"), 3, &DownloadListCtrl::CompareOneCrit )
 , m_popup(0)
 {
-#if defined(__WXMAC__)
-/// on mac, autosize does not work at all
-    const int widths[9] = { 200, 100, 80, 80, 80, 80, 80, 80, 80 };
-#else
-    const int widths[9] = { 200, wxLIST_AUTOSIZE_USEHEADER, wxLIST_AUTOSIZE_USEHEADER, 80, wxLIST_AUTOSIZE_USEHEADER, 80, 80, 80, wxLIST_AUTOSIZE_USEHEADER };
-#endif
+	const int widths[9] = { 200, 100, 80, 80, 80, 80, 80, 80, 80 };
 
 	AddColumn(0, widths[0], _T("Name"), _T("Name"));
     AddColumn(1, widths[1], _T("Status"), _T("Status"));
