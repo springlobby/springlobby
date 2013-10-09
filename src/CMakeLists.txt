@@ -272,7 +272,7 @@ add_sources( templatesources
 )
 
 IF(WIN32)
-	add_sources(SLSharedWithSettings stacktrace.c helper/listctrl.cpp)
+	add_sources(SLSharedWithSettings stacktrace.c)
 ELSE(WIN32)
 	add_sources(SLSharedWithSettings stacktrace.cpp)
 ENDIF(WIN32)

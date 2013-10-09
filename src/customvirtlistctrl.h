@@ -1,13 +1,7 @@
 #ifndef CUSTOMVIRTLISTITEM_H_
 #define CUSTOMVIRTLISTITEM_H_
 
-#if !defined(__WXMSW__)
-    #include <wx/listctrl.h>
-    typedef wxListCtrl ListBaseType;
-#else
-    #include "helper/listctrl.h"
-    typedef SL_Extern::wxGenericListCtrl ListBaseType;
-#endif
+#include <wx/listctrl.h>
 
 #include <wx/timer.h>
 #define IDD_TIP_TIMER 696
@@ -42,7 +36,7 @@ class SLTipWindow;
  * \tparam the type of stored data
  */
 template < class DataImp, class ListCtrlImp >
-class CustomVirtListCtrl : public ListBaseType, public SL::NonCopyable
+class CustomVirtListCtrl : public wxListCtrl, public SL::NonCopyable
 {
 public:
 	typedef DataImp DataType;

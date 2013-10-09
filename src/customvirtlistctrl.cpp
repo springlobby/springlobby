@@ -16,9 +16,9 @@
 #include <algorithm>
 
 #ifdef HAVE_WX29
-	wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
+	wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T,L)
 #else
-	BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, ListBaseType, T,L)
+	BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T,L)
 #endif
 #if wxUSE_TIPWINDOW
   EVT_MOTION(CustomVirtListCtrl::OnMouseMotion)
@@ -38,7 +38,7 @@ template < class T, class L >
 CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,
                 long style, const wxString& name, unsigned int sort_criteria_count,
                 CompareFunction func, bool highlight, UserActions::ActionType hlaction, bool periodic_sort, unsigned int periodic_sort_interval  ):
-	ListBaseType(parent, id, pt, sz, style | wxLC_VIRTUAL),
+	wxListCtrl(parent, id, pt, sz, style | wxLC_VIRTUAL),
     m_tiptimer(this, IDD_TIP_TIMER),
     m_sort_timer(this, IDD_SORT_TIMER),
     m_tiptext(_T("")),
@@ -117,7 +117,7 @@ template < class T, class L >
 void CustomVirtListCtrl<T,L>::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
 {
     m_columnCount++;
-    ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
+    wxListCtrl::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
     SetColumnWidth( i, width );
     colInfo temp( i, label, tip, modifiable, width );
     m_colinfovec.push_back( temp );
@@ -361,12 +361,12 @@ bool CustomVirtListCtrl<T,L>::SetColumnWidth(int col, int& width)
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
         width = sett().GetColumnWidth( m_name, col);
-        return ListBaseType::SetColumnWidth( col, width );
+        return wxListCtrl::SetColumnWidth( col, width );
     }
     else
     {
         sett().SetColumnWidth( m_name, col, width );
-        return ListBaseType::SetColumnWidth( col, width );
+        return wxListCtrl::SetColumnWidth( col, width );
     }
 }
 
@@ -417,7 +417,7 @@ template < class T, class L >
 bool CustomVirtListCtrl<T,L>::PopupMenu(wxMenu* menu, const wxPoint& pos )
 {
     CancelTooltipTimer();
-    return ListBaseType::PopupMenu( menu, pos );
+    return wxListCtrl::PopupMenu( menu, pos );
 }
 
 template < class T, class L >
@@ -534,13 +534,13 @@ void CustomVirtListCtrl<T,L>::OnSortEvent( wxCommandEvent& evt )
 template < class T, class L >
 bool CustomVirtListCtrl<T,L>::GetColumn(int col, wxListItem& item) const
 {
-    return ListBaseType::GetColumn( col, item );
+    return wxListCtrl::GetColumn( col, item );
 }
 
 template < class T, class L >
 bool CustomVirtListCtrl<T,L>::SetColumn(int col, wxListItem& item)
 {
-    return ListBaseType::SetColumn( col, item );
+    return wxListCtrl::SetColumn( col, item );
 }
 
 template < class T, class L >
