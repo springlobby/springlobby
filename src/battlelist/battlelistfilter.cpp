@@ -28,6 +28,15 @@
 #include "settings.h"
 #include "aui/auimanager.h"
 #include "useractions.h"
+
+#include "images/rank0.xpm"
+#include "images/rank1.xpm"
+#include "images/rank2.xpm"
+#include "images/rank3.xpm"
+#include "images/rank4.xpm"
+#include "images/rank5.xpm"
+#include "images/rank6.xpm"
+#include "images/rank7.xpm"
 ///////////////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE( BattleListFilter, wxPanel )
@@ -39,7 +48,7 @@ BEGIN_EVENT_TABLE( BattleListFilter, wxPanel )
 	EVT_CHOICE              ( BATTLE_FILTER_SPECTATOR_CHOICE, BattleListFilter::OnSpectatorChange   )
 	EVT_CHOICE              ( BATTLE_FILTER_MAXPLAYER_CHOICE, BattleListFilter::OnMaxPlayerChange   )
 	EVT_CHOICE              ( BATTLE_FILTER_PLAYER_CHOICE   , BattleListFilter::OnPlayerChange      )
-	EVT_CHOICE              ( BATTLE_FILTER_RANK_CHOICE     , BattleListFilter::OnRankChange        )
+	EVT_COMBOBOX            ( BATTLE_FILTER_RANK_CHOICE     , BattleListFilter::OnRankChange        )
 	EVT_CHECKBOX            ( BATTLE_FILTER_LOCKED          , BattleListFilter::OnChange            )
 	EVT_CHECKBOX            ( BATTLE_FILTER_OPEN            , BattleListFilter::OnChange            )
 	EVT_CHECKBOX            ( BATTLE_FILTER_PASSWORDED      , BattleListFilter::OnChange            )
@@ -136,20 +145,19 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
 	m_filter_rank_button = new wxButton( this, BATTLE_FILTER_RANK_BUTTON, f_values.rank_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_rank_sizer->Add( m_filter_rank_button, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
-	wxArrayString m_filter_rank_choiceChoices;
+    m_filter_rank_choice = new wxBitmapComboBox(this, BATTLE_FILTER_RANK_CHOICE, _T("All"), wxDefaultPosition, wxSize( -1, -1 ), 0, NULL, wxSIMPLE_BORDER | wxCB_READONLY);
+    m_filter_rank_choice->Append(_T("All"));
+    m_filter_rank_choice->Append(_T("1"), wxBitmap(rank0_xpm));
+    m_filter_rank_choice->Append(_T("2"), wxBitmap(rank1_xpm));
+    m_filter_rank_choice->Append(_T("3"), wxBitmap(rank2_xpm));
+    m_filter_rank_choice->Append(_T("4"), wxBitmap(rank3_xpm));
+    m_filter_rank_choice->Append(_T("5"), wxBitmap(rank4_xpm));
+    m_filter_rank_choice->Append(_T("6"), wxBitmap(rank5_xpm));
+    m_filter_rank_choice->Append(_T("7"), wxBitmap(rank6_xpm));
+    m_filter_rank_choice->Append(_T("8"), wxBitmap(rank7_xpm));
 
-	m_filter_rank_choiceChoices.Add( _T( "All" ) );
-	m_filter_rank_choiceChoices.Add( _T( "1" ) );
-	m_filter_rank_choiceChoices.Add( _T( "2" ) );
-	m_filter_rank_choiceChoices.Add( _T( "3" ) );
-	m_filter_rank_choiceChoices.Add( _T( "4" ) );
-	m_filter_rank_choiceChoices.Add( _T( "5" ) );
-	m_filter_rank_choiceChoices.Add( _T( "6" ) );
-	m_filter_rank_choiceChoices.Add( _T( "7" ) );
-
-	m_filter_rank_choice = new wxChoice( this, BATTLE_FILTER_RANK_CHOICE, wxDefaultPosition, wxSize( -1, -1 ), m_filter_rank_choiceChoices, wxSIMPLE_BORDER );
 	m_filter_rank_choice->SetSelection( GetIntParam( f_values.rank ) );
-	m_filter_rank_choice->SetMinSize( wxSize( 40, -1 ) );
+	m_filter_rank_choice->SetMinSize( wxSize( 60, -1 ) );
 
 	m_filter_rank_sizer->Add( m_filter_rank_choice, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
