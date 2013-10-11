@@ -65,3 +65,13 @@ macro(add_analyze)
         message(WARNING "not adding analyze target because clang-check is missing")
     endif(EXISTS ${ANALYZER})
 endmacro(add_analyze)
+
+macro(add_format)
+    find_program(FORMAT NAMES clang-format clang-format-3.4)
+    if(EXISTS ${FORMAT})
+        add_custom_target("format" ${FORMAT} -i -style=file ${ARGN} )
+    else()
+        message(WARNING "not adding format target because clang-format is missing")
+    endif(EXISTS ${FORMAT})
+endmacro(add_format)
+

@@ -356,4 +356,4 @@ ENDIF(UNIX)
 add_subdirectory(tests)
 
 add_analyze(${springlobbySoundsrc} ${springlobbySrc} ${SLSharedWithSettings})
-# add_format(${springlobbySoundsrc} ${springlobbySrc} ${SLSharedWithSettings})
+add_format(${springlobbySoundsrc} ${springlobbySrc} ${SLSharedWithSettings} ${templatesources} ${header} ${header2})
