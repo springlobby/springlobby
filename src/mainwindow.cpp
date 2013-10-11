@@ -249,15 +249,14 @@ wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size ) const
 
 void MainWindow::SetTabIcons()
 {
-    unsigned int count = 0;
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png)  ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( broom_tab_icon_png, sizeof(broom_tab_icon_png) ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( floppy_icon_png , sizeof (floppy_icon_png) ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon(  downloads_icon_png , sizeof (downloads_icon_png) ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( options_icon_png , sizeof (options_icon_png) ) );
+    m_func_tabs->SetPageBitmap( PAGE_CHAT    , GetTabIcon( chat_icon_png          , sizeof(chat_icon_png)  ) );
+    m_func_tabs->SetPageBitmap( PAGE_LIST    , GetTabIcon( join_icon_png          , sizeof(join_icon_png)  ) );
+    m_func_tabs->SetPageBitmap( PAGE_JOIN    , GetTabIcon( broom_tab_icon_png     , sizeof(broom_tab_icon_png) ) );
+    m_func_tabs->SetPageBitmap( PAGE_SINGLE  , GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
+    m_func_tabs->SetPageBitmap( PAGE_TORRENT , GetTabIcon( downloads_icon_png     , sizeof (downloads_icon_png) ) );
+    m_func_tabs->SetPageBitmap( PAGE_REPLAY  , GetTabIcon( replay_icon_png        , sizeof (replay_icon_png) ) );
+    //m_func_tabs->SetPageBitmap( ??         , GetTabIcon( floppy_icon_png        , sizeof (floppy_icon_png) ) );
+    //m_func_tabs->SetPageBitmap( ??         , GetTabIcon( options_icon_png       , sizeof (options_icon_png) ) );
     Refresh();
 }
 
