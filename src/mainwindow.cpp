@@ -484,16 +484,16 @@ void MainWindow::ShowConfigure( const unsigned int page )
 
 void MainWindow::ShowChannelChooser()
 {
-    if ( m_channel_chooser && m_channel_chooser->IsShown() )
-        return;
+	if ( (m_channel_chooser == NULL) || m_channel_chooser && m_channel_chooser->IsShown() )
+		return;
 
-    if ( !ui().IsConnected() )
-        customMessageBox( SL_MAIN_ICON, _("You need to be connected to a server to view the channel list"), _("Not connected") );
-    else {
-        m_channel_chooser->ClearChannels();
+	if ( !ui().IsConnected() ) {
+		customMessageBox( SL_MAIN_ICON, _("You need to be connected to a server to view the channel list"), _("Not connected") );
+	} else {
+		m_channel_chooser->ClearChannels();
 		serverSelector().GetServer().RequestChannels();
-        m_channel_chooser->Show( true );
-    }
+		m_channel_chooser->Show( true );
+	}
 }
 
 //! @brief Called when join channel menuitem is clicked

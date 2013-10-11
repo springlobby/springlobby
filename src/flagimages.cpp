@@ -27,11 +27,10 @@ int GetFlagIndex( const wxString& flag )
 
 int AddFlagImages( wxImageList& imgs )
 {
-	int index, poszero;
-	index = poszero = 0;
+	int poszero = 0;
 	for ( int i = 0; flag_xpm[i]; ++i )
 	{
-		index = imgs.Add( wxBitmap( const_cast<const char**>( flag_xpm[i] ) ) );
+		const int index = imgs.Add( wxBitmap( const_cast<const char**>( flag_xpm[i] ) ) );
 		if ( i == 0 ) poszero = index;
 		m_name_to_pos[TowxString( flag_str[i] )] = i;
 	}

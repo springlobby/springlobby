@@ -382,7 +382,7 @@ wxJSONReader::Parse( wxInputStream& is, wxJSONValue* val )
     // of close-object/array characters
     // note that the missing close-chars error messages are
     // added by the DoRead() function
-    ch = DoRead( is, *val );
+    /*ch =*/ DoRead( is, *val );
     return m_errors.size();
 }
 

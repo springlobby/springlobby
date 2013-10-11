@@ -1539,7 +1539,7 @@ void MapCtrl::OnRightUp( wxMouseEvent& event )
             mclx = LSL::Util::Clamp( mclx, 0, m_map.info.width );
             mcly = LSL::Util::Clamp( mcly, 0, m_map.info.height );
 
-            int x, y, index, range;
+            int x, y, index = -1, range;
             GetClosestStartPos( mclx, mcly, index, x, y, range );
             if ( index != -1 )
             {

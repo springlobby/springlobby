@@ -377,10 +377,6 @@ bool Ui::AskPassword( const wxString& heading, const wxString& message, wxString
 
 bool Ui::AskText( const wxString& heading, const wxString& question, wxString& answer, bool multiline )
 {
-	long style = wxOK | wxCANCEL | wxCENTRE;
-	if (multiline) {
-		style |= wxTE_MULTILINE;
-	}
 	TextEntryDialog name_dlg( &mw(), question, heading, answer, multiline );
 	int res = name_dlg.ShowModal();
 	answer = name_dlg.GetValue();

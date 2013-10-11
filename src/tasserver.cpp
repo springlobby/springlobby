@@ -849,7 +849,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 			if ( params.StartsWith(_T("JOINEDBATTLE")) )
 			{
 				GetWordParam( params ); // skip first word, it's the message itself
-				id = GetIntParam( params );
+				/*id =*/ GetIntParam( params );
 				wxString usernick = GetWordParam( params );
 				wxString userScriptPassword = GetWordParam( params );
 				try
