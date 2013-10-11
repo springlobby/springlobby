@@ -21,6 +21,7 @@
 #include <lslutils/globalsmanager.h>
 #include "lib/src/Downloader/IDownloader.h"
 #include "lib/src/FileSystem/FileSystem.h"
+#include "lib/src/FileSystem/File.h"
 #include "../utils/uievents.h"
 #include "../utils/conversion.h"
 #include "../utils/globalevents.h"
@@ -36,31 +37,41 @@
 
 class DownloadItem : public LSL::WorkItem {
 public:
-    DownloadItem( std::list<IDownload*> item, IDownloader* loader)
-        : m_item(item)
-        , m_loader(loader)
-    {}
+	DownloadItem( std::list<IDownload*> item, IDownloader* loader)
+	: m_item(item)
+	, m_loader(loader)
+	{}
 
-    void Run()
-    {
-        if (!m_item.empty()) {
-            UiEvents::ScopedStatusMessage msg("Downloading: " + m_item.front()->name, 0);
-            //we create this in avance cause m_item gets freed
-            wxString d(_("Download complete: "));
-            d += TowxString(m_item.front()->name);
-            m_loader->download( m_item, sett().GetHTTPMaxParallelDownloads() );
-            m_loader->freeResult( m_item );
+	void Run()
+	{
+		if (!m_item.empty()) {
+			UiEvents::ScopedStatusMessage msg("Downloading: " + m_item.front()->name, 0);
+			//we create this in avance cause m_item gets freed
+			wxString d(_("Download complete: "));
+			d += TowxString(m_item.front()->name);
+			m_loader->download( m_item, sett().GetHTTPMaxParallelDownloads() );
+			std::list<IDownload*>::iterator it;
+			for( it = m_item.begin(); it!=m_item.end(); ++it) {
+				IDownload* dl = *it;
+				switch(dl->cat){
+					case IDownload::CAT_ENGINE_LINUX: case IDownload::CAT_ENGINE_WINDOWS: case IDownload::CAT_ENGINE_LINUX64: case IDownload::CAT_ENGINE_MACOSX:
+						{
+							fileSystem->extractEngine(dl->name, dl->version);
+						}
+					default: continue;
+				}
+			}
+			m_loader->freeResult( m_item );
+			UiEvents::ScopedStatusMessage msgcomplete(d, 0);
+			LSL::usync().ReloadUnitSyncLib();
+			GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
 
-		UiEvents::ScopedStatusMessage msgcomplete(d, 0);
-		LSL::usync().ReloadUnitSyncLib();
-		GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
-
-        }
-    }
+		}
+	}
 
 private:
-    std::list<IDownload*> m_item;
-    IDownloader* m_loader;
+	std::list<IDownload*> m_item;
+	IDownloader* m_loader;
 };
 
 class SearchItem : public LSL::WorkItem {
