@@ -347,7 +347,6 @@ void SLArtProvider::DrawTab(wxDC& dc,
     }
 
 
-    int text_offset = tab_x + 8;
     int close_button_width = 0;
     if (close_button_state != wxAUI_BUTTON_STATE_HIDDEN)
     {
@@ -356,6 +355,7 @@ void SLArtProvider::DrawTab(wxDC& dc,
 
 
     int bitmap_offset = 0;
+    int text_offset = tab_x + 8;
     if (page.bitmap.IsOk())
     {
         bitmap_offset = tab_x + 8;
@@ -368,10 +368,6 @@ void SLArtProvider::DrawTab(wxDC& dc,
 
         text_offset = bitmap_offset + page.bitmap.GetWidth();
         text_offset += 3; // bitmap padding
-    }
-     else
-    {
-        text_offset = tab_x + 8;
     }
 
 
