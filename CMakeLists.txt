@@ -115,9 +115,9 @@ IF( EXISTS ${CPPCHECK_BINARY} )
 ENDIF( EXISTS ${CPPCHECK_BINARY} )
 
 IF( WIN32 )
-	LIST( APPEND SLSharedWithSettings stacktrace.c )
+	LIST( APPEND SLSharedWithSettings ${CMAKE_CURRENT_SOURCE_DIR}/src/stacktrace.c )
 ELSE( WIN32 )
-	LIST( APPEND SLSharedWithSettings stacktrace.cpp )
+	LIST( APPEND SLSharedWithSettings ${CMAKE_CURRENT_SOURCE_DIR}/src/stacktrace.cpp )
 ENDIF( WIN32 )
 
 INCLUDE(cmake/package_config.cmake)

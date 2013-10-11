@@ -168,7 +168,6 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/json)
 clear(springlobbySrc)
 add_sources(springlobbySrc
 	chatpanelmenu.cpp
-	updater/updater.cpp
 	agreementdialog.cpp
 	base64.cpp
 	battle.cpp
@@ -224,7 +223,8 @@ add_sources(springlobbySrc
 	json/jsonval.cpp
 )
 
-SET(springlobbySoundsrc
+clear(springlobbySoundsrc)
+add_sources(springlobbySoundsrc
 	sound/alsound.cpp
 )
 
@@ -355,3 +355,5 @@ ENDIF(UNIX)
 
 add_subdirectory(tests)
 
+add_analyze(${springlobbySoundsrc} ${springlobbySrc} ${SLSharedWithSettings})
+# add_format(${springlobbySoundsrc} ${springlobbySrc} ${SLSharedWithSettings})
