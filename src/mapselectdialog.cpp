@@ -134,9 +134,9 @@ MapSelectDialog::MapSelectDialog( wxWindow* parent )
 
 	// Ugh.. Can not have these created by generated code because wxSmith doesn't accept a symbolic size,
 	// (ie. wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT)) and all Set*Size() methods don't seem to have any effect.
-	m_vertical_direction_button = new wxButton(this, ID_VERTICAL_DIRECTION, _T("ᴠ"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_VERTICAL_DIRECTION"));
+	m_vertical_direction_button = new wxButton(this, ID_VERTICAL_DIRECTION, _T("ᴧ"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_VERTICAL_DIRECTION"));
 	boxSizerVertical->Add(m_vertical_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	m_horizontal_direction_button = new wxButton(this, ID_HORIZONTAL_DIRECTION, _T(">"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_HORIZONTAL_DIRECTION"));
+	m_horizontal_direction_button = new wxButton(this, ID_HORIZONTAL_DIRECTION, _T("<"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_HORIZONTAL_DIRECTION"));
 	boxSizerHorizontal->Add(m_horizontal_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	//<>ᴠᴧ
 
@@ -197,8 +197,8 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
 	m_horizontal_choice->SetSelection( sett().GetHorizontalSortkeyIndex() );
 	m_vertical_choice->SetSelection( sett().GetVerticalSortkeyIndex() );
 
-    m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
-    m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
+    m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T(">") : _T("<") );
+    m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴠ") : _T("ᴧ") );
 
     m_maps = LSL::Util::vectorToArrayString(LSL::usync().GetMapList());
     //true meaning replays, flase meaning savegames
@@ -339,7 +339,7 @@ void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& /*unused*/ )
 {
 	wxLogDebugFunc( _T("") );
 	m_vertical_direction = !m_vertical_direction;
-	m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
+	m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴠ") : _T("ᴧ") );
 	UpdateSortAndFilter();
 }
 
@@ -347,7 +347,7 @@ void MapSelectDialog::OnHorizontalDirectionClicked( wxCommandEvent& /*unused*/ )
 {
 	wxLogDebugFunc( _T("") );
 	m_horizontal_direction = !m_horizontal_direction;
-	m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
+	m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T(">") : _T("<") );
 	UpdateSortAndFilter();
 }
 
