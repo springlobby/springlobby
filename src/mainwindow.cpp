@@ -145,6 +145,7 @@ MainWindow::MainWindow( )
 	m_menuEdit = new wxMenu;
 	m_menuEdit->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels"));
 	m_menuEdit->Append(MENU_PREFERENCES, _("&Preferences"));
+	m_menuEdit->Append(MENU_SELECT_LOCALE, _("&Change language"));
 	m_settings_menu = new wxMenuItem( m_menuEdit, MENU_SETTINGSPP, _("&Spring settings"), wxEmptyString, wxITEM_NORMAL );
 	m_menuEdit->Append (m_settings_menu);
 
@@ -174,7 +175,6 @@ MainWindow::MainWindow( )
 	menuHelp->Append(MENU_GENERAL_HELP, _("&Help, tutorial and FAQ"));
 	menuHelp->Append(MENU_ABOUT, _("&About"));
 	menuHelp->Append(MENU_PATHINFO, _("&System Info"));
-	menuHelp->Append(MENU_SELECT_LOCALE, _("&Change language"));
 	menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
 	menuHelp->Append(MENU_DOC, _("&Documentation"));
 
