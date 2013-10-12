@@ -24,17 +24,17 @@
 	#include <wx/colourdata.h>
 #endif
 #include <set>
+#include <lslutils/misc.h>
+#include <lslutils/globalsmanager.h>
+#include <lslunitsync/c_api.h>
 
 #include "nonportable.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
-#include <lslutils/misc.h>
 #include "utils/platform.h"
 #include "uiutils.h"
 #include "battlelist/battlelistfiltervalues.h"
 #include "playback/playbackfiltervalues.h"
-#include <lslutils/globalsmanager.h>
-#include <lslunitsync/c_api.h>
 #include "customlistctrl.h"
 #include "springsettings/presets.h"
 #include "helper/sortutil.h"
