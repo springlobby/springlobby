@@ -728,7 +728,7 @@ std::map<wxString, wxString> Settings::GetSpringVersionList() const
 	return m_spring_versions;
 }
 
-void Settings::RefreshSpringVersionList()
+void Settings::RefreshSpringVersionList(bool autosearch)
 {
 	wxLogDebugFunc( _T( "" ) );
 	wxArrayString list = GetGroupList( _T( "/Spring/Paths" ) );
@@ -737,6 +737,20 @@ void Settings::RefreshSpringVersionList()
 	for ( int i = 0; i < count; i++ ) {
 		const wxString groupname = list[i];
 		usync_paths[STD_STRING(groupname)] = STD_STRING(GetUnitSync(groupname));
+	}
+	if (autosearch) {
+		wxPathList paths;
+		paths = PathlistFactory::AdditionalSearchPaths(paths);
+		const wxString springbin(SPRING_BIN);
+		for (const auto path: paths) {
+			const wxFileName path1(path, _T("unitsync") + GetLibExtension());
+			const wxFileName path2(path , _T("libunitsync") + GetLibExtension());
+			if (path1.IsFileReadable()) {
+				usync_paths[STD_STRING(path)] = STD_STRING(path1.GetFullPath());
+			} else if (path2.IsFileReadable()) {
+				usync_paths[STD_STRING(path)] = STD_STRING(path2.GetFullPath());
+			}
+		}
 	}
 	if ( sett().GetSearchSpringOnlyInSLPath() || sett().GetUseSpringPathFromBundle() ) {
 		usync_paths.clear();

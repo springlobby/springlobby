@@ -10,7 +10,7 @@
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
-#include  <wx/dir.h>
+#include <wx/dir.h>
 
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);

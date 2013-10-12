@@ -382,7 +382,7 @@ class Settings : public SL::NonCopyable
      * @{
      */
 
-    void RefreshSpringVersionList();
+    void RefreshSpringVersionList(bool autosearch=true);
     std::map<wxString, wxString> GetSpringVersionList() const; /// index -> version
     wxString GetCurrentUsedSpringIndex();
     void SetUsedSpringIndex(const wxString &index );
