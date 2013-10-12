@@ -580,7 +580,10 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
     {
 		const wxString path = pair.second;
 		const wxString ver = pair.first;
-      if ( (STD_STRING(ver) == neededversion) || (STD_STRING(ver)==hackversion) )
+		const int pos = STD_STRING(ver).find(" ");
+      if ( (STD_STRING(ver) == neededversion) ||
+			(STD_STRING(ver)==hackversion) ||
+			(pos>0 && neededversion==STD_STRING(ver).substr(0,pos))) //contains space, compare without branch
       {
         if ( sett().GetCurrentUsedSpringIndex() != ver )
         {
@@ -591,13 +594,12 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
         return true;
       }
     }
-	wxString message = wxFormat( _("No compatible installed spring version has been found, this server requires version: %s\n") ) % version;
-    message << _("Your current installed versions are:");
-    for (const auto pair : versionlist)
-        message << _T("\n") << TowxString(pair.first);
-    message << _T("\n") << _("Online play is currently disabled.");
-    customMessageBoxNoModal (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
-    wxLogWarning ( _T("no spring version supported by the server found") );
+	if ( wxYES == customMessageBox( SL_MAIN_ICON,
+						_("The selected preset requires the engine ") + version+ _(". Should it be downloaded? \nPlease reselect the preset after download finished"),
+						_("Engine missing"),
+						wxYES_NO ) )
+
+	Download(TowxString(PrDownloader::GetEngineCat()), version, _T(""));
     return false; // no compatible version found
 }
 

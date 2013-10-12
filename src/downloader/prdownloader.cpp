@@ -35,6 +35,18 @@
 #include <lslutils/thread.h>
 #include <settings.h>
 
+std::string PrDownloader::GetEngineCat(){
+#ifdef WIN32
+	return "engine_win32";
+#elif defined(__APPLE__)
+	return "engine_macosx";
+#elif defined(__x86_64__)
+	return "engine_linux64";
+#else
+	return "engine_linux";
+#endif
+}
+
 class DownloadItem : public LSL::WorkItem {
 public:
 	DownloadItem( std::list<IDownload*> item, IDownloader* loader)
@@ -57,6 +69,7 @@ public:
 					case IDownload::CAT_ENGINE_LINUX: case IDownload::CAT_ENGINE_WINDOWS: case IDownload::CAT_ENGINE_LINUX64: case IDownload::CAT_ENGINE_MACOSX:
 						{
 							fileSystem->extractEngine(dl->name, dl->version);
+							sett().RefreshSpringVersionList(); //FIXME: maybe not thread-save!
 						}
 					default: continue;
 				}

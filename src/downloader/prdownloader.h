@@ -67,6 +67,7 @@ public:
 	void SetIngameStatus( bool ingame );
 	void OnSpringStarted(wxCommandEvent& data);
 	void OnSpringTerminated(wxCommandEvent& data);
+	static std::string GetEngineCat();
 
 private:
     //! searches given loaders for filename and pushes fitting workitems into dl_thread
