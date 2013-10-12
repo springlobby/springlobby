@@ -484,7 +484,7 @@ void MainWindow::ShowConfigure( const unsigned int page )
 
 void MainWindow::ShowChannelChooser()
 {
-	if ( (m_channel_chooser == NULL) || m_channel_chooser && m_channel_chooser->IsShown() )
+	if ( (m_channel_chooser == NULL) || (m_channel_chooser && m_channel_chooser->IsShown()) )
 		return;
 
 	if ( !ui().IsConnected() ) {
