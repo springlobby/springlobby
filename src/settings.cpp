@@ -5,9 +5,6 @@
 
 #include "settings.h"
 
-#ifdef __WXMSW__
-	#include <wx/msw/registry.h>
-#endif
 #include "helper/slconfig.h"
 #include "defines.h" //to get HAVEWX??
 
