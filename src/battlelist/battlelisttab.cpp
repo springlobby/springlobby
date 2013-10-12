@@ -395,15 +395,6 @@ void BattleListTab::DoJoin( Battle& battle )
 
 	Battle* curbattle = ui().mw().GetJoinTab().GetCurrentBattle();
 
-    //handle matchmakers
-    const std::set<int> cpus = sett().KnownMatchmakerCPU();
-    if ( cpus.find(battle.GetFounder().GetCpu()) != cpus.end() )
-    {
-        const wxString msg(_( "You are about to join a matchmaking battleroom.\nThe host might move you to another battle at any time. In case of problems please contact the host or a lobby moderator.\nDo you want to continue?" ));
-        if ( !ui().Ask( _( "Matchmaker detected" ), msg ) )
-            return;
-    }
-
 	if ( curbattle != 0 && curbattle->GetID() == battle.GetID() )
 	{
         ui().mw().GetJoinTab().FocusBattleRoomTab();

@@ -795,9 +795,6 @@ class Settings : public SL::NonCopyable
     //! move weirdly saved lists to sane form
     void ConvertLists();
 
-    std::set<int> KnownMatchmakerCPU();
-    void AddKnownMatchmakerCPU(int cpu);
-
   protected:
     bool IsSpringBin( const wxString& path );
 

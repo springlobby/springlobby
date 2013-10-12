@@ -2519,23 +2519,3 @@ bool Settings::IsSelfUpdateDisabled()
 	return m_config->Read( _T( "/General/SelfUpdateDisabled" ), 0l );
 }
 
-std::set<int> Settings::KnownMatchmakerCPU()
-{
-    const wxArrayString cpus = getFromList(_T("/Hosting/KnownMatchmakerCPU"));
-    std::set<int> ret;
-    for ( unsigned int i = 0; i < cpus.GetCount(); i++ )
-        ret.insert( FromwxString<int>(cpus[i]) );
-    return ret;
-}
-
-void Settings::AddKnownMatchmakerCPU(int cpu)
-{
-    std::set<int> current = KnownMatchmakerCPU();
-    current.insert(cpu);
-    wxArrayString new_cpus;
-    for (std::set<int>::const_iterator it = current.begin();
-         it != current.end(); ++it) {
-        new_cpus.Add( TowxString(*it) );
-    }
-    setFromList( new_cpus, _T("/Hosting/KnownMatchmakerCPU") );
-}

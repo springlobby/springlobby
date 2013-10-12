@@ -399,7 +399,6 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 			if ( settversion < 23 )
 			{
 				sett().ConvertLists();
-				sett().AddKnownMatchmakerCPU(6667);
 			}
 		if ( settversion < 24 ) {
 			sett().DeleteServer( _T("Backup server") );
