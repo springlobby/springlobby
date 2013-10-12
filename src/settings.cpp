@@ -731,14 +731,11 @@ std::map<wxString, wxString> Settings::GetSpringVersionList() const
 void Settings::RefreshSpringVersionList(bool autosearch)
 {
 	wxLogDebugFunc( _T( "" ) );
-	wxArrayString list = GetGroupList( _T( "/Spring/Paths" ) );
-	int count = list.GetCount();
 	std::map<std::string, std::string> usync_paths;
-	for ( int i = 0; i < count; i++ ) {
-		const wxString groupname = list[i];
-		usync_paths[STD_STRING(groupname)] = STD_STRING(GetUnitSync(groupname));
-	}
-	if (autosearch) {
+	if ( sett().GetSearchSpringOnlyInSLPath() || sett().GetUseSpringPathFromBundle() ) {
+		usync_paths.clear();
+		usync_paths[STD_STRING(sett().GetCurrentUsedSpringIndex())] = STD_STRING(sett().GetCurrentUsedUnitSync());
+	} else if (autosearch) {
 		wxPathList paths;
 		paths = PathlistFactory::AdditionalSearchPaths(paths);
 		const wxString springbin(SPRING_BIN);
@@ -751,16 +748,19 @@ void Settings::RefreshSpringVersionList(bool autosearch)
 				usync_paths[STD_STRING(path)] = STD_STRING(path2.GetFullPath());
 			}
 		}
-	}
-	if ( sett().GetSearchSpringOnlyInSLPath() || sett().GetUseSpringPathFromBundle() ) {
-		usync_paths.clear();
-		usync_paths[STD_STRING(sett().GetCurrentUsedSpringIndex())] = STD_STRING(sett().GetCurrentUsedUnitSync());
+	} else {
+		wxArrayString list = GetGroupList( _T( "/Spring/Paths" ) );
+		int count = list.GetCount();
+		for ( int i = 0; i < count; i++ ) {
+			const wxString groupname = list[i];
+			usync_paths[STD_STRING(groupname)] = STD_STRING(GetUnitSync(groupname));
+		}
 	}
 	m_spring_versions.clear();
 	try {
 		const auto versions = LSL::susynclib().GetSpringVersionList( usync_paths );
 		for(const auto pair : versions) {
-			m_spring_versions.insert(std::make_pair(TowxString(pair.first), TowxString(pair.second)));
+			m_spring_versions.insert(std::make_pair(TowxString(pair.second), TowxString(pair.first)));
 		}
 	} catch (const std::runtime_error& e) {
 		wxLogError(wxString::Format(_T("Couln't get list of spring versions: %s"), e.what()));
@@ -782,7 +782,7 @@ void Settings::SetUsedSpringIndex( const wxString& index )
 
 bool Settings::GetSearchSpringOnlyInSLPath()
 {
-	return m_config->Read( _T( "/Spring/SearchSpringOnlyInSLPath" ), true );
+	return m_config->Read( _T( "/Spring/SearchSpringOnlyInSLPath" ), ( long int )false );
 }
 
 void Settings::SetSearchSpringOnlyInSLPath( bool value )

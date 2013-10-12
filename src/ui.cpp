@@ -578,21 +578,23 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
     }
     for ( const auto pair : versionlist )
     {
-      if ( (STD_STRING(pair.second) == neededversion) || (STD_STRING(pair.second)==hackversion) )
+		const wxString path = pair.second;
+		const wxString ver = pair.first;
+      if ( (STD_STRING(ver) == neededversion) || (STD_STRING(ver)==hackversion) )
       {
-        if ( sett().GetCurrentUsedSpringIndex() != pair.first )
+        if ( sett().GetCurrentUsedSpringIndex() != ver )
         {
-          wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), neededversion.c_str(), pair.first.c_str() );
-          sett().SetUsedSpringIndex( pair.first );
+          wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), ver.c_str(), ver.c_str());
+          sett().SetUsedSpringIndex( ver );
 		  LSL::usync().ReloadUnitSyncLib();
         }
         return true;
       }
     }
-	wxString message = wxFormat( _("No compatible installed spring version has been found, this server requires version: %s\n") ) % neededversion;
+	wxString message = wxFormat( _("No compatible installed spring version has been found, this server requires version: %s\n") ) % version;
     message << _("Your current installed versions are:");
     for (const auto pair : versionlist)
-        message << _T(" ") << TowxString(pair.second);
+        message << _T("\n") << TowxString(pair.first);
     message << _T("\n") << _("Online play is currently disabled.");
     customMessageBoxNoModal (SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION|wxOK );
     wxLogWarning ( _T("no spring version supported by the server found") );
