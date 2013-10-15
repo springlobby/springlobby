@@ -720,7 +720,7 @@ wxString Settings::AutoFindUikeys()
 }
 
 
-std::map<wxString, wxString> Settings::GetSpringVersionList() const
+std::map<wxString, LSL::SpringBundle> Settings::GetSpringVersionList() const
 {
 	return m_spring_versions;
 }
@@ -728,36 +728,31 @@ std::map<wxString, wxString> Settings::GetSpringVersionList() const
 void Settings::RefreshSpringVersionList(bool autosearch)
 {
 	wxLogDebugFunc( _T( "" ) );
-	std::map<std::string, std::string> usync_paths;
+	std::list<std::string> usync_paths;
 	if ( sett().GetSearchSpringOnlyInSLPath() || sett().GetUseSpringPathFromBundle() ) {
 		usync_paths.clear();
-		usync_paths[STD_STRING(sett().GetCurrentUsedSpringIndex())] = STD_STRING(sett().GetCurrentUsedUnitSync());
+		usync_paths.push_back(STD_STRING(sett().GetCurrentUsedUnitSync()));
 	} else if (autosearch) {
 		wxPathList paths;
 		paths = PathlistFactory::AdditionalSearchPaths(paths);
 		const wxString springbin(SPRING_BIN);
 		for (const auto path: paths) {
-			const wxFileName path1(path, _T("unitsync") + GetLibExtension());
-			const wxFileName path2(path , _T("libunitsync") + GetLibExtension());
-			if (path1.IsFileReadable()) {
-				usync_paths[STD_STRING(path)] = STD_STRING(path1.GetFullPath());
-			} else if (path2.IsFileReadable()) {
-				usync_paths[STD_STRING(path)] = STD_STRING(path2.GetFullPath());
-			}
+			usync_paths.push_back(STD_STRING(path));
 		}
 	} else {
 		wxArrayString list = GetGroupList( _T( "/Spring/Paths" ) );
 		int count = list.GetCount();
 		for ( int i = 0; i < count; i++ ) {
 			const wxString groupname = list[i];
-			usync_paths[STD_STRING(groupname)] = STD_STRING(GetUnitSync(groupname));
+			usync_paths.push_back(STD_STRING(GetUnitSync(groupname)));
 		}
 	}
 	m_spring_versions.clear();
 	try {
 		const auto versions = LSL::susynclib().GetSpringVersionList( usync_paths );
 		for(const auto pair : versions) {
-			m_spring_versions.insert(std::make_pair(TowxString(pair.second), TowxString(pair.first)));
+			const LSL::SpringBundle& bundle = pair.second;
+			m_spring_versions[TowxString(bundle.version)] = bundle;
 		}
 	} catch (const std::runtime_error& e) {
 		wxLogError(wxString::Format(_T("Couln't get list of spring versions: %s"), e.what()));

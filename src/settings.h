@@ -62,6 +62,10 @@ struct ChannelJoinInfo
 	wxString password;
 };
 
+namespace LSL{
+	struct SpringBundle;
+};
+
 //!convenience class for saving and displaying a choice of discrete screen pos
 class ScreenPosition : public wxArrayString
 {
@@ -382,7 +386,7 @@ class Settings : public SL::NonCopyable
      */
 
     void RefreshSpringVersionList(bool autosearch=true);
-    std::map<wxString, wxString> GetSpringVersionList() const; /// index -> version
+    std::map<wxString, LSL::SpringBundle> GetSpringVersionList() const; /// index -> version
     wxString GetCurrentUsedSpringIndex();
     void SetUsedSpringIndex(const wxString &index );
     void DeleteSpringVersionbyIndex( const wxString& index );
@@ -803,7 +807,7 @@ class Settings : public SL::NonCopyable
 	wxString m_forced_springconfig_path;
     bool m_portable_mode;
 
-    std::map<wxString, wxString> m_spring_versions;
+    std::map<wxString, LSL::SpringBundle> m_spring_versions;
 
 	wxString m_final_config_path;
 

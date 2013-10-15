@@ -55,6 +55,7 @@
 #include "updater/versionchecker.h"
 #include "sound/alsound.h"
 #include <lslutils/globalsmanager.h>
+#include <lslunitsync/c_api.h>
 #include "utils/misc.h"
 #include "textentrydialog.h"
 
@@ -558,7 +559,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 }
 
 
-bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
+bool Ui::IsSpringCompatible(const wxString& /*engine*/, const wxString& version)
 {
 	assert(engine == _T("spring"));
     if ( sett().GetDisableSpringVersionCheck() ) return true;
@@ -578,11 +579,11 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
     }
     for ( const auto pair : versionlist )
     {
-		const wxString path = pair.second;
 		const wxString ver = pair.first;
+		const LSL::SpringBundle bundle = pair.second;
 		const int pos = STD_STRING(ver).find(" ");
       if ( (STD_STRING(ver) == neededversion) ||
-			(STD_STRING(ver)==hackversion) ||
+			(STD_STRING(ver) == hackversion) ||
 			(pos>0 && neededversion==STD_STRING(ver).substr(0,pos))) //contains space, compare without branch
       {
         if ( sett().GetCurrentUsedSpringIndex() != ver )
