@@ -752,7 +752,11 @@ void Settings::RefreshSpringVersionList(bool autosearch)
 		const auto versions = LSL::susynclib().GetSpringVersionList( usync_paths );
 		for(const auto pair : versions) {
 			const LSL::SpringBundle& bundle = pair.second;
-			m_spring_versions[TowxString(bundle.version)] = bundle;
+			const wxString version = TowxString(bundle.version);
+			m_spring_versions[version] = bundle;
+			SetSpringBinary(version, TowxString(bundle.spring));
+			SetUnitSync(version, TowxString(bundle.unitsync));
+			SetBundle(version, TowxString(bundle.path));
 		}
 	} catch (const std::runtime_error& e) {
 		wxLogError(wxString::Format(_T("Couln't get list of spring versions: %s"), e.what()));
