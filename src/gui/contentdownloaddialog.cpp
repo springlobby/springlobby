@@ -149,12 +149,11 @@ ContentDownloadDialog::~ContentDownloadDialog()
 }
 void ContentDownloadDialog::OnSearch(wxCommandEvent& /*event*/)
 {
-  wxString search_query = _T("*")+m_searchbox->GetValue()+_T("*");//By default the user would expect that
-  m_searchbutton->Enable(false);
-  m_search_thread = new SearchThread(this,search_query);
-  m_search_thread->Create();
-  m_search_thread->Run();
-
+	wxString search_query = m_searchbox->GetValue();
+	m_searchbutton->Enable(false);
+	m_search_thread = new SearchThread(this,search_query);
+	m_search_thread->Create();
+	m_search_thread->Run();
 }
 void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 {
@@ -171,8 +170,18 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
     wxMessageBox(_("Failed to parse search results"),_("Error"));
     return;
   }
-  const wxJSONInternalArray * a = root.AsArray();
-  m_search_res_w->Clear();
+	const wxJSONInternalArray * a = root.AsArray();
+	if ((a->GetCount() == 0) && (!wildcardsearch)){ //no results returned, try wildcard search
+		wildcardsearch = true;
+		wxString search_query = _T("*")+m_searchbox->GetValue()+_T("*");//By default the user would expect that
+		m_searchbutton->Enable(false);
+		m_search_thread = new SearchThread(this,search_query);
+		m_search_thread->Create();
+		m_search_thread->Run();
+	}
+	wildcardsearch = false;
+	m_search_res_w->Clear();
+
   for ( unsigned i = 0; i < a->GetCount(); i++ )
   {
     wxJSONValue val = a->Item(i);
