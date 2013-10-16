@@ -42,6 +42,7 @@ class HostBattleDialog : public wxDialog, public WindowHintsPickle
 		wxTextCtrl* m_desc_text;
 		wxStaticText* m_mod_lbl;
 		wxChoice* m_mod_pic;
+		wxChoice* m_engine_pic;
 		wxStaticText* m_pwd_lbl;
 		wxTextCtrl* m_pwd_text;
 		wxChoice* m_rank_direction;

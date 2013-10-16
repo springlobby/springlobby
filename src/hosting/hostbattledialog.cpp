@@ -34,7 +34,7 @@
 #include "utils/customdialogs.h"
 #include "ui.h"
 #include "server.h"
-
+#include <lslunitsync/c_api.h>
 
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"
@@ -92,6 +92,17 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
     topsizer->AddStretchSpacer();
 	topsizer->Add( m_desc_check, 0, wxLEFT, 5 );
 //	topsizer->Add( desc_sizer , 0, wxEXPAND | wxALL, 0 );
+
+	m_mod_lbl = new wxStaticText( m_panel, wxID_ANY, _( "Engine" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_mod_lbl->Wrap( -1 );
+	topsizer->Add( m_mod_lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxArrayString m_engine_picChoices;
+	wxBoxSizer* mod_choice_button_sizer2 = new wxBoxSizer( wxHORIZONTAL );
+	m_engine_pic = new wxChoice( m_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_engine_picChoices, 0 );
+	m_engine_pic->SetToolTip( TE( _( "Select the engine version to play." ) ) );
+	mod_choice_button_sizer2->Add( m_engine_pic, 0, wxALL , 5 );
+	topsizer->Add( mod_choice_button_sizer2, 0,  wxEXPAND|wxALL ,1 );
 
 	m_mod_lbl = new wxStaticText( m_panel, wxID_ANY, _( "Game" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_mod_lbl->Wrap( -1 );
@@ -285,29 +296,56 @@ void HostBattleDialog::ReloadModList()
 {
 	m_mod_pic->Clear();
 
-    wxArrayString modlist = LSL::Util::vectorToArrayString(
-                LSL::usync().GetModList());
+	wxArrayString modlist = LSL::Util::vectorToArrayString(LSL::usync().GetModList());
+	wxString last = sett().GetLastHostMod();
 
 	size_t nummods = modlist.Count();
-	for ( size_t i = 0; i < nummods; i++ ) m_mod_pic->Insert( modlist[i], i );
+	for ( size_t i = 0; i < nummods; i++ ) {
+		m_mod_pic->Insert( modlist[i], i );
+		if (last == modlist[i])
+			m_mod_pic->SetSelection(i);
+	}
 
-	wxString last = sett().GetLastHostMod();
-	if ( last != wxEmptyString )
-        m_mod_pic->SetSelection( m_mod_pic->FindString( last ) );
+	if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
+		m_mod_pic->SetSelection( 0 );
+	}
 
-	if ( m_mod_pic->GetSelection() == wxNOT_FOUND )
-        m_mod_pic->SetSelection( 0 );
+	m_engine_pic->Clear();
+	std::map<wxString, LSL::SpringBundle> versions = sett().GetSpringVersionList();
+	last = sett().GetCurrentUsedSpringIndex();
+	int i=0;
+	for(auto pair: versions) {
+		m_engine_pic->Insert(pair.first, i);
+		if (last == pair.first) {
+			m_engine_pic->SetSelection(i);
+		}
+		i++;
+	}
+
+	if ( m_engine_pic->GetSelection() == wxNOT_FOUND ) {
+		m_engine_pic->SetSelection( 0 );
+	}
+
 }
 
 
 void HostBattleDialog::OnOk( wxCommandEvent& /*unused*/ )
 {
 	if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
-		wxLogWarning( _T( "no mod selected" ) );
+		wxLogWarning( _T( "no game selected" ) );
 		customMessageBox( SL_MAIN_ICON, _( "You have to select a game first." ), _( "No game selected." ), wxOK );
 		return;
 	}
+
+	if (m_engine_pic->GetSelection() == wxNOT_FOUND) {
+		wxLogWarning( _T( "no engine selected" ) );
+		customMessageBox( SL_MAIN_ICON, _( "You have to select a engine version first." ), _( "No engine selected." ), wxOK );
+		return;
+	}
+
 	if ( m_desc_text->GetValue().IsEmpty() ) m_desc_text->SetValue( _T( "(none)" ) );
+	sett().SetUsedSpringIndex(m_engine_pic->GetString(m_engine_pic->GetSelection()));
+	LSL::usync().ReloadUnitSyncLib(); //fixme, should be called when selecting engine version and then refresh the game list
 	sett().SetLastHostDescription( m_desc_text->GetValue() );
 	sett().SetLastHostMod( m_mod_pic->GetString( m_mod_pic->GetSelection() ) );
 	wxString password = m_pwd_text->GetValue();
