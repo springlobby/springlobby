@@ -559,7 +559,7 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 }
 
 
-bool Ui::IsSpringCompatible(const wxString& /*engine*/, const wxString& version)
+bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 {
 	assert(engine == _T("spring"));
     if ( sett().GetDisableSpringVersionCheck() ) return true;
