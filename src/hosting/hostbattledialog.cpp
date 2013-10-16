@@ -47,7 +47,6 @@
 #include "images/arrow_refresh.png.h"
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
-
 	EVT_BUTTON              ( HOST_CANCEL, 		HostBattleDialog::OnCancel    		)
 	EVT_BUTTON              ( HOST_OK,     		HostBattleDialog::OnOk        		)
 	EVT_BUTTON              ( BTN_REFRESH, 		HostBattleDialog::OnReloadMods		)
@@ -55,7 +54,7 @@ BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 	EVT_MENU				( wxID_ANY, 		HostBattleDialog::OnRelayChoice		)
 	EVT_RADIOBOX            ( CHOSE_NAT,   		HostBattleDialog::OnNatChange 		)
 	EVT_CHECKBOX            ( CHK_USE_RELAY,    HostBattleDialog::OnUseRelay        )
-
+	EVT_CHOICE				( CHOOSE_ENGINE,	HostBattleDialog::OnEngineSelect	)
 END_EVENT_TABLE()
 
 HostBattleDialog::HostBattleDialog( wxWindow* parent )
@@ -99,7 +98,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 
 	wxArrayString m_engine_picChoices;
 	wxBoxSizer* mod_choice_button_sizer2 = new wxBoxSizer( wxHORIZONTAL );
-	m_engine_pic = new wxChoice( m_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_engine_picChoices, 0 );
+	m_engine_pic = new wxChoice( m_panel, CHOOSE_ENGINE, wxDefaultPosition, wxDefaultSize, m_engine_picChoices, 0 );
 	m_engine_pic->SetToolTip( TE( _( "Select the engine version to play." ) ) );
 	mod_choice_button_sizer2->Add( m_engine_pic, 0, wxALL , 5 );
 	topsizer->Add( mod_choice_button_sizer2, 0,  wxEXPAND|wxALL ,1 );
@@ -288,7 +287,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	this->Layout();
 	m_host_btn->SetFocus();
 
-	ReloadModList();
+	ReloadEngineList();
 }
 
 
@@ -310,9 +309,13 @@ void HostBattleDialog::ReloadModList()
 		m_mod_pic->SetSelection( 0 );
 	}
 
+}
+
+void HostBattleDialog::ReloadEngineList()
+{
 	m_engine_pic->Clear();
 	std::map<wxString, LSL::SpringBundle> versions = sett().GetSpringVersionList();
-	last = sett().GetCurrentUsedSpringIndex();
+	const wxString last = sett().GetCurrentUsedSpringIndex();
 	int i=0;
 	for(auto pair: versions) {
 		m_engine_pic->Insert(pair.first, i);
@@ -325,7 +328,8 @@ void HostBattleDialog::ReloadModList()
 	if ( m_engine_pic->GetSelection() == wxNOT_FOUND ) {
 		m_engine_pic->SetSelection( 0 );
 	}
-
+	//unitsync change needs a refresh of games as well
+	ReloadModList();
 }
 
 
@@ -344,8 +348,6 @@ void HostBattleDialog::OnOk( wxCommandEvent& /*unused*/ )
 	}
 
 	if ( m_desc_text->GetValue().IsEmpty() ) m_desc_text->SetValue( _T( "(none)" ) );
-	sett().SetUsedSpringIndex(m_engine_pic->GetString(m_engine_pic->GetSelection()));
-	LSL::usync().ReloadUnitSyncLib(); //fixme, should be called when selecting engine version and then refresh the game list
 	sett().SetLastHostDescription( m_desc_text->GetValue() );
 	sett().SetLastHostMod( m_mod_pic->GetString( m_mod_pic->GetSelection() ) );
 	wxString password = m_pwd_text->GetValue();
@@ -396,13 +398,12 @@ void HostBattleDialog::OnNatChange( wxCommandEvent& /*unused*/  )
 
 void HostBattleDialog::OnReloadMods( wxCommandEvent&  )
 {
-    LSL::usync().ReloadUnitSyncLib();
-    ReloadModList();
+	ReloadModList();
 }
 
 void HostBattleDialog::OnPickRelayHost( wxCommandEvent&  )
 {
-		PopupMenu( m_relayhost_list );
+	PopupMenu( m_relayhost_list );
 }
 
 void HostBattleDialog::OnRelayChoice( wxCommandEvent& event )
@@ -427,6 +428,14 @@ void HostBattleDialog::OnUseRelay( wxCommandEvent&  )
 	m_nat_radios->Enable( !m_relayed_host_check->IsChecked() );
     Layout();
 }
+
+void HostBattleDialog::OnEngineSelect ( wxCommandEvent& event )
+{
+	sett().SetUsedSpringIndex(m_engine_pic->GetString(m_engine_pic->GetSelection()));
+	LSL::usync().ReloadUnitSyncLib();
+	ReloadEngineList();
+}
+
 
 namespace SL{
 void RunHostBattleDialog( wxWindow* parent )
