@@ -571,12 +571,6 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 		hackversion = "91";
 
     const auto versionlist = sett().GetSpringVersionList();
-    if ( versionlist.size() == 0 )
-    {
-      wxLogWarning( _T("can't get spring version from any unitsync") );
-      customMessageBoxNoModal(SL_MAIN_ICON,  _("Couldn't get your spring versions from any unitsync library.\n\nOnline play is currently disabled."), _("Spring error"), wxICON_EXCLAMATION|wxOK );
-      return false;
-    }
     for ( const auto pair : versionlist )
     {
 		const wxString ver = pair.first;
