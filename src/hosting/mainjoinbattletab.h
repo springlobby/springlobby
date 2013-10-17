@@ -33,9 +33,6 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     void BattleUserUpdated( User& user );
     BattleRoomTab& GetBattleRoomTab();
-    BattleMapTab& GetBattleMapTab();
-    BattleOptionsTab& GetOptionsTab();
-    BattleroomMMOptionsTab<Battle>& GetMMOptionsTab();
 
     void ReloadPresetList();
 
@@ -46,7 +43,10 @@ class MainJoinBattleTab : public wxScrolledWindow
     void FocusBattleRoomTab();
 
     void OnUpdate();
-  protected:
+private:
+    BattleMapTab& GetBattleMapTab();
+    BattleOptionsTab& GetOptionsTab();
+    BattleroomMMOptionsTab<Battle>& GetMMOptionsTab();
     wxBoxSizer* m_main_sizer;
 
     wxImageList* m_imagelist;
