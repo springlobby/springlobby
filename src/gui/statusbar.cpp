@@ -1,4 +1,5 @@
 #include "statusbar.h"
+#include "taskbar.h"
 #include "../updater/updatehelper.h"
 #include "../utils/platform.h"
 #include "../utils/conversion.h"
@@ -10,12 +11,13 @@ Statusbar::Statusbar( wxWindow* parent )
 	m_removeMessageSink( this, &GetStatusEventSender(UiEvents::removeStatusMessage) )
 
 {
-	int w[3] = {-1,-1,120};
+	int w[3] = {460,-1,120};
 	SetFieldsCount( 3, w );
 	PushStatusText( wxFormat( _T("%s %s") )
 									  % GetAppName()
 									  % GetSpringLobbyVersion(),
 					1 );
+	/*TaskBar* taskBar = */ new TaskBar(this);
 }
 DEFINE_EVENT_TYPE(PUSH_STATUS_MSG)
 DEFINE_EVENT_TYPE(POP_STATUS_MSG)
