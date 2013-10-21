@@ -394,8 +394,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
 {
   int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);
   int end = m_chatlog_text->GetScrollRange(wxVERTICAL);
-  int thumb = m_chatlog_text->GetScrollThumb(wxVERTICAL);
-  float original_pos = (float)(pos+thumb) / (float)end;
+  int size = m_chatlog_text->GetSize().GetHeight();
+  float original_pos = (float)(pos+size) / (float)end; // wxmsw is retarded and reports thumb size as 0 always
   int numOfLines = m_chatlog_text->GetNumberOfLines();
   int maxlenght = sett().GetChatHistoryLenght();
 
@@ -513,7 +513,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
   }
   else
   {
-    m_chatlog_text->ScrollLines(10); // wx is retarded, necessary to show the latest line
+    m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
   }
 
   m_chatlog_text->Thaw();
