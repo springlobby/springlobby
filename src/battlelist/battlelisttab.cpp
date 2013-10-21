@@ -168,6 +168,7 @@ BattleListTab::BattleListTab( wxWindow* parent )
 	Layout();
 
 	SelectBattle( 0 );
+	ShowExtendedInfos(true);
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleListTab::OnUnitsyncReloaded));
 }
 
@@ -507,7 +508,5 @@ void BattleListTab::OnResize( wxSizeEvent& event )
 {
 	SetSize( event.GetSize() );
 	Layout();
-	// window too small, hide additional infos
-	ShowExtendedInfos( ( GetClientSize().GetHeight() > 400 ) );
 }
 
