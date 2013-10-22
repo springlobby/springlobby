@@ -38,13 +38,13 @@ AgreementDialog::AgreementDialog( wxWindow* parent, const wxString& agreement ):
 
 	wxBoxSizer* m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_yes_btn = new wxButton( this, AGREE_YES, _( "Yes" ), wxDefaultPosition, wxDefaultSize, 0 );
-	m_button_sizer->Add( m_yes_btn, 0, wxALL, 5 );
+	m_no_btn = new wxButton( this, AGREE_NO, _( "No" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_button_sizer->Add( m_no_btn, 0, wxALL, 5 );
 
 	m_button_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-	m_no_btn = new wxButton( this, AGREE_NO, _( "No" ), wxDefaultPosition, wxDefaultSize, 0 );
-	m_button_sizer->Add( m_no_btn, 0, wxALL, 5 );
+	m_yes_btn = new wxButton( this, AGREE_YES, _( "Yes" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_button_sizer->Add( m_yes_btn, 0, wxALL, 5 );
 
 	m_main_sizer->Add( m_button_sizer, 0, wxEXPAND, 5 );
 
