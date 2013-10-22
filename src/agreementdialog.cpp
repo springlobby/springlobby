@@ -21,13 +21,13 @@ END_EVENT_TABLE()
 
 
 AgreementDialog::AgreementDialog( wxWindow* parent, const wxString& agreement ):
-		wxDialog( parent, -1, _( "Accept Agreement" ), wxDefaultPosition, wxDefaultSize )
+		wxDialog( parent, -1, _( "Accept Agreement" ), wxDefaultPosition, wxDefaultSize,  wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER )
 {
 	SetSizeHints( wxDefaultSize, wxDefaultSize );
 
 	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_text = new wxTextCtrl( this, wxID_ANY, RTFtoText( agreement ), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_RICH | wxTE_WORDWRAP );
+	m_text = new wxTextCtrl( this, wxID_ANY, RTFtoText( agreement ), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_RICH | wxTE_WORDWRAP| wxTE_READONLY  );
 	m_main_sizer->Add( m_text, 1, wxALL | wxEXPAND, 5 );
 
 	m_accept_lbl = new wxStaticText( this, wxID_ANY, _( "Do you accept the terms of this agreement?" ), wxDefaultPosition, wxDefaultSize, 0 );
