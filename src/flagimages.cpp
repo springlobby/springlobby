@@ -15,7 +15,7 @@ static NameToPosMap m_name_to_pos;
 
 int GetFlagIndex( const wxString& flag )
 {
-	if ( flag.IsEmpty() )
+	if (( flag.IsEmpty() ) || (flag == _T("??")))
 		return FLAG_NONE;
 
 	NameToPosMap::const_iterator itor = m_name_to_pos.find( flag );
