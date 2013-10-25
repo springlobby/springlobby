@@ -29,7 +29,7 @@ END_EVENT_TABLE()
 
 void Statusbar::OnUpdateMsg(wxCommandEvent& evt) {
 	const int pos = evt.GetInt();
-	const int id = evt.GetId();
+//	const int id = evt.GetId();
 	SetStatusText(evt.GetString(), pos);
 //FIXME: Push/Pop seems to have never worked as it should, what should the code do?
 /*
