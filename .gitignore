@@ -21,6 +21,7 @@ Updater.fbp
 *.diff
 config.h
 doc/html/
+doc/doxygen/html/
 formbuilder.cpp
 formbuilder.h
 options.xrc
