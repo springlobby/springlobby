@@ -514,6 +514,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
   else
   {
     m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
+    m_chatlog_text->ScrollLines(1);
   }
 
   m_chatlog_text->Thaw();
