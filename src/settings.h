@@ -619,46 +619,6 @@ class Settings : public SL::NonCopyable
     bool GetDisableSpringVersionCheck();
     void SetDisableSpringVersionCheck(bool disable);
 
-    /* ================================================================ */
-    /** @name Torrent System
-     * @{
-     */
-    unsigned int GetTorrentPort();
-    void SetTorrentPort( unsigned int port );
-    int GetTorrentUploadRate();
-    void SetTorrentUploadRate( int speed );
-    int GetTorrentDownloadRate();
-    void SetTorrentDownloadRate( int speed );
-
-    int GetTorrentSystemSuspendMode();
-    void SetTorrentSystemSuspendMode( int mode );
-    int GetTorrentThrottledUploadRate();
-    void SetTorrentThrottledUploadRate( int speed );
-    int GetTorrentThrottledDownloadRate();
-    void SetTorrentThrottledDownloadRate( int speed );
-
-    void SetTorrentMaxConnections( int connections );
-    int GetTorrentMaxConnections();
-
-	void SetTorrentListToResume( const std::vector<wxString>& list );
-	std::vector<wxString> GetTorrentListToResume();
-	void ClearTorrentListToResume();
-
-    /** Get the path to the directory where *.torrent files are stored.
-     * @deprecated isn't used any more!
-     */
-    wxFileName GetTorrentDir();
-
-
-    /** Get the path to the directory where partially-downloaded
-     * torrented files are stored.
-     * @deprecated isn't used any more!
-     * @sa GetTorrentsFolder
-     */
-    wxFileName GetTorrentDataDir();
-
-    /**@}*/
-
     /** @name Aui
      *
      * Functions used to store and retrieve the current SpringLobby

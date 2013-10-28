@@ -372,11 +372,6 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 	if ( !sett().IsFirstRun() )
 	{
 		int settversion = sett().GetSettingsVersion();
-			if ( settversion < 18 )
-			{
-				//new downloader was introduced
-				sett().ClearTorrentListToResume();
-			}
 			if( settversion < 19 )
 			{
 				//the dummy column hack was removed on win
