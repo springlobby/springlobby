@@ -45,7 +45,7 @@
 inline wxString BtS( bool q, std::string y = "yes", std::string n = "no" ) { return q ? TowxString(y) : TowxString(n) ; }
 
 InfoDialog::InfoDialog(wxWindow* parent )
-	:wxDialog(parent,wxID_ANY, _("path shit"), wxDefaultPosition, wxSize(620,400), wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX)
+	:wxDialog(parent,wxID_ANY, _("Paths"), wxDefaultPosition, wxSize(620,400), wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX)
 {
 	wxBoxSizer* main_sizer = new wxBoxSizer( wxVERTICAL );
 
