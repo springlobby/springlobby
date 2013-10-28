@@ -934,7 +934,7 @@ void Settings::SetChatLogEnable( const bool value )
 
 wxString Settings::GetChatLogLoc()
 {
-	wxString path = GetLobbyWriteDir() + _T( "chatlog" );
+	wxString path = GetLobbyWriteDir() +  sepstring + _T( "chatlog" );
 	if ( !wxFileName::DirExists( path ) )
 	{
 		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
