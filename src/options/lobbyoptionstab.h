@@ -30,7 +30,6 @@ class LobbyOptionsTab : public wxScrolledWindow
     protected:
 
         wxCheckBox* m_autojoin;
-        wxCheckBox* m_reportstats;
         wxCheckBox* m_updater;
         wxCheckBox* m_show_tooltips;
         wxCheckBox* m_use_tabicons;
@@ -39,7 +38,6 @@ class LobbyOptionsTab : public wxScrolledWindow
 		wxCheckBox* m_disable_version_check;
 
         wxStaticText* m_autoconnect_label;
-        wxStaticText* m_reportstats_label;
         wxStaticText* m_disable_version_check_label;
         wxStaticText* m_updater_label;
         wxStaticText* m_show_tooltips_label;
@@ -71,7 +69,7 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxChoice* m_start_tab;
 		wxChoice* m_notif_popup_pos;
 		wxSpinCtrl* m_notif_popup_time;
-		
+
 
     enum
     {
@@ -82,7 +80,7 @@ class LobbyOptionsTab : public wxScrolledWindow
 
 
 		DECLARE_EVENT_TABLE()
-        
+
 };
 
 #endif // LOBBYOPTIONSTAB_H

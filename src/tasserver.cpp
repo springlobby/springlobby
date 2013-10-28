@@ -735,20 +735,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("LOGININFOEND") )
     {
-				if ( sett().GetReportStats() )
-				{
-					wxString version = GetSpringLobbyVersion(false);
-					wxString aux = GetSpringLobbyAuxVersion();
-					aux.Replace( _T(" "), _T("") );
-					aux = _T(" ") + aux;
-					wxString os = wxPlatformInfo::Get().GetOperatingSystemIdName();
-					os.Replace( _T(" "), _T("") );
-					wxString wxversion = wxVERSION_STRING;
-					wxversion.Replace( _T(" "), _T("") );
-					wxString reportstring = _T("stats.report ") + version + _T(" ") + wxversion + _T(" ") + os + aux;
-					if ( UserExists( _T("SL_bot") ) ) SayPrivate( _T("SL_bot"), reportstring );
-				}
-				if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!lm") );
+		if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!lm") );
         m_se->OnLoginInfoComplete();
     }
     else if ( cmd == _T("REMOVEUSER") )

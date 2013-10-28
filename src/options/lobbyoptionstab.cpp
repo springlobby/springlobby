@@ -98,16 +98,6 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_autojoin_sizer->Add( m_autoconnect_label, 1, wxEXPAND | wxALL, 5 );
     m_autojoin_sizer->Add( m_autojoin, 0, wxEXPAND | wxALL, 5 );
 
-    wxStaticBoxSizer* m_reportstats_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Report statistics") );
-	m_reportstats_label = new wxStaticText ( this,
-											 -1,
-											 IdentityString( _("By default %s will send some statistics (OS,lobby version) to server,\nto both make helping you in case of problems easier and inform of critical updates.\nUncheck to disable.") )
-											 );
-    m_reportstats = new wxCheckBox( this, -1, _("report statistics"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_reportstats->SetValue( sett().GetReportStats() );
-    m_reportstats_sizer->Add( m_reportstats_label, 1, wxEXPAND|wxALL, 5);
-
-    m_reportstats_sizer->Add( m_reportstats, 0, wxEXPAND|wxALL, 5);
     wxStaticBoxSizer* m_disable_version_check_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Disable version check") );
 	m_disable_version_check_label = new wxStaticText ( this,
 											 -1,
@@ -121,7 +111,6 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 5 );
     m_main_sizer->Add( m_editor_box_sizer, 0, wxEXPAND | wxALL, 5 );
     m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 5 );
-    m_main_sizer->Add( m_reportstats_sizer, 0, wxALL, 5 );
     m_main_sizer->Add( m_disable_version_check_sizer, 0, wxALL, 5 );
 #ifdef __WXMSW__
     wxStaticBoxSizer* m_updater_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Automatic updates") );
@@ -214,7 +203,6 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
     sett().SetWebBrowserUseDefault( m_web_def_radio->GetValue() );
 
     sett().SetAutoConnect( m_autojoin->IsChecked() );
-    sett().SetReportStats( m_reportstats->GetValue() );
     sett().SetDisableSpringVersionCheck(m_disable_version_check->GetValue() );
 #ifdef __WXMSW__
     sett().SetAutoUpdate( m_updater->IsChecked() );
@@ -242,7 +230,6 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 {
     m_autojoin->SetValue( sett().GetAutoConnect() );
-    m_reportstats->SetValue( sett().GetReportStats() );
     m_disable_version_check->SetValue( sett().GetDisableSpringVersionCheck() );
 #ifdef __WXMSW__
     m_updater->SetValue( sett().GetAutoUpdate() );

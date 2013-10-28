@@ -112,10 +112,6 @@ class Settings : public SL::NonCopyable
     void SetSettingsVersion();
 	int GetSettingsVersion();
 
-    //! should we sayex/pm bot?
-    void SetReportStats(const bool value);
-    bool GetReportStats();
-
     void SetAutoUpdate( const bool value );
     bool GetAutoUpdate();
 	bool IsSelfUpdateDisabled();
