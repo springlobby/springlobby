@@ -211,17 +211,8 @@ int Settings::GetSettingsVersion()
 
 wxString Settings::GetLobbyWriteDir()
 {
-	wxString path = GetCurrentUsedDataDir() + sepstring + _T( "lobby" );
-	if ( !wxFileName::DirExists( path ) )
-	{
-		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
-	}
-	path += sepstring + _T( "SpringLobby" ) + sepstring;
-	if ( !wxFileName::DirExists( path ) )
-	{
-		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
-	}
-	return path;
+	//FIXME: make configureable
+	return GetConfigfileDir();
 }
 
 
@@ -304,14 +295,8 @@ void Settings::SetWebBrowserPath( const wxString& path )
 
 wxString Settings::GetCachePath()
 {
-	wxString path = GetCurrentUsedDataDir() + sepstring + _T( "cache" ) + sep;
-	if ( !wxFileName::DirExists( path ) )
-	{
-		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
-	}
-	path += _T( "SpringLobby" ) + sepstring;
-	if ( !wxFileName::DirExists( path ) )
-	{
+	wxString path = GetLobbyWriteDir() + sepstring + _T( "cache" ) + sep;
+	if ( !wxFileName::DirExists( path ) ) {
 		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
 	}
 	return path;

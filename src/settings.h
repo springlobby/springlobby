@@ -794,7 +794,7 @@ class Settings : public SL::NonCopyable
     //! move weirdly saved lists to sane form
     void ConvertLists();
 
-  protected:
+private:
     bool IsSpringBin( const wxString& path );
 
 	slConfig* m_config; //!< wxConfig object to store and restore  all settings in.
