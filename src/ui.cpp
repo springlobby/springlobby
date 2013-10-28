@@ -19,7 +19,6 @@
 #include <wx/filename.h>
 #include <wx/app.h>
 
-#include "introguide.h"
 #include "ui.h"
 #include "tasserver.h"
 #include "settings.h"
@@ -1327,9 +1326,6 @@ void Ui::FirstRunWelcome()
 										% GetAppName(),
 					  _("Welcome"),
 					  wxOK | wxICON_INFORMATION, &mw() );
-
-		IntroGuide* intro = new IntroGuide();
-		intro->Show();
 
 		// copy uikeys.txt
 		wxPathList pl;

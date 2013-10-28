@@ -180,7 +180,6 @@ add_sources(springlobbySrc
 	flagimages.cpp
 	ibattle.cpp
 	iconimagelist.cpp
-	introguide.cpp
 	mainchattab.cpp
 	maindownloadtab.cpp
 	mainwindow.cpp

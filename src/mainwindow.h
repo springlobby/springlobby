@@ -81,7 +81,6 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void OnMenuLoadLayout( wxCommandEvent& event );
     void OnMenuResetLayout( wxCommandEvent& event );
 	void OnMenuPreferences( wxCommandEvent& event );
-//	void OnMenuRename( wxCommandEvent& event );
 	void OnMenuFirstStart( wxCommandEvent& event );
     void OnUnitSyncReload( wxCommandEvent& event );
     void OnMenuAutojoinChannels( wxCommandEvent& event );
@@ -185,7 +184,6 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
         MENU_DEFAULT_LAYOUT,
 		MENU_SCREENSHOTS,
 		MENU_PREFERENCES,
-		MENU_RENAME,
 		MENU_GENERAL_HELP,
 		MENU_PATHINFO
     };
