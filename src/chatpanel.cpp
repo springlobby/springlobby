@@ -26,7 +26,6 @@
 #include <wx/wupdlock.h>
 #include <wx/bmpbuttn.h>
 #include <wx/stattext.h>
-#include <wx/wupdlock.h>
 
 #include "aui/auimanager.h"
 #include "aui/slbook.h"
@@ -514,8 +513,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
   }
   else
   {
+    m_chatlog_text->ScrollLines(10);
     m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
-    m_chatlog_text->ScrollLines(2);
   }
 }
 
