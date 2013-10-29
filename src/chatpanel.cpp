@@ -26,6 +26,7 @@
 #include <wx/wupdlock.h>
 #include <wx/bmpbuttn.h>
 #include <wx/stattext.h>
+#include <wx/wupdlock.h>
 
 #include "aui/auimanager.h"
 #include "aui/slbook.h"
@@ -404,7 +405,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
   long original_line = (long)(original_pos * (float)numOfLines);
 
-  m_chatlog_text->Freeze();
+  wxWindowUpdateLocker noUpdates(m_chatlog_text);
 
   m_chatlog_text->SetDefaultStyle( line.timestyle );
   m_chatlog_text->AppendText( line.time );
@@ -509,15 +510,13 @@ void ChatPanel::OutputLine( const ChatLine& line )
   {
     wxString linetext = m_chatlog_text->GetLineText(original_line);
     long zoomto = m_chatlog_text->GetValue().Find(linetext);
-    m_chatlog_text->ShowPosition( zoomto ); // wxgtk is retarded and always autoscrolls
+    m_chatlog_text->ShowPosition( zoomto );
   }
   else
   {
     m_chatlog_text->ShowPosition( m_chatlog_text->GetLastPosition() );
     m_chatlog_text->ScrollLines(1);
   }
-
-  m_chatlog_text->Thaw();
   this->Refresh();
 }
 
