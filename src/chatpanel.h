@@ -36,25 +36,23 @@ class wxImageList;
 class ChatPanelMenu;
 
 enum ChatPanelType {
-  CPT_Channel,
-  CPT_Server,
-  CPT_User,
-  CPT_Battle
+	CPT_Channel,
+	CPT_Server,
+	CPT_User,
+	CPT_Battle
 };
 
-enum HighlightType
-{
-  highlight_say,
-  highlight_join_leave,
-  highlight_important
+enum HighlightType {
+	highlight_say,
+	highlight_join_leave,
+	highlight_important
 };
 
-struct ChatLine
-{
-  wxString chat;
-  wxString time;
-  wxTextAttr timestyle;
-  wxTextAttr chatstyle;
+struct ChatLine {
+	wxString chat;
+	wxString time;
+	wxTextAttr timestyle;
+	wxTextAttr chatstyle;
 };
 
 /*! @brief wxPanel that contains a chat.
@@ -107,8 +105,12 @@ public:
 	void FocusInputBox();
 
 
-	size_t GetIconIndex()  const { return m_icon_index; }
-	void SetIconIndex( size_t index ) { m_icon_index = index; }
+	size_t GetIconIndex()  const {
+		return m_icon_index;
+	}
+	void SetIconIndex( size_t index ) {
+		m_icon_index = index;
+	}
 
 	void OnUserDisconnected();
 	void OnUserConnected();
@@ -209,8 +211,7 @@ private:
 	DECLARE_EVENT_TABLE()
 };
 
-enum
-{
+enum {
 	CHAT_SEND = wxID_HIGHEST,
 	CHAT_TEXT,
 	CHAT_LOG,
