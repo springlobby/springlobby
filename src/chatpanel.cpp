@@ -265,24 +265,32 @@ void ChatPanel::CreateControls( )
 
 	m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
 									 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+	m_chan_opts_button = NULL;
 	if ( m_type == CPT_Channel ) {
 		m_chatlog_text->SetToolTip( TE(_("right click for options (like autojoin)" ) ) );
-		//m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
-	} else if ( m_type == CPT_User ) {
-		if ( m_user ) {
-			//m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, icons().GetBitmap(icons().GetUserBattleStateIcon(m_user->GetStatus()) ), wxDefaultPosition , wxSize( CONTROL_HEIGHT, CONTROL_HEIGHT ) );
-		}
-	} else {
-
 	}
-	m_chan_opts_button = 0;
 
-	m_say_text = new wxTextCtrlHist( textcompletiondatabase, m_chat_panel, CHAT_TEXT, _T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ), wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB );
+	if (m_type == CPT_Channel || (m_type == CPT_User && m_user)) {
+		m_chan_opts_button = new wxBitmapButton(
+			m_chat_panel,
+			CHAT_CHAN_OPTS,
+			m_type == CPT_Channel ?
+				icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS):
+				icons().GetBitmap(icons().GetUserBattleStateIcon(m_user->GetStatus())),
+			wxDefaultPosition,
+			wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT)
+		);
+	}
+
+	m_say_text = new wxTextCtrlHist(
+		textcompletiondatabase, m_chat_panel, CHAT_TEXT,
+		_T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ),
+		wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB
+	);
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
 
 	// Adding elements to sizers
-	//if ( m_type == CPT_Channel ) m_say_sizer->Add( m_chan_opts_button );
-	//if ( m_type == CPT_User ) m_say_sizer->Add( m_chan_opts_button );
+	if (m_chan_opts_button) m_say_sizer->Add( m_chan_opts_button );
 	m_say_sizer->Add( m_say_text, 1, wxEXPAND );
 	m_say_sizer->Add( m_say_button );
 	m_chat_sizer->Add( m_chatlog_text, 1, wxEXPAND );
@@ -504,7 +512,7 @@ void ChatPanel::OnLinkEvent( wxTextUrlEvent& event )
 void ChatPanel::OnChanOpts( wxCommandEvent& /*unused*/ )
 {
 	CreatePopup();
-	if ( (m_chan_opts_button == 0) || (m_popup_menu == 0) ) return;
+	if ( (m_chan_opts_button == NULL) || (m_popup_menu == 0) ) return;
 	m_chan_opts_button->PopupMenu(m_popup_menu->GetMenu());
 }
 
@@ -757,9 +765,8 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 
 void ChatPanel::UserStatusUpdated( User& who )
 {
-	if ( ( m_type == CPT_User ) && ( m_user == &who ) && ( m_chan_opts_button != 0 ) ) {
+	if ( ( m_type == CPT_User ) && ( m_user == &who ) && ( m_chan_opts_button != NULL ) ) {
 		m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(who.GetStatus(),false, who.GetBattle() != 0 ) ) );
-
 	}
 	if ( !m_show_nick_list || ( m_nicklist == 0 ) ) return;
 	try {
@@ -839,11 +846,11 @@ void ChatPanel::SetUser( const User* usr )
 	if (( usr == 0 ) && ( m_user != 0 ) ) {
 		StatusMessage( _( "Chat closed." ) );
 		m_user->uidata.panel = 0;
-		if (m_chan_opts_button != 0) m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().ICON_EMPTY) );
+		if (m_chan_opts_button) m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().ICON_EMPTY) );
 	} else if ( usr != 0 ) usr->uidata.panel = this;
 	m_user = usr;
 	if ( m_user ) {
-		if (m_chan_opts_button != 0)  m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(m_user->GetStatus(),false, m_user->GetBattle() != 0 ) ) );
+		if (m_chan_opts_button)  m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(m_user->GetStatus(),false, m_user->GetBattle() != 0 ) ) );
 	}
 //	if ( m_user )
 //        m_chat_log.SetTarget( sett().GetDefaultServer(), usr->GetNick() );
