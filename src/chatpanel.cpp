@@ -392,15 +392,15 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 
 void ChatPanel::OutputLine( const ChatLine& line )
 {
-  int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);
-  int end = m_chatlog_text->GetScrollRange(wxVERTICAL);
-  int size = m_chatlog_text->GetSize().GetHeight();
-  float original_pos = (float)(pos+size) / (float)end; // wxmsw is retarded and reports thumb size as 0 always
+  int pos = m_chatlog_text->GetScrollPos(wxVERTICAL); // vertical scrolled window position
+  int end = m_chatlog_text->GetScrollRange(wxVERTICAL); // hight of complete scolled window
+  int height = m_chatlog_text->GetSize().GetHeight();
+  float original_pos = (float)(pos+height) / (float)end;
   int numOfLines = m_chatlog_text->GetNumberOfLines();
   int maxlenght = sett().GetChatHistoryLenght();
 
   if ( original_pos < 0.0f ) original_pos = 0.0f;
-  if ( original_pos > 1.0f ) original_pos = 1.0f; // windows isn't 100% right because thumb always returns 0
+  if ( original_pos > 1.0f ) original_pos = 1.0f;
 
   long original_line = (long)(original_pos * (float)numOfLines);
 
@@ -507,9 +507,11 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
   if (original_pos < 1.0f)
   {
+    #ifndef __WXMSW__
     wxString linetext = m_chatlog_text->GetLineText(original_line);
     long zoomto = m_chatlog_text->GetValue().Find(linetext);
     m_chatlog_text->ShowPosition( zoomto );
+    #endif
   }
   else
   {
