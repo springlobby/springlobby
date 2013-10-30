@@ -112,8 +112,10 @@ ALsound::ALsound():m_thread(NULL)
 
 ALsound::~ALsound()
 {
-	m_thread->Wait();
-	delete m_thread;
+	if (m_thread != NULL) {
+		m_thread->Wait();
+		delete m_thread;
+	}
 }
 
 void ALsound::Play(int idx)
