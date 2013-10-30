@@ -11,16 +11,16 @@
 class soundThread;
 class ALsound
 {
-	public:
-		ALsound();
-		~ALsound();
+public:
+	ALsound();
+	~ALsound();
 
-		void ring();
-		void pm();
+	void ring();
+	void pm();
 
-	private:
-		void Play(int idx);
-		soundThread* m_thread;
+private:
+	void Play(int idx);
+	soundThread* m_thread;
 };
 
 ALsound& sound();
