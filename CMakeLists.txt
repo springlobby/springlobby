@@ -122,10 +122,10 @@ ENDIF( WIN32 )
 
 INCLUDE(cmake/package_config.cmake)
 IF(WIN32)
-    install(FILES AUTHORS COPYING NEWS README THANKS  DESTINATION .)
+    install(FILES AUTHORS COPYING README THANKS  DESTINATION .)
 	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
 ELSE (WIN32)
-    install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
+    install(FILES AUTHORS COPYING README THANKS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
     install(FILES src/images/springlobby.svg DESTINATION
 	    ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
     install(FILES src/springlobby.desktop DESTINATION
