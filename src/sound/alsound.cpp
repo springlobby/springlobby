@@ -118,6 +118,7 @@ ALsound::~ALsound()
 
 void ALsound::Play(int idx)
 {
+	// use a thread to play sounds because having the sound device opened seems to require some cpu
 	if ((m_thread == NULL) || (!m_thread->IsRunning())) {
 		delete m_thread;
 		m_thread = new soundThread(idx);
