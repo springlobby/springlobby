@@ -1066,6 +1066,16 @@ void Settings::SetLastAI( const wxString& ai )
 	m_config->Write( _T( "/SinglePlayer/LastAI" ), ai );
 }
 
+void Settings::SetLastBattleId(int battleId)
+{
+	m_config->Write( _T( "/Hosting/MyLastBattleId" ), battleId);
+}
+
+void Settings::SetLastScriptPassword( const wxString& scriptPassword )
+{
+	m_config->Write( _T( "/Hosting/MyLastScriptPassword" ), scriptPassword );
+}
+
 void Settings::SetTestHostPort( bool value )
 {
 	m_config->Write( _T( "/Hosting/TestHostPort" ), value );
@@ -1223,6 +1233,16 @@ int Settings::GetFixIDGrouping()
 wxString Settings::GetLastAI()
 {
 	return m_config->Read( _T( "/SinglePlayer/LastAI" ), wxEmptyString );
+}
+
+int Settings::GetLastBattleId()
+{
+	return m_config->Read( _T( "/Hosting/MyLastBattleId" ), -1 );
+}
+
+wxString Settings::GetLastScriptPassword()
+{
+	return m_config->Read( _T( "/Hosting/MyLastScriptPassword" ), wxEmptyString );
 }
 
 void Settings::SetDisplayJoinLeave( bool display, const wxString& channel  )

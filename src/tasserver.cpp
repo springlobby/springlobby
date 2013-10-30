@@ -1564,9 +1564,20 @@ void TASServer::FinalizeJoinBattle()
 {
     if (m_do_finalize_join_battle)
     {
-		srand ( time(NULL) );
-		wxString randomScriptPassword = wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF);
-		SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d %s %s"), m_finalize_join_battle_id, m_finalize_join_battle_pw.c_str(), randomScriptPassword.c_str()  ) );
+		// save scriptPassword so user can rejoin if SL crashes or
+		// loosed connection
+		wxString scriptPassword;
+		if (sett().GetLastBattleId() == m_finalize_join_battle_id) {
+			scriptPassword = sett().GetLastScriptPassword();
+		} else {
+			srand ( time(NULL) );
+			scriptPassword = wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF);
+			// save assword and write settings file
+			sett().SetLastBattleId(m_finalize_join_battle_id);
+			sett().SetLastScriptPassword(scriptPassword);
+			sett().SaveSettings();
+		}
+		SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d %s %s"), m_finalize_join_battle_id, m_finalize_join_battle_pw.c_str(), scriptPassword.c_str()  ) );
         m_do_finalize_join_battle=false;
     }
 }
