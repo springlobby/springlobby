@@ -889,8 +889,7 @@ bool ChatPanel::Say( const wxString& message )
 	wxLogDebugFunc( message );
 	wxStringTokenizer lines( message, _T( '\n' ) );
 	if ( lines.CountTokens() > flood_threshold ) {
-		PasteDialog dl ( this, wxFormat(
-							 _( "Are you sure you want to paste %d lines?" ) ) % lines.CountTokens() );
+		PasteDialog dl ( this, wxFormat( _( "Are you sure you want to paste %d lines?" ) ) % lines.CountTokens() );
 		switch ( dl.ShowModal() ) {
 		case wxID_NO :
 			return true;
