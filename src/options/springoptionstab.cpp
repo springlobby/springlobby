@@ -139,13 +139,10 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_bundle_browse_btn = new wxButton( this, SPRING_BUNDLEBROWSE, _( "Browse" ) );
 	m_bundle_find_btn = new wxButton( this, SPRING_BUNDLEFIND, _( "Find" ) );
 
-	if (sett().GetBundleMode())
-	{
+	if (sett().GetBundleMode()) {
 		EnableSpringBox(false);
 		EnableUnitsyncBox(false);
-	}
-	else
-	{
+	} else {
 		EnableBundleBox(false);
 	}
 
@@ -206,8 +203,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 	DoRestore();
 
-	if ( sett().IsPortableMode() || sett().GetSearchSpringOnlyInSLPath() )
-	{
+	if ( sett().IsPortableMode() || sett().GetSearchSpringOnlyInSLPath() ) {
 		EnableSpringBox(false);
 		EnableUnitsyncBox(false);
 		m_auto_btn->Disable();
@@ -215,13 +211,11 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 		m_datadir_btn->Disable();
 	}
 
-	if ( sett().GetUseSpringPathFromBundle() )
-	{
+	if ( sett().GetUseSpringPathFromBundle() ) {
 		m_bundle_box->Disable();
 	}
 
-	if ( sett().IsFirstRun() )
-	{
+	if ( sett().IsFirstRun() ) {
 		sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
 		sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
 		sett().SetBundle( sett().GetCurrentUsedSpringIndex(), m_bundle_edit->GetValue() );
@@ -238,35 +232,35 @@ SpringOptionsTab::~SpringOptionsTab()
 
 void SpringOptionsTab::EnableSpringBox(bool enabled)
 {
-		m_exec_box->Enable(enabled);
-		m_exec_loc_text->Enable(enabled);
-		m_exec_edit->Enable(enabled);
-		m_exec_browse_btn->Enable(enabled);
-		m_exec_find_btn->Enable(enabled);
+	m_exec_box->Enable(enabled);
+	m_exec_loc_text->Enable(enabled);
+	m_exec_edit->Enable(enabled);
+	m_exec_browse_btn->Enable(enabled);
+	m_exec_find_btn->Enable(enabled);
 }
 
 void SpringOptionsTab::EnableUnitsyncBox(bool enabled)
 {
-		m_sync_box->Enable(enabled);
-		m_sync_loc_text->Enable(enabled);
-		m_sync_edit->Enable(enabled);
-		m_sync_browse_btn->Enable(enabled);
-		m_sync_find_btn->Enable(enabled);
+	m_sync_box->Enable(enabled);
+	m_sync_loc_text->Enable(enabled);
+	m_sync_edit->Enable(enabled);
+	m_sync_browse_btn->Enable(enabled);
+	m_sync_find_btn->Enable(enabled);
 }
 
 void SpringOptionsTab::EnableBundleBox(bool enabled)
 {
-		m_bundle_box->Enable(enabled);
-		m_bundle_edit->Enable(enabled);
-		m_bundle_loc_text->Enable(enabled);
-		m_bundle_browse_btn->Enable(enabled);
-		m_bundle_find_btn->Enable(enabled);
+	m_bundle_box->Enable(enabled);
+	m_bundle_edit->Enable(enabled);
+	m_bundle_loc_text->Enable(enabled);
+	m_bundle_browse_btn->Enable(enabled);
+	m_bundle_find_btn->Enable(enabled);
 }
 
 void SpringOptionsTab::DoRestore()
 {
 	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
-    m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
+	m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
 	m_sync_edit->SetValue( sett().GetCurrentUsedUnitSync() );
 	m_exec_edit->SetValue( sett().GetCurrentUsedSpringBinary() );
 	m_bundle_edit->SetValue( sett().GetCurrentUsedBundle() );
@@ -303,8 +297,8 @@ void SpringOptionsTab::OnFindBundle( wxCommandEvent& /*unused*/ )
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& /*unused*/ )
 {
 	wxFileDialog pick( this, _( "Choose a Spring executable" ),
-	                   wxPathOnly( sett().GetCurrentUsedSpringBinary() ),
-	                   wxString( SPRING_BIN ), CHOOSE_EXE );
+			   wxPathOnly( sett().GetCurrentUsedSpringBinary() ),
+			   wxString( SPRING_BIN ), CHOOSE_EXE );
 	if ( pick.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pick.GetPath() );
 }
 
@@ -316,9 +310,9 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& /*unused*/ )
 #endif
 	filefilter << _T( "|" )  << wxString( _( "Any File" ) ) << _T( " (*.*)|*.*" );
 	wxFileDialog pick( this, _( "Choose UnitSync library" ),
-	                   wxPathOnly( sett().GetCurrentUsedSpringBinary() ),
-	                   _T( "unitsync" ) + GetLibExtension(),
-	                   wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() + _T( "|" ) + wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" )  );
+			   wxPathOnly( sett().GetCurrentUsedSpringBinary() ),
+			   _T( "unitsync" ) + GetLibExtension(),
+			   wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() + _T( "|" ) + wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" )  );
 	if ( pick.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pick.GetPath() );
 }
 
@@ -326,15 +320,15 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& /*unused*/ )
 void SpringOptionsTab::OnBrowseBundle( wxCommandEvent& /*unused*/ )
 {
 	wxFileDialog pick( this, _( "Choose a Spring executable" ),
-	                   wxPathOnly( sett().GetCurrentUsedBundle() ),
-	                   _T("Spring.App"), wxString(_("App bundle")) + _T("(*.App)||.App") );
+			   wxPathOnly( sett().GetCurrentUsedBundle() ),
+			   _T("Spring.App"), wxString(_("App bundle")) + _T("(*.App)||.App") );
 	if ( pick.ShowModal() == wxID_OK ) m_bundle_edit->SetValue( pick.GetPath() );
 }
 
 void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
-    const bool reload_usync =
-            sett().GetUnitSync( sett().GetCurrentUsedSpringIndex() ) != m_sync_edit->GetValue();
+	const bool reload_usync =
+		sett().GetUnitSync( sett().GetCurrentUsedSpringIndex() ) != m_sync_edit->GetValue();
 	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
 	sett().SetBundle( sett().GetCurrentUsedSpringIndex(), m_bundle_edit->GetValue() );
@@ -346,12 +340,11 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 
 	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
 	sett().RefreshSpringVersionList();
-    if ( reload_usync && !LSL::usync().LoadUnitSyncLib(STD_STRING(sett().GetCurrentUsedUnitSync())))
-	{
+	if ( reload_usync && !LSL::usync().LoadUnitSyncLib(STD_STRING(sett().GetCurrentUsedUnitSync()))) {
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
 		customMessageBox( SL_MAIN_ICON,
-						  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
-		                  _( "Spring error" ), wxOK );
+				  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
+				  _( "Spring error" ), wxOK );
 	}
 }
 
@@ -372,8 +365,7 @@ void SpringOptionsTab::OnDontSearch( wxCommandEvent& /*unused*/ )
 		EnableSpringBox(false);
 		EnableUnitsyncBox(false);
 		m_datadir_btn->Disable();
-	}
-	else {
+	} else {
 		EnableSpringBox(true);
 		EnableUnitsyncBox(true);
 		m_datadir_btn->Enable();
@@ -397,25 +389,23 @@ void SpringOptionsTab::SetupUserFolders()
 	wxString dir = wxDirSelector( _( "Choose a folder" ), defaultdir );
 
 	if ( dir.IsEmpty() ||
-	        ( !tryCreateDirectory( dir, 0775 ) ||
-	          ( !tryCreateDirectory( dir + sep + _T( "mods" ), 0775 ) ||
-				!tryCreateDirectory( dir + sep + _T( "games" ), 0775 ) ||
-	            !tryCreateDirectory( dir + sep + _T( "maps" ), 0775 ) ||
-	            !tryCreateDirectory( dir + sep + _T( "base" ), 0775 ) ||
-	            !tryCreateDirectory( dir + sep + _T( "demos" ), 0775 ) ||
-	            !tryCreateDirectory( dir + sep + _T( "screenshots" ), 0775  ) )
-	        )
-	   )
-	{
+	     ( !tryCreateDirectory( dir, 0775 ) ||
+	       ( !tryCreateDirectory( dir + sep + _T( "mods" ), 0775 ) ||
+		 !tryCreateDirectory( dir + sep + _T( "games" ), 0775 ) ||
+		 !tryCreateDirectory( dir + sep + _T( "maps" ), 0775 ) ||
+		 !tryCreateDirectory( dir + sep + _T( "base" ), 0775 ) ||
+		 !tryCreateDirectory( dir + sep + _T( "demos" ), 0775 ) ||
+		 !tryCreateDirectory( dir + sep + _T( "screenshots" ), 0775  ) )
+	     )
+	   ) {
 		if ( dir.IsEmpty() ) dir = defaultdir;
 		wxMessageBox( _( "Something went wrong when creating the directories\nPlease create manually the following folders:" ) + wxString( _T( "\n" ) ) + dir +  _T( "\n" ) + dir + sep + _T( "mods\n" ) + dir + sep + _T( "maps\n" ) + dir + sep + _T( "base\n" ) );
 		return;
 	}
-	if ( LSL::usync().IsLoaded() )
-	{
-        LSL::usync().SetSpringDataPath(STD_STRING(dir));
+	if ( LSL::usync().IsLoaded() ) {
+		LSL::usync().SetSpringDataPath(STD_STRING(dir));
 	}
-    CopyUikeys( sett().GetCurrentUsedDataDir() );
+	CopyUikeys( sett().GetCurrentUsedDataDir() );
 }
 
 
@@ -428,7 +418,7 @@ void SpringOptionsTab::ReloadSpringList()
 {
 	std::map<wxString, LSL::SpringBundle> springlist = sett().GetSpringVersionList();
 	m_spring_list->Clear();
-	for(auto bundle: springlist) {
+for(auto bundle: springlist) {
 		m_spring_list->Append(bundle.first);
 		//m_spring_list->SetStringSelection(m_current_group);
 	}
