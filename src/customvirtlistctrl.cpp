@@ -516,12 +516,11 @@ void CustomVirtListCtrl<T,L>::OnColClick( wxListEvent& event )
     col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
     SetColumn( m_sortorder[0].col, col );
 
-	if ( old_sort_col != m_sortorder[0].col ){
+	if ( (old_sort_col != m_sortorder[0].col) || m_dirty_sort){
 		SortList( true );
+	} else { // O(n) instead of guaranteed worst case O(n*n)
+		ReverseOrder();
 	}
-    else { // O(n) instead of guaranteed worst case O(n*n)
-        ReverseOrder();
-    }
 }
 
 template < class T, class L >
