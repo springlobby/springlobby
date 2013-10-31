@@ -68,7 +68,6 @@ public:
 	void SetIngameStatus( bool ingame );
 	void OnSpringStarted(wxCommandEvent& data);
 	void OnSpringTerminated(wxCommandEvent& data);
-	void OnUnitsyncReloaded(wxCommandEvent& data);
 	static std::string GetEngineCat();
 
 private:

@@ -141,7 +141,8 @@ PrDownloader::PrDownloader():
 	m_map_loaders.push_back(plasmaDownload);
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringStarted, wxObjectEventFunction(&PrDownloader::OnSpringStarted));
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&PrDownloader::OnSpringTerminated));
-	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&PrDownloader::OnUnitsyncReloaded));
+	//FIXME: set writepath set in config! can't use unitsyncs data dir, as we want a "global" data dir across all spring versions
+	//fileSystem->setWritePath(path);
 }
 
 PrDownloader::~PrDownloader()
@@ -190,14 +191,6 @@ void PrDownloader::OnSpringStarted(wxCommandEvent& /*data*/)
 void PrDownloader::OnSpringTerminated(wxCommandEvent& /*data*/)
 {
 	//FIXME: resume downloads
-}
-
-
-void PrDownloader::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
-{
-	std::string path;
-	LSL::usync().GetSpringDataPath(path);
-	fileSystem->setWritePath(path);
 }
 
 int PrDownloader::Get(std::list<IDownloader*> loaders, const std::string &name, IDownload::category cat)
