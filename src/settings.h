@@ -538,6 +538,11 @@ class Settings : public SL::NonCopyable
     wxColour GetBattleLastColour();
     void SetBattleLastColour( const wxColour& col );
 
+    void SetLastBattleId( int battleId );
+    int GetLastBattleId();
+
+    void SetLastScriptPassword( const wxString& scriptPassword );
+    wxString GetLastScriptPassword();
 
     void SetLastAI( const wxString& ai );
     wxString GetLastAI();
