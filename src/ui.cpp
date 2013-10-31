@@ -604,6 +604,7 @@ void Ui::OnLoggedIn( )
     mw().GetChatTab().RejoinChannels();
     if ( sett().GetAutoConnect() )
         mw().ShowTab( sett().GetStartTab() );
+	mw().GetBattleListTab().SortBattleList();
 }
 
 
