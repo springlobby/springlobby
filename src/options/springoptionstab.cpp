@@ -390,16 +390,14 @@ void SpringOptionsTab::SetupUserFolders()
 
 	if ( dir.IsEmpty() ||
 	     ( !tryCreateDirectory( dir, 0775 ) ||
-	       ( !tryCreateDirectory( dir + sep + _T( "mods" ), 0775 ) ||
-		 !tryCreateDirectory( dir + sep + _T( "games" ), 0775 ) ||
-		 !tryCreateDirectory( dir + sep + _T( "maps" ), 0775 ) ||
-		 !tryCreateDirectory( dir + sep + _T( "base" ), 0775 ) ||
-		 !tryCreateDirectory( dir + sep + _T( "demos" ), 0775 ) ||
-		 !tryCreateDirectory( dir + sep + _T( "screenshots" ), 0775  ) )
+	       (!tryCreateDirectory( dir + sep + _T( "games" ), 0775 ) ||
+		!tryCreateDirectory( dir + sep + _T( "maps" ), 0775 ) ||
+		!tryCreateDirectory( dir + sep + _T( "demos" ), 0775 ) ||
+		!tryCreateDirectory( dir + sep + _T( "screenshots" ), 0775  ) )
 	     )
 	   ) {
 		if ( dir.IsEmpty() ) dir = defaultdir;
-		wxMessageBox( _( "Something went wrong when creating the directories\nPlease create manually the following folders:" ) + wxString( _T( "\n" ) ) + dir +  _T( "\n" ) + dir + sep + _T( "mods\n" ) + dir + sep + _T( "maps\n" ) + dir + sep + _T( "base\n" ) );
+		wxMessageBox( _( "Something went wrong when creating the directories\nPlease create manually the following folders:" ) + wxString( _T( "\n" ) ) + dir +  _T( "\n" ) + dir + sep + _T( "maps\n" ) + dir + sep + _T( "base\n" ) );
 		return;
 	}
 	if ( LSL::usync().IsLoaded() ) {
