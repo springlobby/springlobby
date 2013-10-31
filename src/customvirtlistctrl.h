@@ -19,10 +19,11 @@
 
 const wxEventType ListctrlDoSortEventType = wxNewEventType();
 
-class ListctrlSortEvent : public wxCommandEvent {
+class ListctrlSortEvent : public wxCommandEvent
+{
 public:
 	ListctrlSortEvent( int event_id = wxNewId() )
-	 : wxCommandEvent( ListctrlDoSortEventType, event_id )
+		: wxCommandEvent( ListctrlDoSortEventType, event_id )
 	{}
 };
 
@@ -49,11 +50,11 @@ protected:
 	wxTimer m_sort_timer;
 	//! always set to the currrently displayed tooltip text
 	wxString m_tiptext;
-	#if wxUSE_TIPWINDOW
+#if wxUSE_TIPWINDOW
 	//! some wx implementations do not support this yet
 	SLTipWindow* m_tipwindow;
 	SLTipWindow** m_controlPointer;
-	#endif
+#endif
 	unsigned int m_columnCount;
 
 	struct colInfo {
@@ -145,8 +146,7 @@ protected:
 	 * in derived classes via comapre callbakc func that
 	 * performs the actual comparison of two items **/
 	template < class ObjImp >
-	struct ItemComparator
-	{
+	struct ItemComparator {
 		typedef ObjImp ObjType;
 		SortOrder& m_order;
 		typedef int (ListCtrlImp::*CmpFunc)  ( ObjType u1, ObjType u2, int, int ) const;
@@ -161,13 +161,12 @@ protected:
 		 */
 		ItemComparator( const BaseType* listctrl, SortOrder& order,CmpFunc func, const unsigned int num_criteria = 3 )
 			:m_order(order),
-			m_cmp_func(func),
-			m_num_criteria(num_criteria),
-			m_listctrl( listctrl )
+			 m_cmp_func(func),
+			 m_num_criteria(num_criteria),
+			 m_listctrl( listctrl )
 		{}
 
-		bool operator () ( ObjType u1, ObjType u2 ) const
-		{
+		bool operator () ( ObjType u1, ObjType u2 ) const {
 			int res = (m_listctrl->asImp().*m_cmp_func)( u1, u2, m_order[0].col, m_order[0].direction );
 			if ( res != 0 )
 				return res < 0;
@@ -211,8 +210,8 @@ public:
 
 public:
 	CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-					const wxSize& sz,long style, const wxString& name, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
-					UserActions::ActionType hlaction = UserActions::ActHighlight, bool periodic_sort = false, unsigned int periodic_sort_interval = 5000 /*miliseconds*/);
+			   const wxSize& sz,long style, const wxString& name, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
+			   UserActions::ActionType hlaction = UserActions::ActHighlight, bool periodic_sort = false, unsigned int periodic_sort_interval = 5000 /*miliseconds*/);
 
 	virtual ~CustomVirtListCtrl();
 
@@ -286,10 +285,10 @@ public:
 	//! marks the items in the control to be sorted
 	void MarkDirtySort();
 
-	 /** @name overloaded wxFunctions
-	  * these are used to display items in virtual lists
-	  * @{
-	 */
+	/** @name overloaded wxFunctions
+	 * these are used to display items in virtual lists
+	 * @{
+	*/
 	wxString OnGetItemText(long item, long column) const;
 	int OnGetItemColumnImage(long item, long column) const;
 	wxListItemAttr* OnGetItemAttr(long item) const;
@@ -300,19 +299,19 @@ public:
 	/** @}
 	 */
 
-	 //! delete all data, selections, and whatnot
-	 virtual void Clear();
+	//! delete all data, selections, and whatnot
+	virtual void Clear();
 
-	 //! handle sort order updates
-	 void OnColClick( wxListEvent& event );
+	//! handle sort order updates
+	void OnColClick( wxListEvent& event );
 
-	 virtual int GetIndexFromData( const DataType& data ) const = 0;
+	virtual int GetIndexFromData( const DataType& data ) const = 0;
 
-	 void ReverseOrder();
+	void ReverseOrder();
 
-	 void OnQuit( wxCommandEvent& data );
-	 void StartTimer();
-	 void StopTimer();
+	void OnQuit( wxCommandEvent& data );
+	void StartTimer();
+	void StopTimer();
 
 protected:
 	typedef std::vector< DataImp > DataVector;
@@ -345,23 +344,26 @@ public:
 
 private:
 	typedef BaseType ThisType;
-	ListCtrlImp& asImp() { return static_cast<ListCtrlImp&>(*this); }
-	const ListCtrlImp& asImp() const { return static_cast<const ListCtrlImp&>(*this); }
+	ListCtrlImp& asImp() {
+		return static_cast<ListCtrlImp&>(*this);
+	}
+	const ListCtrlImp& asImp() const {
+		return static_cast<const ListCtrlImp&>(*this);
+	}
 
 };
 
-template < class ListCtrlType > class SelectionSaver {
+template < class ListCtrlType > class SelectionSaver
+{
 	ListCtrlType& m_list;
 
 public:
 	SelectionSaver( ListCtrlType& list)
-		: m_list( list )
-	{
+		: m_list( list ) {
 		m_list.SaveSelection();
 	}
 
-	~SelectionSaver()
-	{
+	~SelectionSaver() {
 		m_list.RestoreSelection();
 	}
 };
