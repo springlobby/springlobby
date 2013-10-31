@@ -24,6 +24,7 @@
 #include <wx/stdpaths.h>
 #include <wx/scrolbar.h>        // added for scroll bar powers
 #include <wx/log.h>
+#include <wx/listbox.h>
 
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
@@ -39,6 +40,7 @@
 #include "settings.h"
 #include "mainwindow.h"
 #include "utils/customdialogs.h"
+#include <lslunitsync/c_api.h>
 
 
 BEGIN_EVENT_TABLE( SpringOptionsTab, wxPanel )
@@ -53,13 +55,48 @@ BEGIN_EVENT_TABLE( SpringOptionsTab, wxPanel )
 	EVT_BUTTON (    SPRING_DATADIR,     SpringOptionsTab::OnDataDir     )
 	EVT_CHECKBOX(   SPRING_DONTSEARCH,  SpringOptionsTab::OnDontSearch  )
 	EVT_CHECKBOX(   SPRING_FORCEBUNDLE, SpringOptionsTab::OnForceBundle )
+	EVT_LISTBOX(    SPRING_LIST,        SpringOptionsTab::OnGroupListSelectionChange )
 
 END_EVENT_TABLE()
 
 
-SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
-    : wxScrolledWindow( parent, -1 )
+SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
+	wxScrolledWindow( parent, -1 )
 {
+	wxBoxSizer* windowSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* mainSizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* groupListSizer = new wxBoxSizer( wxVERTICAL );
+
+	m_spring_list = new wxListBox( this, SPRING_LIST, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_ALWAYS_SB|wxLB_SINGLE|wxLB_SORT );
+	groupListSizer->Add( m_spring_list, 1, wxEXPAND|wxTOP|wxRIGHT|wxLEFT, 5 );
+
+	wxBoxSizer* groupListButtonsSizer = new wxBoxSizer( wxHORIZONTAL );
+
+	m_remove_spring_button = new wxButton( this, SPRING_REMOVE, _("Remove"), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
+	m_remove_spring_button->Enable( false );
+	m_remove_spring_button->SetToolTip( _("Remove an existing spring version") );
+
+	groupListButtonsSizer->Add( m_remove_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+
+	m_rename_spring_button = new wxButton( this, SPRING_RENAME, _("Rename.."), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
+	m_rename_spring_button->Enable( false );
+	m_rename_spring_button->SetToolTip( _("Rename an existing spring version") );
+
+	groupListButtonsSizer->Add( m_rename_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	groupListButtonsSizer->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	m_add_spring_button = new wxButton( this, SPRING_ADD, _("Add New.."), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
+	m_add_spring_button->SetToolTip( _("Add new spring version") );
+
+	groupListButtonsSizer->Add( m_add_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+
+	groupListSizer->Add( groupListButtonsSizer, 0, wxEXPAND|wxBOTTOM, 5 );
+
+	mainSizer->Add( groupListSizer, 2, wxEXPAND, 5 );
+
+
+
+
 	m_dontsearch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Search only in current installed path"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
 	m_oldlaunch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Use alternative launch method (DO NOT TOUCH THIS UNLESS YOU KNOW WHAT YOU'RE DOING)"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
@@ -115,11 +152,11 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 	m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _( "Auto Configure" ) );
 	m_datadir_btn = new wxButton( this, SPRING_DATADIR, _( "Change Datadir path" ) );
 
-	m_main_sizer = new wxBoxSizer( wxVERTICAL );
-	m_aconf_sizer = new wxBoxSizer( wxVERTICAL );
-	m_exec_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_sync_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_bundle_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* m_aconf_sizer = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* m_exec_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* m_sync_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* m_bundle_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 	m_exec_loc_sizer->Add( m_exec_loc_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2 );
 	m_exec_loc_sizer->Add( m_exec_edit, 1, wxEXPAND );
@@ -159,7 +196,9 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 	m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->AddStretchSpacer();
 
-	SetSizer( m_main_sizer );
+	windowSizer->Add(mainSizer);
+	windowSizer->Add(m_main_sizer);
+	SetSizer( windowSizer );
 
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
@@ -188,7 +227,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent )
 		sett().SetBundle( sett().GetCurrentUsedSpringIndex(), m_bundle_edit->GetValue() );
 		sett().SetSearchSpringOnlyInSLPath( m_dontsearch_chkbox->IsChecked() );
 	}
-
+	ReloadSpringList();
 }
 
 
@@ -379,3 +418,18 @@ void SpringOptionsTab::SetupUserFolders()
     CopyUikeys( sett().GetCurrentUsedDataDir() );
 }
 
+
+void SpringOptionsTab::OnGroupListSelectionChange( wxCommandEvent& event )
+{
+
+}
+
+void SpringOptionsTab::ReloadSpringList()
+{
+	std::map<wxString, LSL::SpringBundle> springlist = sett().GetSpringVersionList();
+	m_spring_list->Clear();
+	for(auto bundle: springlist) {
+		m_spring_list->Append(bundle.first);
+		//m_spring_list->SetStringSelection(m_current_group);
+	}
+}

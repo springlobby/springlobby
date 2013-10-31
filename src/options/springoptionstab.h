@@ -12,6 +12,7 @@ class wxTextCtrl;
 class wxBoxSizer;
 class Ui;
 class wxCheckBox;
+class wxListBox;
 
 class SpringOptionsTab : public wxScrolledWindow
 {
@@ -42,9 +43,11 @@ class SpringOptionsTab : public wxScrolledWindow
     void EnableUnitsyncBox(bool enabled);
     void EnableBundleBox(bool enabled);
 
-  protected:
+private:
 
-		void SetupUserFolders();
+	void SetupUserFolders();
+	void OnGroupListSelectionChange( wxCommandEvent& event );
+	void ReloadSpringList();
 
     wxStaticText* m_exec_loc_text;
     wxStaticText* m_sync_loc_text;
@@ -79,16 +82,14 @@ class SpringOptionsTab : public wxScrolledWindow
     wxStaticBoxSizer* m_sync_box_sizer;
     wxStaticBoxSizer* m_bundle_box_sizer;
 
-
-    wxBoxSizer* m_main_sizer;
-    wxBoxSizer* m_aconf_sizer;
-    wxBoxSizer* m_exec_loc_sizer;
-    wxBoxSizer* m_sync_loc_sizer;
-    wxBoxSizer* m_bundle_loc_sizer;
-
     wxCheckBox* m_dontsearch_chkbox;
     wxCheckBox* m_forcebundle_chkbox;
     wxCheckBox* m_oldlaunch_chkbox;
+
+	wxListBox* m_spring_list;
+	wxButton* m_remove_spring_button;
+	wxButton* m_rename_spring_button;
+	wxButton* m_add_spring_button;
 
     enum {
         SPRING_EXECBROWSE = wxID_HIGHEST,
@@ -105,7 +106,11 @@ class SpringOptionsTab : public wxScrolledWindow
         SPRING_BUNDLEFIND,
         SPRING_DATADIR,
         SPRING_DONTSEARCH,
-        SPRING_FORCEBUNDLE
+        SPRING_FORCEBUNDLE,
+		SPRING_LIST,
+		SPRING_REMOVE,
+		SPRING_RENAME,
+		SPRING_ADD
     };
 
     DECLARE_EVENT_TABLE()
