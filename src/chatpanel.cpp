@@ -270,17 +270,18 @@ void ChatPanel::CreateControls( )
 		m_chatlog_text->SetToolTip( TE(_("right click for options (like autojoin)" ) ) );
 	}
 
-	if (m_type == CPT_Channel || (m_type == CPT_User && m_user)) {
-		m_chan_opts_button = new wxBitmapButton(
-			m_chat_panel,
-			CHAT_CHAN_OPTS,
-			m_type == CPT_Channel ?
-				icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS):
-				icons().GetBitmap(icons().GetUserBattleStateIcon(m_user->GetStatus())),
-			wxDefaultPosition,
-			wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT)
-		);
+	wxBitmap ico;
+	if(m_type == CPT_User && (m_user!=NULL)) {
+		const int userstatus = icons().GetUserBattleStateIcon(m_user->GetStatus());
+		if (userstatus == icons().ICON_NOSTATE) {
+			ico = icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS);
+		} else {
+			ico = icons().GetBitmap(userstatus);
+		}
+	} else {
+		ico = icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS);
 	}
+	m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, ico, wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT));
 
 	m_say_text = new wxTextCtrlHist(
 		textcompletiondatabase, m_chat_panel, CHAT_TEXT,
