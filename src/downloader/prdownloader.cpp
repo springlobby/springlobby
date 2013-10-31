@@ -35,7 +35,8 @@
 #include <lslutils/thread.h>
 #include <settings.h>
 
-std::string PrDownloader::GetEngineCat(){
+std::string PrDownloader::GetEngineCat()
+{
 #ifdef WIN32
 	return "engine_win32";
 #elif defined(__APPLE__)
@@ -47,15 +48,15 @@ std::string PrDownloader::GetEngineCat(){
 #endif
 }
 
-class DownloadItem : public LSL::WorkItem {
+class DownloadItem : public LSL::WorkItem
+{
 public:
 	DownloadItem( std::list<IDownload*> item, IDownloader* loader)
-	: m_item(item)
-	, m_loader(loader)
+		: m_item(item)
+		, m_loader(loader)
 	{}
 
-	void Run()
-	{
+	void Run() {
 		if (!m_item.empty()) {
 			UiEvents::ScopedStatusMessage msg("Downloading: " + m_item.front()->name, 0);
 			//we create this in avance cause m_item gets freed
@@ -65,13 +66,16 @@ public:
 			std::list<IDownload*>::iterator it;
 			for( it = m_item.begin(); it!=m_item.end(); ++it) {
 				IDownload* dl = *it;
-				switch(dl->cat){
-					case IDownload::CAT_ENGINE_LINUX: case IDownload::CAT_ENGINE_WINDOWS: case IDownload::CAT_ENGINE_LINUX64: case IDownload::CAT_ENGINE_MACOSX:
-						{
-							fileSystem->extractEngine(dl->name, dl->version);
-							sett().RefreshSpringVersionList(); //FIXME: maybe not thread-save!
-						}
-					default: continue;
+				switch(dl->cat) {
+				case IDownload::CAT_ENGINE_LINUX:
+				case IDownload::CAT_ENGINE_WINDOWS:
+				case IDownload::CAT_ENGINE_LINUX64:
+				case IDownload::CAT_ENGINE_MACOSX: {
+					fileSystem->extractEngine(dl->name, dl->version);
+					sett().RefreshSpringVersionList(); //FIXME: maybe not thread-save!
+				}
+				default:
+					continue;
 				}
 			}
 			m_loader->freeResult( m_item );
@@ -87,39 +91,40 @@ private:
 	IDownloader* m_loader;
 };
 
-class SearchItem : public LSL::WorkItem {
+class SearchItem : public LSL::WorkItem
+{
 public:
-    SearchItem(std::list<IDownloader*> loaders, std::string name, IDownload::category cat);
-    void Run();
+	SearchItem(std::list<IDownloader*> loaders, std::string name, IDownload::category cat);
+	void Run();
 
 private:
-    const std::list<IDownloader*> m_loaders;
-    const std::string m_name;
-    const IDownload::category m_cat;
-    int m_result_size;
+	const std::list<IDownloader*> m_loaders;
+	const std::string m_name;
+	const IDownload::category m_cat;
+	int m_result_size;
 };
 
 SearchItem::SearchItem(std::list<IDownloader*> loaders, const std::string name, IDownload::category cat)
-    : m_loaders(loaders)
-    , m_name(name)
-    , m_cat(cat)
-    , m_result_size(0)
+	: m_loaders(loaders)
+	, m_name(name)
+	, m_cat(cat)
+	, m_result_size(0)
 {}
 
 void SearchItem::Run()
 {
-    std::list<IDownload*> results;
-    std::list<IDownloader*>::const_iterator it = m_loaders.begin();
-    for( ; it != m_loaders.end(); ++it ) {
-        (*it)->search(results, m_name, m_cat);
-        if (!results.empty()) {
-            DownloadItem* dl_item = new DownloadItem(results, *it);
-            prDownloader().m_dl_thread->DoWork(dl_item);
-            m_result_size = results.size();
-            return;
-        }
-    }
-    return;
+	std::list<IDownload*> results;
+	std::list<IDownloader*>::const_iterator it = m_loaders.begin();
+	for( ; it != m_loaders.end(); ++it ) {
+		(*it)->search(results, m_name, m_cat);
+		if (!results.empty()) {
+			DownloadItem* dl_item = new DownloadItem(results, *it);
+			prDownloader().m_dl_thread->DoWork(dl_item);
+			m_result_size = results.size();
+			return;
+		}
+	}
+	return;
 }
 
 
@@ -127,21 +132,22 @@ PrDownloader::PrDownloader():
 	wxEvtHandler(),
 	m_dl_thread(new LSL::WorkerThread())
 {
-    IDownloader::Initialize(&downloadsObserver());
-    //UpdateSettings();
-    m_game_loaders.push_back(rapidDownload);
-    m_game_loaders.push_back(httpDownload);
-    m_game_loaders.push_back(plasmaDownload);
-    m_map_loaders.push_back(httpDownload);
-    m_map_loaders.push_back(plasmaDownload);
+	IDownloader::Initialize(&downloadsObserver());
+	//UpdateSettings();
+	m_game_loaders.push_back(rapidDownload);
+	m_game_loaders.push_back(httpDownload);
+	m_game_loaders.push_back(plasmaDownload);
+	m_map_loaders.push_back(httpDownload);
+	m_map_loaders.push_back(plasmaDownload);
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringStarted, wxObjectEventFunction(&PrDownloader::OnSpringStarted));
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&PrDownloader::OnSpringTerminated));
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&PrDownloader::OnUnitsyncReloaded));
 }
 
 PrDownloader::~PrDownloader()
 {
-    delete m_dl_thread;
-    IDownloader::Shutdown();
+	delete m_dl_thread;
+	IDownloader::Shutdown();
 }
 
 void PrDownloader::ClearFinished()
@@ -187,16 +193,23 @@ void PrDownloader::OnSpringTerminated(wxCommandEvent& /*data*/)
 }
 
 
+void PrDownloader::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
+{
+	std::string path;
+	LSL::usync().GetSpringDataPath(path);
+	fileSystem->setWritePath(path);
+}
+
 int PrDownloader::Get(std::list<IDownloader*> loaders, const std::string &name, IDownload::category cat)
 {
-    SearchItem* searchItem = new SearchItem(loaders, name, cat);
-    m_dl_thread->DoWork(searchItem);
-    return 1;
+	SearchItem* searchItem = new SearchItem(loaders, name, cat);
+	m_dl_thread->DoWork(searchItem);
+	return 1;
 }
 
 PrDownloader& prDownloader()
 {
-    static LSL::Util::LineInfo<PrDownloader> m( AT );
-    static LSL::Util::GlobalObjectHolder<PrDownloader, LSL::Util::LineInfo<PrDownloader> > s_PrDownloader( m );
-    return s_PrDownloader;
+	static LSL::Util::LineInfo<PrDownloader> m( AT );
+	static LSL::Util::GlobalObjectHolder<PrDownloader, LSL::Util::LineInfo<PrDownloader> > s_PrDownloader( m );
+	return s_PrDownloader;
 }
