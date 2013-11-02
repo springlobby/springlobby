@@ -447,7 +447,7 @@ void TASServer::Login()
 	localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
-    wxFormat login_cmd( _T("%s %s %s %s %s\t%s\ta m sp eb") );
+    wxFormat login_cmd( _T("%s %s %s %s %s\t%s\ta m sp eb cl") );
     SendCmd ( _T("LOGIN"), (login_cmd % m_user % pass % GetHostCPUSpeed() % localaddr % Useragent() % protocol).str() );
 	m_id_transmission = true;
 }
@@ -680,42 +680,19 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         haspass = GetBoolParam( params );
         rank = GetIntParam( params );
         hash = MakeHashUnsigned( GetWordParam( params ) );
+		engineName = GetSentenceParam( params );
+		engineVersion = GetSentenceParam( params );
         map = GetSentenceParam( params );
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
-        m_se->OnBattleOpenedEx( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
-                              haspass, rank, hash,wxEmptyString, wxEmptyString, map, title, mod );
+		m_se->OnBattleOpenedEx( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
+				haspass, rank, hash, engineName, engineVersion, map, title, mod );
         if ( nick == m_relay_host_bot )
         {
 		   GetBattle( id ).SetProxy( m_relay_host_bot );
            JoinBattle( id, sett().GetLastHostPassword() ); // autojoin relayed host battles
         }
     }
-	else if ( cmd == _T("BATTLEOPENEDEX") )
-	{
-		id = GetIntParam( params );
-		type = GetIntParam( params );
-		nat = GetIntParam( params );
-		nick = GetWordParam( params );
-		host = GetWordParam( params );
-		port = GetIntParam( params );
-		maxplayers = GetIntParam( params );
-		haspass = GetBoolParam( params );
-		rank = GetIntParam( params );
-		hash = MakeHashUnsigned( GetWordParam( params ) );
-		engineName = GetWordParam( params );
-		engineVersion = GetWordParam( params );
-		map = GetSentenceParam( params );
-		title = GetSentenceParam( params );
-		mod = GetSentenceParam( params );
-		m_se->OnBattleOpenedEx( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
-				haspass, rank, hash, engineName, engineVersion, map, title, mod );
-		if ( nick == m_relay_host_bot )
-		{
-			GetBattle( id ).SetProxy( m_relay_host_bot );
-			JoinBattle( id, sett().GetLastHostPassword() ); // autojoin relayed host battles
-		}
-	}
     else if ( cmd == _T("JOINEDBATTLE") )
     {
         id = GetIntParam( params );
@@ -1469,9 +1446,8 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     cmd += MakeHashSigned( bo.modhash );
     cmd += wxString::Format( _T(" %d "), bo.rankneeded );
     cmd += MakeHashSigned( bo.maphash ) + _T(" ");
-	cmd += bo.engineName + _T(" ");
-	//FIXME: this is a dirty hack for https://github.com/spring/LobbyProtocol/issues/15 which breaks compatibility to other lobbies
-	cmd += bo.engineVersion.BeforeFirst(' ') +  _T(" ");
+	cmd += bo.engineName + _T("\t");
+	cmd += bo.engineVersion + _T("\t");
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
     cmd += bo.modname;
@@ -1479,7 +1455,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     m_delayed_open_command = _T("");
 	if ( !bo.userelayhost )
     {
-       SendCmd( _T("OPENBATTLEEX"), cmd );
+       SendCmd( _T("OPENBATTLE"), cmd );
     }
     else
     {
