@@ -447,7 +447,7 @@ void TASServer::Login()
 	localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
-    wxFormat login_cmd( _T("%s %s %s %s %s\t%s\ta m sp eb cl") );
+    wxFormat login_cmd( _T("%s %s %s %s %s\t%s\ta m sp cl") );
     SendCmd ( _T("LOGIN"), (login_cmd % m_user % pass % GetHostCPUSpeed() % localaddr % Useragent() % protocol).str() );
 	m_id_transmission = true;
 }
