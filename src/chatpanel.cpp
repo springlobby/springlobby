@@ -850,11 +850,10 @@ void ChatPanel::SetUser( const User* usr )
 		if (m_chan_opts_button != NULL) m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().ICON_EMPTY) );
 	} else if ( usr != 0 ) usr->uidata.panel = this;
 	m_user = usr;
-	if ( m_user ) {
-		if (m_chan_opts_button != NULL)  m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().GetUserListStateIcon(m_user->GetStatus(),false, m_user->GetBattle() != 0 ) ) );
+	if (( m_user != NULL ) && (m_chan_opts_button != NULL)) {
+		const wxBitmap icon = icons().GetBitmap(icons().GetUserListStateIcon(m_user->GetStatus(),false, m_user->GetBattle() != 0 ));
+		m_chan_opts_button->SetBitmapLabel(icon);
 	}
-//	if ( m_user )
-//        m_chat_log.SetTarget( sett().GetDefaultServer(), usr->GetNick() );
 }
 
 bool ChatPanel::IsServerPanel() const
