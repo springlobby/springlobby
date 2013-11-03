@@ -844,11 +844,17 @@ void ChatPanel::SetUser( const User* usr )
 {
 	ASSERT_LOGIC( m_type == CPT_User, _T( "Not of type user" ) );
 
-	if (( usr == 0 ) && ( m_user != 0 ) ) {
-		StatusMessage( _( "Chat closed." ) );
-		m_user->uidata.panel = 0;
-		if (m_chan_opts_button != NULL) m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().ICON_EMPTY) );
-	} else if ( usr != 0 ) usr->uidata.panel = this;
+	if ( usr == NULL ) {
+		if ( m_user != NULL ) {
+			StatusMessage( _( "Chat closed." ) );
+			m_user->uidata.panel = 0;
+			if (m_chan_opts_button != NULL) {
+				m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().ICON_EMPTY) );
+			}
+		}
+	} else {
+		usr->uidata.panel = this;
+	}
 	m_user = usr;
 	if (( m_user != NULL ) && (m_chan_opts_button != NULL)) {
 		const wxBitmap icon = icons().GetBitmap(icons().GetUserListStateIcon(m_user->GetStatus(),false, m_user->GetBattle() != 0 ));
