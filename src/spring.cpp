@@ -204,23 +204,13 @@ bool Spring::LaunchSpring( const wxString& params  )
         return false;
     }
 
-  wxString configfileflags = sett().GetCurrentUsedSpringConfigFilePath();
-  if ( !configfileflags.IsEmpty() )
-  {
-
-		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
-		#ifdef __WXMSW__
-      if ( LSL::usync().GetSpringVersion().find("0.78.") != std::string::npos ) configfileflags = _T("");
-		#endif
-  }
-
   wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary();
   #ifdef __WXMAC__
     wxChar sep = wxFileName::GetPathSeparator();
 	if ( sett().GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") )
         cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
   #endif
-  cmd += _T("\" ") + configfileflags + params;
+  cmd += _T("\" ") + params;
 
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
 
