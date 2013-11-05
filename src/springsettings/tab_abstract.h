@@ -74,7 +74,7 @@ class abstract_panel : public wxScrolledWindow
 		//void update(wxIdleEvent&);
 		virtual void OnComboBoxChange(wxCommandEvent& event);
 		static intMap intSettings;
-		//static stringMap stringSettings;
+		static stringMap stringSettings;
 		static floatMap floatSettings;
 		static bool settingsChanged;
 		static bool saveSettings();

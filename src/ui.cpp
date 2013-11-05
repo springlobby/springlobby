@@ -528,7 +528,7 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 		hackversion = "91";
 
 	const auto versionlist = sett().GetSpringVersionList();
-for ( const auto pair : versionlist ) {
+	for ( const auto pair : versionlist ) {
 		const wxString ver = pair.first;
 		const LSL::SpringBundle bundle = pair.second;
 		const int pos = STD_STRING(ver).find(" ");
