@@ -526,6 +526,8 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 		hackversion = "94";
 	else if (neededversion == "91.0")
 		hackversion = "91";
+	else if (neededversion == "95.0") // hack for http://code.google.com/p/zero-k/issues/detail?id=2030
+		hackversion = "95";
 
 	const auto versionlist = sett().GetSpringVersionList();
 	for ( const auto pair : versionlist ) {
