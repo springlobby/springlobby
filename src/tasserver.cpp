@@ -1446,8 +1446,10 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     cmd += MakeHashSigned( bo.modhash );
     cmd += wxString::Format( _T(" %d "), bo.rankneeded );
     cmd += MakeHashSigned( bo.maphash ) + _T(" ");
-	cmd += bo.engineName + _T("\t");
-	cmd += bo.engineVersion + _T("\t");
+	if (!bo.userelayhost) { //FIXME: relay host hasn't multiversion support yet, see https://github.com/springlobby/springlobby/issues/98
+		cmd += bo.engineName + _T("\t");
+		cmd += bo.engineVersion + _T("\t");
+	}
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
     cmd += bo.modname;
