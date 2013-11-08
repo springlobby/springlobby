@@ -520,7 +520,6 @@ std::string VersionGetMajor(const std::string& version)
 {
 	const int pos = version.find(".");
 	if (pos>0) {
-		printf("VersionGetMajor: %s\n", version.substr(0, pos).c_str());
 		return version.substr(0, pos);
 	}
 	return version;
