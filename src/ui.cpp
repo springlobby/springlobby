@@ -516,27 +516,48 @@ void Ui::OnConnected( Server& server, const wxString& server_name, const wxStrin
 }
 
 
+std::string VersionGetMajor(const std::string& version)
+{
+	const int pos = version.find(".");
+	if (pos>0) {
+		printf("VersionGetMajor: %s\n", version.substr(0, pos).c_str());
+		return version.substr(0, pos);
+	}
+	return version;
+}
+
+bool VersionIsRelease(const std::string& version) { //try to detect if a version is major
+	const std::string allowedChars = "01234567890.";
+	for(int i=0; i<version.length(); i++) {
+		if (allowedChars.find(version[i]) == std::string::npos) { //found invalid char -> not stable version
+			return false;
+		}
+	}
+	return true;
+}
+
+bool VersionSyncCompatible(const std::string& ver1, const std::string& ver2)
+{
+	if (ver1 == ver2) {
+		return true;
+	}
+	if ( (VersionIsRelease(ver1) &&  VersionIsRelease(ver2)) &&
+	 (VersionGetMajor(ver1) == VersionGetMajor(ver2))) {
+		return true;
+	}
+	return false;
+}
+
 bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 {
 	assert(engine == _T("spring"));
 	if ( sett().GetDisableSpringVersionCheck() ) return true;
 	const std::string neededversion = STD_STRING(version);
-	std::string hackversion;
-	if (neededversion == "94.1") //workarrounds for https://github.com/spring/LobbyProtocol/issues/15
-		hackversion = "94";
-	else if (neededversion == "91.0")
-		hackversion = "91";
-	else if (neededversion == "95.0") // hack for http://code.google.com/p/zero-k/issues/detail?id=2030
-		hackversion = "95";
-
 	const auto versionlist = sett().GetSpringVersionList();
 	for ( const auto pair : versionlist ) {
 		const wxString ver = pair.first;
 		const LSL::SpringBundle bundle = pair.second;
-		const int pos = STD_STRING(ver).find(" ");
-		if ( (STD_STRING(ver) == neededversion) ||
-		     (STD_STRING(ver) == hackversion) ||
-		     (pos>0 && neededversion==STD_STRING(ver).substr(0,pos))) { //contains space, compare without branch
+		if ( VersionSyncCompatible(neededversion, STD_STRING(ver))) {
 			if ( sett().GetCurrentUsedSpringIndex() != ver ) {
 				wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), ver.c_str(), ver.c_str());
 				sett().SetUsedSpringIndex( ver );
