@@ -702,16 +702,6 @@ void Ui::OnChannelMessage( const wxString& channel, const wxString& msg )
 }
 
 
-/** \brief this was used when channel was left via raw command in server tab, now it's not used by anything */
-void Ui::OnLeaveChannel( wxString& name )
-{
-	ChatPanel* panel = GetChannelChatPanel( name );
-
-	if (panel)
-		mw().GetChatTab().RemoveChatPanel( panel );
-}
-
-
 void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
 	//wxLogDebugFunc( _T("") );
@@ -770,11 +760,6 @@ void Ui::OnChannelList( const wxString& channel, const int& numusers )
 void Ui::OnUserOnline( User& user )
 {
 	if ( m_main_win == 0 ) return;
-	/*  UiUserData* data = new UiUserData();
-	  data->panel = 0;
-
-	  user.SetUserData( (void*)data );*/
-
 	mw().GetChatTab().OnUserConnected( user );
 }
 
@@ -787,10 +772,6 @@ void Ui::OnUserOffline( User& user )
 		user.uidata.panel->SetUser( 0 );
 		user.uidata.panel = 0;
 	}
-	/*  UiUserData* data = (UiUserData*)user.GetUserData();
-	  if ( data == 0) return;
-
-	  delete data;*/
 }
 
 
@@ -972,17 +953,6 @@ void Ui::OnBattleInfoUpdated( BattleEvents::BattleEventData data )
 	}
 }
 
-//void Ui::OnBattleInfoUpdated( IBattle& battle, const wxString& Tag )
-//{
-//    if ( m_main_win == 0 ) return;
-//    mw().GetBattleListTab().UpdateBattle( battle );
-//    if ( mw().GetJoinTab().GetCurrentBattle() == &battle )
-//    {
-//        mw().GetJoinTab().UpdateCurrentBattle( Tag );
-//    }
-//}
-
-
 void Ui::OnJoinedBattle( Battle& battle )
 {
 	if ( m_main_win == 0 ) return;
@@ -1092,36 +1062,6 @@ void Ui::OnRing( const wxString& from )
 		UiEvents::GetNotificationEventSender().SendEvent(
 			UiEvents::NotficationData( UiEvents::ServerConnection, msg ) );
 	}
-
-//    if(serverSelector().GetServer().GetCurrentBattle()->GetMe().GetBattleStatus().sync == SYNC_UNSYNCED) {
-//        wxString host_map_name = serverSelector().GetServer().GetCurrentBattle()->GetHostMapName();
-//        if(! usync().MapExists(host_map_name)) {//TODO
-
-//			map_infos info_map = prDownloader().CollectGuiInfos();
-//            bool dling = false;
-
-//            for(map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter){
-//                if(iter->first == wxString(_T("global")))
-//                    continue;
-//                else if(iter->first == host_map_name) {
-//                    int eta = iter->second.eta;
-
-//                    if(eta <= 0) {
-//						serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(_("/me map is not available for automatic downloading."));
-//                    } else {
-//                        serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(wxString::Format(
-//                                _("/me downloading map eta: %d s"), eta)
-//                        );
-//                    dling = true;
-//                    }
-//                }
-//            }
-//            if(! dling) { //XXX is it possible to get eta from web dl in sl?, anyone using it instead torrent system? //there is no direct from-web downloading in SL currently
-//                serverSelector().GetServer().GetCurrentBattle()->ExecuteSayCommand(
-//                        _("/me is not downloading map with SL torrent system"));
-//            }
-//        }
-//    }
 
 #ifndef DISABLE_SOUND
 	if ( sett().GetChatPMSoundNotificationEnabled() )
