@@ -74,7 +74,6 @@ Ui::Ui() :
 	m_main_win(0),
 	m_con_win(0),
 	m_reconnect_dialog(0),
-	m_upd_counter_torrent(0),
 	m_first_update_trigger(true),
 	m_recconecting_wait(false),
 	m_disable_autoconnect(false),
@@ -469,35 +468,6 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 // EVENTS
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-
-void Ui::OnUpdate( int mselapsed )
-{
-	if ( IsConnected() && serverSelector().GetServerStatus() ) {
-		serverSelector().GetServer().Update( mselapsed );
-	}
-
-	if ( m_first_update_trigger ) {
-		m_first_update_trigger = false;
-
-		if ( sett().GetAutoConnect() ) {
-			Connect(); //the start tab is set from UI::onLoggedin
-		} else {
-			mw().ShowTab( sett().GetStartTab() );
-		}
-		//don't ask for updates on first run, that's a bit much for a newbie
-		if ( sett().GetAutoUpdate() && !sett().IsFirstRun() )
-			CheckForUpdates();
-	}
-
-	if (m_upd_counter_torrent % 20 == 0 ) {
-		mw().GetDownloadTab().OnUpdate();
-		mw().GetJoinTab().OnUpdate();
-	}
-//    prDownloader().UpdateFromTimer( mselapsed );
-	m_upd_counter_torrent++;
-}
-
-
 //! @brief Called when connected to a server
 //!
 //! @todo Display in servertab
@@ -579,6 +549,8 @@ void Ui::OnLoggedIn( )
 {
 	if ( m_main_win == 0 ) return;
 	mw().GetChatTab().RejoinChannels();
+	// FIXME RejoinChannels changes active tab, we change back to
+	// default tab on auto connect
 	if ( sett().GetAutoConnect() )
 		mw().ShowTab( sett().GetStartTab() );
 	mw().GetBattleListTab().SortBattleList();
@@ -1222,36 +1194,50 @@ void Ui::OpenFileInEditor( const wxString& filepath )
 	}
 }
 
+void Ui::OnInit()
+{
+	if (sett().IsFirstRun()) {
+		FirstRunWelcome();
+	} else {
+		if (sett().GetAutoConnect()) {
+			Connect(); // OnConnect changes tab
+		} else {
+			mw().ShowTab(sett().GetStartTab());
+		}
+		//don't ask for updates on first run, that's a bit much for a newbie
+		if (sett().GetAutoUpdate()) {
+			CheckForUpdates();
+		}
+	}
+}
+
+
 void Ui::FirstRunWelcome()
 {
-	if ( sett().IsFirstRun() ) {
 #ifdef __WXMSW__
-		sett().SetOldSpringLaunchMethod( true );
+	sett().SetOldSpringLaunchMethod( true );
 #endif
 
-		wxLogMessage( _T("first time startup"));
-		wxMessageBox( wxFormat( _("Hi %s,\nIt looks like this is your first time using %s. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration.") )
-			      % wxGetUserName()
-			      % GetAppName(),
-			      _("Welcome"),
-			      wxOK | wxICON_INFORMATION, &mw() );
+	wxLogMessage( _T("first time startup"));
+	wxMessageBox( wxFormat( _("Hi %s,\nIt looks like this is your first time using %s. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration.") )
+				  % wxGetUserName()
+				  % GetAppName(),
+				  _("Welcome"),
+				  wxOK | wxICON_INFORMATION, &mw() );
 
-		// copy uikeys.txt
-		wxPathList pl;
-		pl.AddEnvList( _T("%ProgramFiles%") );
-		pl.AddEnvList( _T("XDG_DATA_DIRS") );
-		pl = PathlistFactory::AdditionalSearchPaths( pl );
-		wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
-		if ( !uikeyslocation.IsEmpty() ) {
-			wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
-		}
-
-		//this ensures that for new configs there's a default perspective to fall back on
-		mw().SavePerspectives( _T("SpringLobby-default") );
-		mw().ShowConfigure();
-	} else {
-		mw().ShowSingleplayer();
+	// copy uikeys.txt
+	wxPathList pl;
+	pl.AddEnvList( _T("%ProgramFiles%") );
+	pl.AddEnvList( _T("XDG_DATA_DIRS") );
+	pl = PathlistFactory::AdditionalSearchPaths( pl );
+	wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
+	if ( !uikeyslocation.IsEmpty() ) {
+		wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
 	}
+
+	//this ensures that for new configs there's a default perspective to fall back on
+	mw().SavePerspectives( _T("SpringLobby-default") );
+	mw().ShowConfigure();
 }
 
 

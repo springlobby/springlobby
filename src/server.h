@@ -69,8 +69,6 @@ class Server : public iNetClass, public SL::NonCopyable
     virtual void Logout() = 0;
     virtual bool IsOnline()  const = 0;
 
-    virtual void Update( int mselapsed ) = 0;
-
     virtual void JoinChannel( const wxString& channel, const wxString& key ) = 0;
     virtual void PartChannel( const wxString& channel ) = 0;
 

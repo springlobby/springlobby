@@ -22,12 +22,14 @@
 #include "aui/auimanager.h"
 #include "gui/contentdownloaddialog.h"
 
+
 BEGIN_EVENT_TABLE( MainDownloadTab, wxPanel )
 	//(*EventTable(MainTorrentTab)
 	//*)
 	EVT_BUTTON      ( ID_BUTTON_CANCEL,     MainDownloadTab::OnCancelButton      )
 	EVT_BUTTON      ( ID_BUTTON_CLEAR,      MainDownloadTab::OnClearFinished     )
 	EVT_BUTTON      ( ID_DOWNLOAD_DIALOG,   MainDownloadTab::OnDownloadDialog    )
+	EVT_TIMER       ( ID_TIMER,             MainDownloadTab::OnUpdate            )
 END_EVENT_TABLE()
 
 MainDownloadTab::MainDownloadTab( wxWindow* parent )
@@ -72,6 +74,9 @@ MainDownloadTab::MainDownloadTab( wxWindow* parent )
 
     Layout();
     //Disable();
+
+	timer = new wxTimer(this, ID_TIMER);
+	timer->Start(1000 * 2);
 }
 
 MainDownloadTab::~MainDownloadTab()
@@ -84,7 +89,7 @@ void MainDownloadTab::OnClearFinished( wxCommandEvent& /*event*/ )
 	m_dl_listctrl->Clear();
 }
 
-void MainDownloadTab::OnUpdate()
+void MainDownloadTab::OnUpdate(wxTimerEvent& /*event*/)
 {
     m_dl_listctrl->UpdateTorrentsList();
 }

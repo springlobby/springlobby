@@ -12,7 +12,6 @@
 
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
-#include <wx/timer.h>
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <wx/image.h>
@@ -64,17 +63,13 @@
 #if wxUSE_UNIX
 	#include <X11/Xlib.h>
 #endif
-const unsigned int TIMER_ID         = 101;
-const unsigned int TIMER_INTERVAL   = 100;
 
 IMPLEMENT_APP(SpringLobbyApp)
 
 BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
-    EVT_TIMER(TIMER_ID, SpringLobbyApp::OnTimer)
 END_EVENT_TABLE()
 
-SpringLobbyApp::SpringLobbyApp()
-    : 	m_timer ( new wxTimer(this, TIMER_ID) ),
+SpringLobbyApp::SpringLobbyApp():
     quit_called( false ),
     m_translationhelper( NULL ),
     m_log_verbosity( 3 ),
@@ -87,11 +82,6 @@ SpringLobbyApp::SpringLobbyApp()
 #if wxUSE_UNIX
 XInitThreads();
 #endif
-}
-
-SpringLobbyApp::~SpringLobbyApp()
-{
-    delete m_timer;
 }
 
 //! @brief Initializes the application.
@@ -196,8 +186,7 @@ bool SpringLobbyApp::OnInit()
 		ui().mw().SavePerspectives( _T("SpringLobby-default") );
 	}
 
-    ui().FirstRunWelcome();
-    m_timer->Start( TIMER_INTERVAL );
+    ui().OnInit();
 
 	ui().mw().SetLogWin( loggerwin, logchain );
 	return true;
@@ -217,8 +206,6 @@ int SpringLobbyApp::OnExit()
     {
         wxDELETE(m_translationhelper);
     }
-
-  	m_timer->Stop();
 
   	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
@@ -244,12 +231,6 @@ void SpringLobbyApp::OnFatalException()
 #endif
 }
 
-
-//! @brief Is called every 1/10 seconds to update statuses
-void SpringLobbyApp::OnTimer( wxTimerEvent& event )
-{
-    ui().OnUpdate( event.GetInterval() );
-}
 
 bool SpringLobbyApp::SelectLanguage()
 {
@@ -443,7 +424,6 @@ void SpringLobbyApp::CacheAndSettingsSetup()
 
 void SpringLobbyApp::OnQuit( wxCommandEvent& /*data*/ )
 {
-	m_timer->Stop();
 	GlobalEvent::Send(GlobalEvent::OnQuit);
 }
 

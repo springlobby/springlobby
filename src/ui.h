@@ -86,7 +86,7 @@ public:
 
 	bool IsMainWindowCreated() const;
 
-	void OnUpdate( int mselapsed );
+	void OnInit();
 
 	void OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported );
 	void OnLoggedIn( );
@@ -166,8 +166,6 @@ protected:
 	ReconnectDialog* m_reconnect_dialog;
 
 	wxString m_last_used_backup_server;
-
-	unsigned int m_upd_counter_torrent;
 
 	bool m_first_update_trigger;
 
