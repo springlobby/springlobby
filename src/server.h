@@ -230,7 +230,7 @@ public:
 	Server& GetServer();
 	const Server& GetServer() const;
 	void SetCurrentServer(Server* server);
-	bool    GetServerStatus() const;
+	bool    IsServerAvailible() const;
 protected:
 	ServerSelector();
 	Server* m_serv;

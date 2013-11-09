@@ -203,7 +203,7 @@ ServerSelector::ServerSelector()
 	: m_serv(0)
 {}
 
-bool ServerSelector::GetServerStatus() const
+bool ServerSelector::IsServerAvailible() const
 {
 	return (bool)(m_serv);
 }
