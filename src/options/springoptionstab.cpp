@@ -421,6 +421,6 @@ void SpringOptionsTab::ReloadSpringList()
 	m_spring_list->Clear();
 for(auto bundle: springlist) {
 		m_spring_list->Append(bundle.first);
-		//m_spring_list->SetStringSelection(m_current_group);
+		m_spring_list->SetStringSelection(sett().GetCurrentUsedSpringIndex());
 	}
 }
