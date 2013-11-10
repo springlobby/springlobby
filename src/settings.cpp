@@ -700,8 +700,11 @@ wxString Settings::AutoFindBundle()
 
 wxString Settings::AutoFindUikeys()
 {
-    wxPathList pl = PathlistFactory::ConfigFileSearchPaths();
-	return pl.FindValidPath( _T( "uikeys.txt" ) );
+	const std::string path = LSL::susynclib().GetSpringDataDir();
+	wxString uikeys(TowxString(path));
+	uikeys += sep;
+	uikeys += _T("uikeys.txt");
+	return uikeys;
 }
 
 
@@ -833,18 +836,12 @@ wxString Settings::GetCurrentUsedDataDir()
 
 wxString Settings::GetCurrentUsedSpringBinary()
 {
-	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sepstring + _T( "spring" ) + BIN_EXT;
-    else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sepstring + _T( "spring" ) +  + BIN_EXT;
-	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sepstring + _T("spring") + BIN_EXT;
-	else return GetSpringBinary( GetCurrentUsedSpringIndex() );
+	return GetSpringBinary( GetCurrentUsedSpringIndex() );
 }
 
 wxString Settings::GetCurrentUsedUnitSync()
 {
-    if ( IsPortableMode() ) return AutoFindUnitSync( PathlistFactory::fromSinglePath( GetCurrentUsedDataDir() ) );
-	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sepstring + _T( "unitsync" ) + GetLibExtension();
-	else if ( GetUseSpringPathFromBundle() ) return GetExecutableFolder() + sepstring + _T("unitsync") + GetLibExtension();
-	else return GetUnitSync( GetCurrentUsedSpringIndex() );
+	return GetUnitSync( GetCurrentUsedSpringIndex() );
 }
 
 wxString Settings::GetCurrentUsedBundle()
@@ -854,9 +851,7 @@ wxString Settings::GetCurrentUsedBundle()
 
 wxString Settings::GetCurrentUsedUikeys()
 {
-	if ( IsPortableMode() ) return GetCurrentUsedDataDir() + sepstring + _T( "uikeys.txt" );
-	else if ( GetSearchSpringOnlyInSLPath() ) return GetExecutableFolder() + sepstring + _T( "uikeys.txt" );
-	else return GetUikeys( GetCurrentUsedSpringIndex() );
+	return GetUikeys(GetCurrentUsedSpringIndex());
 }
 
 wxString Settings::GetCurrentUsedSpringConfigFilePath()
@@ -867,7 +862,6 @@ wxString Settings::GetCurrentUsedSpringConfigFilePath()
 	} catch ( std::runtime_error& e) {
 		wxLogError( wxString::Format( _T("Couldn't get SpringConfigFilePath, exception caught:\n %s"), e.what()  ) );
 	}
-
 	return path;
 }
 
