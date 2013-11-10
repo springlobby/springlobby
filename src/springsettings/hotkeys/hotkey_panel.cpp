@@ -32,7 +32,7 @@ hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &tit
 {
 	try
 	{
-		m_pKeyConfigPanel = new wxKeyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON), wxT("HotkeyPanel"), 
+		m_pKeyConfigPanel = new wxKeyConfigPanel( this, -1, wxDefaultPosition, wxDefaultSize, (wxKEYBINDER_DEFAULT_STYLE & ~wxKEYBINDER_SHOW_APPLYBUTTON), wxT("HotkeyPanel"),
 																			wxT("Selection"), wxCommandEventHandler(hotkey_panel::ButtonAddSelectionCommandClicked),
 																			wxT("Custom"), wxCommandEventHandler(hotkey_panel::ButtonAddCustomCommandClicked),
 																			wxT("Add Command:") );
@@ -54,16 +54,16 @@ hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &tit
 		parentSizer->Add(10, 0, 0);
 		parentSizer->Add(childLSizer,0,wxEXPAND|wxTOP,5);
 
-		
+
 		//content
 		wxFlexGridSizer* fgSizer1;
-		fgSizer1 = new wxFlexGridSizer( 1, 1, 0, 0 ); 
+		fgSizer1 = new wxFlexGridSizer( 1, 1, 0, 0 );
 		fgSizer1->SetFlexibleDirection( wxBOTH );
 		fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 		fgSizer1->Add( parentSizer, 1, wxEXPAND, 5 );
 
 		this->SetSizer( fgSizer1 );
-		
+
 		this->Layout();
 	}
 	catch( const HotkeyException& ex )
@@ -85,7 +85,7 @@ hotkey_panel::~hotkey_panel(void)
 void hotkey_panel::ButtonAddSelectionCommandClicked( wxCommandEvent& )
 {
 	AddSelectionCmdDlg dlg( this );
-	
+
 	if ( dlg.ShowModal() == wxID_OK )
 	{
 		wxString cmd = wxT("select ") + dlg.getCommandString();
@@ -110,7 +110,7 @@ void hotkey_panel::OnAddCommand( const wxString& cmd )
 		CommandList::addCustomCommand( cmd );
 
 		//refresh view
-		this->updateTreeView();	
+		this->updateTreeView();
 		this->addCommandToAllPanelProfiles( CommandList::getCommandByName( cmd ) );
 	}
 	catch( const HotkeyException& ex )
@@ -145,7 +145,7 @@ key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
 	typedef std::map<size_t, std::pair<wxString, wxString> >	SortedKeyCommands;
 	SortedKeyCommands tmpSorted;
 	key_binding binding;
-	
+
 	{	//add non-any keys
 		const wxCmdArray* pCmdArr = profile.GetArray();
 		for( size_t j=0; j < pCmdArr->GetCount(); ++j )
@@ -157,18 +157,18 @@ key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
 				if ( keys->HasAnyModifier() )
 					continue;
 
-				tmpSorted[ keys->GetOrderIndex() ] = std::make_pair( 
+				tmpSorted[ keys->GetOrderIndex() ] = std::make_pair(
 					KeynameConverter::spring2wxKeybinder( keys->GetStr(), true ),
 					cmd.GetName() );
 			}
 		}
-		
+
 		for( SortedKeyCommands::const_iterator iter = tmpSorted.begin(); iter != tmpSorted.end(); ++iter )
 		{
 			binding.bind( iter->second.second, iter->second.first );
 		}
 	}
-	
+
 	tmpSorted.clear();
 	{	//add any-keys
 		const wxCmdArray* pCmdArr = profile.GetArray();
@@ -181,12 +181,12 @@ key_binding hotkey_panel::getBindingsFromProfile( const wxKeyProfile& profile )
 				if ( !keys->HasAnyModifier() )
 					continue;
 
-				tmpSorted[ keys->GetOrderIndex() ] = std::make_pair( 
+				tmpSorted[ keys->GetOrderIndex() ] = std::make_pair(
 					KeynameConverter::spring2wxKeybinder( keys->GetStr(),true ),
 					cmd.GetName() );
 			}
 		}
-		
+
 		for( SortedKeyCommands::const_iterator iter = tmpSorted.begin(); iter != tmpSorted.end(); ++iter )
 		{
 			binding.bind( iter->second.second, iter->second.first );
@@ -236,7 +236,7 @@ void hotkey_panel::SaveSettings()
 			//check if any bindings from the default bindings have been unbind. and save that info to the settings
 			{
 				const key_binding removedBinds = defaultBinds - profileBinds;
-				
+
 				const key_commands_sorted& delCmds = removedBinds.getBinds();
 				int orderIdx = -1;
 				for( key_commands_sorted::const_iterator iter = delCmds.begin(); iter != delCmds.end(); ++iter )
@@ -249,7 +249,7 @@ void hotkey_panel::SaveSettings()
 			//add bindings
 			{
 				const key_binding addedBinds = profileBinds - defaultBinds;
-				
+
 				const key_commands_sorted& addCmds = addedBinds.getBinds();
 				int orderIdx = 1;
 				for( key_commands_sorted::const_iterator iter = addCmds.begin(); iter != addCmds.end(); ++iter )
@@ -401,10 +401,10 @@ void hotkey_panel::selectProfileFromUikeys()
 		{
 			const wxString profName = this->getNextFreeProfileName();
 			wxKeyProfile profile = buildNewProfile( profName, wxT("User hotkey profile"), false );
-			this->putKeybindingsToProfile( profile, curBinding );	
+			this->putKeybindingsToProfile( profile, curBinding );
 			this->m_pKeyConfigPanel->AddProfile( profile, true );
 
-			customMessageBox(SS_MAIN_ICON, _("Your current hotkey configuration does not match any known profile.\n A new profile with the name '" + profName + _("' has been created.")), 
+			customMessageBox(SS_MAIN_ICON, _("Your current hotkey configuration does not match any known profile.\n A new profile with the name '" + profName + _("' has been created.")),
 				_("New hotkey profile found"), wxOK );
 
 			foundIdx = this->m_pKeyConfigPanel->GetProfiles().GetCount() - 1;
@@ -419,7 +419,7 @@ void hotkey_panel::selectProfileFromUikeys()
 }
 
 wxArrayString hotkey_panel::sortArrayStringNumerical( const wxArrayString& arr )
-{	
+{
 	//we get the array here ordered as strings. e.g. "1","10","2","3","4"
 	//but we actually do want it ordered as numbers "1","2","3",..."9","10","11","12"
 	std::list<long> sortList;
@@ -464,13 +464,13 @@ key_binding_collection hotkey_panel::getProfilesFromSettings()
 				const wxString& cmd = sett().GetHotkey( profName, idx, keys.Item(j) );
 
 				const wxString& springKey = keys.Item(j); //KeynameConverter::spring2wxKeybinder( keys.Item(j), true );
-				
+
 				long lIdx = 0;
 				if ( idx.ToLong( &lIdx ) == false )
 				{
 					throw HotkeyException( _("Error parsing springsettings hotkey profile. Invalid order index: ") + idx );
 				}
-				
+
 				if ( lIdx < 0 )
 				{
 					coll[profName].unbind( cmd, springKey );
@@ -511,7 +511,8 @@ key_binding_collection hotkey_panel::getProfilesFromSettings()
 
 void hotkey_panel::UpdateControls(int /*unused*/)
 {
- 	this->updateTreeView();
+	m_uikeys_manager.setUiKeys(sett().GetCurrentUsedUikeys());
+	this->updateTreeView();
 
 	//Fetch the profiles
 	this->m_pKeyConfigPanel->RemoveAllProfiles();
@@ -519,7 +520,7 @@ void hotkey_panel::UpdateControls(int /*unused*/)
 	//put default profile
 	wxKeyProfile defProf = this->buildNewProfile( wxT("Spring default"), wxT("Spring's default keyprofile"),true);
 	const key_binding defBinds = SpringDefaultProfile::getBindings();
-	this->putKeybindingsToProfile( defProf, defBinds );		
+	this->putKeybindingsToProfile( defProf, defBinds );
 	this->m_pKeyConfigPanel->AddProfile( defProf );
 
 	//put user profiles from springsettings configuration
@@ -584,7 +585,7 @@ void hotkey_panel::updateTreeView()
 		}
 	}
 
-	this->m_pKeyConfigPanel->ImportRawList( ctrlMap, wxT("Commands") ); 
+	this->m_pKeyConfigPanel->ImportRawList( ctrlMap, wxT("Commands") );
 }
 
 bool hotkey_panel::HasProfileBeenModifiedOrSelected() const

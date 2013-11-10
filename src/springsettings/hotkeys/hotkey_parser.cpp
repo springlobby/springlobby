@@ -18,44 +18,9 @@
 #include "../../utils/conversion.h"
 
 
-hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : m_filename( uikeys_filename ), m_dontTouch( false )
+hotkey_parser::hotkey_parser(const wxString& uikeys_filename) :m_dontTouch( true )
 {
-	//we will read the uikeys.txt now to get the key profile
-	//1. Fill the profile with spring's default bindings
-	KeynameConverter::initialize();
-
-	this->m_bindings = SpringDefaultProfile::getBindings();
-
-	//2. now read uikeys.txt and modify the default profile
-	wxTextFile uiFile( this->m_filename );
-
-	if ( !uiFile.Open() )
-	{
-		wxLogWarning( _( "hotkey_parser: can't open " ) + uikeys_filename );
-		return;
-	}
-
-	wxString line;
-	for ( line = uiFile.GetFirstLine(); !uiFile.Eof(); line = uiFile.GetNextLine() )
-	{
-		if ( line.Trim().StartsWith( wxT("//SPRINGSETTINGS DO NOT TOUCH") ) )
-		{
-			this->m_dontTouch = true;
-		}
-
-		//look for comments
-		int cmtPos = line.Find(wxT("//"));
-		if (cmtPos != -1) {
-			line.Truncate(cmtPos);	//comment found. cut it.
-		}
-
-		line = line.Trim();
-
-		if ( line.size() == 0 )
-			continue;
-
-		this->processLine( line );
-	}
+	setUiKeys(uikeys_filename);
 }
 
 bool hotkey_parser::processLine( const wxString& line )
@@ -255,4 +220,42 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 bool hotkey_parser::isDontTouchMode() const
 {
 	return this->m_dontTouch;
+}
+
+void hotkey_parser::setUiKeys(const wxString& filename )
+{
+	//we will read the uikeys.txt now to get the key profile
+	//1. Fill the profile with spring's default bindings
+	KeynameConverter::initialize();
+
+	this->m_bindings = SpringDefaultProfile::getBindings();
+
+	//2. now read uikeys.txt and modify the default profile
+	wxTextFile uiFile( this->m_filename );
+
+	if ( !uiFile.Open() ) {
+		wxLogWarning( _( "hotkey_parser: can't open " ) + filename );
+		return;
+	}
+
+	wxString line;
+	for ( line = uiFile.GetFirstLine(); !uiFile.Eof(); line = uiFile.GetNextLine() ) {
+		if ( line.Trim().StartsWith( wxT("//SPRINGSETTINGS DO NOT TOUCH") ) ) {
+			this->m_dontTouch = true;
+		}
+
+		//look for comments
+		int cmtPos = line.Find(wxT("//"));
+		if (cmtPos != -1) {
+			line.Truncate(cmtPos);	//comment found. cut it.
+		}
+
+		line = line.Trim();
+
+		if ( line.size() == 0 )
+			continue;
+
+		this->processLine( line );
+	}
+	this->m_filename = filename;
 }

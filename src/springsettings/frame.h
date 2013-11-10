@@ -54,6 +54,7 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		void buildGuiFromErrorPanel();
 	void OnSetFocus(wxFocusEvent&);
 	void OnKillFocus(wxFocusEvent&);
+		void updateAllControls();
 
 	private:
 		tab_simple* simpleTab;
@@ -102,7 +103,6 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		void OnMenuChoice(wxCommandEvent& event);
 		void CreateGUIControls();
 		void resetSettings();
-		void updateAllControls();
 
 		bool saveSettingsAbstract(); //do not call abstract_panel::SaveSettings directly, call this instead!
 		bool settingsChangedAbstract(); //do not query abstract_panel::settingschanged directly, use this instead!

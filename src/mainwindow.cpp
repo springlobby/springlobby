@@ -623,12 +623,15 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
 {
-    if ( se_frame && se_frame_active ) {
-        se_frame->Raise();
-        return;
-    }
+	if ( se_frame && se_frame_active ) {
+		se_frame->updateAllControls();
+		se_frame->Raise();
+		return;
+	}
+
 	se_frame = new settings_frame(this,wxT("SpringSettings"));
 	se_frame_active = true;
+	se_frame->updateAllControls();
 	se_frame->Show();
 }
 
