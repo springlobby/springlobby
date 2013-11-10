@@ -47,10 +47,10 @@ void showCredits()
 
 void openNewTicket()
 {
-	openUrl(_T("http://projects.springlobby.info/projects/springlobby/issues/new"));
+	openUrl(_T("https://github.com/springlobby/springlobby/issues/new"));
 }
 
 void openContactPage()
 {
-	openUrl(_T("http://projects.springlobby.info/projects/springlobby/wiki/Contact"));
+	openUrl(_T("https://github.com/springlobby?tab=members"));
 }

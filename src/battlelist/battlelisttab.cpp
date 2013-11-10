@@ -473,7 +473,7 @@ void BattleListTab::OnSelect( wxListEvent& event )
 void BattleListTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	assert(wxThread::IsMain());
-	if ( ! serverSelector().GetServerStatus() )
+	if ( ! serverSelector().IsServerAvailible() )
 		return;
 
 	UpdateList();

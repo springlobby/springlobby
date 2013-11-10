@@ -3,8 +3,6 @@
 
 #include <wx/app.h>
 
-class wxTimer;
-class wxTimerEvent;
 class wxIcon;
 class wxLocale;
 class wxTranslationHelper;
@@ -14,7 +12,6 @@ class SpringLobbyApp : public wxApp
 {
   public:
     SpringLobbyApp();
-    ~SpringLobbyApp();
 
     virtual bool OnInit();
     virtual int OnExit();
@@ -22,7 +19,6 @@ class SpringLobbyApp : public wxApp
     virtual void OnFatalException();
 
     // System Events
-    void OnTimer( wxTimerEvent& event );
     bool SelectLanguage();
 
     virtual void OnInitCmdLine(wxCmdLineParser& parser);
@@ -33,8 +29,6 @@ class SpringLobbyApp : public wxApp
   protected:
 
     void CacheAndSettingsSetup();
-
-    wxTimer* m_timer;
 
     bool quit_called;
 

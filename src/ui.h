@@ -79,14 +79,13 @@ public:
 	bool AskText( const wxString& heading, const wxString& question, wxString& answer, bool multiline = false);
 	bool AskPassword( const wxString& heading, const wxString& message, wxString& password );
 	void ShowMessage( const wxString& heading, const wxString& message ) const;
-	//void OnAlertEvent( AlertEventType ); //TODO alert system
 
 	MainWindow& mw();
 	const MainWindow& mw() const;
 
 	bool IsMainWindowCreated() const;
 
-	void OnUpdate( int mselapsed );
+	void OnInit();
 
 	void OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported );
 	void OnLoggedIn( );
@@ -103,7 +102,6 @@ public:
 	void OnChannelDidAction( Channel& channel , User& user, const wxString& action );
 	void OnChannelMessage( const wxString& channel, const wxString& msg );
 
-	void OnLeaveChannel( wxString& name  );
 	void OnChannelList( const wxString& channel, const int& numusers );
 	void OnUserOnline( User& user );
 	void OnUserOffline( User& user );
@@ -121,7 +119,6 @@ public:
 	void OnUserJoinedBattle( IBattle& battle, User& user );
 	void OnUserLeftBattle( IBattle& battle, User& user, bool isbot );
 	void OnBattleInfoUpdated( BattleEvents::BattleEventData data );
-//    void OnBattleInfoUpdated( IBattle& battle, const wxString& Tag );
 	void OnBattleStarted( Battle& battle );
 
 	void OnJoinedBattle( Battle& battle );
@@ -130,7 +127,6 @@ public:
 	void OnRequestBattleStatus( IBattle& battle );
 
 	void OnSaidBattle( IBattle& battle, const wxString& nick, const wxString& msg );
-//    void OnBattleAction( IBattle& battle, const wxString& nick, const wxString& msg );
 
 	void OnSpringTerminated( wxCommandEvent& data);
 
@@ -166,8 +162,6 @@ protected:
 	ReconnectDialog* m_reconnect_dialog;
 
 	wxString m_last_used_backup_server;
-
-	unsigned int m_upd_counter_torrent;
 
 	bool m_first_update_trigger;
 

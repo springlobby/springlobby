@@ -23,6 +23,7 @@ lsl/networking/tasserver.cpp
 #include <wx/tokenzr.h>
 #include <wx/platinfo.h>
 #include <wx/stopwatch.h>
+#include <wx/timer.h>
 
 #include <stdexcept>
 #include <algorithm>
@@ -144,6 +145,7 @@ IBattle::StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
+
 TASServer::TASServer(int serverEventsMode):
 m_ser_ver(0),
 m_connected(false),
@@ -163,9 +165,11 @@ m_do_finalize_join_battle(false),
 m_finalize_join_battle_id(-1),
 m_token_transmission( false )
 {
-	  m_se = IServerEvents::getInstance( *this, IServerEvents::ServerEventsMode(serverEventsMode) );
-	  FillAliasMap();
-	  m_relay_host_manager_list.Clear();
+	m_se = IServerEvents::getInstance( *this, IServerEvents::ServerEventsMode(serverEventsMode) );
+	FillAliasMap();
+	m_relay_host_manager_list.Clear();
+
+	Start(100); // call Update every 100ms
 }
 
 TASServer::~TASServer()
@@ -175,6 +179,9 @@ TASServer::~TASServer()
 	m_se = NULL;
 }
 
+void TASServer::Notify() {
+	Update(GetInterval());
+};
 
 bool TASServer::ExecuteSayCommand( const wxString& cmd )
 {
@@ -541,12 +548,6 @@ void TASServer::Update( int mselapsed )
                         {
                             UdpPingTheServer(m_user);
                         }
-                    }
-                    else
-                    {
-                        // old logging for debug
-                        //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
-                        //if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
                     }
                 }
             }

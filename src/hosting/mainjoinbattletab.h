@@ -42,7 +42,6 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     void FocusBattleRoomTab();
 
-    void OnUpdate();
 private:
     BattleMapTab& GetBattleMapTab();
     BattleOptionsTab& GetOptionsTab();

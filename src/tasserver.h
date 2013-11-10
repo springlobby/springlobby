@@ -18,6 +18,7 @@ lsl/networking/tasserver.h
 
 #include <wx/string.h>
 #include <wx/longlong.h>
+#include <wx/timer.h>
 #include <list>
 
 #include "server.h"
@@ -34,7 +35,7 @@ class wxString;
 class PingThread;
 
 //! @brief TASServer protocol implementation.
-class TASServer : public Server
+class TASServer : public Server, public wxTimer
 {
   public:
 	TASServer(int serverEventsMode = 0);
@@ -212,6 +213,9 @@ class TASServer : public Server
     wxString m_current_chan_name_mutelist;
 
     wxArrayString m_relay_host_manager_list;
+
+	private:
+		void Notify();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

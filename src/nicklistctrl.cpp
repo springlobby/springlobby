@@ -49,11 +49,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
     m_menu( popup )
 {
 
-#if defined(__WXMAC__)
 	const int widths [4] = { 20, 20, 20, 120 };
-#else
-	const int widths [4] = { 20, 20, 20, 120 };
-#endif
 
 	AddColumn( 0, widths[0], _( "s" ), _T( "Status" ) );
 	AddColumn( 1, widths[1], _( "c" ), _T( "Country" ) );
