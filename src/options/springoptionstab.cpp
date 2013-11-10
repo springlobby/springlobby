@@ -327,8 +327,7 @@ void SpringOptionsTab::OnBrowseBundle( wxCommandEvent& /*unused*/ )
 
 void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
-	const bool reload_usync =
-		sett().GetUnitSync( sett().GetCurrentUsedSpringIndex() ) != m_sync_edit->GetValue();
+	const bool reload_usync = sett().GetUnitSync( sett().GetCurrentUsedSpringIndex() ) != m_sync_edit->GetValue();
 	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
 	sett().SetBundle( sett().GetCurrentUsedSpringIndex(), m_bundle_edit->GetValue() );
@@ -409,7 +408,11 @@ void SpringOptionsTab::SetupUserFolders()
 
 void SpringOptionsTab::OnGroupListSelectionChange( wxCommandEvent& event )
 {
-
+	const wxString selection = m_spring_list->GetStringSelection();
+	if (!selection.empty()) {
+		sett().SetUsedSpringIndex(selection);
+		DoRestore();
+	}
 }
 
 void SpringOptionsTab::ReloadSpringList()
