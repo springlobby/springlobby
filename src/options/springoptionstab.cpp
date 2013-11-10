@@ -259,11 +259,12 @@ void SpringOptionsTab::EnableBundleBox(bool enabled)
 
 void SpringOptionsTab::DoRestore()
 {
+	const wxString index = m_spring_list->GetStringSelection();
 	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
 	m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
-	m_sync_edit->SetValue( sett().GetCurrentUsedUnitSync() );
-	m_exec_edit->SetValue( sett().GetCurrentUsedSpringBinary() );
-	m_bundle_edit->SetValue( sett().GetCurrentUsedBundle() );
+	m_sync_edit->SetValue(sett().GetUnitSync(index));
+	m_exec_edit->SetValue(sett().GetSpringBinary(index));
+	m_bundle_edit->SetValue(sett().GetBundle(index));
 }
 
 
@@ -328,9 +329,10 @@ void SpringOptionsTab::OnBrowseBundle( wxCommandEvent& /*unused*/ )
 void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
 	const bool reload_usync = sett().GetUnitSync( sett().GetCurrentUsedSpringIndex() ) != m_sync_edit->GetValue();
-	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
-	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
-	sett().SetBundle( sett().GetCurrentUsedSpringIndex(), m_bundle_edit->GetValue() );
+	const wxString index = m_spring_list->GetStringSelection();
+	sett().SetSpringBinary(index, m_exec_edit->GetValue() );
+	sett().SetUnitSync(index, m_sync_edit->GetValue() );
+	sett().SetBundle(index, m_bundle_edit->GetValue() );
 	sett().SetSearchSpringOnlyInSLPath( m_dontsearch_chkbox->IsChecked() );
 	sett().SetOldSpringLaunchMethod( m_oldlaunch_chkbox->IsChecked() );
 	sett().SetUseSpringPathFromBundle( m_forcebundle_chkbox->IsChecked() );
