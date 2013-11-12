@@ -82,10 +82,6 @@ InfoDialog::InfoDialog(wxWindow* parent )
 		catch (...){}
 		*out << wxString::Format( _T("\tWX: %s POSIX: %s TRY: %s\n"), BtS(wx).c_str(), BtS(posix).c_str(), BtS(tried).c_str() );
 	}
-	*out << wxString::Format( _T("Global config: %s (%s %s )\n"),
-							 sett().GlobalConfigPath().c_str(),
-							 BtS(wxFileName::FileExists(sett().GlobalConfigPath()), "exists", "missing").c_str(),
-							 BtS(wxFileName::IsFileWritable(sett().GlobalConfigPath()), "writable", "").c_str()  );
 	*out << wxString::Format( _T("Local config: %s (%s writable)\n"),
 							 sett().FinalConfigPath().c_str(),
 							 BtS(wxFileName::IsFileWritable(sett().FinalConfigPath()), "", "not" ).c_str() );

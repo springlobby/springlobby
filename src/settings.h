@@ -754,7 +754,6 @@ class Settings : public SL::NonCopyable
 	bool GetBroadcastEverywhere();
 	void SetBroadcastEverywhere(bool value);
 
-	wxString GlobalConfigPath() const { return m_config ? m_config->GlobalConfigPath() : wxString(); }
 	wxString FinalConfigPath() const { return m_final_config_path; }
 
     //! move weirdly saved lists to sane form

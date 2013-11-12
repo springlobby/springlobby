@@ -10,7 +10,7 @@ class wxFileInputStream;
 typedef wxFileConfig
 	slConfigBaseType;
 
-//! a proxy class to wxFileConfig with additional global config values replacing first tier default values
+//! a proxy class to wxFileConfig
 class slConfig : public slConfigBaseType, public SL::NonCopyable
 {
 	public:
@@ -18,7 +18,7 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 				   const wxString& vendorName = wxEmptyString,
 				   const wxString& localFilename = wxEmptyString,
 				   const wxString& globalFilename = wxEmptyString,
-				   long style = wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_GLOBAL_FILE,
+				   long style = wxCONFIG_USE_LOCAL_FILE,
 				   const wxMBConv& conv = wxConvAuto() );
 
 	#if wxUSE_STREAMS
@@ -29,31 +29,18 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 		long Read(const wxString& key, long defaultVal) const;
 
 		bool Read(const wxString& key, wxString* str) const;
-		bool Read(const wxString& key, wxString* str, const wxString& defaultVal) const;
-
 		bool Read(const wxString& key, long* l) const;
-		bool Read(const wxString& key, long* l, long defaultVal) const;
-
 		bool Read(const wxString& key, double* d) const;
-		bool Read(const wxString& key, double* d, double defaultVal) const;
-
 		bool Read(const wxString& key, bool* b) const;
-		bool Read(const wxString& key, bool* d, bool defaultVal) const;
 
-		//! this could be a seriously bad idea if it's used internally to determine if default is used or some such
-//		bool Exists( const wxString& strName) const;
+		// we don't override alls Read methods, so reintroduce them (see
+		// 'name hiding')
+		using slConfigBaseType::Read;
 
+		// FIXME HasSection == Exists in baseclass, rename references and remove
 		bool HasSection( const wxString& strName) const;
 
 		void SetPath(const wxString& strPath);
-		bool GetFirstEntry(wxString& str, long& index) const;
-		bool GetNextEntry(wxString& str, long& index) const;
-		bool GetFirstGroup(wxString& str, long& index) const;
-		bool GetNextGroup(wxString& str, long& index) const;
-//		size_t GetNumberOfGroups(bool bRecursive = false) const;
-//		size_t GetNumberOfEntries(bool bRecursive = false) const;
-
-		wxString GlobalConfigPath() const;
 
 		class PathGuard {
 				slConfig* m_config;
@@ -80,15 +67,6 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 			//! on windows writing longs is broken so we redirect this to string
 			bool DoWriteLong(const wxString& key, long lValue);
 		#endif
-
-		void SetupGlobalconfig();
-
-		wxFileConfig* m_global_config;
-
-		typedef std::map<long,long>
-			ForwardsType;
-		mutable ForwardsType m_enumerationId_forwards_entries;
-		mutable ForwardsType m_enumerationId_forwards_groups;
 };
 
 #endif // SLCONFIG_H
