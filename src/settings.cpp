@@ -727,14 +727,15 @@ void Settings::RefreshSpringVersionList(bool autosearch)
 		for (const auto path: paths) {
 			usync_paths.push_back(STD_STRING(path));
 		}
-	} else {
-		wxArrayString list = GetGroupList( _T( "/Spring/Paths" ) );
-		int count = list.GetCount();
-		for ( int i = 0; i < count; i++ ) {
-			const wxString groupname = list[i];
-			usync_paths.push_back(STD_STRING(GetUnitSync(groupname)));
-		}
 	}
+
+	wxArrayString list = GetGroupList( _T( "/Spring/Paths" ) );
+	int count = list.GetCount();
+	for ( int i = 0; i < count; i++ ) {
+		const wxString groupname = list[i];
+		usync_paths.push_back(STD_STRING(GetUnitSync(groupname)));
+	}
+
 	m_spring_versions.clear();
 	try {
 		const auto versions = LSL::susynclib().GetSpringVersionList( usync_paths );
