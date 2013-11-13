@@ -37,8 +37,6 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 		// 'name hiding')
 		using slConfigBaseType::Read;
 
-		void SetPath(const wxString& strPath);
-
 		class PathGuard {
 				slConfig* m_config;
 				const wxString m_old_path;
