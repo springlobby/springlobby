@@ -37,9 +37,6 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 		// 'name hiding')
 		using slConfigBaseType::Read;
 
-		// FIXME HasSection == Exists in baseclass, rename references and remove
-		bool HasSection( const wxString& strName) const;
-
 		void SetPath(const wxString& strPath);
 
 		class PathGuard {
