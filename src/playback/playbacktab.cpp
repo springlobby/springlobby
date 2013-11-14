@@ -285,32 +285,11 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 		try {
 			PlaybackType& rep = playbacklist<ListType>().GetPlaybackById( m_sel_replay_id );
 
-			std::map<wxString, LSL::SpringBundle> versionlist = sett().GetSpringVersionList();
-			if ( versionlist.empty()) {
-				wxLogWarning( _T( "can't get spring version from any unitsync" ) );
-				customMessageBox( SL_MAIN_ICON,  _( "Couldn't get your spring versions from any unitsync library." ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
-				AskForceWatch( rep );
-				return;
-			}
-			bool versionfound = false;
-			for ( std::map<wxString, LSL::SpringBundle>::const_iterator itor = versionlist.begin(); itor != versionlist.end(); ++itor ) {
-				if ( itor->first == rep.SpringVersion ) {
-					if ( sett().GetCurrentUsedSpringIndex() != itor->first ) {
-						wxLogMessage( _T( "%s requires version: %s, switching to profile: %s" ), type.c_str(), rep.SpringVersion.c_str(), itor->first.c_str() );
-						sett().SetUsedSpringIndex( itor->first );
-			                        LSL::usync().ReloadUnitSyncLib(); // request an unitsync reload
-					}
-					versionfound = true;
-				}
-			}
+			bool versionfound = ui().IsSpringCompatible(_T("spring"), rep.SpringVersion);
 			if ( !ReplayTraits::IsReplayType )
                 versionfound = true; // quick hack to bypass spring version check
 			if ( !versionfound ) {
 				wxString message = wxFormat( _( "No compatible installed spring version has been found, this %s requires version: %s\n" ) ) % type% rep.SpringVersion;
-				message << _( "Your current installed versions are:" );
-				for ( std::map<wxString, LSL::SpringBundle>::const_iterator itor = versionlist.begin(); itor != versionlist.end(); ++itor ) {
-					message << _T( " " ) << itor->first;
-				}
 				customMessageBox( SL_MAIN_ICON, message, _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 				wxLogWarning ( _T( "no spring version supported by this replay found" ) );
 				AskForceWatch( rep );

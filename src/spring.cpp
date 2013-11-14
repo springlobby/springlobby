@@ -89,13 +89,6 @@ bool Spring::IsRunning() const
 	return m_running;
 }
 
-bool Spring::RunReplay ( const wxString& filename )
-{
-  wxLogMessage( _T("launching spring with replay: ") + filename );
-
-  return LaunchSpring( _T("\"") + filename + _T("\"") );
-}
-
 bool Spring::Run( Battle& battle )
 {
 
@@ -146,7 +139,7 @@ bool Spring::Run( Battle& battle )
 	}
 	cmd += _T(" \"") + path +  _T("\"");
 
-	return LaunchSpring( cmd );
+	return LaunchSpring(battle.GetEngineName(), battle.GetEngineVersion(), cmd );
 }
 
 
@@ -179,38 +172,37 @@ bool Spring::Run( SinglePlayerBattle& battle )
     return false;
   }
 
-  return LaunchSpring( _T("\"") + path + _T("\"") );
+	return LaunchSpring(battle.GetEngineName(), battle.GetEngineVersion(), _T("\"") + path + _T("\"") );
 }
 
 bool Spring::Run( OfflineBattle& battle )
 {
-
-  wxString path = battle.GetPlayBackFilePath();
-
-  return LaunchSpring( _T("\"") + path + _T("\"") );
+	wxString path = battle.GetPlayBackFilePath();
+	return LaunchSpring(battle.GetEngineName(), battle.GetEngineVersion(), _T("\"") + path + _T("\"") );
 }
 
 
-bool Spring::LaunchSpring( const wxString& params  )
+bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVersion, const wxString& params)
 {
   if ( m_running )
   {
     wxLogError( _T("Spring already running!") );
     return false;
   }
-    if ( !wxFile::Exists( sett().GetCurrentUsedSpringBinary() ) ) {
+	const wxString executable = sett().GetSpringBinary(engineVersion);
+    if ( !wxFile::Exists(executable) ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _T("The spring executable was not found at the set location, please re-check."), _T("Executable not found") );
         ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
         return false;
     }
 
-  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary();
+  wxString cmd = _T("\"") + executable;
   #ifdef __WXMAC__
     wxChar sep = wxFileName::GetPathSeparator();
 	if ( sett().GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") )
         cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
   #endif
-  cmd += _T("\" ") + params;
+	cmd += _T("\" ") + params;
 
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
 

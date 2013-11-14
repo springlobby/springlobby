@@ -26,35 +26,28 @@ class wxSpringProcess;
 class wxString;
 
 
-class Spring:
-		public wxEvtHandler
+class Spring: public wxEvtHandler
 {
-  public:
+public:
 	explicit Spring();
-    ~Spring();
+	~Spring();
 
-    bool IsRunning() const;
-    bool Run( Battle& battle );
-    bool Run( SinglePlayerBattle& battle );
-    bool Run( OfflineBattle& battle );
+	bool IsRunning() const;
+	bool Run( OfflineBattle& battle );
+	bool Run( Battle& battle );
+	bool Run( SinglePlayerBattle& battle );
+	wxString WriteScriptTxt( IBattle& battle ) const;
 
-    //! executes spring with replay as parameter
-    /*!
-     * \param filename the full path for the replayfile
-     */
-    bool RunReplay ( const wxString& filename );
 
-    wxString WriteScriptTxt( IBattle& battle ) const;
-    void OnTerminated( wxCommandEvent& event );
+private:
+	void OnTerminated( wxCommandEvent& event );
+	bool LaunchSpring(const wxString& engineName, const wxString& engineVersion, const wxString& params);
 
-  protected:
-		bool LaunchSpring( const wxString& params );
+	SpringProcess* m_process;
+	wxSpringProcess* m_wx_process;
+	bool m_running;
 
-    SpringProcess* m_process;
-    wxSpringProcess* m_wx_process;
-    bool m_running;
-
-    DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 
 Spring& spring();
