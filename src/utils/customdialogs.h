@@ -110,7 +110,7 @@ protected:
 class TimedMessageBox : public wxDialog
 {
 public:
-	TimedMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
+	TimedMessageBox(int whichIcon ,wxWindow *parent, const wxString& message,
 	        const wxString& caption = wxMessageBoxCaptionStr,
 	        unsigned int delay = 3000, // miliseconds
 	        long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
