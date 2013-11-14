@@ -31,8 +31,8 @@ class wxGauge;
  * \return wxOK|wxCANCEL|wxYES|wxNO according to option chosen
  */
 int customMessageBox(int whichIcon , const wxString& message,
-        const wxString& caption = wxMessageBoxCaptionStr,
-        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+		     const wxString& caption = wxMessageBoxCaptionStr,
+		     long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
 /** \brief utlity function to display modal messagebox
  * the dialog itself is statically allocated, therefore only one
@@ -41,45 +41,45 @@ int customMessageBox(int whichIcon , const wxString& message,
  * but since it's displayed non-modal nothing would come of it
  */
 void customMessageBoxNoModal(int whichIcon , const wxString& message,
-        const wxString& caption = wxMessageBoxCaptionStr,
-        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+			     const wxString& caption = wxMessageBoxCaptionStr,
+			     long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
 /** \brief displays server messages when no chat window has focus
  * If dialog currently isn't shown, it's brought up. If dialog already is shown (not necessarily having focus)
  * message is appended, rather than old box replaced with new.
  */
 void serverMessageBox(int whichIcon , const wxString& message,
-        const wxString& caption = wxMessageBoxCaptionStr,
-        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+		      const wxString& caption = wxMessageBoxCaptionStr,
+		      long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
 /** \brief displays user action notifications
  * If dialog currently isn't shown, it's brought up. If dialog already is shown (not necessarily having focus)
  * message is appended, rather than old box replaced with new.
  */
 void actNotifBox(int whichIcon , const wxString& message,
-        const wxString& caption = _T("User action notification"),
-        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+		 const wxString& caption = _T("User action notification"),
+		 long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
 /** \brief show  mutelist for a specific channel
  *
  */
 void mutelistWindow( const wxString& message,
-        const wxString& caption = _T("Mutelist"),
-        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+		     const wxString& caption = _T("Mutelist"),
+		     long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
 /** \brief utlity function to display modal messagebox, closing is denied until timer ran down
  * \return wxOK|wxCANCEL|wxYES|wxNO according to option chosen
  */
 int timedMessageBox(int whichIcon , const wxString& message,
-        const wxString& caption = wxMessageBoxCaptionStr, unsigned int delay = 3000, // miliseconds
-        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+		    const wxString& caption = wxMessageBoxCaptionStr, unsigned int delay = 3000, // miliseconds
+		    long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
 /** \brief same as timedMessageBox, but not Modal --> no return val
  * \return wxOK|wxCANCEL|wxYES|wxNO according to option chosen
  */
 void timedMessageBoxNoModal(int whichIcon , const wxString& message,
-        const wxString& caption = wxMessageBoxCaptionStr, unsigned int delay = 3000, // miliseconds
-        long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
+			    const wxString& caption = wxMessageBoxCaptionStr, unsigned int delay = 3000, // miliseconds
+			    long style = wxOK|wxICON_INFORMATION,  const int x = -1, const int y = -1 );
 
 //! cleanup
 void freeStaticBox();
@@ -93,15 +93,15 @@ class CustomMessageBox : public wxDialog
 {
 public:
 	CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
-	        const wxString& caption = wxMessageBoxCaptionStr,
-	        long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
+			 const wxString& caption = wxMessageBoxCaptionStr,
+			 long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
 	virtual ~CustomMessageBox();
 
-    void OnOptionsNo(wxCommandEvent& event);
+	void OnOptionsNo(wxCommandEvent& event);
 
 protected:
 
-     DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 
 };
 
@@ -111,40 +111,41 @@ class TimedMessageBox : public wxDialog
 {
 public:
 	TimedMessageBox(int whichIcon ,wxWindow *parent, const wxString& message,
-	        const wxString& caption = wxMessageBoxCaptionStr,
-	        unsigned int delay = 3000, // miliseconds
-	        long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
-	virtual ~TimedMessageBox();
-
-    void OnOptionsNo(wxCommandEvent& event);
-
-protected:
-    const int m_delay;
-    wxSizer* sizerBtn;
-    wxSizer* topsizer;
-    wxSizer* m_delay_sizer;
-    wxStaticText* m_delay_notif;
-    wxTimer m_delay_timer;
-    wxTimer m_display_timer;
-    unsigned int m_display_hits;
-    static const unsigned int m_update_interval = 500;
-    void OnUpdate( wxTimerEvent& evt );
-    void OnUnlock( wxTimerEvent& evt );
-    void OnClose( wxCloseEvent& evt );
-
-    TimedMessageBox( const TimedMessageBox& );
-    const TimedMessageBox& operator = ( const TimedMessageBox& );
-
-    DECLARE_EVENT_TABLE()
-
-};
-
-class AutocloseMessageBox : public TimedMessageBox {
-public:
-	AutocloseMessageBox(wxWindow *parent, const wxString& message,
 			const wxString& caption = wxMessageBoxCaptionStr,
 			unsigned int delay = 3000, // miliseconds
 			long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
+	virtual ~TimedMessageBox();
+
+	void OnOptionsNo(wxCommandEvent& event);
+
+protected:
+	const int m_delay;
+	wxSizer* sizerBtn;
+	wxSizer* topsizer;
+	wxSizer* m_delay_sizer;
+	wxStaticText* m_delay_notif;
+	wxTimer m_delay_timer;
+	wxTimer m_display_timer;
+	unsigned int m_display_hits;
+	static const unsigned int m_update_interval = 500;
+	void OnUpdate( wxTimerEvent& evt );
+	void OnUnlock( wxTimerEvent& evt );
+	void OnClose( wxCloseEvent& evt );
+
+	TimedMessageBox( const TimedMessageBox& );
+	const TimedMessageBox& operator = ( const TimedMessageBox& );
+
+	DECLARE_EVENT_TABLE()
+
+};
+
+class AutocloseMessageBox : public TimedMessageBox
+{
+public:
+	AutocloseMessageBox(wxWindow *parent, const wxString& message,
+			    const wxString& caption = wxMessageBoxCaptionStr,
+			    unsigned int delay = 3000, // miliseconds
+			    long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
 	virtual ~AutocloseMessageBox();
 	virtual void EndModal( int retCode );
 protected:
@@ -158,11 +159,11 @@ class ServerMessageBox : public wxDialog, public SL::NonCopyable
 {
 public:
 	ServerMessageBox(wxIcon* icon ,wxWindow *parent, const wxString& message,
-	        const wxString& caption = wxMessageBoxCaptionStr,
-	        long style = wxOK, const wxPoint& pos = wxDefaultPosition);
+			 const wxString& caption = wxMessageBoxCaptionStr,
+			 long style = wxOK, const wxPoint& pos = wxDefaultPosition);
 	virtual ~ServerMessageBox();
 
-    virtual void AppendMessage(const wxString& message);
+	virtual void AppendMessage(const wxString& message);
 
 protected:
 	wxBoxSizer* topsizer;
@@ -173,24 +174,24 @@ protected:
 class ActNotifBox : public ServerMessageBox
 {
 public:
-    ActNotifBox (wxIcon* icon ,wxWindow *parent, const wxString& message,
-	        const wxString& caption = _T("User action notification") ,
-	        long style = wxOK, const wxPoint& pos = wxDefaultPosition);
-    virtual ~ActNotifBox ();
+	ActNotifBox (wxIcon* icon ,wxWindow *parent, const wxString& message,
+		     const wxString& caption = _T("User action notification") ,
+		     long style = wxOK, const wxPoint& pos = wxDefaultPosition);
+	virtual ~ActNotifBox ();
 
-    virtual void AppendMessage(const wxString& message);
+	virtual void AppendMessage(const wxString& message);
 };
 
 /** \brief displays channel mutelist */
 class MutelistWindow : public ServerMessageBox
 {
 public:
-    MutelistWindow (wxIcon* icon ,wxWindow *parent, const wxString& message,
-	        const wxString& caption = _T("User action notification") ,
-	        long style = wxOK, const wxPoint& pos = wxDefaultPosition);
-    virtual ~MutelistWindow ();
+	MutelistWindow (wxIcon* icon ,wxWindow *parent, const wxString& message,
+			const wxString& caption = _T("User action notification") ,
+			long style = wxOK, const wxPoint& pos = wxDefaultPosition);
+	virtual ~MutelistWindow ();
 
-    //virtual void AppendMessage(const wxString& message);
+	//virtual void AppendMessage(const wxString& message);
 };
 
 /** \brief encapsulates pointers common to ServerMessageBox and CustomMessageBox
@@ -203,7 +204,7 @@ public:
 	static void setSettingspointer(wxWindow*);
 	static wxWindow* getLobbypointer();
 	static wxWindow* getSettingspointer();
-    void AppendMessage(const wxString& message);
+	void AppendMessage(const wxString& message);
 
 protected:
 	static wxWindow* m_settingsWindow;
@@ -231,13 +232,13 @@ private:
 
 //! extends the wx method by allowing to set selection
 int GetSingleChoiceIndex( const wxString& message,
-                            const wxString& caption,
-                            const wxArrayString& aChoices,
-                            const int selected,
-                            wxWindow *parent = NULL,
-                            int x = wxDefaultCoord,
-                            int y = wxDefaultCoord,
-                            bool centre = true );
+			  const wxString& caption,
+			  const wxArrayString& aChoices,
+			  const int selected,
+			  wxWindow *parent = NULL,
+			  int x = wxDefaultCoord,
+			  int y = wxDefaultCoord,
+			  bool centre = true );
 
 
 #endif /*CUSTOM_MSG_DLG_H_*/
