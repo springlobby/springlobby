@@ -506,6 +506,7 @@ class Settings : public SL::NonCopyable
     int GetLastHostPlayerNum();
     int GetLastHostNATSetting();
     wxString GetLastHostMap();
+	wxString GetDefaultNick();
     int GetLastRankLimit();
     bool GetTestHostPort();
     bool GetLastAutolockStatus();

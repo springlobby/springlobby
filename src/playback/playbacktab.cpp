@@ -292,7 +292,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 				AskForceWatch( rep );
 				return;
 			}
-            rep.battle.GetMe().SetNick(TowxString(LSL::usync().GetDefaultNick()));
+            rep.battle.GetMe().SetNick(sett().GetDefaultNick());
 			bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
 			if ( watchable )
 				rep.battle.StartSpring();

@@ -27,6 +27,7 @@
 #include <lslutils/misc.h>
 #include <lslutils/globalsmanager.h>
 #include <lslunitsync/c_api.h>
+#include <lslunitsync/unitsync.h>
 
 #include "nonportable.h"
 #include "utils/conversion.h"
@@ -2359,3 +2360,8 @@ bool Settings::IsSelfUpdateDisabled()
 	return m_config->Read( _T( "/General/SelfUpdateDisabled" ), 0l );
 }
 
+
+wxString Settings::GetDefaultNick()
+{
+	return TowxString(LSL::usync().IsLoaded() ? LSL::usync().GetDefaultNick() : "invalid");
+}

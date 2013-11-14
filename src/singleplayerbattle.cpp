@@ -13,7 +13,7 @@
 
 SinglePlayerBattle::SinglePlayerBattle( MainSinglePlayerTab& msptab ):
   m_sptab(msptab),
-  m_me( User( TowxString(LSL::usync().IsLoaded() ? LSL::usync().GetDefaultNick() : "invalid")))
+  m_me( User(sett().GetDefaultNick()))
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().side = sett().GetBattleLastSideSel( GetHostModName() );

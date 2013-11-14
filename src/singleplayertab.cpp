@@ -246,7 +246,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
 
 void SinglePlayerTab::ResetUsername()
 {
-    m_battle.GetMe().SetNick(TowxString(LSL::usync().GetDefaultNick()));
+	m_battle.GetMe().SetNick(sett().GetDefaultNick());
 }
 
 void SinglePlayerTab::SetMod( unsigned int index )
