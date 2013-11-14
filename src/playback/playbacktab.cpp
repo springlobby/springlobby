@@ -15,20 +15,17 @@
 #include "playbacklistctrl.h"
 #include "replaylist.h"
 #include "playbackthread.h"
-#include "../ui.h"
-#include "../chatpanel.h"
-#include "../utils/debug.h"
-#include "../uiutils.h"
-#include "../settings.h"
-#include <lslunitsync/unitsync.h>
-#include <lslunitsync/c_api.h>
-#include "../mapctrl.h"
-#include <hosting/battleroomlistctrl.h>
-
+#include "ui.h"
+#include "chatpanel.h"
+#include "uiutils.h"
+#include "settings.h"
+#include "mapctrl.h"
 #include "playbackfilter.h"
-#include "../iconimagelist.h"
+#include "iconimagelist.h"
 
-#include "../utils/customdialogs.h"
+#include "utils/customdialogs.h"
+#include "utils/debug.h"
+#include "hosting/battleroomlistctrl.h"
 
 
 BEGIN_EVENT_TABLE_TEMPLATE1( PlaybackTab, wxPanel, PlaybackTraits )

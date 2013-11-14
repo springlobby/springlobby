@@ -3,7 +3,7 @@
 
 #include <wx/scrolwin.h>
 #include <vector>
-#include "../utils/globalevents.h"
+#include "utils/globalevents.h"
 
 class Ui;
 class MapCtrl;
