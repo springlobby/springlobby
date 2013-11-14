@@ -72,7 +72,6 @@
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
 #include "helper/imageviewer.h"
-#include "customizations.h"
 
 #if defined(__WXMSW__)
     #include <wx/msw/winundef.h>
@@ -124,7 +123,7 @@ MainWindow::MainWindow( )
 	m_log_win(NULL),
 	m_has_focus(true)
 {
-	SetIcons( SLcustomizations().GetAppIconBundle() );
+	SetIcons( icons().GetIcon(icons().ICON_SPRINGLOBBY) );
 
 	GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
@@ -542,7 +541,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
     info.AddTranslator(_T("tc- (swedish)"));
 	info.AddTranslator(_("The numerous contributors from launchpad.net"));
 	//! \todo customisations
-	info.SetIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
+	info.SetIcon( icons().GetIcon(icons().ICON_SPRINGLOBBY) );
 	wxAboutBox(info);
 }
 

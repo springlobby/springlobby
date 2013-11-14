@@ -21,7 +21,7 @@
 #include "../defines.h"
 #include "../settings.h"
 #include "uievents.h"
-#include "../customizations.h"
+#include "iconimagelist.h"
 
 #ifdef HAVE_WX29
     //in < 29 this is defined in wxDialogBase, which seems to have disappeared
@@ -157,11 +157,11 @@ void CustomMessageBoxBase::setLobbypointer(wxWindow* arg)
 	 switch (whichIcon)
 	 {
 		 case SL_MAIN_ICON:
-			 *icon = new wxIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
+			 *icon = new wxIcon( icons().GetIcon(icons().ICON_SPRINGLOBBY) );
 			 *parent = CustomMessageBoxBase::getLobbypointer();
 			 break;
 		 case SS_MAIN_ICON:
-			 *icon = new wxIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
+			 *icon = new wxIcon( icons().GetIcon(icons().ICON_SPRINGLOBBY) );
 			 *parent = CustomMessageBoxBase::getSettingspointer();
 			 break;
 		 default:
@@ -262,7 +262,7 @@ CreditsDialog::CreditsDialog(wxWindow* parent,wxString title,int whichIcon) : wx
 	wxIcon* icon = 0;
 	wxWindow* dummy = 0;
 	getIcon( whichIcon, &icon, &dummy );
-	SetIcons(SLcustomizations().GetAppIconBundle());
+	SetIcons(icons().GetIcon(icons().ICON_SPRINGLOBBY));
 }
 
 void CreditsDialog::AddCredit(wxString person,wxString message)
@@ -410,7 +410,7 @@ void mutelistWindow( const wxString& message, const wxString& caption,
         long style, const int x, const int y )
 {
         wxWindow* parent = CustomMessageBoxBase::getLobbypointer();
-		wxIcon* icon = new wxIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
+		wxIcon* icon = new wxIcon(icons().GetIcon(icons().ICON_SPRINGLOBBY));
 
 		if ( s_mutelistWindow != 0 && s_mutelistWindow->IsShown() )
 		{
@@ -568,7 +568,7 @@ AutocloseMessageBox::AutocloseMessageBox( wxWindow *parent, const wxString& mess
 										  const wxString& caption ,
 										  unsigned int delay,
 										  long style, const wxPoint& pos )
-	: TimedMessageBox( new wxIcon( SLcustomizations().GetAppIconBundle().GetIcon() ), parent, message, caption, delay, style, pos )
+	: TimedMessageBox( new wxIcon(icons().GetIcon(icons().ICON_SPRINGLOBBY)), parent, message, caption, delay, style, pos )
 	,delay_timerID( wxNewId() )
 {
 	m_delay_timer.SetOwner( this, delay_timerID );

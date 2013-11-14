@@ -78,6 +78,7 @@
 #include "images/unknown_flag.xpm"
 
 #include "images/channel_options.xpm"
+#include "images/springsettings.xpm"
 
 #include "flagimages.h"
 
@@ -117,6 +118,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_RANK6 = Add( wxBitmap(rank5_xpm) );
     ICON_RANK7 = Add( wxBitmap(rank6_xpm) );
 	ICON_RANK8 = Add( wxBitmap(rank7_xpm) );
+	ICON_SPRINGLOBBY = Add(wxBitmap(springsettings_xpm));
 
 	m_rank_requirements.push_back(ICON_RANK1);
 	m_rank_requirements.push_back(ICON_RANK2);

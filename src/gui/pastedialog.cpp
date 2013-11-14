@@ -30,7 +30,7 @@
 #include <wx/listctrl.h>
 
 #include "../utils/conversion.h"
-#include "../customizations.h"
+#include "iconimagelist.h"
 
 #ifdef HAVE_WX29
 	//in < 29 this is defined in wxDialogBase, which seems to have disappeared
@@ -45,7 +45,7 @@ END_EVENT_TABLE()
 PasteDialog::PasteDialog( wxWindow *parent, const wxString& message )
 	: wxDialog(parent,-1,_( "Flood warning" ),wxDefaultPosition,wxDefaultSize,wxFRAME_FLOAT_ON_PARENT|wxDEFAULT_DIALOG_STYLE)
 {
-	SetIcons( SLcustomizations().GetAppIconBundle() );
+	SetIcon(icons().GetIcon(icons().ICON_SPRINGLOBBY));
 
 //******** copied from wxsource/generic/msgdlgg.cpp with small modifications***********************************************************
 	wxBoxSizer *topsizer = new wxBoxSizer( wxVERTICAL );

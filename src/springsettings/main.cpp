@@ -29,7 +29,6 @@
 #include "se_utils.h"
 #include "../defines.h"
 #include "../utils/customdialogs.h"
-#include "../customizations.h"
 #include "../helper/wxTranslationHelper.h"
 
 #include <iostream>
@@ -114,7 +113,6 @@ bool Springsettings::OnInit()
 	wxLogChain* logchain  = 0;
 	wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 	//this needs to called _before_ mainwindow instance is created
-	wxInitAllImageHandlers();
 
 #ifdef __WXMSW__
 	wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
@@ -161,13 +159,6 @@ bool Springsettings::OnInit()
 	}
 	//unitsync first load, NEEDS to be blocking
 	LSL::usync().ReloadUnitSyncLib();
-	if ( !m_customizer_archive_name.IsEmpty() ) {
-		if ( !SLcustomizations().Init( m_customizer_archive_name ) ) {
-			customMessageBox( SL_MAIN_ICON, _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
-//            wxLogError( _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
-			exit( OnExit() );//for some twisted reason returning false here does not terminate the app
-		}
-	}
 
 	settings_frame* frame = new settings_frame(NULL,GetAppName());
     SetTopWindow(frame);

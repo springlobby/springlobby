@@ -229,7 +229,6 @@ add_sources(springlobbySoundsrc
 
 clear(SLSharedWithSettings)
 add_sources(SLSharedWithSettings
-	customizations.cpp
 	helper/wxTranslationHelper.cpp
 	uiutils.cpp
 	updater/versionchecker.cpp

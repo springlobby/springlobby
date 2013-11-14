@@ -48,8 +48,8 @@
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #include "defines.h"
-#include "customizations.h"
 #include "sound/alsound.h"
+
 #ifdef HAVE_CONFIG_H
 #include "springlobby_config.h"
 #else
@@ -164,17 +164,6 @@ bool SpringLobbyApp::OnInit()
 
 
 	CacheAndSettingsSetup();
-
-	if ( !m_customizer_archive_name.IsEmpty() ) {
-		if ( SLcustomizations().Init( m_customizer_archive_name ) ) {
-			ui().mw().SetIcons( SLcustomizations().GetAppIconBundle() );
-		}
-		else {
-			customMessageBox( SL_MAIN_ICON, _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
-//            wxLogError( _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
-			exit( OnExit() );//for some twisted reason returning false here does not terminate the app
-		}
-	}
 
 	notificationManager(); //needs to be initialized too
     ui().ShowMainWindow();

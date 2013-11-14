@@ -42,7 +42,6 @@
 #include "../images/springsettings.xpm"
 #include "helpmenufunctions.h"
 #include "se_utils.h"
-#include "../customizations.h"
 #include "../utils/platform.h"
 
 #ifndef SPRINGSETTINGS_STANDALONE
@@ -80,7 +79,6 @@ settings_frame::settings_frame(wxWindow *parent, const wxString &title, wxWindow
 	settingsIcon( new wxIcon(springsettings_xpm) ),
 	m_has_focus(true)
 {
-	SetIcons( SLcustomizations().GetAppIconBundle() );
 
 	alreadyCalled = false;
 	parentWindow = parent;
