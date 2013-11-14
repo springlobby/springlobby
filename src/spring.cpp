@@ -25,16 +25,10 @@ lsl/spring/spring.cpp
 #include <winsock2.h>
 #endif // _MSC_VER
 
-#include <wx/file.h>
-#include <wx/intl.h>
-#include <wx/arrstr.h>
 #include <wx/filename.h>
-#include <wx/stdpaths.h>
 #include <stdexcept>
 #include <vector>
-#include <algorithm>
 #include <fstream>
-#include <clocale>
 
 #include "spring.h"
 #include "springprocess.h"
@@ -44,15 +38,12 @@ lsl/spring/spring.cpp
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "settings.h"
-#include "userlist.h"
 #include "battle.h"
 #include "singleplayerbattle.h"
 #include "offlinebattle.h"
-#include "user.h"
-#include "nonportable.h"
 #include "tdfcontainer.h"
-#include <lslutils/globalsmanager.h>
 
+#include <lslutils/globalsmanager.h>
 #include <lslutils/conversion.h>
 
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
@@ -120,15 +111,6 @@ bool Spring::Run( Battle& battle )
     wxLogError( _T("Couldn't write script.txt") );
     return false;
   }
-
-  #if 0 //TODO: BD, isn't this SUPER obsolete
-  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetFounder().GetNick() + _T("|");
-  for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
-  {
-    CommandForAutomaticTeamSpeak << TowxString<unsigned int>( battle.GetUser(i).BattleStatus().ally) << _T("|") << battle.GetUser(i).GetNick() << _T("|");
-  }
-//  torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak); //this is gone too now, right?
-  #endif
 
 	wxString cmd;
 	if ( battle.GetAutoHost().GetEnabled() )
