@@ -220,8 +220,8 @@ double slConfig::ReadDouble(const wxString& key) const
 bool slConfig::ReadBool(const wxString& key) const
 {
 	bool value;
-	slConfigBaseType::Read( key, &value );
 	GetDefaultsBool().Get(key, value);
+	slConfigBaseType::Read( key, &value );
 	if (IsRecordingDefaults()) {
 		((slConfig*)this)->Write(key, value);
 	}
