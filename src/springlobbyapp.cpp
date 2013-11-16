@@ -30,7 +30,6 @@
 #include <wx/utils.h>
 #include <wx/wfstream.h>
 
-#include "useractions.h"
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
@@ -40,7 +39,6 @@
 #include "utils/platform.h"
 #include "channel/channel.h"
 #include "utils/customdialogs.h"
-#include "springsettings/se_utils.h"
 #include "downloader/prdownloader.h"
 #include "updater/updater.h"
 #include <lslutils/globalsmanager.h>
@@ -152,7 +150,7 @@ bool SpringLobbyApp::OnInit()
 	}
 	//unitsync first load, NEEDS to be blocking
 	const bool usync_loaded = LSL::usync().ReloadUnitSyncLib();
-	if ( !sett().IsFirstRun() && !usync_loaded )
+	if ( !cfg().ReadBool(_T("/General/firstrun")) && !usync_loaded )
 	{
 		customMessageBox( SL_MAIN_ICON, _("Please check that the file given in Preferences->Spring is a proper, readable unitsync library"),
 						 _("Coulnd't load required unitsync library"), wxOK );
@@ -163,8 +161,7 @@ bool SpringLobbyApp::OnInit()
 		sound();
 	#endif
 
-
-	CacheAndSettingsSetup();
+	sett().Setup(m_translationhelper);
 
 	notificationManager(); //needs to be initialized too
     ui().ShowMainWindow();
@@ -316,102 +313,6 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
   #endif
 }
 
-void SpringLobbyApp::CacheAndSettingsSetup()
-{
-    SetSettingsStandAlone( false );
-
-	const wxString userConfigDir = GetConfigfileDir();
-	if ( sett().IsFirstRun() && !wxDirExists( userConfigDir ) )
-    {
-		wxMkdir( userConfigDir );
-    }
-    if ( (sett().GetCacheVersion() < CACHE_VERSION) && !sett().IsFirstRun() )
-    {
-        sett().SetMapCachingThreadProgress( 0 ); // reset map cache thread
-        sett().SetModCachingThreadProgress( 0 ); // reset mod cache thread
-        if ( wxDirExists( sett().GetCachePath() )  )
-        {
-            wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), sett().GetCacheVersion(), CACHE_VERSION );
-            wxString file = wxFindFirstFile( sett().GetCachePath() + wxFILE_SEP_PATH + _T("*") );
-            while ( !file.empty() )
-            {
-                wxRemoveFile( file );
-                file = wxFindNextFile();
-            }
-        }
-    }
-
-	if ( !sett().IsFirstRun() )
-	{
-		int settversion = sett().GetSettingsVersion();
-			if( settversion < 19 )
-			{
-				//the dummy column hack was removed on win
-				sett().NukeColumnWidths();
-			}
-			if ( settversion < 22 )
-			{
-				if ( m_translationhelper )
-				{
-					// add locale's language code to autojoin
-					if ( m_translationhelper->GetLocale() )
-					{
-						wxString localecode = m_translationhelper->GetLocale()->GetCanonicalName();
-						if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
-						if ( localecode == _T("en") ) // we'll skip en for now, maybe in the future we'll reactivate it
-							sett().AddChannelJoin( localecode, _T("") );
-					}
-				}
-			}
-			if ( settversion < 23 )
-			{
-				sett().ConvertLists();
-			}
-		if ( settversion < 24 ) {
-			sett().DeleteServer( _T("Backup server") );
-			sett().DeleteServer( _T("Backup server 1") );
-			sett().DeleteServer( _T("Backup server 2") );
-			sett().SetDefaultServerSettings();
-		}
-		if ( settversion < 25 ) {
-			sett().SetDisableSpringVersionCheck(false);
-		}
-	}
-
-	if ( sett().ShouldAddDefaultServerSettings() || ( sett().GetSettingsVersion() < 14 && sett().GetServers().Count() < 2  ) )
-		sett().SetDefaultServerSettings();
-
-	if ( sett().ShouldAddDefaultChannelSettings() )
-	{
-		sett().AddChannelJoin( _T("main"), _T("") );
-		sett().AddChannelJoin( _T("newbies"), _T("") );
-		if ( m_translationhelper )
-		{
-			if ( m_translationhelper->GetLocale() )
-			{
-				wxString localecode = m_translationhelper->GetLocale()->GetCanonicalName();
-				if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
-				sett().AddChannelJoin( localecode, _T("") ); // add locale's language code to autojoin
-			}
-		}
-	}
-
-	if ( sett().ShouldAddDefaultGroupSettings() )
-	{
-		 sett().AddGroup( _("Default") );
-		 sett().AddGroup( _("Ignore PM") );
-		 useractions().ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
-		 sett().AddGroup( _("Ignore chat") );
-		 useractions().ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
-		 sett().AddGroup( _("Battle Autokick") );
-		 useractions().ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
-		 sett().AddGroup( _("Friends") );
-		 useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
-		 useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
-		 useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
-		 useractions().SetGroupColor( _("Friends"), wxColour( 0, 0, 255 ) );
-	}
-}
 
 void SpringLobbyApp::OnQuit( wxCommandEvent& /*data*/ )
 {

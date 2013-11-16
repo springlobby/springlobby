@@ -28,7 +28,6 @@ class SpringLobbyApp : public wxApp
 
   protected:
 
-    void CacheAndSettingsSetup();
 
     bool quit_called;
 

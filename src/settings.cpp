@@ -5,6 +5,8 @@
 
 #include "settings.h"
 
+#include "springsettings/se_utils.h"
+#include "helper/wxTranslationHelper.h"
 #include "helper/slconfig.h"
 #include "defines.h" //to get HAVEWX??
 
@@ -54,6 +56,9 @@
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
 
+SLCONFIG("/General/SettingsVersion", SETTINGS_VERSION, "version of settings file");
+SLCONFIG("/General/firstrun", true, "true if app is run first time");
+
 
 const wxColour defaultHLcolor ( 255, 0, 0 );
 
@@ -74,6 +79,106 @@ Settings::~Settings()
 {
 }
 
+
+void Settings::Setup(wxTranslationHelper* translationhelper)
+{
+	SetSettingsStandAlone( false );
+
+	long settversion = cfg().ReadLong(_T("/General/SettingsVersion"));
+	long cacheversion = cfg().ReadLong(_T( "/General/CacheVersion" ));
+
+	const wxString userConfigDir = GetConfigfileDir();
+	if ( IsFirstRun() && !wxDirExists( userConfigDir ) ) {
+		wxMkdir( userConfigDir );
+	}
+	if ( (cacheversion < CACHE_VERSION) && !IsFirstRun() ) {
+		SetMapCachingThreadProgress( 0 ); // reset map cache thread
+		SetModCachingThreadProgress( 0 ); // reset mod cache thread
+		if ( wxDirExists( GetCachePath() )  ) {
+			wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), cacheversion, CACHE_VERSION );
+			wxString file = wxFindFirstFile( GetCachePath() + wxFILE_SEP_PATH + _T("*") );
+			while ( !file.empty() ) {
+				wxRemoveFile( file );
+				file = wxFindNextFile();
+			}
+		}
+		// after resetting cache, set current cache version
+		cfg().Write( _T( "/General/CacheVersion" ), CACHE_VERSION );
+	}
+
+	if ( !cfg().ReadBool(_T("/General/firstrun") )) {
+		ConvertSettings(translationhelper, settversion);
+	}
+
+	if ( ShouldAddDefaultServerSettings() || ( settversion < 14 && GetServers().Count() < 2  ) )
+		SetDefaultServerSettings();
+
+	if ( ShouldAddDefaultChannelSettings() ) {
+		AddChannelJoin( _T("main"), _T("") );
+		AddChannelJoin( _T("newbies"), _T("") );
+		if ( translationhelper ) {
+			if ( translationhelper->GetLocale() ) {
+				wxString localecode = translationhelper->GetLocale()->GetCanonicalName();
+				if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
+				AddChannelJoin( localecode, _T("") ); // add locale's language code to autojoin
+			}
+		}
+	}
+
+	// FIXME useractions() not availible for springsettings
+	/*
+	if ( ShouldAddDefaultGroupSettings() )
+	{
+		 AddGroup( _("Default") );
+		 AddGroup( _("Ignore PM") );
+		 useractions().ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
+		 AddGroup( _("Ignore chat") );
+		 useractions().ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
+		 AddGroup( _("Battle Autokick") );
+		 useractions().ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
+		 AddGroup( _("Friends") );
+		 useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
+		 useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
+		 useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
+		 // TODO select better color
+		 useractions().SetGroupColor( _("Friends"), wxColour( 0, 0, 255 ) );
+	}
+	*/
+}
+
+void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long settversion)
+{
+	if( settversion < 19 ) {
+		//the dummy column hack was removed on win
+		NukeColumnWidths();
+	}
+	if ( settversion < 22 ) {
+		if ( translationhelper ) {
+			// add locale's language code to autojoin
+			if ( translationhelper->GetLocale() ) {
+				wxString localecode = translationhelper->GetLocale()->GetCanonicalName();
+				if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
+				if ( localecode == _T("en") ) // we'll skip en for now, maybe in the future we'll reactivate it
+					AddChannelJoin( localecode, _T("") );
+			}
+		}
+	}
+	if ( settversion < 23 ) {
+		ConvertLists();
+	}
+	if ( settversion < 24 ) {
+		DeleteServer( _T("Backup server") );
+		DeleteServer( _T("Backup server 1") );
+		DeleteServer( _T("Backup server 2") );
+		SetDefaultServerSettings();
+	}
+	if ( settversion < 25 ) {
+		SetDisableSpringVersionCheck(false);
+	}
+	// after updating, set current version
+	m_config->Write(_T("/General/SettingsVersion"), SETTINGS_VERSION);
+}
+
 wxString Settings::FinalConfigPath() const
 {
 	return m_config->GetFilePath();
@@ -83,8 +188,6 @@ wxString Settings::FinalConfigPath() const
 void Settings::SaveSettings()
 {
 	m_config->Write( _T( "/General/firstrun" ), false );
-	SetCacheVersion();
-	SetSettingsVersion();
 	m_config->SaveFile();
 }
 
@@ -134,19 +237,7 @@ bool Settings::IsPortableMode() const
 
 bool Settings::IsFirstRun()
 {
-	return m_config->Read( _T( "/General/firstrun" ), true );
-}
-
-
-void Settings::SetSettingsVersion()
-{
-	m_config->Write( _T( "/General/SettingsVersion" ), SETTINGS_VERSION );
-}
-
-
-int Settings::GetSettingsVersion()
-{
-	return m_config->Read( _T( "/General/SettingsVersion" ), SETTINGS_VERSION );
+	return m_config->ReadBool( _T( "/General/firstrun" ) );
 }
 
 
@@ -242,21 +333,6 @@ wxString Settings::GetCachePath()
 	}
 	return path;
 }
-
-
-//! @brief sets version number for the cache, needed to nuke it in case it becomes obsolete & incompatible with new versions
-void Settings::SetCacheVersion()
-{
-	m_config->Write( _T( "/General/CacheVersion" ), CACHE_VERSION );
-}
-
-
-//! @brief returns the cache versioning number, do decide whenever to delete if becomes obsolete & incompatible with new versions
-int Settings::GetCacheVersion()
-{
-	return m_config->Read( _T( "/General/CacheVersion" ), 0l );
-}
-
 
 void Settings::SetMapCachingThreadProgress( unsigned int index )
 {

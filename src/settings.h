@@ -10,8 +10,10 @@
 #include "helper/sortutil.h"
 #include "helper/slconfig.h"
 
-const int CACHE_VERSION     = 12;
-const int SETTINGS_VERSION  = 25;
+
+const long CACHE_VERSION     = 12;
+const long SETTINGS_VERSION  = 25;
+
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("lobby.springrts.com");
@@ -53,6 +55,7 @@ class wxColourData;
 class wxSize;
 class wxPoint;
 class wxPathList;
+class wxTranslationHelper;
 
 typedef std::map<unsigned int,unsigned int> ColumnMap;
 
@@ -87,6 +90,9 @@ class Settings : public SL::NonCopyable
     Settings();
     ~Settings();
 
+    void Setup(wxTranslationHelper* translationhelper);
+    void ConvertSettings(wxTranslationHelper* translationhelper, long settversion);
+
     //! used for passing config file at command line
     static bool m_user_defined_config;
     static wxString m_user_defined_config_path;
@@ -106,10 +112,6 @@ class Settings : public SL::NonCopyable
     void SaveSettings();
 
     bool IsFirstRun();
-
-    //! Sets/Gets settings revision number
-    void SetSettingsVersion();
-	int GetSettingsVersion();
 
     void SetAutoUpdate( const bool value );
     bool GetAutoUpdate();
@@ -184,9 +186,6 @@ class Settings : public SL::NonCopyable
      * @{
      */
     wxString GetCachePath();
-
-    void SetCacheVersion();
-    int GetCacheVersion();
 
     void SetMapCachingThreadProgress( unsigned int index );
     unsigned int GetMapCachingThreadProgress();
