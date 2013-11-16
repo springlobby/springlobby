@@ -4,6 +4,7 @@
 #include <wx/wfstream.h>
 #include <wx/log.h>
 
+#include "../utils/debug.h"
 #include "../utils/platform.h"
 #include "../utils/conversion.h"
 
@@ -81,8 +82,9 @@ slConfig* slConfig::Create()
 		}
 	}
 
-	// abuse the defaults system to set portable mode
-	setDefault(_T("/portable"), portable);
+	// FIXME portable is determined at runtime and should be separate
+	// from this
+	GetDefaultsBool().Set(_T("/portable"), portable);
 
 	slConfig* config = new slConfig( instream );
 	config->SetRecordDefaults( true );
@@ -120,22 +122,22 @@ bool slConfig::DoWriteLong( const wxString& key, long lValue )
 }
 #endif
 
-Default<wxString>& slConfig::getDefaultsString() {
+Default<wxString>& slConfig::GetDefaultsString() {
 	static Default<wxString> defaultString;
 	return defaultString;
 }
 
-Default<long>& slConfig::getDefaultsLong() {
+Default<long>& slConfig::GetDefaultsLong() {
 	static Default<long> defaultLong;
 	return defaultLong;
 }
 
-Default<double>& slConfig::getDefaultsDouble() {
+Default<double>& slConfig::GetDefaultsDouble() {
 	static Default<double> defaultDouble;
 	return defaultDouble;
 }
 
-Default<bool>& slConfig::getDefaultsBool() {
+Default<bool>& slConfig::GetDefaultsBool() {
 	static Default<bool> defaultBool;
 	return defaultBool;
 }
@@ -161,29 +163,15 @@ bool Default<T>::Get(const wxString& key, T& defValue) const {
 
 //! return true if default value set, won't overwrite if already exists
 template <class T>
-bool Default<T>::Set(const wxString& key, const T& defValue) {
+void Default<T>::Set(const wxString& key, const T& defValue) {
 	auto ret = defaultMap.insert(std::pair<const wxString,const T>(key,defValue));
 	if (ret.second) {
-		return true;
+		return;
 	}
-	wxLogWarning(wxString::Format(_T("default already exists: %s"), key.c_str()));
-	return false;
-};
-
-
-bool slConfig::setDefault(const wxString& key, const wxString& defVal) {
-	return getDefaultsString().Set(key, defVal);
-}
-bool slConfig::setDefault(const wxString& key, const long& defVal) {
-	return getDefaultsLong().Set(key, defVal);
-}
-
-bool slConfig::setDefault(const wxString& key, const double& defVal) {
-	return getDefaultsDouble().Set(key, defVal);
-}
-
-bool slConfig::setDefault(const wxString& key, const bool& defVal) {
-	return getDefaultsBool().Set(key, defVal);
+	ASSERT_LOGIC(
+		false,
+		wxString::Format(_T("default already exists: %s"), key.c_str())
+	);
 }
 
 wxString slConfig::Read(const wxString& key, const wxString& defaultVal ) const
@@ -212,7 +200,7 @@ bool slConfig::Read(const wxString& key, wxString* str) const
 	//value was found in self -> return true
 	if ( slConfigBaseType::Read( key, str ) )
 		return true;
-	return getDefaultsString().Get(key, *str);
+	return GetDefaultsString().Get(key, *str);
 }
 
 
@@ -220,7 +208,7 @@ bool slConfig::Read(const wxString& key, long* l) const
 {
 	if ( slConfigBaseType::Read( key, l ) )
 		return true;
-	getDefaultsLong().Get(key, *l);
+	GetDefaultsLong().Get(key, *l);
 	if ( l && IsRecordingDefaults() )
 		((slConfig*)this)->Write( key, *l );
 	return false;
@@ -231,30 +219,30 @@ bool slConfig::Read(const wxString& key, double* d) const
 {
 	if ( slConfigBaseType::Read( key, d ) )
 		return true;
-	return getDefaultsDouble().Get(key, *d);
+	return GetDefaultsDouble().Get(key, *d);
 }
 
 bool slConfig::Read(const wxString& key, bool* b) const
 {
 	if ( slConfigBaseType::Read( key, b ) )
 		return true;
-	return getDefaultsBool().Get(key, *b);
+	return GetDefaultsBool().Get(key, *b);
 }
 
 
 slConfigDefault::slConfigDefault(const wxString& key, const wxString& defVal) {
-	slConfig::setDefault(key, defVal);
+	slConfig::GetDefaultsString().Set(key, defVal);
 }
 
 slConfigDefault::slConfigDefault(const wxString& key, const long& defVal) {
-	slConfig::setDefault(key, defVal);
+	slConfig::GetDefaultsLong().Set(key, defVal);
 }
 
 slConfigDefault::slConfigDefault(const wxString& key, const double& defVal) {
-	slConfig::setDefault(key, defVal);
+	slConfig::GetDefaultsDouble().Set(key, defVal);
 }
 
 slConfigDefault::slConfigDefault(const wxString& key, const bool& defVal) {
-	slConfig::setDefault(key, defVal);
+	slConfig::GetDefaultsBool().Set(key, defVal);
 }
 

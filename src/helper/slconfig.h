@@ -6,6 +6,32 @@
 #include "../utils/mixins.hh"
 
 
+// helper macros to expand __LINE__
+#define SLCONFIG__PASTE(a, b) a ## b
+#define SLCONFIG_PASTE(a, b) SLCONFIG__PASTE(a, b)
+
+//! interface for adding a default value for a config key, inspired by
+// the interface in springrts project
+// defVal can be wxString, long, double or bool
+// the description is not used for now
+// 
+// Examples:
+//
+//     SLCONFIG("/test/string", "test" , "test string");
+//     SLCONFIG("/test/long", 1l, "test long");
+//     SLCONFIG("/test/double", 2.0, "test double");
+//     SLCONFIG("/test/bool", true, "test bool");
+//
+// note the "l" when defining the default for long
+// 
+// It is forbidden to define a default for the same key twice
+// it will result in an assertion error
+//
+#define SLCONFIG(name, defVal, description) \
+	static slConfigDefault SLCONFIG_PASTE(slCfgVar, __LINE__)  = slConfigDefault(_T( #name ), defVal)
+
+
+
 // local class to lookup and save defaults
 template <class T>
 class Default {
@@ -14,7 +40,7 @@ class Default {
 	public:
 		Default();
 		bool Get(const wxString& key, T& defValue) const;
-		bool Set(const wxString& key, const T& defValue);
+		void Set(const wxString& key, const T& defValue);
 
 	private:
 		DefaultMap defaultMap;
@@ -49,17 +75,11 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 		static bool m_user_defined_config;
 		static wxString m_user_defined_config_path;
 
-		// set default value for a config, return true if value set
-		// first time, if a value is set, it will not be overwritten
-		static bool setDefault(const wxString& key, const wxString& defVal);
-		static bool setDefault(const wxString& key, const long& defVal);
-		static bool setDefault(const wxString& key, const double& defVal);
-		static bool setDefault(const wxString& key, const bool& defVal);
-
-		static Default<wxString>& getDefaultsString();
-		static Default<long>& getDefaultsLong();
-		static Default<double>& getDefaultsDouble();
-		static Default<bool>& getDefaultsBool();
+		//! container for default values
+		static Default<wxString>& GetDefaultsString();
+		static Default<long>& GetDefaultsLong();
+		static Default<double>& GetDefaultsDouble();
+		static Default<bool>& GetDefaultsBool();
 
 		wxString Read(const wxString& key, const wxString& defVal = wxEmptyString ) const;
 		long Read(const wxString& key, long defaultVal) const;
@@ -114,21 +134,6 @@ class slConfigDefault {
 		slConfigDefault(const wxString& key, const bool& defVal);
 };
 
-// helper macros to expand __LINE__
-#define SLCONFIG__PASTE(a, b) a ## b
-#define SLCONFIG_PASTE(a, b) SLCONFIG__PASTE(a, b)
-
-//! interface for adding a default value for a config key, inspired by
-// interface in springrts project
-// defVal can be wxString, long, double or bool
-// the description is not used for now
-// 
-// Example to crate default value true for key '/config/is/nice'
-//
-//     SLCONFIG("/config/is/nice", true, "short description");
-//
-#define SLCONFIG(name, defVal, description) \
-	static slConfigDefault SLCONFIG_PASTE(slCfgVar, __LINE__)  = slConfigDefault(_T( #name ), defVal)
 
 
 #endif // SLCONFIG_H
