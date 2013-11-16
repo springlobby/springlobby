@@ -130,7 +130,7 @@ class slConfigDefault {
 		slConfigDefault(const wxString& key, const bool& defVal);
 };
 
-
+slConfig& cfg();
 
 #endif // SLCONFIG_H
 

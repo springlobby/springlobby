@@ -245,3 +245,6 @@ slConfigDefault::slConfigDefault(const wxString& key, const bool& defVal) {
 	slConfig::GetDefaultsBool().Set(key, defVal);
 }
 
+slConfig& cfg() {
+	return *slConfig::Get();
+}

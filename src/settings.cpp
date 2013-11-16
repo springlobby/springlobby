@@ -67,7 +67,7 @@ Settings& sett()
 Settings::Settings()
 	:m_forced_springconfig_path(wxEmptyString)
 {
-	m_config = slConfig::Get();
+	m_config = &cfg();
 }
 
 Settings::~Settings()
