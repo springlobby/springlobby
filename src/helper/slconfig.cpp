@@ -168,12 +168,10 @@ void Default<T>::Get(const wxString& key, T& defValue) const {
 template <class T>
 void Default<T>::Set(const wxString& key, const T& defValue) {
 	auto ret = defaultMap.insert(std::pair<const wxString,const T>(key,defValue));
-	if (!ret.second) {
-		ASSERT_LOGIC(
-			false,
-			wxString::Format(_T("default already exists: %s"), key.c_str())
-		);
-	}
+	ASSERT_LOGIC(
+		ret.second,
+		wxString::Format(_T("default already exists: %s"), key.c_str())
+	);
 }
 
 
