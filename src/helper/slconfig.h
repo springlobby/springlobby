@@ -39,7 +39,7 @@ class Default {
 	
 	public:
 		Default();
-		bool Get(const wxString& key, T& defValue) const;
+		void Get(const wxString& key, T& defValue) const;
 		void Set(const wxString& key, const T& defValue);
 
 	private:
@@ -81,17 +81,13 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 		static Default<double>& GetDefaultsDouble();
 		static Default<bool>& GetDefaultsBool();
 
-		wxString Read(const wxString& key, const wxString& defVal = wxEmptyString ) const;
-		long Read(const wxString& key, long defaultVal) const;
 
-		bool Read(const wxString& key, wxString* str) const;
-		bool Read(const wxString& key, long* l) const;
-		bool Read(const wxString& key, double* d) const;
-		bool Read(const wxString& key, bool* b) const;
+		//! easy to use methods to read config, IF default is set
+		wxString& ReadString(const wxString& key) const;
+		long      ReadLong(const wxString& key) const;
+		double    ReadDouble(const wxString& key) const;
+		bool      ReadBool(const wxString& key) const;
 
-		// we don't override alls Read methods, so reintroduce them (see
-		// 'name hiding')
-		using slConfigBaseType::Read;
 
 		class PathGuard {
 				slConfig* m_config;
