@@ -51,8 +51,6 @@
 	#define BIN_EXT _T("")
 #endif
 
-bool Settings::m_user_defined_config = false;
-wxString Settings::m_user_defined_config_path = wxEmptyString;
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
 
@@ -69,63 +67,16 @@ Settings& sett()
 Settings::Settings()
 	:m_forced_springconfig_path(wxEmptyString)
 {
-	wxString userfilepath = IdentityString( GetConfigfileDir() + sepstring + _T( "%s.conf" ), true );
-	wxString localfilepath =  IdentityString( GetExecutableFolder() + sepstring + _T( "%s.conf" ), true );
-
-	if ( m_user_defined_config && wxFileName::IsFileWritable( m_user_defined_config_path ) )
-	{
-		m_chosen_path = m_user_defined_config_path;
-		SetPortableMode( false );
-	}
-	else
-	{
-		if ( !wxFileName::FileExists( localfilepath ) || !wxFileName::IsFileWritable( localfilepath ) )
-		{
-            //either local conf file does not exist, or it exists but is not writable
-			m_chosen_path = userfilepath;
-			SetPortableMode( false );
-		}
-		else
-		{
-			m_chosen_path = localfilepath; // portable mode, use only current app paths
-			SetPortableMode ( true );
-		}
-	}
-
-	// if it doesn't exist, try to create it
-	if ( !wxFileName::FileExists( m_chosen_path ) )
-	{
-		// if directory doesn't exist, try to create it
-		if ( !IsPortableMode() && !wxFileName::DirExists( GetUserDataDir() ) )
-			wxFileName::Mkdir( GetUserDataDir(), 0755 );
-
-		wxFileOutputStream outstream( m_chosen_path );
-
-		if ( !outstream.IsOk() )
-		{
-			if ( m_user_defined_config ) {
-				wxLogError( _T( "unable to use specified config file" ) );
-				exit( -1 );
-			}
-		}
-	}
-
-	wxFileInputStream instream( m_chosen_path );
-
-	if ( !instream.IsOk() )
-	{
-		if ( m_user_defined_config ) {
-			wxLogError( _T( "unable to use specified config file" ) );
-			exit( -1 );
-		}
-	}
-	m_final_config_path = m_chosen_path;
-	m_config = new slConfig( instream );
-	m_config->SetRecordDefaults( true );
+	m_config = slConfig::Get();
 }
 
 Settings::~Settings()
 {
+}
+
+wxString Settings::FinalConfigPath() const
+{
+	return m_config->GetFilePath();
 }
 
 //! @brief Saves the settings to file
@@ -134,15 +85,7 @@ void Settings::SaveSettings()
 	m_config->Write( _T( "/General/firstrun" ), false );
 	SetCacheVersion();
 	SetSettingsVersion();
-	m_config->Flush();
-	wxFileOutputStream outstream( m_chosen_path );
-
-	if ( !outstream.IsOk() )
-	{
-		// TODO: error handling
-	}
-
-	m_config->Save( outstream );
+	m_config->SaveFile();
 }
 
 wxArrayString Settings::GetGroupList( const wxString& base_key )
@@ -183,12 +126,9 @@ unsigned int Settings::GetGroupCount( const wxString& base_key )
 
 bool Settings::IsPortableMode() const
 {
-	return m_portable_mode;
-}
-
-void Settings::SetPortableMode( bool mode )
-{
-	m_portable_mode = mode;
+	bool portable = false;
+	m_config->Read(_T("/portable"), portable);
+	return portable;
 }
 
 

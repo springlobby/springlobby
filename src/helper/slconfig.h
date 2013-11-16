@@ -36,9 +36,18 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 				   long style = wxCONFIG_USE_LOCAL_FILE,
 				   const wxMBConv& conv = wxConvAuto() );
 
+		static slConfig* Get();
+
 	#if wxUSE_STREAMS
 		slConfig ( wxInputStream& in, const wxMBConv& conv = wxConvAuto() );
 	#endif // wxUSE_STREAMS
+
+		wxString GetFilePath() const;
+		void SaveFile();
+
+		//! used for passing config file at command line
+		static bool m_user_defined_config;
+		static wxString m_user_defined_config_path;
 
 		// set default value for a config, return true if value set
 		// first time, if a value is set, it will not be overwritten
@@ -83,12 +92,16 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 						m_config->SetPath( m_old_path );
 				}
 		};
+		static wxString m_chosen_path;
 
 	protected:
 		#ifdef __WXMSW__
 			//! on windows writing longs is broken so we redirect this to string
 			bool DoWriteLong(const wxString& key, long lValue);
 		#endif
+
+	private:
+		static slConfig* Create();
 };
 
 

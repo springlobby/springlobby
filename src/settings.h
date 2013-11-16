@@ -99,7 +99,6 @@ class Settings : public SL::NonCopyable
     unsigned int GetGroupCount( const wxString& base_key );
 
     bool IsPortableMode() const;
-    void SetPortableMode( bool mode );
 
     /** Initialize all settings to default.
      */
@@ -754,7 +753,7 @@ class Settings : public SL::NonCopyable
 	bool GetBroadcastEverywhere();
 	void SetBroadcastEverywhere(bool value);
 
-	wxString FinalConfigPath() const { return m_final_config_path; }
+	wxString FinalConfigPath() const;
 
     //! move weirdly saved lists to sane form
     void ConvertLists();
@@ -764,13 +763,10 @@ private:
 
 	slConfig* m_config; //!< wxConfig object to store and restore  all settings in.
 
-    wxString m_chosen_path;
 	wxString m_forced_springconfig_path;
-    bool m_portable_mode;
 
     std::map<wxString, LSL::SpringBundle> m_spring_versions;
 
-	wxString m_final_config_path;
 
     void setFromList(const wxArrayString& list, const wxString& path);
     wxArrayString getFromList(const wxString& path);

@@ -34,6 +34,7 @@
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
+#include "helper/slconfig.h"
 #include "crashreport.h"
 #include "utils/controls.h"
 #include "utils/platform.h"
@@ -279,9 +280,10 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 		m_log_file = parser.Found(_T("file-logging"), &m_log_file_path);
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
 
-        Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
-        if ( Settings::m_user_defined_config ) {
-             wxFileName fn ( Settings::m_user_defined_config_path );
+        // TODO make sure this is called before settings are accessed
+        slConfig::m_user_defined_config = parser.Found( _T("config-file"), &slConfig::m_user_defined_config_path );
+        if ( slConfig::m_user_defined_config ) {
+             wxFileName fn ( slConfig::m_user_defined_config_path );
              if ( ! fn.IsAbsolute() ) {
                  wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
                  return false;
