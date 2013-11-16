@@ -151,15 +151,17 @@ Default<T>::Default() {
 //! get default value, return true if default value found
 template <class T>
 void Default<T>::Get(const wxString& key, T& defValue) const {
-	// map[key] is not const, use find
-	auto it = defaultMap.find(key);
-	if (it == defaultMap.end()) {
-		ASSERT_LOGIC(
-			false,
-			wxString::Format(_T("no default set for: %s"), key.c_str())
-		);
+	// TODO make find work or use other container
+	for (auto it=defaultMap.begin(); it!=defaultMap.end(); ++it) {
+		if (it->first.Cmp(key)) {
+			defValue = it->second;
+			return;
+		}
 	}
-	defValue = it->second;
+	ASSERT_LOGIC(
+		false,
+		wxString::Format(_T("no default set for: %s"), key.c_str())
+	);
 };
 
 //! return true if default value set, won't overwrite if already exists
