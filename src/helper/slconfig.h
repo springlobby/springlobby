@@ -5,6 +5,21 @@
 #include <map>
 #include "../utils/mixins.hh"
 
+
+// local class to lookup and save defaults
+template <class T>
+class Default {
+	typedef std::map <wxString, T> DefaultMap;
+	
+	public:
+		Default();
+		bool Get(const wxString& key, T& defValue) const;
+		bool Set(const wxString& key, const T& defValue);
+
+	private:
+		DefaultMap defaultMap;
+};
+
 class wxFileInputStream;
 
 typedef wxFileConfig
@@ -24,6 +39,18 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 	#if wxUSE_STREAMS
 		slConfig ( wxInputStream& in, const wxMBConv& conv = wxConvAuto() );
 	#endif // wxUSE_STREAMS
+
+		// set default value for a config, return true if value set
+		// first time, if a value is set, it will not be overwritten
+		static bool setDefault(const wxString& key, const wxString& defVal);
+		static bool setDefault(const wxString& key, const long& defVal);
+		static bool setDefault(const wxString& key, const double& defVal);
+		static bool setDefault(const wxString& key, const bool& defVal);
+
+		static Default<wxString>& getDefaultsString();
+		static Default<long>& getDefaultsLong();
+		static Default<double>& getDefaultsDouble();
+		static Default<bool>& getDefaultsBool();
 
 		wxString Read(const wxString& key, const wxString& defVal = wxEmptyString ) const;
 		long Read(const wxString& key, long defaultVal) const;
@@ -64,4 +91,32 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 		#endif
 };
 
+
+//! Helper class to define defaults for config keys
+class slConfigDefault {
+	public:
+		slConfigDefault(const wxString& key, const wxString& defVal);
+		slConfigDefault(const wxString& key, const long& defVal);
+		slConfigDefault(const wxString& key, const double& defVal);
+		slConfigDefault(const wxString& key, const bool& defVal);
+};
+
+// helper macros to expand __LINE__
+#define SLCONFIG__PASTE(a, b) a ## b
+#define SLCONFIG_PASTE(a, b) SLCONFIG__PASTE(a, b)
+
+//! interface for adding a default value for a config key, inspired by
+// interface in springrts project
+// defVal can be wxString, long, double or bool
+// the description is not used for now
+// 
+// Example to crate default value true for key '/config/is/nice'
+//
+//     SLCONFIG("/config/is/nice", true, "short description");
+//
+#define SLCONFIG(name, defVal, description) \
+	static slConfigDefault SLCONFIG_PASTE(slCfgVar, __LINE__)  = slConfigDefault(_T( #name ), defVal)
+
+
 #endif // SLCONFIG_H
+
