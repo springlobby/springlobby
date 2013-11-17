@@ -228,6 +228,42 @@ bool slConfig::ReadBool(const wxString& key) const
 	return value;
 }
 
+wxArrayString slConfig::GetGroupList( const wxString& base_key )
+{
+	slConfig::PathGuard pathGuard ( this, base_key );
+	wxString groupname;
+	long dummy;
+	wxArrayString ret;
+	bool groupexist = GetFirstGroup( groupname, dummy );
+	while ( groupexist )
+	{
+		ret.Add( groupname );
+		groupexist = GetNextGroup( groupname, dummy );
+	}
+	return ret;
+}
+
+wxArrayString slConfig::GetEntryList( const wxString& base_key )
+{
+	slConfig::PathGuard pathGuard ( this, base_key );
+	wxString entryname;
+	long dummy;
+	wxArrayString ret;
+	bool entryexist = GetFirstEntry( entryname, dummy );
+	while ( entryexist )
+	{
+		ret.Add( entryname );
+		entryexist = GetNextEntry( entryname, dummy );
+	}
+	return ret;
+}
+
+unsigned int slConfig::GetGroupCount( const wxString& base_key )
+{
+	slConfig::PathGuard pathGuard ( this, base_key );
+	return GetNumberOfGroups( false );
+}
+
 
 slConfigDefault::slConfigDefault(const wxString& key, const wxString& defVal) {
 	slConfig::GetDefaultsString().Set(key, defVal);

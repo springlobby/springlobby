@@ -191,42 +191,6 @@ void Settings::SaveSettings()
 	m_config->SaveFile();
 }
 
-wxArrayString Settings::GetGroupList( const wxString& base_key )
-{
-	slConfig::PathGuard pathGuard ( m_config, base_key );
-	wxString groupname;
-	long dummy;
-	wxArrayString ret;
-	bool groupexist = m_config->GetFirstGroup( groupname, dummy );
-	while ( groupexist )
-	{
-		ret.Add( groupname );
-		groupexist = m_config->GetNextGroup( groupname, dummy );
-	}
-	return ret;
-}
-
-wxArrayString Settings::GetEntryList( const wxString& base_key )
-{
-	slConfig::PathGuard pathGuard ( m_config, base_key );
-	wxString entryname;
-	long dummy;
-	wxArrayString ret;
-	bool entryexist = m_config->GetFirstEntry( entryname, dummy );
-	while ( entryexist )
-	{
-		ret.Add( entryname );
-		entryexist = m_config->GetNextEntry( entryname, dummy );
-	}
-	return ret;
-}
-
-unsigned int Settings::GetGroupCount( const wxString& base_key )
-{
-	slConfig::PathGuard pathGuard ( m_config, base_key );
-	return m_config->GetNumberOfGroups( false );
-}
-
 bool Settings::IsPortableMode() const
 {
 	bool portable = false;
@@ -450,7 +414,7 @@ int    Settings::GetServerPort( const wxString& server_name )
 //! @brief Get list of server aliases
 wxArrayString Settings::GetServers()
 {
-	return GetGroupList( _T( "/Server/Servers/" ) );
+	return cfg().GetGroupList( _T( "/Server/Servers/" ) );
 }
 
 
@@ -517,7 +481,7 @@ void Settings::SetServerAccountSavePass( const wxString& server_name, const bool
 
 int Settings::GetNumChannelsJoin()
 {
-	return GetGroupCount( _T( "/Channels/AutoJoin" ) );
+	return cfg().GetGroupCount( _T( "/Channels/AutoJoin" ) );
 }
 
 void Settings::AddChannelJoin( const wxString& channel , const wxString& key )
@@ -559,7 +523,7 @@ std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
 {
 	std::vector<ChannelJoinInfo> ret;
 //	int num = GetNumChannelsJoin();
-	wxArrayString channels = GetGroupList( _T("/Channels/AutoJoin/") );
+	wxArrayString channels = cfg().GetGroupList( _T("/Channels/AutoJoin/") );
 	slConfig::PathGuard pathguard( m_config, _T("/Channels/AutoJoin/") );
 	for ( size_t i = 0; i < channels.Count(); ++i )
 	{
@@ -746,7 +710,7 @@ void Settings::RefreshSpringVersionList(bool autosearch)
 		}
 	}
 
-	wxArrayString list = GetGroupList( _T( "/Spring/Paths" ) );
+	wxArrayString list = cfg().GetGroupList( _T( "/Spring/Paths" ) );
 	int count = list.GetCount();
 	for ( int i = 0; i < count; i++ ) {
 		const wxString groupname = list[i];
@@ -1116,7 +1080,7 @@ std::map<wxString, wxString> Settings::GetHostingPreset( const wxString& name, i
 {
 	wxString path_base = _T( "/Hosting/Preset/" ) + name + _T( "/" ) + TowxString( optiontype );
 	std::map<wxString, wxString> ret;
-	wxArrayString list = GetEntryList( path_base );
+	wxArrayString list = cfg().GetEntryList( path_base );
 
 	slConfig::PathGuard pathGuard ( m_config, path_base );
 
@@ -1133,7 +1097,7 @@ std::map<wxString, wxString> Settings::GetHostingPreset( const wxString& name, i
 
 wxArrayString Settings::GetPresetList()
 {
-	return GetGroupList( _T( "/Hosting/Preset" ) );
+	return cfg().GetGroupList( _T( "/Hosting/Preset" ) );
 }
 
 
@@ -1142,7 +1106,7 @@ void Settings::DeletePreset( const wxString& name )
 	m_config->DeleteGroup( _T( "/Hosting/Preset/" ) + name );
 
 	//delete mod default preset associated
-	wxArrayString list = GetEntryList( _T( "/Hosting/ModDefaultPreset" ) );
+	wxArrayString list = cfg().GetEntryList( _T( "/Hosting/ModDefaultPreset" ) );
 	int count = list.GetCount();
 	for ( int i = 0; i < count; i ++ )
 	{
@@ -1487,7 +1451,7 @@ wxArrayString Settings::GetHighlightedWords()
 
 void Settings::ConvertLists()
 {
-    const wxArrayString current_hl = GetEntryList( _T( "/Chat/HighlightedWords" ) );
+    const wxArrayString current_hl = cfg().GetEntryList( _T( "/Chat/HighlightedWords" ) );
     m_config->DeleteGroup( _T( "/Chat/HighlightedWords" ) );
     SaveSettings();
     SetHighlightedWords( current_hl );
@@ -1646,7 +1610,7 @@ wxString Settings::GetMapLastStartPosType( const wxString& mapname )
 std::vector<Settings::SettStartBox> Settings::GetMapLastRectPreset( const wxString& mapname )
 {
 	wxString basepath = _T( "/Hosting/MapLastValues/" ) + mapname + _T( "/Rects" );
-	wxArrayString boxes = GetGroupList( basepath );
+	wxArrayString boxes = cfg().GetGroupList( basepath );
 	std::vector<Settings::SettStartBox> ret;
 	for ( unsigned int i = 0; i < boxes.GetCount(); i++ )
 	{
@@ -2197,7 +2161,7 @@ bool Settings::GetAutosavePerspective( )
 
 wxArrayString Settings::GetPerspectives()
 {
-    wxArrayString list = GetGroupList( _T( "/GUI/AUI" ) );
+    wxArrayString list = cfg().GetGroupList( _T( "/GUI/AUI" ) );
     wxArrayString ret;
     for ( size_t i = 0; i < list.GetCount(); ++i) {
     	if ( !list[i].EndsWith( BattlePostfix ) )
@@ -2213,7 +2177,7 @@ wxArrayString Settings::GetPerspectives()
 
 bool Settings::PerspectiveExists( const wxString& perspective_name )
 {
-    wxArrayString list = GetGroupList( _T( "/GUI/AUI" ) );
+    wxArrayString list = cfg().GetGroupList( _T( "/GUI/AUI" ) );
     for ( size_t i = 0; i < list.GetCount(); ++i) {
         if ( list[i] == perspective_name )
             return true;
@@ -2314,7 +2278,7 @@ wxString Settings::GetHotkeyKeySymSet( const wxString& profileName, const wxStri
 
 wxArrayString Settings::GetHotkeyKeySymSetNames( const wxString& profileName )
 {
-	return GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/KeySets/") );
+	return cfg().GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/KeySets/") );
 }
 
 void Settings::SetHotkeyKeySym( const wxString& profileName, const wxString& symName, const wxString& keyStr )
@@ -2329,7 +2293,7 @@ wxString Settings::GetHotkeyKeySym( const wxString& profileName, const wxString&
 
 wxArrayString Settings::GetHotkeyKeySymNames( const wxString& profileName )
 {
-	return GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/KeySyms/") );
+	return cfg().GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/KeySyms/") );
 }
 
 // oderidx == -1 means unbind
@@ -2345,17 +2309,17 @@ wxString Settings::GetHotkey( const wxString& profileName, const wxString& order
 
 wxArrayString Settings::GetHotkeyProfiles()
 {
-	return GetGroupList( _T( "/HotkeyProfiles/" ) );
+	return cfg().GetGroupList( _T( "/HotkeyProfiles/" ) );
 }
 
 wxArrayString Settings::GetHotkeyProfileOrderIndices( const wxString& profileName )
 {
-	return GetGroupList( _T( "/HotkeyProfiles/" ) + profileName + _T("/Bindings/") );
+	return cfg().GetGroupList( _T( "/HotkeyProfiles/" ) + profileName + _T("/Bindings/") );
 }
 
 wxArrayString Settings::GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& orderIdx )
 {
-	return GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/Bindings/") + orderIdx + _T("/") );
+	return cfg().GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/Bindings/") + orderIdx + _T("/") );
 }
 
 void Settings::DeleteHotkeyProfiles()

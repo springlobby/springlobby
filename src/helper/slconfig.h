@@ -88,6 +88,12 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 		double    ReadDouble(const wxString& key) const;
 		bool      ReadBool(const wxString& key) const;
 
+		/// list all entries subkeys of a parent group
+		wxArrayString GetGroupList( const wxString& base_key );
+		/// list all groups subkeys of a parent group
+		wxArrayString GetEntryList( const wxString& base_key );
+		/// counts all groups subkeys of a parent group
+		unsigned int GetGroupCount( const wxString& base_key );
 
 		class PathGuard {
 				slConfig* m_config;
