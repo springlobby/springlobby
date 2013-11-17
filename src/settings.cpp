@@ -1919,16 +1919,6 @@ void Settings::SetSortOrder( const wxString& list_name, const SortOrder& order  
 	}
 }
 
-bool Settings::GetUseTabIcons()
-{
-	return m_config->Read( _T( "/GUI/UseTabIcons" ), 1l );
-}
-
-void Settings::SetUseTabIcons( bool use )
-{
-	m_config->Write( _T( "/GUI/UseTabIcons" ), use );
-}
-
 int Settings::GetSashPosition( const wxString& window_name )
 {
 	return m_config->Read( _T( "/GUI/SashPostion/" ) + window_name , 200l );

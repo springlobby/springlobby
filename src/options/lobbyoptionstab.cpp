@@ -152,7 +152,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     wxStaticBoxSizer* m_misc_gui_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Misc GUI") );
     m_use_tabicons = new wxCheckBox( this, -1, _("Show big icons in mainwindow tabs?"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_use_tabicons->SetValue( sett().GetUseTabIcons() );
+    m_use_tabicons->SetValue( cfg().ReadBool(_T( "/GUI/UseTabIcons" )) );
     m_misc_gui_sizer->Add( m_use_tabicons , 0, wxEXPAND | wxALL, 5 );
 	m_use_notif_popups = new wxCheckBox( this, -1, _("Use notification popups?"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_misc_gui_sizer->Add( m_use_notif_popups, 0, wxEXPAND | wxALL, 5 );
@@ -213,7 +213,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 
     sett().SetCompletionMethod( m_complete_method_new->GetValue() ? Settings::MatchNearest: Settings::MatchExact );
 
-    sett().SetUseTabIcons( m_use_tabicons->IsChecked() );
+    cfg().Write(_T( "/GUI/UseTabIcons" ), m_use_tabicons->IsChecked() );
     ui().mw().SetTabIcons();
     sett().SetStartTab( m_start_tab->GetSelection() );
 
@@ -242,7 +242,7 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
     m_complete_method_new->SetValue( sett().GetCompletionMethod() == Settings::MatchNearest );
 
     HandleWebloc( sett().GetWebBrowserUseDefault() );
-    m_use_tabicons->SetValue( sett().GetUseTabIcons()  );
+    m_use_tabicons->SetValue( cfg().ReadBool(_T( "/GUI/UseTabIcons" ))  );
 
     m_start_tab->SetSelection( sett().GetStartTab() );
 

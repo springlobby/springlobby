@@ -79,6 +79,8 @@
 #endif
 #include <wx/aboutdlg.h>
 
+SLCONFIG("/GUI/UseTabIcons", true, "Show icons in main tabs");
+
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
   EVT_MENU( MENU_JOIN,					MainWindow::OnMenuJoin				)
@@ -236,7 +238,7 @@ MainWindow::MainWindow( )
 
 wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size ) const
 {
-    if ( sett().GetUseTabIcons() )
+    if ( cfg().ReadBool(_T( "/GUI/UseTabIcons" )) )
         return charArr2wxBitmap( data , size );
     else
         return wxNullBitmap;
