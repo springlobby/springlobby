@@ -2084,16 +2084,6 @@ void Settings::SetDoResetPerspectives( bool do_it )
 	m_config->Write(_T( "/reset_perspectives" ) , (long)do_it );
 }
 
-bool Settings::GetBroadcastEverywhere()
-{
-	return m_config->Read( _T("/Chat/BroadcastEverywhere") ,true);
-}
-
-void Settings::SetBroadcastEverywhere(bool value)
-{
-    m_config->Write( _T("/Chat/BroadcastEverywhere"), value);
-}
-
 //Hotkeys stuff (for springsettings)
 void Settings::SetHotkeyMeta( const wxString& profileName, const wxString& keyStr )
 {

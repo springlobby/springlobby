@@ -707,10 +707,6 @@ class Settings : public SL::NonCopyable
 		return m_config->Write( setting, val );
 	}
 
-	//setting to spam the server messages in all channels
-	bool GetBroadcastEverywhere();
-	void SetBroadcastEverywhere(bool value);
-
 	wxString FinalConfigPath() const;
 
     //! move weirdly saved lists to sane form

@@ -60,6 +60,7 @@
 
 SLCONFIG("/General/AutoUpdate", true, "Determines if sprinlobby should check for updates on startup");
 SLCONFIG( "/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup" );
+SLCONFIG("/Chat/BroadcastEverywhere",true, "setting to spam the server messages in all channels");
 
 static const unsigned int s_reconnect_delay_ms = 6000;
 
@@ -821,7 +822,7 @@ void Ui::OnServerBroadcast( Server& /*server*/, const wxString& message )
 
 void Ui::OnServerMessage( Server& server, const wxString& message )
 {
-	if ( !sett().GetBroadcastEverywhere() ) {
+	if ( !cfg().ReadBool(_T("/Chat/BroadcastEverywhere")) ) {
 		if ( server.uidata.panel != 0 ) server.uidata.panel->StatusMessage( message );
 	} else {
 		if ( server.uidata.panel != 0 ) server.uidata.panel->StatusMessage( message );

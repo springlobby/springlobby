@@ -293,7 +293,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 #endif
 
 	m_broadcast_check = new wxCheckBox( this, wxID_ANY, _( "Copy server messages in current channel" ), wxDefaultPosition, wxDefaultSize, 0 );
-	m_broadcast_check->SetValue( sett().GetBroadcastEverywhere() );
+	m_broadcast_check->SetValue(cfg().ReadBool(_T("/Chat/BroadcastEverywhere")));
 	sbBehaviorSizer->Add( m_broadcast_check, 0, wxALL, 5 );
 
 	bMainSizerV->Add( sbBehaviorSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5 );
@@ -443,7 +443,7 @@ void ChatOptionsTab::DoRestore()
 	m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
 #endif
     m_num_lines->SetValue( sett().GetAutoloadedChatlogLinesCount() );
-	m_broadcast_check->SetValue(sett().GetBroadcastEverywhere() );
+	m_broadcast_check->SetValue(cfg().ReadBool(_T("/Chat/BroadcastEverywhere")));
 }
 
 void ChatOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
@@ -469,7 +469,7 @@ void ChatOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 	//Chat Log
 	sett().SetChatLogEnable( m_save_logs->GetValue() );
 
-	sett().SetBroadcastEverywhere( m_broadcast_check->GetValue() );
+	cfg().Write(_T("/Chat/BroadcastEverywhere"), m_broadcast_check->GetValue() );
 
 	// Behavior
 #ifndef DISABLE_SOUND
