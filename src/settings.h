@@ -93,10 +93,6 @@ class Settings : public SL::NonCopyable
     void Setup(wxTranslationHelper* translationhelper);
     void ConvertSettings(wxTranslationHelper* translationhelper, long settversion);
 
-    //! used for passing config file at command line
-    static bool m_user_defined_config;
-    static wxString m_user_defined_config_path;
-
     bool IsPortableMode() const;
 
     /** Initialize all settings to default.
