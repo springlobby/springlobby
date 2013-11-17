@@ -59,6 +59,7 @@
 #include "textentrydialog.h"
 
 SLCONFIG("/General/AutoUpdate", true, "Determines if sprinlobby should check for updates on startup");
+SLCONFIG( "/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup" );
 
 static const unsigned int s_reconnect_delay_ms = 6000;
 
@@ -554,7 +555,7 @@ void Ui::OnLoggedIn( )
 	// FIXME RejoinChannels changes active tab, we change back to
 	// default tab on auto connect
 	if ( sett().GetAutoConnect() )
-		mw().ShowTab( sett().GetStartTab() );
+		mw().ShowTab( cfg().ReadLong(_T( "/GUI/StartTab" )));
 	mw().GetBattleListTab().SortBattleList();
 }
 
@@ -1144,7 +1145,7 @@ void Ui::OnInit()
 		if (sett().GetAutoConnect()) {
 			Connect(); // OnConnect changes tab
 		} else {
-			mw().ShowTab(sett().GetStartTab());
+			mw().ShowTab(cfg().ReadLong(_T( "/GUI/StartTab" )));
 		}
 		//don't ask for updates on first run, that's a bit much for a newbie
 		if (cfg().ReadBool(_T("/General/AutoUpdate"))) {

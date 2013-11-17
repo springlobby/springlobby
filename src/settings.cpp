@@ -1939,16 +1939,6 @@ void Settings::SetSplitBRoomHorizontally( const bool vertical )
 	m_config->Write( _T( "/GUI/SplitBRoomHorizontally" ) , vertical );
 }
 
-void Settings::SetStartTab( const int idx )
-{
-	m_config->Write( _T( "/GUI/StartTab" ) , idx );
-}
-
-unsigned int Settings::GetStartTab( )
-{
-	return m_config->Read( _T( "/GUI/StartTab" ) , MainWindow::PAGE_SINGLE ); //default is SP tab
-}
-
 wxString Settings::GetEditorPath( )
 {
     #if defined(__WXMSW__)

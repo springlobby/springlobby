@@ -177,7 +177,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
     wxStaticBoxSizer* m_start_tab_sizer = new wxStaticBoxSizer ( wxHORIZONTAL, this, _("Start tab") );
     m_start_tab = new wxChoice( this, -1,  wxDefaultPosition, wxDefaultSize, MainWindow::GetTabNames() );
-    m_start_tab->SetSelection( sett().GetStartTab() );
+    m_start_tab->SetSelection( cfg().ReadLong(_T( "/GUI/StartTab" )) );
     wxStaticText* m_start_tab_label = new wxStaticText ( this, -1, _("Select which tab to show at startup") );
     m_start_tab_sizer->Add( m_start_tab_label  , 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5 );
     m_start_tab_sizer->Add( m_start_tab , 0,  wxALIGN_CENTER_VERTICAL , 5 );
@@ -215,7 +215,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 
     cfg().Write(_T( "/GUI/UseTabIcons" ), m_use_tabicons->IsChecked() );
     ui().mw().SetTabIcons();
-    sett().SetStartTab( m_start_tab->GetSelection() );
+    cfg().Write( _T( "/GUI/StartTab" ) , m_start_tab->GetSelection() );
 
     sett().SetEditorPath( m_editor_edit->GetValue() );
 
@@ -244,7 +244,7 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
     HandleWebloc( sett().GetWebBrowserUseDefault() );
     m_use_tabicons->SetValue( cfg().ReadBool(_T( "/GUI/UseTabIcons" ))  );
 
-    m_start_tab->SetSelection( sett().GetStartTab() );
+    m_start_tab->SetSelection( cfg().ReadLong(_T( "/GUI/StartTab" )) );
 
     m_editor_edit->SetValue( sett().GetEditorPath() );
 
