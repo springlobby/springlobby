@@ -119,7 +119,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 										 IdentityString( _("%s can check at startup if a newer version is available and automatically download it for you.") )
 										 );
     m_updater = new wxCheckBox( this, -1, _("automatically check for updates"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_updater->SetValue( sett().GetAutoUpdate() );
+    m_updater->SetValue( cfg().ReadBool(_T("/General/AutoUpdate")) );
     m_updater_sizer->Add( m_updater_label, 1, wxEXPAND|wxALL, 5);
     m_updater_sizer->Add( m_updater, 0, wxEXPAND|wxALL, 5);
 
@@ -205,7 +205,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
     sett().SetAutoConnect( m_autojoin->IsChecked() );
     sett().SetDisableSpringVersionCheck(m_disable_version_check->GetValue() );
 #ifdef __WXMSW__
-    sett().SetAutoUpdate( m_updater->IsChecked() );
+    cfg().Write(_T("/General/AutoUpdate"),  m_updater->IsChecked() );
 #endif
     bool show = m_show_tooltips->IsChecked();
     wxToolTip::Enable(show);
@@ -232,7 +232,7 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
     m_autojoin->SetValue( sett().GetAutoConnect() );
     m_disable_version_check->SetValue( sett().GetDisableSpringVersionCheck() );
 #ifdef __WXMSW__
-    m_updater->SetValue( sett().GetAutoUpdate() );
+    m_updater->SetValue( cfg().ReadBool(_T("/General/AutoUpdate")) );
 #endif
     bool show = sett().GetShowTooltips();
     m_show_tooltips->SetValue(show);

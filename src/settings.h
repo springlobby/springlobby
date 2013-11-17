@@ -102,9 +102,6 @@ class Settings : public SL::NonCopyable
 
     bool IsFirstRun();
 
-    void SetAutoUpdate( const bool value );
-    bool GetAutoUpdate();
-
     wxString GetLobbyWriteDir();
 
     wxString GetTempStorage();

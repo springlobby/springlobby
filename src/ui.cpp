@@ -58,6 +58,8 @@
 #include "utils/misc.h"
 #include "textentrydialog.h"
 
+SLCONFIG("/General/AutoUpdate", true, "Determines if sprinlobby should check for updates on startup");
+
 static const unsigned int s_reconnect_delay_ms = 6000;
 
 Ui& ui()
@@ -1145,7 +1147,7 @@ void Ui::OnInit()
 			mw().ShowTab(sett().GetStartTab());
 		}
 		//don't ask for updates on first run, that's a bit much for a newbie
-		if (sett().GetAutoUpdate()) {
+		if (cfg().ReadBool(_T("/General/AutoUpdate"))) {
 			CheckForUpdates();
 		}
 	}
