@@ -164,8 +164,7 @@ MainWindow::MainWindow( )
 	m_menuTools->Append(MENU_USYNC, _("&Reload maps/games"));
     m_menuTools->AppendSeparator();
 
-    if (!sett().IsSelfUpdateDisabled() )
-		m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
+	m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
 
 	wxMenu *menuHelp = new wxMenu;
 	menuHelp->Append(MENU_GENERAL_HELP, _("&Help, tutorial and FAQ"));

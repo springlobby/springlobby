@@ -2205,11 +2205,6 @@ wxString Settings::GetUikeys( const wxString& index )
 
 //END OF Hotkeys stuff (for springsettings)
 
-bool Settings::IsSelfUpdateDisabled()
-{
-	return m_config->Read( _T( "/General/SelfUpdateDisabled" ), 0l );
-}
-
 
 wxString Settings::GetDefaultNick()
 {
