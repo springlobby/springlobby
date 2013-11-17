@@ -64,6 +64,15 @@ public:
 	wxColour GetGroupColor( const wxString& group ) const;
     bool IsKnown( const wxString& name, bool outputWarning = false ) const;
 
+    // helper functions to access settings file
+    void SetGroupActions( const wxString& group, ActionType action ) const;
+    ActionType GetGroupActions( const wxString& group ) const;
+    wxColour GetGroupHLColor( const wxString& group = _T("default") ) const;
+    void SetGroupHLColor( const wxColour& color, const wxString& group = _T("default") );
+    wxArrayString GetGroups( );
+    void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
+    wxArrayString GetPeopleList( const wxString& group = _T("default") ) const;
+
 protected:
     //lotsa maps to keep runtime finds, etc ti a minimum
     typedef std::map<wxString,wxArrayString> GroupMap;

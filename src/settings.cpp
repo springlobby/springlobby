@@ -60,7 +60,6 @@ SLCONFIG("/General/SettingsVersion", SETTINGS_VERSION, "version of settings file
 SLCONFIG("/General/firstrun", true, "true if app is run first time");
 
 
-const wxColour defaultHLcolor ( 255, 0, 0 );
 
 Settings& sett()
 {
@@ -124,26 +123,6 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 			}
 		}
 	}
-
-	// FIXME useractions() not availible for springsettings
-	/*
-	if ( ShouldAddDefaultGroupSettings() )
-	{
-		 AddGroup( _("Default") );
-		 AddGroup( _("Ignore PM") );
-		 useractions().ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
-		 AddGroup( _("Ignore chat") );
-		 useractions().ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
-		 AddGroup( _("Battle Autokick") );
-		 useractions().ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
-		 AddGroup( _("Friends") );
-		 useractions().ChangeAction( _("Friends"), UserActions::ActNotifBattle );
-		 useractions().ChangeAction( _("Friends"), UserActions::ActHighlight );
-		 useractions().ChangeAction( _("Friends"), UserActions::ActNotifLogin );
-		 // TODO select better color
-		 useractions().SetGroupColor( _("Friends"), wxColour( 0, 0, 255 ) );
-	}
-	*/
 }
 
 void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long settversion)
@@ -1685,117 +1664,8 @@ void Settings::NukeColumnWidths()
 	m_config->DeleteGroup(_T("/GUI/ColumnWidths/"));
 }
 
-void Settings::SetPeopleList( const wxArrayString& friends, const wxString& group  )
-{
-	unsigned int friendsCount = friends.GetCount();
-	m_config->DeleteGroup( _T( "/Groups/" ) + group + _T( "/Members/" ) );
-	for ( unsigned int i = 0; i < friendsCount ; i++ )
-	{
-		m_config->Write( _T( "/Groups/" ) + group + _T( "/Members/" ) + TowxString( i ), friends[i] );
-	}
-}
 
-wxArrayString Settings::GetPeopleList( const wxString& group  ) const
-{
-	wxArrayString list;
-	slConfig::PathGuard pathGuard ( m_config, _T( "/Groups/" ) + group + _T( "/Members/" ) );
-	unsigned int friendsCount  = m_config->GetNumberOfEntries( false );
-	for ( unsigned int i = 0; i < friendsCount ; i++ )
-	{
-		wxString ToAdd;
-		if ( m_config->Read( _T( "/Groups/" ) + group + _T( "/Members/" ) +  TowxString( i ), &ToAdd ) ) list.Add( ToAdd );
-	}
-	return list;
-}
 
-void Settings::SetGroupHLColor( const wxColour& color, const wxString& group )
-{
-	m_config->Write( _T( "/Groups/" ) + group + _T( "/Opts/HLColor" ), color.GetAsString( wxC2S_HTML_SYNTAX ) );
-}
-
-wxColour Settings::GetGroupHLColor( const wxString& group  ) const
-{
-	return wxColour( m_config->Read( _T( "/Groups/" ) + group + _T( "/Opts/HLColor" ) , _T( "#64648C" ) ) );
-}
-
-wxArrayString Settings::GetGroups( )
-{
-	return GetGroupList( _T( "/Groups/" ) );
-}
-
-void Settings::AddGroup( const wxString& group )
-{
-	if ( !m_config->Exists( _T( "/Groups/" ) + group ) )
-	{
-		m_config->Write( _T( "/Groups/" ) , group );
-		//set defaults
-		SetGroupActions( group, UserActions::ActNone );
-		SetGroupHLColor( defaultHLcolor, group );
-	}
-}
-
-void Settings::DeleteGroup( const wxString& group )
-{
-	if ( m_config->Exists( _T( "/Groups/" ) + group ) )
-	{
-		m_config->DeleteGroup( _T( "/Groups/" ) + group );
-	}
-}
-
-void Settings::SetGroupActions( const wxString& group, UserActions::ActionType action )
-{
-	//m_config->Write( _T("/Groups/") + group + _T("/Opts/Actions"), action );
-	wxString key = _T( "/Groups/" ) + group + _T( "/Opts/ActionsList" );
-	m_config->DeleteGroup( key );
-	key += _T( "/" );
-	unsigned int tmp = action & ( ( UserActions::ActLast << 1 ) - 1 );
-	int i = 0;
-	while ( tmp != 0 )
-	{
-		if ( tmp&1 )m_config->Write( key + m_configActionNames[i], true );
-		i++;
-		tmp >>= 1;
-	}
-}
-
-UserActions::ActionType Settings::GetGroupActions( const wxString& group ) const
-{
-	wxString key = _T( "/Groups/" ) + group + _T( "/Opts/Actions" );
-	if ( m_config->HasEntry( key ) )// Backward compatibility.
-	{
-		wxLogMessage( _T( "loading deprecated group actions and updating config" ) );
-		UserActions::ActionType action = ( UserActions::ActionType )m_config->Read( key, ( long )UserActions::ActNone ) ;
-		m_config->DeleteEntry( key );
-
-		// a bit ugly, but i want to update options
-		Settings *this_nonconst = const_cast<Settings*>( this );
-		this_nonconst->SetGroupActions( group, action );
-
-		return action;
-	}
-	key = _T( "/Groups/" ) + group + _T( "/Opts/ActionsList" );
-	if ( !m_config->Exists( key ) ) return UserActions::ActNone;
-	key += _T( "/" );
-	int i = 0;
-	int mask = 1;
-	int result = 0;
-	while ( mask <= UserActions::ActLast )
-	{
-		if ( m_config->Read( key + m_configActionNames[i], 0l ) )
-		{
-			result |= mask;
-		}
-		i++;
-		mask <<= 1;
-	}
-	if ( result == 0 ) return UserActions::ActNone;
-	return ( UserActions::ActionType )result;
-}
-
-bool Settings::ShouldAddDefaultGroupSettings()
-{
-	return !m_config->Exists( _T( "/Groups" ) );
-}
 
 void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& paletteName  )
 {

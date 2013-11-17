@@ -346,26 +346,6 @@ class Settings : public SL::NonCopyable
 	unsigned int GetNotificationPopupDisplayTime( );
     /*@}*/
 
-    /* ================================================================ */
-    /** @name People/Group management
-     * @{
-     */
-    void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
-    wxArrayString GetPeopleList( const wxString& group = _T("default") ) const;
-
-    wxArrayString GetGroups( );
-    void AddGroup( const wxString& group ) ;
-    void DeleteGroup( const wxString& group ) ;
-
-    void SetGroupHLColor( const wxColour& color, const wxString& group = _T("default") );
-    wxColour GetGroupHLColor( const wxString& group = _T("default") ) const;
-
-    void SetGroupActions( const wxString& group, UserActions::ActionType action );
-    UserActions::ActionType GetGroupActions( const wxString& group ) const;
-
-		bool ShouldAddDefaultGroupSettings();
-
-    /*@}*/
 
     /* ================================================================ */
     /** @name Spring locations

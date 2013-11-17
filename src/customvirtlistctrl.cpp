@@ -363,7 +363,7 @@ wxListItemAttr* CustomVirtListCtrl<T,L>::HighlightItemUser( const wxString& name
 {
 	static wxListItemAttr att;
 	if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
-		att.SetBackgroundColour( sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) ) );
+		att.SetBackgroundColour( useractions().GetGroupHLColor( useractions().GetGroupOfUser( name ) ) );
 		return &att;
 	} else
 		return NULL;

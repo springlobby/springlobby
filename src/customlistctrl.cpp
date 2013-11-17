@@ -317,7 +317,7 @@ void CustomListCtrl::UpdateHighlights()
 void CustomListCtrl::HighlightItemUser( long item, const wxString& name )
 {
    if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
-        wxColour c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
+        wxColour c = useractions().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
         SetItemBackgroundColour( item, c );
   }
   else
