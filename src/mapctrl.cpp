@@ -435,7 +435,7 @@ void MapCtrl::GetClosestStartPos( int fromx, int fromy, int& index, int& x, int&
 
 int MapCtrl::LoadMinimap()
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     if ( m_battle == 0 ) return -1;
     if ( m_minimap ) return -1;
     if ( !m_battle->MapExists() ) return -1;
@@ -956,7 +956,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool /*unused*/ )
 
 void MapCtrl::DrawUserPositions( wxDC& dc )
 {
-    wxLogDebugFunc(_T("") );
+    wxLogDebugFunc(wxEmptyString );
     if ( m_battle == 0 ) return;
     if ( !m_battle->MapExists() ) return;
 
@@ -1007,7 +1007,7 @@ void MapCtrl::DrawUserPositions( wxDC& dc )
 
 void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     wxPaintDC dc( this );
 
     DrawBackground( dc );

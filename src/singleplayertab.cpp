@@ -90,7 +90,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
 
 	m_opts_sizer->Add( m_map_opts_list, 0, wxALL, 2 );
 
-    m_map_desc = new wxStaticText(this,-1,_T(""));
+    m_map_desc = new wxStaticText(this,-1,wxEmptyString);
     m_map_desc->Wrap(160);
 
     m_opts_sizer->Add( m_map_desc, 0, wxALL, 2 );
@@ -221,8 +221,8 @@ void SinglePlayerTab::SetMap( unsigned int index )
     	m_battle.SetHostMap( wxEmptyString, wxEmptyString );
  		int count=m_map_opts_list->GetItemCount();
         for(int i=0;i<count;i++)
-            m_map_opts_list->SetItem( i, 1, _T(""));
-        m_map_desc->SetLabel(_T(""));
+            m_map_opts_list->SetItem( i, 1, wxEmptyString);
+        m_map_desc->SetLabel(wxEmptyString);
 	}
 	else {
     try {
@@ -319,7 +319,7 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& /*unused*/ )
 
 void SinglePlayerTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	const wxString mapname = mapSelectDialog();
 	if ( !mapname.empty()) {
 	        const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
@@ -359,7 +359,7 @@ void SinglePlayerTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
     }
     catch ( ... )
     {
-        wxLogDebugFunc( _T("") );
+        wxLogDebugFunc( wxEmptyString );
         wxLogError( _T("unitsync reload sink failed") );
     }
 }

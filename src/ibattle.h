@@ -84,7 +84,7 @@ enum BattleType
 struct BattleOptions
 {
 	BattleOptions() :
-		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),proxyhost(_T("")),userelayhost(false),lockexternalbalancechanges(false),
+		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),proxyhost(wxEmptyString),userelayhost(false),lockexternalbalancechanges(false),
 		nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
 		guilistactiv(false) {}
 

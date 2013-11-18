@@ -73,7 +73,7 @@ class ImageViewerPanel : public wxPanel
 class ImageViewerDialog : public wxDialog
 {
     public:
-        ImageViewerDialog(const wxArrayString& filenames, bool enable_delete, wxWindow* parent, wxWindowID id, const wxString& title = _T(""),
+        ImageViewerDialog(const wxArrayString& filenames, bool enable_delete, wxWindow* parent, wxWindowID id, const wxString& title = wxEmptyString,
             long style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE );
         virtual ~ImageViewerDialog(){}
 

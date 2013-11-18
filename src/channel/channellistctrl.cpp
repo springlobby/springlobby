@@ -95,7 +95,7 @@ void ChannelListctrl::OnActivateItem(wxListEvent& event)
     int index = event.GetIndex();
     if ( index == -1 ) return;
     wxString chan_name = m_data[ m_visible_idxs[index] ].name;
-    ui().JoinChannel( chan_name, _T("") );
+    ui().JoinChannel( chan_name, wxEmptyString );
 }
 
 void ChannelListctrl::ClearChannels()
@@ -157,7 +157,7 @@ void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint& posit
     int column = getColumnFromPosition(position);
     if (column > (int)m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > (long)m_data.size() )
     {
-        m_tiptext = _T("");
+        m_tiptext = wxEmptyString;
     }
     else
     {
@@ -170,7 +170,7 @@ void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint& posit
                 break;
 
             default:
-                m_tiptext = _T("");
+                m_tiptext = wxEmptyString;
                 break;
             }
         }

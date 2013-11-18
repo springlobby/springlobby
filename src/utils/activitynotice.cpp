@@ -15,7 +15,7 @@ END_EVENT_TABLE()
 
 
  ActivityNotice::ActivityNotice(wxWindow* parent,const wxString& notice, const wxSize& gauge_size )
-    : wxDialog ( parent,wxID_ANY,_T(""),wxDefaultPosition, wxSize(190,60),wxBORDER_NONE|wxSTAY_ON_TOP)
+    : wxDialog ( parent,wxID_ANY,wxEmptyString,wxDefaultPosition, wxSize(190,60),wxBORDER_NONE|wxSTAY_ON_TOP)
 {
     wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
     m_panel = new ActivityNoticePanel( this, notice, gauge_size );
@@ -31,7 +31,7 @@ END_EVENT_TABLE()
     static int timer_inc = 0;
     m_timer.SetOwner(this,timer_inc++);
     wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
-    m_message = new wxStaticText(this,wxID_ANY,_T("") );
+    m_message = new wxStaticText(this,wxID_ANY,wxEmptyString );
     m_main_sizer->Add( m_message, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL, 5 );
 
     m_gauge = new wxGauge(this, wxID_ANY,120,wxDefaultPosition, gauge_size );

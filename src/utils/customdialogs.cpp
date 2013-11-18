@@ -297,7 +297,7 @@ ServerMessageBox::ServerMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
 		SetIcon(*icon);
 
 	m_messages = new wxListCtrl(this,-1,wxDefaultPosition,wxDefaultSize,wxLC_NO_HEADER|wxLC_REPORT);
-	m_messages->InsertColumn(0,_T(""));
+	m_messages->InsertColumn(0,wxEmptyString);
 	topsizer = new wxBoxSizer( wxVERTICAL );
 
 	AppendMessage(message);

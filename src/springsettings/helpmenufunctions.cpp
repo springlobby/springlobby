@@ -40,8 +40,8 @@ void showCredits()
 	dlg.AddCredit(_("koshi"),_T("Principal Author"));
 	dlg.AddCredit(_("Very Bad Soldier"),_T("wrote the excellent hotkey editor"));
 	dlg.AddCredit(_("Kloot"),_T("wrote Settings++ from which SpringSettings originated"));
-	dlg.AddCredit(_("The SpringLobby team"),_T(""));
-	dlg.AddCredit(_("everyone reporting bugs/suggestions"),_T(""));
+	dlg.AddCredit(_("The SpringLobby team"),wxEmptyString);
+	dlg.AddCredit(_("everyone reporting bugs/suggestions"),wxEmptyString);
 	dlg.ShowModal();
 }
 

@@ -500,7 +500,7 @@ void MainWindow::OnMenuJoin( wxCommandEvent& /*unused*/ )
   if ( !ui().IsConnected() ) return;
   wxString answer;
   if ( ui().AskText( _("Join channel..."), _("Name of channel to join"), answer ) ) {
-    ui().JoinChannel( answer, _T("") );
+    ui().JoinChannel( answer, wxEmptyString );
   }
 
 }
@@ -526,7 +526,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 	info.SetName( GetAppName() );
 	info.SetVersion (GetSpringLobbyVersion());
 	info.SetDescription( IdentityString( _("%s is a cross-plattform lobby client for the Spring RTS engine") ) );
-	//info.SetCopyright(_T("");
+	//info.SetCopyright(wxEmptyString;
 	info.SetLicence(_T("GPL"));
 	info.AddDeveloper(_T("abma"));
 	info.AddDeveloper(_T("BrainDamage"));

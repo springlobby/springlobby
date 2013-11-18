@@ -106,7 +106,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Battle* battle )
 
 	m_opts_sizer->Add( m_start_radios, 0, wxALL, 2 );
 
-	m_map_desc = new wxStaticText(this,-1,_T(""));
+	m_map_desc = new wxStaticText(this,-1,wxEmptyString);
     m_map_desc->Wrap(160);
 
     m_opts_sizer->Add( m_map_desc, 0, wxALL, 2 );
@@ -252,7 +252,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 
 	wxString mapname = mapSelectDialog();
 	if ( !mapname.empty() )

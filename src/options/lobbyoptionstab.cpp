@@ -263,7 +263,7 @@ void LobbyOptionsTab::HandleWebloc( bool defloc )
     m_web_edit->Enable( false );
     m_web_browse_btn->Enable( false );
     //m_sync_find_btn->Enable( false );
-    m_web_edit->SetValue( _T("") );
+    m_web_edit->SetValue( wxEmptyString );
   } else {
     m_web_edit->Enable( true );
     m_web_browse_btn->Enable( true );
@@ -274,13 +274,13 @@ void LobbyOptionsTab::HandleWebloc( bool defloc )
 
 void LobbyOptionsTab::OnBrowseWeb( wxCommandEvent& /*unused*/ )
 {
-  wxFileDialog pick( this, _("Choose a web browser executable"), _T(""), _T("*"), CHOOSE_EXE );
+  wxFileDialog pick( this, _("Choose a web browser executable"), wxEmptyString, _T("*"), CHOOSE_EXE );
   if ( pick.ShowModal() == wxID_OK ) m_web_edit->SetValue( pick.GetPath() );
 }
 
 void LobbyOptionsTab::OnBrowseEditor( wxCommandEvent& /*unused*/ )
 {
-  wxFileDialog pick( this, _("Choose a editor browser executable"), _T(""), _T("*"), CHOOSE_EXE );
+  wxFileDialog pick( this, _("Choose a editor browser executable"), wxEmptyString, _T("*"), CHOOSE_EXE );
   if ( pick.ShowModal() == wxID_OK ) m_editor_edit->SetValue( pick.GetPath() );
 }
 

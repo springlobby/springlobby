@@ -215,7 +215,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 	if ( servername != m_last_used_backup_server ) { // do not save the server as default if it's a backup one
 		sett().SetDefaultServer( servername );
 	} else {
-		m_last_used_backup_server = _T("");
+		m_last_used_backup_server = wxEmptyString;
 	}
 
 	if ( !sett().ServerExists( servername ) ) {
@@ -232,7 +232,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 		if ( serverSelector().GetServer().IsPasswordHash(password) ) sett().SetServerAccountPass( servername, password );
 		else sett().SetServerAccountPass( servername, serverSelector().GetServer().GetPasswordHash( password ) );
 	} else {
-		sett().SetServerAccountPass( servername, _T("") );
+		sett().SetServerAccountPass( servername, wxEmptyString );
 	}
 	sett().SaveSettings();
 
@@ -429,7 +429,7 @@ void Ui::ConsoleHelp( const wxString& topic )
 	}
 	if ( topic == wxEmptyString ) {
 		panel->ClientMessage( IdentityString( _("%s commands help.") ) );
-		panel->ClientMessage( _T("") );
+		panel->ClientMessage( wxEmptyString );
 		panel->ClientMessage( _("Global commands:") );
 		panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
 		panel->ClientMessage( _("  \"/back\" - Resets your away status.") );
@@ -448,10 +448,10 @@ void Ui::ConsoleHelp( const wxString& topic )
 		panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
 		panel->ClientMessage( IdentityString( _("  \"/ver\" - Displays what version of %s you have.") ) );
 		panel->ClientMessage( _("  \"/clear\" - Clears all text from current chat panel") );
-		panel->ClientMessage( _T("") );
+		panel->ClientMessage( wxEmptyString );
 		panel->ClientMessage( _("Chat commands:") );
 		panel->ClientMessage( _("  \"/me action\" - Say IRC style action message.") );
-		panel->ClientMessage( _T("") );
+		panel->ClientMessage( wxEmptyString );
 		panel->ClientMessage( _("If you are missing any commands, go to #springlobby and try to type it there :)") );
 //    panel->ClientMessage( _("  \"/\" - .") );
 	} else if ( topic == _T("topics") ) {
@@ -477,7 +477,7 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 //! @todo Display in servertab
 void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 
 	if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 	mw().GetBattleListTab().OnConnected();
@@ -544,7 +544,7 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 					_("Engine missing"),
 					wxYES_NO ) )
 
-		Download(TowxString(PrDownloader::GetEngineCat()), version, _T(""));
+		Download(TowxString(PrDownloader::GetEngineCat()), version, wxEmptyString);
 	return false; // no compatible version found
 }
 
@@ -565,7 +565,7 @@ void Ui::OnDisconnected( Server& server, bool wasonline )
 {
 	m_reconnect_delay_timer.Start( s_reconnect_delay_ms, true );
 	if ( m_main_win == 0 ) return;
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	if (!&server) {
 		wxLogError(_T("WTF got null reference!!!"));
 		return;
@@ -667,7 +667,7 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan )
 void Ui::OnJoinedChannelSuccessful( Channel& chan, bool focusTab )
 {
 	if ( m_main_win == 0 ) return;
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 
 	chan.uidata.panel = 0;
 
@@ -677,7 +677,7 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan, bool focusTab )
 //! @brief Called when something is said in a channel
 void Ui::OnChannelSaid( Channel& channel, User& user, const wxString& message )
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	if ( channel.uidata.panel == 0 ) {
 		wxLogError( _T("OnChannelSaid: ud->panel NULL") );
 		return;
@@ -688,7 +688,7 @@ void Ui::OnChannelSaid( Channel& channel, User& user, const wxString& message )
 
 void Ui::OnChannelDidAction( Channel& channel , User& user, const wxString& action )
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	if ( channel.uidata.panel == 0 ) {
 		wxLogError( _T("OnChannelDidAction: ud->panel NULL") );
 		return;
@@ -708,7 +708,7 @@ void Ui::OnChannelMessage( const wxString& channel, const wxString& msg )
 
 void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 {
-	//wxLogDebugFunc( _T("") );
+	//wxLogDebugFunc( wxEmptyString );
 	if ( chan.uidata.panel == 0 ) {
 		wxLogError( _T("OnUserJoinedChannel: ud->panel NULL") );
 		return;
@@ -719,7 +719,7 @@ void Ui::OnUserJoinedChannel( Channel& chan, User& user )
 
 void Ui::OnChannelJoin( Channel& chan, User& user )
 {
-	//wxLogDebugFunc( _T("") );
+	//wxLogDebugFunc( wxEmptyString );
 	if ( chan.uidata.panel == 0 ) {
 		wxLogError( _T("OnChannelJoin: ud->panel NULL") );
 		return;
@@ -730,7 +730,7 @@ void Ui::OnChannelJoin( Channel& chan, User& user )
 
 void Ui::OnUserLeftChannel( Channel& chan, User& user, const wxString& reason )
 {
-	//wxLogDebugFunc( _T("") );
+	//wxLogDebugFunc( wxEmptyString );
 	if ( chan.uidata.panel == 0 ) {
 		wxLogError( _T("OnUserLeftChannel: ud->panel NULL") );
 		return;
@@ -741,7 +741,7 @@ void Ui::OnUserLeftChannel( Channel& chan, User& user, const wxString& reason )
 
 void Ui::OnChannelTopic( Channel& channel, const wxString& user, const wxString& topic )
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	if ( channel.uidata.panel == 0 ) {
 		wxLogError( _T("OnChannelTopic: ud->panel NULL") );
 		return;
@@ -1002,7 +1002,7 @@ void Ui::OnRequestBattleStatus( IBattle& battle )
 void Ui::OnBattleStarted( Battle& battle )
 {
 	if ( m_main_win == 0 ) return;
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	mw().GetBattleListTab().UpdateBattle( battle );
 }
 
@@ -1117,7 +1117,7 @@ bool Ui::OnPresetRequiringMap( const wxString& mapname )
                                     Please reselect the preset after download finished"),
 					_("Map missing"),
 					wxYES_NO ) ) {
-		Download( _T("map") , mapname, _T("") );
+		Download( _T("map") , mapname, wxEmptyString );
 		return true;
 	}
 	return false;

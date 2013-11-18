@@ -64,7 +64,7 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
         }
     }
     if (distance != NULL) *distance = minDistance;
-    if (minDistanceIndex == -1) return _T("");
+    if (minDistanceIndex == -1) return wxEmptyString;
     return a[minDistanceIndex];
 }
 

@@ -13,7 +13,7 @@ class TextCompletionDatabase;
 class wxTextCtrlHist : public wxTextCtrl
 {
   public:
-    wxTextCtrlHist(TextCompletionDatabase& textcompletiondatabase, wxWindow* parent, wxWindowID id, const wxString& value = _T(""),
+    wxTextCtrlHist(TextCompletionDatabase& textcompletiondatabase, wxWindow* parent, wxWindowID id, const wxString& value = wxEmptyString,
             const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0);
     void SetHistoryMax(int max) { history_max = max; }
 

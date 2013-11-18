@@ -168,7 +168,7 @@ void MainChatTab::OnUserDisconnected( User& user )
 	}
 	if ( m_server_chat != 0 )
 	{
-		m_server_chat->Parted( user, _T("") );
+		m_server_chat->Parted( user, wxEmptyString );
 	}
 }
 
@@ -207,7 +207,7 @@ void MainChatTab::RejoinChannels()
 			catch ( ... ) {}
 			if ( !alreadyin )
 			{
-				serverSelector().GetServer().JoinChannel( name, _T( "" ) );
+				serverSelector().GetServer().JoinChannel( name, wxEmptyString );
 				tmp->SetChannel( &serverSelector().GetServer().GetChannel( name ) );
 			}
 
@@ -318,7 +318,7 @@ void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 
 void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 
 	int oldsel = event.GetOldSelection();
 	if ( oldsel < 0 ) return;

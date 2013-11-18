@@ -14,7 +14,7 @@
 // the interface in springrts project
 // defVal can be wxString, long, double or bool
 // the description is not used for now
-// 
+//
 // Examples:
 //
 //     SLCONFIG("/test/string", "test" , "test string");
@@ -23,7 +23,7 @@
 //     SLCONFIG("/test/bool", true, "test bool");
 //
 // note the "l" when defining the default for long
-// 
+//
 // It is forbidden to define a default for the same key twice
 // it will result in an assertion error
 //
@@ -36,7 +36,7 @@
 template <class T>
 class Default {
 	typedef std::map <wxString, T> DefaultMap;
-	
+
 	public:
 		Default();
 		void Get(const wxString& key, T& defValue) const;
@@ -102,7 +102,7 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 			public:
 				PathGuard( slConfig* config, const wxString& new_path )
 					:m_config( config ),
-					m_old_path( m_config ? m_config->GetPath() : _T("") )
+					m_old_path( config ? config->GetPath() : wxString(wxEmptyString) )
 				{
 					if ( m_config )
 						m_config->SetPath( new_path );

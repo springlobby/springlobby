@@ -37,7 +37,7 @@ wxMenu* ChatPanelMenu::GetMenu()
     wxMenuItem* copy = new wxMenuItem( m_menu_all, wxID_COPY, _( "Copy" ), wxEmptyString, wxITEM_NORMAL );
     m_menu_all->Append( copy );
 
-    if ( m_chatpanel->m_url_at_pos != _T("") ) {
+    if ( m_chatpanel->m_url_at_pos != wxEmptyString ) {
         wxMenuItem* copylink = new wxMenuItem( m_menu_all, CHAT_MENU_COPYLINK, _( "Copy link location" ), wxEmptyString, wxITEM_NORMAL );
         m_menu_all->Append( copylink );
     }
@@ -250,7 +250,7 @@ ChatPanelMenu::UserMenu* ChatPanelMenu::GetUserMenuNoCreate()
 void ChatPanelMenu::OnUserMenuCopyLink( wxCommandEvent& /*unused*/ )
 {
     CopyToClipboard( m_chatpanel->m_url_at_pos );
-    m_chatpanel->m_url_at_pos = _T("");
+    m_chatpanel->m_url_at_pos = wxEmptyString;
 }
 
 
@@ -736,7 +736,7 @@ void ChatPanelMenu::OnChatMenuOpenLog( wxCommandEvent&  )
 
 void ChatPanelMenu::OnChannelClearContents( wxCommandEvent& /*unused*/ )
 {
-    m_chatpanel->m_chatlog_text->SetValue( _T("") );
+    m_chatpanel->m_chatlog_text->SetValue( wxEmptyString );
 }
 
 void ChatPanelMenu::OnUserMenuAddToGroup( wxCommandEvent& event )

@@ -57,7 +57,7 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	paths.push_back( std::make_pair( sett().GetCachePath(), _T("CachePath")) );
 	paths.push_back( std::make_pair( sett().GetCurrentUsedDataDir(), _T("CurrentUsedDataDir")) );
 	paths.push_back( std::make_pair( GetExecutableFolder() , _T("ExecutableFolder")));
-	wxTextCtrl* out = new wxTextCtrl( this, wxNewId(), _T( "" ), wxDefaultPosition, wxDefaultSize,
+	wxTextCtrl* out = new wxTextCtrl( this, wxNewId(), wxEmptyString, wxDefaultPosition, wxDefaultSize,
 									 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	for ( size_t i =0; i < paths.size(); ++i )
 	{

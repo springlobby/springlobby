@@ -193,7 +193,7 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
         DataType dt = m_data[idx];
         bool mod_missing = !dt->ModExists();
         bool map_missing = !dt->MapExists();
-        m_popup = new wxMenu( _T("") );
+        m_popup = new wxMenu( wxEmptyString );
         // &m enables shortcout "alt + m" and underlines m
         if ( map_missing )
             m_popup->Append( BLIST_DLMAP, _("Download &map") );
@@ -317,7 +317,7 @@ int BattleListCtrl::ComparePlayer( DataType u1, DataType u2 )
 void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
     if ( (long)m_data.size() < item_hit ) {
-        m_tiptext = _T("");
+        m_tiptext = wxEmptyString;
         return;
     }
 
@@ -373,7 +373,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& posit
         case 10: //running time
             m_tiptext = (m_colinfovec[column].tip);
             break;
-        default: m_tiptext = _T("");
+        default: m_tiptext = wxEmptyString;
             break;
     }
 }

@@ -935,7 +935,7 @@ static wxString FixPresetName( const wxString& name )
   // look name up case-insensitively
   const wxArrayString& presetList = sett().GetPresetList();
   int index = presetList.Index( name, false /*case insensitive*/ );
-  if ( index == -1 ) return _T("");
+  if ( index == -1 ) return wxEmptyString;
 
   // set preset to the actual name, with correct case
   return presetList[index];
@@ -945,7 +945,7 @@ static wxString FixPresetName( const wxString& name )
 bool IBattle::LoadOptionsPreset( const wxString& name )
 {
   wxString preset = FixPresetName(name);
-  if (preset == _T("")) return false; //preset not found
+  if (preset == wxEmptyString) return false; //preset not found
   m_preset = preset;
 
   for ( unsigned int i = 0; i < LSL::OptionsWrapper::LastOption; i++)
@@ -972,7 +972,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
         }
         else if ( !ui().OnPresetRequiringMap( options[_T("mapname")] ) ) {
             //user didn't want to download the missing map, so set to empty to not have it tried to be loaded again
-            options[_T("mapname")] = _T("");
+            options[_T("mapname")] = wxEmptyString;
             sett().SetHostingPreset( m_preset, i, options );
         }
       }
@@ -1013,7 +1013,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
 void IBattle::SaveOptionsPreset( const wxString& name )
 {
   m_preset = FixPresetName(name);
-  if (m_preset == _T("")) m_preset = name; //new preset
+  if (m_preset == wxEmptyString) m_preset = name; //new preset
 
   for ( int i = 0; i < (int)LSL::OptionsWrapper::LastOption; i++)
   {
@@ -1074,7 +1074,7 @@ wxString IBattle::GetCurrentPreset()
 void IBattle::DeletePreset( const wxString& name )
 {
   wxString preset = FixPresetName(name);
-  if ( m_preset == preset ) m_preset = _T("");
+  if ( m_preset == preset ) m_preset = wxEmptyString;
   sett().DeletePreset( preset );
   ui().ReloadPresetList();
 }
@@ -1260,7 +1260,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 											teaminfos.StartPosY = team->GetInt( _T("StartPosY"), -1 );
 											teaminfos.AllyTeam = team->GetInt( _T("AllyTeam"), 0 );
 											teaminfos.RGBColor = GetColorFromFloatStrng( team->GetString( _T("RGBColor") ) );
-											teaminfos.SideName = team->GetString( _T("Side"), _T("") );
+											teaminfos.SideName = team->GetString( _T("Side"), wxEmptyString );
 											teaminfos.Handicap = team->GetInt( _T("Handicap"), 0 );
                                             const int sidepos = LSL::Util::IndexInSequence(sides, STD_STRING(teaminfos.SideName));
 											teaminfos.SideNum = sidepos;

@@ -50,7 +50,7 @@
 #ifdef __WXMSW__
 	#define BIN_EXT _T(".exe")
 #else
-	#define BIN_EXT _T("")
+	#define BIN_EXT wxEmptyString
 #endif
 
 const wxChar sep = wxFileName::GetPathSeparator();
@@ -113,13 +113,13 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 		SetDefaultServerSettings();
 
 	if ( ShouldAddDefaultChannelSettings() ) {
-		AddChannelJoin( _T("main"), _T("") );
-		AddChannelJoin( _T("newbies"), _T("") );
+		AddChannelJoin( _T("main"), wxEmptyString );
+		AddChannelJoin( _T("newbies"), wxEmptyString );
 		if ( translationhelper ) {
 			if ( translationhelper->GetLocale() ) {
 				wxString localecode = translationhelper->GetLocale()->GetCanonicalName();
 				if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
-				AddChannelJoin( localecode, _T("") ); // add locale's language code to autojoin
+				AddChannelJoin( localecode, wxEmptyString ); // add locale's language code to autojoin
 			}
 		}
 	}
@@ -138,7 +138,7 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 				wxString localecode = translationhelper->GetLocale()->GetCanonicalName();
 				if ( localecode.Find(_T("_")) != -1 ) localecode = localecode.BeforeFirst(_T('_'));
 				if ( localecode == _T("en") ) // we'll skip en for now, maybe in the future we'll reactivate it
-					AddChannelJoin( localecode, _T("") );
+					AddChannelJoin( localecode, wxEmptyString );
 			}
 		}
 	}
@@ -402,7 +402,7 @@ wxArrayString Settings::GetServers()
 //! @param server_name the server name/alias
 wxString Settings::GetServerAccountNick( const wxString& server_name )
 {
-	return m_config->Read( _T( "/Server/Servers/" ) + server_name + _T( "/Nick" ), _T( "" ) ) ;
+	return m_config->Read( _T( "/Server/Servers/" ) + server_name + _T( "/Nick" ), wxEmptyString ) ;
 }
 
 
@@ -422,7 +422,7 @@ void Settings::SetServerAccountNick( const wxString& server_name, const wxString
 //! @todo Implement
 wxString Settings::GetServerAccountPass( const wxString& server_name )
 {
-	return m_config->Read( _T( "/Server/Servers/" ) + server_name + _T( "/Pass" ), _T( "" ) );
+	return m_config->Read( _T( "/Server/Servers/" ) + server_name + _T( "/Pass" ), wxEmptyString );
 }
 
 
@@ -493,7 +493,7 @@ int Settings::GetChannelJoinIndex( const wxString& name )
 	int ret = -1;
 	for ( int i = 0; i < numchannels; i++ )
 	{
-		if ( m_config->Read( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Name" ) ) % i, _T( "" ) ) == name ) ret = i;
+		if ( m_config->Read( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Name" ) ) % i, wxEmptyString ) == name ) ret = i;
 	}
 	return ret;
 }
@@ -673,10 +673,13 @@ std::map<wxString, LSL::SpringBundle> Settings::GetSpringVersionList() const
 	return m_spring_versions;
 }
 
-void Settings::RefreshSpringVersionList(bool autosearch)
+void Settings::RefreshSpringVersionList(bool autosearch, const wxString& additionalpath)
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	std::list<std::string> usync_paths;
+	if (!additionalpath.empty()) {
+		usync_paths.push_back(STD_STRING(additionalpath));
+	}
 	if ( sett().GetSearchSpringOnlyInSLPath() || sett().GetUseSpringPathFromBundle() ) {
 		usync_paths.clear();
 		usync_paths.push_back(STD_STRING(sett().GetCurrentUsedUnitSync()));
@@ -738,7 +741,7 @@ void Settings::SetSearchSpringOnlyInSLPath( bool value )
 void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 {
 	m_config->DeleteGroup( _T( "/Spring/Path/" ) + index );
-	if ( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex( _T( "" ) );
+	if ( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex( wxEmptyString );
 }
 
 
@@ -900,19 +903,19 @@ wxString Settings::GetChatLogLoc()
 
 wxString Settings::GetLastHostDescription()
 {
-	return m_config->Read( _T( "/Hosting/LastDescription" ), _T( "" ) );
+	return m_config->Read( _T( "/Hosting/LastDescription" ), wxEmptyString );
 }
 
 
 wxString Settings::GetLastHostMod()
 {
-	return m_config->Read( _T( "/Hosting/LastMod" ), _T( "" ) );
+	return m_config->Read( _T( "/Hosting/LastMod" ), wxEmptyString );
 }
 
 
 wxString Settings::GetLastHostPassword()
 {
-	return m_config->Read( _T( "/Hosting/LastPassword" ), _T( "" ) );
+	return m_config->Read( _T( "/Hosting/LastPassword" ), wxEmptyString );
 }
 
 
@@ -936,7 +939,7 @@ int Settings::GetLastHostNATSetting()
 
 wxString Settings::GetLastHostMap()
 {
-	return m_config->Read( _T( "/Hosting/LastMap" ), _T( "" ) );
+	return m_config->Read( _T( "/Hosting/LastMap" ), wxEmptyString );
 }
 
 int Settings::GetLastRankLimit()
@@ -1450,13 +1453,13 @@ bool Settings::GetRequestAttOnHighlight( )
 BattleListFilterValues Settings::GetBattleFilterValues( const wxString& profile_name )
 {
 	BattleListFilterValues filtervalues;
-	filtervalues.description =      m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/description" ), _T( "" ) );
-	filtervalues.host =             m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/host" ), _T( "" ) );
-	filtervalues.map =               m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/map" ), _T( "" ) );
+	filtervalues.description =      m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/description" ), wxEmptyString );
+	filtervalues.host =             m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/host" ), wxEmptyString );
+	filtervalues.map =               m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/map" ), wxEmptyString );
 	filtervalues.map_show =         m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/map_show" ), 0L );
 	filtervalues.maxplayer =        m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer" ), _T( "All" ) );
 	filtervalues.maxplayer_mode =   m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer_mode" ), _T( "=" ) );
-	filtervalues.mod =              m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), _T( "" ) );
+	filtervalues.mod =              m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), wxEmptyString );
 	filtervalues.mod_show =         m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/mod_show" ), 0L );
 	filtervalues.player_mode =      m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/player_mode" ), _T( "=" ) );
 	filtervalues.player_num  =      m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/player_num" ), _T( "All" ) );
@@ -1583,7 +1586,7 @@ void Settings::SetMapLastRectPreset( const wxString& mapname, std::vector<Settin
 
 wxString Settings::GetMapLastStartPosType( const wxString& mapname )
 {
-	return m_config->Read( _T( "/Hosting/MapLastValues/" ) + mapname + _T( "/startpostype" ), _T( "" ) );
+	return m_config->Read( _T( "/Hosting/MapLastValues/" ) + mapname + _T( "/startpostype" ), wxEmptyString );
 }
 
 std::vector<Settings::SettStartBox> Settings::GetMapLastRectPreset( const wxString& mapname )
@@ -1696,13 +1699,13 @@ wxColourData Settings::GetCustomColors( const wxString& paletteName )
 PlaybackListFilterValues Settings::GetReplayFilterValues( const wxString& profile_name )
 {
 	PlaybackListFilterValues filtervalues;
-	filtervalues.duration =         m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/duration" ), _T( "" ) );
-	filtervalues.map =               m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/map" ), _T( "" ) );
+	filtervalues.duration =         m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/duration" ), wxEmptyString );
+	filtervalues.map =               m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/map" ), wxEmptyString );
 	filtervalues.map_show =         m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/map_show" ), 0L );
-	filtervalues.filesize  =        m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/filesize" ), _T( "" ) );
+	filtervalues.filesize  =        m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/filesize" ), wxEmptyString );
 	filtervalues.filesize_mode  =   m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/filesize_mode" ), _T( ">" ) );
 	filtervalues.duration_mode  =   m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/duration_mode" ), _T( ">" ) );
-	filtervalues.mod =              m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/mod" ), _T( "" ) );
+	filtervalues.mod =              m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/mod" ), wxEmptyString );
 	filtervalues.mod_show =         m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/mod_show" ), 0L );
 	filtervalues.player_mode =      m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/player_mode" ), _T( "=" ) );
 	filtervalues.player_num  =      m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/player_num" ), _T( "All" ) );
@@ -1741,7 +1744,7 @@ wxString Settings::GetLastReplayFilterProfileName()
 }
 wxString Settings::GetLastRelayedHost()
 {
-    return  m_config->Read(_T("/General/RelayHost"),_T(""));
+    return  m_config->Read(_T("/General/RelayHost"),wxEmptyString);
 }
 void Settings::SetLastRelayedHost(wxString relhost)
 {
@@ -1975,7 +1978,7 @@ void Settings::SavePerspective( const wxString& notebook_name, const wxString& p
 wxString Settings::LoadPerspective( const wxString& notebook_name, const wxString& perspective_name )
 {
 	wxString entry = wxFormat( _T( "/GUI/AUI/%s/%s" ) ) % perspective_name % notebook_name;
-    return m_config->Read( entry , _T("") );
+    return m_config->Read( entry , wxEmptyString );
 }
 
 wxString Settings::GetLastPerspectiveName( )
@@ -2092,7 +2095,7 @@ void Settings::SetHotkeyMeta( const wxString& profileName, const wxString& keySt
 
 wxString Settings::GetHotkeyMeta( const wxString& profileName )
 {
-	return m_config->Read(_T( "/HotkeyProfiles/") + profileName + _T("/Meta"), _T("") );
+	return m_config->Read(_T( "/HotkeyProfiles/") + profileName + _T("/Meta"), wxEmptyString );
 }
 
 void Settings::SetHotkeyKeySymSet( const wxString& profileName, const wxString& setName, const wxString& keyStr )
@@ -2102,7 +2105,7 @@ void Settings::SetHotkeyKeySymSet( const wxString& profileName, const wxString& 
 
 wxString Settings::GetHotkeyKeySymSet( const wxString& profileName, const wxString& setName )
 {
-	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/KeySets/") + setName, _T("") );
+	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/KeySets/") + setName, wxEmptyString );
 }
 
 wxArrayString Settings::GetHotkeyKeySymSetNames( const wxString& profileName )
@@ -2117,7 +2120,7 @@ void Settings::SetHotkeyKeySym( const wxString& profileName, const wxString& sym
 
 wxString Settings::GetHotkeyKeySym( const wxString& profileName, const wxString& symName )
 {
-	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/KeySyms/") + symName, _T("") );
+	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/KeySyms/") + symName, wxEmptyString );
 }
 
 wxArrayString Settings::GetHotkeyKeySymNames( const wxString& profileName )
@@ -2133,7 +2136,7 @@ void Settings::SetHotkey( const wxString& profileName, const wxString& command, 
 
 wxString Settings::GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key )
 {
-	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/Bindings/") + orderIdx + _T("/") + key, _T("") );
+	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/Bindings/") + orderIdx + _T("/") + key, wxEmptyString );
 }
 
 wxArrayString Settings::GetHotkeyProfiles()

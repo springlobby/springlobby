@@ -127,7 +127,7 @@ void DownloadListCtrl::OnListRightClick( wxListEvent& /*event*/ )
 
 //        DataType dt = m_data[idx];
 //		delete m_popup;
-//        m_popup = new wxMenu( _T("") );
+//        m_popup = new wxMenu( wxEmptyString );
 //		if(dt.downloadstatus == P2P::not_stored)
 //		{
 //			m_popup->Append( TLIST_CANCEL, _("Cancel download") );
@@ -172,7 +172,7 @@ void DownloadListCtrl::Sort()
 
 void DownloadListCtrl::SetTipWindowText( const long /*item_hit*/, const wxPoint& /*position*/)
 {
-    m_tiptext = _T("");
+    m_tiptext = wxEmptyString;
 }
 
 void DownloadListCtrl::HighlightItem( long /*item*/ )
@@ -233,8 +233,8 @@ wxString DownloadListCtrl::GetItemText(long item, long column) const
 				return _("downloading");
 			}
 		case 2: return wxString::Format(wxT("%i%%"),(int)((double)100.0*infos.progress/(double)infos.size));//(wxFormat(_T("%.2f") ) % ( infos.progress * 100 )).str() : na_str;
-		case 3: return _T("");//infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
-		case 4: return _T("");//infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
+		case 3: return wxEmptyString;//infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
+		case 4: return wxEmptyString;//infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
 		case 5: return infos.size > 0 ? wxString::Format(wxT("%i"),infos.size/MB) : _T("0");
 	}
 }

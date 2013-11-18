@@ -139,7 +139,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_ally_sel->SetToolTip( TE( _( "Players with the same ally number work together to achieve victory." ) ) );
 	m_color_sel = new ColorButton( m_player_panel, BROOM_COLOURSEL, wxColour (0,0,0), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_color_sel->SetToolTip( TE( _( "Select a color to identify your units in-game" ) ) );
-	m_side_sel = new wxBitmapComboBox( m_player_panel, BROOM_SIDESEL, _T( "" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+	m_side_sel = new wxBitmapComboBox( m_player_panel, BROOM_SIDESEL, wxEmptyString, wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_side_sel->SetToolTip( TE( _( "Select your faction" ) ) );
 	m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _( "Spectator" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_spec_chk->SetToolTip( TE( _( "Spectate (watch) the battle instead of playing" ) ) );
@@ -157,11 +157,11 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, _( "Unready: 0" ) );
 
 	//XXX not needed ?
-//	m_size_lbl = new wxStaticText( this, -1, _T( "" ) );
-//	m_wind_lbl = new wxStaticText( this, -1, _T( "" ) );
-//	m_tidal_lbl = new wxStaticText( this, -1, _T( "" ) );
+//	m_size_lbl = new wxStaticText( this, -1, wxEmptyString );
+//	m_wind_lbl = new wxStaticText( this, -1, wxEmptyString );
+//	m_tidal_lbl = new wxStaticText( this, -1, wxEmptyString );
 
-	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, _T( "" ), wxDefaultPosition, wxDefaultSize );
+	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, wxEmptyString, wxDefaultPosition, wxDefaultSize );
 
 	m_minimap = new MapCtrl( this, 162, m_battle, true, true, true, false );
 	m_minimap->SetToolTip( TE( _( "A preview of the selected map.  You can see the starting positions, or (if set) starting boxes." ) ) );
@@ -250,7 +250,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	wxBoxSizer* m_preset_btns_sizer;
 	m_preset_btns_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, _T(""), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
+	m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, wxEmptyString, wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
 	m_options_preset_sel->SetToolTip( TE( _( "Load battle preset" ) ) );
 
 	m_preset_sizer->Add( m_options_preset_sel, 0, wxEXPAND | wxALL );
@@ -606,7 +606,7 @@ Battle* BattleRoomTab::GetBattle()
 
 ChatPanel& BattleRoomTab::GetChatPanel()
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	ASSERT_LOGIC( m_chat != 0, _T( "m_chat = 0" ) );
 	return *m_chat;
 }
@@ -693,7 +693,7 @@ void BattleRoomTab::OnFixTeams( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnFixColours( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxLogMessage( _T( "" ) );
+	wxLogMessage( wxEmptyString );
 	if ( !m_battle->IsFounderMe() ) // Works with autohosts, and human hosts knows what it mean.
 	{
 		m_battle->Say( _T( "!fixcolors" ) );
@@ -775,7 +775,7 @@ void BattleRoomTab::OnAutoStart( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnAutoSpec( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	int trigger = wxGetNumberFromUser( _( "Enter timeout before autospeccing a player in minutes" ), _( "Set Timeout" ), _T( "" ), sett().GetBattleLastAutoSpectTime() / 60, 1, 60, ( wxWindow* ) & ui().mw(), wxDefaultPosition );
+	int trigger = wxGetNumberFromUser( _( "Enter timeout before autospeccing a player in minutes" ), _( "Set Timeout" ), wxEmptyString, sett().GetBattleLastAutoSpectTime() / 60, 1, 60, ( wxWindow* ) & ui().mw(), wxDefaultPosition );
 	if ( trigger < 0 ) trigger = 0;
 	trigger = trigger * 60;
 	m_autospec_mnu->Check( trigger > 0 );
@@ -1004,7 +1004,7 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 
 	const wxString mapname = mapSelectDialog();
 	if ( !mapname.empty() )

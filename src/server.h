@@ -99,8 +99,8 @@ class Server : public iNetClass, public SL::NonCopyable
     virtual void AdminChangeAccountAccess( const wxString& nick, const wxString& accesscode ) = 0;
     virtual void AdminSetBotMode( const wxString& nick, bool isbot ) = 0;
 
-    virtual void HostBattle( BattleOptions bo, const wxString& password = _T("") ) = 0;
-    virtual void JoinBattle( const int& battleid, const wxString& password = _T("") ) = 0;
+    virtual void HostBattle( BattleOptions bo, const wxString& password = wxEmptyString ) = 0;
+    virtual void JoinBattle( const int& battleid, const wxString& password = wxEmptyString ) = 0;
     virtual void LeaveBattle( const int& battleid ) = 0;
     virtual void StartHostedBattle() = 0;
 

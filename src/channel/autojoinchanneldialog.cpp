@@ -27,7 +27,7 @@ AutojoinChannelDialog::AutojoinChannelDialog( wxWindow* parent )
 {
 	wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
 	wxBoxSizer* textSizer = new wxBoxSizer( wxVERTICAL );
-	m_channel_list = new wxTextCtrl( this, wxID_ANY, _T( "" ), wxDefaultPosition, wxDefaultSize,
+	m_channel_list = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
 	                                 wxTE_MULTILINE | wxTE_DONTWRAP );
 	wxSizer *buttonSizer= CreateButtonSizer( wxOK|wxCANCEL|wxALIGN_CENTRE );
 	wxStaticLine* seperator = new wxStaticLine( this );

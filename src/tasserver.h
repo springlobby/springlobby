@@ -103,8 +103,8 @@ class TASServer : public Server, public wxTimer
     void AdminChangeAccountAccess( const wxString& nick, const wxString& accesscode );
     void AdminSetBotMode( const wxString& nick, bool isbot );
 
-    void HostBattle( BattleOptions bo, const wxString& password = _T("") );
-    void JoinBattle( const int& battleid, const wxString& password = _T("") );
+    void HostBattle( BattleOptions bo, const wxString& password = wxEmptyString );
+    void JoinBattle( const int& battleid, const wxString& password = wxEmptyString );
     void LeaveBattle( const int& battleid );
     void SendMyBattleStatus( UserBattleStatus& bs );
     void SendMyUserStatus();
@@ -207,8 +207,8 @@ class TASServer : public Server, public wxTimer
 
     void FinalizeJoinBattle();
 
-    void SendCmd( const wxString& command, const wxString& param = _T("") );
-    void RelayCmd( const wxString& command, const wxString& param = _T("") );
+    void SendCmd( const wxString& command, const wxString& param = wxEmptyString );
+    void RelayCmd( const wxString& command, const wxString& param = wxEmptyString );
 
     wxString m_current_chan_name_mutelist;
 

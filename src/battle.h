@@ -31,7 +31,7 @@ class Battle : public IBattle
     void Update();
     void Update( const wxString& Tag );
 
-    void Join( const wxString& password = _T("") );
+    void Join( const wxString& password = wxEmptyString );
     void Leave();
 
     void KickPlayer( User& user );

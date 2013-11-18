@@ -239,7 +239,7 @@ void BattleOptionsTab::OnRestrict( wxCommandEvent& /*unused*/ )
 	}
 	for ( unsigned int i = 0; i < names.Count(); i++ ) {
 		wxString unit = names.Item( i );
-		int count = wxGetNumberFromUser( _( "How many units of this type do you wish to allow?" ), _T( "" ), _( "Unit restriction" ), 0, 0, 500000 );
+		int count = wxGetNumberFromUser( _( "How many units of this type do you wish to allow?" ), wxEmptyString, _( "Unit restriction" ), 0, 0, 500000 );
 		if ( count >= 0 ) m_battle->RestrictUnit( unit, count );
 	}
 	if ( names.Count() > 0 ) m_battle->SendHostInfo( IBattle::HI_Restrictions );

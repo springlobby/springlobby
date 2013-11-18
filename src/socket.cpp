@@ -53,7 +53,7 @@ wxString _GetHandle()
     DWORD dwBufLen = sizeof(AdapterInfo);  // Save memory size of buffer
 
     DWORD dwStatus = GetAdaptersInfo ( AdapterInfo, &dwBufLen); // Get info
-                if (dwStatus != NO_ERROR) return _T(""); // Check status
+                if (dwStatus != NO_ERROR) return wxEmptyString; // Check status
     for (unsigned int i=0; i<std::min( (unsigned int)6, (unsigned int)AdapterInfo[0].AddressLength); i++)
     {
         handle += TowxString(((unsigned int)AdapterInfo[0].Address[i])&255);
@@ -63,14 +63,14 @@ wxString _GetHandle()
         int sock = socket (AF_INET, SOCK_DGRAM, 0);
         if (sock < 0)
         {
-                return _T(""); //not a valid socket
+                return wxEmptyString; //not a valid socket
         }
         struct ifreq dev; //container for the hw data
         struct if_nameindex *NameList = if_nameindex(); //container for the interfaces list
         if (NameList == NULL)
         {
                 close(sock);
-                return _T(""); //cannot list the interfaces
+                return wxEmptyString; //cannot list the interfaces
         }
 
         int pos = 0;
@@ -81,7 +81,7 @@ wxString _GetHandle()
                 {
                         close(sock);
                         if_freenameindex(NameList);
-                        return _T(""); // no valid interfaces found
+                        return wxEmptyString; // no valid interfaces found
                 }
                 InterfaceName = NameList[pos].if_name;
                 pos++;
@@ -93,7 +93,7 @@ wxString _GetHandle()
         if (ioctl(sock, SIOCGIFHWADDR, &dev) < 0) //get the interface data
         {
                 close(sock);
-                return _T(""); //cannot list the interfaces
+                return wxEmptyString; //cannot list the interfaces
         }
 
     for (int i=0; i<6; i++)
@@ -362,7 +362,7 @@ void Socket::OnTimer( int mselapsed )
   if ( m_rate > 0 ) {
     m_sent -= int( ( mselapsed / 1000.0 ) * m_rate );
     if ( m_sent < 0 ) m_sent = 0;
-    if ( m_buffer.length() > 0 ) _Send(_T(""));
+    if ( m_buffer.length() > 0 ) _Send(wxEmptyString);
   } else {
     m_sent = 0;
   }

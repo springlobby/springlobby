@@ -218,7 +218,7 @@ ChatPanel::~ChatPanel()
 
 void ChatPanel::CreateControls( )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 
 	// Creating sizers
 	m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -263,7 +263,7 @@ void ChatPanel::CreateControls( )
 
 	// Creating ui elements
 
-	m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, _T( "" ), wxDefaultPosition, wxDefaultSize,
+	m_chatlog_text = new wxTextCtrl( m_chat_panel, CHAT_LOG, wxEmptyString, wxDefaultPosition, wxDefaultSize,
 									 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	m_chan_opts_button = NULL;
 	if ( m_type == CPT_Channel ) {
@@ -285,7 +285,7 @@ void ChatPanel::CreateControls( )
 
 	m_say_text = new wxTextCtrlHist(
 		textcompletiondatabase, m_chat_panel, CHAT_TEXT,
-		_T( "" ), wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ),
+		wxEmptyString, wxDefaultPosition, wxSize( 100, CONTROL_HEIGHT ),
 		wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB
 	);
 	m_say_button = new wxButton( m_chat_panel, CHAT_SEND, _( "Send" ), wxDefaultPosition, wxSize( 80, CONTROL_HEIGHT ) );
@@ -335,7 +335,7 @@ void ChatPanel::CreatePopup()
 {
 	if ( m_popup_menu != 0 )
 		return;
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	m_popup_menu = new ChatPanelMenu( this );
 }
 
@@ -520,7 +520,7 @@ void ChatPanel::OnChanOpts( wxCommandEvent& /*unused*/ )
 
 void ChatPanel::OnSay( wxCommandEvent& /*unused*/ )
 {
-	if ( Say( m_say_text->GetValue() ) ) m_say_text->SetValue( _T( "" ) );
+	if ( Say( m_say_text->GetValue() ) ) m_say_text->SetValue( wxEmptyString );
 }
 
 void ChatPanel::OnPaste( wxClipboardTextEvent& event )
@@ -928,7 +928,7 @@ bool ChatPanel::Say( const wxString& message )
 		}
 
 		if ( line == _T( "/clear" ) ) {
-			m_chatlog_text->SetValue( _T("") );
+			m_chatlog_text->SetValue( wxEmptyString );
 			return true;
 		}
 
@@ -1002,7 +1002,7 @@ bool ChatPanel::Say( const wxString& message )
 
 void ChatPanel::Part()
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	if ( m_type == CPT_Channel ) {
 		if ( m_channel == 0 ) return;
 		m_channel->Leave();
@@ -1062,12 +1062,12 @@ wxString ChatPanel::FindUrl( const long pos ) const
 	if ( ret.StartsWith( _T("http://") ) ||  ret.StartsWith( _T("https://") ) || ret.StartsWith( _T("ftp://") ))
 		return ret;
 	else
-		return _T("");
+		return wxEmptyString;
 }
 
 void ChatPanel::OnMouseDown( wxMouseEvent& event )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	wxTextCoord row;
 	wxTextCoord col;
 	wxTextCtrlHitTestResult ht = m_chatlog_text->HitTest( event.GetPosition(), &col, &row);

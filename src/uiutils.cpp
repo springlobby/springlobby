@@ -30,7 +30,7 @@ wxString RTFtoText( const wxString& rtfinput )
     wxString ret = rtfinput;
     ret = ret.AfterFirst( '{' ).BeforeLast( '}' );
 
-    ret.Replace( _T("\\pard"), _T("") ); // remove a ambiguus char
+    ret.Replace( _T("\\pard"), wxEmptyString ); // remove a ambiguus char
 
     ret.Replace( _T("\\par"), _T(" \n") ); // convert the end of lines
 

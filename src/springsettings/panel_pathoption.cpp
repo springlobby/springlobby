@@ -73,11 +73,11 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 
 void PathOptionPanel::SetUsyncPath(wxCommandEvent& /*unused*/)
 {
-  wxString lib_ext = wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
+  wxString lib_ext = wxDynamicLibrary::CanonicalizeName(wxEmptyString, wxDL_MODULE);
 #if defined(__WXGTK__)
   wxString lib_pre = _T("lib");
 #else
-  wxString lib_pre = _T("");
+  wxString lib_pre = wxEmptyString;
 #endif
 
   wxFileDialog pic( this, _("Choose an unitsync library"),

@@ -208,7 +208,7 @@ bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVers
 
 void Spring::OnTerminated( wxCommandEvent& event )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     m_running = false;
     m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
     m_wx_process = 0;
@@ -296,7 +296,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					break;
 				}
 				default:
-                    wxLogDebugFunc( _T("") ); break;
+                    wxLogDebugFunc( wxEmptyString ); break;
 			}
 
             const long startpostype = LSL::Util::FromString<long>(

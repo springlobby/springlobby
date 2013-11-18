@@ -143,7 +143,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 
 	m_relayed_host_check = new wxCheckBox( m_panel, CHK_USE_RELAY, _( "Use relayhost" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_check->SetToolTip( TE( _( "host and control game on remote server, helps if you have trouble hosting" ) ) );
-	m_relayed_host_pick = new wxButton( m_panel, PICK_RELAYHOST, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+	m_relayed_host_pick = new wxButton( m_panel, PICK_RELAYHOST, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_pick->SetLabel( m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost );
 
 	m_relayhost_list = new wxMenu();
@@ -157,7 +157,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_relayhost_array_list = serverSelector().GetServer().GetRelayHostList();
 	for ( unsigned int i = 0; i < m_relayhost_array_list.GetCount(); i++ )
 	{
-		wxMenuItem* newitem = new wxMenuItem( m_relayhost_list, MANUAL_PICK_HOST + 1 + i, m_relayhost_array_list[i], _T("") , wxITEM_RADIO );
+		wxMenuItem* newitem = new wxMenuItem( m_relayhost_list, MANUAL_PICK_HOST + 1 + i, m_relayhost_array_list[i], wxEmptyString , wxITEM_RADIO );
 		m_relayhost_list->Append( newitem );
 		newitem->Check( m_last_relayhost == m_relayhost_array_list[i] );
 	}
@@ -351,7 +351,7 @@ void HostBattleDialog::OnOk( wxCommandEvent& /*unused*/ )
 	sett().SetLastHostDescription( m_desc_text->GetValue() );
 	sett().SetLastHostMod( m_mod_pic->GetString( m_mod_pic->GetSelection() ) );
 	wxString password = m_pwd_text->GetValue();
-	password.Replace(_T(" "), _T(""));
+	password.Replace(_T(" "), wxEmptyString);
 	sett().SetLastHostPassword( password );
 	long tmp = DEFSETT_SPRING_PORT;
 	m_port_text->GetValue().ToLong( &tmp );
@@ -410,7 +410,7 @@ void HostBattleDialog::OnRelayChoice( wxCommandEvent& event )
 {
 		int index = event.GetId();
 		if ( index == AUTO_PICK_HOST )
-            m_last_relayhost = _T("");
+            m_last_relayhost = wxEmptyString;
 		else if ( index == MANUAL_PICK_HOST ) {
 			ui().AskText( _("Manually chose a manager"), _("Please type the nick of the manager you want to use ( case sensitive )"), m_last_relayhost );
 		}

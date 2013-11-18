@@ -187,7 +187,7 @@ int SpringLobbyApp::OnExit()
         return 0;
 
     quit_called = true;
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     if(m_translationhelper)
     {
@@ -294,7 +294,7 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
         if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
             m_log_verbosity = m_log_window_show ? 3 : 5;
 		if ( !parser.Found(_T("customize"), &m_customizer_archive_name ) )
-			m_customizer_archive_name = _T("");
+			m_customizer_archive_name = wxEmptyString;
 		if ( !parser.Found(_T("name"), &m_appname ) )
 			m_appname = _T("SpringLobby");
 

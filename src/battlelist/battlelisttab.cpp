@@ -446,7 +446,7 @@ void BattleListTab::DoJoin( Battle& battle )
 		if ( pw.ShowModal() == wxID_OK )
 		{
 			wxString password = pw.GetValue();
-			password.Replace(_T(" "), _T(""));
+			password.Replace(_T(" "), wxEmptyString);
 			battle.Join( password );
 		}
 	}
@@ -459,7 +459,7 @@ void BattleListTab::DoJoin( Battle& battle )
 
 void BattleListTab::OnSelect( wxListEvent& event )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	if ( event.GetIndex() == -1 )
 	{
 		SelectBattle( 0 );

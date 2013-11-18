@@ -157,7 +157,7 @@ void ImageViewerPanel::OnSaveAs( wxCommandEvent& /*evt*/ )
 {
     wxString ext = m_filenames[m_current_file_index].AfterLast( '.' );
     wxString mask = _T("*.") + ext;
-    wxFileDialog fd( this, _("Choose a filename"), _T(""), _T(""), mask, wxFD_SAVE | wxFD_OVERWRITE_PROMPT );
+    wxFileDialog fd( this, _("Choose a filename"), wxEmptyString, wxEmptyString, mask, wxFD_SAVE | wxFD_OVERWRITE_PROMPT );
     if ( fd.ShowModal() == wxID_OK ) {
         wxString new_file = fd.GetPath();
         if ( !new_file.EndsWith( ext ) )

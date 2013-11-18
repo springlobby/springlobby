@@ -32,8 +32,7 @@ TaskBar::TaskBar(wxWindow *statusbar)
 		this, wxID_ANY, wxArtProvider::GetBitmap(wxART_INFORMATION));
 	sizer->Add(refreshIcon);
 
-	text = new wxStaticText(
-		this, wxID_ANY, _T(""));
+	text = new wxStaticText(this, wxID_ANY, wxEmptyString);
 	text->SetForegroundColour(wxColour(0, 0, 0));
 	sizer->Add(text, 0, wxLEFT | wxALIGN_CENTER_VERTICAL, 5);
 

@@ -29,7 +29,7 @@ wxString GetLibExtension()
 #ifdef __APPLE__
     return wxString(".dylib");
 #endif
-    return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
+    return wxDynamicLibrary::CanonicalizeName(wxEmptyString, wxDL_MODULE);
 }
 
 

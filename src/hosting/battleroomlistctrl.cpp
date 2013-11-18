@@ -297,7 +297,7 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 wxString BattleroomListCtrl::GetItemText(long item, long column) const
 {
 	if ( (item == -1) || (item >= (long)m_data.size()) || (m_battle == NULL))
-		return _T("");
+		return wxEmptyString;
 
 	const User& user = *GetDataFromIndex( item );
 	bool is_bot = user.BattleStatus().IsBot();
@@ -311,7 +311,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 		catch ( ... ) {
 			return wxFormat( _T("s%d") ) % (user.BattleStatus().side + 1);
 		}
-		return _T("");
+		return wxEmptyString;
 	}
     if ( column == m_nick_column_index )  {
         if ( is_bot ) {
@@ -329,12 +329,12 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
         else
             return user.GetNick();
     }
-	if ( column == m_team_column_index ) return is_spec ? _T("") : (wxFormat( _T("%d") ) % ( user.BattleStatus().team + 1 ) ).c_str();
-	if ( column == m_ally_column_index ) return is_spec ? _T("") : (wxFormat( _T("%d") ) % ( user.BattleStatus().ally + 1 ) ).c_str();
-	if ( column == m_resourcebonus_column_index ) return is_spec ? _T("") : (wxFormat( _T("%d%%") ) % user.BattleStatus().handicap ).c_str();
-	if ( column == m_country_column_index ) return _T("");
+	if ( column == m_team_column_index ) return is_spec ? (wxString)wxEmptyString : (wxFormat( _T("%d") ) % ( user.BattleStatus().team + 1 ) );
+	if ( column == m_ally_column_index ) return is_spec ? (wxString)wxEmptyString : (wxFormat( _T("%d") ) % ( user.BattleStatus().ally + 1 ) );
+	if ( column == m_resourcebonus_column_index ) return is_spec ? (wxString)wxEmptyString : (wxFormat( _T("%d%%") ) % user.BattleStatus().handicap );
+	if ( column == m_country_column_index ) return wxEmptyString;
 
-	return _T("");
+	return wxEmptyString;
 }
 
 void BattleroomListCtrl::UpdateUser( const int& index )
@@ -346,7 +346,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
 void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 	if ( m_ro ) return;
 	int index = event.GetIndex();
 
@@ -391,7 +391,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 
 void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   int team = event.GetId() - BRLIST_TEAM;
 	if( m_sel_user ) ((Battle*)m_battle)->ForceTeam( *m_sel_user, team );
 }
@@ -399,7 +399,7 @@ void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   int ally = event.GetId() - BRLIST_ALLY;
 	if( m_sel_user ) ((Battle*)m_battle)->ForceAlly( *m_sel_user, ally );
 }
@@ -407,7 +407,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnColourSelect( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
 
 	wxColour CurrentColour = m_sel_user->BattleStatus().colour;
 	CurrentColour = GetColourFromUser(this, CurrentColour);
@@ -419,7 +419,7 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& /*unused*/ )
 
 void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   int side = event.GetId() - BRLIST_SIDE;
   if( m_sel_user ) ((Battle*)m_battle)->ForceSide( *m_sel_user, side );
 }
@@ -427,9 +427,9 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   if( !m_sel_user ) return;
-  long handicap = wxGetNumberFromUser( _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), _T(""), m_sel_user->BattleStatus().handicap, 0, 100, (wxWindow*)&ui().mw(), wxDefaultPosition );
+  long handicap = wxGetNumberFromUser( _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), wxEmptyString, m_sel_user->BattleStatus().handicap, 0, 100, (wxWindow*)&ui().mw(), wxDefaultPosition );
 	if ( handicap != -1 )
 	{
      ((Battle*)m_battle)->SetHandicap( *m_sel_user, handicap );
@@ -439,21 +439,21 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& /*unused*/ )
 
 void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   if ( m_sel_user ) ((Battle*)m_battle)->ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
 }
 
 
 void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
 	if ( m_sel_user ) ((Battle*)m_battle)->KickPlayer( *m_sel_user );
 }
 
 
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   if ( m_sel_user ) ((Battle*)m_battle)->GetServer().Ring( m_sel_user->GetNick() );
 }
 
@@ -728,13 +728,13 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
     int column = getColumnFromPosition( position );
     if (column > (int)m_colinfovec.size() || column < 0)
     {
-        m_tiptext = _T("");
+        m_tiptext = wxEmptyString;
     }
     else
     {
 		if ( column == m_status_column_index ) // is bot?
 		{
-			m_tiptext = _T("");
+			m_tiptext = wxEmptyString;
 
 			if ( user.BattleStatus().IsBot() )
 			{
@@ -783,7 +783,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 		}
 		else if ( column == m_faction_column_index ) // icon
 		{
-			m_tiptext = _T("");
+			m_tiptext = wxEmptyString;
 			if ( user.BattleStatus().spectator )
 			{
 				m_tiptext = _T("Spectators have no side");

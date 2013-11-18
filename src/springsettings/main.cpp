@@ -252,7 +252,7 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
 			m_log_verbosity = m_log_window_show ? 3 : 5;
 		const bool do_custom = parser.Found(_T("customize"), &m_customizer_archive_name );
 		if ( !do_custom )
-			m_customizer_archive_name = _T("");
+			m_customizer_archive_name = wxEmptyString;
 		const bool do_appname = parser.Found(_T("name"), &m_appname );
 		if ( !do_appname )
 			m_appname = _T("SpringSettings");

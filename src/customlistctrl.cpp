@@ -31,7 +31,7 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
                                unsigned int column_count, bool highlight, UserActions::ActionType hlaction ):
   ListBaseType(parent, id, pt, sz, style),
   m_tiptimer(this, IDD_TIP_TIMER),
-  m_tiptext(_T("")),
+  m_tiptext(wxEmptyString),
 #if wxUSE_TIPWINDOW
   m_tipwindow( 0 ),
   m_controlPointer( 0 ),
@@ -196,7 +196,7 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
 
   if (event.Leaving())
   {
-    m_tiptext = _T("");
+    m_tiptext = wxEmptyString;
     if (m_tipwindow)
     {
       m_tipwindow->Close();
@@ -238,7 +238,7 @@ void CustomListCtrl::SetTipWindowText( const long /*unused*/, const wxPoint& pos
   int column = getColumnFromPosition(position);
   if (column >= int(m_colinfovec.size()) || column < 0)
   {
-    m_tiptext = _T("");
+    m_tiptext = wxEmptyString;
   }
   else
   {

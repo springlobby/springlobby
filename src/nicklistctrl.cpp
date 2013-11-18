@@ -124,7 +124,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 
 void NickListCtrl::OnShowMenu( wxContextMenuEvent& /*unused*/ )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	if ( m_menu != 0 )
 	{
 		//no need to popup the menu when there's no user selected
@@ -144,7 +144,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint& positio
 	int column = getColumnFromPosition( position );
 	if ( column > ( int )m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > ( long ) m_data.size() || m_data[item_hit] == NULL )
 	{
-		m_tiptext = _T( "" );
+		m_tiptext = wxEmptyString;
 	}
 	else
 	{
