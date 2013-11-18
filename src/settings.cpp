@@ -129,7 +129,7 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 {
 	if( settversion < 19 ) {
 		//the dummy column hack was removed on win
-		NukeColumnWidths();
+		m_config->DeleteGroup(_T("/GUI/ColumnWidths/"));
 	}
 	if ( settversion < 22 ) {
 		if ( translationhelper ) {
@@ -1658,14 +1658,6 @@ int Settings::GetColumnWidth( const wxString& list_name, const int column )
 		width = std::max ( width, int( Settings::columnWidthMinimum ) ); //removing the temporary creation here gives me undefined ref error (koshi)
 	return width;
 }
-
-void Settings::NukeColumnWidths()
-{
-	m_config->DeleteGroup(_T("/GUI/ColumnWidths/"));
-}
-
-
-
 
 void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& paletteName  )
 {

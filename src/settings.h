@@ -303,7 +303,6 @@ class Settings : public SL::NonCopyable
 
     void SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width );
     int GetColumnWidth( const wxString& list_name, const int column );
-	void NukeColumnWidths();
     //! used to signal unset column width in Get...
     static const int columnWidthUnset = -3;
     static const int columnWidthMinimum = 5;
