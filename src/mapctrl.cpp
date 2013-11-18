@@ -329,6 +329,9 @@ void MapCtrl::SetMouseOverRect( int index )
 
     if ( (index != oldindex) || (m_rect_area != m_last_rect_area) ) UpdateMinimap();
     m_last_rect_area = m_rect_area;
+
+	Refresh();
+	Update();
 }
 
 
@@ -504,6 +507,8 @@ void MapCtrl::UpdateMinimap()
 			}
         }
     }
+	Refresh();
+	Update();
 }
 
 
@@ -1629,7 +1634,6 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string mapname)
 
 void MapCtrl::OnRefresh( wxCommandEvent& /*event*/ )
 {
-    //Update();
     Refresh();
     Update();
 }
