@@ -521,114 +521,7 @@ bool Settings::ShouldAddDefaultChannelSettings()
 	return !m_config->Exists( _T( "/Channels" ) );
 }
 
-/************* SPRINGLOBBY WINDOW POS/SIZE   ******************/
-//! @brief Get width of MainWindow.
-int Settings::GetWindowWidth( const wxString& window )
-{
-	return m_config->Read( _T( "/GUI/" ) + window + _T( "/width" ), DEFSETT_MW_WIDTH );
-}
 
-
-//! @brief Set width position of MainWindow
-void Settings::SetWindowWidth( const wxString& window, const int value )
-{
-	m_config->Write(
-	    _T( "/GUI/" ) + window + _T( "/width" ),
-	    LSL::Util::Clamp(  value,
-	            wxSystemSettings::GetMetric( wxSYS_WINDOWMIN_X ),
-	            wxSystemSettings::GetMetric( wxSYS_SCREEN_X )
-	         )
-	);
-}
-
-
-//! @brief Get height of MainWindow.
-int Settings::GetWindowHeight( const wxString& window )
-{
-	return m_config->Read( _T( "/GUI/" ) + window + _T( "/height" ), DEFSETT_MW_HEIGHT );
-}
-
-
-//! @brief Set height position of MainWindow
-void Settings::SetWindowHeight( const wxString& window, const int value )
-{
-	m_config->Write(
-	    _T( "/GUI/" ) + window + _T( "/height" ),
-	    LSL::Util::Clamp(  value,
-	            wxSystemSettings::GetMetric( wxSYS_WINDOWMIN_Y ),
-	            wxSystemSettings::GetMetric( wxSYS_SCREEN_Y )
-	         )
-	);
-}
-
-
-//! @brief Get top position of MainWindow.
-int Settings::GetWindowTop( const wxString& window )
-{
-	return m_config->Read( _T( "/GUI/" ) + window + _T( "/top" ), DEFSETT_MW_TOP );
-}
-
-
-//! @brief Set top position of MainWindow
-void Settings::SetWindowTop( const wxString& window, const int value )
-{
-	m_config->Write(
-	    _T( "/GUI/" ) + window + _T( "/top" ),
-	    LSL::Util::Clamp( value,
-	           0,
-	           wxSystemSettings::GetMetric( wxSYS_SCREEN_Y ) - 20
-	         )
-	);
-}
-
-
-//! @brief Get left position of MainWindow.
-int Settings::GetWindowLeft( const wxString& window )
-{
-	return m_config->Read( _T( "/GUI/" ) + window + _T( "/left" ), DEFSETT_MW_LEFT );
-}
-
-//! @brief Set left position of MainWindow
-void Settings::SetWindowLeft( const wxString& window, const int value )
-{
-	m_config->Write(
-	    _T( "/GUI/" ) + window + _T( "/left" ),
-	    LSL::Util::Clamp( value,
-	           0,
-	           wxSystemSettings::GetMetric( wxSYS_SCREEN_X ) - 20
-	         )
-	);
-}
-
-//some code duplication necessary to be able to simply use wx defaults
-wxSize  Settings::GetWindowSize( const wxString& window, const wxSize& def )
-{
-	wxSize ret = def;
-	ret.SetHeight( m_config->Read( _T( "/GUI/" ) + window + _T( "/height" ), ret.GetHeight() ) );
-	ret.SetWidth( m_config->Read( _T( "/GUI/" ) + window + _T( "/width" ), ret.GetWidth() ) );
-	return ret;
-}
-
-void Settings::SetWindowSize( const wxString& window, const wxSize& size  )
-{
-	SetWindowWidth( window, size.GetWidth() );
-	SetWindowHeight( window, size.GetHeight() );
-}
-
-//some code duplication necessary to be able to simply use wx defaults
-wxPoint Settings::GetWindowPos( const wxString& window, const wxPoint& def )
-{
-	wxPoint ret = def;
-	ret.x = m_config->Read( _T( "/GUI/" ) + window + _T( "/left" ), ret.x );
-	ret.y = m_config->Read( _T( "/GUI/" ) + window + _T( "/top" ), ret.y );
-	return ret;
-}
-
-void Settings::SetWindowPos( const wxString& window, const wxPoint& pos )
-{
-	SetWindowLeft( window, pos.x );
-	SetWindowTop( window, pos.y );
-}
 
 // ========================================================
 
@@ -2046,15 +1939,6 @@ size_t Settings::GetNotificationPopupPosition()
 	return m_config->Read( _T("/GUI/NotificationPopupPosition"), (long)ScreenPosition::bottom_right );
 }
 
-bool Settings::GetWindowMaximized( const wxString& window )
-{
-	return m_config->Read(_T( "/GUI/" ) + window + _T( "/maximized" ), 0l );
-}
-
-void Settings::GetWindowMaximized( const wxString& window, bool maximized )
-{
-	m_config->Write(_T( "/GUI/" ) + window + _T( "/maximized" ), maximized );
-}
 
 void Settings::SetNotificationPopupDisplayTime( const unsigned int seconds )
 {

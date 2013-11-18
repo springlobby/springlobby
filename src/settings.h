@@ -20,10 +20,6 @@ const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("lobby.springrts.com");
 const wxString BattlePostfix = _T("_battle");
 const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
 const bool DEFSETT_SAVE_PASSWORD = false;
-const unsigned int DEFSETT_MW_WIDTH = 880;
-const unsigned int DEFSETT_MW_HEIGHT = 600;
-const unsigned int DEFSETT_MW_TOP = 50;
-const unsigned int DEFSETT_MW_LEFT = 50;
 const unsigned int DEFSETT_SPRING_PORT = 8452;
 
 const long SET_MODE_EXPERT = 5000;
@@ -268,26 +264,6 @@ class Settings : public SL::NonCopyable
      void SaveCustomColors( const wxColourData& cdata, const wxString& paletteName = _T("Default") );
      wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
 
-    int    GetWindowWidth( const wxString& window );
-    void   SetWindowWidth( const wxString& window, const int value );
-
-    int    GetWindowHeight( const wxString& window );
-    void   SetWindowHeight( const wxString& window, const int value );
-
-    int    GetWindowTop( const wxString& window );
-    void   SetWindowTop( const wxString& window, const int value );
-
-    int    GetWindowLeft( const wxString& window );
-    void   SetWindowLeft( const wxString& window, const int value );
-
-    wxSize  GetWindowSize( const wxString& window, const wxSize& def );
-    void    SetWindowSize( const wxString& window, const wxSize& size  );
-
-	wxPoint GetWindowPos( const wxString& window, const wxPoint& def );
-    void    SetWindowPos( const wxString& window, const wxPoint& pos );
-
-	bool	GetWindowMaximized( const wxString& window );
-	void	GetWindowMaximized( const wxString& window, bool maximized );
 
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
