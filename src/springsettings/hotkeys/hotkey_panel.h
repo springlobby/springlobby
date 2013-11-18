@@ -39,6 +39,8 @@ public:
 	bool HasProfileBeenModifiedOrSelected() const;
 	void ResetProfileBeenModifiedOrSelected();
 	//static bool isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey );
+	
+    static wxString GetCurrentUsedUikeys();
 
 private:
 	void selectProfileFromUikeys();
@@ -58,6 +60,28 @@ private:
 	void ButtonAddSelectionCommandClicked( wxCommandEvent& event );
 	void ButtonAddCustomCommandClicked( wxCommandEvent& event );
 	void OnAddCommand( const wxString& cmd );
+
+
+	static void SetHotkeyMeta( const wxString& profileName, const wxString& keyStr );
+	static wxString GetHotkeyMeta( const wxString& profileName );
+
+	static void SetHotkeyKeySymSet( const wxString& profileName, const wxString& symName, const wxString& keyStr );
+	static wxString GetHotkeyKeySymSet( const wxString& profileName, const wxString& symName );
+	static wxArrayString GetHotkeyKeySymSetNames( const wxString& profileName );
+
+	static void SetHotkeyKeySym( const wxString& profileName, const wxString& symName, const wxString& keyStr );
+	static wxString GetHotkeyKeySym( const wxString& profileName, const wxString& symName );
+	static wxArrayString GetHotkeyKeySymNames( const wxString& profileName );
+
+	static void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx );
+	static wxString GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key );
+	static wxArrayString GetHotkeyProfiles();
+	static wxArrayString GetHotkeyProfileOrderIndices( const wxString& profileName );
+	static wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& orderIdx );
+	static void DeleteHotkeyProfiles();
+	static wxString GetUikeys( const wxString& index );
+
+	static wxString AutoFindUikeys();
 };
 
 #endif

@@ -20,6 +20,7 @@
 
 #include <wx/sizer.h>
 #include "settings.h"
+#include "springsettings/hotkeys/hotkey_panel.h"
 #include <vector>
 #include <fstream>
 #include <utility>
@@ -87,7 +88,7 @@ InfoDialog::InfoDialog(wxWindow* parent )
 							 BtS(wxFileName::IsFileWritable(sett().FinalConfigPath()), "", "not" ).c_str() );
 	*out << wxString::Format( _T("Portable mode: %s\n"), BtS(sett().IsPortableMode()).c_str() );
 
-	*out << wxString::Format(_T("current uikeys.txt: %s\n"), sett().GetCurrentUsedUikeys().c_str());
+	*out << wxString::Format(_T("current uikeys.txt: %s\n"), hotkey_panel::GetCurrentUsedUikeys().c_str());
 
 	*out << _T( "Version " ) + GetSpringLobbyVersion()
 			<< wxString( wxVERSION_STRING ) + _T(" on ") + wxPlatformInfo::Get().GetOperatingSystemIdName() + _T( "\ncl: " ) ;

@@ -551,15 +551,6 @@ wxString Settings::AutoFindBundle()
 	return pl.FindValidPath( _T( "Spring.app" ) );
 }
 
-wxString Settings::AutoFindUikeys()
-{
-	const std::string path = LSL::susynclib().GetSpringDataDir();
-	wxString uikeys(TowxString(path));
-	uikeys += sep;
-	uikeys += _T("uikeys.txt");
-	return uikeys;
-}
-
 
 std::map<wxString, LSL::SpringBundle> Settings::GetSpringVersionList() const
 {
@@ -704,11 +695,6 @@ wxString Settings::GetCurrentUsedUnitSync()
 wxString Settings::GetCurrentUsedBundle()
 {
 	return GetBundle( GetCurrentUsedSpringIndex() );
-}
-
-wxString Settings::GetCurrentUsedUikeys()
-{
-	return GetUikeys(GetCurrentUsedSpringIndex());
 }
 
 wxString Settings::GetCurrentUsedSpringConfigFilePath()
@@ -1962,87 +1948,6 @@ void Settings::SetDoResetPerspectives( bool do_it )
 {
 	m_config->Write(_T( "/reset_perspectives" ) , (long)do_it );
 }
-
-//Hotkeys stuff (for springsettings)
-void Settings::SetHotkeyMeta( const wxString& profileName, const wxString& keyStr )
-{
-	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/Meta"), keyStr);
-}
-
-wxString Settings::GetHotkeyMeta( const wxString& profileName )
-{
-	return m_config->Read(_T( "/HotkeyProfiles/") + profileName + _T("/Meta"), wxEmptyString );
-}
-
-void Settings::SetHotkeyKeySymSet( const wxString& profileName, const wxString& setName, const wxString& keyStr )
-{
-	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/KeySets/") + setName, keyStr);
-}
-
-wxString Settings::GetHotkeyKeySymSet( const wxString& profileName, const wxString& setName )
-{
-	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/KeySets/") + setName, wxEmptyString );
-}
-
-wxArrayString Settings::GetHotkeyKeySymSetNames( const wxString& profileName )
-{
-	return cfg().GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/KeySets/") );
-}
-
-void Settings::SetHotkeyKeySym( const wxString& profileName, const wxString& symName, const wxString& keyStr )
-{
-	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/KeySyms/") + symName, keyStr);
-}
-
-wxString Settings::GetHotkeyKeySym( const wxString& profileName, const wxString& symName )
-{
-	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/KeySyms/") + symName, wxEmptyString );
-}
-
-wxArrayString Settings::GetHotkeyKeySymNames( const wxString& profileName )
-{
-	return cfg().GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/KeySyms/") );
-}
-
-// oderidx == -1 means unbind
-void Settings::SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx )
-{
-	m_config->Write(_T( "/HotkeyProfiles/") + profileName + _T("/Bindings/") + (wxFormat(wxT("%i") ) % orderIdx) + _T("/") + key, command );
-}
-
-wxString Settings::GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key )
-{
-	return m_config->Read( _T( "/HotkeyProfiles/") + profileName + _T("/Bindings/") + orderIdx + _T("/") + key, wxEmptyString );
-}
-
-wxArrayString Settings::GetHotkeyProfiles()
-{
-	return cfg().GetGroupList( _T( "/HotkeyProfiles/" ) );
-}
-
-wxArrayString Settings::GetHotkeyProfileOrderIndices( const wxString& profileName )
-{
-	return cfg().GetGroupList( _T( "/HotkeyProfiles/" ) + profileName + _T("/Bindings/") );
-}
-
-wxArrayString Settings::GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& orderIdx )
-{
-	return cfg().GetEntryList( _T( "/HotkeyProfiles/" ) + profileName + _T("/Bindings/") + orderIdx + _T("/") );
-}
-
-void Settings::DeleteHotkeyProfiles()
-{
-	m_config->DeleteGroup( _T( "/HotkeyProfiles/" ) );
-}
-
-
-wxString Settings::GetUikeys( const wxString& index )
-{
-	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/Uikeys" ), AutoFindUikeys() );
-}
-
-//END OF Hotkeys stuff (for springsettings)
-
 
 wxString Settings::GetDefaultNick()
 {

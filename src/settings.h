@@ -335,7 +335,6 @@ class Settings : public SL::NonCopyable
 	void SetUseSpringPathFromBundle( bool value );
 
     /// convenience wrappers to get current used version paths
-    wxString GetCurrentUsedUikeys();
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
     wxString GetCurrentUsedBundle();
@@ -356,7 +355,6 @@ class Settings : public SL::NonCopyable
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync( 	wxPathList pl = PathlistFactory::ConfigFileSearchPaths() ) const;
     wxString AutoFindBundle();
-	wxString AutoFindUikeys();
 
     //!@brief returns config file path spring should use, returns empty for default
     wxString GetForcedSpringConfigFilePath();
@@ -643,30 +641,6 @@ class Settings : public SL::NonCopyable
 
     wxString GetLastRelayedHost(void);
     void SetLastRelayedHost(wxString relhost);
-
-    /**@}*/
-  /* ============================================================== */
-	/** @name Hotkeys
-    * @{
-    */
-	void SetHotkeyMeta( const wxString& profileName, const wxString& keyStr );
-	wxString GetHotkeyMeta( const wxString& profileName );
-
-	void SetHotkeyKeySymSet( const wxString& profileName, const wxString& symName, const wxString& keyStr );
-	wxString GetHotkeyKeySymSet( const wxString& profileName, const wxString& symName );
-	wxArrayString GetHotkeyKeySymSetNames( const wxString& profileName );
-
-	void SetHotkeyKeySym( const wxString& profileName, const wxString& symName, const wxString& keyStr );
-	wxString GetHotkeyKeySym( const wxString& profileName, const wxString& symName );
-	wxArrayString GetHotkeyKeySymNames( const wxString& profileName );
-
-	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx );
-	wxString GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key );
-	wxArrayString GetHotkeyProfiles();
-	wxArrayString GetHotkeyProfileOrderIndices( const wxString& profileName );
-	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& orderIdx );
-	void DeleteHotkeyProfiles();
-	wxString GetUikeys( const wxString& index );
 
     /**@}*/
 
