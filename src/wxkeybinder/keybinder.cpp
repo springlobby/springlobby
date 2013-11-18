@@ -960,7 +960,7 @@ void wxKeyBinder::OnChar(wxKeyEvent &event, wxEvtHandler *next)
 
 bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key, bool bCleanOld) const
 {
-    wxString basekey = (key.IsEmpty() ? wxString(wxT("")) : wxString(key + wxT("/")));
+    wxString basekey = (key.IsEmpty() ? wxString(wxEmptyString) : wxString(key + wxT("/")));
     bool b = TRUE;
 
     // does the given key already exists ?
@@ -1156,7 +1156,7 @@ bool wxKeyBinder::Load(wxConfigBase *p, const wxString &key)
 bool wxKeyProfile::Save(wxConfigBase *cfg, const wxString &key, bool bCleanOld) const
 {
     // we will encode our name into the key used to group all this profile
-    wxString basekey = key.IsEmpty() ? wxString(wxT("")) : wxString(key + wxT("/"));
+    wxString basekey = key.IsEmpty() ? wxString(wxEmptyString) : wxString(key + wxT("/"));
 
     // does the given key already exists ?
     if (bCleanOld && cfg->Exists(basekey))
@@ -1212,7 +1212,7 @@ bool wxKeyProfile::Load(wxConfigBase *p, const wxString &key)
 
 bool wxKeyProfileArray::Save(wxConfigBase *cfg, const wxString &key, bool bCleanOld) const
 {
-    wxString basekey = (key.IsEmpty()) ? wxString(wxT("")) : wxString(key + wxT("/"));
+    wxString basekey = (key.IsEmpty()) ? wxString(wxEmptyString) : wxString(key + wxT("/"));
     bool b = TRUE;
 
     cfg->SetPath(key);
@@ -1395,7 +1395,7 @@ void wxKeyConfigPanel::BuildCtrls()
     m_pRemoveBtn = new wxButton(this, wxKEYBINDER_REMOVE_KEY_ID, wxT("&Remove"));
     m_pRemoveAllBtn = new wxButton(this, wxKEYBINDER_REMOVEALL_KEY_ID, wxT("Remove all"));
 
-    m_pCurrCmdField = new wxStaticText( this, -1, wxT(""), wxDefaultPosition,
+    m_pCurrCmdField = new wxStaticText( this, -1, wxEmptyString, wxDefaultPosition,
         wxSize(-1, 20), wxSIMPLE_BORDER | wxST_NO_AUTORESIZE | wxALIGN_CENTRE);
 
     // we won't make it white because it must be clear to the user that this
@@ -1403,10 +1403,10 @@ void wxKeyConfigPanel::BuildCtrls()
     m_pCurrCmdField->SetBackgroundColour(wxColour(200, 200, 200));
 
 #ifdef __WXGTK__
-    m_pDescLabel = new wxTextCtrl(this, -1, wxT(""), wxDefaultPosition,
+    m_pDescLabel = new wxTextCtrl(this, -1, wxEmptyString, wxDefaultPosition,
                                  wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE);
 #else
-    m_pDescLabel = new wxStaticText(this, -1, wxT(""), wxDefaultPosition,
+    m_pDescLabel = new wxStaticText(this, -1, wxEmptyString, wxDefaultPosition,
         wxSize(-1, 40), wxSIMPLE_BORDER | wxST_NO_AUTORESIZE);
     m_pDescLabel->SetBackgroundColour(wxColour(255, 255, 255));
 #endif
@@ -1742,7 +1742,7 @@ void wxKeyConfigPanel::Reset()
 #ifdef __WXGTK__
     m_pDescLabel->Clear();
 #else
-    m_pDescLabel->SetLabel(wxT(""));
+    m_pDescLabel->SetLabel(wxEmptyString);
 #endif
     m_pKeyField->Clear();
 }
@@ -1925,7 +1925,7 @@ void wxKeyConfigPanel::UpdateDesc()
     } else {
 
         // an invalid command is selected ? clear this field...
-        m_pDescLabel->SetLabel(wxT(""));
+        m_pDescLabel->SetLabel(wxEmptyString);
     }
 }
 
@@ -2541,8 +2541,8 @@ void wxKeyConfigPanel::OnKeyPressed(wxCommandEvent &)
 void wxKeyConfigPanel::OnContextMenuCmdList(wxContextMenuEvent &)
 {
 	wxMenu menu;
-	wxMenuItem* pItemAll = menu.AppendRadioItem( wxKEYBINDER_FILTER_ALL_ID, wxT("Show all commands"), wxT(""));
-	wxMenuItem* pItemHideEmpty = menu.AppendRadioItem( wxKEYBINDER_FILTER_HIDE_EMPTY_ID, wxT("Hide empty commands"), wxT(""));
+	wxMenuItem* pItemAll = menu.AppendRadioItem( wxKEYBINDER_FILTER_ALL_ID, wxT("Show all commands"), wxEmptyString);
+	wxMenuItem* pItemHideEmpty = menu.AppendRadioItem( wxKEYBINDER_FILTER_HIDE_EMPTY_ID, wxT("Hide empty commands"), wxEmptyString);
 	wxMenuItem* pItemOnlyDiff = menu.AppendRadioItem( wxKEYBINDER_FILTER_ONLY_DIFF_ID, wxT("Show only differences"), wxT("Only shows commands that got changed in comparison to the default bindigns"));
 
 	switch( this->m_eFilterState )

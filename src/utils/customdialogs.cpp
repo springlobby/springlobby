@@ -258,7 +258,7 @@ CreditsDialog::CreditsDialog(wxWindow* parent,wxString title,int whichIcon) : wx
 			wxDefaultSize,wxDEFAULT_DIALOG_STYLE|wxFRAME_FLOAT_ON_PARENT)
 {
 	wxBoxSizer* container = new wxBoxSizer(wxVERTICAL);
-	text_ctrl = new wxTextCtrl(this,-1,wxT(""),wxDefaultPosition,wxDefaultSize,wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH);
+	text_ctrl = new wxTextCtrl(this,-1,wxEmptyString,wxDefaultPosition,wxDefaultSize,wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH);
 	container->Add(text_ctrl,1,wxEXPAND);
 
 	container->Add(wxDialog::CreateButtonSizer(wxOK));

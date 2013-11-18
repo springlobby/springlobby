@@ -1392,11 +1392,11 @@ public:
                      const wxSize& size = wxDefaultSize,
                      long style = wxKEYBINDER_DEFAULT_STYLE,
                      const wxString& name = wxT("wxKeyConfigPanel"),
-					 const wxString& customButton1Label = wxT(""),
+					 const wxString& customButton1Label = wxEmptyString,
 					 const wxObjectEventFunction customButton1Event = NULL,
-					 const wxString& customButton2Label = wxT(""),
+					 const wxString& customButton2Label = wxEmptyString,
 					 const wxObjectEventFunction customButton2Event = NULL,
-					const wxString& customLabelText = wxT("") )
+					const wxString& customLabelText = wxEmptyString )
     {
 
 		Create(parent, id, pos, size, style, name, customButton1Label, customButton1Event, customButton2Label, customButton2Event, customLabelText);
@@ -1408,11 +1408,11 @@ public:
                 const wxSize& size = wxDefaultSize,
                 long style = wxKEYBINDER_DEFAULT_STYLE,
                 const wxString& name = wxT("wxKeyConfigPanel"),
-				 const wxString& customButton1Label = wxT(""),
+				 const wxString& customButton1Label = wxEmptyString,
 				 const wxObjectEventFunction customButton1Event = NULL,
-				 const wxString& customButton2Label = wxT(""),
+				 const wxString& customButton2Label = wxEmptyString,
 				 const wxObjectEventFunction customButton2Event = NULL,
-				 const wxString& customLabelText = wxT("") );
+				 const wxString& customLabelText = wxEmptyString );
 
     virtual ~wxKeyConfigPanel();
 

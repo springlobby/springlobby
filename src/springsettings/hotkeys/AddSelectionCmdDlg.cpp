@@ -65,7 +65,7 @@ wxString AddSelectionCmdDlg::validateInputFields()
 		}
 	}
 
-	return wxT("");
+	return wxEmptyString;
 }
 
 wxString AddSelectionCmdDlg::getSourceString() const
@@ -294,7 +294,7 @@ wxString AddSelectionCmdDlg::getCommandString() const
 void AddSelectionCmdDlg::OnButtonAddClick( wxCommandEvent& /*event*/ )
 {
 	const wxString valResult = this->validateInputFields();
-	
+
 	if ( valResult.size() == 0 )
 	{
 		this->EndModal( wxID_OK );
