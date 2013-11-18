@@ -331,7 +331,6 @@ void MapCtrl::SetMouseOverRect( int index )
     m_last_rect_area = m_rect_area;
 
 	Refresh();
-	Update();
 }
 
 
@@ -508,7 +507,6 @@ void MapCtrl::UpdateMinimap()
         }
     }
 	Refresh();
-	Update();
 }
 
 
@@ -1168,7 +1166,6 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
         if ( m_rect_area != old )
         {
             Refresh();
-            Update();
         }
         return;
     }
@@ -1317,7 +1314,6 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
         {
             m_mdown_area = m_rect_area;
             Refresh();
-            Update();
         }
         return;
     }
@@ -1476,7 +1472,6 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         }
         m_mdown_area = Main;
         Refresh();
-        Update();
         return;
     }
 
@@ -1594,7 +1589,6 @@ void MapCtrl::OnMouseWheel( wxMouseEvent& event )
         }
         m_current_infomap = (InfoMap) idx;
         Refresh();
-        Update();
     }
 }
 
@@ -1635,5 +1629,4 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string mapname)
 void MapCtrl::OnRefresh( wxCommandEvent& /*event*/ )
 {
     Refresh();
-    Update();
 }
