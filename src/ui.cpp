@@ -234,7 +234,6 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 	} else {
 		sett().SetServerAccountPass( servername, wxEmptyString );
 	}
-	sett().SaveSettings();
 
 	host = sett().GetServerHost( servername );
 	port = sett().GetServerPort( servername );
