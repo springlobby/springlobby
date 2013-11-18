@@ -301,7 +301,6 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 		delete m_autojoin_dialog;
 		m_autojoin_dialog = 0;
 
-		sett().SaveSettings();
 		if ( m_log_win ) {
 			m_log_win->GetFrame()->Destroy();
 			if ( m_log_chain ) // if logwin was created, it's the current "top" log

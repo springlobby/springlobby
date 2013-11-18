@@ -107,8 +107,10 @@ void slConfig::SaveFile()
 
 	if ( !outstream.IsOk() ) {
 		// TODO: error handling
+		wxLogError(_T("can not save config: %s"), slConfig::m_chosen_path.c_str());
 	}
 	Save( outstream );
+	wxLogMessage(_T("config file saved: %s"), slConfig::m_chosen_path.c_str());
 }
 
 wxString slConfig::GetFilePath() const {

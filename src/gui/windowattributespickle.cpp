@@ -32,7 +32,6 @@ void WindowAttributesPickle::SaveAttributes()
 	#ifndef __WXMAC__
 		sett().GetWindowMaximized( m_name, m_window->IsMaximized() );
 	#endif
-	sett().SaveSettings();
 }
 
 WindowHintsPickle::WindowHintsPickle( const wxString& name, wxTopLevelWindow* window, const wxSize& default_size  )
@@ -66,5 +65,4 @@ void WindowHintsPickle::SaveAttributes()
 	#ifndef __WXMAC__
 		sett().GetWindowMaximized( m_name, m_window->IsMaximized() );
 	#endif
-	sett().SaveSettings();
 }
