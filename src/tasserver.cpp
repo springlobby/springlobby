@@ -904,7 +904,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("ENABLEUNITS") )
     {
         //ENABLEUNITS unitname1 unitname2
-        while ( (nick = GetWordParam( params )) !=_T( "") )
+        while ( (nick = GetWordParam( params )) !=wxEmptyString )
         {
             m_se->OnBattleEnableUnit( m_battle_id, nick );
         }
