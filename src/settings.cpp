@@ -559,19 +559,40 @@ std::map<wxString, LSL::SpringBundle> Settings::GetSpringVersionList() const
 
 void Settings::RefreshSpringVersionList(bool autosearch, const wxString& additionalpath)
 {
+/*
+FIXME: move to LSL's GetSpringVersionList() which does:
+
+	1. search system installed spring + unitsync (both paths independant)
+	2. search for user installed spring + unitsync (assume bundled)
+	3. search / validate paths from config
+	4. search path / unitsync given from user input
+
+needs to change to sth like: GetSpringVersionList(std::list<LSL::Bundle>)
+
+*/
+
 	wxLogDebugFunc( wxEmptyString );
 	std::list<std::string> usync_paths;
 	if (!additionalpath.empty()) {
 		usync_paths.push_back(STD_STRING(additionalpath));
 	}
-	if (autosearch) {
+	//if (autosearch) {
 		wxPathList paths;
 		paths = PathlistFactory::AdditionalSearchPaths(paths);
 		const wxString springbin(SPRING_BIN);
 		for (const auto path: paths) {
-			usync_paths.push_back(STD_STRING(path));
+			std::string unitsync1 = STD_STRING(path);
+			unitsync1 += sep;
+			unitsync1 +="unitsync";
+			unitsync1 += STD_STRING(GetLibExtension());
+			std::string unitsync2 = STD_STRING(path);
+			unitsync2 += sep;
+			unitsync2 +="libunitsync";
+			unitsync2 += STD_STRING(GetLibExtension());
+			usync_paths.push_back(unitsync1);
+			usync_paths.push_back(unitsync2);
 		}
-	}
+	//}
 
 	wxArrayString list = cfg().GetGroupList( _T( "/Spring/Paths" ) );
 	int count = list.GetCount();

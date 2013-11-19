@@ -441,8 +441,7 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
 			   filefilter  );
 	if ( pick.ShowModal() == wxID_OK ) {
 		//get unitsync version & add to list
-		const wxFileName path = pick.GetPath();
-		sett().RefreshSpringVersionList(true, path.GetPath());
+		sett().RefreshSpringVersionList(true, pick.GetPath());
 		ReloadSpringList();
 	}
 }
