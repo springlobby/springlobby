@@ -33,6 +33,7 @@ public:
 	void OnFindExec( wxCommandEvent& event );
 	void OnFindSync( wxCommandEvent& event );
 	void OnFindBundle( wxCommandEvent& event );
+	void OnAddBundle(wxCommandEvent& event);
 
 	void OnDataDir( wxCommandEvent& event );
 

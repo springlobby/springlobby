@@ -564,10 +564,7 @@ void Settings::RefreshSpringVersionList(bool autosearch, const wxString& additio
 	if (!additionalpath.empty()) {
 		usync_paths.push_back(STD_STRING(additionalpath));
 	}
-	if ( sett().GetSearchSpringOnlyInSLPath() || sett().GetUseSpringPathFromBundle() ) {
-		usync_paths.clear();
-		usync_paths.push_back(STD_STRING(sett().GetCurrentUsedUnitSync()));
-	} else if (autosearch) {
+	if (autosearch) {
 		wxPathList paths;
 		paths = PathlistFactory::AdditionalSearchPaths(paths);
 		const wxString springbin(SPRING_BIN);
@@ -579,9 +576,11 @@ void Settings::RefreshSpringVersionList(bool autosearch, const wxString& additio
 	wxArrayString list = cfg().GetGroupList( _T( "/Spring/Paths" ) );
 	int count = list.GetCount();
 	for ( int i = 0; i < count; i++ ) {
-		const wxString groupname = list[i];
-		usync_paths.push_back(STD_STRING(GetUnitSync(groupname)));
+		const wxString groupname = GetUnitSync(list[i]);
+		usync_paths.push_back(STD_STRING(groupname));
 	}
+
+	cfg().DeleteGroup(_T("/Spring/Paths"));
 
 	m_spring_versions.clear();
 	try {

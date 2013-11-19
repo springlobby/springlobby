@@ -53,6 +53,7 @@ BEGIN_EVENT_TABLE( SpringOptionsTab, wxPanel )
 	EVT_BUTTON (    SPRING_SYNCFIND,    SpringOptionsTab::OnFindSync    )
 	EVT_BUTTON (    SPRING_BUNDLEFIND,  SpringOptionsTab::OnFindBundle  )
 	EVT_BUTTON (    SPRING_DATADIR,     SpringOptionsTab::OnDataDir     )
+	EVT_BUTTON (    SPRING_ADD,         SpringOptionsTab::OnAddBundle     )
 	EVT_CHECKBOX(   SPRING_DONTSEARCH,  SpringOptionsTab::OnDontSearch  )
 	EVT_CHECKBOX(   SPRING_FORCEBUNDLE, SpringOptionsTab::OnForceBundle )
 	EVT_LISTBOX(    SPRING_LIST,        SpringOptionsTab::OnGroupListSelectionChange )
@@ -147,7 +148,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	}
 
 	m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _( "Auto Configure" ) );
-	m_datadir_btn = new wxButton( this, SPRING_DATADIR, _( "Change Datadir path" ) );
+//	m_datadir_btn = new wxButton( this, SPRING_DATADIR, _( "Change Datadir path" ) );
 
 	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 	wxBoxSizer* m_aconf_sizer = new wxBoxSizer( wxVERTICAL );
@@ -182,7 +183,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 	m_aconf_sizer->AddStretchSpacer();
 	m_aconf_sizer->Add( m_auto_btn );
-	m_aconf_sizer->Add( m_datadir_btn );
+//	m_aconf_sizer->Add( m_datadir_btn );
 
 	m_main_sizer->Add( m_dontsearch_chkbox, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_forcebundle_chkbox, 0, wxEXPAND | wxALL, 5 );
@@ -423,5 +424,25 @@ void SpringOptionsTab::ReloadSpringList()
 for(auto bundle: springlist) {
 		m_spring_list->Append(bundle.first);
 		m_spring_list->SetStringSelection(sett().GetCurrentUsedSpringIndex());
+	}
+}
+
+void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
+{
+#ifdef __WXMAC__
+	wxString filefilter << _T( "|" ) << _( "Library" ) << _T( "(*.dylib)|*.dylib" );
+#else
+	wxString filefilter = wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() + _T( "|" ) + wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" );
+#endif
+	filefilter << _T( "|" )  << wxString( _( "Any File" ) ) << _T( " (*.*)|*.*" );
+	wxFileDialog pick( this, _( "Choose UnitSync library" ),
+			   wxPathOnly( sett().GetCurrentUsedUnitSync() ),
+			   _T( "unitsync" ) + GetLibExtension(),
+			   filefilter  );
+	if ( pick.ShowModal() == wxID_OK ) {
+		//get unitsync version & add to list
+		const wxFileName path = pick.GetPath();
+		sett().RefreshSpringVersionList(true, path.GetPath());
+		ReloadSpringList();
 	}
 }
