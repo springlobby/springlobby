@@ -13,6 +13,7 @@ add_subdirectory(hotkeys)
 
 add_sources(springlobbySrc frame.cpp)
 ADD_LIBRARY(libsettings STATIC ${SettingsSrc})
+TARGET_LINK_LIBRARIES(libsettings ${wxWidgets_LIBRARIES})
 
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE
 		frame.cpp
