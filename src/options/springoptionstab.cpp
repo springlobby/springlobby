@@ -440,8 +440,15 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
 			   filefilter  );
 	if ( pick.ShowModal() == wxID_OK ) {
 		//get unitsync version & add to list
-		sett().RefreshSpringVersionList(true, pick.GetPath());
-		ReloadSpringList();
+		LSL::SpringBundle bundle;
+		bundle.unitsync = STD_STRING(pick.GetPath());
+		bundle.AutoComplete();
+		wxString version = TowxString(bundle.GetBundleVersion());
+		m_spring_list->Append(version);
+		m_spring_list->SetStringSelection(version);
+		m_sync_edit->SetValue(TowxString(bundle.unitsync));
+		m_exec_edit->SetValue(TowxString(bundle.spring));
+		m_bundle_edit->SetValue(TowxString(bundle.path));
 	}
 }
 

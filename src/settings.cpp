@@ -557,7 +557,7 @@ std::map<wxString, LSL::SpringBundle> Settings::GetSpringVersionList() const
 	return m_spring_versions;
 }
 
-void Settings::RefreshSpringVersionList(bool autosearch, const wxString& additionalpath)
+void Settings::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle* additionalbundle)
 {
 /*
 FIXME: move to LSL's GetSpringVersionList() which does:
@@ -572,33 +572,30 @@ needs to change to sth like: GetSpringVersionList(std::list<LSL::Bundle>)
 */
 
 	wxLogDebugFunc( wxEmptyString );
-	std::list<std::string> usync_paths;
-	if (!additionalpath.empty()) {
-		usync_paths.push_back(STD_STRING(additionalpath));
+	std::list<LSL::SpringBundle> usync_paths;
+	if (additionalbundle != NULL) {
+		usync_paths.push_back(*additionalbundle);
 	}
 	//if (autosearch) {
 		wxPathList paths;
 		paths = PathlistFactory::AdditionalSearchPaths(paths);
 		const wxString springbin(SPRING_BIN);
 		for (const auto path: paths) {
-			std::string unitsync1 = STD_STRING(path);
-			unitsync1 += sep;
-			unitsync1 +="unitsync";
-			unitsync1 += STD_STRING(GetLibExtension());
-			std::string unitsync2 = STD_STRING(path);
-			unitsync2 += sep;
-			unitsync2 +="libunitsync";
-			unitsync2 += STD_STRING(GetLibExtension());
-			usync_paths.push_back(unitsync1);
-			usync_paths.push_back(unitsync2);
+			LSL::SpringBundle bundle;
+			bundle.path = STD_STRING(path);
+			usync_paths.push_back(bundle);
 		}
 	//}
 
 	wxArrayString list = cfg().GetGroupList( _T( "/Spring/Paths" ) );
-	int count = list.GetCount();
+	const int count = list.GetCount();
 	for ( int i = 0; i < count; i++ ) {
-		const wxString groupname = GetUnitSync(list[i]);
-		usync_paths.push_back(STD_STRING(groupname));
+		LSL::SpringBundle bundle;
+		bundle.unitsync = STD_STRING(GetUnitSync(list[i]));
+		bundle.spring = STD_STRING(GetSpringBinary(list[i]));
+		bundle.path = STD_STRING(GetBundle(list[i]));
+		bundle.version = STD_STRING(list[i]);
+		usync_paths.push_back(bundle);
 	}
 
 	cfg().DeleteGroup(_T("/Spring/Paths"));
@@ -615,7 +612,7 @@ needs to change to sth like: GetSpringVersionList(std::list<LSL::Bundle>)
 			SetBundle(version, TowxString(bundle.path));
 		}
 	} catch (const std::runtime_error& e) {
-		wxLogError(wxString::Format(_T("Couln't get list of spring versions: %s"), e.what()));
+		wxLogError(wxString::Format(_T("Couldn't get list of spring versions: %s"), e.what()));
 	} catch ( ...) {
 		wxLogError(_T("Unknown Execption caught in Settings::RefreshSpringVersionList"));
 	}
