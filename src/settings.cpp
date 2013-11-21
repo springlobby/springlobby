@@ -585,15 +585,15 @@ needs to change to sth like: GetSpringVersionList(std::list<LSL::Bundle>)
 	wxLogDebugFunc( wxEmptyString );
 	std::list<LSL::SpringBundle> usync_paths;
 
-	LSL::SpringBundle systembundle;
-	if (LocateSystemInstalledSpring(systembundle)) {
-		usync_paths.push_back(systembundle);
-	}
-
 	if (additionalbundle != NULL) {
 		usync_paths.push_back(*additionalbundle);
 	}
-	//if (autosearch) {
+	if (autosearch) {
+		LSL::SpringBundle systembundle;
+		if (LocateSystemInstalledSpring(systembundle)) {
+			usync_paths.push_back(systembundle);
+		}
+
 		wxPathList ret;
 		wxPathList paths = PathlistFactory::AdditionalSearchPaths(ret);
 		const wxString springbin(SPRING_BIN);
@@ -602,7 +602,7 @@ needs to change to sth like: GetSpringVersionList(std::list<LSL::Bundle>)
 			bundle.path = STD_STRING(path);
 			usync_paths.push_back(bundle);
 		}
-	//}
+	}
 
 	wxArrayString list = cfg().GetGroupList( _T( "/Spring/Paths" ) );
 	const int count = list.GetCount();
