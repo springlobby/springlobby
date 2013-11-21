@@ -557,6 +557,18 @@ std::map<wxString, LSL::SpringBundle> Settings::GetSpringVersionList() const
 	return m_spring_versions;
 }
 
+bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
+{
+	wxPathList paths = PathlistFactory::ConfigFileSearchPaths();
+	for (const auto path: paths) {
+		if (bundle.AutoComplete(STD_STRING(path))) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
 void Settings::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle* additionalbundle)
 {
 /*
@@ -570,15 +582,20 @@ FIXME: move to LSL's GetSpringVersionList() which does:
 needs to change to sth like: GetSpringVersionList(std::list<LSL::Bundle>)
 
 */
-
 	wxLogDebugFunc( wxEmptyString );
 	std::list<LSL::SpringBundle> usync_paths;
+
+	LSL::SpringBundle systembundle;
+	if (LocateSystemInstalledSpring(systembundle)) {
+		usync_paths.push_back(systembundle);
+	}
+
 	if (additionalbundle != NULL) {
 		usync_paths.push_back(*additionalbundle);
 	}
 	//if (autosearch) {
-		wxPathList paths;
-		paths = PathlistFactory::AdditionalSearchPaths(paths);
+		wxPathList ret;
+		wxPathList paths = PathlistFactory::AdditionalSearchPaths(ret);
 		const wxString springbin(SPRING_BIN);
 		for (const auto path: paths) {
 			LSL::SpringBundle bundle;
