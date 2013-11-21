@@ -644,7 +644,7 @@ void Settings::SetSearchSpringOnlyInSLPath( bool value )
 
 void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 {
-	m_config->DeleteGroup( _T( "/Spring/Path/" ) + index );
+	m_config->DeleteGroup( _T( "/Spring/Paths/" ) + index );
 	if ( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex( wxEmptyString );
 }
 

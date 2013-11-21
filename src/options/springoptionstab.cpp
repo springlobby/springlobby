@@ -45,15 +45,16 @@
 
 BEGIN_EVENT_TABLE( SpringOptionsTab, wxPanel )
 
-	EVT_BUTTON (    SPRING_EXECBROWSE,  SpringOptionsTab::OnBrowseExec  )
-	EVT_BUTTON (    SPRING_SYNCBROWSE,  SpringOptionsTab::OnBrowseSync  )
-	EVT_BUTTON (    SPRING_BUNDLEBROWSE,SpringOptionsTab::OnBrowseBundle)
-	EVT_BUTTON (    SPRING_AUTOCONF,    SpringOptionsTab::OnAutoConf    )
-	EVT_BUTTON (    SPRING_EXECFIND,    SpringOptionsTab::OnFindExec    )
-	EVT_BUTTON (    SPRING_SYNCFIND,    SpringOptionsTab::OnFindSync    )
-	EVT_BUTTON (    SPRING_BUNDLEFIND,  SpringOptionsTab::OnFindBundle  )
-	EVT_BUTTON (    SPRING_DATADIR,     SpringOptionsTab::OnDataDir     )
-	EVT_BUTTON (    SPRING_ADD,         SpringOptionsTab::OnAddBundle     )
+	EVT_BUTTON(     SPRING_EXECBROWSE,  SpringOptionsTab::OnBrowseExec  )
+	EVT_BUTTON(     SPRING_SYNCBROWSE,  SpringOptionsTab::OnBrowseSync  )
+	EVT_BUTTON(     SPRING_BUNDLEBROWSE,SpringOptionsTab::OnBrowseBundle)
+	EVT_BUTTON(     SPRING_AUTOCONF,    SpringOptionsTab::OnAutoConf    )
+	EVT_BUTTON(     SPRING_EXECFIND,    SpringOptionsTab::OnFindExec    )
+	EVT_BUTTON(     SPRING_SYNCFIND,    SpringOptionsTab::OnFindSync    )
+	EVT_BUTTON(     SPRING_BUNDLEFIND,  SpringOptionsTab::OnFindBundle  )
+	EVT_BUTTON(     SPRING_DATADIR,     SpringOptionsTab::OnDataDir     )
+	EVT_BUTTON(     SPRING_ADD,         SpringOptionsTab::OnAddBundle   )
+	EVT_BUTTON(     SPRING_REMOVE,      SpringOptionsTab::OnRemoveBundle)
 	EVT_CHECKBOX(   SPRING_DONTSEARCH,  SpringOptionsTab::OnDontSearch  )
 	EVT_CHECKBOX(   SPRING_FORCEBUNDLE, SpringOptionsTab::OnForceBundle )
 	EVT_LISTBOX(    SPRING_LIST,        SpringOptionsTab::OnGroupListSelectionChange )
@@ -74,7 +75,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	wxBoxSizer* groupListButtonsSizer = new wxBoxSizer( wxHORIZONTAL );
 
 	m_remove_spring_button = new wxButton( this, SPRING_REMOVE, _("Remove"), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
-	m_remove_spring_button->Enable( false );
 	m_remove_spring_button->SetToolTip( _("Remove an existing spring version") );
 
 	groupListButtonsSizer->Add( m_remove_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
@@ -200,10 +200,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
-	Layout();
-
-	DoRestore();
-
 	if ( sett().IsPortableMode() || sett().GetSearchSpringOnlyInSLPath() ) {
 		EnableSpringBox(false);
 		EnableUnitsyncBox(false);
@@ -223,6 +219,9 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 		sett().SetSearchSpringOnlyInSLPath( m_dontsearch_chkbox->IsChecked() );
 	}
 	ReloadSpringList();
+
+	Layout();
+	DoRestore();
 }
 
 
@@ -421,7 +420,7 @@ void SpringOptionsTab::ReloadSpringList()
 {
 	std::map<wxString, LSL::SpringBundle> springlist = sett().GetSpringVersionList();
 	m_spring_list->Clear();
-for(auto bundle: springlist) {
+	for(auto bundle: springlist) {
 		m_spring_list->Append(bundle.first);
 		m_spring_list->SetStringSelection(sett().GetCurrentUsedSpringIndex());
 	}
@@ -444,4 +443,12 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
 		sett().RefreshSpringVersionList(true, pick.GetPath());
 		ReloadSpringList();
 	}
+}
+
+void SpringOptionsTab::OnRemoveBundle(wxCommandEvent& event)
+{
+	const wxString index = m_spring_list->GetStringSelection();
+	sett().DeleteSpringVersionbyIndex(index);
+	sett().RefreshSpringVersionList(false);
+	ReloadSpringList();
 }

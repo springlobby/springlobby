@@ -20,31 +20,29 @@ public:
 	SpringOptionsTab( wxWindow* parent );
 	~SpringOptionsTab();
 
+	void OnApply( wxCommandEvent& event );
+	void OnRestore( wxCommandEvent& event );
+
+private:
 	void DoRestore();
+	void EnableSpringBox(bool enabled);
+	void EnableUnitsyncBox(bool enabled);
+	void EnableBundleBox(bool enabled);
 
 	void OnBrowseExec( wxCommandEvent& event );
 	void OnBrowseSync( wxCommandEvent& event );
 	void OnBrowseBundle( wxCommandEvent& event );
-
-	void OnApply( wxCommandEvent& event );
-	void OnRestore( wxCommandEvent& event );
-
 	void OnAutoConf( wxCommandEvent& event );
 	void OnFindExec( wxCommandEvent& event );
 	void OnFindSync( wxCommandEvent& event );
 	void OnFindBundle( wxCommandEvent& event );
 	void OnAddBundle(wxCommandEvent& event);
+	void OnRemoveBundle(wxCommandEvent& event);
 
 	void OnDataDir( wxCommandEvent& event );
 
 	void OnDontSearch( wxCommandEvent& event );
 	void OnForceBundle( wxCommandEvent& event );
-
-	void EnableSpringBox(bool enabled);
-	void EnableUnitsyncBox(bool enabled);
-	void EnableBundleBox(bool enabled);
-
-private:
 
 	void SetupUserFolders();
 	void OnGroupListSelectionChange( wxCommandEvent& event );
