@@ -1095,6 +1095,15 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         m_se->OnBattleInfoUpdated( m_battle_id );
         // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
     }
+	else if ( cmd == _T("REMOVESCRIPTTAGS"))
+	{
+		wxString key;
+		while ( (key = GetWordParam(params)) != wxEmptyString )
+		{
+			m_se->OnUnsetBattleInfo( m_battle_id, key);
+		}
+		m_se->OnBattleInfoUpdated(m_battle_id);
+	}
     else if ( cmd == _T("SCRIPTSTART") )
     {
         m_se->OnScriptStart( m_battle_id );

@@ -45,6 +45,7 @@ class ServerEvents : public IServerEvents, public wxEvtHandler
     void OnUserLeftBattle( int battleid, const wxString& nick );
     void OnBattleInfoUpdated( int battleid, int spectators, bool locked, const wxString& maphash, const wxString& map );
     void OnSetBattleInfo( int battleid, const wxString& param, const wxString& value );
+    void OnUnsetBattleInfo( int battleid, const wxString& param);
     void OnBattleInfoUpdated( int battleid );
     void OnBattleClosed( int battleid );
 

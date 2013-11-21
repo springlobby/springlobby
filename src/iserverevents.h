@@ -71,6 +71,7 @@ class IServerEvents
 	virtual void OnUserLeftBattle( int battleid, const wxString& nick ) = 0;
 	virtual void OnBattleInfoUpdated( int battleid, int spectators, bool locked, const wxString& maphash, const wxString& map ) = 0;
 	virtual void OnSetBattleInfo( int battleid, const wxString& param, const wxString& value ) = 0;
+	virtual void OnUnsetBattleInfo( int battleid, const wxString& param) = 0;
 	virtual void OnBattleInfoUpdated( int battleid ) = 0;
 	virtual void OnBattleClosed( int battleid ) = 0;
 
