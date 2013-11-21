@@ -443,7 +443,7 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
 		LSL::SpringBundle bundle;
 		bundle.unitsync = STD_STRING(pick.GetPath());
 		bundle.AutoComplete();
-		wxString version = TowxString(bundle.GetBundleVersion());
+		const wxString version = TowxString(bundle.version);
 		m_spring_list->Append(version);
 		m_spring_list->SetStringSelection(version);
 		m_sync_edit->SetValue(TowxString(bundle.unitsync));
