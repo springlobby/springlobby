@@ -940,11 +940,13 @@ void BattleRoomTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 
 long BattleRoomTab::AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOption optFlag )
 {
-    if ( !m_battle ) return -1;
-    for (auto it : m_battle->CustomBattleOptions().getOptions(optFlag))
+	if ( !m_battle ) return -1;
+	LSL::OptionsWrapper::stringTripleVec optlist = m_battle->CustomBattleOptions().getOptions( optFlag );
+	for ( LSL::OptionsWrapper::stringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
 	{
-        const wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it.first;
-		//m_opt_list_map[ tag ] = pos;
+		m_opts_list->InsertItem( pos, TowxString(it->second.first));
+		wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it->first;
+		m_opt_list_map[ tag ] = pos;
 		UpdateBattleInfo( tag );
 		pos++;
 	}
