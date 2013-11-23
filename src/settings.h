@@ -166,12 +166,6 @@ class Settings : public SL::NonCopyable
      */
     wxString GetCachePath();
 
-    void SetMapCachingThreadProgress( unsigned int index );
-    unsigned int GetMapCachingThreadProgress();
-
-    void SetModCachingThreadProgress( unsigned int index );
-    unsigned int GetModCachingThreadProgress();
-
     /**@}*/
 
     /* ================================================================ */

@@ -90,8 +90,6 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 		wxMkdir( userConfigDir );
 	}
 	if ( (cacheversion < CACHE_VERSION) && !IsFirstRun() ) {
-		SetMapCachingThreadProgress( 0 ); // reset map cache thread
-		SetModCachingThreadProgress( 0 ); // reset mod cache thread
 		if ( wxDirExists( GetCachePath() )  ) {
 			wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), cacheversion, CACHE_VERSION );
 			wxString file = wxFindFirstFile( GetCachePath() + wxFILE_SEP_PATH + _T("*") );
@@ -266,29 +264,6 @@ wxString Settings::GetCachePath()
 		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
 	}
 	return path;
-}
-
-void Settings::SetMapCachingThreadProgress( unsigned int index )
-{
-	m_config->Write( _T( "/General/LastMapCachingThreadIndex" ), ( int )index );
-}
-
-
-unsigned int Settings::GetMapCachingThreadProgress()
-{
-	return m_config->Read( _T( "/General/LastMapCachingThreadIndex" ), 0l );
-}
-
-
-void Settings::SetModCachingThreadProgress( unsigned int index )
-{
-	m_config->Write( _T( "/General/LastModCachingThreadIndex" ), ( int )index );
-}
-
-
-unsigned int Settings::GetModCachingThreadProgress()
-{
-	return m_config->Read( _T( "/General/LastModCachingThreadIndex" ), 0l );
 }
 
 bool Settings::ShouldAddDefaultServerSettings()
