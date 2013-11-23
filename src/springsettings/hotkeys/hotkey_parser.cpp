@@ -224,6 +224,10 @@ bool hotkey_parser::isDontTouchMode() const
 
 void hotkey_parser::setUiKeys(const wxString& filename )
 {
+	if (filename.empty()) {
+		wxLogError( _( "hotkey_parser: invalid filename" ));
+		return;
+	}
 	//we will read the uikeys.txt now to get the key profile
 	//1. Fill the profile with spring's default bindings
 	KeynameConverter::initialize();
@@ -233,7 +237,7 @@ void hotkey_parser::setUiKeys(const wxString& filename )
 	//2. now read uikeys.txt and modify the default profile
 	wxTextFile uiFile( this->m_filename );
 
-	if ( !uiFile.Open() ) {
+	if ( !uiFile.Exists() || !uiFile.Open() ) {
 		wxLogWarning( _( "hotkey_parser: can't open " ) + filename );
 		return;
 	}
