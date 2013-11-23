@@ -59,8 +59,9 @@
 #include "textentrydialog.h"
 
 SLCONFIG("/General/AutoUpdate", true, "Determines if sprinlobby should check for updates on startup");
-SLCONFIG( "/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup" );
+SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere",true, "setting to spam the server messages in all channels");
+SLCONFIG("/General/SelfUpdate", true, "Check for updates of Springlobby");
 
 static const unsigned int s_reconnect_delay_ms = 6000;
 
@@ -1184,12 +1185,11 @@ void Ui::FirstRunWelcome()
 	mw().ShowConfigure();
 }
 
-
 void Ui::CheckForUpdates()
 {
-	bool selfupdate;
-	cfg().Read( _T( "/General/SelfUpdate" ), &selfupdate, true);
+	bool selfupdate = cfg().ReadBool( _T( "/General/SelfUpdate" ));
 	if (!selfupdate) return;
+
 	wxString latestVersion = GetLatestVersion();
 
 	if (latestVersion == _T("-1")) {
