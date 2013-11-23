@@ -487,6 +487,7 @@ void TASServer::AcceptAgreement()
 
 void TASServer::Update( int mselapsed )
 {
+	if (m_sock == NULL) return;
 
 	m_sock->OnTimer( mselapsed );
 

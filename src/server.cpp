@@ -26,8 +26,9 @@ m_pass_hash(false)
 Server::~Server()
 {
 	delete battles_iter;
-  if(uidata.panel)uidata.panel->SetServer(NULL);
-  delete m_sock;
+	if(uidata.panel)uidata.panel->SetServer(NULL);
+	delete m_sock;
+	m_sock = NULL;
 }
 
 
