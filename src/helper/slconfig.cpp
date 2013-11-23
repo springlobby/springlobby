@@ -82,12 +82,13 @@ slConfig* slConfig::Create()
 		}
 	}
 
-	// FIXME portable is determined at runtime and should be separate
-	// from this
-	GetDefaultsBool().Set(_T("/portable"), portable);
-
 	slConfig* config = new slConfig( instream );
 	config->SetRecordDefaults( true );
+
+	// FIXME portable is determined at runtime and should be separate
+	// from this
+	config->Write(_T("/portable"), portable);
+
 	return config;
 }
 
