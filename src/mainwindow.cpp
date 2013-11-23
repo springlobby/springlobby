@@ -618,6 +618,11 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
   {
 	if ( !ui().IsConnected() && ui().IsMainWindowCreated() ) ui().Connect();
   }
+
+	ChatPanel* panel = ui().GetActiveChatPanel(); //set input focus to edit field on tab change
+	if (panel!=NULL) {
+		panel->SetFocus();
+	}
 }
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
