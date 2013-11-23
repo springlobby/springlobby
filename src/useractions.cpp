@@ -51,6 +51,36 @@ bool UserActions::DoActionOnUser( const UserActions::ActionType action, const wx
 
 void UserActions::Init()
 {
+	m_actionNames.clear();
+	m_actionNames.push_back(_("none"));
+	m_actionNames.push_back(_("highlight"));
+	m_actionNames.push_back(_("notify login/out"));
+	m_actionNames.push_back(_("ignore chat"));
+	m_actionNames.push_back(_("ignore pm"));
+	m_actionNames.push_back(_("autokick"));
+	m_actionNames.push_back( _("notify hosted battle"));
+	m_actionNames.push_back(_("notify status change"));
+
+	m_configActionNames.clear();
+	m_configActionNames.push_back(_T("none"));
+	m_configActionNames.push_back(_T("highlight"));
+	m_configActionNames.push_back(_T("notify_login"));
+	m_configActionNames.push_back(_T("ignore_chat"));
+	m_configActionNames.push_back(_T("ignore_pm"));
+	m_configActionNames.push_back(_T("autokick"));
+	m_configActionNames.push_back(_T("notify_hosted"));
+	m_configActionNames.push_back(_T("notify_status"));
+
+	m_actionTooltips.clear();
+	m_actionTooltips.push_back(_("no action at all"));
+	m_actionTooltips.push_back(_("highlight user in nick list and battles he participates in"));
+	m_actionTooltips.push_back(_("popup a message box when user logs in/out from  the server"));
+	m_actionTooltips.push_back(_("you won't see message by these users in normal channels"));
+	m_actionTooltips.push_back(_("ignore private messages of these users, no pm window will open if any of these try to contact you privately"));
+	m_actionTooltips.push_back(_("automatically kick users from battles hosted by yourself"));
+	m_actionTooltips.push_back(_("popup a message box when user hosts a new battle"));
+	m_actionTooltips.push_back(_("popup a message box when user changes away status"));
+
 	// setup if empty
 	if (!cfg().Exists(_T( "/Groups"))) {
 		 AddGroup( _("Default") );
@@ -196,11 +226,8 @@ void UserActions::SetGroupActions( const wxString& group, ActionType action ) co
 	cfg().DeleteGroup( key );
 	key += _T( "/" );
 	unsigned int tmp = action & ( ( UserActions::ActLast << 1 ) - 1 );
-	int i = 0;
-	while ( tmp != 0 )
-	{
-		if ( tmp&1 ) cfg().Write( key + m_configActionNames[i], true );
-		i++;
+	for(auto config: m_configActionNames) {
+		if ( tmp&1 ) cfg().Write( key + config, true );
 		tmp >>= 1;
 	}
 }
@@ -221,16 +248,12 @@ UserActions::ActionType UserActions::GetGroupActions( const wxString& group ) co
 	key = _T( "/Groups/" ) + group + _T( "/Opts/ActionsList" );
 	if ( !cfg().Exists( key ) ) return UserActions::ActNone;
 	key += _T( "/" );
-	int i = 0;
 	int mask = 1;
 	int result = 0;
-	while ( mask <= UserActions::ActLast )
-	{
-		if ( cfg().Read( key + m_configActionNames[i], 0l ) )
-		{
+	for(auto config: m_configActionNames) {
+		if ( cfg().Read( key + config, 0l ) ) {
 			result |= mask;
 		}
-		i++;
 		mask <<= 1;
 	}
 	if ( result == 0 ) return UserActions::ActNone;

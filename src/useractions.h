@@ -4,6 +4,7 @@
 #include <wx/intl.h>
 #include <wx/arrstr.h>
 #include <map>
+#include <list>
 
 class wxColour;
 
@@ -60,19 +61,13 @@ public:
 
 private:
 	//!provide a simple mapping between enum type and string to display in gui
-	const wxString m_actionNames[8] = { _("none"),_("highlight"),_("notify login/out"),_("ignore chat"),_("ignore pm"),
-		_("autokick"), _("notify hosted battle"),_("notify status change")};
+	std::list<wxString> m_actionNames;
 
 	//! Provide the names to be used by config file.
-	const wxString m_configActionNames[8] = { _T("none"),_T("highlight"),_T("notify_login"),_T("ignore_chat"),_T("ignore_pm"),
-		_T("autokick"), _T("notify_hosted"),_T("notify_status")};
-
+	std::list<wxString> m_configActionNames;
 	//!same for tooltips
-	const wxString m_actionTooltips[8] = { _("no action at all"), _("highlight user in nick list and battles he participates in"),
-		_("popup a message box when user logs in/out from  the server"), _("you won't see message by these users in normal channels"),
-		_("ignore private messages of these users, no pm window will open if any of these try to contact you privately"),
-		_("automatically kick users from battles hosted by yourself"), _("popup a message box when user hosts a new battle"),
-		_("popup a message box when user changes away status") };
+	std::list<wxString> m_actionTooltips;
+
 
     //lotsa maps to keep runtime finds, etc ti a minimum
     typedef std::map<wxString,wxArrayString> GroupMap;
