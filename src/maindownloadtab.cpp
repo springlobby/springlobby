@@ -80,7 +80,11 @@ MainDownloadTab::MainDownloadTab( wxWindow* parent )
 }
 
 MainDownloadTab::~MainDownloadTab()
-{}
+{
+	timer->Stop();
+	delete timer;
+	timer = NULL;
+}
 
 void MainDownloadTab::OnClearFinished( wxCommandEvent& /*event*/ )
 {
