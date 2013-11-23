@@ -1187,6 +1187,9 @@ void Ui::FirstRunWelcome()
 
 void Ui::CheckForUpdates()
 {
+	bool selfupdate;
+	cfg().Read( _T( "/General/SelfUpdate" ), &selfupdate, true);
+	if (!selfupdate) return;
 	wxString latestVersion = GetLatestVersion();
 
 	if (latestVersion == _T("-1")) {
