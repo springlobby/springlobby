@@ -320,10 +320,6 @@ class Settings : public SL::NonCopyable
     void SetUsedSpringIndex(const wxString &index );
     void DeleteSpringVersionbyIndex( const wxString& index );
 
-	//!@brief if false, lobby tries to load spring & unitsync as sep paths, otherwise, searches for a bundle containing both
-	bool GetBundleMode();
-	bool IsInsideSpringBundle();
-
     /// convenience wrappers to get current used version paths
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
@@ -333,8 +329,6 @@ class Settings : public SL::NonCopyable
 
     wxString GetUnitSync( const wxString& index );
     wxString GetSpringBinary( const wxString& index );
-    //!@brief meaningful only on mac
-    wxString GetBundle(const wxString& index );
 
     void SetUnitSync( const wxString& index, const wxString& path );
     void SetSpringBinary( const wxString& index, const wxString& path );

@@ -536,13 +536,6 @@ wxString Settings::AutoFindUnitSync(wxPathList pl) const
 	return retpath;
 }
 
-wxString Settings::AutoFindBundle()
-{
-    wxPathList pl = PathlistFactory::ConfigFileSearchPaths();
-	return pl.FindValidPath( _T( "Spring.app" ) );
-}
-
-
 std::map<wxString, LSL::SpringBundle> Settings::GetSpringVersionList() const
 {
 	return m_spring_versions;
@@ -601,7 +594,6 @@ needs to change to sth like: GetSpringVersionList(std::list<LSL::Bundle>)
 		LSL::SpringBundle bundle;
 		bundle.unitsync = STD_STRING(GetUnitSync(list[i]));
 		bundle.spring = STD_STRING(GetSpringBinary(list[i]));
-		bundle.path = STD_STRING(GetBundle(list[i]));
 		bundle.version = STD_STRING(list[i]);
 		usync_paths.push_back(bundle);
 	}
@@ -641,12 +633,6 @@ void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 {
 	m_config->DeleteGroup( _T( "/Spring/Paths/" ) + index );
 	if ( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex( wxEmptyString );
-}
-
-
-bool Settings::IsInsideSpringBundle()
-{
-	return wxFileName::FileExists(GetExecutableFolder() + sepstring + _T("spring") + BIN_EXT) && wxFileName::FileExists(GetExecutableFolder() + sepstring + _T("unitsync") + GetLibExtension());
 }
 
 wxString Settings::GetCurrentUsedDataDir()
@@ -702,11 +688,6 @@ wxString Settings::GetUnitSync( const wxString& index )
 wxString Settings::GetSpringBinary( const wxString& index )
 {
 	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), AutoFindSpringBin() );
-}
-
-wxString Settings::GetBundle( const wxString& index )
-{
-	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBundlePath" ), AutoFindBundle() );
 }
 
 void Settings::SetUnitSync( const wxString& index, const wxString& path )
