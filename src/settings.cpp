@@ -173,7 +173,7 @@ void Settings::SaveSettings()
 bool Settings::IsPortableMode() const
 {
 	bool portable = false;
-	m_config->Read(_T("/portable"), portable);
+	m_config->Read(_T("/portable"), &portable);
 	return portable;
 }
 
