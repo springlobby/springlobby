@@ -26,6 +26,7 @@ if(WIN32)
 		-DSTRICT
 		-DHAVE_W32API_H
 	)
+	set(Boost_THREADAPI win32)
 endif(WIN32)
 
 set(Boost_USE_MULTITHREADED      ON)
