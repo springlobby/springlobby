@@ -36,7 +36,6 @@ public:
        /// update this when adding new actions.
        ActLast=ActNotifStatus
      };
-    const int m_numActions = sizeof(m_actionNames) / sizeof(wxString);
     bool DoActionOnUser( const ActionType action, const wxString& name ) ;
     wxArrayString GetGroupNames() const;
     void AddUserToGroup( const wxString& group, const wxString& name );
