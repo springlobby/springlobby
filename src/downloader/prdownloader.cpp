@@ -38,7 +38,7 @@
 std::string PrDownloader::GetEngineCat()
 {
 #ifdef WIN32
-	return "engine_win32";
+	return "engine_windows";
 #elif defined(__APPLE__)
 	return "engine_macosx";
 #elif defined(__x86_64__)
