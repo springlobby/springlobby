@@ -349,8 +349,6 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 	SetSizer( bMainSizerV );
 	Layout();
 
-	if ( sett().IsPortableMode() ) sbChatLog->Disable();
-
 	DoRestore();
 	UpdateTextSample();
 }

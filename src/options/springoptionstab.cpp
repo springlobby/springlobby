@@ -47,16 +47,13 @@ BEGIN_EVENT_TABLE( SpringOptionsTab, wxPanel )
 
 	EVT_BUTTON(     SPRING_EXECBROWSE,  SpringOptionsTab::OnBrowseExec  )
 	EVT_BUTTON(     SPRING_SYNCBROWSE,  SpringOptionsTab::OnBrowseSync  )
-	EVT_BUTTON(     SPRING_BUNDLEBROWSE,SpringOptionsTab::OnBrowseBundle)
 	EVT_BUTTON(     SPRING_AUTOCONF,    SpringOptionsTab::OnAutoConf    )
 	EVT_BUTTON(     SPRING_EXECFIND,    SpringOptionsTab::OnFindExec    )
 	EVT_BUTTON(     SPRING_SYNCFIND,    SpringOptionsTab::OnFindSync    )
-	EVT_BUTTON(     SPRING_BUNDLEFIND,  SpringOptionsTab::OnFindBundle  )
 	EVT_BUTTON(     SPRING_DATADIR,     SpringOptionsTab::OnDataDir     )
 	EVT_BUTTON(     SPRING_ADD,         SpringOptionsTab::OnAddBundle   )
 	EVT_BUTTON(     SPRING_REMOVE,      SpringOptionsTab::OnRemoveBundle)
 	EVT_CHECKBOX(   SPRING_DONTSEARCH,  SpringOptionsTab::OnDontSearch  )
-	EVT_CHECKBOX(   SPRING_FORCEBUNDLE, SpringOptionsTab::OnForceBundle )
 	EVT_LISTBOX(    SPRING_LIST,        SpringOptionsTab::OnGroupListSelectionChange )
 
 END_EVENT_TABLE()
@@ -98,18 +95,8 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 
 
-	m_dontsearch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Search only in current installed path"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
 	m_oldlaunch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Use alternative launch method (DO NOT TOUCH THIS UNLESS YOU KNOW WHAT YOU'RE DOING)"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
 	m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
-	m_forcebundle_chkbox = new wxCheckBox( this, SPRING_FORCEBUNDLE, _("Use the Spring version in the current bundle"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-	m_forcebundle_chkbox->SetValue( sett().GetUseSpringPathFromBundle() );
-	if (!sett().IsInsideSpringBundle()) m_forcebundle_chkbox->Disable();
-#ifndef __WXMSW__
-	m_dontsearch_chkbox->Disable();
-	m_oldlaunch_chkbox->Disable();
-#endif
-	if (!sett().GetBundleMode()) m_forcebundle_chkbox->Disable();
 	/* ================================
 	 * Spring executable
 	 */
@@ -130,23 +117,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _( "Browse" ) );
 	m_sync_find_btn = new wxButton( this, SPRING_SYNCFIND, _( "Find" ) );
 
-	/* ================================
-	 * Spring Bundle
-	 */
-	m_bundle_box = new wxStaticBox( this, -1, _( "Spring App Bundle" ) );
-
-	m_bundle_edit = new wxTextCtrl( this, -1, sett().GetCurrentUsedBundle() );
-	m_bundle_loc_text = new wxStaticText( this, -1, _( "Location" ) );
-	m_bundle_browse_btn = new wxButton( this, SPRING_BUNDLEBROWSE, _( "Browse" ) );
-	m_bundle_find_btn = new wxButton( this, SPRING_BUNDLEFIND, _( "Find" ) );
-
-	if (sett().GetBundleMode()) {
-		EnableSpringBox(false);
-		EnableUnitsyncBox(false);
-	} else {
-		EnableBundleBox(false);
-	}
-
 	m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _( "Auto Configure" ) );
 //	m_datadir_btn = new wxButton( this, SPRING_DATADIR, _( "Change Datadir path" ) );
 
@@ -154,7 +124,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	wxBoxSizer* m_aconf_sizer = new wxBoxSizer( wxVERTICAL );
 	wxBoxSizer* m_exec_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
 	wxBoxSizer* m_sync_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
-	wxBoxSizer* m_bundle_loc_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 	m_exec_loc_sizer->Add( m_exec_loc_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2 );
 	m_exec_loc_sizer->Add( m_exec_edit, 1, wxEXPAND );
@@ -166,30 +135,19 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_sync_loc_sizer->Add( m_sync_browse_btn );
 	m_sync_loc_sizer->Add( m_sync_find_btn );
 
-	m_bundle_loc_sizer->Add( m_bundle_loc_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2 );
-	m_bundle_loc_sizer->Add( m_bundle_edit, 1, wxEXPAND );
-	m_bundle_loc_sizer->Add( m_bundle_browse_btn );
-	m_bundle_loc_sizer->Add( m_bundle_find_btn );
-
 	m_exec_box_sizer = new wxStaticBoxSizer( m_exec_box, wxVERTICAL );
 	m_sync_box_sizer = new wxStaticBoxSizer( m_sync_box, wxVERTICAL );
-	m_bundle_box_sizer = new wxStaticBoxSizer( m_bundle_box, wxVERTICAL );
 
 	m_exec_box_sizer->Add( m_exec_loc_sizer, 0, wxEXPAND | wxALL, 2 );
 
 	m_sync_box_sizer->Add( m_sync_loc_sizer, 0, wxEXPAND | wxALL, 2 );
 
-	m_bundle_box_sizer->Add( m_bundle_loc_sizer, 0, wxEXPAND | wxALL, 2 );
-
 	m_aconf_sizer->AddStretchSpacer();
 	m_aconf_sizer->Add( m_auto_btn );
 //	m_aconf_sizer->Add( m_datadir_btn );
 
-	m_main_sizer->Add( m_dontsearch_chkbox, 0, wxEXPAND | wxALL, 5 );
-	m_main_sizer->Add( m_forcebundle_chkbox, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_sync_box_sizer, 0, wxEXPAND | wxALL, 5 );
-	m_main_sizer->Add( m_bundle_box_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_oldlaunch_chkbox, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->AddStretchSpacer();
@@ -200,26 +158,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
-	if ( sett().IsPortableMode() || sett().GetSearchSpringOnlyInSLPath() ) {
-		EnableSpringBox(false);
-		EnableUnitsyncBox(false);
-		m_auto_btn->Disable();
-		m_bundle_box->Disable();
-//		m_datadir_btn->Disable();
-	}
-
-	if ( sett().GetUseSpringPathFromBundle() ) {
-		m_bundle_box->Disable();
-	}
-
-	if ( sett().IsFirstRun() ) {
-		sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), m_exec_edit->GetValue() );
-		sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), m_sync_edit->GetValue() );
-		sett().SetBundle( sett().GetCurrentUsedSpringIndex(), m_bundle_edit->GetValue() );
-		sett().SetSearchSpringOnlyInSLPath( m_dontsearch_chkbox->IsChecked() );
-	}
 	ReloadSpringList();
-
 	Layout();
 	DoRestore();
 }
@@ -248,23 +187,12 @@ void SpringOptionsTab::EnableUnitsyncBox(bool enabled)
 	m_sync_find_btn->Enable(enabled);
 }
 
-void SpringOptionsTab::EnableBundleBox(bool enabled)
-{
-	m_bundle_box->Enable(enabled);
-	m_bundle_edit->Enable(enabled);
-	m_bundle_loc_text->Enable(enabled);
-	m_bundle_browse_btn->Enable(enabled);
-	m_bundle_find_btn->Enable(enabled);
-}
-
 void SpringOptionsTab::DoRestore()
 {
 	const wxString index = m_spring_list->GetStringSelection();
-	m_dontsearch_chkbox->SetValue( sett().GetSearchSpringOnlyInSLPath() );
 	m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
 	m_sync_edit->SetValue(sett().GetUnitSync(index));
 	m_exec_edit->SetValue(sett().GetSpringBinary(index));
-	m_bundle_edit->SetValue(sett().GetBundle(index));
 }
 
 
@@ -272,7 +200,6 @@ void SpringOptionsTab::OnAutoConf( wxCommandEvent& event )
 {
 	OnFindExec( event );
 	OnFindSync( event );
-	OnFindBundle( event );
 }
 
 
@@ -287,12 +214,6 @@ void SpringOptionsTab::OnFindSync( wxCommandEvent& /*unused*/ )
 {
 	wxString found = sett().AutoFindUnitSync();
 	if ( !found.IsEmpty() ) m_sync_edit->SetValue( found );
-}
-
-void SpringOptionsTab::OnFindBundle( wxCommandEvent& /*unused*/ )
-{
-	wxString found = sett().AutoFindBundle();
-	if ( !found.IsEmpty() ) m_bundle_edit->SetValue( found );
 }
 
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& /*unused*/ )
@@ -318,23 +239,12 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& /*unused*/ )
 }
 
 
-void SpringOptionsTab::OnBrowseBundle( wxCommandEvent& /*unused*/ )
-{
-	wxFileDialog pick( this, _( "Choose a Spring executable" ),
-			   wxPathOnly( sett().GetCurrentUsedBundle() ),
-			   _T("Spring.App"), wxString(_("App bundle")) + _T("(*.App)||.App") );
-	if ( pick.ShowModal() == wxID_OK ) m_bundle_edit->SetValue( pick.GetPath() );
-}
-
 void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
 	const wxString index = m_spring_list->GetStringSelection();
 	sett().SetSpringBinary(index, m_exec_edit->GetValue() );
 	sett().SetUnitSync(index, m_sync_edit->GetValue() );
-	sett().SetBundle(index, m_bundle_edit->GetValue() );
-	sett().SetSearchSpringOnlyInSLPath( m_dontsearch_chkbox->IsChecked() );
 	sett().SetOldSpringLaunchMethod( m_oldlaunch_chkbox->IsChecked() );
-	sett().SetUseSpringPathFromBundle( m_forcebundle_chkbox->IsChecked() );
 
 	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
 	sett().RefreshSpringVersionList();
@@ -361,20 +271,8 @@ void SpringOptionsTab::OnDataDir( wxCommandEvent& /*unused*/ )
 
 void SpringOptionsTab::OnDontSearch( wxCommandEvent& /*unused*/ )
 {
-	if ( m_dontsearch_chkbox->IsChecked() ) {
-		EnableSpringBox(false);
-		EnableUnitsyncBox(false);
-//		m_datadir_btn->Disable();
-	} else {
-		EnableSpringBox(true);
-		EnableUnitsyncBox(true);
-//		m_datadir_btn->Enable();
-	}
-}
-
-void SpringOptionsTab::OnForceBundle( wxCommandEvent& /*unused*/ )
-{
-	EnableBundleBox(!m_forcebundle_chkbox->IsChecked());
+	EnableSpringBox(true);
+	EnableUnitsyncBox(true);
 }
 
 void SpringOptionsTab::SetupUserFolders()
@@ -448,7 +346,6 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
 		m_spring_list->SetStringSelection(version);
 		m_sync_edit->SetValue(TowxString(bundle.unitsync));
 		m_exec_edit->SetValue(TowxString(bundle.spring));
-		m_bundle_edit->SetValue(TowxString(bundle.path));
 	}
 }
 

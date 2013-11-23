@@ -27,15 +27,12 @@ private:
 	void DoRestore();
 	void EnableSpringBox(bool enabled);
 	void EnableUnitsyncBox(bool enabled);
-	void EnableBundleBox(bool enabled);
 
 	void OnBrowseExec( wxCommandEvent& event );
 	void OnBrowseSync( wxCommandEvent& event );
-	void OnBrowseBundle( wxCommandEvent& event );
 	void OnAutoConf( wxCommandEvent& event );
 	void OnFindExec( wxCommandEvent& event );
 	void OnFindSync( wxCommandEvent& event );
-	void OnFindBundle( wxCommandEvent& event );
 	void OnAddBundle(wxCommandEvent& event);
 	void OnRemoveBundle(wxCommandEvent& event);
 
@@ -50,15 +47,11 @@ private:
 
 	wxStaticText* m_exec_loc_text;
 	wxStaticText* m_sync_loc_text;
-	wxStaticText* m_bundle_loc_text;
 
 	wxButton* m_exec_browse_btn;
 	wxButton* m_exec_find_btn;
 	wxButton* m_sync_browse_btn;
 	wxButton* m_sync_find_btn;
-	wxButton* m_bundle_browse_btn;
-	wxButton* m_bundle_find_btn;
-//	wxButton* m_datadir_btn;
 
 	wxButton* m_auto_btn;
 
@@ -66,23 +59,16 @@ private:
 	wxRadioButton* m_exec_spec_radio;
 	wxRadioButton* m_sync_def_radio;
 	wxRadioButton* m_sync_spec_radio;
-	wxRadioButton* m_bundle_def_radio;
-	wxRadioButton* m_bundle_spec_radio;
 
 	wxTextCtrl* m_exec_edit;
 	wxTextCtrl* m_sync_edit;
-	wxTextCtrl* m_bundle_edit;
 
 	wxStaticBox* m_exec_box;
 	wxStaticBox* m_sync_box;
-	wxStaticBox* m_bundle_box;
 	wxStaticBox* m_web_box;
 	wxStaticBoxSizer* m_exec_box_sizer;
 	wxStaticBoxSizer* m_sync_box_sizer;
-	wxStaticBoxSizer* m_bundle_box_sizer;
 
-	wxCheckBox* m_dontsearch_chkbox;
-	wxCheckBox* m_forcebundle_chkbox;
 	wxCheckBox* m_oldlaunch_chkbox;
 
 	wxListBox* m_spring_list;

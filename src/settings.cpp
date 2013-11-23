@@ -69,7 +69,6 @@ Settings& sett()
 }
 
 Settings::Settings()
-	:m_forced_springconfig_path(wxEmptyString)
 {
 	m_config = &cfg();
 }
@@ -169,14 +168,6 @@ void Settings::SaveSettings()
 	m_config->Write( _T( "/General/firstrun" ), false );
 	m_config->SaveFile();
 }
-
-bool Settings::IsPortableMode() const
-{
-	bool portable = false;
-	m_config->Read(_T("/portable"), &portable);
-	return portable;
-}
-
 
 bool Settings::IsFirstRun()
 {
@@ -646,16 +637,6 @@ void Settings::SetUsedSpringIndex( const wxString& index )
 }
 
 
-bool Settings::GetSearchSpringOnlyInSLPath()
-{
-	return m_config->Read( _T( "/Spring/SearchSpringOnlyInSLPath" ), ( long int )false );
-}
-
-void Settings::SetSearchSpringOnlyInSLPath( bool value )
-{
-	m_config->Write( _T( "/Spring/SearchSpringOnlyInSLPath" ), value );
-}
-
 void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 {
 	m_config->DeleteGroup( _T( "/Spring/Paths/" ) + index );
@@ -666,29 +647,6 @@ void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 bool Settings::IsInsideSpringBundle()
 {
 	return wxFileName::FileExists(GetExecutableFolder() + sepstring + _T("spring") + BIN_EXT) && wxFileName::FileExists(GetExecutableFolder() + sepstring + _T("unitsync") + GetLibExtension());
-}
-
-bool Settings::GetBundleMode()
-{
-	#ifndef __WXMAC__
-		return false;
-	#endif
-	return m_config->Read(_T("/Spring/EnableBundleMode"), true);
-}
-
-
-bool Settings::GetUseSpringPathFromBundle()
-{
-	#ifndef __WXMAC__
-		return false;
-	#endif
-	if ( !GetBundleMode() ) return false;
-	return m_config->Read(_T("/Spring/UseSpringPathFromBundle"), IsInsideSpringBundle());
-}
-
-void Settings::SetUseSpringPathFromBundle( bool value )
-{
-	m_config->Write(_T("/Spring/UseSpringPathFromBundle"), value );
 }
 
 wxString Settings::GetCurrentUsedDataDir()
@@ -705,8 +663,6 @@ wxString Settings::GetCurrentUsedDataDir()
 	if ( dir.IsEmpty() )
         dir = GetExecutableFolder(); // fallback
 #else
-    if ( IsPortableMode() )
-        dir = GetExecutableFolder();
 	if ( dir.IsEmpty() )
         dir = wxFileName::GetHomeDir() + sepstring + _T( ".spring" ); // fallback
 #endif
@@ -726,11 +682,6 @@ wxString Settings::GetCurrentUsedUnitSync()
 	return GetUnitSync( GetCurrentUsedSpringIndex() );
 }
 
-wxString Settings::GetCurrentUsedBundle()
-{
-	return GetBundle( GetCurrentUsedSpringIndex() );
-}
-
 wxString Settings::GetCurrentUsedSpringConfigFilePath()
 {
 	wxString path;
@@ -744,14 +695,12 @@ wxString Settings::GetCurrentUsedSpringConfigFilePath()
 
 wxString Settings::GetUnitSync( const wxString& index )
 {
-	if ( GetBundleMode() ) return GetBundle( index )+ sepstring + _T("Contents") + sepstring + _T("MacOS") + sepstring + _T("libunitsync") +  GetLibExtension();
 	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/UnitSyncPath" ), AutoFindUnitSync() );
 }
 
 
 wxString Settings::GetSpringBinary( const wxString& index )
 {
-	if ( GetBundleMode() )  return GetBundle( index )+ sepstring + _T("Contents") + sepstring + _T("MacOS") + sepstring + _T("spring");
 	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), AutoFindSpringBin() );
 }
 
@@ -773,19 +722,6 @@ void Settings::SetSpringBinary( const wxString& index, const wxString& path )
 void Settings::SetBundle( const wxString& index, const wxString& path )
 {
 	m_config->Write( _T( "/Spring/Paths/" ) + index + _T( "/SpringBundlePath" ), path );
-}
-
-void Settings::SetForcedSpringConfigFilePath( const wxString& path )
-{
-	m_forced_springconfig_path = path;
-}
-
-wxString Settings::GetForcedSpringConfigFilePath()
-{
-	if ( IsPortableMode() )
-        return GetCurrentUsedDataDir() + sepstring + _T( "springsettings.cfg" );
-	else
-		return m_forced_springconfig_path;
 }
 
 // ===================================================

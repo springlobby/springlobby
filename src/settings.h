@@ -89,8 +89,6 @@ class Settings : public SL::NonCopyable
     void Setup(wxTranslationHelper* translationhelper);
     void ConvertSettings(wxTranslationHelper* translationhelper, long settversion);
 
-    bool IsPortableMode() const;
-
     /** Initialize all settings to default.
      */
     void SetDefaultServerSettings();
@@ -322,22 +320,13 @@ class Settings : public SL::NonCopyable
     void SetUsedSpringIndex(const wxString &index );
     void DeleteSpringVersionbyIndex( const wxString& index );
 
-    /// when this mode is enabled in windows SL will search for spring files only in the current executable folder
-    void SetSearchSpringOnlyInSLPath( bool value );
-    bool GetSearchSpringOnlyInSLPath();
-
 	//!@brief if false, lobby tries to load spring & unitsync as sep paths, otherwise, searches for a bundle containing both
 	bool GetBundleMode();
 	bool IsInsideSpringBundle();
 
-	// enable-disable loading the spring exec from same bundle
-	bool GetUseSpringPathFromBundle();
-	void SetUseSpringPathFromBundle( bool value );
-
     /// convenience wrappers to get current used version paths
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
-    wxString GetCurrentUsedBundle();
     wxString GetCurrentUsedSpringBinary();
     //!@brief returns config file path unitsync uses, returns empty if unitsync isn't loaded
     wxString GetCurrentUsedSpringConfigFilePath();
@@ -354,12 +343,6 @@ class Settings : public SL::NonCopyable
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync( 	wxPathList pl = PathlistFactory::ConfigFileSearchPaths() ) const;
-    wxString AutoFindBundle();
-
-    //!@brief returns config file path spring should use, returns empty for default
-    wxString GetForcedSpringConfigFilePath();
-	//! use in game customized mode or externally forced via cli arg
-	void SetForcedSpringConfigFilePath( const wxString& path );
 
     /*@}*/
 
@@ -665,8 +648,6 @@ private:
     bool IsSpringBin( const wxString& path );
 
 	slConfig* m_config; //!< wxConfig object to store and restore  all settings in.
-
-	wxString m_forced_springconfig_path;
 
     std::map<wxString, LSL::SpringBundle> m_spring_versions;
 

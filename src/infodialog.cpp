@@ -86,8 +86,6 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	*out << wxString::Format( _T("Local config: %s (%s writable)\n"),
 							 sett().FinalConfigPath().c_str(),
 							 BtS(wxFileName::IsFileWritable(sett().FinalConfigPath()), "", "not" ).c_str() );
-	*out << wxString::Format( _T("Portable mode: %s\n"), BtS(sett().IsPortableMode()).c_str() );
-
 	*out << wxString::Format(_T("current uikeys.txt: %s\n"), hotkey_panel::GetCurrentUsedUikeys().c_str());
 
 	*out << _T( "Version " ) + GetSpringLobbyVersion()
