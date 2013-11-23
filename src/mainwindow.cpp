@@ -747,6 +747,7 @@ void MainWindow::FocusBattleRoomTab()
 
 void MainWindow::OnMenuPreferences( wxCommandEvent& /*event*/ )
 {
+	assert(wxThread::IsMain());
 	m_opts_dialog = new OptionsDialog( this );
 	m_opts_dialog->Show();
 }
