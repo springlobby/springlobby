@@ -139,11 +139,6 @@ SpringDebugReport::SpringDebugReport()
 {
     wxLogMessage( _T( "Report generated in " ) );
 	CwdGuard cwgGuard( wxFileName::GetTempDir() );
-#if defined(__WXMSW__)
-	bool online = false; // TODO (BrainDamage#1#): check if being online
-#else
-	bool online = true; // TODO (BrainDamage#1#): check if being online
-#endif
 	NetDebugReport* report = new NetDebugReport( "http://debug.springlobby.info/upload" ) ;
 //	NetDebugReport* report = new NetDebugReport( "http://localhost/upload" ) ;
 
@@ -190,22 +185,14 @@ SpringDebugReport::SpringDebugReport()
 	report->AddText( _T("nick.txt"),
 		sett().GetServerAccountNick( sett().GetDefaultServer() ), _T("Nick") );
 
-    wxDebugReportPreviewStd* bkl = new wxDebugReportPreviewStd();
+	wxDebugReportPreviewStd* bkl = new wxDebugReportPreviewStd();
 	// calling Show() is not mandatory, but is more polite
 	if ( bkl->Show( *report ) ) {
 		if ( report->Process() ) {
-			if ( online ) {
-				wxLogMessage( _T( "Report successfully uploaded." ) );
-			}
-			else {
-				wxLogMessage( _T( "Report generated in \"%s\"." ),
-				              report->GetCompressedFileName().c_str() );
-				report->Reset();
-			}
+			wxLogMessage( _T( "Report successfully uploaded." ) );
 		}
 		else {
-		    wxLogMessage( _T( "Report generated in \"%s\", but failed to upload" ),
-				              report->GetCompressedFileName().c_str() );
+				wxLogMessage( _T( "Report generated in \"%s\", but failed to upload" ), report->GetCompressedFileName().c_str() );
 				report->Reset();
 				wxLogMessage( _T("report reset") );
 		}
