@@ -22,7 +22,8 @@
 #include "../settings.h"
 #include "images/springsettings.xpm"
 #include "uievents.h"
-#include <wx/msgdlg.h>
+
+const static int  slButtonSizerFlags = wxOK|wxCANCEL|wxYES|wxNO|wxHELP|wxNO_DEFAULT;
 
 BEGIN_EVENT_TABLE(CustomMessageBox ,wxDialog)
 	EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
@@ -91,7 +92,7 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon ,wxWindow *parent, const wxStrin
 	int center_flag = wxEXPAND;
 	if (style & wxYES_NO)
 		center_flag = wxALIGN_CENTRE;
-	wxSizer *sizerBtn = CreateButtonSizer(style & ButtonSizerFlags);
+	wxSizer *sizerBtn = CreateButtonSizer(style & slButtonSizerFlags);
 	if ( sizerBtn )
 		topsizer->Add(sizerBtn, 0, center_flag | wxALL, 10 );
 
@@ -478,7 +479,7 @@ TimedMessageBox::TimedMessageBox(int whichIcon ,wxWindow *parent, const wxString
 	int center_flag = wxEXPAND;
 	if (style & wxYES_NO)
 		center_flag = wxALIGN_CENTRE;
-	sizerBtn = CreateButtonSizer(style & ButtonSizerFlags);
+	sizerBtn = CreateButtonSizer(style & slButtonSizerFlags);
 	if ( sizerBtn ) {
 		topsizer->Add(sizerBtn, 0, center_flag | wxALL, 10 );
 		sizerBtn->Show( false );
