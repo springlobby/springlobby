@@ -58,7 +58,7 @@ private:
 	wxButton* m_sync_find_btn;
 	wxButton* m_bundle_browse_btn;
 	wxButton* m_bundle_find_btn;
-	wxButton* m_datadir_btn;
+//	wxButton* m_datadir_btn;
 
 	wxButton* m_auto_btn;
 

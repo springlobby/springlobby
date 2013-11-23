@@ -205,7 +205,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 		EnableUnitsyncBox(false);
 		m_auto_btn->Disable();
 		m_bundle_box->Disable();
-		m_datadir_btn->Disable();
+//		m_datadir_btn->Disable();
 	}
 
 	if ( sett().GetUseSpringPathFromBundle() ) {
@@ -364,11 +364,11 @@ void SpringOptionsTab::OnDontSearch( wxCommandEvent& /*unused*/ )
 	if ( m_dontsearch_chkbox->IsChecked() ) {
 		EnableSpringBox(false);
 		EnableUnitsyncBox(false);
-		m_datadir_btn->Disable();
+//		m_datadir_btn->Disable();
 	} else {
 		EnableSpringBox(true);
 		EnableUnitsyncBox(true);
-		m_datadir_btn->Enable();
+//		m_datadir_btn->Enable();
 	}
 }
 
