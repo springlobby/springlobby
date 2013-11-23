@@ -72,20 +72,6 @@ wxPathList PathlistFactory::AdditionalSearchPaths(wxPathList &pl)
     //maybe add more here like:
     //Appdata + \Spring
     //Mydocs + \Spring
-
-    //http://projects.springlobby.info/issues/1530
-    wxRegKey base( _T("HKLM\\Software\\Spring") );
-    wxString usync_keyval = GetRegkeyVal( base, _T("SpringEngineHelper"), wxString() );
-    if ( usync_keyval != wxEmptyString )
-    {
-        pl.Add( usync_keyval.BeforeLast( sep ) );
-    }
-    wxString binary_keyval = GetRegkeyVal( base, _T("SpringEngine"), wxString() );
-    if ( binary_keyval != wxEmptyString )
-    {
-        pl.Add( binary_keyval.BeforeLast( sep ) );
-    }
-
 #endif
 
     for ( size_t i = 0; i < pl.GetCount(); i++ )
