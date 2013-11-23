@@ -62,7 +62,7 @@ class settings_frame : public wxFrame, public WindowAttributesPickle
 		audio_panel* audioTab;
 		tab_render_detail* detailTab;
 		tab_quality_video* qualityTab;
-		hotkey_panel* hotkeyTab;
+//		hotkey_panel* hotkeyTab;
 
 		wxMenu* menuFile;
 		wxMenu* menuMode;

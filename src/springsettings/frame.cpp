@@ -32,7 +32,7 @@
 #include "tab_quality_video.h"
 #include "tab_abstract.h"
 #include "tab_audio.h"
-#include "hotkeys/hotkey_panel.h"
+//#include "hotkeys/hotkey_panel.h"
 #include "tab_ui.h"
 #include "tab_simple.h"
 #include "ctrlconstants.h"
@@ -75,7 +75,7 @@ settings_frame::settings_frame(wxWindow *parent, const wxString &title, wxWindow
 	audioTab(0),
 	detailTab(0),
 	qualityTab(0),
-	hotkeyTab(0),
+//	hotkeyTab(0),
 	settingsIcon( new wxIcon(springsettings_xpm) ),
 	m_has_focus(true)
 {
@@ -206,13 +206,13 @@ void settings_frame::CreateGUIControls()
 							    detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
 							    uiTab = new tab_ui(notebook,ID_UI);
 							    audioTab = new audio_panel(notebook,ID_AUDIO);
-                                hotkeyTab = new hotkey_panel(notebook, ID_HOTKEY);
+//                                hotkeyTab = new hotkey_panel(notebook, ID_HOTKEY);
 								simpleTab = 0;
 								notebook->AddPage(uiTab, uiTabCap);
 								notebook->AddPage(qualityTab, qualityTabCap);
 								notebook->AddPage(detailTab, detailTabCap);
 								notebook->AddPage(audioTab,audioTabCap);
-								notebook->AddPage(hotkeyTab,hotkeyTabCap);
+//								notebook->AddPage(hotkeyTab,hotkeyTabCap);
 						break;
                     default:
 					case SET_MODE_SIMPLE:
@@ -309,7 +309,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				qualityTab = 0;
 				detailTab = 0;
 				audioTab = 0;
-				hotkeyTab = 0;
+//				hotkeyTab = 0;
 				SetTitle(GetAppName() + _("(simple mode)"));
 				if (!sett().getDisableWarning()){
 					customMessageBox(SS_MAIN_ICON,expertModeWarning, _("Hint"), wxOK);
@@ -354,11 +354,11 @@ void settings_frame::switchToExpertMode()
 	qualityTab = new tab_quality_video(notebook,ID_QUALITY_VIDEO);
     detailTab = new tab_render_detail(notebook,ID_RENDER_DETAIL);
     audioTab = new audio_panel(notebook,ID_AUDIO);
-	hotkeyTab = new hotkey_panel(notebook,ID_HOTKEY);
+//	hotkeyTab = new hotkey_panel(notebook,ID_HOTKEY);
 	notebook->AddPage(qualityTab, qualityTabCap);
 	notebook->AddPage(detailTab, detailTabCap);
 	notebook->AddPage(audioTab,audioTabCap);
-	notebook->AddPage(hotkeyTab,hotkeyTabCap);
+//	notebook->AddPage(hotkeyTab,hotkeyTabCap);
 
 	notebook->DeletePage(0);
 	simpleTab = 0;
@@ -382,8 +382,8 @@ void settings_frame::updateAllControls()
 		qualityTab->updateControls(UPDATE_ALL);
 	if (audioTab)
 		audioTab->updateControls(UPDATE_ALL);
-	if (hotkeyTab)
-		hotkeyTab->UpdateControls(UPDATE_ALL);
+//	if (hotkeyTab)
+//		hotkeyTab->UpdateControls(UPDATE_ALL);
 }
 void settings_frame::OnClose(wxCloseEvent& /*unused*/)
 {
@@ -394,8 +394,8 @@ void settings_frame::OnClose(wxCloseEvent& /*unused*/)
 
 bool settings_frame::saveSettingsAbstract()
 {
-	if ( hotkeyTab )
-		hotkeyTab->SaveSettings();
+//	if ( hotkeyTab )
+//		hotkeyTab->SaveSettings();
 
 	return abstract_panel::saveSettings();
 }
@@ -404,7 +404,7 @@ bool settings_frame::settingsChangedAbstract()
 {
 	bool rc = false;
 
-	rc |= ( hotkeyTab && hotkeyTab->HasProfileBeenModifiedOrSelected() );
+//	rc |= ( hotkeyTab && hotkeyTab->HasProfileBeenModifiedOrSelected() );
 	rc |= abstract_panel::settingsChanged;
 
 	return rc;
