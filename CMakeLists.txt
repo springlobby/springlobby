@@ -33,11 +33,12 @@ FIND_PACKAGE( PkgConfig )
 
 #if nothing went wrong we have the file and can define HAVE_CONFIG_H
 IF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h)
-    ADD_DEFINITIONS( -DHAVE_CONFIG_H )
-    INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
+	ADD_DEFINITIONS( -DHAVE_CONFIG_H )
+	INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
 ELSEIF ( EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h  )
-    ADD_DEFINITIONS( -DHAVE_CONFIG_H )
-    INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR})
+	message(WARNING "springlobby_config.h not found!")
+	ADD_DEFINITIONS( -DHAVE_CONFIG_H )
+	INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR})
 ENDIF ()
 
 
