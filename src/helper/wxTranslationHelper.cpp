@@ -7,26 +7,29 @@
 #include <wx/log.h>
 #include <wx/choicdlg.h>
 #include <wx/intl.h>
-#include "../settings.h"
-#include "../utils/customdialogs.h"
-#include "../utils/platform.h"
+#include "helper/slconfig.h"
+#include "utils/customdialogs.h"
+#include "utils/platform.h"
+
+#include "utils/conversion.h"
+
+SLCONFIG("/General/LanguageID", (long)wxLANGUAGE_DEFAULT, "Language ID" );
 
 wxTranslationHelper::wxTranslationHelper( wxApp & app, const wxString & search_path ) :
-	m_App(app),
 	m_SearchPath(search_path),
 	m_Locale(NULL),
-	m_UseNativeConfig(false)
+	m_UseNativeConfig(false),
+	catalogname(app.GetAppName().Lower())
 {
-	if(search_path.IsEmpty())
-	{
-		m_SearchPath = wxPathOnly(m_App.argv[0]);
+	if(search_path.IsEmpty()) {
+		m_SearchPath = wxPathOnly(app.argv[0]);
 	}
+	Load();
 }
 
 wxTranslationHelper::~wxTranslationHelper()
 {
-	if(m_Locale)
-	{
+	if(m_Locale) {
 		Save();
 		wxDELETE(m_Locale);
 	}
@@ -37,32 +40,14 @@ wxLocale * wxTranslationHelper::GetLocale()
 	return m_Locale;
 }
 
-const wxString & wxTranslationHelper::GetSearchPath() const
-{
-	return m_SearchPath;
-}
-
-void wxTranslationHelper::SetSearchPath( const wxString& value )
-{
-	m_SearchPath = value;
-	if( m_SearchPath.IsEmpty() )
-	{
-		m_SearchPath = wxPathOnly( m_App.argv[0] );
-	}
-}
-
 bool wxTranslationHelper::Load()
 {
-	long language = sett().GetLanguageID();
-	if(language == wxLANGUAGE_UNKNOWN)
-	{
-		return false;
-	}
+	long language = cfg().ReadLong(_T("/General/LanguageID"));
+
 
 	wxArrayString names;
 	wxArrayLong identifiers;
-	int dummy;
-	GetInstalledLanguages( names, identifiers, dummy );
+	GetInstalledLanguages( names, identifiers);
 	for(size_t i = 0; i < identifiers.Count(); i++)
 	{
 		if( identifiers[i] == language )
@@ -71,7 +56,7 @@ bool wxTranslationHelper::Load()
 			m_Locale = new wxLocale;
 			m_Locale->Init( identifiers[i] );
 			m_Locale->AddCatalogLookupPathPrefix( m_SearchPath );
-			m_Locale->AddCatalog( m_App.GetAppName().Lower() );
+			m_Locale->AddCatalog( catalogname );
 			m_Locale->AddCatalog( _T("wxstd") );
 			return true;
 		}
@@ -81,28 +66,22 @@ bool wxTranslationHelper::Load()
 
 void wxTranslationHelper::Save()
 {
-    sett().SetLanguageID( m_Locale->GetLanguage() );
-    sett().SaveSettings();
+	cfg().Write(_T( "/General/LanguageID" ) , m_Locale->GetLanguage());
 }
 
-void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names,
-												 wxArrayLong & identifiers,
-												 int& selected_index )
+void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names, wxArrayLong & identifiers)
 {
 	names.Clear();
 	identifiers.Clear();
 	wxString filename;
 	const wxLanguageInfo * langinfo;
 	wxString name = wxLocale::GetLanguageName( wxLANGUAGE_DEFAULT );
-	if(!name.IsEmpty())
-	{
+	if(!name.IsEmpty()) {
 		names.Add( _("Default") );
 		identifiers.Add( wxLANGUAGE_DEFAULT );
 	}
-	if( !wxDir::Exists( m_SearchPath ) )
-	{
-		wxLogError( _T("Directory %s DOES NOT EXIST !!!"),
-                    m_SearchPath.GetData() );
+	if( !wxDir::Exists( m_SearchPath ) ) {
+		wxLogError( _T("Directory %s DOES NOT EXIST"), m_SearchPath.GetData() );
 		return;
 	}
 	wxDir dir( m_SearchPath );
@@ -113,54 +92,51 @@ void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names,
 	wxString mask = wxT("*");
 #endif
 
-    selected_index = -1;
-	for(bool cont = dir.GetFirst(&filename, mask, wxDIR_DEFAULT);
-            cont; cont = dir.GetNext( &filename) )
-	{
+	for(bool cont = dir.GetFirst(&filename, mask, wxDIR_DEFAULT); cont; cont = dir.GetNext( &filename) ) {
 		langinfo = wxLocale::FindLanguageInfo(filename);
-		if(langinfo != NULL)
-		{
-		    wxString mo_file = dir.GetName() +
-                            wxFileName::GetPathSeparator() +
-                            filename +
-                            wxFileName::GetPathSeparator() +
-                            _T("LC_MESSAGES") +
-                            wxFileName::GetPathSeparator() +
-                            m_App.GetAppName().Lower() + wxT(".mo") ;
+		if (langinfo != NULL) {
+			wxString mo_file = dir.GetName() + wxFileName::GetPathSeparator() + filename + wxFileName::GetPathSeparator() + _T("LC_MESSAGES") + wxFileName::GetPathSeparator() + catalogname + wxT(".mo") ;
 			wxLogInfo( _("SEARCHING FOR %s"), mo_file.GetData() );
-			if( wxFileExists( mo_file ) )
-			{
+			if( wxFileExists( mo_file ) ) {
 				names.Add(langinfo->Description);
 				identifiers.Add(langinfo->Language);
-				if ( langinfo->Language == sett().GetLanguageID() )
-                    selected_index = names.GetCount() -1;
 			}
 		}
 	}
 }
 
-bool wxTranslationHelper::AskUserForLanguage( wxArrayString& names,
-											  wxArrayLong& identifiers,
-											  int selected_index)
+long wxTranslationHelper::GetLangID(const long index, const wxArrayLong identifiers) const
 {
-	wxCHECK_MSG( names.Count() == identifiers.Count(), false,
-		_("Array of language names and identifiers should have the same size.") );
-	long index = GetSingleChoiceIndex( _("Select the language"),
-			_("Language"), names, selected_index );
-	if( index != -1 )
-	{
-		if( m_Locale )
-		{
+	int j=0;
+	for(auto i: identifiers) {
+		if (index == i) {
+			return j;
+		}
+		j++;
+	}
+	return -1;
+}
+
+bool wxTranslationHelper::AskUserForLanguage()
+{
+	wxArrayString names;
+	wxArrayLong identifiers;
+
+	GetInstalledLanguages(names, identifiers);
+	const long cfgidx = cfg().ReadLong(_T("/General/LanguageID"));
+
+	assert(names.Count() == identifiers.Count());
+	long index = GetSingleChoiceIndex( _("Select the language"), _("Language"), names, GetLangID(cfgidx, identifiers));
+	if( index != -1 ) {
+		if( m_Locale ) {
 			wxDELETE( m_Locale );
 		}
 		m_Locale = new wxLocale;
 		m_Locale->Init( identifiers[index] );
 		m_Locale->AddCatalogLookupPathPrefix( m_SearchPath );
-		wxLogInfo( _("wxTranslationHelper: Path Prefix = \"%s\""),
-			m_SearchPath.GetData() );
+		wxLogInfo( _("wxTranslationHelper: Path Prefix = \"%s\""), m_SearchPath.GetData() );
 		m_Locale->AddCatalog( GetAppName( true ) );
-		wxLogInfo( _("wxTranslationHelper: Catalog Name = \"%s\""),
-			GetAppName( true ).c_str() );
+		wxLogInfo( _("wxTranslationHelper: Catalog Name = \"%s\""), GetAppName( true ).c_str() );
 		return true;
 	}
 	return false;

@@ -275,9 +275,6 @@ class Settings : public SL::NonCopyable
     static const int columnWidthUnset = -3;
     static const int columnWidthMinimum = 5;
 
-    void SetLanguageID ( const long id );
-    long GetLanguageID ( );
-
     int GetSashPosition( const wxString& window_name );
     void SetSashPosition( const wxString& window_name, const int pos );
 

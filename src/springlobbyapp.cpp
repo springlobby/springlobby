@@ -125,7 +125,6 @@ bool SpringLobbyApp::OnInit()
 	#endif
 #endif
     m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
-    m_translationhelper->Load();
 
 	if ( !wxDirExists( GetConfigfileDir() ) )
 		wxMkdir( GetConfigfileDir() );
@@ -217,13 +216,7 @@ void SpringLobbyApp::OnFatalException()
 
 bool SpringLobbyApp::SelectLanguage()
 {
-    wxArrayString names;
-    wxArrayLong identifiers;
-    int current_selection_index;
-    m_translationhelper->GetInstalledLanguages( names, identifiers, current_selection_index );
-    bool ret = m_translationhelper->AskUserForLanguage( names, identifiers, current_selection_index );
-    if ( ret ) m_translationhelper->Save();
-    return ret;
+	return m_translationhelper->AskUserForLanguage();
 }
 
 void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)

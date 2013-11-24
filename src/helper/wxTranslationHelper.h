@@ -24,21 +24,18 @@ public:
         \param current_selected will contain the index of currently in settings selected languageID
                 in name/identifiers array, or -1 if notfound
     */
-	void GetInstalledLanguages( wxArrayString& names, wxArrayLong& identifiers, int& current_selected );
-	bool AskUserForLanguage( wxArrayString& names, wxArrayLong& identifiers, int selected_index );
-	bool Load();
-	void Save();
-
-	const wxString & GetSearchPath() const;
-	void SetSearchPath( const wxString& value );
+	bool AskUserForLanguage();
 
 private:
-    wxApp& m_App;
+	bool Load();
+	void Save();
+	void GetInstalledLanguages( wxArrayString& names, wxArrayLong& identifiers);
+	long GetLangID(const long index, const wxArrayLong identifiers) const;
 	wxString m_SearchPath;
+	wxString catalogname;
 	wxLocale * m_Locale;
 	bool m_UseNativeConfig;
 
-    wxTranslationHelper( const wxTranslationHelper& );
 };
 
 #endif

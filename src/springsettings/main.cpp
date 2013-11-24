@@ -125,7 +125,6 @@ bool Springsettings::OnInit()
 	#endif
 #endif
 	m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
-	m_translationhelper->Load();
 
     SetSettingsStandAlone( true );
 
