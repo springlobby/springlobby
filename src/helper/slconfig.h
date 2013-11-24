@@ -28,7 +28,7 @@
 // it will result in an assertion error
 //
 #define SLCONFIG(name, defVal, description) \
-	static slConfigDefault SLCONFIG_PASTE(slCfgVar, __LINE__)  = slConfigDefault(_T( #name ), defVal)
+	static slConfigDefault SLCONFIG_PASTE(slCfgVar, __LINE__)  = slConfigDefault(_T( name ), defVal)
 
 
 

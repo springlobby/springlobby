@@ -156,7 +156,7 @@ template <class T>
 void Default<T>::Get(const wxString& key, T& defValue) const {
 	// TODO make find work or use other container
 	for (auto it=defaultMap.begin(); it!=defaultMap.end(); ++it) {
-		if (it->first.Cmp(key)) {
+		if (it->first.IsSameAs(key)) {
 			defValue = it->second;
 			return;
 		}
