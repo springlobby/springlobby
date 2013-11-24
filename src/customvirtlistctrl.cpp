@@ -41,7 +41,7 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
 	wxListCtrl(parent, id, pt, sz, style | wxLC_VIRTUAL),
 	m_tiptimer(this, IDD_TIP_TIMER),
 	m_sort_timer(this, IDD_SORT_TIMER),
-	m_tiptext(_T("")),
+	m_tiptext(wxEmptyString),
 #if wxUSE_TIPWINDOW
 	m_tipwindow( 0 ),
 	m_controlPointer( 0 ),
@@ -254,7 +254,7 @@ void CustomVirtListCtrl<T,L>::OnMouseMotion(wxMouseEvent& event)
 	m_last_mouse_pos = event.GetPosition();
 
 	if (event.Leaving()) {
-		m_tiptext = _T("");
+		m_tiptext = wxEmptyString;
 		if (m_tipwindow) {
 			m_tipwindow->Close();
 			m_tipwindow = 0;
@@ -293,7 +293,7 @@ void CustomVirtListCtrl<T,L>::SetTipWindowText( const long /*unused*/ , const wx
 {
 	int column = getColumnFromPosition(position);
 	if (column >= int(m_colinfovec.size()) || column < 0) {
-		m_tiptext = _T("");
+		m_tiptext = wxEmptyString;
 	} else {
 		m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
 		m_tiptext = TE(m_colinfovec[column].tip);

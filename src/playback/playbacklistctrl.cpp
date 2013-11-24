@@ -61,7 +61,7 @@ PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
     }
 
 
-    m_popup = new wxMenu( _T("") );
+    m_popup = new wxMenu( wxEmptyString );
     // &m enables shortcout "alt + m" and underlines m
     m_popup->Append( RLIST_DLMAP, _("Download &map") );
     m_popup->Append( RLIST_DLMOD, _("Download m&od") );
@@ -152,7 +152,7 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
     int column = getColumnFromPosition( position );
     if (column > (int)m_colinfovec.size() || column < 0)
     {
-        m_tiptext = _T("");
+        m_tiptext = wxEmptyString;
     }
     else
     {
@@ -176,7 +176,7 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
                 m_tiptext = replay.Filename;
                 break;
 
-            default: m_tiptext = _T("");
+            default: m_tiptext = wxEmptyString;
             break;
         }
     }

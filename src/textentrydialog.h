@@ -10,7 +10,7 @@ public:
 		long inputstyle=0;
 		if (multiline)
 			inputstyle=wxTE_MULTILINE;
-		input = new wxTextCtrl(this, -1, _(""), wxDefaultPosition, wxDefaultSize, inputstyle);
+		input = new wxTextCtrl(this, -1, wxEmptyString, wxDefaultPosition, wxDefaultSize, inputstyle);
 		if (multiline)
 			input->SetInitialSize(wxSize(400, 300));
 		SetValue(answer);

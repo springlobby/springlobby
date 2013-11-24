@@ -161,7 +161,7 @@ PlaybackTab<PlaybackTraits>::~PlaybackTab()
 	if ( m_filter != 0 )
 		m_filter->SaveFilterValues();
 
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 }
 
 template < class PlaybackTraits >
@@ -373,7 +373,7 @@ void PlaybackTab<PlaybackTraits>::OnFilterActiv( wxCommandEvent& /*unused*/ )
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::OnSelect( wxListEvent& event )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	if ( event.GetIndex() == -1 ) {
 		Deselect();
 	}
@@ -393,7 +393,7 @@ void PlaybackTab<PlaybackTraits>::OnSelect( wxListEvent& event )
 
 			wxLogMessage( _T( "Selected replay %d " ), m_sel_replay_id );
 
-			m_players_text->SetLabel( _T( "" ) );
+			m_players_text->SetLabel( wxEmptyString );
 			m_map_text->SetLabel( rep.battle.GetHostMapName() );
 			m_mod_text->SetLabel( rep.battle.GetHostModName() );
 			m_minimap->SetBattle( &( rep.battle ) );
@@ -435,9 +435,9 @@ void PlaybackTab<PlaybackTraits>::Deselected()
 {
 	m_watch_btn->Enable( false );
 	m_delete_btn->Enable( false );
-	m_players_text->SetLabel( _T( "" ) );
-	m_map_text->SetLabel( _T( "" ) );
-	m_mod_text->SetLabel( _T( "" ) );
+	m_players_text->SetLabel( wxEmptyString );
+	m_map_text->SetLabel( wxEmptyString );
+	m_mod_text->SetLabel( wxEmptyString );
 	m_minimap->SetBattle( NULL );
 	m_minimap->UpdateMinimap();
 	m_minimap->Refresh();

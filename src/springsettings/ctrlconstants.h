@@ -261,7 +261,7 @@ const Control VO_SLI[] = {
 const category_sizes_map_type VO_SLI_entry ( _T("VO_SLI"), sizeof(VO_SLI) / Control_size );
 
 const Control VO_SLI_EXT[] = {
-	{_T(""), _T("FSAA"), -1, _T("0"), {_T("")}}
+	{wxEmptyString, _T("FSAA"), -1, _T("0"), {wxEmptyString}}
 };
 
 const category_sizes_map_type VO_SLI_EXT_entry ( _T("VO_SLI_EXT"), sizeof(VO_SLI_EXT) / Control_size );
@@ -270,7 +270,7 @@ const Control AO_SLI[] = {
 	{_("Maximum simultaneous sounds"), _T("MaxSounds"),            ID_AO_SLI_0,	_T("128") , {_("maximum different sounds played at the same time\n"
 																								"Set this to zero to disable sound completely.")}},
 	{_("Master sound volume"),   _T("snd_volmaster"),                ID_AO_SLI_1,	_T("60"), {_("master sound volume")}},
-	{_("General sound volume"),   _T("snd_general"),                ID_AO_SLI_2,	_T(""), {_("general volume relative to master volume")}},
+	{_("General sound volume"),   _T("snd_general"),                ID_AO_SLI_2,	wxEmptyString, {_("general volume relative to master volume")}},
 	{_("Unit reply volume"),     _T("snd_volunitreply"),       ID_AO_SLI_3,	_T("100") , {_("reply volume relative to master volume")}},
 	{_("Battle volume"),     _T("snd_volbattle"),       ID_AO_SLI_4,	_T("100") , {_("battle volume relative to global volume")}},
 	{_("User interface volume"),     _T("snd_volui"),       ID_AO_SLI_5,	_T("100") , {_("ui volume relative to global volume")}},
@@ -306,7 +306,7 @@ const Control UI_CBOX[] = {
 	{_("Show commands on mini-map"),                       _T("MiniMapDrawCommands"), ID_WINDOWP_UI_CBOX_3,	_T("1"), {_("default value is \"on\"")}},
 	{_("Draw icons on mini-map"),                          _T("MiniMapIcons"),        ID_WINDOWP_UI_CBOX_4,	_T("1"), {_("default value is \"on\"")}},
 	{_("Draw markers on mini-map"),                        _T("MiniMapMarker"),       ID_WINDOWP_UI_CBOX_5,	_T("1"), {_("default value is \"on\"")}},
-	{_("Mini-map on left (single screen)"), 				_T("MinimapOnLeft"),       ID_WINDOWP_UI_CBOX_6,	_T(""), {_("left is the default")}},
+	{_("Mini-map on left (single screen)"), 				_T("MinimapOnLeft"),       ID_WINDOWP_UI_CBOX_6, wxEmptyString, {_("left is the default")}},
 	{_("Mini-map on left (dual screen)"),   				_T("DualScreenMiniMapOnLeft"), ID_WINDOWP_UI_CBOX_7,_T("0"), {_("left is the default")}},
 	{_("Simplified mini-map colors"),                      _T("SimpleMiniMapColors"), ID_WINDOWP_UI_CBOX_8,	_T("0"), {_("Use less colors")}},
 
@@ -343,22 +343,22 @@ const Control MO_SLI[] = {
 const category_sizes_map_type MO_SLI_entry ( _T("MO_SLI"), sizeof(MO_SLI) / Control_size );
 
 const Control MO_SLI_EXT[] = {
-	{_T(""), _T("OverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
+	{wxEmptyString, _T("OverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
 													"Can be changed ingame.")}},
-	{_T(""), _T("RotOverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
+	{wxEmptyString, _T("RotOverheadEnabled"), -1,	_T("1"), {_("Make this the default view when startins Spring.\n"
 													"Can be changed ingame.")}},
-	{_T(""), _T("TWEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n"
+	{wxEmptyString, _T("TWEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n"
 												"Can be changed ingame.")}},
-	{_T(""), _T("FPSEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n"
+	{wxEmptyString, _T("FPSEnabled"), -1,		_T("1"), {_("Make this the default view when startins Spring.\n"
 												"Can be changed ingame.")}},
-	{_T(""), _T("CamFreeEnabled"), -1,	_T("0"), {_("Make this the default view when startins Spring.\n"
+	{wxEmptyString, _T("CamFreeEnabled"), -1,	_T("0"), {_("Make this the default view when startins Spring.\n"
 												"Can be changed ingame.")}},
 };
 
 const category_sizes_map_type MO_SLI_EXT_entry ( _T("MO_SLI_EXT"), sizeof(MO_SLI_EXT) / Control_size );
 
 const Control DO_SLI[] = {
-	{_("Console verbose level (0=min,10=max)"), _T("VerboseLevel"), ID_DO_SLI_0,	_T(""), {_("How much information should be outputted?")}}
+	{_("Console verbose level (0=min,10=max)"), _T("VerboseLevel"), ID_DO_SLI_0,	wxEmptyString, {_("How much information should be outputted?")}}
 };
 
 const category_sizes_map_type DO_SLI_entry ( _T("DO_SLI"), sizeof(DO_SLI) / Control_size );
@@ -402,8 +402,8 @@ const Control MO_RBUT[] = {
 const category_sizes_map_type MO_RBUT_entry ( _T("MO_RBUT"), sizeof(MO_RBUT) / Control_size );
 
 const Control RC_TEXT[] = {
-	{_T(""), _T("XResolution"), -1,	_T(""), {_("screen width")}},
-	{_T(""), _T("YResolution"), -1,	_T("") , {_("screen height")}}
+	{wxEmptyString, _T("XResolution"), -1,	wxEmptyString, {_("screen width")}},
+	{wxEmptyString, _T("YResolution"), -1,	wxEmptyString, {_("screen height")}}
 };
 
 const category_sizes_map_type RC_TEXT_entry ( _T("RC_TEXT"), sizeof(RC_TEXT) / Control_size );
@@ -411,19 +411,15 @@ const category_sizes_map_type RC_TEXT_entry ( _T("RC_TEXT"), sizeof(RC_TEXT) / C
 
 const Control W4_CONTROLS[] = {
     //booleans = checkboxes
-	{_("Blur reflection"), _T("BumpWaterBlurReflection"), ID_W4_BumpWaterBlurReflection , _T("0"), {_T("")}},
+	{_("Blur reflection"), _T("BumpWaterBlurReflection"), ID_W4_BumpWaterBlurReflection , _T("0"), {wxEmptyString}},
     {_("Use depth texture"), _T("BumpWaterUseDepthTexture"), ID_W4_BumpWaterUseDepthTexture , _T("1"), {_("enables smoother blending on coastlines")}},
     {_("Shore waves"), _T("BumpWaterShoreWaves"), ID_W4_BumpWaterShoreWaves , _T("1"), {_("Enables shorewaves")}},
     {_("Reflection"), _T("BumpWaterReflection"), ID_W4_BumpWaterReflection , _T("1"), {_("Turn on water reflections")}},
     // select boxes
-	{_("Reflection texture size"), _T("BumpWaterTexSizeReflection"), ID_W4_BumpWaterTexSizeReflection , _T("512"), {_T("")}},
+	{_("Reflection texture size"), _T("BumpWaterTexSizeReflection"), ID_W4_BumpWaterTexSizeReflection , _T("512"), {wxEmptyString}},
     {_("Refraction"), _T("BumpWaterRefraction"), ID_W4_BumpWaterRefraction , _T("1"), {_("Turn on water refractions.\n(0:=off, 1:=screencopy(fast), 2:=own rendering pass(slow)).")}},
     // spin control
-	{_("Anisotropy"), _T("BumpWaterAnisotropy"), ID_W4_BumpWaterAnisotropy , _T("0.0"), {_T("")}},
-	//     {_T(""), _T(""), ID_W4_ , _T(""), {_T("")}},
-	//     {_T(""), _T(""), ID_W4_ , _T(""), {_T("")}},
-	//     {_T(""), _T(""), ID_W4_ , _T(""), {_T("")}},
-	//     {_T(""), _T(""), ID_W4_ , _T(""), {_T("")}},
+	{_("Anisotropy"), _T("BumpWaterAnisotropy"), ID_W4_BumpWaterAnisotropy , _T("0.0"), {wxEmptyString}},
 
 };
 
