@@ -145,7 +145,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
     wxBoxSizer* m_regnick_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-    m_regnick_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Nick"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_regnick_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Nickname"), wxDefaultPosition, wxDefaultSize, 0 );
     m_regnick_sizer->Add( m_regnick_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
 
     m_regnick_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
