@@ -17,9 +17,8 @@ SLCONFIG("/General/LanguageID", (long)wxLANGUAGE_DEFAULT, "Language ID" );
 
 wxTranslationHelper::wxTranslationHelper( wxApp & app, const wxString & search_path ) :
 	m_SearchPath(search_path),
-	m_Locale(NULL),
-	m_UseNativeConfig(false),
-	catalogname(app.GetAppName().Lower())
+	catalogname(app.GetAppName().Lower()),
+	m_Locale(NULL)
 {
 	if(search_path.IsEmpty()) {
 		m_SearchPath = wxPathOnly(app.argv[0]);
@@ -43,7 +42,6 @@ wxLocale * wxTranslationHelper::GetLocale()
 bool wxTranslationHelper::Load()
 {
 	long language = cfg().ReadLong(_T("/General/LanguageID"));
-
 
 	wxArrayString names;
 	wxArrayLong identifiers;
@@ -70,11 +68,7 @@ void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names, wxArrayL
 	identifiers.Clear();
 	wxString filename;
 	const wxLanguageInfo * langinfo;
-	wxString name = wxLocale::GetLanguageName( wxLANGUAGE_DEFAULT );
-	if(!name.IsEmpty()) {
-		names.Add( _("Default") );
-		identifiers.Add( wxLANGUAGE_DEFAULT );
-	}
+
 	names.Add( _("English") );
 	identifiers.Add( wxLANGUAGE_ENGLISH );
 
@@ -90,13 +84,18 @@ void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names, wxArrayL
 	wxString mask = wxT("*");
 #endif
 
+	int localeid = wxLocale::GetSystemLanguage();
+
 	for(bool cont = dir.GetFirst(&filename, mask, wxDIR_DEFAULT); cont; cont = dir.GetNext( &filename) ) {
 		langinfo = wxLocale::FindLanguageInfo(filename);
 		if (langinfo != NULL) {
 			wxString mo_file = dir.GetName() + wxFileName::GetPathSeparator() + filename + wxFileName::GetPathSeparator() + _T("LC_MESSAGES") + wxFileName::GetPathSeparator() + catalogname + wxT(".mo") ;
 			wxLogInfo( _("SEARCHING FOR %s"), mo_file.GetData() );
 			if( wxFileExists( mo_file ) ) {
-				names.Add(langinfo->Description);
+				if (langinfo->Language == localeid)
+					names.Add(langinfo->Description + _(" (Default)"));
+				else
+					names.Add(langinfo->Description);
 				identifiers.Add(langinfo->Language);
 			}
 		}

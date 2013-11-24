@@ -33,7 +33,6 @@ private:
 	wxString m_SearchPath;
 	wxString catalogname;
 	wxLocale * m_Locale;
-	bool m_UseNativeConfig;
 
 };
 
