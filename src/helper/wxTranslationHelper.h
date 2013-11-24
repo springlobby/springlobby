@@ -28,7 +28,6 @@ public:
 
 private:
 	bool Load();
-	void Save();
 	void GetInstalledLanguages( wxArrayString& names, wxArrayLong& identifiers);
 	long GetLangID(const long index, const wxArrayLong identifiers) const;
 	wxString m_SearchPath;

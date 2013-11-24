@@ -30,7 +30,7 @@ wxTranslationHelper::wxTranslationHelper( wxApp & app, const wxString & search_p
 wxTranslationHelper::~wxTranslationHelper()
 {
 	if(m_Locale) {
-		Save();
+		cfg().Write(_T( "/General/LanguageID" ) , m_Locale->GetLanguage());
 		wxDELETE(m_Locale);
 	}
 }
@@ -64,11 +64,6 @@ bool wxTranslationHelper::Load()
 	return false;
 }
 
-void wxTranslationHelper::Save()
-{
-	cfg().Write(_T( "/General/LanguageID" ) , m_Locale->GetLanguage());
-}
-
 void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names, wxArrayLong & identifiers)
 {
 	names.Clear();
@@ -80,6 +75,9 @@ void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names, wxArrayL
 		names.Add( _("Default") );
 		identifiers.Add( wxLANGUAGE_DEFAULT );
 	}
+	names.Add( _("English") );
+	identifiers.Add( wxLANGUAGE_ENGLISH );
+
 	if( !wxDir::Exists( m_SearchPath ) ) {
 		wxLogError( _T("Directory %s DOES NOT EXIST"), m_SearchPath.GetData() );
 		return;
