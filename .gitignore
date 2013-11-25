@@ -14,7 +14,7 @@ rpm/.gitignore
 *.suo
 *.ncb
 *.o
-po/*
+/po/*.gmo
 Makefile
 Options.fbp
 Updater.fbp
