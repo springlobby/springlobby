@@ -41,7 +41,6 @@ class wxWindow;
 class wxConfigBase;
 class wxFileConfig;
 class wxFont;
-struct BattleListFilterValues;
 struct PlaybackListFilterValues;
 class wxFileInputStream;
 class wxFileName;
@@ -476,11 +475,6 @@ class Settings : public SL::NonCopyable
     /** @name Battle filters
      * @{
      */
-    BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
-    void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
-    wxString GetLastBattleFilterProfileName();
-    void SetBattleFilterActivState( const bool state );
-    bool GetBattleFilterActivState( ) const;
 
     bool GetBattleLastAutoStartState();
     void SetBattleLastAutoStartState( bool value );

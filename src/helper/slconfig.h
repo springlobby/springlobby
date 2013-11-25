@@ -27,8 +27,18 @@
 // It is forbidden to define a default for the same key twice
 // it will result in an assertion error
 //
+// if you have defined a default value, you can use ReadString(key),
+// ReadLong(key), ReadDouble(key) or ReadBool(keu)
+//
+// Note: You can use wxConfigBase's Write mehtods to actually write
+// a setting
+//
+// Note: You can use wxConfigBase's Read methods directly without using
+// the macro, those methods will not access the defaults set with
+// SLCONFIG macro
+//
 #define SLCONFIG(name, defVal, description) \
-	static slConfigDefault SLCONFIG_PASTE(slCfgVar, __LINE__)  = slConfigDefault(_T( #name ), defVal)
+	static slConfigDefault SLCONFIG_PASTE(slCfgVar, __LINE__)  = slConfigDefault(_T( name ), defVal)
 
 
 
@@ -52,6 +62,9 @@ typedef wxFileConfig
 	slConfigBaseType;
 
 //! a proxy class to wxFileConfig
+// it allows direct access to the Read and Write mehtods of wxConfigBase
+// or to set default values using SLCONFIG() macro and ReadString(key),
+// ReadLong(key), ReadDouble(key) or ReadBool(key)
 class slConfig : public slConfigBaseType, public SL::NonCopyable
 {
 	public:
