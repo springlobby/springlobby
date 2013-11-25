@@ -83,7 +83,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
     m_acc_note_line = new wxStaticLine( m_login_tab );
 
 	m_note_lbl = new wxStaticText( m_login_tab, -1, _("Note: If you do not have an account, you can register one for free on the Register tab.") );
-	m_note_lbl->Wrap(300);
+	m_note_lbl->Wrap(400);
 
     m_ok_btn =     new wxButton( this, wxID_OK,     _("Ok") );
     m_cancel_btn = new wxButton( this, wxID_CANCEL, _("Cancel") );
@@ -168,7 +168,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
     wxBoxSizer* m_regpass1_sizer1 = new wxBoxSizer( wxHORIZONTAL );
 
-    m_regpass2_lbl = new wxStaticText( m_register_tab, wxID_ANY, wxT("Retype password"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_regpass2_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Retype password"), wxDefaultPosition, wxDefaultSize, 0 );
     m_regpass1_sizer1->Add( m_regpass2_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
 
     m_regpass2_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
