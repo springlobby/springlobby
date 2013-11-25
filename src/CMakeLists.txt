@@ -347,6 +347,7 @@ TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr
 		${CURL_LIBRARIES}
 		${CURL_LINKFLAGS}
 	)
+add_dependencies(springlobby version)
 IF(UNIX)
 	TARGET_LINK_LIBRARIES(springlobby X11)
 ENDIF(UNIX)
