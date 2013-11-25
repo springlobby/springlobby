@@ -39,21 +39,9 @@
 #include "../defines.h"
 #include "../utils/conversion.h"
 
-const unsigned int TIMER_ID         = 101;
-const unsigned int TIMER_INTERVAL   = 100;
-
-
 IMPLEMENT_APP(UpdaterApp)
 
-BEGIN_EVENT_TABLE(UpdaterApp, wxApp)
-
-    EVT_TIMER(TIMER_ID, UpdaterApp::OnTimer)
-
-
-END_EVENT_TABLE()
-
 UpdaterApp::UpdaterApp():
-	m_timer ( new wxTimer(this, TIMER_ID) ),
 	m_version( _T("-1") ),
 	m_updater_window( 0 )
 {
@@ -71,7 +59,6 @@ UpdaterApp::~UpdaterApp()
     m_logstream_target->flush();
     m_logstream_target->close();
     delete m_logstream_target;
-    delete m_timer;
 }
 
 
@@ -102,8 +89,6 @@ bool UpdaterApp::OnInit()
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
 
-    m_timer->Start( TIMER_INTERVAL );
-
 	if( m_version == _T("-1") )
 		m_version = GetLatestVersion();
 
@@ -118,9 +103,6 @@ bool UpdaterApp::OnInit()
 //! @brief Finalizes the application
 int UpdaterApp::OnExit()
 {
-  	m_timer->Stop();
-
-
     SetEvtHandlerEnabled(false);
     LSL::Util::DestroyGlobals();
 
@@ -140,13 +122,6 @@ void UpdaterApp::OnFatalException()
 #else
     wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
 #endif
-}
-
-
-//! @brief Is called every 1/10 seconds to update statuses
-void UpdaterApp::OnTimer( wxTimerEvent& /*event*/ )
-{
-
 }
 
 void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
