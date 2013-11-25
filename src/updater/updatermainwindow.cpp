@@ -25,7 +25,7 @@ class UpdaterPanel : public wxPanel {
 
         void OnChangelog( wxCommandEvent&  )
         {
-            OpenWebBrowser( _T("http://projects.springlobby.info/embedded/springlobby/index.html") );
+            OpenWebBrowser( _T("https://github.com/springlobby/springlobby/commits/master") );
         }
 
         DECLARE_EVENT_TABLE()
