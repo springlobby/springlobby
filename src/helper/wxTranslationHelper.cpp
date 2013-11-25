@@ -122,8 +122,8 @@ bool wxTranslationHelper::AskUserForLanguage()
 		m_Locale->Init( identifiers[index] );
 		m_Locale->AddCatalogLookupPathPrefix( m_SearchPath );
 		wxLogInfo( _("wxTranslationHelper: Path Prefix = \"%s\""), m_SearchPath.GetData() );
-		m_Locale->AddCatalog( GetAppName( true ) );
-		wxLogInfo( _("wxTranslationHelper: Catalog Name = \"%s\""), GetAppName( true ).c_str() );
+		m_Locale->AddCatalog( catalogname );
+		wxLogInfo( _("wxTranslationHelper: Catalog Name = \"%s\""), catalogname.c_str() );
 		return true;
 	}
 	return false;
