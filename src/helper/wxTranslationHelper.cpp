@@ -74,15 +74,9 @@ void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names, wxArrayL
 	}
 	wxDir dir( m_SearchPath );
 
-#ifdef __WXMSW__
-	wxString mask = wxT("*.*");
-#else
-	wxString mask = wxT("*");
-#endif
-
 	int localeid = wxLocale::GetSystemLanguage();
 
-	for(bool cont = dir.GetFirst(&filename, mask, wxDIR_DEFAULT); cont; cont = dir.GetNext( &filename) ) {
+	for(bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_DIRS); cont; cont = dir.GetNext( &filename) ) {
 		langinfo = wxLocale::FindLanguageInfo(filename);
 		if (langinfo != NULL) {
 			wxString mo_file = dir.GetName() + wxFileName::GetPathSeparator() + filename + wxFileName::GetPathSeparator() + _T("LC_MESSAGES") + wxFileName::GetPathSeparator() + catalogname + wxT(".mo") ;
