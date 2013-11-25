@@ -3,8 +3,6 @@
 
 #include <wx/app.h>
 
-class wxTimer;
-class wxTimerEvent;
 class UpdaterMainwindow;
 
 //! @brief SpringLobby wxApp
@@ -19,16 +17,12 @@ class UpdaterApp : public wxApp
 
     virtual void OnFatalException();
 
-    // System Events
-    void OnTimer( wxTimerEvent& event );
-
     virtual void OnInitCmdLine(wxCmdLineParser& parser);
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
 
   protected:
 
-    wxTimer* m_timer;
 	wxString m_exe_to_update;
 	wxString m_version;
 
@@ -38,7 +32,6 @@ private:
 	std::ofstream* m_logstream_target;
 
 
-    DECLARE_EVENT_TABLE()
 };
 
 DECLARE_APP(UpdaterApp)

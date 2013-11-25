@@ -28,7 +28,6 @@
 
 
 #include "updaterapp.h"
-#include "../settings.h"
 #include "../crashreport.h"
 #include "../utils/platform.h"
 #include "../utils/customdialogs.h"
@@ -121,7 +120,6 @@ int UpdaterApp::OnExit()
 {
   	m_timer->Stop();
 
-  	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
     SetEvtHandlerEnabled(false);
     LSL::Util::DestroyGlobals();
