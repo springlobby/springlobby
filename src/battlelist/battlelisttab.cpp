@@ -27,7 +27,6 @@
 #include "hosting/hostbattledialog_public.h"
 #include "hosting/mainjoinbattletab.h"
 #include "server.h"
-#include "settings.h"
 #include "mapctrl.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"
@@ -35,6 +34,7 @@
 #include "iconimagelist.h"
 #include "useractions.h"
 #include "utils/customdialogs.h"
+#include "helper/slconfig.h"
 
 const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
@@ -56,6 +56,8 @@ BEGIN_EVENT_TABLE( BattleListTab, wxPanel )
 
 
 END_EVENT_TABLE()
+
+SLCONFIG("/BattleFilter/Active", false, "determines if battle list filter is active");
 
 
 BattleListTab::BattleListTab( wxWindow* parent )
@@ -181,7 +183,7 @@ BattleListTab::~BattleListTab()
 
 void BattleListTab::OnConnected()
 {
-	bool filter = sett().GetBattleFilterActivState();
+	bool filter = cfg().ReadBool(_T("/BattleFilter/Active"));
 	SetFilterActiv( filter );
 }
 
@@ -294,7 +296,7 @@ void BattleListTab::SetFilterActiv( bool activ )
 {
 	m_filter->SetActiv( activ );
 	m_filter_activ->SetValue( activ );
-	sett().SetBattleFilterActivState( activ );
+	cfg().Write( _T( "/BattleFilter/Active" ) , activ );
 	m_battle_list->MarkDirtySort();
 }
 
@@ -349,7 +351,7 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& /*unused*/ )
 		return;
 	}
 	m_filter->SetActiv( active );
-	sett().SetBattleFilterActivState( active );
+	cfg().Write( _T( "/BattleFilter/Active" ) , active );
 	SetNumDisplayed();
 }
 

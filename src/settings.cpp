@@ -36,7 +36,6 @@
 #include "utils/debug.h"
 #include "utils/platform.h"
 #include "uiutils.h"
-#include "battlelist/battlelistfiltervalues.h"
 #include "playback/playbackfiltervalues.h"
 #include "customlistctrl.h"
 #include "springsettings/presets.h"
@@ -1256,66 +1255,6 @@ bool Settings::GetRequestAttOnHighlight( )
 	return m_config->Read( _T( "/Chat/ReqAttOnHighlight" ), 0l );
 }
 
-BattleListFilterValues Settings::GetBattleFilterValues( const wxString& profile_name )
-{
-	BattleListFilterValues filtervalues;
-	filtervalues.description =      m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/description" ), wxEmptyString );
-	filtervalues.host =             m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/host" ), wxEmptyString );
-	filtervalues.map =               m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/map" ), wxEmptyString );
-	filtervalues.map_show =         m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/map_show" ), 0L );
-	filtervalues.maxplayer =        m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer" ), _T( "All" ) );
-	filtervalues.maxplayer_mode =   m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer_mode" ), _T( "=" ) );
-	filtervalues.mod =              m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), wxEmptyString );
-	filtervalues.mod_show =         m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/mod_show" ), 0L );
-	filtervalues.player_mode =      m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/player_mode" ), _T( "=" ) );
-	filtervalues.player_num  =      m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/player_num" ), _T( "All" ) );
-	filtervalues.rank =             m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/rank" ), _T( "All" ) );
-	filtervalues.rank_mode =        m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/rank_mode" ), _T( "<" ) );
-	filtervalues.spectator =        m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator" ), _T( "All" ) );
-	filtervalues.spectator_mode =   m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator_mode" ), _T( "=" ) );
-	filtervalues.status_full =      m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_full" ), true );
-	filtervalues.status_locked =    m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_locked" ), true );
-	filtervalues.status_open =      m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_open" ), true );
-	filtervalues.status_passworded = m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_passworded" ), true );
-	filtervalues.status_start =     m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_start" ), true );
-	filtervalues.highlighted_only = m_config->Read( _T( "/BattleFilter/" ) + profile_name + _T( "/highlighted_only" ), 0l );
-	return filtervalues;
-}
-
-void Settings::SetBattleFilterValues( const BattleListFilterValues& filtervalues, const wxString& profile_name )
-{
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/description" ), filtervalues.description );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/host" ), filtervalues.host );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/map" ), filtervalues.map );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/map_show" ), filtervalues.map_show );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer" ), filtervalues.maxplayer );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer_mode" ), filtervalues.maxplayer_mode );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), filtervalues.mod );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/mod_show" ), filtervalues.mod_show );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/player_mode" ), filtervalues.player_mode );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/player_num" ), filtervalues.player_num );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/rank" ), filtervalues.rank );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/rank_mode" ), filtervalues.rank_mode );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator" ), filtervalues.spectator );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator_mode" ), filtervalues.spectator_mode );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/status_full" ), filtervalues.status_full );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/status_locked" ), filtervalues.status_locked );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/status_open" ), filtervalues.status_open );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/status_passworded" ), filtervalues.status_passworded );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/status_start" ), filtervalues.status_start );
-	m_config->Write( _T( "/BattleFilter/" ) + profile_name + _T( "/highlighted_only" ), filtervalues.highlighted_only );
-	m_config->Write( _T( "/BattleFilter/lastprofile" ), profile_name );
-}
-
-bool Settings::GetBattleFilterActivState() const
-{
-	return m_config->Read( _T( "/BattleFilter/Active" ) , 0l );
-}
-
-void Settings::SetBattleFilterActivState( const bool state )
-{
-	m_config->Write( _T( "/BattleFilter/Active" ) , state );
-}
 
 bool Settings::GetBattleLastAutoStartState()
 {
@@ -1426,10 +1365,6 @@ void Settings::SetDisableSpringVersionCheck(bool disable)
     m_config->Write( _T( "/Spring/DisableVersionCheck" ), ( bool )disable );
 }
 
-wxString Settings::GetLastBattleFilterProfileName()
-{
-	return  m_config->Read( _T( "/BattleFilter/lastprofile" ), _T( "default" ) );
-}
 
 wxString Settings::GetTempStorage()
 {
