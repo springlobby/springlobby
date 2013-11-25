@@ -1,6 +1,5 @@
 #include "wxTranslationHelper.h"
 #include <wx/dir.h>
-#include <wx/config.h>
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/intl.h>
