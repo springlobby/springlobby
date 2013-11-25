@@ -49,12 +49,10 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
     m_menu( popup )
 {
 
-	const int widths [4] = { 20, 20, 20, 120 };
-
-	AddColumn( 0, widths[0], _( "s" ), _T( "Status" ) );
-	AddColumn( 1, widths[1], _( "c" ), _T( "Country" ) );
-	AddColumn( 2, widths[2], _( "r" ), _T( "Rank" ) );
-	AddColumn( 3, widths[3], _( "Nickname" ), _T( "Nickname" ) );
+	AddColumn( 0, 20, _( "s" ), _T( "Status" ) );
+	AddColumn( 1, 20, _( "c" ), _T( "Country" ) );
+	AddColumn( 2, 20, _( "r" ), _T( "Rank" ) );
+	AddColumn( 3, 120, _( "Nickname" ), _T( "Nickname" ) );
 
 	if ( m_sortorder.size() == 0 ) {
 		m_sortorder[0].col = 0;

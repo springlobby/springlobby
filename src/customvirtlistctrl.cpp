@@ -117,7 +117,6 @@ void CustomVirtListCtrl<T,L>::AddColumn(long i, int width, const wxString& label
 {
 	m_columnCount++;
 	wxListCtrl::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
-	SetColumnWidth( i, width );
 	colInfo temp( i, label, tip, modifiable, width );
 	m_colinfovec.push_back( temp );
 }
@@ -533,7 +532,6 @@ bool CustomVirtListCtrl<T,L>::AddItem( const T& item )
 	m_data.push_back( item );
 	SetItemCount( m_data.size() );
 	RefreshItem( m_data.size() - 1 );
-	//SetColumnWidth( 5, wxLIST_AUTOSIZE ); //! TODO does this really work?
 	MarkDirtySort();
 	return true;
 }

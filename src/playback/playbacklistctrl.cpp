@@ -31,22 +31,15 @@ PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
 							wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
 							_T("PlaybackListCtrl"), 4, &PlaybackListCtrl::CompareOneCrit )
 {
-#ifdef __WXMSW__
-    const int hd = wxLIST_AUTOSIZE_USEHEADER;
-    const int widths[8] = {80,140,141,hd,160,hd,70,180};
-#else
-    const int widths[8] = {80,140,141,50,160,50,70,180};
 
-#endif
-
-    AddColumn( 0, widths[0], _("Date"), _("Date of recording") );
-	AddColumn( 1, widths[1], _("Game"), _("Game name") );
-    AddColumn( 2, widths[2], _("Map"), _("Mapname") );
-    AddColumn( 3, widths[3], _("Players"), _("Number of players") );
-    AddColumn( 4, widths[4], _("Duration"), _T("Duration") );
-    AddColumn( 5, widths[5], _("Spring Version"), _("Spring Version") );
-    AddColumn( 6, widths[6], _("Filesize"), _("Filesize in kilobyte") );
-    AddColumn( 7, widths[7], _("File"), _T("Filename") );
+	AddColumn( 0, 152, _("Date"), _("Date of recording") );
+	AddColumn( 1, 203, _("Game"), _("Game name") );
+	AddColumn( 2, 179, _("Map"), _("Mapname") );
+	AddColumn( 3, 59, _("Players"), _("Number of players") );
+	AddColumn( 4, 79, _("Duration"), _T("Duration") );
+	AddColumn( 5, 51, _("Spring Version"), _("Spring Version") );
+	AddColumn( 6, 66, _("Filesize"), _("Filesize in kilobyte") );
+	AddColumn( 7, 330, _("File"), _T("Filename") );
 
     if ( m_sortorder.size() == 0 ) {
       m_sortorder[0].col = 0;
