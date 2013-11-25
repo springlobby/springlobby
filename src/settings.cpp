@@ -151,6 +151,9 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 	if ( settversion < 25 ) {
 		SetDisableSpringVersionCheck(false);
 	}
+	if ( settversion < 26 ) { // language id before was stored by index, now its stored by the id
+		cfg().Write(_T("/General/LanguageID"), 0);
+	}
 	// after updating, set current version
 	m_config->Write(_T("/General/SettingsVersion"), SETTINGS_VERSION);
 }

@@ -12,7 +12,7 @@
 
 
 const long CACHE_VERSION     = 12;
-const long SETTINGS_VERSION  = 25;
+const long SETTINGS_VERSION  = 26;
 
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");

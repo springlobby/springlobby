@@ -18,7 +18,11 @@ wxTranslationHelper::wxTranslationHelper(const wxString& catalog, const wxString
 	if(search_path.IsEmpty()) {
 		m_SearchPath = GetExecutableFolder();
 	}
-	Load();
+	long language = cfg().ReadLong(_T("/General/LanguageID"));
+	if (!Load(language)) { //fallback when something went wrong
+		int localeid = wxLocale::GetSystemLanguage();
+		Load(localeid);
+	}
 }
 
 wxTranslationHelper::~wxTranslationHelper()
@@ -33,16 +37,17 @@ wxLocale * wxTranslationHelper::GetLocale()
 	return m_Locale;
 }
 
-bool wxTranslationHelper::Load()
+bool wxTranslationHelper::Load(int language)
 {
-	long language = cfg().ReadLong(_T("/General/LanguageID"));
 
 	wxArrayString names;
 	wxArrayLong identifiers;
 	GetInstalledLanguages( names, identifiers);
 	for(size_t i = 0; i < identifiers.Count(); i++) {
 		if( identifiers[i] == language ) {
-			if(m_Locale) wxDELETE( m_Locale );
+			if( m_Locale ) {
+				wxDELETE( m_Locale );
+			}
 			m_Locale = new wxLocale;
 			m_Locale->Init( identifiers[i] );
 			m_Locale->AddCatalogLookupPathPrefix( m_SearchPath );
@@ -111,18 +116,12 @@ bool wxTranslationHelper::AskUserForLanguage()
 	assert(names.Count() == identifiers.Count());
 	long index = GetSingleChoiceIndex( _("Select the language"), _("Language"), names, GetLangID(cfgidx, identifiers));
 	if( index != -1 ) {
-		if( m_Locale ) {
-			wxDELETE( m_Locale );
+		int lang = identifiers[index];
+		if (Load(lang)) {
+			cfg().Write(_T( "/General/LanguageID" ), lang);
+			cfg().SaveFile(); //instant save to config
+			return true;
 		}
-		m_Locale = new wxLocale;
-		m_Locale->Init( identifiers[index] );
-		m_Locale->AddCatalogLookupPathPrefix( m_SearchPath );
-		wxLogInfo( _("wxTranslationHelper: Path Prefix = \"%s\""), m_SearchPath.GetData() );
-		m_Locale->AddCatalog( catalogname );
-		wxLogInfo( _("wxTranslationHelper: Catalog Name = \"%s\""), catalogname.c_str() );
-		cfg().Write(_T( "/General/LanguageID" ) , identifiers[index]);
-		cfg().SaveFile(); //instant save to config
-		return true;
 	}
 	return false;
 }
