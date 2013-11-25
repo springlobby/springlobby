@@ -40,10 +40,8 @@ bool wxTranslationHelper::Load()
 	wxArrayString names;
 	wxArrayLong identifiers;
 	GetInstalledLanguages( names, identifiers);
-	for(size_t i = 0; i < identifiers.Count(); i++)
-	{
-		if( identifiers[i] == language )
-		{
+	for(size_t i = 0; i < identifiers.Count(); i++) {
+		if( identifiers[i] == language ) {
 			if(m_Locale) wxDELETE( m_Locale );
 			m_Locale = new wxLocale;
 			m_Locale->Init( identifiers[i] );

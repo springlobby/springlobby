@@ -21,9 +21,9 @@ public:
 	wxLocale * GetLocale();
 
 	/** \brief put names and ID for all found .mo files
-        \param current_selected will contain the index of currently in settings selected languageID
-                in name/identifiers array, or -1 if notfound
-    */
+	\param current_selected will contain the index of currently in settings selected languageID
+	        in name/identifiers array, or -1 if notfound
+	*/
 	bool AskUserForLanguage();
 
 private:
