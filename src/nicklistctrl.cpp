@@ -52,7 +52,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
 	AddColumn( 0, 20, _( "s" ), _T( "Status" ) );
 	AddColumn( 1, 20, _( "c" ), _T( "Country" ) );
 	AddColumn( 2, 20, _( "r" ), _T( "Rank" ) );
-	AddColumn( 3, 120, _( "Nickname" ), _T( "Nickname" ) );
+	AddColumn( 3, 180, _( "Nickname" ), _T( "Nickname" ) );
 
 	if ( m_sortorder.size() == 0 ) {
 		m_sortorder[0].col = 0;
