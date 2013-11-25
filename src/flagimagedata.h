@@ -66,6 +66,7 @@
 #include "images/flags/ER.xpm"
 #include "images/flags/ES.xpm"
 #include "images/flags/ET.xpm"
+#include "images/flags/EU.xpm"
 #include "images/flags/FAM.xpm"
 #include "images/flags/FI.xpm"
 #include "images/flags/FJ.xpm"
@@ -310,6 +311,7 @@ const char* flag_str[] = {
 "ER",
 "ES",
 "ET",
+"EU",
 "FAM",
 "FI",
 "FJ",
@@ -556,6 +558,7 @@ EH_xpm,
 ER_xpm,
 ES_xpm,
 ET_xpm,
+EU_xpm,
 FAM_xpm,
 FI_xpm,
 FJ_xpm,
