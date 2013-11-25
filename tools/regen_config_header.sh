@@ -18,7 +18,10 @@ REV_TEMPLATE="@SPRINGLOBBY_REV@"
 git branch &> /dev/null || exit 0
 
 REV="$(git describe --tags)"
-OLDREV=$(cat ${VERSIONFILE} || exit 0)
+OLDREV=""
+if [ -s ${VERSIONFILE} ]; then
+	OLDREV=$(cat ${VERSIONFILE})
+fi
 
 if [ "${OLDREV}" != "${REV}" ]; then # version changed, update file
 	echo "Updating from version ${OLDREV} to ${REV}"
