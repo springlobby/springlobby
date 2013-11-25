@@ -57,6 +57,7 @@ const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
 
 SLCONFIG("/General/SettingsVersion", SETTINGS_VERSION, "version of settings file");
+SLCONFIG("/General/CacheVersion", CACHE_VERSION, "version of used cache");
 SLCONFIG("/General/firstrun", true, "true if app is run first time");
 
 
