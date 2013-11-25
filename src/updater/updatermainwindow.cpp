@@ -70,7 +70,8 @@ END_EVENT_TABLE()
   * @todo: document this function
   */
  UpdaterMainwindow::UpdaterMainwindow( const wxString& rev_string ):
-	wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) )
+	wxFrame( NULL, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) ),
+	GlobalEvent()
 //                wxMINIMIZE_BOX | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN  ),
 {
     SetIcon( wxIcon(springlobby12x12_xpm) );
