@@ -1,27 +1,23 @@
 #include "wxTranslationHelper.h"
 #include <wx/dir.h>
 #include <wx/config.h>
-#include <wx/fileconf.h>
 #include <wx/filename.h>
-#include <wx/app.h>
 #include <wx/log.h>
-#include <wx/choicdlg.h>
 #include <wx/intl.h>
+
 #include "helper/slconfig.h"
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
 
-#include "utils/conversion.h"
-
 SLCONFIG("/General/LanguageID", (long)wxLANGUAGE_DEFAULT, "Language ID" );
 
-wxTranslationHelper::wxTranslationHelper( wxApp & app, const wxString & search_path ) :
+wxTranslationHelper::wxTranslationHelper(const wxString& catalog, const wxString & search_path ) :
 	m_SearchPath(search_path),
-	catalogname(app.GetAppName().Lower()),
+	catalogname(catalog),
 	m_Locale(NULL)
 {
 	if(search_path.IsEmpty()) {
-		m_SearchPath = wxPathOnly(app.argv[0]);
+		m_SearchPath = GetExecutableFolder();
 	}
 	Load();
 }

@@ -124,7 +124,7 @@ bool SpringLobbyApp::OnInit()
 		path = path.Left( path.First(_T("noneWH") ) );
 	#endif
 #endif
-    m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
+    m_translationhelper = new wxTranslationHelper( GetAppName().Lower(), path );
 
 	if ( !wxDirExists( GetConfigfileDir() ) )
 		wxMkdir( GetConfigfileDir() );

@@ -16,7 +16,7 @@ class wxTranslationHelper
 {
 
 public:
-	wxTranslationHelper( wxApp & app, const wxString & search_path );
+	wxTranslationHelper(const wxString& catalog, const wxString & search_path );
 	~wxTranslationHelper();
 	wxLocale * GetLocale();
 
