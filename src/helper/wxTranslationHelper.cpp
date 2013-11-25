@@ -25,7 +25,6 @@ wxTranslationHelper::wxTranslationHelper(const wxString& catalog, const wxString
 wxTranslationHelper::~wxTranslationHelper()
 {
 	if(m_Locale) {
-		cfg().Write(_T( "/General/LanguageID" ) , m_Locale->GetLanguage());
 		wxDELETE(m_Locale);
 	}
 }
@@ -124,6 +123,8 @@ bool wxTranslationHelper::AskUserForLanguage()
 		wxLogInfo( _("wxTranslationHelper: Path Prefix = \"%s\""), m_SearchPath.GetData() );
 		m_Locale->AddCatalog( catalogname );
 		wxLogInfo( _("wxTranslationHelper: Catalog Name = \"%s\""), catalogname.c_str() );
+		cfg().Write(_T( "/General/LanguageID" ) , identifiers[index]);
+		cfg().SaveFile(); //instant save to config
 		return true;
 	}
 	return false;
