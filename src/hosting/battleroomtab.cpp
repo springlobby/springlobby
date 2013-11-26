@@ -358,9 +358,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
-	unsigned int widthfraction = m_opts_list->GetClientSize().GetWidth() / 3;
-	m_opts_list->SetColumnWidth( 0, widthfraction * 1.95 );
-	m_opts_list->SetColumnWidth( 1, widthfraction * 0.95 );
 
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
 }
