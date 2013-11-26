@@ -156,11 +156,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, _( "Setup: " ) );
 	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, _( "Unready: 0" ) );
 
-	//XXX not needed ?
-//	m_size_lbl = new wxStaticText( this, -1, wxEmptyString );
-//	m_wind_lbl = new wxStaticText( this, -1, wxEmptyString );
-//	m_tidal_lbl = new wxStaticText( this, -1, wxEmptyString );
-
 	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, wxEmptyString, wxDefaultPosition, wxDefaultSize );
 
 	m_minimap = new MapCtrl( this, 162, m_battle, true, true, true, false );
@@ -278,8 +273,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_opts_list->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
 	m_opts_list->SetToolTip( TE( _( "Activate an element to quickly change it" ) ) );
 
-	m_opts_list->InsertColumn( 0, _( "Option" ), wxLIST_FORMAT_LEFT, 200 );
-	m_opts_list->InsertColumn( 1, _( "Value" ), wxLIST_FORMAT_LEFT, 200 );
+	m_opts_list->InsertColumn( 0, _( "Option" ), wxLIST_FORMAT_LEFT, 160 );
+	m_opts_list->InsertColumn( 1, _( "Value" ), wxLIST_FORMAT_LEFT, 140 );
 
 	// Create Sizers
 	m_players_sizer = new wxBoxSizer( wxVERTICAL );
