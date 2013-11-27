@@ -58,6 +58,7 @@ BEGIN_EVENT_TABLE( BattleListTab, wxPanel )
 END_EVENT_TABLE()
 
 SLCONFIG("/BattleFilter/Active", false, "determines if battle list filter is active");
+SLCONFIG("/BattleListTab/ShowExtendedInfos", true, "determines if panels with battle infos is shown");
 
 
 BattleListTab::BattleListTab( wxWindow* parent )
@@ -168,7 +169,7 @@ BattleListTab::BattleListTab( wxWindow* parent )
 	Layout();
 
 	SelectBattle( 0 );
-	ShowExtendedInfos(true);
+	ShowExtendedInfos(cfg().ReadBool(_T("/BattleListTab/ShowExtendedInfos")));
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleListTab::OnUnitsyncReloaded));
 }
 
@@ -497,6 +498,7 @@ void BattleListTab::ShowExtendedInfos( bool show )
 	m_main_sizer->Show( m_buttons_sep, show, recursive  );
 	m_info_show->SetValue( show );
 	Layout();
+	cfg().Write(_T("/BattleListTab/ShowExtendedInfos"), show);
 }
 
 void BattleListTab::OnInfoShow( wxCommandEvent& /*unused*/ )
