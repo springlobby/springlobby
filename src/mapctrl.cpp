@@ -74,6 +74,8 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
     EVT_PAINT( MapCtrl::OnPaint )
     EVT_SIZE( MapCtrl::OnResize )
     EVT_MOTION( MapCtrl::OnMouseMove )
+    EVT_ENTER_WINDOW( MapCtrl::OnMouseEnter )
+    EVT_MOUSEWHEEL( MapCtrl::OnMouseWheel)
     EVT_LEFT_DOWN( MapCtrl::OnLeftDown )
     EVT_LEFT_UP( MapCtrl::OnLeftUp )
     EVT_RIGHT_UP( MapCtrl::OnRightUp )
@@ -1052,6 +1054,10 @@ void MapCtrl::OnResize( wxSizeEvent& /*unused*/ )
     UpdateMinimap();
 }
 
+void MapCtrl::OnMouseEnter(wxMouseEvent& /*event*/)
+{
+	SetFocus();
+}
 
 void MapCtrl::OnMouseMove( wxMouseEvent& event )
 {

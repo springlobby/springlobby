@@ -41,7 +41,6 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
     EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
     EVT_CHECKBOX( SP_SPECTATE, SinglePlayerTab::OnSpectatorCheck )
     EVT_BUTTON( SP_COLOUR, SinglePlayerTab::OnColorButton )
-    EVT_MOUSEWHEEL( SinglePlayerTab::OnMouseWheel )
 
 END_EVENT_TABLE()
 
@@ -448,18 +447,4 @@ void SinglePlayerTab::UpdatePresetList()
 void SinglePlayerTab::OnReset( wxCommandEvent& /*unused*/ )
 {
 
-}
-
-void SinglePlayerTab::OnMouseWheel( wxMouseEvent& event )
-{
-    if ( m_minimap )
-    {
-        wxRect map_rect = m_minimap->GetRect();
-        if ( map_rect.Contains( event.GetPosition() ) )
-        {
-            m_minimap->OnMouseWheel( event );
-            return;
-        }
-    }
-    event.Skip();
 }

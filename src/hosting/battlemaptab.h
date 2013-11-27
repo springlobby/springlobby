@@ -39,7 +39,6 @@ class BattleMapTab : public wxScrolledWindow, public GlobalEvent
      void OnMapSelect( wxCommandEvent& event );
      void OnMapBrowse( wxCommandEvent& event );
      void OnStartTypeSelect( wxCommandEvent& event );
-     void OnMouseWheel( wxMouseEvent& event );
 
     void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
 

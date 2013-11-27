@@ -47,7 +47,6 @@ class SinglePlayerTab: public  wxScrolledWindow
     void OnSpectatorCheck( wxCommandEvent& event );
     void OnColorButton( wxCommandEvent& event );
     void OnReset( wxCommandEvent& event );
-    void OnMouseWheel( wxMouseEvent& event );
 
     void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
 	void ResetUsername();

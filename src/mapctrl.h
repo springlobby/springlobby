@@ -74,6 +74,7 @@ class MapCtrl : public wxPanel
     void OnPaint( wxPaintEvent& event );
     void OnResize( wxSizeEvent& event );
 
+    void OnMouseEnter( wxMouseEvent& event );
     void OnMouseMove( wxMouseEvent& event );
     void OnLeftDown( wxMouseEvent& event );
     void OnLeftUp( wxMouseEvent& event );
