@@ -20,6 +20,7 @@
 #include "../utils/conversion.h"
 #include "../defines.h"
 #include "../settings.h"
+#include "images/springlobby.xpm"
 #include "images/springsettings.xpm"
 #include "uievents.h"
 
@@ -152,7 +153,7 @@ wxIcon getIcon(int whichIcon)
 {
 	switch (whichIcon) {
 	case SL_MAIN_ICON:
-		return wxIcon(springsettings_xpm);
+		return wxIcon(springlobby_xpm);
 	case SS_MAIN_ICON:
 		return wxIcon(springsettings_xpm);
 	default:
