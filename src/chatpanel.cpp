@@ -365,11 +365,7 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, const 
 	wxTextAttr chatstyle( col, sett().GetChatColorBackground(), fon );
 
 	ChatLine newline;
-#ifdef __WXMSW__
 	newline.chat = wxString( message.c_str() );
-#else
-	newline.chat = message;
-#endif
 	newline.time = _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
 	newline.chatstyle = chatstyle;
 	newline.timestyle = timestyle;
@@ -404,8 +400,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
 	m_chatlog_text->SetDefaultStyle( line.timestyle );
 	m_chatlog_text->AppendText( line.time );
 
-	m_chatlog_text->SetDefaultStyle( line.chatstyle );
-
 #ifndef __WXOSX_COCOA__
 	if ( sett().GetUseIrcColors() ) {
 		wxString m1;
@@ -421,7 +415,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		wxColor curcolor(0,0,0);
 		wxColor oldcolor(0,0,0);
 		curcolor = line.chatstyle.GetTextColour();
-		at = m_chatlog_text->GetDefaultStyle();
+		at = line.chatstyle;
 		font = at.GetFont();
 		oldweight = font.GetWeight();
 		oldcolor = line.chatstyle.GetTextColour();
@@ -476,6 +470,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 	} else
 #endif
 	{
+		m_chatlog_text->SetDefaultStyle( line.chatstyle );
 		m_chatlog_text->AppendText( line.chat );
 	}
 
@@ -622,7 +617,7 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
 //! @param message The MOTD message to output
 void ChatPanel::Motd( const wxString& message )
 {
-	wxFont f = m_chatlog_text->GetFont();
+	wxFont f = sett().GetChatFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
 	// change the image of the tab to show new events
 	SetIconHighlight( highlight_say );
@@ -634,7 +629,7 @@ void ChatPanel::StatusMessage( const wxString& message )
 	if ( m_chatlog_text == 0 ) {
 		wxLogMessage( _T( "m_chatlog_text is NULL" ) );
 	} else {
-		wxFont f = m_chatlog_text->GetFont();
+		wxFont f = sett().GetChatFont();
 		f.SetFamily( wxFONTFAMILY_MODERN );
 		if( CPT_Server == m_type ) SetIconHighlight( highlight_important );
 		OutputLine( _T( " ** Server ** " ) + message, sett().GetChatColorServer(), f );
@@ -643,14 +638,14 @@ void ChatPanel::StatusMessage( const wxString& message )
 
 void ChatPanel::ClientMessage( const wxString& message )
 {
-	wxFont f = m_chatlog_text->GetFont();
+	wxFont f = sett().GetChatFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
 	OutputLine( _T( " ** " ) + message, sett().GetChatColorClient(), f );
 }
 
 void ChatPanel::UnknownCommand( const wxString& command, const wxString& params )
 {
-	wxFont f = m_chatlog_text->GetFont();
+	wxFont f = sett().GetChatFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
 	// change the image of the tab to show new events
 	SetIconHighlight( highlight_important );
@@ -749,7 +744,7 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 	pos = refined.Find( _T("\\n") );
 	}
 	*/
-	wxFont f = m_chatlog_text->GetFont();
+	wxFont f = sett().GetChatFont();
 	f.SetFamily( wxFONTFAMILY_MODERN );
 	// change the image of the tab to show new events
 	if ( m_topic_set )
@@ -1160,13 +1155,11 @@ void ChatPanel::SetBattle( Battle* battle )
 
 void ChatPanel::LoadLastLines()
 {
-#ifdef __WXMSW__
 	wxWindowUpdateLocker noUpdates(m_chatlog_text);
-#endif
 
 	wxArrayString lines = m_chat_log.GetLastLines(  );
 
-	wxFont f = m_chatlog_text->GetFont();
+	wxFont f = sett().GetChatFont();
 	f.SetFamily( wxFONTFAMILY_DECORATIVE );
 	f.SetStyle( wxFONTSTYLE_ITALIC );
 	wxTextAttr chatstyle( sett().GetChatColorTime(), sett().GetChatColorBackground(), f );
