@@ -182,11 +182,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
 
     ICON_EMPTY = Add( wxBitmap(empty_xpm) );
 
-#ifdef __WXMSW__
     ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = ICON_EMPTY;
-#else
-    ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = -1;
-#endif
 
     ICON_WARNING_OVERLAY = Add(charArr2wxBitmap(warning_small_png, sizeof(warning_small_png) ));
 
