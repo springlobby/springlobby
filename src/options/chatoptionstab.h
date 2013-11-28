@@ -30,7 +30,6 @@ class ChatOptionsTab : public wxScrolledWindow
     void OnRestore( wxCommandEvent& event );
 
     void OnSelectFont( wxCommandEvent& event );
-    void OnUseSystemColors( wxCommandEvent& event );
     void OnNormalSelect( wxCommandEvent& event );
     void OnBGSelect( wxCommandEvent& event );
     void OnActionSelect( wxCommandEvent& event );
@@ -70,7 +69,6 @@ class ChatOptionsTab : public wxScrolledWindow
     wxStaticText* m_fontname;
     wxStaticText* m_font_label;
     wxButton* m_select_font;
-    wxCheckBox* m_use_sys_colors;
     wxPanel* m_custom_colors;
     ColorButton* m_normal_color;
     wxStaticText* m_normal_label;

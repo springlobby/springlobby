@@ -39,7 +39,6 @@
 BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
 
 	EVT_BUTTON( ID_SELFONT,         ChatOptionsTab::OnSelectFont            )
-	EVT_CHECKBOX( ID_SYSCOLS,       ChatOptionsTab::OnUseSystemColors       )
 	EVT_BUTTON( ID_NORMAL,          ChatOptionsTab::OnNormalSelect          )
 	EVT_BUTTON( ID_BG,              ChatOptionsTab::OnBGSelect              )
 	EVT_BUTTON( ID_ACTION,          ChatOptionsTab::OnActionSelect          )
@@ -68,12 +67,6 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 
 	wxBoxSizer* bColorsVSizer;
 	bColorsVSizer = new wxBoxSizer( wxVERTICAL );
-
-	m_use_sys_colors = new wxCheckBox( this, ID_SYSCOLS, _( "Use system colors" ), wxDefaultPosition, wxDefaultSize, 0 );
-
-	m_use_sys_colors->Enable( false );
-
-	bColorsVSizer->Add( m_use_sys_colors, 0, wxALL, 5 );
 
 	m_custom_colors = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
 	m_custom_colors->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
@@ -494,11 +487,6 @@ void ChatOptionsTab::OnSelectFont( wxCommandEvent& /*unused*/ )
 		this->Layout();
 		UpdateTextSample();
 	}
-}
-
-
-void ChatOptionsTab::OnUseSystemColors( wxCommandEvent& /*unused*/ )
-{
 }
 
 void ChatOptionsTab::OnColorChange( ColorButton* button )
