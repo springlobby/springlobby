@@ -40,9 +40,9 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
 
-	AddColumn( 0, 49, _("Status"), _("Status") );
-	AddColumn( 1, 61, _("Country"), _("Country") );
-	AddColumn( 2, 38, _("Rank"), _("Minimum rank to join") );
+	AddColumn( 0, 26, wxEmptyString, _("Status") );
+	AddColumn( 1, 26, wxEmptyString, _("Country") );
+	AddColumn( 2, 26, wxEmptyString, _("Minimum rank to join") );
 	AddColumn( 3, 335, _("Description"), _("Battle description") );
 	AddColumn( 4, 170, _("Map"), _("Mapname") );
 	AddColumn( 5, 238, _("Game"), _("Gamename") );
