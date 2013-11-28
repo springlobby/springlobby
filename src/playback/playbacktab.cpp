@@ -65,9 +65,9 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent ):
 	m_replaylist_sizer = new wxBoxSizer( wxVERTICAL );
 
 	m_replay_listctrl = new ListCtrlType( this );
-	m_replaylist_sizer->Add( m_replay_listctrl, 1, wxALL | wxEXPAND, 5 );
+	m_replaylist_sizer->Add( m_replay_listctrl, 1, wxEXPAND);
 
-	m_main_sizer->Add( m_replaylist_sizer, 1, wxEXPAND, 5 );;
+	m_main_sizer->Add( m_replaylist_sizer, 1, wxEXPAND);;
 
 	wxBoxSizer* m_info_sizer;
 	m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
