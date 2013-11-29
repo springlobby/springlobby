@@ -202,9 +202,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 
     sett().SetAutoConnect( m_autojoin->IsChecked() );
     sett().SetDisableSpringVersionCheck(m_disable_version_check->GetValue() );
-#ifdef __WXMSW__
     cfg().Write(_T("/General/AutoUpdate"),  m_updater->IsChecked() );
-#endif
     bool show = m_show_tooltips->IsChecked();
     wxToolTip::Enable(show);
     sett().SetShowTooltips(show);
