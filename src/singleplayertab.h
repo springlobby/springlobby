@@ -66,7 +66,7 @@ class SinglePlayerTab: public  wxScrolledWindow
     wxButton* m_select_btn;
     wxButton* m_addbot_btn;
     wxStaticLine* m_buttons_sep;
-    wxButton* m_reset_btn;
+//    wxButton* m_reset_btn;
     wxCheckBox* m_random_check;
     wxCheckBox* m_spectator_check;
     wxButton* m_start_btn;

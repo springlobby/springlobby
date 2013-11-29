@@ -30,8 +30,9 @@ void OfflineBattle::StartSpring()
 	spring().Run(*this);
 }
 
-OfflineBattle::OfflineBattle ( const OfflineBattle& other )
-    : IBattle()
+OfflineBattle::OfflineBattle ( const OfflineBattle& other ):
+	IBattle(),
+	m_id(0)
 {
     *this = other;
 }

@@ -72,6 +72,7 @@ class BattleListFilter : public wxPanel, public SL::NonCopyable
     bool m_activ;
 
 		BattleListTab* m_parent_battlelisttab;
+/*
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
 #else
@@ -80,7 +81,7 @@ class BattleListFilter : public wxPanel, public SL::NonCopyable
 		wxStaticText* m_filter_text;
 
 		wxCheckBox* m_filter_activ;
-
+*/
         //Host
 		wxStaticText* m_filter_host_text;
 		wxTextCtrl*   m_filter_host_edit;

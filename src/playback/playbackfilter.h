@@ -62,6 +62,7 @@ class PlaybackListFilter : public wxPanel
         bool m_activ;
 
 		PlaybackTabType* m_parent_tab;
+/*
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
 #else
@@ -70,6 +71,7 @@ class PlaybackListFilter : public wxPanel
 		wxStaticText* m_filter_text;
 
 		wxCheckBox* m_filter_activ;
+*/
 
         //Player
 		wxStaticText* m_filter_player_text;

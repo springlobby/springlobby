@@ -112,7 +112,10 @@ SearchThread::~SearchThread()
 }
 
 
-ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long int style, const wxString& name):  wxDialog(parent, id, title, pos, size, style, name), WindowAttributesPickle( _T("CONTENTDIALOG"), this, wxSize( 670, 400 ))
+ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long int style, const wxString& name):
+	wxDialog(parent, id, title, pos, size, style, name),
+	WindowAttributesPickle( _T("CONTENTDIALOG"), this, wxSize( 670, 400 )),
+	wildcardsearch(false)
 {
   m_search_thread = NULL;
   m_main_sizer = new wxBoxSizer(wxVERTICAL);

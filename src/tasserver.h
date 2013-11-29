@@ -167,7 +167,6 @@ class TASServer : public Server, public wxTimer
       wxLongLong t;
     };
 
-	PingThread* m_ping_thread;
     CRC m_crc;
 
 	IServerEvents* m_se;

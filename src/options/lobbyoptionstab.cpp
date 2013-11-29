@@ -112,7 +112,6 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_main_sizer->Add( m_editor_box_sizer, 0, wxEXPAND | wxALL, 5 );
     m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 5 );
     m_main_sizer->Add( m_disable_version_check_sizer, 0, wxALL, 5 );
-#ifdef __WXMSW__
     wxStaticBoxSizer* m_updater_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Automatic updates") );
 	m_updater_label = new wxStaticText ( this,
 										 -1,
@@ -124,7 +123,6 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_updater_sizer->Add( m_updater, 0, wxEXPAND|wxALL, 5);
 
     m_main_sizer->Add( m_updater_sizer, 0, wxALL, 5 );
-#endif
 
     wxStaticBoxSizer* m_show_tooltips_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Tooltips") );
     m_show_tooltips = new wxCheckBox( this, -1, _("Show Tooltips?"), wxDefaultPosition, wxDefaultSize, 0 );

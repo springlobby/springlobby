@@ -157,7 +157,9 @@ m_buffer(wxEmptyString),
 m_last_udp_ping(0),
 m_last_ping(time(0) - PING_TIME + PING_DELAY), //no instant ping, delay first ping for PING_DELAY seconds
 m_last_net_packet(0),
+m_last_id(0),
 m_udp_private_port(0),
+m_nat_helper_port(0),
 m_battle_id(-1),
 m_server_lanmode(false),
 m_account_id_count(0),
@@ -427,7 +429,7 @@ wxString TASServer::GetPasswordHash( const wxString& pass ) const
 	md5_finish(&state, digest);
     for (di = 0; di < 16; ++di)
 	    sprintf(hex_output + di * 2, "%02x", digest[di]);
-
+	delete [] cstr;
     wxString coded = wxBase64::Encode( digest, 16 );
     return coded;
 }

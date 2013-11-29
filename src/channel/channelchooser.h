@@ -25,7 +25,7 @@ class ChannelChooserPanel : public wxScrolledWindow, public SL::NonCopyable
 
     protected:
         wxButton* m_join_channels;
-        wxButton* m_mark_autojoin;
+//        wxButton* m_mark_autojoin;
         wxBoxSizer* m_main_sizer;
         ChannelListctrl* m_channellist;
         wxTextCtrl* m_search_text;

@@ -67,6 +67,8 @@ wxJSONRefData::wxJSONRefData()
     m_lineNo   = -1;
     m_refCount = 1;
     m_memBuff  = 0;
+    m_type = wxJSONTYPE_INVALID;
+    m_commentPos = 0;
 
 #if defined( WXJSON_USE_VALUE_COUNTER )
     m_progr = sm_progr;

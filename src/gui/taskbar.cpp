@@ -19,9 +19,13 @@ enum {
 	STATE_HIDDEN
 };
 
-TaskBar::TaskBar(wxWindow *statusbar)
-	:wxPanel(statusbar, wxID_ANY, wxPoint(3, 3),
-			 wxSize(460 - (2 * 3), statusbar->GetSize().GetHeight()))
+TaskBar::TaskBar(wxWindow *statusbar):
+	wxPanel(statusbar, wxID_ANY, wxPoint(3, 3),
+	wxSize(460 - (2 * 3), statusbar->GetSize().GetHeight())),
+	overalSize(0),
+	overalProgress(0),
+	unfinishedTasks(0),
+	finishedCounter(0)
 {
 	timer = new wxTimer(this, TIMER_ID);
 

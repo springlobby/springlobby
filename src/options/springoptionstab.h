@@ -55,17 +55,17 @@ private:
 
 	wxButton* m_auto_btn;
 
-	wxRadioButton* m_exec_def_radio;
-	wxRadioButton* m_exec_spec_radio;
-	wxRadioButton* m_sync_def_radio;
-	wxRadioButton* m_sync_spec_radio;
+//	wxRadioButton* m_exec_def_radio;
+//	wxRadioButton* m_exec_spec_radio;
+//	wxRadioButton* m_sync_def_radio;
+//	wxRadioButton* m_sync_spec_radio;
 
 	wxTextCtrl* m_exec_edit;
 	wxTextCtrl* m_sync_edit;
 
 	wxStaticBox* m_exec_box;
 	wxStaticBox* m_sync_box;
-	wxStaticBox* m_web_box;
+//	wxStaticBox* m_web_box;
 	wxStaticBoxSizer* m_exec_box_sizer;
 	wxStaticBoxSizer* m_sync_box_sizer;
 

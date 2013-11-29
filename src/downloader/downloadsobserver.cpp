@@ -1,7 +1,11 @@
 #include "downloadsobserver.h"
 
 ObserverDownloadInfo::ObserverDownloadInfo():
-            size(0),progress(0),finished(0),name(wxEmptyString)
+	size(0),
+	progress(0),
+	cat(IDownload::category::CAT_NONE),
+	finished(0),
+	name(wxEmptyString)
 {
 
 }

@@ -64,7 +64,7 @@ private:
 	wxBoxSizer* m_main_sizer;
 	wxImageList* m_imagelist;
 	ChatPanel* m_server_chat;
-	ChatPanel* m_main_chat;
+//	ChatPanel* m_main_chat;
 	int m_newtab_sel;
 
 	enum {

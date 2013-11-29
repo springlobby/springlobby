@@ -535,7 +535,7 @@ int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2
   }
 
   int status2 = 0;
-  if ( user1->BattleStatus().IsBot() )
+  if ( user2->BattleStatus().IsBot() )
   {
     status2 = 9;
   }

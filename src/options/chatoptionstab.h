@@ -65,7 +65,7 @@ class ChatOptionsTab : public wxScrolledWindow
       ID_HL_REQ
     };
 
-    wxStaticText* m_text_sample;
+//    wxStaticText* m_text_sample;
     wxStaticText* m_fontname;
     wxStaticText* m_font_label;
     wxButton* m_select_font;
@@ -94,9 +94,9 @@ class ChatOptionsTab : public wxScrolledWindow
     wxStaticText* m_ts_label;
     wxTextCtrl* m_test_text;
     wxCheckBox* m_save_logs;
-    wxStaticText* m_chat_save_label;
-    wxTextCtrl* m_log_save;
-    wxButton* m_browse_log;
+//    wxStaticText* m_chat_save_label;
+//    wxTextCtrl* m_log_save;
+//    wxButton* m_browse_log;
     wxStaticText* m_hilight_words_label;
     wxCheckBox* m_play_sounds;
     wxCheckBox* m_highlight_req;

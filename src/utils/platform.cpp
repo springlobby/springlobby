@@ -79,7 +79,7 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, const wxSt
 
 
     if ( !(  console || showgui ) || verbosity == 0 ){
-        new wxLogNull;
+        wxLogNull();
         return loggerwin;
     }
 
