@@ -75,7 +75,7 @@ if (CMAKE_CROSSCOMPILING)
 	message(STATUS "Crosscompiling: using static flags for wxwidgets")
 	set(WXSTATIC "--static")
 	#FIXME: autodetect thise flags:
-	add_definitions(-DCURL_STATICLIB -DAL_LIBTYPE_STATIC)
+	add_definitions(-DAL_LIBTYPE_STATIC)
 else()
 	set(WXSTATIC "")
 endif()
@@ -117,14 +117,20 @@ IF( NOT CURL_FOUND )
 	MESSAGE( FATAL_ERROR "required library libCURL not found" )
 ENDIF( NOT CURL_FOUND )
 
-if(DEFINED CURL_CONFIG) # override CURL_LIBRARIES if curl-config is set
-	execute_process(COMMAND ${CURL_CONFIG} "--libs"
+if(DEFINED PKG_CONFIG_EXECUTABLE) # override CURL_LIBRARIES if curl-config is set
+	execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} "libcurl" "--libs"
 		OUTPUT_VARIABLE CURL_LINKFLAGS
 		OUTPUT_STRIP_TRAILING_WHITESPACE )
 
 	set(CURL_LIBRARIES "" CACHE STRING "" FORCE)
 	add_to_global(CURL_LINKFLAGS "${CURL_LINKLIBS}")
-	message(STATUS "${CURL_CONFIG} returned ${CURL_LINKFLAGS} for linking to libcurl")
+	message(STATUS "${PKG_CONFIG_EXECUTABLE} returned ${CURL_LINKFLAGS} for linking to libcurl")
+
+	execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} "libcurl" "--cflags-only-other"
+		OUTPUT_VARIABLE CURL_DEFINITONS
+		OUTPUT_STRIP_TRAILING_WHITESPACE )
+	add_definitions(${CURL_DEFINITONS})
+	message(STATUS "${PKG_CONFIG_EXECUTABLE} returned ${CURL_DEFINITONS} for compiling with libcurl")
 endif()
 
 
