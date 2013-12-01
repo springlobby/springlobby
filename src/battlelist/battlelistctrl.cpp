@@ -40,18 +40,18 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
 
-	AddColumn( 0, 49, _("Status"), _("Status") );
-	AddColumn( 1, 61, _("Country"), _("Country") );
-	AddColumn( 2, 38, _("Rank"), _("Minimum rank to join") );
+	AddColumn( 0, 26, wxEmptyString, _("Status") );
+	AddColumn( 1, 26, wxEmptyString, _("Country") );
+	AddColumn( 2, 26, wxEmptyString, _("Minimum rank to join") );
 	AddColumn( 3, 335, _("Description"), _("Battle description") );
 	AddColumn( 4, 170, _("Map"), _("Mapname") );
 	AddColumn( 5, 238, _("Game"), _("Gamename") );
 	AddColumn( 6, 123, _("Host"), _("Name of the Host") );
-	AddColumn( 7, 79, _("Spectators"), _("Number of Spectators") );
-	AddColumn( 8, 55, _("Players"), _("Number of Players joined") );
-	AddColumn( 9, 36, _("Max"), _("Maximum number of Players that can join") );
-	AddColumn( 10, 63, _("Running"), _("How long the game has been running for") );
-	AddColumn( 11, 60, _("Version"), _("Version of the engine") );
+	AddColumn( 7, wxLIST_AUTOSIZE_USEHEADER, _("Spectators"), _("Number of Spectators") );
+	AddColumn( 8, wxLIST_AUTOSIZE_USEHEADER, _("Players"), _("Number of Players joined") );
+	AddColumn( 9, wxLIST_AUTOSIZE_USEHEADER, _("Max"), _("Maximum number of Players that can join") );
+	AddColumn( 10, wxLIST_AUTOSIZE_USEHEADER, _("Running"), _("How long the game has been running for") );
+	AddColumn( 11, wxLIST_AUTOSIZE_USEHEADER, _("Version"), _("Version of the engine") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[0].col = 0;

@@ -121,12 +121,10 @@ void MainJoinBattleTab::HostBattle( Battle& battle )
 
 void MainJoinBattleTab::LeaveCurrentBattle( bool /*called_from_join*/ )
 {
-    PreSwitchBattlePerspective();
 	m_mm_opts_tab->SetBattle( 0 );
 	m_opts_tab->SetBattle( 0 );
 	m_map_tab->SetBattle( 0 );
 	m_battle_tab->SetBattle( 0 );
-	PostSwitchBattlePerspective();
 }
 
 
@@ -191,16 +189,6 @@ void MainJoinBattleTab::LoadPerspective( const wxString& perspective_name  )
 void MainJoinBattleTab::SavePerspective( const wxString& perspective_name )
 {
     SaveNotebookPerspective( m_tabs, perspective_name );
-}
-
-void MainJoinBattleTab::PostSwitchBattlePerspective( )
-{
-    ui().mw().LoadPerspectives( );
-}
-
-void MainJoinBattleTab::PreSwitchBattlePerspective( )
-{
-    ui().mw().SavePerspectives(  );
 }
 
 bool MainJoinBattleTab::UseBattlePerspective()

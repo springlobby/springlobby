@@ -14,6 +14,7 @@
 #include "lobbyoptionstab.h"
 #include "nonportable.h"
 #include "settings.h"
+#include "helper/slconfig.h"
 #include "utils/customdialogs.h"
 #include "utils/controls.h"
 #include "utils/platform.h"
@@ -94,7 +95,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 											 IdentityString( _("If checked, %s will automatically log on to the last used server") )
 											 );
     m_autojoin = new wxCheckBox( this, -1, _("Autoconnect on lobby start"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_autojoin->SetValue( sett().GetAutoConnect() );
+    m_autojoin->SetValue( cfg().ReadBool(_T( "/Server/Autoconnect")) );
     m_autojoin_sizer->Add( m_autoconnect_label, 1, wxEXPAND | wxALL, 5 );
     m_autojoin_sizer->Add( m_autojoin, 0, wxEXPAND | wxALL, 5 );
 
@@ -200,7 +201,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
     if ( !m_web_def_radio->GetValue() ) sett().SetWebBrowserPath( m_web_edit->GetValue() );
     sett().SetWebBrowserUseDefault( m_web_def_radio->GetValue() );
 
-    sett().SetAutoConnect( m_autojoin->IsChecked() );
+    cfg().Write(_T( "/Server/Autoconnect" ), m_autojoin->IsChecked() );
     sett().SetDisableSpringVersionCheck(m_disable_version_check->GetValue() );
     cfg().Write(_T("/General/AutoUpdate"),  m_updater->IsChecked() );
     bool show = m_show_tooltips->IsChecked();
@@ -225,7 +226,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 
 void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 {
-    m_autojoin->SetValue( sett().GetAutoConnect() );
+    m_autojoin->SetValue( cfg().ReadBool(_T( "/Server/Autoconnect")) );
     m_disable_version_check->SetValue( sett().GetDisableSpringVersionCheck() );
     m_updater->SetValue( cfg().ReadBool(_T("/General/AutoUpdate")) );
     bool show = sett().GetShowTooltips();

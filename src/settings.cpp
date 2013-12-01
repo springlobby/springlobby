@@ -300,16 +300,6 @@ wxString Settings::GetDefaultServer()
     return m_config->Read( _T("/Server/Default"), serv );
 }
 
-void Settings::SetAutoConnect( bool do_autoconnect )
-{
-	m_config->Write( _T( "/Server/Autoconnect" ),  do_autoconnect );
-}
-
-bool Settings::GetAutoConnect( )
-{
-	return m_config->Read( _T( "/Server/Autoconnect" ), 0l );
-}
-
 
 //! @brief Set the name/alias of the default server.
 //!
@@ -1794,15 +1784,6 @@ unsigned int Settings::GetNotificationPopupDisplayTime( )
 	return m_config->Read( _T("/GUI/NotificationPopupDisplayTime"), 5l );
 }
 
-bool Settings::DoResetPerspectives()
-{
-	return m_config->Read(_T( "/reset_perspectives" ) , 0l );
-}
-
-void Settings::SetDoResetPerspectives( bool do_it )
-{
-	m_config->Write(_T( "/reset_perspectives" ) , (long)do_it );
-}
 
 wxString Settings::GetDefaultNick()
 {

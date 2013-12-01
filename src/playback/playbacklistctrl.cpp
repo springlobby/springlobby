@@ -35,9 +35,9 @@ PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
 	AddColumn( 0, 152, _("Date"), _("Date of recording") );
 	AddColumn( 1, 203, _("Game"), _("Game name") );
 	AddColumn( 2, 179, _("Map"), _("Mapname") );
-	AddColumn( 3, 59, _("Players"), _("Number of players") );
-	AddColumn( 4, 79, _("Duration"), _T("Duration") );
-	AddColumn( 5, 51, _("Spring Version"), _("Spring Version") );
+	AddColumn( 3, wxLIST_AUTOSIZE_USEHEADER, _("Players"), _("Number of players") );
+	AddColumn( 4, wxLIST_AUTOSIZE_USEHEADER, _("Duration"), _T("Duration") );
+	AddColumn( 5, wxLIST_AUTOSIZE_USEHEADER, _("Version"), _("Version of the engine") );
 	AddColumn( 6, 66, _("Filesize"), _("Filesize in kilobyte") );
 	AddColumn( 7, 330, _("File"), _T("Filename") );
 

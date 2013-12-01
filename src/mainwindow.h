@@ -77,8 +77,6 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void OnMenuQuit( wxCommandEvent& event );
 	void OnMenuPathInfo( wxCommandEvent& event );
     void OnMenuVersion ( wxCommandEvent& event );
-    void OnMenuSaveLayout( wxCommandEvent& event );
-    void OnMenuLoadLayout( wxCommandEvent& event );
     void OnMenuResetLayout( wxCommandEvent& event );
 	void OnMenuPreferences( wxCommandEvent& event );
 	void OnMenuFirstStart( wxCommandEvent& event );

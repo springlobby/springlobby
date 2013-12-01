@@ -61,6 +61,7 @@
 SLCONFIG("/General/AutoUpdate", true, "Determines if sprinlobby should check for updates on startup");
 SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere",true, "setting to spam the server messages in all channels");
+SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
 
 static const unsigned int s_reconnect_delay_ms = 6000;
 
@@ -158,7 +159,7 @@ void Ui::Connect()
 {
 	wxString server_name = sett().GetDefaultServer();
 	wxString nick = sett().GetServerAccountNick( server_name );
-	bool autoconnect = sett().GetAutoConnect();
+	bool autoconnect = cfg().ReadBool(_T( "/Server/Autoconnect" ));
 	if ( !autoconnect || server_name.IsEmpty() || nick.IsEmpty() ) {
 		ShowConnectWindow();
 		return;
@@ -554,7 +555,7 @@ void Ui::OnLoggedIn( )
 	mw().GetChatTab().RejoinChannels();
 	// FIXME RejoinChannels changes active tab, we change back to
 	// default tab on auto connect
-	if ( sett().GetAutoConnect() )
+	if ( cfg().ReadBool(_T( "/Server/Autoconnect" )) )
 		mw().ShowTab( cfg().ReadLong(_T( "/GUI/StartTab" )));
 	mw().GetBattleListTab().SortBattleList();
 }
@@ -658,7 +659,7 @@ static inline bool IsAutoJoinChannel( Channel& chan )
 //! @todo Check if a pannel allready exists for this channel
 void Ui::OnJoinedChannelSuccessful( Channel& chan )
 {
-	bool doFocus = !sett().GetAutoConnect() || !IsAutoJoinChannel( chan );
+	bool doFocus = !cfg().ReadBool(_T( "/Server/Autoconnect" )) || !IsAutoJoinChannel( chan );
 	bool panel_exists = mw().GetChannelChatPanel( chan.GetName() ) != NULL;
 	OnJoinedChannelSuccessful( chan, !panel_exists && doFocus );
 }
@@ -925,6 +926,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user, bool isbot )
 	user.SetSideiconIndex( -1 ); //just making sure he's not running around with some icon still set
 	user.BattleStatus().side = 0; // and reset side, so after rejoin we don't potentially stick with a num higher than avail
 	mw().GetBattleListTab().UpdateBattle( battle );
+	mw().ShowTab(MainWindow::PAGE_LIST);
 	try {
 		if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) {
 			mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
@@ -1143,7 +1145,7 @@ void Ui::OnInit()
 	if (sett().IsFirstRun()) {
 		FirstRunWelcome();
 	} else {
-		if (sett().GetAutoConnect()) {
+		if (cfg().ReadBool(_T( "/Server/Autoconnect" ))) {
 			Connect(); // OnConnect changes tab
 		} else {
 			mw().ShowTab(cfg().ReadLong(_T( "/GUI/StartTab" )));

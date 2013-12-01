@@ -52,9 +52,6 @@ BEGIN_EVENT_TABLE( BattleListTab, wxPanel )
 	EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter         )
 	EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_INFO_BUTTON,   BattleListTab::OnOnInfoShow     )
 	#endif
-	EVT_SIZE( BattleListTab::OnResize )
-
-
 END_EVENT_TABLE()
 
 SLCONFIG("/BattleFilter/Active", false, "determines if battle list filter is active");
@@ -77,9 +74,9 @@ BattleListTab::BattleListTab( wxWindow* parent )
 
 	m_battle_list = new BattleListCtrl( this );
 	m_battle_list->SetHighLightAction ( UserActions::ActHighlight );
-	m_battlelist_sizer->Add( m_battle_list, 1, wxALL | wxEXPAND, 5 );
+	m_battlelist_sizer->Add( m_battle_list, 1, wxEXPAND);
 
-	m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND, 5 );;
+	m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND );
 
 	m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -505,10 +502,3 @@ void BattleListTab::OnInfoShow( wxCommandEvent& /*unused*/ )
 {
 	ShowExtendedInfos( m_info_show->GetValue() );
 }
-
-void BattleListTab::OnResize( wxSizeEvent& event )
-{
-	SetSize( event.GetSize() );
-	Layout();
-}
-

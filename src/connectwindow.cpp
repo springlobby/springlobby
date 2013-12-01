@@ -21,6 +21,7 @@
 
 #include "connectwindow.h"
 #include "settings.h"
+#include "helper/slconfig.h"
 #include "ui.h"
 #include "images/connect.xpm"
 #include "utils/controls.h"
@@ -56,7 +57,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
     username = sett().GetServerAccountNick( sett().GetDefaultServer() );
     password = sett().GetServerAccountPass( sett().GetDefaultServer() );
     savepass = sett().GetServerAccountSavePass( sett().GetDefaultServer() );
-    autoconnect = sett().GetAutoConnect();
+    autoconnect = cfg().ReadBool(_T( "/Server/Autoconnect" ));
     // Create all UI elements.
     m_tabs =         new wxNotebook( this  , -1 );
     m_login_tab =    new wxPanel   ( m_tabs, -1 );
@@ -277,7 +278,7 @@ void ConnectWindow::OnOk(wxCommandEvent& )
             customMessageBox(SL_MAIN_ICON, _("Invalid host/port."), _("Invalid host"), wxOK );
             return;
         }
-        sett().SetAutoConnect( m_autoconnect_check->IsChecked() );
+        cfg().Write(_T( "/Server/Autoconnect" ),  m_autoconnect_check->IsChecked() );
 
         //if autoconnect enabled force saving of pw, actual saving is done in Ui::DoConnect
         if ( m_autoconnect_check->IsChecked() ) sett().SetServerAccountSavePass( HostAddress, true );

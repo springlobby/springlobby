@@ -63,6 +63,8 @@
 	#include <X11/Xlib.h>
 #endif
 
+SLCONFIG("/ResetLayout", false, "reset layout on restart");
+
 IMPLEMENT_APP(SpringLobbyApp)
 
 BEGIN_EVENT_TABLE(SpringLobbyApp, wxApp)
@@ -132,11 +134,10 @@ bool SpringLobbyApp::OnInit()
 	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
 
-	if ( sett().DoResetPerspectives() )
-	{
+	if ( cfg().ReadBool(_T("/ResetLayout")) ) {
 		//we do this early on and reset the config var a little later so we can save a def. perps once mw is created
 		sett().RemoveLayouts();
-		sett().SetDoResetPerspectives( false );
+		cfg().Write(_T( "/ResetLayout" ) , false);
 		ui().mw().SavePerspectives( _T("SpringLobby-default") );
 	}
 
@@ -161,14 +162,8 @@ bool SpringLobbyApp::OnInit()
 	notificationManager(); //needs to be initialized too
     ui().ShowMainWindow();
     SetTopWindow( &ui().mw() );
-	if ( sett().DoResetPerspectives() )
-	{
-		//now that mainwindow is shown, we can save what is the default layout and remove the flag to reset
-		sett().SetDoResetPerspectives( false );
-		ui().mw().SavePerspectives( _T("SpringLobby-default") );
-	}
 
-    ui().OnInit();
+	ui().OnInit();
 
 	ui().mw().SetLogWin( loggerwin, logchain );
 	return true;

@@ -173,8 +173,6 @@ class Settings : public SL::NonCopyable
      */
     wxString GetDefaultServer();
     void SetDefaultServer( const wxString& server_name );
-    void SetAutoConnect( bool do_autoconnect );
-    bool GetAutoConnect( );
 
     wxString GetServerHost( const wxString& server_name );
     int GetServerPort( const wxString& server_name );
@@ -538,8 +536,6 @@ class Settings : public SL::NonCopyable
     bool GetAutosavePerspective( );
     wxArrayString GetPerspectives();
     bool PerspectiveExists( const wxString& perspective_name );
-	bool DoResetPerspectives();
-	void SetDoResetPerspectives( bool do_it );
 
     void RemoveLayouts();
 
