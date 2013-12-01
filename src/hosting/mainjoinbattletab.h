@@ -57,9 +57,6 @@ private:
     BattleOptionsTab* m_opts_tab;
     BattleroomMMOptionsTab<Battle>* m_mm_opts_tab;
 
-    void PreSwitchBattlePerspective ( );
-    void PostSwitchBattlePerspective( );
-
     enum {
         BATTLE_TABS = wxID_HIGHEST
     };
