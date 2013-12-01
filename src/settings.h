@@ -536,8 +536,6 @@ class Settings : public SL::NonCopyable
     bool GetAutosavePerspective( );
     wxArrayString GetPerspectives();
     bool PerspectiveExists( const wxString& perspective_name );
-	bool DoResetPerspectives();
-	void SetDoResetPerspectives( bool do_it );
 
     void RemoveLayouts();
 

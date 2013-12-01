@@ -96,8 +96,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_VERSION,				MainWindow::OnMenuVersion			)
   EVT_MENU( MENU_ABOUT,					MainWindow::OnMenuAbout				)
   EVT_MENU( MENU_PATHINFO,				MainWindow::OnMenuPathInfo			)
-  EVT_MENU( MENU_SAVE_LAYOUT,			MainWindow::OnMenuSaveLayout		)
-  EVT_MENU( MENU_LOAD_LAYOUT,			MainWindow::OnMenuLoadLayout		)
   EVT_MENU( MENU_RESET_LAYOUT,			MainWindow::OnMenuResetLayout		)
 //  EVT_MENU( MENU_SHOW_TOOLTIPS,		MainWindow::OnShowToolTips			)
   EVT_MENU( MENU_AUTOJOIN_CHANNELS,		MainWindow::OnMenuAutojoinChannels	)
@@ -146,15 +144,9 @@ MainWindow::MainWindow( )
 	m_menuEdit->Append(MENU_PREFERENCES, _("&Preferences"));
 	m_menuEdit->Append(MENU_SELECT_LOCALE, _("&Change language"));
 	m_settings_menu = new wxMenuItem( m_menuEdit, MENU_SETTINGSPP, _("&Spring settings"), wxEmptyString, wxITEM_NORMAL );
+	m_menuEdit->Append( MENU_RESET_LAYOUT, _("&Reset layout") );
 	m_menuEdit->Append (m_settings_menu);
 
-
-    // loading layouts currently borked
-	wxMenu* menuView = new wxMenu;
-	menuView->Append( MENU_SAVE_LAYOUT, _("&Save layout") );
-	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
-	menuView->Append( MENU_RESET_LAYOUT, _("&Reset layout") );
-//	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Layout as default") );
 
 
 	m_menuTools = new wxMenu;
@@ -178,8 +170,6 @@ MainWindow::MainWindow( )
 	m_menubar = new wxMenuBar;
 	m_menubar->Append(menuServer, _("&Server"));
 	m_menubar->Append(m_menuEdit, _("&Edit"));
-
-	m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled
 
 	m_menubar->Append(m_menuTools, _("&Tools"));
 	m_menubar->Append(menuHelp, _("&Help"));
@@ -678,33 +668,10 @@ wxString MainWindow::AddPerspectivePostfix( const wxString& pers_name ) const
     return perspective_name;
 }
 
-void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
-{
-	wxString answer;
-	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
-        return;
-    while ( answer == _T("SpringLobby-default") ) {
-        customMessageBox( SL_MAIN_ICON, _("This profile is write protected, please choose another name"), _("Error") );
-
-        if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
-           return;
-    }
-    SavePerspectives( answer );
-}
-
-void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
-{
-	wxArrayString layouts = sett().GetPerspectives();
-	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to load?"), _("Layout manager"), layouts );
-	if ( result > layouts.GetCount() )
-        return;
-
-    LoadPerspectives( layouts[result] );
-}
 
 void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
-	sett().SetDoResetPerspectives( true );
+	cfg().Write(_T( "/ResetLayout" ), true);
 	sett().SaveSettings();
 	customMessageBoxNoModal( SL_MAIN_ICON, IdentityString( _("Please restart %s now") ), wxEmptyString );
 }
