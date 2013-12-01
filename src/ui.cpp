@@ -926,7 +926,6 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user, bool isbot )
 	user.SetSideiconIndex( -1 ); //just making sure he's not running around with some icon still set
 	user.BattleStatus().side = 0; // and reset side, so after rejoin we don't potentially stick with a num higher than avail
 	mw().GetBattleListTab().UpdateBattle( battle );
-	mw().ShowTab(MainWindow::PAGE_LIST);
 	try {
 		if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) {
 			mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
