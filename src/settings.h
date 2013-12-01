@@ -173,8 +173,6 @@ class Settings : public SL::NonCopyable
      */
     wxString GetDefaultServer();
     void SetDefaultServer( const wxString& server_name );
-    void SetAutoConnect( bool do_autoconnect );
-    bool GetAutoConnect( );
 
     wxString GetServerHost( const wxString& server_name );
     int GetServerPort( const wxString& server_name );

@@ -300,16 +300,6 @@ wxString Settings::GetDefaultServer()
     return m_config->Read( _T("/Server/Default"), serv );
 }
 
-void Settings::SetAutoConnect( bool do_autoconnect )
-{
-	m_config->Write( _T( "/Server/Autoconnect" ),  do_autoconnect );
-}
-
-bool Settings::GetAutoConnect( )
-{
-	return m_config->Read( _T( "/Server/Autoconnect" ), 0l );
-}
-
 
 //! @brief Set the name/alias of the default server.
 //!
