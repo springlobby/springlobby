@@ -932,6 +932,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user, bool isbot )
 			OnBattleInfoUpdated( std::make_pair(&battle,wxString()) );
 			if ( &user == &serverSelector().GetServer().GetMe() ) {
 				mw().GetJoinTab().LeaveCurrentBattle();
+				mw().ShowTab(MainWindow::PAGE_LIST);
 			}
 		}
 	} catch (...) {}
