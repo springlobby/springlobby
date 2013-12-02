@@ -48,15 +48,20 @@ wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxS
 #endif
 	}
 
-	if (!logfilepath.empty()) {
-		FILE* logfile = fopen(C_STRING(logfilepath), "w"); // even if it returns null, wxLogStderr will switch to stderr logging, so it's fine
-		logChain = new wxLogChain( new  wxLogStderr( logfile ) );
-	}
-
 	if (showgui) {
 		///gui window logging
 		loggerwin = new wxLogWindow(parent, IdentityString( _("%s error console") ), showgui );
 		logChain = new wxLogChain( loggerwin );
+	}
+
+	if (!console && !showgui) {
+		new wxLogNull(); //memleak but disables logging as no log target exists
+		//FIXME: there should be a cleaner way (like just not showing message boxes)
+	}
+
+	if (!logfilepath.empty()) {
+		FILE* logfile = fopen(C_STRING(logfilepath), "w"); // even if it returns null, wxLogStderr will switch to stderr logging, so it's fine
+		logChain = new wxLogChain( new  wxLogStderr( logfile ) );
 	}
 
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT) && wxUSE_STD_IOSTREAM
@@ -66,7 +71,7 @@ wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxS
 
 //	logCrashChain->SetLogLevel( wxLOG_Trace );
 //	logCrashChain->SetVerbose( true );
-    #endif
+#endif
 
 	if (logChain!=NULL) {
 	switch (verbosity) {
