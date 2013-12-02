@@ -85,11 +85,11 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
         else {
             bool locale_ok = UpdateLocale( m_newexe, false );
             if ( locale_ok ) {
-				customMessageBox(SL_MAIN_ICON, IdentityString( _("Update complete. \nPlease restart %s now.") ), _("Success"));
+				customMessageBox(SL_MAIN_ICON, wxFormat( _("Update complete. \nPlease start %s now.") ) % m_newexe , _("Success"));
             }
             else {
 				customMessageBox(SL_MAIN_ICON,
-								 IdentityString( _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby. \nPlease restart %s now.") ),
+								 wxFormat( _("Binary updated successfully. \nSome translation files could not be updated.\nPlease report this in #springlobby. \nPlease start %s now.") ) % m_newexe,
 								 _("Partial success") );
             }
             wxRmdir( m_newexe );
