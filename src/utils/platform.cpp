@@ -79,7 +79,7 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, const wxSt
 
 
     if ( !(  console || showgui ) || verbosity == 0 ){
-        wxLogNull();
+        new wxLogNull(); //FIXME: mem-leak, as long was the object exists, no logging messages / popups are shown
         return loggerwin;
     }
 
