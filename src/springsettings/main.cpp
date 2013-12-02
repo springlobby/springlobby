@@ -110,7 +110,7 @@ bool Springsettings::OnInit()
     //initialize all loggers
 	//TODO non-constant parameters
 	wxLogChain* logchain  = 0;
-	wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
+	wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity, logchain );
 	//this needs to called _before_ mainwindow instance is created
 
 #ifdef __WXMSW__

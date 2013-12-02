@@ -105,7 +105,7 @@ bool SpringLobbyApp::OnInit()
 
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;
-	wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
+	wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity, logchain );
 
 	wxLogMessage( _T("SpringLobby %s started"), _T(VERSION));
 
@@ -236,7 +236,7 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 		{ wxCMD_LINE_SWITCH, STR("cl"), STR("console-logging"),  wxTRANSLATE("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  wxTRANSLATE("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  wxTRANSLATE("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-		{ wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  wxTRANSLATE("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  wxTRANSLATE("overrides default logging verbosity, can be:\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  wxTRANSLATE("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL } //this is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
 

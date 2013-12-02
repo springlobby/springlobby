@@ -35,75 +35,58 @@ wxString GetLibExtension()
 
 //! @brief Initializes the logging functions.
 ///initializes logging in an hidden stream and std::cout/gui messages
-wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, const wxString&  logfilepath, bool showgui, bool /*logcrash*/, int verbosity, wxLogChain* logChain )
+wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxString&  logfilepath, bool showgui, int verbosity, wxLogChain* logChain )
 {
-    wxLogWindow* loggerwin = 0;
-
+	wxLogWindow* loggerwin = NULL;
+	if ( console ) {
 #if wxUSE_STD_IOSTREAM
-    if (  console && verbosity != 0 )
-    {
-        ///std::cout logging
-        logChain = new wxLogChain( new wxLogStream( &std::cout ) );
-    }
+		///std::cout logging
+		logChain = new wxLogChain( new wxLogStream( &std::cout ) );
 #else
-	if (  console && verbosity != 0 )
-	{
 		///std::cerr logging
 		logChain = new wxLogChain( new  wxLogStderr( 0 ) );
-	}
 #endif
+	}
 
-	if ( logfilepath.size() != 0 && verbosity != 0 )
-	{
+	if (!logfilepath.empty()) {
 		FILE* logfile = fopen(C_STRING(logfilepath), "w"); // even if it returns null, wxLogStderr will switch to stderr logging, so it's fine
 		logChain = new wxLogChain( new  wxLogStderr( logfile ) );
 	}
 
-    if ( showgui && verbosity != 0 )
-    {
-        ///gui window logging
-		loggerwin = new wxLogWindow( (wxWindow*) parent, IdentityString( _("%s error console") ), showgui );
-        logChain = new wxLogChain( loggerwin );
-    }
+	if (showgui) {
+		///gui window logging
+		loggerwin = new wxLogWindow(parent, IdentityString( _("%s error console") ), showgui );
+		logChain = new wxLogChain( loggerwin );
+	}
 
-    #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT) && wxUSE_STD_IOSTREAM
-        ///hidden stream logging for crash reports
-        wxLog *loggercrash = new wxLogStream( &CrashReport::instance().crashlog );
-        logChain = new wxLogChain( loggercrash );
+#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT) && wxUSE_STD_IOSTREAM
+	///hidden stream logging for crash reports
+	wxLog *loggercrash = new wxLogStream( &CrashReport::instance().crashlog );
+	logChain = new wxLogChain( loggercrash );
 
-//        logCrashChain->SetLogLevel( wxLOG_Trace );
-//        logCrashChain->SetVerbose( true );
+//	logCrashChain->SetLogLevel( wxLOG_Trace );
+//	logCrashChain->SetVerbose( true );
     #endif
 
+	if (logChain!=NULL) {
+	switch (verbosity) {
+		case 0: case 1:
+			logChain->SetLogLevel( wxLOG_FatalError ); break;
+		case 2:
+			logChain->SetLogLevel( wxLOG_Error ); break;
+		case 3:
+			logChain->SetLogLevel( wxLOG_Warning ); break;
+		case 4:
+			logChain->SetLogLevel( wxLOG_Message ); break;
+		case 5:
+			logChain->SetLogLevel( wxLOG_Trace );
+			logChain->SetVerbose( true ); break;
+		default://meaning loglevel < 0 or > 5 , == 0 is handled seperately
+			logChain->SetLogLevel( wxLOG_Warning ); break;
+		}
+	}
 
-
-
-    if ( !(  console || showgui ) || verbosity == 0 ){
-        new wxLogNull(); //FIXME: mem-leak, as long was the object exists, no logging messages / popups are shown
-        return loggerwin;
-    }
-
-    if ( logChain )
-    {
-        switch (verbosity)
-        {
-            case 1:
-                logChain->SetLogLevel( wxLOG_FatalError ); break;
-            case 2:
-                logChain->SetLogLevel( wxLOG_Error ); break;
-            case 3:
-                logChain->SetLogLevel( wxLOG_Warning ); break;
-            case 4:
-                logChain->SetLogLevel( wxLOG_Message ); break;
-            case 5:
-                logChain->SetLogLevel( wxLOG_Trace );
-                logChain->SetVerbose( true ); break;
-            default://meaning loglevel < 0 or > 5 , == 0 is handled seperately
-                logChain->SetLogLevel( wxLOG_Warning ); break;
-        }
-    }
-
-    return loggerwin;
+	return loggerwin;
 }
 
 wxString GetExecutableFolder()
