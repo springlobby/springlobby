@@ -99,21 +99,6 @@ wxString GetExecutableFolder()
 	return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
 }
 
-
-// ------------------------------------------------------------------------------------------------------------------------
-///
-/// Read out Host's CPU Speed
-///
-/// \return Sum of each CPU's Speed of this Computer
-///
-///
-// ------------------------------------------------------------------------------------------------------------------------
-wxString GetHostCPUSpeed()
-{
-	return TowxString(1337);
-}
-
-
 // copied from http://wxforum.shadonet.com/viewtopic.php?t=2080
 //slightly modified
 bool CopyDir( wxString from, wxString to, bool overwrite )

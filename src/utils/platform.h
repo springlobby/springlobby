@@ -32,7 +32,6 @@ wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxS
 
 wxString GetExecutableFolder();
 wxString GetLibExtension();
-wxString GetHostCPUSpeed();
 
 //! set new cwd in ctor, reset to old in dtor
 class CwdGuard {
