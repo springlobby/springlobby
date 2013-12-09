@@ -33,6 +33,8 @@
 #include "updater/updatehelper.h"
 #include <wx/textctrl.h>
 #include <wx/app.h>
+#include <wx/platinfo.h>
+
 #if defined(__unix__) || defined(__APPLE__)
 # include <unistd.h>
 # define WRITABLE W_OK
@@ -58,6 +60,8 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	paths.push_back( std::make_pair( sett().GetCachePath(), _T("CachePath")) );
 	paths.push_back( std::make_pair( sett().GetCurrentUsedDataDir(), _T("CurrentUsedDataDir")) );
 	paths.push_back( std::make_pair( GetExecutableFolder() , _T("ExecutableFolder")));
+
+	const wxPlatformInfo arch = wxPlatformInfo::Get();
 	wxTextCtrl* out = new wxTextCtrl( this, wxNewId(), wxEmptyString, wxDefaultPosition, wxDefaultSize,
 									 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	for ( size_t i =0; i < paths.size(); ++i )
@@ -89,7 +93,7 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	*out << wxString::Format(_T("current uikeys.txt: %s\n"), hotkey_panel::GetCurrentUsedUikeys().c_str());
 
 	*out << _T( "Version " ) + GetSpringLobbyVersion()
-			<< wxString( wxVERSION_STRING ) + _T(" on ") + wxPlatformInfo::Get().GetOperatingSystemIdName() + _T( "\ncl: " ) ;
+			<< wxString( wxVERSION_STRING ) + _T(" on ") + arch.GetOperatingSystemIdName() + arch.GetArchName() + _T("\n");
 	for ( int i = 0; i < wxTheApp->argc; ++i )
 		*out << wxTheApp->argv[i] << _T(" ");
 	main_sizer->Add( out, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
