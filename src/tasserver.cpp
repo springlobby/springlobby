@@ -33,7 +33,6 @@ lsl/networking/tasserver.cpp
 #include "base64.h"
 #include "utils/md5.h"
 #include "tasserver.h"
-#include "user.h"
 #include "utils/debug.h"
 #include "utils/tasutil.h"
 #include "utils/conversion.h"
@@ -41,7 +40,6 @@ lsl/networking/tasserver.cpp
 #include "updater/updatehelper.h"
 #include "serverevents.h"
 #include "socket.h"
-#include "channel/channel.h"
 #include "tasservertokentable.h"
 
 // for SL_MAIN_ICON
