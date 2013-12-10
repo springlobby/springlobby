@@ -28,6 +28,7 @@ lsl/spring/spring.cpp
 #include <wx/filename.h>
 #include <stdexcept>
 #include <vector>
+#include <clocale>
 #include <fstream>
 
 #include "spring.h"
