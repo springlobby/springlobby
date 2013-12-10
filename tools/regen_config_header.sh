@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 #regen on bbot releases would screw with version
 if [ "x${BUILDBOT_RELEASE}" != "x" ] ; then
@@ -15,7 +15,7 @@ VERSIONFILE="${3}"
 REV_TEMPLATE="@SPRINGLOBBY_REV@"
 
 #don't fail if no .git
-git branch &> /dev/null || exit 0
+git branch >/dev/null 2>&1 || exit 0
 
 REV="$(git describe --tags)"
 OLDREV=""
