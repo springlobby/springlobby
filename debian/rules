@@ -1,0 +1,49 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+SLVERSION=$(shell dpkg-parsechangelog | sed -n 's/^Version: //p' | cut -f1 -d'-')
+
+PROGDIR := $(CURDIR)/debian/tmp
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+    MAKEFLAGS += -j$(NUMJOBS)
+endif
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DSPRINGLOBBY_REV:STRING=$(SLVERSION) -DCMAKE_BUILD_TYPE=RELWITHDEBINFO
+
+override_dh_auto_build:
+	+dh_auto_build
+	$(MAKE) -C debian/manpages
+
+override_dh_installchangelogs:
+	dh_installchangelogs ChangeLog
+
+override_dh_auto_install:
+	+dh_auto_install
+	cd $(PROGDIR)/usr/share/doc/springlobby && \
+	rm -fv COPYING AUTHORS && \
+	gzip -9 README THANKS NEWS
+
+	# install launcher
+	mkdir -p $(PROGDIR)/usr/games
+	mv $(PROGDIR)/usr/bin/springsettings $(PROGDIR)/usr/games/
+	mv $(PROGDIR)/usr/bin/springlobby $(PROGDIR)/usr/games/
+	# remove empty dirs (/usr/bin expected until an CMake bindir is provided)
+	find $(PROGDIR) -type d -empty -delete
+
+override_dh_strip:
+	+dh_strip --dbg-package=springlobby-dbg
+
+override_dh_auto_clean:
+	+dh_auto_clean
+	$(MAKE) -C debian/manpages clean
+	rm -f .gitattributes
+
+%:
+	# fail to build on architectures other than amd64 and i386
+	dpkg-architecture -eamd64 || dpkg-architecture -ei386 || exit 1
+	+dh $@ --buildsystem=cmake

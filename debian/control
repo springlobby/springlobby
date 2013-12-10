@@ -1,0 +1,36 @@
+Source: springlobby
+Section: games
+Priority: optional
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Debian Games Team <pkg-games-devel@lists.alioth.debian.org>
+Uploaders: Marco Amadori <marco.amadori@gmail.com>, Jan Dittberner <jandd@debian.org>
+Build-Depends: debhelper (>= 9.20120417~), cmake, libwxgtk2.8-dev,
+ libopenal-dev, asciidoc, xsltproc, docbook-xsl, libcurl4-gnutls-dev,
+ libboost-dev, dpkg-dev (>= 1.16.1~), libglib2.0-dev, libnotify-dev,
+ libalure-dev, libboost-thread-dev, libboost-system-dev,
+ libboost-filesystem-dev
+Standards-Version: 3.9.3
+Homepage: http://springlobby.info
+Vcs-Browser: http://git.debian.org/?p=pkg-games/springlobby.git;a=summary
+Vcs-Git: git://git.debian.org/pkg-games/springlobby.git
+
+Package: springlobby
+Provides: spring-lobby
+Architecture: i386 amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}, spring (>= 0.81.2.1+dfsg1-5)
+Description: single/multiplayer lobby for the Spring RTS engine
+ This package provides a single-player and multiplayer lobby for Spring.
+ Other features include a P2P system for downloading maps and mods and
+ a built-in IRC-like chat client.
+
+Package: springlobby-dbg
+Section: debug
+Architecture: i386 amd64
+Priority: extra
+Depends: ${misc:Depends}, springlobby (= ${binary:Version})
+Description: single/multiplayer lobby for the Spring RTS engine (debugging symbols)
+ This package provides a single-player and multiplayer lobby for Spring.
+ Other features include a P2P system for downloading maps and mods and
+ a built-in IRC-like chat client.
+ .
+ This package contains the debugging symbols for the springlobby binary.

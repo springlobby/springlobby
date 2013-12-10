@@ -1,0 +1,305 @@
+springlobby (0.169-1build1) trusty; urgency=low
+
+  * No change rebuild for Boost 1.54 transition.
+
+ -- Dmitrijs Ledkovs <xnox@ubuntu.com>  Mon, 21 Oct 2013 12:46:56 +0100
+
+springlobby (0.169-1) unstable; urgency=low
+
+  * New upstream version
+  * debian/rules:
+    - remove -DOPTION_TORRENT_SYSTEM=OFF from dh_auto_configure invocation.
+      torrent support has been changed
+  * debian/control:
+    - add libglib2.0-dev, libnotify-dev, libalure-dev, libboost-thread-dev,
+      libboost-system-dev and libboost-filesystem-dev to Build-Depends
+
+ -- Jan Dittberner <jandd@debian.org>  Sun, 19 May 2013 11:09:23 +0200
+
+springlobby (0.147-1) unstable; urgency=low
+
+  * New upstream version
+  * enable hardening build flags
+    - add dpkg-dev (>= 1.16.1~) to Build-Depends
+    - bump debian/compat to 9
+    - bump debhelper version in Build-Depends to (>= 9.20120417~)
+  * debian/rules: move --buildsystem=cmake to the end of dh invocation
+  * move rm -f .gitattributes from clean to override_dh_auto_clean to
+    fix FTBFS twice in a row
+
+ -- Jan Dittberner <jandd@debian.org>  Tue, 22 May 2012 12:58:08 +0200
+
+springlobby (0.144-1) unstable; urgency=low
+
+  * New upstream version
+  * Bump Standards-Version to 3.9.3 (no changes)
+  * update debian/copyright format to 1.0
+
+ -- Jan Dittberner <jandd@debian.org>  Sun, 25 Mar 2012 22:29:18 +0200
+
+springlobby (0.139-1) unstable; urgency=low
+
+  * New upstream version.
+  * update debian/copyright format version
+  * update debian/copyright, add myself for debian/* files
+
+ -- Jan Dittberner <jandd@debian.org>  Sun, 02 Oct 2011 22:54:08 +0200
+
+springlobby (0.135-1) unstable; urgency=low
+
+  * New upstream version.
+  * debian/control: add libboost-dev to Build-Depends
+
+ -- Jan Dittberner <jandd@debian.org>  Thu, 04 Aug 2011 15:34:27 +0200
+
+springlobby (0.130-1) unstable; urgency=low
+
+  * New upstream version.
+  * debian/control: Bump Standards-Version to 3.9.2
+
+ -- Jan Dittberner <jandd@debian.org>  Sun, 01 May 2011 00:39:22 +0200
+
+springlobby (0.128-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Sat, 02 Apr 2011 13:01:02 +0200
+
+springlobby (0.127-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Fri, 25 Mar 2011 22:20:33 +0100
+
+springlobby (0.124-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Thu, 03 Mar 2011 18:36:30 +0100
+
+springlobby (0.122-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Mon, 21 Feb 2011 18:28:07 +0100
+
+springlobby (0.121-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Sun, 20 Feb 2011 18:19:20 +0100
+
+springlobby (0.120-2) unstable; urgency=low
+
+  * upload to unstable
+
+ -- Jan Dittberner <jandd@debian.org>  Sun, 06 Feb 2011 12:59:29 +0100
+
+springlobby (0.120-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Fri, 21 Jan 2011 18:57:00 +0100
+
+springlobby (0.118-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Tue, 21 Dec 2010 12:58:07 +0100
+
+springlobby (0.117-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Fri, 26 Nov 2010 10:20:19 +0100
+
+springlobby (0.116-1) experimental; urgency=low
+
+  * New upstream release.
+
+ -- Jan Dittberner <jandd@debian.org>  Wed, 10 Nov 2010 19:37:43 +0100
+
+springlobby (0.114-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Tue, 26 Oct 2010 10:42:51 +0200
+
+springlobby (0.111-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Mon, 11 Oct 2010 18:13:33 +0200
+
+springlobby (0.105-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Tue, 05 Oct 2010 23:04:18 +0200
+
+springlobby (0.104-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Thu, 30 Sep 2010 19:15:25 +0200
+
+springlobby (0.100-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Thu, 02 Sep 2010 20:05:46 +0200
+
+springlobby (0.99-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Fri, 27 Aug 2010 17:08:11 +0200
+
+springlobby (0.96-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Tue, 17 Aug 2010 11:11:42 +0200
+
+springlobby (0.95-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Mon, 16 Aug 2010 12:54:11 +0200
+
+springlobby (0.93-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Sun, 15 Aug 2010 15:36:28 +0200
+
+springlobby (0.88-1) unstable; urgency=low
+
+  * New upstream version.
+  * debian/control: bump Standards-Version to 3.9.1 (no changes needed)
+
+ -- Jan Dittberner <jandd@debian.org>  Tue, 03 Aug 2010 21:27:45 +0200
+
+springlobby (0.85-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Fri, 23 Jul 2010 13:57:57 +0200
+
+springlobby (0.83-1) unstable; urgency=low
+
+  * New upstream version.
+  * debian/control: bump Standards-Version to 3.9.0 (no changes
+    necessary)
+
+ -- Jan Dittberner <jandd@debian.org>  Mon, 12 Jul 2010 12:34:06 +0200
+
+springlobby (0.82-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Sun, 06 Jun 2010 13:31:18 +0200
+
+springlobby (0.80-2) unstable; urgency=low
+
+  * debian/rules: fail to build on unsupported architectures
+  * debian/control:
+    - depend on spring >= 0.81.2.1+dfsg1-5
+    - restrict architectures to amd64 and i386
+
+ -- Jan Dittberner <jandd@debian.org>  Sat, 29 May 2010 01:57:11 +0200
+
+springlobby (0.80-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Fri, 07 May 2010 16:07:47 +0200
+
+springlobby (0.78-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Wed, 21 Apr 2010 21:32:26 +0200
+
+springlobby (0.68-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Jan Dittberner <jandd@debian.org>  Sat, 10 Apr 2010 10:15:30 +0200
+
+springlobby (0.67-1) unstable; urgency=low
+
+  * New upstream version. (Closes: #565098)
+  * add debian/source/format to switch to source format 3.0 (quilt)
+
+ -- Jan Dittberner <jandd@debian.org>  Fri, 09 Apr 2010 19:46:04 +0200
+
+springlobby (0.63-3) unstable; urgency=low
+
+  * debian/control: set spring dependency version to >= 0.81.1.3~dfsg-1 to
+    match spring's versioning
+
+ -- Jan Dittberner <jandd@debian.org>  Sun, 21 Feb 2010 11:12:38 +0100
+
+springlobby (0.63-2) unstable; urgency=low
+
+  * debian/control: set Architecture for springlobby and springlobby-dbg
+    to i386 amd64 kfreebsd-i386 kfreebsd-amd64 hurd-i386 because spring
+    is only available on x86 architectures
+
+ -- Jan Dittberner <jandd@debian.org>  Sat, 20 Feb 2010 17:56:13 +0100
+
+springlobby (0.63-1) unstable; urgency=low
+
+  [ Marco Amadori ]
+  * New Upstream Release (Closes: #569324).
+  * Dropped merged-upstream patches.
+  * Fixed GPL2 kind in copyright.
+  * Removed the springlobby.launcher wrapper since spring (>= 0.81.1.3) does
+    not need it anymore;
+  * Depends on spring (>= 0.81.1.3).
+  * Bumped Standards-Version to 3.8.4.
+
+  [ Jan Dittberner ]
+  * remove .gitattributes
+  * debian/control:
+   - add myself to Uploaders
+   - wrap Build-Depends
+
+ -- Jan Dittberner <jandd@debian.org>  Thu, 18 Feb 2010 19:16:11 +0100
+
+springlobby (0.44-2) unstable; urgency=low
+
+  * Added the -dbg debug package.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Thu, 07 Jan 2010 14:13:45 +0100
+
+springlobby (0.44-1) unstable; urgency=low
+
+  * New upstream release 0.44.
+  * Fixed release cmake option.
+  * Launcher will pollute less /usr/games.
+  * Included a (patched) upstream git patch to fix locales.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Tue, 16 Dec 2009 13:34:03 +0100
+
+springlobby (0.40-1) unstable; urgency=low
+
+  [ Marco Amadori ]
+  * New upstream release.
+  * Migrated packaging to the new upstream build system (cmake).
+  * Revised authors list.
+
+  [ Bruno "Fuddl" Kleinert]
+  * Don't hardwire parallel instances of make to 8 in debian/rules. Use
+    DEB_BUILD_OPTIONS instead. (Closes: #558759)
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Tue, 01 Dec 2009 19:15:06 +0100
+
+springlobby (0.34-1) unstable; urgency=low
+
+  * Initial release (Closes: #550250).
+  * This release has p2p disabled due to openssl license conflicts, look at
+    README.Debian.
+
+ -- Marco Amadori <marco.amadori@gmail.com>  Tue, 03 Nov 2009 01:00:00 +0100

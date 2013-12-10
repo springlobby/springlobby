@@ -1,0 +1,78 @@
+springlobby(6)
+==============
+:man source:   Springlobby distribution
+:man manual:   Games
+
+
+Name
+----
+springlobby - A spring lobby
+
+
+Synopsis
+--------
+*springlobby* [-nc|--no-crash-handler] [-cl|--console-logging] [-gl|--gui-logging] [-l|--log-verbosity 'NUM']
+
+*springlobby* [-h|--help]
+
+Description
+-----------
+Springlobby is a multiplayer / singleplayer lobby for spring.
+
+Spring is a free Real Time Strategy (RTS) game engine originally designed to
+play Total Annihilation ((C) 1997 Cavedog) content and evolved to a general rts
+engine capable to run different kind of games (mods).
+
+It is mainly designed around online multiplayer games but can be played in
+single player mode against different AI.
+
+
+Options
+-------
+*-h, --help*::
+  Prints the options help message and exits.
+
+*-nc, --no-crash-handler*::
+  Don't use the crash handler (useful for debugging)
+
+*-cl, --console-logging*::
+  Shows application log to the console(if available)
+
+*-gl, --gui-logging*::
+  Enables application log window
+
+*-l, --log-verbosity=*'NUM'::
+  Overrides default logging verbosity, can be:
+
+  0 - no log
+  1 - critical errors
+  2 - errors
+  3 - warnings (default)
+  4 - messages
+  5 - function trace
+
+Files
+-----
+
+  /etc/spring/datadir
+  $HOME/.springlobby
+
+Contain the path used by spring and springlobby to save downloaded files and temporary datas.
+
+See also
+--------
+
+spring(6)
+
+Homepage
+--------
+
+More information about the spring can be found on
+link:http://www.springlobby.info
+
+Author
+------
+Springlobby was written by the springlobby developers.
+
+This manual page was written by Marco Amadori <marco.amadori@gmail.com>,
+for the Debian project (and may be used by others).
