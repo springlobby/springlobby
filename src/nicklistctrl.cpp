@@ -19,14 +19,13 @@
 #include "iconimagelist.h"
 #include "user.h"
 #include "settings.h"
-#include "ui.h"
 #include "mainwindow.h"
 #include "countrycodes.h"
 #include "chatpanel.h"
 #include "chatpanelmenu.h"
 #include "userlist.h"
 #include "usermenu.h"
-#include "Helper/sortutil.h"
+#include "helper/sortutil.h"
 
 
 
@@ -50,16 +49,10 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
     m_menu( popup )
 {
 
-#if defined(__WXMAC__)
-	const int widths [4] = { 20, 20, 20, 120 };
-#else
-	const int widths [4] = { 20, 20, 20, 120 };
-#endif
-
-	AddColumn( 0, widths[0], _( "s" ), _T( "Status" ) );
-	AddColumn( 1, widths[1], _( "c" ), _T( "Country" ) );
-	AddColumn( 2, widths[2], _( "r" ), _T( "Rank" ) );
-	AddColumn( 3, widths[3], _( "Nickname" ), _T( "Nickname" ) );
+	AddColumn( 0, 20, _( "s" ), _T( "Status" ) );
+	AddColumn( 1, 20, _( "c" ), _T( "Country" ) );
+	AddColumn( 2, 20, _( "r" ), _T( "Rank" ) );
+	AddColumn( 3, 180, _( "Nickname" ), _T( "Nickname" ) );
 
 	if ( m_sortorder.size() == 0 ) {
 		m_sortorder[0].col = 0;
@@ -129,7 +122,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 
 void NickListCtrl::OnShowMenu( wxContextMenuEvent& /*unused*/ )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	if ( m_menu != 0 )
 	{
 		//no need to popup the menu when there's no user selected
@@ -149,7 +142,7 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint& positio
 	int column = getColumnFromPosition( position );
 	if ( column > ( int )m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > ( long ) m_data.size() || m_data[item_hit] == NULL )
 	{
-		m_tiptext = _T( "" );
+		m_tiptext = wxEmptyString;
 	}
 	else
 	{

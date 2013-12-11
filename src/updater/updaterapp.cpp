@@ -28,38 +28,30 @@
 
 
 #include "updaterapp.h"
-#include "../settings.h"
 #include "../crashreport.h"
 #include "../utils/platform.h"
 #include "../utils/customdialogs.h"
 #include "updater.h"
-#include "../globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 
 #include "versionchecker.h"
 #include "updatermainwindow.h"
 #include "../defines.h"
 #include "../utils/conversion.h"
 
-const unsigned int TIMER_ID         = 101;
-const unsigned int TIMER_INTERVAL   = 100;
-
-
 IMPLEMENT_APP(UpdaterApp)
 
-BEGIN_EVENT_TABLE(UpdaterApp, wxApp)
-
-    EVT_TIMER(TIMER_ID, UpdaterApp::OnTimer)
-
-
-END_EVENT_TABLE()
-
-UpdaterApp::UpdaterApp()
-    : 	m_timer ( new wxTimer(this, TIMER_ID) ),
+UpdaterApp::UpdaterApp():
 	m_version( _T("-1") ),
-    m_updater_window( 0 ),
-	m_logstream_target( new std::ofstream( STD_STRING(wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("update.log") ).c_str() ) )
+	m_updater_window( 0 )
 {
-    SetAppName( _T("springlobby_updater") );
+	SetAppName( _T("springlobby_updater") );
+
+	const std::string filename = STD_STRING(wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("update.log") ).c_str();
+	m_logstream_target = new std::ofstream(filename);
+	if ( (!m_logstream_target->good()) || (!m_logstream_target->is_open() )) {
+		printf("Error opening %s\n", filename.c_str());
+	}
 }
 
 UpdaterApp::~UpdaterApp()
@@ -67,7 +59,6 @@ UpdaterApp::~UpdaterApp()
     m_logstream_target->flush();
     m_logstream_target->close();
     delete m_logstream_target;
-    delete m_timer;
 }
 
 
@@ -87,8 +78,8 @@ bool UpdaterApp::OnInit()
     wxLogMessage( _T("m_exe_to_update ") + m_exe_to_update);
     wxLogMessage( _T("m_version ") + m_version);
 
-#if wxUSE_ON_FATAL_EXCEPTION && !defined(__WXMAC__)
-    if (!m_crash_handle_disable) wxHandleFatalExceptions( true );
+#if wxUSE_ON_FATAL_EXCEPTION
+    wxHandleFatalExceptions( true );
 #endif
 
     //this needs to called _before_ mainwindow instance is created
@@ -97,8 +88,6 @@ bool UpdaterApp::OnInit()
     wxImage::AddHandler(new wxPNGHandler);
     wxFileSystem::AddHandler(new wxZipFSHandler);
     wxSocketBase::Initialize();
-
-    m_timer->Start( TIMER_INTERVAL );
 
 	if( m_version == _T("-1") )
 		m_version = GetLatestVersion();
@@ -114,12 +103,8 @@ bool UpdaterApp::OnInit()
 //! @brief Finalizes the application
 int UpdaterApp::OnExit()
 {
-  	m_timer->Stop();
-
-  	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
-
     SetEvtHandlerEnabled(false);
-    DestroyGlobals();
+    LSL::Util::DestroyGlobals();
 
     return 0;
 }
@@ -139,13 +124,6 @@ void UpdaterApp::OnFatalException()
 #endif
 }
 
-
-//! @brief Is called every 1/10 seconds to update statuses
-void UpdaterApp::OnTimer( wxTimerEvent& event )
-{
-
-}
-
 void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
     #ifndef HAVE_WX29
@@ -156,10 +134,10 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
 
     wxCmdLineEntryDesc cmdLineDesc[] =
     {
-        { wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+		{ wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
 		{ wxCMD_LINE_OPTION, STR("f"), STR("target-exe"),  _("the SpringLobby executeable to be updated"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_MANDATORY | wxCMD_LINE_NEEDS_SEPARATOR },
 		{ wxCMD_LINE_OPTION, STR("r"), STR("target-rev"),  _("the SpringLobby revision to update to"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_MANDATORY | wxCMD_LINE_NEEDS_SEPARATOR },
-        { wxCMD_LINE_NONE }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
+		{ wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, 0 }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
 
     parser.SetDesc( cmdLineDesc );

@@ -67,7 +67,7 @@ wxString GetLatestVersion()
     }
 
     wxLogDebugFunc(_T("Error connecting! Error is: ") + err);
-    customMessageBoxNoModal(SL_MAIN_ICON, _T("Error connecting! Error is: ") + err, _T(""));
+    customMessageBoxNoModal(SL_MAIN_ICON, _T("Error connecting! Error is: ") + err, wxEmptyString);
 
     return _T("-1");
   }
@@ -76,9 +76,9 @@ wxString GetLatestVersion()
   versionRequest.Close();
 
     // Need to replace crap chars or versions will always be inequal
-  result.Replace(_T(" "), _T(""), true);
-  result.Replace(_T("\n"), _T(""), true);
-  result.Replace(_T("\t"), _T(""), true);
+  result.Replace(_T(" "), wxEmptyString, true);
+  result.Replace(_T("\n"), wxEmptyString, true);
+  result.Replace(_T("\t"), wxEmptyString, true);
 
   return result;
 }

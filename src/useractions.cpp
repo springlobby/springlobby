@@ -3,11 +3,10 @@
 #include <wx/intl.h>
 #include <wx/colour.h>
 #include "settings.h"
+#include "helper/slconfig.h"
 #include <cmath>
 #include "utils/customdialogs.h"
 
-//for updating ui, anybody feel free to replace with fancy events stuff :P
-#include "ui.h"
 #include "mainwindow.h"
 #include "mainchattab.h"
 #include "hosting/mainjoinbattletab.h"
@@ -16,12 +15,14 @@
 #include "chatpanel.h"
 #include <options/mainoptionstab.h>
 #include <options/groupoptionspanel.h>
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
+
+const wxColour defaultHLcolor ( 255, 0, 0 );
 
 UserActions& useractions()
 {
-    static LineInfo<UserActions> m( AT );
-    static GlobalObjectHolder<UserActions,LineInfo<UserActions> > m_useractions( m );
+    static LSL::Util::LineInfo<UserActions> m( AT );
+    static LSL::Util::GlobalObjectHolder<UserActions, LSL::Util::LineInfo<UserActions> > m_useractions( m );
     return m_useractions;
 }
 
@@ -35,7 +36,7 @@ UserActions::~UserActions()
 
 }
 
-bool UserActions::DoActionOnUser( const ActionType action, const wxString& name )
+bool UserActions::DoActionOnUser( const UserActions::ActionType action, const wxString& name )
 {
     // preventing action on oneself wasn't the best idea, login gets disabled
     //if ( m_knownUsers.Index( name ) == -1 || ui().IsThisMe(name) || action == ActNone )
@@ -50,7 +51,56 @@ bool UserActions::DoActionOnUser( const ActionType action, const wxString& name 
 
 void UserActions::Init()
 {
-    m_groupNames = sett().GetGroups();
+	m_actionNames.clear();
+	m_actionNames.push_back(_("none"));
+	m_actionNames.push_back(_("highlight"));
+	m_actionNames.push_back(_("notify login/out"));
+	m_actionNames.push_back(_("ignore chat"));
+	m_actionNames.push_back(_("ignore pm"));
+	m_actionNames.push_back(_("autokick"));
+	m_actionNames.push_back( _("notify hosted battle"));
+	m_actionNames.push_back(_("notify status change"));
+
+	m_configActionNames.clear();
+	m_configActionNames.push_back(_T("none"));
+	m_configActionNames.push_back(_T("highlight"));
+	m_configActionNames.push_back(_T("notify_login"));
+	m_configActionNames.push_back(_T("ignore_chat"));
+	m_configActionNames.push_back(_T("ignore_pm"));
+	m_configActionNames.push_back(_T("autokick"));
+	m_configActionNames.push_back(_T("notify_hosted"));
+	m_configActionNames.push_back(_T("notify_status"));
+
+	m_actionTooltips.clear();
+	m_actionTooltips.push_back(_("no action at all"));
+	m_actionTooltips.push_back(_("highlight user in nick list and battles he participates in"));
+	m_actionTooltips.push_back(_("popup a message box when user logs in/out from  the server"));
+	m_actionTooltips.push_back(_("you won't see message by these users in normal channels"));
+	m_actionTooltips.push_back(_("ignore private messages of these users, no pm window will open if any of these try to contact you privately"));
+	m_actionTooltips.push_back(_("automatically kick users from battles hosted by yourself"));
+	m_actionTooltips.push_back(_("popup a message box when user hosts a new battle"));
+	m_actionTooltips.push_back(_("popup a message box when user changes away status"));
+
+	// setup if empty
+	if (!cfg().Exists(_T( "/Groups"))) {
+		 AddGroup( _("Default") );
+		 AddGroup( _("Ignore PM") );
+		 ChangeAction( _("Ignore PM"), UserActions::ActIgnorePM );
+		 AddGroup( _("Ignore chat") );
+		 ChangeAction( _("Ignore chat"), UserActions::ActIgnoreChat );
+		 AddGroup( _("Battle Autokick") );
+		 ChangeAction( _("Battle Autokick"), UserActions::ActAutokick );
+		 AddGroup( _("Friends") );
+		 ChangeAction( _("Friends"), UserActions::ActNotifBattle );
+		 ChangeAction( _("Friends"), UserActions::ActHighlight );
+		 ChangeAction( _("Friends"), UserActions::ActNotifLogin );
+		 // TODO select better color
+		 SetGroupColor( _("Friends"), wxColour( 0, 0, 255 ) );
+	}
+
+
+	// read
+    m_groupNames = GetGroups();
     m_groupMap.clear();
     m_groupActions.clear();
     m_actionsGroups.clear();
@@ -59,18 +109,18 @@ void UserActions::Init()
     for ( unsigned int i = 0; i < m_groupNames.GetCount(); ++i)
     {
         wxString name = m_groupNames[i];
-        m_groupMap[name] = sett().GetPeopleList( name );
+        m_groupMap[name] = GetPeopleList( name );
         for ( unsigned int k = 0; k < m_groupMap[name].GetCount(); ++k)
         {
             wxString user = m_groupMap[name][k];
             m_knownUsers.Add( user );
             m_peopleGroup[ user ] = name;
         }
-        m_groupActions[name] = sett().GetGroupActions( name );
+        m_groupActions[name] = GetGroupActions( name );
     }
-    for ( int i = 0; i < m_numActions; ++i)
+    for ( int i = 0; i < m_actionNames.size(); ++i)
     {
-        ActionType cur = (ActionType) (int) std::pow( 2.0, i);
+        UserActions::ActionType cur = (UserActions::ActionType) (int) std::pow( 2.0, i);
         wxArrayString tmp;
         for ( unsigned int j = 0; j < m_groupNames.GetCount(); ++j)
         {
@@ -120,32 +170,94 @@ void UserActions::AddUserToGroup( const wxString& group, const wxString& name )
     if ( IsKnown( name , false ) || ui().IsThisMe( name ) )
         return;
     m_groupMap[group].Add(name);
-    sett().SetPeopleList( m_groupMap[group], group );
+    SetPeopleList( m_groupMap[group], group );
     Init();
     UpdateUI();
 }
 
-void UserActions::DeleteGroup(const wxString& name )
+void UserActions::DeleteGroup(const wxString& group )
 {
-    sett().DeleteGroup( name );
-    Init();
-    UpdateUI();
+	if ( cfg().Exists( _T( "/Groups/" ) + group ) ) {
+		cfg().DeleteGroup( _T( "/Groups/" ) + group );
+	}
+	Init();
+	UpdateUI();
 }
 
-void UserActions::AddGroup(const wxString& name )
+wxArrayString UserActions::GetPeopleList( const wxString& group  ) const
 {
-    sett().AddGroup( name );
-    Init();
-    UpdateUI();
+	wxArrayString list;
+	slConfig::PathGuard pathGuard ( &cfg(), _T( "/Groups/" ) + group + _T( "/Members/" ) );
+	unsigned int friendsCount  = cfg().GetNumberOfEntries( false );
+	for ( unsigned int i = 0; i < friendsCount ; i++ )
+	{
+		wxString ToAdd;
+		if ( cfg().Read( _T( "/Groups/" ) + group + _T( "/Members/" ) +  TowxString( i ), &ToAdd ) ) list.Add( ToAdd );
+	}
+	return list;
 }
+
+
+void UserActions::AddGroup(const wxString& group )
+{
+	if ( !cfg().Exists( _T( "/Groups/" ) + group ) ) {
+		cfg().Write( _T( "/Groups/" ) , group );
+		//set defaults
+		SetGroupActions( group, UserActions::ActNone );
+		SetGroupHLColor( defaultHLcolor, group );
+	}
+	Init();
+	UpdateUI();
+}
+
 
 void UserActions::ChangeAction( const wxString& group, const ActionType action, bool add )
 {
     ActionType old = m_groupActions[group];
     old = (ActionType) ( add ? (old | action) : (old & ~action ) );
-    sett().SetGroupActions( group, old );
+    SetGroupActions( group, old );
     Init();
     UpdateUI();
+}
+
+void UserActions::SetGroupActions( const wxString& group, ActionType action ) const
+{
+	wxString key = _T( "/Groups/" ) + group + _T( "/Opts/ActionsList" );
+	cfg().DeleteGroup( key );
+	key += _T( "/" );
+	unsigned int tmp = action & ( ( UserActions::ActLast << 1 ) - 1 );
+	for(auto config: m_configActionNames) {
+		if ( tmp&1 ) cfg().Write( key + config, true );
+		tmp >>= 1;
+	}
+}
+
+UserActions::ActionType UserActions::GetGroupActions( const wxString& group ) const
+{
+	wxString key = _T( "/Groups/" ) + group + _T( "/Opts/Actions" );
+	if ( cfg().HasEntry( key ) )// Backward compatibility.
+	{
+		wxLogMessage( _T( "loading deprecated group actions and updating config" ) );
+		UserActions::ActionType action = ( UserActions::ActionType )cfg().Read( key, ( long )UserActions::ActNone ) ;
+		cfg().DeleteEntry( key );
+
+		SetGroupActions( group, action );
+
+		return action;
+	}
+	key = _T( "/Groups/" ) + group + _T( "/Opts/ActionsList" );
+	if ( !cfg().Exists( key ) ) return UserActions::ActNone;
+	key += _T( "/" );
+	int mask = 1;
+	int result = 0;
+	for(auto config: m_configActionNames) {
+		if ( cfg().Read( key + config, 0l ) ) {
+			result |= mask;
+		}
+		mask <<= 1;
+	}
+	if ( result == 0 ) return UserActions::ActNone;
+	return ( UserActions::ActionType )result;
 }
 
 UserActions::ActionType UserActions::GetGroupAction( const wxString& group ) const
@@ -162,14 +274,30 @@ wxString UserActions::GetGroupOfUser( const wxString& user ) const
 
 void UserActions::SetGroupColor( const wxString& group, const wxColour& color )
 {
-    sett().SetGroupHLColor( color, group );
+    SetGroupHLColor( color, group );
     Init();
     UpdateUI();
 }
 
+wxColour UserActions::GetGroupHLColor( const wxString& group  ) const
+{
+	return wxColour( cfg().Read( _T( "/Groups/" ) + group + _T( "/Opts/HLColor" ) , _T( "#64648C" ) ) );
+}
+
+void UserActions::SetGroupHLColor( const wxColour& color, const wxString& group )
+{
+	cfg().Write( _T( "/Groups/" ) + group + _T( "/Opts/HLColor" ), color.GetAsString( wxC2S_HTML_SYNTAX ) );
+}
+
+wxArrayString UserActions::GetGroups( )
+{
+	return cfg().GetGroupList( _T( "/Groups/" ) );
+}
+
+
 wxColour UserActions::GetGroupColor( const wxString& group ) const
 {
-    return sett().GetGroupHLColor( group );
+    return GetGroupHLColor( group );
 }
 
 bool UserActions::IsKnown( const wxString& name, bool outputWarning ) const
@@ -187,7 +315,17 @@ void UserActions::RemoveUser(const wxString& name )
 {
     wxString group = m_peopleGroup[name];
     m_groupMap[group].Remove(name);
-    sett().SetPeopleList( m_groupMap[group], group );
+    SetPeopleList( m_groupMap[group], group );
     Init();
     UpdateUI();
+}
+
+void UserActions::SetPeopleList( const wxArrayString& friends, const wxString& group  )
+{
+	unsigned int friendsCount = friends.GetCount();
+	cfg().DeleteGroup( _T( "/Groups/" ) + group + _T( "/Members/" ) );
+	for ( unsigned int i = 0; i < friendsCount ; i++ )
+	{
+		cfg().Write( _T( "/Groups/" ) + group + _T( "/Members/" ) + TowxString( i ), friends[i] );
+	}
 }

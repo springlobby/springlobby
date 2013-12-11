@@ -19,8 +19,8 @@
 #include "infodialog.h"
 
 #include <wx/sizer.h>
-#include "springunitsync.h"
 #include "settings.h"
+#include "springsettings/hotkeys/hotkey_panel.h"
 #include <vector>
 #include <fstream>
 #include <utility>
@@ -46,7 +46,7 @@
 inline wxString BtS( bool q, std::string y = "yes", std::string n = "no" ) { return q ? TowxString(y) : TowxString(n) ; }
 
 InfoDialog::InfoDialog(wxWindow* parent )
-	:wxDialog(parent,wxID_ANY, _("path shit"), wxDefaultPosition, wxSize(620,400), wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX)
+	:wxDialog(parent,wxID_ANY, _("Paths"), wxDefaultPosition, wxSize(620,400), wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX)
 {
 	wxBoxSizer* main_sizer = new wxBoxSizer( wxVERTICAL );
 
@@ -58,7 +58,7 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	paths.push_back( std::make_pair( sett().GetCachePath(), _T("CachePath")) );
 	paths.push_back( std::make_pair( sett().GetCurrentUsedDataDir(), _T("CurrentUsedDataDir")) );
 	paths.push_back( std::make_pair( GetExecutableFolder() , _T("ExecutableFolder")));
-	wxTextCtrl* out = new wxTextCtrl( this, wxNewId(), _T( "" ), wxDefaultPosition, wxDefaultSize,
+	wxTextCtrl* out = new wxTextCtrl( this, wxNewId(), wxEmptyString, wxDefaultPosition, wxDefaultSize,
 									 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	for ( size_t i =0; i < paths.size(); ++i )
 	{
@@ -83,15 +83,10 @@ InfoDialog::InfoDialog(wxWindow* parent )
 		catch (...){}
 		*out << wxString::Format( _T("\tWX: %s POSIX: %s TRY: %s\n"), BtS(wx).c_str(), BtS(posix).c_str(), BtS(tried).c_str() );
 	}
-	*out << wxString::Format( _T("Global config: %s (%s %s )\n"),
-							 sett().GlobalConfigPath().c_str(),
-							 BtS(wxFileName::FileExists(sett().GlobalConfigPath()), "exists", "missing").c_str(),
-							 BtS(wxFileName::IsFileWritable(sett().GlobalConfigPath()), "writable", "").c_str()  );
 	*out << wxString::Format( _T("Local config: %s (%s writable)\n"),
 							 sett().FinalConfigPath().c_str(),
 							 BtS(wxFileName::IsFileWritable(sett().FinalConfigPath()), "", "not" ).c_str() );
-	*out << wxString::Format( _T("Portable mode: %s\n"), BtS(sett().IsPortableMode()).c_str() );
-
+	*out << wxString::Format(_T("current uikeys.txt: %s\n"), hotkey_panel::GetCurrentUsedUikeys().c_str());
 
 	*out << _T( "Version " ) + GetSpringLobbyVersion()
 			<< wxString( wxVERSION_STRING ) + _T(" on ") + wxPlatformInfo::Get().GetOperatingSystemIdName() + _T( "\ncl: " ) ;

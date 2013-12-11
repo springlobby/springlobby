@@ -13,7 +13,6 @@
 #include "../gui/wxbackgroundimage.h"
 #include "../images/notif_bg.png.h"
 #include "../uiutils.h"
-#include "../customizations.h"
 
 #ifndef __WXMSW__
 	typedef wxClientDC DCType;
@@ -33,16 +32,13 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
 	startTime( wxGetLocalTime() ),
 	parent2( _parent2 ),
 	sleepTime( 10 ),
-	step( 4 ),
 	pauseTime( 1700 ),
 	textColor( *wxWHITE ),
 	popupText( _T("Change Me!") ),
 	m_background_bitmap( charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png) ) ),
-	pn(NULL),
 	shrink(false)
 {
 	SetBackgroundStyle(wxBG_STYLE_CUSTOM);
-	SLcustomizations().GetBitmap( _T("notification_background"), m_background_bitmap );
 	count++;
 	//the size we want the dialog to be
 	wxSize dialogSize(150, 170);

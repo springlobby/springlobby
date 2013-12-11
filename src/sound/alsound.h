@@ -7,20 +7,20 @@
 #else
 #include <AL/al.h>
 #endif
+
+class soundThread;
 class ALsound
 {
-	public:
-		ALsound();
-		~ALsound();
+public:
+	ALsound();
+	~ALsound();
 
-		void ring() const;
-		void pm() const;
+	void ring();
+	void pm();
 
-	private:
-		static const int m_num_buffer = 2;
-		static const int m_num_sources = 2;
-		ALuint m_sources[m_num_sources];
-		ALuint m_buffers[m_num_buffer];
+private:
+	void Play(int idx);
+	soundThread* m_thread;
 };
 
 ALsound& sound();

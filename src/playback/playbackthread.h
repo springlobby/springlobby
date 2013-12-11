@@ -2,20 +2,15 @@
 #define SPRINGLOBBY_HEADERGUARD_PLAYBACKTHREAD
 
 #include <wx/string.h>
-#include <wx/event.h>
-#include <wx/thread.h>
 #include "../defines.h"
+#include <wx/thread.h>
+#include <wx/event.h>
 
 static const wxEventType PlaybacksLoadedEvt = wxNewEventType();
 
-#ifdef HAVE_WX29
-#include <wx/event.h>
-    template <class PlaybackTabImp >
-    class PlaybackLoader : public wxEvtHandler
-#else
-    template <class PlaybackTabImp >
-    class PlaybackLoader
-#endif
+
+template <class PlaybackTabImp >
+class PlaybackLoader : public wxEvtHandler
 {
 protected:
     class PlaybackLoaderThread : public wxThread
@@ -51,10 +46,10 @@ public:
     ~PlaybackLoader();
     void OnComplete();
     void Run();
-    wxArrayString GetPlaybackFilenames();
+    std::vector<std::string> GetPlaybackFilenames();
 
 protected:
-    wxArrayString m_filenames;
+    std::vector<std::string> m_filenames;
     ParentType* m_parent;
     ThreadType* m_thread_loader;
 

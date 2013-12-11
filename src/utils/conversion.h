@@ -20,6 +20,7 @@ typedef __int64 int64_t;
 
 #include <wx/string.h>
 #include <sstream>
+#include <vector>
 
 #include <wx/arrstr.h>
 
@@ -58,29 +59,10 @@ inline T FromwxString(const wxString& arg){
   return (T)ret;
 }
 
-#ifdef SL_QT_MODE
-#include <QString>
-#include <QVariant>
-template<>
-inline QString FromwxString(const wxString& arg) {
-        return QString(arg.mb_str());
-}
-template<>
-inline QVariant FromwxString(const wxString& arg) {
-        return QVariant::fromValue( FromwxString<QString>( arg ) );
-}
-
-template<>
-inline wxString TowxString(QString arg){
-  return wxString(arg.toStdString().c_str(),wxConvUTF8);
-}
-
-
-//template<>
-static inline QString ToQString(const wxString& arg){
-  return QString( arg.mbc_str() );
-}
-#endif
+namespace LSL { namespace Util {
+wxArrayString vectorToArrayString(const std::vector<std::string>& vec);
+std::vector<std::string> arrayStringToVector(const wxArrayString& arr);
+} }
 
 #define WX_STRINGC(v) wxString(v,wxConvUTF8)
 
@@ -155,6 +137,12 @@ struct wxFormat : public boost::format
 	{
 		return str();
 	}
+
+    //! conversion operator to wxString
+    operator std::string () const
+    {
+        return boost::format::str();
+    }
 
 	//! overload the base class % operator to accept wxString input (and return our own type again)
 	template <class T>

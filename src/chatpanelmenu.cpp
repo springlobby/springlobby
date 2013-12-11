@@ -7,23 +7,22 @@
 #include "chatpanel.h"
 #include "channel/channel.h"
 #include "utils/debug.h"
-#include "ui.h"
 #include "server.h"
 #include "user.h"
-#include "battle.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"
 #include "settings.h"
 #include "battlelist/battlelisttab.h"
 
-ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/ )
-	: m_chatpanel(parent),
+ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/ ):
+	wxEvtHandler(),
+	m_chatpanel(parent),
 	m_user_menu( 0 ),
 	m_menu_all( 0 ),
 	displayjoinitem( 0 ),
-    m_autorejoin( 0 ),
+	m_autorejoin( 0 ),
 	m_append_menu( 0 ),
-    m_withChanserv( addChanServ )
+	m_withChanserv( addChanServ )
 {}
 
 //!ATTENTION: _all_ event ids must be handled in ChatPanelMenu::OnMenuItem
@@ -38,7 +37,7 @@ wxMenu* ChatPanelMenu::GetMenu()
     wxMenuItem* copy = new wxMenuItem( m_menu_all, wxID_COPY, _( "Copy" ), wxEmptyString, wxITEM_NORMAL );
     m_menu_all->Append( copy );
 
-    if ( m_chatpanel->m_url_at_pos != _T("") ) {
+    if ( m_chatpanel->m_url_at_pos != wxEmptyString ) {
         wxMenuItem* copylink = new wxMenuItem( m_menu_all, CHAT_MENU_COPYLINK, _( "Copy link location" ), wxEmptyString, wxITEM_NORMAL );
         m_menu_all->Append( copylink );
     }
@@ -251,7 +250,7 @@ ChatPanelMenu::UserMenu* ChatPanelMenu::GetUserMenuNoCreate()
 void ChatPanelMenu::OnUserMenuCopyLink( wxCommandEvent& /*unused*/ )
 {
     CopyToClipboard( m_chatpanel->m_url_at_pos );
-    m_chatpanel->m_url_at_pos = _T("");
+    m_chatpanel->m_url_at_pos = wxEmptyString;
 }
 
 
@@ -322,7 +321,7 @@ void ChatPanelMenu::OnChannelMenuTopic( wxCommandEvent& /*unused*/ )
 	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
 
 	wxString topic = m_chatpanel->m_channel->GetTopic();
-	if ( !ui().AskText( _( "Set topic..." ), _( "What should be the new topic?" ), topic, wxOK | wxCANCEL | wxCENTRE | wxTE_MULTILINE ) ) return;
+	if ( !ui().AskText( _( "Set topic..." ), _( "What should be the new topic?" ), topic, true ) ) return;
 	topic.Replace( _T("\n"), _T("\\n") );
 	cs.Say( _T( "!TOPIC #" ) + m_chatpanel->m_channel->GetName() + _T( " " ) + topic );
 	//TOPIC /<channame>/ {topic}
@@ -737,7 +736,7 @@ void ChatPanelMenu::OnChatMenuOpenLog( wxCommandEvent&  )
 
 void ChatPanelMenu::OnChannelClearContents( wxCommandEvent& /*unused*/ )
 {
-    m_chatpanel->m_chatlog_text->SetValue( _T("") );
+    m_chatpanel->m_chatlog_text->SetValue( wxEmptyString );
 }
 
 void ChatPanelMenu::OnUserMenuAddToGroup( wxCommandEvent& event )

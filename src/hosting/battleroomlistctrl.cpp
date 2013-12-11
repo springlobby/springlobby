@@ -15,11 +15,8 @@
 
 #include "battleroomlistctrl.h"
 #include "iconimagelist.h"
-#include "springunitsync.h"
 #include "battle.h"
-#include "ibattle.h"
 #include "uiutils.h"
-#include "ui.h"
 #include "user.h"
 #include "server.h"
 #include "utils/debug.h"
@@ -81,47 +78,39 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 
 	wxListItem col;
 
-    const int hd = wxLIST_AUTOSIZE_USEHEADER;
-
-#if defined(__WXMAC__)
-/// on mac, autosize does not work at all
-    const int widths[11] = {20,20,20,20,170,140,130,110,28,28,28}; //!TODO revise plox
-#else
-    const int widths[11] = {hd,hd,hd,hd,hd,hd,170,hd,hd,80,130};
-#endif
 	int count = 0;
-    AddColumn( count, widths[count], _T("Status"), _T("Player/Bot") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _T("Status"), _T("Player/Bot") );
 	m_status_column_index = count;
 	count++;
 	if ( m_showingame )
 	{
-        AddColumn( count, widths[count], _T("Ingame"), _T("Battleroom status") );
+        AddColumn( count, 55, _T("Ingame"), _T("Battleroom status") );
 		m_ingame_column_index = count;
         count++;
     }
 
-    AddColumn( count, widths[count], _T("Faction"), _T("Faction icon") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _T("Faction"), _T("Faction icon") );
 	m_faction_column_index = count;
 	count++;
-    AddColumn( count, widths[count], _T("Colour"), _T("Teamcolour") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _T("Colour"), _T("Teamcolour") );
 	m_colour_column_index = count;
 	count++;
-    AddColumn( count, widths[count], _T("Country"), _T("Country") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _T("Country"), _T("Country") );
 	m_country_column_index = count;
 	count++;
-    AddColumn( count, widths[count], _T("Rank"), _T("Rank") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _T("Rank"), _T("Rank") );
 	m_rank_column_index = count;
 	count++;
-    AddColumn( count, widths[count], _("Nickname"), _T("Ingame name"));
+    AddColumn( count, 165, _("Nickname"), _T("Ingame name"));
 	m_nick_column_index = count;
 	count++;
-    AddColumn( count, widths[count], _("Team"), _T("Team number") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _("Team"), _T("Team number") );
 	m_team_column_index = count;
 	count++;
-    AddColumn( count, widths[count], _("Ally"), _T("Ally number") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _("Ally"), _T("Ally number") );
 	m_ally_column_index = count;
 	count++;
-    AddColumn( count, widths[count], _("Resource Bonus"), _T("Resource Bonus") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _("Resource Bonus"), _T("Resource Bonus") );
 	m_resourcebonus_column_index = count;
 
     if ( m_sortorder.size() == 0 ) {
@@ -207,7 +196,8 @@ void BattleroomListCtrl::SetBattle( IBattle* battle )
 	{
 		try
 		{
-			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+            const wxArrayString sides = LSL::Util::vectorToArrayString(
+                        LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
 			{
 				wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
@@ -248,7 +238,7 @@ void BattleroomListCtrl::UpdateUser( User& user )
 {
     if ( !user.BattleStatus().spectator )
 		icons().SetColourIcon( user.BattleStatus().colour );
-    wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
+    wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
     ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
     user.SetSideiconIndex( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
     int index = GetIndexFromData( &user );
@@ -272,7 +262,7 @@ wxListItemAttr * BattleroomListCtrl::GetItemAttr(long item) const
 
 int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 {
-    if ( item == -1 || item >= (long)m_data.size())
+    if ( (item == -1) || (item >= (long)m_data.size()) || (m_battle == NULL) )
         return -1;
 
     const User& user = *GetDataFromIndex( item );
@@ -298,15 +288,16 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 	 if ( column == m_nick_column_index ) return -1;
 	 else
 	 {
-		wxLogWarning( _T("column oob in BattleroomListCtrl::OnGetItemColumnImage") );
+		const wxString msg =  wxFormat(_("column oob in BattleroomListCtrl::OnGetItemColumnImage: %d" )) % column;
+		wxLogWarning( msg);
 		return -1;
 	 }
 }
 
 wxString BattleroomListCtrl::GetItemText(long item, long column) const
 {
-	if ( item == -1 || item >= (long)m_data.size())
-		return _T("");
+	if ( (item == -1) || (item >= (long)m_data.size()) || (m_battle == NULL))
+		return wxEmptyString;
 
 	const User& user = *GetDataFromIndex( item );
 	bool is_bot = user.BattleStatus().IsBot();
@@ -314,19 +305,19 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 
 	if ( column == m_faction_column_index ) {
 		try {
-			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-			ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.GetCount(), _T("Side index too high") );
+            auto sides = LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName()));
+            ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.size(), _T("Side index too high") );
 		}
 		catch ( ... ) {
 			return wxFormat( _T("s%d") ) % (user.BattleStatus().side + 1);
 		}
-		return _T("");
+		return wxEmptyString;
 	}
     if ( column == m_nick_column_index )  {
         if ( is_bot ) {
             wxString botname = user.BattleStatus().aishortname;
             if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
-            if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+            if ( !LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
             {
                 if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
                 if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));
@@ -338,12 +329,12 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
         else
             return user.GetNick();
     }
-	if ( column == m_team_column_index ) return is_spec ? _T("") : (wxFormat( _T("%d") ) % ( user.BattleStatus().team + 1 ) ).c_str();
-	if ( column == m_ally_column_index ) return is_spec ? _T("") : (wxFormat( _T("%d") ) % ( user.BattleStatus().ally + 1 ) ).c_str();
-	if ( column == m_resourcebonus_column_index ) return is_spec ? _T("") : (wxFormat( _T("%d%%") ) % user.BattleStatus().handicap ).c_str();
-	if ( column == m_country_column_index ) return _T("");
+	if ( column == m_team_column_index ) return is_spec ? (wxString)wxEmptyString : (wxFormat( _T("%d") ) % ( user.BattleStatus().team + 1 ) );
+	if ( column == m_ally_column_index ) return is_spec ? (wxString)wxEmptyString : (wxFormat( _T("%d") ) % ( user.BattleStatus().ally + 1 ) );
+	if ( column == m_resourcebonus_column_index ) return is_spec ? (wxString)wxEmptyString : (wxFormat( _T("%d%%") ) % user.BattleStatus().handicap );
+	if ( column == m_country_column_index ) return wxEmptyString;
 
-	return _T("");
+	return wxEmptyString;
 }
 
 void BattleroomListCtrl::UpdateUser( const int& index )
@@ -355,7 +346,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
 void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 	if ( m_ro ) return;
 	int index = event.GetIndex();
 
@@ -388,8 +379,8 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 
     wxLogMessage(_T("Popup"));
     m_popup->EnableItems( !user.BattleStatus().IsBot(), GetSelectedUserNick() );//this updates groups, therefore we need to update the connection to evt handlers too
-    std::vector<long> groups_ids = m_popup->GetGroupIds();
-    for (std::vector<long>::const_iterator it = groups_ids.begin(); it != groups_ids.end(); ++it) {
+    std::vector<int> groups_ids = m_popup->GetGroupIds();
+    for (std::vector<int>::const_iterator it = groups_ids.begin(); it != groups_ids.end(); ++it) {
         Connect( *it, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuAddToGroup ), 0, this );
     }
     Connect( GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnUserMenuCreateGroup), 0, this );
@@ -400,7 +391,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 
 void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   int team = event.GetId() - BRLIST_TEAM;
 	if( m_sel_user ) ((Battle*)m_battle)->ForceTeam( *m_sel_user, team );
 }
@@ -408,7 +399,7 @@ void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   int ally = event.GetId() - BRLIST_ALLY;
 	if( m_sel_user ) ((Battle*)m_battle)->ForceAlly( *m_sel_user, ally );
 }
@@ -416,7 +407,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnColourSelect( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
 
 	wxColour CurrentColour = m_sel_user->BattleStatus().colour;
 	CurrentColour = GetColourFromUser(this, CurrentColour);
@@ -428,7 +419,7 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& /*unused*/ )
 
 void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   int side = event.GetId() - BRLIST_SIDE;
   if( m_sel_user ) ((Battle*)m_battle)->ForceSide( *m_sel_user, side );
 }
@@ -436,9 +427,9 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   if( !m_sel_user ) return;
-  long handicap = wxGetNumberFromUser( _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), _T(""), m_sel_user->BattleStatus().handicap, 0, 100, (wxWindow*)&ui().mw(), wxDefaultPosition );
+  long handicap = wxGetNumberFromUser( _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), wxEmptyString, m_sel_user->BattleStatus().handicap, 0, 100, (wxWindow*)&ui().mw(), wxDefaultPosition );
 	if ( handicap != -1 )
 	{
      ((Battle*)m_battle)->SetHandicap( *m_sel_user, handicap );
@@ -448,21 +439,21 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& /*unused*/ )
 
 void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   if ( m_sel_user ) ((Battle*)m_battle)->ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
 }
 
 
 void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
 	if ( m_sel_user ) ((Battle*)m_battle)->KickPlayer( *m_sel_user );
 }
 
 
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   if ( m_sel_user ) ((Battle*)m_battle)->GetServer().Ring( m_sel_user->GetNick() );
 }
 
@@ -544,7 +535,7 @@ int BattleroomListCtrl::CompareStatus(const DataType user1, const DataType user2
   }
 
   int status2 = 0;
-  if ( user1->BattleStatus().IsBot() )
+  if ( user2->BattleStatus().IsBot() )
   {
     status2 = 9;
   }
@@ -737,13 +728,13 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
     int column = getColumnFromPosition( position );
     if (column > (int)m_colinfovec.size() || column < 0)
     {
-        m_tiptext = _T("");
+        m_tiptext = wxEmptyString;
     }
     else
     {
 		if ( column == m_status_column_index ) // is bot?
 		{
-			m_tiptext = _T("");
+			m_tiptext = wxEmptyString;
 
 			if ( user.BattleStatus().IsBot() )
 			{
@@ -792,7 +783,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 		}
 		else if ( column == m_faction_column_index ) // icon
 		{
-			m_tiptext = _T("");
+			m_tiptext = wxEmptyString;
 			if ( user.BattleStatus().spectator )
 			{
 				m_tiptext = _T("Spectators have no side");
@@ -801,9 +792,10 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 			{
 				try
 				{
-					wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-					int side = user.BattleStatus().side;
-					if ( side < (int)sides.GetCount() ) m_tiptext = sides[side];
+                    const auto sides = LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName()));
+                    const int side = user.BattleStatus().side;
+                    if ( side < (int)sides.size() )
+                        m_tiptext = TowxString(sides[side]);
 				}
 				catch (...){}
 			}

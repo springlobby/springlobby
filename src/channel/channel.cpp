@@ -51,7 +51,7 @@ void Channel::Said( User& who, const wxString& message )
 
 void Channel::Say( const wxString& message )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   m_serv.SayChannel( m_name, message );
 }
 
@@ -64,7 +64,7 @@ void Channel::DidAction( User& who, const wxString& action )
 
 void Channel::DoAction( const wxString& action )
 {
-  wxLogDebugFunc( _T("") );
+  wxLogDebugFunc( wxEmptyString );
   m_serv.DoActionChannel( m_name, action );
 }
 

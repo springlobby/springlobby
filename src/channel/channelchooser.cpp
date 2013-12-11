@@ -7,7 +7,6 @@
 
 #include "channellistctrl.h"
 #include "../server.h"
-#include "../ui.h"
 #include "channel.h"
 
 BEGIN_EVENT_TABLE( ChannelChooserPanel, wxScrolledWindow )
@@ -55,7 +54,7 @@ void ChannelChooserPanel::ClearChannels()
 {
     m_channellist->ClearChannels();
     m_info_label->SetLabel( m_channellist->GetInfo() );
-    m_search_text->SetValue( _T("") );
+    m_search_text->SetValue( wxEmptyString );
 }
 
 void ChannelChooserPanel::OnSearch( wxCommandEvent& /*unused*/ )

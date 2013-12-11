@@ -3,7 +3,7 @@
 #include "../utils/conversion.h"
 #include "../ui.h"
 #include <algorithm>
-#include "../Helper/sortutil.h"
+#include "../helper/sortutil.h"
 
 template<> SortOrder CustomVirtListCtrl<ChannelInfo,ChannelListctrl>::m_sortorder = SortOrder();
 
@@ -18,13 +18,7 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID /*unused*/, const 
 													wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
 													_T("ChannelListCtrl"), 3, &ChannelListctrl::CompareOneCrit)
 {
-#if defined(__WXMSW__)
-    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
-#elif defined(__WXMAC__)
-    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
-#else
-    const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
-#endif
+	const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
 
     AddColumn( 0, widths[0], _("Channel"), _T("Channelname") );
     AddColumn( 1, widths[1], _("# users"), _T("Users") );
@@ -101,7 +95,7 @@ void ChannelListctrl::OnActivateItem(wxListEvent& event)
     int index = event.GetIndex();
     if ( index == -1 ) return;
     wxString chan_name = m_data[ m_visible_idxs[index] ].name;
-    ui().JoinChannel( chan_name, _T("") );
+    ui().JoinChannel( chan_name, wxEmptyString );
 }
 
 void ChannelListctrl::ClearChannels()
@@ -163,7 +157,7 @@ void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint& posit
     int column = getColumnFromPosition(position);
     if (column > (int)m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > (long)m_data.size() )
     {
-        m_tiptext = _T("");
+        m_tiptext = wxEmptyString;
     }
     else
     {
@@ -176,7 +170,7 @@ void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint& posit
                 break;
 
             default:
-                m_tiptext = _T("");
+                m_tiptext = wxEmptyString;
                 break;
             }
         }

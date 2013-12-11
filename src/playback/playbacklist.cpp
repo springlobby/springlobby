@@ -1,13 +1,13 @@
 
 #include "../tdfcontainer.h"
 #include "../offlinebattle.h"
-#include "../globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 
 template <class ListImp>
 ListImp& playbacklist()
 {
-    static LineInfo<ListImp> m( AT );
-    static GlobalObjectHolder<ListImp,LineInfo<ListImp> > m_replay_list( m );
+    static LSL::Util::LineInfo<ListImp> m( AT );
+    static LSL::Util::GlobalObjectHolder<ListImp, LSL::Util::LineInfo<ListImp> > m_replay_list( m );
     return m_replay_list;
 }
 

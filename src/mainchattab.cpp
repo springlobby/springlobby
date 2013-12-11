@@ -21,7 +21,6 @@
 #include "channel/channel.h"
 #include "user.h"
 #include "chatpanel.h"
-#include "ui.h"
 #include "server.h"
 #include "settings.h"
 #include "aui/artprovider.h"
@@ -169,7 +168,7 @@ void MainChatTab::OnUserDisconnected( User& user )
 	}
 	if ( m_server_chat != 0 )
 	{
-		m_server_chat->Parted( user, _T("") );
+		m_server_chat->Parted( user, wxEmptyString );
 	}
 }
 
@@ -208,7 +207,7 @@ void MainChatTab::RejoinChannels()
 			catch ( ... ) {}
 			if ( !alreadyin )
 			{
-				serverSelector().GetServer().JoinChannel( name, _T( "" ) );
+				serverSelector().GetServer().JoinChannel( name, wxEmptyString );
 				tmp->SetChannel( &serverSelector().GetServer().GetChannel( name ) );
 			}
 
@@ -319,7 +318,7 @@ void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 
 void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 
 	int oldsel = event.GetOldSelection();
 	if ( oldsel < 0 ) return;
@@ -355,7 +354,7 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
 }
 
 
-wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour )
+wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour ) const
 {
 	wxImage ret = img.ConvertToImage();
 	wxImage::HSVValue origcolour = wxImage::RGBtoHSV( wxImage::RGBValue( colour.Red(), colour.Green(), colour.Blue() ) );

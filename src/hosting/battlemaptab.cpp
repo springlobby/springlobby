@@ -21,8 +21,7 @@
 #include <stdexcept>
 
 #include "battlemaptab.h"
-#include "springunitsync.h"
-#include "ui.h"
+#include <lslutils/conversion.h>
 #include "user.h"
 #include "battle.h"
 #include "utils/debug.h"
@@ -40,7 +39,6 @@ BEGIN_EVENT_TABLE( BattleMapTab, wxPanel )
 	EVT_CHOICE      ( BMAP_MAP_SEL,     BattleMapTab::OnMapSelect       )
 	EVT_BUTTON      ( BMAP_MAP_BROWSE,  BattleMapTab::OnMapBrowse       )
 	EVT_RADIOBOX    ( BMAP_START_TYPE,  BattleMapTab::OnStartTypeSelect )
-	EVT_MOUSEWHEEL  (                   BattleMapTab::OnMouseWheel      )
 
 END_EVENT_TABLE()
 
@@ -107,6 +105,11 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Battle* battle )
 
 	m_opts_sizer->Add( m_start_radios, 0, wxALL, 2 );
 
+	m_map_desc = new wxStaticText(this,-1,wxEmptyString);
+    m_map_desc->Wrap(160);
+
+    m_opts_sizer->Add( m_map_desc, 0, wxALL, 2 );
+
 	m_main_sizer->Add( m_opts_sizer, 0, wxEXPAND, 5 );
 	//m_main_sizer->AddStretchSpacer();
 	SetSizer( m_main_sizer );
@@ -116,6 +119,7 @@ BattleMapTab::BattleMapTab( wxWindow* parent, Battle* battle )
 
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	Layout();
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleMapTab::OnUnitsyncReloaded));
 }
 
 
@@ -125,31 +129,18 @@ BattleMapTab::~BattleMapTab()
         GetAui().manager->DetachPane( this );
 }
 
-void BattleMapTab::OnMouseWheel( wxMouseEvent& event )
-{
-	if ( m_minimap ) {
-		wxRect map_rect = m_minimap->GetRect();
-		if ( map_rect.Contains( event.GetPosition() ) ) {
-			m_minimap->OnMouseWheel( event );
-			return;
-		}
-	}
-	event.Skip();
-}
-
 void BattleMapTab::Update()
 {
 	if ( !m_battle ) return;
-	wxString value = m_battle->CustomBattleOptions().getSingleValue( _T( "startpostype" ), OptionsWrapper::EngineOption );
-	long longval;
-	value.ToLong( &longval );
+    const long longval = LSL::Util::FromString<long>(
+                m_battle->CustomBattleOptions().getSingleValue( "startpostype", LSL::OptionsWrapper::EngineOption ));
 	m_start_radios->SetSelection( longval );
 
 	m_minimap->UpdateMinimap();
 
 	if ( !m_battle->MapExists() ) return;
 
-	UnitSyncMap map = m_battle->LoadMap();
+	LSL::UnitsyncMap map = m_battle->LoadMap();
 
 	m_map_opts_list->SetItem( 0, 1, wxFormat( _T( "%dx%d" ) ) % (map.info.width / 512) % (map.info.height / 512) );
 	m_map_opts_list->SetItem( 1, 1, wxFormat( _T( "%d-%d" ) ) % map.info.minWind % map.info.maxWind );
@@ -158,7 +149,10 @@ void BattleMapTab::Update()
 	m_map_opts_list->SetItem( 4, 1, wxFormat( _T( "%d" ) ) % map.info.extractorRadius );
 	m_map_opts_list->SetItem( 5, 1, wxFormat( _T( "%.3f" ) ) % map.info.maxMetal );
 
-	int index = m_map_combo->FindString( map.name );
+    m_map_desc->SetLabel(TowxString(map.info.description));
+    m_map_desc->Wrap(160);
+
+	int index = m_map_combo->FindString( TowxString(map.name)  );
 	if ( index == wxNOT_FOUND ) return;
 	m_map_combo->SetSelection( index );
 }
@@ -169,21 +163,20 @@ void BattleMapTab::Update( const wxString& Tag )
 	if ( !m_battle ) return;
 	long type;
 	Tag.BeforeFirst( '_' ).ToLong( &type );
-	wxString key = Tag.AfterFirst( '_' );
-	wxString value = m_battle->CustomBattleOptions().getSingleValue( key, ( OptionsWrapper::GameOption )type );
-	long longval;
-	value.ToLong( &longval );
-	if ( type == OptionsWrapper::EngineOption )
+    const std::string key = STD_STRING(Tag.AfterFirst( '_' ));
+    const long longval = LSL::Util::FromString<long>(
+                m_battle->CustomBattleOptions().getSingleValue( key, ( LSL::OptionsWrapper::GameOption )type ));
+	if ( type == LSL::OptionsWrapper::EngineOption )
 	{
-		if ( key == _T( "startpostype" ) )
+        if ( key == "startpostype" )
 		{
 			m_start_radios->SetSelection( longval );
 			m_minimap->UpdateMinimap();
 		}
 	}
-	else if ( type == OptionsWrapper::PrivateOptions )
+	else if ( type == LSL::OptionsWrapper::PrivateOptions )
 	{
-		if ( key == _T( "mapname" ) )
+        if ( key == "mapname" )
 		{
 			Update();
 		}
@@ -195,12 +188,9 @@ void BattleMapTab::ReloadMaplist()
 {
 	if ( !m_battle ) return;
 	m_map_combo->Clear();
-
-	wxArrayString maplist = usync().GetMapList();
-// maplist.Sort(CompareStringIgnoreCase);
-
-	size_t nummaps = maplist.Count();
-	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( maplist[i], i );
+    int i = 0;
+    for (auto map : LSL::usync().GetMapList())
+        m_map_combo->Insert( TowxString(map), i++ );
 }
 
 
@@ -220,7 +210,7 @@ void BattleMapTab::SetMap( int index )
 	if ( !m_battle ) return;
 	try
 	{
-		UnitSyncMap map = usync().GetMapEx( index );
+		LSL::UnitsyncMap map = LSL::usync().GetMapEx( index );
 		m_battle->SetLocalMap( map );
 
 		m_battle->SendHostInfo( IBattle::HI_Map );
@@ -235,7 +225,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 	{
 		try
 		{
-			m_battle->DoAction( _T( "suggests " ) + usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
+            m_battle->DoAction(TowxString("suggests " + LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name));
 		}
 		catch ( ... )
 		{
@@ -249,11 +239,11 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 
-	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
+	wxString mapname = mapSelectDialog();
+	if ( !mapname.empty() )
 	{
-		wxString mapname = mapSelectDialog().GetSelectedMap()->name;
 		wxLogDebugFunc( mapname );
 		if ( !m_battle->IsFounderMe() )
 		{
@@ -271,13 +261,13 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 void BattleMapTab::OnStartTypeSelect( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxString pos = wxFormat( _T( "%d" ) ) % m_start_radios->GetSelection();
-	m_battle->CustomBattleOptions().setSingleOption( _T( "startpostype" ), pos, OptionsWrapper::EngineOption );
-	m_battle->SendHostInfo( wxFormat( _T( "%d_startpostype" ) ) % OptionsWrapper::EngineOption );
+    const std::string pos = wxFormat( _T( "%d" ) ) % m_start_radios->GetSelection();
+    m_battle->CustomBattleOptions().setSingleOption( "startpostype", pos, LSL::OptionsWrapper::EngineOption );
+	m_battle->SendHostInfo( wxFormat( _T( "%d_startpostype" ) ) % LSL::OptionsWrapper::EngineOption );
 }
 
 
-void BattleMapTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void BattleMapTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	if ( !m_battle ) return;
     ReloadMaplist();

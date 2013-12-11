@@ -1,18 +1,24 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRING_H
 #define SPRINGLOBBY_HEADERGUARD_SPRING_H
 
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/spring/spring.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 #include <wx/event.h>
-#ifdef SL_QT_MODE
-	#include <QObject>
-	#include <QProcess>
-#else
-	#define Q_OBJECT
-#endif
 
 class wxCommandEvent;
 class IBattle;
 class SinglePlayerBattle;
-class NoGuiSinglePlayerBattle;
 class OfflineBattle;
 class Battle;
 class SpringProcess;
@@ -20,51 +26,28 @@ class wxSpringProcess;
 class wxString;
 
 
-class Spring:
-		#ifdef SL_QT_MODE
-		 public  QObject,
-		#endif
-		public wxEvtHandler
+class Spring: public wxEvtHandler
 {
-	Q_OBJECT
-  public:
+public:
 	explicit Spring();
-    ~Spring();
+	~Spring();
 
-    bool IsRunning() const;
-    bool Run( Battle& battle );
-    bool Run( SinglePlayerBattle& battle );
-    bool Run( NoGuiSinglePlayerBattle& battle );
-    bool Run( OfflineBattle& battle );
+	bool IsRunning() const;
+	bool Run( OfflineBattle& battle );
+	bool Run( Battle& battle );
+	bool Run( SinglePlayerBattle& battle );
+	wxString WriteScriptTxt( IBattle& battle ) const;
 
-    //! executes spring with replay as parameter
-    /*!
-     * \param filename the full path for the replayfile
-     */
-    bool RunReplay ( const wxString& filename );
 
-    wxString WriteScriptTxt( IBattle& battle ) const;
-    void OnTerminated( wxCommandEvent& event );
-
-#ifdef SL_QT_MODE
-public slots:
-	void OnStopped( int exitCode, QProcess::ExitStatus exitStatus );
-	void OnStarted();
-signals:
-	void springStarted();
-	void springStopped();
 private:
-	QProcess* qt_process_;
-#endif
+	void OnTerminated( wxCommandEvent& event );
+	bool LaunchSpring(const wxString& engineName, const wxString& engineVersion, const wxString& params);
 
-  protected:
-		bool LaunchSpring( const wxString& params );
+	SpringProcess* m_process;
+	wxSpringProcess* m_wx_process;
+	bool m_running;
 
-    SpringProcess* m_process;
-    wxSpringProcess* m_wx_process;
-    bool m_running;
-
-    DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 
 Spring& spring();

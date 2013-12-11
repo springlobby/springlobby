@@ -20,11 +20,10 @@
 #include <wx/numdlg.h>
 
 #include "battleoptionstab.h"
-#include "springunitsync.h"
 #include "ibattle.h"
 #include "utils/controls.h"
 #include "server.h"
-#include "mmoptionswrapper.h"
+#include <lslunitsync/optionswrapper.h>
 #include "aui/auimanager.h"
 
 
@@ -126,7 +125,7 @@ void BattleOptionsTab::UpdateBattle( const wxString& Tag )
 	long type;
 	Tag.BeforeFirst( '_' ).ToLong( &type );
 	wxString key = Tag.AfterFirst( '_' );
-	if ( type == OptionsWrapper::PrivateOptions ) {
+	if ( type == LSL::OptionsWrapper::PrivateOptions ) {
 		if ( key == _T( "restrictions" ) ) ReloadRestrictions();
 	}
 }
@@ -140,7 +139,8 @@ void BattleOptionsTab::ReloadRestrictions()
         return;
 
 	try {
-		m_allowed_list->InsertItems( usync().GetUnitsList( m_battle->GetHostModName() ), 0 );
+        m_allowed_list->InsertItems(LSL::Util::vectorToArrayString(
+                                        LSL::usync().GetUnitsList(STD_STRING(m_battle->GetHostModName()))), 0);
 	} catch ( ... ) {}
 	std::map<wxString, int> units = m_battle->RestrictedUnits();
 
@@ -239,7 +239,7 @@ void BattleOptionsTab::OnRestrict( wxCommandEvent& /*unused*/ )
 	}
 	for ( unsigned int i = 0; i < names.Count(); i++ ) {
 		wxString unit = names.Item( i );
-		int count = wxGetNumberFromUser( _( "How many units of this type do you wish to allow?" ), _T( "" ), _( "Unit restriction" ), 0, 0, 500000 );
+		int count = wxGetNumberFromUser( _( "How many units of this type do you wish to allow?" ), wxEmptyString, _( "Unit restriction" ), 0, 0, 500000 );
 		if ( count >= 0 ) m_battle->RestrictUnit( unit, count );
 	}
 	if ( names.Count() > 0 ) m_battle->SendHostInfo( IBattle::HI_Restrictions );

@@ -17,7 +17,7 @@
 #include "settings.h"
 #include "uiutils.h"
 #include "utils/controls.h"
-#include "Helper/colorbutton.h"
+#include "helper/colorbutton.h"
 #include "selectusersdialog.h"
 
 BEGIN_EVENT_TABLE( GroupOptionsPanel, wxPanel )
@@ -224,7 +224,7 @@ void GroupOptionsPanel::ShowGroup( const wxString& group )
 
 void GroupOptionsPanel::ReloadUsersList()
 {
-    wxArrayString groupuser = sett().GetPeopleList( m_current_group );
+    wxArrayString groupuser = useractions().GetPeopleList( m_current_group );
     m_user_list->Clear();
     m_user_list->InsertItems(groupuser, 0);
     m_remove_user_button->Enable( false );

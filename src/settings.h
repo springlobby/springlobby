@@ -7,22 +7,19 @@
 #include "utils/mixins.hh"
 #include "utils/pathlistfactory.h"
 #include "useractions.h"
-#include "Helper/sortutil.h"
-#include "Helper/slconfig.h"
+#include "helper/sortutil.h"
+#include "helper/slconfig.h"
 
-const int CACHE_VERSION     = 11;
-const int SETTINGS_VERSION  = 23;
+
+const long CACHE_VERSION     = 12;
+const long SETTINGS_VERSION  = 26;
+
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("lobby.springrts.com");
-const wxString widgetDownloader_baseUrl = _T("widgetdb.springrts.de");
 const wxString BattlePostfix = _T("_battle");
 const int DEFSETT_DEFAULT_SERVER_PORT = 8200;
 const bool DEFSETT_SAVE_PASSWORD = false;
-const unsigned int DEFSETT_MW_WIDTH = 880;
-const unsigned int DEFSETT_MW_HEIGHT = 600;
-const unsigned int DEFSETT_MW_TOP = 50;
-const unsigned int DEFSETT_MW_LEFT = 50;
 const unsigned int DEFSETT_SPRING_PORT = 8452;
 
 const long SET_MODE_EXPERT = 5000;
@@ -44,7 +41,6 @@ class wxWindow;
 class wxConfigBase;
 class wxFileConfig;
 class wxFont;
-struct BattleListFilterValues;
 struct PlaybackListFilterValues;
 class wxFileInputStream;
 class wxFileName;
@@ -54,6 +50,7 @@ class wxColourData;
 class wxSize;
 class wxPoint;
 class wxPathList;
+class wxTranslationHelper;
 
 typedef std::map<unsigned int,unsigned int> ColumnMap;
 
@@ -61,6 +58,10 @@ struct ChannelJoinInfo
 {
 	wxString name;
 	wxString password;
+};
+
+namespace LSL{
+	class SpringBundle;
 };
 
 //!convenience class for saving and displaying a choice of discrete screen pos
@@ -84,19 +85,8 @@ class Settings : public SL::NonCopyable
     Settings();
     ~Settings();
 
-    //! used for passing config file at command line
-    static bool m_user_defined_config;
-    static wxString m_user_defined_config_path;
-
-    /// list all entries subkeys of a parent group
-    wxArrayString GetGroupList( const wxString& base_key );
-    /// list all groups subkeys of a parent group
-    wxArrayString GetEntryList( const wxString& base_key );
-    /// counts all groups subkeys of a parent group
-    unsigned int GetGroupCount( const wxString& base_key );
-
-    bool IsPortableMode() const;
-    void SetPortableMode( bool mode );
+    void Setup(wxTranslationHelper* translationhelper);
+    void ConvertSettings(wxTranslationHelper* translationhelper, long settversion);
 
     /** Initialize all settings to default.
      */
@@ -104,18 +94,6 @@ class Settings : public SL::NonCopyable
     void SaveSettings();
 
     bool IsFirstRun();
-
-    //! Sets/Gets settings revision number
-    void SetSettingsVersion();
-	int GetSettingsVersion();
-
-    //! should we sayex/pm bot?
-    void SetReportStats(const bool value);
-    bool GetReportStats();
-
-    void SetAutoUpdate( const bool value );
-    bool GetAutoUpdate();
-	bool IsSelfUpdateDisabled();
 
     wxString GetLobbyWriteDir();
 
@@ -133,6 +111,9 @@ class Settings : public SL::NonCopyable
 
     bool GetShowIPAddresses();
     void SetShowIPAddresses(bool value);
+
+    int GetHTTPMaxParallelDownloads();
+    void SetHTTPMaxParallelDownloads(int value);
     /**@}*/
 
     /* ================================================================ */
@@ -184,26 +165,14 @@ class Settings : public SL::NonCopyable
      */
     wxString GetCachePath();
 
-    void SetCacheVersion();
-    int GetCacheVersion();
-
-    void SetMapCachingThreadProgress( unsigned int index );
-    unsigned int GetMapCachingThreadProgress();
-
-    void SetModCachingThreadProgress( unsigned int index );
-    unsigned int GetModCachingThreadProgress();
-
     /**@}*/
 
     /* ================================================================ */
     /** @name Servers
      * @{
      */
-		void ConvertOldServerSettings();
     wxString GetDefaultServer();
     void SetDefaultServer( const wxString& server_name );
-    void SetAutoConnect( bool do_autoconnect );
-    bool GetAutoConnect( );
 
     wxString GetServerHost( const wxString& server_name );
     int GetServerPort( const wxString& server_name );
@@ -273,8 +242,6 @@ class Settings : public SL::NonCopyable
      */
 		int GetChannelJoinIndex( const wxString& name );
 
-    void ConvertOldChannelSettings();
-
     bool ShouldAddDefaultChannelSettings();
 		/**@}*/
 
@@ -283,32 +250,9 @@ class Settings : public SL::NonCopyable
      * @{
      */
 
-     void SetStartTab( const int idx );
-     unsigned int GetStartTab( );
-
      void SaveCustomColors( const wxColourData& cdata, const wxString& paletteName = _T("Default") );
      wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
 
-    int    GetWindowWidth( const wxString& window );
-    void   SetWindowWidth( const wxString& window, const int value );
-
-    int    GetWindowHeight( const wxString& window );
-    void   SetWindowHeight( const wxString& window, const int value );
-
-    int    GetWindowTop( const wxString& window );
-    void   SetWindowTop( const wxString& window, const int value );
-
-    int    GetWindowLeft( const wxString& window );
-    void   SetWindowLeft( const wxString& window, const int value );
-
-    wxSize  GetWindowSize( const wxString& window, const wxSize& def );
-    void    SetWindowSize( const wxString& window, const wxSize& size  );
-
-	wxPoint GetWindowPos( const wxString& window, const wxPoint& def );
-    void    SetWindowPos( const wxString& window, const wxPoint& pos );
-
-	bool	GetWindowMaximized( const wxString& window );
-	void	GetWindowMaximized( const wxString& window, bool maximized );
 
     bool UseOldSpringLaunchMethod();
     void SetOldSpringLaunchMethod( bool value );
@@ -324,13 +268,9 @@ class Settings : public SL::NonCopyable
 
     void SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width );
     int GetColumnWidth( const wxString& list_name, const int column );
-	void NukeColumnWidths();
     //! used to signal unset column width in Get...
     static const int columnWidthUnset = -3;
     static const int columnWidthMinimum = 5;
-
-    void SetLanguageID ( const long id );
-    long GetLanguageID ( );
 
     int GetSashPosition( const wxString& window_name );
     void SetSashPosition( const wxString& window_name, const int pos );
@@ -341,7 +281,6 @@ class Settings : public SL::NonCopyable
     bool GetShowXallTabs();
     void SetShowXallTabs( bool show );
 
-    void TranslateSavedColumWidths();
 
 	wxString GetEditorPath();
     void SetEditorPath( const wxString& path );
@@ -357,64 +296,27 @@ class Settings : public SL::NonCopyable
 	unsigned int GetNotificationPopupDisplayTime( );
     /*@}*/
 
-    /* ================================================================ */
-    /** @name People/Group management
-     * @{
-     */
-    void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
-    wxArrayString GetPeopleList( const wxString& group = _T("default") ) const;
-
-    wxArrayString GetGroups( );
-    void AddGroup( const wxString& group ) ;
-    void DeleteGroup( const wxString& group ) ;
-
-    void SetGroupHLColor( const wxColour& color, const wxString& group = _T("default") );
-    wxColour GetGroupHLColor( const wxString& group = _T("default") ) const;
-
-    void SetGroupActions( const wxString& group, UserActions::ActionType action );
-    UserActions::ActionType GetGroupActions( const wxString& group ) const;
-
-		bool ShouldAddDefaultGroupSettings();
-
-    /*@}*/
 
     /* ================================================================ */
     /** @name Spring locations
      * @{
      */
 
-    void ConvertOldSpringDirsOptions();
-    void RefreshSpringVersionList();
-    std::map<wxString, wxString> GetSpringVersionList() const; /// index -> version
+    void RefreshSpringVersionList(bool autosearch=true, const LSL::SpringBundle* additionalbundle = NULL);
+    std::map<wxString, LSL::SpringBundle> GetSpringVersionList() const; /// index -> version
     wxString GetCurrentUsedSpringIndex();
-    void SetUsedSpringIndex( const wxString& index );
+    void SetUsedSpringIndex(const wxString &index );
     void DeleteSpringVersionbyIndex( const wxString& index );
 
-    /// when this mode is enabled in windows SL will search for spring files only in the current executable folder
-    void SetSearchSpringOnlyInSLPath( bool value );
-    bool GetSearchSpringOnlyInSLPath();
-
-	//!@brief if false, lobby tries to load spring & unitsync as sep paths, otherwise, searches for a bundle containing both
-	bool GetBundleMode();
-	bool IsInsideSpringBundle();
-
-	// enable-disable loading the spring exec from same bundle
-	bool GetUseSpringPathFromBundle();
-	void SetUseSpringPathFromBundle( bool value );
-
     /// convenience wrappers to get current used version paths
-    wxString GetCurrentUsedUikeys();
     wxString GetCurrentUsedDataDir();
     wxString GetCurrentUsedUnitSync();
-    wxString GetCurrentUsedBundle();
     wxString GetCurrentUsedSpringBinary();
     //!@brief returns config file path unitsync uses, returns empty if unitsync isn't loaded
     wxString GetCurrentUsedSpringConfigFilePath();
 
     wxString GetUnitSync( const wxString& index );
     wxString GetSpringBinary( const wxString& index );
-    //!@brief meaningful only on mac
-    wxString GetBundle(const wxString& index );
 
     void SetUnitSync( const wxString& index, const wxString& path );
     void SetSpringBinary( const wxString& index, const wxString& path );
@@ -423,13 +325,6 @@ class Settings : public SL::NonCopyable
 
     wxString AutoFindSpringBin();
     wxString AutoFindUnitSync( 	wxPathList pl = PathlistFactory::ConfigFileSearchPaths() ) const;
-    wxString AutoFindBundle();
-	wxString AutoFindUikeys();
-
-    //!@brief returns config file path spring should use, returns empty for default
-    wxString GetForcedSpringConfigFilePath();
-	//! use in game customized mode or externally forced via cli arg
-	void SetForcedSpringConfigFilePath( const wxString& path );
 
     /*@}*/
 
@@ -448,8 +343,6 @@ class Settings : public SL::NonCopyable
 
     void SetChatPMSoundNotificationEnabled( bool enabled );
     bool GetChatPMSoundNotificationEnabled();
-
-    void ConvertOldColorSettings();
 
     wxColour GetChatColorNormal();
     void SetChatColorNormal( wxColour value );
@@ -493,8 +386,6 @@ class Settings : public SL::NonCopyable
     bool GetAlwaysAutoScrollOnFocusLost();
     void SetAlwaysAutoScrollOnFocusLost(bool value);
 
-		void ConvertOldHiglightSettings();
-
 		void SetUseIrcColors( bool value );
 		bool GetUseIrcColors();
 
@@ -513,6 +404,7 @@ class Settings : public SL::NonCopyable
     int GetLastHostPlayerNum();
     int GetLastHostNATSetting();
     wxString GetLastHostMap();
+	wxString GetDefaultNick();
     int GetLastRankLimit();
     bool GetTestHostPort();
     bool GetLastAutolockStatus();
@@ -545,6 +437,11 @@ class Settings : public SL::NonCopyable
     wxColour GetBattleLastColour();
     void SetBattleLastColour( const wxColour& col );
 
+    void SetLastBattleId( int battleId );
+    int GetLastBattleId();
+
+    void SetLastScriptPassword( const wxString& scriptPassword );
+    wxString GetLastScriptPassword();
 
     void SetLastAI( const wxString& ai );
     wxString GetLastAI();
@@ -576,11 +473,6 @@ class Settings : public SL::NonCopyable
     /** @name Battle filters
      * @{
      */
-    BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
-    void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
-    wxString GetLastBattleFilterProfileName();
-    void SetBattleFilterActivState( const bool state );
-    bool GetBattleFilterActivState( ) const;
 
     bool GetBattleLastAutoStartState();
     void SetBattleLastAutoStartState( bool value );
@@ -624,47 +516,7 @@ class Settings : public SL::NonCopyable
     /**@}*/
 
     bool GetDisableSpringVersionCheck();
-	bool IgnoreOfferfile();
-
-    /* ================================================================ */
-    /** @name Torrent System
-     * @{
-     */
-    unsigned int GetTorrentPort();
-    void SetTorrentPort( unsigned int port );
-    int GetTorrentUploadRate();
-    void SetTorrentUploadRate( int speed );
-    int GetTorrentDownloadRate();
-    void SetTorrentDownloadRate( int speed );
-
-    int GetTorrentSystemSuspendMode();
-    void SetTorrentSystemSuspendMode( int mode );
-    int GetTorrentThrottledUploadRate();
-    void SetTorrentThrottledUploadRate( int speed );
-    int GetTorrentThrottledDownloadRate();
-    void SetTorrentThrottledDownloadRate( int speed );
-
-    void SetTorrentMaxConnections( int connections );
-    int GetTorrentMaxConnections();
-
-	void SetTorrentListToResume( const std::vector<wxString>& list );
-	std::vector<wxString> GetTorrentListToResume();
-	void ClearTorrentListToResume();
-
-    /** Get the path to the directory where *.torrent files are stored.
-     * @deprecated isn't used any more!
-     */
-    wxFileName GetTorrentDir();
-
-
-    /** Get the path to the directory where partially-downloaded
-     * torrented files are stored.
-     * @deprecated isn't used any more!
-     * @sa GetTorrentsFolder
-     */
-    wxFileName GetTorrentDataDir();
-
-    /**@}*/
+    void SetDisableSpringVersionCheck(bool disable);
 
     /** @name Aui
      *
@@ -684,14 +536,9 @@ class Settings : public SL::NonCopyable
     bool GetAutosavePerspective( );
     wxArrayString GetPerspectives();
     bool PerspectiveExists( const wxString& perspective_name );
-	bool DoResetPerspectives();
-	void SetDoResetPerspectives( bool do_it );
 
     void RemoveLayouts();
 
-    //! icons for mainwindow tabs??
-    bool GetUseTabIcons();
-    void SetUseTabIcons( bool use );
     /**@}*/
 
     enum CompletionMethod {
@@ -754,30 +601,6 @@ class Settings : public SL::NonCopyable
     void SetLastRelayedHost(wxString relhost);
 
     /**@}*/
-  /* ============================================================== */
-	/** @name Hotkeys
-    * @{
-    */
-	void SetHotkeyMeta( const wxString& profileName, const wxString& keyStr );
-	wxString GetHotkeyMeta( const wxString& profileName );
-
-	void SetHotkeyKeySymSet( const wxString& profileName, const wxString& symName, const wxString& keyStr );
-	wxString GetHotkeyKeySymSet( const wxString& profileName, const wxString& symName );
-	wxArrayString GetHotkeyKeySymSetNames( const wxString& profileName );
-
-	void SetHotkeyKeySym( const wxString& profileName, const wxString& symName, const wxString& keyStr );
-	wxString GetHotkeyKeySym( const wxString& profileName, const wxString& symName );
-	wxArrayString GetHotkeyKeySymNames( const wxString& profileName );
-
-	void SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx );
-	wxString GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key );
-	wxArrayString GetHotkeyProfiles();
-	wxArrayString GetHotkeyProfileOrderIndices( const wxString& profileName );
-	wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& orderIdx );
-	void DeleteHotkeyProfiles();
-	wxString GetUikeys( const wxString& index );
-
-    /**@}*/
 
 	//! you are absolutely forbidden to use this
 	template < class T >
@@ -791,31 +614,18 @@ class Settings : public SL::NonCopyable
 		return m_config->Write( setting, val );
 	}
 
-	//setting to spam the server messages in all channels
-	bool GetBroadcastEverywhere();
-	void SetBroadcastEverywhere(bool value);
-
-	wxString GlobalConfigPath() const { return m_config ? m_config->GlobalConfigPath() : wxString(); }
-	wxString FinalConfigPath() const { return m_final_config_path; }
+	wxString FinalConfigPath() const;
 
     //! move weirdly saved lists to sane form
     void ConvertLists();
 
-    std::set<int> KnownMatchmakerCPU();
-    void AddKnownMatchmakerCPU(int cpu);
-
-  protected:
+private:
     bool IsSpringBin( const wxString& path );
 
 	slConfig* m_config; //!< wxConfig object to store and restore  all settings in.
 
-    wxString m_chosen_path;
-	wxString m_forced_springconfig_path;
-    bool m_portable_mode;
+    std::map<wxString, LSL::SpringBundle> m_spring_versions;
 
-    std::map<wxString, wxString> m_spring_versions;
-
-	wxString m_final_config_path;
 
     void setFromList(const wxArrayString& list, const wxString& path);
     wxArrayString getFromList(const wxString& path);

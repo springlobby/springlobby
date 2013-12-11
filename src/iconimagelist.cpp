@@ -13,8 +13,7 @@
 #include "iconimagelist.h"
 #include "user.h"
 #include "battle.h"
-//#include "utils.h"
-#include "springunitsync.h"
+#include <lslunitsync/image.h>
 
 #include "images/bot.xpm"
 #include "images/bot_broom.png.h"
@@ -79,6 +78,7 @@
 #include "images/unknown_flag.xpm"
 
 #include "images/channel_options.xpm"
+#include "images/springlobby.xpm"
 
 #include "flagimages.h"
 
@@ -118,6 +118,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_RANK6 = Add( wxBitmap(rank5_xpm) );
     ICON_RANK7 = Add( wxBitmap(rank6_xpm) );
 	ICON_RANK8 = Add( wxBitmap(rank7_xpm) );
+	ICON_SPRINGLOBBY = Add(wxBitmap(springlobby_xpm));
 
 	m_rank_requirements.push_back(ICON_RANK1);
 	m_rank_requirements.push_back(ICON_RANK2);
@@ -181,11 +182,7 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
 
     ICON_EMPTY = Add( wxBitmap(empty_xpm) );
 
-#ifdef __WXMSW__
     ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = ICON_EMPTY;
-#else
-    ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = -1;
-#endif
 
     ICON_WARNING_OVERLAY = Add(charArr2wxBitmap(warning_small_png, sizeof(warning_small_png) ));
 
@@ -366,23 +363,26 @@ void IconImageList::SetColourIcon( const wxColour& colour )
 
 int IconImageList::GetSideIcon( const wxString& modname, int side )
 {
-	wxArrayString sides = usync().GetSides( modname );
+    const auto sides = LSL::usync().GetSides(STD_STRING(modname));
 	wxString sidename;
-	if( side < (int)sides.GetCount() ) sidename = sides[side];
-  wxString cachestring = modname + _T("_") + sidename;
-  if (m_cached_side_icons.find(cachestring)  == m_cached_side_icons.end()){
-    try
-    {
-      int IconPosition = Add(wxBitmap( usync().GetSidePicture( modname , sidename ) ), wxNullBitmap);
-      m_cached_side_icons[cachestring] = IconPosition;
-      return IconPosition;
-    } catch (...)
-    {
-      if ( side == 0 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_0;
-      else m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
+    if( side < (int)sides.size() )
+        sidename = TowxString(sides[side]);
+    wxString cachestring = modname + _T("_") + sidename;
+    if (m_cached_side_icons.find(cachestring)  == m_cached_side_icons.end()){
+        try
+        {
+            const auto img = LSL::usync().GetSidePicture(
+                        STD_STRING(modname), STD_STRING(sidename) );
+            int IconPosition = Add(wxBitmap( img.wxbitmap() ), wxNullBitmap);
+          m_cached_side_icons[cachestring] = IconPosition;
+          return IconPosition;
+        } catch (...)
+        {
+          if ( side == 0 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_0;
+          else m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
+        }
     }
-  }
-  return m_cached_side_icons[cachestring];
+    return m_cached_side_icons[cachestring];
 }
 
 int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const unsigned int& sync, const bool& bot )

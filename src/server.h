@@ -69,8 +69,6 @@ class Server : public iNetClass, public SL::NonCopyable
     virtual void Logout() = 0;
     virtual bool IsOnline()  const = 0;
 
-    virtual void Update( int mselapsed ) = 0;
-
     virtual void JoinChannel( const wxString& channel, const wxString& key ) = 0;
     virtual void PartChannel( const wxString& channel ) = 0;
 
@@ -101,8 +99,8 @@ class Server : public iNetClass, public SL::NonCopyable
     virtual void AdminChangeAccountAccess( const wxString& nick, const wxString& accesscode ) = 0;
     virtual void AdminSetBotMode( const wxString& nick, bool isbot ) = 0;
 
-    virtual void HostBattle( BattleOptions bo, const wxString& password = _T("") ) = 0;
-    virtual void JoinBattle( const int& battleid, const wxString& password = _T("") ) = 0;
+    virtual void HostBattle( BattleOptions bo, const wxString& password = wxEmptyString ) = 0;
+    virtual void JoinBattle( const int& battleid, const wxString& password = wxEmptyString ) = 0;
     virtual void LeaveBattle( const int& battleid ) = 0;
     virtual void StartHostedBattle() = 0;
 
@@ -216,7 +214,7 @@ class Server : public iNetClass, public SL::NonCopyable
     Battle& _AddBattle( const int& id );
     void _RemoveBattle( const int& id );
 
-    static const unsigned int PING_TIMEOUT = 40;
+    static const unsigned int PING_TIMEOUT = 60;
 
     virtual void SendCmd( const wxString& command, const wxString& param ) = 0;
     virtual void RelayCmd( const wxString& command, const wxString& param ) = 0;
@@ -226,17 +224,17 @@ class Server : public iNetClass, public SL::NonCopyable
 class ServerSelector;
 ServerSelector& serverSelector();
 
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 class ServerSelector {
 public:
 	Server& GetServer();
 	const Server& GetServer() const;
 	void SetCurrentServer(Server* server);
-	bool    GetServerStatus() const;
+	bool    IsServerAvailible() const;
 protected:
 	ServerSelector();
 	Server* m_serv;
-	friend class GlobalObjectHolder<ServerSelector, LineInfo<ServerSelector> >;
+	friend class LSL::Util::GlobalObjectHolder<ServerSelector, LSL::Util::LineInfo<ServerSelector> >;
 };
 
 

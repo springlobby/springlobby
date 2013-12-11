@@ -456,7 +456,7 @@ bool SlSpinCtrlGenericBase::DoSetValue(double val)
         }
     }
 
-	wxString str(wxFormat(m_format) % val);
+	wxString str = wxFormat(m_format) % val;
 
     if ((val != m_value) || (str != m_textCtrl->GetValue()))
     {
@@ -504,6 +504,7 @@ void SlSpinCtrlGenericBase::SetSelection(long from, long to)
 
     m_textCtrl->SetSelection(from, to);
 }
+
 
 #endif // wxUSE_SPINBTN
 

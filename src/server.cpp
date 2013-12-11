@@ -11,7 +11,6 @@
 #include "battle.h"
 #include "channel/channel.h"
 #include "user.h"
-#include "ui.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "chatpanel.h"
@@ -27,8 +26,9 @@ m_pass_hash(false)
 Server::~Server()
 {
 	delete battles_iter;
-  if(uidata.panel)uidata.panel->SetServer(NULL);
-  delete m_sock;
+	if(uidata.panel)uidata.panel->SetServer(NULL);
+	delete m_sock;
+	m_sock = NULL;
 }
 
 
@@ -204,7 +204,7 @@ ServerSelector::ServerSelector()
 	: m_serv(0)
 {}
 
-bool ServerSelector::GetServerStatus() const
+bool ServerSelector::IsServerAvailible() const
 {
 	return (bool)(m_serv);
 }
@@ -229,7 +229,7 @@ void ServerSelector::SetCurrentServer(Server* server)
 
 ServerSelector& serverSelector()
 {
-	static LineInfo<ServerSelector> m( AT );
-	static GlobalObjectHolder<ServerSelector,LineInfo<ServerSelector> > m_selector( m );
+    static LSL::Util::LineInfo<ServerSelector> m( AT );
+    static LSL::Util::GlobalObjectHolder<ServerSelector, LSL::Util::LineInfo<ServerSelector> > m_selector( m );
 	return m_selector;
 }

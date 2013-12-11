@@ -33,7 +33,7 @@ wxString GetParamByChar( wxString& params, const wxChar& sep )
 	else
 	{
 		ret = params;
-		params = _T("");
+		params = wxEmptyString;
 	}
 	return ret;
 }
@@ -52,8 +52,8 @@ bool IsValidNickname( const wxString& _name )
     wxRegEx regex( wxT("[ \t\r\n\v\föäüß, .:<>\\!§$%&+-]" ));
 
     // We need to escape all regular Expression Characters, that have a special Meaning
-    name.Replace( _T("["), _T("") );
-    name.Replace( _T("]"), _T("") );
+    name.Replace( _T("["), wxEmptyString );
+    name.Replace( _T("]"), wxEmptyString );
 
     if ( name.IsEmpty() ) return false;
 

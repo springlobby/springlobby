@@ -1,15 +1,24 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SPRINGPROCESS_H
 #define SPRINGLOBBY_HEADERGUARD_SPRINGPROCESS_H
 
-#ifdef SL_QT_MODE
-	#include "thread.h"
-	typedef Thread SpringProcessBase;
-	//wxThread segfaults in mutex when used from qt..
-#else
-	#include <wx/thread.h>
-	#include <wx/string.h>
-	typedef wxThread SpringProcessBase;
-#endif
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/spring/springprocess.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
+
+#include <wx/thread.h>
+#include <wx/string.h>
+typedef wxThread SpringProcessBase;
 
 #include <wx/process.h>
 

@@ -2,8 +2,7 @@
 Name=SpringLobby
 Comment=Play real-time strategy games using the Spring engine
 Exec=springlobby
-Icon=springlobby.svg
+Icon=springlobby
 Terminal=false
 Type=Application
-Categories=Application;Game;StrategyGame;
-X-SuSE-translate=false
+Categories=Game;StrategyGame;

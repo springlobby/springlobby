@@ -1,28 +1,41 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H
 #define SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H
 
-#include "events.h"
 
-#include <map>
-namespace GlobalEvents {
-    enum GlobalEventsTypes
-    {
-      OnUnitsyncFirstTimeLoad,
-      OnUnitsyncReloaded,
-      OnSpringTerminated,
-	  OnSpringStarted,
-      UpdateFinished,
-      OnQuit,
-	  OnLogin,
-      PlasmaResourceListParsed,
-	  PlasmaResourceListFailedDownload,
-	  BattleSyncReload,
+#include <wx/event.h>
 
-      OnTimerUpdates
-    };
+class wxEvtHandler;
 
-    typedef int GlobalEventData;
+class GlobalEvent{
+public:
+	static const wxEventType OnDownloadComplete;
+	static const wxEventType OnUnitsyncFirstTimeLoad;
+	static const wxEventType OnUnitsyncReloaded;
+	static const wxEventType OnSpringTerminated;
+	static const wxEventType OnSpringStarted;
+	static const wxEventType UpdateFinished;
+	static const wxEventType OnQuit;
+	static const wxEventType OnLogin;
+	static const wxEventType PlasmaResourceListParsed;
+	static const wxEventType PlasmaResourceListFailedDownload;
+	static const wxEventType BattleSyncReload;
+	static const wxEventType OnUpdateFinished;
+//	static const wxEventType OnTimerUpdates;
+	static void Send(wxEventType type);
+	static void Send(wxCommandEvent event);
+//	static void Initialize(wxEvtHandler* evthandler);
+//	static void DeInit();
 
-    EventSender<GlobalEventData> &GetGlobalEventSender( GlobalEventsTypes cmd );
-}
+	GlobalEvent();
+	~GlobalEvent();
+
+	void ConnectGlobalEvent(wxEvtHandler*evh, wxEventType id, wxObjectEventFunction func);
+
+private:
+	static void _Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func);
+	static void _Disconnect(wxEvtHandler* evthandler, wxEventType id = 0);
+	wxEvtHandler* m_handler;
+};
+
+
 #endif // SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H

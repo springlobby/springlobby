@@ -10,6 +10,8 @@
 #include <wx/stattext.h>
 #include <wx/checkbox.h>
 #include <wx/colordlg.h>
+#include <wx/listctrl.h>
+#include <wx/settings.h>
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
@@ -19,14 +21,14 @@
 #include "utils/conversion.h"
 #include "uiutils.h"
 #include "ui.h"
-#include "springunitsync.h"
 #include "hosting/addbotdialog.h"
 #include "server.h"
 #include "settings.h"
-#include "Helper/colorbutton.h"
+#include "helper/colorbutton.h"
 #include "aui/auimanager.h"
 #include "utils/customdialogs.h"
-#include "springunitsynclib.h"
+
+#include <lslutils/conversion.h>
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
@@ -39,7 +41,6 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
     EVT_CHECKBOX( SP_RANDOM, SinglePlayerTab::OnRandomCheck )
     EVT_CHECKBOX( SP_SPECTATE, SinglePlayerTab::OnSpectatorCheck )
     EVT_BUTTON( SP_COLOUR, SinglePlayerTab::OnColorButton )
-    EVT_MOUSEWHEEL( SinglePlayerTab::OnMouseWheel )
 
 END_EVENT_TABLE()
 
@@ -52,10 +53,48 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
 
     wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
+    wxBoxSizer* m_mapabour_sizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxBoxSizer* m_map_sizer = new wxBoxSizer( wxHORIZONTAL );
+   // m_map_sizer->SetMinSize( wxSize( 352, -1 ) );
+
     m_minimap = new MapCtrl( this, 100, &m_battle, false, false, true, true );
     m_minimap->SetToolTip( TE(_("You can drag the sun/bot icon around to define start position.\n "
                                 "Hover over the icon for a popup that lets you change side, ally and bonus." )) );
-    m_main_sizer->Add( m_minimap, 1, wxALL|wxEXPAND, 5 );
+    m_map_sizer->Add( m_minimap, 1, wxALL | wxEXPAND, 2 );
+    m_mapabour_sizer->Add(m_map_sizer, 1, wxEXPAND, 2 );
+
+    //map description and parametrs like in battletab
+    wxBoxSizer* m_opts_sizer = new wxBoxSizer( wxVERTICAL );
+
+	m_map_opts_list = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 150, 160 ), wxLC_NO_HEADER | wxLC_REPORT );
+	m_map_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
+	m_map_opts_list->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
+
+	wxListItem col;
+
+	col.SetText( _( "Option" ) );
+	m_map_opts_list->InsertColumn( 0, col );
+	col.SetText( _( "Value" ) );
+	m_map_opts_list->InsertColumn( 1, col );
+	m_map_opts_list->SetColumnWidth( 0, 90 );
+	m_map_opts_list->SetColumnWidth( 1, 50 );
+
+	m_map_opts_list->InsertItem( 0, _( "Size" ) );
+	m_map_opts_list->InsertItem( 1, _( "Windspeed" ) );
+	m_map_opts_list->InsertItem( 2, _( "Tidal strength" ) );
+	m_map_opts_list->InsertItem( 3, _( "Gravity" ) );
+	m_map_opts_list->InsertItem( 4, _( "Extractor radius" ) );
+	m_map_opts_list->InsertItem( 5, _( "Max metal" ) );
+
+	m_opts_sizer->Add( m_map_opts_list, 0, wxALL, 2 );
+
+    m_map_desc = new wxStaticText(this,-1,wxEmptyString);
+    m_map_desc->Wrap(160);
+
+    m_opts_sizer->Add( m_map_desc, 0, wxALL, 2 );
+    m_mapabour_sizer->Add( m_opts_sizer, 0, wxALL | wxEXPAND, 2 );
+    m_main_sizer->Add( m_mapabour_sizer, 1, wxEXPAND, 5 );
 
     wxBoxSizer* m_ctrl_sizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -132,9 +171,7 @@ void SinglePlayerTab::UpdateMinimap()
 void SinglePlayerTab::ReloadMaplist()
 {
 	m_map_pick->Clear();
-
-    m_map_pick->Append( usync().GetMapList() );
-
+    m_map_pick->Append(LSL::Util::vectorToArrayString(LSL::usync().GetMapList()));
     m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
 
     if ( m_battle.GetHostMapName() != wxEmptyString )
@@ -155,14 +192,14 @@ void SinglePlayerTab::ReloadModlist()
 {
     m_mod_pick->Clear();
 
-    wxArrayString modlist= usync().GetModList();
+    const auto modlist= LSL::Util::vectorToArrayString(LSL::usync().GetModList());
     //modlist.Sort(CompareStringIgnoreCase);
 
     size_t nummods = modlist.Count();
-    for ( size_t i = 0; i < nummods; i++ ) m_mod_pick->Insert( modlist[i], i );
+    for ( size_t i = 0; i < nummods; i++ )
+        m_mod_pick->Insert( modlist[i], i );
 
     m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
-
     if ( !m_battle.GetHostModName().IsEmpty() )
     {
         m_mod_pick->SetStringSelection( m_battle.GetHostModName() );
@@ -179,13 +216,26 @@ void SinglePlayerTab::SetMap( unsigned int index )
 {
 	//ui().ReloadUnitSync();
   m_addbot_btn->Enable( false );
-  if ( index >= m_map_pick->GetCount()-1 ) {
-    m_battle.SetHostMap( wxEmptyString, wxEmptyString );
-  } else {
+  	if ( index >= m_map_pick->GetCount()-1 ) {
+    	m_battle.SetHostMap( wxEmptyString, wxEmptyString );
+ 		int count=m_map_opts_list->GetItemCount();
+        for(int i=0;i<count;i++)
+            m_map_opts_list->SetItem( i, 1, wxEmptyString);
+        m_map_desc->SetLabel(wxEmptyString);
+	}
+	else {
     try {
-      UnitSyncMap map = usync().GetMapEx( index );
-      m_battle.SetHostMap( map.name, map.hash );
-      m_addbot_btn->Enable( true );
+      	LSL::UnitsyncMap map = LSL::usync().GetMapEx( index );
+      	m_battle.SetHostMap(TowxString(map.name), TowxString(map.hash));
+     	m_addbot_btn->Enable( true );
+		m_map_opts_list->SetItem( 0, 1, wxFormat( _T( "%dx%d" ) ) % (map.info.width / 512) % (map.info.height / 512) );
+        m_map_opts_list->SetItem( 1, 1, wxFormat( _T( "%d-%d" ) ) % map.info.minWind % map.info.maxWind );
+		m_map_opts_list->SetItem( 2, 1, wxFormat( _T( "%d" ) ) % map.info.tidalStrength );
+		m_map_opts_list->SetItem( 3, 1, wxFormat( _T( "%d" ) ) % map.info.gravity );
+		m_map_opts_list->SetItem( 4, 1, wxFormat( _T( "%d" ) ) % map.info.extractorRadius );
+		m_map_opts_list->SetItem( 5, 1, wxFormat( _T( "%.3f" ) ) % map.info.maxMetal );
+		m_map_desc->SetLabel(TowxString(map.info.description));
+		m_map_desc->Wrap(160);
     } catch (...) {}
   }
   m_minimap->UpdateMinimap();
@@ -195,7 +245,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
 
 void SinglePlayerTab::ResetUsername()
 {
-    m_battle.GetMe().SetNick( usync().GetDefaultNick() );
+	m_battle.GetMe().SetNick(sett().GetDefaultNick());
 }
 
 void SinglePlayerTab::SetMod( unsigned int index )
@@ -209,9 +259,9 @@ void SinglePlayerTab::SetMod( unsigned int index )
     {
         try
         {
-            UnitSyncMod mod = usync().GetMod( index );
+            LSL::UnitsyncMod mod = LSL::usync().GetMod( index );
             m_battle.SetLocalMod( mod );
-            m_battle.SetHostMod( mod.name, mod.hash );
+            m_battle.SetHostMod(TowxString(mod.name), TowxString(mod.hash));
         }
         catch (...) {}
     }
@@ -268,15 +318,14 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& /*unused*/ )
 
 void SinglePlayerTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
-    wxLogDebugFunc( _T("") );
-
-	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
-    {
-		wxLogDebugFunc( mapSelectDialog().GetSelectedMap()->name );
-		const wxString mapname = mapSelectDialog().GetSelectedMap()->name;
-        const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
-        if ( idx != wxNOT_FOUND ) SetMap( idx );
-    }
+	wxLogDebugFunc( wxEmptyString );
+	const wxString mapname = mapSelectDialog();
+	if ( !mapname.empty()) {
+	        const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
+		if ( idx != wxNOT_FOUND ) {
+			SetMap( idx );
+		}
+	}
 }
 
 
@@ -300,7 +349,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& /*unused*/ )
     }
 }
 
-void SinglePlayerTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void SinglePlayerTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
     try {
         ReloadMaplist();
@@ -309,7 +358,7 @@ void SinglePlayerTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/
     }
     catch ( ... )
     {
-        wxLogDebugFunc( _T("") );
+        wxLogDebugFunc( wxEmptyString );
         wxLogError( _T("unitsync reload sink failed") );
     }
 }
@@ -332,8 +381,12 @@ void SinglePlayerTab::OnStart( wxCommandEvent& /*unused*/ )
 
 void SinglePlayerTab::OnRandomCheck( wxCommandEvent& /*unused*/ )
 {
-    if ( m_random_check->IsChecked() ) m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Random), OptionsWrapper::EngineOption );
-    else m_battle.CustomBattleOptions().setSingleOption( _T("startpostype"), TowxString<int>(IBattle::ST_Pick), OptionsWrapper::EngineOption );
+    if ( m_random_check->IsChecked() )
+        m_battle.CustomBattleOptions().setSingleOption("startpostype",
+                                                       LSL::Util::ToString(IBattle::ST_Random), LSL::OptionsWrapper::EngineOption );
+    else
+        m_battle.CustomBattleOptions().setSingleOption("startpostype",
+                                                       LSL::Util::ToString(IBattle::ST_Pick), LSL::OptionsWrapper::EngineOption );
     m_battle.SendHostInfo( IBattle::HI_StartType );
 }
 
@@ -358,16 +411,13 @@ void SinglePlayerTab::UpdateTag( const wxString& Tag )
 {
     long type;
     Tag.BeforeFirst( '_' ).ToLong( &type );
-    wxString key = Tag.AfterFirst( '_' );
-    wxString value = m_battle.CustomBattleOptions().getSingleValue( key, (OptionsWrapper::GameOption)type);
-    long longval;
-    value.ToLong( &longval );
-    if ( type == OptionsWrapper::PrivateOptions ) {
+    const wxString key = Tag.AfterFirst( '_' );
+    if ( type == LSL::OptionsWrapper::PrivateOptions ) {
         if ( key == _T("mapname") ) {
             m_addbot_btn->Enable( false );
             try
             {
-                m_map_pick->SetSelection( usync().GetMapIndex( m_battle.GetHostMapName() ) );
+                m_map_pick->SetSelection(LSL::usync().GetMapIndex(STD_STRING(m_battle.GetHostMapName())));
                 UpdateMinimap();
                 m_addbot_btn->Enable( true );
             }
@@ -397,18 +447,4 @@ void SinglePlayerTab::UpdatePresetList()
 void SinglePlayerTab::OnReset( wxCommandEvent& /*unused*/ )
 {
 
-}
-
-void SinglePlayerTab::OnMouseWheel( wxMouseEvent& event )
-{
-    if ( m_minimap )
-    {
-        wxRect map_rect = m_minimap->GetRect();
-        if ( map_rect.Contains( event.GetPosition() ) )
-        {
-            m_minimap->OnMouseWheel( event );
-            return;
-        }
-    }
-    event.Skip();
 }

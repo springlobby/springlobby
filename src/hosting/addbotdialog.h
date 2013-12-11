@@ -45,6 +45,7 @@ class AddBotDialog : public wxDialog, public WindowAttributesPickle
 
 
   protected:
+    wxString Get(const std::string& section);
     AddBotDialog( const AddBotDialog& );
 
     wxStaticText* m_nick_lbl;

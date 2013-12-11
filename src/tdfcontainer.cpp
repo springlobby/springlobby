@@ -1,3 +1,18 @@
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/battle/tdfcontainer.cpp
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
+
 #include "tdfcontainer.h"
 
 #include "utils/conversion.h"
@@ -179,7 +194,7 @@ start:
 			return;
 		case '=':
 			token.type = Token::type_entry_value;
-			token.value_s = _T( "" );
+			token.value_s = wxEmptyString;
 			while ( Good() && PeekNextChar() != ';' ) {
 				unsigned char c_ = GetNextChar();
 				token.value_s += c_;
@@ -496,7 +511,7 @@ PNode DataList::FindByPath( const wxString &str ) {
 				else
 					return NULL;
 			}
-			buff = _T( "" );
+			buff = wxEmptyString;
 		}
 		else {
 			buff += str[i];

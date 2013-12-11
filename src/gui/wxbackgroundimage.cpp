@@ -56,7 +56,7 @@ bool wxBackgroundBitmap::ProcessEvent(wxEvent &Event)
         Event.Skip();
     }
     else
-        return Inherited::ProcessEvent(Event);
+        return wxEvtHandler::ProcessEvent(Event);
     return true;
 }
 #else

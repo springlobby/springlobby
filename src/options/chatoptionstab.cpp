@@ -26,25 +26,19 @@
 #include <wx/checkbox.h>
 #include <wx/tokenzr.h>
 
-#ifdef __WXMSW__
-#include <wx/msw/registry.h>
-#endif
-
 #include "nonportable.h"
 #include "chatoptionstab.h"
-#include "springunitsync.h"
 #include "utils/controls.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "spring.h"
 #include "mainwindow.h"
-#include "Helper/colorbutton.h"
+#include "helper/colorbutton.h"
 #include "aui/auimanager.h"
 
 BEGIN_EVENT_TABLE( ChatOptionsTab, wxPanel )
 
 	EVT_BUTTON( ID_SELFONT,         ChatOptionsTab::OnSelectFont            )
-	EVT_CHECKBOX( ID_SYSCOLS,       ChatOptionsTab::OnUseSystemColors       )
 	EVT_BUTTON( ID_NORMAL,          ChatOptionsTab::OnNormalSelect          )
 	EVT_BUTTON( ID_BG,              ChatOptionsTab::OnBGSelect              )
 	EVT_BUTTON( ID_ACTION,          ChatOptionsTab::OnActionSelect          )
@@ -73,12 +67,6 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 
 	wxBoxSizer* bColorsVSizer;
 	bColorsVSizer = new wxBoxSizer( wxVERTICAL );
-
-	m_use_sys_colors = new wxCheckBox( this, ID_SYSCOLS, _( "Use system colors" ), wxDefaultPosition, wxDefaultSize, 0 );
-
-	m_use_sys_colors->Enable( false );
-
-	bColorsVSizer->Add( m_use_sys_colors, 0, wxALL, 5 );
 
 	m_custom_colors = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxTAB_TRAVERSAL );
 	m_custom_colors->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
@@ -298,7 +286,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 #endif
 
 	m_broadcast_check = new wxCheckBox( this, wxID_ANY, _( "Copy server messages in current channel" ), wxDefaultPosition, wxDefaultSize, 0 );
-	m_broadcast_check->SetValue( sett().GetBroadcastEverywhere() );
+	m_broadcast_check->SetValue(cfg().ReadBool(_T("/Chat/BroadcastEverywhere")));
 	sbBehaviorSizer->Add( m_broadcast_check, 0, wxALL, 5 );
 
 	bMainSizerV->Add( sbBehaviorSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5 );
@@ -353,8 +341,6 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 
 	SetSizer( bMainSizerV );
 	Layout();
-
-	if ( sett().IsPortableMode() ) sbChatLog->Disable();
 
 	DoRestore();
 	UpdateTextSample();
@@ -448,7 +434,7 @@ void ChatOptionsTab::DoRestore()
 	m_play_sounds->SetValue( sett().GetChatPMSoundNotificationEnabled() );
 #endif
     m_num_lines->SetValue( sett().GetAutoloadedChatlogLinesCount() );
-	m_broadcast_check->SetValue(sett().GetBroadcastEverywhere() );
+	m_broadcast_check->SetValue(cfg().ReadBool(_T("/Chat/BroadcastEverywhere")));
 }
 
 void ChatOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
@@ -474,7 +460,7 @@ void ChatOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 	//Chat Log
 	sett().SetChatLogEnable( m_save_logs->GetValue() );
 
-	sett().SetBroadcastEverywhere( m_broadcast_check->GetValue() );
+	cfg().Write(_T("/Chat/BroadcastEverywhere"), m_broadcast_check->GetValue() );
 
 	// Behavior
 #ifndef DISABLE_SOUND
@@ -501,11 +487,6 @@ void ChatOptionsTab::OnSelectFont( wxCommandEvent& /*unused*/ )
 		this->Layout();
 		UpdateTextSample();
 	}
-}
-
-
-void ChatOptionsTab::OnUseSystemColors( wxCommandEvent& /*unused*/ )
-{
 }
 
 void ChatOptionsTab::OnColorChange( ColorButton* button )

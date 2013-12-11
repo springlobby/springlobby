@@ -30,7 +30,7 @@ wxString RTFtoText( const wxString& rtfinput )
     wxString ret = rtfinput;
     ret = ret.AfterFirst( '{' ).BeforeLast( '}' );
 
-    ret.Replace( _T("\\pard"), _T("") ); // remove a ambiguus char
+    ret.Replace( _T("\\pard"), wxEmptyString ); // remove a ambiguus char
 
     ret.Replace( _T("\\par"), _T(" \n") ); // convert the end of lines
 
@@ -538,3 +538,5 @@ TimerMessageBox::~TimerMessageBox()
 	customMessageBoxNoModal( SL_MAIN_ICON, wxFormat( m_msg_format ) % diff.Format() );
 	delete m_start;
 }
+
+DEFINE_EVENT_TYPE(REFRESH_EVENT)

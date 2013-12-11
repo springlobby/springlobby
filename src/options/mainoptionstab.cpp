@@ -32,13 +32,14 @@
 #include "images/torrentoptionspanel_icon.png.h"
 #include "images/spring.xpm"
 #include "images/userchat.xpm"
-#include "images/springlobby.xpm"
+#include "images/springlobby12x12.xpm"
 
 
 BEGIN_EVENT_TABLE( MainOptionsTab, wxPanel )
 
 	EVT_BUTTON ( wxID_APPLY,    MainOptionsTab::OnApply     )
 	EVT_BUTTON ( wxID_REVERT,   MainOptionsTab::OnRestore   )
+	EVT_BUTTON ( wxID_OK,   MainOptionsTab::OnOk   )
 
 END_EVENT_TABLE()
 
@@ -50,16 +51,17 @@ END_EVENT_TABLE()
 MainOptionsTab::MainOptionsTab( wxWindow* parent )
     : wxScrolledWindow( parent, -1 )
 {
+	frame = parent;
     GetAui().manager->AddPane( this, wxLEFT, _T("mainoptionstab") );
     m_tabs = new SLNotebook( this, _T("mainoptionstab"), OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
     m_tabs->SetArtProvider(new SLArtProvider);
-    m_imagelist = new wxImageList( 12, 12 );
+/*    m_imagelist = new wxImageList( 12, 12 );
     m_imagelist->Add( wxIcon(spring_xpm) );
     m_imagelist->Add( charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
     m_imagelist->Add( wxIcon(userchat_xpm) );
     m_imagelist->Add( wxIcon(userchat_xpm) );
-    m_imagelist->Add( wxIcon(springlobby_xpm) ); //!TODO this is non-square ?!!?
-
+    m_imagelist->Add( wxIcon(springlobby12x12_xpm) );
+*/
     m_spring_opts = new SpringOptionsTab( m_tabs );
     m_tabs->AddPage( m_spring_opts, _("Spring"), true, wxIcon(spring_xpm) );
 
@@ -70,18 +72,20 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
     m_tabs->AddPage( m_chat_opts, _("Chat"), true, wxIcon(userchat_xpm) );
 
 	m_lobby_opts = new LobbyOptionsTab( m_tabs );
-	m_tabs->AddPage ( m_lobby_opts, _( "General" ), true, wxIcon( springlobby_xpm ) );
+	m_tabs->AddPage ( m_lobby_opts, _( "General" ), true, wxIcon( springlobby12x12_xpm ) );
 
 	m_groups_opts = new GroupOptionsPanel( m_tabs );
 	m_tabs->AddPage ( m_groups_opts, _( "Groups" ), true, wxIcon( userchat_xpm ) );
 
-	m_restore_btn = new wxButton( this, wxID_REVERT, _( "Restore" ) );
 	m_apply_btn = new wxButton( this, wxID_APPLY, _( "Apply" ) );
+	m_cancel_btn = new wxButton( this, wxID_CANCEL, _( "Cancel" ) );
+	m_ok_btn = new wxButton( this, wxID_OK, _( "Ok" ) );
 
 	m_button_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_button_sizer->AddStretchSpacer();
-	m_button_sizer->Add( m_restore_btn, 0, wxALL, 2 );
 	m_button_sizer->Add( m_apply_btn, 0, wxALL, 2 );
+	m_button_sizer->Add( m_cancel_btn, 0, wxALL, 2 );
+	m_button_sizer->Add( m_ok_btn, 0, wxALL, 2 );
 
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 	m_main_sizer->Add( m_tabs, 1, wxEXPAND );
@@ -117,13 +121,19 @@ void MainOptionsTab::OnApply( wxCommandEvent& event )
 	sett().SaveSettings();
 }
 
+void MainOptionsTab::OnOk( wxCommandEvent& event )
+{
+	OnApply(event);
+	frame->Close();
+}
+
 void MainOptionsTab::OnRestore( wxCommandEvent& event )
 {
 	m_spring_opts->OnRestore( event );
 	m_chat_opts->OnRestore( event );
 	m_torrent_opts->OnRestore( event );
-
 	m_lobby_opts->OnRestore ( event );
+	frame->Close();
 }
 
 void MainOptionsTab::OnOpenGroupsTab()

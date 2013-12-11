@@ -49,8 +49,8 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer) {
 		sizer->Add(ctrl_vo_Boxes[i], 0, wxTOP, (i == 0)? 5 : 0);
 	}
 
-	ctrl_x_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_X,_T(""), WX_DEF_P, wxSize(60, 20), 0);
-	ctrl_y_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_Y, _T(""), WX_DEF_P, wxSize(60, 20), 0);
+	ctrl_x_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_X,wxEmptyString, WX_DEF_P, wxSize(60, 20), 0);
+	ctrl_y_res = new wxTextCtrl(this, ID_RES_CHOICES_LBOX_Y, wxEmptyString, WX_DEF_P, wxSize(60, 20), 0);
 	ctrl_x_res->SetToolTip(RC_TEXT[0].tTip[0]);
 	ctrl_y_res->SetToolTip(RC_TEXT[1].tTip[0]);
 
@@ -252,9 +252,9 @@ void tab_quality_video::initW4Sizer(wxSizer* sizer)
 
     sizer->Add(new wxStaticText(this, -1, (W4_CONTROLS[6].lbl)) , 0, wxTOP|wxEXPAND, 5);
     m_aniso_spin = new SlSpinCtrlDouble<tab_quality_video>();
-    m_aniso_spin->Create(this, W4_CONTROLS[6].id, _T(""),
+    m_aniso_spin->Create(this, W4_CONTROLS[6].id, wxEmptyString,
             wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0.f, 6.f,
-            0.f,0.25f, _T(""));
+            0.f,0.25f, wxEmptyString);
     m_aniso_spin->SetToolTip(W4_CONTROLS[6].tTip[0]);
 	m_w4_controls.push_back( (wxControl*) m_aniso_spin );
     sizer->Add( m_aniso_spin, 0, wxEXPAND|wxALL, 4 );

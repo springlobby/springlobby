@@ -2,7 +2,7 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H
 
 #include <wx/scrolwin.h>
-#include "utils/isink.h"
+#include "utils/globalevents.h"
 
 class Ui;
 class Battle;
@@ -24,7 +24,7 @@ class wxMouseEvent;
 
 /** \brief select map, draw startboxes (in sp define startpos)
  * \todo DOCMEMORE */
-class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< BattleMapTab >
+class BattleMapTab : public wxScrolledWindow, public GlobalEvent
 {
   public:
     BattleMapTab( wxWindow* parent, Battle* battle );
@@ -39,9 +39,8 @@ class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< Battl
      void OnMapSelect( wxCommandEvent& event );
      void OnMapBrowse( wxCommandEvent& event );
      void OnStartTypeSelect( wxCommandEvent& event );
-     void OnMouseWheel( wxMouseEvent& event );
 
-    void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
+    void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
 
     void SetMap( int index );
     void SetBattle( Battle* battle );
@@ -49,13 +48,14 @@ class BattleMapTab : public wxScrolledWindow, public UnitsyncReloadedSink< Battl
 
   protected:
     Battle* m_battle;
-    //UnitSyncMap m_map;
+    //LSL::UnitsyncMap m_map;
 
     MapCtrl* m_minimap;
     wxChoice* m_map_combo;
     wxButton* m_browse_btn;
     wxRadioBox* m_start_radios;
     wxListCtrl* m_map_opts_list;
+    wxStaticText* m_map_desc;
 
     enum {
       BMAP_MAP_SEL = wxID_HIGHEST,

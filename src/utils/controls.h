@@ -16,8 +16,6 @@ class wxArrayString;
 
 static const int SCROLL_RATE = 3;
 
-#define bool2yn(b) ((b)?_("Yes"):_("No"))
-
 #ifdef __WXMSW__
     const wxString DEFAULT_COLORDLG_TITLE = _("Choose color");
 #else
@@ -30,6 +28,7 @@ wxColour GetColourFromUser(wxWindow *parent, const wxColour& colInit,
         const wxString& caption = DEFAULT_COLORDLG_TITLE, const wxString& palette = _T("Default") );
 
 #define TE(v) TooltipEnable(v)
+#define TES(v) TE(TowxString(v))
 
 //! call this function everytime map app loses/acquires focus to enable/disable tooltips
 void UpdateMainAppHasFocus( bool focus );
@@ -38,9 +37,7 @@ void UpdateMainAppHasFocus( bool focus );
     it outputs empty string if tooltips are disabled in SL settings
 */
 const wxChar* TooltipEnable(const wxChar* input);
-#if defined(HAVE_WX29)
-const wxChar* TooltipEnable(const wxString input);
-#endif
+const wxChar* TooltipEnable(const wxString& input);
 
 int GetMaxStringWidth( const wxWindow& win, const wxArrayString& strings );
 

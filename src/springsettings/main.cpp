@@ -26,8 +26,11 @@
 #include "../utils/conversion.h"
 #include "../utils/platform.h"
 #include "../settings.h"
+#include "../helper/slconfig.h"
 #include "se_utils.h"
 #include "../defines.h"
+#include "../utils/customdialogs.h"
+#include "../helper/wxTranslationHelper.h"
 
 #include <iostream>
 #include <wx/msgdlg.h>
@@ -38,23 +41,18 @@
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
 
-#include "../utils/customdialogs.h"
-#include "../globalsmanager.h"
-#include "../springunitsynclib.h"
-#include "../customizations.h"
-#include "../Helper/wxTranslationHelper.h"
+#include <lslutils/globalsmanager.h>
+#include <lslunitsync/unitsync.h>
 
 IMPLEMENT_APP(Springsettings)
 
 Springsettings::Springsettings()
 	:  m_translationhelper(NULL),
 	m_log_verbosity( 3 ),
-    m_log_console( true ),
+	m_log_console( true ),
 	m_log_file( false ),
-    m_log_window_show( false ),
-	m_crash_handle_disable( false ),
-	m_appname( _T("SpringSettings") ),
-	m_engine_config_filepath(wxEmptyString)
+	m_log_window_show( false ),
+	m_crash_handle_disable( false )
 {}
 
 Springsettings::~Springsettings()
@@ -93,7 +91,7 @@ bool Springsettings::OnInit()
     if (!wxApp::OnInit())
         return false;
 
-	SetAppName( m_appname );
+	SetAppName(_T("SpringSettings"));
 
 	if ( !wxDirExists( GetConfigfileDir() ) )
 		wxMkdir( GetConfigfileDir() );
@@ -114,7 +112,6 @@ bool Springsettings::OnInit()
 	wxLogChain* logchain  = 0;
 	wxLogWindow* loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, !m_crash_handle_disable, m_log_verbosity, logchain );
 	//this needs to called _before_ mainwindow instance is created
-	wxInitAllImageHandlers();
 
 #ifdef __WXMSW__
 	wxString path = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
@@ -127,47 +124,12 @@ bool Springsettings::OnInit()
 		path = path.Left( path.First(_T("noneWH") ) );
 	#endif
 #endif
-	m_translationhelper = new wxTranslationHelper( *( (wxApp*)this ), path );
-	m_translationhelper->Load();
+	m_translationhelper = new wxTranslationHelper( GetAppName().Lower(), path );
 
     SetSettingsStandAlone( true );
 
-	if ( !m_customizer_archive_name.IsEmpty() )
-	{//this needsto happen before usync load
-		sett().SetForcedSpringConfigFilePath( GetCustomizedEngineConfigFilePath() );
-	}
-	else if ( !m_engine_config_filepath.IsEmpty() )
-	{
-
-		if ( !wxFileName( m_engine_config_filepath ).IsAbsolute() )
-		{
-			customMessageBox( SS_MAIN_ICON, wxString::Format( _T(" custom engine config filename is not an sbolute path"), m_engine_config_filepath.c_str() ) );
-			return false;
-		}
-		if ( !wxFile::Exists( m_engine_config_filepath ) )
-		{
-			if ( !wxFile(m_engine_config_filepath,wxFile::write).Write(wxString()) )
-			{
-				customMessageBox( SS_MAIN_ICON, wxString::Format( _T("cannot open custom engine config filename for wrtiting"), m_engine_config_filepath.c_str() ) );
-				return false;
-			}
-		}
-		if( !wxFileName::IsFileWritable( m_engine_config_filepath ) )
-		{
-			customMessageBox( SS_MAIN_ICON, wxString::Format( _T("given custom engine config filename is not writeable"), m_engine_config_filepath.c_str() ) );
-			return false;
-		}
-		sett().SetForcedSpringConfigFilePath( m_engine_config_filepath );
-	}
 	//unitsync first load, NEEDS to be blocking
-	usync().ReloadUnitSyncLib();
-	if ( !m_customizer_archive_name.IsEmpty() ) {
-		if ( !SLcustomizations().Init( m_customizer_archive_name ) ) {
-			customMessageBox( SL_MAIN_ICON, _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error"), wxOK );
-//            wxLogError( _("Couldn't load customizations for ") + m_customizer_archive_name + _("\nPlease check that that is the correct name, passed in qoutation"), _("Fatal error") );
-			exit( OnExit() );//for some twisted reason returning false here does not terminate the app
-		}
-	}
+	LSL::usync().ReloadUnitSyncLib();
 
 	settings_frame* frame = new settings_frame(NULL,GetAppName());
     SetTopWindow(frame);
@@ -190,7 +152,7 @@ int Springsettings::OnExit()
 	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
 	SetEvtHandlerEnabled(false);
-	DestroyGlobals();
+  LSL::Util::DestroyGlobals();
 	return 0;
 }
 
@@ -216,9 +178,6 @@ void Springsettings::OnInitCmdLine(wxCmdLineParser& parser)
 		{ wxCMD_LINE_OPTION, STR("fl"), STR("file-logging"),  wxString(_("dumps application log to a file ( enter path )"))CSTR, wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  wxString(_("enables application log window"))CSTR, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  wxString(_("override default choice for config-file"))CSTR, wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-		{ wxCMD_LINE_OPTION, STR("e"), STR("engine-config"),  wxString(_("override default choice for engine config-file, needs absolute path"))CSTR, wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-		{ wxCMD_LINE_OPTION, STR("c"), STR("customize"),  wxString(_("load lobby customizations from given archive. Expects the archive filename."))CSTR, wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  wxString(_("overrides default application name"))CSTR, wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  wxString(_("overrides default logging verbosity, can be:\n                                0: no log\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"))CSTR, wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL } //this is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
 	};
@@ -243,9 +202,9 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
 
-		Settings::m_user_defined_config = parser.Found( _T("config-file"), &Settings::m_user_defined_config_path );
-		if ( Settings::m_user_defined_config ) {
-			 wxFileName fn ( Settings::m_user_defined_config_path );
+		slConfig::m_user_defined_config = parser.Found( _T("config-file"), &slConfig::m_user_defined_config_path );
+		if ( slConfig::m_user_defined_config ) {
+			 wxFileName fn ( slConfig::m_user_defined_config_path );
 			 if ( ! fn.IsAbsolute() ) {
 				 wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
 				 return false;
@@ -258,19 +217,7 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
 
 		if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
 			m_log_verbosity = m_log_window_show ? 3 : 5;
-		const bool do_custom = parser.Found(_T("customize"), &m_customizer_archive_name );
-		if ( !do_custom )
-			m_customizer_archive_name = _T("");
-		const bool do_appname = parser.Found(_T("name"), &m_appname );
-		if ( !do_appname )
-			m_appname = _T("SpringSettings");
 
-		if ( parser.Found(_T("engine-config"), &m_engine_config_filepath)
-				&& ( do_appname || do_custom ) )
-		{
-				wxLogError( _T("cannot mix -n/-c and -e parameters") );
-				return false;
-		}
         return true;
     }
     else

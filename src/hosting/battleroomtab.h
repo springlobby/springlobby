@@ -3,9 +3,10 @@
 
 #include <wx/scrolwin.h>
 
-#include "mmoptionswrapper.h"
-#include "utils/isink.h"
+#include <lslunitsync/optionswrapper.h>
+#include "utils/globalevents.h"
 #include "utils/uievents.h"
+#include "autohostmanager.h"
 #include <map>
 
 class Ui;
@@ -35,7 +36,7 @@ typedef std::map<wxString, long> OptionListMap;
 
 /** \brief container for BattleroomListCtrl, battle specific ChatPanel. Also displaying battle info summary
  * \todo DOCMEMORE */
-class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<BattleRoomTab>
+class BattleRoomTab : public wxScrolledWindow, public GlobalEvent
 {
 	public:
 		BattleRoomTab( wxWindow* parent, Battle* battle );
@@ -92,6 +93,11 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void OnAutoStart( wxCommandEvent& event );
 		void OnAutoSpec( wxCommandEvent& event );
 
+        void OnAutohostBalance( wxCommandEvent& event );
+        void OnAutohostRandomMap( wxCommandEvent& event );
+        void OnAutohostNotify( wxCommandEvent& event );
+
+
 		void OnBattleActionEvent( UiEvents::UiEventData data );
 
 		void OnUserJoined( User& user );
@@ -106,7 +112,7 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 
 		void SortPlayerList();
 
-		void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
+		void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
 
 		void SetBattle( Battle* battle );
 
@@ -119,8 +125,9 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 		void UpdateMyInfo();
 
 	protected:
+        AutohostManager autohostManager;
 
-		long AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag );
+		long AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOption optFlag );
 
 		void SplitSizerHorizontally( const bool horizontal );
 
@@ -232,7 +239,11 @@ class BattleRoomTab : public wxScrolledWindow, public UnitsyncReloadedSink<Battl
 			BROOM_AUTOSTART,
 			BROOM_AUTOCONTROL,
 			BROOM_AUTOPASTE,
-			BROOM_HOST_NEW
+			BROOM_HOST_NEW,
+
+			BROOM_AUTOHOST_BALANCE,
+			BROOM_AUTOHOST_RANDOMMAP,
+			BROOM_AUTOHOST_NOTIFY,
 		};
 
 		DECLARE_EVENT_TABLE()

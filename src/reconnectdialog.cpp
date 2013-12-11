@@ -19,9 +19,9 @@ BEGIN_EVENT_TABLE( ReconnectDialog, wxDialog )
 
 END_EVENT_TABLE()
 
-ReconnectDialog::ReconnectDialog()
-: wxDialog( (wxFrame*)&ui().mw(), -1, _( "Reconnect Dialog" ), wxDefaultPosition, wxSize( 400, 150 ), wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE ),
-  WindowAttributesPickle( _T("reconnectdialog"), this, wxSize( 400, 150 ) )
+ReconnectDialog::ReconnectDialog():
+	wxDialog( (wxFrame*)&ui().mw(), -1, _( "Reconnect Dialog" ), wxDefaultPosition, wxSize( 400, 150 ), wxRESIZE_BORDER | wxDEFAULT_DIALOG_STYLE ),
+	WindowAttributesPickle( _T("reconnectdialog"), this, wxSize( 400, 150 ) )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	SetSizeHints( wxDefaultSize, wxDefaultSize );
@@ -49,6 +49,7 @@ ReconnectDialog::ReconnectDialog()
 	SetAutoLayout( true );
 	Raise();
 	m_next_btn->SetFocus();
+	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&ReconnectDialog::OnQuit));
 }
 
 
@@ -67,7 +68,7 @@ void ReconnectDialog::OnTryNext ( wxCommandEvent& /*event*/ )
     EndModal( wxID_NO );
 }
 
-void ReconnectDialog::OnQuit(GlobalEvents::GlobalEventData /*data*/)
+void ReconnectDialog::OnQuit(wxCommandEvent& /*data*/)
 {
     EndModal( wxID_CANCEL );
 }

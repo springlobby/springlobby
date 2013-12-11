@@ -1,6 +1,21 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLELIST_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLELIST_H
 
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/container/battlelist.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
+
 #include <map>
 #include "utils/mixins.hh"
 

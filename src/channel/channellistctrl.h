@@ -6,7 +6,7 @@
 struct ChannelInfo
 {
     ChannelInfo()
-        : name(_T("")), usercount(0),topic(_T("")) {}
+        : name(wxEmptyString), usercount(0),topic(wxEmptyString) {}
     ChannelInfo( const wxString& name_, int usercount_, const wxString& topic_ = wxEmptyString )
         : name(name_), usercount(usercount_),topic(topic_) {}
 

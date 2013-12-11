@@ -2,19 +2,16 @@
 #define SPRINGLOBBY_HEADERGUARD_SPRINGLOBBYAPP_H
 
 #include <wx/app.h>
-#include "utils/isink.h"
-class wxTimer;
-class wxTimerEvent;
+
 class wxIcon;
 class wxLocale;
 class wxTranslationHelper;
 
 //! @brief SpringLobby wxApp
-class SpringLobbyApp : public wxApp, public OnQuitSink<SpringLobbyApp>
+class SpringLobbyApp : public wxApp
 {
   public:
     SpringLobbyApp();
-    ~SpringLobbyApp();
 
     virtual bool OnInit();
     virtual int OnExit();
@@ -22,19 +19,15 @@ class SpringLobbyApp : public wxApp, public OnQuitSink<SpringLobbyApp>
     virtual void OnFatalException();
 
     // System Events
-    void OnTimer( wxTimerEvent& event );
     bool SelectLanguage();
 
     virtual void OnInitCmdLine(wxCmdLineParser& parser);
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
-	void OnQuit( GlobalEvents::GlobalEventData data );
+	void OnQuit( wxCommandEvent& data );
 
   protected:
 
-    void CacheAndSettingsSetup();
-
-    wxTimer* m_timer;
 
     bool quit_called;
 
@@ -46,7 +39,6 @@ class SpringLobbyApp : public wxApp, public OnQuitSink<SpringLobbyApp>
 	wxString m_log_file_path;
     bool m_log_window_show;
     bool m_crash_handle_disable;
-	wxString m_customizer_archive_name;
 	wxString m_appname;
 
     DECLARE_EVENT_TABLE()

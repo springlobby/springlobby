@@ -10,6 +10,7 @@
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
+#include <wx/dir.h>
 
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
@@ -64,11 +65,6 @@ wxPathList PathlistFactory::AdditionalSearchPaths(wxPathList &pl)
     pl.Add( wxFileName::GetCwd() );
     pl.Add( sp.GetExecutablePath().BeforeLast( sep ) );
     pl.Add( wxFileName::GetHomeDir() );
-#ifndef SL_QT_MODE
-    pl.Add( sp.GetUserDataDir().BeforeLast( sep ) );
-    pl.Add( sp.GetDataDir().BeforeLast( sep ) );
-    pl.Add( sp.GetResourcesDir().BeforeLast( sep ) );
-#endif
     pl.Add( wxGetOSDirectory() );
 
 #ifdef __WXMSW__
@@ -76,20 +72,6 @@ wxPathList PathlistFactory::AdditionalSearchPaths(wxPathList &pl)
     //maybe add more here like:
     //Appdata + \Spring
     //Mydocs + \Spring
-
-    //http://projects.springlobby.info/issues/1530
-    wxRegKey base( _T("HKLM\\Software\\Spring") );
-    wxString usync_keyval = GetRegkeyVal( base, _T("SpringEngineHelper"), wxString() );
-    if ( usync_keyval != wxEmptyString )
-    {
-        pl.Add( usync_keyval.BeforeLast( sep ) );
-    }
-    wxString binary_keyval = GetRegkeyVal( base, _T("SpringEngine"), wxString() );
-    if ( binary_keyval != wxEmptyString )
-    {
-        pl.Add( binary_keyval.BeforeLast( sep ) );
-    }
-
 #endif
 
     for ( size_t i = 0; i < pl.GetCount(); i++ )
@@ -103,5 +85,24 @@ wxPathList PathlistFactory::AdditionalSearchPaths(wxPathList &pl)
         ret.Add( path + _T( "games" ) + sepstring + _T( "Spring" ) + sepstring );
         ret.Add( path + _T( "games" ) + sepstring + _T( "spring" ) + sepstring );
     }
-    return ret;
+
+// search in ~/.spring/engine/ , too
+#ifdef __WXMSW__
+	const wxString userdir = sp.GetDocumentsDir() + sep + _T("My Games") + sep + _T("Spring") + sep + _T("engine");;
+#else
+	const wxString userdir = wxFileName::GetHomeDir() + sep + _T(".spring") + sep + _T("engine");
+#endif
+	wxDir dir(userdir);
+
+	if ( dir.IsOpened() ) {
+		wxString filename;
+		bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_DIRS|wxDIR_HIDDEN);
+		while ( cont )
+		{
+			ret.Add(userdir + sepstring + filename);
+			cont = dir.GetNext(&filename);
+		}
+	}
+
+	return ret;
 }

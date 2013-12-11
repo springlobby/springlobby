@@ -4,23 +4,9 @@
 #include <wx/intl.h>
 #include <wx/arrstr.h>
 #include <map>
+#include <list>
 
 class wxColour;
-
-//!provide a simple mapping between enum type and string to display in gui
-const wxString m_actionNames[] = { _("none"),_("highlight"),_("notify login/out"),_("ignore chat"),_("ignore pm"),
-    _("autokick"), _("notify hosted battle"),_("notify status change")};
-
-//! Provide the names to be used by config file.
-const wxString m_configActionNames[] = { _T("none"),_T("highlight"),_T("notify_login"),_T("ignore_chat"),_T("ignore_pm"),
-    _T("autokick"), _T("notify_hosted"),_T("notify_status")};
-
-//!same for tooltips
-const wxString m_actionTooltips[] = { _("no action at all"), _("highlight user in nick list and battles he participates in"),
-	_("popup a message box when user logs in/out from  the server"), _("you won't see message by these users in normal channels"),
-    _("ignore private messages of these users, no pm window will open if any of these try to contact you privately"),
-	_("automatically kick users from battles hosted by yourself"), _("popup a message box when user hosts a new battle"),
-    _("popup a message box when user changes away status") };
 
 
 //! data handling for group / action management
@@ -50,7 +36,6 @@ public:
        /// update this when adding new actions.
        ActLast=ActNotifStatus
      };
-    static const int m_numActions = sizeof(m_actionNames) / sizeof(wxString);
     bool DoActionOnUser( const ActionType action, const wxString& name ) ;
     wxArrayString GetGroupNames() const;
     void AddUserToGroup( const wxString& group, const wxString& name );
@@ -64,7 +49,25 @@ public:
 	wxColour GetGroupColor( const wxString& group ) const;
     bool IsKnown( const wxString& name, bool outputWarning = false ) const;
 
-protected:
+    // helper functions to access settings file
+    void SetGroupActions( const wxString& group, ActionType action ) const;
+    ActionType GetGroupActions( const wxString& group ) const;
+    wxColour GetGroupHLColor( const wxString& group = _T("default") ) const;
+    void SetGroupHLColor( const wxColour& color, const wxString& group = _T("default") );
+    wxArrayString GetGroups( );
+    void SetPeopleList( const wxArrayString& friends, const wxString& group = _T("default") );
+    wxArrayString GetPeopleList( const wxString& group = _T("default") ) const;
+
+private:
+	//!provide a simple mapping between enum type and string to display in gui
+	std::list<wxString> m_actionNames;
+
+	//! Provide the names to be used by config file.
+	std::list<wxString> m_configActionNames;
+	//!same for tooltips
+	std::list<wxString> m_actionTooltips;
+
+
     //lotsa maps to keep runtime finds, etc ti a minimum
     typedef std::map<wxString,wxArrayString> GroupMap;
     /// groupname --> array of people in the group

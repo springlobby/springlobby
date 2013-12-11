@@ -12,103 +12,93 @@ class wxTextCtrl;
 class wxBoxSizer;
 class Ui;
 class wxCheckBox;
+class wxListBox;
 
 class SpringOptionsTab : public wxScrolledWindow
 {
-  public:
-    SpringOptionsTab( wxWindow* parent );
-    ~SpringOptionsTab();
+public:
+	SpringOptionsTab( wxWindow* parent );
+	~SpringOptionsTab();
 
-    void DoRestore();
+	void OnApply( wxCommandEvent& event );
+	void OnRestore( wxCommandEvent& event );
 
-    void OnBrowseExec( wxCommandEvent& event );
-    void OnBrowseSync( wxCommandEvent& event );
-    void OnBrowseBundle( wxCommandEvent& event );
+private:
+	void DoRestore();
+	void EnableSpringBox(bool enabled);
+	void EnableUnitsyncBox(bool enabled);
 
-    void OnApply( wxCommandEvent& event );
-    void OnRestore( wxCommandEvent& event );
+	void OnBrowseExec( wxCommandEvent& event );
+	void OnBrowseSync( wxCommandEvent& event );
+	void OnAutoConf( wxCommandEvent& event );
+	void OnFindExec( wxCommandEvent& event );
+	void OnFindSync( wxCommandEvent& event );
+	void OnAddBundle(wxCommandEvent& event);
+	void OnRemoveBundle(wxCommandEvent& event);
 
-    void OnAutoConf( wxCommandEvent& event );
-    void OnFindExec( wxCommandEvent& event );
-    void OnFindSync( wxCommandEvent& event );
-    void OnFindBundle( wxCommandEvent& event );
+	void OnDataDir( wxCommandEvent& event );
 
-    void OnDataDir( wxCommandEvent& event );
+	void OnDontSearch( wxCommandEvent& event );
+	void OnForceBundle( wxCommandEvent& event );
 
-    void OnDontSearch( wxCommandEvent& event );
-    void OnForceBundle( wxCommandEvent& event );
+	void SetupUserFolders();
+	void OnGroupListSelectionChange( wxCommandEvent& event );
+	void ReloadSpringList();
 
-    void EnableSpringBox(bool enabled);
-    void EnableUnitsyncBox(bool enabled);
-    void EnableBundleBox(bool enabled);
+	wxStaticText* m_exec_loc_text;
+	wxStaticText* m_sync_loc_text;
 
-  protected:
+	wxButton* m_exec_browse_btn;
+	wxButton* m_exec_find_btn;
+	wxButton* m_sync_browse_btn;
+	wxButton* m_sync_find_btn;
 
-		void SetupUserFolders();
+	wxButton* m_auto_btn;
 
-    wxStaticText* m_exec_loc_text;
-    wxStaticText* m_sync_loc_text;
-    wxStaticText* m_bundle_loc_text;
+//	wxRadioButton* m_exec_def_radio;
+//	wxRadioButton* m_exec_spec_radio;
+//	wxRadioButton* m_sync_def_radio;
+//	wxRadioButton* m_sync_spec_radio;
 
-    wxButton* m_exec_browse_btn;
-    wxButton* m_exec_find_btn;
-    wxButton* m_sync_browse_btn;
-    wxButton* m_sync_find_btn;
-    wxButton* m_bundle_browse_btn;
-    wxButton* m_bundle_find_btn;
-    wxButton* m_datadir_btn;
+	wxTextCtrl* m_exec_edit;
+	wxTextCtrl* m_sync_edit;
 
-    wxButton* m_auto_btn;
+	wxStaticBox* m_exec_box;
+	wxStaticBox* m_sync_box;
+//	wxStaticBox* m_web_box;
+	wxStaticBoxSizer* m_exec_box_sizer;
+	wxStaticBoxSizer* m_sync_box_sizer;
 
-    wxRadioButton* m_exec_def_radio;
-    wxRadioButton* m_exec_spec_radio;
-    wxRadioButton* m_sync_def_radio;
-    wxRadioButton* m_sync_spec_radio;
-    wxRadioButton* m_bundle_def_radio;
-    wxRadioButton* m_bundle_spec_radio;
+	wxCheckBox* m_oldlaunch_chkbox;
 
-    wxTextCtrl* m_exec_edit;
-    wxTextCtrl* m_sync_edit;
-    wxTextCtrl* m_bundle_edit;
+	wxListBox* m_spring_list;
+	wxButton* m_remove_spring_button;
+	wxButton* m_rename_spring_button;
+	wxButton* m_add_spring_button;
 
-    wxStaticBox* m_exec_box;
-    wxStaticBox* m_sync_box;
-    wxStaticBox* m_bundle_box;
-    wxStaticBox* m_web_box;
-    wxStaticBoxSizer* m_exec_box_sizer;
-    wxStaticBoxSizer* m_sync_box_sizer;
-    wxStaticBoxSizer* m_bundle_box_sizer;
+	enum {
+		SPRING_EXECBROWSE = wxID_HIGHEST,
+		SPRING_SYNCBROWSE,
+		SPRING_BUNDLEBROWSE,
+		SPRING_WEBBROWSE,
+		SPRING_DEFEXE,
+		SPRING_DEFUSYNC,
+		SPRING_DEFBUNDLE,
+		SPRING_DEFWEB,
+		SPRING_AUTOCONF,
+		SPRING_EXECFIND,
+		SPRING_SYNCFIND,
+		SPRING_BUNDLEFIND,
+		SPRING_DATADIR,
+		SPRING_DONTSEARCH,
+		SPRING_FORCEBUNDLE,
+		SPRING_LIST,
+		SPRING_REMOVE,
+		SPRING_RENAME,
+		SPRING_ADD
+	};
 
-
-    wxBoxSizer* m_main_sizer;
-    wxBoxSizer* m_aconf_sizer;
-    wxBoxSizer* m_exec_loc_sizer;
-    wxBoxSizer* m_sync_loc_sizer;
-    wxBoxSizer* m_bundle_loc_sizer;
-
-    wxCheckBox* m_dontsearch_chkbox;
-    wxCheckBox* m_forcebundle_chkbox;
-    wxCheckBox* m_oldlaunch_chkbox;
-
-    enum {
-        SPRING_EXECBROWSE = wxID_HIGHEST,
-        SPRING_SYNCBROWSE,
-        SPRING_BUNDLEBROWSE,
-        SPRING_WEBBROWSE,
-        SPRING_DEFEXE,
-        SPRING_DEFUSYNC,
-        SPRING_DEFBUNDLE,
-        SPRING_DEFWEB,
-        SPRING_AUTOCONF,
-        SPRING_EXECFIND,
-        SPRING_SYNCFIND,
-        SPRING_BUNDLEFIND,
-        SPRING_DATADIR,
-        SPRING_DONTSEARCH,
-        SPRING_FORCEBUNDLE
-    };
-
-    DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_SPRINGOPTIONSTAB_H

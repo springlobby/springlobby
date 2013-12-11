@@ -15,19 +15,17 @@
 #include "playbacklistctrl.h"
 #include "replaylist.h"
 #include "playbackthread.h"
-#include "../ui.h"
-#include "../chatpanel.h"
-#include "../utils/debug.h"
-#include "../uiutils.h"
-#include "../settings.h"
-#include "../springunitsync.h"
-#include "../mapctrl.h"
-#include <hosting/battleroomlistctrl.h>
-
+#include "ui.h"
+#include "chatpanel.h"
+#include "uiutils.h"
+#include "settings.h"
+#include "mapctrl.h"
 #include "playbackfilter.h"
-#include "../iconimagelist.h"
+#include "iconimagelist.h"
 
-#include "../utils/customdialogs.h"
+#include "utils/customdialogs.h"
+#include "utils/debug.h"
+#include "hosting/battleroomlistctrl.h"
 
 
 BEGIN_EVENT_TABLE_TEMPLATE1( PlaybackTab, wxPanel, PlaybackTraits )
@@ -49,10 +47,9 @@ BEGIN_EVENT_TABLE_TEMPLATE1( PlaybackTab, wxPanel, PlaybackTraits )
 END_EVENT_TABLE()
 
 template < class PlaybackTraits >
-PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent )
-	: wxScrolledWindow( parent, -1 ),
-	m_replay_loader ( 0 ),
-	OnUsync_reload( this, &GetGlobalEventSender( GlobalEvents::OnUnitsyncReloaded ) )
+PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent ):
+	wxScrolledWindow( parent, -1 ),
+	m_replay_loader ( 0 )
 {
 	wxLogMessage( _T( "PlaybackTab::PlaybackTab()" ) );
 
@@ -68,9 +65,9 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent )
 	m_replaylist_sizer = new wxBoxSizer( wxVERTICAL );
 
 	m_replay_listctrl = new ListCtrlType( this );
-	m_replaylist_sizer->Add( m_replay_listctrl, 1, wxALL | wxEXPAND, 5 );
+	m_replaylist_sizer->Add( m_replay_listctrl, 1, wxEXPAND);
 
-	m_main_sizer->Add( m_replaylist_sizer, 1, wxEXPAND, 5 );;
+	m_main_sizer->Add( m_replaylist_sizer, 1, wxEXPAND);;
 
 	wxBoxSizer* m_info_sizer;
 	m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -153,6 +150,8 @@ PlaybackTab<PlaybackTraits>::PlaybackTab( wxWindow* parent )
 
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	Layout();
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&PlaybackTab::OnUnitsyncReloaded));
+	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&PlaybackTab::OnSpringTerminated));
 }
 
 template < class PlaybackTraits >
@@ -162,12 +161,13 @@ PlaybackTab<PlaybackTraits>::~PlaybackTab()
 	if ( m_filter != 0 )
 		m_filter->SaveFilterValues();
 
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 }
 
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::AddAllPlaybacks( wxCommandEvent& /*unused*/ )
 {
+	assert(wxThread::IsMain());
 	const typename ListType::playback_map_t& replays =
 	    playbacklist<ListType>().GetPlaybacksMap();
 
@@ -282,36 +282,17 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 		try {
 			PlaybackType& rep = playbacklist<ListType>().GetPlaybackById( m_sel_replay_id );
 
-			std::map<wxString, wxString> versionlist = sett().GetSpringVersionList();
-			if ( versionlist.empty()) {
-				wxLogWarning( _T( "can't get spring version from any unitsync" ) );
-				customMessageBox( SL_MAIN_ICON,  _( "Couldn't get your spring versions from any unitsync library." ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
-				AskForceWatch( rep );
-				return;
-			}
-			bool versionfound = false;
-			for ( std::map<wxString, wxString>::const_iterator itor = versionlist.begin(); itor != versionlist.end(); ++itor ) {
-				if ( itor->second == rep.SpringVersion ) {
-					if ( sett().GetCurrentUsedSpringIndex() != itor->first ) {
-						wxLogMessage( _T( "%s requires version: %s, switching to profile: %s" ), type.c_str(), rep.SpringVersion.c_str(), itor->first.c_str() );
-						sett().SetUsedSpringIndex( itor->first );
-						usync().AddReloadEvent(); // request an unitsync reload
-					}
-					versionfound = true;
-				}
-			}
+			bool versionfound = ui().IsSpringCompatible(_T("spring"), rep.SpringVersion);
 			if ( !ReplayTraits::IsReplayType )
                 versionfound = true; // quick hack to bypass spring version check
 			if ( !versionfound ) {
 				wxString message = wxFormat( _( "No compatible installed spring version has been found, this %s requires version: %s\n" ) ) % type% rep.SpringVersion;
-				message << _( "Your current installed versions are:" );
-				for ( std::map<wxString, wxString>::const_iterator itor = versionlist.begin(); itor != versionlist.end(); ++itor ) message << _T( " " ) << itor->second;
 				customMessageBox( SL_MAIN_ICON, message, _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 				wxLogWarning ( _T( "no spring version supported by this replay found" ) );
 				AskForceWatch( rep );
 				return;
 			}
-			rep.battle.GetMe().SetNick( usync().GetDefaultNick() );
+            rep.battle.GetMe().SetNick(sett().GetDefaultNick());
 			bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
 			if ( watchable )
 				rep.battle.StartSpring();
@@ -323,7 +304,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 					if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the game before you can watch this replay.\n\n" ) + downloadProc, _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 						wxString modhash = battle.GetHostModHash();
 						wxString modname = battle.GetHostModName();
-						ui().DownloadMod ( modhash, modname );
+						ui().Download (_T("game"), modname, modhash);
 					}
 					else {
 						AskForceWatch( rep );
@@ -335,7 +316,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 					if ( customMessageBox( SL_MAIN_ICON, _( " I couldn't find the map to be able to watch this replay\nThis can be caused by tasclient writing broken map hash value\nIf you're sure you have the map, press no\nYou need to download the map to be able to watch this replay.\n\n" ) + downloadProc, _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 						wxString maphash = battle.GetHostMapHash();
 						wxString mapname = battle.GetHostMapName();
-						ui().DownloadMap ( maphash, mapname );
+						ui().Download ( _T("map"), mapname, maphash );
 					}
 					else {
 						AskForceWatch( rep );
@@ -392,7 +373,7 @@ void PlaybackTab<PlaybackTraits>::OnFilterActiv( wxCommandEvent& /*unused*/ )
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::OnSelect( wxListEvent& event )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	if ( event.GetIndex() == -1 ) {
 		Deselect();
 	}
@@ -412,7 +393,7 @@ void PlaybackTab<PlaybackTraits>::OnSelect( wxListEvent& event )
 
 			wxLogMessage( _T( "Selected replay %d " ), m_sel_replay_id );
 
-			m_players_text->SetLabel( _T( "" ) );
+			m_players_text->SetLabel( wxEmptyString );
 			m_map_text->SetLabel( rep.battle.GetHostMapName() );
 			m_mod_text->SetLabel( rep.battle.GetHostModName() );
 			m_minimap->SetBattle( &( rep.battle ) );
@@ -454,9 +435,9 @@ void PlaybackTab<PlaybackTraits>::Deselected()
 {
 	m_watch_btn->Enable( false );
 	m_delete_btn->Enable( false );
-	m_players_text->SetLabel( _T( "" ) );
-	m_map_text->SetLabel( _T( "" ) );
-	m_mod_text->SetLabel( _T( "" ) );
+	m_players_text->SetLabel( wxEmptyString );
+	m_map_text->SetLabel( wxEmptyString );
+	m_mod_text->SetLabel( wxEmptyString );
 	m_minimap->SetBattle( NULL );
 	m_minimap->UpdateMinimap();
 	m_minimap->Refresh();
@@ -479,13 +460,13 @@ void PlaybackTab<PlaybackTraits>::OnReload( wxCommandEvent& /*unused*/ )
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::OnSpringTerminated( GlobalEvents::GlobalEventData /*data*/ )
+void PlaybackTab<PlaybackTraits>::OnSpringTerminated( wxCommandEvent& /*data*/ )
 {
     ReloadList();
 }
 
 template < class PlaybackTraits >
-void PlaybackTab<PlaybackTraits>::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void PlaybackTab<PlaybackTraits>::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	ReloadList();
 }

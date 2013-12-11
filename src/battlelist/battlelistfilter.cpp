@@ -25,9 +25,18 @@
 #include "battle.h"
 #include "uiutils.h"
 #include "utils/tasutil.h"
-#include "settings.h"
 #include "aui/auimanager.h"
 #include "useractions.h"
+#include "helper/slconfig.h"
+
+#include "images/rank0.xpm"
+#include "images/rank1.xpm"
+#include "images/rank2.xpm"
+#include "images/rank3.xpm"
+#include "images/rank4.xpm"
+#include "images/rank5.xpm"
+#include "images/rank6.xpm"
+#include "images/rank7.xpm"
 ///////////////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE( BattleListFilter, wxPanel )
@@ -39,7 +48,7 @@ BEGIN_EVENT_TABLE( BattleListFilter, wxPanel )
 	EVT_CHOICE              ( BATTLE_FILTER_SPECTATOR_CHOICE, BattleListFilter::OnSpectatorChange   )
 	EVT_CHOICE              ( BATTLE_FILTER_MAXPLAYER_CHOICE, BattleListFilter::OnMaxPlayerChange   )
 	EVT_CHOICE              ( BATTLE_FILTER_PLAYER_CHOICE   , BattleListFilter::OnPlayerChange      )
-	EVT_CHOICE              ( BATTLE_FILTER_RANK_CHOICE     , BattleListFilter::OnRankChange        )
+	EVT_COMBOBOX            ( BATTLE_FILTER_RANK_CHOICE     , BattleListFilter::OnRankChange        )
 	EVT_CHECKBOX            ( BATTLE_FILTER_LOCKED          , BattleListFilter::OnChange            )
 	EVT_CHECKBOX            ( BATTLE_FILTER_OPEN            , BattleListFilter::OnChange            )
 	EVT_CHECKBOX            ( BATTLE_FILTER_PASSWORDED      , BattleListFilter::OnChange            )
@@ -72,7 +81,7 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "battlelistfilter" ) );
 
-	BattleListFilterValues f_values = sett().GetBattleFilterValues( sett().GetLastBattleFilterProfileName() );
+	BattleListFilterValues f_values = GetBattleFilterValues( GetLastBattleFilterProfileName() );
 
 	wxBoxSizer* m_filter_sizer;
 	m_filter_sizer = new wxBoxSizer( wxVERTICAL );
@@ -136,20 +145,19 @@ BattleListFilter::BattleListFilter( wxWindow* parent, wxWindowID id, BattleListT
 	m_filter_rank_button = new wxButton( this, BATTLE_FILTER_RANK_BUTTON, f_values.rank_mode, wxDefaultPosition, wxSize( 25, 25 ), 0 );
 	m_filter_rank_sizer->Add( m_filter_rank_button, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
-	wxArrayString m_filter_rank_choiceChoices;
+    m_filter_rank_choice = new wxBitmapComboBox(this, BATTLE_FILTER_RANK_CHOICE, _T("All"), wxDefaultPosition, wxSize( -1, -1 ), 0, NULL, wxSIMPLE_BORDER | wxCB_READONLY);
+    m_filter_rank_choice->Append(_T("All"));
+    m_filter_rank_choice->Append(_T("1"), wxBitmap(rank0_xpm));
+    m_filter_rank_choice->Append(_T("2"), wxBitmap(rank1_xpm));
+    m_filter_rank_choice->Append(_T("3"), wxBitmap(rank2_xpm));
+    m_filter_rank_choice->Append(_T("4"), wxBitmap(rank3_xpm));
+    m_filter_rank_choice->Append(_T("5"), wxBitmap(rank4_xpm));
+    m_filter_rank_choice->Append(_T("6"), wxBitmap(rank5_xpm));
+    m_filter_rank_choice->Append(_T("7"), wxBitmap(rank6_xpm));
+    m_filter_rank_choice->Append(_T("8"), wxBitmap(rank7_xpm));
 
-	m_filter_rank_choiceChoices.Add( _T( "All" ) );
-	m_filter_rank_choiceChoices.Add( _T( "1" ) );
-	m_filter_rank_choiceChoices.Add( _T( "2" ) );
-	m_filter_rank_choiceChoices.Add( _T( "3" ) );
-	m_filter_rank_choiceChoices.Add( _T( "4" ) );
-	m_filter_rank_choiceChoices.Add( _T( "5" ) );
-	m_filter_rank_choiceChoices.Add( _T( "6" ) );
-	m_filter_rank_choiceChoices.Add( _T( "7" ) );
-
-	m_filter_rank_choice = new wxChoice( this, BATTLE_FILTER_RANK_CHOICE, wxDefaultPosition, wxSize( -1, -1 ), m_filter_rank_choiceChoices, wxSIMPLE_BORDER );
 	m_filter_rank_choice->SetSelection( GetIntParam( f_values.rank ) );
-	m_filter_rank_choice->SetMinSize( wxSize( 40, -1 ) );
+	m_filter_rank_choice->SetMinSize( wxSize( 60, -1 ) );
 
 	m_filter_rank_sizer->Add( m_filter_rank_choice, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -420,7 +428,7 @@ bool BattleListFilter::_IntCompare( const int a, const int b, const BattleListFi
 
 bool BattleListFilter::StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex, StringTransformFunction additional_transform, bool case_sensitive)
 {
-    if ( filter_string.Len() < 1 || filter_string == _T("") )
+    if ( filter_string.Len() < 1 || filter_string == wxEmptyString )
 	return true;
 
     wxString input_cased ( input );
@@ -703,5 +711,63 @@ void  BattleListFilter::SaveFilterValues()
 	filtervalues.status_passworded = m_filter_status_pass->IsChecked();
 	filtervalues.status_start = m_filter_status_start->IsChecked();
 	filtervalues.highlighted_only = m_filter_highlighted->IsChecked();
-	sett().SetBattleFilterValues( filtervalues );
+	SetBattleFilterValues( filtervalues );
+}
+
+
+
+BattleListFilterValues BattleListFilter::GetBattleFilterValues( const wxString& profile_name )
+{
+	BattleListFilterValues filtervalues;
+	filtervalues.description =      cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/description" ), wxEmptyString );
+	filtervalues.host =             cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/host" ), wxEmptyString );
+	filtervalues.map =               cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/map" ), wxEmptyString );
+	filtervalues.map_show =         cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/map_show" ), 0L );
+	filtervalues.maxplayer =        cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer" ), _T( "All" ) );
+	filtervalues.maxplayer_mode =   cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer_mode" ), _T( "=" ) );
+	filtervalues.mod =              cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), wxEmptyString );
+	filtervalues.mod_show =         cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/mod_show" ), 0L );
+	filtervalues.player_mode =      cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/player_mode" ), _T( "=" ) );
+	filtervalues.player_num  =      cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/player_num" ), _T( "All" ) );
+	filtervalues.rank =             cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/rank" ), _T( "All" ) );
+	filtervalues.rank_mode =        cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/rank_mode" ), _T( "<" ) );
+	filtervalues.spectator =        cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator" ), _T( "All" ) );
+	filtervalues.spectator_mode =   cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator_mode" ), _T( "=" ) );
+	filtervalues.status_full =      cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_full" ), true );
+	filtervalues.status_locked =    cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_locked" ), true );
+	filtervalues.status_open =      cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_open" ), true );
+	filtervalues.status_passworded = cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_passworded" ), true );
+	filtervalues.status_start =     cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_start" ), true );
+	filtervalues.highlighted_only = cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/highlighted_only" ), 0l );
+	return filtervalues;
+}
+
+void BattleListFilter::SetBattleFilterValues( const BattleListFilterValues& filtervalues, const wxString& profile_name )
+{
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/description" ), filtervalues.description );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/host" ), filtervalues.host );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/map" ), filtervalues.map );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/map_show" ), filtervalues.map_show );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer" ), filtervalues.maxplayer );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer_mode" ), filtervalues.maxplayer_mode );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), filtervalues.mod );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/mod_show" ), filtervalues.mod_show );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/player_mode" ), filtervalues.player_mode );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/player_num" ), filtervalues.player_num );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/rank" ), filtervalues.rank );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/rank_mode" ), filtervalues.rank_mode );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator" ), filtervalues.spectator );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator_mode" ), filtervalues.spectator_mode );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/status_full" ), filtervalues.status_full );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/status_locked" ), filtervalues.status_locked );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/status_open" ), filtervalues.status_open );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/status_passworded" ), filtervalues.status_passworded );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/status_start" ), filtervalues.status_start );
+	cfg().Write( _T( "/BattleFilter/" ) + profile_name + _T( "/highlighted_only" ), filtervalues.highlighted_only );
+	cfg().Write( _T( "/BattleFilter/lastprofile" ), profile_name );
+}
+
+wxString BattleListFilter::GetLastBattleFilterProfileName()
+{
+	return  cfg().Read( _T( "/BattleFilter/lastprofile" ), _T( "default" ) );
 }

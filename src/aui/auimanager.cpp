@@ -1,9 +1,9 @@
 #include "auimanager.h"
-#include "../globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 
 AuiManagerContainer& GetAui()
 {
-    static LineInfo<AuiManagerContainer> m( AT );
-    static GlobalObjectHolder<AuiManagerContainer, LineInfo<AuiManagerContainer> > m_aui( m );
+    static LSL::Util::LineInfo<AuiManagerContainer> m( AT );
+    static LSL::Util::GlobalObjectHolder<AuiManagerContainer, LSL::Util::LineInfo<AuiManagerContainer> > m_aui( m );
     return m_aui;
 }

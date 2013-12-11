@@ -36,8 +36,6 @@
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
-#include "ui.h"
-#include "introguide.h"
 #include "server.h"
 #include "utils/debug.h"
 #include "utils/platform.h"
@@ -47,7 +45,6 @@
 #include "hosting/mainsingleplayertab.h"
 #include "battlelist/battlelisttab.h"
 #include "options/mainoptionstab.h"
-#include "springunitsync.h"
 #include "uiutils.h"
 #include "utils/misc.h"
 #include "chatpanel.h"
@@ -74,14 +71,15 @@
 #include "updater/updatehelper.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
-#include "Helper/imageviewer.h"
-#include "customizations.h"
+#include "helper/imageviewer.h"
 
 #if defined(__WXMSW__)
     #include <wx/msw/winundef.h>
     #include <iostream>
 #endif
 #include <wx/aboutdlg.h>
+
+SLCONFIG("/GUI/UseTabIcons", true, "Show icons in main tabs");
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -98,8 +96,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_VERSION,				MainWindow::OnMenuVersion			)
   EVT_MENU( MENU_ABOUT,					MainWindow::OnMenuAbout				)
   EVT_MENU( MENU_PATHINFO,				MainWindow::OnMenuPathInfo			)
-  EVT_MENU( MENU_SAVE_LAYOUT,			MainWindow::OnMenuSaveLayout		)
-  EVT_MENU( MENU_LOAD_LAYOUT,			MainWindow::OnMenuLoadLayout		)
   EVT_MENU( MENU_RESET_LAYOUT,			MainWindow::OnMenuResetLayout		)
 //  EVT_MENU( MENU_SHOW_TOOLTIPS,		MainWindow::OnShowToolTips			)
   EVT_MENU( MENU_AUTOJOIN_CHANNELS,		MainWindow::OnMenuAutojoinChannels	)
@@ -107,7 +103,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_CHANNELCHOOSER,		MainWindow::OnShowChannelChooser	)
   EVT_MENU( MENU_SCREENSHOTS,			MainWindow::OnShowScreenshots		)
   EVT_MENU( MENU_PREFERENCES,			MainWindow::OnMenuPreferences		)
-  EVT_MENU( MENU_RENAME,				MainWindow::OnMenuRename			)
   EVT_MENU( MENU_GENERAL_HELP,			MainWindow::OnMenuFirstStart		)
   EVT_MENU( MENU_SERVER_TAB,			MainWindow::OnMenuServerTab			)
   EVT_SET_FOCUS(                        MainWindow::OnSetFocus              )
@@ -119,16 +114,16 @@ END_EVENT_TABLE()
 MainWindow::TabNames MainWindow::m_tab_names;
 
 MainWindow::MainWindow( )
-	: wxFrame( (wxFrame*)0, -1, GetAppName(), wxPoint(50, 50) ),
+	: wxFrame(NULL, -1, GetAppName() ),
 	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(720, 576) ),
 	m_opts_dialog(NULL),
-    m_autojoin_dialog(NULL),
-    se_frame(NULL),
-    m_channel_chooser(NULL),
+	m_autojoin_dialog(NULL),
+	se_frame(NULL),
+	m_channel_chooser(NULL),
 	m_log_win(NULL),
-    m_has_focus(true)
+	m_has_focus(true)
 {
-	SetIcons( SLcustomizations().GetAppIconBundle() );
+	SetIcons( icons().GetIcon(icons().ICON_SPRINGLOBBY) );
 
 	GetAui().manager = new AuiManagerContainer::ManagerType( this );
 
@@ -147,44 +142,34 @@ MainWindow::MainWindow( )
 	m_menuEdit = new wxMenu;
 	m_menuEdit->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels"));
 	m_menuEdit->Append(MENU_PREFERENCES, _("&Preferences"));
+	m_menuEdit->Append(MENU_SELECT_LOCALE, _("&Change language"));
 	m_settings_menu = new wxMenuItem( m_menuEdit, MENU_SETTINGSPP, _("&Spring settings"), wxEmptyString, wxITEM_NORMAL );
+	m_menuEdit->Append( MENU_RESET_LAYOUT, _("&Reset layout") );
 	m_menuEdit->Append (m_settings_menu);
 
-
-    // loading layouts currently borked
-	wxMenu* menuView = new wxMenu;
-	menuView->Append( MENU_SAVE_LAYOUT, _("&Save layout") );
-	menuView->Append( MENU_LOAD_LAYOUT, _("&Load layout") );
-	menuView->Append( MENU_RESET_LAYOUT, _("&Reset layout") );
-//	menuView->Append( MENU_DEFAULT_LAYOUT, _("&Set &Layout as default") );
 
 
 	m_menuTools = new wxMenu;
 	m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
 	m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel &list"));
 	m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
-	m_menuTools->Append(MENU_RENAME, _("Change &username"));
 	m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
 	m_menuTools->AppendSeparator();
 	m_menuTools->Append(MENU_USYNC, _("&Reload maps/games"));
     m_menuTools->AppendSeparator();
 
-    if (!sett().IsSelfUpdateDisabled() )
-		m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
+	m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
 
 	wxMenu *menuHelp = new wxMenu;
 	menuHelp->Append(MENU_GENERAL_HELP, _("&Help, tutorial and FAQ"));
 	menuHelp->Append(MENU_ABOUT, _("&About"));
 	menuHelp->Append(MENU_PATHINFO, _("&System Info"));
-	menuHelp->Append(MENU_SELECT_LOCALE, _("&Change language"));
 	menuHelp->Append(MENU_TRAC, _("&Report a bug..."));
 	menuHelp->Append(MENU_DOC, _("&Documentation"));
 
 	m_menubar = new wxMenuBar;
 	m_menubar->Append(menuServer, _("&Server"));
 	m_menubar->Append(m_menuEdit, _("&Edit"));
-
-	m_menubar->Append(menuView, _("&View")); //layout stuff --> disabled
 
 	m_menubar->Append(m_menuTools, _("&Tools"));
 	m_menubar->Append(menuHelp, _("&Help"));
@@ -236,11 +221,14 @@ MainWindow::MainWindow( )
 
 	UpdateMainAppHasFocus(m_has_focus);
     Connect( MainwindowMessageEvent, wxCommandEventHandler( MainWindow::OnMessage ), NULL, this );
+
+        //this should take off the firstload time considerably *ie nil it :P )
+        mapSelectDialog(true, this);
 }
 
 wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size ) const
 {
-    if ( sett().GetUseTabIcons() )
+    if ( cfg().ReadBool(_T( "/GUI/UseTabIcons" )) )
         return charArr2wxBitmap( data , size );
     else
         return wxNullBitmap;
@@ -248,24 +236,19 @@ wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size ) const
 
 void MainWindow::SetTabIcons()
 {
-    unsigned int count = 0;
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( chat_icon_png, sizeof(chat_icon_png)  ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( join_icon_png, sizeof(join_icon_png)  ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( broom_tab_icon_png, sizeof(broom_tab_icon_png) ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( floppy_icon_png , sizeof (floppy_icon_png) ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( replay_icon_png , sizeof (replay_icon_png) ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon(  downloads_icon_png , sizeof (downloads_icon_png) ) );
-    m_func_tabs->SetPageBitmap( count++, GetTabIcon( options_icon_png , sizeof (options_icon_png) ) );
+    m_func_tabs->SetPageBitmap( PAGE_CHAT    , GetTabIcon( chat_icon_png          , sizeof(chat_icon_png)  ) );
+    m_func_tabs->SetPageBitmap( PAGE_LIST    , GetTabIcon( join_icon_png          , sizeof(join_icon_png)  ) );
+    m_func_tabs->SetPageBitmap( PAGE_JOIN    , GetTabIcon( broom_tab_icon_png     , sizeof(broom_tab_icon_png) ) );
+    m_func_tabs->SetPageBitmap( PAGE_SINGLE  , GetTabIcon( single_player_icon_png , sizeof (single_player_icon_png) ) );
+    m_func_tabs->SetPageBitmap( PAGE_TORRENT , GetTabIcon( downloads_icon_png     , sizeof (downloads_icon_png) ) );
+    m_func_tabs->SetPageBitmap( PAGE_REPLAY  , GetTabIcon( replay_icon_png        , sizeof (replay_icon_png) ) );
+    //m_func_tabs->SetPageBitmap( ??         , GetTabIcon( floppy_icon_png        , sizeof (floppy_icon_png) ) );
+    //m_func_tabs->SetPageBitmap( ??         , GetTabIcon( options_icon_png       , sizeof (options_icon_png) ) );
     Refresh();
 }
 
 void MainWindow::forceSettingsFrameClose()
 {
-#ifndef SL_QT_MODE
-	if (se_frame_active && se_frame != 0)
-		se_frame->handleExternExit();
-#endif
 }
 
 void MainWindow::SetLogWin( wxLogWindow* log, wxLogChain* logchain  )
@@ -288,9 +271,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
-	GetGlobalEventSender(GlobalEvents::OnQuit).SendEvent( 0 );
-    SetEvtHandlerEnabled(false);
-    {
+	GlobalEvent::Send(GlobalEvent::OnQuit);
+//	GlobalEvent::Disconnect(MainWindow::OnClose, GlobalEvent::)
+//	SetEvtHandlerEnabled(false);
+	{
 		wxWindowUpdateLocker lock( this );
 		SavePerspectives();
 		AuiManagerContainer::ManagerType* manager=GetAui().manager;
@@ -299,12 +283,6 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 			manager->UnInit();
 			delete manager;
 		}
-		//interim fix for resize crashes on metacity and kwin
-		#ifndef __WXMSW__
-			mapSelectDialog().Show( false );
-			mapSelectDialog().Reparent( &ui().mw() );
-			mapSelectDialog().Destroy( );
-		#endif
 
 		ui().Quit();
 		forceSettingsFrameClose();
@@ -313,7 +291,6 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 		delete m_autojoin_dialog;
 		m_autojoin_dialog = 0;
 
-		sett().SaveSettings();
 		if ( m_log_win ) {
 			m_log_win->GetFrame()->Destroy();
 			if ( m_log_chain ) // if logwin was created, it's the current "top" log
@@ -493,16 +470,16 @@ void MainWindow::ShowConfigure( const unsigned int page )
 
 void MainWindow::ShowChannelChooser()
 {
-    if ( m_channel_chooser && m_channel_chooser->IsShown() )
-        return;
+	if ( (m_channel_chooser == NULL) || (m_channel_chooser && m_channel_chooser->IsShown()) )
+		return;
 
-    if ( !ui().IsConnected() )
-        customMessageBox( SL_MAIN_ICON, _("You need to be connected to a server to view the channel list"), _("Not connected") );
-    else {
-        m_channel_chooser->ClearChannels();
+	if ( !ui().IsConnected() ) {
+		customMessageBox( SL_MAIN_ICON, _("You need to be connected to a server to view the channel list"), _("Not connected") );
+	} else {
+		m_channel_chooser->ClearChannels();
 		serverSelector().GetServer().RequestChannels();
-        m_channel_chooser->Show( true );
-    }
+		m_channel_chooser->Show( true );
+	}
 }
 
 //! @brief Called when join channel menuitem is clicked
@@ -512,7 +489,7 @@ void MainWindow::OnMenuJoin( wxCommandEvent& /*unused*/ )
   if ( !ui().IsConnected() ) return;
   wxString answer;
   if ( ui().AskText( _("Join channel..."), _("Name of channel to join"), answer ) ) {
-    ui().JoinChannel( answer, _T("") );
+    ui().JoinChannel( answer, wxEmptyString );
   }
 
 }
@@ -538,8 +515,9 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 	info.SetName( GetAppName() );
 	info.SetVersion (GetSpringLobbyVersion());
 	info.SetDescription( IdentityString( _("%s is a cross-plattform lobby client for the Spring RTS engine") ) );
-	//info.SetCopyright(_T("");
+	//info.SetCopyright(wxEmptyString;
 	info.SetLicence(_T("GPL"));
+	info.AddDeveloper(_T("abma"));
 	info.AddDeveloper(_T("BrainDamage"));
 	info.AddDeveloper(_T("dizekat"));
 	info.AddDeveloper(_T("insaneinside"));
@@ -553,7 +531,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
     info.AddTranslator(_T("tc- (swedish)"));
 	info.AddTranslator(_("The numerous contributors from launchpad.net"));
 	//! \todo customisations
-	info.SetIcon( SLcustomizations().GetAppIconBundle().GetIcon() );
+	info.SetIcon( icons().GetIcon(icons().ICON_SPRINGLOBBY) );
 	wxAboutBox(info);
 }
 
@@ -592,12 +570,15 @@ void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
 {
-	usync().AddReloadEvent();
+	LSL::usync().ReloadUnitSyncLib();
+	GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
 }
 
 void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
 {
-    wxArrayString ar = usync().GetScreenshotFilenames();
+    wxArrayString ar;
+    for( auto i : LSL::usync().GetScreenshotFilenames())
+        ar.Add(TowxString(i));
     if ( ar.Count() == 0 ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _("There were no screenshots found in your spring data directory."), _("No files found") );
         return;
@@ -610,13 +591,13 @@ void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnReportBug( wxCommandEvent& /*unused*/ )
 {
-	OpenWebBrowser( _T("http://projects.springlobby.info/projects/springlobby/issues/new") );
+	OpenWebBrowser( _T("https://github.com/springlobby/springlobby/issues") );
 }
 
 
 void MainWindow::OnShowDocs( wxCommandEvent& /*unused*/ )
 {
-    OpenWebBrowser( _T("http://springlobby.info") );
+	OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/") );
 }
 
 void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
@@ -627,19 +608,25 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
   {
 	if ( !ui().IsConnected() && ui().IsMainWindowCreated() ) ui().Connect();
   }
+
+	ChatPanel* panel = ui().GetActiveChatPanel(); //set input focus to edit field on tab change
+	if (panel!=NULL) {
+		panel->SetFocus();
+	}
 }
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
 {
-#ifndef SL_QT_MODE
-    if ( se_frame && se_frame_active ) {
-        se_frame->Raise();
-        return;
-    }
+	if ( se_frame && se_frame_active ) {
+		se_frame->updateAllControls();
+		se_frame->Raise();
+		return;
+	}
+
 	se_frame = new settings_frame(this,wxT("SpringSettings"));
 	se_frame_active = true;
+	se_frame->updateAllControls();
 	se_frame->Show();
-#endif
 }
 
 void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
@@ -650,14 +637,12 @@ void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuSelectLocale( wxCommandEvent& /*unused*/ )
 {
-#ifndef SL_QT_MODE
     if ( wxGetApp().SelectLanguage() ) {
 		customMessageBoxNoModal( SL_MAIN_ICON,
 								 IdentityString( _("You need to restart %s for the language change to take effect.") ),
 								 _("Restart required"),
 								 wxICON_EXCLAMATION | wxOK );
     }
-#endif
 }
 
 void MainWindow::OnShowChannelChooser( wxCommandEvent& /*unused*/ )
@@ -683,33 +668,10 @@ wxString MainWindow::AddPerspectivePostfix( const wxString& pers_name ) const
     return perspective_name;
 }
 
-void MainWindow::OnMenuSaveLayout( wxCommandEvent& /*unused*/ )
-{
-	wxString answer;
-	if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
-        return;
-    while ( answer == _T("SpringLobby-default") ) {
-        customMessageBox( SL_MAIN_ICON, _("This profile is write protected, please choose another name"), _("Error") );
-
-        if ( !ui().AskText( _("Layout manager"),_("Enter a profile name"), answer ) )
-           return;
-    }
-    SavePerspectives( answer );
-}
-
-void MainWindow::OnMenuLoadLayout( wxCommandEvent& /*unused*/ )
-{
-	wxArrayString layouts = sett().GetPerspectives();
-	unsigned int result = wxGetSingleChoiceIndex( _("Which profile do you want to load?"), _("Layout manager"), layouts );
-	if ( result > layouts.GetCount() )
-        return;
-
-    LoadPerspectives( layouts[result] );
-}
 
 void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
-	sett().SetDoResetPerspectives( true );
+	cfg().Write(_T( "/ResetLayout" ), true);
 	sett().SaveSettings();
 	customMessageBoxNoModal( SL_MAIN_ICON, IdentityString( _("Please restart %s now") ), wxEmptyString );
 }
@@ -757,21 +719,14 @@ void MainWindow::FocusBattleRoomTab()
 
 void MainWindow::OnMenuPreferences( wxCommandEvent& /*event*/ )
 {
+	assert(wxThread::IsMain());
 	m_opts_dialog = new OptionsDialog( this );
 	m_opts_dialog->Show();
 }
 
-void MainWindow::OnMenuRename( wxCommandEvent& /*event*/ )
-{
-	wxString new_username;
-	if ( ui().AskText( _("Rename"), _("Enter new nickname"), new_username ) )
-		serverSelector().GetServer().ExecuteSayCommand( _T("/rename ") + new_username );
-}
-
 void MainWindow::OnMenuFirstStart( wxCommandEvent& /*event*/ )
 {
-	IntroGuide* intro = new IntroGuide();
-	intro->Show();
+	OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/Userdoc") );
 }
 
 void MainWindow::OnMenuPathInfo( wxCommandEvent& /*event*/ )

@@ -16,6 +16,7 @@
 #include "prdownloader.h"
 #include "../iconimagelist.h"
 #include "../utils/conversion.h"
+#include "downloadsobserver.h"
 
 static const wxString na_str = wxString(_("N/A"));
 
@@ -40,19 +41,12 @@ DownloadListCtrl::DownloadListCtrl( wxWindow* parent )
                                _T("DownloadListCtrl"), 3, &DownloadListCtrl::CompareOneCrit )
 , m_popup(0)
 {
-#if defined(__WXMAC__)
-/// on mac, autosize does not work at all
-    const int widths[9] = { 200, 100, 80, 80, 80, 80, 80, 80, 80 };
-#else
-    const int widths[9] = { 200, wxLIST_AUTOSIZE_USEHEADER, wxLIST_AUTOSIZE_USEHEADER, 80, wxLIST_AUTOSIZE_USEHEADER, 80, 80, 80, wxLIST_AUTOSIZE_USEHEADER };
-#endif
-
-	AddColumn(0, widths[0], _T("Name"), _T("Name"));
-    AddColumn(1, widths[1], _T("Status"), _T("Status"));
-    AddColumn(2, widths[2], _T("% complete"), _T("% complete"));
-    AddColumn(3, widths[3], _T("KB/s down"), _T("KB/s download"));
-    AddColumn(4, widths[4], _T("ETA"), _T("Estimated time remaining"));
-    AddColumn(5, widths[5], _T("Filesize (MB)"), _T("Filesize"));
+	AddColumn(0, 339, _T("Name"), _T("Name"));
+    AddColumn(1, 104, _T("Status"), _T("Status"));
+    AddColumn(2, 99, _T("% complete"), _T("% complete"));
+    AddColumn(3, 83, _T("KB/s down"), _T("KB/s download"));
+    AddColumn(4, 37, _T("ETA"), _T("Estimated time remaining"));
+    AddColumn(5, 93, _T("Filesize (MB)"), _T("Filesize"));
 
 
 // sortorder: name --> percent completed --> mb donwloaded
@@ -115,6 +109,16 @@ void DownloadListCtrl::UpdateTorrentInfo(const DataType& info)
 	MarkDirtySort();
 }
 
+void DownloadListCtrl::UpdateTorrentsList()
+{
+    DownloadsObserver& observ=downloadsObserver();
+    std::list<ObserverDownloadInfo> list;
+    observ.GetList(list);
+    std::list<ObserverDownloadInfo>::iterator it;
+
+    for(it=list.begin();it!=list.end();++it)
+        UpdateTorrentInfo((*it));
+}
 
 void DownloadListCtrl::OnListRightClick( wxListEvent& /*event*/ )
 {
@@ -123,7 +127,7 @@ void DownloadListCtrl::OnListRightClick( wxListEvent& /*event*/ )
 
 //        DataType dt = m_data[idx];
 //		delete m_popup;
-//        m_popup = new wxMenu( _T("") );
+//        m_popup = new wxMenu( wxEmptyString );
 //		if(dt.downloadstatus == P2P::not_stored)
 //		{
 //			m_popup->Append( TLIST_CANCEL, _("Cancel download") );
@@ -140,7 +144,7 @@ void DownloadListCtrl::OnListRightClick( wxListEvent& /*event*/ )
 
 void DownloadListCtrl::OnCancel(wxCommandEvent &/*event*/)
 {
-	prDownloader().RemoveTorrentByName(GetSelectedData().name);
+	//prDownloader().RemoveTorrentByName(GetSelectedData().name);
 	RemoveTorrentInfo(GetSelectedData());
 }
 
@@ -148,7 +152,7 @@ void DownloadListCtrl::OnCancel(wxCommandEvent &/*event*/)
 void DownloadListCtrl::OnRetry(wxCommandEvent &/*event*/)
 {
 	DataType info( GetSelectedData() );
-	prDownloader().RemoveTorrentByName( info.name );
+	//prDownloader().RemoveTorrentByName( info.name );
 	RemoveTorrentInfo( info );
     assert(false);
 //	prDownloader().RequestFileByName( info.name );
@@ -168,7 +172,7 @@ void DownloadListCtrl::Sort()
 
 void DownloadListCtrl::SetTipWindowText( const long /*item_hit*/, const wxPoint& /*position*/)
 {
-    m_tiptext = _T("");
+    m_tiptext = wxEmptyString;
 }
 
 void DownloadListCtrl::HighlightItem( long /*item*/ )
@@ -179,13 +183,13 @@ void DownloadListCtrl::HighlightItem( long /*item*/ )
 int DownloadListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
-        case 0: return dir * compareSimple(boost::to_lower_copy(u1.name), boost::to_lower_copy(u2.name));
-        case 1: return dir * compareSimple( u1.numcopies, u2.numcopies );
-		case 2: return dir * compareSimple( u1.downloadstatus, u2.downloadstatus );
+        case 0: return dir * compareSimple(boost::to_lower_copy(std::string(u1.name.mb_str())), boost::to_lower_copy(std::string(u2.name.mb_str())));
+        //case 1: return dir * compareSimple( u1.numcopies, u2.numcopies );
+		//case 2: return dir * compareSimple( u1.downloadstatus, u2.downloadstatus );
 		case 3: return dir * compareSimple( u1.progress, u2.progress );
-		case 4: return dir * compareSimple( u1.inspeed, u2.inspeed );
-		case 5: return dir * compareSimple( u1.eta, u2.eta );
-		case 6: return dir * compareSimple( u1.filesize, u2.filesize );
+		//case 4: return dir * compareSimple( u1.inspeed, u2.inspeed );
+		//case 5: return dir * compareSimple( u1.eta, u2.eta );
+		case 6: return dir * compareSimple( u1.size, u2.size );
         default: return 0;
     }
 }
@@ -204,43 +208,49 @@ int DownloadListCtrl::GetItemImage(long /*item*/) const
 wxString DownloadListCtrl::GetItemText(long item, long column) const
 {
 
-    if ( item > (long)m_data.size() || item < 0 )
-        return wxEmptyString;
+	if ( item > (long)m_data.size() || item < 0 ) {
+		return wxEmptyString;
+	}
 
-	float kfactor = 1/float(1024);
-	float mfactor = 1/float(1024*1024);
+	//float kfactor = 1/float(1024);
+	//float mfactor = 1/float(1024*1024);
+	const int MB=1024*1024;
 
 	const DataType& infos = m_data[item];
 
 	switch ( column ) {
         default: return wxEmptyString;
-        case 0: return TowxString(infos.name);
-		case 1: return infos.numcopies > 0 ? (wxFormat(_T("%.2f") ) % infos.numcopies).str() : na_str;
-		case 2:
-			if(infos.downloadstatus == P2P::not_stored) return _("not found");
+        case 0: return infos.name;
+		case 1:
+			/*if(infos.downloadstatus == P2P::not_stored) return _("not found");
 			else if(infos.downloadstatus == P2P::queued) return _("queued");
 			else if(infos.downloadstatus == P2P::leeching) return _("downloading");
 			else if(infos.downloadstatus == P2P::complete) return _("complete");
-			else return wxEmptyString;
-		case 3: return infos.progress > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.progress * 100 )).str() : na_str;
-		case 4: return infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
-		case 5: return infos.eta > -1 ? wxTimeSpan::Seconds(infos.eta).Format( _T("%H:%M:%S") ) : _T("inf.") ;
-		case 6: return infos.filesize > 0 ? (wxFormat(_T("%.2f") ) % ( infos.filesize*mfactor)).str() : na_str;
+			else return wxEmptyString;*/
+			if (infos.finished) {
+				return _("complete");
+			} else {
+				return _("downloading");
+			}
+		case 2: return wxString::Format(wxT("%i%%"),(int)((double)100.0*infos.progress/(double)infos.size));//(wxFormat(_T("%.2f") ) % ( infos.progress * 100 )).str() : na_str;
+		case 3: return wxEmptyString;//infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
+		case 4: return wxEmptyString;//infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
+		case 5: return infos.size > 0 ? wxString::Format(wxT("%i"),infos.size/MB) : _T("0");
 	}
 }
 
 int DownloadListCtrl::GetIndexFromData( const DataType& data ) const
 {
-    DataCIter it = m_data.begin();
-    for ( int i = 0; it != m_data.end(); ++it , ++i) {
-        if ( it->name == data.name )
-            return i;
-    }
-    return -1;
+	DataCIter it = m_data.begin();
+	for ( int i = 0; it != m_data.end(); ++it , ++i) {
+		if ( it->name == data.name ) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 bool DownloadListCtrl::IsTorrentActive(const DataType& info) const
 {
-	 return (info.downloadstatus == P2P::leeching
-		  || info.downloadstatus == P2P::queued);
+	 return !info.finished;
 }

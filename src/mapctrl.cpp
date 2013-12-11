@@ -9,18 +9,22 @@
 #include <stdexcept>
 #include <wx/log.h>
 
+#include <lslutils/conversion.h>
+#include <lslutils/misc.h>
+#include <lslunitsync/image.h>
+#include <lslunitsync/data.h>
+
 #include "utils/debug.h"
 #include "utils/conversion.h"
-#include <lslutils/misc.h>
 #include "uiutils.h"
 #include "mapctrl.h"
-#include "springunitsync.h"
 #include "user.h"
 #include "ui.h"
 #include "server.h"
 #include "ibattle.h"
 #include "settings.h"
 #include "iconimagelist.h"
+#include "hosting/addbotdialog.h"
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
@@ -70,10 +74,12 @@ BEGIN_EVENT_TABLE( MapCtrl, wxPanel )
     EVT_PAINT( MapCtrl::OnPaint )
     EVT_SIZE( MapCtrl::OnResize )
     EVT_MOTION( MapCtrl::OnMouseMove )
+    EVT_ENTER_WINDOW( MapCtrl::OnMouseEnter )
+    EVT_MOUSEWHEEL( MapCtrl::OnMouseWheel)
     EVT_LEFT_DOWN( MapCtrl::OnLeftDown )
     EVT_LEFT_UP( MapCtrl::OnLeftUp )
-    //  EVT_MOUSEWHEEL( MapCtrl::OnMouseWheel )
-    EVT_COMMAND( wxID_ANY, UnitSyncAsyncOperationCompletedEvt, MapCtrl::OnGetMapImageAsyncCompleted )
+    EVT_RIGHT_UP( MapCtrl::OnRightUp )
+    EVT_COMMAND(wxID_ANY , REFRESH_EVENT, MapCtrl::OnRefresh)
 END_EVENT_TABLE()
 
 /* Something to do with start box sizes. */
@@ -94,12 +100,12 @@ static inline int ReadInt24(const unsigned char* p)
 
 MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
         wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
-        m_async(this),
+        m_async(boost::bind(&MapCtrl::OnGetMapImageAsyncCompleted, this, _1)),
         m_minimap(0),
         m_metalmap(0),
         m_heightmap(0),
         m_battle(battle),
-        m_mapname(_T("")),
+        m_mapname(""),
         m_draw_start_types(draw_start_types),
         m_fixed_size(fixed_size),
         m_ro(readonly),
@@ -325,6 +331,8 @@ void MapCtrl::SetMouseOverRect( int index )
 
     if ( (index != oldindex) || (m_rect_area != m_last_rect_area) ) UpdateMinimap();
     m_last_rect_area = m_rect_area;
+
+	Refresh();
 }
 
 
@@ -339,8 +347,8 @@ void MapCtrl::_SetCursor()
 
     if ( m_battle != 0 )
     {
-        long longval;
-        m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+        const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+                                             .getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption ));
         if ( longval != IBattle::ST_Choose )
         {
             SetCursor( wxCursor( wxCURSOR_ARROW ) );
@@ -403,7 +411,7 @@ void MapCtrl::RelocateUsers()
 void MapCtrl::GetClosestStartPos( int fromx, int fromy, int& index, int& x, int& y, int& range )
 {
     if ( m_battle == 0 ) return;
-    UnitSyncMap map = m_battle->LoadMap();
+    LSL::UnitsyncMap map = m_battle->LoadMap();
 
     int newrange;
     range = -1;
@@ -431,12 +439,12 @@ void MapCtrl::GetClosestStartPos( int fromx, int fromy, int& index, int& x, int&
 
 int MapCtrl::LoadMinimap()
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     if ( m_battle == 0 ) return -1;
     if ( m_minimap ) return -1;
     if ( !m_battle->MapExists() ) return -1;
 
-    wxString map = m_battle->GetHostMapName();
+    const std::string map = STD_STRING(m_battle->GetHostMapName());
 
     try
     {
@@ -444,19 +452,17 @@ int MapCtrl::LoadMinimap()
         GetClientSize( &w, &h );
         if ( w * h == 0 )
         {
-            m_mapname = _T("");
+            m_mapname = "";
             m_lastsize = wxSize( -1, -1 );
             return -2;
         }
 
         // start chain of asynchronous map image fetches
         // first minimap, then metalmap and heightmap
-        m_async.GetMinimap( map, w, h );
+        m_async.GetMinimap(map, w, h);
 
         m_mapname = map;
         m_lastsize = wxSize( w, h );
-        Refresh();
-        Update();
     }
     catch (...)
     {
@@ -475,38 +481,34 @@ void MapCtrl::FreeMinimap()
     m_metalmap = 0;
     delete m_heightmap;
     m_heightmap = 0;
-    m_mapname = _T("");
+    m_mapname = "";
 }
 
 
 void MapCtrl::UpdateMinimap()
 {
-    int w, h;
+	assert(wxThread::IsMain());
     _SetCursor();
     if ( m_battle == 0 ) return;
+    int w, h;
     GetClientSize( &w, &h );
     if ( m_battle )  //needs to be looked into, crahses with replaytab (koshi)
     {
 		bool just_resize = ( m_lastsize != wxSize(-1,-1) && m_lastsize != wxSize(w, h) );
-        if ( (m_mapname != m_battle->GetHostMapName() ) || just_resize )
+        if ( (m_mapname != STD_STRING(m_battle->GetHostMapName()) ) || just_resize )
         {
             FreeMinimap();
             int loaded_ok = LoadMinimap();
 
 			if(!just_resize && loaded_ok == 0) // if a new map is loaded, reset start positions
 			{
-				long longval;
-				m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+                const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+                                                                 .getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption));
 				if ( longval == IBattle::ST_Pick ) RelocateUsers();
 			}
         }
     }
-    //without this test aborts happen when unit sync is reloaded from torrent complete
-    //if ( IsShownOnScreen() ) //meh, doesn't actually help
-    {
-        Refresh();
-        Update();
-    }
+	Refresh();
 }
 
 
@@ -745,8 +747,8 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
     wxRect mr = GetMinimapRect();
     m_map = m_battle->LoadMap();
     RequireImages();
-    long longval;
-    m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+    const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+                                                     .getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption ));
     if ( longval == IBattle::ST_Fixed )
     {
 
@@ -959,7 +961,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool /*unused*/ )
 
 void MapCtrl::DrawUserPositions( wxDC& dc )
 {
-    wxLogDebugFunc(_T("") );
+    wxLogDebugFunc(wxEmptyString );
     if ( m_battle == 0 ) return;
     if ( !m_battle->MapExists() ) return;
 
@@ -1010,7 +1012,7 @@ void MapCtrl::DrawUserPositions( wxDC& dc )
 
 void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     wxPaintDC dc( this );
 
     DrawBackground( dc );
@@ -1018,8 +1020,8 @@ void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
     if ( m_battle == 0 ) return;
 
     if ( !m_minimap ) return;
-    long longval;
-    m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+    const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+                                                     .getSingleValue("startpostype",LSL::OptionsWrapper::EngineOption ));
 
 
     if ( m_draw_start_types )
@@ -1052,14 +1054,18 @@ void MapCtrl::OnResize( wxSizeEvent& /*unused*/ )
     UpdateMinimap();
 }
 
+void MapCtrl::OnMouseEnter(wxMouseEvent& /*event*/)
+{
+	SetFocus();
+}
 
 void MapCtrl::OnMouseMove( wxMouseEvent& event )
 {
     wxPoint p = event.GetPosition();
     if ( m_battle == 0 ) return;
     if ( p == wxDefaultPosition ) return;
-    long longval;
-    m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+    const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+                                                     .getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption ));
 
     if ( longval == IBattle::ST_Pick )
     {
@@ -1166,7 +1172,6 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
         if ( m_rect_area != old )
         {
             Refresh();
-            Update();
         }
         return;
     }
@@ -1284,8 +1289,8 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
 {
     if ( m_battle == 0 ) return;
 
-    long longval;
-    m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+    const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+                                                     .getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption));
 
     if ( !m_ro )
     {
@@ -1315,7 +1320,6 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
         {
             m_mdown_area = m_rect_area;
             Refresh();
-            Update();
         }
         return;
     }
@@ -1388,8 +1392,8 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
 {
     if ( m_battle == 0 ) return;
 
-    long longval;
-    m_battle->CustomBattleOptions().getSingleValue( _T("startpostype") , OptionsWrapper::EngineOption ).ToLong( &longval );
+    const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+                                                     .getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption ));
     if ( longval == IBattle::ST_Pick )
     {
         if ( !m_user_expanded ) return;
@@ -1436,8 +1440,8 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         {
             try
             {
-                wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-                unsigned int sidecount = sides.GetCount();
+                const auto sides = LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName()));
+                const unsigned int sidecount = sides.size();
                 if ( sidecount > 0 ) user.BattleStatus().side = (user.BattleStatus().side + 1) % sidecount;
                 else user.BattleStatus().side = 0;
             }
@@ -1463,18 +1467,17 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         {
             if ( m_mdown_area == Refreshing )
             {
-				usync().AddReloadEvent();
-				m_battle->Update( wxFormat( _T("%d_mapname") ) % OptionsWrapper::PrivateOptions );
+//				LSL::usync().AddReloadEvent();
+				m_battle->Update( wxFormat( _T("%d_mapname") ) % LSL::OptionsWrapper::PrivateOptions );
                 UpdateMinimap();
             }
             else if ( m_mdown_area == Download )
             {
-                ui().DownloadMap( m_battle->GetHostMapHash(),  m_battle->GetHostMapName() );
+                ui().Download( _T("map"), m_battle->GetHostMapName(), m_battle->GetHostMapHash() );
             }
         }
         m_mdown_area = Main;
         Refresh();
-        Update();
         return;
     }
 
@@ -1519,7 +1522,59 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
     m_maction = None;
 
 }
+void MapCtrl::OnRightUp( wxMouseEvent& event )
+{
+    wxPoint p = event.GetPosition();
+    if ( m_battle == 0 ) return;
+    if ( p == wxDefaultPosition ) return;
 
+    const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+                                                     .getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption ));
+    if ( longval == IBattle::ST_Pick )
+    {
+
+        if ( !m_battle->MapExists() ) return;
+
+        if ( m_maction != Moved )
+        {
+            m_map = m_battle->LoadMap();
+            wxRect mr = GetMinimapRect();
+
+            int mclx = (int)( ( (double)(event.GetX() - mr.x) / (double)mr.width ) * (double)m_map.info.width );
+            int mcly = (int)( ( (double)(event.GetY() - mr.y) / (double)mr.height ) * (double)m_map.info.height );
+            mclx = LSL::Util::Clamp( mclx, 0, m_map.info.width );
+            mcly = LSL::Util::Clamp( mcly, 0, m_map.info.height );
+
+            int x, y, index = -1, range;
+            GetClosestStartPos( mclx, mcly, index, x, y, range );
+            if ( index != -1 )
+            {
+                if ( range < (10.0 / (double)mr.width) * (double)m_map.info.width )
+                {
+                    AddBotDialog dlg( this, m_battle[0], true );
+                    if ( dlg.ShowModal() == wxID_OK )
+                    {
+                        UserBattleStatus bs;
+                        bs.owner = m_battle->GetMe().GetNick();
+                        bs.aishortname = dlg.GetAIShortName();
+                        bs.airawname = dlg.GetAiRawName();
+                        bs.aiversion = dlg.GetAIVersion();
+                        bs.aitype = dlg.GetAIType();
+                        bs.team = m_battle->GetFreeTeam();
+                        bs.ally = m_battle->GetFreeAlly();
+                        bs.colour = m_battle->GetNewColour();
+                        User& bot = m_battle->OnBotAdded( dlg.GetNick(), bs  );
+                        ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
+                        bot.BattleStatus().pos.x = x;
+                        bot.BattleStatus().pos.y = y;
+                        RefreshRect( GetUserRect( bot, false ), false );
+                    }
+                }
+            }
+            return;
+        }
+    }
+}
 
 void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 {
@@ -1540,17 +1595,12 @@ void MapCtrl::OnMouseWheel( wxMouseEvent& event )
         }
         m_current_infomap = (InfoMap) idx;
         Refresh();
-        Update();
     }
 }
 
 
-void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
+void MapCtrl::OnGetMapImageAsyncCompleted(const std::string mapname)
 {
-    wxLogDebugFunc( _T("") );
-
-    wxString mapname = event.GetString();
-
     if ( mapname != m_mapname ) return;
 
     const int w = m_lastsize.GetWidth();
@@ -1558,24 +1608,31 @@ void MapCtrl::OnGetMapImageAsyncCompleted( wxCommandEvent& event )
 
     if ( m_minimap == NULL )
     {
-        m_minimap = new wxBitmap( usync().GetMinimap( m_mapname, w, h ) );
+        m_minimap = new wxBitmap( LSL::usync().GetMinimap(m_mapname, w, h ).wxbitmap());
         // this ensures metalmap and heightmap aren't loaded in battlelist
-        if (m_draw_start_types && usync().VersionSupports(SpringUnitSync::USYNC_GetInfoMap))
+        if (m_draw_start_types && LSL::usync().VersionSupports(LSL::USYNC_GetInfoMap))
             m_async.GetMetalmap( m_mapname, w, h );
     }
     else if ( m_metalmap == NULL )
     {
-        m_metalmap = new wxBitmap( usync().GetMetalmap( m_mapname, w, h ) );
+        m_metalmap = new wxBitmap( LSL::usync().GetMetalmap( m_mapname, w, h ).wxbitmap());
         // singleplayer mode doesn't allow startboxes anyway
-        m_metalmap_cumulative = usync().GetMetalmap( m_mapname );
+        m_metalmap_cumulative = LSL::usync().GetMetalmap( m_mapname ).wximage();
         Accumulate( m_metalmap_cumulative );
         m_async.GetHeightmap( m_mapname, w, h );
     }
     else if ( m_heightmap == NULL )
     {
-        m_heightmap = new wxBitmap( usync().GetHeightmap( m_mapname, w, h ) );
+        m_heightmap = new wxBitmap( LSL::usync().GetHeightmap( m_mapname, w, h ).wxbitmap());
     }
 
+	// never ever call a gui function here, it will crash! (in 1/100 cases)
+	wxCommandEvent evt( REFRESH_EVENT, GetId() );
+	evt.SetEventObject( this );
+	wxPostEvent( this, evt );
+}
+
+void MapCtrl::OnRefresh( wxCommandEvent& /*event*/ )
+{
     Refresh();
-    Update();
 }

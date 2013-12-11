@@ -1,13 +1,28 @@
+
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/networking/tasserver.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 #ifndef SPRINGLOBBY_HEADERGUARD_TASSERVER_H
 #define SPRINGLOBBY_HEADERGUARD_TASSERVER_H
 
 #include <wx/string.h>
 #include <wx/longlong.h>
+#include <wx/timer.h>
 #include <list>
 
 #include "server.h"
 #include "crc.h"
-#include "mutexwrapper.h"
 
 const unsigned int FIRST_UDP_SOURCEPORT = 8300;
 
@@ -20,7 +35,7 @@ class wxString;
 class PingThread;
 
 //! @brief TASServer protocol implementation.
-class TASServer : public Server
+class TASServer : public Server, public wxTimer
 {
   public:
 	TASServer(int serverEventsMode = 0);
@@ -88,8 +103,8 @@ class TASServer : public Server
     void AdminChangeAccountAccess( const wxString& nick, const wxString& accesscode );
     void AdminSetBotMode( const wxString& nick, bool isbot );
 
-    void HostBattle( BattleOptions bo, const wxString& password = _T("") );
-    void JoinBattle( const int& battleid, const wxString& password = _T("") );
+    void HostBattle( BattleOptions bo, const wxString& password = wxEmptyString );
+    void JoinBattle( const int& battleid, const wxString& password = wxEmptyString );
     void LeaveBattle( const int& battleid );
     void SendMyBattleStatus( UserBattleStatus& bs );
     void SendMyUserStatus();
@@ -142,8 +157,6 @@ class TASServer : public Server
 
 	void SetRelayIngamePassword( const User& user );
 
-    void RequestSpringUpdate();
-
     wxArrayString GetRelayHostList() ;
 	virtual const IServerEvents* serverEvents() const { return m_se; }
   protected:
@@ -154,7 +167,6 @@ class TASServer : public Server
       wxLongLong t;
     };
 
-	PingThread* m_ping_thread;
     CRC m_crc;
 
 	IServerEvents* m_se;
@@ -168,22 +180,11 @@ class TASServer : public Server
     bool m_redirecting;
     wxString m_buffer;
     time_t m_last_udp_ping;
+	time_t m_last_ping;
     time_t m_last_net_packet;
-	MutexWrapper<unsigned int> m_last_id;
-	unsigned int& GetLastID()
-	{
-		ScopedLocker<unsigned int> l_last_id(m_last_id);
-		return l_last_id.Get();
-	}
+	unsigned int m_last_id;
 
-	typedef std::list<TASPingListItem> PingList;
-	MutexWrapper<PingList> m_pinglist;
-
-	PingList& GetPingList()
-	{
-		ScopedLocker<PingList> l_pinglist(m_pinglist);
-		return l_pinglist.Get();
-	}
+	std::list<TASPingListItem> m_pinglist;
 
     unsigned long m_udp_private_port;
     unsigned long m_nat_helper_port;
@@ -205,12 +206,15 @@ class TASServer : public Server
 
     void FinalizeJoinBattle();
 
-    void SendCmd( const wxString& command, const wxString& param = _T("") );
-    void RelayCmd( const wxString& command, const wxString& param = _T("") );
+    void SendCmd( const wxString& command, const wxString& param = wxEmptyString );
+    void RelayCmd( const wxString& command, const wxString& param = wxEmptyString );
 
     wxString m_current_chan_name_mutelist;
 
     wxArrayString m_relay_host_manager_list;
+
+	private:
+		void Notify();
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

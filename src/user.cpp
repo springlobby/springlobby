@@ -1,4 +1,17 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/user/user.cpp
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
 //
 // Class: User
 //
@@ -6,7 +19,6 @@
 #include "user.h"
 #include "battle.h"
 #include "server.h"
-//#include "utils.h"
 #include "chatpanel.h"
 #include "iconimagelist.h"
 
@@ -14,20 +26,20 @@
 #include <wx/intl.h>
 
 User::User( Server& serv )
-    : CommonUser( _T(""),_T(""),0 ),
+    : CommonUser( wxEmptyString,wxEmptyString,0 ),
     m_serv(&serv),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
+    m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User( const wxString& nick, Server& serv )
-    : CommonUser( nick,_T(""),0 ),
+    : CommonUser( nick,wxEmptyString,0 ),
     m_serv(&serv),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
+    m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
@@ -47,7 +59,7 @@ User::User( const wxString& nick )
     : CommonUser( nick, wxEmptyString, 0 ),
     m_serv(0),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
+    m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
@@ -67,7 +79,7 @@ User::User()
     : CommonUser( wxEmptyString, wxEmptyString, 0 ),
     m_serv(0),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( _T("") ) ),
+    m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
@@ -217,7 +229,7 @@ wxString User::GetClan()
     wxString clan = tmp.BeforeFirst(']');
     if ( clan != tmp ) return clan;
   }
-  return _T("");
+  return wxEmptyString;
 }
 
 void CommonUser::SetStatus( const UserStatus& status )

@@ -8,10 +8,12 @@
 #include "ui.h"
 #include "uiutils.h"
 #include "utils/controls.h"
+#include "utils/conversion.h"
 #include "utils/debug.h"
 #include "settings.h"
-#include "globalsmanager.h"
+#include <lslutils/globalsmanager.h>
 #include <wx/settings.h>
+#include <lslutils/misc.h>
 
 //(*InternalHeaders(MapSelectDialog)
 #include <wx/listctrl.h>
@@ -50,7 +52,7 @@ BEGIN_EVENT_TABLE(MapSelectDialog,wxDialog)
 END_EVENT_TABLE()
 
 MapSelectDialog::MapSelectDialog( wxWindow* parent )
-	: WindowAttributesPickle( m_dialog_name, this, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) ),
+	: // WindowHintsPickle( m_dialog_name, this, wxSize( DEFSETT_MW_WIDTH, DEFSETT_MW_HEIGHT ) ),
 	m_horizontal_direction( sett().GetHorizontalSortorder() ),
 	m_vertical_direction( sett().GetVerticalSortorder() )
 {
@@ -132,9 +134,9 @@ MapSelectDialog::MapSelectDialog( wxWindow* parent )
 
 	// Ugh.. Can not have these created by generated code because wxSmith doesn't accept a symbolic size,
 	// (ie. wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT)) and all Set*Size() methods don't seem to have any effect.
-	m_vertical_direction_button = new wxButton(this, ID_VERTICAL_DIRECTION, _T("ᴠ"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_VERTICAL_DIRECTION"));
+	m_vertical_direction_button = new wxButton(this, ID_VERTICAL_DIRECTION, _T("ᴧ"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_VERTICAL_DIRECTION"));
 	boxSizerVertical->Add(m_vertical_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	m_horizontal_direction_button = new wxButton(this, ID_HORIZONTAL_DIRECTION, _T(">"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_HORIZONTAL_DIRECTION"));
+	m_horizontal_direction_button = new wxButton(this, ID_HORIZONTAL_DIRECTION, _T("<"), wxDefaultPosition, wxSize(CONTROL_HEIGHT,CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_HORIZONTAL_DIRECTION"));
 	boxSizerHorizontal->Add(m_horizontal_direction_button, 0, wxALL|wxEXPAND|wxSHAPED|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	//<>ᴠᴧ
 
@@ -163,6 +165,7 @@ MapSelectDialog::MapSelectDialog( wxWindow* parent )
 	m_map_opts_list->InsertItem( 6, _("Start positions") );
 
     Layout();
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&MapSelectDialog::OnUnitsyncReloaded));
 }
 
 MapSelectDialog::~MapSelectDialog()
@@ -186,7 +189,7 @@ MapSelectDialog::~MapSelectDialog()
 
 void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 
 	AppendSortKeys( m_horizontal_choice );
 	AppendSortKeys( m_vertical_choice );
@@ -194,11 +197,12 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
 	m_horizontal_choice->SetSelection( sett().GetHorizontalSortkeyIndex() );
 	m_vertical_choice->SetSelection( sett().GetVerticalSortkeyIndex() );
 
-    m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
-    m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
+    m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T(">") : _T("<") );
+    m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴠ") : _T("ᴧ") );
 
-	m_maps = usync().GetMapList();
-	m_replays = usync().GetPlaybackList( true ); //true meaning replays, flase meaning savegames
+    m_maps = LSL::Util::vectorToArrayString(LSL::usync().GetMapList());
+    //true meaning replays, flase meaning savegames
+    m_replays = LSL::Util::vectorToArrayString(LSL::usync().GetPlaybackList(true));
 
     const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
 	m_filter_popular->Enable( ui().IsConnected() );
@@ -245,7 +249,7 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
 
 void MapSelectDialog::OnSortKeySelect( wxCommandEvent& /*unused*/ )
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	UpdateSortAndFilter();
 }
 
@@ -268,20 +272,23 @@ void MapSelectDialog::AppendSortKeys( wxChoice* choice )
 
 static MapGridCtrl::SortKey GetSelectedSortKey( wxChoice* choice )
 {
-	return (MapGridCtrl::SortKey) (int) (long) choice->GetClientData( choice->GetSelection() );
+	const int selection = choice->GetSelection();
+	if (selection == wxNOT_FOUND) //default to first entry
+		return MapGridCtrl::SortKey_Name;
+	return (MapGridCtrl::SortKey) (int) (long) choice->GetClientData( selection );
 }
 
 namespace {
 struct FilterPredicate
 {
-	FilterPredicate( const wxString& _searchText ) : searchText(_searchText.Lower()) {}
-	bool operator () ( const UnitSyncMap& map ) const
+    FilterPredicate( const wxString& _searchText ) : searchText(STD_STRING(_searchText.Lower())) {}
+	bool operator () ( const LSL::UnitsyncMap& map ) const
 	{
-		return map.name.Lower().Find( searchText ) != wxNOT_FOUND
-			|| map.info.description.Lower().Find( searchText ) != wxNOT_FOUND
-			|| map.info.author.Lower().Find( searchText ) != wxNOT_FOUND ;
+        return boost::to_lower_copy(map.name).find(searchText) != std::string::npos
+            || boost::to_lower_copy(map.info.description).find(searchText) != std::string::npos
+            || boost::to_lower_copy(map.info.author).find(searchText) != std::string::npos;
 	}
-	wxString searchText;
+    const std::string searchText;
 };
 }
 
@@ -290,13 +297,12 @@ void MapSelectDialog::UpdateSortAndFilter()
 	FilterPredicate predicate( m_filter_text->GetValue() );
 	m_mapgrid->Filter( predicate );
 	m_mapgrid->Sort( GetSelectedSortKey( m_vertical_choice ), GetSelectedSortKey( m_horizontal_choice ), m_vertical_direction, m_horizontal_direction );
-	m_mapgrid->CheckInBounds();
 	m_mapgrid->Refresh();
 }
 
-UnitSyncMap* MapSelectDialog::GetSelectedMap() const
+LSL::UnitsyncMap* MapSelectDialog::GetSelectedMap() const
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	return m_mapgrid->GetSelectedMap();
 }
 
@@ -306,11 +312,11 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 
 	wxLogDebugFunc( mapname );
 
-	const UnitSyncMap* pMap = m_mapgrid->GetSelectedMap();
+	const LSL::UnitsyncMap* pMap = m_mapgrid->GetSelectedMap();
 	if ( pMap == NULL) return;
-	const UnitSyncMap& map = *pMap;
+	const LSL::UnitsyncMap& map = *pMap;
 
-	m_map_name->SetLabel( map.name + _T("\n\n") + map.info.description );
+    m_map_name->SetLabel(TowxString(map.name + "\n\n" + map.info.description));
 
 	// TODO: refactor, this is copied from battlemaptab.cpp
 	m_map_opts_list->SetItem( 0, 1, wxFormat( _T("%dx%d") ) % (map.info.width/512) % (map.info.height/512) );
@@ -324,30 +330,30 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 
 void MapSelectDialog::OnMapLoadingCompleted( wxCommandEvent& /*unused*/ )
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	// to apply stored sorting settings we need to re-apply sorting after loading finished
 	UpdateSortAndFilter();
 }
 
 void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& /*unused*/ )
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	m_vertical_direction = !m_vertical_direction;
-	m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴧ") : _T("ᴠ") );
+	m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴠ") : _T("ᴧ") );
 	UpdateSortAndFilter();
 }
 
 void MapSelectDialog::OnHorizontalDirectionClicked( wxCommandEvent& /*unused*/ )
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	m_horizontal_direction = !m_horizontal_direction;
-	m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T("<") : _T(">") );
+	m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T(">") : _T("<") );
 	UpdateSortAndFilter();
 }
 
 void MapSelectDialog::OnMapGridLeftDClick(wxMouseEvent& /*unused*/)
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 
 	if ( m_mapgrid->GetSelectedMap() ) {
 		EndModal( wxID_OK );
@@ -356,7 +362,7 @@ void MapSelectDialog::OnMapGridLeftDClick(wxMouseEvent& /*unused*/)
 
 void MapSelectDialog::LoadAll()
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	const int count = m_maps.size();
 
 	m_mapgrid->Clear();
@@ -370,7 +376,7 @@ void MapSelectDialog::LoadAll()
 
 void MapSelectDialog::LoadPopular()
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 
 	m_mapgrid->Clear();
 
@@ -378,7 +384,9 @@ void MapSelectDialog::LoadPopular()
 		serverSelector().GetServer().battles_iter->IteratorBegin();
 		while ( !serverSelector().GetServer().battles_iter->EOL() ) {
 			Battle* b = serverSelector().GetServer().battles_iter->GetBattle();
-			if ( b != NULL ) m_mapgrid->AddMap( b->GetHostMapName() );
+			const wxString mapname = b->GetHostMapName();
+			assert(!mapname.empty());
+			if ( b != NULL ) m_mapgrid->AddMap( mapname );
 		}
 	}
 	catch (...) {} // ui().GetServer may throw when disconnected...
@@ -388,7 +396,7 @@ void MapSelectDialog::LoadPopular()
 
 void MapSelectDialog::LoadRecent()
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	const int count = m_maps.size();
 
 	m_mapgrid->Clear();
@@ -412,45 +420,41 @@ void MapSelectDialog::LoadRecent()
 
 void MapSelectDialog::OnFilterAllSelect(wxCommandEvent& /*unused*/)
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	LoadAll();
 }
 
 void MapSelectDialog::OnFilterPopularSelect(wxCommandEvent& /*unused*/)
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	LoadPopular();
 }
 
 void MapSelectDialog::OnFilterRecentSelect(wxCommandEvent& /*unused*/)
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	LoadRecent();
 }
 
 void MapSelectDialog::OnFilterTextChanged(wxCommandEvent& /*unused*/)
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 	UpdateSortAndFilter();
 }
-#ifdef __WXMSW__
-	#include "ui.h"
-	#include "mainwindow.h"
-#endif
-MapSelectDialog& mapSelectDialog()
-{
-	#ifdef __WXMSW__
-		static MapSelectDialog* m = new MapSelectDialog( &ui().mw() );
-		return *m;
-	#else
-	/* either a globals handled or directly on stack created dialog would result in sigsegv / sigabrt in dtor, no idea why */
-		static MapSelectDialog* m = new MapSelectDialog( 0 );
-		return *m;
-	#endif
-}
 
-void MapSelectDialog::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void MapSelectDialog::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	wxInitDialogEvent dummy;
 	AddPendingEvent( dummy );
 }
+
+wxString mapSelectDialog(bool hidden, wxWindow* parent){
+	wxString mapname = wxEmptyString;
+	assert( (hidden && parent!=NULL) || (!hidden && parent==NULL)); //at the first call, the window is created hidden
+	static MapSelectDialog* m = new MapSelectDialog(parent);
+	if ( (!hidden) && (m->ShowModal() == wxID_OK) && (m->GetSelectedMap() != NULL) ) {
+		mapname = TowxString(m->GetSelectedMap()->name);
+	}
+	return mapname;
+}
+

@@ -84,7 +84,7 @@ void tab_ui::initUiOptSizer(wxStaticBoxSizer* sizer)
 void tab_ui::initZoomSizer(wxStaticBoxSizer* sizer)
 {
 	wxBoxSizer* subSizer = new wxBoxSizer(wxVERTICAL);
-	ctrl_zoom_spin = new wxSpinCtrl(this,UI_ZOOM[0].id,_T(""),wxDefaultPosition,wxDefaultSize,wxSP_ARROW_KEYS,-255,255);
+	ctrl_zoom_spin = new wxSpinCtrl(this,UI_ZOOM[0].id,wxEmptyString,wxDefaultPosition,wxDefaultSize,wxSP_ARROW_KEYS,-255,255);
 	ctrl_zoom_spin->SetToolTip(UI_ZOOM[0].tTip[0]);
 	subSizer->Add(new wxStaticText(this, -1, UI_ZOOM[0].lbl) , 0,wxTOP,10);
 	subSizer->Add(ctrl_zoom_spin,0,wxALIGN_RIGHT|wxALL,5);

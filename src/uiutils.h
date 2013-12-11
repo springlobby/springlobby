@@ -5,6 +5,7 @@
 
 #include <wx/intl.h>
 #include <wx/gdicmn.h>
+#include <wx/event.h>
 #include <vector>
 #include "utils/mixins.hh"
 
@@ -62,6 +63,11 @@ struct TimerMessageBox: public SL::NonCopyable {
 	wxString m_msg_format;
 };
 
+inline wxString bool2yn(const bool b) {
+    return b ? _("Yes") : _("No");
+}
+
+DECLARE_EVENT_TYPE(REFRESH_EVENT, wxID_ANY)
 
 #endif
 // SPRINGLOBBY_HEADERGUARD_UIUTILS_H

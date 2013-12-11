@@ -91,8 +91,8 @@ wxString wxBase64::Encode(const wxUint8* pData, size_t len)
 
 std::string wxBase64::Decode(const wxString& data)
 {
-    int c;
-    int c1;
+    wchar_t c;
+    wchar_t c1;
     size_t len = data.Len();
     std::string ret;
     ret.reserve(data.length() * 3 / 4);

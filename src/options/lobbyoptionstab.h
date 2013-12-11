@@ -30,15 +30,15 @@ class LobbyOptionsTab : public wxScrolledWindow
     protected:
 
         wxCheckBox* m_autojoin;
-        wxCheckBox* m_reportstats;
         wxCheckBox* m_updater;
         wxCheckBox* m_show_tooltips;
         wxCheckBox* m_use_tabicons;
         wxCheckBox* m_x_on_all_tabs;
 		wxCheckBox* m_use_notif_popups;
+		wxCheckBox* m_disable_version_check;
 
         wxStaticText* m_autoconnect_label;
-        wxStaticText* m_reportstats_label;
+        wxStaticText* m_disable_version_check_label;
         wxStaticText* m_updater_label;
         wxStaticText* m_show_tooltips_label;
         wxStaticText* m_web_loc_text;
@@ -53,7 +53,7 @@ class LobbyOptionsTab : public wxScrolledWindow
         wxRadioButton* m_complete_method_new;
         wxButton* m_web_browse_btn;
         wxButton* m_editor_browse_btn;
-        wxButton* m_select_locale;
+//        wxButton* m_select_locale;
         wxRadioButton* m_web_def_radio;
         wxRadioButton* m_web_spec_radio;
 
@@ -70,6 +70,7 @@ class LobbyOptionsTab : public wxScrolledWindow
 		wxChoice* m_notif_popup_pos;
 		wxSpinCtrl* m_notif_popup_time;
 
+
     enum
     {
         SPRING_WEBBROWSE = wxID_HIGHEST,
@@ -79,6 +80,7 @@ class LobbyOptionsTab : public wxScrolledWindow
 
 
 		DECLARE_EVENT_TABLE()
+
 };
 
 #endif // LOBBYOPTIONSTAB_H

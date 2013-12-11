@@ -216,7 +216,9 @@ class wxAuiCommandCapture : public wxEvtHandler
 {
 public:
 
-    wxAuiCommandCapture() { m_last_id = 0; }
+	wxAuiCommandCapture():
+		wxEvtHandler(),
+		m_last_id(0) {}
     int GetCommandId() const { return m_last_id; }
 
     bool ProcessEvent(wxEvent& evt)

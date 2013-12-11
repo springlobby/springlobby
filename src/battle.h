@@ -31,7 +31,7 @@ class Battle : public IBattle
     void Update();
     void Update( const wxString& Tag );
 
-    void Join( const wxString& password = _T("") );
+    void Join( const wxString& password = wxEmptyString );
     void Leave();
 
     void KickPlayer( User& user );
@@ -44,7 +44,7 @@ class Battle : public IBattle
     void Say( const wxString& msg );
     void DoAction( const wxString& msg );
 
-    void SetLocalMap( const UnitSyncMap& map );
+    void SetLocalMap( const LSL::UnitsyncMap& map );
 
     void OnRequestBattleStatus();
     void SendMyBattleStatus();
@@ -104,12 +104,13 @@ class Battle : public IBattle
 
 	void SetInGame( bool ingame );
 
-	void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
+	void OnUnitsyncReloaded( wxEvent& data );
+
 
 	void SetAutoUnspec(bool value);
 	bool GetAutoUnspec() { return m_auto_unspec; }
-
-  void ShouldAutoUnspec();
+private:
+	void ShouldAutoUnspec();
 
   protected:
     // Battle variables

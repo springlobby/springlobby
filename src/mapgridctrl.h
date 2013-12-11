@@ -3,13 +3,11 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_MAPGRIDCTRL_H
 
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/panel.h>
-
 class Ui;
-
 
 class MapGridCtrl : public wxPanel
 {
@@ -40,9 +38,7 @@ class MapGridCtrl : public wxPanel
 
 		void Clear();
 		void AddMap( const wxString& mapname );
-		void AddMap( const UnitSyncMap& map );
 
-		void CheckInBounds();
 
 		/* ===== sorting ===== */
 		void Sort( SortKey vertical, SortKey horizontal, bool vertical_direction = false, bool horizontal_direction = false );
@@ -52,27 +48,21 @@ class MapGridCtrl : public wxPanel
 		{
 			std::vector< wxString > maps;
 
-			m_maps_filtered.insert( m_maps.begin(), m_maps.end() );
-			m_maps_unused.insert( m_maps.begin(), m_maps.end() );
-			m_maps.clear();
 			m_grid.clear();
 			m_mouseover_map = NULL; // can't be sure pointer will stay valid
 			m_selected_map = NULL;
 
-			for (MapMap::const_iterator it = m_maps_filtered.begin(); it != m_maps_filtered.end(); ++it) {
-				if ( pred( it->second ) ) maps.push_back( it->first );
+			for (MapMap::const_iterator it = m_maps.begin(); it != m_maps.end(); ++it) {
+				if ( pred( it->second ) )  {
+					AddMap( it->first );
+				}
 			}
-
-			for (std::vector< wxString >::iterator it = maps.begin(); it != maps.end(); ++it) {
-				AddMap( *it );
-				m_maps_filtered.erase( *it );
-			}
-
 			return m_maps.size();
 		}
 
-		UnitSyncMap* GetSelectedMap() const { return m_selected_map; }
+		LSL::UnitsyncMap* GetSelectedMap() const { return m_selected_map; }
 
+	protected:
 		void OnPaint( wxPaintEvent& event );
 		void OnResize( wxSizeEvent& event );
 
@@ -80,10 +70,8 @@ class MapGridCtrl : public wxPanel
 		void OnLeftDown( wxMouseEvent& event );
 		void OnLeftUp( wxMouseEvent& event );
 
-		void OnGetMapImageAsyncCompleted( wxCommandEvent& event );
-		void OnGetMapExAsyncCompleted( wxCommandEvent& event );
-
-	protected:
+		void OnRefresh( wxCommandEvent& event );
+		void CheckInBounds();
 
 		enum MapState
 		{
@@ -92,13 +80,14 @@ class MapGridCtrl : public wxPanel
 			MapState_GotMinimap
 		};
 
-		struct MapData : UnitSyncMap
+		struct MapData : LSL::UnitsyncMap
 		{
-			MapData() : state( MapState_NoMinimap ) {}
-			void operator=( const UnitSyncMap& other ) { UnitSyncMap::operator=( other ); }
+			MapData() : state( MapState_NoMinimap ), priority(0)  {}
+			void operator=( const LSL::UnitsyncMap& other ) { LSL::UnitsyncMap::operator=( other ); }
 
 			wxBitmap minimap;
 			MapState state;
+			unsigned priority; //the higher the earlier data will be fetched, is increased by Draw()
 		};
 
 		typedef std::map< wxString, MapData > MapMap;
@@ -136,25 +125,32 @@ class MapGridCtrl : public wxPanel
 		static int ComparePosCount( const MapData* a, const MapData* b );
 		template< class Compare > void _Sort( int dimension, Compare cmp );
 
+private:
+		void OnGetMapImageAsyncCompleted(const std::string& _mapname );
+		void OnGetMapExAsyncCompleted(const std::string& _mapname );
 		void UpdateGridSize();
 		void UpdateAsyncFetches();
 		void FetchMapInfo( const wxString& mapname );
 		void FetchMinimap( MapData& map );
 		void DrawMap( wxDC& dc, MapData& map, int x, int y );
 		void DrawBackground( wxDC& dc );
-		void SetMinimap( MapMap& maps, const wxString& mapname, const wxBitmap& minimap );
+		void SetMinimap(MapData& mapdata, const wxBitmap& minimap );
 		void SelectMap( MapData* map );
+		bool IsInGrid(const std::string& mapname);
+		MapData* GetMaxPriorityMap(std::list<MapData*>& maps);
 
-		UnitSyncAsyncOps m_async;
+		LSL::UnitSyncAsyncOps m_async_image;
+		LSL::UnitSyncAsyncOps m_async_ex;
+
+		int m_async_ops_count;
 
 		const bool m_selection_follows_mouse;
 
 		/// Set of maps which are queued to be fetched asynchronously.
-		std::vector< wxString > m_pending_maps;
+		std::list<MapData*> m_pending_mapinfos;
+		std::list<MapData*> m_pending_mapimages;
 
-		MapMap m_maps;
-		MapMap m_maps_unused;
-		MapMap m_maps_filtered;
+		MapMap m_maps; //list of all maps
 		std::vector< MapData* > m_grid;
 		wxSize m_size;
 
@@ -162,16 +158,6 @@ class MapGridCtrl : public wxPanel
 		wxPoint m_first_mouse_pos;
 		wxPoint m_last_mouse_pos;
 		bool m_in_mouse_drag;
-
-		/// Number of async minimap fetches still running on behalf of this control.
-		/// This number is limited so SL doesn't keep fetching maps after this
-		/// control is destroyed.
-		int m_async_mapinfo_fetches;
-
-		/// Number of async minimap fetches still running on behalf of this control.
-		/// This number is limited so the control can adapt (faster) to changes in
-		/// the set of visible maps.  (it fetches only visible maps)
-		int m_async_minimap_fetches;
 
 		/// Map which is currently under the mouse pointer.
 		MapData* m_mouseover_map;

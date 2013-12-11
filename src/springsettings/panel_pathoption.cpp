@@ -22,7 +22,8 @@
 #include "frame.h"
 #include "../settings.h"
 #include "../nonportable.h"
-#include "../springunitsynclib.h"
+#include <lslunitsync/unitsync.h>
+#include <lslunitsync/c_api.h>
 #include "se_utils.h"
 
 
@@ -72,11 +73,11 @@ PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxP
 
 void PathOptionPanel::SetUsyncPath(wxCommandEvent& /*unused*/)
 {
-  wxString lib_ext = wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
+  wxString lib_ext = wxDynamicLibrary::CanonicalizeName(wxEmptyString, wxDL_MODULE);
 #if defined(__WXGTK__)
   wxString lib_pre = _T("lib");
 #else
-  wxString lib_pre = _T("");
+  wxString lib_pre = wxEmptyString;
 #endif
 
   wxFileDialog pic( this, _("Choose an unitsync library"),
@@ -89,9 +90,9 @@ void PathOptionPanel::SetUsyncPath(wxCommandEvent& /*unused*/)
 void PathOptionPanel::UsePaths(wxCommandEvent& /*unused*/)
 {
 	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(),  usync_ctrl->GetValue() );
-	usync().ReloadUnitSyncLib();
+    LSL::usync().ReloadUnitSyncLib();
 
-	if ( !(susynclib().IsLoaded()) )
+    if ( !(LSL::susynclib().IsLoaded()) )
 	{
 		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unable to load your unitsync library.\n\
 				You might want to take another look at your unitsync setting.\n\
@@ -103,7 +104,6 @@ void PathOptionPanel::UsePaths(wxCommandEvent& /*unused*/)
 		origin->buildGuiFromErrorPanel();
 		sett().SaveSettings();
 	}
-
 }
 
 PathOptionPanel::~PathOptionPanel()

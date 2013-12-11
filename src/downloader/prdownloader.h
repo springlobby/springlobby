@@ -22,74 +22,62 @@
 #include <string>
 #include <queue>
 #include <list>
-#include <lslutils/thread.h>
 
 #include "lib/src/Downloader/Download.h"
+#include "utils/globalevents.h"
 
 class IDownloader;
 
-namespace LSL {
-    class WorkerThread;
+namespace LSL
+{
+class WorkerThread;
 }
 
-namespace P2P {
-enum FileStatus
+namespace P2P
 {
-    not_stored	= 0, /// file is not on disk and not downloading
-    queued		= 1, /// file is not on disk and queued for download
-    leeching	= 2, /// file is being downloaded
-    paused		= 3, /// file currently not downloading but has valid handle
-    complete	= 4  /// file is on disk / dl completed
+enum FileStatus {
+	not_stored	= 0, /// file is not on disk and not downloading
+	queued		= 1, /// file is not on disk and queued for download
+	leeching	= 2, /// file is being downloaded
+	paused		= 3, /// file currently not downloading but has valid handle
+	complete	= 4  /// file is on disk / dl completed
 };
 }
 
-struct DownloadInfo{
-    P2P::FileStatus downloadstatus;
-    std::string name;
-    int numcopies;//TODO remove
-    double progress;
-    double inspeed;
-    double eta;
-    double filesize;
+struct DownloadInfo {
+	P2P::FileStatus downloadstatus;
+	std::string name;
+	int numcopies;//TODO remove
+	double progress;
+	double inspeed;
+	double eta;
+	double filesize;
 };
 
-class SearchItem : public LSL::WorkItem {
-public:
-    SearchItem(std::list<IDownloader*> loaders, const std::string& name, IDownload::category cat);
-    void Run();
-
-private:
-    const std::list<IDownloader*> m_loaders;
-    const std::string m_name;
-    const IDownload::category m_cat;
-    int m_result_size;
-};
-
-class PrDownloader
+class PrDownloader: public wxEvtHandler, public GlobalEvent
 {
 public:
-    PrDownloader();
+	PrDownloader();
 	~PrDownloader();
 
 	void ClearFinished();
 	void UpdateSettings();
-    void RemoveTorrentByName( const std::string& name );
-    //! returns true if name found and added to dl list
-    int GetGame( const std::string& name );
-    //! returns true if name found and added to dl list
-    int GetMap( const std::string& name );
-    //! returns true if name found and added to dl list
-    int GetWidget( const std::string& name );
+	void RemoveTorrentByName( const std::string& name );
+	//! returns true if name found and added to dl list
+	int GetDownload( const std::string& category, const std::string& name );
 	void SetIngameStatus( bool ingame );
+	void OnSpringStarted(wxCommandEvent& data);
+	void OnSpringTerminated(wxCommandEvent& data);
+	static std::string GetEngineCat();
 
 private:
-    //! searches given loaders for filename and pushes fitting workitems into dl_thread
-    int Get(std::list<IDownloader*> loaders, const std::string& name, IDownload::category cat );
-    std::list<IDownloader*> m_game_loaders;
-    std::list<IDownloader*> m_map_loaders;
-    LSL::WorkerThread* m_dl_thread;
+	//! searches given loaders for filename and pushes fitting workitems into dl_thread
+	int Get(std::list<IDownloader*> loaders, const std::string& name, IDownload::category cat );
+	std::list<IDownloader*> m_game_loaders;
+	std::list<IDownloader*> m_map_loaders;
+	LSL::WorkerThread* m_dl_thread;
 
-    friend class SearchItem;
+	friend class SearchItem;
 };
 
 PrDownloader& prDownloader();

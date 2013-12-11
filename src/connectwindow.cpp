@@ -21,6 +21,7 @@
 
 #include "connectwindow.h"
 #include "settings.h"
+#include "helper/slconfig.h"
 #include "ui.h"
 #include "images/connect.xpm"
 #include "utils/controls.h"
@@ -56,7 +57,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
     username = sett().GetServerAccountNick( sett().GetDefaultServer() );
     password = sett().GetServerAccountPass( sett().GetDefaultServer() );
     savepass = sett().GetServerAccountSavePass( sett().GetDefaultServer() );
-    autoconnect = sett().GetAutoConnect();
+    autoconnect = cfg().ReadBool(_T( "/Server/Autoconnect" ));
     // Create all UI elements.
     m_tabs =         new wxNotebook( this  , -1 );
     m_login_tab =    new wxPanel   ( m_tabs, -1 );
@@ -82,7 +83,8 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
     m_acc_note_line = new wxStaticLine( m_login_tab );
 
-    m_note_lbl = new wxStaticText( m_login_tab, -1, _("Note: If you do not have an account, you\n can register one for free on the\n\"Register\" tab.") );
+	m_note_lbl = new wxStaticText( m_login_tab, -1, _("Note: If you do not have an account, you can register one for free on the Register tab.") );
+	m_note_lbl->Wrap(400);
 
     m_ok_btn =     new wxButton( this, wxID_OK,     _("Ok") );
     m_cancel_btn = new wxButton( this, wxID_CANCEL, _("Cancel") );
@@ -102,9 +104,9 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
     m_buttons_sizer = new wxStdDialogButtonSizer();
 
     // Add UI elements to sizers.
-    m_buttons_sizer->Add( m_ok_btn );
-    m_buttons_sizer->AddStretchSpacer();
     m_buttons_sizer->Add( m_cancel_btn );
+    m_buttons_sizer->AddStretchSpacer();
+    m_buttons_sizer->Add( m_ok_btn );
 
 
     m_rpass_sizer->Add( m_rpass_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4 );
@@ -144,7 +146,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
     wxBoxSizer* m_regnick_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-    m_regnick_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Nick"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_regnick_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Nickname"), wxDefaultPosition, wxDefaultSize, 0 );
     m_regnick_sizer->Add( m_regnick_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
 
     m_regnick_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
@@ -167,7 +169,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
     wxBoxSizer* m_regpass1_sizer1 = new wxBoxSizer( wxHORIZONTAL );
 
-    m_regpass2_lbl = new wxStaticText( m_register_tab, wxID_ANY, wxT("Retype password"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_regpass2_lbl = new wxStaticText( m_register_tab, wxID_ANY, _("Retype password"), wxDefaultPosition, wxDefaultSize, 0 );
     m_regpass1_sizer1->Add( m_regpass2_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4 );
 
     m_regpass2_text = new wxTextCtrl( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
@@ -201,7 +203,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 #endif
 
     ReloadServerList();
-
+	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&ConnectWindow::OnQuit));
 }
 
 
@@ -276,7 +278,7 @@ void ConnectWindow::OnOk(wxCommandEvent& )
             customMessageBox(SL_MAIN_ICON, _("Invalid host/port."), _("Invalid host"), wxOK );
             return;
         }
-        sett().SetAutoConnect( m_autoconnect_check->IsChecked() );
+        cfg().Write(_T( "/Server/Autoconnect" ),  m_autoconnect_check->IsChecked() );
 
         //if autoconnect enabled force saving of pw, actual saving is done in Ui::DoConnect
         if ( m_autoconnect_check->IsChecked() ) sett().SetServerAccountSavePass( HostAddress, true );
@@ -320,7 +322,7 @@ void ConnectWindow::OnCancel(wxCommandEvent& )
     Hide();
 }
 
-void ConnectWindow::OnQuit(GlobalEvents::GlobalEventData /*data*/)
+void ConnectWindow::OnQuit(wxCommandEvent& /*data*/)
 {
     EndModal(wxCANCEL);
 }

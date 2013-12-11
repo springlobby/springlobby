@@ -10,7 +10,7 @@
 #include "../utils/activitynotice.h"
 #include "../uiutils.h"
 
-#include "../images/springlobby.xpm"
+#include "../images/springlobby12x12.xpm"
 
 class UpdaterPanel : public wxPanel {
 
@@ -25,7 +25,7 @@ class UpdaterPanel : public wxPanel {
 
         void OnChangelog( wxCommandEvent&  )
         {
-            OpenWebBrowser( _T("http://projects.springlobby.info/embedded/springlobby/index.html") );
+            OpenWebBrowser( _T("https://github.com/springlobby/springlobby/commits/master") );
         }
 
         DECLARE_EVENT_TABLE()
@@ -69,12 +69,12 @@ END_EVENT_TABLE()
   *
   * @todo: document this function
   */
- UpdaterMainwindow::UpdaterMainwindow( const wxString& rev_string )
-    : wxFrame( (wxFrame*)0, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) ),
+ UpdaterMainwindow::UpdaterMainwindow( const wxString& rev_string ):
+	wxFrame( NULL, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) ),
+	GlobalEvent()
 //                wxMINIMIZE_BOX | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN  ),
-    m_onDownloadComplete( this, &GetGlobalEventSender( GlobalEvents::UpdateFinished) )
 {
-    SetIcon( wxIcon(springlobby_xpm) );
+    SetIcon( wxIcon(springlobby12x12_xpm) );
 
     wxBoxSizer* top_sizer = new wxBoxSizer( wxVERTICAL );
     UpdaterPanel* panel = new UpdaterPanel( this, rev_string );
@@ -85,6 +85,7 @@ END_EVENT_TABLE()
     Layout();
     Center();
     CustomMessageBoxBase::setLobbypointer( this );
+	ConnectGlobalEvent(this, GlobalEvent::OnUpdateFinished, wxObjectEventFunction(&UpdaterMainwindow::OnUpdateFinished));
 }
 
 /** @brief OnClose
@@ -101,7 +102,7 @@ void UpdaterMainwindow::OnClose(wxCloseEvent&)
     }
 }
 
-void UpdaterMainwindow::OnDownloadComplete( GlobalEvents::GlobalEventData /*data*/ )
+void UpdaterMainwindow::OnUpdateFinished( wxCommandEvent&/*data*/ )
 {
     freeStaticBox();
     Destroy();

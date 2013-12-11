@@ -18,7 +18,6 @@
 #include "aui/auimanager.h"
 #include "battlelisttab.h"
 #include "battlelistctrl.h"
-#include "battle.h"
 #include "ui.h"
 #include "chatpanel.h"
 #include "utils/debug.h"
@@ -28,8 +27,6 @@
 #include "hosting/hostbattledialog_public.h"
 #include "hosting/mainjoinbattletab.h"
 #include "server.h"
-#include "settings.h"
-#include "springunitsync.h"
 #include "mapctrl.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"
@@ -37,6 +34,7 @@
 #include "iconimagelist.h"
 #include "useractions.h"
 #include "utils/customdialogs.h"
+#include "helper/slconfig.h"
 
 const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
@@ -54,10 +52,10 @@ BEGIN_EVENT_TABLE( BattleListTab, wxPanel )
 	EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter         )
 	EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_INFO_BUTTON,   BattleListTab::OnOnInfoShow     )
 	#endif
-	EVT_SIZE( BattleListTab::OnResize )
-
-
 END_EVENT_TABLE()
+
+SLCONFIG("/BattleFilter/Active", false, "determines if battle list filter is active");
+SLCONFIG("/BattleListTab/ShowExtendedInfos", true, "determines if panels with battle infos is shown");
 
 
 BattleListTab::BattleListTab( wxWindow* parent )
@@ -76,9 +74,9 @@ BattleListTab::BattleListTab( wxWindow* parent )
 
 	m_battle_list = new BattleListCtrl( this );
 	m_battle_list->SetHighLightAction ( UserActions::ActHighlight );
-	m_battlelist_sizer->Add( m_battle_list, 1, wxALL | wxEXPAND, 5 );
+	m_battlelist_sizer->Add( m_battle_list, 1, wxEXPAND);
 
-	m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND, 5 );;
+	m_main_sizer->Add( m_battlelist_sizer, 1, wxEXPAND );
 
 	m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
 
@@ -114,8 +112,6 @@ BattleListTab::BattleListTab( wxWindow* parent )
 	m_info_sizer->Add( m_data_sizer, 1, wxEXPAND, 5 );
 
 	m_players = new NickListCtrl( this, false, 0, true, _T("battlelist_nicklist") );
-	int width = m_players->GetClientSize().GetWidth() - 60;
-	m_players->SetColumnWidth( 3, width );
 	m_info_sizer->Add( m_players, 1, wxALL | wxEXPAND, 5 );
 
 	m_main_sizer->Add( m_info_sizer, 0, wxEXPAND, 5 );
@@ -170,6 +166,8 @@ BattleListTab::BattleListTab( wxWindow* parent )
 	Layout();
 
 	SelectBattle( 0 );
+	ShowExtendedInfos(cfg().ReadBool(_T("/BattleListTab/ShowExtendedInfos")));
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleListTab::OnUnitsyncReloaded));
 }
 
 
@@ -181,7 +179,7 @@ BattleListTab::~BattleListTab()
 
 void BattleListTab::OnConnected()
 {
-	bool filter = sett().GetBattleFilterActivState();
+	bool filter = cfg().ReadBool(_T("/BattleFilter/Active"));
 	SetFilterActiv( filter );
 }
 
@@ -294,11 +292,11 @@ void BattleListTab::SetFilterActiv( bool activ )
 {
 	m_filter->SetActiv( activ );
 	m_filter_activ->SetValue( activ );
-	sett().SetBattleFilterActivState( activ );
+	cfg().Write( _T( "/BattleFilter/Active" ) , activ );
 	m_battle_list->MarkDirtySort();
 }
-void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 
+void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 {
 	if ( !ui().IsConnected() )
 	{
@@ -307,12 +305,7 @@ void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 		ui().ShowConnectWindow();
 		return;
 	}
-	if ( !ui().IsSpringCompatible() )
-	{
-		wxLogWarning( _T( "Hosting is disabled due to the incompatible version " ) );
-		customMessageBoxNoModal( SL_MAIN_ICON, _( "Hosting is disabled due to the incompatible version you're using" ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
-		return;
-	}
+
 	Battle* battle = ui().mw().GetJoinTab().GetCurrentBattle();
 	if ( battle != 0 )
 	{
@@ -354,7 +347,7 @@ void BattleListTab::OnFilterActiv( wxCommandEvent& /*unused*/ )
 		return;
 	}
 	m_filter->SetActiv( active );
-	sett().SetBattleFilterActivState( active );
+	cfg().Write( _T( "/BattleFilter/Active" ) , active );
 	SetNumDisplayed();
 }
 
@@ -391,23 +384,15 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 
 void BattleListTab::DoJoin( Battle& battle )
 {
-	if ( !ui().IsSpringCompatible() )
+
+	if ( !ui().IsSpringCompatible(battle.GetBattleOptions().engineName, battle.GetBattleOptions().engineVersion) )
 	{
         wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
-		customMessageBox( SL_MAIN_ICON, _( "Joining battles is disabled due to the incompatible spring version you're using." ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
+//		customMessageBox( SL_MAIN_ICON, _( "Joining battles is disabled due to the incompatible spring version you're using." ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 		return;
 	}
 
 	Battle* curbattle = ui().mw().GetJoinTab().GetCurrentBattle();
-
-    //handle matchmakers
-    const std::set<int> cpus = sett().KnownMatchmakerCPU();
-    if ( cpus.find(battle.GetFounder().GetCpu()) != cpus.end() )
-    {
-        const wxString msg(_( "You are about to join a matchmaking battleroom.\nThe host might move you to another battle at any time. In case of problems please contact the host or a lobby moderator.\nDo you want to continue?" ));
-        if ( !ui().Ask( _( "Matchmaker detected" ), msg ) )
-            return;
-    }
 
 	if ( curbattle != 0 && curbattle->GetID() == battle.GetID() )
 	{
@@ -434,7 +419,7 @@ void BattleListTab::DoJoin( Battle& battle )
                                _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 			wxString modhash = battle.GetHostModHash();
 			wxString modname = battle.GetHostModName();
-			ui().DownloadMod ( modhash, modname );
+			ui().Download ( _T("game"), modname, modhash);
 		}
         else
             return;
@@ -446,7 +431,7 @@ void BattleListTab::DoJoin( Battle& battle )
                                _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 			wxString maphash = battle.GetHostMapHash();
 			wxString mapname = battle.GetHostMapName();
-			ui().DownloadMap ( maphash, mapname );
+			ui().Download ( _T("map"), mapname, maphash);
 		}
         else
             return;
@@ -459,7 +444,7 @@ void BattleListTab::DoJoin( Battle& battle )
 		if ( pw.ShowModal() == wxID_OK )
 		{
 			wxString password = pw.GetValue();
-			password.Replace(_T(" "), _T(""));
+			password.Replace(_T(" "), wxEmptyString);
 			battle.Join( password );
 		}
 	}
@@ -472,7 +457,7 @@ void BattleListTab::DoJoin( Battle& battle )
 
 void BattleListTab::OnSelect( wxListEvent& event )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	if ( event.GetIndex() == -1 )
 	{
 		SelectBattle( 0 );
@@ -483,9 +468,10 @@ void BattleListTab::OnSelect( wxListEvent& event )
 }
 
 
-void BattleListTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void BattleListTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
-	if ( ! serverSelector().GetServerStatus() )
+	assert(wxThread::IsMain());
+	if ( ! serverSelector().IsServerAvailible() )
 		return;
 
 	UpdateList();
@@ -509,18 +495,10 @@ void BattleListTab::ShowExtendedInfos( bool show )
 	m_main_sizer->Show( m_buttons_sep, show, recursive  );
 	m_info_show->SetValue( show );
 	Layout();
+	cfg().Write(_T("/BattleListTab/ShowExtendedInfos"), show);
 }
 
 void BattleListTab::OnInfoShow( wxCommandEvent& /*unused*/ )
 {
 	ShowExtendedInfos( m_info_show->GetValue() );
 }
-
-void BattleListTab::OnResize( wxSizeEvent& event )
-{
-	SetSize( event.GetSize() );
-	Layout();
-	// window too small, hide additional infos
-	ShowExtendedInfos( ( GetClientSize().GetHeight() > 400 ) );
-}
-

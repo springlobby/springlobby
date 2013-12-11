@@ -105,6 +105,8 @@ class IconImageList : public wxImageList
 
     int ICON_EMPTY;
 
+	int ICON_SPRINGLOBBY;
+
   protected:
     std::map<wxString, int> m_cached_side_icons;
     // why map? because i already included and didn't want to include more stuff, it's not time-critical code anyway

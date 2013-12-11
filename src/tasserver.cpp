@@ -1,12 +1,18 @@
 /* Copyright (C) 2007-2011 The SpringLobby Team. All rights reserved. */
 
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-#ifdef _MSC_VER
-#ifndef NOMINMAX
-    #define NOMINMAX
-#endif // NOMINMAX
-#include <winsock2.h>
-#endif // _MSC_VER
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/networking/tasserver.cpp
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 
 #include <wx/string.h>
 #include <wx/regex.h>
@@ -17,6 +23,7 @@
 #include <wx/tokenzr.h>
 #include <wx/platinfo.h>
 #include <wx/stopwatch.h>
+#include <wx/timer.h>
 
 #include <stdexcept>
 #include <algorithm>
@@ -26,25 +33,24 @@
 #include "base64.h"
 #include "utils/md5.h"
 #include "tasserver.h"
-#include "springunitsync.h"
 #include "user.h"
 #include "utils/debug.h"
 #include "utils/tasutil.h"
 #include "utils/conversion.h"
 #include "utils/platform.h"
 #include "updater/updatehelper.h"
-#include "battle.h"
 #include "serverevents.h"
 #include "socket.h"
 #include "channel/channel.h"
 #include "tasservertokentable.h"
-#include "pingthread.h"
 
 // for SL_MAIN_ICON
 #include "utils/customdialogs.h"
 
 #include "settings.h"
 
+#define PING_TIME 30
+#define PING_DELAY 5 //first ping is sent after PING_DELAY
 
 const int udp_reply_timeout=10;
 
@@ -106,25 +112,6 @@ union UTASBattleStatus
     TASBattleStatus tasdata;
 };
 
-//! @brief struct used internallby by tasserver to convert offer file bitfields
-struct OfferFileData
-{
-	bool autoopen :
-		1;
-	bool closelobbyondownload :
-		1;
-	bool disconnectonrefuse :
-		1;
-};
-
-//! @brief Union used internally by the TASServer class to get battle status information.
-union UTASOfferFileData
-{
-    int data;
-    OfferFileData tasdata;
-};
-
-
 struct TASColor
 {
 unsigned int red :
@@ -158,18 +145,21 @@ IBattle::StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
+
 TASServer::TASServer(int serverEventsMode):
-m_ping_thread(0),
 m_ser_ver(0),
 m_connected(false),
 m_online(false),
 m_debug_dont_catch( false ),
 m_id_transmission( true ),
 m_redirecting( false ),
-m_buffer(_T("")),
+m_buffer(wxEmptyString),
 m_last_udp_ping(0),
+m_last_ping(time(0) - PING_TIME + PING_DELAY), //no instant ping, delay first ping for PING_DELAY seconds
 m_last_net_packet(0),
+m_last_id(0),
 m_udp_private_port(0),
+m_nat_helper_port(0),
 m_battle_id(-1),
 m_server_lanmode(false),
 m_account_id_count(0),
@@ -177,17 +167,24 @@ m_do_finalize_join_battle(false),
 m_finalize_join_battle_id(-1),
 m_token_transmission( false )
 {
-	  m_se = IServerEvents::getInstance( *this, IServerEvents::ServerEventsMode(serverEventsMode) );
-	  FillAliasMap();
-	  m_relay_host_manager_list.Clear();
+	m_se = IServerEvents::getInstance( *this, IServerEvents::ServerEventsMode(serverEventsMode) );
+	FillAliasMap();
+	m_relay_host_manager_list.Clear();
+
+	Start(100); // call Update every 100ms
 }
 
 TASServer::~TASServer()
 {
-    Disconnect();
-    delete m_se;
+	Stop();
+	Disconnect();
+	delete m_se;
+	m_se = NULL;
 }
 
+void TASServer::Notify() {
+	Update(GetInterval());
+};
 
 bool TASServer::ExecuteSayCommand( const wxString& cmd )
 {
@@ -341,13 +338,13 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
 {
 	m_server_name = servername;
     m_addr=addr;
-	m_buffer = _T("");
+	m_buffer = wxEmptyString;
 	m_sock->Connect( addr, port );
 	m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
 	m_connected = false;
     m_online = false;
     m_redirecting = false;
-    m_agreement = _T("");
+    m_agreement = wxEmptyString;
 	m_crc.ResetCRC();
 	m_last_net_packet = time( 0 );
 	wxString handle = m_sock->GetHandle();
@@ -360,19 +357,20 @@ void TASServer::Disconnect()
     {
         return;
     }
-    SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
+	m_connected = false;
+	SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
 	m_sock->Disconnect();
 }
 
 bool TASServer::IsConnected()
 {
-	return (m_sock->State() == SS_Open);
+	return (m_sock->State() == SS_Open) && (m_connected);
 }
 
 
 bool TASServer::Register( const wxString& addr, const int port, const wxString& nick, const wxString& password, wxString& reason )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 	FakeNetClass temp;
 	Socket tempsocket( temp, true, true );
     tempsocket.Connect( addr, port );
@@ -431,7 +429,7 @@ wxString TASServer::GetPasswordHash( const wxString& pass ) const
 	md5_finish(&state, digest);
     for (di = 0; di < 16; ++di)
 	    sprintf(hex_output + di * 2, "%02x", digest[di]);
-
+	delete [] cstr;
     wxString coded = wxBase64::Encode( digest, 16 );
     return coded;
 }
@@ -452,21 +450,21 @@ wxString Useragent()
 
 void TASServer::Login()
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     wxString pass = GetPasswordHash( m_pass );
     wxString protocol = TowxString( m_crc.GetCRC() );
     wxString localaddr;
 	localaddr = m_sock->GetLocalAddress();
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
-    wxFormat login_cmd( _T("%s %s %s %s %s\t%s\ta m sp") );
+    wxFormat login_cmd( _T("%s %s %s %s %s\t%s\ta m sp cl") );
     SendCmd ( _T("LOGIN"), (login_cmd % m_user % pass % GetHostCPUSpeed() % localaddr % Useragent() % protocol).str() );
 	m_id_transmission = true;
 }
 
 void TASServer::Logout()
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     Disconnect();
 }
 
@@ -491,6 +489,7 @@ void TASServer::AcceptAgreement()
 
 void TASServer::Update( int mselapsed )
 {
+	if (m_sock == NULL) return;
 
 	m_sock->OnTimer( mselapsed );
 
@@ -498,8 +497,8 @@ void TASServer::Update( int mselapsed )
     {
         if ( IsConnected() )
         {
-            m_last_udp_ping = time( 0 );
-            m_connected = true;
+		m_last_udp_ping = time( 0 );
+		m_connected = true;
         }
         return;
     }
@@ -509,12 +508,15 @@ void TASServer::Update( int mselapsed )
 
         time_t now = time( 0 );
 
-//disabled until better timing is miplemented
-//        if ( ( m_last_net_packet > 0 ) && ( ( now - m_last_net_packet ) > PING_TIMEOUT ) )
-//        {
-//					 m_se->OnServerMessage( _("Timeout assumed, disconnecting") );
-//        	 Disconnect();
-//        }
+	if ((m_last_ping + PING_TIME) < now) { //Send a PING every 30 seconds
+		m_last_ping = now;
+		Ping();
+	}
+
+	if ( ( m_last_net_packet > 0 ) && ( ( now - m_last_net_packet ) > PING_TIMEOUT ) ) { // no data received, assume timeout
+		 m_se->OnServerMessage( _("Timeout assumed, disconnecting") );
+		 Disconnect();
+	}
 
         // joining battle with nat traversal:
         // if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
@@ -550,12 +552,6 @@ void TASServer::Update( int mselapsed )
                         {
                             UdpPingTheServer(m_user);
                         }
-                    }
-                    else
-                    {
-                        // old logging for debug
-                        //if(battle->GetNatType()!=NAT_Hole_punching)wxLogMessage( _T("pinging: current battle not using NAT_Hole_punching") );
-                        //if(battle->GetInGame())wxLogMessage( _T("pinging: current battle is in game") );
                     }
                 }
             }
@@ -619,7 +615,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally, type;
     bool haspass,lanmode = false;
     wxString hash;
-    wxString nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version, topic;
+    wxString nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version, topic, engineName, engineVersion;
     //NatType ntype;
     UserStatus cstatus;
     UTASClientStatus tasstatus;
@@ -642,8 +638,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		if ( m_online ) return; // in case is the server sends WTF
         m_online = true;
         m_user = params;
-		m_ping_thread = new PingThread( *this, 10000 );
-		m_ping_thread->Init();
         m_se->OnLogin( );
     }
     else if ( cmd == _T("MOTD") )
@@ -669,7 +663,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         if ( nick == m_relay_host_bot )
         {
            RelayCmd( _T("OPENBATTLE"), m_delayed_open_command ); // relay bot is deployed, send host command
-           m_delayed_open_command = _T("");
+           m_delayed_open_command = wxEmptyString;
         }
     }
     else if ( cmd == _T("CLIENTSTATUS") )
@@ -691,11 +685,13 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         haspass = GetBoolParam( params );
         rank = GetIntParam( params );
         hash = MakeHashUnsigned( GetWordParam( params ) );
+		engineName = GetSentenceParam( params );
+		engineVersion = GetSentenceParam( params );
         map = GetSentenceParam( params );
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
-        m_se->OnBattleOpened( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
-                              haspass, rank, hash, map, title, mod );
+		m_se->OnBattleOpenedEx( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
+				haspass, rank, hash, engineName, engineVersion, map, title, mod );
         if ( nick == m_relay_host_bot )
         {
 		   GetBattle( id ).SetProxy( m_relay_host_bot );
@@ -720,20 +716,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("LOGININFOEND") )
     {
-				if ( sett().GetReportStats() )
-				{
-					wxString version = GetSpringLobbyVersion(false);
-					wxString aux = GetSpringLobbyAuxVersion();
-					aux.Replace( _T(" "), _T("") );
-					aux = _T(" ") + aux;
-					wxString os = wxPlatformInfo::Get().GetOperatingSystemIdName();
-					os.Replace( _T(" "), _T("") );
-					wxString wxversion = wxVERSION_STRING;
-					wxversion.Replace( _T(" "), _T("") );
-					wxString reportstring = _T("stats.report ") + version + _T(" ") + wxversion + _T(" ") + os + aux;
-					if ( UserExists( _T("SL_bot") ) ) SayPrivate( _T("SL_bot"), reportstring );
-				}
-				if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!lm") );
+		if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!lm") );
         m_se->OnLoginInfoComplete();
     }
     else if ( cmd == _T("REMOVEUSER") )
@@ -745,7 +728,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("BATTLECLOSED") )
     {
         id = GetIntParam( params );
-        if ( m_battle_id == id ) m_relay_host_bot = _T("");
+        if ( m_battle_id == id ) m_relay_host_bot = wxEmptyString;
         m_se->OnBattleClosed( id );
     }
     else if ( cmd == _T("LEFTBATTLE") )
@@ -761,7 +744,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("JOIN") )
     {
         channel = GetWordParam( params );
-        m_se->OnJoinChannelResult( true, channel, _T("") );
+        m_se->OnJoinChannelResult( true, channel, wxEmptyString );
     }
     else if ( cmd == _T("JOIN") )
     {
@@ -805,7 +788,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("CLIENTS") )
     {
         channel = GetWordParam( params );
-        while ( (nick = GetWordParam( params )) != _T("") )
+        while ( (nick = GetWordParam( params )) != wxEmptyString )
         {
             m_se->OnChannelJoin( channel, nick );
         }
@@ -834,7 +817,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 			if ( params.StartsWith(_T("JOINEDBATTLE")) )
 			{
 				GetWordParam( params ); // skip first word, it's the message itself
-				id = GetIntParam( params );
+				/*id =*/ GetIntParam( params );
 				wxString usernick = GetWordParam( params );
 				wxString userScriptPassword = GetWordParam( params );
 				try
@@ -861,7 +844,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
           {
             m_relay_host_bot = params;
           }
-          m_relay_host_manager = _T("");
+          m_relay_host_manager = wxEmptyString;
           return;
         }
         if ( nick == _T("RelayHostManagerList") )
@@ -925,7 +908,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("ENABLEUNITS") )
     {
         //ENABLEUNITS unitname1 unitname2
-        while ( (nick = GetWordParam( params )) !=_T( "") )
+        while ( (nick = GetWordParam( params )) !=wxEmptyString )
         {
             m_se->OnBattleEnableUnit( m_battle_id, nick );
         }
@@ -933,7 +916,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("DISABLEUNITS") )
     {
         //"DISABLEUNITS" params: "arm_advanced_radar_tower arm_advanced_sonar_station arm_advanced_torpedo_launcher arm_dragons_teeth arm_energy_storage arm_eraser arm_fark arm_fart_mine arm_fibber arm_geothermal_powerplant arm_guardian"
-        while ( (nick = GetWordParam( params )) != _T("") )
+        while ( (nick = GetWordParam( params )) != wxEmptyString )
         {
             m_se->OnBattleDisableUnit( m_battle_id, nick );
         }
@@ -971,7 +954,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("AGREEMENTEND") )
     {
         m_se->OnAcceptAgreement( m_agreement );
-        m_agreement = _T("");
+        m_agreement = wxEmptyString;
     }
     else if ( cmd == _T("OPENBATTLE") )
     {
@@ -993,7 +976,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
             wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
             ai = _T("INVALID|INVALID");
         }
-        if( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+        if( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
         {
 			if (ai.Find(_T('|')) != -1)
 			{
@@ -1107,7 +1090,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("SETSCRIPTTAGS") )
     {
         wxString command;
-        while ( (command = GetSentenceParam( params )) != _T("") )
+        while ( (command = GetSentenceParam( params )) != wxEmptyString )
         {
             wxString key = command.BeforeFirst( '=' ).Lower();
             wxString value = command.AfterFirst( '=' );
@@ -1116,6 +1099,15 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         m_se->OnBattleInfoUpdated( m_battle_id );
         // !! Command: "SETSCRIPTTAGS" params: "game/startpostype=0	game/maxunits=1000	game/limitdgun=0	game/startmetal=1000	game/gamemode=0	game/ghostedbuildings=-1	game/startenergy=1000	game/diminishingmms=0"
     }
+	else if ( cmd == _T("REMOVESCRIPTTAGS"))
+	{
+		wxString key;
+		while ( (key = GetWordParam(params)) != wxEmptyString )
+		{
+			m_se->OnUnsetBattleInfo( m_battle_id, key);
+		}
+		m_se->OnBattleInfoUpdated(m_battle_id);
+	}
     else if ( cmd == _T("SCRIPTSTART") )
     {
         m_se->OnScriptStart( m_battle_id );
@@ -1133,7 +1125,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("FORCEQUITBATTLE"))
     {
-        m_relay_host_bot = _T("");
+        m_relay_host_bot = wxEmptyString;
         m_se->OnKickedFromBattle();
     }
     else if ( cmd == _T("BROADCAST"))
@@ -1169,17 +1161,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("MUTELISTEND") )
     {
         m_se->OnMutelistEnd( m_current_chan_name_mutelist );
-        m_current_chan_name_mutelist = _T("");
-    }
-    // OFFERFILE options {filename} {url} {description}
-    else if ( cmd == _T("OFFERFILE") )
-    {
-				UTASOfferFileData parsingdata;
-				parsingdata.data = GetIntParam( params );
-				wxString FileName = GetSentenceParam( params );
-				wxString url = GetSentenceParam( params );
-				wxString description = GetSentenceParam( params );
-				m_se->OnFileDownload( parsingdata.tasdata.autoopen, parsingdata.tasdata.closelobbyondownload, parsingdata.tasdata.disconnectonrefuse, FileName, url, description );
+        m_current_chan_name_mutelist = wxEmptyString;
     }
     else if ( cmd == _T("FORCEJOINBATTLE") )
     {
@@ -1215,8 +1197,8 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 		wxString cmd, msg;
 		if ( m_id_transmission )
 		{
-			 GetLastID()++;
-			 msg = msg + _T("#") + TowxString( GetLastID() ) + _T(" ");
+			m_last_id++;
+			msg = msg + _T("#") + TowxString( m_last_id ) + _T(" ");
 		}
 		if ( m_token_transmission )
 		{
@@ -1249,31 +1231,22 @@ void TASServer::Ping()
 {
 	SendCmd( _T("PING") );
 	TASPingListItem pli;
-	pli.id = GetLastID();
+	pli.id = m_last_id;
 	pli.t = wxGetLocalTimeMillis();
-	GetPingList().push_back ( pli );
+	m_pinglist.push_back ( pli );
 }
 
 void TASServer::HandlePong( int replyid )
 {
-	PingList& pinglistcopy = GetPingList();
-	PingList::iterator it;
+	if (m_pinglist.empty()) //safety, shouldn't happen
+		return;
 
-    bool found = false;
-	for ( it = pinglistcopy.begin(); it != pinglistcopy.end(); ++it )
-    {
-        if (it->id == replyid )
-        {
-            found = true;
-            break;
-        }
-    }
-
-    if ( found )
-    {
-        m_se->OnPong( (wxGetLocalTimeMillis() - it->t) );
-		pinglistcopy.erase( it );
-    }
+	// server connection is tcp, we assume packets are received in order
+	TASPingListItem pli = m_pinglist.back();
+	m_pinglist.pop_back();
+	if (pli.id == replyid ) {
+		m_se->OnPong( (wxGetLocalTimeMillis() - pli.t) );
+	}
 }
 
 
@@ -1302,7 +1275,7 @@ void TASServer::PartChannel( const wxString& channel )
 void TASServer::DoActionChannel( const wxString& channel, const wxString& msg )
 {
     //SAYEX channame {message}
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     SendCmd( _T("SAYEX"), channel + _T(" ") + msg );
 }
@@ -1311,7 +1284,7 @@ void TASServer::DoActionChannel( const wxString& channel, const wxString& msg )
 void TASServer::SayChannel( const wxString& channel, const wxString& msg )
 {
     //SAY channame {message}
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     SendCmd( _T("SAY"), channel + _T(" ") + msg );
 }
@@ -1320,7 +1293,7 @@ void TASServer::SayChannel( const wxString& channel, const wxString& msg )
 void TASServer::SayPrivate( const wxString& nick, const wxString& msg )
 {
     //SAYPRIVATE username {message}
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     SendCmd( _T("SAYPRIVATE"), nick + _T(" ") + msg );
 }
@@ -1328,7 +1301,7 @@ void TASServer::SayPrivate( const wxString& nick, const wxString& msg )
 
 void TASServer::DoActionPrivate( const wxString& nick, const wxString& msg )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     SendCmd( _T("SAYPRIVATEEX"), nick + _T(" ") + msg );
 }
@@ -1336,7 +1309,7 @@ void TASServer::DoActionPrivate( const wxString& nick, const wxString& msg )
 
 void TASServer::SayBattle( int /*unused*/, const wxString& msg )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     SendCmd( _T("SAYBATTLE"), msg );
 }
@@ -1344,7 +1317,7 @@ void TASServer::SayBattle( int /*unused*/, const wxString& msg )
 
 void TASServer::DoActionBattle( int /*unused*/, const wxString& msg )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     SendCmd( _T("SAYBATTLEEX"), msg );
 }
@@ -1352,7 +1325,7 @@ void TASServer::DoActionBattle( int /*unused*/, const wxString& msg )
 
 void TASServer::Ring( const wxString& nick )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 		try
 		{
 				ASSERT_EXCEPTION( m_battle_id != -1, _T("invalid m_battle_id value") );
@@ -1396,7 +1369,7 @@ void TASServer::ModeratorSetChannelKey( const wxString& channel, const wxString&
 
 void TASServer::ModeratorMute( const wxString& channel, const wxString& nick, int duration, bool byip )
 {
-    SendCmd( _T("MUTE"), channel + _T(" ") + nick + _T(" ") + wxString::Format( _T("%d"), duration) + (byip?_T(" ip"):_T("") )  );
+    SendCmd( _T("MUTE"), channel + _T(" ") + nick + _T(" ") + wxString::Format( _T("%d"), duration) + (byip?_T(" ip"):wxEmptyString )  );
 }
 
 
@@ -1471,7 +1444,7 @@ void TASServer::AdminSetBotMode( const wxString& nick, bool isbot )
 
 void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     // to see ip addresses of users as they join (in the log), pretend you're hosting with NAT.
     int nat_type=bo.nattype;
@@ -1487,11 +1460,15 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
     cmd += MakeHashSigned( bo.modhash );
     cmd += wxString::Format( _T(" %d "), bo.rankneeded );
     cmd += MakeHashSigned( bo.maphash ) + _T(" ");
+	if (!bo.userelayhost) { //FIXME: relay host hasn't multiversion support yet, see https://github.com/springlobby/springlobby/issues/98
+		cmd += bo.engineName + _T("\t");
+		cmd += bo.engineVersion + _T("\t");
+	}
     cmd += bo.mapname + _T("\t");
     cmd += bo.description + _T("\t");
     cmd += bo.modname;
 
-    m_delayed_open_command = _T("");
+    m_delayed_open_command = wxEmptyString;
 	if ( !bo.userelayhost )
     {
        SendCmd( _T("OPENBATTLE"), cmd );
@@ -1528,7 +1505,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 void TASServer::JoinBattle( const int& battleid, const wxString& password )
 {
     //JOINBATTLE BATTLE_ID [parameter]
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     m_finalize_join_battle_pw=password;
     m_finalize_join_battle_id=battleid;
@@ -1579,9 +1556,20 @@ void TASServer::FinalizeJoinBattle()
 {
     if (m_do_finalize_join_battle)
     {
-		srand ( time(NULL) );
-		wxString randomScriptPassword = wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF);
-		SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d %s %s"), m_finalize_join_battle_id, m_finalize_join_battle_pw.c_str(), randomScriptPassword.c_str()  ) );
+		// save scriptPassword so user can rejoin if SL crashes or
+		// loosed connection
+		wxString scriptPassword;
+		if (sett().GetLastBattleId() == m_finalize_join_battle_id) {
+			scriptPassword = sett().GetLastScriptPassword();
+		} else {
+			srand ( time(NULL) );
+			scriptPassword = wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF);
+			// save assword and write settings file
+			sett().SetLastBattleId(m_finalize_join_battle_id);
+			sett().SetLastScriptPassword(scriptPassword);
+			sett().SaveSettings();
+		}
+		SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d %s %s"), m_finalize_join_battle_id, m_finalize_join_battle_pw.c_str(), scriptPassword.c_str()  ) );
         m_do_finalize_join_battle=false;
     }
 }
@@ -1590,15 +1578,15 @@ void TASServer::FinalizeJoinBattle()
 void TASServer::LeaveBattle( const int& /*unused*/ )
 {
     //LEAVEBATTLE
-    wxLogDebugFunc( _T("") );
-    m_relay_host_bot = _T("");
+    wxLogDebugFunc( wxEmptyString );
+    m_relay_host_bot = wxEmptyString;
     SendCmd( _T("LEAVEBATTLE") );
 }
 
 
 void TASServer::SendHostInfo( HostInfo update )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     try
     {
@@ -1626,8 +1614,8 @@ void TASServer::SendHostInfo( HostInfo update )
     {
         // UPDATEBATTLEINFO SpectatorCount locked maphash {mapname}
         wxString cmd = wxString::Format( _T("%d %d "), battle.GetSpectators(), battle.IsLocked() );
-        cmd += MakeHashSigned( battle.LoadMap().hash ) + _T(" ");
-        cmd += battle.LoadMap().name;
+        cmd += MakeHashSigned(TowxString(battle.LoadMap().hash)) + _T(" ");
+        cmd += TowxString(battle.LoadMap().name);
 
         if ( !battle.IsProxy() ) SendCmd( _T("UPDATEBATTLEINFO"), cmd );
         else RelayCmd( _T("UPDATEBATTLEINFO"), cmd );
@@ -1635,40 +1623,36 @@ void TASServer::SendHostInfo( HostInfo update )
     if ( ( update & IBattle::HI_Send_All_opts ) > 0 )
     {
         wxString cmd;
-
-        OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-		for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+        for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::MapOption ))
         {
-			wxString newcmd = _T("game/mapoptions/") + it->first + _T("=") + it->second.second + _T("\t");
+            const wxString newcmd = TowxString("game/mapoptions/" + it.first + "=" + it.second.second + "\t");
 			if ( cmd.size() + newcmd.size() > 900 ) // should be 1024 add margin for relayhost name and command itself
 			{
 				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
 				else RelayCmd( _T("SETSCRIPTTAGS"), cmd );
-				cmd = _T("");
+				cmd = wxEmptyString;
 			}
 			cmd << newcmd;
         }
-        OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-		for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+        for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::ModOption ))
         {
-			wxString newcmd = _T("game/modoptions/") + it->first + _T("=") + it->second.second + _T("\t");
+            const wxString newcmd = TowxString("game/modoptions/" + it.first + "=" + it.second.second + "\t");
 			if ( cmd.size() + newcmd.size() > 900 )// should be 1024 add margin for relayhost name and command itself
 			{
 				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
 				else RelayCmd( _T("SETSCRIPTTAGS"), cmd );
-				cmd = _T("");
+				cmd = wxEmptyString;
 			}
 			cmd << newcmd;
         }
-        OptionsWrapper::wxStringTripleVec optlistEng = battle.CustomBattleOptions().getOptions( OptionsWrapper::EngineOption );
-		for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistEng.begin(); it != optlistEng.end(); ++it)
+        for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::EngineOption ))
         {
-			wxString newcmd = _T("game/") + it->first + _T("=") + it->second.second + _T("\t");
+            const wxString newcmd = TowxString("game/" + it.first + "=" + it.second.second + "\t");
 			if ( cmd.size() + newcmd.size() > 900 )// should be 1024 add margin for relayhost name and command itself
 			{
 				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
 				else RelayCmd( _T("SETSCRIPTTAGS"), cmd );
-				cmd = _T("");
+				cmd = wxEmptyString;
 			}
 			cmd << newcmd;
         }
@@ -1744,7 +1728,7 @@ void TASServer::SendHostInfo( HostInfo update )
 
 void TASServer::SendHostInfo( const wxString& Tag )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     try
     {
@@ -1771,18 +1755,21 @@ void TASServer::SendHostInfo( const wxString& Tag )
 
     long type;
     Tag.BeforeFirst( '_' ).ToLong( &type );
-    wxString key = Tag.AfterFirst( '_' );
-    if ( type == OptionsWrapper::MapOption )
+    const wxString key = Tag.AfterFirst( '_' );
+    if ( type == LSL::OptionsWrapper::MapOption )
     {
-        cmd << _T("game/mapoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::MapOption );
+        cmd << _T("game/mapoptions/") << key << _T("=")
+            << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::OptionsWrapper::MapOption ));
     }
-    else if ( type == OptionsWrapper::ModOption )
+    else if ( type == LSL::OptionsWrapper::ModOption )
     {
-        cmd << _T("game/modoptions/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::ModOption );
+        cmd << _T("game/modoptions/") << key << _T("=")
+            << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::OptionsWrapper::ModOption ));
     }
-    else if ( type == OptionsWrapper::EngineOption )
+    else if ( type == LSL::OptionsWrapper::EngineOption )
     {
-        cmd << _T("game/") << key << _T("=") << battle.CustomBattleOptions().getSingleValue( key, OptionsWrapper::EngineOption );
+        cmd << _T("game/") << key << _T("=")
+            << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::OptionsWrapper::EngineOption ));
     }
     if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
     else RelayCmd( _T("SETSCRIPTTAGS"), cmd );
@@ -1791,29 +1778,28 @@ void TASServer::SendHostInfo( const wxString& Tag )
 
 void TASServer::SendUserPosition( const User& user )
 {
-	wxLogDebugFunc( _T("") );
+	wxLogDebugFunc( wxEmptyString );
 
 	try
 	{
-			ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
-			ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
+        ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
+        ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
 
-			Battle& battle = GetBattle( m_battle_id );
-			ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
+        Battle& battle = GetBattle( m_battle_id );
+        ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
 
-			UserBattleStatus status = user.BattleStatus();
-			wxString msgx = _T("game/Team") + TowxString( status.team ) + _T("/StartPosX=") + TowxString( status.pos.x );
-			wxString msgy = _T("game/Team") + TowxString( status.team ) + _T("/StartPosY=") + TowxString( status.pos.y );
-			wxString netmessage = msgx + _T("\t") + msgy;
-			if ( battle.IsProxy() )
-			{
-				RelayCmd( _T("SETSCRIPTTAGS"), netmessage );
-			}
-			else
-			{
-				SendCmd( _T("SETSCRIPTTAGS"), netmessage );
-			}
-
+        UserBattleStatus status = user.BattleStatus();
+        wxString msgx = _T("game/Team") + TowxString( status.team ) + _T("/StartPosX=") + TowxString( status.pos.x );
+        wxString msgy = _T("game/Team") + TowxString( status.team ) + _T("/StartPosY=") + TowxString( status.pos.y );
+        wxString netmessage = msgx + _T("\t") + msgy;
+        if ( battle.IsProxy() )
+        {
+            RelayCmd( _T("SETSCRIPTTAGS"), netmessage );
+        }
+        else
+        {
+            SendCmd( _T("SETSCRIPTTAGS"), netmessage );
+        }
 	}
 	catch (...)
 	{
@@ -1851,7 +1837,7 @@ Battle* TASServer::GetCurrentBattle()
 
 void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     UTASBattleStatus tasbs;
     tasbs.tasdata = ConvTasbattlestatus( bs );
@@ -1867,7 +1853,7 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 
 void TASServer::SendMyUserStatus()
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
 
     UserStatus& us = GetMe().Status();
 
@@ -1884,7 +1870,7 @@ void TASServer::SendMyUserStatus()
 
 void TASServer::StartHostedBattle()
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     try
     {
         ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
@@ -1910,7 +1896,7 @@ void TASServer::StartHostedBattle()
 
 void TASServer::ForceSide( int battleid, User& user, int side )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     try
     {
         ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
@@ -1941,7 +1927,7 @@ void TASServer::ForceSide( int battleid, User& user, int side )
 
 void TASServer::ForceTeam( int battleid, User& user, int team )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     try
     {
         ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
@@ -1979,7 +1965,7 @@ void TASServer::ForceTeam( int battleid, User& user, int team )
 
 void TASServer::ForceAlly( int battleid, User& user, int ally )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     try
     {
         ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
@@ -2019,7 +2005,7 @@ void TASServer::ForceAlly( int battleid, User& user, int ally )
 
 void TASServer::ForceColour( int battleid, User& user, const wxColour& col )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     try
     {
         ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
@@ -2062,7 +2048,7 @@ void TASServer::ForceColour( int battleid, User& user, const wxColour& col )
 
 void TASServer::ForceSpectator( int battleid, User& user, bool spectator )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     try
     {
         ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
@@ -2101,7 +2087,7 @@ void TASServer::ForceSpectator( int battleid, User& user, bool spectator )
 
 void TASServer::BattleKickPlayer( int battleid, User& user )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     try
     {
         ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
@@ -2141,7 +2127,7 @@ void TASServer::BattleKickPlayer( int battleid, User& user )
 
 void TASServer::SetHandicap( int battleid, User& user, int handicap)
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     try
     {
         ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
@@ -2174,7 +2160,7 @@ void TASServer::SetHandicap( int battleid, User& user, int handicap)
 
 void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& status )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     try
     {
         ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
@@ -2197,14 +2183,14 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
     wxString msg;
     wxString ailib;
     ailib += status.aishortname;
-    if ( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
+    if ( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
     SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
 }
 
 
 void TASServer::RemoveBot( int battleid, User& bot )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     try
     {
         ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
@@ -2233,7 +2219,7 @@ void TASServer::RemoveBot( int battleid, User& bot )
 
 void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     try
     {
         ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
@@ -2291,16 +2277,16 @@ void TASServer::SendScriptToClients( const wxString& script )
 
 void TASServer::OnConnected( Socket* /*unused*/ )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     //TASServer* serv = (TASServer*)sock->GetUserdata();
     m_last_udp_ping = time( 0 );
     m_connected = true;
     m_online = false;
 	m_token_transmission = false;
 	m_relay_host_manager_list.Clear();
-	m_last_denied = _T("");
-	GetLastID() = 0;
-	GetPingList().clear();
+	m_last_denied = wxEmptyString;
+	m_last_id = 0;
+	m_pinglist.clear();
 }
 
 
@@ -2308,24 +2294,20 @@ void TASServer::OnDisconnected( Socket* /*unused*/ )
 {
     wxLogDebugFunc( TowxString(m_connected) );
     bool connectionwaspresent = m_online || !m_last_denied.IsEmpty() || m_redirecting;
-    m_last_denied = _T("");
+    m_last_denied = wxEmptyString;
     m_connected = false;
     m_online = false;
     m_redirecting = false;
 	m_token_transmission = false;
-	m_buffer = _T("");
+	m_buffer = wxEmptyString;
 	m_relay_host_manager_list.Clear();
-	GetLastID() = 0;
-	GetPingList().clear();
-	if ( m_ping_thread )
-	{
-		m_ping_thread->Wait();
-		delete m_ping_thread;
-		m_ping_thread = 0;
-	}
+	m_last_id = 0;
+	m_pinglist.clear();
 	m_users.Nullify();
-    m_se->OnDisconnected( connectionwaspresent );
-    Server::OnDisconnected();
+	if (m_se != NULL) {
+		m_se->OnDisconnected( connectionwaspresent );
+		Server::OnDisconnected();
+	}
 }
 
 
@@ -2492,11 +2474,6 @@ int TASServer::TestOpenPort( unsigned int port ) const
         return porttest_socketError;
     }
     return porttest_pass;
-}
-
-void TASServer::RequestSpringUpdate()
-{
-	SendCmd( _T("REQUESTUPDATEFILE"), _T("Spring ") + usync().GetSpringVersion() );
 }
 
 wxArrayString TASServer::GetRelayHostList()

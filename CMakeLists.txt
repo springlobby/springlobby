@@ -33,11 +33,13 @@ FIND_PACKAGE( PkgConfig )
 
 #if nothing went wrong we have the file and can define HAVE_CONFIG_H
 IF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h)
-    ADD_DEFINITIONS( -DHAVE_CONFIG_H )
-    INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
+	ADD_DEFINITIONS( -DHAVE_CONFIG_H )
+	INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
 ELSEIF ( EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h  )
-    ADD_DEFINITIONS( -DHAVE_CONFIG_H )
-    INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR})
+	ADD_DEFINITIONS( -DHAVE_CONFIG_H )
+	INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR})
+ELSE()
+	message(WARNING "springlobby_config.h not found!")
 ENDIF ()
 
 
@@ -89,6 +91,7 @@ Add_Subdirectory(doc)
 if( OPTION_TRANSLATION_SUPPORT )
         add_subdirectory(po)
 endif( OPTION_TRANSLATION_SUPPORT )
+ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 Add_Subdirectory(src)
 
 #cppcheck stuff
@@ -114,17 +117,17 @@ IF( EXISTS ${CPPCHECK_BINARY} )
 ENDIF( EXISTS ${CPPCHECK_BINARY} )
 
 IF( WIN32 )
-	LIST( APPEND SLSharedWithSettings stacktrace.c )
+	LIST( APPEND SLSharedWithSettings ${CMAKE_CURRENT_SOURCE_DIR}/src/stacktrace.c )
 ELSE( WIN32 )
-	LIST( APPEND SLSharedWithSettings stacktrace.cpp )
+	LIST( APPEND SLSharedWithSettings ${CMAKE_CURRENT_SOURCE_DIR}/src/stacktrace.cpp )
 ENDIF( WIN32 )
 
 INCLUDE(cmake/package_config.cmake)
 IF(WIN32)
-    install(FILES AUTHORS COPYING NEWS README THANKS  DESTINATION .)
+    install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION .)
 	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
 ELSE (WIN32)
-    install(FILES AUTHORS COPYING NEWS README THANKS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
+    install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
     install(FILES src/images/springlobby.svg DESTINATION
 	    ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
     install(FILES src/springlobby.desktop DESTINATION
@@ -147,10 +150,10 @@ add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
                         rm -rf ${PACKAGE_NAME}-${PACKAGE_VERSION} &&
                         tar -xzf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
                         cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
-                        cmake "-DCMAKE_CXX_FLAGS:STRING=-O0". && ${CMAKE_MAKE_PROGRAM}
+                        cmake "-DCMAKE_CXX_FLAGS:STRING=-O0" . && ${CMAKE_MAKE_PROGRAM}
 					)
 add_custom_target( version
-				${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR}/cmake/config.h ${springlobby_BINARY_DIR}/springlobby_config.h
+				${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR}/cmake/config.h ${springlobby_BINARY_DIR}/springlobby_config.h ${springlobby_BINARY_DIR}/VERSION
 				)
 add_dependencies( distcheck dist )
 #add_dependencies( versiontest version )

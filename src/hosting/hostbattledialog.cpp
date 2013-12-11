@@ -28,14 +28,13 @@
 
 
 #include "settings.h"
-#include "springunitsync.h"
 #include "user.h"
 #include "uiutils.h"
 #include "utils/controls.h"
 #include "utils/customdialogs.h"
 #include "ui.h"
 #include "server.h"
-
+#include <lslunitsync/c_api.h>
 
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"
@@ -48,7 +47,6 @@
 #include "images/arrow_refresh.png.h"
 
 BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
-
 	EVT_BUTTON              ( HOST_CANCEL, 		HostBattleDialog::OnCancel    		)
 	EVT_BUTTON              ( HOST_OK,     		HostBattleDialog::OnOk        		)
 	EVT_BUTTON              ( BTN_REFRESH, 		HostBattleDialog::OnReloadMods		)
@@ -56,7 +54,7 @@ BEGIN_EVENT_TABLE( HostBattleDialog, wxDialog )
 	EVT_MENU				( wxID_ANY, 		HostBattleDialog::OnRelayChoice		)
 	EVT_RADIOBOX            ( CHOSE_NAT,   		HostBattleDialog::OnNatChange 		)
 	EVT_CHECKBOX            ( CHK_USE_RELAY,    HostBattleDialog::OnUseRelay        )
-
+	EVT_CHOICE				( CHOOSE_ENGINE,	HostBattleDialog::OnEngineSelect	)
 END_EVENT_TABLE()
 
 HostBattleDialog::HostBattleDialog( wxWindow* parent )
@@ -93,6 +91,17 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
     topsizer->AddStretchSpacer();
 	topsizer->Add( m_desc_check, 0, wxLEFT, 5 );
 //	topsizer->Add( desc_sizer , 0, wxEXPAND | wxALL, 0 );
+
+	m_mod_lbl = new wxStaticText( m_panel, wxID_ANY, _( "Engine" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_mod_lbl->Wrap( -1 );
+	topsizer->Add( m_mod_lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
+
+	wxArrayString m_engine_picChoices;
+	wxBoxSizer* mod_choice_button_sizer2 = new wxBoxSizer( wxHORIZONTAL );
+	m_engine_pic = new wxChoice( m_panel, CHOOSE_ENGINE, wxDefaultPosition, wxDefaultSize, m_engine_picChoices, 0 );
+	m_engine_pic->SetToolTip( TE( _( "Select the engine version to play." ) ) );
+	mod_choice_button_sizer2->Add( m_engine_pic, 0, wxALL , 5 );
+	topsizer->Add( mod_choice_button_sizer2, 0,  wxEXPAND|wxALL ,1 );
 
 	m_mod_lbl = new wxStaticText( m_panel, wxID_ANY, _( "Game" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_mod_lbl->Wrap( -1 );
@@ -134,7 +143,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 
 	m_relayed_host_check = new wxCheckBox( m_panel, CHK_USE_RELAY, _( "Use relayhost" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_check->SetToolTip( TE( _( "host and control game on remote server, helps if you have trouble hosting" ) ) );
-	m_relayed_host_pick = new wxButton( m_panel, PICK_RELAYHOST, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
+	m_relayed_host_pick = new wxButton( m_panel, PICK_RELAYHOST, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_relayed_host_pick->SetLabel( m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost );
 
 	m_relayhost_list = new wxMenu();
@@ -148,7 +157,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_relayhost_array_list = serverSelector().GetServer().GetRelayHostList();
 	for ( unsigned int i = 0; i < m_relayhost_array_list.GetCount(); i++ )
 	{
-		wxMenuItem* newitem = new wxMenuItem( m_relayhost_list, MANUAL_PICK_HOST + 1 + i, m_relayhost_array_list[i], _T("") , wxITEM_RADIO );
+		wxMenuItem* newitem = new wxMenuItem( m_relayhost_list, MANUAL_PICK_HOST + 1 + i, m_relayhost_array_list[i], wxEmptyString , wxITEM_RADIO );
 		m_relayhost_list->Append( newitem );
 		newitem->Check( m_last_relayhost == m_relayhost_array_list[i] );
 	}
@@ -278,7 +287,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	this->Layout();
 	m_host_btn->SetFocus();
 
-	ReloadModList();
+	ReloadEngineList();
 }
 
 
@@ -286,32 +295,63 @@ void HostBattleDialog::ReloadModList()
 {
 	m_mod_pic->Clear();
 
-	wxArrayString modlist = usync().GetModList();
+	wxArrayString modlist = LSL::Util::vectorToArrayString(LSL::usync().GetModList());
+	wxString last = sett().GetLastHostMod();
 
 	size_t nummods = modlist.Count();
-	for ( size_t i = 0; i < nummods; i++ ) m_mod_pic->Insert( modlist[i], i );
+	for ( size_t i = 0; i < nummods; i++ ) {
+		m_mod_pic->Insert( modlist[i], i );
+		if (last == modlist[i])
+			m_mod_pic->SetSelection(i);
+	}
 
-	wxString last = sett().GetLastHostMod();
-	if ( last != wxEmptyString )
-        m_mod_pic->SetSelection( m_mod_pic->FindString( last ) );
+	if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
+		m_mod_pic->SetSelection( 0 );
+	}
 
-	if ( m_mod_pic->GetSelection() == wxNOT_FOUND )
-        m_mod_pic->SetSelection( 0 );
+}
+
+void HostBattleDialog::ReloadEngineList()
+{
+	m_engine_pic->Clear();
+	std::map<wxString, LSL::SpringBundle> versions = sett().GetSpringVersionList();
+	const wxString last = sett().GetCurrentUsedSpringIndex();
+	int i=0;
+	for(auto pair: versions) {
+		m_engine_pic->Insert(pair.first, i);
+		if (last == pair.first) {
+			m_engine_pic->SetSelection(i);
+		}
+		i++;
+	}
+
+	if ( m_engine_pic->GetSelection() == wxNOT_FOUND ) {
+		m_engine_pic->SetSelection( 0 );
+	}
+	//unitsync change needs a refresh of games as well
+	ReloadModList();
 }
 
 
 void HostBattleDialog::OnOk( wxCommandEvent& /*unused*/ )
 {
 	if ( m_mod_pic->GetSelection() == wxNOT_FOUND ) {
-		wxLogWarning( _T( "no mod selected" ) );
+		wxLogWarning( _T( "no game selected" ) );
 		customMessageBox( SL_MAIN_ICON, _( "You have to select a game first." ), _( "No game selected." ), wxOK );
 		return;
 	}
+
+	if (m_engine_pic->GetSelection() == wxNOT_FOUND) {
+		wxLogWarning( _T( "no engine selected" ) );
+		customMessageBox( SL_MAIN_ICON, _( "You have to select a engine version first." ), _( "No engine selected." ), wxOK );
+		return;
+	}
+
 	if ( m_desc_text->GetValue().IsEmpty() ) m_desc_text->SetValue( _T( "(none)" ) );
 	sett().SetLastHostDescription( m_desc_text->GetValue() );
 	sett().SetLastHostMod( m_mod_pic->GetString( m_mod_pic->GetSelection() ) );
 	wxString password = m_pwd_text->GetValue();
-	password.Replace(_T(" "), _T(""));
+	password.Replace(_T(" "), wxEmptyString);
 	sett().SetLastHostPassword( password );
 	long tmp = DEFSETT_SPRING_PORT;
 	m_port_text->GetValue().ToLong( &tmp );
@@ -358,20 +398,19 @@ void HostBattleDialog::OnNatChange( wxCommandEvent& /*unused*/  )
 
 void HostBattleDialog::OnReloadMods( wxCommandEvent&  )
 {
-    usync().ReloadUnitSyncLib();
-    ReloadModList();
+	ReloadModList();
 }
 
 void HostBattleDialog::OnPickRelayHost( wxCommandEvent&  )
 {
-		PopupMenu( m_relayhost_list );
+	PopupMenu( m_relayhost_list );
 }
 
 void HostBattleDialog::OnRelayChoice( wxCommandEvent& event )
 {
 		int index = event.GetId();
 		if ( index == AUTO_PICK_HOST )
-            m_last_relayhost = _T("");
+            m_last_relayhost = wxEmptyString;
 		else if ( index == MANUAL_PICK_HOST ) {
 			ui().AskText( _("Manually chose a manager"), _("Please type the nick of the manager you want to use ( case sensitive )"), m_last_relayhost );
 		}
@@ -389,6 +428,14 @@ void HostBattleDialog::OnUseRelay( wxCommandEvent&  )
 	m_nat_radios->Enable( !m_relayed_host_check->IsChecked() );
     Layout();
 }
+
+void HostBattleDialog::OnEngineSelect ( wxCommandEvent& event )
+{
+	sett().SetUsedSpringIndex(m_engine_pic->GetString(m_engine_pic->GetSelection()));
+	LSL::usync().ReloadUnitSyncLib();
+	ReloadEngineList();
+}
+
 
 namespace SL{
 void RunHostBattleDialog( wxWindow* parent )
@@ -446,12 +493,12 @@ void RunHostBattleDialog( wxWindow* parent )
 		}
 
 		// Get selected mod from unitsync.
-		UnitSyncMod mod;
+		LSL::UnitsyncMod mod;
 		try
 		{
-			mod = usync().GetMod( sett().GetLastHostMod() );
-			bo.modhash = mod.hash;
-			bo.modname = mod.name;
+            mod = LSL::usync().GetMod(STD_STRING(sett().GetLastHostMod()));
+            bo.modhash = TowxString(mod.hash);
+            bo.modname = TowxString(mod.name);
 		}
 		catch ( ... )
 		{
@@ -460,12 +507,12 @@ void RunHostBattleDialog( wxWindow* parent )
 			return;
 		}
 
-		UnitSyncMap map;
-		wxString mname = sett().GetLastHostMap();
+		LSL::UnitsyncMap map;
+        const auto mname = STD_STRING(sett().GetLastHostMap());
 		try {
-			if ( usync().MapExists( mname ) )
-				map = usync().GetMap( mname );
-			else if ( usync().GetNumMaps() <= 0 )
+			if ( LSL::usync().MapExists( mname ) )
+				map = LSL::usync().GetMap( mname );
+			else if ( LSL::usync().GetNumMaps() <= 0 )
 			{
 				wxLogWarning( _T( "no maps found" ) );
 				customMessageBoxNoModal( SL_MAIN_ICON, _( "Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly." ), _( "No maps found" ), wxOK );
@@ -473,7 +520,7 @@ void RunHostBattleDialog( wxWindow* parent )
 			}
 			else
 			{
-				map = usync().GetMap( 0 );
+				map = LSL::usync().GetMap( 0 );
 			}
 		}
 		catch ( ... )
@@ -482,8 +529,8 @@ void RunHostBattleDialog( wxWindow* parent )
 			customMessageBoxNoModal( SL_MAIN_ICON, _( "Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly." ), _( "No maps found" ), wxOK );
 			return;
 		}
-		bo.maphash = map.hash;
-		bo.mapname = map.name;
+        bo.maphash = TowxString(map.hash);
+        bo.mapname = TowxString(map.name);
 
 		bo.rankneeded = sett().GetLastRankLimit();
 
@@ -491,6 +538,9 @@ void RunHostBattleDialog( wxWindow* parent )
 		bo.userelayhost = sett().GetLastHostRelayedMode();
 		if ( bo.userelayhost ) bo.nattype = NAT_None;
 		bo.relayhost = sett().GetLastRelayedHost();
+		bo.engineName = _T("spring");
+		bo.engineVersion = TowxString(LSL::usync().GetSpringVersion());
+
 		serverSelector().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
 	}
 }

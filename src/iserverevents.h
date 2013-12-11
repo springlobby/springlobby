@@ -1,6 +1,20 @@
 #ifndef ISERVEREVENTS_H
 #define ISERVEREVENTS_H
 
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/networking/iserver.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 //almost only needed for NAtType enum def
 #include "battle.h"
 
@@ -19,17 +33,8 @@ typedef int Sockerror;
 
 typedef int Protocolerror;
 
-#ifdef SL_QT_MODE
-#include <QObject>
-class IServerEvents : public QObject
-{
-	Q_OBJECT
-signals:
-	void saidBattle( int battleid, const QString& nick, const QString& msg );
-#else
 class IServerEvents
 {
-#endif
   public:
 	IServerEvents( ) {}
 	virtual ~IServerEvents() {}
@@ -57,15 +62,16 @@ class IServerEvents
 	virtual void OnUserStatus( const wxString& nick, UserStatus status ) = 0;
 	virtual void OnUserQuit( const wxString& nick ) = 0;
 
-	virtual void OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
+	virtual void OnBattleOpenedEx( int id, BattleType type, NatType nat, const wxString& nick,
 						 const wxString& host, int port, int maxplayers,
-						 bool haspass, int rank, const wxString& maphash, const wxString& map,
+						 bool haspass, int rank, const wxString& maphash, const wxString& engineVersion, const wxString& engineName, const wxString& map,
 						 const wxString& title, const wxString& mod ) = 0;
 
 	virtual void OnUserJoinedBattle( int battleid, const wxString& nick, const wxString& userScriptPassword ) = 0;
 	virtual void OnUserLeftBattle( int battleid, const wxString& nick ) = 0;
 	virtual void OnBattleInfoUpdated( int battleid, int spectators, bool locked, const wxString& maphash, const wxString& map ) = 0;
 	virtual void OnSetBattleInfo( int battleid, const wxString& param, const wxString& value ) = 0;
+	virtual void OnUnsetBattleInfo( int battleid, const wxString& param) = 0;
 	virtual void OnBattleInfoUpdated( int battleid ) = 0;
 	virtual void OnBattleClosed( int battleid ) = 0;
 
@@ -134,7 +140,6 @@ class IServerEvents
 	virtual void OnScriptLine( int battleid, const wxString& line ) = 0;
 	virtual void OnScriptEnd( int battleid ) = 0;
 
-	virtual void OnFileDownload( bool autolaunch, bool autoclose, bool disconnectonrefuse, const wxString& FileName, const wxString& url, const wxString& description ) = 0;
 	virtual void OnSpringDownloadEvent( wxCommandEvent& event ) = 0;
     virtual void OnForceJoinBattle( int battleid, const wxString& line ) = 0;
 

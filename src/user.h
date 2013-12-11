@@ -1,6 +1,20 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_USER_H
 #define SPRINGLOBBY_HEADERGUARD_USER_H
 
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/user/user.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 #include <wx/string.h>
 #include <wx/colour.h>
 #include "utils/mixins.hh"

@@ -1,6 +1,5 @@
 #include "offlinebattle.h"
 #include "spring.h"
-#include "ui.h"
 
 #include <wx/timer.h>
 
@@ -29,11 +28,11 @@ m_me( User(_T("Spectator")) )
 void OfflineBattle::StartSpring()
 {
 	spring().Run(*this);
-	ui().OnSpringStarting();
 }
 
-OfflineBattle::OfflineBattle ( const OfflineBattle& other )
-    : IBattle()
+OfflineBattle::OfflineBattle ( const OfflineBattle& other ):
+	IBattle(),
+	m_id(0)
 {
     *this = other;
 }

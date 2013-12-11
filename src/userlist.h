@@ -1,6 +1,18 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_USERLIST_H
 #define SPRINGLOBBY_HEADERGUARD_USERLIST_H
 
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/container/userlist.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
 #include <map>
 #include <wx/string.h>
 

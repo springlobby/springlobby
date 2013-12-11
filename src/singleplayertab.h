@@ -15,12 +15,13 @@ class wxButton;
 class wxStaticLine;
 class wxChoice;
 class wxStaticText;
+class wxListCtrl;
 class wxCommandEvent;
 class wxCheckBox;
 class wxMouseEvent;
 class ColorButton;
 
-class SinglePlayerTab: public  wxScrolledWindow , public UnitsyncReloadedSink< SinglePlayerTab >
+class SinglePlayerTab: public  wxScrolledWindow
 {
   public:
 
@@ -46,10 +47,9 @@ class SinglePlayerTab: public  wxScrolledWindow , public UnitsyncReloadedSink< S
     void OnSpectatorCheck( wxCommandEvent& event );
     void OnColorButton( wxCommandEvent& event );
     void OnReset( wxCommandEvent& event );
-    void OnMouseWheel( wxMouseEvent& event );
 
-    void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
-	void ResetUsername();	
+    void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
+	void ResetUsername();
 
     void SetMap( unsigned int index );
     void SetMod( unsigned int index );
@@ -66,11 +66,14 @@ class SinglePlayerTab: public  wxScrolledWindow , public UnitsyncReloadedSink< S
     wxButton* m_select_btn;
     wxButton* m_addbot_btn;
     wxStaticLine* m_buttons_sep;
-    wxButton* m_reset_btn;
+//    wxButton* m_reset_btn;
     wxCheckBox* m_random_check;
     wxCheckBox* m_spectator_check;
     wxButton* m_start_btn;
     ColorButton* m_color_btn;
+
+    wxListCtrl* m_map_opts_list;
+    wxStaticText* m_map_desc;
 
     enum
     {

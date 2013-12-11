@@ -1,6 +1,21 @@
 #ifndef TDFCONTAINER_H
 #define TDFCONTAINER_H
 
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/battle/tdfcontainer.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
+
 #include <wx/string.h>
 #include <wx/colour.h>
 #include <wx/log.h>
@@ -264,7 +279,7 @@ class Tokenizer {
 		{
 		}
 
-		void EnterStream( std::istream &stream_, const wxString &name = _T( "" ) );
+		void EnterStream( std::istream &stream_, const wxString &name = wxEmptyString );
 
 		Token GetToken( int i = 0 );
 		void Step( int i = 1 );

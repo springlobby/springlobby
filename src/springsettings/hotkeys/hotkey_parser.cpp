@@ -18,44 +18,9 @@
 #include "../../utils/conversion.h"
 
 
-hotkey_parser::hotkey_parser(const wxString& uikeys_filename) : m_filename( uikeys_filename ), m_dontTouch( false )
+hotkey_parser::hotkey_parser(const wxString& uikeys_filename) :m_dontTouch( true )
 {
-	//we will read the uikeys.txt now to get the key profile
-	//1. Fill the profile with spring's default bindings
-	KeynameConverter::initialize();
-
-	this->m_bindings = SpringDefaultProfile::getBindings();
-
-	//2. now read uikeys.txt and modify the default profile
-	wxTextFile uiFile( this->m_filename );
-
-	if ( !uiFile.Open() )
-	{
-		wxLogWarning( _( "can't open " ) + uikeys_filename );
-		return;
-	}
-
-	wxString line;
-	for ( line = uiFile.GetFirstLine(); !uiFile.Eof(); line = uiFile.GetNextLine() )
-	{
-		if ( line.Trim().StartsWith( wxT("//SPRINGSETTINGS DO NOT TOUCH") ) )
-		{
-			this->m_dontTouch = true;
-		}
-
-		//look for comments
-		int cmtPos = line.Find(wxT("//"));
-		if (cmtPos != -1) {
-			line.Truncate(cmtPos);	//comment found. cut it.
-		}
-
-		line = line.Trim();
-
-		if ( line.size() == 0 )
-			continue;
-
-		this->processLine( line );
-	}
+	setUiKeys(uikeys_filename);
 }
 
 bool hotkey_parser::processLine( const wxString& line )
@@ -76,7 +41,7 @@ bool hotkey_parser::processLine( const wxString& line )
 		}
 		return true;
 	}
-	else if ( tokLine.size() == 2 ) 
+	else if ( tokLine.size() == 2 )
 	{	//fakemeta=
 		const wxString& cmd = tokLine[0];
 		const wxString& key = tokLine[1];
@@ -105,7 +70,7 @@ bool hotkey_parser::processLine( const wxString& line )
 	const wxString& key = tokLine[1];
 
 	//append all following tokens to the action string for stuff like "buildspacing inc"
-	wxString action; 
+	wxString action;
 	for( unsigned i=2; i < tokLine.size(); ++i )
 	{
 		action.append( tokLine[i] + wxT(" ") );
@@ -188,25 +153,25 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	oldFile.Close();
 
 	//add keysyms
-	key_sym_map keySymRev;
+	//key_sym_map keySymRev;
 	for( key_sym_map::const_iterator iter = springbindings.getKeySyms().begin(); iter != springbindings.getKeySyms().end(); ++iter )
 	{
 		newFile.AddLine( wxT("keysym\t\t") + iter->first + wxT("\t\t") + iter->second );
-		keySymRev[ KeynameConverter::convertHexValueToKey( iter->second ) ] = iter->first;
+		//keySymRev[ KeynameConverter::convertHexValueToKey( iter->second ) ] = iter->first;
 	}
 
 	//add keysyms
-	key_sym_map keySymSetRev;
+	//key_sym_map keySymSetRev;
 	for( key_sym_set_map::const_iterator iter = springbindings.getKeySymsSet().begin(); iter != springbindings.getKeySymsSet().end(); ++iter )
 	{
 		newFile.AddLine( wxT("keyset\t\t") + iter->first + wxT("\t\t") + springbindings.resolveKeySymKey(iter->second ) );
-		keySymSetRev[ iter->second ] = iter->first;
+		//keySymSetRev[ iter->second ] = iter->first;
 	}
 
 	//add fakemeta
 	if ( SpringDefaultProfile::getBindings().getMetaKey() != springbindings.getMetaKey() )
 	{
-		newFile.AddLine( wxT("fakemeta\t\t") + springbindings.getMetaKey() );		
+		newFile.AddLine( wxT("fakemeta\t\t") + springbindings.getMetaKey() );
 	}
 
 	//check all default bindings if they still exist in current profile
@@ -241,7 +206,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 		if ( wxRenameFile( newTmpFilename, this->m_filename ) == false )
 		{
 			wxString msg = _("Error renaming uikeys.txt.tmp to uikeys.txt.");
-			
+
 			//restore backup
 			if ( wxRenameFile( prevFilenameBak, this->m_filename ) == false )
 			{
@@ -255,4 +220,46 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 bool hotkey_parser::isDontTouchMode() const
 {
 	return this->m_dontTouch;
+}
+
+void hotkey_parser::setUiKeys(const wxString& filename )
+{
+	if (filename.empty()) {
+		wxLogError( _( "hotkey_parser: invalid filename" ));
+		return;
+	}
+	//we will read the uikeys.txt now to get the key profile
+	//1. Fill the profile with spring's default bindings
+	KeynameConverter::initialize();
+
+	this->m_bindings = SpringDefaultProfile::getBindings();
+
+	//2. now read uikeys.txt and modify the default profile
+	wxTextFile uiFile( this->m_filename );
+
+	if ( !uiFile.Exists() || !uiFile.Open() ) {
+		wxLogWarning( _( "hotkey_parser: can't open " ) + filename );
+		return;
+	}
+
+	wxString line;
+	for ( line = uiFile.GetFirstLine(); !uiFile.Eof(); line = uiFile.GetNextLine() ) {
+		if ( line.Trim().StartsWith( wxT("//SPRINGSETTINGS DO NOT TOUCH") ) ) {
+			this->m_dontTouch = true;
+		}
+
+		//look for comments
+		int cmtPos = line.Find(wxT("//"));
+		if (cmtPos != -1) {
+			line.Truncate(cmtPos);	//comment found. cut it.
+		}
+
+		line = line.Trim();
+
+		if ( line.size() == 0 )
+			continue;
+
+		this->processLine( line );
+	}
+	this->m_filename = filename;
 }

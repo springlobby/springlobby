@@ -58,7 +58,7 @@ protected:
     wxBitmap m_bitmap;
     //should we attempt to shrink the text
     //if it's too big for the popup?
-    bool shrink;
+//    bool shrink;
 	StackDirection m_stack_direction;
 };
 

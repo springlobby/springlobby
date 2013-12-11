@@ -7,7 +7,6 @@
 
 #include "user.h"
 #include "iconimagelist.h"
-#include "battle.h"
 #include "uiutils.h"
 #include "ui.h"
 #include "server.h"
@@ -15,7 +14,7 @@
 #include "settings.h"
 #include "utils/customdialogs.h"
 #include "useractions.h"
-#include "Helper/sortutil.h"
+#include "helper/sortutil.h"
 #include "aui/auimanager.h"
 
 template<> SortOrder CustomVirtListCtrl<IBattle*,BattleListCtrl>::m_sortorder = SortOrder();
@@ -41,27 +40,18 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("battlelistctrl") );
 
-
-    const int hd = wxLIST_AUTOSIZE_USEHEADER;
-
-#if defined(__WXMAC__)
-/// on mac, autosize does not work at all
-    const int widths[11] = {20,20,20,170,140,130,110,28,28,28,30};
-#else
-    const int widths[11] = {hd,hd,hd,170,140,130,110,hd,hd,hd,hd};
-#endif
-
-	AddColumn( 0, widths[0], _("Status"), _("Status") );
-	AddColumn( 1, widths[1], _("Country"), _("Country") );
-	AddColumn( 2, widths[2], _("Rank"), _("Minimum rank to join") );
-	AddColumn( 3, widths[3], _("Description"), _("Battle description") );
-	AddColumn( 4, widths[4], _("Map"), _("Mapname") );
-	AddColumn( 5, widths[5], _("Game"), _("Gamename") );
-	AddColumn( 6, widths[6], _("Host"), _("Name of the Host") );
-	AddColumn( 7, widths[7], _("Spectators"), _("Number of Spectators") );
-	AddColumn( 8, widths[8], _("Players"), _("Number of Players joined") );
-	AddColumn( 9, widths[9], _("Max"), _("Maximum number of Players that can join") );
-	AddColumn( 10, widths[10], _("Running"), _("How long the game has been running for") );
+	AddColumn( 0, 26, wxEmptyString, _("Status") );
+	AddColumn( 1, 26, wxEmptyString, _("Country") );
+	AddColumn( 2, 26, wxEmptyString, _("Minimum rank to join") );
+	AddColumn( 3, 335, _("Description"), _("Battle description") );
+	AddColumn( 4, 170, _("Map"), _("Mapname") );
+	AddColumn( 5, 238, _("Game"), _("Gamename") );
+	AddColumn( 6, 123, _("Host"), _("Name of the Host") );
+	AddColumn( 7, wxLIST_AUTOSIZE_USEHEADER, _("Spectators"), _("Number of Spectators") );
+	AddColumn( 8, wxLIST_AUTOSIZE_USEHEADER, _("Players"), _("Number of Players joined") );
+	AddColumn( 9, wxLIST_AUTOSIZE_USEHEADER, _("Max"), _("Maximum number of Players that can join") );
+	AddColumn( 10, wxLIST_AUTOSIZE_USEHEADER, _("Running"), _("How long the game has been running for") );
+	AddColumn( 11, wxLIST_AUTOSIZE_USEHEADER, _("Version"), _("Version of the engine") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[0].col = 0;
@@ -105,6 +95,7 @@ wxString BattleListCtrl::GetItemText(long item, long column) const
 		case 9: return wxFormat(_T("%d") ) % int(battle.GetMaxPlayers());
         case 10: return ( wxTimeSpan(0/*h*/,0/*m*/,
                                      battle.GetBattleRunningTime()).Format(_T("%H:%M")) );
+		case 11: return battle.GetEngineVersion();
     }
 }
 
@@ -200,7 +191,7 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
         DataType dt = m_data[idx];
         bool mod_missing = !dt->ModExists();
         bool map_missing = !dt->MapExists();
-        m_popup = new wxMenu( _T("") );
+        m_popup = new wxMenu( wxEmptyString );
         // &m enables shortcout "alt + m" and underlines m
         if ( map_missing )
             m_popup->Append( BLIST_DLMAP, _("Download &map") );
@@ -217,7 +208,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        ui().DownloadMap( dt->GetHostMapHash(), dt->GetHostMapName() );
+        ui().Download( _T("map"), dt->GetHostMapName(), dt->GetHostMapHash() );
     }
 }
 
@@ -225,7 +216,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        ui().DownloadMod( dt->GetHostModHash(), dt->GetHostModName() );
+        ui().Download(_T("game"), dt->GetHostModName(), dt->GetHostModHash() );
     }
 }
 
@@ -267,6 +258,7 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
         case 8: return dir * ComparePlayer( u1, u2 );
         case 9: return dir * compareSimple( u1->GetMaxPlayers(), u2->GetMaxPlayers() );
         case 10: return dir * compareSimple( u1->GetBattleRunningTime(), u2->GetBattleRunningTime());
+		case 11: return dir * compareSimple( u1->GetEngineVersion(), u2->GetEngineVersion() );
         default: return 0;
     }
     return 0; // simply to avoid compiler warning
@@ -323,7 +315,7 @@ int BattleListCtrl::ComparePlayer( DataType u1, DataType u2 )
 void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
     if ( (long)m_data.size() < item_hit ) {
-        m_tiptext = _T("");
+        m_tiptext = wxEmptyString;
         return;
     }
 
@@ -379,7 +371,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& posit
         case 10: //running time
             m_tiptext = (m_colinfovec[column].tip);
             break;
-        default: m_tiptext = _T("");
+        default: m_tiptext = wxEmptyString;
             break;
     }
 }

@@ -2,16 +2,29 @@
 #define SPRINGLOBBY_HEADERGUARD_IBATTLE_H
 
 
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/battle/ibattle.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 #include <wx/string.h>
 #include <wx/event.h>
 
-#include "springunitsync.h"
+#include <lslunitsync/unitsync.h>
 #include "user.h"
-#include "mmoptionswrapper.h"
+#include <lslunitsync/optionswrapper.h>
 #include "userlist.h"
 #include "tdfcontainer.h"
-#include "utils/isink.h"
 #include "utils/mixins.hh"
+#include "utils/globalevents.h"
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
@@ -71,7 +84,7 @@ enum BattleType
 struct BattleOptions
 {
 	BattleOptions() :
-		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),proxyhost(_T("")),userelayhost(false),lockexternalbalancechanges(false),
+		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),proxyhost(wxEmptyString),userelayhost(false),lockexternalbalancechanges(false),
 		nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
 		guilistactiv(false) {}
 
@@ -99,13 +112,15 @@ struct BattleOptions
 	wxString modhash;
 
 	wxString description;
+	wxString engineVersion;
+	wxString engineName;
 	wxString mapname;
 	wxString modname;
 
 	bool guilistactiv;
 };
 
-class IBattle: public UserList, public wxEvtHandler, public UnitsyncReloadedSink< IBattle > , public SL::NonCopyable
+class IBattle: public UserList, public GlobalEvent, public wxEvtHandler, public SL::NonCopyable
 {
 public:
 
@@ -190,8 +205,8 @@ public:
     /**@}*/
 
     virtual void SetHostMap( const wxString& mapname, const wxString& hash );
-    virtual void SetLocalMap( const UnitSyncMap& map );
-    virtual const UnitSyncMap& LoadMap();
+    virtual void SetLocalMap( const LSL::UnitsyncMap& map );
+    virtual const LSL::UnitsyncMap& LoadMap();
     virtual wxString GetHostMapName() const;
     virtual wxString GetHostMapHash() const;
 
@@ -209,8 +224,8 @@ public:
     virtual int GetPlayerNum( const User& user ) const;
 
     virtual void SetHostMod( const wxString& modname, const wxString& hash );
-    virtual void SetLocalMod( const UnitSyncMod& mod );
-    virtual const UnitSyncMod& LoadMod();
+    virtual void SetLocalMod( const LSL::UnitsyncMod& mod );
+    virtual const LSL::UnitsyncMod& LoadMod();
     virtual wxString GetHostModName() const;
     virtual wxString GetHostModHash() const;
 
@@ -264,10 +279,10 @@ public:
     virtual void UnrestrictAllUnits();
     virtual std::map<wxString,int> RestrictedUnits() const;
 
-    virtual void OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ );
+    virtual void OnUnitsyncReloaded(wxEvent& event);
 
-    virtual OptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
-    virtual const OptionsWrapper& CustomBattleOptions() const { return m_opt_wrap; }
+    virtual LSL::OptionsWrapper& CustomBattleOptions() { return m_opt_wrap; }
+    virtual const LSL::OptionsWrapper& CustomBattleOptions() const { return m_opt_wrap; }
 
     virtual bool LoadOptionsPreset( const wxString& name );
     virtual void SaveOptionsPreset( const wxString& name );
@@ -394,6 +409,11 @@ public:
 
 		virtual long GetBattleRunningTime() const; // returns 0 if not started
 
+		virtual void SetEngineName(const wxString& name){ m_opts.engineName = name;}
+		virtual void SetEngineVersion(const wxString& version){ m_opts.engineVersion = version;}
+		virtual wxString GetEngineName() const{ return m_opts.engineName;}
+		virtual wxString GetEngineVersion() const{ return m_opts.engineVersion;}
+
 protected:
 
 		void LoadScriptMMOpts( const wxString& sectionname, const SL::PDataList& node );
@@ -408,21 +428,22 @@ protected:
     bool m_mod_loaded;
     bool m_map_exists;
     bool m_mod_exists;
-    UnitSyncMap m_local_map;
-    UnitSyncMod m_local_mod;
-    UnitSyncMap m_host_map;
-    UnitSyncMod m_host_mod;
+    LSL::UnitsyncMap m_local_map;
+    LSL::UnitsyncMod m_local_mod;
+    LSL::UnitsyncMap m_host_map;
+    LSL::UnitsyncMod m_host_mod;
     wxString m_previous_local_mod_name;
 
     std::map<wxString, int> m_restricted_units;
 
-    OptionsWrapper m_opt_wrap;
+    LSL::OptionsWrapper m_opt_wrap;
 
     BattleOptions m_opts;
 
     bool m_ingame;
 
     bool m_auto_unspec; // unspec as soon as there's a free slot
+    unsigned int m_auto_unspec_num_players; // number of players in the battle when m_auto_unspec was set to true
 
     bool m_generating_script;
 
@@ -444,6 +465,7 @@ protected:
     /// replay&savegame stuff
     wxString m_script;
     wxString m_playback_file_path;
+
     TeamVec m_parsed_teams;
     AllyVec m_parsed_allies;
     UserVec m_internal_user_list; /// to store users from savegame/replay

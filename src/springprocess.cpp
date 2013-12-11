@@ -1,5 +1,19 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/spring/springprocess.cpp
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 #include "springprocess.h"
 #include "spring.h"
 #include "utils/debug.h"
@@ -13,13 +27,13 @@ DEFINE_LOCAL_EVENT_TYPE( wxEVT_SPRING_EXIT )
 SpringProcess::SpringProcess( Spring& sp ) :
 		m_sp( sp ), m_exit_code( 0 )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 }
 
 
 SpringProcess::~SpringProcess()
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 }
 
 
@@ -31,7 +45,7 @@ void SpringProcess::SetCommand( const wxString& cmd )
 
 void SpringProcess::OnExit()
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	wxCommandEvent event( wxEVT_SPRING_EXIT, PROC_SPRING );
 	event.SetExtraLong( m_exit_code );
 	m_sp.AddPendingEvent( event );
@@ -40,7 +54,7 @@ void SpringProcess::OnExit()
 
 void* SpringProcess::Entry()
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	m_exit_code = system( m_cmd.mb_str( wxConvUTF8 ) );
 	wxLogMessage( _T( "Spring closed." ) );
 	return 0;
@@ -49,13 +63,13 @@ void* SpringProcess::Entry()
 wxSpringProcess::wxSpringProcess( Spring& sp ) :
 		m_sp( sp )
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 }
 
 
 wxSpringProcess::~wxSpringProcess()
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 }
 
 void wxSpringProcess::OnTerminate( int /*pid*/, int status )

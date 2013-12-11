@@ -11,11 +11,6 @@
 #include <wx/dir.h>
 #include <wx/app.h>
 
-#ifdef __WXMSW__
- #include <wx/msw/registry.h>
- #include <wx/platinfo.h>
-#endif
-
 #include <iostream>
 
 #include <stdio.h>
@@ -26,10 +21,6 @@
 #include <lslutils/misc.h>
 #include "../crashreport.h"
 
-#ifdef SL_QT_MODE
-	#include <QCoreApplication>
-	#include <QDir>
-#endif
 #include "pathlistfactory.h"
 
 //!This is only ever used for unitsync and on daftalx notice it should actually be .dylib (wx returns .bundle )
@@ -38,7 +29,7 @@ wxString GetLibExtension()
 #ifdef __APPLE__
     return wxString(".dylib");
 #endif
-    return wxDynamicLibrary::CanonicalizeName(_T(""), wxDL_MODULE);
+    return wxDynamicLibrary::CanonicalizeName(wxEmptyString, wxDL_MODULE);
 }
 
 
@@ -88,7 +79,7 @@ wxLogWindow* InitializeLoggingTargets( wxFrame* parent, bool console, const wxSt
 
 
     if ( !(  console || showgui ) || verbosity == 0 ){
-        new wxLogNull;
+        new wxLogNull(); //FIXME: mem-leak, as long was the object exists, no logging messages / popups are shown
         return loggerwin;
     }
 
@@ -131,57 +122,7 @@ wxString GetExecutableFolder()
 // ------------------------------------------------------------------------------------------------------------------------
 wxString GetHostCPUSpeed()
 {
-
-    int cpu_count = 0;
-    int max_cpu_speed=0;
-
-#ifdef __WXMSW__
-
-    //afaik there is no way to determine the number of sub keys for a given key
-    //so i'll hardcode some value here and hope bd doesn't hit me with a stick :P
-    for (int i = 0; i< 16; ++i)
-    {
-		wxRegKey programreg( _T("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\")+	wxFormat(_T("%d") ) % i);
-        long tmp;
-        if ( programreg.QueryValue( _T("~MHz"), &tmp ) )
-        {
-            if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
-            cpu_count++;
-        }
-
-    }
-
-#else
-
-    wxTextFile file( _T("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq") );
-    if ( file.Exists() )
-    {
-      file.Open();
-      wxString line = file.GetFirstLine();
-      cpu_count++;
-      int tmp = s2l( line );
-      tmp /= 1000;
-      if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
-    }
-    else {
-      wxTextFile file( _T("/proc/cpuinfo") );
-      if ( file.Exists() )
-      {
-        file.Open();
-        for ( wxString line = file.GetFirstLine(); !file.Eof(); line = file.GetNextLine() )
-        {
-          if ( line.Left(7) == _T("cpu MHz") )
-          {
-            line = line.AfterLast( _T(' ') ).BeforeLast( _T('.') );
-            cpu_count++;
-            int tmp = s2l( line );
-            if ( max_cpu_speed < tmp ) max_cpu_speed = tmp;
-          }
-        }
-      }
-    }
-#endif
-    return TowxString( LSL::Util::Clamp( max_cpu_speed,0,max_cpu_speed ) );
+	return TowxString(1337);
 }
 
 
@@ -393,11 +334,7 @@ PwdGuard::~PwdGuard()
 
 wxString GetAppName( const bool lowerCase )
 {
-#ifdef SL_QT_MODE
-	wxString name = TowxString( QCoreApplication::applicationName() );
-#else
 	wxString name = wxTheApp->GetAppName();//this would segfault in qt mode
-#endif
 	if ( lowerCase )
 		name.MakeLower();
 	return name;

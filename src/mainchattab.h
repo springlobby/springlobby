@@ -17,60 +17,61 @@ class wxString;
 //! @brief The main chat tab.
 class MainChatTab : public wxScrolledWindow
 {
-  public:
-    MainChatTab( wxWindow* parent );
-    ~MainChatTab();
+public:
+	MainChatTab( wxWindow* parent );
+	~MainChatTab();
 
-    ChatPanel* GetActiveChatPanel();
-    ChatPanel* GetChannelChatPanel( const wxString& channel );
-    ChatPanel* GetUserChatPanel( const wxString& user );
+	ChatPanel* GetActiveChatPanel();
+	ChatPanel* GetChannelChatPanel( const wxString& channel );
+	ChatPanel* GetUserChatPanel( const wxString& user );
 
-    ChatPanel& ServerChat();
+	ChatPanel& ServerChat();
 
 	ChatPanel* AddChatPanel( Channel& channel, bool doFocus  );
-    ChatPanel* AddChatPanel( Server& server, const wxString& name );
-    ChatPanel* AddChatPanel( const User& user );
-    /** \brief this is only used if channel is left via raw command in server tab */
-    bool RemoveChatPanel( ChatPanel* panel );
+	ChatPanel* AddChatPanel( Server& server, const wxString& name );
+	ChatPanel* AddChatPanel( const User& user );
+	/** \brief this is only used if channel is left via raw command in server tab */
+	bool RemoveChatPanel( ChatPanel* panel );
 
-    void RejoinChannels();
-    void LeaveChannels();
 
-    void OnTabsChanged( wxAuiNotebookEvent& event );
-    void OnTabClose( wxAuiNotebookEvent& event );
-    void OnUserConnected( User& user );
-    void OnUserDisconnected( User& user );
+	void RejoinChannels();
+	void LeaveChannels();
 
 	void BroadcastMessage( const wxString& message );
-	ChatPanel* GetCurrentPanel();
 
-    void ChangeUnreadChannelColour( const wxColour& colour );
-    void ChangeUnreadPMColour( const wxColour& colour );
+	void OnUserConnected( User& user );
+	void OnUserDisconnected( User& user );
 
-    void UpdateNicklistHighlights();
 
-    wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
-
-    void LoadPerspective( const wxString& perspective_name = wxEmptyString );
-    void SavePerspective( const wxString& perspective_name = wxEmptyString );
+	void UpdateNicklistHighlights();
 
 	void AdvanceSelection( bool forward );
 
-  protected:
+private:
+	ChatPanel* GetCurrentPanel();
 
-    wxWindow* m_close_window;
-    SLChatNotebook* m_chat_tabs;
-    wxBoxSizer* m_main_sizer;
-    wxImageList* m_imagelist;
-    ChatPanel* m_server_chat;
-    ChatPanel* m_main_chat;
-    int m_newtab_sel;
+	void OnTabsChanged( wxAuiNotebookEvent& event );
+	void OnTabClose( wxAuiNotebookEvent& event );
 
-    enum {
-        CHAT_TABS = wxID_HIGHEST
-    };
+	void LoadPerspective( const wxString& perspective_name = wxEmptyString );
+	void SavePerspective( const wxString& perspective_name = wxEmptyString );
 
-    DECLARE_EVENT_TABLE()
+	wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour ) const;
+
+
+	wxWindow* m_close_window;
+	SLChatNotebook* m_chat_tabs;
+	wxBoxSizer* m_main_sizer;
+	wxImageList* m_imagelist;
+	ChatPanel* m_server_chat;
+//	ChatPanel* m_main_chat;
+	int m_newtab_sel;
+
+	enum {
+		CHAT_TABS = wxID_HIGHEST
+	};
+
+	DECLARE_EVENT_TABLE()
 };
 
 

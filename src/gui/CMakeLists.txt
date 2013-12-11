@@ -4,6 +4,7 @@ add_sources(springlobbySrc
 	statusbar.cpp
 	pastedialog.cpp
 	notificationmanager.cpp
+	taskbar.cpp
 )
 
 add_sources(SLSharedWithSettings

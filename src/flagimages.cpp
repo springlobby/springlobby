@@ -15,7 +15,11 @@ static NameToPosMap m_name_to_pos;
 
 int GetFlagIndex( const wxString& flag )
 {
-	if ( flag.IsEmpty() )
+	if (( flag.IsEmpty() ) ||
+	    (flag == _T("??")) || // unknown
+	    (flag == _T("A1")) || // anonymous proxy
+	    (flag == _T("A2")) || // satellite provider
+	    (flag == _T("O1")))  // other country
 		return FLAG_NONE;
 
 	NameToPosMap::const_iterator itor = m_name_to_pos.find( flag );
@@ -27,11 +31,9 @@ int GetFlagIndex( const wxString& flag )
 
 int AddFlagImages( wxImageList& imgs )
 {
-	int index, poszero;
-	index = poszero = 0;
-	for ( int i = 0; flag_xpm[i]; ++i )
-	{
-		index = imgs.Add( wxBitmap( const_cast<const char**>( flag_xpm[i] ) ) );
+	int poszero = 0;
+	for ( int i = 0; flag_xpm[i]; ++i ) {
+		const int index = imgs.Add( wxBitmap( const_cast<const char**>( flag_xpm[i] ) ) );
 		if ( i == 0 ) poszero = index;
 		m_name_to_pos[TowxString( flag_str[i] )] = i;
 	}

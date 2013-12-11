@@ -33,9 +33,6 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     void BattleUserUpdated( User& user );
     BattleRoomTab& GetBattleRoomTab();
-    BattleMapTab& GetBattleMapTab();
-    BattleOptionsTab& GetOptionsTab();
-    BattleroomMMOptionsTab<Battle>& GetMMOptionsTab();
 
     void ReloadPresetList();
 
@@ -45,7 +42,10 @@ class MainJoinBattleTab : public wxScrolledWindow
 
     void FocusBattleRoomTab();
 
-  protected:
+private:
+    BattleMapTab& GetBattleMapTab();
+    BattleOptionsTab& GetOptionsTab();
+    BattleroomMMOptionsTab<Battle>& GetMMOptionsTab();
     wxBoxSizer* m_main_sizer;
 
     wxImageList* m_imagelist;
@@ -56,9 +56,6 @@ class MainJoinBattleTab : public wxScrolledWindow
     BattleMapTab* m_map_tab;
     BattleOptionsTab* m_opts_tab;
     BattleroomMMOptionsTab<Battle>* m_mm_opts_tab;
-
-    void PreSwitchBattlePerspective ( );
-    void PostSwitchBattlePerspective( );
 
     enum {
         BATTLE_TABS = wxID_HIGHEST

@@ -3,22 +3,23 @@
 
 
 #include "../utils/uievents.h"
-#include "../utils/isink.h"
+#include "../utils/globalevents.h"
 #include "../utils/mixins.hh"
+#include <lslutils/globalsmanager.h>
 #include <wx/timer.h>
 #include <wx/event.h>
 #include <vector>
 
 class INotification;
 
-class NotificationManager : public OnQuitSink < NotificationManager > , public SL::NonCopyable, public wxEvtHandler
+class NotificationManager : public SL::NonCopyable, public wxEvtHandler, public GlobalEvent
 {
     public:
         virtual ~NotificationManager();
 
 		void OnShowNotification( UiEvents::NotficationData data );
 
-		void OnQuit( GlobalEvents::GlobalEventData data );
+		void OnQuit( wxCommandEvent& data );
 
     protected:
         NotificationManager();
@@ -35,7 +36,7 @@ class NotificationManager : public OnQuitSink < NotificationManager > , public S
 
         //make globals holder have access to ctor
         template <class PB, class I >
-        friend class GlobalObjectHolder;
+        friend class LSL::Util::GlobalObjectHolder;
 
 		EventReceiverFunc< NotificationManager, UiEvents::NotficationData, &NotificationManager::OnShowNotification> m_showNotificationSink;
 

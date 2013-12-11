@@ -7,7 +7,7 @@
 
 class wxCloseEvent;
 
-class UpdaterMainwindow : public wxFrame {
+class UpdaterMainwindow : public wxFrame, public GlobalEvent {
 
     public:
         UpdaterMainwindow( const wxString& rev_string );
@@ -15,13 +15,9 @@ class UpdaterMainwindow : public wxFrame {
 
         void OnClose( wxCloseEvent& evt );
 
-        void OnDownloadComplete( GlobalEvents::GlobalEventData /*data*/ );
+        void OnUpdateFinished( wxCommandEvent& /*data*/ );
 
     protected:
-        typedef EventReceiverFunc<UpdaterMainwindow, GlobalEvents::GlobalEventData, &UpdaterMainwindow::OnDownloadComplete>
-            EventReceiverFunction;
-        EventReceiverFunction m_onDownloadComplete;
-
         DECLARE_EVENT_TABLE()
 };
 

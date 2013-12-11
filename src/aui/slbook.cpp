@@ -4,8 +4,8 @@
 #include "../settings.h"
 #include "../chatpanel.h"
 #include "../chatpanelmenu.h"
-#include "../ui.h"
 #include "../mainwindow.h"
+#include "../defines.h"
 
 #include <wx/menu.h>
 #include <wx/scrolwin.h>
@@ -323,7 +323,7 @@ wxString SLNotebook::SavePerspective() {
 
 		if (p) tabs += wxT(",");
 
-		if ((int)page_idx == m_curpage) tabs += wxT("*");
+		if ((int)page_idx == GetSelection()) tabs += wxT("*");
 		else if ((int)p == tabframe->m_tabs->GetActivePage()) tabs += wxT("+");
 		tabs += (wxFormat(wxT("%u") ) % page_idx).str();
      }
@@ -368,15 +368,20 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
      // Get pane name
      const wxString pane_name = tab_part.BeforeFirst(wxT('='));
 
-     // create a new tab frame
-     wxTabFrame* new_tabs = new wxTabFrame;
-     new_tabs->m_tabs = new wxAuiTabCtrl(this,
-                                m_tab_id_counter++,
-                                wxDefaultPosition,
-                                wxDefaultSize,
-                                wxNO_BORDER|wxWANTS_CHARS);
+	// create a new tab frame
+	wxTabFrame* new_tabs = new wxTabFrame;
+	#ifdef HAVE_WX29
+	const int nextid = m_tabIdCounter++;
+	#else
+	const int nextid = m_tab_id_counter++;
+	#endif
+	new_tabs->m_tabs = new wxAuiTabCtrl(this,
+				nextid,
+				wxDefaultPosition,
+				wxDefaultSize,
+				wxNO_BORDER|wxWANTS_CHARS);
      new_tabs->m_tabs->SetArtProvider(m_tabs.GetArtProvider()->Clone());
-     new_tabs->SetTabCtrlHeight(m_tab_ctrl_height);
+     new_tabs->SetTabCtrlHeight(GetTabCtrlHeight());
      new_tabs->m_tabs->SetFlags(m_flags);
      wxAuiTabCtrl *dest_tabs = new_tabs->m_tabs;
 
@@ -418,7 +423,6 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
   m_mgr.LoadPerspective(frames);
 
   // Force refresh of selection
-  m_curpage = -1;
   SetSelection(sel_page);
 
   return true;
@@ -443,25 +447,6 @@ void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_
         notebook->Layout();
         wxWindow* parent = notebook->GetParent();
 
-        #ifdef __WXMSW__
-		for( size_t i = 0; i < notebook->GetPageCount(); ++i ) {
-            try {
-				wxWindow* tmp = notebook->GetPage( i );
-				if ( tmp ) {
-					tmp->Layout();
-//                    tmp->Fit();
-//                    tmp->FitInside();//these two seem to be problematic rather than helpful
-					tmp->Refresh();
-				}
-				wxScrolledWindow* scrollwin = dynamic_cast<wxScrolledWindow*>( notebook->GetPage( i ) );
-				if ( scrollwin ) {
-					scrollwin->SetScrollRate( 3, 3 );
-                }
-            }
-            catch (...) {}
-        }
-		notebook->Refresh();
-        #endif
 		if ( parent ) {
 			parent->Layout();
 			parent->Refresh();

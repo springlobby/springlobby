@@ -5,8 +5,7 @@
 #include "../utils/platform.h"
 #include "../utils/globalevents.h"
 #include "../settings.h"
-#include "../globalsmanager.h"
-#include "../ui.h"
+#include <lslutils/globalsmanager.h>
 #include "../uiutils.h"
 
 #include <wx/stdpaths.h>
@@ -21,13 +20,14 @@ END_EVENT_TABLE()
 
 UpdaterClass& Updater()
 {
-    static LineInfo<UpdaterClass> m( AT );
-    static GlobalObjectHolder<UpdaterClass,LineInfo<UpdaterClass> > m_upd( m );
+    static LSL::Util::LineInfo<UpdaterClass> m( AT );
+    static LSL::Util::GlobalObjectHolder<UpdaterClass, LSL::Util::LineInfo<UpdaterClass> > m_upd( m );
     return m_upd;
 }
 
-UpdaterClass::UpdaterClass()
-    : m_http_thread( 0 )
+UpdaterClass::UpdaterClass():
+	wxEvtHandler(),
+	m_http_thread( 0 )
 {
 }
 
@@ -36,7 +36,6 @@ UpdaterClass::~UpdaterClass()
     delete m_http_thread;
 }
 
-#ifdef __WXMSW__
 bool UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& exe_to_update )
 {
     wxString sep = wxFileName::GetPathSeparator();
@@ -61,7 +60,6 @@ bool UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& e
     //could prolly use some test on the thread here instead
     return true;
 }
-#endif
 
 
 //all messageboxes need to be modal, updater closes immeadiately when receiving the UpdateFinished event
@@ -73,7 +71,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
     else {
         if (!PostMinGW44( m_newexe ) ) {
             customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser."), _("Updater error.") );
-			OpenWebBrowser( _T("http://projects.springlobby.info/wiki/springlobby/Install#Windows-Binary") );
+			OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/Install#wiki-Windows_Binary") );
             OpenWebBrowser( GetDownloadUrl( m_latest_version ) );
         }
         if ( !UpdateExe( m_newexe , false ) ) {
@@ -82,6 +80,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
 											   % m_newexe
 											   % m_currentexe,
 							 _("Error") );
+			GlobalEvent::Send( GlobalEvent::OnUpdateFinished );
         }
         else {
             bool locale_ok = UpdateLocale( m_newexe, false );
@@ -96,7 +95,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
             wxRmdir( m_newexe );
         }
     }
-    GetGlobalEventSender( GlobalEvents::UpdateFinished ).SendEvent( 0 );
+    GlobalEvent::Send( GlobalEvent::OnUpdateFinished );
 }
 
 //! DO NOT use mw() global unless fromCli is false !

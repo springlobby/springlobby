@@ -15,6 +15,7 @@
 #include <wx/log.h>
 #include <wx/platinfo.h>
 #include <wx/sstream.h>
+#include <wx/utils.h>
 
 #include "utils/curlhelper.h"
 #include "utils/platform.h"
@@ -22,7 +23,6 @@
 #include "utils/conversion.h"
 #include "settings.h"
 #include "stacktrace.h"
-#include "springunitsync.h"
 
 NetDebugReport::NetDebugReport( const char* url )
 	: m_url( url )
@@ -109,14 +109,7 @@ void SpringDebugReport::AddVFSFile( const wxString& fn, const wxString& id )
 {
 	wxString dir = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
 	AddFile( dir + fn, id );
-	return;//TODO: wtf is there a return here?
-	wxArrayString res = usync().FindFilesVFS( fn );
-	if ( res.Count() > 0 ) {
-		AddFile( res[0], id );
-		wxLogError( _T("SpringDebugReport: file found: "), res[0].c_str() );
-	}
-	else
-		wxLogError( _T("SpringDebugReport: file not found: "), fn.c_str() );
+	return;
 }
 
 SpringDebugReport::SpringDebugReport()
@@ -138,7 +131,7 @@ SpringDebugReport::SpringDebugReport()
 	AddText( _T("appname.txt"), GetAppName(), _T("Application Name"));
 }
 
-#if wxUSE_STACKWALKER
+#if wxUSE_STACKWALKER && !__WXMSW__
     void CrashReport::GenerateReport()
 #else
     void CrashReport::GenerateReport(EXCEPTION_POINTERS* p)
@@ -146,11 +139,6 @@ SpringDebugReport::SpringDebugReport()
 {
     wxLogMessage( _T( "Report generated in " ) );
 	CwdGuard cwgGuard( wxFileName::GetTempDir() );
-#if defined(__WXMSW__)
-	bool online = false; // TODO (BrainDamage#1#): check if being online
-#else
-	bool online = true; // TODO (BrainDamage#1#): check if being online
-#endif
 	NetDebugReport* report = new NetDebugReport( "http://debug.springlobby.info/upload" ) ;
 //	NetDebugReport* report = new NetDebugReport( "http://localhost/upload" ) ;
 
@@ -173,7 +161,7 @@ SpringDebugReport::SpringDebugReport()
     if ( wxFile::Exists( script_file ) )
         report->AddFile( script_file, _( "Last generated spring launching script" ) );
 
-#if wxUSE_STACKWALKER
+#if wxUSE_STACKWALKER && !__WXMSW__
     StackTrace stacktrace;
 	stacktrace.Walk( 3, 20 );
 	report->AddText( _T( "stacktrace.txt" ), _T("Call stack:\n") + stacktrace.GetStackTrace(), _( "StackTrace" ) );
@@ -197,22 +185,14 @@ SpringDebugReport::SpringDebugReport()
 	report->AddText( _T("nick.txt"),
 		sett().GetServerAccountNick( sett().GetDefaultServer() ), _T("Nick") );
 
-    wxDebugReportPreviewStd* bkl = new wxDebugReportPreviewStd();
+	wxDebugReportPreviewStd* bkl = new wxDebugReportPreviewStd();
 	// calling Show() is not mandatory, but is more polite
 	if ( bkl->Show( *report ) ) {
 		if ( report->Process() ) {
-			if ( online ) {
-				wxLogMessage( _T( "Report successfully uploaded." ) );
-			}
-			else {
-				wxLogMessage( _T( "Report generated in \"%s\"." ),
-				              report->GetCompressedFileName().c_str() );
-				report->Reset();
-			}
+			wxLogMessage( _T( "Report successfully uploaded." ) );
 		}
 		else {
-		    wxLogMessage( _T( "Report generated in \"%s\", but failed to upload" ),
-				              report->GetCompressedFileName().c_str() );
+				wxLogMessage( _T( "Report generated in \"%s\", but failed to upload" ), report->GetCompressedFileName().c_str() );
 				report->Reset();
 				wxLogMessage( _T("report reset") );
 		}

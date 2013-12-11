@@ -31,7 +31,7 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
                                unsigned int column_count, bool highlight, UserActions::ActionType hlaction ):
   ListBaseType(parent, id, pt, sz, style),
   m_tiptimer(this, IDD_TIP_TIMER),
-  m_tiptext(_T("")),
+  m_tiptext(wxEmptyString),
 #if wxUSE_TIPWINDOW
   m_tipwindow( 0 ),
   m_controlPointer( 0 ),
@@ -61,13 +61,6 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
 
 void CustomListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
 {
-//#ifdef __WXMSW__ //this fixes header text misalignement
-//    item.m_mask = wxLIST_MASK_FORMAT | wxLIST_MASK_TEXT;
-//    if ( item.m_image != icons().ICON_EMPTY || item.m_image != -1 )
-//        item.m_mask = item.m_mask | wxLIST_MASK_IMAGE;
-//
-//    item.m_format = wxLIST_FORMAT_LEFT;
-//#endif
     ListBaseType::InsertColumn(i,item);
     colInfo temp(tip,modifiable);
     m_colinfovec.push_back(temp);
@@ -203,7 +196,7 @@ void CustomListCtrl::OnMouseMotion(wxMouseEvent& event)
 
   if (event.Leaving())
   {
-    m_tiptext = _T("");
+    m_tiptext = wxEmptyString;
     if (m_tipwindow)
     {
       m_tipwindow->Close();
@@ -245,7 +238,7 @@ void CustomListCtrl::SetTipWindowText( const long /*unused*/, const wxPoint& pos
   int column = getColumnFromPosition(position);
   if (column >= int(m_colinfovec.size()) || column < 0)
   {
-    m_tiptext = _T("");
+    m_tiptext = wxEmptyString;
   }
   else
   {
@@ -324,7 +317,7 @@ void CustomListCtrl::UpdateHighlights()
 void CustomListCtrl::HighlightItemUser( long item, const wxString& name )
 {
    if ( m_highlight && useractions().DoActionOnUser( m_highlightAction, name ) ) {
-        wxColour c = sett().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
+        wxColour c = useractions().GetGroupHLColor( useractions().GetGroupOfUser( name ) );
         SetItemBackgroundColour( item, c );
   }
   else

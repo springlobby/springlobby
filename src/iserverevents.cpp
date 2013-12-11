@@ -1,13 +1,23 @@
 #include "iserverevents.h"
 #include "serverevents.h"
-#include "qt/simpleserverevents.h"
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/networking/iserver.cpp
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
 
 IServerEvents* IServerEvents::getInstance( Server& server, ServerEventsMode mode  )
 {
 	switch (mode) {
 		default: return new ServerEvents( server );
-	#ifdef SL_QT_MODE
-		case IServerEvents::simple: return new SimpleServerEvents( server );
-	#endif //SL_QT_MODE
 	}
+	return NULL;
 }

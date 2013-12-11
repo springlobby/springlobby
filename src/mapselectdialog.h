@@ -5,7 +5,7 @@
 
 #include <vector>
 #include "gui/windowattributespickle.h"
-#include "utils/isink.h"
+#include "utils/globalevents.h"
 //(*Headers(MapSelectDialog)
 #include <wx/dialog.h>
 class wxStdDialogButtonSizer;
@@ -21,19 +21,21 @@ class wxChoice;
 class wxButton;
 
 class Ui;
-struct UnitSyncMap;
+namespace LSL {
+    struct UnitsyncMap;
+}
 
-
-class MapSelectDialog: public wxDialog, public WindowAttributesPickle, public UnitsyncReloadedSink<MapSelectDialog>
+// FIXME: WindowAttributesPickle calls SetSize which causes an wx-assertion
+class MapSelectDialog: public wxDialog, public GlobalEvent /*,public WindowAttributesPickle, */
 {
 	public:
 
-		MapSelectDialog( wxWindow* parent = 0 );
+		MapSelectDialog( wxWindow* parent);
 		virtual ~MapSelectDialog();
 
-		UnitSyncMap* GetSelectedMap() const;
+		LSL::UnitsyncMap* GetSelectedMap() const;
 
-		void OnUnitsyncReloaded( GlobalEvents::GlobalEventData data );
+		void OnUnitsyncReloaded( wxCommandEvent& data );
 
 	protected:
 
@@ -103,7 +105,8 @@ class MapSelectDialog: public wxDialog, public WindowAttributesPickle, public Un
 		DECLARE_EVENT_TABLE()
 };
 
-MapSelectDialog& mapSelectDialog();
+wxString mapSelectDialog(bool hidden=false, wxWindow* parent=NULL);
+
 #endif
 
 /**

@@ -2,9 +2,9 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H
 
 #include <wx/panel.h>
+#include <wx/bmpcbox.h>
 
 #include "battlelisttab.h"
-#include "battle.h"
 #include "utils/mixins.hh"
 ///////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +17,7 @@ class wxChoice;
 class wxButton;
 class wxRegEx;
 class wxStaticText;
+struct BattleListFilterValues;
 
 
 /** \brief The panel contained in BattleListTab used to filter for diff info of battles
@@ -71,6 +72,7 @@ class BattleListFilter : public wxPanel, public SL::NonCopyable
     bool m_activ;
 
 		BattleListTab* m_parent_battlelisttab;
+/*
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
 #else
@@ -79,7 +81,7 @@ class BattleListFilter : public wxPanel, public SL::NonCopyable
 		wxStaticText* m_filter_text;
 
 		wxCheckBox* m_filter_activ;
-
+*/
         //Host
 		wxStaticText* m_filter_host_text;
 		wxTextCtrl*   m_filter_host_edit;
@@ -98,7 +100,7 @@ class BattleListFilter : public wxPanel, public SL::NonCopyable
 		wxStaticText* m_filter_rank_text;
 		ButtonMode m_filter_rank_mode;
 		wxButton* m_filter_rank_button;
-		wxChoice* m_filter_rank_choice;
+		wxBitmapComboBox* m_filter_rank_choice;
 		int m_filter_rank_choice_value;
 
         //Description
@@ -165,6 +167,10 @@ class BattleListFilter : public wxPanel, public SL::NonCopyable
 
 	protected:
 		DECLARE_EVENT_TABLE()
+		BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
+		void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
+		wxString GetLastBattleFilterProfileName();
+		void SetBattleFilterActivState( const bool state );
 };
 
 enum

@@ -23,10 +23,10 @@ if(WIN32)
 		-D__WXMSW__
 		-D_WIN32_WINNT=0x0501
 		-DBOOST_THREAD_USE_LIB
-		-DAL_LIBTYPE_STATIC
 		-DSTRICT
 		-DHAVE_W32API_H
 	)
+	set(Boost_THREADAPI win32)
 endif(WIN32)
 
 set(Boost_USE_MULTITHREADED      ON)
@@ -37,7 +37,7 @@ endif()
 
 FIND_PACKAGE(Boost 1.42.0 COMPONENTS thread system REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-add_to_global(link_directories ${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
+#add_to_global(link_directories ${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
 
 ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 
@@ -65,17 +65,38 @@ FIND_PACKAGE(wxWidgets REQUIRED ${wxWidgets_USE_LIBS})
 IF(wxWidgets_FOUND)
 	INCLUDE(${wxWidgets_USE_FILE})
 	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
+	add_definitions(-DHAVE_WX)
 ELSE(wxWidgets_FOUND)
 	# For Convenience. If we cannot continue, inform the User.
 	MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
 ENDIF(wxWidgets_FOUND)
 
-execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cppflags"
+if (CMAKE_CROSSCOMPILING)
+	message(STATUS "Crosscompiling: using static flags for wxwidgets")
+	set(WXSTATIC "--static")
+	#FIXME: autodetect thise flags:
+	add_definitions(-DAL_LIBTYPE_STATIC)
+else()
+	set(WXSTATIC "")
+endif()
+
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cppflags" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_CXX_FLAGS
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
-execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs"
+message(STATUS "Using WX_CXX_FLAGS: ${WX_CXX_FLAGS}")
+
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cflags" "${WXSTATIC}"
+	OUTPUT_VARIABLE WX_C_FLAGS
+	OUTPUT_STRIP_TRAILING_WHITESPACE )
+message(STATUS "Using WX_C_FLAGS: ${WX_C_FLAGS}")
+
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_LD_FLAGS
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
+message(STATUS "Using WX_LD_FLAGS: ${WX_LD_FLAGS}")
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WX_CXX_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${WX_C_FLAGS}")
 
 
 #----------------------------------------------------------------------------------------------------
@@ -96,20 +117,26 @@ IF( NOT CURL_FOUND )
 	MESSAGE( FATAL_ERROR "required library libCURL not found" )
 ENDIF( NOT CURL_FOUND )
 
-if(DEFINED CURL_CONFIG) # override CURL_LIBRARIES if curl-config is set
-	execute_process(COMMAND ${CURL_CONFIG} "--libs"
+if(DEFINED PKG_CONFIG_EXECUTABLE) # override CURL_LIBRARIES if curl-config is set
+	execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} "libcurl" "--libs"
 		OUTPUT_VARIABLE CURL_LINKFLAGS
 		OUTPUT_STRIP_TRAILING_WHITESPACE )
 
 	set(CURL_LIBRARIES "" CACHE STRING "" FORCE)
 	add_to_global(CURL_LINKFLAGS "${CURL_LINKLIBS}")
-	message(STATUS "${CURL_CONFIG} returned ${CURL_LINKFLAGS} for linking to libcurl")
+	message(STATUS "${PKG_CONFIG_EXECUTABLE} returned ${CURL_LINKFLAGS} for linking to libcurl")
+
+	execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} "libcurl" "--cflags-only-other"
+		OUTPUT_VARIABLE CURL_DEFINITONS
+		OUTPUT_STRIP_TRAILING_WHITESPACE )
+	add_definitions(${CURL_DEFINITONS})
+	message(STATUS "${PKG_CONFIG_EXECUTABLE} returned ${CURL_DEFINITONS} for compiling with libcurl")
 endif()
 
 
 
 ADD_DEFINITIONS( ${CURL_CFLAGS} )
-add_to_global(link_directories  ${CURL_LIB_DIRS} )
+#add_to_global(link_directories  ${CURL_LIB_DIRS} )
 INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
 
 #----------------------------------------------------------------------------------------------------
@@ -144,11 +171,10 @@ else ( OPTION_SOUND )
 	unset(ALURE_LIBRARIES)
 	unset(OPENAL_LIBRARIES)
 endif ( OPTION_SOUND )
-
+INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/json)
 clear(springlobbySrc)
 add_sources(springlobbySrc
 	chatpanelmenu.cpp
-	updater/updater.cpp
 	agreementdialog.cpp
 	base64.cpp
 	battle.cpp
@@ -161,13 +187,15 @@ add_sources(springlobbySrc
 	flagimages.cpp
 	ibattle.cpp
 	iconimagelist.cpp
-	introguide.cpp
 	mainchattab.cpp
 	maindownloadtab.cpp
 	mainwindow.cpp
 	mapctrl.cpp
 	mapgridctrl.cpp
 	mapselectdialog.cpp
+	gui/contentdownloaddialog.cpp
+	gui/contentsearchresultslistctrl.cpp
+	contentsearchresult.cpp
 	nicklistctrl.cpp
 	offlinebattle.cpp
 	
@@ -195,18 +223,20 @@ add_sources(springlobbySrc
 	toasterbox/ToasterBoxWindow.cpp
 	toasterbox/ToasterBoxWindowList.cpp
 	
-	pingthread.cpp
 	iserverevents.cpp
+	
+	json/jsonreader.cpp
+	json/jsonval.cpp
 )
 
-SET(springlobbySoundsrc
+clear(springlobbySoundsrc)
+add_sources(springlobbySoundsrc
 	sound/alsound.cpp
 )
 
 clear(SLSharedWithSettings)
 add_sources(SLSharedWithSettings
-	customizations.cpp
-	Helper/wxTranslationHelper.cpp
+	helper/wxTranslationHelper.cpp
 	uiutils.cpp
 	updater/versionchecker.cpp
 	updater/updatehelper.cpp
@@ -221,17 +251,11 @@ add_sources(SLSharedWithSettings
 	utils/uievents.cpp
 	utils/curlhelper.cpp
 	crashreport.cpp
-	globalsmanager.cpp
-	mmoptionmodel.cpp
-	mmoptionswrapper.cpp
 	settings.cpp
-	springunitsynclib.cpp
-	springunitsync.cpp
-	thread.cpp
 	infodialog.cpp
 	gui/windowattributespickle.cpp
 	gui/spinctl/generic/spinctlg.cpp
-	Helper/slconfig.cpp
+	helper/slconfig.cpp
 )
 
 FILE( GLOB header "*.h" )
@@ -253,7 +277,7 @@ add_sources( templatesources
 )
 
 IF(WIN32)
-	add_sources(SLSharedWithSettings stacktrace.c Helper/listctrl.cpp)
+	add_sources(SLSharedWithSettings stacktrace.c)
 ELSE(WIN32)
 	add_sources(SLSharedWithSettings stacktrace.cpp)
 ENDIF(WIN32)
@@ -273,11 +297,10 @@ add_subdirectory(battlelist)
 add_subdirectory(channel)
 add_subdirectory(downloader)
 add_subdirectory(gui)
-add_subdirectory(Helper)
+add_subdirectory(helper)
 add_subdirectory(hosting)
 add_subdirectory(options)
 add_subdirectory(utils)
-add_subdirectory(widgets)
 add_subdirectory(wxkeybinder)
 
 set(LSLSERVER OFF CACHE BOOL "disable lsl-server build" FORCE)
@@ -292,12 +315,12 @@ add_subdirectory(springsettings)
 
 set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
 
-mylink( ${EXTRA_LIB_DIRS} ${link_directories} ) 
+#mylink( ${EXTRA_LIB_DIRS} ${link_directories} )
 
 IF(WIN32)
 	set(springlobby_RC_FILE springlobby.rc)
-	add_subdirectory(updater)
 ENDIF()
+add_subdirectory(updater)
 
 
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
@@ -315,11 +338,14 @@ IF(WIN32)
 	install(TARGETS springlobby RUNTIME DESTINATION .)
 ELSE (WIN32)
 	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+	option(TEST_UNITSYNC_DEADLOCKS "check unitsync for deadlocks" ON)
 	#only do this on platforms with awk expected to be installed
-	ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/springunitsynclib.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+	if(TEST_UNITSYNC_DEADLOCKS)
+		ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/lsl/src/lslunitsync/unitsync.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+	endif()
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils pr-downloader_static
+TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr-downloader_static
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${ALURE_LIBRARIES}
@@ -327,10 +353,14 @@ TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils pr-downloader_s
 		${CURL_LIBRARIES}
 		${CURL_LINKFLAGS}
 	)
+#add_dependencies(springlobby version)
 IF(UNIX)
 	TARGET_LINK_LIBRARIES(springlobby X11)
 ENDIF(UNIX)
 
 
 add_subdirectory(tests)
+
+add_analyze(${springlobbySoundsrc} ${springlobbySrc} ${SLSharedWithSettings})
+#add_format(${springlobbySoundsrc} ${springlobbySrc} ${SLSharedWithSettings} ${templatesources} ${header} ${header2})
 

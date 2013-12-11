@@ -29,9 +29,7 @@ ChatLog::ChatLog( const wxString& server, const wxString& room ):
     m_active ( LogEnabled() ),
     m_logfile ( )
 {
-#ifdef __WXMSW__
 	m_server.Replace( wxT( ":" ), wxT( "_" ) ) ;
-#endif
 	wxLogMessage( _T( "ChatLog::ChatLog( %s, %s )" ), m_server.c_str(), m_room.c_str() ) ;
 	m_active = OpenLogFile();
 }
@@ -252,14 +250,14 @@ find_tail_sequences(int fd, const char* bytes, size_t bytes_length, size_t count
 			if (  strncmp(source, "##", 2) != 0 ) {
 			    out.Insert(wxString(L'\0', 0), 0);
 			    wxLogMessage(_T("ChatLog::find_tail_sequences: fetching write buffer for %lu bytes"), sizeof(wxChar) * (line_length + 1));
-                #if !defined(HAVE_WX28) || defined(SL_QT_MODE) || wxUSE_STL
+				#if !defined(HAVE_WX28) || wxUSE_STL
 			    	wxStringBufferLength outzero_buf(out[0], sizeof(wxChar) * (line_length + 1));
 			    	wxConvUTF8.ToWChar(outzero_buf, line_length, source);
 			    	outzero_buf.SetLength(line_length);
-			    #else
+				#else
 			    	wxConvUTF8.MB2WC(out[0].GetWriteBuf(sizeof(wxChar) * (line_length + 1)), source, line_length);
 			    	out[0].UngetWriteBuf(line_length);
-			    #endif
+				#endif
 
 			    ++count_added;
 			}

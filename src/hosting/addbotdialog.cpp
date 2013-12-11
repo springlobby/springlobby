@@ -14,7 +14,8 @@
 #include "utils/controls.h"
 #include "uiutils.h"
 #include "battle.h"
-#include "springunitsync.h"
+#include <lslutils/misc.h>
+#include <lslutils/conversion.h>
 #include "mmoptionwindows.h"
 #include "utils/conversion.h"
 
@@ -70,7 +71,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
 	m_main_sizer->Add( m_ai_sizer, 0, wxEXPAND, 5 );
 
-	if ( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+	if ( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
 	{
 		m_ai_infos_lst = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
 		wxListItem col;
@@ -137,20 +138,23 @@ wxString AddBotDialog::GetNick()
 }
 
 
+wxString AddBotDialog::Get(const std::string& section)
+{
+    const auto sel = m_ai->GetSelection();
+    const auto infos = LSL::usync().GetAIInfos(sel);
+    const auto namepos = LSL::Util::IndexInSequence(infos, section);
+    if ( namepos == LSL::lslNotFound ) return m_ais[sel];
+    return TowxString(infos[namepos +1]);
+}
+
 wxString AddBotDialog::GetAIShortName()
 {
-	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
-	int namepos = infos.Index( _T("shortName") );
-	if ( namepos == wxNOT_FOUND ) return m_ais[ m_ai->GetSelection() ];
-	return infos[namepos +1];
+    return Get("shortName");
 }
 
 wxString AddBotDialog::GetAIVersion()
 {
-	wxArrayString infos = usync().GetAIInfos( m_ai->GetSelection() );
-	int namepos = infos.Index( _T("version") );
-	if ( namepos == wxNOT_FOUND ) return _T("");
-	return infos[namepos +1];
+    return Get("version");
 }
 
 int AddBotDialog::GetAIType()
@@ -161,7 +165,7 @@ int AddBotDialog::GetAIType()
 wxString AddBotDialog::RefineAIName( const wxString& name )
 {
   wxString ret = name;
-  if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+  if ( !LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
   {
 		if ( ret.Find(_T('.')) != wxNOT_FOUND ) ret = ret.BeforeLast(_T('.'));
 		if ( ret.Find(_T('/')) != wxNOT_FOUND ) ret = ret.AfterLast(_T('/'));
@@ -188,7 +192,8 @@ void AddBotDialog::ReloadAIList()
 {
   try
   {
-    m_ais = usync().GetAIList( m_battle.GetHostModName() );
+     m_ais = LSL::Util::vectorToArrayString(
+                    LSL::usync().GetAIList(STD_STRING(m_battle.GetHostModName())));
   } catch (...) {}
 
   m_ai->Clear();
@@ -230,9 +235,9 @@ void AddBotDialog::OnSelectBot( wxCommandEvent& /*unused*/ )
 void AddBotDialog::ShowAIInfo()
 {
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
-  if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) return;
+  if ( !LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) return;
   m_ai_infos_lst->DeleteAllItems();
-  wxArrayString info = usync().GetAIInfos( GetAIType() );
+  const wxArrayString info = LSL::Util::vectorToArrayString( LSL::usync().GetAIInfos( GetAIType() ));
   int count = info.GetCount();
 	for ( int i = 0; i < count; i = i + 3 )
 	{
@@ -249,24 +254,23 @@ void AddBotDialog::ShowAIInfo()
 
 void AddBotDialog::ShowAIOptions()
 {
-  if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) ) return;
+  if ( !LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) return;
   m_opts_list->DeleteAllItems();
   m_opt_list_map.clear();
-  m_battle.CustomBattleOptions().loadAIOptions( m_battle.GetHostModName(), GetAIType(), GetNick() );
-	AddMMOptionsToList( 0, m_battle.CustomBattleOptions().GetAIOptionIndex( GetNick() ) );
-	m_opts_list->SetColumnWidth( 0, wxLIST_AUTOSIZE );
-	m_opts_list->SetColumnWidth( 1, wxLIST_AUTOSIZE );
-	Layout();
-	SetSize( wxDefaultSize );
+  m_battle.CustomBattleOptions().loadAIOptions(STD_STRING(m_battle.GetHostModName()), GetAIType(), STD_STRING(GetNick()) );
+    AddMMOptionsToList( 0, m_battle.CustomBattleOptions().GetAIOptionIndex( STD_STRING(GetNick()) ) );
+    m_opts_list->SetColumnWidth( 0, wxLIST_AUTOSIZE );
+    m_opts_list->SetColumnWidth( 1, wxLIST_AUTOSIZE );
+    Layout();
+    SetSize( wxDefaultSize );
 }
 
 long AddBotDialog::AddMMOptionsToList( long pos, int optFlag )
 {
-	OptionsWrapper::wxStringTripleVec optlist = m_battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optFlag );
-	for ( OptionsWrapper::wxStringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
+    for (const auto& it : m_battle.CustomBattleOptions().getOptions( (LSL::OptionsWrapper::GameOption)optFlag ))
 	{
-		m_opts_list->InsertItem( pos, it->second.first );
-		wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it->first;
+        m_opts_list->InsertItem( pos, TowxString(it.second.first));
+        const wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it.first;
 		m_opt_list_map[ tag ] = pos;
 		UpdateOption( tag );
 		pos++;
@@ -277,24 +281,24 @@ long AddBotDialog::AddMMOptionsToList( long pos, int optFlag )
 
 void AddBotDialog::UpdateOption( const wxString& Tag )
 {
-	long index = m_opt_list_map[ Tag ];
-	OptionsWrapper::GameOption type = ( OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
-	wxString key = Tag.AfterFirst( '_' );
-	wxString value;
+    const long index = m_opt_list_map[ Tag ];
+    const LSL::OptionsWrapper::GameOption type = ( LSL::OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
+    const std::string key = STD_STRING(Tag.AfterFirst( '_' ));
+    std::string value;
 
-	OptionType DataType = m_battle.CustomBattleOptions().GetSingleOptionType( key );
-	value = m_battle.CustomBattleOptions().getSingleValue( key, ( OptionsWrapper::GameOption )type );
+    const auto DataType = m_battle.CustomBattleOptions().GetSingleOptionType( key );
+	value = m_battle.CustomBattleOptions().getSingleValue( key, ( LSL::OptionsWrapper::GameOption )type );
 	if ( m_battle.CustomBattleOptions().getDefaultValue( key, type ) == value ) m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
 	else m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD ) );
-	if ( DataType == opt_bool )
+    if ( DataType == LSL::Enum::opt_bool )
 	{
-		value =  bool2yn( s2l( value ) ); // convert from 0/1 to literal Yes/No
+        value =  STD_STRING(bool2yn(LSL::Util::FromString<long>(value))); // convert from 0/1 to literal Yes/No
 	}
-	else if ( DataType == opt_list )
+    else if ( DataType == LSL::Enum::opt_list )
 	{
 		value = m_battle.CustomBattleOptions().GetNameListOptValue( key, type ); // get the key full name not short key
 	}
-	m_opts_list->SetItem( index, 1, value );
+    m_opts_list->SetItem( index, 1, TowxString(value));
 	m_opts_list->SetColumnWidth( 1, wxLIST_AUTOSIZE );
 }
 
@@ -310,10 +314,10 @@ void AddBotDialog::OnOptionActivate( wxListEvent& event )
 			break;
 		}
 	}
-	OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
-	OptionsWrapper::GameOption optFlag = ( OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
-	wxString key = tag.AfterFirst( '_' );
-	OptionType type = optWrap.GetSingleOptionType( key );
+    LSL::OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
+    const LSL::OptionsWrapper::GameOption optFlag = ( LSL::OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
+    const std::string key = STD_STRING(tag.AfterFirst( '_' ));
+    LSL::Enum::OptionType type = optWrap.GetSingleOptionType( key );
 	if ( !optWrap.keyExists( key, optFlag, false, type ) ) return;
 	SingleOptionDialog dlg( m_battle, tag );
 	dlg.ShowModal();

@@ -14,13 +14,14 @@ rpm/.gitignore
 *.suo
 *.ncb
 *.o
-po/*
+/po/*.gmo
 Makefile
 Options.fbp
 Updater.fbp
 *.diff
 config.h
 doc/html/
+doc/doxygen/html/
 formbuilder.cpp
 formbuilder.h
 options.xrc

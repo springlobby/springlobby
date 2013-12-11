@@ -1,4 +1,19 @@
 /* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/spring/spring.cpp
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 //
 // Class: Spring
 //
@@ -10,16 +25,10 @@
 #include <winsock2.h>
 #endif // _MSC_VER
 
-#include <wx/file.h>
-#include <wx/intl.h>
-#include <wx/arrstr.h>
 #include <wx/filename.h>
-#include <wx/stdpaths.h>
 #include <stdexcept>
 #include <vector>
-#include <algorithm>
 #include <fstream>
-#include <clocale>
 
 #include "spring.h"
 #include "springprocess.h"
@@ -29,21 +38,13 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "settings.h"
-#include "userlist.h"
 #include "battle.h"
 #include "singleplayerbattle.h"
-#include "qt/noguisingleplayerbattle.h"
 #include "offlinebattle.h"
-#include "user.h"
-#include "springunitsync.h"
-#include "nonportable.h"
 #include "tdfcontainer.h"
-#include "globalsmanager.h"
 
-#ifdef SL_QT_MODE
-	#include <QMessageBox>
-	#include <QProcess>
-#endif
+#include <lslutils/globalsmanager.h>
+#include <lslutils/conversion.h>
 
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
@@ -55,15 +56,13 @@ END_EVENT_TABLE()
 
 Spring& spring()
 {
-    static LineInfo<Spring> m( AT );
-	static GlobalObjectHolder<Spring,LineInfo<Spring> > m_spring( m );
+    static LSL::Util::LineInfo<Spring> m( AT );
+	static LSL::Util::GlobalObjectHolder<Spring, LSL::Util::LineInfo<Spring> > m_spring( m );
 	return m_spring;
 }
 
 Spring::Spring() :
-	#ifdef SL_QT_MODE
-		qt_process_( 0 ),
-	#endif
+	wxEvtHandler(),
         m_process(0),
         m_wx_process(0),
         m_running(false)
@@ -79,13 +78,6 @@ Spring::~Spring()
 bool Spring::IsRunning() const
 {
 	return m_running;
-}
-
-bool Spring::RunReplay ( const wxString& filename )
-{
-  wxLogMessage( _T("launching spring with replay: ") + filename );
-
-  return LaunchSpring( _T("\"") + filename + _T("\"") );
 }
 
 bool Spring::Run( Battle& battle )
@@ -120,15 +112,6 @@ bool Spring::Run( Battle& battle )
     return false;
   }
 
-  #if 0 //TODO: BD, isn't this SUPER obsolete
-  wxString CommandForAutomaticTeamSpeak = _T("SCRIPT|") + battle.GetFounder().GetNick() + _T("|");
-  for ( UserList::user_map_t::size_type i = 0; i < battle.GetNumUsers(); i++ )
-  {
-    CommandForAutomaticTeamSpeak << TowxString<unsigned int>( battle.GetUser(i).BattleStatus().ally) << _T("|") << battle.GetUser(i).GetNick() << _T("|");
-  }
-//  torrent().SendMessageToCoordinator(CommandForAutomaticTeamSpeak); //this is gone too now, right?
-  #endif
-
 	wxString cmd;
 	if ( battle.GetAutoHost().GetEnabled() )
 	{
@@ -138,7 +121,7 @@ bool Spring::Run( Battle& battle )
 	}
 	cmd += _T(" \"") + path +  _T("\"");
 
-	return LaunchSpring( cmd );
+	return LaunchSpring(battle.GetEngineName(), battle.GetEngineVersion(), cmd );
 }
 
 
@@ -171,87 +154,40 @@ bool Spring::Run( SinglePlayerBattle& battle )
     return false;
   }
 
-  return LaunchSpring( _T("\"") + path + _T("\"") );
-}
-
-bool Spring::Run( NoGuiSinglePlayerBattle& battle )
-{
-
-  wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
-
-  wxString cmd = _T("\"") + path + _T("\"");
-
-  try
-  {
-
-    if ( !wxFile::Access( path, wxFile::write ) )
-    {
-      wxLogError( _T("Access denied to script.txt.") );
-    }
-
-    wxFile f( path, wxFile::write );
-    f.Write( WriteScriptTxt(battle) );
-    f.Close();
-
-  } catch (...)
-  {
-    wxLogError( _T("Couldn't write script.txt") );
-    return false;
-  }
-
-  return LaunchSpring( cmd );
+	return LaunchSpring(battle.GetEngineName(), battle.GetEngineVersion(), _T("\"") + path + _T("\"") );
 }
 
 bool Spring::Run( OfflineBattle& battle )
 {
-
-  wxString path = battle.GetPlayBackFilePath();
-
-  return LaunchSpring( _T("\"") + path + _T("\"") );
+	wxString path = battle.GetPlayBackFilePath();
+	return LaunchSpring(battle.GetEngineName(), battle.GetEngineVersion(), _T("\"") + path + _T("\"") );
 }
 
 
-bool Spring::LaunchSpring( const wxString& params  )
+bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVersion, const wxString& params)
 {
   if ( m_running )
   {
     wxLogError( _T("Spring already running!") );
     return false;
   }
-    if ( !wxFile::Exists( sett().GetCurrentUsedSpringBinary() ) ) {
+	const wxString executable = sett().GetSpringBinary(engineVersion);
+    if ( !wxFile::Exists(executable) ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _T("The spring executable was not found at the set location, please re-check."), _T("Executable not found") );
         ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
         return false;
     }
 
-  wxString configfileflags = sett().GetCurrentUsedSpringConfigFilePath();
-  if ( !configfileflags.IsEmpty() )
-  {
-
-		configfileflags = _T("--config=\"") + configfileflags + _T("\" ");
-		#ifdef __WXMSW__
-		if ( usync().GetSpringVersion().Find(_T("0.78.") ) != wxNOT_FOUND ) configfileflags = _T("");
-		#endif
-  }
-
-  wxString cmd =  _T("\"") + sett().GetCurrentUsedSpringBinary();
+  wxString cmd = _T("\"") + executable;
   #ifdef __WXMAC__
     wxChar sep = wxFileName::GetPathSeparator();
 	if ( sett().GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") )
         cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
   #endif
-  cmd += _T("\" ") + configfileflags + params;
+	cmd += _T("\" ") + params;
 
   wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
 
-#ifdef SL_QT_MODE
-	QMessageBox:: warning ( NULL, "CMD", QString(cmd.mb_str()));
-	qt_process_ = new QProcess;
-	qt_process_->setWorkingDirectory(QString(sett().GetCurrentUsedDataDir().mb_str()));
-	qt_process_->start(QString(cmd.mb_str()));
-	connect( qt_process_, SIGNAL(finished(int, QProcess::ExitStatus )), this, SLOT( OnStopped(int, QProcess::ExitStatus ) ) );
-	connect( qt_process_, SIGNAL(started()), this, SLOT( OnStarted() ) );
-#else
   wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
   if ( sett().UseOldSpringLaunchMethod() )
   {
@@ -265,33 +201,19 @@ bool Spring::LaunchSpring( const wxString& params  )
     m_process->SetCommand( cmd );
     m_process->Run();
   }
-#endif
   m_running = true;
+	GlobalEvent::Send(GlobalEvent::OnSpringStarted);
   return true;
 }
 
-#ifdef SL_QT_MODE
-void Spring::OnStopped( int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/ )
-{
-	m_running = false;
-	emit springStopped( );
-}
-void Spring::OnStarted()
-{
-	m_running = true;
-	emit springStarted();
-}
-#endif
-
-
 void Spring::OnTerminated( wxCommandEvent& event )
 {
-    wxLogDebugFunc( _T("") );
+    wxLogDebugFunc( wxEmptyString );
     m_running = false;
     m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
     m_wx_process = 0;
-    ui().OnSpringTerminated( event.GetExtraLong() );
-    GetGlobalEventSender(GlobalEvents::OnSpringTerminated).SendEvent( event.GetExtraLong() );
+	event.SetEventType(GlobalEvent::OnSpringTerminated);
+	GlobalEvent::Send(event);
 }
 
 
@@ -374,13 +296,13 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					break;
 				}
 				default:
-                    wxLogDebugFunc( _T("") ); break;
+                    wxLogDebugFunc( wxEmptyString ); break;
 			}
 
-			long startpostype;
-			battle.CustomBattleOptions().getSingleValue( _T("startpostype"), OptionsWrapper::EngineOption ).ToLong( &startpostype );
+            const long startpostype = LSL::Util::FromString<long>(
+                battle.CustomBattleOptions().getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption ));
 
-			std::vector<StartPos> remap_positions;
+            std::vector<LSL::StartPos> remap_positions;
 			if ( battle.IsProxy() && ( startpostype != IBattle::ST_Pick ) && ( startpostype != IBattle::ST_Choose ) )
 			{
 				std::set<int> parsedteams;
@@ -396,14 +318,14 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 						NumTeams++;
 				}
 
-				MapInfo infos = battle.LoadMap().info;
+                LSL::MapInfo infos = battle.LoadMap().info;
 				unsigned int nummapstartpositions = infos.positions.size();
 				unsigned int copysize = std::min( nummapstartpositions, NumTeams );
-				remap_positions = std::vector<StartPos> ( infos.positions.begin(), infos.positions.begin() + copysize ); // only add the first x positions
+                remap_positions = std::vector<LSL::StartPos> ( infos.positions.begin(), infos.positions.begin() + copysize ); // only add the first x positions
 
 				if ( startpostype == IBattle::ST_Random )
 				{
-					random_shuffle( remap_positions.begin(), remap_positions.end() ); // shuffle the positions
+                    std::random_shuffle( remap_positions.begin(), remap_positions.end() ); // shuffle the positions
 				}
 
 			}
@@ -417,21 +339,19 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			}
 			else tdf.Append( _T("startpostype"), startpostype );
 
-			tdf.EnterSection( _T("mapoptions") );
-				OptionsWrapper::wxStringTripleVec optlistMap = battle.CustomBattleOptions().getOptions( OptionsWrapper::MapOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMap.begin(); it != optlistMap.end(); ++it)
+            tdf.EnterSection( _T("mapoptions") );
+                for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::MapOption ))
 				{
-						tdf.Append(it->first,it->second.second);
+                    tdf.Append(TowxString(it.first), TowxString(it.second.second));
 				}
 			tdf.LeaveSection();
 
 
 			tdf.EnterSection(_T("modoptions"));
 				tdf.Append( _T("relayhoststartpostype"), startpostype ); // also save the original wanted setting
-				OptionsWrapper::wxStringTripleVec optlistMod = battle.CustomBattleOptions().getOptions( OptionsWrapper::ModOption );
-				for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod.begin(); it != optlistMod.end(); ++it)
+                for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::ModOption ))
 				{
-						tdf.Append(it->first,it->second.second);
+                    tdf.Append(TowxString(it.first), TowxString(it.second.second));
 				}
 			tdf.LeaveSection();
 
@@ -509,7 +429,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					tdf.LeaveSection();
 					player_to_number[&user] = i;
 			}
-			if ( usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) )
+            if ( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
 			{
 				for ( unsigned int i = 0; i < NumUsers; i++ )
 				{
@@ -524,13 +444,12 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 								tdf.Append( _T("IsFromDemo"), int(status.isfromdemo) );
 								tdf.Append( _T("Host"), player_to_number[&battle.GetUser( status.owner )] );
 								tdf.EnterSection( _T("Options") );
-									int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex( user.GetNick() );
+                                    int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex(STD_STRING(user.GetNick()));
 									if ( optionmapindex > 0 )
-									{
-										OptionsWrapper::wxStringTripleVec optlistMod_ = battle.CustomBattleOptions().getOptions( (OptionsWrapper::GameOption)optionmapindex );
-										for (OptionsWrapper::wxStringTripleVec::const_iterator it = optlistMod_.begin(); it != optlistMod_.end(); ++it)
+                                    {
+                                        for (const auto& it : battle.CustomBattleOptions().getOptions((LSL::OptionsWrapper::GameOption)optionmapindex ))
 										{
-												tdf.Append(it->first,it->second.second);
+                                            tdf.Append(TowxString(it.first), TowxString(it.second.second));
 										}
 									}
 								tdf.LeaveSection();
@@ -542,7 +461,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			tdf.AppendLineBreak();
 
 			std::set<int> parsedteams;
-			wxArrayString sides = usync().GetSides( battle.GetHostModName() );
+            const auto sides = LSL::usync().GetSides(STD_STRING(battle.GetHostModName()));
 			for ( unsigned int i = 0; i < NumUsers; i++ )
 			{
 					User& usr = battle.GetUser( i );
@@ -552,7 +471,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 					parsedteams.insert( status.team );
 
 					tdf.EnterSection( _T("TEAM") + TowxString( teams_to_sorted_teams[status.team] ) );
-						if ( !usync().VersionSupports( SpringUnitSync::USYNC_GetSkirmishAI ) && status.IsBot() )
+                        if ( !LSL::usync().VersionSupports(LSL::USYNC_GetSkirmishAI ) && status.IsBot() )
 						{
 								tdf.Append( _T("AIDLL"), status.aishortname );
 								tdf.Append( _T("TeamLeader"), player_to_number[&battle.GetUser( status.owner )] ); // bot owner is the team leader
@@ -580,7 +499,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 									int teamnumber = teams_to_sorted_teams[status.team];
 									if ( teamnumber < int(remap_positions.size()) ) // don't overflow
 									{
-										StartPos position = remap_positions[teamnumber];
+                                        LSL::StartPos position = remap_positions[teamnumber];
 										tdf.Append(_T("StartPosX"), position.x );
 										tdf.Append(_T("StartPosZ"), position.y );
 									}
@@ -604,7 +523,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 						tdf.Append( _T("RGBColor"), colourstring);
 
 						unsigned int side = status.side;
-						if ( side < sides.GetCount() ) tdf.Append( _T("Side"), sides[side] );
+                        if ( side < sides.size() ) tdf.Append( _T("Side"), sides[side] );
 						tdf.Append( _T("Handicap"), status.handicap );
 					tdf.LeaveSection();
 			}

@@ -8,26 +8,28 @@
 //#include "../utils.h"
 #include "replaylist.h"
 #include "savegamelist.h"
-#include "../springunitsync.h"
+#include <lslunitsync/unitsync.h>
 
 template <class PlaybackTabImp >
-PlaybackLoader<PlaybackTabImp>::PlaybackLoader( ParentType* parent )
-    : m_parent( parent ),
-    m_thread_loader( 0 )
+PlaybackLoader<PlaybackTabImp>::PlaybackLoader( ParentType* parent ):
+	wxEvtHandler(),
+	m_parent( parent ),
+	m_thread_loader( NULL )
 {
 }
 
 template <class PlaybackTabImp >
 PlaybackLoader<PlaybackTabImp>::~PlaybackLoader()
 {
+	delete m_thread_loader;
 }
 
 template <class PlaybackTabImp >
 void PlaybackLoader<PlaybackTabImp>::Run()
 {
-    if ( !usync().IsLoaded() ) return;
+    if ( !LSL::usync().IsLoaded() ) return;
     if ( m_thread_loader ) return; // a thread is already running
-    m_filenames = usync().GetPlaybackList( IsReplayType );
+    m_filenames = LSL::usync().GetPlaybackList( IsReplayType );
     playbacklist<ListType>().RemoveAll();
     m_thread_loader = new ThreadType();
     m_thread_loader->SetParent( this );
@@ -38,14 +40,14 @@ void PlaybackLoader<PlaybackTabImp>::Run()
 template <class PlaybackTabImp >
 void PlaybackLoader<PlaybackTabImp>::OnComplete()
 {
-    if ( !m_parent ) return;
-        wxCommandEvent notice( PlaybacksLoadedEvt, 1 );
-    ((wxEvtHandler*)m_parent)->ProcessEvent( notice );
-    m_thread_loader = 0; // the thread object deleted itself
+	if ( m_parent == NULL ) return;
+	wxCommandEvent notice( PlaybacksLoadedEvt, 1 );
+	wxPostEvent(m_parent, notice);
+	m_thread_loader = 0; // the thread object deleted itself
 }
 
 template <class PlaybackTabImp >
-wxArrayString PlaybackLoader<PlaybackTabImp>::GetPlaybackFilenames()
+std::vector<std::string> PlaybackLoader<PlaybackTabImp>::GetPlaybackFilenames()
 {
 	return m_filenames;
 }

@@ -28,8 +28,6 @@
 #include <stdexcept>
 
 #include "battleroomtab.h"
-#include "ui.h"
-#include "springunitsync.h"
 #include "user.h"
 #include "battle.h"
 #include "defines.h"
@@ -47,7 +45,7 @@
 #include "utils/customdialogs.h"
 #include "autobalancedialog.h"
 #include "settings.h"
-#include "Helper/colorbutton.h"
+#include "helper/colorbutton.h"
 #include "mapselectdialog.h"
 #include "mmoptionwindows.h"
 #include "aui/auimanager.h"
@@ -98,7 +96,12 @@ BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 	EVT_MENU                ( BROOM_BALANCE,                BattleRoomTab::OnBalance                )
 	EVT_MENU                ( BROOM_FIXID,                  BattleRoomTab::OnFixTeams               )
 	EVT_MENU                ( BROOM_FIXCOLOURS,             BattleRoomTab::OnFixColours             )
-	EVT_MENU                ( BROOM_AUTOPASTE,             BattleRoomTab::OnAutoPaste             )
+	EVT_MENU                ( BROOM_AUTOPASTE,              BattleRoomTab::OnAutoPaste              )
+
+	EVT_MENU                ( BROOM_AUTOHOST_BALANCE,       BattleRoomTab::OnAutohostBalance        )
+	EVT_MENU                ( BROOM_AUTOHOST_RANDOMMAP,     BattleRoomTab::OnAutohostRandomMap      )
+	EVT_MENU                ( BROOM_AUTOHOST_NOTIFY,        BattleRoomTab::OnAutohostNotify         )
+
 
 	EVT_LIST_ITEM_ACTIVATED ( BROOM_OPTIONLIST,             BattleRoomTab::OnOptionActivate         )
 
@@ -136,7 +139,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_ally_sel->SetToolTip( TE( _( "Players with the same ally number work together to achieve victory." ) ) );
 	m_color_sel = new ColorButton( m_player_panel, BROOM_COLOURSEL, wxColour (0,0,0), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_color_sel->SetToolTip( TE( _( "Select a color to identify your units in-game" ) ) );
-	m_side_sel = new wxBitmapComboBox( m_player_panel, BROOM_SIDESEL, _T( "" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
+	m_side_sel = new wxBitmapComboBox( m_player_panel, BROOM_SIDESEL, wxEmptyString, wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_side_sel->SetToolTip( TE( _( "Select your faction" ) ) );
 	m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _( "Spectator" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_spec_chk->SetToolTip( TE( _( "Spectate (watch) the battle instead of playing" ) ) );
@@ -153,12 +156,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, _( "Setup: " ) );
 	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, _( "Unready: 0" ) );
 
-	//XXX not needed ?
-//	m_size_lbl = new wxStaticText( this, -1, _T( "" ) );
-//	m_wind_lbl = new wxStaticText( this, -1, _T( "" ) );
-//	m_tidal_lbl = new wxStaticText( this, -1, _T( "" ) );
-
-	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, _T( "" ), wxDefaultPosition, wxDefaultSize );
+	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, wxEmptyString, wxDefaultPosition, wxDefaultSize );
 
 	m_minimap = new MapCtrl( this, 162, m_battle, true, true, true, false );
 	m_minimap->SetToolTip( TE( _( "A preview of the selected map.  You can see the starting positions, or (if set) starting boxes." ) ) );
@@ -247,7 +245,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	wxBoxSizer* m_preset_btns_sizer;
 	m_preset_btns_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, _T(""), wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
+	m_options_preset_sel = new wxComboBox( this, BROOM_PRESETSEL, wxEmptyString, wxDefaultPosition, wxDefaultSize,  sett().GetPresetList(), wxCB_READONLY );
 	m_options_preset_sel->SetToolTip( TE( _( "Load battle preset" ) ) );
 
 	m_preset_sizer->Add( m_options_preset_sel, 0, wxEXPAND | wxALL );
@@ -270,16 +268,13 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	m_preset_sizer->Add( m_preset_btns_sizer, 0, wxEXPAND );
 
 
-	m_opts_list = new wxListCtrl( this, BROOM_OPTIONLIST, wxDefaultPosition, wxDefaultSize, wxLC_NO_HEADER | wxLC_REPORT );
+	m_opts_list = new wxListCtrl( this, BROOM_OPTIONLIST, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
 	//m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
 	m_opts_list->SetFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
 	m_opts_list->SetToolTip( TE( _( "Activate an element to quickly change it" ) ) );
-	wxListItem col;
 
-	col.SetText( _( "Option" ) );
-	m_opts_list->InsertColumn( 0, col );
-	col.SetText( _( "Value" ) );
-	m_opts_list->InsertColumn( 1, col );
+	m_opts_list->InsertColumn( 0, _( "Option" ), wxLIST_FORMAT_LEFT, 160 );
+	m_opts_list->InsertColumn( 1, _( "Value" ), wxLIST_FORMAT_LEFT, 140 );
 
 	// Create Sizers
 	m_players_sizer = new wxBoxSizer( wxVERTICAL );
@@ -358,10 +353,8 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
-	unsigned int widthfraction = m_opts_list->GetClientSize().GetWidth() / 3;
-	m_opts_list->SetColumnWidth( 0, widthfraction * 1.95 );
-	m_opts_list->SetColumnWidth( 1, widthfraction * 0.95 );
 
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
 }
 
 
@@ -459,22 +452,22 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
   if ( !m_battle ) return;
 
 	long index = m_opt_list_map[ Tag ];
-	OptionsWrapper::GameOption type = ( OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
+	LSL::OptionsWrapper::GameOption type = ( LSL::OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
 	wxString key = Tag.AfterFirst( '_' );
 	wxString value;
-	if ( ( type == OptionsWrapper::MapOption ) || ( type == OptionsWrapper::ModOption ) || ( type == OptionsWrapper::EngineOption ) )
+	if ( ( type == LSL::OptionsWrapper::MapOption ) || ( type == LSL::OptionsWrapper::ModOption ) || ( type == LSL::OptionsWrapper::EngineOption ) )
 	{
-		OptionType DataType = m_battle->CustomBattleOptions().GetSingleOptionType( key );
-		value = m_battle->CustomBattleOptions().getSingleValue( key, ( OptionsWrapper::GameOption )type );
-		if ( m_battle->CustomBattleOptions().getDefaultValue( key, type ) == value ) m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
+		LSL::Enum::OptionType DataType = m_battle->CustomBattleOptions().GetSingleOptionType( STD_STRING(key) );
+		value = TowxString(m_battle->CustomBattleOptions().getSingleValue(STD_STRING(key), ( LSL::OptionsWrapper::GameOption )type ));
+		if ( TowxString(m_battle->CustomBattleOptions().getDefaultValue( STD_STRING(key), type )) == value) m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
 		else m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD ) );
-		if ( DataType == opt_bool )
+		if ( DataType == LSL::Enum::opt_bool )
 		{
 			value =  bool2yn( s2l( value ) ); // convert from 0/1 to literal Yes/No
 		}
-		else if ( DataType == opt_list )
+		else if ( DataType == LSL::Enum::opt_list )
 		{
-			value = m_battle->CustomBattleOptions().GetNameListOptValue( key, type ); // get the key full name not short key
+			value = TowxString(m_battle->CustomBattleOptions().GetNameListOptValue(STD_STRING(key), type )); // get the key full name not short key
 		}
 		m_opts_list->SetItem( index, 1, value );
 	}
@@ -496,7 +489,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 			{
                 m_opts_list->DeleteItem( i );
 			}
-			AddMMOptionsToList( m_map_opts_index, OptionsWrapper::MapOption );
+			AddMMOptionsToList( m_map_opts_index, LSL::OptionsWrapper::MapOption );
 
 			m_minimap->UpdateMinimap();
 
@@ -514,12 +507,12 @@ BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 	return *m_players;
 }
 
-void BattleRoomTab::UpdateMapInfoSummary() 
+void BattleRoomTab::UpdateMapInfoSummary()
 {
 	try   // updates map info summary
 	{
 		ASSERT_EXCEPTION( m_battle->MapExists(), _( "Map does not exist." ) );
-		UnitSyncMap map = m_battle->LoadMap();
+		LSL::UnitsyncMap map = m_battle->LoadMap();
 		m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ] , 1, wxFormat( _T( "%.0fx%.0f" ) ) % (map.info.width / 512.0) % (map.info.height / 512.0 ) );
 		m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, wxFormat( _T( "%d-%d" ) ) % map.info.minWind % map.info.maxWind );
 		m_opts_list->SetItem( m_opt_list_map[ _( "Tidal strength" ) ], 1, wxFormat( _T( "%d" ) ) % map.info.tidalStrength );
@@ -579,14 +572,14 @@ void BattleRoomTab::UpdateUser( User& user )
 		    m_ready_chk->Enable();
 		    m_auto_unspec_chk->Disable();
 		}
-	}
-	else
-	{
+	} else { // we are player
 		m_side_sel->Enable();
 		m_ally_sel->Enable();
 		m_team_sel->Enable();
 		m_ready_chk->Enable();
-		m_auto_unspec_chk->Disable();
+		m_auto_unspec_chk->Disable(); //disable and uncheck unspec as we are already a player
+		m_auto_unspec_chk->SetValue(false);
+		m_battle->SetAutoUnspec(false);
 	}
 
 	icons().SetColourIcon( user.BattleStatus().colour );
@@ -602,7 +595,7 @@ Battle* BattleRoomTab::GetBattle()
 
 ChatPanel& BattleRoomTab::GetChatPanel()
 {
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 	ASSERT_LOGIC( m_chat != 0, _T( "m_chat = 0" ) );
 	return *m_chat;
 }
@@ -638,7 +631,7 @@ void BattleRoomTab::OnStart( wxCommandEvent& /*unused*/ )
 
 void BattleRoomTab::OnLeave( wxCommandEvent& /*unused*/ )
 {
-	if ( !m_battle ) return;
+	if ( m_battle == NULL) return;
 	m_battle->Leave();
 }
 
@@ -689,7 +682,7 @@ void BattleRoomTab::OnFixTeams( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnFixColours( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxLogMessage( _T( "" ) );
+	wxLogMessage( wxEmptyString );
 	if ( !m_battle->IsFounderMe() ) // Works with autohosts, and human hosts knows what it mean.
 	{
 		m_battle->Say( _T( "!fixcolors" ) );
@@ -771,7 +764,7 @@ void BattleRoomTab::OnAutoStart( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnAutoSpec( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	int trigger = wxGetNumberFromUser( _( "Enter timeout before autospeccing a player in minutes" ), _( "Set Timeout" ), _T( "" ), sett().GetBattleLastAutoSpectTime() / 60, 1, 60, ( wxWindow* ) & ui().mw(), wxDefaultPosition );
+	int trigger = wxGetNumberFromUser( _( "Enter timeout before autospeccing a player in minutes" ), _( "Set Timeout" ), wxEmptyString, sett().GetBattleLastAutoSpectTime() / 60, 1, 60, ( wxWindow* ) & ui().mw(), wxDefaultPosition );
 	if ( trigger < 0 ) trigger = 0;
 	trigger = trigger * 60;
 	m_autospec_mnu->Check( trigger > 0 );
@@ -812,6 +805,7 @@ void BattleRoomTab::OnAllySel( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnColourSel( wxCommandEvent& /*unused*/ )
 {
 		if ( !m_battle ) return;
+    if ( !m_battle ) return;
     User& u = m_battle->GetMe();
     wxColour CurrentColour = u.BattleStatus().colour;
     CurrentColour = GetColourFromUser(this, CurrentColour);
@@ -909,8 +903,7 @@ void BattleRoomTab::OnUserJoined( User& user )
 	}
 	UpdateStatsLabels();
 
-	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
-			UiEvents::StatusData( wxFormat(_("%s joined your active battle") ) % user.GetNick(), 1 ) );
+	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(UiEvents::StatusData( wxFormat(_("%s joined your active battle") ) % user.GetNick(), 1 ) );
 }
 
 
@@ -924,7 +917,7 @@ void BattleRoomTab::OnUserLeft( User& user )
 }
 
 
-void BattleRoomTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
+void BattleRoomTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	if ( !m_battle ) return;
 	//m_minimap->UpdateMinimap();//should happen automagically now
@@ -934,13 +927,13 @@ void BattleRoomTab::OnUnitsyncReloaded( GlobalEvents::GlobalEventData /*data*/ )
 	m_battle->SendMyBattleStatus(); // This should reset sync status.
 }
 
-long BattleRoomTab::AddMMOptionsToList( long pos, OptionsWrapper::GameOption optFlag )
+long BattleRoomTab::AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOption optFlag )
 {
 	if ( !m_battle ) return -1;
-	OptionsWrapper::wxStringTripleVec optlist = m_battle->CustomBattleOptions().getOptions( optFlag );
-	for ( OptionsWrapper::wxStringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
+	LSL::OptionsWrapper::stringTripleVec optlist = m_battle->CustomBattleOptions().getOptions( optFlag );
+	for ( LSL::OptionsWrapper::stringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
 	{
-		m_opts_list->InsertItem( pos, it->second.first );
+		m_opts_list->InsertItem( pos, TowxString(it->second.first));
 		wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it->first;
 		m_opt_list_map[ tag ] = pos;
 		UpdateBattleInfo( tag );
@@ -1002,20 +995,22 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxLogDebugFunc( _T( "" ) );
+	wxLogDebugFunc( wxEmptyString );
 
-	if ( mapSelectDialog().ShowModal() == wxID_OK && mapSelectDialog().GetSelectedMap() != NULL )
+	const wxString mapname = mapSelectDialog();
+	if ( !mapname.empty() )
 	{
-		wxString mapname = mapSelectDialog().GetSelectedMap()->name;
-		wxLogDebugFunc( mapname );
 		if ( !m_battle->IsFounderMe() )
 		{
-			m_battle->DoAction( _T( "suggests " ) + mapname );
+            autohostManager.GetAutohostHandler().SetMap(mapname);
+			//m_battle->DoAction( _T( "suggests " ) + mapname );
 			return;
 		}
+
 		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );
-		if ( idx != wxNOT_FOUND )
-            SetMap( idx );
+		if ( idx != wxNOT_FOUND ) {
+			SetMap( idx );
+		}
 	}
 }
 
@@ -1024,7 +1019,7 @@ void BattleRoomTab::ReloadMaplist()
 	if ( !m_battle ) return;
 	m_map_combo->Clear();
 
-	wxArrayString maplist = usync().GetMapList();
+    const wxArrayString maplist = LSL::Util::vectorToArrayString(LSL::usync().GetMapList());
 // maplist.Sort(CompareStringIgnoreCase);
 
 	size_t nummaps = maplist.Count();
@@ -1037,7 +1032,7 @@ void BattleRoomTab::SetMap( int index )
 	if ( !m_battle ) return;
 	try
 	{
-		UnitSyncMap map = usync().GetMapEx( index );
+		LSL::UnitsyncMap map = LSL::usync().GetMapEx( index );
 		m_battle->SetLocalMap( map );
 		m_battle->SendHostInfo( IBattle::HI_Map );
 	} catch ( ... ) {}
@@ -1050,7 +1045,7 @@ void BattleRoomTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 	{
 		try
 		{
-			m_battle->DoAction( _T( "suggests " ) + usync().GetMap( m_map_combo->GetCurrentSelection() ).name );
+            m_battle->DoAction( _T( "suggests " ) + TowxString(LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name));
 		}
 		catch ( ... )
 		{
@@ -1075,10 +1070,10 @@ void BattleRoomTab::OnOptionActivate( wxListEvent& event )
 			break;
 		}
 	}
-	OptionsWrapper& optWrap = m_battle->CustomBattleOptions();
-	OptionsWrapper::GameOption optFlag = ( OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
-	wxString key = tag.AfterFirst( '_' );
-	OptionType type = optWrap.GetSingleOptionType( key );
+	LSL::OptionsWrapper& optWrap = m_battle->CustomBattleOptions();
+	LSL::OptionsWrapper::GameOption optFlag = ( LSL::OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
+	const std::string key = STD_STRING(tag.AfterFirst( '_' ));
+	LSL::Enum::OptionType type = optWrap.GetSingleOptionType( key );
 	if ( !optWrap.keyExists( key, optFlag, false, type ) ) return;
 	SingleOptionDialog dlg( *m_battle, tag );
 	dlg.ShowModal();
@@ -1090,7 +1085,7 @@ void BattleRoomTab::SortPlayerList()
 	m_players->SortList();
 }
 
-void BattleRoomTab::SetBattle( Battle* battle )
+void BattleRoomTab::SetBattle(Battle* battle)
 {
 	m_battle = battle;
 
@@ -1128,22 +1123,11 @@ void BattleRoomTab::SetBattle( Battle* battle )
 	m_players->SetBattle( m_battle );
 	m_chat->SetBattle( m_battle );
 	m_players->Clear();
-	m_side_sel->Clear();
 
-	if ( m_battle )
-	{
+	if ( m_battle ) {
+		RegenerateOptionsList();
 		m_options_preset_sel->SetStringSelection( sett().GetModDefaultPresetName( m_battle->GetHostModName() ) );
-
 		m_color_sel->SetColor( m_battle->GetMe().BattleStatus().colour );
-		try
-		{
-			wxArrayString sides = usync().GetSides( m_battle->GetHostModName() );
-			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
-			{
-				m_side_sel->Append( sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
-			}
-		}
-		catch ( ... ) {}
 		for ( UserList::user_map_t::size_type i = 0; i < m_battle->GetNumUsers(); i++ )
 		{
 			m_players->AddUser( m_battle->GetUser( i ) );
@@ -1165,11 +1149,9 @@ void BattleRoomTab::SetBattle( Battle* battle )
 
 		m_host_new_btn->Show( false );
 
-		RegenerateOptionsList();
-
 		ReloadMaplist();
 
-		UpdateBattleInfo( wxFormat( _T( "%d_mapname" ) ) % OptionsWrapper::PrivateOptions );
+		UpdateBattleInfo( wxFormat( _T( "%d_mapname" ) ) % LSL::OptionsWrapper::PrivateOptions );
 		UpdateBattleInfo();
 		UpdateStatsLabels();
 	}
@@ -1194,17 +1176,29 @@ void BattleRoomTab::RegenerateOptionsList()
 	pos++;
 	m_opts_list->InsertItem( pos, wxEmptyString );
 	pos++;
-	pos = AddMMOptionsToList( pos, OptionsWrapper::EngineOption );
+	pos = AddMMOptionsToList( pos, LSL::OptionsWrapper::EngineOption );
 	// AddMMOptionsToList already increments pos by itself
 	m_opts_list->InsertItem( pos, wxEmptyString );
 	pos++;
 	m_mod_opts_index = pos;
-	pos = AddMMOptionsToList( m_mod_opts_index, OptionsWrapper::ModOption );
+	pos = AddMMOptionsToList( m_mod_opts_index, LSL::OptionsWrapper::ModOption );
 	// AddMMOptionsToList already increments pos by itself
 	m_opts_list->InsertItem( pos, wxEmptyString );
 	pos++;
 	m_map_opts_index = pos;
-	pos = AddMMOptionsToList( m_map_opts_index, OptionsWrapper::MapOption );
+	pos = AddMMOptionsToList( m_map_opts_index, LSL::OptionsWrapper::MapOption );
+	m_side_sel->Clear();
+	if (m_battle != NULL) {
+		try {
+			printf("RegenerateOptionsList\n");
+			const wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
+			for ( unsigned int i = 0; i < sides.GetCount(); i++ ) {
+				m_side_sel->Append(sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
+			printf("RegenerateOptionsList %s\n", (const char*)sides[i].mb_str());
+			}
+		}
+		catch ( ... ) {}
+	}
 }
 
 void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )
@@ -1223,13 +1217,30 @@ void BattleRoomTab::OnHostNew( wxCommandEvent& /*event*/ )
 		ui().ShowConnectWindow();
 		return;
 	}
-	if ( !ui().IsSpringCompatible() )
+/*	if ( !ui().IsSpringCompatible() )
 	{
 		wxLogWarning( _T( "Hosting is disabled due to the incompatible version " ) );
 		customMessageBoxNoModal( SL_MAIN_ICON, _( "Hosting is disabled due to the incompatible version you're using" ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 		return;
 	}
+*/
 	SL::RunHostBattleDialog( this );
+}
+
+void BattleRoomTab::OnAutohostBalance( wxCommandEvent& /*event*/ )
+{
+	autohostManager.GetAutohostHandler().Balance();
+}
+
+void BattleRoomTab::OnAutohostRandomMap( wxCommandEvent& /*event*/ )
+{
+	autohostManager.GetAutohostHandler().SetRandomMap();
+}
+
+
+void BattleRoomTab::OnAutohostNotify( wxCommandEvent& /*event*/ )
+{
+	autohostManager.GetAutohostHandler().Notify();
 }
 
 //void BattleRoomTab::MaximizeSizer()

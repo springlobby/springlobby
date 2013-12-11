@@ -2,6 +2,7 @@
 #define MAINTORRENTTAB_H
 
 #include <wx/scrolwin.h>
+#include <wx/timer.h>
 #include <map>
 
 class wxStaticText;
@@ -12,7 +13,7 @@ struct DownloadInfo;
 class wxBoxSizer;
 class ColorButton;
 class WidgetDownloadDialog;
-
+class ContentDownloadDialog;
 
 typedef std::map<wxString,DownloadInfo> map_infos;
 typedef map_infos::iterator map_infos_iter;
@@ -24,7 +25,7 @@ class MainDownloadTab: public wxScrolledWindow
 		MainDownloadTab( wxWindow* parent );
 		~MainDownloadTab();
 
-        void OnUpdate();
+        void OnUpdate(wxTimerEvent& /*event*/);
 
 	protected:
 
@@ -38,21 +39,15 @@ class MainDownloadTab: public wxScrolledWindow
             ID_INCOMING_LBL,
             ID_DOWNLOAD_DIALOG,
             ID_BUTTON_CLEAR,
-            ID_BUTTON_WIDGETS
+            ID_BUTTON_WIDGETS,
+            ID_TIMER
         };
-
-        wxStaticText* m_incoming;
-		wxStaticText* m_incoming_lbl;
-		wxStaticText* m_status_color_text;
 
 		wxButton* m_but_cancel;
 		wxButton* m_but_clear;
-		//wxButton* m_but_download;
-		ColorButton* m_status_color;
 		DownloadListCtrl* m_dl_listctrl;
         WidgetDownloadDialog* m_widgets_dialog;
 
-        map_infos info_map;
         void OnCancelButton( wxCommandEvent& event );
 		void OnDownloadDialog( wxCommandEvent& event );
         void OnDLWidgets( wxCommandEvent& event );
@@ -66,6 +61,9 @@ class MainDownloadTab: public wxScrolledWindow
 		//*)
 
 		DECLARE_EVENT_TABLE()
+		ContentDownloadDialog* m_download_dialog;
+		wxButton* m_but_download;
+        wxTimer* timer;
 };
 
 #endif

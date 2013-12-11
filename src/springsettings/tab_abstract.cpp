@@ -35,18 +35,18 @@
 #include <wx/display.h>
 
 #include "../utils/customdialogs.h"
-#include "../springunitsynclib.h"
-
+#include <utils/conversion.h>
 #include "ctrlconstants.h"
 #include "se_utils.h"
 #include "../settings.h"
 #include "presets.h"
 
 #include "../utils/debug.h"
+#include <lslunitsync/c_api.h>
 
 
 intMap abstract_panel::intSettings;
-//stringMap abstract_panel::stringSettings;
+stringMap abstract_panel::stringSettings;
 floatMap abstract_panel::floatSettings;
 
 bool abstract_panel::settingsChanged = false;
@@ -90,8 +90,8 @@ const Control intControls[] = {
 		//UI_ZOOM[1]
 		UI_ZOOM[0],
         //W4_CONTROLS[7]
-		W4_CONTROLS[0],W4_CONTROLS[1],W4_CONTROLS[2],W4_CONTROLS[3],
-		W4_CONTROLS[4],W4_CONTROLS[5]
+        W4_CONTROLS[0],W4_CONTROLS[1],W4_CONTROLS[2],W4_CONTROLS[3],
+        W4_CONTROLS[4],W4_CONTROLS[5]
 
 };
 
@@ -121,17 +121,18 @@ bool abstract_panel::loadValuesIntoMap()
 		//special treatment for resolution that'll set proper defaults for res
 		wxDisplay display(0);
 		wxRect display_rect ( display.GetGeometry() );
-//		const int current_x_res = configHandler.GetSpringConfigInt(RC_TEXT[0].key,display_rect.width);
-//		const int current_y_res = configHandler.GetSpringConfigInt(RC_TEXT[1].key,display_rect.height);
+//		const int current_x_res = LSL::susynclib().GetSpringConfigInt(RC_TEXT[0].key,display_rect.width);
+//		const int current_y_res = LSL::susynclib().GetSpringConfigInt(RC_TEXT[1].key,display_rect.height);
 
 		for (int i = 0; i< intControls_size;++i)
 		{
-			intSettings[intControls[i].key] = configHandler.GetSpringConfigInt(intControls[i].key,fromString(intControls[i].def));
+      intSettings[intControls[i].key]
+          = LSL::susynclib().GetSpringConfigInt(STD_STRING(intControls[i].key),fromString(intControls[i].def));
 		}
-		for (int i = 0; i< floatControls_size;++i)
-		{
-			float tmp = configHandler.GetSpringConfigFloat(floatControls[i].key,fromString(floatControls[i].def));
-			floatSettings[floatControls[i].key] = tmp;
+    for (int i = 0; i< floatControls_size;++i)
+    {
+      floatSettings[floatControls[i].key]
+          = LSL::susynclib().GetSpringConfigFloat(STD_STRING(floatControls[i].key),fromString(floatControls[i].def));
 		}
 	}
 	catch (...)
@@ -214,19 +215,21 @@ void abstract_panel::loadDefaults()
 	for (int i = 0;i< s_category_sizes[_T("UI_ZOOM")]; ++i)
 		intSettings[UI_ZOOM[i].key] = fromString( UI_ZOOM[i].def);
 
-	for (int i = 0;i< s_category_sizes[_T("W4_CONTROLS")] - 1; ++i)
+    for (int i = 0;i< s_category_sizes[_T("W4_CONTROLS")] - 1; ++i)
 		intSettings[W4_CONTROLS[i].key] = fromString( W4_CONTROLS[i].def);
 
-	floatSettings[W4_CONTROLS[ s_category_sizes[_T("W4_CONTROLS")]  ].key] = fromString( W4_CONTROLS[ s_category_sizes[_T("W4_CONTROLS")] ].def);
+    floatSettings[W4_CONTROLS[ s_category_sizes[_T("W4_CONTROLS")]  ].key] = fromString( W4_CONTROLS[ s_category_sizes[_T("W4_CONTROLS")] ].def);
+
 }
 
 void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 
-	settingsChanged = true;
+    settingsChanged = true;
+
 	wxSlider* slider = (wxSlider*) event.GetEventObject();
 
-	int value = slider->GetValue();
-	int id = event.GetId();
+    int value = slider->GetValue();
+    int id = event.GetId();
 
 	switch (event.GetId()) {
 		case ID_RO_SLI_0: {
@@ -286,26 +289,26 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 			(intSettings)[MO_SLI[0].key]= value;
 			(intSettings)[MO_SLI_EXT[0].key]= ( value > 0 ? 1 : 0);
 			} break;
-		case ID_MO_SLI_1:  {
+        case ID_MO_SLI_1:  {
 			(intSettings)[MO_SLI[1].key]= value;
 			(intSettings)[MO_SLI_EXT[1].key]= ( value > 0 ? 1 : 0);
 			} break;
-		case ID_MO_SLI_2:  {
+        case ID_MO_SLI_2:  {
 			(intSettings)[MO_SLI[2].key]= value;
 			(intSettings)[MO_SLI_EXT[2].key]= ( value > 0 ? 1 : 0);
 			} break;
-		case ID_MO_SLI_3:  {
+        case ID_MO_SLI_3:  {
 			(intSettings)[MO_SLI[3].key]= value;
 			(intSettings)[MO_SLI_EXT[3].key]= ( value > 0 ? 1 : 0);
 			} break;
-		case ID_MO_SLI_4:  {
+        case ID_MO_SLI_4:  {
 			(intSettings)[MO_SLI[4].key]= value;
 			(intSettings)[MO_SLI_EXT[4].key]= ( value > 0 ? 1 : 0);
 			} break;
-		default:
-			wxLogDebugFunc( _T("unhandled case val") );
-			break;
-		}
+        default:
+            wxLogDebugFunc( _T("unhandled case val") );
+            break;
+	}
 }
 
 
@@ -476,29 +479,27 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 
 		case ID_W4_BumpWaterRefraction:
 		{
-			int choiceIndex=0;
+            int choiceIndex=0;
 			for (unsigned int i =1; i<sizeof(W4_REFRACTION_CHOICES)/sizeof(W4_REFRACTION_CHOICES[0]);++i)
 			{
 				if (choice==W4_REFRACTION_CHOICES[i])
 					choiceIndex = i;
 			}
 
-			(intSettings)[W4_CONTROLS[5].key]= choiceIndex;
-			break;
+		    (intSettings)[W4_CONTROLS[5].key]= choiceIndex;
+		    break;
 		}
 
 		case ID_W4_BumpWaterTexSizeReflection:
 		{
-			/*int choiceIndex = 0;
+			int choiceIndex = 0;
 			for (unsigned int i =1; i<sizeof(W4_TEXSIZE_CHOICES)/sizeof(W4_TEXSIZE_CHOICES[0]);++i)
 			{
 				if (choice==W4_TEXSIZE_CHOICES[i])
 					choiceIndex = i;
 			}
-			*/
-			long val = 128;
-			choice.ToLong( &val );
-			(intSettings)[W4_CONTROLS[4].key]= val;
+
+			(intSettings)[W4_CONTROLS[4].key]= choiceIndex;
 			break;
 		}
 
@@ -518,7 +519,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			for (int i=0; i<prVal_RenderQuality_size;++i)
 			{
 				presetValues<int,5> pop = prVal_RenderQuality[i];
-				int k = (pop.values[choice]);
+                int k = (pop.values[choice]);
 
 				(intSettings)[prVal_RenderQuality[i].key]= k;
 			}
@@ -568,9 +569,9 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 			break;
 		}
 
-		default:
-			wxLogDebugFunc( _T("unhandled case val") );
-			break;
+        default:
+            wxLogDebugFunc( _T("unhandled case val") );
+            break;
 	}
 }
 
@@ -597,23 +598,20 @@ void abstract_panel::OnSpinControlChange(wxSpinEvent& event)
 //TODO inquire about floatsettings
 bool abstract_panel::saveSettings() {
 	try {
-		for (intMap::const_iterator i = intSettings.begin(); i != intSettings.end();++i)
-		{
-			configHandler.SetSpringConfigInt(i->first,i->second);
+		for (intMap::const_iterator i = intSettings.begin(); i != intSettings.end();++i) {
+			LSL::susynclib().SetSpringConfigInt(STD_STRING(i->first),i->second);
 		}
-//		for (stringMap::const_iterator s = stringSettings.begin(); s != stringSettings.end();++s)
-//		{
-//			//not used
-//			//configHandler.SetSpringConfigString(s->first,s->second);
-//		}
-		for (floatMap::const_iterator f = floatSettings.begin(); f != floatSettings.end();++f)
-		{
-			configHandler.SetSpringConfigFloat(f->first,f->second);
+		for (stringMap::const_iterator s = stringSettings.begin(); s != stringSettings.end();++s) {
+			LSL::susynclib().SetSpringConfigString(STD_STRING(s->first),STD_STRING(s->second));
+		}
+		for (floatMap::const_iterator f = floatSettings.begin(); f != floatSettings.end();++f) {
+			LSL::susynclib().SetSpringConfigFloat(STD_STRING(f->first),f->second);
 		}
 	} catch (...) {
 		customMessageBox(SS_MAIN_ICON,_("Could not save, unitsync not properly loaded"), _("SpringSettings Error"), wxOK|wxICON_HAND, 0);
 		return false;
 	}
+
 	return true;
 }
 

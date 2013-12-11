@@ -3,6 +3,8 @@
 
 #include <lslutils/misc.h>
 #include "../settings.h"
+#include <lslutils/conversion.h>
+#include "conversion.h"
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
@@ -41,6 +43,12 @@ double LevenshteinDistance(wxString s, wxString t)
 #undef D
 }
 
+std::string GetBestMatch(const std::vector<std::string>& a, const std::string& s, double* distance  )
+{
+    auto arr = LSL::Util::vectorToArrayString(a);
+    return STD_STRING(GetBestMatch(arr, TowxString(s), distance));
+}
+
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance )
 {
     const unsigned int count = a.GetCount();
@@ -56,13 +64,12 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
         }
     }
     if (distance != NULL) *distance = minDistance;
-    if (minDistanceIndex == -1) return _T("");
+    if (minDistanceIndex == -1) return wxEmptyString;
     return a[minDistanceIndex];
 }
 
 wxString Paste2Pastebin( const wxString& message )
 {
-	#ifndef SL_QT_MODE
 	#ifndef __WXMAC__
 	wxStringOutputStream response;
 	wxStringOutputStream rheader;
@@ -114,7 +121,6 @@ wxString Paste2Pastebin( const wxString& message )
 	if(ret == CURLE_OK)
 		return response.GetString();
 	else
-	#endif
 	#endif
 
 	return wxEmptyString;

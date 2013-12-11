@@ -1,6 +1,20 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SOCKET_H
 #define SPRINGLOBBY_HEADERGUARD_SOCKET_H
 
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/networking/socket.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
 #include <wx/string.h>
 
 #include <wx/event.h>
@@ -26,7 +40,6 @@ enum SockError
 
 const int SOCKET_ID = 100;
 
-#ifndef SL_QT_MODE
 
 class SocketEvents;
 class wxSocketEvent;
@@ -91,7 +104,7 @@ class Socket
 class SocketEvents: public wxEvtHandler
 {
   public:
-    SocketEvents( iNetClass& netclass ): m_net_class(netclass) {}
+    SocketEvents( iNetClass& netclass ): wxEvtHandler(), m_net_class(netclass) {}
     void OnSocketEvent(wxSocketEvent& event);
   protected:
     iNetClass& m_net_class;
@@ -99,70 +112,6 @@ class SocketEvents: public wxEvtHandler
 };
 
 typedef void (*socket_callback)(Socket*);
-
-#else
-
-#include <QTcpSocket>
-//! @brief Class that implements a TCP client socket.
-class Socket : public QObject
-{
-    Q_OBJECT
-
-   public:
-    Socket( iNetClass& netclass, bool wait_on_connect = false, bool blocking = false );
-    ~Socket();
-
-    // Socket interface
-
-    void Connect( const wxString& addr, const int port );
-    void Disconnect( );
-
-    bool Send( const wxString& data );
-
-    //! used in plasmaservice, otherwise getting garbeld responses
-    wxString ReceiveSpecial();
-
-    wxString GetLocalAddress() const;
-    wxString GetHandle() const {return m_handle;}
-
-    SockState State( );
-    SockError Error( ) const;
-
-    void SetSendRateLimit( int Bps = -1 );
-    int GetSendRateLimit() {return m_rate;}
-    void OnTimer( int mselapsed );
-
-    void SetTimeout( const int seconds );
-    wxString Receive();
-
-private slots:
-    void OnDataIncoming();
-    void OnConnected();
-    void OnDisconnected();
-
-
-    protected:
-
-  // Socket variables
-    QTcpSocket* m_sock;
-
-    wxCriticalSection m_lock;
-
-    wxString m_ping_msg,m_handle;
-
-    bool m_wait_on_connect;
-    bool m_blocking;
-    iNetClass& m_net_class;
-
-    unsigned int m_udp_private_port;
-    int m_rate;
-    int m_sent;
-    quint16 m_blockSize;
-
-    QTcpSocket* _CreateSocket() const;
-};
-
-#endif
 
 #endif // SPRINGLOBBY_HEADERGUARD_SOCKET_H
 

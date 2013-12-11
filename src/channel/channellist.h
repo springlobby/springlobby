@@ -1,6 +1,21 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHANNELLIST_H
 #define SPRINGLOBBY_HEADERGUARD_CHANNELLIST_H
 
+
+/**
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+DO NOT CHANGE THIS FILE!
+
+this file is deprecated and will be replaced with
+
+lsl/container/channellist.h
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**/
+
+
+
 #include <map>
 #include <wx/string.h>
 

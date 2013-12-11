@@ -10,6 +10,7 @@ set -u
 
 SOURCE_HEADER="${1}"
 TARGET_HEADER="${2}"
+VERSIONFILE="${3}"
 
 REV_TEMPLATE="@SPRINGLOBBY_REV@"
 
@@ -17,7 +18,14 @@ REV_TEMPLATE="@SPRINGLOBBY_REV@"
 git branch &> /dev/null || exit 0
 
 REV="$(git describe --tags)"
+OLDREV=""
+if [ -s ${VERSIONFILE} ]; then
+	OLDREV=$(cat ${VERSIONFILE})
+fi
 
-sed "s;${REV_TEMPLATE};${REV};g" ${SOURCE_HEADER} > ${TARGET_HEADER}
-
+if [ "${OLDREV}" != "${REV}" ]; then # version changed, update file
+	echo "Updating from version ${OLDREV} to ${REV}"
+	echo -n ${REV}>${VERSIONFILE}
+	sed "s;${REV_TEMPLATE};${REV};g" ${SOURCE_HEADER} > ${TARGET_HEADER}
+fi
 

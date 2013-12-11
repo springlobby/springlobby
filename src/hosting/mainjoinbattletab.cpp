@@ -11,10 +11,8 @@
 #include <wx/wupdlock.h>
 #include <wx/log.h>
 
-#include "ui.h"
 #include "mainwindow.h" //used only for global pers load/save, remove when signals are merged
 #include "settings.h"
-#include "battle.h"
 #include "mainjoinbattletab.h"
 #include "battleroomtab.h"
 #include "battlemaptab.h"
@@ -92,7 +90,6 @@ ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
 	return 0;
 }
 
-//void MainJoinBattleTab::UpdateCurrentBattle()
 void MainJoinBattleTab::UpdateCurrentBattle()
 {
 	GetBattleRoomTab().UpdateBattleInfo();
@@ -107,15 +104,12 @@ void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
 	GetMMOptionsTab().UpdateOptControls( Tag );
 }
 
-
 void MainJoinBattleTab::JoinBattle( Battle& battle )
 {
-    PreSwitchBattlePerspective();
 	m_mm_opts_tab->SetBattle( &battle );
 	m_opts_tab->SetBattle( &battle );
 	m_map_tab->SetBattle( &battle );
 	m_battle_tab->SetBattle( &battle );
-	PostSwitchBattlePerspective();
 }
 
 
@@ -127,12 +121,10 @@ void MainJoinBattleTab::HostBattle( Battle& battle )
 
 void MainJoinBattleTab::LeaveCurrentBattle( bool /*called_from_join*/ )
 {
-    PreSwitchBattlePerspective();
 	m_mm_opts_tab->SetBattle( 0 );
 	m_opts_tab->SetBattle( 0 );
 	m_map_tab->SetBattle( 0 );
 	m_battle_tab->SetBattle( 0 );
-	PostSwitchBattlePerspective();
 }
 
 
@@ -152,7 +144,7 @@ void MainJoinBattleTab::ReloadPresetList()
 {
 	try
 	{
-		GetBattleRoomTab().UpdatePresetList();
+		//GetBattleRoomTab().UpdatePresetList();
 	} catch ( ... ) {}
 	try
 	{
@@ -199,16 +191,6 @@ void MainJoinBattleTab::SavePerspective( const wxString& perspective_name )
     SaveNotebookPerspective( m_tabs, perspective_name );
 }
 
-void MainJoinBattleTab::PostSwitchBattlePerspective( )
-{
-    ui().mw().LoadPerspectives( );
-}
-
-void MainJoinBattleTab::PreSwitchBattlePerspective( )
-{
-    ui().mw().SavePerspectives(  );
-}
-
 bool MainJoinBattleTab::UseBattlePerspective()
 {
     return GetBattleRoomTab().GetBattle() != 0;
@@ -218,4 +200,3 @@ void MainJoinBattleTab::FocusBattleRoomTab()
 {
 	m_tabs->SetSelection( 0 );
 }
-
