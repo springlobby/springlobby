@@ -7,17 +7,9 @@
 SLVERSION=$(shell dpkg-parsechangelog | sed -n 's/^Version: //p' | cut -f1 -d'-')
 
 PROGDIR := $(CURDIR)/debian/tmp
-ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
-    MAKEFLAGS += -j$(NUMJOBS)
-endif
 
 override_dh_auto_configure:
 	dh_auto_configure -- -DSPRINGLOBBY_REV:STRING=$(SLVERSION) -DCMAKE_BUILD_TYPE=RELWITHDEBINFO
-
-override_dh_auto_build:
-	+dh_auto_build
-	$(MAKE) -C debian/manpages
 
 #override_dh_installchangelogs:
 #	dh_installchangelogs ChangeLog
@@ -46,4 +38,4 @@ override_dh_auto_clean:
 %:
 	# fail to build on architectures other than amd64 and i386
 	dpkg-architecture -eamd64 || dpkg-architecture -ei386 || exit 1
-	+dh $@ --buildsystem=cmake
+	+dh $@ --buildsystem=cmake --parallel
