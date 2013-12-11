@@ -25,7 +25,8 @@ IF(WIN32)
 	CreateResourceCompileCommand(springsettings_RC_FILE ${springlobby_SOURCE_DIR}/src settings.rc ss_icon.o )
 	install(TARGETS springsettings RUNTIME DESTINATION .)
 ELSE(WIN32)
-	install(TARGETS springsettings RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+	set(BINDIR  "bin"                CACHE STRING "Where to install binaries")
+	install(TARGETS springsettings RUNTIME DESTINATION ${BINDIR} )
 ENDIF (WIN32)
 TARGET_LINK_LIBRARIES(springsettings
 		libsettings
