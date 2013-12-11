@@ -337,7 +337,7 @@ IF(WIN32)
 	)
 	install(TARGETS springlobby RUNTIME DESTINATION .)
 ELSE (WIN32)
-	set(BINDIR  "bin"                CACHE STRING "Where to install binaries")
+	set(BINDIR  "bin"                CACHE PATH "Where to install binaries")
 	install(TARGETS springlobby RUNTIME DESTINATION ${BINDIR} )
 	option(TEST_UNITSYNC_DEADLOCKS "check unitsync for deadlocks" ON)
 	#only do this on platforms with awk expected to be installed
