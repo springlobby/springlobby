@@ -15,6 +15,8 @@ override_dh_auto_configure:
 #	dh_installchangelogs ChangeLog
 
 override_dh_auto_install:
+	a2x --doctype manpage --format manpage debian/manpages/springlobby.6.txt
+	a2x --doctype manpage --format manpage debian/manpages/springsettings.6.txt
 	+dh_auto_install
 	cd $(PROGDIR)/usr/share/doc/springlobby && \
 	rm -fv COPYING AUTHORS && \
@@ -32,7 +34,7 @@ override_dh_strip:
 
 override_dh_auto_clean:
 	+dh_auto_clean
-	$(MAKE) -C debian/manpages clean
+	rm -f debian/manpages/springlobby.6 debian/manpages/springsettings.6
 	rm -f .gitattributes
 
 %:
