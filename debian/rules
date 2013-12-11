@@ -11,16 +11,10 @@ PROGDIR := $(CURDIR)/debian/tmp
 override_dh_auto_configure:
 	dh_auto_configure -- -DSPRINGLOBBY_REV:STRING=$(SLVERSION) -DCMAKE_BUILD_TYPE=RELWITHDEBINFO
 
-#override_dh_installchangelogs:
-#	dh_installchangelogs ChangeLog
-
 override_dh_auto_install:
 	a2x --doctype manpage --format manpage debian/manpages/springlobby.6.txt
 	a2x --doctype manpage --format manpage debian/manpages/springsettings.6.txt
 	+dh_auto_install
-	cd $(PROGDIR)/usr/share/doc/springlobby && \
-	rm -fv COPYING AUTHORS && \
-	gzip -9 README THANKS NEWS
 
 	# install launcher
 	mkdir -p $(PROGDIR)/usr/games
@@ -35,7 +29,6 @@ override_dh_strip:
 override_dh_auto_clean:
 	+dh_auto_clean
 	rm -f debian/manpages/springlobby.6 debian/manpages/springsettings.6
-	rm -f .gitattributes
 
 %:
 	# fail to build on architectures other than amd64 and i386
