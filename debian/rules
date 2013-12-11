@@ -10,8 +10,8 @@ override_dh_auto_configure:
 	dh_auto_configure -- -DSPRINGLOBBY_REV:STRING=$(SLVERSION) -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -DBINDIR=games
 
 override_dh_auto_install:
-	a2x --doctype manpage --format manpage debian/manpages/springlobby.6.txt
-	a2x --doctype manpage --format manpage debian/manpages/springsettings.6.txt
+	a2x -L --doctype manpage --format manpage debian/manpages/springlobby.6.txt
+	a2x -L --doctype manpage --format manpage debian/manpages/springsettings.6.txt
 	+dh_auto_install
 
 
