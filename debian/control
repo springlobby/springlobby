@@ -17,7 +17,7 @@ Vcs-Git: git://git.debian.org/pkg-games/springlobby.git
 Package: springlobby
 Provides: spring-lobby
 Architecture: i386 amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, spring (>= 0.81.2.1+dfsg1-5)
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: single/multiplayer lobby for the Spring RTS engine
  This package provides a single-player and multiplayer lobby for Spring.
  Other features include a P2P system for downloading maps and mods and
