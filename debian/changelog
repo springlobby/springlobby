@@ -1,3 +1,682 @@
+springlobby (0.180-1ubuntu1) UNRELEASED; urgency=low
+
+  [ Rene Milk ]
+  * using LSL::usync
+  * more LSL::usync usage pt1
+  * more LSL::usync usage pt2
+  * more LSL::usync usage pt3
+  * more LSL::usync usage pt4
+  * more LSL::usync usage pt5
+  * started to switch sasi over to LSL
+  * fixing qt sources for lsl pt1
+  * fixes post-rebase lslunitsync usage issues
+  * adds forgotten headercheck template file
+  * bump to fitting lsl commit
+
+  [ abma ]
+  * fix two possible crashes in battleroom
+  * fix wx assertion failed: RemoveItem (RefreshItems(), index was out of bounds)
+  * fix wxWidget assertion (double creation of alpha channel)
+  * fix wx assertion (nothing selected)
+  * update pr-downloader: fix osx engine downloading
+  * remove unused vars & fix failed wxassertion because of wrong sized image
+  * fix compile
+  * slightly refactor usermenu.h (still fails at Destroy())
+  * fix wx failed assertion (Destroy() with invalid item called)
+  * fix assertion in config (can't write value to section)
+  * fix updater compile
+  * remove debug msg
+
+  [ Rene Milk ]
+  * fix test_susynclib target
+  * fix springsettings linking
+
+  [ abma ]
+  * revert parts of merge / fix compile
+  * remove unused file
+  * update lsl
+  * remove dead code
+  * update lsl
+  * try to fix win32 buildslave error / cleanup
+
+  [ Rene Milk ]
+  * avoid leaking c++11 flag into plain C compilation units
+  * fixes msw compile, linking still an issue
+
+  [ abma ]
+  * try to fix compile
+
+  [ Rene Milk ]
+  * fix html window type in infopanel
+  * mostly fixes linker errors in msw build
+  * fixes remaining link errors in msw build
+
+  [ abma ]
+  * fix "unused var choiceIndex"
+  * fix some cppcheck warnings & update submodules
+  * fix crash on starting spring
+  * update lsl: fix springsettings
+  * update lsl: fix endlessloop / invalid cache / speedup
+  * try to fix crash at start
+  * style & catch execption from GetSpringVersionList
+  * update lsl / fix two crashes
+  * try to remove ifdef #2
+
+  [ N0U ]
+  * Feature #1704: add gui setting for DisableVersionCheck=1 DisableVersionCheck checkbox was added to options->general
+  * Feature #240 (right-click a spawn point and hit "add bot" in single player)
+  * Feature #1448 ( Map description) Not for single player!
+  * Replays are sorted corectly. Replay date (timestamp) is corect. Replay date in file is wrong, so it is taken from file name like date_string
+  * Feature #1198 (map info lateral bar on single player mode too)
+  * Display downloads
+  * Prepare to merge
+  * Line ending
+  * Fix line ending
+  * Merged with abma/springlobby
+  * Change pr-download addres to my fork
+  * Update submodule
+  * Fix errors
+
+  [ abma ]
+  * revert line-ending changes
+
+  [ N0U ]
+  * Added progress bars which show map and mod download progress for current battle.
+  * Small style fix
+  * Replaced game options from BattleRoomTab with BattleRoomDownloads
+  * Small fix Display NoDownload
+  * Fix DownloadsTab
+  * Added menu to support an autohost support Only !balance, !map, !fix, !notify
+  * Basic inerface for operations with autohost.
+  * Autohost manager can recognzie autohost by comapring a welcome message.
+
+  [ abma ]
+  * update pr-downloader
+
+  [ N0U ]
+  * Button start send commad for autohost.
+
+  [ abma ]
+  * update pr-downloader
+  * try to fix mingw compile error
+  * try to fix startup crash
+  * style
+  * fix warnings / line endings
+  * style / compile warnings
+
+  [ N0U ]
+  * Added comments
+  * Merger with abma/master
+  * Merge
+
+  [ abma ]
+  * add background initialize for the map select dialog again
+  * fix crash when ringed and not inside a battle
+  * simplify demofile filename parsing & fix wx assertions at start
+  * fix autounspec:apply patch from baracoder
+
+  [ N0U ]
+  * Fixed updating modes and maps list.
+  * Change gui
+  * Enable "Battle managment" button when battle hosted by Springie or Spads Change suggest map, to set map by autohost
+  * Added Ally combo box and speactators check boxes Progres bars of map and mode download proces automaticly show and hide
+
+  [ abma ]
+  * add travis-ci config file
+  * install dependencies for travis-ci
+  * update pr-downloader & lsl
+  * remove unused file
+  * remove (failing) assertion: code seems to be rebust enough
+  * fix --help output broken
+  * fix random crashes (linux & maybe windows!)
+  * fix wx assertion in mapselect dialog (possible windows crash)
+
+  [ N0U ]
+  * Added some comments
+
+  [ abma ]
+  * simplify
+  * remove clang compile test (no time to fix atm)
+
+  [ N0U ]
+  * Fix bug with map vote
+  * Fix bug with wrong bool values in game and map options
+
+  [ abma ]
+  * clarify
+  * re-apply server settings / cleanup
+
+  [ N0U ]
+  * Fix bug with Refresh == BUG == MapGridCtrl loads only some minimaps
+
+  [ abma ]
+  * fix version in replaytab & cleanup
+  * fix crash
+  * fix possible crashes
+  * fix some wx2.9 errors
+  * allow to disable test_susynclib
+  * Revert "fix some wx2.9 errors"
+  * add direct link to install from source
+  * fix some wx 2.9 errors: - "call of overloaded 'wxString(wxFormat&)' is ambiguous" - pure functions
+  * additional wx2.9 fixes
+  * try to fix linker error
+  * fix linking on buildbot
+  * fix strip path
+  * remove QT code (-> cleaner/fewer code!) - if still needed, code should be moved to an external repo
+  * remove unused / empty files
+  * Helper->helper
+  * -
+  * permissions / remove some unused scripts
+  * remove broken visual studio project file (use cmake instead to generate it!)
+  * win32 fix
+  * fix readonly tabs
+  * fix for wx2.9, too
+  * space -> tab
+  * update pr-downloader
+  * update lsl
+  * unused vars -- / make some stuff private
+  * simplify mapgridctrl by reducing # of vars
+  * space -> tab
+  * remove unused file
+  * fix hang at exit / crash at exit
+  * fix assert & update pr-downloader
+  * update pr-downloader (rapid was broken)
+
+  [ Tiziano Bacocco ]
+  * Initial work for content searching
+
+  [ abma ]
+  * update pr-downloader: proxy support!
+
+  [ Tiziano Bacocco ]
+  * Working async search ( json parsing still to do )
+  * Content search working
+  * Added parallel downloads option
+  * Forgot an important detail
+
+  [ abma ]
+  * cleanup
+
+  [ Tiziano Bacocco ]
+  * Moved parallell http setting to correct tab
+
+  [ abma ]
+  * update pr-downloader (again)
+  * update lsl
+  * allow searching for rapid tags, too
+  * ok|cancel|apply button for settings
+  * reorder buttons (constistence!)
+  * fix ok/cancel
+  * try to fix win32 compile error
+  * try to fix #2
+  * remove "rename", /rename still works!
+  * don't try to load non-existing maps / fix failed assertion
+  * fix compile / slightly improve minimap loading (where is the bug?)
+  * set focus to m_searchbox
+  * hopefully fix download crash #1739
+  * add a few asserts
+  * replace isink.h with (hopefully) thread-safe approach
+  * send event when spring is executed
+  * try to fix updater
+  * oops, remove debug code
+  * use OnSpringTerminated & OnSpringStarted global events
+  * proper initialize IBattle()
+  * fix compile warning
+  * create timer only once
+  * add SPRINGLOBBY_UPDATER cmake option / allow updater to be compiled on *nix, too
+  * compile springlobby updater on travis-ci, too
+  * constify
+  * no reconnect window on quit
+  * fix compile warning
+  * no windows includes on non windows systems (fix #1337)
+  * comment out broken IRI converting code (causes SIGTRAP in wxWidgets)
+  * add engine download support (not functionally yet)
+  * fix compile warning
+  * add missing return
+  * add support for OPENBATTLEEX / engine version set by battle
+  * fix order of init
+  * fix wx2.9 compile
+  * try to fix ConvToIRI
+  * simplify download handling
+  * fix wxString usage
+  * re-add "setup" in battleroom tab
+  * don't cache source files in CMakeCache.txt
+  * fix 'wxString wxMenuItemBase::GetLabel() const' is deprecated
+  * linux line endings
+  * add ~/.spring/engine/* to searchpath, too
+  * set engine name/version when hosting, check spring version to hosted version
+  * try to fix compile error
+  * -
+  * add hack for version compare
+  * fix exiting of updater
+  * heavily reduce difference between windows / linux
+  * fix removal of tasclient import
+  * Revert part of heavily reduce difference between windows / linux
+  * style
+  * cleanup
+  * more accurate error message
+  * cleanup
+  * more verbose logging
+  * cleanup tasserver: remove OFFERFILE / REQUESTUPDATEFILE
+  * revert possible unsafe changes
+  * more accurate error msg
+  * update lsl
+  * try to fix win32 exceptions not handled correctly
+  * update lsl / fix crash at exit
+  * includes--
+  * initialize var
+  * unused typedef
+  * add assert
+  * update lsl (should fix most win32 problems)
+  * update lsl (fix linux compile)
+  * fix failed assertion
+  * fix compile
+  * remove engine name from battle list
+  * remove pingthread.cpp/h
+  * improve ping behaviour: first ping is sent after a delay of 5 seconds / send 1 ping only every 30 seconds
+  * remove some other weird code :-|
+  * remove own thread implementation (was unused)
+  * fix win32 crash on close
+  * automaticly reload unitsync after download complete
+  * cleanup (NLC)
+  * open demo file only once for getting infos
+  * clean error msg
+  * cleanup
+  * partly fix error spam
+  * correctly detect playbacks
+  * update lsl: fix win32 compile
+  * update bug tracker url
+  * self-kudos!
+  * log error when category isn't found
+  * revert n0u's changes in battleroom tab (sorry, was to broken / features missing!)
+  * fix crash on exit / reconnect on close #2:
+  * fix broken cache files
+  * rename AddReloadEvent -> ReloadUnitsyncLib
+  * no reconnect on leave #2
+  * update lsl
+  * remove some includes: many of these are redundant, (i)battle.h already includes unitsync.h
+  * dead code--
+  * includes--
+  * add deprecated file note
+
+  [ N0U ]
+  * Fixed #12
+
+  [ abma ]
+  * update lsl
+  * update lsl (image loading fix)
+  * constify
+  * update lsl
+  * privatize
+  * privatize + style
+  * cleanup
+  * fix ui.AskText()
+  * refactor last commit
+  * remove unused OFFERFILE references
+  * reduce win/linux differences: allow spring to be selected outside springlobby dir
+  * uncheck autounspec when we are already a player: avoid force spec players to auto unspec
+  * reduce platform differences (possible fixes empty lines when scrolling with mousewheel on windows)
+  * allow sorting by engine version
+  * update lsl: rescale unitsync images to a max resolution of 512x512 to keep things small & fast
+  * Fix #31
+  * clean up last commit
+  * remove not needed call (version list is updated at init & on download)
+  * fix #35, invalid search path on win32 for unitsync
+  * remove some old springlobby config conversation code & set version to 25 disable version check (as everybody enabled it)
+  * nuke cache as well
+  * try to fix #38
+  * space -> tab
+  * try to fix #38, try 2
+  * update lsl
+  * try to fix #42
+  * try to fix column list
+
+  [ Herman Fries ]
+  * Fix mainwindow tab icons for downloads and replays
+
+  [ tulipe7 ]
+  * Update mapselectdialog.cpp
+
+  [ Herman Fries ]
+  * fix #26 make autoscroll disable work
+  * fix #30 replace rank filter numbers with icons
+
+  [ abma ]
+  * update pr-downlodoader / add support for extracting engine
+
+  [ Rene Milk ]
+  * [cmake] adds static analysis target
+
+  [ abma ]
+  * fix some clang warnings & update lsl
+  * fix clang warning
+  * fix compile warning
+  * get list of all spring versions
+  * enable autoswitch of engine version when available
+  * ask if engine should be downloaded / add hacks for comparing engine versions:
+  * update pr-downloader: don't overwrite files when extracting
+
+  [ Herman Fries ]
+  * Move "Change language" dialog from help to Edit menu
+
+  [ abma ]
+  * cleanup (never saw this message!)
+  * include--
+  * cleanup / reorder includes
+  * use springbundle for spring version detection
+  * update lsl: fix path, fix multiversion support
+  * allow engine version to be selected when hosting
+  * refresh game list when engine version is changed
+  * fix debug build
+  * fix #60
+  * fix auto engine download working when no spring is installed at all
+  * make private!
+
+  [ Rene Milk ]
+  * [cmake] adds clang-format target
+
+  [ abma ]
+  * adjust .clang-format
+
+  [ Herman Fries ]
+  * possible fix for #72
+  * fix #70: battle infos reopens after window is resized
+
+  [ abma ]
+  * disable "make format" for the moment
+  * exchange yes/no in agreement dialog: yes|ok is at the right in other dialogs
+  * make agreement readonly & resizeable
+
+  [ Herman Fries ]
+  * Add download status to statusbar
+
+  [ abma ]
+  * unused code
+  * fix #77
+
+  [ Herman Fries ]
+  * possible fix for #72
+  * try to fix autoscroll on win7  #72
+  * try to fix autoscroll on win7  #72
+  * ring_sound.h: split very long line
+  * gitignore: ignore generated doxygen html files
+
+  [ abma ]
+  * remove report statistics: - can be already collected indirectly at lobby server - updates are already checked differently
+  * remove introguide / link to online version / cleanup
+  * make cache path of springlobby independant of unitsync / spring: - this allow (re) use of cached images & stuff - logs are written in one dir and not across all spring installations - no need for unitsync to be loaded in most cases
+  * lang!
+  * remove unused torrent settings
+  * fix chatlog path
+  * reenable connection timeout to server
+  * remove ChangeLog, use git log instead!
+  * remove obsolete NEWS file
+  * add git pre-commit hook for coding style
+
+  [ Herman Fries ]
+  * use wupdlock instead of freeze/thaw, remove comment
+  * remove refresh, as it shouldn't be necessary
+  * scroll more lines to observer effect on win7
+  * remove double include, scroll lines first, then show last position
+  * do nothing if autoscroll is disabled on msw, change some comments
+  * reformat file, since i have already touched it
+  * re enable chat options button, break some long lines
+
+  [ abma ]
+  * Revert "try to fix autoscroll on win7  #72"
+  * Revert "possible fix for #72"
+  * style
+
+  [ Herman Fries ]
+  * reinsert != NULL to indicate var is not bool
+
+  [ abma ]
+  * fix #64 (sound always uses ~3% cpu)
+  * style
+  * doc
+  * fix possible crash at exit
+
+  [ Herman Fries ]
+  * remove NEWS from install file list, prevents make install
+  * save scriptPassword and last battle
+
+  [ abma ]
+  * fix #85: add special flags
+  * addition to 3774051100d082a8a59ba6327aaec7acd3b53397
+  * fix #22
+  * revert last commit / add comment
+  * add list of found spring versions to spring options (not completed let)
+  * astyle springoptionstab
+  * cleanup folder created
+  * fix bug in sorting lists (allow instant sort after start)
+  * astyle
+  * instant sort battle list at start
+  * astyle
+  * fix wx assertion of invalid icon
+  * implement cl flag
+  * remove redundant eb flag
+  * readable++
+  * +++
+  * don't add configfile parameter
+  * cleanup
+  * add hack for springie bug
+  * workarround for #98
+  * rework version detection:
+  * -
+  * fix crash
+
+  [ Herman Fries ]
+  * remove unneccecery ifdef
+  * springsettings: change help-menu urls to github
+  * remove "main" timer for OnUpdate
+  * better name: GetServerStatus -> IsServerAvailible (bool)
+  * remove unused code in ui.
+
+  [ abma ]
+  * allow selecting spring version
+  * set current "default" selected spring
+  * don't set default when editing/configuring
+  * update hotkeys.txt path on unitsync change
+  * simplify
+  * update pr-downloader
+  * cleanup
+  * always use spring bundles from config
+  * multiversion support for replays & cleanup
+  * cleanup
+  * cleanup includes
+  * add GetDefaultNick to settings
+  * remove customizations.*: as it requires lsl to be loaded at start if we want to customize icons, we should read icons from filesystem
+  * cleanup / fix springsettings linking
+  * astyle
+
+  [ Herman Fries ]
+  * slconfig: remove support for global config
+  * slconfig: remove HasSection, use Exists of base class
+  * use base class SetPath
+  * define macro to set defaults
+  * move config initialisation from Settings to slConfig::Create()
+  * use assert instead of warning on redefinition of default
+  * define better to use ReadX() methods
+  * make Default::Get actauly work
+  * simplify Default::Set()
+  * fix ReadBool()
+  * add shorter name to access slConfig: cfg()
+  * move settings setup from springlobbyapp to settings
+  * slconfig: from settings move helper methods to show/count sub entries
+  * settings: move methods concerning useractions to useractions
+  * remove unused setting /General/SelfUpdateDisabled
+  * settings: cleanup unused variables
+  * settings: remove *AutoUpdate methods, show intended use of SLCONFIG()
+  * refactor tabicons setting
+  * refactor StartTab setting
+  * refactor BroadcastEverywhere setting
+  * SaveSettings called during normal startup and shutdown multiple times
+  * settings: remove NukeColumnWidths
+  * refactor windowattributespickle
+  * fix mapctrl related issues
+
+  [ abma ]
+  * _T("") -> wxEmptyString
+  * addition to b487a56449d777c29cbee613f8c5ce2975e362ba
+
+  [ Herman Fries ]
+  * mapctrl: remove Update()
+  * mv hotkey stuff to hotkey_panel
+
+  [ abma ]
+  * wxEmptyString++
+  * allow custom paths for spring / fix unitsync detection / clear springlobby.conf
+  * fix broken detection of bundles in ~/.spring/engine (with hack + add fixme)
+  * try to fix win32 linker error
+  * add REMOVESCRIPTTAGS
+  * allow removal of spring bundle
+  * allow adding spring bundles where spring executable isn't next to unitsync
+  * update lsl
+  * search for local installed spring as well
+  * update lsl
+  * try to fix lsl compile error
+  * fix version
+  * fix crash without unitsync / show engine name, too
+  * fix #96
+  * reduce win/linux differences / fix error msg
+  * add assert
+  * assert++
+
+  [ Herman Fries ]
+  * fix Settings::IsPortable()
+
+  [ abma ]
+  * additional assertion
+  * ouch
+  * fix crash (thanks baracoder!)
+  * remove portable & bundle mode
+  * fix compile & more cleanup
+  * try to fix crash at exit
+  * try to fix crash at exit #2
+  * safety
+  * try to fix cmake warning
+  * wx 3.0 fix
+  * fix compile
+  * try to fix boost detection
+  * fix wx30 compile
+  * fix hang on start (wx30)
+  * fix compile for older gcc
+  * fix compile
+  * unused config --
+  * cleanup
+  * cleanup crashreport
+  * check for existing uikeys.txt
+  * disable broken hotkey tab in settings (imo it never worked)
+  * allow to disable selfupdate
+  * fix cfg() usage
+  * set focus to text input on panel change
+
+  [ Matthias Mailänder ]
+  * Update springlobby.desktop
+
+  [ abma ]
+  * fix link
+  * update translations
+  * simplify changing language / don't forget user selection / cleanup & style
+  * allow english to be selected as well
+  * mark default language / cleanup
+  * "" -> wxEmptyString & no special char in translation
+  * warn about missing springlobby_config.h
+  * Nick->Nickname (is used in connect)
+  * -
+  * simplify / cleanup
+  * fix changelog url
+  * fix invisible updater window
+  * cleanup updaterapp
+
+  [ Herman Fries ]
+  * ubs! fix SLCONFIG macro "behaving strangely" lol
+  * slconfig: add doc on SLCONFIG macro
+  * slconfig: make find work
+  * fix cacheversion setting
+  * move battle filter settings
+
+  [ abma ]
+  * oops, fix compile (forgot to commit)
+  * fix language files not found on windows
+  * simplify
+  * instant save language
+  * cleanup
+  * astyle
+  * fix #112
+  * fix nickname list width
+  * update .gitignore
+  * reset lang to system default / code dedup
+  * increase width / allow translation
+  * fix #115 (add EU flag)
+  * always update version
+  * surpress "file does not exist" error message
+  * disable version dependency (breaks current release scripts)
+  * no double resize (addition to #112)
+  * cleanup / adjust sizes
+
+  [ Herman Fries ]
+  * BattleListTab: Save state of "Battle infos" button
+  * fix #113 wrong icon springsettings icon is used
+  * fix #41 chat font on windows, cleanup
+
+  [ Matthias Mailänder ]
+  * Update springlobby.desktop
+  * Update springlobby.desktop
+
+  [ Herman Fries ]
+  * allow scrolling in battleroom map views, deselect map combobox
+  * remove chat option "use system colors" (without function)
+  * update lsl (try to fix broken icons on msw)
+  * fix #87 space in front of first column in customvirtuallistctl
+
+  [ abma ]
+  * fix some memleaks & uninitialized vars & unused vars
+  * update pr-downloader (removed unused widgetdownloader)
+  * oops, remove double-setting: AutoUpdate config was hidden because #ifdef WIN32...
+  * + made autoupdate setting work
+  * -
+
+  [ Herman Fries ]
+  * battlelist: cleanup
+  * use header width for column with on small columns
+  * battlelist: make icon-only columns compact by removing header text
+  * remove borders in battlelist and plabyacklist
+  * settings: move AutoConnect setting
+  * fix #126 Tab docking is reset on leaving battle room
+  * focus battle list when leaving battle
+  * remove borked layouts (broken since 2009 or so)
+
+  [ abma ]
+  * try to fix linking error with mxe
+  * try to fix buildbot compile
+
+  [ Herman Fries ]
+  * Revert "focus battle list when leaving battle" (not working out as intended)
+  * focus battle list wwhen leaving battle room (fix 6d02a8f2cc5791a8c9499144391f68999db07274)
+
+  [ abma ]
+  * (re-)add NEWS
+  * make debian packagers happy
+  * aww, fix log-spam :-|
+
+  [ Herman Fries ]
+  * remove changelog override
+  * enable parallel build (e.g. export DEB_BUILD_OPTIONS='parallel=9')
+  * use native source format (git)
+  * fix manpage install
+  * cleanup (files are handled automatically)
+  * added config for git-buildpackage
+  * cmake: add bindir support
+  * rules: use BINDIR
+  * fix bindir cmake
+  * fix gbp.conf
+  * fix manpage install
+  * cmake: disable check for springlobby_config.h
+  * remove spring engine dependency, it is downloaded automatically
+
+ -- Herman Fries <baracoder@googlemail.com>  Sun, 15 Dec 2013 01:24:32 +0000
+
 springlobby (0.169-1build1) trusty; urgency=low
 
   * No change rebuild for Boost 1.54 transition.
