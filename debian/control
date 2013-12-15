@@ -3,8 +3,9 @@ Section: games
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 XSBC-Original-Maintainer: Debian Games Team <pkg-games-devel@lists.alioth.debian.org>
-Uploaders: Marco Amadori <marco.amadori@gmail.com>, Jan Dittberner <jandd@debian.org>
-Build-Depends: debhelper (>= 9.20120417~), cmake, libwxgtk2.8-dev,
+Uploaders: Marco Amadori <marco.amadori@gmail.com>, Jan Dittberner <jandd@debian.org>,
+ Herman Fries <baracoder@googlemail.com>
+Build-Depends: debhelper, cmake, libwxgtk2.8-dev,
  libopenal-dev, asciidoc, xsltproc, docbook-xsl, libcurl4-gnutls-dev,
  libboost-dev, dpkg-dev (>= 1.16.1~), libglib2.0-dev, libnotify-dev,
  libalure-dev, libboost-thread-dev, libboost-system-dev,
