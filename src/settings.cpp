@@ -605,24 +605,10 @@ void Settings::DeleteSpringVersionbyIndex( const wxString& index )
 
 wxString Settings::GetCurrentUsedDataDir()
 {
-	wxString dir;
-	if ( LSL::susynclib().IsLoaded() )
-	{
-        if ( LSL::susynclib().VersionSupports( LSL::USYNC_GetDataDir ) )
-            dir = TowxString(LSL::susynclib().GetSpringDataDir());
-        else
-            dir = TowxString(LSL::susynclib().GetSpringConfigString("SpringData", ""));
-	}
-#ifdef __WXMSW__
-	if ( dir.IsEmpty() )
-        dir = GetExecutableFolder(); // fallback
-#else
-	if ( dir.IsEmpty() )
-        dir = wxFileName::GetHomeDir() + sepstring + _T( ".spring" ); // fallback
-#endif
-	wxString stripped;
-	if ( dir.EndsWith(sepstring,&stripped) ) return stripped;
-	return dir;
+	std::string dir;
+	if (LSL::usync().GetSpringDataPath(dir))
+		return TowxString(dir);
+	return wxEmptyString;
 }
 
 

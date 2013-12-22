@@ -107,8 +107,10 @@ bool NetDebugReport::OnServerReply( const wxArrayString& reply )
 
 void SpringDebugReport::AddVFSFile( const wxString& fn, const wxString& id )
 {
-	wxString dir = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator();
-	AddFile( dir + fn, id );
+	const wxString file = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + fn;
+	if (wxFile::Exists(file)) {
+		AddFile(file , id);
+	}
 	return;
 }
 
