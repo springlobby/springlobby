@@ -1,7 +1,6 @@
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 INCLUDE(compat_flags)
-ADD_DEFINITIONS(-DHAVE_SPRINGLOBBY=1)
 
 
 # Add Definitions, Compiler-Switches, etc.: -Wall -O2 -g3 ...
@@ -65,7 +64,6 @@ FIND_PACKAGE(wxWidgets REQUIRED ${wxWidgets_USE_LIBS})
 IF(wxWidgets_FOUND)
 	INCLUDE(${wxWidgets_USE_FILE})
 	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-	add_definitions(-DHAVE_WX)
 ELSE(wxWidgets_FOUND)
 	# For Convenience. If we cannot continue, inform the User.
 	MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
@@ -155,23 +153,6 @@ IF( OPTION_NOTIFY AND NOT WIN32 )
 	ENDIF( LIBNOTIFY_FOUND )
 ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 
-#----------------------------------------------------------------------------------------------------
-# libalure dependency check
-#----------------------------------------------------------------------------------------------------
-if   ( OPTION_SOUND )
-	message(STATUS "Sound enabled!")
-	find_package(Alure REQUIRED)
-	include_directories(${ALURE_INCLUDE_DIRS})
-	find_package(OpenAL REQUIRED)
-else ( OPTION_SOUND )
-	# Disable sound.
-	message(STATUS "Sound disabled!")
-	add_definitions( -DDISABLE_SOUND )
-
-	unset(ALURE_LIBRARIES)
-	unset(OPENAL_LIBRARIES)
-endif ( OPTION_SOUND )
-INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/json)
 clear(springlobbySrc)
 add_sources(springlobbySrc
 	chatpanelmenu.cpp
@@ -225,13 +206,6 @@ add_sources(springlobbySrc
 	
 	iserverevents.cpp
 	
-	json/jsonreader.cpp
-	json/jsonval.cpp
-)
-
-clear(springlobbySoundsrc)
-add_sources(springlobbySoundsrc
-	sound/alsound.cpp
 )
 
 clear(SLSharedWithSettings)
@@ -308,10 +282,14 @@ set(LSLSERVER OFF CACHE BOOL "disable lsl-server build" FORCE)
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
 	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
 else()
+	add_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
 	Add_Subdirectory(lsl)
 	INCLUDE_DIRECTORIES(lsl/src)
+	remove_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
 endif()
 add_subdirectory(springsettings)
+add_subdirectory(sound)
+add_subdirectory(json)
 
 
 set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
@@ -325,7 +303,6 @@ add_subdirectory(updater)
 
 
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
-		${springlobbySoundsrc}
 		${springlobbySrc}
 		${springlobby_RC_FILE}
 	)
@@ -346,11 +323,9 @@ ELSE (WIN32)
 	endif()
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr-downloader_static springlobbyversion
+TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr-downloader_static sound json springlobbyversion
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
-		${ALURE_LIBRARIES}
-		${OPENAL_LIBRARY}
 		${CURL_LIBRARIES}
 		${CURL_LINKFLAGS}
 	)

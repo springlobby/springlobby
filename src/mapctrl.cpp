@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <wx/log.h>
 
+#define HAVE_WX
 #include <lslutils/conversion.h>
 #include <lslutils/misc.h>
 #include <lslunitsync/image.h>

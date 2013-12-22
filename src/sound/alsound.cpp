@@ -1,4 +1,11 @@
 #ifndef DISABLE_SOUND
+
+#ifdef __WXMAC__
+#include <al.h>
+#else
+#include <AL/al.h>
+#endif
+
 #include "alsound.h"
 
 #ifdef WIN32

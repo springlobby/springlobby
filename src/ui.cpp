@@ -55,10 +55,11 @@
 #include "sound/alsound.h"
 #include <lslutils/globalsmanager.h>
 #include <lslunitsync/c_api.h>
+#include <lslunitsync/springbundle.h>
 #include "utils/misc.h"
 #include "textentrydialog.h"
 
-SLCONFIG("/General/AutoUpdate", true, "Determines if sprinlobby should check for updates on startup");
+SLCONFIG("/General/AutoUpdate", true, "Determines if springlobby should check for updates on startup");
 SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere",true, "setting to spam the server messages in all channels");
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");

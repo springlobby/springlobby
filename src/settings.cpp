@@ -28,8 +28,9 @@
 #include <set>
 #include <lslutils/misc.h>
 #include <lslutils/globalsmanager.h>
-#include <lslunitsync/c_api.h>
 #include <lslunitsync/unitsync.h>
+#include <lslunitsync/c_api.h>
+#include <lslunitsync/springbundle.h>
 
 #include "nonportable.h"
 #include "utils/conversion.h"
@@ -570,7 +571,7 @@ needs to change to sth like: GetSpringVersionList(std::list<LSL::Bundle>)
 
 	m_spring_versions.clear();
 	try {
-		const auto versions = LSL::susynclib().GetSpringVersionList( usync_paths );
+		const auto versions = LSL::usync().GetSpringVersionList( usync_paths );
 		for(const auto pair : versions) {
 			const LSL::SpringBundle& bundle = pair.second;
 			const wxString version = TowxString(bundle.version);

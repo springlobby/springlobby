@@ -12,6 +12,7 @@
 #include <wx/settings.h>
 #include <wx/log.h>
 #include <algorithm>
+#define HAVE_WX
 #include <lslutils/misc.h>
 #include <lslunitsync/image.h>
 

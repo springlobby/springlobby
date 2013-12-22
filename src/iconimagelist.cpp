@@ -13,6 +13,7 @@
 #include "iconimagelist.h"
 #include "user.h"
 #include "battle.h"
+#define HAVE_WX
 #include <lslunitsync/image.h>
 
 #include "images/bot.xpm"

@@ -2,11 +2,6 @@
 #define SPRINGLOBBY_HEADERGUARD_SDLSOUND_H
 
 #ifndef DISABLE_SOUND
-#ifdef __WXMAC__
-#include <al.h>
-#else
-#include <AL/al.h>
-#endif
 
 class soundThread;
 class ALsound
