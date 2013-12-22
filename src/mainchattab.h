@@ -59,7 +59,7 @@ private:
 	wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour ) const;
 
 
-	wxWindow* m_close_window;
+//	wxWindow* m_close_window;
 	SLChatNotebook* m_chat_tabs;
 	wxBoxSizer* m_main_sizer;
 	wxImageList* m_imagelist;
