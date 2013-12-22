@@ -118,7 +118,7 @@ void UserActions::Init()
         }
         m_groupActions[name] = GetGroupActions( name );
     }
-    for ( int i = 0; i < m_actionNames.size(); ++i)
+    for ( size_t i = 0; i < m_actionNames.size(); ++i)
     {
         UserActions::ActionType cur = (UserActions::ActionType) (int) std::pow( 2.0, i);
         wxArrayString tmp;

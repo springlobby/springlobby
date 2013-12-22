@@ -48,7 +48,6 @@
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #include "defines.h"
-#include "sound/alsound.h"
 
 #include <wx/debugrpt.h>
 #include <wx/intl.h>
@@ -146,11 +145,6 @@ bool SpringLobbyApp::OnInit()
 		customMessageBox( SL_MAIN_ICON, _("Please check that the file given in Preferences->Spring is a proper, readable unitsync library"),
 						 _("Coulnd't load required unitsync library"), wxOK );
 	}
-
-	#ifndef DISABLE_SOUND
-		//sound sources/buffer init
-		sound();
-	#endif
 
 	sett().Setup(m_translationhelper);
 

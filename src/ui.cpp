@@ -52,7 +52,9 @@
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
 #include "updater/versionchecker.h"
+#ifndef DISABLE_SOUND
 #include "sound/alsound.h"
+#endif
 #include <lslutils/globalsmanager.h>
 #include <lslunitsync/c_api.h>
 #include <lslunitsync/springbundle.h>
@@ -502,7 +504,7 @@ std::string VersionGetMajor(const std::string& version)
 
 bool VersionIsRelease(const std::string& version) { //try to detect if a version is major
 	const std::string allowedChars = "01234567890.";
-	for(int i=0; i<version.length(); i++) {
+	for(size_t i=0; i<version.length(); i++) {
 		if (allowedChars.find(version[i]) == std::string::npos) { //found invalid char -> not stable version
 			return false;
 		}
@@ -1070,12 +1072,9 @@ void Ui::OnRing( const wxString& from )
 			UiEvents::NotficationData( UiEvents::ServerConnection, msg ) );
 	}
 
-#ifndef DISABLE_SOUND
-	if ( sett().GetChatPMSoundNotificationEnabled() )
-		sound().ring();
-#else
-	wxBell();
-#endif
+	if ( sett().GetChatPMSoundNotificationEnabled() ) {
+		slsound().ring();
+	}
 }
 
 bool Ui::IsThisMe(User& other) const

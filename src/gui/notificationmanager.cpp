@@ -9,7 +9,6 @@
 #include "../utils/platform.h"
 #include "../images/springlobby_64.png.h"
 #include "inotification.h"
-
 #include "sound/alsound.h"
 
 #ifdef HAVE_LIBNOTIFY
@@ -80,10 +79,8 @@ void NotificationManager::ShowNotification( const UiEvents::NotficationData& dat
 			m_notification_wrapper->Show( nmp, sett().GetNotificationPopupPosition(), data );
 		}
 	}
-	#ifndef DISABLE_SOUND
-		if ( sett().GetChatPMSoundNotificationEnabled() )
-			sound().pm();
-	#endif
+	if ( sett().GetChatPMSoundNotificationEnabled() )
+		slsound().pm();
 }
 
 void NotificationManager::OnTimer( wxTimerEvent& /*event*/ )

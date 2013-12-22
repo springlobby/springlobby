@@ -323,11 +323,12 @@ ELSE (WIN32)
 	endif()
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr-downloader_static sound json springlobbyversion
+TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${CURL_LIBRARIES}
 		${CURL_LINKFLAGS}
+		sound
 	)
 #add_dependencies(springlobby version)
 IF(UNIX)

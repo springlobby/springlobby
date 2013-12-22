@@ -1,23 +1,25 @@
-#ifndef SPRINGLOBBY_HEADERGUARD_SDLSOUND_H
-#define SPRINGLOBBY_HEADERGUARD_SDLSOUND_H
+#include "alsound.h"
 
-class soundThread;
-class ALsound {
-public:
-	ALsound();
-	~ALsound();
+ALsound::ALsound()
+{
+}
 
-	void ring();
-	void pm();
+ALsound::~ALsound()
+{
+}
 
-private:
-	void Play(int idx);
-	soundThread* m_thread;
-};
+void ALsound::ring()
+{
+}
+void ALsound::pm()
+{
+}
 
-ALsound& slsound();
-
-#endif // SPRINGLOBBY_HEADERGUARD_SDLSOUND_H
+ALsound& slsound()
+{
+	static ALsound snd;
+	return snd;
+}
 
 /**
     This file is part of SpringLobby,

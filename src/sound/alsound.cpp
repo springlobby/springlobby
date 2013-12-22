@@ -24,7 +24,7 @@
 #include <assert.h>
 #include <wx/thread.h>
 
-ALsound& sound()
+ALsound& slsound()
 {
 	static LSL::Util::LineInfo<ALsound> m( AT );
 	static LSL::Util::GlobalObjectHolder<ALsound, LSL::Util::LineInfo<ALsound> > m_sound( m );
