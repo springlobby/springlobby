@@ -1,46 +1,22 @@
-build-*
-build
-bin
-obj
-springlobby.layout
-springlobby.depend
-*~
-.cproject
-.project
-unitsync.log
-doc/.gitignore
-rpm/.gitignore
-*.vcproj.*.user
-*.suo
-*.ncb
-*.o
-/po/*.gmo
-Makefile
-Options.fbp
-Updater.fbp
-*.diff
-config.h
-doc/html/
-doc/doxygen/html/
-formbuilder.cpp
-formbuilder.h
-options.xrc
-src/images/logo_xmas.svg
-src/images/replay_icon.xpm
-src/images/updater/
-src/iunitsyncmap.cpp
-src/sha1.c
-src/sha1.h
-test.txt
-test/*
-src/images/updater/*
-*.fbp.bak
-CMakeLists.txt.user*
-src/qt-build/
-attic/
-moc_*.cpp
+# ninja build
+/build.ninja
+/.ninja_log
+/.ninja_deps
+/rules.ninja
+
+# cmake
 cmake_install.cmake
 CMakeFiles/
-*.gmo
+/CMakeCache.txt
+
+# output
+/src/springlobby
+/src/springsettings/springsettings
 *.a
 
+# temp files
+*.swp
+/po/*.gmo
+
+# codeblocks
+/springlobby.cbp
