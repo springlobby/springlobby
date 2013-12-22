@@ -44,7 +44,7 @@ public:
         Layout();
     }
 
-    void Update(ObserverDownloadInfo dl_info)
+    void UpdateDownload(ObserverDownloadInfo dl_info)
     {
         m_progres->SetRange(dl_info.size);
         m_progres->SetValue(dl_info.progress);
@@ -100,7 +100,7 @@ void BattleRoomDownloads::OnUpdate()
         wxString game=m_battle->GetHostModName();
         ObserverDownloadInfo obi=dlmap.at(game);
         m_mod->Show();
-        m_mod->Update(obi);
+        m_mod->UpdateDownload(obi);
     }
     catch(...)
     {
@@ -112,26 +112,11 @@ void BattleRoomDownloads::OnUpdate()
         wxString map=m_battle->GetHostMapName();
         ObserverDownloadInfo obi=dlmap.at(map);
         m_map->Show();
-        m_map->Update(obi);
+        m_map->UpdateDownload(obi);
     }
     catch(...)
     {
         m_map->Hide();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
