@@ -1,12 +1,7 @@
 #include "updatehelper.h"
 
-#ifdef HAVE_CONFIG_H
-	#include "springlobby_config.h"
-#else
-        #define VERSION "unknown"
-#endif
-
-#include "../utils/conversion.h"
+#include "utils/version.h"
+#include "utils/conversion.h"
 
 wxString GetDownloadUrl( const wxString& version )
 {
@@ -17,11 +12,11 @@ wxString GetSpringLobbyVersion( bool consider_aux )
 {
 	if ( consider_aux )
 	{
-		return (TowxString(VERSION)).BeforeFirst( _T(' ') ) + _T(" ") + GetSpringLobbyAuxVersion();
+		return (TowxString(getSpringlobbyVersion())).BeforeFirst( _T(' ') ) + _T(" ") + GetSpringLobbyAuxVersion();
 	}
 	else
 	{
-		return (TowxString(VERSION)).BeforeFirst( _T(' ') );
+		return (TowxString(getSpringlobbyVersion())).BeforeFirst( _T(' ') );
 	}
 
 }

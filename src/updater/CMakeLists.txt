@@ -21,6 +21,7 @@ if (SPRINGLOBBY_UPDATER)
 			libsettings
 			lsl-utils
 			lsl-unitsync
+			springlobbyversion
 			${CURL_LIBRARIES}
 			${CURL_LINKFLAGS}
 			${CMAKE_DL_LIBS}

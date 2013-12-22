@@ -285,6 +285,7 @@ add_library(slcommon STATIC
 		${SLSharedWithSettings}
 	)
 target_link_libraries(slcommon
+		springlobbyversion
  		${wxWidgets_LIBRARIES}
 		${CURL_LIBRARIES}
 	)
@@ -345,7 +346,7 @@ ELSE (WIN32)
 	endif()
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr-downloader_static
+TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr-downloader_static springlobbyversion
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${ALURE_LIBRARIES}

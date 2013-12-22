@@ -37,6 +37,7 @@
 #include "crashreport.h"
 #include "utils/controls.h"
 #include "utils/platform.h"
+#include "utils/version.h"
 #include "channel/channel.h"
 #include "utils/customdialogs.h"
 #include "downloader/prdownloader.h"
@@ -48,12 +49,6 @@
 #include "playback/playbacktab.h"
 #include "defines.h"
 #include "sound/alsound.h"
-
-#ifdef HAVE_CONFIG_H
-#include "springlobby_config.h"
-#else
-	#define VERSION "unknown"
-#endif
 
 #include <wx/debugrpt.h>
 #include <wx/intl.h>
@@ -107,7 +102,7 @@ bool SpringLobbyApp::OnInit()
     wxLogChain* logchain = 0;
 	wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity, logchain );
 
-	wxLogMessage( _T("SpringLobby %s started"), _T(VERSION));
+	wxLogMessage( _T("SpringLobby %s started"), getSpringlobbyVersion().c_str());
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();
