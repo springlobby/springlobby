@@ -124,7 +124,7 @@ MainWindow::MainWindow( )
 {
 	SetIcons( icons().GetIcon(icons().ICON_SPRINGLOBBY) );
 
-	GetAui().manager = new AuiManagerContainer::ManagerType( this );
+	GetAui().manager = new wxAuiManager( this );
 
 	wxMenu *menuServer = new wxMenu;
 	menuServer->Append(MENU_CONNECT, _("&Connect..."));
@@ -276,7 +276,7 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 	{
 		wxWindowUpdateLocker lock( this );
 		SavePerspectives();
-		AuiManagerContainer::ManagerType* manager=GetAui().manager;
+		wxAuiManager* manager=GetAui().manager;
 		if(manager){
 			GetAui().manager=NULL;
 			manager->UnInit();
