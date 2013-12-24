@@ -31,7 +31,6 @@
 
 #include "aui/auimanager.h"
 #include "aui/slbook.h"
-#include "aui/artprovider.h"
 #include "gui/statusbar.h"
 #include "springlobbyapp.h"
 #include "mainwindow.h"
@@ -178,7 +177,7 @@ MainWindow::MainWindow( )
 	m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_func_tabs = new SLNotebook(  this, _T("mainfunctabs"), MAIN_TABS, wxDefaultPosition, wxDefaultSize,
 		wxAUI_NB_WINDOWLIST_BUTTON | wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_LEFT );
-	m_func_tabs->SetArtProvider(new SLArtProvider);
+	m_func_tabs->SetArtProvider(new wxAuiDefaultTabArt);
 
 	//IMPORTANT: event handling needs to be disabled while constructing, otherwise deadlock occurs
 	SetEvtHandlerEnabled( false );

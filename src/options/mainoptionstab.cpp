@@ -14,7 +14,6 @@
 #include <wx/log.h>
 
 #include "aui/auimanager.h"
-#include "aui/artprovider.h"
 #include "aui/slbook.h"
 
 #include "springoptionstab.h"
@@ -54,7 +53,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
 	frame = parent;
     GetAui().manager->AddPane( this, wxLEFT, _T("mainoptionstab") );
     m_tabs = new SLNotebook( this, _T("mainoptionstab"), OPTIONS_TABS, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
-    m_tabs->SetArtProvider(new SLArtProvider);
+    m_tabs->SetArtProvider(new wxAuiDefaultTabArt);
 /*    m_imagelist = new wxImageList( 12, 12 );
     m_imagelist->Add( wxIcon(spring_xpm) );
     m_imagelist->Add( charArr2wxBitmap( torrentoptionspanel_icon_png, sizeof(torrentoptionspanel_icon_png) )  );
