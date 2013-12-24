@@ -23,9 +23,9 @@ class SLNotebook : public wxAuiNotebook {
 
         wxString SavePerspective();
         bool LoadPerspective(const wxString& layout);
-
 		void AdvanceSelection( bool forward );
 
+private:
         /** \brief call fitinside for each child page
             useful after loading perspectives, since that does not generate OnSize events
             \note koshi: turns out it isn't strictly necessary on at least wxGTK
@@ -40,15 +40,15 @@ class ChatPanel;
 **/
 class SLChatNotebook : public SLNotebook, public SL::NonCopyable {
 
-    public:
+public:
         SLChatNotebook (wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxAUI_NB_DEFAULT_STYLE);
+private:
         bool AddPage(ChatPanel* page, const wxString& caption, bool select = false, const wxBitmap& bitmap = wxNullBitmap);
 
         void OnHeaderRightClick(wxAuiNotebookEvent &event);
         void OnMenuItem( wxCommandEvent& event );
         void OnAllowNotebookDnD(wxAuiNotebookEvent& evt);
 
-    protected:
         typedef SLNotebook
             ParentType;
 
