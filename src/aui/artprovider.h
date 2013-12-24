@@ -3,7 +3,7 @@
 
 #include <wx/aui/aui.h>
 
-class SLArtProvider : public wxAuiTabArt
+class SLArtProvider : public wxAuiDefaultTabArt
 {
 
 public:
@@ -65,10 +65,6 @@ public:
 
 	virtual void SetColour(const wxColour& colour);
 	virtual void SetActiveColour(const wxColour& colour);
-
-	virtual void DrawBorder(wxDC&, wxWindow*, const wxRect&) {}
-	virtual int GetBorderWidth(wxWindow*) {return 0;}
-	virtual int GetAdditionalBorderSpace(wxWindow*) { return 0;}
 
 protected:
 
