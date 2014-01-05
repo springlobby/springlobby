@@ -17,6 +17,7 @@ int GetFlagIndex( const wxString& flag )
 {
 	if (( flag.IsEmpty() ) ||
 	    (flag == _T("??")) || // unknown
+	    (flag == _T("XX")) || // not sure where this come from, very likely from incomplete bootstrap at login
 	    (flag == _T("A1")) || // anonymous proxy
 	    (flag == _T("A2")) || // satellite provider
 	    (flag == _T("O1")))  // other country
