@@ -43,10 +43,10 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 	AddColumn( 0, 26, wxEmptyString, _("Status") );
 	AddColumn( 1, 26, wxEmptyString, _("Country") );
 	AddColumn( 2, 26, wxEmptyString, _("Minimum rank to join") );
-	AddColumn( 3, 335, _("Description"), _("Battle description") );
-	AddColumn( 4, 170, _("Map"), _("Mapname") );
-	AddColumn( 5, 238, _("Game"), _("Gamename") );
-	AddColumn( 6, 123, _("Host"), _("Name of the Host") );
+	AddColumn( 3, wxLIST_AUTOSIZE, _("Description"), _("Battle description") );
+	AddColumn( 4, wxLIST_AUTOSIZE, _("Map"), _("Mapname") );
+	AddColumn( 5, wxLIST_AUTOSIZE, _("Game"), _("Gamename") );
+	AddColumn( 6, wxLIST_AUTOSIZE, _("Host"), _("Name of the Host") );
 	AddColumn( 7, wxLIST_AUTOSIZE_USEHEADER, _("Spectators"), _("Number of Spectators") );
 	AddColumn( 8, wxLIST_AUTOSIZE_USEHEADER, _("Players"), _("Number of Players joined") );
 	AddColumn( 9, wxLIST_AUTOSIZE_USEHEADER, _("Max"), _("Maximum number of Players that can join") );
@@ -161,8 +161,14 @@ wxListItemAttr* BattleListCtrl::GetItemAttr(long item) const
 
 void BattleListCtrl::AddBattle( IBattle& battle )
 {
-    if ( AddItem( &battle ) )
-        return;
+	if (AddItem(&battle)) ; {
+		// change column width based on content
+		SetColumnWidth(3, wxLIST_AUTOSIZE);
+		SetColumnWidth(4, wxLIST_AUTOSIZE);
+		SetColumnWidth(5, wxLIST_AUTOSIZE);
+		SetColumnWidth(6, wxLIST_AUTOSIZE);
+		return;
+	}
 
     wxLogWarning( _T("Battle already in list.") );
 }

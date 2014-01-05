@@ -330,7 +330,7 @@ void CustomVirtListCtrl<T,L>::OnEndResizeCol(wxListEvent& event)
 }
 
 template < class T, class L >
-bool CustomVirtListCtrl<T,L>::SetColumnWidth(int col, int& width)
+bool CustomVirtListCtrl<T,L>::SetColumnWidth(int col, int width)
 {
 	assert( col < (long)m_columnCount );
 	assert( col >= 0 );
