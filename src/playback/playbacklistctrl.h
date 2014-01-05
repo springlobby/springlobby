@@ -37,6 +37,7 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, Playback
     using ParentType::m_tooltip_duration;
 	using ParentType::RemoveItem;
 	using ParentType::AddItem;
+	using ParentType::SetColumnWidth;
 	using ParentType::compareSimple;
 	using ParentType::SetItemCount;
 //    using ParentType::DataVector;

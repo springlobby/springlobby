@@ -32,14 +32,14 @@ PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
 							_T("PlaybackListCtrl"), 4, &PlaybackListCtrl::CompareOneCrit )
 {
 
-	AddColumn( 0, 152, _("Date"), _("Date of recording") );
-	AddColumn( 1, 203, _("Game"), _("Game name") );
-	AddColumn( 2, 179, _("Map"), _("Mapname") );
+	AddColumn( 0, wxLIST_AUTOSIZE, _("Date"), _("Date of recording") );
+	AddColumn( 1, wxLIST_AUTOSIZE, _("Game"), _("Game name") );
+	AddColumn( 2, wxLIST_AUTOSIZE, _("Map"), _("Mapname") );
 	AddColumn( 3, wxLIST_AUTOSIZE_USEHEADER, _("Players"), _("Number of players") );
 	AddColumn( 4, wxLIST_AUTOSIZE_USEHEADER, _("Duration"), _T("Duration") );
 	AddColumn( 5, wxLIST_AUTOSIZE_USEHEADER, _("Version"), _("Version of the engine") );
-	AddColumn( 6, 66, _("Filesize"), _("Filesize in kilobyte") );
-	AddColumn( 7, 330, _("File"), _T("Filename") );
+	AddColumn( 6, wxLIST_AUTOSIZE, _("Filesize"), _("Filesize in kilobyte") );
+	AddColumn( 7, wxLIST_AUTOSIZE, _("File"), _T("Filename") );
 
     if ( m_sortorder.size() == 0 ) {
       m_sortorder[0].col = 0;
@@ -75,8 +75,14 @@ void PlaybackListCtrl<PlaybackType>::OnListRightClick( wxListEvent& /*unused*/ )
 template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::AddPlayback( const PlaybackType& replay )
 {
-    if ( AddItem( &replay ) )
-        return;
+	if ( AddItem( &replay ) ) {
+		SetColumnWidth(0, wxLIST_AUTOSIZE);
+		SetColumnWidth(1, wxLIST_AUTOSIZE);
+		SetColumnWidth(2, wxLIST_AUTOSIZE);
+		SetColumnWidth(6, wxLIST_AUTOSIZE);
+		SetColumnWidth(7, wxLIST_AUTOSIZE);
+		return;
+	}
 
     wxLogWarning( _T("Replay already in list.") );
 }
