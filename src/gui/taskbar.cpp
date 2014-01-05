@@ -119,6 +119,8 @@ void TaskBar::UpdateDisplay()
 		}
 		break;
 	}
+	Layout();
+	Refresh();
 }
 
 void TaskBar::UpdateProgress()
