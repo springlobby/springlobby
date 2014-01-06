@@ -48,6 +48,7 @@
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #include "defines.h"
+#include "utils/slpaths.h"
 
 #include <wx/debugrpt.h>
 #include <wx/intl.h>
@@ -250,9 +251,9 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
 
         // TODO make sure this is called before settings are accessed
-        slConfig::m_user_defined_config = parser.Found( _T("config-file"), &slConfig::m_user_defined_config_path );
-        if ( slConfig::m_user_defined_config ) {
-             wxFileName fn ( slConfig::m_user_defined_config_path );
+        SlPaths::m_user_defined_config = parser.Found( _T("config-file"), &SlPaths::m_user_defined_config_path );
+        if ( SlPaths::m_user_defined_config ) {
+             wxFileName fn ( SlPaths::m_user_defined_config_path );
              if ( ! fn.IsAbsolute() ) {
                  wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
                  return false;

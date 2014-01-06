@@ -1,19 +1,14 @@
 #include "slconfig.h"
 
-#include <wx/filename.h>
 #include <wx/wfstream.h>
 #include <wx/log.h>
 
 #include "../utils/debug.h"
-#include "../utils/platform.h"
+#include "../utils/slpaths.h"
 #include "../utils/conversion.h"
 
 
-bool slConfig::m_user_defined_config = false;
-wxString slConfig::m_user_defined_config_path = wxEmptyString;
 wxString slConfig::m_chosen_path = wxEmptyString;
-const wxChar sep = wxFileName::GetPathSeparator();
-const wxString sepstring = wxString(sep);
 
 
 slConfig::slConfig ( const wxString& appName,
@@ -38,57 +33,16 @@ slConfig::slConfig( wxInputStream& in, const wxMBConv& conv ):
 //! overwrite default create of wxConfigBase
 slConfig* slConfig::Create()
 {
-	bool portable = false;
-
-	wxString userfilepath = IdentityString( GetConfigfileDir() + sepstring + _T( "%s.conf" ), true );
-	wxString localfilepath =  IdentityString( GetExecutableFolder() + sepstring + _T( "%s.conf" ), true );
-
-	if ( m_user_defined_config && wxFileName::IsFileWritable( m_user_defined_config_path ) ) {
-		slConfig::m_chosen_path = m_user_defined_config_path;
-		portable = false;
-	} else {
-		if ( !wxFileName::FileExists( localfilepath ) || !wxFileName::IsFileWritable( localfilepath ) ) {
-			//either local conf file does not exist, or it exists but is not writable
-			slConfig::m_chosen_path = userfilepath;
-			portable = false;
-		} else {
-			slConfig::m_chosen_path = localfilepath; // portable mode, use only current app paths
-			portable = true;
-		}
-	}
-
-	// if it doesn't exist, try to create it
-	if ( !wxFileName::FileExists( slConfig::m_chosen_path ) ) {
-		// if directory doesn't exist, try to create it
-		if ( !portable && !wxFileName::DirExists( GetUserDataDir() ) )
-			wxFileName::Mkdir( GetUserDataDir(), 0755 );
-
-		wxFileOutputStream outstream( slConfig::m_chosen_path );
-
-		if ( !outstream.IsOk() ) {
-			if ( m_user_defined_config ) {
-				wxLogError( _T( "unable to use specified config file" ) );
-				exit( -1 );
-			}
-		}
-	}
-
+	m_chosen_path = SlPaths::GetConfigPath();
 	wxFileInputStream instream( slConfig::m_chosen_path );
 
 	if ( !instream.IsOk() ) {
-		if ( m_user_defined_config ) {
-			wxLogError( _T( "unable to use specified config file" ) );
-			exit( -1 );
-		}
+		wxLogError( _T( "unable to use config file" ) );
+		exit( -1 );
 	}
 
 	slConfig* config = new slConfig( instream );
 	config->SetRecordDefaults( true );
-
-	// FIXME portable is determined at runtime and should be separate
-	// from this
-	config->Write(_T("/portable"), portable);
-
 	return config;
 }
 
