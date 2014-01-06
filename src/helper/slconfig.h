@@ -84,10 +84,6 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 		wxString GetFilePath() const;
 		void SaveFile();
 
-		//! used for passing config file at command line
-		static bool m_user_defined_config;
-		static wxString m_user_defined_config_path;
-
 		//! container for default values
 		static Default<wxString>& GetDefaultsString();
 		static Default<long>& GetDefaultsLong();

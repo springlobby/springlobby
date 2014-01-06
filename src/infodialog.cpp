@@ -30,6 +30,7 @@
 #include "utils/debug.h"
 #include <lslutils/misc.h>
 #include "utils/platform.h"
+#include "utils/slpaths.h"
 #include "updater/updatehelper.h"
 #include <wx/textctrl.h>
 #include <wx/app.h>
@@ -87,9 +88,11 @@ InfoDialog::InfoDialog(wxWindow* parent )
 		catch (...){}
 		*out << wxString::Format( _T("\tWX: %s POSIX: %s TRY: %s\n"), BtS(wx).c_str(), BtS(posix).c_str(), BtS(tried).c_str() );
 	}
-	*out << wxString::Format( _T("Local config: %s (%s writable)\n"),
-							 sett().FinalConfigPath().c_str(),
-							 BtS(wxFileName::IsFileWritable(sett().FinalConfigPath()), "", "not" ).c_str() );
+	*out << wxString::Format( _T("Portable mode: %s\n"), BtS(SlPaths::IsPortableMode()).c_str() );
+
+	*out << wxString::Format( _T("Config: %s (%s writable)\n"),
+							 SlPaths::GetConfigPath().c_str(),
+							 BtS(wxFileName::IsFileWritable(SlPaths::GetConfigPath()), "", "not" ).c_str() );
 	*out << wxString::Format(_T("current uikeys.txt: %s\n"), hotkey_panel::GetCurrentUsedUikeys().c_str());
 
 	*out << _T( "Version " ) + GetSpringLobbyVersion()

@@ -614,8 +614,6 @@ class Settings : public SL::NonCopyable
 		return m_config->Write( setting, val );
 	}
 
-	wxString FinalConfigPath() const;
-
     //! move weirdly saved lists to sane form
     void ConvertLists();
 

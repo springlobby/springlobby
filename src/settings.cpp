@@ -159,11 +159,6 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 	m_config->Write(_T("/General/SettingsVersion"), SETTINGS_VERSION);
 }
 
-wxString Settings::FinalConfigPath() const
-{
-	return m_config->GetFilePath();
-}
-
 //! @brief Saves the settings to file
 void Settings::SaveSettings()
 {

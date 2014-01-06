@@ -220,6 +220,7 @@ add_sources(SLSharedWithSettings
 	utils/debug.cpp
 	utils/globalevents.cpp
 	utils/platform.cpp
+	utils/slpaths.cpp
 	utils/pathlistfactory.cpp
 	utils/sltipwin.cpp
 	utils/uievents.cpp

@@ -26,7 +26,7 @@
 #include "../utils/conversion.h"
 #include "../utils/platform.h"
 #include "../settings.h"
-#include "../helper/slconfig.h"
+#include "../utils/slpaths.h"
 #include "se_utils.h"
 #include "../defines.h"
 #include "../utils/customdialogs.h"
@@ -202,9 +202,9 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
 
-		slConfig::m_user_defined_config = parser.Found( _T("config-file"), &slConfig::m_user_defined_config_path );
-		if ( slConfig::m_user_defined_config ) {
-			 wxFileName fn ( slConfig::m_user_defined_config_path );
+		SlPaths::m_user_defined_config = parser.Found( _T("config-file"), &SlPaths::m_user_defined_config_path );
+		if ( SlPaths::m_user_defined_config ) {
+			 wxFileName fn ( SlPaths::m_user_defined_config_path );
 			 if ( ! fn.IsAbsolute() ) {
 				 wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
 				 return false;
