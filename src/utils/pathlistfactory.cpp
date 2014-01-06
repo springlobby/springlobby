@@ -3,10 +3,6 @@
 #include <wx/string.h>
 #include "../defines.h" //to get HAVEWX??
 #include "platform.h"
-#ifdef __WXMSW__
-    #include <wx/msw/registry.h>
-    #include <wx/stream.h>
-#endif
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
@@ -14,6 +10,8 @@
 
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
+
+
 
 wxPathList PathlistFactory::fromSinglePath(wxString path)
 {
