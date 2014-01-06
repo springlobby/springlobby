@@ -1,9 +1,10 @@
 #----------------------------------------------------------------------------------------------------
 # libalure dependency check
 #----------------------------------------------------------------------------------------------------
+
 option(OPTION_SOUND "enable sound support (requires alure / openal)" ON)
 
-if   ( OPTION_SOUND )
+if   ( OPTION_SOUND AND NOT WIN32 ) # no sound support on windows yet
 	message(STATUS "Sound enabled!")
 	find_package(Alure REQUIRED)
 	include_directories(${ALURE_INCLUDE_DIRS})
