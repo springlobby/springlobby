@@ -4,6 +4,7 @@
 #include <string>
 
 const std::string getSpringlobbyVersion();
+const std::string getSpringlobbyAgent();
 
 #endif
 

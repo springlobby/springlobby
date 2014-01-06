@@ -46,6 +46,7 @@ lsl/networking/tasserver.cpp
 #include "utils/customdialogs.h"
 
 #include "settings.h"
+#include "utils/version.h"
 
 #define PING_TIME 30
 #define PING_DELAY 5 //first ping is sent after PING_DELAY
@@ -440,12 +441,6 @@ const User& TASServer::GetMe() const {
     return GetUser( m_user );
 }
 
-wxString Useragent()
-{
-	return sett().Get( _T("Useragent"), GetAppName() ) + _T(" ") +
-		sett().Get( _T("Userversion"), GetSpringLobbyVersion(false) );
-}
-
 void TASServer::Login()
 {
     wxLogDebugFunc( wxEmptyString );
@@ -456,7 +451,7 @@ void TASServer::Login()
     if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
 	wxFormat login_cmd( _T("%s %s 1337 %s %s\t%s\ta m sp cl") );
-	SendCmd ( _T("LOGIN"), (login_cmd % m_user % pass % localaddr % Useragent() % protocol).str() );
+	SendCmd ( _T("LOGIN"), (login_cmd % m_user % pass % localaddr % TowxString(getSpringlobbyAgent()) % protocol).str() );
 	m_id_transmission = true;
 }
 
