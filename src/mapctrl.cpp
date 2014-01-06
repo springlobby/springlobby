@@ -8,6 +8,8 @@
 #include <cmath>
 #include <stdexcept>
 #include <wx/log.h>
+#include <wx/app.h>
+#include <wx/toplevel.h>
 
 #define HAVE_WX
 #include <lslutils/conversion.h>
@@ -1057,7 +1059,10 @@ void MapCtrl::OnResize( wxSizeEvent& /*unused*/ )
 
 void MapCtrl::OnMouseEnter(wxMouseEvent& /*event*/)
 {
-	SetFocus();
+	// workaround: scroll events only if element is focused on MSW
+	// workaround2: only focus current if window is active
+	if ( ((wxTopLevelWindow*)wxTheApp->GetTopWindow())->IsActive())
+		SetFocus();
 }
 
 void MapCtrl::OnMouseMove( wxMouseEvent& event )
