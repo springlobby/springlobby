@@ -136,16 +136,9 @@ bool SpringLobbyApp::OnInit()
 		ui().mw().SavePerspectives( _T("SpringLobby-default") );
 	}
 
-	sett().RefreshSpringVersionList();
-
-
 	//unitsync first load, NEEDS to be blocking
+	sett().RefreshSpringVersionList();
 	const bool usync_loaded = LSL::usync().ReloadUnitSyncLib();
-	if ( !cfg().ReadBool(_T("/General/firstrun")) && !usync_loaded )
-	{
-		customMessageBox( SL_MAIN_ICON, _("Please check that the file given in Preferences->Spring is a proper, readable unitsync library"),
-						 _("Coulnd't load required unitsync library"), wxOK );
-	}
 
 	sett().Setup(m_translationhelper);
 
