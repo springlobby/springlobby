@@ -357,7 +357,7 @@ void TASServer::Disconnect()
         return;
     }
 	m_connected = false;
-	SendCmd( _T("EXIT") ); // EXIT command for new protocol compatibility
+	SendCmd( _T("EXIT Using http://springlobby.info/") ); // EXIT command for new protocol compatibility
 	m_sock->Disconnect();
 }
 
