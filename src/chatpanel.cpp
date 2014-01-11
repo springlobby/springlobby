@@ -1141,6 +1141,10 @@ void ChatPanel::OnMenuItem( wxCommandEvent& event )
 
 void ChatPanel::SetBattle( Battle* battle )
 {
+	if (battle!=NULL) {
+		m_chat_log.SetLogFile(_T( "_BATTLE_" ) + battle->GetFounder().GetNick());
+	}
+
 	if ( m_battle != battle ) {
 		if ( m_battle ) OutputLine( _( " ** Left Battle." ), sett().GetChatColorNotification(), sett().GetChatFont() );
 		if ( battle ) OutputLine( _( " ** Joined Battle." ), sett().GetChatColorNotification(), sett().GetChatFont() );

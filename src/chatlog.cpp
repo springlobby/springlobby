@@ -25,15 +25,28 @@
 
 ChatLog::ChatLog( const wxString& server, const wxString& room ):
     m_server( server ),
-    m_room( room ),
     m_active ( LogEnabled() ),
     m_logfile ( )
 {
 	m_server.Replace( wxT( ":" ), wxT( "_" ) ) ;
 	wxLogMessage( _T( "ChatLog::ChatLog( %s, %s )" ), m_server.c_str(), m_room.c_str() ) ;
-	m_active = OpenLogFile();
+	SetLogFile(room);
 }
 
+bool ChatLog::SetLogFile(const wxString& room)
+{
+	if (m_logfile.IsOpened()) {
+		if (room != m_room) {
+			CloseSession();
+			m_room = room;
+			m_active = OpenLogFile();
+		}
+		return m_active;
+	}
+	m_room = room;
+	m_active = OpenLogFile();
+	return m_active;
+}
 
 ChatLog::~ChatLog() {
     wxLogMessage( _T( "%s -- ChatLog::~ChatLog()" ), m_room.c_str() );

@@ -60,7 +60,9 @@ class ChatLog
     void OpenInEditor();
     const wxArrayString& GetLastLines( ) const;
 
-  protected:
+	bool SetLogFile(const wxString& room);
+
+private:
     /** Closes the current "session" in the log file by appending a
      * session-closed notice to end before closing the file.
      *
