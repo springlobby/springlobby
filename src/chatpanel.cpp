@@ -346,7 +346,10 @@ const User* ChatPanel::GetSelectedUser() const
 	}
 	if ( !m_show_nick_list || ( m_nicklist == 0 ) ) return 0;
 
-	return m_nicklist->GetSelectedData();
+	if(m_nicklist->GetSelectedItemCount()>0)
+		return m_nicklist->GetSelectedData();
+	else
+		return 0;
 }
 
 
