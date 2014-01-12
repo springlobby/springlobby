@@ -36,6 +36,8 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 	m_sp(singleplayer)
 {
   //this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	if(battle.GetNumBots()>=2)
+		SetTitle(_("Add bot: high nimber of bots can cause performance problems"));
 
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
