@@ -40,17 +40,20 @@ public:
 	virtual bool Show(bool show = true);
 	void OnSearch( wxCommandEvent& event );
 	void OnSearchCompleted( wxCommandEvent& event);
+	void OnDownloadButton( wxCommandEvent& event);
 	void OnCloseButton( wxCommandEvent& event);
 	void OnListDownload( wxListEvent& event );
 private:
 	DECLARE_EVENT_TABLE()
-	wxButton* m_close_button;
+
 	wxBoxSizer* m_main_sizer;
+	ContentSearchResultsListctrl* m_search_res_w;
 	wxBoxSizer* m_searchsizer;
 	wxTextCtrl* m_searchbox;
-	wxStaticText* m_searchlabel;
 	wxButton* m_searchbutton;
-	ContentSearchResultsListctrl* m_search_res_w;
+	wxButton* m_download_button;
+	wxButton* m_close_button;
+
 	SearchThread* m_search_thread;
 	bool wildcardsearch;
 public:
@@ -59,6 +62,7 @@ public:
 		ID_SEARCH_FINISHED,
 		CLOSE_BUTTON,
 		LAUNCH_DOWNLOAD,
+		DOWNLOAD_BUTTON
 	};
 };
 

@@ -36,6 +36,7 @@ DEFINE_EVENT_TYPE(SEARCH_FINISHED);
 BEGIN_EVENT_TABLE( ContentDownloadDialog, wxDialog )
 	EVT_BUTTON(		SEARCH_BUTTON, ContentDownloadDialog::OnSearch )
 	EVT_BUTTON(		CLOSE_BUTTON, ContentDownloadDialog::OnCloseButton )
+	EVT_BUTTON(		DOWNLOAD_BUTTON, ContentDownloadDialog::OnDownloadButton )
 	EVT_COMMAND(ID_SEARCH_FINISHED,SEARCH_FINISHED,ContentDownloadDialog::OnSearchCompleted )
 	EVT_LIST_ITEM_ACTIVATED ( LAUNCH_DOWNLOAD ,              ContentDownloadDialog::OnListDownload      )
 END_EVENT_TABLE()
@@ -117,25 +118,42 @@ ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, co
 	WindowAttributesPickle( _T("CONTENTDIALOG"), this, wxSize( 670, 400 )),
 	wildcardsearch(false)
 {
-  m_search_thread = NULL;
-  m_main_sizer = new wxBoxSizer(wxVERTICAL);
-  m_search_res_w = new ContentSearchResultsListctrl(this,LAUNCH_DOWNLOAD);
-  m_main_sizer->Add(m_search_res_w,2,wxALL | wxEXPAND, 3);
-  m_searchsizer = new wxBoxSizer( wxHORIZONTAL );
-  m_searchbox = new wxTextCtrl(this,-1);
-  m_searchbutton = new wxButton(this,SEARCH_BUTTON,_("Search"));
-  m_searchlabel = new wxStaticText(this,-1,_("Enter search query(wildcard * can be used):"));
-  m_searchsizer->Add(m_searchlabel);
-  m_searchsizer->Add(m_searchbox,1,wxEXPAND | wxRIGHT ,0);
-  m_searchsizer->Add(m_searchbutton);
-  m_close_button = new wxButton(this,CLOSE_BUTTON,_("Close"));
-  m_searchsizer->Add(m_close_button);
-  m_main_sizer->Add(m_searchsizer,0,wxEXPAND | wxTOP,1);
-  SetSizer( m_main_sizer );
-  Layout();
-  m_searchbutton->SetDefault();
-  m_searchbox->SetFocus();
+	m_search_thread = NULL;
+	m_main_sizer = new wxBoxSizer(wxVERTICAL);
+	{
+		m_search_res_w = new ContentSearchResultsListctrl(this,LAUNCH_DOWNLOAD);
+		{
+			m_main_sizer->Add(m_search_res_w,2,wxALL | wxEXPAND, 5);
+		}
+		m_searchsizer = new wxBoxSizer( wxHORIZONTAL );
+		{
+			m_searchbox = new wxTextCtrl(this,-1);
+			{
+				m_searchbox->SetToolTip(_("Enter search query (wildcard * can be used)"));
+				m_searchsizer->Add(m_searchbox,1,wxALL,5);
+			}
+			m_searchbutton = new wxButton(this,SEARCH_BUTTON,_("Search"));
+			{
+				m_searchsizer->Add(m_searchbutton,0,wxALL,5);
 
+			}
+			m_download_button = new wxButton(this,DOWNLOAD_BUTTON,_("Download"));
+			{
+				m_searchsizer->Add(m_download_button,0,wxALL,5);
+
+			}
+			m_close_button = new wxButton(this,CLOSE_BUTTON,_("Close"));
+			{
+				m_searchsizer->Add(m_close_button,0,wxALL,5);
+			}
+			m_main_sizer->Add(m_searchsizer,0,wxEXPAND,5);
+		}
+		SetSizer( m_main_sizer );
+	}
+	Layout();
+
+	m_searchbutton->SetDefault();
+	m_searchbox->SetFocus();
 }
 
 bool ContentDownloadDialog::Show(bool show)
@@ -203,6 +221,16 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 void ContentDownloadDialog::OnCloseButton(wxCommandEvent& /*event*/)
 {
     Close();
+}
+
+void ContentDownloadDialog::OnDownloadButton( wxCommandEvent& event)
+{
+	long item_index=m_search_res_w->GetNextItem(-1,wxLIST_NEXT_ALL,wxLIST_STATE_SELECTED);
+	if(item_index!=-1)
+	{
+		const ContentSearchResult * res = m_search_res_w->GetDataFromIndex(item_index);
+		ui().Download(res->type, res->name, wxEmptyString);
+	}
 }
 
 void ContentDownloadDialog::OnListDownload(wxListEvent& event)

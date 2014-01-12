@@ -77,21 +77,32 @@ int ContentSearchResultsListctrl::GetItemImage(long int /*item*/) const
 }
 wxString ContentSearchResultsListctrl::GetItemText(long int item, long int column) const
 {
-  if ( m_data[item] == NULL )
-      return wxEmptyString;
-  const ContentSearchResult * res = m_data[item];
-  switch ( column )
-  {
-    case 0:
-      return res->name;
-    case 1:
-      return _("TODO");
-    case 2:
-      return res->type;
-    case 3:
-      return wxString::Format(_("%d M"),res->filesize/1024/1024);
-  }
-  return wxEmptyString;
+	if ( m_data[item] == NULL )
+		return wxEmptyString;
+	const ContentSearchResult * res = m_data[item];
+	switch ( column )
+	{
+		case 0:
+			return res->name;
+		case 1:
+			return _("TODO");
+		case 2:
+			return res->type;
+		case 3:
+			{
+				int kb=res->filesize/1024;
+				int mb=kb/1024;
+
+				if(mb>0)
+					return wxString::Format(_("%d MB"),mb);
+				else if(kb>0)
+					return wxString::Format(_("%d KB"),kb);
+				else
+					return _("< 1 KB");
+			}
+
+	}
+	return wxEmptyString;
 }
 void ContentSearchResultsListctrl::Sort()
 {
