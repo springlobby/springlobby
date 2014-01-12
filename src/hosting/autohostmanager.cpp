@@ -119,7 +119,7 @@ void SpadsHandler::Start()
 //-------------
 
 
-AutohostManager::AutohostManager():m_type(AUTOHOSTTYPE_UNKNOWN), m_battle(0)
+AutohostManager::AutohostManager():m_type(AUTOHOSTTYPE_NONE), m_battle(0)
 {
 
 }
@@ -135,6 +135,7 @@ void AutohostManager::SetBattle(Battle* battle)
     m_springie.SetBattle(battle);
     m_spads.SetBattle(battle);
     m_emptyhandler.SetBattle(battle);
+    m_type=AutohostManager::AUTOHOSTTYPE_NONE;
 }
 
 AutohostHandler& AutohostManager::GetAutohostHandler()
@@ -145,8 +146,9 @@ AutohostHandler& AutohostManager::GetAutohostHandler()
             return GetSpringie();
         case AUTOHOSTTYPE_SPADS:
             return GetSpads();
-	case AUTOHOSTTYPE_UNKNOWN:
-		return m_emptyhandler;
+		case AUTOHOSTTYPE_NONE:
+		case AUTOHOSTTYPE_UNKNOWN:
+			return m_emptyhandler;
     }
     return m_emptyhandler;
 }

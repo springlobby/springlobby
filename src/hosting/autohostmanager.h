@@ -65,6 +65,7 @@ class AutohostManager
 
         enum AutohostType
         {
+        	AUTOHOSTTYPE_NONE,
             AUTOHOSTTYPE_UNKNOWN,
             AUTOHOSTTYPE_SPRINGIE,
             AUTOHOSTTYPE_SPADS
