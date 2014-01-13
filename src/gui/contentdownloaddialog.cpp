@@ -44,21 +44,21 @@ END_EVENT_TABLE()
 class SearchThread : public wxThread
 {
 public:
-virtual void* Entry();
-SearchThread(ContentDownloadDialog * content_dialog,wxString searchquery);
-virtual ~SearchThread();
+	virtual void* Entry();
+	SearchThread(ContentDownloadDialog * content_dialog,wxString searchquery);
+	virtual ~SearchThread();
 
 private:
 
-ContentDownloadDialog* m_content_dialog;
-wxString m_search_query;
+	ContentDownloadDialog* m_content_dialog;
+	wxString m_search_query;
 
 };
 
 SearchThread::SearchThread(ContentDownloadDialog * content_dialog,wxString searchquery): wxThread(wxTHREAD_DETACHED)
 {
-  m_content_dialog = content_dialog;
-  m_search_query = searchquery;
+	m_content_dialog = content_dialog;
+	m_search_query = searchquery;
 }
 
 // convert a string to IRI: https://en.wikipedia.org/wiki/Internationalized_resource_identifier
@@ -70,7 +70,7 @@ static wxString ConvToIRI(const wxString& str)
 		const unsigned char c = utf8[i];
 		if ( (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') ) {
 			escaped.append(wxChar(c));
-		} else/* if (i+1<utf8.length())*/ {
+		} else { /* if (i+1<utf8.length())*/
 			escaped.append(wxString::Format(_T("%%%02x"),wxChar(c)));
 		}
 		//FIXME: this function is incomplete! tested only with german umlauts
@@ -84,25 +84,24 @@ void* SearchThread::Entry()
 
 
 //   std::cout << "Escaped search query: " << m_search_query.ToAscii().data() << std::endl;
-  wxHTTP get;
-  get.SetTimeout(10);
-  get.Connect(_("api.springfiles.com"));
-  const wxString query = wxFormat(_("/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"))  % searchescaped % searchescaped;
-  wxInputStream * httpStream = get.GetInputStream(query);
-  wxString res;
-  if ( get.GetError() == wxPROTO_NOERR )
-  {
+	wxHTTP get;
+	get.SetTimeout(10);
+	get.Connect(_("api.springfiles.com"));
+	const wxString query = wxFormat(_("/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"))  % searchescaped % searchescaped;
+	wxInputStream * httpStream = get.GetInputStream(query);
+	wxString res;
+	if ( get.GetError() == wxPROTO_NOERR ) {
 
-    wxStringOutputStream out_stream(&res);
-    httpStream->Read(out_stream);
+		wxStringOutputStream out_stream(&res);
+		httpStream->Read(out_stream);
 
 
-  }
-  wxDELETE(httpStream);
-  wxCommandEvent notify(SEARCH_FINISHED,ContentDownloadDialog::ID_SEARCH_FINISHED);
-  notify.SetInt(0);
-  notify.SetString(res);
-  wxPostEvent(m_content_dialog,notify);
+	}
+	wxDELETE(httpStream);
+	wxCommandEvent notify(SEARCH_FINISHED,ContentDownloadDialog::ID_SEARCH_FINISHED);
+	notify.SetInt(0);
+	notify.SetString(res);
+	wxPostEvent(m_content_dialog,notify);
 //   std::cout << "Search finished" << std::endl;
 	return NULL;
 }
@@ -158,15 +157,14 @@ ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, co
 
 bool ContentDownloadDialog::Show(bool show)
 {
-return wxDialog::Show(show);
+	return wxDialog::Show(show);
 }
 
 ContentDownloadDialog::~ContentDownloadDialog()
 {
-  if ( m_search_thread )
-  {
-      m_search_thread->Wait();
-  }
+	if ( m_search_thread ) {
+		m_search_thread->Wait();
+	}
 }
 void ContentDownloadDialog::OnSearch(wxCommandEvent& /*event*/)
 {
@@ -178,21 +176,20 @@ void ContentDownloadDialog::OnSearch(wxCommandEvent& /*event*/)
 }
 void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 {
-  wxString json = event.GetString();
+	wxString json = event.GetString();
 //   std::cout << json.ToAscii().data() << std::endl;
 
-  wxJSONReader reader;
-  wxJSONValue root;
-  int errors = reader.Parse(json,&root);
-  m_search_thread = NULL;
-  m_searchbutton->Enable(true);
-  if ( errors )
-  {
-    wxMessageBox(_("Failed to parse search results"),_("Error"));
-    return;
-  }
+	wxJSONReader reader;
+	wxJSONValue root;
+	int errors = reader.Parse(json,&root);
+	m_search_thread = NULL;
+	m_searchbutton->Enable(true);
+	if ( errors ) {
+		wxMessageBox(_("Failed to parse search results"),_("Error"));
+		return;
+	}
 	const wxJSONInternalArray * a = root.AsArray();
-	if ((a->GetCount() == 0) && (!wildcardsearch)){ //no results returned, try wildcard search
+	if ((a->GetCount() == 0) && (!wildcardsearch)) { //no results returned, try wildcard search
 		wildcardsearch = true;
 		wxString search_query = _T("*")+m_searchbox->GetValue()+_T("*");//By default the user would expect that
 		m_searchbutton->Enable(false);
@@ -203,31 +200,29 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 	wildcardsearch = false;
 	m_search_res_w->Clear();
 
-  for ( unsigned i = 0; i < a->GetCount(); i++ )
-  {
-    wxJSONValue val = a->Item(i);
-    wxString category = val[_("category")].AsString();
-    int size = val[_("size")].AsInt();
-    wxString name = val[_("springname")].AsString();
+	for ( unsigned i = 0; i < a->GetCount(); i++ ) {
+		wxJSONValue val = a->Item(i);
+		wxString category = val[_("category")].AsString();
+		int size = val[_("size")].AsInt();
+		wxString name = val[_("springname")].AsString();
 //     std::cout << category.ToAscii().data() << "," << name.ToAscii().data() << "," << size << std::endl;
-    ContentSearchResult* res = new ContentSearchResult();
-    res->name = name;
-    res->filesize = size;
-    res->type = category;
-    m_search_res_w->AddContent(res);
-  }
+		ContentSearchResult* res = new ContentSearchResult();
+		res->name = name;
+		res->filesize = size;
+		res->type = category;
+		m_search_res_w->AddContent(res);
+	}
 }
 
 void ContentDownloadDialog::OnCloseButton(wxCommandEvent& /*event*/)
 {
-    Close();
+	Close();
 }
 
 void ContentDownloadDialog::OnDownloadButton( wxCommandEvent& event)
 {
 	long item_index=m_search_res_w->GetNextItem(-1,wxLIST_NEXT_ALL,wxLIST_STATE_SELECTED);
-	if(item_index!=-1)
-	{
+	if(item_index!=-1) {
 		const ContentSearchResult * res = m_search_res_w->GetDataFromIndex(item_index);
 		ui().Download(res->type, res->name, wxEmptyString);
 	}
