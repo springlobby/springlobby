@@ -161,7 +161,7 @@ wxListItemAttr* BattleListCtrl::GetItemAttr(long item) const
 
 void BattleListCtrl::AddBattle( IBattle& battle )
 {
-	if (AddItem(&battle)) ; {
+	if (AddItem(&battle)) {
 		// change column width based on content
 		SetColumnWidth(3, wxLIST_AUTOSIZE);
 		SetColumnWidth(4, wxLIST_AUTOSIZE);
