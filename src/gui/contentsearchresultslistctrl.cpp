@@ -36,6 +36,7 @@ ContentSearchResultsListctrl::ContentSearchResultsListctrl(wxWindow* parent, wxW
 	AddColumn(1,wxLIST_AUTOSIZE,_("Preview"),_("Preview"));
 	AddColumn(2,wxLIST_AUTOSIZE,_("Type"),_("Type"));
 	AddColumn(3,wxLIST_AUTOSIZE,_("Size"),_("Size"));
+	AddColumn(4,wxLIST_AUTOSIZE,_("Downloaded"),_("Downloaded"));
 
 	if ( m_sortorder.size() == 0 ) {
 		m_sortorder[2].col = 2;
@@ -62,6 +63,8 @@ int ContentSearchResultsListctrl::CompareOneCrit(DataType u1,DataType u2, int co
 		return 0;
 	case 3:
 		return (u1->filesize - u2->filesize)*dir;
+	case 4:
+		return (u1->is_downloaded<u2->is_downloaded);
 	}
 	return -1;
 }
@@ -97,7 +100,12 @@ wxString ContentSearchResultsListctrl::GetItemText(long int item, long int colum
 		else
 			return _("< 1 KB");
 	}
-
+	case 4:{
+			if(res->is_downloaded)
+				return _("Yes");
+			else
+				return _("No");
+	}
 	}
 	return wxEmptyString;
 }

@@ -210,6 +210,13 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 		res->name = name;
 		res->filesize = size;
 		res->type = category;
+		if(category==_("map"))
+			res->is_downloaded=LSL::usync().MapExists(std::string(name.mb_str()));
+		else if(category==_("game"))
+			res->is_downloaded=LSL::usync().ModExists(std::string(name.mb_str()));
+		else
+			res->is_downloaded=0;
+
 		m_search_res_w->AddContent(res);
 	}
 }
