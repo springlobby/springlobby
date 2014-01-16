@@ -181,6 +181,7 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 		m_search_thread = new SearchThread(this,search_query);
 		m_search_thread->Create();
 		m_search_thread->Run();
+		return;
 	}
 	wildcardsearch = false;
 	m_search_res_w->Clear();
