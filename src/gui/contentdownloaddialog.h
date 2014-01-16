@@ -57,7 +57,7 @@ private:
 	SearchThread* m_search_thread;
 	bool wildcardsearch;
 public:
-	enum{
+	enum {
 		SEARCH_BUTTON = wxID_HIGHEST,
 		ID_SEARCH_FINISHED,
 		CLOSE_BUTTON,
