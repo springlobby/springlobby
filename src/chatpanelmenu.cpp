@@ -135,7 +135,6 @@ wxMenu* ChatPanelMenu::GetMenu()
 		submenu_user->AppendSeparator();
 		wxMenuItem* broadcastitem = new wxMenuItem( submenu_user, CHAT_MENU_SV_BROADCAST, _( "Broadcast..." ), wxEmptyString, wxITEM_NORMAL );
 		submenu_user->Append( broadcastitem );
-		m_menu_all->Append( -1, _( "Admin" ), m_user_menu );
 	}
 	else if ( m_chatpanel->m_type == CPT_User ) {
         if ( m_chatpanel->m_user )
