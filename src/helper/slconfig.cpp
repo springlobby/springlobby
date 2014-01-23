@@ -2,6 +2,7 @@
 
 #include <wx/wfstream.h>
 #include <wx/log.h>
+#include <wx/filename.h>
 
 #include "../utils/debug.h"
 #include "../utils/slpaths.h"
@@ -34,8 +35,26 @@ slConfig::slConfig( wxInputStream& in, const wxMBConv& conv ):
 slConfig* slConfig::Create()
 {
 	m_chosen_path = SlPaths::GetConfigPath();
-	wxFileInputStream instream( slConfig::m_chosen_path );
 
+	// make sure config file & dir is created/writeable when not exists
+	wxString configDir;
+	wxFileName::SplitPath(m_chosen_path, &configDir, NULL, NULL);
+	if (!wxFileName::DirExists(configDir)) {
+		if  (!wxMkdir(configDir)) {
+			wxLogError(_T("unable to create config dir"));
+			exit(-1);
+		}
+	}
+	if (!wxFileName::FileExists(m_chosen_path)){
+		wxFileOutputStream outstream(m_chosen_path);
+		if (!outstream.IsOk()) {
+			wxLogError(_T("unable to create config file"));
+			exit(-1);
+		}
+	}
+
+
+	wxFileInputStream instream( slConfig::m_chosen_path );
 	if ( !instream.IsOk() ) {
 		wxLogError( _T( "unable to use config file" ) );
 		exit( -1 );
