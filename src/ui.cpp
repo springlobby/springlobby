@@ -1160,26 +1160,7 @@ void Ui::OnInit()
 
 void Ui::FirstRunWelcome()
 {
-#ifdef __WXMSW__
-	sett().SetOldSpringLaunchMethod( true );
-#endif
-
 	wxLogMessage( _T("first time startup"));
-	wxMessageBox( wxFormat( _("Hi %s,\nIt looks like this is your first time using %s. I have guessed a configuration that I think will work for you but you should review it, especially the Spring configuration.") )
-				  % wxGetUserName()
-				  % GetAppName(),
-				  _("Welcome"),
-				  wxOK | wxICON_INFORMATION, &mw() );
-
-	// copy uikeys.txt
-	wxPathList pl;
-	pl.AddEnvList( _T("%ProgramFiles%") );
-	pl.AddEnvList( _T("XDG_DATA_DIRS") );
-	pl = PathlistFactory::AdditionalSearchPaths( pl );
-	wxString uikeyslocation = pl.FindValidPath( _T("uikeys.txt") );
-	if ( !uikeyslocation.IsEmpty() ) {
-		wxCopyFile( uikeyslocation, sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
-	}
 
 	//this ensures that for new configs there's a default perspective to fall back on
 	mw().SavePerspectives( _T("SpringLobby-default") );
