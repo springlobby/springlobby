@@ -1164,7 +1164,7 @@ void Ui::FirstRunWelcome()
 
 	//this ensures that for new configs there's a default perspective to fall back on
 	mw().SavePerspectives( _T("SpringLobby-default") );
-	mw().ShowConfigure();
+	ShowConnectWindow();
 }
 
 void Ui::CheckForUpdates()

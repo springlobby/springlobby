@@ -187,7 +187,8 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 
 	if ( !username.empty() ) {
 		m_ok_btn->SetFocus();
-	} else {
+	} else { // no nick set, make register tab default
+		m_tabs->SetSelection(1);
 		m_nick_text->SetFocus();
 	}
 
