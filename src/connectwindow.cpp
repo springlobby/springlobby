@@ -189,7 +189,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 		m_ok_btn->SetFocus();
 	} else { // no nick set, make register tab default
 		m_tabs->SetSelection(1);
-		m_nick_text->SetFocus();
+		m_regnick_text->SetFocus();
 	}
 
 	m_ok_btn->SetDefault();
