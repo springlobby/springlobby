@@ -47,6 +47,8 @@ lsl/spring/spring.cpp
 #include <lslutils/globalsmanager.h>
 #include <lslutils/conversion.h>
 
+SLCONFIG("/Spring/Safemode", false, "launch spring in safemode");
+
 BEGIN_EVENT_TABLE( Spring, wxEvtHandler )
 
 	EVT_COMMAND ( PROC_SPRING, wxEVT_SPRING_EXIT, Spring::OnTerminated )
@@ -179,32 +181,37 @@ bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVers
         return false;
     }
 
-  wxString cmd = _T("\"") + executable;
-  #ifdef __WXMAC__
-    wxChar sep = wxFileName::GetPathSeparator();
+	wxString cmd = _T("\"") + executable;
+#ifdef __WXMAC__
+	wxChar sep = wxFileName::GetPathSeparator();
 	if ( sett().GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") )
-        cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
-  #endif
-	cmd += _T("\" ") + params;
+	cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
+#endif
+	cmd += _T("\" ");
+	if (cfg().ReadBool(_T( "/Spring/Safemode" ))) {
+		cmd+=_T("--safemode ");
+	}
+	cmd += params;
 
-  wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
+	wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
+	wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
 
-  wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
-  if ( sett().UseOldSpringLaunchMethod() )
-  {
-    if ( m_wx_process == 0 ) m_wx_process = new wxSpringProcess( *this );
-    if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) return false;
-  }
-  else
-  {
-    if ( m_process == 0 ) m_process = new SpringProcess( *this );
-    m_process->Create();
-    m_process->SetCommand( cmd );
-    m_process->Run();
-  }
-  m_running = true;
+	if ( sett().UseOldSpringLaunchMethod() ) {
+		if ( m_wx_process == NULL ) {
+			m_wx_process = new wxSpringProcess( *this );
+		}
+		if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) {
+			return false;
+		}
+	} else {
+		if ( m_process == 0 ) m_process = new SpringProcess( *this );
+		m_process->Create();
+		m_process->SetCommand( cmd );
+		m_process->Run();
+	}
+	m_running = true;
 	GlobalEvent::Send(GlobalEvent::OnSpringStarted);
-  return true;
+	return true;
 }
 
 void Spring::OnTerminated( wxCommandEvent& event )
