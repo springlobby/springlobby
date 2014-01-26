@@ -49,6 +49,7 @@ lsl/networking/tasserver.cpp
 #include "utils/version.h"
 
 #define PING_TIME 30
+#define PING_TIMEOUT 60
 #define PING_DELAY 5 //first ping is sent after PING_DELAY
 
 const int udp_reply_timeout=10;
@@ -336,18 +337,20 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
 void TASServer::Connect( const wxString& servername ,const wxString& addr, const int port )
 {
 	m_server_name = servername;
-    m_addr=addr;
+	m_addr=addr;
 	m_buffer = wxEmptyString;
 	m_sock->Connect( addr, port );
 	m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
 	m_connected = false;
-    m_online = false;
-    m_redirecting = false;
-    m_agreement = wxEmptyString;
+	m_online = false;
+	m_redirecting = false;
+	m_agreement = wxEmptyString;
 	m_crc.ResetCRC();
-	m_last_net_packet = time( 0 );
+	m_last_net_packet = 0;
 	wxString handle = m_sock->GetHandle();
-	if ( !handle.IsEmpty() ) m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
+	if ( !handle.IsEmpty() ) {
+		m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
+	}
 }
 
 void TASServer::Disconnect()
@@ -495,11 +498,9 @@ void TASServer::Update( int mselapsed )
         }
         return;
     }
-    else   // We are connected already.
-    {
-        if ( !IsConnected() ) return;
+	if ( !IsConnected() ) return;
 
-        time_t now = time( 0 );
+	time_t now = time( 0 );
 
 	if ((m_last_ping + PING_TIME) < now) { //Send a PING every 30 seconds
 		m_last_ping = now;
@@ -507,50 +508,40 @@ void TASServer::Update( int mselapsed )
 	}
 
 	if ( ( m_last_net_packet > 0 ) && ( ( now - m_last_net_packet ) > PING_TIMEOUT ) ) { // no data received, assume timeout
-		 m_se->OnServerMessage( _("Timeout assumed, disconnecting") );
-		 Disconnect();
+		m_se->OnServerMessage( _("Timeout assumed, disconnecting") );
+		Disconnect();
 	}
 
-        // joining battle with nat traversal:
-        // if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
-        // we did UdpPing(our name) , join battle anyway, but with warning message that nat failed.
-        // (if we'd receive reply from server, we'd finalize already)
-        //
-        if (m_do_finalize_join_battle&&(m_last_udp_ping+udp_reply_timeout<now))
-        {
-            customMessageBoxNoModal(SL_MAIN_ICON,_("Failed to punch through NAT, playing this battle might not work for you or for other players."),_("Error"), wxICON_ERROR);
-            //wxMessageBox()
-            FinalizeJoinBattle();
-            //wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
-        };
+	// joining battle with nat traversal:
+	// if we havent finalized joining yet, and udp_reply_timeout seconds has passed since
+	// we did UdpPing(our name) , join battle anyway, but with warning message that nat failed.
+	// (if we'd receive reply from server, we'd finalize already)
+	//
+	if (m_do_finalize_join_battle&&(m_last_udp_ping+udp_reply_timeout<now)) {
+		customMessageBoxNoModal(SL_MAIN_ICON,_("Failed to punch through NAT, playing this battle might not work for you or for other players."),_("Error"), wxICON_ERROR);
+		//wxMessageBox()
+		FinalizeJoinBattle();
+		//wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
+	};
 
-        if ( ( m_last_udp_ping + m_keepalive ) < now )
-        {
-            // Is it time for a nat traversal PING?
-            m_last_udp_ping = now;
-            // Nat travelsal "ping"
-            if ( m_battle_id != -1 )
-            {
-                Battle *battle=GetCurrentBattle();
-                if (battle)
-                {
-                    if ( ( battle->GetNatType() == NAT_Hole_punching || ( battle->GetNatType() == NAT_Fixed_source_ports ) ) && !battle->GetInGame() )
-                    {
-                        if ( battle->IsFounderMe() )
-                        {
-                            UdpPingTheServer(m_user);
-                            UdpPingAllClients();
-                        }
-                        else
-                        {
-                            UdpPingTheServer(m_user);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
+	if ( ( m_last_udp_ping + m_keepalive ) < now ) {
+		// Is it time for a nat traversal PING?
+		m_last_udp_ping = now;
+		// Nat travelsal "ping"
+		if ( m_battle_id != -1 ) {
+			Battle *battle=GetCurrentBattle();
+			if (battle) {
+				if ( ( battle->GetNatType() == NAT_Hole_punching || ( battle->GetNatType() == NAT_Fixed_source_ports ) ) && !battle->GetInGame() ) {
+					if ( battle->IsFounderMe() ) {
+						UdpPingTheServer(m_user);
+						UdpPingAllClients();
+					} else {
+						UdpPingTheServer(m_user);
+					}
+				}
+			}
+		}
+	}
 }
 
 

@@ -214,8 +214,6 @@ class Server : public iNetClass, public SL::NonCopyable
     Battle& _AddBattle( const int& id );
     void _RemoveBattle( const int& id );
 
-    static const unsigned int PING_TIMEOUT = 60;
-
     virtual void SendCmd( const wxString& command, const wxString& param ) = 0;
     virtual void RelayCmd( const wxString& command, const wxString& param ) = 0;
 
