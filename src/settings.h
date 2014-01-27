@@ -369,9 +369,6 @@ class Settings : public SL::NonCopyable
     wxFont GetChatFont();
     void SetChatFont( wxFont value );
 
-    void SetDisplayJoinLeave( bool display, const wxString& channel  );
-    bool GetDisplayJoinLeave( const wxString& channel );
-
     void SetHighlightedWords( const wxArrayString& words );
     wxArrayString GetHighlightedWords( );
 

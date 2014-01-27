@@ -45,8 +45,9 @@ wxMenu* ChatPanelMenu::GetMenu()
     wxMenuItem* clear = new wxMenuItem( m_menu_all, CHAT_MENU_CH_CLEAR, _( "Clear" ), wxEmptyString, wxITEM_NORMAL );
     m_menu_all->Append( clear );
 
-	if ( m_chatpanel->m_type == CPT_Channel ) {
 
+
+	if ( m_chatpanel->m_type == CPT_Channel ) {
 		wxLogMessage( _T( "channel" ) );
 		m_autorejoin = new wxMenuItem( m_menu_all, CHAT_MENU_CH_AUTOJOIN, _( "Auto join this channel" ), wxEmptyString, wxITEM_CHECK );
 		m_menu_all->Append( m_autorejoin );
@@ -54,17 +55,16 @@ wxMenu* ChatPanelMenu::GetMenu()
 			bool isautojoin = sett().GetChannelJoinIndex( m_chatpanel->m_channel->GetName() ) >= 0;
 			m_autorejoin->Check( isautojoin );
 		}
-
 		wxMenuItem* leaveitem = new wxMenuItem( m_menu_all, CHAT_MENU_CH_LEAVE, _( "Leave" ), wxEmptyString, wxITEM_NORMAL );
 		m_menu_all->Append( leaveitem );
+	}
 
-		displayjoinitem = new wxMenuItem( m_menu_all, CHAT_MENU_CH_DISPLAYJOIN, _( "Display Join/Leave Messages" ), wxEmptyString, wxITEM_CHECK );
-		if ( m_chatpanel->m_channel && m_chatpanel->m_type == CPT_Channel ) {
-			m_menu_all->Append( displayjoinitem );
-			displayjoinitem->Check( sett().GetDisplayJoinLeave( m_chatpanel->m_channel->GetName() ) );
-		}
+	displayjoinitem = new wxMenuItem( m_menu_all, CHAT_MENU_CH_DISPLAYJOIN, _( "Display Join/Leave Messages" ), wxEmptyString, wxITEM_CHECK );
+	m_menu_all->Append( displayjoinitem );
+	displayjoinitem->Check(m_chatpanel->m_display_joinitem);
 
-        wxMenuItem* mutelistitem = new wxMenuItem( m_menu_all, CHAT_MENU_SHOW_MUTELIST, _( "Show mute list" ), wxEmptyString, wxITEM_NORMAL );
+	if ( m_chatpanel->m_type == CPT_Channel ) {
+		wxMenuItem* mutelistitem = new wxMenuItem( m_menu_all, CHAT_MENU_SHOW_MUTELIST, _( "Show mute list" ), wxEmptyString, wxITEM_NORMAL );
 
 		m_menu_all->Append( mutelistitem );
 
@@ -270,14 +270,10 @@ void ChatPanelMenu::OnChannelMenuLeave( wxCommandEvent& /*unused*/ )
 
 void ChatPanelMenu::OnChannelMenuDisplayJoinLeave( wxCommandEvent& /*unused*/ )
 {
-	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !displayjoinitem->IsChecked() ) {
-		sett().SetDisplayJoinLeave( false, m_chatpanel->m_channel->GetName() );
-		displayjoinitem->Check( false );
-	} else {
-		sett().SetDisplayJoinLeave( true, m_chatpanel->m_channel->GetName() );
-		displayjoinitem->Check( true );
-	}
+	m_chatpanel->m_display_joinitem = displayjoinitem->IsChecked();
+
+	// not needed, menu is re-created each time it is shown
+	//displayjoinitem->Check(!checked);
 }
 
 

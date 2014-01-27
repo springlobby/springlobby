@@ -983,17 +983,6 @@ wxString Settings::GetLastScriptPassword()
 	return m_config->Read( _T( "/Hosting/MyLastScriptPassword" ), wxEmptyString );
 }
 
-void Settings::SetDisplayJoinLeave( bool display, const wxString& channel  )
-{
-	m_config->Write( _T( "/Channels/DisplayJoinLeave/" )  + channel, display );
-}
-
-bool Settings::GetDisplayJoinLeave( const wxString& channel  )
-{
-    return m_config->Read( _T( "/Channels/DisplayJoinLeave/" ) +  channel, 0l );
-}
-
-
 void Settings::SetChatHistoryLenght( int historylines )
 {
 	m_config->Write( _T( "/Chat/HistoryLinesLenght" ), historylines );

@@ -84,6 +84,7 @@ static wxColor m_irc_colors[16]  = {
 	wxColor(149,149,149)
 };
 
+
 ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
 	wxPanel( parent, -1 ),
 	m_show_nick_list( true ),
@@ -94,14 +95,20 @@ ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
 	m_user( 0 ),
 	m_battle( 0 ),
 	m_type( CPT_Channel ),
-	m_popup_menu( 0 ),
+	m_popup_menu( NULL ),
 	m_chat_log(sett().GetDefaultServer(), chan_prefix + chan.GetName()),
 	m_icon_index( 2 ),
 	m_imagelist( imaglist ),
 	m_disable_append( false ),
+	m_display_joinitem(true),
 	m_topic_set( false )
 {
+	m_chatpanelname = chan.GetName();
+
 	GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + chan.GetName() );
+
+	cfg().Read(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
+
 	wxLogDebugFunc( _T( "wxWindow* parent, Channel& chan" ) );
 	CreateControls( );
 	LoadLastLines();
@@ -121,19 +128,22 @@ ChatPanel::ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist 
 	m_user( &user ),
 	m_battle( 0 ),
 	m_type( CPT_User ),
-	m_popup_menu( 0 ),
+	m_popup_menu( NULL ),
 	m_chat_log(sett().GetDefaultServer(), user.GetNick()),
 	m_icon_index( 3 ),
 	m_imagelist( imaglist ),
 	m_disable_append( false ),
+	m_display_joinitem(true),
 	m_topic_set( false )
 {
-	GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-pm-") + user.GetNick() );
+	m_chatpanelname = _T("chatpanel-pm-") + user.GetNick();
+	cfg().Read(_T( "/Channels/DisplayJoinLeave/" )  + m_chatpanelname, m_display_joinitem);
+
+	GetAui().manager->AddPane( this, wxLEFT, m_chatpanelname);
 	CreateControls( );
 	LoadLastLines();
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
 	user.uidata.panel = this;
-
 }
 
 
@@ -147,14 +157,18 @@ ChatPanel::ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  ):
 	m_user( 0 ),
 	m_battle( 0 ),
 	m_type( CPT_Server ),
-	m_popup_menu( 0 ),
+	m_popup_menu( NULL ),
 	m_chat_log(sett().GetDefaultServer(), _T( "_SERVER" )),
 	m_icon_index( 1 ),
 	m_imagelist( imaglist ),
 	m_disable_append( false ),
+	m_display_joinitem(false),
 	m_topic_set( false )
 {
-	GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-server") );
+	m_chatpanelname = _T("chatpanel-server");
+	cfg().Read(_T( "/Channels/DisplayJoinLeave/" )  + m_chatpanelname, m_display_joinitem);
+
+	GetAui().manager->AddPane( this, wxLEFT, m_chatpanelname );
 	wxLogDebugFunc( _T( "wxWindow* parent, Server& serv" ) );
 	CreateControls( );
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
@@ -174,11 +188,14 @@ ChatPanel::ChatPanel( wxWindow* parent, Battle* battle ):
 	m_user( 0 ),
 	m_battle( battle ),
 	m_type( CPT_Battle ),
-	m_popup_menu( 0 ),
+	m_popup_menu( NULL ),
 	m_chat_log(sett().GetDefaultServer(), _T( "_BATTLE_" ) + wxDateTime::Now().Format( _T( "%Y_%m_%d__%H_%M_%S" ) )),
 	m_disable_append( false ),
 	m_topic_set( false )
 {
+	m_chatpanelname = _T("BATTLE");
+	m_display_joinitem = cfg().Read(_T( "/Channels/DisplayJoinLeave/" )  + m_chatpanelname, true);
+
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
 	if ( m_battle ) {
 		for (unsigned int i = 0; i < m_battle->GetNumUsers(); ++i) {
@@ -203,15 +220,17 @@ ChatPanel::~ChatPanel()
 	if ( m_channel != 0 ) {
 		if ( m_channel->uidata.panel == this ) m_channel->uidata.panel = 0;
 	}
+	cfg().Write( _T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
 
 	if ( m_type == CPT_Channel ) {
 		m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
-		if(GetAui().manager)GetAui().manager->DetachPane( this );
 	} else if ( m_type == CPT_Server ) {
 		m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
-		if(GetAui().manager)GetAui().manager->DetachPane( this );
-	} else if ( m_type == CPT_User ) {
-		if(GetAui().manager)GetAui().manager->DetachPane( this );
+	} else if  (m_type == CPT_Battle) {
+	}
+
+	if(GetAui().manager) {
+		GetAui().manager->DetachPane( this );
 	}
 }
 
@@ -333,7 +352,7 @@ void ChatPanel::CreateControls( )
 
 void ChatPanel::CreatePopup()
 {
-	if ( m_popup_menu != 0 )
+	if ( m_popup_menu != NULL )
 		return;
 	wxLogDebugFunc( wxEmptyString );
 	m_popup_menu = new ChatPanelMenu( this );
@@ -664,19 +683,17 @@ wxString ChatPanel::GetChatTypeStr() const
 	return _T( "ROOMTYPE FIXME" );
 }
 
+//sett().GetDisplayJoinLeave( m_channel->GetName() )
 void ChatPanel::Joined( User& who )
 {
-	if ( m_type == CPT_Channel ) {
-		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
-			// change the image of the tab to show new events
+	if (m_display_joinitem) {
+		// change the image of the tab to show new events
+		if ( m_type == CPT_Channel ) {
 			SetIconHighlight( highlight_join_leave );
-			OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 		}
-	} else if ( m_type == CPT_Battle ) {
-		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) ) {
-			OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
-		}
+		OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 	}
+
 	if ( m_show_nick_list && ( m_nicklist != 0 ) ) {
 		unsigned int numusers = 0;
 		if ( m_type == CPT_Channel ) numusers = GetChannel()->GetNumUsers();
@@ -707,6 +724,9 @@ void ChatPanel::Parted( User& who, const wxString& message )
 {
 //    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
 	bool me_parted = m_channel && &who == &m_channel->GetMe();
+	if ( m_display_joinitem ) {
+		OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+	}
 	if ( m_type == CPT_Channel ) {
 		if ( m_channel == 0 ) return;
 		if ( me_parted ) {
@@ -714,16 +734,11 @@ void ChatPanel::Parted( User& who, const wxString& message )
 			SetChannel( 0 );
 			return;
 		}
-		if ( sett().GetDisplayJoinLeave( m_channel->GetName() ) ) {
+		if ( m_display_joinitem ) {
 			// change the image of the tab to show new events
 			SetIconHighlight( highlight_join_leave );
-			OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 		}
-	} else if ( m_type == CPT_Battle ) {
-		if ( sett().GetDisplayJoinLeave( _T( "game/battle" ) ) )  {
-			OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
-		}
-	} else if ( m_type == CPT_Server && me_parted )
+	}else if ( m_type == CPT_Server && me_parted )
 		return;
 	if ( m_show_nick_list && ( m_nicklist != 0 ) ) {
 		unsigned int numusers = 0;
@@ -1074,8 +1089,11 @@ void ChatPanel::OnMouseDown( wxMouseEvent& event )
 		m_url_at_pos = FindUrl( pos );
 	}
 	CreatePopup();
-	if ( m_popup_menu != 0 ) PopupMenu( m_popup_menu->GetMenu() );
-	else event.Skip();
+	if ( m_popup_menu != NULL ) {
+		PopupMenu( m_popup_menu->GetMenu() );
+	} else {
+		event.Skip();
+	}
 }
 
 void ChatPanel::UpdateNicklistHighlights()

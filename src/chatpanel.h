@@ -199,8 +199,10 @@ private:
 	TextCompletionDatabase textcompletiondatabase;
 
 	std::vector<ChatLine> m_buffer;
-	bool m_disable_append;
+	bool m_disable_append; //disable text appending
+	bool m_display_joinitem; //show users joing/leaving
 
+	wxString m_chatpanelname;
 	wxString m_url_at_pos; //! the mouse event sink sets this
 
 	friend class ChatPanelMenu; //menu needs access to members
