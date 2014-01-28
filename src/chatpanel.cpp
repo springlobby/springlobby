@@ -103,7 +103,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
 	m_icon_index( 2 ),
 	m_imagelist( imaglist ),
 	m_disable_append( false ),
-	m_display_joinitem(true),
+	m_display_joinitem(false),
 	m_topic_set( false )
 {
 	m_chatpanelname = chan.GetName();
@@ -194,10 +194,11 @@ ChatPanel::ChatPanel( wxWindow* parent, Battle* battle ):
 	m_popup_menu( NULL ),
 	m_chat_log(sett().GetDefaultServer(), _T( "_BATTLE_" ) + wxDateTime::Now().Format( _T( "%Y_%m_%d__%H_%M_%S" ) )),
 	m_disable_append( false ),
+	m_display_joinitem(true),
 	m_topic_set( false )
 {
 	m_chatpanelname = _T("BATTLE");
-	m_display_joinitem = cfg().Read(_T( "/Channels/DisplayJoinLeave/" )  + m_chatpanelname, true);
+	cfg().Read(_T( "/Channels/DisplayJoinLeave/" )  + m_chatpanelname, m_display_joinitem);
 
 	wxLogDebugFunc( _T( "wxWindow* parent, Battle& battle" ) );
 	if ( m_battle ) {
