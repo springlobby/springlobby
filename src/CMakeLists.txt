@@ -336,7 +336,7 @@ IF(UNIX)
 	TARGET_LINK_LIBRARIES(springlobby X11)
 ENDIF(UNIX)
 
-
+ENABLE_TESTING()
 add_subdirectory(tests)
 
 add_analyze(${springlobbySoundsrc} ${springlobbySrc} ${SLSharedWithSettings})
