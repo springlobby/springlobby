@@ -146,14 +146,14 @@ void Default<T>::Set(const wxString& key, const T& defValue) {
 }
 
 
-wxString& slConfig::ReadString(const wxString& key) const
+wxString slConfig::ReadString(const wxString& key) const
 {
 	// read a value with preset default
 	// this will return a valid value or fail loudly
 	// 1. read the default value to make sure it is set
 	// 2. read current value, if set
-	wxString* value = NULL;
-	GetDefaultsString().Get(key, *value);
+	wxString value;
+	GetDefaultsString().Get(key, value);
 
 	// Read() without default (third parameter) will change value if
 	// set, or leave it alone
@@ -163,7 +163,7 @@ wxString& slConfig::ReadString(const wxString& key) const
 	if (IsRecordingDefaults()) {
 		((slConfig*)this)->Write(key, *value);
 	}
-	return *value;
+	return value;
 }
 
 long slConfig::ReadLong(const wxString& key) const

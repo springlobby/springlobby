@@ -92,7 +92,7 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 
 
 		//! easy to use methods to read config, IF default is set
-		wxString& ReadString(const wxString& key) const;
+		wxString  ReadString(const wxString& key) const;
 		long      ReadLong(const wxString& key) const;
 		double    ReadDouble(const wxString& key) const;
 		bool      ReadBool(const wxString& key) const;

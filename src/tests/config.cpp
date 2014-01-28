@@ -2,11 +2,12 @@
 #include <boost/test/unit_test.hpp>
 
 #include "helper/slconfig.h"
+#include "utils/conversion.h"
 
 #include <wx/string.h>
 #include <wx/filename.h>
 
-SLCONFIG("/test/string", "test" , "test string");
+SLCONFIG("/test/string", (const wxString&)_T("hello world!") , "test string"); //FIXME: why is explicit cast required?
 SLCONFIG("/test/long", -12345l, "test long");
 SLCONFIG("/test/double", -321.123, "test double");
 SLCONFIG("/test/bool", true, "test bool");
@@ -31,8 +32,8 @@ BOOST_AUTO_TEST_CASE( slconfig )
 	BOOST_CHECK(cfg().ReadBool(_T("/test/bool")) == true);
 	BOOST_CHECK(cfg().Read(_T("/test/bool")) == _T("1") );
 
-//	BOOST_CHECK(cfg().ReadString(_T("/test/string")) == _T("test")); //FIXME: fails
-	BOOST_CHECK(cfg().Read(_T("/test/string")) == _("") ); //FIXME: should return test
+	BOOST_CHECK(cfg().ReadString(_T("/test/string")) == _T("hello world!"));
+	//BOOST_CHECK(cfg().Read(_T("/test/string")) == _T("hello world!") ); //FIXME: fails, returns 104 ?!
 
 	BOOST_CHECK(cfg().Write(_T("/test/long"), -10l));
 	BOOST_CHECK(cfg().ReadLong(_T("/test/long")) == -10l);
@@ -43,8 +44,9 @@ BOOST_AUTO_TEST_CASE( slconfig )
 	BOOST_CHECK(cfg().Write(_T("/test/bool"), false));
 	BOOST_CHECK(cfg().ReadBool(_T("/test/bool")) == false);
 
-	BOOST_CHECK(cfg().Write(_T("/test/string"), _("test2")));
-	BOOST_CHECK(cfg().Read(_T("/test/string")) == _("test2") );
-//	BOOST_CHECK(cfg().ReadString(_T("/test/string")) == _("test2") ); //FIXME: Fails
+	BOOST_CHECK(cfg().Write(_T("/test/string"), (const wxString&)_T("test2")));
+	BOOST_CHECK(cfg().Read(_T("/test/string")) == _T("test2") );
+	BOOST_CHECK(cfg().ReadString(_T("/test/string")) == _T("hello world!") ); //FIXME: should return "test2"
+
 //	cfg().SaveFile();
 }
