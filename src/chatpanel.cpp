@@ -62,7 +62,10 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
 END_EVENT_TABLE()
 
-wxString chan_prefix = _("channel_");
+static const wxString chan_prefix = _("channel_");
+
+SLCONFIG("/Channel/bridgebot", (const wxString&)_T("TIZBOT"), "Name of the Bridgebot (which forwards traffic between #sy and irc channels)");
+
 
 /// table for irc colors
 static wxColor m_irc_colors[16]  = {
@@ -581,17 +584,11 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 			col = sett().GetChatColorNormal();
 	}
 
-	if ( ( who == _T( "MelBot" ) || who == _T( "[BOT]tizbacbridgebot" ) )
-		 && message.StartsWith( _T( "<" ) ) && message.Find( _T( ">" ) ) != wxNOT_FOUND ) {
+	if ( ( who == cfg().ReadString(_T("/Channel/bridgebot")) )
+		&& (message.StartsWith( _T( "<" ) )) && (message.Find( _T( ">" ) ) != wxNOT_FOUND) ) {
 		wxString who2;
 		wxString message2;
 		who2 = message.BeforeFirst( '>' ).AfterFirst( '<' );
-		if ( who != _T( "[BOT]tizbacbridgebot" ) ) who2 += _T( "@IRC" );
-		//don't highlight if i'm talking from irc to channel
-		if ( who2.Upper().BeforeLast(_T('@')) == me.Upper() ) {
-			req_user = false;
-			col = sett().GetChatColorNormal();
-		}
 		message2 = message.AfterFirst( '>' );
 		OutputLine( _T( " <" ) + who2 + _T( "> " ) + message2, col, sett().GetChatFont() );
 	} else {
