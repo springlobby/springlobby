@@ -20,10 +20,8 @@ wxString GetConfigPath(){
 
 BOOST_AUTO_TEST_CASE( slconfig )
 {
-	BOOST_CHECK(true);
-
+	BOOST_CHECK(cfg().ReadLong(_T("/test/long")) == 1l);
+	BOOST_CHECK(cfg().ReadDouble(_T("/test/double")) == 2.0);
+	BOOST_CHECK(cfg().ReadBool(_T("/test/bool")) == true);
 	BOOST_CHECK(cfg().ReadString(_T("/test/string")) == _T("test"));
-	BOOST_CHECK(cfg().ReadString(_T("/test/long")) == 1l);
-	BOOST_CHECK(cfg().ReadString(_T("/test/double")) == 2.0);
-	BOOST_CHECK(cfg().ReadString(_T("/test/bool")) == true);
 }
