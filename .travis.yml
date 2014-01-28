@@ -2,7 +2,9 @@ language: cpp
 compiler:
   - gcc
 before_script:
-  - sudo apt-get install libwxgtk2.8-dev libboost-thread-dev libboost-system-dev libboost-filesystem-dev libalure-dev
+  - sudo apt-get install libwxgtk2.8-dev libboost-thread-dev libboost-system-dev libboost-filesystem-dev
+# optional dependencies
+  - sudo apt-get install libboost-test-dev libalure-dev
   - git submodule update --init --recursive
   - cmake -DSPRINGLOBBY_UPDATER:BOOL=ON .
 script:
