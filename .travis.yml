@@ -7,3 +7,4 @@ before_script:
   - cmake -DSPRINGLOBBY_UPDATER:BOOL=ON .
 script:
   - make -j2
+  - make check

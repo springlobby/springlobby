@@ -6,8 +6,7 @@ If    (NOT Boost_FOUND)
         Message(STATUS "Note: Unit tests will not be built: Boost::test library was not found")
 Else  (NOT Boost_FOUND)
 
-add_definitions(-DSYNCCHECK -DUNIT_TEST)
-ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK) 
+ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 
 add_custom_target(tests)
 add_custom_target(check ${CMAKE_CTEST_COMMAND} --output-on-failure -V)
