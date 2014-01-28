@@ -674,9 +674,9 @@ void ChatPanel::UnknownCommand( const wxString& command, const wxString& params 
 
 wxString ChatPanel::GetChatTypeStr() const
 {
-	if ( m_type == CPT_Channel ) return _( "channel" );
-	else if ( m_type == CPT_Battle ) return _( "battle" );
-	else if ( m_type == CPT_Server ) return _( "server" );
+	if ( m_type == CPT_Channel ) return _( "the channel" );
+	else if ( m_type == CPT_Battle ) return _( "the battle" );
+	else if ( m_type == CPT_Server ) return _( "the server" );
 
 	return _T( "ROOMTYPE FIXME" );
 }
@@ -689,7 +689,7 @@ void ChatPanel::Joined( User& who )
 		if ( m_type == CPT_Channel ) {
 			SetIconHighlight( highlight_join_leave );
 		}
-		OutputLine( _T( " ** " ) + who.GetNick() + _( " joined the " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+		OutputLine( _T( " ** " ) + who.GetNick() + _( " joined " ) + GetChatTypeStr() + _T( "." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 	}
 
 	if ( m_show_nick_list && ( m_nicklist != 0 ) ) {
@@ -723,7 +723,7 @@ void ChatPanel::Parted( User& who, const wxString& message )
 //    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
 	bool me_parted = m_channel && &who == &m_channel->GetMe();
 	if ( m_display_joinitem ) {
-		OutputLine( _T( " ** " ) + who.GetNick() + _( " left the " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+		OutputLine( _T( " ** " ) + who.GetNick() + _( " left " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 	}
 	if ( m_type == CPT_Channel ) {
 		if ( m_channel == 0 ) return;

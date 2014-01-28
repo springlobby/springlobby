@@ -17,6 +17,7 @@ CMakeFiles/
 # temp files
 *.swp
 /po/*.gmo
+/po/*~
 
 # codeblocks
 /springlobby.cbp
