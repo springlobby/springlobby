@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE( slconfig )
 
 	BOOST_CHECK(cfg().Write(_T("/test/string"), (const wxString&)_T("test2")));
 	BOOST_CHECK(cfg().Read(_T("/test/string")) == _T("test2") );
-	BOOST_CHECK(cfg().ReadString(_T("/test/string")) == _T("hello world!") ); //FIXME: should return "test2"
+	BOOST_CHECK(cfg().ReadString(_T("/test/string")) == _T("test2") );
 
 //	cfg().SaveFile();
 }

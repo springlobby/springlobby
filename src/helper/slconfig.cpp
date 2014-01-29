@@ -157,7 +157,7 @@ wxString slConfig::ReadString(const wxString& key) const
 
 	// Read() without default (third parameter) will change value if
 	// set, or leave it alone
-	slConfigBaseType::Read( key, value );
+	slConfigBaseType::Read( key, &value );
 
 	// we can assert that value will be valid or the program terminated
 	if (IsRecordingDefaults()) {
