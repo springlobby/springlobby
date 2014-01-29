@@ -95,7 +95,6 @@ class Settings : public SL::NonCopyable
 
     bool IsFirstRun();
 
-    wxString GetLobbyWriteDir();
 
     wxString GetTempStorage();
 
@@ -155,17 +154,6 @@ class Settings : public SL::NonCopyable
 
     /**@}*/
 
-    /* ================================================================ */
-    /** @name Cache
-     *
-     * Information about the directory tree used to cache infomation about maps
-     * and mods.
-     *
-     * @{
-     */
-    wxString GetCachePath();
-
-    /**@}*/
 
     /* ================================================================ */
     /** @name Servers
@@ -282,9 +270,6 @@ class Settings : public SL::NonCopyable
     void SetShowXallTabs( bool show );
 
 
-	wxString GetEditorPath();
-    void SetEditorPath( const wxString& path );
-
     void SetAutoloadedChatlogLinesCount( const int count );
 	int GetAutoloadedChatlogLinesCount();
 
@@ -297,36 +282,6 @@ class Settings : public SL::NonCopyable
     /*@}*/
 
 
-    /* ================================================================ */
-    /** @name Spring locations
-     * @{
-     */
-
-    void RefreshSpringVersionList(bool autosearch=true, const LSL::SpringBundle* additionalbundle = NULL);
-    std::map<wxString, LSL::SpringBundle> GetSpringVersionList() const; /// index -> version
-    wxString GetCurrentUsedSpringIndex();
-    void SetUsedSpringIndex(const wxString &index );
-    void DeleteSpringVersionbyIndex( const wxString& index );
-
-    /// convenience wrappers to get current used version paths
-    wxString GetCurrentUsedDataDir();
-    wxString GetCurrentUsedUnitSync();
-    wxString GetCurrentUsedSpringBinary();
-    //!@brief returns config file path unitsync uses, returns empty if unitsync isn't loaded
-    wxString GetCurrentUsedSpringConfigFilePath();
-
-    wxString GetUnitSync( const wxString& index );
-    wxString GetSpringBinary( const wxString& index );
-
-    void SetUnitSync( const wxString& index, const wxString& path );
-    void SetSpringBinary( const wxString& index, const wxString& path );
-    //!@brief meaningful only on mac
-    void SetBundle( const wxString& index, const wxString& path );
-
-    wxString AutoFindSpringBin();
-    wxString AutoFindUnitSync( 	wxPathList pl = PathlistFactory::ConfigFileSearchPaths() ) const;
-
-    /*@}*/
 
     /* ================================================================ */
     /** @name Chat
@@ -334,8 +289,6 @@ class Settings : public SL::NonCopyable
      */
     bool GetChatLogEnable();
     void SetChatLogEnable( const bool value );
-    wxString GetChatLogLoc();
-    void   SetChatLogLoc( const wxString& loc );
 
     //!@brief sets how many lines can stay in a chat panel before the old will start getting erased, 0 to disable
     void SetChatHistoryLenght( int historylines );
@@ -615,11 +568,8 @@ class Settings : public SL::NonCopyable
     void ConvertLists();
 
 private:
-    bool IsSpringBin( const wxString& path );
 
 	slConfig* m_config; //!< wxConfig object to store and restore  all settings in.
-
-    std::map<wxString, LSL::SpringBundle> m_spring_versions;
 
 
     void setFromList(const wxArrayString& list, const wxString& path);

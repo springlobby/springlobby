@@ -21,6 +21,7 @@
 #include "utils/platform.h"
 #include "updater/updatehelper.h"
 #include "utils/conversion.h"
+#include "utils/slpaths.h"
 #include "settings.h"
 #include "stacktrace.h"
 
@@ -107,7 +108,7 @@ bool NetDebugReport::OnServerReply( const wxArrayString& reply )
 
 void SpringDebugReport::AddVFSFile( const wxString& fn, const wxString& id )
 {
-	const wxString file = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + fn;
+	const wxString file = SlPaths::GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + fn;
 	if (wxFile::Exists(file)) {
 		AddFile(file , id);
 	}
@@ -118,7 +119,7 @@ SpringDebugReport::SpringDebugReport()
 	: NetDebugReport( "http://infologs.springrts.com/upload" )
 {
 	wxString tmp_filename = wxPathOnly( wxFileName::CreateTempFileName(_T("dummy")) ) + wxFileName::GetPathSeparator() + _T("settings.txt");
-	wxCopyFile( sett().GetCurrentUsedSpringConfigFilePath(), tmp_filename );
+	wxCopyFile( SlPaths::GetCurrentUsedSpringConfigFilePath(), tmp_filename );
 	AddFile( tmp_filename, _T("Settings") );
 
 	AddVFSFile( _T("infolog.txt"),		_T("Infolog") );
@@ -159,7 +160,7 @@ SpringDebugReport::SpringDebugReport()
 #if wxUSE_STD_IOSTREAM
 	report->AddText( _T( "AppLog.txt" ), TowxString( crashlog.str() ), _( "Application verbose log" ) );
 #endif
-    wxString script_file = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
+    wxString script_file = SlPaths::GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
     if ( wxFile::Exists( script_file ) )
         report->AddFile( script_file, _( "Last generated spring launching script" ) );
 

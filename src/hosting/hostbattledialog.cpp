@@ -32,6 +32,7 @@
 #include "uiutils.h"
 #include "utils/controls.h"
 #include "utils/customdialogs.h"
+#include "utils/slpaths.h"
 #include "ui.h"
 #include "server.h"
 #include <lslunitsync/c_api.h>
@@ -315,8 +316,8 @@ void HostBattleDialog::ReloadModList()
 void HostBattleDialog::ReloadEngineList()
 {
 	m_engine_pic->Clear();
-	std::map<wxString, LSL::SpringBundle> versions = sett().GetSpringVersionList();
-	const wxString last = sett().GetCurrentUsedSpringIndex();
+	std::map<wxString, LSL::SpringBundle> versions = SlPaths::GetSpringVersionList();
+	const wxString last = SlPaths::GetCurrentUsedSpringIndex();
 	int i=0;
 	for(auto pair: versions) {
 		m_engine_pic->Insert(pair.first, i);
@@ -432,7 +433,7 @@ void HostBattleDialog::OnUseRelay( wxCommandEvent&  )
 
 void HostBattleDialog::OnEngineSelect ( wxCommandEvent& event )
 {
-	sett().SetUsedSpringIndex(m_engine_pic->GetString(m_engine_pic->GetSelection()));
+	SlPaths::SetUsedSpringIndex(m_engine_pic->GetString(m_engine_pic->GetSelection()));
 	LSL::usync().ReloadUnitSyncLib();
 	ReloadEngineList();
 }

@@ -38,6 +38,7 @@ lsl/spring/spring.cpp
 #include "utils/customdialogs.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
+#include "utils/slpaths.h"
 #include "settings.h"
 #include "battle.h"
 #include "singleplayerbattle.h"
@@ -86,7 +87,7 @@ bool Spring::IsRunning() const
 bool Spring::Run( Battle& battle )
 {
 
-  wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
+  wxString path = SlPaths::GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
 
   try
   {
@@ -131,7 +132,7 @@ bool Spring::Run( Battle& battle )
 bool Spring::Run( SinglePlayerBattle& battle )
 {
 
-  wxString path = sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
+  wxString path = SlPaths::GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
 
   try
   {
@@ -174,7 +175,7 @@ bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVers
     wxLogError( _T("Spring already running!") );
     return false;
   }
-	const wxString executable = sett().GetSpringBinary(engineVersion);
+	const wxString executable = SlPaths::GetSpringBinary(engineVersion);
     if ( !wxFile::Exists(executable) ) {
         customMessageBoxNoModal( SL_MAIN_ICON, _T("The spring executable was not found at the set location, please re-check."), _T("Executable not found") );
         ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
@@ -184,7 +185,7 @@ bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVers
 	wxString cmd = _T("\"") + executable;
 #ifdef __WXMAC__
 	wxChar sep = wxFileName::GetPathSeparator();
-	if ( sett().GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") )
+	if ( SlPaths::GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") )
 	cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
 #endif
 	cmd += _T("\" ");
@@ -194,7 +195,7 @@ bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVers
 	cmd += params;
 
 	wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
-	wxSetWorkingDirectory( sett().GetCurrentUsedDataDir() );
+	wxSetWorkingDirectory( SlPaths::GetCurrentUsedDataDir() );
 
 	if ( sett().UseOldSpringLaunchMethod() ) {
 		if ( m_wx_process == NULL ) {

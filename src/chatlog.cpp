@@ -21,6 +21,7 @@
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
 #include "utils/misc.h"
+#include "utils/slpaths.h"
 
 
 ChatLog::ChatLog( const wxString& server, const wxString& room ):
@@ -153,7 +154,7 @@ const wxArrayString& ChatLog::GetLastLines( ) const
 
 
 wxString ChatLog::GetCurrentLogfilePath() const {
-    return sett().GetChatLogLoc()
+    return SlPaths::GetChatLogLoc()
 	+ wxFileName::GetPathSeparator() + m_server
 	+ wxFileName::GetPathSeparator() + m_room + _T( ".txt" );
 

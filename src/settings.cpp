@@ -30,12 +30,12 @@
 #include <lslutils/globalsmanager.h>
 #include <lslunitsync/unitsync.h>
 #include <lslunitsync/c_api.h>
-#include <lslunitsync/springbundle.h>
 
 #include "nonportable.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
 #include "utils/platform.h"
+#include "utils/slpaths.h"
 #include "uiutils.h"
 #include "playback/playbackfiltervalues.h"
 #include "customlistctrl.h"
@@ -91,9 +91,9 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 		wxMkdir( userConfigDir );
 	}
 	if ( (cacheversion < CACHE_VERSION) && !IsFirstRun() ) {
-		if ( wxDirExists( GetCachePath() )  ) {
+		if ( wxDirExists( SlPaths::GetCachePath() )  ) {
 			wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), cacheversion, CACHE_VERSION );
-			wxString file = wxFindFirstFile( GetCachePath() + wxFILE_SEP_PATH + _T("*") );
+			wxString file = wxFindFirstFile( SlPaths::GetCachePath() + wxFILE_SEP_PATH + _T("*") );
 			while ( !file.empty() ) {
 				wxRemoveFile( file );
 				file = wxFindNextFile();
@@ -172,11 +172,6 @@ bool Settings::IsFirstRun()
 }
 
 
-wxString Settings::GetLobbyWriteDir()
-{
-	//FIXME: make configureable
-	return GetConfigfileDir();
-}
 
 
 bool Settings::UseOldSpringLaunchMethod()
@@ -255,15 +250,6 @@ void Settings::SetWebBrowserPath( const wxString& path )
 	m_config->Write( _T( "/General/WebBrowserPath" ), path );
 }
 
-
-wxString Settings::GetCachePath()
-{
-	wxString path = GetLobbyWriteDir() + sepstring + _T( "cache" ) + sep;
-	if ( !wxFileName::DirExists( path ) ) {
-		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
-	}
-	return path;
-}
 
 bool Settings::ShouldAddDefaultServerSettings()
 {
@@ -476,185 +462,6 @@ bool Settings::ShouldAddDefaultChannelSettings()
 	return !m_config->Exists( _T( "/Channels" ) );
 }
 
-
-
-// ========================================================
-
-wxString Settings::AutoFindSpringBin()
-{
-	wxPathList pl;
-
-	pl.AddEnvList( _T( "%ProgramFiles%" ) );
-	pl.AddEnvList( _T( "PATH" ) );
-
-    pl = PathlistFactory::AdditionalSearchPaths( pl );
-
-	return pl.FindValidPath( SPRING_BIN );
-}
-
-wxString Settings::AutoFindUnitSync(wxPathList pl) const
-{
-	wxString retpath = pl.FindValidPath( _T( "unitsync" ) + GetLibExtension() );
-	if ( retpath.IsEmpty() )
-		retpath = pl.FindValidPath( _T( "libunitsync" ) + GetLibExtension() );
-	return retpath;
-}
-
-std::map<wxString, LSL::SpringBundle> Settings::GetSpringVersionList() const
-{
-	return m_spring_versions;
-}
-
-bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
-{
-	wxPathList paths = PathlistFactory::ConfigFileSearchPaths();
-	for (const auto path: paths) {
-		if (bundle.AutoComplete(STD_STRING(path))) {
-			return true;
-		}
-	}
-	return false;
-}
-
-
-void Settings::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle* additionalbundle)
-{
-/*
-FIXME: move to LSL's GetSpringVersionList() which does:
-
-	1. search system installed spring + unitsync (both paths independant)
-	2. search for user installed spring + unitsync (assume bundled)
-	3. search / validate paths from config
-	4. search path / unitsync given from user input
-
-needs to change to sth like: GetSpringVersionList(std::list<LSL::Bundle>)
-
-*/
-	wxLogDebugFunc( wxEmptyString );
-	std::list<LSL::SpringBundle> usync_paths;
-
-	if (additionalbundle != NULL) {
-		usync_paths.push_back(*additionalbundle);
-	}
-	if (autosearch) {
-		LSL::SpringBundle systembundle;
-		if (LocateSystemInstalledSpring(systembundle)) {
-			usync_paths.push_back(systembundle);
-		}
-
-		wxPathList ret;
-		wxPathList paths = PathlistFactory::AdditionalSearchPaths(ret);
-		const wxString springbin(SPRING_BIN);
-		for (const auto path: paths) {
-			LSL::SpringBundle bundle;
-			bundle.path = STD_STRING(path);
-			usync_paths.push_back(bundle);
-		}
-	}
-
-	wxArrayString list = cfg().GetGroupList( _T( "/Spring/Paths" ) );
-	const int count = list.GetCount();
-	for ( int i = 0; i < count; i++ ) {
-		LSL::SpringBundle bundle;
-		bundle.unitsync = STD_STRING(GetUnitSync(list[i]));
-		bundle.spring = STD_STRING(GetSpringBinary(list[i]));
-		bundle.version = STD_STRING(list[i]);
-		usync_paths.push_back(bundle);
-	}
-
-	cfg().DeleteGroup(_T("/Spring/Paths"));
-
-	m_spring_versions.clear();
-	try {
-		const auto versions = LSL::usync().GetSpringVersionList( usync_paths );
-		for(const auto pair : versions) {
-			const LSL::SpringBundle& bundle = pair.second;
-			const wxString version = TowxString(bundle.version);
-			m_spring_versions[version] = bundle;
-			SetSpringBinary(version, TowxString(bundle.spring));
-			SetUnitSync(version, TowxString(bundle.unitsync));
-			SetBundle(version, TowxString(bundle.path));
-		}
-	} catch (const std::runtime_error& e) {
-		wxLogError(wxString::Format(_T("Couldn't get list of spring versions: %s"), e.what()));
-	} catch ( ...) {
-		wxLogError(_T("Unknown Execption caught in Settings::RefreshSpringVersionList"));
-	}
-}
-
-wxString Settings::GetCurrentUsedSpringIndex()
-{
-    return m_config->Read( _T( "/Spring/CurrentIndex" ), _T( "default" ) );
-}
-
-void Settings::SetUsedSpringIndex( const wxString& index )
-{
-    m_config->Write( _T( "/Spring/CurrentIndex" ), TowxString(index) );
-}
-
-
-void Settings::DeleteSpringVersionbyIndex( const wxString& index )
-{
-	m_config->DeleteGroup( _T( "/Spring/Paths/" ) + index );
-	if ( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex( wxEmptyString );
-}
-
-wxString Settings::GetCurrentUsedDataDir()
-{
-	std::string dir;
-	if (LSL::usync().GetSpringDataPath(dir))
-		return TowxString(dir);
-	return wxEmptyString;
-}
-
-
-wxString Settings::GetCurrentUsedSpringBinary()
-{
-	return GetSpringBinary( GetCurrentUsedSpringIndex() );
-}
-
-wxString Settings::GetCurrentUsedUnitSync()
-{
-	return GetUnitSync( GetCurrentUsedSpringIndex() );
-}
-
-wxString Settings::GetCurrentUsedSpringConfigFilePath()
-{
-	wxString path;
-	try {
-		path = TowxString(LSL::susynclib().GetConfigFilePath());
-	} catch ( std::runtime_error& e) {
-		wxLogError( wxString::Format( _T("Couldn't get SpringConfigFilePath, exception caught:\n %s"), e.what()  ) );
-	}
-	return path;
-}
-
-wxString Settings::GetUnitSync( const wxString& index )
-{
-	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/UnitSyncPath" ), AutoFindUnitSync() );
-}
-
-
-wxString Settings::GetSpringBinary( const wxString& index )
-{
-	return m_config->Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), AutoFindSpringBin() );
-}
-
-void Settings::SetUnitSync( const wxString& index, const wxString& path )
-{
-	m_config->Write( _T( "/Spring/Paths/" ) + index + _T( "/UnitSyncPath" ), path );
-}
-
-void Settings::SetSpringBinary( const wxString& index, const wxString& path )
-{
-	m_config->Write( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), path );
-}
-
-void Settings::SetBundle( const wxString& index, const wxString& path )
-{
-	m_config->Write( _T( "/Spring/Paths/" ) + index + _T( "/SpringBundlePath" ), path );
-}
-
 // ===================================================
 
 bool Settings::GetChatLogEnable()
@@ -667,17 +474,6 @@ bool Settings::GetChatLogEnable()
 void Settings::SetChatLogEnable( const bool value )
 {
 	m_config->Write( _T( "/ChatLog/chatlog_enable" ), value );
-}
-
-
-wxString Settings::GetChatLogLoc()
-{
-	wxString path = GetLobbyWriteDir() +  sepstring + _T( "chatlog" );
-	if ( !wxFileName::DirExists( path ) )
-	{
-		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
-	}
-	return path;
 }
 
 
@@ -1578,12 +1374,6 @@ void Settings::setSimpleDetail( wxString det )
 	m_config->Write( _T( "/SpringSettings/SimpleDetail" ), det );
 }
 
-bool Settings::IsSpringBin( const wxString& path )
-{
-	if ( !wxFile::Exists( path ) ) return false;
-	if ( !wxFileName::IsFileExecutable( path ) ) return false;
-	return true;
-}
 
 SortOrder Settings::GetSortOrder( const wxString& list_name )
 {
@@ -1627,23 +1417,6 @@ bool Settings::GetSplitBRoomHorizontally()
 void Settings::SetSplitBRoomHorizontally( const bool vertical )
 {
 	m_config->Write( _T( "/GUI/SplitBRoomHorizontally" ) , vertical );
-}
-
-wxString Settings::GetEditorPath( )
-{
-    #if defined(__WXMSW__)
-        wxString def = wxGetOSDirectory() + sepstring + _T("system32") + sepstring + _T("notepad.exe");
-        if ( !wxFile::Exists( def ) )
-            def = wxEmptyString;
-    #else
-        wxString def = wxEmptyString;
-    #endif
-    return m_config->Read( _T( "/GUI/Editor" ) , def );
-}
-
-void Settings::SetEditorPath( const wxString& path )
-{
-    m_config->Write( _T( "/GUI/Editor" ) , path );
 }
 
 bool Settings::GetShowXallTabs()

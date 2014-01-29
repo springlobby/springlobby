@@ -36,6 +36,7 @@
 #include "utils/platform.h"
 #include "utils/uievents.h"
 #include "utils/misc.h"
+#include "utils/slpaths.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "mainwindow.h"
@@ -104,7 +105,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_exec_box = new wxStaticBox( this, -1, _( "Spring executable" ) );
 
 	m_exec_loc_text = new wxStaticText( this, -1, _( "Location" ) );
-	m_exec_edit = new wxTextCtrl( this, -1, sett().GetCurrentUsedSpringBinary() );
+	m_exec_edit = new wxTextCtrl( this, -1, SlPaths::GetCurrentUsedSpringBinary() );
 	m_exec_browse_btn = new wxButton( this, SPRING_EXECBROWSE, _( "Browse" ) );
 	m_exec_find_btn = new wxButton( this, SPRING_EXECFIND, _( "Find" ) );
 
@@ -113,7 +114,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	 */
 	m_sync_box = new wxStaticBox( this, -1, _( "UnitSync library" ) );
 
-	m_sync_edit = new wxTextCtrl( this, -1, sett().GetCurrentUsedUnitSync() );
+	m_sync_edit = new wxTextCtrl( this, -1, SlPaths::GetCurrentUsedUnitSync() );
 	m_sync_loc_text = new wxStaticText( this, -1, _( "Location" ) );
 	m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _( "Browse" ) );
 	m_sync_find_btn = new wxButton( this, SPRING_SYNCFIND, _( "Find" ) );
@@ -192,8 +193,8 @@ void SpringOptionsTab::DoRestore()
 {
 	const wxString index = m_spring_list->GetStringSelection();
 	m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
-	m_sync_edit->SetValue(sett().GetUnitSync(index));
-	m_exec_edit->SetValue(sett().GetSpringBinary(index));
+	m_sync_edit->SetValue(SlPaths::GetUnitSync(index));
+	m_exec_edit->SetValue(SlPaths::GetSpringBinary(index));
 }
 
 
@@ -206,21 +207,21 @@ void SpringOptionsTab::OnAutoConf( wxCommandEvent& event )
 
 void SpringOptionsTab::OnFindExec( wxCommandEvent& /*unused*/ )
 {
-	wxString found = sett().AutoFindSpringBin();
+	wxString found = SlPaths::AutoFindSpringBin();
 	if ( !found.IsEmpty() ) m_exec_edit->SetValue( found );
 }
 
 
 void SpringOptionsTab::OnFindSync( wxCommandEvent& /*unused*/ )
 {
-	wxString found = sett().AutoFindUnitSync();
+	wxString found = SlPaths::AutoFindUnitSync();
 	if ( !found.IsEmpty() ) m_sync_edit->SetValue( found );
 }
 
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& /*unused*/ )
 {
 	wxFileDialog pick( this, _( "Choose a Spring executable" ),
-			   wxPathOnly( sett().GetCurrentUsedSpringBinary() ),
+			   wxPathOnly( SlPaths::GetCurrentUsedSpringBinary() ),
 			   wxString( SPRING_BIN ), CHOOSE_EXE );
 	if ( pick.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pick.GetPath() );
 }
@@ -233,7 +234,7 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& /*unused*/ )
 #endif
 	filefilter << _T( "|" )  << wxString( _( "Any File" ) ) << _T( " (*.*)|*.*" );
 	wxFileDialog pick( this, _( "Choose UnitSync library" ),
-			   wxPathOnly( sett().GetCurrentUsedSpringBinary() ),
+			   wxPathOnly( SlPaths::GetCurrentUsedSpringBinary() ),
 			   _T( "unitsync" ) + GetLibExtension(),
 			   wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() + _T( "|" ) + wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" )  );
 	if ( pick.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pick.GetPath() );
@@ -243,15 +244,15 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& /*unused*/ )
 void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
 	const wxString index = m_spring_list->GetStringSelection();
-	sett().SetSpringBinary(index, m_exec_edit->GetValue() );
-	sett().SetUnitSync(index, m_sync_edit->GetValue() );
+	SlPaths::SetSpringBinary(index, m_exec_edit->GetValue() );
+	SlPaths::SetUnitSync(index, m_sync_edit->GetValue() );
 	sett().SetOldSpringLaunchMethod( m_oldlaunch_chkbox->IsChecked() );
 
 	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
-	sett().RefreshSpringVersionList();
+	SlPaths::RefreshSpringVersionList();
 
-	const bool reload_usync = sett().GetUnitSync( index ) != m_sync_edit->GetValue();
-	if ( reload_usync && !LSL::usync().LoadUnitSyncLib(STD_STRING(sett().GetUnitSync(index)))) {
+	const bool reload_usync = SlPaths::GetUnitSync( index ) != m_sync_edit->GetValue();
+	if ( reload_usync && !LSL::usync().LoadUnitSyncLib(STD_STRING(SlPaths::GetUnitSync(index)))) {
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
 		customMessageBox( SL_MAIN_ICON,
 				  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
@@ -302,7 +303,7 @@ void SpringOptionsTab::SetupUserFolders()
 	if ( LSL::usync().IsLoaded() ) {
 		LSL::usync().SetSpringDataPath(STD_STRING(dir));
 	}
-	CopyUikeys( sett().GetCurrentUsedDataDir() );
+	CopyUikeys( SlPaths::GetCurrentUsedDataDir() );
 }
 
 
@@ -310,18 +311,18 @@ void SpringOptionsTab::OnGroupListSelectionChange( wxCommandEvent& event )
 {
 	const wxString selection = m_spring_list->GetStringSelection();
 	if (!selection.empty()) {
-		sett().SetUsedSpringIndex(selection);
+		SlPaths::SetUsedSpringIndex(selection);
 		DoRestore();
 	}
 }
 
 void SpringOptionsTab::ReloadSpringList()
 {
-	std::map<wxString, LSL::SpringBundle> springlist = sett().GetSpringVersionList();
+	std::map<wxString, LSL::SpringBundle> springlist = SlPaths::GetSpringVersionList();
 	m_spring_list->Clear();
 	for(auto bundle: springlist) {
 		m_spring_list->Append(bundle.first);
-		m_spring_list->SetStringSelection(sett().GetCurrentUsedSpringIndex());
+		m_spring_list->SetStringSelection(SlPaths::GetCurrentUsedSpringIndex());
 	}
 }
 
@@ -334,7 +335,7 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
 #endif
 	filefilter << _T( "|" )  << wxString( _( "Any File" ) ) << _T( " (*.*)|*.*" );
 	wxFileDialog pick( this, _( "Choose UnitSync library" ),
-			   wxPathOnly( sett().GetCurrentUsedUnitSync() ),
+			   wxPathOnly( SlPaths::GetCurrentUsedUnitSync() ),
 			   _T( "unitsync" ) + GetLibExtension(),
 			   filefilter  );
 	if ( pick.ShowModal() == wxID_OK ) {
@@ -353,7 +354,7 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
 void SpringOptionsTab::OnRemoveBundle(wxCommandEvent& event)
 {
 	const wxString index = m_spring_list->GetStringSelection();
-	sett().DeleteSpringVersionbyIndex(index);
-	sett().RefreshSpringVersionList(false);
+	SlPaths::DeleteSpringVersionbyIndex(index);
+	SlPaths::RefreshSpringVersionList(false);
 	ReloadSpringList();
 }

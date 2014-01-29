@@ -43,6 +43,7 @@
 
 #include <lslutils/globalsmanager.h>
 #include <lslunitsync/unitsync.h>
+#include <lslutils/config.h>
 
 IMPLEMENT_APP(Springsettings)
 
@@ -127,6 +128,13 @@ bool Springsettings::OnInit()
 	m_translationhelper = new wxTranslationHelper( GetAppName().Lower(), path );
 
     SetSettingsStandAlone( true );
+
+	// configure unitsync paths before trying to load
+	LSL::Util::config().ConfigurePaths(
+		boost::filesystem::path(STD_STRING(SlPaths::GetCachePath())),
+		boost::filesystem::path(STD_STRING(SlPaths::GetCurrentUsedUnitSync())),
+		boost::filesystem::path(STD_STRING(SlPaths::GetCurrentUsedSpringBinary()))
+	);
 
 	//unitsync first load, NEEDS to be blocking
 	LSL::usync().ReloadUnitSyncLib();

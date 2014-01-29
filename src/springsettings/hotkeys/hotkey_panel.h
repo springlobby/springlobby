@@ -40,7 +40,6 @@ public:
 	void ResetProfileBeenModifiedOrSelected();
 	//static bool isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey );
 	
-    static wxString GetCurrentUsedUikeys();
 
 private:
 	void selectProfileFromUikeys();
@@ -79,9 +78,6 @@ private:
 	static wxArrayString GetHotkeyProfileOrderIndices( const wxString& profileName );
 	static wxArrayString GetHotkeyProfileCommandKeys( const wxString& profileName, const wxString& orderIdx );
 	static void DeleteHotkeyProfiles();
-	static wxString GetUikeys( const wxString& index );
-
-	static wxString AutoFindUikeys();
 };
 
 #endif

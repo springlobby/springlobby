@@ -43,6 +43,7 @@
 #include "downloader/prdownloader.h"
 #include "updater/updater.h"
 #include <lslutils/globalsmanager.h>
+#include <lslutils/config.h>
 #include "gui/notificationmanager.h"
 #include "helper/wxTranslationHelper.h"
 #include "playback/playbacktraits.h"
@@ -126,8 +127,8 @@ bool SpringLobbyApp::OnInit()
 	if ( !wxDirExists( GetConfigfileDir() ) )
 		wxMkdir( GetConfigfileDir() );
 
-	sett().SetSpringBinary( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedSpringBinary() );
-	sett().SetUnitSync( sett().GetCurrentUsedSpringIndex(), sett().GetCurrentUsedUnitSync() );
+	SlPaths::SetSpringBinary( SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetCurrentUsedSpringBinary() );
+	SlPaths::SetUnitSync( SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetCurrentUsedUnitSync() );
 
 	if ( cfg().ReadBool(_T("/ResetLayout")) ) {
 		//we do this early on and reset the config var a little later so we can save a def. perps once mw is created
@@ -136,9 +137,16 @@ bool SpringLobbyApp::OnInit()
 		ui().mw().SavePerspectives( _T("SpringLobby-default") );
 	}
 
+	// configure unitsync paths before trying to load
+	LSL::Util::config().ConfigurePaths(
+		boost::filesystem::path(STD_STRING(SlPaths::GetCachePath())),
+		boost::filesystem::path(STD_STRING(SlPaths::GetCurrentUsedUnitSync())),
+		boost::filesystem::path(STD_STRING(SlPaths::GetCurrentUsedSpringBinary()))
+	);
+
 	//unitsync first load, NEEDS to be blocking
-	sett().RefreshSpringVersionList();
-	const bool usync_loaded = LSL::usync().ReloadUnitSyncLib();
+	SlPaths::RefreshSpringVersionList();
+	LSL::usync().ReloadUnitSyncLib();
 
 	sett().Setup(m_translationhelper);
 

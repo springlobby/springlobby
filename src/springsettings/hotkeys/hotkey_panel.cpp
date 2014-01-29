@@ -19,6 +19,7 @@
 
 #include "../../utils/customdialogs.h"
 #include "../../utils/conversion.h"
+#include "../../utils/slpaths.h"
 #include "hotkey_parser.h"
 #include "wxSpringCommand.h"
 #include "commandlist.h"
@@ -33,7 +34,7 @@ const wxChar sep = wxFileName::GetPathSeparator();
 
 hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
 													try : wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
-													m_uikeys_manager(GetCurrentUsedUikeys() )
+													m_uikeys_manager(SlPaths::GetCurrentUsedUikeys() )
 {
 	try
 	{
@@ -516,7 +517,7 @@ key_binding_collection hotkey_panel::getProfilesFromSettings()
 
 void hotkey_panel::UpdateControls(int /*unused*/)
 {
-	m_uikeys_manager.setUiKeys(GetCurrentUsedUikeys());
+	m_uikeys_manager.setUiKeys(SlPaths::GetCurrentUsedUikeys());
 	this->updateTreeView();
 
 	//Fetch the profiles
@@ -679,24 +680,6 @@ void hotkey_panel::DeleteHotkeyProfiles()
 }
 
 
-wxString hotkey_panel::GetUikeys( const wxString& index )
-{
-	return cfg().Read( _T( "/Spring/Paths/" ) + index + _T( "/Uikeys" ), AutoFindUikeys() );
-}
 
 //END OF Hotkeys stuff (for springsettings)
-
-wxString hotkey_panel::AutoFindUikeys()
-{
-	const std::string path = LSL::susynclib().GetSpringDataDir();
-	wxString uikeys(TowxString(path));
-	uikeys += sep;
-	uikeys += _T("uikeys.txt");
-	return uikeys;
-}
-
-wxString hotkey_panel::GetCurrentUsedUikeys()
-{
-	return GetUikeys(sett().GetCurrentUsedSpringIndex());
-}
 

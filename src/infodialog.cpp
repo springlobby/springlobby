@@ -20,7 +20,6 @@
 
 #include <wx/sizer.h>
 #include "settings.h"
-#include "springsettings/hotkeys/hotkey_panel.h"
 #include <vector>
 #include <fstream>
 #include <utility>
@@ -34,6 +33,7 @@
 #include "utils/slpaths.h"
 #include "updater/updatehelper.h"
 #include <wx/textctrl.h>
+#include <wx/app.h>
 
 #if defined(__unix__) || defined(__APPLE__)
 # include <unistd.h>
@@ -55,10 +55,10 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	typedef  std::vector< std::pair< wxString,wxString > >
 		Paths;
 	Paths paths;
-	paths.push_back( std::make_pair( sett().GetLobbyWriteDir(), _T("LobbyWriteDir") ) );
+	paths.push_back( std::make_pair( SlPaths::GetLobbyWriteDir(), _T("LobbyWriteDir") ) );
 	paths.push_back( std::make_pair( sett().GetTempStorage(), _T("TempStorage")) );
-	paths.push_back( std::make_pair( sett().GetCachePath(), _T("CachePath")) );
-	paths.push_back( std::make_pair( sett().GetCurrentUsedDataDir(), _T("CurrentUsedDataDir")) );
+	paths.push_back( std::make_pair( SlPaths::GetCachePath(), _T("CachePath")) );
+	paths.push_back( std::make_pair( SlPaths::GetCurrentUsedDataDir(), _T("CurrentUsedDataDir")) );
 	paths.push_back( std::make_pair( GetExecutableFolder() , _T("ExecutableFolder")));
 
 	wxTextCtrl* out = new wxTextCtrl( this, wxNewId(), wxEmptyString, wxDefaultPosition, wxDefaultSize,
@@ -91,7 +91,7 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	*out << wxString::Format( _T("Config: %s (%s writable)\n"),
 							 SlPaths::GetConfigPath().c_str(),
 							 BtS(wxFileName::IsFileWritable(SlPaths::GetConfigPath()), "", "not" ).c_str() );
-	*out << wxString::Format(_T("current uikeys.txt: %s\n"), hotkey_panel::GetCurrentUsedUikeys().c_str());
+	*out << wxString::Format(_T("current uikeys.txt: %s\n"), SlPaths::GetCurrentUsedUikeys().c_str());
 
 	*out << _T( "Version " ) + TowxString(getSpringlobbyAgent()) + _T("\n");
 	for ( int i = 0; i < wxTheApp->argc; ++i )

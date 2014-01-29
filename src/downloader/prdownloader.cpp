@@ -25,6 +25,7 @@
 #include "../utils/uievents.h"
 #include "../utils/conversion.h"
 #include "../utils/globalevents.h"
+#include "../utils/slpaths.h"
 #include "../mainwindow.h"
 #include "downloadsobserver.h"
 #include "../utils/debug.h"
@@ -72,7 +73,7 @@ public:
 				case IDownload::CAT_ENGINE_LINUX64:
 				case IDownload::CAT_ENGINE_MACOSX: {
 					fileSystem->extractEngine(dl->name, dl->version);
-					sett().RefreshSpringVersionList(); //FIXME: maybe not thread-save!
+					SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
 				}
 				default:
 					continue;

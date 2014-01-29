@@ -31,6 +31,7 @@
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/uievents.h"
+#include "utils/slpaths.h"
 #include "updater/updatehelper.h"
 #include "uiutils.h"
 #include "chatpanel.h"
@@ -529,14 +530,14 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 	assert(engine == _T("spring"));
 	if ( sett().GetDisableSpringVersionCheck() ) return true;
 	const std::string neededversion = STD_STRING(version);
-	const auto versionlist = sett().GetSpringVersionList();
+	const auto versionlist = SlPaths::GetSpringVersionList();
 	for ( const auto pair : versionlist ) {
 		const wxString ver = pair.first;
 		const LSL::SpringBundle bundle = pair.second;
 		if ( VersionSyncCompatible(neededversion, STD_STRING(ver))) {
-			if ( sett().GetCurrentUsedSpringIndex() != ver ) {
+			if ( SlPaths::GetCurrentUsedSpringIndex() != ver ) {
 				wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), ver.c_str(), ver.c_str());
-				sett().SetUsedSpringIndex( ver );
+				SlPaths::SetUsedSpringIndex( ver );
 				LSL::usync().ReloadUnitSyncLib();
 			}
 			return true;
@@ -1127,7 +1128,7 @@ bool Ui::OnPresetRequiringMap( const wxString& mapname )
 
 void Ui::OpenFileInEditor( const wxString& filepath )
 {
-	wxString editor_path = sett().GetEditorPath( );
+	wxString editor_path = SlPaths::GetEditorPath( );
 	if ( editor_path == wxEmptyString ) {
 		customMessageBoxNoModal( SL_MAIN_ICON, _T("You have not chosen an external text editor to open files with.\nPlease Select one now."), _T("No editor set") );
 		mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );

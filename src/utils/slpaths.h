@@ -1,7 +1,17 @@
 #ifndef SPRINGLOBBY_SLPATHS_H
 #define SPRINGLOBBY_SLPATHS_H
 
-class wxString;
+#include <map>
+#include <list>
+#include <cstddef>
+#include <wx/filefn.h>
+
+#include <lslunitsync/springbundle.h>
+#include <lslunitsync/unitsync.h>
+
+#include "pathlistfactory.h"
+
+
 
 //! Interface for accessing paths for differnt files
 // like configuration, logs ...
@@ -10,15 +20,66 @@ class wxString;
 // IsPortableMode() into account
 class SlPaths
 {
-	public:
-		//! used for passing config file at command line
-		static bool m_user_defined_config;
-		static wxString m_user_defined_config_path;
+public:
+	//! used for passing config file at command line
+	static bool m_user_defined_config;
+	static wxString m_user_defined_config_path;
 
-		static bool IsPortableMode();
-		static wxString GetLocalConfigPath();
-		static wxString GetDefaultConfigPath();
-		static wxString GetConfigPath();
+	static bool IsPortableMode();
+	static wxString GetLocalConfigPath();
+	static wxString GetDefaultConfigPath();
+	static wxString GetConfigPath();
+
+	//! directory used to cache infomation about maps
+	static wxString GetCachePath();
+
+	/* ================================================================ */
+	/** @name Spring locations
+	 * @{
+	 */
+
+	static void RefreshSpringVersionList(bool autosearch=true, const LSL::SpringBundle* additionalbundle = NULL);
+	static std::map<wxString, LSL::SpringBundle> GetSpringVersionList(); /// index -> version
+	static wxString GetCurrentUsedSpringIndex();
+	static void SetUsedSpringIndex(const wxString &index );
+	static void DeleteSpringVersionbyIndex( const wxString& index );
+
+	/// convenience wrappers to get current used version paths
+	static wxString GetCurrentUsedDataDir();
+	static wxString GetCurrentUsedUnitSync();
+	static wxString GetCurrentUsedSpringBinary();
+	//!@brief returns config file path unitsync uses, returns empty if unitsync isn't loaded
+	static wxString GetCurrentUsedSpringConfigFilePath();
+
+	static wxString GetUnitSync( const wxString& index );
+	static wxString GetSpringBinary( const wxString& index );
+
+	static void SetUnitSync( const wxString& index, const wxString& path );
+	static void SetSpringBinary( const wxString& index, const wxString& path );
+	//!@brief meaningful only on mac
+	static void SetBundle( const wxString& index, const wxString& path );
+
+	static wxString AutoFindSpringBin();
+	static wxString AutoFindUnitSync(wxPathList pl = PathlistFactory::ConfigFileSearchPaths() );
+	static bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle);
+
+	/*@}*/
+
+	static wxString GetChatLogLoc();
+
+	static wxString GetEditorPath();
+	static void SetEditorPath( const wxString& path );
+
+	static wxString GetLobbyWriteDir();
+
+	static wxString GetUikeys( const wxString& index );
+
+	static wxString AutoFindUikeys();
+	static wxString GetCurrentUsedUikeys();
+
+private:
+	static bool IsSpringBin( const wxString& path );
+	static std::map<wxString, LSL::SpringBundle> m_spring_versions;
 };
 
 #endif // SPRINGLOBBY_PATHLISTFACTORY_H
