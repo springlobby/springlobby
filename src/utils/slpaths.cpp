@@ -297,7 +297,6 @@ wxString SlPaths::AutoFindUikeys()
 {
 	const std::string path = LSL::susynclib().GetSpringDataDir();
 	wxString uikeys(TowxString(path));
-	uikeys += sep;
 	uikeys += _T("uikeys.txt");
 	return uikeys;
 }
