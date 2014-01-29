@@ -140,6 +140,7 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 class slConfigDefault {
 	public:
 		slConfigDefault(const wxString& key, const wxString& defVal);
+		slConfigDefault(const wxString& key, const char* defVal);
 		slConfigDefault(const wxString& key, const long& defVal);
 		slConfigDefault(const wxString& key, const double& defVal);
 		slConfigDefault(const wxString& key, const bool& defVal);

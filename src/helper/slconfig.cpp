@@ -240,6 +240,10 @@ slConfigDefault::slConfigDefault(const wxString& key, const wxString& defVal) {
 	slConfig::GetDefaultsString().Set(key, defVal);
 }
 
+slConfigDefault::slConfigDefault(const wxString& key, const char* defVal) {
+	slConfig::GetDefaultsString().Set(key, wxString::FromUTF8(defVal));
+}
+
 slConfigDefault::slConfigDefault(const wxString& key, const long& defVal) {
 	slConfig::GetDefaultsLong().Set(key, defVal);
 }

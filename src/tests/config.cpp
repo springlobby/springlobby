@@ -7,7 +7,7 @@
 #include <wx/string.h>
 #include <wx/filename.h>
 
-SLCONFIG("/test/string", (const wxString&)_T("hello world!") , "test string"); //FIXME: why is explicit cast required?
+SLCONFIG("/test/string", "hello world!", "test string");
 SLCONFIG("/test/long", -12345l, "test long");
 SLCONFIG("/test/double", -321.123, "test double");
 SLCONFIG("/test/bool", true, "test bool");
