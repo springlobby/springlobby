@@ -5,6 +5,7 @@
 #include "../utils/platform.h"
 #include "../utils/globalevents.h"
 #include "../settings.h"
+#include "utils/slpaths.h"
 #include <lslutils/globalsmanager.h>
 #include "../uiutils.h"
 
@@ -46,7 +47,7 @@ bool UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& e
         customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
         return false;
     }
-    m_newexe = sett().GetLobbyWriteDir() + _T("update") + sep;
+    m_newexe = SlPaths::GetLobbyWriteDir() + _T("update") + sep;
     wxLogError( m_newexe  );
     if ( !wxDirExists( m_newexe ) ) {
         if ( !wxMkdir( m_newexe ) ){
