@@ -4,7 +4,6 @@
 #include "../utils/customdialogs.h"
 #include "../utils/platform.h"
 #include "../utils/globalevents.h"
-#include "../settings.h"
 #include "utils/slpaths.h"
 #include <lslutils/globalsmanager.h>
 #include "../uiutils.h"
