@@ -96,7 +96,6 @@ public:
 	const User* GetUser() const ;
 	void SetUser( const User* usr );
 
-	bool IsServerPanel() const;
 	ChatPanelType GetPanelType() const;
 
 	void SetBattle( Battle* battle );
@@ -118,6 +117,7 @@ public:
 	void UpdateNicklistHighlights();
 
 private:
+	void Init(const wxString& panelname);
 	//! @returns true on success ( blank line ), false otherwise
 	bool Say( const wxString& message );
 
@@ -143,7 +143,6 @@ private:
 
 	void OnLogin( wxCommandEvent& data );
 
-	void _SetChannel( Channel* channel );
 	void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
 	void OutputLine( const ChatLine& line );
 	void SetIconHighlight( HighlightType highlight );

@@ -133,8 +133,8 @@ bool SLChatNotebook::DeleteChatPage( size_t i )
     ChatPanel* cur_page = static_cast<ChatPanel*>( GetPage( i ) );
 
 	//the checking for server panel is not supposed to be here, but it prevents a nasty crash bug in handling 'close all' for the time being
-	if ( cur_page && !cur_page->IsServerPanel() ) {
-        cur_page->Part();
+	if ( cur_page && (cur_page->GetPanelType() != ChatPanelType::CPT_Server)) {
+		cur_page->Part();
 		ParentType::DeletePage( i );
 		return true;
 	}

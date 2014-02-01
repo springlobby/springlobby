@@ -14,6 +14,7 @@
 
 #include "chatlog.h"
 #include "settings.h"
+#include "helper/slconfig.h"
 #include "utils/conversion.h"
 #include "ui.h"
 #include "defines.h"
@@ -23,46 +24,62 @@
 #include "utils/misc.h"
 #include "utils/slpaths.h"
 
+SLCONFIG("/ChatLog/chatlog_enable", true, "Log chat messages");
 
-ChatLog::ChatLog( const wxString& server, const wxString& room ):
-    m_server( server ),
-    m_active ( LogEnabled() ),
-    m_logfile ( )
+ChatLog::ChatLog():
+	m_active(false)
 {
-	m_server.Replace( wxT( ":" ), wxT( "_" ) ) ;
-	wxLogMessage( _T( "ChatLog::ChatLog( %s, %s )" ), m_server.c_str(), m_room.c_str() ) ;
-	SetLogFile(room);
 }
 
-bool ChatLog::SetLogFile(const wxString& room)
+ChatLog::ChatLog(const wxString& logname):
+	m_logname(logname),
+	m_active ( LogEnabled() ),
+	m_logfile ( )
 {
+	wxLogMessage( _T( "ChatLog::ChatLog( %s )" ), logname.c_str());
+	SetLogFile(logname);
+}
+
+bool ChatLog::SetLogFile(const wxString& logname)
+{
+	if (logname == wxEmptyString) {
+		m_logname = logname;
+		CloseSession();
+		return true;
+	}
+
+	m_logname.Replace( wxT( ":" ), wxT( "_" ) );
+
 	if (m_logfile.IsOpened()) {
-		if (room != m_room) {
+		if (logname != m_logname) {
 			CloseSession();
-			m_room = room;
+			m_logname = logname;
 			m_active = OpenLogFile();
 		}
 		return m_active;
 	}
-	m_room = room;
+	m_logname = logname;
 	m_active = OpenLogFile();
 	return m_active;
 }
 
 ChatLog::~ChatLog() {
-    wxLogMessage( _T( "%s -- ChatLog::~ChatLog()" ), m_room.c_str() );
-    if ( m_logfile.IsOpened() ) {
+	wxLogMessage( _T( "%s -- ChatLog::~ChatLog()" ), m_logname.c_str() );
 	CloseSession();
-    }
 }
 
 void ChatLog::CloseSession() {
-    wxDateTime now = wxDateTime::Now();
-    wxString newline ( wxTextBuffer::GetEOL() );
-    WriteLine( _( "### Session Closed at [" ) + now.Format( _T( "%Y-%m-%d %H:%M" ) ) + _( "]" ) );
-    WriteLine(_T(" ") + newline + _T(" ") + newline + _T(" ") + newline);
-    m_logfile.Flush();
-    m_logfile.Close();
+	if (!m_logfile.IsOpened() ) {
+		return;
+	}
+
+	wxDateTime now = wxDateTime::Now();
+	wxString newline ( wxTextBuffer::GetEOL() );
+	WriteLine( _( "### Session Closed at [" ) + now.Format( _T( "%Y-%m-%d %H:%M" ) ) + _( "]" ) );
+	WriteLine(_T(" ") + newline + _T(" ") + newline + _T(" ") + newline);
+	m_logfile.Flush();
+	m_logfile.Close();
+	m_active = false;
 }
 
 bool ChatLog::AddMessage( const wxString& text )
@@ -100,9 +117,9 @@ bool ChatLog::WriteLine( const wxString& text )
 {
 	if ( !m_logfile.Write( text, wxConvUTF8 ) ) {
 		m_active = false;
-		wxLogWarning( _T( "can't write message to log (%s)" ),  wxString( m_server + _T( "::" ) + m_room ).c_str() );
+		wxLogWarning( _T( "can't write message to log (%s)" ),  wxString( GetCurrentLogfilePath() ).c_str() );
 		customMessageBox( SL_MAIN_ICON, _( "Couldn't write message to log.\nLogging will be disabled for room " )
-				  + m_server + _T( "::" ) + m_room + _( ".\n\nRejoin room to reactivate logging." ),
+				  + GetCurrentLogfilePath() + _( ".\n\nRejoin room to reactivate logging." ),
 				  _( "Log Warning" ) );
 		return false;
 	}
@@ -111,7 +128,7 @@ bool ChatLog::WriteLine( const wxString& text )
 
 bool ChatLog::OpenLogFile()
 {
-    wxLogMessage( _T( "OpenLogFile( ) server = %s, room = %s" ), m_server.c_str(), m_room.c_str() ) ;
+    wxLogMessage( _T( "OpenLogFile( ) server = %s" ), m_logname.c_str() ) ;
     wxString logFilePath ( GetCurrentLogfilePath() );
 
     if ( LogEnabled() && CreateCurrentLogFolder() ) {
@@ -154,15 +171,12 @@ const wxArrayString& ChatLog::GetLastLines( ) const
 
 
 wxString ChatLog::GetCurrentLogfilePath() const {
-    return SlPaths::GetChatLogLoc()
-	+ wxFileName::GetPathSeparator() + m_server
-	+ wxFileName::GetPathSeparator() + m_room + _T( ".txt" );
-
+    return SlPaths::GetChatLogLoc() + wxFileName::GetPathSeparator() + sett().GetDefaultServer() + wxFileName::GetPathSeparator() + m_logname + _T( ".txt" );
 }
 
 bool ChatLog::LogEnabled()
 {
-	return sett().GetChatLogEnable();
+	return cfg().ReadBool(_T("/ChatLog/chatlog_enable"));
 }
 
 

@@ -464,18 +464,6 @@ bool Settings::ShouldAddDefaultChannelSettings()
 
 // ===================================================
 
-bool Settings::GetChatLogEnable()
-{
-	if ( !m_config->Exists( _T( "/ChatLog/chatlog_enable" ) ) ) SetChatLogEnable( true );
-	return m_config->Read( _T( "/ChatLog/chatlog_enable" ), true );
-}
-
-
-void Settings::SetChatLogEnable( const bool value )
-{
-	m_config->Write( _T( "/ChatLog/chatlog_enable" ), value );
-}
-
 
 wxString Settings::GetLastHostDescription()
 {

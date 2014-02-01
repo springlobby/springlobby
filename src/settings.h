@@ -287,8 +287,6 @@ class Settings : public SL::NonCopyable
     /** @name Chat
      * @{
      */
-    bool GetChatLogEnable();
-    void SetChatLogEnable( const bool value );
 
     //!@brief sets how many lines can stay in a chat panel before the old will start getting erased, 0 to disable
     void SetChatHistoryLenght( int historylines );

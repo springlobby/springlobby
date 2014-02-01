@@ -13,13 +13,12 @@ class ChatLog
     /** Constructor.  Prepares the %ChatLog to accept log messages for
      * the given chat room or channel on the given server.
      *
-     * @param server Alias or hostname for the server on which the
-     * chat room or channel is located.
-     *
-     * @param room Name of the chat room or channel this object will
+     * @param logname Name of the logfile this object will
      * accept messages for.
      */
-    ChatLog(const wxString& server,const wxString& room);
+	ChatLog(const wxString& logname);
+	ChatLog();
+
 
     /** Destructor.  Calls CloseSession if the log file is currently
      * opened.
@@ -48,6 +47,13 @@ class ChatLog
      */
     bool LogEnabled();
 
+
+    void OpenInEditor();
+    const wxArrayString& GetLastLines( ) const;
+
+	bool SetLogFile(const wxString& logname);
+
+private:
     /** Get a string, representing the current time-of-day, suitable
      * for prepending to messages.  This is used by AddMessage.
      *
@@ -57,12 +63,6 @@ class ChatLog
      */
     wxString LogTime();
 
-    void OpenInEditor();
-    const wxArrayString& GetLastLines( ) const;
-
-	bool SetLogFile(const wxString& room);
-
-private:
     /** Closes the current "session" in the log file by appending a
      * session-closed notice to end before closing the file.
      *
@@ -96,8 +96,7 @@ private:
     bool CreateCurrentLogFolder();
     bool OpenLogFile();
 
-    wxString m_server;
-    wxString m_room;
+	wxString m_logname;
 
     bool m_active;
     wxFile m_logfile;

@@ -299,7 +299,8 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 	sbChatLogSizer = new wxStaticBoxSizer( sbChatLog, wxVERTICAL );
 
 	m_save_logs = new wxCheckBox( this, wxID_ANY, _( "Save chat logs" ), wxDefaultPosition, wxDefaultSize, 0 );
-	m_save_logs->SetValue( sett().GetChatLogEnable() );
+
+	m_save_logs->SetValue( cfg().ReadBool(_T("/ChatLog/chatlog_enable")));
 
 	sbChatLogSizer->Add( m_save_logs, 0, wxALL, 5 );
 
@@ -422,7 +423,7 @@ void ChatOptionsTab::DoRestore()
 	m_ts_color->SetColor( sett().GetChatColorTime() );
 	m_chat_font = sett().GetChatFont();
 	m_fontname->SetLabel( m_chat_font.GetFaceName() );
-	m_save_logs->SetValue(  sett().GetChatLogEnable() );
+	m_save_logs->SetValue( cfg().ReadBool(_T("/ChatLog/chatlog_enable")));
 	m_irc_colors->SetValue( sett().GetUseIrcColors() );
 	wxString highlightstring;
 	wxArrayString highlights = sett().GetHighlightedWords();
@@ -458,7 +459,7 @@ void ChatOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 	sett().SetRequestAttOnHighlight( m_highlight_req->IsChecked() );
 
 	//Chat Log
-	sett().SetChatLogEnable( m_save_logs->GetValue() );
+	cfg().Write(_T("/ChatLog/chatlog_enable"), m_save_logs->GetValue());
 
 	cfg().Write(_T("/Chat/BroadcastEverywhere"), m_broadcast_check->GetValue() );
 

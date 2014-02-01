@@ -306,13 +306,12 @@ void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 {
 	int selection = event.GetSelection();
 	ChatPanel* panel = ( ChatPanel* )m_chat_tabs->GetPage( selection );
-	if ( panel )
-	{
+	if ( panel ) {
 		panel->Part();
-		if( panel->IsServerPanel() )
-            m_server_chat = 0;
+		if( panel->GetPanelType() == ChatPanelType::CPT_Server ) {
+			m_server_chat = NULL;
+		}
 	}
-
 }
 
 void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
