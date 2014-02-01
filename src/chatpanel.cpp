@@ -117,7 +117,7 @@ ChatPanel::ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist 
 	m_topic_set( false )
 {
 	Init(_T("chatpanel-pm-") + user.GetNick());
-	user.uidata.panel = this;
+	SetUser(&user);
 }
 
 
