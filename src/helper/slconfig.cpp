@@ -161,7 +161,7 @@ wxString slConfig::ReadString(const wxString& key) const
 
 	// we can assert that value will be valid or the program terminated
 	if (IsRecordingDefaults()) {
-		((slConfig*)this)->Write(key, *value);
+		((slConfig*)this)->Write(key, value);
 	}
 	return value;
 }
