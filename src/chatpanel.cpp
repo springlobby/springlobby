@@ -5,25 +5,12 @@
 
 #include "chatpanel.h"
 
-#include <stdexcept>
-
 #include <wx/intl.h>
-#include <wx/datetime.h>
-#include <wx/sizer.h>
 #include <wx/splitter.h>
-#include <wx/combobox.h>
-#include <wx/button.h>
 #include <wx/tokenzr.h>
-#include <wx/msgdlg.h>
-#include <wx/menu.h>
-#include <wx/log.h>
-#include <wx/utils.h>
-#include <wx/event.h>
 #include <wx/app.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
-#include <wx/imaglist.h>
-#include <wx/wupdlock.h>
 #include <wx/bmpbuttn.h>
 #include <wx/stattext.h>
 
@@ -31,25 +18,16 @@
 #include "aui/slbook.h"
 #include "channel/channel.h"
 #include "utils/debug.h"
-#include "utils/conversion.h"
 #include "utils/uievents.h"
 #include "updater/updatehelper.h"
 #include "utils/misc.h"
 #include "server.h"
-#include "user.h"
 #include "battle.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"
-#include "chatlog.h"
 #include "chatpanelmenu.h"
-#include "utils/customdialogs.h"
 #include "gui/pastedialog.h"
-#include "settings.h"
-#include "uiutils.h"
 #include "helper/wxtextctrlhist.h"
-
-#include "useractions.h"
-#include "usermenu.h"
 
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
