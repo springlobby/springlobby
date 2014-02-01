@@ -419,7 +419,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
 	if ( original_pos < 0.0f ) original_pos = 0.0f;
 	if ( original_pos > 1.0f ) original_pos = 1.0f;
 
-	long original_line = (long)(original_pos * (float)numOfLines);
 
 	wxWindowUpdateLocker noUpdates(m_chatlog_text);
 
@@ -511,6 +510,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
 	if (original_pos < 1.0f) {
 #ifndef __WXMSW__
+		const long original_line = original_pos * numOfLines;
 		wxString linetext = m_chatlog_text->GetLineText(original_line);
 		long zoomto = m_chatlog_text->GetValue().Find(linetext);
 		m_chatlog_text->ShowPosition( zoomto );
