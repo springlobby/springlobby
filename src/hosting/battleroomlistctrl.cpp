@@ -146,7 +146,6 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 		m_popup->Append( -1, _("Ally"), m_allies );
 
 		m_sides = new wxMenu();
-		SetBattle( battle );
 		m_popup->Append( -1, _("Side"), m_sides );
 
 		m_popup->AppendSeparator();
@@ -171,6 +170,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 		wxMenuItem* ring = new wxMenuItem( m_popup, BRLIST_RING, wxString( _("Ring") ) , wxEmptyString, wxITEM_NORMAL );
 		m_popup->Append( ring );
 
+		SetBattle( battle );
 	}
 }
 
@@ -182,24 +182,20 @@ BattleroomListCtrl::~BattleroomListCtrl()
 
 void BattleroomListCtrl::SetBattle( IBattle* battle )
 {
-	m_battle = battle;
-	for ( unsigned int i = 0; i < side_vector.size(); i++ )
-	{
-		wxMenuItem* side = side_vector[i];
-		m_popup->Remove( side );
-		m_sides->Destroy( side ); // delete side;
-		Disconnect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
+	if (m_battle != NULL) {
+		for ( unsigned int i = 0; i < side_vector.size(); i++ ) {
+			m_sides->Destroy( side_vector[i] ); // delete side;
+			Disconnect( BRLIST_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnSideSelect ) );
+		}
 	}
+
 	m_data.clear();
 	side_vector.clear();
-	if ( m_battle && m_sides )
-	{
-		try
-		{
-            const wxArrayString sides = LSL::Util::vectorToArrayString(
-                        LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
-			for ( unsigned int i = 0; i < sides.GetCount(); i++ )
-			{
+
+	if ( (battle != NULL) && m_sides ) {
+		try {
+			const wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(STD_STRING(battle->GetHostModName())));
+			for ( unsigned int i = 0; i < sides.GetCount(); i++ ) {
 				wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
 				m_sides->Append( side );
 				side_vector.push_back( side );
@@ -207,6 +203,7 @@ void BattleroomListCtrl::SetBattle( IBattle* battle )
 			}
 		} catch (...) {}
 	}
+	m_battle = battle;
 }
 
 IBattle& BattleroomListCtrl::GetBattle()
