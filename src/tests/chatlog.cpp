@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE( slconfig )
 	}
 	BOOST_CHECK_MESSAGE(lines.GetCount() > 3, lines.GetCount());
 
-	const int skip = 8; //ignore date
+	const int skip = 11; //ignore date
 	BOOST_CHECK(lines[lines.GetCount()-4].Mid(skip) == line1);
 	BOOST_CHECK(lines[lines.GetCount()-3].Mid(skip) == line2);
 	BOOST_CHECK(lines[lines.GetCount()-2].Mid(skip) == line3);

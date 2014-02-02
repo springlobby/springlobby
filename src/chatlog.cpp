@@ -156,7 +156,7 @@ bool ChatLog::OpenLogFile()
 wxString ChatLog::LogTime()
 {
 	wxDateTime now = wxDateTime::Now();
-	return  _T( "[" ) + now.Format( _T( "%H:%M" ) ) + _T( "]" );
+	return  _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
 }
 
 void ChatLog::OpenInEditor()
