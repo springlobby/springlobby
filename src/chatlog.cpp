@@ -64,12 +64,14 @@ bool ChatLog::SetLogFile(const wxString& logname)
 	return m_active;
 }
 
-ChatLog::~ChatLog() {
+ChatLog::~ChatLog()
+{
 	wxLogMessage( _T( "%s -- ChatLog::~ChatLog()" ), m_logname.c_str() );
 	CloseSession();
 }
 
-void ChatLog::CloseSession() {
+void ChatLog::CloseSession()
+{
 	if (!m_logfile.IsOpened() ) {
 		return;
 	}
@@ -85,28 +87,25 @@ bool ChatLog::AddMessage( const wxString& text )
 {
 	if ( !LogEnabled() || ! m_active ) {
 		return true;
+	} else if ( !m_logfile.IsOpened() ) {
+		m_active = OpenLogFile();
 	}
-	else if ( !m_logfile.IsOpened() ) {
-	    m_active = OpenLogFile();
-	}
-	if ( m_active )
-	{
-	    return WriteLine( LogTime() + _T( " " ) + text + wxTextBuffer::GetEOL() );
-	}
-	else return false;
+	if ( m_active ) {
+		return WriteLine( LogTime() + _T( " " ) + text + wxTextBuffer::GetEOL() );
+	} else return false;
 }
 
 
 bool ChatLog::CreateCurrentLogFolder()
 {
-    const wxString path = wxFileName(GetCurrentLogfilePath()).GetPath();
-        wxLogWarning( _T( "can't create logging folder: %s" ), path.c_str() );
-    if ( !tryCreateDirectory( path ) ) {
-        wxLogWarning( _T( "can't create logging folder: %s" ), path.c_str() );
-        m_active = false;
-        return false;
-    }
-    return true;
+	const wxString path = wxFileName(GetCurrentLogfilePath()).GetPath();
+	wxLogWarning( _T( "can't create logging folder: %s" ), path.c_str() );
+	if ( !tryCreateDirectory( path ) ) {
+		wxLogWarning( _T( "can't create logging folder: %s" ), path.c_str() );
+		m_active = false;
+		return false;
+	}
+	return true;
 }
 
 
@@ -122,14 +121,14 @@ bool ChatLog::WriteLine( const wxString& text )
 
 bool ChatLog::OpenLogFile()
 {
-    wxLogMessage( _T( "OpenLogFile( ) %s" ), m_logname.c_str() ) ;
-    wxString logFilePath ( GetCurrentLogfilePath() );
+	wxLogMessage( _T( "OpenLogFile( ) %s" ), m_logname.c_str() ) ;
+	wxString logFilePath ( GetCurrentLogfilePath() );
 
 	if (!LogEnabled()) {
 		return true;
 	}
 
-    if (!CreateCurrentLogFolder()) {
+	if (!CreateCurrentLogFolder()) {
 		return false;
 	}
 
@@ -163,21 +162,22 @@ wxString ChatLog::LogTime()
 void ChatLog::OpenInEditor()
 {
 #ifndef TEST
-    ui().OpenFileInEditor( GetCurrentLogfilePath());
+	ui().OpenFileInEditor( GetCurrentLogfilePath());
 #endif
 }
 
 const wxArrayString& ChatLog::GetLastLines( ) const
 {
-    return m_last_lines;
+	return m_last_lines;
 }
 
 
-wxString ChatLog::GetCurrentLogfilePath() const {
+wxString ChatLog::GetCurrentLogfilePath() const
+{
 #ifdef TEST
 	return wxFileName::GetTempDir()+_T("/sltest.log");
 #else
-    return SlPaths::GetChatLogLoc() + wxFileName::GetPathSeparator() + sett().GetDefaultServer() + wxFileName::GetPathSeparator() + m_logname + _T( ".txt" );
+	return SlPaths::GetChatLogLoc() + wxFileName::GetPathSeparator() + sett().GetDefaultServer() + wxFileName::GetPathSeparator() + m_logname + _T( ".txt" );
 #endif
 }
 
@@ -209,7 +209,7 @@ static inline ssize_t readblock(wxFile& fd, void* buffer, size_t size, off_t off
 /** Calculate the next read position for find_tail_sequences (below) */
 static inline off_t next_read_position(off_t last_read_position, size_t read_size, size_t read_overlap)
 {
-    return std::max(static_cast<long signed int>(last_read_position - read_size - read_overlap), (long signed int) 0);
+	return std::max(static_cast<long signed int>(last_read_position - read_size - read_overlap), (long signed int) 0);
 }
 
 /** Find an arbitrary number of delimited strings at the end of a file.  This
@@ -227,98 +227,98 @@ static inline off_t next_read_position(off_t last_read_position, size_t read_siz
  */
 static size_t find_tail_sequences(wxFile& fd, const char* bytes, size_t bytes_length, size_t count, wxArrayString& out)
 {
-    size_t count_added ( 0 );
+	size_t count_added ( 0 );
 
-    /* We overlap the file reads a little to avoid splitting (and thus missing) the
-       delimiter sequence.  */
-    const size_t read_overlap = bytes_length - 1;
-    const size_t read_size = BUFSIZ;
+	/* We overlap the file reads a little to avoid splitting (and thus missing) the
+	   delimiter sequence.  */
+	const size_t read_overlap = bytes_length - 1;
+	const size_t read_size = BUFSIZ;
 
-    const off_t log_length = fd.SeekEnd();
-    bool have_last_pos = false;
-    char buf[read_size];
-    off_t last_found_pos = 0;
-    off_t last_read_position = log_length + read_overlap ;
+	const off_t log_length = fd.SeekEnd();
+	bool have_last_pos = false;
+	char buf[read_size];
+	off_t last_found_pos = 0;
+	off_t last_read_position = log_length + read_overlap ;
 
-    /* We read `read_size'-byte blocks of the file, starting at the end and working backwards. */
-    while ( count_added < count && last_read_position > 0 ) {
+	/* We read `read_size'-byte blocks of the file, starting at the end and working backwards. */
+	while ( count_added < count && last_read_position > 0 ) {
 		const off_t read_position = next_read_position(last_read_position, read_size, read_overlap);
 		const size_t bytes_read = readblock(fd, buf, std::min(static_cast<off_t>(read_size), last_read_position - read_position), read_position);
 
 		/* In each block, we search for `bytes', starting at the end.  */
 		for ( ssize_t i = bytes_read - read_overlap - 1; i >= 0; i-- ) {
 			if ( !strncmp((buf + i), bytes, bytes_length) ) {
-			const off_t this_found_pos  = read_position + i;
+				const off_t this_found_pos  = read_position + i;
 
-			if ( have_last_pos && count_added < count ) {
-				const size_t line_length = last_found_pos - this_found_pos - bytes_length;
+				if ( have_last_pos && count_added < count ) {
+					const size_t line_length = last_found_pos - this_found_pos - bytes_length;
 
-				if ( line_length > 0 ) {
-				char* source = NULL;
+					if ( line_length > 0 ) {
+						char* source = NULL;
 
-				if ( last_found_pos >= read_position + (off_t) bytes_read ) {
-					source = new char[ line_length + 1];
-					memset(source, 0, line_length + 1);
+						if ( last_found_pos >= read_position + (off_t) bytes_read ) {
+							source = new char[ line_length + 1];
+							memset(source, 0, line_length + 1);
 
-					if ( readblock(fd, source, line_length, this_found_pos + bytes_length) < (ssize_t) line_length ) {
-						wxLogWarning(_T("ChatLog::find_tail_sequences: Read-byte count less than expected"));
+							if ( readblock(fd, source, line_length, this_found_pos + bytes_length) < (ssize_t) line_length ) {
+								wxLogWarning(_T("ChatLog::find_tail_sequences: Read-byte count less than expected"));
+							}
+						} else {
+							source = buf + i + bytes_length;
+						}
+						source[line_length] = 0;
+						wxString tmp = wxString::FromUTF8(source);
+						out.Insert(tmp, 0);
+						++count_added;
+
+						if ( last_found_pos >= read_position + (off_t) bytes_read )
+							delete[] source;
+
+						if ( count_added >= count )
+							i = -1; /* short-circuit the `for' loop. */
 					}
-				} else {
-					source = buf + i + bytes_length;
 				}
-					source[line_length] = 0;
-					wxString tmp = wxString::FromUTF8(source);
-					out.Insert(tmp, 0);
-					++count_added;
-
-				if ( last_found_pos >= read_position + (off_t) bytes_read )
-					delete[] source;
-
-				if ( count_added >= count )
-					i = -1; /* short-circuit the `for' loop. */
-				}
-			}
-			last_found_pos = this_found_pos;
-			have_last_pos = true;
-			i -= bytes_length - 1;
+				last_found_pos = this_found_pos;
+				have_last_pos = true;
+				i -= bytes_length - 1;
 			}
 		}
 
 		last_read_position = read_position;
-    }
+	}
 
-    return count_added;
+	return count_added;
 }
 
 
 void ChatLog::FillLastLineArray()
 {
-    if (!m_logfile.IsOpened() ) {
+	if (!m_logfile.IsOpened() ) {
 		wxLogError(_T("%s: failed to open log file."), __PRETTY_FUNCTION__);
 		return;
-    }
+	}
 #ifdef TEST
 	const size_t num_lines = 6;
 #else
 	const size_t num_lines = sett().GetAutoloadedChatlogLinesCount();
 #endif
 
-    m_last_lines.Clear();
-    m_last_lines.Alloc(num_lines);
+	m_last_lines.Clear();
+	m_last_lines.Alloc(num_lines);
 
-    const wxChar* wc_EOL ( wxTextBuffer::GetEOL() );
-    const size_t eol_num_chars ( wxStrlen(wc_EOL) );
+	const wxChar* wc_EOL ( wxTextBuffer::GetEOL() );
+	const size_t eol_num_chars ( wxStrlen(wc_EOL) );
 #ifndef WIN32
-    char* eol ( static_cast<char*>( alloca(eol_num_chars) ) );
+	char* eol ( static_cast<char*>( alloca(eol_num_chars) ) );
 #else
-    char* eol ( new char[eol_num_chars] );
+	char* eol ( new char[eol_num_chars] );
 #endif
-    wxConvUTF8.WC2MB(eol, wc_EOL, eol_num_chars);
+	wxConvUTF8.WC2MB(eol, wc_EOL, eol_num_chars);
 
 	const size_t lines_added = find_tail_sequences(m_logfile, eol, eol_num_chars, num_lines, m_last_lines);
-    wxLogMessage(_T("ChatLog::FillLastLineArray: Loaded %lu lines from %s."), lines_added, GetCurrentLogfilePath().c_str());
+	wxLogMessage(_T("ChatLog::FillLastLineArray: Loaded %lu lines from %s."), lines_added, GetCurrentLogfilePath().c_str());
 
 #ifdef WIN32
-    delete[] eol;
+	delete[] eol;
 #endif
 }
