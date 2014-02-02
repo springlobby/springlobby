@@ -23,11 +23,20 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
 
     void AddUser( User& user );
     void RemoveUser( User& user );
-    void UpdateUser( const int& index );
     void UpdateUser( User& user );
-    void UpdateList();
 
     int GetIndexFromData( const DataType& data ) const;
+
+    wxString GetItemText(long item, long column) const;
+    int GetItemColumnImage(long item, long column) const;
+    wxListItemAttr * GetItemAttr(long item) const;
+
+    void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
+    void OnUserMenuCreateGroup( wxCommandEvent& event );
+
+private:
+    void UpdateUser( const int& index );
+    void UpdateList();
 
     void OnListRightClick( wxListEvent& event );
     void OnColClick( wxListEvent& event );
@@ -41,16 +50,9 @@ class BattleroomListCtrl : public CustomVirtListCtrl< User *, BattleroomListCtrl
 
     void OnKickPlayer( wxCommandEvent& event );
     void OnRingPlayer( wxCommandEvent& event );
-    void OnUserMenuCreateGroup( wxCommandEvent& event );
-    void OnUserMenuDeleteFromGroup( wxCommandEvent& event );
     void OnUserMenuAddToGroup( wxCommandEvent& event );
+
     virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
-
-    wxString GetItemText(long item, long column) const;
-    int GetItemColumnImage(long item, long column) const;
-    wxListItemAttr * GetItemAttr(long item) const;
-
-  protected:
 	static int CompareLobbyStatus( const DataType user1, const DataType user2 );
     static int CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle );
     static int CompareSide(const DataType user1, const DataType user2);
