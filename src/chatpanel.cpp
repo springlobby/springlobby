@@ -20,7 +20,7 @@
 #include "utils/debug.h"
 #include "utils/uievents.h"
 #include "updater/updatehelper.h"
-#include "utils/misc.h"
+#include "utils/curlhelper.h"
 #include "server.h"
 #include "battle.h"
 #include "nicklistctrl.h"
@@ -177,12 +177,7 @@ ChatPanel::~ChatPanel()
 	}
 	cfg().Write( _T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
 
-	if ( m_type == CPT_Channel ) {
-		m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
-	} else if ( m_type == CPT_Server ) {
-		m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
-	} else if  (m_type == CPT_Battle) {
-	}
+	m_chatlog_text->Disconnect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, 0 );
 
 	if(GetAui().manager) {
 		GetAui().manager->DetachPane( this );

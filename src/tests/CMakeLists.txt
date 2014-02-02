@@ -23,6 +23,8 @@ macro (add_springlobby_test target sources libraries flags)
 	#install(TARGETS test_${target} DESTINATION ${BINDIR})
 endmacro()
 
+
+################################################################################
 set(test_name Config)
 Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/config.cpp"
@@ -35,6 +37,20 @@ set(test_libs
 	${Boost_SYSTEM_LIBRARY}
 )
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "")
+################################################################################
+set(test_name ChatLog)
+Set(test_src
+	"${CMAKE_CURRENT_SOURCE_DIR}/chatlog.cpp"
+	"${springlobby_SOURCE_DIR}/src/chatlog.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/misc.cpp"
+)
 
+set(test_libs
+	${wxWidgets_LIBRARIES}
+	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+	${Boost_SYSTEM_LIBRARY}
+)
+add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
+################################################################################
 
 endif()
