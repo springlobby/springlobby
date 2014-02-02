@@ -21,7 +21,6 @@ double LevenshteinDistance(wxString s, wxString t);
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance = 0 );
 std::string GetBestMatch(const std::vector<std::string>& a, const std::string& s, double* distance = 0 );
 
-wxString Paste2Pastebin( const wxString& message );
 
 
 /** Try to create the named directory, if it doesn't exist.

@@ -29,4 +29,7 @@ extern "C"
 	size_t wxcurl_stream_read(void* ptr, size_t size, size_t nmemb, void* stream);
 }
 
+wxString Paste2Pastebin( const wxString& message );
+
+
 #endif // CURLHELPER_H
