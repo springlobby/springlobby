@@ -557,10 +557,6 @@ void Ui::OnLoggedIn( )
 {
 	if ( m_main_win == 0 ) return;
 	mw().GetChatTab().RejoinChannels();
-	// FIXME RejoinChannels changes active tab, we change back to
-	// default tab on auto connect
-	if ( cfg().ReadBool(_T( "/Server/Autoconnect" )) )
-		mw().ShowTab( cfg().ReadLong(_T( "/GUI/StartTab" )));
 	mw().GetBattleListTab().SortBattleList();
 }
 
