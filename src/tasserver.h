@@ -44,8 +44,6 @@ class TASServer : public Server, public wxTimer
     // Overloaded functions from Server
     bool ExecuteSayCommand( const wxString& cmd );
 
-    void SetSocket(Socket& sock );
-
     bool Register( const wxString& addr, const int port, const wxString& nick, const wxString& password,wxString& reason );
     void AcceptAgreement();
 
@@ -159,7 +157,8 @@ class TASServer : public Server, public wxTimer
 
     wxArrayString GetRelayHostList() ;
 	virtual const IServerEvents* serverEvents() const { return m_se; }
-  protected:
+
+private:
 
     //! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
     struct TASPingListItem {
