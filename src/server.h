@@ -143,9 +143,9 @@ class Server : public iNetClass, public SL::NonCopyable
 
     void SetRequiredSpring( const wxString& version ) { m_required_spring_ver = version; }
 
-    virtual void OnConnected( Socket* sock ) = 0;
-    virtual void OnDisconnected( Socket* sock ) = 0;
-    virtual void OnDataReceived( Socket* sock ) = 0;
+    virtual void OnConnected( Socket& sock ) = 0;
+    virtual void OnDisconnected( Socket& sock ) = 0;
+    virtual void OnDataReceived( Socket& sock ) = 0;
 
     virtual void OnDisconnected();
 

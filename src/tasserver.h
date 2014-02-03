@@ -44,7 +44,7 @@ class TASServer : public Server, public wxTimer
     // Overloaded functions from Server
     bool ExecuteSayCommand( const wxString& cmd );
 
-    void SetSocket( Socket* sock );
+    void SetSocket(Socket& sock );
 
     bool Register( const wxString& addr, const int port, const wxString& nick, const wxString& password,wxString& reason );
     void AcceptAgreement();
@@ -142,9 +142,9 @@ class TASServer : public Server, public wxTimer
 
     void HandlePong( int replyid );
 
-    void OnConnected( Socket* sock );
-    void OnDisconnected( Socket* sock );
-    void OnDataReceived( Socket* sock );
+    void OnConnected(Socket& sock );
+    void OnDisconnected(Socket& sock );
+    void OnDataReceived(Socket& sock );
 
     bool IsPasswordHash( const wxString& pass )  const;
     wxString GetPasswordHash( const wxString& pass ) const;

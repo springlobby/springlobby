@@ -2259,7 +2259,7 @@ void TASServer::SendScriptToClients( const wxString& script )
   SendCmd( _T("SCRIPTEND") );
 }
 
-void TASServer::OnConnected( Socket* /*unused*/ )
+void TASServer::OnConnected(Socket& /*unused*/ )
 {
     wxLogDebugFunc( wxEmptyString );
     //TASServer* serv = (TASServer*)sock->GetUserdata();
@@ -2274,7 +2274,7 @@ void TASServer::OnConnected( Socket* /*unused*/ )
 }
 
 
-void TASServer::OnDisconnected( Socket* /*unused*/ )
+void TASServer::OnDisconnected(Socket& /*unused*/ )
 {
     wxLogDebugFunc( TowxString(m_connected) );
     bool connectionwaspresent = m_online || !m_last_denied.IsEmpty() || m_redirecting;
@@ -2295,11 +2295,10 @@ void TASServer::OnDisconnected( Socket* /*unused*/ )
 }
 
 
-void TASServer::OnDataReceived( Socket* sock )
+void TASServer::OnDataReceived( Socket& sock )
 {
-    if ( sock == 0 ) return;
     m_last_net_packet = time( 0 );
-    wxString data = sock->Receive();
+    wxString data = sock.Receive();
     m_buffer << data;
     m_buffer.Replace( _T("\r\n"), _T("\n") );
     int returnpos = m_buffer.Find( _T("\n") );

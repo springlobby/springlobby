@@ -123,11 +123,11 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
   } catch (...) { return; }
 
   if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
-    m_net_class.OnDataReceived( sock );
+    m_net_class.OnDataReceived( *sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_LOST ) {
-    m_net_class.OnDisconnected( sock );
+    m_net_class.OnDisconnected( *sock );
   } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
-    m_net_class.OnConnected( sock );
+    m_net_class.OnConnected( *sock );
   } else {
     try
     {
@@ -224,7 +224,7 @@ void Socket::Disconnect( )
     m_sock->Destroy();
     m_sock = 0;
   }
-  m_net_class.OnDisconnected( this );
+  m_net_class.OnDisconnected( *this );
 }
 
 
