@@ -2,6 +2,7 @@
 //
 // Classes: NetDebugReport CrashReport
 //
+#include "utils/curlhelper.h" // has to be first, else compiler will warn about "please include winsock2.h before windows.h"
 #include "crashreport.h"
 
 #if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
@@ -17,7 +18,6 @@
 #include <wx/sstream.h>
 #include <wx/utils.h>
 
-#include "utils/curlhelper.h"
 #include "utils/platform.h"
 #include "updater/updatehelper.h"
 #include "utils/conversion.h"

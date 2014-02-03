@@ -3,6 +3,8 @@
 // Class: ChatPanel
 //
 
+#include "utils/curlhelper.h" //has to be first include, as else it warns about winsock2.h should be included first
+
 #include "chatpanel.h"
 
 #include <wx/intl.h>
@@ -20,7 +22,6 @@
 #include "utils/debug.h"
 #include "utils/uievents.h"
 #include "updater/updatehelper.h"
-#include "utils/curlhelper.h"
 #include "server.h"
 #include "battle.h"
 #include "nicklistctrl.h"
