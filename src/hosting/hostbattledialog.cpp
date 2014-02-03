@@ -479,7 +479,7 @@ void RunHostBattleDialog( wxWindow* parent )
 											 "option in the hosting settings." ) ) % bo.port );
 					return;
 				default:
-					wxLogWarning( _T( "unknonw port forward test result" ) );
+					wxLogWarning( _T( "unknown port forward test result" ) );
 					break;
 
 			}
