@@ -674,7 +674,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
         map = GetSentenceParam( params );
         title = GetSentenceParam( params );
         mod = GetSentenceParam( params );
-		m_se->OnBattleOpenedEx( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
+		m_se->OnBattleOpened( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
 				haspass, rank, hash, engineName, engineVersion, map, title, mod );
         if ( nick == m_relay_host_bot )
         {

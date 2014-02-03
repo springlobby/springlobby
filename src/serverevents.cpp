@@ -228,7 +228,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 }
 
 
-void ServerEvents::OnBattleOpenedEx( int id, BattleType type, NatType nat, const wxString& nick,
+void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
 									const wxString& host, int port, int maxplayers,
 									bool haspass, int rank, const wxString& maphash, const wxString& engineName, const wxString& engineVersion, const wxString& map,
 									const wxString& title, const wxString& mod )
