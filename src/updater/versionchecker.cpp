@@ -69,7 +69,7 @@ wxString GetLatestVersion()
     wxLogDebugFunc(_T("Error connecting! Error is: ") + err);
     customMessageBoxNoModal(SL_MAIN_ICON, _T("Error connecting! Error is: ") + err, wxEmptyString);
 
-    return _T("-1");
+    return wxEmptyString;
   }
 
   wxDELETE(stream);

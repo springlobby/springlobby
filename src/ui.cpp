@@ -1168,7 +1168,7 @@ void Ui::CheckForUpdates()
 {
 	wxString latestVersion = GetLatestVersion();
 
-	if (latestVersion == _T("-1")) {
+	if (latestVersion.empty()) {
 		customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
 		return;
 	}
