@@ -22,7 +22,8 @@ template <class ParentClass>
 HttpDownloaderThread<ParentClass>::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath,
         ParentClass& parent, int code, const bool notify, const bool unzip,
         const wxString& noticeErr, const wxString& noticeOk   )
-		: m_destroy( false ),
+		: wxThread(wxTHREAD_DETACHED),
+		m_destroy( false ),
 		m_destpath( DestPath ),
 		m_fileurl( FileUrl ),
 		m_do_unzip( unzip ),

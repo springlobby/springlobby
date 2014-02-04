@@ -33,7 +33,8 @@ UpdaterClass::UpdaterClass():
 
 UpdaterClass::~UpdaterClass()
 {
-    delete m_http_thread;
+	//no need to delete thread as its detached (deletes himself)
+	//delete m_http_thread;
 }
 
 bool UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& exe_to_update )
