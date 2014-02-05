@@ -118,19 +118,29 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 	if (additionalbundle != NULL) {
 		usync_paths.push_back(*additionalbundle);
 	}
-	if (autosearch) {
-		LSL::SpringBundle systembundle;
-		if (LocateSystemInstalledSpring(systembundle)) {
-			usync_paths.push_back(systembundle);
-		}
 
-		wxPathList ret;
-		wxPathList paths = PathlistFactory::AdditionalSearchPaths(ret);
-		const wxString springbin(SPRING_BIN);
-		for (const auto path: paths) {
-			LSL::SpringBundle bundle;
-			bundle.path = STD_STRING(path);
-			usync_paths.push_back(bundle);
+	if (autosearch) {
+		if (SlPaths::IsPortableMode()) {
+			wxPathList localPaths;
+			PathlistFactory::EnginePaths(localPaths, GetLobbyWriteDir());
+			for (const auto path: localPaths) {
+				LSL::SpringBundle bundle;
+				bundle.path = STD_STRING(path);
+				usync_paths.push_back(bundle);
+			}
+		} else {
+			LSL::SpringBundle systembundle;
+			if (LocateSystemInstalledSpring(systembundle)) {
+				usync_paths.push_back(systembundle);
+			}
+
+			wxPathList ret;
+			wxPathList paths = PathlistFactory::AdditionalSearchPaths(ret);
+			for (const auto path: paths) {
+				LSL::SpringBundle bundle;
+				bundle.path = STD_STRING(path);
+				usync_paths.push_back(bundle);
+			}
 		}
 	}
 
@@ -285,6 +295,9 @@ void SlPaths::SetEditorPath( const wxString& path )
 wxString SlPaths::GetLobbyWriteDir()
 {
 	//FIXME: make configureable
+	if (IsPortableMode()) {
+		return GetExecutableFolder();
+	}
 	return GetConfigfileDir();
 }
 

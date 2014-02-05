@@ -55,6 +55,23 @@ wxPathList PathlistFactory::UikeysLocations()
     return pl;
 }
 
+wxPathList PathlistFactory::EnginePaths(wxPathList& pl, const wxString basedir)
+{
+	const wxString enginedir = basedir + sep + _T("engine");
+	wxDir dir(enginedir);
+
+	if ( dir.IsOpened() ) {
+		wxString filename;
+		bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_DIRS|wxDIR_HIDDEN);
+		while ( cont )
+		{
+			pl.Add(enginedir + sepstring + filename);
+			cont = dir.GetNext(&filename);
+		}
+	}
+	return pl;
+}
+
 wxPathList PathlistFactory::AdditionalSearchPaths(wxPathList &pl)
 {
     wxPathList ret;
@@ -86,21 +103,12 @@ wxPathList PathlistFactory::AdditionalSearchPaths(wxPathList &pl)
 
 // search in ~/.spring/engine/ , too
 #ifdef __WXMSW__
-	const wxString userdir = sp.GetDocumentsDir() + sep + _T("My Games") + sep + _T("Spring") + sep + _T("engine");;
+	const wxString userdir = sp.GetDocumentsDir() + sep + _T("My Games") + sep + _T("Spring");
 #else
-	const wxString userdir = wxFileName::GetHomeDir() + sep + _T(".spring") + sep + _T("engine");
+	const wxString userdir = wxFileName::GetHomeDir() + sep + _T(".spring");
 #endif
-	wxDir dir(userdir);
 
-	if ( dir.IsOpened() ) {
-		wxString filename;
-		bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_DIRS|wxDIR_HIDDEN);
-		while ( cont )
-		{
-			ret.Add(userdir + sepstring + filename);
-			cont = dir.GetNext(&filename);
-		}
-	}
+	EnginePaths(ret, userdir);
 
 	return ret;
 }

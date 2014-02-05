@@ -50,6 +50,7 @@
 #include "playback/playbacktab.h"
 #include "defines.h"
 #include "utils/slpaths.h"
+#include "downloader/lib/src/FileSystem/FileSystem.h"
 
 #include <wx/debugrpt.h>
 #include <wx/intl.h>
@@ -127,14 +128,20 @@ bool SpringLobbyApp::OnInit()
 	if ( !wxDirExists( GetConfigfileDir() ) )
 		wxMkdir( GetConfigfileDir() );
 
-	SlPaths::SetSpringBinary( SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetCurrentUsedSpringBinary() );
-	SlPaths::SetUnitSync( SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetCurrentUsedUnitSync() );
-
 	if ( cfg().ReadBool(_T("/ResetLayout")) ) {
 		//we do this early on and reset the config var a little later so we can save a def. perps once mw is created
 		sett().RemoveLayouts();
 		cfg().Write(_T( "/ResetLayout" ) , false);
 		ui().mw().SavePerspectives( _T("SpringLobby-default") );
+	}
+
+	if (SlPaths::IsPortableMode()) {
+		// change write path for downloader if in portable mode
+		fileSystem->setWritePath(STD_STRING(GetExecutableFolder()));
+	} else {
+		// only search if not in portable mode
+		SlPaths::SetSpringBinary( SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetCurrentUsedSpringBinary() );
+		SlPaths::SetUnitSync( SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetCurrentUsedUnitSync() );
 	}
 
 	// configure unitsync paths before trying to load
@@ -147,6 +154,7 @@ bool SpringLobbyApp::OnInit()
 	//unitsync first load, NEEDS to be blocking
 	SlPaths::RefreshSpringVersionList();
 	LSL::usync().ReloadUnitSyncLib();
+
 
 	sett().Setup(m_translationhelper);
 
