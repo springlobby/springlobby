@@ -13,6 +13,8 @@
 #include <lslunitsync/c_api.h>
 #include <lslutils/config.h>
 
+#include "pathlistfactory.h"
+
 bool SlPaths::m_user_defined_config = false;
 wxString SlPaths::m_user_defined_config_path = wxEmptyString;
 
@@ -73,9 +75,10 @@ wxString SlPaths::AutoFindSpringBin()
 	return pl.FindValidPath( SPRING_BIN );
 }
 
-wxString SlPaths::AutoFindUnitSync(wxPathList pl)
+wxString SlPaths::AutoFindUnitSync()
 {
 	// TODO define IsPortableMode behavior
+	wxPathList pl = PathlistFactory::ConfigFileSearchPaths();
 	wxString retpath = pl.FindValidPath( _T( "unitsync" ) + GetLibExtension() );
 	if ( retpath.IsEmpty() )
 		retpath = pl.FindValidPath( _T( "libunitsync" ) + GetLibExtension() );

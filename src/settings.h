@@ -5,7 +5,6 @@
 #include <vector>
 #include <set>
 #include "utils/mixins.hh"
-#include "utils/pathlistfactory.h"
 #include "useractions.h"
 #include "helper/sortutil.h"
 #include "helper/slconfig.h"

@@ -9,10 +9,6 @@
 #include <lslunitsync/springbundle.h>
 #include <lslunitsync/unitsync.h>
 
-#include "pathlistfactory.h"
-
-
-
 //! Interface for accessing paths for differnt files
 // like configuration, logs ...
 //
@@ -60,7 +56,7 @@ public:
 	static void SetBundle( const wxString& index, const wxString& path );
 
 	static wxString AutoFindSpringBin();
-	static wxString AutoFindUnitSync(wxPathList pl = PathlistFactory::ConfigFileSearchPaths() );
+	static wxString AutoFindUnitSync( );
 	static bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle);
 
 	/*@}*/

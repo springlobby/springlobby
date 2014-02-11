@@ -45,7 +45,6 @@
 #ifdef SL_DUMMY_COL
     #include "utils/customdialogs.h"
 #endif
-#include "utils/pathlistfactory.h"
 
 #ifdef __WXMSW__
 	#define BIN_EXT _T(".exe")
