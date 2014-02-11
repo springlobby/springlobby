@@ -21,21 +21,6 @@ double LevenshteinDistance(wxString s, wxString t);
 wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distance = 0 );
 std::string GetBestMatch(const std::vector<std::string>& a, const std::string& s, double* distance = 0 );
 
-
-
-/** Try to create the named directory, if it doesn't exist.
- *
- * @param name Path to directory that should exist or be created
- *
- * @param perm Value of @p perm parameter for wxFileName::Mkdir.
- *
- * @param flags Value of @p flags parameter for wxFileName::Mkdir.
- *
- * @return @c true if the directory already exists, or the return
- * value of wxFileName::Mkdir if it does not.
- */
-bool tryCreateDirectory( const wxString& name, int perm = 0775, int flags = 0 );
-
 #endif // SPRINGLOBBY_HEADERGUARD_MISC_H
 
 /**

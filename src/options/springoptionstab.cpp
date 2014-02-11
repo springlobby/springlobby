@@ -35,7 +35,6 @@
 #include "utils/controls.h"
 #include "utils/platform.h"
 #include "utils/uievents.h"
-#include "utils/misc.h"
 #include "utils/slpaths.h"
 #include "uiutils.h"
 #include "settings.h"
@@ -266,46 +265,28 @@ void SpringOptionsTab::OnRestore( wxCommandEvent& /*unused*/ )
 	DoRestore();
 }
 
-void SpringOptionsTab::OnDataDir( wxCommandEvent& /*unused*/ )
-{
-	SetupUserFolders();
-}
-
 void SpringOptionsTab::OnDontSearch( wxCommandEvent& /*unused*/ )
 {
 	EnableSpringBox(true);
 	EnableUnitsyncBox(true);
 }
 
-void SpringOptionsTab::SetupUserFolders()
+void SpringOptionsTab::OnDataDir( wxCommandEvent& /*unused*/ )
 {
-	wxString sep = wxFileName::GetPathSeparator();
-	wxString defaultdir = wxFileName::GetHomeDir() + sep + _T( ".spring" );
-
 	int result = wxMessageBox( _( "Do you want to change spring's datadir location? (select yes only if you know what you're doing)" ), _( "Data dir wizard" ), wxICON_QUESTION | wxYES_NO, &ui().mw() );
 
-	if ( result != wxYES ) return;
-
-	wxString dir = wxDirSelector( _( "Choose a folder" ), defaultdir );
-
-	if ( dir.IsEmpty() ||
-	     ( !tryCreateDirectory( dir, 0775 ) ||
-	       (!tryCreateDirectory( dir + sep + _T( "games" ), 0775 ) ||
-		!tryCreateDirectory( dir + sep + _T( "maps" ), 0775 ) ||
-		!tryCreateDirectory( dir + sep + _T( "demos" ), 0775 ) ||
-		!tryCreateDirectory( dir + sep + _T( "screenshots" ), 0775  ) )
-	     )
-	   ) {
-		if ( dir.IsEmpty() ) dir = defaultdir;
-		wxMessageBox( _( "Something went wrong when creating the directories\nPlease create manually the following folders:" ) + wxString( _T( "\n" ) ) + dir +  _T( "\n" ) + dir + sep + _T( "maps\n" ) + dir + sep + _T( "base\n" ) );
+	if ( result != wxYES ) {
 		return;
 	}
-	if ( LSL::usync().IsLoaded() ) {
-		LSL::usync().SetSpringDataPath(STD_STRING(dir));
-	}
-	CopyUikeys( SlPaths::GetCurrentUsedDataDir() );
-}
 
+	const wxString dir = wxDirSelector( _( "Choose a folder" ), SlPaths::GetCurrentUsedDataDir());
+	const bool res = SlPaths::SetupUserFolders(dir);
+	if (!res) {
+		wxMessageBox( wxString::Format(_( "Something went wrong when creating the directory: %s" ), dir.c_str()));
+		return;
+	}
+
+}
 
 void SpringOptionsTab::OnGroupListSelectionChange( wxCommandEvent& event )
 {

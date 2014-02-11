@@ -54,7 +54,6 @@
 
 #include <wx/debugrpt.h>
 #include <wx/intl.h>
-#include "utils/misc.h"
 
 #if wxUSE_UNIX
 	#include <X11/Xlib.h>

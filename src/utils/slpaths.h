@@ -71,8 +71,11 @@ public:
 
 	static wxString AutoFindUikeys();
 	static wxString GetCurrentUsedUikeys();
+	static bool SetupUserFolders(const wxString& dir);
 
 private:
+	//recursive create dir
+	static bool mkDir(const wxString& dir);
 	static bool IsSpringBin( const wxString& path );
 	static std::map<wxString, LSL::SpringBundle> m_spring_versions;
 };

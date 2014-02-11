@@ -59,7 +59,6 @@
 #include <lslutils/globalsmanager.h>
 #include <lslunitsync/c_api.h>
 #include <lslunitsync/springbundle.h>
-#include "utils/misc.h"
 #include "textentrydialog.h"
 
 SLCONFIG("/General/AutoUpdate", true, "Determines if springlobby should check for updates on startup");

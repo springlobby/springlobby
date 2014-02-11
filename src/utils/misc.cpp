@@ -69,21 +69,3 @@ wxString GetBestMatch(const wxArrayString& a, const wxString& s, double* distanc
     return a[minDistanceIndex];
 }
 
-/** Try to create the named directory, if it doesn't exist.
- *
- * @param name Path to directory that should exist or be created.
- *
- * @param perm Value of @p perm parameter for wxFileName::Mkdir.
- *
- * @param flags Value of @p flags parameter for wxFileName::Mkdir.
- *
- * @return @c true if the directory already exists, or the return
- * value of wxFileName::Mkdir if it does not.
- */
-bool tryCreateDirectory( const wxString& name, int perm, int flags )
-{
-	if (wxFileName::DirExists( name )) {
-		return true;
-	}
-	return wxFileName::Mkdir( name, perm, flags );
-}

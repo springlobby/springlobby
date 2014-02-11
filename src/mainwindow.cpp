@@ -45,7 +45,6 @@
 #include "battlelist/battlelisttab.h"
 #include "options/mainoptionstab.h"
 #include "uiutils.h"
-#include "utils/misc.h"
 #include "chatpanel.h"
 #include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"

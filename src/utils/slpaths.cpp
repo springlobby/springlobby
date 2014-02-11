@@ -320,3 +320,38 @@ wxString SlPaths::GetCurrentUsedUikeys()
 	return SlPaths::GetUikeys(SlPaths::GetCurrentUsedSpringIndex());
 }
 
+//! copy uikeys.txt
+void CopyUikeys( wxString currentDatadir )
+{
+    wxString uikeyslocation = PathlistFactory::UikeysLocations().FindValidPath( _T("uikeys.txt") );
+    if ( !uikeyslocation.IsEmpty() )
+    {
+        wxCopyFile( uikeyslocation, currentDatadir + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
+    }
+}
+
+
+bool SlPaths::mkDir(const wxString& dir) {
+	return wxFileName::Mkdir(dir, 0, wxPATH_MKDIR_FULL);
+}
+
+bool SlPaths::SetupUserFolders(const wxString& dir)
+{
+	wxString sep = wxFileName::GetPathSeparator();
+	if ( dir.IsEmpty() ) {
+		return false;
+	}
+	if ( !mkDir(dir) ||
+			!mkDir(dir + sep + _T("games") ) ||
+			!mkDir(dir + sep + _T("maps") ) ||
+			!mkDir(dir + sep + _T("demos") ) ||
+			!mkDir(dir + sep + _T("screenshots"))) {
+		return false;
+	}
+	if (LSL::usync().IsLoaded()) {
+		LSL::usync().SetSpringDataPath(STD_STRING(dir));
+	}
+	CopyUikeys( SlPaths::GetCurrentUsedDataDir() );
+	return true;
+}
+

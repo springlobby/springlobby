@@ -6,7 +6,6 @@
 #include "ui.h"
 #include "server.h"
 #include "user.h"
-#include "utils/misc.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
 #include <lslutils/misc.h>

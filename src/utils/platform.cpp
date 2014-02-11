@@ -357,12 +357,3 @@ wxString GetCustomizedEngineConfigFilePath()
 	return path;
 }
 
-//! copy uikeys.txt
-void CopyUikeys( wxString currentDatadir )
-{
-    wxString uikeyslocation = PathlistFactory::UikeysLocations().FindValidPath( _T("uikeys.txt") );
-    if ( !uikeyslocation.IsEmpty() )
-    {
-        wxCopyFile( uikeyslocation, currentDatadir + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
-    }
-}
