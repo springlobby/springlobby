@@ -15,9 +15,7 @@
 
 #include "pathlistfactory.h"
 
-bool SlPaths::m_user_defined_config = false;
 wxString SlPaths::m_user_defined_config_path = wxEmptyString;
-
 
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
@@ -35,7 +33,7 @@ wxString SlPaths::GetDefaultConfigPath ()
 
 bool SlPaths::IsPortableMode ()
 {
-	if (m_user_defined_config) {
+	if (!m_user_defined_config_path.empty()) {
 		return false;
 	}
 	return wxFileName::FileExists( GetLocalConfigPath() );
@@ -43,7 +41,7 @@ bool SlPaths::IsPortableMode ()
 
 wxString SlPaths::GetConfigPath ()
 {
-	if ( m_user_defined_config) {
+	if (!m_user_defined_config_path.empty()) {
 		return m_user_defined_config_path;
 	}
 	return IsPortableMode() ?

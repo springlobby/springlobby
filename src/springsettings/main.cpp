@@ -210,8 +210,8 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
 
-		SlPaths::m_user_defined_config = parser.Found( _T("config-file"), &SlPaths::m_user_defined_config_path );
-		if ( SlPaths::m_user_defined_config ) {
+		const bool userconfig = parser.Found( _T("config-file"), &SlPaths::m_user_defined_config_path );
+		if ( userconfig ) {
 			 wxFileName fn ( SlPaths::m_user_defined_config_path );
 			 if ( ! fn.IsAbsolute() ) {
 				 wxLogError ( _T("path for parameter \"config-file\" must be absolute") );

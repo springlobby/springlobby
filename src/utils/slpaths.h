@@ -9,7 +9,7 @@
 #include <lslunitsync/springbundle.h>
 #include <lslunitsync/unitsync.h>
 
-//! Interface for accessing paths for differnt files
+//! Interface for accessing paths for different files
 // like configuration, logs ...
 //
 // the functions shall return the correct path taking
@@ -17,10 +17,9 @@
 class SlPaths
 {
 public:
-	//! used for passing config file at command line
-	static bool m_user_defined_config;
+	//! used for passing config file at command line, empty if not set
 	static wxString m_user_defined_config_path;
-
+	static void SetUserConfigPath(const wxString& path);
 	static bool IsPortableMode();
 	static wxString GetLocalConfigPath();
 	static wxString GetDefaultConfigPath();
