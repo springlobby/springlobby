@@ -71,7 +71,7 @@ public:
 
 	static wxString AutoFindUikeys();
 	static wxString GetCurrentUsedUikeys();
-	static bool SetupUserFolders(const wxString& dir);
+	static bool CreateSpringDataDir(const wxString& dir);
 
 private:
 	//recursive create dir

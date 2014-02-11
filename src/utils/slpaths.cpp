@@ -335,9 +335,8 @@ bool SlPaths::mkDir(const wxString& dir) {
 	return wxFileName::Mkdir(dir, 0, wxPATH_MKDIR_FULL);
 }
 
-bool SlPaths::SetupUserFolders(const wxString& dir)
+bool SlPaths::CreateSpringDataDir(const wxString& dir)
 {
-	wxString sep = wxFileName::GetPathSeparator();
 	if ( dir.IsEmpty() ) {
 		return false;
 	}

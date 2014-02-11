@@ -280,7 +280,7 @@ void SpringOptionsTab::OnDataDir( wxCommandEvent& /*unused*/ )
 	}
 
 	const wxString dir = wxDirSelector( _( "Choose a folder" ), SlPaths::GetCurrentUsedDataDir());
-	const bool res = SlPaths::SetupUserFolders(dir);
+	const bool res = SlPaths::CreateSpringDataDir(dir);
 	if (!res) {
 		wxMessageBox( wxString::Format(_( "Something went wrong when creating the directory: %s" ), dir.c_str()));
 		return;
