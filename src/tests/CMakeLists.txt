@@ -42,7 +42,6 @@ set(test_name ChatLog)
 Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/chatlog.cpp"
 	"${springlobby_SOURCE_DIR}/src/chatlog.cpp"
-	"${springlobby_SOURCE_DIR}/src/utils/misc.cpp"
 )
 
 set(test_libs

@@ -20,7 +20,6 @@
 #include "defines.h"
 
 #include "utils/platform.h"
-#include "utils/misc.h"
 #include "utils/slpaths.h"
 
 #ifndef TEST
@@ -100,7 +99,7 @@ bool ChatLog::CreateCurrentLogFolder()
 {
 	const wxString path = wxFileName(GetCurrentLogfilePath()).GetPath();
 	wxLogWarning( _T( "can't create logging folder: %s" ), path.c_str() );
-	if ( !tryCreateDirectory( path ) ) {
+	if ( !wxFileName::Mkdir( path, 0, wxPATH_MKDIR_FULL) ) {
 		wxLogWarning( _T( "can't create logging folder: %s" ), path.c_str() );
 		m_active = false;
 		return false;
