@@ -34,6 +34,7 @@
 #include "updater/updatehelper.h"
 #include <wx/textctrl.h>
 #include <wx/app.h>
+#include <wx/version.h>
 
 #if defined(__unix__) || defined(__APPLE__)
 # include <unistd.h>
@@ -94,6 +95,8 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	*out << wxString::Format(_T("current uikeys.txt: %s\n"), SlPaths::GetUikeys().c_str());
 
 	*out << _T( "Version " ) + TowxString(getSpringlobbyAgent()) + _T("\n");
+	*out << wxString::Format(_T("Compiled with %s"), wxVERSION_STRING) + _T("\n");
+	*out << _T("Started with: \n");
 	for ( int i = 0; i < wxTheApp->argc; ++i )
 		*out << wxTheApp->argv[i] << _T(" ");
 	main_sizer->Add( out, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
