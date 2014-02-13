@@ -87,7 +87,7 @@ bool Spring::IsRunning() const
 bool Spring::Run( Battle& battle )
 {
 
-  wxString path = SlPaths::GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
+  wxString path = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
 
   try
   {
@@ -132,7 +132,7 @@ bool Spring::Run( Battle& battle )
 bool Spring::Run( SinglePlayerBattle& battle )
 {
 
-  wxString path = SlPaths::GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
+  wxString path = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
 
   try
   {
@@ -195,7 +195,7 @@ bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVers
 	cmd += params;
 
 	wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
-	wxSetWorkingDirectory( SlPaths::GetCurrentUsedDataDir() );
+	wxSetWorkingDirectory( SlPaths::GetDataDir() );
 
 	if ( sett().UseOldSpringLaunchMethod() ) {
 		if ( m_wx_process == NULL ) {

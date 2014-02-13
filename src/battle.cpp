@@ -617,7 +617,7 @@ void Battle::StartHostedBattle()
 					wxString hostscript = spring().WriteScriptTxt( *this );
 					try
 					{
-						wxString path = SlPaths::GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
+						wxString path = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + _T("relayhost_script.txt");
 						if ( !wxFile::Access( path, wxFile::write ) ) {
 								wxLogError( _T("Access denied to script.txt.") );
 						}

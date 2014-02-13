@@ -139,15 +139,15 @@ bool SpringLobbyApp::OnInit()
 		fileSystem->setWritePath(STD_STRING(GetExecutableFolder()));
 	} else {
 		// only search if not in portable mode
-		SlPaths::SetSpringBinary( SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetCurrentUsedSpringBinary() );
-		SlPaths::SetUnitSync( SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetCurrentUsedUnitSync() );
+		SlPaths::SetSpringBinary( SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetSpringBinary() );
+		SlPaths::SetUnitSync( SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetUnitSync() );
 	}
 
 	// configure unitsync paths before trying to load
 	LSL::Util::config().ConfigurePaths(
 		boost::filesystem::path(STD_STRING(SlPaths::GetCachePath())),
-		boost::filesystem::path(STD_STRING(SlPaths::GetCurrentUsedUnitSync())),
-		boost::filesystem::path(STD_STRING(SlPaths::GetCurrentUsedSpringBinary()))
+		boost::filesystem::path(STD_STRING(SlPaths::GetUnitSync())),
+		boost::filesystem::path(STD_STRING(SlPaths::GetSpringBinary()))
 	);
 
 	//unitsync first load, NEEDS to be blocking

@@ -34,7 +34,7 @@ const wxChar sep = wxFileName::GetPathSeparator();
 
 hotkey_panel::hotkey_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
 													try : wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title),
-													m_uikeys_manager(SlPaths::GetCurrentUsedUikeys() )
+													m_uikeys_manager(SlPaths::GetUikeys() )
 {
 	try
 	{
@@ -517,7 +517,7 @@ key_binding_collection hotkey_panel::getProfilesFromSettings()
 
 void hotkey_panel::UpdateControls(int /*unused*/)
 {
-	m_uikeys_manager.setUiKeys(SlPaths::GetCurrentUsedUikeys());
+	m_uikeys_manager.setUiKeys(SlPaths::GetUikeys());
 	this->updateTreeView();
 
 	//Fetch the profiles

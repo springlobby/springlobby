@@ -104,7 +104,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_exec_box = new wxStaticBox( this, -1, _( "Spring executable" ) );
 
 	m_exec_loc_text = new wxStaticText( this, -1, _( "Location" ) );
-	m_exec_edit = new wxTextCtrl( this, -1, SlPaths::GetCurrentUsedSpringBinary() );
+	m_exec_edit = new wxTextCtrl( this, -1, SlPaths::GetSpringBinary() );
 	m_exec_browse_btn = new wxButton( this, SPRING_EXECBROWSE, _( "Browse" ) );
 	m_exec_find_btn = new wxButton( this, SPRING_EXECFIND, _( "Find" ) );
 
@@ -113,7 +113,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	 */
 	m_sync_box = new wxStaticBox( this, -1, _( "UnitSync library" ) );
 
-	m_sync_edit = new wxTextCtrl( this, -1, SlPaths::GetCurrentUsedUnitSync() );
+	m_sync_edit = new wxTextCtrl( this, -1, SlPaths::GetUnitSync() );
 	m_sync_loc_text = new wxStaticText( this, -1, _( "Location" ) );
 	m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _( "Browse" ) );
 	m_sync_find_btn = new wxButton( this, SPRING_SYNCFIND, _( "Find" ) );
@@ -206,21 +206,21 @@ void SpringOptionsTab::OnAutoConf( wxCommandEvent& event )
 
 void SpringOptionsTab::OnFindExec( wxCommandEvent& /*unused*/ )
 {
-	wxString found = SlPaths::AutoFindSpringBin();
+	wxString found = SlPaths::GetSpringBinary();
 	if ( !found.IsEmpty() ) m_exec_edit->SetValue( found );
 }
 
 
 void SpringOptionsTab::OnFindSync( wxCommandEvent& /*unused*/ )
 {
-	wxString found = SlPaths::AutoFindUnitSync();
+	wxString found = SlPaths::GetUnitSync();
 	if ( !found.IsEmpty() ) m_sync_edit->SetValue( found );
 }
 
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& /*unused*/ )
 {
 	wxFileDialog pick( this, _( "Choose a Spring executable" ),
-			   wxPathOnly( SlPaths::GetCurrentUsedSpringBinary() ),
+			   wxPathOnly( SlPaths::GetSpringBinary() ),
 			   wxString( SPRING_BIN ), CHOOSE_EXE );
 	if ( pick.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pick.GetPath() );
 }
@@ -233,7 +233,7 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& /*unused*/ )
 #endif
 	filefilter << _T( "|" )  << wxString( _( "Any File" ) ) << _T( " (*.*)|*.*" );
 	wxFileDialog pick( this, _( "Choose UnitSync library" ),
-			   wxPathOnly( SlPaths::GetCurrentUsedSpringBinary() ),
+			   wxPathOnly( SlPaths::GetSpringBinary() ),
 			   _T( "unitsync" ) + GetLibExtension(),
 			   wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() + _T( "|" ) + wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" )  );
 	if ( pick.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pick.GetPath() );
@@ -279,7 +279,7 @@ void SpringOptionsTab::OnDataDir( wxCommandEvent& /*unused*/ )
 		return;
 	}
 
-	const wxString dir = wxDirSelector( _( "Choose a folder" ), SlPaths::GetCurrentUsedDataDir());
+	const wxString dir = wxDirSelector( _( "Choose a folder" ), SlPaths::GetDataDir());
 	const bool res = SlPaths::CreateSpringDataDir(dir);
 	if (!res) {
 		wxMessageBox( wxString::Format(_( "Something went wrong when creating the directory: %s" ), dir.c_str()));
@@ -316,7 +316,7 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
 #endif
 	filefilter << _T( "|" )  << wxString( _( "Any File" ) ) << _T( " (*.*)|*.*" );
 	wxFileDialog pick( this, _( "Choose UnitSync library" ),
-			   wxPathOnly( SlPaths::GetCurrentUsedUnitSync() ),
+			   wxPathOnly( SlPaths::GetUnitSync() ),
 			   _T( "unitsync" ) + GetLibExtension(),
 			   filefilter  );
 	if ( pick.ShowModal() == wxID_OK ) {

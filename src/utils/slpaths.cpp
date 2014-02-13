@@ -186,8 +186,8 @@ void SlPaths::SetUsedSpringIndex( const wxString& index )
 	// reconfigure unitsync in case it is reloaded
 	LSL::Util::config().ConfigurePaths(
 		boost::filesystem::path(STD_STRING(SlPaths::GetCachePath())),
-		boost::filesystem::path(STD_STRING(SlPaths::GetCurrentUsedUnitSync())),
-		boost::filesystem::path(STD_STRING(SlPaths::GetCurrentUsedSpringBinary()))
+		boost::filesystem::path(STD_STRING(SlPaths::GetUnitSync())),
+		boost::filesystem::path(STD_STRING(SlPaths::GetSpringBinary()))
 	);
 }
 
@@ -199,24 +199,7 @@ void SlPaths::DeleteSpringVersionbyIndex( const wxString& index )
 }
 
 
-wxString SlPaths::GetCurrentUsedDataDir()
-{
-	std::string dir;
-	if (LSL::usync().GetSpringDataPath(dir))
-		return TowxString(dir);
-	return wxEmptyString;
-}
-wxString SlPaths::GetCurrentUsedUnitSync()
-{
-	return GetUnitSync( GetCurrentUsedSpringIndex() );
-}
-
-wxString SlPaths::GetCurrentUsedSpringBinary()
-{
-	return GetSpringBinary( GetCurrentUsedSpringIndex() );
-}
-
-wxString SlPaths::GetCurrentUsedSpringConfigFilePath()
+wxString SlPaths::GetSpringConfigFilePath(const wxString& /*FIXME: implement index*/)
 {
 	wxString path;
 	try {
@@ -243,8 +226,8 @@ void SlPaths::SetUnitSync( const wxString& index, const wxString& path )
 	// reconfigure unitsync in case it is reloaded
 	LSL::Util::config().ConfigurePaths(
 		boost::filesystem::path(STD_STRING(SlPaths::GetCachePath())),
-		boost::filesystem::path(STD_STRING(SlPaths::GetCurrentUsedUnitSync())),
-		boost::filesystem::path(STD_STRING(SlPaths::GetCurrentUsedSpringBinary()))
+		boost::filesystem::path(STD_STRING(SlPaths::GetUnitSync())),
+		boost::filesystem::path(STD_STRING(SlPaths::GetSpringBinary()))
 	);
 }
 
@@ -315,11 +298,6 @@ wxString SlPaths::AutoFindUikeys()
 	return uikeys;
 }
 
-wxString SlPaths::GetCurrentUsedUikeys()
-{
-	return SlPaths::GetUikeys(SlPaths::GetCurrentUsedSpringIndex());
-}
-
 //! copy uikeys.txt
 void CopyUikeys( wxString currentDatadir )
 {
@@ -350,7 +328,14 @@ bool SlPaths::CreateSpringDataDir(const wxString& dir)
 	if (LSL::usync().IsLoaded()) {
 		LSL::usync().SetSpringDataPath(STD_STRING(dir));
 	}
-	CopyUikeys( SlPaths::GetCurrentUsedDataDir() );
+	CopyUikeys( SlPaths::GetDataDir() );
 	return true;
 }
 
+wxString SlPaths::GetDataDir(const wxString& /*FIXME: implement index */)
+{
+	std::string dir;
+	if (LSL::usync().GetSpringDataPath(dir))
+		return TowxString(dir);
+	return wxEmptyString;
+}
