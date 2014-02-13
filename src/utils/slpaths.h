@@ -35,23 +35,25 @@ public:
 
 	static void RefreshSpringVersionList(bool autosearch=true, const LSL::SpringBundle* additionalbundle = NULL);
 	static std::map<wxString, LSL::SpringBundle> GetSpringVersionList(); /// index -> version
+	static bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle);
+
 	static wxString GetCurrentUsedSpringIndex();
 	static void SetUsedSpringIndex(const wxString &index = GetCurrentUsedSpringIndex() );
 	static void DeleteSpringVersionbyIndex( const wxString& index = GetCurrentUsedSpringIndex() );
 
-	static wxString GetUnitSync( const wxString& index = GetCurrentUsedSpringIndex() );
-	static wxString GetSpringBinary( const wxString& index = GetCurrentUsedSpringIndex() );
-
+	static wxString GetUnitSync(const wxString& index = GetCurrentUsedSpringIndex());
 	static void SetUnitSync(const wxString& path, const wxString& index = GetCurrentUsedSpringIndex());
+
+	static wxString GetSpringBinary(const wxString& index = GetCurrentUsedSpringIndex() );
 	static void SetSpringBinary(const wxString& path, const wxString& index = GetCurrentUsedSpringIndex());
-	static wxString GetUikeys( const wxString& index = GetCurrentUsedSpringIndex());
+
+	static wxString GetUikeys(const wxString& index = GetCurrentUsedSpringIndex());
 	static wxString GetDataDir(const wxString& index = GetCurrentUsedSpringIndex());
 	static wxString GetSpringConfigFilePath(const wxString& index = GetCurrentUsedSpringIndex());
 
 	//!@brief meaningful only on mac
 	static void SetBundle( const wxString& index, const wxString& path );
 
-	static bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle);
 
 	/*@}*/
 
@@ -66,9 +68,6 @@ public:
 	static bool CreateSpringDataDir(const wxString& dir);
 
 private:
-	static wxString AutoFindUikeys();
-	static wxString AutoFindSpringBin();
-	static wxString AutoFindUnitSync( );
 	//recursive create dir
 	static bool mkDir(const wxString& dir);
 	static bool IsSpringBin( const wxString& path );

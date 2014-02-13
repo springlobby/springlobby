@@ -10,6 +10,7 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
+#include <lslunitsync/unitsync.h>
 #include <lslunitsync/c_api.h>
 #include <lslutils/config.h>
 
@@ -59,29 +60,6 @@ wxString SlPaths::GetCachePath()
 
 // ========================================================
 std::map<wxString, LSL::SpringBundle> SlPaths::m_spring_versions;
-
-wxString SlPaths::AutoFindSpringBin()
-{
-	// TODO define IsPortableMode behavior
-	wxPathList pl;
-
-	pl.AddEnvList( _T( "%ProgramFiles%" ) );
-	pl.AddEnvList( _T( "PATH" ) );
-
-	pl = PathlistFactory::AdditionalSearchPaths( pl );
-
-	return pl.FindValidPath( SPRING_BIN );
-}
-
-wxString SlPaths::AutoFindUnitSync()
-{
-	// TODO define IsPortableMode behavior
-	wxPathList pl = PathlistFactory::ConfigFileSearchPaths();
-	wxString retpath = pl.FindValidPath( _T( "unitsync" ) + GetLibExtension() );
-	if ( retpath.IsEmpty() )
-		retpath = pl.FindValidPath( _T( "libunitsync" ) + GetLibExtension() );
-	return retpath;
-}
 
 std::map<wxString, LSL::SpringBundle> SlPaths::GetSpringVersionList()
 {
@@ -212,12 +190,12 @@ wxString SlPaths::GetSpringConfigFilePath(const wxString& /*FIXME: implement ind
 
 wxString SlPaths::GetUnitSync( const wxString& index )
 {
-	return cfg().Read( _T( "/Spring/Paths/" ) + index + _T( "/UnitSyncPath" ), AutoFindUnitSync() );
+	return cfg().Read( _T( "/Spring/Paths/" ) + index + _T( "/UnitSyncPath" ), wxEmptyString );
 }
 
 wxString SlPaths::GetSpringBinary( const wxString& index )
 {
-	return cfg().Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), AutoFindSpringBin() );
+	return cfg().Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), wxEmptyString );
 }
 
 void SlPaths::SetUnitSync( const wxString& index, const wxString& path )
@@ -285,21 +263,16 @@ wxString SlPaths::GetLobbyWriteDir()
 	return GetConfigfileDir();
 }
 
-wxString SlPaths::GetUikeys( const wxString& index )
+wxString SlPaths::GetUikeys(const wxString& index)
 {
-	return cfg().Read( _T( "/Spring/Paths/" ) + index + _T( "/Uikeys" ), AutoFindUikeys() );
-}
-
-wxString SlPaths::AutoFindUikeys()
-{
-	const std::string path = LSL::susynclib().GetSpringDataDir();
-	wxString uikeys(TowxString(path));
+	const wxString path = GetDataDir(index);
+	wxString uikeys(path);
 	uikeys += _T("uikeys.txt");
 	return uikeys;
 }
 
 //! copy uikeys.txt
-void CopyUikeys( wxString currentDatadir )
+void CopyUikeys(const wxString& currentDatadir )
 {
     wxString uikeyslocation = PathlistFactory::UikeysLocations().FindValidPath( _T("uikeys.txt") );
     if ( !uikeyslocation.IsEmpty() )

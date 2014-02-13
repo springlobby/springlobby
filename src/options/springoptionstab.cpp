@@ -251,7 +251,14 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 	SlPaths::RefreshSpringVersionList();
 
 	const bool reload_usync = SlPaths::GetUnitSync( index ) != m_sync_edit->GetValue();
-	if ( reload_usync && !LSL::usync().LoadUnitSyncLib(STD_STRING(SlPaths::GetUnitSync(index)))) {
+	if ( !reload_usync)
+		return;
+	if (index.empty()) {
+		LSL::usync().FreeUnitSyncLib();
+		return;
+	}
+
+	if (!LSL::usync().LoadUnitSyncLib(STD_STRING(SlPaths::GetUnitSync(index)))) {
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
 		customMessageBox( SL_MAIN_ICON,
 				  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
