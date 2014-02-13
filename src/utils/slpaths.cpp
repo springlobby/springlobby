@@ -11,7 +11,7 @@
 #include <wx/log.h>
 
 #include <lslunitsync/unitsync.h>
-#include <lslunitsync/c_api.h>
+#include <lslunitsync/c_api.h> //FIXME: unitsync.h should be only used, as it caches calls to unitsync, calls to unitsync are blocking!
 #include <lslutils/config.h>
 
 #include "pathlistfactory.h"

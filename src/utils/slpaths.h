@@ -2,12 +2,10 @@
 #define SPRINGLOBBY_SLPATHS_H
 
 #include <map>
-#include <list>
 #include <cstddef>
 #include <wx/filefn.h>
 
 #include <lslunitsync/springbundle.h>
-#include <lslunitsync/unitsync.h>
 
 //! Interface for accessing paths for different files
 // like configuration, logs ...
