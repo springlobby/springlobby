@@ -381,7 +381,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		int color = 0;
 		bool bold = false;
 		wxColor curcolor(line.chatstyle.GetTextColour());
-		const wxFontWeight oldweight = at.GetFontWeight();
+		const wxFont oldfont = at.GetFont();
+		const int oldweight = oldfont.GetWeight();
 		const wxColor oldcolor(line.chatstyle.GetTextColour());
 
 		while ( m1.Len() > 0 ) {
@@ -409,11 +410,13 @@ void ChatPanel::OutputLine( const ChatLine& line )
 				m1 = m1.Mid(1);
 			} else {
 
+				wxFont font = oldfont;
 				at = line.chatstyle;
 				if (bold)
-					at.SetFontWeight(wxFONTWEIGHT_BOLD);
+					font.SetWeight(wxFONTWEIGHT_BOLD);
 				else
-					at.SetFontWeight(oldweight);
+					font.SetWeight(oldweight);
+				at.SetFont(font);
 				at.SetTextColour(curcolor);
 
 				m_chatlog_text->SetDefaultStyle(at);
@@ -422,7 +425,9 @@ void ChatPanel::OutputLine( const ChatLine& line )
 			}
 		}
 		if (bold) {
-			at.SetFontWeight(oldweight);
+			wxFont font = oldfont;
+			font.SetWeight(oldweight);
+			at.SetFont(font);
 			m_chatlog_text->SetDefaultStyle(at);
 		}
 
