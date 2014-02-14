@@ -158,6 +158,8 @@ bool Spring::Run( SinglePlayerBattle& battle )
     return false;
   }
 
+	battle.SetEngineVersion(SlPaths::GetCurrentUsedSpringIndex());
+
 	return LaunchSpring(battle.GetEngineName(), battle.GetEngineVersion(), _T("\"") + path + _T("\"") );
 }
 
