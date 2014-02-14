@@ -915,14 +915,12 @@ wxFont Settings::GetChatFont()
 {
 	wxString info = m_config->Read( _T( "/Chat/Font" ), wxEmptyString );
 	if ( info != wxEmptyString ) {
-		wxFont f;
-		f.SetNativeFontInfo( info );
-		return f;
+		wxFont f(info);
+		if (f.IsOk()) {
+			return f;
+		}
 	}
-	else {
-		wxFont f( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
-		return f;
-	}
+	return wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
 }
 
 void Settings::SetChatFont( wxFont value )
