@@ -809,12 +809,12 @@ void ChatPanel::SetUser( const User* usr )
 		}
 	} else {
 		usr->uidata.panel = this;
+		if (m_chan_opts_button != NULL) {
+			const wxBitmap icon = icons().GetBitmap(icons().GetUserListStateIcon(usr->GetStatus(),false, usr->GetBattle() != 0 ));
+			m_chan_opts_button->SetBitmapLabel(icon);
+		}
 	}
 	m_user = usr;
-	if (( m_user != NULL ) && (m_chan_opts_button != NULL)) {
-		const wxBitmap icon = icons().GetBitmap(icons().GetUserListStateIcon(m_user->GetStatus(),false, m_user->GetBattle() != 0 ));
-		m_chan_opts_button->SetBitmapLabel(icon);
-	}
 }
 
 ChatPanelType ChatPanel::GetPanelType() const
