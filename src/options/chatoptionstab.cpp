@@ -258,7 +258,7 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 	m_font_label->Wrap( -1 );
 	bFontNameSizer->Add( m_font_label, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_fontname = new wxStaticText( this, wxID_ANY, _( "default" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_fontname = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_fontname->Wrap( -1 );
 	bFontNameSizer->Add( m_fontname, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5 );
 
@@ -341,10 +341,10 @@ ChatOptionsTab::ChatOptionsTab( wxWindow* parent )
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 
 	SetSizer( bMainSizerV );
-	Layout();
-
 	DoRestore();
 	UpdateTextSample();
+	UpdateFontLabel();
+	Layout();
 }
 
 
@@ -404,7 +404,12 @@ void ChatOptionsTab::UpdateTextSample()
 	m_test_text->AppendText( _T( "[22:33]" ) );
 	m_test_text->SetDefaultStyle( wxTextAttr( m_client_color->GetColor(), m_bg_color->GetColor(), m_chat_font ) );
 	m_test_text->AppendText( _T( " ** Client message." ) );
+}
 
+void ChatOptionsTab::UpdateFontLabel()
+{
+	m_fontname->SetLabel( m_chat_font.GetNativeFontInfoUserDesc() );
+	m_fontname->SetFont(m_chat_font);
 }
 
 
@@ -422,7 +427,6 @@ void ChatOptionsTab::DoRestore()
 	m_error_color->SetColor( sett().GetChatColorError() );
 	m_ts_color->SetColor( sett().GetChatColorTime() );
 	m_chat_font = sett().GetChatFont();
-	m_fontname->SetLabel( m_chat_font.GetNativeFontInfoUserDesc() );
 	m_save_logs->SetValue( cfg().ReadBool(_T("/ChatLog/chatlog_enable")));
 	m_irc_colors->SetValue( sett().GetUseIrcColors() );
 	wxString highlightstring;
@@ -436,6 +440,7 @@ void ChatOptionsTab::DoRestore()
 #endif
     m_num_lines->SetValue( sett().GetAutoloadedChatlogLinesCount() );
 	m_broadcast_check->SetValue(cfg().ReadBool(_T("/Chat/BroadcastEverywhere")));
+	UpdateFontLabel();
 }
 
 void ChatOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
@@ -485,9 +490,9 @@ void ChatOptionsTab::OnSelectFont( wxCommandEvent& /*unused*/ )
 	wxFontDialog dlg( this->GetParent(), data );
 	if ( dlg.ShowModal() == wxID_OK ) {
 		m_chat_font = dlg.GetFontData().GetChosenFont();
-		m_fontname->SetLabel( m_chat_font.GetNativeFontInfoUserDesc() );
-		this->Layout();
 		UpdateTextSample();
+		UpdateFontLabel();
+		Layout();
 	}
 }
 

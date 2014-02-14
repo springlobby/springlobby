@@ -18,16 +18,16 @@ class wxSpinCtrl;
 
 class ChatOptionsTab : public wxScrolledWindow
 {
-  public:
-    ChatOptionsTab( wxWindow* parent );
-    ~ChatOptionsTab();
+public:
+	ChatOptionsTab( wxWindow* parent );
+	~ChatOptionsTab();
 
-    void UpdateTextSample();
+	void OnApply( wxCommandEvent& event );
+	void OnRestore( wxCommandEvent& event );
 
+private:
     void DoRestore();
 
-    void OnApply( wxCommandEvent& event );
-    void OnRestore( wxCommandEvent& event );
 
     void OnSelectFont( wxCommandEvent& event );
     void OnNormalSelect( wxCommandEvent& event );
@@ -43,7 +43,8 @@ class ChatOptionsTab : public wxScrolledWindow
     void OnTimestampSelect( wxCommandEvent& event );
     void OnSaveLogs( wxCommandEvent& event );
 
-  protected:
+	void UpdateTextSample();
+	void UpdateFontLabel();
 
     enum
     {
