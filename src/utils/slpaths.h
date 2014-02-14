@@ -37,6 +37,9 @@ public:
 
 	static wxString GetCurrentUsedSpringIndex();
 	static void SetUsedSpringIndex(const wxString &index);
+
+	static void ReconfigureUnitsync();
+
 	static void DeleteSpringVersionbyIndex( const wxString& index = GetCurrentUsedSpringIndex() );
 
 	static wxString GetUnitSync(const wxString& index = GetCurrentUsedSpringIndex());

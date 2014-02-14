@@ -161,7 +161,11 @@ wxString SlPaths::GetCurrentUsedSpringIndex()
 void SlPaths::SetUsedSpringIndex( const wxString& index )
 {
 	cfg().Write( _T( "/Spring/CurrentIndex" ), TowxString(index) );
-	// reconfigure unitsync in case it is reloaded
+	ReconfigureUnitsync();
+}
+
+void SlPaths::ReconfigureUnitsync()
+{
 	LSL::Util::config().ConfigurePaths(
 		boost::filesystem::path(STD_STRING(SlPaths::GetCachePath())),
 		boost::filesystem::path(STD_STRING(SlPaths::GetUnitSync())),
@@ -202,11 +206,7 @@ void SlPaths::SetUnitSync( const wxString& index, const wxString& path )
 {
 	cfg().Write( _T( "/Spring/Paths/" ) + index + _T( "/UnitSyncPath" ), path );
 	// reconfigure unitsync in case it is reloaded
-	LSL::Util::config().ConfigurePaths(
-		boost::filesystem::path(STD_STRING(SlPaths::GetCachePath())),
-		boost::filesystem::path(STD_STRING(SlPaths::GetUnitSync())),
-		boost::filesystem::path(STD_STRING(SlPaths::GetSpringBinary()))
-	);
+	ReconfigureUnitsync();
 }
 
 void SlPaths::SetSpringBinary( const wxString& index, const wxString& path )
