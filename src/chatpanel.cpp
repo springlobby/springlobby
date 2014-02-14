@@ -374,25 +374,18 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
 #ifndef __WXOSX_COCOA__
 	if ( sett().GetUseIrcColors() ) {
-		wxString m1;
+		wxString m1(line.chat);
 		wxString m2;
 		wxString m3;
-		wxTextAttr at;
-		int oldweight;
-		char c;
-		int color;
-		m1 = line.chat;
+		wxTextAttr at(line.chatstyle);
+		int color = 0;
 		bool bold = false;
-		wxFont font;
-		wxColor curcolor(0,0,0);
-		wxColor oldcolor(0,0,0);
-		curcolor = line.chatstyle.GetTextColour();
-		at = line.chatstyle;
-		font = at.GetFont();
-		oldweight = font.GetWeight();
-		oldcolor = line.chatstyle.GetTextColour();
+		wxColor curcolor(line.chatstyle.GetTextColour());
+		const wxFontWeight oldweight = at.GetFontWeight();
+		const wxColor oldcolor(line.chatstyle.GetTextColour());
+
 		while ( m1.Len() > 0 ) {
-			c = m1.GetChar(0);
+			const char c = m1.GetChar(0);
 			if (c == 3 && m1.Len() > 1 && (m1.GetChar(1) >= 48 && m1.GetChar(1) <= 58)) { // Color
 				if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58)) {
 					color = (int(m1.GetChar(1)) - 48)*10+(int(m1.GetChar(2)) - 48);
@@ -404,7 +397,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
 				wxColor dummy(0,0,0);
 				if ( ( color > -1 ) && ( color < long(( sizeof( m_irc_colors ) / sizeof( dummy ) )) ) ) {
-
 					curcolor = m_irc_colors[color];
 				}
 
@@ -417,14 +409,11 @@ void ChatPanel::OutputLine( const ChatLine& line )
 				m1 = m1.Mid(1);
 			} else {
 
-				at = m_chatlog_text->GetDefaultStyle();
-				at.SetFlags(wxTEXT_ATTR_TEXT_COLOUR | wxTEXT_ATTR_FONT_WEIGHT);
-				font = at.GetFont();
+				at = line.chatstyle;
 				if (bold)
-					font.SetWeight(wxFONTWEIGHT_BOLD);
+					at.SetFontWeight(wxFONTWEIGHT_BOLD);
 				else
-					font.SetWeight(oldweight);
-				at.SetFont(font);
+					at.SetFontWeight(oldweight);
 				at.SetTextColour(curcolor);
 
 				m_chatlog_text->SetDefaultStyle(at);
@@ -433,9 +422,7 @@ void ChatPanel::OutputLine( const ChatLine& line )
 			}
 		}
 		if (bold) {
-			font = at.GetFont();
-			font.SetWeight(oldweight);
-			at.SetFont(font);
+			at.SetFontWeight(oldweight);
 			m_chatlog_text->SetDefaultStyle(at);
 		}
 
