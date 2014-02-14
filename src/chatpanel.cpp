@@ -583,7 +583,6 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
 void ChatPanel::Motd( const wxString& message )
 {
 	wxFont f = sett().GetChatFont();
-	f.SetFamily( wxFONTFAMILY_MODERN );
 	// change the image of the tab to show new events
 	SetIconHighlight( highlight_say );
 	OutputLine( _T( " ** motd ** " ) + message, sett().GetChatColorServer(), f );
@@ -595,7 +594,6 @@ void ChatPanel::StatusMessage( const wxString& message )
 		wxLogMessage( _T( "m_chatlog_text is NULL" ) );
 	} else {
 		wxFont f = sett().GetChatFont();
-		f.SetFamily( wxFONTFAMILY_MODERN );
 		if( CPT_Server == m_type ) SetIconHighlight( highlight_important );
 		OutputLine( _T( " ** Server ** " ) + message, sett().GetChatColorServer(), f );
 	}
@@ -604,14 +602,12 @@ void ChatPanel::StatusMessage( const wxString& message )
 void ChatPanel::ClientMessage( const wxString& message )
 {
 	wxFont f = sett().GetChatFont();
-	f.SetFamily( wxFONTFAMILY_MODERN );
 	OutputLine( _T( " ** " ) + message, sett().GetChatColorClient(), f );
 }
 
 void ChatPanel::UnknownCommand( const wxString& command, const wxString& params )
 {
 	wxFont f = sett().GetChatFont();
-	f.SetFamily( wxFONTFAMILY_MODERN );
 	// change the image of the tab to show new events
 	SetIconHighlight( highlight_important );
 	OutputLine( _( " !! Command: \"" ) + command + _( "\" params: \"" ) + params + _T( "\"." ), sett().GetChatColorError(), f );
@@ -706,7 +702,6 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 	}
 	*/
 	wxFont f = sett().GetChatFont();
-	f.SetFamily( wxFONTFAMILY_MODERN );
 	// change the image of the tab to show new events
 	if ( m_topic_set )
 		SetIconHighlight( highlight_say );
@@ -1113,8 +1108,6 @@ void ChatPanel::LoadLastLines()
 	wxArrayString lines = m_chat_log.GetLastLines(  );
 
 	wxFont f = sett().GetChatFont();
-	f.SetFamily( wxFONTFAMILY_DECORATIVE );
-	f.SetStyle( wxFONTSTYLE_ITALIC );
 	wxTextAttr chatstyle( sett().GetChatColorTime(), sett().GetChatColorBackground(), f );
 	m_chatlog_text->SetDefaultStyle( chatstyle );
 
