@@ -422,7 +422,7 @@ void ChatOptionsTab::DoRestore()
 	m_error_color->SetColor( sett().GetChatColorError() );
 	m_ts_color->SetColor( sett().GetChatColorTime() );
 	m_chat_font = sett().GetChatFont();
-	m_fontname->SetLabel( m_chat_font.GetFaceName() );
+	m_fontname->SetLabel( m_chat_font.GetNativeFontInfoUserDesc() );
 	m_save_logs->SetValue( cfg().ReadBool(_T("/ChatLog/chatlog_enable")));
 	m_irc_colors->SetValue( sett().GetUseIrcColors() );
 	wxString highlightstring;
@@ -480,11 +480,12 @@ void ChatOptionsTab::OnRestore( wxCommandEvent& /*unused*/ )
 void ChatOptionsTab::OnSelectFont( wxCommandEvent& /*unused*/ )
 {
 	wxFontData data;
-	data.SetChosenFont( m_chat_font );
+	data.SetChosenFont(m_chat_font);
+	data.SetInitialFont(m_chat_font);
 	wxFontDialog dlg( this->GetParent(), data );
 	if ( dlg.ShowModal() == wxID_OK ) {
 		m_chat_font = dlg.GetFontData().GetChosenFont();
-		m_fontname->SetLabel( m_chat_font.GetFaceName() );
+		m_fontname->SetLabel( m_chat_font.GetNativeFontInfoUserDesc() );
 		this->Layout();
 		UpdateTextSample();
 	}
