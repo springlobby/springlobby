@@ -418,8 +418,10 @@ void ChatPanel::OutputLine( const ChatLine& line )
 					font.SetWeight(oldweight);
 				at.SetFont(font);
 				at.SetTextColour(curcolor);
-				at.SetFontUnderlined(oldfont.GetUnderlined()); //bug in msw version of wxwidgets
-				at.SetFontStrikethrough(oldfont.GetStrikethrough()); //bug in msw version of wxwidgets
+#ifdef __WXMSW__ //workaround bug in msw version of wxwidgets
+				at.SetFontUnderlined(oldfont.GetUnderlined());
+				at.SetFontStrikethrough(oldfont.GetStrikethrough());
+#endif
 
 				m_chatlog_text->SetDefaultStyle(at);
 				m_chatlog_text->AppendText( m1.Mid(0,1) );
@@ -429,8 +431,10 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		if (bold) {
 			wxFont font = at.GetFont(); //isn't needed any more in wx3.0
 			font.SetWeight(oldweight);
-			at.SetFontUnderlined(oldfont.GetUnderlined()); //bug in msw version of wxwidgets
-			at.SetFontStrikethrough(oldfont.GetStrikethrough()); //bug in msw version of wxwidgets
+#ifdef __WXMSW__ //workaround bug in msw version of wxwidgets
+			at.SetFontUnderlined(oldfont.GetUnderlined());
+			at.SetFontStrikethrough(oldfont.GetStrikethrough());
+#endif
 			at.SetFont(font);
 			m_chatlog_text->SetDefaultStyle(at);
 		}
