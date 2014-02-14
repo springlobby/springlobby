@@ -36,9 +36,9 @@ TorrentOptionsPanel::TorrentOptionsPanel( wxWindow* parent )
     m_parallel_http->SetRange(1,10);
     m_parallel_http_sizer = new wxStaticBoxSizer( wxHORIZONTAL , this,_("Parallel HTTP Connections when downloading content"));
     m_parallel_http_sizer->Add(m_parallel_http);
-    
 
-    mainboxsizer->Add( m_parallel_http_sizer, 0, wxALL, 5 );
+
+    mainboxsizer->Add( m_parallel_http_sizer, 0, wxALL|wxEXPAND, 5 );
 
     //the lazy man's solution to options not being set correctly at panel creation
     wxCommandEvent dummy;
