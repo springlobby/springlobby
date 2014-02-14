@@ -153,7 +153,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->AddStretchSpacer();
 
-	windowSizer->Add(mainSizer);
+	windowSizer->Add(mainSizer,0, wxEXPAND | wxBOTTOM | wxLEFT);
 	windowSizer->Add(m_main_sizer);
 	SetSizer( windowSizer );
 
