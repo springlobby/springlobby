@@ -1,24 +1,4 @@
-/**
-    This file is part of springsettings,
-    Copyright (C) 2007
-    Original work by Kloot
-    cross-plattform/UI adaptation and currently maintained by koshi (Ren� Milk)
-    visit http://springrts.com/phpbb/viewtopic.php?t=12104
-    for more info/help
-
-    SpringLobby is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    springsettings is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with springsettings.  If not, see <http://www.gnu.org/licenses/>.
-**/
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "tab_audio.h"
 #include "se_utils.h"
