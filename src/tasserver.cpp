@@ -48,6 +48,8 @@ lsl/networking/tasserver.cpp
 #include "settings.h"
 #include "utils/version.h"
 
+SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which is send when leaving server");
+
 #define PING_TIME 30
 #define PING_TIMEOUT 60
 #define PING_DELAY 5 //first ping is sent after PING_DELAY
@@ -360,7 +362,7 @@ void TASServer::Disconnect()
         return;
     }
 	m_connected = false;
-	SendCmd( _T("EXIT Using http://springlobby.info/") ); // EXIT command for new protocol compatibility
+	SendCmd( _T("EXIT ") + cfg().ReadString(_T("/Server/ExitMessage")) ); // EXIT command for new protocol compatibility
 	m_sock->Disconnect();
 }
 
