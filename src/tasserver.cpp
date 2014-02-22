@@ -432,8 +432,8 @@ wxString TASServer::GetPasswordHash( const wxString& pass ) const
     for (di = 0; di < 16; ++di)
 	    sprintf(hex_output + di * 2, "%02x", digest[di]);
 	delete [] cstr;
-    wxString coded = wxBase64::Encode( digest, 16 );
-    return coded;
+    const std::string base64pass = base64_encode( digest, 16 );
+    return TowxString(base64pass);
 }
 
 
