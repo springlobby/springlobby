@@ -1,14 +1,16 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #ifndef __AddSelectionPanelDlg__
 #define __AddSelectionPanelDlg__
 
 #include "HotkeyForms.h"
 
 
-class AddSelectionCmdDlg : public AddSelectionCmdDlgBase 
+class AddSelectionCmdDlg : public AddSelectionCmdDlgBase
 {
 public:
 	AddSelectionCmdDlg( wxWindow* parent );
-	
+
 	wxString getCommandString() const;
 
 protected:

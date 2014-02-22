@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include "CommandOrderDlg.h"
 #include "../../utils/customdialogs.h"
 #include "../../wxkeybinder/keybinder.h"
@@ -33,14 +35,14 @@ void CommandOrderDlg::fillCommandList()
 			text = wxT("(Any) ") + text;
 		}
 
-		this->m_listBoxCommands->Append( text ); 
-	}	
+		this->m_listBoxCommands->Append( text );
+	}
 }
 
 void CommandOrderDlg::updateOrderMap()
 {
 	typedef std::map<size_t, wxString> SortedCmds;
-	
+
 	size_t listIdx = 0;
 	m_normKeyCount = 0;
 
@@ -49,7 +51,7 @@ void CommandOrderDlg::updateOrderMap()
 		{
 			SortedCmds tmp;
 			for ( CmdSet::const_iterator iter = m_cmds.begin(); iter != m_cmds.end(); ++iter )
-			{		
+			{
 				for( int i = 0; i < (*iter)->GetShortcutCount(); ++i )
 				{
 					const wxKeyBind* pKb = (*iter)->GetShortcut( i );
@@ -71,7 +73,7 @@ void CommandOrderDlg::updateOrderMap()
 	{	//add "any"-keys
 		SortedCmds tmp;
 		for ( CmdSet::const_iterator iter = m_cmds.begin(); iter != m_cmds.end(); ++iter )
-		{		
+		{
 			for( int i = 0; i < (*iter)->GetShortcutCount(); ++i )
 			{
 				const wxKeyBind* pKb = (*iter)->GetShortcut( i );
@@ -92,7 +94,7 @@ void CommandOrderDlg::updateOrderMap()
 void CommandOrderDlg::OnButtonUpClick( wxCommandEvent& )
 {
 	const int selIdx = this->m_listBoxCommands->GetSelection();
-	
+
 	if ( selIdx == wxNOT_FOUND || selIdx <= 0 )
 	{
 		return;
@@ -116,7 +118,7 @@ void CommandOrderDlg::OnButtonUpClick( wxCommandEvent& )
 void CommandOrderDlg::OnButtonDownClick( wxCommandEvent& )
 {
 	const int selIdx = this->m_listBoxCommands->GetSelection();
-	
+
 	if ( selIdx == wxNOT_FOUND || static_cast<unsigned int>( selIdx+2 ) > this->m_listBoxCommands->GetCount() )
 	{
 		return;

@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/intl.h>

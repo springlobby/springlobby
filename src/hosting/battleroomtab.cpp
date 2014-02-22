@@ -1,4 +1,5 @@
-/* Copyright (C) 2007, 2008 The SpringLobby Team. All rights reserved. */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 //
 // Class: BattleRoomTab
 //

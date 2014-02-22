@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #ifndef __COMMANDLIST_h__
 #define __COMMANDLIST_h__
 
@@ -84,7 +86,7 @@ public:
 
 		//put new command to command list
 		CommandList::m_customCommands[command] = Command();
-		
+
 		//fill it
 		Command& cmd = CommandList::m_customCommands[command];
 		cmd.m_category = category;
@@ -100,7 +102,7 @@ private:
 	{
 		//put new command to command list
 		CommandList::m_commands[command] = Command();
-		
+
 		//fill it
 		Command& cmd = CommandList::m_commands[command];
 		cmd.m_category = category;

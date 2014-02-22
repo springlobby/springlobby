@@ -1,4 +1,5 @@
-/* Copyright (C) 2007-2011 The SpringLobby Team. All rights reserved. */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include "sltipwin.h"
 
 #if wxUSE_TIPWINDOW

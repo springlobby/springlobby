@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include "KeynameConverter.h"
 
 #include <sstream>
@@ -49,7 +51,7 @@ wxString KeynameConverter::discardModifier( const wxString& keystring )
 	{
 		result = keystring;
 	}
-	else 
+	else
 	{
 		size_t lastAdd = keystring.find_last_of(wxT('+'));
 		if ( ( lastAdd != keystring.npos ) && ( keystring.GetChar(lastAdd - 1) == wxT('+') ) )

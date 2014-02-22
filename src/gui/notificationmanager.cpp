@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include "notificationmanager.h"
 
 #include <lslutils/globalsmanager.h>

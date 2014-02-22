@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include <algorithm>
 #include <wx/log.h>
 
@@ -103,7 +105,7 @@ const wxString key_binding::resolveKeySymName( const wxString& symName ) const
 wxString key_binding::resolveKeySymKeyAndSet( const wxString& key ) const
 {
 	wxString res = resolveKeySymSetKey( key );
-	
+
 	return resolveKeySymKey(res);
 }
 
@@ -122,7 +124,7 @@ wxString key_binding::resolveKeySymKey( const wxString& key ) const
 void key_binding::setKeySymsSet( const key_sym_set_map& keySymsSet )
 {
 	this->m_keySymsSet = keySymsSet;
-	
+
 	//update reverse map
 	for( key_sym_set_map::const_iterator iter = m_keySymsSet.begin(); iter != m_keySymsSet.end(); ++iter )
 	{
@@ -133,7 +135,7 @@ void key_binding::setKeySymsSet( const key_sym_set_map& keySymsSet )
 void key_binding::setKeySyms( const key_sym_map& keySyms )
 {
 	this->m_keySyms = keySyms;
-	
+
 	//update reverse map
 	for( key_sym_map::const_iterator iter = m_keySyms.begin(); iter != m_keySyms.end(); ++iter )
 	{
@@ -241,7 +243,7 @@ void key_binding::unbind( const wxString& cmd, const wxString& keyString )
 		return;
 	}
 
-	const wxString normKey = KeynameConverter::normalizeSpringKey( keyString );	
+	const wxString normKey = KeynameConverter::normalizeSpringKey( keyString );
 	if ( normKey.StartsWith( wxT("Any+") ) )
 	{
 		m_keyCmdSetAny.erase( std::make_pair( normKey, cmd ) );
@@ -268,7 +270,7 @@ void key_binding::unbind( const wxString& cmd, const wxString& keyString )
 
 bool key_binding::exists( const wxString& command, const wxString& key )
 {
-	const wxString& normKey = resolveKeySymName( KeynameConverter::normalizeSpringKey( key ) ); 
+	const wxString& normKey = resolveKeySymName( KeynameConverter::normalizeSpringKey( key ) );
 
 	bool found = false;
 	if ( normKey.StartsWith( wxT("Any+") ) )
@@ -329,7 +331,7 @@ bool key_binding::operator==(const key_binding& other) const
 				}
 			}
 			else
-				wxLogWarning( wxT("Group ") + iter->first + wxT(" not found in other group!") ); 
+				wxLogWarning( wxT("Group ") + iter->first + wxT(" not found in other group!") );
 		}
 	}
 
@@ -353,7 +355,7 @@ bool key_binding::operator==(const key_binding& other) const
 				}
 			}
 			else
-				wxLogWarning( wxT("GroupAny ") + iter->first + wxT(" not found in other group!") ); 
+				wxLogWarning( wxT("GroupAny ") + iter->first + wxT(" not found in other group!") );
 		}
 	}
 #endif

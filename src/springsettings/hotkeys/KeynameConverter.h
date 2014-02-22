@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #ifndef _H_KEYNAME_CONVERTER
 #define _H_KEYNAME_CONVERTER
 
@@ -42,9 +44,9 @@ private:
 	KeynameConverter();
 
 	static wxString convert( const wxString& keystring, bool reverse = false );
-	
+
 	static void addMapping( const wxString& springKey, const wxString& keybinderKey );
-	
+
 	static KeynameConverter::KeyMap			m_spring2keybinder;
 	static KeynameConverter::KeyMap			m_keybinder2spring;
 };

@@ -1,8 +1,10 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include "wxSpringCommand.h"
 
 unsigned short wxSpringCommand::type_id = 0x2345u;
 
-wxSpringCommand::wxSpringCommand( const wxString& name, const wxString& descr, int id ) : 
+wxSpringCommand::wxSpringCommand( const wxString& name, const wxString& descr, int id ) :
 						wxCmd( id /*wxID_INVALID*/, name, descr )
 {
 }

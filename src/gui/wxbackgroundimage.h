@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #ifndef SPRINGLOBBY_HEADERGUARD_WXBACKGROUNDIMAGE_H
 #define SPRINGLOBBY_HEADERGUARD_WXBACKGROUNDIMAGE_H
 
@@ -26,4 +28,3 @@ protected:
 //copied from http://forum.wxwidgets.org/viewtopic.php?t=10019
 
 #endif // SPRINGLOBBY_HEADERGUARD_WXBACKGROUNDIMAGE_H
-

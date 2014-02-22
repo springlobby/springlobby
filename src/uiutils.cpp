@@ -1,6 +1,6 @@
-/// \file uiutils.cpp
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
+/// \file uiutils.cpp
 
 #include <wx/colour.h>
 #include <wx/image.h>

@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #ifndef __SPRING_COMMAND_h__
 #define __SPRING_COMMAND_h__
 

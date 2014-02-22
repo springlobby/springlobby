@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #ifndef __ChangeMetaDlg__
 #define __ChangeMetaDlg__
 
@@ -7,11 +9,11 @@
 
 #define CHANGEMETADLG_KEY_PRESSED_ID	40001
 
-class ChangeMetaDlg : public ChangeMetaDlgBase 
+class ChangeMetaDlg : public ChangeMetaDlgBase
 {
 public:
 	ChangeMetaDlg( const wxString& curMeta, wxWindow* parent );
-	
+
 	const wxString& GetNewMetaKey() const;
 
 protected:

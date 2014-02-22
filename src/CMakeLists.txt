@@ -217,7 +217,6 @@ add_sources(SLSharedWithSettings
 	utils/controls.cpp
 	utils/conversion.cpp
 	utils/customdialogs.cpp
-	utils/debug.cpp
 	utils/globalevents.cpp
 	utils/platform.cpp
 	utils/slpaths.cpp

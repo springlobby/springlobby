@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include "commandlist.h"
 
 CommandList::CommandMap CommandList::m_commands;
@@ -10,9 +12,9 @@ void CommandList::InitializeCommandList()
 	{
 		return;
 	}
-	
+
 	CommandList::addCommand(wxT("General"), wxT("fakemeta"), wxT("Nice command"));
-	
+
 	CommandList::addCommand(wxT("General"), wxT("quitmenu"), wxT("Nice command"));
 	CommandList::addCommand(wxT("General"), wxT("quitforce"), wxT("Nice command"));
 	//
@@ -96,7 +98,7 @@ void CommandList::InitializeCommandList()
 	CommandList::addCommand(wxT("General"), wxT("movefast"), wxT("Nice command"));
 	CommandList::addCommand(wxT("General"), wxT("moveslow"), wxT("Nice command"));
 	//
-	CommandList::addCommand(wxT("General"), wxT("specteam 0"), wxT("Nice command")); 
+	CommandList::addCommand(wxT("General"), wxT("specteam 0"), wxT("Nice command"));
 	CommandList::addCommand(wxT("General"), wxT("specteam 1"), wxT("Nice command"));
 	CommandList::addCommand(wxT("General"), wxT("specteam 2"), wxT("Nice command"));
 	CommandList::addCommand(wxT("General"), wxT("specteam 3"), wxT("Nice command"));

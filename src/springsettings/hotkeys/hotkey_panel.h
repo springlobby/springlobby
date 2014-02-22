@@ -1,3 +1,4 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #ifndef __TAB_HOTKEY_h__
 #define __TAB_HOTKEY_h__
@@ -39,7 +40,7 @@ public:
 	bool HasProfileBeenModifiedOrSelected() const;
 	void ResetProfileBeenModifiedOrSelected();
 	//static bool isBindingInProfile( const key_binding& springprofile, const wxString& command, const wxString& springkey );
-	
+
 
 private:
 	void selectProfileFromUikeys();

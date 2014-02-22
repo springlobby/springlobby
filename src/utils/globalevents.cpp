@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include "globalevents.h"
 #include <wx/app.h>
 #include <list>
@@ -40,14 +42,22 @@ void GlobalEvent::Send(wxEventType type)
 	Send(evt);
 }
 
+static bool disabled = false;
 void GlobalEvent::Send(wxCommandEvent event)
 {
+	if (disabled) {
+		return;
+	}
 	std::list<wxEvtHandler*>& evtlist = evts[event.GetEventType()];
 //	printf("AddPendingEvent %lu %lu\n", evts.size(), evtlist.size());
 	assert(event.GetString() == wxEmptyString); // using strings here isn't thread safe http://docs.wxwidgets.org/trunk/classwx_evt_handler.html#a0737c6d2cbcd5ded4b1ecdd53ed0def3
 	for(auto evt: evtlist) {
 //		printf("	AddPendingEvent %lu \n", evt);
 		evt->AddPendingEvent(event);
+	}
+
+	if (event.GetEventType() == GlobalEvent::OnQuit) {
+		disabled = true;
 	}
 }
 

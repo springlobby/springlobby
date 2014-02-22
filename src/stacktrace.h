@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #ifndef STACKTRACE_H_INCLUDED
 #define STACKTRACE_H_INCLUDED
 

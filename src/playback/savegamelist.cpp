@@ -1,6 +1,7 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include "savegamelist.h"
 
-/* Copyright (C) 2007 The SpringLobby Team. All rights reserved. */
 #include <iterator>
 #include <algorithm>
 #include <fstream>

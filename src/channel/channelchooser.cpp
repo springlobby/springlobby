@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include "channelchooser.h"
 #include <wx/button.h>
 #include <wx/sizer.h>

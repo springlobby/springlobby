@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #ifndef __SPRING_DEFAULT_PROFILE_h__
 #define __SPRING_DEFAULT_PROFILE_h__
 
@@ -14,7 +16,7 @@ class SpringDefaultProfile : public key_binding
 public:
 	static void initialize();
 	static const key_binding& getBindings();
-	
+
 private:
 	SpringDefaultProfile();
 

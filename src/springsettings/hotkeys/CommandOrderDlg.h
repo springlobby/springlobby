@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #ifndef __CommandOrderDlg__
 #define __CommandOrderDlg__
 
@@ -5,16 +7,16 @@
 #include "HotkeyTypes.h"
 #include <wx/string.h>
 
-class CommandOrderDlg : public CommandOrderDlgBase 
+class CommandOrderDlg : public CommandOrderDlgBase
 {
 public:
 	CommandOrderDlg( const wxString& command, const CmdSet& cmds, wxWindow* parent );
-	
+
 	struct CmdInfo
 	{
 		CmdInfo() : globalSortIdx(0), any(false) {}
 
-		CmdInfo(const wxString& cmdIn, bool anyIn, size_t globSortIdxIn ) : 
+		CmdInfo(const wxString& cmdIn, bool anyIn, size_t globSortIdxIn ) :
 			command(cmdIn), globalSortIdx(globSortIdxIn), any(anyIn)
 		{
 		}
@@ -31,7 +33,7 @@ public:
 protected:
 	void updateOrderMap();
 	void fillCommandList();
-	
+
 	virtual void OnInitDialog( wxInitDialogEvent& event );
 	virtual void OnButtonUpClick( wxCommandEvent& event );
 	virtual void OnButtonDownClick( wxCommandEvent& event );

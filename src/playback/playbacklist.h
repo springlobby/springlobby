@@ -1,3 +1,5 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #ifndef SL_PLAYBACKLIST_H_INCLUDED
 #define SL_PLAYBACKLIST_H_INCLUDED
 
@@ -58,3 +60,4 @@ ListImp& playbacklist();
 #include "playbacklist.cpp"
 
 #endif // SL_PLAYBACKLIST_H_INCLUDED
+
