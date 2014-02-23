@@ -91,6 +91,12 @@ ChatPanel& MainChatTab::ServerChat()
 	return *m_server_chat;
 }
 
+#define LOOP_PANELS(code) \
+for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) { \
+	ChatPanel* tmp = static_cast<ChatPanel*>(m_chat_tabs->GetPage( i )); \
+	code; \
+}
+
 
 ChatPanel* MainChatTab::GetActiveChatPanel()
 {
@@ -104,24 +110,22 @@ ChatPanel* MainChatTab::GetActiveChatPanel()
 
 ChatPanel* MainChatTab::GetChannelChatPanel( const wxString& channel )
 {
-	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-		ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
+	LOOP_PANELS(
 		if ( tmp->GetPanelType() == CPT_Channel ) {
 			wxString name = m_chat_tabs->GetPageText( i );
-			if ( name.Lower() == channel.Lower() ) return ( ChatPanel* )m_chat_tabs->GetPage( i );
+			if ( name.Lower() == channel.Lower() ) return tmp;
 		}
-	}
+	);
 	return 0;
 }
 
 void MainChatTab::UpdateNicklistHighlights()
 {
-	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-		ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
+	LOOP_PANELS(
 		if ( tmp->GetPanelType() == CPT_Channel ) {
 			tmp->UpdateNicklistHighlights();
 		}
-	}
+	)
 	if ( m_server_chat != 0 )
 	{
 		m_server_chat->UpdateNicklistHighlights();
@@ -130,13 +134,12 @@ void MainChatTab::UpdateNicklistHighlights()
 
 ChatPanel* MainChatTab::GetUserChatPanel( const wxString& user )
 {
-	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-		ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
+	LOOP_PANELS(
 		if ( tmp->GetPanelType() == CPT_User ) {
 			wxString name = m_chat_tabs->GetPageText( i );
 			if ( name.Lower() == user.Lower() ) return ( ChatPanel* )m_chat_tabs->GetPage( i );
 		}
-	}
+	)
 	return 0;
 }
 
@@ -174,8 +177,7 @@ void MainChatTab::OnUserDisconnected( User& user )
 
 void MainChatTab::LeaveChannels()
 {
-	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-		ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
+	LOOP_PANELS(
 		if ( tmp->GetPanelType() == CPT_Channel )
 		{
 			tmp->StatusMessage( _( "Disconnected from server, chat closed." ) );
@@ -185,14 +187,12 @@ void MainChatTab::LeaveChannels()
 			tmp->StatusMessage( _( "Disconnected from server, chat closed." ) );
 			tmp->SetUser( 0 );
 		}
-	}
+	)
 }
 
 void MainChatTab::RejoinChannels()
 {
-	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
-	{
-		ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
+	LOOP_PANELS(
 		if ( tmp->GetPanelType() == CPT_Channel )
 		{
 
@@ -218,24 +218,23 @@ void MainChatTab::RejoinChannels()
 			if ( serverSelector().GetServer().UserExists( name ) ) tmp->SetUser( &serverSelector().GetServer().GetUser( name ) );
 
 		}
-	}
+	)
 }
 
 
 ChatPanel* MainChatTab::AddChatPanel( Channel& channel, bool doFocus )
 {
 
-	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-		if ( m_chat_tabs->GetPageText( i ) == channel.GetName() ) {
-			ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
-			if ( tmp->GetPanelType() == CPT_Channel ) {
+	LOOP_PANELS(
+		if ( tmp->GetPanelType() == CPT_Channel ) {
+			if ( tmp->GetChannel()->GetName() == channel.GetName() ) {
 				if ( doFocus )
 					m_chat_tabs->SetSelection( i );
 				tmp->SetChannel( &channel );
 				return tmp;
 			}
 		}
-	}
+	)
 
 	ChatPanel* chat = new ChatPanel( m_chat_tabs, channel, m_imagelist );
 	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), doFocus, wxBitmap( channel_xpm ) );
@@ -247,16 +246,12 @@ ChatPanel* MainChatTab::AddChatPanel( Channel& channel, bool doFocus )
 ChatPanel* MainChatTab::AddChatPanel( Server& server, const wxString& name )
 {
 
-	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-		//if ( m_chat_tabs->GetPageText( i ) == name ) {
-		if ( true ) { // wipe all old server tabs
-			ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
-			if ( tmp->GetPanelType() == CPT_Server ) {
-				m_chat_tabs->DeletePage( i );
-				i--;
-			}
+	LOOP_PANELS(
+		if ( tmp->GetPanelType() == CPT_Server ) {
+			m_chat_tabs->DeletePage( i );
+			i--;
 		}
-	}
+	)
 
 	ChatPanel* chat = new ChatPanel( m_chat_tabs, server, m_imagelist );
 	m_server_chat = chat;
@@ -266,16 +261,15 @@ ChatPanel* MainChatTab::AddChatPanel( Server& server, const wxString& name )
 
 ChatPanel* MainChatTab::AddChatPanel( const User& user )
 {
-	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-		if ( m_chat_tabs->GetPageText( i ) == user.GetNick() ) {
-			ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
-			if ( tmp->GetPanelType() == CPT_User ) {
+	LOOP_PANELS(
+		if ( tmp->GetPanelType() == CPT_User ) {
+			if ( tmp->GetUser()->GetNick() == user.GetNick() ) {
 				m_chat_tabs->SetSelection( i );
 				tmp->SetUser( &user );
 				return tmp;
 			}
 		}
-	}
+	)
 	int selection = m_chat_tabs->GetSelection();
 	ChatPanel* chat = new ChatPanel( m_chat_tabs, user, m_imagelist );
 	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, wxBitmap( userchat_xpm ) );
@@ -287,11 +281,9 @@ ChatPanel* MainChatTab::AddChatPanel( const User& user )
 void MainChatTab::BroadcastMessage( const wxString& message )
 {
 	// spam the message in all channels
-	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ )
-	{
-		ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
+	LOOP_PANELS(
 		tmp->StatusMessage( message );
-	}
+	)
 }
 
 
@@ -391,14 +383,12 @@ wxImage MainChatTab::ReplaceChannelStatusColour( wxBitmap img, const wxColour& c
 
 bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
 {
-	for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) {
-		ChatPanel* tmp = ( ChatPanel* )m_chat_tabs->GetPage( i );
-		if ( tmp == panel && panel != 0 )
-		{
+	LOOP_PANELS(
+		if ( tmp == panel && panel != 0 ) {
 			m_chat_tabs->DeletePage( i );
 			return true;
 		}
-	}
+	)
 	return false;
 }
 
