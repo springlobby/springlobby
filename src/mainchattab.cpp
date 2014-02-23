@@ -174,15 +174,22 @@ void MainChatTab::OnUserDisconnected( User& user )
 void MainChatTab::LeaveChannels()
 {
 	LOOP_PANELS(
-		if ( tmp->GetPanelType() == CPT_Channel )
-		{
-			tmp->StatusMessage( _( "Disconnected from server, chat closed." ) );
-			tmp->SetChannel( 0 );
-		} else if ( tmp->GetPanelType() == CPT_User )
-		{
-			tmp->StatusMessage( _( "Disconnected from server, chat closed." ) );
-			tmp->SetUser( 0 );
+		tmp->StatusMessage( _( "Disconnected from server, chat closed." ) );
+		switch(tmp->GetPanelType()) {
+			case CPT_Channel:
+				tmp->SetChannel(NULL);
+				break;
+			case CPT_User:
+				tmp->SetUser(NULL);
+				break;
+			case CPT_Server:
+				tmp->SetServer(NULL);
+				break;
+			case CPT_Battle:
+				tmp->SetBattle(NULL);
+				break;
 		}
+
 	)
 }
 

@@ -740,9 +740,6 @@ void ChatPanel::SetChannel( Channel* chan )
 	ASSERT_LOGIC( m_type == CPT_Channel, _T( "Not of type channel" ) );
 
 	if (( chan == 0 ) && ( m_channel != 0 ) ) {
-		// causes weird crash.
-		StatusMessage( _( "Chat closed." ) );
-
 		m_channel->uidata.panel = 0;
 	}
 	if ( m_show_nick_list && (m_nicklist != 0) ) {
@@ -770,7 +767,6 @@ void ChatPanel::SetServer( Server* serv )
 {
 	ASSERT_LOGIC( m_type == CPT_Server, _T( "Not of type server" ) );
 	if (( serv == 0 ) && ( m_server != 0 ) ) {
-		StatusMessage( _( "Chat closed." ) );
 		m_server->uidata.panel = 0;
 		if ( m_nicklist ) {
 			m_nicklist->StopTimer();
@@ -797,7 +793,6 @@ void ChatPanel::SetUser( const User* usr )
 
 	if ( usr == NULL ) {
 		if ( m_user != NULL ) {
-			StatusMessage( _( "Chat closed." ) );
 			m_user->uidata.panel = 0;
 			if (m_chan_opts_button != NULL) {
 				m_chan_opts_button->SetBitmapLabel( icons().GetBitmap(icons().ICON_EMPTY) );
