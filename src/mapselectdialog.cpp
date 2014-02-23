@@ -176,12 +176,13 @@ MapSelectDialog::~MapSelectDialog()
 	sett().SetVerticalSortkeyIndex( m_vertical_choice->GetSelection() );
 	sett().SetHorizontalSortorder( m_horizontal_direction );
 	sett().SetVerticalSortorder( m_vertical_direction );
-    if ( m_filter_all->GetValue() )
-        sett().SetMapSelectorFilterRadio( m_filter_all_sett );
+    if ( m_filter_popular->GetValue() )
+        sett().SetMapSelectorFilterRadio( m_filter_popular_sett );
     else if ( m_filter_recent->GetValue() )
         sett().SetMapSelectorFilterRadio( m_filter_recent_sett );
     else
-        sett().SetMapSelectorFilterRadio( m_filter_popular_sett );
+        sett().SetMapSelectorFilterRadio( m_filter_all_sett );
+
 	if ( IsShown() )
 		EndModal( 0 );
 }
@@ -209,36 +210,18 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
 
 	// due to a bug / crappy design in SpringUnitSync / unitsync itself we
 	// get a replay list with one empty item when there are no replays..
-	bool no_replays = m_replays.empty() || ( m_replays.size() == 1 && m_replays[0] == wxEmptyString );
-	if ( no_replays ) {
-		m_filter_all->SetValue( true );
-		m_filter_recent->Enable( false );
-	}
+	const bool no_replays = m_replays.empty() || ( m_replays.size() == 1 && m_replays[0] == wxEmptyString );
 
-	if ( lastFilter == m_filter_popular_sett ) {
-	    if ( ui().IsConnected() ) {
-	        m_filter_popular->SetValue( true );
-            LoadPopular();
-	    }
-	    else {
-	        m_filter_all->SetValue( true );
-	        LoadAll();
-	    }
-	}
-	else if ( lastFilter == m_filter_recent_sett ) {
-	    if ( !no_replays ) {
-            m_filter_recent->Enable( true );
-            m_filter_recent->SetValue( true );
-            LoadRecent();
-	    }
-	    else {
-	        m_filter_all->SetValue( true );
-	        LoadAll();
-	    }
-	}
-	else {
-	        m_filter_all->SetValue( true );
-	        LoadAll();
+	if (( lastFilter == m_filter_popular_sett ) && (ui().IsConnected())) {
+		m_filter_popular->SetValue( true );
+		LoadPopular();
+	} else if (( lastFilter == m_filter_recent_sett ) && ( !no_replays ))  {
+		m_filter_recent->Enable( true );
+		m_filter_recent->SetValue( true );
+		LoadRecent();
+	} else {
+		m_filter_all->SetValue( true );
+		LoadAll();
     }
 
     UpdateSortAndFilter();
