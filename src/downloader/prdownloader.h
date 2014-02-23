@@ -16,7 +16,7 @@ namespace LSL
 {
 class WorkerThread;
 }
-
+/*
 namespace P2P
 {
 enum FileStatus {
@@ -28,6 +28,7 @@ enum FileStatus {
 };
 }
 
+
 struct DownloadInfo {
 	P2P::FileStatus downloadstatus;
 	std::string name;
@@ -37,6 +38,7 @@ struct DownloadInfo {
 	double eta;
 	double filesize;
 };
+*/
 
 class PrDownloader: public wxEvtHandler, public GlobalEvent
 {
