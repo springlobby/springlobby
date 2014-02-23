@@ -7,6 +7,7 @@
 #include "../defines.h"
 #include <wx/thread.h>
 #include <wx/event.h>
+#include <vector>
 
 static const wxEventType PlaybacksLoadedEvt = wxNewEventType();
 

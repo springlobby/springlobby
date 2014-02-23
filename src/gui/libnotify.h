@@ -6,6 +6,7 @@
 #ifdef HAVE_LIBNOTIFY
 
 #include "inotification.h"
+#include "settings.h"
 
 class LibnotifyNotification : public INotification
 {
