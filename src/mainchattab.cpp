@@ -230,7 +230,7 @@ ChatPanel* MainChatTab::AddChatPanel( Channel& channel, bool doFocus )
 
 	LOOP_PANELS(
 		if ( tmp->GetPanelType() == CPT_Channel ) {
-			if ( tmp->GetChannel()->GetName() == channel.GetName() ) {
+			if ( m_chat_tabs->GetPageText(i) == channel.GetName() ) {
 				if ( doFocus )
 					m_chat_tabs->SetSelection( i );
 				tmp->SetChannel( &channel );
@@ -266,7 +266,7 @@ ChatPanel* MainChatTab::AddChatPanel( const User& user )
 {
 	LOOP_PANELS(
 		if ( tmp->GetPanelType() == CPT_User ) {
-			if ( tmp->GetUser()->GetNick() == user.GetNick() ) {
+			if ( m_chat_tabs->GetPageText(i) == user.GetNick() ) {
 				m_chat_tabs->SetSelection( i );
 				tmp->SetUser( &user );
 				return tmp;
