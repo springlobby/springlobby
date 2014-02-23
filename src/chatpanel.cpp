@@ -655,7 +655,9 @@ void ChatPanel::OnChannelJoin( User& who )
 		m_usercount_label->SetLabel( wxFormat( _("%d users") ) % numusers );
 		m_nicklist->AddUser( who );
 	}
-
+	if ( m_display_joinitem ) {
+		OutputLine( _T( " ** " ) + who.GetNick() + _( " joined " ) + GetChatTypeStr(), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+	}
 	// Also add the User to the TextCompletionDatabase
 	textcompletiondatabase.Insert_Mapping( who.GetNick(), who.GetNick() );
 }
