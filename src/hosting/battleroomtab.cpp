@@ -910,7 +910,7 @@ void BattleRoomTab::OnUserJoined( User& user )
 void BattleRoomTab::OnUserLeft( User& user )
 {
 	if ( !m_battle ) return;
-	if ( !user.BattleStatus().IsBot() ) m_chat->Parted( user, wxEmptyString );
+	m_chat->Parted( user, wxEmptyString );
 	m_players->RemoveUser( user );
 
 	UpdateStatsLabels();
