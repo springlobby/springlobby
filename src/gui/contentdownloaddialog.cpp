@@ -38,10 +38,11 @@ private:
 
 };
 
-SearchThread::SearchThread(ContentDownloadDialog * content_dialog,wxString searchquery): wxThread(wxTHREAD_DETACHED)
+SearchThread::SearchThread(ContentDownloadDialog * content_dialog,wxString searchquery):
+	wxThread(wxTHREAD_DETACHED),
+	m_content_dialog(content_dialog),
+	m_search_query(searchquery)
 {
-	m_content_dialog = content_dialog;
-	m_search_query = searchquery;
 }
 
 // convert a string to IRI: https://en.wikipedia.org/wiki/Internationalized_resource_identifier

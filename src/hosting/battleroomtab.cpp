@@ -370,6 +370,7 @@ void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
 		m_splitter->SplitVertically( m_player_panel, m_chat );
 }
 
+/*
 wxString _GetStartPosStr( IBattle::StartType t )
 {
 	switch ( t )
@@ -387,7 +388,6 @@ wxString _GetStartPosStr( IBattle::StartType t )
 	};
 }
 
-
 wxString _GetGameTypeStr( IBattle::GameType t )
 {
 	switch ( t )
@@ -402,7 +402,7 @@ wxString _GetGameTypeStr( IBattle::GameType t )
 			return _T( "?" );
 	};
 }
-
+*/
 
 void BattleRoomTab::UpdateBattleInfo()
 {

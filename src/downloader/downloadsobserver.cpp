@@ -12,16 +12,17 @@ ObserverDownloadInfo::ObserverDownloadInfo():
 
 }
 
-ObserverDownloadInfo::ObserverDownloadInfo(IDownload* dl): finished(0)
+ObserverDownloadInfo::ObserverDownloadInfo(IDownload* dl):
+	size(dl->size),
+	finished(0),
+	filename(wxString::FromUTF8(dl->name.c_str())),
+	name(wxString::FromUTF8(dl->origin_name.c_str()))
 {
-    filename=wxString::FromUTF8(dl->name.c_str());
-    name=wxString::FromUTF8(dl->origin_name.c_str());
-    //name=name.AfterLast('/');
-    size=dl->size;
-    if(size>0)
-        progress=dl->getProgress();
-    else
-        progress=0;
+	if (size > 0) {
+		progress=dl->getProgress();
+	} else {
+		progress=0;
+	}
 }
 
 DownloadsObserver::DownloadsObserver()

@@ -31,7 +31,7 @@ public:
 private:
 	bool Load(int language);
 	void GetInstalledLanguages( wxArrayString& names, wxArrayLong& identifiers);
-	long GetLangID(const long index, const wxArrayLong identifiers) const;
+	long GetLangID(const long index, const wxArrayLong& identifiers) const;
 	wxString m_SearchPath;
 	wxString catalogname;
 	wxLocale * m_Locale;

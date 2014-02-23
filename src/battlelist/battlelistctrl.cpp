@@ -99,6 +99,7 @@ wxString BattleListCtrl::GetItemText(long item, long column) const
     }
 }
 
+/*
 int BattleListCtrl::GetItemImage(long item) const
 {
     if ( m_data[item] == NULL )
@@ -106,6 +107,7 @@ int BattleListCtrl::GetItemImage(long item) const
 
     return icons().GetBattleStatusIcon( *m_data[item] );
 }
+*/
 
 int BattleListCtrl::GetItemColumnImage(long item, long column) const
 {

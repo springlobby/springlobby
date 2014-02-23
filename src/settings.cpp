@@ -790,6 +790,7 @@ bool Settings::GetChatPMSoundNotificationEnabled()
 	return m_config->Read( _T( "/Chat/PMSound" ), 1l );
 }
 
+/*
 wxColour ConvertOldRGBFormat( wxString color )
 {
 	long R = 0, G = 0, B = 0;
@@ -800,6 +801,7 @@ wxColour ConvertOldRGBFormat( wxString color )
 	color.BeforeFirst( _T( ' ' ) ).ToLong( &B );
 	return wxColour( R % 256, G % 256, B % 256 );
 }
+*/
 
 wxColour Settings::GetChatColorNormal()
 {
@@ -1207,10 +1209,13 @@ void Settings::SetReplayFilterValues( const PlaybackListFilterValues& filtervalu
 	m_config->Write( _T( "/ReplayFilter/lastprofile" ), profile_name );
 }
 
+/*
 bool Settings::GetReplayFilterActivState() const
 {
 	return m_config->Read( _T( "/ReplayFilter/Active" ) , 0l );
 }
+
+*/
 
 void Settings::SetReplayFilterActivState( const bool state )
 {

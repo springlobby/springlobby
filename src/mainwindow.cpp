@@ -327,11 +327,13 @@ void MainWindow::AddMessageEvent(const wxString& message)
     AddPendingEvent(evt);
 }
 
+/*
 bool MainWindow::HasFocus() const
 {
 	return m_has_focus;
 }
-
+*/
+/*
 void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
 {
   wxMemoryDC dc;
@@ -339,6 +341,7 @@ void DrawBmpOnBmp( wxBitmap& canvas, wxBitmap& object, int x, int y )
   dc.DrawBitmap( object, x, y, true );
   dc.SelectObject( wxNullBitmap );
 }
+*/
 
 //void MainWindow::DrawTxtOnBmp( wxBitmap& canvas, wxString text, int x, int y )
 //{

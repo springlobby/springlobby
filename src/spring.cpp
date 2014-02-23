@@ -434,7 +434,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 							else
 							{
 								int speccteam = 0;
-								if ( teams_to_sorted_teams.size() != 0 ) speccteam = rand() % teams_to_sorted_teams.size();
+								if ( !teams_to_sorted_teams.empty() ) speccteam = rand() % teams_to_sorted_teams.size();
 								tdf.Append( _T("Team"), speccteam );
 							}
 					tdf.LeaveSection();

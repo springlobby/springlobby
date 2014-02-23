@@ -95,7 +95,7 @@ class Node: public LSL::RefcountedContainer , public SL::NonCopyable
 		virtual ~Node();
 		DataList* Parent() const;// parent list
 		//void SetParent(DataList *parent_);
-		bool IsChildOf( DataList *what ) const;
+//		bool IsChildOf( DataList *what ) const;
 
 		virtual void Save( TDFWriter &f );
 		virtual void Load( Tokenizer &f );

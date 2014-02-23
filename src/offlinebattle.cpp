@@ -41,6 +41,7 @@ OfflineBattle::OfflineBattle ( const OfflineBattle& other ):
 
 OfflineBattle& OfflineBattle::operator = ( const OfflineBattle& other )
 {
+    m_id = other.m_id;
     m_map_loaded = other.m_map_loaded;
     m_map_loaded = other.m_map_loaded;
     m_mod_loaded = other.m_mod_loaded;

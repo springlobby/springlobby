@@ -13,7 +13,7 @@ public:
     static wxPathList ConfigFileSearchPaths();
     static wxPathList UikeysLocations();
     static wxPathList AdditionalSearchPaths( wxPathList& pl );
-	static wxPathList EnginePaths(wxPathList& pl, const wxString basedir);
+	static wxPathList EnginePaths(wxPathList& pl, const wxString& basedir);
 };
 
 #endif // SPRINGLOBBY_PATHLISTFACTORY_H

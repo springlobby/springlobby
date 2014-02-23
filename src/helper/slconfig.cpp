@@ -89,9 +89,11 @@ void slConfig::SaveFile()
 	wxLogMessage(_T("config file saved: %s"), slConfig::m_chosen_path.c_str());
 }
 
+/*
 wxString slConfig::GetFilePath() const {
 	return slConfig::m_chosen_path;
 }
+*/
 
 #ifdef __WXMSW__
 bool slConfig::DoWriteLong( const wxString& key, long lValue )

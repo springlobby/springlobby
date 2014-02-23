@@ -83,7 +83,7 @@ class MapCtrl : public wxPanel
     void OnRightUp( wxMouseEvent& event );
     void OnMouseWheel( wxMouseEvent& event );
 
-    void OnGetMapImageAsyncCompleted(const std::string mapname);
+    void OnGetMapImageAsyncCompleted(const std::string& mapname);
 
     void OnRefresh( wxCommandEvent& event );
 

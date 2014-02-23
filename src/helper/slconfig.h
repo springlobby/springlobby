@@ -83,7 +83,7 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 		slConfig ( wxInputStream& in, const wxMBConv& conv = wxConvAuto() );
 	#endif // wxUSE_STREAMS
 
-		wxString GetFilePath() const;
+//		wxString GetFilePath() const;
 		void SaveFile();
 
 		//! container for default values

@@ -264,6 +264,7 @@ DataList* Node::Parent() const { // parent list
 	return parent;
 }
 
+/*
 bool Node::IsChildOf( DataList *what ) const {
 	DataList *current = Parent();
 	while ( current ) {
@@ -272,6 +273,7 @@ bool Node::IsChildOf( DataList *what ) const {
 	}
 	return false;
 }
+*/
 
 void Node::ListRemove() {
 	//if(parent->list_first==this)parent->list_first=next;

@@ -74,7 +74,7 @@ void GlobalEvent::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEve
 //	printf("connected event! %lu\n", evthandler);
 	evthandler->Connect(id, func);
 	evtlist.push_back(evthandler);
-	assert(evtlist.size()>0);
+	assert(!evtlist.empty());
 }
 
 //static std::map<wxEventType, std::list<wxEvtHandler*>> evts;

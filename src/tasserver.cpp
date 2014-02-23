@@ -598,7 +598,6 @@ void TASServer::ExecuteCommand( const wxString& in )
 void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, int replyid )
 {
     wxString params = inparams;
-    int pos, cpu, id, nat, port, maxplayers, rank, specs, units, top, left, right, bottom, ally, type;
     bool haspass,lanmode = false;
     wxString hash;
     wxString nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version, topic, engineName, engineVersion;
@@ -632,9 +631,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("ADDUSER") )
     {
+		int id;
         nick = GetWordParam( params );
         contry = GetWordParam( params );
-        cpu = GetIntParam( params );
+        const int cpu = GetIntParam( params );
         if ( params.IsEmpty() )
         {
         	// if server didn't send any account id to us, fill with an always increasing number
@@ -661,15 +661,15 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("BATTLEOPENED") )
     {
-        id = GetIntParam( params );
-        type = GetIntParam( params );
-        nat = GetIntParam( params );
+        const int id = GetIntParam( params );
+        const int type = GetIntParam( params );
+        const int nat = GetIntParam( params );
         nick = GetWordParam( params );
         host = GetWordParam( params );
-        port = GetIntParam( params );
-        maxplayers = GetIntParam( params );
+        const int port = GetIntParam( params );
+        const int maxplayers = GetIntParam( params );
         haspass = GetBoolParam( params );
-        rank = GetIntParam( params );
+        const int rank = GetIntParam( params );
         hash = MakeHashUnsigned( GetWordParam( params ) );
 		engineName = GetSentenceParam( params );
 		engineVersion = GetSentenceParam( params );
@@ -686,15 +686,15 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("JOINEDBATTLE") )
     {
-        id = GetIntParam( params );
+        const int id = GetIntParam( params );
         nick = GetWordParam( params );
 		wxString userScriptPassword = GetWordParam( params );
 		m_se->OnUserJoinedBattle( id, nick, userScriptPassword );
     }
     else if ( cmd == _T("UPDATEBATTLEINFO") )
     {
-        id = GetIntParam( params );
-        specs = GetIntParam( params );
+        const int id = GetIntParam( params );
+        const int specs = GetIntParam( params );
         haspass = GetBoolParam( params );
         hash = MakeHashUnsigned( GetWordParam( params ) );
         map = GetSentenceParam( params );
@@ -713,13 +713,13 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("BATTLECLOSED") )
     {
-        id = GetIntParam( params );
+        const int id = GetIntParam( params );
         if ( m_battle_id == id ) m_relay_host_bot = wxEmptyString;
         m_se->OnBattleClosed( id );
     }
     else if ( cmd == _T("LEFTBATTLE") )
     {
-        id = GetIntParam( params );
+        const int id = GetIntParam( params );
         nick = GetWordParam( params );
         m_se->OnUserLeftBattle( id, nick );
     }
@@ -761,7 +761,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     {
         channel = GetWordParam( params );
         nick = GetWordParam( params );
-        pos = GetIntParam( params );
+        int pos = GetIntParam( params );
         params.Replace( _T("\\n"), _T("\n") );
         m_se->OnChannelTopic( channel, nick, params, pos/1000 );
     }
@@ -851,7 +851,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 	}
     else if ( cmd == _T("JOINBATTLE") )
     {
-        id = GetIntParam( params );
+        const int id = GetIntParam( params );
         hash = MakeHashUnsigned( GetWordParam( params ) );
         m_battle_id = id;
 		m_se->OnJoinedBattle( id, hash );
@@ -873,17 +873,17 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("ADDSTARTRECT") )
     {
         //ADDSTARTRECT allyno left top right bottom
-        ally = GetIntParam( params );
-        left = GetIntParam( params );
-        top = GetIntParam( params );
-        right = GetIntParam( params );
-        bottom = GetIntParam( params );;
+        const int ally = GetIntParam( params );
+        const int left = GetIntParam( params );
+        const int top = GetIntParam( params );
+        const int right = GetIntParam( params );
+        const int bottom = GetIntParam( params );;
         m_se->OnBattleStartRectAdd( m_battle_id, ally, left, top, right, bottom );
     }
     else if ( cmd == _T("REMOVESTARTRECT") )
     {
         //REMOVESTARTRECT allyno
-        ally = GetIntParam( params );
+        const int ally = GetIntParam( params );
         m_se->OnBattleStartRectRemove( m_battle_id, ally );
     }
     else if ( cmd == _T("ENABLEALLUNITS") )
@@ -910,7 +910,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("CHANNEL") )
     {
         channel = GetWordParam( params );
-        units = GetIntParam( params );
+        const int units = GetIntParam( params );
         topic = GetSentenceParam( params );
         m_se->OnChannelList( channel, units, topic );
     }
@@ -950,7 +950,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     else if ( cmd == _T("ADDBOT") )
     {
         // ADDBOT BATTLE_ID name owner battlestatus teamcolor {AIDLL}
-        id = GetIntParam( params );
+        const int id = GetIntParam( params );
         nick = GetWordParam( params );
         owner = GetWordParam( params );
         tasbstatus.data = GetIntParam( params );
@@ -980,7 +980,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("UPDATEBOT") )
     {
-        id = GetIntParam( params );
+        const int id = GetIntParam( params );
         nick = GetWordParam( params );
         tasbstatus.data = GetIntParam( params );
         bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
@@ -991,7 +991,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
     }
     else if ( cmd == _T("REMOVEBOT") )
     {
-        id = GetIntParam( params );
+        const int id = GetIntParam( params );
         nick = GetWordParam( params );
         m_se->OnBattleRemoveBot( id, nick );
         //REMOVEBOT BATTLE_ID name

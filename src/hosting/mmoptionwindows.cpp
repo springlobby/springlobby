@@ -97,7 +97,6 @@ SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiont
 			{
 				EndModal( wxID_CANCEL );
 				return;
-				break;
 			}
 	}
 

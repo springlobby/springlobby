@@ -57,7 +57,7 @@ wxPathList PathlistFactory::UikeysLocations()
     return pl;
 }
 
-wxPathList PathlistFactory::EnginePaths(wxPathList& pl, const wxString basedir)
+wxPathList PathlistFactory::EnginePaths(wxPathList& pl, const wxString& basedir)
 {
 	const wxString enginedir = basedir + sep + _T("engine");
 	wxDir dir(enginedir);

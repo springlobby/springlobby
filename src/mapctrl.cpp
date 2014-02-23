@@ -1605,7 +1605,7 @@ void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 }
 
 
-void MapCtrl::OnGetMapImageAsyncCompleted(const std::string mapname)
+void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 {
     if ( mapname != m_mapname ) return;
 

@@ -987,6 +987,7 @@ bool wxKeyBinder::Save(wxConfigBase *cfg, const wxString &key, bool bCleanOld) c
 
 #include <wx/wfstream.h>
 #include <iostream>
+/*
 void wxKeyBinder::PrintOrdering() const
 {
 	wxFileOutputStream outstream( wxT("D:\\out.txt") );
@@ -1002,6 +1003,7 @@ void wxKeyBinder::PrintOrdering() const
 	}
 	wxLogError( wxT("-----------------") );
 }
+*/
 
 void wxKeyBinder::CommitOrdering( const CommandOrderDlg::ListIndexCmdMap& cmds )
 {
@@ -1865,9 +1867,8 @@ void wxKeyConfigPanel::UpdateButtons()
     m_pRemoveBtn->Enable(m_pBindings->GetSelection() >= 0);
     m_pRemoveAllBtn->Enable(m_pBindings->GetCount() > 0);
 
-	bool enableAddBtn = false;
 	// is the assign button to be enabled ?
-	enableAddBtn = IsSelectedValidCmd() && m_pKeyField->IsValidKeyComb();
+	bool enableAddBtn = IsSelectedValidCmd() && m_pKeyField->IsValidKeyComb();
 
 	// must the "Currently assigned to" field be updated ?
 	if (m_pKeyField->IsValidKeyComb()) {

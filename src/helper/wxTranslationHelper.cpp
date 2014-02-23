@@ -95,7 +95,7 @@ void wxTranslationHelper::GetInstalledLanguages( wxArrayString & names, wxArrayL
 	}
 }
 
-long wxTranslationHelper::GetLangID(const long index, const wxArrayLong identifiers) const
+long wxTranslationHelper::GetLangID(const long index, const wxArrayLong& identifiers) const
 {
 	int j=0;
 	for(auto i: identifiers) {
