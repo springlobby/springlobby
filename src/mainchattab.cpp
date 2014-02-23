@@ -40,7 +40,7 @@ END_EVENT_TABLE()
 
 
 MainChatTab::MainChatTab( wxWindow* parent )
-    : wxScrolledWindow( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr )
+	: wxScrolledWindow( parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr )
 {
 	GetAui().manager->AddPane( this, wxLEFT, _T( "mainchattab" ) );
 
@@ -100,11 +100,11 @@ for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) { \
 
 ChatPanel* MainChatTab::GetActiveChatPanel()
 {
-    int selection = m_chat_tabs->GetSelection();
-    if ( selection < 0 )
-        return NULL;
-    else
-        return static_cast< ChatPanel* >( m_chat_tabs->GetPage( selection ) );
+	int selection = m_chat_tabs->GetSelection();
+	if ( selection < 0 )
+		return NULL;
+	else
+		return static_cast< ChatPanel* >( m_chat_tabs->GetPage( selection ) );
 }
 
 
@@ -147,14 +147,12 @@ ChatPanel* MainChatTab::GetUserChatPanel( const wxString& user )
 void MainChatTab::OnUserConnected( User& user )
 {
 	ChatPanel* panel = GetUserChatPanel( user.GetNick() );
-	if ( panel != 0 )
-	{
+	if ( panel != 0 ) {
 		panel->SetUser( &user );
 		panel->OnUserConnected();
 		//TODO enable send button (koshi)
 	}
-	if ( m_server_chat != 0 )
-	{
+	if ( m_server_chat != 0 ) {
 		m_server_chat->OnChannelJoin( user );
 	}
 }
@@ -163,14 +161,12 @@ void MainChatTab::OnUserConnected( User& user )
 void MainChatTab::OnUserDisconnected( User& user )
 {
 	ChatPanel* panel = GetUserChatPanel( user.GetNick() );
-	if ( panel != 0 )
-	{
+	if ( panel != 0 ) {
 		panel->OnUserDisconnected();
 		panel->SetUser( 0 );
 		//TODO disable send button (koshi)
 	}
-	if ( m_server_chat != 0 )
-	{
+	if ( m_server_chat != 0 ) {
 		m_server_chat->Parted( user, wxEmptyString );
 	}
 }
@@ -318,18 +314,13 @@ void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
 
 	// change icon to default the icon to show that no new events happened
 	size_t ImageIndex = ( ( ChatPanel* )m_chat_tabs->GetPage( newsel ) )->GetIconIndex();
-	if ( ImageIndex == 4 || ImageIndex == 6 || ImageIndex == 8 )
-	{
+	if ( ImageIndex == 4 || ImageIndex == 6 || ImageIndex == 8 ) {
 		GetActiveChatPanel()->SetIconIndex( 2 );
 		m_chat_tabs->SetPageBitmap( newsel, wxBitmap( channel_xpm ) );
-	}
-	else if ( ImageIndex == 5 || ImageIndex == 7 || ImageIndex == 9 )
-	{
+	} else if ( ImageIndex == 5 || ImageIndex == 7 || ImageIndex == 9 ) {
 		GetActiveChatPanel()->SetIconIndex( 3 );
 		m_chat_tabs->SetPageBitmap( newsel, wxBitmap( userchat_xpm ) );
-	}
-	else if ( ImageIndex == 10 )
-	{
+	} else if ( ImageIndex == 10 ) {
 		GetActiveChatPanel()->SetIconIndex( 1 );
 		m_chat_tabs->SetPageBitmap( newsel, wxBitmap( server_xpm ) );
 	}
@@ -394,12 +385,12 @@ bool MainChatTab::RemoveChatPanel( ChatPanel* panel )
 
 void MainChatTab::LoadPerspective( const wxString& perspective_name  )
 {
-    LoadNotebookPerspective( m_chat_tabs, perspective_name );
+	LoadNotebookPerspective( m_chat_tabs, perspective_name );
 }
 
 void MainChatTab::SavePerspective( const wxString& perspective_name )
 {
-    SaveNotebookPerspective( m_chat_tabs, perspective_name );
+	SaveNotebookPerspective( m_chat_tabs, perspective_name );
 }
 
 void MainChatTab::AdvanceSelection( bool forward )
