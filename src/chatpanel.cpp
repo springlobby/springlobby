@@ -705,17 +705,18 @@ void ChatPanel::SetTopic( const wxString& who, const wxString& message )
 	pos = refined.Find( _T("\\n") );
 	}
 	*/
-	wxFont f = sett().GetChatFont();
+	const wxFont f = sett().GetChatFont();
+	const wxColor col = sett().GetChatColorServer();
 	// change the image of the tab to show new events
 	if ( m_topic_set )
 		SetIconHighlight( highlight_say );
-	OutputLine( _( " ** Channel topic:" ), sett().GetChatColorServer(), f );
+	OutputLine( _( " ** Channel topic:" ), col , f );
 	wxStringTokenizer tkz( message, _T("\n") );
 	while ( tkz.HasMoreTokens() ) {
 		wxString msg = tkz.GetNextToken();
-		OutputLine( _T(" ") + msg, sett().GetChatColorServer(), f );
+		OutputLine( _T(" ") + msg, col, f );
 	}
-	OutputLine( _( " ** Set by " ) + who, sett().GetChatColorServer(), f );
+	OutputLine( _( " ** Set by " ) + who, col, f );
 	m_topic_set = true;
 }
 
