@@ -5,6 +5,7 @@
 //
 
 #include "utils/curlhelper.h" //has to be first include, as else it warns about winsock2.h should be included first
+#include "utils/conversion.h"
 
 #include "chatpanel.h"
 
@@ -656,7 +657,7 @@ void ChatPanel::OnChannelJoin( User& who )
 		m_nicklist->AddUser( who );
 	}
 	if ( m_display_joinitem ) {
-		OutputLine( _T( " ** " ) + who.GetNick() + _( " joined " ) + GetChatTypeStr(), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+		OutputLine( _T( " ** " ) + wxString::Format(_( "%s joined %s." ), who.GetNick().c_str(), GetChatTypeStr().c_str()), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 	}
 	// Also add the User to the TextCompletionDatabase
 	textcompletiondatabase.Insert_Mapping( who.GetNick(), who.GetNick() );
@@ -667,7 +668,7 @@ void ChatPanel::Parted( User& who, const wxString& message )
 //    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
 	bool me_parted = m_channel && &who == &m_channel->GetMe();
 	if ( m_display_joinitem ) {
-		OutputLine( _T( " ** " ) + who.GetNick() + _( " left " ) + GetChatTypeStr() + _T( "( " ) + message + _T( " )." ), sett().GetChatColorJoinPart(), sett().GetChatFont() );
+		OutputLine( _T( " ** " ) + wxString::Format(_( "%s left %s (%s)." ), who.GetNick().c_str(), GetChatTypeStr().c_str(), message.c_str()), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 	}
 	if ( m_type == CPT_Channel ) {
 		if ( m_channel == 0 ) return;
