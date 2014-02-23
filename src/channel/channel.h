@@ -32,7 +32,7 @@ class Channel : public UserList, public SL::NonCopyable
     Server& GetServer() { return m_serv; }
 
     void SetName( const wxString& name );
-    wxString GetName();
+    wxString GetName() const;
     User& GetMe();
 
     // filtering functions

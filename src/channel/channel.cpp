@@ -31,7 +31,7 @@ void Channel::SetName( const wxString& name )
 }
 
 
-wxString Channel::GetName()
+wxString Channel::GetName() const
 {
   return m_name;
 }
