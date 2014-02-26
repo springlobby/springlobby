@@ -121,8 +121,6 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 
     void FocusBattleRoomTab();
 
-	bool HasFocus() const;
-
   protected:
 
     wxMenuItem* m_settings_menu;
