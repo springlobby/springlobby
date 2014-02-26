@@ -145,7 +145,7 @@ private:
 
 	void OnLogin( wxCommandEvent& data );
 
-	void OutputLine( const wxString& message, const wxColour& col, const wxFont& fon );
+	void OutputLine( const wxString& message, const wxColour& col);
 	void OutputLine( const ChatLine& line );
 	void SetIconHighlight( HighlightType highlight );
 	wxString FindUrl( const long pos ) const ;
