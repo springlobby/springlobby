@@ -44,12 +44,6 @@ enum ChatPanelType {
 	CPT_Battle
 };
 
-enum HighlightType {
-	highlight_say,
-	highlight_join_leave,
-	highlight_important
-};
-
 struct ChatLine {
 	wxString chat;
 	wxString time;
@@ -146,7 +140,15 @@ private:
 	void OnLogin( wxCommandEvent& data );
 
 	void OutputLine( const wxString& message, const wxColour& col);
+
 	void OutputLine( const ChatLine& line );
+
+	enum HighlightType {
+		highlight_say,
+		highlight_join_leave,
+		highlight_important
+	};
+
 	void SetIconHighlight( HighlightType highlight );
 	wxString FindUrl( const long pos ) const ;
 
