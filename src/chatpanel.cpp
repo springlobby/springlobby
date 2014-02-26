@@ -73,7 +73,7 @@ void ChatPanel::Init(const wxString& panelname)
 	m_chatpanelname = panelname;
 	m_chat_log.SetLogFile(panelname);
 	CreateControls( );
-	cfg().Read(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, &m_display_joinitem);
+	m_display_joinitem = cfg().Read(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
 	GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + panelname );
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
 	ConnectGlobalEvent(this, GlobalEvent::OnLogin, wxObjectEventFunction(&ChatPanel::OnLogin));
