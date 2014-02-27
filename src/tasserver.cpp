@@ -60,16 +60,11 @@ const int udp_reply_timeout=10;
 //! @brief Struct used internally by the TASServer class to get client status information.
 struct TASClientstatus
 {
-unsigned int in_game   :
-    1;
-unsigned int away      :
-    1;
-unsigned int rank      :
-    3;
-unsigned int moderator :
-    1;
-unsigned int bot       :
-    1;
+	unsigned int in_game   : 1;
+	unsigned int away      : 1;
+	unsigned int rank      : 3;
+	unsigned int moderator : 1;
+	unsigned int bot       : 1;
 };
 
 
@@ -148,7 +143,7 @@ NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
 
 
-TASServer::TASServer(int serverEventsMode):
+TASServer::TASServer():
 m_ser_ver(0),
 m_connected(false),
 m_online(false),
@@ -169,7 +164,7 @@ m_do_finalize_join_battle(false),
 m_finalize_join_battle_id(-1),
 m_token_transmission( false )
 {
-	m_se = IServerEvents::getInstance( *this, IServerEvents::ServerEventsMode(serverEventsMode) );
+	m_se = new ServerEvents(*this);
 	FillAliasMap();
 	m_relay_host_manager_list.Clear();
 

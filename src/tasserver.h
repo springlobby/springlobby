@@ -38,7 +38,7 @@ class PingThread;
 class TASServer : public Server, public wxTimer
 {
   public:
-	TASServer(int serverEventsMode = 0);
+	TASServer();
     ~TASServer();
 
     // Overloaded functions from Server

@@ -203,9 +203,6 @@ add_sources(springlobbySrc
 	toasterbox/ToasterBox.cpp
 	toasterbox/ToasterBoxWindow.cpp
 	toasterbox/ToasterBoxWindowList.cpp
-	
-	iserverevents.cpp
-	
 )
 
 clear(SLSharedWithSettings)

@@ -40,11 +40,6 @@ class IServerEvents
   public:
 	IServerEvents( ) {}
 	virtual ~IServerEvents() {}
-	enum ServerEventsMode {
-		normal = 0,
-		simple = 1
-	};
-	static IServerEvents* getInstance( Server& server, ServerEventsMode mode = normal );
   // Uicontrol interface
 
 	virtual void OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool lanmode ) = 0;
