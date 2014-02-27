@@ -20,9 +20,6 @@ lsl/spring/spring.h
 
 class wxCommandEvent;
 class IBattle;
-class SinglePlayerBattle;
-class OfflineBattle;
-class Battle;
 class SpringProcess;
 class wxSpringProcess;
 class wxString;
@@ -35,9 +32,7 @@ public:
 	~Spring();
 
 	bool IsRunning() const;
-	bool Run( OfflineBattle& battle );
-	bool Run( Battle& battle );
-	bool Run( SinglePlayerBattle& battle );
+	bool Run( IBattle& battle );
 	wxString WriteScriptTxt( IBattle& battle ) const;
 
 

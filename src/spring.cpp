@@ -84,7 +84,7 @@ bool Spring::IsRunning() const
 	return m_running;
 }
 
-bool Spring::Run( Battle& battle )
+bool Spring::Run( IBattle& battle )
 {
 
   wxString path = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
@@ -117,58 +117,10 @@ bool Spring::Run( Battle& battle )
   }
 
 	wxString cmd;
-	if ( battle.GetAutoHost().GetEnabled() )
-	{
-    // -m, --minimise          Start minimised
-    // -q [T], --quit=[T]      Quit immediately on game over or after T seconds
-	cmd = _T("--minimise");
-	}
 	cmd += _T(" \"") + path +  _T("\"");
 
 	return LaunchSpring(battle.GetEngineName(), battle.GetEngineVersion(), cmd );
 }
-
-
-bool Spring::Run( SinglePlayerBattle& battle )
-{
-
-  wxString path = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
-
-  try
-  {
-
-    if ( !wxFile::Access( path, wxFile::write ) )
-    {
-      wxLogError( _T("Access denied to script.txt.") );
-    }
-
-    wxFile f( path, wxFile::write );
-    f.Write( WriteScriptTxt(battle) );
-    f.Close();
-
-  }
-  catch ( std::exception& e )
-  {
-    wxLogError( wxString::Format( _T("Couldn't write script.txt, exception caught:\n %s"), TowxString( e.what() ).c_str() ) );
-    return false;
-  }
-  catch (...)
-  {
-    wxLogError( _T("Couldn't write script.txt") );
-    return false;
-  }
-
-	battle.SetEngineVersion(SlPaths::GetCurrentUsedSpringIndex());
-
-	return LaunchSpring(battle.GetEngineName(), battle.GetEngineVersion(), _T("\"") + path + _T("\"") );
-}
-
-bool Spring::Run( OfflineBattle& battle )
-{
-	wxString path = battle.GetPlayBackFilePath();
-	return LaunchSpring(battle.GetEngineName(), battle.GetEngineVersion(), _T("\"") + path + _T("\"") );
-}
-
 
 bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVersion, const wxString& params)
 {
