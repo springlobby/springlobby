@@ -49,11 +49,15 @@ public:
 	 */
 	bool LogEnabled();
 
-
-	void OpenInEditor();
 	const wxArrayString& GetLastLines( ) const;
 
 	bool SetLogFile(const wxString& logname);
+
+	/** Get the path (filename) to the current log file.
+	 *
+	 * @return A platform-specific logfile path string.
+	 */
+	wxString GetCurrentLogfilePath() const;
 
 private:
 	/** Get a string, representing the current time-of-day, suitable
@@ -72,14 +76,6 @@ private:
 	 * will reopen the log file, starting a new session.
 	 */
 	void CloseSession();
-
-
-	/** Get the path (filename) to the current log file.
-	 *
-	 * @return A platform-specific logfile path string.
-	 */
-	wxString GetCurrentLogfilePath() const;
-
 
 	/** Write a line of text to the output file, without any further
 	 * formatting.

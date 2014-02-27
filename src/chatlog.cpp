@@ -17,7 +17,6 @@
 #include "settings.h"
 #include "helper/slconfig.h"
 #include "utils/conversion.h"
-#include "ui.h"
 #include "defines.h"
 
 #include "utils/platform.h"
@@ -157,13 +156,6 @@ wxString ChatLog::LogTime()
 {
 	wxDateTime now = wxDateTime::Now();
 	return  _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
-}
-
-void ChatLog::OpenInEditor()
-{
-#ifndef TEST
-	ui().OpenFileInEditor( GetCurrentLogfilePath());
-#endif
 }
 
 const wxArrayString& ChatLog::GetLastLines( ) const

@@ -726,7 +726,7 @@ void ChatPanelMenu::OnChannelMenuShowMutelist( wxCommandEvent& /*unused*/ )
 
 void ChatPanelMenu::OnChatMenuOpenLog( wxCommandEvent&  )
 {
-    m_chatpanel->m_chat_log.OpenInEditor();
+	ui().OpenFileInEditor(m_chatpanel->m_chat_log.GetCurrentLogfilePath());
 }
 
 void ChatPanelMenu::OnChannelClearContents( wxCommandEvent& /*unused*/ )
