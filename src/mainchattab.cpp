@@ -204,7 +204,7 @@ void MainChatTab::RejoinChannels()
 			bool alreadyin = false;
 			try
 			{
-				serverSelector().GetServer().GetChannel( name ).GetMe();
+				serverSelector().GetServer().GetMe();
 				alreadyin = true;
 			}
 			catch ( ... ) {}
