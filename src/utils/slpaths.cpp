@@ -158,8 +158,9 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 wxString SlPaths::GetCurrentUsedSpringIndex()
 {
 	wxString index = wxEmptyString;
-	if(!cfg().Read(_T("/Spring/CurrentIndex"), &index)) {
-		// if no version set yet, select one, if availibe
+	cfg().Read(_T("/Spring/CurrentIndex"), &index);
+	if(index.empty()) {
+		// if no version set yet, select one, if available
 		for(auto pair: m_spring_versions) {
 			return pair.first;
 		}

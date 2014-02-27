@@ -81,7 +81,7 @@ const Control floatControls[] = {
 
 const int intControls_size = sizeof(intControls) / sizeof(intControls[0] ) ;
 const int floatControls_size = sizeof(floatControls) / sizeof(floatControls[0] ) ;
-const int allControls_size = intControls_size + floatControls_size;
+//const int allControls_size = intControls_size + floatControls_size;
 
 abstract_panel::abstract_panel(wxWindow *parent, wxWindowID id , const wxString &title , const wxPoint& pos , const wxSize& size, long style)
                 : wxScrolledWindow(parent, id, pos, size, style|wxTAB_TRAVERSAL|wxHSCROLL,title) {
@@ -100,7 +100,7 @@ bool abstract_panel::loadValuesIntoMap()
 	{
 		//special treatment for resolution that'll set proper defaults for res
 		wxDisplay display(0);
-		wxRect display_rect ( display.GetGeometry() );
+//		wxRect display_rect ( display.GetGeometry() );
 //		const int current_x_res = LSL::susynclib().GetSpringConfigInt(RC_TEXT[0].key,display_rect.width);
 //		const int current_y_res = LSL::susynclib().GetSpringConfigInt(RC_TEXT[1].key,display_rect.height);
 

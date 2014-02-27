@@ -47,7 +47,6 @@ class IServerEvents
 
 	virtual void OnLogin() = 0;
 	virtual void OnLoginInfoComplete() = 0;
-	virtual void OnLogout() = 0;
 
 	virtual void OnUnknownCommand( const wxString& command, const wxString& params ) = 0;
 	virtual void OnSocketError( const Sockerror& error ) = 0;
