@@ -25,7 +25,6 @@ class ServerEvents : public IServerEvents
 
     void OnLogin();
     void OnLoginInfoComplete();
-    void OnLogout();
 
     void OnUnknownCommand( const wxString& command, const wxString& params );
     void OnSocketError( const Sockerror& error );

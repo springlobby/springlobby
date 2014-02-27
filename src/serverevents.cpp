@@ -81,12 +81,6 @@ void ServerEvents::OnLoginInfoComplete()
 }
 
 
-void ServerEvents::OnLogout()
-{
-    //wxLogDebugFunc( wxEmptyString );
-}
-
-
 void ServerEvents::OnUnknownCommand( const wxString& command, const wxString& params )
 {
     wxLogDebugFunc( wxEmptyString );
