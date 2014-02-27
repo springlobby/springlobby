@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 
 #include "iserverevents.h"
-#include <wx/event.h>
 #include <wx/longlong.h>
 
 class Ui;
@@ -13,10 +12,10 @@ struct UserBattleStatus;
 class Battle;
 
 //! @brief Class that implements server event behaviour.
-class ServerEvents : public IServerEvents, public wxEvtHandler
+class ServerEvents : public IServerEvents
 {
   public:
-    ServerEvents( Server& serv) :  wxEvtHandler(), m_serv(serv), m_autolaunch(false), m_autoclose(false) {}
+    ServerEvents( Server& serv): m_serv(serv), m_autolaunch(false), m_autoclose(false) {}
     ~ServerEvents() {}
 
   // Uicontrol interface
@@ -116,14 +115,11 @@ class ServerEvents : public IServerEvents, public wxEvtHandler
     void OnScriptLine( int battleid, const wxString& line );
     void OnScriptEnd( int battleid );
 
-    void OnSpringDownloadEvent( wxCommandEvent& event );
     void OnForceJoinBattle( int battleid, const wxString& line );
 
   protected:
     Server& m_serv;
     std::map<wxString,MessageSpamCheck> m_spam_check;
-
-    DECLARE_EVENT_TABLE()
 
 		/// spring autoupdate stuff
     bool m_autolaunch;

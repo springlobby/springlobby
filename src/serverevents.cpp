@@ -30,11 +30,6 @@
 
 #include <lslutils/globalsmanager.h>
 
-BEGIN_EVENT_TABLE(ServerEvents, wxEvtHandler)
-    EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  ServerEvents::OnSpringDownloadEvent)
-    EVT_COMMAND(wxID_ANY, httpDownloadEvtFailed,    ServerEvents::OnSpringDownloadEvent)
-END_EVENT_TABLE()
-
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool /*unused*/ )
 {
     wxLogDebugFunc( server_ver + _T(" ") + server_spring_ver );
@@ -978,68 +973,6 @@ void ServerEvents::OnScriptEnd( int battleid )
 			return;
 	}
 	m_serv.GetBattle( battleid ).GetBattleFromScript( true );
-}
-
-void ServerEvents::OnSpringDownloadEvent( wxCommandEvent& event )
-{
-	int code = event.GetInt();
-	wxLogMessage(event.GetString());
-  if ( code != 0)
-  {
-  	 customMessageBox(SL_MAIN_ICON, _("There was an error downloading for the latest version.\n"), _("Error"));
-		wxString err;
-    switch (code)
-    {
-      case wxPROTO_NETERR:
-        err = _("Network Error");
-        break;
-      case wxPROTO_PROTERR:
-        err = _("Negotiation error");
-        break;
-      case wxPROTO_CONNERR:
-        err = _T("Failed to connect to server");
-        break;
-      case wxPROTO_INVVAL:
-        err = _("Invalid Value");
-        break;
-      case wxPROTO_NOHNDLR:
-        err = _("No Handler");
-        break;
-      case wxPROTO_NOFILE:
-        err = _("File doesn't exit");
-        break;
-      case wxPROTO_ABRT:
-        err = _("Action Aborted");
-        break;
-      case wxPROTO_RCNCT:
-        err = _("Reconnection Error");
-        break;
-      default:
-        err = _("Unknown Error");
-        break;
-    }
-
-    wxLogDebugFunc(_T("Error connecting! Error is: ") + err);
-    customMessageBoxNoModal(SL_MAIN_ICON, _T("Error connecting! (") + err + _T(")\nPlease update manually from http://springrts.com"), wxEmptyString);
-
-  }
-  else
-  {
-        wxString text =  _("Download complete, location is: ") + m_savepath;
-        if ( m_autoclose ) text += _("\nlobby will get closed now.");
-        customMessageBox(SL_MAIN_ICON, text, _("Download complete.")  );
-        if ( m_autolaunch )
-        {
-            if ( !wxExecute( _T("\"") + m_savepath + _T("\""), wxEXEC_ASYNC ) )
-            {
-                    customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch installer. File location is: ") + m_savepath, _("Couldn't launch installer.")  );
-            }
-        }
-        if ( m_autoclose )
-        {
-            ui().mw().Close();
-        }
-  }
 }
 
 void ServerEvents::OnForceJoinBattle(int battleid, const wxString &scriptPW)

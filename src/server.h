@@ -181,8 +181,6 @@ class Server : public iNetClass, public SL::NonCopyable
 
     wxString GetServerName() const { return m_server_name; }
 
-    virtual void RequestSpringUpdate();
-
 	virtual void SetRelayIngamePassword( const User& user ) = 0;
 
 	virtual wxArrayString GetRelayHostList();

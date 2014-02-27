@@ -179,10 +179,6 @@ void Server::OnDisconnected()
 
 }
 
-void Server::RequestSpringUpdate()
-{
-}
-
 wxArrayString Server::GetRelayHostList()
 {
 	if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
