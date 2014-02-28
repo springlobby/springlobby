@@ -5,7 +5,7 @@
 //
 #include "battle.h"
 #include "ui.h"
-#include "server.h"
+#include "iserver.h"
 #include "user.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
@@ -34,13 +34,11 @@ BEGIN_EVENT_TABLE(Battle, wxEvtHandler)
     EVT_TIMER(TIMER_ID, Battle::OnTimer)
 END_EVENT_TABLE()
 
-Battle::Battle( Server& serv, int id ) :
-		IBattle(),
-        m_serv(serv),
+Battle::Battle( IServer& serv, int id ) :
+		m_serv(serv),
         m_ah(*this),
         m_autolock_on_start(false),
         m_id( id )
-
 {
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
     m_opts.battleid =  m_id;
@@ -62,13 +60,6 @@ void Battle::SendHostInfo( const wxString& Tag )
 {
     m_serv.SendHostInfo( Tag );
 }
-
-
-void Battle::Update()
-{
-	BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(this,wxString()) );
-}
-
 
 void Battle::Update( const wxString& Tag )
 {
@@ -446,7 +437,7 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
     //>
     return false;
 }
-///< quick hotfix for bans
+
 /// returns true if user is banned (and hence has been kicked)
 bool Battle::CheckBan(User &user)
 {

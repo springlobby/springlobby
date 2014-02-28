@@ -58,7 +58,7 @@ class BattleListTab : public wxScrolledWindow, public GlobalEvent, public SL::No
     void OnListJoin( wxListEvent& event );
     void ShowExtendedInfos( bool show );
 
-    void DoJoin( Battle& battle );
+    void DoJoin( IBattle& battle );
 
     void OnSelect( wxListEvent& event );
     void OnUnitsyncReloaded( wxCommandEvent& data );

@@ -35,7 +35,7 @@
 #include "utils/customdialogs.h"
 #include "utils/slpaths.h"
 #include "ui.h"
-#include "server.h"
+#include "iserver.h"
 #include <lslunitsync/c_api.h>
 #include <lslunitsync/springbundle.h>
 
@@ -455,24 +455,24 @@ void RunHostBattleDialog( wxWindow* parent )
 		{
 			switch ( ui().TestHostPort( bo.port ) )
 			{
-				case Server::porttest_pass :
+				case IServer::porttest_pass :
 					break; // success
-				case Server::porttest_pass_WX26 :
+				case IServer::porttest_pass_WX26 :
 					wxLogWarning( _T( "hosting port %d: test aborted (wx26)" ), bo.port  );
 					customMessageBoxNoModal( SL_MAIN_ICON, wxFormat( _( "Your using wxWidgets prior to version 2.8,\n "
 											 "port testing is not supported.\n Hosting may or may not work." ) ) % bo.port );
 					sett().SetTestHostPort( false ); // no need to have it checked anymore
 					break;
 
-				case Server::porttest_unreachable :
+				case IServer::porttest_unreachable :
 					wxLogWarning( _T( "hosting port %d: test undetermined" ), bo.port  );
 					customMessageBoxNoModal( SL_MAIN_ICON, wxFormat( _( "The server used for testing your port %d "
 											 "is unreachable. \nHosting may or may not work with this setting." ) ) % bo.port );
 					break; //inconclusive test shouldn't hinder hosting imo (koshi)
 
-				case Server::porttest_timeout :
-				case Server::porttest_socketNotOk :
-				case Server::porttest_socketError :
+				case IServer::porttest_timeout :
+				case IServer::porttest_socketNotOk :
+				case IServer::porttest_socketError :
 					wxLogWarning( _T( "hosting port %d: test unsuccessful, closing battle" ), bo.port  );
 					customMessageBoxNoModal( SL_MAIN_ICON, wxFormat( _( "Battle not started because the port you selected (%d) "
 											 "is unable to-f /home/kosh/.springlobby/testing.conf recieve incoming packets\n checks your router & firewall configuration again or change port "

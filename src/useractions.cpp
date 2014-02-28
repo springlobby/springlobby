@@ -15,6 +15,7 @@
 #include "hosting/battleroomtab.h"
 #include "battlelist/battlelisttab.h"
 #include "chatpanel.h"
+#include "ui.h"
 #include <options/mainoptionstab.h>
 #include <options/groupoptionspanel.h>
 #include <lslutils/globalsmanager.h>
@@ -47,8 +48,6 @@ bool UserActions::DoActionOnUser( const UserActions::ActionType action, const wx
         return false;
     else
         return ( m_actionsGroups.find( action ) != m_actionsGroups.end() && m_actionsPeople[action].Index( name ) != -1 );
-
-    return false;
 }
 
 void UserActions::Init()

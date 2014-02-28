@@ -2,9 +2,9 @@
 
 #include "autohostmanager.h"
 
-#include "../battle.h"
-#include "../user.h"
-#include "../mainwindow.h"
+#include "ibattle.h"
+#include "user.h"
+#include "mainwindow.h"
 
 AutohostHandler::AutohostHandler():m_battle(0)
 {
@@ -15,7 +15,7 @@ AutohostHandler::~AutohostHandler()
 
 }
 
-void AutohostHandler::SetBattle(Battle* battle)
+void AutohostHandler::SetBattle(IBattle* battle)
 {
     m_battle=battle;
 }
@@ -131,7 +131,7 @@ AutohostManager::~AutohostManager()
 
 }
 
-void AutohostManager::SetBattle(Battle* battle)
+void AutohostManager::SetBattle(IBattle* battle)
 {
     m_battle=battle;
     m_springie.SetBattle(battle);

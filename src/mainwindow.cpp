@@ -36,7 +36,7 @@
 #include "springlobbyapp.h"
 #include "mainwindow.h"
 #include "settings.h"
-#include "server.h"
+#include "iserver.h"
 #include "utils/debug.h"
 #include "utils/platform.h"
 #include "battlelist/battlelisttab.h"

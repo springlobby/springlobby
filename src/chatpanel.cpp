@@ -24,8 +24,8 @@
 #include "utils/debug.h"
 #include "utils/uievents.h"
 #include "updater/updatehelper.h"
-#include "server.h"
-#include "battle.h"
+#include "iserver.h"
+#include "ibattle.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"
 #include "chatpanelmenu.h"
@@ -124,7 +124,7 @@ ChatPanel::ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist 
 }
 
 
-ChatPanel::ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  ):
+ChatPanel::ChatPanel( wxWindow* parent, IServer& serv, wxImageList* imaglist  ):
 	wxPanel( parent, -1 ),
 	m_show_nick_list( true ),
 	m_nicklist(0),
@@ -146,7 +146,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  ):
 }
 
 
-ChatPanel::ChatPanel( wxWindow* parent, Battle* battle ):
+ChatPanel::ChatPanel( wxWindow* parent, IBattle* battle ):
 	wxPanel( parent, -1 ),
 	m_show_nick_list( false ),
 	m_nicklist( 0 ),
@@ -756,12 +756,12 @@ void ChatPanel::SetChannel( Channel* chan )
 		m_topic_set = false;
 }
 
-const Server* ChatPanel::GetServer()  const
+const IServer* ChatPanel::GetServer()  const
 {
 	return m_server;
 }
 
-void ChatPanel::SetServer( Server* serv )
+void ChatPanel::SetServer( IServer* serv )
 {
 	ASSERT_LOGIC( m_type == CPT_Server, _T( "Not of type server" ) );
 	if (( serv == 0 ) && ( m_server != 0 ) ) {
@@ -1056,8 +1056,6 @@ void ChatPanel::SetIconHighlight( HighlightType highlight )
 					}
 					break;
 				}
-				default:
-					break;
 				}
 			}
 		}
@@ -1069,7 +1067,7 @@ void ChatPanel::OnMenuItem( wxCommandEvent& event )
 	m_popup_menu->OnMenuItem( event );
 }
 
-void ChatPanel::SetBattle( Battle* battle )
+void ChatPanel::SetBattle(IBattle* battle )
 {
 	if (m_battle == battle) { // battle didn't change, skip
 		return;

@@ -9,7 +9,7 @@
 #include "../utils/mixins.hh"
 
 class Channel;
-class Server;
+class IServer;
 class Ui;
 class ChatPanel;
 
@@ -26,10 +26,10 @@ class Channel : public UserList, public SL::NonCopyable
     UiChannelData uidata;
 
     //Channel(): m_serv(0),m_userdata(0) {}
-    Channel( Server& serv );
+    Channel( IServer& serv );
     virtual ~Channel();
 
-    Server& GetServer() { return m_serv; }
+    IServer& GetServer() { return m_serv; }
 
     void SetName( const wxString& name );
     wxString GetName() const;
@@ -64,7 +64,7 @@ class Channel : public UserList, public SL::NonCopyable
     void SetPassword( const wxString& pw );
 
   protected:
-    Server& m_serv;
+    IServer& m_serv;
 
     std::set<wxString> m_banned_users;
 

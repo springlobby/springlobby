@@ -21,7 +21,7 @@ lsl/networking/tasserver.h
 #include <wx/timer.h>
 #include <list>
 
-#include "server.h"
+#include "iserver.h"
 #include "crc.h"
 
 const unsigned int FIRST_UDP_SOURCEPORT = 8300;
@@ -35,7 +35,7 @@ class wxString;
 class PingThread;
 
 //! @brief TASServer protocol implementation.
-class TASServer : public Server, public wxTimer
+class TASServer : public IServer, public wxTimer
 {
   public:
 	TASServer();
@@ -131,7 +131,7 @@ class TASServer : public Server, public wxTimer
     void SendUdpSourcePort( int udpport );
     void SendNATHelperInfos( const wxString& username, const wxString& ip, int port );
 
-    Battle* GetCurrentBattle();
+    IBattle* GetCurrentBattle();
 
     void RequestChannels();
     // TASServer specific functions

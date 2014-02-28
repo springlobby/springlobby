@@ -32,7 +32,9 @@ const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 
 class IBattle;
+class IServer;
 class wxTimer;
+class AutoHost;
 
 struct BattleStartRect
 {
@@ -415,7 +417,37 @@ public:
 		virtual void SetEngineVersion(const wxString& version){ m_opts.engineVersion = version;}
 		virtual wxString GetEngineName() const{ return m_opts.engineName;}
 		virtual wxString GetEngineVersion() const{ return m_opts.engineVersion;}
-
+		virtual bool ExecuteSayCommand(const wxString& /*line*/) { return true;}
+		virtual int GetID() const { return 0;}
+		virtual void Join( const wxString& /*password*/ = wxEmptyString ) {}
+		virtual IServer& GetServer();
+		virtual void Say(const wxString& /*msg*/) {}
+		virtual bool CheckBan(User& /*user*/) {return false;}
+		virtual bool GetAutoLockOnStart() { return false;}
+		virtual void LoadMapDefaults(const wxString&) {}
+		virtual void SendMyBattleStatus() {}
+		virtual AutoHost* GetAutoHost() { return NULL; }
+		virtual void Autobalance( BalanceType /*balance_type*/, bool /*support_clans*/, bool /*strong_clans*/, int /*numallyteams*/ ){}
+		virtual void DoAction( const wxString& /*action*/) {}
+		virtual void RingPlayer(const User& /*user*/){}
+		virtual void RingNotReadyPlayers(){}
+		virtual void FixColours(){}
+		virtual void FixTeamIDs( BalanceType /*balance_type*/ = balance_divide, bool /*clans*/ = true, bool /*strong_clans*/ = true, int /*controlteamsize*/ = 0 ) {}
+		virtual void ForceUnsyncedToSpectate(){}
+		virtual void StartHostedBattle() {}
+		virtual void SaveMapDefaults() {}
+		virtual void OnRequestBattleStatus() {}
+		virtual void Leave() {}
+		virtual bool GetAutoUnspec() {return false;}
+		virtual void SetAutoUnspec(bool /*value*/){}
+		virtual void SetImReady(bool /*ready*/){}
+		virtual void SetLastAutolockStatus(bool /*autolock*/){}
+		virtual void SetLockExternalBalanceChanges(bool /*block*/) {}
+		virtual void ForceUnReadyToSpectate() {}
+		virtual void ForceUnsyncedAndUnreadyToSpectate() {}
+		virtual void RingNotSyncedPlayers() {}
+		virtual void RingNotSyncedAndNotReadyPlayers() {}
+		virtual void SetAutoLockOnStart(bool /*autolock*/) {}
 protected:
 
 		void LoadScriptMMOpts( const wxString& sectionname, const SL::PDataList& node );

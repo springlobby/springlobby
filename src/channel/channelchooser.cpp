@@ -8,7 +8,7 @@
 #include <wx/textctrl.h>
 
 #include "channellistctrl.h"
-#include "../server.h"
+#include "iserver.h"
 #include "channel.h"
 
 BEGIN_EVENT_TABLE( ChannelChooserPanel, wxScrolledWindow )

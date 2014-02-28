@@ -17,15 +17,15 @@ lsl/user/user.cpp
 //
 
 #include "user.h"
-#include "battle.h"
-#include "server.h"
+#include "ibattle.h"
+#include "iserver.h"
 #include "chatpanel.h"
 #include "iconimagelist.h"
 
 #include <wx/string.h>
 #include <wx/intl.h>
 
-User::User( Server& serv )
+User::User( IServer& serv )
     : CommonUser( wxEmptyString,wxEmptyString,0 ),
     m_serv(&serv),
     m_battle(0),
@@ -35,7 +35,7 @@ User::User( Server& serv )
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
-User::User( const wxString& nick, Server& serv )
+User::User( const wxString& nick, IServer& serv )
     : CommonUser( nick,wxEmptyString,0 ),
     m_serv(&serv),
     m_battle(0),
@@ -45,7 +45,7 @@ User::User( const wxString& nick, Server& serv )
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
-User::User( const wxString& nick, const wxString& country, const int& cpu, Server& serv)
+User::User( const wxString& nick, const wxString& country, const int& cpu, IServer& serv)
     : CommonUser( nick,country,cpu ),
     m_serv(&serv),
     m_battle(0),
@@ -116,13 +116,13 @@ void User::DoAction( const wxString& message ) const
 }
 
 
-Battle* User::GetBattle() const
+IBattle* User::GetBattle() const
 {
   return m_battle;
 }
 
 
-void User::SetBattle( Battle* battle )
+void User::SetBattle( IBattle* battle )
 {
   m_battle = battle;
   m_statusicon_idx = icons().GetUserListStateIcon( m_status, false, m_battle != 0 );
@@ -137,7 +137,7 @@ void User::SetStatus( const UserStatus& status )
   	{
 			User& user = m_battle->GetFounder();
 			if ( user.GetNick() == m_nick ) {
-				m_battle->Update();
+				m_battle->Update(wxEmptyString);
 			}
     }catch(...){}
   }

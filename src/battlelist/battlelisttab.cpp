@@ -26,7 +26,7 @@
 #include "uiutils.h"
 #include "hosting/hostbattledialog_public.h"
 #include "hosting/mainjoinbattletab.h"
-#include "server.h"
+#include "iserver.h"
 #include "mapctrl.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"
@@ -36,7 +36,7 @@
 #include "utils/customdialogs.h"
 #include "helper/slconfig.h"
 
-const unsigned int BATTLELIST_COLUMNCOUNT = 10;
+//const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
 BEGIN_EVENT_TABLE( BattleListTab, wxPanel )
 
@@ -268,7 +268,7 @@ void BattleListTab::RemoveAllBattles()
 	serverSelector().GetServer().battles_iter->IteratorBegin();
 	while ( ! serverSelector().GetServer().battles_iter->EOL() )
 	{
-		Battle* temp_battle = serverSelector().GetServer().battles_iter->GetBattle();
+		IBattle* temp_battle = serverSelector().GetServer().battles_iter->GetBattle();
 		if ( temp_battle != 0 )
 			temp_battle->SetGUIListActiv( false );
 	}
@@ -280,7 +280,7 @@ void BattleListTab::RemoveAllBattles()
 void BattleListTab::UpdateList() {
 	serverSelector().GetServer().battles_iter->IteratorBegin();
 	while ( ! serverSelector().GetServer().battles_iter->EOL() ) {
-		Battle* b = serverSelector().GetServer().battles_iter->GetBattle();
+		IBattle* b = serverSelector().GetServer().battles_iter->GetBattle();
 		if ( b != 0 )
 			UpdateBattle( *b );
 	}
@@ -306,7 +306,7 @@ void BattleListTab::OnHost( wxCommandEvent& /*unused*/ )
 		return;
 	}
 
-	Battle* battle = ui().mw().GetJoinTab().GetCurrentBattle();
+	IBattle* battle = ui().mw().GetJoinTab().GetCurrentBattle();
 	if ( battle != 0 )
 	{
 		if ( ui().Ask( _( "Already in a battle" ), _( "You are already in a battle.\n\nDo you want to leave current battle to start a new?" ) ) ) {
@@ -382,7 +382,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 }
 
 
-void BattleListTab::DoJoin( Battle& battle )
+void BattleListTab::DoJoin( IBattle& battle )
 {
 
 	if ( !ui().IsSpringCompatible(battle.GetBattleOptions().engineName, battle.GetBattleOptions().engineVersion) )
@@ -392,7 +392,7 @@ void BattleListTab::DoJoin( Battle& battle )
 		return;
 	}
 
-	Battle* curbattle = ui().mw().GetJoinTab().GetCurrentBattle();
+	IBattle* curbattle = ui().mw().GetJoinTab().GetCurrentBattle();
 
 	if ( curbattle != 0 && curbattle->GetID() == battle.GetID() )
 	{

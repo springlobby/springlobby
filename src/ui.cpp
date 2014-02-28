@@ -23,7 +23,7 @@
 #include "ui.h"
 #include "tasserver.h"
 #include "settings.h"
-#include "server.h"
+#include "iserver.h"
 #include "spring.h"
 #include "channel/channel.h"
 #include "connectwindow.h"
@@ -479,7 +479,7 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 //! @brief Called when connected to a server
 //!
 //! @todo Display in servertab
-void Ui::OnConnected( Server& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
+void Ui::OnConnected( IServer& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
 {
 	wxLogDebugFunc( wxEmptyString );
 
@@ -561,7 +561,7 @@ void Ui::OnLoggedIn( )
 }
 
 
-void Ui::OnDisconnected( Server& server, bool wasonline )
+void Ui::OnDisconnected( IServer& server, bool wasonline )
 {
 	m_reconnect_delay_timer.Start( s_reconnect_delay_ms, true );
 	if ( m_main_win == 0 ) return;
@@ -799,18 +799,18 @@ void Ui::OnUserStatusChanged( User& user )
 }
 
 
-void Ui::OnUnknownCommand( Server& server, const wxString& command, const wxString& params )
+void Ui::OnUnknownCommand( IServer& server, const wxString& command, const wxString& params )
 {
 	if ( server.uidata.panel != 0 ) server.uidata.panel->UnknownCommand( command, params );
 }
 
 
-void Ui::OnMotd( Server& server, const wxString& message )
+void Ui::OnMotd( IServer& server, const wxString& message )
 {
 	if ( server.uidata.panel != 0 ) server.uidata.panel->Motd( message );
 }
 
-void Ui::OnServerBroadcast( Server& /*server*/, const wxString& message )
+void Ui::OnServerBroadcast( IServer& /*server*/, const wxString& message )
 {
 	if ( m_main_win == 0 ) return;
 	mw().GetChatTab().BroadcastMessage( message );
@@ -820,7 +820,7 @@ void Ui::OnServerBroadcast( Server& /*server*/, const wxString& message )
 }
 
 
-void Ui::OnServerMessage( Server& server, const wxString& message )
+void Ui::OnServerMessage( IServer& server, const wxString& message )
 {
 	if ( !cfg().ReadBool(_T("/Chat/BroadcastEverywhere")) ) {
 		if ( server.uidata.panel != 0 ) server.uidata.panel->StatusMessage( message );
@@ -959,7 +959,7 @@ void Ui::OnBattleInfoUpdated( BattleEvents::BattleEventData data )
 	}
 }
 
-void Ui::OnJoinedBattle( Battle& battle )
+void Ui::OnJoinedBattle( IBattle& battle )
 {
 	if ( m_main_win == 0 ) return;
 	mw().GetJoinTab().JoinBattle( battle );
@@ -973,7 +973,7 @@ void Ui::OnJoinedBattle( Battle& battle )
 }
 
 
-void Ui::OnHostedBattle( Battle& battle )
+void Ui::OnHostedBattle( IBattle& battle )
 {
 	if ( m_main_win == 0 )
 		return;
@@ -1001,7 +1001,7 @@ void Ui::OnRequestBattleStatus( IBattle& battle )
 }
 
 
-void Ui::OnBattleStarted( Battle& battle )
+void Ui::OnBattleStarted( IBattle& battle )
 {
 	if ( m_main_win == 0 ) return;
 	wxLogDebugFunc( wxEmptyString );
@@ -1026,7 +1026,7 @@ void Ui::OnSpringTerminated( wxCommandEvent& data  )
 	try {
 		serverSelector().GetServer().GetMe().Status().in_game = false;
 		serverSelector().GetServer().GetMe().SendMyUserStatus();
-		Battle *battle = serverSelector().GetServer().GetCurrentBattle();
+		IBattle *battle = serverSelector().GetServer().GetCurrentBattle();
 		if ( !battle )
 			return;
 		if( battle->IsFounderMe() && battle->GetAutoLockOnStart() ) {

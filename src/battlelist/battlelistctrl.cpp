@@ -9,7 +9,7 @@
 #include "iconimagelist.h"
 #include "uiutils.h"
 #include "ui.h"
-#include "server.h"
+#include "iserver.h"
 #include "countrycodes.h"
 #include "settings.h"
 #include "utils/customdialogs.h"

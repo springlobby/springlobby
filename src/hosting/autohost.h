@@ -7,7 +7,7 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 
-class Battle;
+class IBattle;
 class User;
 class wxString;
 
@@ -16,7 +16,7 @@ class AutoHost
 {
   public:
 
-    AutoHost( Battle& battle );
+    AutoHost( IBattle& battle );
 
     void SetEnabled( const bool enabled );
     bool GetEnabled() const;
@@ -28,7 +28,7 @@ class AutoHost
 
     void StartBattle();
 
-    Battle& m_battle;
+    IBattle& m_battle;
 
     bool m_enabled;
     time_t m_lastActionTime;

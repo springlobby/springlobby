@@ -60,7 +60,7 @@ SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiont
         case LSL::Enum::opt_float:
 			{
                 const auto opt = optWrap.m_opts[optFlag].float_map[key];
-				m_spinctrl = new SlSpinCtrlDouble<SingleOptionDialog>();
+				m_spinctrl = new SlSpinCtrlDouble();
                 m_spinctrl->Create( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
                                     wxSP_ARROW_KEYS, double( opt.min ), double( opt.max ),
                                     double( opt.value ), double( opt.stepping ), TowxString(opt.key));

@@ -15,7 +15,7 @@ class Battle;
 class ServerEvents : public IServerEvents
 {
   public:
-    ServerEvents( Server& serv): m_serv(serv), m_autolaunch(false), m_autoclose(false) {}
+    ServerEvents( IServer& serv): m_serv(serv), m_autolaunch(false), m_autoclose(false) {}
     ~ServerEvents() {}
 
   // Uicontrol interface
@@ -117,7 +117,7 @@ class ServerEvents : public IServerEvents
     void OnForceJoinBattle( int battleid, const wxString& line );
 
   protected:
-    Server& m_serv;
+    IServer& m_serv;
     std::map<wxString,MessageSpamCheck> m_spam_check;
 
 		/// spring autoupdate stuff

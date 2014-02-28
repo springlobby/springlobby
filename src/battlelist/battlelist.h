@@ -21,7 +21,7 @@ lsl/container/battlelist.h
 #include <map>
 #include "utils/mixins.hh"
 
-class Battle;
+class IBattle;
 
 /** \brief encapsulates a <battle_id_t, Battle*> map
  */
@@ -33,11 +33,11 @@ class BattleList
 
     typedef unsigned int battle_id_t;
 
-    void AddBattle( Battle& battle );
+    void AddBattle( IBattle& battle );
     void RemoveBattle( battle_id_t const& id );
 
     //! @brief mapping from battle id number to battle object
-    typedef std::map<battle_id_t, Battle*> battle_map_t;
+    typedef std::map<battle_id_t, IBattle*> battle_map_t;
     //! @brief iterator for battle map
     typedef battle_map_t::iterator battle_iter_t;
 
@@ -52,9 +52,9 @@ class BattleList_Iter : public SL::NonCopyable
 	BattleList_Iter(BattleList* battlelist) : m_battlelist( battlelist ) {}
 	~BattleList_Iter() {}
     void IteratorBegin();
-    Battle* GetBattle();
+    IBattle* GetBattle();
 	bool EOL() const;
-    Battle& GetBattle( BattleList::battle_id_t const& id );
+    IBattle& GetBattle( BattleList::battle_id_t const& id );
     //Battle& GetFirstBattle();
     bool BattleExists( BattleList::battle_id_t const& id );
 	BattleList::battle_map_t::size_type GetNumBattles() const;

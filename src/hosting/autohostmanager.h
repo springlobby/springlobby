@@ -5,7 +5,7 @@
 
 #include <wx/string.h>
 #include <exception>
-class Battle;
+class IBattle;
 
 
 class AutohostHandler
@@ -22,10 +22,10 @@ class AutohostHandler
         virtual void Notify(){};
         virtual void Start(){};
     protected:
-        Battle* m_battle;
+        IBattle* m_battle;
 
     private:
-        void SetBattle(Battle* battle);
+        void SetBattle(IBattle* battle);
 
 
         friend class AutohostManager;
@@ -76,7 +76,7 @@ class AutohostManager
         AutohostManager();
         ~AutohostManager();
 
-        void SetBattle(Battle* bt);
+        void SetBattle(IBattle* bt);
 
         bool RecnognizeAutohost();
         bool RecnognizeAutohost(const wxString& who, const wxString& message);
@@ -93,7 +93,7 @@ class AutohostManager
         AutohostHandler m_emptyhandler;
 
         AutohostType m_type;
-        Battle* m_battle;
+        IBattle* m_battle;
 };
 
 #endif // AUTOHOSTMANAGER_H

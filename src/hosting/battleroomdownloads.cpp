@@ -8,7 +8,7 @@
 #include <wx/string.h>
 #include "../downloader/downloadsobserver.h"
 #include <map>
-#include  "../ibattle.h"
+#include  "ibattle.h"
 
 class BattleRoomDownloadProgres: public wxPanel
 {

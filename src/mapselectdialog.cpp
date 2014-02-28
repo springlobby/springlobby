@@ -2,8 +2,8 @@
 
 #include "mapselectdialog.h"
 
-#include "battle.h"
-#include "server.h"
+#include "ibattle.h"
+#include "iserver.h"
 #include "settings.h"
 #include "ui.h"
 #include "uiutils.h"
@@ -366,7 +366,7 @@ void MapSelectDialog::LoadPopular()
 	try {
 		serverSelector().GetServer().battles_iter->IteratorBegin();
 		while ( !serverSelector().GetServer().battles_iter->EOL() ) {
-			Battle* b = serverSelector().GetServer().battles_iter->GetBattle();
+			IBattle* b = serverSelector().GetServer().battles_iter->GetBattle();
 			const wxString mapname = b->GetHostMapName();
 			assert(!mapname.empty());
 			if ( b != NULL ) m_mapgrid->AddMap( mapname );

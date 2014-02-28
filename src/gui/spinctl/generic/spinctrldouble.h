@@ -5,12 +5,11 @@
 // SlSpinCtrlDouble
 //-----------------------------------------------------------------------------
 
-template <class ParentType>
 class  SlSpinCtrlDouble : public SlSpinCtrlGenericBase
 {
 public:
     SlSpinCtrlDouble() : m_parent_instance(0), m_digits(0) { }
-    SlSpinCtrlDouble(ParentType *parent,
+    SlSpinCtrlDouble(wxWindow *parent,
                      wxWindowID id = wxID_ANY,
                      const wxString& value = wxEmptyString,
                      const wxPoint& pos = wxDefaultPosition,
@@ -21,11 +20,11 @@ public:
                      const wxString& name = wxT("SlSpinCtrlDouble"))
     {
         m_digits = 0;
-        Create((wxWindow*)parent, id, value, pos, size, style,
+        Create(parent, id, value, pos, size, style,
                min, max, initial, inc, name);
     }
 
-    bool Create(ParentType *parent,
+    bool Create(wxWindow *parent,
                 wxWindowID id = wxID_ANY,
                 const wxString& value = wxEmptyString,
                 const wxPoint& pos = wxDefaultPosition,
@@ -57,40 +56,11 @@ public:
     void SetDigits(unsigned digits);
 
 protected:
-    virtual void DoSendEvent();
-    ParentType* m_parent_instance;
+    virtual void DoSendEvent(){}
+    wxWindow* m_parent_instance;
     unsigned m_digits;
 
 //    DECLARE_DYNAMIC_CLASS(SlSpinCtrlDouble)
 };
-
-//-----------------------------------------------------------------------------
-// SlSpinCtrlDouble
-//-----------------------------------------------------------------------------
-
-//IMPLEMENT_DYNAMIC_CLASS(SlSpinCtrlDouble, SlSpinCtrlGenericBase)
-#include "../../../utils/debug.h"
-#include <wx/log.h>
-template <class P>
-void SlSpinCtrlDouble<P>::DoSendEvent()
-{
-    SlSpinDoubleEvent event( SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, GetId());
-    event.SetEventObject( this );
-    event.SetValue(m_value);
-    event.SetString(m_textCtrl->GetValue());
-
-    m_parent_instance->OnSpinCtrlDoubleChange( event );
-//    if ( !GetEventHandler()->ProcessEvent( event ) )
-//        wxLogError( _T("BULLSHIT") );
-}
-
-template <class P>
-void SlSpinCtrlDouble<P>::SetDigits(unsigned digits)
-{
-    wxCHECK_RET( digits <= 20, "too many digits for SlSpinCtrlDouble" );
-    m_format.Printf(wxT("%%0.%ulf"), digits);
-    DoSetValue(m_value);
-}
-
 
 #endif

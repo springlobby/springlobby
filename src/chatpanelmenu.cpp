@@ -7,7 +7,7 @@
 #include "chatpanel.h"
 #include "channel/channel.h"
 #include "utils/debug.h"
-#include "server.h"
+#include "iserver.h"
 #include "user.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"
@@ -505,7 +505,7 @@ void ChatPanelMenu::OnUserMenuJoinSame( wxCommandEvent& /*unused*/ )
 {
 	const User* user = m_chatpanel->GetSelectedUser();
 	if ( user == 0 ) return;
-	Battle* battle = user->GetBattle();
+	IBattle* battle = user->GetBattle();
 	if ( battle == 0 ) return;
 
     ui().mw().GetBattleListTab().DoJoin(*battle);

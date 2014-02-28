@@ -26,8 +26,8 @@ class NickListCtrl;
 class Channel;
 class User;
 class ChatLog;
-class Server;
-class Battle;
+class IServer;
+class IBattle;
 class Ui;
 class wxStaticText;
 
@@ -65,8 +65,8 @@ public:
 
 	ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist );
 	ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist  );
-	ChatPanel( wxWindow* parent, Server& serv, wxImageList* imaglist  );
-	ChatPanel( wxWindow* parent, Battle* battle );
+	ChatPanel( wxWindow* parent, IServer& serv, wxImageList* imaglist  );
+	ChatPanel( wxWindow* parent, IBattle* battle );
 	~ChatPanel();
 
 	void Said( const wxString& who, const wxString& message );
@@ -86,15 +86,15 @@ public:
 	const Channel* GetChannel() const;
 	void SetChannel( Channel* chan );
 
-	const Server* GetServer()  const;
-	void SetServer( Server* serv );
+	const IServer* GetServer()  const;
+	void SetServer( IServer* serv );
 
 	const User* GetUser() const ;
 	void SetUser( const User* usr );
 
 	ChatPanelType GetPanelType() const;
 
-	void SetBattle( Battle* battle );
+	void SetBattle( IBattle* battle );
 
 	void Part();
 	void FocusInputBox();
@@ -175,9 +175,9 @@ private:
 	SLNotebook* m_chat_tabs;
 
 	Channel* m_channel;         //!< Channel object.
-	Server* m_server;           //!< Server object.
+	IServer* m_server;           //!< Server object.
 	const User* m_user;               //!< User object.
-	Battle* m_battle;           //!< User object.
+	IBattle* m_battle;           //!< User object.
 
 	wxStaticText* m_usercount_label;
 

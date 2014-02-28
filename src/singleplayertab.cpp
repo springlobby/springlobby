@@ -22,7 +22,8 @@
 #include "uiutils.h"
 #include "ui.h"
 #include "hosting/addbotdialog.h"
-#include "server.h"
+#include "iserver.h"
+#include "offlinebattle.h"
 #include "settings.h"
 #include "helper/colorbutton.h"
 #include "aui/auimanager.h"
@@ -47,7 +48,7 @@ END_EVENT_TABLE()
 
 SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
         wxScrolledWindow( parent, -1 ),
-        m_battle( msptab )
+        m_battle(msptab)
 {
     GetAui().manager->AddPane( this, wxLEFT, _T("singleplayertab") );
 

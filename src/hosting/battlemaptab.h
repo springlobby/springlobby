@@ -7,7 +7,7 @@
 #include "utils/globalevents.h"
 
 class Ui;
-class Battle;
+class IBattle;
 class User;
 class ChatPanel;
 class wxCommandEvent;
@@ -29,7 +29,7 @@ class wxMouseEvent;
 class BattleMapTab : public wxScrolledWindow, public GlobalEvent
 {
   public:
-    BattleMapTab( wxWindow* parent, Battle* battle );
+    BattleMapTab( wxWindow* parent, IBattle* battle );
      ~BattleMapTab();
 
      void UpdateUser( User& user );
@@ -45,11 +45,11 @@ class BattleMapTab : public wxScrolledWindow, public GlobalEvent
     void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
 
     void SetMap( int index );
-    void SetBattle( Battle* battle );
-    Battle* GetBattle() { return m_battle; }
+    void SetBattle( IBattle* battle );
+    IBattle* GetBattle() { return m_battle; }
 
   protected:
-    Battle* m_battle;
+    IBattle* m_battle;
     //LSL::UnitsyncMap m_map;
 
     MapCtrl* m_minimap;

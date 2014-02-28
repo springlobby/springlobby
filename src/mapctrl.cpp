@@ -23,7 +23,7 @@
 #include "mapctrl.h"
 #include "user.h"
 #include "ui.h"
-#include "server.h"
+#include "iserver.h"
 #include "ibattle.h"
 #include "settings.h"
 #include "iconimagelist.h"
@@ -65,7 +65,7 @@ const int USER_BOX_ICON_HEIGHT = 16;
 
 //int div is indeed wanted here
 const int USER_BOX_ICON_HALFWIDTH = (USER_BOX_ICON_WIDTH / 2);
-const int USER_BOX_ICON_HALFHEIGHT = (USER_BOX_ICON_HEIGHT / 2);
+//const int USER_BOX_ICON_HALFHEIGHT = (USER_BOX_ICON_HEIGHT / 2);
 
 
 const wxSize user_box_icon_size ( USER_BOX_ICON_WIDTH + 2 * USER_BOX_ICON_PADDING,

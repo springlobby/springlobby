@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <wx/log.h>
 
-#include "server.h"
+#include "iserver.h"
 #include "socket.h"
 #include "battle.h"
 #include "channel/channel.h"
@@ -16,7 +16,7 @@
 #include "utils/conversion.h"
 #include "chatpanel.h"
 
-Server::Server():
+IServer::IServer():
 battles_iter(new BattleList_Iter(&m_battles)),
 m_keepalive(15),
 m_pass_hash(false)
@@ -24,7 +24,7 @@ m_pass_hash(false)
 	m_sock = new Socket( *this, false, false );
 }
 
-Server::~Server()
+IServer::~IServer()
 {
 	delete battles_iter;
 	if(uidata.panel)uidata.panel->SetServer(NULL);
@@ -33,56 +33,56 @@ Server::~Server()
 }
 
 
-User& Server::GetUser( const wxString& nickname ) const
+User& IServer::GetUser( const wxString& nickname ) const
 {
   return m_users.GetUser( nickname );
 }
 
 
-bool Server::UserExists( const wxString& nickname ) const
+bool IServer::UserExists( const wxString& nickname ) const
 {
   return m_users.UserExists( nickname );
 }
 
 
-Channel& Server::GetChannel( const wxString& name )
+Channel& IServer::GetChannel( const wxString& name )
 {
   return m_channels.GetChannel( name );
 }
 
 
-int Server::GetNumChannels() const
+int IServer::GetNumChannels() const
 {
   return m_channels.GetNumChannels();
 }
 
 
-Channel& Server::GetChannel( const int& index )
+Channel& IServer::GetChannel( const int& index )
 {
   return m_channels.GetChannel( index );
 }
 
 
-bool Server::ChannelExists( const wxString& name ) const
+bool IServer::ChannelExists( const wxString& name ) const
 {
   return m_channels.ChannelExists( name );
 }
 
 
-Battle& Server::GetBattle( const int& battleid )
+IBattle& IServer::GetBattle( const int& battleid )
 {
   return battles_iter->GetBattle( battleid );
 }
 
 
-bool Server::BattleExists( const int& battleid ) const
+bool IServer::BattleExists( const int& battleid ) const
 {
   return battles_iter->BattleExists( battleid );
 }
 
 
 
-User& Server::_AddUser( const wxString& user )
+User& IServer::_AddUser( const wxString& user )
 {
   if ( m_users.UserExists( user ) ) return m_users.GetUser( user );
   User* u = new User( user, *this );
@@ -91,7 +91,7 @@ User& Server::_AddUser( const wxString& user )
 }
 
 
-void Server::_RemoveUser( const wxString& nickname )
+void IServer::_RemoveUser( const wxString& nickname )
 {
   try{
     User* u = &m_users.GetUser( nickname );
@@ -108,7 +108,7 @@ void Server::_RemoveUser( const wxString& nickname )
 }
 
 
-Channel& Server::_AddChannel( const wxString& chan )
+Channel& IServer::_AddChannel( const wxString& chan )
 {
   if ( m_channels.ChannelExists( chan ) ) return m_channels.GetChannel( chan );
   Channel* c = new Channel( *this );
@@ -119,39 +119,39 @@ Channel& Server::_AddChannel( const wxString& chan )
 }
 
 
-void Server::_RemoveChannel( const wxString& name )
+void IServer::_RemoveChannel( const wxString& name )
 {
   Channel* c = &m_channels.GetChannel( name );
   m_channels.RemoveChannel( name );
-  ASSERT_LOGIC( c != 0, _T("Server::_RemoveChannel(\"") + name + _T("\"): GetChannel returned NULL pointer"));
+  ASSERT_LOGIC( c != 0, _T("IServer::_RemoveChannel(\"") + name + _T("\"): GetChannel returned NULL pointer"));
   delete c;
 }
 
-Battle& Server::_AddBattle( const int& id )
+IBattle& IServer::_AddBattle( const int& id )
 {
   if ( battles_iter->BattleExists( id ) ) return battles_iter->GetBattle( id );
-  Battle* b = new Battle( *this, id );
+  IBattle* b = new Battle( *this, id );
 
   m_battles.AddBattle( *b );
   return *b;
 }
 
 
-void Server::_RemoveBattle( const int& id )
+void IServer::_RemoveBattle( const int& id )
 {
-  Battle* b = &battles_iter->GetBattle( id );
+  IBattle* b = &battles_iter->GetBattle( id );
   m_battles.RemoveBattle( id );
-  ASSERT_LOGIC( b != 0, _T("Server::_RemoveBattle(): GetBattle returned NULL pointer"));
+  ASSERT_LOGIC( b != 0, _T("IServer::_RemoveBattle(): GetBattle returned NULL pointer"));
   delete b;
 }
 
 
-void Server::OnDisconnected()
+void IServer::OnDisconnected()
 {
   while ( battles_iter->GetNumBattles() > 0 )
   {
     battles_iter->IteratorBegin();
-    Battle* b = battles_iter->GetBattle();
+    IBattle* b = battles_iter->GetBattle();
     if (b!=0)
     {
         m_battles.RemoveBattle( b->GetBattleId() );
@@ -179,7 +179,7 @@ void Server::OnDisconnected()
 
 }
 
-wxArrayString Server::GetRelayHostList()
+wxArrayString IServer::GetRelayHostList()
 {
 	if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
 	wxArrayString ret;
@@ -206,19 +206,19 @@ bool ServerSelector::IsServerAvailible() const
 	return (bool)(m_serv);
 }
 
-Server& ServerSelector::GetServer()
+IServer& ServerSelector::GetServer()
 {
 	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
 	return *m_serv;
 }
 
-const Server& ServerSelector::GetServer() const
+const IServer& ServerSelector::GetServer() const
 {
 	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
 	return *m_serv;
 }
 
-void ServerSelector::SetCurrentServer(Server* server)
+void ServerSelector::SetCurrentServer(IServer* server)
 {
 	m_serv = server;
 	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );

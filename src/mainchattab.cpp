@@ -22,7 +22,7 @@
 #include "channel/channel.h"
 #include "user.h"
 #include "chatpanel.h"
-#include "server.h"
+#include "iserver.h"
 #include "settings.h"
 #include "aui/slbook.h"
 
@@ -246,7 +246,7 @@ ChatPanel* MainChatTab::AddChatPanel( Channel& channel, bool doFocus )
 	return chat;
 }
 
-ChatPanel* MainChatTab::AddChatPanel( Server& server, const wxString& name )
+ChatPanel* MainChatTab::AddChatPanel( IServer& server, const wxString& name )
 {
 
 	LOOP_PANELS(

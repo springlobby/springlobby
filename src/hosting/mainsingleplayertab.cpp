@@ -17,6 +17,7 @@
 #include "battleroommmoptionstab.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
+#include "utils/controls.h"
 
 #include "images/battle.xpm"
 #include "images/battle_settings.xpm"
@@ -36,7 +37,7 @@ MainSinglePlayerTab::MainSinglePlayerTab( wxWindow* parent )
 
 	m_sp_tab = new SinglePlayerTab( m_tabs, *this );
 	m_tabs->AddPage( m_sp_tab, _( "Game" ), true, wxNullBitmap );
-	m_mm_opts_tab = new BattleroomMMOptionsTab<SinglePlayerBattle>( &m_sp_tab->GetBattle(), m_tabs );
+	m_mm_opts_tab = new BattleroomMMOptionsTab(&m_sp_tab->GetBattle(), m_tabs);
 	m_tabs->InsertPage( 1, m_mm_opts_tab, _( "Options" ), false, wxIcon( battle_settings_xpm ) );
 	m_opts_tab = new BattleOptionsTab( m_tabs, &m_sp_tab->GetBattle() );
 	m_tabs->InsertPage( 2, m_opts_tab, _( "Unit Restrictions" ), false, wxIcon( battle_settings_xpm ) );
@@ -131,7 +132,7 @@ BattleOptionsTab& MainSinglePlayerTab::GetOptionsTab()
 }
 
 
-BattleroomMMOptionsTab<SinglePlayerBattle>& MainSinglePlayerTab::GetMMOptionsTab()
+BattleroomMMOptionsTab& MainSinglePlayerTab::GetMMOptionsTab()
 {
 	ASSERT_EXCEPTION( m_mm_opts_tab, _T( "m_mm_opts_tab == 0" ) );
 	return *m_mm_opts_tab;

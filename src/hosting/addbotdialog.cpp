@@ -15,7 +15,7 @@
 #include "settings.h"
 #include "utils/controls.h"
 #include "uiutils.h"
-#include "battle.h"
+#include "ibattle.h"
 #include <lslutils/misc.h>
 #include <lslutils/conversion.h>
 #include "mmoptionwindows.h"

@@ -30,7 +30,7 @@
 
 #include "battleroomtab.h"
 #include "user.h"
-#include "battle.h"
+#include "ibattle.h"
 #include "defines.h"
 #include "utils/conversion.h"
 #include "utils/debug.h"
@@ -41,7 +41,7 @@
 #include "mapctrl.h"
 #include "uiutils.h"
 #include "addbotdialog.h"
-#include "server.h"
+#include "iserver.h"
 #include "iconimagelist.h"
 #include "utils/customdialogs.h"
 #include "autobalancedialog.h"
@@ -51,6 +51,7 @@
 #include "mmoptionwindows.h"
 #include "aui/auimanager.h"
 #include "hostbattledialog_public.h"
+#include "autohost.h"
 
 BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 
@@ -117,7 +118,7 @@ class MyStrings : public wxArrayString
 const MyStrings<SPRING_MAX_TEAMS> team_choices;
 const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
-BattleRoomTab::BattleRoomTab( wxWindow* parent, Battle* battle )
+BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
     : wxScrolledWindow( parent, -1 ),
 	m_battle( battle ),
 	m_BattleActionSink( this, &UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ))
@@ -583,7 +584,7 @@ void BattleRoomTab::UpdateUser( User& user )
 }
 
 
-Battle* BattleRoomTab::GetBattle()
+IBattle* BattleRoomTab::GetBattle()
 {
 	return m_battle;
 }
@@ -736,7 +737,10 @@ void BattleRoomTab::OnLock( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnAutoHost( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	m_battle->GetAutoHost().SetEnabled( m_autohost_mnu->IsChecked() );
+	AutoHost* ah = m_battle->GetAutoHost();
+	if (ah!=NULL) {
+		ah->SetEnabled( m_autohost_mnu->IsChecked() );
+	}
 }
 
 
@@ -1086,7 +1090,7 @@ void BattleRoomTab::SortPlayerList()
 	m_players->SortList();
 }
 
-void BattleRoomTab::SetBattle(Battle* battle)
+void BattleRoomTab::SetBattle(IBattle* battle)
 {
 	m_battle = battle;
 

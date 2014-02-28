@@ -17,7 +17,7 @@ class SinglePlayerBattle: public IBattle
 {
   public:
 
-    SinglePlayerBattle( MainSinglePlayerTab& msptab );
+    SinglePlayerBattle(MainSinglePlayerTab& msptab );
     virtual ~SinglePlayerBattle();
 
 // (koshi) these are never called
@@ -35,7 +35,6 @@ class SinglePlayerBattle: public IBattle
     void Update( const wxString& Tag );
 
     void StartSpring();
-
   protected:
     void RemoveUnfittingBots();
 

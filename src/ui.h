@@ -3,7 +3,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UI_H
 #define SPRINGLOBBY_HEADERGUARD_UI_H
 
-class Server;
+class IServer;
 class TASServer;
 class ConnectWindow;
 class Spring;
@@ -89,9 +89,9 @@ public:
 
 	void OnInit();
 
-	void OnConnected( Server& server, const wxString& server_name, const wxString& server_ver, bool supported );
+	void OnConnected( IServer& server, const wxString& server_name, const wxString& server_ver, bool supported );
 	void OnLoggedIn( );
-	void OnDisconnected( Server& server, bool wasonline );
+	void OnDisconnected( IServer& server, bool wasonline );
 
 	void OnJoinedChannelSuccessful( Channel& chan );
 	void OnJoinedChannelSuccessful( Channel& chan, bool focusTab );
@@ -111,20 +111,20 @@ public:
 	void OnUserSaid( User& user, const wxString& message, bool me = false );
 	void OnUserSaidEx( User& user, const wxString& action, bool me = false );
 
-	void OnUnknownCommand( Server& server, const wxString& command, const wxString& params );
-	void OnMotd( Server& server, const wxString& message );
-	void OnServerBroadcast( Server& server, const wxString& message );
-	void OnServerMessage( Server& server, const wxString& message );
+	void OnUnknownCommand( IServer& server, const wxString& command, const wxString& params );
+	void OnMotd( IServer& server, const wxString& message );
+	void OnServerBroadcast( IServer& server, const wxString& message );
+	void OnServerMessage( IServer& server, const wxString& message );
 
 	void OnBattleOpened( IBattle& battle );
 	void OnBattleClosed( IBattle& battle );
 	void OnUserJoinedBattle( IBattle& battle, User& user );
 	void OnUserLeftBattle( IBattle& battle, User& user, bool isbot );
 	void OnBattleInfoUpdated( BattleEvents::BattleEventData data );
-	void OnBattleStarted( Battle& battle );
+	void OnBattleStarted( IBattle& battle );
 
-	void OnJoinedBattle( Battle& battle );
-	void OnHostedBattle( Battle& battle );
+	void OnJoinedBattle( IBattle& battle );
+	void OnHostedBattle( IBattle& battle );
 	void OnUserBattleStatus( IBattle& battle, User& user );
 	void OnRequestBattleStatus( IBattle& battle );
 
@@ -157,7 +157,7 @@ public:
 	void CheckForUpdates();
 
 protected:
-	Server* m_serv;
+	IServer* m_serv;
 	MainWindow* m_main_win;
 	ConnectWindow* m_con_win;
 	wxTimer m_reconnect_delay_timer;

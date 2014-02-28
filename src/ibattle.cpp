@@ -29,13 +29,12 @@ lsl/battle/ibattle.cpp
 #include "spring.h"
 #include <lslutils/conversion.h>
 #include "springlobbyapp.h"
+#include "iserver.h"
 
 #include <list>
 #include <algorithm>
 #include <cmath>
 #include <set>
-
-const unsigned int TIMER_ID         = 102;
 
 IBattle::IBattle():
 	wxEvtHandler(),
@@ -1329,5 +1328,11 @@ long IBattle::GetBattleRunningTime() const
 	if (!GetInGame()) return 0;
 	if (m_start_time == 0 ) return 0;
 	return wxGetUTCTime() - m_start_time;
+}
+
+
+IServer& IBattle::GetServer()
+{
+	return serverSelector().GetServer();
 }
 

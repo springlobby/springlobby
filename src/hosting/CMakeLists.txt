@@ -12,4 +12,5 @@ add_sources(springlobbySrc
 	mmoptionwindows.cpp
 	battleroomdownloads.cpp
 	autohostmanager.cpp
+	battleroommmoptionstab.cpp
 )

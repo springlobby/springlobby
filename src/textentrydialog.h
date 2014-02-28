@@ -1,5 +1,9 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
 #include <wx/string.h>
 #include <wx/dialog.h>
+#include <wx/stattext.h>
+#include <wx/sizer.h>
 
 class TextEntryDialog: public wxDialog {
 public:

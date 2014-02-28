@@ -20,7 +20,7 @@
 #include "iconimagelist.h"
 #include "ui.h"
 #include "userlist.h"
-#include "server.h"
+#include "iserver.h"
 #include "user.h"
 #include "utils/conversion.h"
 #include "useractions.h"

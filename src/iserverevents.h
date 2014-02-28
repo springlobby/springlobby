@@ -26,7 +26,7 @@ struct MessageSpamCheck
   unsigned int count;
 };
 
-class Server;
+class IServer;
 class wxString;
 struct UserStatus;
 

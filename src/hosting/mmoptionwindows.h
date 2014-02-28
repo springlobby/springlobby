@@ -9,7 +9,6 @@ class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
 class IBattle;
-template <class P>
 class SlSpinCtrlDouble;
 class SlSpinDoubleEvent;
 class wxTextCtrl;
@@ -34,7 +33,7 @@ class SingleOptionDialog: public wxDialog
 
 			wxCheckBox* m_checkbox;
 			wxComboBox* m_combobox;
-			SlSpinCtrlDouble<SingleOptionDialog>* m_spinctrl;
+			SlSpinCtrlDouble* m_spinctrl;
 			wxTextCtrl* m_textctrl;
 			wxButton* m_cancel_button;
 			wxButton* m_ok_button;

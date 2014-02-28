@@ -8,4 +8,6 @@ add_sources(springlobbySrc
 )
 
 add_sources(SLSharedWithSettings
-	spinctl/generic/spinctlg.cpp)
+	spinctl/generic/spinctlg.cpp
+	spinctl/generic/spinctrldouble.cpp
+)

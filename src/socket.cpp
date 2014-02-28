@@ -27,7 +27,7 @@ lsl/networking/socket.cpp
 #include <algorithm>
 
 #include "socket.h"
-#include "server.h"
+#include "iserver.h"
 #include "utils/debug.h"
 #include "utils/conversion.h"
 

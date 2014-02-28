@@ -21,13 +21,12 @@ namespace LSL {
 class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
-class Battle;
-template <class P>
 class SlSpinCtrlDouble;
 class wxTextCtrl;
 class SlSpinDoubleEvent;
 class wxStaticText;
 class wxButton;
+class IBattle;
 
 
 /** \brief a panel displaying programmatically generated gui elements to manipulate mmOptions
@@ -38,11 +37,10 @@ class wxButton;
  * That way we can use the inverse mapping in the event handlers to go from the name of event-generating gui element
  * to the mmOptionKey that needs to be changed.
  */
-template < class BattleType >
 class BattleroomMMOptionsTab : public wxScrolledWindow
 {
 	public:
-		BattleroomMMOptionsTab( BattleType* battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
+		BattleroomMMOptionsTab( IBattle* battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
 		~BattleroomMMOptionsTab();
 
 		void UpdateOptControls(wxString controlName);
@@ -60,11 +58,11 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
         void OnSetModDefaultPreset( wxCommandEvent& event );
         void OnInfoButton( wxCommandEvent& event );
 
-        BattleType* GetBattle();
-        void SetBattle( BattleType* battle );
+        IBattle* GetBattle();
+        void SetBattle( IBattle* battle );
 
 	protected:
-        BattleType* m_battle;
+        IBattle* m_battle;
 
 		wxBoxSizer* m_main_sizer;
 		wxStaticBoxSizer* m_mod_options_sizer;
@@ -81,25 +79,17 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 
         LSL::OptionsWrapper* m_mapmodoptions;
 
-        typedef BattleroomMMOptionsTab<BattleType>
-            ThisType;
+//        typedef BattleroomMMOptionsTab<IBattle> ThisType;
 
-        friend class SlSpinCtrlDouble<ThisType>; //so we don't have to make the event handler public for everyone
-        //totally ok to store pointers here, since wx takes care of gui element destruction for us
-        typedef std::map<wxString,wxCheckBox*>
-            chkBoxMap;
-        typedef std::map<wxString,wxComboBox*>
-            comboBoxMap;
-        typedef std::map<wxString,SlSpinCtrlDouble<ThisType> * >
-            spinCtrlMap;
-        typedef std::map<wxString,wxTextCtrl*>
-            textCtrlMap;
-        typedef std::map<wxString,wxStaticText*>
-            staticTextMap;
-        typedef std::map<wxString,wxButton*>
-            buttonMap;
-        typedef std::map<wxString,wxString>
-            nameInfoMap; //! map control name <-> info (description)
+//        friend class SlSpinCtrlDouble<ThisType>; //so we don't have to make the event handler public for everyone
+		//totally ok to store pointers here, since wx takes care of gui element destruction for us
+        typedef std::map<wxString,wxCheckBox*> chkBoxMap;
+        typedef std::map<wxString,wxComboBox*> comboBoxMap;
+        typedef std::map<wxString,SlSpinCtrlDouble* > spinCtrlMap;
+        typedef std::map<wxString,wxTextCtrl*> textCtrlMap;
+        typedef std::map<wxString,wxStaticText*> staticTextMap;
+        typedef std::map<wxString,wxButton*> buttonMap;
+        typedef std::map<wxString,wxString> nameInfoMap; //! map control name <-> info (description)
 
 		chkBoxMap m_chkbox_map;
 		comboBoxMap m_combox_map;
@@ -147,8 +137,6 @@ enum
   BOPTS_SETDEFAULTPRES,
   BOPTS_CHOSEPRES
 };
-
-#include "battleroommmoptionstab.cxx"
 
 #endif /*BATTLEROOMMMOPTIONSTAB_H_*/
 

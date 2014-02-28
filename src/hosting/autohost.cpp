@@ -2,8 +2,8 @@
 
 
 #include "autohost.h"
-#include "battle.h"
-#include "server.h"
+#include "ibattle.h"
+#include "iserver.h"
 #include "settings.h"
 #include "user.h"
 #include "utils/conversion.h"
@@ -13,7 +13,7 @@
 #include <wx/tokenzr.h>
 
 
-AutoHost::AutoHost( Battle& battle )
+AutoHost::AutoHost( IBattle& battle )
     : m_battle( battle ),
     m_enabled( false ),
     m_lastActionTime( 0 )
@@ -54,7 +54,7 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
     else if ( command == _T( "!balance" ) ) {
 		unsigned int num = s2l( params );
 		m_battle.Autobalance( IBattle::balance_random, false, false, num );
-		m_battle.DoAction( _T( "is auto-balancing alliances ..." ) );
+		m_battle.DoAction( _T( "is auto-balancing alliances ..." ));
 	}
 	else if ( command == _T( "!cbalance" ) ) {
 		unsigned int num = s2l( params );

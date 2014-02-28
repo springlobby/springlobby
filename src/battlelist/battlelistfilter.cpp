@@ -23,7 +23,7 @@
 #include "battlelistfilter.h"
 #include "battlelistfiltervalues.h"
 #include "battlelistctrl.h"
-#include "battle.h"
+#include "ibattle.h"
 #include "uiutils.h"
 #include "utils/tasutil.h"
 #include "aui/auimanager.h"

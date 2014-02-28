@@ -8,8 +8,7 @@
 class OfflineBattle : public IBattle
 {
 	public:
-			OfflineBattle ( const int id );
-			OfflineBattle ( );
+			OfflineBattle (const int id = 0 );
 			OfflineBattle ( const OfflineBattle&  );
 			OfflineBattle& operator = ( const OfflineBattle&  );
 			~OfflineBattle (){}
@@ -17,7 +16,6 @@ class OfflineBattle : public IBattle
             const User& GetMe() const { return m_me; }
 			bool IsFounderMe() const { return true; }
 			void StartSpring();
-
 	protected:
 			int m_id;
 			User m_me;

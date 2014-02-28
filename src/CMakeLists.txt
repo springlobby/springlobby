@@ -184,7 +184,7 @@ add_sources(springlobbySrc
 	playback/savegamelist.cpp
 	
 	selectusersdialog.cpp
-	server.cpp
+	iserver.cpp
 	reconnectdialog.cpp
 	serverevents.cpp
 	singleplayerbattle.cpp

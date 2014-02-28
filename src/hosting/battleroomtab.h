@@ -12,7 +12,7 @@
 #include <map>
 
 class Ui;
-class Battle;
+class IBattle;
 struct BattleBot;
 class BattleroomListCtrl;
 class User;
@@ -41,14 +41,14 @@ typedef std::map<wxString, long> OptionListMap;
 class BattleRoomTab : public wxScrolledWindow, public GlobalEvent
 {
 	public:
-		BattleRoomTab( wxWindow* parent, Battle* battle );
+		BattleRoomTab( wxWindow* parent, IBattle* battle );
 		~BattleRoomTab();
 
 		BattleroomListCtrl& GetPlayersListCtrl();
 
 		void UpdateUser( User& user );
 
-		Battle* GetBattle();
+		IBattle* GetBattle();
 		ChatPanel& GetChatPanel();
 
 		void UpdateBattleInfo();
@@ -116,7 +116,7 @@ class BattleRoomTab : public wxScrolledWindow, public GlobalEvent
 
 		void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
 
-		void SetBattle( Battle* battle );
+		void SetBattle( IBattle* battle );
 
 		void PrintAllySetup();
 
@@ -133,7 +133,7 @@ class BattleRoomTab : public wxScrolledWindow, public GlobalEvent
 
 		void SplitSizerHorizontally( const bool horizontal );
 
-		Battle* m_battle;
+		IBattle* m_battle;
 //		UnitSyncMap m_map; //not needed
 
 		long m_mod_opts_index;

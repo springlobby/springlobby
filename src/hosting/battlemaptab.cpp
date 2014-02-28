@@ -24,14 +24,14 @@
 #include "battlemaptab.h"
 #include <lslutils/conversion.h>
 #include "user.h"
-#include "battle.h"
+#include "ibattle.h"
 #include "utils/debug.h"
 #include "utils/controls.h"
 #include "chatpanel.h"
 #include "mapctrl.h"
 #include "mapselectdialog.h"
 #include "uiutils.h"
-#include "server.h"
+#include "iserver.h"
 #include "settings.h"
 #include "aui/auimanager.h"
 
@@ -44,7 +44,7 @@ BEGIN_EVENT_TABLE( BattleMapTab, wxPanel )
 END_EVENT_TABLE()
 
 
-BattleMapTab::BattleMapTab( wxWindow* parent, Battle* battle )
+BattleMapTab::BattleMapTab( wxWindow* parent, IBattle* battle )
     : wxScrolledWindow( parent, -1 ),
 	m_battle( battle )
 {
@@ -274,7 +274,7 @@ void BattleMapTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
     ReloadMaplist();
 }
 
-void BattleMapTab::SetBattle( Battle* battle )
+void BattleMapTab::SetBattle( IBattle* battle )
 {
 	m_battle = battle;
 

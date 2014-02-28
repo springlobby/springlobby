@@ -9,7 +9,7 @@
 #include "ibattle.h"
 
 class Ui;
-class Server;
+class IServer;
 class User;
 class wxTimerEvent;
 
@@ -19,18 +19,17 @@ class wxTimerEvent;
 class Battle : public IBattle
 {
   public:
-    Battle( Server& serv, int id );
+    Battle( IServer& serv, int id );
     ~Battle();
 
     //const BattleOptions& opts() { return m_opts; }
 
-    Server& GetServer() { return m_serv; }
-    AutoHost& GetAutoHost() { return m_ah; }
+    IServer& GetServer() { return m_serv; }
+    AutoHost* GetAutoHost() { return &m_ah; }
 
     void SendHostInfo( HostInfo update );
     void SendHostInfo( const wxString& Tag );
 
-    void Update();
     void Update( const wxString& Tag );
 
     void Join( const wxString& password = wxEmptyString );
@@ -83,9 +82,7 @@ class Battle : public IBattle
 
     void SendScriptToClients();
 
-    ///< quick hotfix for bans
     bool CheckBan(User &user);
-    ///>
 
     void SetImReady( bool ready );
 
@@ -122,7 +119,7 @@ private:
     std::set<wxString> m_banned_ips;
     ///>
 
-    Server& m_serv;
+    IServer& m_serv;
     AutoHost m_ah;
     bool m_autolock_on_start;
 

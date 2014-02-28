@@ -120,7 +120,7 @@ typedef void (wxEvtHandler::*SlSpinDoubleEventFunction)(SlSpinDoubleEvent&);
 //the common stuff
 #include "generic/spinctlg.h"
 //the actual tempalte class, seperated to avoid multiple definition conflicts
-#include "generic/spinctrldouble.hh"
+#include "generic/spinctrldouble.h"
 
 #endif // wxUSE_SPINCTRL
 

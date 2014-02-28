@@ -5,7 +5,7 @@
 
 #include "channel.h"
 #include "../ui.h"
-#include "../server.h"
+#include "iserver.h"
 #include "../user.h"
 #include "../utils/tasutil.h"
 #include "../utils/debug.h"
@@ -14,7 +14,7 @@
 #include <wx/log.h>
 #include "../chatpanel.h"
 
-Channel::Channel( Server& serv )
+Channel::Channel( IServer& serv )
     : m_serv(serv),
     m_do_ban_regex(false),
     m_do_unban_regex(false),

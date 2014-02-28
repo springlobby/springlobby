@@ -5,15 +5,15 @@
 
 #include "singleplayerbattle.h"
 #include "hosting/mainsingleplayertab.h"
-#include "server.h"
+#include "iserver.h"
 #include "settings.h"
 #include "spring.h"
 #include <lslutils/conversion.h>
 #include "utils/conversion.h"
 
-SinglePlayerBattle::SinglePlayerBattle( MainSinglePlayerTab& msptab ):
-  m_sptab(msptab),
-  m_me( User(sett().GetDefaultNick()))
+SinglePlayerBattle::SinglePlayerBattle(MainSinglePlayerTab& msptab ):
+	m_sptab(msptab),
+	m_me( User(sett().GetDefaultNick()))
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().side = sett().GetBattleLastSideSel( GetHostModName() );

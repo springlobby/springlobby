@@ -20,7 +20,7 @@ lsl/user/user.h
 #include <wx/string.h>
 #include <wx/colour.h>
 #include "utils/mixins.hh"
-class Server;
+class IServer;
 
 const unsigned int SYNC_UNKNOWN = 0;
 const unsigned int SYNC_SYNCED = 1;
@@ -95,7 +95,7 @@ struct UserBattleStatus
 };
 
 class ChatPanel;
-class Battle;
+class IBattle;
 
 struct UiUserData {
   UiUserData(): panel(0) {}
@@ -167,9 +167,9 @@ class User : public CommonUser
 
     mutable UiUserData uidata;
 
-    User( Server& serv );
-    User( const wxString& nick, Server& serv );
-    User( const wxString& nick, const wxString& country, const int& cpu, Server& serv);
+    User( IServer& serv );
+    User( const wxString& nick, IServer& serv );
+    User( const wxString& nick, const wxString& country, const int& cpu, IServer& serv);
     User( const wxString& nick );
     User( const wxString& nick, const wxString& country, const int& cpu );
     User();
@@ -178,14 +178,14 @@ class User : public CommonUser
 
     // User interface
 
-    Server& GetServer() const { return *m_serv; }
+    IServer& GetServer() const { return *m_serv; }
 
     void Said( const wxString& message ) const;
     void Say( const wxString& message ) const;
     void DoAction( const wxString& message ) const;
 
-    Battle* GetBattle() const;
-    void SetBattle( Battle* battle );
+    IBattle* GetBattle() const;
+    void SetBattle( IBattle* battle );
 
     void SendMyUserStatus() const;
     void SetStatus( const UserStatus& status );
@@ -211,8 +211,8 @@ class User : public CommonUser
   protected:
     // User variables
 
-    Server* m_serv;
-    Battle* m_battle;
+    IServer* m_serv;
+    IBattle* m_battle;
     int m_flagicon_idx;
     int m_rankicon_idx;
     int m_statusicon_idx;

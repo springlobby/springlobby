@@ -40,9 +40,7 @@ lsl/spring/spring.cpp
 #include "utils/conversion.h"
 #include "utils/slpaths.h"
 #include "settings.h"
-#include "battle.h"
-#include "singleplayerbattle.h"
-#include "offlinebattle.h"
+#include "ibattle.h"
 #include "tdfcontainer.h"
 
 #include <lslutils/globalsmanager.h>

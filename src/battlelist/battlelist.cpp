@@ -17,7 +17,7 @@ lsl/container/battlelist.cpp
 #include <stdexcept>
 
 #include "battlelist.h"
-#include "battle.h"
+#include "ibattle.h"
 
 
 BattleList::BattleList()
@@ -25,7 +25,7 @@ BattleList::BattleList()
 }
 
 
-void BattleList::AddBattle( Battle& battle )
+void BattleList::AddBattle( IBattle& battle )
 {
   m_battles[battle.GetBattleId()] = &battle;
 }
@@ -55,9 +55,9 @@ void BattleList_Iter::IteratorBegin()
   if (m_battlelist) m_iterator = m_battlelist->m_battles.begin();
 }
 
-Battle* BattleList_Iter::GetBattle()
+IBattle* BattleList_Iter::GetBattle()
 {
-  Battle* battle = m_iterator->second;
+  IBattle* battle = m_iterator->second;
   if ( m_battlelist && m_iterator != m_battlelist->m_battles.end() ) ++m_iterator;
   return battle;
 }
@@ -68,7 +68,7 @@ bool BattleList_Iter::EOL() const
 }
 
 
-Battle& BattleList_Iter::GetBattle( BattleList::battle_id_t const& id ) {
+IBattle& BattleList_Iter::GetBattle( BattleList::battle_id_t const& id ) {
   if (!m_battlelist) throw std::logic_error("BattleList_Iter::GetBattle(): no battlelist");
   BattleList::battle_iter_t b = m_battlelist->m_battles.find(id);
   if (b == m_battlelist->m_battles.end()) throw std::runtime_error("BattleList_Iter::GetBattle(): no such battle");

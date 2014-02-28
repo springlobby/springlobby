@@ -23,6 +23,7 @@
 #include "battleroommmoptionstab.h"
 #include "aui/auimanager.h"
 #include "aui/slbook.h"
+#include "utils/controls.h"
 
 #include "images/battle_list.xpm"
 #include "images/battle.xpm"
@@ -57,7 +58,7 @@ MainJoinBattleTab::MainJoinBattleTab( wxWindow* parent )
 	m_map_tab = new BattleMapTab( m_tabs, 0 );
 	m_tabs->InsertPage( 1, m_map_tab, _( "Map" ), false, wxIcon( battle_map_xpm ) );
 
-	m_mm_opts_tab = new BattleroomMMOptionsTab<Battle>( 0, m_tabs );
+	m_mm_opts_tab = new BattleroomMMOptionsTab( 0, m_tabs );
 	m_tabs->InsertPage( 2, m_mm_opts_tab, _( "Options" ), false, wxIcon( battle_settings_xpm ) );
 
 	m_opts_tab = new BattleOptionsTab( m_tabs, 0 );
@@ -76,7 +77,7 @@ MainJoinBattleTab::~MainJoinBattleTab()
 }
 
 
-Battle* MainJoinBattleTab::GetCurrentBattle()
+IBattle* MainJoinBattleTab::GetCurrentBattle()
 {
 	return m_battle_tab->GetBattle();
 }
@@ -104,7 +105,7 @@ void MainJoinBattleTab::UpdateCurrentBattle( const wxString& Tag )
 	GetMMOptionsTab().UpdateOptControls( Tag );
 }
 
-void MainJoinBattleTab::JoinBattle( Battle& battle )
+void MainJoinBattleTab::JoinBattle( IBattle& battle )
 {
 	m_mm_opts_tab->SetBattle( &battle );
 	m_opts_tab->SetBattle( &battle );
@@ -113,7 +114,7 @@ void MainJoinBattleTab::JoinBattle( Battle& battle )
 }
 
 
-void MainJoinBattleTab::HostBattle( Battle& battle )
+void MainJoinBattleTab::HostBattle( IBattle& battle )
 {
 	JoinBattle( battle );
 }
@@ -175,7 +176,7 @@ BattleOptionsTab& MainJoinBattleTab::GetOptionsTab()
 }
 
 
-BattleroomMMOptionsTab<Battle>& MainJoinBattleTab::GetMMOptionsTab()
+BattleroomMMOptionsTab& MainJoinBattleTab::GetMMOptionsTab()
 {
 	ASSERT_EXCEPTION( m_mm_opts_tab, _T( "m_mm_opts_tab == 0" ) );
 	return *m_mm_opts_tab;

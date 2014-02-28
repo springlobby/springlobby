@@ -526,7 +526,7 @@ void TASServer::Update( int mselapsed )
 		m_last_udp_ping = now;
 		// Nat travelsal "ping"
 		if ( m_battle_id != -1 ) {
-			Battle *battle=GetCurrentBattle();
+			IBattle *battle=GetCurrentBattle();
 			if (battle) {
 				if ( ( battle->GetNatType() == NAT_Hole_punching || ( battle->GetNatType() == NAT_Fixed_source_ports ) ) && !battle->GetInGame() ) {
 					if ( battle->IsFounderMe() ) {
@@ -805,7 +805,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 				{
 					User& usr = GetUser(usernick);
 					usr.BattleStatus().scriptPassword = userScriptPassword;
-					Battle* battle = GetCurrentBattle();
+					IBattle* battle = GetCurrentBattle();
 					if (battle)
 					{
 						if ( battle->CheckBan( usr ) ) return;
@@ -1200,7 +1200,7 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 
 void TASServer::SetRelayIngamePassword( const User& user )
 {
-	Battle* battle = GetCurrentBattle();
+	IBattle* battle = GetCurrentBattle();
 	if (battle)
 	{
 		if ( !battle->GetInGame() ) return;
@@ -1312,7 +1312,7 @@ void TASServer::Ring( const wxString& nick )
 				ASSERT_EXCEPTION( m_battle_id != -1, _T("invalid m_battle_id value") );
 				ASSERT_EXCEPTION( BattleExists(m_battle_id), _T("battle doesn't exists") );
 
-				Battle& battle = GetBattle( m_battle_id );
+				IBattle& battle = GetBattle( m_battle_id );
 				ASSERT_EXCEPTION( battle.IsFounderMe(), _T("I'm not founder") );
 
 				if ( battle.IsProxy() )
@@ -1493,7 +1493,7 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
 
     if (BattleExists(battleid))
     {
-        Battle *battle=&GetBattle(battleid);
+        IBattle *battle=&GetBattle(battleid);
 
         if (battle)
         {
@@ -1579,7 +1579,7 @@ void TASServer::SendHostInfo( HostInfo update )
         return;
     }
 
-    Battle& battle = GetBattle( m_battle_id );
+    IBattle& battle = GetBattle( m_battle_id );
     try
     {
         ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
@@ -1721,7 +1721,7 @@ void TASServer::SendHostInfo( const wxString& Tag )
         return;
     }
 
-    Battle& battle = GetBattle( m_battle_id );
+    IBattle& battle = GetBattle( m_battle_id );
 
     try
     {
@@ -1766,7 +1766,7 @@ void TASServer::SendUserPosition( const User& user )
         ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
         ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
 
-        Battle& battle = GetBattle( m_battle_id );
+        IBattle& battle = GetBattle( m_battle_id );
         ASSERT_LOGIC( battle.IsFounderMe(), _T("I'm not founder") );
 
         UserBattleStatus status = user.BattleStatus();
@@ -1800,7 +1800,7 @@ void TASServer::RequestInGameTime( const wxString& nick )
 }
 
 
-Battle* TASServer::GetCurrentBattle()
+IBattle* TASServer::GetCurrentBattle()
 {
     try
     {
@@ -1861,7 +1861,7 @@ void TASServer::StartHostedBattle()
     {
         return;
     }
-    Battle *battle=GetCurrentBattle();
+    IBattle *battle=GetCurrentBattle();
     if (battle)
     {
         if ( ( battle->GetNatType() == NAT_Hole_punching ) || ( battle->GetNatType() == NAT_Fixed_source_ports ) )
@@ -2183,7 +2183,7 @@ void TASServer::RemoveBot( int battleid, User& bot )
         return;
     }
 
-    Battle& battle = GetBattle( battleid );
+    IBattle& battle = GetBattle( battleid );
     ASSERT_LOGIC( &bot != 0, _T("Bot does not exist.") );
 
     if ( !( battle.IsFounderMe() || ( bot.BattleStatus().owner == GetMe().GetNick() ) ) )
@@ -2287,7 +2287,7 @@ void TASServer::OnDisconnected(Socket& /*unused*/ )
 	m_users.Nullify();
 	if (m_se != NULL) {
 		m_se->OnDisconnected( connectionwaspresent );
-		Server::OnDisconnected();
+		IServer::OnDisconnected();
 	}
 }
 
@@ -2372,7 +2372,7 @@ struct UserOrder
 
 void TASServer::UdpPingAllClients()// used when hosting with nat holepunching. has some rudimentary support for fixed source ports.
 {
-    Battle *battle=GetCurrentBattle();
+    IBattle *battle=GetCurrentBattle();
     if (!battle)return;
     if (!battle->IsFounderMe())return;
     wxLogMessage(_T("UdpPingAllClients()"));

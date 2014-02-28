@@ -559,7 +559,7 @@ void abstract_panel::OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event)
 {
 	if (event.GetId()==ID_W4_BumpWaterAnisotropy)
 	{
-		SlSpinCtrlDouble<abstract_panel>* aniso = (SlSpinCtrlDouble<abstract_panel>*) event.GetEventObject();
+		SlSpinCtrlDouble* aniso = (SlSpinCtrlDouble*) event.GetEventObject();
 		(floatSettings)[W4_CONTROLS[6].key] = aniso->GetValue();
 		settingsChanged = true;
 	}

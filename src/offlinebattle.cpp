@@ -5,19 +5,8 @@
 
 #include <wx/timer.h>
 
-OfflineBattle::OfflineBattle(  const int id  ):
+OfflineBattle::OfflineBattle(const int id  ):
 m_id( id ),
-m_me( User(_T("Spectator")) )
-{
-	m_opts.founder = m_me.GetNick();
-	OnUserAdded( m_me );
-	UserBattleStatus& newstatus = m_me.BattleStatus();
-	newstatus.spectator = true;
-	newstatus.sync = true;
-}
-
-OfflineBattle::OfflineBattle():
-m_id( 0 ),
 m_me( User(_T("Spectator")) )
 {
 	m_opts.founder = m_me.GetNick();

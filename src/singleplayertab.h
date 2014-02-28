@@ -36,7 +36,7 @@ class SinglePlayerTab: public  wxScrolledWindow
 	void UpdateTag( const wxString& Tag );
     void UpdatePresetList();
 
-    SinglePlayerBattle& GetBattle() { return m_battle; }
+    IBattle& GetBattle() { return m_battle; }
 
 	bool ValidSetup() const;
 

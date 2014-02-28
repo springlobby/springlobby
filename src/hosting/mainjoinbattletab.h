@@ -8,7 +8,7 @@
 
 class Ui;
 class BattleListTab;
-class Battle;
+class IBattle;
 class User;
 class BattleRoomTab;
 class BattleMapTab;
@@ -24,13 +24,13 @@ class MainJoinBattleTab : public wxScrolledWindow
     MainJoinBattleTab( wxWindow* parent );
      ~MainJoinBattleTab();
 
-    void HostBattle( Battle& battle );
-    void JoinBattle( Battle& battle );
+    void HostBattle( IBattle& battle );
+    void JoinBattle( IBattle& battle );
     //void UpdateCurrentBattle();
     void UpdateCurrentBattle();
     void UpdateCurrentBattle( const wxString& Tag );
     void LeaveCurrentBattle( bool called_from_join = false );
-    Battle* GetCurrentBattle();
+    IBattle* GetCurrentBattle();
     ChatPanel* GetActiveChatPanel();
 
     void BattleUserUpdated( User& user );
@@ -47,7 +47,7 @@ class MainJoinBattleTab : public wxScrolledWindow
 private:
     BattleMapTab& GetBattleMapTab();
     BattleOptionsTab& GetOptionsTab();
-    BattleroomMMOptionsTab<Battle>& GetMMOptionsTab();
+    BattleroomMMOptionsTab& GetMMOptionsTab();
     wxBoxSizer* m_main_sizer;
 
     wxImageList* m_imagelist;
@@ -57,7 +57,7 @@ private:
     BattleRoomTab* m_battle_tab;
     BattleMapTab* m_map_tab;
     BattleOptionsTab* m_opts_tab;
-    BattleroomMMOptionsTab<Battle>* m_mm_opts_tab;
+    BattleroomMMOptionsTab* m_mm_opts_tab;
 
     enum {
         BATTLE_TABS = wxID_HIGHEST

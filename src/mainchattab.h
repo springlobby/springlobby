@@ -7,7 +7,7 @@
 
 class Ui;
 class ChatPanel;
-class Server;
+class IServer;
 class Channel;
 class User;
 class wxAuiNotebookEvent;
@@ -30,7 +30,7 @@ public:
 	ChatPanel& ServerChat();
 
 	ChatPanel* AddChatPanel( Channel& channel, bool doFocus  );
-	ChatPanel* AddChatPanel( Server& server, const wxString& name );
+	ChatPanel* AddChatPanel( IServer& server, const wxString& name );
 	ChatPanel* AddChatPanel( const User& user );
 	/** \brief this is only used if channel is left via raw command in server tab */
 	bool RemoveChatPanel( ChatPanel* panel );

@@ -21,7 +21,7 @@
 #include "user.h"
 #include "utils/debug.h"
 #include "uiutils.h"
-#include "server.h"
+#include "iserver.h"
 #include <downloader/httpdownloader.h>
 #include "settings.h"
 #include "utils/customdialogs.h"
@@ -160,7 +160,7 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
 
         if ( user.GetBattle() != 0 )
         {
-            Battle& battle = *user.GetBattle();
+            IBattle& battle = *user.GetBattle();
             try
             {
             if ( battle.GetFounder().GetNick() == user.GetNick() )
@@ -189,7 +189,7 @@ void ServerEvents::OnUserQuit( const wxString& nick )
     try
     {
         User &user=m_serv.GetUser( nick );
-				Battle* userbattle = user.GetBattle();
+				IBattle* userbattle = user.GetBattle();
 				if ( userbattle )
 				{
 					int battleid = userbattle->GetID();
@@ -227,7 +227,7 @@ void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const w
     try
     {
         ASSERT_EXCEPTION( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
-        Battle& battle = m_serv._AddBattle( id );
+        IBattle& battle = m_serv._AddBattle( id );
 
         User& user = m_serv.GetUser( nick );
         battle.OnUserAdded( user );
@@ -267,7 +267,7 @@ void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
 
         battle.SetHostMod( battle.GetHostModName(), hash );
         UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
@@ -292,7 +292,7 @@ void ServerEvents::OnHostedBattle( int battleid )
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
 
 				if ( battle.GetBattleType() == BT_Played )
 				{
@@ -324,7 +324,7 @@ void ServerEvents::OnHostedBattle( int battleid )
 void ServerEvents::OnStartHostedBattle( int battleid )
 {
     wxLogDebugFunc( wxEmptyString );
-    Battle& battle = m_serv.GetBattle( battleid );
+    IBattle& battle = m_serv.GetBattle( battleid );
     battle.SetInGame( true );
     battle.StartSpring();
 }
@@ -334,7 +334,7 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
 {
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
         User& user = battle.GetUser( nick );
 
 		//if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
@@ -354,7 +354,7 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick, const
     {
         wxLogDebugFunc( wxEmptyString );
         User& user = m_serv.GetUser( nick );
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
 
         battle.OnUserAdded( user );
 		user.BattleStatus().scriptPassword = userScriptPassword;
@@ -382,7 +382,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
         User& user = battle.GetUser( nick );
         // this is necessary since the user will be deleted when the gui function is called
         bool isbot = user.BattleStatus().IsBot();
@@ -402,7 +402,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
 
         battle.SetSpectators( spectators );
         battle.SetIsLocked( locked );
@@ -428,7 +428,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     wxLogDebugFunc( param + _T(", ") + value );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
 		battle.m_script_tags[param] = value;
         wxString key = param;
         if ( key.Left( 5 ) == _T("game/") )
@@ -503,7 +503,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid )
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
 		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
     }
     catch ( assert_exception ) {}
@@ -515,7 +515,7 @@ void ServerEvents::OnBattleClosed( int battleid )
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
 
         ui().OnBattleClosed( battle );
 
@@ -530,7 +530,7 @@ void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname, 
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
         battle.RestrictUnit( unitname, count );
         battle.Update( wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions ) );
     }
@@ -543,7 +543,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
         battle.UnrestrictUnit( unitname );
         battle.Update( wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions ) );
     }
@@ -556,7 +556,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
         battle.UnrestrictAllUnits();
         battle.Update( wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions ) );
     }
@@ -699,7 +699,7 @@ void ServerEvents::OnRequestBattleStatus( int battleid )
 {
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
         ui().OnRequestBattleStatus( battle );
     }
     catch (assert_exception) {}
@@ -710,12 +710,15 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
 {
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
 		if ( ( m_serv.GetMe().GetNick() ==  nick ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, nick ) )
 		{
 			ui().OnSaidBattle( battle, nick, msg );
 		}
-        battle.GetAutoHost().OnSaidBattle( nick, msg );
+		AutoHost* ah = battle.GetAutoHost();
+        if (ah != NULL) {
+			ah->OnSaidBattle( nick, msg );
+		}
     }
     catch (assert_exception) {}
 }
@@ -736,7 +739,7 @@ void ServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int left, int
 {
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
         battle.AddStartRect( allyno, left, top, right, bottom );
         battle.StartRectAdded( allyno );
         battle.Update( wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions ) );
@@ -749,7 +752,7 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 {
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
         battle.RemoveStartRect( allyno );
         battle.StartRectRemoved( allyno );
         battle.Update( wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions ) );
@@ -763,7 +766,7 @@ void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, UserBattl
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
         battle.OnBotAdded( nick, status );
         User& bot = battle.GetUser( nick );
         ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
@@ -783,7 +786,7 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        Battle& battle = m_serv.GetBattle( battleid );
+        IBattle& battle = m_serv.GetBattle( battleid );
 		User& user = battle.GetUser( nick );
 		bool isbot = user.BattleStatus().IsBot();
 		ui().OnUserLeftBattle( battle, user, isbot );
@@ -971,8 +974,10 @@ void ServerEvents::OnScriptEnd( int battleid )
 
 void ServerEvents::OnForceJoinBattle(int battleid, const wxString &scriptPW)
 {
-    if ( m_serv.GetCurrentBattle() )
-        m_serv.GetCurrentBattle()->Leave();
+	IBattle* battle = m_serv.GetCurrentBattle();
+    if ( battle != NULL ) {
+        m_serv.LeaveBattle(battle->GetID());
+	}
     m_serv.JoinBattle( battleid, scriptPW );
     UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
             UiEvents::StatusData( _("Automatically moved to new battle"), 1 ) );
