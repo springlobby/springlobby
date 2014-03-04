@@ -11,9 +11,6 @@ class MainWindow;
 class Channel;
 class User;
 class IBattle;
-class Battle;
-class SinglePlayerBattle;
-class OfflineBattle;
 class ChatPanel;
 class ReconnectDialog;
 

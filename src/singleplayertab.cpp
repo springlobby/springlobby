@@ -23,7 +23,6 @@
 #include "ui.h"
 #include "hosting/addbotdialog.h"
 #include "iserver.h"
-#include "offlinebattle.h"
 #include "settings.h"
 #include "helper/colorbutton.h"
 #include "aui/auimanager.h"

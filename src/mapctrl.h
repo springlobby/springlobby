@@ -15,7 +15,6 @@ class wxDC;
 
 class Battle;
 struct BattleStartRect;
-class SinglePlayerBattle;
 class Ui;
 namespace LSL {
     struct UnitsyncMap;
