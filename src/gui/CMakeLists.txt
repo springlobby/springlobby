@@ -7,7 +7,3 @@ add_sources(springlobbySrc
 	taskbar.cpp
 )
 
-add_sources(SLSharedWithSettings
-	spinctl/generic/spinctlg.cpp
-	spinctl/generic/spinctrldouble.cpp
-)

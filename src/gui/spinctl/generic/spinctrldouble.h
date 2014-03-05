@@ -5,6 +5,8 @@
 // SlSpinCtrlDouble
 //-----------------------------------------------------------------------------
 
+#include "../spinctrl.h"
+
 class  SlSpinCtrlDouble : public SlSpinCtrlGenericBase
 {
 public:
@@ -56,7 +58,7 @@ public:
     void SetDigits(unsigned digits);
 
 protected:
-    virtual void DoSendEvent(){}
+    virtual void DoSendEvent();
     wxWindow* m_parent_instance;
     unsigned m_digits;
 

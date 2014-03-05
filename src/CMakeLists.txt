@@ -226,6 +226,7 @@ add_sources(SLSharedWithSettings
 	infodialog.cpp
 	gui/windowattributespickle.cpp
 	gui/spinctl/generic/spinctlg.cpp
+	gui/spinctl/generic/spinctrldouble.cpp
 	helper/slconfig.cpp
 )
 

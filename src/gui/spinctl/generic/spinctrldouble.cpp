@@ -15,14 +15,15 @@ void SlSpinCtrlDouble::DoSendEvent()
     event.SetValue(m_value);
     event.SetString(m_textCtrl->GetValue());
 
-	m_parent_instance->OnSpinCtrlDoubleChange( event );
-//    if ( !GetEventHandler()->ProcessEvent( event ) )
-//        wxLogError( _T("BULLSHIT") );
+	//m_parent_instance->OnSpinCtrlDoubleChange( event );
+    if ( !GetEventHandler()->ProcessEvent( event ) ) {
+        wxLogError( _T("Error handling SlSpinCtrlDouble") );
+	}
 }
 
 void SlSpinCtrlDouble::SetDigits(unsigned digits)
 {
-    wxCHECK_RET( digits <= 20, "too many digits for SlSpinCtrlDouble" );
+    wxCHECK_RET( digits <= 20, _T("too many digits for SlSpinCtrlDouble") );
     m_format.Printf(wxT("%%0.%ulf"), digits);
     DoSetValue(m_value);
 }
