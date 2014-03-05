@@ -19,8 +19,14 @@ Statusbar::Statusbar( wxWindow* parent )
 									  % GetAppName()
 									  % GetSpringLobbyVersion(),
 					1 );
-	/*TaskBar* taskBar = */ new TaskBar(this);
+	taskBar = new TaskBar(this);
 }
+
+Statusbar::~Statusbar()
+{
+	wxDELETE(taskBar);
+}
+
 DEFINE_EVENT_TYPE(PUSH_STATUS_MSG)
 DEFINE_EVENT_TYPE(POP_STATUS_MSG)
 
@@ -45,7 +51,8 @@ void Statusbar::OnUpdateMsg(wxCommandEvent& evt) {
 
 void Statusbar::OnAddMessage( UiEvents::StatusData data )
 {
-	// is called from a thread, wxPostEvent used for thread-safety!
+	assert(wxThread::IsMain());
+
 	wxCommandEvent evt(PUSH_STATUS_MSG, GetId());
 	evt.SetEventObject(this);
 
@@ -56,7 +63,8 @@ void Statusbar::OnAddMessage( UiEvents::StatusData data )
 
 void Statusbar::OnRemoveMessage( UiEvents::StatusData data )
 {
-	// is called from a thread, wxPostEvent used for thread-safety!
+	assert(wxThread::IsMain());
+
 	wxCommandEvent evt(POP_STATUS_MSG, GetId());
 	evt.SetEventObject(this);
 

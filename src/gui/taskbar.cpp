@@ -54,6 +54,12 @@ TaskBar::TaskBar(wxWindow *statusbar):
 	timer->Start(100);
 }
 
+TaskBar::~TaskBar()
+{
+	timer->Stop();
+	wxDELETE(timer);
+}
+
 void TaskBar::UpdateDisplay()
 {
 	bool finished = true;

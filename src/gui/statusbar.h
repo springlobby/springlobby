@@ -6,21 +6,24 @@
 #include <wx/statusbr.h>
 #include "../utils/uievents.h"
 
+class TaskBar;
+
 class Statusbar : public wxStatusBar
 {
 public:
 	Statusbar( wxWindow* parent );
+	~Statusbar();
 	void OnAddMessage	( UiEvents::StatusData data );
 	void OnRemoveMessage( UiEvents::StatusData data );
 
 protected:
 	static const wxEventType UpdateMsgEvt;
 	void OnUpdateMsg(wxCommandEvent& evt);
-	EventReceiverFunc< Statusbar, UiEvents::StatusData, &Statusbar::OnAddMessage >
-		m_addMessageSink;
-	EventReceiverFunc< Statusbar, UiEvents::StatusData, &Statusbar::OnRemoveMessage >
-		m_removeMessageSink;
+	EventReceiverFunc< Statusbar, UiEvents::StatusData, &Statusbar::OnAddMessage> m_addMessageSink;
+	EventReceiverFunc< Statusbar, UiEvents::StatusData, &Statusbar::OnRemoveMessage> m_removeMessageSink;
 
+private:
+	TaskBar* taskBar;
 	DECLARE_EVENT_TABLE()
 };
 
