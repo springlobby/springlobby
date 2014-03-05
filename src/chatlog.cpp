@@ -98,7 +98,6 @@ bool ChatLog::AddMessage( const wxString& text )
 bool ChatLog::CreateCurrentLogFolder()
 {
 	const wxString path = wxFileName(GetCurrentLogfilePath()).GetPath();
-	wxLogWarning( _T( "can't create logging folder: %s" ), path.c_str() );
 	if ( !wxFileName::Mkdir( path, 0, wxPATH_MKDIR_FULL) ) {
 		wxLogWarning( _T( "can't create logging folder: %s" ), path.c_str() );
 		m_active = false;
