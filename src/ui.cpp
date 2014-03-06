@@ -24,6 +24,7 @@
 #include "tasserver.h"
 #include "settings.h"
 #include "iserver.h"
+#include "serverselector.h"
 #include "spring.h"
 #include "channel/channel.h"
 #include "connectwindow.h"

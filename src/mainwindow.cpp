@@ -37,6 +37,7 @@
 #include "mainwindow.h"
 #include "settings.h"
 #include "iserver.h"
+#include "serverselector.h"
 #include "utils/debug.h"
 #include "utils/platform.h"
 #include "battlelist/battlelisttab.h"

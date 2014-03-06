@@ -21,6 +21,7 @@
 #include "ui.h"
 #include "userlist.h"
 #include "iserver.h"
+#include "serverselector.h"
 #include "user.h"
 #include "utils/conversion.h"
 #include "useractions.h"

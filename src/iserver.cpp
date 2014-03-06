@@ -196,37 +196,3 @@ wxArrayString IServer::GetRelayHostList()
 	}
 	return ret;
 }
-
-ServerSelector::ServerSelector()
-	: m_serv(0)
-{}
-
-bool ServerSelector::IsServerAvailible() const
-{
-	return (bool)(m_serv);
-}
-
-IServer& ServerSelector::GetServer()
-{
-	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
-	return *m_serv;
-}
-
-const IServer& ServerSelector::GetServer() const
-{
-	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
-	return *m_serv;
-}
-
-void ServerSelector::SetCurrentServer(IServer* server)
-{
-	m_serv = server;
-	ASSERT_LOGIC( m_serv != 0, _T("m_serv NULL!") );
-}
-
-ServerSelector& serverSelector()
-{
-    static LSL::Util::LineInfo<ServerSelector> m( AT );
-    static LSL::Util::GlobalObjectHolder<ServerSelector, LSL::Util::LineInfo<ServerSelector> > m_selector( m );
-	return m_selector;
-}

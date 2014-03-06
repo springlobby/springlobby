@@ -30,6 +30,7 @@ lsl/battle/ibattle.cpp
 #include <lslutils/conversion.h>
 #include "springlobbyapp.h"
 #include "iserver.h"
+#include "serverselector.h"
 
 #include <list>
 #include <algorithm>

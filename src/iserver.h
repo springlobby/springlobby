@@ -218,21 +218,4 @@ class IServer : public iNetClass, public SL::NonCopyable
 
 };
 
-class ServerSelector;
-ServerSelector& serverSelector();
-
-#include <lslutils/globalsmanager.h>
-class ServerSelector {
-public:
-	IServer& GetServer();
-	const IServer& GetServer() const;
-	void SetCurrentServer(IServer* server);
-	bool    IsServerAvailible() const;
-protected:
-	ServerSelector();
-	IServer* m_serv;
-	friend class LSL::Util::GlobalObjectHolder<ServerSelector, LSL::Util::LineInfo<ServerSelector> >;
-};
-
-
 #endif // SPRINGLOBBY_HEADERGUARD_SERVER_H

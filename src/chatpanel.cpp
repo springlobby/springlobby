@@ -25,6 +25,7 @@
 #include "utils/uievents.h"
 #include "updater/updatehelper.h"
 #include "iserver.h"
+#include "serverselector.h"
 #include "ibattle.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"

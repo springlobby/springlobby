@@ -23,6 +23,7 @@
 #include "user.h"
 #include "chatpanel.h"
 #include "iserver.h"
+#include "serverselector.h"
 #include "settings.h"
 #include "aui/slbook.h"
 

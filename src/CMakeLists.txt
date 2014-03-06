@@ -199,6 +199,7 @@ add_sources(springlobbySrc
 	user.cpp
 	useractions.cpp
 	userlist.cpp
+	serverselector.cpp
 	
 	toasterbox/ToasterBox.cpp
 	toasterbox/ToasterBoxWindow.cpp

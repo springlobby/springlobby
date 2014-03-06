@@ -42,6 +42,7 @@
 #include "uiutils.h"
 #include "addbotdialog.h"
 #include "iserver.h"
+#include "serverselector.h"
 #include "iconimagelist.h"
 #include "utils/customdialogs.h"
 #include "autobalancedialog.h"

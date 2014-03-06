@@ -36,6 +36,7 @@
 #include "utils/slpaths.h"
 #include "ui.h"
 #include "iserver.h"
+#include "serverselector.h"
 #include <lslunitsync/c_api.h>
 #include <lslunitsync/springbundle.h>
 

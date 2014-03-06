@@ -27,6 +27,7 @@
 #include "hosting/hostbattledialog_public.h"
 #include "hosting/mainjoinbattletab.h"
 #include "iserver.h"
+#include "serverselector.h"
 #include "mapctrl.h"
 #include "nicklistctrl.h"
 #include "mainwindow.h"

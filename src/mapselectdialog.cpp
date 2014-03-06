@@ -4,6 +4,7 @@
 
 #include "ibattle.h"
 #include "iserver.h"
+#include "serverselector.h"
 #include "settings.h"
 #include "ui.h"
 #include "uiutils.h"
