@@ -268,9 +268,9 @@ public:
     virtual User& GetMe() = 0;
     virtual const User& GetMe() const = 0;
 
-    virtual void SendHostInfo( HostInfo update );
-    virtual void SendHostInfo( const wxString& Tag );
-    virtual void Update ( const wxString& Tag );
+    virtual void SendHostInfo( HostInfo /*update*/ ) {}
+    virtual void SendHostInfo( const wxString& /*Tag*/ ) {}
+    virtual void Update ( const wxString& /*Tag*/ ) {}
 
     virtual unsigned int GetNumBots() const;
     virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );

@@ -213,19 +213,6 @@ int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &ex
     return result;
 }
 
-
-void IBattle::SendHostInfo( HostInfo /*unused*/ )
-{
-}
-
-void IBattle::SendHostInfo( const wxString& /*unused*/ )
-{
-}
-
-void IBattle::Update ( const wxString& /*unused*/)
-{
-}
-
 User& IBattle::OnUserAdded( User& user )
 {
     UserList::AddUser( user );
@@ -1336,4 +1323,3 @@ IServer& IBattle::GetServer()
 {
 	return serverSelector().GetServer();
 }
-
