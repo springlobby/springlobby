@@ -17,6 +17,7 @@ class INotification;
 class NotificationManager : public SL::NonCopyable, public wxEvtHandler, public GlobalEvent
 {
     public:
+        NotificationManager();
         virtual ~NotificationManager();
 
 		void OnShowNotification( UiEvents::NotficationData data );
@@ -24,7 +25,6 @@ class NotificationManager : public SL::NonCopyable, public wxEvtHandler, public 
 		void OnQuit( wxCommandEvent& data );
 
     protected:
-        NotificationManager();
 		INotification* m_notification_wrapper;
 
 		wxTimer m_rate_limit_timer;
@@ -35,10 +35,6 @@ class NotificationManager : public SL::NonCopyable, public wxEvtHandler, public 
 
 		void OnTimer( wxTimerEvent& /*event*/ );
 		void ShowNotification( const UiEvents::NotficationData& data );
-
-        //make globals holder have access to ctor
-        template <class PB, class I >
-        friend class LSL::Util::GlobalObjectHolder;
 
 		EventReceiverFunc< NotificationManager, UiEvents::NotficationData, &NotificationManager::OnShowNotification> m_showNotificationSink;
 
