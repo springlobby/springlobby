@@ -19,7 +19,7 @@ class ObserverDownloadInfo
         ObserverDownloadInfo();
 
         //! Size of file in bytes
-        unsigned int size;
+        int size;
 
         //! Downloaded part in bytes
         unsigned int progress;

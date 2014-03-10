@@ -133,12 +133,9 @@ void TaskBar::UpdateDisplay()
 
 void TaskBar::UpdateProgress()
 {
-	int overalPercent;
-	// set percent to -1 if unknown
-	if (overalSize <= 100 ) {
-		overalPercent = -1;
-	} else {
-		overalPercent = overalProgress / (overalSize / 100);
+	float overalPercent = -1; // -1 means unknown
+	if (overalSize > 0 ) {
+		overalPercent = ((float)overalProgress/overalSize) * 100;
 	}
 
 	if (unfinishedTasks == 1 ) {
@@ -147,11 +144,11 @@ void TaskBar::UpdateProgress()
 		text->SetLabel(wxFormat( _T("Downloading %u files") ) % unfinishedTasks );
 	}
 
-	if (overalPercent > -1) {
+	if (overalPercent < 0) {
 		// just pulse the bar, if the progress is unknown
-		gauge->SetValue(overalPercent);
-	} else {
 		gauge->Pulse();
+	} else {
+		gauge->SetValue(overalPercent);
 	}
 }
 

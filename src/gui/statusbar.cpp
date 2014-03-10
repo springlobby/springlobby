@@ -51,7 +51,7 @@ void Statusbar::OnUpdateMsg(wxCommandEvent& evt) {
 
 void Statusbar::OnAddMessage( UiEvents::StatusData data )
 {
-	assert(wxThread::IsMain());
+	// is called from a thread, wxPostEvent used for thread-safety!
 
 	wxCommandEvent evt(PUSH_STATUS_MSG, GetId());
 	evt.SetEventObject(this);
@@ -63,7 +63,7 @@ void Statusbar::OnAddMessage( UiEvents::StatusData data )
 
 void Statusbar::OnRemoveMessage( UiEvents::StatusData data )
 {
-	assert(wxThread::IsMain());
+	// is called from a thread, wxPostEvent used for thread-safety!
 
 	wxCommandEvent evt(POP_STATUS_MSG, GetId());
 	evt.SetEventObject(this);

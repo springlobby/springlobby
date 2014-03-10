@@ -25,7 +25,7 @@ private:
 	wxGauge* gauge;
 	int state;
 	wxString downloadName;
-	unsigned int overalSize;
+	int overalSize;
 	unsigned int overalProgress;
 	int unfinishedTasks;
 	int finishedCounter;
