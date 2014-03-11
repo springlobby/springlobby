@@ -7,18 +7,24 @@
 
 class OfflineBattle : public IBattle
 {
-	public:
-			OfflineBattle (const int id = 0 );
-			OfflineBattle ( const OfflineBattle&  );
-			OfflineBattle& operator = ( const OfflineBattle&  );
-			~OfflineBattle (){}
-			virtual User& GetMe() { return m_me; }
-            virtual const User& GetMe() const { return m_me; }
-			virtual bool IsFounderMe() const { return true; }
-			virtual void StartSpring();
-	protected:
-			int m_id;
-			User m_me;
+public:
+	OfflineBattle (const int id = 0 );
+	OfflineBattle ( const OfflineBattle&  );
+	OfflineBattle& operator = ( const OfflineBattle&  );
+	~OfflineBattle () {}
+	virtual User& GetMe() {
+		return m_me;
+	}
+	virtual const User& GetMe() const {
+		return m_me;
+	}
+	virtual bool IsFounderMe() const {
+		return true;
+	}
+	virtual void StartSpring();
+protected:
+	int m_id;
+	User m_me;
 };
 
 #endif // OFFLINEBATTLE_H_INCLUDED
