@@ -24,17 +24,17 @@ class SinglePlayerBattle: public IBattle
 //    unsigned int AddBot( int ally, int posx, int posy, int handicap, const wxString& aidll );
 //    void UpdateBot( unsigned int index, int ally, int posx, int posy, int side );
 
-	bool IsFounderMe() const { return true; }
+	virtual bool IsFounderMe() const { return true; }
 
-    User& GetMe() { return m_me; }
-    const User& GetMe() const { return m_me; }
+    virtual User& GetMe() { return m_me; }
+    virtual const User& GetMe() const { return m_me; }
 
-    void SendHostInfo( HostInfo update );
-    void SendHostInfo( const wxString& /*unused*/ ){ }
+    virtual void SendHostInfo( HostInfo update );
+    virtual void SendHostInfo( const wxString& /*unused*/ ){ }
 
-    void Update( const wxString& Tag );
+    virtual void Update( const wxString& Tag );
 
-    void StartSpring();
+    virtual void StartSpring();
   protected:
     void RemoveUnfittingBots();
 

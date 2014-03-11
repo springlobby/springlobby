@@ -12,10 +12,10 @@ class OfflineBattle : public IBattle
 			OfflineBattle ( const OfflineBattle&  );
 			OfflineBattle& operator = ( const OfflineBattle&  );
 			~OfflineBattle (){}
-			User& GetMe() { return m_me; }
-            const User& GetMe() const { return m_me; }
-			bool IsFounderMe() const { return true; }
-			void StartSpring();
+			virtual User& GetMe() { return m_me; }
+            virtual const User& GetMe() const { return m_me; }
+			virtual bool IsFounderMe() const { return true; }
+			virtual void StartSpring();
 	protected:
 			int m_id;
 			User m_me;

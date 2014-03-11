@@ -237,19 +237,19 @@ public:
     virtual bool ModExists() const;
 
     virtual BattleStartRect GetStartRect( unsigned int allyno ) const;
-    User& OnUserAdded( User& user );
-    void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
-    void OnUserRemoved( User& user );
+    virtual User& OnUserAdded( User& user );
+    virtual void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
+    virtual void OnUserRemoved( User& user );
 
-	bool IsEveryoneReady() const;
+	virtual bool IsEveryoneReady() const;
 
-    void ForceSide( User& user, int side );
-    void ForceAlly( User& user, int ally );
-    void ForceTeam( User& user, int team );
-    void ForceColour( User& user, const wxColour& col );
-    void ForceSpectator( User& user, bool spectator );
-    void SetHandicap( User& user, int handicap);
-    void KickPlayer( User& user );
+    virtual void ForceSide( User& user, int side );
+    virtual void ForceAlly( User& user, int ally );
+    virtual void ForceTeam( User& user, int team );
+    virtual void ForceColour( User& user, const wxColour& col );
+    virtual void ForceSpectator( User& user, bool spectator );
+    virtual void SetHandicap( User& user, int handicap);
+    virtual void KickPlayer( User& user );
 
 
     virtual void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom );
@@ -298,13 +298,13 @@ public:
     virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int difference) const;
     virtual wxColour GetFixColour(int i) const;
     virtual wxColour GetFreeColour( User &for_whom ) const;
-    wxColour GetFreeColour( User *for_whom = NULL ) const;
-    wxColour GetNewColour() const;
-    int ColourDifference(const wxColour &a, const wxColour &b)  const;
+    virtual wxColour GetFreeColour( User *for_whom = NULL ) const;
+    virtual wxColour GetNewColour() const;
+    virtual int ColourDifference(const wxColour &a, const wxColour &b)  const;
 
-	User& GetFounder() const { return GetUser( m_opts.founder ); }
+	virtual User& GetFounder() const { return GetUser( m_opts.founder ); }
 
-	bool IsFull() const { return GetMaxPlayers() == GetNumActivePlayers(); }
+	virtual bool IsFull() const { return GetMaxPlayers() == GetNumActivePlayers(); }
 
 		virtual unsigned int GetNumPlayers() const;
 		virtual unsigned int GetNumActivePlayers() const;
@@ -363,7 +363,7 @@ public:
 		typedef UserVec::const_iterator UserVecCIter;
 		typedef UserVec::iterator UserVecIter;
 
-		void SetBattleOptions( const BattleOptions& options ) { m_opts = options; }
+		virtual void SetBattleOptions( const BattleOptions& options ) { m_opts = options; }
 
 		virtual void OnSelfLeftBattle();
 
@@ -376,15 +376,15 @@ public:
 		typedef AllyVec::const_iterator AllyVecCIter;
 		typedef AllyVec::iterator AllyVecIter;
 
-		TeamVec GetParsedTeamsVec() { return m_parsed_teams; }
-		AllyVec GetParsedAlliesVec() { return m_parsed_allies; }
+		virtual TeamVec GetParsedTeamsVec() { return m_parsed_teams; }
+		virtual AllyVec GetParsedAlliesVec() { return m_parsed_allies; }
 
-		void SetParsedTeamsVec( const TeamVec& t ) { m_parsed_teams = t; }
-		void SetParsedAlliesVec( const AllyVec& a ) { m_parsed_allies = a; }
+		virtual void SetParsedTeamsVec( const TeamVec& t ) { m_parsed_teams = t; }
+		virtual void SetParsedAlliesVec( const AllyVec& a ) { m_parsed_allies = a; }
 
-		const BattleOptions& GetBattleOptions() const { return m_opts; }
+		virtual const BattleOptions& GetBattleOptions() const { return m_opts; }
 
-		bool Equals( const IBattle& other ) const { return m_opts.battleid == other.GetBattleOptions().battleid; }
+		virtual bool Equals( const IBattle& other ) const { return m_opts.battleid == other.GetBattleOptions().battleid; }
 
 		virtual void DisableHostStatusInProxyMode( bool value ) { m_generating_script = value; }
 
@@ -400,7 +400,7 @@ public:
 
 		virtual void AddUserFromDemo( User& user );
 
-		virtual void GetBattleFromScript( bool loadmapmod );
+		void GetBattleFromScript( bool loadmapmod );
 
 		virtual bool ShouldAutoStart() const;
 

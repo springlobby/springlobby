@@ -27,87 +27,87 @@ class Battle : public IBattle
     IServer& GetServer() { return m_serv; }
     AutoHost* GetAutoHost() { return &m_ah; }
 
-    void SendHostInfo( HostInfo update );
-    void SendHostInfo( const wxString& Tag );
+    virtual void SendHostInfo( HostInfo update );
+    virtual void SendHostInfo( const wxString& Tag );
 
-    void Update( const wxString& Tag );
+    virtual void Update( const wxString& Tag );
 
-    void Join( const wxString& password = wxEmptyString );
-    void Leave();
+    virtual void Join( const wxString& password = wxEmptyString );
+    virtual void Leave();
 
-    void KickPlayer( User& user );
+    virtual void KickPlayer( User& user );
 
-    void RingNotReadyPlayers();
-    void RingNotSyncedPlayers();
-    void RingNotSyncedAndNotReadyPlayers();
-    void RingPlayer( const User& u );
+    virtual void RingNotReadyPlayers();
+    virtual void RingNotSyncedPlayers();
+    virtual void RingNotSyncedAndNotReadyPlayers();
+    virtual void RingPlayer( const User& u );
 
-    void Say( const wxString& msg );
-    void DoAction( const wxString& msg );
+    virtual void Say( const wxString& msg );
+    virtual void DoAction( const wxString& msg );
 
-    void SetLocalMap( const LSL::UnitsyncMap& map );
+    virtual void SetLocalMap( const LSL::UnitsyncMap& map );
 
-    void OnRequestBattleStatus();
-    void SendMyBattleStatus();
+    virtual void OnRequestBattleStatus();
+    virtual void SendMyBattleStatus();
 
-    bool ExecuteSayCommand( const wxString& cmd );
+    virtual bool ExecuteSayCommand( const wxString& cmd );
 
-    void AddBot( const wxString& nick, UserBattleStatus status );
+    virtual void AddBot( const wxString& nick, UserBattleStatus status );
 
-    void ForceSide( User& user, int side );
-    void ForceTeam( User& user, int team );
-    void ForceAlly( User& user, int ally );
-    void ForceColour( User& user, const wxColour& col );
-    void ForceSpectator( User& user, bool spectator );
-    void BattleKickPlayer( User& user );
-    void SetHandicap( User& user, int handicap);
+    virtual void ForceSide( User& user, int side );
+    virtual void ForceTeam( User& user, int team );
+    virtual void ForceAlly( User& user, int ally );
+    virtual void ForceColour( User& user, const wxColour& col );
+    virtual void ForceSpectator( User& user, bool spectator );
+//    virtual void BattleKickPlayer( User& user );
+    virtual void SetHandicap( User& user, int handicap);
 
-    User& OnUserAdded( User& user );
-    void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
-    void OnUserRemoved( User& user );
+    virtual User& OnUserAdded( User& user );
+    virtual void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
+    virtual void OnUserRemoved( User& user );
 
-    void ForceUnsyncedToSpectate();
-    void ForceUnReadyToSpectate();
-    void ForceUnsyncedAndUnreadyToSpectate();
+    virtual void ForceUnsyncedToSpectate();
+    virtual void ForceUnReadyToSpectate();
+    virtual void ForceUnsyncedAndUnreadyToSpectate();
 
-    void SetAutoLockOnStart( bool value );
-    bool GetAutoLockOnStart();
+    virtual void SetAutoLockOnStart( bool value );
+    virtual bool GetAutoLockOnStart();
 
-    void SetLockExternalBalanceChanges( bool value );
-    bool GetLockExternalBalanceChanges();
+    virtual void SetLockExternalBalanceChanges( bool value );
+    virtual bool GetLockExternalBalanceChanges();
 
-    void FixColours();
-    void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
-    void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
+    virtual void FixColours();
+    virtual void Autobalance( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0 );
+    virtual void FixTeamIDs( BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0 );
 
-    void SendScriptToClients();
+    virtual void SendScriptToClients();
 
-    bool CheckBan(User &user);
+    virtual bool CheckBan(User &user);
 
-    void SetImReady( bool ready );
+    virtual void SetImReady( bool ready );
 
-    User& GetMe();
-    const User& GetMe() const;
+    virtual User& GetMe();
+    virtual const User& GetMe() const;
 
-    void UserPositionChanged( const User& user );
+    virtual void UserPositionChanged( const User& user );
 
-	int GetID() const { return m_id; }
+	virtual int GetID() const { return m_id; }
 
-    void SaveMapDefaults();
-    void LoadMapDefaults( const wxString& mapname );
+    virtual void SaveMapDefaults();
+    virtual void LoadMapDefaults( const wxString& mapname );
 
-		void StartHostedBattle();
-    void StartSpring();
+	virtual void StartHostedBattle();
+    virtual void StartSpring();
 
-    void OnTimer( wxTimerEvent& /*event*/ );
+    virtual void OnTimer( wxTimerEvent& /*event*/ );
 
-	void SetInGame( bool ingame );
+	virtual void SetInGame( bool ingame );
 
-	void OnUnitsyncReloaded( wxEvent& data );
+	virtual void OnUnitsyncReloaded( wxEvent& data );
 
 
-	void SetAutoUnspec(bool value);
-	bool GetAutoUnspec() { return m_auto_unspec; }
+	virtual void SetAutoUnspec(bool value);
+	virtual bool GetAutoUnspec() { return m_auto_unspec; }
 private:
 	void ShouldAutoUnspec();
 
