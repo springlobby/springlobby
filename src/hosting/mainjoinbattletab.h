@@ -17,6 +17,7 @@ class wxBoxSizer;
 class wxImageList;
 class SLNotebook;
 class wxNotebook;
+class ChatPanel;
 
 class MainJoinBattleTab : public wxScrolledWindow
 {

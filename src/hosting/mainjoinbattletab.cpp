@@ -12,7 +12,6 @@
 #include <wx/wupdlock.h>
 #include <wx/log.h>
 
-#include "mainwindow.h" //used only for global pers load/save, remove when signals are merged
 #include "settings.h"
 #include "mainjoinbattletab.h"
 #include "battleroomtab.h"
