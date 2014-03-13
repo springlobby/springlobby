@@ -27,6 +27,7 @@
 #include "helper/colorbutton.h"
 #include "aui/auimanager.h"
 #include "utils/customdialogs.h"
+#include "utils/slpaths.h"
 
 #include <lslutils/conversion.h>
 
@@ -374,6 +375,9 @@ void SinglePlayerTab::OnStart( wxCommandEvent& /*unused*/ )
         customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION );
         return;
     }
+
+	m_battle.SetEngineName(_T("spring"));
+	m_battle.SetEngineVersion(SlPaths::GetCurrentUsedSpringIndex()); //FIXME: make engine version selectable
 
     if ( ValidSetup() ) m_battle.StartSpring();
 }
