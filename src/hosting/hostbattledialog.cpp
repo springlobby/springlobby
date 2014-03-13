@@ -37,7 +37,6 @@
 #include "ui.h"
 #include "iserver.h"
 #include "serverselector.h"
-#include <lslunitsync/c_api.h>
 #include <lslunitsync/springbundle.h>
 
 #include "images/rank0.xpm"

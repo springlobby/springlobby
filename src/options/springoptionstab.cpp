@@ -41,7 +41,6 @@
 #include "settings.h"
 #include "mainwindow.h"
 #include "utils/customdialogs.h"
-#include <lslunitsync/c_api.h>
 #include <lslunitsync/springbundle.h>
 
 

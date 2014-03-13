@@ -30,7 +30,6 @@
 #include <lslutils/misc.h>
 #include <lslutils/globalsmanager.h>
 #include <lslunitsync/unitsync.h>
-#include <lslunitsync/c_api.h>
 
 #include "nonportable.h"
 #include "utils/conversion.h"

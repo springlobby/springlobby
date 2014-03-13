@@ -22,7 +22,7 @@
 #include "presets.h"
 
 #include "../utils/debug.h"
-#include <lslunitsync/c_api.h>
+#include <lslunitsync/unitsync.h>
 
 
 intMap abstract_panel::intSettings;
@@ -107,12 +107,12 @@ bool abstract_panel::loadValuesIntoMap()
 		for (int i = 0; i< intControls_size;++i)
 		{
       intSettings[intControls[i].key]
-          = LSL::susynclib().GetSpringConfigInt(STD_STRING(intControls[i].key),fromString(intControls[i].def));
+          = LSL::usync().GetSpringConfigInt(STD_STRING(intControls[i].key),fromString(intControls[i].def));
 		}
     for (int i = 0; i< floatControls_size;++i)
     {
       floatSettings[floatControls[i].key]
-          = LSL::susynclib().GetSpringConfigFloat(STD_STRING(floatControls[i].key),fromString(floatControls[i].def));
+          = LSL::usync().GetSpringConfigFloat(STD_STRING(floatControls[i].key),fromString(floatControls[i].def));
 		}
 	}
 	catch (...)
@@ -579,13 +579,13 @@ void abstract_panel::OnSpinControlChange(wxSpinEvent& event)
 bool abstract_panel::saveSettings() {
 	try {
 		for (intMap::const_iterator i = intSettings.begin(); i != intSettings.end();++i) {
-			LSL::susynclib().SetSpringConfigInt(STD_STRING(i->first),i->second);
+			LSL::usync().SetSpringConfigInt(STD_STRING(i->first),i->second);
 		}
 		for (stringMap::const_iterator s = stringSettings.begin(); s != stringSettings.end();++s) {
-			LSL::susynclib().SetSpringConfigString(STD_STRING(s->first),STD_STRING(s->second));
+			LSL::usync().SetSpringConfigString(STD_STRING(s->first),STD_STRING(s->second));
 		}
 		for (floatMap::const_iterator f = floatSettings.begin(); f != floatSettings.end();++f) {
-			LSL::susynclib().SetSpringConfigFloat(STD_STRING(f->first),f->second);
+			LSL::usync().SetSpringConfigFloat(STD_STRING(f->first),f->second);
 		}
 	} catch (...) {
 		customMessageBox(SS_MAIN_ICON,_("Could not save, unitsync not properly loaded"), _("SpringSettings Error"), wxOK|wxICON_HAND, 0);

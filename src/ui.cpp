@@ -59,7 +59,6 @@
 #include "sound/alsound.h"
 #endif
 #include <lslutils/globalsmanager.h>
-#include <lslunitsync/c_api.h>
 #include <lslunitsync/springbundle.h>
 #include "textentrydialog.h"
 

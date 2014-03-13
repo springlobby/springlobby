@@ -17,8 +17,6 @@
 #include <wx/textdlg.h>
 #include <wx/filename.h>
 
-#include <lslunitsync/c_api.h>
-
 #include "../../utils/customdialogs.h"
 #include "../../utils/conversion.h"
 #include "../../utils/slpaths.h"

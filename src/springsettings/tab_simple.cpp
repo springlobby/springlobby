@@ -15,7 +15,7 @@
 #include "presets.h"
 #include "frame.h"
 #include "../settings.h"
-#include <lslunitsync/c_api.h>
+#include <lslunitsync/unitsync.h>
 #include <utils/conversion.h>
 
 const wxString infoTextContent= _("These options let you roughly control Spring's rendering.\n\
@@ -47,8 +47,8 @@ void tab_simple::getSetUpResolutionCBX()
 	else
 	{
 		try{
-            x_res = LSL::susynclib().GetSpringConfigInt(STD_STRING(RC_TEXT[0].key),fromString(RC_TEXT[0].def));
-            y_res = LSL::susynclib().GetSpringConfigInt(STD_STRING(RC_TEXT[1].key),fromString(RC_TEXT[1].def));
+            x_res = LSL::usync().GetSpringConfigInt(STD_STRING(RC_TEXT[0].key),fromString(RC_TEXT[0].def));
+            y_res = LSL::usync().GetSpringConfigInt(STD_STRING(RC_TEXT[1].key),fromString(RC_TEXT[1].def));
 		}
 		catch (...)	{}
 	}

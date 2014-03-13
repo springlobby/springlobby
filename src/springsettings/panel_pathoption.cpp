@@ -25,7 +25,6 @@
 #include "../settings.h"
 #include "../nonportable.h"
 #include <lslunitsync/unitsync.h>
-#include <lslunitsync/c_api.h>
 #include "se_utils.h"
 
 
@@ -95,7 +94,7 @@ void PathOptionPanel::UsePaths(wxCommandEvent& /*unused*/)
 	SlPaths::SetUnitSync( SlPaths::GetCurrentUsedSpringIndex(),  usync_ctrl->GetValue() );
     LSL::usync().ReloadUnitSyncLib();
 
-    if ( !(LSL::susynclib().IsLoaded()) )
+    if ( !(LSL::usync().IsLoaded()) )
 	{
 		customMessageBox(SS_MAIN_ICON, _("SpringSettings is unable to load your unitsync library.\n\
 				You might want to take another look at your unitsync setting.\n\
