@@ -28,6 +28,7 @@ lsl/battle/ibattle.cpp
 #include "ui.h" //only required for preset stuff
 #include "spring.h"
 #include <lslutils/conversion.h>
+#include <lslunitsync/unitsync.h>
 #include "springlobbyapp.h"
 #include "iserver.h"
 #include "serverselector.h"

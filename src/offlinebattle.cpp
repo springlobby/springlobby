@@ -4,6 +4,7 @@
 #include "spring.h"
 
 #include <wx/timer.h>
+#include <lslunitsync/unitsync.h>
 
 OfflineBattle::OfflineBattle(const int id  ):
 m_id( id ),

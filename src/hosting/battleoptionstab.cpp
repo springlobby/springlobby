@@ -25,6 +25,7 @@
 #include "utils/controls.h"
 #include "iserver.h"
 #include <lslunitsync/optionswrapper.h>
+#include <lslunitsync/unitsync.h>
 #include "aui/auimanager.h"
 
 

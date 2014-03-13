@@ -28,6 +28,7 @@
 #include "aui/auimanager.h"
 #include "utils/customdialogs.h"
 #include "settings.h"
+#include <lslunitsync/unitsync.h>
 
 template<> SortOrder CustomVirtListCtrl<User*,BattleroomListCtrl>::m_sortorder = SortOrder();
 

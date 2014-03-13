@@ -8,6 +8,7 @@
 #include <wx/panel.h>
 
 #include "ibattle.h"
+#include <lslunitsync/unitsync.h>
 
 class wxPanel;
 class wxBitmap;

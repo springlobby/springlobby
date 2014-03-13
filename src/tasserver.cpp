@@ -47,6 +47,7 @@ lsl/networking/tasserver.cpp
 
 #include "settings.h"
 #include "utils/version.h"
+#include <lslunitsync/unitsync.h>
 
 SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which is send when leaving server");
 

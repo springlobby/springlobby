@@ -18,6 +18,7 @@
 #include "ibattle.h"
 #include <lslutils/misc.h>
 #include <lslutils/conversion.h>
+#include <lslunitsync/unitsync.h>
 #include "mmoptionwindows.h"
 #include "utils/conversion.h"
 

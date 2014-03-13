@@ -38,6 +38,7 @@
 #include "iserver.h"
 #include "serverselector.h"
 #include <lslunitsync/springbundle.h>
+#include <lslunitsync/unitsync.h>
 
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"

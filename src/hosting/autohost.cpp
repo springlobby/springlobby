@@ -9,6 +9,7 @@
 #include "utils/conversion.h"
 #include "utils/misc.h"
 #include "utils/platform.h"
+#include <lslunitsync/unitsync.h>
 
 #include <wx/tokenzr.h>
 

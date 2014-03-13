@@ -45,6 +45,7 @@ lsl/spring/spring.cpp
 
 #include <lslutils/globalsmanager.h>
 #include <lslutils/conversion.h>
+#include <lslunitsync/unitsync.h>
 
 SLCONFIG("/Spring/Safemode", false, "launch spring in safemode");
 

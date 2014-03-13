@@ -16,6 +16,7 @@
 #include "battle.h"
 #define HAVE_WX
 #include <lslunitsync/image.h>
+#include <lslunitsync/unitsync.h>
 
 #include "images/bot.xpm"
 #include "images/bot_broom.png.h"

@@ -12,6 +12,7 @@
 #include <wx/thread.h>
 #include "../json/wx/jsonreader.h"
 #include "ui.h"
+#include <lslunitsync/unitsync.h>
 
 #include <iostream>
 DECLARE_EVENT_TYPE(SEARCH_FINISHED, wxID_ANY);

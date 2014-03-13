@@ -17,6 +17,7 @@
 
 #include "ui.h"
 #include <lslunitsync/optionswrapper.h>
+#include <lslunitsync/unitsync.h>
 #include "utils/controls.h"
 #include <lslutils/misc.h>
 #include "utils/conversion.h"

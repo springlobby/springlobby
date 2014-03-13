@@ -20,7 +20,8 @@ lsl/battle/ibattle.h
 #include <wx/string.h>
 #include <wx/event.h>
 
-#include <lslunitsync/unitsync.h>
+#include <lslunitsync/data.h>
+
 #include "user.h"
 #include <lslunitsync/optionswrapper.h>
 #include "userlist.h"

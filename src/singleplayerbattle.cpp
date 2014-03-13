@@ -9,6 +9,7 @@
 #include "settings.h"
 #include "spring.h"
 #include <lslutils/conversion.h>
+#include <lslunitsync/unitsync.h>
 #include "utils/conversion.h"
 
 SinglePlayerBattle::SinglePlayerBattle(MainSinglePlayerTab& msptab ):
