@@ -135,10 +135,10 @@ void Battle::DoAction( const wxString& msg )
     m_serv.DoActionBattle( m_opts.battleid, msg );
 }
 
-void Battle::SetLocalMap( const LSL::UnitsyncMap& map )
+void Battle::SetLocalMap( const wxString& mapname )
 {
-	IBattle::SetLocalMap( map );
-    if ( IsFounderMe() )  LoadMapDefaults( TowxString(map.name) );
+	IBattle::SetLocalMap( mapname );
+    if ( IsFounderMe() )  LoadMapDefaults(mapname);
 }
 
 User& Battle::GetMe()

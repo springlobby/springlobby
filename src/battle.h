@@ -49,7 +49,7 @@ public:
 	virtual void Say( const wxString& msg );
 	virtual void DoAction( const wxString& msg );
 
-	virtual void SetLocalMap( const LSL::UnitsyncMap& map );
+	virtual void SetLocalMap( const wxString& mapname);
 
 	virtual void OnRequestBattleStatus();
 	virtual void SendMyBattleStatus();

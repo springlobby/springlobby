@@ -198,7 +198,7 @@ public:
 	/**@}*/
 
 	virtual void SetHostMap( const wxString& mapname, const wxString& hash );
-	virtual void SetLocalMap( const LSL::UnitsyncMap& map );
+	virtual void SetLocalMap( const wxString& mapname);
 	virtual const LSL::UnitsyncMap& LoadMap();
 	virtual wxString GetHostMapName() const;
 	virtual wxString GetHostMapHash() const;

@@ -730,9 +730,10 @@ void IBattle::SetHostMap(const wxString& _mapname, const wxString& _hash)
 }
 
 
-void IBattle::SetLocalMap(const LSL::UnitsyncMap& map)
+void IBattle::SetLocalMap(const wxString& mapname)
 {
-	assert(!map.name.empty());
+	assert(!mapname.empty());
+	LSL::UnitsyncMap map = LSL::usync().GetMapEx(STD_STRING(mapname));
   if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
     m_local_map = map;
     m_map_loaded = true;
@@ -954,8 +955,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
       if ( !options[_T("mapname")].IsEmpty() )
       {
         if (LSL::usync().MapExists(STD_STRING(options[_T("mapname")]))) {
-            LSL::UnitsyncMap map = LSL::usync().GetMapEx(STD_STRING(options[_T("mapname")]) );
-            SetLocalMap( map );
+            SetLocalMap( options[_T("mapname")] );
             SendHostInfo( HI_Map );
         }
         else if ( !ui().OnPresetRequiringMap( options[_T("mapname")] ) ) {

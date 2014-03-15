@@ -157,8 +157,7 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
             const wxString mapname = GetBestMatch( LSL::Util::vectorToArrayString(LSL::usync().GetMapList()), params );
 			try
 			{
-                LSL::UnitsyncMap map = LSL::usync().GetMap(STD_STRING(mapname));
-				m_battle.SetLocalMap( map );
+				m_battle.SetLocalMap( mapname );
 				m_battle.DoAction( _T( "is switching to map " ) + mapname );
 				m_battle.SendHostInfo( IBattle::HI_Map );
 			} catch ( ... )

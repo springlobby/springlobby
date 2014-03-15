@@ -1036,8 +1036,7 @@ void BattleRoomTab::SetMap( int index )
 	if ( !m_battle ) return;
 	try
 	{
-		LSL::UnitsyncMap map = LSL::usync().GetMapEx( index );
-		m_battle->SetLocalMap( map );
+		m_battle->SetLocalMap( m_map_combo->GetString(index) );
 		m_battle->SendHostInfo( IBattle::HI_Map );
 	} catch ( ... ) {}
 }
