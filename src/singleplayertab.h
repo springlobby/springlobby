@@ -23,7 +23,7 @@ class wxCheckBox;
 class wxMouseEvent;
 class ColorButton;
 
-class SinglePlayerTab: public  wxScrolledWindow
+class SinglePlayerTab: public  wxScrolledWindow, public GlobalEvent
 {
   public:
 

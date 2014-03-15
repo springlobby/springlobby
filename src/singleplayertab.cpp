@@ -28,6 +28,7 @@
 #include "aui/auimanager.h"
 #include "utils/customdialogs.h"
 #include "utils/slpaths.h"
+#include "utils/globalevents.h"
 
 #include <lslutils/conversion.h>
 
@@ -153,7 +154,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab):
 
     ReloadMaplist();
     ReloadModlist();
-
+	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&SinglePlayerTab::OnUnitsyncReloaded));
 }
 
 
