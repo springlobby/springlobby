@@ -224,7 +224,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 	{
 		try
 		{
-            m_battle->DoAction(TowxString("suggests " + LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name));
+            m_battle->DoAction(_T("suggests ") + m_map_combo->GetString(m_map_combo->GetCurrentSelection()));
 		}
 		catch ( ... )
 		{

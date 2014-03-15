@@ -314,7 +314,7 @@ void MapGridCtrl::UpdateAsyncFetches()
 	if (!m_pending_mapinfos.empty()) {
 		m_async_ops_count++;
 		const MapData* m = GetMaxPriorityMap(m_pending_mapinfos);
-		m_async_ex.GetMapEx(m->name);
+		m_async_ex.GetMap(m->name);
 	} else if ( !m_pending_mapimages.empty() ) {
 		MapData* m = GetMaxPriorityMap(m_pending_mapimages);
 		if (m->state != MapState_NoMinimap) //FIXME: this shouldn never happen
@@ -531,7 +531,7 @@ void MapGridCtrl::OnGetMapExAsyncCompleted( const std::string& _mapname )
 	// if mapname is empty, some error occurred in LSL::usync().GetMapEx...
 	assert(!_mapname.empty());
 	const wxString mapname = TowxString(_mapname);
-	LSL::UnitsyncMap m = LSL::usync().GetMapEx(_mapname);
+	LSL::UnitsyncMap m = LSL::usync().GetMap(_mapname);
 	m_maps[mapname].hash = m.hash;
 	m_maps[mapname].info = m.info;
 	m_async_ops_count--;

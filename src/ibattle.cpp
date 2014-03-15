@@ -733,7 +733,7 @@ void IBattle::SetHostMap(const wxString& _mapname, const wxString& _hash)
 void IBattle::SetLocalMap(const wxString& mapname)
 {
 	assert(!mapname.empty());
-	LSL::UnitsyncMap map = LSL::usync().GetMapEx(STD_STRING(mapname));
+	LSL::UnitsyncMap map = LSL::usync().GetMap(STD_STRING(mapname));
   if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
     m_local_map = map;
     m_map_loaded = true;
@@ -758,7 +758,7 @@ const LSL::UnitsyncMap& IBattle::LoadMap()
   if (( !m_map_loaded ) && (!m_host_map.name.empty())){
     try {
       ASSERT_EXCEPTION( m_map_exists, _T("Map does not exist: ") + TowxString(m_host_map.name) );
-      m_local_map = LSL::usync().GetMapEx( m_host_map.name );
+      m_local_map = LSL::usync().GetMap( m_host_map.name );
 	  bool options_loaded = CustomBattleOptions().loadOptions( LSL::OptionsWrapper::MapOption, m_host_map.name );
 	  ASSERT_EXCEPTION( options_loaded, _T("couldn't load the map options") );
       m_map_loaded = true;

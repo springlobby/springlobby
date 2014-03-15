@@ -216,7 +216,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
 	}
 	else {
     try {
-      	LSL::UnitsyncMap map = LSL::usync().GetMapEx( index );
+		LSL::UnitsyncMap map = LSL::usync().GetMap( index );
       	m_battle.SetHostMap(TowxString(map.name), TowxString(map.hash));
      	m_addbot_btn->Enable( true );
 		m_map_opts_list->SetItem( 0, 1, wxFormat( _T( "%dx%d" ) ) % (map.info.width / 512) % (map.info.height / 512) );

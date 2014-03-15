@@ -1048,7 +1048,7 @@ void BattleRoomTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 	{
 		try
 		{
-			autohostManager.GetAutohostHandler().SetMap(TowxString(LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name));
+			autohostManager.GetAutohostHandler().SetMap(m_map_combo->GetString(m_map_combo->GetCurrentSelection()));
             //m_battle->DoAction( _T( "suggests " ) + TowxString(LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name));
 		}
 		catch ( ... )
