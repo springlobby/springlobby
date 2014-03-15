@@ -173,44 +173,33 @@ void SinglePlayerTab::UpdateMinimap()
 void SinglePlayerTab::ReloadMaplist()
 {
 	m_map_pick->Clear();
-    m_map_pick->Append(LSL::Util::vectorToArrayString(LSL::usync().GetMapList()));
-    m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
-
-    if ( m_battle.GetHostMapName() != wxEmptyString )
-    {
+	m_map_pick->Append(LSL::Util::vectorToArrayString(LSL::usync().GetMapList()));
+	m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
+	if (m_battle.GetHostMapName().IsEmpty() ) {
+		m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
+		m_addbot_btn->Enable(false);
+	} else {
 		m_map_pick->SetStringSelection( m_battle.GetHostMapName());
-        if ( m_map_pick->GetStringSelection() == wxEmptyString )
-            SetMap( m_mod_pick->GetCount()-1 );
-    }
-    else
-    {
-        m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
-        m_addbot_btn->Enable(false);
-    }
+		if ( m_map_pick->GetStringSelection().IsEmpty() ) {
+			SetMap( m_mod_pick->GetCount()-1 );
+		}
+	}
 }
 
 
 void SinglePlayerTab::ReloadModlist()
 {
-    m_mod_pick->Clear();
-
-    const auto modlist= LSL::Util::vectorToArrayString(LSL::usync().GetModList());
-    //modlist.Sort(CompareStringIgnoreCase);
-
-    size_t nummods = modlist.Count();
-    for ( size_t i = 0; i < nummods; i++ )
-        m_mod_pick->Insert( modlist[i], i );
-
-    m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
-    if ( !m_battle.GetHostModName().IsEmpty() )
-    {
-        m_mod_pick->SetStringSelection( m_battle.GetHostModName() );
-        if ( m_mod_pick->GetStringSelection() == wxEmptyString ) SetMod( m_mod_pick->GetCount()-1 );
-    }
-    else
-    {
-        m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
-    }
+	m_mod_pick->Clear();
+	m_mod_pick->Append( LSL::Util::vectorToArrayString(LSL::usync().GetModList()));
+	m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
+	if (m_battle.GetHostModName().IsEmpty() ) {
+		m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
+	} else {
+		m_mod_pick->SetStringSelection( m_battle.GetHostModName() );
+		if ( m_mod_pick->GetStringSelection().IsEmpty() ) {
+			SetMod( m_mod_pick->GetCount()-1 );
+		}
+	}
 }
 
 
