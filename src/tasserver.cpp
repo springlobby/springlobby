@@ -448,7 +448,7 @@ void TASServer::Notify()
 	}
 
 	if (now-m_last_timer > 1) {
-		m_se->OnServerMessage(wxFormat(_T("SpringLobby hanged for %d seconds")) % ((int)now-m_last_timer));
+		m_se->OnServerMessage(wxFormat(_("SpringLobby hung for %d seconds")) % ((int)now-m_last_timer));
 		m_last_timer = now;
 		return;
 	}
