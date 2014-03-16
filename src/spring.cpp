@@ -281,7 +281,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 	} else tdf.Append( _T("startpostype"), startpostype );
 
 	tdf.EnterSection( _T("mapoptions") );
-for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::MapOption )) {
+	for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::MapOption )) {
 		tdf.Append(TowxString(it.first), TowxString(it.second.second));
 	}
 	tdf.LeaveSection();
@@ -289,7 +289,7 @@ for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapp
 
 	tdf.EnterSection(_T("modoptions"));
 	tdf.Append( _T("relayhoststartpostype"), startpostype ); // also save the original wanted setting
-for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::ModOption )) {
+	for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::ModOption )) {
 		tdf.Append(TowxString(it.first), TowxString(it.second.second));
 	}
 	tdf.LeaveSection();
@@ -372,7 +372,7 @@ for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapp
 			tdf.EnterSection( _T("Options") );
 			int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex(STD_STRING(user.GetNick()));
 			if ( optionmapindex > 0 ) {
-for (const auto& it : battle.CustomBattleOptions().getOptions((LSL::OptionsWrapper::GameOption)optionmapindex )) {
+	for (const auto& it : battle.CustomBattleOptions().getOptions((LSL::OptionsWrapper::GameOption)optionmapindex )) {
 					tdf.Append(TowxString(it.first), TowxString(it.second.second));
 				}
 			}
