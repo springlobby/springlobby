@@ -155,6 +155,7 @@ m_buffer(wxEmptyString),
 m_last_udp_ping(0),
 m_last_ping(time(0) - PING_TIME + PING_DELAY), //no instant ping, delay first ping for PING_DELAY seconds
 m_last_net_packet(0),
+m_last_timer(time( 0 )),
 m_last_id(0),
 m_udp_private_port(0),
 m_nat_helper_port(0),
@@ -179,10 +180,6 @@ TASServer::~TASServer()
 	delete m_se;
 	m_se = NULL;
 }
-
-void TASServer::Notify() {
-	Update(GetInterval());
-};
 
 bool TASServer::ExecuteSayCommand( const wxString& cmd )
 {
@@ -481,29 +478,35 @@ void TASServer::AcceptAgreement()
 }
 
 
-void TASServer::Update( int mselapsed )
-{
+void TASServer::Notify() {
 	if (m_sock == NULL) return;
-
-	m_sock->OnTimer( mselapsed );
+	m_sock->OnTimer(GetInterval());
+	const time_t now = time( 0 );
 
     if ( !m_connected )   // We are not formally connected yet, but might be.
     {
         if ( IsConnected() )
         {
-		m_last_udp_ping = time( 0 );
+		m_last_udp_ping = now;
 		m_connected = true;
         }
         return;
     }
 	if ( !IsConnected() ) return;
 
-	time_t now = time( 0 );
 
 	if ((m_last_ping + PING_TIME) < now) { //Send a PING every 30 seconds
 		m_last_ping = now;
 		Ping();
+		return;
 	}
+
+	if (now-m_last_timer > 1) {
+		m_se->OnServerMessage(wxFormat(_T("bad timer, last time called %d seconds ago")) % ((int)now-m_last_timer));
+		m_last_timer = now;
+		return;
+	}
+	m_last_timer = now;
 
 	if ( ( m_last_net_packet > 0 ) && ( ( now - m_last_net_packet ) > PING_TIMEOUT ) ) { // no data received, assume timeout
 		m_se->OnServerMessage( _("Timeout assumed, disconnecting") );
