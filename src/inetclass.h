@@ -8,27 +8,27 @@ class Socket;
 //! @brief Abstract baseclass that is used when needed to interface with socket class
 class iNetClass
 {
-  public:
+public:
 
-    iNetClass(){}
-    virtual ~iNetClass(){}
+	iNetClass() {}
+	virtual ~iNetClass() {}
 
-    virtual void OnConnected( Socket& /*sock*/ ) {}
-    virtual void OnDisconnected( Socket& /*sock*/ ) {}
-    virtual void OnDataReceived( Socket& /*sock*/ ) {}
+	virtual void OnConnected( Socket& /*sock*/ ) {}
+	virtual void OnDisconnected( Socket& /*sock*/ ) {}
+	virtual void OnDataReceived( Socket& /*sock*/ ) {}
 	virtual void Ping() {}
 };
 
 class FakeNetClass : public iNetClass
 {
-  public:
+public:
 
-    FakeNetClass(){}
-    ~FakeNetClass(){}
+	FakeNetClass() {}
+	~FakeNetClass() {}
 
-    void OnConnected( Socket& /*unused*/ ) {}
-    void OnDisconnected( Socket& /*unused*/ ) {}
-    void OnDataReceived( Socket& /*unused*/ ) {}
+	void OnConnected( Socket& /*unused*/ ) {}
+	void OnDisconnected( Socket& /*unused*/ ) {}
+	void OnDataReceived( Socket& /*unused*/ ) {}
 	void Ping() {}
 };
 
