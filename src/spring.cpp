@@ -190,14 +190,12 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
     // Start generating the script.
     tdf.EnterSection( _T("GAME") );
 
-		tdf.Append( _T("HostIP"), battle.GetHostIp() );
-			if ( battle.IsFounderMe() )
-			{
+			if ( battle.IsFounderMe() ) {
+					tdf.Append( _T("HostIP"), wxEmptyString); //Listen on all addresses for connections when hosting
 					if ( battle.GetNatType() == NAT_Hole_punching ) tdf.Append( _T("HostPort"), battle.GetMyInternalUdpSourcePort() );
 					else tdf.Append(_T("HostPort"), battle.GetHostPort() );
-			}
-			else
-			{
+			} else {
+					tdf.Append( _T("HostIP"), battle.GetHostIp() );
 					tdf.Append( _T("HostPort"), battle.GetHostPort() );
 					if ( battle.GetNatType() == NAT_Hole_punching )
 					{
