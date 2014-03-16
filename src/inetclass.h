@@ -13,10 +13,10 @@ class iNetClass
     iNetClass(){}
     virtual ~iNetClass(){}
 
-    virtual void OnConnected( Socket& sock ) = 0;
-    virtual void OnDisconnected( Socket& sock ) = 0;
-    virtual void OnDataReceived( Socket& sock ) = 0;
-	virtual void Ping() = 0;
+    virtual void OnConnected( Socket& /*sock*/ ) {}
+    virtual void OnDisconnected( Socket& /*sock*/ ) {}
+    virtual void OnDataReceived( Socket& /*sock*/ ) {}
+	virtual void Ping() {}
 };
 
 class FakeNetClass : public iNetClass
