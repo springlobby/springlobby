@@ -149,7 +149,7 @@ TASServer::TASServer():
 	m_last_udp_ping(0),
 	m_last_ping(time(0) - PING_TIME + PING_DELAY), //no instant ping, delay first ping for PING_DELAY seconds
 	m_last_net_packet(0),
-	m_last_timer(time( 0 )),
+	m_last_timer(0),
 	m_last_id(0),
 	m_udp_private_port(0),
 	m_nat_helper_port(0),
@@ -292,6 +292,7 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
 	m_agreement = wxEmptyString;
 	m_crc.ResetCRC();
 	m_last_net_packet = 0;
+	m_last_timer = 0;
 	wxString handle = m_sock->GetHandle();
 	if ( !handle.IsEmpty() ) {
 		m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
@@ -447,7 +448,7 @@ void TASServer::Notify()
 		return;
 	}
 
-	if (now-m_last_timer > 1) {
+	if (m_last_timer > 0 && (now-m_last_timer > 1)) {
 		m_se->OnServerMessage(wxFormat(_("SpringLobby hung for %d seconds")) % ((int)now-m_last_timer));
 		m_last_timer = now;
 		return;
