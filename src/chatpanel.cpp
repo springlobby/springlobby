@@ -340,6 +340,10 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col)
 	wxTextAttr timestyle( sett().GetChatColorTime(), sett().GetChatColorBackground(), sett().GetChatFont() );
 	wxTextAttr chatstyle( col, sett().GetChatColorBackground(), sett().GetChatFont());
 
+	//set all styles for these attributes as its used to reset style to default
+	timestyle.SetFlags(wxTEXT_ATTR_FONT | wxTEXT_ATTR_BACKGROUND_COLOUR | wxTEXT_ATTR_TEXT_COLOUR|wxTEXT_ATTR_ALIGNMENT|wxTEXT_ATTR_LEFT_INDENT|wxTEXT_ATTR_RIGHT_INDENT|wxTEXT_ATTR_TABS);
+	chatstyle.SetFlags(wxTEXT_ATTR_FONT | wxTEXT_ATTR_BACKGROUND_COLOUR | wxTEXT_ATTR_TEXT_COLOUR|wxTEXT_ATTR_ALIGNMENT|wxTEXT_ATTR_LEFT_INDENT|wxTEXT_ATTR_RIGHT_INDENT|wxTEXT_ATTR_TABS);
+
 	ChatLine newline;
 	newline.chat = wxString( message.c_str() );
 	newline.time = _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
@@ -384,8 +388,8 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		int color = 0;
 		bool bold = false;
 		wxColor curcolor(line.chatstyle.GetTextColour());
-		const wxFont oldfont = at.GetFont();
-		const int oldweight = oldfont.GetWeight();
+		const wxFont oldfont = sett().GetChatFont();
+		const wxFontWeight oldweight = (wxFontWeight)oldfont.GetWeight();
 		const wxColor oldcolor(line.chatstyle.GetTextColour());
 
 		while ( m1.Len() > 0 ) {
@@ -421,10 +425,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
 					font.SetWeight(oldweight);
 				at.SetFont(font);
 				at.SetTextColour(curcolor);
-#ifdef __WXMSW__ //workaround bug in msw version of wxwidgets
-				at.SetFontUnderlined(oldfont.GetUnderlined());
-				at.SetFontStrikethrough(oldfont.GetStrikethrough());
-#endif
 
 				m_chatlog_text->SetDefaultStyle(at);
 				m_chatlog_text->AppendText( m1.Mid(0,1) );
@@ -434,10 +434,6 @@ void ChatPanel::OutputLine( const ChatLine& line )
 		if (bold) {
 			wxFont font = at.GetFont(); //isn't needed any more in wx3.0
 			font.SetWeight(oldweight);
-#ifdef __WXMSW__ //workaround bug in msw version of wxwidgets
-			at.SetFontUnderlined(oldfont.GetUnderlined());
-			at.SetFontStrikethrough(oldfont.GetStrikethrough());
-#endif
 			at.SetFont(font);
 			m_chatlog_text->SetDefaultStyle(at);
 		}
@@ -1100,7 +1096,7 @@ void ChatPanel::LoadLastLines()
 
 	wxArrayString lines = m_chat_log.GetLastLines(  );
 
-	wxTextAttr chatstyle( sett().GetChatColorTime(), sett().GetChatColorBackground());
+	wxTextAttr chatstyle( sett().GetChatColorTime(), sett().GetChatColorBackground(), sett().GetChatFont());
 	m_chatlog_text->SetDefaultStyle( chatstyle );
 
 	for ( size_t i = 0; i < lines.Count(); ++i ) {
