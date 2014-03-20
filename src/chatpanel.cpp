@@ -1097,6 +1097,7 @@ void ChatPanel::LoadLastLines()
 	wxArrayString lines = m_chat_log.GetLastLines(  );
 
 	wxTextAttr chatstyle( sett().GetChatColorTime(), sett().GetChatColorBackground(), sett().GetChatFont());
+	chatstyle.SetFlags(wxTEXT_ATTR_FONT | wxTEXT_ATTR_BACKGROUND_COLOUR | wxTEXT_ATTR_TEXT_COLOUR|wxTEXT_ATTR_ALIGNMENT|wxTEXT_ATTR_LEFT_INDENT|wxTEXT_ATTR_RIGHT_INDENT|wxTEXT_ATTR_TABS);
 	m_chatlog_text->SetDefaultStyle( chatstyle );
 
 	for ( size_t i = 0; i < lines.Count(); ++i ) {
