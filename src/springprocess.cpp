@@ -58,34 +58,54 @@ void SpringProcess::OnExit()
 	m_sp.AddPendingEvent( event );
 }
 
-
-void* SpringProcess::Entry()
+static wxString escapeStr(const wxString& str)
 {
-	wxLogDebugFunc( wxEmptyString );
-	wxString params;
-	for (wxString param: m_params) {
-		if (!params.empty()) {
-			params += _T(" ");
+	if (str.Find(_T(" ")) == wxNOT_FOUND)
+		return str;
+	return _T("\"") + str + _T("\"");
+}
+
+static int runProcess(const wxString& cmd, const wxArrayString& params)
+{
+	wxString paramstring;
+	for (wxString param: params) {
+		if (!paramstring.empty()) {
+			paramstring += _T(" ");
 		}
-		params += param;
+		paramstring += escapeStr(param);
 	}
 #ifdef __WXMSW__
 	SHELLEXECUTEINFO ShExecInfo;
+	DWORD exitCode = 0;
+
 	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
 	ShExecInfo.hwnd = NULL;
 	ShExecInfo.lpVerb = NULL;
-	ShExecInfo.lpFile = m_cmd.t_str();
-	ShExecInfo.lpParameters = params.t_str();
+	ShExecInfo.lpFile = cmd.t_str();
+	ShExecInfo.lpParameters = paramstring.t_str();
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL;
+
 	ShellExecuteEx(&ShExecInfo);
 	WaitForSingleObject(ShExecInfo.hProcess,INFINITE);
+	GetExitCodeProcess(ShExecInfo.hProcess, &exitCode);
+	return exitCode;
 #else
-	const wxString cmd = m_cmd + params;
-	m_exit_code = system( cmd.mb_str( wxConvUTF8 ) );
+	wxString realcmd = escapeStr(cmd);
+	if (!paramstring.empty()) {
+		realcmd += _T(" ") + paramstring;
+	}
+	return system( realcmd.mb_str( wxConvUTF8 ) );
 #endif
-	wxLogMessage( _T( "Spring closed." ) );
-	return 0;
 }
+
+void* SpringProcess::Entry()
+{
+	wxLogDebugFunc( wxEmptyString );
+	runProcess(m_cmd, m_params);
+	wxLogMessage( _T( "Spring closed." ) );
+	return NULL;
+}
+

@@ -117,7 +117,7 @@ bool Spring::Run( IBattle& battle )
 	}
 
 	wxArrayString params;
-	params.push_back( _T(" \"") + scripttxt +  _T("\""));
+	params.push_back(scripttxt);
 
 	return LaunchEngine(executable, params);
 }
