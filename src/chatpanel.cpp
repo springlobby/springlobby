@@ -286,10 +286,8 @@ void ChatPanel::CreateControls( )
 	}
 
 	m_chatlog_text->SetBackgroundColour( sett().GetChatColorBackground() );
-	m_chatlog_text->SetFont( sett().GetChatFont() );
 
 	m_say_text->SetBackgroundColour( sett().GetChatColorBackground() );
-	m_say_text->SetFont( sett().GetChatFont() );
 	m_say_text->SetForegroundColour(sett().GetChatColorNormal());
 
 	// Fill up TextCompletionDatabase
@@ -336,12 +334,8 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col, bool s
 	if ( ! m_chatlog_text ) return;
 
 	wxDateTime now = wxDateTime::Now();
-	wxTextAttr timestyle( sett().GetChatColorTime(), sett().GetChatColorBackground(), sett().GetChatFont() );
-	wxTextAttr chatstyle( col, sett().GetChatColorBackground(), sett().GetChatFont());
-
-	//set all styles for these attributes as its used to reset style to default
-	timestyle.SetFlags(wxTEXT_ATTR_FONT | wxTEXT_ATTR_BACKGROUND_COLOUR | wxTEXT_ATTR_TEXT_COLOUR|wxTEXT_ATTR_ALIGNMENT|wxTEXT_ATTR_LEFT_INDENT|wxTEXT_ATTR_RIGHT_INDENT|wxTEXT_ATTR_TABS);
-	chatstyle.SetFlags(wxTEXT_ATTR_FONT | wxTEXT_ATTR_BACKGROUND_COLOUR | wxTEXT_ATTR_TEXT_COLOUR|wxTEXT_ATTR_ALIGNMENT|wxTEXT_ATTR_LEFT_INDENT|wxTEXT_ATTR_RIGHT_INDENT|wxTEXT_ATTR_TABS);
+	wxTextAttr timestyle( sett().GetChatColorTime(), sett().GetChatColorBackground());
+	wxTextAttr chatstyle( col, sett().GetChatColorBackground());
 
 	ChatLine newline;
 	newline.chat = wxString( message.c_str() );
@@ -394,7 +388,6 @@ void ChatPanel::OutputLine( const ChatLine& line)
 		bool bold = false;
 		wxColor curcolor(line.chatstyle.GetTextColour());
 		const wxFont oldfont = sett().GetChatFont();
-		const wxFontWeight oldweight = (wxFontWeight)oldfont.GetWeight();
 		const wxColor oldcolor(line.chatstyle.GetTextColour());
 
 		while ( m1.Len() > 0 ) {
@@ -426,23 +419,13 @@ void ChatPanel::OutputLine( const ChatLine& line)
 				at = line.chatstyle;
 				if (bold)
 					font.SetWeight(wxFONTWEIGHT_BOLD);
-				else
-					font.SetWeight(oldweight);
 				at.SetFont(font);
 				at.SetTextColour(curcolor);
-
 				m_chatlog_text->SetDefaultStyle(at);
 				m_chatlog_text->AppendText( m1.Mid(0,1) );
 				m1 = m1.Mid(1);
 			}
 		}
-		if (bold) {
-			wxFont font = at.GetFont(); //isn't needed any more in wx3.0
-			font.SetWeight(oldweight);
-			at.SetFont(font);
-			m_chatlog_text->SetDefaultStyle(at);
-		}
-
 	} else
 #endif
 	{
