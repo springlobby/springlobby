@@ -85,15 +85,15 @@ bool Spring::IsRunning() const
 bool Spring::Run( IBattle& battle )
 {
 
-	wxString path = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
+	wxString scripttxt = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
 
 	try {
 
-		if ( !wxFile::Access( path , wxFile::write ) ) {
+		if ( !wxFile::Access( scripttxt , wxFile::write ) ) {
 			wxLogError( _T("Access denied to script.txt.") );
 		}
 
-		wxFile f( path, wxFile::write );
+		wxFile f( scripttxt, wxFile::write );
 		battle.DisableHostStatusInProxyMode( true );
 		f.Write( WriteScriptTxt(battle) );
 		battle.DisableHostStatusInProxyMode( false );
@@ -109,37 +109,29 @@ bool Spring::Run( IBattle& battle )
 		return false;
 	}
 
-	wxString cmd;
-	cmd += _T(" \"") + path +  _T("\"");
-
-	return LaunchSpring(battle.GetEngineName(), battle.GetEngineVersion(), cmd );
-}
-
-bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVersion, const wxString& params)
-{
-	if ( m_running ) {
-		wxLogError( _T("Spring already running!") );
-		return false;
-	}
-	const wxString executable = SlPaths::GetSpringBinary(engineVersion);
+	const wxString executable = SlPaths::GetSpringBinary(battle.GetEngineVersion());
 	if ( !wxFile::Exists(executable) ) {
 		customMessageBoxNoModal( SL_MAIN_ICON, _T("The spring executable was not found at the set location, please re-check."), _T("Executable not found") );
 		ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
 		return false;
 	}
 
-	wxString cmd = _T("\"") + executable;
-#ifdef __WXMAC__
-	wxChar sep = wxFileName::GetPathSeparator();
-	if ( SlPaths::GetCurrentUsedSpringBinary().AfterLast(_T('.')) == _T("app") )
-		cmd += sep + wxString(_T("Contents")) + sep + wxString(_T("MacOS")) + sep + wxString(_T("spring")); // append app bundle inner path
-#endif
-	cmd += _T("\" ");
-	if (cfg().ReadBool(_T( "/Spring/Safemode" ))) {
-		cmd+=_T("--safemode ");
-	}
-	cmd += params;
+	wxArrayString params;
+	params.push_back( _T(" \"") + scripttxt +  _T("\""));
 
+	return LaunchEngine(executable, params);
+}
+
+bool Spring::LaunchEngine(const wxString& cmd, wxArrayString& params)
+{
+	if ( m_running ) {
+		wxLogError( _T("Spring already running!") );
+		return false;
+	}
+
+	if (cfg().ReadBool(_T( "/Spring/Safemode" ))) {
+		params.push_back(_T("--safemode "));
+	}
 	wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
 	wxSetWorkingDirectory( SlPaths::GetDataDir() );
 
@@ -147,7 +139,7 @@ bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVers
 		m_process = new SpringProcess( *this );
 	}
 	m_process->Create();
-	m_process->SetCommand( cmd );
+	m_process->SetCommand( cmd, params );
 	m_process->Run();
 	m_running = true;
 	GlobalEvent::Send(GlobalEvent::OnSpringStarted);

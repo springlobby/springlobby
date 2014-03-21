@@ -31,17 +31,15 @@ class SpringProcess: public wxThread
   public:
     SpringProcess( Spring& sp );
     ~SpringProcess();
-
     void OnExit();
-
-    void SetCommand( const wxString& cmd );
-
+    void SetCommand(const wxString& cmd, const wxArrayString& params);
     void* Entry();
 
-  protected:
-    Spring& m_sp;
-    wxString m_cmd;
-    int m_exit_code;
+private:
+	Spring& m_sp;
+	wxString m_cmd;
+	wxArrayString m_params;
+	int m_exit_code;
 };
 
 const int PROC_SPRING = wxID_HIGHEST;
