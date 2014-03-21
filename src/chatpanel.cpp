@@ -757,7 +757,7 @@ void ChatPanel::SetServer( IServer* serv )
 			m_nicklist->Clear();
 		}
 	} else if ( serv != 0 ) {
-		SetLogFile(serv->GetServerName());
+		SetLogFile(_T("server"));
 		serv->uidata.panel = this;
 		if ( m_nicklist )
 			m_nicklist->StartTimer();
