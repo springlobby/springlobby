@@ -49,17 +49,13 @@ bool ChatLog::SetLogFile(const wxString& logname)
 	}
 
 	m_logname.Replace( wxT( ":" ), wxT( "_" ) );
-
-	if (m_logfile.IsOpened()) {
-		if (logname != m_logname) {
+	if (logname != m_logname) {
+		if (m_logfile.IsOpened()) {
 			CloseSession();
-			m_logname = logname;
-			m_active = OpenLogFile();
 		}
-		return m_active;
+		m_logname = logname;
+		OpenLogFile();
 	}
-	m_logname = logname;
-	m_active = OpenLogFile();
 	return m_active;
 }
 
@@ -76,22 +72,27 @@ void ChatLog::CloseSession()
 	}
 
 	wxDateTime now = wxDateTime::Now();
-	WriteLine( _( "### Session Closed at [" ) + now.Format( _T( "%Y-%m-%d %H:%M" ) ) + _( "]" )  + wxTextBuffer::GetEOL());
+	AddMessage(wxEmptyString, _( "### Session Closed at [%Y-%m-%d %H:%M]" ));
 	m_logfile.Flush();
-	m_logfile.Close();
 	m_active = false;
+	m_logfile.Close();
 }
 
-bool ChatLog::AddMessage( const wxString& text )
+bool ChatLog::AddMessage(const wxString& text, const wxString& timeformat)
 {
-	if ( !LogEnabled() || ! m_active ) {
+	if (!LogEnabled()) {
 		return true;
-	} else if ( !m_logfile.IsOpened() ) {
-		m_active = OpenLogFile();
 	}
-	if ( m_active ) {
-		return WriteLine( LogTime() + _T( " " ) + text + wxTextBuffer::GetEOL() );
-	} else return false;
+	if (!m_active) { //logging is enabled, logfile should be writeable
+		return false;
+	}
+	wxString logtime = wxDateTime::Now().Format(timeformat);
+	const bool res = m_logfile.Write( logtime + text + wxTextBuffer::GetEOL(), wxConvUTF8);
+	if (!res) {
+		wxLogWarning(_T("Couldn't write to %s"), m_logname.c_str());
+		m_logfile.Close();
+	}
+	return res;
 }
 
 
@@ -101,17 +102,6 @@ bool ChatLog::CreateCurrentLogFolder()
 	if ( !wxFileName::Mkdir( path, 0, wxPATH_MKDIR_FULL) ) {
 		wxLogWarning( _T( "can't create logging folder: %s" ), path.c_str() );
 		m_active = false;
-		return false;
-	}
-	return true;
-}
-
-
-bool ChatLog::WriteLine( const wxString& text )
-{
-	if ( !m_logfile.Write( text, wxConvUTF8 ) ) {
-		m_active = false;
-		wxLogWarning( _T( "can't write message to log (%s)" ),  wxString( GetCurrentLogfilePath() ).c_str() );
 		return false;
 	}
 	return true;
@@ -143,18 +133,11 @@ bool ChatLog::OpenLogFile()
 	}
 
 	FillLastLineArray();
+	m_active = true;
 
 	const wxDateTime now = wxDateTime::Now();
-	const wxString text = _T( "### Session Start at [" ) + now.Format( _T( "%Y-%m-%d %H:%M" ) ) + _T( "]" ) + wxTextBuffer::GetEOL();
-	WriteLine(text);
-	return true;
-}
 
-
-wxString ChatLog::LogTime()
-{
-	wxDateTime now = wxDateTime::Now();
-	return  _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
+	return AddMessage(wxEmptyString, _T( "### Session Start at [%Y-%m-%d %H:%M]" ));
 }
 
 const wxArrayString& ChatLog::GetLastLines( ) const

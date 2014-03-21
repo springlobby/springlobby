@@ -40,7 +40,7 @@ public:
 	 *
 	 * @see LogEnabled LogTime
 	 */
-	bool AddMessage(const wxString& text);
+	bool AddMessage(const wxString& text, const wxString& timeformat = _T("[%H:%M:%S] "));
 
 	/** Check if chat logging is enabled.
 	 *
@@ -60,15 +60,6 @@ public:
 	wxString GetCurrentLogfilePath() const;
 
 private:
-	/** Get a string, representing the current time-of-day, suitable
-	 * for prepending to messages.  This is used by AddMessage.
-	 *
-	 * @return a string including hours and minutes.
-	 *
-	 * @see AddMessage
-	 */
-	wxString LogTime();
-
 	/** Closes the current "session" in the log file by appending a
 	 * session-closed notice to end before closing the file.
 	 *
@@ -76,16 +67,6 @@ private:
 	 * will reopen the log file, starting a new session.
 	 */
 	void CloseSession();
-
-	/** Write a line of text to the output file, without any further
-	 * formatting.
-	 *
-	 * @param text The line to write.
-	 *
-	 * @return @c true if the line was successfully written, and @c
-	 * false otherwise.
-	 */
-	bool WriteLine(const wxString& text);
 
 	/** Create the directory in which the current logfile is saved.
 	 *
