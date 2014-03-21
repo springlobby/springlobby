@@ -243,9 +243,6 @@ class Settings : public SL::NonCopyable
      wxColourData GetCustomColors( const wxString& paletteName = _T("Default") );
 
 
-    bool UseOldSpringLaunchMethod();
-    void SetOldSpringLaunchMethod( bool value );
-
     void SetShowTooltips( bool show);
     bool GetShowTooltips();
 

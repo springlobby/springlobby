@@ -67,14 +67,13 @@ Spring& spring()
 Spring::Spring() :
 	wxEvtHandler(),
 	m_process(0),
-	m_wx_process(0),
 	m_running(false)
 { }
 
 
 Spring::~Spring()
 {
-	delete m_process;
+	m_process=NULL;
 }
 
 
@@ -144,19 +143,12 @@ bool Spring::LaunchSpring(const wxString& engineName, const wxString& engineVers
 	wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
 	wxSetWorkingDirectory( SlPaths::GetDataDir() );
 
-	if ( sett().UseOldSpringLaunchMethod() ) {
-		if ( m_wx_process == NULL ) {
-			m_wx_process = new wxSpringProcess( *this );
-		}
-		if ( wxExecute( cmd , wxEXEC_ASYNC, m_wx_process ) == 0 ) {
-			return false;
-		}
-	} else {
-		if ( m_process == 0 ) m_process = new SpringProcess( *this );
-		m_process->Create();
-		m_process->SetCommand( cmd );
-		m_process->Run();
+	if ( m_process == 0 ) {
+		m_process = new SpringProcess( *this );
 	}
+	m_process->Create();
+	m_process->SetCommand( cmd );
+	m_process->Run();
 	m_running = true;
 	GlobalEvent::Send(GlobalEvent::OnSpringStarted);
 	return true;
@@ -166,8 +158,7 @@ void Spring::OnTerminated( wxCommandEvent& event )
 {
 	wxLogDebugFunc( wxEmptyString );
 	m_running = false;
-	m_process = 0; // NOTE I'm not sure if this should be deleted or not, according to wx docs it shouldn't.
-	m_wx_process = 0;
+	m_process = NULL;
 	event.SetEventType(GlobalEvent::OnSpringTerminated);
 	GlobalEvent::Send(event);
 }

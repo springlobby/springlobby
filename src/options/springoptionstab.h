@@ -71,8 +71,6 @@ private:
 	wxStaticBoxSizer* m_exec_box_sizer;
 	wxStaticBoxSizer* m_sync_box_sizer;
 
-	wxCheckBox* m_oldlaunch_chkbox;
-
 	wxListBox* m_spring_list;
 	wxButton* m_remove_spring_button;
 	wxButton* m_rename_spring_button;

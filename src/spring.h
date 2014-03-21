@@ -41,7 +41,6 @@ private:
 	bool LaunchSpring(const wxString& engineName, const wxString& engineVersion, const wxString& params);
 
 	SpringProcess* m_process;
-	wxSpringProcess* m_wx_process;
 	bool m_running;
 
 	DECLARE_EVENT_TABLE()

@@ -94,11 +94,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 	mainSizer->Add( groupListSizer, 2, wxEXPAND, 5 );
 
-
-
-
-	m_oldlaunch_chkbox = new wxCheckBox( this, SPRING_DONTSEARCH, _("Use alternative launch method (DO NOT TOUCH THIS UNLESS YOU KNOW WHAT YOU'RE DOING)"), wxDefaultPosition, wxSize(-1,CONTROL_HEIGHT) );
-	m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
 	/* ================================
 	 * Spring executable
 	 */
@@ -150,7 +145,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 	m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_sync_box_sizer, 0, wxEXPAND | wxALL, 5 );
-	m_main_sizer->Add( m_oldlaunch_chkbox, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->AddStretchSpacer();
 
@@ -192,7 +186,6 @@ void SpringOptionsTab::EnableUnitsyncBox(bool enabled)
 void SpringOptionsTab::DoRestore()
 {
 	const wxString index = m_spring_list->GetStringSelection();
-	m_oldlaunch_chkbox->SetValue( sett().UseOldSpringLaunchMethod() );
 	m_sync_edit->SetValue(SlPaths::GetUnitSync(index));
 	m_exec_edit->SetValue(SlPaths::GetSpringBinary(index));
 }
@@ -246,7 +239,6 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 	const wxString index = m_spring_list->GetStringSelection();
 	SlPaths::SetSpringBinary(index, m_exec_edit->GetValue() );
 	SlPaths::SetUnitSync(index, m_sync_edit->GetValue() );
-	sett().SetOldSpringLaunchMethod( m_oldlaunch_chkbox->IsChecked() );
 
 	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
 	SlPaths::RefreshSpringVersionList();

@@ -170,14 +170,6 @@ bool Settings::IsFirstRun()
 	return m_config->ReadBool( _T( "/General/firstrun" ) );
 }
 
-
-
-
-bool Settings::UseOldSpringLaunchMethod()
-{
-	return m_config->Read( _T( "/Spring/UseOldLaunchMethod" ), 0l );
-}
-
 bool Settings::GetNoUDP()
 {
 	return m_config->Read( _T( "/General/NoUDP" ), 0l );
@@ -207,12 +199,6 @@ void Settings::SetShowIPAddresses( bool value )
 {
 	m_config->Write( _T( "/General/ShowIP" ), value );
 }
-
-void Settings::SetOldSpringLaunchMethod( bool value )
-{
-	m_config->Write( _T( "/Spring/UseOldLaunchMethod" ), value );
-}
-
 
 int Settings::GetHTTPMaxParallelDownloads()
 {

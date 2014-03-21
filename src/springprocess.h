@@ -16,12 +16,8 @@ lsl/spring/springprocess.h
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 **/
 
-
-
 #include <wx/thread.h>
 #include <wx/string.h>
-typedef wxThread SpringProcessBase;
-
 #include <wx/process.h>
 
 BEGIN_DECLARE_EVENT_TYPES()
@@ -30,7 +26,7 @@ END_DECLARE_EVENT_TYPES()
 
 class Spring;
 
-class SpringProcess: public SpringProcessBase
+class SpringProcess: public wxThread
 {
   public:
     SpringProcess( Spring& sp );
@@ -46,18 +42,6 @@ class SpringProcess: public SpringProcessBase
     Spring& m_sp;
     wxString m_cmd;
     int m_exit_code;
-};
-
-class wxSpringProcess: public wxProcess
-{
-  public:
-    wxSpringProcess( Spring& sp );
-    ~wxSpringProcess();
-
-    void OnTerminate( int pid, int status );
-
-  protected:
-    Spring& m_sp;
 };
 
 const int PROC_SPRING = wxID_HIGHEST;

@@ -59,23 +59,3 @@ void* SpringProcess::Entry()
 	wxLogMessage( _T( "Spring closed." ) );
 	return 0;
 }
-
-wxSpringProcess::wxSpringProcess( Spring& sp ) :
-		m_sp( sp )
-{
-	wxLogDebugFunc( wxEmptyString );
-}
-
-
-wxSpringProcess::~wxSpringProcess()
-{
-	wxLogDebugFunc( wxEmptyString );
-}
-
-void wxSpringProcess::OnTerminate( int /*pid*/, int status )
-{
-	wxCommandEvent event( wxEVT_SPRING_EXIT, PROC_SPRING );
-	event.SetExtraLong( status );
-	m_sp.AddPendingEvent( event );
-}
-
