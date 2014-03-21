@@ -30,6 +30,7 @@ wxPathList PathlistFactory::ConfigFileSearchPaths()
 
     pl.AddEnvList( _T( "LDPATH" ) );
     pl.AddEnvList( _T( "LD_LIBRARY_PATH" ) );
+    pl.AddEnvList( _T( "SPRING_BUNDLE_DIR" ) ); //folder which contains a bundle, for example {SPRING_BUNDLE_DIR]/spring {SPRING_BUNDLE_DIR}/libunitsync.so
 
     pl.Add( _T( "/usr/local/lib/spring" ) );
     pl.Add( _T( "/usr/local/lib64" ) );
