@@ -105,7 +105,6 @@ void* SpringProcess::Entry()
 {
 	wxLogDebugFunc( wxEmptyString );
 	runProcess(m_cmd, m_params);
-	wxLogMessage( _T( "Spring closed." ) );
 	return NULL;
 }
 
