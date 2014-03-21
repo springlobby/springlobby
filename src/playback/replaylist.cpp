@@ -28,7 +28,7 @@ void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 		const wxString wfilename = TowxString(filenames[i]);
 		PlaybackType& playback = AddPlayback(i);
 		if (!GetReplayInfos(wfilename, playback)) {
-			wxLogError(_T("Couldn't open replay %s"), wfilename.c_str() );
+			//wxLogError(_T("Couldn't open replay %s"), wfilename.c_str() ); //FIXME, see https://github.com/springlobby/springlobby/issues/186
 			RemovePlayback(i); //FIXME: stupid logic: always add but remove on fail, why not add on success only?
 		}
 	}
