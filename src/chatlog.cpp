@@ -238,10 +238,10 @@ static size_t find_tail_sequences(wxFile& fd, const char* bytes, size_t bytes_le
 
 		/* In each block, we search for `bytes', starting at the end.  */
 		for ( ssize_t i = bytes_read - read_overlap - 1; i >= 0; i-- ) {
-			if ( !strncmp((buf + i), bytes, bytes_length) ) {
+			if ( strncmp((buf + i), bytes, bytes_length) == 0 ) {
 				const off_t this_found_pos  = read_position + i;
 
-				if ( have_last_pos && count_added < count ) {
+				if (have_last_pos) {
 					const size_t line_length = last_found_pos - this_found_pos - bytes_length;
 
 					if ( line_length > 0 ) {
@@ -260,13 +260,12 @@ static size_t find_tail_sequences(wxFile& fd, const char* bytes, size_t bytes_le
 						source[line_length] = 0;
 						wxString tmp = wxString::FromUTF8(source);
 						out.Insert(tmp, 0);
-						++count_added;
-
 						if ( last_found_pos >= read_position + (off_t) bytes_read )
 							delete[] source;
 
+						count_added++;
 						if ( count_added >= count )
-							i = -1; /* short-circuit the `for' loop. */
+							break;
 					}
 				}
 				last_found_pos = this_found_pos;

@@ -142,6 +142,7 @@ private:
 	void OutputLine( const wxString& message, const wxColour& col, bool showtime = true);
 
 	void OutputLine( const ChatLine& line);
+	void SetLogFile(const wxString& name);
 
 	enum HighlightType {
 		highlight_say,
@@ -192,8 +193,6 @@ private:
 	void LogTime();
 	void CreateControls( );
 	void CreatePopup();
-	void LoadLastLines();
-
 	size_t m_icon_index;
 
 	wxImageList* m_imagelist;

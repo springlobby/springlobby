@@ -72,13 +72,12 @@ static wxColor m_irc_colors[16]  = {
 void ChatPanel::Init(const wxString& panelname)
 {
 	m_chatpanelname = panelname;
-	m_chat_log.SetLogFile(panelname);
-	CreateControls( );
+	CreateControls();
+	SetLogFile(panelname);
 	m_display_joinitem = cfg().Read(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
 	GetAui().manager->AddPane( this, wxLEFT, _T("chatpanel-channel-") + panelname );
 	m_chatlog_text->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( ChatPanel::OnMouseDown ), 0, this );
 	ConnectGlobalEvent(this, GlobalEvent::OnLogin, wxObjectEventFunction(&ChatPanel::OnLogin));
-	LoadLastLines();
 }
 
 ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
@@ -749,8 +748,9 @@ void ChatPanel::SetChannel( Channel* chan )
 
 	if ( chan != 0 ) {
 		chan->uidata.panel = this;
-		m_chat_log.SetLogFile(chan->GetName() );
-		LoadLastLines();
+		if (chan != m_channel) {
+			SetLogFile(chan->GetName());
+		}
 	}
 	m_channel = chan;
 
@@ -774,8 +774,7 @@ void ChatPanel::SetServer( IServer* serv )
 			m_nicklist->Clear();
 		}
 	} else if ( serv != 0 ) {
-		m_chat_log.SetLogFile(serv->GetServerName());
-		LoadLastLines();
+		SetLogFile(serv->GetServerName());
 		serv->uidata.panel = this;
 		if ( m_nicklist )
 			m_nicklist->StartTimer();
@@ -1081,7 +1080,7 @@ void ChatPanel::SetBattle(IBattle* battle )
 	}
 
 	if (battle == NULL) {
-		m_chat_log.SetLogFile(wxEmptyString);
+		SetLogFile(wxEmptyString);
 		return;
 	}
 
@@ -1092,19 +1091,9 @@ void ChatPanel::SetBattle(IBattle* battle )
 		textcompletiondatabase.Insert_Mapping(nick, nick);
 	}
 
-	m_chat_log.SetLogFile(_T( "_BATTLE_" ) + battle->GetFounder().GetNick());
+	SetLogFile(_T( "_BATTLE_" ) + battle->GetFounder().GetNick());
 	m_battle = battle;
 }
-
-void ChatPanel::LoadLastLines()
-{
-	wxWindowUpdateLocker noUpdates(m_chatlog_text);
-	wxArrayString lines = m_chat_log.GetLastLines(  );
-	for ( size_t i = 0; i < lines.Count(); ++i ) {
-		OutputLine(lines[i], sett().GetChatColorServer(), false);
-	}
-}
-
 
 void ChatPanel::OnLogin( wxCommandEvent& /*data*/ )
 {
@@ -1113,3 +1102,17 @@ void ChatPanel::OnLogin( wxCommandEvent& /*data*/ )
 	}
 }
 
+void ChatPanel::SetLogFile(const wxString& name)
+{
+	m_chat_log.SetLogFile(name);
+	if (name.empty()) {
+		return;
+	}
+	wxWindowUpdateLocker noUpdates(m_chatlog_text);
+	wxArrayString lines = m_chat_log.GetLastLines();
+	const size_t num_lines = sett().GetAutoloadedChatlogLinesCount();
+	const size_t start = std::max<size_t>(0, lines.Count() - num_lines);
+	for ( size_t i = start; i < lines.Count(); ++i ) {
+		OutputLine(lines[i], sett().GetChatColorServer(), false);
+	}
+}
