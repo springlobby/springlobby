@@ -139,9 +139,9 @@ private:
 
 	void OnLogin( wxCommandEvent& data );
 
-	void OutputLine( const wxString& message, const wxColour& col);
+	void OutputLine( const wxString& message, const wxColour& col, bool showtime = true);
 
-	void OutputLine( const ChatLine& line );
+	void OutputLine( const ChatLine& line);
 
 	enum HighlightType {
 		highlight_say,

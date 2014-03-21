@@ -331,7 +331,7 @@ const User& ChatPanel::GetMe()  const
 	return serverSelector().GetServer().GetMe();
 }
 
-void ChatPanel::OutputLine( const wxString& message, const wxColour& col)
+void ChatPanel::OutputLine( const wxString& message, const wxColour& col, bool showtime)
 {
 
 	if ( ! m_chatlog_text ) return;
@@ -346,22 +346,27 @@ void ChatPanel::OutputLine( const wxString& message, const wxColour& col)
 
 	ChatLine newline;
 	newline.chat = wxString( message.c_str() );
-	newline.time = _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
 	newline.chatstyle = chatstyle;
-	newline.timestyle = timestyle;
+	if (showtime) {
+		newline.time = _T( "[" ) + now.Format( _T( "%H:%M:%S" ) ) + _T( "]" );
+		newline.timestyle = timestyle;
+		m_chat_log.AddMessage( message );
+	} else {
+		newline.time.clear();
+	}
 
 	if ( m_disable_append ) {
 		m_buffer.push_back( newline );
 	} else {
-		OutputLine( newline );
+		OutputLine( newline);
 	}
 
-	m_chat_log.AddMessage( message );
+
 
 }
 
 
-void ChatPanel::OutputLine( const ChatLine& line )
+void ChatPanel::OutputLine( const ChatLine& line)
 {
 	int pos = m_chatlog_text->GetScrollPos(wxVERTICAL); // vertical scrolled window position
 	int end = m_chatlog_text->GetScrollRange(wxVERTICAL); // hight of complete scolled window
@@ -375,9 +380,10 @@ void ChatPanel::OutputLine( const ChatLine& line )
 
 
 	wxWindowUpdateLocker noUpdates(m_chatlog_text);
-
-	m_chatlog_text->SetDefaultStyle( line.timestyle );
-	m_chatlog_text->AppendText( line.time );
+	if (!line.time.empty()) {
+		m_chatlog_text->SetDefaultStyle( line.timestyle );
+		m_chatlog_text->AppendText( line.time );
+	}
 
 #ifndef __WXOSX_COCOA__
 	if ( sett().GetUseIrcColors() ) {
@@ -1093,18 +1099,12 @@ void ChatPanel::SetBattle(IBattle* battle )
 void ChatPanel::LoadLastLines()
 {
 	wxWindowUpdateLocker noUpdates(m_chatlog_text);
-
 	wxArrayString lines = m_chat_log.GetLastLines(  );
-
-	wxTextAttr chatstyle( sett().GetChatColorTime(), sett().GetChatColorBackground(), sett().GetChatFont());
-	chatstyle.SetFlags(wxTEXT_ATTR_FONT | wxTEXT_ATTR_BACKGROUND_COLOUR | wxTEXT_ATTR_TEXT_COLOUR|wxTEXT_ATTR_ALIGNMENT|wxTEXT_ATTR_LEFT_INDENT|wxTEXT_ATTR_RIGHT_INDENT|wxTEXT_ATTR_TABS);
-	m_chatlog_text->SetDefaultStyle( chatstyle );
-
 	for ( size_t i = 0; i < lines.Count(); ++i ) {
-		m_chatlog_text->AppendText( lines[i] );
-		m_chatlog_text->AppendText( _T( "\n" ) );
+		OutputLine(lines[i], sett().GetChatColorServer(), false);
 	}
 }
+
 
 void ChatPanel::OnLogin( wxCommandEvent& /*data*/ )
 {
