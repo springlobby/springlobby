@@ -121,7 +121,7 @@ void UserActions::Init()
     }
     for ( size_t i = 0; i < m_actionNames.size(); ++i)
     {
-        UserActions::ActionType cur = (UserActions::ActionType) (int) std::pow( 2.0, i);
+        UserActions::ActionType cur = (UserActions::ActionType) (1 << i);
         wxArrayString tmp;
         for ( unsigned int j = 0; j < m_groupNames.GetCount(); ++j)
         {
