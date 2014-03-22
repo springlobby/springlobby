@@ -4,6 +4,25 @@
 
 struct BattleListFilterValues
 {
+	BattleListFilterValues():
+		status_locked(true),
+		status_passworded(true),
+		status_start(true),
+		status_full(true),
+		status_open(true),
+		map_show(true),
+		mod_show(true),
+		highlighted_only(false),
+		rank(_T("All")),
+		player_num(_T("All")),
+		maxplayer(_T("All")),
+		spectator(_T( "All" ) ),
+		rank_mode(_T( "<" ) ),
+		player_mode (_T("=")),
+		maxplayer_mode(_T("=")),
+		spectator_mode(_T("="))
+	{
+	}
     // checkboxes
         bool status_locked;
         bool status_passworded;

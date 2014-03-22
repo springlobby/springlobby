@@ -720,26 +720,26 @@ void  BattleListFilter::SaveFilterValues()
 BattleListFilterValues BattleListFilter::GetBattleFilterValues( const wxString& profile_name )
 {
 	BattleListFilterValues filtervalues;
-	filtervalues.description =      cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/description" ), wxEmptyString );
-	filtervalues.host =             cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/host" ), wxEmptyString );
-	filtervalues.map =               cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/map" ), wxEmptyString );
-	filtervalues.map_show =         cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/map_show" ), 0L );
-	filtervalues.maxplayer =        cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer" ), _T( "All" ) );
-	filtervalues.maxplayer_mode =   cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer_mode" ), _T( "=" ) );
-	filtervalues.mod =              cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), wxEmptyString );
-	filtervalues.mod_show =         cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/mod_show" ), 0L );
-	filtervalues.player_mode =      cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/player_mode" ), _T( "=" ) );
-	filtervalues.player_num  =      cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/player_num" ), _T( "All" ) );
-	filtervalues.rank =             cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/rank" ), _T( "All" ) );
-	filtervalues.rank_mode =        cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/rank_mode" ), _T( "<" ) );
-	filtervalues.spectator =        cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator" ), _T( "All" ) );
-	filtervalues.spectator_mode =   cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator_mode" ), _T( "=" ) );
-	filtervalues.status_full =      cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_full" ), true );
-	filtervalues.status_locked =    cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_locked" ), true );
-	filtervalues.status_open =      cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_open" ), true );
-	filtervalues.status_passworded = cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_passworded" ), true );
-	filtervalues.status_start =     cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_start" ), true );
-	filtervalues.highlighted_only = cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/highlighted_only" ), 0l );
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/description" ), &filtervalues.description);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/host" ), &filtervalues.host);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/map" ), &filtervalues.map );
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/map_show" ), &filtervalues.map_show );
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer" ), &filtervalues.maxplayer);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer_mode" ), &filtervalues.maxplayer_mode);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), &filtervalues.mod);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/mod_show" ), &filtervalues.mod_show);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/player_mode" ), &filtervalues.player_mode);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/player_num" ), &filtervalues.player_num);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/rank" ), &filtervalues.rank);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/rank_mode" ), &filtervalues.rank_mode);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator" ), &filtervalues.spectator);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/spectator_mode" ), &filtervalues.spectator_mode);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_full" ), &filtervalues.status_full);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_locked" ), &filtervalues.status_locked);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_open" ), &filtervalues.status_open);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_passworded" ), &filtervalues.status_passworded);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/status_start" ), &filtervalues.status_start);
+	cfg().Read( _T( "/BattleFilter/" ) + profile_name + _T( "/highlighted_only" ), &filtervalues.highlighted_only);
 	return filtervalues;
 }
 
