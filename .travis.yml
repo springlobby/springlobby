@@ -1,8 +1,9 @@
 language: cpp
 compiler:
   - gcc
-  - clang
+#  - clang # disabled, libboost-signals fails to compile: https://travis-ci.org/springlobby/springlobby/jobs/21325986
 before_script:
+  - sudo apt-cache search libboost
   - sudo apt-get install libwxgtk2.8-dev libboost-thread1.48-dev libboost-system1.48-dev libboost-filesystem1.48-dev
 # optional dependencies
   - sudo apt-get install libboost-test1.48-dev libalure-dev
