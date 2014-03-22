@@ -1,6 +1,7 @@
 language: cpp
 compiler:
   - gcc
+  - clang
 before_script:
   - sudo apt-get install libwxgtk2.8-dev libboost-thread-dev libboost-system-dev libboost-filesystem-dev
 # optional dependencies
