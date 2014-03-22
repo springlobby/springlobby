@@ -3,9 +3,9 @@ compiler:
   - gcc
   - clang
 before_script:
-  - sudo apt-get install libwxgtk2.8-dev libboost-thread-dev libboost-system-dev libboost-filesystem-dev
+  - sudo apt-get install libwxgtk2.8-dev libboost-thread1.48-dev libboost-system1.48-dev libboost-filesystem1.48-dev
 # optional dependencies
-  - sudo apt-get install libboost-test-dev libalure-dev
+  - sudo apt-get install libboost-test1.48-dev libalure-dev
   - git submodule update --init --recursive
   - cmake -DSPRINGLOBBY_UPDATER:BOOL=ON .
 script:
