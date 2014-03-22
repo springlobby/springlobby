@@ -54,6 +54,7 @@
 #include "maindownloadtab.h"
 #include "user.h"
 #include "mapselectdialog.h"
+#include "downloader/prdownloader.h"
 
 #include "images/chat_icon.png.h"
 #include "images/join_icon.png.h"
@@ -87,6 +88,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_CHAT,					MainWindow::OnMenuChat				)
   EVT_MENU( MENU_CONNECT,				MainWindow::OnMenuConnect			)
   EVT_MENU( MENU_DISCONNECT,			MainWindow::OnMenuDisconnect		)
+  EVT_MENU( MENU_DOWNLOAD,			    MainWindow::OnMenuDownload          )
   EVT_MENU( MENU_SAVE_OPTIONS,			MainWindow::OnMenuSaveOptions		)
   EVT_MENU( MENU_QUIT,					MainWindow::OnMenuQuit				)
   EVT_MENU( MENU_USYNC,					MainWindow::OnUnitSyncReload		)
@@ -155,9 +157,10 @@ MainWindow::MainWindow( )
 	m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
 	m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
 	m_menuTools->AppendSeparator();
+	m_menuTools->Append(MENU_DOWNLOAD, _("&Download Archives"));
+	m_menuTools->AppendSeparator();
 	m_menuTools->Append(MENU_USYNC, _("&Reload maps/games"));
-    m_menuTools->AppendSeparator();
-
+	m_menuTools->AppendSeparator();
 	m_menuTools->Append(MENU_VERSION, _("Check for new Version"));
 
 	wxMenu *menuHelp = new wxMenu;
@@ -735,4 +738,23 @@ void MainWindow::OnMenuFirstStart( wxCommandEvent& /*event*/ )
 void MainWindow::OnMenuPathInfo( wxCommandEvent& /*event*/ )
 {
 	InfoDialog( this ).ShowModal();
+}
+
+void MainWindow::OnMenuDownload( wxCommandEvent& event )
+{
+	wxString lines;
+	if ( !ui().AskText( _( "Which Archives to download? Put each archive on a single line, for example \ngame:ba:stable\nmap:The Rock Final" ), _( "Download Archives" ), lines, true ) ) return;
+	size_t start = 0;
+	size_t pos = 0;
+	do {
+		pos = lines.find('\n', start);
+		wxString line = lines.substr(start, pos-start);
+		line.Trim(true).Trim(false);
+		const std::string category = STD_STRING(line.BeforeFirst(':'));
+		const std::string archive = STD_STRING(line.AfterFirst(':'));
+		if (!category.empty() && !archive.empty()) {
+			prDownloader().GetDownload(category, archive);
+		}
+		start = pos+1;
+	} while (pos != wxNOT_FOUND);
 }
