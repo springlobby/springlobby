@@ -1607,6 +1607,8 @@ void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 
 void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 {
+	if (m_mapname.empty() || mapname.empty())
+		return;
     if ( mapname != m_mapname ) return;
 
     const int w = m_lastsize.GetWidth();

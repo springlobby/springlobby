@@ -24,12 +24,6 @@ const int MINIMAP_SIZE = 98;
 /// Margin between the map previews, in pixels.
 const int MINIMAP_MARGIN = 1;
 
-/// Maximum minimap fetches in WorkerThread queue
-/// (these will still be executed after control is destroyed)
-const int MAX_MINIMAP_FETCHES = 2;
-/// Maximum mapinfo fetches in WorkerThread queue
-const int MAX_MAPINFO_FETCHES = 5;
-
 BEGIN_EVENT_TABLE( MapGridCtrl, wxPanel )
 	EVT_PAINT( MapGridCtrl::OnPaint )
 	EVT_SIZE( MapGridCtrl::OnResize )
@@ -499,7 +493,8 @@ void MapGridCtrl::SelectMap( MapData* map )
 void MapGridCtrl::OnGetMapImageAsyncCompleted( const std::string& _mapname )
 {
 	// if mapname is empty, some error occurred in LSL::usync().GetMinimap...
-	assert( !_mapname.empty() );
+	if (_mapname.empty())
+		return;
 	const wxString mapname = TowxString(_mapname);
 	wxImage minimap(LSL::usync().GetMinimap(_mapname, MINIMAP_SIZE, MINIMAP_SIZE).wximage());
 
@@ -529,7 +524,8 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted( const std::string& _mapname )
 void MapGridCtrl::OnGetMapExAsyncCompleted( const std::string& _mapname )
 {
 	// if mapname is empty, some error occurred in LSL::usync().GetMapEx...
-	assert(!_mapname.empty());
+	if (_mapname.empty())
+		return;
 	const wxString mapname = TowxString(_mapname);
 	LSL::UnitsyncMap m = LSL::usync().GetMap(_mapname);
 	m_maps[mapname].hash = m.hash;
