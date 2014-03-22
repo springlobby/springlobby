@@ -567,8 +567,6 @@ void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
   Close();
 }
 
-#include "utils/uievents.h"
-
 void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 {
 	ui().CheckForUpdates();
