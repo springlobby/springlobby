@@ -642,59 +642,16 @@ wxString Ui::GetNextServer()
 	return serverlist[position];
 }
 
-static inline bool IsAutoJoinChannel( Channel& chan )
-{
-	typedef std::vector<ChannelJoinInfo>
-	Vec;
-	typedef Vec::const_iterator
-	VecIt;
-	const Vec chans = sett().GetChannelsJoin();
-	for ( VecIt it = chans.begin(); it != chans.end(); ++it ) {
-		if ( it->name == chan.GetName() )
-			return true;
-	}
-	return false;
-}
 //! @brief Called when client has joined a channel
 //!
 //! @todo Check if a pannel allready exists for this channel
-void Ui::OnJoinedChannelSuccessful( Channel& chan )
-{
-	bool doFocus = !cfg().ReadBool(_T( "/Server/Autoconnect" )) || !IsAutoJoinChannel( chan );
-	bool panel_exists = mw().GetChannelChatPanel( chan.GetName() ) != NULL;
-	OnJoinedChannelSuccessful( chan, !panel_exists && doFocus );
-}
-
-void Ui::OnJoinedChannelSuccessful( Channel& chan, bool focusTab )
-{
-	if ( m_main_win == 0 ) return;
-	wxLogDebugFunc( wxEmptyString );
-
-	chan.uidata.panel = 0;
-
-	mw().OpenChannelChat( chan, focusTab );
-}
-
-//! @brief Called when something is said in a channel
-void Ui::OnChannelSaid( Channel& channel, User& user, const wxString& message )
+void Ui::OnJoinedChannelSuccessful( Channel& chan, bool doFocus)
 {
 	wxLogDebugFunc( wxEmptyString );
-	if ( channel.uidata.panel == 0 ) {
-		wxLogError( _T("OnChannelSaid: ud->panel NULL") );
+	if ( m_main_win == NULL ) {
 		return;
 	}
-	channel.uidata.panel->Said( user.GetNick(), message );
-}
-
-
-void Ui::OnChannelDidAction( Channel& channel , User& user, const wxString& action )
-{
-	wxLogDebugFunc( wxEmptyString );
-	if ( channel.uidata.panel == 0 ) {
-		wxLogError( _T("OnChannelDidAction: ud->panel NULL") );
-		return;
-	}
-	channel.uidata.panel->DidAction( user.GetNick(), action );
+	mw().OpenChannelChat( chan, doFocus );
 }
 
 
@@ -705,51 +662,6 @@ void Ui::OnChannelMessage( const wxString& channel, const wxString& msg )
 		panel->StatusMessage( msg );
 	}
 }
-
-
-void Ui::OnUserJoinedChannel( Channel& chan, User& user )
-{
-	//wxLogDebugFunc( wxEmptyString );
-	if ( chan.uidata.panel == 0 ) {
-		wxLogError( _T("OnUserJoinedChannel: ud->panel NULL") );
-		return;
-	}
-	chan.uidata.panel->Joined( user );
-}
-
-
-void Ui::OnChannelJoin( Channel& chan, User& user )
-{
-	//wxLogDebugFunc( wxEmptyString );
-	if ( chan.uidata.panel == 0 ) {
-		wxLogError( _T("OnChannelJoin: ud->panel NULL") );
-		return;
-	}
-	chan.uidata.panel->OnChannelJoin( user );
-}
-
-
-void Ui::OnUserLeftChannel( Channel& chan, User& user, const wxString& reason )
-{
-	//wxLogDebugFunc( wxEmptyString );
-	if ( chan.uidata.panel == 0 ) {
-		wxLogError( _T("OnUserLeftChannel: ud->panel NULL") );
-		return;
-	}
-	chan.uidata.panel->Parted( user, reason );
-}
-
-
-void Ui::OnChannelTopic( Channel& channel, const wxString& user, const wxString& topic )
-{
-	wxLogDebugFunc( wxEmptyString );
-	if ( channel.uidata.panel == 0 ) {
-		wxLogError( _T("OnChannelTopic: ud->panel NULL") );
-		return;
-	}
-	channel.uidata.panel->SetTopic( user, topic );
-}
-
 
 void Ui::OnChannelList( const wxString& channel, const int& numusers )
 {

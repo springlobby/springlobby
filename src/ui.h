@@ -90,15 +90,7 @@ public:
 	void OnLoggedIn( );
 	void OnDisconnected( IServer& server, bool wasonline );
 
-	void OnJoinedChannelSuccessful( Channel& chan );
-	void OnJoinedChannelSuccessful( Channel& chan, bool focusTab );
-	void OnUserJoinedChannel( Channel& chan, User& user );
-	void OnChannelJoin( Channel& chan, User& user );
-	void OnUserLeftChannel( Channel& chan, User& user, const wxString& reason );
-
-	void OnChannelTopic( Channel& channel , const wxString& user, const wxString& topic );
-	void OnChannelSaid( Channel& channel , User& user, const wxString& message );
-	void OnChannelDidAction( Channel& channel , User& user, const wxString& action );
+	void OnJoinedChannelSuccessful( Channel& chan, bool doFocus = false);
 	void OnChannelMessage( const wxString& channel, const wxString& msg );
 
 	void OnChannelList( const wxString& channel, const int& numusers );

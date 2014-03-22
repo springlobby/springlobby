@@ -45,7 +45,12 @@ User& Channel::GetMe()
 
 void Channel::Said( User& who, const wxString& message )
 {
-  ui().OnChannelSaid( *this , who, message );
+	wxLogDebugFunc( wxEmptyString );
+	if (uidata.panel == 0 ) {
+		wxLogError( _T("OnChannelSaid: ud->panel NULL") );
+		return;
+	}
+	uidata.panel->Said( who.GetNick(), message );
 }
 
 
@@ -58,27 +63,37 @@ void Channel::Say( const wxString& message )
 
 void Channel::DidAction( User& who, const wxString& action )
 {
-  ui().OnChannelDidAction( *this, who, action );
+	wxLogDebugFunc( wxEmptyString );
+	if ( uidata.panel == 0 ) {
+		wxLogError( _T("OnChannelDidAction: ud->panel NULL") );
+		return;
+	}
+	uidata.panel->DidAction( who.GetNick(), action );
 }
 
 
 void Channel::DoAction( const wxString& action )
 {
-  wxLogDebugFunc( wxEmptyString );
-  m_serv.DoActionChannel( m_name, action );
+	wxLogDebugFunc( wxEmptyString );
+	m_serv.DoActionChannel( m_name, action );
 }
 
 
 void Channel::Left( User& who, const wxString& reason )
 {
-  RemoveUser( who.GetNick() );
-  ui().OnUserLeftChannel( *this, who, reason );
+	RemoveUser( who.GetNick() );
+	//wxLogDebugFunc( wxEmptyString );
+	if ( uidata.panel == 0 ) {
+		wxLogError( _T("OnUserLeftChannel: ud->panel NULL") );
+		return;
+	}
+	uidata.panel->Parted( who, reason );
 }
 
 
 void Channel::Leave()
 {
-  m_serv.PartChannel( m_name );
+	m_serv.PartChannel( m_name );
 }
 
 void Channel::Rejoin()
@@ -89,24 +104,38 @@ void Channel::Rejoin()
 
 void Channel::Joined( User& who )
 {
-  AddUser( who );
-  ui().OnUserJoinedChannel( *this, who );
+	AddUser( who );
+	if ( uidata.panel == 0 ) {
+		wxLogError( _T("OnUserJoinedChannel: ud->panel NULL") );
+		return;
+	}
+	uidata.panel->Joined(who);
 }
 
 
 void Channel::OnChannelJoin( User& who )
 {
-  AddUser( who );
-  ui().OnChannelJoin( *this, who );
+	AddUser( who );
+	//wxLogDebugFunc( wxEmptyString );
+	if ( uidata.panel == 0 ) {
+		wxLogError( _T("OnChannelJoin: ud->panel NULL") );
+		return;
+	}
+	uidata.panel->OnChannelJoin( who );
 }
 
 
 void Channel::SetTopic( const wxString& topic, const wxString& who )
 {
-  m_topic = topic;
-  m_topic_nick = who;
+	m_topic = topic;
+	m_topic_nick = who;
 
-  ui().OnChannelTopic( *this, who, topic );
+	wxLogDebugFunc( wxEmptyString );
+	if ( uidata.panel == 0 ) {
+		wxLogError( _T("OnChannelTopic: ud->panel NULL") );
+		return;
+	}
+	uidata.panel->SetTopic( who, topic );
 }
 
 wxString Channel::GetTopicSetBy()
