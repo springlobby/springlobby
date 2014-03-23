@@ -892,8 +892,8 @@ void IBattle::OnSelfLeftBattle()
 		User& u = GetUser( j );
 		if ( u.GetBattleStatus().IsBot() )
 		{
-			OnUserRemoved( u );
 			ui().OnUserLeftBattle( *this, u, true );
+			OnUserRemoved( u );
 			j--;
 		}
 	}
