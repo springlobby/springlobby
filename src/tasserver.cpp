@@ -50,6 +50,7 @@ lsl/networking/tasserver.cpp
 #include <lslunitsync/unitsync.h>
 
 SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which is send when leaving server");
+SLCONFIG("/Server/HangTimeout", 10l, "Warn when SpringLobby hangs longer then this delay");
 
 #define PING_TIME 30
 #define PING_TIMEOUT 60
@@ -448,7 +449,8 @@ void TASServer::Notify()
 		return;
 	}
 
-	if (m_last_timer > 0 && (now-m_last_timer > 1)) {
+	const static long hangcheck = std::max(1l, cfg().ReadLong(_T("/Server/HangTimeout")));
+	if (m_last_timer > 0 && (now-m_last_timer > hangcheck)) {
 		m_se->OnServerMessage(wxFormat(_("SpringLobby hung for %d seconds")) % ((int)now-m_last_timer));
 		m_last_timer = now;
 		return;
