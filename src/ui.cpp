@@ -338,14 +338,6 @@ void Ui::Download( const wxString& category, const wxString& name, const wxStrin
 	assert( count > 0 );
 }
 
-//void Ui::DownloadFileWebsite( const wxString& name )
-//{
-//	wxString newname = name;
-//	newname.Replace( _T(" "), _T("+") );
-//	wxString url = _T("http://spring.jobjol.nl/search_result.php?search_cat=1&select_select=select_file_subject&Submit=Search&search=") + newname;
-//	OpenWebBrowser ( url );
-//}
-
 //! @brief Display a dialog asking a question with OK and Canel buttons
 //!
 //! @return true if OK button was pressed

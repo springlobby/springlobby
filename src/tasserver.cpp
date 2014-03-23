@@ -691,7 +691,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 				wxString userScriptPassword = GetWordParam( params );
 				try {
 					User& usr = GetUser(usernick);
-					usr.BattleStatus().scriptPassword = userScriptPassword;
+					usr.BattleStatus().scriptPassword = STD_STRING(userScriptPassword);
 					IBattle* battle = GetCurrentBattle();
 					if (battle) {
 						if ( battle->CheckBan( usr ) ) return;
@@ -980,7 +980,7 @@ void TASServer::SetRelayIngamePassword( const User& user )
 	if (battle) {
 		if ( !battle->GetInGame() ) return;
 	}
-	RelayCmd( _T("SETINGAMEPASSWORD"), user.GetNick() + _T(" ") + user.BattleStatus().scriptPassword );
+	RelayCmd( _T("SETINGAMEPASSWORD"), user.GetNick() + _T(" ") + TowxString(user.BattleStatus().scriptPassword));
 }
 
 void TASServer::Ping()
@@ -1759,7 +1759,7 @@ void TASServer::BattleKickPlayer( int battleid, User& user )
 
 	//KICKFROMBATTLE username
 	if( !GetBattle(battleid).IsProxy() ) {
-		user.BattleStatus().scriptPassword = wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF); // reset his password to something random, so he can't rejoin
+		user.BattleStatus().scriptPassword = STD_STRING(wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF)); // reset his password to something random, so he can't rejoin
 		SetRelayIngamePassword( user );
 		SendCmd( _T("KICKFROMBATTLE"), user.GetNick() );
 	} else RelayCmd( _T("KICKFROMBATTLE"), user.GetNick() );

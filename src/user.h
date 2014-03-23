@@ -81,7 +81,7 @@ struct UserBattleStatus
   // for nat holepunching
   wxString ip;
   unsigned int udpport;
-  wxString scriptPassword;
+  std::string scriptPassword;
   bool IsBot() const { return !aishortname.IsEmpty(); }
   UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), isfromdemo(false), aitype(-1), udpport(0) {}
   bool operator == ( const UserBattleStatus& s ) const

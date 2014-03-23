@@ -204,6 +204,8 @@ add_sources(springlobbySrc
 	toasterbox/ToasterBox.cpp
 	toasterbox/ToasterBoxWindow.cpp
 	toasterbox/ToasterBoxWindowList.cpp
+
+	lsl/src/lsl/battle/tdfcontainer.cpp #FIXME
 )
 
 clear(SLSharedWithSettings)

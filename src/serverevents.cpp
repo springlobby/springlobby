@@ -357,7 +357,7 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick, const
         IBattle& battle = m_serv.GetBattle( battleid );
 
         battle.OnUserAdded( user );
-		user.BattleStatus().scriptPassword = userScriptPassword;
+		user.BattleStatus().scriptPassword = STD_STRING(userScriptPassword);
         ui().OnUserJoinedBattle( battle, user );
 				try
 				{
@@ -386,7 +386,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
         User& user = battle.GetUser( nick );
         // this is necessary since the user will be deleted when the gui function is called
         bool isbot = user.BattleStatus().IsBot();
-		user.BattleStatus().scriptPassword.Clear();
+		user.BattleStatus().scriptPassword.clear();
         battle.OnUserRemoved( user );
         ui().OnUserLeftBattle( battle, user, isbot );
     }
