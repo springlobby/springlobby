@@ -26,8 +26,8 @@
 #include "images/connect.xpm"
 #include "utils/controls.h"
 #include "utils/tasutil.h"
-
 #include "utils/customdialogs.h"
+#include "utils/conversion.h"
 
 // Define events.
 BEGIN_EVENT_TABLE(ConnectWindow, wxDialog)

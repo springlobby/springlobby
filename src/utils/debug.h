@@ -4,6 +4,7 @@
 #define SPRINGLOBBY_HEADERGUARD_DEBUG_H
 
 #include <stdexcept>
+#include <wx/log.h>
 
 class assert_exception : public std::runtime_error
 {

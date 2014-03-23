@@ -37,6 +37,7 @@
 #include "utils/platform.h"
 #include "utils/uievents.h"
 #include "utils/slpaths.h"
+#include "utils/conversion.h"
 #include "uiutils.h"
 #include "settings.h"
 #include "mainwindow.h"

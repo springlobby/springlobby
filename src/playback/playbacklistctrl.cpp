@@ -11,6 +11,7 @@
 #include "../iconimagelist.h"
 #include "../uiutils.h"
 #include "../ui.h"
+#include "utils/conversion.h"
 
 
 BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, PlaybackListCtrl::BaseType, PlaybackType )

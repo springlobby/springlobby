@@ -12,6 +12,7 @@
 #include "../images/springlobby_64.png.h"
 #include "inotification.h"
 #include "sound/alsound.h"
+#include "utils/conversion.h"
 
 #ifdef HAVE_LIBNOTIFY
 	#include "libnotify.h"

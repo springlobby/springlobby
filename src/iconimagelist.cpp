@@ -87,6 +87,7 @@
 
 #include "images/empty.xpm"
 #include "uiutils.h"
+#include "utils/conversion.h"
 
 IconImageList::IconImageList() : wxImageList(16,16,true)
 {

@@ -19,6 +19,8 @@
 #include <options/mainoptionstab.h>
 #include <options/groupoptionspanel.h>
 #include <lslutils/globalsmanager.h>
+#include "utils/conversion.h"
+#include <wx/log.h>
 
 const wxColour defaultHLcolor ( 255, 0, 0 );
 

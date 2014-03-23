@@ -14,6 +14,7 @@
 #include <wx/tipwin.h>
 #include <wx/tooltip.h>
 #include <wx/textctrl.h>
+#include <wx/log.h>
 
 #include "ui.h"
 #include <lslunitsync/optionswrapper.h>

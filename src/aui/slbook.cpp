@@ -9,6 +9,7 @@
 
 #include <wx/menu.h>
 #include <wx/scrolwin.h>
+#include "utils/conversion.h"
 
 static const long ID_CLOSE_TAB          = wxNewId();
 static const long ID_CLOSE_TAB_OTHER    = wxNewId();

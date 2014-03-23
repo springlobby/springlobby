@@ -34,6 +34,7 @@
 #include "utils/controls.h"
 #include "utils/customdialogs.h"
 #include "utils/slpaths.h"
+#include "utils/conversion.h"
 #include "ui.h"
 #include "iserver.h"
 #include "serverselector.h"

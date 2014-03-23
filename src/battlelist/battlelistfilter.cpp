@@ -29,6 +29,7 @@
 #include "aui/auimanager.h"
 #include "useractions.h"
 #include "helper/slconfig.h"
+#include "utils/conversion.h"
 
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"

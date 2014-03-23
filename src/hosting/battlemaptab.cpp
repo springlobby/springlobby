@@ -34,6 +34,7 @@
 #include "iserver.h"
 #include "settings.h"
 #include "aui/auimanager.h"
+#include "utils/conversion.h"
 
 BEGIN_EVENT_TABLE( BattleMapTab, wxPanel )
 
