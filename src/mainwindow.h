@@ -90,7 +90,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void OnShowSettingsPP( wxCommandEvent& event );
     void OnMenuSelectLocale( wxCommandEvent& event );
     void OnShowChannelChooser( wxCommandEvent& event );
-	void OnShowScreenshots( wxCommandEvent& event );
+	void OnShowWriteableDir( wxCommandEvent& event );
     void forceSettingsFrameClose();
     void OnUnitSyncReloaded();
     void OnChannelList( const wxString& channel, const int& numusers, const wxString& topic );
@@ -182,7 +182,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
         MENU_LOAD_LAYOUT,
         MENU_RESET_LAYOUT,
         MENU_DEFAULT_LAYOUT,
-		MENU_SCREENSHOTS,
+		MENU_SHOWWRITEABLEDIR,
 		MENU_PREFERENCES,
 		MENU_GENERAL_HELP,
 		MENU_PATHINFO

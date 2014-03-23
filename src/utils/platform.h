@@ -9,6 +9,7 @@ class wxString;
 class wxLogChain;
 
 #include <wx/string.h>
+#include <wx/arrstr.h>
 
 /**
     let origin be /path/to/some/dir and destination /some/other/path
@@ -68,6 +69,9 @@ wxString GetUserDataDir();
 wxString IdentityString(const wxString& format, bool lowerCase = false );
 
 wxString GetCustomizedEngineConfigFilePath();
+
+int RunProcess(const wxString& cmd, const wxArrayString& params);
+int BrowseFolder(const wxString& path);
 
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>

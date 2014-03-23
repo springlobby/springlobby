@@ -68,11 +68,11 @@
 #include "springsettings/frame.h"
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
+#include "utils/slpaths.h"
 
 #include "updater/updatehelper.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
-#include "helper/imageviewer.h"
 
 #if defined(__WXMSW__)
     #include <wx/msw/winundef.h>
@@ -103,7 +103,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU( MENU_AUTOJOIN_CHANNELS,		MainWindow::OnMenuAutojoinChannels	)
   EVT_MENU( MENU_SELECT_LOCALE,			MainWindow::OnMenuSelectLocale		)
   EVT_MENU( MENU_CHANNELCHOOSER,		MainWindow::OnShowChannelChooser	)
-  EVT_MENU( MENU_SCREENSHOTS,			MainWindow::OnShowScreenshots		)
+  EVT_MENU( MENU_SHOWWRITEABLEDIR,      MainWindow::OnShowWriteableDir		)
   EVT_MENU( MENU_PREFERENCES,			MainWindow::OnMenuPreferences		)
   EVT_MENU( MENU_GENERAL_HELP,			MainWindow::OnMenuFirstStart		)
   EVT_MENU( MENU_SERVER_TAB,			MainWindow::OnMenuServerTab			)
@@ -155,7 +155,7 @@ MainWindow::MainWindow( )
 	m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
 	m_menuTools->Append(MENU_CHANNELCHOOSER, _("Channel &list"));
 	m_menuTools->Append(MENU_CHAT, _("Open private &chat..."));
-	m_menuTools->Append(MENU_SCREENSHOTS, _("&View screenshots"));
+	m_menuTools->Append(MENU_SHOWWRITEABLEDIR, _("&Open Spring DataDir"));
 	m_menuTools->AppendSeparator();
 	m_menuTools->Append(MENU_DOWNLOAD, _("&Download Archives"));
 	m_menuTools->AppendSeparator();
@@ -578,18 +578,10 @@ void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
 	GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
 }
 
-void MainWindow::OnShowScreenshots( wxCommandEvent& /*unused*/ )
+void MainWindow::MainWindow::OnShowWriteableDir( wxCommandEvent& /*unused*/ )
 {
-    wxArrayString ar;
-    for( auto i : LSL::usync().GetScreenshotFilenames())
-        ar.Add(TowxString(i));
-    if ( ar.Count() == 0 ) {
-        customMessageBoxNoModal( SL_MAIN_ICON, _("There were no screenshots found in your spring data directory."), _("No files found") );
-        return;
-    }
-    ar.Sort();
-    ImageViewerDialog* img  = new ImageViewerDialog( ar, true, this, -1, _T("Screenshots") );
-    img->Show( true );
+	const wxString path = SlPaths::GetDataDir();
+	BrowseFolder(path);
 }
 
 
