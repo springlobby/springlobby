@@ -9,19 +9,17 @@
 
 #include <map>
 
-#include "utils/conversion.h"
-
-typedef std::map<wxString, int> NameToPosMap;
+typedef std::map<std::string, int> NameToPosMap;
 static NameToPosMap m_name_to_pos;
 
-int GetFlagIndex( const wxString& flag )
+int GetFlagIndex( const std::string& flag )
 {
-	if (( flag.IsEmpty() ) ||
-	    (flag == _T("??")) || // unknown
-	    (flag == _T("XX")) || // not sure where this come from, very likely from incomplete bootstrap at login
-	    (flag == _T("A1")) || // anonymous proxy
-	    (flag == _T("A2")) || // satellite provider
-	    (flag == _T("O1")))  // other country
+	if (( flag.empty() ) ||
+	    (flag == "??") || // unknown
+	    (flag == "XX") || // not sure where this come from, very likely from incomplete bootstrap at login
+	    (flag == "A1") || // anonymous proxy
+	    (flag == "A2") || // satellite provider
+	    (flag == "O1"))  // other country
 		return FLAG_NONE;
 
 	NameToPosMap::const_iterator itor = m_name_to_pos.find( flag );
@@ -37,7 +35,7 @@ int AddFlagImages( wxImageList& imgs )
 	for ( int i = 0; flag_xpm[i]; ++i ) {
 		const int index = imgs.Add( wxBitmap( const_cast<const char**>( flag_xpm[i] ) ) );
 		if ( i == 0 ) poszero = index;
-		m_name_to_pos[TowxString( flag_str[i] )] = i;
+		m_name_to_pos[flag_str[i]] = i;
 	}
 	return poszero;
 }
