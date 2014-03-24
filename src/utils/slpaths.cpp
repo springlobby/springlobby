@@ -176,9 +176,9 @@ void SlPaths::SetUsedSpringIndex( const wxString& index )
 void SlPaths::ReconfigureUnitsync()
 {
 	LSL::Util::config().ConfigurePaths(
-		boost::filesystem::path(STD_STRING(SlPaths::GetCachePath())),
-		boost::filesystem::path(STD_STRING(SlPaths::GetUnitSync())),
-		boost::filesystem::path(STD_STRING(SlPaths::GetSpringBinary()))
+		STD_STRING(SlPaths::GetCachePath()),
+		STD_STRING(SlPaths::GetUnitSync()),
+		STD_STRING(SlPaths::GetSpringBinary())
 	);
 }
 
