@@ -311,7 +311,8 @@ void SpringOptionsTab::ReloadSpringList()
 void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
 {
 #ifdef __WXMAC__
-	wxString filefilter << _T( "|" ) << _( "Library" ) << _T( "(*.dylib)|*.dylib" );
+	wxString filefilter;
+	filefilter << _T( "|" ) << _( "Library" ) << _T( "(*.dylib)|*.dylib" );
 #else
 	wxString filefilter = wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() + _T( "|" ) + wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" );
 #endif
