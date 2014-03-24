@@ -3,7 +3,7 @@
 #ifndef DISABLE_SOUND
 
 #ifdef __WXMAC__
-#include <al.h>
+#include <OpenAL/al.h>
 #else
 #include <AL/al.h>
 #endif
