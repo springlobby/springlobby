@@ -171,7 +171,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 		if ( battle.GetNatType() == NAT_Hole_punching ) tdf.Append("HostPort", battle.GetMyInternalUdpSourcePort() );
 		else tdf.Append("HostPort", battle.GetHostPort() );
 	} else {
-		tdf.Append("HostIP", battle.GetHostIp() );
+		tdf.Append("HostIP", STD_STRING(battle.GetHostIp()) );
 		tdf.Append("HostPort", battle.GetHostPort() );
 		if ( battle.GetNatType() == NAT_Hole_punching ) {
 			tdf.Append("SourcePort", battle.GetMyInternalUdpSourcePort() );
