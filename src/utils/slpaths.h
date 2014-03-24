@@ -69,6 +69,7 @@ public:
 
 
 	static bool CreateSpringDataDir(const wxString& dir);
+	static std::string GetCompatibleVersion(const std::string& neededversion);
 
 private:
 	//recursive create dir

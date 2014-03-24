@@ -321,3 +321,47 @@ wxString SlPaths::GetDataDir(const wxString& /*FIXME: implement index */)
 		return TowxString(dir);
 	return wxEmptyString;
 }
+
+std::string VersionGetMajor(const std::string& version)
+{
+	const int pos = version.find(".");
+	if (pos>0) {
+		return version.substr(0, pos);
+	}
+	return version;
+}
+
+bool VersionIsRelease(const std::string& version) { //try to detect if a version is major
+	const std::string allowedChars = "01234567890.";
+	for(size_t i=0; i<version.length(); i++) {
+		if (allowedChars.find(version[i]) == std::string::npos) { //found invalid char -> not stable version
+			return false;
+		}
+	}
+	return true;
+}
+
+bool VersionSyncCompatible(const std::string& ver1, const std::string& ver2)
+{
+	if (ver1 == ver2) {
+		return true;
+	}
+	if ( (VersionIsRelease(ver1) &&  VersionIsRelease(ver2)) &&
+	 (VersionGetMajor(ver1) == VersionGetMajor(ver2))) {
+		return true;
+	}
+	return false;
+}
+
+std::string SlPaths::GetCompatibleVersion(const std::string& neededversion)
+{
+	const auto versionlist = SlPaths::GetSpringVersionList();
+	for ( const auto pair : versionlist ) {
+		const std::string ver = STD_STRING(pair.first);
+		const LSL::SpringBundle bundle = pair.second;
+		if ( VersionSyncCompatible(neededversion, ver)) {
+			return ver;
+		}
+	}
+	return "";
+}

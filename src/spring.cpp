@@ -109,11 +109,14 @@ bool Spring::Run( IBattle& battle )
 		return false;
 	}
 
-	const wxString executable = SlPaths::GetSpringBinary(battle.GetEngineVersion());
+	wxString executable = SlPaths::GetSpringBinary(battle.GetEngineVersion());
 	if ( !wxFile::Exists(executable) ) {
-		customMessageBoxNoModal( SL_MAIN_ICON, _T("The spring executable was not found at the set location, please re-check."), _T("Executable not found") );
-		ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
-		return false;
+		executable = SlPaths::GetSpringBinary(TowxString(SlPaths::GetCompatibleVersion(STD_STRING(battle.GetEngineVersion())))); //fallback, no exact version found, try fallback version
+		if ( !wxFile::Exists(executable) ) {
+			customMessageBoxNoModal( SL_MAIN_ICON, wxFormat(_T("The spring executable version '%s' was not found at the set location '%s', please re-check.")) % battle.GetEngineVersion() % executable, _T("Executable not found") );
+			ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
+			return false;
+		}
 	}
 
 	wxArrayString params;
