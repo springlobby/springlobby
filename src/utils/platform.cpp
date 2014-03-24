@@ -405,7 +405,7 @@ int BrowseFolder(const wxString& path)
 	wxArrayString param;
 #ifdef __WXMSW__
 	return RunProcess(path, param);
-#elifdef __APPLE__
+#elif defined(__APPLE__)
 	param.push_back(path);
 	return RunProcess(_T("open"), param);
 #else
