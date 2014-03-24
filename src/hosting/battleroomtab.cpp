@@ -926,8 +926,9 @@ void BattleRoomTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 	if ( !m_battle ) return;
 	//m_minimap->UpdateMinimap();//should happen automagically now
 	ReloadMaplist();
-	UpdateBattleInfo();
 	RegenerateOptionsList();
+	UpdateBattleInfo();
+
 	m_battle->SendMyBattleStatus(); // This should reset sync status.
 }
 
@@ -1196,11 +1197,9 @@ void BattleRoomTab::RegenerateOptionsList()
 	m_side_sel->Clear();
 	if (m_battle != NULL) {
 		try {
-			printf("RegenerateOptionsList\n");
 			const wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ ) {
 				m_side_sel->Append(sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
-			printf("RegenerateOptionsList %s\n", (const char*)sides[i].mb_str());
 			}
 		}
 		catch ( ... ) {}
