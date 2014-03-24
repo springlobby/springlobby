@@ -15,6 +15,7 @@
 #include <wx/dataobj.h>
 
 #include <cmath>
+#include <clocale>
 
 #include "uiutils.h"
 #include <lslutils/misc.h>
@@ -120,6 +121,8 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
 
 wxColour GetColorFromFloatStrng( const wxString& color_ )
 {
+	const std::string oldlocale = std::setlocale(LC_NUMERIC, NULL);
+	std::setlocale(LC_NUMERIC, "C"); //ToDouble depends on the locale, set to C
 	wxString colorstring = color_;
 	wxString tmp_string;
 	unsigned char* decimal_colors = new unsigned char[3];
@@ -132,6 +135,7 @@ wxColour GetColorFromFloatStrng( const wxString& color_ )
 	}
 	wxColour final_c( decimal_colors[0], decimal_colors[1], decimal_colors[2] );
 	delete[] decimal_colors;
+	std::setlocale(LC_NUMERIC, oldlocale.c_str());
 	return final_c;
 }
 

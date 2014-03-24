@@ -75,14 +75,6 @@ static inline long s2l( const wxString& arg )
     return ret;
 }
 
-static inline double s2d( const wxString& arg )
-{
-    double ret;
-    arg.ToDouble(&ret);
-    return ret;
-}
-
-
 /** @} */
 
 static inline wxString MakeHashUnsigned( const wxString& hash )
