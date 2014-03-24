@@ -342,29 +342,27 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 		tdf.LeaveSection();
 		player_to_number[&user] = i;
 	}
-	if ( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) {
-		for ( unsigned int i = 0; i < NumUsers; i++ ) {
-			User& user = battle.GetUser( i );
-			UserBattleStatus& status = user.BattleStatus();
-			if ( !status.IsBot() ) continue;
-			tdf.EnterSection(stdprintf("AI%d", i));
-			tdf.Append("Name", user.GetNick()); // AI's nick;
-			tdf.Append("ShortName", status.aishortname ); // AI libtype
-			tdf.Append("Version", status.aiversion ); // AI libtype version
-			tdf.Append("Team", teams_to_sorted_teams[status.team] );
-			tdf.Append("IsFromDemo", int(status.isfromdemo) );
-			tdf.Append("Host", player_to_number[&battle.GetUser( status.owner )] );
-			tdf.EnterSection("Options");
-			int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex(user.GetNick());
-			if ( optionmapindex > 0 ) {
-	for (const auto& it : battle.CustomBattleOptions().getOptions((LSL::OptionsWrapper::GameOption)optionmapindex )) {
-					tdf.Append(it.first, it.second.second);
-				}
+	for ( unsigned int i = 0; i < NumUsers; i++ ) {
+		User& user = battle.GetUser( i );
+		UserBattleStatus& status = user.BattleStatus();
+		if ( !status.IsBot() ) continue;
+		tdf.EnterSection(stdprintf("AI%d", i));
+		tdf.Append("Name", user.GetNick()); // AI's nick;
+		tdf.Append("ShortName", status.aishortname ); // AI libtype
+		tdf.Append("Version", status.aiversion ); // AI libtype version
+		tdf.Append("Team", teams_to_sorted_teams[status.team] );
+		tdf.Append("IsFromDemo", int(status.isfromdemo) );
+		tdf.Append("Host", player_to_number[&battle.GetUser( status.owner )] );
+		tdf.EnterSection("Options");
+		int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex(user.GetNick());
+		if ( optionmapindex > 0 ) {
+			for (const auto& it : battle.CustomBattleOptions().getOptions((LSL::OptionsWrapper::GameOption)optionmapindex )) {
+				tdf.Append(it.first, it.second.second);
 			}
-			tdf.LeaveSection();
-			tdf.LeaveSection();
-			player_to_number[&user] = i;
 		}
+		tdf.LeaveSection();
+		tdf.LeaveSection();
+		player_to_number[&user] = i;
 	}
 
 	tdf.AppendLineBreak();
@@ -379,15 +377,10 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 		parsedteams.insert( status.team );
 
 		tdf.EnterSection(stdprintf("TEAM%d", teams_to_sorted_teams[status.team]));
-		if ( !LSL::usync().VersionSupports(LSL::USYNC_GetSkirmishAI ) && status.IsBot() ) {
-			tdf.Append("AIDLL", status.aishortname );
-			tdf.Append("TeamLeader", player_to_number[&battle.GetUser( status.owner )] ); // bot owner is the team leader
+		if ( status.IsBot() ) {
+			tdf.Append("TeamLeader", player_to_number[&battle.GetUser( status.owner )] );
 		} else {
-			if ( status.IsBot() ) {
-				tdf.Append("TeamLeader", player_to_number[&battle.GetUser( status.owner )] );
-			} else {
-				tdf.Append("TeamLeader", player_to_number[&usr] );
-			}
+			tdf.Append("TeamLeader", player_to_number[&usr] );
 		}
 		if ( battle.IsProxy() ) {
 			if ( startpostype == IBattle::ST_Pick ) {

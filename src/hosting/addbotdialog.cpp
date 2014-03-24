@@ -76,38 +76,31 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
 	m_main_sizer->Add( m_ai_sizer, 0, wxEXPAND, 5 );
 
-	if ( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
-	{
-		m_ai_infos_lst = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
-		wxListItem col;
-		col.SetText( _("property") );
-		col.SetImage( -1 );
-		m_ai_infos_lst->InsertColumn( 0, col );
-		wxListItem col2;
-		col2.SetText( _("value") );
-		col2.SetImage( -1 );
-		m_ai_infos_lst->InsertColumn( 1, col2 );
+	m_ai_infos_lst = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
+	wxListItem col;
+	col.SetText( _("property") );
+	col.SetImage( -1 );
+	m_ai_infos_lst->InsertColumn( 0, col );
+	wxListItem col2;
+	col2.SetText( _("value") );
+	col2.SetImage( -1 );
+	m_ai_infos_lst->InsertColumn( 1, col2 );
 
-		m_opts_list = new wxListCtrl( this, ADDBOT_OPTIONLIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
-		wxListItem col3;
-		col3.SetText( _("property") );
-		col3.SetImage( -1 );
-		m_opts_list->InsertColumn( 0, col3 );
-		wxListItem col4;
-		col4.SetText( _("value") );
-		col4.SetImage( -1 );
-		m_opts_list->InsertColumn( 1, col4 );
+	m_opts_list = new wxListCtrl( this, ADDBOT_OPTIONLIST, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_NO_HEADER );
+	wxListItem col3;
+	col3.SetText( _("property") );
+	col3.SetImage( -1 );
+	m_opts_list->InsertColumn( 0, col3 );
+	wxListItem col4;
+	col4.SetText( _("value") );
+	col4.SetImage( -1 );
+	m_opts_list->InsertColumn( 1, col4 );
 
-		m_info_sizer = new wxBoxSizer(wxVERTICAL);
-		m_info_sizer->Add( m_ai_infos_lst, 1, wxALL|wxEXPAND );
-		m_info_sizer->Add( m_opts_list, 1, wxALL|wxEXPAND );
-		m_main_sizer->Add( m_info_sizer, 1, wxALL|wxEXPAND );
+	m_info_sizer = new wxBoxSizer(wxVERTICAL);
+	m_info_sizer->Add( m_ai_infos_lst, 1, wxALL|wxEXPAND );
+	m_info_sizer->Add( m_opts_list, 1, wxALL|wxEXPAND );
+	m_main_sizer->Add( m_info_sizer, 1, wxALL|wxEXPAND );
 
-	}
-	else
-	{
-		 m_main_sizer->AddStretchSpacer();
-	}
 
 	m_buttons_sep = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
 	m_main_sizer->Add( m_buttons_sep, 0, wxALL|wxEXPAND );
@@ -170,13 +163,6 @@ int AddBotDialog::GetAIType()
 wxString AddBotDialog::RefineAIName( const wxString& name )
 {
   wxString ret = name;
-  if ( !LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
-  {
-		if ( ret.Find(_T('.')) != wxNOT_FOUND ) ret = ret.BeforeLast(_T('.'));
-		if ( ret.Find(_T('/')) != wxNOT_FOUND ) ret = ret.AfterLast(_T('/'));
-		if ( ret.Find(_T('\\')) != wxNOT_FOUND ) ret = ret.AfterLast(_T('\\'));
-		if ( ret.Find(_T("LuaAI:")) != wxNOT_FOUND ) ret = ret.AfterFirst(_T(':'));
-  }
   if ( m_ai->FindString( ret ) == wxNOT_FOUND ) return ret;
   wxString ret2;
   int i = 2;
@@ -239,7 +225,6 @@ void AddBotDialog::OnSelectBot( wxCommandEvent& /*unused*/ )
 void AddBotDialog::ShowAIInfo()
 {
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
-  if ( !LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) return;
   m_ai_infos_lst->DeleteAllItems();
   const wxArrayString info = LSL::Util::vectorToArrayString( LSL::usync().GetAIInfos( GetAIType() ));
   int count = info.GetCount();
@@ -258,7 +243,6 @@ void AddBotDialog::ShowAIInfo()
 
 void AddBotDialog::ShowAIOptions()
 {
-  if ( !LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) return;
   m_opts_list->DeleteAllItems();
   m_opt_list_map.clear();
 	m_battle.CustomBattleOptions().loadAIOptions(m_battle.GetHostModName(), GetAIType(), STD_STRING(GetNick()));

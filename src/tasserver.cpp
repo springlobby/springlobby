@@ -800,15 +800,11 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 			wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
 			ai = _T("INVALID|INVALID");
 		}
-		if( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) {
-			if (ai.Find(_T('|')) != -1) {
-				bstatus.aiversion = STD_STRING(ai.AfterLast( _T('|') ));
-				ai = ai.BeforeLast( _T('|') );
-			}
-			bstatus.aishortname = STD_STRING(ai);
-		} else {
-			bstatus.aishortname = STD_STRING(ai);
+		if (ai.Find(_T('|')) != -1) {
+			bstatus.aiversion = STD_STRING(ai.AfterLast( _T('|') ));
+			ai = ai.BeforeLast( _T('|') );
 		}
+		bstatus.aishortname = STD_STRING(ai);
 		bstatus.owner = STD_STRING(owner);
 		m_se->OnBattleAddBot( id, nick, bstatus );
 	} else if ( cmd == _T("UPDATEBOT") ) {
@@ -1815,7 +1811,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
 	wxString msg;
 	wxString ailib;
 	ailib += TowxString(status.aishortname);
-	if ( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) ailib += _T("|") +TowxString(status.aiversion);
+	ailib += _T("|") +TowxString(status.aiversion);
 	SendCmd( _T("ADDBOT"), TowxString(nick) + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
 }
 

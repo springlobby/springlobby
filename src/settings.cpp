@@ -1507,5 +1507,5 @@ unsigned int Settings::GetNotificationPopupDisplayTime( )
 
 wxString Settings::GetDefaultNick()
 {
-	return TowxString(LSL::usync().IsLoaded() ? LSL::usync().GetDefaultNick() : "invalid");
+	return TowxString(LSL::usync().GetSpringConfigString("name", "Player"));
 }

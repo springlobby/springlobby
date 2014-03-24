@@ -319,13 +319,6 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
         if ( is_bot ) {
             wxString botname = TowxString(user.BattleStatus().aishortname);
             if ( !user.BattleStatus().aiversion.empty() ) botname += _T(" ") + TowxString(user.BattleStatus().aiversion);
-            if ( !LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
-            {
-                if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
-                if ( botname.Find(_T('/')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('/'));
-                if ( botname.Find(_T('\\')) != wxNOT_FOUND ) botname = botname.AfterLast(_T('\\'));
-                if ( botname.Find(_T("LuaAI:")) != wxNOT_FOUND ) botname = botname.AfterFirst(_T(':'));
-            }
             return (wxFormat(_T("%s - %s (%s)")) % user.GetNick() % botname % user.BattleStatus().owner);
         }
         else

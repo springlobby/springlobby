@@ -1618,11 +1618,10 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
     {
         m_minimap = new wxBitmap( LSL::usync().GetMinimap(m_mapname, w, h ).wxbitmap());
         // this ensures metalmap and heightmap aren't loaded in battlelist
-        if (m_draw_start_types && LSL::usync().VersionSupports(LSL::USYNC_GetInfoMap))
+        if (m_draw_start_types) {
             m_async.GetMetalmap( m_mapname, w, h );
-    }
-    else if ( m_metalmap == NULL )
-    {
+		}
+	} else if ( m_metalmap == NULL ) {
         m_metalmap = new wxBitmap( LSL::usync().GetMetalmap( m_mapname, w, h ).wxbitmap());
         // singleplayer mode doesn't allow startboxes anyway
         m_metalmap_cumulative = LSL::usync().GetMetalmap( m_mapname ).wximage();
