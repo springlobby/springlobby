@@ -514,26 +514,18 @@ void RunHostBattleDialog( wxWindow* parent )
 
 		LSL::UnitsyncMap map;
         const auto mname = STD_STRING(sett().GetLastHostMap());
-		try {
-			if ( LSL::usync().MapExists( mname ) )
-				map = LSL::usync().GetMap( mname );
-			else if ( LSL::usync().GetNumMaps() <= 0 )
-			{
+		if ( LSL::usync().MapExists( mname ) ) {
+			map = LSL::usync().GetMap( mname );
+		} else  {
+			std::vector<std::string> maps = LSL::usync().GetMapList();
+			if ( maps.size() <= 0 ) {
 				wxLogWarning( _T( "no maps found" ) );
 				customMessageBoxNoModal( SL_MAIN_ICON, _( "Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly." ), _( "No maps found" ), wxOK );
 				return;
 			}
-			else
-			{
-				map = LSL::usync().GetMap( 0 );
-			}
+			map = LSL::usync().GetMap(maps[0]);
 		}
-		catch ( ... )
-		{
-			wxLogWarning( _T( "no maps found" ) );
-			customMessageBoxNoModal( SL_MAIN_ICON, _( "Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly." ), _( "No maps found" ), wxOK );
-			return;
-		}
+
         bo.maphash = map.hash;
         bo.mapname = map.name;
 
