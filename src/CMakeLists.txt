@@ -332,7 +332,8 @@ TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr
 	)
 #add_dependencies(springlobby version)
 IF(UNIX)
-	TARGET_LINK_LIBRARIES(springlobby X11)
+	FIND_PACKAGE(X11 REQUIRED)
+	TARGET_LINK_LIBRARIES(springlobby ${X11_X11_LIB})
 ENDIF(UNIX)
 
 ENABLE_TESTING()
