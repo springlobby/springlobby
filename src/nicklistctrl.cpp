@@ -130,7 +130,7 @@ void NickListCtrl::OnShowMenu( wxContextMenuEvent& /*unused*/ )
 		int selected = GetSelectedIndex();
 		if ( selected != -1 && m_data[selected] ) {
 			const User& user = *m_data[selected];
-			wxString nick = user.GetNick();
+			wxString nick = TowxString(user.GetNick());
 			m_menu->EnableItems( ( selected != -1 ), nick );
 			PopupMenu( m_menu );
 		}
@@ -170,15 +170,15 @@ void NickListCtrl::SetTipWindowText( const long item_hit, const wxPoint& positio
 					break;
 
 				case 1: // country
-					m_tiptext =  GetFlagNameFromCountryCode( user.GetCountry().Upper() );
+					m_tiptext =  GetFlagNameFromCountryCode( TowxString(user.GetCountry()).Upper() );
 					break;
 
 				case 2: // rank
-					m_tiptext = user.GetRankName( user.GetStatus().rank );
+					m_tiptext = TowxString(user.GetRankName( user.GetStatus().rank));
 					break;
 
 				case 3: // nickname
-					m_tiptext = user.GetNick();
+					m_tiptext = TowxString(user.GetNick());
 					break;
 
 				default:
@@ -193,7 +193,7 @@ wxListItemAttr* NickListCtrl::GetItemAttr( long item ) const
 {
 	if ( item > -1 && item < ( long ) m_data.size() && m_data[item] ) {
 		const User& u = *m_data[item];
-		wxString name = u.GetNick();
+		wxString name = TowxString(u.GetNick());
 		return HighlightItemUser( name );
 	}
 	return NULL;
@@ -256,7 +256,7 @@ wxString NickListCtrl::GetItemText( long item, long column ) const
 
 		case 3: {
             if ( m_data[item] )
-                return m_data[item]->GetNick();
+                return TowxString(m_data[item]->GetNick());
             else
                 return wxEmptyString;
         }
@@ -292,11 +292,11 @@ int NickListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) c
 		case 0:
 			return dir * CompareUserStatus( u1, u2 );
 		case 1:
-			return dir * u2->GetCountry().CmpNoCase( u1->GetCountry() );
+			return dir * TowxString(u2->GetCountry()).CmpNoCase(TowxString(u1->GetCountry()));
 		case 2:
-			return dir * compareSimple( u2->GetStatus().rank, u1->GetStatus().rank );
+			return dir * compareSimple( TowxString(u2->GetStatus().rank), TowxString(u1->GetStatus().rank)) ;
 		case 3:
-			return dir * u2->GetNick().CmpNoCase( u1->GetNick() ) ;
+			return dir * TowxString(u2->GetNick()).CmpNoCase( TowxString(u1->GetNick())) ;
 		default:
 			return 0;
 	}

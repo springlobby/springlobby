@@ -507,12 +507,12 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 	{
 		try
 		{
-			wxString host = battle.GetFounder().GetNick();
+			wxString host = TowxString(battle.GetFounder().GetNick());
 			if ( !useractions().DoActionOnUser( UserActions::ActHighlight, host ) )
 				return false;
 
 			for ( unsigned int i = 0; i < battle.GetNumUsers(); ++i ) {
-				wxString name = battle.GetUser( i ).GetNick();
+				wxString name = TowxString(battle.GetUser( i ).GetNick());
 				if ( !useractions().DoActionOnUser( UserActions::ActHighlight, name ) )
 					return false;
 			}
@@ -579,7 +579,7 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 
   //Host:
 	try { //!TODO
-  if ( ! StringMatches(battle.GetFounder().GetNick(),
+  if ( ! StringMatches(TowxString(TowxString(battle.GetFounder().GetNick())),
 		       m_filter_host_edit->GetValue(),
 		       m_filter_host_expression) )
       return false;

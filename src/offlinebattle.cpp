@@ -5,12 +5,13 @@
 
 #include <wx/timer.h>
 #include <lslunitsync/unitsync.h>
+#include "utils/conversion.h"
 
 OfflineBattle::OfflineBattle(const int id  ):
 m_id( id ),
-m_me( User(_T("Spectator")) )
+m_me( User("Spectator") )
 {
-	m_opts.founder = m_me.GetNick();
+	m_opts.founder = TowxString(m_me.GetNick());
 	OnUserAdded( m_me );
 	UserBattleStatus& newstatus = m_me.BattleStatus();
 	newstatus.spectator = true;

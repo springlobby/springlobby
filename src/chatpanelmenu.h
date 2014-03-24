@@ -80,6 +80,7 @@ class ChatPanelMenu : public wxEvtHandler , public SL::NonCopyable
 
     protected:
         void CreateNickListMenu();
+		void MutePlayer(long dur);
 
         ChatPanel* m_chatpanel;
 

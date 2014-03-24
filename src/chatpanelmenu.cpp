@@ -140,7 +140,7 @@ wxMenu* ChatPanelMenu::GetMenu()
 	}
 	else if ( m_chatpanel->m_type == CPT_User ) {
         if ( m_chatpanel->m_user )
-            m_user_menu->EnableItems( true, m_chatpanel->m_user->GetNick() );
+            m_user_menu->EnableItems( true, TowxString(m_chatpanel->m_user->GetNick()) );
         m_menu_all->AppendSubMenu( m_user_menu, _("User") );
 	}
 
@@ -297,13 +297,13 @@ void ChatPanelMenu::OnChannelAutoJoin( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnChannelMenuInfo( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
-	cs.Say(_T("!INFO #")  + TowxString(m_chatpanel->m_channel->GetName()) );
+	cs.Say("!INFO #"  + m_chatpanel->m_channel->GetName());
 	//INFO /<channame>/
 }
 
@@ -311,16 +311,16 @@ void ChatPanelMenu::OnChannelMenuInfo( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnChannelMenuTopic( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
 	wxString topic = TowxString(m_chatpanel->m_channel->GetTopic());
 	if ( !ui().AskText( _( "Set topic..." ), _( "What should be the new topic?" ), topic, true ) ) return;
 	topic.Replace( _T("\n"), _T("\\n") );
-	cs.Say( _T( "!TOPIC #" ) + TowxString(m_chatpanel->m_channel->GetName()) + _T( " " ) + topic );
+	cs.Say("!TOPIC #" + m_chatpanel->m_channel->GetName() + " " +STD_STRING(topic));
 	//TOPIC /<channame>/ {topic}
 }
 
@@ -328,16 +328,16 @@ void ChatPanelMenu::OnChannelMenuTopic( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnChannelMenuMessage( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
 	wxString text;
 if ( !ui().AskText( _( "Channel message..." ), _( "Message:" ), text ) ) return;
 
-	cs.Say( _T( "!CHANMSG #" ) + TowxString(m_chatpanel->m_channel->GetName()) + _T( " " ) + text );
+	cs.Say("!CHANMSG #" + m_chatpanel->m_channel->GetName() + " " + STD_STRING(text));
 	//CHANMSG /<channame>/ {message}
 }
 
@@ -345,16 +345,16 @@ if ( !ui().AskText( _( "Channel message..." ), _( "Message:" ), text ) ) return;
 void ChatPanelMenu::OnChannelMenuLock( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ")) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
 	wxString text;
 	if ( !ui().AskText( _( "Lock channel..." ), _( "What should the new password be?" ), text ) ) return;
 
-	cs.Say( _T( "!LOCK #" ) + TowxString(m_chatpanel->m_channel->GetName()) + _T( " " ) + text );
+	cs.Say("!LOCK #"+ m_chatpanel->m_channel->GetName() + " " + STD_STRING(text));
 	//LOCK /<channame>/ <key>
 }
 
@@ -362,15 +362,15 @@ void ChatPanelMenu::OnChannelMenuLock( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnChannelMenuUnlock( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
 	if ( !ui().Ask( _( "Unlock Channel" ), _( "Are you sure you want to unlock this channel?" ) ) ) return;
 
-	cs.Say( _T( "!UNLOCK #" ) + TowxString(m_chatpanel->m_channel->GetName()));
+	cs.Say("!UNLOCK #" + m_chatpanel->m_channel->GetName());
 	//UNLOCK /<channame>/
 }
 
@@ -378,16 +378,16 @@ void ChatPanelMenu::OnChannelMenuUnlock( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnChannelMenuRegister( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->GetServer().UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->GetServer().UserExists(_T("ChanServ")) ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not on this server." ) );
 		return;
 	}
-	User& cs = m_chatpanel->m_channel->GetServer().GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetServer().GetUser(_T("ChanServ"));
 
-	wxString text = m_chatpanel->m_channel->GetMe().GetNick();
+	wxString text = TowxString(m_chatpanel->m_channel->GetMe().GetNick());
 	if ( !ui().AskText( _( "Register Channel" ), _( "Who should be appointed founder of this channel?" ), text ) ) return;
 
-	cs.Say( _T( "!REGISTER #" ) + TowxString(m_chatpanel->m_channel->GetName()) + _T( " " ) + text );
+	cs.Say("!REGISTER #" + m_chatpanel->m_channel->GetName() +" " + STD_STRING(text));
 	//REGISTER <channame> <founder>
 }
 
@@ -395,15 +395,15 @@ void ChatPanelMenu::OnChannelMenuRegister( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnChannelMenuUnregister( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->GetServer().UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->GetServer().UserExists(_T("ChanServ")) ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not on this server." ) );
 		return;
 	}
-	User& cs = m_chatpanel->m_channel->GetServer().GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetServer().GetUser(_T("ChanServ"));
 
 	if ( !ui().Ask( _( "Unregister Channel" ), _( "Are you sure you want to unregister this channel?" ) ) ) return;
 
-	cs.Say( _T( "!UNREGISTER #" ) + TowxString(m_chatpanel->m_channel->GetName()));
+	cs.Say("!UNREGISTER #" + m_chatpanel->m_channel->GetName());
 	//UNREGISTER <channame>
 }
 
@@ -411,13 +411,13 @@ void ChatPanelMenu::OnChannelMenuUnregister( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnChannelMenuSpamOn( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
-	cs.Say( _T( "!SPAMPROTECTION #" ) + TowxString(m_chatpanel->m_channel->GetName()) + _T( " on" ) );
+	cs.Say("!SPAMPROTECTION #" + m_chatpanel->m_channel->GetName() + " on" );
 	//SPAMPROTECTION /<channame>/ <on|off>
 }
 
@@ -425,13 +425,13 @@ void ChatPanelMenu::OnChannelMenuSpamOn( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnChannelMenuSpanOff( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
-	cs.Say( _T( "!SPAMPROTECTION #" ) + TowxString(m_chatpanel->m_channel->GetName()) + _T( " off" ) );
+	cs.Say("!SPAMPROTECTION #" + m_chatpanel->m_channel->GetName()+ " off");
 	//SPAMPROTECTION /<channame>/ <on|off>
 }
 
@@ -439,13 +439,13 @@ void ChatPanelMenu::OnChannelMenuSpanOff( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnChannelMenuSpamIsOn( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
-	cs.Say( _T( "!SPAMPROTECTION #" ) + TowxString(m_chatpanel->m_channel->GetName()));
+	cs.Say("!SPAMPROTECTION #" + m_chatpanel->m_channel->GetName());
 	//SPAMPROTECTION /<channame>/
 }
 
@@ -521,10 +521,10 @@ void ChatPanelMenu::OnUserMenuSlap( wxCommandEvent& /*unused*/ )
 
 	if ( m_chatpanel->m_type == CPT_Channel ) {
 		if ( m_chatpanel->m_channel == 0 ) return;
-		m_chatpanel->m_channel->DoAction("Slaps " + STD_STRING(user->GetNick()) +" around with a large PeeWee!");
+		m_chatpanel->m_channel->DoAction("Slaps " + user->GetNick() +" around with a large PeeWee!");
 	} else if ( m_chatpanel->m_type == CPT_User ) {
 		if ( m_chatpanel->m_user == 0 ) return;
-		m_chatpanel->m_user->DoAction(_T("slaps ")+ user->GetNick() + _T(" around with a large PeeWee!"));
+		m_chatpanel->m_user->DoAction("slaps "+ user->GetNick() + " around with a large PeeWee!");
 	}
 }
 
@@ -532,7 +532,7 @@ void ChatPanelMenu::OnUserMenuSlap( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnUserMenuMute( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
@@ -540,12 +540,12 @@ void ChatPanelMenu::OnUserMenuMute( wxCommandEvent& /*unused*/ )
 	wxString mutetime = _T( "5" );
 	if ( !ui().AskText( _( "Mute User" ), _( "For how many minutes should the user be muted?" ), mutetime ) ) return;
 
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
 	const User* user = m_chatpanel->GetSelectedUser();
 	if ( user == 0 ) return;
 
-	cs.Say( _T( "!MUTE #" ) + TowxString(m_chatpanel->m_channel->GetName()) + _T( " " ) + user->GetNick() + _T( " " ) + mutetime );
+	cs.Say("!MUTE #" + m_chatpanel->m_channel->GetName() + " " + user->GetNick() + " " + STD_STRING(mutetime));
 	//MUTE /<channame>/ <username> [<duration>]
 
 }
@@ -554,16 +554,16 @@ void ChatPanelMenu::OnUserMenuMute( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnUserMenuUnmute( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
 	const User* user = m_chatpanel->GetSelectedUser();
 	if ( user == 0 ) return;
 
-	cs.Say( _T( "!UNMUTE #" ) + TowxString(m_chatpanel->m_channel->GetName()) + _T( " " ) + user->GetNick() );
+	cs.Say("!UNMUTE #" + m_chatpanel->m_channel->GetName() + " " + user->GetNick() );
 	//UNMUTE /<channame>/ <username>
 }
 
@@ -571,7 +571,7 @@ void ChatPanelMenu::OnUserMenuUnmute( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnUserMenuKick( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
@@ -582,10 +582,10 @@ void ChatPanelMenu::OnUserMenuKick( wxCommandEvent& /*unused*/ )
 	wxString msg;
 	if ( !ui().AskText( _( "Kick User" ), _( "Reason:" ), msg ) ) return;
 
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
 	if ( msg != wxEmptyString ) msg = _T( " " ) + msg;
-	cs.Say( _T( "!KICK #" ) + TowxString(m_chatpanel->m_channel->GetName()) + _T( " " ) + user->GetNick() + msg );
+	cs.Say( "!KICK #" + m_chatpanel->m_channel->GetName() + " " + user->GetNick() + STD_STRING(msg));
 	//KICK /<channame>/ <username> [{reason}]
 }
 
@@ -593,16 +593,16 @@ void ChatPanelMenu::OnUserMenuKick( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnUserMenuOp( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 
 	const User* user = m_chatpanel->GetSelectedUser();
 	if ( user == 0 ) return;
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
-	cs.Say( _T( "!OP #" ) + TowxString(m_chatpanel->m_channel->GetName()) + _T( " " ) + user->GetNick() );
+	cs.Say("!OP #" + m_chatpanel->m_channel->GetName() + " "  + user->GetNick() );
 	//OP /<channame>/ <username>
 }
 
@@ -610,29 +610,29 @@ void ChatPanelMenu::OnUserMenuOp( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnUserMenuDeop( wxCommandEvent& /*unused*/ )
 {
 	if ( m_chatpanel->m_channel == 0 ) return;
-	if ( !m_chatpanel->m_channel->UserExists( _T( "ChanServ" ) ) ) {
+	if ( !m_chatpanel->m_channel->UserExists("ChanServ") ) {
 		ui().ShowMessage( _( "ChanServ error" ), _( "ChanServ is not in this channel." ) );
 		return;
 	}
 
 	const User* user = m_chatpanel->GetSelectedUser();
 	if ( user == 0 ) return;
-	User& cs = m_chatpanel->m_channel->GetUser( _T( "ChanServ" ) );
+	User& cs = m_chatpanel->m_channel->GetUser("ChanServ");
 
-	cs.Say( _T( "!DEOP #" ) + TowxString(m_chatpanel->m_channel->GetName()) + _T( " " ) + user->GetNick() );
+	cs.Say("!DEOP #" + m_chatpanel->m_channel->GetName()+ " " + user->GetNick() );
 	//DEOP /<channame>/ <username>
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorIngame( wxCommandEvent& /*unused*/ )
 {
-	serverSelector().GetServer().RequestInGameTime( m_chatpanel->GetSelectedUser()->GetNick() );
+	serverSelector().GetServer().RequestInGameTime( TowxString(m_chatpanel->GetSelectedUser()->GetNick()) );
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorCurrentIP( wxCommandEvent& /*unused*/ )
 {
-	serverSelector().GetServer().ModeratorGetIP( m_chatpanel->GetSelectedUser()->GetNick() );
+	serverSelector().GetServer().ModeratorGetIP( TowxString(m_chatpanel->GetSelectedUser()->GetNick()));
 }
 
 
@@ -640,7 +640,7 @@ void ChatPanelMenu::OnUserMenuModeratorKick( wxCommandEvent& /*unused*/ )
 {
 	wxString reason;
 	if ( !ui().AskText( _( "Kick user" ), _( "Reason:" ), reason ) ) return;
-	serverSelector().GetServer().ModeratorKick( m_chatpanel->GetSelectedUser()->GetNick(), reason );
+	serverSelector().GetServer().ModeratorKick( TowxString(m_chatpanel->GetSelectedUser()->GetNick()), reason );
 }
 
 
@@ -656,56 +656,61 @@ void ChatPanelMenu::OnUserMenuModeratorUnban( wxCommandEvent& /*unused*/ )
 }
 
 
+void ChatPanelMenu::MutePlayer(long dur)
+{
+	serverSelector().GetServer().ModeratorMute( TowxString(m_chatpanel->m_channel->GetName()), TowxString(m_chatpanel->GetSelectedUser()->GetNick()), ( int ) dur, true );
+}
+
 void ChatPanelMenu::OnUserMenuModeratorMute( wxCommandEvent& /*unused*/ )
 {
 	wxString duration;
 	if ( !ui().AskText( _( "Mute user" ), _( "Duration:" ), duration ) ) return;
 	long int dur = 0;
 	duration.ToLong( &dur, dur );
-	serverSelector().GetServer().ModeratorMute( TowxString(m_chatpanel->m_channel->GetName()), m_chatpanel->GetSelectedUser()->GetNick(), ( int ) dur, true );
+	MutePlayer(dur);
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorMute5( wxCommandEvent& /*unused*/ )
 {
-	serverSelector().GetServer().ModeratorMute( TowxString(m_chatpanel->m_channel->GetName()), m_chatpanel->GetSelectedUser()->GetNick(), 5, true );
+	MutePlayer(5);
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorMute10( wxCommandEvent& /*unused*/ )
 {
-	serverSelector().GetServer().ModeratorMute( TowxString(m_chatpanel->m_channel->GetName()), m_chatpanel->GetSelectedUser()->GetNick(), 10, true );
+	MutePlayer(10);
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorMute30( wxCommandEvent& /*unused*/ )
 {
-	serverSelector().GetServer().ModeratorMute( TowxString(m_chatpanel->m_channel->GetName()), m_chatpanel->GetSelectedUser()->GetNick(), 30, true );
+	MutePlayer(30);
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorMute120( wxCommandEvent& /*unused*/ )
 {
-	serverSelector().GetServer().ModeratorMute( TowxString(m_chatpanel->m_channel->GetName()), m_chatpanel->GetSelectedUser()->GetNick(), 120, true );
+	MutePlayer(120);
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorMute1440( wxCommandEvent& /*unused*/ )
 {
-	serverSelector().GetServer().ModeratorMute( TowxString(m_chatpanel->m_channel->GetName()), m_chatpanel->GetSelectedUser()->GetNick(), 1440, true );
+	MutePlayer(1440);
 }
 
 
 
 void ChatPanelMenu::OnUserMenuModeratorUnmute( wxCommandEvent& /*unused*/ )
 {
-	serverSelector().GetServer().ModeratorUnmute( TowxString(m_chatpanel->m_channel->GetName()), m_chatpanel->GetSelectedUser()->GetNick());
+	serverSelector().GetServer().ModeratorUnmute( TowxString(m_chatpanel->m_channel->GetName()), TowxString(m_chatpanel->GetSelectedUser()->GetNick()));
 }
 
 
 void ChatPanelMenu::OnUserMenuModeratorRing( wxCommandEvent& /*unused*/ )
 {
-	serverSelector().GetServer().Ring(m_chatpanel->GetSelectedUser()->GetNick());
+	serverSelector().GetServer().Ring(TowxString(m_chatpanel->GetSelectedUser()->GetNick()));
 }
 
 void ChatPanelMenu::OnMenuToggleAppend( wxCommandEvent& /*unused*/ )
@@ -743,7 +748,7 @@ void ChatPanelMenu::OnUserMenuAddToGroup( wxCommandEvent& event )
         wxString groupname = m_user_menu->GetGroupByEvtID(id);
         const User* user = m_chatpanel->GetSelectedUser();
         if ( user )
-            useractions().AddUserToGroup( groupname, user->GetNick() );
+            useractions().AddUserToGroup( groupname, TowxString(user->GetNick()) );
     }
 }
 
@@ -751,7 +756,7 @@ void ChatPanelMenu::OnUserMenuDeleteFromGroup( wxCommandEvent& /*unused*/ )
 {
     const User* user = m_chatpanel->GetSelectedUser();
     if ( user )
-        useractions().RemoveUser( user->GetNick() );
+        useractions().RemoveUser( TowxString(user->GetNick()) );
 }
 
 void ChatPanelMenu::OnUserMenuCreateGroup( wxCommandEvent& /*unused*/ )
@@ -763,7 +768,7 @@ void ChatPanelMenu::OnUserMenuCreateGroup( wxCommandEvent& /*unused*/ )
         const User* user = m_chatpanel->GetSelectedUser();
         if ( user ) {
             useractions().AddGroup( name );
-            useractions().AddUserToGroup( name, user->GetNick() );
+            useractions().AddUserToGroup( name, TowxString(user->GetNick()));
             ui().mw().ShowConfigure( MainWindow::OPT_PAGE_GROUPS );
         }
         else

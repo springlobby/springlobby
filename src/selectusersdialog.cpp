@@ -120,9 +120,9 @@ void SelectUsersDialog::PopulateUsersList()
 
     wxWindowUpdateLocker noUpdates(m_user_list);
     for ( unsigned int i = 0; i < userlist.GetNumUsers(); ++i) {
-      wxString name = userlist.GetUser( i ).GetNick();
+      wxString name = TowxString(userlist.GetUser( i ).GetNick());
       if ( !useractions().IsKnown( name ) && !ui().IsThisMe( name ) ) {
-        wxString country = userlist.GetUser( i ).GetCountry();
+        wxString country = TowxString(userlist.GetUser( i ).GetCountry());
         AddUserToList( name, country );
       }
     }

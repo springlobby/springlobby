@@ -802,14 +802,14 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		}
 		if( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) {
 			if (ai.Find(_T('|')) != -1) {
-				bstatus.aiversion = ai.AfterLast( _T('|') );
+				bstatus.aiversion = STD_STRING(ai.AfterLast( _T('|') ));
 				ai = ai.BeforeLast( _T('|') );
 			}
-			bstatus.aishortname = ai;
+			bstatus.aishortname = STD_STRING(ai);
 		} else {
-			bstatus.aishortname = ai;
+			bstatus.aishortname = STD_STRING(ai);
 		}
-		bstatus.owner =owner;
+		bstatus.owner = STD_STRING(owner);
 		m_se->OnBattleAddBot( id, nick, bstatus );
 	} else if ( cmd == _T("UPDATEBOT") ) {
 		const int id = GetIntParam( params );
@@ -855,7 +855,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		channel = GetWordParam( params );
 		nick = GetWordParam( params );
 		msg = GetSentenceParam( params );
-		m_se->OnChannelPart( channel, GetMe().GetNick(), _T("Kicked by <") + nick + _T("> ") + msg );
+		m_se->OnChannelPart( channel, TowxString(GetMe().GetNick()), _T("Kicked by <") + nick + _T("> ") + msg );
 		//FORCELEAVECHANNEL channame username [{reason}]
 	} else if ( cmd == _T("DENIED") ) {
 		if ( m_online ) return;
@@ -980,7 +980,7 @@ void TASServer::SetRelayIngamePassword( const User& user )
 	if (battle) {
 		if ( !battle->GetInGame() ) return;
 	}
-	RelayCmd( _T("SETINGAMEPASSWORD"), user.GetNick() + _T(" ") + TowxString(user.BattleStatus().scriptPassword));
+	RelayCmd( _T("SETINGAMEPASSWORD"), TowxString(user.GetNick()) + _T(" ") + TowxString(user.BattleStatus().scriptPassword));
 }
 
 void TASServer::Ping()
@@ -1619,13 +1619,13 @@ void TASServer::ForceTeam( int battleid, User& user, int team )
 		return;
 	}
 	if ( !GetBattle(battleid).IsFounderMe() ) {
-		DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" changes to team #") + wxString::Format( _T("%d"), team + 1 ) + _T(".") );
+		DoActionBattle( battleid, _T("suggests that ") + TowxString(user.GetNick()) + _T(" changes to team #") + wxString::Format( _T("%d"), team + 1 ) + _T(".") );
 		return;
 	}
 
 	//FORCETEAMNO username teamno
-	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCETEAMNO"), user.GetNick() + wxString::Format(_T(" %d"), team ) );
-	else RelayCmd( _T("FORCETEAMNO"), user.GetNick() + wxString::Format(_T(" %d"), team ) );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCETEAMNO"), TowxString(user.GetNick()) + wxString::Format(_T(" %d"), team ) );
+	else RelayCmd( _T("FORCETEAMNO"), TowxString(user.GetNick()) + wxString::Format(_T(" %d"), team ) );
 }
 
 
@@ -1653,13 +1653,13 @@ void TASServer::ForceAlly( int battleid, User& user, int ally )
 	}
 
 	if ( !GetBattle(battleid).IsFounderMe() ) {
-		DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" changes to ally #") + wxString::Format( _T("%d"), ally + 1 ) + _T(".") );
+		DoActionBattle( battleid, _T("suggests that ") + TowxString(user.GetNick()) + _T(" changes to ally #") + wxString::Format( _T("%d"), ally + 1 ) + _T(".") );
 		return;
 	}
 
 	//FORCEALLYNO username teamno
-	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCEALLYNO"), user.GetNick() + wxString::Format( _T(" %d"), ally ) );
-	else RelayCmd( _T("FORCEALLYNO"), user.GetNick() + wxString::Format( _T(" %d"), ally ) );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCEALLYNO"), TowxString(user.GetNick()) + wxString::Format( _T(" %d"), ally ) );
+	else RelayCmd( _T("FORCEALLYNO"), TowxString(user.GetNick()) + wxString::Format( _T(" %d"), ally ) );
 }
 
 
@@ -1685,7 +1685,7 @@ void TASServer::ForceColour( int battleid, User& user, const wxColour& col )
 		return;
 	}
 	if ( !GetBattle(battleid).IsFounderMe() ) {
-		DoActionBattle( battleid, _T("sugests that ") + user.GetNick() + _T(" changes colour.") );
+		DoActionBattle( battleid, _T("sugests that ") + TowxString(user.GetNick()) + _T(" changes colour.") );
 		return;
 	}
 
@@ -1695,8 +1695,8 @@ void TASServer::ForceColour( int battleid, User& user, const wxColour& col )
 	tascl.color.blue = col.Blue();
 	tascl.color.zero = 0;
 	//FORCETEAMCOLOR username color
-	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCETEAMCOLOR"), user.GetNick() + _T(" ") + wxString::Format( _T("%d"), tascl.data ) );
-	else RelayCmd( _T("FORCETEAMCOLOR"), user.GetNick() + _T(" ") + wxString::Format( _T("%d"), tascl.data ) );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCETEAMCOLOR"), TowxString(user.GetNick()) + _T(" ") + wxString::Format( _T("%d"), tascl.data ) );
+	else RelayCmd( _T("FORCETEAMCOLOR"), TowxString(user.GetNick()) + _T(" ") + wxString::Format( _T("%d"), tascl.data ) );
 }
 
 
@@ -1722,14 +1722,14 @@ void TASServer::ForceSpectator( int battleid, User& user, bool spectator )
 		return;
 	}
 	if ( !GetBattle(battleid).IsFounderMe() ) {
-		if ( spectator ) DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" becomes a spectator.") );
-		else DoActionBattle( battleid, _T("suggests that ") + user.GetNick() + _T(" plays.") );
+		if ( spectator ) DoActionBattle( battleid, _T("suggests that ") + TowxString(user.GetNick()) + _T(" becomes a spectator.") );
+		else DoActionBattle( battleid, _T("suggests that ") + TowxString(user.GetNick()) + _T(" plays.") );
 		return;
 	}
 
 	//FORCESPECTATORMODE username
-	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCESPECTATORMODE"), user.GetNick() );
-	else RelayCmd( _T("FORCESPECTATORMODE"), user.GetNick() );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("FORCESPECTATORMODE"), TowxString(user.GetNick()) );
+	else RelayCmd( _T("FORCESPECTATORMODE"), TowxString(user.GetNick()) );
 }
 
 
@@ -1753,7 +1753,7 @@ void TASServer::BattleKickPlayer( int battleid, User& user )
 		return;
 	}
 	if ( !GetBattle(battleid).IsFounderMe() ) {
-		DoActionBattle( battleid, _T("thinks ") + user.GetNick() + _T(" should leave.") );
+		DoActionBattle( battleid, _T("thinks ") + TowxString(user.GetNick()) + _T(" should leave.") );
 		return;
 	}
 
@@ -1761,8 +1761,8 @@ void TASServer::BattleKickPlayer( int battleid, User& user )
 	if( !GetBattle(battleid).IsProxy() ) {
 		user.BattleStatus().scriptPassword = STD_STRING(wxString::Format(_T("%04x%04x"), rand()&0xFFFF, rand()&0xFFFF)); // reset his password to something random, so he can't rejoin
 		SetRelayIngamePassword( user );
-		SendCmd( _T("KICKFROMBATTLE"), user.GetNick() );
-	} else RelayCmd( _T("KICKFROMBATTLE"), user.GetNick() );
+		SendCmd( _T("KICKFROMBATTLE"), TowxString(user.GetNick()) );
+	} else RelayCmd( _T("KICKFROMBATTLE"), TowxString(user.GetNick()) );
 }
 
 void TASServer::SetHandicap( int battleid, User& user, int handicap)
@@ -1783,13 +1783,13 @@ void TASServer::SetHandicap( int battleid, User& user, int handicap)
 	}
 
 	if ( !GetBattle(battleid).IsFounderMe() ) {
-		DoActionBattle( battleid, _T("thinks ") + user.GetNick() + _T(" should get a ") + wxString::Format( _T("%d"), handicap) + _T("% resource bonus") );
+		DoActionBattle( battleid, _T("thinks ") + TowxString(user.GetNick()) + _T(" should get a ") + wxString::Format( _T("%d"), handicap) + _T("% resource bonus") );
 		return;
 	}
 
 	//HANDICAP username value
-	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("HANDICAP"), user.GetNick() + wxString::Format( _T(" %d"), handicap ) );
-	else RelayCmd( _T("HANDICAP"), user.GetNick() + wxString::Format( _T(" %d"), handicap ) );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("HANDICAP"), TowxString(user.GetNick()) + wxString::Format( _T(" %d"), handicap ) );
+	else RelayCmd( _T("HANDICAP"), TowxString(user.GetNick()) + wxString::Format( _T(" %d"), handicap ) );
 }
 
 
@@ -1814,9 +1814,9 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
 	//ADDBOT name battlestatus teamcolor {AIDLL}
 	wxString msg;
 	wxString ailib;
-	ailib += status.aishortname;
-	if ( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) ailib += _T("|") + status.aiversion;
-	SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
+	ailib += TowxString(status.aishortname);
+	if ( LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) ) ailib += _T("|") +TowxString(status.aiversion);
+	SendCmd( _T("ADDBOT"), TowxString(nick) + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
 }
 
 
@@ -1835,13 +1835,13 @@ void TASServer::RemoveBot( int battleid, User& bot )
 	ASSERT_LOGIC( &bot != 0, _T("Bot does not exist.") );
 
 	if ( !( battle.IsFounderMe() || ( bot.BattleStatus().owner == GetMe().GetNick() ) ) ) {
-		DoActionBattle( battleid, _T("thinks the bot ") + bot.GetNick() + _T(" should be removed.") );
+		DoActionBattle( battleid, _T("thinks the bot ") + TowxString(bot.GetNick()) + _T(" should be removed.") );
 		return;
 	}
 
 	//REMOVEBOT name
-	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("REMOVEBOT"), bot.GetNick() );
-	else RelayCmd( _T("REMOVEBOT"), bot.GetNick() );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("REMOVEBOT"), TowxString(bot.GetNick()) );
+	else RelayCmd( _T("REMOVEBOT"), TowxString(bot.GetNick()) );
 }
 
 
@@ -1864,8 +1864,8 @@ void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 	tascl.color.blue = status.colour.Blue();
 	tascl.color.zero = 0;
 	//UPDATEBOT name battlestatus teamcolor
-	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("UPDATEBOT"), bot.GetNick() + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
-	else RelayCmd( _T("UPDATEBOT"), bot.GetNick() + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("UPDATEBOT"), TowxString(bot.GetNick()) + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
+	else RelayCmd( _T("UPDATEBOT"), TowxString(bot.GetNick()) + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
 }
 
 void TASServer::SendScriptToProxy( const wxString& script )
@@ -2037,7 +2037,7 @@ void TASServer::UdpPingAllClients()// used when hosting with nat holepunching. h
 	for (int i=0; i<int(ordered_users.size()); ++i) {
 		User &user=battle->GetUser(ordered_users[i].index);
 
-		wxString ip=user.BattleStatus().ip;
+		wxString ip=TowxString(user.BattleStatus().ip);
 		unsigned int port=user.BattleStatus().udpport;
 
 		unsigned int src_port=m_udp_private_port;

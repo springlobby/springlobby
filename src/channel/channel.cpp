@@ -82,7 +82,7 @@ void Channel::DoAction( const std::string& action )
 
 void Channel::Left( User& who, const std::string& reason )
 {
-	RemoveUser(STD_STRING(who.GetNick()));
+	RemoveUser(who.GetNick());
 	//wxLogDebugFunc( wxEmptyString );
 	if ( uidata.panel == 0 ) {
 		wxLogError( _T("OnUserLeftChannel: ud->panel NULL") );
@@ -154,7 +154,7 @@ std::string Channel::GetTopic()
 void Channel::AddUser( User& user )
 {
   UserList::AddUser( user );
-  CheckBanned(STD_STRING(user.GetNick()));
+  CheckBanned(user.GetNick());
 }
 
 void Channel::CheckBanned(const std::string& name){
@@ -182,7 +182,7 @@ bool Channel::IsBanned(const std::string& name){
 
 void Channel::RemoveUser( const std::string& nick )
 {
-  UserList::RemoveUser(TowxString(nick));
+  UserList::RemoveUser(nick);
 }
 
 

@@ -185,7 +185,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 	tdf.Append("IsHost", battle.IsFounderMe() );
 
 	User& me = battle.GetMe();
-	tdf.Append("MyPlayerName", STD_STRING(me.GetNick()));
+	tdf.Append("MyPlayerName", me.GetNick());
 
 	if ( !me.BattleStatus().scriptPassword.empty() ) {
 		tdf.Append("MyPasswd", me.BattleStatus().scriptPassword);
@@ -325,7 +325,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 		if ( status.IsBot() ) continue;
 		tdf.EnterSection(stdprintf("PLAYER%d", i));
 		tdf.Append("Name", user.GetNick() );
-		tdf.Append("CountryCode", user.GetCountry().Lower());
+		tdf.Append("CountryCode", STD_STRING(TowxString(user.GetCountry()).Lower()));
 		tdf.Append("Spectator", status.spectator );
 		tdf.Append("Rank", (int)user.GetRank() );
 		tdf.Append("IsFromDemo", int(status.isfromdemo) );
@@ -348,14 +348,14 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			UserBattleStatus& status = user.BattleStatus();
 			if ( !status.IsBot() ) continue;
 			tdf.EnterSection(stdprintf("AI%d", i));
-			tdf.Append("Name", STD_STRING(user.GetNick())); // AI's nick;
+			tdf.Append("Name", user.GetNick()); // AI's nick;
 			tdf.Append("ShortName", status.aishortname ); // AI libtype
 			tdf.Append("Version", status.aiversion ); // AI libtype version
 			tdf.Append("Team", teams_to_sorted_teams[status.team] );
 			tdf.Append("IsFromDemo", int(status.isfromdemo) );
 			tdf.Append("Host", player_to_number[&battle.GetUser( status.owner )] );
 			tdf.EnterSection("Options");
-			int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex(STD_STRING(user.GetNick()));
+			int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex(user.GetNick());
 			if ( optionmapindex > 0 ) {
 	for (const auto& it : battle.CustomBattleOptions().getOptions((LSL::OptionsWrapper::GameOption)optionmapindex )) {
 					tdf.Append(it.first, it.second.second);

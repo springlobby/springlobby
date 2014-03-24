@@ -212,12 +212,12 @@ User& Battle::OnUserAdded( User& user )
         {
 			 if ( m_opts.rankneeded > UserStatus::RANK_1 && user.GetStatus().rank < m_opts.rankneeded )
 			 {
-				DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+				DoAction(_T("Rank limit autospec: ")+ TowxString(user.GetNick()));
 				ForceSpectator( user, true );
 			 }
 			 else if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
 			 {
-				 DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+				 DoAction( _T("Rank limit autospec: ") + TowxString(user.GetNick()));
 				 ForceSpectator( user, true );
 			 }
         }
@@ -237,12 +237,12 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			{
 				if ( m_opts.rankneeded > UserStatus::RANK_1 && user.GetStatus().rank < m_opts.rankneeded )
 				{
-					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+					DoAction( _T("Rank limit autospec: ") + TowxString(user.GetNick()));
 					ForceSpectator( user, true );
 				}
 				else if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
 				{
-					DoAction( _T("Rank limit autospec: ") + user.GetNick() );
+					DoAction( _T("Rank limit autospec: ") + TowxString(user.GetNick()));
 					ForceSpectator( user, true );
 				}
 			}
@@ -265,7 +265,7 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
     if ( status.handicap != 0 )
     {
 		UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
-				UiEvents::OnBattleActionData( wxString(_T(" ")) , ( _T("Warning: user ") + user.GetNick() + _T(" got bonus ") ) << status.handicap )
+				UiEvents::OnBattleActionData( wxString(_T(" ")) , ( _T("Warning: user ") + TowxString(user.GetNick()) + _T(" got bonus ") ) << status.handicap )
 			);
     }
 		if ( IsFounderMe() )
@@ -298,7 +298,7 @@ void Battle::RingNotReadyPlayers()
         User& u = GetUser(i);
         UserBattleStatus& bs = u.BattleStatus();
         if ( bs.IsBot() ) continue;
-        if ( !bs.ready && !bs.spectator ) m_serv.Ring( u.GetNick() );
+        if ( !bs.ready && !bs.spectator ) m_serv.Ring(TowxString(u.GetNick()) );
     }
 }
 
@@ -309,7 +309,7 @@ void Battle::RingNotSyncedPlayers()
         User& u = GetUser(i);
         UserBattleStatus& bs = u.BattleStatus();
         if ( bs.IsBot() ) continue;
-        if ( !bs.sync && !bs.spectator ) m_serv.Ring( u.GetNick() );
+        if ( !bs.sync && !bs.spectator ) m_serv.Ring(TowxString(u.GetNick()));
     }
 }
 
@@ -320,14 +320,14 @@ void Battle::RingNotSyncedAndNotReadyPlayers()
         User& u = GetUser(i);
         UserBattleStatus& bs = u.BattleStatus();
         if ( bs.IsBot() ) continue;
-        if ( ( !bs.sync || !bs.ready ) && !bs.spectator ) m_serv.Ring( u.GetNick() );
+        if ( ( !bs.sync || !bs.ready ) && !bs.spectator ) m_serv.Ring( TowxString(u.GetNick()));
     }
 }
 
 void Battle::RingPlayer( const User& u )
 {
 	if ( u.BattleStatus().IsBot() ) return;
-	m_serv.Ring( u.GetNick() );
+	m_serv.Ring( TowxString(u.GetNick()));
 }
 
 bool Battle::ExecuteSayCommand( const wxString& cmd )
@@ -354,7 +354,7 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
             m_banned_users.insert(nick);
             try
 						{
-							User& user = GetUser( nick );
+							User& user = GetUser(STD_STRING(nick));
 							m_serv.BattleKickPlayer( m_opts.battleid, user );
 						}
 						catch( assert_exception ) {}
@@ -416,14 +416,14 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
 					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" banned") )
 				);
 
-            if (UserExists(nick))
+            if (UserExists(STD_STRING(nick)))
             {
-                User &user=GetUser(nick);
+                User &user=GetUser(STD_STRING(nick));
                 if (!user.BattleStatus().ip.empty())
                 {
-                    m_banned_ips.insert(user.BattleStatus().ip);
+                    m_banned_ips.insert(TowxString(user.BattleStatus().ip));
 					UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
-							UiEvents::OnBattleActionData( wxString(_T(" ")) , user.BattleStatus().ip+_T(" banned") )
+							UiEvents::OnBattleActionData( wxString(_T(" ")) , TowxString(user.BattleStatus().ip)+_T(" banned") )
 						);
                 }
                 m_serv.BattleKickPlayer( m_opts.battleid, user );
@@ -443,19 +443,19 @@ bool Battle::CheckBan(User &user)
 {
     if (IsFounderMe())
     {
-        if (m_banned_users.count(user.GetNick())>0
-                || useractions().DoActionOnUser(UserActions::ActAutokick, user.GetNick() ) )
+        if (m_banned_users.count(TowxString(user.GetNick()))>0
+                || useractions().DoActionOnUser(UserActions::ActAutokick, TowxString(user.GetNick())) )
         {
             KickPlayer(user);
 			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
-					UiEvents::OnBattleActionData( wxString(_T(" ")) , user.GetNick()+_T(" is banned, kicking") )
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , TowxString(user.GetNick())+_T(" is banned, kicking") )
 				);
             return true;
         }
-        else if (m_banned_ips.count(user.BattleStatus().ip)>0)
+        else if (m_banned_ips.count(TowxString(user.BattleStatus().ip))>0)
         {
 			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
-					UiEvents::OnBattleActionData( wxString(_T(" ")) , user.BattleStatus().ip+_T(" is banned, kicking") )
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , TowxString(user.BattleStatus().ip)+_T(" is banned, kicking") )
 				);
             KickPlayer(user);
             return true;
@@ -603,7 +603,7 @@ void Battle::StartHostedBattle()
 			}
 			if ( IsProxy() )
 			{
-				if ( UserExists( GetProxy() ) && !GetUser(GetProxy()).Status().in_game )
+				if ( UserExists( STD_STRING(GetProxy())) && !GetUser(STD_STRING(GetProxy())).Status().in_game )
 				{
 					// DON'T set m_generating_script here, it will trick the script generating code to think we're the host
 					wxString hostscript = spring().WriteScriptTxt( *this );
@@ -630,7 +630,7 @@ void Battle::StartHostedBattle()
 			sett().SetLastHostMap( GetServer().GetCurrentBattle()->GetHostMapName() );
 			sett().SaveSettings();
 			if ( !IsProxy() ) GetServer().StartHostedBattle();
-			else if ( UserExists( GetProxy() ) && GetUser(GetProxy()).Status().in_game ) // relayhost is already ingame, let's try to join it
+			else if ( UserExists( STD_STRING(GetProxy()) ) && GetUser(STD_STRING(GetProxy())).Status().in_game ) // relayhost is already ingame, let's try to join it
 			{
 				StartSpring();
 			}
@@ -667,7 +667,7 @@ void Battle::OnTimer( wxTimerEvent&  )
 		if ( status.IsBot() || status.spectator ) continue;
 		if ( status.sync && status.ready ) continue;
 		if ( &usr == &GetMe() ) continue;
-		std::map<wxString, time_t>::const_iterator itor = m_ready_up_map.find( usr.GetNick() );
+		std::map<wxString, time_t>::const_iterator itor = m_ready_up_map.find( TowxString(usr.GetNick()));
 		if ( itor != m_ready_up_map.end() )
 		{
 			if ( ( now - itor->second ) > autospect_trigger_time )
@@ -689,7 +689,7 @@ void Battle::SetInGame( bool value )
 			UserBattleStatus& status = user.BattleStatus();
 			if ( status.IsBot() || status.spectator ) continue;
 			if ( status.ready && status.sync ) continue;
-			m_ready_up_map[user.GetNick()] = now;
+			m_ready_up_map[TowxString(user.GetNick())] = now;
 		}
 	}
 	IBattle::SetInGame( value );
@@ -896,7 +896,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     {
         for ( size_t i=0; i < players_sorted.size(); ++i )
         {
-            wxString clan = players_sorted[i]->GetClan();
+            wxString clan = TowxString(players_sorted[i]->GetClan());
             if ( !clan.empty() )
             {
                 clan_alliances[clan].AddPlayer( players_sorted[i] );
@@ -940,7 +940,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     for ( size_t i = 0; i < players_sorted.size(); ++i )
     {
         // skip clanners, those have been added already.
-        if ( clan_alliances.count( players_sorted[i]->GetClan() ) > 0 )
+        if ( clan_alliances.count( TowxString(players_sorted[i]->GetClan()) ) > 0 )
         {
             wxLogMessage( _T("clanner already added, nick=%s"), players_sorted[i]->GetNick().c_str() );
             continue;
@@ -1062,7 +1062,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     {
         for ( size_t i = 0; i < players_sorted.size(); ++i )
         {
-            wxString clan = players_sorted[i]->GetClan();
+            wxString clan = TowxString(players_sorted[i]->GetClan());
             if ( !clan.empty() )
             {
                 clan_teams[clan].AddPlayer( players_sorted[i] );
@@ -1106,7 +1106,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     for (size_t i = 0; i < players_sorted.size(); ++i )
     {
         // skip clanners, those have been added already.
-        if ( clan_teams.count( players_sorted[i]->GetClan() ) > 0 )
+        if ( clan_teams.count( TowxString(players_sorted[i]->GetClan()) ) > 0 )
         {
             wxLogMessage( _T("clanner already added, nick=%s"),players_sorted[i]->GetNick().c_str() );
             continue;

@@ -21,12 +21,13 @@ lsl/user/user.cpp
 #include "iserver.h"
 #include "chatpanel.h"
 #include "iconimagelist.h"
+#include "utils/conversion.h"
 
 #include <wx/string.h>
 #include <wx/intl.h>
 
 User::User( IServer& serv )
-    : CommonUser( wxEmptyString,wxEmptyString,0 ),
+    : CommonUser( "","",0 ),
     m_serv(&serv),
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
@@ -35,8 +36,8 @@ User::User( IServer& serv )
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
-User::User( const wxString& nick, IServer& serv )
-    : CommonUser( nick,wxEmptyString,0 ),
+User::User( const std::string& nick, IServer& serv )
+    : CommonUser( nick,"",0 ),
     m_serv(&serv),
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
@@ -45,18 +46,18 @@ User::User( const wxString& nick, IServer& serv )
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
-User::User( const wxString& nick, const wxString& country, const int& cpu, IServer& serv)
+User::User( const std::string& nick, const std::string& country, const int& cpu, IServer& serv)
     : CommonUser( nick,country,cpu ),
     m_serv(&serv),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( country ) ),
+    m_flagicon_idx( icons().GetFlagIcon( TowxString(country) ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
-User::User( const wxString& nick )
-    : CommonUser( nick, wxEmptyString, 0 ),
+User::User( const std::string& nick )
+    : CommonUser( nick, "", 0 ),
     m_serv(0),
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
@@ -65,18 +66,18 @@ User::User( const wxString& nick )
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
-User::User( const wxString& nick, const wxString& country, const int& cpu )
+User::User( const std::string& nick, const std::string& country, const int& cpu )
     : CommonUser( nick,country,cpu ) ,
     m_serv(0),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( country ) ),
+    m_flagicon_idx( icons().GetFlagIcon(TowxString(country)) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
 User::User()
-    : CommonUser( wxEmptyString, wxEmptyString, 0 ),
+    : CommonUser( "", "", 0 ),
     m_serv(0),
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
@@ -89,30 +90,30 @@ User::~User(){
   if(uidata.panel)uidata.panel->SetUser( 0 );
 }
 
-wxString UserStatus::GetDiffString ( const UserStatus& old ) const
+std::string UserStatus::GetDiffString ( const UserStatus& old ) const
 {
     if ( old.away != away )
-        return ( away ? _("away") : _("back") );
+        return ( away ? "away" : "back");
     if ( old.in_game != in_game )
-        return ( in_game ? _("ingame") : _("back from game") );
+        return ( in_game ? "ingame" : "back from game");
     return
-        wxEmptyString;
+        "";
 }
 
-void User::Said( const wxString& /*message*/ ) const
+void User::Said( const std::string& /*message*/ ) const
 {
 }
 
 
-void User::Say( const wxString& message ) const
+void User::Say( const std::string& message ) const
 {
-  GetServer().SayPrivate( m_nick, message );
+  GetServer().SayPrivate( TowxString(m_nick), TowxString(message));
 }
 
 
-void User::DoAction( const wxString& message ) const
+void User::DoAction( const std::string& message ) const
 {
-  GetServer().DoActionPrivate( m_nick, message );
+  GetServer().DoActionPrivate( TowxString(m_nick), TowxString(message));
 }
 
 
@@ -146,10 +147,10 @@ void User::SetStatus( const UserStatus& status )
   m_rankicon_idx =  icons().GetRankIcon( m_status.rank );
 }
 
-void User::SetCountry( const wxString& country )
+void User::SetCountry( const std::string& country )
 {
     m_country = country;
-    m_flagicon_idx = icons().GetFlagIcon( country );
+    m_flagicon_idx = icons().GetFlagIcon( TowxString(country));
 }
 
 void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
@@ -166,16 +167,16 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
   m_bstatus.sync = status.sync;
   m_bstatus.spectator = status.spectator;
   m_bstatus.ready = status.ready;
-  if( !status.aishortname.IsEmpty() ) m_bstatus.aishortname = status.aishortname;
-  if( !status.airawname.IsEmpty() ) m_bstatus.airawname = status.airawname;
-  if( !status.aiversion.IsEmpty() ) m_bstatus.aiversion = status.aiversion;
+  if( !status.aishortname.empty() ) m_bstatus.aishortname = status.aishortname;
+  if( !status.airawname.empty() ) m_bstatus.airawname = status.airawname;
+  if( !status.aiversion.empty() ) m_bstatus.aiversion = status.aiversion;
   if( !(status.aitype > 0) ) m_bstatus.aitype = status.aitype;
-  if( !status.owner.IsEmpty() ) m_bstatus.owner = status.owner;
+  if( !status.owner.empty() ) m_bstatus.owner = status.owner;
   if( status.pos.x > 0 ) m_bstatus.pos.x = status.pos.x;
   if( status.pos.y > 0 ) m_bstatus.pos.y = status.pos.y;
 
   // update ip and port if those were set.
-  if( !status.ip.IsEmpty() ) m_bstatus.ip = status.ip;
+  if( !status.ip.empty() ) m_bstatus.ip = status.ip;
   if( status.udpport != 0 ) m_bstatus.udpport = status.udpport;// 15
 }
 
@@ -186,10 +187,10 @@ void User::SendMyUserStatus() const
 }
 
 
-bool User::ExecuteSayCommand( const wxString& cmd ) const
+bool User::ExecuteSayCommand( const std::string& cmd ) const
 {
-  if ( cmd.BeforeFirst(' ').Lower() == _T("/me") ) {
-    GetServer().DoActionPrivate( m_nick, cmd.AfterFirst(' ') );
+  if ( TowxString(cmd).BeforeFirst(' ').Lower() == _T("/me") ) {
+    GetServer().DoActionPrivate(TowxString(m_nick), TowxString(cmd).AfterFirst(' ') );
     return true;
   }  else return false;
 }
@@ -199,20 +200,20 @@ UserStatus::RankContainer User::GetRank()
 	return GetStatus().rank;
 }
 
-wxString User::GetRankName(UserStatus::RankContainer rank)
+std::string User::GetRankName(UserStatus::RankContainer rank)
 {
   //TODO: better interface to ranks?
       switch( rank )
       {
-          case UserStatus::RANK_1: return _("Newbie");
-          case UserStatus::RANK_2: return _("Beginner");
-          case UserStatus::RANK_3: return _("Average");
-          case UserStatus::RANK_4: return _("Above average");
-          case UserStatus::RANK_5: return _("Experienced");
-          case UserStatus::RANK_6: return _("Highly experienced");
-          case UserStatus::RANK_7: return _("Veteran");
-		  case UserStatus::RANK_8: return _("Badly needs to get laid");
-          default:                 return _("Unknown");
+          case UserStatus::RANK_1: return "Newbie";
+          case UserStatus::RANK_2: return "Beginner";
+          case UserStatus::RANK_3: return "Average";
+          case UserStatus::RANK_4: return "Above average";
+          case UserStatus::RANK_5: return "Experienced";
+          case UserStatus::RANK_6: return "Highly experienced";
+          case UserStatus::RANK_7: return "Veteran";
+		  case UserStatus::RANK_8: return "Badly needs to get laid";
+          default:                 return "Unknown";
       }
 }
 
@@ -221,15 +222,15 @@ float User::GetBalanceRank()
   return 1.0 + 0.1 * float( GetStatus().rank - UserStatus::RANK_1 ) / float( UserStatus::RANK_8 - UserStatus::RANK_1 );
 }
 
-wxString User::GetClan()
+std::string User::GetClan()
 {
-  wxString tmp = m_nick.AfterFirst('[');
-  if ( tmp != m_nick )
+  wxString tmp = TowxString(m_nick).AfterFirst('[');
+  if ( STD_STRING(tmp) != m_nick )
   {
-    wxString clan = tmp.BeforeFirst(']');
-    if ( clan != tmp ) return clan;
+    wxString clan = TowxString(tmp).BeforeFirst(']');
+    if ( clan != tmp ) return STD_STRING(clan);
   }
-  return wxEmptyString;
+  return "";
 }
 
 void CommonUser::SetStatus( const UserStatus& status )

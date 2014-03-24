@@ -295,9 +295,7 @@ public:
 	virtual wxColour GetNewColour() const;
 	virtual int ColourDifference(const wxColour &a, const wxColour &b)  const;
 
-	virtual User& GetFounder() const {
-		return GetUser( m_opts.founder );
-	}
+	virtual User& GetFounder() const;
 
 	virtual bool IsFull() const {
 		return GetMaxPlayers() == GetNumActivePlayers();

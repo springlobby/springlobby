@@ -35,13 +35,13 @@ IServer::~IServer()
 
 User& IServer::GetUser( const wxString& nickname ) const
 {
-  return m_users.GetUser( nickname );
+  return m_users.GetUser( STD_STRING(nickname));
 }
 
 
 bool IServer::UserExists( const wxString& nickname ) const
 {
-  return m_users.UserExists( nickname );
+  return m_users.UserExists(STD_STRING(nickname));
 }
 
 
@@ -84,8 +84,8 @@ bool IServer::BattleExists( const int& battleid ) const
 
 User& IServer::_AddUser( const wxString& user )
 {
-  if ( m_users.UserExists( user ) ) return m_users.GetUser( user );
-  User* u = new User( user, *this );
+  if ( m_users.UserExists(STD_STRING(user)) ) return m_users.GetUser(STD_STRING(user));
+  User* u = new User( STD_STRING(user), *this );
   m_users.AddUser( *u );
   return *u;
 }
@@ -94,13 +94,13 @@ User& IServer::_AddUser( const wxString& user )
 void IServer::_RemoveUser( const wxString& nickname )
 {
   try{
-    User* u = &m_users.GetUser( nickname );
-    m_users.RemoveUser( nickname );
+    User* u = &m_users.GetUser(STD_STRING(nickname));
+    m_users.RemoveUser(STD_STRING(nickname));
     int numchannels = m_channels.GetNumChannels();
     for ( int i = 0; i < numchannels; i++ )
     {
     	Channel& chan = m_channels.GetChannel( i );
-		if ( chan.UserExists( TowxString(nickname)) ) chan.Left( *u, "server idiocy");
+		if ( chan.UserExists( STD_STRING(nickname))) chan.Left( *u, "server idiocy");
     }
     delete u;
   }catch(std::runtime_error){

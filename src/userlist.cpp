@@ -33,16 +33,16 @@ void UserList::AddUser( User& user )
   m_seekpos = SEEKPOS_INVALID;
 }
 
-void UserList::RemoveUser( const wxString& nick )
+void UserList::RemoveUser( const std::string& nick )
 {
   m_users.erase(nick);
   m_seekpos = SEEKPOS_INVALID;
 }
 
-User& UserList::GetUser( const wxString& nick ) const
+User& UserList::GetUser( const std::string& nick ) const
 {
   user_const_iter_t u = m_users.find(nick);
-  ASSERT_EXCEPTION( u != m_users.end(), _T("UserList::GetUser(\"") + nick + _T("\"): no such user") );
+  ASSERT_EXCEPTION( u != m_users.end(), _T("UserList::GetUser(\"") + TowxString(nick) + _T("\"): no such user") );
   //ASSERT_LOGIC( u != m_users.end(), _T("UserList::GetUser(\"") + nick + _T("\"): no such user") );
   return *u->second;
 }
@@ -58,7 +58,7 @@ User& UserList::GetUser( user_map_t::size_type index ) const
   return *m_seek->second;
 }
 
-bool UserList::UserExists( wxString const& nick ) const
+bool UserList::UserExists( std::string const& nick ) const
 {
   return m_users.find(nick) != m_users.end();
 }

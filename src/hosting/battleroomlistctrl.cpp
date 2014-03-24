@@ -256,7 +256,7 @@ wxListItemAttr * BattleroomListCtrl::GetItemAttr(long item) const
     bool is_bot = user.BattleStatus().IsBot();
 
     if ( !is_bot ) {
-        return HighlightItemUser( user.GetNick() );
+        return HighlightItemUser(TowxString(user.GetNick()));
     }
 
     return NULL;
@@ -284,7 +284,7 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 	}
 	 if ( column == m_ingame_column_index ) return user.GetStatusIconIndex();
 	 if ( column == m_colour_column_index ) return is_spec ? -1 : icons().GetColourIcon( user.BattleStatus().colour );
-	 if ( column == m_country_column_index ) return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry() );
+	 if ( column == m_country_column_index ) return is_bot ? -1 : icons().GetFlagIcon( TowxString(user.GetCountry()));
 	 if ( column == m_rank_column_index ) return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
 	 if ( column == m_faction_column_index ) return is_spec ? -1 : user.GetSideiconIndex();
 	 if ( column == m_nick_column_index ) return -1;
@@ -317,8 +317,8 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 	}
     if ( column == m_nick_column_index )  {
         if ( is_bot ) {
-            wxString botname = user.BattleStatus().aishortname;
-            if ( !user.BattleStatus().aiversion.IsEmpty() ) botname += _T(" ") + user.BattleStatus().aiversion;
+            wxString botname = TowxString(user.BattleStatus().aishortname);
+            if ( !user.BattleStatus().aiversion.empty() ) botname += _T(" ") + TowxString(user.BattleStatus().aiversion);
             if ( !LSL::usync().VersionSupports( LSL::USYNC_GetSkirmishAI ) )
             {
                 if ( botname.Find(_T('.')) != wxNOT_FOUND ) botname = botname.BeforeLast(_T('.'));
@@ -329,7 +329,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
             return (wxFormat(_T("%s - %s (%s)")) % user.GetNick() % botname % user.BattleStatus().owner);
         }
         else
-            return user.GetNick();
+            return TowxString(user.GetNick());
     }
 	if ( column == m_team_column_index ) return is_spec ? (wxString)wxEmptyString : (wxFormat( _T("%d") ) % ( user.BattleStatus().team + 1 ) );
 	if ( column == m_ally_column_index ) return is_spec ? (wxString)wxEmptyString : (wxFormat( _T("%d") ) % ( user.BattleStatus().ally + 1 ) );
@@ -456,7 +456,7 @@ void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& /*unused*/ )
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& /*unused*/ )
 {
   wxLogDebugFunc( wxEmptyString );
-  if ( m_sel_user ) m_battle->GetServer().Ring( m_sel_user->GetNick() );
+  if ( m_sel_user ) m_battle->GetServer().Ring( TowxString(m_sel_user->GetNick()));
 }
 
 void BattleroomListCtrl::Sort()
@@ -477,7 +477,7 @@ int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int di
 	if ( col == m_colour_column_index ) return dir * CompareColor( u1, u2 );
 	if ( col == m_country_column_index ) return dir * compareSimple( u1, u2 );
 	if ( col == m_rank_column_index ) return dir * CompareRank( u1, u2 );
-	if ( col == m_nick_column_index ) return dir * u1->GetNick().CmpNoCase( u2->GetNick() );
+	if ( col == m_nick_column_index ) return dir * TowxString(u1->GetNick()).CmpNoCase(TowxString(u2->GetNick()));
 	if ( col == m_team_column_index ) return dir * CompareTeam( u1, u2 );
 	if ( col == m_ally_column_index ) return dir * CompareAlly( u1, u2 );
 	if ( col == m_resourcebonus_column_index ) return dir * CompareHandicap( u1, u2 );
@@ -833,15 +833,15 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 		}
 		else if ( column == m_country_column_index ) // country
 		{
-			m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particular") : GetFlagNameFromCountryCode(user.GetCountry());
+			m_tiptext = user.BattleStatus().IsBot() ? _T("This bot is from nowhere particular") : GetFlagNameFromCountryCode(TowxString(user.GetCountry()));
 		}
 		else if ( column == m_rank_column_index ) // rank
 		{
-			m_tiptext = user.BattleStatus().IsBot() ? _T("This bot has no rank") : user.GetRankName(user.GetStatus().rank);
+			m_tiptext = user.BattleStatus().IsBot() ? _T("This bot has no rank") : TowxString(user.GetRankName(user.GetStatus().rank));
 		}
 		else if ( column == m_nick_column_index ) //name
 		{
-			m_tiptext = user.BattleStatus().IsBot() ?user.GetNick() : user.GetNick();
+			m_tiptext = TowxString(user.GetNick());
 		}
 		else m_tiptext = m_colinfovec[column].tip;
     }
@@ -881,7 +881,7 @@ wxString BattleroomListCtrl::GetSelectedUserNick()
     if ( m_selected_index < 0 || m_selected_index >= (long)m_data.size() )
         return wxEmptyString;
     else
-        return m_data[m_selected_index]->GetNick();
+        return TowxString(m_data[m_selected_index]->GetNick());
 }
 
 void BattleroomListCtrl::OnActivateItem( wxListEvent& /*unused*/ )

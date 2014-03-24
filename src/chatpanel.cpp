@@ -119,7 +119,7 @@ ChatPanel::ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist 
 	m_display_joinitem(true),
 	m_topic_set( false )
 {
-	Init(_T("chatpanel-pm-") + user.GetNick());
+	Init(_T("chatpanel-pm-") + TowxString(user.GetNick()));
 	SetUser(&user);
 }
 
@@ -500,7 +500,7 @@ void ChatPanel::OnPaste( wxClipboardTextEvent& event )
 //! @param message the message to be outputted.
 void ChatPanel::Said( const wxString& who, const wxString& message )
 {
-	wxString me = GetMe().GetNick();
+	wxString me = TowxString(GetMe().GetNick());
 	wxColour col;
 	bool req_user = false;
 	if ( who.Upper() == me.Upper() ) {
@@ -623,7 +623,7 @@ void ChatPanel::Joined( User& who )
 		m_nicklist->AddUser( who );
 	}
 	// Also add the User to the TextCompletionDatabase
-	textcompletiondatabase.Insert_Mapping( who.GetNick(), who.GetNick() );
+	textcompletiondatabase.Insert_Mapping( TowxString(who.GetNick()), TowxString(who.GetNick()));
 }
 
 void ChatPanel::OnChannelJoin( User& who )
@@ -640,7 +640,7 @@ void ChatPanel::OnChannelJoin( User& who )
 		OutputLine( _T( " ** " ) + wxString::Format(_( "%s joined %s." ), who.GetNick().c_str(), GetChatTypeStr().c_str()), sett().GetChatColorJoinPart());
 	}
 	// Also add the User to the TextCompletionDatabase
-	textcompletiondatabase.Insert_Mapping( who.GetNick(), who.GetNick() );
+	textcompletiondatabase.Insert_Mapping(TowxString(who.GetNick()), TowxString(who.GetNick()));
 }
 
 void ChatPanel::Parted( User& who, const wxString& message )
@@ -671,7 +671,7 @@ void ChatPanel::Parted( User& who, const wxString& message )
 		m_nicklist->RemoveUser( who );
 	}
 	// Also remove the User from the TextCompletionDatabase
-	textcompletiondatabase.Delete_Mapping( who.GetNick() );
+	textcompletiondatabase.Delete_Mapping(TowxString(who.GetNick()));
 }
 
 void ChatPanel::SetTopic( const wxString& who, const wxString& message )
@@ -874,12 +874,12 @@ bool ChatPanel::Say( const wxString& message )
 				return true;
 			}
 			if ( line.StartsWith( _T( "/" ) ) ) {
-				if ( m_user->ExecuteSayCommand( line ) ) return true;
+				if ( m_user->ExecuteSayCommand(STD_STRING(line))) return true;
 				if ( m_user->GetServer().ExecuteSayCommand( line ) ) return true;
 				OutputLine( wxFormat( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ) ) % line, sett().GetChatColorError());
 				return true;
 			}
-			m_user->Say( line );
+			m_user->Say(STD_STRING(line));
 
 		} else if ( m_type == CPT_Server ) {
 			if ( m_server == 0 ) return true;
@@ -1070,11 +1070,11 @@ void ChatPanel::SetBattle(IBattle* battle )
 	OutputLine( _( " ** Joined Battle." ), sett().GetChatColorNotification());
 
 	for (unsigned int i = 0; i < battle->GetNumUsers(); ++i) {
-		const wxString nick = battle->GetUser(i).GetNick();
+		const wxString nick = TowxString(battle->GetUser(i).GetNick());
 		textcompletiondatabase.Insert_Mapping(nick, nick);
 	}
 
-	SetLogFile(_T( "_BATTLE_" ) + battle->GetFounder().GetNick());
+	SetLogFile(_T( "_BATTLE_" ) + TowxString(battle->GetFounder().GetNick()));
 	m_battle = battle;
 }
 

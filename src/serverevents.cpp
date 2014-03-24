@@ -56,7 +56,7 @@ void ServerEvents::OnLogin()
 void ServerEvents::OnLoginInfoComplete()
 {
     wxLogDebugFunc( wxEmptyString );
-	wxString nick = m_serv.GetMe().GetNick();
+	wxString nick = TowxString(m_serv.GetMe().GetNick());
 	wxArrayString highlights = sett().GetHighlightedWords();
 	if ( highlights.Index( nick ) == -1 )
 	{
@@ -129,9 +129,9 @@ void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int
     User& user = m_serv._AddUser( nick );
     if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
         actNotifBox( SL_MAIN_ICON, nick + _(" is online") );
-    user.SetCountry( country );
+    user.SetCountry( STD_STRING(country));
     user.SetCpu( cpu );
-		user.SetID( id );
+		user.SetID(STD_STRING(id));
     ui().OnUserOnline( user );
 }
 
@@ -149,7 +149,7 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
         user.SetStatus( status );
         if ( useractions().DoActionOnUser( UserActions::ActNotifStatus, nick ) )
         {
-            wxString diffString = status.GetDiffString( oldStatus ) ;
+            wxString diffString = TowxString(status.GetDiffString( oldStatus ));
             if ( diffString != wxEmptyString )
                 actNotifBox( SL_MAIN_ICON, nick + _(" is now ") + diffString );
         }
@@ -200,11 +200,11 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 							for ( int i = 0; i < int(userbattle->GetNumUsers()); i ++ )
 							{
 								User& battleuser = userbattle->GetUser( i );
-								OnUserLeftBattle( battleid, battleuser.GetNick() );
+								OnUserLeftBattle( battleid, TowxString(battleuser.GetNick()));
 							}
 							 OnBattleClosed( battleid );
 						}
-						else OnUserLeftBattle( battleid, user.GetNick() );
+						else OnUserLeftBattle( battleid, TowxString(user.GetNick()));
 					}catch(...){}
 				}
         ui().OnUserOffline( user );
@@ -246,8 +246,8 @@ void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const w
 		battle.SetEngineName(engineName);
 		battle.SetEngineVersion(engineVersion);
 
-        if ( useractions().DoActionOnUser( UserActions::ActNotifBattle, user.GetNick() ) )
-            actNotifBox( SL_MAIN_ICON, user.GetNick() + _(" opened battle ") + title );
+        if ( useractions().DoActionOnUser( UserActions::ActNotifBattle, TowxString(user.GetNick())) )
+            actNotifBox( SL_MAIN_ICON, TowxString(user.GetNick()) + _(" opened battle ") + title );
 
         ui().OnBattleOpened( battle );
         if ( user.Status().in_game )
@@ -335,7 +335,7 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-        User& user = battle.GetUser( nick );
+        User& user = battle.GetUser( STD_STRING(nick) );
 
 		//if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
 
@@ -383,7 +383,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-        User& user = battle.GetUser( nick );
+        User& user = battle.GetUser(STD_STRING(nick));
         // this is necessary since the user will be deleted when the gui function is called
         bool isbot = user.BattleStatus().IsBot();
 		user.BattleStatus().scriptPassword.clear();
@@ -586,7 +586,7 @@ void ServerEvents::OnChannelSaid( const wxString& channel, const wxString& who, 
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
+        if ( ( m_serv.GetMe().GetNick() ==  STD_STRING(who) ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
             m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), STD_STRING(message) );
     }
     catch (std::runtime_error &except)
@@ -639,7 +639,7 @@ void ServerEvents::OnChannelAction( const wxString& channel, const wxString& who
     wxLogDebugFunc( wxEmptyString );
     try
     {
-		if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
+		if ( ( m_serv.GetMe().GetNick() ==  STD_STRING(who) ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
 			m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), STD_STRING(action));
     }
     catch (std::runtime_error &except)
@@ -654,7 +654,7 @@ void ServerEvents::OnPrivateMessage( const wxString& user, const wxString& messa
     try
     {
         User& who = m_serv.GetUser( user );
-        if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, who.GetNick() ) )
+        if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, TowxString(who.GetNick())))
             ui().OnUserSaid( who, message, fromme );
     }
     catch (std::runtime_error &except)
@@ -668,7 +668,7 @@ void ServerEvents::OnPrivateMessageEx( const wxString& user, const wxString& act
 	try
 	{
 		User& who = m_serv.GetUser( user );
-		if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, who.GetNick() ) )
+		if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, TowxString(who.GetNick())) )
 			ui().OnUserSaidEx( who, action, fromme );
 	}
 	catch (std::runtime_error &except)
@@ -711,7 +711,7 @@ void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxStr
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-		if ( ( m_serv.GetMe().GetNick() ==  nick ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, nick ) )
+		if ( ( m_serv.GetMe().GetNick() ==  STD_STRING(nick)) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, nick ) )
 		{
 			ui().OnSaidBattle( battle, nick, msg );
 		}
@@ -768,7 +768,7 @@ void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, UserBattl
     {
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.OnBotAdded( nick, status );
-        User& bot = battle.GetUser( nick );
+        User& bot = battle.GetUser(STD_STRING(nick));
         ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
         ui().OnUserJoinedBattle( battle, bot );
     }
@@ -787,7 +787,7 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-		User& user = battle.GetUser( nick );
+		User& user = battle.GetUser(STD_STRING(nick));
 		bool isbot = user.BattleStatus().IsBot();
 		ui().OnUserLeftBattle( battle, user, isbot );
         battle.OnUserRemoved( user );
@@ -862,9 +862,9 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
     }
     try
     {
-        User &user=m_serv.GetCurrentBattle()->GetUser( username );
+        User &user=m_serv.GetCurrentBattle()->GetUser(STD_STRING(username));
 
-        user.BattleStatus().ip=ip;
+        user.BattleStatus().ip=STD_STRING(ip);
         user.BattleStatus().udpport=udpport;
         wxLogMessage(_T("set to %s %d "),user.BattleStatus().ip.c_str(),user.BattleStatus().udpport);
 
@@ -908,7 +908,7 @@ void ServerEvents::OnRedirect( const wxString& address,  unsigned int port, cons
 
 void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
 {
-    wxString nick = user.GetNick();
+    wxString nick = TowxString(user.GetNick());
     MessageSpamCheck info = m_spam_check[nick];
     time_t now = time( 0 );
     if ( info.lastmessage == now ) info.count++;

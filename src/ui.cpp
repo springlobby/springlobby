@@ -713,8 +713,8 @@ void Ui::OnUserSaid( User& user, const wxString& message, bool fromme )
 	if ( user.uidata.panel == 0 ) {
 		mw().OpenPrivateChat( user );
 	}
-	if ( fromme ) user.uidata.panel->Said( serverSelector().GetServer().GetMe().GetNick(), message );
-	else user.uidata.panel->Said( user.GetNick(), message );
+	if ( fromme ) user.uidata.panel->Said( TowxString(serverSelector().GetServer().GetMe().GetNick()), message );
+	else user.uidata.panel->Said(TowxString(user.GetNick()), message);
 }
 
 void Ui::OnUserSaidEx( User& user, const wxString& action, bool fromme )
@@ -723,8 +723,8 @@ void Ui::OnUserSaidEx( User& user, const wxString& action, bool fromme )
 	if ( user.uidata.panel == 0 ) {
 		mw().OpenPrivateChat( user );
 	}
-	if ( fromme ) user.uidata.panel->DidAction ( serverSelector().GetServer().GetMe().GetNick(), action );
-	else user.uidata.panel->DidAction( user.GetNick(), action );
+	if ( fromme ) user.uidata.panel->DidAction ( TowxString(serverSelector().GetServer().GetMe().GetNick()), action );
+	else user.uidata.panel->DidAction(TowxString(user.GetNick()), action );
 }
 
 void Ui::OnBattleOpened( IBattle& battle )
@@ -945,12 +945,12 @@ void Ui::OnRing( const wxString& from )
 
 bool Ui::IsThisMe(User& other) const
 {
-	return IsThisMe( other.GetNick() );
+	return IsThisMe( TowxString(other.GetNick()));
 }
 
 bool Ui::IsThisMe(User* other) const
 {
-	return ( ( other != 0 ) && IsThisMe( other->GetNick() ) );
+	return ( ( other != 0 ) && IsThisMe( TowxString(other->GetNick())) );
 }
 
 bool Ui::IsThisMe(const wxString& other) const
@@ -959,7 +959,7 @@ bool Ui::IsThisMe(const wxString& other) const
 	if (!IsConnected() || m_serv==0)
 		return false;
 	else
-		return ( other == serverSelector().GetServer().GetMe().GetNick() );
+		return ( STD_STRING(other) == serverSelector().GetServer().GetMe().GetNick() );
 }
 
 int Ui::TestHostPort( unsigned int port ) const

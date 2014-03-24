@@ -5,6 +5,7 @@
 #include "ibattle.h"
 #include "user.h"
 #include "mainwindow.h"
+#include "utils/conversion.h"
 
 AutohostHandler::AutohostHandler():m_battle(0)
 {
@@ -180,7 +181,7 @@ bool AutohostManager::RecnognizeAutohost(const wxString& who, const wxString& me
 
         if(status.bot)
         {
-            wxString nick=founder.GetNick();
+            wxString nick=TowxString(founder.GetNick());
             if(who.Upper() ==nick.Upper())
             {
                 if(message.Find(_T("welcome to Springie"))!=wxNOT_FOUND)

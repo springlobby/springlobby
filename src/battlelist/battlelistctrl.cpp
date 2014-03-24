@@ -125,7 +125,7 @@ int BattleListCtrl::GetItemColumnImage(long item, long column) const
         {
         	try
         	{
-        	 return icons().GetFlagIcon( battle.GetFounder().GetCountry() );
+				return icons().GetFlagIcon(TowxString(battle.GetFounder().GetCountry()));
         	}catch(...){}
 					break;
         }
@@ -142,7 +142,7 @@ wxListItemAttr* BattleListCtrl::GetItemAttr(long item) const
         const IBattle& b = *m_data[item];
         try
         {
-					wxString host = b.GetFounder().GetNick();
+					wxString host = TowxString(b.GetFounder().GetNick());
 					wxListItemAttr* attr = HighlightItemUser( host );
 					if ( attr != NULL )
 							return attr;
@@ -150,7 +150,7 @@ wxListItemAttr* BattleListCtrl::GetItemAttr(long item) const
 					//to avoid color flicker check first if highlighting should be done
 					//and return if it should
 					for ( unsigned int i = 0; i < b.GetNumUsers(); ++i){
-							wxString name = b.GetUser(i).GetNick();
+							wxString name = TowxString(b.GetUser(i).GetNick());
 							attr = HighlightItemUser( name );
 							if ( attr != NULL )
 									return attr;
@@ -247,7 +247,7 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
         {
 					try
 					{
-        	 return dir * u1->GetFounder().GetCountry().CmpNoCase( u2->GetFounder().GetCountry() );
+					return dir * TowxString(u1->GetFounder().GetCountry()).CmpNoCase( TowxString(u2->GetFounder().GetCountry()) );
         	 }catch(...){}
 					break;
         }
@@ -259,7 +259,7 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
         {
         	try
 					{
-        	 return dir * u1->GetFounder().GetNick().CmpNoCase( u2->GetFounder().GetNick() );
+					return dir * TowxString(u1->GetFounder().GetNick()).CmpNoCase(TowxString(u2->GetFounder().GetNick()));
         	 }catch(...){}
         	 break;
         }
@@ -339,7 +339,7 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& posit
         case 1: // country
 						try
 						{
-							m_tiptext = GetFlagNameFromCountryCode(battle.GetFounder().GetCountry());
+							m_tiptext = GetFlagNameFromCountryCode(TowxString(battle.GetFounder().GetCountry()));
             }catch(...){}
             break;
         case 2: // rank_min
@@ -357,21 +357,21 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& posit
         case 6: // host
 					try
 					{
-            m_tiptext = battle.GetFounder().GetNick();
+            m_tiptext = TowxString(battle.GetFounder().GetNick());
 					}catch(...){}
             break;
         case 7: // specs
             m_tiptext = _("Spectators:");
             for (unsigned int i = 0; i < battle.GetNumUsers(); ++i )
             {
-                if ( battle.GetUser(i).BattleStatus().spectator ) m_tiptext << _T("\n") << battle.GetUser(i).GetNick();
+                if ( battle.GetUser(i).BattleStatus().spectator ) m_tiptext << _T("\n") << TowxString(battle.GetUser(i).GetNick());
             }
             break;
         case 8: // player
             m_tiptext = _("Active Players:");
             for ( unsigned int i = 0; i < battle.GetNumUsers(); ++i )
             {
-                if ( !battle.GetUser(i).BattleStatus().spectator ) m_tiptext << _T("\n") << battle.GetUser(i).GetNick();
+                if ( !battle.GetUser(i).BattleStatus().spectator ) m_tiptext << _T("\n") << TowxString(battle.GetUser(i).GetNick());
             }
             break;
         case 9: //max player

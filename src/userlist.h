@@ -24,7 +24,7 @@ class UserList
 {
   public:
       //! @brief mapping from nick to user object
-    typedef std::map<wxString, User*> user_map_t;
+    typedef std::map<std::string, User*> user_map_t;
     //! @brief iterator for user map
     typedef user_map_t::iterator user_iter_t;
     typedef user_map_t::const_iterator user_const_iter_t;
@@ -32,10 +32,10 @@ class UserList
     UserList();
     virtual ~UserList() {}
     void AddUser( User& user );
-    void RemoveUser( wxString const& nick );
-    User& GetUser( wxString const& nick ) const;
+    void RemoveUser( std::string const& nick );
+    User& GetUser( std::string const& nick ) const;
     User& GetUser( user_map_t::size_type index ) const;
-    bool UserExists( wxString const& nick ) const;
+    bool UserExists( std::string const& nick ) const;
     user_map_t::size_type GetNumUsers() const;
 
     void Nullify();

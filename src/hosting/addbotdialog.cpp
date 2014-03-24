@@ -52,7 +52,7 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
 	int bot = 1;
 	wxString botname = wxString::Format( _T("Bot%d"), bot );
-	while ( m_battle.UserExists( botname ) )
+	while ( m_battle.UserExists(STD_STRING(botname)))
 	{
 		bot++;
 		botname = wxString::Format( _T("Bot%d"), bot );

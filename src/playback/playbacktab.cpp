@@ -294,7 +294,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 				AskForceWatch( rep );
 				return;
 			}
-            rep.battle.GetMe().SetNick(sett().GetDefaultNick());
+            rep.battle.GetMe().SetNick(STD_STRING(sett().GetDefaultNick()));
 			bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
 			if ( watchable )
 				rep.battle.StartSpring();

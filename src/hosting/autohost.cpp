@@ -88,7 +88,7 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 			wxString user = GetBestMatch( m_userlist, params );
 			try
 			{
-				User& u = m_battle.GetUser( user );
+				User& u = m_battle.GetUser(STD_STRING(user));
 				m_battle.RingPlayer( u );
 				m_battle.DoAction( _T( "is ringing " ) + user );
 			}
@@ -266,7 +266,7 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 /// Should only be called if user isn't immediately kicked (ban / rank limit)
 void AutoHost::OnUserAdded( User& user )
 {
-	m_userlist.Add( user.GetNick() );
+	m_userlist.Add(TowxString(user.GetNick()));
 	// do nothing if autohost functionality is disabled
 	if ( !m_enabled )
 		return;
@@ -276,8 +276,8 @@ void AutoHost::OnUserAdded( User& user )
 
 void AutoHost::OnUserRemoved( User& user )
 {
-    if ( m_userlist.Index( user.GetNick() ) != wxNOT_FOUND )//triggers assertion in arraystring otherwise
-        m_userlist.Remove( user.GetNick() );
+    if ( m_userlist.Index( TowxString(user.GetNick()) ) != wxNOT_FOUND )//triggers assertion in arraystring otherwise
+        m_userlist.Remove( TowxString(user.GetNick()) );
 	// do nothing if autohost functionality is disabled
 	if ( !m_enabled )
 		return;

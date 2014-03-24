@@ -236,7 +236,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
 
 void SinglePlayerTab::ResetUsername()
 {
-	m_battle.GetMe().SetNick(sett().GetDefaultNick());
+	m_battle.GetMe().SetNick(STD_STRING(sett().GetDefaultNick()));
 }
 
 void SinglePlayerTab::SetMod( unsigned int index )
@@ -327,9 +327,9 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& /*unused*/ )
     {
         UserBattleStatus bs;
         bs.owner = m_battle.GetMe().GetNick();
-        bs.aishortname = dlg.GetAIShortName();
-        bs.airawname = dlg.GetAiRawName();
-        bs.aiversion = dlg.GetAIVersion();
+        bs.aishortname = STD_STRING(dlg.GetAIShortName());
+        bs.airawname = STD_STRING(dlg.GetAiRawName());
+        bs.aiversion = STD_STRING(dlg.GetAIVersion());
         bs.aitype = dlg.GetAIType();
         bs.team = m_battle.GetFreeTeam();
         bs.ally = m_battle.GetFreeAlly();

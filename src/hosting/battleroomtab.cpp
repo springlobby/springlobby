@@ -710,8 +710,8 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& /*unused*/ )
 		bs.ready = true;
 		bs.handicap = 0;
 		bs.colour = m_battle->GetNewColour();
-		bs.aishortname = dlg.GetAIShortName();
-		bs.aiversion = dlg.GetAIVersion();
+		bs.aishortname = STD_STRING(dlg.GetAIShortName());
+		bs.aiversion = STD_STRING(dlg.GetAIVersion());
 		bs.aitype = dlg.GetAIType();
 		bs.owner = m_battle->GetMe().GetNick();
 		serverSelector().GetServer().AddBot( m_battle->GetBattleId(), dlg.GetNick(), bs );

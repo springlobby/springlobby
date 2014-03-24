@@ -47,7 +47,7 @@ struct UserStatus
   bool moderator;
   bool bot;
   UserStatus(): in_game(false), away(false), rank(RANK_1), moderator(false), bot(false) {}
-  wxString GetDiffString ( const UserStatus& other ) const;
+  std::string GetDiffString ( const UserStatus& other ) const;
 };
 
 struct UserPosition
@@ -73,16 +73,16 @@ struct UserBattleStatus
   bool isfromdemo;
   UserPosition pos; // for startpos = 4
   // bot-only stuff
-  wxString owner;
-  wxString aishortname;
-  wxString airawname;
-  wxString aiversion;
+  std::string owner;
+  std::string aishortname;
+  std::string airawname;
+  std::string aiversion;
   int aitype;
   // for nat holepunching
-  wxString ip;
+  std::string ip;
   unsigned int udpport;
   std::string scriptPassword;
-  bool IsBot() const { return !aishortname.IsEmpty(); }
+  bool IsBot() const { return !aishortname.empty(); }
   UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), isfromdemo(false), aitype(-1), udpport(0) {}
   bool operator == ( const UserBattleStatus& s ) const
   {
@@ -106,22 +106,22 @@ struct UiUserData {
 class CommonUser
 {
     public:
-        CommonUser(const wxString& nick, const wxString& country, const int& cpu)
-           : m_nick(wxString(nick)), m_country(wxString(country)), m_cpu(cpu)  {}
+        CommonUser(const std::string& nick, const std::string& country, const int& cpu)
+           : m_nick(std::string(nick)), m_country(std::string(country)), m_cpu(cpu)  {}
 
         virtual ~CommonUser(){}
 
-        const wxString& GetNick() const { return m_nick; }
-        virtual void SetNick( const wxString& nick ) { m_nick = nick; }
+        const std::string& GetNick() const { return m_nick; }
+        virtual void SetNick( const std::string& nick ) { m_nick = nick; }
 
-        const wxString& GetCountry() const { return m_country; }
-        virtual void SetCountry( const wxString& country ) { m_country = country; }
+        const std::string& GetCountry() const { return m_country; }
+        virtual void SetCountry( const std::string& country ) { m_country = country; }
 
         int GetCpu() const { return m_cpu; }
         void SetCpu( const int& cpu ) { m_cpu = cpu; }
 
-        const wxString& GetID() const { return m_id; }
-        void SetID( const wxString& id ) { m_id = id; }
+        const std::string& GetID() const { return m_id; }
+        void SetID( const std::string& id ) { m_id = id; }
 
         UserStatus& Status() { return m_status; }
 
@@ -149,9 +149,9 @@ class CommonUser
 
 
     protected:
-        wxString m_nick;
-        wxString m_country;
-        wxString m_id;
+        std::string m_nick;
+        std::string m_country;
+        std::string m_id;
         int m_cpu;
         UserStatus m_status;
         UserBattleStatus m_bstatus;
@@ -168,10 +168,10 @@ class User : public CommonUser
     mutable UiUserData uidata;
 
     User( IServer& serv );
-    User( const wxString& nick, IServer& serv );
-    User( const wxString& nick, const wxString& country, const int& cpu, IServer& serv);
-    User( const wxString& nick );
-    User( const wxString& nick, const wxString& country, const int& cpu );
+    User( const std::string& nick, IServer& serv );
+    User( const std::string& nick, const std::string& country, const int& cpu, IServer& serv);
+    User( const std::string& nick );
+    User( const std::string& nick, const std::string& country, const int& cpu );
     User();
 
     virtual ~User();
@@ -180,24 +180,24 @@ class User : public CommonUser
 
     IServer& GetServer() const { return *m_serv; }
 
-    void Said( const wxString& message ) const;
-    void Say( const wxString& message ) const;
-    void DoAction( const wxString& message ) const;
+    void Said( const std::string& message ) const;
+    void Say( const std::string& message ) const;
+    void DoAction( const std::string& message ) const;
 
     IBattle* GetBattle() const;
     void SetBattle( IBattle* battle );
 
     void SendMyUserStatus() const;
     void SetStatus( const UserStatus& status );
-    void SetCountry( const wxString& country );
+    void SetCountry( const std::string& country );
 
-    bool ExecuteSayCommand( const wxString& cmd ) const;
+    bool ExecuteSayCommand( const std::string& cmd ) const;
 
-    static wxString GetRankName(UserStatus::RankContainer rank);
+    static std::string GetRankName(UserStatus::RankContainer rank);
 
     float GetBalanceRank();
     UserStatus::RankContainer GetRank();
-    wxString GetClan();
+    std::string GetClan();
 
     int GetFlagIconIndex() const { return m_flagicon_idx; }
     int GetRankIconIndex() const { return m_rankicon_idx; }

@@ -243,7 +243,7 @@ User& IBattle::OnUserAdded( User& user )
 	{
 		if ( bs.ready ) m_players_ready++;
 		if ( bs.sync) m_players_sync++;
-		if ( !bs.ready || !bs.sync ) m_ready_up_map[user.GetNick()] = time(0);
+		if ( !bs.ready || !bs.sync ) m_ready_up_map[TowxString(user.GetNick())] = time(0);
 		if ( bs.ready && bs.sync ) m_players_ok++;
 	}
     return user;
@@ -251,7 +251,7 @@ User& IBattle::OnUserAdded( User& user )
 
 User& IBattle::OnBotAdded( const wxString& nick, const UserBattleStatus& bs )
 {
-		m_internal_bot_list[nick] = User( nick );
+		m_internal_bot_list[nick] = User( STD_STRING(nick));
 		User& user = m_internal_bot_list[nick];
 		user.UpdateBattleStatus( bs );
 		User& usr = OnUserAdded( user );
@@ -311,7 +311,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 	{
 		if ( ( status.ready && status.sync ) || status.spectator )
 		{
-			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
+			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( TowxString(user.GetNick()));
 			if ( itor != m_ready_up_map.end() )
 			{
 				m_ready_up_map.erase( itor );
@@ -319,10 +319,10 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 		}
 		if ( ( !status.ready || !status.sync ) && !status.spectator )
 		{
-			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( user.GetNick() );
+			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find(TowxString(user.GetNick()));
 			if ( itor == m_ready_up_map.end() )
 			{
-				m_ready_up_map[user.GetNick()] = time(0);
+				m_ready_up_map[TowxString(user.GetNick())] = time(0);
 			}
 		}
 	}
@@ -364,7 +364,7 @@ void IBattle::OnUserRemoved( User& user )
         user.SetBattle( 0 );
     else
     {
-    	UserVecIter itor = m_internal_bot_list.find( user.GetNick() );
+    	UserVecIter itor = m_internal_bot_list.find( TowxString(user.GetNick()));
         if ( itor != m_internal_bot_list.end() )
         {
             m_internal_bot_list.erase( itor );
@@ -1079,8 +1079,8 @@ void IBattle::UserPositionChanged( const User& /*unused*/ )
 void IBattle::AddUserFromDemo( User& user )
 {
 	user.BattleStatus().isfromdemo = true;
-	m_internal_user_list[user.GetNick()] = user;
-	UserList::AddUser( m_internal_user_list[user.GetNick()] );
+	m_internal_user_list[TowxString(user.GetNick())] = user;
+	UserList::AddUser( m_internal_user_list[TowxString(user.GetNick())] );
 }
 
 void IBattle::SetProxy( const wxString& value )
@@ -1100,12 +1100,12 @@ wxString IBattle::GetProxy() const
 
 bool IBattle::IsFounderMe() const
 {
-	return ( ( m_opts.founder == GetMe().GetNick() ) || ( IsProxy()  && !m_generating_script ) );
+	return ( ( m_opts.founder == TowxString(GetMe().GetNick())) || ( IsProxy()  && !m_generating_script ) );
 }
 
 bool IBattle::IsFounder( const User& user ) const
 {
-    if ( UserExists( m_opts.founder ) ) {
+    if ( UserExists( STD_STRING(m_opts.founder)) ) {
     	try
     	{
         return &GetFounder() == &user;
@@ -1198,7 +1198,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
             if ( player.ok() || bot.ok() )
             {
 								if ( bot.ok() ) player = bot;
-                User user(TowxString(player->GetString("Name")), TowxString(boost::to_upper_copy(player->GetString("CountryCode"))), 0);
+                User user(player->GetString("Name"), boost::to_upper_copy(player->GetString("CountryCode")), 0);
                 UserBattleStatus& status = user.BattleStatus();
                 status.isfromdemo = true;
                 status.spectator = player->GetInt("Spectator", 0 );
@@ -1226,13 +1226,13 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 
                 if ( bot.ok() )
                 {
-					status.aishortname = TowxString(bot->GetString("ShortName"));
-					status.aiversion = TowxString(bot->GetString("Version"));
+					status.aishortname = bot->GetString("ShortName");
+					status.aiversion = bot->GetString("Version");
 					int ownerindex = bot->GetInt("Host");
 					LSL::TDF::PDataList aiowner (replayNode->Find(stdprintf("PLAYER%d", ownerindex)));
                 	if ( aiowner.ok() )
                 	{
-						status.owner = TowxString(aiowner->GetString("Name"));
+						status.owner = aiowner->GetString("Name");
                 	}
                 }
 
@@ -1323,4 +1323,8 @@ long IBattle::GetBattleRunningTime() const
 IServer& IBattle::GetServer()
 {
 	return serverSelector().GetServer();
+}
+
+User& IBattle::GetFounder() const {
+	return GetUser( STD_STRING(m_opts.founder) );
 }

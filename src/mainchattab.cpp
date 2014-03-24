@@ -147,7 +147,7 @@ ChatPanel* MainChatTab::GetUserChatPanel( const wxString& user )
 
 void MainChatTab::OnUserConnected( User& user )
 {
-	ChatPanel* panel = GetUserChatPanel( user.GetNick() );
+	ChatPanel* panel = GetUserChatPanel( TowxString(user.GetNick()) );
 	if ( panel != 0 ) {
 		panel->SetUser( &user );
 		panel->OnUserConnected();
@@ -161,7 +161,7 @@ void MainChatTab::OnUserConnected( User& user )
 
 void MainChatTab::OnUserDisconnected( User& user )
 {
-	ChatPanel* panel = GetUserChatPanel( user.GetNick() );
+	ChatPanel* panel = GetUserChatPanel( TowxString(user.GetNick()));
 	if ( panel != 0 ) {
 		panel->OnUserDisconnected();
 		panel->SetUser( 0 );
@@ -267,7 +267,7 @@ ChatPanel* MainChatTab::AddChatPanel( const User& user )
 {
 	LOOP_PANELS(
 		if ( tmp->GetPanelType() == CPT_User ) {
-			if ( m_chat_tabs->GetPageText(i) == user.GetNick() ) {
+			if ( m_chat_tabs->GetPageText(i) == TowxString(user.GetNick())) {
 				m_chat_tabs->SetSelection( i );
 				tmp->SetUser( &user );
 				return tmp;
@@ -276,7 +276,7 @@ ChatPanel* MainChatTab::AddChatPanel( const User& user )
 	)
 	int selection = m_chat_tabs->GetSelection();
 	ChatPanel* chat = new ChatPanel( m_chat_tabs, user, m_imagelist );
-	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, user.GetNick(), true, wxBitmap( userchat_xpm ) );
+	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, TowxString(user.GetNick()), true, wxBitmap( userchat_xpm ) );
 	if ( selection > 0 ) m_chat_tabs->SetSelection( selection );
 	return chat;
 }

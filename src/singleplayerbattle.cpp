@@ -14,7 +14,7 @@
 
 SinglePlayerBattle::SinglePlayerBattle(MainSinglePlayerTab& msptab ):
 	m_sptab(msptab),
-	m_me( User(sett().GetDefaultNick()))
+	m_me( User(STD_STRING(sett().GetDefaultNick())))
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().side = sett().GetBattleLastSideSel( GetHostModName() );
@@ -74,7 +74,7 @@ void SinglePlayerBattle::RemoveUnfittingBots()
     for(auto it = diff.begin(); it != end; ++it) {
         for( size_t j = 0; j < GetNumUsers(); ++j  ) {
             User& u = GetUser( j );
-            if (u.GetBattleStatus().airawname == TowxString(*it))
+            if (u.GetBattleStatus().airawname == *it)
                 KickPlayer( u );
         }
     }

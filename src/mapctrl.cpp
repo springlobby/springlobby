@@ -1562,9 +1562,9 @@ void MapCtrl::OnRightUp( wxMouseEvent& event )
                     {
                         UserBattleStatus bs;
                         bs.owner = m_battle->GetMe().GetNick();
-                        bs.aishortname = dlg.GetAIShortName();
-                        bs.airawname = dlg.GetAiRawName();
-                        bs.aiversion = dlg.GetAIVersion();
+                        bs.aishortname = STD_STRING(dlg.GetAIShortName());
+                        bs.airawname = STD_STRING(dlg.GetAiRawName());
+                        bs.aiversion = STD_STRING(dlg.GetAIVersion());
                         bs.aitype = dlg.GetAIType();
                         bs.team = m_battle->GetFreeTeam();
                         bs.ally = m_battle->GetFreeAlly();
