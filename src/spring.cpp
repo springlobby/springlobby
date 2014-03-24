@@ -155,16 +155,6 @@ void Spring::OnTerminated( wxCommandEvent& event )
 	GlobalEvent::Send(event);
 }
 
-std::string stdprintf(const std::string& format, ...)
-{
-	char buf[1024];
-	va_list args;
-	va_start(args, format);
-	int count = vsnprintf(buf, 1024, format.c_str(), args);
-	va_end(args);
-	return std::string(buf, count);
-}
-
 wxString Spring::WriteScriptTxt( IBattle& battle ) const
 {
 	wxLogMessage(_T("0 WriteScriptTxt called "));

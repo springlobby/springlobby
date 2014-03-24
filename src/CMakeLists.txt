@@ -194,7 +194,6 @@ add_sources(springlobbySrc
 	springlobbyapp.cpp
 	springprocess.cpp
 	tasserver.cpp
-	tdfcontainer.cpp
 	ui.cpp
 	user.cpp
 	useractions.cpp

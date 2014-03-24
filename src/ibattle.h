@@ -24,8 +24,8 @@ lsl/battle/ibattle.h
 
 #include "user.h"
 #include <lslunitsync/optionswrapper.h>
+#include <lsl/battle/tdfcontainer.h>
 #include "userlist.h"
-#include "tdfcontainer.h"
 #include "utils/mixins.hh"
 #include "utils/globalevents.h"
 
@@ -563,8 +563,8 @@ public:
 	virtual void SetAutoLockOnStart(bool /*autolock*/) {}
 protected:
 
-	void LoadScriptMMOpts( const wxString& sectionname, const SL::PDataList& node );
-	void LoadScriptMMOpts( const SL::PDataList& node );
+	void LoadScriptMMOpts( const std::string& sectionname, const LSL::TDF::PDataList& node );
+	void LoadScriptMMOpts( const LSL::TDF::PDataList& node );
 
 	void PlayerLeftTeam( int team );
 	void PlayerLeftAlly( int ally );

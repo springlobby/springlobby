@@ -173,5 +173,7 @@ inline wxFormat&  wxFormat::operator%(const wxChar* x)
 	return operator % ( wxString(x) );
 }
 
+std::string stdprintf(const std::string& format, ...);
+
 
 #endif // SPRINGLOBBY_HEADERGUARD_CONVERSION_H

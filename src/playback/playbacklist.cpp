@@ -1,7 +1,7 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include "../tdfcontainer.h"
 #include "../offlinebattle.h"
+#include <lsl/battle/tdfcontainer.h>
 #include <lslutils/globalsmanager.h>
 
 template <class ListImp>
