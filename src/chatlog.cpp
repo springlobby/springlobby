@@ -71,7 +71,6 @@ void ChatLog::CloseSession()
 		return;
 	}
 
-	wxDateTime now = wxDateTime::Now();
 	AddMessage(wxEmptyString, _( "### Session Closed at [%Y-%m-%d %H:%M]" ));
 	m_logfile.Flush();
 	m_active = false;
@@ -134,8 +133,6 @@ bool ChatLog::OpenLogFile()
 
 	FillLastLineArray();
 	m_active = true;
-
-	const wxDateTime now = wxDateTime::Now();
 
 	return AddMessage(wxEmptyString, _T( "### Session Start at [%Y-%m-%d %H:%M]" ));
 }

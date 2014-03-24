@@ -447,7 +447,7 @@ int MapCtrl::LoadMinimap()
     if ( m_minimap ) return -1;
     if ( !m_battle->MapExists() ) return -1;
 
-    const std::string map = STD_STRING(m_battle->GetHostMapName());
+    const std::string map = m_battle->GetHostMapName();
 
     try
     {
@@ -498,7 +498,7 @@ void MapCtrl::UpdateMinimap()
     if ( m_battle )  //needs to be looked into, crahses with replaytab (koshi)
     {
 		bool just_resize = ( m_lastsize != wxSize(-1,-1) && m_lastsize != wxSize(w, h) );
-        if ( (m_mapname != STD_STRING(m_battle->GetHostMapName()) ) || just_resize )
+        if ( (m_mapname != m_battle->GetHostMapName() ) || just_resize )
         {
             FreeMinimap();
             int loaded_ok = LoadMinimap();
@@ -1446,7 +1446,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         {
             try
             {
-                const auto sides = LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName()));
+                const auto sides = LSL::usync().GetSides(m_battle->GetHostModName());
                 const unsigned int sidecount = sides.size();
                 if ( sidecount > 0 ) user.BattleStatus().side = (user.BattleStatus().side + 1) % sidecount;
                 else user.BattleStatus().side = 0;
@@ -1479,7 +1479,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
             }
             else if ( m_mdown_area == Download )
             {
-                ui().Download( _T("map"), m_battle->GetHostMapName(), m_battle->GetHostMapHash() );
+                ui().Download( _T("map"), TowxString(m_battle->GetHostMapName()), TowxString(m_battle->GetHostMapHash()));
             }
         }
         m_mdown_area = Main;
@@ -1569,7 +1569,7 @@ void MapCtrl::OnRightUp( wxMouseEvent& event )
                         bs.team = m_battle->GetFreeTeam();
                         bs.ally = m_battle->GetFreeAlly();
                         bs.colour = m_battle->GetNewColour();
-                        User& bot = m_battle->OnBotAdded( dlg.GetNick(), bs  );
+                        User& bot = m_battle->OnBotAdded(STD_STRING(dlg.GetNick()), bs  );
                         ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
                         bot.BattleStatus().pos.x = x;
                         bot.BattleStatus().pos.y = y;

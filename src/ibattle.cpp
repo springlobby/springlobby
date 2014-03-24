@@ -44,7 +44,7 @@ IBattle::IBattle():
   m_mod_loaded(false),
   m_map_exists(false),
   m_mod_exists(false),
-  m_previous_local_mod_name( wxEmptyString ),
+  m_previous_local_mod_name( "" ),
   m_ingame(false),
   m_auto_unspec(false),
   m_auto_unspec_num_players(0),
@@ -243,15 +243,15 @@ User& IBattle::OnUserAdded( User& user )
 	{
 		if ( bs.ready ) m_players_ready++;
 		if ( bs.sync) m_players_sync++;
-		if ( !bs.ready || !bs.sync ) m_ready_up_map[TowxString(user.GetNick())] = time(0);
+		if ( !bs.ready || !bs.sync ) m_ready_up_map[user.GetNick()] = time(0);
 		if ( bs.ready && bs.sync ) m_players_ok++;
 	}
     return user;
 }
 
-User& IBattle::OnBotAdded( const wxString& nick, const UserBattleStatus& bs )
+User& IBattle::OnBotAdded( const std::string& nick, const UserBattleStatus& bs )
 {
-		m_internal_bot_list[nick] = User( STD_STRING(nick));
+		m_internal_bot_list[nick] = User(nick);
 		User& user = m_internal_bot_list[nick];
 		user.UpdateBattleStatus( bs );
 		User& usr = OnUserAdded( user );
@@ -311,7 +311,7 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 	{
 		if ( ( status.ready && status.sync ) || status.spectator )
 		{
-			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find( TowxString(user.GetNick()));
+			std::map<std::string, time_t>::iterator itor = m_ready_up_map.find(user.GetNick());
 			if ( itor != m_ready_up_map.end() )
 			{
 				m_ready_up_map.erase( itor );
@@ -319,10 +319,10 @@ void IBattle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 		}
 		if ( ( !status.ready || !status.sync ) && !status.spectator )
 		{
-			std::map<wxString, time_t>::iterator itor = m_ready_up_map.find(TowxString(user.GetNick()));
+			std::map<std::string, time_t>::iterator itor = m_ready_up_map.find(user.GetNick());
 			if ( itor == m_ready_up_map.end() )
 			{
-				m_ready_up_map[TowxString(user.GetNick())] = time(0);
+				m_ready_up_map[user.GetNick()] = time(0);
 			}
 		}
 	}
@@ -364,7 +364,7 @@ void IBattle::OnUserRemoved( User& user )
         user.SetBattle( 0 );
     else
     {
-    	UserVecIter itor = m_internal_bot_list.find( TowxString(user.GetNick()));
+    	UserVecIter itor = m_internal_bot_list.find( user.GetNick());
         if ( itor != m_internal_bot_list.end() )
         {
             m_internal_bot_list.erase( itor );
@@ -708,11 +708,11 @@ UserPosition IBattle::GetFreePosition()
 }
 
 
-void IBattle::SetHostMap(const wxString& _mapname, const wxString& _hash)
+void IBattle::SetHostMap(const std::string& _mapname, const std::string& _hash)
 {
 	assert(!_mapname.empty());
-  const std::string mapname(STD_STRING(_mapname));
-  const std::string hash(STD_STRING(_hash));
+  const std::string mapname(_mapname);
+  const std::string hash(_hash);
   if ( mapname != m_host_map.name || hash != m_host_map.hash )
   {
     m_map_loaded = false;
@@ -730,10 +730,10 @@ void IBattle::SetHostMap(const wxString& _mapname, const wxString& _hash)
 }
 
 
-void IBattle::SetLocalMap(const wxString& mapname)
+void IBattle::SetLocalMap(const std::string& mapname)
 {
 	assert(!mapname.empty());
-	LSL::UnitsyncMap map = LSL::usync().GetMap(STD_STRING(mapname));
+	LSL::UnitsyncMap map = LSL::usync().GetMap(mapname);
   if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
     m_local_map = map;
     m_map_loaded = true;
@@ -769,22 +769,22 @@ const LSL::UnitsyncMap& IBattle::LoadMap()
 }
 
 
-wxString IBattle::GetHostMapName() const
+std::string IBattle::GetHostMapName() const
 {
-  return TowxString(m_host_map.name);
+  return m_host_map.name;
 }
 
 
-wxString IBattle::GetHostMapHash() const
+std::string IBattle::GetHostMapHash() const
 {
-  return TowxString(m_host_map.hash);
+  return m_host_map.hash;
 }
 
 
-void IBattle::SetHostMod( const wxString& _modname, const wxString& _hash )
+void IBattle::SetHostMod( const std::string& _modname, const std::string& _hash )
 {
-    const std::string modname(STD_STRING(_modname));
-    const std::string hash(STD_STRING(_hash));
+    const std::string modname(_modname);
+    const std::string hash(_hash);
   if ( m_host_mod.name != modname || m_host_mod.hash != hash )
   {
     m_mod_loaded = false;
@@ -802,7 +802,7 @@ void IBattle::SetLocalMod( const LSL::UnitsyncMod& mod )
 {
   if ( mod.name != m_local_mod.name || mod.hash != m_local_mod.hash )
   {
-    m_previous_local_mod_name = TowxString(m_local_mod.name);
+    m_previous_local_mod_name = m_local_mod.name;
     m_local_mod = mod;
     m_mod_loaded = true;
     if ( !m_host_mod.hash.empty() && m_host_mod.hash != "0" )
@@ -830,15 +830,15 @@ const LSL::UnitsyncMod& IBattle::LoadMod()
 }
 
 
-wxString IBattle::GetHostModName() const
+std::string IBattle::GetHostModName() const
 {
-  return TowxString(m_host_mod.name);
+  return m_host_mod.name;
 }
 
 
-wxString IBattle::GetHostModHash() const
+std::string IBattle::GetHostModHash() const
 {
-  return TowxString(m_host_mod.hash);
+  return m_host_mod.hash;
 }
 
 
@@ -855,15 +855,15 @@ bool IBattle::ModExists() const
 //  return LSL::usync().ModExists( m_host_mod.name, m_host_mod.hash );
 }
 
-void IBattle::RestrictUnit( const wxString& unitname, int count )
+void IBattle::RestrictUnit( const std::string& unitname, int count )
 {
   m_restricted_units[ unitname ] = count;
 }
 
 
-void IBattle::UnrestrictUnit( const wxString& unitname )
+void IBattle::UnrestrictUnit( const std::string& unitname )
 {
-  std::map<wxString,int>::iterator pos = m_restricted_units.find( unitname );
+  std::map<std::string,int>::iterator pos = m_restricted_units.find( unitname );
   if ( pos == m_restricted_units.end() ) return;
   m_restricted_units.erase( pos );
 }
@@ -875,7 +875,7 @@ void IBattle::UnrestrictAllUnits()
 }
 
 
-std::map<wxString,int> IBattle::RestrictedUnits() const
+std::map<std::string,int> IBattle::RestrictedUnits() const
 {
   return m_restricted_units;
 }
@@ -919,27 +919,27 @@ void IBattle::OnUnitsyncReloaded( wxEvent& /*data*/ )
 }
 
 
-static wxString FixPresetName( const wxString& name )
+static std::string FixPresetName( const std::string& name )
 {
   // look name up case-insensitively
   const wxArrayString& presetList = sett().GetPresetList();
-  int index = presetList.Index( name, false /*case insensitive*/ );
-  if ( index == -1 ) return wxEmptyString;
+  int index = presetList.Index( TowxString(name), false /*case insensitive*/ );
+  if ( index == -1 ) return "";
 
   // set preset to the actual name, with correct case
-  return presetList[index];
+  return STD_STRING(presetList[index]);
 }
 
 
-bool IBattle::LoadOptionsPreset( const wxString& name )
+bool IBattle::LoadOptionsPreset( const std::string& name )
 {
-  wxString preset = FixPresetName(name);
-  if (preset == wxEmptyString) return false; //preset not found
+  const std::string preset = FixPresetName(name);
+  if (preset.empty()) return false; //preset not found
   m_preset = preset;
 
   for ( unsigned int i = 0; i < LSL::OptionsWrapper::LastOption; i++)
   {
-    std::map<wxString,wxString> options = sett().GetHostingPreset( m_preset, i );
+    std::map<wxString,wxString> options = sett().GetHostingPreset( TowxString(m_preset), i );
     if ( (LSL::OptionsWrapper::GameOption)i != LSL::OptionsWrapper::PrivateOptions )
     {
 	  for ( std::map<wxString,wxString>::const_iterator itor = options.begin(); itor != options.end(); ++itor )
@@ -955,13 +955,13 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
       if ( !options[_T("mapname")].IsEmpty() )
       {
         if (LSL::usync().MapExists(STD_STRING(options[_T("mapname")]))) {
-            SetLocalMap( options[_T("mapname")] );
+            SetLocalMap( STD_STRING(options[_T("mapname")]) );
             SendHostInfo( HI_Map );
         }
         else if ( !ui().OnPresetRequiringMap( options[_T("mapname")] ) ) {
             //user didn't want to download the missing map, so set to empty to not have it tried to be loaded again
             options[_T("mapname")] = wxEmptyString;
-            sett().SetHostingPreset( m_preset, i, options );
+            sett().SetHostingPreset( TowxString(m_preset), i, options );
         }
       }
 
@@ -985,7 +985,7 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
       while( tkr.HasMoreTokens() )
       {
       	wxString unitinfo = tkr.GetNextToken();
-      	RestrictUnit( unitinfo.BeforeLast(_T('=')), s2l( unitinfo.AfterLast(_T('=')) ) );
+      	RestrictUnit( STD_STRING(unitinfo.BeforeLast(_T('='))), s2l( unitinfo.AfterLast(_T('=')) ) );
       }
       SendHostInfo( HI_Restrictions );
 	  Update( wxFormat( _T("%d_restrictions") ) % LSL::OptionsWrapper::PrivateOptions );
@@ -998,10 +998,10 @@ bool IBattle::LoadOptionsPreset( const wxString& name )
 }
 
 
-void IBattle::SaveOptionsPreset( const wxString& name )
+void IBattle::SaveOptionsPreset( const std::string& name )
 {
   m_preset = FixPresetName(name);
-  if (m_preset == wxEmptyString) m_preset = name; //new preset
+  if (m_preset == "") m_preset = name; //new preset
 
   for ( int i = 0; i < (int)LSL::OptionsWrapper::LastOption; i++)
   {
@@ -1011,12 +1011,12 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       std::map<wxString, wxString> wopts;
       for( const auto pair : opts)
           wopts.insert(std::make_pair(TowxString(pair.first), TowxString(pair.second)));
-      sett().SetHostingPreset( m_preset, (LSL::OptionsWrapper::GameOption)i, wopts);
+      sett().SetHostingPreset( TowxString(m_preset), (LSL::OptionsWrapper::GameOption)i, wopts);
     }
     else
     {
       std::map<wxString,wxString> opts;
-      opts[_T("mapname")] = GetHostMapName();
+      opts[_T("mapname")] = TowxString(GetHostMapName());
       unsigned int validrectcount = 0;
       if ( LSL::Util::FromString<long>(
                CustomBattleOptions().getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption ) ) == ST_Choose )
@@ -1039,13 +1039,13 @@ void IBattle::SaveOptionsPreset( const wxString& name )
       opts[_T("numrects")] = TowxString( validrectcount );
 
       wxString restrictionsstring;
-	  for ( std::map<wxString, int>::const_iterator itor = m_restricted_units.begin(); itor != m_restricted_units.end(); ++itor )
+	  for ( std::map<std::string, int>::const_iterator itor = m_restricted_units.begin(); itor != m_restricted_units.end(); ++itor )
       {
-        restrictionsstring << itor->first << _T('=') << TowxString(itor->second) << _T('\t');
+        restrictionsstring << TowxString(itor->first) << _T('=') << TowxString(itor->second) << _T('\t');
       }
       opts[_T("restrictions")] = restrictionsstring;
 
-      sett().SetHostingPreset( m_preset, (LSL::OptionsWrapper::GameOption)i, opts );
+      sett().SetHostingPreset( TowxString(m_preset), (LSL::OptionsWrapper::GameOption)i, opts );
     }
   }
   sett().SaveSettings();
@@ -1053,18 +1053,18 @@ void IBattle::SaveOptionsPreset( const wxString& name )
 }
 
 
-wxString IBattle::GetCurrentPreset()
+std::string IBattle::GetCurrentPreset()
 {
   return m_preset;
 }
 
 
-void IBattle::DeletePreset( const wxString& name )
+void IBattle::DeletePreset( const std::string & name )
 {
-  wxString preset = FixPresetName(name);
-  if ( m_preset == preset ) m_preset = wxEmptyString;
-  sett().DeletePreset( preset );
-  ui().ReloadPresetList();
+	const std::string preset = FixPresetName(name);
+	if ( m_preset == preset ) m_preset = "";
+	sett().DeletePreset( TowxString(preset) );
+	ui().ReloadPresetList();
 }
 
 wxArrayString IBattle::GetPresetList()
@@ -1079,33 +1079,33 @@ void IBattle::UserPositionChanged( const User& /*unused*/ )
 void IBattle::AddUserFromDemo( User& user )
 {
 	user.BattleStatus().isfromdemo = true;
-	m_internal_user_list[TowxString(user.GetNick())] = user;
-	UserList::AddUser( m_internal_user_list[TowxString(user.GetNick())] );
+	m_internal_user_list[user.GetNick()] = user;
+	UserList::AddUser( m_internal_user_list[user.GetNick()] );
 }
 
-void IBattle::SetProxy( const wxString& value )
+void IBattle::SetProxy( const std::string & value )
 {
 	m_opts.proxyhost = value;
 }
 
 bool IBattle::IsProxy() const
 {
-	return !m_opts.proxyhost.IsEmpty();
+	return !m_opts.proxyhost.empty();
 }
 
-wxString IBattle::GetProxy() const
+std::string IBattle::GetProxy() const
 {
 	return m_opts.proxyhost;
 }
 
 bool IBattle::IsFounderMe() const
 {
-	return ( ( m_opts.founder == TowxString(GetMe().GetNick())) || ( IsProxy()  && !m_generating_script ) );
+	return ( ( m_opts.founder == GetMe().GetNick()) || ( IsProxy()  && !m_generating_script ) );
 }
 
 bool IBattle::IsFounder( const User& user ) const
 {
-    if ( UserExists( STD_STRING(m_opts.founder)) ) {
+    if ( UserExists(m_opts.founder) ) {
     	try
     	{
         return &GetFounder() == &user;
@@ -1150,23 +1150,23 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 {
 
     BattleOptions opts;
-    std::stringstream ss ( (const char *)GetScript().mb_str(wxConvUTF8) );// no need to convert wxstring-->std::string-->std::stringstream, convert directly.
+    std::stringstream ss (GetScript());
 	LSL::TDF::PDataList script( LSL::TDF::ParseTDF(ss) );
 
 	LSL::TDF::PDataList replayNode ( script->Find("GAME") );
     if ( replayNode.ok() )
     {
 
-        wxString modname = TowxString(replayNode->GetString("GameType"));
-        wxString modhash = TowxString(replayNode->GetString("ModHash"));
-        if ( !modhash.IsEmpty() ) modhash = MakeHashUnsigned( modhash );
+        std::string modname = replayNode->GetString("GameType");
+        std::string modhash = replayNode->GetString("ModHash");
+        if ( !modhash.empty() ) modhash = STD_STRING(MakeHashUnsigned(TowxString(modhash)));
         SetHostMod( modname, modhash );
 
         //don't have the maphash, what to do?
         //ui download function works with mapname if hash is empty, so works for now
-		wxString mapname    = TowxString(replayNode->GetString("MapName"));
-		wxString maphash    = TowxString(replayNode->GetString("MapHash"));
-        if ( !maphash.IsEmpty() ) maphash = MakeHashUnsigned( maphash );
+		std::string mapname    = replayNode->GetString("MapName");
+		std::string maphash    = replayNode->GetString("MapHash");
+        if ( !maphash.empty() ) maphash = STD_STRING(MakeHashUnsigned(TowxString(maphash)));
         SetHostMap( mapname, maphash );
 
 //        opts.ip         = replayNode->GetString( _T("HostIP") );
@@ -1184,7 +1184,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
         LSL::StringVector sides;
         if ( loadmapmod )
         {
-            sides = LSL::usync().GetSides(STD_STRING(modname));
+            sides = LSL::usync().GetSides(modname);
         }
 
 				IBattle::TeamVec parsed_teams = GetParsedTeamsVec();
@@ -1248,9 +1248,9 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 											teaminfos.StartPosY = team->GetInt("StartPosY", -1 );
 											teaminfos.AllyTeam = team->GetInt("AllyTeam", 0 );
 											teaminfos.RGBColor = GetColorFromFloatStrng(TowxString(team->GetString("RGBColor")));
-											teaminfos.SideName = TowxString(team->GetString("Side", ""));
+											teaminfos.SideName = team->GetString("Side", "");
 											teaminfos.Handicap = team->GetInt("Handicap", 0 );
-                                            const int sidepos = LSL::Util::IndexInSequence(sides, STD_STRING(teaminfos.SideName));
+                                            const int sidepos = LSL::Util::IndexInSequence(sides, teaminfos.SideName);
 											teaminfos.SideNum = sidepos;
 											parsed_teams[ user.BattleStatus().team ] = teaminfos;
 									}
@@ -1326,5 +1326,5 @@ IServer& IBattle::GetServer()
 }
 
 User& IBattle::GetFounder() const {
-	return GetUser( STD_STRING(m_opts.founder) );
+	return GetUser(m_opts.founder);
 }

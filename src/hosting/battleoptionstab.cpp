@@ -138,17 +138,16 @@ void BattleOptionsTab::ReloadRestrictions()
 	if ( !m_battle ) return;
 	m_allowed_list->Clear();
 	m_restrict_list->Clear();
-	if ( m_battle->GetHostModName() == wxEmptyString )
+	if ( m_battle->GetHostModName().empty() )
         return;
 
 	try {
-        m_allowed_list->InsertItems(LSL::Util::vectorToArrayString(
-                                        LSL::usync().GetUnitsList(STD_STRING(m_battle->GetHostModName()))), 0);
+        m_allowed_list->InsertItems(LSL::Util::vectorToArrayString(LSL::usync().GetUnitsList(m_battle->GetHostModName())), 0);
 	} catch ( ... ) {}
-	std::map<wxString, int> units = m_battle->RestrictedUnits();
+	std::map<std::string, int> units = m_battle->RestrictedUnits();
 
-	for ( std::map<wxString, int>::const_iterator itor = units.begin(); itor != units.end(); ++itor )
-		Restrict( itor->first, itor->second );
+	for ( std::map<std::string, int>::const_iterator itor = units.begin(); itor != units.end(); ++itor )
+		Restrict( TowxString(itor->first), itor->second );
 }
 
 
@@ -243,7 +242,7 @@ void BattleOptionsTab::OnRestrict( wxCommandEvent& /*unused*/ )
 	for ( unsigned int i = 0; i < names.Count(); i++ ) {
 		wxString unit = names.Item( i );
 		int count = wxGetNumberFromUser( _( "How many units of this type do you wish to allow?" ), wxEmptyString, _( "Unit restriction" ), 0, 0, 500000 );
-		if ( count >= 0 ) m_battle->RestrictUnit( unit, count );
+		if ( count >= 0 ) m_battle->RestrictUnit(STD_STRING(unit), count );
 	}
 	if ( names.Count() > 0 ) m_battle->SendHostInfo( IBattle::HI_Restrictions );
 }
@@ -263,8 +262,8 @@ void BattleOptionsTab::OnAllow( wxCommandEvent& /*unused*/ )
 		names.Add( name );
 	}
 	for ( unsigned int i = 0; i < names.Count(); i++ ) {
-		wxString unit =  names.Item( i );
-		m_battle->UnrestrictUnit( unit );
+		const wxString unit =  names.Item( i );
+		m_battle->UnrestrictUnit(STD_STRING(unit));
 	}
 	if ( names.Count() > 0 ) m_battle->SendHostInfo( IBattle::HI_Restrictions );
 

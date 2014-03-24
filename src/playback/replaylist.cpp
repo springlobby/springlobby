@@ -49,7 +49,7 @@ bool ReplayList::GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const
 {
 	const wxString FileName = ReplayPath.AfterLast( wxFileName::GetPathSeparator() ); // strips file path
 	ret.Filename = ReplayPath;
-	ret.battle.SetPlayBackFilePath( ReplayPath );
+	ret.battle.SetPlayBackFilePath(STD_STRING(ReplayPath));
 	ret.SpringVersion = FileName.AfterLast(_T('_')).BeforeLast(_T('.'));
 	ret.MapName = FileName.BeforeLast(_T('_'));
 
@@ -63,18 +63,18 @@ bool ReplayList::GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const
 	}
 
 	const int replay_version = replayVersion( replay );
-	ret.battle.SetScript( GetScriptFromReplay( replay, replay_version ) );
+	ret.battle.SetScript(STD_STRING(GetScriptFromReplay( replay, replay_version )));
 
-	if ( ret.battle.GetScript().IsEmpty() ) {
+	if ( ret.battle.GetScript().empty() ) {
 		return false;
 	}
 
 	GetHeaderInfo(replay, ret, replay_version );
 	ret.battle.GetBattleFromScript( false );
-	ret.ModName = ret.battle.GetHostModName();
+	ret.ModName = TowxString(ret.battle.GetHostModName());
 	ret.battle.SetBattleType( BT_Replay );
-	ret.battle.SetEngineName(_T("spring"));
-	ret.battle.SetEngineVersion(ret.SpringVersion);
+	ret.battle.SetEngineName("spring");
+	ret.battle.SetEngineVersion(STD_STRING(ret.SpringVersion));
 
 	//getting this from filename seems more reliable than from demoheader
 	wxDateTime rdate;

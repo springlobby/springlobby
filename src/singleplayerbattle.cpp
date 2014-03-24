@@ -17,7 +17,7 @@ SinglePlayerBattle::SinglePlayerBattle(MainSinglePlayerTab& msptab ):
 	m_me( User(STD_STRING(sett().GetDefaultNick())))
 {
 	OnUserAdded( m_me );
-	m_me.BattleStatus().side = sett().GetBattleLastSideSel( GetHostModName() );
+	m_me.BattleStatus().side = sett().GetBattleLastSideSel(TowxString(GetHostModName()));
 	m_me.BattleStatus().colour = sett().GetBattleLastColour();
     CustomBattleOptions().setSingleOption( "startpostype", LSL::Util::ToString(ST_Pick), LSL::OptionsWrapper::EngineOption );
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&SinglePlayerBattle::OnUnitsyncReloaded));
@@ -44,10 +44,10 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   {
     RemoveUnfittingBots();
 	LoadMod();
-    wxString presetname = sett().GetModDefaultPresetName( GetHostModName() );
+    wxString presetname = sett().GetModDefaultPresetName( TowxString(GetHostModName()));
     if ( !presetname.IsEmpty() )
     {
-      LoadOptionsPreset( presetname );
+      LoadOptionsPreset( STD_STRING(presetname) );
       SendHostInfo( HI_Send_All_opts );
     }
     m_sptab.ReloadModOptContrls();
@@ -67,7 +67,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
 
 void SinglePlayerBattle::RemoveUnfittingBots()
 {
-    const auto old_ais = LSL::usync().GetAIList(STD_STRING(m_previous_local_mod_name));
+    const auto old_ais = LSL::usync().GetAIList(m_previous_local_mod_name);
     const auto new_ais = LSL::usync().GetAIList(m_local_mod.name);
     LSL::StringVector diff(old_ais.size());
     LSL::StringVector::iterator end = std::set_difference(old_ais.begin(), old_ais.end(), new_ais.begin(), new_ais.end(),diff.begin());

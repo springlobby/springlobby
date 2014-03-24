@@ -281,9 +281,9 @@ int IconImageList::GetRankLimitIcon( int rank,  bool showlowest )const
 }
 
 
-int IconImageList::GetFlagIcon( const wxString& flagname )const
+int IconImageList::GetFlagIcon( const std::string& flagname )const
 {
-    return ICON_FLAGS_BASE + GetFlagIndex( flagname );
+    return ICON_FLAGS_BASE + GetFlagIndex(flagname);
 }
 
 
@@ -365,18 +365,17 @@ void IconImageList::SetColourIcon( const wxColour& colour )
 }
 
 
-int IconImageList::GetSideIcon( const wxString& modname, int side )
+int IconImageList::GetSideIcon( const std::string& modname, int side )
 {
-    const auto sides = LSL::usync().GetSides(STD_STRING(modname));
-	wxString sidename;
+    const auto sides = LSL::usync().GetSides(modname);
+	std::string sidename;
     if( side < (int)sides.size() )
-        sidename = TowxString(sides[side]);
-    wxString cachestring = modname + _T("_") + sidename;
+        sidename = sides[side];
+    std::string cachestring = modname + "_" + sidename;
     if (m_cached_side_icons.find(cachestring)  == m_cached_side_icons.end()){
         try
         {
-            const auto img = LSL::usync().GetSidePicture(
-                        STD_STRING(modname), STD_STRING(sidename) );
+            const auto img = LSL::usync().GetSidePicture(modname, sidename);
             int IconPosition = Add(wxBitmap( img.wxbitmap() ), wxNullBitmap);
           m_cached_side_icons[cachestring] = IconPosition;
           return IconPosition;

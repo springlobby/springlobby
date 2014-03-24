@@ -145,7 +145,7 @@ void SelectUsersDialog::ClearList()
 
 long SelectUsersDialog::AddUserToList( const wxString& nick, const wxString& flag )
 {
-  return AddUserToList(nick, icons().GetFlagIcon(flag) );
+  return AddUserToList(nick, icons().GetFlagIcon(STD_STRING(flag)) );
 }
 
 long SelectUsersDialog::AddUserToList( const wxString& nick, const int& flag )

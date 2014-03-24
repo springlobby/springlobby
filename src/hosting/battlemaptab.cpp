@@ -212,7 +212,7 @@ void BattleMapTab::SetMap( int index )
 	if ( !m_battle ) return;
 	try
 	{
-		m_battle->SetLocalMap( m_map_combo->GetString(index) );
+		m_battle->SetLocalMap( STD_STRING(m_map_combo->GetString(index)));
 		m_battle->SendHostInfo( IBattle::HI_Map );
 	} catch ( ... ) {}
 }
@@ -225,7 +225,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 	{
 		try
 		{
-            m_battle->DoAction(_T("suggests ") + m_map_combo->GetString(m_map_combo->GetCurrentSelection()));
+            m_battle->DoAction("suggests " + STD_STRING(m_map_combo->GetString(m_map_combo->GetCurrentSelection())));
 		}
 		catch ( ... )
 		{
@@ -247,7 +247,7 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 		wxLogDebugFunc( mapname );
 		if ( !m_battle->IsFounderMe() )
 		{
-			m_battle->DoAction( _T( "suggests " ) + mapname  );
+			m_battle->DoAction( "suggests " + STD_STRING(mapname)  );
 			return;
 		}
 		const int idx = m_map_combo->FindString( mapname, true /*case sensitive*/ );

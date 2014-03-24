@@ -30,7 +30,7 @@ User::User( IServer& serv )
     : CommonUser( "","",0 ),
     m_serv(&serv),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
+    m_flagicon_idx( icons().GetFlagIcon( "" ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
@@ -40,7 +40,7 @@ User::User( const std::string& nick, IServer& serv )
     : CommonUser( nick,"",0 ),
     m_serv(&serv),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
+    m_flagicon_idx( icons().GetFlagIcon( "" ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
@@ -50,7 +50,7 @@ User::User( const std::string& nick, const std::string& country, const int& cpu,
     : CommonUser( nick,country,cpu ),
     m_serv(&serv),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( TowxString(country) ) ),
+    m_flagicon_idx( icons().GetFlagIcon( country ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
@@ -60,7 +60,7 @@ User::User( const std::string& nick )
     : CommonUser( nick, "", 0 ),
     m_serv(0),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
+    m_flagicon_idx( icons().GetFlagIcon( "" ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
@@ -70,7 +70,7 @@ User::User( const std::string& nick, const std::string& country, const int& cpu 
     : CommonUser( nick,country,cpu ) ,
     m_serv(0),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon(TowxString(country)) ),
+    m_flagicon_idx( icons().GetFlagIcon(country) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
@@ -80,7 +80,7 @@ User::User()
     : CommonUser( "", "", 0 ),
     m_serv(0),
     m_battle(0),
-    m_flagicon_idx( icons().GetFlagIcon( wxEmptyString ) ),
+    m_flagicon_idx( icons().GetFlagIcon( "" ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
     m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
@@ -138,7 +138,7 @@ void User::SetStatus( const UserStatus& status )
   	{
 			User& user = m_battle->GetFounder();
 			if ( user.GetNick() == m_nick ) {
-				m_battle->Update(wxEmptyString);
+				m_battle->Update("");
 			}
     }catch(...){}
   }
@@ -150,7 +150,7 @@ void User::SetStatus( const UserStatus& status )
 void User::SetCountry( const std::string& country )
 {
     m_country = country;
-    m_flagicon_idx = icons().GetFlagIcon( TowxString(country));
+    m_flagicon_idx = icons().GetFlagIcon(country);
 }
 
 void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )

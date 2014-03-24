@@ -196,7 +196,7 @@ void BattleroomListCtrl::SetBattle( IBattle* battle )
 
 	if ( (battle != NULL) && m_sides ) {
 		try {
-			const wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(STD_STRING(battle->GetHostModName())));
+			const wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(battle->GetHostModName()));
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ ) {
 				wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
 				m_sides->Append( side );
@@ -239,7 +239,7 @@ void BattleroomListCtrl::UpdateUser( User& user )
 {
     if ( !user.BattleStatus().spectator )
 		icons().SetColourIcon( user.BattleStatus().colour );
-	wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
+	wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(m_battle->GetHostModName()));
 	if  (user.BattleStatus().side < (long)sides.GetCount()) {
 		user.SetSideiconIndex( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
 	}
@@ -284,7 +284,7 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 	}
 	 if ( column == m_ingame_column_index ) return user.GetStatusIconIndex();
 	 if ( column == m_colour_column_index ) return is_spec ? -1 : icons().GetColourIcon( user.BattleStatus().colour );
-	 if ( column == m_country_column_index ) return is_bot ? -1 : icons().GetFlagIcon( TowxString(user.GetCountry()));
+	 if ( column == m_country_column_index ) return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry());
 	 if ( column == m_rank_column_index ) return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
 	 if ( column == m_faction_column_index ) return is_spec ? -1 : user.GetSideiconIndex();
 	 if ( column == m_nick_column_index ) return -1;
@@ -307,7 +307,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 
 	if ( column == m_faction_column_index ) {
 		try {
-            auto sides = LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName()));
+            auto sides = LSL::usync().GetSides(m_battle->GetHostModName());
             ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.size(), _T("Side index too high") );
 		}
 		catch ( ... ) {
@@ -794,7 +794,7 @@ void BattleroomListCtrl::SetTipWindowText( const long item_hit, const wxPoint& p
 			{
 				try
 				{
-                    const auto sides = LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName()));
+                    const auto sides = LSL::usync().GetSides(m_battle->GetHostModName());
                     const int side = user.BattleStatus().side;
                     if ( side < (int)sides.size() )
                         m_tiptext = TowxString(sides[side]);

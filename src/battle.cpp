@@ -20,6 +20,7 @@
 #include <lslutils/conversion.h>
 #include "iconimagelist.h"
 #include "spring.h"
+#include "utils/conversion.h"
 
 #include <wx/timer.h>
 #include <wx/image.h>
@@ -56,20 +57,20 @@ void Battle::SendHostInfo( HostInfo update )
 }
 
 
-void Battle::SendHostInfo( const wxString& Tag )
+void Battle::SendHostInfo( const std::string& Tag )
 {
-    m_serv.SendHostInfo( Tag );
+    m_serv.SendHostInfo(TowxString(Tag));
 }
 
-void Battle::Update( const wxString& Tag )
+void Battle::Update( const std::string& Tag )
 {
-	BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(this,Tag) );
+	BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(this,TowxString(Tag)) );
 }
 
 
-void Battle::Join( const wxString& password )
+void Battle::Join( const std::string& password )
 {
-    m_serv.JoinBattle( m_opts.battleid, password );
+    m_serv.JoinBattle( m_opts.battleid, TowxString(password));
     m_is_self_in = true;
 }
 
@@ -87,7 +88,7 @@ void Battle::OnRequestBattleStatus()
     bs.ally = GetFreeAlly( true );
     bs.spectator = false;
     bs.colour = sett().GetBattleLastColour();
-    bs.side = sett().GetBattleLastSideSel( GetHostModName() );
+    bs.side = sett().GetBattleLastSideSel( TowxString(GetHostModName()));
     // theres some highly annoying bug with color changes on player join/leave.
     if ( !bs.colour.IsOk() ) bs.colour = GetFreeColour( GetMe() );
 
@@ -124,20 +125,20 @@ void Battle::SetImReady( bool ready )
 }*/
 
 
-void Battle::Say( const wxString& msg )
+void Battle::Say( const std::string& msg )
 {
-    m_serv.SayBattle( m_opts.battleid, msg );
+    m_serv.SayBattle( m_opts.battleid, TowxString(msg));
 }
 
 
-void Battle::DoAction( const wxString& msg )
+void Battle::DoAction( const std::string& msg )
 {
-    m_serv.DoActionBattle( m_opts.battleid, msg );
+    m_serv.DoActionBattle( m_opts.battleid, TowxString(msg));
 }
 
-void Battle::SetLocalMap( const wxString& mapname )
+void Battle::SetLocalMap( const std::string& mapname )
 {
-	IBattle::SetLocalMap( mapname );
+	IBattle::SetLocalMap( mapname);
     if ( IsFounderMe() )  LoadMapDefaults(mapname);
 }
 
@@ -175,17 +176,17 @@ void Battle::SaveMapDefaults()
 		sett().SetMapLastRectPreset( mapname, rects );
 }
 
-void Battle::LoadMapDefaults( const wxString& mapname )
+void Battle::LoadMapDefaults( const std::string& mapname )
 {
     CustomBattleOptions().setSingleOption( "startpostype",
-                                           STD_STRING(sett().GetMapLastStartPosType(mapname)),
+                                           STD_STRING(sett().GetMapLastStartPosType(TowxString(mapname))),
                                            LSL::OptionsWrapper::EngineOption );
 	SendHostInfo( wxFormat( _T("%d_startpostype") ) % LSL::OptionsWrapper::EngineOption );
 
 	for( unsigned int i = 0; i <= GetLastRectIdx(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects
 	SendHostInfo( IBattle::HI_StartRects );
 
-	std::vector<Settings::SettStartBox> savedrects = sett().GetMapLastRectPreset( mapname );
+	std::vector<Settings::SettStartBox> savedrects = sett().GetMapLastRectPreset(TowxString(mapname));
 	for ( std::vector<Settings::SettStartBox>::const_iterator itor = savedrects.begin(); itor != savedrects.end(); ++itor )
 	{
 		AddStartRect( itor->ally, itor->topx, itor->topy, itor->bottomx, itor->bottomy );
@@ -212,18 +213,18 @@ User& Battle::OnUserAdded( User& user )
         {
 			 if ( m_opts.rankneeded > UserStatus::RANK_1 && user.GetStatus().rank < m_opts.rankneeded )
 			 {
-				DoAction(_T("Rank limit autospec: ")+ TowxString(user.GetNick()));
+				DoAction("Rank limit autospec: " + user.GetNick());
 				ForceSpectator( user, true );
 			 }
 			 else if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
 			 {
-				 DoAction( _T("Rank limit autospec: ") + TowxString(user.GetNick()));
+				 DoAction("Rank limit autospec: " + user.GetNick());
 				 ForceSpectator( user, true );
 			 }
         }
 
         m_ah.OnUserAdded( user );
-        if ( !user.BattleStatus().IsBot() && sett().GetBattleLastAutoAnnounceDescription() ) DoAction( m_opts.description );
+        if ( !user.BattleStatus().IsBot() && sett().GetBattleLastAutoAnnounceDescription() ) DoAction( m_opts.description);
     }
     // any code here may be skipped if the user was autokicked
     return user;
@@ -237,12 +238,12 @@ void Battle::OnUserBattleStatusUpdated( User &user, UserBattleStatus status )
 			{
 				if ( m_opts.rankneeded > UserStatus::RANK_1 && user.GetStatus().rank < m_opts.rankneeded )
 				{
-					DoAction( _T("Rank limit autospec: ") + TowxString(user.GetNick()));
+					DoAction("Rank limit autospec: " + user.GetNick());
 					ForceSpectator( user, true );
 				}
 				else if ( m_opts.rankneeded < UserStatus::RANK_1 && user.GetStatus().rank > ( -m_opts.rankneeded - 1 ) )
 				{
-					DoAction( _T("Rank limit autospec: ") + TowxString(user.GetNick()));
+					DoAction("Rank limit autospec: " + user.GetNick());
 					ForceSpectator( user, true );
 				}
 			}
@@ -330,18 +331,18 @@ void Battle::RingPlayer( const User& u )
 	m_serv.Ring( TowxString(u.GetNick()));
 }
 
-bool Battle::ExecuteSayCommand( const wxString& cmd )
+bool Battle::ExecuteSayCommand( const std::string& cmd )
 {
-    wxString cmd_name=cmd.BeforeFirst(' ').Lower();
+    wxString cmd_name=TowxString(cmd).BeforeFirst(' ').Lower();
     if ( cmd_name == _T("/me") )
     {
-        m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
+        m_serv.DoActionBattle( m_opts.battleid, TowxString(cmd).AfterFirst(' ') );
         return true;
     }
 		if ( cmd_name == _T("/replacehostip") )
 		{
-				wxString ip = cmd.AfterFirst(' ');
-				if ( ip.IsEmpty() ) return false;
+				std::string ip = STD_STRING(TowxString(cmd).AfterFirst(' '));
+				if ( ip.empty() ) return false;
 				m_opts.ip = ip;
 				return true;
 		}
@@ -350,16 +351,16 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
     {
         if ( cmd_name == _T("/ban") )
         {
-            wxString nick=cmd.AfterFirst(' ');
+            std::string nick = STD_STRING(TowxString(cmd).AfterFirst(' '));
             m_banned_users.insert(nick);
             try
 						{
-							User& user = GetUser(STD_STRING(nick));
+							User& user = GetUser(nick);
 							m_serv.BattleKickPlayer( m_opts.battleid, user );
 						}
 						catch( assert_exception ) {}
 			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
-					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" banned") )
+					UiEvents::OnBattleActionData( wxString(_T(" ")) , TowxString(nick+ " banned"))
 				);
 
 			//m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
@@ -367,8 +368,8 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
         }
         if ( cmd_name == _T("/unban") )
         {
-            wxString nick=cmd.AfterFirst(' ');
-            m_banned_users.erase(nick);
+            wxString nick=TowxString(cmd).AfterFirst(' ');
+            m_banned_users.erase(STD_STRING(nick));
 			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
 					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" unbanned") )
 				);
@@ -381,16 +382,16 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
 					UiEvents::OnBattleActionData( wxString(_T(" ")) , _T("banlist:") )
 				);
 
-			for (std::set<wxString>::const_iterator i=m_banned_users.begin();i!=m_banned_users.end();++i)
+			for (std::set<std::string>::const_iterator i=m_banned_users.begin();i!=m_banned_users.end();++i)
             {
 				UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
-						UiEvents::OnBattleActionData( wxString(_T(" ")) , *i )
+						UiEvents::OnBattleActionData( wxString(_T(" ")) ,TowxString(*i) )
 					);
             }
-            for (std::set<wxString>::iterator i=m_banned_ips.begin();i!=m_banned_ips.end();++i)
+            for (std::set<std::string>::iterator i=m_banned_ips.begin();i!=m_banned_ips.end();++i)
             {
 				UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
-						UiEvents::OnBattleActionData( wxString(_T(" ")) , *i )
+						UiEvents::OnBattleActionData( wxString(_T(" ")) , TowxString(*i) )
 					);
 
             }
@@ -398,9 +399,9 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
         }
         if ( cmd_name == _T("/unban") )
         {
-            wxString nick=cmd.AfterFirst(' ');
-            m_banned_users.erase(nick);
-            m_banned_ips.erase(nick);
+            wxString nick=TowxString(cmd).AfterFirst(' ');
+            m_banned_users.erase(STD_STRING(nick));
+            m_banned_ips.erase(STD_STRING(nick));
 			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
 					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" unbanned") )
 				);
@@ -410,8 +411,8 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
         }
         if ( cmd_name == _T("/ipban") )
         {
-            wxString nick=cmd.AfterFirst(' ');
-            m_banned_users.insert(nick);
+            wxString nick=TowxString(cmd).AfterFirst(' ');
+            m_banned_users.insert(STD_STRING(nick));
 			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
 					UiEvents::OnBattleActionData( wxString(_T(" ")) , nick+_T(" banned") )
 				);
@@ -421,7 +422,7 @@ bool Battle::ExecuteSayCommand( const wxString& cmd )
                 User &user=GetUser(STD_STRING(nick));
                 if (!user.BattleStatus().ip.empty())
                 {
-                    m_banned_ips.insert(TowxString(user.BattleStatus().ip));
+                    m_banned_ips.insert(user.BattleStatus().ip);
 					UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
 							UiEvents::OnBattleActionData( wxString(_T(" ")) , TowxString(user.BattleStatus().ip)+_T(" banned") )
 						);
@@ -443,7 +444,7 @@ bool Battle::CheckBan(User &user)
 {
     if (IsFounderMe())
     {
-        if (m_banned_users.count(TowxString(user.GetNick()))>0
+        if (m_banned_users.count(user.GetNick())>0
                 || useractions().DoActionOnUser(UserActions::ActAutokick, TowxString(user.GetNick())) )
         {
             KickPlayer(user);
@@ -452,7 +453,7 @@ bool Battle::CheckBan(User &user)
 				);
             return true;
         }
-        else if (m_banned_ips.count(TowxString(user.BattleStatus().ip))>0)
+        else if (m_banned_ips.count(user.BattleStatus().ip)>0)
         {
 			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
 					UiEvents::OnBattleActionData( wxString(_T(" ")) , TowxString(user.BattleStatus().ip)+_T(" is banned, kicking") )
@@ -477,8 +478,11 @@ bool Battle::GetAutoLockOnStart()
 
 void Battle::SetLockExternalBalanceChanges( bool value )
 {
-    if ( value ) DoAction( _T("has locked player balance changes") );
-    else DoAction( _T("has unlocked player balance changes") );
+    if ( value ) {
+		DoAction("has locked player balance changes");
+	} else {
+		DoAction("has unlocked player balance changes");
+	}
     m_opts.lockexternalbalancechanges = value;
 }
 
@@ -488,9 +492,9 @@ bool Battle::GetLockExternalBalanceChanges()
 }
 
 
-void Battle::AddBot( const wxString& nick, UserBattleStatus status )
+void Battle::AddBot( const std::string& nick, UserBattleStatus status )
 {
-    m_serv.AddBot( m_opts.battleid, nick, status );
+    m_serv.AddBot( m_opts.battleid, TowxString(nick), status );
 }
 
 
@@ -585,7 +589,7 @@ void Battle::UserPositionChanged( const User& user )
 
 void Battle::SendScriptToClients()
 {
-	m_serv.SendScriptToClients( GetScript() );
+	m_serv.SendScriptToClients(TowxString(GetScript()));
 }
 
 
@@ -603,7 +607,7 @@ void Battle::StartHostedBattle()
 			}
 			if ( IsProxy() )
 			{
-				if ( UserExists( STD_STRING(GetProxy())) && !GetUser(STD_STRING(GetProxy())).Status().in_game )
+				if ( UserExists( GetProxy()) && !GetUser(GetProxy()).Status().in_game )
 				{
 					// DON'T set m_generating_script here, it will trick the script generating code to think we're the host
 					wxString hostscript = spring().WriteScriptTxt( *this );
@@ -627,10 +631,10 @@ void Battle::StartHostedBattle()
 				SetIsLocked( true );
 				SendHostInfo( IBattle::HI_Locked );
 			}
-			sett().SetLastHostMap( GetServer().GetCurrentBattle()->GetHostMapName() );
+			sett().SetLastHostMap(TowxString(GetServer().GetCurrentBattle()->GetHostMapName()));
 			sett().SaveSettings();
 			if ( !IsProxy() ) GetServer().StartHostedBattle();
-			else if ( UserExists( STD_STRING(GetProxy()) ) && GetUser(STD_STRING(GetProxy())).Status().in_game ) // relayhost is already ingame, let's try to join it
+			else if ( UserExists( GetProxy() ) && GetUser(GetProxy()).Status().in_game ) // relayhost is already ingame, let's try to join it
 			{
 				StartSpring();
 			}
@@ -667,7 +671,7 @@ void Battle::OnTimer( wxTimerEvent&  )
 		if ( status.IsBot() || status.spectator ) continue;
 		if ( status.sync && status.ready ) continue;
 		if ( &usr == &GetMe() ) continue;
-		std::map<wxString, time_t>::const_iterator itor = m_ready_up_map.find( TowxString(usr.GetNick()));
+		std::map<std::string, time_t>::const_iterator itor = m_ready_up_map.find( usr.GetNick());
 		if ( itor != m_ready_up_map.end() )
 		{
 			if ( ( now - itor->second ) > autospect_trigger_time )
@@ -689,7 +693,7 @@ void Battle::SetInGame( bool value )
 			UserBattleStatus& status = user.BattleStatus();
 			if ( status.IsBot() || status.spectator ) continue;
 			if ( status.ready && status.sync ) continue;
-			m_ready_up_map[TowxString(user.GetNick())] = now;
+			m_ready_up_map[user.GetNick()] = now;
 		}
 	}
 	IBattle::SetInGame( value );

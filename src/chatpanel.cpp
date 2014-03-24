@@ -860,12 +860,12 @@ bool ChatPanel::Say( const wxString& message )
 				return true;
 			}
 			if ( line.StartsWith( _T( "/" ) ) ) {
-				if ( m_battle->ExecuteSayCommand( line ) ) return true;
+				if ( m_battle->ExecuteSayCommand( STD_STRING(line) ) ) return true;
 				if ( m_battle->GetServer().ExecuteSayCommand( line ) ) return true;
 				OutputLine( wxFormat( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ) ) % line, sett().GetChatColorError());
 				return true;
 			}
-			m_battle->Say( line );
+			m_battle->Say(STD_STRING(line));
 
 		} else if ( m_type == CPT_User ) {
 

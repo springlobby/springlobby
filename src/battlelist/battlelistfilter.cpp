@@ -572,7 +572,7 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 	//Strings Plain Text & RegEx Check (Case insensitiv)
 
   //Description:
-  if ( ! StringMatches(battle.GetDescription(),
+  if ( ! StringMatches(TowxString(battle.GetDescription()),
 		       m_filter_description_edit->GetValue(),
 		       m_filter_description_expression) )
       return false;
@@ -586,13 +586,13 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 	} catch (...) {}
 
   //Map:
-  if ( ! StringMatches(battle.GetHostMapName(),
+  if ( ! StringMatches(TowxString(battle.GetHostMapName()),
 		       m_filter_map_edit->GetValue(),
 			   m_filter_map_expression) )
       return false;
 
   //Mod:
-  if ( ! StringMatches(battle.GetHostModName(),
+  if ( ! StringMatches(TowxString(battle.GetHostModName()),
 		       m_filter_mod_edit->GetValue(),
 			   m_filter_mod_expression) )
       return false;

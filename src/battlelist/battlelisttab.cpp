@@ -197,8 +197,8 @@ void BattleListTab::SelectBattle( IBattle* battle )
 	m_players->ClearUsers();
 	if ( m_sel_battle != 0 )
 	{
-		m_map_text->SetLabel( m_sel_battle->GetHostMapName() );
-		m_mod_text->SetLabel( m_sel_battle->GetHostModName() );
+		m_map_text->SetLabel( TowxString(m_sel_battle->GetHostMapName()));
+		m_mod_text->SetLabel( TowxString(m_sel_battle->GetHostModName()) );
 		m_players_text->SetLabel( wxFormat( _T( "%d / %d" ) ) % (int( m_sel_battle->GetNumUsers() ) - int( m_sel_battle->GetSpectators() )) % int( m_sel_battle->GetMaxPlayers() ) );
 		m_spec_text->SetLabel( wxFormat( _T( "%d" ) ) % m_sel_battle->GetSpectators() );
 		for ( unsigned int i = 0; i < m_sel_battle->GetNumUsers(); i++ )
@@ -386,7 +386,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 void BattleListTab::DoJoin( IBattle& battle )
 {
 
-	if ( !ui().IsSpringCompatible(battle.GetBattleOptions().engineName, battle.GetBattleOptions().engineVersion) )
+	if ( !ui().IsSpringCompatible(TowxString(battle.GetBattleOptions().engineName), TowxString(battle.GetBattleOptions().engineVersion)))
 	{
         wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
 //		customMessageBox( SL_MAIN_ICON, _( "Joining battles is disabled due to the incompatible spring version you're using." ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
@@ -418,9 +418,9 @@ void BattleListTab::DoJoin( IBattle& battle )
 	{
         if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the game before you can join this game.\n\n" ) + downloadProc,
                                _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-			wxString modhash = battle.GetHostModHash();
-			wxString modname = battle.GetHostModName();
-			ui().Download ( _T("game"), modname, modhash);
+			const std::string modhash = battle.GetHostModHash();
+			const std::string modname = battle.GetHostModName();
+			ui().Download ( _T("game"), TowxString(modname), TowxString(modhash));
 		}
         else
             return;
@@ -430,9 +430,9 @@ void BattleListTab::DoJoin( IBattle& battle )
 	{
         if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the map to be able to play in this game.\n\n" ) + downloadProc,
                                _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-			wxString maphash = battle.GetHostMapHash();
-			wxString mapname = battle.GetHostMapName();
-			ui().Download ( _T("map"), mapname, maphash);
+			std::string maphash = battle.GetHostMapHash();
+			std::string mapname = battle.GetHostMapName();
+			ui().Download ( _T("map"), TowxString(mapname), TowxString(maphash));
 		}
         else
             return;
@@ -446,7 +446,7 @@ void BattleListTab::DoJoin( IBattle& battle )
 		{
 			wxString password = pw.GetValue();
 			password.Replace(_T(" "), wxEmptyString);
-			battle.Join( password );
+			battle.Join(STD_STRING(password));
 		}
 	}
 	else

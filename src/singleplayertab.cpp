@@ -175,11 +175,11 @@ void SinglePlayerTab::ReloadMaplist()
 	m_map_pick->Clear();
 	m_map_pick->Append(LSL::Util::vectorToArrayString(LSL::usync().GetMapList()));
 	m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
-	if (m_battle.GetHostMapName().IsEmpty() ) {
+	if (m_battle.GetHostMapName().empty() ) {
 		m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
 		m_addbot_btn->Enable(false);
 	} else {
-		m_map_pick->SetStringSelection( m_battle.GetHostMapName());
+		m_map_pick->SetStringSelection( TowxString(m_battle.GetHostMapName()));
 		if ( m_map_pick->GetStringSelection().IsEmpty() ) {
 			SetMap( m_mod_pick->GetCount()-1 );
 		}
@@ -192,11 +192,11 @@ void SinglePlayerTab::ReloadModlist()
 	m_mod_pick->Clear();
 	m_mod_pick->Append( LSL::Util::vectorToArrayString(LSL::usync().GetModList()));
 	m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
-	if (m_battle.GetHostModName().IsEmpty() ) {
+	if (m_battle.GetHostModName().empty() ) {
 		m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
 	} else {
-		m_mod_pick->SetStringSelection( m_battle.GetHostModName() );
-		if ( m_mod_pick->GetStringSelection().IsEmpty() ) {
+		m_mod_pick->SetStringSelection( TowxString(m_battle.GetHostModName()));
+		if ( m_mod_pick->GetStringSelection().empty() ) {
 			SetMod( m_mod_pick->GetCount()-1 );
 		}
 	}
@@ -208,7 +208,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
 	//ui().ReloadUnitSync();
   m_addbot_btn->Enable( false );
   	if ( index >= m_map_pick->GetCount()-1 ) {
-    	m_battle.SetHostMap( wxEmptyString, wxEmptyString );
+    	m_battle.SetHostMap( "", "");
  		int count=m_map_opts_list->GetItemCount();
         for(int i=0;i<count;i++)
             m_map_opts_list->SetItem( i, 1, wxEmptyString);
@@ -217,7 +217,7 @@ void SinglePlayerTab::SetMap( unsigned int index )
 	else {
     try {
 		LSL::UnitsyncMap map = LSL::usync().GetMap( index );
-      	m_battle.SetHostMap(TowxString(map.name), TowxString(map.hash));
+      	m_battle.SetHostMap(map.name, map.hash);
      	m_addbot_btn->Enable( true );
 		m_map_opts_list->SetItem( 0, 1, wxFormat( _T( "%dx%d" ) ) % (map.info.width / 512) % (map.info.height / 512) );
         m_map_opts_list->SetItem( 1, 1, wxFormat( _T( "%d-%d" ) ) % map.info.minWind % map.info.maxWind );
@@ -244,7 +244,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
     //ui().ReloadUnitSync();
     if ( index >= m_mod_pick->GetCount()-1 )
     {
-        m_battle.SetHostMod( wxEmptyString, wxEmptyString );
+        m_battle.SetHostMod( "", "" );
     }
     else
     {
@@ -252,7 +252,7 @@ void SinglePlayerTab::SetMod( unsigned int index )
         {
             LSL::UnitsyncMod mod = LSL::usync().GetMod( index );
             m_battle.SetLocalMod( mod );
-            m_battle.SetHostMod(TowxString(mod.name), TowxString(mod.hash));
+            m_battle.SetHostMod(mod.name, mod.hash);
         }
         catch (...) {}
     }
@@ -334,7 +334,7 @@ void SinglePlayerTab::OnAddBot( wxCommandEvent& /*unused*/ )
         bs.team = m_battle.GetFreeTeam();
         bs.ally = m_battle.GetFreeAlly();
         bs.colour = m_battle.GetNewColour();
-		User& bot = m_battle.OnBotAdded( dlg.GetNick(), bs  );
+		User& bot = m_battle.OnBotAdded( STD_STRING(dlg.GetNick()), bs  );
         ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
         m_minimap->UpdateMinimap();
     }
@@ -366,8 +366,8 @@ void SinglePlayerTab::OnStart( wxCommandEvent& /*unused*/ )
         return;
     }
 
-	m_battle.SetEngineName(_T("spring"));
-	m_battle.SetEngineVersion(SlPaths::GetCurrentUsedSpringIndex()); //FIXME: make engine version selectable
+	m_battle.SetEngineName("spring");
+	m_battle.SetEngineVersion(STD_STRING(SlPaths::GetCurrentUsedSpringIndex())); //FIXME: make engine version selectable
 
     if ( ValidSetup() ) m_battle.StartSpring();
 }
@@ -411,7 +411,7 @@ void SinglePlayerTab::UpdateTag( const wxString& Tag )
             m_addbot_btn->Enable( false );
             try
             {
-                m_map_pick->SetSelection(LSL::usync().GetMapIndex(STD_STRING(m_battle.GetHostMapName())));
+                m_map_pick->SetSelection(LSL::usync().GetMapIndex(m_battle.GetHostMapName()));
                 UpdateMinimap();
                 m_addbot_btn->Enable( true );
             }

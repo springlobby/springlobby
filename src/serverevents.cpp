@@ -234,17 +234,17 @@ void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const w
 
         battle.SetBattleType( type );
         battle.SetNatType( nat );
-        battle.SetFounder( nick );
-        battle.SetHostIp( host );
+        battle.SetFounder( STD_STRING(nick));
+        battle.SetHostIp( STD_STRING(host));
         battle.SetHostPort( port );
         battle.SetMaxPlayers( maxplayers );
         battle.SetIsPassworded( haspass );
         battle.SetRankNeeded( rank );
-        battle.SetHostMap( map, maphash );
-        battle.SetDescription( title );
-        battle.SetHostMod( mod, wxEmptyString );
-		battle.SetEngineName(engineName);
-		battle.SetEngineVersion(engineVersion);
+        battle.SetHostMap( STD_STRING(map), STD_STRING(maphash));
+        battle.SetDescription( STD_STRING(title));
+        battle.SetHostMod( STD_STRING(mod), "" );
+		battle.SetEngineName(STD_STRING(engineName));
+		battle.SetEngineVersion(STD_STRING(engineVersion));
 
         if ( useractions().DoActionOnUser( UserActions::ActNotifBattle, TowxString(user.GetNick())) )
             actNotifBox( SL_MAIN_ICON, TowxString(user.GetNick()) + _(" opened battle ") + title );
@@ -269,14 +269,14 @@ void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
     {
         IBattle& battle = m_serv.GetBattle( battleid );
 
-        battle.SetHostMod( battle.GetHostModName(), hash );
+        battle.SetHostMod( battle.GetHostModName(), STD_STRING(hash));
         UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
         bs.spectator = false;
 
         if ( !battle.IsFounderMe() || battle.IsProxy() )
         {
-            battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::MapOption, STD_STRING(battle.GetHostMapName()));
-            battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::ModOption, STD_STRING(battle.GetHostModName()));
+            battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::MapOption, battle.GetHostMapName());
+            battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::ModOption, battle.GetHostModName());
         }
 
         ui().OnJoinedBattle( battle );
@@ -296,8 +296,8 @@ void ServerEvents::OnHostedBattle( int battleid )
 
 				if ( battle.GetBattleType() == BT_Played )
 				{
-                    battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::MapOption, STD_STRING(battle.GetHostMapName()));
-                    battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::ModOption, STD_STRING(battle.GetHostModName()));
+                    battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::MapOption, battle.GetHostMapName());
+                    battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::ModOption, battle.GetHostModName());
 				}
 				else
 				{
@@ -305,8 +305,8 @@ void ServerEvents::OnHostedBattle( int battleid )
 				}
 
 
-        wxString presetname = sett().GetModDefaultPresetName( battle.GetHostModName() );
-        if ( !presetname.IsEmpty() )
+        const std::string presetname = STD_STRING(sett().GetModDefaultPresetName( TowxString(battle.GetHostModName())));
+        if ( !presetname.empty() )
         {
             battle.LoadOptionsPreset( presetname );
         }
@@ -407,15 +407,15 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
         battle.SetSpectators( spectators );
         battle.SetIsLocked( locked );
 
-        wxString oldmap = battle.GetHostMapName();
+        wxString oldmap = TowxString(battle.GetHostMapName());
 
-        battle.SetHostMap( map, maphash );
+        battle.SetHostMap( STD_STRING(map), STD_STRING(maphash));
 
         if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
         {
             battle.SendMyBattleStatus();
             battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::MapOption, STD_STRING(map));
-            battle.Update( wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions ) );
+            battle.Update( STD_STRING(wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions )));
         }
 
 		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
@@ -429,7 +429,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-		battle.m_script_tags[param] = value;
+		battle.m_script_tags[STD_STRING(param)] = STD_STRING(value);
         wxString key = param;
         if ( key.Left( 5 ) == _T("game/") )
         {
@@ -438,13 +438,13 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             {
                 key = key.AfterFirst( '/' );
                 battle.CustomBattleOptions().setSingleOption(STD_STRING(key), STD_STRING(value), LSL::OptionsWrapper::MapOption );
-                battle.Update( wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::MapOption, key.c_str() ) );
+                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::MapOption, key.c_str() )));
             }
             else if ( key.Left( 11 ) == _T( "modoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
                 battle.CustomBattleOptions().setSingleOption(STD_STRING(key), STD_STRING(value), LSL::OptionsWrapper::ModOption );
-                battle.Update(  wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::ModOption,  key.c_str() ) );
+                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::ModOption,  key.c_str() )));
             }
             else if ( key.Left( 8 ) == _T( "restrict" ) )
             {
@@ -485,7 +485,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             else
             {
                 battle.CustomBattleOptions().setSingleOption( STD_STRING(key), STD_STRING(value), LSL::OptionsWrapper::EngineOption );
-                battle.Update( wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::EngineOption, key.c_str() ) );
+                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::EngineOption, key.c_str() )));
             }
         }
     }
@@ -531,8 +531,8 @@ void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname, 
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-        battle.RestrictUnit( unitname, count );
-        battle.Update( wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions ) );
+        battle.RestrictUnit(STD_STRING(unitname), count );
+        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions )));
     }
     catch ( assert_exception ) {}
 }
@@ -544,8 +544,8 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-        battle.UnrestrictUnit( unitname );
-        battle.Update( wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions ) );
+        battle.UnrestrictUnit(STD_STRING(unitname));
+        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions )));
     }
     catch ( assert_exception ) {}
 }
@@ -558,7 +558,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
     {
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.UnrestrictAllUnits();
-        battle.Update( wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions ) );
+        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions )));
     }
     catch ( assert_exception ) {}
 }
@@ -742,7 +742,7 @@ void ServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int left, int
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.AddStartRect( allyno, left, top, right, bottom );
         battle.StartRectAdded( allyno );
-        battle.Update( wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions ) );
+        battle.Update(STD_STRING(wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions )));
     }
     catch (assert_exception) {}
 }
@@ -755,7 +755,7 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.RemoveStartRect( allyno );
         battle.StartRectRemoved( allyno );
-        battle.Update( wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions ) );
+        battle.Update(STD_STRING(wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions )));
     }
     catch (assert_exception) {}
 }
@@ -767,7 +767,7 @@ void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, UserBattl
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-        battle.OnBotAdded( nick, status );
+        battle.OnBotAdded(STD_STRING(nick), status );
         User& bot = battle.GetUser(STD_STRING(nick));
         ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
         ui().OnUserJoinedBattle( battle, bot );
@@ -917,7 +917,7 @@ void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
     m_spam_check[nick] = info;
     if ( info.count == 7 )
     {
-			battle.DoAction( _T("is autokicking ") + nick + _T(" due to command spam.") );
+			battle.DoAction(STD_STRING(_T("is autokicking ") + nick + _T(" due to command spam.")));
 			battle.KickPlayer( user );
     }
 }
@@ -960,7 +960,7 @@ void ServerEvents::OnScriptLine( int battleid, const wxString& line )
 	{
 			return;
 	}
-	m_serv.GetBattle( battleid ).AppendScriptLine( line );
+	m_serv.GetBattle( battleid ).AppendScriptLine(STD_STRING(line));
 }
 
 void ServerEvents::OnScriptEnd( int battleid )

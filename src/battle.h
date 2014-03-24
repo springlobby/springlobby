@@ -32,11 +32,11 @@ public:
 	}
 
 	virtual void SendHostInfo( HostInfo update );
-	virtual void SendHostInfo( const wxString& Tag );
+	virtual void SendHostInfo( const std::string& Tag );
 
-	virtual void Update( const wxString& Tag );
+	virtual void Update( const std::string& Tag );
 
-	virtual void Join( const wxString& password = wxEmptyString );
+	virtual void Join( const std::string& password = "" );
 	virtual void Leave();
 
 	virtual void KickPlayer( User& user );
@@ -46,17 +46,17 @@ public:
 	virtual void RingNotSyncedAndNotReadyPlayers();
 	virtual void RingPlayer( const User& u );
 
-	virtual void Say( const wxString& msg );
-	virtual void DoAction( const wxString& msg );
+	virtual void Say( const std::string& msg );
+	virtual void DoAction( const std::string& msg );
 
-	virtual void SetLocalMap( const wxString& mapname);
+	virtual void SetLocalMap( const std::string& mapname);
 
 	virtual void OnRequestBattleStatus();
 	virtual void SendMyBattleStatus();
 
-	virtual bool ExecuteSayCommand( const wxString& cmd );
+	virtual bool ExecuteSayCommand( const std::string& cmd );
 
-	virtual void AddBot( const wxString& nick, UserBattleStatus status );
+	virtual void AddBot( const std::string& nick, UserBattleStatus status );
 
 	virtual void ForceSide( User& user, int side );
 	virtual void ForceTeam( User& user, int team );
@@ -100,7 +100,7 @@ public:
 	}
 
 	virtual void SaveMapDefaults();
-	virtual void LoadMapDefaults( const wxString& mapname );
+	virtual void LoadMapDefaults( const std::string& mapname );
 
 	virtual void StartHostedBattle();
 	virtual void StartSpring();
@@ -123,8 +123,8 @@ protected:
 	// Battle variables
 
 	///< quick hotfix for bans
-	std::set<wxString> m_banned_users;
-	std::set<wxString> m_banned_ips;
+	std::set<std::string> m_banned_users;
+	std::set<std::string> m_banned_ips;
 	///>
 
 	IServer& m_serv;

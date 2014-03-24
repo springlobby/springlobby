@@ -602,7 +602,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		m_se->OnBattleOpened( id, (BattleType)type, IntToNatType( nat ), nick, host, port, maxplayers,
 				      haspass, rank, hash, engineName, engineVersion, map, title, mod );
 		if ( nick == m_relay_host_bot ) {
-			GetBattle( id ).SetProxy( m_relay_host_bot );
+			GetBattle( id ).SetProxy(STD_STRING(m_relay_host_bot));
 			JoinBattle( id, sett().GetLastHostPassword() ); // autojoin relayed host battles
 		}
 	} else if ( cmd == _T("JOINEDBATTLE") ) {
@@ -1207,22 +1207,22 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 	wxString cmd = wxString::Format( _T("0 %d "), nat_type );
 	cmd += (password.IsEmpty())?_T("*"):password;
 	cmd += wxString::Format( _T(" %d %d "), bo.port, bo.maxplayers );
-	cmd += MakeHashSigned( bo.modhash );
+	cmd += MakeHashSigned(TowxString(bo.modhash));
 	cmd += wxString::Format( _T(" %d "), bo.rankneeded );
-	cmd += MakeHashSigned( bo.maphash ) + _T(" ");
+	cmd += MakeHashSigned(TowxString(bo.maphash)) + _T(" ");
 	if (!bo.userelayhost) { //FIXME: relay host hasn't multiversion support yet, see https://github.com/springlobby/springlobby/issues/98
-		cmd += bo.engineName + _T("\t");
-		cmd += bo.engineVersion + _T("\t");
+		cmd += TowxString(bo.engineName) + _T("\t");
+		cmd += TowxString(bo.engineVersion) + _T("\t");
 	}
-	cmd += bo.mapname + _T("\t");
-	cmd += bo.description + _T("\t");
-	cmd += bo.modname;
+	cmd += TowxString(bo.mapname) + _T("\t");
+	cmd += TowxString(bo.description) + _T("\t");
+	cmd += TowxString(bo.modname);
 
 	m_delayed_open_command = wxEmptyString;
 	if ( !bo.userelayhost ) {
 		SendCmd( _T("OPENBATTLE"), cmd );
 	} else {
-		if ( bo.relayhost.IsEmpty() ) {
+		if ( bo.relayhost.empty() ) {
 			wxArrayString relaylist = GetRelayHostList();
 			unsigned int numbots = relaylist.GetCount();
 			if ( numbots > 0 ) {
@@ -1233,9 +1233,9 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 				SayPrivate( m_relay_host_manager, _T("!spawn") );
 			}
 		} else {
-			m_relay_host_manager = bo.relayhost;
+			m_relay_host_manager = TowxString(bo.relayhost);
 			m_delayed_open_command = cmd;
-			SayPrivate(bo.relayhost,_T("!spawn"));
+			SayPrivate(TowxString(bo.relayhost),_T("!spawn"));
 		}
 	}
 
@@ -1406,15 +1406,15 @@ for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapp
 
 	}
 	if ( (update & IBattle::HI_Restrictions) > 0 ) {
-		std::map<wxString, int> units = battle.RestrictedUnits();
+		std::map<std::string, int> units = battle.RestrictedUnits();
 		if ( !battle.IsProxy() ) SendCmd( _T("ENABLEALLUNITS") );
 		else RelayCmd( _T("ENABLEALLUNITS") );
 		if ( !units.empty() ) {
 			wxString msg;
 			wxString scriptmsg;
-			for ( std::map<wxString, int>::const_iterator itor = units.begin(); itor != units.end(); ++itor ) {
-				msg << itor->first + _T(" ");
-				scriptmsg << _T("game/restrict/") + itor->first + _T("=") + TowxString(itor->second) + _T('\t'); // this is a serious protocol abuse, but on the other hand, the protocol fucking suck and it's unmaintained so it will do for now
+			for ( std::map<std::string, int>::const_iterator itor = units.begin(); itor != units.end(); ++itor ) {
+				msg << TowxString(itor->first) + _T(" ");
+				scriptmsg << _T("game/restrict/") + TowxString(itor->first) + _T("=") + TowxString(itor->second) + _T('\t'); // this is a serious protocol abuse, but on the other hand, the protocol fucking suck and it's unmaintained so it will do for now
 			}
 			if ( !battle.IsProxy() ) {
 				SendCmd( _T("DISABLEUNITS"), msg );

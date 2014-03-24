@@ -449,7 +449,7 @@ void RunHostBattleDialog( wxWindow* parent )
 	if ( dlg.ShowModal() == wxID_OK )
 	{
 		BattleOptions bo;
-		bo.description = sett().GetLastHostDescription();
+		bo.description = STD_STRING(sett().GetLastHostDescription());
 		bo.port = sett().GetLastHostPort();
 		bo.nattype = NatType( sett().GetLastHostNATSetting() );
 
@@ -502,8 +502,8 @@ void RunHostBattleDialog( wxWindow* parent )
 		try
 		{
             mod = LSL::usync().GetMod(STD_STRING(sett().GetLastHostMod()));
-            bo.modhash = TowxString(mod.hash);
-            bo.modname = TowxString(mod.name);
+            bo.modhash = mod.hash;
+            bo.modname = mod.name;
 		}
 		catch ( ... )
 		{
@@ -534,17 +534,17 @@ void RunHostBattleDialog( wxWindow* parent )
 			customMessageBoxNoModal( SL_MAIN_ICON, _( "Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly." ), _( "No maps found" ), wxOK );
 			return;
 		}
-        bo.maphash = TowxString(map.hash);
-        bo.mapname = TowxString(map.name);
+        bo.maphash = map.hash;
+        bo.mapname = map.name;
 
 		bo.rankneeded = sett().GetLastRankLimit();
 
 		bo.maxplayers = sett().GetLastHostPlayerNum();
 		bo.userelayhost = sett().GetLastHostRelayedMode();
 		if ( bo.userelayhost ) bo.nattype = NAT_None;
-		bo.relayhost = sett().GetLastRelayedHost();
-		bo.engineName = _T("spring");
-		bo.engineVersion = TowxString(LSL::usync().GetSpringVersion());
+		bo.relayhost = STD_STRING(sett().GetLastRelayedHost());
+		bo.engineName = "spring";
+		bo.engineVersion = LSL::usync().GetSpringVersion();
 
 		serverSelector().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
 	}

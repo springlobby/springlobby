@@ -27,6 +27,7 @@ class AutoHost
   private:
 
     void StartBattle();
+	void DoAction(const wxString& str);
 
     IBattle& m_battle;
 

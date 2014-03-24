@@ -47,17 +47,17 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
     //wxLOG_Info  ( STD_STRING( SavegamePath ) );
     //TODO extract moar info
     ret.Filename = SavegamePath;
-    ret.battle.SetPlayBackFilePath( SavegamePath );
+    ret.battle.SetPlayBackFilePath(STD_STRING(SavegamePath));
     if ( SavegamePath.IsEmpty() )
         return false;
-    ret.battle.SetScript( GetScriptFromSavegame( SavegamePath ) );
+    ret.battle.SetScript( STD_STRING(GetScriptFromSavegame( SavegamePath )));
     //wxLogMessage(_T("Script: %s"), script.c_str());
 
-    if ( ret.battle.GetScript().IsEmpty() )
+    if ( ret.battle.GetScript().empty() )
         return false;
 
     ret.battle.GetBattleFromScript( false );
-    ret.ModName = ret.battle.GetHostModName();
+    ret.ModName = TowxString(ret.battle.GetHostModName());
     ret.battle.SetBattleType( BT_Savegame );
 	ret.size = wxFileName::GetSize( SavegamePath ).ToULong();
 

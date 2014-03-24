@@ -37,37 +37,37 @@ SpringieHandler::~SpringieHandler()
 
 void SpringieHandler::Balance()
 {
-    m_battle->Say(_T("!balance"));
+    m_battle->Say("!balance");
 }
 
 void SpringieHandler::SetRandomMap()
 {
-    m_battle->Say(_T("!map"));
+    m_battle->Say("!map");
 }
 
 void SpringieHandler::SetMap(const wxString& map)
 {
-    m_battle->Say(_T("!map ")+map);
+    m_battle->Say("!map " + STD_STRING(map));
 }
 
 void SpringieHandler::ClearStartBoxes()
 {
-    m_battle->Say(_T("!clear")); /// will check
+    m_battle->Say("!clear"); /// will check
 }
 
 void SpringieHandler::AddStartBox(int posx,int posy,int w,int h)
 {
-    m_battle->Say(wxString::Format(wxT("!addbox %i %i %i %i"),posx,posy,w,h));
+    m_battle->Say(STD_STRING(wxString::Format(wxT("!addbox %i %i %i %i"),posx,posy,w,h)));
 }
 
 void SpringieHandler::Notify()
 {
-    m_battle->Say(_T("!notify"));
+    m_battle->Say("!notify");
 }
 
 void SpringieHandler::Start()
 {
-    m_battle->Say(_T("!start"));
+    m_battle->Say("!start");
 }
 
 //------------------------------
@@ -87,17 +87,17 @@ SpadsHandler::~SpadsHandler()
 
 void SpadsHandler::Balance()
 {
-    m_battle->Say(_T("!balance"));
+    m_battle->Say("!balance");
 }
 
 void SpadsHandler::SetRandomMap()
 {
-    m_battle->Say(_T("!map 1")); //not so random
+    m_battle->Say("!map 1"); //not so random
 }
 
 void SpadsHandler::SetMap(const wxString& map)
 {
-    m_battle->Say(_T("!map ")+map);
+    m_battle->Say("!map "+STD_STRING(map));
 }
 
 void SpadsHandler::ClearStartBoxes()
@@ -112,12 +112,12 @@ void SpadsHandler::AddStartBox(int /*posx*/,int /*posy*/,int /*w*/,int /*h*/)
 
 void SpadsHandler::Notify()
 {
-    m_battle->Say(_T("!notify"));
+    m_battle->Say("!notify");
 }
 
 void SpadsHandler::Start()
 {
-    m_battle->Say(_T("!start"));
+    m_battle->Say("!start");
 }
 //-------------
 

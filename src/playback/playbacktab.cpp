@@ -304,9 +304,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 
 				if ( !battle.ModExists() ) {
 					if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the game before you can watch this replay.\n\n" ) + downloadProc, _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-						wxString modhash = battle.GetHostModHash();
-						wxString modname = battle.GetHostModName();
-						ui().Download (_T("game"), modname, modhash);
+						ui().Download (_T("game"), TowxString(battle.GetHostModName()), TowxString(battle.GetHostModHash()));
 					}
 					else {
 						AskForceWatch( rep );
@@ -316,9 +314,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 
 				if ( !battle.MapExists() ) {
 					if ( customMessageBox( SL_MAIN_ICON, _( " I couldn't find the map to be able to watch this replay\nThis can be caused by tasclient writing broken map hash value\nIf you're sure you have the map, press no\nYou need to download the map to be able to watch this replay.\n\n" ) + downloadProc, _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-						wxString maphash = battle.GetHostMapHash();
-						wxString mapname = battle.GetHostMapName();
-						ui().Download ( _T("map"), mapname, maphash );
+						ui().Download ( _T("map"), TowxString(battle.GetHostModName()), TowxString(battle.GetHostModHash()));
 					}
 					else {
 						AskForceWatch( rep );
@@ -396,8 +392,8 @@ void PlaybackTab<PlaybackTraits>::OnSelect( wxListEvent& event )
 			wxLogMessage( _T( "Selected replay %d " ), m_sel_replay_id );
 
 			m_players_text->SetLabel( wxEmptyString );
-			m_map_text->SetLabel( rep.battle.GetHostMapName() );
-			m_mod_text->SetLabel( rep.battle.GetHostModName() );
+			m_map_text->SetLabel( TowxString(rep.battle.GetHostMapName()) );
+			m_mod_text->SetLabel( TowxString(rep.battle.GetHostModName()) );
 			m_minimap->SetBattle( &( rep.battle ) );
 			m_minimap->UpdateMinimap();
 

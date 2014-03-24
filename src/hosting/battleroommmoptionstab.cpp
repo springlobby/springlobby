@@ -322,7 +322,7 @@ void BattleroomMMOptionsTab::OnChkBoxChange(wxCommandEvent& event)
 	{
         if (m_battle->IsFounderMe())
         {
-          m_battle->SendHostInfo( (wxString()<<gameoption) + wxsep + key );
+          m_battle->SendHostInfo( STD_STRING((wxString()<<gameoption) + wxsep + key));
         }
 	}
 }
@@ -343,7 +343,7 @@ void BattleroomMMOptionsTab::OnComBoxChange(wxCommandEvent& event)
 	{
         if (m_battle->IsFounderMe())
         {
-          m_battle->SendHostInfo( (wxString()<< gameoption) + wxsep + TowxString(key) );
+          m_battle->SendHostInfo(STD_STRING((wxString()<< gameoption) + wxsep + TowxString(key)));
         }
 	}
 }
@@ -360,7 +360,7 @@ void BattleroomMMOptionsTab::OnTextCtrlChange(wxCommandEvent& event)
 	{
 		if (m_battle->IsFounderMe())
 		{
-          m_battle->SendHostInfo(  (wxString()<< gameoption) + wxsep + TowxString(key));
+          m_battle->SendHostInfo(STD_STRING((wxString()<< gameoption) + wxsep + TowxString(key)));
 		}
 
 	}
@@ -378,7 +378,7 @@ void BattleroomMMOptionsTab::OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event)
 	{
 		if (m_battle->IsFounderMe())
 		{
-          m_battle->SendHostInfo(  (wxString()<< gameoption) + wxsep + TowxString(key) );
+          m_battle->SendHostInfo(STD_STRING((wxString()<< gameoption) + wxsep + TowxString(key)));
 		}
 	}
 }
@@ -498,8 +498,8 @@ void BattleroomMMOptionsTab::OnReloadControls()
 void BattleroomMMOptionsTab::OnLoadPreset( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-  wxString presetname = m_options_preset_sel->GetValue();
-  if ( presetname.IsEmpty() )
+  std::string presetname = STD_STRING(m_options_preset_sel->GetValue());
+  if ( presetname.empty() )
   {
      customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot load an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION|wxOK );
      return;
@@ -513,15 +513,15 @@ void BattleroomMMOptionsTab::OnLoadPreset( wxCommandEvent& /*unused*/ )
 void BattleroomMMOptionsTab::OnSavePreset( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-    wxString presetname;
-	if ( !ui().AskText( _("Enter preset name"), _("Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten"), presetname ) )
+	wxString presetname;
+	if ( !ui().AskText( _("Enter preset name"), _("Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten"), presetname))
         return;
-    if ( presetname.IsEmpty() )
+    if ( presetname.empty() )
     {
         customMessageBoxNoModal( SL_MAIN_ICON , _("Cannot save an options set without a name."), _("error"), wxICON_EXCLAMATION|wxOK );
         return;
     }
-    m_battle->SaveOptionsPreset( presetname );
+    m_battle->SaveOptionsPreset(STD_STRING(presetname));
 }
 
 void BattleroomMMOptionsTab::OnDeletePreset( wxCommandEvent& /*unused*/ )
@@ -530,7 +530,7 @@ void BattleroomMMOptionsTab::OnDeletePreset( wxCommandEvent& /*unused*/ )
   wxArrayString choices = m_battle->GetPresetList();
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Delete preset"), choices );
 	if ( result < 0 ) return;
-  m_battle->DeletePreset( choices[result] );
+  m_battle->DeletePreset( STD_STRING(choices[result]));
 }
 
 void BattleroomMMOptionsTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
@@ -539,15 +539,15 @@ void BattleroomMMOptionsTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
   wxArrayString choices = m_battle->GetPresetList();
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set game default preset"), choices );
 	if ( result < 0 ) return;
-  sett().SetModDefaultPresetName( m_battle->GetHostModName(), choices[result] );
+  sett().SetModDefaultPresetName( TowxString(m_battle->GetHostModName()), choices[result] );
 }
 
 void BattleroomMMOptionsTab::UpdatePresetList()
 {
 		if ( !m_battle ) return;
-    m_options_preset_sel->Clear();
-    m_options_preset_sel->Append(sett().GetPresetList());
-    m_options_preset_sel->SetStringSelection(  m_battle->GetCurrentPreset() );
+	m_options_preset_sel->Clear();
+	m_options_preset_sel->Append(sett().GetPresetList());
+	m_options_preset_sel->SetStringSelection(TowxString(m_battle->GetCurrentPreset()));
 }
 
 void BattleroomMMOptionsTab::OnButton( wxCommandEvent& event )
@@ -597,7 +597,7 @@ void BattleroomMMOptionsTab::SetBattle( IBattle* battle )
 	for ( buttonMap::iterator itor = m_button_map.begin(); itor != m_button_map.end(); ++itor ) itor->second->Enable(m_battle);
 
 	if ( m_battle ) {
-		m_options_preset_sel->SetStringSelection( sett().GetModDefaultPresetName( m_battle->GetHostModName() ) );
+		m_options_preset_sel->SetStringSelection( sett().GetModDefaultPresetName( TowxString(m_battle->GetHostModName())) );
 		if ( !m_battle->IsFounderMe() ) {
 			m_options_preset_sel->Disable();
 			m_load_btn->Disable();

@@ -321,10 +321,10 @@ bool PlaybackListFilter<PlaybackTabType>::FilterPlayback( const typename Playbac
     //Strings Plain Text & RegEx Check (Case insensitiv)
 
     //Map:
-    if ( !battle.GetHostMapName().Upper().Contains( m_filter_map_edit->GetValue().Upper() ) && !m_filter_map_expression->Matches(battle.GetHostMapName()) ) return false;
+    if ( !TowxString(battle.GetHostMapName()).Upper().Contains( m_filter_map_edit->GetValue().Upper() ) && !m_filter_map_expression->Matches(TowxString(battle.GetHostMapName())) ) return false;
 
     //Mod:
-    if ( !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !battle.GetHostModName().Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(battle.GetHostModName()) ) return false;
+    if ( !TowxString(battle.GetHostModName()).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) &&  !TowxString(battle.GetHostModName()).Upper().Contains( m_filter_mod_edit->GetValue().Upper() ) && !m_filter_mod_expression->Matches(TowxString(battle.GetHostModName())) ) return false;
 
     if ( (!m_filter_filesize_edit->GetValue().IsEmpty() ) && !_IntCompare( playback.size , 1024 * s2l( m_filter_filesize_edit->GetValue()) , m_filter_filesize_mode) ) return false;
 

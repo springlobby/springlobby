@@ -474,7 +474,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 		{
 		    UpdateMapInfoSummary();
 
-			wxString mapname =m_battle->GetHostMapName();
+			wxString mapname = TowxString(m_battle->GetHostMapName());
 			int index_ = m_map_combo->FindString( mapname );
 			if ( index_ != wxNOT_FOUND )
                 m_map_combo->SetSelection( index_ );
@@ -686,7 +686,7 @@ void BattleRoomTab::OnFixColours( wxCommandEvent& /*unused*/ )
 	wxLogMessage( wxEmptyString );
 	if ( !m_battle->IsFounderMe() ) // Works with autohosts, and human hosts knows what it mean.
 	{
-		m_battle->Say( _T( "!fixcolors" ) );
+		m_battle->Say("!fixcolors");
 		return;
 	}
 	//m_battle->Say(_T("fixing colours"));
@@ -747,9 +747,9 @@ void BattleRoomTab::OnAutoHost( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnAutoPaste( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxString description = wxGetTextFromUser( _( "Enter a battle description" ), _( "Set description" ), m_battle->GetDescription(), ( wxWindow* ) & ui().mw() );
+	const wxString description = wxGetTextFromUser( _( "Enter a battle description" ), _( "Set description" ), TowxString(m_battle->GetDescription()), ( wxWindow* ) & ui().mw() );
 	m_autopaste_mnu->Check( !description.IsEmpty() );
-	if ( !description.IsEmpty() ) m_battle->SetDescription( description );
+	if ( !description.IsEmpty() ) m_battle->SetDescription(STD_STRING(description));
 	sett().SetBattleLastAutoAnnounceDescription( m_autopaste_mnu->IsChecked() );
 }
 
@@ -823,7 +823,7 @@ void BattleRoomTab::OnSideSel( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	m_battle->ForceSide( m_battle->GetMe(), m_side_sel->GetSelection() );
-	sett().SetBattleLastSideSel( m_battle->GetHostModName(), m_side_sel->GetSelection() );
+	sett().SetBattleLastSideSel( TowxString(m_battle->GetHostModName()), m_side_sel->GetSelection() );
 }
 
 
@@ -832,7 +832,7 @@ void BattleRoomTab::OnPresetSel( wxCommandEvent& /*unused*/ )
 	if ( !m_battle ) return;
 	wxString presetname = m_options_preset_sel->GetValue();
 	if ( presetname.IsEmpty() ) return;
-	m_battle->LoadOptionsPreset( presetname );
+	m_battle->LoadOptionsPreset(STD_STRING(presetname));
 	m_battle->SendHostInfo( IBattle::HI_Send_All_opts );
 }
 
@@ -959,7 +959,7 @@ void BattleRoomTab::UpdatePresetList()
 	if ( !m_battle ) return;
 	m_options_preset_sel->Clear();
 	m_options_preset_sel->Append( sett().GetPresetList() );
-	m_options_preset_sel->SetStringSelection(  m_battle->GetCurrentPreset() );
+	m_options_preset_sel->SetStringSelection(TowxString(m_battle->GetCurrentPreset()));
 }
 
 
@@ -974,7 +974,7 @@ void BattleRoomTab::OnSavePreset( wxCommandEvent& /*unused*/ )
 		customMessageBoxNoModal( SL_MAIN_ICON , _( "Cannot save an options set without a name." ), _( "error" ), wxICON_EXCLAMATION | wxOK );
 		return;
 	}
-	m_battle->SaveOptionsPreset( presetname );
+	m_battle->SaveOptionsPreset(STD_STRING(presetname));
 }
 
 
@@ -984,7 +984,7 @@ void BattleRoomTab::OnDeletePreset( wxCommandEvent& /*unused*/ )
 	wxArrayString choices = m_battle->GetPresetList();
 	int result = wxGetSingleChoiceIndex( _( "Pick an existing option set from the list" ), _( "Delete preset" ), choices );
 	if ( result < 0 ) return;
-	m_battle->DeletePreset( choices[result] );
+	m_battle->DeletePreset(STD_STRING(choices[result]));
 }
 
 void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
@@ -993,7 +993,7 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 	wxArrayString choices = m_battle->GetPresetList();
 	int result = wxGetSingleChoiceIndex( _( "Pick an existing option set from the list" ), _( "Set game default preset" ), choices );
 	if ( result < 0 ) return;
-	sett().SetModDefaultPresetName( m_battle->GetHostModName(), choices[result] );
+	sett().SetModDefaultPresetName(TowxString(m_battle->GetHostModName()), choices[result] );
 }
 
 
@@ -1029,7 +1029,7 @@ void BattleRoomTab::ReloadMaplist()
 
 	size_t nummaps = maplist.Count();
 	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( maplist[i], i );
-	m_map_combo->SetValue( m_battle->GetHostMapName() );
+	m_map_combo->SetValue(TowxString(m_battle->GetHostMapName()));
 }
 
 void BattleRoomTab::SetMap( int index )
@@ -1037,7 +1037,7 @@ void BattleRoomTab::SetMap( int index )
 	if ( !m_battle ) return;
 	try
 	{
-		m_battle->SetLocalMap( m_map_combo->GetString(index) );
+		m_battle->SetLocalMap( STD_STRING(m_map_combo->GetString(index)));
 		m_battle->SendHostInfo( IBattle::HI_Map );
 	} catch ( ... ) {}
 }
@@ -1133,7 +1133,7 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 
 	if ( m_battle ) {
 		RegenerateOptionsList();
-		m_options_preset_sel->SetStringSelection( sett().GetModDefaultPresetName( m_battle->GetHostModName() ) );
+		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostModName())));
 		m_color_sel->SetColor( m_battle->GetMe().BattleStatus().colour );
 		for ( UserList::user_map_t::size_type i = 0; i < m_battle->GetNumUsers(); i++ )
 		{
@@ -1197,7 +1197,7 @@ void BattleRoomTab::RegenerateOptionsList()
 	m_side_sel->Clear();
 	if (m_battle != NULL) {
 		try {
-			const wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(STD_STRING(m_battle->GetHostModName())));
+			const wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(m_battle->GetHostModName()));
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ ) {
 				m_side_sel->Append(sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
 			}

@@ -83,7 +83,7 @@ enum BattleType {
 
 struct BattleOptions {
 	BattleOptions() :
-		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),proxyhost(wxEmptyString),userelayhost(false),lockexternalbalancechanges(false),
+		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),userelayhost(false),lockexternalbalancechanges(false),
 		nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
 		guilistactiv(false) {}
 
@@ -92,29 +92,29 @@ struct BattleOptions {
 	BattleType battletype;
 	bool ispassworded;
 	int rankneeded;
-	wxString proxyhost;
+	std::string proxyhost;
 	bool userelayhost;
 	bool lockexternalbalancechanges;
 
-	wxString founder;
+	std::string founder;
 
 	NatType nattype;
 	unsigned int port;
-	wxString ip;
+	std::string ip;
 	unsigned int externaludpsourceport;
 	unsigned int internaludpsourceport;
 
 	unsigned int maxplayers;
 	unsigned int spectators;
-	wxString relayhost;
-	wxString maphash;
-	wxString modhash;
+	std::string relayhost;
+	std::string maphash;
+	std::string modhash;
 
-	wxString description;
-	wxString engineVersion;
-	wxString engineName;
-	wxString mapname;
-	wxString modname;
+	std::string description;
+	std::string engineVersion;
+	std::string engineName;
+	std::string mapname;
+	std::string modname;
 
 	bool guilistactiv;
 };
@@ -180,7 +180,7 @@ public:
 		int StartPosY;
 		int AllyTeam;
 		wxColor RGBColor;
-		wxString SideName;
+		std::string SideName;
 		int Handicap;
 		int SideNum;
 	};
@@ -197,14 +197,14 @@ public:
 
 	/**@}*/
 
-	virtual void SetHostMap( const wxString& mapname, const wxString& hash );
-	virtual void SetLocalMap( const wxString& mapname);
+	virtual void SetHostMap( const std::string& mapname, const std::string& hash );
+	virtual void SetLocalMap( const std::string& mapname);
 	virtual const LSL::UnitsyncMap& LoadMap();
-	virtual wxString GetHostMapName() const;
-	virtual wxString GetHostMapHash() const;
+	virtual std::string GetHostMapName() const;
+	virtual std::string GetHostMapHash() const;
 
-	virtual void SetProxy( const wxString& proxyhost );
-	virtual wxString GetProxy() const;
+	virtual void SetProxy( const std::string& proxyhost );
+	virtual std::string GetProxy() const;
 	virtual bool IsProxy() const;
 
 	virtual bool IsSynced(); //cannot be const
@@ -216,11 +216,11 @@ public:
 
 	virtual int GetPlayerNum( const User& user ) const;
 
-	virtual void SetHostMod( const wxString& modname, const wxString& hash );
+	virtual void SetHostMod( const std::string& modname, const std::string& hash );
 	virtual void SetLocalMod( const LSL::UnitsyncMod& mod );
 	virtual const LSL::UnitsyncMod& LoadMod();
-	virtual wxString GetHostModName() const;
-	virtual wxString GetHostModHash() const;
+	virtual std::string GetHostModName() const;
+	virtual std::string GetHostModHash() const;
 
 	virtual bool MapExists() const;
 	virtual bool ModExists() const;
@@ -258,19 +258,19 @@ public:
 	virtual const User& GetMe() const = 0;
 
 	virtual void SendHostInfo( HostInfo /*update*/ ) {}
-	virtual void SendHostInfo( const wxString& /*Tag*/ ) {}
-	virtual void Update ( const wxString& /*Tag*/ ) {}
+	virtual void SendHostInfo( const std::string& /*Tag*/ ) {}
+	virtual void Update ( const std::string& /*Tag*/ ) {}
 
 	virtual unsigned int GetNumBots() const;
-	virtual User& OnBotAdded( const wxString& nick, const UserBattleStatus& bs );
+	virtual User& OnBotAdded( const std::string& nick, const UserBattleStatus& bs );
 
 	virtual UserPosition GetFreePosition() ;
 	virtual int GetFreeAlly( bool excludeme = false ) const;
 
-	virtual void RestrictUnit( const wxString& unitname, int count = 0 );
-	virtual void UnrestrictUnit( const wxString& unitname );
+	virtual void RestrictUnit( const std::string& unitname, int count = 0 );
+	virtual void UnrestrictUnit( const std::string& unitname );
 	virtual void UnrestrictAllUnits();
-	virtual std::map<wxString,int> RestrictedUnits() const;
+	virtual std::map<std::string,int> RestrictedUnits() const;
 
 	virtual void OnUnitsyncReloaded(wxEvent& event);
 
@@ -281,10 +281,10 @@ public:
 		return m_opt_wrap;
 	}
 
-	virtual bool LoadOptionsPreset( const wxString& name );
-	virtual void SaveOptionsPreset( const wxString& name );
-	virtual wxString GetCurrentPreset();
-	virtual void DeletePreset( const wxString& name );
+	virtual bool LoadOptionsPreset( const std::string& name );
+	virtual void SaveOptionsPreset( const std::string& name );
+	virtual std::string GetCurrentPreset();
+	virtual void DeletePreset( const std::string& name );
 	virtual wxArrayString GetPresetList();
 
 	virtual std::vector<wxColour> &GetFixColoursPalette( int numteams ) const;
@@ -377,13 +377,13 @@ public:
 	virtual int GetHostPort() const {
 		return m_opts.port;
 	}
-	virtual void SetFounder( const wxString& nick ) {
+	virtual void SetFounder( const std::string& nick ) {
 		m_opts.founder = nick;
 	}
-	virtual void SetHostIp( const wxString& ip ) {
+	virtual void SetHostIp( const std::string& ip ) {
 		m_opts.ip = ip;
 	}
-	virtual wxString GetHostIp() const {
+	virtual std::string GetHostIp() const {
 		return m_opts.ip;
 	}
 
@@ -407,18 +407,18 @@ public:
 		return m_opts.rankneeded;
 	}
 
-	// virtual void SetMapHash( const wxString& maphash ) { m_opts.maphash = maphash; }
-	// virtual void SetMapname( const wxString& map ) { m_opts.mapname = map; }
-	virtual void SetDescription( const wxString& desc ) {
+	// virtual void SetMapHash( const std::string& maphash ) { m_opts.maphash = maphash; }
+	// virtual void SetMapname( const std::string& map ) { m_opts.mapname = map; }
+	virtual void SetDescription( const std::string& desc ) {
 		m_opts.description = desc;
 	}
-	virtual wxString GetDescription() const {
+	virtual std::string GetDescription() const {
 		return m_opts.description;
 	}
-	// virtual void SetModname( const wxString& mod ) { m_opts.modname = mod; }
+	// virtual void SetModname( const std::string& mod ) { m_opts.modname = mod; }
 
 
-	typedef std::map<wxString, User> UserVec;
+	typedef std::map<std::string, User> UserVec;
 	typedef UserVec::const_iterator UserVecCIter;
 	typedef UserVec::iterator UserVecIter;
 
@@ -465,23 +465,23 @@ public:
 
 	virtual void UserPositionChanged( const User& usr );
 
-	virtual void SetScript( const wxString& script ) {
+	virtual void SetScript( const std::string& script ) {
 		m_script = script;
 	}
-	virtual void AppendScriptLine( const wxString& line ) {
-		m_script << line;
+	virtual void AppendScriptLine( const std::string& line ) {
+		m_script += line;
 	}
 	virtual void ClearScript() {
-		m_script.Clear();
+		m_script.clear();
 	}
-	virtual wxString GetScript() const {
+	virtual std::string GetScript() const {
 		return m_script;
 	}
 
-	virtual void SetPlayBackFilePath( const wxString& path ) {
+	virtual void SetPlayBackFilePath( const std::string& path ) {
 		m_playback_file_path = path;
 	}
-	virtual wxString GetPlayBackFilePath() const {
+	virtual std::string GetPlayBackFilePath() const {
 		return m_playback_file_path;
 	}
 
@@ -500,44 +500,44 @@ public:
 		return m_teams_sizes;
 	}
 
-	std::map<wxString, wxString> m_script_tags; // extra script tags to reload in the case of map/mod reload
+	std::map<std::string, std::string> m_script_tags; // extra script tags to reload in the case of map/mod reload
 
 	virtual long GetBattleRunningTime() const; // returns 0 if not started
 
-	virtual void SetEngineName(const wxString& name) {
+	virtual void SetEngineName(const std::string& name) {
 		m_opts.engineName = name;
 	}
-	virtual void SetEngineVersion(const wxString& version) {
+	virtual void SetEngineVersion(const std::string& version) {
 		m_opts.engineVersion = version;
 	}
-	virtual wxString GetEngineName() const {
+	virtual std::string GetEngineName() const {
 		return m_opts.engineName;
 	}
-	virtual wxString GetEngineVersion() const {
+	virtual std::string GetEngineVersion() const {
 		return m_opts.engineVersion;
 	}
-	virtual bool ExecuteSayCommand(const wxString& /*line*/) {
+	virtual bool ExecuteSayCommand(const std::string& /*line*/) {
 		return true;
 	}
 	virtual int GetID() const {
 		return 0;
 	}
-	virtual void Join( const wxString& /*password*/ = wxEmptyString ) {}
+	virtual void Join( const std::string& /*password*/ = "" ) {}
 	virtual IServer& GetServer();
-	virtual void Say(const wxString& /*msg*/) {}
+	virtual void Say(const std::string& /*msg*/) {}
 	virtual bool CheckBan(User& /*user*/) {
 		return false;
 	}
 	virtual bool GetAutoLockOnStart() {
 		return false;
 	}
-	virtual void LoadMapDefaults(const wxString&) {}
+	virtual void LoadMapDefaults(const std::string&) {}
 	virtual void SendMyBattleStatus() {}
 	virtual AutoHost* GetAutoHost() {
 		return NULL;
 	}
 	virtual void Autobalance( BalanceType /*balance_type*/, bool /*support_clans*/, bool /*strong_clans*/, int /*numallyteams*/ ) {}
-	virtual void DoAction( const wxString& /*action*/) {}
+	virtual void DoAction( const std::string& /*action*/) {}
 	virtual void RingPlayer(const User& /*user*/) {}
 	virtual void RingNotReadyPlayers() {}
 	virtual void FixColours() {}
@@ -577,9 +577,9 @@ protected:
 	LSL::UnitsyncMod m_local_mod;
 	LSL::UnitsyncMap m_host_map;
 	LSL::UnitsyncMod m_host_mod;
-	wxString m_previous_local_mod_name;
+	std::string m_previous_local_mod_name;
 
-	std::map<wxString, int> m_restricted_units;
+	std::map<std::string, int> m_restricted_units;
 
 	LSL::OptionsWrapper m_opt_wrap;
 
@@ -594,7 +594,7 @@ protected:
 
 	std::map<unsigned int,BattleStartRect> m_rects;
 
-	std::map<wxString, time_t> m_ready_up_map; // player name -> time counting from join/unspect
+	std::map<std::string, time_t> m_ready_up_map; // player name -> time counting from join/unspect
 
 	unsigned int m_players_ready;
 	unsigned int m_players_sync;
@@ -602,14 +602,14 @@ protected:
 	std::map<int, int> m_teams_sizes; // controlteam -> number of people in
 	std::map<int, int> m_ally_sizes; // allyteam -> number of people in
 
-	wxString m_preset;
+	std::string m_preset;
 
 	bool m_is_self_in;
 	UserVec m_internal_bot_list;
 
 	/// replay&savegame stuff
-	wxString m_script;
-	wxString m_playback_file_path;
+	std::string m_script;
+	std::string m_playback_file_path;
 
 	TeamVec m_parsed_teams;
 	AllyVec m_parsed_allies;

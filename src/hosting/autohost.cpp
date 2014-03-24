@@ -31,6 +31,10 @@ bool AutoHost::GetEnabled() const
 {
 	return m_enabled;
 }
+void AutoHost::DoAction(const wxString& str)
+{
+	m_battle.DoAction(STD_STRING(str));
+}
 
 void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 {
@@ -55,32 +59,32 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
     else if ( command == _T( "!balance" ) ) {
 		unsigned int num = s2l( params );
 		m_battle.Autobalance( IBattle::balance_random, false, false, num );
-		m_battle.DoAction( _T( "is auto-balancing alliances ..." ));
+		DoAction(_T("is auto-balancing alliances ..."));
 	}
 	else if ( command == _T( "!cbalance" ) ) {
 		unsigned int num = s2l( params );
 		m_battle.Autobalance( IBattle::balance_random, true, false, num );
-		m_battle.DoAction( _T( "is auto-balancing alliances ..." ) );
+		DoAction( _T( "is auto-balancing alliances ..." ) );
 	}
 	else if ( command == _T( "!help" ) ) {
-		m_battle.DoAction( _T( "The following commands are available ( <> = mandatory value, {} = optional value ):" ) );
-		m_battle.DoAction( _T( "!addbox <topx> <topy> <bottomx> <bottomy> {allynumber}: adds a <allynumber> start restriction to the given coordinates, coordinates range from 0 to 200." ) );
-		m_battle.DoAction( _T( "!balance {number}: tries to put players into allyteams by how many start boxes there are, uses {number} allyteams if present." ) );
-		m_battle.DoAction( _T( "!cbalance {number}: see !balance but tries to put clanmates together first." ) );
-		m_battle.DoAction( _T( "!fixcolors: changes players duplicate colours so they are unique." ) );
-		m_battle.DoAction( _T( "!fixids {number}: tries to put players into control teams by number, if number is omitted it assignes as different controlteam per player." ) );
-		m_battle.DoAction( _T( "!cfixids {number}: see !fixids but tries to put clanmates together first." ) );
-		m_battle.DoAction( _T( "!help: this guide." ) );
-		m_battle.DoAction( _T( "!listprofiles: lists the available battle profiles." ) );
-		m_battle.DoAction( _T( "!loadprofile profilename: loads an available battle profile." ) );
-		m_battle.DoAction( _T( "!lock: prevents more people to join." ) );
-		m_battle.DoAction( _T( "!map <name>: switches to <name>." ) );
-		m_battle.DoAction( _T( "!removebox <allynumber>: deletes <allynumber> start restriction's box." ) );
-		m_battle.DoAction( _T( "!ring {name}: rings players that are not ready or {name} if specified." ) );
-		m_battle.DoAction( _T( "!set <optionname> <value>: sets battle option <optionname> to <value>" ) );
-		m_battle.DoAction( _T( "!spectunsynced: sets all players with unsynced status to be spectators." ) );
-		m_battle.DoAction( _T( "!start: starts the battle." ) );
-		m_battle.DoAction( _T( "!unlock: opens the battle again." ) );
+		DoAction( _T( "The following commands are available ( <> = mandatory value, {} = optional value ):" ) );
+		DoAction( _T( "!addbox <topx> <topy> <bottomx> <bottomy> {allynumber}: adds a <allynumber> start restriction to the given coordinates, coordinates range from 0 to 200." ) );
+		DoAction( _T( "!balance {number}: tries to put players into allyteams by how many start boxes there are, uses {number} allyteams if present." ) );
+		DoAction( _T( "!cbalance {number}: see !balance but tries to put clanmates together first." ) );
+		DoAction( _T( "!fixcolors: changes players duplicate colours so they are unique." ) );
+		DoAction( _T( "!fixids {number}: tries to put players into control teams by number, if number is omitted it assignes as different controlteam per player." ) );
+		DoAction( _T( "!cfixids {number}: see !fixids but tries to put clanmates together first." ) );
+		DoAction( _T( "!help: this guide." ) );
+		DoAction( _T( "!listprofiles: lists the available battle profiles." ) );
+		DoAction( _T( "!loadprofile profilename: loads an available battle profile." ) );
+		DoAction( _T( "!lock: prevents more people to join." ) );
+		DoAction( _T( "!map <name>: switches to <name>." ) );
+		DoAction( _T( "!removebox <allynumber>: deletes <allynumber> start restriction's box." ) );
+		DoAction( _T( "!ring {name}: rings players that are not ready or {name} if specified." ) );
+		DoAction( _T( "!set <optionname> <value>: sets battle option <optionname> to <value>" ) );
+		DoAction( _T( "!spectunsynced: sets all players with unsynced status to be spectators." ) );
+		DoAction( _T( "!start: starts the battle." ) );
+		DoAction( _T( "!unlock: opens the battle again." ) );
 	}
 	else if ( command == _T( "!ring" ) ) {
 		if ( !params.IsEmpty() )
@@ -90,79 +94,79 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 			{
 				User& u = m_battle.GetUser(STD_STRING(user));
 				m_battle.RingPlayer( u );
-				m_battle.DoAction( _T( "is ringing " ) + user );
+				DoAction( _T( "is ringing " ) + user );
 			}
 			catch ( ... )
 			{
-				m_battle.DoAction( _T( "cannot ring " ) + user );
+				DoAction( _T( "cannot ring " ) + user );
 			}
 		}
 		else
 		{
 			m_battle.RingNotReadyPlayers();
-			m_battle.DoAction( _T( "is ringing players not ready ..." ) );
+			DoAction( _T( "is ringing players not ready ..." ) );
 		}
 	}
 	else if ( command == _T( "!listprofiles" ) ) {
 		wxArrayString profilelist = m_battle.GetPresetList();
 		unsigned int count = profilelist.GetCount();
 		if ( count == 0 ) {
-			m_battle.DoAction( _T( "There are no presets available." ) );
+			DoAction( _T( "There are no presets available." ) );
 		}
 		else {
-			m_battle.DoAction( _T( "The following presets are available:" ) );
+			DoAction( _T( "The following presets are available:" ) );
 			for ( unsigned int i = 0; i < count; i++ ) {
-				m_battle.DoAction( profilelist[i] );
+				DoAction( profilelist[i] );
 			}
 		}
 	}
 	else if ( command == _T( "!loadprofile" ) ) {
 		wxString profilename = GetBestMatch( m_battle.GetPresetList(), params );
-		if ( !m_battle.LoadOptionsPreset( profilename ) )
-			m_battle.DoAction( _T( "Profile not found, use !listprofiles for a list of available profiles." ) );
-		else m_battle.DoAction( _T( "has loaded profile: " ) + profilename );
+		if ( !m_battle.LoadOptionsPreset(STD_STRING(profilename)) )
+			DoAction( _T( "Profile not found, use !listprofiles for a list of available profiles." ) );
+		else DoAction( _T( "has loaded profile: " ) + profilename );
 	}
 	else if ( command == _T( "!fixcolors" ) ) {
 		m_battle.FixColours();
-		m_battle.DoAction( _T( "is fixing colors." ) );
+		DoAction( _T( "is fixing colors." ) );
 	}
 	else if ( command == _T( "!lock" ) ) {
 		m_battle.SetIsLocked( true );
-		m_battle.DoAction( _T( "has locked the battle." ) );
+		DoAction( _T( "has locked the battle." ) );
 		m_battle.SendHostInfo( IBattle::HI_Locked );
 	}
 	else if ( command == _T( "!unlock" ) ) {
 		m_battle.SetIsLocked( false );
-		m_battle.DoAction( _T( "has unlocked the battle." ) );
+		DoAction( _T( "has unlocked the battle." ) );
 		m_battle.SendHostInfo( IBattle::HI_Locked );
 	}
 	else if ( command == _T( "!fixids" ) ) {
 		unsigned int num = s2l( params );
 		m_battle.FixTeamIDs( IBattle::balance_divide, false, false, num );
-		m_battle.DoAction( _T( "is auto-balancing control teams ..." ) );
+		DoAction( _T( "is auto-balancing control teams ..." ) );
 	}
 	else if ( command == _T( "!cfixids" ) ) {
 		unsigned int num = s2l( params );
 		m_battle.FixTeamIDs( IBattle::balance_divide, true, true, num );
-		m_battle.DoAction( _T( "is auto-balancing control teams ..." ) );
+		DoAction( _T( "is auto-balancing control teams ..." ) );
 	}
 	else if ( command == _T( "!spectunsynced" ) ) {
 		m_battle.ForceUnsyncedToSpectate();
-		m_battle.DoAction( _T( "is forcing unsynced players to be spectators." ) );
+		DoAction( _T( "is forcing unsynced players to be spectators." ) );
 	}
 	else if ( command == _T( "!map" ) ) {
-		if ( params.IsEmpty() ) m_battle.DoAction( _T( "cannot switch to void mapname" ) );
+		if ( params.IsEmpty() ) DoAction( _T( "cannot switch to void mapname" ) );
 		else
 		{
             const wxString mapname = GetBestMatch( LSL::Util::vectorToArrayString(LSL::usync().GetMapList()), params );
 			try
 			{
-				m_battle.SetLocalMap( mapname );
-				m_battle.DoAction( _T( "is switching to map " ) + mapname );
+				m_battle.SetLocalMap(STD_STRING(mapname));
+				DoAction( _T( "is switching to map " ) + mapname );
 				m_battle.SendHostInfo( IBattle::HI_Map );
 			} catch ( ... )
 			{
-				m_battle.DoAction( _T( "cannot switch to map " ) + mapname );
+				DoAction( _T( "cannot switch to map " ) + mapname );
 			}
 		}
 	}
@@ -177,13 +181,13 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 			{
                 auto section = m_battle.CustomBattleOptions().GetSection( key );
 				m_battle.SendHostInfo( wxFormat( _T( "%d_%s" ) ) % section % key );
-                m_battle.DoAction( TowxString( "has set option "  + key + " to value "  + value ));
+                DoAction( TowxString( "has set option "  + key + " to value "  + value ));
 			}
-            else m_battle.DoAction( TowxString( "cannot set option " + key + " to value " + value + ", reason: invalid value." ) );
+            else DoAction( TowxString( "cannot set option " + key + " to value " + value + ", reason: invalid value." ) );
 		}
 		else
 		{
-            m_battle.DoAction( TowxString( "cannot find option entry " + key ));
+            DoAction( TowxString( "cannot find option entry " + key ));
 		}
 	}
 	else if ( command == _T( "!addbox" ) ) {
@@ -194,7 +198,7 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 		long bottomrighty;
 		wxArrayString values = wxStringTokenize( params, _T( " " ) );
 		int numvalues = values.GetCount();
-		if ( numvalues > 4 || numvalues < 3 ) m_battle.DoAction( _T( "has recieved an invalid number of params for !addbox" ) );
+		if ( numvalues > 4 || numvalues < 3 ) DoAction( _T( "has recieved an invalid number of params for !addbox" ) );
 		else
 		{
 			bool valueok = values[0].ToLong( &topleftx );
@@ -220,18 +224,18 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 				BattleStartRect rect = m_battle.GetStartRect( allynumber );
 				if ( rect.IsOk() )
 				{
-					m_battle.DoAction( _T( "cannot add a startbox for allyteam " ) + TowxString( allynumber ) + _T( " because one is already present." ) );
+					DoAction( _T( "cannot add a startbox for allyteam " ) + TowxString( allynumber ) + _T( " because one is already present." ) );
 				}
 				else
 				{
 					m_battle.AddStartRect( allynumber, topleftx, toplefty, bottomrightx, bottomrighty );
 					m_battle.SendHostInfo( IBattle::HI_StartRects );
-					m_battle.DoAction( _T( "has added start box for allyteam " ) + TowxString( allynumber ) );
+					DoAction( _T( "has added start box for allyteam " ) + TowxString( allynumber ) );
 				}
 			}
 			else
 			{
-				m_battle.DoAction( _T( "has recieved an invalid param for !addbox" ) );
+				DoAction( _T( "has recieved an invalid param for !addbox" ) );
 			}
 		}
 	}
@@ -246,16 +250,16 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 			{
 				m_battle.RemoveStartRect( boxnumber );
 				m_battle.SendHostInfo( IBattle::HI_StartRects );
-				m_battle.DoAction( _T( "has removed the start box for allyteam " ) + TowxString( boxnumber ) );
+				DoAction( _T( "has removed the start box for allyteam " ) + TowxString( boxnumber ) );
 			}
 			else
 			{
-				m_battle.DoAction( _T( "cannot find start box " ) + params );
+				DoAction( _T( "cannot find start box " ) + params );
 			}
 		}
 		else
 		{
-			m_battle.DoAction( _T( "has recieved an invalid param to !removebox command" ) );
+			DoAction( _T( "has recieved an invalid param to !removebox command" ) );
 		}
 	}
 	else return;
@@ -285,7 +289,7 @@ void AutoHost::OnUserRemoved( User& user )
 	if ( m_battle.GetNumUsers() == 1 && m_battle.IsLocked() )
 	{
 		m_battle.SetIsLocked( false );
-		m_battle.DoAction( _T( "has auto-unlocked the battle." ) );
+		DoAction( _T( "has auto-unlocked the battle." ) );
 		m_battle.SendHostInfo( IBattle::HI_Locked );
 	}
 }
@@ -300,11 +304,11 @@ void AutoHost::StartBattle()
 
 	if ( !m_battle.IsEveryoneReady() )
 	{
-		m_battle.DoAction( _T( "Some players are not ready yet." ) );
+		DoAction( _T( "Some players are not ready yet." ) );
 		return;
 	}
 
-	m_battle.DoAction( _T( "is starting game ..." ) );
+	DoAction( _T( "is starting game ..." ) );
 	m_battle.StartHostedBattle();
 
 	m_battle.SaveMapDefaults(); // save map preset

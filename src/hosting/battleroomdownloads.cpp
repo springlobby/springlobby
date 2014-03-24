@@ -9,6 +9,7 @@
 #include "../downloader/downloadsobserver.h"
 #include <map>
 #include  "ibattle.h"
+#include "utils/conversion.h"
 
 class BattleRoomDownloadProgres: public wxPanel
 {
@@ -99,7 +100,7 @@ void BattleRoomDownloads::OnUpdate()
 
     try
     {
-        wxString game=m_battle->GetHostModName();
+        wxString game = TowxString(m_battle->GetHostModName());
         ObserverDownloadInfo obi=dlmap.at(game);
         m_mod->Show();
         m_mod->UpdateDownload(obi);
@@ -111,7 +112,7 @@ void BattleRoomDownloads::OnUpdate()
 
     try
     {
-        wxString map=m_battle->GetHostMapName();
+        wxString map = TowxString(m_battle->GetHostMapName());
         ObserverDownloadInfo obi=dlmap.at(map);
         m_map->Show();
         m_map->UpdateDownload(obi);

@@ -109,9 +109,9 @@ bool Spring::Run( IBattle& battle )
 		return false;
 	}
 
-	wxString executable = SlPaths::GetSpringBinary(battle.GetEngineVersion());
+	wxString executable = SlPaths::GetSpringBinary(TowxString(battle.GetEngineVersion()));
 	if ( !wxFile::Exists(executable) ) {
-		executable = SlPaths::GetSpringBinary(TowxString(SlPaths::GetCompatibleVersion(STD_STRING(battle.GetEngineVersion())))); //fallback, no exact version found, try fallback version
+		executable = SlPaths::GetSpringBinary(TowxString(SlPaths::GetCompatibleVersion(battle.GetEngineVersion()))); //fallback, no exact version found, try fallback version
 		if ( !wxFile::Exists(executable) ) {
 			customMessageBoxNoModal( SL_MAIN_ICON, wxFormat(_T("The spring executable version '%s' was not found at the set location '%s', please re-check.")) % battle.GetEngineVersion() % executable, _T("Executable not found") );
 			ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
@@ -174,7 +174,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 		if ( battle.GetNatType() == NAT_Hole_punching ) tdf.Append("HostPort", battle.GetMyInternalUdpSourcePort() );
 		else tdf.Append("HostPort", battle.GetHostPort() );
 	} else {
-		tdf.Append("HostIP", STD_STRING(battle.GetHostIp()) );
+		tdf.Append("HostIP", battle.GetHostIp() );
 		tdf.Append("HostPort", battle.GetHostPort() );
 		if ( battle.GetNatType() == NAT_Hole_punching ) {
 			tdf.Append("SourcePort", battle.GetMyInternalUdpSourcePort() );
@@ -205,8 +205,8 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 	tdf.Append("ModHash", battle.LoadMod().hash);
 	tdf.Append("MapHash", battle.LoadMap().hash);
 
-	tdf.Append("Mapname", STD_STRING(battle.GetHostMapName()));
-	tdf.Append("GameType", STD_STRING(battle.GetHostModName()));
+	tdf.Append("Mapname", battle.GetHostMapName());
+	tdf.Append("GameType", battle.GetHostModName());
 
 	tdf.AppendLineBreak();
 
@@ -214,14 +214,14 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 	case BT_Played:
 		break;
 	case BT_Replay: {
-		wxString path = battle.GetPlayBackFilePath();
+		wxString path = TowxString(battle.GetPlayBackFilePath());
 		if ( path.Find(_T("/")) != wxNOT_FOUND ) path.BeforeLast(_T('/'));
 		tdf.Append("DemoFile", STD_STRING(path));
 		tdf.AppendLineBreak();
 		break;
 	}
 	case BT_Savegame: {
-		wxString path = battle.GetPlayBackFilePath();
+		wxString path = TowxString(battle.GetPlayBackFilePath());
 		if ( path.Find(_T("/")) != wxNOT_FOUND ) path.BeforeLast(_T('/'));
 		tdf.Append("Savefile", STD_STRING(path));
 		tdf.AppendLineBreak();
@@ -279,11 +279,11 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 	}
 	tdf.LeaveSection();
 
-	std::map<wxString,int> units = battle.RestrictedUnits();
+	std::map<std::string,int> units = battle.RestrictedUnits();
 	tdf.Append("NumRestrictions", units.size());
 	tdf.EnterSection("RESTRICT");
 	int restrictcount = 0;
-	for ( std::map<wxString, int>::const_iterator itor = units.begin(); itor != units.end(); ++itor ) {
+	for ( std::map<std::string, int>::const_iterator itor = units.begin(); itor != units.end(); ++itor ) {
 		tdf.Append(stdprintf("Unit%d", restrictcount), itor->first );
 		tdf.Append(stdprintf("Limit%d", restrictcount), itor->second );
 		restrictcount++;
@@ -370,7 +370,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 	tdf.AppendLineBreak();
 
 	std::set<int> parsedteams;
-	const auto sides = LSL::usync().GetSides(STD_STRING(battle.GetHostModName()));
+	const auto sides = LSL::usync().GetSides(battle.GetHostModName());
 	for ( unsigned int i = 0; i < NumUsers; i++ ) {
 		User& usr = battle.GetUser( i );
 		UserBattleStatus& status = usr.BattleStatus();

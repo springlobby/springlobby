@@ -87,16 +87,16 @@ wxString BattleListCtrl::GetItemText(long item, long column) const
         case 2:
         default: return wxEmptyString;
 
-        case 3: return ( opts.description );
-		case 4: return ( battle.GetHostMapName() );
-		case 5: return ( battle.GetHostModName() );
-        case 6: return ( opts.founder );
+        case 3: return ( TowxString(opts.description)) ;
+		case 4: return ( TowxString(battle.GetHostMapName()));
+		case 5: return ( TowxString(battle.GetHostModName()));
+        case 6: return ( TowxString(opts.founder));
 		case 7: return wxFormat(_T("%d") ) % int(battle.GetSpectators());
 		case 8: return wxFormat(_T("%d") ) % (int(battle.GetNumUsers()) - int(battle.GetSpectators()));
 		case 9: return wxFormat(_T("%d") ) % int(battle.GetMaxPlayers());
         case 10: return ( wxTimeSpan(0/*h*/,0/*m*/,
                                      battle.GetBattleRunningTime()).Format(_T("%H:%M")) );
-		case 11: return battle.GetEngineVersion();
+		case 11: return TowxString(battle.GetEngineVersion());
     }
 }
 
@@ -125,7 +125,7 @@ int BattleListCtrl::GetItemColumnImage(long item, long column) const
         {
         	try
         	{
-				return icons().GetFlagIcon(TowxString(battle.GetFounder().GetCountry()));
+				return icons().GetFlagIcon(battle.GetFounder().GetCountry());
         	}catch(...){}
 					break;
         }
@@ -217,7 +217,7 @@ void BattleListCtrl::OnDLMap( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        ui().Download( _T("map"), dt->GetHostMapName(), dt->GetHostMapHash() );
+        ui().Download( _T("map"), TowxString(dt->GetHostMapName()), TowxString(dt->GetHostMapHash()));
     }
 }
 
@@ -225,7 +225,7 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& /*unused*/  )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         DataType dt = m_data[m_selected_index];
-        ui().Download(_T("game"), dt->GetHostModName(), dt->GetHostModHash() );
+        ui().Download(_T("game"), TowxString(dt->GetHostModName()), TowxString(dt->GetHostModHash()));
     }
 }
 
@@ -252,9 +252,9 @@ int BattleListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir )
 					break;
         }
         case 2: return dir * compareSimple( u1->GetRankNeeded(), u2->GetRankNeeded() );
-        case 3: return dir * u1->GetDescription().CmpNoCase( u2->GetDescription() );
-		case 4: return dir * u1->GetHostMapName().CmpNoCase( u2->GetHostMapName() );
-		case 5: return dir * u1->GetHostModName().CmpNoCase( u2->GetHostModName() );
+        case 3: return dir * TowxString(u1->GetDescription()).CmpNoCase( TowxString(u2->GetDescription()) );
+		case 4: return dir * TowxString(u1->GetHostMapName()).CmpNoCase( TowxString(u2->GetHostMapName()) );
+		case 5: return dir * TowxString(u1->GetHostModName()).CmpNoCase( TowxString(u2->GetHostModName()) );
         case 6:
         {
         	try
@@ -346,13 +346,13 @@ void BattleListCtrl::SetTipWindowText( const long item_hit, const wxPoint& posit
             m_tiptext = m_colinfovec[column].tip;
             break;
         case 3: // descrp
-            m_tiptext = battle.GetDescription();
+            m_tiptext = TowxString(battle.GetDescription());
             break;
         case 4: //map
-			m_tiptext = battle.GetHostMapName();
+			m_tiptext = TowxString(battle.GetHostMapName());
             break;
         case 5: //mod
-			m_tiptext = battle.GetHostModName();
+			m_tiptext = TowxString(battle.GetHostModName());
             break;
         case 6: // host
 					try

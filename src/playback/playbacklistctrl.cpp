@@ -102,7 +102,7 @@ void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
-        ui().Download( _T("map"), battle.GetHostMapName(), battle.GetHostMapHash() );
+        ui().Download( _T("map"), TowxString(battle.GetHostMapName()), TowxString(battle.GetHostMapHash()));
     }
 }
 
@@ -111,7 +111,7 @@ void PlaybackListCtrl<PlaybackType>::OnDLMod( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
         OfflineBattle battle = m_data[m_selected_index]->battle;
-        ui().Download( _T("map"), battle.GetHostModName(), battle.GetHostModHash() );
+        ui().Download( _T("map"), TowxString(battle.GetHostModName()), TowxString(battle.GetHostModHash()) );
     }
 }
 
@@ -130,8 +130,8 @@ int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, in
 {
     switch ( col ) {
         case 0: return dir * compareSimple( u1->date, u2->date );
-        case 1: return dir * u1->battle.GetHostModName().CmpNoCase( u2->battle.GetHostModName() );
-        case 2: return dir * u1->battle.GetHostMapName().CmpNoCase( u2->battle.GetHostMapName() );
+        case 1: return dir * TowxString(u1->battle.GetHostModName()).CmpNoCase( TowxString(u2->battle.GetHostModName()) );
+        case 2: return dir * TowxString(u1->battle.GetHostMapName()).CmpNoCase( TowxString(u2->battle.GetHostMapName()) );
         case 3: return dir * compareSimple( u1->battle.GetNumUsers() - u1->battle.GetSpectators(), u2->battle.GetNumUsers() - u2->battle.GetSpectators() );
         case 4: return dir * compareSimple( u1->duration,u2->duration );
         case 5: return dir * u1->SpringVersion.CmpNoCase( u2->SpringVersion ) ;
@@ -196,8 +196,8 @@ wxString PlaybackListCtrl<PlaybackType>::GetItemText(long item, long column) con
 
     switch ( column ) {
         case 0: return replay.date_string;
-        case 1: return replay.battle.GetHostModName();
-        case 2: return replay.battle.GetHostMapName();
+        case 1: return TowxString(replay.battle.GetHostModName());
+        case 2: return TowxString(replay.battle.GetHostMapName());
 		case 3: return wxFormat(_T("%d") ) % ( replay.battle.GetNumUsers() - replay.battle.GetSpectators() );
         case 4: return duration;
         case 5: return replay.SpringVersion;

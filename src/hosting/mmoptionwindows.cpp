@@ -133,7 +133,7 @@ void SingleOptionDialog::OnCancel( wxCommandEvent& /*unused*/ )
 void SingleOptionDialog::OnOk( wxCommandEvent& /*unused*/ )
 {
     const auto optFlag = ( LSL::OptionsWrapper::GameOption )s2l( m_tag.BeforeFirst( '_' ) );
-    const auto key = STD_STRING(m_tag.AfterFirst( '_' ));
+    const std::string key = STD_STRING(m_tag.AfterFirst( '_' ));
 	wxString value;
     if ( m_textctrl )
         value = m_textctrl->GetValue();
@@ -148,6 +148,6 @@ void SingleOptionDialog::OnOk( wxCommandEvent& /*unused*/ )
 	}
 	else if ( m_checkbox ) value = TowxString( m_checkbox->GetValue() );
     m_battle.CustomBattleOptions().setSingleOption( key, STD_STRING(value), optFlag );
-	m_battle.SendHostInfo( m_tag );
+	m_battle.SendHostInfo( STD_STRING(m_tag) );
 	EndModal( wxID_OK );
 }
