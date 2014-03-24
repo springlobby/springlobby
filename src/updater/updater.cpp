@@ -58,7 +58,7 @@ bool UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& e
         }
     }
 
-    m_http_thread = new HttpDownloaderThread<UpdaterClass>( GetDownloadUrl( m_latest_version ), m_newexe + _T("temp.zip"), *this, wxNewId(), true, true );
+    m_http_thread = new HttpDownloaderThread<UpdaterClass>( TowxString(GetDownloadUrl( STD_STRING(m_latest_version))), m_newexe + _T("temp.zip"), *this, wxNewId(), true, true );
 
     //could prolly use some test on the thread here instead
     return true;
@@ -75,7 +75,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
         if (!PostMinGW44( m_newexe ) ) {
             customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser."), _("Updater error.") );
 			OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/Install#wiki-Windows_Binary") );
-            OpenWebBrowser( GetDownloadUrl( m_latest_version ) );
+            OpenWebBrowser( TowxString(GetDownloadUrl(STD_STRING(m_latest_version))));
         }
         if ( !UpdateExe( m_newexe , false ) ) {
 			customMessageBox(SL_MAIN_ICON,
@@ -132,7 +132,7 @@ bool UpdaterClass::UpdateExe( const wxString& newexe, bool /*unused*/ ) {
 
 bool UpdaterClass::PostMinGW44( const wxString& newdir )
 {
-	wxString current = GetSpringLobbyVersion(false);
+	wxString current = TowxString(GetSpringLobbyVersion(false));
     long minor = std::numeric_limits<long>::max();
     bool convert_ok = current.AfterLast( '.' ).ToLong( &minor );
 	wxLogMessage( (wxFormat( _T("Got minor rev %d") ) % minor ).c_str() );
