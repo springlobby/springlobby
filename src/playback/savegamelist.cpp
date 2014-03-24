@@ -56,7 +56,7 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
     if ( ret.battle.GetScript().IsEmpty() )
         return false;
 
-    ret.battle.GetBattleFromScript( true );
+    ret.battle.GetBattleFromScript( false );
     ret.ModName = ret.battle.GetHostModName();
     ret.battle.SetBattleType( BT_Savegame );
 	ret.size = wxFileName::GetSize( SavegamePath ).ToULong();
