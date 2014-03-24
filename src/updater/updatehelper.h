@@ -3,10 +3,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UPDATEHELPER_H
 #define SPRINGLOBBY_HEADERGUARD_UPDATEHELPER_H
 
-class wxString;
+#include <string>
 
-wxString GetDownloadUrl( const wxString& version );
-wxString GetSpringLobbyVersion( bool consider_aux = true );
-wxString GetSpringLobbyAuxVersion();
+std::string GetDownloadUrl( const std::string& version );
+std::string GetSpringLobbyVersion( bool consider_aux = true );
+std::string GetSpringLobbyAuxVersion();
 
 #endif

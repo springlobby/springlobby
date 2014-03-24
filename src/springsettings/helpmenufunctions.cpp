@@ -8,6 +8,7 @@
 #include "../utils/customdialogs.h"
 #include "../utils/platform.h"
 #include "../updater/updatehelper.h"
+#include "utils/conversion.h"
 #include <wx/intl.h>
 #include "se_utils.h"
 #include <string>
@@ -28,7 +29,7 @@ void showAbout()
 	else
 	{
 		info.SetName( GetAppName() );
-		info.SetVersion(GetSpringLobbyVersion());
+		info.SetVersion(TowxString(GetSpringLobbyVersion()));
 	}
     info.SetDescription(_("SpringSettings is a graphical frontend to the Settings of the Spring engine"));
 	info.SetCopyright(_T("(C) 2007-2011 koshi <koshi@springlobby.info>"));

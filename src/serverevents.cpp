@@ -71,7 +71,7 @@ void ServerEvents::OnLoginInfoComplete()
 		if ( itor->name.IsEmpty() )
 			continue;
 		Channel& chan = m_serv._AddChannel( itor->name );
-		chan.SetPassword( itor->password );
+		chan.SetPassword( STD_STRING(itor->password) );
 		ui().OnJoinedChannelSuccessful( chan, itor == autojoin.begin() );
 	}
 	for ( std::vector<ChannelJoinInfo>::const_iterator itor = autojoin.begin(); itor != autojoin.end(); ++itor )
@@ -570,7 +570,7 @@ void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, c
     if ( success )
     {
         Channel& chan = m_serv._AddChannel( channel );
-        chan.SetPassword( m_serv.m_channel_pw[channel] );
+        chan.SetPassword(STD_STRING(m_serv.m_channel_pw[channel]));
         ui().OnJoinedChannelSuccessful( chan );
 
     }
@@ -587,7 +587,7 @@ void ServerEvents::OnChannelSaid( const wxString& channel, const wxString& who, 
     try
     {
         if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
-            m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), message );
+            m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), STD_STRING(message) );
     }
     catch (std::runtime_error &except)
     {
@@ -613,7 +613,7 @@ void ServerEvents::OnChannelPart( const wxString& channel, const wxString& who, 
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        m_serv.GetChannel( channel ).Left( m_serv.GetUser( who ), message );
+        m_serv.GetChannel( channel ).Left( m_serv.GetUser( who ), STD_STRING(message));
     }
     catch (std::runtime_error &except)
     {
@@ -626,7 +626,7 @@ void ServerEvents::OnChannelTopic( const wxString& channel, const wxString& who,
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        m_serv.GetChannel( channel ).SetTopic( message, who );
+        m_serv.GetChannel( channel ).SetTopic( STD_STRING(message), STD_STRING(who));
     }
     catch (std::runtime_error &except)
     {
@@ -640,7 +640,7 @@ void ServerEvents::OnChannelAction( const wxString& channel, const wxString& who
     try
     {
 		if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
-			m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), action );
+			m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), STD_STRING(action));
     }
     catch (std::runtime_error &except)
     {
@@ -828,7 +828,7 @@ void ServerEvents::OnServerMessageBox( const wxString& message )
 
 void ServerEvents::OnChannelMessage( const wxString& channel, const wxString& msg )
 {
-    ui().OnChannelMessage( channel, msg );
+	ui().OnChannelMessage(m_serv.GetChannel(channel), msg );
 }
 
 

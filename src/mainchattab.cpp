@@ -231,7 +231,7 @@ ChatPanel* MainChatTab::AddChatPanel( Channel& channel, bool doFocus )
 
 	LOOP_PANELS(
 		if ( tmp->GetPanelType() == CPT_Channel ) {
-			if ( m_chat_tabs->GetPageText(i) == channel.GetName() ) {
+			if ( STD_STRING(m_chat_tabs->GetPageText(i)) == channel.GetName() ) {
 				if ( doFocus )
 					m_chat_tabs->SetSelection( i );
 				tmp->SetChannel( &channel );
@@ -241,7 +241,7 @@ ChatPanel* MainChatTab::AddChatPanel( Channel& channel, bool doFocus )
 	)
 
 	ChatPanel* chat = new ChatPanel( m_chat_tabs, channel, m_imagelist );
-	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, channel.GetName(), doFocus, wxBitmap( channel_xpm ) );
+	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, TowxString(channel.GetName()), doFocus, wxBitmap( channel_xpm ) );
 	if ( doFocus )
 		chat->FocusInputBox();
 	return chat;

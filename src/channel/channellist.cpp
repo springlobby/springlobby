@@ -33,16 +33,16 @@ void ChannelList::AddChannel( Channel& channel )
   m_seekpos = SEEKPOS_INVALID;
 }
 
-void ChannelList::RemoveChannel( const wxString& name )
+void ChannelList::RemoveChannel( const std::string& name )
 {
   m_chans.erase( name );
   m_seekpos = SEEKPOS_INVALID;
 }
 
-Channel& ChannelList::GetChannel( const wxString& name )
+Channel& ChannelList::GetChannel( const std::string& name )
 {
   channel_iter_t u = m_chans.find(name);
-  ASSERT_LOGIC( u != m_chans.end(), _T("ChannelList::GetChannel(\"") + name + _T("\"): no such channel"));
+  ASSERT_LOGIC( u != m_chans.end(), _T("ChannelList::GetChannel(\"") + TowxString(name) + _T("\"): no such channel"));
   return *u->second;
 }
 
@@ -57,7 +57,7 @@ Channel& ChannelList::GetChannel( channel_map_t::size_type index )
   return *m_seek->second;
 }
 
-bool ChannelList::ChannelExists( const wxString& name ) const
+bool ChannelList::ChannelExists( const std::string& name ) const
 {
   return m_chans.find( name ) != m_chans.end();
 }

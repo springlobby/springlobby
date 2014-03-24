@@ -5,29 +5,29 @@
 #include "utils/version.h"
 #include "utils/conversion.h"
 
-wxString GetDownloadUrl( const wxString& version )
+std::string GetDownloadUrl( const std::string& version )
 {
-    return _T("springlobby.info/windows/springlobby-") + version + _T("-win32.zip");
+    return "springlobby.info/windows/springlobby-" + version + "-win32.zip";
 }
 
-wxString GetSpringLobbyVersion( bool consider_aux )
+std::string GetSpringLobbyVersion( bool consider_aux )
 {
 	if ( consider_aux )
 	{
-		return (TowxString(getSpringlobbyVersion())).BeforeFirst( _T(' ') ) + _T(" ") + GetSpringLobbyAuxVersion();
+		return STD_STRING((TowxString(getSpringlobbyVersion())).BeforeFirst( _T(' ') )) + " " + GetSpringLobbyAuxVersion();
 	}
 	else
 	{
-		return (TowxString(getSpringlobbyVersion())).BeforeFirst( _T(' ') );
+		return STD_STRING((TowxString(getSpringlobbyVersion())).BeforeFirst( _T(' ') ));
 	}
 
 }
 
-wxString GetSpringLobbyAuxVersion()
+std::string GetSpringLobbyAuxVersion()
 {
 #ifndef AUX_VERSION
-	return wxEmptyString;
+	return "";
 #else
-	return TowxString(AUX_VERSION);
+	return AUX_VERSION;
 #endif
 }

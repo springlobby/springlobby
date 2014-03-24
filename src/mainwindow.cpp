@@ -519,7 +519,7 @@ void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 {
     wxAboutDialogInfo info;
 	info.SetName( GetAppName() );
-	info.SetVersion (GetSpringLobbyVersion());
+	info.SetVersion (TowxString(GetSpringLobbyVersion()));
 	info.SetDescription( IdentityString( _("%s is a cross-plattform lobby client for the Spring RTS engine") ) );
 	//info.SetCopyright(wxEmptyString;
 	info.SetLicence(_T("GPL v2 or later"));

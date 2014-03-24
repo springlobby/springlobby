@@ -611,9 +611,9 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan, bool doFocus)
 }
 
 
-void Ui::OnChannelMessage( const wxString& channel, const wxString& msg )
+void Ui::OnChannelMessage(Channel& chan, const wxString& msg )
 {
-	ChatPanel* panel = GetChannelChatPanel( channel );
+	ChatPanel* panel = GetChannelChatPanel( TowxString(chan.GetName()) );
 	if ( panel != 0 ) {
 		panel->StatusMessage( msg );
 	}
@@ -1042,7 +1042,7 @@ void Ui::CheckForUpdates()
 		return;
 	}
 	//get current rev w/o AUX_VERSION added
-	wxString myVersion = GetSpringLobbyVersion( false ) ;
+	wxString myVersion = TowxString(GetSpringLobbyVersion( false ));
 
 	wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
 	if ( !latestVersion.IsSameAs(myVersion, false) ) {

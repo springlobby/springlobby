@@ -31,42 +31,42 @@ class Channel : public UserList, public SL::NonCopyable
 
     IServer& GetServer() { return m_serv; }
 
-    void SetName( const wxString& name );
-    wxString GetName() const;
+    void SetName( const std::string& name );
+    std::string GetName() const;
     User& GetMe();
 
     // filtering functions
-    void CheckBanned(const wxString& name);
-    bool IsBanned(const wxString& name);
+    void CheckBanned(const std::string& name);
+    bool IsBanned(const std::string& name);
 
     // Channel Functions
-    void Say( const wxString& message );
-    void DoAction( const wxString& action );
+    void Say( const std::string& message );
+    void DoAction( const std::string& action );
     void Leave();
 	void Rejoin();
 
-    void Said( User& who, const wxString& message );
+    void Said( User& who, const std::string& message );
 
-    void DidAction( User& who, const wxString& action );
+    void DidAction( User& who, const std::string& action );
 
-    void Left( User& who, const wxString& reason );
+    void Left( User& who, const std::string& reason );
     void Joined( User& who );
 
     void OnChannelJoin( User& who );
 
-    void SetTopic( const wxString& topic, const wxString& who );
-    wxString GetTopic();
-    wxString GetTopicSetBy();
+    void SetTopic( const std::string& topic, const std::string& who );
+    std::string GetTopic();
+    std::string GetTopicSetBy();
 
-    bool ExecuteSayCommand( const wxString& in );
+    bool ExecuteSayCommand( const std::string& in );
 
-    wxString GetPassword();
-    void SetPassword( const wxString& pw );
+    std::string GetPassword();
+    void SetPassword( const std::string& pw );
 
-  protected:
+private:
     IServer& m_serv;
 
-    std::set<wxString> m_banned_users;
+    std::set<std::string> m_banned_users;
 
     bool m_do_ban_regex;
     wxRegEx m_ban_regex;
@@ -74,18 +74,18 @@ class Channel : public UserList, public SL::NonCopyable
     bool m_do_unban_regex;
     wxRegEx m_unban_regex;
 
-    wxString m_ban_regex_msg;
+    std::string m_ban_regex_msg;
 
-    wxString m_topic;
-    wxString m_topic_nick;
-    wxString m_name;
+    std::string m_topic;
+    std::string m_topic_nick;
+    std::string m_name;
 
     void* m_userdata;
 
-    wxString m_password;
+    std::string m_password;
 
     void AddUser( User& user );
-    void RemoveUser( const wxString& nick );
+    void RemoveUser( const std::string& nick );
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHANNEL_H

@@ -47,7 +47,7 @@ bool IServer::UserExists( const wxString& nickname ) const
 
 Channel& IServer::GetChannel( const wxString& name )
 {
-  return m_channels.GetChannel( name );
+  return m_channels.GetChannel( STD_STRING(name));
 }
 
 
@@ -65,7 +65,7 @@ Channel& IServer::GetChannel( const int& index )
 
 bool IServer::ChannelExists( const wxString& name ) const
 {
-  return m_channels.ChannelExists( name );
+  return m_channels.ChannelExists( STD_STRING(name));
 }
 
 
@@ -100,7 +100,7 @@ void IServer::_RemoveUser( const wxString& nickname )
     for ( int i = 0; i < numchannels; i++ )
     {
     	Channel& chan = m_channels.GetChannel( i );
-    	if ( chan.UserExists( nickname ) ) chan.Left( *u, _T("server idiocy") );
+		if ( chan.UserExists( TowxString(nickname)) ) chan.Left( *u, "server idiocy");
     }
     delete u;
   }catch(std::runtime_error){
@@ -110,9 +110,9 @@ void IServer::_RemoveUser( const wxString& nickname )
 
 Channel& IServer::_AddChannel( const wxString& chan )
 {
-  if ( m_channels.ChannelExists( chan ) ) return m_channels.GetChannel( chan );
+  if ( m_channels.ChannelExists(STD_STRING(chan)) ) return m_channels.GetChannel(STD_STRING(chan));
   Channel* c = new Channel( *this );
-  c->SetName( chan );
+  c->SetName( STD_STRING(chan) );
 
   m_channels.AddChannel( *c );
   return *c;
@@ -121,8 +121,8 @@ Channel& IServer::_AddChannel( const wxString& chan )
 
 void IServer::_RemoveChannel( const wxString& name )
 {
-  Channel* c = &m_channels.GetChannel( name );
-  m_channels.RemoveChannel( name );
+  Channel* c = &m_channels.GetChannel( STD_STRING(name));
+  m_channels.RemoveChannel(STD_STRING(name));
   ASSERT_LOGIC( c != 0, _T("IServer::_RemoveChannel(\"") + name + _T("\"): GetChannel returned NULL pointer"));
   delete c;
 }

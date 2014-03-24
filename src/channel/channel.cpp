@@ -13,6 +13,7 @@
 #include <wx/regex.h>
 #include <wx/log.h>
 #include "../chatpanel.h"
+#include "utils/conversion.h"
 
 Channel::Channel( IServer& serv )
     : m_serv(serv),
@@ -25,13 +26,13 @@ Channel::~Channel() {
   if(uidata.panel)uidata.panel->SetChannel(NULL);
 }
 
-void Channel::SetName( const wxString& name )
+void Channel::SetName( const std::string& name )
 {
   m_name = name;
 }
 
 
-wxString Channel::GetName() const
+std::string Channel::GetName() const
 {
   return m_name;
 }
@@ -43,62 +44,62 @@ User& Channel::GetMe()
 }
 
 
-void Channel::Said( User& who, const wxString& message )
+void Channel::Said( User& who, const std::string& message )
 {
 	wxLogDebugFunc( wxEmptyString );
 	if (uidata.panel == 0 ) {
 		wxLogError( _T("OnChannelSaid: ud->panel NULL") );
 		return;
 	}
-	uidata.panel->Said( who.GetNick(), message );
+	uidata.panel->Said( TowxString(who.GetNick()), TowxString(message));
 }
 
 
-void Channel::Say( const wxString& message )
+void Channel::Say( const std::string& message )
 {
   wxLogDebugFunc( wxEmptyString );
-  m_serv.SayChannel( m_name, message );
+  m_serv.SayChannel( TowxString(m_name), TowxString(message));
 }
 
 
-void Channel::DidAction( User& who, const wxString& action )
+void Channel::DidAction( User& who, const std::string& action )
 {
 	wxLogDebugFunc( wxEmptyString );
 	if ( uidata.panel == 0 ) {
 		wxLogError( _T("OnChannelDidAction: ud->panel NULL") );
 		return;
 	}
-	uidata.panel->DidAction( who.GetNick(), action );
+	uidata.panel->DidAction( TowxString(who.GetNick()), TowxString(action ));
 }
 
 
-void Channel::DoAction( const wxString& action )
+void Channel::DoAction( const std::string& action )
 {
 	wxLogDebugFunc( wxEmptyString );
-	m_serv.DoActionChannel( m_name, action );
+	m_serv.DoActionChannel( TowxString(m_name), TowxString(action) );
 }
 
 
-void Channel::Left( User& who, const wxString& reason )
+void Channel::Left( User& who, const std::string& reason )
 {
-	RemoveUser( who.GetNick() );
+	RemoveUser(STD_STRING(who.GetNick()));
 	//wxLogDebugFunc( wxEmptyString );
 	if ( uidata.panel == 0 ) {
 		wxLogError( _T("OnUserLeftChannel: ud->panel NULL") );
 		return;
 	}
-	uidata.panel->Parted( who, reason );
+	uidata.panel->Parted( who, TowxString(reason));
 }
 
 
 void Channel::Leave()
 {
-	m_serv.PartChannel( m_name );
+	m_serv.PartChannel( TowxString(m_name) );
 }
 
 void Channel::Rejoin()
 {
-	m_serv.JoinChannel( m_name, m_password );
+	m_serv.JoinChannel( TowxString(m_name), TowxString(m_password));
 }
 
 
@@ -125,7 +126,7 @@ void Channel::OnChannelJoin( User& who )
 }
 
 
-void Channel::SetTopic( const wxString& topic, const wxString& who )
+void Channel::SetTopic( const std::string& topic, const std::string& who )
 {
 	m_topic = topic;
 	m_topic_nick = who;
@@ -135,16 +136,16 @@ void Channel::SetTopic( const wxString& topic, const wxString& who )
 		wxLogError( _T("OnChannelTopic: ud->panel NULL") );
 		return;
 	}
-	uidata.panel->SetTopic( who, topic );
+	uidata.panel->SetTopic( TowxString(who), TowxString(topic));
 }
 
-wxString Channel::GetTopicSetBy()
+std::string Channel::GetTopicSetBy()
 {
   return m_topic_nick;
 }
 
 
-wxString Channel::GetTopic()
+std::string Channel::GetTopic()
 {
   return m_topic;
 }
@@ -153,69 +154,69 @@ wxString Channel::GetTopic()
 void Channel::AddUser( User& user )
 {
   UserList::AddUser( user );
-  CheckBanned(user.GetNick());
+  CheckBanned(STD_STRING(user.GetNick()));
 }
 
-void Channel::CheckBanned(const wxString& name){
-  if(name==_T("ChanServ"))return;
+void Channel::CheckBanned(const std::string& name){
+  if(name=="ChanServ")return;
   if(m_banned_users.count(name)>0){
-    m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+GetName()+_T(" ")+name);
+    m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+TowxString(GetName())+_T(" ")+TowxString(name));
   }
   if(m_do_ban_regex&&m_ban_regex.IsValid()){
-    if(m_ban_regex.Matches(name)&&!(m_do_unban_regex&&m_unban_regex.IsValid()&&m_unban_regex.Matches(name))){
-      m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+GetName()+_T(" ")+name);
-      if(!m_ban_regex_msg.empty())m_serv.SayPrivate(name,m_ban_regex_msg);
+    if(m_ban_regex.Matches(TowxString(name))&&!(m_do_unban_regex&&m_unban_regex.IsValid()&&m_unban_regex.Matches(TowxString(name)))){
+      m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+TowxString(GetName())+_T(" ")+TowxString(name));
+      if(!m_ban_regex_msg.empty())m_serv.SayPrivate(TowxString(name),TowxString(m_ban_regex_msg));
     }
   }
 }
 
-bool Channel::IsBanned(const wxString& name){
-  if(name==_T("ChanServ"))return false;
+bool Channel::IsBanned(const std::string& name){
+  if(name == "ChanServ")return false;
   if(m_banned_users.count(name)>0)return true;
   if(m_do_ban_regex&&m_ban_regex.IsValid()){
-    if(m_ban_regex.Matches(name)&&!(m_do_unban_regex&&m_unban_regex.IsValid()&&m_unban_regex.Matches(name)))return true;
+    if(m_ban_regex.Matches(TowxString(name))&&!(m_do_unban_regex&&m_unban_regex.IsValid()&&m_unban_regex.Matches(TowxString(name))))return true;
   }
   return false;
 }
 
 
-void Channel::RemoveUser( const wxString& nick )
+void Channel::RemoveUser( const std::string& nick )
 {
-  UserList::RemoveUser( nick );
+  UserList::RemoveUser(TowxString(nick));
 }
 
 
-bool Channel::ExecuteSayCommand( const wxString& in )
+bool Channel::ExecuteSayCommand( const std::string& in )
 {
   if ( in.length() == 0 ) return true;
 
   if ( in[0] != '/' ) return false;
 
-  wxString subcmd = in.BeforeFirst(' ').Lower();
-  wxString params = in.AfterFirst( ' ' );
+  wxString subcmd = TowxString(in).BeforeFirst(' ').Lower();
+  wxString params = TowxString(in).AfterFirst( ' ' );
 
-  wxString cmdline = in;
+  wxString cmdline = TowxString(in);
   wxString param = GetWordParam( cmdline );
   if ( param == _T("/me") ) {
-    DoAction( cmdline );
+    DoAction(STD_STRING(cmdline));
     return true;
-  } else if ( in == _T("/part") || in == _T("/p") ) {
+  } else if (( in == "/part") || (in == "/p") ) {
     Leave();
     uidata.panel = 0;
     return true;
   } else if ( param == _T("/sayver") ) {
 	  //!this instance is not replaced with GetAppname for sake of help/debug online
-    DoAction( _T("is using SpringLobby v") + GetSpringLobbyVersion() );
+    DoAction( "is using SpringLobby v" + GetSpringLobbyVersion() );
     return true;
   } else if(subcmd==_T("/userban")){
-    m_banned_users.insert(params);
-    m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+GetName()+_T(" ")+params);
+    m_banned_users.insert(STD_STRING(params));
+    m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+TowxString(GetName())+_T(" ")+params);
     return true;
   } else if(subcmd==_T("/userunban")){
-    m_banned_users.erase(params);
+    m_banned_users.erase(STD_STRING(params));
     return true;
   } else if(subcmd==_T("/banregex")){
-    ui().OnChannelMessage(m_name,_T("/banregex ")+params);
+    ui().OnChannelMessage(*this,_T("/banregex ")+params);
     m_do_ban_regex=!params.empty();
     if(m_do_ban_regex){
       #ifdef wxHAS_REGEX_ADVANCED
@@ -223,11 +224,11 @@ bool Channel::ExecuteSayCommand( const wxString& in )
       #else
       m_ban_regex.Compile(params, wxRE_EXTENDED);
       #endif
-      if(!m_ban_regex.IsValid())ui().OnChannelMessage(m_name,_T("Invalid regular expression"));
+      if(!m_ban_regex.IsValid())ui().OnChannelMessage(*this,_T("Invalid regular expression"));
     }
     return true;
   } else if(subcmd==_T("/unbanregex")){
-    ui().OnChannelMessage(m_name,_T("/unbanregex ")+params);
+    ui().OnChannelMessage(*this,_T("/unbanregex ")+params);
     m_do_unban_regex=!params.empty();
     if(m_do_unban_regex){
       #ifdef wxHAS_REGEX_ADVANCED
@@ -235,22 +236,22 @@ bool Channel::ExecuteSayCommand( const wxString& in )
       #else
       m_unban_regex.Compile(params, wxRE_EXTENDED);
       #endif
-      if(!m_unban_regex.IsValid())ui().OnChannelMessage(m_name,_T("Invalid regular expression"));
+      if(!m_unban_regex.IsValid())ui().OnChannelMessage(*this,_T("Invalid regular expression"));
     }
     return true;
   } else if (subcmd==_T("/checkban")) {
-    if(IsBanned(params)){
-      ui().OnChannelMessage(m_name,params+_T(" is banned"));
+    if(IsBanned(STD_STRING(params))){
+      ui().OnChannelMessage(*this,params+_T(" is banned"));
     }else{
-      ui().OnChannelMessage(m_name,params+_T(" is not banned"));
+      ui().OnChannelMessage(*this,params+_T(" is not banned"));
     }
     return true;
   }
 
 
   else if(subcmd==_T("/banregexmsg")){
-    ui().OnChannelMessage(m_name,_T("/banregexmsg ")+params);
-    m_ban_regex_msg=params;
+    ui().OnChannelMessage(*this,_T("/banregexmsg ")+params);
+    m_ban_regex_msg=STD_STRING(params);
     return true;
   }
 
@@ -258,13 +259,13 @@ bool Channel::ExecuteSayCommand( const wxString& in )
 }
 
 
-wxString Channel::GetPassword()
+std::string Channel::GetPassword()
 {
   return m_password;
 }
 
 
-void Channel::SetPassword( const wxString& pw )
+void Channel::SetPassword( const std::string& pw )
 {
   m_password = pw;
 }

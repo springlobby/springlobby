@@ -91,7 +91,7 @@ public:
 	void OnDisconnected( IServer& server, bool wasonline );
 
 	void OnJoinedChannelSuccessful( Channel& chan, bool doFocus = false);
-	void OnChannelMessage( const wxString& channel, const wxString& msg );
+	void OnChannelMessage(Channel& chan, const wxString& msg );
 
 	void OnChannelList( const wxString& channel, const int& numusers );
 	void OnUserOnline( User& user );

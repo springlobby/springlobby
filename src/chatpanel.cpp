@@ -97,7 +97,7 @@ ChatPanel::ChatPanel( wxWindow* parent, Channel& chan, wxImageList* imaglist ):
 	m_display_joinitem(false),
 	m_topic_set( false )
 {
-	Init(chan.GetName());
+	Init(TowxString(chan.GetName()));
 	SetChannel( &chan );
 }
 
@@ -732,7 +732,7 @@ void ChatPanel::SetChannel( Channel* chan )
 	if ( chan != 0 ) {
 		chan->uidata.panel = this;
 		if (chan != m_channel) {
-			SetLogFile(chan->GetName());
+			SetLogFile(TowxString(chan->GetName()));
 		}
 	}
 	m_channel = chan;
@@ -830,7 +830,7 @@ bool ChatPanel::Say( const wxString& message )
 
 		if ( line == _T( "/ver" ) ) {
 			//!this instance is not replaced with GetAppname for sake of help/debug online
-			OutputLine( _( " You have SpringLobby v" ) + GetSpringLobbyVersion(), sett().GetChatColorNormal());
+			OutputLine( _( " You have SpringLobby v" ) + TowxString(GetSpringLobbyVersion()), sett().GetChatColorNormal());
 			return true;
 		}
 
@@ -846,12 +846,12 @@ bool ChatPanel::Say( const wxString& message )
 				return true;
 			}
 			if ( line.StartsWith( _T( "/" ) ) ) {
-				if ( m_channel->ExecuteSayCommand( line ) ) return true;
+				if ( m_channel->ExecuteSayCommand(STD_STRING(line) ) ) return true;
 				if ( m_channel->GetServer().ExecuteSayCommand( line ) ) return true;
 				OutputLine( wxFormat( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ) ) % line, sett().GetChatColorError());
 				return true;
 			}
-			m_channel->Say( line );
+			m_channel->Say( STD_STRING(line));
 
 		} else if ( m_type == CPT_Battle ) {
 
