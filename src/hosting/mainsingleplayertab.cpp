@@ -150,19 +150,3 @@ void MainSinglePlayerTab::ReloadPresetList()
 		GetMMOptionsTab().UpdatePresetList();
 	} catch ( ... ) {}
 }
-
-
-void MainSinglePlayerTab::UpdateTag( const wxString& Tag )
-{
-
-	try
-	{
-		GetSinglePlayerTab().UpdateTag( Tag );
-	} catch ( ... ) {}
-
-	try
-	{
-		GetOptionsTab().UpdateBattle( Tag );
-	} catch ( ... ) {}
-
-}

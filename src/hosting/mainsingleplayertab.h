@@ -21,7 +21,6 @@ class MainSinglePlayerTab : public wxScrolledWindow
 
     void UpdateMinimap();
     void OnUnitSyncReloaded();
-	void UpdateTag( const wxString& Tag );
 
     void ReloadRestrictions();
     void ReloadMapOptContrls();

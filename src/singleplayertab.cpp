@@ -400,7 +400,7 @@ void SinglePlayerTab::OnColorButton( wxCommandEvent& /*unused*/ )
     m_battle.ForceColour( u, CurrentColour );
     UpdateMinimap();
 }
-
+/*
 void SinglePlayerTab::UpdateTag( const wxString& Tag )
 {
     long type;
@@ -433,6 +433,7 @@ void SinglePlayerTab::UpdateTag( const wxString& Tag )
         }
     }
 }
+*/
 
 void SinglePlayerTab::UpdatePresetList()
 {

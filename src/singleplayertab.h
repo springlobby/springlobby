@@ -33,7 +33,6 @@ class SinglePlayerTab: public  wxScrolledWindow, public GlobalEvent
     void UpdateMinimap();
     void ReloadMaplist();
     void ReloadModlist();
-	void UpdateTag( const wxString& Tag );
     void UpdatePresetList();
 
     IBattle& GetBattle() { return m_battle; }
