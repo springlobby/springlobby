@@ -501,7 +501,7 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 		return true;
 	}
 	if ( wxYES == customMessageBox( SL_MAIN_ICON,
-					_("The selected preset requires the engine ") + engine + _(" ") + version+ _(". Should it be downloaded? \nPlease reselect the preset after download finished"),
+					wxFormat(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded? \nPlease reselect the preset after download finished")) % engine % version,
 					_("Engine missing"),
 					wxYES_NO ) )
 

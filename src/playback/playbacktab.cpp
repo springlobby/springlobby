@@ -288,7 +288,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 			if ( !ReplayTraits::IsReplayType )
                 versionfound = true; // quick hack to bypass spring version check
 			if ( !versionfound ) {
-				wxString message = wxFormat( _( "No compatible installed spring version has been found, this %s requires version: %s\n" ) ) % type% rep.SpringVersion;
+				wxString message = wxFormat( _( "No compatible installed spring version has been found, this %s requires version: %s\n" ) ) % type% rep.battle.GetEngineVersion();
 				customMessageBox( SL_MAIN_ICON, message, _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 				wxLogWarning ( _T( "no spring version supported by this replay found" ) );
 				AskForceWatch( rep );

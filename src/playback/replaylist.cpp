@@ -53,6 +53,7 @@ bool ReplayList::GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const
 	ret.SpringVersion = FileName.AfterLast(_T('_')).BeforeLast(_T('.'));
 	ret.MapName = FileName.BeforeLast(_T('_'));
 
+
 	if (!wxFileExists(ReplayPath)) {
 		return false;
 	}
@@ -72,6 +73,8 @@ bool ReplayList::GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const
 	ret.battle.GetBattleFromScript( false );
 	ret.ModName = ret.battle.GetHostModName();
 	ret.battle.SetBattleType( BT_Replay );
+	ret.battle.SetEngineName(_T("spring"));
+	ret.battle.SetEngineVersion(ret.SpringVersion);
 
 	//getting this from filename seems more reliable than from demoheader
 	wxDateTime rdate;
