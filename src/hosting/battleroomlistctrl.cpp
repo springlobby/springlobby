@@ -217,8 +217,10 @@ IBattle& BattleroomListCtrl::GetBattle()
 void BattleroomListCtrl::AddUser( User& user )
 {
 	//first time setting is necessary to have color in replay/savegame used controls
-	if ( !user.BattleStatus().spectator )
+	if ( !user.BattleStatus().spectator ) {
 		icons().SetColourIcon( user.BattleStatus().colour );
+		UpdateUser(user);
+	}
     if ( AddItem( &user ) )
         return;
 
