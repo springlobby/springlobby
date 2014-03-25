@@ -141,9 +141,8 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
     wxLogDebugFunc( wxEmptyString );
     try
     {
-        wxLogMessage( _T("calling m_serv.GetUser( nick ) ") );
+        wxLogMessage( _T("ServerEvents::OnUserStatus") );
         User& user = m_serv.GetUser( nick );
-        wxLogMessage( _T("calling user.SetStatus( status ) ") );
 
         UserStatus oldStatus = user.GetStatus();
         user.SetStatus( status );
@@ -154,10 +153,7 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
                 actNotifBox( SL_MAIN_ICON, nick + _(" is now ") + diffString );
         }
 
-        wxLogMessage( _T("calling ui().OnUserStatusChanged( user ) ") );
         ui().OnUserStatusChanged( user );
-        wxLogMessage( _T("updating battles ") );
-
         if ( user.GetBattle() != 0 )
         {
             IBattle& battle = *user.GetBattle();
