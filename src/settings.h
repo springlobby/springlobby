@@ -12,7 +12,7 @@
 #include "helper/slconfig.h"
 
 
-const long CACHE_VERSION     = 13;
+const long CACHE_VERSION     = 14;
 const long SETTINGS_VERSION  = 26;
 
 
