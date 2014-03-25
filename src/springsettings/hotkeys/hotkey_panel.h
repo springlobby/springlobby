@@ -19,7 +19,7 @@
 #include <vector>
 #include <memory>
 
-#include "../../wxkeybinder/keybinder.h"
+#include "springsettings/wxkeybinder/keybinder.h"
 
 #include "hotkey_parser.h"
 #include "HotkeyTypes.h"

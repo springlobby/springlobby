@@ -28,7 +28,7 @@
 #include "wx/checkbox.h"
 
 
-#include "../springsettings/hotkeys/CommandOrderDlg.h"
+#include "springsettings/hotkeys/CommandOrderDlg.h"
 
 
 // The maximum number of shortcuts associated with each wxCmd.

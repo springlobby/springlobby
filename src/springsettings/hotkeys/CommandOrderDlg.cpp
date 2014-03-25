@@ -1,8 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "CommandOrderDlg.h"
-#include "../../utils/customdialogs.h"
-#include "../../wxkeybinder/keybinder.h"
+#include "utils/customdialogs.h"
+#include "springsettings/wxkeybinder/keybinder.h"
 
 CommandOrderDlg::CommandOrderDlg( const wxString& key, const CmdSet& cmds, wxWindow* parent ) :
 						CommandOrderDlgBase( parent ), m_key( key ), m_cmds( cmds ), m_normKeyCount(0)

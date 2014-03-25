@@ -24,7 +24,7 @@
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/listbox.h>
-#include "../../wxkeybinder/wxKeyMonitorTextCtrl.h"
+#include "springsettings/wxkeybinder/wxKeyMonitorTextCtrl.h"
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -3,7 +3,7 @@
 #ifndef __SPRING_COMMAND_h__
 #define __SPRING_COMMAND_h__
 
-#include "../../wxkeybinder/keybinder.h"
+#include "springsettings/wxkeybinder/keybinder.h"
 
 class wxSpringCommand : public wxCmd
 {

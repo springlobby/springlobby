@@ -3,7 +3,7 @@
 #include "KeynameConverter.h"
 
 #include <sstream>
-#include "../../wxkeybinder/keybinder.h"
+#include "springsettings/wxkeybinder/keybinder.h"
 
 KeynameConverter::KeyMap		KeynameConverter::m_spring2keybinder;
 KeynameConverter::KeyMap		KeynameConverter::m_keybinder2spring;

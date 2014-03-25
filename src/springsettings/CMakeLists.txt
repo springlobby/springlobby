@@ -21,8 +21,8 @@ set(SettingsSrc
 	hotkeys/CommandOrderDlg.cpp
 	hotkeys/ChangeMetaDlg.cpp
 
-	../wxkeybinder/keybinder.cpp
-	../wxkeybinder/wxKeyMonitorTextCtrl.cpp
+	wxkeybinder/keybinder.cpp
+	wxkeybinder/wxKeyMonitorTextCtrl.cpp
 )
 
 ADD_LIBRARY(libsettings STATIC ${SettingsSrc})
