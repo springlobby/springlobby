@@ -2,7 +2,7 @@
 
 #ifndef DISABLE_SOUND
 
-#ifdef __WXMAC__
+#ifdef __APPLE__
 #include <OpenAL/al.h>
 #else
 #include <AL/al.h>
