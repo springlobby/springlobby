@@ -282,18 +282,20 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 		else
 			return icons().ICON_BOT;
 	}
-	 if ( column == m_ingame_column_index ) return user.GetStatusIconIndex();
-	 if ( column == m_colour_column_index ) return is_spec ? -1 : icons().GetColourIcon( user.BattleStatus().colour );
-	 if ( column == m_country_column_index ) return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry());
-	 if ( column == m_rank_column_index ) return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
-	 if ( column == m_faction_column_index ) return is_spec ? -1 : user.GetSideiconIndex();
-	 if ( column == m_nick_column_index ) return -1;
-	 else
-	 {
-		const wxString msg =  wxFormat(_("column oob in BattleroomListCtrl::OnGetItemColumnImage: %d" )) % column;
-		wxLogWarning( msg);
-		return -1;
-	 }
+	if ( column == m_ingame_column_index ) return user.GetStatusIconIndex();
+	if ( column == m_colour_column_index ) return is_spec ? -1 : icons().GetColourIcon( user.BattleStatus().colour );
+	if ( column == m_country_column_index ) return is_bot ? -1 : icons().GetFlagIcon( user.GetCountry());
+	if ( column == m_rank_column_index ) return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
+	if ( column == m_faction_column_index ) return is_spec ? -1 : user.GetSideiconIndex();
+	if ( column == m_nick_column_index ) return -1;
+	if ( column == m_status_column_index ) return -1;
+	if ( column == m_team_column_index ) return -1;
+	if ( column == m_ally_column_index ) return -1;
+	if ( column == m_resourcebonus_column_index ) return -1;
+
+	const wxString msg =  wxFormat(_("column oob in BattleroomListCtrl::OnGetItemColumnImage: %d" )) % column;
+	wxLogWarning( msg);
+	return -1;
 }
 
 wxString BattleroomListCtrl::GetItemText(long item, long column) const
