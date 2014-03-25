@@ -84,8 +84,7 @@ bool Spring::IsRunning() const
 
 bool Spring::Run( IBattle& battle )
 {
-
-	wxString scripttxt = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + _T("script.txt");
+	const wxString scripttxt = SlPaths::GetDataDir() + _T("script.txt");
 
 	try {
 

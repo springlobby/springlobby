@@ -21,6 +21,11 @@ wxString SlPaths::m_user_defined_config_path = wxEmptyString;
 
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
+#ifdef WIN32
+#define PATH_DELIMITER '\\'
+#else
+#define PATH_DELIMITER '/'
+#endif
 
 
 wxString SlPaths::GetLocalConfigPath ()
@@ -313,13 +318,20 @@ bool SlPaths::CreateSpringDataDir(const wxString& dir)
 	CopyUikeys( SlPaths::GetDataDir() );
 	return true;
 }
+static std::string& EnsureDelimiter(std::string& path)
+{
+	if ( !path.empty() && (path[path.length()-1] != PATH_DELIMITER )) {
+		path += PATH_DELIMITER;
+	}
+	return path;
+}
 
 wxString SlPaths::GetDataDir(const wxString& /*FIXME: implement index */)
 {
 	std::string dir;
-	if (LSL::usync().GetSpringDataPath(dir))
-		return TowxString(dir);
-	return wxEmptyString;
+	if (!LSL::usync().GetSpringDataPath(dir))
+		return wxEmptyString;
+	return TowxString(EnsureDelimiter(dir));
 }
 
 std::string VersionGetMajor(const std::string& version)
