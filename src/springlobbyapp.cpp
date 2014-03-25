@@ -104,7 +104,7 @@ bool SpringLobbyApp::OnInit()
     wxLogChain* logchain = 0;
 	wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity, logchain );
 
-	wxLogMessage( _T("SpringLobby %s started"), getSpringlobbyVersion().c_str());
+	wxLogMessage( _T("SpringLobby %s started"), TowxString(getSpringlobbyVersion()).c_str());
 
     //this needs to called _before_ mainwindow instance is created
     wxInitAllImageHandlers();

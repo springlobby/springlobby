@@ -612,7 +612,7 @@ void ChatPanel::Joined( User& who )
 		if ( m_type == CPT_Channel ) {
 			SetIconHighlight( highlight_join_leave );
 		}
-		OutputLine( _T( " ** " ) + wxString::Format(_( "%s joined %s." ), who.GetNick().c_str(),  GetChatTypeStr().c_str() ), sett().GetChatColorJoinPart());
+		OutputLine( _T( " ** " ) + wxString::Format(_( "%s joined %s." ), TowxString(who.GetNick()).c_str(),  GetChatTypeStr().c_str() ), sett().GetChatColorJoinPart());
 	}
 
 	if ( m_show_nick_list && ( m_nicklist != 0 ) ) {
@@ -637,7 +637,7 @@ void ChatPanel::OnChannelJoin( User& who )
 		m_nicklist->AddUser( who );
 	}
 	if ( m_display_joinitem ) {
-		OutputLine( _T( " ** " ) + wxString::Format(_( "%s joined %s." ), who.GetNick().c_str(), GetChatTypeStr().c_str()), sett().GetChatColorJoinPart());
+		OutputLine( _T( " ** " ) + wxString::Format(_( "%s joined %s." ), TowxString(who.GetNick()).c_str(), GetChatTypeStr().c_str()), sett().GetChatColorJoinPart());
 	}
 	// Also add the User to the TextCompletionDatabase
 	textcompletiondatabase.Insert_Mapping(TowxString(who.GetNick()), TowxString(who.GetNick()));
@@ -648,7 +648,7 @@ void ChatPanel::Parted( User& who, const wxString& message )
 //    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
 	bool me_parted = m_channel && &who == &m_channel->GetMe();
 	if ( m_display_joinitem ) {
-		OutputLine( _T( " ** " ) + wxString::Format(_( "%s left %s (%s)." ), who.GetNick().c_str(), GetChatTypeStr().c_str(), message.c_str()), sett().GetChatColorJoinPart());
+		OutputLine( _T( " ** " ) + wxString::Format(_( "%s left %s (%s)." ), TowxString(who.GetNick()).c_str(), GetChatTypeStr().c_str(), message.c_str()), sett().GetChatColorJoinPart());
 	}
 	if ( m_type == CPT_Channel ) {
 		if ( m_channel == 0 ) return;
