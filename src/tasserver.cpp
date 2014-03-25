@@ -964,9 +964,9 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 	bool send_success = m_sock->Send( msg );
 	if ( command != _T("PING") ) {
 		if ( send_success )
-			wxLogMessage( _T("sent: %s"), msg.c_str() );
+			wxLogMessage( _T("sent: %s"), msg.RemoveLast().c_str() );
 		else
-			wxLogMessage( _T("sending: %s failed"), msg.c_str() );
+			wxLogMessage( _T("sending: %s failed"), msg.RemoveLast().c_str() );
 	}
 }
 
