@@ -1607,6 +1607,17 @@ void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 
 void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 {
+	// never ever call a gui function here, it will crash! (in 1/100 cases)
+	wxCommandEvent evt( REFRESH_EVENT, GetId() );
+	evt.SetString(TowxString(mapname));
+	evt.SetEventObject( this );
+	wxPostEvent( this, evt );
+}
+
+void MapCtrl::OnRefresh( wxCommandEvent& event )
+{
+	assert(wxThread::IsMain());
+	std::string mapname = STD_STRING(event.GetString());
 	if (m_mapname.empty() || mapname.empty())
 		return;
     if ( mapname != m_mapname ) return;
@@ -1633,13 +1644,5 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
         m_heightmap = new wxBitmap( LSL::usync().GetHeightmap( m_mapname, w, h ).wxbitmap());
     }
 
-	// never ever call a gui function here, it will crash! (in 1/100 cases)
-	wxCommandEvent evt( REFRESH_EVENT, GetId() );
-	evt.SetEventObject( this );
-	wxPostEvent( this, evt );
-}
-
-void MapCtrl::OnRefresh( wxCommandEvent& /*event*/ )
-{
     Refresh();
 }
