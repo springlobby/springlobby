@@ -1,17 +1,3 @@
-add_sources(springlobbySrc
-	prdownloader.cpp
-	downloadlistctrl.cpp
-	downloadsobserver.cpp
-)
-	
-#currently unused
-clear(filelistSrc)
-add_sources( filelistSrc
-	filelister/filelistctrl.cpp
-	filelister/filelistdialog.cpp
-	filelister/filelistfilter.cpp 
-)
-
 set(PRD_CONSOLETOOL OFF CACHE BOOL "disable console tool compile" FORCE)
 set(PRD_SHAREDLIB OFF CACHE BOOL "disable shared lib compile" FORCE)
 set(PRD_DEVELOP_FILES OFF CACHE BOOL "disable develop files" FORCE)

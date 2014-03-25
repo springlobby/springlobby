@@ -36,7 +36,6 @@ endif()
 
 FIND_PACKAGE(Boost 1.42.0 COMPONENTS thread system REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-#add_to_global(link_directories ${Boost_LIBRARY_DIRS} ${BOOST_LIB_DIR})
 
 ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 
@@ -120,8 +119,7 @@ if(DEFINED PKG_CONFIG_EXECUTABLE) # override CURL_LIBRARIES if curl-config is se
 		OUTPUT_VARIABLE CURL_LINKFLAGS
 		OUTPUT_STRIP_TRAILING_WHITESPACE )
 
-	set(CURL_LIBRARIES "" CACHE STRING "" FORCE)
-	add_to_global(CURL_LINKFLAGS "${CURL_LINKLIBS}")
+	SET(CURL_LINKFLAGS "${CURL_LINKFLAGS}" CACHE STRING "" FORCE)
 	message(STATUS "${PKG_CONFIG_EXECUTABLE} returned ${CURL_LINKFLAGS} for linking to libcurl")
 
 	execute_process(COMMAND ${PKG_CONFIG_EXECUTABLE} "libcurl" "--cflags-only-other"
@@ -153,8 +151,76 @@ IF( OPTION_NOTIFY AND NOT WIN32 )
 	ENDIF( LIBNOTIFY_FOUND )
 ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 
-clear(springlobbySrc)
-add_sources(springlobbySrc
+
+set(springlobbySrc
+	aui/slbook.cpp
+	aui/auimanager.cpp
+
+	hosting/addbotdialog.cpp
+	hosting/autobalancedialog.cpp
+	hosting/autohost.cpp
+	hosting/battlemaptab.cpp
+	hosting/battleoptionstab.cpp
+	hosting/battleroomlistctrl.cpp
+	hosting/battleroomtab.cpp
+	hosting/hostbattledialog.cpp
+	hosting/mainjoinbattletab.cpp
+	hosting/mainsingleplayertab.cpp
+	hosting/mmoptionwindows.cpp
+	hosting/battleroomdownloads.cpp
+	hosting/autohostmanager.cpp
+	hosting/battleroommmoptionstab.cpp
+
+	options/downloadoptionspanel.cpp
+	options/mainoptionstab.cpp
+	options/springoptionstab.cpp
+	options/groupoptionspanel.cpp
+	options/lobbyoptionstab.cpp
+	options/chatoptionstab.cpp
+
+	playback/replaylist.cpp
+	playback/savegamelist.cpp
+
+	helper/TextCompletionDatabase.cpp
+	helper/slhtmlwindow.cpp
+	helper/wxtextctrlhist.cpp
+	helper/colorbutton.cpp
+
+	gui/toasternotification.cpp
+	gui/wxbackgroundimage.cpp
+	gui/statusbar.cpp
+	gui/pastedialog.cpp
+	gui/notificationmanager.cpp
+	gui/taskbar.cpp
+	gui/contentdownloaddialog.cpp
+	gui/contentsearchresultslistctrl.cpp
+
+	utils/activitynotice.cpp
+	utils/misc.cpp
+	utils/tasutil.cpp
+	utils/md5.c
+	utils/battleevents.cpp
+
+	channel/channelchooser.cpp
+	channel/channelchooserdialog.cpp
+	channel/autojoinchanneldialog.cpp
+	channel/channel.cpp
+	channel/channellist.cpp
+	channel/channellistctrl.cpp
+
+	battlelist/battlelist.cpp
+	battlelist/battlelistctrl.cpp
+	battlelist/battlelistfilter.cpp
+	battlelist/battlelisttab.cpp
+
+	downloader/prdownloader.cpp
+	downloader/downloadlistctrl.cpp
+	downloader/downloadsobserver.cpp
+
+	toasterbox/ToasterBox.cpp
+	toasterbox/ToasterBoxWindow.cpp
+	toasterbox/ToasterBoxWindowList.cpp
+
 	chatpanelmenu.cpp
 	agreementdialog.cpp
 	base64.cpp
@@ -174,14 +240,10 @@ add_sources(springlobbySrc
 	mapctrl.cpp
 	mapgridctrl.cpp
 	mapselectdialog.cpp
-	gui/contentdownloaddialog.cpp
-	gui/contentsearchresultslistctrl.cpp
 	contentsearchresult.cpp
 	nicklistctrl.cpp
 	offlinebattle.cpp
 	
-	playback/replaylist.cpp
-	playback/savegamelist.cpp
 	
 	selectusersdialog.cpp
 	iserver.cpp
@@ -200,15 +262,11 @@ add_sources(springlobbySrc
 	userlist.cpp
 	serverselector.cpp
 	
-	toasterbox/ToasterBox.cpp
-	toasterbox/ToasterBoxWindow.cpp
-	toasterbox/ToasterBoxWindowList.cpp
-
 	lsl/src/lsl/battle/tdfcontainer.cpp #FIXME
+	springsettings/frame.cpp
 )
 
-clear(SLSharedWithSettings)
-add_sources(SLSharedWithSettings
+SET(SLSharedWithSettings
 	helper/wxTranslationHelper.cpp
 	uiutils.cpp
 	updater/versionchecker.cpp
@@ -237,8 +295,7 @@ FILE( GLOB header2 "*/*.h" )
 # FILE( GLOB header3 "*/*/*.h" )
 
 #grep -lR cpp\"$ * | sed -e "s/\.h/\.cpp/g"
-clear( templatesources)
-add_sources( templatesources
+SET( templatesources
 	hosting/battleroommmoptionstab.cxx
 	customvirtlistctrl.cpp
 	downloader/httpdownloader.cpp
@@ -251,32 +308,26 @@ add_sources( templatesources
 )
 
 IF(WIN32)
-	add_sources(SLSharedWithSettings stacktrace.c)
+	list(APPEND SLSharedWithSettings stacktrace.c)
 ELSE(WIN32)
-	add_sources(SLSharedWithSettings stacktrace.cpp)
+	list(APPEND SLSharedWithSettings stacktrace.cpp)
 ENDIF(WIN32)
 add_library(slcommon STATIC
 		${SLSharedWithSettings}
 	)
 target_link_libraries(slcommon
 		springlobbyversion
- 		${wxWidgets_LIBRARIES}
+		libsettings
+		lsl-unitsync
+		${wxWidgets_LIBRARIES}
 		${CURL_LIBRARIES}
 	)
 set_target_properties(slcommon PROPERTIES
 		LINK_FLAGS "${CURL_LINKFLAGS}"
 	)
 
-add_subdirectory(aui)
-add_subdirectory(battlelist)
-add_subdirectory(channel)
 add_subdirectory(downloader)
-add_subdirectory(gui)
-add_subdirectory(helper)
-add_subdirectory(hosting)
-add_subdirectory(options)
 add_subdirectory(utils)
-add_subdirectory(wxkeybinder)
 
 set(LSLSERVER OFF CACHE BOOL "disable lsl-server build" FORCE)
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
@@ -323,7 +374,7 @@ ELSE (WIN32)
 	endif()
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby slcommon libsettings lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion
+TARGET_LINK_LIBRARIES(springlobby slcommon lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion libsettings
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${CURL_LIBRARIES}

@@ -1,4 +1,4 @@
-add_sources(SettingsSrc
+set(SettingsSrc
 	helpmenufunctions.cpp
 	panel_pathoption.cpp
 	se_utils.cpp
@@ -8,10 +8,23 @@ add_sources(SettingsSrc
 	tab_render_detail.cpp
 	tab_simple.cpp
 	tab_ui.cpp
-)
-add_subdirectory(hotkeys)
 
-add_sources(springlobbySrc frame.cpp)
+	hotkeys/HotkeyForms.cpp
+	hotkeys/AddSelectionCmdDlg.cpp
+	hotkeys/commandlist.cpp
+	hotkeys/hotkey_panel.cpp
+	hotkeys/hotkey_parser.cpp
+	hotkeys/KeynameConverter.cpp
+	hotkeys/wxSpringCommand.cpp
+	hotkeys/SpringDefaultProfile.cpp
+	hotkeys/HotkeyTypes.cpp
+	hotkeys/CommandOrderDlg.cpp
+	hotkeys/ChangeMetaDlg.cpp
+
+	../wxkeybinder/keybinder.cpp
+	../wxkeybinder/wxKeyMonitorTextCtrl.cpp
+)
+
 ADD_LIBRARY(libsettings STATIC ${SettingsSrc})
 TARGET_LINK_LIBRARIES(libsettings ${wxWidgets_LIBRARIES})
 

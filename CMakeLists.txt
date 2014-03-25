@@ -61,8 +61,6 @@ IF( AUX_VERSION )
 ENDIF( AUX_VERSION )
 
 INCLUDE(SpringLobbyMacros)
-clear(link_directories)
-clear(springlobbySrc)
 Add_Subdirectory(doc)
 #----------------------------------------------------------------------------------------------------
 # L10n support

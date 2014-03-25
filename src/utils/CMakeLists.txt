@@ -1,10 +1,3 @@
-add_sources(springlobbySrc
-	activitynotice.cpp	
-	misc.cpp
-	tasutil.cpp
-	md5.c
-	battleevents.cpp
-)
 add_library(springlobbyversion STATIC
 	version.cpp
 )
