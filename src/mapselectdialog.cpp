@@ -203,20 +203,16 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
     m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴠ") : _T("ᴧ") );
 
     m_maps = LSL::Util::vectorToArrayString(LSL::usync().GetMapList());
-    //true meaning replays, flase meaning savegames
+    //true meaning replays, false meaning savegames
     m_replays = LSL::Util::vectorToArrayString(LSL::usync().GetPlaybackList(true));
 
     const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
 	m_filter_popular->Enable( ui().IsConnected() );
 
-	// due to a bug / crappy design in SpringUnitSync / unitsync itself we
-	// get a replay list with one empty item when there are no replays..
-	const bool no_replays = m_replays.empty() || ( m_replays.size() == 1 && m_replays[0] == wxEmptyString );
-
 	if (( lastFilter == m_filter_popular_sett ) && (ui().IsConnected())) {
 		m_filter_popular->SetValue( true );
 		LoadPopular();
-	} else if (( lastFilter == m_filter_recent_sett ) && ( !no_replays ))  {
+	} else if (( lastFilter == m_filter_recent_sett ) && ( !m_replays.empty() ))  {
 		m_filter_recent->Enable( true );
 		m_filter_recent->SetValue( true );
 		LoadRecent();

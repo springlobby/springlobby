@@ -1281,7 +1281,9 @@ bool Settings::GetMapSelectorFollowsMouse()
 
 unsigned int Settings::GetMapSelectorFilterRadio()
 {
-	return m_config->Read( _T( "/GUI/MapSelector/FilterRadio" ), 0l );
+	int val = 0;
+	m_config->Read( _T( "/GUI/MapSelector/FilterRadio" ), &val);
+	return val;
 }
 
 void Settings::SetMapSelectorFilterRadio( const unsigned int val )

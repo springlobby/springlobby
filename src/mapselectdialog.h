@@ -98,9 +98,11 @@ class MapSelectDialog: public wxDialog, public GlobalEvent /*,public WindowAttri
 		wxArrayString m_replays;
 
 		static const wxString m_dialog_name;
-		static const unsigned int m_filter_all_sett = 0;
-		static const unsigned int m_filter_recent_sett = 1;
-		static const unsigned int m_filter_popular_sett = 2;
+		enum {
+			m_filter_all_sett = 0,
+			m_filter_popular_sett = 1,
+			m_filter_recent_sett = 2,
+		};
 
 		DECLARE_EVENT_TABLE()
 };
