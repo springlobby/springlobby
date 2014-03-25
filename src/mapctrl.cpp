@@ -1624,7 +1624,7 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 	} else if ( m_metalmap == NULL ) {
         m_metalmap = new wxBitmap( LSL::usync().GetMetalmap( m_mapname, w, h ).wxbitmap());
         // singleplayer mode doesn't allow startboxes anyway
-        m_metalmap_cumulative = LSL::usync().GetMetalmap( m_mapname ).wximage();
+        m_metalmap_cumulative = m_metalmap->ConvertToImage();
         Accumulate( m_metalmap_cumulative );
         m_async.GetHeightmap( m_mapname, w, h );
     }
