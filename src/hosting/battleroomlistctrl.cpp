@@ -267,20 +267,19 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
     if ( (item == -1) || (item >= (long)m_data.size()) || (m_battle == NULL) )
         return -1;
 
-    const User& user = *GetDataFromIndex( item );
-    bool is_bot = user.BattleStatus().IsBot();
-    bool is_spec = user.BattleStatus().spectator;
-	 if ( column == m_status_column_index ) {
+	const User& user = *GetDataFromIndex( item );
+	const bool is_bot = user.BattleStatus().IsBot();
+	const bool is_spec = user.BattleStatus().spectator;
+	if ( column == m_status_column_index ) {
 		if ( !is_bot ) {
 			if ( m_battle->IsFounder( user ) ) {
 				return icons().GetHostIcon( is_spec );
-			}
-			else {
+			} else {
 				return icons().GetReadyIcon( is_spec, user.BattleStatus().ready, user.BattleStatus().sync, is_bot );
 			}
-		}
-		else
+		} else {
 			return icons().ICON_BOT;
+		}
 	}
 	if ( column == m_ingame_column_index ) return user.GetStatusIconIndex();
 	if ( column == m_colour_column_index ) return is_spec ? -1 : icons().GetColourIcon( user.BattleStatus().colour );
@@ -288,7 +287,6 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 	if ( column == m_rank_column_index ) return is_bot ? -1 : icons().GetRankIcon( user.GetStatus().rank );
 	if ( column == m_faction_column_index ) return is_spec ? -1 : user.GetSideiconIndex();
 	if ( column == m_nick_column_index ) return -1;
-	if ( column == m_status_column_index ) return -1;
 	if ( column == m_team_column_index ) return -1;
 	if ( column == m_ally_column_index ) return -1;
 	if ( column == m_resourcebonus_column_index ) return -1;
