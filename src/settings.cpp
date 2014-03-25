@@ -90,9 +90,9 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 		wxMkdir( userConfigDir );
 	}
 	if ( (cacheversion < CACHE_VERSION) && !IsFirstRun() ) {
-		if ( wxDirExists( SlPaths::GetCachePath() )  ) {
+		if ( wxDirExists( TowxString(SlPaths::GetCachePath()) )  ) {
 			wxLogWarning( _T("erasing old cache ver %d (app cache ver %d)"), cacheversion, CACHE_VERSION );
-			wxString file = wxFindFirstFile( SlPaths::GetCachePath() + wxFILE_SEP_PATH + _T("*") );
+			wxString file = wxFindFirstFile( TowxString(SlPaths::GetCachePath()) + wxFILE_SEP_PATH + _T("*") );
 			while ( !file.empty() ) {
 				wxRemoveFile( file );
 				file = wxFindNextFile();

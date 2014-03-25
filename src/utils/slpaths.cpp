@@ -55,11 +55,11 @@ wxString SlPaths::GetConfigPath ()
 		   GetLocalConfigPath() : GetDefaultConfigPath();
 }
 
-wxString SlPaths::GetCachePath()
+std::string SlPaths::GetCachePath()
 {
-	wxString path = GetLobbyWriteDir() + sepstring + _T( "cache" ) + sep;
-	if ( !wxFileName::DirExists( path ) ) {
-		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
+	const std::string path = GetLobbyWriteDir() + "cache" + PATH_DELIMITER;
+	if ( !wxFileName::DirExists(TowxString(path)) ) {
+		if ( !wxFileName::Mkdir(TowxString(path), 0755  ) ) return "";
 	}
 	return path;
 }
@@ -107,7 +107,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 	if (autosearch) {
 		if (SlPaths::IsPortableMode()) {
 			wxPathList localPaths;
-			PathlistFactory::EnginePaths(localPaths, GetLobbyWriteDir());
+			PathlistFactory::EnginePaths(localPaths, TowxString(GetLobbyWriteDir()));
 			for (const auto path: localPaths) {
 				LSL::SpringBundle bundle;
 				bundle.path = STD_STRING(path);
@@ -181,7 +181,7 @@ void SlPaths::SetUsedSpringIndex( const wxString& index )
 void SlPaths::ReconfigureUnitsync()
 {
 	LSL::Util::config().ConfigurePaths(
-		STD_STRING(SlPaths::GetCachePath()),
+		SlPaths::GetCachePath(),
 		STD_STRING(SlPaths::GetUnitSync()),
 		STD_STRING(SlPaths::GetSpringBinary())
 	);
@@ -235,7 +235,7 @@ void SlPaths::SetBundle( const wxString& index, const wxString& path )
 
 wxString SlPaths::GetChatLogLoc()
 {
-	wxString path = GetLobbyWriteDir() +  sepstring + _T( "chatlog" );
+	wxString path = TowxString(GetLobbyWriteDir()) +  sepstring + _T( "chatlog" );
 	if ( !wxFileName::DirExists( path ) ) {
 		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
 	}
@@ -268,13 +268,13 @@ void SlPaths::SetEditorPath( const wxString& path )
 }
 
 
-wxString SlPaths::GetLobbyWriteDir()
+std::string SlPaths::GetLobbyWriteDir()
 {
 	//FIXME: make configureable
 	if (IsPortableMode()) {
-		return GetExecutableFolder();
+		return EnsureDelimiter(STD_STRING(GetExecutableFolder()));
 	}
-	return GetConfigfileDir();
+	return EnsureDelimiter(STD_STRING(GetConfigfileDir()));
 }
 
 wxString SlPaths::GetUikeys(const wxString& index)
@@ -318,12 +318,14 @@ bool SlPaths::CreateSpringDataDir(const wxString& dir)
 	CopyUikeys( SlPaths::GetDataDir() );
 	return true;
 }
-static std::string& EnsureDelimiter(std::string& path)
+
+std::string SlPaths::EnsureDelimiter(const std::string& path)
 {
+	std::string dir = path;
 	if ( !path.empty() && (path[path.length()-1] != PATH_DELIMITER )) {
-		path += PATH_DELIMITER;
+		dir += PATH_DELIMITER;
 	}
-	return path;
+	return dir;
 }
 
 wxString SlPaths::GetDataDir(const wxString& /*FIXME: implement index */)

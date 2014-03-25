@@ -26,7 +26,7 @@ public:
 	static wxString GetConfigPath();
 
 	//! directory used to cache infomation about maps
-	static wxString GetCachePath();
+	static std::string GetCachePath();
 
 	/* ================================================================ */
 	/** @name Spring locations
@@ -65,8 +65,7 @@ public:
 	static wxString GetEditorPath();
 	static void SetEditorPath( const wxString& path );
 
-	static wxString GetLobbyWriteDir();
-
+	static std::string GetLobbyWriteDir();
 
 	static bool CreateSpringDataDir(const wxString& dir);
 	static std::string GetCompatibleVersion(const std::string& neededversion);
@@ -76,6 +75,7 @@ private:
 	static bool mkDir(const wxString& dir);
 	static bool IsSpringBin( const wxString& path );
 	static std::map<wxString, LSL::SpringBundle> m_spring_versions;
+	static std::string EnsureDelimiter(const std::string& path);
 };
 
 #endif // SPRINGLOBBY_PATHLISTFACTORY_H

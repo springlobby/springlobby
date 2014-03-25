@@ -49,7 +49,7 @@ bool UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& e
         customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
         return false;
     }
-    m_newexe = SlPaths::GetLobbyWriteDir() + _T("update") + sep;
+    m_newexe = TowxString(SlPaths::GetLobbyWriteDir()) + _T("update") + sep;
     wxLogError( m_newexe  );
     if ( !wxDirExists( m_newexe ) ) {
         if ( !wxMkdir( m_newexe ) ){
