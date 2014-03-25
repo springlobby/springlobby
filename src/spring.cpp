@@ -84,8 +84,25 @@ bool Spring::IsRunning() const
 
 bool Spring::Run( IBattle& battle )
 {
-	const wxString scripttxt = SlPaths::GetDataDir() + _T("script.txt");
+	wxString executable = SlPaths::GetSpringBinary(TowxString(battle.GetEngineVersion()));
+	if ( !wxFile::Exists(executable) ) {
+		executable = SlPaths::GetSpringBinary(TowxString(SlPaths::GetCompatibleVersion(battle.GetEngineVersion()))); //fallback, no exact version found, try fallback version
+		if ( !wxFile::Exists(executable) ) {
+			customMessageBoxNoModal( SL_MAIN_ICON, wxFormat(_T("The spring executable version '%s' was not found at the set location '%s', please re-check.")) % battle.GetEngineVersion() % executable, _T("Executable not found") );
+			ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
+			return false;
+		}
+	}
 
+	wxArrayString params;
+
+	const std::string demopath = battle.GetPlayBackFilePath();
+	if (!demopath.empty()){
+		params.push_back(TowxString(demopath));
+		return LaunchEngine(executable, params);
+	}
+
+	const wxString scripttxt = SlPaths::GetDataDir() + _T("script.txt");
 	try {
 
 		if ( !wxFile::Access( scripttxt , wxFile::write ) ) {
@@ -101,26 +118,12 @@ bool Spring::Run( IBattle& battle )
 	} catch ( std::exception& e ) {
 		wxLogError( wxString::Format( _T("Couldn't write script.txt, exception caught:\n %s"), TowxString( e.what() ).c_str() ) );
 		return false;
-	}
-
-	catch (...) {
+	} catch (...) {
 		wxLogError( _T("Couldn't write script.txt") );
 		return false;
 	}
 
-	wxString executable = SlPaths::GetSpringBinary(TowxString(battle.GetEngineVersion()));
-	if ( !wxFile::Exists(executable) ) {
-		executable = SlPaths::GetSpringBinary(TowxString(SlPaths::GetCompatibleVersion(battle.GetEngineVersion()))); //fallback, no exact version found, try fallback version
-		if ( !wxFile::Exists(executable) ) {
-			customMessageBoxNoModal( SL_MAIN_ICON, wxFormat(_T("The spring executable version '%s' was not found at the set location '%s', please re-check.")) % battle.GetEngineVersion() % executable, _T("Executable not found") );
-			ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
-			return false;
-		}
-	}
-
-	wxArrayString params;
 	params.push_back(scripttxt);
-
 	return LaunchEngine(executable, params);
 }
 

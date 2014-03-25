@@ -75,6 +75,7 @@ bool ReplayList::GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const
 	ret.battle.SetBattleType( BT_Replay );
 	ret.battle.SetEngineName("spring");
 	ret.battle.SetEngineVersion(STD_STRING(ret.SpringVersion));
+	ret.battle.SetPlayBackFilePath(STD_STRING(ReplayPath));
 
 	//getting this from filename seems more reliable than from demoheader
 	wxDateTime rdate;
