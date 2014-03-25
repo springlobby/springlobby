@@ -367,25 +367,28 @@ void IconImageList::SetColourIcon( const wxColour& colour )
 
 int IconImageList::GetSideIcon( const std::string& modname, int side )
 {
-    const auto sides = LSL::usync().GetSides(modname);
+	const auto sides = LSL::usync().GetSides(modname);
 	std::string sidename;
-    if( side < (int)sides.size() )
-        sidename = sides[side];
-    std::string cachestring = modname + "_" + sidename;
-    if (m_cached_side_icons.find(cachestring)  == m_cached_side_icons.end()){
-        try
-        {
-            const auto img = LSL::usync().GetSidePicture(modname, sidename);
-            int IconPosition = Add(wxBitmap( img.wxbitmap() ), wxNullBitmap);
-          m_cached_side_icons[cachestring] = IconPosition;
-          return IconPosition;
-        } catch (...)
-        {
-          if ( side == 0 ) m_cached_side_icons[cachestring] = ICON_SIDEPIC_0;
-          else m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
-        }
-    }
-    return m_cached_side_icons[cachestring];
+	if( side < (int)sides.size() ) {
+		sidename = sides[side];
+	}
+	const std::string cachestring = modname + "_" + sidename;
+	if ( m_cached_side_icons.find(cachestring) != m_cached_side_icons.end()){ //already cached
+		return m_cached_side_icons[cachestring];
+	}
+
+	try {
+		const LSL::UnitsyncImage img = LSL::usync().GetSidePicture(modname, sidename);
+		int IconPosition = Add(wxBitmap( img.wxbitmap() ), wxNullBitmap);
+		m_cached_side_icons[cachestring] = IconPosition;
+		return IconPosition;
+	} catch (...) {}
+	if ( side == 0 ) { //failed to load, store dummies in cache
+		m_cached_side_icons[cachestring] = ICON_SIDEPIC_0;
+	} else {
+		m_cached_side_icons[cachestring] = ICON_SIDEPIC_1;
+	}
+	return m_cached_side_icons[cachestring];
 }
 
 int IconImageList::GetReadyIcon( const bool& spectator,const bool& ready, const unsigned int& sync, const bool& bot )
