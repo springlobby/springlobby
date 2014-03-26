@@ -14,11 +14,10 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/stdpaths.h>
+#include <wx/dir.h>
 
 #include <lslunitsync/unitsync.h>
 #include <lslutils/config.h>
-
-#include "pathlistfactory.h"
 
 std::string SlPaths::m_user_defined_config_path = "";
 
@@ -77,8 +76,26 @@ std::map<std::string, LSL::SpringBundle> SlPaths::GetSpringVersionList()
 
 bool SlPaths::LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
 {
-	wxPathList paths = PathlistFactory::ConfigFileSearchPaths();
-	for (const auto path: paths) {
+	wxPathList pl;
+    pl.AddEnvList( _T( "%ProgramFiles%" ) );
+
+    pl.AddEnvList( _T( "LDPATH" ) );
+    pl.AddEnvList( _T( "LD_LIBRARY_PATH" ) );
+    pl.AddEnvList( _T( "SPRING_BUNDLE_DIR" ) ); //folder which contains a bundle, for example {SPRING_BUNDLE_DIR]/spring {SPRING_BUNDLE_DIR}/libunitsync.so
+
+    pl.Add( _T( "/usr/local/lib/spring" ) );
+    pl.Add( _T( "/usr/local/lib64" ) );
+    pl.Add( _T( "/usr/local/games" ) );
+    pl.Add( _T( "/usr/local/games/lib" ) );
+    pl.Add( _T( "/usr/local/lib" ) );
+    pl.Add( _T( "/usr/lib64" ) );
+    pl.Add( _T( "/usr/lib" ) );
+    pl.Add( _T( "/usr/lib/spring" ) );
+    pl.Add( _T( "/usr/games" ) );
+    pl.Add( _T( "/usr/games/lib64" ) );
+    pl.Add( _T( "/usr/games/lib" ) );
+
+	for (const wxString path: pl) {
 		if (bundle.AutoComplete(STD_STRING(path))) {
 			return true;
 		}
@@ -86,6 +103,40 @@ bool SlPaths::LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
 	return false;
 }
 
+//returns possible paths where a spring bundles could be
+void SlPaths::PossibleEnginePaths(wxPathList &pl)
+{
+    pl.Add( wxFileName::GetCwd() ); //current working directory
+    pl.Add( TowxString(GetExecutableFolder())); //dir of springlobby.exe
+
+	std::vector<std::string> basedirs, paths;
+	const std::string homedir = EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetDocumentsDir()));
+	basedirs.push_back(homedir + ".spring");
+	basedirs.push_back(homedir + "My Games" + PATH_DELIMITER + "Spring" + PATH_DELIMITER);
+	EngineSubPaths(basedirs, paths);
+
+    for(auto path: paths) { //fill result
+        pl.Add(TowxString(path));
+	}
+}
+
+// get all possible subpaths of basedirs with installed engines
+void SlPaths::EngineSubPaths(const std::vector<std::string>& basedirs, std::vector<std::string>& paths)
+{
+	for (auto basedir: basedirs) {
+		const std::string enginedir = EnsureDelimiter(EnsureDelimiter(basedir)+ "engine");
+		wxDir dir(TowxString(enginedir));
+
+		if ( dir.IsOpened() ) {
+			wxString filename;
+			bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_DIRS|wxDIR_HIDDEN);
+			while ( cont ) {
+				paths.push_back(enginedir + STD_STRING(filename));
+				cont = dir.GetNext(&filename);
+			}
+		}
+	}
+}
 
 void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle* additionalbundle)
 {
@@ -108,22 +159,23 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 	}
 
 	if (autosearch) {
-		if (SlPaths::IsPortableMode()) {
-			wxPathList localPaths;
-			PathlistFactory::EnginePaths(localPaths, TowxString(GetLobbyWriteDir()));
-			for (const auto path: localPaths) {
-				LSL::SpringBundle bundle;
-				bundle.path = STD_STRING(path);
-				usync_paths.push_back(bundle);
-			}
-		} else {
+		std::vector<std::string> lobbysubpaths;
+		std::vector<std::string> basedirs;
+		basedirs.push_back(GetLobbyWriteDir());
+		EngineSubPaths(basedirs, lobbysubpaths);
+		for (const auto path: lobbysubpaths) {
+			LSL::SpringBundle bundle;
+			bundle.path = path;
+			usync_paths.push_back(bundle);
+		}
+		if (!SlPaths::IsPortableMode()) {
 			LSL::SpringBundle systembundle;
 			if (LocateSystemInstalledSpring(systembundle)) {
 				usync_paths.push_back(systembundle);
 			}
 
-			wxPathList ret;
-			wxPathList paths = PathlistFactory::AdditionalSearchPaths(ret);
+			wxPathList paths;
+			PossibleEnginePaths(paths);
 			for (const auto path: paths) {
 				LSL::SpringBundle bundle;
 				bundle.path = STD_STRING(path);
@@ -285,17 +337,6 @@ std::string SlPaths::GetUikeys(const std::string& index)
 	return GetDataDir(index) + "uikeys.txt";
 }
 
-//! copy uikeys.txt
-void CopyUikeys(const wxString& currentDatadir )
-{
-    wxString uikeyslocation = PathlistFactory::UikeysLocations().FindValidPath( _T("uikeys.txt") );
-    if ( !uikeyslocation.IsEmpty() )
-    {
-        wxCopyFile( uikeyslocation, currentDatadir + wxFileName::GetPathSeparator() + _T("uikeys.txt"), false );
-    }
-}
-
-
 bool SlPaths::mkDir(const std::string& dir) {
 	return wxFileName::Mkdir(TowxString(dir), 0, wxPATH_MKDIR_FULL);
 }
@@ -316,7 +357,6 @@ bool SlPaths::CreateSpringDataDir(const std::string& dir)
 	if (LSL::usync().IsLoaded()) {
 		LSL::usync().SetSpringDataPath(dir);
 	}
-	CopyUikeys(TowxString(SlPaths::GetDataDir()));
 	return true;
 }
 

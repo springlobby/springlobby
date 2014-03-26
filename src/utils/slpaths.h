@@ -4,7 +4,9 @@
 #define SPRINGLOBBY_SLPATHS_H
 
 #include <map>
+#include <vector>
 #include <cstddef>
+#include <wx/filename.h>
 
 #include <lslunitsync/springbundle.h>
 
@@ -32,7 +34,6 @@ public:
 
 	static void RefreshSpringVersionList(bool autosearch=true, const LSL::SpringBundle* additionalbundle = NULL);
 	static std::map<std::string, LSL::SpringBundle> GetSpringVersionList(); /// index -> version
-	static bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle);
 
 	static std::string GetCurrentUsedSpringIndex();
 	static void SetUsedSpringIndex(const std::string &index);
@@ -71,6 +72,9 @@ public:
 	static std::string GetConfigfileDir();
 
 private:
+	static bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle);
+	static void EngineSubPaths(const std::vector<std::string>& basedirs, std::vector<std::string>& paths);
+
 	//! used for passing config file at command line, empty if not set
 	static std::string m_user_defined_config_path;
 	//recursive create dir
@@ -78,6 +82,7 @@ private:
 	static bool IsSpringBin( const std::string& path );
 	static std::map<std::string, LSL::SpringBundle> m_spring_versions;
 	static std::string EnsureDelimiter(const std::string& path);
+	static void PossibleEnginePaths(wxPathList &pl);
 
 };
 

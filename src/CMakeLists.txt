@@ -277,7 +277,6 @@ SET(SLSharedWithSettings
 	utils/globalevents.cpp
 	utils/platform.cpp
 	utils/slpaths.cpp
-	utils/pathlistfactory.cpp
 	utils/sltipwin.cpp
 	utils/uievents.cpp
 	utils/curlhelper.cpp

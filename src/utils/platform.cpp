@@ -20,8 +20,6 @@
 #include "customdialogs.h"
 #include <lslutils/misc.h>
 #include "../crashreport.h"
-
-#include "pathlistfactory.h"
 #include "utils/version.h"
 
 //!This is only ever used for unitsync and on daftalx notice it should actually be .dylib (wx returns .bundle )
