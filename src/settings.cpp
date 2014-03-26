@@ -85,7 +85,7 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 	long settversion = cfg().ReadLong(_T("/General/SettingsVersion"));
 	long cacheversion = cfg().ReadLong(_T( "/General/CacheVersion" ));
 
-	const wxString userConfigDir = GetConfigfileDir();
+	const wxString userConfigDir = TowxString(SlPaths::GetConfigfileDir());
 	if ( IsFirstRun() && !wxDirExists( userConfigDir ) ) {
 		wxMkdir( userConfigDir );
 	}

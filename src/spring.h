@@ -38,7 +38,7 @@ public:
 
 private:
 	void OnTerminated( wxCommandEvent& event );
-	bool LaunchEngine(const wxString& cmd, wxArrayString& params);
+	bool LaunchEngine(const std::string& cmd, wxArrayString& params);
 
 	SpringProcess* m_process;
 	bool m_running;

@@ -34,6 +34,7 @@
 #include "utils/conversion.h"
 #include "utils/uievents.h"
 #include "utils/slpaths.h"
+#include "utils/version.h"
 #include "updater/updatehelper.h"
 #include "uiutils.h"
 #include "chatpanel.h"
@@ -491,8 +492,8 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 {
 	assert(engine == _T("spring"));
 	if ( sett().GetDisableSpringVersionCheck() ) return true;
-	const wxString ver = TowxString(SlPaths::GetCompatibleVersion(STD_STRING(version)));
-	if (!ver.IsEmpty()) {
+	const std::string ver = SlPaths::GetCompatibleVersion(STD_STRING(version));
+	if (!ver.empty()) {
 		if ( SlPaths::GetCurrentUsedSpringIndex() != ver ) {
 			wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), ver.c_str(), ver.c_str());
 			SlPaths::SetUsedSpringIndex( ver );
@@ -993,7 +994,7 @@ bool Ui::OnPresetRequiringMap( const wxString& mapname )
 
 void Ui::OpenFileInEditor( const wxString& filepath )
 {
-	wxString editor_path = SlPaths::GetEditorPath( );
+	const wxString editor_path = TowxString(SlPaths::GetEditorPath());
 	if ( editor_path == wxEmptyString ) {
 		customMessageBoxNoModal( SL_MAIN_ICON, _T("You have not chosen an external text editor to open files with.\nPlease Select one now."), _T("No editor set") );
 		mw().ShowConfigure( MainWindow::OPT_PAGE_GENERAL );
@@ -1049,7 +1050,7 @@ void Ui::CheckForUpdates()
 #ifdef __WXMSW__
 		int answer = customMessageBox(SL_MAIN_ICON,
 					      wxFormat( _("Your %s version is not up to date.\n\n%s\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again.") )
-					      % GetAppName()
+					      % TowxString(getSpringlobbyName())
 					      % msg,
 					      _("Not up to date"), wxYES_NO);
 		if (answer == wxYES) {

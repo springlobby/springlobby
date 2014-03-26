@@ -24,7 +24,7 @@
 #include "aui/auimanager.h"
 #include "ui.h"
 #include "mainwindow.h"
-
+#include "utils/conversion.h"
 
 BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
 
@@ -78,7 +78,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     wxStaticBox* m_editor_box = new wxStaticBox( this , -1, _("External text editor") );
     m_editor_loc_text = new wxStaticText( this, -1, _("Path") );
 
-    m_editor_edit = new wxTextCtrl( this, -1, SlPaths::GetEditorPath() );
+    m_editor_edit = new wxTextCtrl( this, -1, TowxString(SlPaths::GetEditorPath()));
 
     m_editor_browse_btn = new wxButton( this, ID_BUT_EDITOR, _("Browse") );
     m_editor_browse_btn->SetToolTip(TE(_("Use a file dialog to find the editor binary")));
@@ -217,7 +217,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
     ui().mw().SetTabIcons();
     cfg().Write( _T( "/GUI/StartTab" ) , m_start_tab->GetSelection() );
 
-    SlPaths::SetEditorPath( m_editor_edit->GetValue() );
+    SlPaths::SetEditorPath(STD_STRING(m_editor_edit->GetValue()));
 
     sett().SetShowXallTabs( m_x_on_all_tabs->IsChecked() );
 	sett().SetUseNotificationPopups( m_use_notif_popups->IsChecked() );
@@ -244,7 +244,7 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 
     m_start_tab->SetSelection( cfg().ReadLong(_T( "/GUI/StartTab" )) );
 
-    m_editor_edit->SetValue( SlPaths::GetEditorPath() );
+    m_editor_edit->SetValue(TowxString(SlPaths::GetEditorPath()));
 
     m_x_on_all_tabs->SetValue( sett().GetShowXallTabs() );
 	m_use_notif_popups->SetValue( sett().GetUseNotificationPopups() );

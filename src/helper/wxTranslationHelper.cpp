@@ -7,8 +7,9 @@
 #include <wx/intl.h>
 
 #include "helper/slconfig.h"
+#include "utils/slpaths.h"
+#include "utils/conversion.h"
 #include "utils/customdialogs.h"
-#include "utils/platform.h"
 
 SLCONFIG("/General/LanguageID", (long)wxLANGUAGE_DEFAULT, "Language ID" );
 
@@ -18,7 +19,7 @@ wxTranslationHelper::wxTranslationHelper(const wxString& catalog, const wxString
 	m_Locale(NULL)
 {
 	if(search_path.IsEmpty()) {
-		m_SearchPath = GetExecutableFolder();
+		m_SearchPath = TowxString(SlPaths::GetExecutableFolder());
 	}
 	long language = cfg().ReadLong(_T("/General/LanguageID"));
 	if (!Load(language)) { //fallback when something went wrong

@@ -33,7 +33,7 @@ bool IsUACenabled();
 **/
 wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxString& logfilepath, bool showgui, int verbosity, wxLogChain* logChain );
 
-wxString GetExecutableFolder();
+
 wxString GetLibExtension();
 
 //! set new cwd in ctor, reset to old in dtor
@@ -57,18 +57,11 @@ class PwdGuard {
 bool IsPreVistaWindows();
 #endif
 
-//! simply return wxApp::GetAppName with letter lowercased on demand
-wxString GetAppName( const bool lowerCase = false );
-wxString GetConfigfileDir();
-wxString GetUserDataDir();
-
 /**
   \in Format string with a single %s
   \out wxString with %s replaced with GetAppName()
   **/
 wxString IdentityString(const wxString& format, bool lowerCase = false );
-
-wxString GetCustomizedEngineConfigFilePath();
 
 int RunProcess(const wxString& cmd, const wxArrayString& params);
 int BrowseFolder(const wxString& path);

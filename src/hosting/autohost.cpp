@@ -8,7 +8,7 @@
 #include "user.h"
 #include "utils/conversion.h"
 #include "utils/misc.h"
-#include "utils/platform.h"
+#include "utils/version.h"
 #include <lslunitsync/unitsync.h>
 
 #include <wx/tokenzr.h>
@@ -274,7 +274,7 @@ void AutoHost::OnUserAdded( User& user )
 	// do nothing if autohost functionality is disabled
 	if ( !m_enabled )
 		return;
-	m_battle.DoAction( wxFormat( _T( "Hi %s, this battle is in %s autohost mode. For help say !help" ) ) % user.GetNick() % GetAppName() );
+	m_battle.DoAction(stdprintf("Hi %s, this battle is in %s autohost mode. For help say !help", user.GetNick().c_str(), getSpringlobbyVersion().c_str()));
 }
 
 

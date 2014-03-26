@@ -37,21 +37,20 @@ InfoDialog::InfoDialog(wxWindow* parent )
 {
 	wxBoxSizer* main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	typedef  std::vector< std::pair< wxString,wxString > >
-		Paths;
+	typedef  std::vector< std::pair< std::string,wxString > >Paths;
 	Paths paths;
-	paths.push_back( std::make_pair( TowxString(SlPaths::GetLobbyWriteDir()), _T("LobbyWriteDir") ) );
-	paths.push_back( std::make_pair( sett().GetTempStorage(), _T("TempStorage")) );
-	paths.push_back( std::make_pair( TowxString(SlPaths::GetCachePath()), _T("CachePath")) );
+	paths.push_back( std::make_pair( SlPaths::GetLobbyWriteDir(), _T("LobbyWriteDir") ) );
+	paths.push_back( std::make_pair( STD_STRING(sett().GetTempStorage()), _T("TempStorage")) );
+	paths.push_back( std::make_pair( SlPaths::GetCachePath(), _T("CachePath")) );
 	paths.push_back( std::make_pair( SlPaths::GetDataDir(), _T("CurrentUsedDataDir")) );
-	paths.push_back( std::make_pair( GetExecutableFolder() , _T("ExecutableFolder")));
+	paths.push_back( std::make_pair( SlPaths::GetExecutableFolder() , _T("ExecutableFolder")));
 
 	wxTextCtrl* out = new wxTextCtrl( this, wxNewId(), wxEmptyString, wxDefaultPosition, wxDefaultSize,
 									 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 	for ( size_t i =0; i < paths.size(); ++i )
 	{
-		*out << wxString::Format( _T("%s (%s)\n"), paths[i].second.c_str(), paths[i].first.c_str());
-		wxString path = paths[i].first;
+		const wxString path = TowxString(paths[i].first);
+		*out << wxString::Format( _T("%s (%s)\n"), paths[i].second.c_str(), path.c_str());
 		wxString dummy_fn = path + wxFileName::GetPathSeparator() + _T("dummy.txt");
 		const bool wx = wxFileName::IsDirWritable( path );
 		const bool posix = access(STD_STRING(path).c_str(), WRITABLE) == 0;
@@ -71,12 +70,16 @@ InfoDialog::InfoDialog(wxWindow* parent )
 		catch (...){}
 		*out << wxString::Format( _T("\tWX: %s POSIX: %s TRY: %s\n"), BtS(wx).c_str(), BtS(posix).c_str(), BtS(tried).c_str() );
 	}
-	*out << wxString::Format( _T("Portable mode: %s\n"), BtS(SlPaths::IsPortableMode()).c_str() );
 
-	*out << wxString::Format( _T("Config: %s (%s writable)\n"),
-							 SlPaths::GetConfigPath().c_str(),
-							 BtS(wxFileName::IsFileWritable(SlPaths::GetConfigPath()), "", "not" ).c_str() );
-	*out << wxString::Format(_T("current uikeys.txt: %s\n"), SlPaths::GetUikeys().c_str());
+	*out << wxString::Format(_T("Default unitsync: %s\n"), TowxString(SlPaths::GetUnitSync()).c_str());
+	*out << wxString::Format(_T("Default spring executable: %s\n") , TowxString(SlPaths::GetSpringBinary()).c_str());
+
+	*out << wxString::Format(_T("Portable mode: %s\n"), BtS(SlPaths::IsPortableMode()).c_str() );
+
+	*out << wxString::Format(_T("SpringLobby config file: %s (%s writable)\n"),
+							 TowxString(SlPaths::GetConfigPath()).c_str(),
+							 BtS(wxFileName::IsFileWritable(TowxString(SlPaths::GetConfigPath())), "", "not" ).c_str() );
+	*out << wxString::Format(_T("current uikeys.txt: %s\n"), TowxString(SlPaths::GetUikeys()).c_str());
 
 	*out << _T( "Version " ) + TowxString(getSpringlobbyAgent()) + _T("\n");
 	*out << wxString::Format(_T("Compiled with %s"), wxVERSION_STRING) + _T("\n");

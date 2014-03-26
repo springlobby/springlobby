@@ -5,7 +5,6 @@
 
 #include <map>
 #include <cstddef>
-#include <wx/filefn.h>
 
 #include <lslunitsync/springbundle.h>
 
@@ -17,13 +16,11 @@
 class SlPaths
 {
 public:
-	//! used for passing config file at command line, empty if not set
-	static wxString m_user_defined_config_path;
-	static void SetUserConfigPath(const wxString& path);
+	static void SetUserConfigPath(const std::string& path) {m_user_defined_config_path = path;}
 	static bool IsPortableMode();
-	static wxString GetLocalConfigPath();
-	static wxString GetDefaultConfigPath();
-	static wxString GetConfigPath();
+	static std::string GetLocalConfigPath();
+	static std::string GetDefaultConfigPath();
+	static std::string GetConfigPath();
 
 	//! directory used to cache infomation about maps
 	static std::string GetCachePath();
@@ -34,48 +31,54 @@ public:
 	 */
 
 	static void RefreshSpringVersionList(bool autosearch=true, const LSL::SpringBundle* additionalbundle = NULL);
-	static std::map<wxString, LSL::SpringBundle> GetSpringVersionList(); /// index -> version
+	static std::map<std::string, LSL::SpringBundle> GetSpringVersionList(); /// index -> version
 	static bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle);
 
-	static wxString GetCurrentUsedSpringIndex();
-	static void SetUsedSpringIndex(const wxString &index);
+	static std::string GetCurrentUsedSpringIndex();
+	static void SetUsedSpringIndex(const std::string &index);
 
 	static void ReconfigureUnitsync();
 
-	static void DeleteSpringVersionbyIndex( const wxString& index = GetCurrentUsedSpringIndex() );
+	static void DeleteSpringVersionbyIndex( const std::string& index = GetCurrentUsedSpringIndex() );
 
-	static wxString GetUnitSync(const wxString& index = GetCurrentUsedSpringIndex());
-	static void SetUnitSync(const wxString& path, const wxString& index = GetCurrentUsedSpringIndex());
+	static std::string GetUnitSync(const std::string& index = GetCurrentUsedSpringIndex());
+	static void SetUnitSync(const std::string& path, const std::string& index = GetCurrentUsedSpringIndex());
 
-	static wxString GetSpringBinary(const wxString& index = GetCurrentUsedSpringIndex() );
-	static void SetSpringBinary(const wxString& path, const wxString& index = GetCurrentUsedSpringIndex());
+	static std::string GetSpringBinary(const std::string& index = GetCurrentUsedSpringIndex() );
+	static void SetSpringBinary(const std::string& path, const std::string& index = GetCurrentUsedSpringIndex());
 
-	static wxString GetUikeys(const wxString& index = GetCurrentUsedSpringIndex());
-	static wxString GetDataDir(const wxString& index = GetCurrentUsedSpringIndex());
-	static wxString GetSpringConfigFilePath(const wxString& index = GetCurrentUsedSpringIndex());
+	static std::string GetUikeys(const std::string& index = GetCurrentUsedSpringIndex());
+	static std::string GetDataDir(const std::string& index = GetCurrentUsedSpringIndex());
+	static std::string GetSpringConfigFilePath(const std::string& index = GetCurrentUsedSpringIndex());
 
 	//!@brief meaningful only on mac
-	static void SetBundle( const wxString& index, const wxString& path );
+	static void SetBundle( const std::string& index, const std::string& path );
 
 
 	/*@}*/
 
-	static wxString GetChatLogLoc();
+	static std::string GetChatLogLoc();
 
-	static wxString GetEditorPath();
-	static void SetEditorPath( const wxString& path );
+	static std::string GetEditorPath();
+	static void SetEditorPath( const std::string& path );
 
 	static std::string GetLobbyWriteDir();
 
-	static bool CreateSpringDataDir(const wxString& dir);
+	static bool CreateSpringDataDir(const std::string& dir);
 	static std::string GetCompatibleVersion(const std::string& neededversion);
+	static std::string GetExecutableFolder();
+	static std::string GetUserDataDir();
+	static std::string GetConfigfileDir();
 
 private:
+	//! used for passing config file at command line, empty if not set
+	static std::string m_user_defined_config_path;
 	//recursive create dir
-	static bool mkDir(const wxString& dir);
-	static bool IsSpringBin( const wxString& path );
-	static std::map<wxString, LSL::SpringBundle> m_spring_versions;
+	static bool mkDir(const std::string& dir);
+	static bool IsSpringBin( const std::string& path );
+	static std::map<std::string, LSL::SpringBundle> m_spring_versions;
 	static std::string EnsureDelimiter(const std::string& path);
+
 };
 
 #endif // SPRINGLOBBY_PATHLISTFACTORY_H

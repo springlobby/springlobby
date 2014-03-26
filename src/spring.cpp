@@ -84,10 +84,10 @@ bool Spring::IsRunning() const
 
 bool Spring::Run( IBattle& battle )
 {
-	wxString executable = SlPaths::GetSpringBinary(TowxString(battle.GetEngineVersion()));
-	if ( !wxFile::Exists(executable) ) {
-		executable = SlPaths::GetSpringBinary(TowxString(SlPaths::GetCompatibleVersion(battle.GetEngineVersion()))); //fallback, no exact version found, try fallback version
-		if ( !wxFile::Exists(executable) ) {
+	std::string executable = SlPaths::GetSpringBinary(battle.GetEngineVersion());
+	if ( !wxFile::Exists(TowxString(executable)) ) {
+		executable = SlPaths::GetSpringBinary(SlPaths::GetCompatibleVersion(battle.GetEngineVersion())); //fallback, no exact version found, try fallback version
+		if ( !wxFile::Exists(TowxString(executable)) ) {
 			customMessageBoxNoModal( SL_MAIN_ICON, wxFormat(_T("The spring executable version '%s' was not found at the set location '%s', please re-check.")) % battle.GetEngineVersion() % executable, _T("Executable not found") );
 			ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
 			return false;
@@ -102,7 +102,7 @@ bool Spring::Run( IBattle& battle )
 		return LaunchEngine(executable, params);
 	}
 
-	const wxString scripttxt = SlPaths::GetDataDir() + _T("script.txt");
+	const wxString scripttxt = TowxString(SlPaths::GetDataDir()) + _T("script.txt");
 	try {
 
 		if ( !wxFile::Access( scripttxt , wxFile::write ) ) {
@@ -127,7 +127,7 @@ bool Spring::Run( IBattle& battle )
 	return LaunchEngine(executable, params);
 }
 
-bool Spring::LaunchEngine(const wxString& cmd, wxArrayString& params)
+bool Spring::LaunchEngine(const std::string& cmd, wxArrayString& params)
 {
 	if ( m_running ) {
 		wxLogError( _T("Spring already running!") );
@@ -138,13 +138,13 @@ bool Spring::LaunchEngine(const wxString& cmd, wxArrayString& params)
 		params.push_back(_T("--safemode "));
 	}
 	wxLogMessage( _T("spring call params: %s"), cmd.c_str() );
-	wxSetWorkingDirectory( SlPaths::GetDataDir() );
+	wxSetWorkingDirectory( TowxString(SlPaths::GetDataDir()) );
 
 	if ( m_process == 0 ) {
 		m_process = new SpringProcess( *this );
 	}
 	m_process->Create();
-	m_process->SetCommand( cmd, params );
+	m_process->SetCommand(TowxString(cmd), params );
 	m_process->Run();
 	m_running = true;
 	GlobalEvent::Send(GlobalEvent::OnSpringStarted);

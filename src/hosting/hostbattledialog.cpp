@@ -319,11 +319,11 @@ void HostBattleDialog::ReloadModList()
 void HostBattleDialog::ReloadEngineList()
 {
 	m_engine_pic->Clear();
-	std::map<wxString, LSL::SpringBundle> versions = SlPaths::GetSpringVersionList();
-	const wxString last = SlPaths::GetCurrentUsedSpringIndex();
+	std::map<std::string, LSL::SpringBundle> versions = SlPaths::GetSpringVersionList();
+	const std::string last = SlPaths::GetCurrentUsedSpringIndex();
 	int i=0;
 	for(auto pair: versions) {
-		m_engine_pic->Insert(pair.first, i);
+		m_engine_pic->Insert(TowxString(pair.first), i);
 		if (last == pair.first) {
 			m_engine_pic->SetSelection(i);
 		}
@@ -436,7 +436,7 @@ void HostBattleDialog::OnUseRelay( wxCommandEvent&  )
 
 void HostBattleDialog::OnEngineSelect ( wxCommandEvent& event )
 {
-	SlPaths::SetUsedSpringIndex(m_engine_pic->GetString(m_engine_pic->GetSelection()));
+	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
 	LSL::usync().ReloadUnitSyncLib();
 	ReloadEngineList();
 }

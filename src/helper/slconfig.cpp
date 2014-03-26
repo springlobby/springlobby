@@ -36,7 +36,7 @@ slConfig::slConfig( wxInputStream& in, const wxMBConv& conv ):
 //! overwrite default create of wxConfigBase
 slConfig* slConfig::Create()
 {
-	m_chosen_path = SlPaths::GetConfigPath();
+	m_chosen_path = TowxString(SlPaths::GetConfigPath());
 
 	// make sure config file & dir is created/writeable when not exists
 	wxString configDir;

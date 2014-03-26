@@ -74,9 +74,9 @@ bool Springsettings::OnInit()
         return false;
 
 	SetAppName(_T("SpringSettings"));
-
-	if ( !wxDirExists( GetConfigfileDir() ) )
-		wxMkdir( GetConfigfileDir() );
+	const wxString configdir = TowxString(SlPaths::GetConfigfileDir());
+	if ( !wxDirExists(configdir) )
+		wxMkdir(configdir);
 
 	if (!m_crash_handle_disable) {
 	#if wxUSE_ON_FATAL_EXCEPTION
@@ -177,7 +177,7 @@ void Springsettings::OnInitCmdLine(wxCmdLineParser& parser)
 //! @brief parses the command line and sets global app options like log verbosity or log target
 bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
 {
-  #if wxUSE_CMDLINE_PARSER
+//  #if wxUSE_CMDLINE_PARSER
     if ( !parser.Parse(true) )
     {
 #if wxUSE_STD_IOSTREAM
@@ -187,9 +187,10 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
         m_log_window_show = parser.Found(_T("gui-logging"));
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
 
-		const bool userconfig = parser.Found( _T("config-file"), &SlPaths::m_user_defined_config_path );
+		wxString config;;
+		const bool userconfig = parser.Found( _T("config-file"), &config);
 		if ( userconfig ) {
-			 wxFileName fn ( SlPaths::m_user_defined_config_path );
+			 wxFileName fn ( config );
 			 if ( ! fn.IsAbsolute() ) {
 				 wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
 				 return false;
@@ -198,7 +199,9 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
 				 wxLogError ( _T("path for parameter \"config-file\" must be writeable") );
 				 return false;
 			 }
+			SlPaths::SetUserConfigPath(STD_STRING(config));
 		}
+
 
 		if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
 			m_log_verbosity = m_log_window_show ? 3 : 5;
@@ -209,8 +212,8 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
     {
         return false;
     }
-  #else // wxUSE_CMDLINE_PARSER
+//  #else // wxUSE_CMDLINE_PARSER
   return true;
-  #endif
+//  #endif
 }
 

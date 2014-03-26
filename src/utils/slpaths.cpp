@@ -4,20 +4,23 @@
 
 #include "../nonportable.h"
 #include "../helper/slconfig.h"
+
 #include "platform.h"
 #include "conversion.h"
 #include "debug.h"
+#include "utils/version.h"
 
 #include <wx/string.h>
 #include <wx/filename.h>
 #include <wx/log.h>
+#include <wx/stdpaths.h>
 
 #include <lslunitsync/unitsync.h>
 #include <lslutils/config.h>
 
 #include "pathlistfactory.h"
 
-wxString SlPaths::m_user_defined_config_path = wxEmptyString;
+std::string SlPaths::m_user_defined_config_path = "";
 
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
@@ -28,14 +31,14 @@ const wxString sepstring = wxString(sep);
 #endif
 
 
-wxString SlPaths::GetLocalConfigPath ()
+std::string SlPaths::GetLocalConfigPath ()
 {
-	return IdentityString( GetExecutableFolder() + sepstring + _T( "%s.conf" ), true );
+	return GetExecutableFolder() + STD_STRING(IdentityString(_T( "%s.conf"), true ));
 }
 
-wxString SlPaths::GetDefaultConfigPath ()
+std::string SlPaths::GetDefaultConfigPath ()
 {
-	return IdentityString( GetConfigfileDir() + sepstring + _T( "%s.conf" ), true );
+	return GetConfigfileDir() + STD_STRING(IdentityString(_T( "%s.conf" ), true ));
 }
 
 bool SlPaths::IsPortableMode ()
@@ -43,10 +46,10 @@ bool SlPaths::IsPortableMode ()
 	if (!m_user_defined_config_path.empty()) {
 		return false;
 	}
-	return wxFileName::FileExists( GetLocalConfigPath() );
+	return wxFileName::FileExists(TowxString(GetLocalConfigPath()));
 }
 
-wxString SlPaths::GetConfigPath ()
+std::string SlPaths::GetConfigPath ()
 {
 	if (!m_user_defined_config_path.empty()) {
 		return m_user_defined_config_path;
@@ -65,9 +68,9 @@ std::string SlPaths::GetCachePath()
 }
 
 // ========================================================
-std::map<wxString, LSL::SpringBundle> SlPaths::m_spring_versions;
+std::map<std::string, LSL::SpringBundle> SlPaths::m_spring_versions;
 
-std::map<wxString, LSL::SpringBundle> SlPaths::GetSpringVersionList()
+std::map<std::string, LSL::SpringBundle> SlPaths::GetSpringVersionList()
 {
 	return m_spring_versions;
 }
@@ -133,9 +136,10 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 	const int count = list.GetCount();
 	for ( int i = 0; i < count; i++ ) {
 		LSL::SpringBundle bundle;
-		bundle.unitsync = STD_STRING(GetUnitSync(list[i]));
-		bundle.spring = STD_STRING(GetSpringBinary(list[i]));
-		bundle.version = STD_STRING(list[i]);
+		const std::string configsection = STD_STRING(list[i]);
+		bundle.unitsync = GetUnitSync(configsection);
+		bundle.spring = GetSpringBinary(configsection);
+		bundle.version = configsection;
 		usync_paths.push_back(bundle);
 	}
 
@@ -146,11 +150,11 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 		const auto versions = LSL::usync().GetSpringVersionList( usync_paths );
 		for(const auto pair : versions) {
 			const LSL::SpringBundle& bundle = pair.second;
-			const wxString version = TowxString(bundle.version);
+			const std::string version = bundle.version;
 			m_spring_versions[version] = bundle;
-			SetSpringBinary(version, TowxString(bundle.spring));
-			SetUnitSync(version, TowxString(bundle.unitsync));
-			SetBundle(version, TowxString(bundle.path));
+			SetSpringBinary(version, bundle.spring);
+			SetUnitSync(version, bundle.unitsync);
+			SetBundle(version, bundle.path);
 		}
 	} catch (const std::runtime_error& e) {
 		wxLogError(wxString::Format(_T("Couldn't get list of spring versions: %s"), e.what()));
@@ -159,7 +163,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 	}
 }
 
-wxString SlPaths::GetCurrentUsedSpringIndex()
+std::string SlPaths::GetCurrentUsedSpringIndex()
 {
 	wxString index = wxEmptyString;
 	cfg().Read(_T("/Spring/CurrentIndex"), &index);
@@ -169,10 +173,10 @@ wxString SlPaths::GetCurrentUsedSpringIndex()
 			return pair.first;
 		}
 	}
-	return index;
+	return STD_STRING(index);
 }
 
-void SlPaths::SetUsedSpringIndex( const wxString& index )
+void SlPaths::SetUsedSpringIndex( const std::string& index )
 {
 	cfg().Write( _T( "/Spring/CurrentIndex" ), TowxString(index) );
 	ReconfigureUnitsync();
@@ -182,89 +186,88 @@ void SlPaths::ReconfigureUnitsync()
 {
 	LSL::Util::config().ConfigurePaths(
 		SlPaths::GetCachePath(),
-		STD_STRING(SlPaths::GetUnitSync()),
-		STD_STRING(SlPaths::GetSpringBinary())
+		SlPaths::GetUnitSync(),
+		SlPaths::GetSpringBinary()
 	);
 }
 
 
-void SlPaths::DeleteSpringVersionbyIndex( const wxString& index )
+void SlPaths::DeleteSpringVersionbyIndex( const std::string& index )
 {
-	cfg().DeleteGroup( _T( "/Spring/Paths/" ) + index );
-	if ( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex( wxEmptyString );
+	cfg().DeleteGroup( _T( "/Spring/Paths/" ) + TowxString(index) );
+	if ( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex("");
 }
 
 
-wxString SlPaths::GetSpringConfigFilePath(const wxString& /*FIXME: implement index*/)
+std::string SlPaths::GetSpringConfigFilePath(const std::string& /*FIXME: implement index*/)
 {
-	wxString path;
+	std::string path;
 	try {
-		path = TowxString(LSL::usync().GetConfigFilePath());
+		path = LSL::usync().GetConfigFilePath();
 	} catch ( std::runtime_error& e) {
 		wxLogError( wxString::Format( _T("Couldn't get SpringConfigFilePath, exception caught:\n %s"), e.what()  ) );
 	}
 	return path;
 }
 
-wxString SlPaths::GetUnitSync( const wxString& index )
+std::string SlPaths::GetUnitSync( const std::string& index )
 {
-	return cfg().Read( _T( "/Spring/Paths/" ) + index + _T( "/UnitSyncPath" ), wxEmptyString );
+	return STD_STRING(cfg().Read( _T( "/Spring/Paths/" ) + TowxString(index) + _T( "/UnitSyncPath" ), wxEmptyString ));
 }
 
-wxString SlPaths::GetSpringBinary( const wxString& index )
+std::string SlPaths::GetSpringBinary( const std::string& index )
 {
-	return cfg().Read( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), wxEmptyString );
+	return STD_STRING(cfg().Read( _T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBinPath" ), wxEmptyString ));
 }
 
-void SlPaths::SetUnitSync( const wxString& index, const wxString& path )
+void SlPaths::SetUnitSync( const std::string& index, const std::string& path )
 {
-	cfg().Write( _T( "/Spring/Paths/" ) + index + _T( "/UnitSyncPath" ), path );
+	cfg().Write( _T( "/Spring/Paths/" ) + TowxString(index) + _T( "/UnitSyncPath" ), TowxString(path));
 	// reconfigure unitsync in case it is reloaded
 	ReconfigureUnitsync();
 }
 
-void SlPaths::SetSpringBinary( const wxString& index, const wxString& path )
+void SlPaths::SetSpringBinary( const std::string& index, const std::string& path )
 {
-	cfg().Write( _T( "/Spring/Paths/" ) + index + _T( "/SpringBinPath" ), path );
+	cfg().Write( _T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBinPath" ), TowxString(path) );
 }
 
-void SlPaths::SetBundle( const wxString& index, const wxString& path )
+void SlPaths::SetBundle( const std::string& index, const std::string& path )
 {
-	cfg().Write( _T( "/Spring/Paths/" ) + index + _T( "/SpringBundlePath" ), path );
+	cfg().Write( _T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBundlePath" ), TowxString(path));
 }
 
-wxString SlPaths::GetChatLogLoc()
+std::string SlPaths::GetChatLogLoc()
 {
-	wxString path = TowxString(GetLobbyWriteDir()) +  sepstring + _T( "chatlog" );
-	if ( !wxFileName::DirExists( path ) ) {
-		if ( !wxFileName::Mkdir(  path, 0755  ) ) return wxEmptyString;
+	const std::string path = GetLobbyWriteDir() + "chatlog";
+	if ( !wxFileName::DirExists(TowxString(path)) ) {
+		if ( !wxFileName::Mkdir(TowxString(path), 0755  ) ) return "";
 	}
-	return path;
+	return EnsureDelimiter(path);
 }
 
 
-bool SlPaths::IsSpringBin( const wxString& path )
+bool SlPaths::IsSpringBin( const std::string& path )
 {
-	if ( !wxFile::Exists( path ) ) return false;
-	if ( !wxFileName::IsFileExecutable( path ) ) return false;
+	if ( !wxFile::Exists(TowxString(path)) ) return false;
+	if ( !wxFileName::IsFileExecutable(TowxString(path)) ) return false;
 	return true;
 }
 
-wxString SlPaths::GetEditorPath( )
+std::string SlPaths::GetEditorPath( )
 {
+	wxString def = wxEmptyString;
 #if defined(__WXMSW__)
-	wxString def = wxGetOSDirectory() + sepstring + _T("system32") + sepstring + _T("notepad.exe");
+	def = wxGetOSDirectory() + sepstring + _T("system32") + sepstring + _T("notepad.exe");
 	if ( !wxFile::Exists( def ) )
 		def = wxEmptyString;
-#else
-	wxString def = wxEmptyString;
 #endif
-	return cfg().Read( _T( "/GUI/Editor" ) , def );
+	return STD_STRING(cfg().Read( _T( "/GUI/Editor" ) , def ));
 }
 
-void SlPaths::SetEditorPath( const wxString& path )
+void SlPaths::SetEditorPath( const std::string& path )
 {
-	cfg().Write( _T( "/GUI/Editor" ) , path );
+	cfg().Write( _T( "/GUI/Editor" ) , TowxString(path));
 }
 
 
@@ -272,17 +275,14 @@ std::string SlPaths::GetLobbyWriteDir()
 {
 	//FIXME: make configureable
 	if (IsPortableMode()) {
-		return EnsureDelimiter(STD_STRING(GetExecutableFolder()));
+		return EnsureDelimiter(GetExecutableFolder());
 	}
-	return EnsureDelimiter(STD_STRING(GetConfigfileDir()));
+	return EnsureDelimiter(GetConfigfileDir());
 }
 
-wxString SlPaths::GetUikeys(const wxString& index)
+std::string SlPaths::GetUikeys(const std::string& index)
 {
-	const wxString path = GetDataDir(index);
-	wxString uikeys(path);
-	uikeys += _T("uikeys.txt");
-	return uikeys;
+	return GetDataDir(index) + "uikeys.txt";
 }
 
 //! copy uikeys.txt
@@ -296,26 +296,27 @@ void CopyUikeys(const wxString& currentDatadir )
 }
 
 
-bool SlPaths::mkDir(const wxString& dir) {
-	return wxFileName::Mkdir(dir, 0, wxPATH_MKDIR_FULL);
+bool SlPaths::mkDir(const std::string& dir) {
+	return wxFileName::Mkdir(TowxString(dir), 0, wxPATH_MKDIR_FULL);
 }
 
-bool SlPaths::CreateSpringDataDir(const wxString& dir)
+bool SlPaths::CreateSpringDataDir(const std::string& dir)
 {
-	if ( dir.IsEmpty() ) {
+	if ( dir.empty() ) {
 		return false;
 	}
-	if ( !mkDir(dir) ||
-			!mkDir(dir + sep + _T("games") ) ||
-			!mkDir(dir + sep + _T("maps") ) ||
-			!mkDir(dir + sep + _T("demos") ) ||
-			!mkDir(dir + sep + _T("screenshots"))) {
+	const std::string directory = EnsureDelimiter(dir);
+	if ( !mkDir(directory) ||
+			!mkDir(directory + "games") ||
+			!mkDir(directory + "maps") ||
+			!mkDir(directory + "demos") ||
+			!mkDir(directory + "screenshots")) {
 		return false;
 	}
 	if (LSL::usync().IsLoaded()) {
-		LSL::usync().SetSpringDataPath(STD_STRING(dir));
+		LSL::usync().SetSpringDataPath(dir);
 	}
-	CopyUikeys( SlPaths::GetDataDir() );
+	CopyUikeys(TowxString(SlPaths::GetDataDir()));
 	return true;
 }
 
@@ -328,12 +329,12 @@ std::string SlPaths::EnsureDelimiter(const std::string& path)
 	return dir;
 }
 
-wxString SlPaths::GetDataDir(const wxString& /*FIXME: implement index */)
+std::string SlPaths::GetDataDir(const std::string& /*FIXME: implement index */)
 {
 	std::string dir;
 	if (!LSL::usync().GetSpringDataPath(dir))
-		return wxEmptyString;
-	return TowxString(EnsureDelimiter(dir));
+		return "";
+	return EnsureDelimiter(dir);
 }
 
 std::string VersionGetMajor(const std::string& version)
@@ -371,11 +372,31 @@ std::string SlPaths::GetCompatibleVersion(const std::string& neededversion)
 {
 	const auto versionlist = SlPaths::GetSpringVersionList();
 	for ( const auto pair : versionlist ) {
-		const std::string ver = STD_STRING(pair.first);
+		const std::string ver = pair.first;
 		const LSL::SpringBundle bundle = pair.second;
 		if ( VersionSyncCompatible(neededversion, ver)) {
 			return ver;
 		}
 	}
 	return "";
+}
+
+std::string SlPaths::GetExecutableFolder()
+{
+	return EnsureDelimiter(STD_STRING(wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator())));
+}
+
+std::string SlPaths::GetUserDataDir()
+{
+	return EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetUserConfigDir()));
+}
+
+std::string SlPaths::GetConfigfileDir()
+{
+	std::string path = GetUserDataDir();
+#ifndef __WXMSW__
+	path += ".";
+#endif
+	path += getSpringlobbyName(true);
+	return EnsureDelimiter(path);
 }

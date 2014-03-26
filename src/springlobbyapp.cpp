@@ -125,8 +125,9 @@ bool SpringLobbyApp::OnInit()
 #endif
     m_translationhelper = new wxTranslationHelper( GetAppName().Lower(), path );
 
-	if ( !wxDirExists( GetConfigfileDir() ) )
-		wxMkdir( GetConfigfileDir() );
+	const wxString configdir = TowxString(SlPaths::GetConfigfileDir());
+	if ( !wxDirExists( configdir) )
+		wxMkdir(configdir);
 
 	if ( cfg().ReadBool(_T("/ResetLayout")) ) {
 		//we do this early on and reset the config var a little later so we can save a def. perps once mw is created
@@ -137,7 +138,7 @@ bool SpringLobbyApp::OnInit()
 
 	if (SlPaths::IsPortableMode()) {
 		// change write path for downloader if in portable mode
-		fileSystem->setWritePath(STD_STRING(GetExecutableFolder()));
+		fileSystem->setWritePath(SlPaths::GetExecutableFolder());
 	} else {
 		// only search if not in portable mode
 		SlPaths::SetSpringBinary( SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetSpringBinary() );
@@ -247,7 +248,7 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 //! @brief parses the command line and sets global app options like log verbosity or log target
 bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
-  #if wxUSE_CMDLINE_PARSER
+#if wxUSE_CMDLINE_PARSER
     if ( !parser.Parse(true) )
     {
         m_log_console = parser.Found(_T("console-logging"));
@@ -256,9 +257,10 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
 
         // TODO make sure this is called before settings are accessed
-        const bool userconfig = parser.Found( _T("config-file"), &SlPaths::m_user_defined_config_path );
+		wxString config;
+        const bool userconfig = parser.Found( _T("config-file"), &config);
         if (userconfig) {
-             wxFileName fn ( SlPaths::m_user_defined_config_path );
+             wxFileName fn (config);
              if ( ! fn.IsAbsolute() ) {
                  wxLogError ( _T("path for parameter \"config-file\" must be absolute") );
                  return false;
@@ -267,13 +269,11 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
                  wxLogError ( _T("path for parameter \"config-file\" must be writeable") );
                  return false;
              }
+            SlPaths::SetUserConfigPath(STD_STRING(config));
         }
 
         if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
             m_log_verbosity = m_log_window_show ? 3 : 5;
-		if ( !parser.Found(_T("name"), &m_appname ) )
-			m_appname = _T("SpringLobby");
-
 
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage

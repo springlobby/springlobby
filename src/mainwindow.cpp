@@ -25,11 +25,11 @@
 #include <wx/wupdlock.h>
 #include <wx/aui/auibook.h>
 #include <wx/tooltip.h>
-#include <wx/aboutdlg.h>
 
 #include <stdexcept>
 #include <iostream>
 
+#include "aboutbox.h"
 #include "aui/auimanager.h"
 #include "aui/slbook.h"
 #include "gui/statusbar.h"
@@ -40,6 +40,7 @@
 #include "serverselector.h"
 #include "utils/debug.h"
 #include "utils/platform.h"
+#include "utils/version.h"
 #include "battlelist/battlelisttab.h"
 #include "mainchattab.h"
 #include "hosting/mainjoinbattletab.h"
@@ -78,7 +79,6 @@
     #include <wx/msw/winundef.h>
     #include <iostream>
 #endif
-#include <wx/aboutdlg.h>
 
 SLCONFIG("/GUI/UseTabIcons", true, "Show icons in main tabs");
 
@@ -116,7 +116,7 @@ END_EVENT_TABLE()
 MainWindow::TabNames MainWindow::m_tab_names;
 
 MainWindow::MainWindow( )
-	: wxFrame(NULL, -1, GetAppName() ),
+	: wxFrame(NULL, -1, TowxString(getSpringlobbyName()) ),
 	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(720, 576) ),
 	m_opts_dialog(NULL),
 	m_autojoin_dialog(NULL),
@@ -517,28 +517,7 @@ void MainWindow::OnMenuChat( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuAbout( wxCommandEvent& /*unused*/ )
 {
-    wxAboutDialogInfo info;
-	info.SetName( GetAppName() );
-	info.SetVersion (TowxString(GetSpringLobbyVersion()));
-	info.SetDescription( IdentityString( _("%s is a cross-plattform lobby client for the Spring RTS engine") ) );
-	//info.SetCopyright(wxEmptyString;
-	info.SetLicence(_T("GPL v2 or later"));
-	info.AddDeveloper(_T("abma"));
-	info.AddDeveloper(_T("BrainDamage"));
-	info.AddDeveloper(_T("dizekat"));
-	info.AddDeveloper(_T("insaneinside"));
-	info.AddDeveloper(_T("Kaot"));
-	info.AddDeveloper(_T("koshi"));
-	info.AddDeveloper(_T("semi_"));
-	info.AddDeveloper(_T("tc-"));
-    info.AddTranslator(_T("chaosch (simplified chinese)"));
-	info.AddTranslator(_T("lejocelyn (french)"));
-	info.AddTranslator(_T("Suprano (german)"));
-    info.AddTranslator(_T("tc- (swedish)"));
-	info.AddTranslator(_("The numerous contributors from launchpad.net"));
-	//! \todo customisations
-	info.SetIcon( icons().GetIcon(icons().ICON_SPRINGLOBBY) );
-	wxAboutBox(info);
+	aboutbox().Show();
 }
 
 void MainWindow::OnMenuConnect( wxCommandEvent& /*unused*/ )
@@ -580,20 +559,19 @@ void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )
 
 void MainWindow::MainWindow::OnShowWriteableDir( wxCommandEvent& /*unused*/ )
 {
-	const wxString path = SlPaths::GetDataDir();
-	BrowseFolder(path);
+	BrowseFolder(TowxString(SlPaths::GetDataDir()));
 }
 
 
 void MainWindow::OnReportBug( wxCommandEvent& /*unused*/ )
 {
-	OpenWebBrowser( _T("https://github.com/springlobby/springlobby/issues") );
+	aboutbox().openNewTicket();
 }
 
 
 void MainWindow::OnShowDocs( wxCommandEvent& /*unused*/ )
 {
-	OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/") );
+	aboutbox().showDocs();
 }
 
 void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )

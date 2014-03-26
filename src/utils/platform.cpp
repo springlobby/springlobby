@@ -94,11 +94,6 @@ wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxS
 	return loggerwin;
 }
 
-wxString GetExecutableFolder()
-{
-	return wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator() );
-}
-
 // copied from http://wxforum.shadonet.com/viewtopic.php?t=2080
 //slightly modified
 bool CopyDir( wxString from, wxString to, bool overwrite )
@@ -315,46 +310,9 @@ wxString GetAppName( const bool lowerCase )
 
 wxString IdentityString(const wxString& format, bool lowerCase )
 {
-	return wxFormat( format ) %  GetAppName( lowerCase ) ;
-}
-
-//! this follows the wx implementation to the letter, just substituting our own app name function
-wxString AppendAppName(const wxString& dir)
-{
-	wxString subdir(dir);
-	// empty string indicates that an error has occurred, don't touch it then
-	if ( !subdir.empty() )
-	{
-		const wxString appname = GetAppName();
-		if ( !appname.empty() )
-		{
-			const wxChar ch = *(subdir.end() - 1);
-			if ( !wxFileName::IsPathSeparator(ch) && ch != _T('.') )
-				subdir += wxFileName::GetPathSeparator();
-			subdir += appname;
-		}
-	}
-	return subdir;
-}
-
-wxString GetUserDataDir()
-{
-	return AppendAppName( wxStandardPaths::Get().GetUserConfigDir() );
-}
-
-wxString GetConfigfileDir()
-{
-	#ifdef __WXMSW__
-		return GetUserDataDir();
-	#else
-		return wxFormat( _T("%s/.%s") ) % wxStandardPaths::Get().GetUserConfigDir() % GetAppName(true);
-	#endif //__WXMSW__
-}
-
-wxString GetCustomizedEngineConfigFilePath()
-{
-	const wxString path = GetConfigfileDir() + wxFileName::GetPathSeparator() + _T("engine.cfg");
-	return path;
+	if (lowerCase)
+		return wxFormat( format ) %  _T("springlobby") ;
+	return wxFormat( format ) %  _T("Springlobby") ;
 }
 
 static wxString escapeStr(const wxString& str)

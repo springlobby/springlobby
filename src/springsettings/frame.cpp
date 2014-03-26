@@ -17,12 +17,14 @@
 #include "tab_simple.h"
 #include "ctrlconstants.h"
 #include "panel_pathoption.h"
-#include "../utils/customdialogs.h"
-#include "../utils/controls.h"
-#include "../images/springsettings.xpm"
-#include "helpmenufunctions.h"
+#include "utils/customdialogs.h"
+#include "utils/controls.h"
+#include "images/springsettings.xpm"
 #include "se_utils.h"
-#include "../utils/platform.h"
+#include "utils/platform.h"
+#include "utils/version.h"
+#include "utils/conversion.h"
+#include "aboutbox.h"
 
 #ifndef SPRINGSETTINGS_STANDALONE
     #include "../mainwindow.h"
@@ -290,7 +292,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 				detailTab = 0;
 				audioTab = 0;
 //				hotkeyTab = 0;
-				SetTitle(GetAppName() + _("(simple mode)"));
+				SetTitle(TowxString(getSpringlobbyName()) + _("(simple mode)"));
 				if (!sett().getDisableWarning()){
 					customMessageBox(SS_MAIN_ICON,expertModeWarning, _("Hint"), wxOK);
 				}
@@ -307,16 +309,13 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event) {
 			break;
 
 		case ID_MENUITEM_ABOUT:
-			showAbout();
-			break;
-		case ID_MENUITEM_CREDITS:
-			showCredits();
+			aboutbox().Show();
 			break;
 		case ID_MENUITEM_CONTACT:
-			openContactPage();
+			aboutbox().openContactPage();
 			break;
 		case ID_MENUITEM_BUGREPORT:
-			openNewTicket();
+			aboutbox().openNewTicket();
 			break;
 	}
 }
@@ -342,7 +341,7 @@ void settings_frame::switchToExpertMode()
 
 	notebook->DeletePage(0);
 	simpleTab = 0;
-	SetTitle(GetAppName() + _("(expert mode)"));
+	SetTitle(TowxString(getSpringlobbyName()) + _("(expert mode)"));
 	/*uiTab->updateControls(UPDATE_ALL);
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);

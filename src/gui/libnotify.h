@@ -7,6 +7,7 @@
 
 #include "inotification.h"
 #include "settings.h"
+#include "utils/version.h"
 
 class LibnotifyNotification : public INotification
 {
@@ -26,10 +27,10 @@ void LibnotifyNotification::Show(const wxBitmap& icon, const size_t /*pos*/, con
 {
 	NotifyNotification *n;
 	notify_init("Test");
-	#if !defined(NOTIFY_VERSION_MINOR) || (NOTIFY_VERSION_MAJOR == 0 && NOTIFY_VERSION_MINOR < 7) 
-		n = notify_notification_new ( GetAppName().mb_str(),data.second.mb_str(), NULL, NULL );
+	#if !defined(NOTIFY_VERSION_MINOR) || (NOTIFY_VERSION_MAJOR == 0 && NOTIFY_VERSION_MINOR < 7)
+		n = notify_notification_new ( getSpringlobbyName().c_str(),data.second.mb_str(), NULL, NULL );
 	#else
-		n = notify_notification_new ( GetAppName().mb_str(),data.second.mb_str(), NULL );
+		n = notify_notification_new ( getSpringlobbyName().c_str(),data.second.mb_str(), NULL );
 	#endif
 	notify_notification_set_timeout (n, sett().GetNotificationPopupDisplayTime()*1000);
 

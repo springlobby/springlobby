@@ -148,7 +148,7 @@ wxString ChatLog::GetCurrentLogfilePath() const
 #ifdef TEST
 	return wxFileName::GetTempDir()+_T("/sltest.log");
 #else
-	return SlPaths::GetChatLogLoc() + wxFileName::GetPathSeparator() + sett().GetDefaultServer() + wxFileName::GetPathSeparator() + m_logname + _T( ".txt" );
+	return TowxString(SlPaths::GetChatLogLoc()) + sett().GetDefaultServer() + wxFileName::GetPathSeparator() + m_logname + _T( ".txt" );
 #endif
 }
 

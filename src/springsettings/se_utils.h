@@ -12,8 +12,6 @@
 
 int fromString(const wxString& s);
 
-void openUrl(const wxString& url);
-
 template<class T>
 wxString towxString(T arg){
   std::stringstream s;

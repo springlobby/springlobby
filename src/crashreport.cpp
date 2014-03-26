@@ -23,6 +23,7 @@
 #include "updater/updatehelper.h"
 #include "utils/conversion.h"
 #include "utils/slpaths.h"
+#include "utils/version.h"
 #include "settings.h"
 #include "stacktrace.h"
 
@@ -132,7 +133,7 @@ SpringDebugReport::SpringDebugReport()
 	info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
 	AddText( _T("platform.txt"), info, _T("Platform") );
 	AddText( _T("client.txt"), _T( "SpringLobby " ) + TowxString(GetSpringLobbyVersion()), _T("Client") );
-	AddText( _T("appname.txt"), GetAppName(), _T("Application Name"));
+	AddText( _T("appname.txt"), TowxString(getSpringlobbyName()), _T("Application Name"));
 }
 
 #if wxUSE_STACKWALKER && !__WXMSW__

@@ -33,13 +33,3 @@ int fromString( const wxString& s ) {
 	s.ToLong( &temp );
 	return int( temp );
 }
-
-void openUrl( const wxString& url )
-{
-	if ( !wxLaunchDefaultBrowser( url ) )
-	{
-		wxLogWarning( _( "can't launch default browser" ) );
-		customMessageBox( SS_MAIN_ICON, _( "Couldn't launch browser. URL is: " ) + url, _( "Couldn't launch browser." )  );
-	}
-}
-

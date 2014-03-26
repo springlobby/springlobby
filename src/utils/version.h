@@ -7,6 +7,7 @@
 
 const std::string getSpringlobbyVersion();
 const std::string getSpringlobbyAgent();
+const std::string getSpringlobbyName(bool lowercase = false);
 
 #endif
 

@@ -2,9 +2,10 @@
 
 #include "statusbar.h"
 #include "taskbar.h"
-#include "../updater/updatehelper.h"
-#include "../utils/platform.h"
-#include "../utils/conversion.h"
+#include "updater/updatehelper.h"
+#include "utils/platform.h"
+#include "utils/conversion.h"
+#include "utils/version.h"
 #include <wx/event.h>
 
 Statusbar::Statusbar( wxWindow* parent )
@@ -15,10 +16,7 @@ Statusbar::Statusbar( wxWindow* parent )
 {
 	int w[3] = {460,-1,120};
 	SetFieldsCount( 3, w );
-	PushStatusText( wxFormat( _T("%s %s") )
-									  % GetAppName()
-									  % GetSpringLobbyVersion(),
-					1 );
+	PushStatusText( TowxString(getSpringlobbyVersion()), 1 );
 	taskBar = new TaskBar(this);
 }
 

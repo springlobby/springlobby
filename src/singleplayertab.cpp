@@ -367,7 +367,7 @@ void SinglePlayerTab::OnStart( wxCommandEvent& /*unused*/ )
     }
 
 	m_battle.SetEngineName("spring");
-	m_battle.SetEngineVersion(STD_STRING(SlPaths::GetCurrentUsedSpringIndex())); //FIXME: make engine version selectable
+	m_battle.SetEngineVersion(SlPaths::GetCurrentUsedSpringIndex()); //FIXME: make engine version selectable
 
     if ( ValidSetup() ) m_battle.StartSpring();
 }

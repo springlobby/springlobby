@@ -8,6 +8,13 @@
 
 #include "version.h"
 
+const std::string getSpringlobbyName(bool lowercase)
+{
+	if (lowercase)
+		return "springlobby";
+	return "SpringLobby";
+}
+
 const std::string getSpringlobbyVersion()
 {
 	const static std::string version(VERSION);
@@ -16,7 +23,7 @@ const std::string getSpringlobbyVersion()
 
 const std::string getSpringlobbyAgent()
 {
-	std::string agent = "SpringLobby ";
+	std::string agent = getSpringlobbyName() + " ";
 	agent += getSpringlobbyVersion();
 	agent += " (";
 #if WIN32

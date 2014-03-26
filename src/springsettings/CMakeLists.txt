@@ -1,5 +1,4 @@
 set(SettingsSrc
-	helpmenufunctions.cpp
 	panel_pathoption.cpp
 	se_utils.cpp
 	tab_abstract.cpp
