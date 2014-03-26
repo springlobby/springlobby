@@ -115,7 +115,7 @@ void SlPaths::PossibleEnginePaths(wxPathList &pl)
 	basedirs.push_back(homedir + "My Games" + PATH_DELIMITER + "Spring" + PATH_DELIMITER);
 	EngineSubPaths(basedirs, paths);
 
-    for(auto path: paths) { //fill result
+    for(const std::string path: paths) { //fill result
         pl.Add(TowxString(path));
 	}
 }
@@ -123,7 +123,7 @@ void SlPaths::PossibleEnginePaths(wxPathList &pl)
 // get all possible subpaths of basedirs with installed engines
 void SlPaths::EngineSubPaths(const std::vector<std::string>& basedirs, std::vector<std::string>& paths)
 {
-	for (auto basedir: basedirs) {
+	for (const std::string basedir: basedirs) {
 		const std::string enginedir = EnsureDelimiter(EnsureDelimiter(basedir)+ "engine");
 		wxDir dir(TowxString(enginedir));
 
@@ -163,7 +163,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 		std::vector<std::string> basedirs;
 		basedirs.push_back(GetLobbyWriteDir());
 		EngineSubPaths(basedirs, lobbysubpaths);
-		for (const auto path: lobbysubpaths) {
+		for (const std::string path: lobbysubpaths) {
 			LSL::SpringBundle bundle;
 			bundle.path = path;
 			usync_paths.push_back(bundle);
@@ -176,7 +176,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 
 			wxPathList paths;
 			PossibleEnginePaths(paths);
-			for (const auto path: paths) {
+			for (const wxString path: paths) {
 				LSL::SpringBundle bundle;
 				bundle.path = STD_STRING(path);
 				usync_paths.push_back(bundle);
