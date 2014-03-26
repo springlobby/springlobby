@@ -1607,9 +1607,31 @@ void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 
 void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 {
+	if (m_mapname.empty() || mapname.empty())
+		return;
+	if ( mapname != m_mapname ) return;
+
+	const int w = m_lastsize.GetWidth();
+	const int h = m_lastsize.GetHeight();
+
+	if ( m_minimap == NULL ){
+		m_minimap = new wxBitmap( LSL::usync().GetMinimap(m_mapname, w, h ).wxbitmap());
+		// this ensures metalmap and heightmap aren't loaded in battlelist
+		if (m_draw_start_types) {
+			m_async.GetMetalmap( m_mapname, w, h );
+		}
+	} else if ( m_metalmap == NULL ) {
+		m_metalmap = new wxBitmap( LSL::usync().GetMetalmap( m_mapname, w, h ).wxbitmap());
+		// singleplayer mode doesn't allow startboxes anyway
+		m_metalmap_cumulative = LSL::usync().GetMetalmap( m_mapname, w, h).wximage();
+		Accumulate( m_metalmap_cumulative );
+		m_async.GetHeightmap( m_mapname, w, h );
+	} else if ( m_heightmap == NULL ) {
+		m_heightmap = new wxBitmap( LSL::usync().GetHeightmap( m_mapname, w, h ).wxbitmap());
+	}
+
 	// never ever call a gui function here, it will crash! (in 1/100 cases)
 	wxCommandEvent evt( REFRESH_EVENT, GetId() );
-	evt.SetString(TowxString(mapname));
 	evt.SetEventObject( this );
 	wxPostEvent( this, evt );
 }
@@ -1617,32 +1639,5 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 void MapCtrl::OnRefresh( wxCommandEvent& event )
 {
 	assert(wxThread::IsMain());
-	std::string mapname = STD_STRING(event.GetString());
-	if (m_mapname.empty() || mapname.empty())
-		return;
-    if ( mapname != m_mapname ) return;
-
-    const int w = m_lastsize.GetWidth();
-    const int h = m_lastsize.GetHeight();
-
-    if ( m_minimap == NULL )
-    {
-        m_minimap = new wxBitmap( LSL::usync().GetMinimap(m_mapname, w, h ).wxbitmap());
-        // this ensures metalmap and heightmap aren't loaded in battlelist
-        if (m_draw_start_types) {
-            m_async.GetMetalmap( m_mapname, w, h );
-		}
-	} else if ( m_metalmap == NULL ) {
-        m_metalmap = new wxBitmap( LSL::usync().GetMetalmap( m_mapname, w, h ).wxbitmap());
-        // singleplayer mode doesn't allow startboxes anyway
-        m_metalmap_cumulative = m_metalmap->ConvertToImage();
-        Accumulate( m_metalmap_cumulative );
-        m_async.GetHeightmap( m_mapname, w, h );
-    }
-    else if ( m_heightmap == NULL )
-    {
-        m_heightmap = new wxBitmap( LSL::usync().GetHeightmap( m_mapname, w, h ).wxbitmap());
-    }
-
-    Refresh();
+	Refresh();
 }
