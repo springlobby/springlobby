@@ -22,6 +22,7 @@
 #include "../crashreport.h"
 
 #include "pathlistfactory.h"
+#include "utils/version.h"
 
 //!This is only ever used for unitsync and on daftalx notice it should actually be .dylib (wx returns .bundle )
 wxString GetLibExtension()
@@ -302,17 +303,12 @@ PwdGuard::~PwdGuard()
 
 wxString GetAppName( const bool lowerCase )
 {
-	wxString name = wxTheApp->GetAppName();//this would segfault in qt mode
-	if ( lowerCase )
-		name.MakeLower();
-	return name;
+	return TowxString(getSpringlobbyName(lowerCase));
 }
 
 wxString IdentityString(const wxString& format, bool lowerCase )
 {
-	if (lowerCase)
-		return wxFormat( format ) %  _T("springlobby") ;
-	return wxFormat( format ) %  _T("Springlobby") ;
+	return wxFormat( format ) % TowxString(getSpringlobbyName(lowerCase));
 }
 
 static wxString escapeStr(const wxString& str)
