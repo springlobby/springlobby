@@ -16,8 +16,8 @@ SLCONFIG("/test/bool", true, "test bool");
 
 namespace SlPaths{
 
-wxString GetConfigPath(){
-	return wxFileName::GetTempDir()+_T("/sltest.config");
+std::string GetConfigPath(){
+	return STD_STRING(wxFileName::GetTempDir()) + "/sltest.config";
 }
 }
 

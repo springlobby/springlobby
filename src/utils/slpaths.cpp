@@ -33,12 +33,12 @@ const wxString sepstring = wxString(sep);
 
 std::string SlPaths::GetLocalConfigPath ()
 {
-	return GetExecutableFolder() + STD_STRING(IdentityString(_T( "%s.conf"), true ));
+	return GetExecutableFolder() + getSpringlobbyName(true) + ".conf";
 }
 
 std::string SlPaths::GetDefaultConfigPath ()
 {
-	return GetConfigfileDir() + STD_STRING(IdentityString(_T( "%s.conf" ), true ));
+	return GetConfigfileDir() + getSpringlobbyName(true) + ".conf";
 }
 
 bool SlPaths::IsPortableMode ()
