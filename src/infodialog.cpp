@@ -73,13 +73,13 @@ InfoDialog::InfoDialog(wxWindow* parent )
 
 	*out << wxString::Format(_T("Default unitsync: %s\n"), TowxString(SlPaths::GetUnitSync()).c_str());
 	*out << wxString::Format(_T("Default spring executable: %s\n") , TowxString(SlPaths::GetSpringBinary()).c_str());
+	*out << wxString::Format(_T("Default uikeys.txt: %s\n"), TowxString(SlPaths::GetUikeys()).c_str());
 
 	*out << wxString::Format(_T("Portable mode: %s\n"), BtS(SlPaths::IsPortableMode()).c_str() );
 
 	*out << wxString::Format(_T("SpringLobby config file: %s (%s writable)\n"),
 							 TowxString(SlPaths::GetConfigPath()).c_str(),
 							 BtS(wxFileName::IsFileWritable(TowxString(SlPaths::GetConfigPath())), "", "not" ).c_str() );
-	*out << wxString::Format(_T("current uikeys.txt: %s\n"), TowxString(SlPaths::GetUikeys()).c_str());
 
 	*out << _T( "Version " ) + TowxString(getSpringlobbyAgent()) + _T("\n");
 	*out << wxString::Format(_T("Compiled with %s"), wxVERSION_STRING) + _T("\n");
