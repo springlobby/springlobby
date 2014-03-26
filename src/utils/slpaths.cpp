@@ -18,16 +18,9 @@
 
 #include <lslunitsync/unitsync.h>
 #include <lslutils/config.h>
+#include <lslutils/misc.h>
 
 std::string SlPaths::m_user_defined_config_path = "";
-
-const wxChar sep = wxFileName::GetPathSeparator();
-const wxString sepstring = wxString(sep);
-#ifdef WIN32
-#define PATH_DELIMITER '\\'
-#else
-#define PATH_DELIMITER '/'
-#endif
 
 
 std::string SlPaths::GetLocalConfigPath ()
@@ -45,7 +38,8 @@ bool SlPaths::IsPortableMode ()
 	if (!m_user_defined_config_path.empty()) {
 		return false;
 	}
-	return wxFileName::FileExists(TowxString(GetLocalConfigPath()));
+
+	return LSL::Util::FileExists(GetLocalConfigPath());
 }
 
 std::string SlPaths::GetConfigPath ()
@@ -61,7 +55,7 @@ std::string SlPaths::GetCachePath()
 {
 	const std::string path = EnsureDelimiter(GetLobbyWriteDir() + "cache")																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							;
 	if ( !wxFileName::DirExists(TowxString(path)) ) {
-		if ( !wxFileName::Mkdir(TowxString(path), 0755  ) ) return "";
+		if (!mkDir(path)) return "";
 	}
 	return path;
 }
@@ -104,20 +98,16 @@ bool SlPaths::LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
 }
 
 //returns possible paths where a spring bundles could be
-void SlPaths::PossibleEnginePaths(wxPathList &pl)
+void SlPaths::PossibleEnginePaths(std::vector<std::string>& pl)
 {
-    pl.Add( wxFileName::GetCwd() ); //current working directory
-    pl.Add( TowxString(GetExecutableFolder())); //dir of springlobby.exe
+    pl.push_back(STD_STRING(wxFileName::GetCwd())); //current working directory
+    pl.push_back(GetExecutableFolder()); //dir of springlobby.exe
 
 	std::vector<std::string> basedirs, paths;
 	const std::string homedir = EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetDocumentsDir()));
 	basedirs.push_back(homedir + ".spring");
-	basedirs.push_back(homedir + "My Games" + PATH_DELIMITER + "Spring" + PATH_DELIMITER);
-	EngineSubPaths(basedirs, paths);
-
-    for(const std::string path: paths) { //fill result
-        pl.Add(TowxString(path));
-	}
+	basedirs.push_back(homedir + "My Games" + SEP + "Spring" + SEP);
+	EngineSubPaths(basedirs, pl);
 }
 
 // get all possible subpaths of basedirs with installed engines
@@ -174,11 +164,11 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 				usync_paths.push_back(systembundle);
 			}
 
-			wxPathList paths;
+			std::vector<std::string> paths;
 			PossibleEnginePaths(paths);
-			for (const wxString path: paths) {
+			for (const std::string path: paths) {
 				LSL::SpringBundle bundle;
-				bundle.path = STD_STRING(path);
+				bundle.path = path;
 				usync_paths.push_back(bundle);
 			}
 		}
@@ -292,8 +282,8 @@ void SlPaths::SetBundle( const std::string& index, const std::string& path )
 std::string SlPaths::GetChatLogLoc()
 {
 	const std::string path = GetLobbyWriteDir() + "chatlog";
-	if ( !wxFileName::DirExists(TowxString(path)) ) {
-		if ( !wxFileName::Mkdir(TowxString(path), 0755  ) ) return "";
+	if ( !LSL::Util::FileExists(path) ) {
+		if (!mkDir(path)) return "";
 	}
 	return EnsureDelimiter(path);
 }
@@ -301,7 +291,7 @@ std::string SlPaths::GetChatLogLoc()
 
 bool SlPaths::IsSpringBin( const std::string& path )
 {
-	if ( !wxFile::Exists(TowxString(path)) ) return false;
+	if ( !LSL::Util::FileExists(path) ) return false;
 	if ( !wxFileName::IsFileExecutable(TowxString(path)) ) return false;
 	return true;
 }
@@ -310,6 +300,8 @@ std::string SlPaths::GetEditorPath( )
 {
 	wxString def = wxEmptyString;
 #if defined(__WXMSW__)
+	const wxChar sep = wxFileName::GetPathSeparator();
+	const wxString sepstring = wxString(sep);
 	def = wxGetOSDirectory() + sepstring + _T("system32") + sepstring + _T("notepad.exe");
 	if ( !wxFile::Exists( def ) )
 		def = wxEmptyString;
@@ -363,8 +355,8 @@ bool SlPaths::CreateSpringDataDir(const std::string& dir)
 std::string SlPaths::EnsureDelimiter(const std::string& path)
 {
 	std::string dir = path;
-	if ( !path.empty() && (path[path.length()-1] != PATH_DELIMITER )) {
-		dir += PATH_DELIMITER;
+	if ( !path.empty() && (path[path.length()-1] != SEP[0] )) {
+		dir += SEP;
 	}
 	return dir;
 }
@@ -423,7 +415,7 @@ std::string SlPaths::GetCompatibleVersion(const std::string& neededversion)
 
 std::string SlPaths::GetExecutableFolder()
 {
-	return EnsureDelimiter(STD_STRING(wxStandardPathsBase::Get().GetExecutablePath().BeforeLast( wxFileName::GetPathSeparator())));
+	return EnsureDelimiter(LSL::Util::ParentPath(STD_STRING(wxStandardPathsBase::Get().GetExecutablePath())));
 }
 
 std::string SlPaths::GetUserDataDir()
