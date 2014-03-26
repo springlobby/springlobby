@@ -60,7 +60,7 @@ std::string SlPaths::GetConfigPath ()
 
 std::string SlPaths::GetCachePath()
 {
-	const std::string path = GetLobbyWriteDir() + "cache" + PATH_DELIMITER;
+	const std::string path = EnsureDelimiter(GetLobbyWriteDir() + "cache")																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							;
 	if ( !wxFileName::DirExists(TowxString(path)) ) {
 		if ( !wxFileName::Mkdir(TowxString(path), 0755  ) ) return "";
 	}
