@@ -60,14 +60,11 @@ class Default {
 
 class wxFileInputStream;
 
-typedef wxFileConfig
-	slConfigBaseType;
-
 //! a proxy class to wxFileConfig
 // it allows direct access to the Read and Write mehtods of wxConfigBase
 // or to set default values using SLCONFIG() macro and ReadString(key),
 // ReadLong(key), ReadDouble(key) or ReadBool(key)
-class slConfig : public slConfigBaseType, public SL::NonCopyable
+class slConfig : public wxFileConfig, public SL::NonCopyable
 {
 	public:
 		slConfig ( const wxString& appName = wxEmptyString,
@@ -75,7 +72,7 @@ class slConfig : public slConfigBaseType, public SL::NonCopyable
 				   const wxString& localFilename = wxEmptyString,
 				   const wxString& globalFilename = wxEmptyString,
 				   long style = wxCONFIG_USE_LOCAL_FILE,
-				   const wxMBConv& conv = wxConvAuto() );
+				   const wxMBConv& conv = wxConvUTF8 );
 
 		static slConfig* Get();
 

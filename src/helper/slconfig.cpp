@@ -20,14 +20,14 @@ slConfig::slConfig ( const wxString& appName,
 					 const wxString& strGlobal,
 					 long style,
 					 const wxMBConv& conv ):
-	slConfigBaseType( appName, vendorName, strLocal, strGlobal, style, conv )
+	wxFileConfig( appName, vendorName, strLocal, strGlobal, style, conv )
 {
 	// nop
 }
 
 #if wxUSE_STREAMS
 slConfig::slConfig( wxInputStream& in, const wxMBConv& conv ):
-	slConfigBaseType( in, conv )
+	wxFileConfig( in, conv )
 {
 	// nop
 }
@@ -62,7 +62,7 @@ slConfig* slConfig::Create()
 		exit( -1 );
 	}
 
-	slConfig* config = new slConfig( instream );
+	slConfig* config = new slConfig();
 	config->SetRecordDefaults( true );
 	return config;
 }
@@ -98,7 +98,7 @@ wxString slConfig::GetFilePath() const {
 #ifdef __WXMSW__
 bool slConfig::DoWriteLong( const wxString& key, long lValue )
 {
-	return slConfigBaseType::DoWriteString( key, TowxString<long>( lValue ) );
+	return wxFileConfig::DoWriteString( key, TowxString<long>( lValue ) );
 }
 #endif
 
@@ -161,7 +161,7 @@ wxString slConfig::ReadString(const wxString& key) const
 
 	// Read() without default (third parameter) will change value if
 	// set, or leave it alone
-	slConfigBaseType::Read( key, &value );
+	wxFileConfig::Read( key, &value );
 
 	// we can assert that value will be valid or the program terminated
 	if (IsRecordingDefaults()) {
@@ -174,7 +174,7 @@ long slConfig::ReadLong(const wxString& key) const
 {
 	long value;
 	GetDefaultsLong().Get(key, value);
-	slConfigBaseType::Read( key, &value );
+	wxFileConfig::Read( key, &value );
 	if (IsRecordingDefaults()) {
 		((slConfig*)this)->Write(key, value);
 	}
@@ -185,7 +185,7 @@ double slConfig::ReadDouble(const wxString& key) const
 {
 	double value;
 	GetDefaultsDouble().Get(key, value);
-	slConfigBaseType::Read( key, &value );
+	wxFileConfig::Read( key, &value );
 	if (IsRecordingDefaults()) {
 		((slConfig*)this)->Write(key, value);
 	}
@@ -196,7 +196,7 @@ bool slConfig::ReadBool(const wxString& key) const
 {
 	bool value;
 	GetDefaultsBool().Get(key, value);
-	slConfigBaseType::Read( key, &value );
+	wxFileConfig::Read( key, &value );
 	if (IsRecordingDefaults()) {
 		((slConfig*)this)->Write(key, value);
 	}
