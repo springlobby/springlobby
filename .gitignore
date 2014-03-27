@@ -9,15 +9,22 @@ cmake_install.cmake
 CMakeFiles/
 /CMakeCache.txt
 
+
 # output
 /src/springlobby
 /src/springsettings/springsettings
+/src/updater/springlobby_updater
+/src/tests/test_ChatLog
+/src/tests/test_Config
 *.a
 
 # temp files
 *.swp
 /po/*.gmo
-/po/*~
+*~
+*.orig
+/springlobby_config.h
+/VERSION
 
 # codeblocks
 /springlobby.cbp
