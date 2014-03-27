@@ -11,6 +11,7 @@ public:
 	void openContactPage();
 	void openNewTicket();
 	void showDocs();
+	void showChangelog();
 private:
 	wxAboutDialogInfo* info;
 };

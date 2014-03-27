@@ -7,4 +7,4 @@
 
 
 -unify spelling
--ö doesnt work http://projects.springlobby.info/issues/1443
+-ö doesnt work

@@ -62,5 +62,10 @@ void slAboutBox::openContactPage()
 
 void slAboutBox::showDocs()
 {
-	OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/") );
+	OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/"));
+}
+
+void slAboutBox::showChangelog()
+{
+	OpenWebBrowser( _T("http://springlobby.info/changelog.html"));
 }

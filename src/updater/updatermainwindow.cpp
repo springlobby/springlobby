@@ -11,6 +11,7 @@
 #include "../uiutils.h"
 
 #include "../images/springlobby12x12.xpm"
+#include "aboutbox.h"
 
 class UpdaterPanel : public wxPanel {
 
@@ -25,7 +26,7 @@ class UpdaterPanel : public wxPanel {
 
         void OnChangelog( wxCommandEvent&  )
         {
-            OpenWebBrowser( _T("https://github.com/springlobby/springlobby/commits/master") );
+		aboutbox().showChangelog();
         }
 
         DECLARE_EVENT_TABLE()
