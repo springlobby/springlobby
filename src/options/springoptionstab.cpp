@@ -231,6 +231,29 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& /*unused*/ )
 	if ( pick.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pick.GetPath() );
 }
 
+void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
+{
+	wxString filefilter = wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() +
+	filefilter << _T( "|" ) << wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" );
+
+	wxFileDialog pick( this, _( "Choose UnitSync library" ),
+			   wxPathOnly(TowxString(SlPaths::GetUnitSync())),
+			   _T( "unitsync" ) + GetLibExtension(),
+			   filefilter  );
+	if ( pick.ShowModal() == wxID_OK ) {
+		//get unitsync version & add to list
+		LSL::SpringBundle bundle;
+		bundle.unitsync = STD_STRING(pick.GetPath());
+		bundle.AutoComplete();
+		const wxString version = TowxString(bundle.version);
+		m_spring_list->Append(version);
+		m_spring_list->SetStringSelection(version);
+		m_sync_edit->SetValue(TowxString(bundle.unitsync));
+		m_exec_edit->SetValue(TowxString(bundle.spring));
+	}
+}
+
+
 
 void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
@@ -302,28 +325,6 @@ void SpringOptionsTab::ReloadSpringList()
 	for(auto bundle: springlist) {
 		m_spring_list->Append(TowxString(bundle.first));
 		m_spring_list->SetStringSelection(TowxString(SlPaths::GetCurrentUsedSpringIndex()));
-	}
-}
-
-void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
-{
-	wxString filefilter = wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() +
-	filefilter << _T( "|" ) << wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" );
-
-	wxFileDialog pick( this, _( "Choose UnitSync library" ),
-			   wxPathOnly(TowxString(SlPaths::GetUnitSync())),
-			   _T( "unitsync" ) + GetLibExtension(),
-			   filefilter  );
-	if ( pick.ShowModal() == wxID_OK ) {
-		//get unitsync version & add to list
-		LSL::SpringBundle bundle;
-		bundle.unitsync = STD_STRING(pick.GetPath());
-		bundle.AutoComplete();
-		const wxString version = TowxString(bundle.version);
-		m_spring_list->Append(version);
-		m_spring_list->SetStringSelection(version);
-		m_sync_edit->SetValue(TowxString(bundle.unitsync));
-		m_exec_edit->SetValue(TowxString(bundle.spring));
 	}
 }
 
