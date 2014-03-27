@@ -40,8 +40,8 @@ void Logger::Info(const wxString& message)
 }
 
 Logger& logger(){
-    static LSL::Util::LineInfo<Logger> m( AT );
-    static LSL::Util::GlobalObjectHolder<Logger, LSL::Util::LineInfo<Logger> > m_sett( m );
+	static LSL::Util::LineInfo<Logger> m( AT );
+	static LSL::Util::GlobalObjectHolder<Logger, LSL::Util::LineInfo<Logger> > m_sett( m );
 	return m_sett;
 }
 

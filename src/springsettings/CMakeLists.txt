@@ -41,9 +41,9 @@ ELSE(WIN32)
 ENDIF (WIN32)
 TARGET_LINK_LIBRARIES(springsettings
 		libsettings
-		slcommon
 		lsl-utils
 		lsl-unitsync
+		slcommon
 		${wxWidgets_LIBRARIES}
 		${CURL_LINKFLAGS}
 		${CMAKE_DL_LIBS}

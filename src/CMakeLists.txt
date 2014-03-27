@@ -289,6 +289,7 @@ SET(SLSharedWithSettings
 	helper/slconfig.cpp
 	aboutbox.cpp
 	log.cpp
+	lsllog.cpp
 )
 
 FILE( GLOB header "*.h" )
@@ -375,7 +376,7 @@ ELSE (WIN32)
 	endif()
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby slcommon lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion libsettings
+TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion libsettings slcommon
 		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${CURL_LIBRARIES}
