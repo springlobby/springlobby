@@ -288,6 +288,7 @@ SET(SLSharedWithSettings
 	gui/spinctl/generic/spinctrldouble.cpp
 	helper/slconfig.cpp
 	aboutbox.cpp
+	log.cpp
 )
 
 FILE( GLOB header "*.h" )

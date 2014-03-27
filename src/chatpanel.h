@@ -41,7 +41,8 @@ enum ChatPanelType {
 	CPT_Channel,
 	CPT_Server,
 	CPT_User,
-	CPT_Battle
+	CPT_Battle,
+	CPT_Debug
 };
 
 struct ChatLine {
@@ -67,6 +68,7 @@ public:
 	ChatPanel( wxWindow* parent, const User& user, wxImageList* imaglist  );
 	ChatPanel( wxWindow* parent, IServer& serv, wxImageList* imaglist  );
 	ChatPanel( wxWindow* parent, IBattle* battle );
+	ChatPanel( wxWindow* parent); //debug chatpanel
 	~ChatPanel();
 
 	void Said( const wxString& who, const wxString& message );

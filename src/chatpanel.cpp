@@ -165,6 +165,23 @@ ChatPanel::ChatPanel( wxWindow* parent, IBattle* battle ):
 	SetBattle(battle);
 }
 
+ChatPanel::ChatPanel( wxWindow* parent):
+	wxPanel( parent, -1 ),
+	m_show_nick_list( false ),
+	m_nicklist( 0 ),
+	m_chat_tabs( 0 ),
+	m_channel( 0 ),
+	m_server( 0 ),
+	m_user( 0 ),
+	m_battle( 0 ),
+	m_type( CPT_Debug ),
+	m_popup_menu( NULL ),
+	m_disable_append( false ),
+	m_display_joinitem(true),
+	m_topic_set( false )
+{
+	Init(_T("debug"));
+}
 
 //! @brief ChatPanel destructor.
 ChatPanel::~ChatPanel()

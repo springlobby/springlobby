@@ -189,6 +189,8 @@ void MainChatTab::LeaveChannels()
 			case CPT_Battle:
 				tmp->SetBattle(NULL);
 				break;
+			case CPT_Debug:
+				break;
 		}
 
 	)
@@ -280,6 +282,22 @@ ChatPanel* MainChatTab::AddChatPanel( const User& user )
 	if ( selection > 0 ) m_chat_tabs->SetSelection( selection );
 	return chat;
 }
+
+ChatPanel* MainChatTab::AddChatPanel()
+{
+	LOOP_PANELS(
+		if ( tmp->GetPanelType() == CPT_Debug ) {
+			if ( m_chat_tabs->GetPageText(i) == TowxString("debug")) {
+				return tmp;
+			}
+		}
+	)
+	int selection = m_chat_tabs->GetSelection();
+	ChatPanel* chat = new ChatPanel( m_chat_tabs);
+	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, _T("debug"), true, wxBitmap( userchat_xpm ) );
+	return chat;
+}
+
 
 
 void MainChatTab::BroadcastMessage( const wxString& message )
