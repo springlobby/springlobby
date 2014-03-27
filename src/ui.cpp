@@ -1064,7 +1064,7 @@ void Ui::CheckForUpdates()
 			} else {
 				//this will also happen if updater exe is not present so we don't really ne special check for existance of it
 				customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser.") + msg, _("Updater error.") );
-				OpenWebBrowser( _T("http://projects.springlobby.info/wiki/springlobby/Install#Windows-Binary") );
+				OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary") );
 				OpenWebBrowser( TowxString(GetDownloadUrl(STD_STRING(latestVersion))) );
 
 			}
