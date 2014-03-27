@@ -962,6 +962,11 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 	if ( param.IsEmpty() ) msg = msg + cmd + _T("\n");
 	else msg = msg + cmd + _T(" ") + param + _T("\n");
 	bool send_success = m_sock->Send( msg );
+	if (command == _T("LOGIN")) {
+		wxLogMessage( _T("sent: LOGIN ... <password removed>"));
+		return;
+	}
+
 	if ( command != _T("PING") ) {
 		if ( send_success )
 			wxLogMessage( _T("sent: %s"), msg.RemoveLast().c_str() );
