@@ -223,14 +223,11 @@ void SpringOptionsTab::OnBrowseExec( wxCommandEvent& /*unused*/ )
 void SpringOptionsTab::OnBrowseSync( wxCommandEvent& /*unused*/ )
 {
 	wxString filefilter = wxString( _( "Library" ) ) << _T( "(*" ) << GetLibExtension() << _T( ")|*" ) + GetLibExtension();
-#ifdef __WXMAC__
-	filefilter << _T( "|" ) << _( "Library" ) << _T( "(*.dylib)|*.dylib" );
-#endif
 	filefilter << _T( "|" )  << wxString( _( "Any File" ) ) << _T( " (*.*)|*.*" );
 	wxFileDialog pick( this, _( "Choose UnitSync library" ),
-			   wxPathOnly( TowxString(SlPaths::GetUnitSync()) ),
-			   _T( "unitsync" ) + GetLibExtension(),
-			   wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() + _T( "|" ) + wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" )  );
+				wxPathOnly( TowxString(SlPaths::GetUnitSync()) ),
+				_T( "unitsync" ) + GetLibExtension(),
+				filefilter);
 	if ( pick.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pick.GetPath() );
 }
 
@@ -310,13 +307,9 @@ void SpringOptionsTab::ReloadSpringList()
 
 void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
 {
-#ifdef __WXMAC__
-	wxString filefilter;
-	filefilter << _T( "|" ) << _( "Library" ) << _T( "(*.dylib)|*.dylib" );
-#else
-	wxString filefilter = wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() + _T( "|" ) + wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" );
-#endif
-	filefilter << _T( "|" )  << wxString( _( "Any File" ) ) << _T( " (*.*)|*.*" );
+	wxString filefilter = wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() +
+	filefilter << _T( "|" ) << wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" );
+
 	wxFileDialog pick( this, _( "Choose UnitSync library" ),
 			   wxPathOnly(TowxString(SlPaths::GetUnitSync())),
 			   _T( "unitsync" ) + GetLibExtension(),
