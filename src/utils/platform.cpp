@@ -34,7 +34,7 @@ wxString GetLibExtension()
 wxString GetExeExtension()
 {
 #ifdef __WXMSW__
-	return _T(.exe);
+	return _T(".exe");
 #else
 	return wxEmptyString;
 #endif
