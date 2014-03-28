@@ -131,7 +131,7 @@ void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
     pl.push_back(GetExecutableFolder()); //dir of springlobby.exe
 
 	std::vector<std::string> basedirs, paths;
-	const std::string homedir = GetMyDocumentsDir();
+	const std::string homedir = EnsureDelimiter(GetMyDocumentsDir());
 #ifdef WIN32
 	basedirs.push_back(homedir + "My Games" + SEP + "Spring" + SEP);
 #else
@@ -140,7 +140,11 @@ void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
 	EngineSubPaths(basedirs, pl);
 }
 
-// get all possible subpaths of basedirs with installed engines
+/* get all possible subpaths of basedirs with installed engines
+* @param basdirs dirs in which to engines possible could be installed
+*        basicly it returns the output of ls <basedirs>/engine/*
+* @param paths list of all paths found
+*/
 void SlPaths::EngineSubPaths(const LSL::StringVector& basedirs, LSL::StringVector& paths)
 {
 	for (const std::string basedir: basedirs) {
