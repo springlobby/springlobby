@@ -214,12 +214,12 @@ void SpringOptionsTab::OnFindSync( wxCommandEvent& /*unused*/ )
 
 static wxString GetUnitsyncFilter()
 {
-	return wxString(_T("unitsync"))  << _T("(*") << GetLibExtension() << _T(")|*") << GetLibExtension();
+	return wxString(_T("unitsync"))  << _T("(*") << TowxString(LIBEXT) << _T(")|*") << TowxString(LIBEXT);
 }
 
 static wxString GetSpringFilter()
 {
-	return wxString(_T("Spring executable")) << _T("(*") << GetExeExtension() << _T(")|*") << GetExeExtension();
+	return wxString(_T("Spring executable")) << _T("(*") << TowxString(EXEEXT) << _T(")|*") << TowxString(EXEEXT);
 }
 
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& /*unused*/ )

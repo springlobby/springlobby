@@ -33,10 +33,6 @@ bool IsUACenabled();
 **/
 wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxString& logfilepath, bool showgui, int verbosity, wxLogChain* logChain );
 
-
-wxString GetLibExtension();
-wxString GetExeExtension();
-
 //! set new cwd in ctor, reset to old in dtor
 class CwdGuard {
     wxString m_old_cwd;

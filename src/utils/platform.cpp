@@ -22,25 +22,6 @@
 #include "../crashreport.h"
 #include "utils/version.h"
 
-//!This is only ever used for unitsync and on daftalx notice it should actually be .dylib (wx returns .bundle )
-wxString GetLibExtension()
-{
-#ifdef __APPLE__
-    return wxString(".dylib");
-#endif
-    return wxDynamicLibrary::CanonicalizeName(wxEmptyString, wxDL_MODULE);
-}
-
-wxString GetExeExtension()
-{
-#ifdef __WXMSW__
-	return _T(".exe");
-#else
-	return wxEmptyString;
-#endif
-}
-
-
 //! @brief Initializes the logging functions.
 ///initializes logging in an hidden stream and std::cout/gui messages
 wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxString&  logfilepath, bool showgui, int verbosity, wxLogChain* logChain )
