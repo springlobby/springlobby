@@ -11,8 +11,6 @@
 #include "utils/version.h"
 
 #include <wx/string.h>
-#include <wx/filename.h>
-#include <wx/log.h>
 #include <wx/stdpaths.h>
 #include <wx/dir.h>
 
@@ -68,50 +66,82 @@ std::map<std::string, LSL::SpringBundle> SlPaths::GetSpringVersionList()
 	return m_spring_versions;
 }
 
+void GetEnv(const std::string& name, LSL::StringVector& pathlist)
+{
+	const char* envvar= getenv(name.c_str());
+	if (envvar == NULL) return;
+	LSL::StringVector res = LSL::Util::StringTokenize(envvar, ";:");
+	for (const std::string path:res) {
+		pathlist.push_back(path);
+	}
+}
+
 bool SlPaths::LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
 {
-	wxPathList pl;
-    pl.AddEnvList( _T( "%ProgramFiles%" ) );
+	LSL::StringVector paths;
+	GetEnv("PATH", paths);
+	GetEnv("%ProgramFiles%", paths);
+	GetEnv("%ProgramFiles(x86)%", paths);
+	GetEnv("%ProgramFiles(x86)%", paths);
 
-    pl.AddEnvList( _T( "LDPATH" ) );
-    pl.AddEnvList( _T( "LD_LIBRARY_PATH" ) );
-    pl.AddEnvList( _T( "SPRING_BUNDLE_DIR" ) ); //folder which contains a bundle, for example {SPRING_BUNDLE_DIR]/spring {SPRING_BUNDLE_DIR}/libunitsync.so
+	GetEnv("LDPATH", paths);
+	GetEnv("LD_LIBRARY_PATH", paths);
+	GetEnv("SPRING_BUNDLE_DIR", paths);
 
-    pl.Add( _T( "/usr/local/lib/spring" ) );
-    pl.Add( _T( "/usr/local/lib64" ) );
-    pl.Add( _T( "/usr/local/games" ) );
-    pl.Add( _T( "/usr/local/games/lib" ) );
-    pl.Add( _T( "/usr/local/lib" ) );
-    pl.Add( _T( "/usr/lib64" ) );
-    pl.Add( _T( "/usr/lib" ) );
-    pl.Add( _T( "/usr/lib/spring" ) );
-    pl.Add( _T( "/usr/games" ) );
-    pl.Add( _T( "/usr/games/lib64" ) );
-    pl.Add( _T( "/usr/games/lib" ) );
+	paths.push_back("/usr/local/lib/spring");
+	paths.push_back("/usr/local/lib64");
+	paths.push_back("/usr/local/games");
+	paths.push_back("/usr/local/games/lib");
+	paths.push_back("/usr/local/lib");
+	paths.push_back("/usr/lib64");
+	paths.push_back("/usr/lib");
+	paths.push_back("/usr/lib/spring");
+	paths.push_back("/usr/games");
+	paths.push_back("/usr/games/lib64");
+	paths.push_back("/usr/games/lib");
+	paths.push_back("/lib");
+	paths.push_back("/bin");
 
-	for (const wxString path: pl) {
-		if (bundle.AutoComplete(STD_STRING(path))) {
+	for (const std::string path: paths) {
+		if (bundle.AutoComplete(path)) {
 			return true;
 		}
 	}
 	return false;
 }
 
+
+static std::string GetMyDocumentsDir()
+{
+#ifdef WIN32
+    char my_documents[MAX_PATH];
+    HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+	if (result == S_OK) return std::string(my_documents);
+#else
+	const char* envvar= getenv("HOME");
+	if (envvar == NULL) return "";
+	return std::string(envvar);
+#endif
+}
+
 //returns possible paths where a spring bundles could be
-void SlPaths::PossibleEnginePaths(std::vector<std::string>& pl)
+void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
 {
     pl.push_back(STD_STRING(wxFileName::GetCwd())); //current working directory
     pl.push_back(GetExecutableFolder()); //dir of springlobby.exe
 
 	std::vector<std::string> basedirs, paths;
-	const std::string homedir = EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetDocumentsDir()));
-	basedirs.push_back(homedir + ".spring");
+	const std::string homedir = GetMyDocumentsDir();
+#ifdef WIN32
 	basedirs.push_back(homedir + "My Games" + SEP + "Spring" + SEP);
+#else
+	basedirs.push_back(homedir + ".spring");
+#endif
 	EngineSubPaths(basedirs, pl);
 }
 
 // get all possible subpaths of basedirs with installed engines
-void SlPaths::EngineSubPaths(const std::vector<std::string>& basedirs, std::vector<std::string>& paths)
+void SlPaths::EngineSubPaths(const LSL::StringVector& basedirs, LSL::StringVector& paths)
 {
 	for (const std::string basedir: basedirs) {
 		const std::string enginedir = EnsureDelimiter(EnsureDelimiter(basedir)+ "engine");
@@ -426,7 +456,7 @@ std::string SlPaths::GetUserDataDir()
 std::string SlPaths::GetConfigfileDir()
 {
 	std::string path = GetUserDataDir();
-#ifndef __WXMSW__
+#ifndef WIN32
 	path += ".";
 #endif
 	path += getSpringlobbyName(true);
