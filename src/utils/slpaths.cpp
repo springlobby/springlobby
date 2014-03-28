@@ -79,14 +79,14 @@ void GetEnv(const std::string& name, LSL::StringVector& pathlist)
 bool SlPaths::LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
 {
 	LSL::StringVector paths;
+	GetEnv("SPRING_BUNDLE_DIR", paths);
 	GetEnv("PATH", paths);
 	GetEnv("%ProgramFiles%", paths);
 	GetEnv("%ProgramFiles(x86)%", paths);
 	GetEnv("%ProgramFiles(x86)%", paths);
 
-	GetEnv("LDPATH", paths);
 	GetEnv("LD_LIBRARY_PATH", paths);
-	GetEnv("SPRING_BUNDLE_DIR", paths);
+	GetEnv("LDPATH", paths);
 
 	paths.push_back("/usr/local/lib/spring");
 	paths.push_back("/usr/local/lib64");
