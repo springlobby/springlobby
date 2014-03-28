@@ -9,8 +9,11 @@ extern void lsllogerror(const char* format, ...)
 	char buf[1024];
 	va_list args;
 	va_start(args, format);
-	vsnprintf(buf, 1024, format, args);
-	wxLogError(TowxString(buf));
+	const int len = vsnprintf(buf, 1024, format, args);
+	if (len > 0) {
+		const std::string msg(buf, len);
+		wxLogError(TowxString(msg));
+	}
 	va_end(args);
 }
 
