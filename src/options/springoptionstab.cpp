@@ -212,34 +212,40 @@ void SpringOptionsTab::OnFindSync( wxCommandEvent& /*unused*/ )
 	if ( !found.empty() ) m_sync_edit->SetValue(TowxString(found));
 }
 
+static wxString GetUnitsyncFilter()
+{
+	return wxString(_T("unitsync"))  << _T("(*") << GetLibExtension() << _T(")|*") << GetLibExtension();
+}
+
+static wxString GetSpringFilter()
+{
+	return wxString(_T("Spring executable")) << _T("(*") << GetExeExtension() << _T(")|*") << GetExeExtension();
+}
+
 void SpringOptionsTab::OnBrowseExec( wxCommandEvent& /*unused*/ )
 {
 	wxFileDialog pick( this, _( "Choose a Spring executable" ),
 			   wxPathOnly(TowxString(SlPaths::GetSpringBinary())),
-			   wxString( SPRING_BIN ), CHOOSE_EXE );
+			   wxFileName::FileName(TowxString(SlPaths::GetSpringBinary())).GetFullName(),
+			   GetSpringFilter());
 	if ( pick.ShowModal() == wxID_OK ) m_exec_edit->SetValue( pick.GetPath() );
 }
 
 void SpringOptionsTab::OnBrowseSync( wxCommandEvent& /*unused*/ )
 {
-	wxString filefilter = wxString( _( "Library" ) ) << _T( "(*" ) << GetLibExtension() << _T( ")|*" ) + GetLibExtension();
-	filefilter << _T( "|" )  << wxString( _( "Any File" ) ) << _T( " (*.*)|*.*" );
 	wxFileDialog pick( this, _( "Choose UnitSync library" ),
 				wxPathOnly( TowxString(SlPaths::GetUnitSync()) ),
-				_T( "unitsync" ) + GetLibExtension(),
-				filefilter);
+				wxFileName::FileName(TowxString(SlPaths::GetUnitSync())).GetFullName(),
+				GetUnitsyncFilter());
 	if ( pick.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pick.GetPath() );
 }
 
 void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
 {
-	wxString filefilter = wxString( _( "Library" ) ) + _T( "(*" ) + GetLibExtension() + _T( ")|*" ) + GetLibExtension() +
-	filefilter << _T( "|" ) << wxString( _( "Any File" ) ) + _T( " (*.*)|*.*" );
-
 	wxFileDialog pick( this, _( "Choose UnitSync library" ),
-			   wxPathOnly(TowxString(SlPaths::GetUnitSync())),
-			   _T( "unitsync" ) + GetLibExtension(),
-			   filefilter  );
+				wxPathOnly(TowxString(SlPaths::GetUnitSync())),
+				wxFileName::FileName(TowxString(SlPaths::GetUnitSync())).GetFullName(),
+				GetUnitsyncFilter());
 	if ( pick.ShowModal() == wxID_OK ) {
 		//get unitsync version & add to list
 		LSL::SpringBundle bundle;

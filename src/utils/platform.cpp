@@ -31,6 +31,15 @@ wxString GetLibExtension()
     return wxDynamicLibrary::CanonicalizeName(wxEmptyString, wxDL_MODULE);
 }
 
+wxString GetExeExtension()
+{
+#ifdef __WXMSW__
+	return _T(.exe);
+#else
+	return wxEmptyString;
+#endif
+}
+
 
 //! @brief Initializes the logging functions.
 ///initializes logging in an hidden stream and std::cout/gui messages

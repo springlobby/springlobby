@@ -35,6 +35,7 @@ wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxS
 
 
 wxString GetLibExtension();
+wxString GetExeExtension();
 
 //! set new cwd in ctor, reset to old in dtor
 class CwdGuard {

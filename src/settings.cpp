@@ -46,12 +46,6 @@
     #include "utils/customdialogs.h"
 #endif
 
-#ifdef __WXMSW__
-	#define BIN_EXT _T(".exe")
-#else
-	#define BIN_EXT wxEmptyString
-#endif
-
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
 
