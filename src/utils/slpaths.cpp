@@ -384,7 +384,7 @@ std::string SlPaths::GetUikeys(const std::string& index)
 }
 
 bool SlPaths::mkDir(const std::string& dir) {
-	return wxFileName::Mkdir(TowxString(dir), 0, wxPATH_MKDIR_FULL);
+	return wxFileName::Mkdir(TowxString(dir), 0755, wxPATH_MKDIR_FULL);
 }
 
 bool SlPaths::CreateSpringDataDir(const std::string& dir)
