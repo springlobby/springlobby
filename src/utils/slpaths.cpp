@@ -130,7 +130,7 @@ static std::string GetMyDocumentsDir()
 {
 #ifdef WIN32
     char my_documents[MAX_PATH];
-    HRESULT result = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+    HRESULT result = SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
 	if (result == S_OK) return std::string(my_documents);
 #else
 	const char* envvar= getenv("HOME");
@@ -157,7 +157,7 @@ void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
 
 /* get all possible subpaths of basedirs with installed engines
 * @param basdirs dirs in which to engines possible could be installed
-*        basicly it returns the output of ls <basedirs>/engine/*
+*        basicly it returns the output of ls <basedirs>/engine/
 * @param paths list of all paths found
 */
 void SlPaths::EngineSubPaths(const LSL::StringVector& basedirs, LSL::StringVector& paths)
