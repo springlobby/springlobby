@@ -40,6 +40,7 @@ bool SlPaths::IsPortableMode ()
 	return LSL::Util::FileExists(GetLocalConfigPath());
 }
 
+//returns the path to springlobby.conf
 std::string SlPaths::GetConfigPath ()
 {
 	if (!m_user_defined_config_path.empty()) {
@@ -49,6 +50,7 @@ std::string SlPaths::GetConfigPath ()
 		   GetLocalConfigPath() : GetDefaultConfigPath();
 }
 
+//returns the lobby cache path
 std::string SlPaths::GetCachePath()
 {
 	const std::string path = EnsureDelimiter(GetLobbyWriteDir() + "cache")																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							;
@@ -66,41 +68,53 @@ std::map<std::string, LSL::SpringBundle> SlPaths::GetSpringVersionList()
 	return m_spring_versions;
 }
 
+// adds path to pathlist if it exists
+static void AddPath(const std::string& path, LSL::StringVector& pathlist)
+{
+	if (LSL::Util::FileExists(path)) {
+		pathlist.push_back(path);
+	}
+}
+
+
+//reads envvar, splits it by : and ; and add it to pathlist, when exists
 void GetEnv(const std::string& name, LSL::StringVector& pathlist)
 {
 	const char* envvar= getenv(name.c_str());
 	if (envvar == NULL) return;
 	LSL::StringVector res = LSL::Util::StringTokenize(envvar, ";:");
 	for (const std::string path:res) {
-		pathlist.push_back(path);
+		AddPath(path, pathlist);
 	}
 }
 
+
+// searches in OS standard paths for a system installed spring
 bool SlPaths::LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
 {
 	LSL::StringVector paths;
+
 	GetEnv("SPRING_BUNDLE_DIR", paths);
 	GetEnv("PATH", paths);
 	GetEnv("%ProgramFiles%", paths);
 	GetEnv("%ProgramFiles(x86)%", paths);
 	GetEnv("%ProgramFiles(x86)%", paths);
-
 	GetEnv("LD_LIBRARY_PATH", paths);
 	GetEnv("LDPATH", paths);
 
-	paths.push_back("/usr/local/lib/spring");
-	paths.push_back("/usr/local/lib64");
-	paths.push_back("/usr/local/games");
-	paths.push_back("/usr/local/games/lib");
-	paths.push_back("/usr/local/lib");
-	paths.push_back("/usr/lib64");
-	paths.push_back("/usr/lib");
-	paths.push_back("/usr/lib/spring");
-	paths.push_back("/usr/games");
-	paths.push_back("/usr/games/lib64");
-	paths.push_back("/usr/games/lib");
-	paths.push_back("/lib");
-	paths.push_back("/bin");
+	AddPath("/usr/local/lib/spring", paths);
+	AddPath("/usr/local/lib64", paths);
+	AddPath("/usr/local/games", paths);
+	AddPath("/usr/local/games/lib", paths);
+	AddPath("/usr/local/lib", paths);
+	AddPath("/usr/lib64", paths);
+	AddPath("/usr/lib", paths);
+	AddPath("/usr/lib/spring", paths);
+	AddPath("/usr/games", paths);
+	AddPath("/usr/games/lib64", paths);
+	AddPath("/usr/games/lib", paths);
+	AddPath("/lib", paths);
+	AddPath("/bin", paths);
 
 	for (const std::string path: paths) {
 		if (bundle.AutoComplete(path)) {
@@ -111,6 +125,7 @@ bool SlPaths::LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
 }
 
 
+// returns my documents dir on windows, HOME on windows
 static std::string GetMyDocumentsDir()
 {
 #ifdef WIN32
