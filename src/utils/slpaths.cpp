@@ -18,6 +18,11 @@
 #include <lslutils/config.h>
 #include <lslutils/misc.h>
 
+#ifdef WIN32
+#include <windows.h>
+#include <shlobj.h>
+#endif
+
 std::string SlPaths::m_user_defined_config_path = "";
 
 
