@@ -118,9 +118,10 @@ AddBotDialog::AddBotDialog( wxWindow* parent, IBattle& battle , bool singleplaye
 
 	m_main_sizer->Add( m_buttons_sizer, 0, wxEXPAND );
 
+	ReloadAIList();
+
 	this->SetSizer( m_main_sizer );
 	this->Layout();
-	ReloadAIList();
 	m_add_btn->SetFocus();
 }
 
