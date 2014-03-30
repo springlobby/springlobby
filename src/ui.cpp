@@ -63,6 +63,7 @@
 #include <lslunitsync/springbundle.h>
 #include <lslunitsync/unitsync.h>
 #include "textentrydialog.h"
+#include "log.h"
 
 SLCONFIG("/General/AutoUpdate", true, "Determines if springlobby should check for updates on startup");
 SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup");
@@ -1091,5 +1092,5 @@ void Ui::OnQuit(wxCommandEvent& /*data*/)
 
 void Ui::EnableDebug(bool enable)
 {
-	ui().EnableDebug(enable);
+	logger().Enable(enable);
 }
