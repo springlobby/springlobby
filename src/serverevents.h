@@ -116,6 +116,8 @@ class ServerEvents : public IServerEvents
 
     void OnForceJoinBattle( int battleid, const wxString& line );
 
+	void OnDebugEnable(bool enable);
+
 protected:
     IServer& m_serv;
     std::map<wxString,MessageSpamCheck> m_spam_check;

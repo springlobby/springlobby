@@ -144,6 +144,7 @@ public:
 	//! the welcome box, should be called in all code paths directly after MainWindow might be shown for the first time
 	void FirstRunWelcome();
 	void CheckForUpdates();
+	void EnableDebug(bool enable);
 
 protected:
 	IServer* m_serv;

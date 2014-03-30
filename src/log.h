@@ -16,7 +16,9 @@ public:
 	void Error(const char* message);
 	void Warning(const char* message);
 	void Info(const char* message);
-
+	void Enable(bool enable);
+private:
+	bool enabled;
 };
 
 Logger& logger();

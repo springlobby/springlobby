@@ -1087,3 +1087,9 @@ void Ui::OnQuit(wxCommandEvent& /*data*/)
 	delete m_serv;
 	m_serv = NULL;
 }
+
+
+void Ui::EnableDebug(bool enable)
+{
+	ui().EnableDebug(enable);
+}

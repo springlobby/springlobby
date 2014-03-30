@@ -6,12 +6,16 @@
 #include "mainchattab.h"
 #include "chatpanel.h"
 #include "utils/conversion.h"
-
+#include "helper/slconfig.h"
 #include <lslutils/globalsmanager.h>
+
+
+SLCONFIG("/debug", false, "Show debug window");
+
 
 Logger::Logger()
 {
-	//ctor
+	enabled = cfg().ReadBool(_T("/debug"));
 }
 
 Logger::~Logger()
@@ -21,6 +25,9 @@ Logger::~Logger()
 
 void Logger::Error(const wxString& message)
 {
+	if (!enabled) {
+		return;
+	}
 	ChatPanel* p = ui().mw().GetChatTab().AddChatPanel();
 	if (p == NULL) {
 		printf("%s\n", STD_STRING(message).c_str());
@@ -59,4 +66,13 @@ void Logger::Warning(const char* message)
 void Logger::Info(const char* message)
 {
 	Info(TowxString(message));
+}
+
+void Logger::Enable(bool enable)
+{
+	enabled = enable;
+	cfg().Write(_T("/debug"), enabled);
+	if (enable) {
+		Info(_T("Debug window enabled!"));
+	}
 }

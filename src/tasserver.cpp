@@ -275,6 +275,8 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
 	} else if ( subcmd == _T("/ping") ) {
 		Ping();
 		return true;
+	} else if (subcmd == _T("/debug")) {
+        m_se->OnDebugEnable(true);
 	}
 	return false;
 }
