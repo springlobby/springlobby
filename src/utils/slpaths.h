@@ -81,7 +81,6 @@ private:
 	static bool mkDir(const std::string& dir);
 	static bool IsSpringBin( const std::string& path );
 	static std::map<std::string, LSL::SpringBundle> m_spring_versions;
-	static std::string EnsureDelimiter(const std::string& path);
 	static void PossibleEnginePaths(std::vector<std::string>& pl);
 };
 

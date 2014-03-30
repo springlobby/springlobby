@@ -58,7 +58,7 @@ std::string SlPaths::GetConfigPath ()
 //returns the lobby cache path
 std::string SlPaths::GetCachePath()
 {
-	const std::string path = EnsureDelimiter(GetLobbyWriteDir() + "cache")																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							;
+	const std::string path = LSL::Util::EnsureDelimiter(GetLobbyWriteDir() + "cache")																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							;
 	if ( !wxFileName::DirExists(TowxString(path)) ) {
 		if (!mkDir(path)) return "";
 	}
@@ -151,7 +151,7 @@ void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
     pl.push_back(GetExecutableFolder()); //dir of springlobby.exe
 
 	std::vector<std::string> basedirs, paths;
-	const std::string homedir = EnsureDelimiter(GetMyDocumentsDir());
+	const std::string homedir = LSL::Util::EnsureDelimiter(GetMyDocumentsDir());
 #ifdef WIN32
 	basedirs.push_back(homedir + "My Games" + SEP + "Spring" + SEP);
 #else
@@ -168,7 +168,7 @@ void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
 void SlPaths::EngineSubPaths(const LSL::StringVector& basedirs, LSL::StringVector& paths)
 {
 	for (const std::string basedir: basedirs) {
-		const std::string enginedir = EnsureDelimiter(EnsureDelimiter(basedir)+ "engine");
+		const std::string enginedir = LSL::Util::EnsureDelimiter(LSL::Util::EnsureDelimiter(basedir)+ "engine");
 		wxDir dir(TowxString(enginedir));
 
 		if ( dir.IsOpened() ) {
@@ -339,7 +339,7 @@ std::string SlPaths::GetChatLogLoc()
 	if ( !LSL::Util::FileExists(path) ) {
 		if (!mkDir(path)) return "";
 	}
-	return EnsureDelimiter(path);
+	return LSL::Util::EnsureDelimiter(path);
 }
 
 
@@ -373,9 +373,9 @@ std::string SlPaths::GetLobbyWriteDir()
 {
 	//FIXME: make configureable
 	if (IsPortableMode()) {
-		return EnsureDelimiter(GetExecutableFolder());
+		return LSL::Util::EnsureDelimiter(GetExecutableFolder());
 	}
-	return EnsureDelimiter(GetConfigfileDir());
+	return LSL::Util::EnsureDelimiter(GetConfigfileDir());
 }
 
 std::string SlPaths::GetUikeys(const std::string& index)
@@ -392,7 +392,7 @@ bool SlPaths::CreateSpringDataDir(const std::string& dir)
 	if ( dir.empty() ) {
 		return false;
 	}
-	const std::string directory = EnsureDelimiter(dir);
+	const std::string directory = LSL::Util::EnsureDelimiter(dir);
 	if ( !mkDir(directory) ||
 			!mkDir(directory + "games") ||
 			!mkDir(directory + "maps") ||
@@ -406,21 +406,12 @@ bool SlPaths::CreateSpringDataDir(const std::string& dir)
 	return true;
 }
 
-std::string SlPaths::EnsureDelimiter(const std::string& path)
-{
-	std::string dir = path;
-	if ( !path.empty() && (path[path.length()-1] != SEP[0] )) {
-		dir += SEP;
-	}
-	return dir;
-}
-
 std::string SlPaths::GetDataDir(const std::string& /*FIXME: implement index */)
 {
 	std::string dir;
 	if (!LSL::usync().GetSpringDataPath(dir))
 		return "";
-	return EnsureDelimiter(dir);
+	return LSL::Util::EnsureDelimiter(dir);
 }
 
 std::string VersionGetMajor(const std::string& version)
@@ -469,12 +460,12 @@ std::string SlPaths::GetCompatibleVersion(const std::string& neededversion)
 
 std::string SlPaths::GetExecutableFolder()
 {
-	return EnsureDelimiter(LSL::Util::ParentPath(STD_STRING(wxStandardPathsBase::Get().GetExecutablePath())));
+	return LSL::Util::EnsureDelimiter(LSL::Util::ParentPath(STD_STRING(wxStandardPathsBase::Get().GetExecutablePath())));
 }
 
 std::string SlPaths::GetUserDataDir()
 {
-	return EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetUserConfigDir()));
+	return LSL::Util::EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetUserConfigDir()));
 }
 
 std::string SlPaths::GetConfigfileDir()
@@ -484,5 +475,5 @@ std::string SlPaths::GetConfigfileDir()
 	path += ".";
 #endif
 	path += getSpringlobbyName(true);
-	return EnsureDelimiter(path);
+	return LSL::Util::EnsureDelimiter(path);
 }
