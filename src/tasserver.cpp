@@ -443,7 +443,7 @@ void TASServer::Notify()
 	if ( !IsConnected() ) return;
 
 
-	if ((m_last_ping + PING_TIME) < now) { //Send a PING every 30 seconds
+	if (now - m_last_ping > PING_TIME) { //Send a PING every 30 seconds
 		m_last_ping = now;
 		Ping();
 		return;
@@ -456,10 +456,12 @@ void TASServer::Notify()
 		return;
 	}
 	m_last_timer = now;
-	const time_t lastpacketreceived_diff = now - m_last_net_packet;
-	if ( ( m_last_net_packet > 0 ) && ( lastpacketreceived_diff > PING_TIMEOUT ) ) { // no data received, assume timeout
-		m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds.")) % lastpacketreceived_diff );
-		Disconnect();
+	if ( m_last_net_packet > 0 ) {
+		const time_t lastpacketreceived_diff = now - m_last_net_packet;
+		if ( lastpacketreceived_diff > PING_TIMEOUT ) { // no data received, assume timeout
+			m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.")) % lastpacketreceived_diff % (now - m_last_ping) );
+			Disconnect();
+		}
 	}
 
 	// joining battle with nat traversal:

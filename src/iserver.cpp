@@ -148,16 +148,6 @@ void IServer::_RemoveBattle( const int& id )
 
 void IServer::OnDisconnected()
 {
-  while ( battles_iter->GetNumBattles() > 0 )
-  {
-    battles_iter->IteratorBegin();
-    IBattle* b = battles_iter->GetBattle();
-    if (b!=0)
-    {
-        m_battles.RemoveBattle( b->GetBattleId() );
-        delete b;
-    }
-  }
   while ( m_users.GetNumUsers() > 0 )
   {
     try
@@ -168,6 +158,16 @@ void IServer::OnDisconnected()
     }
     catch(std::runtime_error)
     {
+    }
+  }
+  while ( battles_iter->GetNumBattles() > 0 )
+  {
+    battles_iter->IteratorBegin();
+    IBattle* b = battles_iter->GetBattle();
+    if (b!=0)
+    {
+        m_battles.RemoveBattle( b->GetBattleId() );
+        delete b;
     }
   }
   while ( m_channels.GetNumChannels() > 0 )
