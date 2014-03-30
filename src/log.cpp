@@ -23,28 +23,52 @@ Logger::~Logger()
 	//dtor
 }
 
-void Logger::Error(const wxString& message)
+wxString Logger::LogName(level l)
+{
+	switch(l){
+		case LOG_ERROR: return _T("error");
+		case LOG_WARNING: return _T("warning");
+		case LOG_INFO: return _T("info");
+	}
+	return wxEmptyString;
+}
+
+void Logger::Log(level l, const char* format, ...) const
 {
 	if (!enabled) {
 		return;
 	}
-	ChatPanel* p = ui().mw().GetChatTab().AddChatPanel();
-	if (p == NULL) {
-		printf("%s\n", STD_STRING(message).c_str());
+	char buf[1024];
+	va_list args;
+	va_start(args, format);
+	const int len = vsnprintf(buf, 1024, format, args);
+	if (len == 0) {
 		return;
 	}
-	p->StatusMessage(message);
+	va_end(args);
+
+	const std::string msg(buf, len);
+	if (!wxThread::IsMain()) {
+		printf("Log from non-main: %s\n", msg.c_str());
+		return;
+	}
+	ChatPanel* p = ui().mw().GetChatTab().AddChatPanel();
+	if (p == NULL) {
+		printf("%s\n", msg.c_str());
+		return;
+	}
+	p->StatusMessage(LogName(l) + _T(" ") +TowxString(msg));
 }
 
-void Logger::Warning(const wxString& message)
+void Logger::Log(level l, const wxString& format, ...) const
 {
-	Error(message); //FIXME
+	va_list args;
+	va_start(args, format);
+	const wxString tmp = wxString::FormatV(format, args);
+	va_end(args);
+	Log(l, STD_STRING(tmp).c_str());
 }
 
-void Logger::Info(const wxString& message)
-{
-	Error(message); //FIXME
-}
 
 Logger& logger(){
 	static LSL::Util::LineInfo<Logger> m( AT );
@@ -52,27 +76,11 @@ Logger& logger(){
 	return m_sett;
 }
 
-void Logger::Error(const char* message)
-{
-	Error(TowxString(message));
-}
-
-void Logger::Warning(const char* message)
-{
-	Warning(TowxString(message));
-
-}
-
-void Logger::Info(const char* message)
-{
-	Info(TowxString(message));
-}
-
 void Logger::Enable(bool enable)
 {
 	enabled = enable;
 	cfg().Write(_T("/debug"), enabled);
 	if (enable) {
-		Info(_T("Debug window enabled!"));
+		Log(LOG_INFO, "Debug window enabled!");
 	}
 }

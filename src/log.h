@@ -10,22 +10,25 @@ class Logger
 public:
 	Logger();
 	~Logger();
-	void Error(const wxString& message);
-	void Warning(const wxString& message);
-	void Info(const wxString& message);
-	void Error(const char* message);
-	void Warning(const char* message);
-	void Info(const char* message);
+	enum level{
+		LOG_ERROR,
+		LOG_WARNING,
+		LOG_INFO,
+	};
+	void Log(level l, const char* format, ...) const;
+	void Log(level l, const wxString& format, ...) const;
+
 	void Enable(bool enable);
 private:
+	static wxString LogName(level l);
 	bool enabled;
 };
 
 Logger& logger();
 
 //shortcuts
-#define logError(msg) logger().Error(msg)
-#define logWarning(msg) logger().Warning(msg)
-#define logInfo(msg) logger().Info(msg)
+#define logError(msg, ...) logger().Log(LOG_ERROR, msg, ##__VA_ARGS__)
+#define logWarning(msg, ...) logger().Warning(LOG_WARNING, msg, ##__VA_ARGS__)
+#define logInfo(msg, ...) logger().Info(LOG_INFO, msg, ##__VA_ARGS__)
 
 #endif // DEBUG_H
