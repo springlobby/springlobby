@@ -181,7 +181,7 @@ void BattleListCtrl::RemoveBattle( IBattle& battle )
     if ( RemoveItem( &battle ) )
         return;
 
-    wxLogError( _T("Didn't find the battle to remove.") );
+    wxLogError(_T("BattleListCtrl::RemoveBattle(): didn't find the battle to remove.") );
 }
 
 void BattleListCtrl::UpdateBattle( IBattle& battle )
