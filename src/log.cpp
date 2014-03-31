@@ -1,21 +1,21 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "log.h"
-#include "ui.h"
-#include "mainwindow.h"
-#include "mainchattab.h"
-#include "chatpanel.h"
+//#include "ui.h"
+//#include "mainwindow.h"
+//#include "mainchattab.h"
+//#include "chatpanel.h"
 #include "utils/conversion.h"
 #include "helper/slconfig.h"
 #include <lslutils/globalsmanager.h>
-
+#include <wx/log.h>
+#include <wx/thread.h>
 
 bool Logger::gui = false;
 bool Logger::enabled = false;
 
 Logger::Logger()
 {
-	printf("logger initialized\n");
 }
 
 Logger::~Logger()
@@ -52,20 +52,22 @@ void Logger::Log(level l, const char* format, ...)
 
 	const std::string msg(buf, len);
 	if (!wxThread::IsMain()) {
-		printf("thread %ld: %s %s\n",wxThread::GetCurrentId(), LogName(l).c_str(), msg.c_str());
+		wxLogInfo(_T("thread %ld: %s %s"),wxThread::GetCurrentId(), LogName(l).c_str(), msg.c_str());
 		return;
 	}
 	if (isinlog || !gui) {
-		printf("%s\n", msg.c_str());
+		wxLogInfo(_T("%s"), msg.c_str());
 		return;
 	}
 	isinlog = true; //the following calls could trigger a log, too, protect this
-	ChatPanel* p = ui().mw().GetChatTab().AddChatPanel();
+/*	ChatPanel* p = ui().mw().GetChatTab().AddChatPanel();
 	if (p == NULL) {
-		printf("%s\n", msg.c_str());
+		wxLogInfo("%s", msg.c_str());
 		return;
 	}
 	p->StatusMessage(TowxString(LogName(l)) + _T(" ") +TowxString(msg));
+*/
+	wxLogDebug(_T("%s"), msg.c_str());
 	isinlog = false;
 }
 
