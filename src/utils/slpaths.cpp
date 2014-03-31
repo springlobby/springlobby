@@ -2,21 +2,24 @@
 
 #include "slpaths.h"
 
-#include "../nonportable.h"
-#include "../helper/slconfig.h"
-
-#include "platform.h"
-#include "conversion.h"
-#include "debug.h"
-#include "utils/version.h"
-
 #include <wx/string.h>
 #include <wx/stdpaths.h>
 #include <wx/dir.h>
+#include <wx/log.h>
 
 #include <lslunitsync/unitsync.h>
 #include <lslutils/config.h>
 #include <lslutils/misc.h>
+
+#include "nonportable.h"
+#include "helper/slconfig.h"
+
+#include "platform.h"
+#include "conversion.h"
+#include "utils/version.h"
+#include "log.h"
+
+
 
 #ifdef WIN32
 #include <windows.h>
@@ -195,7 +198,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 	needs to change to sth like: GetSpringVersionList(std::list<LSL::Bundle>)
 
 	*/
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	std::list<LSL::SpringBundle> usync_paths;
 
 	if (additionalbundle != NULL) {

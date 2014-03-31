@@ -173,7 +173,7 @@ int SpringLobbyApp::OnExit()
         return 0;
 
     quit_called = true;
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
     if(m_translationhelper)
     {

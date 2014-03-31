@@ -20,9 +20,9 @@
 #include "uiutils.h"
 #include <lslutils/misc.h>
 #include "utils/conversion.h"
-#include "utils/debug.h"
 #include "utils/customdialogs.h"
 #include "settings.h"
+#include "log.h"
 #include "images/colourbox.xpm"
 
 
@@ -153,7 +153,7 @@ wxImage BlendImage( const wxImage& foreground, const wxImage& background, bool b
 {
     if ( ( foreground.GetWidth()  != background.GetWidth() ) || ( background.GetHeight() != foreground.GetHeight() ) )
     {
-        wxLogDebugFunc(_T("size mismatch while blending"));
+        slLogDebugFunc(_T("size mismatch while blending"));
         return background;
     }
 
@@ -194,7 +194,7 @@ wxImage BlendImage( const wxImage& foreground, const wxImage& background, bool b
         }
         return ret;
     }
-    wxLogDebugFunc(_T("cannot blend without alpha"));
+    slLogDebugFunc(_T("cannot blend without alpha"));
     return background;
 }
 
@@ -344,7 +344,7 @@ void hue(huevec& out, int amount)
 std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
 {
     static std::vector<wxColour> result;
-    wxLogDebugFunc( TowxString(numteams) );
+    slLogDebugFunc("numteams: %d", numteams);
 		huevec huevector;
     static int satvalbifurcatepos;
     static std::vector<double> satvalsplittings;

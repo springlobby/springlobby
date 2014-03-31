@@ -5,9 +5,9 @@
 #include <wx/wx.h>
 #include <wx/spinctrl.h>
 #include <wx/log.h>
+#include "log.h"
 
 #include "ctrlconstants.h"
-#include "../utils/debug.h"
 #include "se_utils.h"
 
 //TODO maybe use only one chkbox for minimap on left
@@ -85,7 +85,7 @@ void tab_ui::updateControls(int /*what_to_update*/)
 		case 2: { ctrl_cam_radio2->SetValue(1); } break;	// CamMode 3: TW
 		case 4: { ctrl_cam_radio4->SetValue(1); } break;	// CamMode 4: FC
         default:
-            wxLogDebugFunc( _T("unhandled case val") );
+            slLogDebugFunc( _T("unhandled case val") );
             break;
 	}
 

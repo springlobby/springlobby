@@ -3,11 +3,19 @@
 //
 // Class: Battle
 //
+
+#include <wx/timer.h>
+#include <wx/image.h>
+#include <wx/string.h>
+#include <wx/log.h>
+#include <wx/filename.h>
+
+#include <lslutils/conversion.h>
+
 #include "battle.h"
 #include "ui.h"
 #include "iserver.h"
 #include "user.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include <lslutils/misc.h>
 #include "utils/uievents.h"
@@ -17,16 +25,11 @@
 #include "settings.h"
 #include "useractions.h"
 #include "utils/customdialogs.h"
-#include <lslutils/conversion.h>
 #include "iconimagelist.h"
 #include "spring.h"
 #include "utils/conversion.h"
+#include "log.h"
 
-#include <wx/timer.h>
-#include <wx/image.h>
-#include <wx/string.h>
-#include <wx/log.h>
-#include <wx/filename.h>
 
 const unsigned int TIMER_INTERVAL         = 1000;
 const unsigned int TIMER_ID               = 101;

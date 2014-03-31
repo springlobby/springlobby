@@ -13,12 +13,13 @@
 
 
 #include <wx/textdlg.h>
-#include <stdexcept>
 #include <wx/intl.h>
 #include <wx/utils.h>
 #include <wx/debugrpt.h>
 #include <wx/filename.h>
 #include <wx/app.h>
+#include <wx/log.h>
+#include <stdexcept>
 
 #include "ui.h"
 #include "tasserver.h"
@@ -30,7 +31,6 @@
 #include "connectwindow.h"
 #include "mainwindow.h"
 #include "user.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/uievents.h"
 #include "utils/slpaths.h"
@@ -476,7 +476,7 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 //! @todo Display in servertab
 void Ui::OnConnected( IServer& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 	mw().GetBattleListTab().OnConnected();
@@ -524,7 +524,7 @@ void Ui::OnDisconnected( IServer& server, bool wasonline )
 {
 	m_reconnect_delay_timer.Start( s_reconnect_delay_ms, true );
 	if ( m_main_win == 0 ) return;
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	if (!&server) {
 		wxLogError(_T("WTF got null reference!!!"));
 		return;
@@ -605,7 +605,7 @@ wxString Ui::GetNextServer()
 //! @todo Check if a pannel allready exists for this channel
 void Ui::OnJoinedChannelSuccessful( Channel& chan, bool doFocus)
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	if ( m_main_win == NULL ) {
 		return;
 	}
@@ -875,7 +875,7 @@ void Ui::OnRequestBattleStatus( IBattle& battle )
 void Ui::OnBattleStarted( IBattle& battle )
 {
 	if ( m_main_win == 0 ) return;
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	mw().GetBattleListTab().UpdateBattle( battle );
 }
 
@@ -1090,7 +1090,3 @@ void Ui::OnQuit(wxCommandEvent& /*data*/)
 }
 
 
-void Ui::EnableDebug(bool enable)
-{
-	logger().Enable(enable);
-}

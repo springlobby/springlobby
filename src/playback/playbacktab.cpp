@@ -26,8 +26,8 @@
 #include "iconimagelist.h"
 
 #include "utils/customdialogs.h"
-#include "utils/debug.h"
 #include "hosting/battleroomlistctrl.h"
+#include "log.h"
 
 
 BEGIN_EVENT_TABLE_TEMPLATE1( PlaybackTab, wxPanel, PlaybackTraits )
@@ -163,7 +163,7 @@ PlaybackTab<PlaybackTraits>::~PlaybackTab()
 	if ( m_filter != 0 )
 		m_filter->SaveFilterValues();
 
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 }
 
 template < class PlaybackTraits >
@@ -371,7 +371,7 @@ void PlaybackTab<PlaybackTraits>::OnFilterActiv( wxCommandEvent& /*unused*/ )
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::OnSelect( wxListEvent& event )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc( wxEmptyString );
 	if ( event.GetIndex() == -1 ) {
 		Deselect();
 	}

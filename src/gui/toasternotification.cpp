@@ -2,8 +2,9 @@
 
 #include "toasternotification.h"
 
-#include "../toasterbox/ToasterBox.h"
-#include "../settings.h"
+#include "toasterbox/ToasterBox.h"
+#include "settings.h"
+#include <wx/settings.h>
 
 ToasterNotification::ToasterNotification( wxWindow* parent )
 	:m_toasterbox( new ToasterBox( parent ) ),

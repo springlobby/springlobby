@@ -19,7 +19,6 @@
 #include "ui.h"
 #include "channel/channel.h"
 #include "user.h"
-#include "utils/debug.h"
 #include "uiutils.h"
 #include "iserver.h"
 #include <downloader/httpdownloader.h>
@@ -27,12 +26,13 @@
 #include "utils/customdialogs.h"
 #include "utils/tasutil.h"
 #include "utils/uievents.h"
+#include "log.h"
 
 #include <lslutils/globalsmanager.h>
 
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool /*unused*/ )
 {
-    wxLogDebugFunc( server_ver + _T(" ") + server_spring_ver );
+	slLogDebugFunc("%s %s", STD_STRING(server_ver).c_str(), STD_STRING(server_spring_ver).c_str());
     //Server version will include patchlevel from release 89 onwards
     m_serv.SetRequiredSpring( server_spring_ver.BeforeFirst('.') );
     ui().OnConnected( m_serv, server_name, server_ver, supported );
@@ -42,7 +42,7 @@ void ServerEvents::OnConnected( const wxString& server_name, const wxString& ser
 
 void ServerEvents::OnDisconnected( bool wasonline )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     m_serv.SetRequiredSpring (wxEmptyString);
     ui().OnDisconnected( m_serv, wasonline );
 }
@@ -55,7 +55,7 @@ void ServerEvents::OnLogin()
 
 void ServerEvents::OnLoginInfoComplete()
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	wxString nick = TowxString(m_serv.GetMe().GetNick());
 	wxArrayString highlights = sett().GetHighlightedWords();
 	if ( highlights.Index( nick ) == -1 )
@@ -83,7 +83,7 @@ void ServerEvents::OnLoginInfoComplete()
 
 void ServerEvents::OnUnknownCommand( const wxString& command, const wxString& params )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     ui().OnUnknownCommand( m_serv, command, params );
 }
 
@@ -102,7 +102,7 @@ void ServerEvents::OnProtocolError( const Protocolerror /*unused*/ )
 
 void ServerEvents::OnMotd( const wxString& msg )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     ui().OnMotd( m_serv, msg );
 }
 
@@ -117,7 +117,7 @@ void ServerEvents::OnPong( wxLongLong ping_time )
 
 void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu, const wxString& id )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         ASSERT_LOGIC( !m_serv.UserExists( nick ), _T("New user from server, but already exists!") );
@@ -138,7 +138,7 @@ void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int
 
 void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         wxLogMessage( _T("ServerEvents::OnUserStatus") );
@@ -181,7 +181,7 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
 
 void ServerEvents::OnUserQuit( const wxString& nick )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         User &user=m_serv.GetUser( nick );
@@ -219,7 +219,7 @@ void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const w
 									bool haspass, int rank, const wxString& maphash, const wxString& engineName, const wxString& engineVersion, const wxString& map,
 									const wxString& title, const wxString& mod )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         ASSERT_EXCEPTION( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
@@ -260,7 +260,7 @@ void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const w
 
 void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -285,7 +285,7 @@ void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
 
 void ServerEvents::OnHostedBattle( int battleid )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -319,7 +319,7 @@ void ServerEvents::OnHostedBattle( int battleid )
 
 void ServerEvents::OnStartHostedBattle( int battleid )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     IBattle& battle = m_serv.GetBattle( battleid );
     battle.SetInGame( true );
     battle.StartSpring();
@@ -348,7 +348,7 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick, const
 {
     try
     {
-        wxLogDebugFunc( wxEmptyString );
+		slLogDebugFunc("");
         User& user = m_serv.GetUser( nick );
         IBattle& battle = m_serv.GetBattle( battleid );
 
@@ -375,7 +375,7 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick, const
 
 void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -395,7 +395,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
 
 void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, const wxString& maphash, const wxString& map )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -421,7 +421,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
 
 void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const wxString& value )
 {
-    wxLogDebugFunc( param + _T(", ") + value );
+    slLogDebugFunc("%s, %s",  STD_STRING(param).c_str(), STD_STRING(value).c_str());
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -496,7 +496,7 @@ void ServerEvents::OnUnsetBattleInfo( int battleid, const wxString& param)
 
 void ServerEvents::OnBattleInfoUpdated( int battleid )
 {
-    wxLogDebugFunc( wxEmptyString );
+    slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -508,7 +508,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid )
 
 void ServerEvents::OnBattleClosed( int battleid )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -523,7 +523,7 @@ void ServerEvents::OnBattleClosed( int battleid )
 
 void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname, int count )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -536,7 +536,7 @@ void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname, 
 
 void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -549,7 +549,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
 
 void ServerEvents::OnBattleEnableAllUnits( int battleid )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -562,7 +562,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
 
 void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, const wxString& reason )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     if ( success )
     {
         Channel& chan = m_serv._AddChannel( channel );
@@ -579,7 +579,7 @@ void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, c
 
 void ServerEvents::OnChannelSaid( const wxString& channel, const wxString& who, const wxString& message )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         if ( ( m_serv.GetMe().GetNick() ==  STD_STRING(who) ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
@@ -593,7 +593,7 @@ void ServerEvents::OnChannelSaid( const wxString& channel, const wxString& who, 
 
 void ServerEvents::OnChannelJoin( const wxString& channel, const wxString& who )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         m_serv.GetChannel( channel ).OnChannelJoin( m_serv.GetUser( who ) );
@@ -606,7 +606,7 @@ void ServerEvents::OnChannelJoin( const wxString& channel, const wxString& who )
 
 void ServerEvents::OnChannelPart( const wxString& channel, const wxString& who, const wxString& message )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         m_serv.GetChannel( channel ).Left( m_serv.GetUser( who ), STD_STRING(message));
@@ -619,7 +619,7 @@ void ServerEvents::OnChannelPart( const wxString& channel, const wxString& who, 
 
 void ServerEvents::OnChannelTopic( const wxString& channel, const wxString& who, const wxString& message, int /*unused*/ )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         m_serv.GetChannel( channel ).SetTopic( STD_STRING(message), STD_STRING(who));
@@ -632,7 +632,7 @@ void ServerEvents::OnChannelTopic( const wxString& channel, const wxString& who,
 
 void ServerEvents::OnChannelAction( const wxString& channel, const wxString& who, const wxString& action )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
 		if ( ( m_serv.GetMe().GetNick() ==  STD_STRING(who) ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
@@ -646,7 +646,7 @@ void ServerEvents::OnChannelAction( const wxString& channel, const wxString& who
 
 void ServerEvents::OnPrivateMessage( const wxString& user, const wxString& message, bool fromme )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         User& who = m_serv.GetUser( user );
@@ -660,7 +660,7 @@ void ServerEvents::OnPrivateMessage( const wxString& user, const wxString& messa
 
 void ServerEvents::OnPrivateMessageEx( const wxString& user, const wxString& action, bool fromme )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try
 	{
 		User& who = m_serv.GetUser( user );
@@ -680,7 +680,7 @@ void ServerEvents::OnChannelList( const wxString& channel, const int& numusers, 
 
 void ServerEvents::OnUserJoinChannel( const wxString& channel, const wxString& who )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
@@ -759,7 +759,7 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 
 void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, UserBattleStatus status )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -779,7 +779,7 @@ void ServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, UserBa
 
 void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
@@ -977,10 +977,4 @@ void ServerEvents::OnForceJoinBattle(int battleid, const wxString &scriptPW)
     m_serv.JoinBattle( battleid, scriptPW );
     UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
             UiEvents::StatusData( _("Automatically moved to new battle"), 1 ) );
-}
-
-
-void ServerEvents::OnDebugEnable(bool enable)
-{
-	ui().EnableDebug(enable);
 }

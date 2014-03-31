@@ -4,7 +4,6 @@
 
 //IMPLEMENT_DYNAMIC_CLASS(SlSpinCtrlDouble, SlSpinCtrlGenericBase)
 #include "spinctrldouble.h"
-#include "../../../utils/debug.h"
 #include <wx/log.h>
 
 

@@ -14,13 +14,14 @@
 #include <stdexcept>
 #include <vector>
 
+#include <lslunitsync/unitsync.h>
+
 #include "battleroomlistctrl.h"
 #include "iconimagelist.h"
 #include "ibattle.h"
 #include "uiutils.h"
 #include "user.h"
 #include "iserver.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include "uiutils.h"
 #include "countrycodes.h"
@@ -28,7 +29,8 @@
 #include "aui/auimanager.h"
 #include "utils/customdialogs.h"
 #include "settings.h"
-#include <lslunitsync/unitsync.h>
+#include "log.h"
+
 
 template<> SortOrder CustomVirtListCtrl<User*,BattleroomListCtrl>::m_sortorder = SortOrder();
 
@@ -341,7 +343,7 @@ void BattleroomListCtrl::UpdateUser( const int& index )
 
 void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	if ( m_ro ) return;
 	int index = event.GetIndex();
 
@@ -386,7 +388,7 @@ void BattleroomListCtrl::OnListRightClick( wxListEvent& event )
 
 void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
   int team = event.GetId() - BRLIST_TEAM;
 	if( m_sel_user ) m_battle->ForceTeam( *m_sel_user, team );
 }
@@ -394,7 +396,7 @@ void BattleroomListCtrl::OnTeamSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
   int ally = event.GetId() - BRLIST_ALLY;
 	if( m_sel_user ) m_battle->ForceAlly( *m_sel_user, ally );
 }
@@ -402,7 +404,7 @@ void BattleroomListCtrl::OnAllySelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnColourSelect( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	wxColour CurrentColour = m_sel_user->BattleStatus().colour;
 	CurrentColour = GetColourFromUser(this, CurrentColour);
@@ -414,7 +416,7 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& /*unused*/ )
 
 void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 {
-  wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
   int side = event.GetId() - BRLIST_SIDE;
   if( m_sel_user ) m_battle->ForceSide( *m_sel_user, side );
 }
@@ -422,7 +424,7 @@ void BattleroomListCtrl::OnSideSelect( wxCommandEvent& event )
 
 void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
   if( !m_sel_user ) return;
   long handicap = wxGetNumberFromUser( _("Please enter a value between 0 and 100"), _("Set Resource Bonus"), wxEmptyString, m_sel_user->BattleStatus().handicap, 0, 100, (wxWindow*)&ui().mw(), wxDefaultPosition );
 	if ( handicap != -1 )
@@ -434,21 +436,21 @@ void BattleroomListCtrl::OnHandicapSelect( wxCommandEvent& /*unused*/ )
 
 void BattleroomListCtrl::OnSpecSelect( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
   if ( m_sel_user ) m_battle->ForceSpectator( *m_sel_user, m_spec_item->IsChecked() );
 }
 
 
 void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	if ( m_sel_user ) m_battle->KickPlayer( *m_sel_user );
 }
 
 
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& /*unused*/ )
 {
-  wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
   if ( m_sel_user ) m_battle->GetServer().Ring( TowxString(m_sel_user->GetNick()));
 }
 

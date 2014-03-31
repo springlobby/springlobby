@@ -6,7 +6,6 @@
 #include <wx/log.h>
 
 #include "playbackstructs.h"
-//#include "../utils.h"
 #include "../user.h"
 #include "../iconimagelist.h"
 #include "../uiutils.h"

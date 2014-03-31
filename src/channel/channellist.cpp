@@ -19,8 +19,8 @@ lsl/container/channellist.cpp
 
 #include "channellist.h"
 #include "channel.h"
-#include "../utils/debug.h"
-#include "../utils/conversion.h"
+#include "utils/conversion.h"
+#include "log.h"
 
 const UserList::user_map_t::size_type SEEKPOS_INVALID = UserList::user_map_t::size_type(-1);
 

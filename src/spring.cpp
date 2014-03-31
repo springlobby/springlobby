@@ -26,6 +26,7 @@ lsl/spring/spring.cpp
 #endif // _MSC_VER
 
 #include <wx/filename.h>
+#include <wx/log.h>
 #include <stdexcept>
 #include <vector>
 #include <clocale>
@@ -36,11 +37,11 @@ lsl/spring/spring.cpp
 #include "ui.h"
 #include "mainwindow.h"
 #include "utils/customdialogs.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/slpaths.h"
 #include "settings.h"
 #include "ibattle.h"
+#include "log.h"
 
 #include <lsl/battle/tdfcontainer.h>
 #include <lslutils/globalsmanager.h>
@@ -153,7 +154,7 @@ bool Spring::LaunchEngine(const std::string& cmd, wxArrayString& params)
 
 void Spring::OnTerminated( wxCommandEvent& event )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	m_running = false;
 	m_process = NULL;
 	event.SetEventType(GlobalEvent::OnSpringTerminated);
@@ -230,7 +231,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 		break;
 	}
 	default:
-		wxLogDebugFunc( wxEmptyString );
+		slLogDebugFunc("");
 		break;
 	}
 

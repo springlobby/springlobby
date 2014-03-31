@@ -14,12 +14,13 @@ lsl/spring/springprocess.cpp
 **/
 
 
+#include <wx/log.h>
+
 #include "springprocess.h"
 #include "spring.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/platform.h"
-#include <wx/log.h>
+#include "log.h"
 
 #ifdef __WXMSW__
 #include <shlobj.h>
@@ -34,13 +35,13 @@ DEFINE_LOCAL_EVENT_TYPE( wxEVT_SPRING_EXIT )
 SpringProcess::SpringProcess( Spring& sp ) :
 		m_sp( sp ), m_exit_code( 0 )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 }
 
 
 SpringProcess::~SpringProcess()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 }
 
 
@@ -53,7 +54,7 @@ void SpringProcess::SetCommand(const wxString& cmd, const wxArrayString& params)
 
 void SpringProcess::OnExit()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	wxCommandEvent event( wxEVT_SPRING_EXIT, PROC_SPRING );
 	event.SetExtraLong( m_exit_code );
 	m_sp.AddPendingEvent( event );
@@ -61,7 +62,7 @@ void SpringProcess::OnExit()
 
 void* SpringProcess::Entry()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	RunProcess(m_cmd, m_params);
 	return NULL;
 }

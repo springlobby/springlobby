@@ -20,7 +20,6 @@
 #include "battlelistctrl.h"
 #include "ui.h"
 #include "chatpanel.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/controls.h"
 #include "uiutils.h"
@@ -36,6 +35,7 @@
 #include "useractions.h"
 #include "utils/customdialogs.h"
 #include "helper/slconfig.h"
+#include "log.h"
 
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
@@ -458,7 +458,7 @@ void BattleListTab::DoJoin( IBattle& battle )
 
 void BattleListTab::OnSelect( wxListEvent& event )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	if ( event.GetIndex() == -1 )
 	{
 		SelectBattle( 0 );

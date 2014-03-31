@@ -4,16 +4,16 @@
 //
 
 #include "channel.h"
-#include "../ui.h"
+#include "ui.h"
 #include "iserver.h"
-#include "../user.h"
-#include "../utils/tasutil.h"
-#include "../utils/debug.h"
-#include "../updater/updatehelper.h"
+#include "user.h"
+#include "utils/tasutil.h"
+#include "updater/updatehelper.h"
 #include <wx/regex.h>
 #include <wx/log.h>
-#include "../chatpanel.h"
+#include "chatpanel.h"
 #include "utils/conversion.h"
+#include "log.h"
 
 Channel::Channel( IServer& serv )
     : m_serv(serv),
@@ -46,7 +46,7 @@ User& Channel::GetMe()
 
 void Channel::Said( User& who, const std::string& message )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	if (uidata.panel == 0 ) {
 		wxLogError( _T("OnChannelSaid: ud->panel NULL") );
 		return;
@@ -57,14 +57,14 @@ void Channel::Said( User& who, const std::string& message )
 
 void Channel::Say( const std::string& message )
 {
-  wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
   m_serv.SayChannel( TowxString(m_name), TowxString(message));
 }
 
 
 void Channel::DidAction( User& who, const std::string& action )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	if ( uidata.panel == 0 ) {
 		wxLogError( _T("OnChannelDidAction: ud->panel NULL") );
 		return;
@@ -75,7 +75,7 @@ void Channel::DidAction( User& who, const std::string& action )
 
 void Channel::DoAction( const std::string& action )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	m_serv.DoActionChannel( TowxString(m_name), TowxString(action) );
 }
 
@@ -131,7 +131,7 @@ void Channel::SetTopic( const std::string& topic, const std::string& who )
 	m_topic = topic;
 	m_topic_nick = who;
 
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	if ( uidata.panel == 0 ) {
 		wxLogError( _T("OnChannelTopic: ud->panel NULL") );
 		return;

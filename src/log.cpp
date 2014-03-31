@@ -10,30 +10,33 @@
 #include <lslutils/globalsmanager.h>
 
 
-SLCONFIG("/debug", false, "Show debug window");
-
+bool Logger::gui = false;
+bool Logger::enabled = false;
 
 Logger::Logger()
 {
-	enabled = cfg().ReadBool(_T("/debug"));
+	printf("logger initialized\n");
 }
 
 Logger::~Logger()
 {
-	//dtor
+	gui = false;
 }
 
-wxString Logger::LogName(level l)
+std::string Logger::LogName(level l)
 {
 	switch(l){
-		case LOG_ERROR: return _T("error");
-		case LOG_WARNING: return _T("warning");
-		case LOG_INFO: return _T("info");
+		case LOG_ERROR: return "error";
+		case LOG_WARNING: return "warning";
+		case LOG_INFO: return "info";
+		case LOG_DEBUG: return "debug";
+		case LOG_TRACE: return "trace";
 	}
-	return wxEmptyString;
+	return "";
 }
 
-void Logger::Log(level l, const char* format, ...) const
+static bool isinlog = false;
+void Logger::Log(level l, const char* format, ...)
 {
 	if (!enabled) {
 		return;
@@ -49,18 +52,24 @@ void Logger::Log(level l, const char* format, ...) const
 
 	const std::string msg(buf, len);
 	if (!wxThread::IsMain()) {
-		printf("Log from non-main: %s\n", msg.c_str());
+		printf("thread %ld: %s %s\n",wxThread::GetCurrentId(), LogName(l).c_str(), msg.c_str());
 		return;
 	}
+	if (isinlog || !gui) {
+		printf("%s\n", msg.c_str());
+		return;
+	}
+	isinlog = true; //the following calls could trigger a log, too, protect this
 	ChatPanel* p = ui().mw().GetChatTab().AddChatPanel();
 	if (p == NULL) {
 		printf("%s\n", msg.c_str());
 		return;
 	}
-	p->StatusMessage(LogName(l) + _T(" ") +TowxString(msg));
+	p->StatusMessage(TowxString(LogName(l)) + _T(" ") +TowxString(msg));
+	isinlog = false;
 }
 
-void Logger::Log(level l, const wxString& format, ...) const
+void Logger::Log(level l, const wxString& format, ...)
 {
 	va_list args;
 	va_start(args, format);
@@ -69,18 +78,36 @@ void Logger::Log(level l, const wxString& format, ...) const
 	Log(l, STD_STRING(tmp).c_str());
 }
 
-
-Logger& logger(){
-	static LSL::Util::LineInfo<Logger> m( AT );
-	static LSL::Util::GlobalObjectHolder<Logger, LSL::Util::LineInfo<Logger> > m_sett( m );
-	return m_sett;
+void Logger::Log(level l, const char* file, const char* function, const int line, const char* format, ...)
+{
+	char msg[1024];
+	va_list args;
+	va_start(args, format);
+	const int len = vsnprintf(msg, 1024, format, args);
+	if (len == 0) {
+		return;
+	}
+	va_end(args);
+	char fullmsg[1024];
+	const int fullen = snprintf(fullmsg, 1024, "%s %s():%d: %s", file, function, line, msg);
+	if (fullen == 0) {
+		return;
+	}
+	Log(l, "%s", fullmsg);
 }
 
-void Logger::Enable(bool enable)
+void Logger::Initialize()
 {
-	enabled = enable;
-	cfg().Write(_T("/debug"), enabled);
-	if (enable) {
-		Log(LOG_INFO, "Debug window enabled!");
-	}
+	//enabled = true;
+}
+
+void Logger::Shutdown()
+{
+}
+
+void Logger::ShowDebugWindow(bool show)
+{
+	gui = show;
+//	enabled = show;
+	Log(LOG_INFO, "enabled debug window");
 }

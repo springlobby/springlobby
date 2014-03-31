@@ -16,7 +16,6 @@
 
 
 #include "utils/conversion.h"
-#include "utils/debug.h"
 
 template <class ParentClass>
 HttpDownloaderThread<ParentClass>::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath,

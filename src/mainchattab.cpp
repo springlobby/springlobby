@@ -12,11 +12,11 @@
 #include <wx/image.h>
 #include <wx/log.h>
 
+#include <lslutils/misc.h>
+
 #include "aui/auimanager.h"
 #include "mainchattab.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
-#include <lslutils/misc.h>
 #include "utils/controls.h"
 #include "mainwindow.h"
 #include "channel/channel.h"
@@ -26,6 +26,7 @@
 #include "serverselector.h"
 #include "settings.h"
 #include "aui/slbook.h"
+#include "log.h"
 
 #include "images/close.xpm"
 #include "images/server.xpm"
@@ -331,7 +332,7 @@ void MainChatTab::OnTabClose( wxAuiNotebookEvent& event )
 
 void MainChatTab::OnTabsChanged( wxAuiNotebookEvent& event )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	int oldsel = event.GetOldSelection();
 	if ( oldsel < 0 ) return;

@@ -16,27 +16,30 @@ lsl/battle/ibattle.cpp
 
 #include <wx/tokenzr.h>
 #include <wx/image.h>
-#include <sstream>
 #include <wx/timer.h>
-
-#include "ibattle.h"
-#include "utils/debug.h"
-#include "utils/conversion.h"
-#include <lslutils/misc.h>
-#include "uiutils.h"
-#include "settings.h"
-#include "ui.h" //only required for preset stuff
-#include "spring.h"
-#include <lslutils/conversion.h>
-#include <lslunitsync/unitsync.h>
-#include "springlobbyapp.h"
-#include "iserver.h"
-#include "serverselector.h"
+#include <wx/log.h>
 
 #include <list>
 #include <algorithm>
 #include <cmath>
 #include <set>
+#include <sstream>
+
+#include <lslutils/misc.h>
+#include <lslutils/conversion.h>
+#include <lslunitsync/unitsync.h>
+
+#include "ibattle.h"
+#include "utils/conversion.h"
+#include "uiutils.h"
+#include "settings.h"
+#include "ui.h" //only required for preset stuff
+#include "spring.h"
+#include "springlobbyapp.h"
+#include "iserver.h"
+#include "serverselector.h"
+#include "log.h"
+
 
 IBattle::IBattle():
 	wxEvtHandler(),

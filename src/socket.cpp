@@ -29,8 +29,8 @@ lsl/networking/socket.cpp
 
 #include "socket.h"
 #include "iserver.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
+#include "log.h"
 
 #ifdef __WXMSW__
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers

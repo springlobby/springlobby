@@ -6,9 +6,9 @@
 #include <wx/log.h>
 #include <wx/filename.h>
 
-#include "../utils/debug.h"
-#include "../utils/slpaths.h"
-#include "../utils/conversion.h"
+#include "utils/slpaths.h"
+#include "utils/conversion.h"
+#include "log.h"
 
 
 wxString slConfig::m_chosen_path = wxEmptyString;

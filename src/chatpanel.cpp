@@ -21,7 +21,6 @@
 #include "aui/auimanager.h"
 #include "aui/slbook.h"
 #include "channel/channel.h"
-#include "utils/debug.h"
 #include "utils/uievents.h"
 #include "updater/updatehelper.h"
 #include "iserver.h"
@@ -32,6 +31,7 @@
 #include "chatpanelmenu.h"
 #include "gui/pastedialog.h"
 #include "helper/wxtextctrlhist.h"
+#include "log.h"
 
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 
@@ -207,7 +207,7 @@ ChatPanel::~ChatPanel()
 
 void ChatPanel::CreateControls( )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	// Creating sizers
 	m_main_sizer = new wxBoxSizer( wxHORIZONTAL );
@@ -322,7 +322,7 @@ void ChatPanel::CreatePopup()
 {
 	if ( m_popup_menu != NULL )
 		return;
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	m_popup_menu = new ChatPanelMenu( this );
 }
 
@@ -816,7 +816,7 @@ ChatPanelType ChatPanel::GetPanelType() const
 bool ChatPanel::Say( const wxString& message )
 {
 	static const unsigned int flood_threshold = 5;
-	wxLogDebugFunc( message );
+	slLogDebugFunc("");
 	wxStringTokenizer lines( message, _T( '\n' ) );
 	if ( lines.CountTokens() > flood_threshold ) {
 		PasteDialog dl ( this, wxFormat( _( "Are you sure you want to paste %d lines?" ) ) % lines.CountTokens() );
@@ -926,7 +926,7 @@ bool ChatPanel::Say( const wxString& message )
 
 void ChatPanel::Part()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	if ( m_type == CPT_Channel ) {
 		if ( m_channel == 0 ) return;
 		m_channel->Leave();
@@ -991,7 +991,7 @@ wxString ChatPanel::FindUrl( const long pos ) const
 
 void ChatPanel::OnMouseDown( wxMouseEvent& event )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	wxTextCoord row;
 	wxTextCoord col;
 	wxTextCtrlHitTestResult ht = m_chatlog_text->HitTest( event.GetPosition(), &col, &row);

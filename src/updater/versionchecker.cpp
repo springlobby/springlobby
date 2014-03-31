@@ -11,8 +11,9 @@
 #include <wx/protocol/http.h>
 #include <wx/log.h>
 
-#include "../utils/debug.h"
-#include "../utils/customdialogs.h"
+#include "utils/customdialogs.h"
+#include "log.h"
+#include "utils/conversion.h"
 
 
 //! @brief gets latest version from version.springlobby.info via HTTP
@@ -68,7 +69,7 @@ wxString GetLatestVersion()
         break;
     }
 
-    wxLogDebugFunc(_T("Error connecting! Error is: ") + err);
+    slLogDebugFunc("Error connecting! Error is: %s", STD_STRING(err).c_str());
     customMessageBoxNoModal(SL_MAIN_ICON, _T("Error connecting! Error is: ") + err, wxEmptyString);
 
     return wxEmptyString;

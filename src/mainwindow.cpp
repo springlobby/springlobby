@@ -38,7 +38,6 @@
 #include "settings.h"
 #include "iserver.h"
 #include "serverselector.h"
-#include "utils/debug.h"
 #include "utils/platform.h"
 #include "utils/version.h"
 #include "battlelist/battlelisttab.h"
@@ -227,6 +226,7 @@ MainWindow::MainWindow( )
 
         //this should take off the firstload time considerably *ie nil it :P )
         mapSelectDialog(true, this);
+	Logger::ShowDebugWindow(cfg().ReadBool(_T("/debug")));
 }
 
 wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size ) const
@@ -261,7 +261,6 @@ void MainWindow::SetLogWin( wxLogWindow* log, wxLogChain* logchain  )
     if ( m_log_win )
         m_log_win->GetFrame()->SetParent( this );
 }
-
 MainWindow::~MainWindow()
 {
 	SetEvtHandlerEnabled( false );
@@ -274,6 +273,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 {
+	Logger::ShowDebugWindow(false);
 	GlobalEvent::Send(GlobalEvent::OnQuit);
 //	GlobalEvent::Disconnect(MainWindow::OnClose, GlobalEvent::)
 //	SetEvtHandlerEnabled(false);
@@ -294,15 +294,6 @@ void MainWindow::OnClose( wxCloseEvent& /*unused*/ )
 		delete m_autojoin_dialog;
 		m_autojoin_dialog = 0;
 
-		if ( m_log_win ) {
-			m_log_win->GetFrame()->Destroy();
-			if ( m_log_chain ) // if logwin was created, it's the current "top" log
-				m_log_chain->DetachOldLog();  //so we need to tellwx not to delete it on its own
-				//since we absolutely need to destroy the logwin here, set a fallback for the time until app cleanup
-			#if(wxUSE_STD_IOSTREAM)
-				wxLog::SetActiveTarget( new wxLogStream( &std::cout ) );
-			#endif
-		}
 	}
 	Destroy();
 }

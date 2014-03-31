@@ -33,7 +33,6 @@ lsl/networking/tasserver.cpp
 #include "base64.h"
 #include "utils/md5.h"
 #include "tasserver.h"
-#include "utils/debug.h"
 #include "utils/tasutil.h"
 #include "utils/conversion.h"
 #include "utils/platform.h"
@@ -41,6 +40,7 @@ lsl/networking/tasserver.cpp
 #include "serverevents.h"
 #include "socket.h"
 #include "tasservertokentable.h"
+#include "log.h"
 
 // for SL_MAIN_ICON
 #include "utils/customdialogs.h"
@@ -275,8 +275,6 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
 	} else if ( subcmd == _T("/ping") ) {
 		Ping();
 		return true;
-	} else if (subcmd == _T("/debug")) {
-        m_se->OnDebugEnable(true);
 	}
 	return false;
 }
@@ -320,7 +318,7 @@ bool TASServer::IsConnected()
 
 bool TASServer::Register( const wxString& addr, const int port, const wxString& nick, const wxString& password, wxString& reason )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	FakeNetClass temp;
 	Socket tempsocket( temp, true, true );
 	tempsocket.Connect( addr, port );
@@ -392,7 +390,7 @@ const User& TASServer::GetMe() const
 
 void TASServer::Login()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	wxString pass = GetPasswordHash( m_pass );
 	wxString protocol = TowxString( m_crc.GetCRC() );
 	wxString localaddr;
@@ -406,7 +404,7 @@ void TASServer::Login()
 
 void TASServer::Logout()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	Disconnect();
 }
 
@@ -1014,7 +1012,7 @@ void TASServer::HandlePong( int replyid )
 void TASServer::JoinChannel( const wxString& channel, const wxString& key )
 {
 	//JOIN channame [key]
-	wxLogDebugFunc( channel );
+	slLogDebugFunc("");
 
 	m_channel_pw[channel] = key;
 	m_id_transmission = false; // workaround a retarded server bug
@@ -1026,7 +1024,7 @@ void TASServer::JoinChannel( const wxString& channel, const wxString& key )
 void TASServer::PartChannel( const wxString& channel )
 {
 	//LEAVE channame
-	wxLogDebugFunc( channel );
+	slLogDebugFunc("");
 
 	SendCmd( _T("LEAVE"), channel );
 
@@ -1036,7 +1034,7 @@ void TASServer::PartChannel( const wxString& channel )
 void TASServer::DoActionChannel( const wxString& channel, const wxString& msg )
 {
 	//SAYEX channame {message}
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	SendCmd( _T("SAYEX"), channel + _T(" ") + msg );
 }
@@ -1045,7 +1043,7 @@ void TASServer::DoActionChannel( const wxString& channel, const wxString& msg )
 void TASServer::SayChannel( const wxString& channel, const wxString& msg )
 {
 	//SAY channame {message}
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	SendCmd( _T("SAY"), channel + _T(" ") + msg );
 }
@@ -1054,7 +1052,7 @@ void TASServer::SayChannel( const wxString& channel, const wxString& msg )
 void TASServer::SayPrivate( const wxString& nick, const wxString& msg )
 {
 	//SAYPRIVATE username {message}
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	SendCmd( _T("SAYPRIVATE"), nick + _T(" ") + msg );
 }
@@ -1062,31 +1060,28 @@ void TASServer::SayPrivate( const wxString& nick, const wxString& msg )
 
 void TASServer::DoActionPrivate( const wxString& nick, const wxString& msg )
 {
-	wxLogDebugFunc( wxEmptyString );
-
+	slLogDebugFunc("");
 	SendCmd( _T("SAYPRIVATEEX"), nick + _T(" ") + msg );
 }
 
 
 void TASServer::SayBattle( int /*unused*/, const wxString& msg )
 {
-	wxLogDebugFunc( wxEmptyString );
-
+	slLogDebugFunc("");
 	SendCmd( _T("SAYBATTLE"), msg );
 }
 
 
 void TASServer::DoActionBattle( int /*unused*/, const wxString& msg )
 {
-	wxLogDebugFunc( wxEmptyString );
-
+	slLogDebugFunc("");
 	SendCmd( _T("SAYBATTLEEX"), msg );
 }
 
 
 void TASServer::Ring( const wxString& nick )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_EXCEPTION( m_battle_id != -1, _T("invalid m_battle_id value") );
 		ASSERT_EXCEPTION( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1199,7 +1194,7 @@ void TASServer::AdminSetBotMode( const wxString& nick, bool isbot )
 
 void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	// to see ip addresses of users as they join (in the log), pretend you're hosting with NAT.
 	int nat_type=bo.nattype;
@@ -1253,7 +1248,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 void TASServer::JoinBattle( const int& battleid, const wxString& password )
 {
 	//JOINBATTLE BATTLE_ID [parameter]
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	m_finalize_join_battle_pw=password;
 	m_finalize_join_battle_id=battleid;
@@ -1315,7 +1310,7 @@ void TASServer::FinalizeJoinBattle()
 void TASServer::LeaveBattle( const int& /*unused*/ )
 {
 	//LEAVEBATTLE
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	m_relay_host_bot = wxEmptyString;
 	SendCmd( _T("LEAVEBATTLE") );
 }
@@ -1323,7 +1318,7 @@ void TASServer::LeaveBattle( const int& /*unused*/ )
 
 void TASServer::SendHostInfo( HostInfo update )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
@@ -1435,7 +1430,7 @@ for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapp
 
 void TASServer::SendHostInfo( const wxString& Tag )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
@@ -1474,7 +1469,7 @@ void TASServer::SendHostInfo( const wxString& Tag )
 
 void TASServer::SendUserPosition( const User& user )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("invalid m_battle_id value") );
@@ -1524,7 +1519,7 @@ IBattle* TASServer::GetCurrentBattle()
 
 void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	UTASBattleStatus tasbs;
 	tasbs.tasdata = ConvTasbattlestatus( bs );
@@ -1540,7 +1535,7 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 
 void TASServer::SendMyUserStatus()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	UserStatus& us = GetMe().Status();
 
@@ -1557,7 +1552,7 @@ void TASServer::SendMyUserStatus()
 
 void TASServer::StartHostedBattle()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
 		ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1578,7 +1573,7 @@ void TASServer::StartHostedBattle()
 
 void TASServer::ForceSide( int battleid, User& user, int side )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
 		ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1604,7 +1599,7 @@ void TASServer::ForceSide( int battleid, User& user, int side )
 
 void TASServer::ForceTeam( int battleid, User& user, int team )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
 		ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1636,7 +1631,7 @@ void TASServer::ForceTeam( int battleid, User& user, int team )
 
 void TASServer::ForceAlly( int battleid, User& user, int ally )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
 		ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1670,7 +1665,7 @@ void TASServer::ForceAlly( int battleid, User& user, int ally )
 
 void TASServer::ForceColour( int battleid, User& user, const wxColour& col )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
 		ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1707,7 +1702,7 @@ void TASServer::ForceColour( int battleid, User& user, const wxColour& col )
 
 void TASServer::ForceSpectator( int battleid, User& user, bool spectator )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
 		ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1740,7 +1735,7 @@ void TASServer::ForceSpectator( int battleid, User& user, bool spectator )
 
 void TASServer::BattleKickPlayer( int battleid, User& user )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
 		ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1772,7 +1767,7 @@ void TASServer::BattleKickPlayer( int battleid, User& user )
 
 void TASServer::SetHandicap( int battleid, User& user, int handicap)
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
 		ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1800,7 +1795,7 @@ void TASServer::SetHandicap( int battleid, User& user, int handicap)
 
 void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& status )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
 		ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1827,7 +1822,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
 
 void TASServer::RemoveBot( int battleid, User& bot )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
 		ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1852,7 +1847,7 @@ void TASServer::RemoveBot( int battleid, User& bot )
 
 void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try {
 		ASSERT_LOGIC( m_battle_id != -1, _T("Invalid m_battle_id") );
 		ASSERT_LOGIC( BattleExists(m_battle_id), _T("battle doesn't exists") );
@@ -1905,7 +1900,7 @@ void TASServer::SendScriptToClients( const wxString& script )
 
 void TASServer::OnConnected(Socket& /*unused*/ )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	//TASServer* serv = (TASServer*)sock->GetUserdata();
 	m_last_udp_ping = time( 0 );
 	m_connected = true;
@@ -1920,7 +1915,7 @@ void TASServer::OnConnected(Socket& /*unused*/ )
 
 void TASServer::OnDisconnected(Socket& /*unused*/ )
 {
-	wxLogDebugFunc( TowxString(m_connected) );
+	slLogDebugFunc("%d", m_connected);
 	bool connectionwaspresent = m_online || !m_last_denied.IsEmpty() || m_redirecting;
 	m_last_denied = wxEmptyString;
 	m_connected = false;

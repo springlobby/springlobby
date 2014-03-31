@@ -6,7 +6,6 @@
 
 #include "chatpanel.h"
 #include "channel/channel.h"
-#include "utils/debug.h"
 #include "iserver.h"
 #include "serverselector.h"
 #include "user.h"

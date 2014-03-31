@@ -12,9 +12,9 @@
 #include "battle.h"
 #include "channel/channel.h"
 #include "user.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include "chatpanel.h"
+#include "log.h"
 
 IServer::IServer():
 battles_iter(new BattleList_Iter(&m_battles)),

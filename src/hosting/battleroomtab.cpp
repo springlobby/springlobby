@@ -33,7 +33,6 @@
 #include "ibattle.h"
 #include "defines.h"
 #include "utils/conversion.h"
-#include "utils/debug.h"
 #include "utils/uievents.h"
 #include "defines.h"
 #include "battleroomlistctrl.h"
@@ -53,6 +52,7 @@
 #include "aui/auimanager.h"
 #include "hostbattledialog_public.h"
 #include "autohost.h"
+#include "log.h"
 
 BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 
@@ -592,7 +592,7 @@ IBattle* BattleRoomTab::GetBattle()
 
 ChatPanel& BattleRoomTab::GetChatPanel()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	ASSERT_LOGIC( m_chat != 0, _T( "m_chat = 0" ) );
 	return *m_chat;
 }
@@ -1000,7 +1000,7 @@ void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	const wxString mapname = mapSelectDialog();
 	if ( !mapname.empty() )

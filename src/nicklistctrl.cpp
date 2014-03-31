@@ -15,7 +15,6 @@
 
 #include "nicklistctrl.h"
 #include <lslutils/misc.h>
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include "iconimagelist.h"
 #include "user.h"
@@ -27,7 +26,7 @@
 #include "userlist.h"
 #include "usermenu.h"
 #include "helper/sortutil.h"
-
+#include "log.h"
 
 
 BEGIN_EVENT_TABLE( NickListCtrl, NickListCtrl::BaseType )
@@ -123,7 +122,7 @@ void NickListCtrl::OnActivateItem( wxListEvent& event )
 
 void NickListCtrl::OnShowMenu( wxContextMenuEvent& /*unused*/ )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	if ( m_menu != 0 )
 	{
 		//no need to popup the menu when there's no user selected

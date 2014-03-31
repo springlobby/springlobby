@@ -25,10 +25,11 @@
 
 #include "settings.h"
 #include "uiutils.h"
-#include "utils/debug.h"
 #include "utils/controls.h"
 #include "utils/conversion.h"
 #include "utils/platform.h"
+#include "log.h"
+
 #include "images/torrentoptionspanel_icon.png.h"
 #include "images/spring.xpm"
 #include "images/userchat.xpm"

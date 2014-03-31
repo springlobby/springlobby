@@ -11,7 +11,6 @@
 #include "nonportable.h"
 #include "utils/conversion.h"
 #include "utils/version.h"
-#include "utils/debug.h"
 #include <lslutils/misc.h>
 #include "utils/platform.h"
 #include "utils/slpaths.h"

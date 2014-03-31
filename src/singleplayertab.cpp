@@ -12,12 +12,14 @@
 #include <wx/colordlg.h>
 #include <wx/listctrl.h>
 #include <wx/settings.h>
+#include <wx/log.h>
+
+#include <lslutils/conversion.h>
 
 #include "singleplayertab.h"
 #include "mapctrl.h"
 #include "mapselectdialog.h"
 #include "utils/controls.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include "uiutils.h"
 #include "ui.h"
@@ -29,8 +31,8 @@
 #include "utils/customdialogs.h"
 #include "utils/slpaths.h"
 #include "utils/globalevents.h"
+#include "log.h"
 
-#include <lslutils/conversion.h>
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
@@ -305,7 +307,7 @@ void SinglePlayerTab::OnModSelect( wxCommandEvent& /*unused*/ )
 
 void SinglePlayerTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	const wxString mapname = mapSelectDialog();
 	if ( !mapname.empty()) {
 	        const int idx = m_map_pick->FindString( mapname, true /*case sensitive*/ );
@@ -345,7 +347,7 @@ void SinglePlayerTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
     }
     catch ( ... )
     {
-        wxLogDebugFunc( wxEmptyString );
+		slLogDebugFunc("");
         wxLogError( _T("unitsync reload sink failed") );
     }
 }
@@ -353,7 +355,7 @@ void SinglePlayerTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 
 void SinglePlayerTab::OnStart( wxCommandEvent& /*unused*/ )
 {
-    wxLogDebugFunc( _T("SP: ") );
+    slLogDebugFunc("SP: ");
 
     if ( ui().IsSpringRunning() )
     {

@@ -25,7 +25,6 @@
 #include <lslutils/conversion.h>
 #include "user.h"
 #include "ibattle.h"
-#include "utils/debug.h"
 #include "utils/controls.h"
 #include "chatpanel.h"
 #include "mapctrl.h"
@@ -35,6 +34,7 @@
 #include "settings.h"
 #include "aui/auimanager.h"
 #include "utils/conversion.h"
+#include "log.h"
 
 BEGIN_EVENT_TABLE( BattleMapTab, wxPanel )
 
@@ -239,12 +239,12 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc( wxEmptyString );
 
 	wxString mapname = mapSelectDialog();
 	if ( !mapname.empty() )
 	{
-		wxLogDebugFunc( mapname );
+		slLogDebugFunc("");
 		if ( !m_battle->IsFounderMe() )
 		{
 			m_battle->DoAction( "suggests " + STD_STRING(mapname)  );

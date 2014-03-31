@@ -137,8 +137,6 @@ class IServerEvents
 	virtual void OnScriptEnd( int battleid ) = 0;
 
 	virtual void OnForceJoinBattle( int battleid, const wxString& line ) = 0;
-	virtual void OnDebugEnable(bool enable) = 0;
-
 };
 
 #endif // ISERVEREVENTS_H

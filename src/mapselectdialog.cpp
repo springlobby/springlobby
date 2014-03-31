@@ -1,7 +1,11 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include "mapselectdialog.h"
+#include <wx/settings.h>
 
+#include <lslutils/globalsmanager.h>
+#include <lslutils/misc.h>
+
+#include "mapselectdialog.h"
 #include "ibattle.h"
 #include "iserver.h"
 #include "serverselector.h"
@@ -10,11 +14,8 @@
 #include "uiutils.h"
 #include "utils/controls.h"
 #include "utils/conversion.h"
-#include "utils/debug.h"
 #include "settings.h"
-#include <lslutils/globalsmanager.h>
-#include <wx/settings.h>
-#include <lslutils/misc.h>
+#include "log.h"
 
 //(*InternalHeaders(MapSelectDialog)
 #include <wx/listctrl.h>
@@ -191,7 +192,7 @@ MapSelectDialog::~MapSelectDialog()
 
 void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	AppendSortKeys( m_horizontal_choice );
 	AppendSortKeys( m_vertical_choice );
@@ -229,7 +230,7 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
 
 void MapSelectDialog::OnSortKeySelect( wxCommandEvent& /*unused*/ )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	UpdateSortAndFilter();
 }
 
@@ -282,7 +283,7 @@ void MapSelectDialog::UpdateSortAndFilter()
 
 LSL::UnitsyncMap* MapSelectDialog::GetSelectedMap() const
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	return m_mapgrid->GetSelectedMap();
 }
 
@@ -290,7 +291,7 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 {
 	const wxString& mapname = event.GetString();
 
-	wxLogDebugFunc( mapname );
+	slLogDebugFunc("");
 
 	const LSL::UnitsyncMap* pMap = m_mapgrid->GetSelectedMap();
 	if ( pMap == NULL) return;
@@ -310,14 +311,14 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 
 void MapSelectDialog::OnMapLoadingCompleted( wxCommandEvent& /*unused*/ )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	// to apply stored sorting settings we need to re-apply sorting after loading finished
 	UpdateSortAndFilter();
 }
 
 void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& /*unused*/ )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	m_vertical_direction = !m_vertical_direction;
 	m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴠ") : _T("ᴧ") );
 	UpdateSortAndFilter();
@@ -325,7 +326,7 @@ void MapSelectDialog::OnVerticalDirectionClicked( wxCommandEvent& /*unused*/ )
 
 void MapSelectDialog::OnHorizontalDirectionClicked( wxCommandEvent& /*unused*/ )
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	m_horizontal_direction = !m_horizontal_direction;
 	m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T(">") : _T("<") );
 	UpdateSortAndFilter();
@@ -333,7 +334,7 @@ void MapSelectDialog::OnHorizontalDirectionClicked( wxCommandEvent& /*unused*/ )
 
 void MapSelectDialog::OnMapGridLeftDClick(wxMouseEvent& /*unused*/)
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	if ( m_mapgrid->GetSelectedMap() ) {
 		EndModal( wxID_OK );
@@ -342,7 +343,7 @@ void MapSelectDialog::OnMapGridLeftDClick(wxMouseEvent& /*unused*/)
 
 void MapSelectDialog::LoadAll()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	const int count = m_maps.size();
 
 	m_mapgrid->Clear();
@@ -356,7 +357,7 @@ void MapSelectDialog::LoadAll()
 
 void MapSelectDialog::LoadPopular()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	m_mapgrid->Clear();
 
@@ -376,7 +377,7 @@ void MapSelectDialog::LoadPopular()
 
 void MapSelectDialog::LoadRecent()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	const int count = m_maps.size();
 
 	m_mapgrid->Clear();
@@ -400,25 +401,25 @@ void MapSelectDialog::LoadRecent()
 
 void MapSelectDialog::OnFilterAllSelect(wxCommandEvent& /*unused*/)
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	LoadAll();
 }
 
 void MapSelectDialog::OnFilterPopularSelect(wxCommandEvent& /*unused*/)
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	LoadPopular();
 }
 
 void MapSelectDialog::OnFilterRecentSelect(wxCommandEvent& /*unused*/)
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	LoadRecent();
 }
 
 void MapSelectDialog::OnFilterTextChanged(wxCommandEvent& /*unused*/)
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	UpdateSortAndFilter();
 }
 

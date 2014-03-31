@@ -17,7 +17,6 @@
 #include <lslunitsync/image.h>
 #include <lslunitsync/data.h>
 
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include "uiutils.h"
 #include "mapctrl.h"
@@ -28,6 +27,7 @@
 #include "settings.h"
 #include "iconimagelist.h"
 #include "hosting/addbotdialog.h"
+#include "log.h"
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
@@ -442,7 +442,7 @@ void MapCtrl::GetClosestStartPos( int fromx, int fromy, int& index, int& x, int&
 
 int MapCtrl::LoadMinimap()
 {
-    wxLogDebugFunc( wxEmptyString );
+    slLogDebugFunc("");
     if ( m_battle == 0 ) return -1;
     if ( m_minimap ) return -1;
     if ( !m_battle->MapExists() ) return -1;
@@ -964,7 +964,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool /*unused*/ )
 
 void MapCtrl::DrawUserPositions( wxDC& dc )
 {
-    wxLogDebugFunc(wxEmptyString );
+	slLogDebugFunc("");
     if ( m_battle == 0 ) return;
     if ( !m_battle->MapExists() ) return;
 
@@ -1015,7 +1015,7 @@ void MapCtrl::DrawUserPositions( wxDC& dc )
 
 void MapCtrl::OnPaint( wxPaintEvent& WXUNUSED(event) )
 {
-    wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
     wxPaintDC dc( this );
 
     DrawBackground( dc );

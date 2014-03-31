@@ -15,9 +15,9 @@
 #include "battleoptionstab.h"
 #include "mainsingleplayertab.h"
 #include "battleroommmoptionstab.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include "utils/controls.h"
+#include "log.h"
 
 #include "images/battle.xpm"
 #include "images/battle_settings.xpm"
@@ -77,7 +77,7 @@ void MainSinglePlayerTab::UpdateMinimap()
 
 void MainSinglePlayerTab::OnUnitSyncReloaded()
 {
-	wxLogDebugFunc( wxEmptyString );
+	slLogDebugFunc( wxEmptyString );
 	try
 	{
 		GetSinglePlayerTab().ResetUsername();

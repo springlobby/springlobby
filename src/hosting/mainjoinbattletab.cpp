@@ -17,12 +17,12 @@
 #include "battleroomtab.h"
 #include "battlemaptab.h"
 #include "battleoptionstab.h"
-#include "utils/debug.h"
 #include "utils/conversion.h"
 #include "battleroommmoptionstab.h"
 #include "aui/auimanager.h"
 #include "aui/slbook.h"
 #include "utils/controls.h"
+#include "log.h"
 
 #include "images/battle_list.xpm"
 #include "images/battle.xpm"
