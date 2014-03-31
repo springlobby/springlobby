@@ -12,7 +12,7 @@ extern void lsllogerror(const char* format, ...)
 	const int len = vsnprintf(buf, 1024, format, args);
 	if (len > 0) {
 		const std::string msg(buf, len);
-		wxLogError(TowxString(msg));
+		wxLogDebug(TowxString(msg));
 	}
 	va_end(args);
 }
