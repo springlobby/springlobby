@@ -302,7 +302,7 @@ wxString convert(char* buff, const int len)
 	if (!ret.empty()) {
 		return ret;
 	}
-	printf("Error: couldn't convert: '%s'", tmp.c_str());
+	printf("Fatal Error: couldn't convert: '%s' in socket.receive()", tmp.c_str());
 	return wxEmptyString;
 }
 
