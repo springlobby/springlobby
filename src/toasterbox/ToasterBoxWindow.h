@@ -4,9 +4,8 @@
 #define TOASTERBOXWINDOW_HH_INCLUDED
 
 #include <wx/timer.h>
-#include <wx/wx.h>
-#include <wx/defs.h>
 #include "../utils/mixins.hh"
+#include <wx/statbmp.h>
 
 #if wxUSE_POPUPWIN
 	#include <wx/popupwin.h>

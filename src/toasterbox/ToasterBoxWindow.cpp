@@ -10,6 +10,8 @@
 #include <wx/dcclient.h>
 #include <wx/region.h>
 #include <wx/dcbuffer.h>
+#include <wx/frame.h>
+
 #include "ToasterBoxWindow.h"
 #include "../gui/wxbackgroundimage.h"
 #include "../images/notif_bg.png.h"

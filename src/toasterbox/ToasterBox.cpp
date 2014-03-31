@@ -10,15 +10,14 @@
 // Version 1.0rc
 //---------------------------------------------------------------------------
 
-#include <wx/wx.h>
-//#include "wx/wxprec.h"
+#include "ToasterBox.h"
+
 #include <wx/dialog.h>
 #include <wx/utils.h>
 #include <wx/string.h>
 #include <wx/bitmap.h>
 #include <wx/timer.h>
-#include "ToasterBox.h"
-
+#include <wx/log.h>
 
 ToasterBox::ToasterBox(wxWindow* _parent)
 	: parent( _parent ),
