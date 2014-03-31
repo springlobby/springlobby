@@ -267,7 +267,7 @@ bool Socket::_Send( const wxString& data )
 }
 
 
-wxString convert(const char* buff, const int len)
+wxString convert(char* buff, const int len)
 {
 	wxString ret = wxString(buff, wxConvUTF8, len );
 	if ( !ret.IsEmpty() ) {
@@ -281,10 +281,28 @@ wxString convert(const char* buff, const int len)
 	if ( !ret.IsEmpty() ) {
 		return ret;
 	}
+	ret = wxString(buff, wxConvISO8859_1, len );
+	if (!ret.empty()) {
+		return ret;
+	}
 	ret = wxString(buff, wxConvAuto(), len );
 	if (!ret.empty()) {
 		return ret;
 	}
+	std::string tmp(buff, len);
+	printf("Error: invalid charset, replacing invalid chars: '%s'", tmp.c_str());
+
+	//worst case, couldn't convert, replace unknown chars!
+	for(int i=0; i<len; i++) {
+	if ((buff[i] < '!') || (buff[i] > '~')){
+			buff[i] = '_';
+		}
+	}
+	ret = wxString(buff, wxConvUTF8, len );
+	if (!ret.empty()) {
+		return ret;
+	}
+	printf("Error: couldn't convert: '%s'", tmp.c_str());
 	return wxEmptyString;
 }
 
