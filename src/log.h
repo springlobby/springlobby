@@ -42,10 +42,10 @@ private:
 #define slLogDebugFunc(logmsg, ...) Logger::Log(Logger::LOG_DEBUG,__FILE__, __FUNCTION__, __LINE__, logmsg, ##__VA_ARGS__)
 
 #define ASSERT_LOGIC(cond,msg) if(!(cond))\
-{slLogError(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );}
+{wxLogError(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );}
 
 #define ASSERT_EXCEPTION(cond,msg) if(!(cond))\
-{slLogMessage(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );}
+{wxLogError(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() );}
 
 #include <stdexcept>
 class assert_exception : public std::runtime_error
