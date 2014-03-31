@@ -22,6 +22,7 @@ lsl/networking/socket.cpp
 
 #include <wx/socket.h>
 #include <wx/string.h>
+#include <wx/convauto.h>
 #include <wx/log.h>
 #include <stdexcept>
 #include <algorithm>
@@ -266,44 +267,47 @@ bool Socket::_Send( const wxString& data )
 }
 
 
+wxString convert(const char* buff, const int len)
+{
+	wxString ret = wxString(buff, wxConvUTF8, len );
+	if ( !ret.IsEmpty() ) {
+		return ret;
+	}
+	ret = wxString(buff, wxConvLibc, len);
+	if (!ret.empty()) {
+		return ret;
+	}
+	ret = wxString(buff, wxConvLocal, len );
+	if ( !ret.IsEmpty() ) {
+		return ret;
+	}
+	ret = wxString(buff, wxConvAuto(), len );
+	if (!ret.empty()) {
+		return ret;
+	}
+	return wxEmptyString;
+}
+
 //! @brief Receive data from connection
 wxString Socket::Receive()
 {
 	wxString ret;
-  if ( m_sock == 0 )
-  {
-    wxLogError( _T("Socket NULL") );
-    return ret;
-  }
-
-  LOCK_SOCKET;
-
-  const int chunk_size = 1337;
-
-  std::vector<char> buff;
-  int readnum = 0;
-  int totalbytes = 0;
-
-  do
-  {
-  	buff.resize( totalbytes + chunk_size ); // increase buffer capacity to fit incoming chunk
-    m_sock->Read( &buff[totalbytes], chunk_size );
-    readnum = m_sock->LastCount();
-    totalbytes += readnum;
-  } while ( readnum >= chunk_size );
-
-	if ( totalbytes > 0 )
-	{
-		ret = wxString( &buff[0], wxConvUTF8, totalbytes );
-		if ( ret.IsEmpty() )
-		{
-			ret = wxString( &buff[0], wxConvLocal, totalbytes );
-			if ( ret.IsEmpty() )
-			{
-				 ret = wxString( &buff[0], wxCSConv(_T("latin-1")), totalbytes );
-			}
-		}
+	if ( m_sock == 0 ) {
+		slLogError( _T("Socket NULL") );
+		return ret;
 	}
+
+	LOCK_SOCKET;
+
+	static const int chunk_size = 1500;
+	char buf[chunk_size];
+	int readnum = 0;
+
+	do {
+		m_sock->Read( buf, chunk_size );
+		const int readnum = m_sock->LastCount();
+		ret += convert(buf, readnum);
+	} while ( readnum > 0 );
 
 	return ret;
 }
