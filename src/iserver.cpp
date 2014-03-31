@@ -35,7 +35,8 @@ IServer::~IServer()
 
 User& IServer::GetUser( const wxString& nickname ) const
 {
-  return m_users.GetUser( STD_STRING(nickname));
+	ASSERT_EXCEPTION(!nickname.empty(), _T("GetUser with empty nickname called"));
+	return m_users.GetUser( STD_STRING(nickname));
 }
 
 
@@ -47,6 +48,7 @@ bool IServer::UserExists( const wxString& nickname ) const
 
 Channel& IServer::GetChannel( const wxString& name )
 {
+	ASSERT_EXCEPTION(!name.empty(), _T("GetChannel with empty nickname called"));
   return m_channels.GetChannel( STD_STRING(name));
 }
 
@@ -71,7 +73,7 @@ bool IServer::ChannelExists( const wxString& name ) const
 
 IBattle& IServer::GetBattle( const int& battleid )
 {
-  return battles_iter->GetBattle( battleid );
+	return battles_iter->GetBattle( battleid );
 }
 
 
