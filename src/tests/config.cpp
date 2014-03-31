@@ -13,6 +13,7 @@ SLCONFIG("/test/string", "hello world!", "test string");
 SLCONFIG("/test/long", -12345l, "test long");
 SLCONFIG("/test/double", -321.123, "test double");
 SLCONFIG("/test/bool", true, "test bool");
+SLCONFIG("/test/notbool", false, "test bool");
 
 namespace SlPaths{
 
@@ -32,6 +33,7 @@ BOOST_AUTO_TEST_CASE( slconfig )
 	BOOST_CHECK(cfg().Read(_T("/test/double")) == _T("-321.123") );
 
 	BOOST_CHECK(cfg().ReadBool(_T("/test/bool")) == true);
+	BOOST_CHECK(cfg().ReadBool(_T("/test/notbool")) == false);
 	BOOST_CHECK(cfg().Read(_T("/test/bool")) == _T("1") );
 
 	BOOST_CHECK(cfg().ReadString(_T("/test/string")) == _T("hello world!"));
