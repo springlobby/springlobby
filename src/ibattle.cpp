@@ -713,7 +713,7 @@ UserPosition IBattle::GetFreePosition()
 
 void IBattle::SetHostMap(const std::string& _mapname, const std::string& _hash)
 {
-	assert(!_mapname.empty());
+	ASSERT_LOGIC(!_mapname.empty(), _T("Battle with empty map name!"));
   const std::string mapname(_mapname);
   const std::string hash(_hash);
   if ( mapname != m_host_map.name || hash != m_host_map.hash )
@@ -735,7 +735,7 @@ void IBattle::SetHostMap(const std::string& _mapname, const std::string& _hash)
 
 void IBattle::SetLocalMap(const std::string& mapname)
 {
-	assert(!mapname.empty());
+	ASSERT_LOGIC(!mapname.empty(), _T("Battle with empty map name!"));
 	LSL::UnitsyncMap map = LSL::usync().GetMap(mapname);
   if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
     m_local_map = map;
