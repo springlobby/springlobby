@@ -137,9 +137,10 @@ bool SlPaths::LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
 static std::string GetMyDocumentsDir()
 {
 #ifdef WIN32
-    char my_documents[MAX_PATH];
-    HRESULT result = SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+	char my_documents[MAX_PATH];
+	HRESULT result = SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
 	if (result == S_OK) return std::string(my_documents);
+	return "";
 #else
 	const char* envvar= getenv("HOME");
 	if (envvar == NULL) return "";
