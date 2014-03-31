@@ -555,7 +555,7 @@ AutocloseMessageBox::AutocloseMessageBox( wxWindow *parent, const wxString& mess
 		const wxString& caption ,
 		unsigned int delay,
 		long style, const wxPoint& pos )
-	: TimedMessageBox( SS_MAIN_ICON, parent, message, caption, delay, style, pos )
+	: TimedMessageBox( SL_MAIN_ICON, parent, message, caption, delay, style, pos )
 	,delay_timerID( wxNewId() )
 {
 	m_delay_timer.SetOwner( this, delay_timerID );
