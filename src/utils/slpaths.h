@@ -68,7 +68,6 @@ public:
 	static bool CreateSpringDataDir(const std::string& dir);
 	static std::string GetCompatibleVersion(const std::string& neededversion);
 	static std::string GetExecutableFolder();
-	static std::string GetUserDataDir();
 	static std::string GetConfigfileDir();
 
 private:

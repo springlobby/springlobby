@@ -467,14 +467,12 @@ std::string SlPaths::GetExecutableFolder()
 	return LSL::Util::EnsureDelimiter(LSL::Util::ParentPath(STD_STRING(wxStandardPathsBase::Get().GetExecutablePath())));
 }
 
-std::string SlPaths::GetUserDataDir()
-{
-	return LSL::Util::EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetUserConfigDir()));
-}
-
+/**
+	returns %APPDATA%\springlobby on windows, $HOME/.spring on linux
+*/
 std::string SlPaths::GetConfigfileDir()
 {
-	std::string path = GetUserDataDir();
+	std::string path = LSL::Util::EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetUserConfigDir()));
 #ifndef WIN32
 	path += ".";
 #endif

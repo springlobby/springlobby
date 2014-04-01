@@ -14,13 +14,9 @@
 wxString slConfig::m_chosen_path = wxEmptyString;
 
 
-slConfig::slConfig ( const wxString& appName,
-					 const wxString& vendorName,
-					 const wxString& strLocal,
-					 const wxString& strGlobal,
-					 long style,
-					 const wxMBConv& conv ):
-	wxFileConfig( appName, vendorName, strLocal, strGlobal, style, conv )
+slConfig::slConfig (const wxString& strLocal,
+					 const wxString& strGlobal ):
+	wxFileConfig( wxEmptyString, wxEmptyString, strLocal, strGlobal, wxCONFIG_USE_LOCAL_FILE, wxConvUTF8 )
 {
 	// nop
 }
@@ -62,7 +58,7 @@ slConfig* slConfig::Create()
 		exit( -1 );
 	}
 
-	slConfig* config = new slConfig();
+	slConfig* config = new slConfig(m_chosen_path);
 	config->SetRecordDefaults( true );
 	return config;
 }
