@@ -66,8 +66,7 @@ class wxFileInputStream;
 class slConfig : public wxFileConfig, public SL::NonCopyable
 {
 	public:
-		slConfig ( const wxString& localFilename = wxEmptyString,
-				   const wxString& globalFilename = wxEmptyString);
+		slConfig ( const wxString& localFilename, const wxString& globalFilename);
 
 		static slConfig* Get();
 
