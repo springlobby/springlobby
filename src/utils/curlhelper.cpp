@@ -1,8 +1,9 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+#include <wx/log.h>
+
 #include "curlhelper.h"
 #include "settings.h"
-#include <wx/log.h>
 
 extern "C"
 {
@@ -96,15 +97,14 @@ wxString Paste2Pastebin( const wxString& message )
 
 	CURLcode ret = curl_easy_perform(curl_handle);
 
-	wxLogError( rheader.GetString()  );
-
   /* cleanup curl stuff */
 	curl_easy_cleanup(curl_handle);
 	curl_formfree(m_pPostHead);
 
-	if(ret == CURLE_OK)
+	if(ret == CURLE_OK) {
 		return response.GetString();
-	else
+	}
 
+	wxLogError(rheader.GetString());
 	return wxEmptyString;
 }
