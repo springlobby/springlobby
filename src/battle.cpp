@@ -9,6 +9,7 @@
 #include <wx/string.h>
 #include <wx/log.h>
 #include <wx/filename.h>
+#include <wx/file.h>
 
 #include <lslutils/conversion.h>
 

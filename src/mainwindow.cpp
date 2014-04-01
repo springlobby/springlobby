@@ -55,6 +55,14 @@
 #include "user.h"
 #include "mapselectdialog.h"
 #include "downloader/prdownloader.h"
+#include "helper/slconfig.h"
+#include "springsettings/frame.h"
+#include "utils/customdialogs.h"
+#include "utils/platform.h"
+#include "utils/slpaths.h"
+#include "updater/updatehelper.h"
+#include "channel/autojoinchanneldialog.h"
+#include "channel/channelchooserdialog.h"
 
 #include "images/chat_icon.png.h"
 #include "images/join_icon.png.h"
@@ -65,14 +73,6 @@
 #include "images/broom_tab_icon.png.h"
 #include "images/floppy_icon.png.h"
 
-#include "springsettings/frame.h"
-#include "utils/customdialogs.h"
-#include "utils/platform.h"
-#include "utils/slpaths.h"
-
-#include "updater/updatehelper.h"
-#include "channel/autojoinchanneldialog.h"
-#include "channel/channelchooserdialog.h"
 
 #if defined(__WXMSW__)
     #include <wx/msw/winundef.h>

@@ -19,11 +19,17 @@
 #include <wx/filename.h>
 #include <wx/app.h>
 #include <wx/log.h>
+#include <wx/stdpaths.h>
+
 #include <stdexcept>
+
+#include <lslutils/globalsmanager.h>
+#include <lslunitsync/springbundle.h>
+#include <lslunitsync/unitsync.h>
 
 #include "ui.h"
 #include "tasserver.h"
-#include "settings.h"
+#include "helper/slconfig.h"
 #include "iserver.h"
 #include "serverselector.h"
 #include "spring.h"
@@ -46,24 +52,20 @@
 #include "crashreport.h"
 #include "maindownloadtab.h"
 #include "downloader/prdownloader.h"
-
 #include "agreementdialog.h"
-
 #include "updater/updatehelper.h"
-#include <wx/stdpaths.h>
-
 #include "reconnectdialog.h"
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
 #include "updater/versionchecker.h"
+#include "textentrydialog.h"
+#include "log.h"
+#include "settings.h"
+
 #ifndef DISABLE_SOUND
 #include "sound/alsound.h"
 #endif
-#include <lslutils/globalsmanager.h>
-#include <lslunitsync/springbundle.h>
-#include <lslunitsync/unitsync.h>
-#include "textentrydialog.h"
-#include "log.h"
+
 
 SLCONFIG("/General/AutoUpdate", true, "Determines if springlobby should check for updates on startup");
 SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup");

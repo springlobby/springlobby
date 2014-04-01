@@ -32,6 +32,7 @@
 #include "gui/pastedialog.h"
 #include "helper/wxtextctrlhist.h"
 #include "log.h"
+#include "helper/slconfig.h"
 
 BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 

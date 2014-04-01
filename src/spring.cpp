@@ -27,10 +27,16 @@ lsl/spring/spring.cpp
 
 #include <wx/filename.h>
 #include <wx/log.h>
+
 #include <stdexcept>
 #include <vector>
 #include <clocale>
 #include <fstream>
+
+#include <lsl/battle/tdfcontainer.h>
+#include <lslutils/globalsmanager.h>
+#include <lslutils/conversion.h>
+#include <lslunitsync/unitsync.h>
 
 #include "spring.h"
 #include "springprocess.h"
@@ -39,14 +45,11 @@ lsl/spring/spring.cpp
 #include "utils/customdialogs.h"
 #include "utils/conversion.h"
 #include "utils/slpaths.h"
+#include "helper/slconfig.h"
 #include "settings.h"
 #include "ibattle.h"
 #include "log.h"
 
-#include <lsl/battle/tdfcontainer.h>
-#include <lslutils/globalsmanager.h>
-#include <lslutils/conversion.h>
-#include <lslunitsync/unitsync.h>
 
 SLCONFIG("/Spring/Safemode", false, "launch spring in safemode");
 

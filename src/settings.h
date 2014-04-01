@@ -9,8 +9,6 @@
 #include "utils/mixins.h"
 #include "useractions.h"
 #include "helper/sortutil.h"
-#include "helper/slconfig.h"
-
 
 const long CACHE_VERSION     = 14;
 const long SETTINGS_VERSION  = 26;

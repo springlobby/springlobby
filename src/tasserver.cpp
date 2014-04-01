@@ -27,8 +27,9 @@ lsl/networking/tasserver.cpp
 
 #include <stdexcept>
 #include <algorithm>
-
 #include <map>
+
+#include <lslunitsync/unitsync.h>
 
 #include "base64.h"
 #include "utils/md5.h"
@@ -41,13 +42,11 @@ lsl/networking/tasserver.cpp
 #include "socket.h"
 #include "tasservertokentable.h"
 #include "log.h"
-
-// for SL_MAIN_ICON
 #include "utils/customdialogs.h"
-
-#include "settings.h"
+#include "helper/slconfig.h"
 #include "utils/version.h"
-#include <lslunitsync/unitsync.h>
+#include "settings.h"
+
 
 SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which is send when leaving server");
 SLCONFIG("/Server/HangTimeout", 10l, "Warn when SpringLobby hangs longer then this delay");
