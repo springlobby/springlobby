@@ -3,16 +3,18 @@
 #include "notificationmanager.h"
 
 #include <lslutils/globalsmanager.h>
-#include "../uiutils.h"
-#include "../ui.h"
+#include "uiutils.h"
+#include "ui.h"
 #include "helper/slconfig.h"
+#include "settings.h"
 #include "spring.h"
-#include "../mainwindow.h"
-#include "../utils/platform.h"
-#include "../images/springlobby_64.png.h"
+#include "mainwindow.h"
+#include "utils/platform.h"
 #include "inotification.h"
 #include "sound/alsound.h"
 #include "utils/conversion.h"
+
+#include "images/springlobby_64.png.h"
 
 #ifdef HAVE_LIBNOTIFY
 	#include "libnotify.h"
