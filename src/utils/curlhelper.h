@@ -14,13 +14,12 @@
 #endif
 
 #include <curl/curl.h>
-#include <curl/easy.h>
 
 extern "C"
 {
 	int wxcurl_evt_progress_func(void* ptr, double rDlTotal, double rDlNow,
 								 double rUlTotal, double rUlNow);
-	int wxcurl_verbose_stream_write (CURL * crlptr , curl_infotype info, char * cStrMessage,
+	int wxcurl_verbose_stream_write (CURL* crlptr , curl_infotype info, char * cStrMessage,
 									 size_t msgSize, void * buffer);
 	size_t wxcurl_header_func(void *ptr, size_t size, size_t nmemb, void *stream);
 
