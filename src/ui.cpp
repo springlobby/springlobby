@@ -1052,11 +1052,11 @@ void Ui::CheckForUpdates()
 	if ( !latestVersion.IsSameAs(myVersion, false) ) {
 #ifdef __WXMSW__
 		int answer = customMessageBox(SL_MAIN_ICON,
-					      wxFormat( _("Your %s version is not up to date.\n\n%s\n\nWould you like for me to autodownload the new version? Changes will take effect next you launch the lobby again.") )
+					      wxFormat( _("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?") )
 					      % TowxString(getSpringlobbyName())
 					      % msg,
-					      _("Not up to date"), wxYES_NO);
-		if (answer == wxYES) {
+					      _("Not up to date"), wxYES|wxCANCEL);
+		if (answer == wxYes) {
 			wxString command = _T("\"") + wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("springlobby_updater.exe\"");
 			wxString params = _T("-f \"") + wxStandardPaths::Get().GetExecutablePath() + _T("\"") + _T(" -r ") +  latestVersion  ;
 			if( WinExecute( command, params ) > 0 ) {
