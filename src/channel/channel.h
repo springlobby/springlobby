@@ -3,10 +3,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHANNEL_H
 #define SPRINGLOBBY_HEADERGUARD_CHANNEL_H
 
-#include "../userlist.h"
+#include "userlist.h"
 #include <set>
 #include <wx/regex.h>
-#include "../utils/mixins.hh"
+#include "utils/mixins.h"
 
 class Channel;
 class IServer;

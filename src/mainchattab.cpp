@@ -293,7 +293,7 @@ ChatPanel* MainChatTab::AddChatPanel()
 			}
 		}
 	)
-	int selection = m_chat_tabs->GetSelection();
+//	int selection = m_chat_tabs->GetSelection();
 	ChatPanel* chat = new ChatPanel( m_chat_tabs);
 	m_chat_tabs->InsertPage( m_chat_tabs->GetPageCount() - 1, chat, _T("debug"), true, wxBitmap( userchat_xpm ) );
 	return chat;

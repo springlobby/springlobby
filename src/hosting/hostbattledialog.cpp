@@ -434,7 +434,7 @@ void HostBattleDialog::OnUseRelay( wxCommandEvent&  )
     Layout();
 }
 
-void HostBattleDialog::OnEngineSelect ( wxCommandEvent& event )
+void HostBattleDialog::OnEngineSelect ( wxCommandEvent& /*event*/ )
 {
 	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
 	LSL::usync().ReloadUnitSyncLib();

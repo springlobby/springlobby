@@ -5,7 +5,6 @@
 
 #include "customvirtlistctrl.h"
 #include "usermenu.h"
-#include "utils/mixins.hh"
 
 class User;
 class UserList;

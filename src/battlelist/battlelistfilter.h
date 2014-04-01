@@ -7,7 +7,7 @@
 #include <wx/bmpcbox.h>
 
 #include "battlelisttab.h"
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 ///////////////////////////////////////////////////////////////////////////
 
 class BattleListTab;

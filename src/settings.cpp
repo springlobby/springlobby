@@ -423,7 +423,6 @@ std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
 	std::vector<ChannelJoinInfo> ret;
 //	int num = GetNumChannelsJoin();
 	wxArrayString channels = cfg().GetGroupList( _T("/Channels/AutoJoin/") );
-	slConfig::PathGuard pathguard( m_config, _T("/Channels/AutoJoin/") );
 	for ( size_t i = 0; i < channels.Count(); ++i )
 	{
 		if( !channels[i].StartsWith( _T("Channel") ) )
@@ -606,8 +605,6 @@ std::map<wxString, wxString> Settings::GetHostingPreset( const wxString& name, i
 	wxString path_base = _T( "/Hosting/Preset/" ) + name + _T( "/" ) + TowxString( optiontype );
 	std::map<wxString, wxString> ret;
 	wxArrayString list = cfg().GetEntryList( path_base );
-
-	slConfig::PathGuard pathGuard ( m_config, path_base );
 
 	int count = list.GetCount();
 	for ( int i = 0; i < count; i ++ )
@@ -1345,7 +1342,6 @@ void Settings::setSimpleDetail( wxString det )
 {
 	m_config->Write( _T( "/SpringSettings/SimpleDetail" ), det );
 }
-
 
 SortOrder Settings::GetSortOrder( const wxString& list_name )
 {

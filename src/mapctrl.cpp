@@ -1636,7 +1636,7 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 	wxPostEvent( this, evt );
 }
 
-void MapCtrl::OnRefresh( wxCommandEvent& event )
+void MapCtrl::OnRefresh( wxCommandEvent& /*event*/ )
 {
 	assert(wxThread::IsMain());
 	Refresh();

@@ -49,7 +49,7 @@ bool IServer::UserExists( const wxString& nickname ) const
 Channel& IServer::GetChannel( const wxString& name )
 {
 	ASSERT_EXCEPTION(!name.empty(), _T("GetChannel with empty nickname called"));
-  return m_channels.GetChannel( STD_STRING(name));
+	return m_channels.GetChannel( STD_STRING(name));
 }
 
 
@@ -61,7 +61,7 @@ int IServer::GetNumChannels() const
 
 Channel& IServer::GetChannel( const int& index )
 {
-  return m_channels.GetChannel( index );
+	return m_channels.GetChannel( index );
 }
 
 
@@ -73,6 +73,7 @@ bool IServer::ChannelExists( const wxString& name ) const
 
 IBattle& IServer::GetBattle( const int& battleid )
 {
+	ASSERT_EXCEPTION(BattleExists(battleid), _T("Battle doesn't exist!"));
 	return battles_iter->GetBattle( battleid );
 }
 

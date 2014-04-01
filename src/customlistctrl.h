@@ -23,7 +23,7 @@
 #include <map>
 
 #include "useractions.h"
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 
 class SLTipWindow;
 

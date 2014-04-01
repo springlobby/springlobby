@@ -19,7 +19,7 @@ lsl/container/battlelist.h
 
 
 #include <map>
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 
 class IBattle;
 

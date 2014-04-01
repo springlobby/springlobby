@@ -240,7 +240,7 @@ void SpringOptionsTab::OnBrowseSync( wxCommandEvent& /*unused*/ )
 	if ( pick.ShowModal() == wxID_OK ) m_sync_edit->SetValue( pick.GetPath() );
 }
 
-void SpringOptionsTab::OnAddBundle(wxCommandEvent& event)
+void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 {
 	wxFileDialog pick( this, _( "Choose UnitSync library" ),
 				wxPathOnly(TowxString(SlPaths::GetUnitSync())),
@@ -315,7 +315,7 @@ void SpringOptionsTab::OnDataDir( wxCommandEvent& /*unused*/ )
 
 }
 
-void SpringOptionsTab::OnGroupListSelectionChange( wxCommandEvent& event )
+void SpringOptionsTab::OnGroupListSelectionChange( wxCommandEvent& /*event*/ )
 {
 	const std::string selection = STD_STRING(m_spring_list->GetStringSelection());
 	if (!selection.empty()) {
@@ -334,7 +334,7 @@ void SpringOptionsTab::ReloadSpringList()
 	}
 }
 
-void SpringOptionsTab::OnRemoveBundle(wxCommandEvent& event)
+void SpringOptionsTab::OnRemoveBundle(wxCommandEvent& /*event*/)
 {
 	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
 	SlPaths::DeleteSpringVersionbyIndex(index);

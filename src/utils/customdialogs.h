@@ -8,7 +8,7 @@
 #include <wx/dialog.h>
 #include <wx/timer.h>
 #include <wx/panel.h>
-#include "mixins.hh"
+#include "mixins.h"
 
 const unsigned SL_MAIN_ICON = 1;
 const unsigned SS_MAIN_ICON = 2;

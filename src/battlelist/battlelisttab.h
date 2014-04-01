@@ -5,7 +5,7 @@
 
 #include <wx/scrolwin.h>
 #include "utils/globalevents.h"
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 
 class User;
 class Ui;

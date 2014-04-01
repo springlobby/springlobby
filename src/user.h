@@ -19,7 +19,7 @@ lsl/user/user.h
 
 #include <wx/string.h>
 #include <wx/colour.h>
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 class IServer;
 
 const unsigned int SYNC_UNKNOWN = 0;

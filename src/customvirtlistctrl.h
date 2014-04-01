@@ -17,7 +17,7 @@
 #include "useractions.h"
 #include "helper/sortutil.h"
 #include "utils/globalevents.h"
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 
 const wxEventType ListctrlDoSortEventType = wxNewEventType();
 

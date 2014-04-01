@@ -27,7 +27,7 @@ extern const wxEventType torrentSystemStatusUpdateEvt;
 #include "utils/battleevents.h"
 #include <wx/string.h>
 #include <wx/timer.h>
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 
 //! @brief UI main class
 class Ui : public wxEvtHandler, public GlobalEvent, public SL::NonCopyable

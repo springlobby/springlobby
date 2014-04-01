@@ -10,7 +10,7 @@
 #include "userlist.h"
 #include "battlelist/battlelist.h"
 #include "inetclass.h"
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 #include "ibattle.h"
 
 class ServerEvents;

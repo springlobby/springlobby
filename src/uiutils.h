@@ -9,7 +9,7 @@
 #include <wx/gdicmn.h>
 #include <wx/event.h>
 #include <vector>
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 
 class wxColour;
 class wxImage;

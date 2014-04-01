@@ -5,7 +5,7 @@
 
 #include "ToasterBoxWindow.h"
 #include "ToasterBoxWindowList.h"
-#include "../utils/mixins.hh"
+#include "utils/mixins.h"
 /*
   The toasterbox class should stay resident in memory.
   It creates and displays popups and handles the

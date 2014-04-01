@@ -4,7 +4,7 @@
 #define CHANNELCHOOSERPANEL_H
 
 #include <wx/scrolwin.h>
-#include "../utils/mixins.hh"
+#include "utils/mixins.h"
 
 class ChannelListctrl;
 class wxBoxSizer;

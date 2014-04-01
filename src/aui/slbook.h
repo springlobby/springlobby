@@ -4,7 +4,7 @@
 #define SPRINGLOBBY_HEADERGUARD_SLBOOK_H
 
 #include <wx/aui/aui.h>
-#include "../utils/mixins.hh"
+#include "utils/mixins.h"
 
 class ChatPanelMenu;
 

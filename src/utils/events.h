@@ -4,7 +4,7 @@
 #define EVENTS_H_INCLUDED
 
 #include <assert.h>
-#include "../utils/mixins.hh"
+#include "utils/mixins.h"
 
 #ifndef my_assert
 #define my_assert(x) assert(x)

@@ -6,7 +6,7 @@
 #include <wx/string.h>
 #include <vector>
 #include <set>
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 #include "useractions.h"
 #include "helper/sortutil.h"
 #include "helper/slconfig.h"

@@ -289,7 +289,7 @@ LSL::UnitsyncMap* MapSelectDialog::GetSelectedMap() const
 
 void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
 {
-	const wxString& mapname = event.GetString();
+//	const wxString& mapname = event.GetString();
 
 	slLogDebugFunc("");
 

@@ -6,7 +6,7 @@
 #include <wx/menu.h>
 #include <map>
 #include <vector>
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 
 //static const long GROUP_ID  = wxNewId();
 static const long GROUP_ID_NEW  = wxNewId();

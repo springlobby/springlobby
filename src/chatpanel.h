@@ -8,8 +8,8 @@
 #include <vector>
 
 #include "chatlog.h"
-#include "helper/TextCompletionDatabase.hpp"
-#include "utils/mixins.hh"
+#include "helper/TextCompletionDatabase.h"
+#include "utils/mixins.h"
 #include "utils/globalevents.h"
 
 class wxCommandEvent;

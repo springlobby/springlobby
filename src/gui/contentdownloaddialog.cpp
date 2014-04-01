@@ -212,7 +212,7 @@ void ContentDownloadDialog::OnCloseButton(wxCommandEvent& /*event*/)
 	Close();
 }
 
-void ContentDownloadDialog::OnDownloadButton( wxCommandEvent& event)
+void ContentDownloadDialog::OnDownloadButton( wxCommandEvent& /*event*/)
 {
 	long item_index=m_search_res_w->GetNextItem(-1,wxLIST_NEXT_ALL,wxLIST_STATE_SELECTED);
 	if(item_index!=-1) {

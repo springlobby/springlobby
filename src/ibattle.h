@@ -26,7 +26,7 @@ lsl/battle/ibattle.h
 #include <lslunitsync/optionswrapper.h>
 #include <lsl/battle/tdfcontainer.h>
 #include "userlist.h"
-#include "utils/mixins.hh"
+#include "utils/mixins.h"
 #include "utils/globalevents.h"
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;

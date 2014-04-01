@@ -15,7 +15,7 @@
     class wxGauge;
 #endif
 
-#include "mixins.hh"
+#include "mixins.h"
 
 class wxStaticText;
 
