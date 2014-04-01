@@ -1055,7 +1055,7 @@ void Ui::CheckForUpdates()
 					      wxFormat( _("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?") )
 					      % TowxString(getSpringlobbyName())
 					      % msg,
-					      _("Not up to date"), wxYES|wxCANCEL);
+					      _("Not up to date"), wxOK|wxCANCEL);
 		if (answer == wxYES) {
 			wxString command = _T("\"") + wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("springlobby_updater.exe\"");
 			wxString params = _T("-f \"") + wxStandardPaths::Get().GetExecutablePath() + _T("\"") + _T(" -r ") +  latestVersion  ;
