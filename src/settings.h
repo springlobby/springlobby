@@ -548,24 +548,11 @@ class Settings : public SL::NonCopyable
 
     /**@}*/
 
-	//! you are absolutely forbidden to use this
-	template < class T >
-	T Get( wxString setting, const T def )
-	{
-		return m_config->Read( setting, def );
-	}
-	template < class T >
-	bool Set( wxString setting, const T val )
-	{
-		return m_config->Write( setting, val );
-	}
-
     //! move weirdly saved lists to sane form
     void ConvertLists();
 
 private:
 
-	slConfig* m_config; //!< wxConfig object to store and restore  all settings in.
 
 
     void setFromList(const wxArrayString& list, const wxString& path);

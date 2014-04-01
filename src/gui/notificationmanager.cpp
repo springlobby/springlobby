@@ -5,8 +5,8 @@
 #include <lslutils/globalsmanager.h>
 #include "../uiutils.h"
 #include "../ui.h"
-#include "../settings.h"
-#include "../spring.h"
+#include "helper/slconfig.h"
+#include "spring.h"
 #include "../mainwindow.h"
 #include "../utils/platform.h"
 #include "../images/springlobby_64.png.h"
@@ -24,6 +24,9 @@
 	#include "toasternotification.h"
 	typedef ToasterNotification NotificationWrapperType;
 #endif
+
+
+SLCONFIG("/GUI/NotificationPopupDisableIngame", false, "disable config notifications when ingame");
 
 const int this_timer_id = wxNewId();
 
@@ -75,7 +78,7 @@ void NotificationManager::OnShowNotification( UiEvents::NotficationData data )
 void NotificationManager::ShowNotification( const UiEvents::NotficationData& data )
 {
 	if ( sett().GetUseNotificationPopups() ) {
-		const bool disable_if_ingame = sett().Get<bool>( _T("/GUI/NotificationPopupDisableIngame"), true );
+		const bool disable_if_ingame = cfg().ReadBool(_T("/GUI/NotificationPopupDisableIngame"));
 		if ( m_notification_wrapper &&  ! ( disable_if_ingame && spring().IsRunning() ) ) {
 			//! \todo use image from customizations
 			wxBitmap nmp ( charArr2wxBitmap( springlobby_64_png, sizeof(springlobby_64_png) ) );

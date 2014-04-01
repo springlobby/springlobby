@@ -63,7 +63,6 @@ Settings& sett()
 
 Settings::Settings()
 {
-	m_config = &cfg();
 }
 
 Settings::~Settings()
@@ -120,7 +119,7 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 {
 	if( settversion < 19 ) {
 		//the dummy column hack was removed on win
-		m_config->DeleteGroup(_T("/GUI/ColumnWidths/"));
+		cfg().DeleteGroup(_T("/GUI/ColumnWidths/"));
 	}
 	if ( settversion < 22 ) {
 		if ( translationhelper ) {
@@ -149,58 +148,58 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 		cfg().Write(_T("/General/LanguageID"), 0);
 	}
 	// after updating, set current version
-	m_config->Write(_T("/General/SettingsVersion"), SETTINGS_VERSION);
+	cfg().Write(_T("/General/SettingsVersion"), SETTINGS_VERSION);
 }
 
 //! @brief Saves the settings to file
 void Settings::SaveSettings()
 {
-	m_config->Write( _T( "/General/firstrun" ), false );
-	m_config->SaveFile();
+	cfg().Write( _T( "/General/firstrun" ), false );
+	cfg().SaveFile();
 }
 
 bool Settings::IsFirstRun()
 {
-	return m_config->ReadBool( _T( "/General/firstrun" ) );
+	return cfg().ReadBool( _T( "/General/firstrun" ) );
 }
 
 bool Settings::GetNoUDP()
 {
-	return m_config->Read( _T( "/General/NoUDP" ), 0l );
+	return cfg().Read( _T( "/General/NoUDP" ), 0l );
 }
 
 void Settings::SetNoUDP( bool value )
 {
-	m_config->Write( _T( "/General/NoUDP" ), value );
+	cfg().Write( _T( "/General/NoUDP" ), value );
 }
 
 int Settings::GetClientPort()
 {
-	return m_config->Read( _T( "/General/ClientPort" ), 0l );
+	return cfg().Read( _T( "/General/ClientPort" ), 0l );
 }
 
 void Settings::SetClientPort( int value )
 {
-	m_config->Write( _T( "/General/ClientPort" ), value );
+	cfg().Write( _T( "/General/ClientPort" ), value );
 }
 
 bool Settings::GetShowIPAddresses()
 {
-	return m_config->Read( _T( "/General/ShowIP" ), 0l );
+	return cfg().Read( _T( "/General/ShowIP" ), 0l );
 }
 
 void Settings::SetShowIPAddresses( bool value )
 {
-	m_config->Write( _T( "/General/ShowIP" ), value );
+	cfg().Write( _T( "/General/ShowIP" ), value );
 }
 
 int Settings::GetHTTPMaxParallelDownloads()
 {
-	return m_config->Read(_T("/General/ParallelHTTPCount"),3);
+	return cfg().Read(_T("/General/ParallelHTTPCount"),3);
 }
 void Settings::SetHTTPMaxParallelDownloads(int value)
 {
-	m_config->Write(_T("/General/ParallelHTTPCount"),value);
+	cfg().Write(_T("/General/ParallelHTTPCount"),value);
 }
 
 
@@ -209,30 +208,30 @@ bool Settings::GetWebBrowserUseDefault()
 {
 	// See note on ambiguities, in wx/confbase.h near line 180.
 	bool useDefault;
-	m_config->Read( _T( "/General/WebBrowserUseDefault" ), &useDefault, DEFSETT_WEB_BROWSER_USE_DEFAULT );
+	cfg().Read( _T( "/General/WebBrowserUseDefault" ), &useDefault, DEFSETT_WEB_BROWSER_USE_DEFAULT );
 	return useDefault;
 }
 
 void Settings::SetWebBrowserUseDefault( bool useDefault )
 {
-	m_config->Write( _T( "/General/WebBrowserUseDefault" ), useDefault );
+	cfg().Write( _T( "/General/WebBrowserUseDefault" ), useDefault );
 }
 
 wxString Settings::GetWebBrowserPath()
 {
-	return m_config->Read( _T( "/General/WebBrowserPath" ), wxEmptyString );
+	return cfg().Read( _T( "/General/WebBrowserPath" ), wxEmptyString );
 }
 
 
 void Settings::SetWebBrowserPath( const wxString& path )
 {
-	m_config->Write( _T( "/General/WebBrowserPath" ), path );
+	cfg().Write( _T( "/General/WebBrowserPath" ), path );
 }
 
 
 bool Settings::ShouldAddDefaultServerSettings()
 {
-	return !m_config->Exists( _T( "/Server" ) );
+	return !cfg().Exists( _T( "/Server" ) );
 }
 
 //! @brief Restores default settings
@@ -248,7 +247,7 @@ void Settings::SetDefaultServerSettings()
 //! @brief Checks if the server name/alias exists in the settings
 bool Settings::ServerExists( const wxString& server_name )
 {
-	return m_config->Exists( _T( "/Server/Servers/" ) + server_name );
+	return cfg().Exists( _T( "/Server/Servers/" ) + server_name );
 }
 
 
@@ -258,7 +257,7 @@ bool Settings::ServerExists( const wxString& server_name )
 wxString Settings::GetDefaultServer()
 {
     wxString serv = DEFSETT_DEFAULT_SERVER_NAME;
-    return m_config->Read( _T("/Server/Default"), serv );
+    return cfg().Read( _T("/Server/Default"), serv );
 }
 
 
@@ -268,7 +267,7 @@ wxString Settings::GetDefaultServer()
 //! @see GetDefaultServer()
 void   Settings::SetDefaultServer( const wxString& server_name )
 {
-	m_config->Write( _T( "/Server/Default" ),  server_name );
+	cfg().Write( _T( "/Server/Default" ),  server_name );
 }
 
 
@@ -278,7 +277,7 @@ void   Settings::SetDefaultServer( const wxString& server_name )
 wxString Settings::GetServerHost( const wxString& server_name )
 {
     wxString host = DEFSETT_DEFAULT_SERVER_HOST;
-    return m_config->Read( _T("/Server/Servers/")+ server_name +_T("/Host"), host );
+    return cfg().Read( _T("/Server/Servers/")+ server_name +_T("/Host"), host );
 }
 
 
@@ -289,8 +288,8 @@ wxString Settings::GetServerHost( const wxString& server_name )
 //! @param the port where the service is run
 void   Settings::SetServer( const wxString& server_name, const wxString& url, int port )
 {
-	m_config->Write( _T( "/Server/Servers/" ) + server_name + _T( "/Host" ), url );
-	m_config->Write( _T( "/Server/Servers/" ) + server_name + _T( "/Port" ), port );
+	cfg().Write( _T( "/Server/Servers/" ) + server_name + _T( "/Host" ), url );
+	cfg().Write( _T( "/Server/Servers/" ) + server_name + _T( "/Port" ), port );
 }
 
 //! @brief Deletes a server from the list.
@@ -298,7 +297,7 @@ void   Settings::SetServer( const wxString& server_name, const wxString& url, in
 //! @param server_name the server name/alias
 void Settings::DeleteServer( const wxString& server_name )
 {
-	m_config->DeleteGroup( _T( "/Server/Servers/" ) + server_name );
+	cfg().DeleteGroup( _T( "/Server/Servers/" ) + server_name );
 }
 
 
@@ -307,7 +306,7 @@ void Settings::DeleteServer( const wxString& server_name )
 //! @param server_name the server name/alias
 int    Settings::GetServerPort( const wxString& server_name )
 {
-	return m_config->Read( _T( "/Server/Servers/" ) + server_name + _T( "/Port" ), DEFSETT_DEFAULT_SERVER_PORT );
+	return cfg().Read( _T( "/Server/Servers/" ) + server_name + _T( "/Port" ), DEFSETT_DEFAULT_SERVER_PORT );
 }
 
 //! @brief Get list of server aliases
@@ -322,7 +321,7 @@ wxArrayString Settings::GetServers()
 //! @param server_name the server name/alias
 wxString Settings::GetServerAccountNick( const wxString& server_name )
 {
-	return m_config->Read( _T( "/Server/Servers/" ) + server_name + _T( "/Nick" ), wxEmptyString ) ;
+	return cfg().Read( _T( "/Server/Servers/" ) + server_name + _T( "/Nick" ), wxEmptyString ) ;
 }
 
 
@@ -332,7 +331,7 @@ wxString Settings::GetServerAccountNick( const wxString& server_name )
 //! @param value the vaule to be set
 void Settings::SetServerAccountNick( const wxString& server_name, const wxString& value )
 {
-	m_config->Write( _T( "/Server/Servers/" ) + server_name + _T( "/Nick" ), value );
+	cfg().Write( _T( "/Server/Servers/" ) + server_name + _T( "/Nick" ), value );
 }
 
 
@@ -342,7 +341,7 @@ void Settings::SetServerAccountNick( const wxString& server_name, const wxString
 //! @todo Implement
 wxString Settings::GetServerAccountPass( const wxString& server_name )
 {
-	return m_config->Read( _T( "/Server/Servers/" ) + server_name + _T( "/Pass" ), wxEmptyString );
+	return cfg().Read( _T( "/Server/Servers/" ) + server_name + _T( "/Pass" ), wxEmptyString );
 }
 
 
@@ -353,7 +352,7 @@ wxString Settings::GetServerAccountPass( const wxString& server_name )
 //! @todo Implement
 void   Settings::SetServerAccountPass( const wxString& server_name, const wxString& value )
 {
-	m_config->Write( _T( "/Server/Servers/" ) + server_name + _T( "/Pass" ), value );
+	cfg().Write( _T( "/Server/Servers/" ) + server_name + _T( "/Pass" ), value );
 }
 
 
@@ -363,7 +362,7 @@ void   Settings::SetServerAccountPass( const wxString& server_name, const wxStri
 //! @todo Implement
 bool   Settings::GetServerAccountSavePass( const wxString& server_name )
 {
-	return m_config->Read( _T( "/Server/Servers/" ) + server_name + _T( "/savepass" ), ( long int )false );
+	return cfg().Read( _T( "/Server/Servers/" ) + server_name + _T( "/savepass" ), ( long int )false );
 }
 
 
@@ -374,7 +373,7 @@ bool   Settings::GetServerAccountSavePass( const wxString& server_name )
 //! @todo Implement
 void Settings::SetServerAccountSavePass( const wxString& server_name, const bool value )
 {
-	m_config->Write( _T( "/Server/Servers/" ) + server_name + _T( "/savepass" ), ( long int )value );
+	cfg().Write( _T( "/Server/Servers/" ) + server_name + _T( "/savepass" ), ( long int )value );
 }
 
 
@@ -387,8 +386,8 @@ void Settings::AddChannelJoin( const wxString& channel , const wxString& key )
 {
 	int index = GetNumChannelsJoin();
 
-	m_config->Write( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Name" ) ) % index, channel );
-	m_config->Write( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Password" ) ) % index, key );
+	cfg().Write( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Name" ) ) % index, channel );
+	cfg().Write( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Password" ) ) % index, key );
 }
 
 
@@ -397,13 +396,13 @@ void Settings::RemoveChannelJoin( const wxString& channel )
 	int index = GetChannelJoinIndex( channel );
 	if ( index == -1 ) return;
 	int total = GetNumChannelsJoin();
-	m_config->DeleteGroup( _T( "/Channels/AutoJoin/Channel" ) + TowxString( index ) );
-	m_config->RenameGroup( _T( "/Channels/AutoJoin/Channel" ) + TowxString( total - 1 ), _T( "/Channels/AutoJoin/Channel" ) + TowxString( index ) );
+	cfg().DeleteGroup( _T( "/Channels/AutoJoin/Channel" ) + TowxString( index ) );
+	cfg().RenameGroup( _T( "/Channels/AutoJoin/Channel" ) + TowxString( total - 1 ), _T( "/Channels/AutoJoin/Channel" ) + TowxString( index ) );
 }
 
 void Settings::RemoveAllChannelsJoin()
 {
-	m_config->DeleteGroup( _T( "/Channels/AutoJoin" ) );
+	cfg().DeleteGroup( _T( "/Channels/AutoJoin" ) );
 }
 
 
@@ -413,7 +412,7 @@ int Settings::GetChannelJoinIndex( const wxString& name )
 	int ret = -1;
 	for ( int i = 0; i < numchannels; i++ )
 	{
-		if ( m_config->Read( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Name" ) ) % i, wxEmptyString ) == name ) ret = i;
+		if ( cfg().Read( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Name" ) ) % i, wxEmptyString ) == name ) ret = i;
 	}
 	return ret;
 }
@@ -428,8 +427,8 @@ std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
 		if( !channels[i].StartsWith( _T("Channel") ) )
 			continue;
 		ChannelJoinInfo info;
-		info.name = m_config->Read( channels[i] + _T("/Name" ) );
-		info.password = m_config->Read( channels[i] + _T("/Password" ) );
+		info.name = cfg().Read( channels[i] + _T("/Name" ) );
+		info.password = cfg().Read( channels[i] + _T("/Password" ) );
 		ret.push_back( info );
 	}
 	return ret;
@@ -437,7 +436,7 @@ std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
 
 bool Settings::ShouldAddDefaultChannelSettings()
 {
-	return !m_config->Exists( _T( "/Channels" ) );
+	return !cfg().Exists( _T( "/Channels" ) );
 }
 
 // ===================================================
@@ -445,158 +444,158 @@ bool Settings::ShouldAddDefaultChannelSettings()
 
 wxString Settings::GetLastHostDescription()
 {
-	return m_config->Read( _T( "/Hosting/LastDescription" ), wxEmptyString );
+	return cfg().Read( _T( "/Hosting/LastDescription" ), wxEmptyString );
 }
 
 
 wxString Settings::GetLastHostMod()
 {
-	return m_config->Read( _T( "/Hosting/LastMod" ), wxEmptyString );
+	return cfg().Read( _T( "/Hosting/LastMod" ), wxEmptyString );
 }
 
 
 wxString Settings::GetLastHostPassword()
 {
-	return m_config->Read( _T( "/Hosting/LastPassword" ), wxEmptyString );
+	return cfg().Read( _T( "/Hosting/LastPassword" ), wxEmptyString );
 }
 
 
 int Settings::GetLastHostPort()
 {
-	return m_config->Read( _T( "/Hosting/LastPort" ), DEFSETT_SPRING_PORT );
+	return cfg().Read( _T( "/Hosting/LastPort" ), DEFSETT_SPRING_PORT );
 }
 
 
 int Settings::GetLastHostPlayerNum()
 {
-	return m_config->Read( _T( "/Hosting/LastPlayerNum" ), 4 );
+	return cfg().Read( _T( "/Hosting/LastPlayerNum" ), 4 );
 }
 
 
 int Settings::GetLastHostNATSetting()
 {
-	return m_config->Read( _T( "/Hosting/LastNATSetting" ), ( long )0 );
+	return cfg().Read( _T( "/Hosting/LastNATSetting" ), ( long )0 );
 }
 
 
 wxString Settings::GetLastHostMap()
 {
-	return m_config->Read( _T( "/Hosting/LastMap" ), wxEmptyString );
+	return cfg().Read( _T( "/Hosting/LastMap" ), wxEmptyString );
 }
 
 int Settings::GetLastRankLimit()
 {
-	return m_config->Read( _T( "/Hosting/LastRank" ), 0l );
+	return cfg().Read( _T( "/Hosting/LastRank" ), 0l );
 }
 
 bool Settings::GetTestHostPort()
 {
-	return m_config->Read( _T( "/Hosting/TestHostPort" ), 0l );
+	return cfg().Read( _T( "/Hosting/TestHostPort" ), 0l );
 }
 
 bool Settings::GetLastAutolockStatus()
 {
-	return m_config->Read( _T( "/Hosting/LastAutoLock" ), true );
+	return cfg().Read( _T( "/Hosting/LastAutoLock" ), true );
 }
 
 bool Settings::GetLastHostRelayedMode()
 {
-	return m_config->Read( _T( "/Hosting/LastRelayedMode" ), 0l );
+	return cfg().Read( _T( "/Hosting/LastRelayedMode" ), 0l );
 }
 
 wxColour Settings::GetBattleLastColour()
 {
-	return  wxColour( m_config->Read( _T( "/Hosting/MyLastColour" ), _T( "#FFFF00" ) ) );
+	return  wxColour( cfg().Read( _T( "/Hosting/MyLastColour" ), _T( "#FFFF00" ) ) );
 }
 
 
 void Settings::SetBattleLastColour( const wxColour& col )
 {
-	m_config->Write( _T( "/Hosting/MyLastColour" ), col.GetAsString( wxC2S_HTML_SYNTAX ) );
+	cfg().Write( _T( "/Hosting/MyLastColour" ), col.GetAsString( wxC2S_HTML_SYNTAX ) );
 }
 
 void Settings::SetLastHostDescription( const wxString& value )
 {
-	m_config->Write( _T( "/Hosting/LastDescription" ), value );
+	cfg().Write( _T( "/Hosting/LastDescription" ), value );
 }
 
 
 void Settings::SetLastHostMod( const wxString& value )
 {
-	m_config->Write( _T( "/Hosting/LastMod" ), value );
+	cfg().Write( _T( "/Hosting/LastMod" ), value );
 }
 
 
 void Settings::SetLastHostPassword( const wxString& value )
 {
-	m_config->Write( _T( "/Hosting/LastPassword" ), value );
+	cfg().Write( _T( "/Hosting/LastPassword" ), value );
 }
 
 
 void Settings::SetLastHostPort( int value )
 {
-	m_config->Write( _T( "/Hosting/LastPort" ), value );
+	cfg().Write( _T( "/Hosting/LastPort" ), value );
 }
 
 
 void Settings::SetLastHostPlayerNum( int value )
 {
-	m_config->Write( _T( "/Hosting/LastPlayerNum" ), value );
+	cfg().Write( _T( "/Hosting/LastPlayerNum" ), value );
 }
 
 
 void Settings::SetLastHostNATSetting( int value )
 {
-	m_config->Write( _T( "/Hosting/LastNATSetting" ), value );
+	cfg().Write( _T( "/Hosting/LastNATSetting" ), value );
 }
 
 
 void Settings::SetLastHostMap( const wxString& value )
 {
-	m_config->Write( _T( "/Hosting/LastMap" ), value );
+	cfg().Write( _T( "/Hosting/LastMap" ), value );
 }
 
 void Settings::SetLastRankLimit( int rank )
 {
-	m_config->Write( _T( "/Hosting/LastRank" ), rank );
+	cfg().Write( _T( "/Hosting/LastRank" ), rank );
 }
 
 void Settings::SetLastAI( const wxString& ai )
 {
-	m_config->Write( _T( "/SinglePlayer/LastAI" ), ai );
+	cfg().Write( _T( "/SinglePlayer/LastAI" ), ai );
 }
 
 void Settings::SetLastBattleId(int battleId)
 {
-	m_config->Write( _T( "/Hosting/MyLastBattleId" ), battleId);
+	cfg().Write( _T( "/Hosting/MyLastBattleId" ), battleId);
 }
 
 void Settings::SetLastScriptPassword( const wxString& scriptPassword )
 {
-	m_config->Write( _T( "/Hosting/MyLastScriptPassword" ), scriptPassword );
+	cfg().Write( _T( "/Hosting/MyLastScriptPassword" ), scriptPassword );
 }
 
 void Settings::SetTestHostPort( bool value )
 {
-	m_config->Write( _T( "/Hosting/TestHostPort" ), value );
+	cfg().Write( _T( "/Hosting/TestHostPort" ), value );
 }
 
 void Settings::SetLastAutolockStatus( bool value )
 {
-	m_config->Write( _T( "/Hosting/LastAutoLock" ), value );
+	cfg().Write( _T( "/Hosting/LastAutoLock" ), value );
 }
 
 void Settings::SetLastHostRelayedMode( bool value )
 {
-	m_config->Write( _T( "/Hosting/LastRelayedMode" ), value );
+	cfg().Write( _T( "/Hosting/LastRelayedMode" ), value );
 }
 
 void Settings::SetHostingPreset( const wxString& name, int optiontype, std::map<wxString, wxString> options )
 {
-	m_config->DeleteGroup( _T( "/Hosting/Preset/" ) + name + _T( "/" ) + TowxString( optiontype ) );
+	cfg().DeleteGroup( _T( "/Hosting/Preset/" ) + name + _T( "/" ) + TowxString( optiontype ) );
 	for ( std::map<wxString, wxString>::const_iterator it = options.begin(); it != options.end(); ++it )
 	{
-		m_config->Write( _T( "/Hosting/Preset/" ) + name + _T( "/" ) + TowxString( optiontype ) + _T( "/" ) + it->first , it->second );
+		cfg().Write( _T( "/Hosting/Preset/" ) + name + _T( "/" ) + TowxString( optiontype ) + _T( "/" ) + it->first , it->second );
 	}
 }
 
@@ -610,7 +609,7 @@ std::map<wxString, wxString> Settings::GetHostingPreset( const wxString& name, i
 	for ( int i = 0; i < count; i ++ )
 	{
 		wxString keyname = list[i];
-		wxString val = m_config->Read( keyname );
+		wxString val = cfg().Read( keyname );
 		ret[keyname] = val;
 	}
 	return ret;
@@ -625,7 +624,7 @@ wxArrayString Settings::GetPresetList()
 
 void Settings::DeletePreset( const wxString& name )
 {
-	m_config->DeleteGroup( _T( "/Hosting/Preset/" ) + name );
+	cfg().DeleteGroup( _T( "/Hosting/Preset/" ) + name );
 
 	//delete mod default preset associated
 	wxArrayString list = cfg().GetEntryList( _T( "/Hosting/ModDefaultPreset" ) );
@@ -633,137 +632,137 @@ void Settings::DeletePreset( const wxString& name )
 	for ( int i = 0; i < count; i ++ )
 	{
 		wxString keyname = list[i];
-		if ( m_config->Read( keyname ) == name ) m_config->DeleteEntry( keyname );
+		if ( cfg().Read( keyname ) == name ) cfg().DeleteEntry( keyname );
 	}
 }
 
 
 wxString Settings::GetModDefaultPresetName( const wxString& modname )
 {
-	return m_config->Read( _T( "/Hosting/ModDefaultPreset/" ) + modname );
+	return cfg().Read( _T( "/Hosting/ModDefaultPreset/" ) + modname );
 }
 
 
 void Settings::SetModDefaultPresetName( const wxString& modname, const wxString& presetname )
 {
-	m_config->Write( _T( "/Hosting/ModDefaultPreset/" ) + modname, presetname );
+	cfg().Write( _T( "/Hosting/ModDefaultPreset/" ) + modname, presetname );
 }
 
 
 void Settings::SetBalanceMethod( int value )
 {
-	m_config->Write( _T( "/Hosting/BalanceMethod" ), value );
+	cfg().Write( _T( "/Hosting/BalanceMethod" ), value );
 }
 int Settings::GetBalanceMethod()
 {
-	return m_config->Read( _T( "/Hosting/BalanceMethod" ), 1l );
+	return cfg().Read( _T( "/Hosting/BalanceMethod" ), 1l );
 }
 
 void Settings::SetBalanceClans( bool value )
 {
-	m_config->Write( _T( "/Hosting/BalanceClans" ), value );
+	cfg().Write( _T( "/Hosting/BalanceClans" ), value );
 }
 bool Settings::GetBalanceClans()
 {
-	return m_config->Read( _T( "/Hosting/BalanceClans" ), true );
+	return cfg().Read( _T( "/Hosting/BalanceClans" ), true );
 }
 
 void Settings::SetBalanceStrongClans( bool value )
 {
-	m_config->Write( _T( "/Hosting/BalanceStrongClans" ), value );
+	cfg().Write( _T( "/Hosting/BalanceStrongClans" ), value );
 }
 
 bool Settings::GetBalanceStrongClans()
 {
-	return m_config->Read( _T( "/Hosting/BalanceStrongClans" ), 0l );
+	return cfg().Read( _T( "/Hosting/BalanceStrongClans" ), 0l );
 }
 
 void Settings::SetBalanceGrouping( int value )
 {
-	m_config->Write( _T( "/Hosting/BalanceGroupingSize" ), value );
+	cfg().Write( _T( "/Hosting/BalanceGroupingSize" ), value );
 }
 
 int Settings::GetBalanceGrouping()
 {
-	return m_config->Read( _T( "/Hosting/BalanceGroupingSize" ), 0l );
+	return cfg().Read( _T( "/Hosting/BalanceGroupingSize" ), 0l );
 }
 
 
 void Settings::SetFixIDMethod( int value )
 {
-	m_config->Write( _T( "/Hosting/FixIDMethod" ), value );
+	cfg().Write( _T( "/Hosting/FixIDMethod" ), value );
 }
 int Settings::GetFixIDMethod()
 {
-	return m_config->Read( _T( "/Hosting/FixIDMethod" ), 1l );
+	return cfg().Read( _T( "/Hosting/FixIDMethod" ), 1l );
 }
 
 void Settings::SetFixIDClans( bool value )
 {
-	m_config->Write( _T( "/Hosting/FixIDClans" ), value );
+	cfg().Write( _T( "/Hosting/FixIDClans" ), value );
 }
 bool Settings::GetFixIDClans()
 {
-	return m_config->Read( _T( "/Hosting/FixIDClans" ), true );
+	return cfg().Read( _T( "/Hosting/FixIDClans" ), true );
 }
 
 void Settings::SetFixIDStrongClans( bool value )
 {
-	m_config->Write( _T( "/Hosting/FixIDStrongClans" ), value );
+	cfg().Write( _T( "/Hosting/FixIDStrongClans" ), value );
 }
 
 bool Settings::GetFixIDStrongClans()
 {
-	return m_config->Read( _T( "/Hosting/FixIDStrongClans" ), 0l );
+	return cfg().Read( _T( "/Hosting/FixIDStrongClans" ), 0l );
 }
 
 void Settings::SetFixIDGrouping( int value )
 {
-	m_config->Write( _T( "/Hosting/FixIDGroupingSize" ), value );
+	cfg().Write( _T( "/Hosting/FixIDGroupingSize" ), value );
 }
 
 int Settings::GetFixIDGrouping()
 {
-	return m_config->Read( _T( "/Hosting/FixIDGroupingSize" ), 0l );
+	return cfg().Read( _T( "/Hosting/FixIDGroupingSize" ), 0l );
 }
 
 
 wxString Settings::GetLastAI()
 {
-	return m_config->Read( _T( "/SinglePlayer/LastAI" ), wxEmptyString );
+	return cfg().Read( _T( "/SinglePlayer/LastAI" ), wxEmptyString );
 }
 
 int Settings::GetLastBattleId()
 {
-	return m_config->Read( _T( "/Hosting/MyLastBattleId" ), -1 );
+	return cfg().Read( _T( "/Hosting/MyLastBattleId" ), -1 );
 }
 
 wxString Settings::GetLastScriptPassword()
 {
-	return m_config->Read( _T( "/Hosting/MyLastScriptPassword" ), wxEmptyString );
+	return cfg().Read( _T( "/Hosting/MyLastScriptPassword" ), wxEmptyString );
 }
 
 void Settings::SetChatHistoryLenght( int historylines )
 {
-	m_config->Write( _T( "/Chat/HistoryLinesLenght" ), historylines );
+	cfg().Write( _T( "/Chat/HistoryLinesLenght" ), historylines );
 }
 
 
 int Settings::GetChatHistoryLenght()
 {
-	return m_config->Read( _T( "/Chat/HistoryLinesLenght" ), 1000l );
+	return cfg().Read( _T( "/Chat/HistoryLinesLenght" ), 1000l );
 }
 
 
 void Settings::SetChatPMSoundNotificationEnabled( bool enabled )
 {
-	m_config->Write( _T( "/Chat/PMSound" ), enabled );
+	cfg().Write( _T( "/Chat/PMSound" ), enabled );
 }
 
 
 bool Settings::GetChatPMSoundNotificationEnabled()
 {
-	return m_config->Read( _T( "/Chat/PMSound" ), 1l );
+	return cfg().Read( _T( "/Chat/PMSound" ), 1l );
 }
 
 /*
@@ -781,118 +780,118 @@ wxColour ConvertOldRGBFormat( wxString color )
 
 wxColour Settings::GetChatColorNormal()
 {
-	return wxColour( m_config->Read( _T( "/Chat/Colour/Normal" ), _T( "#000000" ) ) );
+	return wxColour( cfg().Read( _T( "/Chat/Colour/Normal" ), _T( "#000000" ) ) );
 }
 
 void Settings::SetChatColorNormal( wxColour value )
 {
-	m_config->Write( _T( "/Chat/Colour/Normal" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+	cfg().Write( _T( "/Chat/Colour/Normal" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 
 wxColour Settings::GetChatColorBackground()
 {
-	return wxColour( m_config->Read( _T( "/Chat/Colour/Background" ), _T( "#FFFFFF" ) ) );
+	return wxColour( cfg().Read( _T( "/Chat/Colour/Background" ), _T( "#FFFFFF" ) ) );
 }
 
 void Settings::SetChatColorBackground( wxColour value )
 {
-	m_config->Write( _T( "/Chat/Colour/Background" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+	cfg().Write( _T( "/Chat/Colour/Background" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxColour Settings::GetChatColorHighlight()
 {
-	return wxColour( m_config->Read( _T( "/Chat/Colour/Highlight" ), _T( "#FF0000" ) ) );
+	return wxColour( cfg().Read( _T( "/Chat/Colour/Highlight" ), _T( "#FF0000" ) ) );
 }
 
 void Settings::SetChatColorHighlight( wxColour value )
 {
-	m_config->Write( _T( "/Chat/Colour/Highlight" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+	cfg().Write( _T( "/Chat/Colour/Highlight" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxColour Settings::GetChatColorMine()
 {
-	return wxColour( m_config->Read( _T( "/Chat/Colour/Mine" ), _T( "#8A8A8A" ) ) );
+	return wxColour( cfg().Read( _T( "/Chat/Colour/Mine" ), _T( "#8A8A8A" ) ) );
 }
 
 void Settings::SetChatColorMine( wxColour value )
 {
-	m_config->Write( _T( "/Chat/Colour/Mine" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+	cfg().Write( _T( "/Chat/Colour/Mine" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxColour Settings::GetChatColorNotification()
 {
-	return wxColour( m_config->Read( _T( "/Chat/Colour/Notification" ), _T( "#FF2828" ) ) );
+	return wxColour( cfg().Read( _T( "/Chat/Colour/Notification" ), _T( "#FF2828" ) ) );
 }
 
 void Settings::SetChatColorNotification( wxColour value )
 {
-	m_config->Write( _T( "/Chat/Colour/Notification" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+	cfg().Write( _T( "/Chat/Colour/Notification" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxColour Settings::GetChatColorAction()
 {
-	return wxColour( m_config->Read( _T( "/Chat/Colour/Action" ), _T( "#E600FF" ) ) );
+	return wxColour( cfg().Read( _T( "/Chat/Colour/Action" ), _T( "#E600FF" ) ) );
 }
 
 void Settings::SetChatColorAction( wxColour value )
 {
-	m_config->Write( _T( "/Chat/Colour/Action" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+	cfg().Write( _T( "/Chat/Colour/Action" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxColour Settings::GetChatColorServer()
 {
-	return wxColour( m_config->Read( _T( "/Chat/Colour/Server" ), _T( "#005080" ) ) );
+	return wxColour( cfg().Read( _T( "/Chat/Colour/Server" ), _T( "#005080" ) ) );
 }
 
 void Settings::SetChatColorServer( wxColour value )
 {
-	m_config->Write( _T( "/Chat/Colour/Server" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+	cfg().Write( _T( "/Chat/Colour/Server" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxColour Settings::GetChatColorClient()
 {
-	return wxColour( m_config->Read( _T( "/Chat/Colour/Client" ), _T( "#14C819" ) ) );
+	return wxColour( cfg().Read( _T( "/Chat/Colour/Client" ), _T( "#14C819" ) ) );
 }
 
 void Settings::SetChatColorClient( wxColour value )
 {
-	m_config->Write( _T( "/Chat/Colour/Client" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+	cfg().Write( _T( "/Chat/Colour/Client" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxColour Settings::GetChatColorJoinPart()
 {
-	return wxColour( m_config->Read( _T( "/Chat/Colour/JoinPart" ), _T( "#42CC42" ) ) );
+	return wxColour( cfg().Read( _T( "/Chat/Colour/JoinPart" ), _T( "#42CC42" ) ) );
 }
 
 void Settings::SetChatColorJoinPart( wxColour value )
 {
-	m_config->Write( _T( "/Chat/Colour/JoinPart" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+	cfg().Write( _T( "/Chat/Colour/JoinPart" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxColour Settings::GetChatColorError()
 {
-	return wxColour( m_config->Read( _T( "/Chat/Colour/Error" ), _T( "#800000" ) ) );
+	return wxColour( cfg().Read( _T( "/Chat/Colour/Error" ), _T( "#800000" ) ) );
 }
 
 void Settings::SetChatColorError( wxColour value )
 {
-	m_config->Write( _T( "/Chat/Colour/Error" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+	cfg().Write( _T( "/Chat/Colour/Error" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxColour Settings::GetChatColorTime()
 {
-	return wxColour( m_config->Read( _T( "/Chat/Colour/Time" ), _T( "#64648C" ) ) );
+	return wxColour( cfg().Read( _T( "/Chat/Colour/Time" ), _T( "#64648C" ) ) );
 }
 
 void Settings::SetChatColorTime( wxColour value )
 {
-	m_config->Write( _T( "/Chat/Colour/Time" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
+	cfg().Write( _T( "/Chat/Colour/Time" ), value.GetAsString( wxC2S_CSS_SYNTAX ) );
 }
 
 wxFont Settings::GetChatFont()
 {
-	wxString info = m_config->Read( _T( "/Chat/Font" ), wxEmptyString );
+	wxString info = cfg().Read( _T( "/Chat/Font" ), wxEmptyString );
 	if ( info != wxEmptyString ) {
 		wxFont f(info);
 		if (f.IsOk()) {
@@ -904,37 +903,37 @@ wxFont Settings::GetChatFont()
 
 void Settings::SetChatFont( wxFont value )
 {
-	m_config->Write( _T( "/Chat/Font" ), value.GetNativeFontInfoDesc() );
+	cfg().Write( _T( "/Chat/Font" ), value.GetNativeFontInfoDesc() );
 }
 
 
 bool Settings::GetSmartScrollEnabled()
 {
-	return m_config->Read( _T( "/Chat/SmartScrollEnabled" ), true );
+	return cfg().Read( _T( "/Chat/SmartScrollEnabled" ), true );
 }
 
 void Settings::SetSmartScrollEnabled( bool value ) {
-	m_config->Write( _T( "/Chat/SmartScrollEnabled" ), value );
+	cfg().Write( _T( "/Chat/SmartScrollEnabled" ), value );
 }
 
 bool Settings::GetAlwaysAutoScrollOnFocusLost()
 {
-	return m_config->Read( _T( "/Chat/AlwaysAutoScrollOnFocusLost" ), true );
+	return cfg().Read( _T( "/Chat/AlwaysAutoScrollOnFocusLost" ), true );
 }
 
 void Settings::SetAlwaysAutoScrollOnFocusLost( bool value )
 {
-	m_config->Write( _T( "/Chat/AlwaysAutoScrollOnFocusLost" ), value );
+	cfg().Write( _T( "/Chat/AlwaysAutoScrollOnFocusLost" ), value );
 }
 
 void Settings::SetUseIrcColors( bool value )
 {
-	m_config->Write( _T( "/Chat/UseIrcColors" ), value );
+	cfg().Write( _T( "/Chat/UseIrcColors" ), value );
 }
 
 bool Settings::GetUseIrcColors()
 {
-	return m_config->Read( _T( "/Chat/UseIrcColors" ), true );
+	return cfg().Read( _T( "/Chat/UseIrcColors" ), true );
 }
 
 void Settings::setFromList(const wxArrayString& list, const wxString& path)
@@ -942,12 +941,12 @@ void Settings::setFromList(const wxArrayString& list, const wxString& path)
     wxString string;
     for ( unsigned int i = 0; i < list.GetCount(); i++ )
         string << list[i] << _T( ";" );
-    m_config->Write( path, string );
+    cfg().Write( path, string );
 }
 
 wxArrayString Settings::getFromList(const wxString& path)
 {
-    return wxStringTokenize( m_config->Read( path, wxString() ), _T(";") );
+    return wxStringTokenize( cfg().Read( path, wxString() ), _T(";") );
 }
 
 void Settings::SetHighlightedWords( const wxArrayString& words )
@@ -963,7 +962,7 @@ wxArrayString Settings::GetHighlightedWords()
 void Settings::ConvertLists()
 {
     const wxArrayString current_hl = cfg().GetEntryList( _T( "/Chat/HighlightedWords" ) );
-    m_config->DeleteGroup( _T( "/Chat/HighlightedWords" ) );
+    cfg().DeleteGroup( _T( "/Chat/HighlightedWords" ) );
     SaveSettings();
     SetHighlightedWords( current_hl );
     SaveSettings();
@@ -971,91 +970,91 @@ void Settings::ConvertLists()
 
 void Settings::SetRequestAttOnHighlight( const bool req )
 {
-	m_config->Write( _T( "/Chat/ReqAttOnHighlight" ), req );
+	cfg().Write( _T( "/Chat/ReqAttOnHighlight" ), req );
 }
 
 bool Settings::GetRequestAttOnHighlight( )
 {
-	return m_config->Read( _T( "/Chat/ReqAttOnHighlight" ), 0l );
+	return cfg().Read( _T( "/Chat/ReqAttOnHighlight" ), 0l );
 }
 
 
 bool Settings::GetBattleLastAutoStartState()
 {
-	return m_config->Read( _T( "/Hosting/AutoStart" ) , 0l );
+	return cfg().Read( _T( "/Hosting/AutoStart" ) , 0l );
 }
 
 void Settings::SetBattleLastAutoStartState( bool value )
 {
-	m_config->Write( _T( "/Hosting/AutoStart" ), value );
+	cfg().Write( _T( "/Hosting/AutoStart" ), value );
 }
 
 bool Settings::GetBattleLastAutoControlState()
 {
-	return m_config->Read( _T( "/Hosting/AutoControl" ) , 0l );
+	return cfg().Read( _T( "/Hosting/AutoControl" ) , 0l );
 }
 
 void Settings::SetBattleLastAutoControlState( bool value )
 {
-	m_config->Write( _T( "/Hosting/AutoControl" ), value );
+	cfg().Write( _T( "/Hosting/AutoControl" ), value );
 }
 
 int Settings::GetBattleLastAutoSpectTime()
 {
-	return m_config->Read( _T( "/Hosting/AutoSpectTime" ) , 0l );
+	return cfg().Read( _T( "/Hosting/AutoSpectTime" ) , 0l );
 }
 
 void Settings::SetBattleLastAutoSpectTime( int value )
 {
-	m_config->Write( _T( "/Hosting/AutoSpectTime" ) , value );
+	cfg().Write( _T( "/Hosting/AutoSpectTime" ) , value );
 }
 
 bool Settings::GetBattleLastAutoAnnounceDescription()
 {
-	return m_config->Read( _T( "/Hosting/AutoAnnounceDescription" ) , 0l );
+	return cfg().Read( _T( "/Hosting/AutoAnnounceDescription" ) , 0l );
 }
 
 void Settings::SetBattleLastAutoAnnounceDescription( bool value )
 {
-	m_config->Write( _T( "/Hosting/AutoAnnounceDescription" ) , value );
+	cfg().Write( _T( "/Hosting/AutoAnnounceDescription" ) , value );
 }
 
 void Settings::SetBattleLastSideSel( const wxString& modname, int sidenum )
 {
-	m_config->Write(_T("/Battle/Sides/" + modname), sidenum);
+	cfg().Write(_T("/Battle/Sides/" + modname), sidenum);
 }
 
 int Settings::GetBattleLastSideSel( const wxString& modname )
 {
 	if (modname.IsEmpty())
 		return 0;
-	return m_config->Read( _T("/Battle/Sides/" + modname), 0l );
+	return cfg().Read( _T("/Battle/Sides/" + modname), 0l );
 }
 
 void Settings::SetMapLastStartPosType( const wxString& mapname, const wxString& startpostype )
 {
-	m_config->Write( _T( "/Hosting/MapLastValues/" ) + mapname + _T( "/startpostype" ), startpostype );
+	cfg().Write( _T( "/Hosting/MapLastValues/" ) + mapname + _T( "/startpostype" ), startpostype );
 }
 
 void Settings::SetMapLastRectPreset( const wxString& mapname, std::vector<Settings::SettStartBox> rects )
 {
 	wxString basepath = _T( "/Hosting/MapLastValues/" ) + mapname + _T( "/Rects" );
-	m_config->DeleteGroup( basepath );
+	cfg().DeleteGroup( basepath );
 	for ( std::vector<Settings::SettStartBox>::const_iterator itor = rects.begin(); itor != rects.end(); ++itor )
 	{
 		SettStartBox box = *itor;
 		wxString additionalpath = basepath + _T( "/Rect" ) + TowxString( box.ally ) + _T( "/" );
-		m_config->Write( additionalpath + _T( "TopLeftX" ), box.topx );
-		m_config->Write( additionalpath + _T( "TopLeftY" ), box.topy );
-		m_config->Write( additionalpath + _T( "BottomRightX" ), box.bottomx );
-		m_config->Write( additionalpath + _T( "BottomRightY" ), box.bottomy );
-		m_config->Write( additionalpath + _T( "AllyTeam" ), box.ally );
+		cfg().Write( additionalpath + _T( "TopLeftX" ), box.topx );
+		cfg().Write( additionalpath + _T( "TopLeftY" ), box.topy );
+		cfg().Write( additionalpath + _T( "BottomRightX" ), box.bottomx );
+		cfg().Write( additionalpath + _T( "BottomRightY" ), box.bottomy );
+		cfg().Write( additionalpath + _T( "AllyTeam" ), box.ally );
 	}
 }
 
 wxString Settings::GetMapLastStartPosType( const wxString& mapname )
 {
-	return m_config->Read( _T( "/Hosting/MapLastValues/" ) + mapname + _T( "/startpostype" ), wxEmptyString );
+	return cfg().Read( _T( "/Hosting/MapLastValues/" ) + mapname + _T( "/startpostype" ), wxEmptyString );
 }
 
 std::vector<Settings::SettStartBox> Settings::GetMapLastRectPreset( const wxString& mapname )
@@ -1067,11 +1066,11 @@ std::vector<Settings::SettStartBox> Settings::GetMapLastRectPreset( const wxStri
 	{
 		wxString additionalpath = basepath + _T( "/" ) + boxes[i] + _T( "/" );
 		SettStartBox box;
-		box.topx = m_config->Read( additionalpath + _T( "TopLeftX" ), -1 );
-		box.topy = m_config->Read( additionalpath + _T( "TopLeftY" ), -1 );
-		box.bottomx = m_config->Read( additionalpath + _T( "BottomRightX" ), -1 );
-		box.bottomy = m_config->Read( additionalpath + _T( "BottomRightY" ), -1 );
-		box.ally = m_config->Read( additionalpath + _T( "AllyTeam" ), -1 );
+		box.topx = cfg().Read( additionalpath + _T( "TopLeftX" ), -1 );
+		box.topy = cfg().Read( additionalpath + _T( "TopLeftY" ), -1 );
+		box.bottomx = cfg().Read( additionalpath + _T( "BottomRightX" ), -1 );
+		box.bottomy = cfg().Read( additionalpath + _T( "BottomRightY" ), -1 );
+		box.ally = cfg().Read( additionalpath + _T( "AllyTeam" ), -1 );
 		ret.push_back( box );
 	}
 	return ret;
@@ -1080,13 +1079,13 @@ std::vector<Settings::SettStartBox> Settings::GetMapLastRectPreset( const wxStri
 bool Settings::GetDisableSpringVersionCheck()
 {
 	bool ret;
-	m_config->Read( _T( "/Spring/DisableVersionCheck" ), &ret, false );
+	cfg().Read( _T( "/Spring/DisableVersionCheck" ), &ret, false );
 	return ret;
 }
 
 void Settings::SetDisableSpringVersionCheck(bool disable)
 {
-    m_config->Write( _T( "/Spring/DisableVersionCheck" ), ( bool )disable );
+    cfg().Write( _T( "/Spring/DisableVersionCheck" ), ( bool )disable );
 }
 
 
@@ -1098,29 +1097,29 @@ wxString Settings::GetTempStorage()
 
 void Settings::SetShowTooltips( bool show )
 {
-	m_config->Write( _T( "/GUI/ShowTooltips" ), show );
+	cfg().Write( _T( "/GUI/ShowTooltips" ), show );
 }
 
 bool Settings::GetShowTooltips()
 {
-	return m_config->Read( _T( "/GUI/ShowTooltips" ), 1l );
+	return cfg().Read( _T( "/GUI/ShowTooltips" ), 1l );
 }
 
 void Settings::RemoveLayouts()
 {
-	m_config->DeleteEntry(_T("/GUI/DefaultLayout"));
-	m_config->DeleteGroup(_T("/Layout"));
-	m_config->DeleteGroup(_T("/GUI/AUI"));
+	cfg().DeleteEntry(_T("/GUI/DefaultLayout"));
+	cfg().DeleteGroup(_T("/Layout"));
+	cfg().DeleteGroup(_T("/GUI/AUI"));
 }
 
 void Settings::SetColumnWidth( const wxString& list_name, const int column_ind, const int column_width )
 {
-	m_config->Write( _T( "GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString( column_ind ), column_width );
+	cfg().Write( _T( "GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString( column_ind ), column_width );
 }
 
 int Settings::GetColumnWidth( const wxString& list_name, const int column )
 {
-	const int orgwidth = m_config->Read( _T( "/GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString( column ), columnWidthUnset );
+	const int orgwidth = cfg().Read( _T( "/GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString( column ), columnWidthUnset );
 	int width = orgwidth;
 	if ( orgwidth > -1 ) //-3 is unset, -2 and -1 used for auto size by wx
 		width = std::max ( width, int( Settings::columnWidthMinimum ) ); //removing the temporary creation here gives me undefined ref error (koshi)
@@ -1136,7 +1135,7 @@ void Settings::SaveCustomColors( const wxColourData& _cdata, const wxString& pal
 		wxColour col = cdata.GetCustomColour( i );
 		if ( !col.IsOk() )
 			col = wxColour ( 255, 255, 255 );
-		m_config->Write( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ),  col.GetAsString( wxC2S_HTML_SYNTAX ) ) ;
+		cfg().Write( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ),  col.GetAsString( wxC2S_HTML_SYNTAX ) ) ;
 	}
 }
 
@@ -1146,7 +1145,7 @@ wxColourData Settings::GetCustomColors( const wxString& paletteName )
 	//note 16 colors is wx limit
 	for ( int i = 0; i < 16; ++i )
 	{
-		wxColour col( m_config->Read( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ), wxColour ( 255, 255, 255 ).GetAsString( wxC2S_HTML_SYNTAX ) ) );
+		wxColour col( cfg().Read( _T( "/CustomColors/" ) + paletteName + _T( "/" ) + TowxString( i ), wxColour ( 255, 255, 255 ).GetAsString( wxC2S_HTML_SYNTAX ) ) );
 		cdata.SetCustomColour( i, col );
 	}
 
@@ -1156,130 +1155,130 @@ wxColourData Settings::GetCustomColors( const wxString& paletteName )
 PlaybackListFilterValues Settings::GetReplayFilterValues( const wxString& profile_name )
 {
 	PlaybackListFilterValues filtervalues;
-	filtervalues.duration =         m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/duration" ), wxEmptyString );
-	filtervalues.map =               m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/map" ), wxEmptyString );
-	filtervalues.map_show =         m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/map_show" ), 0L );
-	filtervalues.filesize  =        m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/filesize" ), wxEmptyString );
-	filtervalues.filesize_mode  =   m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/filesize_mode" ), _T( ">" ) );
-	filtervalues.duration_mode  =   m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/duration_mode" ), _T( ">" ) );
-	filtervalues.mod =              m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/mod" ), wxEmptyString );
-	filtervalues.mod_show =         m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/mod_show" ), 0L );
-	filtervalues.player_mode =      m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/player_mode" ), _T( "=" ) );
-	filtervalues.player_num  =      m_config->Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/player_num" ), _T( "All" ) );
+	filtervalues.duration =         cfg().Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/duration" ), wxEmptyString );
+	filtervalues.map =               cfg().Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/map" ), wxEmptyString );
+	filtervalues.map_show =         cfg().Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/map_show" ), 0L );
+	filtervalues.filesize  =        cfg().Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/filesize" ), wxEmptyString );
+	filtervalues.filesize_mode  =   cfg().Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/filesize_mode" ), _T( ">" ) );
+	filtervalues.duration_mode  =   cfg().Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/duration_mode" ), _T( ">" ) );
+	filtervalues.mod =              cfg().Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/mod" ), wxEmptyString );
+	filtervalues.mod_show =         cfg().Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/mod_show" ), 0L );
+	filtervalues.player_mode =      cfg().Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/player_mode" ), _T( "=" ) );
+	filtervalues.player_num  =      cfg().Read( _T( "/ReplayFilter/" ) + profile_name + _T( "/player_num" ), _T( "All" ) );
 
 	return filtervalues;
 }
 
 void Settings::SetReplayFilterValues( const PlaybackListFilterValues& filtervalues, const wxString& profile_name )
 {
-	m_config->Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/duration" ), filtervalues.duration );
-	m_config->Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/map" ), filtervalues.map );
-	m_config->Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/map_show" ), filtervalues.map_show );
-	m_config->Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/filesize" ), filtervalues.filesize );
-	m_config->Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/filesize_mode" ), filtervalues.filesize_mode );
-	m_config->Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/duration_mode" ), filtervalues.duration_mode );
-	m_config->Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/mod" ), filtervalues.mod );
-	m_config->Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/mod_show" ), filtervalues.mod_show );
-	m_config->Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/player_mode" ), filtervalues.player_mode );
-	m_config->Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/player_num" ), filtervalues.player_num );
-	m_config->Write( _T( "/ReplayFilter/lastprofile" ), profile_name );
+	cfg().Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/duration" ), filtervalues.duration );
+	cfg().Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/map" ), filtervalues.map );
+	cfg().Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/map_show" ), filtervalues.map_show );
+	cfg().Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/filesize" ), filtervalues.filesize );
+	cfg().Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/filesize_mode" ), filtervalues.filesize_mode );
+	cfg().Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/duration_mode" ), filtervalues.duration_mode );
+	cfg().Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/mod" ), filtervalues.mod );
+	cfg().Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/mod_show" ), filtervalues.mod_show );
+	cfg().Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/player_mode" ), filtervalues.player_mode );
+	cfg().Write( _T( "/ReplayFilter/" ) + profile_name + _T( "/player_num" ), filtervalues.player_num );
+	cfg().Write( _T( "/ReplayFilter/lastprofile" ), profile_name );
 }
 
 /*
 bool Settings::GetReplayFilterActivState() const
 {
-	return m_config->Read( _T( "/ReplayFilter/Active" ) , 0l );
+	return cfg().Read( _T( "/ReplayFilter/Active" ) , 0l );
 }
 
 */
 
 void Settings::SetReplayFilterActivState( const bool state )
 {
-	m_config->Write( _T( "/ReplayFilter/Active" ) , state );
+	cfg().Write( _T( "/ReplayFilter/Active" ) , state );
 }
 
 wxString Settings::GetLastReplayFilterProfileName()
 {
-	return  m_config->Read( _T( "/ReplayFilter/lastprofile" ), _T( "default" ) );
+	return  cfg().Read( _T( "/ReplayFilter/lastprofile" ), _T( "default" ) );
 }
 wxString Settings::GetLastRelayedHost()
 {
-    return  m_config->Read(_T("/General/RelayHost"),wxEmptyString);
+    return  cfg().Read(_T("/General/RelayHost"),wxEmptyString);
 }
 void Settings::SetLastRelayedHost(wxString relhost)
 {
-    m_config->Write(_T("/General/RelayHost"),relhost);
+    cfg().Write(_T("/General/RelayHost"),relhost);
 }
 void Settings::SetCompletionMethod( CompletionMethod method )
 {
-	m_config->Write( _T( "/General/CompletionMethod" ), ( int )method );
+	cfg().Write( _T( "/General/CompletionMethod" ), ( int )method );
 }
 Settings::CompletionMethod Settings::GetCompletionMethod(  ) const
 {
-	return  ( CompletionMethod )m_config->Read( _T( "/General/CompletionMethod" ), ( int )MatchExact );
+	return  ( CompletionMethod )cfg().Read( _T( "/General/CompletionMethod" ), ( int )MatchExact );
 }
 
 
 unsigned int Settings::GetHorizontalSortkeyIndex()
 {
-	return m_config->Read( _T( "/GUI/MapSelector/HorizontalSortkeyIndex" ), 0l );
+	return cfg().Read( _T( "/GUI/MapSelector/HorizontalSortkeyIndex" ), 0l );
 }
 
 void Settings::SetHorizontalSortkeyIndex( const unsigned int idx )
 {
-	m_config->Write( _T( "/GUI/MapSelector/HorizontalSortkeyIndex" ), ( int ) idx );
+	cfg().Write( _T( "/GUI/MapSelector/HorizontalSortkeyIndex" ), ( int ) idx );
 }
 
 unsigned int Settings::GetVerticalSortkeyIndex()
 {
-	return m_config->Read( _T( "/GUI/MapSelector/VerticalSortkeyIndex" ), 0l );
+	return cfg().Read( _T( "/GUI/MapSelector/VerticalSortkeyIndex" ), 0l );
 }
 
 void Settings::SetVerticalSortkeyIndex( const unsigned int idx )
 {
-	m_config->Write( _T( "/GUI/MapSelector/VerticalSortkeyIndex" ), ( int ) idx );
+	cfg().Write( _T( "/GUI/MapSelector/VerticalSortkeyIndex" ), ( int ) idx );
 }
 
 bool Settings::GetHorizontalSortorder()
 {
-	return m_config->Read( _T( "/GUI/MapSelector/HorizontalSortorder" ), 0l );
+	return cfg().Read( _T( "/GUI/MapSelector/HorizontalSortorder" ), 0l );
 }
 
 void Settings::SetHorizontalSortorder( const bool order )
 {
-	m_config->Write( _T( "/GUI/MapSelector/HorizontalSortorder" ), order );
+	cfg().Write( _T( "/GUI/MapSelector/HorizontalSortorder" ), order );
 }
 
 bool Settings::GetVerticalSortorder()
 {
-	return m_config->Read( _T( "/GUI/MapSelector/VerticalSortorder" ), 0l );
+	return cfg().Read( _T( "/GUI/MapSelector/VerticalSortorder" ), 0l );
 }
 
 void Settings::SetVerticalSortorder( const bool order )
 {
-	m_config->Write( _T( "/GUI/MapSelector/VerticalSortorder" ), order );
+	cfg().Write( _T( "/GUI/MapSelector/VerticalSortorder" ), order );
 }
 
 void Settings::SetMapSelectorFollowsMouse( bool value )
 {
-	m_config->Write( _T( "/GUI/MapSelector/SelectionFollowsMouse" ), value );
+	cfg().Write( _T( "/GUI/MapSelector/SelectionFollowsMouse" ), value );
 }
 
 bool Settings::GetMapSelectorFollowsMouse()
 {
-	return m_config->Read( _T( "/GUI/MapSelector/SelectionFollowsMouse" ), 0l );
+	return cfg().Read( _T( "/GUI/MapSelector/SelectionFollowsMouse" ), 0l );
 }
 
 unsigned int Settings::GetMapSelectorFilterRadio()
 {
 	int val = 0;
-	m_config->Read( _T( "/GUI/MapSelector/FilterRadio" ), &val);
+	cfg().Read( _T( "/GUI/MapSelector/FilterRadio" ), &val);
 	return val;
 }
 
 void Settings::SetMapSelectorFilterRadio( const unsigned int val )
 {
-	m_config->Write( _T( "/GUI/MapSelector/FilterRadio" ), ( int ) val );
+	cfg().Write( _T( "/GUI/MapSelector/FilterRadio" ), ( int ) val );
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1289,70 +1288,70 @@ void Settings::SetMapSelectorFilterRadio( const unsigned int val )
 
 long Settings::getMode()
 {
-	return m_config->Read( _T( "/SpringSettings/mode" ), SET_MODE_SIMPLE );
+	return cfg().Read( _T( "/SpringSettings/mode" ), SET_MODE_SIMPLE );
 }
 
 void Settings::setMode( long mode )
 {
-	m_config->Write( _T( "/SpringSettings/mode" ), mode );
+	cfg().Write( _T( "/SpringSettings/mode" ), mode );
 }
 
 bool Settings::getDisableWarning()
 {
-	return m_config->Read( _T( "/SpringSettings/disableWarning" ), 0l );
+	return cfg().Read( _T( "/SpringSettings/disableWarning" ), 0l );
 }
 
 void Settings::setDisableWarning( bool disable )
 {
-	m_config->Write( _T( "/SpringSettings/disableWarning" ), disable );
+	cfg().Write( _T( "/SpringSettings/disableWarning" ), disable );
 }
 
 
 wxString Settings::getSimpleRes()
 {
 	wxString def = vl_Resolution_Str[1];
-	m_config->Read( _T( "/SpringSettings/SimpleRes" ), &def );
+	cfg().Read( _T( "/SpringSettings/SimpleRes" ), &def );
 	return def;
 }
 void Settings::setSimpleRes( wxString res )
 {
-	m_config->Write( _T( "/SpringSettings/SimpleRes" ), res );
+	cfg().Write( _T( "/SpringSettings/SimpleRes" ), res );
 }
 
 wxString Settings::getSimpleQuality()
 {
 	wxString def = wxT( "medium" );
-	m_config->Read( _T( "/SpringSettings/SimpleQuality" ), &def );
+	cfg().Read( _T( "/SpringSettings/SimpleQuality" ), &def );
 	return def;
 }
 
 void Settings::setSimpleQuality( wxString qual )
 {
-	m_config->Write( _T( "/SpringSettings/SimpleQuality" ), qual );
+	cfg().Write( _T( "/SpringSettings/SimpleQuality" ), qual );
 }
 
 wxString Settings::getSimpleDetail()
 {
 	wxString def = wxT( "medium" );
-	m_config->Read( _T( "/SpringSettings/SimpleDetail" ), &def );
+	cfg().Read( _T( "/SpringSettings/SimpleDetail" ), &def );
 	return def;
 }
 
 void Settings::setSimpleDetail( wxString det )
 {
-	m_config->Write( _T( "/SpringSettings/SimpleDetail" ), det );
+	cfg().Write( _T( "/SpringSettings/SimpleDetail" ), det );
 }
 
 SortOrder Settings::GetSortOrder( const wxString& list_name )
 {
 	SortOrder order;
-	slConfig::PathGuard pathGuard ( m_config, _T( "/UI/SortOrder/" ) + list_name + _T( "/" ) );
-	unsigned int entries  = m_config->GetNumberOfGroups( false ); //do not recurse
+	slConfig::PathGuard pathGuard ( &cfg(), _T( "/UI/SortOrder/" ) + list_name + _T( "/" ) );
+	unsigned int entries  = cfg().GetNumberOfGroups( false ); //do not recurse
 	for ( unsigned int i = 0; i < entries ; i++ )
 	{
 		SortOrderItem it;
-		it.direction = m_config->Read( TowxString( i ) + _T( "/dir" ), 1 );
-		it.col = m_config->Read( TowxString( i ) + _T( "/col" ), i );
+		it.direction = cfg().Read( TowxString( i ) + _T( "/dir" ), 1 );
+		it.col = cfg().Read( TowxString( i ) + _T( "/col" ), i );
 		order[i] = it;
 	}
 	return order;
@@ -1362,71 +1361,71 @@ void Settings::SetSortOrder( const wxString& list_name, const SortOrder& order  
 {
 	SortOrder::const_iterator it = order.begin();
 	for ( ; it != order.end(); ++it ) {
-		m_config->Write( _T( "/UI/SortOrder/" ) + list_name + _T( "/" ) + TowxString( it->first ) + _T( "/dir" ), it->second.direction );
-		m_config->Write( _T( "/UI/SortOrder/" ) + list_name + _T( "/" ) + TowxString( it->first ) + _T( "/col" ), it->second.col );
+		cfg().Write( _T( "/UI/SortOrder/" ) + list_name + _T( "/" ) + TowxString( it->first ) + _T( "/dir" ), it->second.direction );
+		cfg().Write( _T( "/UI/SortOrder/" ) + list_name + _T( "/" ) + TowxString( it->first ) + _T( "/col" ), it->second.col );
 	}
 }
 
 int Settings::GetSashPosition( const wxString& window_name )
 {
-	return m_config->Read( _T( "/GUI/SashPostion/" ) + window_name , 200l );
+	return cfg().Read( _T( "/GUI/SashPostion/" ) + window_name , 200l );
 }
 
 void Settings::SetSashPosition( const wxString& window_name, const int pos )
 {
-	m_config->Write( _T( "/GUI/SashPostion/" ) + window_name , pos );
+	cfg().Write( _T( "/GUI/SashPostion/" ) + window_name , pos );
 }
 
 bool Settings::GetSplitBRoomHorizontally()
 {
-	return m_config->Read( _T( "/GUI/SplitBRoomHorizontally" ) , 1l );
+	return cfg().Read( _T( "/GUI/SplitBRoomHorizontally" ) , 1l );
 }
 
 void Settings::SetSplitBRoomHorizontally( const bool vertical )
 {
-	m_config->Write( _T( "/GUI/SplitBRoomHorizontally" ) , vertical );
+	cfg().Write( _T( "/GUI/SplitBRoomHorizontally" ) , vertical );
 }
 
 bool Settings::GetShowXallTabs()
 {
-    return m_config->Read( _T( "/GUI/CloseOnAll" ) , 0l );
+    return cfg().Read( _T( "/GUI/CloseOnAll" ) , 0l );
 }
 
 void Settings::SetShowXallTabs( bool show )
 {
-    m_config->Write( _T( "/GUI/CloseOnAll" ) , show );
+    cfg().Write( _T( "/GUI/CloseOnAll" ) , show );
 }
 
 void Settings::SavePerspective( const wxString& notebook_name, const wxString& perspective_name, const wxString& layout_string )
 {
 	wxString entry = wxFormat( _T( "/GUI/AUI/%s/%s" ) ) % perspective_name % notebook_name;
-    m_config->Write( entry, layout_string );
+    cfg().Write( entry, layout_string );
 }
 
 wxString Settings::LoadPerspective( const wxString& notebook_name, const wxString& perspective_name )
 {
 	wxString entry = wxFormat( _T( "/GUI/AUI/%s/%s" ) ) % perspective_name % notebook_name;
-    return m_config->Read( entry , wxEmptyString );
+    return cfg().Read( entry , wxEmptyString );
 }
 
 wxString Settings::GetLastPerspectiveName( )
 {
-    return m_config->Read( _T( "/GUI/AUI/lastperspective_name" ), _T("default") );
+    return cfg().Read( _T( "/GUI/AUI/lastperspective_name" ), _T("default") );
 }
 
 void Settings::SetLastPerspectiveName( const wxString&  name )
 {
-    m_config->Write( _T( "/GUI/AUI/lastperspective_name" ), name );
+    cfg().Write( _T( "/GUI/AUI/lastperspective_name" ), name );
 }
 
 void Settings::SetAutosavePerspective( bool autosave )
 {
-    m_config->Write( _T( "/GUI/AUI/autosave" ), autosave );
+    cfg().Write( _T( "/GUI/AUI/autosave" ), autosave );
 }
 
 bool Settings::GetAutosavePerspective( )
 {
-    return m_config->Read( _T( "/GUI/AUI/autosave" ), 1l );
+    return cfg().Read( _T( "/GUI/AUI/autosave" ), 1l );
 }
 
 wxArrayString Settings::GetPerspectives()
@@ -1457,43 +1456,43 @@ bool Settings::PerspectiveExists( const wxString& perspective_name )
 
 void Settings::SetAutoloadedChatlogLinesCount( const int count )
 {
-    m_config->Write( _T( "/GUI/AutoloadedChatlogLinesCount" ), std::abs( count ) );
+    cfg().Write( _T( "/GUI/AutoloadedChatlogLinesCount" ), std::abs( count ) );
 }
 
 int Settings::GetAutoloadedChatlogLinesCount( )
 {
-    return m_config->Read( _T( "/GUI/AutoloadedChatlogLinesCount" ), 10l );
+    return cfg().Read( _T( "/GUI/AutoloadedChatlogLinesCount" ), 10l );
 }
 
 void Settings::SetUseNotificationPopups( const bool use )
 {
-	m_config->Write( _T("/GUI/UseNotificationPopups"), use );
+	cfg().Write( _T("/GUI/UseNotificationPopups"), use );
 }
 
 bool Settings::GetUseNotificationPopups()
 {
-	return m_config->Read( _T("/GUI/UseNotificationPopups"), true );
+	return cfg().Read( _T("/GUI/UseNotificationPopups"), true );
 }
 
 void Settings::SetNotificationPopupPosition( const size_t index )
 {
-	m_config->Write( _T("/GUI/NotificationPopupPosition"), (long)index );
+	cfg().Write( _T("/GUI/NotificationPopupPosition"), (long)index );
 }
 
 size_t Settings::GetNotificationPopupPosition()
 {
-	return m_config->Read( _T("/GUI/NotificationPopupPosition"), (long)ScreenPosition::bottom_right );
+	return cfg().Read( _T("/GUI/NotificationPopupPosition"), (long)ScreenPosition::bottom_right );
 }
 
 
 void Settings::SetNotificationPopupDisplayTime( const unsigned int seconds )
 {
-	m_config->Write( _T("/GUI/NotificationPopupDisplayTime"), (long)seconds );
+	cfg().Write( _T("/GUI/NotificationPopupDisplayTime"), (long)seconds );
 }
 
 unsigned int Settings::GetNotificationPopupDisplayTime( )
 {
-	return m_config->Read( _T("/GUI/NotificationPopupDisplayTime"), 5l );
+	return cfg().Read( _T("/GUI/NotificationPopupDisplayTime"), 5l );
 }
 
 
