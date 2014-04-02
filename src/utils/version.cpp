@@ -45,3 +45,8 @@ const std::string getSpringlobbyAgent()
 
 	return agent;
 }
+
+const std::string getSpringCompileTimeDate()
+{
+	return std::string(__DATE__) + " " + std::string(__TIME__);
+}
