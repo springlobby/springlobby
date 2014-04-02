@@ -81,6 +81,7 @@ InfoDialog::InfoDialog(wxWindow* parent )
 							 BtS(wxFileName::IsFileWritable(TowxString(SlPaths::GetConfigPath())), "", "not" ).c_str() );
 
 	*out << _T( "Version " ) + TowxString(getSpringlobbyAgent()) + _T("\n");
+	*out << _T("Compile Time ") + TowxString(getSpringCompileTimeDate()) + _T("\n");
 	*out << wxString::Format(_T("Compiled with %s"), wxVERSION_STRING) + _T("\n");
 	*out << _T("Started with: \n");
 	for ( int i = 0; i < wxTheApp->argc; ++i )
