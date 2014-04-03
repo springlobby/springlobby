@@ -51,6 +51,7 @@ public:
 	static std::string GetUikeys(const std::string& index = GetCurrentUsedSpringIndex());
 	static std::string GetDataDir(const std::string& index = GetCurrentUsedSpringIndex());
 	static std::string GetSpringConfigFilePath(const std::string& index = GetCurrentUsedSpringIndex());
+	static std::string GetDownloadDir();
 
 	//!@brief meaningful only on mac
 	static void SetBundle( const std::string& index, const std::string& path );

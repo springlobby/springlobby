@@ -404,9 +404,7 @@ bool SlPaths::CreateSpringDataDir(const std::string& dir)
 			!mkDir(directory + "screenshots")) {
 		return false;
 	}
-	if (LSL::usync().IsLoaded()) {
-		LSL::usync().SetSpringDataPath(dir);
-	}
+	LSL::usync().SetSpringDataPath(dir);
 	return true;
 }
 
@@ -478,4 +476,20 @@ std::string SlPaths::GetConfigfileDir()
 #endif
 	path += getSpringlobbyName(true);
 	return LSL::Util::EnsureDelimiter(path);
+}
+
+std::string SlPaths::GetDownloadDir()
+{
+	std::string dir;
+
+	#ifdef WIN32
+	dir = LSL::Util::EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetDocumentsDir())) +"My Games" + PATH_DELIMITER + "Spring"
+	#else
+	const char* home = getenv("HOME");
+	if (home == NULL) return "";
+	dir = LSL::Util::EnsureDelimiter(home) + ".spring";
+	#endif
+	wxString downloadDir = TowxString(dir);
+	cfg().Read(_T("/Spring/DownloadDir"), &downloadDir);
+	return STD_STRING(downloadDir);
 }

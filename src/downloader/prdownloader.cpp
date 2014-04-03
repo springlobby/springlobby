@@ -117,7 +117,7 @@ PrDownloader::PrDownloader():
 	m_dl_thread(new LSL::WorkerThread())
 {
 	IDownloader::Initialize(&downloadsObserver());
-	//UpdateSettings();
+	UpdateSettings();
 	m_game_loaders.push_back(rapidDownload);
 	m_game_loaders.push_back(httpDownload);
 	m_game_loaders.push_back(plasmaDownload);
@@ -125,8 +125,6 @@ PrDownloader::PrDownloader():
 	m_map_loaders.push_back(plasmaDownload);
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringStarted, wxObjectEventFunction(&PrDownloader::OnSpringStarted));
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&PrDownloader::OnSpringTerminated));
-	//FIXME: set writepath set in config! can't use unitsyncs data dir, as we want a "global" data dir across all spring versions
-	//fileSystem->setWritePath(path);
 }
 
 PrDownloader::~PrDownloader()
@@ -141,7 +139,7 @@ void PrDownloader::ClearFinished()
 
 void PrDownloader::UpdateSettings()
 {
-
+	fileSystem->setWritePath(SlPaths::GetDownloadDir());
 }
 
 void PrDownloader::RemoveTorrentByName(const std::string &/*name*/)
