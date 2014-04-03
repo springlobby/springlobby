@@ -483,7 +483,7 @@ std::string SlPaths::GetDownloadDir()
 	std::string dir;
 
 	#ifdef WIN32
-	dir = LSL::Util::EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetDocumentsDir())) +"My Games" + PATH_DELIMITER + "Spring"
+	dir = LSL::Util::EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetDocumentsDir())) +"My Games" + SEP + "Spring";
 	#else
 	const char* home = getenv("HOME");
 	if (home == NULL) return "";
