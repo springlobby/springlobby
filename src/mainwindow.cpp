@@ -124,7 +124,7 @@ MainWindow::MainWindow( )
 	m_log_win(NULL),
 	m_has_focus(true)
 {
-	SetIcons( icons().GetIcon(icons().ICON_SPRINGLOBBY) );
+	SetIcon( icons().GetIcon(icons().ICON_SPRINGLOBBY) );
 
 	GetAui().manager = new wxAuiManager( this );
 
