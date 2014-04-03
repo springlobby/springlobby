@@ -18,8 +18,8 @@ class UpdaterClass : public wxEvtHandler
 
 protected:
 
-    bool UpdateExe( const wxString& newexe, bool WaitForReboot );
-    bool UpdateLocale( const wxString& newdir, bool WaitForReboot );
+    bool UpdateExe( const wxString& newexe);
+    bool UpdateLocale( const wxString& newdir);
 
     bool PostMinGW44( const wxString& newdir );
 

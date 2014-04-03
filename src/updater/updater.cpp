@@ -77,7 +77,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
 			OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/Install#wiki-Windows_Binary") );
             OpenWebBrowser( TowxString(GetDownloadUrl(STD_STRING(m_latest_version))));
         }
-        if ( !UpdateExe( m_newexe , false ) ) {
+        if ( !UpdateExe( m_newexe) ) {
 			customMessageBox(SL_MAIN_ICON,
 							 wxFormat( _("There was an error while trying to replace the current executable version.\n Please manually copy springlobby.exe from: %s\n to: %s\n") )
 											   % m_newexe
@@ -86,7 +86,7 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
 			GlobalEvent::Send( GlobalEvent::OnUpdateFinished );
         }
         else {
-            bool locale_ok = UpdateLocale( m_newexe, false );
+            bool locale_ok = UpdateLocale( m_newexe);
             if ( locale_ok ) {
 				customMessageBox(SL_MAIN_ICON, wxFormat( _("Update complete. \nPlease start %s now.") ) % m_newexe , _("Success"));
             }
@@ -102,14 +102,14 @@ void UpdaterClass::OnDownloadEvent( wxCommandEvent& event )
 }
 
 //! DO NOT use mw() global unless fromCli is false !
-bool UpdaterClass::UpdateLocale( const wxString& tempdir, bool /*unused*/ ) {
+bool UpdaterClass::UpdateLocale( const wxString& tempdir) {
     wxString target = wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("locale");
     wxString origin = tempdir + _T("locale") + wxFileName::GetPathSeparator() ;
     return CopyDir( origin, target );
 }
 
 //! DO NOT use mw() global unless fromCli is false !
-bool UpdaterClass::UpdateExe( const wxString& newexe, bool /*unused*/ ) {
+bool UpdaterClass::UpdateExe( const wxString& newexe) {
     //this always returns false on msw
 //  if ( !wxFileName::IsFileExecutable( newexe + _T("springlobby.exe") ) )
 //  {
