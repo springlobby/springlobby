@@ -491,5 +491,5 @@ std::string SlPaths::GetDownloadDir()
 	#endif
 	wxString downloadDir = TowxString(dir);
 	cfg().Read(_T("/Spring/DownloadDir"), &downloadDir);
-	return STD_STRING(downloadDir);
+	return LSL::Util::EnsureDelimiter(STD_STRING(downloadDir));
 }
