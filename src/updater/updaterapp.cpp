@@ -110,15 +110,9 @@ void UpdaterApp::OnFatalException()
 
 void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
-    #ifndef HAVE_WX29
-        #define STR _T
-    #else
-        #define STR
-    #endif
-
     wxCmdLineEntryDesc cmdLineDesc[] =
     {
-		{ wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+		{ wxCMD_LINE_SWITCH, _("h"), _("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
 		{ wxCMD_LINE_PARAM,  NULL, NULL, _("<parent pid> <springlobby.exe> <updater.exe> <source dir> <destination dir>"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE },
 		{ wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, 0 }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
@@ -126,7 +120,6 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
     parser.SetDesc( cmdLineDesc );
     parser.SetSwitchChars (_T("-"));
 
-    #undef STR
 }
 
 static bool CheckDir(const wxString& dir)
