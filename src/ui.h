@@ -138,7 +138,7 @@ public:
 	void EnableDebug(bool enable);
 
 protected:
-	bool StartUpdate( const wxString& latestVersion, const wxString& exe_to_update );
+	bool StartUpdate( const wxString& latestVersion);
 	void OnDownloadComplete(wxCommandEvent& /*data*/);
 
 	HttpDownloaderThread* m_http_thread;

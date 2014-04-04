@@ -1042,24 +1042,24 @@ void Ui::FirstRunWelcome()
 }
 
 
-bool Ui::StartUpdate( const wxString& latestVersion, const wxString& exe_to_update )
+bool Ui::StartUpdate(const wxString& latestVersion)
 {
-	wxString sep = wxFileName::GetPathSeparator();
-	if ( !wxFileName::IsDirWritable( wxPathOnly( exe_to_update ) ) ) {
-		wxLogError( _T("dir not writable: ") + exe_to_update );
-		customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
-		return false;
-	}
-	wxString m_newexe = TowxString(SlPaths::GetUpdateDir());
+	const wxString updatedir = TowxString(SlPaths::GetUpdateDir());
 
-	if ( !wxDirExists( m_newexe ) ) {
-			if ( !wxMkdir( m_newexe ) ){
+	if ( !wxDirExists( updatedir ) ) {
+			if ( !wxMkdir( updatedir ) ){
 			wxLogError( _T("couldn't create update directory") );
+			customMessageBox(SL_MAIN_ICON, _("Unable to create to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
 			return false;
 		}
 	}
+	if ( !wxFileName::IsDirWritable( updatedir ) ) {
+		wxLogError( _T("dir not writable: ") + updatedir );
+		customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
+		return false;
+	}
 
-	m_http_thread = new HttpDownloaderThread( TowxString(GetDownloadUrl( STD_STRING(latestVersion))), m_newexe + _T("temp.zip"), true, wxObjectEventFunction(&Ui::OnDownloadComplete), this);
+	m_http_thread = new HttpDownloaderThread( TowxString(GetDownloadUrl( STD_STRING(latestVersion))), updatedir + _T("temp.zip"), true, wxObjectEventFunction(&Ui::OnDownloadComplete), this);
 
 	//could prolly use some test on the thread here instead
 	return true;
@@ -1100,7 +1100,7 @@ void Ui::CheckForUpdates()
 					      % msg,
 					      _("Not up to date"), wxOK|wxCANCEL);
 		if (answer == wxYES) {
-			if (!StartUpdate(latestVersion, TowxString(SlPaths::GetExecutableFolder()))) {
+			if (!StartUpdate(latestVersion)) {
 				//this will also happen if updater exe is not present so we don't really ne special check for existance of it
 				customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser.") + msg, _("Updater error.") );
 				OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary") );
