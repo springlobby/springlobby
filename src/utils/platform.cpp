@@ -94,13 +94,19 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bo
 {
     // first make sure that the source dir exists
     if(!wxDir::Exists(from)) {
-            wxLogError(from + _T(" does not exist.  Can not copy directory.") );
+            wxMessageBox(from + _T(" does not exist.  Can not copy directory."), _T("Error") );
             return false;
     }
 
     SafeMkdir(to);
 
     wxString sep = wxFileName::GetPathSeparator();
+
+    wxDir dir(from);
+    wxString filename;
+    if (!dir.GetFirst(&filename)) {
+		return false;
+	}
 
     // append a slash if there is not one (for easier parsing)
     // because who knows what people will pass to the function.
@@ -111,13 +117,6 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bo
     if ( !from.EndsWith( sep ) ) {
             from += sep;
     }
-
-
-    wxDir dir(from);
-    wxString filename;
-    if (!dir.GetFirst(&filename)) {
-		return false;
-	}
 
 	do {
 		if (wxDirExists(from + filename) )
@@ -132,13 +131,13 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bo
 				}
 				//make backup
 				if ( !wxRenameFile( to + filename, to + filename + _T(".old") ) ) {
-					wxLogError( _T("could not rename %s, copydir aborted"), (to + filename).c_str() );
+					wxMessageBox( _T("could not rename %s, copydir aborted") + to + filename, _T("Error"));
 					return false;
 				}
 			}
 			//do the actual copy
 			if ( !wxCopyFile(from + filename, to + filename, overwrite) ) {
-				wxLogError( _T("could not copy %s to %s, copydir aborted"), (from + filename).c_str(), (to + filename).c_str() );
+				wxMessageBox( _T("could not copy %s to %s, copydir aborted") + from + filename + _T("\n") + to + filename, _T("Error"));
 				return false;
 			}
 		}

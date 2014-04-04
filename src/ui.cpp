@@ -1082,7 +1082,8 @@ void Ui::OnDownloadComplete(wxCommandEvent& data)
 	params.push_back(wxString::Format(_T("%ld"), id));
 	params.push_back(TowxString(SlPaths::GetExecutable()));
 	params.push_back(m_newexe);
-	params.push_back(TowxString(SlPaths::GetUpdateDir()));
+	wxString updateDir = TowxString(SlPaths::GetUpdateDir()); //FIXME: for some reason calling the updater with backslash in this dir doesn't work
+	params.push_back(updateDir.SubString(0, updateDir.length() - 2));
 	params.push_back(TowxString(SlPaths::GetExecutableFolder()));
 	const int res = RunProcess(m_newexe, params, true);
 	if(res != 0) {
