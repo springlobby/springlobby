@@ -104,22 +104,6 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
 
 }
 
-#ifdef WIN32
-#define SEP '\\'
-#else
-#define SEP '/'
-#endif
-
-static bool CheckDir(wxString& dir)
-{
-	if (dir[dir.length()-1] == SEP)
-		dir = dir.BeforeLast(SEP);
-	if (wxDirExists(dir)) return true;
-	wxMessageBox(_T("%s doesn't exist!"), dir.c_str());
-	return false;
-}
-
-
 //! @brief parses the command line
 bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
@@ -130,8 +114,6 @@ bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 	if (m_paramcount == 2) {
 		m_source_dir = parser.GetParam(0);
 		m_destination_dir = parser.GetParam(1);
-		if (!CheckDir(m_source_dir)) return false;
-		if (!CheckDir(m_destination_dir)) return false;
 		return true;
 	}
 	if (m_paramcount == 5) {
@@ -149,17 +131,20 @@ bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 	return false;
 }
 
+wxString TrimSep(const wxString& path)
+{
+	wxString sep = wxFileName::GetPathSeparator();
+	if (path.EndsWith(sep)) {
+		return path.SubString(0, path.length()-2);
+	}
+	return path;
+}
 
 bool UpdaterApp::StartUpdate( const wxString& source, const wxString& destination )
 {
-	wxString sep = wxFileName::GetPathSeparator();
-	if ( !wxFileName::IsDirWritable( destination ) ) {
-		wxMessageBox(_("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
-		return false;
-	}
-	bool success = CopyDirWithFilebackupRename( source, destination, true);
+	bool success = CopyDirWithFilebackupRename( TrimSep(source), TrimSep(destination), true);
 	if ( !success ) {
-		wxString msg =  _T("Copy failed: \n") + source + _T("\n") + destination;
+		const wxString msg =  _T("Copy failed: \n") + source + _T("\n") + destination;
 		wxMessageBox(msg, _("Error") );
 		return false;
 	}
