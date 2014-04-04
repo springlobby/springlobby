@@ -84,6 +84,7 @@ Ui& ui()
 
 Ui::Ui() :
 	wxEvtHandler(),
+	m_http_thread(NULL),
 	m_serv(0),
 	m_main_win(0),
 	m_con_win(0),

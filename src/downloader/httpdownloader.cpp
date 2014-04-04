@@ -23,7 +23,7 @@
 const wxEventType HttpDownloaderThread::httpDownloadEvtComplete = wxNewEventType();
 
 HttpDownloaderThread::HttpDownloaderThread(const wxString& FileUrl, const wxString& DestPath, const bool unzip, wxObjectEventFunction func, wxEvtHandler* evt)
-		: wxThread(wxTHREAD_DETACHED),
+		: wxThread(wxTHREAD_JOINABLE),
 		m_do_unzip( unzip ),
 		m_destroy( false ),
 		m_destpath( DestPath ),
