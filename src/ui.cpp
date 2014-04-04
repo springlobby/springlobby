@@ -1099,7 +1099,7 @@ void Ui::CheckForUpdates()
 					      % TowxString(getSpringlobbyName())
 					      % msg,
 					      _("Not up to date"), wxOK|wxCANCEL);
-		if (answer == wxYES) {
+		if (answer == wxOK) {
 			if (!StartUpdate(latestVersion)) {
 				//this will also happen if updater exe is not present so we don't really ne special check for existance of it
 				customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser.") + msg, _("Updater error.") );
