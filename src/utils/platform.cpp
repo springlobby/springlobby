@@ -188,6 +188,13 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite )
     return true;
 }
 
+#ifdef __WXMSW__
+bool IsPreVistaWindows()
+{
+    return wxPlatformInfo().GetOSMajorVersion() < 6;
+}
+#endif
+
 bool IsUACenabled()
 {
 #ifdef __WXMSW__
@@ -263,11 +270,12 @@ int RunProcess(const wxString& cmd, const wxArrayString& params, const bool asyn
 	SHELLEXECUTEINFO ShExecInfo;
 	DWORD exitCode = 0;
 
-	if ((root) && (IsUACenabled()) {
+	if (root && IsUACenabled()) {
 		if ( IsPreVistaWindows() )
 			ShExecInfo.lpVerb = NULL;
 		else
 			ShExecInfo.lpVerb = _T("runas");
+	}
 
 	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
@@ -309,12 +317,12 @@ int BrowseFolder(const wxString& path)
 int WaitForExit(int pid)
 {
 #ifdef WIN32
-	HANDLE h = OpenProcess(0, false, pid)
+	HANDLE h = OpenProcess(0, false, pid);
 	if (h == NULL) {
         return 0;
 	}
 	WaitForSingleObject(h, INFINITE);
-	int exitCode = 0;
+	DWORD exitCode = 0;
 	GetExitCodeProcess(h, &exitCode);
 	return exitCode;
 #endif
