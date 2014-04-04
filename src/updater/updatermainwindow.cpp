@@ -3,15 +3,10 @@
 #include "updatermainwindow.h"
 
 #include <wx/sizer.h>
-#include <wx/button.h>
 #include <wx/icon.h>
 
-#include "../utils/customdialogs.h"
 #include "../utils/activitynotice.h"
-#include "../uiutils.h"
-
 #include "../images/springlobby12x12.xpm"
-#include "aboutbox.h"
 
 class UpdaterPanel : public wxPanel {
 
