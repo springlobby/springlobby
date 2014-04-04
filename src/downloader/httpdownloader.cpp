@@ -55,7 +55,9 @@ void* HttpDownloaderThread::Entry()
 	wxInputStream* m_httpstream = FileDownloading.GetInputStream( _T( "/" ) + m_fileurl.AfterFirst( _T( '/' ) ) );
 
 	if (!m_httpstream ) {
-			evt.SetInt(-1);
+		evt.SetInt(-1);
+		m_evt->AddPendingEvent(evt);
+		return NULL;
 	}
 
 	try

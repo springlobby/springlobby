@@ -10,8 +10,9 @@ SLCONFIG("/General/DownloadUrl", "springlobby.info/windows/springlobby-%s-win32.
 
 std::string GetDownloadUrl( const std::string& version )
 {
-	const wxString url = cfg().ReadString(_T("/General/DownloadUrl"));
-	return wxFormat(url) % version.c_str();
+	wxString url = cfg().ReadString(_T("/General/DownloadUrl"));
+	url.Replace(wxT("%s"), TowxString(version));
+	return STD_STRING(url);
 }
 
 std::string GetSpringLobbyVersion( bool consider_aux )
