@@ -115,9 +115,10 @@ bool CopyDir( wxString from, wxString to, bool overwrite )
     if (bla){
         do {
 
-            if (wxDirExists(from + filename) )
-            {
-                wxMkdir(to + filename);
+            if (wxDirExists(from + filename) ) {
+		if (!wxDirExists(from + filename)) {
+	                wxMkdir(to + filename);
+		}
                 CopyDir(from + filename, to + filename, overwrite);
             }
             else{
@@ -162,7 +163,9 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite )
 
 		if (wxDirExists(from + filename) )
 		{
-			wxMkdir(to + filename);
+			if (!wxDirExists(to + filename)) {
+				wxMkdir(to + filename);
+			}
 			CopyDir(from + filename, to + filename, overwrite);
 		}
 		else{
