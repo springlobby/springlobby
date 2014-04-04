@@ -4,10 +4,14 @@
 
 #include "utils/version.h"
 #include "utils/conversion.h"
+#include "helper/slconfig.h"
+
+SLCONFIG("/General/DownloadUrl", "springlobby.info/windows/springlobby-%s-win32.zip", "Url for downloading a springlobby update, %s is replaced with the version");
 
 std::string GetDownloadUrl( const std::string& version )
 {
-	return "springlobby.info/windows/springlobby-" + version + "-win32.zip";
+	const wxString url = cfg().ReadString(_T("/General/DownloadUrl"));
+	return wxFormat(url) % version.c_str();
 }
 
 std::string GetSpringLobbyVersion( bool consider_aux )
