@@ -16,6 +16,8 @@ else
 	filename=sl_${3}.zip
 fi
 
+rm -f ${filename}
+
 zip -9 -u ${filename} springlobby.exe springlobby_updater.exe
 
 if [ ! -d /data/www/springlobby.info/temp/builds/$DEVELOPER ] ; then
