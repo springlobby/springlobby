@@ -133,7 +133,8 @@ bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 	}
 	if (parser.GetParamCount() == 5) {
 		long pid;
-		if (parser.GetParam(0).ToLong(&pid)) {
+		if (!parser.GetParam(0).ToLong(&pid)) {
+			wxLogError(_T("Invalid pid %s"), parser.GetParam(0).c_str());
 			return false;
 		}
 		WaitForExit(pid);
@@ -141,8 +142,8 @@ bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 		wxArrayString params;
 		params.push_back(parser.GetParam(3));
 		params.push_back(parser.GetParam(4));
-		RunProcess(parser.GetParam(2),  params, false, true);
-		params.clear();
+		RunProcess(parser.GetParam(2),  params, false, true); //start updater as admin for copying
+		params.clear(); //start springlobby
 		RunProcess(parser.GetParam(1), params, false);
 		return false;
 	}

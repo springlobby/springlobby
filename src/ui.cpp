@@ -1070,6 +1070,8 @@ void Ui::OnDownloadComplete(wxCommandEvent& /*data*/)
 	const wxString m_newexe = TowxString(SlPaths::GetUpdateDir()) + _T("springlobby_updater.exe");
 	wxArrayString params;
 	params.push_back(wxString::Format(_T("%ld"), wxThread::GetCurrentId()));
+	params.push_back(TowxString(SlPaths::GetExecutable()));
+	params.push_back(m_newexe);
 	params.push_back(TowxString(SlPaths::GetUpdateDir()));
 	params.push_back(TowxString(SlPaths::GetExecutableFolder()));
 	const int res = RunProcess(m_newexe, params, true);
