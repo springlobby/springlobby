@@ -7,17 +7,14 @@
 
 std::string GetDownloadUrl( const std::string& version )
 {
-    return "springlobby.info/windows/springlobby-" + version + "-win32.zip";
+	return "springlobby.info/windows/springlobby-" + version + "-win32.zip";
 }
 
 std::string GetSpringLobbyVersion( bool consider_aux )
 {
-	if ( consider_aux )
-	{
+	if ( consider_aux ) {
 		return STD_STRING((TowxString(getSpringlobbyVersion())).BeforeFirst( _T(' ') )) + " " + GetSpringLobbyAuxVersion();
-	}
-	else
-	{
+	} else {
 		return STD_STRING((TowxString(getSpringlobbyVersion())).BeforeFirst( _T(' ') ));
 	}
 

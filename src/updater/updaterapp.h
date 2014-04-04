@@ -10,25 +10,25 @@ class UpdaterMainwindow;
 //! @brief SpringLobby wxApp
 class UpdaterApp : public wxApp
 {
-  public:
-    UpdaterApp();
-    ~UpdaterApp();
+public:
+	UpdaterApp();
+	~UpdaterApp();
 
-    virtual bool OnInit();
-    virtual int OnExit();
+	virtual bool OnInit();
+	virtual int OnExit();
 
-    virtual void OnFatalException();
+	virtual void OnFatalException();
 
-    virtual void OnInitCmdLine(wxCmdLineParser& parser);
-    virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+	virtual void OnInitCmdLine(wxCmdLineParser& parser);
+	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
-  protected:
+protected:
 	bool StartUpdate( const wxString& source, const wxString& destination )	;
 
 	wxString m_source_dir;
 	wxString m_destination_dir;
 
-    UpdaterMainwindow* m_updater_window;
+	UpdaterMainwindow* m_updater_window;
 
 private:
 	std::ofstream* m_logstream_target;

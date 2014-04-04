@@ -8,27 +8,27 @@
 #include "../utils/activitynotice.h"
 #include "../images/springlobby12x12.xpm"
 
-class UpdaterPanel : public wxPanel {
+class UpdaterPanel : public wxPanel
+{
 
-    protected:
-        wxBoxSizer* m_main_sizer;
-        ActivityNoticePanel* m_activity_panel;
+protected:
+	wxBoxSizer* m_main_sizer;
+	ActivityNoticePanel* m_activity_panel;
 
-        DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 
-    public:
-        UpdaterPanel ( wxWindow* parent)
-            : wxPanel( parent, -1 )
-        {
-            m_main_sizer = new wxBoxSizer( wxVERTICAL );
-            m_activity_panel = new ActivityNoticePanel( this,
-                wxString::Format ( _T("Updating SpringLobby, please wait.")),
-                wxSize(450, 60) , wxSize(420, 15)  );
-            m_main_sizer->Add( m_activity_panel, 0, wxALL, 0 );
+public:
+	UpdaterPanel ( wxWindow* parent)
+		: wxPanel( parent, -1 ) {
+		m_main_sizer = new wxBoxSizer( wxVERTICAL );
+		m_activity_panel = new ActivityNoticePanel( this,
+				wxString::Format ( _T("Updating SpringLobby, please wait.")),
+				wxSize(450, 60) , wxSize(420, 15)  );
+		m_main_sizer->Add( m_activity_panel, 0, wxALL, 0 );
 
-            SetSizer( m_main_sizer);
-            Layout();
-        }
+		SetSizer( m_main_sizer);
+		Layout();
+	}
 };
 
 BEGIN_EVENT_TABLE( UpdaterPanel, wxPanel )
@@ -37,14 +37,14 @@ END_EVENT_TABLE()
 
 
 BEGIN_EVENT_TABLE( UpdaterMainwindow, wxFrame )
-    EVT_CLOSE( UpdaterMainwindow::OnClose )
+	EVT_CLOSE( UpdaterMainwindow::OnClose )
 END_EVENT_TABLE()
 
 /** @brief ~UpdaterMainwindow
   *
   * @todo: document this function
   */
- UpdaterMainwindow::~UpdaterMainwindow()
+UpdaterMainwindow::~UpdaterMainwindow()
 {
 
 }
@@ -53,19 +53,19 @@ END_EVENT_TABLE()
   *
   * @todo: document this function
   */
- UpdaterMainwindow::UpdaterMainwindow():
+UpdaterMainwindow::UpdaterMainwindow():
 	wxFrame( NULL, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) )
 {
-    SetIcon( wxIcon(springlobby12x12_xpm) );
+	SetIcon( wxIcon(springlobby12x12_xpm) );
 
-    wxBoxSizer* top_sizer = new wxBoxSizer( wxVERTICAL );
-    UpdaterPanel* panel = new UpdaterPanel(this);
+	wxBoxSizer* top_sizer = new wxBoxSizer( wxVERTICAL );
+	UpdaterPanel* panel = new UpdaterPanel(this);
 
-    top_sizer->Add( panel, 1, wxEXPAND|wxALL, 0 );
+	top_sizer->Add( panel, 1, wxEXPAND|wxALL, 0 );
 
-    SetSizer( top_sizer );
-    Layout();
-    Center();
+	SetSizer( top_sizer );
+	Layout();
+	Center();
 }
 
 /** @brief OnClose
@@ -79,5 +79,5 @@ void UpdaterMainwindow::OnClose(wxCloseEvent&)
 
 void UpdaterMainwindow::OnUpdateFinished( wxCommandEvent&/*data*/ )
 {
-    Destroy();
+	Destroy();
 }
