@@ -157,7 +157,7 @@ bool UpdaterApp::StartUpdate( const wxString& source, const wxString& destinatio
 		wxMessageBox(_("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
 		return false;
 	}
-	bool success = CopyDirWithFilebackupRename( source, destination);
+	bool success = CopyDirWithFilebackupRename( source, destination, true);
 	if ( !success ) {
 		wxString msg =  _T("Copy failed: \n") + source + _T("\n") + destination;
 		wxMessageBox(msg, _("Error") );

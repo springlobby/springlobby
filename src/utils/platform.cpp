@@ -83,55 +83,23 @@ wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxS
 	return loggerwin;
 }
 
-// copied from http://wxforum.shadonet.com/viewtopic.php?t=2080
-//slightly modified
-bool CopyDir( wxString from, wxString to, bool overwrite )
+bool SafeMkdir(const wxString& dir)
 {
-    wxString sep = wxFileName::GetPathSeparator();
-
-    // append a slash if there is not one (for easier parsing)
-    // because who knows what people will pass to the function.
-    if ( !to.EndsWith( sep ) ) {
-            to += sep;
-    }
-    // for both dirs
-    if ( !from.EndsWith( sep ) ) {
-            from += sep;
-    }
-
-    // first make sure that the source dir exists
-    if(!wxDir::Exists(from)) {
-            wxLogError(from + _T(" does not exist.  Can not copy directory.") );
-            return false;
-    }
-
-    if (!wxDirExists(to))
-        wxMkdir(to);
-
-    wxDir dir(from);
-    wxString filename;
-    bool bla = dir.GetFirst(&filename);
-
-    if (bla){
-        do {
-
-            if (wxDirExists(from + filename) ) {
-		if (!wxDirExists(from + filename)) {
-	                wxMkdir(to + filename);
-		}
-                CopyDir(from + filename, to + filename, overwrite);
-            }
-            else{
-                wxCopyFile(from + filename, to + filename, overwrite);
-            }
-        }
-        while (dir.GetNext(&filename) );
-    }
-    return true;
+    if (!wxDirExists(dir))
+        return wxMkdir(dir);
+	return true;
 }
 
-bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite )
+bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bool backup )
 {
+    // first make sure that the source dir exists
+    if(!wxDir::Exists(from)) {
+            wxLogError(from + _T(" does not exist.  Can not copy directory.") );
+            return false;
+    }
+
+    SafeMkdir(to);
+
     wxString sep = wxFileName::GetPathSeparator();
 
     // append a slash if there is not one (for easier parsing)
@@ -144,33 +112,20 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite )
             from += sep;
     }
 
-    // first make sure that the source dir exists
-    if(!wxDir::Exists(from)) {
-            wxLogError(from + _T(" does not exist.  Can not copy directory.") );
-            return false;
-    }
-
-    if (!wxDirExists(to))
-        wxMkdir(to);
 
     wxDir dir(from);
     wxString filename;
-    bool bla = dir.GetFirst(&filename);
-
-    if (!bla)
+    if (!dir.GetFirst(&filename)) {
 		return false;
-	do {
+	}
 
+	do {
 		if (wxDirExists(from + filename) )
 		{
-			if (!wxDirExists(to + filename)) {
-				wxMkdir(to + filename);
-			}
-			CopyDir(from + filename, to + filename, overwrite);
-		}
-		else{
+			CopyDirWithFilebackupRename(from + filename, to + filename, overwrite, false); //no backup in subdirs
+		} else{
 			//if files exists move it to backup, this way we can use this func on windows to replace 'active' files
-			if ( wxFileExists( to + filename ) ) {
+			if ( backup && wxFileExists( to + filename ) ) {
 				//delete prev backup
 				if ( wxFileExists( to + filename + _T(".old") ) ) {
 					wxRemoveFile( to + filename + _T(".old")  );

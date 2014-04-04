@@ -16,8 +16,7 @@ class wxLogChain;
     this will copy dir (and everything below that recursively to /some/other/path/dir
     \return true if successful
 */
-bool CopyDir( wxString origin, wxString destination, bool overwrite = true);
-bool CopyDirWithFilebackupRename( wxString origin, wxString destination, bool overwrite = true);
+bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite = true, bool backup = true );
 
 //! returns false on !win, checks for regkey on win
 bool IsUACenabled();
