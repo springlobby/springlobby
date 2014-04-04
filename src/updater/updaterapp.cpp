@@ -12,29 +12,18 @@
 #endif // _MSC_VER
 
 #include <wx/intl.h>
-#include <wx/timer.h>
 #include <wx/stdpaths.h>
-#include <wx/filefn.h>
 #include <wx/cmdline.h>
-#include <wx/filename.h>
 #include <wx/image.h>
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/log.h>
 #include <wx/msgdlg.h>
 
-#ifdef __WXMSW__
-	#include <wx/msw/registry.h>
-#endif
-#include <wx/utils.h>
-#include <wx/wfstream.h>
 #include <fstream>
-#include <string>
-#include <vector>
 
 #include "updaterapp.h"
-#include "utils/platform.h"
-#include "versionchecker.h"
 #include "updatermainwindow.h"
+#include "utils/platform.h"
 #include "utils/conversion.h"
 
 IMPLEMENT_APP(UpdaterApp)
