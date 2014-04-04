@@ -1066,8 +1066,12 @@ bool Ui::StartUpdate(const wxString& latestVersion)
 	return true;
 }
 
-void Ui::OnDownloadComplete(wxCommandEvent& /*data*/)
+void Ui::OnDownloadComplete(wxCommandEvent& data)
 {
+	if (data.GetInt()!=0) {
+		wxLogError(_T("Download springlobby update failed"));
+		return;
+	}
 	const wxString m_newexe = TowxString(SlPaths::GetUpdateDir()) + _T("springlobby_updater.exe");
 	wxArrayString params;
 	params.push_back(wxString::Format(_T("%ld"), wxThread::GetCurrentId()));
