@@ -12,6 +12,7 @@
 #endif // _MSC_VER
 
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <stdexcept>
 
 #include "serverevents.h"
@@ -21,12 +22,13 @@
 #include "user.h"
 #include "uiutils.h"
 #include "iserver.h"
-#include <downloader/httpdownloader.h>
+#include "downloader/httpdownloader.h"
 #include "settings.h"
 #include "utils/customdialogs.h"
 #include "utils/tasutil.h"
 #include "utils/uievents.h"
 #include "log.h"
+#include "utils/conversion.h"
 
 #include <lslutils/globalsmanager.h>
 

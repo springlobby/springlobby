@@ -12,105 +12,76 @@
 #include <wx/wfstream.h>
 #include <wx/app.h>
 #include <wx/log.h>
+#include <wx/thread.h>
+#include <wx/event.h>
+
 #include <memory>
 
-
+#include "httpdownloader.h"
 #include "utils/conversion.h"
 
-template <class ParentClass>
-HttpDownloaderThread<ParentClass>::HttpDownloaderThread(  const wxString& FileUrl, const wxString& DestPath,
-        ParentClass& parent, int code, const bool notify, const bool unzip,
-        const wxString& noticeErr, const wxString& noticeOk   )
+const wxEventType HttpDownloaderThread::httpDownloadEvtComplete = wxNewEventType();
+
+HttpDownloaderThread::HttpDownloaderThread(const wxString& FileUrl, const wxString& DestPath, const bool unzip, wxObjectEventFunction func, wxEvtHandler* evt)
 		: wxThread(wxTHREAD_DETACHED),
+		m_do_unzip( unzip ),
 		m_destroy( false ),
 		m_destpath( DestPath ),
 		m_fileurl( FileUrl ),
-		m_do_unzip( unzip ),
-		m_notifyOnDownloadEvent( notify ),
-		m_noticeErr( noticeErr ),
-		m_noticeOk( noticeOk ),
-		m_id_code( code ),
-		m_parent( parent )
+		m_evt(evt)
 {
+	m_evt->Connect(httpDownloadEvtComplete, func);
 	Init();
 }
 
-template <class ParentClass>
-HttpDownloaderThread<ParentClass>::~HttpDownloaderThread()
+HttpDownloaderThread::~HttpDownloaderThread()
 {
 }
 
-template <class ParentClass>
-void HttpDownloaderThread<ParentClass>::Init()
+void HttpDownloaderThread::Init()
 {
 	Create();
 	Run();
 }
 
-template <class ParentClass>
-void* HttpDownloaderThread<ParentClass>::Entry()
+void* HttpDownloaderThread::Entry()
 {
+	wxCommandEvent evt(httpDownloadEvtComplete);
+
 	wxHTTP FileDownloading;
 	// normal timeout is 10 minutes.. set to 10 secs.
 	FileDownloading.SetTimeout( 60 );
 	FileDownloading.Connect( m_fileurl.BeforeFirst( _T( '/' ) ), 80 );
 	wxInputStream* m_httpstream = FileDownloading.GetInputStream( _T( "/" ) + m_fileurl.AfterFirst( _T( '/' ) ) );
 
-	if ( m_httpstream )
+	if (!m_httpstream ) {
+			evt.SetInt(-1);
+	}
+
+	try
 	{
-		try
-		{
-			wxFileOutputStream outs( m_destpath );
-			m_httpstream->Read( outs );
-			outs.Close();
-			delete m_httpstream;
-			m_httpstream = 0;
-			//download success
-			if ( m_notifyOnDownloadEvent )
-			{
-				wxCommandEvent notice( httpDownloadEvtComplete, m_id_code );
-				notice.SetString( m_fileurl + _( "\nsuccessfully saved to:\n" ) + m_destpath );
-				if ( m_do_unzip )
-				{
-					bool unzipOk = Unzip();
-					if ( m_noticeOk == wxEmptyString )
-					{
-						if ( unzipOk ) notice.SetString( m_fileurl + _( "\nsuccessfully unzipped in:\n" ) + m_destpath );
-						else notice.SetString( notice.GetString() + _( "\n unzipping failed, please correct manually" ) );
-					}
-				}
-				if ( m_noticeOk != wxEmptyString ) notice.SetString( m_noticeOk );
-				notice.SetInt( FileDownloading.GetError() );
-				wxLogMessage( notice.GetString() );
-				wxPostEvent( &m_parent, notice );
+		wxFileOutputStream outs( m_destpath );
+		m_httpstream->Read( outs );
+		outs.Close();
+		delete m_httpstream;
+		m_httpstream = 0;
+		//download success
+		if ( m_do_unzip ) {
+			if(!Unzip()) {
+				evt.SetInt(-1);
 			}
-			return NULL;
 		}
-		catch ( ... )
-		{
-			wxLogMessage( _T( "exception on download of" ) + m_fileurl );
-		}
+
+	} catch ( ... ) {
+		evt.SetInt(-1);
+		wxLogMessage( _T( "exception on download of" ) + m_fileurl );
 	}
 
-	//download failed
-	if ( m_notifyOnDownloadEvent )
-	{
-		wxCommandEvent notice( httpDownloadEvtFailed, m_id_code );
-		if ( m_noticeErr == wxEmptyString )
-			notice.SetString( _( "Could not save\n" ) + m_fileurl + _( "\nto:\n" ) + m_destpath );
-		else
-			notice.SetString( m_noticeErr );
-		notice.SetString( notice.GetString() + _( "\nError number: " ) + TowxString( FileDownloading.GetError() ) );
-		notice.SetInt( FileDownloading.GetError() );
-		wxLogError( notice.GetString() );
-		wxPostEvent( &m_parent, notice );
-	}
-
+	m_evt->AddPendingEvent(evt);
 	return NULL;
 }
 
-template <class ParentClass>
-bool HttpDownloaderThread<ParentClass>::Unzip()
+bool HttpDownloaderThread::Unzip()
 {
 	try
 	{
@@ -158,14 +129,12 @@ bool HttpDownloaderThread<ParentClass>::Unzip()
 
 }
 
-template <class ParentClass>
-bool HttpDownloaderThread<ParentClass>::TestDestroy()
+bool HttpDownloaderThread::TestDestroy()
 {
 	return m_destroy;
 }
 
-template <class ParentClass>
-void HttpDownloaderThread<ParentClass>::CloseThread()
+void HttpDownloaderThread::CloseThread()
 {
 	m_destroy = true;
 }

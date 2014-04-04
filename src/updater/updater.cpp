@@ -14,11 +14,8 @@
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <limits>
-
-BEGIN_EVENT_TABLE(UpdaterClass, wxEvtHandler)
-    EVT_COMMAND(wxID_ANY, httpDownloadEvtComplete,  UpdaterClass::OnDownloadEvent)
-    EVT_COMMAND(wxID_ANY, httpDownloadEvtFailed,    UpdaterClass::OnDownloadEvent)
-END_EVENT_TABLE()
+#include <wx/log.h>
+#include <utils/conversion.h>
 
 UpdaterClass& Updater()
 {
@@ -58,11 +55,11 @@ bool UpdaterClass::StartUpdate( const wxString& latestVersion, const wxString& e
         }
     }
 
-    m_http_thread = new HttpDownloaderThread<UpdaterClass>( TowxString(GetDownloadUrl( STD_STRING(m_latest_version))), m_newexe + _T("temp.zip"), *this, wxNewId(), true, true );
-
+//    m_http_thread = new HttpDownloaderThread(this, TowxString(GetDownloadUrl( STD_STRING(m_latest_version))), m_newexe + _T("temp.zip"), wxObjectEventFunction(&Ui::OnLogin) );
     //could prolly use some test on the thread here instead
     return true;
 }
+
 
 
 //all messageboxes need to be modal, updater closes immeadiately when receiving the UpdateFinished event

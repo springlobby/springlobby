@@ -460,9 +460,14 @@ std::string SlPaths::GetCompatibleVersion(const std::string& neededversion)
 	return "";
 }
 
+std::string SlPaths::GetExecutable()
+{
+	return STD_STRING(wxStandardPathsBase::Get().GetExecutablePath());
+}
+
 std::string SlPaths::GetExecutableFolder()
 {
-	return LSL::Util::EnsureDelimiter(LSL::Util::ParentPath(STD_STRING(wxStandardPathsBase::Get().GetExecutablePath())));
+	return LSL::Util::EnsureDelimiter(LSL::Util::ParentPath(GetExecutable()));
 }
 
 /**
@@ -492,4 +497,9 @@ std::string SlPaths::GetDownloadDir()
 	wxString downloadDir = TowxString(dir);
 	cfg().Read(_T("/Spring/DownloadDir"), &downloadDir);
 	return LSL::Util::EnsureDelimiter(STD_STRING(downloadDir));
+}
+
+std::string SlPaths::GetUpdateDir()
+{
+	return SlPaths::GetLobbyWriteDir() + "update" + SEP;
 }

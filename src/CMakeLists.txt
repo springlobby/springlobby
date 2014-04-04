@@ -216,6 +216,7 @@ set(springlobbySrc
 	downloader/prdownloader.cpp
 	downloader/downloadlistctrl.cpp
 	downloader/downloadsobserver.cpp
+	downloader/httpdownloader.cpp
 
 	toasterbox/ToasterBox.cpp
 	toasterbox/ToasterBoxWindow.cpp
@@ -271,6 +272,7 @@ SET(SLSharedWithSettings
 	uiutils.cpp
 	updater/versionchecker.cpp
 	updater/updatehelper.cpp
+	updater/updater.cpp
 	utils/controls.cpp
 	utils/conversion.cpp
 	utils/customdialogs.cpp
@@ -300,7 +302,6 @@ FILE( GLOB header2 "*/*.h" )
 SET( templatesources
 	hosting/battleroommmoptionstab.cxx
 	customvirtlistctrl.cpp
-	downloader/httpdownloader.cpp
 	playback/playbackfilter.cpp
 	playback/playbacklist.cpp
 	playback/playbacklistctrl.cpp

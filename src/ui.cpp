@@ -41,7 +41,6 @@
 #include "utils/uievents.h"
 #include "utils/slpaths.h"
 #include "utils/version.h"
-#include "updater/updatehelper.h"
 #include "uiutils.h"
 #include "chatpanel.h"
 #include "battlelist/battlelisttab.h"
@@ -52,8 +51,10 @@
 #include "crashreport.h"
 #include "maindownloadtab.h"
 #include "downloader/prdownloader.h"
+#include "downloader/httpdownloader.h"
 #include "agreementdialog.h"
 #include "updater/updatehelper.h"
+#include "updater/updater.h"
 #include "reconnectdialog.h"
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
@@ -106,6 +107,10 @@ Ui::~Ui()
 	m_disable_autoconnect = true;
 	Disconnect();
 	delete m_serv;
+	if (m_http_thread != NULL) {
+		m_http_thread->Wait();
+		m_http_thread = NULL;
+	}
 }
 
 ChatPanel* Ui::GetActiveChatPanel()
@@ -1037,6 +1042,41 @@ void Ui::FirstRunWelcome()
 	ShowConnectWindow();
 }
 
+
+bool Ui::StartUpdate( const wxString& latestVersion, const wxString& exe_to_update )
+{
+	wxString sep = wxFileName::GetPathSeparator();
+	if ( !wxFileName::IsDirWritable( wxPathOnly( exe_to_update ) ) ) {
+		wxLogError( _T("dir not writable: ") + exe_to_update );
+		customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
+		return false;
+	}
+	wxString m_newexe = TowxString(SlPaths::GetUpdateDir());
+
+	if ( !wxDirExists( m_newexe ) ) {
+			if ( !wxMkdir( m_newexe ) ){
+			wxLogError( _T("couldn't create update directory") );
+			return false;
+		}
+	}
+
+	m_http_thread = new HttpDownloaderThread( TowxString(GetDownloadUrl( STD_STRING(latestVersion))), m_newexe + _T("temp.zip"), true, wxObjectEventFunction(&Ui::OnDownloadComplete), this);
+
+	//could prolly use some test on the thread here instead
+	return true;
+}
+
+void Ui::OnDownloadComplete(wxCommandEvent& /*data*/)
+{
+	const wxString m_newexe = TowxString(SlPaths::GetUpdateDir()) + _T("springlobby_updater.exe");
+	const bool res = WinExecuteAdmin(m_newexe, TowxString(SlPaths::GetExecutableFolder()));
+	if(!res) {
+		wxLogError(_T("Tried to call %s %s"), m_newexe.c_str(), TowxString(SlPaths::GetExecutableFolder()).c_str());
+		return;
+	}
+	mw().Close();
+}
+
 void Ui::CheckForUpdates()
 {
 	wxString latestVersion = GetLatestVersion();
@@ -1050,6 +1090,8 @@ void Ui::CheckForUpdates()
 
 	wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
 	if ( !latestVersion.IsSameAs(myVersion, false) ) {
+		StartUpdate(latestVersion, TowxString(SlPaths::GetExecutableFolder()));
+
 #ifdef __WXMSW__
 		int answer = customMessageBox(SL_MAIN_ICON,
 					      wxFormat( _("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?") )

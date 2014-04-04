@@ -212,9 +212,11 @@ bool IsUACenabled()
 #include <windows.h>
 #include <wx/msw/winundef.h>
 #include <shellapi.h>
+#endif
 
 bool WinExecuteAdmin( const wxString& command, const wxString& params )
 {
+#ifdef __WXMSW__
       SHELLEXECUTEINFO shExecInfo;
 
       shExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
@@ -240,8 +242,11 @@ bool WinExecuteAdmin( const wxString& command, const wxString& params )
       shExecInfo.hInstApp = NULL;
       }
       return ShellExecuteEx(&shExecInfo);
+#endif // __WXMSW__
+	return false;
 }
 
+#ifdef __WXMSW__
 bool WinExecute( const wxString& command, const wxString& params )
 {
       SHELLEXECUTEINFO shExecInfo;

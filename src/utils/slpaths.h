@@ -59,6 +59,7 @@ public:
 
 	/*@}*/
 
+	static std::string GetExecutable();
 	static std::string GetChatLogLoc();
 
 	static std::string GetEditorPath();
@@ -70,6 +71,7 @@ public:
 	static std::string GetCompatibleVersion(const std::string& neededversion);
 	static std::string GetExecutableFolder();
 	static std::string GetConfigfileDir();
+	static std::string GetUpdateDir();
 
 private:
 	static bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle);

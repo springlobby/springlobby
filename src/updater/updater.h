@@ -27,7 +27,7 @@ protected:
     wxString m_currentexe;
     wxString m_latest_version;
 
-    HttpDownloaderThread<UpdaterClass>* m_http_thread;
+    HttpDownloaderThread* m_http_thread;
 
     DECLARE_EVENT_TABLE()
 };
