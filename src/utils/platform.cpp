@@ -261,6 +261,7 @@ int RunProcess(const wxString& cmd, const wxArrayString& params, const bool asyn
 		}
 		paramstring += escapeStr(param);
 	}
+	wxLogDebug(_T("going to run %s %s"), cmd.c_str(), paramstring.c_str());
 #ifdef __WXMSW__
 	SHELLEXECUTEINFO ShExecInfo;
 	DWORD exitCode = 0;

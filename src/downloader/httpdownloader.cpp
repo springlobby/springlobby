@@ -111,7 +111,7 @@ bool HttpDownloaderThread::Unzip()
 			}
 			else
 			{
-			    wxLogMessage( _T("unzipping: ")+ file );
+			    wxLogDebug( _T("unzipping: ")+ file );
 				wxFFileOutputStream out( file );
 				if( !out.IsOk() )
                     wxLogError( _T("unzipping failed on: ")+ file );
