@@ -4,7 +4,11 @@ set -e
 cd $(dirname $0)/../${1}
 pwd
 DEVELOPER=${2}
-/opt/mingw32/usr/bin/i686-w64-mingw32-strip src/springlobby.exe
+
+mv src/springlobby.exe .
+mv src/updater/springlobby_updater.exe .
+/opt/mingw32/usr/bin/i686-w64-mingw32-strip springlobby.exe
+/opt/mingw32/usr/bin/i686-w64-mingw32-strip springlobby_updater.exe
 
 if [ x$3 == x ]; then
 	filename=sl_master.zip
@@ -12,7 +16,7 @@ else
 	filename=sl_${3}.zip
 fi
 
-zip -9 -u ${filename} src/springlobby.exe
+zip -9 -u ${filename} springlobby.exe springlobby_updater.exe
 
 if [ ! -d /data/www/springlobby.info/temp/builds/$DEVELOPER ] ; then
 	mkdir -p /data/www/springlobby.info/temp/builds/$DEVELOPER
