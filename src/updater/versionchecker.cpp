@@ -14,7 +14,9 @@
 #include "utils/customdialogs.h"
 #include "log.h"
 #include "utils/conversion.h"
+#include "helper/slconfig.h"
 
+SLCONFIG("/General/UpdateUrl", "http://version.springlobby.info/current.txt", "Url to check for updates" );
 
 //! @brief gets latest version from version.springlobby.info via HTTP
 wxString GetLatestVersion()
@@ -22,10 +24,14 @@ wxString GetLatestVersion()
   wxHTTP versionRequest;
 
   versionRequest.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
+	const wxString updateurl = cfg().ReadString(_T("/General/UpdateUrl"));
+	const wxString host = updateurl.AfterFirst('/').AfterFirst('/').BeforeFirst('/');
+	const wxString url = updateurl.AfterFirst('/').AfterFirst('/').AfterFirst('/');
   // normal timeout is 10 minutes.. set to 10 secs.
-  versionRequest.SetTimeout(10);
-  versionRequest.Connect( _T("version.springlobby.info"), 80);
-  wxInputStream *stream = versionRequest.GetInputStream( _T("/current.txt") );
+	versionRequest.SetTimeout(10);
+	versionRequest.Connect(host, 80);
+	wxLogDebug(_T("Connecting to %s, %s"), host.c_str(), url.c_str());
+  wxInputStream *stream = versionRequest.GetInputStream(_T("/") + url);
   wxString result;
 
   if (versionRequest.GetError() == wxPROTO_NOERR)
