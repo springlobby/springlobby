@@ -57,12 +57,12 @@ bool UpdaterApp::OnInit()
 	//this triggers the Cli Parser amongst other stuff
 	if (!wxApp::OnInit())
 		return false;
-/*
+
 	assert( m_logstream_target );
 	wxLogStream* m_log_stream = new wxLogStream( m_logstream_target );
 	m_log_stream->SetLogLevel( wxLOG_Trace );
 	wxLog::SetActiveTarget( m_log_stream );
-*/
+
 	wxLogMessage( _T("m_source_dir ") + m_source_dir);
 	wxLogMessage( _T("m_destination_dir ") + m_destination_dir);
 
@@ -126,7 +126,7 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
 static bool CheckDir(const wxString& dir)
 {
 	if (wxDirExists(dir)) return true;
-	wxLogError(_T("%s doesn't exist!"), dir.c_str());
+	wxMessageBox(_T("%s doesn't exist!"), dir.c_str());
 	return false;
 }
 
@@ -147,7 +147,7 @@ bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 	}
 	if (m_paramcount == 5) {
 		if (!parser.GetParam(0).ToLong(&m_pid)) {
-			wxLogError(_T("Invalid pid %s"), parser.GetParam(0).c_str());
+			wxMessageBox(_T("Invalid pid %s"), parser.GetParam(0).c_str());
 			return false;
 		}
 		m_springlobby_exe = parser.GetParam(1);
