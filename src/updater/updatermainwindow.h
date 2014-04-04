@@ -12,7 +12,7 @@ class wxCloseEvent;
 class UpdaterMainwindow : public wxFrame, public GlobalEvent {
 
     public:
-        UpdaterMainwindow( const wxString& rev_string );
+        UpdaterMainwindow();
         virtual ~UpdaterMainwindow();
 
         void OnClose( wxCloseEvent& evt );

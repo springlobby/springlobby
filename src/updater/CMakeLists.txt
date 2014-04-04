@@ -1,7 +1,6 @@
 set(update_RC_FILE updater.rc)
 SET(updaterSrc
 	updatermainwindow.cpp
-	updater.cpp
 	updaterapp.cpp
 	../utils/activitynotice.cpp
 	../utils/misc.cpp

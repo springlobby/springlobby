@@ -19,20 +19,20 @@
 #include <wx/filename.h>
 #include <wx/image.h>
 #include <wx/fs_zip.h> //filesystem zip handler
-#include <wx/socket.h>
+#include <wx/log.h>
 #ifdef __WXMSW__
 	#include <wx/msw/registry.h>
 #endif
 #include <wx/utils.h>
 #include <wx/wfstream.h>
 #include <fstream>
-
+#include <string>
+#include <vector>
 
 #include "updaterapp.h"
 #include "../crashreport.h"
 #include "../utils/platform.h"
 #include "../utils/customdialogs.h"
-#include "updater.h"
 #include <lslutils/globalsmanager.h>
 
 #include "versionchecker.h"
@@ -43,7 +43,6 @@
 IMPLEMENT_APP(UpdaterApp)
 
 UpdaterApp::UpdaterApp():
-	m_version( _T("-1") ),
 	m_updater_window( 0 )
 {
 	SetAppName( _T("springlobby_updater") );
@@ -76,8 +75,8 @@ bool UpdaterApp::OnInit()
     wxLogStream* m_log_stream = new wxLogStream( m_logstream_target );
     m_log_stream->SetLogLevel( wxLOG_Trace );
     wxLog::SetActiveTarget( m_log_stream );
-    wxLogMessage( _T("m_exe_to_update ") + m_exe_to_update);
-    wxLogMessage( _T("m_version ") + m_version);
+    wxLogMessage( _T("m_source_dir ") + m_source_dir);
+    wxLogMessage( _T("m_destination_dir ") + m_destination_dir);
 
 #if wxUSE_ON_FATAL_EXCEPTION
     wxHandleFatalExceptions( true );
@@ -88,24 +87,14 @@ bool UpdaterApp::OnInit()
      //TODO needed?
     wxImage::AddHandler(new wxPNGHandler);
     wxFileSystem::AddHandler(new wxZipFSHandler);
-    wxSocketBase::Initialize();
 
-	if (m_version.empty()) {
-		m_version = GetLatestVersion();
-		if (m_version.empty()) { // no cmd line param specified and couldn't fetch online -> abort
-			return -1;
-		}
-	}
-
-	if (m_exe_to_update.empty()) {
-		m_exe_to_update = _T("springlobby.exe");
-	}
-
-	m_updater_window = new UpdaterMainwindow( m_version );
+	m_updater_window = new UpdaterMainwindow();
 	m_updater_window->Show( true );
 	SetTopWindow( m_updater_window );
 
-	return Updater().StartUpdate( m_version, m_exe_to_update );
+	bool ret = StartUpdate(m_source_dir, m_destination_dir);
+	m_updater_window->Close();
+	return ret;
 }
 
 
@@ -144,8 +133,7 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
     wxCmdLineEntryDesc cmdLineDesc[] =
     {
 		{ wxCMD_LINE_SWITCH, STR("h"), STR("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-		{ wxCMD_LINE_OPTION, STR("f"), STR("target-exe"),  _("the SpringLobby executeable to be updated"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_NEEDS_SEPARATOR },
-		{ wxCMD_LINE_OPTION, STR("r"), STR("target-rev"),  _("the SpringLobby revision to update to"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_NEEDS_SEPARATOR },
+		{ wxCMD_LINE_PARAM,  NULL, NULL, _("<parent pid> <springlobby.exe> <updater.exe> <source dir> <destination dir>"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE },
 		{ wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, 0 }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
     };
 
@@ -155,14 +143,59 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
     #undef STR
 }
 
+static bool CheckDir(const wxString& dir)
+{
+	if (wxDirExists(dir)) return true;
+	wxLogError(_T("%s doesn't exist!"), dir.c_str());
+	return false;
+}
+
+
 //! @brief parses the command line and sets global app options like log verbosity or log target
 bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
 	#if wxUSE_CMDLINE_PARSER
-        if ( parser.Found(_T("help")) )
-            return false; // not a syntax error, but program should stop if user asked for command line usage
-		if ( parser.Found(_T("target-exe"), &m_exe_to_update ) && parser.Found(_T("target-rev"),  &m_version) )
-			return true;
+	if ( parser.Found(_T("help")) )
+		return false; // not a syntax error, but program should stop if user asked for command line usage
+	if (parser.GetParamCount() == 2){
+		m_source_dir = parser.GetParam(0);
+		m_destination_dir = parser.GetParam(1);
+		if (!CheckDir(m_source_dir)) return false;
+		if (!CheckDir(m_destination_dir)) return false;
+		return true;
+	}
+	if (parser.GetParamCount() == 5){
+		long pid;
+		if (parser.GetParam(0).ToLong(&pid)) {
+			return false;
+		}
+		WaitForExit(pid);
+
+		wxArrayString params;
+		params.push_back(parser.GetParam(3));
+		params.push_back(parser.GetParam(4));
+		RunProcess(parser.GetParam(2),  params, false, true);
+		params.clear();
+		RunProcess(parser.GetParam(1), params, false);
+		return false;
+	}
 	#endif
-        return true;
+	return false;
+}
+
+
+bool UpdaterApp::StartUpdate( const wxString& source, const wxString& destination )
+{
+    wxString sep = wxFileName::GetPathSeparator();
+    if ( !wxFileName::IsDirWritable( destination ) ) {
+        wxLogError( _T("dir not writable: ") + destination );
+        customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
+        return false;
+    }
+    bool success = CopyDirWithFilebackupRename( source, destination);
+    if ( !success ) {
+        wxLogError( _T("Full dir copy failed") );
+		return false;
+    }
+	return true;
 }

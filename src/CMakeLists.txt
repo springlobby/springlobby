@@ -272,7 +272,6 @@ SET(SLSharedWithSettings
 	uiutils.cpp
 	updater/versionchecker.cpp
 	updater/updatehelper.cpp
-	updater/updater.cpp
 	utils/controls.cpp
 	utils/conversion.cpp
 	utils/customdialogs.cpp

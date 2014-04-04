@@ -42,7 +42,6 @@
 #include "channel/channel.h"
 #include "utils/customdialogs.h"
 #include "downloader/prdownloader.h"
-#include "updater/updater.h"
 #include <lslutils/globalsmanager.h>
 #include <lslutils/config.h>
 #include "gui/notificationmanager.h"

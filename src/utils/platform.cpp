@@ -156,36 +156,35 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite )
     wxString filename;
     bool bla = dir.GetFirst(&filename);
 
-    if (bla){
-        do {
+    if (!bla)
+		return false;
+	do {
 
-            if (wxDirExists(from + filename) )
-            {
-                wxMkdir(to + filename);
-                CopyDir(from + filename, to + filename, overwrite);
-            }
-            else{
-                //if files exists move it to backup, this way we can use this func on windows to replace 'active' files
-                if ( wxFileExists( to + filename ) ) {
-                    //delete prev backup
-                    if ( wxFileExists( to + filename + _T(".old") ) ) {
-                        wxRemoveFile( to + filename + _T(".old")  );
-                    }
-                    //make backup
-                    if ( !wxRenameFile( to + filename, to + filename + _T(".old") ) ) {
-						wxLogError( _T("could not rename %s, copydir aborted"), (to + filename).c_str() );
-                        return false;
-                    }
-                }
-                //do the actual copy
-                if ( !wxCopyFile(from + filename, to + filename, overwrite) ) {
-					wxLogError( _T("could not copy %s to %s, copydir aborted"), (from + filename).c_str(), (to + filename).c_str() );
-                    return false;
-                }
-            }
-        }
-        while (dir.GetNext(&filename) );
-    }
+		if (wxDirExists(from + filename) )
+		{
+			wxMkdir(to + filename);
+			CopyDir(from + filename, to + filename, overwrite);
+		}
+		else{
+			//if files exists move it to backup, this way we can use this func on windows to replace 'active' files
+			if ( wxFileExists( to + filename ) ) {
+				//delete prev backup
+				if ( wxFileExists( to + filename + _T(".old") ) ) {
+					wxRemoveFile( to + filename + _T(".old")  );
+				}
+				//make backup
+				if ( !wxRenameFile( to + filename, to + filename + _T(".old") ) ) {
+					wxLogError( _T("could not rename %s, copydir aborted"), (to + filename).c_str() );
+					return false;
+				}
+			}
+			//do the actual copy
+			if ( !wxCopyFile(from + filename, to + filename, overwrite) ) {
+				wxLogError( _T("could not copy %s to %s, copydir aborted"), (from + filename).c_str(), (to + filename).c_str() );
+				return false;
+			}
+		}
+	} while (dir.GetNext(&filename) );
     return true;
 }
 
@@ -214,66 +213,6 @@ bool IsUACenabled()
 #include <shellapi.h>
 #endif
 
-bool WinExecuteAdmin( const wxString& command, const wxString& params )
-{
-#ifdef __WXMSW__
-      SHELLEXECUTEINFO shExecInfo;
-
-      shExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-
-      shExecInfo.fMask = 0;
-      shExecInfo.hwnd = NULL;
-
-      //on XP this would open the real runas dialog, which apparently is its own wonder
-      //by default it has a checkbox enabled which makes sl unable to write to the working dir...
-      if ( IsUACenabled() ) {
-        if ( IsPreVistaWindows() )
-            shExecInfo.lpVerb = _T("open");
-        else
-            shExecInfo.lpVerb = _T("runas");
-#ifdef _MSC_VER //some strange compiler stupidity going on here
-      shExecInfo.lpFile = command.c_str();
-      shExecInfo.lpParameters = params.c_str();
-#else
-	  shExecInfo.lpFile = command.wc_str();
-      shExecInfo.lpParameters = params.wc_str();
-#endif
-      shExecInfo.lpDirectory = NULL;
-      shExecInfo.hInstApp = NULL;
-      }
-      return ShellExecuteEx(&shExecInfo);
-#endif // __WXMSW__
-	return false;
-}
-
-#ifdef __WXMSW__
-bool WinExecute( const wxString& command, const wxString& params )
-{
-      SHELLEXECUTEINFO shExecInfo;
-
-      shExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-    shExecInfo.lpVerb = _T("open");
-      shExecInfo.fMask = 0;
-      shExecInfo.hwnd = NULL;
-
-#ifdef _MSC_VER //some strange compiler stupidity going on here
-      shExecInfo.lpFile = command.c_str();
-      shExecInfo.lpParameters = params.c_str();
-#else
-	  shExecInfo.lpFile = command.wc_str();
-      shExecInfo.lpParameters = params.wc_str();
-#endif
-      shExecInfo.lpDirectory = NULL;
-      shExecInfo.hInstApp = NULL;
-
-      return ShellExecuteEx(&shExecInfo);
-}
-
-bool IsPreVistaWindows()
-{
-    return wxPlatformInfo().GetOSMajorVersion() < 6;
-}
-#endif
 
 CwdGuard::CwdGuard( const wxString& new_cwd )
     : m_old_cwd( wxGetCwd() )
@@ -311,7 +250,7 @@ static wxString escapeStr(const wxString& str)
 	return _T("\"") + str + _T("\"");
 }
 
-int RunProcess(const wxString& cmd, const wxArrayString& params)
+int RunProcess(const wxString& cmd, const wxArrayString& params, const bool async, const bool root)
 {
 	wxString paramstring;
 	for (wxString param: params) {
@@ -324,17 +263,23 @@ int RunProcess(const wxString& cmd, const wxArrayString& params)
 	SHELLEXECUTEINFO ShExecInfo;
 	DWORD exitCode = 0;
 
+	if ((root) && (IsUACenabled()) {
+		if ( IsPreVistaWindows() )
+			ShExecInfo.lpVerb = NULL;
+		else
+			ShExecInfo.lpVerb = _T("runas");
+
 	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
 	ShExecInfo.hwnd = NULL;
-	ShExecInfo.lpVerb = NULL;
 	ShExecInfo.lpFile = cmd.t_str();
 	ShExecInfo.lpParameters = paramstring.t_str();
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL;
 
-	ShellExecuteEx(&ShExecInfo);
+	int res = ShellExecuteEx(&ShExecInfo);
+	if (async) return (res > 32);
 	WaitForSingleObject(ShExecInfo.hProcess,INFINITE);
 	GetExitCodeProcess(ShExecInfo.hProcess, &exitCode);
 	return exitCode;
@@ -359,4 +304,19 @@ int BrowseFolder(const wxString& path)
 	param.push_back(path);
 	return RunProcess(_T("xdg-open"), param);
 #endif
+}
+
+int WaitForExit(int pid)
+{
+#ifdef WIN32
+	HANDLE h = OpenProcess(0, false, pid)
+	if (h == NULL) {
+        return 0;
+	}
+	WaitForSingleObject(h, INFINITE);
+	int exitCode = 0;
+	GetExitCodeProcess(h, &exitCode);
+	return exitCode;
+#endif
+	return 0;
 }

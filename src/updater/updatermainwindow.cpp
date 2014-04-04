@@ -32,12 +32,12 @@ class UpdaterPanel : public wxPanel {
         DECLARE_EVENT_TABLE()
 
     public:
-        UpdaterPanel ( wxWindow* parent, const wxString& rev_string )
+        UpdaterPanel ( wxWindow* parent)
             : wxPanel( parent, -1 )
         {
             m_main_sizer = new wxBoxSizer( wxVERTICAL );
             m_activity_panel = new ActivityNoticePanel( this,
-                wxString::Format ( _T("Updating SpringLobby to %s, please wait."), rev_string.c_str() ),
+                wxString::Format ( _T("Updating SpringLobby, please wait.")),
                 wxSize(450, 60) , wxSize(420, 15)  );
             m_main_sizer->Add( m_activity_panel, 0, wxALL, 0 );
 
@@ -70,7 +70,7 @@ END_EVENT_TABLE()
   *
   * @todo: document this function
   */
- UpdaterMainwindow::UpdaterMainwindow( const wxString& rev_string ):
+ UpdaterMainwindow::UpdaterMainwindow():
 	wxFrame( NULL, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) ),
 	GlobalEvent()
 //                wxMINIMIZE_BOX | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN  ),
@@ -78,7 +78,7 @@ END_EVENT_TABLE()
     SetIcon( wxIcon(springlobby12x12_xpm) );
 
     wxBoxSizer* top_sizer = new wxBoxSizer( wxVERTICAL );
-    UpdaterPanel* panel = new UpdaterPanel( this, rev_string );
+    UpdaterPanel* panel = new UpdaterPanel(this);
 
     top_sizer->Add( panel, 1, wxEXPAND|wxALL, 0 );
 
@@ -95,12 +95,8 @@ END_EVENT_TABLE()
   */
 void UpdaterMainwindow::OnClose(wxCloseEvent&)
 {
-    if ( timedMessageBox( SL_MAIN_ICON, _("Closing this window will abort the update, you may end up with a broken client.\nAbort?"), _("Warning"), 4000, wxYES_NO | wxICON_WARNING )
-                        == wxYES )
-    {
-        freeStaticBox();
-        Destroy();
-    }
+	freeStaticBox();
+	Destroy();
 }
 
 void UpdaterMainwindow::OnUpdateFinished( wxCommandEvent&/*data*/ )

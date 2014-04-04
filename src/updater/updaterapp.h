@@ -22,11 +22,11 @@ class UpdaterApp : public wxApp
     virtual void OnInitCmdLine(wxCmdLineParser& parser);
     virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
-
   protected:
+	bool StartUpdate( const wxString& source, const wxString& destination )	;
 
-	wxString m_exe_to_update;
-	wxString m_version;
+	wxString m_source_dir;
+	wxString m_destination_dir;
 
     UpdaterMainwindow* m_updater_window;
 

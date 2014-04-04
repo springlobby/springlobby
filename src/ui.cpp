@@ -54,7 +54,6 @@
 #include "downloader/httpdownloader.h"
 #include "agreementdialog.h"
 #include "updater/updatehelper.h"
-#include "updater/updater.h"
 #include "reconnectdialog.h"
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
@@ -1069,9 +1068,13 @@ bool Ui::StartUpdate( const wxString& latestVersion, const wxString& exe_to_upda
 void Ui::OnDownloadComplete(wxCommandEvent& /*data*/)
 {
 	const wxString m_newexe = TowxString(SlPaths::GetUpdateDir()) + _T("springlobby_updater.exe");
-	const bool res = WinExecuteAdmin(m_newexe, TowxString(SlPaths::GetExecutableFolder()));
-	if(!res) {
-		wxLogError(_T("Tried to call %s %s"), m_newexe.c_str(), TowxString(SlPaths::GetExecutableFolder()).c_str());
+	wxArrayString params;
+	params.push_back(wxString::Format(_T("%ld"), wxThread::GetCurrentId()));
+	params.push_back(TowxString(SlPaths::GetUpdateDir()));
+	params.push_back(TowxString(SlPaths::GetExecutableFolder()));
+	const int res = RunProcess(m_newexe, params, true);
+	if(res != 0) {
+		wxLogError(_T("Tried to call %s %s"), m_newexe.c_str());
 		return;
 	}
 	mw().Close();
@@ -1090,8 +1093,6 @@ void Ui::CheckForUpdates()
 
 	wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
 	if ( !latestVersion.IsSameAs(myVersion, false) ) {
-		StartUpdate(latestVersion, TowxString(SlPaths::GetExecutableFolder()));
-
 #ifdef __WXMSW__
 		int answer = customMessageBox(SL_MAIN_ICON,
 					      wxFormat( _("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?") )
@@ -1099,19 +1100,11 @@ void Ui::CheckForUpdates()
 					      % msg,
 					      _("Not up to date"), wxOK|wxCANCEL);
 		if (answer == wxYES) {
-			wxString command = _T("\"") + wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("springlobby_updater.exe\"");
-			wxString params = _T("-f \"") + wxStandardPaths::Get().GetExecutablePath() + _T("\"") + _T(" -r ") +  latestVersion  ;
-			if( WinExecute( command, params ) > 0 ) {
-				//returned pid > 0 -> proc started successfully
-				// now close this instance immeadiately
-				wxCloseEvent dummy;
-				ui().mw().OnClose( dummy );
-			} else {
+			if (!StartUpdate(latestVersion, TowxString(SlPaths::GetExecutableFolder()))) {
 				//this will also happen if updater exe is not present so we don't really ne special check for existance of it
 				customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser.") + msg, _("Updater error.") );
 				OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary") );
 				OpenWebBrowser( TowxString(GetDownloadUrl(STD_STRING(latestVersion))) );
-
 			}
 		}
 #else
