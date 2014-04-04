@@ -265,14 +265,7 @@ int RunProcess(const wxString& cmd, const wxArrayString& params, const bool asyn
 #ifdef __WXMSW__
 	SHELLEXECUTEINFO ShExecInfo;
 	DWORD exitCode = 0;
-
-	if (root && IsUACenabled()) {
-		if ( IsPreVistaWindows() )
-			ShExecInfo.lpVerb = NULL;
-		else
-			ShExecInfo.lpVerb = _T("runas");
-	}
-
+	ShExecInfo.lpVerb = _T("open");
 	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
 	ShExecInfo.hwnd = NULL;
@@ -281,6 +274,11 @@ int RunProcess(const wxString& cmd, const wxArrayString& params, const bool asyn
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL;
+
+	if (root && IsUACenabled()) {
+		if (!IsPreVistaWindows() )
+			ShExecInfo.lpVerb = _T("runas");
+	}
 
 	int res = ShellExecuteEx(&ShExecInfo);
 	if (async) return (res > 32);
