@@ -318,6 +318,7 @@ int WaitForExit(int pid)
 	WaitForSingleObject(h, INFINITE);
 	DWORD exitCode = 0;
 	GetExitCodeProcess(h, &exitCode);
+	CloseHandle(h);
 	return exitCode;
 #endif
 	return 0;
