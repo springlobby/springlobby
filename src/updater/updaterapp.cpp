@@ -89,7 +89,7 @@ bool UpdaterApp::OnInit()
 		params.push_back(m_destination_dir);
 		RunProcess(m_updater_exe,  params, false, true); //start updater as admin for copying
 		params.clear(); //start springlobby
-		ret = RunProcess(m_springlobby_exe, params, false);
+		ret = RunProcess(m_springlobby_exe, params, true);
 	}
 
 	m_updater_window->Close();
