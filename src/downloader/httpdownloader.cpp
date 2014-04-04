@@ -47,12 +47,13 @@ void HttpDownloaderThread::Init()
 void* HttpDownloaderThread::Entry()
 {
 	wxCommandEvent evt(httpDownloadEvtComplete);
-
+	const wxString host = m_fileurl.AfterFirst('/').AfterFirst('/').BeforeFirst('/');
+	const wxString url = m_fileurl.AfterFirst('/').AfterFirst('/').AfterFirst('/');
 	wxHTTP FileDownloading;
 	// normal timeout is 10 minutes.. set to 10 secs.
 	FileDownloading.SetTimeout( 60 );
-	FileDownloading.Connect( m_fileurl.BeforeFirst( _T( '/' ) ), 80 );
-	wxInputStream* m_httpstream = FileDownloading.GetInputStream( _T( "/" ) + m_fileurl.AfterFirst( _T( '/' ) ) );
+	FileDownloading.Connect(host, 80 );
+	wxInputStream* m_httpstream = FileDownloading.GetInputStream( _T("/") + url );
 
 	if (!m_httpstream ) {
 		evt.SetInt(-1);
