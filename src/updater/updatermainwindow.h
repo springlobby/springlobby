@@ -5,11 +5,9 @@
 
 #include <wx/frame.h>
 
-#include "../utils/globalevents.h"
-
 class wxCloseEvent;
 
-class UpdaterMainwindow : public wxFrame, public GlobalEvent {
+class UpdaterMainwindow : public wxFrame{
 
     public:
         UpdaterMainwindow();

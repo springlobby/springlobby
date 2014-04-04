@@ -17,17 +17,7 @@ class UpdaterPanel : public wxPanel {
 
     protected:
         wxBoxSizer* m_main_sizer;
-        wxButton* m_changelog;
         ActivityNoticePanel* m_activity_panel;
-
-        enum {
-            ID_BUT_CHANGELOG = wxID_HIGHEST
-        };
-
-        void OnChangelog( wxCommandEvent&  )
-        {
-		aboutbox().showChangelog();
-        }
 
         DECLARE_EVENT_TABLE()
 
@@ -41,17 +31,15 @@ class UpdaterPanel : public wxPanel {
                 wxSize(450, 60) , wxSize(420, 15)  );
             m_main_sizer->Add( m_activity_panel, 0, wxALL, 0 );
 
-            m_changelog = new wxButton( this, ID_BUT_CHANGELOG,_("Open changelog in browser") );
-            m_main_sizer->Add( m_changelog, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
-
             SetSizer( m_main_sizer);
             Layout();
         }
 };
 
 BEGIN_EVENT_TABLE( UpdaterPanel, wxPanel )
-    EVT_BUTTON ( ID_BUT_CHANGELOG, UpdaterPanel::OnChangelog )
+//    EVT_BUTTON ( ID_BUT_CHANGELOG, UpdaterPanel::OnChangelog )
 END_EVENT_TABLE()
+
 
 BEGIN_EVENT_TABLE( UpdaterMainwindow, wxFrame )
     EVT_CLOSE( UpdaterMainwindow::OnClose )
@@ -71,9 +59,7 @@ END_EVENT_TABLE()
   * @todo: document this function
   */
  UpdaterMainwindow::UpdaterMainwindow():
-	wxFrame( NULL, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) ),
-	GlobalEvent()
-//                wxMINIMIZE_BOX | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN  ),
+	wxFrame( NULL, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) )
 {
     SetIcon( wxIcon(springlobby12x12_xpm) );
 
@@ -85,8 +71,6 @@ END_EVENT_TABLE()
     SetSizer( top_sizer );
     Layout();
     Center();
-    CustomMessageBoxBase::setLobbypointer( this );
-	ConnectGlobalEvent(this, GlobalEvent::OnUpdateFinished, wxObjectEventFunction(&UpdaterMainwindow::OnUpdateFinished));
 }
 
 /** @brief OnClose
@@ -95,12 +79,10 @@ END_EVENT_TABLE()
   */
 void UpdaterMainwindow::OnClose(wxCloseEvent&)
 {
-	freeStaticBox();
 	Destroy();
 }
 
 void UpdaterMainwindow::OnUpdateFinished( wxCommandEvent&/*data*/ )
 {
-    freeStaticBox();
     Destroy();
 }

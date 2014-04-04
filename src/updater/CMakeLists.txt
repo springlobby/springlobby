@@ -3,7 +3,7 @@ SET(updaterSrc
 	updatermainwindow.cpp
 	updaterapp.cpp
 	../utils/activitynotice.cpp
-	../utils/misc.cpp
+	../utils/platform.cpp
 	${updater_RC_FILE}
 )
 
@@ -15,15 +15,8 @@ endif()
 if (SPRINGLOBBY_UPDATER)
 	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${updater_RC_FILE} )
 	TARGET_LINK_LIBRARIES(springlobby_updater
-			libsettings
-			lsl-utils
-			lsl-unitsync
 			springlobbyversion
-			slcommon
 			${wxWidgets_LIBRARIES}
-			${CURL_LIBRARIES}
-			${CURL_LINKFLAGS}
-			${CMAKE_DL_LIBS}
 		)
 	install(TARGETS springlobby_updater RUNTIME DESTINATION .)
 endif()

@@ -20,6 +20,8 @@
 #include <wx/image.h>
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/log.h>
+#include <wx/msgdlg.h>
+
 #ifdef __WXMSW__
 	#include <wx/msw/registry.h>
 #endif
@@ -30,15 +32,10 @@
 #include <vector>
 
 #include "updaterapp.h"
-#include "../crashreport.h"
-#include "../utils/platform.h"
-#include "../utils/customdialogs.h"
-#include <lslutils/globalsmanager.h>
-
+#include "utils/platform.h"
 #include "versionchecker.h"
 #include "updatermainwindow.h"
-#include "../defines.h"
-#include "../utils/conversion.h"
+#include "utils/conversion.h"
 
 IMPLEMENT_APP(UpdaterApp)
 
@@ -102,24 +99,13 @@ bool UpdaterApp::OnInit()
 int UpdaterApp::OnExit()
 {
     SetEvtHandlerEnabled(false);
-    LSL::Util::DestroyGlobals();
-
     return 0;
 }
 
 //! @brief is called when the app crashes
 void UpdaterApp::OnFatalException()
 {
-#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-    #if wxUSE_STACKWALKER
-        CrashReport::instance().GenerateReport();
-    #else
-        EXCEPTION_POINTERS* p = new EXCEPTION_POINTERS; //lets hope this'll never get called
-        CrashReport::instance().GenerateReport(p);
-    #endif
-#else
     wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
-#endif
 }
 
 void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
@@ -189,7 +175,7 @@ bool UpdaterApp::StartUpdate( const wxString& source, const wxString& destinatio
     wxString sep = wxFileName::GetPathSeparator();
     if ( !wxFileName::IsDirWritable( destination ) ) {
         wxLogError( _T("dir not writable: ") + destination );
-        customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
+        wxMessageBox(_("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
         return false;
     }
     bool success = CopyDirWithFilebackupRename( source, destination);

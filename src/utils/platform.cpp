@@ -240,11 +240,6 @@ PwdGuard::~PwdGuard()
 	wxSetWorkingDirectory( m_old_pwd );
 }
 
-wxString GetAppName( const bool lowerCase )
-{
-	return TowxString(getSpringlobbyName(lowerCase));
-}
-
 wxString IdentityString(const wxString& format, bool lowerCase )
 {
 	return wxFormat( format ) % TowxString(getSpringlobbyName(lowerCase));
