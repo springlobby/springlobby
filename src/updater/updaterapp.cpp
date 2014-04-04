@@ -29,7 +29,8 @@
 IMPLEMENT_APP(UpdaterApp)
 
 UpdaterApp::UpdaterApp():
-	m_updater_window( 0 )
+	m_pid(0),
+	m_updater_window(NULL)
 {
 	SetAppName( _T("springlobby_updater") );
 
@@ -56,11 +57,12 @@ bool UpdaterApp::OnInit()
 	//this triggers the Cli Parser amongst other stuff
 	if (!wxApp::OnInit())
 		return false;
-
+/*
 	assert( m_logstream_target );
 	wxLogStream* m_log_stream = new wxLogStream( m_logstream_target );
 	m_log_stream->SetLogLevel( wxLOG_Trace );
 	wxLog::SetActiveTarget( m_log_stream );
+*/
 	wxLogMessage( _T("m_source_dir ") + m_source_dir);
 	wxLogMessage( _T("m_destination_dir ") + m_destination_dir);
 
@@ -77,8 +79,19 @@ bool UpdaterApp::OnInit()
 	m_updater_window = new UpdaterMainwindow();
 	m_updater_window->Show( true );
 	SetTopWindow( m_updater_window );
+	bool ret;
+	if (m_paramcount == 2) {
+		ret = StartUpdate(m_source_dir, m_destination_dir);
+	} else if ( m_paramcount == 5) {
+		WaitForExit(m_pid);
+		wxArrayString params;
+		params.push_back(m_source_dir);
+		params.push_back(m_destination_dir);
+		RunProcess(m_updater_exe,  params, false, true); //start updater as admin for copying
+		params.clear(); //start springlobby
+		ret = RunProcess(m_springlobby_exe, params, false);
+	}
 
-	bool ret = StartUpdate(m_source_dir, m_destination_dir);
 	m_updater_window->Close();
 	return ret;
 }
@@ -124,28 +137,24 @@ bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 #if wxUSE_CMDLINE_PARSER
 	if ( parser.Found(_T("help")) )
 		return false; // not a syntax error, but program should stop if user asked for command line usage
-	if (parser.GetParamCount() == 2) {
+	m_paramcount = parser.GetParamCount();
+	if (m_paramcount == 2) {
 		m_source_dir = parser.GetParam(0);
 		m_destination_dir = parser.GetParam(1);
 		if (!CheckDir(m_source_dir)) return false;
 		if (!CheckDir(m_destination_dir)) return false;
 		return true;
 	}
-	if (parser.GetParamCount() == 5) {
-		long pid;
-		if (!parser.GetParam(0).ToLong(&pid)) {
+	if (m_paramcount == 5) {
+		if (!parser.GetParam(0).ToLong(&m_pid)) {
 			wxLogError(_T("Invalid pid %s"), parser.GetParam(0).c_str());
 			return false;
 		}
-		WaitForExit(pid);
-
-		wxArrayString params;
-		params.push_back(parser.GetParam(3));
-		params.push_back(parser.GetParam(4));
-		RunProcess(parser.GetParam(2),  params, false, true); //start updater as admin for copying
-		params.clear(); //start springlobby
-		RunProcess(parser.GetParam(1), params, false);
-		return false;
+		m_springlobby_exe = parser.GetParam(1);
+		m_updater_exe = parser.GetParam(2);
+		m_source_dir = parser.GetParam(3);
+		m_destination_dir = parser.GetParam(4);
+		return true;
 	}
 #endif
 	return false;

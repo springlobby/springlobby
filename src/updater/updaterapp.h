@@ -27,6 +27,10 @@ protected:
 
 	wxString m_source_dir;
 	wxString m_destination_dir;
+	wxString m_springlobby_exe;
+	wxString m_updater_exe;
+	long m_pid;
+	long m_paramcount;
 
 	UpdaterMainwindow* m_updater_window;
 
