@@ -104,8 +104,16 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
 
 }
 
-static bool CheckDir(const wxString& dir)
+#ifdef WIN32
+#define SEP '\\'
+#else
+#define SEP '/'
+#endif
+
+static bool CheckDir(wxString& dir)
 {
+	if (dir[dir.length()-1] == SEP)
+		dir = dir.BeforeLast(SEP);
 	if (wxDirExists(dir)) return true;
 	wxMessageBox(_T("%s doesn't exist!"), dir.c_str());
 	return false;
