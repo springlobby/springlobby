@@ -156,17 +156,22 @@ bool IsUACenabled()
 {
 #ifdef __WXMSW__
     wxRegKey UACpath( _T("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System") ); // check if UAC is on, skip dialog if not
-    if( UACpath.Exists() )
-    {
-        long value;
-        if( UACpath.QueryValue( _T("EnableLUA"), &value ) ) // reg key not present -> not vista
-        {
-            if( value != 0 )
-            {
-                return true;
-            }
-        }
-    }
+    if(!UACpath.Exists() ) {
+		return false;
+	}
+
+	const wxString LUA = _T("EnableLUA");
+	if (!UACpath.HasValue(LUA)) {
+		return false;
+	}
+
+	long value;
+	if( UACpath.QueryValue(LUA, &value ) ) { // reg key not present -> not vista
+		if( value != 0 ) {
+			return true;
+		}
+	}
+
 #endif
     return false;
 }
