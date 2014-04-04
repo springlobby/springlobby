@@ -1,6 +1,10 @@
 #! /usr/bin/env bash
 
 set -e
+
+REV=$(git describe)
+
+echo $REV
 cd $(dirname $0)/../${1}
 pwd
 DEVELOPER=${2}
@@ -16,7 +20,7 @@ else
 	filename=sl_${3}.zip
 fi
 
-rm -f ${filename}
+#rm -f ${filename}
 
 zip -9 -u ${filename} springlobby.exe springlobby_updater.exe
 
@@ -24,6 +28,8 @@ if [ ! -d /data/www/springlobby.info/temp/builds/$DEVELOPER ] ; then
 	mkdir -p /data/www/springlobby.info/temp/builds/$DEVELOPER
 fi
 
-/usr/bin/install -m 0755 ${filename} /data/www/springlobby.info/temp/builds/$DEVELOPER/${filename}
+/usr/bin/install -m 0644 ${filename} /data/www/springlobby.info/temp/builds/$DEVELOPER/${filename}
 
-echo "http://springlobby.info/temp/builds/$DEVELOPER/${filename}"
+echo $REV > /data/www/springlobby.info/temp/builds/$DEVELOPER/current.txt
+chmod 0644 /data/www/springlobby.info/temp/builds/$DEVELOPER/current.txt
+
