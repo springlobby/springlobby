@@ -12,11 +12,9 @@
 #endif // _MSC_VER
 
 #include <wx/intl.h>
-#include <wx/stdpaths.h>
 #include <wx/cmdline.h>
 #include <wx/image.h>
 #include <wx/fs_zip.h> //filesystem zip handler
-#include <wx/log.h>
 #include <wx/msgdlg.h>
 
 #include <fstream>
@@ -33,19 +31,10 @@ UpdaterApp::UpdaterApp():
 	m_updater_window(NULL)
 {
 	SetAppName( _T("springlobby_updater") );
-
-	const std::string filename = STD_STRING(wxPathOnly( wxStandardPaths::Get().GetExecutablePath() ) + wxFileName::GetPathSeparator() + _T("update.log") ).c_str();
-	m_logstream_target = new std::ofstream(filename);
-	if ( (!m_logstream_target->good()) || (!m_logstream_target->is_open() )) {
-		printf("Error opening %s\n", filename.c_str());
-	}
 }
 
 UpdaterApp::~UpdaterApp()
 {
-	m_logstream_target->flush();
-	m_logstream_target->close();
-	delete m_logstream_target;
 }
 
 
@@ -57,14 +46,6 @@ bool UpdaterApp::OnInit()
 	//this triggers the Cli Parser amongst other stuff
 	if (!wxApp::OnInit())
 		return false;
-
-	assert( m_logstream_target );
-	wxLogStream* m_log_stream = new wxLogStream( m_logstream_target );
-	m_log_stream->SetLogLevel( wxLOG_Trace );
-	wxLog::SetActiveTarget( m_log_stream );
-
-	wxLogMessage( _T("m_source_dir ") + m_source_dir);
-	wxLogMessage( _T("m_destination_dir ") + m_destination_dir);
 
 #if wxUSE_ON_FATAL_EXCEPTION
 	wxHandleFatalExceptions( true );
@@ -79,7 +60,7 @@ bool UpdaterApp::OnInit()
 	m_updater_window = new UpdaterMainwindow();
 	m_updater_window->Show( true );
 	SetTopWindow( m_updater_window );
-	bool ret;
+	bool ret = false;
 	if (m_paramcount == 2) {
 		ret = StartUpdate(m_source_dir, m_destination_dir);
 	} else if ( m_paramcount == 5) {
@@ -131,7 +112,7 @@ static bool CheckDir(const wxString& dir)
 }
 
 
-//! @brief parses the command line and sets global app options like log verbosity or log target
+//! @brief parses the command line
 bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
 #if wxUSE_CMDLINE_PARSER
@@ -165,13 +146,13 @@ bool UpdaterApp::StartUpdate( const wxString& source, const wxString& destinatio
 {
 	wxString sep = wxFileName::GetPathSeparator();
 	if ( !wxFileName::IsDirWritable( destination ) ) {
-		wxLogError( _T("dir not writable: ") + destination );
 		wxMessageBox(_("Unable to write to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
 		return false;
 	}
 	bool success = CopyDirWithFilebackupRename( source, destination);
 	if ( !success ) {
-		wxLogError( _T("Full dir copy failed") );
+		wxString msg =  _T("Copy failed: \n") + source + _T("\n") + destination;
+		wxMessageBox(msg, _("Error") );
 		return false;
 	}
 	return true;

@@ -34,10 +34,6 @@ protected:
 
 	UpdaterMainwindow* m_updater_window;
 
-private:
-	std::ofstream* m_logstream_target;
-
-
 };
 
 DECLARE_APP(UpdaterApp)
