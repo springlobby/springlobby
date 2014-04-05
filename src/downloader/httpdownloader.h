@@ -12,7 +12,7 @@ class HttpDownloaderThread : public wxThread
 	public:
 		static const wxEventType httpDownloadEvtComplete;
 
-		HttpDownloaderThread(const wxString& FileUrl, const wxString& DestPath, const bool unzip, wxObjectEventFunction func, wxEvtHandler* evt);
+		HttpDownloaderThread(const wxString& FileUrl, const wxString& DestPath, const wxString& unzipPath, wxObjectEventFunction func, wxEvtHandler* evt);
 		~HttpDownloaderThread();
 		void Init();
 		void* Entry();
@@ -20,9 +20,9 @@ class HttpDownloaderThread : public wxThread
 		bool TestDestroy();
 	private:
 		bool Unzip();
-		bool m_do_unzip;
 
 		bool m_destroy;
+		wxString m_unzippath;
 		wxString m_destpath;
 		wxString m_fileurl;
 

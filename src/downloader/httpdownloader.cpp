@@ -22,9 +22,9 @@
 
 const wxEventType HttpDownloaderThread::httpDownloadEvtComplete = wxNewEventType();
 
-HttpDownloaderThread::HttpDownloaderThread(const wxString& FileUrl, const wxString& DestPath, const bool unzip, wxObjectEventFunction func, wxEvtHandler* evt)
+HttpDownloaderThread::HttpDownloaderThread(const wxString& FileUrl, const wxString& DestPath, const wxString& unzipPath, wxObjectEventFunction func, wxEvtHandler* evt)
 		: wxThread(wxTHREAD_JOINABLE),
-		m_do_unzip( unzip ),
+		m_unzippath( unzipPath ),
 		m_destroy( false ),
 		m_destpath( DestPath ),
 		m_fileurl( FileUrl ),
@@ -69,7 +69,7 @@ void* HttpDownloaderThread::Entry()
 		delete m_httpstream;
 		m_httpstream = 0;
 		//download success
-		if ( m_do_unzip ) {
+		if (!m_unzippath.empty() ) {
 			if(!Unzip()) {
 				evt.SetInt(-1);
 			}
@@ -90,7 +90,7 @@ bool HttpDownloaderThread::Unzip()
 	{
 		std::auto_ptr<wxZipEntry> entry;
 
-		wxString base = wxPathOnly( m_destpath ) + wxFileName::GetPathSeparator();
+		wxString base = m_unzippath;
 		wxFFileInputStream in( m_destpath );
 		wxZipInputStream zip( in );
 

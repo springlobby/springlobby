@@ -1060,7 +1060,9 @@ bool Ui::StartUpdate(const wxString& latestVersion)
 		return false;
 	}
 
-	m_http_thread = new HttpDownloaderThread( TowxString(GetDownloadUrl( STD_STRING(latestVersion))), updatedir + _T("temp.zip"), true, wxObjectEventFunction(&Ui::OnDownloadComplete), this);
+	const wxString dlfilepath = TowxString(SlPaths::GetLobbyWriteDir()) + _T("springlobby-") + latestVersion + _T(".zip");
+	const wxString dlurl = TowxString(GetDownloadUrl(STD_STRING(latestVersion)));
+	m_http_thread = new HttpDownloaderThread( dlurl, dlfilepath, updatedir, wxObjectEventFunction(&Ui::OnDownloadComplete), this);
 
 	//could prolly use some test on the thread here instead
 	return true;
