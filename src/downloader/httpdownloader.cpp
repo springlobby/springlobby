@@ -97,7 +97,6 @@ bool HttpDownloaderThread::Unzip()
 			wxString name = entry->GetInternalName();
 //            name.Replace( wxT("/") , wxT("\\") );
 			// read 'zip' to access the entry's data
-			using namespace std;
 			const wxString file = m_unzippath + name;
 			const wxString path = wxPathOnly( file );
 			if ( ( entry->IsDir() )  ) {

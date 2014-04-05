@@ -1060,7 +1060,7 @@ bool Ui::StartUpdate(const wxString& latestVersion)
 		return false;
 	}
 
-	const wxString dlfilepath = TowxString(SlPaths::GetLobbyWriteDir()) + _T("springlobby-") + latestVersion + _T(".zip");
+	const wxString dlfilepath = TowxString(SlPaths::GetLobbyWriteDir()) + _T("springlobby-latest.zip");
 	const wxString dlurl = TowxString(GetDownloadUrl(STD_STRING(latestVersion)));
 	m_http_thread = new HttpDownloaderThread( dlurl, dlfilepath, updatedir, wxObjectEventFunction(&Ui::OnDownloadComplete), this);
 
