@@ -1104,7 +1104,7 @@ void Ui::CheckForUpdates()
 		return;
 	}
 	//get current rev w/o AUX_VERSION added
-	wxString myVersion = TowxString(GetSpringLobbyVersion( false ));
+	wxString myVersion = TowxString(getSpringlobbyVersion());
 
 	wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
 	if ( !latestVersion.IsSameAs(myVersion, false) ) {

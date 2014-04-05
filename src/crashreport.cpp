@@ -132,7 +132,7 @@ SpringDebugReport::SpringDebugReport()
 	wxString info;
 	info << wxGetOsDescription() << ( wxIsPlatform64Bit() ? _T(" 64bit\n") : _T(" 32bit\n") );
 	AddText( _T("platform.txt"), info, _T("Platform") );
-	AddText( _T("client.txt"), _T( "SpringLobby " ) + TowxString(GetSpringLobbyVersion()), _T("Client") );
+	AddText( _T("client.txt"), _T( "SpringLobby " ) + TowxString(getSpringlobbyVersion()), _T("Client") );
 	AddText( _T("appname.txt"), TowxString(getSpringlobbyName()), _T("Application Name"));
 }
 
@@ -155,7 +155,7 @@ SpringDebugReport::SpringDebugReport()
 
 	wxString SystemInfos;
 
-	SystemInfos += _T( "SpringLobby version " ) + TowxString(GetSpringLobbyVersion()) + _T( "\n" ) ;
+	SystemInfos += _T( "SpringLobby version " ) + TowxString(getSpringlobbyVersion()) + _T( "\n" ) ;
 	SystemInfos += _T( "Built from " ) + wxString( wxVERSION_STRING ) + _T(" on ") + wxPlatformInfo::Get().GetOperatingSystemIdName() + _T( "\n" ) ;
 
 	report->AddText( _T( "SystemInfos.txt" ), SystemInfos, _( "System informations" ) );

@@ -6,7 +6,5 @@
 #include <string>
 
 std::string GetDownloadUrl( const std::string& version );
-std::string GetSpringLobbyVersion( bool consider_aux = true );
-std::string GetSpringLobbyAuxVersion();
 
 #endif

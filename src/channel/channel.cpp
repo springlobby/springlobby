@@ -8,7 +8,7 @@
 #include "iserver.h"
 #include "user.h"
 #include "utils/tasutil.h"
-#include "updater/updatehelper.h"
+#include "utils/version.h"
 #include <wx/regex.h>
 #include <wx/log.h>
 #include "chatpanel.h"
@@ -206,7 +206,7 @@ bool Channel::ExecuteSayCommand( const std::string& in )
     return true;
   } else if ( param == _T("/sayver") ) {
 	  //!this instance is not replaced with GetAppname for sake of help/debug online
-    DoAction( "is using SpringLobby v" + GetSpringLobbyVersion() );
+    DoAction( "is using SpringLobby v" + getSpringlobbyVersion() );
     return true;
   } else if(subcmd==_T("/userban")){
     m_banned_users.insert(STD_STRING(params));

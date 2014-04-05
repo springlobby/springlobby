@@ -22,7 +22,7 @@
 #include "aui/slbook.h"
 #include "channel/channel.h"
 #include "utils/uievents.h"
-#include "updater/updatehelper.h"
+#include "utils/version.h"
 #include "iserver.h"
 #include "serverselector.h"
 #include "ibattle.h"
@@ -848,7 +848,7 @@ bool ChatPanel::Say( const wxString& message )
 
 		if ( line == _T( "/ver" ) ) {
 			//!this instance is not replaced with GetAppname for sake of help/debug online
-			OutputLine( _( " You have SpringLobby v" ) + TowxString(GetSpringLobbyVersion()), sett().GetChatColorNormal());
+			OutputLine( _( " You have SpringLobby v" ) + TowxString(getSpringlobbyVersion()), sett().GetChatColorNormal());
 			return true;
 		}
 
