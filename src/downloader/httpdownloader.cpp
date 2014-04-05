@@ -24,8 +24,8 @@ const wxEventType HttpDownloaderThread::httpDownloadEvtComplete = wxNewEventType
 
 HttpDownloaderThread::HttpDownloaderThread(const wxString& FileUrl, const wxString& DestPath, const wxString& unzipPath, wxObjectEventFunction func, wxEvtHandler* evt)
 		: wxThread(wxTHREAD_JOINABLE),
-		m_unzippath( unzipPath ),
 		m_destroy( false ),
+		m_unzippath( unzipPath ),
 		m_destpath( DestPath ),
 		m_fileurl( FileUrl ),
 		m_evt(evt)
@@ -86,45 +86,37 @@ void* HttpDownloaderThread::Entry()
 
 bool HttpDownloaderThread::Unzip()
 {
-	try
-	{
+	try {
 		std::auto_ptr<wxZipEntry> entry;
 
-		wxString base = m_unzippath;
 		wxFFileInputStream in( m_destpath );
 		wxZipInputStream zip( in );
 
-		while ( entry.reset( zip.GetNextEntry() ), entry.get() != NULL )
-		{
+		while ( entry.reset( zip.GetNextEntry() ), entry.get() != NULL ) {
 			// access meta-data
 			wxString name = entry->GetInternalName();
 //            name.Replace( wxT("/") , wxT("\\") );
 			// read 'zip' to access the entry's data
 			using namespace std;
-			wxString file = base + name;
-			wxString path = wxPathOnly( file );
-			if ( ( entry->IsDir() )  )
-			{
+			const wxString file = m_unzippath + name;
+			const wxString path = wxPathOnly( file );
+			if ( ( entry->IsDir() )  ) {
 				if ( !wxDirExists( file ) )
 					wxFileName::Mkdir( file, 0775, wxPATH_MKDIR_FULL );
 				wxLogWarning( path );
-			}
-			else
-			{
+			} else {
 			    wxLogDebug( _T("unzipping: ")+ file );
 				wxFFileOutputStream out( file );
-				if( !out.IsOk() )
+				if( !out.IsOk() ) {
                     wxLogError( _T("unzipping failed on: ")+ file );
-                else {
+                } else {
                     out.Write( zip );
                     out.Close();
                 }
 			}
 		}
-	}
-	catch ( std::exception& e )
-	{
-	    wxLogError( TowxString( e.what() ) );
+	} catch ( std::exception& e ) {
+		wxLogError( TowxString( e.what()) + m_destpath );
 		return false;
 	}
 
