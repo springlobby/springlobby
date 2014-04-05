@@ -2,9 +2,7 @@
 
 set -e
 
-REV=$(git describe)
 
-echo $REV
 cd $(dirname $0)/../${1}
 pwd
 DEVELOPER=${2}
@@ -30,6 +28,8 @@ fi
 
 /usr/bin/install -m 0644 ${filename} /data/www/springlobby.info/temp/builds/$DEVELOPER/${filename}
 
+REV=$(grep -o -P '(?<=define VERSION ").*(?=")' springlobby_config.h)
+echo $REV
 echo $REV > /data/www/springlobby.info/temp/builds/$DEVELOPER/current.txt
 chmod 0644 /data/www/springlobby.info/temp/builds/$DEVELOPER/current.txt
 
