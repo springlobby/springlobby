@@ -423,9 +423,7 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
 void MainWindow::OpenChannelChat( Channel& channel, bool doFocus )
 {
     ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
-    if ( doFocus )
-        m_func_tabs->SetSelection( PAGE_CHAT );
-	m_chat_tab->AddChatPanel( channel, doFocus );
+	m_chat_tab->AddChatPanel( channel, doFocus);
 }
 
 

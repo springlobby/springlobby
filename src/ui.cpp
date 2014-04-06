@@ -1022,9 +1022,8 @@ void Ui::OnInit()
 	} else {
 		if (cfg().ReadBool(_T( "/Server/Autoconnect" ))) {
 			Connect(); // OnConnect changes tab
-		} else {
-			mw().ShowTab(cfg().ReadLong(_T( "/GUI/StartTab" )));
 		}
+		mw().ShowTab(cfg().ReadLong(_T( "/GUI/StartTab" )));
 		//don't ask for updates on first run, that's a bit much for a newbie
 		if (cfg().ReadBool(_T("/General/AutoUpdate"))) {
 			CheckForUpdates();
