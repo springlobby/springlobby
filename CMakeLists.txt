@@ -129,9 +129,6 @@ add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
                         cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
                         cmake "-DCMAKE_CXX_FLAGS:STRING=-O0" . && ${CMAKE_MAKE_PROGRAM}
 					)
-add_custom_target( version
-				${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR}/cmake/config.h ${springlobby_BINARY_DIR}/springlobby_config.h ${springlobby_BINARY_DIR}/VERSION
-				)
 add_dependencies( distcheck dist )
 #add_dependencies( versiontest version )
 

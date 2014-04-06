@@ -14,12 +14,14 @@ VERSIONFILE="${3}"
 
 REV_TEMPLATE="@SPRINGLOBBY_REV@"
 
-#don't fail if no .git
-git branch >/dev/null 2>&1 || exit 0
+REV="$(git describe --tags)" 2>/dev/null
 
-REV="$(git describe --tags)"
+if [ -z "$REV" ]; then
+	REV="unknown"
+fi
+
 OLDREV=""
-if [ -s ${VERSIONFILE} ]; then
+if [ -s ${VERSIONFILE} ] && [ -s ${TARGET_HEADER} ]; then
 	OLDREV=$(cat ${VERSIONFILE})
 fi
 

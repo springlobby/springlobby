@@ -1,15 +1,11 @@
+add_custom_target(version ALL ${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR}/cmake/config.h ${springlobby_BINARY_DIR}/springlobby_config.h ${springlobby_BINARY_DIR}/VERSION)
+
+
 add_library(springlobbyversion STATIC
 	version.cpp
 )
 
-#if nothing went wrong we have the file and can define HAVE_CONFIG_H
-IF ( EXISTS ${springlobby_BINARY_DIR}/springlobby_config.h)
-	set_target_properties(springlobbyversion PROPERTIES COMPILE_DEFINITIONS "HAVE_VERSION=1")
-	INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
-ELSEIF ( EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h  )
-	set_target_properties(springlobbyversion PROPERTIES COMPILE_DEFINITIONS "HAVE_VERSION=1")
-	INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR})
-ELSE()
-	message(WARNING "springlobby_config.h not found!")
-ENDIF ()
+INCLUDE_DIRECTORIES(${springlobby_BINARY_DIR})
+INCLUDE_DIRECTORIES(${springlobby_SOURCE_DIR})
 
+add_dependencies(springlobbyversion version)

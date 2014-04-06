@@ -1,11 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#ifdef HAVE_VERSION
 #include "springlobby_config.h"
-#else
-#define VERSION "unknown"
-#endif
-
 #include "version.h"
 
 const std::string getSpringlobbyName(bool lowercase)
