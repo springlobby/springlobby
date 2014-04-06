@@ -369,11 +369,6 @@ IF(WIN32)
 	install(TARGETS springlobby RUNTIME DESTINATION .)
 ELSE (WIN32)
 	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
-	option(TEST_UNITSYNC_DEADLOCKS "check unitsync for deadlocks" ON)
-	#only do this on platforms with awk expected to be installed
-	if(TEST_UNITSYNC_DEADLOCKS)
-		ADD_CUSTOM_TARGET(test_susynclib ALL COMMAND tools/test-susynclib.awk src/lsl/src/lslunitsync/unitsync.cpp WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-	endif()
 ENDIF (WIN32)
 
 TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion libsettings slcommon
