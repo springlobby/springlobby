@@ -63,7 +63,6 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 
     void ShowConfigure( const unsigned int page = OPT_PAGE_SPRING );
     void ShowTab( const unsigned int idx );
-    void ShowSingleplayer();
 
     /** Show the channel list dialog. */
     void ShowChannelChooser();

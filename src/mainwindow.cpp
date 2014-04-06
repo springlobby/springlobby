@@ -442,12 +442,6 @@ void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 
 }
 
-//! @brief Displays the lobby singleplayer tab.
-void MainWindow::ShowSingleplayer()
-{
-    ShowTab( PAGE_SINGLE );
-}
-
 void MainWindow::ShowTab( const unsigned int idx )
 {
     if ( idx < m_tab_names.GetCount() )
