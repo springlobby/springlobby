@@ -397,7 +397,7 @@ void BattleListTab::DoJoin( IBattle& battle )
 
 	if ( curbattle != 0 && curbattle->GetID() == battle.GetID() )
 	{
-        ui().mw().GetJoinTab().FocusBattleRoomTab();
+        ui().mw().ShowTab(MainWindow::PAGE_JOIN);
         return;
 	}
 

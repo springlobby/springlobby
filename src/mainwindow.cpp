@@ -442,9 +442,21 @@ void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 
 void MainWindow::ShowTab( const unsigned int idx )
 {
-    if ( idx < m_tab_names.GetCount() )
+    if ( idx < m_tab_names.GetCount() ) {
         m_func_tabs->SetSelection( idx );
-    else
+		switch(idx) {
+			case PAGE_JOIN: {
+				GetJoinTab().SetFocus();
+				ChatPanel* p = GetJoinTab().GetActiveChatPanel();
+				if (p!=NULL) {
+					p->FocusInputBox();
+				}
+				return;
+			}
+			default:
+				break;
+		};
+    } else
         wxLogError( _T("tab selection oob: %d"), idx );
 }
 
@@ -666,12 +678,6 @@ void MainWindow::SavePerspectives( const wxString& pers_name )
     m_join_tab->SavePerspective( perspective_name );
 //    m_chat_tab->SavePerspective( perspective_name );
     SaveNotebookPerspective( m_func_tabs, perspective_name );
-}
-
-void MainWindow::FocusBattleRoomTab()
-{
-	m_func_tabs->SetSelection( PAGE_JOIN );
-	GetJoinTab().FocusBattleRoomTab();
 }
 
 void MainWindow::OnMenuPreferences( wxCommandEvent& /*event*/ )

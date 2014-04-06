@@ -195,8 +195,3 @@ bool MainJoinBattleTab::UseBattlePerspective()
 {
     return GetBattleRoomTab().GetBattle() != 0;
 }
-
-void MainJoinBattleTab::FocusBattleRoomTab()
-{
-	m_tabs->SetSelection( 0 );
-}
