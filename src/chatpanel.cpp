@@ -518,6 +518,10 @@ void ChatPanel::OnPaste( wxClipboardTextEvent& event )
 //! @param message the message to be outputted.
 void ChatPanel::Said( const wxString& who, const wxString& message )
 {
+	if (m_active_users.find(who) == m_active_users.end()) {
+		m_active_users.insert(who);
+	}
+
 	wxString me = TowxString(GetMe().GetNick());
 	wxColour col;
 	bool req_user = false;
@@ -664,9 +668,11 @@ void ChatPanel::OnChannelJoin( User& who )
 void ChatPanel::Parted( User& who, const wxString& message )
 {
 //    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
-	bool me_parted = m_channel && &who == &m_channel->GetMe();
-	if ( m_display_joinitem ) {
-		OutputLine( _T( " ** " ) + wxString::Format(_( "%s left %s (%s)." ), TowxString(who.GetNick()).c_str(), GetChatTypeStr().c_str(), message.c_str()), sett().GetChatColorJoinPart());
+	const bool me_parted = m_channel && &who == &m_channel->GetMe();
+	const wxString nick = TowxString(who.GetNick());
+	const bool wasactive = m_active_users.erase(nick) > 0;
+	if ( m_display_joinitem || wasactive ) {
+		OutputLine( _T( " ** " ) + wxString::Format(_( "%s left %s (%s)." ), nick.c_str(), GetChatTypeStr().c_str(), message.c_str()), sett().GetChatColorJoinPart());
 	}
 	if ( m_type == CPT_Channel ) {
 		if ( m_channel == 0 ) return;

@@ -6,6 +6,7 @@
 #include <wx/panel.h>
 #include <wx/textctrl.h>
 #include <vector>
+#include <set>
 
 #include "chatlog.h"
 #include "helper/TextCompletionDatabase.h"
@@ -203,6 +204,7 @@ private:
 	TextCompletionDatabase textcompletiondatabase;
 
 	std::vector<ChatLine> m_buffer;
+	std::set<wxString> m_active_users; //users who spoke
 	bool m_disable_append; //disable text appending
 	bool m_display_joinitem; //show users joing/leaving
 
