@@ -61,7 +61,7 @@ std::string SlPaths::GetConfigPath ()
 //returns the lobby cache path
 std::string SlPaths::GetCachePath()
 {
-	const std::string path = LSL::Util::EnsureDelimiter(GetLobbyWriteDir() + "cache")																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							;
+	const std::string path = LSL::Util::EnsureDelimiter(GetLobbyWriteDir() + "cache");
 	if ( !wxFileName::DirExists(TowxString(path)) ) {
 		if (!mkDir(path)) return "";
 	}
