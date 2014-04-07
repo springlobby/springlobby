@@ -151,9 +151,9 @@ static std::string GetMyDocumentsDir()
 //returns possible paths where a spring bundles could be
 void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
 {
-    pl.push_back(STD_STRING(wxFileName::GetCwd())); //current working directory
-    pl.push_back(GetExecutableFolder()); //dir of springlobby.exe
-
+	pl.push_back(STD_STRING(wxFileName::GetCwd())); //current working directory
+	pl.push_back(GetExecutableFolder()); //dir of springlobby.exe
+	pl.push_back(GetDownloadDir());
 	std::vector<std::string> basedirs, paths;
 	const std::string homedir = LSL::Util::EnsureDelimiter(GetMyDocumentsDir());
 #ifdef WIN32
