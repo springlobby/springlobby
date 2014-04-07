@@ -153,14 +153,9 @@ void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
 {
 	pl.push_back(STD_STRING(wxFileName::GetCwd())); //current working directory
 	pl.push_back(GetExecutableFolder()); //dir of springlobby.exe
-	pl.push_back(GetDownloadDir());
-	std::vector<std::string> basedirs, paths;
-	const std::string homedir = LSL::Util::EnsureDelimiter(GetMyDocumentsDir());
-#ifdef WIN32
-	basedirs.push_back(homedir + "My Games" + SEP + "Spring" + SEP);
-#else
-	basedirs.push_back(homedir + ".spring");
-#endif
+
+	std::vector<std::string> basedirs;
+	basedirs.push_back(GetDownloadDir());
 	EngineSubPaths(basedirs, pl);
 }
 
@@ -485,15 +480,11 @@ std::string SlPaths::GetConfigfileDir()
 
 std::string SlPaths::GetDownloadDir()
 {
-	std::string dir;
-
-	#ifdef WIN32
-	dir = LSL::Util::EnsureDelimiter(STD_STRING(wxStandardPaths::Get().GetDocumentsDir())) +"My Games" + SEP + "Spring";
-	#else
-	const char* home = getenv("HOME");
-	if (home == NULL) return "";
-	dir = LSL::Util::EnsureDelimiter(home) + ".spring";
-	#endif
+#ifdef WIN32
+	const std::string dir = LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) +"My Games" + SEP + "Spring";
+#else
+	const std::string dir = GetMyDocumentsDir() + ".spring";
+#endif
 	wxString downloadDir = TowxString(dir);
 	cfg().Read(_T("/Spring/DownloadDir"), &downloadDir);
 	return LSL::Util::EnsureDelimiter(STD_STRING(downloadDir));
