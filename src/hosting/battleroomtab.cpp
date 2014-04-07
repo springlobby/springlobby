@@ -549,7 +549,11 @@ void BattleRoomTab::UpdateUser( User& user )
 	UserBattleStatus& bs = user.BattleStatus();
 	m_team_sel->SetSelection( bs.team );
 	m_ally_sel->SetSelection( bs.ally );
-	m_side_sel->SetSelection( bs.side );
+
+	if (m_side_sel->GetCount()>0) {
+		m_side_sel->SetSelection( bs.side );
+	}
+
 	m_spec_chk->SetValue( bs.spectator );
 	m_auto_unspec_chk->SetValue( m_battle->GetAutoUnspec() );
 	m_ready_chk->SetValue( bs.ready );
@@ -929,6 +933,10 @@ void BattleRoomTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 	RegenerateOptionsList();
 	UpdateBattleInfo();
 
+	const size_t count = m_battle->GetNumUsers();
+	for(size_t i=0; i<count; i++) {
+		UpdateUser(m_battle->GetUser(i));
+	}
 	m_battle->SendMyBattleStatus(); // This should reset sync status.
 }
 
