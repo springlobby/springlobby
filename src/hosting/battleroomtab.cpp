@@ -372,40 +372,6 @@ void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
 		m_splitter->SplitVertically( m_player_panel, m_chat );
 }
 
-/*
-wxString _GetStartPosStr( IBattle::StartType t )
-{
-	switch ( t )
-	{
-		case IBattle::ST_Fixed:
-			return _( "Fixed" );
-		case IBattle::ST_Random:
-			return _( "Random" );
-		case IBattle::ST_Choose:
-			return _( "Boxes" );
-		case IBattle::ST_Pick:
-			return _( "Pick" );
-		default:
-			return _T( "?" );
-	};
-}
-
-wxString _GetGameTypeStr( IBattle::GameType t )
-{
-	switch ( t )
-	{
-		case IBattle::GT_ComContinue:
-			return _( "Continue" );
-		case IBattle::GT_ComEnds:
-			return _( "End" );
-		case IBattle::GT_Lineage:
-			return _( "Lineage" );
-		default:
-			return _T( "?" );
-	};
-}
-*/
-
 void BattleRoomTab::UpdateBattleInfo()
 {
 	if ( !m_battle ) return;
@@ -449,7 +415,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 {
   if ( !m_battle ) return;
 
-	long index = m_opt_list_map[ Tag ];
+	const long index = m_opt_list_map[ Tag ];
 	LSL::OptionsWrapper::GameOption type = ( LSL::OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
 	wxString key = Tag.AfterFirst( '_' );
 	if ( ( type == LSL::OptionsWrapper::MapOption ) || ( type == LSL::OptionsWrapper::ModOption ) || ( type == LSL::OptionsWrapper::EngineOption ) )
@@ -929,8 +895,8 @@ void BattleRoomTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	if ( !m_battle ) return;
 	//m_minimap->UpdateMinimap();//should happen automagically now
-	ReloadMaplist();
 	RegenerateOptionsList();
+	ReloadMaplist();
 	UpdateBattleInfo();
 
 	const size_t count = m_battle->GetNumUsers();
@@ -1033,8 +999,6 @@ void BattleRoomTab::ReloadMaplist()
 	m_map_combo->Clear();
 
     const wxArrayString maplist = LSL::Util::vectorToArrayString(LSL::usync().GetMapList());
-// maplist.Sort(CompareStringIgnoreCase);
-
 	size_t nummaps = maplist.Count();
 	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( maplist[i], i );
 	m_map_combo->SetValue(TowxString(m_battle->GetHostMapName()));
@@ -1146,9 +1110,6 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 		for ( UserList::user_map_t::size_type i = 0; i < m_battle->GetNumUsers(); i++ )
 		{
 			m_players->AddUser( m_battle->GetUser( i ) );
-			#ifdef __WXMAC__
-			UpdateUser( m_battle->GetUser( i ) );
-			#endif
 		}
 
 		if ( !m_battle->IsFounderMe() )
@@ -1233,23 +1194,6 @@ void BattleRoomTab::OnHostNew( wxCommandEvent& /*event*/ )
 		ui().ShowConnectWindow();
 		return;
 	}
-/*	if ( !ui().IsSpringCompatible() )
-	{
-		wxLogWarning( _T( "Hosting is disabled due to the incompatible version " ) );
-		customMessageBoxNoModal( SL_MAIN_ICON, _( "Hosting is disabled due to the incompatible version you're using" ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
-		return;
-	}
-*/
 	SL::RunHostBattleDialog( this );
 }
-
-//void BattleRoomTab::MaximizeSizer()
-//{
-//	wxSize s = GetClientSize();
-//	m_main_sizer->RecalcSizes();
-//	//m_main_sizer->SetDimension( )
-//	m_main_sizer->Layout();
-//	Layout();
-//	Refresh();
-//}
 
