@@ -21,7 +21,14 @@ typename PlaybackList<PlaybackImp>::PlaybackType&
 }
 
 template <class PlaybackImp>
-void PlaybackList<PlaybackImp>::RemovePlayback( playback_id_t const& id )
+void PlaybackList<PlaybackImp>::AddPlayback(PlaybackType& p, const unsigned int index )
+{
+	m_replays[index] = p;
+}
+
+
+template <class PlaybackImp>
+void PlaybackList<PlaybackImp>::RemovePlayback( unsigned int const id )
 {
     m_replays.erase(id);
 }
@@ -34,7 +41,7 @@ typename PlaybackList<PlaybackImp>::playback_map_t::size_type PlaybackList<Playb
 
 template <class PlaybackImp>
 typename PlaybackList<PlaybackImp>::PlaybackType&
-    PlaybackList<PlaybackImp>::GetPlaybackById( playback_id_t const& id )
+    PlaybackList<PlaybackImp>::GetPlaybackById( unsigned int const id )
 {
 //TODO catch
     playback_iter_t b = m_replays.find(id);
@@ -45,13 +52,13 @@ typename PlaybackList<PlaybackImp>::PlaybackType&
 }
 
 template <class PlaybackImp>
-bool PlaybackList<PlaybackImp>::PlaybackExists( playback_id_t const& id ) const
+bool PlaybackList<PlaybackImp>::PlaybackExists( unsigned int const id ) const
 {
     return m_replays.find(id) != m_replays.end();
 }
 
 template <class PlaybackImp>
-bool PlaybackList<PlaybackImp>::DeletePlayback( playback_id_t const& id )
+bool PlaybackList<PlaybackImp>::DeletePlayback( unsigned int const id )
 {
     PlaybackType rep = m_replays[id];
     if ( wxRemoveFile( rep.Filename ) ) {

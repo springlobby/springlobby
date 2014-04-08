@@ -35,22 +35,11 @@ struct DemoFileHeader {
 
 struct Replay;
 
-template <class PB, class I>
-class GlobalObjectHolder;
-
 class ReplayList : public PlaybackList<Replay>
 {
-	public:
-
-	typedef Replay PlaybackType;
+public:
 	virtual void LoadPlaybacks(const std::vector<std::string>& filenames );
-protected:
 	ReplayList();
-
-	template <class PB, class T>
-	friend class LSL::Util::GlobalObjectHolder;
-
-
 private:
 	bool GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const;
 	int replayVersion(wxFile& ReplayPath ) const;

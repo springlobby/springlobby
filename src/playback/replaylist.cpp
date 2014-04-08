@@ -8,11 +8,11 @@
 
 #include "replaylist.h"
 #include <lslutils/misc.h>
-#include "../utils/conversion.h"
-#include "../utils/customdialogs.h"
+#include "utils/conversion.h"
+#include "utils/customdialogs.h"
 #include "playbacktab.h"
 #include "playbackstructs.h"
-#include "../uiutils.h"
+#include "uiutils.h"
 #include <lslutils/globalsmanager.h>
 
 ReplayList::ReplayList()
@@ -21,15 +21,16 @@ ReplayList::ReplayList()
 
 void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 {
-	std::string datadir;
 	m_replays.clear();
-	const size_t size = filenames.size();
-	for ( size_t i = 0; i < size; ++i) {
+	for ( size_t i = 0; i < filenames.size(); ++i) {
 		const wxString wfilename = TowxString(filenames[i]);
-		PlaybackType& playback = AddPlayback(i);
-		if (!GetReplayInfos(wfilename, playback)) {
-			//wxLogError(_T("Couldn't open replay %s"), wfilename.c_str() ); //FIXME, see https://github.com/springlobby/springlobby/issues/186
-			RemovePlayback(i); //FIXME: stupid logic: always add but remove on fail, why not add on success only?
+		Replay repl;
+		repl.id = i;
+		if (GetReplayInfos(wfilename, repl)) {
+			AddPlayback(repl, i);
+			wxLogDebug(_T("-------------- %d %s %s"),i, TowxString(repl.battle.GetHostModName()).c_str(), TowxString(repl.battle.GetHostMapName()).c_str());
+		} else {
+			wxLogDebug(_T("Error adding %s"), wfilename.c_str());
 		}
 	}
 }

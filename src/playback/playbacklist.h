@@ -20,10 +20,8 @@ class PlaybackList : public wxEvtHandler
 
     typedef PlaybackImp PlaybackType;
 
-    typedef unsigned int playback_id_t;
-
     //! @brief mapping from playback id number to playback object
-    typedef std::map<playback_id_t, PlaybackType> playback_map_t;
+    typedef std::map<unsigned int, PlaybackType> playback_map_t;
     //! @brief iterator for playback map
     typedef typename playback_map_t::iterator playback_iter_t;
     //! @brief const iterator for playback map
@@ -32,13 +30,13 @@ class PlaybackList : public wxEvtHandler
     virtual void LoadPlaybacks( const std::vector<std::string>& filenames ) = 0;
 
 	PlaybackType& AddPlayback( const size_t index );
-    void AddPlayback( PlaybackType* replay );
-    void RemovePlayback( playback_id_t const& id );
+    void AddPlayback(PlaybackType& p, const unsigned int index );
+    void RemovePlayback( unsigned int const id );
 
-    PlaybackType &GetPlaybackById( playback_id_t const& id );
+    PlaybackType &GetPlaybackById( unsigned int const id );
 
-	bool PlaybackExists( playback_id_t const& id ) const;
-    bool DeletePlayback( playback_id_t const& id );
+	bool PlaybackExists( unsigned int const id ) const;
+    bool DeletePlayback( unsigned int const id );
 	typename playback_map_t::size_type GetNumPlaybacks() const;
 
     void RemoveAll();
