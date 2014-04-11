@@ -10,6 +10,7 @@
 #include <lslunitsync/unitsync.h>
 #include <lslutils/config.h>
 #include <lslutils/misc.h>
+#include <lslutils/conversion.h>
 
 #include "nonportable.h"
 #include "helper/slconfig.h"
@@ -137,9 +138,9 @@ bool SlPaths::LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
 static std::string GetMyDocumentsDir()
 {
 #ifdef WIN32
-	char my_documents[MAX_PATH];
-	HRESULT result = SHGetFolderPathA(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
-	if (result == S_OK) return std::string(my_documents);
+	wchar_t my_documents[MAX_PATH];
+	HRESULT result = SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+	if (result == S_OK) return LSL::Util::ws2s(my_documents);
 	return "";
 #else
 	const char* envvar= getenv("HOME");
@@ -481,7 +482,7 @@ std::string SlPaths::GetConfigfileDir()
 std::string SlPaths::GetDownloadDir()
 {
 #ifdef WIN32
-	const std::string dir = LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) +"My Games" + SEP + "Spring";
+	const std::string dir = LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + "My Games\\Spring";
 #else
 	const std::string dir = GetMyDocumentsDir() + ".spring";
 #endif
