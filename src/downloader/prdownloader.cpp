@@ -57,6 +57,7 @@ public:
 				case IDownload::CAT_ENGINE_MACOSX: {
 					fileSystem->extractEngine(dl->name, dl->version);
 					SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
+					SlPaths::SetUsedSpringIndex(dl->version);
 				}
 				default:
 					continue;

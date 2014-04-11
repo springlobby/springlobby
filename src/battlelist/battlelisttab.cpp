@@ -386,12 +386,6 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 void BattleListTab::DoJoin( IBattle& battle )
 {
 
-	if ( !ui().IsSpringCompatible(TowxString(battle.GetBattleOptions().engineName), TowxString(battle.GetBattleOptions().engineVersion)))
-	{
-        wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
-//		customMessageBox( SL_MAIN_ICON, _( "Joining battles is disabled due to the incompatible spring version you're using." ), _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
-		return;
-	}
 
 	IBattle* curbattle = ui().mw().GetJoinTab().GetCurrentBattle();
 
@@ -411,6 +405,11 @@ void BattleListTab::DoJoin( IBattle& battle )
 		{
 			return;
 		}
+	}
+
+	if ( !ui().IsSpringCompatible(TowxString(battle.GetBattleOptions().engineName), TowxString(battle.GetBattleOptions().engineVersion)))
+	{
+        wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
 	}
 
     const wxString downloadProc = _( "Should I try to download it for you?\nYou'll be notified once it's complete" );
