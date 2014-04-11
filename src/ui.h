@@ -57,13 +57,13 @@ public:
 	bool IsConnected() const;
 	void JoinChannel( const wxString& name, const wxString& password );
 
-	bool IsSpringCompatible(const wxString& engine, const wxString& version);
+	bool IsSpringCompatible(const std::string& engine, const std::string& version);
 
 	bool IsSpringRunning() const;
 
 	void Quit();
 
-	void Download( const wxString& category, const wxString& name, const wxString& hash );
+	void Download( const std::string& category, const std::string& name, const std::string& hash );
 
 	bool Ask( const wxString& heading, const wxString& question ) const;
 	bool AskText( const wxString& heading, const wxString& question, wxString& answer, bool multiline = false);

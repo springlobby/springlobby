@@ -284,7 +284,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 		try {
 			PlaybackType& rep = playbacklist<ListType>().GetPlaybackById( m_sel_replay_id );
 
-			bool versionfound = ui().IsSpringCompatible(_T("spring"), rep.SpringVersion);
+			bool versionfound = ui().IsSpringCompatible("spring", STD_STRING(rep.SpringVersion));
 			if ( !ReplayTraits::IsReplayType )
                 versionfound = true; // quick hack to bypass spring version check
 			if ( !versionfound ) {
@@ -304,7 +304,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 
 				if ( !battle.ModExists() ) {
 					if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the game before you can watch this replay.\n\n" ) + downloadProc, _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-						ui().Download (_T("game"), TowxString(battle.GetHostModName()), TowxString(battle.GetHostModHash()));
+						ui().Download ("game", battle.GetHostModName(), battle.GetHostModHash());
 					}
 					else {
 						AskForceWatch( rep );
@@ -314,7 +314,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 
 				if ( !battle.MapExists() ) {
 					if ( customMessageBox( SL_MAIN_ICON, _( " I couldn't find the map to be able to watch this replay\nThis can be caused by tasclient writing broken map hash value\nIf you're sure you have the map, press no\nYou need to download the map to be able to watch this replay.\n\n" ) + downloadProc, _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-						ui().Download ( _T("map"), TowxString(battle.GetHostModName()), TowxString(battle.GetHostModHash()));
+						ui().Download ("map", battle.GetHostModName(), battle.GetHostModHash());
 					}
 					else {
 						AskForceWatch( rep );

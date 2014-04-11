@@ -407,7 +407,7 @@ void BattleListTab::DoJoin( IBattle& battle )
 		}
 	}
 
-	if ( !ui().IsSpringCompatible(TowxString(battle.GetBattleOptions().engineName), TowxString(battle.GetBattleOptions().engineVersion)))
+	if ( !ui().IsSpringCompatible(battle.GetBattleOptions().engineName, battle.GetBattleOptions().engineVersion))
 	{
         wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
 	}
@@ -417,9 +417,7 @@ void BattleListTab::DoJoin( IBattle& battle )
 	{
         if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the game before you can join this game.\n\n" ) + downloadProc,
                                _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-			const std::string modhash = battle.GetHostModHash();
-			const std::string modname = battle.GetHostModName();
-			ui().Download ( _T("game"), TowxString(modname), TowxString(modhash));
+			ui().Download("game", battle.GetHostModName(), battle.GetHostModHash());
 		}
         else
             return;
@@ -429,9 +427,7 @@ void BattleListTab::DoJoin( IBattle& battle )
 	{
         if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the map to be able to play in this game.\n\n" ) + downloadProc,
                                _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-			std::string maphash = battle.GetHostMapHash();
-			std::string mapname = battle.GetHostMapName();
-			ui().Download ( _T("map"), TowxString(mapname), TowxString(maphash));
+			ui().Download("map", battle.GetHostMapName(), battle.GetHostMapHash());
 		}
         else
             return;

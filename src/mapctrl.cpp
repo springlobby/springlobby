@@ -1479,7 +1479,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
             }
             else if ( m_mdown_area == Download )
             {
-                ui().Download( _T("map"), TowxString(m_battle->GetHostMapName()), TowxString(m_battle->GetHostMapHash()));
+                ui().Download("map", m_battle->GetHostMapName(), m_battle->GetHostMapHash());
             }
         }
         m_mdown_area = Main;

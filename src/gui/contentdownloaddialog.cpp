@@ -217,13 +217,13 @@ void ContentDownloadDialog::OnDownloadButton( wxCommandEvent& /*event*/)
 	long item_index=m_search_res_w->GetNextItem(-1,wxLIST_NEXT_ALL,wxLIST_STATE_SELECTED);
 	if(item_index!=-1) {
 		const ContentSearchResult * res = m_search_res_w->GetDataFromIndex(item_index);
-		ui().Download(res->type, res->name, wxEmptyString);
+		ui().Download(STD_STRING(res->type), STD_STRING(res->name), "");
 	}
 }
 
 void ContentDownloadDialog::OnListDownload(wxListEvent& event)
 {
 	const ContentSearchResult * res = m_search_res_w->GetDataFromIndex(event.GetIndex());
-	ui().Download(res->type, res->name, wxEmptyString);
+	ui().Download(STD_STRING(res->type), STD_STRING(res->name), "");
 }
 

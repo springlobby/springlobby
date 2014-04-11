@@ -339,11 +339,9 @@ void Ui::Quit()
 		m_con_win->Close();
 }
 
-void Ui::Download( const wxString& category, const wxString& name, const wxString& /*hash */)
+void Ui::Download( const std::string& category, const std::string& name, const std::string& /*hash */)
 {
-	const std::string scat = STD_STRING(category);
-	const std::string sname = STD_STRING(name);
-	int count = prDownloader().GetDownload(scat, sname);
+	int count = prDownloader().GetDownload(category, name);
 	assert( count > 0 );
 }
 
@@ -496,11 +494,11 @@ void Ui::OnConnected( IServer& server, const wxString& server_name, const wxStri
 }
 
 
-bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
+bool Ui::IsSpringCompatible(const std::string& engine, const std::string& version)
 {
-	assert(engine == _T("spring"));
+	assert(engine == "spring");
 	if ( sett().GetDisableSpringVersionCheck() ) return true;
-	const std::string ver = SlPaths::GetCompatibleVersion(STD_STRING(version));
+	const std::string ver = SlPaths::GetCompatibleVersion(version);
 	if (!ver.empty()) {
 		if ( SlPaths::GetCurrentUsedSpringIndex() != ver ) {
 			wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), ver.c_str(), ver.c_str());
@@ -512,9 +510,9 @@ bool Ui::IsSpringCompatible(const wxString& engine, const wxString& version)
 	if ( wxYES == customMessageBox( SL_MAIN_ICON,
 					wxFormat(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded? \nPlease reselect the preset after download finished")) % engine % version,
 					_("Engine missing"),
-					wxYES_NO ) )
-
-		Download(TowxString(PrDownloader::GetEngineCat()), version, wxEmptyString);
+					wxYES_NO ) ) {
+		Download(PrDownloader::GetEngineCat(), version, "");
+	}
 	return false; // no compatible version found
 }
 
@@ -994,7 +992,7 @@ bool Ui::OnPresetRequiringMap( const wxString& mapname )
                                     Please reselect the preset after download finished"),
 					_("Map missing"),
 					wxYES_NO ) ) {
-		Download( _T("map") , mapname, wxEmptyString );
+		Download("map", STD_STRING(mapname), "");
 		return true;
 	}
 	return false;
