@@ -54,7 +54,7 @@ UpdaterMainwindow::~UpdaterMainwindow()
   * @todo: document this function
   */
 UpdaterMainwindow::UpdaterMainwindow():
-	wxFrame( NULL, -1, _("SpringLobby"), wxPoint(150, 150), wxSize(450, 120) )
+	wxFrame( NULL, -1, _("Springlobby Updater"), wxPoint(150, 150), wxSize(450, 120) )
 {
 	SetIcon( wxIcon(springlobby12x12_xpm) );
 
