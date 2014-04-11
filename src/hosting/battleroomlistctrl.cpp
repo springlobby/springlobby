@@ -241,10 +241,12 @@ void BattleroomListCtrl::UpdateUser( User& user )
 {
     if ( !user.BattleStatus().spectator )
 		icons().SetColourIcon( user.BattleStatus().colour );
-	wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(m_battle->GetHostModName()));
-	if  (user.BattleStatus().side < (long)sides.GetCount()) {
-		user.SetSideiconIndex( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
-	}
+	try {
+		wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(m_battle->GetHostModName()));
+		if  (user.BattleStatus().side < (long)sides.GetCount()) {
+			user.SetSideiconIndex( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
+		}
+	} catch (...) {}
     int index = GetIndexFromData( &user );
     UpdateUser( index );
 }

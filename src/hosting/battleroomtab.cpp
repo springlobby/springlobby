@@ -378,6 +378,10 @@ void BattleRoomTab::UpdateBattleInfo()
 	m_lock_chk->SetValue( m_battle->IsLocked() );
 	m_minimap->UpdateMinimap();
 	UpdateMapInfoSummary();
+	OptionListMap::iterator it;
+	for(it = m_opt_list_map.begin(); it != m_opt_list_map.end(); ++it) {
+		UpdateBattleInfo(*it->first);
+	}
 }
 
 void BattleRoomTab::PrintAllySetup()
@@ -474,7 +478,7 @@ void BattleRoomTab::UpdateMapInfoSummary()
 {
 	try   // updates map info summary
 	{
-		ASSERT_EXCEPTION( m_battle->MapExists(), _( "Map does not exist." ) );
+		ASSERT_EXCEPTION( m_battle->MapExists(), _T( "Map does not exist." ) );
 		LSL::UnitsyncMap map = m_battle->LoadMap();
 		m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ] , 1, wxFormat( _T( "%.0fx%.0f" ) ) % (map.info.width / 512.0) % (map.info.height / 512.0 ) );
 		m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, wxFormat( _T( "%d-%d" ) ) % map.info.minWind % map.info.maxWind );
