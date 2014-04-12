@@ -103,6 +103,7 @@
 #include "images/flags/ID.xpm"
 #include "images/flags/IE.xpm"
 #include "images/flags/IL.xpm"
+#include "images/flags/IM.xpm"
 #include "images/flags/IN.xpm"
 #include "images/flags/IO.xpm"
 #include "images/flags/IQ.xpm"
@@ -348,6 +349,7 @@ const char* flag_str[] = {
 "ID",
 "IE",
 "IL",
+"IM",
 "IN",
 "IO",
 "IQ",
@@ -595,6 +597,7 @@ HU_xpm,
 ID_xpm,
 IE_xpm,
 IL_xpm,
+IM_xpm,
 IN_xpm,
 IO_xpm,
 IQ_xpm,

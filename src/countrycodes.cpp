@@ -114,6 +114,7 @@ void InitTable()
 	m_cc_table[_T("ID")] = _("Indonesia");
 	m_cc_table[_T("IE")] = _("Ireland");
 	m_cc_table[_T("IL")] = _("Israel");
+	m_cc_table[_T("IM")] = _("Isle of Man");
 	m_cc_table[_T("IN")] = _("India");
 	m_cc_table[_T("IO")] = _("British Indian Ocean Territory");
 	m_cc_table[_T("IQ")] = _("Iraq");

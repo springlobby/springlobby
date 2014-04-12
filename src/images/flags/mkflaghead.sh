@@ -2,6 +2,8 @@
 
 # This script autogenerates a flagimagedata.cpp file
 
+echo '/* This file is part of the Springlobby (GPL v2 or later), see COPYING */'
+echo ''
 echo '// this header file is automatically generated with a script'
 
 for img in *.xpm ; do
