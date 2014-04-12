@@ -380,7 +380,7 @@ void BattleRoomTab::UpdateBattleInfo()
 	UpdateMapInfoSummary();
 	OptionListMap::iterator it;
 	for(it = m_opt_list_map.begin(); it != m_opt_list_map.end(); ++it) {
-		UpdateBattleInfo(*it->first);
+		UpdateBattleInfo(it->first);
 	}
 }
 
