@@ -420,6 +420,11 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
   if ( !m_battle ) return;
 
 	const long index = m_opt_list_map[ Tag ];
+	if (index > m_opts_list->GetItemCount()) {
+		wxLogDebug(_T("UpdateBattleInfo: Invalid index %d %d"), index, m_opts_list->GetItemCount());
+		return;
+	}
+
 	LSL::OptionsWrapper::GameOption type = ( LSL::OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
 	wxString key = Tag.AfterFirst( '_' );
 	if ( ( type == LSL::OptionsWrapper::MapOption ) || ( type == LSL::OptionsWrapper::ModOption ) || ( type == LSL::OptionsWrapper::EngineOption ) )

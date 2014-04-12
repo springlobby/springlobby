@@ -28,7 +28,7 @@ void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 		repl.id = i;
 		if (GetReplayInfos(wfilename, repl)) {
 			AddPlayback(repl, i);
-			wxLogDebug(_T("-------------- %d %s %s"),i, TowxString(repl.battle.GetHostModName()).c_str(), TowxString(repl.battle.GetHostMapName()).c_str());
+//			wxLogDebug(_T("-------------- %d %s %s"),i, TowxString(repl.battle.GetHostModName()).c_str(), TowxString(repl.battle.GetHostMapName()).c_str());
 		} else {
 			wxLogDebug(_T("Error adding %s"), wfilename.c_str());
 		}
