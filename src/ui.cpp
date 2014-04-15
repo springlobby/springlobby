@@ -876,9 +876,6 @@ void Ui::OnJoinedBattle( IBattle& battle )
 	if ( m_main_win == 0 ) return;
 	mw().GetJoinTab().JoinBattle( battle );
 	mw().ShowTab(MainWindow::PAGE_JOIN);
-	if ( !LSL::usync().IsLoaded() ) {
-		customMessageBox(SL_MAIN_ICON, _("Your spring settings are probably not configured correctly,\nyou should take another look at your settings before trying\nto play online."), _("Spring settings error"), wxOK );
-	}
 	if ( battle.GetNatType() != NAT_None ) {
 		wxLogWarning( _T("joining game with NAT transversal") );
 	}
