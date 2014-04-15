@@ -495,3 +495,18 @@ std::string SlPaths::GetUpdateDir()
 {
 	return SlPaths::GetLobbyWriteDir() + "update" + SEP;
 }
+
+void SlPaths::DeleteAllFilesInDir(const std::string& dir)
+{
+	if (dir.empty())
+		return;
+	const wxString cachedir = TowxString(dir);
+	if (wxDirExists(cachedir)) {
+		wxLogWarning( _T("erasing dir %s"), cachedir.c_str());
+		wxString file = wxFindFirstFile( cachedir + wxFILE_SEP_PATH + _T("*") );
+		while ( !file.empty() ) {
+			wxRemoveFile( file );
+			file = wxFindNextFile();
+		}
+	}
+}

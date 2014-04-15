@@ -82,15 +82,7 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 		wxMkdir( userConfigDir );
 	}
 	if ( (cacheversion < CACHE_VERSION) && !IsFirstRun() ) {
-		const wxString cachedir = TowxString(SlPaths::GetCachePath());
-		if ( (!cachedir.empty())  && wxDirExists(cachedir)) {
-			wxLogWarning( _T("erasing old cache ver %d (app cache ver %d) %s"), cacheversion, CACHE_VERSION, cachedir.c_str());
-			wxString file = wxFindFirstFile( cachedir + wxFILE_SEP_PATH + _T("*") );
-			while ( !file.empty() ) {
-				wxRemoveFile( file );
-				file = wxFindNextFile();
-			}
-		}
+		SlPaths::DeleteAllFilesInDir(SlPaths::GetCachePath());
 		// after resetting cache, set current cache version
 		cfg().Write( _T( "/General/CacheVersion" ), CACHE_VERSION );
 	}

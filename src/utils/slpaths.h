@@ -72,6 +72,7 @@ public:
 	static std::string GetExecutableFolder();
 	static std::string GetConfigfileDir();
 	static std::string GetUpdateDir();
+	static void DeleteAllFilesInDir(const std::string& dir);
 
 private:
 	static bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle);

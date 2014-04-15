@@ -19,6 +19,7 @@
 
 #include "httpdownloader.h"
 #include "utils/conversion.h"
+#include "utils/slpaths.h"
 
 const wxEventType HttpDownloaderThread::httpDownloadEvtComplete = wxNewEventType();
 
@@ -87,8 +88,9 @@ void* HttpDownloaderThread::Entry()
 bool HttpDownloaderThread::Unzip()
 {
 	try {
-		std::auto_ptr<wxZipEntry> entry;
+		SlPaths::DeleteAllFilesInDir(STD_STRING(m_destpath));
 
+		std::auto_ptr<wxZipEntry> entry;
 		wxFFileInputStream in( m_destpath );
 		wxZipInputStream zip( in );
 
