@@ -189,3 +189,8 @@ PrDownloader& prDownloader()
 	static LSL::Util::GlobalObjectHolder<PrDownloader, LSL::Util::LineInfo<PrDownloader> > s_PrDownloader( m );
 	return s_PrDownloader;
 }
+
+bool PrDownloader::IsRunning()
+{
+	return !downloadsObserver().IsEmpty();
+}

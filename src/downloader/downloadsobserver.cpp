@@ -110,3 +110,8 @@ DownloadsObserver& downloadsObserver()
     static DownloadsObserver s_DownloadsObserver;
     return s_DownloadsObserver;
 }
+
+bool DownloadsObserver::IsEmpty()
+{
+	return m_dl_list.empty();
+}

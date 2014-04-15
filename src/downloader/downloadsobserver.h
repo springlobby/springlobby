@@ -66,6 +66,8 @@ class DownloadsObserver: public IDownloadsObserver
 
         //! Delete all informations about finished downloads
         void ClearFinished();
+
+		bool IsEmpty();
     private:
 
         //! Creatre infromation about download
