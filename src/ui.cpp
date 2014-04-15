@@ -539,7 +539,7 @@ bool Ui::DownloadArchives(const IBattle& battle)
 		prompt += wxFormat(_("the Map %s")) % battle.GetHostModName();
 	}
 
-	if ( customMessageBox( SL_MAIN_ICON, _( "You need to download %s to be able to play.\n\n Shall I download it?" ),
+	if ( customMessageBox( SL_MAIN_ICON, wxFormat(_( "You need to download %s to be able to play.\n\n Shall I download it?" )) % prompt,
 						   _( "Content needed to be downloaded" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 		if (!battle.MapExists()) {
 			ui().Download("map", battle.GetHostMapName(), battle.GetHostMapHash());
