@@ -102,7 +102,6 @@ int IBattle::GetPlayerNum( const User& user ) const
 	return -1;
 }
 
-#include <algorithm>
 class DismissColor
 {
 protected:
