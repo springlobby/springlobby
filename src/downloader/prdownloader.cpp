@@ -58,6 +58,7 @@ public:
 					fileSystem->extractEngine(dl->name, dl->version);
 					SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
 					SlPaths::SetUsedSpringIndex(dl->version);
+					break;
 				}
 				default:
 					continue;
@@ -66,6 +67,19 @@ public:
 			m_loader->freeResult( m_item );
 			UiEvents::ScopedStatusMessage msgcomplete(d, 0);
 			LSL::usync().ReloadUnitSyncLib();
+			// prefetch map data after a download as well
+			for( it = m_item.begin(); it!=m_item.end(); ++it) {
+				IDownload* dl = *it;
+				switch(dl->cat) {
+					case IDownload::CAT_MAPS: {
+						LSL::usync().PrefetchMap(dl->name); //FIXME: do the same for games, too
+					}
+					default:
+						continue;
+				}
+			}
+
+			//notify about finished download
 			GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
 		}
 	}

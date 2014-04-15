@@ -24,8 +24,6 @@ lsl/battle/ibattle.cpp
 #include <set>
 #include <sstream>
 
-#include <lslutils/misc.h>
-#include <lslutils/conversion.h>
 #include <lslunitsync/unitsync.h>
 
 #include "ibattle.h"
@@ -665,10 +663,6 @@ void IBattle::SetHostMap(const std::string& _mapname, const std::string& _hash)
 		m_map_loaded = false;
 		m_host_map.name = mapname;
 		m_host_map.hash = hash;
-
-		if ( MapExists() && !spring().IsRunning() ) {
-			LSL::usync().PrefetchMap( m_host_map.name );
-		}
 	}
 }
 
@@ -680,9 +674,6 @@ void IBattle::SetLocalMap(const std::string& mapname)
 	if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
 		m_local_map = map;
 		m_map_loaded = true;
-		if ( MapExists() && !spring().IsRunning() ) {
-			LSL::usync().PrefetchMap( m_host_map.name );
-		}
 		if ( IsFounderMe() ) {// save all rects infos
 			//TODO
 		}
