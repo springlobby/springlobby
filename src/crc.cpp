@@ -2,9 +2,6 @@
 
 #include "crc.h"
 
-#include <stdio.h>
-
-
 unsigned int CRC::crcTable[256];
 
 
@@ -57,25 +54,4 @@ void CRC::ResetCRC()
 void CRC::UpdateData(const std::string& buf)
 {
 	UpdateData((const unsigned char*) buf.c_str(), buf.size());
-}
-
-
-/** @brief Update CRC over the data in the specified file.
-    @return true on success, false if file could not be opened. */
-bool CRC::UpdateFile(const std::string& filename)
-{
-	FILE* fp = fopen(filename.c_str(), "rb");
-	if (!fp)
-		return false;
-
-	unsigned char buf[100000];
-	size_t bytes;
-	do {
-		bytes = fread((void*)buf, 1, 100000, fp);
-		UpdateData(buf, bytes);
-	} while (bytes == 100000);
-
-	fclose(fp);
-
-	return true;
 }

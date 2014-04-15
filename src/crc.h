@@ -13,8 +13,6 @@ public:
 
 	void UpdateData(const unsigned char* buf, unsigned bytes);
 	void UpdateData(const std::string& buf);
-	bool UpdateFile(const std::string& filename);
-
 	void ResetCRC();
 
 	unsigned int GetCRC() const { return crc ^ 0xFFFFFFFF; }
