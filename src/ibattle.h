@@ -18,8 +18,6 @@ lsl/battle/ibattle.h
 
 
 #include <wx/string.h>
-#include <wx/event.h>
-
 #include <lslunitsync/data.h>
 
 #include "user.h"
@@ -27,14 +25,12 @@ lsl/battle/ibattle.h
 #include <lsl/battle/tdfcontainer.h>
 #include "userlist.h"
 #include "utils/mixins.h"
-#include "utils/globalevents.h"
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 
 class IBattle;
 class IServer;
-class wxTimer;
 class AutoHost;
 
 struct BattleStartRect {
@@ -119,7 +115,7 @@ struct BattleOptions {
 	bool guilistactiv;
 };
 
-class IBattle: public UserList, public GlobalEvent, public wxEvtHandler, public SL::NonCopyable
+class IBattle: public UserList, public SL::NonCopyable
 {
 public:
 
@@ -271,8 +267,6 @@ public:
 	virtual void UnrestrictUnit( const std::string& unitname );
 	virtual void UnrestrictAllUnits();
 	virtual std::map<std::string,int> RestrictedUnits() const;
-
-	virtual void OnUnitsyncReloaded(wxEvent& event);
 
 	virtual LSL::OptionsWrapper& CustomBattleOptions() {
 		return m_opt_wrap;
@@ -571,8 +565,6 @@ protected:
 
 	bool m_map_loaded;
 	bool m_mod_loaded;
-	bool m_map_exists;
-	bool m_mod_exists;
 	LSL::UnitsyncMap m_local_map;
 	LSL::UnitsyncMod m_local_mod;
 	LSL::UnitsyncMap m_host_map;
@@ -614,8 +606,6 @@ protected:
 	TeamVec m_parsed_teams;
 	AllyVec m_parsed_allies;
 	UserVec m_internal_user_list; /// to store users from savegame/replay
-
-	wxTimer* m_timer;
 
 	long m_start_time;
 };

@@ -6,7 +6,7 @@
 #include <wx/scrolwin.h>
 
 #include "singleplayerbattle.h"
-
+#include "utils/globalevents.h"
 
 class Ui;
 class MapCtrl;
@@ -23,7 +23,7 @@ class wxCheckBox;
 class wxMouseEvent;
 class ColorButton;
 
-class SinglePlayerTab: public  wxScrolledWindow, public GlobalEvent
+class SinglePlayerTab: public wxScrolledWindow, public GlobalEvent
 {
   public:
 

@@ -490,7 +490,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     catch (assert_exception) {}
 }
 
-void ServerEvents::OnUnsetBattleInfo( int battleid, const wxString& param)
+void ServerEvents::OnUnsetBattleInfo( int /*battleid*/, const wxString& /*param*/)
 {
 	//FIXME: implement this
 }

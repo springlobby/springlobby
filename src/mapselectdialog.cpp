@@ -287,7 +287,7 @@ LSL::UnitsyncMap* MapSelectDialog::GetSelectedMap() const
 	return m_mapgrid->GetSelectedMap();
 }
 
-void MapSelectDialog::OnMapSelected( wxCommandEvent& event )
+void MapSelectDialog::OnMapSelected( wxCommandEvent& /*event*/ )
 {
 //	const wxString& mapname = event.GetString();
 

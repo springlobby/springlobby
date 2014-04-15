@@ -29,6 +29,7 @@
 #include "iconimagelist.h"
 #include "spring.h"
 #include "utils/conversion.h"
+#include "utils/globalevents.h"
 #include "log.h"
 
 
@@ -43,7 +44,8 @@ Battle::Battle( IServer& serv, int id ) :
 		m_serv(serv),
         m_ah(*this),
         m_autolock_on_start(false),
-        m_id( id )
+        m_id( id ),
+		m_timer(NULL)
 {
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
     m_opts.battleid =  m_id;
@@ -52,6 +54,10 @@ Battle::Battle( IServer& serv, int id ) :
 
 Battle::~Battle()
 {
+	if(m_timer!=NULL) {
+		delete m_timer;
+		m_timer = NULL;
+	}
 }
 
 
@@ -1155,9 +1161,8 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     }
 }
 
-void Battle::OnUnitsyncReloaded( wxEvent& data )
+void Battle::OnUnitsyncReloaded( wxEvent& /*data*/ )
 {
-	IBattle::OnUnitsyncReloaded( data );
 	if ( m_is_self_in ) SendMyBattleStatus();
 }
 

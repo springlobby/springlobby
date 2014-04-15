@@ -3,7 +3,6 @@
 #include "offlinebattle.h"
 #include "spring.h"
 
-#include <wx/timer.h>
 #include <lslunitsync/unitsync.h>
 #include "utils/conversion.h"
 
@@ -36,8 +35,6 @@ OfflineBattle& OfflineBattle::operator = ( const OfflineBattle& other )
     m_map_loaded = other.m_map_loaded;
     m_map_loaded = other.m_map_loaded;
     m_mod_loaded = other.m_mod_loaded;
-    m_map_exists = other.m_map_exists;
-    m_mod_exists = other.m_mod_exists;
     m_local_map = other.m_local_map;
     m_local_mod = other.m_local_mod;
     m_host_map = other.m_host_map;
@@ -61,6 +58,5 @@ OfflineBattle& OfflineBattle::operator = ( const OfflineBattle& other )
     m_parsed_teams = other.m_parsed_teams;
     m_parsed_allies = other.m_parsed_allies;
     m_internal_user_list = other.m_internal_user_list;
-    m_timer = new wxTimer( other.m_timer ); //!no idea if this is proper
     return *this;
 }

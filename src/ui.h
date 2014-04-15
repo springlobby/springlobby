@@ -14,8 +14,10 @@ class IBattle;
 class ChatPanel;
 class ReconnectDialog;
 class HttpDownloaderThread;
+class wxEvtHandler;
 
 #include "utils/battleevents.h"
+#include "utils/globalevents.h"
 #include <wx/string.h>
 #include <wx/timer.h>
 #include "utils/mixins.h"

@@ -6,17 +6,20 @@
 #include <set>
 
 #include "hosting/autohost.h"
+#include "utils/globalevents.h"
 #include "ibattle.h"
 
 class Ui;
 class IServer;
 class User;
 class wxTimerEvent;
+class wxEvtHandler;
+class wxTimer;
 
 
 /** \brief model of a sp/mp battle
  * \todo DOCME */
-class Battle : public IBattle
+class Battle : public IBattle, public GlobalEvent, public wxEvtHandler
 {
 public:
 	Battle( IServer& serv, int id );
@@ -132,6 +135,7 @@ protected:
 	bool m_autolock_on_start;
 
 	const int m_id;
+	wxTimer* m_timer;
 
 	DECLARE_EVENT_TABLE()
 };
