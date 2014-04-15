@@ -1064,7 +1064,7 @@ void Ui::OnInit()
 		mw().ShowTab(cfg().ReadLong(_T( "/GUI/StartTab" )));
 		//don't ask for updates on first run, that's a bit much for a newbie
 		if (cfg().ReadBool(_T("/General/AutoUpdate"))) {
-			time_t now = time(0);
+			const time_t now = time(0);
 			const size_t lastcheck = cfg().ReadLong(_T("/General/LastUpdateCheck"));
 			if (now - lastcheck > 3600) {
 				CheckForUpdates();
