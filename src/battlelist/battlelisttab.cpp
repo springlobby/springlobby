@@ -406,31 +406,8 @@ void BattleListTab::DoJoin( IBattle& battle )
 			return;
 		}
 	}
-
-	if ( !ui().IsSpringCompatible(battle.GetBattleOptions().engineName, battle.GetBattleOptions().engineVersion))
-	{
-        wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
-	}
-
-    const wxString downloadProc = _( "Should I try to download it for you?\nYou'll be notified once it's complete" );
-	if ( !battle.ModExists() )
-	{
-        if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the game before you can join this game.\n\n" ) + downloadProc,
-                               _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-			ui().Download("game", battle.GetHostModName(), battle.GetHostModHash());
-		}
-        else
-            return;
-	}
-
-	if ( !battle.MapExists() )
-	{
-        if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the map to be able to play in this game.\n\n" ) + downloadProc,
-                               _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-			ui().Download("map", battle.GetHostMapName(), battle.GetHostMapHash());
-		}
-        else
-            return;
+	if (!ui().DownloadArchives(battle)) {
+		return;
 	}
 
 	if ( battle.IsPassworded() )
@@ -443,9 +420,7 @@ void BattleListTab::DoJoin( IBattle& battle )
 			password.Replace(_T(" "), wxEmptyString);
 			battle.Join(STD_STRING(password));
 		}
-	}
-	else
-	{
+	} else {
 		battle.Join();
 	}
 }

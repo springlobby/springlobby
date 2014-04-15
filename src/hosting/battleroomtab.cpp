@@ -913,6 +913,7 @@ void BattleRoomTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 		UpdateUser(m_battle->GetUser(i));
 	}
 	m_battle->SendMyBattleStatus(); // This should reset sync status.
+	ui().DownloadArchives(*m_battle);
 }
 
 long BattleRoomTab::AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOption optFlag )

@@ -507,13 +507,49 @@ bool Ui::IsSpringCompatible(const std::string& engine, const std::string& versio
 		}
 		return true;
 	}
-	if ( wxYES == customMessageBox( SL_MAIN_ICON,
-					wxFormat(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded? \nPlease reselect the preset after download finished")) % engine % version,
-					_("Engine missing"),
-					wxYES_NO ) ) {
-		Download(PrDownloader::GetEngineCat(), version, "");
-	}
 	return false; // no compatible version found
+}
+
+bool Ui::DownloadArchives(const IBattle& battle)
+{
+	const std::string engineVersion = battle.GetBattleOptions().engineVersion;
+	const std::string engineName = battle.GetBattleOptions().engineName;
+
+	if ( !IsSpringCompatible(engineName, engineVersion)) {
+        wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
+
+		if ( wxYES == customMessageBox( SL_MAIN_ICON,
+						wxFormat(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded?")) % engineName % engineVersion,
+						_("Engine missing"),
+						wxYES_NO ) ) {
+			Download(PrDownloader::GetEngineCat(), engineVersion, "");
+			return true;
+		}
+	}
+
+	wxString prompt = wxEmptyString;
+	if (!battle.ModExists() ) {
+		prompt += wxFormat(_("the Game %s")) % battle.GetHostModName();
+	}
+
+	if (!battle.MapExists() ) {
+		if (prompt.empty()) {
+			prompt+= _(" and ");
+		}
+		prompt += wxFormat(_("the Map %s")) % battle.GetHostModName();
+	}
+
+	if ( customMessageBox( SL_MAIN_ICON, _( "You need to download %s to be able to play.\n\n Shall I download it?" ),
+						   _( "Content needed to be downloaded" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
+		if (!battle.MapExists()) {
+			ui().Download("map", battle.GetHostMapName(), battle.GetHostMapHash());
+		}
+		if (!battle.ModExists()) {
+			ui().Download("game", battle.GetHostModName(), battle.GetHostModHash());
+		}
+		return true;
+	}
+	return false;
 }
 
 

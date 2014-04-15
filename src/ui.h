@@ -58,6 +58,7 @@ public:
 	void JoinChannel( const wxString& name, const wxString& password );
 
 	bool IsSpringCompatible(const std::string& engine, const std::string& version);
+	bool DownloadArchives(const IBattle& battle);
 
 	bool IsSpringRunning() const;
 

@@ -296,30 +296,10 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 			}
             rep.battle.GetMe().SetNick(STD_STRING(sett().GetDefaultNick()));
 			bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
-			if ( watchable )
+			if ( watchable ) {
 				rep.battle.StartSpring();
-			else {
-				wxString downloadProc = _( "Should i try to download it for you?\nYou can see the progress in the \"Download Manager\" tab." );
-				OfflineBattle& battle = rep.battle;
-
-				if ( !battle.ModExists() ) {
-					if ( customMessageBox( SL_MAIN_ICON, _( "You need to download the game before you can watch this replay.\n\n" ) + downloadProc, _( "Game not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-						ui().Download ("game", battle.GetHostModName(), battle.GetHostModHash());
-					}
-					else {
-						AskForceWatch( rep );
-					}
-					return;
-				}
-
-				if ( !battle.MapExists() ) {
-					if ( customMessageBox( SL_MAIN_ICON, _( " I couldn't find the map to be able to watch this replay\nThis can be caused by tasclient writing broken map hash value\nIf you're sure you have the map, press no\nYou need to download the map to be able to watch this replay.\n\n" ) + downloadProc, _( "Map not available" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
-						ui().Download ("map", battle.GetHostModName(), battle.GetHostModHash());
-					}
-					else {
-						AskForceWatch( rep );
-					}
-				}
+			} else {
+				ui().DownloadArchives(rep.battle);
 			}
 		} catch ( std::runtime_error ) {
 			return;
