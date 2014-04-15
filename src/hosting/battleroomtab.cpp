@@ -500,6 +500,7 @@ void BattleRoomTab::UpdateMapInfoSummary()
 
 void BattleRoomTab::UpdateStatsLabels()
 {
+	if (m_battle == NULL) return;
 	m_ok_count_lbl->SetLabel( wxFormat( _( "Unready: %d" ) ) % ( m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ) );
 	PrintAllySetup();
 }
