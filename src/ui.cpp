@@ -527,6 +527,10 @@ bool Ui::DownloadArchives(const IBattle& battle)
 		}
 	}
 
+	if (battle.MapExists() && battle.ModExists()) {
+		return true;
+	}
+
 	wxString prompt = wxEmptyString;
 	if (!battle.ModExists() ) {
 		prompt += wxFormat(_("the game '%s'")) % battle.GetHostModName();
