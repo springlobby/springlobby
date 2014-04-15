@@ -68,6 +68,7 @@
 
 
 SLCONFIG("/General/AutoUpdate", true, "Determines if springlobby should check for updates on startup");
+SLCONFIG("/General/LastUpdateCheck", 0L, "Last time springlobby checked for an update");
 SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere",true, "setting to spam the server messages in all channels");
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
@@ -1063,7 +1064,12 @@ void Ui::OnInit()
 		mw().ShowTab(cfg().ReadLong(_T( "/GUI/StartTab" )));
 		//don't ask for updates on first run, that's a bit much for a newbie
 		if (cfg().ReadBool(_T("/General/AutoUpdate"))) {
-			CheckForUpdates();
+			time_t now = time(0);
+			const size_t lastcheck = cfg().ReadLong(_T("/General/LastUpdateCheck"));
+			if (now - lastcheck > 3600) {
+				CheckForUpdates();
+				cfg().Write(_T("/General/LastUpdateCheck"), (long)now);
+			}
 		}
 	}
 }
