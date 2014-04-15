@@ -17,7 +17,6 @@ lsl/user/user.h
 **/
 
 
-#include <wx/string.h>
 #include <wx/colour.h>
 #include "utils/mixins.h"
 class IServer;

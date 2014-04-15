@@ -16,7 +16,6 @@ lsl/container/userlist.h
 **/
 
 #include <map>
-#include <wx/string.h>
 
 class User;
 

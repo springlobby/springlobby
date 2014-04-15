@@ -16,13 +16,11 @@ lsl/battle/ibattle.h
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 **/
 
-
-#include <wx/string.h>
 #include <lslunitsync/data.h>
-
-#include "user.h"
 #include <lslunitsync/optionswrapper.h>
 #include <lsl/battle/tdfcontainer.h>
+
+#include "user.h"
 #include "userlist.h"
 #include "utils/mixins.h"
 
