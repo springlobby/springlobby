@@ -16,6 +16,7 @@ lsl/container/userlist.h
 **/
 
 #include <map>
+#include <string>
 
 class User;
 
