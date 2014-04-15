@@ -18,10 +18,6 @@ ObserverDownloadInfo::ObserverDownloadInfo(IDownload* dl):
 	filename(wxString::FromUTF8(dl->name.c_str())),
 	name(wxString::FromUTF8(dl->origin_name.c_str()))
 {
-	if (dl->downloaded) {
-		progress = 100;
-		return;
-	}
 	if (size > 0) {
 		progress=dl->getProgress();
 	} else {

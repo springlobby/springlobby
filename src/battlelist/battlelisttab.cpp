@@ -385,44 +385,38 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 
 void BattleListTab::DoJoin( IBattle& battle )
 {
-
+	wxString password = wxEmptyString;
 
 	IBattle* curbattle = ui().mw().GetJoinTab().GetCurrentBattle();
 
-	if ( curbattle != 0 && curbattle->GetID() == battle.GetID() )
-	{
+	if ( curbattle != 0 && curbattle->GetID() == battle.GetID() ) {
         ui().mw().ShowTab(MainWindow::PAGE_JOIN);
         return;
 	}
 
-	if ( curbattle != 0 )
-	{
+	if ( curbattle != 0 ) {
 		if ( ui().Ask( _( "Already in another battle" ), _( "You are already in a battle.\n\nDo you want to leave your current battle and join this one?" ) ) ) {
 			curbattle->Leave();
 			ui().mw().GetJoinTab().LeaveCurrentBattle();
-		}
-		else
-		{
+		} else {
 			return;
 		}
 	}
+
+	if ( battle.IsPassworded() ) {
+		wxPasswordEntryDialog pw( this, _( "Battle password" ), _( "Enter password (spaces will be stripped)" ) );
+		pw.SetFocus();
+		if ( pw.ShowModal() == wxID_OK ) {
+			password = pw.GetValue();
+			password.Replace(_T(" "), wxEmptyString);
+		}
+	}
+
 	if (!ui().DownloadArchives(battle)) {
 		return;
 	}
 
-	if ( battle.IsPassworded() )
-	{
-		wxPasswordEntryDialog pw( this, _( "Battle password" ), _( "Enter password (spaces will be stripped)" ) );
-		pw.SetFocus();
-		if ( pw.ShowModal() == wxID_OK )
-		{
-			wxString password = pw.GetValue();
-			password.Replace(_T(" "), wxEmptyString);
-			battle.Join(STD_STRING(password));
-		}
-	} else {
-		battle.Join();
-	}
+	battle.Join(STD_STRING(password));
 }
 
 

@@ -529,14 +529,14 @@ bool Ui::DownloadArchives(const IBattle& battle)
 
 	wxString prompt = wxEmptyString;
 	if (!battle.ModExists() ) {
-		prompt += wxFormat(_("the Game %s")) % battle.GetHostModName();
+		prompt += wxFormat(_("the game '%s'")) % battle.GetHostModName();
 	}
 
 	if (!battle.MapExists() ) {
 		if (!prompt.empty()) {
 			prompt+= _(" and ");
 		}
-		prompt += wxFormat(_("the Map %s")) % battle.GetHostModName();
+		prompt += wxFormat(_("the map '%s'")) % battle.GetHostMapName();
 	}
 	if (prDownloader().IsRunning()) {
 		return true;
