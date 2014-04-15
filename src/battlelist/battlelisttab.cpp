@@ -406,10 +406,11 @@ void BattleListTab::DoJoin( IBattle& battle )
 	if ( battle.IsPassworded() ) {
 		wxPasswordEntryDialog pw( this, _( "Battle password" ), _( "Enter password (spaces will be stripped)" ) );
 		pw.SetFocus();
-		if ( pw.ShowModal() == wxID_OK ) {
-			password = pw.GetValue();
-			password.Replace(_T(" "), wxEmptyString);
+		if ( pw.ShowModal() != wxID_OK ) {
+			return;
 		}
+		password = pw.GetValue();
+		password.Replace(_T(" "), wxEmptyString);
 	}
 
 	if (!ui().DownloadArchives(battle)) {
