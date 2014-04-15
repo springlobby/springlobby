@@ -1153,6 +1153,7 @@ void BattleRoomTab::RegenerateOptionsList()
 	long pos = 0;
 	m_opts_list->DeleteAllItems();
 	m_opts_list->InsertItem( pos, _( "Size" ) );
+	m_opt_list_map.clear();
 	m_opt_list_map[ _( "Size" ) ] = pos;
 	pos++;
 	m_opts_list->InsertItem( pos , _( "Windspeed" ) );
