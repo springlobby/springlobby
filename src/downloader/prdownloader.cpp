@@ -154,6 +154,7 @@ void PrDownloader::ClearFinished()
 void PrDownloader::UpdateSettings()
 {
 	fileSystem->setWritePath(SlPaths::GetDownloadDir());
+	rapidDownload->setOption("masterurl", "http://repos.springrts.com/repos.gz");
 }
 
 void PrDownloader::RemoveTorrentByName(const std::string &/*name*/)
