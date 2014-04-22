@@ -23,7 +23,7 @@ class wxEvtHandler;
 #include "utils/mixins.h"
 
 //! @brief UI main class
-class Ui : public wxEvtHandler, public GlobalEvent, public SL::NonCopyable
+class Ui : public wxTimer, public GlobalEvent, public SL::NonCopyable
 {
 public:
 
@@ -143,12 +143,12 @@ public:
 protected:
 	bool StartUpdate( const wxString& latestVersion);
 	void OnDownloadComplete(wxCommandEvent& /*data*/);
+	void Notify();
 
 	HttpDownloaderThread* m_http_thread;
 	IServer* m_serv;
 	MainWindow* m_main_win;
 	ConnectWindow* m_con_win;
-	wxTimer m_reconnect_delay_timer;
 	ReconnectDialog* m_reconnect_dialog;
 
 	wxString m_last_used_backup_server;

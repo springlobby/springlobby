@@ -84,7 +84,6 @@ Ui& ui()
 }
 
 Ui::Ui() :
-	wxEvtHandler(),
 	m_http_thread(NULL),
 	m_serv(0),
 	m_main_win(0),
@@ -214,13 +213,13 @@ void Ui::Disconnect()
 //! @brief Opens the accutial connection to a server.
 void Ui::DoConnect( const wxString& servername, const wxString& username, const wxString& password )
 {
-	if ( m_reconnect_delay_timer.IsRunning() ) {
+	if (IsRunning() ) {
 		m_recconecting_wait = true;
 		AutocloseMessageBox m( &mw(), _("Waiting for reconnect"), wxMessageBoxCaptionStr, s_reconnect_delay_ms );
 		int res = m.ShowModal();
 		m_recconecting_wait = false;
 		if ( res == wxID_CANCEL ) {
-			m_reconnect_delay_timer.Stop();
+			Stop();
 			return;
 		}
 	}
@@ -570,7 +569,7 @@ void Ui::OnLoggedIn( )
 
 void Ui::OnDisconnected( IServer& server, bool wasonline )
 {
-	m_reconnect_delay_timer.Start( s_reconnect_delay_ms, true );
+	Start( s_reconnect_delay_ms, true );
 	if ( m_main_win == 0 ) return;
 	slLogDebugFunc("");
 	if (!&server) {
@@ -1184,3 +1183,8 @@ void Ui::OnQuit(wxCommandEvent& /*data*/)
 }
 
 
+void Ui::Notify()
+{
+	Stop();
+	Reconnect();
+}

@@ -460,6 +460,7 @@ void TASServer::Notify()
 		if ( lastpacketreceived_diff > PING_TIMEOUT ) { // no data received, assume timeout
 			m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.")) % lastpacketreceived_diff % (now - m_last_ping) );
 			Disconnect();
+			return;
 		}
 	}
 
@@ -1915,7 +1916,7 @@ void TASServer::OnConnected(Socket& /*unused*/ )
 void TASServer::OnDisconnected(Socket& /*unused*/ )
 {
 	slLogDebugFunc("%d", m_connected);
-	bool connectionwaspresent = m_online || !m_last_denied.IsEmpty() || m_redirecting;
+	const bool connectionwaspresent = m_online || !m_last_denied.IsEmpty() || m_redirecting;
 	m_last_denied = wxEmptyString;
 	m_connected = false;
 	m_online = false;
