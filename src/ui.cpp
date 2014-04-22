@@ -1185,6 +1185,9 @@ void Ui::OnQuit(wxCommandEvent& /*data*/)
 
 void Ui::Notify()
 {
-	Stop();
-	Reconnect();
+	if(serverSelector().GetServer().IsConnected()) {
+		Stop();
+	} else {
+		Reconnect();
+	}
 }
