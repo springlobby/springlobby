@@ -77,61 +77,6 @@ std::map<std::string, LSL::SpringBundle> SlPaths::GetSpringVersionList()
 	return m_spring_versions;
 }
 
-// adds path to pathlist if it exists
-static void AddPath(const std::string& path, LSL::StringVector& pathlist)
-{
-	if (LSL::Util::FileExists(path)) {
-		pathlist.push_back(path);
-	}
-}
-
-
-//reads envvar, splits it by : and ; and add it to pathlist, when exists
-void GetEnv(const std::string& name, LSL::StringVector& pathlist)
-{
-	const char* envvar= getenv(name.c_str());
-	if (envvar == NULL) return;
-	LSL::StringVector res = LSL::Util::StringTokenize(envvar, ";:");
-	for (const std::string path:res) {
-		AddPath(path, pathlist);
-	}
-}
-
-
-// searches in OS standard paths for a system installed spring
-bool SlPaths::LocateSystemInstalledSpring(LSL::SpringBundle& bundle)
-{
-	LSL::StringVector paths;
-
-	GetEnv("SPRING_BUNDLE_DIR", paths);
-	GetEnv("PATH", paths);
-	GetEnv("%ProgramFiles%", paths);
-	GetEnv("%ProgramFiles(x86)%", paths);
-	GetEnv("%ProgramFiles(x86)%", paths);
-	GetEnv("LD_LIBRARY_PATH", paths);
-	GetEnv("LDPATH", paths);
-
-	AddPath("/usr/local/lib/spring", paths);
-	AddPath("/usr/local/lib64", paths);
-	AddPath("/usr/local/games", paths);
-	AddPath("/usr/local/games/lib", paths);
-	AddPath("/usr/local/lib", paths);
-	AddPath("/usr/lib64", paths);
-	AddPath("/usr/lib", paths);
-	AddPath("/usr/lib/spring", paths);
-	AddPath("/usr/games", paths);
-	AddPath("/usr/games/lib64", paths);
-	AddPath("/usr/games/lib", paths);
-	AddPath("/lib", paths);
-	AddPath("/bin", paths);
-
-	for (const std::string path: paths) {
-		if (bundle.AutoComplete(path)) {
-			return true;
-		}
-	}
-	return false;
-}
 
 
 // returns my documents dir on windows, HOME on windows
@@ -214,7 +159,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 		}
 		if (!SlPaths::IsPortableMode()) {
 			LSL::SpringBundle systembundle;
-			if (LocateSystemInstalledSpring(systembundle)) {
+			if (LSL::SpringBundle::LocateSystemInstalledSpring(systembundle)) {
 				usync_paths.push_back(systembundle);
 			}
 
@@ -243,7 +188,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 
 	m_spring_versions.clear();
 	try {
-		const auto versions = LSL::usync().GetSpringVersionList( usync_paths );
+		const auto versions = LSL::SpringBundle::GetSpringVersionList( usync_paths );
 		for(const auto pair : versions) {
 			const LSL::SpringBundle& bundle = pair.second;
 			const std::string version = bundle.version;

@@ -75,7 +75,6 @@ public:
 	static void DeleteAllFilesInDir(const std::string& dir);
 
 private:
-	static bool LocateSystemInstalledSpring(LSL::SpringBundle& bundle);
 	static void EngineSubPaths(const std::vector<std::string>& basedirs, std::vector<std::string>& paths);
 
 	//! used for passing config file at command line, empty if not set
