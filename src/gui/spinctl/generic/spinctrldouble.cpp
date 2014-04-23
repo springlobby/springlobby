@@ -12,7 +12,7 @@ void SlSpinCtrlDouble::DoSendEvent()
     SlSpinDoubleEvent event(SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, GetId(), m_value);
     event.SetEventObject(this);
     event.SetString(m_textCtrl->GetValue());
-    if ( !GetParent()->ProcessEvent( event ) ) {
+    if ( !GetEventHandler()->ProcessEvent( event ) ) {
         wxLogError( _T("Error handling SlSpinCtrlDouble") );
 	}
 }
