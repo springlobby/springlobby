@@ -30,22 +30,21 @@
 #include "battleroommmoptionstab.h"
 
 
-const char sep = *("_");
+const char sep = '_';
 const wxString wxsep = _T("_");
 
 
-// note that the SpinCtrlDouble change is handled explicitly via the control calling the right handler
 BEGIN_EVENT_TABLE(BattleroomMMOptionsTab, wxScrolledWindow)
 	EVT_COMBOBOX					(wxID_ANY, BattleroomMMOptionsTab::OnComBoxChange)
 	EVT_CHECKBOX					(wxID_ANY, BattleroomMMOptionsTab::OnChkBoxChange)
-	EVT_TEXT_ENTER					(wxID_ANY,  BattleroomMMOptionsTab::OnTextCtrlChange)
-
+	EVT_TEXT_ENTER					(wxID_ANY, BattleroomMMOptionsTab::OnTextCtrlChange)
+	EVT_SLSPINCTRLDOUBLE			(wxID_ANY, BattleroomMMOptionsTab::OnSpinCtrlDoubleChange)
 //  EVT_BUTTON( BOPTS_LOADPRES, BattleroomMMOptionsTab::OnLoadPreset )
 //  EVT_BUTTON( BOPTS_SAVEPRES, BattleroomMMOptionsTab::OnSavePreset )
 //  EVT_BUTTON( BOPTS_DELETEPRES, BattleroomMMOptionsTab::OnDeletePreset )
 //  EVT_BUTTON( BOPTS_SETDEFAULTPRES, BattleroomMMOptionsTab::OnSetModDefaultPreset )
 
-  EVT_BUTTON( wxID_ANY, BattleroomMMOptionsTab::OnButton )
+	EVT_BUTTON( wxID_ANY, BattleroomMMOptionsTab::OnButton )
 END_EVENT_TABLE()
 
 BattleroomMMOptionsTab::BattleroomMMOptionsTab(  IBattle* battle, wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
@@ -212,8 +211,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
         if ( it.second.section == section.key )
         {
             const LSL::mmOptionFloat current = it.second;
-			SlSpinCtrlDouble* tempspin = new SlSpinCtrlDouble();
-			tempspin->Create(this, FLOAT_START_ID+ctrl_count, _T(""),
+			SlSpinCtrlDouble* tempspin = new SlSpinCtrlDouble(this, FLOAT_START_ID+ctrl_count, _T(""),
 					wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, double(current.min), double(current.max),
                     double(current.value),double(current.stepping), TowxString(current.key));
             tempspin->SetSnapToTicks( true );

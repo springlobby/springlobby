@@ -141,8 +141,6 @@ END_EVENT_TABLE()
 // SlSpinCtrlGenericBase creation
 // ----------------------------------------------------------------------------
 
-    IMPLEMENT_DYNAMIC_CLASS(SlSpinDoubleEvent, wxNotifyEvent)
-
 void SlSpinCtrlGenericBase::Init()
 {
     m_value         = 0;

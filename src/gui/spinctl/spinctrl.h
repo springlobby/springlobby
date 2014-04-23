@@ -31,7 +31,8 @@
 // Events
 class  SlSpinDoubleEvent;
 
-static const wxEventType SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED  = wxNewEventType();
+DECLARE_EVENT_TYPE(SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxID_ANY);
+
 //const wxEventType SLEVT_COMMAND_SPINCTRL_UPDATED  = wxNewEventType();
 
 // ----------------------------------------------------------------------------
@@ -94,8 +95,6 @@ public:
 protected:
     double m_value;
 
-private:
-    DECLARE_DYNAMIC_CLASS_NO_ASSIGN(SlSpinDoubleEvent)
 };
 
 // ----------------------------------------------------------------------------
@@ -106,13 +105,6 @@ typedef void (wxEvtHandler::*SlSpinDoubleEventFunction)(SlSpinDoubleEvent&);
 
 #define SlSpinDoubleEventHandler(func) \
     (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(SlSpinDoubleEventFunction, &func)
-
-//#define wxCommandEventHandler(func)
-//    (wxObjectEventFunction)(wxEventFunction)wxStaticCastEvent(wxCommandEventFunction, &func)
-// macros for handling spinctrl events
-
-//#define EVT_SLSPINCTRL(id, fn)
-//    wx__DECLARE_EVT1(SLEVT_COMMAND_SPINCTRL_UPDATED, id, SlSpinEventHandler(fn))
 
 #define EVT_SLSPINCTRLDOUBLE(id, fn) \
     wx__DECLARE_EVT1(SLEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, id, SlSpinDoubleEventHandler(fn))
