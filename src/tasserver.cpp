@@ -396,7 +396,7 @@ void TASServer::Login()
 	localaddr = m_sock->GetLocalAddress();
 	if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
-	wxFormat login_cmd( _T("%s %s 1337 %s %s\t%s\ta m sp cl") );
+	wxFormat login_cmd( _T("%s %s 1337 %s %s\t%s\ta m sp cl p") );
 	SendCmd ( _T("LOGIN"), (login_cmd % m_user % pass % localaddr % TowxString(getSpringlobbyAgent()) % protocol).str() );
 	m_id_transmission = true;
 }
