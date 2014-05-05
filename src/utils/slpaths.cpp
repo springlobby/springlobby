@@ -429,7 +429,7 @@ std::string SlPaths::GetDownloadDir()
 #ifdef WIN32
 	const std::string dir = LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + "My Games\\Spring";
 #else
-	const std::string dir = GetMyDocumentsDir() + ".spring";
+	const std::string dir = LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + ".spring";
 #endif
 	wxString downloadDir = TowxString(dir);
 	cfg().Read(_T("/Spring/DownloadDir"), &downloadDir);
