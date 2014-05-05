@@ -99,7 +99,6 @@ bool GetMac(std::vector<unsigned char>& mac)
 		}
 		freeifaddrs(ifap);
 	}
-	assert(false);
 	return false;
 }
 
