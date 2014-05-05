@@ -846,8 +846,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		channel = GetWordParam( params );
 		m_se->OnChannelMessage( channel, params );
 		//CHANNELMESSAGE channame {message}
-	} else if ( cmd == _T("ACQUIREUSERID") ) {
-		SendCmd( _T("USERID"), TowxString( m_crc.GetCRC() ) );
 	} else if ( cmd == _T("FORCELEAVECHANNEL") ) {
 		channel = GetWordParam( params );
 		nick = GetWordParam( params );
