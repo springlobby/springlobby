@@ -57,7 +57,7 @@ bool GetMac(std::vector<unsigned char>& mac)
 
     DWORD dwStatus = GetAdaptersInfo ( AdapterInfo, &dwBufLen); // Get info
                 if (dwStatus != NO_ERROR) return wxEmptyString; // Check status
-	for(int i=0; i<sizeof(AdapterInfo); i++) {
+	for(size_t i = 0; i<sizeof(AdapterInfo); i++) {
 		mac.resize(AdapterInfo[i].AddressLength);
 		mac.assign(AdapterInfo[i].Address, AdapterInfo[i].Address + AdapterInfo[i].AddressLength);
 		for (size_t j=0; j< mac.size(); j++) {
