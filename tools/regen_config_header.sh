@@ -26,6 +26,13 @@ if [ -s ${VERSIONFILE} ] && [ -s ${TARGET_HEADER} ]; then
 fi
 
 if [ "${OLDREV}" != "${REV}" ]; then # version changed, update file
+	if [ "${REV}" = "unknown" ]; then # new version couldn't be determinated
+		if [ -n "${OLDREV}" ]; then # don't set as old rev is known
+			echo "Couldn't determinate version, using old rev ${OLDREV}"
+			exit
+		fi
+	fi
+
 	echo "Updating from version ${OLDREV} to ${REV}"
 	echo -n ${REV}>${VERSIONFILE}
 	sed "s;${REV_TEMPLATE};${REV};g" ${SOURCE_HEADER} > ${TARGET_HEADER}
