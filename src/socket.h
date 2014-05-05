@@ -18,8 +18,8 @@ lsl/networking/socket.h
 
 
 #include <wx/string.h>
-
 #include <wx/event.h>
+#include <string>
 
 class iNetClass;
 class wxCriticalSection;
@@ -66,7 +66,7 @@ class Socket
     wxString ReceiveSpecial();
 
     wxString GetLocalAddress() const;
-    wxString GetHandle() const {return m_handle;}
+    std::string GetHandle() const {return m_handle;}
 
     SockState State( );
     SockError Error( ) const;
@@ -86,7 +86,8 @@ class Socket
 
     wxCriticalSection m_lock;
 
-    wxString m_ping_msg,m_handle;
+    wxString m_ping_msg;
+	std::string m_handle;
 
     bool m_connecting;
     bool m_wait_on_connect;

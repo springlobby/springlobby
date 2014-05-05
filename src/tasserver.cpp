@@ -293,9 +293,9 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
 	m_crc.ResetCRC();
 	m_last_net_packet = 0;
 	m_last_timer = 0;
-	wxString handle = m_sock->GetHandle();
-	if ( !handle.IsEmpty() ) {
-		m_crc.UpdateData( STD_STRING( wxString( handle + m_addr ) ) );
+	const std::string handle = m_sock->GetHandle();
+	if ( !handle.empty() ) {
+		m_crc.UpdateData(handle + ":" + STD_STRING(m_addr));
 	}
 }
 
@@ -390,10 +390,9 @@ const User& TASServer::GetMe() const
 void TASServer::Login()
 {
 	slLogDebugFunc("");
-	wxString pass = GetPasswordHash( m_pass );
-	wxString protocol = TowxString( m_crc.GetCRC() );
-	wxString localaddr;
-	localaddr = m_sock->GetLocalAddress();
+	const wxString pass = GetPasswordHash( m_pass );
+	const wxString protocol = TowxString( m_crc.GetCRC() );
+	wxString localaddr = m_sock->GetLocalAddress();
 	if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
 	wxFormat login_cmd( _T("%s %s 1337 %s %s\t%s\ta m sp cl p") );

@@ -45,68 +45,90 @@ lsl/networking/socket.cpp
 
 #define LOCK_SOCKET wxCriticalSectionLocker criticalsection_lock(m_lock)
 
-wxString _GetHandle()
+
+#ifdef __WXMSW__
+
+bool GetMac(std::vector<unsigned char>& mac)
 {
-        wxString handle;
-        #ifdef __WXMSW__
+	wxString handle;
 
     IP_ADAPTER_INFO AdapterInfo[16];       // Allocate information for 16 cards
     DWORD dwBufLen = sizeof(AdapterInfo);  // Save memory size of buffer
 
     DWORD dwStatus = GetAdaptersInfo ( AdapterInfo, &dwBufLen); // Get info
                 if (dwStatus != NO_ERROR) return wxEmptyString; // Check status
-    for (unsigned int i=0; i<std::min( (unsigned int)6, (unsigned int)AdapterInfo[0].AddressLength); i++)
-    {
-        handle += TowxString(((unsigned int)AdapterInfo[0].Address[i])&255);
-        if (i != 5) handle += _T(':');
-    }
-        #elif defined(__WXGTK__) && defined(linux)
-        int sock = socket (AF_INET, SOCK_DGRAM, 0);
-        if (sock < 0)
-        {
-                return wxEmptyString; //not a valid socket
-        }
-        struct ifreq dev; //container for the hw data
-        struct if_nameindex *NameList = if_nameindex(); //container for the interfaces list
-        if (NameList == NULL)
-        {
-                close(sock);
-                return wxEmptyString; //cannot list the interfaces
-        }
-
-        int pos = 0;
-        std::string InterfaceName;
-        do
-        {
-                if (NameList[pos].if_index == 0)
-                {
-                        close(sock);
-                        if_freenameindex(NameList);
-                        return wxEmptyString; // no valid interfaces found
-                }
-                InterfaceName = NameList[pos].if_name;
-                pos++;
-        } while (InterfaceName.substr(0,2) == "lo" || InterfaceName.substr(0,3) == "sit");
-
-        if_freenameindex(NameList); //free the memory
-
-        strcpy (dev.ifr_name, InterfaceName.c_str()); //select from the name
-        if (ioctl(sock, SIOCGIFHWADDR, &dev) < 0) //get the interface data
-        {
-                close(sock);
-                return wxEmptyString; //cannot list the interfaces
-        }
-
-    for (int i=0; i<6; i++)
-    {
-        handle += TowxString(((unsigned int)dev.ifr_hwaddr.sa_data[i])&255);
-        if (i != 5) handle += _T(':');
-    }
-        close(sock);
-        #endif
-        return handle;
+	for(int i=0; i<sizeof(AdapterInfo); i++) {
+		mac.resize(AdapterInfo[i].AddressLength);
+		mac.assign(AdapterInfo[i].Address, AdapterInfo[i].Address + AdapterInfo[i].AddressLength);
+		for (size_t j=0; j< mac.size(); j++) {
+			if (mac[j] != 0) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
+#else
+
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <net/if.h>
+#include <netpacket/packet.h>
+#include <ifaddrs.h>
+
+bool GetMac(std::vector<unsigned char>& mac)
+{
+	ifaddrs * ifap = 0;
+	if(getifaddrs(&ifap) == 0) {
+		ifaddrs * iter = ifap;
+		while(iter) {
+				sockaddr_ll * sal = reinterpret_cast<sockaddr_ll*>(iter->ifa_addr);
+				if(sal->sll_family == AF_PACKET) {
+					mac.resize(sal->sll_halen);
+					mac.assign(sal->sll_addr, sal->sll_addr + sal->sll_halen);
+					for(size_t i=0; i < mac.size(); i++) {
+						if (mac[i] != 0) {
+							return true;
+						}
+					}
+				}
+				iter = iter->ifa_next;
+		}
+		freeifaddrs(ifap);
+	}
+	assert(false);
+	return false;
+}
+
+#endif
+
+std::string MacToString(std::vector<unsigned char>& mac)
+{
+	std::string res;
+	for(size_t i=0; i<mac.size(); i++) {
+		char buf[3];
+		snprintf(buf, sizeof(buf), "%02X", mac[i]);
+		if (!res.empty())
+			res+=":";
+		res.append(buf, 2);
+	}
+	return res;
+}
+
+std::string _GetHandle()
+{
+	std::vector<unsigned char> mac;
+	std::string res;
+	if (GetMac(mac)) {
+		res.assign(mac.begin(), mac.end());
+		wxLogDebug(_T("Found mac: %s"), TowxString(MacToString(mac)).c_str());
+		return std::string(mac.begin(), mac.end());
+	}
+	return res;
+}
 
 BEGIN_EVENT_TABLE(SocketEvents, wxEvtHandler)
 
@@ -290,7 +312,7 @@ wxString convert(char* buff, const int len)
 		return ret;
 	}
 	std::string tmp(buff, len);
-	printf("Error: invalid charset, replacing invalid chars: '%s'", tmp.c_str());
+	wxLogDebug(_T("Error: invalid charset, replacing invalid chars: '%s'"), TowxString(tmp).c_str());
 
 	//worst case, couldn't convert, replace unknown chars!
 	for(int i=0; i<len; i++) {
@@ -302,7 +324,7 @@ wxString convert(char* buff, const int len)
 	if (!ret.empty()) {
 		return ret;
 	}
-	printf("Fatal Error: couldn't convert: '%s' in socket.receive()", tmp.c_str());
+	wxLogDebug(_T("Fatal Error: couldn't convert: '%s' in socket.receive()"), TowxString(tmp).c_str());
 	return wxEmptyString;
 }
 
