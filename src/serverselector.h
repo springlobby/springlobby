@@ -6,10 +6,11 @@ class IServer;
 class ServerSelector {
 public:
 	ServerSelector();
+	~ServerSelector();
 	IServer& GetServer();
 	const IServer& GetServer() const;
 	void SetCurrentServer(IServer* server);
-	bool    IsServerAvailible() const;
+	bool IsServerAvailible() const;
 protected:
 	IServer* m_serv;
 };
