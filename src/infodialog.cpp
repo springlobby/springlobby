@@ -41,9 +41,9 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	paths.push_back( std::make_pair( SlPaths::GetLobbyWriteDir(), _T("LobbyWriteDir") ) );
 	paths.push_back( std::make_pair( STD_STRING(sett().GetTempStorage()), _T("TempStorage")) );
 	paths.push_back( std::make_pair( SlPaths::GetCachePath(), _T("CachePath")) );
-	paths.push_back( std::make_pair( SlPaths::GetDataDir(), _T("CurrentUsedDataDir")) );
 	paths.push_back( std::make_pair( SlPaths::GetExecutableFolder() , _T("ExecutableFolder")));
 	paths.push_back( std::make_pair( SlPaths::GetDownloadDir(), _T("DownloadDir")));
+	paths.push_back( std::make_pair( SlPaths::GetDataDir(), _T("Current SpringData:")) );
 
 	wxTextCtrl* out = new wxTextCtrl( this, wxNewId(), wxEmptyString, wxDefaultPosition, wxDefaultSize,
 									 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
@@ -71,9 +71,9 @@ InfoDialog::InfoDialog(wxWindow* parent )
 		*out << wxString::Format( _T("\tWX: %s POSIX: %s TRY: %s\n"), BtS(wx).c_str(), BtS(posix).c_str(), BtS(tried).c_str() );
 	}
 
-	*out << wxString::Format(_T("Default unitsync: %s\n"), TowxString(SlPaths::GetUnitSync()).c_str());
-	*out << wxString::Format(_T("Default spring executable: %s\n") , TowxString(SlPaths::GetSpringBinary()).c_str());
-	*out << wxString::Format(_T("Default uikeys.txt: %s\n"), TowxString(SlPaths::GetUikeys()).c_str());
+	*out << wxString::Format(_T("Current unitsync: %s\n"), TowxString(SlPaths::GetUnitSync()).c_str());
+	*out << wxString::Format(_T("Current spring executable: %s\n") , TowxString(SlPaths::GetSpringBinary()).c_str());
+	*out << wxString::Format(_T("Current uikeys.txt: %s\n"), TowxString(SlPaths::GetUikeys()).c_str());
 
 	*out << wxString::Format(_T("Portable mode: %s\n"), BtS(SlPaths::IsPortableMode()).c_str() );
 
