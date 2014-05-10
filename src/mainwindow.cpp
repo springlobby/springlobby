@@ -543,7 +543,7 @@ void MainWindow::OnMenuQuit( wxCommandEvent& /*unused*/ )
 
 void MainWindow::OnMenuVersion( wxCommandEvent& /*unused*/ )
 {
-	ui().CheckForUpdates();
+	ui().CheckForUpdates(true);
 }
 
 void MainWindow::OnUnitSyncReload( wxCommandEvent& /*unused*/ )

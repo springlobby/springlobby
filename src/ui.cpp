@@ -1067,7 +1067,7 @@ void Ui::OnInit()
 			const time_t now = time(0);
 			const size_t lastcheck = cfg().ReadLong(_T("/General/LastUpdateCheck"));
 			if (now - lastcheck > 3600) {
-				CheckForUpdates();
+				CheckForUpdates(false);
 				cfg().Write(_T("/General/LastUpdateCheck"), (long)now);
 			}
 		}
@@ -1137,7 +1137,7 @@ void Ui::OnDownloadComplete(wxCommandEvent& data)
 	mw().Close();
 }
 
-void Ui::CheckForUpdates()
+void Ui::CheckForUpdates(bool show)
 {
 	wxString latestVersion = GetLatestVersion();
 
@@ -1167,11 +1167,9 @@ void Ui::CheckForUpdates()
 #else
 		customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date") );
 #endif
-	}
-	/* TODO currently not usable cause automatic update calls this function too and we don't want a msg box everytime the check succeeds
-	else
+	} else if (show){
 	    customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date") );
-	*/
+	}
 }
 
 
