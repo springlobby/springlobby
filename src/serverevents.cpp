@@ -143,7 +143,6 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
 	slLogDebugFunc("");
     try
     {
-        wxLogMessage( _T("ServerEvents::OnUserStatus") );
         User& user = m_serv.GetUser( nick );
 
         UserStatus oldStatus = user.GetStatus();
