@@ -501,21 +501,4 @@ wxBitmap getColourIcon( const wxColour& colour )
 	return wxBitmap(img);
 //	assert( IsOk() );
 }
-
-#include <wx/datetime.h>
-#include "utils/customdialogs.h"
-TimerMessageBox::TimerMessageBox( const wxString& msg_format  )
-	:m_start( new wxDateTime( wxDateTime::Now() ) ),
-	m_msg_format( msg_format )
-{
-
-}
-
-TimerMessageBox::~TimerMessageBox()
-{
-	wxTimeSpan diff = wxDateTime::Now().Subtract( *m_start );
-	customMessageBoxNoModal( SL_MAIN_ICON, wxFormat( m_msg_format ) % diff.Format() );
-	delete m_start;
-}
-
 DEFINE_EVENT_TYPE(REFRESH_EVENT)
