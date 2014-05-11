@@ -8,7 +8,7 @@
 class InfoDialog : public wxDialog
 {
 public:
-	InfoDialog(wxWindow* parent = 0 );
+	InfoDialog(wxWindow* parent);
 };
 
 #endif // INFODIALOG_H
