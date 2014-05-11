@@ -466,16 +466,12 @@ void OpenWebBrowser( const wxString& url )
     if ( sett().GetWebBrowserUseDefault()
             // These shouldn't happen, but if they do we use the default browser anyway.
             || sett().GetWebBrowserPath() == wxEmptyString
-            || sett().GetWebBrowserPath() == _T("use default") )
-    {
-        if ( !wxLaunchDefaultBrowser( url ) )
-        {
+            || sett().GetWebBrowserPath() == _T("use default") ) {
+        if ( !wxLaunchDefaultBrowser( url ) ) {
             wxLogWarning( _T("can't launch default browser") );
             customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't launch browser. URL is: ") + url, _("Couldn't launch browser.")  );
         }
-    }
-    else
-    {
+    } else {
         if ( !wxExecute ( sett().GetWebBrowserPath() + _T(" ") + url, wxEXEC_ASYNC ) )
         {
             wxLogWarning( _T("can't launch browser: %s"), sett().GetWebBrowserPath().c_str() );
