@@ -11,7 +11,7 @@
 #include "helper/sortutil.h"
 
 const long CACHE_VERSION     = 14;
-const long SETTINGS_VERSION  = 26;
+const long SETTINGS_VERSION  = 27;
 
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME= _T("Official server");

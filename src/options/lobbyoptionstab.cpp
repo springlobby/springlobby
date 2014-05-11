@@ -102,20 +102,9 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_autojoin_sizer->Add( m_autoconnect_label, 1, wxEXPAND | wxALL, 5 );
     m_autojoin_sizer->Add( m_autojoin, 0, wxEXPAND | wxALL, 5 );
 
-    wxStaticBoxSizer* m_disable_version_check_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Disable version check") );
-	m_disable_version_check_label = new wxStaticText ( this,
-											 -1,
-											 IdentityString( _("By default %s will check spring version.\nCheck to disable.") )
-											 );
-    m_disable_version_check = new wxCheckBox( this, -1, _("disable version check"), wxDefaultPosition, wxDefaultSize, 0 );
-    m_disable_version_check->SetValue( sett().GetDisableSpringVersionCheck() );
-    m_disable_version_check_sizer->Add( m_disable_version_check_label, 1, wxEXPAND|wxALL, 5);
-    m_disable_version_check_sizer->Add( m_disable_version_check, 0, wxEXPAND|wxALL, 5);
-
     m_main_sizer->Add( m_web_box_sizer, 0, wxEXPAND | wxALL, 5 );
     m_main_sizer->Add( m_editor_box_sizer, 0, wxEXPAND | wxALL, 5 );
     m_main_sizer->Add( m_autojoin_sizer, 0, wxALL, 5 );
-    m_main_sizer->Add( m_disable_version_check_sizer, 0, wxALL, 5 );
     wxStaticBoxSizer* m_updater_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Automatic updates") );
 	m_updater_label = new wxStaticText ( this,
 										 -1,
@@ -204,8 +193,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
     if ( !m_web_def_radio->GetValue() ) sett().SetWebBrowserPath( m_web_edit->GetValue() );
     sett().SetWebBrowserUseDefault( m_web_def_radio->GetValue() );
 
-    cfg().Write(_T( "/Server/Autoconnect" ), m_autojoin->IsChecked() );
-    sett().SetDisableSpringVersionCheck(m_disable_version_check->GetValue() );
+    cfg().Write(_T("/Server/Autoconnect"), m_autojoin->IsChecked() );
     cfg().Write(_T("/General/AutoUpdate"),  m_updater->IsChecked() );
     bool show = m_show_tooltips->IsChecked();
     wxToolTip::Enable(show);
@@ -229,8 +217,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 
 void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 {
-    m_autojoin->SetValue( cfg().ReadBool(_T( "/Server/Autoconnect")) );
-    m_disable_version_check->SetValue( sett().GetDisableSpringVersionCheck() );
+    m_autojoin->SetValue( cfg().ReadBool(_T("/Server/Autoconnect")) );
     m_updater->SetValue( cfg().ReadBool(_T("/General/AutoUpdate")) );
     bool show = sett().GetShowTooltips();
     m_show_tooltips->SetValue(show);
