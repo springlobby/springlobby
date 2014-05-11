@@ -25,31 +25,6 @@
 #include "log.h"
 #include "images/colourbox.xpm"
 
-
-wxString RTFtoText( const wxString& rtfinput )
-{
-    wxString ret = rtfinput;
-    ret = ret.AfterFirst( '{' ).BeforeLast( '}' );
-
-    ret.Replace( _T("\\pard"), wxEmptyString ); // remove a ambiguus char
-
-    ret.Replace( _T("\\par"), _T(" \n") ); // convert the end of lines
-
-    wxString BeforeBrack = ret.BeforeFirst( '{' );
-    wxString AfterBrack = ret.AfterLast( '}' );
-    ret = BeforeBrack + AfterBrack; // remove everyhting that matches { text }
-
-    wxString out;
-    while ( ret.Find('\\') >= 0 ) //remove anything in the form \please\ignore\this
-    {
-        out += ret.BeforeFirst( '\\' );
-        ret = ret.AfterFirst ( '\\' );
-        ret = ret.AfterFirst ( ' ' );
-    } ;
-
-    return out;
-}
-
 bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff )
 {
     int r,g,b;

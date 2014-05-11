@@ -16,7 +16,6 @@ class wxImage;
 class wxIcon;
 class wxBitmap;
 
-wxString RTFtoText( const wxString& rtfinput );
 bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff = 10 );
 
 void ColourDelta( int& r, int& g, int& b, const int& delta );

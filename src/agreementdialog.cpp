@@ -11,8 +11,6 @@
 #include <wx/stattext.h>
 #include <wx/statline.h>
 
-#include "uiutils.h"
-
 BEGIN_EVENT_TABLE( AgreementDialog, wxDialog )
 
 	EVT_BUTTON ( AGREE_YES, AgreementDialog::OnYes  )
@@ -28,7 +26,7 @@ AgreementDialog::AgreementDialog( wxWindow* parent, const wxString& agreement ):
 
 	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_text = new wxTextCtrl( this, wxID_ANY, RTFtoText( agreement ), wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_RICH | wxTE_WORDWRAP| wxTE_READONLY  );
+	m_text = new wxTextCtrl( this, wxID_ANY, agreement, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_RICH | wxTE_WORDWRAP| wxTE_READONLY  );
 	m_main_sizer->Add( m_text, 1, wxALL | wxEXPAND, 5 );
 
 	m_accept_lbl = new wxStaticText( this, wxID_ANY, _( "Do you accept the terms of this agreement?" ), wxDefaultPosition, wxDefaultSize, 0 );
