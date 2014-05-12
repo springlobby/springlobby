@@ -4,15 +4,36 @@
 #include <boost/test/unit_test.hpp>
 
 #include "crc.h"
-
+#include <stdio.h>
 
 BOOST_AUTO_TEST_CASE( lobbyid )
 {
-	const unsigned char mac [6] = {0x00,0x01,0x02,0x03,0x04,0x05};
+
+	const unsigned char mac [3][6] ={
+			{0x00,0x01,0x02,0x03,0x04,0x05},
+			{0x00,0x00,0x00,0x00,0x00,0x00},
+			{0xFF,0xFF,0xFF,0xFF,0xFF,0xFF},
+		};
+
+	const unsigned int c[3] = {
+			820760394,
+			2982322595,
+			1104801024
+		};
 
 	CRC m_crc;
-	m_crc.UpdateData(mac, 6);
-	BOOST_CHECK(m_crc.GetCRC() == 820760394);
+	for (int i=0; i<3; i++) {
+		m_crc.ResetCRC();
+		m_crc.UpdateData(mac[i], 6);
+		printf("Checksum of the mac ");
+		for(int j=0; j<6; j++) {
+			if (j>0)
+				printf(":");
+			printf("%02x", (int)(mac[i][j]));
+		}
+		printf(" is %u\n", m_crc.GetCRC());
+		BOOST_CHECK(m_crc.GetCRC() == c[i]);
+	}
 
 	m_crc.ResetCRC();
 	m_crc.UpdateData("The quick brown fox jumps over the lazy dog");
