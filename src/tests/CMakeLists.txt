@@ -51,5 +51,17 @@ set(test_libs
 )
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
 ################################################################################
+################################################################################
+set(test_name lobbyid)
+Set(test_src
+	"${CMAKE_CURRENT_SOURCE_DIR}/lobbyid.cpp"
+	"${springlobby_SOURCE_DIR}/src/crc.cpp"
+)
+
+set(test_libs
+	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+	${Boost_SYSTEM_LIBRARY}
+)
+add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
 
 endif()
