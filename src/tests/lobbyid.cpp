@@ -9,11 +9,10 @@
 BOOST_AUTO_TEST_CASE( lobbyid )
 {
 	const unsigned char mac [6] = {0x00,0x01,0x02,0x03,0x04,0x05};
-	const std::string data(mac, mac+6);
-	CRC m_crc;
-	m_crc.UpdateData(data + ":lobby.springrts.com");
 
-	BOOST_CHECK(m_crc.GetCRC() == 1147635839);
+	CRC m_crc;
+	m_crc.UpdateData(mac, 6);
+	BOOST_CHECK(m_crc.GetCRC() == 820760394);
 
 	m_crc.ResetCRC();
 	m_crc.UpdateData("The quick brown fox jumps over the lazy dog");

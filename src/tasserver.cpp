@@ -295,7 +295,7 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
 	m_last_timer = 0;
 	const std::string handle = m_sock->GetHandle();
 	if ( !handle.empty() ) {
-		m_crc.UpdateData(handle + ":" + STD_STRING(m_addr));
+		m_crc.UpdateData(handle);
 	}
 }
 
