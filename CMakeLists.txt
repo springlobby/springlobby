@@ -20,11 +20,13 @@ SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
 #----------------------------------------------------------------------------------------------------
-EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
+if(NOT DEFINED SPRINGLOBBY_REV)
+  EXECUTE_PROCESS(COMMAND ${springlobby_SOURCE_DIR}/tools/get-revision.sh
     OUTPUT_VARIABLE SPRINGLOBBY_REV
     ERROR_VARIABLE GIT_ERROR
     OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+    )
+endif(NOT DEFINED SPRINGLOBBY_REV)
 
 # PKG-Config
 FIND_PACKAGE( PkgConfig )
