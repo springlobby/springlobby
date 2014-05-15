@@ -85,7 +85,7 @@ GroupOptionsPanel::GroupOptionsPanel( wxWindow* parent, wxWindowID id, const wxP
 	actionsSizer = new wxStaticBoxSizer( new wxStaticBox( m_group_panel, wxID_ANY, _("Group Actions") ), wxVERTICAL );
 
 	wxGridSizer* actionCheckSizer;
-	actionCheckSizer = new wxGridSizer( 2, 2, 0, 0 );
+	actionCheckSizer = new wxGridSizer(0, 2, 0, 0 );
 
 	m_login_notify_check = new wxCheckBox( m_group_panel, NOTIFY_LOGIN, _("Notify login/logout"), wxDefaultPosition, wxDefaultSize, 0 );
 
