@@ -1184,7 +1184,7 @@ void Ui::OnQuit(wxCommandEvent& /*data*/)
 
 void Ui::Notify()
 {
-	if(m_serv->IsConnected() || m_con_win->IsVisible() ) {
+	if(m_serv->IsConnected() || (m_con_win != NULL && m_con_win->IsVisible() )) {
 		Stop();
 	} else {
 		Reconnect();
