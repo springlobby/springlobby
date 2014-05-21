@@ -37,6 +37,12 @@ UpdaterApp::~UpdaterApp()
 {
 }
 
+wxString TrimQuotes(const wxString& str)
+{
+	wxString res = str;
+	res.Replace(_T("\""), wxEmptyString, true);
+	return res;
+}
 
 //! @brief Initializes the application.
 //!
@@ -62,7 +68,7 @@ bool UpdaterApp::OnInit()
 	SetTopWindow( m_updater_window );
 	bool ret = false;
 	if (m_paramcount == 2) {
-		ret = StartUpdate(m_source_dir, m_destination_dir);
+		ret = StartUpdate(TrimQuotes(m_source_dir), TrimQuotes(m_destination_dir));
 	} else if ( m_paramcount == 5) {
 		WaitForExit(m_pid);
 		wxArrayString params;
@@ -133,7 +139,7 @@ bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
 wxString TrimSep(const wxString& path)
 {
-	wxString sep = wxFileName::GetPathSeparator();
+	const wxString sep = wxFileName::GetPathSeparator();
 	if (path.EndsWith(sep)) {
 		return path.SubString(0, path.length()-2);
 	}
