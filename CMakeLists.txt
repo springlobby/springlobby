@@ -119,7 +119,7 @@ add_custom_target(pack
 				)
 
 # setup make dist
-add_custom_target(dist ${CMAKE_SOURCE_DIR}/tools/make_dist.sh "${springlobby_BINARY_DIR}" "${PACKAGE_NAME}-${PACKAGE_VERSION}"
+add_custom_target(dist ${CMAKE_SOURCE_DIR}/tools/make_dist.sh "${springlobby_BINARY_DIR}" "${PACKAGE_NAME}-${PACKAGE_VERSION} ${PACKAGE_VERSION}"
 					 )
 
 # setup make distcheck
