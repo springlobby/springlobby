@@ -209,8 +209,12 @@ wxString IdentityString(const wxString& format, bool lowerCase )
 
 static wxString escapeStr(const wxString& str)
 {
-	if (str.Find(_T(" ")) == wxNOT_FOUND)
+	if (str.Find(_T(" ")) == wxNOT_FOUND) {
 		return str;
+	}
+	if (str.StartsWith(_T("\"")) && str.EndsWith(_T("\""))){ //no double escape
+		return str;
+	}
 	return _T("\"") + str + _T("\"");
 }
 
