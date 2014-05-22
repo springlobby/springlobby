@@ -8,11 +8,8 @@ fi
 
 set -u
 
-SOURCE_HEADER="${1}"
-TARGET_HEADER="${2}"
-VERSIONFILE="${3}"
-
-REV_TEMPLATE="@SPRINGLOBBY_REV@"
+SOURCE="${1}"
+OUTPUT="${2}"
 
 REV="$(git describe --tags)" 2>/dev/null
 
@@ -21,8 +18,8 @@ if [ -z "$REV" ]; then
 fi
 
 OLDREV=""
-if [ -s ${VERSIONFILE} ] && [ -s ${TARGET_HEADER} ]; then
-	OLDREV=$(cat ${VERSIONFILE})
+if [ -s ${SOURCE}/VERSION ] && [ -s ${SOURCE}/springlobby_config.h ]; then
+	OLDREV=$(cat ${SOURCE}/VERSION)
 fi
 
 if [ "${OLDREV}" != "${REV}" ]; then # version changed, update file
@@ -34,7 +31,7 @@ if [ "${OLDREV}" != "${REV}" ]; then # version changed, update file
 	fi
 
 	echo "Updating from version ${OLDREV} to ${REV}"
-	echo -n ${REV}>${VERSIONFILE}
-	sed "s;${REV_TEMPLATE};${REV};g" ${SOURCE_HEADER} > ${TARGET_HEADER}
+	echo -n ${REV}>${OUTPUT}/VERSION
+	sed "s;@SPRINGLOBBY_REV@;${REV};g" ${SOURCE}/cmake/config.h > ${OUTPUT}/springlobby_config.h
 fi
 
