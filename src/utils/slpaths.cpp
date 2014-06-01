@@ -385,7 +385,8 @@ bool VersionSyncCompatible(const std::string& ver1, const std::string& ver2)
 	 (VersionGetMajor(ver1) == VersionGetMajor(ver2))) {
 		return true;
 	}
-	return false;
+	return (LSL::Util::BeforeFirst(ver1, " ") == LSL::Util::BeforeFirst(ver2, " ")); //hack for zk-lobby it sets incomplete version
+	//return false;
 }
 
 std::string SlPaths::GetCompatibleVersion(const std::string& neededversion)
