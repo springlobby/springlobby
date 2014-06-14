@@ -49,12 +49,8 @@ SET( ENABLE_DEBUG_REPORT
 	TRUE CACHE BOOL
 	"Enable automatic uploading of crash information (requires libcurl)" )
 
-SET( SPRINGLOBBY_REV
-	"${SPRINGLOBBY_REV}" CACHE STRING
-	"The revision string used in packages etc." )
-SET( LOCALE_INSTALL_DIR
-	${CMAKE_INSTALL_PREFIX}/share/locale CACHE STRING
-	"message catalogs will installed here" )
+SET(SPRINGLOBBY_REV "${SPRINGLOBBY_REV}")
+SET(LOCALE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/locale")
 
 IF( AUX_VERSION )
 	ADD_DEFINITIONS( -DAUX_VERSION="${AUX_VERSION}" )
