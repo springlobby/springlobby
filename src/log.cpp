@@ -1,15 +1,15 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "log.h"
-//#include "ui.h"
-//#include "mainwindow.h"
-//#include "mainchattab.h"
-//#include "chatpanel.h"
 #include "utils/conversion.h"
 #include "helper/slconfig.h"
+#include "utils/platform.h"
+#include "crashreport.h"
+
 #include <lslutils/globalsmanager.h>
 #include <wx/log.h>
 #include <wx/thread.h>
+#include <wx/intl.h>
 
 bool Logger::gui = false;
 bool Logger::enabled = false;
@@ -98,9 +98,63 @@ void Logger::Log(level l, const char* file, const char* function, const int line
 	Log(l, "%s", fullmsg);
 }
 
-void Logger::Initialize()
+	//! @brief Initializes the logging functions.
+///initializes logging in an hidden stream and std::cout/gui messages
+wxLogWindow* Logger::InitializeLoggingTargets( wxWindow* parent, bool console, const wxString&  logfilepath, bool showgui, int verbosity, wxLogChain* logChain )
 {
-	//enabled = true;
+	wxLogWindow* loggerwin = NULL;
+	if ( console ) {
+#if wxUSE_STD_IOSTREAM
+		///std::cout logging
+		logChain = new wxLogChain( new wxLogStream( &std::cout ) );
+#else
+		///std::cerr logging
+		logChain = new wxLogChain( new  wxLogStderr( 0 ) );
+#endif
+	}
+
+	if (showgui) {
+		///gui window logging
+		loggerwin = new wxLogWindow(parent, IdentityString( _("%s error console") ), showgui );
+		logChain = new wxLogChain( loggerwin );
+	}
+
+	if (!console && !showgui) {
+		new wxLogNull(); //memleak but disables logging as no log target exists
+		//FIXME: there should be a cleaner way (like just not showing message boxes)
+	}
+
+	if (!logfilepath.empty()) {
+		FILE* logfile = fopen(C_STRING(logfilepath), "w"); // even if it returns null, wxLogStderr will switch to stderr logging, so it's fine
+		logChain = new wxLogChain( new  wxLogStderr( logfile ) );
+	}
+
+#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT) && wxUSE_STD_IOSTREAM
+	///hidden stream logging for crash reports
+	wxLog *loggercrash = new wxLogStream( &CrashReport::instance().crashlog );
+	logChain = new wxLogChain( loggercrash );
+
+//	logCrashChain->SetLogLevel( wxLOG_Trace );
+//	logCrashChain->SetVerbose( true );
+#endif
+
+	if (logChain!=NULL) {
+		switch (verbosity) {
+			case 0: case 1:
+				logChain->SetLogLevel( wxLOG_FatalError ); break;
+			case 2:
+				logChain->SetLogLevel( wxLOG_Error ); break;
+			case 4:
+				logChain->SetLogLevel( wxLOG_Message ); break;
+			case 5:
+				logChain->SetLogLevel( wxLOG_Trace );
+				logChain->SetVerbose( true ); break;
+			case 3:
+			default: {//meaning loglevel < 0 or > 5 , == 0 is handled seperately
+			}
+		}
+	}
+	return loggerwin;
 }
 
 void Logger::Shutdown()

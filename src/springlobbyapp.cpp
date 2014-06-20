@@ -101,7 +101,7 @@ bool SpringLobbyApp::OnInit()
 
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;
-	wxLogWindow *loggerwin = InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity, logchain );
+	wxLogWindow *loggerwin = Logger::InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity, logchain );
 
 	wxLogMessage( _T("SpringLobby %s started"), TowxString(getSpringlobbyVersion()).c_str());
 

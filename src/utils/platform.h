@@ -21,12 +21,6 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite = t
 //! returns false on !win, checks for regkey on win
 bool IsUACenabled();
 
-/** \brief initialize logchain
-
-    \return Logwindow pointer (may be 0), useful if parent frame should be created _after_ logging is set up
-**/
-wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxString& logfilepath, bool showgui, int verbosity, wxLogChain* logChain );
-
 //! set new cwd in ctor, reset to old in dtor
 class CwdGuard {
     wxString m_old_cwd;

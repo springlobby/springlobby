@@ -4,84 +4,16 @@
 
 #include <wx/string.h>
 #include <wx/log.h>
-#include <wx/dynlib.h>
 #include <wx/stdpaths.h>
-#include <wx/textfile.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
-#include <wx/app.h>
-
 #include <iostream>
 
-#include <stdio.h>
+#include <lslutils/misc.h>
 
 #include "conversion.h"
-#include "../updater/versionchecker.h"
 #include "customdialogs.h"
-#include <lslutils/misc.h>
-#include "../crashreport.h"
 #include "utils/version.h"
-
-//! @brief Initializes the logging functions.
-///initializes logging in an hidden stream and std::cout/gui messages
-wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxString&  logfilepath, bool showgui, int verbosity, wxLogChain* logChain )
-{
-	wxLogWindow* loggerwin = NULL;
-	if ( console ) {
-#if wxUSE_STD_IOSTREAM
-		///std::cout logging
-		logChain = new wxLogChain( new wxLogStream( &std::cout ) );
-#else
-		///std::cerr logging
-		logChain = new wxLogChain( new  wxLogStderr( 0 ) );
-#endif
-	}
-
-	if (showgui) {
-		///gui window logging
-		loggerwin = new wxLogWindow(parent, IdentityString( _("%s error console") ), showgui );
-		logChain = new wxLogChain( loggerwin );
-	}
-
-	if (!console && !showgui) {
-		new wxLogNull(); //memleak but disables logging as no log target exists
-		//FIXME: there should be a cleaner way (like just not showing message boxes)
-	}
-
-	if (!logfilepath.empty()) {
-		FILE* logfile = fopen(C_STRING(logfilepath), "w"); // even if it returns null, wxLogStderr will switch to stderr logging, so it's fine
-		logChain = new wxLogChain( new  wxLogStderr( logfile ) );
-	}
-
-#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT) && wxUSE_STD_IOSTREAM
-	///hidden stream logging for crash reports
-	wxLog *loggercrash = new wxLogStream( &CrashReport::instance().crashlog );
-	logChain = new wxLogChain( loggercrash );
-
-//	logCrashChain->SetLogLevel( wxLOG_Trace );
-//	logCrashChain->SetVerbose( true );
-#endif
-
-	if (logChain!=NULL) {
-	switch (verbosity) {
-		case 0: case 1:
-			logChain->SetLogLevel( wxLOG_FatalError ); break;
-		case 2:
-			logChain->SetLogLevel( wxLOG_Error ); break;
-		case 3:
-			logChain->SetLogLevel( wxLOG_Warning ); break;
-		case 4:
-			logChain->SetLogLevel( wxLOG_Message ); break;
-		case 5:
-			logChain->SetLogLevel( wxLOG_Trace );
-			logChain->SetVerbose( true ); break;
-		default://meaning loglevel < 0 or > 5 , == 0 is handled seperately
-			logChain->SetLogLevel( wxLOG_Warning ); break;
-		}
-	}
-
-	return loggerwin;
-}
 
 bool SafeMkdir(const wxString& dir)
 {

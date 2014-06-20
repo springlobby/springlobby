@@ -6,6 +6,9 @@
 #include <string>
 
 class wxString;
+class wxLogWindow;
+class wxWindow;
+class wxLogChain;
 
 class Logger
 {
@@ -23,7 +26,7 @@ public:
 	static void Log(level l, const wxString& format, ...);
 	static void Log(level l, const char* file, const char* function, const int line, const char* format, ...);
 
-	static void Initialize();
+	static wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxString&  logfilepath, bool showgui, int verbosity, wxLogChain* logChain);
 	static void Shutdown();
 	static void ShowDebugWindow(bool show);
 private:
