@@ -1,5 +1,9 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+#include <wx/log.h>
+#include <wx/thread.h>
+#include <wx/intl.h>
+
 #include "log.h"
 #include "utils/conversion.h"
 #include "helper/slconfig.h"
@@ -7,9 +11,11 @@
 #include "crashreport.h"
 
 #include <lslutils/globalsmanager.h>
-#include <wx/log.h>
-#include <wx/thread.h>
-#include <wx/intl.h>
+
+#if wxUSE_STD_IOSTREAM
+#include <iostream>
+#endif
+
 
 bool Logger::gui = false;
 bool Logger::enabled = false;
