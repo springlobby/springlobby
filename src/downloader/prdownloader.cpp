@@ -6,11 +6,11 @@
 #include "lib/src/Downloader/IDownloader.h"
 #include "lib/src/FileSystem/FileSystem.h"
 #include "lib/src/FileSystem/File.h"
-#include "../utils/uievents.h"
-#include "../utils/conversion.h"
-#include "../utils/globalevents.h"
-#include "../utils/slpaths.h"
-#include "../mainwindow.h"
+#include "utils/uievents.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "utils/slpaths.h"
+#include "mainwindow.h"
 #include "downloadsobserver.h"
 #include <list>
 
@@ -18,6 +18,11 @@
 #include <lslunitsync/unitsync.h>
 #include <lslutils/thread.h>
 #include <settings.h>
+#include "helper/slconfig.h"
+
+
+SLCONFIG("/Spring/PortableDownload", true, "true to download portable versions of spring, if false cache/settings/etc are shared (bogous!)");
+SLCONFIG("/Spring/RapidMasterUrl", "http://repos.springrts.com/repos.gz", "master url for rapid downloads");
 
 std::string PrDownloader::GetEngineCat()
 {
@@ -154,7 +159,8 @@ void PrDownloader::ClearFinished()
 void PrDownloader::UpdateSettings()
 {
 	fileSystem->setWritePath(SlPaths::GetDownloadDir());
-	rapidDownload->setOption("masterurl", "http://repos.springrts.com/repos.gz");
+	fileSystem->setEnginePortableDownload(cfg().ReadBool(_T("/Spring/PortableDownload")));
+	rapidDownload->setOption("masterurl", STD_STRING(cfg().ReadString(_T("/Spring/RapidMasterUrl"))));
 }
 
 void PrDownloader::RemoveTorrentByName(const std::string &/*name*/)
