@@ -502,7 +502,7 @@ bool Ui::IsSpringCompatible(const std::string& engine, const std::string& versio
 	const std::string ver = SlPaths::GetCompatibleVersion(version);
 	if (!ver.empty()) {
 		if ( SlPaths::GetCurrentUsedSpringIndex() != ver ) {
-			wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), ver.c_str(), ver.c_str());
+			wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), TowxString(ver).c_str(), TowxString(ver).c_str());
 			SlPaths::SetUsedSpringIndex( ver );
 			LSL::usync().ReloadUnitSyncLib();
 		}
