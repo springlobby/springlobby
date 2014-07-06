@@ -702,7 +702,7 @@ void MainWindow::OnMenuDownload( wxCommandEvent& /*event*/ )
 	wxString lines;
 	if ( !ui().AskText( _( "Which Archives to download? Put each archive on a single line, for example \ngame:ba:stable\nmap:The Rock Final" ), _( "Download Archives" ), lines, true ) ) return;
 	size_t start = 0;
-	size_t pos = 0;
+	int pos = 0;
 	do {
 		pos = lines.find('\n', start);
 		wxString line = lines.substr(start, pos-start);
