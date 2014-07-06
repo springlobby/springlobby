@@ -21,7 +21,7 @@
 #include "helper/slconfig.h"
 
 
-SLCONFIG("/Spring/PortableDownload", true, "true to download portable versions of spring, if false cache/settings/etc are shared (bogous!)");
+SLCONFIG("/Spring/PortableDownload", false, "true to download portable versions of spring, if false cache/settings/etc are shared (bogous!)");
 SLCONFIG("/Spring/RapidMasterUrl", "http://repos.springrts.com/repos.gz", "master url for rapid downloads");
 
 std::string PrDownloader::GetEngineCat()
