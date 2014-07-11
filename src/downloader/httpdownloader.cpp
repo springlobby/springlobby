@@ -70,7 +70,9 @@ void* HttpDownloaderThread::Entry()
 		delete m_httpstream;
 		m_httpstream = 0;
 		//download success
-		if (!m_unzippath.empty() ) {
+		if (m_unzippath.empty()) {
+			evt.SetInt(-1);
+		} else {
 			if(!Unzip()) {
 				evt.SetInt(-1);
 			}
