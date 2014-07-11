@@ -9,24 +9,24 @@ class wxEvtHandler;
 
 class HttpDownloaderThread : public wxThread
 {
-	public:
-		static const wxEventType httpDownloadEvtComplete;
+public:
+	static const wxEventType httpDownloadEvtComplete;
 
-		HttpDownloaderThread(const wxString& FileUrl, const wxString& DestPath, const wxString& unzipPath, wxObjectEventFunction func, wxEvtHandler* evt);
-		~HttpDownloaderThread();
-		void Init();
-		void* Entry();
-		void CloseThread();
-		bool TestDestroy();
-	private:
-		bool Unzip();
+	HttpDownloaderThread(const wxString& FileUrl, const wxString& DestPath, const wxString& unzipPath, wxObjectEventFunction func, wxEvtHandler* evt);
+	~HttpDownloaderThread();
+	void Init();
+	void* Entry();
+	void CloseThread();
+	bool TestDestroy();
+private:
+	bool Unzip();
 
-		bool m_destroy;
-		wxString m_unzippath;
-		wxString m_destpath;
-		wxString m_fileurl;
+	bool m_destroy;
+	wxString m_unzippath;
+	wxString m_destpath;
+	wxString m_fileurl;
 
-		wxEvtHandler* m_evt;
+	wxEvtHandler* m_evt;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_HTTPDOWNLOADER

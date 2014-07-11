@@ -24,12 +24,12 @@
 const wxEventType HttpDownloaderThread::httpDownloadEvtComplete = wxNewEventType();
 
 HttpDownloaderThread::HttpDownloaderThread(const wxString& FileUrl, const wxString& DestPath, const wxString& unzipPath, wxObjectEventFunction func, wxEvtHandler* evt)
-		: wxThread(wxTHREAD_JOINABLE),
-		m_destroy( false ),
-		m_unzippath( unzipPath ),
-		m_destpath( DestPath ),
-		m_fileurl( FileUrl ),
-		m_evt(evt)
+	: wxThread(wxTHREAD_JOINABLE),
+	  m_destroy( false ),
+	  m_unzippath( unzipPath ),
+	  m_destpath( DestPath ),
+	  m_fileurl( FileUrl ),
+	  m_evt(evt)
 {
 	m_evt->Connect(httpDownloadEvtComplete, func);
 	Init();
@@ -62,8 +62,7 @@ void* HttpDownloaderThread::Entry()
 		return NULL;
 	}
 
-	try
-	{
+	try {
 		wxFileOutputStream outs( m_destpath );
 		m_httpstream->Read( outs );
 		outs.Close();
@@ -108,15 +107,15 @@ bool HttpDownloaderThread::Unzip()
 					wxFileName::Mkdir( file, 0775, wxPATH_MKDIR_FULL );
 				wxLogWarning( path );
 			} else {
-			    wxLogDebug( _T("unzipping: ")+ file );
+				wxLogDebug( _T("unzipping: ")+ file );
 				wxFFileOutputStream out( file );
 				if( !out.IsOk() ) {
 					wxLogError( _T("unzipping failed on: ")+ file );
 					return false;
-                } else {
-                    out.Write( zip );
-                    out.Close();
-                }
+				} else {
+					out.Write( zip );
+					out.Close();
+				}
 			}
 		}
 	} catch ( std::exception& e ) {
