@@ -262,7 +262,7 @@ int PlaybackListCtrl<PlaybackType>::GetIndexFromData( const DataType& data ) con
         if ( *it != 0 && data->Equals( *(*it) ) )
             return i;
     }
-    wxLogError( _T("didn't find the battle.") );
+    wxLogError( _T("PlaybackListCtrl: didn't find the battle.") );
     return -1;
 }
 
