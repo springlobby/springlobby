@@ -32,7 +32,7 @@ Set(test_src
 )
 
 set(test_libs
-	${wxWidgets_LIBRARIES}
+	${WX_LD_FLAGS}
 	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 	${Boost_SYSTEM_LIBRARY}
 )
@@ -45,7 +45,7 @@ Set(test_src
 )
 
 set(test_libs
-	${wxWidgets_LIBRARIES}
+	${WX_LD_FLAGS}
 	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 	${Boost_SYSTEM_LIBRARY}
 )
