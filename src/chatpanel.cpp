@@ -976,6 +976,9 @@ void ChatPanel::FocusInputBox()
 
 wxString ChatPanel::FindUrl( const long pos ) const
 {
+	if (pos < 0) {
+		return wxEmptyString;
+	}
 	long last = m_chatlog_text->GetLastPosition();
 
 	long start = pos;
