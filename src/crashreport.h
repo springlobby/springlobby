@@ -5,17 +5,11 @@
 
 
 #include <wx/setup.h>
-#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-
 #include <wx/debugrpt.h>
-#include "utils/platform.h"
-
-#include <sstream>
 #include <wx/arrstr.h>
 
-#if ! wxUSE_STACKWALKER && __WXMSW__
-	#include <windows.h>
-#endif
+#include "utils/platform.h"
+#include <sstream>
 
 //! @brief uploads zipped stacktraces using curl
 class NetDebugReport : public wxDebugReportCompress
@@ -64,8 +58,5 @@ class CrashReport
         CrashReport(){}
 
 };
-
-
-#endif //wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 
 #endif // SPRINGLOBBY_HEADERGUARD_CRASHREPORT_H_INCLUDED

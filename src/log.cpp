@@ -20,8 +20,14 @@
 bool Logger::gui = false;
 bool Logger::enabled = false;
 
+static void AssertHandler(const wxString &file, int line, const wxString &func, const wxString &cond, const wxString &msg)
+{
+	assert(false);
+}
+
 Logger::Logger()
 {
+	wxSetAssertHandler(AssertHandler);
 }
 
 Logger::~Logger()
@@ -135,7 +141,7 @@ wxLogWindow* Logger::InitializeLoggingTargets( wxWindow* parent, bool console, c
 		logChain = new wxLogChain( new  wxLogStderr( logfile ) );
 	}
 
-#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT) && wxUSE_STD_IOSTREAM
+#if wxUSE_STD_IOSTREAM
 	///hidden stream logging for crash reports
 	wxLog *loggercrash = new wxLogStream( &CrashReport::instance().crashlog );
 	logChain = new wxLogChain( loggercrash );

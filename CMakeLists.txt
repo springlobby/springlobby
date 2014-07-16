@@ -45,10 +45,6 @@ SET( BUILD_SHARED_LIBS
 	FALSE CACHE BOOL
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
 
-SET( ENABLE_DEBUG_REPORT
-	TRUE CACHE BOOL
-	"Enable automatic uploading of crash information (requires libcurl)" )
-
 SET(SPRINGLOBBY_REV "${SPRINGLOBBY_REV}")
 SET(LOCALE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/locale")
 

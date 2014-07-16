@@ -951,14 +951,9 @@ void Ui::OnSpringTerminated( wxCommandEvent& data  )
 	} catch ( assert_exception ) {}
 
 	if (exit_code != 0) {
-#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
 		SpringDebugReport report;
 		if ( wxDebugReportPreviewStd().Show( report ) )
 			report.Process();
-#else
-		if ( customMessageBox( SL_MAIN_ICON, _T("The game has crashed.\nOpen infolog.txt?"), _T("Crash"), wxYES_NO ) == wxYES )
-			OpenFileInEditor( sett().GetCurrentUsedDataDir() + wxFileName::GetPathSeparator() + _T("infolog.txt") );
-#endif
 	}
 }
 

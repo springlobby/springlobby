@@ -55,10 +55,6 @@
 #include <wx/debugrpt.h>
 #include <wx/intl.h>
 
-#if wxUSE_UNIX
-	#include <X11/Xlib.h>
-#endif
-
 SLCONFIG("/ResetLayout", false, "reset layout on restart");
 
 IMPLEMENT_APP(SpringLobbyApp)
@@ -76,9 +72,6 @@ SpringLobbyApp::SpringLobbyApp():
     m_crash_handle_disable( false ),
 	m_appname( _T("SpringLobby") )
 {
-#if wxUSE_UNIX
-XInitThreads();
-#endif
 }
 
 //! @brief Initializes the application.
@@ -93,11 +86,7 @@ bool SpringLobbyApp::OnInit()
 		return false;
 	SetAppName( m_appname );
 
-    if (!m_crash_handle_disable) {
-    #if wxUSE_ON_FATAL_EXCEPTION
-        wxHandleFatalExceptions( true );
-    #endif
-    }
+	wxHandleFatalExceptions( !m_crash_handle_disable );
 
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;
@@ -191,16 +180,7 @@ int SpringLobbyApp::OnExit()
 //! @brief is called when the app crashes
 void SpringLobbyApp::OnFatalException()
 {
-#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-    #if wxUSE_STACKWALKER
-        CrashReport::instance().GenerateReport();
-    #else
-        EXCEPTION_POINTERS* p = new EXCEPTION_POINTERS; //lets hope this'll never get called
-        CrashReport::instance().GenerateReport(p);
-    #endif
-#else
-    wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
-#endif
+	CrashReport::instance().GenerateReport();
 }
 
 

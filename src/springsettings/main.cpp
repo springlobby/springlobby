@@ -40,30 +40,9 @@ Springsettings::Springsettings()
 Springsettings::~Springsettings()
 {}
 
-
-#if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
-LONG __stdcall filter(EXCEPTION_POINTERS* p){
-	#if wxUSE_STACKWALKER
-		CrashReport::instance().GenerateReport();
-	#else
-		CrashReport::instance().GenerateReport(p);
-	#endif
-	return 0; //must return 0 here or we'll end in an inf loop of dbg reports
-}
-#endif
-
 void Springsettings::OnFatalException()
 {
-#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-	#if wxUSE_STACKWALKER
-		CrashReport::instance().GenerateReport();
-	#else
-		EXCEPTION_POINTERS* p = new EXCEPTION_POINTERS; //lets hope this'll never get called
-		CrashReport::instance().GenerateReport(p);
-	#endif
-#else
-	wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
-#endif
+	CrashReport::instance().GenerateReport();
 }
 
 bool Springsettings::OnInit()
@@ -78,16 +57,7 @@ bool Springsettings::OnInit()
 	if ( !wxDirExists(configdir) )
 		wxMkdir(configdir);
 
-	if (!m_crash_handle_disable) {
-	#if wxUSE_ON_FATAL_EXCEPTION
-		wxHandleFatalExceptions( true );
-	#endif
-	#if defined(__WXMSW__) && defined(ENABLE_DEBUG_REPORT)
-		//this undocumented function acts as a workaround for the dysfunctional
-		// wxUSE_ON_FATAL_EXCEPTION on msw when mingw is used (or any other non SEH-capable compiler )
-		SetUnhandledExceptionFilter(filter);
-	#endif
-	}
+	wxHandleFatalExceptions(!m_crash_handle_disable);
 
     //initialize all loggers
 	//TODO non-constant parameters

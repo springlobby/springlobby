@@ -89,14 +89,11 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${WX_C_FLAGS}")
 # openAL libs dependency check
 #----------------------------------------------------------------------------------------------------
 
-IF( ENABLE_DEBUG_REPORT )
-	ADD_DEFINITIONS( -DENABLE_DEBUG_REPORT )
-	IF( MINGW )
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gstabs")
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -gstabs")
-		LINK_LIBRARIES( intl)
-	ENDIF( MINGW )
-ENDIF( ENABLE_DEBUG_REPORT )
+IF( MINGW )
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -gstabs")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -gstabs")
+	LINK_LIBRARIES( intl)
+ENDIF( MINGW )
 
 FIND_PACKAGE( CURL REQUIRED libcurl )
 IF( NOT CURL_FOUND )
@@ -297,11 +294,7 @@ SET( templatesources
 	utils/stringserializer.cpp
 )
 
-IF(WIN32)
-	list(APPEND SLSharedWithSettings stacktrace.c)
-ELSE(WIN32)
-	list(APPEND SLSharedWithSettings stacktrace.cpp)
-ENDIF(WIN32)
+list(APPEND SLSharedWithSettings stacktrace.cpp)
 add_library(slcommon STATIC
 		${SLSharedWithSettings}
 	)

@@ -5,9 +5,6 @@
 
 #include "stacktrace.h"
 #include "utils/conversion.h"
-#if defined(ENABLE_DEBUG_REPORT)
-
-#if wxUSE_STACKWALKER
 
 void StackTrace::OnStackFrame ( const wxStackFrame& frame )
 {
@@ -49,7 +46,3 @@ void StackTrace::OnStackFrame ( const wxStackFrame& frame )
   StackTraceString += _T("\n");
 
 }
-
-#endif //__MSW
-
-#endif //#if defined(ENABLE_DEBUG_REPORT)

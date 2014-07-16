@@ -6,8 +6,6 @@
 #include "utils/curlhelper.h" // has to be first, else compiler will warn about "please include winsock2.h before windows.h"
 #include "crashreport.h"
 
-#if wxUSE_DEBUGREPORT && defined(ENABLE_DEBUG_REPORT)
-
 #include <wx/intl.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
@@ -166,18 +164,9 @@ SpringDebugReport::SpringDebugReport()
     if ( wxFile::Exists( script_file ) )
         report->AddFile( script_file, _( "Last generated spring launching script" ) );
 
-#if wxUSE_STACKWALKER && !__WXMSW__
     StackTrace stacktrace;
 	stacktrace.Walk( 3, 20 );
 	report->AddText( _T( "stacktrace.txt" ), _T("Call stack:\n") + stacktrace.GetStackTrace(), _( "StackTrace" ) );
-#else
-	wxString report_fn = ( wxGetCwd() + wxFileName::GetPathSeparator() + _T("stacktrace.txt") );
-	if ( wxFile::Exists( report_fn ) )
-		wxRemoveFile( report_fn );
-	wxCharBuffer report_fn_char = report_fn.mb_str();
-	DrMingwGenerateStacktrace( p, (const char*)report_fn_char );
-	report->AddFile( report_fn, _( "StackTrace" ) );
-#endif
 
 	wxString SlBuildFlags;
 	#ifdef DISABLE_SOUND
@@ -208,5 +197,3 @@ SpringDebugReport::SpringDebugReport()
 	wxLogMessage( _T("deleted report") );
 }
 
-
-#endif // wxUSE_DEBUGREPORT

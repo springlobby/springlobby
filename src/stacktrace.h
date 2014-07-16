@@ -3,8 +3,6 @@
 #ifndef STACKTRACE_H_INCLUDED
 #define STACKTRACE_H_INCLUDED
 
-#if defined(ENABLE_DEBUG_REPORT)
-
 #ifdef __WXMSW__
 	#include <windows.h>
 	#ifdef __cplusplus
@@ -39,10 +37,8 @@
 
 	};
 	#else
-		#error "No usable stacktrace config, set ENABLE_DEBUG_REPORT=OFF in cmake"
+		#error "No usable stacktrace config, wxUSE_STACKWALKER is disabled"
 	#endif //#if wxUSE_STACKWALKER
 #endif // __WXMSW__
-
-#endif //#if defined(ENABLE_DEBUG_REPORT)
 
 #endif // SPRINGLOBBY_HEADERGUARD_STACKTRACE_H_INCLUDED
