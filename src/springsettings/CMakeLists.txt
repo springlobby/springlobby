@@ -44,8 +44,8 @@ TARGET_LINK_LIBRARIES(springsettings
 		lsl-utils
 		lsl-unitsync
 		slcommon
-		${wxWidgets_LIBRARIES}
 		${CURL_LINKFLAGS}
+		${WX_LD_FLAGS}
 		${CMAKE_DL_LIBS}
 	)
 

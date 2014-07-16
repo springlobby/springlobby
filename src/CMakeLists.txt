@@ -40,33 +40,6 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 
 
-#----------------------------------------------------------------------------------------------------
-# wxWidgets lib dependency check
-#----------------------------------------------------------------------------------------------------
-# Here you can define, what Libraries of wxWidgets you need for your Application. You can figure out what Libraries you need here:
-# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-# order matters!
-SET(wxWidgets_USE_LIBS
-		net
-		aui
-		xml
-		qa
-		richtext
-		html
-		adv
-		core
-		base
-	)
-# We need the Find package for wxWidgets to work, but auto-find is broken in x-compile setup
-FIND_PACKAGE(wxWidgets REQUIRED ${wxWidgets_USE_LIBS})
-# Did we find wxWidgets ? This condition will fail for as long as the internal Vars do not point to the proper wxWidgets Configuration.
-IF(wxWidgets_FOUND)
-	INCLUDE(${wxWidgets_USE_FILE})
-	INCLUDE_DIRECTORIES( ${wxWidgets_INCLUDE_DIRS} )
-ELSE(wxWidgets_FOUND)
-	# For Convenience. If we cannot continue, inform the User.
-	MESSAGE( FATAL_ERROR "wxWidgets library not found! Please install the package to continue")
-ENDIF(wxWidgets_FOUND)
 
 if (CMAKE_CROSSCOMPILING)
 	message(STATUS "Crosscompiling: using static flags for wxwidgets")
@@ -75,6 +48,23 @@ if (CMAKE_CROSSCOMPILING)
 	add_definitions(-DAL_LIBTYPE_STATIC)
 else()
 	set(WXSTATIC "")
+endif()
+find_program(wxWidgets_CONFIG_EXECUTABLE wx-config ONLY_CMAKE_FIND_ROOT_PATH)
+if (wxWidgets_CONFIG_EXECUTABLE-NOTFOUND)
+	message(FATAL_ERROR "couldn't find wx-config!")
+else()
+	message(STATUS "found wx-config: ${wxWidgets_CONFIG_EXECUTABLE}")
+endif()
+
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--version-full"
+	OUTPUT_VARIABLE WX_VERSION
+	OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+set(WX_VERSION_MIN "3")
+if(WX_VERSION VERSION_LESS ${WX_VERSION_MIN})
+	message(FATAL_ERROR "couldn't find wx-widgets >= ${WX_VERSION_MIN}")
+else()
+	message(STATUS "found wxwidgets: ${WX_VERSION}")
 endif()
 
 execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cppflags" "${WXSTATIC}"
@@ -87,14 +77,13 @@ execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cflags" "${WXSTATIC}"
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
 message(STATUS "Using WX_C_FLAGS: ${WX_C_FLAGS}")
 
-execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs" "${WXSTATIC}"
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs" "net,xml,qa,richtext,html,adv,aui,core,base" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_LD_FLAGS
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
 message(STATUS "Using WX_LD_FLAGS: ${WX_LD_FLAGS}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WX_CXX_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${WX_C_FLAGS}")
-
 
 #----------------------------------------------------------------------------------------------------
 # openAL libs dependency check
@@ -182,7 +171,6 @@ set(springlobbySrc
 	playback/savegamelist.cpp
 
 	helper/TextCompletionDatabase.cpp
-	helper/slhtmlwindow.cpp
 	helper/wxtextctrlhist.cpp
 	helper/colorbutton.cpp
 
@@ -321,11 +309,7 @@ target_link_libraries(slcommon
 		springlobbyversion
 		libsettings
 		lsl-unitsync
-		${wxWidgets_LIBRARIES}
 		${CURL_LIBRARIES}
-	)
-set_target_properties(slcommon PROPERTIES
-		LINK_FLAGS "${CURL_LINKFLAGS}"
 	)
 
 add_subdirectory(downloader)
@@ -350,7 +334,7 @@ set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
 #mylink( ${EXTRA_LIB_DIRS} ${link_directories} )
 
 IF(WIN32)
-	set(springlobby_RC_FILE springlobby.rc)
+#	set(springlobby_RC_FILE springlobby.rc)
 ENDIF()
 add_subdirectory(updater)
 
@@ -372,10 +356,10 @@ ELSE (WIN32)
 ENDIF (WIN32)
 
 TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion libsettings slcommon
-		${wxWidgets_LIBRARIES}
 		${Boost_LIBRARIES}
 		${CURL_LIBRARIES}
 		${CURL_LINKFLAGS}
+		${WX_LD_FLAGS}
 		sound
 	)
 #add_dependencies(springlobby version)

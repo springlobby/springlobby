@@ -16,7 +16,7 @@ if (SPRINGLOBBY_UPDATER)
 	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${updater_RC_FILE} )
 	TARGET_LINK_LIBRARIES(springlobby_updater
 			springlobbyversion
-			${wxWidgets_LIBRARIES}
+			${WX_LD_FLAGS}
 		)
 	install(TARGETS springlobby_updater RUNTIME DESTINATION .)
 endif()
