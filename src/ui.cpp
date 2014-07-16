@@ -105,7 +105,6 @@ Ui::Ui() :
 Ui::~Ui()
 {
 	m_disable_autoconnect = true;
-	Disconnect();
 	delete m_serv;
 	m_serv = NULL;
 	if (m_http_thread != NULL) {
