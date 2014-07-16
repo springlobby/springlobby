@@ -85,8 +85,9 @@ bool SpringLobbyApp::OnInit()
     if (!wxApp::OnInit())
 		return false;
 	SetAppName( m_appname );
-
+#if wxUSE_STACKWALKER
 	wxHandleFatalExceptions( !m_crash_handle_disable );
+#endif
 
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
     wxLogChain* logchain = 0;

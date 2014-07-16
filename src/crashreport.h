@@ -44,13 +44,7 @@ class CrashReport
       static CrashReport c;
       return c;
     }
-
-    #if wxUSE_STACKWALKER && !__WXMSW__
         void GenerateReport();
-    #else
-        void GenerateReport(EXCEPTION_POINTERS* p);
-    #endif
-
         //! @brief is the container for the stream logging target
         std::ostringstream crashlog;
 

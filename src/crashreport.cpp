@@ -134,11 +134,7 @@ SpringDebugReport::SpringDebugReport()
 	AddText( _T("appname.txt"), TowxString(getSpringlobbyName()), _T("Application Name"));
 }
 
-#if wxUSE_STACKWALKER && !__WXMSW__
-    void CrashReport::GenerateReport()
-#else
-    void CrashReport::GenerateReport(EXCEPTION_POINTERS* p)
-#endif
+void CrashReport::GenerateReport()
 {
     wxLogMessage( _T( "Report generated in " ) );
 	CwdGuard cwgGuard( wxFileName::GetTempDir() );
@@ -164,9 +160,11 @@ SpringDebugReport::SpringDebugReport()
     if ( wxFile::Exists( script_file ) )
         report->AddFile( script_file, _( "Last generated spring launching script" ) );
 
-    StackTrace stacktrace;
+#if wxUSE_STACKWALKER
+	StackTrace stacktrace;
 	stacktrace.Walk( 3, 20 );
 	report->AddText( _T( "stacktrace.txt" ), _T("Call stack:\n") + stacktrace.GetStackTrace(), _( "StackTrace" ) );
+#endif
 
 	wxString SlBuildFlags;
 	#ifdef DISABLE_SOUND
