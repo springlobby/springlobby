@@ -19,18 +19,5 @@ public:
 	virtual void Ping() {}
 };
 
-class FakeNetClass : public iNetClass
-{
-public:
-
-	FakeNetClass() {}
-	~FakeNetClass() {}
-
-	void OnConnected( Socket& /*unused*/ ) {}
-	void OnDisconnected( Socket& /*unused*/ ) {}
-	void OnDataReceived( Socket& /*unused*/ ) {}
-	void Ping() {}
-};
-
 #endif // SPRINGLOBBY_HEADERGUARD_INETCLASS_H
 
