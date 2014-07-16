@@ -55,6 +55,11 @@
 #include <wx/debugrpt.h>
 #include <wx/intl.h>
 
+#if wxUSE_UNIX
+	#include <X11/Xlib.h>
+#endif
+
+
 SLCONFIG("/ResetLayout", false, "reset layout on restart");
 
 IMPLEMENT_APP(SpringLobbyApp)
@@ -72,6 +77,21 @@ SpringLobbyApp::SpringLobbyApp():
     m_crash_handle_disable( false ),
 	m_appname( _T("SpringLobby") )
 {
+#if wxUSE_UNIX
+/*
+workarrounds this crash:
+The program 'springlobby' received an X Window System error.
+This probably reflects a bug in the program.
+The error was 'RenderBadPicture (invalid Picture parameter)'.
+  (Details: serial 71245 error_code 143 request_code 139 minor_code 8)
+  (Note to programmers: normally, X errors are reported asynchronously;
+   that is, you will receive the error a while after causing it.
+   To debug your program, run it with the --sync command line
+   option to change this behavior. You can then get a meaningful
+   backtrace from your debugger if you break on the gdk_x_error() function.)
+*/
+	XInitThreads();
+#endif
 }
 
 //! @brief Initializes the application.
