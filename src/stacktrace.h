@@ -3,8 +3,8 @@
 #ifndef STACKTRACE_H_INCLUDED
 #define STACKTRACE_H_INCLUDED
 
-#include <wx/stackwalk.h>
 #include <wx/string.h>
+#include <wx/stackwalk.h>
 
 #if wxUSE_STACKWALKER
 
