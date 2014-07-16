@@ -60,9 +60,9 @@ execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--version-full"
 	OUTPUT_VARIABLE WX_VERSION
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-set(WX_VERSION_MIN "3")
-if(WX_VERSION VERSION_LESS ${WX_VERSION_MIN})
-	message(FATAL_ERROR "couldn't find wx-widgets >= ${WX_VERSION_MIN}")
+set(WX_VERSION_MIN "2.8")
+if("${WX_VERSION}" VERSION_LESS "${WX_VERSION_MIN}")
+	message(FATAL_ERROR "couldn't find wx-widgets >= ${WX_VERSION_MIN}, found ${WX_VERSION}")
 else()
 	message(STATUS "found wxwidgets: ${WX_VERSION}")
 endif()
@@ -334,7 +334,7 @@ set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
 #mylink( ${EXTRA_LIB_DIRS} ${link_directories} )
 
 IF(WIN32)
-#	set(springlobby_RC_FILE springlobby.rc)
+	set(springlobby_RC_FILE springlobby.rc)
 ENDIF()
 add_subdirectory(updater)
 
