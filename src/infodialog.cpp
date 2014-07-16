@@ -83,7 +83,7 @@ InfoDialog::InfoDialog(wxWindow* parent )
 
 	*out << _T( "Version " ) + TowxString(getSpringlobbyAgent()) + _T("\n");
 	*out << _T("Compile Time ") + TowxString(getSpringCompileTimeDate()) + _T("\n");
-	*out << wxString::Format(_T("Compiled with %s"), wxVERSION_STRING) + _T("\n");
+	*out << wxString::Format(_T("Compiled with wxWidgets %d.%d.%d.%d"),  wxMAJOR_VERSION, wxMINOR_VERSION, wxRELEASE_NUMBER, wxSUBRELEASE_NUMBER) + _T("\n");
 	*out << _T("Started with: \n");
 	for ( int i = 0; i < wxTheApp->argc; ++i )
 		*out << wxTheApp->argv[i] << _T(" ");
