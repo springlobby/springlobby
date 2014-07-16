@@ -77,7 +77,7 @@ execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cflags" "${WXSTATIC}"
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
 message(STATUS "Using WX_C_FLAGS: ${WX_C_FLAGS}")
 
-execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs" "net,xml,qa,richtext,html,adv,aui,core,base" "${WXSTATIC}"
+execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--libs" "net,qa,richtext,adv,aui,core" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_LD_FLAGS
 	OUTPUT_STRIP_TRAILING_WHITESPACE )
 message(STATUS "Using WX_LD_FLAGS: ${WX_LD_FLAGS}")
