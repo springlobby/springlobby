@@ -57,10 +57,6 @@ public:
 */
 
 	}
-	wxLogFormatter* SetFormatter(wxLogFormatter* /*formatter*/)
-	{
-		return NULL;
-	}
 	void Flush()
 	{
 		if (m_logfile != NULL) {
