@@ -181,8 +181,8 @@ void Ui::Connect()
 
 void Ui::Reconnect()
 {
-	wxString servname = sett().GetDefaultServer();
-	wxString pass  = sett().GetServerAccountPass(servname);
+	const wxString servname = sett().GetDefaultServer();
+	const wxString pass  = sett().GetServerAccountPass(servname);
 	if ( !sett().GetServerAccountSavePass(servname) ) {
 		ShowConnectWindow();
 		return;
@@ -205,9 +205,6 @@ void Ui::Disconnect()
 //! @brief Opens the accutial connection to a server.
 void Ui::DoConnect( const wxString& servername, const wxString& username, const wxString& password )
 {
-	wxString host;
-	int port;
-
 	if ( servername != m_last_used_backup_server ) { // do not save the server as default if it's a backup one
 		sett().SetDefaultServer( servername );
 	} else {
@@ -231,8 +228,8 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 		sett().SetServerAccountPass( servername, wxEmptyString );
 	}
 
-	host = sett().GetServerHost( servername );
-	port = sett().GetServerPort( servername );
+	const wxString host = sett().GetServerHost( servername );
+	const int port = sett().GetServerPort( servername );
 
 	AddServerWindow( servername );
 	m_serv->uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
@@ -265,16 +262,13 @@ void Ui::ReopenServerTab()
 
 bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString& reason)
 {
-	wxString host;
-	int port;
-
 	if ( !sett().ServerExists( servername ) ) {
 		ASSERT_LOGIC( false, _T("Server does not exist in settings") );
 		return false;
 	}
 
-	host = sett().GetServerHost( servername );
-	port = sett().GetServerPort( servername );
+	const wxString host = sett().GetServerHost( servername );
+	const int port = sett().GetServerPort( servername );
 	bool success = m_serv->Register( host, port, username, password,reason );
 	if ( success ) {
 		customMessageBox(SL_MAIN_ICON, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
@@ -363,7 +357,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 
 	if ( (cmd.BeforeFirst(' ').Lower() == _T("/join")) || (cmd.BeforeFirst(' ').Lower() == _T("/j")) ) {
 		wxString channel = cmd.AfterFirst(' ');
-		wxString pass = channel.AfterFirst(' ');
+		const wxString pass = channel.AfterFirst(' ');
 		if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
 		if ( channel.StartsWith(_T("#")) ) channel.Remove( 0, 1 );
 		m_serv->JoinChannel( channel, pass );
@@ -381,16 +375,16 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 			return true;
 		}
 	} else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") ) {
-		wxString nick = cmd.AfterFirst(' ');
+		const wxString nick = cmd.AfterFirst(' ');
 		m_serv->RequestInGameTime( nick );
 		return true;
 	} else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") ) {
-		wxString topic = cmd.AfterFirst(' ');
+		const wxString topic = cmd.AfterFirst(' ');
 		ConsoleHelp( topic.Lower() );
 		return true;
 	} else if ( cmd.BeforeFirst(' ').Lower() == _T("/msg") ) {
-		wxString user = cmd.AfterFirst(' ').BeforeFirst(' ');
-		wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
+		const wxString user = cmd.AfterFirst(' ').BeforeFirst(' ');
+		const wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
 		m_serv->SayPrivate( user, msg );
 		return true;
 	} else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") ) {
@@ -507,7 +501,7 @@ bool Ui::DownloadArchives(const IBattle& battle)
 		return true;
 	}
 
-	wxString prompt = wxEmptyString;
+	wxString prompt;
 	if (!battle.ModExists() ) {
 		prompt += wxFormat(_("the game '%s'")) % battle.GetHostModName();
 	}
@@ -558,7 +552,7 @@ void Ui::OnDisconnected( IServer& server, bool wasonline )
 
 	mw().GetChatTab().LeaveChannels();
 
-	wxString disconnect_msg = wxFormat(_("disconnected from server: %s") ) % server.GetServerName();
+	const wxString disconnect_msg = wxFormat(_("disconnected from server: %s") ) % server.GetServerName();
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(UiEvents::StatusData( disconnect_msg, 1 ) );
 	if ( !wxTheApp->IsActive() ) {
 		UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData( UiEvents::ServerConnection, disconnect_msg ) );
@@ -915,8 +909,7 @@ void Ui::OnRing( const wxString& from )
 
 	if ( !wxTheApp->IsActive() ) {
 		const wxString msg = wxFormat(_("%s:\nring!") ) % from;
-		UiEvents::GetNotificationEventSender().SendEvent(
-			UiEvents::NotficationData( UiEvents::ServerConnection, msg ) );
+		UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData( UiEvents::ServerConnection, msg ) );
 	}
 
 	if ( sett().GetChatPMSoundNotificationEnabled() ) {
@@ -1073,16 +1066,16 @@ void Ui::OnDownloadComplete(wxCommandEvent& data)
 
 void Ui::CheckForUpdates(bool show)
 {
-	wxString latestVersion = GetLatestVersion();
+	const wxString latestVersion = GetLatestVersion();
 
 	if (latestVersion.empty()) {
 		customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
 		return;
 	}
 	//get current rev w/o AUX_VERSION added
-	wxString myVersion = TowxString(getSpringlobbyVersion());
+	const wxString myVersion = TowxString(getSpringlobbyVersion());
 
-	wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
+	const wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
 	if ( !latestVersion.IsSameAs(myVersion, false) ) {
 #ifdef __WXMSW__
 		int answer = customMessageBox(SL_MAIN_ICON,
