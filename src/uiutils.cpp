@@ -128,7 +128,7 @@ wxImage BlendImage( const wxImage& foreground, const wxImage& background, bool b
 {
     if ( ( foreground.GetWidth()  != background.GetWidth() ) || ( background.GetHeight() != foreground.GetHeight() ) )
     {
-        slLogDebugFunc(_T("size mismatch while blending"));
+        slLogDebugFunc("size mismatch while blending");
         return background;
     }
 
@@ -169,7 +169,7 @@ wxImage BlendImage( const wxImage& foreground, const wxImage& background, bool b
         }
         return ret;
     }
-    slLogDebugFunc(_T("cannot blend without alpha"));
+    slLogDebugFunc("cannot blend without alpha");
     return background;
 }
 

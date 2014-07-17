@@ -286,7 +286,7 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event) {
 			(intSettings)[MO_SLI_EXT[4].key]= ( value > 0 ? 1 : 0);
 			} break;
         default:
-            slLogDebugFunc( _T("unhandled case val") );
+            slLogDebugFunc("unhandled case val");
             break;
 	}
 }
@@ -317,7 +317,7 @@ void abstract_panel::OnTextUpdate(wxCommandEvent& event) {
     	    		} break;
 
                     default:
-                        slLogDebugFunc( _T("unhandled case val") );
+                        slLogDebugFunc("unhandled case val");
                         break;
     	    	}
     }
@@ -397,7 +397,7 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event) {
 		case ID_WINDOWC_MO_CBOX_1: { (intSettings)[MO_CBOX[1].key]= checked; } break;
 
         default:
-            slLogDebugFunc( _T("unhandled case val") );
+            slLogDebugFunc("unhandled case val");
             break;
 	}
 }
@@ -421,7 +421,7 @@ void abstract_panel::OnRadioButtonToggle(wxCommandEvent& event) {
 		case ID_WINDOWC_MO_RBUT_4: { (intSettings)[MO_RBUT[4].key]= 4; } break;	// FC button (CamMode 4)
 
         default:
-            slLogDebugFunc( _T("unhandled case val") );
+            slLogDebugFunc("unhandled case val");
             break;
 	}
 }
@@ -451,7 +451,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 				case 4: { (intSettings)[WR_COMBOX[0].key]= 4; } break;	// BumpWater
 
                 default:
-                    slLogDebugFunc( _T("unhandled case val") );
+                    slLogDebugFunc("unhandled case val");
                     break;
 			}
 			break;
@@ -550,7 +550,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 		}
 
         default:
-            slLogDebugFunc( _T("unhandled case val") );
+            slLogDebugFunc("unhandled case val");
             break;
 	}
 }

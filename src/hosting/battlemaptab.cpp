@@ -239,7 +239,7 @@ void BattleMapTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	slLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 
 	wxString mapname = mapSelectDialog();
 	if ( !mapname.empty() )

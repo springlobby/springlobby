@@ -85,7 +85,7 @@ void tab_ui::updateControls(int /*what_to_update*/)
 		case 2: { ctrl_cam_radio2->SetValue(1); } break;	// CamMode 3: TW
 		case 4: { ctrl_cam_radio4->SetValue(1); } break;	// CamMode 4: FC
         default:
-            slLogDebugFunc( _T("unhandled case val") );
+            slLogDebugFunc("unhandled case val");
             break;
 	}
 

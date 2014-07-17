@@ -71,8 +71,7 @@ SpringLobbyApp::SpringLobbyApp():
     quit_called( false ),
     m_translationhelper( NULL ),
     m_log_verbosity( 3 ),
-    m_log_console( true ),
-	m_log_file( false ),
+    m_log_console( false ),
     m_log_window_show( false ),
     m_crash_handle_disable( false ),
 	m_appname( _T("SpringLobby") )
@@ -110,8 +109,7 @@ bool SpringLobbyApp::OnInit()
 #endif
 
     //initialize all loggers, we'll use the returned pointer to set correct parent window later
-    wxLogChain* logchain = 0;
-	wxLogWindow *loggerwin = Logger::InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity, logchain );
+	wxLogWindow *loggerwin = Logger::InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity);
 
 	wxLogMessage( _T("SpringLobby %s started"), TowxString(getSpringlobbyVersion()).c_str());
 
@@ -170,7 +168,7 @@ bool SpringLobbyApp::OnInit()
 
 	ui().OnInit();
 
-	ui().mw().SetLogWin( loggerwin, logchain );
+	ui().mw().SetLogWin( loggerwin);
 	return true;
 }
 
@@ -248,13 +246,13 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 //! @brief parses the command line and sets global app options like log verbosity or log target
 bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
-#if wxUSE_CMDLINE_PARSER
     if ( !parser.Parse(true) )
     {
         m_log_console = parser.Found(_T("console-logging"));
         m_log_window_show = parser.Found(_T("gui-logging"));
-		m_log_file = parser.Found(_T("file-logging"), &m_log_file_path);
+		parser.Found(_T("file-logging"), &m_log_file_path);
         m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
+        parser.Found(_T("log-verbosity"), &m_log_verbosity);
 
         // TODO make sure this is called before settings are accessed
 		wxString config;
@@ -271,10 +269,6 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
              }
             SlPaths::SetUserConfigPath(STD_STRING(config));
         }
-
-        if ( !parser.Found(_T("log-verbosity"), &m_log_verbosity ) )
-            m_log_verbosity = m_log_window_show ? 3 : 5;
-
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage
 
@@ -284,9 +278,7 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
     {
         return false;
     }
-  #else // wxUSE_CMDLINE_PARSER
-  return true;
-  #endif
+
 }
 
 

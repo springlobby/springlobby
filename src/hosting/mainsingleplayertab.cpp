@@ -77,7 +77,7 @@ void MainSinglePlayerTab::UpdateMinimap()
 
 void MainSinglePlayerTab::OnUnitSyncReloaded()
 {
-	slLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	try
 	{
 		GetSinglePlayerTab().ResetUsername();

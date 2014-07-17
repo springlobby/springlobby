@@ -114,7 +114,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 
     void SetTabIcons();
 
-    void SetLogWin( wxLogWindow* log, wxLogChain* logchain );
+    void SetLogWin( wxLogWindow* log);
 
     void LoadPerspectives( const wxString& perspective_name = wxEmptyString );
     void SavePerspectives( const wxString& perspective_name = wxEmptyString );
@@ -149,7 +149,6 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 	wxString AddPerspectivePostfix( const wxString& pers_name ) const;
 
     wxLogWindow* m_log_win;
-    wxLogChain* m_log_chain;
 
 	bool m_has_focus;
 

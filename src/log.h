@@ -4,45 +4,26 @@
 #define LOG_H
 
 #include <string>
+#include <wx/log.h>
 
 class wxString;
 class wxLogWindow;
 class wxWindow;
-class wxLogChain;
 
 class Logger
 {
 public:
 	Logger();
 	~Logger();
-	enum level{
-		LOG_ERROR,
-		LOG_WARNING,
-		LOG_INFO,
-		LOG_DEBUG,
-		LOG_TRACE,
-	};
-	static void Log(level l, const char* format, ...);
-	static void Log(level l, const wxString& format, ...);
-	static void Log(level l, const char* file, const char* function, const int line, const char* format, ...);
-
-	static wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxString&  logfilepath, bool showgui, int verbosity, wxLogChain* logChain);
+	static wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxString&  logfilepath, bool showgui, int verbosity);
 	static void Shutdown();
 	static void ShowDebugWindow(bool show);
 private:
-	static std::string LogName(level l);
-	static bool enabled;
 	static bool gui;
 };
 
-#define slLogError(logmsg, ...) Logger::Log(Logger::LOG_ERROR, logmsg, ##__VA_ARGS__)
-#define slLogWarning(logmsg, ...) Logger::Log(Logger::LOG_WARNING, logmsg, ##__VA_ARGS__)
-#define slLogMessage(logmsg, ...) Logger::Log(Logger::LOG_INFO, logmsg, ##__VA_ARGS__)
-#define slLogTrace(logmsg, ...) Logger::Log(Logger::LOG_TRACE, logmsg, ##__VA_ARGS__)
-#define slLogInfo(logmsg, ...) Logger::Log(Logger::LOG_INFO, logmsg, ##__VA_ARGS__)
-#define slLogDebug(logmsg, ...) Logger::Log(Logger::LOG_DEBUG, logmsg, ##__VA_ARGS__)
-
-#define slLogDebugFunc(logmsg, ...) Logger::Log(Logger::LOG_DEBUG,__FILE__, __FUNCTION__, __LINE__, logmsg, ##__VA_ARGS__)
+#define slLogDebugFunc(format, ...)\
+	wxLogDebug("%s:%d %s(): " format, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__);
 
 #include <stdexcept>
 class assert_exception : public std::runtime_error

@@ -62,8 +62,7 @@ bool Springsettings::OnInit()
 
     //initialize all loggers
 	//TODO non-constant parameters
-	wxLogChain* logchain  = 0;
-	wxLogWindow* loggerwin = Logger::InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity, logchain );
+	wxLogWindow* loggerwin = Logger::InitializeLoggingTargets( 0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity);
 	//this needs to called _before_ mainwindow instance is created
 
 #ifdef __WXMSW__
@@ -148,7 +147,6 @@ void Springsettings::OnInitCmdLine(wxCmdLineParser& parser)
 //! @brief parses the command line and sets global app options like log verbosity or log target
 bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
 {
-//  #if wxUSE_CMDLINE_PARSER
     if ( !parser.Parse(true) )
     {
 #if wxUSE_STD_IOSTREAM
@@ -183,8 +181,5 @@ bool Springsettings::OnCmdLineParsed(wxCmdLineParser& parser)
     {
         return false;
     }
-//  #else // wxUSE_CMDLINE_PARSER
-  return true;
-//  #endif
 }
 

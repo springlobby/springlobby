@@ -226,7 +226,7 @@ MainWindow::MainWindow( )
 
         //this should take off the firstload time considerably *ie nil it :P )
         mapSelectDialog(true, this);
-	//Logger::ShowDebugWindow(cfg().ReadBool(_T("/debug")));
+//	Logger::ShowDebugWindow(cfg().ReadBool(_T("/debug")));
 }
 
 wxBitmap MainWindow::GetTabIcon( const unsigned char* data, size_t size ) const
@@ -254,10 +254,9 @@ void MainWindow::forceSettingsFrameClose()
 {
 }
 
-void MainWindow::SetLogWin( wxLogWindow* log, wxLogChain* logchain  )
+void MainWindow::SetLogWin( wxLogWindow* log)
 {
     m_log_win = log;
-    m_log_chain = logchain;
     if ( m_log_win )
         m_log_win->GetFrame()->SetParent( this );
 }

@@ -163,7 +163,7 @@ PlaybackTab<PlaybackTraits>::~PlaybackTab()
 	if ( m_filter != 0 )
 		m_filter->SaveFilterValues();
 
-	slLogDebugFunc("");
+	wxLogDebug("%s");
 }
 
 template < class PlaybackTraits >
@@ -351,7 +351,7 @@ void PlaybackTab<PlaybackTraits>::OnFilterActiv( wxCommandEvent& /*unused*/ )
 template < class PlaybackTraits >
 void PlaybackTab<PlaybackTraits>::OnSelect( wxListEvent& event )
 {
-	slLogDebugFunc( wxEmptyString );
+	slLogDebugFunc("");
 	if ( event.GetIndex() == -1 ) {
 		Deselect();
 	}

@@ -332,7 +332,7 @@ wxString Socket::Receive()
 {
 	wxString ret;
 	if ( m_sock == 0 ) {
-		slLogError( _T("Socket NULL") );
+		wxLogError( _T("Socket NULL") );
 		return ret;
 	}
 
