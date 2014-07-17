@@ -104,7 +104,7 @@ bool SpringLobbyApp::OnInit()
     if (!wxApp::OnInit())
 		return false;
 	SetAppName( m_appname );
-#if wxUSE_STACKWALKER
+#if wxUSE_ON_FATAL_EXCEPTION
 	wxHandleFatalExceptions( !m_crash_handle_disable );
 #endif
 
