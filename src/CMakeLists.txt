@@ -275,7 +275,6 @@ SET(SLSharedWithSettings
 	helper/slconfig.cpp
 	aboutbox.cpp
 	log.cpp
-	lsllog.cpp
 )
 
 FILE( GLOB header "*.h" )
