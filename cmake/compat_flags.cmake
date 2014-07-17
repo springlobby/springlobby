@@ -15,28 +15,20 @@ ENDMACRO(AddSTDFlag FLAG)
 
 # try to use compiler flag -std=c++11
 
-if (CMAKE_CROSSCOMPILING)
-	CHECK_CXX_ACCEPTS_FLAG("-std=gnu++11" CXX_FLAG_CXX11)
-else()
-	CHECK_CXX_ACCEPTS_FLAG("-std=c++11" CXX_FLAG_CXX11)
-endif()
-
-if(CXX_FLAG_CXX11)
-	if (CMAKE_CROSSCOMPILING)
-		AddSTDFlag("-std=gnu++11")
-	else()
-		AddSTDFlag("-std=c++11")
+set(CXX_STD0X_FLAGS FALSE)
+set(i 0)
+foreach(f -std=c++11 -std=gnu++11 -std=c++0x)
+	MATH(EXPR i "${i}+1") #cmake has working unset :-|
+	CHECK_CXX_ACCEPTS_FLAG("${f}" ACCEPTSFLAG${i})
+	if(${ACCEPTSFLAG${i}} AND NOT CXX_STD0X_FLAGS)
+		message(STATUS "Using ${f}")
+		AddSTDFlag("${f}")
+		set(CXX_STD0X_FLAGS TRUE)
 	endif()
-else()
-	# try to use compiler flag -std=c++0x for older compilers
-	CHECK_CXX_ACCEPTS_FLAG("-std=c++0x" CXX_FLAG_CXX0X)
-	if(CXX_FLAG_CXX0X)
-		AddSTDFlag("-std=c++0x")
-	endif(CXX_FLAG_CXX0X)
-endif(CXX_FLAG_CXX11)
+endforeach()
 
 if(NOT CXX_STD0X_FLAGS)
-	message(FATAL "you need a c++11 compatible compiler")
+	message(FATAL_ERROR "you need a c++11 compatible compiler")
 endif()
 
 If(NOT DEFINED LTO_FLAGS)
@@ -61,7 +53,7 @@ If(NOT DEFINED LTO_FLAGS)
 	EndIf (LTO_WHOPR)
 
 	If (LTO AND LTO_WHOPR)
-		Message( FATAL_ERROR "LTO and LTO_WHOPR are mutually exclusive, please enable only one at a time." )
+		Message(FATAL_ERROR "LTO and LTO_WHOPR are mutually exclusive, please enable only one at a time." )
 	EndIf (LTO AND LTO_WHOPR)
 
 EndIf (NOT DEFINED LTO_FLAGS)
