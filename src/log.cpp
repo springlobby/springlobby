@@ -111,6 +111,7 @@ wxLogWindow* Logger::InitializeLoggingTargets( wxWindow* /*parent*/, bool consol
 
 void Logger::Shutdown()
 {
+	gui = false;
 }
 
 void Logger::ShowDebugWindow(bool show)
