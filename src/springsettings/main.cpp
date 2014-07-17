@@ -56,7 +56,7 @@ bool Springsettings::OnInit()
 	const wxString configdir = TowxString(SlPaths::GetConfigfileDir());
 	if ( !wxDirExists(configdir) )
 		wxMkdir(configdir);
-#if wxUSE_STACKWALKER
+#if wxUSE_ON_FATAL_EXCEPTION
 	wxHandleFatalExceptions(!m_crash_handle_disable);
 #endif
 
