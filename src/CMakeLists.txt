@@ -233,7 +233,6 @@ set(springlobbySrc
 	
 	selectusersdialog.cpp
 	iserver.cpp
-	reconnectdialog.cpp
 	serverevents.cpp
 	singleplayerbattle.cpp
 	singleplayertab.cpp

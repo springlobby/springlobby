@@ -50,12 +50,10 @@ public:
 	void AddServerWindow( const wxString& servername );
 	void ReopenServerTab();
 
-	void ConnectionFailurePrompt();
 	wxString GetNextServer();
 
 	bool DoRegister( const wxString& servername, const wxString& username, const wxString& password, wxString& reason );
 
-	bool IsConnecting() const;
 	bool IsConnected() const;
 	void JoinChannel( const wxString& name, const wxString& password );
 
@@ -149,14 +147,11 @@ protected:
 	IServer* m_serv;
 	MainWindow* m_main_win;
 	ConnectWindow* m_con_win;
-	ReconnectDialog* m_reconnect_dialog;
 
 	wxString m_last_used_backup_server;
 
 	bool m_first_update_trigger;
-
-	bool m_recconecting_wait;
-	bool m_disable_autoconnect;
+	int m_connect_retries;
 
 	EventReceiverFunc<Ui, BattleEvents::BattleEventData, &Ui::OnBattleInfoUpdated>
 	m_battle_info_updatedSink;

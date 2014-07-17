@@ -54,7 +54,6 @@
 #include "downloader/httpdownloader.h"
 #include "agreementdialog.h"
 #include "updater/updatehelper.h"
-#include "reconnectdialog.h"
 #include "utils/customdialogs.h"
 #include "utils/platform.h"
 #include "updater/versionchecker.h"
@@ -88,10 +87,7 @@ Ui::Ui() :
 	m_serv(0),
 	m_main_win(0),
 	m_con_win(0),
-	m_reconnect_dialog(0),
 	m_first_update_trigger(true),
-	m_recconecting_wait(false),
-	m_disable_autoconnect(false),
 	m_battle_info_updatedSink( this, &BattleEvents::GetBattleEventSender( ( BattleEvents::BattleInfoUpdate ) ) )
 {
 	m_main_win = new MainWindow( );
@@ -104,7 +100,6 @@ Ui::Ui() :
 
 Ui::~Ui()
 {
-	m_disable_autoconnect = true;
 	delete m_serv;
 	m_serv = NULL;
 	if (m_http_thread != NULL) {
@@ -153,7 +148,7 @@ void Ui::ShowMainWindow()
 //! @note It will create the ConnectWindow if not allready created
 void Ui::ShowConnectWindow()
 {
-	if ( IsConnecting() || IsConnected() || m_recconecting_wait )
+	if (IsConnected())
 		return;
 	if ( m_con_win == 0 ) {
 		ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
@@ -171,17 +166,15 @@ void Ui::ShowConnectWindow()
 //! @see DoConnect
 void Ui::Connect()
 {
-	wxString server_name = sett().GetDefaultServer();
-	wxString nick = sett().GetServerAccountNick( server_name );
+	const wxString server_name = sett().GetDefaultServer();
+	const wxString nick = sett().GetServerAccountNick( server_name );
+	const wxString pass = sett().GetServerAccountPass( server_name );
 	bool autoconnect = cfg().ReadBool(_T( "/Server/Autoconnect" ));
-	if ( !autoconnect || server_name.IsEmpty() || nick.IsEmpty() ) {
+	if ( !autoconnect || server_name.IsEmpty() || nick.IsEmpty() || pass.IsEmpty() ) {
 		ShowConnectWindow();
 		return;
 	}
-	if (m_disable_autoconnect)
-		return;
 	m_con_win = 0;
-	wxString pass = sett().GetServerAccountPass( server_name );
 	DoConnect( server_name, nick, pass);
 }
 
@@ -189,12 +182,11 @@ void Ui::Connect()
 void Ui::Reconnect()
 {
 	wxString servname = sett().GetDefaultServer();
-
 	wxString pass  = sett().GetServerAccountPass(servname);
 	if ( !sett().GetServerAccountSavePass(servname) ) {
-		if ( !AskPassword( _("Server password"), _("Password"), pass ) ) return;
+		ShowConnectWindow();
+		return;
 	}
-
 	Disconnect();
 	DoConnect( servname, sett().GetServerAccountNick(servname), pass );
 }
@@ -213,17 +205,6 @@ void Ui::Disconnect()
 //! @brief Opens the accutial connection to a server.
 void Ui::DoConnect( const wxString& servername, const wxString& username, const wxString& password )
 {
-	if (IsRunning() ) {
-		m_recconecting_wait = true;
-		AutocloseMessageBox m( &mw(), _("Waiting for reconnect"), wxMessageBoxCaptionStr, s_reconnect_delay_ms );
-		int res = m.ShowModal();
-		m_recconecting_wait = false;
-		if ( res == wxID_CANCEL ) {
-			Stop();
-			return;
-		}
-	}
-
 	wxString host;
 	int port;
 
@@ -299,17 +280,14 @@ bool Ui::DoRegister( const wxString& servername, const wxString& username, const
 		customMessageBox(SL_MAIN_ICON, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
 	} else {
 		wxLogWarning( _T("registration failed, reason: %s"), reason.c_str()  );
-		if ( reason == _("Connection timed out") || reason.IsEmpty() ) ConnectionFailurePrompt();
-		else	customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+ reason , _("Registration failed."), wxOK );
+		if ( reason == _("Connection timed out") || reason.IsEmpty() ) {
+			ShowConnectWindow();
+		} else {
+			customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+ reason , _("Registration failed."), wxOK );
+		}
 	}
 	return success;
 
-}
-
-bool Ui::IsConnecting() const
-{
-	if ( m_reconnect_dialog != 0 ) return m_reconnect_dialog->IsShown();
-	return false;
 }
 
 bool Ui::IsConnected() const
@@ -333,7 +311,6 @@ bool Ui::IsSpringRunning() const
 //! @brief Quits the entire application
 void Ui::Quit()
 {
-	m_disable_autoconnect = true;
 	Disconnect();
 	if ( m_con_win != 0 )
 		m_con_win->Close();
@@ -482,6 +459,7 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 void Ui::OnConnected( IServer& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
 {
 	slLogDebugFunc("");
+	m_connect_retries = 10;
 
 	if ( server.uidata.panel ) server.uidata.panel->StatusMessage( _T("Connected to ") + server_name + _T(".") );
 	mw().GetBattleListTab().OnConnected();
@@ -489,8 +467,6 @@ void Ui::OnConnected( IServer& server, const wxString& server_name, const wxStri
 	delete m_con_win;
 	m_con_win = 0;
 
-	delete m_reconnect_dialog;
-	m_reconnect_dialog = 0;
 }
 
 
@@ -583,58 +559,19 @@ void Ui::OnDisconnected( IServer& server, bool wasonline )
 	mw().GetChatTab().LeaveChannels();
 
 	wxString disconnect_msg = wxFormat(_("disconnected from server: %s") ) % server.GetServerName();
-	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
-		UiEvents::StatusData( disconnect_msg, 1 ) );
+	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(UiEvents::StatusData( disconnect_msg, 1 ) );
 	if ( !wxTheApp->IsActive() ) {
-		UiEvents::GetNotificationEventSender().SendEvent(
-			UiEvents::NotficationData( UiEvents::ServerConnection, disconnect_msg ) );
+		UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData( UiEvents::ServerConnection, disconnect_msg ) );
 	}
 	if ( server.uidata.panel ) {
 		server.uidata.panel->StatusMessage( disconnect_msg );
-
 		server.uidata.panel->SetServer( 0 );
 	}
-	if ( (!m_disable_autoconnect) && (!wasonline)) {// couldn't even estabilish a socket, prompt the user to switch to another server
-		ConnectionFailurePrompt();
+	if ((!wasonline) && (m_connect_retries <= 0)) {// couldn't even estabilish a socket, prompt the user to switch to another server
+		ShowConnectWindow();
 	}
+	m_connect_retries--;
 }
-
-void Ui::ConnectionFailurePrompt()
-{
-	if ( m_reconnect_dialog != 0 ) {
-		return;
-	}
-	if ( m_recconecting_wait ) {
-		return;
-	}
-	// if connect window instance exists, delete it to avoid 2 windows which do the same task
-	delete m_con_win;
-	m_con_win = 0;
-	m_reconnect_dialog = new ReconnectDialog();
-	int returnval = m_reconnect_dialog->ShowModal();
-	delete m_reconnect_dialog;
-	m_reconnect_dialog = 0;
-	switch ( returnval ) {
-	case wxID_YES: { // try again with the same server/settings
-		Reconnect();
-		break;
-	}
-	case wxID_NO: { // switch to next server in the list
-		m_last_used_backup_server = GetNextServer();
-		wxString current_server = sett().GetDefaultServer();
-		sett().SetDefaultServer( m_last_used_backup_server );// temp set backup server as default
-		Connect();
-		sett().SetDefaultServer( current_server ); // restore original serv
-		break;
-	}
-	default:
-	case wxID_CANCEL: { // do nothing
-		return;
-	}
-	}
-}
-
-
 
 wxString Ui::GetNextServer()
 {
@@ -964,6 +901,9 @@ void Ui::OnAcceptAgreement( const wxString& agreement )
 	if ( dlg.ShowModal() == 1 ) {
 		m_serv->AcceptAgreement();
 		m_serv->Login();
+	} else {
+		m_connect_retries = 0;
+		m_serv->Disconnect();
 	}
 }
 
@@ -1169,7 +1109,6 @@ void Ui::CheckForUpdates(bool show)
 
 void Ui::OnQuit(wxCommandEvent& /*data*/)
 {
-	m_disable_autoconnect = true;
 	Disconnect();
 	delete m_serv;
 	m_serv = NULL;
