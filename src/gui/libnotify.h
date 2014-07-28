@@ -34,7 +34,9 @@ void LibnotifyNotification::Show(const wxBitmap& icon, const size_t /*pos*/, con
 	#endif
 	notify_notification_set_timeout (n, sett().GetNotificationPopupDisplayTime()*1000);
 
+#ifndef __APPLE__ //FIXME: apple has no icon.GetPixbuf(), see #258
 	notify_notification_set_icon_from_pixbuf(n,icon.GetPixbuf() );
+#endif
 	if (!notify_notification_show (n, NULL)) {
 //	   g_error("Failed to send notification.\n");
 
