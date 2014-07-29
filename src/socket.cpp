@@ -73,7 +73,7 @@ bool GetMac(std::vector<unsigned char>& mac)
 
 bool GetMac(std::vector<unsigned char>& mac)
 {
-	//FIXME: implement this
+	//FIXME: implement this, http://lists.freebsd.org/pipermail/freebsd-hackers/2004-June/007415.html
 	return false;
 }
 
