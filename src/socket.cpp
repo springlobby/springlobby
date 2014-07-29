@@ -69,6 +69,14 @@ bool GetMac(std::vector<unsigned char>& mac)
 	return false;
 }
 
+#elif defined(__APPLE__)
+
+bool GetMac(std::vector<unsigned char>& mac)
+{
+	//FIXME: implement this
+	return false;
+}
+
 #else
 
 #include <sys/types.h>
