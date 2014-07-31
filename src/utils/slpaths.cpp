@@ -45,9 +45,9 @@ static std::string GetMyDocumentsDir()
 }
 
 #ifdef WIN32
-SLCONFIG("/Spring/DownloadDir", LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + "My Games\\Spring", "Path where springlobby stores downloads");
+SLCONFIG("/Spring/DownloadDir", TowxString(LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + "My Games\\Spring"), "Path where springlobby stores downloads");
 #else
-SLCONFIG("/Spring/DownloadDir", LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + ".spring", "Path where springlobby stores downloads");
+SLCONFIG("/Spring/DownloadDir", TowxString(LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + ".spring"), "Path where springlobby stores downloads");
 #endif
 
 
