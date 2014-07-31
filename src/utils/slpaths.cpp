@@ -29,6 +29,27 @@
 
 std::string SlPaths::m_user_defined_config_path = "";
 
+// returns my documents dir on windows, HOME on windows
+static std::string GetMyDocumentsDir()
+{
+#ifdef WIN32
+	wchar_t my_documents[MAX_PATH];
+	HRESULT result = SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+	if (result == S_OK) return LSL::Util::ws2s(my_documents);
+	return "";
+#else
+	const char* envvar= getenv("HOME");
+	if (envvar == NULL) return "";
+	return std::string(envvar);
+#endif
+}
+
+#ifdef WIN32
+SLCONFIG("/Spring/DownloadDir", LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + "My Games\\Spring", "Path where springlobby stores downloads");
+#else
+SLCONFIG("/Spring/DownloadDir", LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + ".spring", "Path where springlobby stores downloads");
+#endif
+
 
 std::string SlPaths::GetLocalConfigPath ()
 {
@@ -75,23 +96,6 @@ std::map<std::string, LSL::SpringBundle> SlPaths::m_spring_versions;
 std::map<std::string, LSL::SpringBundle> SlPaths::GetSpringVersionList()
 {
 	return m_spring_versions;
-}
-
-
-
-// returns my documents dir on windows, HOME on windows
-static std::string GetMyDocumentsDir()
-{
-#ifdef WIN32
-	wchar_t my_documents[MAX_PATH];
-	HRESULT result = SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
-	if (result == S_OK) return LSL::Util::ws2s(my_documents);
-	return "";
-#else
-	const char* envvar= getenv("HOME");
-	if (envvar == NULL) return "";
-	return std::string(envvar);
-#endif
 }
 
 //returns possible paths where a spring bundles could be
@@ -431,13 +435,7 @@ std::string SlPaths::GetConfigfileDir()
 
 std::string SlPaths::GetDownloadDir()
 {
-#ifdef WIN32
-	const std::string dir = LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + "My Games\\Spring";
-#else
-	const std::string dir = LSL::Util::EnsureDelimiter(GetMyDocumentsDir()) + ".spring";
-#endif
-	wxString downloadDir = TowxString(dir);
-	cfg().Read(_T("/Spring/DownloadDir"), &downloadDir);
+	const wxString downloadDir = cfg().ReadString(_T("/Spring/DownloadDir"));
 	return LSL::Util::EnsureDelimiter(STD_STRING(downloadDir));
 }
 
