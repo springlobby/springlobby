@@ -95,8 +95,6 @@ class Settings : public SL::NonCopyable
     bool IsFirstRun();
 
 
-    wxString GetTempStorage();
-
     /* ================================================================ */
     /** @name Network
      * @{

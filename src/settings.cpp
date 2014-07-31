@@ -1087,12 +1087,6 @@ void Settings::SetDisableSpringVersionCheck(bool disable)
 }
 
 
-wxString Settings::GetTempStorage()
-{
-	return wxFileName::GetTempDir();
-}
-
-
 void Settings::SetShowTooltips( bool show )
 {
 	cfg().Write( _T( "/GUI/ShowTooltips" ), show );

@@ -39,7 +39,6 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	typedef  std::vector< std::pair< std::string,wxString > >Paths;
 	Paths paths;
 	paths.push_back( std::make_pair( SlPaths::GetLobbyWriteDir(), _T("LobbyWriteDir") ) );
-	paths.push_back( std::make_pair( STD_STRING(sett().GetTempStorage()), _T("TempStorage")) );
 	paths.push_back( std::make_pair( SlPaths::GetCachePath(), _T("CachePath")) );
 	paths.push_back( std::make_pair( SlPaths::GetExecutableFolder() , _T("ExecutableFolder")));
 	paths.push_back( std::make_pair( SlPaths::GetDownloadDir(), _T("DownloadDir")));
