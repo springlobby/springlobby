@@ -116,6 +116,7 @@ SearchItem::SearchItem(std::list<IDownloader*> loaders, const std::string name, 
 
 void SearchItem::Run()
 {
+	rapidDownload->setOption("forceupdate", "");
 	std::list<IDownload*> results;
 	std::list<IDownloader*>::const_iterator it = m_loaders.begin();
 	for( ; it != m_loaders.end(); ++it ) {
