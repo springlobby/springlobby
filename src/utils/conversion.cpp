@@ -50,12 +50,12 @@ std::vector<std::string> arrayStringToVector(const wxArrayString& arr) {
 
 } } //end namespace LSL::Util
 
-std::string stdprintf(const std::string& format, ...)
+std::string stdprintf(const char* format, ...)
 {
 	char buf[1024];
 	va_list args;
 	va_start(args, format);
-	int count = vsnprintf(buf, 1024, format.c_str(), args);
+	int count = vsnprintf(buf, 1024, format, args);
 	va_end(args);
 	return std::string(buf, count);
 }

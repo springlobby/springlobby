@@ -9,8 +9,6 @@
 class Ui;
 class BattleBot;
 class MainSinglePlayerTab;
-class wxColour;
-class wxString;
 
 
 class SinglePlayerBattle: public IBattle
@@ -32,7 +30,7 @@ public:
 	}
 
 	virtual void SendHostInfo( HostInfo update );
-	virtual void SendHostInfo( const wxString& /*unused*/ ) { }
+	virtual void SendHostInfo( const std::string& /*unused*/ ) { }
 
 	virtual void StartSpring();
 protected:
