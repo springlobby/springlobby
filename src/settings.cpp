@@ -34,12 +34,8 @@
 #include "utils/conversion.h"
 #include "utils/platform.h"
 #include "utils/slpaths.h"
-#include "gui/uiutils.h"
 #include "playbackfiltervalues.h"
-#include "gui/customlistctrl.h"
 #include "springsettings/presets.h"
-#include "utils/sortutil.h"
-#include "gui/mainwindow.h"
 
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
