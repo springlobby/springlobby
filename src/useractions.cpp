@@ -5,7 +5,7 @@
 #include <wx/intl.h>
 #include <wx/colour.h>
 #include "settings.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include <cmath>
 #include "gui/customdialogs.h"
 

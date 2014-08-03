@@ -6,7 +6,7 @@
 #include <wx/log.h>
 #include <wx/intl.h>
 
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "utils/slpaths.h"
 #include "utils/conversion.h"
 #include "gui/customdialogs.h"

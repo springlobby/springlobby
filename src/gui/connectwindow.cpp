@@ -21,7 +21,7 @@
 
 #include "connectwindow.h"
 #include "settings.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "ui.h"
 #include "images/connect.xpm"
 #include "utils/controls.h"

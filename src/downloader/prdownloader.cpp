@@ -18,7 +18,7 @@
 #include <lslunitsync/unitsync.h>
 #include <lslutils/thread.h>
 #include <settings.h>
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 
 
 SLCONFIG("/Spring/PortableDownload", false, "true to download portable versions of spring, if false cache/settings/etc are shared (bogous!)");

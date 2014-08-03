@@ -14,7 +14,7 @@
 #include "settings.h"
 #include "gui/customdialogs.h"
 #include "useractions.h"
-#include "helper/sortutil.h"
+#include "utils/sortutil.h"
 #include "aui/auimanager.h"
 #include "utils/conversion.h"
 

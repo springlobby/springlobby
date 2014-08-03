@@ -9,7 +9,7 @@
 #include <set>
 
 #include "chatlog.h"
-#include "helper/TextCompletionDatabase.h"
+#include "utils/TextCompletionDatabase.h"
 #include "utils/mixins.h"
 #include "utils/globalevents.h"
 

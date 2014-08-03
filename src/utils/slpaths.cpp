@@ -13,7 +13,7 @@
 #include <lslutils/conversion.h>
 
 #include "nonportable.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 
 #include "platform.h"
 #include "conversion.h"

@@ -8,7 +8,7 @@
 #include <set>
 #include "utils/mixins.h"
 #include "useractions.h"
-#include "helper/sortutil.h"
+#include "utils/sortutil.h"
 
 const long CACHE_VERSION     = 14;
 const long SETTINGS_VERSION  = 27;

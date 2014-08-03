@@ -34,7 +34,7 @@
 #include "springlobbyapp.h"
 #include "gui/mainwindow.h"
 #include "settings.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "crashreport.h"
 #include "utils/controls.h"
 #include "utils/platform.h"
@@ -45,7 +45,7 @@
 #include <lslutils/globalsmanager.h>
 #include <lslutils/config.h>
 #include "gui/notificationmanager.h"
-#include "helper/wxTranslationHelper.h"
+#include "utils/wxTranslationHelper.h"
 #include "gui/playback/playbacktraits.h"
 #include "gui/playback/playbacktab.h"
 #include "defines.h"

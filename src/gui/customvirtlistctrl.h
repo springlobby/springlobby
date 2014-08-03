@@ -15,7 +15,7 @@
 #include <map>
 
 #include "useractions.h"
-#include "helper/sortutil.h"
+#include "utils/sortutil.h"
 #include "utils/globalevents.h"
 #include "utils/mixins.h"
 

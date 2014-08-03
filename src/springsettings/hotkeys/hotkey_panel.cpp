@@ -24,7 +24,7 @@
 #include "wxSpringCommand.h"
 #include "commandlist.h"
 #include "settings.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "KeynameConverter.h"
 #include "SpringDefaultProfile.h"
 #include "HotkeyException.h"

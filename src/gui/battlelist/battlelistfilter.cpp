@@ -28,7 +28,7 @@
 #include "utils/tasutil.h"
 #include "aui/auimanager.h"
 #include "useractions.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "utils/conversion.h"
 
 #include "images/rank0.xpm"

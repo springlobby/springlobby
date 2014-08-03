@@ -34,7 +34,7 @@
 #include "iconimagelist.h"
 #include "useractions.h"
 #include "gui/customdialogs.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "log.h"
 
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;

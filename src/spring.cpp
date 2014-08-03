@@ -45,7 +45,7 @@ lsl/spring/spring.cpp
 #include "gui/customdialogs.h"
 #include "utils/conversion.h"
 #include "utils/slpaths.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "settings.h"
 #include "ibattle.h"
 #include "log.h"

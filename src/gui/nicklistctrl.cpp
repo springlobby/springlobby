@@ -25,7 +25,7 @@
 #include "chatpanelmenu.h"
 #include "userlist.h"
 #include "usermenu.h"
-#include "helper/sortutil.h"
+#include "utils/sortutil.h"
 #include "log.h"
 
 

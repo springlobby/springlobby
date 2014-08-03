@@ -16,7 +16,7 @@
 #include "lobbyoptionstab.h"
 #include "nonportable.h"
 #include "settings.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "gui/customdialogs.h"
 #include "utils/controls.h"
 #include "utils/platform.h"

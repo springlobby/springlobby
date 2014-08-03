@@ -14,7 +14,7 @@
 #include "gui/customdialogs.h"
 #include "log.h"
 #include "utils/conversion.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 
 SLCONFIG("/General/UpdateUrl", "http://version.springlobby.info/current.txt", "Url to check for updates" );
 

@@ -6,7 +6,7 @@
 
 #include "log.h"
 #include "utils/conversion.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "utils/platform.h"
 #include "crashreport.h"
 

@@ -55,7 +55,7 @@
 #include "user.h"
 #include "mapselectdialog.h"
 #include "downloader/prdownloader.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "springsettings/frame.h"
 #include "gui/customdialogs.h"
 #include "utils/platform.h"

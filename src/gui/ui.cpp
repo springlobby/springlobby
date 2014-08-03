@@ -29,7 +29,7 @@
 
 #include "ui.h"
 #include "tasserver.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "iserver.h"
 #include "serverselector.h"
 #include "spring.h"

@@ -167,9 +167,9 @@ set(springlobbySrc
 	gui/playback/replaylist.cpp
 	gui/playback/savegamelist.cpp
 
-	helper/TextCompletionDatabase.cpp
-	helper/wxtextctrlhist.cpp
-	helper/colorbutton.cpp
+	utils/TextCompletionDatabase.cpp
+	utils/wxtextctrlhist.cpp
+	utils/colorbutton.cpp
 
 	gui/toasternotification.cpp
 	gui/wxbackgroundimage.cpp
@@ -252,7 +252,7 @@ set(springlobbySrc
 )
 
 SET(SLSharedWithSettings
-	helper/wxTranslationHelper.cpp
+	utils/wxTranslationHelper.cpp
 	gui/uiutils.cpp
 	updater/versionchecker.cpp
 	updater/updatehelper.cpp
@@ -271,7 +271,7 @@ SET(SLSharedWithSettings
 	gui/windowattributespickle.cpp
 	gui/spinctl/generic/spinctlg.cpp
 	gui/spinctl/generic/spinctrldouble.cpp
-	helper/slconfig.cpp
+	utils/slconfig.cpp
 	gui/aboutbox.cpp
 	log.cpp
 )

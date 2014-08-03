@@ -5,7 +5,7 @@
 #include "utils/conversion.h"
 #include "gui/ui.h"
 #include <algorithm>
-#include "helper/sortutil.h"
+#include "utils/sortutil.h"
 
 template<> SortOrder CustomVirtListCtrl<ChannelInfo,ChannelListctrl>::m_sortorder = SortOrder();
 

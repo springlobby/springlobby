@@ -26,7 +26,7 @@
 #include "hosting/addbotdialog.h"
 #include "iserver.h"
 #include "settings.h"
-#include "helper/colorbutton.h"
+#include "utils/colorbutton.h"
 #include "aui/auimanager.h"
 #include "gui/customdialogs.h"
 #include "utils/slpaths.h"

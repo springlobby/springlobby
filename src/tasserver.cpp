@@ -43,7 +43,7 @@ lsl/networking/tasserver.cpp
 #include "tasservertokentable.h"
 #include "log.h"
 #include "gui/customdialogs.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "utils/version.h"
 #include "settings.h"
 

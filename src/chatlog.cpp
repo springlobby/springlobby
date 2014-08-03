@@ -15,7 +15,7 @@
 
 #include "chatlog.h"
 #include "settings.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "utils/conversion.h"
 #include "defines.h"
 

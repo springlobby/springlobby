@@ -3,7 +3,7 @@
 #include "updatehelper.h"
 
 #include "utils/conversion.h"
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 
 SLCONFIG("/General/DownloadUrl", "http://springlobby.info/windows/springlobby-%s-win32.zip", "Url for downloading a springlobby update, %s is replaced with the version");
 

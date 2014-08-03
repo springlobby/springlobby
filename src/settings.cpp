@@ -7,8 +7,8 @@
 #include "settings.h"
 
 #include "springsettings/se_utils.h"
-#include "helper/wxTranslationHelper.h"
-#include "helper/slconfig.h"
+#include "utils/wxTranslationHelper.h"
+#include "utils/slconfig.h"
 #include "defines.h" //to get HAVEWX??
 
 #include <wx/filename.h>
@@ -39,11 +39,8 @@
 #include "playbackfiltervalues.h"
 #include "gui/customlistctrl.h"
 #include "springsettings/presets.h"
-#include "helper/sortutil.h"
+#include "utils/sortutil.h"
 #include "gui/mainwindow.h"
-#ifdef SL_DUMMY_COL
-    #include "utils/customdialogs.h"
-#endif
 
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);

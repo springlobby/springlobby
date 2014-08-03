@@ -28,7 +28,7 @@ endmacro()
 set(test_name Config)
 Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/config.cpp"
-	"${springlobby_SOURCE_DIR}/src/helper/slconfig.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/slconfig.cpp"
 )
 
 set(test_libs

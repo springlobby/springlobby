@@ -3,7 +3,6 @@
 #include <wx/log.h>
 #include <wx/wupdlock.h>
 
-#include "nonportable.h" //pulls in the SL_DUMMY_COL define if applicable
 #include "settings.h"
 #include "defines.h"
 #include "iconimagelist.h"
