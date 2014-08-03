@@ -17,7 +17,7 @@
 
 #include "serverevents.h"
 #include "gui/mainwindow.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "channel.h"
 #include "user.h"
 #include "gui/uiutils.h"

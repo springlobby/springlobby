@@ -32,7 +32,7 @@
 #endif
 
 #include "nonportable.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "utils/controls.h"
 #include "utils/platform.h"
 #include "utils/uievents.h"

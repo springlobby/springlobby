@@ -4,7 +4,7 @@
 //
 
 #include "channel.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "iserver.h"
 #include "user.h"
 #include "utils/tasutil.h"

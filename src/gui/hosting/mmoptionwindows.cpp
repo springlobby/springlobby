@@ -16,7 +16,7 @@
 #include <wx/textctrl.h>
 #include <wx/log.h>
 
-#include "ui.h"
+#include "gui/ui.h"
 #include <lslunitsync/optionswrapper.h>
 #include <lslunitsync/unitsync.h>
 #include "utils/controls.h"

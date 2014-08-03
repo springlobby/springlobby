@@ -30,7 +30,7 @@ lsl/battle/ibattle.cpp
 #include "utils/conversion.h"
 #include "gui/uiutils.h"
 #include "settings.h"
-#include "ui.h" //only required for preset stuff
+#include "gui/ui.h"
 #include "spring.h"
 #include "springlobbyapp.h"
 #include "iserver.h"

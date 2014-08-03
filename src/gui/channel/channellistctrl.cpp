@@ -3,7 +3,7 @@
 #include "channellistctrl.h"
 #include "iconimagelist.h"
 #include "utils/conversion.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include <algorithm>
 #include "helper/sortutil.h"
 

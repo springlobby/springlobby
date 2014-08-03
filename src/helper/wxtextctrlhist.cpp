@@ -18,7 +18,7 @@
 #include <wx/regex.h>
 #include "utils/misc.h"
 #include "settings.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "gui/mainwindow.h"
 #include "gui/mainchattab.h"
 

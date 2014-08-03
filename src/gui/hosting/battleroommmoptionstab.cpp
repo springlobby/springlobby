@@ -25,7 +25,7 @@
 #include "gui/customdialogs.h"
 #include "iserver.h"
 #include "settings.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "aui/auimanager.h"
 #include "battleroommmoptionstab.h"
 

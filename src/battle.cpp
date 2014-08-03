@@ -14,7 +14,7 @@
 #include <lslutils/conversion.h>
 
 #include "battle.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "iserver.h"
 #include "user.h"
 #include "utils/conversion.h"

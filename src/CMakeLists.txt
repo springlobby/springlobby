@@ -241,7 +241,7 @@ set(springlobbySrc
 	springlobbyapp.cpp
 	springprocess.cpp
 	tasserver.cpp
-	ui.cpp
+	gui/ui.cpp
 	user.cpp
 	useractions.cpp
 	userlist.cpp

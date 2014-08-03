@@ -35,7 +35,7 @@
 #include "gui/customdialogs.h"
 #include "utils/slpaths.h"
 #include "utils/conversion.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "iserver.h"
 #include "serverselector.h"
 #include <lslunitsync/springbundle.h>

@@ -22,7 +22,7 @@
 #include "utils/platform.h"
 #include "utils/slpaths.h"
 #include "aui/auimanager.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "gui/mainwindow.h"
 #include "utils/conversion.h"
 

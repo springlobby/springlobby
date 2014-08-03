@@ -15,7 +15,7 @@
 #include "gui/hosting/battleroomtab.h"
 #include "gui/battlelist/battlelisttab.h"
 #include "gui/chatpanel.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "gui/options/mainoptionstab.h"
 #include "gui/options/groupoptionspanel.h"
 #include <lslutils/globalsmanager.h>

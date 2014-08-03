@@ -649,10 +649,6 @@ const MainWindow::TabNames& MainWindow::GetTabNames()
     return m_tab_names;
 }
 
-#ifdef __WXMSW__
-	#include <hosting/battleroomtab.h>
-#endif
-
 void MainWindow::LoadPerspectives( const wxString& pers_name )
 {
     sett().SetLastPerspectiveName( pers_name );

@@ -40,7 +40,7 @@ lsl/spring/spring.cpp
 
 #include "spring.h"
 #include "springprocess.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "gui/mainwindow.h"
 #include "gui/customdialogs.h"
 #include "utils/conversion.h"

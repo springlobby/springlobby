@@ -9,7 +9,7 @@
 #include "user.h"
 #include "iconimagelist.h"
 #include "gui/uiutils.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "utils/conversion.h"
 
 

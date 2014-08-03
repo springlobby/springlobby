@@ -17,7 +17,7 @@
 #include "playbacklistctrl.h"
 #include "replaylist.h"
 #include "playbackthread.h"
-#include "ui.h"
+#include "gui/ui.h"
 #include "gui/chatpanel.h"
 #include "gui/uiutils.h"
 #include "settings.h"
