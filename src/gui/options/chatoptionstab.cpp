@@ -27,7 +27,6 @@
 #include <wx/checkbox.h>
 #include <wx/tokenzr.h>
 
-#include "nonportable.h"
 #include "chatoptionstab.h"
 #include "utils/controls.h"
 #include "gui/uiutils.h"

@@ -31,7 +31,6 @@
 #include <lslutils/globalsmanager.h>
 #include <lslunitsync/unitsync.h>
 
-#include "nonportable.h"
 #include "utils/conversion.h"
 #include "utils/platform.h"
 #include "utils/slpaths.h"

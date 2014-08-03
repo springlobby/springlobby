@@ -12,7 +12,6 @@
 #include <lslutils/misc.h>
 #include <lslutils/conversion.h>
 
-#include "nonportable.h"
 #include "utils/slconfig.h"
 
 #include "platform.h"

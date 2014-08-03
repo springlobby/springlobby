@@ -8,7 +8,6 @@
 #include <fstream>
 #include <utility>
 #include <wx/filename.h>
-#include "nonportable.h"
 #include "utils/conversion.h"
 #include "utils/version.h"
 #include <lslutils/misc.h>

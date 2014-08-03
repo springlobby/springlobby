@@ -23,7 +23,6 @@
 #include "ctrlconstants.h"
 #include "frame.h"
 #include "settings.h"
-#include "nonportable.h"
 #include <lslunitsync/unitsync.h>
 #include "se_utils.h"
 #include "utils/conversion.h"

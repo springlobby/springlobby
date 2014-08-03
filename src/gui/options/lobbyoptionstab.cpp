@@ -14,7 +14,6 @@
 #include <wx/spinctrl.h>
 
 #include "lobbyoptionstab.h"
-#include "nonportable.h"
 #include "settings.h"
 #include "utils/slconfig.h"
 #include "gui/customdialogs.h"
@@ -257,6 +256,14 @@ void LobbyOptionsTab::HandleWebloc( bool defloc )
   }
 }
 
+#if defined(__WXMSW__)
+  #define CHOOSE_EXE _("Executables (*.exe)|*.exe|Any File (*.*)|*.*")
+#elif defined(__WXGTK__) || defined(__WXX11__)
+  #define CHOOSE_EXE _("Any file (*)|*")
+#elif defined(__WXMAC__)
+  #define CHOOSE_EXE _("App Bundles (*.app)|*.app|Any File (*.*)|*.*")
+#endif
+
 void LobbyOptionsTab::OnBrowseWeb( wxCommandEvent& /*unused*/ )
 {
   wxFileDialog pick( this, _("Choose a web browser executable"), wxEmptyString, _T("*"), CHOOSE_EXE );
@@ -268,6 +275,8 @@ void LobbyOptionsTab::OnBrowseEditor( wxCommandEvent& /*unused*/ )
   wxFileDialog pick( this, _("Choose a editor browser executable"), wxEmptyString, _T("*"), CHOOSE_EXE );
   if ( pick.ShowModal() == wxID_OK ) m_editor_edit->SetValue( pick.GetPath() );
 }
+
+#undef CHOOSE_EXE
 
 void LobbyOptionsTab::OnDefaultWeb( wxCommandEvent& /*unused*/ )
 {

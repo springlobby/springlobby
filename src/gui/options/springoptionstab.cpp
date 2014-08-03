@@ -31,7 +31,6 @@
 #include <wx/msw/registry.h>
 #endif
 
-#include "nonportable.h"
 #include "gui/ui.h"
 #include "utils/controls.h"
 #include "utils/platform.h"
