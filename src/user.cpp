@@ -19,7 +19,7 @@ lsl/user/user.cpp
 #include "user.h"
 #include "ibattle.h"
 #include "iserver.h"
-#include "chatpanel.h"
+#include "gui/chatpanel.h"
 #include "iconimagelist.h"
 #include "utils/conversion.h"
 

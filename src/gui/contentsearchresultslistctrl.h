@@ -2,7 +2,7 @@
 
 #ifndef CONTENTSEARCHRESULTSLISTCTRL_H
 #define CONTENTSEARCHRESULTSLISTCTRL_H
-#include "../customvirtlistctrl.h"
+#include "gui/customvirtlistctrl.h"
 #include "contentsearchresult.h"
 
 class ContentSearchResultsListctrl : public CustomVirtListCtrl<ContentSearchResult*,ContentSearchResultsListctrl >

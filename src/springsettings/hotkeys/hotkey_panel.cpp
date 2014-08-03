@@ -17,14 +17,14 @@
 #include <wx/textdlg.h>
 #include <wx/filename.h>
 
-#include "../../utils/customdialogs.h"
-#include "../../utils/conversion.h"
-#include "../../utils/slpaths.h"
+#include "gui/customdialogs.h"
+#include "utils/conversion.h"
+#include "utils/slpaths.h"
 #include "hotkey_parser.h"
 #include "wxSpringCommand.h"
 #include "commandlist.h"
-#include "../../settings.h"
-#include "../../helper/slconfig.h"
+#include "settings.h"
+#include "helper/slconfig.h"
 #include "KeynameConverter.h"
 #include "SpringDefaultProfile.h"
 #include "HotkeyException.h"

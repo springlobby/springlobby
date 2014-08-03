@@ -22,15 +22,15 @@
 #include "se_utils.h"
 #include "ctrlconstants.h"
 #include "frame.h"
-#include "../settings.h"
-#include "../nonportable.h"
+#include "settings.h"
+#include "nonportable.h"
 #include <lslunitsync/unitsync.h>
 #include "se_utils.h"
 #include "utils/conversion.h"
 
 
-#include "../utils/customdialogs.h"
-#include "../utils/slpaths.h"
+#include "gui/customdialogs.h"
+#include "utils/slpaths.h"
 
 PathOptionPanel::PathOptionPanel(wxWindow* parent,settings_frame* _origin) : wxPanel(parent,-1),origin(_origin)
 {

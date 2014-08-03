@@ -4,7 +4,7 @@
 #define INOTIFICATION_H
 
 #include <cstddef>
-#include "../utils/uievents.h"
+#include "utils/uievents.h"
 
 class wxWindow;
 class ScreenPosition;

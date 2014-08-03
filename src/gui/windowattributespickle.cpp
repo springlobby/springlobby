@@ -2,7 +2,7 @@
 
 #include "windowattributespickle.h"
 
-#include "../helper/slconfig.h"
+#include "helper/slconfig.h"
 
 #include <lslutils/misc.h>
 #include <wx/settings.h>

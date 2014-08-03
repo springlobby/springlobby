@@ -1,8 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "taskbar.h"
-#include "../downloader/downloadsobserver.h"
-#include "../utils/conversion.h"
+#include "downloader/downloadsobserver.h"
+#include "utils/conversion.h"
 
 #include <wx/colour.h>
 #include <wx/statbmp.h>

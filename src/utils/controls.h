@@ -8,7 +8,7 @@ class wxColour;
 class wxArrayString;
 
 #include <wx/intl.h>
-#include "../defines.h"
+#include "defines.h"
 
 #ifdef __WXMSW__
     static const int CONTROL_HEIGHT = 22;

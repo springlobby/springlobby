@@ -1,7 +1,7 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "AddSelectionCmdDlg.h"
-#include "../../utils/customdialogs.h"
+#include "gui/customdialogs.h"
 
 
 AddSelectionCmdDlg::AddSelectionCmdDlg( wxWindow* parent ) : AddSelectionCmdDlgBase( parent )

@@ -1,7 +1,7 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "ChangeMetaDlg.h"
-#include "utils/customdialogs.h"
+#include "gui/customdialogs.h"
 #include "springsettings/wxkeybinder/keybinder.h"
 
 ChangeMetaDlg::ChangeMetaDlg( const wxString& curMeta, wxWindow* parent ) :	ChangeMetaDlgBase( parent ),

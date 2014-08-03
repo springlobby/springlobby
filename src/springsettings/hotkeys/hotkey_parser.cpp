@@ -17,7 +17,7 @@
 #include "hotkey_panel.h"
 #include "HotkeyException.h"
 
-#include "../../utils/conversion.h"
+#include "utils/conversion.h"
 
 
 hotkey_parser::hotkey_parser(const wxString& uikeys_filename) :m_dontTouch( true )

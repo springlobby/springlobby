@@ -16,11 +16,11 @@
 #include "wxtextctrlhist.h"
 #include "TextCompletionDatabase.h"
 #include <wx/regex.h>
-#include "../utils/misc.h"
-#include "../settings.h"
-#include "../ui.h"
-#include "../mainwindow.h"
-#include "../mainchattab.h"
+#include "utils/misc.h"
+#include "settings.h"
+#include "ui.h"
+#include "gui/mainwindow.h"
+#include "gui/mainchattab.h"
 
 BEGIN_EVENT_TABLE(wxTextCtrlHist, wxTextCtrl)
     EVT_TEXT_ENTER(wxID_ANY, wxTextCtrlHist::OnSendMessage)

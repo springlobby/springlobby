@@ -14,8 +14,8 @@
 
 #include "downloadlistctrl.h"
 #include "prdownloader.h"
-#include "../iconimagelist.h"
-#include "../utils/conversion.h"
+#include "iconimagelist.h"
+#include "utils/conversion.h"
 #include "downloadsobserver.h"
 
 static const wxString na_str = wxString(_("N/A"));

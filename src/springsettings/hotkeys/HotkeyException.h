@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include <wx/string.h>
-#include "../../utils/conversion.h"
+#include "utils/conversion.h"
 
 class HotkeyException : public std::exception
 {

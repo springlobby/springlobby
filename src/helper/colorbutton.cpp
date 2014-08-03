@@ -2,12 +2,12 @@
 
 #include "colorbutton.h"
 
-#include "../uiutils.h"
-#include "../utils/controls.h"
+#include "gui/uiutils.h"
+#include "utils/controls.h"
 #include <wx/image.h>
 
 #ifdef __WXMSW__
-    #include "../images/colourbox.xpm"
+    #include "images/colourbox.xpm"
 #endif
 
 

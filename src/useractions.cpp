@@ -7,17 +7,17 @@
 #include "settings.h"
 #include "helper/slconfig.h"
 #include <cmath>
-#include "utils/customdialogs.h"
+#include "gui/customdialogs.h"
 
-#include "mainwindow.h"
-#include "mainchattab.h"
-#include "hosting/mainjoinbattletab.h"
-#include "hosting/battleroomtab.h"
-#include "battlelist/battlelisttab.h"
-#include "chatpanel.h"
+#include "gui/mainwindow.h"
+#include "gui/mainchattab.h"
+#include "gui/hosting/mainjoinbattletab.h"
+#include "gui/hosting/battleroomtab.h"
+#include "gui/battlelist/battlelisttab.h"
+#include "gui/chatpanel.h"
 #include "ui.h"
-#include <options/mainoptionstab.h>
-#include <options/groupoptionspanel.h>
+#include "gui/options/mainoptionstab.h"
+#include "gui/options/groupoptionspanel.h"
 #include <lslutils/globalsmanager.h>
 #include "utils/conversion.h"
 #include <wx/log.h>

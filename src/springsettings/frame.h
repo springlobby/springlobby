@@ -5,7 +5,7 @@
 
 
 #include <wx/frame.h>
-#include "../gui/windowattributespickle.h"
+#include "gui/windowattributespickle.h"
 class wxNotebook;
 class tab_simple;
 class tab_ui;

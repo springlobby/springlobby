@@ -10,7 +10,7 @@
 #include <wx/protocol/http.h>
 #include <wx/sstream.h>
 #include <wx/thread.h>
-#include "../json/wx/jsonreader.h"
+#include "json/wx/jsonreader.h"
 #include "ui.h"
 #include <lslunitsync/unitsync.h>
 

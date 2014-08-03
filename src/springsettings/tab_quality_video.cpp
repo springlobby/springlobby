@@ -14,8 +14,8 @@
 #include <wx/combobox.h>
 #include <wx/textctrl.h>
 
-#include "../gui/spinctl/spinctrl.h"
-#include "../utils/conversion.h"
+#include "gui/spinctl/spinctrl.h"
+#include "utils/conversion.h"
 
 #include "ctrlconstants.h"
 

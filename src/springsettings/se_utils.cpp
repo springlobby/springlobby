@@ -12,8 +12,8 @@
 
 #include "se_utils.h"
 
-#include "../utils/customdialogs.h"
-#include "../settings.h"
+#include "gui/customdialogs.h"
+#include "settings.h"
 
 static bool standalonemode = true;
 

@@ -13,7 +13,7 @@
 #include <wx/statbmp.h>
 #include <wx/listctrl.h>
 
-#include "../utils/conversion.h"
+#include "utils/conversion.h"
 #include "iconimagelist.h"
 
 #ifdef HAVE_WX29

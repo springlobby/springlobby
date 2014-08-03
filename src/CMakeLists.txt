@@ -139,33 +139,33 @@ ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 
 
 set(springlobbySrc
-	aui/slbook.cpp
+	gui/slbook.cpp
 	aui/auimanager.cpp
 
-	hosting/addbotdialog.cpp
-	hosting/autobalancedialog.cpp
-	hosting/autohost.cpp
-	hosting/battlemaptab.cpp
-	hosting/battleoptionstab.cpp
-	hosting/battleroomlistctrl.cpp
-	hosting/battleroomtab.cpp
-	hosting/hostbattledialog.cpp
-	hosting/mainjoinbattletab.cpp
-	hosting/mainsingleplayertab.cpp
-	hosting/mmoptionwindows.cpp
-	hosting/battleroomdownloads.cpp
-	hosting/autohostmanager.cpp
-	hosting/battleroommmoptionstab.cpp
+	gui/hosting/addbotdialog.cpp
+	gui/hosting/autobalancedialog.cpp
+	gui/hosting/battlemaptab.cpp
+	gui/hosting/battleoptionstab.cpp
+	gui/hosting/battleroomlistctrl.cpp
+	gui/hosting/battleroomtab.cpp
+	gui/hosting/hostbattledialog.cpp
+	gui/hosting/mainjoinbattletab.cpp
+	gui/hosting/mainsingleplayertab.cpp
+	gui/hosting/mmoptionwindows.cpp
+	gui/hosting/battleroomdownloads.cpp
+	gui/hosting/battleroommmoptionstab.cpp
+	autohost.cpp
+	autohostmanager.cpp
 
-	options/downloadoptionspanel.cpp
-	options/mainoptionstab.cpp
-	options/springoptionstab.cpp
-	options/groupoptionspanel.cpp
-	options/lobbyoptionstab.cpp
-	options/chatoptionstab.cpp
+	gui/options/downloadoptionspanel.cpp
+	gui/options/mainoptionstab.cpp
+	gui/options/springoptionstab.cpp
+	gui/options/groupoptionspanel.cpp
+	gui/options/lobbyoptionstab.cpp
+	gui/options/chatoptionstab.cpp
 
-	playback/replaylist.cpp
-	playback/savegamelist.cpp
+	gui/playback/replaylist.cpp
+	gui/playback/savegamelist.cpp
 
 	helper/TextCompletionDatabase.cpp
 	helper/wxtextctrlhist.cpp
@@ -186,56 +186,56 @@ set(springlobbySrc
 	utils/md5.c
 	utils/battleevents.cpp
 
-	channel/channelchooser.cpp
-	channel/channelchooserdialog.cpp
-	channel/autojoinchanneldialog.cpp
-	channel/channel.cpp
-	channel/channellist.cpp
-	channel/channellistctrl.cpp
+	gui/channel/channelchooser.cpp
+	gui/channel/channelchooserdialog.cpp
+	gui/channel/autojoinchanneldialog.cpp
+	gui/channel/channellistctrl.cpp
+	channel.cpp
+	channellist.cpp
 
-	battlelist/battlelist.cpp
-	battlelist/battlelistctrl.cpp
-	battlelist/battlelistfilter.cpp
-	battlelist/battlelisttab.cpp
+	gui/battlelist/battlelistctrl.cpp
+	gui/battlelist/battlelistfilter.cpp
+	gui/battlelist/battlelisttab.cpp
+	battlelist.cpp
 
 	downloader/prdownloader.cpp
 	downloader/downloadlistctrl.cpp
 	downloader/downloadsobserver.cpp
 	downloader/httpdownloader.cpp
 
-	toasterbox/ToasterBox.cpp
-	toasterbox/ToasterBoxWindow.cpp
-	toasterbox/ToasterBoxWindowList.cpp
+	gui/toasterbox/ToasterBox.cpp
+	gui/toasterbox/ToasterBoxWindow.cpp
+	gui/toasterbox/ToasterBoxWindowList.cpp
 
-	chatpanelmenu.cpp
-	agreementdialog.cpp
+	gui/chatpanelmenu.cpp
+	gui/agreementdialog.cpp
 	base64.cpp
 	battle.cpp
 	crc.cpp
 	chatlog.cpp
-	chatpanel.cpp
-	connectwindow.cpp
+	gui/chatpanel.cpp
+	gui/connectwindow.cpp
 	countrycodes.cpp
-	customlistctrl.cpp
+	gui/customlistctrl.cpp
 	flagimages.cpp
 	ibattle.cpp
 	iconimagelist.cpp
-	mainchattab.cpp
-	maindownloadtab.cpp
-	mainwindow.cpp
-	mapctrl.cpp
-	mapgridctrl.cpp
-	mapselectdialog.cpp
+	gui/mainchattab.cpp
+	gui/maindownloadtab.cpp
+	gui/mainwindow.cpp
+	gui/mapctrl.cpp
+	gui/mapgridctrl.cpp
+	gui/mapselectdialog.cpp
 	contentsearchresult.cpp
-	nicklistctrl.cpp
+	gui/nicklistctrl.cpp
 	offlinebattle.cpp
 	
 	
-	selectusersdialog.cpp
+	gui/selectusersdialog.cpp
 	iserver.cpp
 	serverevents.cpp
-	singleplayerbattle.cpp
-	singleplayertab.cpp
+	gui/singleplayerbattle.cpp
+	gui/singleplayertab.cpp
 	socket.cpp
 	spring.cpp
 	springlobbyapp.cpp
@@ -253,12 +253,12 @@ set(springlobbySrc
 
 SET(SLSharedWithSettings
 	helper/wxTranslationHelper.cpp
-	uiutils.cpp
+	gui/uiutils.cpp
 	updater/versionchecker.cpp
 	updater/updatehelper.cpp
 	utils/controls.cpp
 	utils/conversion.cpp
-	utils/customdialogs.cpp
+	gui/customdialogs.cpp
 	utils/globalevents.cpp
 	utils/platform.cpp
 	utils/slpaths.cpp
@@ -267,12 +267,12 @@ SET(SLSharedWithSettings
 	utils/curlhelper.cpp
 	crashreport.cpp
 	settings.cpp
-	infodialog.cpp
+	gui/infodialog.cpp
 	gui/windowattributespickle.cpp
 	gui/spinctl/generic/spinctlg.cpp
 	gui/spinctl/generic/spinctrldouble.cpp
 	helper/slconfig.cpp
-	aboutbox.cpp
+	gui/aboutbox.cpp
 	log.cpp
 )
 

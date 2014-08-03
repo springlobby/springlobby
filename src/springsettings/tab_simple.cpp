@@ -14,7 +14,7 @@
 #include "ctrlconstants.h"
 #include "presets.h"
 #include "frame.h"
-#include "../settings.h"
+#include "settings.h"
 #include <lslunitsync/unitsync.h>
 #include <utils/conversion.h>
 

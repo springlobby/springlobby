@@ -32,22 +32,22 @@
 #include <wx/wfstream.h>
 
 #include "springlobbyapp.h"
-#include "mainwindow.h"
+#include "gui/mainwindow.h"
 #include "settings.h"
 #include "helper/slconfig.h"
 #include "crashreport.h"
 #include "utils/controls.h"
 #include "utils/platform.h"
 #include "utils/version.h"
-#include "channel/channel.h"
-#include "utils/customdialogs.h"
+#include "channel.h"
+#include "gui/customdialogs.h"
 #include "downloader/prdownloader.h"
 #include <lslutils/globalsmanager.h>
 #include <lslutils/config.h>
 #include "gui/notificationmanager.h"
 #include "helper/wxTranslationHelper.h"
-#include "playback/playbacktraits.h"
-#include "playback/playbacktab.h"
+#include "gui/playback/playbacktraits.h"
+#include "gui/playback/playbacktab.h"
 #include "defines.h"
 #include "utils/slpaths.h"
 #include "downloader/lib/src/FileSystem/FileSystem.h"

@@ -1,8 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "contentsearchresultslistctrl.h"
-#include "../utils/conversion.h"
-#include "../utils/globalevents.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
 
 template<> SortOrder ContentSearchResultsListctrl::BaseType::m_sortorder = SortOrder();
 

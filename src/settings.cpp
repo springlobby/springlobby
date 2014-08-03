@@ -35,12 +35,12 @@
 #include "utils/conversion.h"
 #include "utils/platform.h"
 #include "utils/slpaths.h"
-#include "uiutils.h"
-#include "playback/playbackfiltervalues.h"
-#include "customlistctrl.h"
+#include "gui/uiutils.h"
+#include "playbackfiltervalues.h"
+#include "gui/customlistctrl.h"
 #include "springsettings/presets.h"
 #include "helper/sortutil.h"
-#include "mainwindow.h"
+#include "gui/mainwindow.h"
 #ifdef SL_DUMMY_COL
     #include "utils/customdialogs.h"
 #endif

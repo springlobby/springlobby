@@ -10,7 +10,7 @@
 #include "utils/conversion.h"
 #include "utils/globalevents.h"
 #include "utils/slpaths.h"
-#include "mainwindow.h"
+#include "gui/mainwindow.h"
 #include "downloadsobserver.h"
 #include <list>
 

@@ -9,7 +9,7 @@
 #include "helper/slconfig.h"
 #include "utils/slpaths.h"
 #include "utils/conversion.h"
-#include "utils/customdialogs.h"
+#include "gui/customdialogs.h"
 
 SLCONFIG("/General/LanguageID", (long)wxLANGUAGE_DEFAULT, "Language ID" );
 

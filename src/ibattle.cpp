@@ -28,7 +28,7 @@ lsl/battle/ibattle.cpp
 
 #include "ibattle.h"
 #include "utils/conversion.h"
-#include "uiutils.h"
+#include "gui/uiutils.h"
 #include "settings.h"
 #include "ui.h" //only required for preset stuff
 #include "spring.h"

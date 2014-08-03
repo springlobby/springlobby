@@ -3,12 +3,15 @@
 /.ninja_log
 /.ninja_deps
 /rules.ninja
+/compile_commands.json
 
 # cmake
 cmake_install.cmake
 CMakeFiles/
 /CMakeCache.txt
-
+/CPackConfig.cmake
+/CPackSourceConfig.cmake
+CTestTestfile.cmake
 
 # output
 /src/springlobby
@@ -28,3 +31,4 @@ CMakeFiles/
 
 # codeblocks
 /springlobby.cbp
+/springlobby.layout

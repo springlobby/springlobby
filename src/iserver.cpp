@@ -10,10 +10,10 @@
 #include "iserver.h"
 #include "socket.h"
 #include "battle.h"
-#include "channel/channel.h"
+#include "channel.h"
 #include "user.h"
 #include "utils/conversion.h"
-#include "chatpanel.h"
+#include "gui/chatpanel.h"
 #include "log.h"
 
 IServer::IServer():

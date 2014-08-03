@@ -5,7 +5,7 @@
 
 #include <set>
 
-#include "hosting/autohost.h"
+#include "autohost.h"
 #include "utils/globalevents.h"
 #include "ibattle.h"
 

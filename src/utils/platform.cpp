@@ -12,7 +12,7 @@
 #include <lslutils/misc.h>
 
 #include "conversion.h"
-#include "customdialogs.h"
+#include "gui/customdialogs.h"
 #include "utils/version.h"
 
 bool SafeMkdir(const wxString& dir)

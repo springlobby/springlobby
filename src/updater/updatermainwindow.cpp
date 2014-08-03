@@ -5,8 +5,8 @@
 #include <wx/sizer.h>
 #include <wx/icon.h>
 
-#include "../utils/activitynotice.h"
-#include "../images/springlobby12x12.xpm"
+#include "utils/activitynotice.h"
+#include "images/springlobby12x12.xpm"
 
 class UpdaterPanel : public wxPanel
 {

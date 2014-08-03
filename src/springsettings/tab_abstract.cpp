@@ -7,21 +7,22 @@
 #include <wx/defs.h>
 #include <wx/slider.h>
 #include <wx/log.h>
-#include "../gui/spinctl/spinctrl.h"
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
 #include <wx/textctrl.h>
 #include <wx/display.h>
 
-#include "../utils/customdialogs.h"
-#include <utils/conversion.h>
+#include <lslunitsync/unitsync.h>
+
+#include "gui/spinctl/spinctrl.h"
+#include "gui/customdialogs.h"
+#include "utils/conversion.h"
 #include "ctrlconstants.h"
 #include "se_utils.h"
-#include "../settings.h"
+#include "settings.h"
 #include "presets.h"
 
-#include <lslunitsync/unitsync.h>
 #include "log.h"
 
 

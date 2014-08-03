@@ -11,7 +11,7 @@
 #include <wx/protocol/http.h>
 #include <wx/log.h>
 
-#include "utils/customdialogs.h"
+#include "gui/customdialogs.h"
 #include "log.h"
 #include "utils/conversion.h"
 #include "helper/slconfig.h"

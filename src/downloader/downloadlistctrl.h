@@ -3,7 +3,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_TORRENTLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_TORRENTLISTCTRL_H
 
-#include "../customvirtlistctrl.h"
+#include "gui/customvirtlistctrl.h"
 #include "prdownloader.h"
 #include "downloadsobserver.h"
 

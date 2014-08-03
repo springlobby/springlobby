@@ -3,15 +3,15 @@
 #include "main.h"
 #include "frame.h"
 
-#include "../crashreport.h"
-#include "../utils/conversion.h"
+#include "crashreport.h"
+#include "utils/conversion.h"
 #include "log.h"
-#include "../settings.h"
-#include "../utils/slpaths.h"
+#include "settings.h"
+#include "utils/slpaths.h"
 #include "se_utils.h"
-#include "../defines.h"
-#include "../utils/customdialogs.h"
-#include "../helper/wxTranslationHelper.h"
+#include "defines.h"
+#include "gui/customdialogs.h"
+#include "helper/wxTranslationHelper.h"
 
 #include <iostream>
 #include <wx/msgdlg.h>

@@ -4,7 +4,7 @@
 #define SPRINGLOBBY_HEADERGUARD_STATUSBAR_H
 
 #include <wx/statusbr.h>
-#include "../utils/uievents.h"
+#include "utils/uievents.h"
 
 class TaskBar;
 

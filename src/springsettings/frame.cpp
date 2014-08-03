@@ -5,9 +5,9 @@
 #include <wx/icon.h>
 
 #include "frame.h"
-#include "../settings.h"
+#include "settings.h"
 #include <lslunitsync/unitsync.h>
-#include "../mainwindow.h"
+#include "gui/mainwindow.h"
 #include "tab_render_detail.h"
 #include "tab_quality_video.h"
 #include "tab_abstract.h"
@@ -17,17 +17,17 @@
 #include "tab_simple.h"
 #include "ctrlconstants.h"
 #include "panel_pathoption.h"
-#include "utils/customdialogs.h"
+#include "gui/customdialogs.h"
 #include "utils/controls.h"
 #include "images/springsettings.xpm"
 #include "se_utils.h"
 #include "utils/platform.h"
 #include "utils/version.h"
 #include "utils/conversion.h"
-#include "aboutbox.h"
+#include "gui/aboutbox.h"
 
 #ifndef SPRINGSETTINGS_STANDALONE
-    #include "../mainwindow.h"
+    #include "gui/mainwindow.h"
 #endif
 
 const wxString simpleTabCap= _("Combined Options");

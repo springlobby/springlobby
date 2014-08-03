@@ -6,9 +6,9 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 
-#include "channel/channellist.h"
+#include "channellist.h"
 #include "userlist.h"
-#include "battlelist/battlelist.h"
+#include "battlelist.h"
 #include "inetclass.h"
 #include "utils/mixins.h"
 #include "ibattle.h"

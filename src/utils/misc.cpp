@@ -3,7 +3,7 @@
 #include "misc.h"
 
 #include <lslutils/misc.h>
-#include "../settings.h"
+#include "settings.h"
 #include <lslutils/conversion.h>
 #include "conversion.h"
 

@@ -1,7 +1,7 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "controls.h"
-#include "../settings.h"
+#include "settings.h"
 #include <wx/gdicmn.h>
 #include <wx/window.h>
 #include <wx/tooltip.h>
