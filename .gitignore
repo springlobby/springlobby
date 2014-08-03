@@ -29,6 +29,7 @@ CTestTestfile.cmake
 *.orig
 /springlobby_config.h
 /VERSION
+/src/tests/Testing/Temporary
 
 # codeblocks
 /springlobby.cbp
