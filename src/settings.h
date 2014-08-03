@@ -4,6 +4,8 @@
 #define SPRINGLOBBY_HEADERGUARD_SETTINGS_H
 
 #include <wx/string.h>
+#include <wx/intl.h>
+
 #include <vector>
 #include <set>
 #include "utils/mixins.h"

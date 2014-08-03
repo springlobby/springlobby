@@ -2,25 +2,23 @@
 
 #include "useractions.h"
 
+#include <cmath>
 #include <wx/intl.h>
 #include <wx/colour.h>
+#include <wx/log.h>
+
+#include <lslutils/globalsmanager.h>
+
 #include "settings.h"
 #include "utils/slconfig.h"
-#include <cmath>
+#include "utils/conversion.h"
 #include "gui/customdialogs.h"
-
 #include "gui/mainwindow.h"
 #include "gui/mainchattab.h"
 #include "gui/hosting/mainjoinbattletab.h"
 #include "gui/hosting/battleroomtab.h"
 #include "gui/battlelist/battlelisttab.h"
-#include "gui/chatpanel.h"
 #include "gui/ui.h"
-#include "gui/options/mainoptionstab.h"
-#include "gui/options/groupoptionspanel.h"
-#include <lslutils/globalsmanager.h>
-#include "utils/conversion.h"
-#include <wx/log.h>
 
 const wxColour defaultHLcolor ( 255, 0, 0 );
 

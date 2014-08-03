@@ -3,7 +3,7 @@
 #define BOOST_TEST_MODULE slconfig
 #include <boost/test/unit_test.hpp>
 
-#include "helper/slconfig.h"
+#include "utils/slconfig.h"
 #include "utils/conversion.h"
 
 #include <wx/string.h>

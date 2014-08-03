@@ -3,7 +3,6 @@
 #ifndef USERACTIONS_HH_INCLUDED
 #define USERACTIONS_HH_INCLUDED
 
-#include <wx/intl.h>
 #include <wx/arrstr.h>
 #include <map>
 #include <list>

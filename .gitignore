@@ -19,6 +19,7 @@ CTestTestfile.cmake
 /src/updater/springlobby_updater
 /src/tests/test_ChatLog
 /src/tests/test_Config
+/src/tests/test_lobbyid
 *.a
 
 # temp files

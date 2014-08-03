@@ -42,7 +42,6 @@ lsl/networking/tasserver.cpp
 #include "socket.h"
 #include "tasservertokentable.h"
 #include "log.h"
-#include "gui/customdialogs.h"
 #include "utils/slconfig.h"
 #include "utils/version.h"
 #include "settings.h"
@@ -469,7 +468,7 @@ void TASServer::Notify()
 	// (if we'd receive reply from server, we'd finalize already)
 	//
 	if (m_do_finalize_join_battle&&(m_last_udp_ping+udp_reply_timeout<now)) {
-		customMessageBoxNoModal(SL_MAIN_ICON,_("Failed to punch through NAT, playing this battle might not work for you or for other players."),_("Error"), wxICON_ERROR);
+		m_se->OnServerMessage(_("Failed to punch through NAT, playing this battle might not work for you or for other players."));
 		//wxMessageBox()
 		FinalizeJoinBattle();
 		//wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
