@@ -6,7 +6,7 @@
 
 #include "customlistctrl.h"
 #include "gui/sltipwin.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "settings.h"
 #include "iconimagelist.h"
 #include "gui/customdialogs.h"

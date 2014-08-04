@@ -3,7 +3,7 @@
 #include "autobalancedialog.h"
 
 #include "settings.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "utils/conversion.h"
 
 //(*InternalHeaders(AutoBalanceDialog)

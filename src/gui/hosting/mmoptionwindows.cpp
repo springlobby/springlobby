@@ -19,7 +19,7 @@
 #include "gui/ui.h"
 #include <lslunitsync/optionswrapper.h>
 #include <lslunitsync/unitsync.h>
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include <lslutils/misc.h>
 #include "utils/conversion.h"
 #include "gui/spinctl/spinctrl.h"

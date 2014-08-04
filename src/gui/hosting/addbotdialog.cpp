@@ -13,7 +13,7 @@
 #include <wx/listctrl.h>
 
 #include "settings.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "gui/uiutils.h"
 #include "ibattle.h"
 #include <lslutils/misc.h>

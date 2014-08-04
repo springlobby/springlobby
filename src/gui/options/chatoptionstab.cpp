@@ -28,7 +28,7 @@
 #include <wx/tokenzr.h>
 
 #include "chatoptionstab.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "gui/uiutils.h"
 #include "settings.h"
 #include "spring.h"

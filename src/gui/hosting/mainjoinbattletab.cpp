@@ -21,7 +21,7 @@
 #include "battleroommmoptionstab.h"
 #include "aui/auimanager.h"
 #include "gui/slbook.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "log.h"
 
 #include "images/battle_list.xpm"

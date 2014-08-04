@@ -19,7 +19,7 @@
 #include "singleplayertab.h"
 #include "mapctrl.h"
 #include "mapselectdialog.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "utils/conversion.h"
 #include "uiutils.h"
 #include "ui.h"

@@ -14,7 +14,7 @@
 #include <wx/textctrl.h>
 #include <map>
 
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "utils/conversion.h"
 #include <lslutils/misc.h>
 #include <lslutils/conversion.h>

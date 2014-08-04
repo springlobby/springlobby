@@ -17,7 +17,7 @@
 #include "settings.h"
 #include "utils/slconfig.h"
 #include "gui/customdialogs.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "utils/platform.h"
 #include "utils/slpaths.h"
 #include "aui/auimanager.h"

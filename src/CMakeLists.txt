@@ -256,7 +256,7 @@ SET(SLSharedWithSettings
 	gui/uiutils.cpp
 	updater/versionchecker.cpp
 	updater/updatehelper.cpp
-	utils/controls.cpp
+	gui/controls.cpp
 	utils/conversion.cpp
 	gui/customdialogs.cpp
 	utils/globalevents.cpp

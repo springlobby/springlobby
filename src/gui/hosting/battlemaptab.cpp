@@ -25,7 +25,7 @@
 #include <lslutils/conversion.h>
 #include "user.h"
 #include "ibattle.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "gui/chatpanel.h"
 #include "gui/mapctrl.h"
 #include "gui/mapselectdialog.h"

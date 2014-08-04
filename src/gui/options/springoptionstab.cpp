@@ -32,7 +32,7 @@
 #endif
 
 #include "gui/ui.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "utils/platform.h"
 #include "utils/uievents.h"
 #include "utils/slpaths.h"

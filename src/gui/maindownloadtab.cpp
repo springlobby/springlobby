@@ -17,7 +17,7 @@
 
 #include "downloader/downloadlistctrl.h"
 #include "utils/conversion.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "gui/colorbutton.h"
 #include "downloader/downloadsobserver.h"
 #include "aui/auimanager.h"

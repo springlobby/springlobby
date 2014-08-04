@@ -22,7 +22,7 @@
 
 #include "battleoptionstab.h"
 #include "ibattle.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "utils/conversion.h"
 #include "iserver.h"
 #include <lslunitsync/optionswrapper.h>

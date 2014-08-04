@@ -22,7 +22,7 @@
 #include "settings.h"
 #include "downloader/prdownloader.h"
 #include "utils/conversion.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 
 
 BEGIN_EVENT_TABLE( TorrentOptionsPanel, wxScrolledWindow )

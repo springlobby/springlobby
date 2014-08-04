@@ -3,7 +3,7 @@
 #include "colorbutton.h"
 
 #include "gui/uiutils.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include <wx/image.h>
 
 #ifdef __WXMSW__

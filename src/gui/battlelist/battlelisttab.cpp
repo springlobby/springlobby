@@ -21,7 +21,7 @@
 #include "gui/ui.h"
 #include "gui/chatpanel.h"
 #include "utils/conversion.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "gui/uiutils.h"
 #include "gui/hosting/hostbattledialog_public.h"
 #include "gui/hosting/mainjoinbattletab.h"

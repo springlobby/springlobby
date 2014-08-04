@@ -18,7 +18,7 @@
 #include "ctrlconstants.h"
 #include "panel_pathoption.h"
 #include "gui/customdialogs.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "images/springsettings.xpm"
 #include "se_utils.h"
 #include "utils/platform.h"

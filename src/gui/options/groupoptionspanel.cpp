@@ -17,7 +17,7 @@
 #include "useractions.h"
 #include "settings.h"
 #include "gui/uiutils.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "gui/colorbutton.h"
 #include "gui/selectusersdialog.h"
 

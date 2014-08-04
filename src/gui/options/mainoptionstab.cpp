@@ -25,7 +25,7 @@
 
 #include "settings.h"
 #include "gui/uiutils.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "utils/conversion.h"
 #include "utils/platform.h"
 #include "log.h"

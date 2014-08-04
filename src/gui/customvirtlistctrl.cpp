@@ -10,7 +10,7 @@
 #include "uiutils.h"
 #include "gui/sltipwin.h"
 #include <lslutils/misc.h>
-#include "utils/controls.h"
+#include "gui/controls.h"
 
 #include <algorithm>
 

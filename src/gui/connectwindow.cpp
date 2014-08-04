@@ -24,7 +24,7 @@
 #include "utils/slconfig.h"
 #include "ui.h"
 #include "images/connect.xpm"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "utils/tasutil.h"
 #include "gui/customdialogs.h"
 #include "utils/conversion.h"

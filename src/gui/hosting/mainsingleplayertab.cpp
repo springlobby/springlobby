@@ -16,7 +16,7 @@
 #include "gui/hosting/mainsingleplayertab.h"
 #include "gui/hosting/battleroommmoptionstab.h"
 #include "utils/conversion.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "log.h"
 
 #include "images/battle.xpm"

@@ -36,7 +36,7 @@
 #include "settings.h"
 #include "utils/slconfig.h"
 #include "crashreport.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "utils/platform.h"
 #include "utils/version.h"
 #include "channel.h"

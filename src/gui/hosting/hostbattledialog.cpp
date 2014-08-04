@@ -31,7 +31,7 @@
 #include "settings.h"
 #include "user.h"
 #include "gui/uiutils.h"
-#include "utils/controls.h"
+#include "gui/controls.h"
 #include "gui/customdialogs.h"
 #include "utils/slpaths.h"
 #include "utils/conversion.h"
