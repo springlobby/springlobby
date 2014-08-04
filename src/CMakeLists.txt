@@ -209,9 +209,9 @@ set(springlobbySrc
 
 	gui/chatpanelmenu.cpp
 	gui/agreementdialog.cpp
-	base64.cpp
+	utils/base64.cpp
 	battle.cpp
-	crc.cpp
+	utils/crc.cpp
 	chatlog.cpp
 	gui/chatpanel.cpp
 	gui/connectwindow.cpp

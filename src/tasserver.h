@@ -22,7 +22,7 @@ lsl/networking/tasserver.h
 #include <list>
 
 #include "iserver.h"
-#include "crc.h"
+#include "utils/crc.h"
 
 const unsigned int FIRST_UDP_SOURCEPORT = 8300;
 

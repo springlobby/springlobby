@@ -55,7 +55,7 @@ add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
 set(test_name lobbyid)
 Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/lobbyid.cpp"
-	"${springlobby_SOURCE_DIR}/src/crc.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/crc.cpp"
 )
 
 set(test_libs
