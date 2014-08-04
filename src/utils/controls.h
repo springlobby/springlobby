@@ -38,9 +38,6 @@ void UpdateMainAppHasFocus( bool focus );
 /** @brief when setting tooltips use output of this func as input
     it outputs empty string if tooltips are disabled in SL settings
 */
-const wxChar* TooltipEnable(const wxChar* input);
 const wxChar* TooltipEnable(const wxString& input);
-
-int GetMaxStringWidth( const wxWindow& win, const wxArrayString& strings );
 
 #endif // SPRINGLOBBY_HEADERGUARD_CONTROLS_H
