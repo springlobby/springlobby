@@ -2,7 +2,7 @@ set(update_RC_FILE updater.rc)
 SET(updaterSrc
 	updatermainwindow.cpp
 	updaterapp.cpp
-	../utils/activitynotice.cpp
+	../gui/activitynotice.cpp
 	../utils/platform.cpp
 	${updater_RC_FILE}
 )

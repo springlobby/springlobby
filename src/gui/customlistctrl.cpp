@@ -5,7 +5,7 @@
 #include <wx/log.h>
 
 #include "customlistctrl.h"
-#include "utils/sltipwin.h"
+#include "gui/sltipwin.h"
 #include "utils/controls.h"
 #include "settings.h"
 #include "iconimagelist.h"

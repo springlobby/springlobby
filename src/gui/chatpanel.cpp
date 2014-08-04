@@ -30,7 +30,7 @@
 #include "mainwindow.h"
 #include "chatpanelmenu.h"
 #include "gui/pastedialog.h"
-#include "utils/wxtextctrlhist.h"
+#include "gui/wxtextctrlhist.h"
 #include "log.h"
 #include "utils/slconfig.h"
 

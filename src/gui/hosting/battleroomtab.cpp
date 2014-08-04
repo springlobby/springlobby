@@ -46,7 +46,7 @@
 #include "gui/customdialogs.h"
 #include "autobalancedialog.h"
 #include "settings.h"
-#include "utils/colorbutton.h"
+#include "gui/colorbutton.h"
 #include "gui/mapselectdialog.h"
 #include "mmoptionwindows.h"
 #include "aui/auimanager.h"

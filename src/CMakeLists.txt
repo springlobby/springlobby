@@ -168,8 +168,8 @@ set(springlobbySrc
 	gui/playback/savegamelist.cpp
 
 	utils/TextCompletionDatabase.cpp
-	utils/wxtextctrlhist.cpp
-	utils/colorbutton.cpp
+	gui/wxtextctrlhist.cpp
+	gui/colorbutton.cpp
 
 	gui/toasternotification.cpp
 	gui/wxbackgroundimage.cpp
@@ -180,7 +180,7 @@ set(springlobbySrc
 	gui/contentdownloaddialog.cpp
 	gui/contentsearchresultslistctrl.cpp
 
-	utils/activitynotice.cpp
+	gui/activitynotice.cpp
 	utils/misc.cpp
 	utils/tasutil.cpp
 	utils/md5.c
@@ -262,7 +262,7 @@ SET(SLSharedWithSettings
 	utils/globalevents.cpp
 	utils/platform.cpp
 	utils/slpaths.cpp
-	utils/sltipwin.cpp
+	gui/sltipwin.cpp
 	utils/uievents.cpp
 	utils/curlhelper.cpp
 	crashreport.cpp

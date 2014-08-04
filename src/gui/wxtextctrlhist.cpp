@@ -14,7 +14,7 @@
 #endif
 
 #include "wxtextctrlhist.h"
-#include "TextCompletionDatabase.h"
+#include "utils/TextCompletionDatabase.h"
 #include <wx/regex.h>
 #include "utils/misc.h"
 #include "settings.h"

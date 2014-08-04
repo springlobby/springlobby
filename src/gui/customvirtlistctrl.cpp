@@ -8,7 +8,7 @@
 #include "iconimagelist.h"
 #include "gui/customdialogs.h"
 #include "uiutils.h"
-#include "utils/sltipwin.h"
+#include "gui/sltipwin.h"
 #include <lslutils/misc.h>
 #include "utils/controls.h"
 

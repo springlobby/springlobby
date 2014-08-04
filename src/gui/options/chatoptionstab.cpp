@@ -33,7 +33,7 @@
 #include "settings.h"
 #include "spring.h"
 #include "gui/mainwindow.h"
-#include "utils/colorbutton.h"
+#include "gui/colorbutton.h"
 #include "aui/auimanager.h"
 #include "utils/slconfig.h"
 
