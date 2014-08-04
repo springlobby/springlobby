@@ -3,8 +3,8 @@
 #define BOOST_TEST_MODULE lobbyid
 #include <boost/test/unit_test.hpp>
 
-#include "crc.h"
 #include <stdio.h>
+#include "utils/crc.h"
 
 BOOST_AUTO_TEST_CASE( lobbyid )
 {
