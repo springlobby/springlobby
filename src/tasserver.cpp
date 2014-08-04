@@ -40,7 +40,6 @@ lsl/networking/tasserver.cpp
 #include "updater/updatehelper.h"
 #include "serverevents.h"
 #include "socket.h"
-#include "tasservertokentable.h"
 #include "log.h"
 #include "utils/slconfig.h"
 #include "utils/version.h"
@@ -156,11 +155,9 @@ TASServer::TASServer():
 	m_server_lanmode(false),
 	m_account_id_count(0),
 	m_do_finalize_join_battle(false),
-	m_finalize_join_battle_id(-1),
-	m_token_transmission( false )
+	m_finalize_join_battle_id(-1)
 {
 	m_se = new ServerEvents(*this);
-	FillAliasMap();
 	m_relay_host_manager_list.Clear();
 
 	Start(100); // call Update every 100ms
@@ -513,14 +510,8 @@ void TASServer::ExecuteCommand( const wxString& in )
 		params = params.AfterFirst( ' ' );
 		id.ToLong( &replyid );
 	}
-	cmd = params.BeforeFirst( ' ' );
+	cmd = params.BeforeFirst( ' ' ).MakeUpper();
 	params = params.AfterFirst( ' ' );
-
-	// decode message if tokenized
-	wxString copy = cmd;
-	cmd = DecodeTokenMessage( cmd );
-	if ( copy != cmd ) m_token_transmission = true;
-	cmd.MakeUpper();
 
 	if ( m_debug_dont_catch ) {
 		ExecuteCommand( cmd, params, replyid );
@@ -954,9 +945,7 @@ void TASServer::SendCmd( const wxString& command, const wxString& param )
 		m_last_id++;
 		msg = msg + _T("#") + TowxString( m_last_id ) + _T(" ");
 	}
-	if ( m_token_transmission ) {
-		cmd = EncodeTokenMessage( command );
-	} else cmd = command;
+	cmd = command;
 	if ( param.IsEmpty() ) msg = msg + cmd + _T("\n");
 	else msg = msg + cmd + _T(" ") + param + _T("\n");
 	bool send_success = m_sock->Send( msg );
@@ -1901,7 +1890,6 @@ void TASServer::OnConnected(Socket& /*unused*/ )
 	m_last_udp_ping = time( 0 );
 	m_connected = true;
 	m_online = false;
-	m_token_transmission = false;
 	m_relay_host_manager_list.Clear();
 	m_last_denied = wxEmptyString;
 	m_last_id = 0;
@@ -1917,7 +1905,6 @@ void TASServer::OnDisconnected(Socket& /*unused*/ )
 	m_connected = false;
 	m_online = false;
 	m_redirecting = false;
-	m_token_transmission = false;
 	m_buffer = wxEmptyString;
 	m_relay_host_manager_list.Clear();
 	m_last_id = 0;
