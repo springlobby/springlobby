@@ -167,7 +167,7 @@ void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint& posit
 	switch (column) {
 		case 2: // status
 			m_tiptext = channel.topic;
-			m_tiptext.Replace("\\n", "\n");
+			m_tiptext.Replace(_T("\\n"), _T("\n"));
 			break;
 
 		default:
