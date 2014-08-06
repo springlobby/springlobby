@@ -157,7 +157,7 @@ void wxTextCtrlHist::OnChar(wxKeyEvent & event)
 		return;
 	}
 	//we didn't handle keycode, pass to default control
-	wxTextCtrl::OnChar(event);
+	event.Skip();
 }
 
 #if wxHAS_TEXT_WINDOW_STREAM
