@@ -1,7 +1,5 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include <wx/wx.h>
-//#include "wx/wxprec.h"
 #include <wx/dialog.h>
 #include <wx/utils.h>
 #include <wx/string.h>
@@ -11,6 +9,7 @@
 #include <wx/region.h>
 #include <wx/dcbuffer.h>
 #include <wx/frame.h>
+#include <wx/log.h>
 
 #include "ToasterBoxWindow.h"
 #include "gui/wxbackgroundimage.h"

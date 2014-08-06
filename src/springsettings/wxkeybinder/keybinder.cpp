@@ -10,27 +10,17 @@
 /////////////////////////////////////////////////////////////////////////////
 
 
-
-// For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-    #include "wx/log.h"
-#endif
-
 // includes
-#include "wx/statline.h"
+#include <wx/statline.h>
+#include <wx/msgdlg.h>
+#include <wx/config.h>
+#include <wx/tokenzr.h>
+#include <wx/menu.h>
+#include <wx/textdlg.h>
+#include <list>
+
 #include "keybinder.h"
 #include "menuutils.h"
-#include "wx/config.h"
-#include "wx/tokenzr.h"
-#include "wx/menu.h"
-#include <list>
 #include "springsettings/hotkeys/CommandOrderDlg.h"
 #include "utils/conversion.h"
 #include "springsettings/hotkeys/ChangeMetaDlg.h"

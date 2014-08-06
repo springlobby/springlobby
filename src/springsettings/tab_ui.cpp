@@ -2,9 +2,18 @@
 
 #include "tab_ui.h"
 
-#include <wx/wx.h>
 #include <wx/spinctrl.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/slider.h>
+#include <wx/radiobut.h>
+#include <wx/checkbox.h>
+#include <wx/statbox.h>
+#include <wx/msgdlg.h>
 #include <wx/log.h>
+#include <wx/event.h>
+#include <wx/textctrl.h>
+
 #include "log.h"
 
 #include "ctrlconstants.h"
