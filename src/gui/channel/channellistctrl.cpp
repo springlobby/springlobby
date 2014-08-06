@@ -20,7 +20,7 @@ ChannelListctrl::ChannelListctrl(wxWindow* parent, wxWindowID /*unused*/, const 
 													wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
 													_T("ChannelListCtrl"), 3, &ChannelListctrl::CompareOneCrit)
 {
-	const int widths [3] = { wxLIST_AUTOSIZE, wxLIST_AUTOSIZE, wxLIST_AUTOSIZE };
+	const int widths [3] = { 140, 70, 800 };
 
     AddColumn( 0, widths[0], _("Channel"), _T("Channelname") );
     AddColumn( 1, widths[1], _("# users"), _T("Users") );
@@ -56,9 +56,6 @@ void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users
 
     RefreshItem( m_visible_idxs.size() - 1);
 	MarkDirtySort();
-//    SetColumnWidth( 0, wxLIST_AUTOSIZE );
-//    SetColumnWidth( 1, wxLIST_AUTOSIZE );
-//    SetColumnWidth( 2, wxLIST_AUTOSIZE );
 }
 
 int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
