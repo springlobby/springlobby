@@ -62,11 +62,14 @@ void ChannelListctrl::AddChannel(const wxString& channel, unsigned int num_users
 
 int ChannelListctrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
+	assert(dir!=0);
     switch ( col ) {
         case 0: return dir * u1.name.CmpNoCase( u2.name );
         case 1: return dir * compareSimple( u1.usercount, u2.usercount );
         case 2: return dir * u1.topic.CmpNoCase( u2.topic );
-        default: return 0;
+        default:
+			assert(false);
+			return 0;
     }
 }
 
@@ -160,22 +163,18 @@ void ChannelListctrl::SetTipWindowText(const long item_hit, const wxPoint& posit
     if (column > (int)m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > (long)m_data.size() )
     {
         m_tiptext = wxEmptyString;
+		return;
     }
-    else
-    {
-        const DataType& channel = m_data[item_hit];
-        {
-            switch (column)
-            {
-            case 2: // status
-                m_tiptext = channel.topic;
-                break;
+	const DataType& channel = m_data[item_hit];
+	switch (column) {
+		case 2: // status
+			m_tiptext = channel.topic;
+			m_tiptext.Replace("\\n", "\n");
+			break;
 
-            default:
-                m_tiptext = wxEmptyString;
-                break;
-            }
-        }
-    }
+		default:
+			m_tiptext = wxEmptyString;
+			break;
+	}
 }
 
