@@ -65,7 +65,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	wxScrolledWindow( parent, -1 )
 {
 	wxBoxSizer* windowSizer = new wxBoxSizer( wxHORIZONTAL );
-	wxBoxSizer* mainSizer = new wxBoxSizer( wxHORIZONTAL );
 	wxBoxSizer* groupListSizer = new wxBoxSizer( wxVERTICAL );
 
 	m_spring_list = new wxListBox( this, SPRING_LIST, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_ALWAYS_SB|wxLB_SINGLE|wxLB_SORT );
@@ -91,8 +90,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	groupListButtonsSizer->Add( m_add_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 
 	groupListSizer->Add( groupListButtonsSizer, 0, wxEXPAND|wxBOTTOM, 5 );
-
-	mainSizer->Add( groupListSizer, 2, wxEXPAND, 5 );
 
 	/* ================================
 	 * Spring executable
@@ -132,12 +129,12 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_sync_loc_sizer->Add( m_sync_browse_btn );
 	m_sync_loc_sizer->Add( m_sync_find_btn );
 
-	m_exec_box_sizer = new wxStaticBoxSizer( m_exec_box, wxVERTICAL );
-	m_sync_box_sizer = new wxStaticBoxSizer( m_sync_box, wxVERTICAL );
+	m_exec_box_sizer = new wxStaticBoxSizer( m_exec_box, wxHORIZONTAL );
+	m_sync_box_sizer = new wxStaticBoxSizer( m_sync_box, wxHORIZONTAL );
 
-	m_exec_box_sizer->Add( m_exec_loc_sizer, 0, wxEXPAND | wxALL, 2 );
+	m_exec_box_sizer->Add( m_exec_loc_sizer, 1, wxEXPAND | wxALL, 2 );
 
-	m_sync_box_sizer->Add( m_sync_loc_sizer, 0, wxEXPAND | wxALL, 2 );
+	m_sync_box_sizer->Add( m_sync_loc_sizer, 1, wxEXPAND | wxALL, 2 );
 
 	m_aconf_sizer->AddStretchSpacer();
 	m_aconf_sizer->Add( m_auto_btn );
@@ -148,8 +145,8 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->AddStretchSpacer();
 
-	windowSizer->Add(mainSizer,0, wxEXPAND | wxBOTTOM | wxLEFT);
-	windowSizer->Add(m_main_sizer);
+	windowSizer->Add(groupListSizer,0, wxEXPAND | wxBOTTOM | wxLEFT);
+	windowSizer->Add(m_main_sizer,1, wxEXPAND);
 	SetSizer( windowSizer );
 
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
