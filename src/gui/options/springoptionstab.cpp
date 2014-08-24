@@ -247,6 +247,8 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 		LSL::SpringBundle bundle;
 		bundle.unitsync = STD_STRING(pick.GetPath());
 		bundle.AutoComplete();
+		// TODO: come up with a better index key for the engine list since we might have more than one engine with the same version string (debug/release/branch/etc)
+		//   When starting the game, sl will currently try to automatically select an engine using the version string...
 		const wxString version = TowxString(bundle.version);
 		m_spring_list->Append(version);
 		m_spring_list->SetStringSelection(version);
@@ -260,25 +262,59 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
 	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
-	SlPaths::SetSpringBinary(index, STD_STRING(m_exec_edit->GetValue()));
-	SlPaths::SetUnitSync(index, STD_STRING(m_sync_edit->GetValue()));
-
-	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
-	SlPaths::RefreshSpringVersionList();
-
-	const bool reload_usync = SlPaths::GetUnitSync( index ) != STD_STRING(m_sync_edit->GetValue());
-	if ( !reload_usync)
-		return;
 	if (index.empty()) {
 		LSL::usync().FreeUnitSyncLib();
 		return;
 	}
 
+	// Save old values first so we know whether or not to reload unitsync within the process.
+	const std::string oldIndex = SlPaths::GetCurrentUsedSpringIndex();
+	const std::string oldUnitsync = SlPaths::GetUnitSync(index);
+
+	// Ensure that SlPaths model is consistent with the edit fields
+	SlPaths::SetSpringBinary(index, STD_STRING(m_exec_edit->GetValue()));
+	SlPaths::SetUnitSync(index, STD_STRING(m_sync_edit->GetValue()));
+
+	// When the user clicks apply, this function would migrate all the information from cfg() into SlPaths
+	//   and also perform an autosearch for more engine directories. The user would not see the results of this
+	//   autosearch if they are closing the dialog. So perhaps there should be a separate button for autosearch.
+	//SlPaths::RefreshSpringVersionList();
+
+	// Ensure that the SlPaths model is consistent with the currently selected index
+	SlPaths::SetUsedSpringIndex(index);
+
+	// This condition is trivially always false since edit fields are synchronized with SlPaths by DoRestore()
+	//	 which is typically called before this function.
+	//const bool reload_usync = SlPaths::GetUnitSync( index ) != STD_STRING(m_sync_edit->GetValue());
+
+	// Determine whether to reload unitsync within the process
+	const bool same_index = (index == oldIndex);
+	const bool same_usync =	(SlPaths::GetUnitSync(index) == oldUnitsync);
+	const bool reload_usync = !same_index || !same_usync;
+	if ( !reload_usync ) {
+		/*
+		if (same_index) {
+			printf("index(%s) == oldIndex(%s) so no need to reload unitsync\n", index.c_str(), oldIndex.c_str());
+		}
+		if (same_usync) {
+			printf("unitsync(%s) == oldUnitsync(%s) so no need to reload unitsync\n", SlPaths::GetUnitSync(index).c_str(), oldUnitsync.c_str());
+		}
+		*/
+		return;
+	}
+
+	// If we get here, then either the user switched the selection to a new index or they altered the field value,
+	//   so Unitsync needs to be reloaded.
+	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
 	if (!LSL::usync().LoadUnitSyncLib(SlPaths::GetUnitSync(index))) {
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
 		customMessageBox( SL_MAIN_ICON,
 				  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
 				  _( "Spring error" ), wxOK );
+		// Restore the old index
+		SlPaths::SetUsedSpringIndex(oldIndex);
+		// Restore the fields to what they were before
+		DoRestore();
 	}
 }
 
@@ -315,7 +351,10 @@ void SpringOptionsTab::OnGroupListSelectionChange( wxCommandEvent& /*event*/ )
 {
 	const std::string selection = STD_STRING(m_spring_list->GetStringSelection());
 	if (!selection.empty()) {
-		SlPaths::SetUsedSpringIndex(selection);
+		// This should not be called here. If the user hits cancel, then current index would still be saved to the configuration file.
+		// The configuration file should reflect which engine's unitsync library is loaded within the springlobby process,
+		//   and this is done in OnApply().
+		//SlPaths::SetUsedSpringIndex(selection);
 		DoRestore();
 	}
 }
