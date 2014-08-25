@@ -50,6 +50,7 @@ BEGIN_EVENT_TABLE( SpringOptionsTab, wxPanel )
 	EVT_BUTTON(     SPRING_EXECBROWSE,  SpringOptionsTab::OnBrowseExec  )
 	EVT_BUTTON(     SPRING_SYNCBROWSE,  SpringOptionsTab::OnBrowseSync  )
 	EVT_BUTTON(     SPRING_AUTOCONF,    SpringOptionsTab::OnAutoConf    )
+	EVT_BUTTON(		SPRING_RESTORE,     SpringOptionsTab::OnRestore )
 	EVT_BUTTON(     SPRING_EXECFIND,    SpringOptionsTab::OnFindExec    )
 	EVT_BUTTON(     SPRING_SYNCFIND,    SpringOptionsTab::OnFindSync    )
 	EVT_BUTTON(     SPRING_DATADIR,     SpringOptionsTab::OnDataDir     )
@@ -89,6 +90,9 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 	groupListButtonsSizer->Add( m_add_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 
+	m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _( "Auto Configure" ), wxDefaultPosition, wxSize(-1,-1), wxBU_EXACTFIT );
+	groupListButtonsSizer->Add( m_auto_btn, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+
 	groupListSizer->Add( groupListButtonsSizer, 0, wxEXPAND|wxBOTTOM, 5 );
 
 	/* ================================
@@ -111,7 +115,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _( "Browse" ) );
 	m_sync_find_btn = new wxButton( this, SPRING_SYNCFIND, _( "Find" ) );
 
-	m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _( "Auto Configure" ) );
+	m_restore_btn = new wxButton( this, SPRING_RESTORE, _("Restore Paths") );
 //	m_datadir_btn = new wxButton( this, SPRING_DATADIR, _( "Change Datadir path" ) );
 
 	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -137,7 +141,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_sync_box_sizer->Add( m_sync_loc_sizer, 1, wxEXPAND | wxALL, 2 );
 
 	m_aconf_sizer->AddStretchSpacer();
-	m_aconf_sizer->Add( m_auto_btn );
+	m_aconf_sizer->Add( m_restore_btn );
 //	m_aconf_sizer->Add( m_datadir_btn );
 
 	m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 5 );
@@ -188,23 +192,24 @@ void SpringOptionsTab::DoRestore()
 }
 
 
-void SpringOptionsTab::OnAutoConf( wxCommandEvent& event )
+void SpringOptionsTab::OnAutoConf( wxCommandEvent& /*unused*/ )
 {
-	OnFindExec( event );
-	OnFindSync( event );
+	SlPaths::RefreshSpringVersionList(true);
 }
 
 
 void SpringOptionsTab::OnFindExec( wxCommandEvent& /*unused*/ )
 {
-	const std::string found = SlPaths::GetSpringBinary();
+	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
+	const std::string found = SlPaths::GetSpringBinary(index);
 	if ( !found.empty() ) m_exec_edit->SetValue(TowxString(found));
 }
 
 
 void SpringOptionsTab::OnFindSync( wxCommandEvent& /*unused*/ )
 {
-	const std::string found = SlPaths::GetUnitSync();
+	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
+	const std::string found = SlPaths::GetUnitSync(index);
 	if ( !found.empty() ) m_sync_edit->SetValue(TowxString(found));
 }
 
@@ -276,36 +281,17 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 	SlPaths::SetSpringBinary(index, STD_STRING(m_exec_edit->GetValue()));
 	SlPaths::SetUnitSync(index, STD_STRING(m_sync_edit->GetValue()));
 
-	// When the user clicks apply, this function would migrate all the information from cfg() into SlPaths
-	//   and also perform an autosearch for more engine directories. The user would not see the results of this
-	//   autosearch if they are closing the dialog. So perhaps there should be a separate button for autosearch.
-	//SlPaths::RefreshSpringVersionList();
-
 	// Ensure that the SlPaths model is consistent with the currently selected index
 	SlPaths::SetUsedSpringIndex(index);
-
-	// This condition is trivially always false since edit fields are synchronized with SlPaths by DoRestore()
-	//	 which is typically called before this function.
-	//const bool reload_usync = SlPaths::GetUnitSync( index ) != STD_STRING(m_sync_edit->GetValue());
 
 	// Determine whether to reload unitsync within the process
 	const bool same_index = (index == oldIndex);
 	const bool same_usync =	(SlPaths::GetUnitSync(index) == oldUnitsync);
 	const bool reload_usync = !same_index || !same_usync;
 	if ( !reload_usync ) {
-		/*
-		if (same_index) {
-			printf("index(%s) == oldIndex(%s) so no need to reload unitsync\n", index.c_str(), oldIndex.c_str());
-		}
-		if (same_usync) {
-			printf("unitsync(%s) == oldUnitsync(%s) so no need to reload unitsync\n", SlPaths::GetUnitSync(index).c_str(), oldUnitsync.c_str());
-		}
-		*/
 		return;
 	}
 
-	// If we get here, then either the user switched the selection to a new index or they altered the field value,
-	//   so Unitsync needs to be reloaded.
 	SwitchUnitsync(index,oldIndex);
 }
 
@@ -342,10 +328,6 @@ void SpringOptionsTab::OnGroupListSelectionChange( wxCommandEvent& /*event*/ )
 {
 	const std::string selection = STD_STRING(m_spring_list->GetStringSelection());
 	if (!selection.empty()) {
-		// This should not be called here. If the user hits cancel, then current index would still be saved to the configuration file.
-		// The configuration file should reflect which engine's unitsync library is loaded within the springlobby process,
-		//   and this is done in OnApply().
-		//SlPaths::SetUsedSpringIndex(selection);
 		DoRestore();
 	}
 }
@@ -363,16 +345,32 @@ void SpringOptionsTab::ReloadSpringList()
 
 void SpringOptionsTab::SwitchUnitsync(const std::string& newIndex, const std::string& oldIndex /* can be empty */)
 {
+	wxDialog* notifyBox = new wxDialog(this, -1, _("Reloading unitsync"), wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP);
+	wxString indexStr(newIndex.c_str(),wxConvUTF8);
+	wxString notifyMessage = wxString::Format(_("Springlobby is loading the %s engine unitsync library..."), indexStr.c_str());
+	wxStaticText* notifyText = new wxStaticText( notifyBox, -1, notifyMessage, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL );
+	wxBoxSizer* vertSizer = new wxBoxSizer(wxVERTICAL);
+	vertSizer->Add(notifyText,1,wxALL|wxEXPAND|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL,15,nullptr);
+	notifyBox->SetSizer(vertSizer);
+	notifyBox->Fit();
+	notifyBox->Layout();
+	notifyBox->Show(true);
+	::wxYield();
+
 	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
+	SlPaths::SetUsedSpringIndex(newIndex);
 	if (!LSL::usync().LoadUnitSyncLib(SlPaths::GetUnitSync(newIndex))) {
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
 		customMessageBox( SL_MAIN_ICON,
 				  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
 				  _( "Spring error" ), wxOK );
-		// Restore the old index
 		SlPaths::SetUsedSpringIndex(oldIndex);
 		DoRestore();
 	}
+
+	notifyBox->Show(false);
+	::wxYield();
+	delete notifyBox;
 }
 
 void SpringOptionsTab::OnRemoveBundle(wxCommandEvent& /*event*/)
@@ -382,4 +380,5 @@ void SpringOptionsTab::OnRemoveBundle(wxCommandEvent& /*event*/)
 	SlPaths::DeleteSpringVersionbyIndex(index);
 	SlPaths::RefreshSpringVersionList(false);
 	ReloadSpringList();
+	const std::string newIndex = STD_STRING(m_spring_list->GetStringSelection());
 }

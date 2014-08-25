@@ -55,6 +55,7 @@ private:
 	wxButton* m_exec_find_btn;
 	wxButton* m_sync_browse_btn;
 	wxButton* m_sync_find_btn;
+	wxButton* m_restore_btn;
 
 	wxButton* m_auto_btn;
 
@@ -96,7 +97,8 @@ private:
 		SPRING_LIST,
 		SPRING_REMOVE,
 		SPRING_RENAME,
-		SPRING_ADD
+		SPRING_ADD,
+		SPRING_RESTORE
 	};
 
 	DECLARE_EVENT_TABLE()
