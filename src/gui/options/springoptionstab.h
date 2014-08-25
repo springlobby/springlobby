@@ -46,6 +46,7 @@ private:
 	void SetupUserFolders();
 	void OnGroupListSelectionChange( wxCommandEvent& event );
 	void ReloadSpringList();
+	void SwitchUnitsync(const std::string& newIndex, const std::string& oldIndex);
 
 	wxStaticText* m_exec_loc_text;
 	wxStaticText* m_sync_loc_text;

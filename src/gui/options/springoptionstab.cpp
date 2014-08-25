@@ -254,6 +254,7 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 		m_spring_list->SetStringSelection(version);
 		m_sync_edit->SetValue(TowxString(bundle.unitsync));
 		m_exec_edit->SetValue(TowxString(bundle.spring));
+		SlPaths::RefreshSpringVersionList(false,&bundle);
 	}
 }
 
@@ -305,17 +306,7 @@ void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 
 	// If we get here, then either the user switched the selection to a new index or they altered the field value,
 	//   so Unitsync needs to be reloaded.
-	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
-	if (!LSL::usync().LoadUnitSyncLib(SlPaths::GetUnitSync(index))) {
-		wxLogWarning( _T( "Cannot load UnitSync" ) );
-		customMessageBox( SL_MAIN_ICON,
-				  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
-				  _( "Spring error" ), wxOK );
-		// Restore the old index
-		SlPaths::SetUsedSpringIndex(oldIndex);
-		// Restore the fields to what they were before
-		DoRestore();
-	}
+	SwitchUnitsync(index,oldIndex);
 }
 
 
@@ -367,10 +358,26 @@ void SpringOptionsTab::ReloadSpringList()
 		m_spring_list->Append(TowxString(bundle.first));
 		m_spring_list->SetStringSelection(TowxString(SlPaths::GetCurrentUsedSpringIndex()));
 	}
+	DoRestore();
+}
+
+void SpringOptionsTab::SwitchUnitsync(const std::string& newIndex, const std::string& oldIndex /* can be empty */)
+{
+	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
+	if (!LSL::usync().LoadUnitSyncLib(SlPaths::GetUnitSync(newIndex))) {
+		wxLogWarning( _T( "Cannot load UnitSync" ) );
+		customMessageBox( SL_MAIN_ICON,
+				  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
+				  _( "Spring error" ), wxOK );
+		// Restore the old index
+		SlPaths::SetUsedSpringIndex(oldIndex);
+		DoRestore();
+	}
 }
 
 void SpringOptionsTab::OnRemoveBundle(wxCommandEvent& /*event*/)
 {
+	const std::string usedIndex = SlPaths::GetCurrentUsedSpringIndex();
 	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
 	SlPaths::DeleteSpringVersionbyIndex(index);
 	SlPaths::RefreshSpringVersionList(false);
