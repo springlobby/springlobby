@@ -37,6 +37,7 @@
 #include "utils/uievents.h"
 #include "utils/slpaths.h"
 #include "utils/conversion.h"
+#include "utils/version.h"
 #include "gui/uiutils.h"
 #include "settings.h"
 #include "gui/mainwindow.h"
@@ -78,11 +79,12 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 	groupListButtonsSizer->Add( m_remove_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 
-	m_rename_spring_button = new wxButton( this, SPRING_RENAME, _("Rename.."), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
-	m_rename_spring_button->Enable( false );
-	m_rename_spring_button->SetToolTip( _("Rename an existing spring version") );
+	// TODO: renaming engine was never fully implemented
+	//m_rename_spring_button = new wxButton( this, SPRING_RENAME, _("Rename.."), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
+	//m_rename_spring_button->Enable( false );
+	//m_rename_spring_button->SetToolTip( _("Rename an existing spring version") );
 
-	groupListButtonsSizer->Add( m_rename_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	//groupListButtonsSizer->Add( m_rename_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	groupListButtonsSizer->Add( 0, 0, 1, wxEXPAND, 5 );
 
 	m_add_spring_button = new wxButton( this, SPRING_ADD, _("Add New.."), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
@@ -189,6 +191,11 @@ void SpringOptionsTab::DoRestore()
 	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
 	m_sync_edit->SetValue(TowxString(SlPaths::GetUnitSync(index)));
 	m_exec_edit->SetValue(TowxString(SlPaths::GetSpringBinary(index)));
+	if (index == "") {
+		m_remove_spring_button->Enable(false);
+	} else {
+		m_remove_spring_button->Enable(true);
+	}
 }
 
 
@@ -249,17 +256,33 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 				GetUnitsyncFilter());
 	if ( pick.ShowModal() == wxID_OK ) {
 		//get unitsync version & add to list
+		bool failed = false;
+		wxString failMessage;
 		LSL::SpringBundle bundle;
 		bundle.unitsync = STD_STRING(pick.GetPath());
-		bundle.AutoComplete();
-		// TODO: come up with a better index key for the engine list since we might have more than one engine with the same version string (debug/release/branch/etc)
-		//   When starting the game, sl will currently try to automatically select an engine using the version string...
-		const wxString version = TowxString(bundle.version);
+		wxString version;
+		try {
+			bundle.AutoComplete();
+			version = TowxString(bundle.version);
+			if (!bundle.IsValid() || version.IsEmpty()) {
+				failed = true;
+				failMessage = wxFormat("%s did not find engine and unitsync executables at %s\n\nPlease ensure that both exist and that you have appropriate access privileges.") % getSpringlobbyName() % bundle.path;
+			}
+		} catch (const LSL::Exceptions::unitsync& e) {
+			failed = true;
+			failMessage = wxFormat("%s could not obtain the version string from the shared library file %s\n\nPlease provide a valid unitsync file.") % getSpringlobbyName() % bundle.unitsync;
+		}
+		if (failed) {
+			customMessageBox( SL_MAIN_ICON, failMessage, _( "Configuration error" ), wxOK );
+			return;
+		}
+
 		m_spring_list->Append(version);
 		m_spring_list->SetStringSelection(version);
 		m_sync_edit->SetValue(TowxString(bundle.unitsync));
 		m_exec_edit->SetValue(TowxString(bundle.spring));
 		SlPaths::RefreshSpringVersionList(false,&bundle);
+		DoRestore();
 	}
 }
 
@@ -347,7 +370,7 @@ void SpringOptionsTab::SwitchUnitsync(const std::string& newIndex, const std::st
 {
 	wxDialog* notifyBox = new wxDialog(this, -1, _("Reloading unitsync"), wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP);
 	wxString indexStr(newIndex.c_str(),wxConvUTF8);
-	wxString notifyMessage = wxString::Format(_("Springlobby is loading the %s engine unitsync library..."), indexStr.c_str());
+	wxString notifyMessage = wxFormat("%s is loading the %s engine unitsync library...") % getSpringlobbyName() % indexStr.c_str();
 	wxStaticText* notifyText = new wxStaticText( notifyBox, -1, notifyMessage, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL );
 	wxBoxSizer* vertSizer = new wxBoxSizer(wxVERTICAL);
 	vertSizer->Add(notifyText,1,wxALL|wxEXPAND|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL,15,nullptr);
@@ -361,9 +384,11 @@ void SpringOptionsTab::SwitchUnitsync(const std::string& newIndex, const std::st
 	SlPaths::SetUsedSpringIndex(newIndex);
 	if (!LSL::usync().LoadUnitSyncLib(SlPaths::GetUnitSync(newIndex))) {
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
+		notifyBox->Show(false);
+		::wxYield();
 		customMessageBox( SL_MAIN_ICON,
-				  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
-				  _( "Spring error" ), wxOK );
+						  wxFormat("%s is unable to load your UnitSync library into the process.\n\nYou might want to take another look at your unitsync setting.") % getSpringlobbyName(),
+						  _( "Spring error" ), wxOK );
 		SlPaths::SetUsedSpringIndex(oldIndex);
 		DoRestore();
 	}
@@ -377,6 +402,9 @@ void SpringOptionsTab::OnRemoveBundle(wxCommandEvent& /*event*/)
 {
 	const std::string usedIndex = SlPaths::GetCurrentUsedSpringIndex();
 	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
+	if (index == "") {
+		return;
+	}
 	SlPaths::DeleteSpringVersionbyIndex(index);
 	SlPaths::RefreshSpringVersionList(false);
 	ReloadSpringList();

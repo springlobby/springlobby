@@ -232,6 +232,9 @@ void SlPaths::ReconfigureUnitsync()
 
 void SlPaths::DeleteSpringVersionbyIndex( const std::string& index )
 {
+	if (index == "") {
+		return;
+	}
 	cfg().DeleteGroup( _T( "/Spring/Paths/" ) + TowxString(index) );
 	if ( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex("");
 }
