@@ -37,6 +37,7 @@
 #include "utils/uievents.h"
 #include "utils/slpaths.h"
 #include "utils/conversion.h"
+#include "utils/version.h"
 #include "gui/uiutils.h"
 #include "settings.h"
 #include "gui/mainwindow.h"
@@ -50,6 +51,7 @@ BEGIN_EVENT_TABLE( SpringOptionsTab, wxPanel )
 	EVT_BUTTON(     SPRING_EXECBROWSE,  SpringOptionsTab::OnBrowseExec  )
 	EVT_BUTTON(     SPRING_SYNCBROWSE,  SpringOptionsTab::OnBrowseSync  )
 	EVT_BUTTON(     SPRING_AUTOCONF,    SpringOptionsTab::OnAutoConf    )
+	EVT_BUTTON(		SPRING_RESTORE,     SpringOptionsTab::OnRestore )
 	EVT_BUTTON(     SPRING_EXECFIND,    SpringOptionsTab::OnFindExec    )
 	EVT_BUTTON(     SPRING_SYNCFIND,    SpringOptionsTab::OnFindSync    )
 	EVT_BUTTON(     SPRING_DATADIR,     SpringOptionsTab::OnDataDir     )
@@ -65,7 +67,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	wxScrolledWindow( parent, -1 )
 {
 	wxBoxSizer* windowSizer = new wxBoxSizer( wxHORIZONTAL );
-	wxBoxSizer* mainSizer = new wxBoxSizer( wxHORIZONTAL );
 	wxBoxSizer* groupListSizer = new wxBoxSizer( wxVERTICAL );
 
 	m_spring_list = new wxListBox( this, SPRING_LIST, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_ALWAYS_SB|wxLB_SINGLE|wxLB_SORT );
@@ -78,11 +79,12 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 	groupListButtonsSizer->Add( m_remove_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 
-	m_rename_spring_button = new wxButton( this, SPRING_RENAME, _("Rename.."), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
-	m_rename_spring_button->Enable( false );
-	m_rename_spring_button->SetToolTip( _("Rename an existing spring version") );
+	// TODO: renaming engine was never fully implemented
+	//m_rename_spring_button = new wxButton( this, SPRING_RENAME, _("Rename.."), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
+	//m_rename_spring_button->Enable( false );
+	//m_rename_spring_button->SetToolTip( _("Rename an existing spring version") );
 
-	groupListButtonsSizer->Add( m_rename_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
+	//groupListButtonsSizer->Add( m_rename_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	groupListButtonsSizer->Add( 0, 0, 1, wxEXPAND, 5 );
 
 	m_add_spring_button = new wxButton( this, SPRING_ADD, _("Add New.."), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
@@ -90,9 +92,10 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 	groupListButtonsSizer->Add( m_add_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 
-	groupListSizer->Add( groupListButtonsSizer, 0, wxEXPAND|wxBOTTOM, 5 );
+	m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _( "Auto Configure" ), wxDefaultPosition, wxSize(-1,-1), wxBU_EXACTFIT );
+	groupListButtonsSizer->Add( m_auto_btn, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 
-	mainSizer->Add( groupListSizer, 2, wxEXPAND, 5 );
+	groupListSizer->Add( groupListButtonsSizer, 0, wxEXPAND|wxBOTTOM, 5 );
 
 	/* ================================
 	 * Spring executable
@@ -114,7 +117,7 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_sync_browse_btn = new wxButton( this, SPRING_SYNCBROWSE, _( "Browse" ) );
 	m_sync_find_btn = new wxButton( this, SPRING_SYNCFIND, _( "Find" ) );
 
-	m_auto_btn = new wxButton( this, SPRING_AUTOCONF, _( "Auto Configure" ) );
+	m_restore_btn = new wxButton( this, SPRING_RESTORE, _("Restore Paths") );
 //	m_datadir_btn = new wxButton( this, SPRING_DATADIR, _( "Change Datadir path" ) );
 
 	wxBoxSizer* m_main_sizer = new wxBoxSizer( wxVERTICAL );
@@ -132,15 +135,15 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_sync_loc_sizer->Add( m_sync_browse_btn );
 	m_sync_loc_sizer->Add( m_sync_find_btn );
 
-	m_exec_box_sizer = new wxStaticBoxSizer( m_exec_box, wxVERTICAL );
-	m_sync_box_sizer = new wxStaticBoxSizer( m_sync_box, wxVERTICAL );
+	m_exec_box_sizer = new wxStaticBoxSizer( m_exec_box, wxHORIZONTAL );
+	m_sync_box_sizer = new wxStaticBoxSizer( m_sync_box, wxHORIZONTAL );
 
-	m_exec_box_sizer->Add( m_exec_loc_sizer, 0, wxEXPAND | wxALL, 2 );
+	m_exec_box_sizer->Add( m_exec_loc_sizer, 1, wxEXPAND | wxALL, 2 );
 
-	m_sync_box_sizer->Add( m_sync_loc_sizer, 0, wxEXPAND | wxALL, 2 );
+	m_sync_box_sizer->Add( m_sync_loc_sizer, 1, wxEXPAND | wxALL, 2 );
 
 	m_aconf_sizer->AddStretchSpacer();
-	m_aconf_sizer->Add( m_auto_btn );
+	m_aconf_sizer->Add( m_restore_btn );
 //	m_aconf_sizer->Add( m_datadir_btn );
 
 	m_main_sizer->Add( m_exec_box_sizer, 0, wxEXPAND | wxALL, 5 );
@@ -148,8 +151,8 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 	m_main_sizer->Add( m_aconf_sizer, 0, wxEXPAND | wxALL, 5 );
 	m_main_sizer->AddStretchSpacer();
 
-	windowSizer->Add(mainSizer,0, wxEXPAND | wxBOTTOM | wxLEFT);
-	windowSizer->Add(m_main_sizer);
+	windowSizer->Add(groupListSizer,0, wxEXPAND | wxBOTTOM | wxLEFT);
+	windowSizer->Add(m_main_sizer,1, wxEXPAND);
 	SetSizer( windowSizer );
 
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
@@ -188,26 +191,32 @@ void SpringOptionsTab::DoRestore()
 	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
 	m_sync_edit->SetValue(TowxString(SlPaths::GetUnitSync(index)));
 	m_exec_edit->SetValue(TowxString(SlPaths::GetSpringBinary(index)));
+	if (index == "") {
+		m_remove_spring_button->Enable(false);
+	} else {
+		m_remove_spring_button->Enable(true);
+	}
 }
 
 
-void SpringOptionsTab::OnAutoConf( wxCommandEvent& event )
+void SpringOptionsTab::OnAutoConf( wxCommandEvent& /*unused*/ )
 {
-	OnFindExec( event );
-	OnFindSync( event );
+	SlPaths::RefreshSpringVersionList(true);
 }
 
 
 void SpringOptionsTab::OnFindExec( wxCommandEvent& /*unused*/ )
 {
-	const std::string found = SlPaths::GetSpringBinary();
+	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
+	const std::string found = SlPaths::GetSpringBinary(index);
 	if ( !found.empty() ) m_exec_edit->SetValue(TowxString(found));
 }
 
 
 void SpringOptionsTab::OnFindSync( wxCommandEvent& /*unused*/ )
 {
-	const std::string found = SlPaths::GetUnitSync();
+	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
+	const std::string found = SlPaths::GetUnitSync(index);
 	if ( !found.empty() ) m_sync_edit->SetValue(TowxString(found));
 }
 
@@ -247,14 +256,33 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 				GetUnitsyncFilter());
 	if ( pick.ShowModal() == wxID_OK ) {
 		//get unitsync version & add to list
+		bool failed = false;
+		wxString failMessage;
 		LSL::SpringBundle bundle;
 		bundle.unitsync = STD_STRING(pick.GetPath());
-		bundle.AutoComplete();
-		const wxString version = TowxString(bundle.version);
+		wxString version;
+		try {
+			bundle.AutoComplete();
+			version = TowxString(bundle.version);
+			if (!bundle.IsValid() || version.IsEmpty()) {
+				failed = true;
+				failMessage = wxFormat("%s did not find engine and unitsync executables at %s\n\nPlease ensure that both exist and that you have appropriate access privileges.") % getSpringlobbyName() % bundle.path;
+			}
+		} catch (const LSL::Exceptions::unitsync& e) {
+			failed = true;
+			failMessage = wxFormat("%s could not obtain the version string from the shared library file %s\n\nPlease provide a valid unitsync file.") % getSpringlobbyName() % bundle.unitsync;
+		}
+		if (failed) {
+			customMessageBox( SL_MAIN_ICON, failMessage, _( "Configuration error" ), wxOK );
+			return;
+		}
+
 		m_spring_list->Append(version);
 		m_spring_list->SetStringSelection(version);
 		m_sync_edit->SetValue(TowxString(bundle.unitsync));
 		m_exec_edit->SetValue(TowxString(bundle.spring));
+		SlPaths::RefreshSpringVersionList(false,&bundle);
+		DoRestore();
 	}
 }
 
@@ -263,26 +291,31 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 void SpringOptionsTab::OnApply( wxCommandEvent& /*unused*/ )
 {
 	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
-	SlPaths::SetSpringBinary(index, STD_STRING(m_exec_edit->GetValue()));
-	SlPaths::SetUnitSync(index, STD_STRING(m_sync_edit->GetValue()));
-
-	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
-	SlPaths::RefreshSpringVersionList();
-
-	const bool reload_usync = SlPaths::GetUnitSync( index ) != STD_STRING(m_sync_edit->GetValue());
-	if ( !reload_usync)
-		return;
 	if (index.empty()) {
 		LSL::usync().FreeUnitSyncLib();
 		return;
 	}
 
-	if (!LSL::usync().LoadUnitSyncLib(SlPaths::GetUnitSync(index))) {
-		wxLogWarning( _T( "Cannot load UnitSync" ) );
-		customMessageBox( SL_MAIN_ICON,
-				  IdentityString( _( "%s is unable to load your UnitSync library.\n\nYou might want to take another look at your unitsync setting." ) ),
-				  _( "Spring error" ), wxOK );
+	// Save old values first so we know whether or not to reload unitsync within the process.
+	const std::string oldIndex = SlPaths::GetCurrentUsedSpringIndex();
+	const std::string oldUnitsync = SlPaths::GetUnitSync(index);
+
+	// Ensure that SlPaths model is consistent with the edit fields
+	SlPaths::SetSpringBinary(index, STD_STRING(m_exec_edit->GetValue()));
+	SlPaths::SetUnitSync(index, STD_STRING(m_sync_edit->GetValue()));
+
+	// Ensure that the SlPaths model is consistent with the currently selected index
+	SlPaths::SetUsedSpringIndex(index);
+
+	// Determine whether to reload unitsync within the process
+	const bool same_index = (index == oldIndex);
+	const bool same_usync =	(SlPaths::GetUnitSync(index) == oldUnitsync);
+	const bool reload_usync = !same_index || !same_usync;
+	if ( !reload_usync ) {
+		return;
 	}
+
+	SwitchUnitsync(index,oldIndex);
 }
 
 
@@ -318,7 +351,6 @@ void SpringOptionsTab::OnGroupListSelectionChange( wxCommandEvent& /*event*/ )
 {
 	const std::string selection = STD_STRING(m_spring_list->GetStringSelection());
 	if (!selection.empty()) {
-		SlPaths::SetUsedSpringIndex(selection);
 		DoRestore();
 	}
 }
@@ -331,12 +363,50 @@ void SpringOptionsTab::ReloadSpringList()
 		m_spring_list->Append(TowxString(bundle.first));
 		m_spring_list->SetStringSelection(TowxString(SlPaths::GetCurrentUsedSpringIndex()));
 	}
+	DoRestore();
+}
+
+void SpringOptionsTab::SwitchUnitsync(const std::string& newIndex, const std::string& oldIndex /* can be empty */)
+{
+	wxDialog* notifyBox = new wxDialog(this, -1, _("Reloading unitsync"), wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP);
+	wxString indexStr(newIndex.c_str(),wxConvUTF8);
+	wxString notifyMessage = wxFormat("%s is loading the %s engine unitsync library...") % getSpringlobbyName() % indexStr.c_str();
+	wxStaticText* notifyText = new wxStaticText( notifyBox, -1, notifyMessage, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL );
+	wxBoxSizer* vertSizer = new wxBoxSizer(wxVERTICAL);
+	vertSizer->Add(notifyText,1,wxALL|wxEXPAND|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL,15,nullptr);
+	notifyBox->SetSizer(vertSizer);
+	notifyBox->Fit();
+	notifyBox->Layout();
+	notifyBox->Show(true);
+	::wxYield();
+
+	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
+	SlPaths::SetUsedSpringIndex(newIndex);
+	if (!LSL::usync().LoadUnitSyncLib(SlPaths::GetUnitSync(newIndex))) {
+		wxLogWarning( _T( "Cannot load UnitSync" ) );
+		notifyBox->Show(false);
+		::wxYield();
+		customMessageBox( SL_MAIN_ICON,
+						  wxFormat("%s is unable to load your UnitSync library into the process.\n\nYou might want to take another look at your unitsync setting.") % getSpringlobbyName(),
+						  _( "Spring error" ), wxOK );
+		SlPaths::SetUsedSpringIndex(oldIndex);
+		DoRestore();
+	}
+
+	notifyBox->Show(false);
+	::wxYield();
+	delete notifyBox;
 }
 
 void SpringOptionsTab::OnRemoveBundle(wxCommandEvent& /*event*/)
 {
+	const std::string usedIndex = SlPaths::GetCurrentUsedSpringIndex();
 	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
+	if (index == "") {
+		return;
+	}
 	SlPaths::DeleteSpringVersionbyIndex(index);
 	SlPaths::RefreshSpringVersionList(false);
 	ReloadSpringList();
+	const std::string newIndex = STD_STRING(m_spring_list->GetStringSelection());
 }

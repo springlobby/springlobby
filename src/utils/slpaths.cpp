@@ -211,12 +211,6 @@ std::string SlPaths::GetCurrentUsedSpringIndex()
 {
 	wxString index = wxEmptyString;
 	cfg().Read(_T("/Spring/CurrentIndex"), &index);
-	if(index.empty()) {
-		// if no version set yet, select one, if available
-		for(auto pair: m_spring_versions) {
-			return pair.first;
-		}
-	}
 	return STD_STRING(index);
 }
 
@@ -238,6 +232,9 @@ void SlPaths::ReconfigureUnitsync()
 
 void SlPaths::DeleteSpringVersionbyIndex( const std::string& index )
 {
+	if (index == "") {
+		return;
+	}
 	cfg().DeleteGroup( _T( "/Spring/Paths/" ) + TowxString(index) );
 	if ( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex("");
 }
