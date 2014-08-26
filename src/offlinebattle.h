@@ -9,8 +9,11 @@ class OfflineBattle : public IBattle
 {
 public:
 	OfflineBattle (const int id = 0 );
-	OfflineBattle ( const OfflineBattle&  );
-	OfflineBattle& operator = ( const OfflineBattle&  );
+	OfflineBattle ( const OfflineBattle& ) = delete;
+	OfflineBattle& operator = ( const OfflineBattle& ) = delete;
+
+	OfflineBattle ( const OfflineBattle&& );
+	OfflineBattle& operator = ( const OfflineBattle&&  );
 	~OfflineBattle () {}
 	virtual User& GetMe() {
 		return m_me;

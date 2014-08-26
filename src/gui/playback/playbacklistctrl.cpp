@@ -100,7 +100,7 @@ template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
-        OfflineBattle battle = m_data[m_selected_index]->battle;
+		const OfflineBattle& battle = m_data[m_selected_index]->battle;
         ui().Download("map", battle.GetHostMapName(), battle.GetHostMapHash());
     }
 }
@@ -109,7 +109,7 @@ template <class PlaybackType>
 void PlaybackListCtrl<PlaybackType>::OnDLMod( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
-        OfflineBattle battle = m_data[m_selected_index]->battle;
+		const OfflineBattle& battle = m_data[m_selected_index]->battle;
         ui().Download("game", battle.GetHostModName(), battle.GetHostModHash());
     }
 }
