@@ -196,6 +196,7 @@ void SpringOptionsTab::DoRestore()
 void SpringOptionsTab::OnAutoConf( wxCommandEvent& /*unused*/ )
 {
 	SlPaths::RefreshSpringVersionList(true);
+	ReloadSpringList();
 }
 
 
@@ -376,7 +377,7 @@ void SpringOptionsTab::SwitchUnitsync(const std::string& newIndex, const std::st
 
 	UiEvents::ScopedStatusMessage( _("Reloading unitsync"), 0 );
 	SlPaths::SetUsedSpringIndex(newIndex);
-	if (!LSL::usync().LoadUnitSyncLib(SlPaths::GetUnitSync(newIndex))) {
+	if (!LSL::usync().LoadUnitSyncLib(SlPaths::GetUnitSync(newIndex))) { //FIXME: make LoadUnitSyncLib() async (partly done)
 		wxLogWarning( _T( "Cannot load UnitSync" ) );
 		notifyBox->Show(false);
 		::wxYield();
