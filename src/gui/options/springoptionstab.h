@@ -69,13 +69,11 @@ private:
 
 	wxStaticBox* m_exec_box;
 	wxStaticBox* m_sync_box;
-//	wxStaticBox* m_web_box;
 	wxStaticBoxSizer* m_exec_box_sizer;
 	wxStaticBoxSizer* m_sync_box_sizer;
 
 	wxListBox* m_spring_list;
 	wxButton* m_remove_spring_button;
-	wxButton* m_rename_spring_button;
 	wxButton* m_add_spring_button;
 
 	enum {

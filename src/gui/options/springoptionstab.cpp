@@ -79,12 +79,6 @@ SpringOptionsTab::SpringOptionsTab( wxWindow* parent ):
 
 	groupListButtonsSizer->Add( m_remove_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 
-	// TODO: renaming engine was never fully implemented
-	//m_rename_spring_button = new wxButton( this, SPRING_RENAME, _("Rename.."), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
-	//m_rename_spring_button->Enable( false );
-	//m_rename_spring_button->SetToolTip( _("Rename an existing spring version") );
-
-	//groupListButtonsSizer->Add( m_rename_spring_button, 0, wxTOP|wxRIGHT|wxLEFT, 5 );
 	groupListButtonsSizer->Add( 0, 0, 1, wxEXPAND, 5 );
 
 	m_add_spring_button = new wxButton( this, SPRING_ADD, _("Add New.."), wxDefaultPosition, wxSize( -1,-1 ), wxBU_EXACTFIT );
@@ -191,7 +185,7 @@ void SpringOptionsTab::DoRestore()
 	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
 	m_sync_edit->SetValue(TowxString(SlPaths::GetUnitSync(index)));
 	m_exec_edit->SetValue(TowxString(SlPaths::GetSpringBinary(index)));
-	if (index == "") {
+	if (index.empty()) {
 		m_remove_spring_button->Enable(false);
 	} else {
 		m_remove_spring_button->Enable(true);
@@ -402,7 +396,7 @@ void SpringOptionsTab::OnRemoveBundle(wxCommandEvent& /*event*/)
 {
 	const std::string usedIndex = SlPaths::GetCurrentUsedSpringIndex();
 	const std::string index = STD_STRING(m_spring_list->GetStringSelection());
-	if (index == "") {
+	if (index.empty()) {
 		return;
 	}
 	SlPaths::DeleteSpringVersionbyIndex(index);
