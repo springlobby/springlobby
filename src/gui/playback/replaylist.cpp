@@ -24,13 +24,11 @@ void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 	m_replays.clear();
 	for ( size_t i = 0; i < filenames.size(); ++i) {
 		const wxString wfilename = TowxString(filenames[i]);
-		Replay repl;
-		repl.id = i;
-		if (GetReplayInfos(wfilename, repl)) {
-			AddPlayback(repl, i);
-//			wxLogDebug(_T("-------------- %d %s %s"),i, TowxString(repl.battle.GetHostModName()).c_str(), TowxString(repl.battle.GetHostMapName()).c_str());
-		} else {
-			wxLogDebug(_T("Error adding %s"), wfilename.c_str());
+		PlaybackType& playback = AddPlayback(i);
+		if (!GetReplayInfos(wfilename, playback)) {
+			// looks like funny add/remove logic, but the Replay contains OfflineBattle which is IBattle which is ultimately boost::noncopyable.
+			wxLogError(_T("Couldn't open replay %s"), wfilename.c_str() );
+			RemovePlayback(i);
 		}
 	}
 }
