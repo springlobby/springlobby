@@ -29,7 +29,7 @@ void SavegameList::LoadPlaybacks(const std::vector<std::string> &filenames )
     for (size_t i = 0; i < size; ++i)
     {
         const wxString fn = TowxString(filenames[i]);
-		Savegame& rep_ref = AddPlayback( i ); // don't touch this reference, since elements inside this data structure are filled using pointers, adding & not fecthing the new addresses would screw up references when rep gets destroyed
+		Savegame& rep_ref = AddPlayback( i );
 
         if (!GetSavegameInfos( fn, rep_ref))
         {

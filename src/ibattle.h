@@ -113,7 +113,7 @@ struct BattleOptions {
 	bool guilistactiv;
 };
 
-class IBattle: public UserList, public SL::NonCopyable
+class IBattle: public UserList, private SL::NonCopyable
 {
 public:
 
