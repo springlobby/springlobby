@@ -19,6 +19,7 @@ struct Replay
     time_t date;
     wxString date_string;
     OfflineBattle battle;
+
 	Replay( const size_t idx = 0):
 		id(idx),
 		playernum(0),
@@ -28,6 +29,11 @@ struct Replay
 		date(0)
 	{
 	}
+
+	Replay(const Replay& copy) = delete;
+	Replay(Replay&&) = default;
+	Replay& operator=(const Replay& copy) = delete;
+	Replay& operator=(Replay&&) = default;
 
     bool Equals( const Replay& other ) const { return Filename == other.Filename; }
 };
