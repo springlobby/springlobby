@@ -10,7 +10,7 @@
 
 #include "gui/customdialogs.h"
 #include "playbacktab.h"
-#include "playbackstructs.h"
+#include "savegame.h"
 #include "gui/uiutils.h"
 #include <lslutils/globalsmanager.h>
 

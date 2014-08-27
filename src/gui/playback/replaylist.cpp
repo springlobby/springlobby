@@ -11,7 +11,7 @@
 #include "utils/conversion.h"
 #include "gui/customdialogs.h"
 #include "playbacktab.h"
-#include "playbackstructs.h"
+#include "replay.h"
 #include "gui/uiutils.h"
 #include <lslutils/globalsmanager.h>
 
