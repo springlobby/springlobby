@@ -22,14 +22,14 @@ void OfflineBattle::StartSpring()
 	spring().Run(*this);
 }
 
-OfflineBattle::OfflineBattle ( const OfflineBattle&& moved ):
+OfflineBattle::OfflineBattle ( OfflineBattle&& moved ):
 	IBattle(),
 	m_id(0)
 {
-	*this = (const OfflineBattle&& )moved;
+	*this = (OfflineBattle&& )moved;
 }
 
-OfflineBattle& OfflineBattle::operator = ( const OfflineBattle&& moved )
+OfflineBattle& OfflineBattle::operator = ( OfflineBattle&& moved )
 {
 	// CAUTION: the userlist might contain pointers to the moved.m_me, which is about to go away.
 	// So if it exists, remove this pointer and substitute in our own pointer to m_me.

@@ -31,9 +31,25 @@ struct Replay
 	}
 
 	Replay(const Replay& copy) = delete;
-	Replay(Replay&&) = default;
+	Replay(Replay&& moved) {
+		this->operator=((Replay&&) moved);
+	}
 	Replay& operator=(const Replay& copy) = delete;
-	Replay& operator=(Replay&&) = default;
+	Replay& operator=(Replay&& moved) {
+		id				= moved.id;
+		playernum		= moved.playernum;
+		can_watch		= moved.can_watch;
+		duration		= moved.duration;
+		size			= moved.size;
+		MapName			= moved.MapName;
+		ModName			= moved.ModName;
+		SpringVersion	= moved.SpringVersion;
+		Filename		= moved.Filename;
+		date			= moved.date;
+		date_string		= moved.date_string;
+		battle.operator=((OfflineBattle&&) moved.battle);
+		return *this;
+	}
 
     bool Equals( const Replay& other ) const { return Filename == other.Filename; }
 };
