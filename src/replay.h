@@ -12,12 +12,12 @@ struct Replay
     bool can_watch;
     int duration; //in seconds
     int size; //in bytes
-    wxString MapName;
-    wxString ModName;
-    wxString SpringVersion;
-    wxString Filename;
+    std::string MapName;
+    std::string ModName;
+    std::string SpringVersion;
+    std::string Filename;
     time_t date;
-    wxString date_string;
+    std::string date_string;
     OfflineBattle battle;
 
 	Replay( const size_t idx = 0):

@@ -12,12 +12,12 @@ struct Savegame
     bool can_watch;
     int duration; //in seconds
 	unsigned long size; //in bytes
-    wxString MapName;
-    wxString ModName;
-    wxString SpringVersion;
-    wxString Filename;
+    std::string MapName;
+    std::string ModName;
+    std::string SpringVersion;
+    std::string Filename;
     time_t date;
-    wxString date_string;
+    std::string date_string;
     OfflineBattle battle;
 
 	Savegame(const size_t idx = 0):

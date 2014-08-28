@@ -133,9 +133,9 @@ int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, in
         case 2: return dir * TowxString(u1->battle.GetHostMapName()).CmpNoCase( TowxString(u2->battle.GetHostMapName()) );
         case 3: return dir * compareSimple( u1->battle.GetNumUsers() - u1->battle.GetSpectators(), u2->battle.GetNumUsers() - u2->battle.GetSpectators() );
         case 4: return dir * compareSimple( u1->duration,u2->duration );
-        case 5: return dir * u1->SpringVersion.CmpNoCase( u2->SpringVersion ) ;
+        case 5: return dir * TowxString(u1->SpringVersion).CmpNoCase( TowxString(u2->SpringVersion) ) ;
         case 6: return dir * compareSimple( u1->size, u2->size ) ;
-        case 7: return dir * u1->Filename.AfterLast( wxFileName::GetPathSeparator() ).CmpNoCase( u2->Filename.AfterLast( wxFileName::GetPathSeparator() ) );
+        case 7: return dir * TowxString(u1->Filename).AfterLast( wxFileName::GetPathSeparator() ).CmpNoCase( TowxString(u2->Filename).AfterLast( wxFileName::GetPathSeparator() ) );
         default: return 0;
     }
 }
@@ -201,7 +201,7 @@ wxString PlaybackListCtrl<PlaybackType>::GetItemText(long item, long column) con
         case 4: return duration;
         case 5: return replay.SpringVersion;
 		case 6: return wxFormat( _T("%d KB") ) % ( replay.size/1024 );
-        case 7: return replay.Filename.AfterLast( wxFileName::GetPathSeparator() );
+        case 7: return TowxString(replay.Filename).AfterLast( wxFileName::GetPathSeparator() );
 
         default: return wxEmptyString;
     }

@@ -41,7 +41,7 @@ public:
 	virtual void LoadPlaybacks(const std::vector<std::string>& filenames );
 	ReplayList();
 private:
-	bool GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const;
+	bool GetReplayInfos(const std::string& ReplayPath, Replay& ret ) const;
 	int replayVersion(wxFile& ReplayPath ) const;
 	wxString GetScriptFromReplay (wxFile& ReplayPath, const int version ) const;
 	//! saves relevant infos from header into replay struct

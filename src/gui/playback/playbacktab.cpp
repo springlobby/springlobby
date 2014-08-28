@@ -284,7 +284,7 @@ void PlaybackTab<PlaybackTraits>::OnWatch( wxCommandEvent& /*unused*/ )
 		try {
 			PlaybackType& rep = playbacklist<ListType>().GetPlaybackById( m_sel_replay_id );
 
-			bool versionfound = ui().IsSpringCompatible("spring", STD_STRING(rep.SpringVersion));
+			bool versionfound = ui().IsSpringCompatible("spring", rep.SpringVersion);
 			if ( !ReplayTraits::IsReplayType )
                 versionfound = true; // quick hack to bypass spring version check
 			if ( !versionfound ) {

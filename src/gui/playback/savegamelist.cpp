@@ -44,7 +44,7 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
     //wxLogMessage(_T("GetSavegameInfos %s"), SavegamePath.c_str());
     //wxLOG_Info  ( STD_STRING( SavegamePath ) );
     //TODO extract moar info
-    ret.Filename = SavegamePath;
+    ret.Filename = STD_STRING(SavegamePath);
     ret.battle.SetPlayBackFilePath(STD_STRING(SavegamePath));
     if ( SavegamePath.IsEmpty() )
         return false;

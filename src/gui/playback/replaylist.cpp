@@ -23,7 +23,7 @@ void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 {
 	m_replays.clear();
 	for ( size_t i = 0; i < filenames.size(); ++i) {
-		const wxString wfilename = TowxString(filenames[i]);
+		const std::string wfilename = filenames[i];
 		PlaybackType& playback = AddPlayback(i);
 		if (!GetReplayInfos(wfilename, playback)) {
 			// looks like funny add/remove logic, but the Replay contains OfflineBattle which is IBattle which is ultimately boost::noncopyable.
@@ -44,19 +44,18 @@ int ReplayList::replayVersion(wxFile& replay ) const
 	return version;
 }
 
-bool ReplayList::GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const
+bool ReplayList::GetReplayInfos(const std::string& ReplayPath, Replay& ret ) const
 {
-	const wxString FileName = ReplayPath.AfterLast( wxFileName::GetPathSeparator() ); // strips file path
+	const std::string FileName = LSL::Util::AfterLast( ReplayPath, SEP ); // strips file path
 	ret.Filename = ReplayPath;
-	ret.battle.SetPlayBackFilePath(STD_STRING(ReplayPath));
-	ret.SpringVersion = FileName.AfterLast(_T('_')).BeforeLast(_T('.'));
-	ret.MapName = FileName.BeforeLast(_T('_'));
+	ret.battle.SetPlayBackFilePath(ReplayPath);
+	ret.SpringVersion = LSL::Util::BeforeLast(LSL::Util::AfterLast(FileName, "_"),".");
+	ret.MapName = LSL::Util::BeforeLast(FileName, "_");
 
-
-	if (!wxFileExists(ReplayPath)) {
+	if (!wxFileExists(TowxString(ReplayPath))) {
 		return false;
 	}
-	wxFile replay(ReplayPath, wxFile::read );
+	wxFile replay(TowxString(ReplayPath), wxFile::read );
 	if (!replay.IsOpened()) {
 		return false;
 	}
@@ -70,17 +69,17 @@ bool ReplayList::GetReplayInfos(const wxString& ReplayPath, Replay& ret ) const
 
 	GetHeaderInfo(replay, ret, replay_version );
 	ret.battle.GetBattleFromScript( false );
-	ret.ModName = TowxString(ret.battle.GetHostModName());
+	ret.ModName = ret.battle.GetHostModName();
 	ret.battle.SetBattleType( BT_Replay );
 	ret.battle.SetEngineName("spring");
-	ret.battle.SetEngineVersion(STD_STRING(ret.SpringVersion));
-	ret.battle.SetPlayBackFilePath(STD_STRING(ReplayPath));
+	ret.battle.SetEngineVersion(ret.SpringVersion);
+	ret.battle.SetPlayBackFilePath(ReplayPath);
 
 	//getting this from filename seems more reliable than from demoheader
 	wxDateTime rdate;
 
 	if (rdate.ParseFormat(FileName, _T("%Y%m%d_%H%M%S")) == 0) {
-		wxLogError(_T("Parsing %s failed"), FileName.c_str());
+		wxLogError(_T("Parsing %s failed"), TowxString(FileName).c_str());
 		return false;
 	}
 	ret.date=rdate.GetTicks(); // now it is sorted properly
