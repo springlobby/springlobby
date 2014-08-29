@@ -21,7 +21,7 @@ void OfflineBattle::StartSpring()
 {
 	spring().Run(*this);
 }
-/*
+
 OfflineBattle::OfflineBattle ( OfflineBattle&& moved ):
 	IBattle(),
 	m_id(0)
@@ -71,4 +71,4 @@ OfflineBattle& OfflineBattle::operator = ( OfflineBattle&& moved )
 	m_internal_user_list = moved.m_internal_user_list;
 	return *this;
 }
-*/
+
