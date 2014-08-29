@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application>
- <id type="desktop">springlobby.desktop</id>
+<component type="desktop">
+ <id>springlobby.desktop</id>
  <metadata_license>GFDL-1.3</metadata_license>
  <project_license>GPL-2.0+</project_license>
+ <project_group>SPRINGRTS</project_group>
  <name>Springlobby</name>
  <summary>Play online RTS games with the Spring engine</summary>
  <description>
@@ -40,5 +41,9 @@
   <screenshot width="704" height="461">http://springlobby.info/landing/screenshots/98_chat_prefs.png</screenshot>
  </screenshots>
  <url type="homepage">http://springlobby.info/</url>
- <updatecontact>https://github.com/springlobby/springlobby/</updatecontact>
-</application>
+ <url type="bugtracker">https://github.com/springlobby/springlobby/issues</url>
+ <url type="help">https://github.com/springlobby/springlobby/wiki</url>
+ <provides>
+  <binary>springlobby</binary>
+ </provides>
+</component>
