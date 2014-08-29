@@ -7,14 +7,17 @@
  <summary>Play online RTS games with the Spring engine</summary>
  <description>
   <p>
-    Springlobby is a windowed client that allows you to download and play a wide variety of games using the Spring engine,
-      a popular RTS game engine.
-    Using this program, you can connect to one of dozens of free 24x7 battleroom servers on the internet that are accessible 
-      from our master server.
-    You'll need to download the spring RTS engine and supply lobby with its installation path.
+    Springlobby is a windowed client that allows you to download and play
+    a wide variety of games using the Spring engine, a popular RTS game engine.
+    Using this program, you can connect to one of dozens of free 24x7
+    battleroom servers on the internet that are accessible from our master server.
+  </p>
+  <p>
+    You'll need to download the spring RTS engine and supply lobby with
+    its installation path.
     After that, springlobbylobby will let you create an account and you're set to go!
   </p>
-  <p>Popular games that use the spring engine are:
+  <p>Popular games that use the spring engine are:</p>
   <ul>
    <li>Balanced Annihilation</li>
    <li>Tech Annihilation</li>
@@ -25,23 +28,17 @@
    <li>XTA</li>
    <li>Lots more developed regularly!</li>
   </ul>
-  </p>
   <p>The springlobby home page can be found at http://www.springlobby.info/ or you can visit our project page
-       on github at http://www.github.com/springlobby/springlobby/</p>
+       on github at http://www.github.com/springlobby/springlobby/.</p>
   <p>You can find out more about the spring engine and its games at http://www.springrts.com/.</p>
  </description>
  <screenshots>
-  <screenshot type="default" width="892" height="755">http://springlobby.info/landing/screenshots/11_chat.png</screenshot>
-  <screenshot type="default" width="901" height="611">http://springlobby.info/landing/screenshots/01_welcome.png</screenshot>
-  <screenshot type="default" width="901" height="611">http://springlobby.info/landing/screenshots/31_tabs.png</screenshot>
-  <screenshot type="default" width="901" height="611">http://springlobby.info/landing/screenshots/30_tabs2.png</screenshot>
-  <screenshot type="default" width="901" height="611">http://springlobby.info/landing/screenshots/10_sp.png</screenshot>
-  <screenshot type="default" width="740" height="465">http://springlobby.info/landing/screenshots/97_groups.png</screenshot>
-  <screenshot type="default" width="740" height="465">http://springlobby.info/landing/screenshots/98_chat_prefs.png</screenshot>
-  <screenshot type="default" width="740" height="465">http://springlobby.info/landing/screenshots/99_spring_prefs.png</screenshot>
+  <screenshot type="default" width="892" height="751">http://springlobby.info/landing/screenshots/11_chat.png</screenshot>
+  <screenshot width="978" height="660">http://springlobby.info/landing/screenshots/01_welcome.png</screenshot>
+  <screenshot width="1344" height="820">http://springlobby.info/landing/screenshots/31_tabs.png</screenshot>
+  <screenshot width="970" height="653">http://springlobby.info/landing/screenshots/10_sp.png</screenshot>
+  <screenshot width="704" height="461">http://springlobby.info/landing/screenshots/98_chat_prefs.png</screenshot>
  </screenshots>
  <url type="homepage">http://springlobby.info/</url>
- <url type="github">https://github.com/springlobby/springlobby</url>
- <updatecontact></updatecontact>
- <project_group>GNOME</project_group>
+ <updatecontact>https://github.com/springlobby/springlobby/</updatecontact>
 </application>
