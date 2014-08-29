@@ -101,7 +101,7 @@ ELSE (WIN32)
 	    ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
     install(FILES src/springlobby.desktop DESTINATION
 	    ${CMAKE_INSTALL_PREFIX}/share/applications)
-    install(FILES share/freedesktop.org/springlobby.appdata.xml DESTINATION /usr/share/appdata)
+    install(FILES share/freedesktop.org/springlobby.appdata.xml DESTINATION ${CMAKE_INSTALL_PREFIX}/share/appdata)
 ENDIF (WIN32)
 
 add_custom_target(pack
