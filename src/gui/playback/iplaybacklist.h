@@ -28,7 +28,6 @@ class IPlaybackList : public wxEvtHandler
     virtual void LoadPlaybacks( const std::vector<std::string>& filenames ) = 0;
 
 	StoredGame& AddPlayback( const size_t index );
-    void AddPlayback(StoredGame& p, const unsigned int index );
     void RemovePlayback( unsigned int const id );
 
     StoredGame &GetPlaybackById( unsigned int const id );

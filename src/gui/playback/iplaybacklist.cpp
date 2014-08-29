@@ -13,12 +13,6 @@ StoredGame& IPlaybackList::AddPlayback( const size_t index )
 	return m_replays[index];
 }
 
-void IPlaybackList::AddPlayback(StoredGame& p, const unsigned int index )
-{
-	m_replays[index] = p;
-}
-
-
 void IPlaybackList::RemovePlayback( unsigned int const id )
 {
     m_replays.erase(id);

@@ -36,7 +36,7 @@ struct StoredGame
 		date(0)
 	{
 	}
-/*
+
 	StoredGame(const StoredGame& copy) = delete;
 
 	StoredGame(StoredGame&& moved) {
@@ -59,7 +59,7 @@ struct StoredGame
 		battle.operator=((OfflineBattle&&) moved.battle);
 		return *this;
 	}
-*/
+
     bool Equals( const StoredGame& other ) const { return Filename == other.Filename; }
 };
 
