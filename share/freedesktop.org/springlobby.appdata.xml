@@ -34,11 +34,26 @@
   <p>You can find out more about the spring engine and its games at http://www.springrts.com/.</p>
  </description>
  <screenshots>
-  <screenshot type="default" width="892" height="751">http://springlobby.info/landing/screenshots/11_chat.png</screenshot>
-  <screenshot width="978" height="660">http://springlobby.info/landing/screenshots/01_welcome.png</screenshot>
-  <screenshot width="1344" height="820">http://springlobby.info/landing/screenshots/31_tabs.png</screenshot>
-  <screenshot width="970" height="653">http://springlobby.info/landing/screenshots/10_sp.png</screenshot>
-  <screenshot width="704" height="461">http://springlobby.info/landing/screenshots/98_chat_prefs.png</screenshot>
+  <screenshot type="default">
+    <image width="892" height="751">http://springlobby.info/landing/screenshots/11_chat.png</image>
+    <caption>The main chat tab</caption>
+  </screenshot>
+  <screenshot>
+    <image width="978" height="660">http://springlobby.info/landing/screenshots/01_welcome.png</image>
+    <caption>First start window</caption>
+  </screenshot>
+  <screenshot>
+     <image width="1344" height="820">http://springlobby.info/landing/screenshots/31_tabs.png</image>
+    <caption>Customized gui</caption>
+  </screenshot>
+  <screenshot>
+    <image width="970" height="653">http://springlobby.info/landing/screenshots/10_sp.png</image>
+    <caption>Singleplayer tab</caption>
+  </screenshot>
+  <screenshot>
+    <image width="704" height="461">http://springlobby.info/landing/screenshots/98_chat_prefs.png</image>
+    <caption>Preferences dialog, chat settings</caption>
+  </screenshot>
  </screenshots>
  <url type="homepage">http://springlobby.info/</url>
  <url type="bugtracker">https://github.com/springlobby/springlobby/issues</url>
