@@ -93,35 +93,31 @@ ENDIF( WIN32 )
 
 INCLUDE(cmake/package_config.cmake)
 IF(WIN32)
-    install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION .)
+	install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION .)
 	install(DIRECTORY ${CMAKE_INSTALL_PREFIX}/locale DESTINATION .)
 ELSE (WIN32)
-    install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
-    install(FILES src/images/springlobby.svg DESTINATION
-	    ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
-    install(FILES src/springlobby.desktop DESTINATION
-	    ${CMAKE_INSTALL_PREFIX}/share/applications)
-    install(FILES share/freedesktop.org/springlobby.appdata.xml DESTINATION ${CMAKE_INSTALL_PREFIX}/share/appdata)
+	install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION ${CMAKE_INSTALL_PREFIX}/share/doc/springlobby )
+	install(FILES src/images/springlobby.svg DESTINATION
+		${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
+	install(FILES src/springlobby.desktop DESTINATION
+		${CMAKE_INSTALL_PREFIX}/share/applications)
+	install(FILES share/freedesktop.org/springlobby.appdata.xml DESTINATION ${CMAKE_INSTALL_PREFIX}/share/appdata)
 ENDIF (WIN32)
 
-add_custom_target(pack
-					${CMAKE_MAKE_PROGRAM} package
-					&& ${springlobby_SOURCE_DIR}/tools/transform_release_zip.sh
-						${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}-win32.zip
-						${CMAKE_STRIP}
-				)
+add_custom_target(pack ${CMAKE_MAKE_PROGRAM} package
+			&& ${springlobby_SOURCE_DIR}/tools/transform_release_zip.sh
+			${CMAKE_BINARY_DIR}/${PACKAGE_NAME}-${PACKAGE_VERSION}-win32.zip
+			${CMAKE_STRIP})
 
 # setup make dist
-add_custom_target(dist ${CMAKE_SOURCE_DIR}/tools/make_dist.sh "${springlobby_BINARY_DIR}" "${PACKAGE_NAME}-${PACKAGE_VERSION}" "${PACKAGE_VERSION}"
-					 )
+add_custom_target(dist ${CMAKE_SOURCE_DIR}/tools/make_dist.sh "${springlobby_BINARY_DIR}" "${PACKAGE_NAME}-${PACKAGE_VERSION}" "${PACKAGE_VERSION}")
 
 # setup make distcheck
 add_custom_target(distcheck + cd ${CMAKE_BINARY_DIR} &&
-                        rm -rf ${PACKAGE_NAME}-${PACKAGE_VERSION} &&
-                        tar -xzf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
-                        cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
-                        cmake "-DCMAKE_CXX_FLAGS:STRING=-O0" . && ${CMAKE_MAKE_PROGRAM}
-					)
+			rm -rf ${PACKAGE_NAME}-${PACKAGE_VERSION} &&
+			tar -xzf ${PACKAGE_NAME}-${PACKAGE_VERSION}.tar.gz &&
+			cd ${PACKAGE_NAME}-${PACKAGE_VERSION}/ &&
+			cmake "-DCMAKE_CXX_FLAGS:STRING=-O0" . && ${CMAKE_MAKE_PROGRAM})
 add_dependencies( distcheck dist )
 #add_dependencies( versiontest version )
 
