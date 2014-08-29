@@ -1,0 +1,17 @@
+This directory contains files that are needed for FreeDesktop.org to feature springlobby in so-called software centers
+  for desktop software such as gnome, kde, or xfce.
+
+springlobby.appdata.xml is the descriptor file. It contains references to screenshot images found on the web (springlobby.info),
+  so these screenshots need to remain at this location or their locations need to be updated in this file if they change.
+
+Alternatively, one can write a "springlobby.appdata.xml.in" that would be processed by intltool or some internationalization 
+  program that would produce a locale-specific descriptor, but for now we have a default version in English.
+
+I've included the springlobby.appdata.xml file to get us started, and configured CMake so that "make install" 
+  copies it to /usr/share/appdata, where it is supposed to go.
+
+We should perhaps look at incorporating intltool or itstool for internationalization. We have plenty of people in the community
+  that can write a springlobby description in different languages!
+
+  -MajBoredom
+
