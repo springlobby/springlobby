@@ -6,8 +6,8 @@
 
 #include <wx/string.h>
 
-#include "playbacklist.h"
-#include "playbacktraits.h"
+#include "iplaybacklist.h"
+
 /*
 copied from spring sources for reference
 struct DemoFileHeader {
@@ -33,19 +33,22 @@ struct DemoFileHeader {
 };
 */
 
-struct Replay;
+struct StoredGame;
+class wxFile;
 
-class ReplayList : public PlaybackList<Replay>
+class ReplayList : public IPlaybackList
 {
 public:
 	virtual void LoadPlaybacks(const std::vector<std::string>& filenames );
 	ReplayList();
 private:
-	bool GetReplayInfos(const std::string& ReplayPath, Replay& ret ) const;
+	bool GetReplayInfos(const std::string& ReplayPath, StoredGame& ret ) const;
 	int replayVersion(wxFile& ReplayPath ) const;
 	wxString GetScriptFromReplay (wxFile& ReplayPath, const int version ) const;
 	//! saves relevant infos from header into replay struct
-	void GetHeaderInfo(wxFile& ReplayPath, Replay& rep,const int version ) const;
+	void GetHeaderInfo(wxFile& ReplayPath, StoredGame& rep,const int version ) const;
 };
+
+IPlaybackList& replaylist();
 
 #endif // SPRINGLOBBY_REPLAYLIST_H_INCLUDED

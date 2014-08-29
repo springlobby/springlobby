@@ -9,12 +9,14 @@ class OfflineBattle : public IBattle
 {
 public:
 	OfflineBattle (const int id = 0 );
+/*
 	OfflineBattle ( const OfflineBattle& ) = delete;
+
 	OfflineBattle ( OfflineBattle&& );
 
 	OfflineBattle& operator = ( const OfflineBattle& ) = delete;
 	OfflineBattle& operator = ( OfflineBattle&&  );
-
+*/
 	~OfflineBattle () {}
 
 	virtual User& GetMe() {

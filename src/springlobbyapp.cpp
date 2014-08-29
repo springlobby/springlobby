@@ -44,13 +44,16 @@
 #include "downloader/prdownloader.h"
 #include <lslutils/globalsmanager.h>
 #include <lslutils/config.h>
+#include <lslunitsync/unitsync.h>
 #include "gui/notificationmanager.h"
 #include "utils/wxTranslationHelper.h"
-#include "gui/playback/playbacktraits.h"
 #include "gui/playback/playbacktab.h"
 #include "defines.h"
 #include "utils/slpaths.h"
 #include "downloader/lib/src/FileSystem/FileSystem.h"
+#include "log.h"
+#include "utils/conversion.h"
+#include "gui/ui.h"
 
 #include <wx/debugrpt.h>
 #include <wx/intl.h>

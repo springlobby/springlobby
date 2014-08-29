@@ -5,70 +5,64 @@
 
 #include "replaylist.h"
 #include "savegamelist.h"
+#include "playbackthread.h"
+#include "playbacktab.h"
 #include <lslunitsync/unitsync.h>
 
-template <class PlaybackTabImp >
-PlaybackLoader<PlaybackTabImp>::PlaybackLoader( ParentType* parent ):
+PlaybackLoader::PlaybackLoader( PlaybackTab* parent, bool IsReplayType):
 	wxEvtHandler(),
 	m_parent( parent ),
-	m_thread_loader( NULL )
+	m_thread_loader( NULL ),
+	m_isreplaytype(IsReplayType)
 {
+	assert(m_parent!=NULL);
 }
 
-template <class PlaybackTabImp >
-PlaybackLoader<PlaybackTabImp>::~PlaybackLoader()
+const wxEventType PlaybackLoader::PlaybacksLoadedEvt = wxNewEventType();
+
+PlaybackLoader::~PlaybackLoader()
 {
 	delete m_thread_loader;
 }
 
-template <class PlaybackTabImp >
-void PlaybackLoader<PlaybackTabImp>::Run()
+void PlaybackLoader::Run()
 {
     if ( !LSL::usync().IsLoaded() ) return;
     if ( m_thread_loader ) return; // a thread is already running
-    m_filenames = LSL::usync().GetPlaybackList( IsReplayType );
-    playbacklist<ListType>().RemoveAll();
-    m_thread_loader = new ThreadType();
-    m_thread_loader->SetParent( this );
+    m_filenames = LSL::usync().GetPlaybackList( m_isreplaytype );
+	replaylist().RemoveAll();
+    m_thread_loader = new PlaybackLoaderThread(this, m_parent);
     m_thread_loader->Create();
     m_thread_loader->Run();
 }
 
-template <class PlaybackTabImp >
-void PlaybackLoader<PlaybackTabImp>::OnComplete()
+void PlaybackLoader::OnComplete()
 {
 	if ( m_parent == NULL ) return;
 	wxCommandEvent notice( PlaybacksLoadedEvt, 1 );
 	wxPostEvent(m_parent, notice);
-	m_thread_loader = 0; // the thread object deleted itself
+	m_thread_loader = NULL; // the thread object deleted itself
 }
 
-template <class PlaybackTabImp >
-std::vector<std::string> PlaybackLoader<PlaybackTabImp>::GetPlaybackFilenames()
+std::vector<std::string> PlaybackLoader::GetPlaybackFilenames()
 {
 	return m_filenames;
 }
 
-template <class PlaybackTabImp >
-PlaybackLoader<PlaybackTabImp>::PlaybackLoaderThread::PlaybackLoaderThread():
-m_parent(0)
+PlaybackLoader::PlaybackLoaderThread::PlaybackLoaderThread(PlaybackLoader* loader, PlaybackTab* parent):
+m_parent(parent),
+m_loader(loader)
 {
+	assert(m_parent!=NULL);
 }
 
-template <class PlaybackTabImp >
-void* PlaybackLoader<PlaybackTabImp>::ThreadType::Entry()
+void* PlaybackLoader::PlaybackLoaderThread::Entry()
 {
     if( m_parent )
     {
-        playbacklist<ListType>().LoadPlaybacks( m_parent->GetPlaybackFilenames() );
-        m_parent->OnComplete();
+		replaylist().LoadPlaybacks( m_loader->GetPlaybackFilenames() );
+		m_loader->OnComplete();
     }
 
     return NULL;
-}
-
-template <class PlaybackTabImp >
-void PlaybackLoader<PlaybackTabImp>::PlaybackLoaderThread::SetParent( ParentType* parent )
-{
-	m_parent = parent;
 }

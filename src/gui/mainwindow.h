@@ -29,7 +29,7 @@ class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
 class ChannelChooserDialog;
-class ReplayTab;
+class PlaybackTab;
 class AutojoinChannelDialog;
 class WidgetDownloadDialog;
 class wxLogWindow;
@@ -40,9 +40,6 @@ class OptionsDialog;
 class ReplayTraits;
 class wxFocusEvent;
 
-template < class Traits >
-class PlaybackTab;
-
 const wxEventType MainwindowMessageEvent = wxNewEventType();
 
 //! @brief wxFrame that contains the main window of the client.
@@ -51,11 +48,6 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
   public:
     MainWindow( );
     virtual ~MainWindow();
-
-    typedef PlaybackTab<ReplayTraits>
-        ReplayTab;
-//    typedef PlaybackTab<SavegameTraits>
-//        SavegameTab;
 
     // MainWindow interface
     void OpenChannelChat( Channel& channel, bool doFocus = true );
@@ -105,7 +97,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     BattleListTab& GetBattleListTab();
     MainJoinBattleTab& GetJoinTab();
     MainSinglePlayerTab& GetSPTab();
-    ReplayTab& GetReplayTab();
+    PlaybackTab& GetReplayTab();
 //    SavegameTab& GetSavegameTab();
 	MainDownloadTab& GetDownloadTab();
 
@@ -143,7 +135,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     bool se_frame_active;
     ChannelChooserDialog* m_channel_chooser;
 
-    ReplayTab* m_replay_tab;
+    PlaybackTab* m_replay_tab;
 
 	wxBitmap GetTabIcon( const unsigned char* data, size_t size  ) const;
 	wxString AddPerspectivePostfix( const wxString& pers_name ) const;

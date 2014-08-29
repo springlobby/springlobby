@@ -3,19 +3,16 @@
 #ifndef SAVEGAMELIST_H
 #define SAVEGAMELIST_H
 
-#include "playbacklist.h"
+#include "iplaybacklist.h"
+#include "lslutils/globalsmanager.h"
 
-struct Savegame;
+struct StoredGame;
 
-template <class PB, class T>
 class GlobalObjectHolder;
 
-class SavegameList : public PlaybackList<Savegame>
+class SavegameList : public IPlaybackList
 {
   public:
-
-    typedef Savegame
-        PlaybackType;
 
    virtual  void LoadPlaybacks( const std::vector<std::string>& filenames );
 
@@ -25,7 +22,7 @@ class SavegameList : public PlaybackList<Savegame>
     template <class PB, class I >
     friend class LSL::Util::GlobalObjectHolder;
 private:
-	bool GetSavegameInfos ( const wxString& SavegamePath, Savegame& ret ) const;
+	bool GetSavegameInfos ( const wxString& SavegamePath, StoredGame& ret ) const;
 	wxString GetScriptFromSavegame ( const wxString& SavegamePath ) const;
 };
 

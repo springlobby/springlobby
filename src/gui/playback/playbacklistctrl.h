@@ -8,56 +8,21 @@
 class wxMenu;
 class wxListEvent;
 class wxCommandEvent;
+struct StoredGame;
 
-template <class PlaybackImp>
-class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, PlaybackListCtrl<PlaybackImp> >
+class PlaybackListCtrl : public CustomVirtListCtrl< const StoredGame*, PlaybackListCtrl >
 {
     protected:
-        typedef PlaybackListCtrl<PlaybackImp>
-            ThisType;
-        typedef CustomVirtListCtrl< const PlaybackImp*,PlaybackListCtrl<PlaybackImp> >
-            ParentType;
-        typedef typename ParentType::DataType
-            DataType;
-        typedef PlaybackImp
-            PlaybackType;
-
-    using ParentType::AddColumn;
-    using ParentType::m_sortorder;
-    using ParentType::PopupMenu;
-    using ParentType::m_data;
-    using ParentType::m_selected_data;
-    using ParentType::m_selected_index;
-    using ParentType::SaveSelection;
-    using ParentType::RestoreSelection;
-    using ParentType::HitTest;
-    using ParentType::m_comparator;
-    using ParentType::m_tiptimer;
-    using ParentType::m_tiptext;
-    using ParentType::m_colinfovec;
-    using ParentType::m_tooltip_delay;
-    using ParentType::m_tooltip_duration;
-	using ParentType::RemoveItem;
-	using ParentType::AddItem;
-	using ParentType::SetColumnWidth;
-	using ParentType::compareSimple;
-	using ParentType::SetItemCount;
-//    using ParentType::DataVector;
-    typedef typename ParentType::DataVector::const_iterator
-        DataCIter; //! TODO (koshi) i'd be mighty thankful if some could explain to me why the import with using ParentType::DataCIter doesn't work here;
-    using ParentType::getColumnFromPosition;
-
   public:
     PlaybackListCtrl( wxWindow* parent );
     ~PlaybackListCtrl();
 
-    void AddPlayback( const PlaybackType& replay );
-    void RemovePlayback( const PlaybackType& replay );
+    void AddPlayback( const StoredGame& replay );
+    void RemovePlayback( const StoredGame& replay );
     void RemovePlayback( const int index );
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
-    void OnColClick( wxListEvent& event );
 
     virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 
@@ -70,9 +35,10 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const PlaybackImp*, Playback
     wxListItemAttr * GetItemAttr(long item) const;
     int GetIndexFromData( const DataType& data ) const;
 
+/*
     using ParentType::RefreshVisibleItems;
     using ParentType::GetDataFromIndex;
-
+*/
   protected:
 	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 	void OnChar(wxKeyEvent & event);
@@ -91,6 +57,5 @@ enum
     RLIST_DLMAP
 };
 
-#include "playbacklistctrl.cpp"
 #endif // SPRINGLOBBY_PlaybackListCtrl_H_INCLUDED
 

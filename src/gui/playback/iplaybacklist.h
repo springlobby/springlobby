@@ -6,22 +6,20 @@
 #include <map>
 #include <vector>
 #include <wx/event.h>
+#include "storedgame.h"
 
 class wxArrayString;
 
-template <class PlaybackImp>
-class PlaybackList : public wxEvtHandler
+class IPlaybackList : public wxEvtHandler
 {
   public:
-	PlaybackList():
+	IPlaybackList():
 		wxEvtHandler(),
 		m_fails(0)
 	{}
 
-    typedef PlaybackImp PlaybackType;
-
     //! @brief mapping from playback id number to playback object
-    typedef std::map<unsigned int, PlaybackType> playback_map_t;
+    typedef std::map<unsigned int, StoredGame> playback_map_t;
     //! @brief iterator for playback map
     typedef typename playback_map_t::iterator playback_iter_t;
     //! @brief const iterator for playback map
@@ -29,11 +27,11 @@ class PlaybackList : public wxEvtHandler
 
     virtual void LoadPlaybacks( const std::vector<std::string>& filenames ) = 0;
 
-	PlaybackType& AddPlayback( const size_t index );
-    void AddPlayback(PlaybackType& p, const unsigned int index );
+	StoredGame& AddPlayback( const size_t index );
+    void AddPlayback(StoredGame& p, const unsigned int index );
     void RemovePlayback( unsigned int const id );
 
-    PlaybackType &GetPlaybackById( unsigned int const id );
+    StoredGame &GetPlaybackById( unsigned int const id );
 
 	bool PlaybackExists( unsigned int const id ) const;
     bool DeletePlayback( unsigned int const id );
@@ -51,11 +49,6 @@ class PlaybackList : public wxEvtHandler
     unsigned long m_fails;
 
 };
-
-template <class ListImp>
-ListImp& playbacklist();
-
-#include "playbacklist.cpp"
 
 #endif // SL_PLAYBACKLIST_H_INCLUDED
 

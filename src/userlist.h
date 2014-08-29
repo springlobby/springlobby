@@ -39,10 +39,10 @@ class UserList
     user_map_t::size_type GetNumUsers() const;
 
     void Nullify();
-
+/*
 	UserList& operator= (const UserList& other) = delete;
 	UserList& operator= (const UserList&& other);
-
+*/
 protected:
     user_map_t m_users;
 private:

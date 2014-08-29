@@ -48,7 +48,6 @@
 #include "options/mainoptionstab.h"
 #include "uiutils.h"
 #include "chatpanel.h"
-#include "playback/playbacktraits.h"
 #include "playback/playbacktab.h"
 #include "infodialog.h"
 #include "maindownloadtab.h"
@@ -56,6 +55,7 @@
 #include "mapselectdialog.h"
 #include "downloader/prdownloader.h"
 #include "utils/slconfig.h"
+#include "utils/conversion.h"
 #include "springsettings/frame.h"
 #include "gui/customdialogs.h"
 #include "utils/platform.h"
@@ -63,7 +63,12 @@
 #include "updater/updatehelper.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
+#include "gui/controls.h"
+#include "gui/ui.h"
+#include "log.h"
+#include <lslunitsync/unitsync.h>
 
+#include "iconimagelist.h"
 #include "images/chat_icon.png.h"
 #include "images/join_icon.png.h"
 #include "images/single_player_icon.png.h"
@@ -190,7 +195,7 @@ MainWindow::MainWindow( )
 	m_join_tab = new MainJoinBattleTab( m_func_tabs );
 	m_sp_tab = new MainSinglePlayerTab( m_func_tabs );
 //	m_savegame_tab = new SavegameTab( m_func_tabs );
-	m_replay_tab = new ReplayTab ( m_func_tabs );
+	m_replay_tab = new PlaybackTab ( m_func_tabs, true);
 	m_torrent_tab = new MainDownloadTab( m_func_tabs);
 
     //use Insert so no Changepage events are triggered
@@ -382,7 +387,7 @@ MainSinglePlayerTab& MainWindow::GetSPTab()
   return *m_sp_tab;
 }
 
-MainWindow::ReplayTab& MainWindow::GetReplayTab()
+PlaybackTab& MainWindow::GetReplayTab()
 {
     ASSERT_EXCEPTION( m_replay_tab != 0, _T("m_replay_tab = 0") );
     return *m_replay_tab;

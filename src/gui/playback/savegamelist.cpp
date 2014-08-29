@@ -7,11 +7,14 @@
 #include <fstream>
 #include <wx/file.h>
 #include <wx/filefn.h>
+#include <wx/filename.h>
 
 #include "gui/customdialogs.h"
 #include "playbacktab.h"
-#include "savegame.h"
+#include "storedgame.h"
 #include "gui/uiutils.h"
+#include "utils/conversion.h"
+
 #include <lslutils/globalsmanager.h>
 
 
@@ -29,7 +32,7 @@ void SavegameList::LoadPlaybacks(const std::vector<std::string> &filenames )
     for (size_t i = 0; i < size; ++i)
     {
         const wxString fn = TowxString(filenames[i]);
-		Savegame& rep_ref = AddPlayback( i );
+		StoredGame& rep_ref = AddPlayback( i );
 
         if (!GetSavegameInfos( fn, rep_ref))
         {
@@ -39,11 +42,12 @@ void SavegameList::LoadPlaybacks(const std::vector<std::string> &filenames )
     }
 }
 
-bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& ret ) const
+bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, StoredGame& ret ) const
 {
     //wxLogMessage(_T("GetSavegameInfos %s"), SavegamePath.c_str());
     //wxLOG_Info  ( STD_STRING( SavegamePath ) );
     //TODO extract moar info
+	ret.type = StoredGame::SAVEGAME;
     ret.Filename = STD_STRING(SavegamePath);
     ret.battle.SetPlayBackFilePath(STD_STRING(SavegamePath));
     if ( SavegamePath.IsEmpty() )
@@ -55,7 +59,7 @@ bool SavegameList::GetSavegameInfos ( const wxString& SavegamePath, Savegame& re
         return false;
 
     ret.battle.GetBattleFromScript( false );
-    ret.ModName = TowxString(ret.battle.GetHostModName());
+    ret.ModName = ret.battle.GetHostModName();
     ret.battle.SetBattleType( BT_Savegame );
 	ret.size = wxFileName::GetSize( SavegamePath ).ToULong();
 

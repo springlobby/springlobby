@@ -27,6 +27,7 @@ const UserList::user_map_t::size_type SEEKPOS_INVALID = UserList::user_map_t::si
 UserList::UserList(): m_seek(m_users.end()), m_seekpos(SEEKPOS_INVALID)
 { }
 
+/*
 UserList& UserList::operator= (const UserList&& other)
 {
 	// CAUTION: This list is being moved, but the m_users map contains pointers to objects.
@@ -38,6 +39,7 @@ UserList& UserList::operator= (const UserList&& other)
 	m_seekpos = SEEKPOS_INVALID;
 	return *this;
 }
+*/
 
 void UserList::AddUser( User& user )
 {

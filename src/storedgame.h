@@ -5,8 +5,10 @@
 
 #include "offlinebattle.h"
 
-struct Replay
+
+struct StoredGame
 {
+
     int id;
     int playernum;
     bool can_watch;
@@ -20,7 +22,12 @@ struct Replay
     std::string date_string;
     OfflineBattle battle;
 
-	Replay( const size_t idx = 0):
+	enum Type{
+		REPLAY,
+		SAVEGAME
+	} type;
+
+	StoredGame( const size_t idx = 0):
 		id(idx),
 		playernum(0),
 		can_watch(false),
@@ -29,13 +36,15 @@ struct Replay
 		date(0)
 	{
 	}
+/*
+	StoredGame(const StoredGame& copy) = delete;
 
-	Replay(const Replay& copy) = delete;
-	Replay(Replay&& moved) {
-		this->operator=((Replay&&) moved);
+	StoredGame(StoredGame&& moved) {
+		this->operator=((StoredGame&&) moved);
 	}
-	Replay& operator=(const Replay& copy) = delete;
-	Replay& operator=(Replay&& moved) {
+
+	StoredGame& operator=(const StoredGame& copy) = delete;
+	StoredGame& operator=(StoredGame&& moved) {
 		id				= moved.id;
 		playernum		= moved.playernum;
 		can_watch		= moved.can_watch;
@@ -50,8 +59,8 @@ struct Replay
 		battle.operator=((OfflineBattle&&) moved.battle);
 		return *this;
 	}
-
-    bool Equals( const Replay& other ) const { return Filename == other.Filename; }
+*/
+    bool Equals( const StoredGame& other ) const { return Filename == other.Filename; }
 };
 
 #endif

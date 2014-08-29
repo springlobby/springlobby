@@ -7,7 +7,6 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-class ReplayTab;
 class wxToggleButton;
 class wxCheckBox;
 class wxStaticText;
@@ -16,19 +15,15 @@ class wxChoice;
 class wxButton;
 class wxRegEx;
 class wxStaticText;
-
+class PlaybackTab;
 
 /** \brief The panel contained in BattleListTab used to filter for diff info of battles
  * \todo DOCMEMORE */
-template <class PlaybackTabType>
+
 class PlaybackListFilter : public wxPanel
 {
-    protected:
-        typedef typename PlaybackTabType::PlaybackType
-            PlaybackType;
-
-	public:
-    PlaybackListFilter ( wxWindow* parent, wxWindowID id, PlaybackTabType* parentTab, const wxPoint& pos, const wxSize& size, long style );
+public:
+    PlaybackListFilter ( wxWindow* parent, wxWindowID id, PlaybackTab* parentTab, const wxPoint& pos, const wxSize& size, long style );
 
     void OnPlayerButton   ( wxCommandEvent& event );
     void OnFilesizeButton ( wxCommandEvent& event );
@@ -46,7 +41,7 @@ class PlaybackListFilter : public wxPanel
 
     void OnPlayerChange      ( wxCommandEvent& event );
 
-    bool FilterPlayback( const PlaybackType& playback );
+    bool FilterPlayback( const StoredGame& playback );
     bool GetActiv() const;
 
     void SetFilterHighlighted( bool state );
@@ -63,7 +58,7 @@ class PlaybackListFilter : public wxPanel
 
         bool m_activ;
 
-		PlaybackTabType* m_parent_tab;
+		PlaybackTab* m_parent_tab;
 /*
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
@@ -126,6 +121,5 @@ enum
     PLAYBACK_FILTER_FILESIZE_BUTTON
 };
 
-#include "playbackfilter.cpp"
 #endif // SPRINGLOBBY_PLAYBACKFILTER_H_INCLUDED
 

@@ -25,11 +25,13 @@
 #include "utils/tasutil.h"
 #include "utils/conversion.h"
 #include "settings.h"
-
+#include "offlinebattle.h"
+#include "playbackfilter.h"
+#include "storedgame.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListFilter, wxPanel, PlaybackTabType)
+BEGIN_EVENT_TABLE(PlaybackListFilter, wxPanel)
 
   EVT_BUTTON              ( PLAYBACK_FILTER_PLAYER_BUTTON   , PlaybackListFilter::OnPlayerButton      )
   EVT_BUTTON              ( PLAYBACK_FILTER_DURATION_BUTTON , PlaybackListFilter::OnDurationButton    )
@@ -44,8 +46,8 @@ BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListFilter, wxPanel, PlaybackTabType)
 
 END_EVENT_TABLE()
 
-template <class PlaybackTabType>
-PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWindowID id, PlaybackTabType* parentTab,
+
+PlaybackListFilter::PlaybackListFilter( wxWindow* parent, wxWindowID id, PlaybackTab* parentTab,
                                     const wxPoint& pos, const wxSize& size, long style )
     : wxPanel( parent, id, pos, size, style ),
     m_parent_tab( parentTab ), m_filter_map_edit(0),
@@ -243,8 +245,7 @@ PlaybackListFilter<PlaybackTabType>::PlaybackListFilter( wxWindow* parent, wxWin
 
 }
 
-template <class PlaybackTabType>
-typename PlaybackListFilter<PlaybackTabType>::m_button_mode PlaybackListFilter<PlaybackTabType>::_GetButtonMode(wxString sign)
+PlaybackListFilter::m_button_mode PlaybackListFilter::_GetButtonMode(wxString sign)
 {
     if ( sign == _T("<") )
         return m_smaller;
@@ -253,8 +254,7 @@ typename PlaybackListFilter<PlaybackTabType>::m_button_mode PlaybackListFilter<P
     return m_equal;
 }
 
-template <class PlaybackTabType>
-wxString PlaybackListFilter<PlaybackTabType>::_GetButtonSign(m_button_mode value)
+wxString PlaybackListFilter::_GetButtonSign(m_button_mode value)
 {
   switch (value) {
     case m_equal   : return _T("=");
@@ -264,8 +264,7 @@ wxString PlaybackListFilter<PlaybackTabType>::_GetButtonSign(m_button_mode value
   }
 }
 
-template <class PlaybackTabType>
-typename PlaybackListFilter<PlaybackTabType>::m_button_mode PlaybackListFilter<PlaybackTabType>::_GetNextMode(m_button_mode value)
+PlaybackListFilter::m_button_mode PlaybackListFilter::_GetNextMode(m_button_mode value)
 {
   switch (value) {
     case m_equal   : return m_smaller;
@@ -275,24 +274,22 @@ typename PlaybackListFilter<PlaybackTabType>::m_button_mode PlaybackListFilter<P
   }
 }
 
-template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::OnPlayerButton   ( wxCommandEvent& event )
+void PlaybackListFilter::OnPlayerButton   ( wxCommandEvent& event )
 {
   m_filter_player_mode = _GetNextMode(m_filter_player_mode);
   m_filter_player_button->SetLabel( _GetButtonSign( m_filter_player_mode ) );
   OnChange(event);
 }
 
-template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::SetActiv( bool state )
+void PlaybackListFilter::SetActiv( bool state )
 {
   m_activ = state;
   if (m_parent_tab != 0) {
     m_parent_tab->UpdateList();
   }
 }
-template <class PlaybackTabType>
-bool PlaybackListFilter<PlaybackTabType>::_IntCompare(int a,int b,m_button_mode mode)
+
+bool PlaybackListFilter::_IntCompare(int a,int b,m_button_mode mode)
 {
   switch (mode) {
     case m_equal   : return (a == b);
@@ -302,8 +299,7 @@ bool PlaybackListFilter<PlaybackTabType>::_IntCompare(int a,int b,m_button_mode 
   }
 }
 
-template <class PlaybackTabType>
-bool PlaybackListFilter<PlaybackTabType>::FilterPlayback( const typename PlaybackListFilter<PlaybackTabType>::PlaybackType& playback )
+bool PlaybackListFilter::FilterPlayback( const StoredGame& playback )
 {
 
     if (!m_activ) return true;
@@ -334,15 +330,13 @@ bool PlaybackListFilter<PlaybackTabType>::FilterPlayback( const typename Playbac
     return true;
 }
 
-template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::OnChange   ( wxCommandEvent& /*unused*/ )
+void PlaybackListFilter::OnChange   ( wxCommandEvent& /*unused*/ )
 {
   if (!m_activ) return;
   m_parent_tab->UpdateList();
 }
 
-template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::OnChangeMap ( wxCommandEvent& event )
+void PlaybackListFilter::OnChangeMap ( wxCommandEvent& event )
 {
   if ( m_filter_map_edit == NULL ) return;
   delete m_filter_map_expression;
@@ -350,8 +344,7 @@ void PlaybackListFilter<PlaybackTabType>::OnChangeMap ( wxCommandEvent& event )
   OnChange(event);
 }
 
-template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::OnChangeMod ( wxCommandEvent& event )
+void PlaybackListFilter::OnChangeMod ( wxCommandEvent& event )
 {
   if ( m_filter_mod_edit == NULL ) return;
   delete m_filter_mod_expression;
@@ -359,50 +352,43 @@ void PlaybackListFilter<PlaybackTabType>::OnChangeMod ( wxCommandEvent& event )
   OnChange(event);
 }
 
-template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::OnPlayerChange( wxCommandEvent& event )
+void PlaybackListFilter::OnPlayerChange( wxCommandEvent& event )
 {
   m_filter_player_choice_value = m_filter_player_choice->GetSelection()-1;
   OnChange(event);
 }
 
-template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::OnChangeDuration(wxCommandEvent& event)
+void PlaybackListFilter::OnChangeDuration(wxCommandEvent& event)
 {
     SetDurationValue();
     OnChange(event);
 }
 
-template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::OnChangeFilesize(wxCommandEvent& event)
+void PlaybackListFilter::OnChangeFilesize(wxCommandEvent& event)
 {
     OnChange(event);
 }
 
-template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::OnDurationButton(wxCommandEvent& event)
+void PlaybackListFilter::OnDurationButton(wxCommandEvent& event)
 {
     m_filter_duration_mode = _GetNextMode(m_filter_duration_mode);
     m_filter_duration_button->SetLabel( _GetButtonSign( m_filter_duration_mode ) );
     OnChange(event);
 }
 
-template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::OnFilesizeButton(wxCommandEvent& event)
+void PlaybackListFilter::OnFilesizeButton(wxCommandEvent& event)
 {
     m_filter_filesize_mode = _GetNextMode(m_filter_filesize_mode);
     m_filter_filesize_button->SetLabel( _GetButtonSign( m_filter_filesize_mode ) );
     OnChange(event);
 }
 
-template <class PlaybackTabType>
-bool PlaybackListFilter<PlaybackTabType>::GetActiv() const
+bool PlaybackListFilter::GetActiv() const
 {
   return m_activ;
 }
 
-template <class PlaybackTabType>
-void  PlaybackListFilter<PlaybackTabType>::SaveFilterValues()
+void  PlaybackListFilter::SaveFilterValues()
 {
     PlaybackListFilterValues filtervalues;
     filtervalues.duration = m_filter_duration_edit->GetValue() ;
@@ -419,8 +405,7 @@ void  PlaybackListFilter<PlaybackTabType>::SaveFilterValues()
     sett().SetReplayFilterValues(filtervalues);
 }
 
-template <class PlaybackTabType>
-void PlaybackListFilter<PlaybackTabType>::SetDurationValue()
+void PlaybackListFilter::SetDurationValue()
 {
 
     wxString dur = m_filter_duration_edit->GetValue();

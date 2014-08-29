@@ -5,28 +5,29 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
-#include "replay.h"
+#include "storedgame.h"
 #include "user.h"
 #include "iconimagelist.h"
 #include "gui/uiutils.h"
 #include "gui/ui.h"
 #include "utils/conversion.h"
+#include "playbacklistctrl.h"
 
 
-BEGIN_EVENT_TABLE_TEMPLATE1(PlaybackListCtrl, PlaybackListCtrl::BaseType, PlaybackType )
+BEGIN_EVENT_TABLE(PlaybackListCtrl, CustomVirtListCtrl )
 
   EVT_LIST_ITEM_RIGHT_CLICK( RLIST_LIST, PlaybackListCtrl::OnListRightClick )
   EVT_MENU                 ( RLIST_DLMAP, PlaybackListCtrl::OnDLMap )
   EVT_MENU                 ( RLIST_DLMOD, PlaybackListCtrl::OnDLMod )
-  EVT_LIST_COL_CLICK       ( RLIST_LIST, ParentType::OnColClick )
+  EVT_LIST_COL_CLICK       ( RLIST_LIST, PlaybackListCtrl::OnColClick )
   EVT_KEY_DOWN			   ( PlaybackListCtrl::OnChar )
 
 END_EVENT_TABLE()
 
+
 template<class T,class L> SortOrder CustomVirtListCtrl<T,L>::m_sortorder = SortOrder();
 
-template <class PlaybackType>
-PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
+PlaybackListCtrl::PlaybackListCtrl( wxWindow* parent  ):
   PlaybackListCtrl::BaseType(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
 							wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
 							_T("PlaybackListCtrl"), 4, &PlaybackListCtrl::CompareOneCrit )
@@ -60,20 +61,17 @@ PlaybackListCtrl<PlaybackType>::PlaybackListCtrl( wxWindow* parent  ):
     m_popup->Append( RLIST_DLMOD, _("Download m&od") );
 }
 
-template <class PlaybackType>
-PlaybackListCtrl<PlaybackType>::~PlaybackListCtrl()
+PlaybackListCtrl::~PlaybackListCtrl()
 {
   delete m_popup;
 }
 
-template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::OnListRightClick( wxListEvent& /*unused*/ )
+void PlaybackListCtrl::OnListRightClick( wxListEvent& /*unused*/ )
 {
   PopupMenu( m_popup );
 }
 
-template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::AddPlayback( const PlaybackType& replay )
+void PlaybackListCtrl::AddPlayback( const StoredGame& replay )
 {
 	if ( AddItem( &replay ) ) {
 		SetColumnWidth(0, wxLIST_AUTOSIZE);
@@ -87,8 +85,7 @@ void PlaybackListCtrl<PlaybackType>::AddPlayback( const PlaybackType& replay )
     wxLogWarning( _T("Replay already in list.") );
 }
 
-template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::RemovePlayback( const PlaybackType& replay )
+void PlaybackListCtrl::RemovePlayback( const StoredGame& replay )
 {
     if ( RemoveItem( &replay) )
         return;
@@ -96,8 +93,7 @@ void PlaybackListCtrl<PlaybackType>::RemovePlayback( const PlaybackType& replay 
     wxLogError( _T("Didn't find the replay to remove.") );
 }
 
-template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& /*unused*/ )
+void PlaybackListCtrl::OnDLMap( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
 		const OfflineBattle& battle = m_data[m_selected_index]->battle;
@@ -105,8 +101,7 @@ void PlaybackListCtrl<PlaybackType>::OnDLMap( wxCommandEvent& /*unused*/ )
     }
 }
 
-template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::OnDLMod( wxCommandEvent& /*unused*/ )
+void PlaybackListCtrl::OnDLMod( wxCommandEvent& /*unused*/ )
 {
     if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
 		const OfflineBattle& battle = m_data[m_selected_index]->battle;
@@ -114,8 +109,7 @@ void PlaybackListCtrl<PlaybackType>::OnDLMod( wxCommandEvent& /*unused*/ )
     }
 }
 
-template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::Sort()
+void PlaybackListCtrl::Sort()
 {
     if ( m_data.size() > 0 ) {
         SaveSelection();
@@ -124,8 +118,7 @@ void PlaybackListCtrl<PlaybackType>::Sort()
     }
 }
 
-template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
+int PlaybackListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
         case 0: return dir * compareSimple( u1->date, u2->date );
@@ -140,13 +133,12 @@ int PlaybackListCtrl<PlaybackType>::CompareOneCrit( DataType u1, DataType u2, in
     }
 }
 
-template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, const wxPoint& position)
+void PlaybackListCtrl::SetTipWindowText( const long item_hit, const wxPoint& position)
 {
     if ( item_hit < 0 || item_hit >= (long)m_data.size() )
         return;
 
-    const PlaybackType& replay = *GetDataFromIndex( item_hit );
+    const StoredGame& replay = *GetDataFromIndex( item_hit );
 
     int column = getColumnFromPosition( position );
     if (column > (int)m_colinfovec.size() || column < 0)
@@ -157,22 +149,22 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
     {
         switch (column) {
             case 0: // date
-            m_tiptext = replay.date_string;
+		m_tiptext = TowxString(replay.date_string);
                 break;
             case 1: // modname
-                m_tiptext = replay.ModName;
+                m_tiptext = TowxString(replay.ModName);
                 break;
             case 2: // mapname
-                m_tiptext = replay.MapName;
+                m_tiptext = TowxString(replay.MapName);
                 break;
             case 3: //playernum
-                m_tiptext = replay.ModName;
+                m_tiptext = TowxString(replay.ModName);
                 break;
             case 4: // spring version
-                m_tiptext = replay.SpringVersion;
+                m_tiptext = TowxString(replay.SpringVersion);
                 break;
             case 5: // filenam
-                m_tiptext = replay.Filename;
+                m_tiptext = TowxString(replay.Filename);
                 break;
 
             default: m_tiptext = wxEmptyString;
@@ -181,25 +173,24 @@ void PlaybackListCtrl<PlaybackType>::SetTipWindowText( const long item_hit, cons
     }
 }
 
-template <class PlaybackType>
-wxString PlaybackListCtrl<PlaybackType>::GetItemText(long item, long column) const
+wxString PlaybackListCtrl::GetItemText(long item, long column) const
 {
     if ( m_data[item] == NULL )
         return wxEmptyString;
 
-    const PlaybackType& replay = *m_data[item];
+    const StoredGame& replay = *m_data[item];
 	wxString duration = wxFormat(_T("%02ld:%02ld:%02ld") )
 									% (replay.duration / 3600)
 									% ((replay.duration%3600)/60)
 									% ((replay.duration%60)/60 ) ;
 
     switch ( column ) {
-        case 0: return replay.date_string;
+        case 0: return TowxString(replay.date_string);
         case 1: return TowxString(replay.battle.GetHostModName());
         case 2: return TowxString(replay.battle.GetHostMapName());
 		case 3: return wxFormat(_T("%d") ) % ( replay.battle.GetNumUsers() - replay.battle.GetSpectators() );
         case 4: return duration;
-        case 5: return replay.SpringVersion;
+        case 5: return TowxString(replay.SpringVersion);
 		case 6: return wxFormat( _T("%d KB") ) % ( replay.size/1024 );
         case 7: return TowxString(replay.Filename).AfterLast( wxFileName::GetPathSeparator() );
 
@@ -207,8 +198,7 @@ wxString PlaybackListCtrl<PlaybackType>::GetItemText(long item, long column) con
     }
 }
 
-template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::GetItemImage(long item) const
+int PlaybackListCtrl::GetItemImage(long item) const
 {
     if ( m_data[item] == NULL )
         return -1;
@@ -216,8 +206,7 @@ int PlaybackListCtrl<PlaybackType>::GetItemImage(long item) const
     return -1;//icons().GetBattleStatusIcon( *m_data[item] );
 }
 
-template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::GetItemColumnImage(long /*item*/, long /*column*/) const
+int PlaybackListCtrl::GetItemColumnImage(long /*item*/, long /*column*/) const
 {
     //nothing's been done here atm
     return -1;
@@ -225,15 +214,14 @@ int PlaybackListCtrl<PlaybackType>::GetItemColumnImage(long /*item*/, long /*col
 //    if ( m_data[item] == NULL )
 //        return -1;
 //
-//    const PlaybackType& replay = *m_data[item];
+//    const StoredGame& replay = *m_data[item];
 //
 //    switch ( column ) {
 //        default: return -1;
 //    }
 }
 
-template <class PlaybackType>
-wxListItemAttr* PlaybackListCtrl<PlaybackType>::GetItemAttr(long /*unused*/) const
+wxListItemAttr* PlaybackListCtrl::GetItemAttr(long /*unused*/) const
 {
     //not neded atm
 //    if ( item < m_data.size() && item > -1 ) {
@@ -242,8 +230,7 @@ wxListItemAttr* PlaybackListCtrl<PlaybackType>::GetItemAttr(long /*unused*/) con
     return NULL;
 }
 
-template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::RemovePlayback( const int index )
+void PlaybackListCtrl::RemovePlayback( const int index )
 {
     if ( index != -1 && index < long(m_data.size()) ) {
         m_data.erase( m_data.begin() + index );
@@ -254,8 +241,7 @@ void PlaybackListCtrl<PlaybackType>::RemovePlayback( const int index )
     wxLogError( _T("Didn't find the replay to remove.") );
 }
 
-template <class PlaybackType>
-int PlaybackListCtrl<PlaybackType>::GetIndexFromData( const DataType& data ) const
+int PlaybackListCtrl::GetIndexFromData( const DataType& data ) const
 {
     DataCIter it = m_data.begin();
     for ( int i = 0; it != m_data.end(); ++it, ++i ) {
@@ -266,52 +252,11 @@ int PlaybackListCtrl<PlaybackType>::GetIndexFromData( const DataType& data ) con
     return -1;
 }
 
-template <class PlaybackType>
-void PlaybackListCtrl<PlaybackType>::OnChar(wxKeyEvent & event)
+void PlaybackListCtrl::OnChar(wxKeyEvent & event)
 {
 	const int keyCode = event.GetKeyCode();
 	if ( keyCode == WXK_DELETE )
-		RemovePlayback( ParentType::GetSelectedIndex() );
+		RemovePlayback(GetSelectedIndex());
 	else
 		event.Skip();
 }
-
-/////!TODO get rid of this in favor of the functionality in base class
-//template <class PlaybackType>
-//void PlaybackListCtrl::OnColClick( wxListEvent& event )
-//{
-//  int click_col=event.GetColumn();
-//  wxLogMessage(_T("click col: %d"),click_col);
-//  if ( click_col == -1 ) return;
-//  wxListItem col;
-//  GetColumn( m_sortorder[0].col, col );
-//  col.SetImage( icons().ICON_NONE );
-//  SetColumn( m_sortorder[0].col, col );
-//
-//  if(click_col==m_sortorder[0].col){
-//    m_sortorder[0].direction *= -1;
-//  }
-//  else{
-//    int order_remove=3;
-//    for(int i=0;i<4;++i){
-//      if(m_sortorder[i].col==click_col){
-//        order_remove=i;
-//      }
-//    }
-//    for(int i=order_remove;i>0;--i){
-//      m_sortorder[i]=m_sortorder[i-1];
-//    }
-//    m_sortorder[0].col=click_col;
-//    m_sortorder[0].direction=true;
-//  }
-//
-//  for(int i=0;i<4;++i){
-//    wxLogMessage(_T("sorting level%d by %d direction %d"),i,m_sortorder[i].col,m_sortorder[i].direction);
-//  }
-//
-//  GetColumn( m_sortorder[0].col, col );
-//  col.SetImage( ( m_sortorder[0].direction > 0 )?icons().ICON_UP:icons().ICON_DOWN );
-//  SetColumn( m_sortorder[0].col, col );
-//
-//    SortList( true );
-//}

@@ -9,56 +9,38 @@
 #include <vector>
 
 #include "defines.h"
+class PlaybackTab;
 
-static const wxEventType PlaybacksLoadedEvt = wxNewEventType();
 
-
-template <class PlaybackTabImp >
 class PlaybackLoader : public wxEvtHandler
 {
 protected:
     class PlaybackLoaderThread : public wxThread
     {
-        protected:
-            typedef PlaybackLoader<PlaybackTabImp>
-                ParentType;
-
         public:
-            PlaybackLoaderThread();
-            void SetParent( ParentType* parent );
+			PlaybackLoaderThread(PlaybackLoader* loader, PlaybackTab* parent);
             void* Entry();
 
         protected:
-            ParentType* m_parent;
+            PlaybackTab* m_parent;
+			PlaybackLoader* m_loader;
     };
 
 public:
-    typedef PlaybackTabImp
-        ParentType;
-    typedef typename ParentType::PlaybackType
-        PlaybackType;
-    typedef typename ParentType::ListType
-        ListType;
-    typedef PlaybackLoader<PlaybackTabImp>
-        ThisType;
-    typedef PlaybackLoaderThread
-        ThreadType;
+	static const wxEventType PlaybacksLoadedEvt;
 
-    static const bool IsReplayType = ParentType::IsReplayType;
-
-    PlaybackLoader( ParentType* parent );
+    PlaybackLoader( PlaybackTab* parent, bool IsReplayType);
     ~PlaybackLoader();
     void OnComplete();
     void Run();
     std::vector<std::string> GetPlaybackFilenames();
-
-protected:
+private:
     std::vector<std::string> m_filenames;
-    ParentType* m_parent;
-    ThreadType* m_thread_loader;
+    PlaybackTab* m_parent;
+    PlaybackLoaderThread* m_thread_loader;
+	bool m_isreplaytype;
 
 };
 
-#include "playbackthread.cpp"
 #endif // SPRINGLOBBY_HEADERGUARD_PLAYBACKTHREAD
 

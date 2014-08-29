@@ -20,48 +20,28 @@ class wxStaticText;
 class wxStaticLine;
 class wxCheckBox;
 class wxToggleButton;
-
-template <class PlaybackTabType>
+class PlaybackListCtrl;
+struct StoredGame;
+class PlaybackLoader;
 class PlaybackListFilter;
 
-template <class PlaybackType>
-class PlaybackListCtrl;
-
-template <class PlaybackType>
-class PlaybackLoader;
-
-template <class PlaybackTraitsImp>
 class PlaybackTab : public GlobalEvent, public wxScrolledWindow
 {
     protected:
         friend class BattleListFilter; //! WTF?
 
     public:
-        typedef PlaybackTraitsImp
-            PlaybackTraits;
-        typedef typename PlaybackTraits::PlaybackType
-            PlaybackType;
-        typedef PlaybackTab<PlaybackTraits>
-            ThisType;
-        typedef typename PlaybackTraits::ListType
-            ListType;
-        typedef PlaybackListCtrl<PlaybackType>
-            ListCtrlType;
-        typedef PlaybackLoader<ThisType>
-            LoaderType;
-
-        static const bool IsReplayType = PlaybackTraits::IsReplayType;
 
   public:
     //! loads all replays into list and adds them to listctrl
-    PlaybackTab( wxWindow* parent );
+    PlaybackTab( wxWindow* parent, bool replay);
      ~PlaybackTab();
 
     //! adds a single replay to listctrl
-    void AddPlayback( const PlaybackType& Replay );
-    void RemovePlayback( const PlaybackType& Replay );
+    void AddPlayback( const StoredGame& Replay );
+    void RemovePlayback( const StoredGame& Replay );
     void RemovePlayback( const int index );
-    void UpdatePlayback( const PlaybackType& Replay );
+    void UpdatePlayback( const StoredGame& Replay );
 
     //! add all replays in m_replays to listctrl
     void AddAllPlaybacks( wxCommandEvent& evt );
@@ -94,9 +74,9 @@ class PlaybackTab : public GlobalEvent, public wxScrolledWindow
 	void OnUnitsyncReloaded( wxCommandEvent& data );
 
   protected:
-    PlaybackListFilter<ThisType>* m_filter;
-    ListCtrlType* m_replay_listctrl;
-    LoaderType* m_replay_loader;
+	PlaybackListFilter* m_filter;
+    PlaybackListCtrl* m_replay_listctrl;
+    PlaybackLoader* m_replay_loader;
     MapCtrl* m_minimap;
     wxStaticText* m_map_lbl;
     wxStaticText* m_map_text;
@@ -113,13 +93,14 @@ class PlaybackTab : public GlobalEvent, public wxScrolledWindow
     BattleroomListCtrl* m_players;
 
     wxCheckBox* m_filter_activ;
+	bool m_isreplay;
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
 #else
 		wxCheckBox* m_filter_show;
 #endif
 
-    void AskForceWatch( PlaybackType& rep  ) const;
+    void AskForceWatch( StoredGame& rep  ) const;
 
 	DECLARE_EVENT_TABLE()
 };
@@ -136,6 +117,5 @@ enum
     PLAYBACK_USER_LIST
 };
 
-#include "playbacktab.cpp"
 #endif // SPRINGLOBBY_PlaybackTab_H_INCLUDED
 

@@ -5,15 +5,23 @@
 #include <wx/file.h>
 #include <wx/filefn.h>
 #include <wx/datetime.h>
+#include <wx/log.h>
 
 #include "replaylist.h"
 #include <lslutils/misc.h>
 #include "utils/conversion.h"
 #include "gui/customdialogs.h"
 #include "playbacktab.h"
-#include "replay.h"
+#include "storedgame.h"
 #include "gui/uiutils.h"
 #include <lslutils/globalsmanager.h>
+
+IPlaybackList& replaylist()
+{
+    static LSL::Util::LineInfo<ReplayList> m( AT );
+    static LSL::Util::GlobalObjectHolder<ReplayList, LSL::Util::LineInfo<ReplayList> > m_replay_list( m );
+    return m_replay_list;
+}
 
 ReplayList::ReplayList()
 {
@@ -24,7 +32,7 @@ void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 	m_replays.clear();
 	for ( size_t i = 0; i < filenames.size(); ++i) {
 		const std::string wfilename = filenames[i];
-		PlaybackType& playback = AddPlayback(i);
+		StoredGame& playback = AddPlayback(i);
 		if (!GetReplayInfos(wfilename, playback)) {
 			// looks like funny add/remove logic, but the Replay contains OfflineBattle which is IBattle which is ultimately boost::noncopyable.
 			wxLogError(_T("Couldn't open replay %s"), wfilename.c_str() );
@@ -44,9 +52,10 @@ int ReplayList::replayVersion(wxFile& replay ) const
 	return version;
 }
 
-bool ReplayList::GetReplayInfos(const std::string& ReplayPath, Replay& ret ) const
+bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret ) const
 {
 	const std::string FileName = LSL::Util::AfterLast( ReplayPath, SEP ); // strips file path
+	ret.type = StoredGame::REPLAY;
 	ret.Filename = ReplayPath;
 	ret.battle.SetPlayBackFilePath(ReplayPath);
 	ret.SpringVersion = LSL::Util::BeforeLast(LSL::Util::AfterLast(FileName, "_"),".");
@@ -78,12 +87,12 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, Replay& ret ) con
 	//getting this from filename seems more reliable than from demoheader
 	wxDateTime rdate;
 
-	if (rdate.ParseFormat(FileName, _T("%Y%m%d_%H%M%S")) == 0) {
+	if (rdate.ParseFormat(TowxString(FileName), _T("%Y%m%d_%H%M%S")) == 0) {
 		wxLogError(_T("Parsing %s failed"), TowxString(FileName).c_str());
 		return false;
 	}
 	ret.date=rdate.GetTicks(); // now it is sorted properly
-	ret.date_string=rdate.FormatISODate()+_T(" ")+rdate.FormatISOTime();
+	ret.date_string=STD_STRING(rdate.FormatISODate()+_T(" ")+rdate.FormatISOTime());
 
 	return true;
 }
@@ -112,7 +121,7 @@ wxString ReplayList::GetScriptFromReplay(wxFile& replay, const int version) cons
 	return script;
 }
 
-void ReplayList::GetHeaderInfo(wxFile& replay, Replay& rep, const int version) const
+void ReplayList::GetHeaderInfo(wxFile& replay, StoredGame& rep, const int version) const
 {
 	const int seek = 72 + (version < 5 ? 0 : 240);
 	if(replay.Seek(seek)==wxInvalidOffset) {
@@ -131,7 +140,6 @@ void ReplayList::GetHeaderInfo(wxFile& replay, Replay& rep, const int version) c
 	wxDateTime dt;
 	dt.Set( (time_t) unixtime );
 	// todo: add 2 strings one for date other for time?
-	wxString date_string = dt.FormatISODate()+_T(" ")+dt.FormatISOTime();
+	rep.date_string = STD_STRING(dt.FormatISODate()+_T(" ")+dt.FormatISOTime());
 	//  rep.date = (time_t) unixtime ;
-	rep.date_string = date_string;
 }
