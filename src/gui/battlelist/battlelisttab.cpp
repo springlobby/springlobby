@@ -424,13 +424,12 @@ void BattleListTab::DoJoin( IBattle& battle )
 void BattleListTab::OnSelect( wxListEvent& event )
 {
 	slLogDebugFunc("");
-	if ( event.GetIndex() == -1 )
-	{
+	if ( event.GetIndex() == -1 ) {
 		SelectBattle( 0 );
-	} else {
-		IBattle* b = ( m_battle_list->GetDataFromIndex( event.GetIndex() ) ) ;
-		SelectBattle( b );//
+		return;
 	}
+	IBattle* b = ( m_battle_list->GetSelectedData());
+	SelectBattle( b );
 }
 
 
