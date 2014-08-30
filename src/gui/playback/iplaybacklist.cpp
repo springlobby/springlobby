@@ -10,6 +10,8 @@
 
 StoredGame& IPlaybackList::AddPlayback( const size_t index )
 {
+	assert(!PlaybackExists(index)); //no duplicate add
+	m_replays[index].id = index;
 	return m_replays[index];
 }
 
@@ -25,7 +27,6 @@ IPlaybackList::playback_map_t::size_type IPlaybackList::GetNumPlaybacks() const
 
 StoredGame& IPlaybackList::GetPlaybackById( unsigned int const id )
 {
-//TODO catch
     playback_iter_t b = m_replays.find(id);
     if (b == m_replays.end())
         throw std::runtime_error("PlaybackList_Iter::GetPlayback(): no such replay");
