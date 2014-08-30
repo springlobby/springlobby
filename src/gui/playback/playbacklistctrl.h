@@ -12,11 +12,9 @@ struct StoredGame;
 
 class PlaybackListCtrl : public CustomVirtListCtrl< const StoredGame*, PlaybackListCtrl >
 {
-    protected:
-  public:
+public:
     PlaybackListCtrl( wxWindow* parent );
     ~PlaybackListCtrl();
-
     void AddPlayback( const StoredGame& replay );
     void RemovePlayback( const StoredGame& replay );
     void RemovePlayback( const int index );
@@ -36,14 +34,9 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const StoredGame*, PlaybackL
     wxListItemAttr * GetItemAttr(long item) const;
     int GetIndexFromData( const DataType& data ) const;
 
-/*
-    using ParentType::RefreshVisibleItems;
-    using ParentType::GetDataFromIndex;
-*/
-  protected:
+private:
 	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 	void OnChar(wxKeyEvent & event);
-
     virtual void Sort();
 
     wxMenu* m_popup;
