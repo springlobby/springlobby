@@ -307,26 +307,8 @@ void PlaybackTab::AskForceWatch( StoredGame& rep ) const
 
 void PlaybackTab::OnDelete( wxCommandEvent& /*unused*/ )
 {
-	int sel_index = m_replay_listctrl->GetSelectedIndex();
-	if ( sel_index >= 0 ) {
-		try {
-			const StoredGame& rep = *m_replay_listctrl->GetSelectedData();
-			int m_sel_replay_id = rep.id;
-			int index = m_replay_listctrl->GetIndexFromData( &rep );
-			wxLogMessage( _T( "Deleting replay %d " ), m_sel_replay_id );
-			wxString fn = TowxString(rep.Filename);
-			if ( !replaylist().DeletePlayback( m_sel_replay_id ) )
-				customMessageBoxNoModal( SL_MAIN_ICON, _( "Could not delete Replay: " ) + fn,
-				                         _( "Error" ) );
-			else {
-				RemovePlayback( index ); // Deselect is called in there too
-			}
-		} catch ( std::runtime_error ) {
-			return;
-		}
-	} else {
-		Deselected();
-	}
+	m_replay_listctrl->DeletePlayback();
+	Deselect();
 }
 
 void PlaybackTab::OnFilterActiv( wxCommandEvent& /*unused*/ )

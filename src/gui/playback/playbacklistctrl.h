@@ -23,6 +23,7 @@ class PlaybackListCtrl : public CustomVirtListCtrl< const StoredGame*, PlaybackL
     void OnListRightClick( wxListEvent& event );
     void OnDLMap( wxCommandEvent& event );
     void OnDLMod( wxCommandEvent& event );
+	void DeletePlayback(); //deletes the current selected playback from disk & list
 
     virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 

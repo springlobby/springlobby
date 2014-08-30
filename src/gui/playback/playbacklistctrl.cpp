@@ -12,6 +12,7 @@
 #include "gui/ui.h"
 #include "utils/conversion.h"
 #include "playbacklistctrl.h"
+#include "replaylist.h"
 
 
 BEGIN_EVENT_TABLE(PlaybackListCtrl, CustomVirtListCtrl )
@@ -256,7 +257,29 @@ void PlaybackListCtrl::OnChar(wxKeyEvent & event)
 {
 	const int keyCode = event.GetKeyCode();
 	if ( keyCode == WXK_DELETE )
-		RemovePlayback(GetSelectedIndex());
+		DeletePlayback();
 	else
 		event.Skip();
+}
+
+
+void PlaybackListCtrl::DeletePlayback()
+{
+	int sel_index = GetSelectedIndex();
+	if ( sel_index < 0 ) {
+		return;
+	}
+	try {
+		const StoredGame& rep = *GetSelectedData();
+		int m_sel_replay_id = rep.id;
+		int index = GetIndexFromData( &rep );
+		wxLogMessage( _T( "Deleting replay %d " ), m_sel_replay_id );
+		wxString fn = TowxString(rep.Filename);
+		if ( !replaylist().DeletePlayback( m_sel_replay_id ) )
+			customMessageBoxNoModal( SL_MAIN_ICON, _( "Could not delete Replay: " ) + fn,
+									 _( "Error" ) );
+		else {
+			RemovePlayback(GetSelectedIndex());
+		}
+	} catch ( std::runtime_error ) {}
 }
