@@ -227,16 +227,16 @@ void GroupOptionsPanel::ReloadUsersList()
 {
     wxArrayString groupuser = useractions().GetPeopleList( m_current_group );
     m_user_list->Clear();
-    m_user_list->InsertItems(groupuser, 0);
+	m_user_list->Append(groupuser);
     m_remove_user_button->Enable( false );
 }
 
 void GroupOptionsPanel::ReloadGroupsList()
 {
-  wxArrayString groupnames = useractions().GetGroupNames();
-  m_group_list->Clear();
-  m_group_list->InsertItems(groupnames, 0);
-  m_group_list->SetStringSelection(m_current_group);
+	wxArrayString groupnames = useractions().GetGroupNames();
+	m_group_list->Clear();
+	m_group_list->Append(groupnames);
+	m_group_list->SetStringSelection(m_current_group);
 }
 
 wxString GroupOptionsPanel::GetFirstGroupName()

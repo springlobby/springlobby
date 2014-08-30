@@ -356,8 +356,8 @@ void SpringOptionsTab::ReloadSpringList()
 	m_spring_list->Clear();
 	for(auto bundle: springlist) {
 		m_spring_list->Append(TowxString(bundle.first));
-		m_spring_list->SetStringSelection(TowxString(SlPaths::GetCurrentUsedSpringIndex()));
 	}
+	m_spring_list->SetStringSelection(TowxString(SlPaths::GetCurrentUsedSpringIndex()));
 	DoRestore();
 }
 
