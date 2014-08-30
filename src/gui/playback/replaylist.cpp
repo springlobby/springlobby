@@ -63,7 +63,7 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret )
 	}
 
 	const int replay_version = replayVersion( replay );
-	ret.battle.SetScript(STD_STRING(GetScriptFromReplay( replay, replay_version )));
+	ret.battle.SetScript(GetScriptFromReplay( replay, replay_version ));
 
 	if ( ret.battle.GetScript().empty() ) {
 		return false;
@@ -90,10 +90,10 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret )
 	return true;
 }
 
-wxString ReplayList::GetScriptFromReplay(wxFile& replay, const int version) const
+std::string ReplayList::GetScriptFromReplay(wxFile& replay, const int version) const
 {
 
-	wxString script;
+	std::string script;
 	if ( !replay.IsOpened() ) return script;
 	if(replay.Seek(20)==wxInvalidOffset) {
 		return script;
@@ -108,9 +108,8 @@ wxString ReplayList::GetScriptFromReplay(wxFile& replay, const int version) cons
 	replay.Read( &scriptSize, 4);
 	scriptSize = LSL::Util::Clamp( wxFileOffset(scriptSize), wxFileOffset(0), replay.Length() );
 	if(replay.Seek(headerSize) == wxInvalidOffset)return script;
-	std::string script_a(scriptSize,0);
-	replay.Read( &script_a[0], scriptSize );
-	script = TowxString( script_a ) ;//(script_a,scriptSize);
+	script.resize(scriptSize,0);
+	replay.Read( &script[0], scriptSize );
 	return script;
 }
 

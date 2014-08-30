@@ -44,7 +44,7 @@ public:
 private:
 	bool GetReplayInfos(const std::string& ReplayPath, StoredGame& ret ) const;
 	int replayVersion(wxFile& ReplayPath ) const;
-	wxString GetScriptFromReplay (wxFile& ReplayPath, const int version ) const;
+	std::string GetScriptFromReplay (wxFile& ReplayPath, const int version ) const;
 	//! saves relevant infos from header into replay struct
 	void GetHeaderInfo(wxFile& ReplayPath, StoredGame& rep,const int version ) const;
 };
