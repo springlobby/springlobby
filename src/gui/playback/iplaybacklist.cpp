@@ -7,7 +7,6 @@
 
 #include <lslutils/globalsmanager.h>
 
-
 StoredGame& IPlaybackList::AddPlayback( const size_t index )
 {
 	assert(!PlaybackExists(index)); //no duplicate add
@@ -43,9 +42,6 @@ bool IPlaybackList::DeletePlayback( unsigned int const id )
 {
 	const StoredGame& rep = m_replays[id];
     if ( wxRemoveFile( TowxString(rep.Filename) ) ) {
-
-        //m_filenames.resize(std::remove(m_filenames.begin(), m_filenames.end(), rep.Filename)-m_filenames.begin());
-
         m_replays.erase(id);
         return true;
     }
@@ -54,7 +50,6 @@ bool IPlaybackList::DeletePlayback( unsigned int const id )
 
 void IPlaybackList::RemoveAll()
 {
-//    m_filenames.clear();
     m_replays.clear();
     m_fails = 0;
 }

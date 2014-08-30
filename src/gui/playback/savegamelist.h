@@ -22,8 +22,8 @@ class SavegameList : public IPlaybackList
     template <class PB, class I >
     friend class LSL::Util::GlobalObjectHolder;
 private:
-	bool GetSavegameInfos ( const wxString& SavegamePath, StoredGame& ret ) const;
-	wxString GetScriptFromSavegame ( const wxString& SavegamePath ) const;
+	bool GetSavegameInfos ( const std::string& SavegamePath, StoredGame& ret ) const;
+	std::string GetScriptFromSavegame ( const std::string& SavegamePath ) const;
 };
 
 #endif // SAVEGAMELIST_H

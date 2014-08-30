@@ -1,19 +1,12 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include <iterator>
-#include <algorithm>
 #include <wx/file.h>
 #include <wx/filefn.h>
-#include <wx/datetime.h>
 #include <wx/log.h>
 
 #include "replaylist.h"
-#include <lslutils/misc.h>
-#include "utils/conversion.h"
-#include "gui/customdialogs.h"
-#include "playbacktab.h"
 #include "storedgame.h"
-#include "gui/uiutils.h"
+#include "utils/conversion.h"
 #include <lslutils/globalsmanager.h>
 
 IPlaybackList& replaylist()
