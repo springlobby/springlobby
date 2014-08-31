@@ -63,7 +63,7 @@ BattleOptionsTab::BattleOptionsTab( wxWindow* parent,IBattle* battle )
 	m_aloowed_lbl = new wxStaticText( this, wxID_ANY, _( "Allowed units" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_allowed_sizer->Add( m_aloowed_lbl, 0, wxALL, 5 );
 
-	m_allowed_list = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_MULTIPLE | wxLB_NEEDED_SB);
+	m_allowed_list = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_MULTIPLE | wxLB_NEEDED_SB| wxLB_SORT);
 	m_allowed_list->SetToolTip( TE( _( "Units in this list will be available in the game." ) ) );
 
 	m_allowed_sizer->Add( m_allowed_list, 1, wxALL | wxEXPAND, 5 );
@@ -143,8 +143,7 @@ void BattleOptionsTab::ReloadRestrictions()
 
 	try {
 		wxArrayString items = LSL::Util::vectorToArrayString(LSL::usync().GetUnitsList(m_battle->GetHostModName()));
-		items.Sort();
-		m_allowed_list->InsertItems(items, 0);
+		m_allowed_list->Append(items);
 	} catch ( ... ) {}
 	std::map<std::string, int> units = m_battle->RestrictedUnits();
 
