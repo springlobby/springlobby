@@ -46,20 +46,8 @@ BEGIN_EVENT_TABLE(wxBinderEvtHandler, wxEvtHandler)
     // with the ENTER keypresses: the wxBinderEvtHandler would be called
     // three times with three different events which would then generate
     // three command executions
-#if 0
-    EVT_KEY_UP(wxBinderEvtHandler::OnChar)
-    EVT_CHAR(wxBinderEvtHandler::OnChar)
-#endif
 
 #if defined( __WXMSW__  )       // supported only on Win32
-#if wxCHECK_VERSION(2, 5, 1)    // and from wxWidgets 2.5.1
-
-    // I don't think this is needed because wxEVT_HOTKEY are generated
-    // only in some special cases...
-	//FIXME: maybe re-enable this?
-	//EVT_HOTKEY(wxID_ANY, wxBinderEvtHandler::OnChar)
-#endif
-#endif
 
 END_EVENT_TABLE()
 
@@ -96,30 +84,11 @@ BEGIN_EVENT_TABLE(wxKeyConfigPanel, wxPanel)
 END_EVENT_TABLE()
 
 
-#if !wxCHECK_VERSION(2, 5, 1)
-
-    // with wx previous to 2.5 we need to use wxWindow::Node* instead
-    // of wxWindow::compatibility_iterator (thanks to Sebastien Berthet for this)
-    #define compatibility_iterator          Node*
-#endif
-
-
 // some statics
 int wxCmd::m_nCmdTypes = 0;
 wxCmd::wxCmdType wxCmd::m_arrCmdType[];
 
-
 #ifdef __WXMSW__
-#ifdef __MINGW32__
-#define MAPVK_VK_TO_VSC     (0)
-#define MAPVK_VSC_TO_VK     (1)
-#define MAPVK_VK_TO_CHAR    (2)
-#define MAPVK_VSC_TO_VK_EX  (3)
-#if(WINVER >= 0x0600)
-#define MAPVK_VK_TO_VSC_EX  (4)
-#endif /* WINVER >= 0x0600 */
-#endif
-
 HKL wxMswKeyConverter::m_usLayout = 0;
 
 wxChar wxMswKeyConverter::ConvertUsToLocal( const wxChar& c )
@@ -841,7 +810,7 @@ void wxKeyBinder::AttachRecursively(wxWindow *p)
     Attach(p);
 
     // this is the standard way wxWidgets uses to iterate through children...
-    for (wxWindowList::compatibility_iterator node = p->GetChildren().GetFirst();
+    for (wxWindowList::Node* node = p->GetChildren().GetFirst();
         node;
         node = node->GetNext())
     {
@@ -2081,12 +2050,6 @@ void wxKeyConfigPanel::OnProfileEditing(wxCommandEvent &)
 
 #ifdef wxKEYBINDER_AUTO_SAVE
 	ApplyChanges();
-#endif
-#if 0
-    // and the string of the combobox...
-    int n = m_pKeyProfiles->FindString(oldname);
-    if (n != wxNOT_FOUND)
-        m_pKeyProfiles->SetString(n, newname);
 #endif
 }
 
