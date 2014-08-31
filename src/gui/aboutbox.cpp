@@ -67,5 +67,5 @@ void slAboutBox::showDocs()
 
 void slAboutBox::showChangelog()
 {
-	OpenWebBrowser( _T("http://springlobby.info/changelog.html"));
+	OpenWebBrowser( _T("http://springrts.com/phpbb/viewtopic.php?f=64&t=31224"));
 }
