@@ -76,7 +76,7 @@ PlaybackTab::PlaybackTab( wxWindow* parent, bool replay):
 	wxBoxSizer* m_info_sizer;
 	m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_minimap = new MapCtrl( this, 100, 0, true, true, false, false );
+	m_minimap = new MapCtrl( this, 100, 0, true, false, false );
 	m_info_sizer->Add( m_minimap, 0, wxALL, 5 );
 
 	wxFlexGridSizer* m_data_sizer;

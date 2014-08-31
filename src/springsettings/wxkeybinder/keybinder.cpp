@@ -47,7 +47,6 @@ BEGIN_EVENT_TABLE(wxBinderEvtHandler, wxEvtHandler)
     // three times with three different events which would then generate
     // three command executions
 
-#if defined( __WXMSW__  )       // supported only on Win32
 
 END_EVENT_TABLE()
 

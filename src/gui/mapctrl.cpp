@@ -101,7 +101,7 @@ static inline int ReadInt24(const unsigned char* p)
     return p[0] | (p[1] << 8) | (p[2] << 16);
 }
 
-MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bool fixed_size, bool draw_start_types, bool singleplayer ):
+MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bool draw_start_types, bool singleplayer ):
         wxPanel( parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER|wxFULL_REPAINT_ON_RESIZE ),
         m_async(boost::bind(&MapCtrl::OnGetMapImageAsyncCompleted, this, _1)),
         m_minimap(0),

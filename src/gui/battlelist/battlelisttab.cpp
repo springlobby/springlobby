@@ -81,7 +81,7 @@ BattleListTab::BattleListTab( wxWindow* parent )
 
 	m_info_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_minimap = new MapCtrl( this, 100, 0, true, true, false, false );
+	m_minimap = new MapCtrl( this, 100, 0, true, false, false );
 	m_info_sizer->Add( m_minimap, 0, wxALL, 5 );
 
 	m_data_sizer = new wxFlexGridSizer( 4, 2, 0, 0 );

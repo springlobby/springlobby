@@ -156,7 +156,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 
 	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, wxEmptyString, wxDefaultPosition, wxDefaultSize );
 
-	m_minimap = new MapCtrl( this, 162, m_battle, true, true, true, false );
+	m_minimap = new MapCtrl( this, 162, m_battle, true, true, false );
 	m_minimap->SetToolTip( TE( _( "A preview of the selected map.  You can see the starting positions, or (if set) starting boxes." ) ) );
 
 	m_browse_map_btn = new wxButton( this, BROOM_MAP_BROWSE, _( "Map" ), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );

@@ -37,7 +37,6 @@ lsl/networking/socket.cpp
 #include <windows.h>
 #include <wx/msw/winundef.h>
 #include <iphlpapi.h>
-#pragma comment(lib, "iphlpapi.lib")
 #elif defined(linux)
 #include <sys/ioctl.h>
 #include <net/if.h>
