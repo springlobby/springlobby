@@ -271,7 +271,6 @@ void PlaybackListCtrl::DeletePlayback()
 	try {
 		const StoredGame& rep = *GetSelectedData();
 		int m_sel_replay_id = rep.id;
-		int index = GetIndexFromData( &rep );
 		wxLogMessage( _T( "Deleting replay %d " ), m_sel_replay_id );
 		wxString fn = TowxString(rep.Filename);
 		if ( !replaylist().DeletePlayback( m_sel_replay_id ) )
