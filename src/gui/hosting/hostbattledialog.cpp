@@ -210,7 +210,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_rank_box->Add(m_rank_direction);
 
 	wxFlexGridSizer* m_rank_sizer;
-	m_rank_sizer = new wxFlexGridSizer( 2, 6, 0, 0 );
+	m_rank_sizer = new wxFlexGridSizer( 2, 0, 0, 0 );
 	m_rank_sizer->SetFlexibleDirection( wxBOTH );
 
 	m_rank0_radio = new wxRadioButton( m_panel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxRB_GROUP );
