@@ -110,7 +110,6 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bo
         m_battle(battle),
         m_mapname(""),
         m_draw_start_types(draw_start_types),
-        m_fixed_size(fixed_size),
         m_ro(readonly),
         m_sp(singleplayer),
         m_mover_rect(-2),

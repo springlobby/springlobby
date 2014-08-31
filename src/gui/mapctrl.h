@@ -90,7 +90,7 @@ class MapCtrl : public wxPanel
     void SetReadOnly( bool readonly ) { m_ro = readonly; }
 
 
-   protected:
+private:
 
     int LoadMinimap();
     void FreeMinimap();
@@ -177,7 +177,6 @@ class MapCtrl : public wxPanel
     std::string m_mapname;
 
     bool m_draw_start_types;
-    bool m_fixed_size;
     bool m_ro;
     bool m_sp;
 
