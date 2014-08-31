@@ -94,6 +94,7 @@ MainOptionsTab::MainOptionsTab( wxWindow* parent )
 
 	SetSizer( m_main_sizer );
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
+	SetSelection(0); //activate first tab
 	Layout();
 	Refresh();
 }
