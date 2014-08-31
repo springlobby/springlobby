@@ -409,7 +409,11 @@ void ChatPanel::OutputLine( const ChatLine& line)
 		const wxColor oldcolor(line.chatstyle.GetTextColour());
 
 		while ( m1.Len() > 0 ) {
+#if wxCHECK_VERSION(3,0,0)
 			const wxUniChar c = m1.GetChar(0);
+#else
+			const char c = m1.GetChar(0);
+#endif
 			if (c == 3 && m1.Len() > 1 && (m1.GetChar(1) >= 48 && m1.GetChar(1) <= 58)) { // Color
 				if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58)) {
 					color = (int(m1.GetChar(1)) - 48)*10+(int(m1.GetChar(2)) - 48);
