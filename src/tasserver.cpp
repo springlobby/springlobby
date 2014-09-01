@@ -147,7 +147,7 @@ TASServer::TASServer():
 	m_last_udp_ping(0),
 	m_last_ping(PING_DELAY), //no instant ping, delay first ping for PING_DELAY seconds
 	m_last_net_packet(0),
-	m_last_timer(0),
+	m_lastnotify(wxGetLocalTimeMillis()),
 	m_last_id(0),
 	m_udp_private_port(0),
 	m_nat_helper_port(0),
@@ -288,7 +288,7 @@ void TASServer::Connect( const wxString& servername ,const wxString& addr, const
 	m_agreement = wxEmptyString;
 	m_crc.ResetCRC();
 	m_last_net_packet = 0;
-	m_last_timer = 0;
+	m_lastnotify = wxGetLocalTimeMillis();
 	const std::string handle = m_sock->GetHandle();
 	if ( !handle.empty() ) {
 		m_crc.UpdateData(handle);
@@ -424,11 +424,13 @@ void TASServer::AcceptAgreement()
 void TASServer::Notify()
 {
 	if (m_sock == NULL) return;
-	const int interval = GetInterval();
+	const wxLongLong now = wxGetLocalTimeMillis();
+	const long diff = (now - m_lastnotify).ToLong();
+	const int interval = std::min<long>(GetInterval(), diff);
+	m_lastnotify = now;
 
 	m_sock->OnTimer(interval);
 	m_last_ping += interval;
-	m_last_timer += interval;
 	m_last_net_packet += interval;
 	m_last_udp_ping += interval;
 

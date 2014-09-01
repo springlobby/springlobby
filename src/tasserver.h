@@ -181,7 +181,7 @@ private:
 	int m_last_udp_ping;
 	int m_last_ping; //time last ping was sent
 	int m_last_net_packet; //time last packet was received
-	int m_last_timer;
+	wxLongLong m_lastnotify;
 	unsigned int m_last_id;
 
 	std::list<TASPingListItem> m_pinglist;
