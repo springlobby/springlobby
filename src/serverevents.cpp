@@ -46,7 +46,11 @@ void ServerEvents::OnDisconnected( bool wasonline )
 {
 	slLogDebugFunc("");
     m_serv.SetRequiredSpring (wxEmptyString);
-    ui().OnDisconnected( m_serv, wasonline );
+	try {
+		ui().OnDisconnected( m_serv, wasonline );
+	} catch (LSL::Util::GlobalDestroyedError& ) {
+		/* At the end of the program, the global reference in ui() might already have been nullified. */
+	}
 }
 
 
