@@ -426,7 +426,7 @@ void TASServer::Notify()
 	if (m_sock == NULL) return;
 	const wxLongLong now = wxGetLocalTimeMillis();
 	const long diff = (now - m_lastnotify).ToLong();
-	const int interval = std::min<long>(GetInterval(), diff);
+	const int interval = std::max<long>(GetInterval(), diff);
 	m_lastnotify = now;
 
 	m_sock->OnTimer(interval);
