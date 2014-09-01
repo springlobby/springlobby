@@ -47,13 +47,13 @@ lsl/networking/tasserver.cpp
 
 
 SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which is send when leaving server");
-SLCONFIG("/Server/HangTimeout", 10l, "Warn when SpringLobby hangs longer then this delay");
 
-#define PING_TIME 30
-#define PING_TIMEOUT 60
-#define PING_DELAY 5 //first ping is sent after PING_DELAY
-
-const int udp_reply_timeout=10;
+// times in milliseconds
+#define PING_TIME 30000
+#define PING_TIMEOUT 60000
+#define PING_DELAY 5000 //first ping is sent after PING_DELAY
+#define UDP_KEEP_ALIVE 15000
+#define UDP_REPLY_TIMEOUT 10000
 
 
 //! @brief Struct used internally by the TASServer class to get client status information.
@@ -145,7 +145,7 @@ TASServer::TASServer():
 	m_redirecting( false ),
 	m_buffer(wxEmptyString),
 	m_last_udp_ping(0),
-	m_last_ping(time(0) - PING_TIME + PING_DELAY), //no instant ping, delay first ping for PING_DELAY seconds
+	m_last_ping(PING_DELAY), //no instant ping, delay first ping for PING_DELAY seconds
 	m_last_net_packet(0),
 	m_last_timer(0),
 	m_last_id(0),
@@ -424,12 +424,16 @@ void TASServer::AcceptAgreement()
 void TASServer::Notify()
 {
 	if (m_sock == NULL) return;
-	m_sock->OnTimer(GetInterval());
-	const time_t now = time( 0 );
+	const int interval = GetInterval();
+
+	m_sock->OnTimer(interval);
+	m_last_ping += interval;
+	m_last_timer += interval;
+	m_last_net_packet += interval;
+	m_last_udp_ping += interval;
 
 	if ( !m_connected ) { // We are not formally connected yet, but might be.
 		if ( IsConnected() ) {
-			m_last_udp_ping = now;
 			m_connected = true;
 		}
 		return;
@@ -437,26 +441,17 @@ void TASServer::Notify()
 	if ( !IsConnected() ) return;
 
 
-	if (now - m_last_ping > PING_TIME) { //Send a PING every 30 seconds
-		m_last_ping = now;
+	if (m_last_ping > PING_TIME) { //Send a PING every 30 seconds
+		m_last_ping = 0;
 		Ping();
 		return;
 	}
 
-	const static long hangcheck = std::max(1l, cfg().ReadLong(_T("/Server/HangTimeout")));
-	if (m_last_timer > 0 && (now-m_last_timer > hangcheck)) {
-		m_se->OnServerMessage(wxFormat(_("SpringLobby hung for %d seconds")) % ((int)now-m_last_timer));
-		m_last_timer = now;
+	if ( m_last_net_packet > PING_TIMEOUT ) {
+		m_last_net_packet = 0;
+		m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.")) % m_last_net_packet );
+		Disconnect();
 		return;
-	}
-	m_last_timer = now;
-	if ( m_last_net_packet > 0 ) {
-		const time_t lastpacketreceived_diff = now - m_last_net_packet;
-		if ( lastpacketreceived_diff > PING_TIMEOUT ) { // no data received, assume timeout
-			m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.")) % lastpacketreceived_diff % (now - m_last_ping) );
-			Disconnect();
-			return;
-		}
 	}
 
 	// joining battle with nat traversal:
@@ -464,27 +459,24 @@ void TASServer::Notify()
 	// we did UdpPing(our name) , join battle anyway, but with warning message that nat failed.
 	// (if we'd receive reply from server, we'd finalize already)
 	//
-	if (m_do_finalize_join_battle&&(m_last_udp_ping+udp_reply_timeout<now)) {
+	if (m_do_finalize_join_battle&&(m_last_udp_ping > UDP_REPLY_TIMEOUT)) {
 		m_se->OnServerMessage(_("Failed to punch through NAT, playing this battle might not work for you or for other players."));
 		//wxMessageBox()
 		FinalizeJoinBattle();
 		//wxMessageBox(_("Failed to punch through NAT"), _("Error"), wxICON_INFORMATION, NULL/* m_ui.mw()*/ );
-	};
+	}
 
-	if ( ( m_last_udp_ping + m_keepalive ) < now ) {
+	if ( ( m_last_udp_ping > UDP_KEEP_ALIVE )  ) {
 		// Is it time for a nat traversal PING?
-		m_last_udp_ping = now;
+		m_last_udp_ping = 0;
 		// Nat travelsal "ping"
 		if ( m_battle_id != -1 ) {
 			IBattle *battle=GetCurrentBattle();
-			if (battle) {
-				if ( ( battle->GetNatType() == NAT_Hole_punching || ( battle->GetNatType() == NAT_Fixed_source_ports ) ) && !battle->GetInGame() ) {
-					if ( battle->IsFounderMe() ) {
-						UdpPingTheServer(m_user);
-						UdpPingAllClients();
-					} else {
-						UdpPingTheServer(m_user);
-					}
+			if ((battle) &&
+				( battle->GetNatType() == NAT_Hole_punching || ( battle->GetNatType() == NAT_Fixed_source_ports ) ) && !battle->GetInGame() ) {
+				UdpPingTheServer(m_user);
+				if ( battle->IsFounderMe() ) {
+					UdpPingAllClients();
 				}
 			}
 		}
@@ -1245,7 +1237,7 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
 			if ( ( battle->GetNatType() == NAT_Hole_punching ) || ( battle->GetNatType() == NAT_Fixed_source_ports ) ) {
 				m_udp_private_port=sett().GetClientPort();
 
-				m_last_udp_ping = time(0);
+				m_last_udp_ping = 0;
 				// its important to set time now, to prevent Update()
 				// from calling FinalizeJoinBattle() on timeout.
 				// m_do_finalize_join_battle must be set to true after setting time, not before.
@@ -1254,7 +1246,7 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
 					UdpPingTheServer( m_user );
 					// sleep(0);// sleep until end of timeslice.
 				}
-				m_last_udp_ping = time(0);// set time again
+				m_last_udp_ping = 0;// set time again
 			} else {
 				// if not using nat, finalize now.
 				m_do_finalize_join_battle=true;
@@ -1887,7 +1879,6 @@ void TASServer::OnConnected(Socket& /*unused*/ )
 {
 	slLogDebugFunc("");
 	//TASServer* serv = (TASServer*)sock->GetUserdata();
-	m_last_udp_ping = time( 0 );
 	m_connected = true;
 	m_online = false;
 	m_relay_host_manager_list.Clear();
@@ -1919,7 +1910,7 @@ void TASServer::OnDisconnected(Socket& /*unused*/ )
 
 void TASServer::OnDataReceived( Socket& sock )
 {
-	m_last_net_packet = time( 0 );
+	m_last_net_packet = 0;
 	wxString data = sock.Receive();
 	m_buffer << data;
 	m_buffer.Replace( _T("\r\n"), _T("\n") );

@@ -134,9 +134,6 @@ class IServer : public iNetClass, public SL::NonCopyable
     virtual void SendMyBattleStatus( UserBattleStatus& /*bs*/ ) {};
     virtual void SendMyUserStatus() {};
 
-    virtual void SetKeepaliveInterval( int seconds ) { m_keepalive = seconds; }
-    virtual int GetKeepaliveInterval() { return m_keepalive; }
-
     virtual void SetUsername( const wxString& username ) { m_user = username; }
     virtual void SetPassword( const wxString& password ) { m_pass = password; }
     virtual bool IsPasswordHash( const wxString& /*pass*/ ) const {return true;};
@@ -188,7 +185,6 @@ class IServer : public iNetClass, public SL::NonCopyable
 
   protected:
 	Socket* m_sock;
-    int m_keepalive;
     wxString m_user;
     wxString m_pass;
     wxString m_server_name;

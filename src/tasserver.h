@@ -178,10 +178,10 @@ private:
 	bool m_id_transmission;
 	bool m_redirecting;
 	wxString m_buffer;
-	time_t m_last_udp_ping;
-	time_t m_last_ping; //time last ping was sent
-	time_t m_last_net_packet; //time last packet was received
-	time_t m_last_timer;
+	int m_last_udp_ping;
+	int m_last_ping; //time last ping was sent
+	int m_last_net_packet; //time last packet was received
+	int m_last_timer;
 	unsigned int m_last_id;
 
 	std::list<TASPingListItem> m_pinglist;
