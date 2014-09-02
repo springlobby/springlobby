@@ -190,9 +190,10 @@ void BattleMapTab::ReloadMaplist()
 {
 	if ( !m_battle ) return;
 	m_map_combo->Clear();
-    int i = 0;
-    for (auto map : LSL::usync().GetMapList())
-        m_map_combo->Insert( TowxString(map), i++ );
+	LSL::StringVector maps = LSL::usync().GetMapList();
+	for (const std::string map: maps) {
+	        m_map_combo->Append(TowxString(map));
+	}
 }
 
 
