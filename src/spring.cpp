@@ -106,24 +106,19 @@ bool Spring::Run( IBattle& battle )
 		return LaunchEngine(executable, params);
 	}
 
-	const wxString scripttxt = TowxString(SlPaths::GetDataDir()) + _T("script.txt");
+	const wxString scripttxt = TowxString(SlPaths::GetLobbyWriteDir()) + _T("script.txt");
 	try {
-
-		if ( !wxFile::Access( scripttxt , wxFile::write ) ) {
-			wxLogError( _T("Access denied to script.txt.") );
-		}
 
 		wxFile f( scripttxt, wxFile::write );
 		battle.DisableHostStatusInProxyMode( true );
 		f.Write( WriteScriptTxt(battle) );
 		battle.DisableHostStatusInProxyMode( false );
 		f.Close();
-
 	} catch ( std::exception& e ) {
-		wxLogError( wxString::Format( _T("Couldn't write script.txt, exception caught:\n %s"), TowxString( e.what() ).c_str() ) );
+		wxLogError( wxString::Format( _T("Couldn't write %s, exception caught:\n %s"), scripttxt.c_str(), TowxString( e.what() ).c_str() ) );
 		return false;
 	} catch (...) {
-		wxLogError( _T("Couldn't write script.txt") );
+		wxLogError( wxString::Format( _T("Couldn't write %s"), scripttxt.c_str()));
 		return false;
 	}
 
