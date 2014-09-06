@@ -50,7 +50,7 @@ std::vector<wxColour>& GetBigFixColoursPalette( int numteams );
 
 void CopyToClipboard( const wxString& text );
 
-//! open either plattform default browser or binary saved in settings with given url
+//! open either platform default browser or binary saved in settings with given url
 void OpenWebBrowser( const wxString& url );
 
 inline wxString bool2yn(const bool b) {

@@ -15,7 +15,7 @@ slAboutBox::slAboutBox()
 
 	info->SetName( TowxString(getSpringlobbyName()) );
 	info->SetVersion (TowxString(getSpringlobbyVersion()));
-	info->SetDescription( TowxString(getSpringlobbyName()) + _("is a cross-plattform lobby client for the Spring RTS engine"));
+	info->SetDescription( TowxString(getSpringlobbyName()) + _(" is a cross-platform lobby client for the Spring RTS engine"));
 	//info.SetCopyright(wxEmptyString;
 	info->SetLicence(_T("GPL v2 or later"));
 	info->AddDeveloper(_T("abma"));
