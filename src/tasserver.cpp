@@ -450,8 +450,8 @@ void TASServer::Notify()
 	}
 
 	if ( m_last_net_packet > PING_TIMEOUT ) {
+		m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.")) % (m_last_net_packet / 1000) % m_last_ping );
 		m_last_net_packet = 0;
-		m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.")) % m_last_net_packet );
 		Disconnect();
 		return;
 	}
