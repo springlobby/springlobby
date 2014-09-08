@@ -252,19 +252,25 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
 		Disconnect();
 		return true;
 	} else if ( subcmd == _T("/changepassword2") ) {
-		if ( arrayparams.GetCount() < 1 ) return false;
+		if ( arrayparams.GetCount() < 2 ) {
+			m_se->OnServerMessage(_("Missing parameter, usage: /changepassword2 newpassword"));
+			return true;
+		}
 		wxString oldpassword = sett().GetServerAccountPass( GetServerName() );
 		wxString newpassword = GetPasswordHash( params );
 		if  ( oldpassword.IsEmpty() || !sett().GetServerAccountSavePass(GetServerName()) ) {
-			m_se->OnServerMessage(_("There is no saved password for this account, please use /changepassword"));
+			m_se->OnServerMessage(_("There is no saved password for this account, please use /changepassword oldpassword newpassword"));
 			return true;
 		}
 		SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
 		return true;
 	} else if ( subcmd == _T("/changepassword") ) {
-		if ( arrayparams.GetCount() != 2 ) return false;
+		if ( arrayparams.GetCount() != 3 ) {
+			m_se->OnServerMessage(_("Invalid parameter count, usage: /changepassword oldpassword newpassword"));
+			return true;
+		}
 		wxString oldpassword = GetPasswordHash(arrayparams[1]);
-		wxString newpassword = GetPasswordHash( arrayparams[2] );
+		wxString newpassword = GetPasswordHash(arrayparams[2]);
 		SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
 		return true;
 	} else if ( subcmd == _T("/ping") ) {
@@ -425,7 +431,7 @@ void TASServer::Notify()
 {
 	if (m_sock == NULL) return;
 	const wxLongLong now = wxGetLocalTimeMillis();
-	const long diff = (now - m_lastnotify).ToLong();
+	const long diff = std::abs((now - m_lastnotify).ToLong());
 	const int interval = std::max<long>(GetInterval(), diff);
 	m_lastnotify = now;
 
@@ -444,14 +450,18 @@ void TASServer::Notify()
 
 
 	if (m_last_ping > PING_TIME) { //Send a PING every 30 seconds
+		if (interval > PING_TIME) {
+			m_last_net_packet = 0; //assume local clock is broken and we received a packed within time
+			m_se->OnServerMessage(wxFormat(_("Springlobby hanged or stale clock. Got no timer for %d msec")) % interval );
+		}
 		m_last_ping = 0;
 		Ping();
 		return;
 	}
 
 	if ( m_last_net_packet > PING_TIMEOUT ) {
+		m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.")) % (m_last_net_packet / 1000) % m_last_ping );
 		m_last_net_packet = 0;
-		m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.")) % m_last_net_packet );
 		Disconnect();
 		return;
 	}
