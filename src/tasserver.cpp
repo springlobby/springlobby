@@ -252,19 +252,25 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
 		Disconnect();
 		return true;
 	} else if ( subcmd == _T("/changepassword2") ) {
-		if ( arrayparams.GetCount() < 1 ) return false;
+		if ( arrayparams.GetCount() < 2 ) {
+			m_se->OnServerMessage(_("Missing parameter, usage: /changepassword2 newpassword"));
+			return true;
+		}
 		wxString oldpassword = sett().GetServerAccountPass( GetServerName() );
 		wxString newpassword = GetPasswordHash( params );
 		if  ( oldpassword.IsEmpty() || !sett().GetServerAccountSavePass(GetServerName()) ) {
-			m_se->OnServerMessage(_("There is no saved password for this account, please use /changepassword"));
+			m_se->OnServerMessage(_("There is no saved password for this account, please use /changepassword oldpassword newpassword"));
 			return true;
 		}
 		SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
 		return true;
 	} else if ( subcmd == _T("/changepassword") ) {
-		if ( arrayparams.GetCount() != 2 ) return false;
+		if ( arrayparams.GetCount() != 3 ) {
+			m_se->OnServerMessage(_("Invalid parameter count, usage: /changepassword oldpassword newpassword"));
+			return true;
+		}
 		wxString oldpassword = GetPasswordHash(arrayparams[1]);
-		wxString newpassword = GetPasswordHash( arrayparams[2] );
+		wxString newpassword = GetPasswordHash(arrayparams[2]);
 		SendCmd( _T("CHANGEPASSWORD"), oldpassword + _T(" ") + newpassword );
 		return true;
 	} else if ( subcmd == _T("/ping") ) {
