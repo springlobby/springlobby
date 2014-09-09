@@ -105,7 +105,7 @@ void MainSinglePlayerTab::ReloadMapOptContrls()
 {
 	try
 	{
-		GetMMOptionsTab().OnReloadControls( LSL::OptionsWrapper::MapOption );
+		GetMMOptionsTab().OnReloadControls( LSL::Enum::MapOption );
 	} catch ( ... ) {}
 }
 
@@ -114,7 +114,7 @@ void MainSinglePlayerTab::ReloadModOptContrls()
 {
 	try
 	{
-		GetMMOptionsTab().OnReloadControls( LSL::OptionsWrapper::ModOption );
+		GetMMOptionsTab().OnReloadControls( LSL::Enum::ModOption );
 	} catch ( ... ) {}
 
 }

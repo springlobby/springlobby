@@ -1336,7 +1336,7 @@ void TASServer::SendHostInfo( HostInfo update )
 	}
 	if ( ( update & IBattle::HI_Send_All_opts ) > 0 ) {
 		wxString cmd;
-for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::MapOption )) {
+for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::Enum::MapOption )) {
 			const wxString newcmd = TowxString("game/mapoptions/" + it.first + "=" + it.second.second + "\t");
 			if ( cmd.size() + newcmd.size() > 900 ) { // should be 1024 add margin for relayhost name and command itself
 				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
@@ -1345,7 +1345,7 @@ for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapp
 			}
 			cmd << newcmd;
 		}
-for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::ModOption )) {
+		for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::Enum::ModOption )) {
 			const wxString newcmd = TowxString("game/modoptions/" + it.first + "=" + it.second.second + "\t");
 			if ( cmd.size() + newcmd.size() > 900 ) { // should be 1024 add margin for relayhost name and command itself
 				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
@@ -1354,7 +1354,7 @@ for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapp
 			}
 			cmd << newcmd;
 		}
-for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::EngineOption )) {
+		for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::Enum::EngineOption )) {
 			const wxString newcmd = TowxString("game/" + it.first + "=" + it.second.second + "\t");
 			if ( cmd.size() + newcmd.size() > 900 ) { // should be 1024 add margin for relayhost name and command itself
 				if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
@@ -1441,15 +1441,15 @@ void TASServer::SendHostInfo( const wxString& Tag )
 	long type;
 	Tag.BeforeFirst( '_' ).ToLong( &type );
 	const wxString key = Tag.AfterFirst( '_' );
-	if ( type == LSL::OptionsWrapper::MapOption ) {
+	if ( type == LSL::Enum::MapOption ) {
 		cmd << _T("game/mapoptions/") << key << _T("=")
-		    << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::OptionsWrapper::MapOption ));
-	} else if ( type == LSL::OptionsWrapper::ModOption ) {
+		    << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::Enum::MapOption ));
+	} else if ( type == LSL::Enum::ModOption ) {
 		cmd << _T("game/modoptions/") << key << _T("=")
-		    << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::OptionsWrapper::ModOption ));
-	} else if ( type == LSL::OptionsWrapper::EngineOption ) {
+		    << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::Enum::ModOption ));
+	} else if ( type == LSL::Enum::EngineOption ) {
 		cmd << _T("game/") << key << _T("=")
-		    << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::OptionsWrapper::EngineOption ));
+		    << TowxString(battle.CustomBattleOptions().getSingleValue(STD_STRING(key), LSL::Enum::EngineOption ));
 	}
 	if ( !battle.IsProxy() ) SendCmd( _T("SETSCRIPTTAGS"), cmd );
 	else RelayCmd( _T("SETSCRIPTTAGS"), cmd );

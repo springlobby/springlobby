@@ -425,12 +425,12 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 		return;
 	}
 
-	LSL::OptionsWrapper::GameOption type = ( LSL::OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
+	LSL::Enum::GameOption type = ( LSL::Enum::GameOption )s2l( Tag.BeforeFirst( '_' ) );
 	wxString key = Tag.AfterFirst( '_' );
-	if ( ( type == LSL::OptionsWrapper::MapOption ) || ( type == LSL::OptionsWrapper::ModOption ) || ( type == LSL::OptionsWrapper::EngineOption ) )
+	if ( ( type == LSL::Enum::MapOption ) || ( type == LSL::Enum::ModOption ) || ( type == LSL::Enum::EngineOption ) )
 	{
 		LSL::Enum::OptionType DataType = m_battle->CustomBattleOptions().GetSingleOptionType( STD_STRING(key) );
-		wxString value = TowxString(m_battle->CustomBattleOptions().getSingleValue(STD_STRING(key), ( LSL::OptionsWrapper::GameOption )type ));
+		wxString value = TowxString(m_battle->CustomBattleOptions().getSingleValue(STD_STRING(key), ( LSL::Enum::GameOption )type ));
 		if ( TowxString(m_battle->CustomBattleOptions().getDefaultValue( STD_STRING(key), type )) == value) {
 			m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
 		} else {
@@ -461,7 +461,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 			{
                 m_opts_list->DeleteItem( i );
 			}
-			AddMMOptionsToList( m_map_opts_index, LSL::OptionsWrapper::MapOption );
+			AddMMOptionsToList( m_map_opts_index, LSL::Enum::MapOption );
 
 			m_minimap->UpdateMinimap();
 
@@ -917,7 +917,7 @@ void BattleRoomTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 	ui().DownloadArchives(*m_battle);
 }
 
-long BattleRoomTab::AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOption optFlag )
+long BattleRoomTab::AddMMOptionsToList( long pos, LSL::Enum::GameOption optFlag )
 {
 	if ( !m_battle ) return -1;
 	LSL::OptionsWrapper::stringTripleVec optlist = m_battle->CustomBattleOptions().getOptions( optFlag );
@@ -1059,7 +1059,7 @@ void BattleRoomTab::OnOptionActivate( wxListEvent& event )
 		}
 	}
 	LSL::OptionsWrapper& optWrap = m_battle->CustomBattleOptions();
-	LSL::OptionsWrapper::GameOption optFlag = ( LSL::OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
+	LSL::Enum::GameOption optFlag = ( LSL::Enum::GameOption )s2l( tag.BeforeFirst( '_' ) );
 	const std::string key = STD_STRING(tag.AfterFirst( '_' ));
 	LSL::Enum::OptionType type = optWrap.GetSingleOptionType( key );
 	if ( !optWrap.keyExists( key, optFlag, false, type ) ) return;
@@ -1138,7 +1138,7 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 
 		ReloadMaplist();
 
-		UpdateBattleInfo( wxFormat( _T( "%d_mapname" ) ) % LSL::OptionsWrapper::PrivateOptions );
+		UpdateBattleInfo( wxFormat( _T( "%d_mapname" ) ) % LSL::Enum::PrivateOptions );
 		UpdateBattleInfo();
 		UpdateStatsLabels();
 	}
@@ -1164,17 +1164,17 @@ void BattleRoomTab::RegenerateOptionsList()
 	pos++;
 	m_opts_list->InsertItem( pos, wxEmptyString );
 	pos++;
-	pos = AddMMOptionsToList( pos, LSL::OptionsWrapper::EngineOption );
+	pos = AddMMOptionsToList( pos, LSL::Enum::EngineOption );
 	// AddMMOptionsToList already increments pos by itself
 	m_opts_list->InsertItem( pos, wxEmptyString );
 	pos++;
 	m_mod_opts_index = pos;
-	pos = AddMMOptionsToList( m_mod_opts_index, LSL::OptionsWrapper::ModOption );
+	pos = AddMMOptionsToList( m_mod_opts_index, LSL::Enum::ModOption );
 	// AddMMOptionsToList already increments pos by itself
 	m_opts_list->InsertItem( pos, wxEmptyString );
 	pos++;
 	m_map_opts_index = pos;
-	pos = AddMMOptionsToList( m_map_opts_index, LSL::OptionsWrapper::MapOption );
+	pos = AddMMOptionsToList( m_map_opts_index, LSL::Enum::MapOption );
 	m_side_sel->Clear();
 	if (m_battle != NULL) {
 		try {

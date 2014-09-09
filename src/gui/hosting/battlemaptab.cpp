@@ -135,7 +135,7 @@ void BattleMapTab::Update()
 {
 	if ( !m_battle ) return;
     const long longval = LSL::Util::FromString<long>(
-                m_battle->CustomBattleOptions().getSingleValue( "startpostype", LSL::OptionsWrapper::EngineOption ));
+                m_battle->CustomBattleOptions().getSingleValue( "startpostype", LSL::Enum::EngineOption ));
 	m_start_radios->SetSelection( longval );
 
 	m_minimap->UpdateMinimap();
@@ -167,8 +167,8 @@ void BattleMapTab::Update( const wxString& Tag )
 	Tag.BeforeFirst( '_' ).ToLong( &type );
     const std::string key = STD_STRING(Tag.AfterFirst( '_' ));
     const long longval = LSL::Util::FromString<long>(
-                m_battle->CustomBattleOptions().getSingleValue( key, ( LSL::OptionsWrapper::GameOption )type ));
-	if ( type == LSL::OptionsWrapper::EngineOption )
+                m_battle->CustomBattleOptions().getSingleValue( key, ( LSL::Enum::GameOption )type ));
+	if ( type == LSL::Enum::EngineOption )
 	{
         if ( key == "startpostype" )
 		{
@@ -176,7 +176,7 @@ void BattleMapTab::Update( const wxString& Tag )
 			m_minimap->UpdateMinimap();
 		}
 	}
-	else if ( type == LSL::OptionsWrapper::PrivateOptions )
+	else if ( type == LSL::Enum::PrivateOptions )
 	{
         if ( key == "mapname" )
 		{
@@ -263,8 +263,8 @@ void BattleMapTab::OnStartTypeSelect( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
     const std::string pos = wxFormat( _T( "%d" ) ) % m_start_radios->GetSelection();
-    m_battle->CustomBattleOptions().setSingleOption( "startpostype", pos, LSL::OptionsWrapper::EngineOption );
-	m_battle->SendHostInfo( wxFormat( _T( "%d_startpostype" ) ) % LSL::OptionsWrapper::EngineOption );
+    m_battle->CustomBattleOptions().setSingleOption( "startpostype", pos, LSL::Enum::EngineOption );
+	m_battle->SendHostInfo( wxFormat( _T( "%d_startpostype" ) ) % LSL::Enum::EngineOption );
 }
 
 

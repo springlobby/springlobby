@@ -375,10 +375,10 @@ void SinglePlayerTab::OnRandomCheck( wxCommandEvent& /*unused*/ )
 {
     if ( m_random_check->IsChecked() )
         m_battle.CustomBattleOptions().setSingleOption("startpostype",
-                                                       LSL::Util::ToString(IBattle::ST_Random), LSL::OptionsWrapper::EngineOption );
+                                                       LSL::Util::ToString(IBattle::ST_Random), LSL::Enum::EngineOption );
     else
         m_battle.CustomBattleOptions().setSingleOption("startpostype",
-                                                       LSL::Util::ToString(IBattle::ST_Pick), LSL::OptionsWrapper::EngineOption );
+                                                       LSL::Util::ToString(IBattle::ST_Pick), LSL::Enum::EngineOption );
     m_battle.SendHostInfo( IBattle::HI_StartType );
 }
 
