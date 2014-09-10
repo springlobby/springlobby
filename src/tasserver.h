@@ -215,6 +215,10 @@ private:
 
 private:
 	void Notify();
+
+    wxString m_relay_host_bot;
+    wxString m_relay_host_manager;
+
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H

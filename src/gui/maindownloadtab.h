@@ -29,7 +29,7 @@ class MainDownloadTab: public wxScrolledWindow
 
         void OnUpdate(wxTimerEvent& /*event*/);
 
-	protected:
+private:
 
 		enum
 		{

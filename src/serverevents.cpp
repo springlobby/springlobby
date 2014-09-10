@@ -276,8 +276,8 @@ void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
 
         if ( !battle.IsFounderMe() || battle.IsProxy() )
         {
-            battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::MapOption, battle.GetHostMapName());
-            battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::ModOption, battle.GetHostModName());
+            battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, battle.GetHostMapName());
+            battle.CustomBattleOptions().loadOptions(LSL::Enum::ModOption, battle.GetHostModName());
         }
 
         ui().OnJoinedBattle( battle );
@@ -297,8 +297,8 @@ void ServerEvents::OnHostedBattle( int battleid )
 
 				if ( battle.GetBattleType() == BT_Played )
 				{
-                    battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::MapOption, battle.GetHostMapName());
-                    battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::ModOption, battle.GetHostModName());
+                    battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, battle.GetHostMapName());
+                    battle.CustomBattleOptions().loadOptions(LSL::Enum::ModOption, battle.GetHostModName());
 				}
 				else
 				{
@@ -415,8 +415,8 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
         if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
         {
             battle.SendMyBattleStatus();
-            battle.CustomBattleOptions().loadOptions(LSL::OptionsWrapper::MapOption, STD_STRING(map));
-            battle.Update( STD_STRING(wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions )));
+            battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, STD_STRING(map));
+            battle.Update( STD_STRING(wxString::Format( _T("%d_mapname"), LSL::Enum::PrivateOptions )));
         }
 
 		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
@@ -438,14 +438,14 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             if ( key.Left( 11 ) == _T( "mapoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
-                battle.CustomBattleOptions().setSingleOption(STD_STRING(key), STD_STRING(value), LSL::OptionsWrapper::MapOption );
-                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::MapOption, key.c_str() )));
+                battle.CustomBattleOptions().setSingleOption(STD_STRING(key), STD_STRING(value), LSL::Enum::MapOption );
+                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::MapOption, key.c_str() )));
             }
             else if ( key.Left( 11 ) == _T( "modoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
-                battle.CustomBattleOptions().setSingleOption(STD_STRING(key), STD_STRING(value), LSL::OptionsWrapper::ModOption );
-                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::ModOption,  key.c_str() )));
+                battle.CustomBattleOptions().setSingleOption(STD_STRING(key), STD_STRING(value), LSL::Enum::ModOption );
+                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::ModOption,  key.c_str() )));
             }
             else if ( key.Left( 8 ) == _T( "restrict" ) )
             {
@@ -485,8 +485,8 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
             }
             else
             {
-                battle.CustomBattleOptions().setSingleOption( STD_STRING(key), STD_STRING(value), LSL::OptionsWrapper::EngineOption );
-                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::OptionsWrapper::EngineOption, key.c_str() )));
+                battle.CustomBattleOptions().setSingleOption( STD_STRING(key), STD_STRING(value), LSL::Enum::EngineOption );
+                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::EngineOption, key.c_str() )));
             }
         }
     }
@@ -533,7 +533,7 @@ void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname, 
     {
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.RestrictUnit(STD_STRING(unitname), count );
-        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions )));
+        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::Enum::PrivateOptions )));
     }
     catch ( assert_exception ) {}
 }
@@ -546,7 +546,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
     {
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.UnrestrictUnit(STD_STRING(unitname));
-        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions )));
+        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::Enum::PrivateOptions )));
     }
     catch ( assert_exception ) {}
 }
@@ -559,7 +559,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
     {
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.UnrestrictAllUnits();
-        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::OptionsWrapper::PrivateOptions )));
+        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::Enum::PrivateOptions )));
     }
     catch ( assert_exception ) {}
 }
@@ -743,7 +743,7 @@ void ServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int left, int
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.AddStartRect( allyno, left, top, right, bottom );
         battle.StartRectAdded( allyno );
-        battle.Update(STD_STRING(wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions )));
+        battle.Update(STD_STRING(wxString::Format( _T("%d_mapname"), LSL::Enum::PrivateOptions )));
     }
     catch (assert_exception) {}
 }
@@ -756,7 +756,7 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.RemoveStartRect( allyno );
         battle.StartRectRemoved( allyno );
-        battle.Update(STD_STRING(wxString::Format( _T("%d_mapname"), LSL::OptionsWrapper::PrivateOptions )));
+        battle.Update(STD_STRING(wxString::Format( _T("%d_mapname"), LSL::Enum::PrivateOptions )));
     }
     catch (assert_exception) {}
 }

@@ -41,11 +41,10 @@ class ToasterBox : public wxTimer
 	};
 	void SetStackDirection( StackDirection dir );
 
-protected:
+private:
 	friend class ToasterNotification;
 	ToasterBox(wxWindow* _parent=(wxWindow *)NULL);
 
-  private:
 	wxWindow *parent;
 	int sleepTime;
 	//how long the box hangs around for

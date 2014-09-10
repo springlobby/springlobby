@@ -19,7 +19,7 @@ class wxStaticText;
  * \todo use this in a non-modal way? */
 class AutoBalanceDialog: public wxDialog
 {
-	public:
+public:
 
     struct BalanceOptions
     {
@@ -46,7 +46,7 @@ class AutoBalanceDialog: public wxDialog
 		wxChoice* m_group_choice;
 		//*)
 
-	protected:
+private:
 
 		//(*Identifiers(AutoBalanceDialog)
 		static const long ID_STATICTEXT1;

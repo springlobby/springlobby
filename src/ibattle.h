@@ -551,8 +551,17 @@ public:
 	virtual void RingNotSyncedPlayers() {}
 	virtual void RingNotSyncedAndNotReadyPlayers() {}
 	virtual void SetAutoLockOnStart(bool /*autolock*/) {}
-protected:
 
+protected:
+	BattleOptions m_opts;
+	bool m_generating_script;
+	std::map<int, int> m_teams_sizes; // controlteam -> number of people in
+	bool m_is_self_in;
+	std::map<std::string, time_t> m_ready_up_map; // player name -> time counting from join/unspect
+	std::string m_previous_local_mod_name;
+	LSL::UnitsyncMod m_local_mod;
+
+private:
 	void LoadScriptMMOpts( const std::string& sectionname, const LSL::TDF::PDataList& node );
 	void LoadScriptMMOpts( const LSL::TDF::PDataList& node );
 
@@ -561,40 +570,26 @@ protected:
 	void PlayerJoinedTeam( int team );
 	void PlayerJoinedAlly( int ally );
 
+	bool m_ingame;
 	bool m_map_loaded;
 	bool m_mod_loaded;
 	LSL::UnitsyncMap m_local_map;
-	LSL::UnitsyncMod m_local_mod;
 	LSL::UnitsyncMap m_host_map;
 	LSL::UnitsyncMod m_host_mod;
-	std::string m_previous_local_mod_name;
 
 	std::map<std::string, int> m_restricted_units;
 
 	LSL::OptionsWrapper m_opt_wrap;
 
-	BattleOptions m_opts;
-
-	bool m_ingame;
-
-	bool m_auto_unspec; // unspec as soon as there's a free slot
-	unsigned int m_auto_unspec_num_players; // number of players in the battle when m_auto_unspec was set to true
-
-	bool m_generating_script;
-
 	std::map<unsigned int,BattleStartRect> m_rects;
-
-	std::map<std::string, time_t> m_ready_up_map; // player name -> time counting from join/unspect
 
 	unsigned int m_players_ready;
 	unsigned int m_players_sync;
 	unsigned int m_players_ok; // players which are ready and in sync
-	std::map<int, int> m_teams_sizes; // controlteam -> number of people in
 	std::map<int, int> m_ally_sizes; // allyteam -> number of people in
 
 	std::string m_preset;
 
-	bool m_is_self_in;
 	UserVec m_internal_bot_list;
 
 	/// replay&savegame stuff

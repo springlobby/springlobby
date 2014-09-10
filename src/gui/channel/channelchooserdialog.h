@@ -19,7 +19,7 @@ class ChannelChooserDialog : public wxDialog, public WindowAttributesPickle
         void AddChannel( const wxString& name, int usercount, const wxString& topic = wxEmptyString );
         void ClearChannels();
 
-    protected:
+private:
         ChannelChooserPanel* m_chooser_panel;
         wxBoxSizer* m_main_sizer;
 

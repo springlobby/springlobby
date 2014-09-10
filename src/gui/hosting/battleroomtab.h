@@ -54,6 +54,31 @@ class BattleRoomTab : public wxScrolledWindow, public GlobalEvent
 		void UpdateBattleInfo();
 		void UpdateBattleInfo( const wxString& Tag );
 
+
+		void OnBattleActionEvent( UiEvents::UiEventData data );
+
+		void OnUserJoined( User& user );
+		void OnUserLeft( User& user );
+
+		void ReloadMaplist();
+		void SetMap( int index );
+
+		void UpdateHighlights();
+
+		void UpdatePresetList();
+
+		void SortPlayerList();
+
+		void SetBattle( IBattle* battle );
+
+		void PrintAllySetup();
+		void UpdateMyInfo();
+
+private:
+		void RegenerateOptionsList();
+
+		void UpdateStatsLabels();
+		void UpdateMapInfoSummary();
 		void OnStart( wxCommandEvent& event );
 		void OnHostNew( wxCommandEvent& event );
 		void OnLeave( wxCommandEvent& event );
@@ -99,37 +124,11 @@ class BattleRoomTab : public wxScrolledWindow, public GlobalEvent
         void OnAutohostRandomMap( wxCommandEvent& event );
         void OnAutohostNotify( wxCommandEvent& event );
 
-
-		void OnBattleActionEvent( UiEvents::UiEventData data );
-
-		void OnUserJoined( User& user );
-		void OnUserLeft( User& user );
-
-		void ReloadMaplist();
-		void SetMap( int index );
-
-		void UpdateHighlights();
-
-		void UpdatePresetList();
-
-		void SortPlayerList();
-
 		void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
 
-		void SetBattle( IBattle* battle );
-
-		void PrintAllySetup();
-
-		void RegenerateOptionsList();
-
-		void UpdateStatsLabels();
-		void UpdateMapInfoSummary();
-		void UpdateMyInfo();
-
-	protected:
         AutohostManager autohostManager;
 
-		long AddMMOptionsToList( long pos, LSL::OptionsWrapper::GameOption optFlag );
+		long AddMMOptionsToList( long pos, LSL::Enum::GameOption optFlag );
 
 		void SplitSizerHorizontally( const bool horizontal );
 

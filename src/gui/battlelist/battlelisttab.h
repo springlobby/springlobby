@@ -67,7 +67,7 @@ class BattleListTab : public wxScrolledWindow, public GlobalEvent, public SL::No
 
     void SortBattleList();
 
-  protected:
+private:
     BattleListFilter* m_filter;
     BattleListCtrl* m_battle_list;
     MapCtrl* m_minimap;

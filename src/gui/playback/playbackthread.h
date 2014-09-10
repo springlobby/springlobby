@@ -14,7 +14,7 @@ class PlaybackTab;
 
 class PlaybackLoader : public wxEvtHandler
 {
-protected:
+private:
     class PlaybackLoaderThread : public wxThread
     {
         public:

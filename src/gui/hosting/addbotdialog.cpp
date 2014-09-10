@@ -256,7 +256,7 @@ void AddBotDialog::ShowAIOptions()
 
 long AddBotDialog::AddMMOptionsToList( long pos, int optFlag )
 {
-    for (const auto& it : m_battle.CustomBattleOptions().getOptions( (LSL::OptionsWrapper::GameOption)optFlag ))
+    for (const auto& it : m_battle.CustomBattleOptions().getOptions( (LSL::Enum::GameOption)optFlag ))
 	{
         m_opts_list->InsertItem( pos, TowxString(it.second.first));
         const wxString tag = wxFormat( _T( "%d_%s" ) ) % optFlag % it.first;
@@ -271,12 +271,12 @@ long AddBotDialog::AddMMOptionsToList( long pos, int optFlag )
 void AddBotDialog::UpdateOption( const wxString& Tag )
 {
     const long index = m_opt_list_map[ Tag ];
-    const LSL::OptionsWrapper::GameOption type = ( LSL::OptionsWrapper::GameOption )s2l( Tag.BeforeFirst( '_' ) );
+    const LSL::Enum::GameOption type = ( LSL::Enum::GameOption )s2l( Tag.BeforeFirst( '_' ) );
     const std::string key = STD_STRING(Tag.AfterFirst( '_' ));
     std::string value;
 
     const auto DataType = m_battle.CustomBattleOptions().GetSingleOptionType( key );
-	value = m_battle.CustomBattleOptions().getSingleValue( key, ( LSL::OptionsWrapper::GameOption )type );
+	value = m_battle.CustomBattleOptions().getSingleValue( key, ( LSL::Enum::GameOption )type );
 	if ( m_battle.CustomBattleOptions().getDefaultValue( key, type ) == value ) m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT ) );
 	else m_opts_list->SetItemFont( index, wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD ) );
     if ( DataType == LSL::Enum::opt_bool )
@@ -304,7 +304,7 @@ void AddBotDialog::OnOptionActivate( wxListEvent& event )
 		}
 	}
     LSL::OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
-    const LSL::OptionsWrapper::GameOption optFlag = ( LSL::OptionsWrapper::GameOption )s2l( tag.BeforeFirst( '_' ) );
+    const LSL::Enum::GameOption optFlag = ( LSL::Enum::GameOption )s2l( tag.BeforeFirst( '_' ) );
     const std::string key = STD_STRING(tag.AfterFirst( '_' ));
     LSL::Enum::OptionType type = optWrap.GetSingleOptionType( key );
 	if ( !optWrap.keyExists( key, optFlag, false, type ) ) return;

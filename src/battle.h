@@ -121,8 +121,9 @@ public:
 	}
 private:
 	void ShouldAutoUnspec();
+	bool m_auto_unspec; // unspec as soon as there's a free slot
+	unsigned int m_auto_unspec_num_players; // number of players in the battle when m_auto_unspec was set to true
 
-protected:
 	// Battle variables
 
 	///< quick hotfix for bans

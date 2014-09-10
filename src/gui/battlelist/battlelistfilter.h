@@ -61,7 +61,7 @@ class BattleListFilter : public wxPanel, public SL::NonCopyable
     BUTTON_MODE_SMALLER
   };
 
-	protected:
+private:
 
     wxString _GetButtonSign(ButtonMode value);
 		ButtonMode _GetNextMode(ButtonMode value);
@@ -167,7 +167,7 @@ class BattleListFilter : public wxPanel, public SL::NonCopyable
 		*/
 		static bool StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex = NULL, StringTransformFunction additional_transform = NULL, bool case_sensitive = false);
 
-	protected:
+private:
 		DECLARE_EVENT_TABLE()
 		BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
 		void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));

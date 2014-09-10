@@ -13,9 +13,9 @@ const unsigned int DEFSETT_MW_TOP = 50;
 const unsigned int DEFSETT_MW_LEFT = 50;
 
 WindowAttributesPickle::WindowAttributesPickle( const wxString& name, wxTopLevelWindow* window, const wxSize& default_size  )
-	: m_name( name ),
-	  m_window( window ),
-	  m_default_size( default_size )
+	: m_default_size( default_size )
+	, m_name( name )
+	, m_window( window )
 {
 	LoadAttributes();
 }

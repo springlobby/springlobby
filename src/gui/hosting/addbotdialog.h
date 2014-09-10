@@ -22,7 +22,7 @@ class wxListEvent;
  * \todo DOCMEMORE */
 class AddBotDialog : public wxDialog, public WindowAttributesPickle
 {
-  public:
+public:
 
     AddBotDialog( wxWindow* parent, IBattle& battle, bool singleplayer = false );
     ~AddBotDialog( );
@@ -34,6 +34,8 @@ class AddBotDialog : public wxDialog, public WindowAttributesPickle
     int GetAIType();
 
     void ReloadAIList();
+
+private:
     void ShowAIInfo();
 
     void OnClose( wxCommandEvent& event );
@@ -46,7 +48,6 @@ class AddBotDialog : public wxDialog, public WindowAttributesPickle
     void ShowAIOptions();
 
 
-  protected:
     wxString Get(const std::string& section);
     AddBotDialog( const AddBotDialog& );
 

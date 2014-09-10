@@ -22,7 +22,7 @@ public:
 	virtual void OnInitCmdLine(wxCmdLineParser& parser);
 	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
-protected:
+private:
 	bool StartUpdate( const wxString& source, const wxString& destination )	;
 
 	wxString m_source_dir;

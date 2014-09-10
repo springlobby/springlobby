@@ -34,9 +34,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 class AddSelectionCmdDlgBase : public wxDialog
 {
-	private:
-
-	protected:
+protected:
 		wxRadioButton* m_radioBtnSrcMap;
 		wxRadioButton* m_radioBtnSrcView;
 		wxRadioButton* m_radioBtnSrcSel;
@@ -174,9 +172,7 @@ class AddSelectionCmdDlgBase : public wxDialog
 ///////////////////////////////////////////////////////////////////////////////
 class CommandOrderDlgBase : public wxDialog
 {
-	private:
-
-	protected:
+protected:
 		wxStaticText* m_staticText22;
 
 		wxListBox* m_listBoxCommands;
@@ -202,9 +198,7 @@ class CommandOrderDlgBase : public wxDialog
 ///////////////////////////////////////////////////////////////////////////////
 class ChangeMetaDlgBase : public wxDialog
 {
-	private:
-
-	protected:
+protected:
 		wxStaticText* m_staticText24;
 		wxTextCtrl* m_textCtrlCurKey;
 		wxStaticText* m_staticText23;

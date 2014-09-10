@@ -20,7 +20,7 @@ class Springsettings : public wxApp
         virtual void OnInitCmdLine(wxCmdLineParser& parser);
         virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
-    protected:
+private:
 
 		wxTranslationHelper* m_translationhelper;
 

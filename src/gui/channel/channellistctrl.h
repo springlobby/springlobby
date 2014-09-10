@@ -36,7 +36,7 @@ class ChannelListctrl : public CustomVirtListCtrl< ChannelInfo, ChannelListctrl 
         int GetItemColumnImage(long item, long column) const;
         wxListItemAttr* GetItemAttr(long /*unused*/) const {return 0;}
 
-    protected:
+private:
         void Sort();
         void SetTipWindowText( const long item_hit, const wxPoint& position);
 

@@ -20,7 +20,7 @@ class AutojoinChannelDialog : public wxDialog
 		AutojoinChannelDialog( wxWindow* parent );
 		/** Default destructor */
 		virtual ~AutojoinChannelDialog();
-	protected:
+private:
 
 		wxTextCtrl* m_channel_list;
 

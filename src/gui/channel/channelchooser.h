@@ -25,7 +25,7 @@ class ChannelChooserPanel : public wxScrolledWindow, public SL::NonCopyable
         void ClearChannels();
         void OnSearch( wxCommandEvent& event );
 
-    protected:
+private:
         wxButton* m_join_channels;
 //        wxButton* m_mark_autojoin;
         wxBoxSizer* m_main_sizer;

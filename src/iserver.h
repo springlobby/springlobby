@@ -183,20 +183,21 @@ class IServer : public iNetClass, public SL::NonCopyable
 
 	virtual wxArrayString GetRelayHostList();
 
-  protected:
+protected:
 	Socket* m_sock;
+    wxString m_server_name;
     wxString m_user;
     wxString m_pass;
-    wxString m_server_name;
+    UserList m_users;
+
+private:
+
     bool m_pass_hash;
     wxString m_required_spring_ver;
 
     ChannelList m_channels;
-    UserList m_users;
     BattleList m_battles;
 
-    wxString m_relay_host_bot;
-    wxString m_relay_host_manager;
 
     wxArrayString m_relay_host_manager_list;
 

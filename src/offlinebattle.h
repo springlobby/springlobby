@@ -29,7 +29,7 @@ public:
 		return true;
 	}
 	virtual void StartSpring();
-protected:
+private:
 	int m_id;
 	User m_me;
 };

@@ -111,7 +111,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
     void LoadPerspectives( const wxString& perspective_name = wxEmptyString );
     void SavePerspectives( const wxString& perspective_name = wxEmptyString );
 
-  protected:
+private:
 
     wxMenuItem* m_settings_menu;
     wxMenuBar* m_menubar;
@@ -210,7 +210,7 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 
         static const TabNames& GetTabNames();
 
-    protected:
+private:
 
         DECLARE_EVENT_TABLE()
 };

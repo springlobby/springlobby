@@ -118,14 +118,14 @@ class slConfig : public wxFileConfig, public SL::NonCopyable
 		};
 		static wxString m_chosen_path;
 
-	protected:
-		#ifdef __WXMSW__
-			//! on windows writing longs is broken so we redirect this to string
-			bool DoWriteLong(const wxString& key, long lValue);
-		#endif
+#ifdef __WXMSW__
+protected:
+	//! on windows writing longs is broken so we redirect this to string
+	bool DoWriteLong(const wxString& key, long lValue);
+#endif
 
-	private:
-		static slConfig* Create();
+private:
+	static slConfig* Create();
 };
 
 

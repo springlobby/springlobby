@@ -29,7 +29,7 @@ class LobbyOptionsTab : public wxScrolledWindow
         void OnDefaultWeb( wxCommandEvent& event );
         void HandleWebloc( bool defloc );
 
-    protected:
+private:
 
         wxCheckBox* m_autojoin;
         wxCheckBox* m_updater;

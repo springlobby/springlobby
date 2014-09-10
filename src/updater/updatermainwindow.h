@@ -13,12 +13,10 @@ class UpdaterMainwindow : public wxFrame
 public:
 	UpdaterMainwindow();
 	virtual ~UpdaterMainwindow();
-
+private:
 	void OnClose( wxCloseEvent& evt );
 
 	void OnUpdateFinished( wxCommandEvent& /*data*/ );
-
-protected:
 	DECLARE_EVENT_TABLE()
 };
 

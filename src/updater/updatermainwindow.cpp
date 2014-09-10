@@ -11,7 +11,7 @@
 class UpdaterPanel : public wxPanel
 {
 
-protected:
+private:
 	wxBoxSizer* m_main_sizer;
 	ActivityNoticePanel* m_activity_panel;
 

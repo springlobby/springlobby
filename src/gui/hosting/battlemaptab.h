@@ -28,7 +28,7 @@ class wxMouseEvent;
  * \todo DOCMEMORE */
 class BattleMapTab : public wxScrolledWindow, public GlobalEvent
 {
-  public:
+public:
     BattleMapTab( wxWindow* parent, IBattle* battle );
      ~BattleMapTab();
 
@@ -38,17 +38,16 @@ class BattleMapTab : public wxScrolledWindow, public GlobalEvent
      void Update( const wxString& Tag );
      void ReloadMaplist();
 
-     void OnMapSelect( wxCommandEvent& event );
-     void OnMapBrowse( wxCommandEvent& event );
-     void OnStartTypeSelect( wxCommandEvent& event );
-
-    void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
-
     void SetMap( int index );
     void SetBattle( IBattle* battle );
-    IBattle* GetBattle() { return m_battle; }
 
-  protected:
+private:
+    IBattle* GetBattle() { return m_battle; }
+	void OnMapSelect( wxCommandEvent& event );
+	void OnMapBrowse( wxCommandEvent& event );
+	void OnStartTypeSelect( wxCommandEvent& event );
+	void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
+
     IBattle* m_battle;
     //LSL::UnitsyncMap m_map;
 

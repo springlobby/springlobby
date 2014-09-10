@@ -55,7 +55,7 @@ class SinglePlayerTab: public wxScrolledWindow, public GlobalEvent
     void SetMap( unsigned int index );
     void SetMod( unsigned int index );
 
-  protected:
+private:
 
     SinglePlayerBattle m_battle;
 

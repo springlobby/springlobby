@@ -30,7 +30,7 @@ public:
 	typedef std::map<size_t, CmdInfo>				ListIndexCmdMap;
 	const ListIndexCmdMap& getOrderedCommands() const;
 
-protected:
+private:
 	void updateOrderMap();
 	void fillCommandList();
 

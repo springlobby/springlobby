@@ -33,13 +33,12 @@ public:
 	virtual void SendHostInfo( const std::string& /*unused*/ ) { }
 
 	virtual void StartSpring();
-protected:
+private:
 	void RemoveUnfittingBots();
 
 	MainSinglePlayerTab& m_sptab;
 
 	User m_me;
-
 };
 
 

@@ -62,7 +62,7 @@ class MapGridCtrl : public wxPanel
 
 		LSL::UnitsyncMap* GetSelectedMap() const { return m_selected_map; }
 
-	protected:
+private:
 		void OnPaint( wxPaintEvent& event );
 		void OnResize( wxSizeEvent& event );
 

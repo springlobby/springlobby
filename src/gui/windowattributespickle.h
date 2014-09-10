@@ -15,8 +15,14 @@ public:
 	WindowAttributesPickle( const wxString& name, wxTopLevelWindow* window, const wxSize& default_size );
 	virtual ~WindowAttributesPickle();
 protected:
-	void SaveAttributes();
 	void LoadAttributes();
+	wxSize  GetWindowSize( const wxString& window, const wxSize& def );
+	const wxSize m_default_size;
+	const wxString m_name;
+	wxTopLevelWindow* m_window;
+	void SaveAttributes();
+
+private:
 
 	int    GetWindowWidth( const wxString& window );
 	void   SetWindowWidth( const wxString& window, const int value );
@@ -30,7 +36,6 @@ protected:
 	int    GetWindowLeft( const wxString& window );
 	void   SetWindowLeft( const wxString& window, const int value );
 
-	wxSize  GetWindowSize( const wxString& window, const wxSize& def );
 	void    SetWindowSize( const wxString& window, const wxSize& size  );
 
 	wxPoint GetWindowPos( const wxString& window, const wxPoint& def );
@@ -39,9 +44,6 @@ protected:
 	bool	GetWindowMaximized( const wxString& window );
 	void	GetWindowMaximized( const wxString& window, bool maximized );
 
-	const wxString m_name;
-	wxTopLevelWindow* m_window;
-	const wxSize m_default_size;
 };
 
 class WindowHintsPickle : public WindowAttributesPickle
@@ -49,7 +51,7 @@ class WindowHintsPickle : public WindowAttributesPickle
 public:
 	WindowHintsPickle( const wxString& name, wxTopLevelWindow* window, const wxSize& default_size  );
 
-protected:
+private:
 	void LoadAttributes();
 };
 

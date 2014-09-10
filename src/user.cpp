@@ -32,7 +32,7 @@ User::User( IServer& serv )
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( "" ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( GetStatus(), false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
@@ -42,7 +42,7 @@ User::User( const std::string& nick, IServer& serv )
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( "" ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( GetStatus(), false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
@@ -52,7 +52,7 @@ User::User( const std::string& nick, const std::string& country, const int& cpu,
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( country ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( GetStatus(), false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
@@ -62,7 +62,7 @@ User::User( const std::string& nick )
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( "" ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( GetStatus(), false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
@@ -72,7 +72,7 @@ User::User( const std::string& nick, const std::string& country, const int& cpu 
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon(country) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( GetStatus(), false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
@@ -82,7 +82,7 @@ User::User()
     m_battle(0),
     m_flagicon_idx( icons().GetFlagIcon( "" ) ),
     m_rankicon_idx( icons().GetRankIcon( 0 ) ),
-    m_statusicon_idx( icons().GetUserListStateIcon( m_status, false, false ) ),
+    m_statusicon_idx( icons().GetUserListStateIcon( GetStatus(), false, false ) ),
     m_sideicon_idx( icons().ICON_NONE )
 {}
 
@@ -107,13 +107,13 @@ void User::Said( const std::string& /*message*/ ) const
 
 void User::Say( const std::string& message ) const
 {
-  GetServer().SayPrivate( TowxString(m_nick), TowxString(message));
+  GetServer().SayPrivate( TowxString(GetNick()), TowxString(message));
 }
 
 
 void User::DoAction( const std::string& message ) const
 {
-  GetServer().DoActionPrivate( TowxString(m_nick), TowxString(message));
+  GetServer().DoActionPrivate( TowxString(GetNick()), TowxString(message));
 }
 
 
@@ -126,30 +126,30 @@ IBattle* User::GetBattle() const
 void User::SetBattle( IBattle* battle )
 {
   m_battle = battle;
-  m_statusicon_idx = icons().GetUserListStateIcon( m_status, false, m_battle != 0 );
+  m_statusicon_idx = icons().GetUserListStateIcon( GetStatus(), false, m_battle != 0 );
 }
 
 void User::SetStatus( const UserStatus& status )
 {
-  m_status = status;
+	CommonUser::SetStatus(status);
   // If user is host of a game, then his in_game status tells if the game is on!
   if ( m_battle != 0 ) {
   	try
   	{
 			User& user = m_battle->GetFounder();
-			if ( user.GetNick() == m_nick ) {
+			if ( user.GetNick() == GetNick() ) {
 				m_battle->Update("");
 			}
     }catch(...){}
   }
 
-  m_statusicon_idx = icons().GetUserListStateIcon( m_status, false, m_battle != 0 );
-  m_rankicon_idx =  icons().GetRankIcon( m_status.rank );
+  m_statusicon_idx = icons().GetUserListStateIcon( GetStatus(), false, m_battle != 0 );
+  m_rankicon_idx =  icons().GetRankIcon( GetStatus().rank );
 }
 
 void User::SetCountry( const std::string& country )
 {
-    m_country = country;
+	CommonUser::SetCountry(country);
     m_flagicon_idx = icons().GetFlagIcon(country);
 }
 
@@ -189,10 +189,11 @@ void User::SendMyUserStatus() const
 
 bool User::ExecuteSayCommand( const std::string& cmd ) const
 {
-  if ( TowxString(cmd).BeforeFirst(' ').Lower() == _T("/me") ) {
-    GetServer().DoActionPrivate(TowxString(m_nick), TowxString(cmd).AfterFirst(' ') );
-    return true;
-  }  else return false;
+	if ( TowxString(cmd).BeforeFirst(' ').Lower() == _T("/me") ) {
+		GetServer().DoActionPrivate(TowxString(GetNick()), TowxString(cmd).AfterFirst(' ') );
+		return true;
+	}
+	return false;
 }
 
 UserStatus::RankContainer User::GetRank()
@@ -224,18 +225,17 @@ float User::GetBalanceRank()
 
 std::string User::GetClan()
 {
-  wxString tmp = TowxString(m_nick).AfterFirst('[');
-  if ( STD_STRING(tmp) != m_nick )
-  {
-    wxString clan = TowxString(tmp).BeforeFirst(']');
-    if ( clan != tmp ) return STD_STRING(clan);
-  }
-  return "";
+	const std::string tmp = LSL::Util::AfterFirst(GetNick(), "[");
+	if ( tmp != GetNick() ) {
+		const std::string clan = LSL::Util::BeforeFirst(tmp, "]");
+		if ( clan != tmp ) return clan;
+	}
+	return "";
 }
 
 void CommonUser::SetStatus( const UserStatus& status )
 {
-  m_status = status;
+	m_status = status;
 }
 
 //User& User::operator= ( const User& other )

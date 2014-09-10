@@ -34,7 +34,7 @@ SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiont
 	m_ok_button(0)
 {
     LSL::OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
-    LSL::OptionsWrapper::GameOption optFlag = ( LSL::OptionsWrapper::GameOption )s2l( optiontag.BeforeFirst( '_' ) );
+    LSL::Enum::GameOption optFlag = ( LSL::Enum::GameOption )s2l( optiontag.BeforeFirst( '_' ) );
     const auto key = STD_STRING(optiontag.AfterFirst( '_' ));
     LSL::Enum::OptionType type = optWrap.GetSingleOptionType( key );
     Create( (wxWindow*)&ui().mw(), wxID_ANY, _( "Change option" ), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T( "OptionDialog" ) );
@@ -131,7 +131,7 @@ void SingleOptionDialog::OnCancel( wxCommandEvent& /*unused*/ )
 
 void SingleOptionDialog::OnOk( wxCommandEvent& /*unused*/ )
 {
-    const auto optFlag = ( LSL::OptionsWrapper::GameOption )s2l( m_tag.BeforeFirst( '_' ) );
+    const auto optFlag = ( LSL::Enum::GameOption )s2l( m_tag.BeforeFirst( '_' ) );
     const std::string key = STD_STRING(m_tag.AfterFirst( '_' ));
 	wxString value;
     if ( m_textctrl )

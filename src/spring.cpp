@@ -234,7 +234,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 	}
 
 	const long startpostype = LSL::Util::FromString<long>(
-					  battle.CustomBattleOptions().getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption ));
+					  battle.CustomBattleOptions().getSingleValue("startpostype", LSL::Enum::EngineOption ));
 
 	std::vector<LSL::StartPos> remap_positions;
 	if ( battle.IsProxy() && ( startpostype != IBattle::ST_Pick ) && ( startpostype != IBattle::ST_Choose ) ) {
@@ -267,7 +267,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 	} else tdf.Append("startpostype", startpostype );
 
 	tdf.EnterSection("mapoptions");
-	for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::MapOption )) {
+	for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::Enum::MapOption )) {
 		tdf.Append(it.first, it.second.second);
 	}
 	tdf.LeaveSection();
@@ -275,7 +275,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 
 	tdf.EnterSection("modoptions");
 	tdf.Append("relayhoststartpostype", startpostype ); // also save the original wanted setting
-	for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::OptionsWrapper::ModOption )) {
+	for (const auto& it : battle.CustomBattleOptions().getOptions( LSL::Enum::ModOption )) {
 		tdf.Append(it.first, it.second.second);
 	}
 	tdf.LeaveSection();
@@ -357,7 +357,7 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 		tdf.EnterSection("Options");
 		int optionmapindex = battle.CustomBattleOptions().GetAIOptionIndex(user.GetNick());
 		if ( optionmapindex > 0 ) {
-			for (const auto& it : battle.CustomBattleOptions().getOptions((LSL::OptionsWrapper::GameOption)optionmapindex )) {
+			for (const auto& it : battle.CustomBattleOptions().getOptions((LSL::Enum::GameOption)optionmapindex )) {
 				tdf.Append(it.first, it.second.second);
 			}
 		}

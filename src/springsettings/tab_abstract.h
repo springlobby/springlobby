@@ -69,12 +69,9 @@ class abstract_panel : public wxScrolledWindow
 		static bool loadValuesIntoMap();
 		void OnSpinControlChange(wxSpinEvent& event);
 		void OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event);
-    protected:
+private:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
-
-    private:
-
 
 		DECLARE_EVENT_TABLE()
 };

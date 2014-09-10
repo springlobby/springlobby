@@ -23,7 +23,7 @@ class tab_render_detail : public abstract_panel
 
 		void initRendererSizer(wxFlexGridSizer*,wxFlexGridSizer*);
 		void updateControls(int what_to_update);
-    protected:
+private:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
 

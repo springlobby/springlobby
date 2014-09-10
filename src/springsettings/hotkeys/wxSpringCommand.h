@@ -16,7 +16,7 @@ public:
 
 	static unsigned short	type_id;
 
-protected:
+private:
 	virtual void Exec (wxObject *obj, wxEvtHandler *client);
 };
 

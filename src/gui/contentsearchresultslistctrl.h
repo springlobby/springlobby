@@ -27,7 +27,7 @@ public:
 		WIDGETLISTCTRL_ID
 	};
 	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
-protected:
+private:
 	DECLARE_EVENT_TABLE()
 };
 

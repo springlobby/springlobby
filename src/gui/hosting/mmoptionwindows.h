@@ -18,22 +18,20 @@ class wxButton;
 class SingleOptionDialog: public wxDialog
 {
 
-	public:
-			SingleOptionDialog( IBattle& battle, const wxString& optiontag );
+public:
+		SingleOptionDialog( IBattle& battle, const wxString& optiontag );
+private:
+		void OnOk(wxCommandEvent& event);
+		void OnCancel(wxCommandEvent& event);
+		IBattle& m_battle;
+		wxString m_tag;
 
-			void OnOk(wxCommandEvent& event);
-			void OnCancel(wxCommandEvent& event);
-
-	protected:
-			IBattle& m_battle;
-			wxString m_tag;
-
-			wxCheckBox* m_checkbox;
-			wxComboBox* m_combobox;
-			SlSpinCtrlDouble* m_spinctrl;
-			wxTextCtrl* m_textctrl;
-			wxButton* m_cancel_button;
-			wxButton* m_ok_button;
+		wxCheckBox* m_checkbox;
+		wxComboBox* m_combobox;
+		SlSpinCtrlDouble* m_spinctrl;
+		wxTextCtrl* m_textctrl;
+		wxButton* m_cancel_button;
+		wxButton* m_ok_button;
 };
 
 enum

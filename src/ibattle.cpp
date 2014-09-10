@@ -42,10 +42,7 @@ lsl/battle/ibattle.cpp
 IBattle::IBattle():
 	m_map_loaded(false),
 	m_mod_loaded(false),
-	m_previous_local_mod_name( "" ),
 	m_ingame(false),
-	m_auto_unspec(false),
-	m_auto_unspec_num_players(0),
 	m_generating_script(false),
 	m_players_ready(0),
 	m_players_sync(0),
@@ -107,7 +104,7 @@ int IBattle::GetPlayerNum( const User& user ) const
 
 class DismissColor
 {
-protected:
+private:
 	typedef std::vector<wxColour>
 	ColorVec;
 	const ColorVec& m_other;
@@ -692,7 +689,7 @@ const LSL::UnitsyncMap& IBattle::LoadMap()
 		try {
 			ASSERT_EXCEPTION( MapExists(), _T("Map does not exist: ") + TowxString(m_host_map.name) );
 			m_local_map = LSL::usync().GetMap( m_host_map.name );
-			bool options_loaded = CustomBattleOptions().loadOptions( LSL::OptionsWrapper::MapOption, m_host_map.name );
+			bool options_loaded = CustomBattleOptions().loadOptions( LSL::Enum::MapOption, m_host_map.name );
 			ASSERT_EXCEPTION( options_loaded, _T("couldn't load the map options") );
 			m_map_loaded = true;
 
@@ -743,7 +740,7 @@ const LSL::UnitsyncMod& IBattle::LoadMod()
 		try {
 			ASSERT_EXCEPTION( ModExists(), _T("Mod does not exist.") );
 			m_local_mod = LSL::usync().GetMod( m_host_mod.name );
-			bool options_loaded = CustomBattleOptions().loadOptions( LSL::OptionsWrapper::ModOption, m_host_mod.name );
+			bool options_loaded = CustomBattleOptions().loadOptions( LSL::Enum::ModOption, m_host_mod.name );
 			ASSERT_EXCEPTION( options_loaded, _T("couldn't load the mod options") );
 			m_mod_loaded = true;
 		} catch (...) {}
@@ -839,14 +836,14 @@ bool IBattle::LoadOptionsPreset( const std::string& name )
 	if (preset.empty()) return false; //preset not found
 	m_preset = preset;
 
-	for ( unsigned int i = 0; i < LSL::OptionsWrapper::LastOption; i++) {
+	for ( unsigned int i = 0; i < LSL::Enum::LastOption; i++) {
 		std::map<wxString,wxString> options = sett().GetHostingPreset( TowxString(m_preset), i );
-		if ( (LSL::OptionsWrapper::GameOption)i != LSL::OptionsWrapper::PrivateOptions ) {
+		if ( (LSL::Enum::GameOption)i != LSL::Enum::PrivateOptions ) {
 			for ( std::map<wxString,wxString>::const_iterator itor = options.begin(); itor != options.end(); ++itor ) {
 				wxLogWarning( itor->first + _T(" ::: ") + itor->second );
 				CustomBattleOptions().setSingleOption( STD_STRING(itor->first),
 								       STD_STRING(itor->second),
-								       (LSL::OptionsWrapper::GameOption)i );
+								       (LSL::Enum::GameOption)i );
 			}
 		} else {
 			if ( !options[_T("mapname")].IsEmpty() ) {
@@ -881,7 +878,7 @@ bool IBattle::LoadOptionsPreset( const std::string& name )
 				RestrictUnit( STD_STRING(unitinfo.BeforeLast(_T('='))), s2l( unitinfo.AfterLast(_T('=')) ) );
 			}
 			SendHostInfo( HI_Restrictions );
-			Update( wxFormat( _T("%d_restrictions") ) % LSL::OptionsWrapper::PrivateOptions );
+			Update( wxFormat( _T("%d_restrictions") ) % LSL::Enum::PrivateOptions );
 
 		}
 	}
@@ -896,19 +893,19 @@ void IBattle::SaveOptionsPreset( const std::string& name )
 	m_preset = FixPresetName(name);
 	if (m_preset == "") m_preset = name; //new preset
 
-	for ( int i = 0; i < (int)LSL::OptionsWrapper::LastOption; i++) {
-		if ( (LSL::OptionsWrapper::GameOption)i != LSL::OptionsWrapper::PrivateOptions ) {
-			const auto opts = CustomBattleOptions().getOptionsMap( (LSL::OptionsWrapper::GameOption)i );
+	for ( int i = 0; i < (int)LSL::Enum::LastOption; i++) {
+		if ( (LSL::Enum::GameOption)i != LSL::Enum::PrivateOptions ) {
+			const auto opts = CustomBattleOptions().getOptionsMap( (LSL::Enum::GameOption)i );
 			std::map<wxString, wxString> wopts;
 for( const auto pair : opts)
 				wopts.insert(std::make_pair(TowxString(pair.first), TowxString(pair.second)));
-			sett().SetHostingPreset( TowxString(m_preset), (LSL::OptionsWrapper::GameOption)i, wopts);
+			sett().SetHostingPreset( TowxString(m_preset), (LSL::Enum::GameOption)i, wopts);
 		} else {
 			std::map<wxString,wxString> opts;
 			opts[_T("mapname")] = TowxString(GetHostMapName());
 			unsigned int validrectcount = 0;
 			if ( LSL::Util::FromString<long>(
-				     CustomBattleOptions().getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption ) ) == ST_Choose ) {
+				     CustomBattleOptions().getSingleValue("startpostype", LSL::Enum::EngineOption ) ) == ST_Choose ) {
 				unsigned int boxcount = GetLastRectIdx();
 				for ( unsigned int boxnum = 0; boxnum <= boxcount; boxnum++ ) {
 					BattleStartRect rect = GetStartRect( boxnum );
@@ -930,7 +927,7 @@ for( const auto pair : opts)
 			}
 			opts[_T("restrictions")] = restrictionsstring;
 
-			sett().SetHostingPreset( TowxString(m_preset), (LSL::OptionsWrapper::GameOption)i, opts );
+			sett().SetHostingPreset( TowxString(m_preset), (LSL::Enum::GameOption)i, opts );
 		}
 	}
 	sett().SaveSettings();
@@ -1022,8 +1019,8 @@ void IBattle::LoadScriptMMOpts( const LSL::TDF::PDataList& node )
 {
 	if ( !node.ok() ) return;
 	LSL::OptionsWrapper& opts = CustomBattleOptions();
-	auto options = opts.getOptionsMap(LSL::OptionsWrapper::EngineOption);
-for (const auto i : options) {
+	auto options = opts.getOptionsMap(LSL::Enum::EngineOption);
+	for (const auto i : options) {
 		opts.setSingleOption( i.first, node->GetString( i.first, i.second));
 	}
 }

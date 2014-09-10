@@ -80,8 +80,6 @@ private:
     std::string m_topic_nick;
     std::string m_name;
 
-    void* m_userdata;
-
     std::string m_password;
 
     void AddUser( User& user );

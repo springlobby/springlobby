@@ -78,7 +78,7 @@ class ChatPanelMenu : public wxEvtHandler , public SL::NonCopyable
         wxMenu* GetMenu();
 		ChatPanelMenu::UserMenu* GetUserMenuNoCreate();
 
-    protected:
+private:
         void CreateNickListMenu();
 		void MutePlayer(long dur);
 

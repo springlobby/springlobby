@@ -14,8 +14,7 @@ class IPlaybackList : public wxEvtHandler
 {
   public:
 	IPlaybackList():
-		wxEvtHandler(),
-		m_fails(0)
+		wxEvtHandler()
 	{}
 
     //! @brief mapping from playback id number to playback object
@@ -41,12 +40,8 @@ class IPlaybackList : public wxEvtHandler
     const playback_map_t& GetPlaybacksMap() const;
 
 
-  protected:
-
+protected:
     playback_map_t m_replays;
-
-    unsigned long m_fails;
-
 };
 
 #endif // SL_PLAYBACKLIST_H_INCLUDED

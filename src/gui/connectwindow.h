@@ -36,7 +36,7 @@ public:
 	void OnCancel(wxCommandEvent& event);
 	void OnQuit( wxCommandEvent& data );
 
-protected:
+private:
 	// ConnectWindow variables
 
 	wxNotebook* m_tabs;             //!< Notebook containing the login and register tabs

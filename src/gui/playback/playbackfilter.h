@@ -48,7 +48,7 @@ public:
 
     void SaveFilterValues();
 
-	protected:
+private:
         enum m_button_mode {m_equal,m_bigger,m_smaller};
 
         wxString _GetButtonSign(m_button_mode value);

@@ -27,7 +27,7 @@ class ActivityNoticePanel: public wxPanel, public SL::NonCopyable
 
         void SetString(const wxString& file);
         virtual bool Show(bool show = true);
-    protected:
+private:
         wxString m_notice;
         wxGauge* m_gauge;
         wxStaticText* m_message;
@@ -43,7 +43,7 @@ class ActivityNotice: public wxDialog
     public:
         ActivityNotice(wxWindow* parent,const wxString& notice, const wxSize& gauge_size = wxSize(80,5)  );
         virtual ~ActivityNotice() {}
-    protected:
+private:
         ActivityNoticePanel* m_panel;
 };
 
@@ -54,7 +54,7 @@ class ActivityNoticeContainer
         ActivityNoticeContainer(wxWindow* parent,const wxString& notice, const wxSize& gauge_size = wxSize(80,5)  );
         ~ActivityNoticeContainer();
 
-    protected:
+private:
         ActivityNotice* m_window;
 };
 

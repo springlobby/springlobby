@@ -28,7 +28,7 @@ class SpringLobbyApp : public wxApp
 
 	void OnQuit( wxCommandEvent& data );
 
-  protected:
+private:
 
 
     bool quit_called;

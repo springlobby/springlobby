@@ -5,7 +5,7 @@
 
 #include <wx/scrolwin.h>
 #include <map>
-#include <lslunitsync/optionswrapper.h>
+#include <lslunitsync/enum.h>
 
 const int BOOL_START_ID = 3000;
 const int FLOAT_START_ID = 4000;
@@ -15,9 +15,11 @@ const int BUTTON_ID_OFFSET = 7000;
 
 class wxBoxSizer;
 class wxStaticBoxSizer;
+
 namespace LSL {
-    class OptionsWrapper;
+	struct mmOptionSection;
 }
+
 class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
@@ -43,14 +45,16 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		BattleroomMMOptionsTab( IBattle* battle, wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL );
 		~BattleroomMMOptionsTab();
 
-		void UpdateOptControls(wxString controlName);
-		//!relaod single category
-        void OnReloadControls(LSL::OptionsWrapper::GameOption flag);
+		void UpdateOptControls(const wxString& controlName);
+		//!reload single category
+        void OnReloadControls(const LSL::Enum::GameOption& flag);
 		//!reload all categories
 		void OnReloadControls();
 
         void UpdatePresetList();
+        void SetBattle( IBattle* battle );
 
+	private:
         void OnButton( wxCommandEvent& event );
         void OnLoadPreset( wxCommandEvent& event );
         void OnSavePreset( wxCommandEvent& event );
@@ -59,9 +63,6 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
         void OnInfoButton( wxCommandEvent& event );
 
         IBattle* GetBattle();
-        void SetBattle( IBattle* battle );
-
-	protected:
         IBattle* m_battle;
 
 		wxBoxSizer* m_main_sizer;
@@ -77,7 +78,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
         wxButton* m_default_btn;
         wxComboBox* m_options_preset_sel;
 
-        LSL::OptionsWrapper* m_mapmodoptions;
+//        LSL::OptionsWrapper* m_mapmodoptions;
 
 //        typedef BattleroomMMOptionsTab<IBattle> ThisType;
 
@@ -101,7 +102,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 
 		/** \brief setup toplevel sizer per GameOption with all child sizers ( sections )
             */
-        void setupOptionsSizer( wxBoxSizer* parent_sizer, LSL::OptionsWrapper::GameOption optFlag );
+        void setupOptionsSizer( wxBoxSizer* parent_sizer, LSL::Enum::GameOption optFlag );
 
 
         /** \brief generate Gui elements from loaded MMoptions
@@ -110,7 +111,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
          * \return the total num of controls in the sizer
          */
         int setupOptionsSectionSizer(const LSL::mmOptionSection& section, wxBoxSizer* parent_sizer,
-                                     LSL::OptionsWrapper::GameOption optFlag);
+                                     LSL::Enum::GameOption optFlag);
 
 		/** \name Event handlers
 		 * @{

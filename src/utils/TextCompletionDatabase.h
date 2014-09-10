@@ -12,24 +12,17 @@ WX_DECLARE_STRING_HASH_MAP( wxString, HashMap_String_String );
 
 
 class TextCompletionDatabase {
+public:
+	TextCompletionDatabase();
+	virtual ~TextCompletionDatabase();
 
-	private:
-		HashMap_String_String hm;
+	unsigned int Size();
 
-	public:
-		TextCompletionDatabase();
-		virtual ~TextCompletionDatabase();
-
-		unsigned int Size();
-
-		void Insert_Mapping( const wxString& abbreviation, const wxString& mapping );
-		void Delete_Mapping( const wxString& abbreviation );
-		HashMap_String_String GetMapping( wxString text );
-
-
-
-	protected:
-
+	void Insert_Mapping( const wxString& abbreviation, const wxString& mapping );
+	void Delete_Mapping( const wxString& abbreviation );
+	HashMap_String_String GetMapping( wxString text );
+private:
+	HashMap_String_String hm;
 };
 
 #endif // TEXTCOMPLETIONDATABASE_HPP

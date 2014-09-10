@@ -29,7 +29,6 @@ private:
 	unsigned int overalProgress;
 	int unfinishedTasks;
 	int finishedCounter;
-protected:
 	DECLARE_EVENT_TABLE()
 };
 

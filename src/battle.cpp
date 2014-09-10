@@ -45,7 +45,10 @@ Battle::Battle( IServer& serv, int id ) :
         m_ah(*this),
         m_autolock_on_start(false),
         m_id( id ),
-		m_timer(NULL)
+		m_timer(NULL),
+		m_auto_unspec(false),
+		m_auto_unspec_num_players(0)
+
 {
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
     m_opts.battleid =  m_id;
@@ -166,7 +169,7 @@ void Battle::SaveMapDefaults()
 {
     // save map preset
         const wxString mapname = TowxString(LoadMap().name);
-        const std::string startpostype = CustomBattleOptions().getSingleValue( "startpostype", LSL::OptionsWrapper::EngineOption );
+        const std::string startpostype = CustomBattleOptions().getSingleValue( "startpostype", LSL::Enum::EngineOption );
         sett().SetMapLastStartPosType( mapname, TowxString(startpostype));
 		std::vector<Settings::SettStartBox> rects;
 		for( unsigned int i = 0; i <= GetLastRectIdx(); ++i )
@@ -190,8 +193,8 @@ void Battle::LoadMapDefaults( const std::string& mapname )
 {
     CustomBattleOptions().setSingleOption( "startpostype",
                                            STD_STRING(sett().GetMapLastStartPosType(TowxString(mapname))),
-                                           LSL::OptionsWrapper::EngineOption );
-	SendHostInfo( wxFormat( _T("%d_startpostype") ) % LSL::OptionsWrapper::EngineOption );
+                                           LSL::Enum::EngineOption );
+	SendHostInfo( wxFormat( _T("%d_startpostype") ) % LSL::Enum::EngineOption );
 
 	for( unsigned int i = 0; i <= GetLastRectIdx(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects
 	SendHostInfo( IBattle::HI_StartRects );
@@ -670,7 +673,7 @@ void Battle::StartSpring()
 void Battle::OnTimer( wxTimerEvent&  )
 {
 	if ( !IsFounderMe() ) return;
-	if ( m_ingame ) return;
+	if ( IBattle::GetInGame() ) return;
 	int autospect_trigger_time = sett().GetBattleLastAutoSpectTime();
 	if ( autospect_trigger_time == 0 ) return;
 	time_t now = time(0);
@@ -695,7 +698,7 @@ void Battle::OnTimer( wxTimerEvent&  )
 void Battle::SetInGame( bool value )
 {
 	time_t now = time(0);
-	if ( m_ingame && !value )
+	if ( IBattle::GetInGame() && !value )
 	{
 		for ( int i = 0; i < long(GetNumUsers()); i++ )
 		{
@@ -1007,7 +1010,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
 
 	if ( numcontrolteams == 0 || numcontrolteams == -1 ) numcontrolteams = GetNumUsers() - GetSpectators(); // 0 or -1 -> use num players, will use comshare only if no available team slots
     IBattle::StartType position_type = (IBattle::StartType)
-            LSL::Util::FromString<long>(CustomBattleOptions().getSingleValue("startpostype", LSL::OptionsWrapper::EngineOption));
+            LSL::Util::FromString<long>(CustomBattleOptions().getSingleValue("startpostype", LSL::Enum::EngineOption));
     if ( ( position_type == ST_Fixed ) || ( position_type == ST_Random ) ) // if fixed start pos type or random, use max teams = start pos count
     {
       try
