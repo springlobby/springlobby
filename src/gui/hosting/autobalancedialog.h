@@ -19,7 +19,7 @@ class wxStaticText;
  * \todo use this in a non-modal way? */
 class AutoBalanceDialog: public wxDialog
 {
-	public:
+public:
 
     struct BalanceOptions
     {

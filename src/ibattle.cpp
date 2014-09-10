@@ -41,10 +41,7 @@ lsl/battle/ibattle.cpp
 IBattle::IBattle():
 	m_map_loaded(false),
 	m_mod_loaded(false),
-	m_previous_local_mod_name( "" ),
 	m_ingame(false),
-	m_auto_unspec(false),
-	m_auto_unspec_num_players(0),
 	m_generating_script(false),
 	m_players_ready(0),
 	m_players_sync(0),
@@ -1018,7 +1015,7 @@ void IBattle::LoadScriptMMOpts( const LSL::TDF::PDataList& node )
 	if ( !node.ok() ) return;
 	LSL::OptionsWrapper& opts = CustomBattleOptions();
 	auto options = opts.getOptionsMap(LSL::Enum::EngineOption);
-for (const auto i : options) {
+	for (const auto i : options) {
 		opts.setSingleOption( i.first, node->GetString( i.first, i.second));
 	}
 }

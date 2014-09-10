@@ -76,7 +76,6 @@ class tab_quality_video : public abstract_panel
 
         SlSpinCtrlDouble* m_aniso_spin;
 
-    protected:
 		DECLARE_EVENT_TABLE()
 };
 

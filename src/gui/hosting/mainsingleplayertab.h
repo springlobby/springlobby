@@ -15,7 +15,7 @@ class BattleOptionsTab;
 
 class MainSinglePlayerTab : public wxScrolledWindow
 {
-  public:
+public:
     MainSinglePlayerTab( wxWindow* parent );
     ~MainSinglePlayerTab();
 
@@ -34,7 +34,7 @@ class MainSinglePlayerTab : public wxScrolledWindow
     void LoadPerspective( const wxString& perspective_name = wxEmptyString );
     void SavePerspective( const wxString& perspective_name = wxEmptyString );
 
-  protected:
+private:
 
     wxBoxSizer* m_main_sizer;
     wxImageList* m_imagelist;

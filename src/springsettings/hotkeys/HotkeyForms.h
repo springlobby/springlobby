@@ -202,9 +202,7 @@ class CommandOrderDlgBase : public wxDialog
 ///////////////////////////////////////////////////////////////////////////////
 class ChangeMetaDlgBase : public wxDialog
 {
-	private:
-
-	protected:
+protected:
 		wxStaticText* m_staticText24;
 		wxTextCtrl* m_textCtrlCurKey;
 		wxStaticText* m_staticText23;

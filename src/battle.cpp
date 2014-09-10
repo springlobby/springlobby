@@ -45,7 +45,10 @@ Battle::Battle( IServer& serv, int id ) :
         m_ah(*this),
         m_autolock_on_start(false),
         m_id( id ),
-		m_timer(NULL)
+		m_timer(NULL),
+		m_auto_unspec(false),
+		m_auto_unspec_num_players(0)
+
 {
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
     m_opts.battleid =  m_id;
@@ -670,7 +673,7 @@ void Battle::StartSpring()
 void Battle::OnTimer( wxTimerEvent&  )
 {
 	if ( !IsFounderMe() ) return;
-	if ( m_ingame ) return;
+	if ( IBattle::GetInGame() ) return;
 	int autospect_trigger_time = sett().GetBattleLastAutoSpectTime();
 	if ( autospect_trigger_time == 0 ) return;
 	time_t now = time(0);
@@ -695,7 +698,7 @@ void Battle::OnTimer( wxTimerEvent&  )
 void Battle::SetInGame( bool value )
 {
 	time_t now = time(0);
-	if ( m_ingame && !value )
+	if ( IBattle::GetInGame() && !value )
 	{
 		for ( int i = 0; i < long(GetNumUsers()); i++ )
 		{

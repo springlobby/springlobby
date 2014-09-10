@@ -23,7 +23,7 @@ class audio_panel : public abstract_panel
 
 		void initAudioSizer(wxStaticBoxSizer*);
 		void updateControls(int);
-    protected:
+private:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
 

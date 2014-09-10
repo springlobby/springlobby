@@ -18,8 +18,7 @@
 Channel::Channel( IServer& serv )
     : m_serv(serv),
     m_do_ban_regex(false),
-    m_do_unban_regex(false),
-	m_userdata(NULL)
+    m_do_unban_regex(false)
 {}
 
 Channel::~Channel() {

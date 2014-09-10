@@ -21,30 +21,28 @@ class wxCheckListBox;
  * \todo DOCMEMORE */
 class BattleOptionsTab : public wxScrolledWindow
 {
-  public:
+public:
     BattleOptionsTab( wxWindow* parent, IBattle* battle );
     ~BattleOptionsTab();
 
     void UpdateBattle( const wxString& Tag );
     void ReloadRestrictions();
+    void SetBattle( IBattle* battle );
 
+private:
     int GetAllowedUnitIndex( const wxString& name );
     int GetRestrictedUnitIndex( const wxString& name );
+
     bool IsRestricted( const wxString& name );
     void Restrict( const wxString& name, int count );
     void Allow( const wxString& name );
     void Restrict( int index, int count );
     void Allow( int index );
 
-
+    IBattle* GetBattle();
     void OnRestrict( wxCommandEvent& event );
     void OnAllow( wxCommandEvent& event );
     void OnClearRestrictions( wxCommandEvent& event );
-
-    void SetBattle( IBattle* battle );
-    IBattle* GetBattle();
-
-  protected:
 
     void UpdateBattle();
 

@@ -147,7 +147,7 @@ class CommonUser
         bool Equals( const CommonUser& other ) const { return ( m_nick == other.GetNick() ); }
 
 
-    protected:
+private:
         std::string m_nick;
         std::string m_country;
         std::string m_id;
@@ -207,7 +207,7 @@ class User : public CommonUser
     int GetSideiconIndex() const { return m_sideicon_idx; }
     void SetSideiconIndex( const int idx ) { m_sideicon_idx = idx; }
 
-  protected:
+private:
     // User variables
 
     IServer* m_serv;

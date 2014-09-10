@@ -30,7 +30,7 @@ class tab_ui : public abstract_panel
 		void initUiOptSizer(wxStaticBoxSizer* );
 		void initZoomSizer(wxStaticBoxSizer* );
 		void updateControls(int what_to_update);
-    protected:
+private:
         void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
 		wxSlider** ctrl_scroll_slider;

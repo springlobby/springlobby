@@ -11,7 +11,7 @@ public:
 	const IServer& GetServer() const;
 	void SetCurrentServer(IServer* server);
 	bool IsServerAvailible() const;
-protected:
+private:
 	IServer* m_serv;
 };
 
