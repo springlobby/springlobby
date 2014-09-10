@@ -50,7 +50,7 @@ class DownloadListCtrl : public CustomVirtListCtrl<ObserverDownloadInfo, Downloa
     int GetItemColumnImage(long item, long column) const;
     wxListItemAttr* GetItemAttr(long ) const {return 0;}
 
-  protected:
+private:
 	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
 	int GetIndexFromData( const DataType& data ) const;
 

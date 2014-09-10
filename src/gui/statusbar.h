@@ -16,13 +16,12 @@ public:
 	void OnAddMessage	( UiEvents::StatusData data );
 	void OnRemoveMessage( UiEvents::StatusData data );
 
-protected:
+private:
 	static const wxEventType UpdateMsgEvt;
 	void OnUpdateMsg(wxCommandEvent& evt);
 	EventReceiverFunc< Statusbar, UiEvents::StatusData, &Statusbar::OnAddMessage> m_addMessageSink;
 	EventReceiverFunc< Statusbar, UiEvents::StatusData, &Statusbar::OnRemoveMessage> m_removeMessageSink;
 
-private:
 	TaskBar* taskBar;
 	DECLARE_EVENT_TABLE()
 };

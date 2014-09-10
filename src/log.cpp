@@ -26,10 +26,10 @@ public:
 			fclose(m_logfile);
 		}
 	}
-	myLogger(bool console, const wxString&  logfilepath, bool showgui):
+	myLogger(bool console, const wxString&  logfilepath, bool /*showgui*/):
 		wxLog(),
 		m_console(console),
-		m_gui(showgui),
+//		m_gui(showgui),
 		m_logfile(NULL)
 	{
 		if (!logfilepath.empty()) {
@@ -65,7 +65,7 @@ public:
 	}
 private:
 	bool m_console;
-	bool m_gui;
+//	bool m_gui;
 	FILE* m_logfile;
 };
 

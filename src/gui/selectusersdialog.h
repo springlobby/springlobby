@@ -17,9 +17,9 @@ class wxListEvent;
 
 class SelectUsersDialog : public wxDialog
 {
+private:
   DECLARE_EVENT_TABLE()
 
-  protected:
     enum
     {
       FILTER_TEXT = 1000,

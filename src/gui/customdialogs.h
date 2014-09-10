@@ -101,8 +101,7 @@ public:
 
 	void OnOptionsNo(wxCommandEvent& event);
 
-protected:
-
+private:
 	DECLARE_EVENT_TABLE()
 
 };
@@ -119,14 +118,15 @@ public:
 	virtual ~TimedMessageBox();
 
 	void OnOptionsNo(wxCommandEvent& event);
-
 protected:
+	wxTimer m_delay_timer;
+
+private:
 	const int m_delay;
 	wxSizer* sizerBtn;
 	wxSizer* topsizer;
 	wxSizer* m_delay_sizer;
 	wxStaticText* m_delay_notif;
-	wxTimer m_delay_timer;
 	wxTimer m_display_timer;
 	unsigned int m_display_hits;
 	static const unsigned int m_update_interval = 500;
@@ -150,7 +150,7 @@ public:
 			    long style = wxOK|wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
 	virtual ~AutocloseMessageBox();
 	virtual void EndModal( int retCode );
-protected:
+private:
 	void OnUnlock( wxTimerEvent& evt );
 	wxWindowID delay_timerID;
 };
@@ -167,7 +167,7 @@ public:
 
 	virtual void AppendMessage(const wxString& message);
 
-protected:
+private:
 	wxBoxSizer* topsizer;
 	wxListCtrl* m_messages;
 };
@@ -208,7 +208,7 @@ public:
 	static wxWindow* getSettingspointer();
 	void AppendMessage(const wxString& message);
 
-protected:
+private:
 	static wxWindow* m_settingsWindow;
 	static wxWindow* m_lobbyWindow;
 	wxListCtrl* m_messages;

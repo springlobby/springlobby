@@ -46,7 +46,7 @@ public:
 		wxChoice* m_group_choice;
 		//*)
 
-	protected:
+private:
 
 		//(*Identifiers(AutoBalanceDialog)
 		static const long ID_STATICTEXT1;

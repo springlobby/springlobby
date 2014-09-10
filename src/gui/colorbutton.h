@@ -18,7 +18,7 @@ class ColorButton : public wxBitmapButton
         void SetColor( const wxColour& color );
         wxColour GetColor( );
 
-    protected:
+private:
         wxSize m_size;
         wxColour m_color;
         wxBitmap GetBitmapFromColor( const wxColour& color );

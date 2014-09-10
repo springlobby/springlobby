@@ -51,7 +51,6 @@ bool IPlaybackList::DeletePlayback( unsigned int const id )
 void IPlaybackList::RemoveAll()
 {
     m_replays.clear();
-    m_fails = 0;
 }
 
 const typename IPlaybackList::playback_map_t& IPlaybackList::GetPlaybacksMap() const {

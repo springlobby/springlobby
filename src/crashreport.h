@@ -20,7 +20,7 @@ class NetDebugReport : public wxDebugReportCompress
 	  //! the real workhorse
       bool Process();
 
-  protected:
+private:
       //! @brief gets called after server answered to the upload attempt
       bool OnServerReply(const wxArrayString& reply);
 	  const char* m_url;
@@ -29,7 +29,7 @@ class NetDebugReport : public wxDebugReportCompress
 class SpringDebugReport : public NetDebugReport {
 	public:
 		SpringDebugReport();
-protected:
+private:
 		void AddVFSFile( const wxString& fn, const wxString& id );
 
 };
@@ -48,7 +48,7 @@ class CrashReport
         //! @brief is the container for the stream logging target
         std::ostringstream crashlog;
 
-    protected:
+private:
         CrashReport(){}
 
 };

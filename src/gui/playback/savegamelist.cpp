@@ -16,8 +16,6 @@ SavegameList::SavegameList()
 
 void SavegameList::LoadPlaybacks(const std::vector<std::string> &filenames )
 {
-    m_fails = 0;
-
     m_replays.clear();
     const size_t size = filenames.size();
     for (size_t i = 0; i < size; ++i)
@@ -28,7 +26,6 @@ void SavegameList::LoadPlaybacks(const std::vector<std::string> &filenames )
         if (!GetSavegameInfos( fn, rep_ref))
         {
 			RemovePlayback( rep_ref.id );
-            m_fails++;
         }
     }
 }

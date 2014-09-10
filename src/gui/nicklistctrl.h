@@ -14,7 +14,7 @@ class UserMenu;
 
 class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
 {
-  protected:
+private:
     typedef SL_GENERIC::UserMenu<ChatPanelMenu> UserMenu;
 
   public:
@@ -40,7 +40,7 @@ class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
     int GetItemColumnImage(long item, long column) const;
     wxListItemAttr * GetItemAttr(long item) const;
 
-  protected:
+private:
 
     //! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
 	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;

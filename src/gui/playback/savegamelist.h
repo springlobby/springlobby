@@ -16,7 +16,7 @@ class SavegameList : public IPlaybackList
 
    virtual  void LoadPlaybacks( const std::vector<std::string>& filenames );
 
-  protected:
+private:
     SavegameList();
 
     template <class PB, class I >

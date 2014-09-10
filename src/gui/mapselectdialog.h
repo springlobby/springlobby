@@ -37,7 +37,7 @@ class MapSelectDialog: public wxDialog, public GlobalEvent /*,public WindowAttri
 
 		void OnUnitsyncReloaded( wxCommandEvent& data );
 
-	protected:
+private:
 
 		//(*Declarations(MapSelectDialog)
 		wxRadioButton* m_filter_recent;

@@ -24,7 +24,7 @@ class NotificationManager : public SL::NonCopyable, public wxEvtHandler, public 
 
 		void OnQuit( wxCommandEvent& data );
 
-    protected:
+private:
 		INotification* m_notification_wrapper;
 
 		wxTimer m_rate_limit_timer;

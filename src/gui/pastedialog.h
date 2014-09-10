@@ -15,7 +15,7 @@ public:
 
 	static const int pasteButtonReturnCode = wxID_HIGHEST + 1;
 
-protected:
+private:
 	enum {
 		ID_PASTE_BUTTON = wxID_HIGHEST
 	};

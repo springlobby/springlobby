@@ -27,10 +27,9 @@ class PlaybackListFilter;
 
 class PlaybackTab : public GlobalEvent, public wxScrolledWindow
 {
-    protected:
+private:
         friend class BattleListFilter; //! WTF?
 
-    public:
 
   public:
     //! loads all replays into list and adds them to listctrl

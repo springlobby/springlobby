@@ -16,9 +16,9 @@ class wxButton;
 
 class GroupOptionsPanel : public wxPanel
 {
+private:
   DECLARE_EVENT_TABLE()
 
-  protected:
     enum
     {
       REMOVE_GROUP = 1000,

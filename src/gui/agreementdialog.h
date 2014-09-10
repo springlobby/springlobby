@@ -20,7 +20,7 @@ class AgreementDialog : public wxDialog
     void OnYes( wxCommandEvent& event );
     void OnNo( wxCommandEvent& event );
 
-  protected:
+private:
     wxTextCtrl* m_text;
     wxStaticText* m_accept_lbl;
     wxStaticLine* m_button_sep;

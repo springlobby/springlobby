@@ -20,7 +20,7 @@ public:
 		m_lastSize(wxDefaultSize)
 			{ }
     virtual bool        ProcessEvent(wxEvent &Event);
-protected:
+private:
 	wxBitmap Bitmap;
 	wxSize m_lastSize;
 };

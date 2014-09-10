@@ -99,7 +99,7 @@ int IBattle::GetPlayerNum( const User& user ) const
 
 class DismissColor
 {
-protected:
+private:
 	typedef std::vector<wxColour>
 	ColorVec;
 	const ColorVec& m_other;

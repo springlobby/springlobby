@@ -138,7 +138,7 @@ public:
 	void CheckForUpdates(bool show);
 	void EnableDebug(bool enable);
 
-protected:
+private:
 	bool StartUpdate( const wxString& latestVersion);
 	void OnDownloadComplete(wxCommandEvent& /*data*/);
 	void Notify();
