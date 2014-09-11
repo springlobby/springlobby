@@ -39,14 +39,14 @@ lsl/battle/ibattle.cpp
 
 
 IBattle::IBattle():
+	m_generating_script(false),
+	m_is_self_in(false),
+	m_ingame(false),
 	m_map_loaded(false),
 	m_mod_loaded(false),
-	m_ingame(false),
-	m_generating_script(false),
 	m_players_ready(0),
 	m_players_sync(0),
 	m_players_ok(0),
-	m_is_self_in(false),
 	m_start_time(0)
 {
 }
