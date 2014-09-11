@@ -18,7 +18,6 @@
 #include <wx/utils.h>
 
 #include "utils/platform.h"
-#include "updater/updatehelper.h"
 #include "utils/conversion.h"
 #include "utils/slpaths.h"
 #include "utils/version.h"

@@ -134,16 +134,23 @@ ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 set(springlobbySrc
 	autohost.cpp
 	autohostmanager.cpp
-	channel.cpp
-	channellist.cpp
 	battlelist.cpp
 	battle.cpp
+	channel.cpp
+	channellist.cpp
 	chatlog.cpp
 	countrycodes.cpp
+	contentsearchresult.cpp
 	flagimages.cpp
 	ibattle.cpp
 	iconimagelist.cpp
+	iplaybacklist.cpp
 	iserver.cpp
+	offlinebattle.cpp
+	playbackthread.cpp
+	replaylist.cpp
+	savegamelist.cpp
+	serverselector.cpp
 	serverevents.cpp
 	socket.cpp
 	spring.cpp
@@ -153,13 +160,7 @@ set(springlobbySrc
 	user.cpp
 	useractions.cpp
 	userlist.cpp
-	iplaybacklist.cpp
-	replaylist.cpp
-	savegamelist.cpp
-	serverselector.cpp
-	playbackthread.cpp
-	offlinebattle.cpp
-	contentsearchresult.cpp
+	versionchecker.cpp
 
 	aui/auimanager.cpp
 
@@ -249,8 +250,9 @@ set(springlobbySrc
 
 SET(SLSharedWithSettings
 	crashreport.cpp
-	settings.cpp
 	log.cpp
+	settings.cpp
+	updatehelper.cpp
 
 	gui/uiutils.cpp
 	gui/controls.cpp
@@ -262,8 +264,6 @@ SET(SLSharedWithSettings
 	gui/spinctl/generic/spinctrldouble.cpp
 	gui/aboutbox.cpp
 
-	updater/versionchecker.cpp
-	updater/updatehelper.cpp
 
 	utils/wxTranslationHelper.cpp
 	utils/conversion.cpp

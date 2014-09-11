@@ -32,8 +32,6 @@ private:
 	long m_pid;
 	long m_paramcount;
 
-	UpdaterMainwindow* m_updater_window;
-
 };
 
 DECLARE_APP(UpdaterApp)

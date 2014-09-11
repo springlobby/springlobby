@@ -20,15 +20,13 @@
 #include <fstream>
 
 #include "updaterapp.h"
-#include "updatermainwindow.h"
 #include "utils/platform.h"
 #include "utils/conversion.h"
 
 IMPLEMENT_APP(UpdaterApp)
 
 UpdaterApp::UpdaterApp():
-	m_pid(0),
-	m_updater_window(NULL)
+	m_pid(0)
 {
 	SetAppName( _T("springlobby_updater") );
 }
@@ -63,9 +61,6 @@ bool UpdaterApp::OnInit()
 	wxImage::AddHandler(new wxPNGHandler);
 	wxFileSystem::AddHandler(new wxZipFSHandler);
 
-	m_updater_window = new UpdaterMainwindow();
-	m_updater_window->Show( true );
-	SetTopWindow( m_updater_window );
 	bool ret = false;
 	if (m_paramcount == 2) {
 		ret = StartUpdate(TrimQuotes(m_source_dir), TrimQuotes(m_destination_dir));
@@ -78,8 +73,6 @@ bool UpdaterApp::OnInit()
 		params.clear(); //start springlobby
 		ret = RunProcess(m_springlobby_exe, params, true);
 	}
-
-	m_updater_window->Close();
 	return ret;
 }
 

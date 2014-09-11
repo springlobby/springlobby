@@ -3,20 +3,21 @@
 #include "infodialog.h"
 
 #include <wx/sizer.h>
-#include "settings.h"
+#include <wx/textctrl.h>
+#include <wx/app.h>
+#include <wx/version.h>
 #include <vector>
 #include <fstream>
 #include <utility>
 #include <wx/filename.h>
+
+#include <lslutils/misc.h>
+
+#include "settings.h"
 #include "utils/conversion.h"
 #include "utils/version.h"
-#include <lslutils/misc.h>
 #include "utils/platform.h"
 #include "utils/slpaths.h"
-#include "updater/updatehelper.h"
-#include <wx/textctrl.h>
-#include <wx/app.h>
-#include <wx/version.h>
 
 #if defined(__unix__) || defined(__APPLE__)
 # include <unistd.h>

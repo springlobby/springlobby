@@ -37,7 +37,6 @@ lsl/networking/tasserver.cpp
 #include "utils/tasutil.h"
 #include "utils/conversion.h"
 #include "utils/platform.h"
-#include "updater/updatehelper.h"
 #include "serverevents.h"
 #include "socket.h"
 #include "log.h"
