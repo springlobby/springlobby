@@ -452,7 +452,7 @@ void TASServer::Notify()
 	if (m_last_ping > PING_TIME) { //Send a PING every 30 seconds
 		if (interval > PING_TIME) {
 			m_last_net_packet = 0; //assume local clock is broken and we received a packed within time
-			m_se->OnServerMessage(wxFormat(_("Springlobby hanged or stale clock. Got no timer for %d msec")) % interval );
+			m_se->OnServerMessage(wxFormat(_("Springlobby hunged or stale clock. Got no timer for %d msec")) % interval );
 		}
 		m_last_ping = 0;
 		Ping();
