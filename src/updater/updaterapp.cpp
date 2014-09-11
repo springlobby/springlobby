@@ -4,16 +4,8 @@
 // Class: UpdaterApp
 //
 
-#ifdef _MSC_VER
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif // NOMINMAX
-#include <winsock2.h>
-#endif // _MSC_VER
-
 #include <wx/intl.h>
 #include <wx/cmdline.h>
-#include <wx/image.h>
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/msgdlg.h>
 
@@ -35,7 +27,7 @@ UpdaterApp::~UpdaterApp()
 {
 }
 
-wxString TrimQuotes(const wxString& str)
+static wxString TrimQuotes(const wxString& str)
 {
 	wxString res = str;
 	res.Replace(_T("\""), wxEmptyString, true);
@@ -130,7 +122,7 @@ bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 	return false;
 }
 
-wxString TrimSep(const wxString& path)
+static wxString TrimSep(const wxString& path)
 {
 	const wxString sep = wxFileName::GetPathSeparator();
 	if (path.EndsWith(sep)) {
