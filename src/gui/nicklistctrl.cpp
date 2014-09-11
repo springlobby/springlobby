@@ -4,7 +4,6 @@
 // Class: NickListCtrl
 //
 
-#include <wx/platform.h>
 #include <wx/imaglist.h>
 #include <wx/menu.h>
 #include <wx/string.h>
