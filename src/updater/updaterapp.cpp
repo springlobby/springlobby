@@ -47,10 +47,6 @@ bool UpdaterApp::OnInit()
 	wxHandleFatalExceptions( true );
 #endif
 
-	//this needs to called _before_ mainwindow instance is created
-	wxInitAllImageHandlers();
-	//TODO needed?
-	wxImage::AddHandler(new wxPNGHandler);
 	wxFileSystem::AddHandler(new wxZipFSHandler);
 
 	bool ret = false;
