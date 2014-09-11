@@ -4,6 +4,8 @@ https://github.com/springlobby/springlobby/wiki/Install
 for compiling from source see:
 https://github.com/springlobby/springlobby/wiki/InstallFromSource
 
+[![Build Status](https://travis-ci.org/springlobby/springlobby.svg?branch=master)](https://travis-ci.org/springlobby/springlobby)
+
 #License
 
 SpringLobby is released under GPL v2 (or later):
