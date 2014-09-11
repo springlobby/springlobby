@@ -128,13 +128,6 @@ INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
 IF( OPTION_NOTIFY AND NOT WIN32 )
 	pkg_check_modules( LIBNOTIFY libnotify )
 	pkg_check_modules( GLIB glib-2.0 )
-	IF( LIBNOTIFY_FOUND )
-		INCLUDE_DIRECTORIES( ${LIBNOTIFY_INCLUDE_DIRS} )
-		LINK_LIBRARIES( ${LIBNOTIFY_LIBRARIES} )
-		INCLUDE_DIRECTORIES( ${GLIB_INCLUDE_DIRS} )
-		LINK_LIBRARIES( ${GLIB_LIBRARIES} )
-		ADD_DEFINITIONS( -DHAVE_LIBNOTIFY )
-	ENDIF( LIBNOTIFY_FOUND )
 ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 
 
@@ -305,7 +298,7 @@ target_link_libraries(slcommon
 add_subdirectory(downloader)
 add_subdirectory(utils)
 
-set(LSLSERVER OFF CACHE BOOL "disable lsl-server build" FORCE)
+set(LSLSERVER ON CACHE BOOL "disable lsl-server build" FORCE)
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
 	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
 else()
@@ -328,11 +321,16 @@ IF(WIN32)
 ENDIF()
 add_subdirectory(updater)
 
-
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
 		${springlobbySrc}
 		${springlobby_RC_FILE}
 	)
+IF( LIBNOTIFY_FOUND )
+	INCLUDE_DIRECTORIES( ${LIBNOTIFY_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS} )
+	TARGET_LINK_LIBRARIES(springlobby ${LIBNOTIFY_LIBRARIES} ${GLIB_LIBRARIES} )
+	ADD_DEFINITIONS( -DHAVE_LIBNOTIFY )
+ENDIF( LIBNOTIFY_FOUND )
+
 #the updater needs to be build for windows only
 IF(WIN32)
 	TARGET_LINK_LIBRARIES( springlobby
