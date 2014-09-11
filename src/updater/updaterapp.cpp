@@ -94,7 +94,6 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
 //! @brief parses the command line
 bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
-#if wxUSE_CMDLINE_PARSER
 	if ( parser.Found(_T("help")) )
 		return false; // not a syntax error, but program should stop if user asked for command line usage
 	m_paramcount = parser.GetParamCount();
@@ -114,7 +113,6 @@ bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 		m_destination_dir = parser.GetParam(4);
 		return true;
 	}
-#endif
 	return false;
 }
 

@@ -14,6 +14,7 @@ public:
 	UpdaterApp();
 	~UpdaterApp();
 
+private:
 	virtual bool OnInit();
 	virtual int OnExit();
 
@@ -21,8 +22,6 @@ public:
 
 	virtual void OnInitCmdLine(wxCmdLineParser& parser);
 	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
-
-private:
 	bool StartUpdate( const wxString& source, const wxString& destination )	;
 
 	wxString m_source_dir;
