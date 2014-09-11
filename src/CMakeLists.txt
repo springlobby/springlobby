@@ -165,12 +165,9 @@ set(springlobbySrc
 	gui/options/chatoptionstab.cpp
 
 	gui/playback/playbackfilter.cpp
-	gui/playback/iplaybacklist.cpp
 	gui/playback/playbacklistctrl.cpp
 	gui/playback/playbacktab.cpp
 	gui/playback/playbackthread.cpp
-	gui/playback/replaylist.cpp
-	gui/playback/savegamelist.cpp
 
 
 	utils/TextCompletionDatabase.cpp
@@ -251,6 +248,9 @@ set(springlobbySrc
 	user.cpp
 	useractions.cpp
 	userlist.cpp
+	iplaybacklist.cpp
+	replaylist.cpp
+	savegamelist.cpp
 	serverselector.cpp
 	
 	lsl/src/lsl/battle/tdfcontainer.cpp #FIXME
