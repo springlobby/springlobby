@@ -9,8 +9,6 @@
 #include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/msgdlg.h>
 
-#include <fstream>
-
 #include "updaterapp.h"
 #include "utils/platform.h"
 #include "utils/conversion.h"
