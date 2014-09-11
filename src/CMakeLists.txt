@@ -139,8 +139,74 @@ ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 
 
 set(springlobbySrc
-	gui/slbook.cpp
+	autohost.cpp
+	autohostmanager.cpp
+	channel.cpp
+	channellist.cpp
+	battlelist.cpp
+	battle.cpp
+	chatlog.cpp
+	countrycodes.cpp
+	flagimages.cpp
+	ibattle.cpp
+	iconimagelist.cpp
+	iserver.cpp
+	serverevents.cpp
+	socket.cpp
+	spring.cpp
+	springlobbyapp.cpp
+	springprocess.cpp
+	tasserver.cpp
+	user.cpp
+	useractions.cpp
+	userlist.cpp
+	iplaybacklist.cpp
+	replaylist.cpp
+	savegamelist.cpp
+	serverselector.cpp
+	playbackthread.cpp
+	offlinebattle.cpp
+	contentsearchresult.cpp
+
 	aui/auimanager.cpp
+
+	gui/activitynotice.cpp
+	gui/agreementdialog.cpp
+	gui/chatpanelmenu.cpp
+	gui/chatpanel.cpp
+	gui/contentdownloaddialog.cpp
+	gui/contentsearchresultslistctrl.cpp
+	gui/connectwindow.cpp
+	gui/customlistctrl.cpp
+	gui/colorbutton.cpp
+	gui/mainchattab.cpp
+	gui/maindownloadtab.cpp
+	gui/mainwindow.cpp
+	gui/mapctrl.cpp
+	gui/mapgridctrl.cpp
+	gui/mapselectdialog.cpp
+	gui/nicklistctrl.cpp
+	gui/notificationmanager.cpp
+	gui/pastedialog.cpp
+	gui/slbook.cpp
+	gui/statusbar.cpp
+	gui/singleplayerbattle.cpp
+	gui/singleplayertab.cpp
+	gui/selectusersdialog.cpp
+	gui/toasternotification.cpp
+	gui/taskbar.cpp
+	gui/ui.cpp
+	gui/wxbackgroundimage.cpp
+	gui/wxtextctrlhist.cpp
+
+	gui/battlelist/battlelistctrl.cpp
+	gui/battlelist/battlelistfilter.cpp
+	gui/battlelist/battlelisttab.cpp
+
+	gui/channel/channelchooser.cpp
+	gui/channel/channelchooserdialog.cpp
+	gui/channel/autojoinchanneldialog.cpp
+	gui/channel/channellistctrl.cpp
 
 	gui/hosting/addbotdialog.cpp
 	gui/hosting/autobalancedialog.cpp
@@ -154,8 +220,6 @@ set(springlobbySrc
 	gui/hosting/mmoptionwindows.cpp
 	gui/hosting/battleroomdownloads.cpp
 	gui/hosting/battleroommmoptionstab.cpp
-	autohost.cpp
-	autohostmanager.cpp
 
 	gui/options/downloadoptionspanel.cpp
 	gui/options/mainoptionstab.cpp
@@ -167,119 +231,55 @@ set(springlobbySrc
 	gui/playback/playbackfilter.cpp
 	gui/playback/playbacklistctrl.cpp
 	gui/playback/playbacktab.cpp
-	gui/playback/playbackthread.cpp
 
-
-	utils/TextCompletionDatabase.cpp
-	gui/wxtextctrlhist.cpp
-	gui/colorbutton.cpp
-
-	gui/toasternotification.cpp
-	gui/wxbackgroundimage.cpp
-	gui/statusbar.cpp
-	gui/pastedialog.cpp
-	gui/notificationmanager.cpp
-	gui/taskbar.cpp
-	gui/contentdownloaddialog.cpp
-	gui/contentsearchresultslistctrl.cpp
-
-	gui/activitynotice.cpp
-	utils/misc.cpp
-	utils/tasutil.cpp
-	utils/md5.c
-	utils/battleevents.cpp
-
-	gui/channel/channelchooser.cpp
-	gui/channel/channelchooserdialog.cpp
-	gui/channel/autojoinchanneldialog.cpp
-	gui/channel/channellistctrl.cpp
-	channel.cpp
-	channellist.cpp
-
-	gui/battlelist/battlelistctrl.cpp
-	gui/battlelist/battlelistfilter.cpp
-	gui/battlelist/battlelisttab.cpp
-	battlelist.cpp
+	gui/toasterbox/ToasterBox.cpp
+	gui/toasterbox/ToasterBoxWindow.cpp
+	gui/toasterbox/ToasterBoxWindowList.cpp
 
 	downloader/prdownloader.cpp
 	downloader/downloadlistctrl.cpp
 	downloader/downloadsobserver.cpp
 	downloader/httpdownloader.cpp
 
-	gui/toasterbox/ToasterBox.cpp
-	gui/toasterbox/ToasterBoxWindow.cpp
-	gui/toasterbox/ToasterBoxWindowList.cpp
+	springsettings/frame.cpp
 
-	gui/chatpanelmenu.cpp
-	gui/agreementdialog.cpp
+	utils/battleevents.cpp
 	utils/base64.cpp
-	battle.cpp
 	utils/crc.cpp
-	chatlog.cpp
-	gui/chatpanel.cpp
-	gui/connectwindow.cpp
-	countrycodes.cpp
-	gui/customlistctrl.cpp
-	flagimages.cpp
-	ibattle.cpp
-	iconimagelist.cpp
-	gui/mainchattab.cpp
-	gui/maindownloadtab.cpp
-	gui/mainwindow.cpp
-	gui/mapctrl.cpp
-	gui/mapgridctrl.cpp
-	gui/mapselectdialog.cpp
-	contentsearchresult.cpp
-	gui/nicklistctrl.cpp
-	offlinebattle.cpp
-	
-	
-	gui/selectusersdialog.cpp
-	iserver.cpp
-	serverevents.cpp
-	gui/singleplayerbattle.cpp
-	gui/singleplayertab.cpp
-	socket.cpp
-	spring.cpp
-	springlobbyapp.cpp
-	springprocess.cpp
-	tasserver.cpp
-	gui/ui.cpp
-	user.cpp
-	useractions.cpp
-	userlist.cpp
-	iplaybacklist.cpp
-	replaylist.cpp
-	savegamelist.cpp
-	serverselector.cpp
+	utils/TextCompletionDatabase.cpp
+	utils/misc.cpp
+	utils/tasutil.cpp
+	utils/md5.c
 	
 	lsl/src/lsl/battle/tdfcontainer.cpp #FIXME
-	springsettings/frame.cpp
 )
 
 SET(SLSharedWithSettings
-	utils/wxTranslationHelper.cpp
-	gui/uiutils.cpp
-	updater/versionchecker.cpp
-	updater/updatehelper.cpp
-	gui/controls.cpp
-	utils/conversion.cpp
-	gui/customdialogs.cpp
-	utils/globalevents.cpp
-	utils/platform.cpp
-	utils/slpaths.cpp
-	gui/sltipwin.cpp
-	utils/uievents.cpp
-	utils/curlhelper.cpp
 	crashreport.cpp
 	settings.cpp
+	log.cpp
+
+	gui/uiutils.cpp
+	gui/controls.cpp
+	gui/customdialogs.cpp
+	gui/sltipwin.cpp
 	gui/infodialog.cpp
 	gui/windowattributespickle.cpp
 	gui/spinctl/generic/spinctlg.cpp
 	gui/spinctl/generic/spinctrldouble.cpp
-	utils/slconfig.cpp
 	gui/aboutbox.cpp
-	log.cpp
+
+	updater/versionchecker.cpp
+	updater/updatehelper.cpp
+
+	utils/wxTranslationHelper.cpp
+	utils/conversion.cpp
+	utils/globalevents.cpp
+	utils/platform.cpp
+	utils/slpaths.cpp
+	utils/uievents.cpp
+	utils/curlhelper.cpp
+	utils/slconfig.cpp
 )
 
 FILE( GLOB header "*.h" )
@@ -288,14 +288,7 @@ FILE( GLOB header2 "*/*.h" )
 
 #grep -lR cpp\"$ * | sed -e "s/\.h/\.cpp/g"
 SET( templatesources
-	hosting/battleroommmoptionstab.cxx
-	customvirtlistctrl.cpp
-	playback/playbackfilter.cpp
-	playback/playbacklist.cpp
-	playback/playbacklistctrl.cpp
-	playback/playbackthread.cpp
-	playback/playbacktab.cpp
-	utils/stringserializer.cpp
+	gui/customvirtlistctrl.cpp
 )
 
 list(APPEND SLSharedWithSettings stacktrace.cpp)
