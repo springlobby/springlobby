@@ -298,7 +298,7 @@ target_link_libraries(slcommon
 add_subdirectory(downloader)
 add_subdirectory(utils)
 
-set(LSLSERVER ON CACHE BOOL "disable lsl-server build" FORCE)
+set(LSLSERVER OFF CACHE BOOL "disable lsl-server build" FORCE)
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
 	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
 else()
