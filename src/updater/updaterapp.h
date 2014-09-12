@@ -5,18 +5,14 @@
 
 #include <wx/app.h>
 
-class UpdaterMainwindow;
-
 //! @brief SpringLobby wxApp
 class UpdaterApp : public wxApp
 {
 public:
 	UpdaterApp();
-	~UpdaterApp();
-
 private:
 	virtual bool OnInit();
-	virtual int OnExit();
+	virtual int OnRun();
 
 	virtual void OnFatalException();
 

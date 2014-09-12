@@ -21,10 +21,6 @@ UpdaterApp::UpdaterApp():
 	SetAppName( _T("springlobby_updater") );
 }
 
-UpdaterApp::~UpdaterApp()
-{
-}
-
 static wxString TrimQuotes(const wxString& str)
 {
 	wxString res = str;
@@ -62,18 +58,15 @@ bool UpdaterApp::OnInit()
 	return ret;
 }
 
-
-//! @brief Finalizes the application
-int UpdaterApp::OnExit()
+int UpdaterApp::OnRun()
 {
-	SetEvtHandlerEnabled(false);
-	return 0;
+    return 0; //instantly exit updater
 }
 
 //! @brief is called when the app crashes
 void UpdaterApp::OnFatalException()
 {
-	wxMessageBox( _("The application has generated a fatal error and will be terminated\nGenerating a bug report is not possible\n\nplease get a wxWidgets library that supports wxUSE_DEBUGREPORT"),_("Critical error"), wxICON_ERROR | wxOK );
+	wxMessageBox( _("The application has generated a fatal error and will be terminated"),_("Critical error"), wxICON_ERROR | wxOK );
 }
 
 void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
@@ -86,7 +79,6 @@ void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
 
 	parser.SetDesc( cmdLineDesc );
 	parser.SetSwitchChars (_T("-"));
-
 }
 
 //! @brief parses the command line
