@@ -22,11 +22,18 @@ bool SafeMkdir(const wxString& dir)
 	return true;
 }
 
-bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bool backup )
+void ErrorMsgBox(const wxString& err, bool silent)
+{
+	if (!silent) {
+		wxMessageBox(err, _T("Error") );
+	}
+}
+
+bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bool backup, bool silent)
 {
     // first make sure that the source dir exists
     if(!wxDir::Exists(from)) {
-            wxMessageBox(from + _T(" does not exist.  Can not copy directory."), _T("Error") );
+			ErrorMsgBox(from + _T(" does not exist.  Can not copy directory."), silent);
             return false;
     }
 
@@ -63,13 +70,13 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bo
 				}
 				//make backup
 				if ( !wxRenameFile( to + filename, to + filename + _T(".old") ) ) {
-					wxMessageBox( _T("could not rename %s, copydir aborted") + to + filename, _T("Error"));
+					ErrorMsgBox( _T("could not rename %s, copydir aborted") + to + filename, silent);
 					return false;
 				}
 			}
 			//do the actual copy
 			if ( !wxCopyFile(from + filename, to + filename, overwrite) ) {
-				wxMessageBox( _T("could not copy %s to %s, copydir aborted") + from + filename + _T("\n") + to + filename, _T("Error"));
+				ErrorMsgBox( _T("could not copy %s to %s, copydir aborted") + from + filename + _T("\n") + to + filename, silent);
 				return false;
 			}
 		}

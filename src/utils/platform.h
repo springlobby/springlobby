@@ -16,7 +16,7 @@ class wxLogChain;
     this will copy dir (and everything below that recursively to /some/other/path/dir
     \return true if successful
 */
-bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite = true, bool backup = true );
+bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite = true, bool backup = true, bool silent = false);
 
 //! set new cwd in ctor, reset to old in dtor
 class CwdGuard {
@@ -45,6 +45,7 @@ wxString IdentityString(const wxString& format, bool lowerCase = false );
 int RunProcess(const wxString& cmd, const wxArrayString& params, const bool async = false, const bool root = false);
 int BrowseFolder(const wxString& path);
 int WaitForExit(int pid);
+void ErrorMsgBox(const wxString& err, bool silent = false);
 
 //!
 

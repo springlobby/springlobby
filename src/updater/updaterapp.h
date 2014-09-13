@@ -18,7 +18,7 @@ private:
 
 	virtual void OnInitCmdLine(wxCmdLineParser& parser);
 	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
-	bool StartUpdate( const wxString& source, const wxString& destination )	;
+	bool StartUpdate( const wxString& source, const wxString& destination, bool silent);
 
 	wxString m_source_dir;
 	wxString m_destination_dir;

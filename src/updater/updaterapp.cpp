@@ -43,19 +43,21 @@ bool UpdaterApp::OnInit()
 
 	wxFileSystem::AddHandler(new wxZipFSHandler);
 
-	bool ret = false;
-	if (m_paramcount == 2) {
-		ret = StartUpdate(TrimQuotes(m_source_dir), TrimQuotes(m_destination_dir));
-	} else if ( m_paramcount == 5) {
+	if ( m_paramcount == 5) {
 		WaitForExit(m_pid);
 		wxArrayString params;
-		params.push_back(m_source_dir);
-		params.push_back(m_destination_dir);
-		RunProcess(m_updater_exe,  params, false, true); //start updater as admin for copying
-		params.clear(); //start springlobby
-		ret = RunProcess(m_springlobby_exe, params, true);
+		if (!StartUpdate(TrimQuotes(m_source_dir), TrimQuotes(m_destination_dir), true)) { //update failed, try as admin
+			params.push_back(m_source_dir);
+			params.push_back(m_destination_dir);
+			RunProcess(m_updater_exe,  params, false, true);
+			params.clear();
+		}
+		//start springlobby
+		return RunProcess(m_springlobby_exe, params, true);
+	} else if (m_paramcount != 2) {
+		return false;
 	}
-	return ret;
+	return StartUpdate(TrimQuotes(m_source_dir), TrimQuotes(m_destination_dir), false);
 }
 
 int UpdaterApp::OnRun()
@@ -94,7 +96,7 @@ bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 	}
 	if (m_paramcount == 5) {
 		if (!parser.GetParam(0).ToLong(&m_pid)) {
-			wxMessageBox(_T("Invalid pid %s"), parser.GetParam(0).c_str());
+			ErrorMsgBox(_T("Invalid pid %s") + parser.GetParam(0));
 			return false;
 		}
 		m_springlobby_exe = parser.GetParam(1);
@@ -115,13 +117,11 @@ static wxString TrimSep(const wxString& path)
 	return path;
 }
 
-bool UpdaterApp::StartUpdate( const wxString& source, const wxString& destination )
+bool UpdaterApp::StartUpdate( const wxString& source, const wxString& destination, bool silent)
 {
-	bool success = CopyDirWithFilebackupRename( TrimSep(source), TrimSep(destination), true);
-	if ( !success ) {
-		const wxString msg =  _T("Copy failed: \n") + source + _T("\n") + destination;
-		wxMessageBox(msg, _("Error") );
-		return false;
+	const bool ret = CopyDirWithFilebackupRename( TrimSep(source), TrimSep(destination), true);
+	if (!ret && !silent) {
+		ErrorMsgBox(_T("Copy failed: \n") + source + _T("\n") + destination, silent);
 	}
-	return true;
+	return ret;
 }
