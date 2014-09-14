@@ -1025,6 +1025,10 @@ bool Ui::StartUpdate(const wxString& latestVersion)
 	}
 
 	const std::string dlfilepath = SlPaths::GetLobbyWriteDir() + "springlobby-latest.zip";
+	if (wxFileExists(TowxString(dlfilepath)) && !(wxRemoveFile(TowxString(dlfilepath)))) {
+		wxLogError( _T("couldn't delete: ") + TowxString(dlfilepath));
+		return false;
+	}
 	const std::string dlurl = GetDownloadUrl(STD_STRING(latestVersion));
 	return prDownloader().Download(dlfilepath, dlurl);
 }
