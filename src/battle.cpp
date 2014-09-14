@@ -34,7 +34,7 @@
 
 
 const unsigned int TIMER_INTERVAL         = 1000;
-const unsigned int TIMER_ID               = 101;
+const unsigned int TIMER_ID               = wxNewId();
 
 BEGIN_EVENT_TABLE(Battle, wxEvtHandler)
     EVT_TIMER(TIMER_ID, Battle::OnTimer)

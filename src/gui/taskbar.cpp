@@ -9,7 +9,7 @@
 #include <wx/artprov.h>
 #include <wx/sizer.h>
 
-const unsigned int TIMER_ID         = 103;
+const unsigned int TIMER_ID         = wxNewId();
 
 BEGIN_EVENT_TABLE(TaskBar, wxPanel)
 	EVT_TIMER(TIMER_ID, TaskBar::OnTimer)
