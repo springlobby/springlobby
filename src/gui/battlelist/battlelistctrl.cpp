@@ -17,6 +17,7 @@
 #include "utils/sortutil.h"
 #include "aui/auimanager.h"
 #include "utils/conversion.h"
+#include "utils/slpaths.h"
 
 template<> SortOrder CustomVirtListCtrl<IBattle*,BattleListCtrl>::m_sortorder = SortOrder();
 
@@ -130,8 +131,9 @@ int BattleListCtrl::GetItemColumnImage(long item, long column) const
 					break;
         }
 		case 2: return icons().GetRankLimitIcon( battle.GetRankNeeded(), false );
-        case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
-        case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+        case 4: return battle.MapExists("") ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+        case 5: return battle.ModExists("") ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+		case 11:return SlPaths::GetCompatibleVersion(battle.GetEngineVersion()).empty() ? icons().ICON_NEXISTS: icons().ICON_EXISTS;
     }
     return -1; // simply to avoid compiler warning
 }

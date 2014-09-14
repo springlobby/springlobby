@@ -756,15 +756,20 @@ std::string IBattle::GetHostModHash() const
 }
 
 
-bool IBattle::MapExists() const
+bool IBattle::MapExists(bool comparehash) const
 {
-	return LSL::usync().MapExists( m_host_map.name, m_host_map.hash );
+	if (comparehash) {
+		return LSL::usync().MapExists( m_host_map.name, m_host_map.hash );
+	}
+	return LSL::usync().MapExists( m_host_map.name, "");
 }
 
 
-bool IBattle::ModExists() const
+bool IBattle::ModExists(bool comparehash) const
 {
-	return LSL::usync().ModExists( m_host_mod.name, m_host_mod.hash );
+	if (comparehash)
+		return LSL::usync().ModExists( m_host_mod.name, m_host_mod.hash );
+	return LSL::usync().ModExists( m_host_mod.name, "");
 }
 
 void IBattle::RestrictUnit( const std::string& unitname, int count )
