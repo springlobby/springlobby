@@ -22,11 +22,9 @@ public:
 	static const wxEventType PlasmaResourceListFailedDownload;
 	static const wxEventType BattleSyncReload;
 	static const wxEventType OnUpdateFinished;
-//	static const wxEventType OnTimerUpdates;
+	static const wxEventType OnLobbyDownloaded;
 	static void Send(wxEventType type);
 	static void Send(wxCommandEvent event);
-//	static void Initialize(wxEvtHandler* evthandler);
-//	static void DeInit();
 
 	GlobalEvent();
 	~GlobalEvent();

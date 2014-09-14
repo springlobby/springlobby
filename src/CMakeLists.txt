@@ -233,7 +233,6 @@ set(springlobbySrc
 	downloader/prdownloader.cpp
 	downloader/downloadlistctrl.cpp
 	downloader/downloadsobserver.cpp
-	downloader/httpdownloader.cpp
 
 	springsettings/frame.cpp
 

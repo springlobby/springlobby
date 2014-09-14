@@ -51,7 +51,6 @@
 #include "crashreport.h"
 #include "gui/maindownloadtab.h"
 #include "downloader/prdownloader.h"
-#include "downloader/httpdownloader.h"
 #include "gui/agreementdialog.h"
 #include "updatehelper.h"
 #include "gui/customdialogs.h"
@@ -83,7 +82,6 @@ Ui& ui()
 }
 
 Ui::Ui() :
-	m_http_thread(NULL),
 	m_serv(0),
 	m_main_win(0),
 	m_con_win(0),
@@ -96,16 +94,13 @@ Ui::Ui() :
 	serverSelector().SetCurrentServer( m_serv );
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&Ui::OnSpringTerminated));
 	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&Ui::OnQuit));
+	ConnectGlobalEvent(this, GlobalEvent::OnLobbyDownloaded, wxObjectEventFunction(&Ui::OnDownloadComplete));
 }
 
 Ui::~Ui()
 {
 	delete m_serv;
 	m_serv = NULL;
-	if (m_http_thread != NULL) {
-		m_http_thread->Wait();
-		m_http_thread = NULL;
-	}
 }
 
 ChatPanel* Ui::GetActiveChatPanel()
@@ -1029,12 +1024,9 @@ bool Ui::StartUpdate(const wxString& latestVersion)
 		return false;
 	}
 
-	const wxString dlfilepath = TowxString(SlPaths::GetLobbyWriteDir()) + _T("springlobby-latest.zip");
-	const wxString dlurl = TowxString(GetDownloadUrl(STD_STRING(latestVersion)));
-	m_http_thread = new HttpDownloaderThread( dlurl, dlfilepath, updatedir, wxObjectEventFunction(&Ui::OnDownloadComplete), this);
-
-	//could prolly use some test on the thread here instead
-	return true;
+	const std::string dlfilepath = SlPaths::GetLobbyWriteDir() + "springlobby-latest.zip";
+	const std::string dlurl = GetDownloadUrl(STD_STRING(latestVersion));
+	return prDownloader().Download(dlfilepath, dlurl);
 }
 
 void Ui::OnDownloadComplete(wxCommandEvent& data)

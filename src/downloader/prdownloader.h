@@ -51,6 +51,7 @@ public:
 	void RemoveTorrentByName( const std::string& name );
 	//! returns true if name found and added to dl list
 	int GetDownload( const std::string& category, const std::string& name );
+	bool Download(const std::string& filename, const std::string& url);
 	void SetIngameStatus( bool ingame );
 	void OnSpringStarted(wxCommandEvent& data);
 	void OnSpringTerminated(wxCommandEvent& data);
