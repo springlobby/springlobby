@@ -53,7 +53,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 	AddColumn( 8, wxLIST_AUTOSIZE_USEHEADER, _("Players"), _("Number of Players joined") );
 	AddColumn( 9, wxLIST_AUTOSIZE_USEHEADER, _("Max"), _("Maximum number of Players that can join") );
 	AddColumn( 10, wxLIST_AUTOSIZE_USEHEADER, _("Running"), _("How long the game has been running for") );
-	AddColumn( 11, wxLIST_AUTOSIZE_USEHEADER, _("Version"), _("Version of the engine") );
+	AddColumn( 11, wxLIST_AUTOSIZE_USEHEADER, _("Engine"), _("Spring engine version used at the host") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[0].col = 0;
