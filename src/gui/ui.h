@@ -12,7 +12,6 @@ class Channel;
 class User;
 class IBattle;
 class ChatPanel;
-class ReconnectDialog;
 class HttpDownloaderThread;
 class wxEvtHandler;
 
