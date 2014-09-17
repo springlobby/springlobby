@@ -10,6 +10,8 @@
 #include "ibattle.h"
 #include <lslunitsync/unitsync.h>
 
+#include <wx/thread.h>
+
 class wxPanel;
 class wxBitmap;
 class wxDC;
@@ -213,7 +215,6 @@ private:
 
     User* m_user_expanded;
 
-
     enum InfoMap
     {
       IM_Minimap,  // must be first one
@@ -221,6 +222,8 @@ private:
       IM_Heightmap,
 	  IM_Count     // must be last one
     } m_current_infomap;
+
+	wxMutex m_mutex;
 
   DECLARE_EVENT_TABLE()
 };

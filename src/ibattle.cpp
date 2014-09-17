@@ -26,6 +26,7 @@ lsl/battle/ibattle.cpp
 
 #include <lslunitsync/unitsync.h>
 
+#include "lslutils/globalsmanager.h"
 #include "ibattle.h"
 #include "utils/conversion.h"
 #include "gui/uiutils.h"
@@ -54,7 +55,11 @@ IBattle::IBattle():
 
 IBattle::~IBattle()
 {
-	if ( m_is_self_in ) LSL::usync().UnSetCurrentMod();
+	try {
+		if ( m_is_self_in ) LSL::usync().UnSetCurrentMod();
+	} catch (const LSL::Util::GlobalDestroyedError& err) {
+		/* If this is called during TAServer::~TAServer, then unitsync might be unavailable. */
+	}
 }
 
 bool IBattle::IsSynced()
