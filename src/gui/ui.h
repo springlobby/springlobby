@@ -12,7 +12,6 @@ class Channel;
 class User;
 class IBattle;
 class ChatPanel;
-class ReconnectDialog;
 class HttpDownloaderThread;
 class wxEvtHandler;
 
@@ -143,7 +142,6 @@ private:
 	void OnDownloadComplete(wxCommandEvent& /*data*/);
 	void Notify();
 
-	HttpDownloaderThread* m_http_thread;
 	IServer* m_serv;
 	MainWindow* m_main_win;
 	ConnectWindow* m_con_win;

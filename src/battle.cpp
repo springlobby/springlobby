@@ -34,21 +34,20 @@
 
 
 const unsigned int TIMER_INTERVAL         = 1000;
-const unsigned int TIMER_ID               = 101;
+const unsigned int TIMER_ID               = wxNewId();
 
 BEGIN_EVENT_TABLE(Battle, wxEvtHandler)
     EVT_TIMER(TIMER_ID, Battle::OnTimer)
 END_EVENT_TABLE()
 
 Battle::Battle( IServer& serv, int id ) :
+		m_auto_unspec(false),
+		m_auto_unspec_num_players(0),
 		m_serv(serv),
         m_ah(*this),
         m_autolock_on_start(false),
         m_id( id ),
-		m_timer(NULL),
-		m_auto_unspec(false),
-		m_auto_unspec_num_players(0)
-
+		m_timer(NULL)
 {
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
     m_opts.battleid =  m_id;
@@ -215,6 +214,7 @@ User& Battle::OnUserAdded( User& user )
 			 m_timer = new wxTimer(this,TIMER_ID);
 			 m_timer->Start( TIMER_INTERVAL );
 		}
+
     user.SetBattle( this );
     user.BattleStatus().isfromdemo = false;
 

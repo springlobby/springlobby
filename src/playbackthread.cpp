@@ -6,7 +6,7 @@
 #include "replaylist.h"
 #include "savegamelist.h"
 #include "playbackthread.h"
-#include "playbacktab.h"
+#include "gui/playback/playbacktab.h"
 #include <lslunitsync/unitsync.h>
 
 PlaybackLoader::PlaybackLoader( PlaybackTab* parent, bool IsReplayType):

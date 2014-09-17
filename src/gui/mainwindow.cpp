@@ -60,7 +60,6 @@
 #include "gui/customdialogs.h"
 #include "utils/platform.h"
 #include "utils/slpaths.h"
-#include "updater/updatehelper.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
 #include "gui/controls.h"

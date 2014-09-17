@@ -16,10 +16,7 @@ class wxLogChain;
     this will copy dir (and everything below that recursively to /some/other/path/dir
     \return true if successful
 */
-bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite = true, bool backup = true );
-
-//! returns false on !win, checks for regkey on win
-bool IsUACenabled();
+bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite = true, bool backup = true, bool silent = false);
 
 //! set new cwd in ctor, reset to old in dtor
 class CwdGuard {
@@ -38,9 +35,6 @@ class PwdGuard {
 };
 
 
-#ifdef __WXMSW__
-bool IsPreVistaWindows();
-#endif
 
 /**
   \in Format string with a single %s
@@ -51,29 +45,7 @@ wxString IdentityString(const wxString& format, bool lowerCase = false );
 int RunProcess(const wxString& cmd, const wxArrayString& params, const bool async = false, const bool root = false);
 int BrowseFolder(const wxString& path);
 int WaitForExit(int pid);
-
-#ifdef __WXMSW__
-#include <wx/msw/registry.h>
-template < typename T >
-static T GetRegkeyVal( const wxRegKey& reg, const wxString& name, const T& def )
-{
-	T val = def;
-	if ( reg.QueryValue( name, &val ) )
-		return val;
-	else
-		return def;
-}
-
-template < >
-wxString GetRegkeyVal( const wxRegKey& reg, const wxString& name, const wxString& def )
-{
-	wxString val = def;
-	if ( reg.QueryValue( name, val ) )
-		return val;
-	else
-		return def;
-}
-#endif
+void ErrorMsgBox(const wxString& err, bool silent = false);
 
 //!
 

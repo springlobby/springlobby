@@ -36,14 +36,6 @@ void BattleList::RemoveBattle( battle_id_t const& id ) {
 }
 
 
-/*
-Battle& BattleList::GetFirstBattle()
-{
-  return *m_battles.begin()->second;
-}
-*/
-
-
 BattleList::battle_map_t::size_type BattleList_Iter::GetNumBattles() const
 {
   return (m_battlelist)?(m_battlelist->m_battles.size()):0;

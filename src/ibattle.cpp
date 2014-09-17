@@ -40,14 +40,14 @@ lsl/battle/ibattle.cpp
 
 
 IBattle::IBattle():
+	m_generating_script(false),
+	m_is_self_in(false),
+	m_ingame(false),
 	m_map_loaded(false),
 	m_mod_loaded(false),
-	m_ingame(false),
-	m_generating_script(false),
 	m_players_ready(0),
 	m_players_sync(0),
 	m_players_ok(0),
-	m_is_self_in(false),
 	m_start_time(0)
 {
 }
@@ -761,15 +761,20 @@ std::string IBattle::GetHostModHash() const
 }
 
 
-bool IBattle::MapExists() const
+bool IBattle::MapExists(bool comparehash) const
 {
-	return LSL::usync().MapExists( m_host_map.name, m_host_map.hash );
+	if (comparehash) {
+		return LSL::usync().MapExists( m_host_map.name, m_host_map.hash );
+	}
+	return LSL::usync().MapExists( m_host_map.name, "");
 }
 
 
-bool IBattle::ModExists() const
+bool IBattle::ModExists(bool comparehash) const
 {
-	return LSL::usync().ModExists( m_host_mod.name, m_host_mod.hash );
+	if (comparehash)
+		return LSL::usync().ModExists( m_host_mod.name, m_host_mod.hash );
+	return LSL::usync().ModExists( m_host_mod.name, "");
 }
 
 void IBattle::RestrictUnit( const std::string& unitname, int count )

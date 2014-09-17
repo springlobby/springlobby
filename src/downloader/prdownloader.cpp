@@ -53,6 +53,8 @@ public:
 			d += TowxString(m_item.front()->name);
 			m_loader->download( m_item, sett().GetHTTPMaxParallelDownloads() );
 			std::list<IDownload*>::iterator it;
+			bool reload = false;
+			bool lobbydl = false;
 			for( it = m_item.begin(); it!=m_item.end(); ++it) {
 				IDownload* dl = *it;
 				switch(dl->cat) {
@@ -65,27 +67,40 @@ public:
 					SlPaths::SetUsedSpringIndex(dl->version);
 					break;
 				}
+				case IDownload::CAT_LOBBYCLIENTS:
+					lobbydl = true;
+					fileSystem->extract(dl->name, SlPaths::GetUpdateDir());
+					break;
+				case IDownload::CAT_MAPS:
+				case IDownload::CAT_GAMES:
+					reload = true;
+					break;
 				default:
-					continue;
+					break;;
 				}
 			}
 			m_loader->freeResult( m_item );
 			UiEvents::ScopedStatusMessage msgcomplete(d, 0);
-			LSL::usync().ReloadUnitSyncLib();
-			// prefetch map data after a download as well
-			for( it = m_item.begin(); it!=m_item.end(); ++it) {
-				IDownload* dl = *it;
-				switch(dl->cat) {
-					case IDownload::CAT_MAPS: {
-						LSL::usync().PrefetchMap(dl->name); //FIXME: do the same for games, too
+			if (reload) {
+				LSL::usync().ReloadUnitSyncLib();
+				// prefetch map data after a download as well
+				for( it = m_item.begin(); it!=m_item.end(); ++it) {
+					IDownload* dl = *it;
+					switch(dl->cat) {
+						case IDownload::CAT_MAPS: {
+							LSL::usync().PrefetchMap(dl->name); //FIXME: do the same for games, too
+						}
+						default:
+							continue;
 					}
-					default:
-						continue;
 				}
-			}
 
-			//notify about finished download
-			GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
+				//notify about finished download
+				GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
+			}
+			if (lobbydl) {
+				GlobalEvent::Send(GlobalEvent::OnLobbyDownloaded);
+			}
 		}
 	}
 
@@ -186,6 +201,23 @@ int PrDownloader::GetDownload(const std::string& category, const std::string &na
 	wxLogError(_T("Category %s not found"), category.c_str());
 	return -1;
 }
+
+bool PrDownloader::Download(const std::string& filename, const std::string& url)
+{
+	assert(!filename.empty());
+	assert(!url.empty());
+	std::list<IDownload*> results;
+	IDownload* dl = new IDownload();
+	dl->addMirror(url);
+	dl->name = filename;
+	dl->cat = IDownload::CAT_LOBBYCLIENTS;
+
+	results.push_back(dl);
+	DownloadItem* dl_item = new DownloadItem(results, httpDownload);
+	m_dl_thread->DoWork(dl_item);
+	return true;
+}
+
 
 void PrDownloader::OnSpringStarted(wxCommandEvent& /*data*/)
 {

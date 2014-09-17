@@ -5,25 +5,20 @@
 
 #include <wx/app.h>
 
-class UpdaterMainwindow;
-
 //! @brief SpringLobby wxApp
 class UpdaterApp : public wxApp
 {
 public:
 	UpdaterApp();
-	~UpdaterApp();
-
+private:
 	virtual bool OnInit();
-	virtual int OnExit();
+	virtual int OnRun();
 
 	virtual void OnFatalException();
 
 	virtual void OnInitCmdLine(wxCmdLineParser& parser);
 	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
-
-private:
-	bool StartUpdate( const wxString& source, const wxString& destination )	;
+	bool StartUpdate( const wxString& source, const wxString& destination, bool silent);
 
 	wxString m_source_dir;
 	wxString m_destination_dir;
@@ -31,8 +26,6 @@ private:
 	wxString m_updater_exe;
 	long m_pid;
 	long m_paramcount;
-
-	UpdaterMainwindow* m_updater_window;
 
 };
 

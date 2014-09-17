@@ -7,7 +7,6 @@
 
 #include "storedgame.h"
 #include "utils/conversion.h"
-//#include <lslutils/globalsmanager.h>
 
 SavegameList::SavegameList()
 {

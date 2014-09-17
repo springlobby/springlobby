@@ -22,11 +22,18 @@ bool SafeMkdir(const wxString& dir)
 	return true;
 }
 
-bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bool backup )
+void ErrorMsgBox(const wxString& err, bool silent)
+{
+	if (!silent) {
+		wxMessageBox(err, _T("Error") );
+	}
+}
+
+bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bool backup, bool silent)
 {
     // first make sure that the source dir exists
     if(!wxDir::Exists(from)) {
-            wxMessageBox(from + _T(" does not exist.  Can not copy directory."), _T("Error") );
+			ErrorMsgBox(from + _T(" does not exist.  Can not copy directory."), silent);
             return false;
     }
 
@@ -63,13 +70,13 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bo
 				}
 				//make backup
 				if ( !wxRenameFile( to + filename, to + filename + _T(".old") ) ) {
-					wxMessageBox( _T("could not rename %s, copydir aborted") + to + filename, _T("Error"));
+					ErrorMsgBox( _T("could not rename %s, copydir aborted") + to + filename, silent);
 					return false;
 				}
 			}
 			//do the actual copy
 			if ( !wxCopyFile(from + filename, to + filename, overwrite) ) {
-				wxMessageBox( _T("could not copy %s to %s, copydir aborted") + from + filename + _T("\n") + to + filename, _T("Error"));
+				ErrorMsgBox( _T("could not copy %s to %s, copydir aborted") + from + filename + _T("\n") + to + filename, silent);
 				return false;
 			}
 		}
@@ -78,15 +85,18 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bo
 }
 
 #ifdef __WXMSW__
+#include <wx/msw/registry.h>
+#include <windows.h>
+#include <wx/msw/winundef.h>
+#include <shellapi.h>
+
 bool IsPreVistaWindows()
 {
     return wxPlatformInfo().GetOSMajorVersion() < 6;
 }
-#endif
 
 bool IsUACenabled()
 {
-#ifdef __WXMSW__
     wxRegKey UACpath( _T("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System") ); // check if UAC is on, skip dialog if not
     if(!UACpath.Exists() ) {
 		return false;
@@ -104,14 +114,8 @@ bool IsUACenabled()
 		}
 	}
 
-#endif
     return false;
 }
-
-#ifdef __WXMSW__
-#include <windows.h>
-#include <wx/msw/winundef.h>
-#include <shellapi.h>
 #endif
 
 
@@ -208,7 +212,7 @@ int BrowseFolder(const wxString& path)
 
 int WaitForExit(int pid)
 {
-#ifdef WIN32
+#ifdef __WXMSW__
 	HANDLE h = OpenProcess(0, false, pid);
 	if (h == NULL) {
         return 0;

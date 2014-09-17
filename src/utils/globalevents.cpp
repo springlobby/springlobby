@@ -9,6 +9,7 @@
 const wxEventType GlobalEvent::OnDownloadComplete = wxNewEventType();
 const wxEventType GlobalEvent::OnUnitsyncFirstTimeLoad = wxNewEventType();
 const wxEventType GlobalEvent::OnUnitsyncReloaded = wxNewEventType();
+const wxEventType GlobalEvent::OnLobbyDownloaded = wxNewEventType();
 const wxEventType GlobalEvent::OnSpringTerminated = wxNewEventType();
 const wxEventType GlobalEvent::OnSpringStarted = wxNewEventType();
 const wxEventType GlobalEvent::UpdateFinished = wxNewEventType();

@@ -3,20 +3,21 @@
 #include "infodialog.h"
 
 #include <wx/sizer.h>
-#include "settings.h"
+#include <wx/textctrl.h>
+#include <wx/app.h>
+#include <wx/version.h>
 #include <vector>
 #include <fstream>
 #include <utility>
 #include <wx/filename.h>
+
+#include <lslutils/misc.h>
+
+#include "settings.h"
 #include "utils/conversion.h"
 #include "utils/version.h"
-#include <lslutils/misc.h>
 #include "utils/platform.h"
 #include "utils/slpaths.h"
-#include "updater/updatehelper.h"
-#include <wx/textctrl.h>
-#include <wx/app.h>
-#include <wx/version.h>
 
 #if defined(__unix__) || defined(__APPLE__)
 # include <unistd.h>
@@ -45,6 +46,8 @@ InfoDialog::InfoDialog(wxWindow* parent )
 
 	wxTextCtrl* out = new wxTextCtrl( this, wxNewId(), wxEmptyString, wxDefaultPosition, wxDefaultSize,
 									 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
+
+	*out << TowxString(getSpringlobbyAgent()) + _T("\n");
 	for ( size_t i =0; i < paths.size(); ++i )
 	{
 		const wxString path = TowxString(paths[i].first);
@@ -79,7 +82,6 @@ InfoDialog::InfoDialog(wxWindow* parent )
 							 TowxString(SlPaths::GetConfigPath()).c_str(),
 							 BtS(wxFileName::IsFileWritable(TowxString(SlPaths::GetConfigPath())), "", "not" ).c_str() );
 
-	*out << _T( "Version " ) + TowxString(getSpringlobbyAgent()) + _T("\n");
 	*out << _T("Compile Time ") + TowxString(getSpringCompileTimeDate()) + _T("\n");
 	*out << wxString::Format(_T("Compiled with wxWidgets %d.%d.%d.%d"),  wxMAJOR_VERSION, wxMINOR_VERSION, wxRELEASE_NUMBER, wxSUBRELEASE_NUMBER) + _T("\n");
 	*out << _T("Started with: \n");

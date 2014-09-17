@@ -22,7 +22,6 @@
 #include "user.h"
 #include "gui/uiutils.h"
 #include "iserver.h"
-#include "downloader/httpdownloader.h"
 #include "settings.h"
 #include "gui/customdialogs.h"
 #include "utils/tasutil.h"

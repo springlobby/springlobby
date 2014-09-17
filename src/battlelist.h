@@ -55,7 +55,6 @@ class BattleList_Iter : public SL::NonCopyable
     IBattle* GetBattle();
 	bool EOL() const;
     IBattle& GetBattle( BattleList::battle_id_t const& id );
-    //Battle& GetFirstBattle();
     bool BattleExists( BattleList::battle_id_t const& id );
 	BattleList::battle_map_t::size_type GetNumBattles() const;
   private:

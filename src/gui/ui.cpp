@@ -51,12 +51,11 @@
 #include "crashreport.h"
 #include "gui/maindownloadtab.h"
 #include "downloader/prdownloader.h"
-#include "downloader/httpdownloader.h"
 #include "gui/agreementdialog.h"
-#include "updater/updatehelper.h"
+#include "updatehelper.h"
 #include "gui/customdialogs.h"
 #include "utils/platform.h"
-#include "updater/versionchecker.h"
+#include "versionchecker.h"
 #include "gui/textentrydialog.h"
 #include "log.h"
 #include "settings.h"
@@ -72,7 +71,8 @@ SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on s
 SLCONFIG("/Chat/BroadcastEverywhere",true, "setting to spam the server messages in all channels");
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
 
-static const unsigned int s_reconnect_delay_ms = 6000;
+static unsigned int s_reconnect_delay_ms = 6 * 1000; //initial reconnect delay
+static const unsigned int s_max_reconnect_delay = 120 * 1000; //max delay for reconnecting
 
 Ui& ui()
 {
@@ -83,7 +83,6 @@ Ui& ui()
 }
 
 Ui::Ui() :
-	m_http_thread(NULL),
 	m_serv(0),
 	m_main_win(0),
 	m_con_win(0),
@@ -96,16 +95,13 @@ Ui::Ui() :
 	serverSelector().SetCurrentServer( m_serv );
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&Ui::OnSpringTerminated));
 	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&Ui::OnQuit));
+	ConnectGlobalEvent(this, GlobalEvent::OnLobbyDownloaded, wxObjectEventFunction(&Ui::OnDownloadComplete));
 }
 
 Ui::~Ui()
 {
 	delete m_serv;
 	m_serv = NULL;
-	if (m_http_thread != NULL) {
-		m_http_thread->Wait();
-		m_http_thread = NULL;
-	}
 }
 
 ChatPanel* Ui::GetActiveChatPanel()
@@ -181,6 +177,9 @@ void Ui::Connect()
 
 void Ui::Reconnect()
 {
+	if (s_reconnect_delay_ms <= s_max_reconnect_delay) {
+		s_reconnect_delay_ms += 1000;
+	}
 	const wxString servname = sett().GetDefaultServer();
 	const wxString pass  = sett().GetServerAccountPass(servname);
 	if ( !sett().GetServerAccountSavePass(servname) ) {
@@ -540,6 +539,7 @@ void Ui::OnLoggedIn( )
 void Ui::OnDisconnected( IServer& server, bool wasonline )
 {
 	Start( s_reconnect_delay_ms, true );
+
 	if ( m_main_win == 0 ) return;
 	slLogDebugFunc("");
 	if (!&server) {
@@ -1029,12 +1029,13 @@ bool Ui::StartUpdate(const wxString& latestVersion)
 		return false;
 	}
 
-	const wxString dlfilepath = TowxString(SlPaths::GetLobbyWriteDir()) + _T("springlobby-latest.zip");
-	const wxString dlurl = TowxString(GetDownloadUrl(STD_STRING(latestVersion)));
-	m_http_thread = new HttpDownloaderThread( dlurl, dlfilepath, updatedir, wxObjectEventFunction(&Ui::OnDownloadComplete), this);
-
-	//could prolly use some test on the thread here instead
-	return true;
+	const std::string dlfilepath = SlPaths::GetLobbyWriteDir() + "springlobby-latest.zip";
+	if (wxFileExists(TowxString(dlfilepath)) && !(wxRemoveFile(TowxString(dlfilepath)))) {
+		wxLogError( _T("couldn't delete: ") + TowxString(dlfilepath));
+		return false;
+	}
+	const std::string dlurl = GetDownloadUrl(STD_STRING(latestVersion));
+	return prDownloader().Download(dlfilepath, dlurl);
 }
 
 void Ui::OnDownloadComplete(wxCommandEvent& data)

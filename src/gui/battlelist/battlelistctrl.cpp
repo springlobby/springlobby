@@ -17,6 +17,7 @@
 #include "utils/sortutil.h"
 #include "aui/auimanager.h"
 #include "utils/conversion.h"
+#include "utils/slpaths.h"
 
 template<> SortOrder CustomVirtListCtrl<IBattle*,BattleListCtrl>::m_sortorder = SortOrder();
 
@@ -52,7 +53,7 @@ BattleListCtrl::BattleListCtrl( wxWindow* parent )
 	AddColumn( 8, wxLIST_AUTOSIZE_USEHEADER, _("Players"), _("Number of Players joined") );
 	AddColumn( 9, wxLIST_AUTOSIZE_USEHEADER, _("Max"), _("Maximum number of Players that can join") );
 	AddColumn( 10, wxLIST_AUTOSIZE_USEHEADER, _("Running"), _("How long the game has been running for") );
-	AddColumn( 11, wxLIST_AUTOSIZE_USEHEADER, _("Version"), _("Version of the engine") );
+	AddColumn( 11, wxLIST_AUTOSIZE_USEHEADER, _("Engine"), _("Spring engine version used at the host") );
 
     if ( m_sortorder.size() == 0 ) {
         m_sortorder[0].col = 0;
@@ -130,8 +131,9 @@ int BattleListCtrl::GetItemColumnImage(long item, long column) const
 					break;
         }
 		case 2: return icons().GetRankLimitIcon( battle.GetRankNeeded(), false );
-        case 4: return battle.MapExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
-        case 5: return battle.ModExists() ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+        case 4: return battle.MapExists("") ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+        case 5: return battle.ModExists("") ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+		case 11:return SlPaths::GetCompatibleVersion(battle.GetEngineVersion()).empty() ? icons().ICON_NEXISTS: icons().ICON_EXISTS;
     }
     return -1; // simply to avoid compiler warning
 }

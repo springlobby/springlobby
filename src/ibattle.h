@@ -216,8 +216,8 @@ public:
 	virtual std::string GetHostModName() const;
 	virtual std::string GetHostModHash() const;
 
-	virtual bool MapExists() const;
-	virtual bool ModExists() const;
+	virtual bool MapExists(bool comparehash = true) const;
+	virtual bool ModExists(bool comparehash = true) const;
 
 	virtual BattleStartRect GetStartRect( unsigned int allyno ) const;
 	virtual User& OnUserAdded( User& user );
