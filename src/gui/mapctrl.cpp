@@ -132,7 +132,8 @@ MapCtrl::MapCtrl( wxWindow* parent, int size, IBattle* battle, bool readonly, bo
         m_reload_img(NULL),
         m_dl_img(NULL),
         m_user_expanded(NULL),
-        m_current_infomap(IM_Minimap)
+        m_current_infomap(IM_Minimap),
+        m_mutex()
 {
 	SetBackgroundStyle( wxBG_STYLE_CUSTOM );
 	SetBackgroundColour( *wxLIGHT_GREY );
@@ -446,6 +447,8 @@ int MapCtrl::LoadMinimap()
     if ( m_minimap ) return -1;
     if ( !m_battle->MapExists() ) return -1;
 
+    m_mutex.Lock();
+
     const std::string map = m_battle->GetHostMapName();
 
     try
@@ -456,6 +459,7 @@ int MapCtrl::LoadMinimap()
         {
             m_mapname = "";
             m_lastsize = wxSize( -1, -1 );
+            m_mutex.Unlock();
             return -2;
         }
 
@@ -469,9 +473,11 @@ int MapCtrl::LoadMinimap()
     catch (...)
     {
         FreeMinimap();
-		return -3;
+        m_mutex.Unlock();
+        return -3;
     }
-	return 0;
+    m_mutex.Unlock();
+    return 0;
 }
 
 
@@ -494,6 +500,8 @@ void MapCtrl::UpdateMinimap()
     if ( m_battle == 0 ) return;
     int w, h;
     GetClientSize( &w, &h );
+
+    m_mutex.Lock();
     if ( m_battle )  //needs to be looked into, crahses with replaytab (koshi)
     {
 		bool just_resize = ( m_lastsize != wxSize(-1,-1) && m_lastsize != wxSize(w, h) );
@@ -510,7 +518,8 @@ void MapCtrl::UpdateMinimap()
 			}
         }
     }
-	Refresh();
+    m_mutex.Unlock();
+    Refresh();
 }
 
 
@@ -1606,9 +1615,12 @@ void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 
 void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 {
-	if (m_mapname.empty() || mapname.empty())
-		return;
-	if ( mapname != m_mapname ) return;
+    m_mutex.Lock();
+
+    if (m_mapname.empty() || mapname.empty() || mapname != m_mapname ) {
+        m_mutex.Unlock();
+        return;
+    }
 
 	const int w = m_lastsize.GetWidth();
 	const int h = m_lastsize.GetHeight();
@@ -1633,6 +1645,8 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 	wxCommandEvent evt( REFRESH_EVENT, GetId() );
 	evt.SetEventObject( this );
 	wxPostEvent( this, evt );
+
+    m_mutex.Unlock();
 }
 
 void MapCtrl::OnRefresh( wxCommandEvent& /*event*/ )
