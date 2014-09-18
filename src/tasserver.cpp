@@ -49,7 +49,7 @@ SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which
 
 // times in milliseconds
 #define PING_TIME 30000
-#define PING_TIMEOUT 60000
+#define PING_TIMEOUT 90000
 #define PING_DELAY 5000 //first ping is sent after PING_DELAY
 #define UDP_KEEP_ALIVE 15000
 #define UDP_REPLY_TIMEOUT 10000
@@ -459,7 +459,7 @@ void TASServer::Notify()
 	}
 
 	if ( m_last_net_packet > PING_TIMEOUT ) {
-		m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.")) % (m_last_net_packet / 1000) % m_last_ping );
+		m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.")) % (m_last_net_packet / 1000) % (m_last_ping / 1000) );
 		m_last_net_packet = 0;
 		Disconnect();
 		return;
