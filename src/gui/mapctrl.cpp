@@ -447,8 +447,6 @@ int MapCtrl::LoadMinimap()
     if ( m_minimap ) return -1;
     if ( !m_battle->MapExists() ) return -1;
 
-    m_mutex.Lock();
-
     const std::string map = m_battle->GetHostMapName();
 
     try
@@ -459,7 +457,6 @@ int MapCtrl::LoadMinimap()
         {
             m_mapname = "";
             m_lastsize = wxSize( -1, -1 );
-            m_mutex.Unlock();
             return -2;
         }
 
@@ -473,10 +470,8 @@ int MapCtrl::LoadMinimap()
     catch (...)
     {
         FreeMinimap();
-        m_mutex.Unlock();
         return -3;
     }
-    m_mutex.Unlock();
     return 0;
 }
 
