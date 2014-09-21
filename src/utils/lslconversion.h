@@ -3,6 +3,13 @@
 #ifndef LSLCONVERSION_H
 #define LSLCONVERSION_H
 
+class wxColour;
+class wxArrayString;
+namespace LSL{
+	class lslColor;
+	typedef std::vector< std::string > StringVector;
+}
+
 wxColour lslTowxColour(const LSL::lslColor& col);
 LSL::lslColor wxColourTolsl(const wxColour& col);
 

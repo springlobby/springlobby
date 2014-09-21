@@ -51,7 +51,6 @@ set(test_libs
 )
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
 ################################################################################
-################################################################################
 set(test_name lobbyid)
 Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/lobbyid.cpp"
@@ -63,5 +62,19 @@ set(test_libs
 	${Boost_SYSTEM_LIBRARY}
 )
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
+################################################################################
+set(test_name lslconversion)
+Set(test_src
+	"${CMAKE_CURRENT_SOURCE_DIR}/lslconversion.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/lslconversion.cpp"
+)
+
+set(test_libs
+	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+	${Boost_SYSTEM_LIBRARY}
+	${WX_LD_FLAGS}
+)
+add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
+################################################################################
 
 endif()
