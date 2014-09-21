@@ -124,7 +124,7 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 		const std::string profilename = GetBestMatch( m_battle.GetPresetList(), STD_STRING(params) );
 		if ( !m_battle.LoadOptionsPreset(profilename) )
 			DoAction( _T( "Profile not found, use !listprofiles for a list of available profiles." ) );
-		else DoAction( _T( "has loaded profile: " ) + profilename );
+		else DoAction( _T( "has loaded profile: " ) + TowxString(profilename));
 	}
 	else if ( command == _T( "!fixcolors" ) ) {
 		m_battle.FixColours();
