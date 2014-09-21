@@ -15,7 +15,6 @@ lsl/battle/ibattle.cpp
 
 
 #include <wx/tokenzr.h>
-#include <wx/image.h>
 #include <wx/log.h>
 
 #include <list>
