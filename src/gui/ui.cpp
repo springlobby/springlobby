@@ -797,7 +797,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user, bool isbot )
 void Ui::OnBattleInfoUpdated( BattleEvents::BattleEventData data )
 {
 	IBattle& battle = *data.first;
-	const wxString& Tag = data.second;
+	const wxString Tag = TowxString(data.second);
 	if ( m_main_win == 0 ) return;
 	mw().GetBattleListTab().UpdateBattle( battle );
 	if ( mw().GetJoinTab().GetCurrentBattle() == &battle ) {
