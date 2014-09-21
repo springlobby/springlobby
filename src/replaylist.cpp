@@ -3,6 +3,7 @@
 #include <wx/file.h>
 #include <wx/filefn.h>
 #include <wx/log.h>
+#include <wx/datetime.h>
 
 #include "replaylist.h"
 #include "storedgame.h"

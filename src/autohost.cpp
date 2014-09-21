@@ -116,7 +116,7 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 		else {
 			DoAction( _T( "The following presets are available:" ) );
 			for ( unsigned int i = 0; i < count; i++ ) {
-				DoAction( profilelist[i] );
+				DoAction( TowxString(profilelist[i]) );
 			}
 		}
 	}
