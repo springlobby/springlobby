@@ -108,8 +108,8 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 		}
 	}
 	else if ( command == _T( "!listprofiles" ) ) {
-		wxArrayString profilelist = m_battle.GetPresetList();
-		unsigned int count = profilelist.GetCount();
+		LSL::StringVector profilelist = m_battle.GetPresetList();
+		unsigned int count = profilelist.size();
 		if ( count == 0 ) {
 			DoAction( _T( "There are no presets available." ) );
 		}
@@ -121,8 +121,8 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 		}
 	}
 	else if ( command == _T( "!loadprofile" ) ) {
-		wxString profilename = GetBestMatch( m_battle.GetPresetList(), params );
-		if ( !m_battle.LoadOptionsPreset(STD_STRING(profilename)) )
+		const std::string profilename = GetBestMatch( m_battle.GetPresetList(), STD_STRING(params) );
+		if ( !m_battle.LoadOptionsPreset(profilename) )
 			DoAction( _T( "Profile not found, use !listprofiles for a list of available profiles." ) );
 		else DoAction( _T( "has loaded profile: " ) + profilename );
 	}

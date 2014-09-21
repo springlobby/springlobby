@@ -4,13 +4,14 @@
 #include <wx/log.h>
 
 #include "singleplayerbattle.h"
-#include "hosting/mainsingleplayertab.h"
+#include "gui/hosting/mainsingleplayertab.h"
 #include "iserver.h"
 #include "settings.h"
 #include "spring.h"
 #include <lslutils/conversion.h>
 #include <lslunitsync/unitsync.h>
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 
 SinglePlayerBattle::SinglePlayerBattle(MainSinglePlayerTab& msptab ):
 	m_sptab(msptab),
@@ -18,7 +19,7 @@ SinglePlayerBattle::SinglePlayerBattle(MainSinglePlayerTab& msptab ):
 {
 	OnUserAdded( m_me );
 	m_me.BattleStatus().side = sett().GetBattleLastSideSel(TowxString(GetHostModName()));
-	m_me.BattleStatus().colour = sett().GetBattleLastColour();
+	m_me.BattleStatus().colour = wxColourTolsl(sett().GetBattleLastColour());
     CustomBattleOptions().setSingleOption( "startpostype", LSL::Util::ToString(ST_Pick), LSL::Enum::EngineOption );
 }
 

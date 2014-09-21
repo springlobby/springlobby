@@ -24,8 +24,9 @@ struct UserBattleStatus;
 class ChatPanel;
 class wxString;
 typedef int ServerError;
-class wxColour;
-
+namespace LSL {
+	class lslColor;
+}
 
 typedef int HostInfo;
 
@@ -110,7 +111,7 @@ class IServer : public iNetClass, public SL::NonCopyable
     virtual void ForceSide( int /*battleid*/, User& /*user*/, int /*side*/ ) {};
     virtual void ForceTeam( int /*battleid*/, User& /*user*/, int /*team*/ ) {};
     virtual void ForceAlly( int /*battleid*/, User& /*user*/, int /*ally*/ ) {};
-    virtual void ForceColour( int /*battleid*/, User& /*user*/, const wxColour& /*col*/ ) {};
+    virtual void ForceColour( int /*battleid*/, User& /*user*/, const LSL::lslColor& /*col*/ ) {};
     virtual void ForceSpectator( int /*battleid*/, User& /*user*/, bool /*spectator*/ ) {};
     virtual void BattleKickPlayer( int /*battleid*/, User& /*user*/ ) {};
     virtual void SetHandicap( int /*battleid*/, User& /*user*/, int /*handicap*/) {};

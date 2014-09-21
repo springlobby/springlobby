@@ -15,7 +15,7 @@ namespace BattleEvents {
 		BattleInfoUpdate = 3
 	};
 
-	typedef std::pair<IBattle*,wxString> BattleEventData;
+	typedef std::pair<IBattle*,std::string> BattleEventData;
 
 	EventSender<BattleEventData> &GetBattleEventSender( BattleEventsTypes cmd );
 

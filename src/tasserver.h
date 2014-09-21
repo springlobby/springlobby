@@ -108,7 +108,7 @@ public:
 	void ForceSide( int battleid, User& user, int side );
 	void ForceTeam( int battleid, User& user, int team );
 	void ForceAlly( int battleid, User& user, int ally );
-	void ForceColour( int battleid, User& user, const wxColour& col );
+	void ForceColour( int battleid, User& user, const LSL::lslColor& col );
 	void ForceSpectator( int battleid, User& user, bool spectator );
 	void BattleKickPlayer( int battleid, User& user );
 	void SetHandicap( int battleid, User& user, int handicap);

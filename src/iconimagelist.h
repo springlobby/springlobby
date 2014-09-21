@@ -9,7 +9,10 @@
 #include <vector>
 
 class IBattle;
-class wxColour;
+namespace LSL {
+	class lslColor;
+}
+
 struct UserStatus;
 
 class IconImageList : public wxImageList
@@ -26,8 +29,8 @@ class IconImageList : public wxImageList
     int GetBattleStatusIcon( const IBattle& battle ) const;
     wxString GetBattleStatus(const IBattle& battle) const;
 	int GetHostIcon( const bool& spectator = false ) const;
-	int GetColourIcon( const wxColour& colour ) const;
-	void SetColourIcon( const wxColour& colour );
+	int GetColourIcon( const LSL::lslColor& colour ) const;
+	void SetColourIcon( const LSL::lslColor& colour );
     int GetSideIcon( const std::string& modname, int side );
 	int GetReadyIcon( const bool& spectator, const bool& ready, const unsigned int& sync, const bool& bot );
 

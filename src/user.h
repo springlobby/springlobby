@@ -17,8 +17,10 @@ lsl/user/user.h
 **/
 
 
-#include <wx/colour.h>
 #include "utils/mixins.h"
+#include <lslutils/misc.h>
+#include <string>
+
 class IServer;
 
 const unsigned int SYNC_UNKNOWN = 0;
@@ -62,7 +64,7 @@ struct UserBattleStatus
   // total 17 members here
   int team;
   int ally;
-  wxColour colour;
+  LSL::lslColor colour;
   int color_index;
   int handicap;
   int side;
@@ -82,7 +84,7 @@ struct UserBattleStatus
   unsigned int udpport;
   std::string scriptPassword;
   bool IsBot() const { return !aishortname.empty(); }
-  UserBattleStatus(): team(0),ally(0),colour(wxColour(0,0,0)),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), isfromdemo(false), aitype(-1), udpport(0) {}
+  UserBattleStatus(): team(0),ally(0),colour(0,0,0),color_index(-1),handicap(0),side(0),sync(SYNC_UNKNOWN),spectator(false),ready(false), isfromdemo(false), aitype(-1), udpport(0) {}
   bool operator == ( const UserBattleStatus& s ) const
   {
     return ( ( team == s.team ) && ( colour == s.colour ) && ( handicap == s.handicap ) && ( side == s.side ) && ( sync == s.sync ) && ( spectator == s.spectator ) && ( ready == s.ready ) && ( owner == s.owner ) && ( aishortname == s.aishortname ) && ( isfromdemo == s.isfromdemo ) && ( aitype == s.aitype ) );

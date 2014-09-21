@@ -150,6 +150,7 @@ set(springlobbySrc
 	playbackthread.cpp
 	replaylist.cpp
 	savegamelist.cpp
+	singleplayerbattle.cpp
 	serverselector.cpp
 	serverevents.cpp
 	socket.cpp
@@ -184,7 +185,6 @@ set(springlobbySrc
 	gui/pastedialog.cpp
 	gui/slbook.cpp
 	gui/statusbar.cpp
-	gui/singleplayerbattle.cpp
 	gui/singleplayertab.cpp
 	gui/selectusersdialog.cpp
 	gui/toasternotification.cpp
@@ -240,9 +240,10 @@ set(springlobbySrc
 	utils/base64.cpp
 	utils/crc.cpp
 	utils/TextCompletionDatabase.cpp
-	utils/misc.cpp
-	utils/tasutil.cpp
 	utils/md5.c
+	utils/misc.cpp
+	utils/lslconversion.cpp
+	utils/tasutil.cpp
 	
 	lsl/src/lsl/battle/tdfcontainer.cpp #FIXME
 )
@@ -297,7 +298,7 @@ target_link_libraries(slcommon
 add_subdirectory(downloader)
 add_subdirectory(utils)
 
-set(LSLSERVER OFF CACHE BOOL "disable lsl-server build" FORCE)
+set(LSLSERVER ON CACHE BOOL "disable lsl-server build" FORCE)
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
 	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
 else()

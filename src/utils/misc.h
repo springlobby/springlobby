@@ -14,7 +14,7 @@ class wxString;
  * @return the Levenshtein distance normalized by the longest string's length.
  * @note Source: http://en.wikipedia.org/wiki/Levenshtein_distance
  */
-double LevenshteinDistance(wxString s, wxString t);
+double LevenshteinDistance(const wxString& _s, const wxString& _t);
 
 /**
  * @brief Gets the closest match for s in a, using LevenshteinDistance.

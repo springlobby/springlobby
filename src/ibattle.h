@@ -173,7 +173,7 @@ public:
 		int StartPosX;
 		int StartPosY;
 		int AllyTeam;
-		wxColor RGBColor;
+		LSL::lslColor RGBColor;
 		std::string SideName;
 		int Handicap;
 		int SideNum;
@@ -229,7 +229,7 @@ public:
 	virtual void ForceSide( User& user, int side );
 	virtual void ForceAlly( User& user, int ally );
 	virtual void ForceTeam( User& user, int team );
-	virtual void ForceColour( User& user, const wxColour& col );
+	virtual void ForceColour( User& user, const LSL::lslColor& col );
 	virtual void ForceSpectator( User& user, bool spectator );
 	virtual void SetHandicap( User& user, int handicap);
 	virtual void KickPlayer( User& user );
@@ -277,15 +277,15 @@ public:
 	virtual void SaveOptionsPreset( const std::string& name );
 	virtual std::string GetCurrentPreset();
 	virtual void DeletePreset( const std::string& name );
-	virtual wxArrayString GetPresetList();
+	virtual LSL::StringVector GetPresetList();
 
-	virtual std::vector<wxColour> &GetFixColoursPalette( int numteams ) const;
-	virtual int GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int difference) const;
-	virtual wxColour GetFixColour(int i) const;
-	virtual wxColour GetFreeColour( User &for_whom ) const;
-	virtual wxColour GetFreeColour( User *for_whom = NULL ) const;
-	virtual wxColour GetNewColour() const;
-	virtual int ColourDifference(const wxColour &a, const wxColour &b)  const;
+	virtual std::vector<LSL::lslColor> &GetFixColoursPalette( int numteams ) const;
+	virtual int GetClosestFixColour(const LSL::lslColor &col, const std::vector<int> &excludes, int difference) const;
+	virtual LSL::lslColor GetFixColour(int i) const;
+	virtual LSL::lslColor GetFreeColour( User &for_whom ) const;
+	virtual LSL::lslColor GetFreeColour( User *for_whom = NULL ) const;
+	virtual LSL::lslColor GetNewColour() const;
+	virtual int ColourDifference(const LSL::lslColor &a, const LSL::lslColor &b)  const;
 
 	virtual User& GetFounder() const;
 

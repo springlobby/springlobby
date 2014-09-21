@@ -37,6 +37,7 @@ lsl/battle/ibattle.cpp
 #include "iserver.h"
 #include "serverselector.h"
 #include "log.h"
+#include "utils/lslconversion.h"
 
 
 IBattle::IBattle():
@@ -81,15 +82,15 @@ bool IBattle::IsSynced()
 	return synced;
 }
 
-std::vector<wxColour> &IBattle::GetFixColoursPalette( int numteams ) const
+std::vector<LSL::lslColor> &IBattle::GetFixColoursPalette( int numteams ) const
 {
 	return GetBigFixColoursPalette( numteams );
 }
 
-wxColour IBattle::GetFixColour(int i) const
+LSL::lslColor IBattle::GetFixColour(int i) const
 {
 	int size = m_teams_sizes.size();
-	std::vector<wxColour> palette = GetFixColoursPalette( size );
+	std::vector<LSL::lslColor> palette = GetFixColoursPalette( size );
 	return palette[i];
 }
 
@@ -105,7 +106,7 @@ int IBattle::GetPlayerNum( const User& user ) const
 class DismissColor
 {
 private:
-	typedef std::vector<wxColour>
+	typedef std::vector<LSL::lslColor>
 	ColorVec;
 	const ColorVec& m_other;
 
@@ -114,7 +115,7 @@ public:
 		: m_other( other )
 	{}
 
-	bool operator() ( wxColor to_check ) {
+	bool operator() ( LSL::lslColor to_check ) {
 		return std::find ( m_other.begin(), m_other.end(), to_check ) != m_other.end();
 	}
 };
@@ -128,14 +129,14 @@ public:
 		: m_mindiff ( mindiff )
 	{}
 
-	bool operator() ( wxColor a, wxColor b ) {
+	bool operator() ( LSL::lslColor a, LSL::lslColor b ) {
 		return AreColoursSimilar( a, b, m_mindiff );
 	}
 };
 
-wxColour IBattle::GetFreeColour( User * ) const
+LSL::lslColor IBattle::GetFreeColour( User * ) const
 {
-	typedef std::vector<wxColour>
+	typedef std::vector<LSL::lslColor>
 	ColorVec;
 
 	ColorVec current_used_colors;
@@ -157,18 +158,18 @@ wxColour IBattle::GetFreeColour( User * ) const
 	}
 }
 
-wxColour IBattle::GetFreeColour( User &for_whom ) const
+LSL::lslColor IBattle::GetFreeColour( User &for_whom ) const
 {
 	return GetFreeColour( &for_whom );
 }
 
 
-wxColour IBattle::GetNewColour() const
+LSL::lslColor IBattle::GetNewColour() const
 {
 	return GetFreeColour();
 }
 
-int IBattle::ColourDifference(const wxColour &a, const wxColour &b)  const// returns max difference of r,g,b.
+int IBattle::ColourDifference(const LSL::lslColor &a, const LSL::lslColor &b)  const// returns max difference of r,g,b.
 {
 	return std::max(abs(a.Red()-b.Red()),std::max(abs(a.Green()-b.Green()),abs(a.Blue()-b.Blue())));
 
@@ -193,9 +194,9 @@ int IBattle::GetFreeTeam( bool excludeme ) const
 	return lowest;
 }
 
-int IBattle::GetClosestFixColour(const wxColour &col, const std::vector<int> &excludes, int difference) const
+int IBattle::GetClosestFixColour(const LSL::lslColor &col, const std::vector<int> &excludes, int difference) const
 {
-	std::vector<wxColour> palette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
+	std::vector<LSL::lslColor> palette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
 	int result=0;
 	int t1=palette.size();
 	int t2=excludes.size();
@@ -520,7 +521,7 @@ void IBattle::ForceAlly( User& user, int ally )
 }
 
 
-void IBattle::ForceColour( User& user, const wxColour& col )
+void IBattle::ForceColour( User& user, const LSL::lslColor& col )
 {
 	if ( IsFounderMe() || user.BattleStatus().IsBot() ) {
 		user.BattleStatus().colour = col;
@@ -954,9 +955,9 @@ void IBattle::DeletePreset( const std::string & name )
 	ui().ReloadPresetList();
 }
 
-wxArrayString IBattle::GetPresetList()
+LSL::StringVector IBattle::GetPresetList()
 {
-	return sett().GetPresetList();
+	return wxArrayStringToLSL(sett().GetPresetList());
 }
 
 void IBattle::UserPositionChanged( const User& /*unused*/ )
@@ -1121,9 +1122,7 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 						teaminfos.StartPosX = team->GetInt("StartPosX", -1 );
 						teaminfos.StartPosY = team->GetInt("StartPosY", -1 );
 						teaminfos.AllyTeam = team->GetInt("AllyTeam", 0 );
-
-						const LSL::lslColor color = LSL::Util::ColorFromFloatString(team->GetString("RGBColor"));
-						teaminfos.RGBColor.Set(color.Red(), color.Green(), color.Blue());
+						teaminfos.RGBColor = LSL::Util::ColorFromFloatString(team->GetString("RGBColor"));
 						teaminfos.SideName = team->GetString("Side", "");
 						teaminfos.Handicap = team->GetInt("Handicap", 0 );
 						const int sidepos = LSL::Util::IndexInSequence(sides, teaminfos.SideName);

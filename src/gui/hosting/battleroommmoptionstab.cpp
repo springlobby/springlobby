@@ -28,7 +28,7 @@
 #include "gui/ui.h"
 #include "aui/auimanager.h"
 #include "battleroommmoptionstab.h"
-
+#include "utils/lslconversion.h"
 
 const char sep = '_';
 const wxString wxsep = _T("_");
@@ -525,7 +525,7 @@ void BattleroomMMOptionsTab::OnSavePreset( wxCommandEvent& /*unused*/ )
 void BattleroomMMOptionsTab::OnDeletePreset( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-  wxArrayString choices = m_battle->GetPresetList();
+	wxArrayString choices = lslTowxArrayString(m_battle->GetPresetList());
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Delete preset"), choices );
 	if ( result < 0 ) return;
   m_battle->DeletePreset( STD_STRING(choices[result]));
@@ -534,7 +534,7 @@ void BattleroomMMOptionsTab::OnDeletePreset( wxCommandEvent& /*unused*/ )
 void BattleroomMMOptionsTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-  wxArrayString choices = m_battle->GetPresetList();
+	wxArrayString choices = lslTowxArrayString(m_battle->GetPresetList());
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"),_("Set game default preset"), choices );
 	if ( result < 0 ) return;
   sett().SetModDefaultPresetName( TowxString(m_battle->GetHostModName()), choices[result] );

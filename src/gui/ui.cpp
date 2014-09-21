@@ -755,7 +755,7 @@ void Ui::OnUserJoinedBattle( IBattle& battle, User& user )
 	try {
 		if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) {
 			mw().GetJoinTab().GetBattleRoomTab().OnUserJoined( user );
-			OnBattleInfoUpdated( std::make_pair(&battle,wxString()) );
+			OnBattleInfoUpdated( std::make_pair(&battle, "") );
 		}
 	} catch (...) {}
 
@@ -778,7 +778,7 @@ void Ui::OnUserLeftBattle( IBattle& battle, User& user, bool isbot )
 	try {
 		if ( mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle ) {
 			mw().GetJoinTab().GetBattleRoomTab().OnUserLeft( user );
-			OnBattleInfoUpdated( std::make_pair(&battle,wxString()) );
+			OnBattleInfoUpdated( std::make_pair(&battle,"") );
 			if ( &user == &m_serv->GetMe() ) {
 				mw().GetJoinTab().LeaveCurrentBattle();
 				mw().ShowTab(MainWindow::PAGE_LIST);
@@ -832,7 +832,7 @@ void Ui::OnUserBattleStatus( IBattle& battle, User& user )
 {
 	if ( m_main_win == 0 ) return;
 	mw().GetJoinTab().BattleUserUpdated( user );
-	OnBattleInfoUpdated( std::make_pair(&battle,wxString()) );
+	OnBattleInfoUpdated( std::make_pair(&battle,"") );
 }
 
 

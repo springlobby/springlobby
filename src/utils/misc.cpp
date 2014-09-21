@@ -15,10 +15,10 @@
 #include <wx/filename.h>
 #include <vector>
 
-double LevenshteinDistance(wxString s, wxString t)
+double LevenshteinDistance(const wxString& _s, const wxString& _t)
 {
-    s.MakeLower(); // case insensitive edit distance
-    t.MakeLower();
+    const wxString s = _s.Lower(); // case insensitive edit distance
+	const wxString t = _t.Lower();
 
     const int m = s.length(), n = t.length(), _w = m + 1;
     std::vector<unsigned char> _d((m + 1) * (n + 1));

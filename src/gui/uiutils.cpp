@@ -26,7 +26,7 @@
 #include "log.h"
 #include "images/colourbox.xpm"
 
-bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff )
+bool AreColoursSimilar( const LSL::lslColor& col1, const LSL::lslColor& col2, int mindiff )
 {
     int r,g,b;
     r = col1.Red() - col2.Red();
@@ -296,9 +296,9 @@ void hue(huevec& out, int amount)
 	hue(out, amount, level);
 }
 
-std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
+std::vector<LSL::lslColor>& GetBigFixColoursPalette( int numteams )
 {
-    static std::vector<wxColour> result;
+    static std::vector<LSL::lslColor> result;
     slLogDebugFunc("numteams: %d", numteams);
 		huevec huevector;
     static int satvalbifurcatepos;
@@ -338,7 +338,7 @@ std::vector<wxColour>& GetBigFixColoursPalette( int numteams )
 			if ( hue > 1 ) hue-= 1;
 			wxImage::HSVValue hsvcolor( hue, saturation, value );
 			wxImage::RGBValue rgbvalue = wxImage::HSVtoRGB( hsvcolor );
-			wxColour col( rgbvalue.red, rgbvalue.green, rgbvalue.blue );
+			LSL::lslColor col( rgbvalue.red, rgbvalue.green, rgbvalue.blue );
 			result.push_back( col );
     }
     return result;

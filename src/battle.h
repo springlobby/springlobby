@@ -64,7 +64,7 @@ public:
 	virtual void ForceSide( User& user, int side );
 	virtual void ForceTeam( User& user, int team );
 	virtual void ForceAlly( User& user, int ally );
-	virtual void ForceColour( User& user, const wxColour& col );
+	virtual void ForceColour( User& user, const LSL::lslColor& col );
 	virtual void ForceSpectator( User& user, bool spectator );
 //    virtual void BattleKickPlayer( User& user );
 	virtual void SetHandicap( User& user, int handicap);

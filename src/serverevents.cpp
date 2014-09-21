@@ -170,7 +170,7 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
                     battle.SetInGame( status.in_game );
                     if ( status.in_game ) battle.StartSpring();
 					else
-						BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(user.GetBattle(),wxString()) );
+						BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(user.GetBattle(),"") );
                 }
             }
             }catch(...){}
@@ -418,7 +418,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
             battle.Update( STD_STRING(wxString::Format( _T("%d_mapname"), LSL::Enum::PrivateOptions )));
         }
 
-		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
+		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle, "") );
     }
     catch (assert_exception) {}
 }
@@ -504,7 +504,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid )
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,wxString()) );
+		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle,"") );
     }
     catch ( assert_exception ) {}
 }

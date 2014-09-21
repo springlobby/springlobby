@@ -32,7 +32,7 @@
 #include "utils/slpaths.h"
 #include "utils/globalevents.h"
 #include "log.h"
-
+#include "utils/lslconversion.h"
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
@@ -391,11 +391,11 @@ void SinglePlayerTab::OnSpectatorCheck( wxCommandEvent& /*unused*/ )
 void SinglePlayerTab::OnColorButton( wxCommandEvent& /*unused*/ )
 {
     User& u = m_battle.GetMe();
-    wxColour CurrentColour = u.BattleStatus().colour;
+    wxColour CurrentColour = lslTowxColour(u.BattleStatus().colour);
     CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsOk() ) return;
     sett().SetBattleLastColour( CurrentColour );
-    m_battle.ForceColour( u, CurrentColour );
+    m_battle.ForceColour( u, wxColourTolsl(CurrentColour) );
     UpdateMinimap();
 }
 /*

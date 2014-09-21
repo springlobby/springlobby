@@ -30,6 +30,7 @@
 #include "gui/customdialogs.h"
 #include "settings.h"
 #include "log.h"
+#include "utils/lslconversion.h"
 
 
 template<> SortOrder CustomVirtListCtrl<User*,BattleroomListCtrl>::m_sortorder = SortOrder();
@@ -220,7 +221,7 @@ void BattleroomListCtrl::AddUser( User& user )
 {
 	//first time setting is necessary to have color in replay/savegame used controls
 	if ( !user.BattleStatus().spectator ) {
-		icons().SetColourIcon( user.BattleStatus().colour );
+		icons().SetColourIcon(user.BattleStatus().colour);
 		UpdateUser(user);
 	}
     if ( AddItem( &user ) )
@@ -240,7 +241,7 @@ void BattleroomListCtrl::RemoveUser( User& user )
 void BattleroomListCtrl::UpdateUser( User& user )
 {
     if ( !user.BattleStatus().spectator )
-		icons().SetColourIcon( user.BattleStatus().colour );
+ 		icons().SetColourIcon(user.BattleStatus().colour);
 	try {
 		wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(m_battle->GetHostModName()));
 		if  (user.BattleStatus().side < (long)sides.GetCount()) {
@@ -408,10 +409,10 @@ void BattleroomListCtrl::OnColourSelect( wxCommandEvent& /*unused*/ )
 {
 	slLogDebugFunc("");
 
-	wxColour CurrentColour = m_sel_user->BattleStatus().colour;
+	wxColour CurrentColour = lslTowxColour(m_sel_user->BattleStatus().colour);
 	CurrentColour = GetColourFromUser(this, CurrentColour);
 	if ( !CurrentColour.IsOk() ) return;
-	if( m_sel_user ) m_battle->ForceColour( *m_sel_user, CurrentColour );
+	if( m_sel_user ) m_battle->ForceColour( *m_sel_user, wxColourTolsl(CurrentColour) );
 
 }
 

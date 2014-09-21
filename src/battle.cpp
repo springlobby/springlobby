@@ -76,7 +76,7 @@ void Battle::SendHostInfo( const std::string& Tag )
 
 void Battle::Update( const std::string& Tag )
 {
-	BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(this,TowxString(Tag)) );
+	BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(this,Tag));
 }
 
 
@@ -99,11 +99,10 @@ void Battle::OnRequestBattleStatus()
     bs.team = GetFreeTeam( true );
     bs.ally = GetFreeAlly( true );
     bs.spectator = false;
-    bs.colour = sett().GetBattleLastColour();
+	const wxColor col = sett().GetBattleLastColour();
+    bs.colour = LSL::lslColor(col.Red(), col.Green(), col.Blue());
+    //FIXME ? bs.colour = GetFreeColour( GetMe() );
     bs.side = sett().GetBattleLastSideSel( TowxString(GetHostModName()));
-    // theres some highly annoying bug with color changes on player join/leave.
-    if ( !bs.colour.IsOk() ) bs.colour = GetFreeColour( GetMe() );
-
     SendMyBattleStatus();
 }
 
@@ -532,10 +531,10 @@ void Battle::ForceAlly( User& user, int ally )
 }
 
 
-void Battle::ForceColour( User& user, const wxColour& col )
+void Battle::ForceColour( User& user, const LSL::lslColor& col )
 {
-		IBattle::ForceColour( user, col );
-    m_serv.ForceColour( m_opts.battleid, user, col );
+	IBattle::ForceColour( user, col );
+	m_serv.ForceColour( m_opts.battleid, user, col );
 }
 
 
@@ -717,10 +716,10 @@ void Battle::SetInGame( bool value )
 void Battle::FixColours()
 {
     if ( !IsFounderMe() )return;
-    std::vector<wxColour> &palette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
+    std::vector<LSL::lslColor> &palette = GetFixColoursPalette( m_teams_sizes.size() + 1 );
     std::vector<int> palette_use( palette.size(), 0 );
 
-    wxColour my_col = GetMe().BattleStatus().colour; // Never changes color of founder (me) :-)
+    LSL::lslColor my_col = GetMe().BattleStatus().colour; // Never changes color of founder (me) :-)
     int my_diff = 0;
     int my_col_i = GetClosestFixColour( my_col, palette_use,my_diff );
     palette_use[my_col_i]++;
@@ -735,7 +734,7 @@ void Battle::FixColours()
         if ( parsed_teams.find( status.team ) != parsed_teams.end() ) continue; // skip duplicates
         parsed_teams.insert( status.team );
 
-        wxColour &user_col=status.colour;
+        LSL::lslColor &user_col=status.colour;
         int user_col_i=GetClosestFixColour(user_col,palette_use, 60);
         palette_use[user_col_i]++;
 				for ( user_map_t::size_type j = 0; j < GetNumUsers(); j++ )

@@ -53,6 +53,7 @@
 #include "hostbattledialog_public.h"
 #include "autohost.h"
 #include "log.h"
+#include "utils/lslconversion.h"
 
 BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 
@@ -560,7 +561,7 @@ void BattleRoomTab::UpdateUser( User& user )
 	}
 
 	icons().SetColourIcon( user.BattleStatus().colour );
-	m_color_sel->SetColor( user.BattleStatus().colour );
+	m_color_sel->SetColor( lslTowxColour(user.BattleStatus().colour ));
 }
 
 
@@ -791,11 +792,11 @@ void BattleRoomTab::OnColourSel( wxCommandEvent& /*unused*/ )
 		if ( !m_battle ) return;
     if ( !m_battle ) return;
     User& u = m_battle->GetMe();
-    wxColour CurrentColour = u.BattleStatus().colour;
+    wxColour CurrentColour = lslTowxColour(u.BattleStatus().colour);
     CurrentColour = GetColourFromUser(this, CurrentColour);
     if ( !CurrentColour.IsOk() ) return;
     sett().SetBattleLastColour( CurrentColour );
-    m_battle->ForceColour( u, CurrentColour );
+    m_battle->ForceColour( u, wxColourTolsl(CurrentColour));
 }
 
 
@@ -966,7 +967,7 @@ void BattleRoomTab::OnSavePreset( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnDeletePreset( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxArrayString choices = m_battle->GetPresetList();
+	wxArrayString choices = lslTowxArrayString(m_battle->GetPresetList());
 	int result = wxGetSingleChoiceIndex( _( "Pick an existing option set from the list" ), _( "Delete preset" ), choices );
 	if ( result < 0 ) return;
 	m_battle->DeletePreset(STD_STRING(choices[result]));
@@ -975,7 +976,7 @@ void BattleRoomTab::OnDeletePreset( wxCommandEvent& /*unused*/ )
 void BattleRoomTab::OnSetModDefaultPreset( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-	wxArrayString choices = m_battle->GetPresetList();
+	wxArrayString choices = lslTowxArrayString(m_battle->GetPresetList());
 	int result = wxGetSingleChoiceIndex( _( "Pick an existing option set from the list" ), _( "Set game default preset" ), choices );
 	if ( result < 0 ) return;
 	sett().SetModDefaultPresetName(TowxString(m_battle->GetHostModName()), choices[result] );
@@ -1117,7 +1118,7 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 	if ( m_battle ) {
 		RegenerateOptionsList();
 		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostModName())));
-		m_color_sel->SetColor( m_battle->GetMe().BattleStatus().colour );
+		m_color_sel->SetColor( lslTowxColour(m_battle->GetMe().BattleStatus().colour));
 		for ( UserList::user_map_t::size_type i = 0; i < m_battle->GetNumUsers(); i++ )
 		{
 			m_players->AddUser( m_battle->GetUser( i ) );

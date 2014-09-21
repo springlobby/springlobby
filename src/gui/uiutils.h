@@ -9,13 +9,14 @@
 #include <wx/gdicmn.h>
 #include <wx/event.h>
 #include <vector>
+#include <lslutils/misc.h>
 
 class wxColour;
 class wxImage;
 class wxIcon;
 class wxBitmap;
 
-bool AreColoursSimilar( const wxColour& col1, const wxColour& col2, int mindiff = 10 );
+bool AreColoursSimilar( const LSL::lslColor& col1, const LSL::lslColor& col2, int mindiff = 10 );
 
 void ColourDelta( int& r, int& g, int& b, const int& delta );
 wxColour ColourDelta( const wxColour& colour, const int& delta );
@@ -43,7 +44,7 @@ wxImage BorderInvariantResizeImage(  const wxImage& image, int width, int height
 
 wxImage ReplaceChannelStatusColour( wxBitmap img, const wxColour& colour );
 
-std::vector<wxColour>& GetBigFixColoursPalette( int numteams );
+std::vector<LSL::lslColor>& GetBigFixColoursPalette( int numteams );
 
 
 void CopyToClipboard( const wxString& text );

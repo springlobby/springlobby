@@ -538,7 +538,6 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 	UTASClientStatus tasstatus;
 	UTASBattleStatus tasbstatus;
 	UserBattleStatus bstatus;
-	UTASColor color;
 
 	if ( cmd == _T("TASSERVER")) {
 		mod = GetWordParam( params );
@@ -728,8 +727,9 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		nick = GetWordParam( params );
 		tasbstatus.data = GetIntParam( params );
 		bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
+		UTASColor color;
 		color.data = GetIntParam( params );
-		bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
+		bstatus.colour = LSL::lslColor(color.color.red, color.color.green, color.color.blue);
 		m_se->OnClientBattleStatus( m_battle_id, nick, bstatus );
 	} else if ( cmd == _T("ADDSTARTRECT") ) {
 		//ADDSTARTRECT allyno left top right bottom
@@ -787,8 +787,9 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		owner = GetWordParam( params );
 		tasbstatus.data = GetIntParam( params );
 		bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
+		UTASColor color;
 		color.data = GetIntParam( params );
-		bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
+		bstatus.colour = LSL::lslColor( color.color.red, color.color.green, color.color.blue );
 		ai = GetSentenceParam( params );
 		if ( ai.IsEmpty() ) {
 			wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
@@ -806,8 +807,9 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		nick = GetWordParam( params );
 		tasbstatus.data = GetIntParam( params );
 		bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
+		UTASColor color;
 		color.data = GetIntParam( params );
-		bstatus.colour = wxColour( color.color.red, color.color.green, color.color.blue );
+		bstatus.colour = LSL::lslColor( color.color.red, color.color.green, color.color.blue );
 		m_se->OnBattleUpdateBot( id, nick, bstatus );
 		//UPDATEBOT BATTLE_ID name battlestatus teamcolor
 	} else if ( cmd == _T("REMOVEBOT") ) {
@@ -1651,7 +1653,7 @@ void TASServer::ForceAlly( int battleid, User& user, int ally )
 }
 
 
-void TASServer::ForceColour( int battleid, User& user, const wxColour& col )
+void TASServer::ForceColour( int battleid, User& user, const LSL::lslColor& col )
 {
 	slLogDebugFunc("");
 	try {

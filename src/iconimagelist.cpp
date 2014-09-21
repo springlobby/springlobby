@@ -88,6 +88,7 @@
 #include "images/empty.xpm"
 #include "gui/uiutils.h"
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 
 IconImageList::IconImageList() : wxImageList(16,16,true)
 {
@@ -342,9 +343,9 @@ wxString getColourIconKey( const wxColour& colour  )
 	return colour.GetAsString(wxC2S_HTML_SYNTAX).AfterFirst('#');
 }
 
-int IconImageList::GetColourIcon( const wxColour& colour )  const
+int IconImageList::GetColourIcon( const LSL::lslColor& colour )  const
 {
-	const wxString key = getColourIconKey(colour);
+	const wxString key = getColourIconKey(lslTowxColour(colour));
 	PlayerColourMap::const_iterator it = m_player_colour_icons.find( key );
 	if ( it != m_player_colour_icons.end() && it->second != 0 ) return it->second;
     else return -1;
@@ -357,11 +358,11 @@ int IconImageList::GetHostIcon( const bool& spectator ) const
 }
 
 
-void IconImageList::SetColourIcon( const wxColour& colour )
+void IconImageList::SetColourIcon( const LSL::lslColor& colour )
 {
-	const wxString key = getColourIconKey(colour);
+	const wxString key = getColourIconKey(lslTowxColour(colour));
 	if ( m_player_colour_icons.find( key ) == m_player_colour_icons.end() )
-		m_player_colour_icons[key] = Add( getColourIcon(colour) );
+		m_player_colour_icons[key] = Add(getColourIcon(lslTowxColour(colour)));
 }
 
 

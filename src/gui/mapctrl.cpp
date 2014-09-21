@@ -44,6 +44,7 @@
 #include "images/not_found_icon.xpm"
 #include "images/download_map.xpm"
 #include "images/reload_map.xpm"
+#include "utils/lslconversion.h"
 
 const int USER_BOX_EXPANDED_HEIGHT = 70;
 const int USER_BOX_EXPANDED_WIDTH = 75;
@@ -893,7 +894,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool /*unused*/ )
     dc.SetTextForeground( *wxWHITE );
 
     wxRect r = GetUserRect( user, selected );
-    wxColour col = user.BattleStatus().colour;
+    wxColour col = lslTowxColour(user.BattleStatus().colour);
 
     if ( selected )
     {
