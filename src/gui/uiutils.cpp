@@ -94,27 +94,6 @@ wxColour ColourDelta( const wxColour& colour, const int& delta )
 }
 
 
-
-wxColour GetColorFromFloatStrng( const wxString& color_ )
-{
-	const std::string oldlocale = std::setlocale(LC_NUMERIC, NULL);
-	std::setlocale(LC_NUMERIC, "C"); //ToDouble depends on the locale, set to C
-	wxString colorstring = color_;
-	wxString tmp_string;
-	unsigned char* decimal_colors = new unsigned char[3];
-	for ( size_t i = 0; i < 3; ++i) {
-		tmp_string = colorstring.BeforeFirst( ' ' );
-		colorstring = colorstring.AfterFirst( ' ' );
-		double float_color = 0;
-		tmp_string.ToDouble( &float_color );
-		decimal_colors[i] = LSL::Util::Clamp( static_cast<unsigned char>(float_color*256), static_cast<unsigned char>(0), static_cast<unsigned char>(255) );
-	}
-	wxColour final_c( decimal_colors[0], decimal_colors[1], decimal_colors[2] );
-	delete[] decimal_colors;
-	std::setlocale(LC_NUMERIC, oldlocale.c_str());
-	return final_c;
-}
-
 /**
  @brief Blends two images based on alpha channel present in foreground image.
  @param foreground Foreground image, must have an alpha channel
