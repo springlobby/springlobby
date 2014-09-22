@@ -459,5 +459,5 @@ bool SlPaths::RmDir(const std::string& dir)
 			return false;
 		file = wxFindNextFile();
 	}
-	return wxRmDir(cachedir);
+	return rmdir(dir.c_str()) == 0;
 }
