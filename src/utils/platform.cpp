@@ -108,7 +108,7 @@ bool RmDir(wxString path, bool silent)
 	}
 
 	// append a slash if we don't have one
-	if (!path.EndsWith(wxFILE_SEP_PATH)) {
+	if (!path.EndsWith(wxString(wxFILE_SEP_PATH))) {
 		path += wxFILE_SEP_PATH;
 	}
 
