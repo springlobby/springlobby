@@ -89,7 +89,6 @@ bool MoveDirWithFilebackupRename( wxString from, wxString to, bool backup, bool 
 				ErrorMsgBox( _T("could not copy %s to %s, copydir aborted") + from + filename + _T("\n") + to + filename, silent);
 				return false;
 			}
-			wxRemoveFile(from + filename); // remove source file
 		}
 	} while (dir.GetNext(&filename) );
     return true;
