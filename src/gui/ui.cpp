@@ -1018,7 +1018,7 @@ bool Ui::StartUpdate(const std::string& latestVersion)
 	const wxString updatedir = TowxString(SlPaths::GetUpdateDir());
 	const int mindirlen = 9; // safety, minimal is/should be: C:\update
 	if ((updatedir.size() <= mindirlen)) {
-		wxLogError("Invalid update dir: "+ TowxString(updatedir));
+		wxLogError(_T("Invalid update dir: ") + TowxString(updatedir));
 		return false;
 	}
 	if ( wxDirExists( updatedir ) ) {
