@@ -29,7 +29,7 @@ void ErrorMsgBox(const wxString& err, bool silent)
 	}
 }
 
-bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bool backup, bool silent)
+bool MoveDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bool backup, bool silent)
 {
     // first make sure that the source dir exists
     if(!wxDir::Exists(from)) {
@@ -70,7 +70,7 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bo
 	do {
 		if (wxDirExists(from + filename) )
 		{
-			CopyDirWithFilebackupRename(from + filename, to + filename, overwrite, false); //no backup in subdirs
+			MoveDirWithFilebackupRename(from + filename, to + filename, overwrite, false); //no backup in subdirs
 		} else{
 			//if files exists move it to backup, this way we can use this func on windows to replace 'active' files
 			if ( backup && wxFileExists( to + filename ) ) {
