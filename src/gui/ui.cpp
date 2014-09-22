@@ -1013,15 +1013,18 @@ void Ui::FirstRunWelcome()
 }
 
 
-bool Ui::StartUpdate(const wxString& latestVersion)
+bool Ui::StartUpdate(const std::string& latestVersion)
 {
 	const wxString updatedir = TowxString(SlPaths::GetUpdateDir());
 	const int mindirlen = 9; // safety, minimal is/should be: C:\update
 	if ((updatedir.size() <= mindirlen)) {
 		wxLogError("Invalid update dir: "+ updatedir);
+		return false;
 	}
 	if ( wxDirExists( updatedir ) ) {
-		RmDir(updatedir, false);
+		if (!RmDir(updatedir, false)) {
+			return false;
+		}
 	}
 	if ( !wxMkdir( updatedir ) ){
 		wxLogError( _T("couldn't create update directory") );
@@ -1039,7 +1042,7 @@ bool Ui::StartUpdate(const wxString& latestVersion)
 		wxLogError( _T("couldn't delete: ") + TowxString(dlfilepath));
 		return false;
 	}
-	const std::string dlurl = GetDownloadUrl(STD_STRING(latestVersion));
+	const std::string dlurl = GetDownloadUrl(latestVersion);
 	return prDownloader().Download(dlfilepath, dlurl);
 }
 
@@ -1090,7 +1093,7 @@ void Ui::CheckForUpdates(bool show)
 					      % msg,
 					      _("Not up to date"), wxOK|wxCANCEL);
 		if (answer == wxOK) {
-			if (!StartUpdate(latestVersion)) {
+			if (!StartUpdate(STD_STRING(latestVersion))) {
 				//this will also happen if updater exe is not present so we don't really ne special check for existance of it
 				customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser.") + msg, _("Updater error.") );
 				OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary") );

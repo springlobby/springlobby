@@ -138,7 +138,7 @@ public:
 	void EnableDebug(bool enable);
 
 private:
-	bool StartUpdate( const wxString& latestVersion);
+	bool StartUpdate( const std::string& latestVersion);
 	void OnDownloadComplete(wxCommandEvent& /*data*/);
 	void Notify();
 
