@@ -235,7 +235,7 @@ private:
 //! extends the wx method by allowing to set selection
 int GetSingleChoiceIndex( const wxString& message,
 			  const wxString& caption,
-			  const wxArrayString& aChoices,
+			  const wxArrayString& choices,
 			  const int selected,
 			  wxWindow *parent = NULL,
 			  int x = wxDefaultCoord,

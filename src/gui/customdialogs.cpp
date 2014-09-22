@@ -372,17 +372,14 @@ void actNotifBox( int whichIcon , const wxString& message,const wxString& captio
 
 int GetSingleChoiceIndex( const wxString& message,
 			  const wxString& caption,
-			  const wxArrayString& aChoices,
+			  const wxArrayString& choices,
 			  const int selected,
 			  wxWindow *parent ,
 			  int /*unused*/ ,
 			  int /*unused*/ ,
 			  bool /*unused*/ )
 {
-	wxString *choices;
-	int n = ConvertWXArrayToC(aChoices, &choices);
-
-	wxSingleChoiceDialog dialog(parent, message, caption, n, choices);
+	wxSingleChoiceDialog dialog(parent, message, caption, choices);
 	dialog.SetSelection( selected );
 
 	int choice;
@@ -390,8 +387,6 @@ int GetSingleChoiceIndex( const wxString& message,
 		choice = dialog.GetSelection();
 	else
 		choice = -1;
-
-	delete [] choices;
 
 	return choice;
 }
