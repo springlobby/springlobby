@@ -13,7 +13,6 @@
 
 #include "conversion.h"
 #include "gui/customdialogs.h"
-#include "utils/version.h"
 
 bool SafeMkdir(const wxString& dir)
 {
