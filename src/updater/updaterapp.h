@@ -14,8 +14,6 @@ private:
 	virtual bool OnInit();
 	virtual int OnRun();
 
-	virtual void OnFatalException();
-
 	virtual void OnInitCmdLine(wxCmdLineParser& parser);
 	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 	bool StartUpdate( const wxString& source, const wxString& destination, bool silent);

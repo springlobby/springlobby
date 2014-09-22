@@ -37,12 +37,7 @@ bool UpdaterApp::OnInit()
 	if (!wxApp::OnInit())
 		return false;
 
-#if wxUSE_ON_FATAL_EXCEPTION
-	wxHandleFatalExceptions( true );
-#endif
-
 	wxFileSystem::AddHandler(new wxZipFSHandler);
-
 	if ( m_paramcount == 5) {
 		WaitForExit(m_pid);
 		wxArrayString params;
@@ -63,12 +58,6 @@ bool UpdaterApp::OnInit()
 int UpdaterApp::OnRun()
 {
     return 0; //instantly exit updater
-}
-
-//! @brief is called when the app crashes
-void UpdaterApp::OnFatalException()
-{
-	wxMessageBox( _("The application has generated a fatal error and will be terminated"),_("Critical error"), wxICON_ERROR | wxOK );
 }
 
 void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
