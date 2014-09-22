@@ -119,7 +119,7 @@ static wxString TrimSep(const wxString& path)
 
 bool UpdaterApp::StartUpdate( const wxString& source, const wxString& destination, bool silent)
 {
-	const bool ret = MoveDirWithFilebackupRename( TrimSep(source), TrimSep(destination), true);
+	const bool ret = MoveDirWithFilebackupRename( TrimSep(source), TrimSep(destination), silent);
 	if (!ret) {
 		ErrorMsgBox(_T("Copy failed: \n") + source + _T("\n") + destination, silent);
 	}

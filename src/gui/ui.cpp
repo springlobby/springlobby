@@ -41,6 +41,7 @@
 #include "utils/uievents.h"
 #include "utils/slpaths.h"
 #include "utils/version.h"
+#include "utils/platform.h"
 #include "gui/uiutils.h"
 #include "gui/chatpanel.h"
 #include "gui/battlelist/battlelisttab.h"
@@ -1015,13 +1016,17 @@ void Ui::FirstRunWelcome()
 bool Ui::StartUpdate(const wxString& latestVersion)
 {
 	const wxString updatedir = TowxString(SlPaths::GetUpdateDir());
-
-	if ( !wxDirExists( updatedir ) ) {
-			if ( !wxMkdir( updatedir ) ){
-			wxLogError( _T("couldn't create update directory") );
-			customMessageBox(SL_MAIN_ICON, _("Unable to create to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
-			return false;
-		}
+	const int mindirlen = 9; // safety, minimal is/should be: C:\update
+	if ((updatedir.size() <= mindirlen)) {
+		wxLogError("Invalid update dir: "+ updatedir);
+	}
+	if ( wxDirExists( updatedir ) ) {
+		RmDir(updatedir, false);
+	}
+	if ( !wxMkdir( updatedir ) ){
+		wxLogError( _T("couldn't create update directory") );
+		customMessageBox(SL_MAIN_ICON, _("Unable to create to the lobby installation directory.\nPlease update manually or enable write permissions for the current user."), _("Error"));
+		return false;
 	}
 	if ( !wxFileName::IsDirWritable( updatedir ) ) {
 		wxLogError( _T("dir not writable: ") + updatedir );

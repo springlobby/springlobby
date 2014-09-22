@@ -16,7 +16,11 @@ class wxLogChain;
     this will copy dir (and everything below that recursively to /some/other/path/dir
     \return true if successful
 */
-bool MoveDirWithFilebackupRename( wxString from, wxString to, bool overwrite = true, bool backup = true, bool silent = false);
+bool MoveDirWithFilebackupRename( wxString from, wxString to, bool backup = true, bool silent = false);
+/**
+	recursive delete a directory
+*/
+bool RmDir(wxString path, bool silent);
 
 //! set new cwd in ctor, reset to old in dtor
 class CwdGuard {
