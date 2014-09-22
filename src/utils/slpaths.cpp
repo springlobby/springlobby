@@ -451,7 +451,7 @@ bool SlPaths::RmDir(const std::string& dir)
 	wxLogWarning( _T("erasing dir %s"), cachedir.c_str());
 	wxString file = wxFindFirstFile( cachedir + wxFILE_SEP_PATH + _T("*") );
 	while ( !file.empty() ) {
-		if (wxDirExists(file))	{
+		if (wxDirExists(file)) {
 			if (!RmDir(STD_STRING(file))) {
 				return false;
 			}
@@ -459,6 +459,5 @@ bool SlPaths::RmDir(const std::string& dir)
 			return false;
 		file = wxFindNextFile();
 	}
-	wxRmDir(TowxString(dir));
-	return true;
+	return wxRmDir(cachedir);
 }
