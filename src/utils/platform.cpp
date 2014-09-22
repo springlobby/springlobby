@@ -95,63 +95,6 @@ bool MoveDirWithFilebackupRename( wxString from, wxString to, bool backup, bool 
     return true;
 }
 
-bool RmDir(wxString path, bool silent)
-{
-	if (path.empty()) {
-		ErrorMsgBox(_T("Invalid path. Can't remove empty path."), silent);
-		return false;
-	}
-	// first make sure that the dir exists
-	if(!wxDir::Exists(path)) {
-		ErrorMsgBox(TowxString(path) + _T(" does not exist.  Could not remove directory."), silent);
-		return false;
-	}
-
-	// append a slash if we don't have one
-	if (!path.EndsWith(wxString(wxFILE_SEP_PATH))) {
-		path += wxFILE_SEP_PATH;
-	}
-
-	// define our directory object.  When we begin traversing it, the
-	// os will not let go until the object goes out of scope.
-	wxDir* dir = new wxDir(path);
-
-	// check for allocation failure
-	if (dir == NULL) {
-		ErrorMsgBox(_T("Could not allocate new memory on the heap!"), silent);
-		return false;
-	}
-
-	wxString filename;
-	bool cont = dir->GetFirst(&filename);
-
-	if (cont){
-		do {
-			if (wxDirExists(path + filename)) {
-				RmDir(path + filename, silent);
-			} else {
-				if(!wxRemoveFile(path + filename)) {
-					ErrorMsgBox(_T("Could not remove file \"") + TowxString(path) + TowxString(filename) + "\"", silent);
-				}
-			}
-		} while (dir->GetNext(&filename));
-	}
-
-	// Remove our directory object, so the OS will let go of it and
-	// allow us to delete it
-	delete dir;
-
-	// now actually try to delete it
-	if (!wxFileName::Rmdir(path)) {
-		ErrorMsgBox("Could not remove directory " + TowxString(path), silent);
-		return false;
-	} else {
-		return true;
-	}
-
-}
-
-
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
 #include <windows.h>

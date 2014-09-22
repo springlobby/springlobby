@@ -1022,7 +1022,8 @@ bool Ui::StartUpdate(const std::string& latestVersion)
 		return false;
 	}
 	if ( wxDirExists( updatedir ) ) {
-		if (!RmDir(updatedir, false)) {
+		if (!SlPaths::DeleteAllFilesInDir(STD_STRING(updatedir))) {
+			customMessageBox(SL_MAIN_ICON, _("Couldn't cleanup ") + TowxString(updatedir), _("Error"));
 			return false;
 		}
 	}
@@ -1039,7 +1040,7 @@ bool Ui::StartUpdate(const std::string& latestVersion)
 
 	const std::string dlfilepath = SlPaths::GetLobbyWriteDir() + "springlobby-latest.zip";
 	if (wxFileExists(TowxString(dlfilepath)) && !(wxRemoveFile(TowxString(dlfilepath)))) {
-		wxLogError( _T("couldn't delete: ") + TowxString(dlfilepath));
+		customMessageBox(SL_MAIN_ICON, _T("couldn't delete: ") + TowxString(dlfilepath), _("Error"));
 		return false;
 	}
 	const std::string dlurl = GetDownloadUrl(latestVersion);

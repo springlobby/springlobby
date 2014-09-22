@@ -72,7 +72,7 @@ public:
 	static std::string GetExecutableFolder();
 	static std::string GetConfigfileDir();
 	static std::string GetUpdateDir();
-	static void DeleteAllFilesInDir(const std::string& dir);
+	static bool DeleteAllFilesInDir(const std::string& dir);
 
 private:
 	static void EngineSubPaths(const std::vector<std::string>& basedirs, std::vector<std::string>& paths);
