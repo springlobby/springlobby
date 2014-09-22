@@ -455,4 +455,5 @@ bool SlPaths::DeleteAllFilesInDir(const std::string& dir)
 			return false;
 		file = wxFindNextFile();
 	}
+	return true;
 }
