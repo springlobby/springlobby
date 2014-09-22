@@ -70,13 +70,14 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 	long cacheversion = cfg().ReadLong(_T( "/General/CacheVersion" ));
 
 	const wxString userConfigDir = TowxString(SlPaths::GetConfigfileDir());
-	if ( IsFirstRun() && !wxDirExists( userConfigDir ) ) {
-		wxMkdir( userConfigDir );
-	}
 	if ( (cacheversion < CACHE_VERSION) && !IsFirstRun() ) {
-		SlPaths::DeleteAllFilesInDir(SlPaths::GetCachePath());
+		SlPaths::RmDir(SlPaths::GetCachePath());
 		// after resetting cache, set current cache version
 		cfg().Write( _T( "/General/CacheVersion" ), CACHE_VERSION );
+	}
+
+	if ( !wxDirExists( userConfigDir ) ) {
+		wxMkdir( userConfigDir );
 	}
 
 	if ( !cfg().ReadBool(_T("/General/firstrun") )) {

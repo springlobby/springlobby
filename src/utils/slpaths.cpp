@@ -440,7 +440,7 @@ std::string SlPaths::GetUpdateDir()
 	return SlPaths::GetLobbyWriteDir() + "update" + SEP;
 }
 
-bool SlPaths::DeleteAllFilesInDir(const std::string& dir)
+bool SlPaths::RmDir(const std::string& dir)
 {
 	if (dir.empty())
 		return false;
@@ -451,9 +451,14 @@ bool SlPaths::DeleteAllFilesInDir(const std::string& dir)
 	wxLogWarning( _T("erasing dir %s"), cachedir.c_str());
 	wxString file = wxFindFirstFile( cachedir + wxFILE_SEP_PATH + _T("*") );
 	while ( !file.empty() ) {
-		if (!wxRemoveFile( file ))
+		if (wxDirExists(file))	{
+			if (!RmDir(STD_STRING(file))) {
+				return false;
+			}
+		} else if (!wxRemoveFile( file ))
 			return false;
 		file = wxFindNextFile();
 	}
+	wxRmDir(TowxString(dir));
 	return true;
 }

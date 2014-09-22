@@ -1022,7 +1022,7 @@ bool Ui::StartUpdate(const std::string& latestVersion)
 		return false;
 	}
 	if ( wxDirExists( updatedir ) ) {
-		if (!SlPaths::DeleteAllFilesInDir(STD_STRING(updatedir))) {
+		if (!SlPaths::RmDir(STD_STRING(updatedir))) {
 			customMessageBox(SL_MAIN_ICON, _("Couldn't cleanup ") + TowxString(updatedir), _("Error"));
 			return false;
 		}
