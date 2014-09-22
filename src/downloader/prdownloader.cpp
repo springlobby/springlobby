@@ -69,7 +69,7 @@ public:
 				}
 				case IDownload::CAT_LOBBYCLIENTS:
 					lobbydl = true;
-					fileSystem->extract(dl->name, SlPaths::GetUpdateDir());
+					fileSystem->extract(dl->name, SlPaths::GetUpdateDir(), true);
 					break;
 				case IDownload::CAT_MAPS:
 				case IDownload::CAT_GAMES:
