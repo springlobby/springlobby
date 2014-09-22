@@ -37,6 +37,16 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bo
             return false;
     }
 
+	if (from == to) {
+		ErrorMsgBox(_T("Cannot copy: source == destination: ") + from, silent);
+		return false;
+	}
+
+	if (from.empty() || to.empty()){
+		ErrorMsgBox(_T("Cannot copy empty directory"), silent);
+		return false;
+	}
+
     SafeMkdir(to);
 
     wxString sep = wxFileName::GetPathSeparator();
@@ -79,6 +89,7 @@ bool CopyDirWithFilebackupRename( wxString from, wxString to, bool overwrite, bo
 				ErrorMsgBox( _T("could not copy %s to %s, copydir aborted") + from + filename + _T("\n") + to + filename, silent);
 				return false;
 			}
+			wxRemoveFile(from + filename); // remove source file
 		}
 	} while (dir.GetNext(&filename) );
     return true;
