@@ -3,10 +3,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 #define SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 
-class wxLogWindow;
 class wxWindow;
 class wxString;
-class wxLogChain;
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
@@ -20,17 +18,12 @@ bool MoveDirWithFilebackupRename( wxString from, wxString to, bool backup = true
 
 //! set new cwd in ctor, reset to old in dtor
 class CwdGuard {
-    wxString m_old_cwd;
-    public:
-        CwdGuard( const wxString& new_cwd );
-        ~CwdGuard();
+public:
+	CwdGuard( const wxString& new_cwd );
+	~CwdGuard();
+private:
+	wxString m_old_cwd;
 };
-
-/**
-  \in Format string with a single %s
-  \out wxString with %s replaced with GetAppName()
-  **/
-wxString IdentityString(const wxString& format, bool lowerCase = false );
 
 int RunProcess(const wxString& cmd, const wxArrayString& params, const bool async = false, const bool root = false);
 int BrowseFolder(const wxString& path);

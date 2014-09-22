@@ -11,7 +11,6 @@
 
 #include "updaterapp.h"
 #include "utils/platform.h"
-#include "utils/conversion.h"
 
 IMPLEMENT_APP(UpdaterApp)
 

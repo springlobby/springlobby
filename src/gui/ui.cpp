@@ -41,7 +41,6 @@
 #include "utils/uievents.h"
 #include "utils/slpaths.h"
 #include "utils/version.h"
-#include "utils/platform.h"
 #include "gui/uiutils.h"
 #include "gui/chatpanel.h"
 #include "gui/battlelist/battlelisttab.h"
@@ -55,7 +54,6 @@
 #include "gui/agreementdialog.h"
 #include "updatehelper.h"
 #include "gui/customdialogs.h"
-#include "utils/platform.h"
 #include "versionchecker.h"
 #include "gui/textentrydialog.h"
 #include "log.h"
@@ -403,7 +401,7 @@ void Ui::ConsoleHelp( const wxString& topic )
 		return;
 	}
 	if ( topic == wxEmptyString ) {
-		panel->ClientMessage( IdentityString( _("%s commands help.") ) );
+		panel->ClientMessage( _("SpringLobby commands help."));
 		panel->ClientMessage( wxEmptyString );
 		panel->ClientMessage( _("Global commands:") );
 		panel->ClientMessage( _("  \"/away\" - Sets your status to away.") );
@@ -419,9 +417,9 @@ void Ui::ConsoleHelp( const wxString& topic )
 		panel->ClientMessage( _("  \"/part\" - Leaves current channel.") );
 		panel->ClientMessage( _("  \"/p\" - Alias to /part.") );
 		panel->ClientMessage( _("  \"/rename newalias\" - Changes your nickname to newalias.") );
-		panel->ClientMessage( IdentityString( _("  \"/sayver\" - Says what version of %s you have in chat.") ) );
+		panel->ClientMessage( _("  \"/sayver\" - Says what version of SpringLobby you have in chat.") );
 		panel->ClientMessage( _("  \"/testmd5 text\" - Returns md5-b64 hash of given text.") );
-		panel->ClientMessage( IdentityString( _("  \"/ver\" - Displays what version of %s you have.") ) );
+		panel->ClientMessage( _("  \"/ver\" - Displays what version of SpringLobby you have.") );
 		panel->ClientMessage( _("  \"/clear\" - Clears all text from current chat panel") );
 		panel->ClientMessage( wxEmptyString );
 		panel->ClientMessage( _("Chat commands:") );

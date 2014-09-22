@@ -139,11 +139,6 @@ CwdGuard::~CwdGuard()
     wxSetWorkingDirectory( m_old_cwd );
 }
 
-wxString IdentityString(const wxString& format, bool lowerCase )
-{
-	return wxFormat( format ) % TowxString(getSpringlobbyName(lowerCase));
-}
-
 static wxString escapeStr(const wxString& str)
 {
 	if (str.Find(_T(" ")) == wxNOT_FOUND) {

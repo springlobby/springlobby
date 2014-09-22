@@ -18,7 +18,6 @@
 #include "utils/slconfig.h"
 #include "gui/customdialogs.h"
 #include "gui/controls.h"
-#include "utils/platform.h"
 #include "utils/slpaths.h"
 #include "aui/auimanager.h"
 #include "gui/ui.h"
@@ -94,7 +93,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     wxStaticBoxSizer* m_autojoin_sizer= new wxStaticBoxSizer ( wxVERTICAL, this, _("Autoconnect") );
 	m_autoconnect_label = new wxStaticText ( this,
 											 -1,
-											 IdentityString( _("If checked, %s will automatically log on to the last used server") )
+											 _("If checked, SpringLobby will automatically log on to the last used server")
 											 );
     m_autojoin = new wxCheckBox( this, -1, _("Autoconnect on lobby start"), wxDefaultPosition, wxDefaultSize, 0 );
     m_autojoin->SetValue( cfg().ReadBool(_T( "/Server/Autoconnect")) );
@@ -107,7 +106,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     wxStaticBoxSizer* m_updater_sizer = new wxStaticBoxSizer ( wxVERTICAL, this, _("Automatic updates") );
 	m_updater_label = new wxStaticText ( this,
 										 -1,
-										 IdentityString( _("%s can check at startup if a newer version is available and automatically download it for you.") )
+										 _("SpringLobby can check at startup if a newer version is available and automatically download it for you.")
 										 );
     m_updater = new wxCheckBox( this, -1, _("automatically check for updates"), wxDefaultPosition, wxDefaultSize, 0 );
     m_updater->SetValue( cfg().ReadBool(_T("/General/AutoUpdate")) );
@@ -120,7 +119,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
     m_show_tooltips = new wxCheckBox( this, -1, _("Show Tooltips?"), wxDefaultPosition, wxDefaultSize, 0 );
     m_show_tooltips->SetValue( sett().GetShowTooltips() );
 #ifndef __WXMSW__ // on windows this change is immediate
-	m_show_tooltips_label = new wxStaticText ( this, -1, IdentityString( _("Requires %s restart to take effect.") ) );
+	m_show_tooltips_label = new wxStaticText ( this, -1, _("Requires SpringLobby restart to take effect."));
     m_show_tooltips_sizer->Add( m_show_tooltips_label, 1, wxEXPAND|wxALL, 5);
 #endif
     m_show_tooltips_sizer->Add( m_show_tooltips, 0, wxEXPAND|wxALL, 5);

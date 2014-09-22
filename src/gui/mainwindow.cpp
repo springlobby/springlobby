@@ -58,7 +58,6 @@
 #include "utils/conversion.h"
 #include "springsettings/frame.h"
 #include "gui/customdialogs.h"
-#include "utils/platform.h"
 #include "utils/slpaths.h"
 #include "channel/autojoinchanneldialog.h"
 #include "channel/channelchooserdialog.h"
@@ -611,7 +610,7 @@ void MainWindow::OnMenuSelectLocale( wxCommandEvent& /*unused*/ )
 {
     if ( wxGetApp().SelectLanguage() ) {
 		customMessageBoxNoModal( SL_MAIN_ICON,
-								 IdentityString( _("You need to restart %s for the language change to take effect.") ),
+								 _("You need to restart SpringLobby for the language change to take effect."),
 								 _("Restart required"),
 								 wxICON_EXCLAMATION | wxOK );
     }
@@ -645,7 +644,7 @@ void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 {
 	cfg().Write(_T( "/ResetLayout" ), true);
 	sett().SaveSettings();
-	customMessageBoxNoModal( SL_MAIN_ICON, IdentityString( _("Please restart %s now") ), wxEmptyString );
+	customMessageBoxNoModal( SL_MAIN_ICON, _("Please restart SpringLobby now"), wxEmptyString );
 }
 
 const MainWindow::TabNames& MainWindow::GetTabNames()

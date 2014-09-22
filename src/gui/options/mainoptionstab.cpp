@@ -27,7 +27,6 @@
 #include "gui/uiutils.h"
 #include "gui/controls.h"
 #include "utils/conversion.h"
-#include "utils/platform.h"
 #include "log.h"
 
 #include "images/torrentoptionspanel_icon.png.h"
@@ -165,7 +164,7 @@ void MainOptionsTab::SavePerspective( const wxString& perspective_name )
 }
 
 OptionsDialog::OptionsDialog( wxWindow* parent )
-	: wxDialog( parent, -1, IdentityString(_("%s Preferences") ), wxDefaultPosition, wxSize( 700,430 ), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX ),
+	: wxDialog( parent, -1, _("SpringLobby Preferences"), wxDefaultPosition, wxSize( 700,430 ), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX ),
 	WindowAttributesPickle( _T("preferences"), this, wxSize( 700,430 ) )
 {
 	m_options = new MainOptionsTab( this );
