@@ -97,9 +97,13 @@ bool MoveDirWithFilebackupRename( wxString from, wxString to, bool backup, bool 
 
 bool RmDir(wxString path, bool silent)
 {
+	if (path.empty()) {
+		ErrorMsgBox(_T("Invalid path. Can't remove empty path."), silent);
+		return false;
+	}
 	// first make sure that the dir exists
 	if(!wxDir::Exists(path)) {
-		ErrorMsgBox(path + _T(" does not exist.  Could not remove directory."), silent);
+		ErrorMsgBox(TowxString(path) + _T(" does not exist.  Could not remove directory."), silent);
 		return false;
 	}
 
@@ -127,12 +131,10 @@ bool RmDir(wxString path, bool silent)
 				RmDir(path + filename, silent);
 			} else {
 				if(!wxRemoveFile(path + filename)) {
-						ErrorMsgBox(_T("Could not remove file \"") + path + filename + "\"", silent);
-					}
+					ErrorMsgBox(_T("Could not remove file \"") + TowxString(path) + TowxString(filename) + "\"", silent);
 				}
-		}
-		// get the next file name
-		while (dir->GetNext(&filename));
+			}
+		} while (dir->GetNext(&filename));
 	}
 
 	// Remove our directory object, so the OS will let go of it and
@@ -141,10 +143,10 @@ bool RmDir(wxString path, bool silent)
 
 	// now actually try to delete it
 	if (!wxFileName::Rmdir(path)) {
-	ErrorMsgBox("Could not remove directory " + path, silent);
-	return false;
+		ErrorMsgBox("Could not remove directory " + TowxString(path), silent);
+		return false;
 	} else {
-	return true;
+		return true;
 	}
 
 }
