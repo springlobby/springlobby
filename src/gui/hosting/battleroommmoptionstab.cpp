@@ -245,7 +245,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
             wxComboBox* tempchoice = new wxComboBox(this, LIST_START_ID+ctrl_count,
                                                     TowxString(current.cbx_choices[index]), wxDefaultPosition,
                                                     wxDefaultSize,
-                                                    LSL::Util::vectorToArrayString(current.cbx_choices),
+                                                    lslTowxArrayString(current.cbx_choices),
                                                     wxCB_READONLY, wxDefaultValidator);
             wxString tooltip = TowxString(current.description + std::string("\n"));
             for ( const auto itor : current.listitems)

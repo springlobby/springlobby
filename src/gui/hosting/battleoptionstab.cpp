@@ -24,6 +24,7 @@
 #include "ibattle.h"
 #include "gui/controls.h"
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 #include "iserver.h"
 #include <lslunitsync/optionswrapper.h>
 #include <lslunitsync/unitsync.h>
@@ -142,7 +143,7 @@ void BattleOptionsTab::ReloadRestrictions()
         return;
 
 	try {
-		wxArrayString items = LSL::Util::vectorToArrayString(LSL::usync().GetUnitsList(m_battle->GetHostModName()));
+		wxArrayString items = lslTowxArrayString(LSL::usync().GetUnitsList(m_battle->GetHostModName()));
 		m_allowed_list->Append(items);
 	} catch ( ... ) {}
 	std::map<std::string, int> units = m_battle->RestrictedUnits();

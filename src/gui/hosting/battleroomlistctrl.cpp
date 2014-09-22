@@ -199,7 +199,7 @@ void BattleroomListCtrl::SetBattle( IBattle* battle )
 
 	if ( (battle != NULL) && m_sides ) {
 		try {
-			const wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(battle->GetHostModName()));
+			const wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(battle->GetHostModName()));
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ ) {
 				wxMenuItem* side = new wxMenuItem( m_sides, BRLIST_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL );
 				m_sides->Append( side );
@@ -243,7 +243,7 @@ void BattleroomListCtrl::UpdateUser( User& user )
     if ( !user.BattleStatus().spectator )
  		icons().SetColourIcon(user.BattleStatus().colour);
 	try {
-		wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(m_battle->GetHostModName()));
+		wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(m_battle->GetHostModName()));
 		if  (user.BattleStatus().side < (long)sides.GetCount()) {
 			user.SetSideiconIndex( icons().GetSideIcon( m_battle->GetHostModName(), user.BattleStatus().side ) );
 		}

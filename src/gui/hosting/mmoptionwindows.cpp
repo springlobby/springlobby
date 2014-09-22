@@ -16,12 +16,14 @@
 #include <wx/textctrl.h>
 #include <wx/log.h>
 
-#include "gui/ui.h"
 #include <lslunitsync/optionswrapper.h>
 #include <lslunitsync/unitsync.h>
-#include "gui/controls.h"
 #include <lslutils/misc.h>
+
+#include "gui/ui.h"
+#include "gui/controls.h"
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 #include "gui/spinctl/spinctrl.h"
 
 SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiontag ):
@@ -84,7 +86,7 @@ SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiont
                 const int temp = int( opt.cbx_choices.size() - 1 );
                 const int index = LSL::Util::Clamp( opt.cur_choice_index, 0, temp );
                 m_combobox = new wxComboBox( this, wxID_ANY, TowxString(opt.cbx_choices[index]), wxDefaultPosition, wxDefaultSize,
-                                             LSL::Util::vectorToArrayString(opt.cbx_choices), wxCB_READONLY, wxDefaultValidator );
+                                             lslTowxArrayString(opt.cbx_choices), wxCB_READONLY, wxDefaultValidator );
                 std::string tooltip = opt.description + "\n";
                 for (const auto itor : opt.listitems)
 				{

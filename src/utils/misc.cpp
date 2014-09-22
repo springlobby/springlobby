@@ -4,15 +4,11 @@
 
 #include <lslutils/misc.h>
 #include "settings.h"
-#include <lslutils/conversion.h>
 #include "conversion.h"
 
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <wx/log.h>
-#include <wx/tokenzr.h>
-#include <wx/sstream.h>
-#include <wx/filename.h>
 #include <vector>
 
 double LevenshteinDistance(const wxString& _s, const wxString& _t)
@@ -44,9 +40,10 @@ double LevenshteinDistance(const wxString& _s, const wxString& _t)
 }
 
 #ifndef TEST
+#include "lslconversion.h"
 std::string GetBestMatch(const std::vector<std::string>& a, const std::string& s, double* distance  )
 {
-    auto arr = LSL::Util::vectorToArrayString(a);
+    auto arr = lslTowxArrayString(a);
     return STD_STRING(GetBestMatch(arr, TowxString(s), distance));
 }
 #endif

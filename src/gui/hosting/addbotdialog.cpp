@@ -21,6 +21,7 @@
 #include <lslunitsync/unitsync.h>
 #include "mmoptionwindows.h"
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 
 #include "gui/customdialogs.h"
 
@@ -184,7 +185,7 @@ void AddBotDialog::ReloadAIList()
 {
   try
   {
-     m_ais = LSL::Util::vectorToArrayString(LSL::usync().GetAIList(m_battle.GetHostModName()));
+     m_ais = lslTowxArrayString(LSL::usync().GetAIList(m_battle.GetHostModName()));
   } catch (...) {}
 
   m_ai->Clear();
@@ -227,7 +228,7 @@ void AddBotDialog::ShowAIInfo()
 {
   m_add_btn->Enable( m_ai->GetStringSelection() != wxEmptyString );
   m_ai_infos_lst->DeleteAllItems();
-  const wxArrayString info = LSL::Util::vectorToArrayString( LSL::usync().GetAIInfos( GetAIType() ));
+  const wxArrayString info = lslTowxArrayString( LSL::usync().GetAIInfos( GetAIType() ));
   int count = info.GetCount();
 	for ( int i = 0; i < count; i = i + 3 )
 	{

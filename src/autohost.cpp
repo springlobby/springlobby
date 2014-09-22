@@ -7,6 +7,7 @@
 #include "settings.h"
 #include "user.h"
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 #include "utils/misc.h"
 #include "utils/version.h"
 #include <lslunitsync/unitsync.h>
@@ -158,7 +159,7 @@ void AutoHost::OnSaidBattle( const wxString& /*unused*/, const wxString& msg )
 		if ( params.IsEmpty() ) DoAction( _T( "cannot switch to void mapname" ) );
 		else
 		{
-            const wxString mapname = GetBestMatch( LSL::Util::vectorToArrayString(LSL::usync().GetMapList()), params );
+            const wxString mapname = GetBestMatch( lslTowxArrayString(LSL::usync().GetMapList()), params );
 			try
 			{
 				m_battle.SetLocalMap(STD_STRING(mapname));

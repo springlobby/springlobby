@@ -14,6 +14,7 @@
 #include "uiutils.h"
 #include "gui/controls.h"
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 #include "settings.h"
 #include "log.h"
 
@@ -203,9 +204,9 @@ void MapSelectDialog::OnInit( wxInitDialogEvent& /*unused*/ )
     m_horizontal_direction_button->SetLabel( m_horizontal_direction ? _T(">") : _T("<") );
     m_vertical_direction_button->SetLabel( m_vertical_direction ? _T("ᴠ") : _T("ᴧ") );
 
-    m_maps = LSL::Util::vectorToArrayString(LSL::usync().GetMapList());
+    m_maps = lslTowxArrayString(LSL::usync().GetMapList());
     //true meaning replays, false meaning savegames
-    m_replays = LSL::Util::vectorToArrayString(LSL::usync().GetPlaybackList(true));
+    m_replays = lslTowxArrayString(LSL::usync().GetPlaybackList(true));
 
     const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
 	m_filter_popular->Enable( ui().IsConnected() );

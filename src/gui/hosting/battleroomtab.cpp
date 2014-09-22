@@ -1010,7 +1010,7 @@ void BattleRoomTab::ReloadMaplist()
 	if ( !m_battle ) return;
 	m_map_combo->Clear();
 
-    const wxArrayString maplist = LSL::Util::vectorToArrayString(LSL::usync().GetMapList());
+    const wxArrayString maplist = lslTowxArrayString(LSL::usync().GetMapList());
 	size_t nummaps = maplist.Count();
 	for ( size_t i = 0; i < nummaps; i++ ) m_map_combo->Insert( maplist[i], i );
 	m_map_combo->SetValue(TowxString(m_battle->GetHostMapName()));
@@ -1179,7 +1179,7 @@ void BattleRoomTab::RegenerateOptionsList()
 	m_side_sel->Clear();
 	if (m_battle != NULL) {
 		try {
-			const wxArrayString sides = LSL::Util::vectorToArrayString(LSL::usync().GetSides(m_battle->GetHostModName()));
+			const wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(m_battle->GetHostModName()));
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ ) {
 				m_side_sel->Append(sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
 			}

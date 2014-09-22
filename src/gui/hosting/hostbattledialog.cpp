@@ -35,6 +35,7 @@
 #include "gui/customdialogs.h"
 #include "utils/slpaths.h"
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 #include "gui/ui.h"
 #include "iserver.h"
 #include "serverselector.h"
@@ -300,7 +301,7 @@ void HostBattleDialog::ReloadModList()
 {
 	m_mod_pic->Clear();
 
-	wxArrayString modlist = LSL::Util::vectorToArrayString(LSL::usync().GetModList());
+	wxArrayString modlist = lslTowxArrayString(LSL::usync().GetModList());
 	wxString last = sett().GetLastHostMod();
 
 	size_t nummods = modlist.Count();

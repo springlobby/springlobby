@@ -171,7 +171,7 @@ void SinglePlayerTab::UpdateMinimap()
 void SinglePlayerTab::ReloadMaplist()
 {
 	m_map_pick->Clear();
-	m_map_pick->Append(LSL::Util::vectorToArrayString(LSL::usync().GetMapList()));
+	m_map_pick->Append(lslTowxArrayString(LSL::usync().GetMapList()));
 	m_map_pick->Insert( _("-- Select one --"), m_map_pick->GetCount() );
 	if (m_battle.GetHostMapName().empty() ) {
 		m_map_pick->SetSelection( m_map_pick->GetCount()-1 );
@@ -188,7 +188,7 @@ void SinglePlayerTab::ReloadMaplist()
 void SinglePlayerTab::ReloadModlist()
 {
 	m_mod_pick->Clear();
-	m_mod_pick->Append( LSL::Util::vectorToArrayString(LSL::usync().GetModList()));
+	m_mod_pick->Append( lslTowxArrayString(LSL::usync().GetModList()));
 	m_mod_pick->Insert( _("-- Select one --"), m_mod_pick->GetCount() );
 	if (m_battle.GetHostModName().empty() ) {
 		m_mod_pick->SetSelection( m_mod_pick->GetCount()-1 );
