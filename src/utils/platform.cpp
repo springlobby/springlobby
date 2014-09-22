@@ -140,15 +140,6 @@ CwdGuard::~CwdGuard()
     wxSetWorkingDirectory( m_old_cwd );
 }
 
-PwdGuard::PwdGuard(  )
-	: m_old_pwd( wxGetCwd() )
-{}
-
-PwdGuard::~PwdGuard()
-{
-	wxSetWorkingDirectory( m_old_pwd );
-}
-
 wxString IdentityString(const wxString& format, bool lowerCase )
 {
 	return wxFormat( format ) % TowxString(getSpringlobbyName(lowerCase));

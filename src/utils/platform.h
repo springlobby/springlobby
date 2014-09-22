@@ -26,16 +26,6 @@ class CwdGuard {
         ~CwdGuard();
 };
 
-//! remember pwd in ctor and reset in dtor
-class PwdGuard {
-	wxString m_old_pwd;
-	public:
-		PwdGuard( );
-		~PwdGuard();
-};
-
-
-
 /**
   \in Format string with a single %s
   \out wxString with %s replaced with GetAppName()
