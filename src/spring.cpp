@@ -134,7 +134,7 @@ bool Spring::LaunchEngine(const std::string& cmd, wxArrayString& params)
 	}
 
 	if (cfg().ReadBool(_T( "/Spring/Safemode" ))) {
-		params.push_back(_T("--safemode "));
+		params.push_back(_T("--safemode"));
 	}
 	wxLogMessage( _T("spring call params: %s"), TowxString(cmd).c_str() );
 	wxSetWorkingDirectory( TowxString(SlPaths::GetDataDir()) );
