@@ -48,6 +48,10 @@ InfoDialog::InfoDialog(wxWindow* parent )
 									 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL );
 
 	*out << TowxString(getSpringlobbyAgent()) + _T("\n");
+	*out << wxString::Format(_T("SpringLobby config file: %s (%s writable)\n"),
+							 TowxString(SlPaths::GetConfigPath()).c_str(),
+							 BtS(wxFileName::IsFileWritable(TowxString(SlPaths::GetConfigPath())), "", "not" ).c_str() );
+
 	for ( size_t i =0; i < paths.size(); ++i )
 	{
 		const wxString path = TowxString(paths[i].first);
@@ -77,10 +81,6 @@ InfoDialog::InfoDialog(wxWindow* parent )
 	*out << wxString::Format(_T("Current uikeys.txt: %s\n"), TowxString(SlPaths::GetUikeys()).c_str());
 
 	*out << wxString::Format(_T("Portable mode: %s\n"), BtS(SlPaths::IsPortableMode()).c_str() );
-
-	*out << wxString::Format(_T("SpringLobby config file: %s (%s writable)\n"),
-							 TowxString(SlPaths::GetConfigPath()).c_str(),
-							 BtS(wxFileName::IsFileWritable(TowxString(SlPaths::GetConfigPath())), "", "not" ).c_str() );
 
 	*out << _T("Compile Time ") + TowxString(getSpringCompileTimeDate()) + _T("\n");
 	*out << wxString::Format(_T("Compiled with wxWidgets %d.%d.%d.%d"),  wxMAJOR_VERSION, wxMINOR_VERSION, wxRELEASE_NUMBER, wxSUBRELEASE_NUMBER) + _T("\n");
