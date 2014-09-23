@@ -6,7 +6,7 @@
 
 #include <wx/intl.h>
 #include <wx/cmdline.h>
-#include <wx/fs_zip.h> //filesystem zip handler
+#include <wx/filename.h>
 #include <wx/msgdlg.h>
 
 #include "updaterapp.h"
@@ -36,7 +36,6 @@ bool UpdaterApp::OnInit()
 	if (!wxApp::OnInit())
 		return false;
 
-	wxFileSystem::AddHandler(new wxZipFSHandler);
 	if ( m_paramcount == 5) {
 		WaitForExit(m_pid);
 		wxArrayString params;
