@@ -85,7 +85,7 @@ void* SearchThread::Entry()
 	wxDELETE(httpStream);
 	wxCommandEvent notify(SEARCH_FINISHED,ContentDownloadDialog::ID_SEARCH_FINISHED);
 	notify.SetInt(0);
-	notify.SetString(res);
+	notify.SetString(res); //FIXME: wxWidgets strings in events are not threadsafe, this will crash, etc.etc
 	wxPostEvent(m_content_dialog,notify);
 //   std::cout << "Search finished" << std::endl;
 	return NULL;
@@ -161,7 +161,9 @@ void ContentDownloadDialog::OnSearch(wxCommandEvent& /*event*/)
 }
 void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 {
-	wxString json = event.GetString();
+	assert(wxThread::IsMain());
+
+	wxString json = event.GetString(); //FIXME: strings are not threadsafe in events, this is a bug / leads to crashes / mem-corruption, etc.ect.!!!!
 //   std::cout << json.ToAscii().data() << std::endl;
 
 	wxJSONReader reader;
