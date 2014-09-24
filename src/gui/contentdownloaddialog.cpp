@@ -189,7 +189,13 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 	for ( unsigned i = 0; i < a->GetCount(); i++ ) {
 		wxJSONValue val = a->Item(i);
 		wxString category = val[_("category")].AsString();
-		int size = val[_("size")].AsInt();
+
+		long size = 0;
+		if (val[_("size")].IsInt()) {
+			size = val[_("size")].AsInt();
+		} else if (val[_("size")].IsLong()){
+			size = val[_("size")].AsLong();
+		}
 		wxString name = val[_("springname")].AsString();
 //     std::cout << category.ToAscii().data() << "," << name.ToAscii().data() << "," << size << std::endl;
 		ContentSearchResult* res = new ContentSearchResult();
