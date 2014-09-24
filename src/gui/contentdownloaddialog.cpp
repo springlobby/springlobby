@@ -170,7 +170,7 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 	m_search_thread = NULL;
 	m_searchbutton->Enable(true);
 	if ( errors ) {
-		wxMessageBox(_("Failed to parse search results"),_("Error"));
+		wxMessageBox(wxFormat("Failed to parse search results:\n%s") % json.c_str() ,_("Error"));
 		return;
 	}
 	const wxJSONInternalArray * a = root.AsArray();
