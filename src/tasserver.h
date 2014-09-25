@@ -141,6 +141,7 @@ public:
 	void OnConnected(Socket& sock );
 	void OnDisconnected(Socket& sock );
 	void OnDataReceived(Socket& sock );
+	void OnError(const wxString& err);
 
 	bool IsPasswordHash( const wxString& pass )  const;
 	wxString GetPasswordHash( const wxString& pass ) const;

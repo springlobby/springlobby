@@ -1935,6 +1935,13 @@ void TASServer::OnDataReceived( Socket& sock )
 		returnpos = m_buffer.Find( _T("\n") );
 	}
 }
+void TASServer::OnError(const wxString& err)
+{
+    wxLogError(err);
+	if (m_se != NULL) {
+		m_se->OnServerMessage(err);
+	}
+}
 
 
 //! @brief Send udp ping.

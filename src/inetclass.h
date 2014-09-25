@@ -16,6 +16,7 @@ public:
 	virtual void OnConnected( Socket& /*sock*/ ) {}
 	virtual void OnDisconnected( Socket& /*sock*/ ) {}
 	virtual void OnDataReceived( Socket& /*sock*/ ) {}
+	virtual void OnError(const wxString& /*error*/) {}
 	virtual void Ping() {}
 };
 

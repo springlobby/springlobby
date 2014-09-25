@@ -30,7 +30,6 @@ lsl/networking/socket.cpp
 #include "socket.h"
 #include "iserver.h"
 #include "utils/conversion.h"
-#include "log.h"
 
 #ifdef __WXMSW__
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
@@ -145,24 +144,21 @@ END_EVENT_TABLE()
 
 void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 {
-  Socket* sock = (Socket*)event.GetClientData();
-  try
-  {
-  ASSERT_LOGIC( sock != 0, _T("sock = 0") );
-  } catch (...) { return; }
+	Socket* sock = (Socket*)event.GetClientData();
+	if (sock == NULL) {
+		m_net_class.OnError(_T("sock = 0"));
+		return;
+	}
 
-  if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
-    m_net_class.OnDataReceived( *sock );
-  } else if ( event.GetSocketEvent() == wxSOCKET_LOST ) {
-    m_net_class.OnDisconnected( *sock );
-  } else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
-    m_net_class.OnConnected( *sock );
-  } else {
-    try
-    {
-    ASSERT_LOGIC( false, _T("Unknown socket event."));
-    } catch (...) { return; };
-  }
+	if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
+		m_net_class.OnDataReceived( *sock );
+	} else if ( event.GetSocketEvent() == wxSOCKET_LOST ) {
+		m_net_class.OnDisconnected( *sock );
+	} else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
+		m_net_class.OnConnected( *sock );
+	} else {
+		m_net_class.OnError(_T("Unknown socket event."));
+	}
 }
 
 
@@ -221,19 +217,25 @@ wxSocketClient* Socket::_CreateSocket()
 //! @brief Connect to remote host.
 void Socket::Connect( const wxString& addr, const int port )
 {
-  LOCK_SOCKET;
+	LOCK_SOCKET;
 
-  wxIPV4address wxaddr;
-  m_connecting = true;
-  m_buffer = "";
+	wxIPV4address wxaddr;
+	m_connecting = true;
+	m_buffer = "";
 
-  wxaddr.Hostname( addr );
-  wxaddr.Service( port );
+	if (!wxaddr.Hostname( addr )) {
+		m_net_class.OnError(_T("Invalid Hostname"));
+		return;
+	}
+	if (!wxaddr.Service( port )) {
+		m_net_class.OnError(_T("Invalid Port"));
+		return;
+	}
 
-  if ( m_sock != 0 ) m_sock->Destroy();
-  m_sock = _CreateSocket();
-  m_sock->Connect( wxaddr, m_wait_on_connect );
-  m_sock->SetTimeout( 40 );
+	if ( m_sock != 0 ) m_sock->Destroy();
+	m_sock = _CreateSocket();
+	m_sock->Connect( wxaddr, m_wait_on_connect );
+	m_sock->SetTimeout( 40 );
 }
 
 void Socket::SetTimeout( const int seconds )
