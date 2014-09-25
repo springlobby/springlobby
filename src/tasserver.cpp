@@ -367,7 +367,7 @@ const User& TASServer::GetMe() const
 void TASServer::Login()
 {
 	slLogDebugFunc("");
-	const wxString pass = GetPasswordHash( GetUserName() );
+	const wxString pass = GetPasswordHash( GetPassword() );
 	const wxString protocol = TowxString( m_crc.GetCRC() );
 	wxString localaddr = m_sock->GetLocalAddress();
 	if ( localaddr.IsEmpty() ) localaddr = _T("*");
