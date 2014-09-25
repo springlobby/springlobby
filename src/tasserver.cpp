@@ -322,11 +322,17 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
 	iNetClass temp;
 	Socket tempsocket( temp, true, true );
 	tempsocket.Connect( addr, port );
-	if ( tempsocket.State() != SS_Open ) return false;
+	if ( tempsocket.State() != SS_Open ) {
+		m_se->RegistrationDenied(_T("Couldn't connect"));
+		return false;
+	}
 
 	wxString data = tempsocket.Receive().BeforeLast(_T('\n'));
 	if ( data.Find( _T("\r") ) != wxNOT_FOUND ) data = data.BeforeLast(_T('\r'));
-	if ( GetWordParam( data ) != _T("TASServer") ) return false;
+	if ( GetWordParam( data ) != _T("TASServer") ) {
+		m_se->RegistrationDenied(_T("Invalid response from server received"));
+		return false;
+	}
 
 	tempsocket.Send( _T("REGISTER ") + nick + _T(" ") + GetPasswordHash( password ) + _T("\n") );
 
@@ -335,16 +341,20 @@ bool TASServer::Register( const wxString& addr, const int port, const wxString& 
 	if ( data.Find( _T("\r") ) != wxNOT_FOUND ) data = data.BeforeLast(_T('\r'));
 	if ( data.IsEmpty() ) {
 		reason = _("Connection timed out");
+		m_se->RegistrationDenied(reason);
 		return false;
 	}
 	wxString cmd = GetWordParam( data );
 	if ( cmd == _T("REGISTRATIONACCEPTED")) {
+		m_se->RegistrationAccepted();
 		return true;
 	} else if ( cmd == _T("REGISTRATIONDENIED") ) {
+		m_se->RegistrationDenied(data);
 		reason = data;
 		return false;
 	}
 	reason = _("Unknown answer from server");
+	m_se->RegistrationDenied(reason);
 	return false;
 }
 

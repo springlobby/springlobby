@@ -118,6 +118,8 @@ public:
 
 	void OnRing( const wxString& from );
 	void OnQuit(wxCommandEvent& data);
+	void OnRegistrationAccepted();
+	void OnRegistrationDenied(const wxString& reason);
 
 	//! ask to download missing map, return true if download attempted
 	bool OnPresetRequiringMap( const wxString& mapname );

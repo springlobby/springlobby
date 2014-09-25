@@ -982,3 +982,13 @@ void ServerEvents::OnForceJoinBattle(int battleid, const wxString &scriptPW)
     UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
             UiEvents::StatusData( _("Automatically moved to new battle"), 1 ) );
 }
+
+void ServerEvents::RegistrationAccepted()
+{
+	ui().OnRegistrationAccepted();
+}
+
+void ServerEvents::RegistrationDenied(const wxString& reason)
+{
+	ui().OnRegistrationDenied(reason);
+}

@@ -1124,3 +1124,15 @@ void Ui::Notify()
 		Reconnect();
 	}
 }
+
+void Ui::OnRegistrationAccepted()
+{
+	//TODO: implement this
+	slLogDebugFunc("");
+}
+
+void Ui::OnRegistrationDenied(const wxString& reason)
+{
+	//TODO: implement this
+	wxLogDebug(reason);
+}
