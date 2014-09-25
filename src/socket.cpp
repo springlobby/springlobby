@@ -48,8 +48,6 @@ lsl/networking/socket.cpp
 
 bool GetMac(std::vector<unsigned char>& mac)
 {
-	wxString handle;
-
     IP_ADAPTER_INFO AdapterInfo[16];       // Allocate information for 16 cards
     DWORD dwBufLen = sizeof(AdapterInfo);  // Save memory size of buffer
 
@@ -273,7 +271,7 @@ bool Socket::_Send( const wxString& data )
 {
   if ( !m_sock )
   {
-    wxLogError( _T("Socket NULL") );
+    m_net_class.OnError( _T("Socket NULL") );
     return false;
   }
 
@@ -284,7 +282,7 @@ bool Socket::_Send( const wxString& data )
   	 int max = m_rate - m_sent;
   	 if ( crop > 0 ) crop = max;
   }
-  std::string send = m_buffer.substr( 0, crop );
+	std::string send = m_buffer.substr( 0, crop );
 	//wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
 	m_sock->Write( send.c_str(), send.length() );
 	if ( !m_sock->Error() )
@@ -341,7 +339,7 @@ wxString Socket::Receive()
 {
 	wxString ret;
 	if ( m_sock == 0 ) {
-		wxLogError( _T("Socket NULL") );
+		m_net_class.OnError( _T("Socket NULL") );
 		return ret;
 	}
 
