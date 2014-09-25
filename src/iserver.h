@@ -62,7 +62,7 @@ class IServer : public iNetClass, public SL::NonCopyable
 
     virtual bool ExecuteSayCommand( const wxString& /*cmd*/ ) {return true;};
 
-    virtual bool Register( const wxString& /*addr*/, const int /*port*/, const wxString& /*nick*/, const wxString& /*password*/, wxString& /*reason*/ ) {return true;};
+    virtual void Register(const wxString& /*servername*/, const wxString& /*host*/, const int /*port*/, const wxString& /*user*/, const wxString& /*pass*/) {};
     virtual void AcceptAgreement() {};
 
     virtual void Connect( const wxString& /*servername*/, const wxString& /*addr*/, const int /*port*/ ) {};
@@ -136,7 +136,9 @@ class IServer : public iNetClass, public SL::NonCopyable
     virtual void SendMyUserStatus() {};
 
     virtual void SetUsername( const wxString& username ) { m_user = username; }
+	virtual const wxString& GetUserName() const {return m_user; }
     virtual void SetPassword( const wxString& password ) { m_pass = password; }
+	virtual const wxString& GetPassword() const {return m_pass; }
     virtual bool IsPasswordHash( const wxString& /*pass*/ ) const {return true;};
     virtual wxString GetPasswordHash( const wxString& /*pass*/ ) const {return wxEmptyString;};
 
@@ -187,11 +189,11 @@ class IServer : public iNetClass, public SL::NonCopyable
 protected:
 	Socket* m_sock;
     wxString m_server_name;
-    wxString m_user;
-    wxString m_pass;
     UserList m_users;
 
 private:
+    wxString m_user;
+    wxString m_pass;
 
     bool m_pass_hash;
     wxString m_required_spring_ver;

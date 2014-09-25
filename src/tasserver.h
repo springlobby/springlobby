@@ -44,7 +44,7 @@ public:
 	// Overloaded functions from Server
 	bool ExecuteSayCommand( const wxString& cmd );
 
-	bool Register( const wxString& addr, const int port, const wxString& nick, const wxString& password,wxString& reason );
+	void Register( const wxString& servername, const wxString& host, const int port, const wxString& nick, const wxString& password);
 	void AcceptAgreement();
 
 	void Connect( const wxString& servername, const wxString& addr, const int port );

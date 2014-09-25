@@ -203,6 +203,11 @@ void Ui::Disconnect()
 //! @brief Opens the accutial connection to a server.
 void Ui::DoConnect( const wxString& servername, const wxString& username, const wxString& password )
 {
+	if ( (m_serv != NULL) && (m_serv->GetServerName() == servername) &&  IsConnected() &&
+			(m_serv->GetUserName() == username) && (m_serv->GetPassword() == password) ) {
+		//nothing changed & already connected, do nothing
+		return;
+	}
 	if ( servername != m_last_used_backup_server ) { // do not save the server as default if it's a backup one
 		sett().SetDefaultServer( servername );
 	} else {
@@ -258,28 +263,13 @@ void Ui::ReopenServerTab()
 	}
 }
 
-bool Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password,wxString& reason)
+void Ui::DoRegister( const wxString& servername, const wxString& username, const wxString& password)
 {
 	if ( !sett().ServerExists( servername ) ) {
-		ASSERT_LOGIC( false, _T("Server does not exist in settings") );
-		return false;
+		OnRegistrationDenied(_T("Server does not exist in settings"));
+		return;
 	}
-
-	const wxString host = sett().GetServerHost( servername );
-	const int port = sett().GetServerPort( servername );
-	bool success = m_serv->Register( host, port, username, password,reason );
-	if ( success ) {
-		customMessageBox(SL_MAIN_ICON, _("Registration successful,\nyou should now be able to login."), _("Registration successful"), wxOK );
-	} else {
-		wxLogWarning( _T("registration failed, reason: %s"), reason.c_str()  );
-		if ( reason == _("Connection timed out") || reason.IsEmpty() ) {
-			ShowConnectWindow();
-		} else {
-			customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\n")+ reason , _("Registration failed."), wxOK );
-		}
-	}
-	return success;
-
+	m_serv->Register(servername, sett().GetServerHost(servername), sett().GetServerPort(servername), username, password);
 }
 
 bool Ui::IsConnected() const
@@ -1125,14 +1115,18 @@ void Ui::Notify()
 	}
 }
 
-void Ui::OnRegistrationAccepted()
+void Ui::OnRegistrationAccepted(const wxString& user, const wxString& pass)
 {
-	//TODO: implement this
-	slLogDebugFunc("");
+	if ( m_con_win == 0 ) {
+		m_con_win = new ConnectWindow( m_main_win, *this );
+	}
+	m_con_win->OnRegistrationAccepted(user, pass);
 }
 
 void Ui::OnRegistrationDenied(const wxString& reason)
 {
-	//TODO: implement this
-	wxLogDebug(reason);
+	if ( m_con_win == 0 ) {
+		m_con_win = new ConnectWindow( m_main_win, *this );
+	}
+	m_con_win->OnRegistrationDenied(reason);
 }

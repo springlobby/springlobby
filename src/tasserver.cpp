@@ -283,7 +283,7 @@ bool TASServer::ExecuteSayCommand( const wxString& cmd )
 void TASServer::Connect( const wxString& servername ,const wxString& addr, const int port )
 {
 	m_server_name = servername;
-	m_addr=addr;
+	m_addr = addr;
 	m_buffer = wxEmptyString;
 	m_sock->Connect( addr, port );
 	m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
@@ -316,46 +316,12 @@ bool TASServer::IsConnected()
 }
 
 
-bool TASServer::Register( const wxString& addr, const int port, const wxString& nick, const wxString& password, wxString& reason )
+void TASServer::Register(const wxString& servername, const wxString& host, const int port,const wxString& nick, const wxString& password)
 {
-	slLogDebugFunc("");
-	iNetClass temp;
-	Socket tempsocket( temp, true, true );
-	tempsocket.Connect( addr, port );
-	if ( tempsocket.State() != SS_Open ) {
-		m_se->RegistrationDenied(_T("Couldn't connect"));
-		return false;
-	}
-
-	wxString data = tempsocket.Receive().BeforeLast(_T('\n'));
-	if ( data.Find( _T("\r") ) != wxNOT_FOUND ) data = data.BeforeLast(_T('\r'));
-	if ( GetWordParam( data ) != _T("TASServer") ) {
-		m_se->RegistrationDenied(_T("Invalid response from server received"));
-		return false;
-	}
-
-	tempsocket.Send( _T("REGISTER ") + nick + _T(" ") + GetPasswordHash( password ) + _T("\n") );
-
-	data = tempsocket.Receive().BeforeLast(_T('\n'));
-	tempsocket.Disconnect();
-	if ( data.Find( _T("\r") ) != wxNOT_FOUND ) data = data.BeforeLast(_T('\r'));
-	if ( data.IsEmpty() ) {
-		reason = _("Connection timed out");
-		m_se->RegistrationDenied(reason);
-		return false;
-	}
-	wxString cmd = GetWordParam( data );
-	if ( cmd == _T("REGISTRATIONACCEPTED")) {
-		m_se->RegistrationAccepted();
-		return true;
-	} else if ( cmd == _T("REGISTRATIONDENIED") ) {
-		m_se->RegistrationDenied(data);
-		reason = data;
-		return false;
-	}
-	reason = _("Unknown answer from server");
-	m_se->RegistrationDenied(reason);
-	return false;
+	SetUsername(nick);
+	SetPassword(password);
+	Connect(servername, host, port);
+	SendCmd(_T("REGISTER"), nick + _T(" ") + GetPasswordHash( password ) );
 }
 
 
@@ -391,23 +357,23 @@ wxString TASServer::GetPasswordHash( const wxString& pass ) const
 
 User& TASServer::GetMe()
 {
-	return GetUser( m_user );
+	return GetUser( GetUserName() );
 }
 const User& TASServer::GetMe() const
 {
-	return GetUser( m_user );
+	return GetUser( GetUserName() );
 }
 
 void TASServer::Login()
 {
 	slLogDebugFunc("");
-	const wxString pass = GetPasswordHash( m_pass );
+	const wxString pass = GetPasswordHash( GetUserName() );
 	const wxString protocol = TowxString( m_crc.GetCRC() );
 	wxString localaddr = m_sock->GetLocalAddress();
 	if ( localaddr.IsEmpty() ) localaddr = _T("*");
 	m_id_transmission = false;
 	wxFormat login_cmd( _T("%s %s 0 %s %s\t%s\ta m sp cl p") );
-	SendCmd ( _T("LOGIN"), (login_cmd % m_user % pass % localaddr % TowxString(getSpringlobbyAgent()) % protocol).str() );
+	SendCmd ( _T("LOGIN"), (login_cmd % GetUserName() % pass % localaddr % TowxString(getSpringlobbyAgent()) % protocol).str() );
 	m_id_transmission = true;
 }
 
@@ -495,7 +461,7 @@ void TASServer::Notify()
 			IBattle *battle=GetCurrentBattle();
 			if ((battle) &&
 				( battle->GetNatType() == NAT_Hole_punching || ( battle->GetNatType() == NAT_Fixed_source_ports ) ) && !battle->GetInGame() ) {
-				UdpPingTheServer(m_user);
+				UdpPingTheServer(GetUserName());
 				if ( battle->IsFounderMe() ) {
 					UdpPingAllClients();
 				}
@@ -560,7 +526,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 	} else if ( cmd == _T("ACCEPTED") ) {
 		if ( m_online ) return; // in case is the server sends WTF
 		m_online = true;
-		m_user = params;
+		SetUsername(params);
 		m_se->OnLogin( );
 	} else if ( cmd == _T("MOTD") ) {
 		m_se->OnMotd( params );
@@ -625,7 +591,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		m_se->OnLoginInfoComplete();
 	} else if ( cmd == _T("REMOVEUSER") ) {
 		nick = GetWordParam( params );
-		if ( nick == m_user ) return; // to prevent peet doing nasty stuff to you, watch your back!
+		if ( nick == GetUserName() ) return; // to prevent peet doing nasty stuff to you, watch your back!
 		m_se->OnUserQuit( nick );
 	} else if ( cmd == _T("BATTLECLOSED") ) {
 		const int id = GetIntParam( params );
@@ -916,7 +882,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		if ( address.IsEmpty() ) return;
 		if ( u_port  == 0 ) u_port  = DEFSETT_DEFAULT_SERVER_PORT;
 		m_redirecting = true;
-		m_se->OnRedirect( address, u_port , m_user, m_pass );
+		m_se->OnRedirect( address, u_port , GetUserName(), GetPassword() );
 	} else if ( cmd == _T("MUTELISTBEGIN") ) {
 		m_current_chan_name_mutelist = GetWordParam( params );
 		m_se->OnMutelistBegin( m_current_chan_name_mutelist );
@@ -932,6 +898,10 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		const int battleID = GetIntParam( params );
 		const wxString scriptpw = GetWordParam( params );
 		m_se->OnForceJoinBattle( battleID, scriptpw );
+	} else if ( cmd == _T("REGISTRATIONACCEPTED")) {
+		m_se->RegistrationAccepted(GetUserName(), GetPassword());
+	} else if ( cmd == _T("REGISTRATIONDENIED") ) {
+		m_se->RegistrationDenied(GetWordParam( params ));
 	} else {
 		wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );
 		m_se->OnUnknownCommand( cmd, params );
@@ -1239,7 +1209,7 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 		}
 	}
 
-	if (bo.nattype>0)UdpPingTheServer(m_user);
+	if (bo.nattype>0)UdpPingTheServer(GetUserName());
 
 	// OPENBATTLE type natType password port maphash {map} {title} {modname}
 }
@@ -1266,7 +1236,7 @@ void TASServer::JoinBattle( const int& battleid, const wxString& password )
 				// m_do_finalize_join_battle must be set to true after setting time, not before.
 				m_do_finalize_join_battle=true;
 				for (int n=0; n<5; ++n) { // do 5 udp pings with tiny interval
-					UdpPingTheServer( m_user );
+					UdpPingTheServer( GetUserName() );
 					// sleep(0);// sleep until end of timeslice.
 				}
 				m_last_udp_ping = 0;// set time again
@@ -1562,7 +1532,7 @@ void TASServer::StartHostedBattle()
 	IBattle *battle=GetCurrentBattle();
 	if (battle) {
 		if ( ( battle->GetNatType() == NAT_Hole_punching ) || ( battle->GetNatType() == NAT_Fixed_source_ports ) ) {
-			UdpPingTheServer(m_user);
+			UdpPingTheServer(GetUserName());
 			for (int i=0; i<5; ++i)UdpPingAllClients();
 		}
 	}

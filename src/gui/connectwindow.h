@@ -36,6 +36,9 @@ public:
 	void OnCancel(wxCommandEvent& event);
 	void OnQuit( wxCommandEvent& data );
 
+	void OnRegistrationAccepted(const wxString& user, const wxString& pass);
+	void OnRegistrationDenied(const wxString& reason);
+
 private:
 	// ConnectWindow variables
 

@@ -277,7 +277,6 @@ void ConnectWindow::OnOk(wxCommandEvent& )
 
 		m_ui.DoConnect( HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue() );
 	} else {
-		wxString reason;
 		if ( !IsValidNickname( m_regnick_text->GetValue() ) ) {
 			customMessageBox(SL_MAIN_ICON,_("The entered nickname contains invalid characters like )? &%.\n Please try again") , _("Invalid nickname"), wxOK );
 			Show();
@@ -285,15 +284,9 @@ void ConnectWindow::OnOk(wxCommandEvent& )
 			Show();
 			wxLogWarning( _T("registration failed, reason: password/confirmation mismatch")  );
 			customMessageBox(SL_MAIN_ICON,_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty passwort)") , _("Registration failed."), wxOK );
-		} else if ( m_ui.DoRegister( HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue(),reason ) ) {
-			m_tabs->SetSelection( 0 );
-			m_nick_text->SetValue(m_regnick_text->GetValue());
-			m_pass_text->SetValue(m_regpass1_text->GetValue());
-			Show();
 		} else {
-			Show();
+			m_ui.DoRegister(HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue());
 		}
-
 	}
 }
 
@@ -304,7 +297,19 @@ void ConnectWindow::OnCancel(wxCommandEvent& )
 
 void ConnectWindow::OnQuit(wxCommandEvent& /*data*/)
 {
-	EndModal(wxCANCEL);
+	Close();
 }
 
 
+void ConnectWindow::OnRegistrationAccepted(const wxString& user, const wxString& pass)
+{
+	Show();
+	m_tabs->SetSelection( 0 );
+	m_nick_text->SetValue(user);
+	m_pass_text->SetValue(pass);
+}
+
+void ConnectWindow::OnRegistrationDenied(const wxString& reason)
+{
+	Show();
+}

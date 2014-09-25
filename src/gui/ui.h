@@ -51,7 +51,7 @@ public:
 
 	wxString GetNextServer();
 
-	bool DoRegister( const wxString& servername, const wxString& username, const wxString& password, wxString& reason );
+	void DoRegister( const wxString& servername, const wxString& username, const wxString& password);
 
 	bool IsConnected() const;
 	void JoinChannel( const wxString& name, const wxString& password );
@@ -118,7 +118,7 @@ public:
 
 	void OnRing( const wxString& from );
 	void OnQuit(wxCommandEvent& data);
-	void OnRegistrationAccepted();
+	void OnRegistrationAccepted(const wxString& user, const wxString& pass);
 	void OnRegistrationDenied(const wxString& reason);
 
 	//! ask to download missing map, return true if download attempted
