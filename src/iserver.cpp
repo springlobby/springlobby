@@ -20,7 +20,7 @@ IServer::IServer():
 battles_iter(new BattleList_Iter(&m_battles)),
 m_pass_hash(false)
 {
-	m_sock = new Socket( *this, false, false );
+	m_sock = new Socket( *this);
 }
 
 IServer::~IServer()

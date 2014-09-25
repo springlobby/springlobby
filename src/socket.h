@@ -52,7 +52,7 @@ class Socket
 {
   public:
 
-    Socket( iNetClass& netclass, bool wait_on_connect = false, bool blocking = false );
+    Socket( iNetClass& netclass);
     ~Socket();
 
     // Socket interface
@@ -90,8 +90,6 @@ private:
 	std::string m_handle;
 
     bool m_connecting;
-    bool m_wait_on_connect;
-    bool m_blocking;
     iNetClass& m_net_class;
 
     unsigned int m_udp_private_port;

@@ -161,13 +161,11 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 
 
 //! @brief Constructor
-Socket::Socket( iNetClass& netclass, bool wait_on_connect, bool blocking  ) :
+Socket::Socket( iNetClass& netclass):
     m_sock( NULL ),
     m_events( NULL ),
     m_handle( _GetHandle() ),
     m_connecting( false ),
-    m_wait_on_connect( wait_on_connect ),
-    m_blocking(blocking),
     m_net_class(netclass),
 	m_udp_private_port(0),
     m_rate(-1),
@@ -191,24 +189,13 @@ wxSocketClient* Socket::_CreateSocket()
     wxSocketClient* sock = new wxSocketClient();
 
     sock->SetClientData( (void*)this );
-    if ( !m_blocking )
-    {
-        if ( m_events == 0 )
-            m_events = new SocketEvents( m_net_class );
-        sock->SetFlags( wxSOCKET_NOWAIT );
+	if ( m_events == 0 )
+		m_events = new SocketEvents( m_net_class );
+	sock->SetFlags( wxSOCKET_NOWAIT );
 
-        sock->SetEventHandler(*m_events, SOCKET_ID);
-        sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
-        sock->Notify(true);
-    }
-    else
-    {
-		// blocking mode _must_ block, and end blocking as soon as data arrives otherwise other blocking but no gui block
-		// mode will wait for timeout before unlocking
-		sock->SetFlags( wxSOCKET_BLOCK );
-		delete m_events;
-		m_events = 0;
-    }
+	sock->SetEventHandler(*m_events, SOCKET_ID);
+	sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
+	sock->Notify(true);
     return sock;
 }
 
@@ -232,7 +219,7 @@ void Socket::Connect( const wxString& addr, const int port )
 
 	if ( m_sock != 0 ) m_sock->Destroy();
 	m_sock = _CreateSocket();
-	m_sock->Connect( wxaddr, m_wait_on_connect );
+	m_sock->Connect( wxaddr, false);
 	m_sock->SetTimeout( 40 );
 }
 
