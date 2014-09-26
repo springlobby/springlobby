@@ -234,6 +234,7 @@ void ConnectWindow::OnServerChange( wxCommandEvent&  )
 void ConnectWindow::CleanHide()
 {
 	m_reginfo_text->SetLabel(wxEmptyString);
+	m_note_lbl->SetLabel(wxEmptyString);
 	Hide();
 }
 
