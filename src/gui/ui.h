@@ -120,6 +120,7 @@ public:
 	void OnQuit(wxCommandEvent& data);
 	void OnRegistrationAccepted(const wxString& user, const wxString& pass);
 	void OnRegistrationDenied(const wxString& reason);
+	void OnLoginDenied(const wxString& reason);
 
 	//! ask to download missing map, return true if download attempted
 	bool OnPresetRequiringMap( const wxString& mapname );

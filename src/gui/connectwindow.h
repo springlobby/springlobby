@@ -38,8 +38,10 @@ public:
 
 	void OnRegistrationAccepted(const wxString& user, const wxString& pass);
 	void OnRegistrationDenied(const wxString& reason);
+	void OnLoginDenied(const wxString& reason);
 
 private:
+	void CleanHide();
 	// ConnectWindow variables
 
 	wxNotebook* m_tabs;             //!< Notebook containing the login and register tabs
@@ -80,6 +82,7 @@ private:
 	wxTextCtrl* m_regpass1_text;
 	wxStaticText* m_regpass2_lbl;
 	wxTextCtrl* m_regpass2_text;
+	wxStaticText* m_reginfo_text;
 
 	Ui& m_ui;
 

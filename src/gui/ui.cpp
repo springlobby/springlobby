@@ -208,28 +208,11 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 		//nothing changed & already connected, do nothing
 		return;
 	}
-	if ( servername != m_last_used_backup_server ) { // do not save the server as default if it's a backup one
-		sett().SetDefaultServer( servername );
-	} else {
-		m_last_used_backup_server = wxEmptyString;
-	}
-
-	if ( !sett().ServerExists( servername ) ) {
-		ASSERT_LOGIC( false, _T("Server does not exist in settings") );
-		return;
-	}
 
 	Disconnect();
 
 	m_serv->SetUsername( username );
 	m_serv->SetPassword( password );
-
-	if ( sett().GetServerAccountSavePass( servername ) ) {
-		if ( m_serv->IsPasswordHash(password) ) sett().SetServerAccountPass( servername, password );
-		else sett().SetServerAccountPass( servername, m_serv->GetPasswordHash( password ) );
-	} else {
-		sett().SetServerAccountPass( servername, wxEmptyString );
-	}
 
 	const wxString host = sett().GetServerHost( servername );
 	const int port = sett().GetServerPort( servername );
@@ -1129,4 +1112,14 @@ void Ui::OnRegistrationDenied(const wxString& reason)
 		m_con_win = new ConnectWindow( m_main_win, *this );
 	}
 	m_con_win->OnRegistrationDenied(reason);
+	Disconnect();
+}
+
+void Ui::OnLoginDenied(const wxString& reason)
+{
+	if ( m_con_win == 0 ) {
+		m_con_win = new ConnectWindow( m_main_win, *this );
+	}
+	m_con_win->OnLoginDenied(reason);
+	Disconnect();
 }

@@ -115,8 +115,9 @@ class ServerEvents : public IServerEvents
     void OnScriptEnd( int battleid );
 
     void OnForceJoinBattle( int battleid, const wxString& line );
-	void RegistrationAccepted(const wxString& /*user*/, const wxString& /*pass*/);
+	void RegistrationAccepted(const wxString& user, const wxString& pass);
 	void RegistrationDenied(const wxString& reason);
+	void OnLoginDenied(const wxString& reason);
 private:
     IServer& m_serv;
     std::map<wxString,MessageSpamCheck> m_spam_check;

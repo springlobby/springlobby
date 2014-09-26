@@ -139,6 +139,7 @@ class IServerEvents
 	virtual void OnForceJoinBattle( int battleid, const wxString& line ) = 0;
 	virtual void RegistrationAccepted(const wxString& /*user*/, const wxString& /*pass*/) = 0;
 	virtual void RegistrationDenied(const wxString& /*reason*/) = 0;
+	virtual void OnLoginDenied(const wxString& /*reason*/) = 0;
 };
 
 #endif // ISERVEREVENTS_H

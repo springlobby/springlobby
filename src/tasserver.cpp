@@ -826,7 +826,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 	} else if ( cmd == _T("DENIED") ) {
 		if ( m_online ) return;
 		m_last_denied = msg = GetSentenceParam( params );
-		m_se->OnServerMessage( msg );
+		m_se->OnLoginDenied( msg );
 		Disconnect();
 		//Command: "DENIED" params: "Already logged in".
 	} else if ( cmd == _T("HOSTPORT") ) {
@@ -901,7 +901,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 	} else if ( cmd == _T("REGISTRATIONACCEPTED")) {
 		m_se->RegistrationAccepted(GetUserName(), GetPassword());
 	} else if ( cmd == _T("REGISTRATIONDENIED") ) {
-		m_se->RegistrationDenied(GetWordParam( params ));
+		m_se->RegistrationDenied(params);
 	} else {
 		wxLogMessage( _T("??? Cmd: %s params: %s"), cmd.c_str(), params.c_str() );
 		m_se->OnUnknownCommand( cmd, params );

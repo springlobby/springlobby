@@ -992,3 +992,8 @@ void ServerEvents::RegistrationDenied(const wxString& reason)
 {
 	ui().OnRegistrationDenied(reason);
 }
+
+void ServerEvents::OnLoginDenied(const wxString& reason)
+{
+	ui().OnLoginDenied(reason);
+}
