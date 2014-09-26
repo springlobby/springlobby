@@ -179,6 +179,7 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 	m_register_sizer->Add( m_regpass1_sizer1, 0, wxEXPAND, 4 );
 
 	m_reginfo_text = new wxStaticText( m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+
 	m_register_sizer->Add( m_reginfo_text, 1, wxALL, 4 );
 
 	m_register_tab->SetSizer( m_register_sizer );
@@ -320,6 +321,7 @@ void ConnectWindow::OnRegistrationDenied(const wxString& reason)
 {
 	wxLogError(reason);
 	m_reginfo_text->SetLabel(reason);
+	m_reginfo_text->Wrap(400);
 	m_tabs->SetSelection(1);
 	Show();
 }
@@ -328,6 +330,7 @@ void ConnectWindow::OnLoginDenied(const wxString& reason)
 {
 	wxLogError(reason);
 	m_note_lbl->SetLabel(reason);
+	m_note_lbl->Wrap(400);
 	m_tabs->SetSelection(0);
 	Show();
 }
