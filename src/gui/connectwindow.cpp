@@ -322,6 +322,7 @@ void ConnectWindow::OnRegistrationDenied(const wxString& reason)
 {
 	wxLogError(reason);
 	m_reginfo_text->SetLabel(reason);
+	m_reginfo_text->SetForegroundColour(wxColour(255,0,0));
 	m_reginfo_text->Wrap(400);
 	m_tabs->SetSelection(1);
 	Show();
@@ -331,6 +332,7 @@ void ConnectWindow::OnLoginDenied(const wxString& reason)
 {
 	wxLogError(reason);
 	m_note_lbl->SetLabel(reason);
+	m_note_lbl->SetForegroundColour(wxColour(255,0,0));
 	m_note_lbl->Wrap(400);
 	m_tabs->SetSelection(0);
 	Show();
