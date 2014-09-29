@@ -277,8 +277,11 @@ bool Ui::IsSpringRunning() const
 void Ui::Quit()
 {
 	Disconnect();
-	if ( m_con_win != 0 )
+	if ( m_con_win != 0 ) {
 		m_con_win->Close();
+		delete m_con_win;
+		m_con_win = NULL;
+	}
 }
 
 void Ui::Download( const std::string& category, const std::string& name, const std::string& /*hash */)

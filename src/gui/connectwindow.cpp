@@ -26,7 +26,6 @@
 #include "images/connect.xpm"
 #include "gui/controls.h"
 #include "utils/tasutil.h"
-#include "gui/customdialogs.h"
 #include "utils/conversion.h"
 
 // Define events.
@@ -206,7 +205,6 @@ ConnectWindow::ConnectWindow( wxWindow* parent, Ui& ui )
 #endif
 
 	ReloadServerList();
-	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&ConnectWindow::OnQuit));
 }
 
 
@@ -246,13 +244,11 @@ void ConnectWindow::OnOk(wxCommandEvent& )
 	if ( serverString.GetCount() == 2 ) {
 		long port;
 		if ( !serverString[1].ToLong( &port ) ) {
-			wxLogWarning( _T("Invalid port.") );
-			customMessageBox(SL_MAIN_ICON, _("Invalid port."), _("Invalid port"), wxOK );
+			OnLoginDenied( _T("Invalid port.") );
 			return;
 		}
 		if ( port < 1 || port > 65535) {
-			wxLogWarning( _T("port number out of range") );
-			customMessageBox(SL_MAIN_ICON, _("Port number out of range.\n\nIt must be an integer between 1 and 65535"), _("Invalid port"), wxOK );
+			OnLoginDenied(_T("Port number out of range.\n\nIt must be an integer between 1 and 65535"));
 			return;
 		}
 		sett().SetServer( HostAddress, serverString[0], port );
@@ -261,8 +257,7 @@ void ConnectWindow::OnOk(wxCommandEvent& )
 	cfg().Write(_T( "/Server/Autoconnect" ),  m_autoconnect_check->IsChecked() );
 
 	if ( serverString.GetCount() > 2 ) {
-		wxLogWarning( _T("invalid host/port.") );
-		customMessageBox(SL_MAIN_ICON, _("Invalid host/port."), _("Invalid host"), wxOK );
+		OnLoginDenied( _T("invalid host/port.") );
 		return;
 	}
 
@@ -303,12 +298,6 @@ void ConnectWindow::OnCancel(wxCommandEvent& )
 {
 	Hide();
 }
-
-void ConnectWindow::OnQuit(wxCommandEvent& /*data*/)
-{
-	Close();
-}
-
 
 void ConnectWindow::OnRegistrationAccepted(const wxString& user, const wxString& pass)
 {

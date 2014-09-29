@@ -5,8 +5,6 @@
 
 #include <wx/dialog.h>
 
-#include "utils/globalevents.h"
-
 class wxPanel;
 class wxComboBox;
 class wxBoxSizer;
@@ -20,7 +18,7 @@ class wxStaticLine;
 class Ui;
 
 //! @brief wxFrame with a connection dialog used to specify username, password, and server. It can also register a new acount.
-class ConnectWindow : public GlobalEvent, public wxDialog
+class ConnectWindow : public wxDialog
 {
 public:
 	ConnectWindow( wxWindow* parent, Ui& ui );
@@ -32,15 +30,15 @@ public:
 
 	void OnServerChange( wxCommandEvent& event );
 
-	void OnOk(wxCommandEvent& event);
-	void OnCancel(wxCommandEvent& event);
-	void OnQuit( wxCommandEvent& data );
-
 	void OnRegistrationAccepted(const wxString& user, const wxString& pass);
 	void OnRegistrationDenied(const wxString& reason);
 	void OnLoginDenied(const wxString& reason);
 
 private:
+	void OnOk(wxCommandEvent& event);
+	void OnCancel(wxCommandEvent& event);
+	void OnQuit(wxCommandEvent& data );
+
 	void CleanHide();
 	// ConnectWindow variables
 
