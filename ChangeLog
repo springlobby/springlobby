@@ -4,13 +4,13 @@
  - fix SafeMode config setting
  - show more verbose message when searching for downloadable content
  - fix error in download dialog
- - fix compile on fedora[/list]
+ - fix compile on fedora
 
 ## 0.200
  - reduce updater size: remove gui parts from updater
  - updater: don't ask for admin rights when not needed
  - battlelist: show if engine is installed
- - delay lobby server reconnect on each retry[/list]
+ - delay lobby server reconnect on each retry
 
 ## 0.199
  - write script.txt into lobby writeable dir: possible fix "script.txt" not found errors
@@ -18,12 +18,12 @@
  - fix blury map images
  - fix rare crash at exit
  - fix deleting replays with "DEL"
- - fix replay list[/list]
+ - fix replay list
 
 ## 0.198
  - fix blurry image in map preview
  - fix replays list & spring engine list  (thanks MajBoredom)
- - the usal code cleanup[/list]
+ - the usal code cleanup
 
 ## 0.197
  - fix osx compile
@@ -31,7 +31,7 @@
  - fix rapid repo isn't automaticly updated
  - don't crash when cached images are broken
  - fix some wx3.0 bugs/crashes, some cleanups
- - remove reconnect dialog[/list]
+ - remove reconnect dialog
 
 ## 0.196
  - downloaded engines are non-portable: cache & settings are shared again
@@ -43,6 +43,7 @@
 
 ## 0.194
  - hopefully fixed version when sourcedir != builddir
+
 ## 0.193
  - fix crash on reconnect, hopefully fix autoupdater, fix version number in builds from tarball
 
@@ -50,15 +51,19 @@
  - broken builds, no release made
 
 ## 0.190
- - fix autoreconnect, fix option number passed always as 0 to script.txt, implement p compatibility flag (agreement of registration in txt format)
+ - fix autoreconnect, fix option number passed always as 0 to script.txt
+ - implement p compatibility flag (agreement of registration in txt format)
 
 ## 0.189
- - new updating system: springlobby downloads the update file and extracts it. then it runs springlobby_updater which updates all files and re-runs springlobby. no more waiting for springlobby_updater to download. also the update-urls can be configured, this allows to select updates from the develop branch.
+ - new updating system: springlobby downloads the update file and extracts it.
+   then it runs springlobby_updater which updates all files and re-runs springlobby.
+   no more waiting for springlobby_updater to download. also the update-urls can
+   be configured, this allows to select updates from the develop branch.
  - fix tab selection at start
  - fix some unicode path problems (win32 only)
  - allow battles to be joined without spring/unitsync installed
  - made faction icon transparent
- - always show "user left" when he was active before (=wrote sth.)[/list]
+ - always show "user left" when he was active before (=wrote sth.)
 
 ## 0.188
  - fix win32 compile
@@ -66,13 +71,15 @@
 ## 0.187
  - fix problems with non-asscii chars in HOME path
  - fix some unitsync related crashes
- - more verbose "Timeout assumed" message / maybe fix it[/list]
+ - more verbose "Timeout assumed" message / maybe fix it
 
 ## 0.186
  - fix crash in battle room at map change
 
 ## 0.185
- - improve caching, most data is now shared accross multiple spring/unitsync versions (at first start the cache folder is automaticly cleared and cache files are recreated in background! this will can take a very long time. don't wonder when springlobby takes 100% cpu while doing this)
+ - improve caching, most data is now shared accross multiple spring/unitsync versions:
+   at first start the cache folder is automaticly cleared and cache files are recreated in background!
+   this will can take a very long time. don't wonder when springlobby takes 100% cpu while doing this.
  - fix team colors/faction in replay list
  - fix demo playback
 ## 0.184
