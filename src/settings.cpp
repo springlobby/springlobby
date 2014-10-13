@@ -134,6 +134,10 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 	if ( settversion < 27 ) {
 		SetDisableSpringVersionCheck(false);
 	}
+	if ( settversion < 28 ) {
+		RemoveChannelJoin(_("main"));
+	}
+
 	// after updating, set current version
 	cfg().Write(_T("/General/SettingsVersion"), SETTINGS_VERSION);
 }
