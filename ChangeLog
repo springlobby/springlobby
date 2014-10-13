@@ -1,5 +1,9 @@
 ChangeLog of Springlobby
 
+## 0.202
+ - new users don't auto-join #main any more
+ - remove #main from autojoin channels once
+
 ## 0.201
  - reworked connect / register dialog
  - fix autoupdater / further reduce size
