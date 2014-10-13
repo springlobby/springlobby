@@ -88,7 +88,6 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 		SetDefaultServerSettings();
 
 	if ( ShouldAddDefaultChannelSettings() ) {
-		AddChannelJoin( _T("main"), wxEmptyString );
 		AddChannelJoin( _T("newbies"), wxEmptyString );
 		if ( translationhelper ) {
 			if ( translationhelper->GetLocale() ) {
