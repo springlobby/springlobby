@@ -234,7 +234,7 @@ set(springlobbySrc
 	downloader/downloadlistctrl.cpp
 	downloader/downloadsobserver.cpp
 
-	springsettings/frame.cpp
+#	springsettings/frame.cpp
 
 	utils/battleevents.cpp
 	utils/base64.cpp
@@ -290,7 +290,7 @@ add_library(slcommon STATIC
 	)
 target_link_libraries(slcommon
 		springlobbyversion
-		libsettings
+#		libsettings
 		lsl-unitsync
 		${CURL_LIBRARIES}
 	)
@@ -307,7 +307,7 @@ else()
 	INCLUDE_DIRECTORIES(lsl/src)
 	remove_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
 endif()
-add_subdirectory(springsettings)
+#add_subdirectory(springsettings)
 add_subdirectory(sound)
 add_subdirectory(json)
 
@@ -343,7 +343,9 @@ ELSE (WIN32)
 	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion libsettings slcommon
+TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion
+		#libsettings
+		slcommon
 		${Boost_LIBRARIES}
 		${CURL_LIBRARIES}
 		${CURL_LINKFLAGS}

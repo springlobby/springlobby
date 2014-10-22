@@ -34,8 +34,8 @@ public:
 	bool IsRunning() const;
 	bool Run( IBattle& battle );
 	wxString WriteScriptTxt( IBattle& battle ) const;
-
-
+	/* start engine */
+	bool LaunchEngine(wxArrayString& params);
 private:
 	void OnTerminated( wxCommandEvent& event );
 	bool LaunchEngine(const std::string& cmd, wxArrayString& params);

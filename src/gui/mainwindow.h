@@ -24,7 +24,7 @@ class MainOptionsTab;
 class wxBitmap;
 class wxImageList;
 class ChatPanel;
-class settings_frame;
+//class settings_frame;
 class wxMenuItem;
 class wxMenuBar;
 class wxMenu;
@@ -131,7 +131,7 @@ private:
 
     AutojoinChannelDialog* m_autojoin_dialog;
     friend class settings_frame;
-    settings_frame* se_frame;
+//    settings_frame* se_frame;
     bool se_frame_active;
     ChannelChooserDialog* m_channel_chooser;
 

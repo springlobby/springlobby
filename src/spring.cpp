@@ -70,7 +70,7 @@ Spring& spring()
 
 Spring::Spring() :
 	wxEvtHandler(),
-	m_process(0),
+	m_process(NULL),
 	m_running(false)
 { }
 
@@ -124,6 +124,11 @@ bool Spring::Run( IBattle& battle )
 
 	params.push_back(scripttxt);
 	return LaunchEngine(executable, params);
+}
+
+bool Spring::LaunchEngine(wxArrayString& params)
+{
+	return LaunchEngine(SlPaths::GetSpringBinary(), params);
 }
 
 bool Spring::LaunchEngine(const std::string& cmd, wxArrayString& params)
