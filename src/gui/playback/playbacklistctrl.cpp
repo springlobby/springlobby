@@ -96,7 +96,7 @@ void PlaybackListCtrl::RemovePlayback( const StoredGame& replay )
 
 void PlaybackListCtrl::OnDLMap( wxCommandEvent& /*unused*/ )
 {
-    if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
+    if ( m_selected_index >= 0 &&  (long)m_data.size() > m_selected_index ) {
 		const OfflineBattle& battle = m_data[m_selected_index]->battle;
         ui().Download("map", battle.GetHostMapName(), battle.GetHostMapHash());
     }
@@ -104,7 +104,7 @@ void PlaybackListCtrl::OnDLMap( wxCommandEvent& /*unused*/ )
 
 void PlaybackListCtrl::OnDLMod( wxCommandEvent& /*unused*/ )
 {
-    if ( m_selected_index > 0 &&  (long)m_data.size() > m_selected_index ) {
+    if ( m_selected_index >= 0 &&  (long)m_data.size() > m_selected_index ) {
 		const OfflineBattle& battle = m_data[m_selected_index]->battle;
         ui().Download("game", battle.GetHostModName(), battle.GetHostModHash());
     }
