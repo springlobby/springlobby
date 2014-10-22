@@ -590,7 +590,7 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
 {
 	wxArrayString params;
-	params.push_back("-w");
+	params.push_back(_T("-w"));
 	spring().LaunchEngine(params);
 /*
 	if ( se_frame && se_frame_active ) {
