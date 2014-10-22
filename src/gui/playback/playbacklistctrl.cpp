@@ -59,7 +59,7 @@ PlaybackListCtrl::PlaybackListCtrl( wxWindow* parent  ):
     m_popup = new wxMenu( wxEmptyString );
     // &m enables shortcout "alt + m" and underlines m
     m_popup->Append( RLIST_DLMAP, _("Download &map") );
-    m_popup->Append( RLIST_DLMOD, _("Download m&od") );
+    m_popup->Append( RLIST_DLMOD, _("Download &game") );
 }
 
 PlaybackListCtrl::~PlaybackListCtrl()
