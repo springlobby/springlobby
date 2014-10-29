@@ -598,12 +598,12 @@ void Battle::UserPositionChanged( const User& user )
 	  m_serv.SendUserPosition( user );
 }
 
-
+/*
 void Battle::SendScriptToClients()
 {
 	m_serv.SendScriptToClients(TowxString(GetScript()));
 }
-
+*/
 
 void Battle::StartHostedBattle()
 {

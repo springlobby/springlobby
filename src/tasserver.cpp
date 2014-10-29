@@ -1838,6 +1838,7 @@ void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 	else RelayCmd( _T("UPDATEBOT"), TowxString(bot.GetNick()) + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
 }
 
+/*
 void TASServer::SendScriptToProxy( const wxString& script )
 {
 	wxArrayString strings = wxStringTokenize( script, _T("\n") );
@@ -1857,6 +1858,7 @@ void TASServer::SendScriptToProxy( const wxString& script )
 	RelayCmd( _T("STARTGAME") );
 }
 
+
 void TASServer::SendScriptToClients( const wxString& script )
 {
 	SendCmd( _T("SCRIPTSTART") );
@@ -1867,6 +1869,7 @@ void TASServer::SendScriptToClients( const wxString& script )
 	}
 	SendCmd( _T("SCRIPTEND") );
 }
+*/
 
 void TASServer::OnConnected(Socket& /*unused*/ )
 {

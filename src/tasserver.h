@@ -148,9 +148,11 @@ public:
 
 	int TestOpenPort( unsigned int port ) const;
 
+/*
 	void SendScriptToProxy( const wxString& script );
 
 	void SendScriptToClients( const wxString& script );
+*/
 
 	void SetRelayIngamePassword( const User& user );
 
