@@ -544,7 +544,9 @@ bool CustomVirtListCtrl<T,L>::RemoveItem( const T& item )
 		SetItemCount( m_data.size() );
 		if (index>(long)m_data.size()-1)
 			index--;
-		RefreshItems( index, m_data.size() -1 );
+		if (m_data.size() > 0) {
+			RefreshItems( index, m_data.size() -1 );
+		}
 		return true;
 	}
 	return false;
