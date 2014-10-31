@@ -31,7 +31,8 @@ template<class T,class L> SortOrder CustomVirtListCtrl<T,L>::m_sortorder = SortO
 PlaybackListCtrl::PlaybackListCtrl( wxWindow* parent  ):
   PlaybackListCtrl::BaseType(parent, RLIST_LIST, wxDefaultPosition, wxDefaultSize,
 							wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT,
-							_T("PlaybackListCtrl"), 4, &PlaybackListCtrl::CompareOneCrit )
+							_T("PlaybackListCtrl"), 4, &PlaybackListCtrl::CompareOneCrit ),
+	m_parent(parent)
 {
 
 	AddColumn( 0, wxLIST_AUTOSIZE, _("Date"), _("Date of recording") );
@@ -96,16 +97,16 @@ void PlaybackListCtrl::RemovePlayback( const StoredGame& replay )
 
 void PlaybackListCtrl::OnDLMap( wxCommandEvent& /*unused*/ )
 {
-    if ( m_selected_index >= 0 &&  (long)m_data.size() > m_selected_index ) {
-		const OfflineBattle& battle = m_data[m_selected_index]->battle;
+    if (GetSelectedIndex() >= 0) {
+		const OfflineBattle& battle = m_data[GetSelectedIndex()]->battle;
         ui().Download("map", battle.GetHostMapName(), battle.GetHostMapHash());
     }
 }
 
 void PlaybackListCtrl::OnDLMod( wxCommandEvent& /*unused*/ )
 {
-    if ( m_selected_index >= 0 &&  (long)m_data.size() > m_selected_index ) {
-		const OfflineBattle& battle = m_data[m_selected_index]->battle;
+    if (GetSelectedIndex() >= 0) {
+		const OfflineBattle& battle = m_data[GetSelectedIndex()]->battle;
         ui().Download("game", battle.GetHostModName(), battle.GetHostModHash());
     }
 }
@@ -255,22 +256,23 @@ int PlaybackListCtrl::GetIndexFromData( const DataType& data ) const
 void PlaybackListCtrl::OnChar(wxKeyEvent & event)
 {
 	const int keyCode = event.GetKeyCode();
-	if ( keyCode == WXK_DELETE )
-		DeletePlayback();
-	else
-		event.Skip();
+	if (( keyCode == WXK_DELETE ) && (m_parent != NULL)) {
+		wxPostEvent(m_parent, event); //post to parent window, as an other child window uses data from this window
+		return;
+	}
+	event.Skip();
 }
 
 
 void PlaybackListCtrl::DeletePlayback()
 {
-	int sel_index = GetSelectedIndex();
+	const int sel_index = GetSelectedIndex();
 	if ( sel_index < 0 ) {
 		return;
 	}
 	try {
 		const StoredGame& rep = *GetSelectedData();
-		int m_sel_replay_id = rep.id;
+		const int m_sel_replay_id = rep.id;
 		wxLogMessage( _T( "Deleting replay %d " ), m_sel_replay_id );
 		wxString fn = TowxString(rep.Filename);
 		if ( !replaylist().DeletePlayback( m_sel_replay_id ) )

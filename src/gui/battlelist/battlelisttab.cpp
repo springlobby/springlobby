@@ -467,3 +467,4 @@ void BattleListTab::OnInfoShow( wxCommandEvent& /*unused*/ )
 {
 	ShowExtendedInfos( m_info_show->GetValue() );
 }
+

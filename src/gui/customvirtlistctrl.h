@@ -90,7 +90,7 @@ protected:
 	static const unsigned int m_tooltip_delay    = 1000;
 	static const unsigned int m_tooltip_duration = 2000;
 	static const unsigned int m_sort_block_time  = 1500;
-
+private:
 	/*** these are only meaningful in single selection lists ***/
 	//! index of curently selected data
 	long m_selected_index;
@@ -98,6 +98,7 @@ protected:
 	//! index of previously selected data
 	long m_prev_selected_index;
 	/***********************************************************/
+protected:
 
 	//! stores info about the columns (wxString name,bool isResizable) - pairs
 	colInfoVec m_colinfovec;

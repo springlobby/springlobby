@@ -151,6 +151,7 @@ template < class T, class L >
 void CustomVirtListCtrl<T,L>::ResetSelection()
 {
 	m_selected_data.clear();
+	m_selected_index = -1;
 }
 
 template < class T, class L >
@@ -170,6 +171,10 @@ void CustomVirtListCtrl<T,L>::OnDeselected( wxListEvent& event )
 template < class T, class L >
 long CustomVirtListCtrl<T,L>::GetSelectedIndex() const
 {
+	if (m_selected_index >= m_data.size()) {
+		//FIXME: HACK
+		return m_data.size()-1;
+	}
 	return m_selected_index ;
 }
 
@@ -411,6 +416,7 @@ template < class T, class L >
 void CustomVirtListCtrl<T,L>::Clear()
 {
 	m_data.clear();
+	m_selected_data.clear();
 	SetItemCount( 0 );
 	ResetSelection();
 	RefreshVisibleItems();
@@ -539,13 +545,16 @@ bool CustomVirtListCtrl<T,L>::RemoveItem( const T& item )
 {
 	int index = GetIndexFromData( item );
 	if ( (index >= 0) && (index<(long)m_data.size()) ) {
-		SelectionSaver<ThisType>(*this);
+		SaveSelection();
 		m_data.erase( m_data.begin() + index );
 		SetItemCount( m_data.size() );
 		if (index>(long)m_data.size()-1)
 			index--;
 		if (m_data.size() > 0) {
 			RefreshItems( index, m_data.size() -1 );
+			RestoreSelection();
+		} else {
+			Clear();
 		}
 		return true;
 	}

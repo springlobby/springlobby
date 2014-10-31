@@ -72,7 +72,8 @@ private:
     void OnSpringTerminated( wxCommandEvent& data );
 	void OnUnitsyncReloaded( wxCommandEvent& data );
 
-  protected:
+private:
+	void OnChar(wxKeyEvent & event);
 	PlaybackListFilter* m_filter;
     PlaybackListCtrl* m_replay_listctrl;
     PlaybackLoader* m_replay_loader;

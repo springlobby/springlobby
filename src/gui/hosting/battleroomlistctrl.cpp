@@ -876,20 +876,20 @@ void BattleroomListCtrl::OnUserMenuCreateGroup( wxCommandEvent& /*unused*/ )
 
 wxString BattleroomListCtrl::GetSelectedUserNick()
 {
-    if ( m_selected_index < 0 || m_selected_index >= (long)m_data.size() )
+    if (GetSelectedIndex() < 0)
         return wxEmptyString;
     else
-        return TowxString(m_data[m_selected_index]->GetNick());
+        return TowxString(m_data[GetSelectedIndex()]->GetNick());
 }
 
 void BattleroomListCtrl::OnActivateItem( wxListEvent& /*unused*/ )
 {
     if ( m_ro )
         return;
-    if ( m_selected_index < 0 || m_selected_index >= (long)m_data.size() )
+    if ( GetSelectedIndex() < 0)
         return;
 
-    const User* usr = m_data[m_selected_index];
+    const User* usr = m_data[GetSelectedIndex()];
     if ( usr != NULL && !usr->BattleStatus().IsBot() )
         ui().mw().OpenPrivateChat( *usr );
 }

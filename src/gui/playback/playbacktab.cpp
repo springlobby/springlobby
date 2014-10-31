@@ -42,6 +42,8 @@ BEGIN_EVENT_TABLE( PlaybackTab, wxScrolledWindow )
     EVT_LIST_ITEM_DESELECTED( wxID_ANY                      , PlaybackTab::OnDeselect       )
     EVT_CHECKBOX            ( PLAYBACK_LIST_FILTER_ACTIV    , PlaybackTab::OnFilterActiv    )
     EVT_COMMAND             ( wxID_ANY, PlaybackLoader::PlaybacksLoadedEvt  , PlaybackTab::AddAllPlaybacks  )
+    EVT_KEY_DOWN            ( PlaybackTab::OnChar )
+
     #if  wxUSE_TOGGLEBTN
     EVT_TOGGLEBUTTON        ( PLAYBACK_LIST_FILTER_BUTTON   , PlaybackTab::OnFilter         )
     #else
@@ -407,4 +409,15 @@ void PlaybackTab::OnSpringTerminated( wxCommandEvent& /*data*/ )
 void PlaybackTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	ReloadList();
+}
+
+void PlaybackTab::OnChar(wxKeyEvent & event)
+{
+	const int keyCode = event.GetKeyCode();
+	if ( keyCode == WXK_DELETE ) {
+		m_replay_listctrl->DeletePlayback();
+		Deselect();
+	} else {
+		event.Skip();
+	}
 }
