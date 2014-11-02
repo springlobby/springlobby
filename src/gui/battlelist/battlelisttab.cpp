@@ -362,8 +362,9 @@ void BattleListTab::OnJoin( wxCommandEvent& /*unused*/ )
 	}
 
 	if ( m_battle_list->GetSelectedIndex() < 0 ) return;
-
-	int id = m_battle_list->GetSelectedData()->GetBattleId();
+	const IBattle* battle = m_battle_list->GetSelectedData();
+	assert(battle != NULL);
+	const int id = battle->GetBattleId();
 	DoJoin( serverSelector().GetServer().battles_iter->GetBattle( id ) );
 }
 
