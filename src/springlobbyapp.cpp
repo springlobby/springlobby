@@ -234,6 +234,7 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 		{ wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  wxTRANSLATE("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  wxTRANSLATE("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
 		{ wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  wxTRANSLATE("overrides default logging verbosity, can be:\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_SWITCH, STR("ve"), STR("version"),  wxTRANSLATE("print version"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL},
 		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  wxTRANSLATE("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL } //this is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
 
@@ -275,6 +276,11 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
         if ( parser.Found(_T("help")) )
             return false; // not a syntax error, but program should stop if user asked for command line usage
 
+		if (parser.Found(_T("version")))
+		{
+			wxLogMessage(TowxString(getSpringlobbyVersion()).c_str());
+			return false;
+		}
         return true;
     }
     else
