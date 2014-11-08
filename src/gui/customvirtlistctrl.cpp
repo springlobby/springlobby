@@ -171,10 +171,6 @@ void CustomVirtListCtrl<T,L>::OnDeselected( wxListEvent& event )
 template < class T, class L >
 long CustomVirtListCtrl<T,L>::GetSelectedIndex() const
 {
-	if (m_selected_index >= m_data.size()) {
-		//FIXME: HACK
-		return m_data.size()-1;
-	}
 	return m_selected_index ;
 }
 
