@@ -2,6 +2,7 @@ ChangeLog of Springlobby
 
 ## 0.202
  - add command line switch --version
+ - add "Download engine" to battle list context menu
  - new users don't auto-join #main any more
  - remove #main from autojoin channels once
  - replace springsettings by running spring executable / edit settings

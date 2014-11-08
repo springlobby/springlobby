@@ -28,8 +28,6 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
 
 
     void OnListRightClick( wxListEvent& event );
-    void OnDLMap( wxCommandEvent& event );
-    void OnDLMod( wxCommandEvent& event );
     virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
 
     //these are overloaded to use list in virtual style
@@ -41,11 +39,16 @@ class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
     enum {
         BLIST_LIST = wxID_HIGHEST,
         BLIST_DLMOD,
-        BLIST_DLMAP
+        BLIST_DLMAP,
+		BLIST_DLENGINE
     };
 
 
 private:
+    void OnDLMap( wxCommandEvent& event );
+    void OnDLMod( wxCommandEvent& event );
+    void OnDLEngine( wxCommandEvent& event );
+
     static int CompareStatus( DataType u1, DataType u2 );
     static int ComparePlayer( DataType u1, DataType u2 );
 

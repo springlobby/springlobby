@@ -18,6 +18,7 @@
 #include "aui/auimanager.h"
 #include "utils/conversion.h"
 #include "utils/slpaths.h"
+#include "downloader/prdownloader.h"
 
 template<> SortOrder CustomVirtListCtrl<IBattle*,BattleListCtrl>::m_sortorder = SortOrder();
 
@@ -26,6 +27,7 @@ BEGIN_EVENT_TABLE(BattleListCtrl, BattleListCtrl::BaseType )
   EVT_LIST_ITEM_RIGHT_CLICK( BLIST_LIST, BattleListCtrl::OnListRightClick )
   EVT_MENU                 ( BLIST_DLMAP, BattleListCtrl::OnDLMap )
   EVT_MENU                 ( BLIST_DLMOD, BattleListCtrl::OnDLMod )
+  EVT_MENU                 ( BLIST_DLENGINE, BattleListCtrl::OnDLEngine )
 #if wxUSE_TIPWINDOW
 #if !defined(__WXMSW__) /* && !defined(__WXMAC__) */ //disables tooltips on msw /* and mac */
   EVT_MOTION(BattleListCtrl::OnMouseMotion)
@@ -200,8 +202,9 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
     if ( idx < (long)m_data.size() && idx > -1 ) {
 
         DataType dt = m_data[idx];
-        bool mod_missing = !dt->ModExists();
-        bool map_missing = !dt->MapExists();
+        const bool mod_missing = !dt->ModExists();
+        const bool map_missing = !dt->MapExists();
+		const bool engine_missing = SlPaths::GetCompatibleVersion(dt->GetEngineVersion()).empty();
         m_popup = new wxMenu( wxEmptyString );
         // &m enables shortcout "alt + m" and underlines m
         if ( map_missing )
@@ -210,7 +213,10 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
         if ( mod_missing )
 			m_popup->Append( BLIST_DLMOD, _("Download &game") );
 
-        if ( map_missing || mod_missing )
+		if (engine_missing)
+			m_popup->Append( BLIST_DLENGINE, _("Download &engine") );
+
+        if ( map_missing || mod_missing || engine_missing )
             PopupMenu( m_popup );
     }
 }
@@ -231,6 +237,15 @@ void BattleListCtrl::OnDLMod( wxCommandEvent& /*unused*/  )
         ui().Download("game", dt->GetHostModName(), dt->GetHostModHash());
     }
 }
+
+void BattleListCtrl::OnDLEngine( wxCommandEvent& /*unused*/  )
+{
+    if ( GetSelectedIndex() >= 0) {
+        DataType dt = m_data[GetSelectedIndex()];
+		ui().Download(PrDownloader::GetEngineCat(), dt->GetEngineVersion(), "");
+    }
+}
+
 
 void BattleListCtrl::Sort()
 {
