@@ -133,7 +133,7 @@ class IServer : public iNetClass, public SL::NonCopyable
     virtual void RequestChannels() {};
 
     virtual void SendMyBattleStatus( UserBattleStatus& /*bs*/ ) {};
-    virtual void SendMyUserStatus() {};
+    virtual void SendMyUserStatus(const UserStatus& /*us*/) {};
 
     virtual void SetUsername( const wxString& username ) { m_user = username; }
 	virtual const wxString& GetUserName() const {return m_user; }

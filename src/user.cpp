@@ -183,7 +183,7 @@ void CommonUser::UpdateBattleStatus( const UserBattleStatus& status )
 
 void User::SendMyUserStatus() const
 {
-  GetServer().SendMyUserStatus();
+  GetServer().SendMyUserStatus(GetStatus());
 }
 
 

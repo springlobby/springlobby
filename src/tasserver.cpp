@@ -55,23 +55,6 @@ SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which
 #define UDP_REPLY_TIMEOUT 10000
 
 
-//! @brief Struct used internally by the TASServer class to get client status information.
-struct TASClientstatus {
-	unsigned int in_game   : 1;
-	unsigned int away      : 1;
-	unsigned int rank      : 3;
-	unsigned int moderator : 1;
-	unsigned int bot       : 1;
-};
-
-
-//! @brief Union used internally by the TASServer class to get client status information.
-union UTASClientStatus {
-	unsigned char byte;
-	TASClientstatus tasdata;
-};
-
-
 struct TASColor {
 unsigned int red :
 	8;
@@ -95,10 +78,12 @@ union UTASColor {
 myteamcolor:  Should be 32-bit signed integer in decimal form (e.g. 255 and not FF) where each color channel should occupy 1 byte (e.g. in hexdecimal: $00BBGGRR, B = blue, G = green, R = red). Example: 255 stands for $000000FF.
 
 */
+int ConvUserStatus(const UserStatus& us);
+UserStatus ConvTasclientstatus( int );
 
-UserStatus ConvTasclientstatus( TASClientstatus );
 UserBattleStatus ConvTasbattlestatus( int );
 int ConvTasbattlestatus( UserBattleStatus );
+
 IBattle::StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
@@ -480,7 +465,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 	wxString nick, contry, host, map, title, mod, channel, error, msg, owner, ai, supported_spring_version, topic, engineName, engineVersion;
 	//NatType ntype;
 	UserStatus cstatus;
-	UTASClientStatus tasstatus;
+	int tasstatus;
 	int tasbstatus;
 	UserBattleStatus bstatus;
 
@@ -518,8 +503,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		}
 	} else if ( cmd == _T("CLIENTSTATUS") ) {
 		nick = GetWordParam( params );
-		tasstatus.byte = GetIntParam( params );
-		cstatus = ConvTasclientstatus( tasstatus.tasdata );
+		tasstatus = GetIntParam( params );
+		cstatus = ConvTasclientstatus( tasstatus );
 		m_se->OnUserStatus( nick, cstatus );
 	} else if ( cmd == _T("BATTLEOPENED") ) {
 		const int id = GetIntParam( params );
@@ -1471,21 +1456,13 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 }
 
 
-void TASServer::SendMyUserStatus()
+void TASServer::SendMyUserStatus(const UserStatus& us)
 {
 	slLogDebugFunc("");
-
-	UserStatus& us = GetMe().Status();
-
-	UTASClientStatus taus;
-	taus.tasdata.in_game = us.in_game;
-	taus.tasdata.away = us.away;
-	taus.tasdata.rank = us.rank;
-	taus.tasdata.moderator = us.moderator;
-	taus.tasdata.bot = us.bot;
-
-	SendCmd( _T("MYSTATUS"), wxString::Format( _T("%d"), taus.byte ) );
+	const int taus = ConvUserStatus(us);
+	SendCmd( _T("MYSTATUS"), wxString::Format( _T("%d"), taus ) );
 }
+
 
 
 void TASServer::StartHostedBattle()
@@ -2044,14 +2021,25 @@ wxArrayString TASServer::GetRelayHostList()
 // Utility functions
 //////////////////////
 
-UserStatus ConvTasclientstatus( TASClientstatus tas )
+int ConvUserStatus(const UserStatus& us)
+{
+	int taus = 0;
+	taus += (us.in_game   ? 1 : 0 );
+	taus += (us.away      ? 1 : 0 ) << 1;
+	taus += (us.rank      % 16    ) << 2;
+	taus += (us.moderator ? 1 : 0 ) << 5;
+	taus += (us.bot       ? 1 : 0 ) << 6;
+	return taus;
+}
+
+UserStatus ConvTasclientstatus( int tas )
 {
 	UserStatus stat;
-	stat.in_game = tas.in_game;
-	stat.away = tas.away;
-	stat.rank = (UserStatus::RankContainer)tas.rank;
-	stat.moderator = tas.moderator;
-	stat.bot = tas.bot;
+	stat.in_game =   (tas >> 0) & 1;
+	stat.away =      (tas >> 1) & 1;
+	stat.rank = (UserStatus::RankContainer) ((tas >> 2) % 8);
+	stat.moderator = (tas >> 5) & 1;
+	stat.bot =       (tas >> 6) & 1;
 	return stat;
 }
 

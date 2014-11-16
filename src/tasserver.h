@@ -103,7 +103,7 @@ public:
 	void JoinBattle( const int& battleid, const wxString& password = wxEmptyString );
 	void LeaveBattle( const int& battleid );
 	void SendMyBattleStatus( UserBattleStatus& bs );
-	void SendMyUserStatus();
+	void SendMyUserStatus(const UserStatus& us);
 
 	void ForceSide( int battleid, User& user, int side );
 	void ForceTeam( int battleid, User& user, int team );
