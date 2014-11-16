@@ -70,6 +70,7 @@ unsigned int zero:
 union UTASColor {
 	int data;
 	TASColor color;
+	UTASColor(): data(0) {}
 };
 
 
