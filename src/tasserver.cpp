@@ -2036,6 +2036,7 @@ int ConvUserStatus(const UserStatus& us)
 
 UserStatus ConvTasclientstatus( const int tas )
 {
+	//http://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYSTATUS:client
 	UserStatus stat;
 	stat.in_game =   (tas >> 0) & 1;
 	stat.away =      (tas >> 1) & 1;
@@ -2049,11 +2050,11 @@ UserStatus ConvTasclientstatus( const int tas )
 UserBattleStatus ConvTasbattlestatus( const int tas )
 {
 	UserBattleStatus stat;
-	//http://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYSTATUS:client
+	//http://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYBATTLESTATUS:client
 	stat.ready =      (tas >>  1)  &   1;
 	stat.team =       (tas >>  2)  &  15;
 	stat.ally =       (tas >>  6)  &  15;
-	stat.spectator =  (tas >> 10)  &   1;
+	stat.spectator =  ((tas >> 10)  &   1) == 0;
 	stat.handicap =  ((tas >> 11)  & 127) % 101;
 	stat.sync =      ((tas >> 22)  &   3) %   3;
  	stat.side =       (tas >> 24)  &  15;
@@ -2068,7 +2069,7 @@ int ConvTasbattlestatus( UserBattleStatus bs)
 	ret += (bs.ready ? 1:0) << 1; // b1
 	ret += (bs.team % 16) << 2; //b2..b5
 	ret += (bs.ally % 16) << 6; //b6..b9
-	ret += (bs.spectator?1:0) << 10; //b10
+	ret += (bs.spectator?0:1) << 10; //b10
 	ret += (bs.handicap % 101) << 11; //b11..b17
 	//b18..b21 reserverd
 	ret += (bs.sync % 3) << 22; //b22..b23
