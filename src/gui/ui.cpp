@@ -71,7 +71,7 @@ SLCONFIG("/Chat/BroadcastEverywhere",true, "setting to spam the server messages 
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
 
 static unsigned int s_reconnect_delay_ms = 6 * 1000; //initial reconnect delay
-static const unsigned int s_max_reconnect_delay = 120 * 1000; //max delay for reconnecting
+static const unsigned int s_max_reconnect_delay = 240 * 1000; //max delay for reconnecting
 
 Ui& ui()
 {
@@ -177,7 +177,7 @@ void Ui::Connect()
 void Ui::Reconnect()
 {
 	if (s_reconnect_delay_ms <= s_max_reconnect_delay) {
-		s_reconnect_delay_ms += 1000;
+		s_reconnect_delay_ms += std::max<unsigned int>(s_max_reconnect_delay * 0.50, 1000);
 	}
 	const wxString servname = sett().GetDefaultServer();
 	const wxString pass  = sett().GetServerAccountPass(servname);
