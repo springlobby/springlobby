@@ -79,10 +79,10 @@ myteamcolor:  Should be 32-bit signed integer in decimal form (e.g. 255 and not 
 
 */
 int ConvUserStatus(const UserStatus& us);
-UserStatus ConvTasclientstatus( int );
+UserStatus ConvTasclientstatus( const int );
 
-UserBattleStatus ConvTasbattlestatus( int );
-int ConvTasbattlestatus( UserBattleStatus );
+UserBattleStatus ConvTasbattlestatus( const int );
+int ConvTasbattlestatus( const UserBattleStatus );
 
 IBattle::StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
@@ -2032,7 +2032,8 @@ int ConvUserStatus(const UserStatus& us)
 	return taus;
 }
 
-UserStatus ConvTasclientstatus( int tas )
+
+UserStatus ConvTasclientstatus( const int tas )
 {
 	UserStatus stat;
 	stat.in_game =   (tas >> 0) & 1;
@@ -2040,10 +2041,11 @@ UserStatus ConvTasclientstatus( int tas )
 	stat.rank = (UserStatus::RankContainer) ((tas >> 2) % 8);
 	stat.moderator = (tas >> 5) & 1;
 	stat.bot =       (tas >> 6) & 1;
+	assert(ConvUserStatus(stat) == tas);
 	return stat;
 }
 
-UserBattleStatus ConvTasbattlestatus( int tas )
+UserBattleStatus ConvTasbattlestatus( const int tas )
 {
 	UserBattleStatus stat;
 	//http://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYSTATUS:client
@@ -2054,6 +2056,7 @@ UserBattleStatus ConvTasbattlestatus( int tas )
 	stat.handicap =  ((tas >> 11)  & 127) % 101;
 	stat.sync =      ((tas >> 22)  &   3) %   3;
  	stat.side =       (tas >> 24)  &  15;
+	assert(tas == ConvTasbattlestatus(stat));
 	return stat;
 }
 
