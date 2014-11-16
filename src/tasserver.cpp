@@ -75,7 +75,7 @@ union UTASClientStatus {
 //! @brief Struct used internally by the TASServer class to get battle status information.
 //!TODO is that last member necessary? throws a warning baout bein used uninited
 struct TASBattleStatus {
-unsigned int :
+unsigned int unused:
 	1;
 unsigned int ready :
 	1;
@@ -87,13 +87,13 @@ unsigned int player :
 	1;
 unsigned int handicap:
 	7;
-unsigned int :
+unsigned int unused2:
 	4;
 unsigned int sync :
 	2;
 unsigned int side :
 	4;
-unsigned int :
+unsigned int unused3:
 	4;
 };
 
@@ -2106,6 +2106,9 @@ UserBattleStatus ConvTasbattlestatus( TASBattleStatus tas )
 TASBattleStatus ConvTasbattlestatus( UserBattleStatus bs)
 {
 	TASBattleStatus stat;
+	stat.unused = 0;
+	stat.unused2 = 0;
+	stat.unused3 = 0;
 	stat.ally = bs.ally;
 	stat.handicap = bs.handicap;
 	stat.ready = bs.ready?1:0;
