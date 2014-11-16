@@ -72,37 +72,6 @@ union UTASClientStatus {
 };
 
 
-//! @brief Struct used internally by the TASServer class to get battle status information.
-//!TODO is that last member necessary? throws a warning baout bein used uninited
-struct TASBattleStatus {
-unsigned int unused:
-	1;
-unsigned int ready :
-	1;
-unsigned int team :
-	4;
-unsigned int ally :
-	4;
-unsigned int player :
-	1;
-unsigned int handicap:
-	7;
-unsigned int unused2:
-	4;
-unsigned int sync :
-	2;
-unsigned int side :
-	4;
-unsigned int unused3:
-	4;
-};
-
-//! @brief Union used internally by the TASServer class to get battle status information.
-union UTASBattleStatus {
-	int data;
-	TASBattleStatus tasdata;
-};
-
 struct TASColor {
 unsigned int red :
 	8;
@@ -128,8 +97,8 @@ myteamcolor:  Should be 32-bit signed integer in decimal form (e.g. 255 and not 
 */
 
 UserStatus ConvTasclientstatus( TASClientstatus );
-UserBattleStatus ConvTasbattlestatus( TASBattleStatus );
-TASBattleStatus ConvTasbattlestatus( UserBattleStatus );
+UserBattleStatus ConvTasbattlestatus( int );
+int ConvTasbattlestatus( UserBattleStatus );
 IBattle::StartType IntToStartType( int start );
 NatType IntToNatType( int nat );
 IBattle::GameType IntToGameType( int gt );
@@ -512,7 +481,7 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 	//NatType ntype;
 	UserStatus cstatus;
 	UTASClientStatus tasstatus;
-	UTASBattleStatus tasbstatus;
+	int tasbstatus;
 	UserBattleStatus bstatus;
 
 	if ( cmd == _T("TASSERVER")) {
@@ -701,8 +670,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		} catch(...) {}
 	} else if ( cmd == _T("CLIENTBATTLESTATUS") ) {
 		nick = GetWordParam( params );
-		tasbstatus.data = GetIntParam( params );
-		bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
+		tasbstatus = GetIntParam( params );
+		bstatus = ConvTasbattlestatus( tasbstatus );
 		UTASColor color;
 		color.data = GetIntParam( params );
 		bstatus.colour = LSL::lslColor(color.color.red, color.color.green, color.color.blue);
@@ -761,8 +730,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 		const int id = GetIntParam( params );
 		nick = GetWordParam( params );
 		owner = GetWordParam( params );
-		tasbstatus.data = GetIntParam( params );
-		bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
+		tasbstatus = GetIntParam( params );
+		bstatus = ConvTasbattlestatus( tasbstatus );
 		UTASColor color;
 		color.data = GetIntParam( params );
 		bstatus.colour = LSL::lslColor( color.color.red, color.color.green, color.color.blue );
@@ -781,8 +750,8 @@ void TASServer::ExecuteCommand( const wxString& cmd, const wxString& inparams, i
 	} else if ( cmd == _T("UPDATEBOT") ) {
 		const int id = GetIntParam( params );
 		nick = GetWordParam( params );
-		tasbstatus.data = GetIntParam( params );
-		bstatus = ConvTasbattlestatus( tasbstatus.tasdata );
+		tasbstatus = GetIntParam( params );
+		bstatus = ConvTasbattlestatus( tasbstatus );
 		UTASColor color;
 		color.data = GetIntParam( params );
 		bstatus.colour = LSL::lslColor( color.color.red, color.color.green, color.color.blue );
@@ -1491,15 +1460,14 @@ void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 {
 	slLogDebugFunc("");
 
-	UTASBattleStatus tasbs;
-	tasbs.tasdata = ConvTasbattlestatus( bs );
+	const int tasbs = ConvTasbattlestatus( bs );
 	UTASColor tascl;
 	tascl.color.red = bs.colour.Red();
 	tascl.color.green = bs.colour.Green();
 	tascl.color.blue = bs.colour.Blue();
 	tascl.color.zero = 0;
 	//MYBATTLESTATUS battlestatus myteamcolor
-	SendCmd( _T("MYBATTLESTATUS"), wxString::Format( _T("%d %d"), tasbs.data, tascl.data ) );
+	SendCmd( _T("MYBATTLESTATUS"), wxString::Format( _T("%d %d"), tasbs, tascl.data ) );
 }
 
 
@@ -1774,8 +1742,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
 		return;
 	}
 
-	UTASBattleStatus tasbs;
-	tasbs.tasdata = ConvTasbattlestatus( status );
+	const int tasbs = ConvTasbattlestatus( status );
 	UTASColor tascl;
 	tascl.color.red = status.colour.Red();
 	tascl.color.green = status.colour.Green();
@@ -1786,7 +1753,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
 	wxString ailib;
 	ailib += TowxString(status.aishortname);
 	ailib += _T("|") +TowxString(status.aiversion);
-	SendCmd( _T("ADDBOT"), TowxString(nick) + wxString::Format( _T(" %d %d "), tasbs.data, tascl.data ) + ailib );
+	SendCmd( _T("ADDBOT"), TowxString(nick) + wxString::Format( _T(" %d %d "), tasbs, tascl.data ) + ailib );
 }
 
 
@@ -1826,16 +1793,15 @@ void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 		return;
 	}
 
-	UTASBattleStatus tasbs;
-	tasbs.tasdata = ConvTasbattlestatus( status );
+	const int tasbs = ConvTasbattlestatus( status );
 	UTASColor tascl;
 	tascl.color.red = status.colour.Red();
 	tascl.color.green = status.colour.Green();
 	tascl.color.blue = status.colour.Blue();
 	tascl.color.zero = 0;
 	//UPDATEBOT name battlestatus teamcolor
-	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("UPDATEBOT"), TowxString(bot.GetNick()) + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
-	else RelayCmd( _T("UPDATEBOT"), TowxString(bot.GetNick()) + wxString::Format( _T(" %d %d"), tasbs.data, tascl.data ) );
+	if( !GetBattle(battleid).IsProxy() ) SendCmd( _T("UPDATEBOT"), TowxString(bot.GetNick()) + wxString::Format( _T(" %d %d"), tasbs, tascl.data ) );
+	else RelayCmd( _T("UPDATEBOT"), TowxString(bot.GetNick()) + wxString::Format( _T(" %d %d"), tasbs, tascl.data ) );
 }
 
 /*
@@ -2089,34 +2055,34 @@ UserStatus ConvTasclientstatus( TASClientstatus tas )
 	return stat;
 }
 
-UserBattleStatus ConvTasbattlestatus( TASBattleStatus tas )
+UserBattleStatus ConvTasbattlestatus( int tas )
 {
 	UserBattleStatus stat;
-	stat.ally = tas.ally;
-	stat.handicap = tas.handicap;
-	stat.ready = (tas.ready==1)?true:false;
-	stat.side = tas.side;
-	stat.spectator = (tas.player == 0)?true:false;
-	stat.sync = tas.sync;
-	stat.team = tas.team;
+	//http://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYSTATUS:client
+	stat.ready =      (tas >>  1)  &   1;
+	stat.team =       (tas >>  2)  &  15;
+	stat.ally =       (tas >>  6)  &  15;
+	stat.spectator =  (tas >> 10)  &   1;
+	stat.handicap =  ((tas >> 11)  & 127) % 101;
+	stat.sync =      ((tas >> 22)  &   3) %   3;
+ 	stat.side =       (tas >> 24)  &  15;
 	return stat;
 }
 
 
-TASBattleStatus ConvTasbattlestatus( UserBattleStatus bs)
+int ConvTasbattlestatus( UserBattleStatus bs)
 {
-	TASBattleStatus stat;
-	stat.unused = 0;
-	stat.unused2 = 0;
-	stat.unused3 = 0;
-	stat.ally = bs.ally;
-	stat.handicap = bs.handicap;
-	stat.ready = bs.ready?1:0;
-	stat.side = bs.side;
-	stat.player = bs.spectator?0:1;
-	stat.sync = bs.sync;
-	stat.team = bs.team;
-	return stat;
+	int ret = 0; // b0 is reserved
+	ret += (bs.ready ? 1:0) << 1; // b1
+	ret += (bs.team % 16) << 2; //b2..b5
+	ret += (bs.ally % 16) << 6; //b6..b9
+	ret += (bs.spectator?1:0) << 10; //b10
+	ret += (bs.handicap % 101) << 11; //b11..b17
+	//b18..b21 reserverd
+	ret += (bs.sync % 3) << 22; //b22..b23
+	ret += (bs.side % 16) << 24; //b24..b27
+	//b28..31 is unused
+	return ret;
 }
 
 
