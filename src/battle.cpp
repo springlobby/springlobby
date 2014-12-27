@@ -50,7 +50,7 @@ Battle::Battle( IServer& serv, int id ) :
         m_id( id ),
 		m_timer(NULL)
 {
-	m_autohost_manager = new AutohostManager();
+	m_autohost_manager = new AutohostManager(); //FIXME: don't instantiate for each battle, only for the battle we've joined
 	m_autohost_manager->SetBattle(this);
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
     m_opts.battleid =  m_id;
