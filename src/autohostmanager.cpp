@@ -169,11 +169,11 @@ SpadsHandler& AutohostManager::GetSpads()
 
 bool AutohostManager::RecognizeAutohost(const std::string& type)
 {
-	if (type == _T("SPRINGIE")) {
+	if (type == "SPRINGIE") {
 		m_type = AutohostManager::AUTOHOSTTYPE_SPRINGIE;
                 return true;
 	}
-	if (type == _T("SPADS")) {
+	if (type == "SPADS") {
 		m_type = AutohostManager::AUTOHOSTTYPE_SPADS;
 		return true;
 	}
