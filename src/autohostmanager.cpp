@@ -189,7 +189,7 @@ bool AutohostManager::RecnognizeAutohost(const wxString& who, const wxString& me
                     m_type=AutohostManager::AUTOHOSTTYPE_SPRINGIE;
                     return true;
                 }
-                else if(message.Find(_T("welcome to Spads0"))!=wxNOT_FOUND)
+                else if(message.Find(_T("SPADS"))!=wxNOT_FOUND)
                 {
                     m_type=AutohostManager::AUTOHOSTTYPE_SPADS;
                     return true;
