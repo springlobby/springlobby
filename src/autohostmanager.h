@@ -21,10 +21,11 @@ class AutohostHandler
         virtual void Notify(){};
         virtual void Start(){};
     protected:
-        IBattle* m_battle;
+        virtual void Send(const std::string& /*cmd*/);
 
     private:
         void SetBattle(IBattle* battle);
+        IBattle* m_battle;
 
 
         friend class AutohostManager;
