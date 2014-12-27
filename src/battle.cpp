@@ -30,6 +30,7 @@
 #include "spring.h"
 #include "utils/conversion.h"
 #include "utils/globalevents.h"
+#include "autohostmanager.h"
 #include "log.h"
 
 
@@ -49,6 +50,8 @@ Battle::Battle( IServer& serv, int id ) :
         m_id( id ),
 		m_timer(NULL)
 {
+	m_autohost_manager = new AutohostManager();
+	m_autohost_manager->SetBattle(this);
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
     m_opts.battleid =  m_id;
 }
@@ -60,6 +63,8 @@ Battle::~Battle()
 		delete m_timer;
 		m_timer = NULL;
 	}
+	delete m_autohost_manager;
+	m_autohost_manager = NULL;
 }
 
 

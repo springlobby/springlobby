@@ -28,8 +28,10 @@
 #include "utils/uievents.h"
 #include "log.h"
 #include "utils/conversion.h"
+#include "autohostmanager.h"
 
 #include <lslutils/globalsmanager.h>
+#include <exception>
 
 void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool /*unused*/ )
 {
@@ -481,12 +483,12 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 							 	 	 }
 							 	 }
 							 }
-            }
-            else
-            {
-                battle.CustomBattleOptions().setSingleOption( STD_STRING(key), STD_STRING(value), LSL::Enum::EngineOption );
-                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::EngineOption, key.c_str() )));
-            }
+		} else if (key.Left(8) == _T("hosttype")) {
+			battle.m_autohost_manager->RecognizeAutohost(value);
+		} else {
+			battle.CustomBattleOptions().setSingleOption( STD_STRING(key), STD_STRING(value), LSL::Enum::EngineOption );
+			battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::EngineOption, key.c_str() )));
+		}
         }
     }
     catch (assert_exception) {}

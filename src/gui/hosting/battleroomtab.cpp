@@ -54,6 +54,7 @@
 #include "autohost.h"
 #include "log.h"
 #include "utils/lslconversion.h"
+#include "autohostmanager.h"
 
 BEGIN_EVENT_TABLE( BattleRoomTab, wxPanel )
 
@@ -604,7 +605,7 @@ void BattleRoomTab::OnStart( wxCommandEvent& /*unused*/ )
 		}
 		else
 		{
-			autohostManager.GetAutohostHandler().Start();
+			m_battle->m_autohost_manager->GetAutohostHandler().Start();
 			//customMessageBoxNoModal( SL_MAIN_ICON, _("Host is not ingame."), _("Error") );
 		}
 	}
@@ -993,7 +994,7 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 	{
 		if ( !m_battle->IsFounderMe() )
 		{
-            autohostManager.GetAutohostHandler().SetMap(mapname);
+			m_battle->m_autohost_manager->GetAutohostHandler().SetMap(mapname);
 			//m_battle->DoAction( _T( "suggests " ) + mapname );
 			return;
 		}
@@ -1033,7 +1034,7 @@ void BattleRoomTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 	{
 		try
 		{
-			autohostManager.GetAutohostHandler().SetMap(m_map_combo->GetString(m_map_combo->GetCurrentSelection()));
+			m_battle->m_autohost_manager->GetAutohostHandler().SetMap(m_map_combo->GetString(m_map_combo->GetCurrentSelection()));
             //m_battle->DoAction( _T( "suggests " ) + TowxString(LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name));
 		}
 		catch ( ... )
@@ -1111,7 +1112,6 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 	m_minimap->SetBattle( m_battle );
 	m_players->SetBattle( m_battle );
 	m_chat->SetBattle( m_battle );
-	autohostManager.SetBattle(m_battle);
 
 	m_players->Clear();
 
@@ -1194,8 +1194,6 @@ void BattleRoomTab::OnBattleActionEvent( UiEvents::UiEventData data )
 	wxString msg = data.Count() > 1 ? data[1] : wxString(wxEmptyString);
 	GetChatPanel().DidAction( nick, msg );
 
-	if(autohostManager.GetAutohostType()==AutohostManager::AUTOHOSTTYPE_NONE)
-		autohostManager.RecnognizeAutohost(nick, msg);
 }
 
 void BattleRoomTab::OnHostNew( wxCommandEvent& /*event*/ )

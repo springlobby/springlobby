@@ -40,6 +40,7 @@ lsl/battle/ibattle.cpp
 
 
 IBattle::IBattle():
+	m_autohost_manager(NULL),
 	m_generating_script(false),
 	m_is_self_in(false),
 	m_ingame(false),

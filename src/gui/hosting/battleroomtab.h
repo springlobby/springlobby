@@ -8,7 +8,6 @@
 #include <lslunitsync/optionswrapper.h>
 #include "utils/globalevents.h"
 #include "utils/uievents.h"
-#include "autohostmanager.h"
 #include <map>
 
 class Ui;
@@ -125,8 +124,6 @@ private:
         void OnAutohostNotify( wxCommandEvent& event );
 
 		void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
-
-        AutohostManager autohostManager;
 
 		long AddMMOptionsToList( long pos, LSL::Enum::GameOption optFlag );
 

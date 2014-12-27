@@ -6,6 +6,7 @@
 #include "user.h"
 #include "gui/mainwindow.h"
 #include "utils/conversion.h"
+#include <wx/log.h>
 
 AutohostHandler::AutohostHandler():m_battle(0)
 {
@@ -134,24 +135,25 @@ AutohostManager::~AutohostManager()
 
 void AutohostManager::SetBattle(IBattle* battle)
 {
-    m_battle=battle;
+    m_type = AutohostManager::AUTOHOSTTYPE_NONE;
+    m_battle = battle;
+
     m_springie.SetBattle(battle);
     m_spads.SetBattle(battle);
     m_emptyhandler.SetBattle(battle);
-    m_type=AutohostManager::AUTOHOSTTYPE_NONE;
 }
 
 AutohostHandler& AutohostManager::GetAutohostHandler()
 {
     switch(m_type)
     {
-        case AUTOHOSTTYPE_SPRINGIE:
-            return GetSpringie();
-        case AUTOHOSTTYPE_SPADS:
-            return GetSpads();
-		case AUTOHOSTTYPE_NONE:
-		case AUTOHOSTTYPE_UNKNOWN:
-			return m_emptyhandler;
+	case AUTOHOSTTYPE_SPRINGIE:
+		return GetSpringie();
+	case AUTOHOSTTYPE_SPADS:
+		return GetSpads();
+	case AUTOHOSTTYPE_NONE:
+	case AUTOHOSTTYPE_UNKNOWN:
+		return m_emptyhandler;
     }
     return m_emptyhandler;
 }
@@ -166,42 +168,24 @@ SpadsHandler& AutohostManager::GetSpads()
     return m_spads;
 }
 
-bool AutohostManager::RecnognizeAutohost()
+bool AutohostManager::RecognizeAutohost(const wxString& type)
 {
-    m_type=AutohostManager::AUTOHOSTTYPE_UNKNOWN;
-    return false;
-}
+	if (type == _T("SPRINGIE")) {
+		m_type = AutohostManager::AUTOHOSTTYPE_SPRINGIE;
+                return true;
+	}
+	if (type == _T("SPADS")) {
+		m_type = AutohostManager::AUTOHOSTTYPE_SPADS;
+		return true;
+	}
 
-bool AutohostManager::RecnognizeAutohost(const wxString& who, const wxString& message)
-{
-    if(m_battle)
-    {
-        User& founder=m_battle->GetFounder();
-        UserStatus status=founder.GetStatus();
-
-        if(status.bot)
-        {
-            wxString nick=TowxString(founder.GetNick());
-            if(who.Upper() ==nick.Upper())
-            {
-                if(message.Find(_T("welcome to Springie"))!=wxNOT_FOUND)
-                {
-                    m_type=AutohostManager::AUTOHOSTTYPE_SPRINGIE;
-                    return true;
-                }
-                else if(message.Find(_T("welcome to Spads0"))!=wxNOT_FOUND)
-                {
-                    m_type=AutohostManager::AUTOHOSTTYPE_SPADS;
-                    return true;
-                }
-            }
-        }
-    }
-    m_type=AutohostManager::AUTOHOSTTYPE_UNKNOWN;
-    return false;
+	wxLogMessage("Unknown autohost: %s", type);
+	m_type=AutohostManager::AUTOHOSTTYPE_UNKNOWN;
+	return false;
 }
 
 AutohostManager::AutohostType AutohostManager::GetAutohostType()
 {
     return m_type;
 }
+

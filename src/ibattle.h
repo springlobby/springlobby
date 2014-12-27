@@ -30,6 +30,7 @@ const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 class IBattle;
 class IServer;
 class AutoHost;
+class AutohostManager;
 
 struct BattleStartRect {
 	BattleStartRect() :
@@ -552,6 +553,7 @@ public:
 	virtual void RingNotSyncedAndNotReadyPlayers() {}
 	virtual void SetAutoLockOnStart(bool /*autolock*/) {}
 
+	AutohostManager* m_autohost_manager;
 protected:
 	BattleOptions m_opts;
 	bool m_generating_script;

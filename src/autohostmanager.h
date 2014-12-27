@@ -4,7 +4,6 @@
 #define AUTOHOSTMANAGER_H
 
 #include <wx/string.h>
-#include <exception>
 class IBattle;
 
 
@@ -78,8 +77,7 @@ class AutohostManager
 
         void SetBattle(IBattle* bt);
 
-        bool RecnognizeAutohost();
-        bool RecnognizeAutohost(const wxString& who, const wxString& message);
+        bool RecognizeAutohost(const wxString& type);
 
         AutohostType GetAutohostType();
 
