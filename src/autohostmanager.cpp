@@ -46,9 +46,9 @@ void SpringieHandler::SetRandomMap()
     m_battle->Say("!map");
 }
 
-void SpringieHandler::SetMap(const wxString& map)
+void SpringieHandler::SetMap(const std::string& map)
 {
-    m_battle->Say("!map " + STD_STRING(map));
+    m_battle->Say("!map " + map);
 }
 
 void SpringieHandler::ClearStartBoxes()
@@ -96,9 +96,9 @@ void SpadsHandler::SetRandomMap()
     m_battle->Say("!map 1"); //not so random
 }
 
-void SpadsHandler::SetMap(const wxString& map)
+void SpadsHandler::SetMap(const std::string& map)
 {
-    m_battle->Say("!map "+STD_STRING(map));
+    m_battle->Say("!map "+map);
 }
 
 void SpadsHandler::ClearStartBoxes()
@@ -145,8 +145,7 @@ void AutohostManager::SetBattle(IBattle* battle)
 
 AutohostHandler& AutohostManager::GetAutohostHandler()
 {
-    switch(m_type)
-    {
+    switch(m_type) {
 	case AUTOHOSTTYPE_SPRINGIE:
 		return GetSpringie();
 	case AUTOHOSTTYPE_SPADS:
@@ -168,7 +167,7 @@ SpadsHandler& AutohostManager::GetSpads()
     return m_spads;
 }
 
-bool AutohostManager::RecognizeAutohost(const wxString& type)
+bool AutohostManager::RecognizeAutohost(const std::string& type)
 {
 	if (type == _T("SPRINGIE")) {
 		m_type = AutohostManager::AUTOHOSTTYPE_SPRINGIE;

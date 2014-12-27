@@ -3,7 +3,7 @@
 #ifndef AUTOHOSTMANAGER_H
 #define AUTOHOSTMANAGER_H
 
-#include <wx/string.h>
+#include <string>
 class IBattle;
 
 
@@ -15,7 +15,7 @@ class AutohostHandler
 
         virtual void Balance(){};
         virtual void SetRandomMap(){};
-        virtual void SetMap(const wxString& /*map*/){};
+        virtual void SetMap(const std::string& /*map*/){};
         virtual void ClearStartBoxes(){};
         virtual void AddStartBox(int /*posx*/,int /*posy*/,int /*w*/,int /*h*/){};
         virtual void Notify(){};
@@ -38,7 +38,7 @@ class SpringieHandler: public AutohostHandler
 
         void Balance();
         void SetRandomMap();
-        void SetMap(const wxString& map);
+        void SetMap(const std::string& map);
         void ClearStartBoxes();
         void AddStartBox(int posx,int posy,int w,int h);
         void Notify();
@@ -53,7 +53,7 @@ class SpadsHandler: virtual public AutohostHandler
 
         void Balance();
         void SetRandomMap();
-        void SetMap(const wxString& map);
+        void SetMap(const std::string& map);
         void ClearStartBoxes();
         void AddStartBox(int posx,int posy,int w,int h);
         void Notify();
@@ -77,7 +77,7 @@ class AutohostManager
 
         void SetBattle(IBattle* bt);
 
-        bool RecognizeAutohost(const wxString& type);
+        bool RecognizeAutohost(const std::string& type);
 
         AutohostType GetAutohostType();
 

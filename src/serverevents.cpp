@@ -484,7 +484,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 							 	 }
 							 }
 		} else if (key.Left(8) == _T("hosttype")) {
-			battle.m_autohost_manager->RecognizeAutohost(value);
+			battle.m_autohost_manager->RecognizeAutohost(STD_STRING(value));
 		} else {
 			battle.CustomBattleOptions().setSingleOption( STD_STRING(key), STD_STRING(value), LSL::Enum::EngineOption );
 			battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::EngineOption, key.c_str() )));

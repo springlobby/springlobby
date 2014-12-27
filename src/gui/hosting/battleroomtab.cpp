@@ -994,7 +994,7 @@ void BattleRoomTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 	{
 		if ( !m_battle->IsFounderMe() )
 		{
-			m_battle->m_autohost_manager->GetAutohostHandler().SetMap(mapname);
+			m_battle->m_autohost_manager->GetAutohostHandler().SetMap(STD_STRING(mapname));
 			//m_battle->DoAction( _T( "suggests " ) + mapname );
 			return;
 		}
@@ -1034,7 +1034,8 @@ void BattleRoomTab::OnMapSelect( wxCommandEvent& /*unused*/ )
 	{
 		try
 		{
-			m_battle->m_autohost_manager->GetAutohostHandler().SetMap(m_map_combo->GetString(m_map_combo->GetCurrentSelection()));
+			const std::string map = STD_STRING(m_map_combo->GetString(m_map_combo->GetCurrentSelection()));
+			m_battle->m_autohost_manager->GetAutohostHandler().SetMap(map);
             //m_battle->DoAction( _T( "suggests " ) + TowxString(LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name));
 		}
 		catch ( ... )
