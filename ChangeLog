@@ -8,7 +8,7 @@ ChangeLog of Springlobby
  - replace springsettings by running spring executable / edit settings
  - allow cpuid to be set by config var
  - increase connect timeouts for downloader
- - fix autohost connection (clicking "Start" should send !start again)
+ - fix autohost detection (clicking "Start" should send !start again)
 
 ## 0.201
  - reworked connect / register dialog
