@@ -179,7 +179,7 @@ bool AutohostManager::RecognizeAutohost(const wxString& type)
 		return true;
 	}
 
-	wxLogMessage(_T("Unknown autohost: %s"), type);
+	wxLogMessage(_T("Unknown autohost: %s"), type.c_str());
 	m_type=AutohostManager::AUTOHOSTTYPE_UNKNOWN;
 	return false;
 }
