@@ -340,7 +340,10 @@ IF(WIN32)
 	)
 	install(TARGETS springlobby RUNTIME DESTINATION .)
 ELSE (WIN32)
-	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+	install(TARGETS springlobby 
+		RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin 
+		BUNDLE DESTINATION  ${CMAKE_INSTALL_PREFIX}/bin
+		)
 ENDIF (WIN32)
 
 TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion
