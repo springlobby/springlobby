@@ -259,7 +259,7 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 		try {
 			bundle.AutoComplete();
 			version = TowxString(bundle.version);
-			if (!bundle.IsValid() || version.IsEmpty()) {
+			if (!bundle.IsValid() || version.IsEmpty()) { // couldn't detect paths automaticly, allow user to select spring executable
 				wxFileDialog pick( this, _( "Choose a Spring executable" ),
 				wxPathOnly(TowxString(bundle.unitsync)),
 				wxFileName::FileName(TowxString(SlPaths::GetSpringBinary())).GetFullName(),
