@@ -33,12 +33,12 @@
 #include <lslutils/globalsmanager.h>
 #include <exception>
 
-void ServerEvents::OnConnected( const wxString& server_name, const wxString& server_ver, bool supported, const wxString& server_spring_ver, bool /*unused*/ )
+void ServerEvents::OnConnected( const std::string& server_name, const std::string& server_ver, bool supported, const std::string& server_spring_ver, bool /*unused*/ )
 {
-	slLogDebugFunc("%s %s", STD_STRING(server_ver).c_str(), STD_STRING(server_spring_ver).c_str());
+	slLogDebugFunc("%s %s", server_ver.c_str(), server_spring_ver.c_str());
     //Server version will include patchlevel from release 89 onwards
-    m_serv.SetRequiredSpring( server_spring_ver.BeforeFirst('.') );
-    ui().OnConnected( m_serv, server_name, server_ver, supported );
+    m_serv.SetRequiredSpring( TowxString(server_spring_ver).BeforeFirst('.') );
+    ui().OnConnected( m_serv, TowxString(server_name), TowxString(server_ver), supported );
     m_serv.Login();
 }
 
@@ -88,10 +88,10 @@ void ServerEvents::OnLoginInfoComplete()
 }
 
 
-void ServerEvents::OnUnknownCommand( const wxString& command, const wxString& params )
+void ServerEvents::OnUnknownCommand( const std::string& command, const std::string& params )
 {
 	slLogDebugFunc("");
-    ui().OnUnknownCommand( m_serv, command, params );
+    ui().OnUnknownCommand(m_serv, TowxString(command), TowxString(params));
 }
 
 
@@ -107,10 +107,10 @@ void ServerEvents::OnProtocolError( const Protocolerror /*unused*/ )
 }
 
 
-void ServerEvents::OnMotd( const wxString& msg )
+void ServerEvents::OnMotd( const std::string& msg )
 {
 	slLogDebugFunc("");
-    ui().OnMotd( m_serv, msg );
+    ui().OnMotd(m_serv, TowxString(msg));
 }
 
 
@@ -122,41 +122,41 @@ void ServerEvents::OnPong( wxLongLong ping_time )
 }
 
 
-void ServerEvents::OnNewUser( const wxString& nick, const wxString& country, int cpu, const wxString& id )
+void ServerEvents::OnNewUser( const std::string& nick, const std::string& country, int cpu, int id )
 {
 	slLogDebugFunc("");
     try
     {
-        ASSERT_LOGIC( !m_serv.UserExists( nick ), _T("New user from server, but already exists!") );
+        ASSERT_LOGIC( !m_serv.UserExists( TowxString(nick) ), _T("New user from server, but already exists!") );
     }
     catch (...)
     {
         return;
     }
-    User& user = m_serv._AddUser( nick );
-    if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
-        actNotifBox( SL_MAIN_ICON, nick + _(" is online") );
-    user.SetCountry( STD_STRING(country));
+    User& user = m_serv._AddUser(TowxString(nick));
+    if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, TowxString(nick)) )
+        actNotifBox( SL_MAIN_ICON, TowxString(nick) + _(" is online") );
+    user.SetCountry( country);
     user.SetCpu( cpu );
-		user.SetID(STD_STRING(id));
+		user.SetID(id);
     ui().OnUserOnline( user );
 }
 
 
-void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
+void ServerEvents::OnUserStatus( const std::string& nick, UserStatus status )
 {
 	slLogDebugFunc("");
     try
     {
-        User& user = m_serv.GetUser( nick );
+        User& user = m_serv.GetUser(TowxString(nick));
 
         UserStatus oldStatus = user.GetStatus();
         user.SetStatus( status );
-        if ( useractions().DoActionOnUser( UserActions::ActNotifStatus, nick ) )
+        if ( useractions().DoActionOnUser( UserActions::ActNotifStatus, TowxString(nick) ) )
         {
             wxString diffString = TowxString(status.GetDiffString( oldStatus ));
             if ( diffString != wxEmptyString )
-                actNotifBox( SL_MAIN_ICON, nick + _(" is now ") + diffString );
+                actNotifBox( SL_MAIN_ICON, TowxString(nick) + _(" is now ") + diffString );
         }
 
         ui().OnUserStatusChanged( user );
@@ -185,12 +185,12 @@ void ServerEvents::OnUserStatus( const wxString& nick, UserStatus status )
 }
 
 
-void ServerEvents::OnUserQuit( const wxString& nick )
+void ServerEvents::OnUserQuit( const std::string& nick )
 {
 	slLogDebugFunc("");
     try
     {
-        User &user=m_serv.GetUser( nick );
+        User &user=m_serv.GetUser( TowxString(nick) );
 				IBattle* userbattle = user.GetBattle();
 				if ( userbattle )
 				{
@@ -202,17 +202,17 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 							for ( int i = 0; i < int(userbattle->GetNumUsers()); i ++ )
 							{
 								User& battleuser = userbattle->GetUser( i );
-								OnUserLeftBattle( battleid, TowxString(battleuser.GetNick()));
+								OnUserLeftBattle( battleid, battleuser.GetNick());
 							}
 							 OnBattleClosed( battleid );
 						}
-						else OnUserLeftBattle( battleid, TowxString(user.GetNick()));
+						else OnUserLeftBattle( battleid, user.GetNick());
 					}catch(...){}
 				}
         ui().OnUserOffline( user );
-        m_serv._RemoveUser( nick );
-        if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, nick ) )
-            actNotifBox( SL_MAIN_ICON, nick + _(" just went offline") );
+        m_serv._RemoveUser( TowxString(nick) );
+        if ( useractions().DoActionOnUser( UserActions::ActNotifLogin, TowxString(nick) ) )
+            actNotifBox( SL_MAIN_ICON, TowxString(nick) + _(" just went offline") );
     }
     catch (std::runtime_error &except)
     {
@@ -220,10 +220,10 @@ void ServerEvents::OnUserQuit( const wxString& nick )
 }
 
 
-void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const wxString& nick,
-									const wxString& host, int port, int maxplayers,
-									bool haspass, int rank, const wxString& maphash, const wxString& engineName, const wxString& engineVersion, const wxString& map,
-									const wxString& title, const wxString& mod )
+void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const std::string& nick,
+									const std::string& host, int port, int maxplayers,
+									bool haspass, int rank, const std::string& maphash, const std::string& engineName, const std::string& engineVersion, const std::string& map,
+									const std::string& title, const std::string& mod )
 {
 	slLogDebugFunc("");
     try
@@ -231,25 +231,25 @@ void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const w
         ASSERT_EXCEPTION( !m_serv.BattleExists( id ), _T("New battle from server, but already exists!") );
         IBattle& battle = m_serv._AddBattle( id );
 
-        User& user = m_serv.GetUser( nick );
+        User& user = m_serv.GetUser( TowxString(nick) );
         battle.OnUserAdded( user );
 
         battle.SetBattleType( type );
         battle.SetNatType( nat );
-        battle.SetFounder( STD_STRING(nick));
-        battle.SetHostIp( STD_STRING(host));
+        battle.SetFounder( nick);
+        battle.SetHostIp( host);
         battle.SetHostPort( port );
         battle.SetMaxPlayers( maxplayers );
         battle.SetIsPassworded( haspass );
         battle.SetRankNeeded( rank );
-        battle.SetHostMap( STD_STRING(map), STD_STRING(maphash));
-        battle.SetDescription( STD_STRING(title));
-        battle.SetHostMod( STD_STRING(mod), "" );
-		battle.SetEngineName(STD_STRING(engineName));
-		battle.SetEngineVersion(STD_STRING(engineVersion));
+        battle.SetHostMap( map, maphash);
+        battle.SetDescription( title);
+        battle.SetHostMod( mod, "" );
+		battle.SetEngineName(engineName);
+		battle.SetEngineVersion(engineVersion);
 
         if ( useractions().DoActionOnUser( UserActions::ActNotifBattle, TowxString(user.GetNick())) )
-            actNotifBox( SL_MAIN_ICON, TowxString(user.GetNick()) + _(" opened battle ") + title );
+            actNotifBox( SL_MAIN_ICON, TowxString(user.GetNick()) + _(" opened battle ") + TowxString(title));
 
         ui().OnBattleOpened( battle );
         if ( user.Status().in_game )
@@ -264,14 +264,14 @@ void ServerEvents::OnBattleOpened( int id, BattleType type, NatType nat, const w
 }
 
 
-void ServerEvents::OnJoinedBattle( int battleid, const wxString& hash )
+void ServerEvents::OnJoinedBattle( int battleid, const std::string& hash )
 {
 	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
 
-        battle.SetHostMod( battle.GetHostModName(), STD_STRING(hash));
+        battle.SetHostMod( battle.GetHostModName(), hash);
         UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
         bs.spectator = false;
 
@@ -332,12 +332,12 @@ void ServerEvents::OnStartHostedBattle( int battleid )
 }
 
 
-void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, UserBattleStatus status )
+void ServerEvents::OnClientBattleStatus( int battleid, const std::string& nick, UserBattleStatus status )
 {
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-        User& user = battle.GetUser( STD_STRING(nick) );
+        User& user = battle.GetUser( nick);
 
 		//if ( battle.IsFounderMe() ) AutoCheckCommandSpam( battle, user );
 
@@ -350,16 +350,16 @@ void ServerEvents::OnClientBattleStatus( int battleid, const wxString& nick, Use
 }
 
 
-void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick, const wxString& userScriptPassword )
+void ServerEvents::OnUserJoinedBattle( int battleid, const std::string& nick, const std::string& userScriptPassword )
 {
     try
     {
 		slLogDebugFunc("");
-        User& user = m_serv.GetUser( nick );
+        User& user = m_serv.GetUser(TowxString(nick));
         IBattle& battle = m_serv.GetBattle( battleid );
 
         battle.OnUserAdded( user );
-		user.BattleStatus().scriptPassword = STD_STRING(userScriptPassword);
+		user.BattleStatus().scriptPassword = userScriptPassword;
         ui().OnUserJoinedBattle( battle, user );
 				try
 				{
@@ -379,13 +379,13 @@ void ServerEvents::OnUserJoinedBattle( int battleid, const wxString& nick, const
 }
 
 
-void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
+void ServerEvents::OnUserLeftBattle( int battleid, const std::string& nick )
 {
 	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-        User& user = battle.GetUser(STD_STRING(nick));
+        User& user = battle.GetUser(nick);
         // this is necessary since the user will be deleted when the gui function is called
         bool isbot = user.BattleStatus().IsBot();
 		user.BattleStatus().scriptPassword.clear();
@@ -399,7 +399,7 @@ void ServerEvents::OnUserLeftBattle( int battleid, const wxString& nick )
 }
 
 
-void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, const wxString& maphash, const wxString& map )
+void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locked, const std::string& maphash, const std::string& map )
 {
 	slLogDebugFunc("");
     try
@@ -409,14 +409,14 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
         battle.SetSpectators( spectators );
         battle.SetIsLocked( locked );
 
-        wxString oldmap = TowxString(battle.GetHostMapName());
+        const std::string oldmap = battle.GetHostMapName();
 
-        battle.SetHostMap( STD_STRING(map), STD_STRING(maphash));
+        battle.SetHostMap(map, maphash);
 
         if ( (oldmap != map) && (battle.UserExists( m_serv.GetMe().GetNick())) )
         {
             battle.SendMyBattleStatus();
-            battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, STD_STRING(map));
+            battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, map);
             battle.Update( STD_STRING(wxString::Format( _T("%d_mapname"), LSL::Enum::PrivateOptions )));
         }
 
@@ -425,32 +425,32 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
     catch (assert_exception) {}
 }
 
-void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const wxString& value )
+void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, const std::string& value )
 {
-    slLogDebugFunc("%s, %s",  STD_STRING(param).c_str(), STD_STRING(value).c_str());
+    slLogDebugFunc("%s, %s",  param.c_str(), value.c_str());
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-		battle.m_script_tags[STD_STRING(param)] = STD_STRING(value);
-        wxString key = param;
+		battle.m_script_tags[param] = value;
+        wxString key = TowxString(param);
         if ( key.Left( 5 ) == _T("game/") )
         {
             key = key.AfterFirst( '/' );
             if ( key.Left( 11 ) == _T( "mapoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
-                battle.CustomBattleOptions().setSingleOption(STD_STRING(key), STD_STRING(value), LSL::Enum::MapOption );
+                battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::MapOption );
                 battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::MapOption, key.c_str() )));
             }
             else if ( key.Left( 11 ) == _T( "modoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
-                battle.CustomBattleOptions().setSingleOption(STD_STRING(key), STD_STRING(value), LSL::Enum::ModOption );
+                battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::ModOption );
                 battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::ModOption,  key.c_str() )));
             }
             else if ( key.Left( 8 ) == _T( "restrict" ) )
             {
-            	OnBattleDisableUnit( battleid, key.AfterFirst(_T('/')), s2l(value) );
+				OnBattleDisableUnit( battleid, STD_STRING(key.AfterFirst(_T('/'))), s2l(TowxString(value)) );
             }
             else if ( key.Left( 4 ) == _T( "team" ) && key.Find( _T("startpos") ) != wxNOT_FOUND )
             {
@@ -464,7 +464,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 							 	 	 UserBattleStatus& status = usr.BattleStatus();
 							 	 	 if ( status.team == team )
 							 	 	 {
-							 	 	 	 status.pos.x = s2l( value );
+							 	 	 	 status.pos.x = s2l(TowxString(value));
 										 battle.OnUserBattleStatusUpdated( usr, status );
 							 	 	 }
 							 	 }
@@ -478,15 +478,15 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
 							 	 	 UserBattleStatus& status = usr.BattleStatus();
 							 	 	 if ( status.team == team )
 							 	 	 {
-							 	 	 	 status.pos.y = s2l( value );
+							 	 	 	 status.pos.y = s2l(TowxString(value));
 							 	 	 	 battle.OnUserBattleStatusUpdated( usr, status );
 							 	 	 }
 							 	 }
 							 }
 		} else if (key.Left(8) == _T("hosttype")) {
-			battle.m_autohost_manager->RecognizeAutohost(STD_STRING(value));
+			battle.m_autohost_manager->RecognizeAutohost(value);
 		} else {
-			battle.CustomBattleOptions().setSingleOption( STD_STRING(key), STD_STRING(value), LSL::Enum::EngineOption );
+			battle.CustomBattleOptions().setSingleOption( STD_STRING(key), value, LSL::Enum::EngineOption );
 			battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::EngineOption, key.c_str() )));
 		}
         }
@@ -494,7 +494,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const wxString& param, const w
     catch (assert_exception) {}
 }
 
-void ServerEvents::OnUnsetBattleInfo( int /*battleid*/, const wxString& /*param*/)
+void ServerEvents::OnUnsetBattleInfo( int /*battleid*/, const std::string& /*param*/)
 {
 	//FIXME: implement this
 }
@@ -527,26 +527,26 @@ void ServerEvents::OnBattleClosed( int battleid )
 }
 
 
-void ServerEvents::OnBattleDisableUnit( int battleid, const wxString& unitname, int count )
+void ServerEvents::OnBattleDisableUnit( int battleid, const std::string& unitname, int count )
 {
 	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-        battle.RestrictUnit(STD_STRING(unitname), count );
+        battle.RestrictUnit(unitname, count );
         battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::Enum::PrivateOptions )));
     }
     catch ( assert_exception ) {}
 }
 
 
-void ServerEvents::OnBattleEnableUnit( int battleid, const wxString& unitname )
+void ServerEvents::OnBattleEnableUnit( int battleid, const std::string& unitname )
 {
 	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-        battle.UnrestrictUnit(STD_STRING(unitname));
+        battle.UnrestrictUnit(unitname);
         battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::Enum::PrivateOptions )));
     }
     catch ( assert_exception ) {}
@@ -566,30 +566,30 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
 }
 
 
-void ServerEvents::OnJoinChannelResult( bool success, const wxString& channel, const wxString& reason )
+void ServerEvents::OnJoinChannelResult( bool success, const std::string& channel, const std::string& reason )
 {
 	slLogDebugFunc("");
     if ( success )
     {
-        Channel& chan = m_serv._AddChannel( channel );
-        chan.SetPassword(STD_STRING(m_serv.m_channel_pw[channel]));
+        Channel& chan = m_serv._AddChannel(TowxString(channel));
+        chan.SetPassword(STD_STRING(m_serv.m_channel_pw[TowxString(channel)]));
         ui().OnJoinedChannelSuccessful( chan );
 
     }
     else
     {
-        ui().ShowMessage( _("Join channel failed"), _("Could not join channel ") + channel + _(" because: ") + reason );
+        ui().ShowMessage( _("Join channel failed"), _("Could not join channel ") + TowxString(channel) + _(" because: ") + TowxString(reason) );
     }
 }
 
 
-void ServerEvents::OnChannelSaid( const wxString& channel, const wxString& who, const wxString& message )
+void ServerEvents::OnChannelSaid( const std::string& channel, const std::string& who, const std::string& message )
 {
 	slLogDebugFunc("");
     try
     {
-        if ( ( m_serv.GetMe().GetNick() ==  STD_STRING(who) ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
-            m_serv.GetChannel( channel ).Said( m_serv.GetUser( who ), STD_STRING(message) );
+        if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, TowxString(who)) )
+            m_serv.GetChannel(TowxString(channel)).Said( m_serv.GetUser(TowxString(who)), message);
     }
     catch (std::runtime_error &except)
     {
@@ -597,12 +597,12 @@ void ServerEvents::OnChannelSaid( const wxString& channel, const wxString& who, 
 }
 
 
-void ServerEvents::OnChannelJoin( const wxString& channel, const wxString& who )
+void ServerEvents::OnChannelJoin( const std::string& channel, const std::string& who )
 {
 	slLogDebugFunc("");
     try
     {
-        m_serv.GetChannel( channel ).OnChannelJoin( m_serv.GetUser( who ) );
+        m_serv.GetChannel(TowxString(channel)).OnChannelJoin( m_serv.GetUser(TowxString(who)) );
     }
     catch (std::runtime_error &except)
     {
@@ -610,12 +610,12 @@ void ServerEvents::OnChannelJoin( const wxString& channel, const wxString& who )
 }
 
 
-void ServerEvents::OnChannelPart( const wxString& channel, const wxString& who, const wxString& message )
+void ServerEvents::OnChannelPart( const std::string& channel, const std::string& who, const std::string& message )
 {
 	slLogDebugFunc("");
     try
     {
-        m_serv.GetChannel( channel ).Left( m_serv.GetUser( who ), STD_STRING(message));
+        m_serv.GetChannel(TowxString(channel)).Left( m_serv.GetUser(TowxString(who)), message);
     }
     catch (std::runtime_error &except)
     {
@@ -623,12 +623,12 @@ void ServerEvents::OnChannelPart( const wxString& channel, const wxString& who, 
 }
 
 
-void ServerEvents::OnChannelTopic( const wxString& channel, const wxString& who, const wxString& message, int /*unused*/ )
+void ServerEvents::OnChannelTopic( const std::string& channel, const std::string& who, const std::string& message, int /*unused*/ )
 {
 	slLogDebugFunc("");
     try
     {
-        m_serv.GetChannel( channel ).SetTopic( STD_STRING(message), STD_STRING(who));
+        m_serv.GetChannel(TowxString(channel)).SetTopic( message, who);
     }
     catch (std::runtime_error &except)
     {
@@ -636,13 +636,13 @@ void ServerEvents::OnChannelTopic( const wxString& channel, const wxString& who,
 }
 
 
-void ServerEvents::OnChannelAction( const wxString& channel, const wxString& who, const wxString& action )
+void ServerEvents::OnChannelAction( const std::string& channel, const std::string& who, const std::string& action )
 {
 	slLogDebugFunc("");
     try
     {
-		if ( ( m_serv.GetMe().GetNick() ==  STD_STRING(who) ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, who ) )
-			m_serv.GetChannel( channel ).DidAction( m_serv.GetUser( who ), STD_STRING(action));
+		if ( ( m_serv.GetMe().GetNick() ==  who ) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, TowxString(who) ) )
+			m_serv.GetChannel(TowxString(channel)).DidAction( m_serv.GetUser(TowxString(who)), action);
     }
     catch (std::runtime_error &except)
     {
@@ -650,46 +650,46 @@ void ServerEvents::OnChannelAction( const wxString& channel, const wxString& who
 }
 
 
-void ServerEvents::OnPrivateMessage( const wxString& user, const wxString& message, bool fromme )
+void ServerEvents::OnPrivateMessage( const std::string& user, const std::string& message, bool fromme )
 {
 	slLogDebugFunc("");
     try
     {
-        User& who = m_serv.GetUser( user );
+		User& who = m_serv.GetUser(TowxString(user));
         if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, TowxString(who.GetNick())))
-            ui().OnUserSaid( who, message, fromme );
+            ui().OnUserSaid(who, TowxString(message), fromme );
     }
     catch (std::runtime_error &except)
     {
     }
 }
 
-void ServerEvents::OnPrivateMessageEx( const wxString& user, const wxString& action, bool fromme )
+void ServerEvents::OnPrivateMessageEx( const std::string& user, const std::string& action, bool fromme )
 {
 	slLogDebugFunc("");
 	try
 	{
-		User& who = m_serv.GetUser( user );
+		User& who = m_serv.GetUser(TowxString(user));
 		if (!useractions().DoActionOnUser( UserActions::ActIgnorePM, TowxString(who.GetNick())) )
-			ui().OnUserSaidEx( who, action, fromme );
+			ui().OnUserSaidEx( who, TowxString(action), fromme );
 	}
 	catch (std::runtime_error &except)
 	{
 	}
 }
 
-void ServerEvents::OnChannelList( const wxString& channel, const int& numusers, const wxString& topic )
+void ServerEvents::OnChannelList( const std::string& channel, const int& numusers, const std::string& topic )
 {
-    ui().mw().OnChannelList( channel, numusers, topic );
+    ui().mw().OnChannelList(TowxString(channel), numusers, TowxString(topic));
 }
 
 
-void ServerEvents::OnUserJoinChannel( const wxString& channel, const wxString& who )
+void ServerEvents::OnUserJoinChannel( const std::string& channel, const std::string& who )
 {
 	slLogDebugFunc("");
     try
     {
-        m_serv.GetChannel( channel ).Joined( m_serv.GetUser( who ) );
+        m_serv.GetChannel(TowxString(channel)).Joined( m_serv.GetUser(TowxString(who)) );
     }
     catch (std::runtime_error &except)
     {
@@ -708,29 +708,29 @@ void ServerEvents::OnRequestBattleStatus( int battleid )
 }
 
 
-void ServerEvents::OnSaidBattle( int battleid, const wxString& nick, const wxString& msg )
+void ServerEvents::OnSaidBattle( int battleid, const std::string& nick, const std::string& msg )
 {
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-		if ( ( m_serv.GetMe().GetNick() ==  STD_STRING(nick)) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, nick ) )
+		if ( ( m_serv.GetMe().GetNick() ==  nick) || !useractions().DoActionOnUser( UserActions::ActIgnoreChat, TowxString(nick)) )
 		{
-			ui().OnSaidBattle( battle, nick, msg );
+			ui().OnSaidBattle( battle, TowxString(nick), TowxString(msg));
 		}
 		AutoHost* ah = battle.GetAutoHost();
         if (ah != NULL) {
-			ah->OnSaidBattle( nick, msg );
+			ah->OnSaidBattle( TowxString(nick), TowxString(msg));
 		}
     }
     catch (assert_exception) {}
 }
 
-void ServerEvents::OnBattleAction( int /*battleid*/, const wxString& nick, const wxString& msg )
+void ServerEvents::OnBattleAction( int /*battleid*/, const std::string& nick, const std::string& msg )
 {
     try
     {
 		UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
-				UiEvents::OnBattleActionData( nick, msg )
+				UiEvents::OnBattleActionData( TowxString(nick), TowxString(msg))
 			);
     }
     catch (assert_exception) {}
@@ -763,33 +763,33 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
 }
 
 
-void ServerEvents::OnBattleAddBot( int battleid, const wxString& nick, UserBattleStatus status )
+void ServerEvents::OnBattleAddBot( int battleid, const std::string& nick, UserBattleStatus status )
 {
 	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-        battle.OnBotAdded(STD_STRING(nick), status );
-        User& bot = battle.GetUser(STD_STRING(nick));
+        battle.OnBotAdded(nick, status );
+        User& bot = battle.GetUser(nick);
         ASSERT_LOGIC( &bot != 0, _T("Bot null after add.") );
         ui().OnUserJoinedBattle( battle, bot );
     }
     catch (assert_exception) {}
 }
 
-void ServerEvents::OnBattleUpdateBot( int battleid, const wxString& nick, UserBattleStatus status )
+void ServerEvents::OnBattleUpdateBot( int battleid, const std::string& nick, UserBattleStatus status )
 {
     OnClientBattleStatus( battleid, nick, status );
 }
 
 
-void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
+void ServerEvents::OnBattleRemoveBot( int battleid, const std::string& nick )
 {
 	slLogDebugFunc("");
     try
     {
         IBattle& battle = m_serv.GetBattle( battleid );
-		User& user = battle.GetUser(STD_STRING(nick));
+		User& user = battle.GetUser(nick);
 		bool isbot = user.BattleStatus().IsBot();
 		ui().OnUserLeftBattle( battle, user, isbot );
         battle.OnUserRemoved( user );
@@ -800,37 +800,37 @@ void ServerEvents::OnBattleRemoveBot( int battleid, const wxString& nick )
 }
 
 
-void ServerEvents::OnAcceptAgreement( const wxString& agreement )
+void ServerEvents::OnAcceptAgreement( const std::string& agreement )
 {
-    ui().OnAcceptAgreement( agreement );
+    ui().OnAcceptAgreement( TowxString(agreement));
 }
 
 
-void ServerEvents::OnRing( const wxString& from )
+void ServerEvents::OnRing( const std::string& from )
 {
-    ui().OnRing( from );
+    ui().OnRing(TowxString(from));
 }
 
-void ServerEvents::OnServerBroadcast( const wxString& message )
+void ServerEvents::OnServerBroadcast( const std::string& message )
 {
-	ui().OnServerBroadcast( m_serv, message );
+	ui().OnServerBroadcast( m_serv, TowxString(message));
 }
 
-void ServerEvents::OnServerMessage( const wxString& message )
+void ServerEvents::OnServerMessage( const std::string& message )
 {
-    ui().OnServerMessage( m_serv, message );
-}
-
-
-void ServerEvents::OnServerMessageBox( const wxString& message )
-{
-    ui().ShowMessage( _("Server Message"), message );
+    ui().OnServerMessage( m_serv, TowxString(message));
 }
 
 
-void ServerEvents::OnChannelMessage( const wxString& channel, const wxString& msg )
+void ServerEvents::OnServerMessageBox( const std::string& message )
 {
-	ui().OnChannelMessage(m_serv.GetChannel(channel), msg );
+    ui().ShowMessage( _("Server Message"), TowxString(message));
+}
+
+
+void ServerEvents::OnChannelMessage( const std::string& channel, const std::string& msg )
+{
+	ui().OnChannelMessage(m_serv.GetChannel(TowxString(channel)), TowxString(msg));
 }
 
 
@@ -854,7 +854,7 @@ void ServerEvents::OnMyExternalUdpSourcePort( const unsigned int udpport )
     m_serv.GetCurrentBattle()->SetMyExternalUdpSourcePort(udpport);
 }
 
-void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip, unsigned int udpport )
+void ServerEvents::OnClientIPPort( const std::string &username, const std::string &ip, unsigned int udpport )
 {
     wxLogMessage(_T("OnClientIPPort(%s,%s,%d)"),username.c_str(),ip.c_str(),udpport);
     if ( !m_serv.GetCurrentBattle() )
@@ -864,15 +864,15 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
     }
     try
     {
-        User &user=m_serv.GetCurrentBattle()->GetUser(STD_STRING(username));
+        User &user=m_serv.GetCurrentBattle()->GetUser(username);
 
-        user.BattleStatus().ip=STD_STRING(ip);
+        user.BattleStatus().ip=ip;
         user.BattleStatus().udpport=udpport;
         wxLogMessage(_T("set to %s %d "),user.BattleStatus().ip.c_str(),user.BattleStatus().udpport);
 
 		if (sett().GetShowIPAddresses()) {
 			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
-					UiEvents::OnBattleActionData( username,wxString::Format(_(" has ip=%s"),ip.c_str()) )
+					UiEvents::OnBattleActionData( TowxString(username), wxString::Format(_(" has ip=%s"),ip.c_str()) )
 				);
 		}
 
@@ -881,7 +881,7 @@ void ServerEvents::OnClientIPPort( const wxString &username, const wxString &ip,
             // todo: better warning message
             //something.OutputLine( _T(" ** ") + who.GetNick() + _(" does not support nat traversal! ") + GetChatTypeStr() + _T("."), sett().GetChatColorJoinPart(), sett().GetChatFont() );
 			UiEvents::GetUiEventSender( UiEvents::OnBattleActionEvent ).SendEvent(
-					UiEvents::OnBattleActionData( username,_(" does not really support nat traversal") )
+					UiEvents::OnBattleActionData( TowxString(username), _(" does not really support nat traversal") )
 				);
 
         }
@@ -900,17 +900,17 @@ void ServerEvents::OnKickedFromBattle()
 }
 
 
-void ServerEvents::OnRedirect( const wxString& address,  unsigned int port, const wxString& CurrentNick, const wxString& CurrentPassword )
+void ServerEvents::OnRedirect( const std::string& address,  unsigned int port, const std::string& CurrentNick, const std::string& CurrentPassword )
 {
-		wxString name = address + _T(":") + TowxString(port);
-    sett().SetServer( name, address, port );
-    ui().DoConnect( name, CurrentNick, CurrentPassword );
+	const wxString name = TowxString(address) + _T(":") + TowxString(port);
+	sett().SetServer( name, TowxString(address), port );
+	ui().DoConnect( TowxString(name), TowxString(CurrentNick), TowxString(CurrentPassword));
 }
 
 
 void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
 {
-    wxString nick = TowxString(user.GetNick());
+	const std::string nick = user.GetNick();
     MessageSpamCheck info = m_spam_check[nick];
     time_t now = time( 0 );
     if ( info.lastmessage == now ) info.count++;
@@ -919,21 +919,21 @@ void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
     m_spam_check[nick] = info;
     if ( info.count == 7 )
     {
-			battle.DoAction(STD_STRING(_T("is autokicking ") + nick + _T(" due to command spam.")));
+			battle.DoAction("is autokicking " + nick + " due to command spam.");
 			battle.KickPlayer( user );
     }
 }
 
-void ServerEvents::OnMutelistBegin( const wxString& channel )
+void ServerEvents::OnMutelistBegin( const std::string& channel )
 {
-    mutelistWindow( _("Begin mutelist for ") + channel, wxString::Format( _("%s mutelist"), channel.c_str() ) );
+    mutelistWindow( _("Begin mutelist for ") + TowxString(channel), wxString::Format( _("%s mutelist"), channel.c_str() ) );
 }
 
-void ServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxString& mutee, const wxString& description )
+void ServerEvents::OnMutelistItem( const std::string& /*unused*/, const std::string& mutee, const std::string& description )
 {
-    wxString message = mutee;
-    wxString desc = description;
-    wxString mutetime = GetWordParam( desc );
+    wxString message = TowxString(mutee);
+    wxString desc = TowxString(description);
+    wxString mutetime = TowxString(GetWordParam( desc ));
 		long time;
 		if ( mutetime == _T("indefinite") ) message << _(" indefinite time remaining");
 		else if ( mutetime.ToLong(&time) ) message << wxString::Format( _(" %d minutes remaining"), time/60 + 1 );
@@ -942,9 +942,9 @@ void ServerEvents::OnMutelistItem( const wxString& /*unused*/, const wxString& m
     mutelistWindow( message );
 }
 
-void ServerEvents::OnMutelistEnd( const wxString& channel )
+void ServerEvents::OnMutelistEnd( const std::string& channel )
 {
-    mutelistWindow( _("End mutelist for ") + channel );
+    mutelistWindow( _("End mutelist for ") + TowxString(channel));
 }
 
 void ServerEvents::OnScriptStart( int battleid )
@@ -956,13 +956,13 @@ void ServerEvents::OnScriptStart( int battleid )
 	m_serv.GetBattle( battleid ).ClearScript();
 }
 
-void ServerEvents::OnScriptLine( int battleid, const wxString& line )
+void ServerEvents::OnScriptLine( int battleid, const std::string& line )
 {
 	if ( !m_serv.BattleExists( battleid ) )
 	{
 			return;
 	}
-	m_serv.GetBattle( battleid ).AppendScriptLine(STD_STRING(line));
+	m_serv.GetBattle( battleid ).AppendScriptLine(line);
 }
 
 void ServerEvents::OnScriptEnd( int battleid )
@@ -974,28 +974,28 @@ void ServerEvents::OnScriptEnd( int battleid )
 	m_serv.GetBattle( battleid ).GetBattleFromScript( true );
 }
 
-void ServerEvents::OnForceJoinBattle(int battleid, const wxString &scriptPW)
+void ServerEvents::OnForceJoinBattle(int battleid, const std::string &scriptPW)
 {
 	IBattle* battle = m_serv.GetCurrentBattle();
     if ( battle != NULL ) {
         m_serv.LeaveBattle(battle->GetID());
 	}
-    m_serv.JoinBattle( battleid, scriptPW );
+    m_serv.JoinBattle( battleid, TowxString(scriptPW));
     UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(
             UiEvents::StatusData( _("Automatically moved to new battle"), 1 ) );
 }
 
-void ServerEvents::RegistrationAccepted(const wxString& user, const wxString& pass)
+void ServerEvents::RegistrationAccepted(const std::string& user, const std::string& pass)
 {
-	ui().OnRegistrationAccepted(user, pass);
+	ui().OnRegistrationAccepted(TowxString(user), TowxString(pass));
 }
 
-void ServerEvents::RegistrationDenied(const wxString& reason)
+void ServerEvents::RegistrationDenied(const std::string& reason)
 {
-	ui().OnRegistrationDenied(reason);
+	ui().OnRegistrationDenied(TowxString(reason));
 }
 
-void ServerEvents::OnLoginDenied(const wxString& reason)
+void ServerEvents::OnLoginDenied(const std::string& reason)
 {
-	ui().OnLoginDenied(reason);
+	ui().OnLoginDenied(TowxString(reason));
 }

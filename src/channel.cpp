@@ -195,7 +195,7 @@ bool Channel::ExecuteSayCommand( const std::string& in )
   wxString params = TowxString(in).AfterFirst( ' ' );
 
   wxString cmdline = TowxString(in);
-  wxString param = GetWordParam( cmdline );
+  wxString param = TowxString(GetWordParam( cmdline ));
   if ( param == _T("/me") ) {
     DoAction(STD_STRING(cmdline));
     return true;

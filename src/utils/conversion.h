@@ -56,16 +56,6 @@ static inline long s2l( const wxString& arg )
 
 /** @} */
 
-static inline wxString MakeHashUnsigned( const wxString& hash )
-{
-	return TowxString( FromwxString<unsigned int>( hash ) );
-}
-
-static inline wxString MakeHashSigned( const wxString& hash )
-{
-	return TowxString( FromwxString<int>( hash ) );
-}
-
 #include <vector>
 class wxStringTokenizer;
 //! converts a string tokneizer into a vector of string

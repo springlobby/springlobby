@@ -5,15 +5,15 @@
 
 #include <wx/regex.h>
 
-wxString GetWordParam( wxString& params )
+std::string GetWordParam( wxString& params )
 {
-	return GetParamByChar( params, _T(' ') );
+	return STD_STRING(GetParamByChar( params, _T(' ') ));
 }
 
 
-wxString GetSentenceParam( wxString& params )
+std::string GetSentenceParam( wxString& params )
 {
-   return GetParamByChar( params, _T('\t') );
+   return STD_STRING(GetParamByChar( params, _T('\t') ));
 }
 
 

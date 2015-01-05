@@ -174,7 +174,7 @@ private:
 	IServerEvents* m_se;
 	double m_ser_ver;
 
-	wxString m_last_denied;
+	std::string m_last_denied;
 	bool m_connected;
 	bool m_online;
 	bool m_debug_dont_catch;
@@ -197,7 +197,7 @@ private:
 	bool m_server_lanmode;
 	unsigned int m_account_id_count;
 
-	wxString m_agreement;
+	std::string m_agreement;
 
 	wxString m_addr;
 	wxString m_delayed_open_command;
@@ -212,15 +212,15 @@ private:
 	void SendCmd( const wxString& command, const wxString& param = wxEmptyString );
 	void RelayCmd( const wxString& command, const wxString& param = wxEmptyString );
 
-	wxString m_current_chan_name_mutelist;
+	std::string m_current_chan_name_mutelist;
 
 	wxArrayString m_relay_host_manager_list;
 
 private:
 	void Notify();
 
-    wxString m_relay_host_bot;
-    wxString m_relay_host_manager;
+    std::string m_relay_host_bot;
+    std::string m_relay_host_manager;
 
 };
 

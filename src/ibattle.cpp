@@ -1044,14 +1044,14 @@ void IBattle::GetBattleFromScript( bool loadmapmod )
 
 		std::string modname = replayNode->GetString("GameType");
 		std::string modhash = replayNode->GetString("ModHash");
-		if ( !modhash.empty() ) modhash = STD_STRING(MakeHashUnsigned(TowxString(modhash)));
+		if ( !modhash.empty() ) modhash = LSL::Util::MakeHashUnsigned(modhash);
 		SetHostMod( modname, modhash );
 
 		//don't have the maphash, what to do?
 		//ui download function works with mapname if hash is empty, so works for now
 		std::string mapname    = replayNode->GetString("MapName");
 		std::string maphash    = replayNode->GetString("MapHash");
-		if ( !maphash.empty() ) maphash = STD_STRING(MakeHashUnsigned(TowxString(maphash)));
+		if ( !modhash.empty() ) modhash = LSL::Util::MakeHashUnsigned(maphash);
 		SetHostMap( mapname, maphash );
 
 //        opts.ip         = replayNode->GetString( _T("HostIP") );
