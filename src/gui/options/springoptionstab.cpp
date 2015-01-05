@@ -260,6 +260,16 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 			bundle.AutoComplete();
 			version = TowxString(bundle.version);
 			if (!bundle.IsValid() || version.IsEmpty()) {
+				wxFileDialog pick( this, _( "Choose a Spring executable" ),
+				wxPathOnly(TowxString(bundle.unitsync)),
+				wxFileName::FileName(TowxString(SlPaths::GetSpringBinary())).GetFullName(),
+				GetSpringFilter());
+				if ( pick.ShowModal() == wxID_OK ) {
+					bundle.spring = STD_STRING(pick.GetPath());
+				}
+			}
+
+			if (!bundle.IsValid() || version.IsEmpty()) {
 				failed = true;
 				failMessage = wxFormat("%s did not find engine and unitsync executables at %s\n\nPlease ensure that both exist and that you have appropriate access privileges.") % getSpringlobbyName() % bundle.path;
 			}
