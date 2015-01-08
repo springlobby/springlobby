@@ -379,11 +379,11 @@ void BattleRoomTab::UpdateBattleInfo()
 	if ( !m_battle ) return;
 	m_lock_chk->SetValue( m_battle->IsLocked() );
 	m_minimap->UpdateMinimap();
-	UpdateMapInfoSummary();
 	OptionListMap::iterator it;
 	for(it = m_opt_list_map.begin(); it != m_opt_list_map.end(); ++it) {
 		UpdateBattleInfo(it->first);
 	}
+	UpdateMapInfoSummary();
 }
 
 void BattleRoomTab::PrintAllySetup()
