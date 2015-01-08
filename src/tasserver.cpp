@@ -1132,9 +1132,9 @@ void TASServer::HostBattle( BattleOptions bo, const wxString& password )
 	wxString cmd = wxString::Format( _T("0 %d "), nat_type );
 	cmd += (password.IsEmpty())?_T("*"):password;
 	cmd += wxString::Format( _T(" %d %d "), bo.port, bo.maxplayers );
-	cmd += TowxString(bo.modhash);
+	cmd += TowxString(LSL::Util::MakeHashSigned(bo.modhash));
 	cmd += wxString::Format( _T(" %d "), bo.rankneeded );
-	cmd += TowxString(bo.maphash) + _T(" ");
+	cmd += TowxString(LSL::Util::MakeHashSigned(bo.maphash)) + _T(" ");
 	if (!bo.userelayhost) { //FIXME: relay host hasn't multiversion support yet, see https://github.com/springlobby/springlobby/issues/98
 		cmd += TowxString(bo.engineName) + _T("\t");
 		cmd += TowxString(bo.engineVersion) + _T("\t");
