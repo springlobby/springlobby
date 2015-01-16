@@ -56,8 +56,7 @@
 #include "downloader/prdownloader.h"
 #include "utils/slconfig.h"
 #include "utils/conversion.h"
-//#include "springsettings/frame.h"
-#include "spring.h"
+#include "springsettings/frame.h"
 #include "gui/customdialogs.h"
 #include "utils/slpaths.h"
 #include "channel/autojoinchanneldialog.h"
@@ -123,7 +122,7 @@ MainWindow::MainWindow( )
 	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(720, 576) ),
 	m_opts_dialog(NULL),
 	m_autojoin_dialog(NULL),
-//	se_frame(NULL),
+	se_frame(NULL),
 	m_channel_chooser(NULL),
 	m_log_win(NULL),
 	m_has_focus(true)
@@ -589,10 +588,6 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
 {
-	wxArrayString params;
-	params.push_back(_T("-w"));
-	spring().LaunchEngine(params);
-/*
 	if ( se_frame && se_frame_active ) {
 		se_frame->updateAllControls();
 		se_frame->Raise();
@@ -603,7 +598,6 @@ void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
 	se_frame_active = true;
 	se_frame->updateAllControls();
 	se_frame->Show();
-*/
 }
 
 void MainWindow::OnMenuAutojoinChannels( wxCommandEvent& /*unused*/ )

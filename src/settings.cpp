@@ -6,7 +6,7 @@
 
 #include "settings.h"
 
-//#include "springsettings/se_utils.h"
+#include "springsettings/se_utils.h"
 #include "utils/wxTranslationHelper.h"
 #include "utils/slconfig.h"
 #include "defines.h" //to get HAVEWX??
@@ -35,7 +35,7 @@
 #include "utils/platform.h"
 #include "utils/slpaths.h"
 #include "playbackfiltervalues.h"
-//#include "springsettings/presets.h"
+#include "springsettings/presets.h"
 
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
@@ -64,7 +64,7 @@ Settings::~Settings()
 
 void Settings::Setup(wxTranslationHelper* translationhelper)
 {
-//	SetSettingsStandAlone( false );
+	SetSettingsStandAlone( false );
 
 	long settversion = cfg().ReadLong(_T("/General/SettingsVersion"));
 	long cacheversion = cfg().ReadLong(_T( "/General/CacheVersion" ));
@@ -1273,7 +1273,7 @@ void Settings::SetMapSelectorFilterRadio( const unsigned int val )
 ///                            SpringSettings                              ///
 //////////////////////////////////////////////////////////////////////////////
 
-/*
+
 long Settings::getMode()
 {
 	return cfg().Read( _T( "/SpringSettings/mode" ), SET_MODE_SIMPLE );
@@ -1329,7 +1329,7 @@ void Settings::setSimpleDetail( wxString det )
 {
 	cfg().Write( _T( "/SpringSettings/SimpleDetail" ), det );
 }
-*/
+
 
 SortOrder Settings::GetSortOrder( const wxString& list_name )
 {
@@ -1489,4 +1489,3 @@ wxString Settings::GetDefaultNick()
 {
 	return TowxString(LSL::usync().GetSpringConfigString("name", "Player"));
 }
-

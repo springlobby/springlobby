@@ -5,7 +5,6 @@ ChangeLog of Springlobby
  - add "Download engine" to battle list context menu
  - new users don't auto-join #main any more
  - remove #main from autojoin channels once
- - replace springsettings by running spring executable / edit settings
  - allow cpuid to be set by config var
  - increase connect timeouts for downloader
  - fix autohost detection (clicking "Start" should send !start again)
