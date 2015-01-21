@@ -101,11 +101,12 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 
 void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long settversion)
 {
-	if( settversion < 19 ) {
+	switch(settversion) { //no breaks! thats by intention!
+	case 18: {
 		//the dummy column hack was removed on win
 		cfg().DeleteGroup(_T("/GUI/ColumnWidths/"));
 	}
-	if ( settversion < 22 ) {
+	case 21: {
 		if ( translationhelper ) {
 			// add locale's language code to autojoin
 			if ( translationhelper->GetLocale() ) {
@@ -116,26 +117,31 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 			}
 		}
 	}
-	if ( settversion < 23 ) {
+	case 22: {
 		ConvertLists();
 	}
-	if ( settversion < 24 ) {
+	case 23: {
 		DeleteServer( _T("Backup server") );
 		DeleteServer( _T("Backup server 1") );
 		DeleteServer( _T("Backup server 2") );
 		SetDefaultServerSettings();
 	}
-	if ( settversion < 25 ) {
+	case 24: {
 		SetDisableSpringVersionCheck(false);
 	}
-	if ( settversion < 26 ) { // language id before was stored by index, now its stored by the id
+	case 25: { // language id before was stored by index, now its stored by the id
 		cfg().Write(_T("/General/LanguageID"), 0);
 	}
-	if ( settversion < 27 ) {
+	case 26: {
 		SetDisableSpringVersionCheck(false);
 	}
-	if ( settversion < 28 ) {
+	case 27: {
 		RemoveChannelJoin(_("main"));
+	}
+	case 28: {
+		SetDefaultServerSettings();
+	}
+	default : {}
 	}
 
 	// after updating, set current version
@@ -229,6 +235,7 @@ bool Settings::ShouldAddDefaultServerSettings()
 void Settings::SetDefaultServerSettings()
 {
 	SetServer(  DEFSETT_DEFAULT_SERVER_NAME,  DEFSETT_DEFAULT_SERVER_HOST, DEFSETT_DEFAULT_SERVER_PORT );
+	SetServer( _T( "Zero-K Lobby Server" ), _T( "lobby.zero-k.info" ), 8200 );
 	SetServer( _T( "Backup server 1" ), _T( "lobby1.springlobby.info" ), 8200 );
 	SetServer( _T( "Backup server 2" ), _T( "lobby2.springlobby.info" ), 8200 );
 	SetServer( _T( "Test server" ), _T( "lobby.springrts.com" ), 7000 );
