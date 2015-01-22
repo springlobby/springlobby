@@ -1,7 +1,4 @@
 
-#include <wx/colour.h>
-#include <wx/log.h>
-#include <wx/wupdlock.h>
 
 #include "gui/customdialogs.h"
 #include "gui/controls.h"
