@@ -298,15 +298,16 @@ target_link_libraries(slcommon
 add_subdirectory(downloader)
 add_subdirectory(utils)
 
-set(LSLSERVER ON CACHE BOOL "disable lsl-server build" FORCE)
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
 	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
-else()
-	add_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
-	Add_Subdirectory(lsl)
-	INCLUDE_DIRECTORIES(lsl/src)
-	remove_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
 endif()
+set(LSLSERVER OFF CACHE BOOL "build lsl server" FORCE)
+
+add_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
+Add_Subdirectory(lsl)
+INCLUDE_DIRECTORIES(lsl/src)
+remove_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
+
 add_subdirectory(springsettings)
 add_subdirectory(sound)
 add_subdirectory(json)
