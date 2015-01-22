@@ -16,14 +16,13 @@ lsl/user/user.cpp
 // Class: User
 //
 
-#include "user.h"
 #include "ibattle.h"
+#include "user.h"
 #include "iserver.h"
 #include "gui/chatpanel.h"
 #include "iconimagelist.h"
 #include "utils/conversion.h"
 
-#include <wx/string.h>
 #include <wx/intl.h>
 
 User::User( IServer& serv )

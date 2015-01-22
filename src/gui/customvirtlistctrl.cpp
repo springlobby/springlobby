@@ -3,16 +3,15 @@
 #include <wx/log.h>
 #include <wx/wupdlock.h>
 
+#include "gui/customdialogs.h"
+#include "gui/controls.h"
 #include "settings.h"
 #include "defines.h"
 #include "iconimagelist.h"
-#include "gui/customdialogs.h"
 #include "uiutils.h"
 #include "gui/sltipwin.h"
-#include <lslutils/misc.h>
-#include "gui/controls.h"
-
 #include <algorithm>
+#include <lslutils/misc.h>
 
 #ifdef HAVE_WX29
 wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T,L)

@@ -1,14 +1,17 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+#include <wx/dcbuffer.h>
+#include <wx/geometry.h>
+#include <wx/settings.h>
+#include <wx/log.h>
+
 #include "mapgridctrl.h"
 
 #include "settings.h"
 #include "uiutils.h"
 #include "utils/conversion.h"
-#include <wx/dcbuffer.h>
-#include <wx/geometry.h>
-#include <wx/settings.h>
-#include <wx/log.h>
+
+
 #include <algorithm>
 #define HAVE_WX
 #include <lslutils/misc.h>

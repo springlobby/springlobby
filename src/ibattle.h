@@ -17,12 +17,12 @@ lsl/battle/ibattle.h
 **/
 
 #include <lslunitsync/data.h>
-#include <lslunitsync/optionswrapper.h>
 #include <lsl/battle/tdfcontainer.h>
 
 #include "user.h"
 #include "userlist.h"
 #include "utils/mixins.h"
+#include <lslunitsync/optionswrapper.h>
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
@@ -31,6 +31,9 @@ class IBattle;
 class IServer;
 class AutoHost;
 class AutohostManager;
+namespace LSL {
+	class OptionsWrapper;
+};
 
 struct BattleStartRect {
 	BattleStartRect() :
