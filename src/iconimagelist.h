@@ -7,9 +7,11 @@
 #include <wx/imaglist.h>
 #include <map>
 #include <vector>
-#include <lslutils/misc.h>
 
 class IBattle;
+namespace LSL {
+	class lslColor;
+}
 
 struct UserStatus;
 
