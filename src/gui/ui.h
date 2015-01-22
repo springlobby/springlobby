@@ -49,8 +49,6 @@ public:
 	void AddServerWindow( const wxString& servername );
 	void ReopenServerTab();
 
-	wxString GetNextServer();
-
 	void DoRegister( const wxString& servername, const wxString& username, const wxString& password);
 
 	bool IsConnected() const;

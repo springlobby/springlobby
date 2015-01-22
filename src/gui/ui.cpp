@@ -542,17 +542,6 @@ void Ui::OnDisconnected( IServer& server, bool wasonline )
 	m_connect_retries--;
 }
 
-wxString Ui::GetNextServer()
-{
-	wxString previous_server = m_last_used_backup_server;
-	if ( previous_server.IsEmpty() ) previous_server = sett().GetDefaultServer();
-	wxArrayString serverlist = sett().GetServers();
-	int position = serverlist.Index( previous_server );
-	if ( position == wxNOT_FOUND ) position = -1;
-	position = ( position + 1) % serverlist.GetCount(); // switch to next in the list
-	return serverlist[position];
-}
-
 //! @brief Called when client has joined a channel
 //!
 //! @todo Check if a pannel allready exists for this channel
