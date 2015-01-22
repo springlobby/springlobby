@@ -1,5 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+
 #include "tab_abstract.h"
 #include <wx/string.h>
 #include <wx/gbsizer.h>
@@ -13,7 +14,6 @@
 #include <wx/textctrl.h>
 #include <wx/display.h>
 
-#include <lslunitsync/unitsync.h>
 
 #include "gui/spinctl/spinctrl.h"
 #include "gui/customdialogs.h"
@@ -24,6 +24,8 @@
 #include "presets.h"
 
 #include "log.h"
+
+#include <lslunitsync/unitsync.h>
 
 
 intMap abstract_panel::intSettings;
