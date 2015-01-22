@@ -38,9 +38,9 @@ public:
 
 	}
 
-	virtual void DoLogText(const wxString &msg)
+	virtual void DoLogString(const wxChar *msg, time_t timestamp)
 	{
-		const std::string std_msg = (STD_STRING(msg) + "\n").c_str();
+		const std::string std_msg = (STD_STRING(wxString(msg)) + "\n").c_str();
 		if (m_console) {
 			printf("%s",std_msg.c_str());
 		}
