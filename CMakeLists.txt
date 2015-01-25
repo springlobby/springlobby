@@ -47,7 +47,11 @@ SET( BUILD_SHARED_LIBS
 	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
 
 SET(SPRINGLOBBY_REV "${SPRINGLOBBY_REV}")
-SET(LOCALE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/locale")
+if (WIN32)
+	SET(LOCALE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/locale")
+else()
+	SET(LOCALE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/locale")
+endif()
 
 IF( AUX_VERSION )
 	ADD_DEFINITIONS( -DAUX_VERSION="${AUX_VERSION}" )
