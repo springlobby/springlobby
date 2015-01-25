@@ -4,6 +4,10 @@
 // Class: Battle
 //
 
+#include <lslutils/misc.h>
+#include <lslutils/conversion.h>
+#include "battle.h"
+
 #include <wx/timer.h>
 #include <wx/image.h>
 #include <wx/string.h>
@@ -11,14 +15,9 @@
 #include <wx/filename.h>
 #include <wx/file.h>
 
-#include <lslutils/conversion.h>
 
-#include "battle.h"
-#include "gui/ui.h"
-#include "iserver.h"
 #include "user.h"
 #include "utils/conversion.h"
-#include <lslutils/misc.h>
 #include "utils/uievents.h"
 #include "utils/battleevents.h"
 #include "utils/slpaths.h"
@@ -32,6 +31,8 @@
 #include "utils/globalevents.h"
 #include "autohostmanager.h"
 #include "log.h"
+#include "iserver.h"
+#include "gui/ui.h"
 
 
 const unsigned int TIMER_INTERVAL         = 1000;

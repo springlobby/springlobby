@@ -14,7 +14,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include <lslunitsync/unitsync.h>
 
 #include "battleroomlistctrl.h"
 #include "iconimagelist.h"
@@ -31,6 +30,8 @@
 #include "settings.h"
 #include "log.h"
 #include "utils/lslconversion.h"
+
+#include <lslunitsync/unitsync.h>
 
 
 template<> SortOrder CustomVirtListCtrl<User*,BattleroomListCtrl>::m_sortorder = SortOrder();

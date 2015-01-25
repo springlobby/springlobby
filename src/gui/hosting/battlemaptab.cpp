@@ -22,12 +22,10 @@
 #include <stdexcept>
 
 #include "battlemaptab.h"
-#include <lslutils/conversion.h>
 #include "user.h"
 #include "ibattle.h"
 #include "gui/controls.h"
 #include "gui/chatpanel.h"
-#include "gui/mapctrl.h"
 #include "gui/mapselectdialog.h"
 #include "gui/uiutils.h"
 #include "iserver.h"
@@ -35,6 +33,9 @@
 #include "aui/auimanager.h"
 #include "utils/conversion.h"
 #include "log.h"
+#include "gui/mapctrl.h"
+
+#include <lslutils/conversion.h>
 
 BEGIN_EVENT_TABLE( BattleMapTab, wxPanel )
 

@@ -29,7 +29,7 @@ void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 		StoredGame& playback = AddPlayback(i);
 		if (!GetReplayInfos(wfilename, playback)) {
 			// looks like funny add/remove logic, but the Replay contains OfflineBattle which is IBattle which is ultimately boost::noncopyable.
-			wxLogError(_T("Couldn't open replay %s"), wfilename.c_str() );
+			wxLogError(_T("Couldn't open replay %s"), TowxString(wfilename).c_str() );
 			RemovePlayback(i);
 		}
 	}

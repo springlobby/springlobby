@@ -1,12 +1,13 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+#include <wx/log.h>
+
 #include "autohostmanager.h"
 
 #include "ibattle.h"
 #include "user.h"
 #include "gui/mainwindow.h"
 #include "utils/conversion.h"
-#include <wx/log.h>
 
 AutohostHandler::AutohostHandler():m_battle(0)
 {

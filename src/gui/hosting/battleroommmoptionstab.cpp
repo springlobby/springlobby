@@ -16,10 +16,6 @@
 
 #include "gui/controls.h"
 #include "utils/conversion.h"
-#include <lslutils/misc.h>
-#include <lslutils/conversion.h>
-#include <lslunitsync/optionswrapper.h>
-#include <lslunitsync/unitsync.h>
 #include "battle.h"
 #include "gui/spinctl/spinctrl.h"
 #include "gui/customdialogs.h"
@@ -29,6 +25,11 @@
 #include "aui/auimanager.h"
 #include "battleroommmoptionstab.h"
 #include "utils/lslconversion.h"
+
+#include <lslutils/misc.h>
+#include <lslutils/conversion.h>
+#include <lslunitsync/optionswrapper.h>
+#include <lslunitsync/unitsync.h>
 
 const char sep = '_';
 const wxString wxsep = _T("_");

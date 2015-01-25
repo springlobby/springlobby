@@ -6,6 +6,10 @@
 #include <wx/listctrl.h>
 
 #include <wx/timer.h>
+#include <wx/colour.h>
+#include <wx/log.h>
+#include <wx/wupdlock.h>
+
 #define IDD_TIP_TIMER 696
 #define IDD_SORT_TIMER 697
 

@@ -12,18 +12,19 @@ lsl/networking/socket.cpp
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 **/
 
+#include <wx/socket.h>
+#include <wx/string.h>
+#include <wx/convauto.h>
+#include <wx/log.h>
 
-#ifdef _MSC_VER
+#ifdef WIN32
 #ifndef NOMINMAX
     #define NOMINMAX
 #endif // NOMINMAX
 #include <winsock2.h>
 #endif // _MSC_VER
 
-#include <wx/socket.h>
-#include <wx/string.h>
-#include <wx/convauto.h>
-#include <wx/log.h>
+
 #include <stdexcept>
 #include <algorithm>
 

@@ -27,6 +27,9 @@ set(SettingsSrc
 ADD_LIBRARY(libsettings STATIC ${SettingsSrc})
 TARGET_LINK_LIBRARIES(libsettings ${wxWidgets_LIBRARIES})
 
+option(SPRING_SETTINGS "compile spring settings" OFF)
+
+if (SPRING_SETTINGS)
 ADD_EXECUTABLE(springsettings WIN32 MACOSX_BUNDLE
 		frame.cpp
 		main.cpp
@@ -52,3 +55,5 @@ TARGET_LINK_LIBRARIES(springsettings
 set_target_properties(springsettings PROPERTIES
 		COMPILE_FLAGS -DSPRINGSETTINGS_STANDALONE
 	)
+
+endif()
