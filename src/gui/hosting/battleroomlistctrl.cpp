@@ -84,26 +84,26 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 	wxListItem col;
 
 	int count = 0;
-    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _T("Status"), _T("Player/Bot") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _("Status"), _T("Player/Bot") );
 	m_status_column_index = count;
 	count++;
 	if ( m_showingame )
 	{
-        AddColumn( count, 55, _T("Ingame"), _T("Battleroom status") );
+        AddColumn( count, 55, _("Ingame"), _T("Battleroom status") );
 		m_ingame_column_index = count;
         count++;
     }
 
-    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _T("Faction"), _T("Faction icon") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _("Faction"), _T("Faction icon") );
 	m_faction_column_index = count;
 	count++;
-    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _T("Colour"), _T("Teamcolour") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _("Colour"), _T("Teamcolour") );
 	m_colour_column_index = count;
 	count++;
-    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _T("Country"), _T("Country") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _("Country"), _T("Country") );
 	m_country_column_index = count;
 	count++;
-    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _T("Rank"), _T("Rank") );
+    AddColumn( count, wxLIST_AUTOSIZE_USEHEADER, _("Rank"), _T("Rank") );
 	m_rank_column_index = count;
 	count++;
     AddColumn( count, 165, _("Nickname"), _T("Ingame name"));
