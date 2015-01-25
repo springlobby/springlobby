@@ -22,6 +22,7 @@ PARAMS="-DSPRINGLOBBY_REV=${REV} ${@}"
 
 echo configuring ${DIR} with $PARAMS
 cd ${DIR}
-rm -fv CMakeCache.txt
+rm -fv CMakeCache.txt CPackConfig.cmake CPackSourceConfig.cmake
+find -name cmake_install.cmake -delete
 cmake $PARAMS ..
 
