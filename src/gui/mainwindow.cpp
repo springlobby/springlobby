@@ -12,7 +12,6 @@
 #endif // _MSC_VER
 
 #include <wx/frame.h>
-#include <wx/intl.h>
 #include <wx/textdlg.h>
 #include <wx/imaglist.h>
 #include <wx/image.h>
@@ -115,8 +114,6 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_CLOSE( MainWindow::OnClose )
 END_EVENT_TABLE()
 
-MainWindow::TabNames MainWindow::m_tab_names;
-
 MainWindow::MainWindow( )
 	: wxFrame(NULL, -1, TowxString(getSpringlobbyName()) ),
 	WindowAttributesPickle( _T("MAINWINDOW"), this, wxSize(720, 576) ),
@@ -127,6 +124,14 @@ MainWindow::MainWindow( )
 	m_log_win(NULL),
 	m_has_focus(true)
 {
+	m_tab_names.Add( _("Chat") );
+	m_tab_names.Add( _("Battlelist") );
+	m_tab_names.Add( _("Battleroom") );
+	m_tab_names.Add( _("Singleplayer") );
+//	m_tab_names.Add( _("Savegames") );
+	m_tab_names.Add( _("Replays") );
+	m_tab_names.Add( _("Downloads") );
+
 	SetIcon( icons().GetIcon(icons().ICON_SPRINGLOBBY) );
 
 	GetAui().manager = new wxAuiManager( this );
@@ -647,7 +652,7 @@ void MainWindow::OnMenuResetLayout( wxCommandEvent& /*event*/ )
 	customMessageBoxNoModal( SL_MAIN_ICON, _("Please restart SpringLobby now"), wxEmptyString );
 }
 
-const MainWindow::TabNames& MainWindow::GetTabNames()
+const wxArrayString& MainWindow::GetTabNames()
 {
     return m_tab_names;
 }

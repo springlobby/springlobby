@@ -3,6 +3,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
 #define SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
 
+#include <wx/intl.h>
 #include <wx/frame.h>
 #include "gui/windowattributespickle.h"
 
@@ -176,21 +177,7 @@ private:
 		MENU_PATHINFO
     };
 
-        class TabNames : public wxArrayString
-        {
-            public:
-                TabNames ()
-                {
-                    Add( _("Chat") );
-                    Add( _("Battlelist") );
-                    Add( _("Battleroom") );
-                    Add( _("Singleplayer") );
-//                    Add( _("Savegames") );
-                    Add( _("Replays") );
-					Add( _("Downloads") );
-				}
-        };
-        static TabNames m_tab_names;
+	wxArrayString m_tab_names;
 
     public:
         // Page indexes
@@ -208,7 +195,7 @@ private:
         static const unsigned int OPT_PAGE_GENERAL  = 3;
         static const unsigned int OPT_PAGE_GROUPS   = 4;
 
-        static const TabNames& GetTabNames();
+	const wxArrayString& GetTabNames();
 
 private:
 
