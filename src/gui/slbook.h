@@ -51,9 +51,6 @@ private:
         void OnMenuItem( wxCommandEvent& event );
         void OnAllowNotebookDnD(wxAuiNotebookEvent& evt);
 
-        typedef SLNotebook
-            ParentType;
-
         //prohibit adding other panels
         bool AddPage(wxWindow* , const wxString& , bool , const wxBitmap& );
 		bool DeleteChatPage( size_t i );

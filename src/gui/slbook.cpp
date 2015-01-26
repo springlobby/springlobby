@@ -77,7 +77,7 @@ END_EVENT_TABLE()
 
 bool SLChatNotebook::AddPage(ChatPanel* page, const wxString& caption, bool select, const wxBitmap& bitmap)
 {
-    return ParentType::AddPage((wxWindow*)page, caption, select, bitmap);
+    return SLNotebook::AddPage((wxWindow*)page, caption, select, bitmap);
 }
 
 /** @brief SLChatNotebook
@@ -85,7 +85,7 @@ bool SLChatNotebook::AddPage(ChatPanel* page, const wxString& caption, bool sele
   * @todo: document this function
   */
  SLChatNotebook::SLChatNotebook(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
-    : ParentType( parent, _T("chatnotebook"), id, pos,  size, sett().GetShowXallTabs() ? style | wxAUI_NB_CLOSE_ON_ALL_TABS : style )
+    : SLNotebook( parent, _T("chatnotebook"), id, pos,  size, sett().GetShowXallTabs() ? style | wxAUI_NB_CLOSE_ON_ALL_TABS : style )
     ,m_ch_menu(0)
     ,m_cur_page(0)
 {
@@ -136,7 +136,7 @@ bool SLChatNotebook::DeleteChatPage( size_t i )
 	//the checking for server panel is not supposed to be here, but it prevents a nasty crash bug in handling 'close all' for the time being
 	if ( cur_page && (cur_page->GetPanelType() != ChatPanelType::CPT_Server)) {
 		cur_page->Part();
-		ParentType::DeletePage( i );
+		SLNotebook::DeletePage( i );
 		return true;
 	}
 	return false;
