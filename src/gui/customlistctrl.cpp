@@ -13,7 +13,7 @@
 #include "uiutils.h"
 
 
-BEGIN_EVENT_TABLE(CustomListCtrl, ListBaseType)
+BEGIN_EVENT_TABLE(CustomListCtrl, wxListCtrl)
 #if wxUSE_TIPWINDOW
   EVT_MOTION(CustomListCtrl::OnMouseMotion)
   EVT_TIMER(IDD_TIP_TIMER, CustomListCtrl::OnTimer)
@@ -30,7 +30,7 @@ END_EVENT_TABLE()
 //wxTipWindow* CustomListCtrl::m_tipwindow = 0;
 CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,long style,wxString name,
                                unsigned int column_count, bool highlight, UserActions::ActionType hlaction ):
-  ListBaseType(parent, id, pt, sz, style),
+  wxListCtrl(parent, id, pt, sz, style),
   m_tiptimer(this, IDD_TIP_TIMER),
   m_tiptext(wxEmptyString),
 #if wxUSE_TIPWINDOW
@@ -62,14 +62,14 @@ CustomListCtrl::CustomListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& p
 
 void CustomListCtrl::InsertColumn(long i, wxListItem item, wxString tip, bool modifiable)
 {
-    ListBaseType::InsertColumn(i,item);
+    wxListCtrl::InsertColumn(i,item);
     colInfo temp(tip,modifiable);
     m_colinfovec.push_back(temp);
 }
 
 void CustomListCtrl::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
 {
-    ListBaseType::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
+    wxListCtrl::InsertColumn( i, label, wxLIST_FORMAT_LEFT, width);
     colInfo temp(tip,modifiable);
     m_colinfovec.push_back(temp);
 }
@@ -280,12 +280,12 @@ bool CustomListCtrl::SetColumnWidth(int col, int width)
 {
     if ( sett().GetColumnWidth( m_name, col) != Settings::columnWidthUnset)
     {
-        return ListBaseType::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );
+        return wxListCtrl::SetColumnWidth( col, sett().GetColumnWidth( m_name, col) );
     }
     else
     {
         sett().SetColumnWidth( m_name, col, width );
-        return ListBaseType::SetColumnWidth( col, width );
+        return wxListCtrl::SetColumnWidth( col, width );
     }
 }
 
@@ -343,5 +343,5 @@ void CustomListCtrl::CancelTooltipTimer()
 bool CustomListCtrl::PopupMenu(wxMenu* menu, const wxPoint& pos )
 {
     CancelTooltipTimer();
-    return ListBaseType::PopupMenu( menu, pos );
+    return wxListCtrl::PopupMenu( menu, pos );
 }
