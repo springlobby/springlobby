@@ -122,14 +122,14 @@ PlaybackTab::PlaybackTab( wxWindow* parent, bool replay):
 	m_buttons_sizer = new wxBoxSizer( wxHORIZONTAL );
 
 #if  wxUSE_TOGGLEBTN
-	m_filter_show = new wxToggleButton( this, PLAYBACK_LIST_FILTER_BUTTON , wxT( " Filter " ), wxDefaultPosition , wxSize( -1, 28 ), 0 );
+	m_filter_show = new wxToggleButton( this, PLAYBACK_LIST_FILTER_BUTTON , _( " Filter " ), wxDefaultPosition , wxSize( -1, 28 ), 0 );
 #else
-	m_filter_show = new wxCheckBox( this, PLAYBACK_LIST_FILTER_BUTTON , wxT( " Filter " ), wxDefaultPosition , wxSize( -1, 28 ), 0 );
+	m_filter_show = new wxCheckBox( this, PLAYBACK_LIST_FILTER_BUTTON , _( " Filter " ), wxDefaultPosition , wxSize( -1, 28 ), 0 );
 #endif
 
 	m_buttons_sizer->Add( m_filter_show, 0, 0, 5 );
 
-	m_filter_activ = new wxCheckBox( this, PLAYBACK_LIST_FILTER_ACTIV , wxT( "Activated" ), wxDefaultPosition, wxDefaultSize, 0 );
+	m_filter_activ = new wxCheckBox( this, PLAYBACK_LIST_FILTER_ACTIV , _( "Activated" ), wxDefaultPosition, wxDefaultSize, 0 );
 	m_buttons_sizer->Add( m_filter_activ, 1, wxALL | wxEXPAND, 5 );
 
 	m_buttons_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
