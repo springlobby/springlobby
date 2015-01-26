@@ -202,13 +202,13 @@ MainWindow::MainWindow( )
 	m_torrent_tab = new MainDownloadTab( m_func_tabs);
 
     //use Insert so no Changepage events are triggered
-    m_func_tabs->InsertPage( PAGE_CHAT,     m_chat_tab,     m_tab_names[PAGE_CHAT],     true  );
-    m_func_tabs->InsertPage( PAGE_LIST,     m_list_tab,     m_tab_names[PAGE_LIST],     false  );
-    m_func_tabs->InsertPage( PAGE_JOIN,     m_join_tab,     m_tab_names[PAGE_JOIN],     false );
-    m_func_tabs->InsertPage( PAGE_SINGLE,   m_sp_tab,       m_tab_names[PAGE_SINGLE],   false );
-//    m_func_tabs->InsertPage( PAGE_SAVEGAME, m_savegame_tab, m_tab_names[PAGE_SAVEGAME], false );
-    m_func_tabs->InsertPage( PAGE_REPLAY,   m_replay_tab,   m_tab_names[PAGE_REPLAY],   false );
-    m_func_tabs->InsertPage( PAGE_TORRENT,  m_torrent_tab,  m_tab_names[PAGE_TORRENT],  false );
+    m_func_tabs->InsertPage( PAGE_CHAT,     m_chat_tab,     _(m_tab_names[PAGE_CHAT]),     true  );
+    m_func_tabs->InsertPage( PAGE_LIST,     m_list_tab,     _(m_tab_names[PAGE_LIST]),     false  );
+    m_func_tabs->InsertPage( PAGE_JOIN,     m_join_tab,     _(m_tab_names[PAGE_JOIN]),     false );
+    m_func_tabs->InsertPage( PAGE_SINGLE,   m_sp_tab,       _(m_tab_names[PAGE_SINGLE]),   false );
+//    m_func_tabs->InsertPage( PAGE_SAVEGAME, m_savegame_tab, _(m_tab_names[PAGE_SAVEGAME]), false );
+    m_func_tabs->InsertPage( PAGE_REPLAY,   m_replay_tab,   _(m_tab_names[PAGE_REPLAY]),   false );
+    m_func_tabs->InsertPage( PAGE_TORRENT,  m_torrent_tab,  _(m_tab_names[PAGE_TORRENT]),  false );
 
     LoadPerspectives();
 	SetTabIcons();

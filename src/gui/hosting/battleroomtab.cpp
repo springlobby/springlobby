@@ -954,7 +954,7 @@ void BattleRoomTab::OnSavePreset( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
 	wxString presetname;
-	if ( !ui().AskText( _( "Enter preset name" ), _( "Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten" ), presetname ) )
+	if ( !ui().AskText( _( "Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten" ), _( "Enter preset name" ), presetname ) )
 		return;
 	if ( presetname.IsEmpty() )
 	{
