@@ -249,7 +249,7 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 				wxPathOnly(TowxString(SlPaths::GetUnitSync())),
 				wxFileName::FileName(TowxString(SlPaths::GetUnitSync())).GetFullName(),
 #ifdef __APPLE__
-				"Spring application or unitsync (*.app;*.dylib)|*.app;*.dylib");
+				_T("Spring application or unitsync (*.app;*.dylib)|*.app;*.dylib"));
 #else
 				GetUnitsyncFilter());
 #endif
@@ -260,7 +260,7 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 		LSL::SpringBundle bundle;
 #ifdef __APPLE__
 		wxString path = pick.GetPath();
-		bundle.unitsync = STD_STRING(path + (path.Contains("libunitsync.dylib") ? "" : "/Contents/MacOS/libunitsync.dylib"));
+		bundle.unitsync = STD_STRING(path + (path.EndsWith("libunitsync.dylib") ? "" : "/Contents/MacOS/libunitsync.dylib"));
 #else
 		bundle.unitsync = STD_STRING(pick.GetPath());
 #endif
