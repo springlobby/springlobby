@@ -248,13 +248,22 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 	wxFileDialog pick( this, _( "Choose UnitSync library" ),
 				wxPathOnly(TowxString(SlPaths::GetUnitSync())),
 				wxFileName::FileName(TowxString(SlPaths::GetUnitSync())).GetFullName(),
+#ifdef __APPLE__
+				"Spring application or unitsync (*.app;*.dylib)|*.app;*.dylib");
+#else
 				GetUnitsyncFilter());
+#endif
 	if ( pick.ShowModal() == wxID_OK ) {
 		//get unitsync version & add to list
 		bool failed = false;
 		wxString failMessage;
 		LSL::SpringBundle bundle;
+#ifdef __APPLE__
+		wxString path = pick.GetPath();
+		bundle.unitsync = STD_STRING(path + (path.Contains("libunitsync.dylib") ? "" : "/Contents/MacOS/libunitsync.dylib"));
+#else
 		bundle.unitsync = STD_STRING(pick.GetPath());
+#endif
 		wxString version;
 		try {
 			bundle.AutoComplete();
