@@ -17,7 +17,7 @@ class NickListCtrl : public CustomVirtListCtrl< const User* ,NickListCtrl >
 private:
     typedef SL_GENERIC::UserMenu<ChatPanelMenu> UserMenu;
 
-  public:
+public:
     NickListCtrl( wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
         bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true  );
     virtual ~NickListCtrl();
@@ -28,6 +28,8 @@ private:
     void UserUpdated( const User& user );
 
     void ClearUsers();
+    void SetUsersFilterString( wxString fs );
+    void DoUsersFilter();
 
     void OnActivateItem( wxListEvent& event );
     void OnShowMenu( wxContextMenuEvent& event );
@@ -49,10 +51,14 @@ private:
     //! required per base clase
     virtual void Sort( );
 
+    int GetIndexFromRealData( const User& user );
     int GetIndexFromData( const DataType& data ) const;
 
     UserMenu* m_menu;
 
+    wxString m_UsersFilterString; //<- String with filter pattern for nicklist
+    std::vector<const User*> m_real_users_list; //<- actual list of users (not filtered)
+	
     enum {
       NICK_LIST = 31765 //wxID_HIGHEST
       //wxID_HIGHEST is used by BattleListCTRL. The cant be in the same Tab like BattleTab

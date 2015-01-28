@@ -42,6 +42,7 @@ BEGIN_EVENT_TABLE( ChatPanel, wxPanel )
 	EVT_BUTTON(		CHAT_SEND, ChatPanel::OnSay )
 	EVT_TEXT_URL(	CHAT_LOG,  ChatPanel::OnLinkEvent )
 	EVT_MENU (		wxID_ANY, ChatPanel::OnMenuItem )
+	EVT_TEXT ( FILTER_USERS, ChatPanel::OnFilterUsers )
 
 END_EVENT_TABLE()
 
@@ -235,8 +236,10 @@ void ChatPanel::CreateControls( )
 		// m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
 		// m_nick_filter->Disable();
 
+		m_nick_filter = new wxTextCtrl( m_nick_panel, FILTER_USERS );
 		m_nick_sizer->Add( m_usercount_label, 0 );
 		m_nick_sizer->Add( m_nicklist, 1, wxEXPAND );
+		m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND );
 		// m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
 
 		m_nick_panel->SetSizer( m_nick_sizer );
@@ -246,8 +249,8 @@ void ChatPanel::CreateControls( )
 		m_chat_panel = this;
 		m_nick_sizer = 0;
 		m_nicklist = 0;
-		m_nick_filter = 0;
 		m_splitter = 0;
+		m_nick_filter = 0;
 
 	}
 
@@ -498,6 +501,11 @@ void ChatPanel::OnChanOpts( wxCommandEvent& /*unused*/ )
 void ChatPanel::OnSay( wxCommandEvent& /*unused*/ )
 {
 	if ( Say( m_say_text->GetValue() ) ) m_say_text->SetValue( wxEmptyString );
+}
+
+void ChatPanel::OnFilterUsers( wxCommandEvent& /*unused*/ )
+{
+	m_nicklist->SetUsersFilterString( m_nick_filter->GetValue() );
 }
 
 void ChatPanel::OnPaste( wxClipboardTextEvent& event )
