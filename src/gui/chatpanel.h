@@ -126,6 +126,7 @@ private:
 	const User* GetSelectedUser() const;
 
 	void SortNickList();
+	void OnFilterUsers( wxCommandEvent& );
 
 	void OnChanOpts( wxCommandEvent& event );
 	void OnSay( wxCommandEvent& event );
@@ -167,13 +168,14 @@ private:
 	wxSplitterWindow* m_splitter; //!< The splitter.
 	wxPanel* m_chat_panel;      //!< Panel containing the chat. Only used when nicklist is visible.
 	wxPanel* m_nick_panel;      //!< Panel containing the nicklist.
+	wxTextCtrl* m_nick_filter;  //!< Textcontrol for filtering nicklist
 
 	wxTextCtrl* m_chatlog_text; //!< The chat log textcontrol.
 	wxTextCtrlHist* m_say_text;     //!< The say textcontrol.
 	wxBitmapButton* m_chan_opts_button; //!< The channel options button.
 
 	NickListCtrl* m_nicklist;   //!< The nicklist.
-	wxComboBox* m_nick_filter;  //!< The filter combo.
+	//wxComboBox* m_nick_filter;  //!< The filter combo.
 
 	wxButton* m_say_button;     //!< The say button.
 	SLNotebook* m_chat_tabs;
@@ -223,6 +225,7 @@ enum {
 	CHAT_SEND = wxID_HIGHEST,
 	CHAT_TEXT,
 	CHAT_LOG,
-	CHAT_CHAN_OPTS
+	CHAT_CHAN_OPTS,
+	FILTER_USERS
 };
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
