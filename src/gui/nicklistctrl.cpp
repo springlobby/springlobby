@@ -136,7 +136,7 @@ void NickListCtrl::DoUsersFilter()
 	it++)
 		{
 			const User* user = *it;
-			wxString nick( user->GetNick() );
+			wxString nick( user->GetNick().c_str() );
 			if( nick.Lower().Contains(m_UsersFilterString) )
 				AddItem(user);
 		}
