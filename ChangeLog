@@ -1,6 +1,7 @@
 ChangeLog of Springlobby
 
 ## 0.202
+ - add ability for search/filter players in chat
  - add command line switch --version
  - add "Download engine" to battle list context menu
  - new users don't auto-join #main any more
