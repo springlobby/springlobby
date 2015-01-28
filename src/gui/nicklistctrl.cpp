@@ -72,28 +72,43 @@ NickListCtrl::~NickListCtrl()
 
 void NickListCtrl::AddUser( const User& user )
 {
-	if ( AddItem( &user ) )
+	if( GetIndexFromRealData(user)!=-1 )
+	{
+		wxLogWarning( _T( "Useralready in list." ) );
 		return;
+	}
 
-	wxLogWarning( _T( "Useralready in list." ) );
+	m_real_users_list.push_back(&user);
+
+	if( m_UsersFilterString.empty() )
+		AddItem( &user );
+	else
+		DoUsersFilter();
 }
 
 void NickListCtrl::RemoveUser( const User& user )
 {
-	if ( RemoveItem( &user ) )
-		return;
+	int i = GetIndexFromRealData(user);
 
-	wxLogError( _T( "Didn't find the user to remove." ) );
+	if( i ==-1 )
+	{
+		wxLogError( _T( "Didn't find the user to remove." ) );
+		return;
+	}
+
+	m_real_users_list.erase( m_real_users_list.begin() + (unsigned int)i );
+	DoUsersFilter();
 }
 
 
 void NickListCtrl::UserUpdated( const User& user )
 {
-	int index = GetIndexFromData( &user );
+	int index = GetIndexFromRealData( user );
 	if ( index != -1 ) {
-		m_data[index] = &user;
+		m_real_users_list[index] = &user;
 		MarkDirtySort();
-		RefreshItem( index );
+		//RefreshItem( index );
+		DoUsersFilter();
 	}
 	else {
 		wxLogWarning( _T( "NickListCtrl::UserUpdated error, index == -1 ." ) );
@@ -102,7 +117,41 @@ void NickListCtrl::UserUpdated( const User& user )
 
 void NickListCtrl::ClearUsers()
 {
+	m_real_users_list.clear();
 	Clear();
+}
+
+void NickListCtrl::SetUsersFilterString( wxString fs )
+{
+	m_UsersFilterString = fs.Lower();
+	DoUsersFilter();
+}
+
+void NickListCtrl::DoUsersFilter()
+{
+	Clear();
+
+	for( std::vector<const User*>::iterator it = m_real_users_list.begin();
+	it != m_real_users_list.end();
+	it++)
+		{
+			const User* user = *it;
+			wxString nick = wxString::FromAscii( user->GetNick().c_str() );
+			if( nick.Lower().Contains(m_UsersFilterString) )
+				AddItem(user);
+		}
+}
+
+int NickListCtrl::GetIndexFromRealData( const User& user )
+{
+	unsigned int i;
+
+	for( i = 0;
+	i < m_real_users_list.size();
+	i++ )
+		if( m_real_users_list.at(i)->GetNick().compare(user.GetNick())==0 )return i;
+
+	return -1;
 }
 
 void NickListCtrl::OnActivateItem( wxListEvent& event )
