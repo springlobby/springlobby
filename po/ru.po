@@ -427,7 +427,7 @@ msgstr "правое нажатие для настроек (напр., авто
 
 #: src/chatpanel.cpp:263
 msgid "Send"
-msgstr "Отправить"
+msgstr "Послать"
 
 #: src/chatpanel.cpp:615
 msgid " !! Command: \""
@@ -2907,7 +2907,7 @@ msgstr "Укажите задержку в минутах перед перев�
 
 #: src/hosting/battleroomtab.cpp:767
 msgid "Set Timeout"
-msgstr "Установте таймаут!"
+msgstr "Установите таймаут!"
 
 #: src/hosting/battleroomtab.cpp:906
 #, c-format
@@ -2964,7 +2964,7 @@ msgstr "Автоматически записывать описание сра�
 
 #: src/hosting/hostbattledialog.cpp:98
 msgid "Engine"
-msgstr "Движёк"
+msgstr "Движок"
 
 #: src/hosting/hostbattledialog.cpp:105
 msgid "Select the engine version to play."
@@ -3074,7 +3074,7 @@ msgstr "Сначала выберите версию движка."
 
 #: src/hosting/hostbattledialog.cpp:349
 msgid "No engine selected."
-msgstr "Не выбран движёк."
+msgstr "Не выбран движок."
 
 #: src/hosting/hostbattledialog.cpp:418
 msgid "Manually chose a manager"
@@ -5855,7 +5855,7 @@ msgstr ""
 
 #: src/ui.cpp:547
 msgid "The selected preset requires the engine "
-msgstr "Выбранная настройка требует движёк "
+msgstr "Выбранная настройка требует движок "
 
 #: src/ui.cpp:547
 msgid ""
