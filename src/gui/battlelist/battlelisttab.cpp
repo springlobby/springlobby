@@ -43,7 +43,7 @@ BEGIN_EVENT_TABLE( BattleListTab, wxPanel )
 
 	EVT_BUTTON              ( BattleListTab::BATTLE_JOIN ,              BattleListTab::OnJoin           )
 	EVT_BUTTON              ( BattleListTab::BATTLE_HOST ,              BattleListTab::OnHost           )
-	EVT_LIST_ITEM_ACTIVATED ( BattleListTab::BATTLE_JOIN ,              BattleListTab::OnListJoin       )
+	EVT_LIST_ITEM_ACTIVATED ( BattleListCtrl::BLIST_LIST ,              BattleListTab::OnListJoin       )
 	EVT_LIST_ITEM_SELECTED  ( BattleListCtrl::BLIST_LIST  ,             BattleListTab::OnSelect         )
 	EVT_CHECKBOX            ( BattleListTab::BATTLE_LIST_FILTER_ACTIV,  BattleListTab::OnFilterActiv    )
 	#if  wxUSE_TOGGLEBTN
@@ -222,14 +222,12 @@ void BattleListTab::AddBattle( IBattle& battle ) {
 	}
 	m_battle_list->AddBattle( battle );
 	battle.SetGUIListActiv( true );
-	m_battle_list->MarkDirtySort();
 	SetNumDisplayed();
 }
 
 void BattleListTab::RemoveBattle( IBattle& battle )
 {
 	if ( &battle == m_sel_battle ) {
-		m_battle_list->ResetSelection();
 		SelectBattle( 0 );
 	}
 
@@ -260,6 +258,7 @@ void BattleListTab::UpdateBattle( IBattle& battle )
 	m_battle_list->UpdateBattle( battle );
 	if ( &battle == m_sel_battle )
 		SelectBattle( m_sel_battle );
+	m_battle_list->SetSelectedIndex(0);
 }
 
 
@@ -279,12 +278,18 @@ void BattleListTab::RemoveAllBattles()
 
 
 void BattleListTab::UpdateList() {
+
+	RemoveAllBattles(); //<- this is only solution I found to fix bug witch selects all battles in list 
+				// while user playing with filter options.
+				// may be need to separate battlelisttab`s logic from battlelistctrl?..
+
 	serverSelector().GetServer().battles_iter->IteratorBegin();
 	while ( ! serverSelector().GetServer().battles_iter->EOL() ) {
 		IBattle* b = serverSelector().GetServer().battles_iter->GetBattle();
 		if ( b != 0 )
 			UpdateBattle( *b );
 	}
+	m_battle_list->SortList(true);
 	m_battle_list->RefreshVisibleItems();
 }
 
@@ -430,7 +435,8 @@ void BattleListTab::OnSelect( wxListEvent& event )
 		return;
 	}
 	IBattle* b = ( m_battle_list->GetSelectedData());
-	SelectBattle( b );
+	if( b!= 0 )
+		SelectBattle( b );
 }
 
 

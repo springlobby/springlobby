@@ -80,6 +80,8 @@ PlaybackListFilter::PlaybackListFilter( wxWindow* parent, wxWindowID id, Playbac
 
 	m_filter_player_choice = new wxChoice( this, PLAYBACK_FILTER_PLAYER_CHOICE, wxDefaultPosition, wxSize( -1,-1 ), m_filter_player_choiceChoices, 0 );
 	m_filter_player_choice->SetSelection( GetIntParam( f_values.player_num )  );
+	if( m_filter_player_choice->GetSelection()==-1 )m_filter_player_choice->SetSelection(0);
+
 	m_filter_player_choice->SetMinSize( wxSize( 140,-1 ) );
 
 	m_filter_body_row2_sizer ->Add( m_filter_player_choice, 0, wxALIGN_RIGHT|wxALL|wxALIGN_CENTER_VERTICAL, 5 );
