@@ -36,15 +36,9 @@ FIND_PACKAGE( PkgConfig )
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise springlobby
 #----------------------------------------------------------------------------------------------------
-SET( OPTION_TRANSLATION_SUPPORT
-	TRUE CACHE BOOL
-	"Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" )
-SET( OPTION_NOTIFY
-	TRUE CACHE BOOL
-	"Enables libnotify support for popup status messages (requires libnotify)" )
-SET( BUILD_SHARED_LIBS
-	FALSE CACHE BOOL
-	"Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." )
+option( OPTION_TRANSLATION_SUPPORT "Enables translation support to the programs and adds facilities for helping translators (requires GNU Gettext)" TRUE)
+option( OPTION_NOTIFY "Enables libnotify support for popup status messages (requires libnotify)" TRUE)
+option( BUILD_SHARED_LIBS "Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." FALSE)
 
 SET(SPRINGLOBBY_REV "${SPRINGLOBBY_REV}")
 if (WIN32)
