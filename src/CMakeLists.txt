@@ -357,7 +357,7 @@ TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static js
 #add_dependencies(springlobby version)
 IF(UNIX)
 	FIND_PACKAGE(X11 REQUIRED)
-	TARGET_LINK_LIBRARIES(springlobby ${X11_X11_LIB})
+	TARGET_LINK_LIBRARIES(springlobby ${X11_LIBRARIES})
 ENDIF(UNIX)
 
 ENABLE_TESTING()
