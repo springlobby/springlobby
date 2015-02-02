@@ -5,11 +5,11 @@
 struct BattleListFilterValues
 {
 	BattleListFilterValues():
-		status_locked(true),
-		status_passworded(true),
-		status_start(true),
-		status_full(true),
-		status_open(true),
+		status_locked(false),
+		status_passworded(false),
+		status_start(false),
+		status_full(false),
+		status_open(false),
 		map_show(false),
 		mod_show(false),
 		highlighted_only(false),

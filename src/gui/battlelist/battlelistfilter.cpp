@@ -511,39 +511,50 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 	if ( !m_activ )
         return true;
 
-	if ( m_filter_highlighted->IsChecked() )
+	if( m_filter_highlighted->IsChecked() | 
+	m_filter_status_start->IsChecked() |
+	m_filter_status_locked->IsChecked() |
+	m_filter_status_pass->IsChecked() |
+	m_filter_status_full->IsChecked() |
+	m_filter_status_open->IsChecked() )
 	{
 		bool bResult = false;
 
-		try
+		if ( m_filter_highlighted->IsChecked() )
 		{
-			wxString host = TowxString(battle.GetFounder().GetNick());
-			bResult = useractions().DoActionOnUser( UserActions::ActHighlight, host );
+			try
+			{
+				wxString host = TowxString(battle.GetFounder().GetNick());
+				bResult = useractions().DoActionOnUser( UserActions::ActHighlight, host );
 
-			if( !bResult )
-				for ( unsigned int i = 0; i < battle.GetNumUsers(); ++i ) {
-					wxString name = TowxString(battle.GetUser( i ).GetNick());
-					if ( useractions().DoActionOnUser( UserActions::ActHighlight, name ) )
-						{bResult = true;break;}
-				}
-		}catch(...){}
+				if( !bResult )
+					for ( unsigned int i = 0; i < battle.GetNumUsers(); ++i ) {
+						wxString name = TowxString(battle.GetUser( i ).GetNick());
+						if ( useractions().DoActionOnUser( UserActions::ActHighlight, name ) )
+							{bResult = true;break;}
+					}
+			}catch(...){}
+		}
 
-		if( !bResult )
-			return false;
+
+		//Battle Status Check
+		if ( m_filter_status_start->GetValue() )
+			bResult |= battle.GetInGame();
+
+		if ( m_filter_status_locked->GetValue() )
+			bResult |= battle.IsLocked();
+
+		if ( m_filter_status_pass->GetValue() )
+			bResult |= battle.IsPassworded();
+
+		if ( m_filter_status_full->GetValue() )
+			bResult |= battle.IsFull();
+
+		if ( m_filter_status_open->GetValue() )
+			bResult |= (!battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull());
+
+		if(bResult==false)return false;
 	}
-
-
-	//Battle Status Check
-	if ( m_filter_status_start->GetValue() && !battle.GetInGame() )
-        return false;
-	if ( m_filter_status_locked->GetValue() && !battle.IsLocked() )
-        return false;
-	if ( m_filter_status_pass->GetValue() && !battle.IsPassworded() )
-        return false;
-	if ( m_filter_status_full->GetValue() && !battle.IsFull() )
-        return false;
-	if ( m_filter_status_open->GetValue() && !(!battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull()) )
-        return false;
 
   //Rank Check
 
