@@ -73,14 +73,14 @@ public:
 	static std::string GetConfigfileDir();
 	static std::string GetUpdateDir();
 	static bool RmDir(const std::string& dir);
+	//recursive create dir
+	static bool mkDir(const std::string& dir);
 
 private:
 	static void EngineSubPaths(const std::vector<std::string>& basedirs, std::vector<std::string>& paths);
 
 	//! used for passing config file at command line, empty if not set
 	static std::string m_user_defined_config_path;
-	//recursive create dir
-	static bool mkDir(const std::string& dir);
 	static bool IsSpringBin( const std::string& path );
 	static std::map<std::string, LSL::SpringBundle> m_spring_versions;
 	static void PossibleEnginePaths(std::vector<std::string>& pl);

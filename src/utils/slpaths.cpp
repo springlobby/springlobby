@@ -6,11 +6,12 @@
 #include <wx/stdpaths.h>
 #include <wx/dir.h>
 #include <wx/log.h>
-
+#ifndef TESTS
 #include <lslunitsync/unitsync.h>
 #include <lslutils/config.h>
 #include <lslutils/misc.h>
 #include <lslutils/conversion.h>
+#endif
 
 #include "utils/slconfig.h"
 
@@ -28,6 +29,7 @@
 
 std::string SlPaths::m_user_defined_config_path = "";
 
+#ifndef TESTS
 // returns my documents dir on windows, HOME on windows
 static std::string GetMyDocumentsDir()
 {
@@ -328,10 +330,6 @@ std::string SlPaths::GetUikeys(const std::string& index)
 	return GetDataDir(index) + "uikeys.txt";
 }
 
-bool SlPaths::mkDir(const std::string& dir) {
-	return wxFileName::Mkdir(TowxString(dir), 0755, wxPATH_MKDIR_FULL);
-}
-
 bool SlPaths::CreateSpringDataDir(const std::string& dir)
 {
 	if ( dir.empty() ) {
@@ -440,6 +438,8 @@ std::string SlPaths::GetUpdateDir()
 	return SlPaths::GetLobbyWriteDir() + "update" + SEP;
 }
 
+#endif
+
 bool SlPaths::RmDir(const std::string& dir)
 {
 	if (dir.empty())
@@ -448,16 +448,27 @@ bool SlPaths::RmDir(const std::string& dir)
 	if (!wxDirExists(cachedir)) {
 		return false;
 	}
-	wxLogWarning( _T("erasing dir %s"), cachedir.c_str());
-	wxString file = wxFindFirstFile( cachedir + wxFILE_SEP_PATH + _T("*") );
-	while ( !file.empty() ) {
-		if (wxDirExists(file)) {
-			if (!RmDir(STD_STRING(file))) {
+	wxDir dirit(cachedir);
+	wxString file;
+	bool cont = dirit.GetFirst(&file);
+	while ( cont ) {
+		const wxString absname = cachedir + wxFileName::GetPathSeparator() + file;
+		if (wxDirExists(absname)) {
+			if (!RmDir(STD_STRING(absname))) {
 				return false;
 			}
-		} else if (!wxRemoveFile( file ))
-			return false;
-		file = wxFindNextFile();
+		} else {
+			wxLogWarning( _T("deleting %s"), absname.c_str());
+			if (!wxRemoveFile(absname))
+				return false;
+		}
+		cont = dirit.GetNext(&file);
 	}
+	wxLogWarning( _T("deleting %s"), TowxString(dir).c_str());
 	return rmdir(dir.c_str()) == 0;
 }
+
+bool SlPaths::mkDir(const std::string& dir) {
+	return wxFileName::Mkdir(TowxString(dir), 0755, wxPATH_MKDIR_FULL);
+}
+

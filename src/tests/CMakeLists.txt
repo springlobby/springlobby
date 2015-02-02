@@ -6,7 +6,7 @@ If    (NOT Boost_FOUND)
         Message(STATUS "Note: Unit tests will not be built: Boost::test library was not found")
 Else  (NOT Boost_FOUND)
 
-ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
+ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK -DTESTS)
 
 add_custom_target(tests)
 add_custom_target(check ${CMAKE_CTEST_COMMAND} --output-on-failure -V)
@@ -77,4 +77,17 @@ set(test_libs
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
 ################################################################################
 
+set(test_name slpaths)
+Set(test_src
+	"${CMAKE_CURRENT_SOURCE_DIR}/slpaths.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/slpaths.cpp"
+)
+
+set(test_libs
+	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+	${Boost_SYSTEM_LIBRARY}
+	${WX_LD_FLAGS}
+)
+add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
+################################################################################
 endif()
