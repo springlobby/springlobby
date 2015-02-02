@@ -17,7 +17,7 @@ ENDMACRO(AddSTDFlag FLAG)
 
 set(CXX_STD0X_FLAGS FALSE)
 set(i 0)
-foreach(f -std=gnu++11 -std=c++11 -std=c++0x)
+foreach(f -std=c++11 -std=gnu++11 -std=c++0x)
 	MATH(EXPR i "${i}+1") #cmake has working unset :-|
 	CHECK_CXX_ACCEPTS_FLAG("${f}" ACCEPTSFLAG${i})
 	if(${ACCEPTSFLAG${i}} AND NOT CXX_STD0X_FLAGS)
