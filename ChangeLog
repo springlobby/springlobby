@@ -1,6 +1,6 @@
 ChangeLog of Springlobby
 
-## 0.202
+## 0.209
  - fix a lot of bugs in battle/playback filter (thanks Usaga!)
  - improve russion translations (thanks Usaga!)
  - add ability for search/filter players in chat (thanks Usaga!)
@@ -12,6 +12,9 @@ ChangeLog of Springlobby
  - allow cpuid to be set by config var
  - increase connect timeouts for downloader
  - fix autohost detection (clicking "Start" should send !start again)
+
+## 0.202 - 0.208
+ - skipped due build errors
 
 ## 0.201
  - reworked connect / register dialog
