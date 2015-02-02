@@ -986,15 +986,13 @@ bool Ui::StartUpdate(const std::string& latestVersion)
 	}
 	if ( wxDirExists( updatedir ) ) {
 		if (!SlPaths::RmDir(STD_STRING(updatedir))) {
-			customMessageBox(SL_MAIN_ICON, _("Couldn't cleanup ") + TowxString(updatedir), _("Error"));
-			return false;
+			wxLogError(_T("Couldn't cleanup ") + TowxString(updatedir));
 		}
 	}
 	if ( !wxMkdir( updatedir ) ){
-		wxLogError( _T("couldn't create update directory") );
-		customMessageBox(SL_MAIN_ICON, _("Unable to create to the lobby update directory:") + TowxString(updatedir), _("Error"));
-		return false;
+		wxLogError( _T("couldn't create update directory") + TowxString(updatedir) );
 	}
+
 	if ( !wxFileName::IsDirWritable( updatedir ) ) {
 		wxLogError( _T("dir not writable: ") + updatedir );
 		customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby update directory:") + TowxString(updatedir), _("Error"));

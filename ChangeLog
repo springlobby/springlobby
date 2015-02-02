@@ -1,5 +1,8 @@
 ChangeLog of Springlobby
 
+## 0.210
+ - fix autoupdater (Couldn't cleanup ...)
+
 ## 0.209
  - fix a lot of bugs in battle/playback filter (thanks Usaga!)
  - improve russion translations (thanks Usaga!)
