@@ -61,7 +61,8 @@ settings_frame::settings_frame(wxWindow *parent, const wxString &title, wxWindow
 	settingsIcon( new wxIcon(springsettings_xpm) ),
 	m_has_focus(true)
 {
-
+	SetMinSize(wxSize(DEFSETT_SW_WIDTH, DEFSETT_SW_HEIGHT));
+	
 	alreadyCalled = false;
 	parentWindow = parent;
 

@@ -107,7 +107,7 @@ void TaskBar::UpdateDisplay()
 	case STATE_WORKING:
 		if (finished) {
 			state = STATE_FINISHED;
-			text->SetLabel(_T("Download finished"));
+			text->SetLabel(_("Download finished"));
 			gauge->Hide();
 			SetBackgroundColour(wxColour(0, 208, 10));
 		} else {
@@ -139,9 +139,9 @@ void TaskBar::UpdateProgress()
 	}
 
 	if (unfinishedTasks == 1 ) {
-		text->SetLabel(wxFormat( _T("Downloading %s") ) % downloadName );
+		text->SetLabel(wxFormat( _("Downloading %s") ) % downloadName );
 	} else {
-		text->SetLabel(wxFormat( _T("Downloading %u files") ) % unfinishedTasks );
+		text->SetLabel(wxFormat( _("Downloading %u files") ) % unfinishedTasks );
 	}
 
 	if (overalPercent < 0) {
