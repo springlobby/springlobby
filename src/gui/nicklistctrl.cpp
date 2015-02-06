@@ -27,7 +27,6 @@
 #include "utils/sortutil.h"
 #include "log.h"
 
-
 BEGIN_EVENT_TABLE( NickListCtrl, NickListCtrl::BaseType )
 	EVT_LIST_ITEM_ACTIVATED ( NICK_LIST,    NickListCtrl::OnActivateItem    )
 	EVT_CONTEXT_MENU        (               NickListCtrl::OnShowMenu        )
@@ -46,8 +45,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
 							  wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | ( int )( !show_header ) * wxLC_NO_HEADER | ( int )( singleSelectList ) * wxLC_SINGLE_SEL,
 							  name, 3, &NickListCtrl::CompareOneCrit, highlight, UserActions::ActHighlight, true /*periodic sort*/ ),
     m_menu( popup )
-{
-
+{	
 	AddColumn( 0, 20, _( "s" ), _T( "Status" ) );
 	AddColumn( 1, 20, _( "c" ), _T( "Country" ) );
 	AddColumn( 2, 20, _( "r" ), _T( "Rank" ) );
@@ -67,7 +65,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
 
 NickListCtrl::~NickListCtrl()
 {
-
+  
 }
 
 void NickListCtrl::AddUser( const User& user )
@@ -106,8 +104,6 @@ void NickListCtrl::UserUpdated( const User& user )
 	int index = GetIndexFromRealData( user );
 	if ( index != -1 ) {
 		m_real_users_list[index] = &user;
-		MarkDirtySort();
-		//RefreshItem( index );
 		DoUsersFilter();
 	}
 	else {
@@ -140,6 +136,7 @@ void NickListCtrl::DoUsersFilter()
 			if( nick.Lower().Contains(m_UsersFilterString) )
 				AddItem(user);
 		}
+	Sort();
 }
 
 int NickListCtrl::GetIndexFromRealData( const User& user )
