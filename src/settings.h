@@ -25,8 +25,8 @@ const unsigned int DEFSETT_SPRING_PORT = 8452;
 
 const long SET_MODE_EXPERT = 5000;
 const long SET_MODE_SIMPLE = 5001;
-const unsigned int DEFSETT_SW_WIDTH = 770;
-const unsigned int DEFSETT_SW_HEIGHT = 580;
+const unsigned int DEFSETT_SW_WIDTH = 1055;
+const unsigned int DEFSETT_SW_HEIGHT = 670;
 const unsigned int DEFSETT_SW_TOP = 50;
 const unsigned int DEFSETT_SW_LEFT = 50;
 

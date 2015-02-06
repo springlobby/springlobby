@@ -3250,7 +3250,33 @@ msgstr "Любой файл (*)|*"
 
 #: src/lsl/src/lslunitsync/nonportable.h:16 src/nonportable.h:20
 msgid "App Bundles (*.app)|*.app|Any File (*.*)|*.*"
-msgstr "Узлы приложения (*.app)|*.app|Любой файл (*.*)|*.*"
+msgstr "Приложения (*.app)|*.app|Любой файл (*.*)|*.*"
+
+#, c-format
+msgid "Downloading %s"
+msgstr "Идёт загрузка %s"
+
+msgid "SpringLobby Preferences"
+msgstr "Настройки SpringLobby"
+
+msgid "If checked, SpringLobby will automatically log on to the last used server"
+msgstr "Если включено, то SpringLobby будет подключаться к использованному ранее серверу"
+
+msgid "SpringLobby can check at startup if a newer version is available and automatically download it for you."
+msgstr "При каждом запуске SpringLobby будет искать и закачивать новую версию программы."
+
+msgid "Requires SpringLobby restart to take effect."
+msgstr "Требуется перезапуск программы"
+
+msgid "Restore Paths"
+msgstr "Восстановить пути"
+
+#, c-format
+msgid "Downloading %u files"
+msgstr "Идёт загрузка %u файлов"
+
+msgid "Download finished"
+msgstr "Загрузка завершена"
 
 #: src/mainchattab.cpp:177
 msgid "Disconnected from server, chat closed."
@@ -3291,6 +3317,12 @@ msgstr "&Сохранить настройки"
 #: src/mainwindow.cpp:139
 msgid "&Quit"
 msgstr "&Выйти"
+
+msgid "&Open Spring DataDir"
+msgstr "&Открыть папку данных Spring"
+
+msgid "&Download Archives"
+msgstr "&Скачать архивы"
 
 #: src/mainwindow.cpp:142
 msgid "&Autojoin channels"
@@ -5868,6 +5900,28 @@ msgstr ""
 #: src/ui.cpp:548
 msgid "Engine missing"
 msgstr "Нет движка"
+
+msgid "Content needed to be downloaded"
+msgstr "Необходимо загрузить контент"
+
+#, c-format
+msgid "You need to download %s to be able to play.\n\n Shall I download it?"
+msgstr "Сначала вам нужно скачать %s.\n\n Приступить к закачке?"
+
+msgid " and "
+msgstr " и "
+
+#, c-format
+msgid "the game '%s'"
+msgstr "игру '%s'"
+
+#, c-format
+msgid "the map '%s'"
+msgstr "карту '%s'"
+
+#, c-format
+msgid "The selected preset requires the engine '%s' version '%s'. Should it be downloaded?"
+msgstr "Для данной игры требуется движок '%s' версии '%s'. Приступить к закачке?"
 
 #: src/ui.cpp:579
 #, c-format
