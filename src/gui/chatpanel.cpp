@@ -790,7 +790,7 @@ void ChatPanel::SetServer( IServer* serv )
 		m_server->uidata.panel = 0;
 		if ( m_nicklist ) {
 			m_nicklist->StopTimer();
-			m_nicklist->Clear();
+			m_nicklist->ClearUsers();
 		}
 	} else if ( serv != 0 ) {
 		SetLogFile(_T("server"));
