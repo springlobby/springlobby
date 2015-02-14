@@ -904,7 +904,7 @@ void ServerEvents::OnRedirect( const std::string& address,  unsigned int port, c
 {
 	const wxString name = TowxString(address) + _T(":") + TowxString(port);
 	sett().SetServer( name, TowxString(address), port );
-	ui().DoConnect( TowxString(name), TowxString(CurrentNick), TowxString(CurrentPassword));
+	ui().DoConnect( name, TowxString(CurrentNick), TowxString(CurrentPassword));
 }
 
 

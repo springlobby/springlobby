@@ -604,7 +604,7 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 
   //Host:
 	try { //!TODO
-  if ( ! StringMatches(TowxString(TowxString(battle.GetFounder().GetNick())),
+  if ( ! StringMatches(TowxString(battle.GetFounder().GetNick()),
 		       m_filter_host_edit->GetValue(),
 		       m_filter_host_expression) )
       return false;

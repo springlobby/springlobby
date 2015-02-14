@@ -1730,7 +1730,7 @@ void TASServer::AddBot( int battleid, const wxString& nick, UserBattleStatus& st
 	wxString ailib;
 	ailib += TowxString(status.aishortname);
 	ailib += _T("|") +TowxString(status.aiversion);
-	SendCmd( _T("ADDBOT"), TowxString(nick) + wxString::Format( _T(" %d %d "), tasbs, tascl.data ) + ailib );
+	SendCmd( _T("ADDBOT"), nick + wxString::Format( _T(" %d %d "), tasbs, tascl.data ) + ailib );
 }
 
 

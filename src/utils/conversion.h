@@ -17,33 +17,13 @@ typedef __int64 int64_t;
 #define C_STRING(v) (v).mb_str(wxConvUTF8)
 
 #include <wx/string.h>
-#include <sstream>
 
-template<class T>
-static inline wxString TowxString(T arg){
-  std::stringstream s;
-  s << arg;
-  return wxString(s.str().c_str(),wxConvUTF8);
-}
 
-template<>
-inline wxString TowxString(wxString arg){
-  return arg;
-}
+wxString TowxString(const std::string& arg);
+wxString TowxString(int);
 
-template<>
-inline wxString TowxString(const wxChar *arg){
-  return wxString(arg);
-}
 
-template<class T>
-inline T FromwxString(const wxString& arg){
-  std::stringstream s;
-  s << STD_STRING(arg);
-  int64_t ret;
-  s >> ret;
-  return (T)ret;
-}
+long FromwxString(const wxString& arg);
 
 #define WX_STRINGC(v) wxString(v,wxConvUTF8)
 

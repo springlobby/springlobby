@@ -981,21 +981,21 @@ bool Ui::StartUpdate(const std::string& latestVersion)
 	const wxString updatedir = TowxString(SlPaths::GetUpdateDir());
 	const int mindirlen = 9; // safety, minimal is/should be: C:\update
 	if ((updatedir.size() <= mindirlen)) {
-		wxLogError(_T("Invalid update dir: ") + TowxString(updatedir));
+		wxLogError(_T("Invalid update dir: ") + updatedir);
 		return false;
 	}
 	if ( wxDirExists( updatedir ) ) {
 		if (!SlPaths::RmDir(STD_STRING(updatedir))) {
-			wxLogError(_T("Couldn't cleanup ") + TowxString(updatedir));
+			wxLogError(_T("Couldn't cleanup ") + updatedir);
 		}
 	}
 	if ( !wxMkdir( updatedir ) ){
-		wxLogError( _T("couldn't create update directory") + TowxString(updatedir) );
+		wxLogError( _T("couldn't create update directory") + updatedir );
 	}
 
 	if ( !wxFileName::IsDirWritable( updatedir ) ) {
 		wxLogError( _T("dir not writable: ") + updatedir );
-		customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby update directory:") + TowxString(updatedir), _("Error"));
+		customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby update directory:") + updatedir, _("Error"));
 		return false;
 	}
 

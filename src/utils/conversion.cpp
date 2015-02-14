@@ -4,6 +4,7 @@
 
 #include <wx/arrstr.h>
 #include <wx/tokenzr.h>
+#include <sstream>
 
 StringtokenizerVectorized::StringtokenizerVectorized( wxStringTokenizer tokenizer )
 {
@@ -20,4 +21,24 @@ std::string stdprintf(const char* format, ...)
 	int count = vsnprintf(buf, 1024, format, args);
 	va_end(args);
 	return std::string(buf, count);
+}
+
+wxString TowxString(const std::string& arg){
+  std::stringstream s;
+  s << arg;
+  return wxString(s.str().c_str(),wxConvUTF8);
+}
+
+wxString TowxString(int arg){
+  std::stringstream s;
+  s << arg;
+  return wxString(s.str().c_str(),wxConvUTF8);
+}
+
+long FromwxString(const wxString& arg){
+  std::stringstream s;
+  s << STD_STRING(arg);
+  int64_t ret;
+  s >> ret;
+  return ret;
 }
