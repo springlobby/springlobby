@@ -651,7 +651,7 @@ wxArrayString hotkey_panel::GetHotkeyKeySymNames( const wxString& profileName )
 // oderidx == -1 means unbind
 void hotkey_panel::SetHotkey( const wxString& profileName, const wxString& command, const wxString& key, int orderIdx )
 {
-	cfg().Write(_T( "/HotkeyProfiles/") + profileName + _T("/Bindings/") + (wxFormat(wxT("%i") ) % orderIdx) + _T("/") + key, command );
+	cfg().Write(_T( "/HotkeyProfiles/") + profileName + _T("/Bindings/") + (wxString::Format(wxT("%i") , orderIdx)) + _T("/") + key, command );
 }
 
 wxString hotkey_panel::GetHotkey( const wxString& profileName, const wxString& orderIdx, const wxString& key )

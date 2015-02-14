@@ -463,9 +463,9 @@ bool Ui::DownloadArchives(const IBattle& battle)
         wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
 
 		if ( wxYES == customMessageBox( SL_MAIN_ICON,
-						wxFormat(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded?")) % engineName % engineVersion,
+						wxString::Format(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded?"), engineName.c_str(), engineVersion.c_str(),
 						_("Engine missing"),
-						wxYES_NO ) ) {
+						wxYES_NO ) )) {
 			Download(PrDownloader::GetEngineCat(), engineVersion, "");
 			return true;
 		}
@@ -477,19 +477,19 @@ bool Ui::DownloadArchives(const IBattle& battle)
 
 	wxString prompt;
 	if (!battle.ModExists() ) {
-		prompt += wxFormat(_("the game '%s'")) % battle.GetHostModName();
+		prompt += wxString::Format(_("the game '%s'"), battle.GetHostModName().c_str());
 	}
 
 	if (!battle.MapExists() ) {
 		if (!prompt.empty()) {
 			prompt+= _(" and ");
 		}
-		prompt += wxFormat(_("the map '%s'")) % battle.GetHostMapName();
+		prompt += wxString::Format(_("the map '%s'"), battle.GetHostMapName().c_str());
 	}
 	if (prDownloader().IsRunning()) {
 		return true;
 	}
-	if ( customMessageBox( SL_MAIN_ICON, wxFormat(_( "You need to download %s to be able to play.\n\n Shall I download it?" )) % prompt,
+	if ( customMessageBox( SL_MAIN_ICON, wxString::Format(_( "You need to download %s to be able to play.\n\n Shall I download it?" ), prompt.c_str()),
 						   _( "Content needed to be downloaded" ), wxYES_NO | wxICON_QUESTION ) == wxYES ) {
 		if (!battle.MapExists()) {
 			ui().Download("map", battle.GetHostMapName(), battle.GetHostMapHash());
@@ -527,7 +527,7 @@ void Ui::OnDisconnected( IServer& server, bool wasonline )
 
 	mw().GetChatTab().LeaveChannels();
 
-	const wxString disconnect_msg = wxFormat(_("disconnected from server: %s") ) % server.GetServerName();
+	const wxString disconnect_msg = wxString::Format(_("disconnected from server: %s"), server.GetServerName().c_str());
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(UiEvents::StatusData( disconnect_msg, 1 ) );
 	if ( !wxTheApp->IsActive() ) {
 		UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData( UiEvents::ServerConnection, disconnect_msg ) );
@@ -570,7 +570,7 @@ void Ui::OnChannelList( const wxString& channel, const int& numusers )
 		ShowMessage( _("error"), _("no active chat panels open.") );
 		return;
 	}
-	panel->StatusMessage( wxFormat( _("%s (%d users)") ) % channel % numusers );
+	panel->StatusMessage( wxString::Format( _("%s (%d users)"), STD_STRING(channel).c_str(), numusers ));
 }
 
 
@@ -872,7 +872,7 @@ void Ui::OnRing( const wxString& from )
 	m_main_win->RequestUserAttention();
 
 	if ( !wxTheApp->IsActive() ) {
-		const wxString msg = wxFormat(_("%s:\nring!") ) % from;
+		const wxString msg = wxString::Format(_("%s:\nring!"), STD_STRING(from).c_str());
 		UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData( UiEvents::ServerConnection, msg ) );
 	}
 
@@ -1050,7 +1050,7 @@ void Ui::CheckForUpdates(bool show)
 	if ( !latestVersion.IsSameAs(myVersion, false) ) {
 #ifdef __WXMSW__
 		int answer = customMessageBox(SL_MAIN_ICON,
-					      wxFormat( _("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?") )
+					      wxString::Format( _("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?") )
 					      % TowxString(getSpringlobbyName())
 					      % msg,
 					      _("Not up to date"), wxOK|wxCANCEL);

@@ -324,13 +324,12 @@ void TASServer::Login()
 {
 	slLogDebugFunc("");
 	const wxString pass = GetPasswordHash( GetPassword() );
-	const wxString protocol = TowxString( m_crc.GetCRC() );
 	wxString localaddr = m_sock->GetLocalAddress();
-	if ( localaddr.IsEmpty() ) localaddr = _T("*");
+	if ( localaddr.empty() ) localaddr = _T("*");
 	m_id_transmission = false;
-	wxFormat login_cmd( _T("%s %s %d %s %s\t%s\ta m sp cl p") );
 	const int cpuid = cfg().ReadLong(_T("/General/CpuID"));
-	SendCmd ( _T("LOGIN"), (login_cmd % GetUserName() % pass % cpuid % localaddr % TowxString(getSpringlobbyAgent()) % protocol).str() );
+	SendCmd ( _T("LOGIN"), wxString::Format(_T("%s %s %d %s %s\t%u\ta m sp cl p"),
+			GetUserName().c_str(), pass.c_str(), cpuid, localaddr.c_str(), TowxString(getSpringlobbyAgent()).c_str(), m_crc.GetCRC()));
 	m_id_transmission = true;
 }
 
@@ -384,7 +383,7 @@ void TASServer::Notify()
 	if (m_last_ping > PING_TIME) { //Send a PING every 30 seconds
 		if (interval > PING_TIME) {
 			m_last_net_packet = 0; //assume local clock is broken and we received a packed within time
-			m_se->OnServerMessage(wxFormat(_("Springlobby hung or stale clock. Got no timer for %d msec")) % interval );
+			m_se->OnServerMessage(stdprintf("Springlobby hung or stale clock. Got no timer for %d msec", interval));
 		}
 		m_last_ping = 0;
 		Ping();
@@ -392,7 +391,7 @@ void TASServer::Notify()
 	}
 
 	if ( m_last_net_packet > PING_TIMEOUT ) {
-		m_se->OnServerMessage(wxFormat(_("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.")) % (m_last_net_packet / 1000) % (m_last_ping / 1000) );
+		m_se->OnServerMessage(stdprintf("Timeout assumed, disconnecting. Received no data from server for %d seconds. Last ping send %d seconds ago.", (m_last_net_packet / 1000), (m_last_ping / 1000) ));
 		m_last_net_packet = 0;
 		Disconnect();
 		return;

@@ -229,7 +229,7 @@ protected:
 
     bool DoSetValue(double val)
     {
-        wxTextCtrl::SetValue(wxFormat(m_format.c_str(), val));
+        wxTextCtrl::SetValue(wxString::Format(m_format.c_str(), val));
         return true;
     }
     void DoSetRange(double min_val, double max_val)

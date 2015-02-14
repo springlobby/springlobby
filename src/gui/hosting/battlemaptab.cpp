@@ -145,12 +145,12 @@ void BattleMapTab::Update()
 
 	LSL::UnitsyncMap map = m_battle->LoadMap();
 
-	m_map_opts_list->SetItem( 0, 1, wxFormat( _T( "%dx%d" ) ) % (map.info.width / 512) % (map.info.height / 512) );
-	m_map_opts_list->SetItem( 1, 1, wxFormat( _T( "%d-%d" ) ) % map.info.minWind % map.info.maxWind );
-	m_map_opts_list->SetItem( 2, 1, wxFormat( _T( "%d" ) ) % map.info.tidalStrength );
-	m_map_opts_list->SetItem( 3, 1, wxFormat( _T( "%d" ) ) % map.info.gravity );
-	m_map_opts_list->SetItem( 4, 1, wxFormat( _T( "%d" ) ) % map.info.extractorRadius );
-	m_map_opts_list->SetItem( 5, 1, wxFormat( _T( "%.3f" ) ) % map.info.maxMetal );
+	m_map_opts_list->SetItem( 0, 1, wxString::Format( _T("%dx%d"), map.info.width / 512, map.info.height / 512));
+	m_map_opts_list->SetItem( 1, 1, wxString::Format( _T("%d-%d"), map.info.minWind % map.info.maxWind ));
+	m_map_opts_list->SetItem( 2, 1, wxString::Format( _T("%d"), map.info.tidalStrength ));
+	m_map_opts_list->SetItem( 3, 1, wxString::Format( _T("%d"), map.info.gravity ));
+	m_map_opts_list->SetItem( 4, 1, wxString::Format( _T("%d"), map.info.extractorRadius ));
+	m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ));
 
     m_map_desc->SetLabel(TowxString(map.info.description));
     m_map_desc->Wrap(160);
@@ -263,9 +263,9 @@ void BattleMapTab::OnMapBrowse( wxCommandEvent& /*unused*/ )
 void BattleMapTab::OnStartTypeSelect( wxCommandEvent& /*unused*/ )
 {
 	if ( !m_battle ) return;
-    const std::string pos = wxFormat( _T( "%d" ) ) % m_start_radios->GetSelection();
+    const std::string pos = stdprintf("%d", m_start_radios->GetSelection());
     m_battle->CustomBattleOptions().setSingleOption( "startpostype", pos, LSL::Enum::EngineOption );
-	m_battle->SendHostInfo( wxFormat( _T( "%d_startpostype" ) ) % LSL::Enum::EngineOption );
+	m_battle->SendHostInfo( stdprintf("%d_startpostype", LSL::Enum::EngineOption ));
 }
 
 

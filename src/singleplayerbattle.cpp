@@ -38,7 +38,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
   {
 	LoadMap();
     m_sptab.ReloadMapOptContrls();
-	Update(  wxFormat(_T("%d_%s") ) % LSL::Enum::PrivateOptions % _T("mapname") );
+	Update(stdprintf("%d_%s", LSL::Enum::PrivateOptions, "mapname"));
   }
   if ( (update & HI_Mod_Changed) != 0 )
   {
@@ -51,7 +51,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
       SendHostInfo( HI_Send_All_opts );
     }
     m_sptab.ReloadModOptContrls();
-	Update(  wxFormat(_T("%d_%s") ) % LSL::Enum::PrivateOptions % _T("modname") );
+	Update(stdprintf("%d_%s", LSL::Enum::PrivateOptions, "modname"));
   }
   if ( (update & HI_Send_All_opts) != 0 )
   {
@@ -59,7 +59,7 @@ void SinglePlayerBattle::SendHostInfo( HostInfo update )
     {
       for (const auto pair : CustomBattleOptions().getOptionsMap( (LSL::Enum::GameOption)i))
       {
-        Update(  wxFormat(_T("%d_%s") ) % i % pair.first );
+        Update(stdprintf("%d_%s", i, pair.first.c_str()));
       }
     }
   }

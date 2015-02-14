@@ -280,11 +280,11 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 
 			if (!bundle.IsValid() || version.IsEmpty()) {
 				failed = true;
-				failMessage = wxFormat("%s did not find engine and unitsync executables at %s\n\nPlease ensure that both exist and that you have appropriate access privileges.") % getSpringlobbyName() % bundle.path;
+				failMessage = wxString::Format(_T("%s did not find engine and unitsync executables at %s\n\nPlease ensure that both exist and that you have appropriate access privileges."), getSpringlobbyName().c_str(), bundle.path.c_str());
 			}
 		} catch (const LSL::Exceptions::unitsync& e) {
 			failed = true;
-			failMessage = wxFormat("%s could not obtain the version string from the shared library file %s\n\nPlease provide a valid unitsync file.") % getSpringlobbyName() % bundle.unitsync;
+			failMessage = wxString::Format(_T("%s could not obtain the version string from the shared library file %s\n\nPlease provide a valid unitsync file."), getSpringlobbyName().c_str(), bundle.unitsync.c_str());
 		}
 		if (failed) {
 			customMessageBox( SL_MAIN_ICON, failMessage, _( "Configuration error" ), wxOK );
@@ -384,7 +384,7 @@ void SpringOptionsTab::SwitchUnitsync(const std::string& newIndex, const std::st
 {
 	wxDialog* notifyBox = new wxDialog(this, -1, _("Reloading unitsync"), wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP);
 	wxString indexStr(newIndex.c_str(),wxConvUTF8);
-	wxString notifyMessage = wxFormat("%s is loading the %s engine unitsync library...") % getSpringlobbyName() % indexStr.c_str();
+	wxString notifyMessage = wxString::Format(_T("%s is loading the %s engine unitsync library..."), getSpringlobbyName().c_str(), indexStr.c_str());
 	wxStaticText* notifyText = new wxStaticText( notifyBox, -1, notifyMessage, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL );
 	wxBoxSizer* vertSizer = new wxBoxSizer(wxVERTICAL);
 	vertSizer->Add(notifyText,1,wxALL|wxEXPAND|wxALIGN_CENTRE_VERTICAL|wxALIGN_CENTRE_HORIZONTAL,15,nullptr);
@@ -401,7 +401,7 @@ void SpringOptionsTab::SwitchUnitsync(const std::string& newIndex, const std::st
 		notifyBox->Show(false);
 		::wxYield();
 		customMessageBox( SL_MAIN_ICON,
-						  wxFormat("%s is unable to load your UnitSync library into the process.\n\nYou might want to take another look at your unitsync setting.") % getSpringlobbyName(),
+						  wxString::Format(_T("%s is unable to load your UnitSync library into the process.\n\nYou might want to take another look at your unitsync setting."), getSpringlobbyName().c_str()),
 						  _( "Spring error" ), wxOK );
 		SlPaths::SetUsedSpringIndex(oldIndex);
 		DoRestore();

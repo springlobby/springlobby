@@ -199,7 +199,7 @@ void hotkey_parser::writeBindingsToFile( const key_binding& springbindings )
 	{
 		if ( wxRenameFile( this->m_filename, prevFilenameBak ) == false )
 		{
-            throw HotkeyException( (wxFormat(_("Error renaming %s to %s")) % m_filename % prevFilenameBak )  );
+            throw HotkeyException( wxString::Format(_("Error renaming %s to %s"), STD_STRING(m_filename).c_str(), STD_STRING(prevFilenameBak).c_str()) );
 		}
 	}
 

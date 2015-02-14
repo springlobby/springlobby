@@ -383,8 +383,8 @@ void Settings::AddChannelJoin( const wxString& channel , const wxString& key )
 {
 	int index = GetNumChannelsJoin();
 
-	cfg().Write( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Name" ) ) % index, channel );
-	cfg().Write( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Password" ) ) % index, key );
+	cfg().Write( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Name" ) , index), channel);
+	cfg().Write( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Password" ), index), key);
 }
 
 
@@ -409,7 +409,7 @@ int Settings::GetChannelJoinIndex( const wxString& name )
 	int ret = -1;
 	for ( int i = 0; i < numchannels; i++ )
 	{
-		if ( cfg().Read( wxFormat( _T( "/Channels/AutoJoin/Channel%d/Name" ) ) % i, wxEmptyString ) == name ) ret = i;
+		if ( cfg().Read( wxString::Format( _T( "/Channels/AutoJoin/Channel%d/Name" ), i), wxEmptyString ) == name ) ret = i;
 	}
 	return ret;
 }
@@ -1393,13 +1393,13 @@ void Settings::SetShowXallTabs( bool show )
 
 void Settings::SavePerspective( const wxString& notebook_name, const wxString& perspective_name, const wxString& layout_string )
 {
-	wxString entry = wxFormat( _T( "/GUI/AUI/%s/%s" ) ) % perspective_name % notebook_name;
+	wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), STD_STRING(perspective_name).c_str(), STD_STRING(notebook_name).c_str());
     cfg().Write( entry, layout_string );
 }
 
 wxString Settings::LoadPerspective( const wxString& notebook_name, const wxString& perspective_name )
 {
-	wxString entry = wxFormat( _T( "/GUI/AUI/%s/%s" ) ) % perspective_name % notebook_name;
+	wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), STD_STRING(perspective_name).c_str(), STD_STRING(notebook_name).c_str());
     return cfg().Read( entry , wxEmptyString );
 }
 

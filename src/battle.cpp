@@ -198,7 +198,7 @@ void Battle::LoadMapDefaults( const std::string& mapname )
     CustomBattleOptions().setSingleOption( "startpostype",
                                            STD_STRING(sett().GetMapLastStartPosType(TowxString(mapname))),
                                            LSL::Enum::EngineOption );
-	SendHostInfo( wxFormat( _T("%d_startpostype") ) % LSL::Enum::EngineOption );
+	SendHostInfo( stdprintf("%d_startpostype", LSL::Enum::EngineOption ));
 
 	for( unsigned int i = 0; i <= GetLastRectIdx(); ++i ) if ( GetStartRect( i ).IsOk() ) RemoveStartRect(i); // remove all rects
 	SendHostInfo( IBattle::HI_StartRects );
@@ -1161,7 +1161,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
         for ( size_t j = 0; j < control_teams[i].players.size(); ++j )
         {
             ASSERT_LOGIC( control_teams[i].players[j], _T("fail in Autobalance teams, NULL player") );
-			wxString msg = wxFormat( _T("setting player %s to team and ally %d") ) % control_teams[i].players[j]->GetNick() % i;
+			wxString msg = wxString::Format( _T("setting player %s to team and ally %d"), control_teams[i].players[j]->GetNick().c_str(), i);
             wxLogMessage( _T("%s"), msg.c_str() );
             ForceTeam( *control_teams[i].players[j], control_teams[i].teamnum );
             ForceAlly( *control_teams[i].players[j], control_teams[i].teamnum );

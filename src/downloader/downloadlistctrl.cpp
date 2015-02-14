@@ -232,9 +232,9 @@ wxString DownloadListCtrl::GetItemText(long item, long column) const
 			} else {
 				return _("downloading");
 			}
-		case 2: return wxString::Format(wxT("%i%%"),(int)((double)100.0*infos.progress/(double)infos.size));//(wxFormat(_T("%.2f") ) % ( infos.progress * 100 )).str() : na_str;
-		case 3: return wxEmptyString;//infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
-		case 4: return wxEmptyString;//infos.inspeed > -0.01 ? (wxFormat(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
+		case 2: return wxString::Format(wxT("%i%%"),(int)((double)100.0*infos.progress/(double)infos.size));//(wxString::Format(_T("%.2f") ) % ( infos.progress * 100 )).str() : na_str;
+		case 3: return wxEmptyString;//infos.inspeed > -0.01 ? (wxString::Format(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
+		case 4: return wxEmptyString;//infos.inspeed > -0.01 ? (wxString::Format(_T("%.2f") ) % ( infos.inspeed*kfactor )).str() : na_str;
 		case 5: return infos.size > 0 ? wxString::Format(wxT("%i"),infos.size/MB) : _T("0");
 	}
 }

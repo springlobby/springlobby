@@ -78,7 +78,7 @@ bool NetDebugReport::Process()
 		szResponse = wxT("SUCCESS!\n\n");
 	else
 		szResponse = wxT("FAILURE!\n\n");
-	szResponse += wxFormat(wxT("\nResponse Code: %d\n\n") ) % ret;
+	szResponse += wxString::Format(wxT("\nResponse Code: %d\n\n"),  ret);
 	szResponse += rheader.GetString();
 	szResponse += wxT("\n\n");
 	szResponse += response.GetString();

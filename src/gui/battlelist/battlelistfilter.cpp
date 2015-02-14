@@ -511,7 +511,7 @@ bool BattleListFilter::FilterBattle( IBattle& battle )
 	if ( !m_activ )
         return true;
 
-	if( m_filter_highlighted->IsChecked() | 
+	if( m_filter_highlighted->IsChecked() |
 	m_filter_status_start->IsChecked() |
 	m_filter_status_locked->IsChecked() |
 	m_filter_status_pass->IsChecked() |
@@ -722,15 +722,15 @@ void  BattleListFilter::SaveFilterValues()
 	filtervalues.map = m_filter_map_edit->GetValue();
 	filtervalues.map_show = m_filter_map_show->GetValue();
 	filtervalues.map = m_filter_map_edit->GetValue();
-	filtervalues.maxplayer = wxFormat( _( "%d" ) ) % m_filter_maxplayer_choice->GetSelection();
+	filtervalues.maxplayer = wxString::Format( _( "%d" ), m_filter_maxplayer_choice->GetSelection());
 	filtervalues.maxplayer_mode = _GetButtonSign( m_filter_maxplayer_mode );
 	filtervalues.mod = m_filter_mod_edit->GetValue();
 	filtervalues.mod_show = m_filter_mod_show->GetValue();
 	filtervalues.player_mode = _GetButtonSign( m_filter_player_mode );
-	filtervalues.player_num = wxFormat( _( "%d" ) ) % m_filter_player_choice->GetSelection();
-	filtervalues.rank = wxFormat( _( "%d" ) ) % m_filter_rank_choice->GetSelection();
+	filtervalues.player_num = wxString::Format( _( "%d" ), m_filter_player_choice->GetSelection());
+	filtervalues.rank = wxString::Format( _( "%d" ), m_filter_rank_choice->GetSelection());
 	filtervalues.rank_mode = _GetButtonSign( m_filter_rank_mode );
-	filtervalues.spectator = wxFormat( _( "%d" ) ) % m_filter_spectator_choice->GetSelection();
+	filtervalues.spectator = wxString::Format( _( "%d" ), m_filter_spectator_choice->GetSelection());
 	filtervalues.spectator_mode = _GetButtonSign( m_filter_spectator_mode );
 	filtervalues.status_full = m_filter_status_full->IsChecked();
 	filtervalues.status_locked = m_filter_status_locked->IsChecked();

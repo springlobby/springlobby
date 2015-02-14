@@ -116,7 +116,7 @@ void ServerEvents::OnMotd( const std::string& msg )
 
 void ServerEvents::OnPong( wxLongLong ping_time )
 {
-	//wxLongLong is non-POD and cannot be passed to wxFormat as such. use c-string rep instead. converting to long might loose precision
+	//wxLongLong is non-POD and cannot be passed to wxString::Format as such. use c-string rep instead. converting to long might loose precision
 	UiEvents::StatusData data( wxString::Format( _("ping: %s ms"), ping_time.ToString().c_str() ), 2 );
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent( data );
 }

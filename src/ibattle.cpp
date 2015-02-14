@@ -884,7 +884,7 @@ bool IBattle::LoadOptionsPreset( const std::string& name )
 				RestrictUnit( STD_STRING(unitinfo.BeforeLast(_T('='))), s2l( unitinfo.AfterLast(_T('=')) ) );
 			}
 			SendHostInfo( HI_Restrictions );
-			Update( wxFormat( _T("%d_restrictions") ) % LSL::Enum::PrivateOptions );
+			Update(stdprintf("%d_restrictions", LSL::Enum::PrivateOptions));
 
 		}
 	}
