@@ -570,7 +570,7 @@ void Ui::OnChannelList( const wxString& channel, const int& numusers )
 		ShowMessage( _("error"), _("no active chat panels open.") );
 		return;
 	}
-	panel->StatusMessage( wxString::Format( _("%s (%d users)"), STD_STRING(channel).c_str(), numusers ));
+	panel->StatusMessage( wxString::Format( _("%s (%d users)"), channel.c_str(), numusers ));
 }
 
 
@@ -872,7 +872,7 @@ void Ui::OnRing( const wxString& from )
 	m_main_win->RequestUserAttention();
 
 	if ( !wxTheApp->IsActive() ) {
-		const wxString msg = wxString::Format(_("%s:\nring!"), STD_STRING(from).c_str());
+		const wxString msg = wxString::Format(_("%s:\nring!"), from.c_str());
 		UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData( UiEvents::ServerConnection, msg ) );
 	}
 

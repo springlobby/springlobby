@@ -567,7 +567,7 @@ void ChatPanel::Said( const wxString& who, const wxString& message )
 		bool inactive = ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ;
 		ui().mw().RequestUserAttention();
 		if ( inactive ) {
-			const wxString msg = wxString::Format( _T("%s:\n%s"), STD_STRING(who).c_str(), STD_STRING(message.Left(50)).c_str());
+			const wxString msg = wxString::Format( _T("%s:\n%s"), who.c_str(), message.Left(50).c_str());
 			UiEvents::GetNotificationEventSender().SendEvent(
 				UiEvents::NotficationData( UiEvents::PrivateMessage,msg ) );
 		}
@@ -592,7 +592,7 @@ void ChatPanel::DidAction( const wxString& who, const wxString& action )
 	SetIconHighlight( highlight_say );
 	OutputLine( _T( " * " ) + who + _T( " " ) + action, sett().GetChatColorAction());
 	if ( m_type == CPT_User && ( ui().GetActiveChatPanel() != this  || !wxTheApp->IsActive() ) ) {
-		const wxString msg = wxString::Format( _T("%s \n%s"), STD_STRING(who).c_str(), STD_STRING(action.Left(50)).c_str());
+		const wxString msg = wxString::Format( _T("%s \n%s"), who.c_str(), action.Left(50).c_str());
 		UiEvents::GetNotificationEventSender().SendEvent(
 			UiEvents::NotficationData( UiEvents::PrivateMessage, msg ));
 	}
@@ -884,7 +884,7 @@ bool ChatPanel::Say( const wxString& message )
 			if ( line.StartsWith( _T( "/" ) ) ) {
 				if ( m_channel->ExecuteSayCommand(STD_STRING(line) ) ) return true;
 				if ( m_channel->GetServer().ExecuteSayCommand( line ) ) return true;
-				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), STD_STRING(line).c_str()), sett().GetChatColorError());
+				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str()), sett().GetChatColorError());
 				return true;
 			}
 			m_channel->Say( STD_STRING(line));
@@ -898,7 +898,7 @@ bool ChatPanel::Say( const wxString& message )
 			if ( line.StartsWith( _T( "/" ) ) ) {
 				if ( m_battle->ExecuteSayCommand( STD_STRING(line) ) ) return true;
 				if ( m_battle->GetServer().ExecuteSayCommand( line ) ) return true;
-				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), STD_STRING(line).c_str()), sett().GetChatColorError());
+				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str()), sett().GetChatColorError());
 				return true;
 			}
 			m_battle->Say(STD_STRING(line));
@@ -912,7 +912,7 @@ bool ChatPanel::Say( const wxString& message )
 			if ( line.StartsWith( _T( "/" ) ) ) {
 				if ( m_user->ExecuteSayCommand(STD_STRING(line))) return true;
 				if ( m_user->GetServer().ExecuteSayCommand( line ) ) return true;
-				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), STD_STRING(line).c_str()), sett().GetChatColorError());
+				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str()), sett().GetChatColorError());
 				return true;
 			}
 			m_user->Say(STD_STRING(line));
@@ -922,7 +922,7 @@ bool ChatPanel::Say( const wxString& message )
 
 			if ( line.StartsWith( _T( "/" ) ) ) {
 				if ( m_server->ExecuteSayCommand( line ) ) return true;
-				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), STD_STRING(line).c_str()), sett().GetChatColorError());
+				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str()), sett().GetChatColorError());
 				return true;
 			}
 

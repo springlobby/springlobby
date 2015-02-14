@@ -144,7 +144,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer( wxBoxSizer* parent_sizer,
     wxBoxSizer* section_sizer = new wxBoxSizer( wxVERTICAL );
     if ( setupOptionsSectionSizer( dummy, section_sizer, optFlag ) == 0 ) {
         if ( num_options == 0 ) {
-			wxString name = wxString::Format( _T("%d%sno_opts"), optFlag, STD_STRING(wxsep).c_str());
+			wxString name = wxString::Format( _T("%d%sno_opts"), optFlag, wxsep.c_str());
             wxStaticText* none_found = new wxStaticText( this, wxID_ANY, _("no options available"),
                                             wxDefaultPosition, wxDefaultSize, 0, name  );
             m_statictext_map[name] = none_found;
@@ -171,7 +171,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 {
 	if ( !m_battle ) return -1;
     const int col_gap = 35;
-	wxString pref = wxString::Format( _T("%d%s"), optFlag, STD_STRING(wxsep).c_str());
+	wxString pref = wxString::Format( _T("%d%s"), optFlag, wxsep.c_str());
     LSL::OptionsWrapper optWrap = m_battle->CustomBattleOptions();
 	bool enable = m_battle->IsFounderMe();
 	wxFlexGridSizer* cbxSizer =  new wxFlexGridSizer( 4, 2, 10, 10 );
@@ -449,7 +449,7 @@ void RemovePrefixed(T &v, const wxString& pref){
 void BattleroomMMOptionsTab::OnReloadControls(const LSL::Enum::GameOption& flag)
 {
 	if ( !m_battle ) return;
-	const wxString pref = wxString::Format( _T("%d%s"), flag, STD_STRING(wxsep).c_str());
+	const wxString pref = wxString::Format( _T("%d%s"), flag, wxsep.c_str());
 
 	//purgin existing keys from map
 	RemovePrefixed(m_chkbox_map,pref);

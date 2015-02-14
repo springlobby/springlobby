@@ -417,7 +417,7 @@ void ServerEvents::OnBattleInfoUpdated( int battleid, int spectators, bool locke
         {
             battle.SendMyBattleStatus();
             battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, map);
-            battle.Update( STD_STRING(wxString::Format( _T("%d_mapname"), LSL::Enum::PrivateOptions )));
+            battle.Update(stdprintf("%d_mapname", LSL::Enum::PrivateOptions ));
         }
 
 		BattleEvents::GetBattleEventSender( BattleEvents::BattleInfoUpdate ).SendEvent( std::make_pair(&battle, "") );
@@ -440,13 +440,13 @@ void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, cons
             {
                 key = key.AfterFirst( '/' );
                 battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::MapOption );
-                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::MapOption, key.c_str() )));
+                battle.Update(stdprintf("%d_%s", LSL::Enum::MapOption, key.c_str() ));
             }
             else if ( key.Left( 11 ) == _T( "modoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
                 battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::ModOption );
-                battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::ModOption,  key.c_str() )));
+                battle.Update(stdprintf("%d_%s", LSL::Enum::ModOption, key.c_str()));
             }
             else if ( key.Left( 8 ) == _T( "restrict" ) )
             {
@@ -487,7 +487,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, cons
 			battle.m_autohost_manager->RecognizeAutohost(value);
 		} else {
 			battle.CustomBattleOptions().setSingleOption( STD_STRING(key), value, LSL::Enum::EngineOption );
-			battle.Update(STD_STRING(wxString::Format(_T("%d_%s"), LSL::Enum::EngineOption, key.c_str() )));
+			battle.Update(stdprintf("%d_%s", LSL::Enum::EngineOption, key.c_str() ));
 		}
         }
     }
@@ -534,7 +534,7 @@ void ServerEvents::OnBattleDisableUnit( int battleid, const std::string& unitnam
     {
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.RestrictUnit(unitname, count );
-        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::Enum::PrivateOptions )));
+        battle.Update(stdprintf("%d_restrictions", LSL::Enum::PrivateOptions ));
     }
     catch ( assert_exception ) {}
 }
@@ -547,7 +547,7 @@ void ServerEvents::OnBattleEnableUnit( int battleid, const std::string& unitname
     {
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.UnrestrictUnit(unitname);
-        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::Enum::PrivateOptions )));
+        battle.Update(stdprintf("%d_restrictions", LSL::Enum::PrivateOptions ));
     }
     catch ( assert_exception ) {}
 }
@@ -560,7 +560,7 @@ void ServerEvents::OnBattleEnableAllUnits( int battleid )
     {
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.UnrestrictAllUnits();
-        battle.Update(STD_STRING(wxString::Format( _T("%d_restrictions"), LSL::Enum::PrivateOptions )));
+        battle.Update(stdprintf("%d_restrictions", LSL::Enum::PrivateOptions));
     }
     catch ( assert_exception ) {}
 }
@@ -744,7 +744,7 @@ void ServerEvents::OnBattleStartRectAdd( int battleid, int allyno, int left, int
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.AddStartRect( allyno, left, top, right, bottom );
         battle.StartRectAdded( allyno );
-        battle.Update(STD_STRING(wxString::Format( _T("%d_mapname"), LSL::Enum::PrivateOptions )));
+        battle.Update(stdprintf("%d_mapname", LSL::Enum::PrivateOptions ));
     }
     catch (assert_exception) {}
 }
@@ -757,7 +757,7 @@ void ServerEvents::OnBattleStartRectRemove( int battleid, int allyno )
         IBattle& battle = m_serv.GetBattle( battleid );
         battle.RemoveStartRect( allyno );
         battle.StartRectRemoved( allyno );
-        battle.Update(STD_STRING(wxString::Format( _T("%d_mapname"), LSL::Enum::PrivateOptions )));
+        battle.Update(stdprintf("%d_mapname", LSL::Enum::PrivateOptions ));
     }
     catch (assert_exception) {}
 }

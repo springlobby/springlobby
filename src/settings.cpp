@@ -1393,13 +1393,13 @@ void Settings::SetShowXallTabs( bool show )
 
 void Settings::SavePerspective( const wxString& notebook_name, const wxString& perspective_name, const wxString& layout_string )
 {
-	wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), STD_STRING(perspective_name).c_str(), STD_STRING(notebook_name).c_str());
+	wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ),perspective_name.c_str(), notebook_name.c_str());
     cfg().Write( entry, layout_string );
 }
 
 wxString Settings::LoadPerspective( const wxString& notebook_name, const wxString& perspective_name )
 {
-	wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), STD_STRING(perspective_name).c_str(), STD_STRING(notebook_name).c_str());
+	wxString entry = wxString::Format( _T( "/GUI/AUI/%s/%s" ), perspective_name.c_str(), notebook_name.c_str());
     return cfg().Read( entry , wxEmptyString );
 }
 

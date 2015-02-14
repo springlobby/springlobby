@@ -260,7 +260,7 @@ long AddBotDialog::AddMMOptionsToList( long pos, int optFlag )
     for (const auto& it : m_battle.CustomBattleOptions().getOptions( (LSL::Enum::GameOption)optFlag ))
 	{
         m_opts_list->InsertItem( pos, TowxString(it.second.first));
-        const wxString tag = wxString::Format( _T( "%d_%s"), optFlag, it.first.c_str());
+        const wxString tag = wxString::Format( _T( "%d_%s"), optFlag, TowxString(it.first).c_str());
 		m_opt_list_map[ tag ] = pos;
 		UpdateOption( tag );
 		pos++;
