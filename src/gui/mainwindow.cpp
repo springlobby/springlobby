@@ -429,7 +429,7 @@ ChatPanel* MainWindow::GetChannelChatPanel( const wxString& channel )
 //! @sa Server::JoinChannel OpenPrivateChat
 void MainWindow::OpenChannelChat( Channel& channel, bool doFocus )
 {
-    ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
+    ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab");
 	m_chat_tab->AddChatPanel( channel, doFocus);
 }
 
@@ -439,7 +439,7 @@ void MainWindow::OpenChannelChat( Channel& channel, bool doFocus )
 //! @param nick The user to whom the chatwindow should be opened to
 void MainWindow::OpenPrivateChat( const User& user, bool doFocus )
 {
-  ASSERT_LOGIC( m_chat_tab != 0, _T("m_chat_tab") );
+  ASSERT_LOGIC( m_chat_tab != 0, "m_chat_tab");
   m_func_tabs->SetSelection( PAGE_CHAT );
   ChatPanel* cp = m_chat_tab->AddChatPanel( user );
   if ( doFocus )
@@ -509,9 +509,9 @@ void MainWindow::OnMenuChat( wxCommandEvent& /*unused*/ )
   if ( !ui().IsConnected() ) return;
   wxString answer;
   if ( ui().AskText( _("Open Private Chat..."), _("Name of user"), answer ) ) {
-	if (serverSelector().GetServer().UserExists( answer ) ) {
+	if (serverSelector().GetServer().UserExists(STD_STRING(answer)) ) {
         //true puts focus on new tab
-	  OpenPrivateChat( serverSelector().GetServer().GetUser( answer ), true  );
+	  OpenPrivateChat( serverSelector().GetServer().GetUser(STD_STRING(answer)), true  );
     }
   }
 

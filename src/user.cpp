@@ -106,13 +106,13 @@ void User::Said( const std::string& /*message*/ ) const
 
 void User::Say( const std::string& message ) const
 {
-  GetServer().SayPrivate( TowxString(GetNick()), TowxString(message));
+	GetServer().SayPrivate( GetNick(),message);
 }
 
 
 void User::DoAction( const std::string& message ) const
 {
-  GetServer().DoActionPrivate( TowxString(GetNick()), TowxString(message));
+  GetServer().DoActionPrivate(GetNick(), message);
 }
 
 
@@ -189,7 +189,7 @@ void User::SendMyUserStatus() const
 bool User::ExecuteSayCommand( const std::string& cmd ) const
 {
 	if ( TowxString(cmd).BeforeFirst(' ').Lower() == _T("/me") ) {
-		GetServer().DoActionPrivate(TowxString(GetNick()), TowxString(cmd).AfterFirst(' ') );
+		GetServer().DoActionPrivate(GetNick(), LSL::Util::AfterFirst(cmd, " "));
 		return true;
 	}
 	return false;

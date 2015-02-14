@@ -361,7 +361,7 @@ void BattleListTab::OnJoin( wxCommandEvent& /*unused*/ )
 {
 	try
 	{
-		ASSERT_LOGIC( m_battle_list != 0, _T( "m_battle_list = 0" ) );
+		ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0"  );
 	} catch ( ... ) {
 		return;
 	}
@@ -378,7 +378,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 {
 	try
 	{
-		ASSERT_LOGIC( m_battle_list != 0, _T( "m_battle_list = 0" ) );
+		ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0");
 	} catch ( ... ) {
 		return;
 	}

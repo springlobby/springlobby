@@ -477,7 +477,7 @@ void BattleRoomTab::UpdateBattleInfo( const wxString& Tag )
 
 BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
 {
-	ASSERT_LOGIC( m_players != 0, _T( "m_players = 0" ) );
+	ASSERT_LOGIC( m_players != 0, "m_players = 0");
 	return *m_players;
 }
 
@@ -575,7 +575,7 @@ IBattle* BattleRoomTab::GetBattle()
 ChatPanel& BattleRoomTab::GetChatPanel()
 {
 	slLogDebugFunc("");
-	ASSERT_LOGIC( m_chat != 0, _T( "m_chat = 0" ) );
+	ASSERT_LOGIC( m_chat != 0, "m_chat = 0" );
 	return *m_chat;
 }
 
@@ -696,7 +696,7 @@ void BattleRoomTab::OnAddBot( wxCommandEvent& /*unused*/ )
 		bs.aiversion = STD_STRING(dlg.GetAIVersion());
 		bs.aitype = dlg.GetAIType();
 		bs.owner = m_battle->GetMe().GetNick();
-		serverSelector().GetServer().AddBot( m_battle->GetBattleId(), dlg.GetNick(), bs );
+		serverSelector().GetServer().AddBot( m_battle->GetBattleId(), STD_STRING(dlg.GetNick()), bs );
 	}
 }
 

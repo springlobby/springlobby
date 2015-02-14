@@ -455,7 +455,7 @@ void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& /*unused*/ )
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& /*unused*/ )
 {
 	slLogDebugFunc("");
-  if ( m_sel_user ) m_battle->GetServer().Ring( TowxString(m_sel_user->GetNick()));
+  if ( m_sel_user ) m_battle->GetServer().Ring(m_sel_user->GetNick());
 }
 
 void BattleroomListCtrl::Sort()

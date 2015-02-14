@@ -80,7 +80,7 @@ public:
 	void OnDisconnected( IServer& server, bool wasonline );
 
 	void OnJoinedChannelSuccessful( Channel& chan, bool doFocus = false);
-	void OnChannelMessage(Channel& chan, const wxString& msg );
+	void OnChannelMessage(Channel& chan, const std::string& msg );
 
 	void OnChannelList( const wxString& channel, const int& numusers );
 	void OnUserOnline( User& user );
@@ -118,7 +118,7 @@ public:
 	void OnQuit(wxCommandEvent& data);
 	void OnRegistrationAccepted(const wxString& user, const wxString& pass);
 	void OnRegistrationDenied(const wxString& reason);
-	void OnLoginDenied(const wxString& reason);
+	void OnLoginDenied(const std::string& reason);
 
 	//! ask to download missing map, return true if download attempted
 	bool OnPresetRequiringMap( const wxString& mapname );

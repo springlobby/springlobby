@@ -112,13 +112,13 @@ ChatPanel* Ui::GetActiveChatPanel()
 MainWindow& Ui::mw()
 {
 	assert(wxThread::IsMain());
-	ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
+	ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0");
 	return *m_main_win;
 }
 
 const MainWindow& Ui::mw() const
 {
-	ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
+	ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0");
 	return *m_main_win;
 }
 
@@ -133,7 +133,7 @@ bool Ui::IsMainWindowCreated() const
 //! @brief Shows the main window on screen
 void Ui::ShowMainWindow()
 {
-	ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
+	ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0");
 	mw().Show(true);
 }
 
@@ -146,7 +146,7 @@ void Ui::ShowConnectWindow()
 	if (IsConnected())
 		return;
 	if ( m_con_win == 0 ) {
-		ASSERT_LOGIC( m_main_win != 0, _T("m_main_win = 0") );
+		ASSERT_LOGIC( m_main_win != 0, "m_main_win = 0");
 		m_con_win = new ConnectWindow( m_main_win, *this );
 	}
 	m_con_win->CenterOnParent();
@@ -203,16 +203,16 @@ void Ui::Disconnect()
 //! @brief Opens the accutial connection to a server.
 void Ui::DoConnect( const wxString& servername, const wxString& username, const wxString& password )
 {
-	if ( (m_serv != NULL) && (m_serv->GetServerName() == servername) &&  IsConnected() &&
-			(m_serv->GetUserName() == username) && (m_serv->GetPassword() == password) ) {
+	if ( (m_serv != NULL) && (m_serv->GetServerName() == STD_STRING(servername)) &&  IsConnected() &&
+			(m_serv->GetUserName() == STD_STRING(username)) && (m_serv->GetPassword() == STD_STRING(password)) ) {
 		//nothing changed & already connected, do nothing
 		return;
 	}
 
 	Disconnect();
 
-	m_serv->SetUsername( username );
-	m_serv->SetPassword( password );
+	m_serv->SetUsername(STD_STRING(username));
+	m_serv->SetPassword(STD_STRING(password));
 
 	const wxString host = sett().GetServerHost( servername );
 	const int port = sett().GetServerPort( servername );
@@ -221,7 +221,7 @@ void Ui::DoConnect( const wxString& servername, const wxString& username, const 
 	m_serv->uidata.panel->StatusMessage( _T("Connecting to server ") + servername + _T("...") );
 
 	// Connect
-	m_serv->Connect( servername, host, port );
+	m_serv->Connect(STD_STRING(servername), STD_STRING(host), port );
 
 }
 
@@ -237,7 +237,7 @@ void Ui::AddServerWindow( const wxString& servername )
 void Ui::ReopenServerTab()
 {
 	if ( m_serv->IsOnline() ) {
-		AddServerWindow( m_serv->GetServerName() );
+		AddServerWindow(TowxString(m_serv->GetServerName()));
 		// re-add all users to the user list
 		const UserList& list = m_serv->GetUserList();
 		for ( unsigned int i = 0; i < list.GetNumUsers(); i++ ) {
@@ -252,7 +252,7 @@ void Ui::DoRegister( const wxString& servername, const wxString& username, const
 		OnRegistrationDenied(_T("Server does not exist in settings"));
 		return;
 	}
-	m_serv->Register(servername, sett().GetServerHost(servername), sett().GetServerPort(servername), username, password);
+	m_serv->Register(STD_STRING(servername), STD_STRING(sett().GetServerHost(servername)), sett().GetServerPort(servername), STD_STRING(username), STD_STRING(password));
 }
 
 bool Ui::IsConnected() const
@@ -263,7 +263,7 @@ bool Ui::IsConnected() const
 
 void Ui::JoinChannel( const wxString& name, const wxString& password )
 {
-	if ( m_serv != 0 ) m_serv->JoinChannel( name, password );
+	if ( m_serv != 0 ) m_serv->JoinChannel( STD_STRING(name), STD_STRING(password));
 }
 
 
@@ -334,7 +334,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 		const wxString pass = channel.AfterFirst(' ');
 		if ( !pass.IsEmpty() ) channel = channel.BeforeFirst(' ');
 		if ( channel.StartsWith(_T("#")) ) channel.Remove( 0, 1 );
-		m_serv->JoinChannel( channel, pass );
+		m_serv->JoinChannel(STD_STRING(channel), STD_STRING(pass));
 		return true;
 	} else if ( cmd.BeforeFirst(' ').Lower() == _T("/away") ) {
 		m_serv->GetMe().Status().away = true;
@@ -350,7 +350,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 		}
 	} else if ( cmd.BeforeFirst(' ').Lower() == _T("/ingame") ) {
 		const wxString nick = cmd.AfterFirst(' ');
-		m_serv->RequestInGameTime( nick );
+		m_serv->RequestInGameTime(STD_STRING(nick));
 		return true;
 	} else if ( cmd.BeforeFirst(' ').Lower() == _T("/help") ) {
 		const wxString topic = cmd.AfterFirst(' ');
@@ -359,7 +359,7 @@ bool Ui::ExecuteSayCommand( const wxString& cmd )
 	} else if ( cmd.BeforeFirst(' ').Lower() == _T("/msg") ) {
 		const wxString user = cmd.AfterFirst(' ').BeforeFirst(' ');
 		const wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
-		m_serv->SayPrivate( user, msg );
+		m_serv->SayPrivate(STD_STRING(user), STD_STRING(msg));
 		return true;
 	} else if ( cmd.BeforeFirst(' ').Lower() == _T("/channels") ) {
 		mw().ShowChannelChooser();
@@ -555,11 +555,11 @@ void Ui::OnJoinedChannelSuccessful( Channel& chan, bool doFocus)
 }
 
 
-void Ui::OnChannelMessage(Channel& chan, const wxString& msg )
+void Ui::OnChannelMessage(Channel& chan, const std::string& msg )
 {
 	ChatPanel* panel = GetChannelChatPanel( TowxString(chan.GetName()) );
 	if ( panel != 0 ) {
-		panel->StatusMessage( msg );
+		panel->StatusMessage(TowxString(msg));
 	}
 }
 
@@ -1105,11 +1105,11 @@ void Ui::OnRegistrationDenied(const wxString& reason)
 	Disconnect();
 }
 
-void Ui::OnLoginDenied(const wxString& reason)
+void Ui::OnLoginDenied(const std::string& reason)
 {
 	if ( m_con_win == 0 ) {
 		m_con_win = new ConnectWindow( m_main_win, *this );
 	}
-	m_con_win->OnLoginDenied(reason);
+	m_con_win->OnLoginDenied(TowxString(reason));
 	Disconnect();
 }

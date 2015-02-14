@@ -293,7 +293,7 @@ double MapCtrl::GetStartRectMetalFraction( const BattleStartRect& sr ) const
 
 unsigned int MapCtrl::GetNewRectIndex() const
 {
-    ASSERT_LOGIC ( m_battle, _T("getting a rectangle index not in a battle"));
+    ASSERT_LOGIC ( m_battle, "getting a rectangle index not in a battle");
 	return m_battle->GetNextFreeRectIdx();
 }
 
@@ -676,7 +676,7 @@ void MapCtrl::DrawBackground( wxDC& dc )
         img = m_heightmap;
         break;
     default:
-        ASSERT_LOGIC( false, _T("missing InfoMap IM_* enumeration constant in switch") );
+        ASSERT_LOGIC( false, "missing InfoMap IM_* enumeration constant in switch");
         break;
     }
 
@@ -808,7 +808,7 @@ inline wxPoint
 FitInside(const wxRect& what, const wxRect& container)
 {
     ASSERT_LOGIC ( what.width <= container.width && what.height <= container.height,
-                   _T("Can't fit rect inside target container") );
+                   "Can't fit rect inside target container");
 
     wxPoint offset ( 0, 0 );
 
@@ -827,7 +827,7 @@ FitInside(const wxRect& what, const wxRect& container)
 
 wxRect MapCtrl::GetUserRect( const User& user, bool selected )
 {
-    ASSERT_LOGIC( m_battle != 0, _T("Bot == 0") );
+    ASSERT_LOGIC( m_battle != 0, "Bot == 0");
     m_map = m_battle->LoadMap();
 
     wxPoint absolute_position ( GetTranslatedScaledUserMapPosition(user) );
@@ -1086,7 +1086,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
             User& user = *m_user_expanded;
             try
             {
-                ASSERT_LOGIC( &user != 0, _T("MapCtrl::OnMouseMove(): user = 0") );
+                ASSERT_LOGIC( &user != 0, "MapCtrl::OnMouseMove(): user = 0");
             }
             catch (...)
             {
@@ -1123,7 +1123,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
             User& user = *m_user_expanded;
             try
             {
-                ASSERT_LOGIC( &user != 0, _T("MapCtrl::OnMouseMove(): user = 0") );
+                ASSERT_LOGIC( &user != 0, "MapCtrl::OnMouseMove(): user = 0");
             }
             catch (...)
             {
@@ -1313,7 +1313,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
             User& user = *m_user_expanded;
             try
             {
-                ASSERT_LOGIC( &user != 0, _T("MapCtrl::OnLeftDown(): user = 0") );
+                ASSERT_LOGIC( &user != 0, "MapCtrl::OnLeftDown(): user = 0");
             }
             catch (...)
             {
@@ -1411,7 +1411,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         User& user = *m_user_expanded;
         try
         {
-            ASSERT_LOGIC( &user != 0, _T("MapCtrl::OnLeftUp(): user == 0") );
+            ASSERT_LOGIC( &user != 0, "MapCtrl::OnLeftUp(): user == 0");
         }
         catch (...)
         {
@@ -1574,7 +1574,7 @@ void MapCtrl::OnRightUp( wxMouseEvent& event )
                         bs.ally = m_battle->GetFreeAlly();
                         bs.colour = m_battle->GetNewColour();
                         User& bot = m_battle->OnBotAdded(STD_STRING(dlg.GetNick()), bs  );
-                        ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
+                        ASSERT_LOGIC( &bot != 0, "bot == 0");
                         bot.BattleStatus().pos.x = x;
                         bot.BattleStatus().pos.y = y;
                         RefreshRect( GetUserRect( bot, false ), false );

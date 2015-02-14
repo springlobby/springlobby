@@ -32,23 +32,23 @@ IServer::~IServer()
 }
 
 
-User& IServer::GetUser( const wxString& nickname ) const
+User& IServer::GetUser( const std::string& nickname ) const
 {
 	ASSERT_EXCEPTION(!nickname.empty(), _T("GetUser with empty nickname called"));
-	return m_users.GetUser( STD_STRING(nickname));
+	return m_users.GetUser(nickname);
 }
 
 
-bool IServer::UserExists( const wxString& nickname ) const
+bool IServer::UserExists( const std::string& nickname ) const
 {
-  return m_users.UserExists(STD_STRING(nickname));
+  return m_users.UserExists(nickname);
 }
 
 
-Channel& IServer::GetChannel( const wxString& name )
+Channel& IServer::GetChannel( const std::string& name )
 {
 	ASSERT_EXCEPTION(!name.empty(), _T("GetChannel with empty nickname called"));
-	return m_channels.GetChannel( STD_STRING(name));
+	return m_channels.GetChannel(name);
 }
 
 
@@ -64,9 +64,9 @@ Channel& IServer::GetChannel( const int& index )
 }
 
 
-bool IServer::ChannelExists( const wxString& name ) const
+bool IServer::ChannelExists( const std::string& name ) const
 {
-  return m_channels.ChannelExists( STD_STRING(name));
+  return m_channels.ChannelExists(name);
 }
 
 
@@ -84,25 +84,25 @@ bool IServer::BattleExists( const int& battleid ) const
 
 
 
-User& IServer::_AddUser( const wxString& user )
+User& IServer::_AddUser( const std::string& user )
 {
-  if ( m_users.UserExists(STD_STRING(user)) ) return m_users.GetUser(STD_STRING(user));
-  User* u = new User( STD_STRING(user), *this );
+  if ( m_users.UserExists(user) ) return m_users.GetUser(user);
+  User* u = new User( user, *this );
   m_users.AddUser( *u );
   return *u;
 }
 
 
-void IServer::_RemoveUser( const wxString& nickname )
+void IServer::_RemoveUser( const std::string& nickname )
 {
   try{
-    User* u = &m_users.GetUser(STD_STRING(nickname));
-    m_users.RemoveUser(STD_STRING(nickname));
+    User* u = &m_users.GetUser(nickname);
+    m_users.RemoveUser(nickname);
     int numchannels = m_channels.GetNumChannels();
     for ( int i = 0; i < numchannels; i++ )
     {
     	Channel& chan = m_channels.GetChannel( i );
-		if ( chan.UserExists( STD_STRING(nickname))) chan.Left( *u, "server idiocy");
+		if ( chan.UserExists( nickname)) chan.Left( *u, "server idiocy");
     }
     delete u;
   }catch(std::runtime_error){
@@ -110,22 +110,22 @@ void IServer::_RemoveUser( const wxString& nickname )
 }
 
 
-Channel& IServer::_AddChannel( const wxString& chan )
+Channel& IServer::_AddChannel( const std::string& chan )
 {
-  if ( m_channels.ChannelExists(STD_STRING(chan)) ) return m_channels.GetChannel(STD_STRING(chan));
+  if ( m_channels.ChannelExists(chan) ) return m_channels.GetChannel(chan);
   Channel* c = new Channel( *this );
-  c->SetName( STD_STRING(chan) );
+  c->SetName( chan );
 
   m_channels.AddChannel( *c );
   return *c;
 }
 
 
-void IServer::_RemoveChannel( const wxString& name )
+void IServer::_RemoveChannel( const std::string& name )
 {
-  Channel* c = &m_channels.GetChannel( STD_STRING(name));
-  m_channels.RemoveChannel(STD_STRING(name));
-  ASSERT_LOGIC( c != 0, _T("IServer::_RemoveChannel(\"") + name + _T("\"): GetChannel returned NULL pointer"));
+  Channel* c = &m_channels.GetChannel( name);
+  m_channels.RemoveChannel(name);
+  ASSERT_LOGIC( c != 0, "IServer::_RemoveChannel(\"" + name + "\"): GetChannel returned NULL pointer");
   delete c;
 }
 
@@ -143,7 +143,7 @@ void IServer::_RemoveBattle( const int& id )
 {
   IBattle* b = &battles_iter->GetBattle( id );
   m_battles.RemoveBattle( id );
-  ASSERT_LOGIC( b != 0, _T("IServer::_RemoveBattle(): GetBattle returned NULL pointer"));
+  ASSERT_LOGIC( b != 0, "IServer::_RemoveBattle(): GetBattle returned NULL pointer");
   delete b;
 }
 
@@ -181,18 +181,18 @@ void IServer::OnDisconnected()
 
 }
 
-wxArrayString IServer::GetRelayHostList()
+LSL::StringVector IServer::GetRelayHostList()
 {
-	if ( UserExists( _T("RelayHostManagerList") ) ) SayPrivate( _T("RelayHostManagerList"), _T("!listmanagers") );
-	wxArrayString ret;
-	for ( unsigned int i = 0; i < m_relay_host_manager_list.GetCount(); i++ )
+	if ( UserExists("RelayHostManagerList")) SayPrivate("RelayHostManagerList", "!listmanagers");
+	LSL::StringVector ret;
+	for ( unsigned int i = 0; i < m_relay_host_manager_list.size(); i++ )
 	{
 		try
 		{
 			User& manager = GetUser( m_relay_host_manager_list[i] );
 			if ( manager.Status().in_game ) continue; // skip the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
 			if ( manager.Status().away ) continue;
-			ret.Add( m_relay_host_manager_list[i] );
+			ret.push_back( m_relay_host_manager_list[i] );
 		}
 		catch(...){}
 	}

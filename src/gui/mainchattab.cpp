@@ -89,14 +89,8 @@ MainChatTab::~MainChatTab()
 
 ChatPanel& MainChatTab::ServerChat()
 {
-	ASSERT_LOGIC( m_server_chat != 0, _T( "m_server_chat = 0" ) );
+	ASSERT_LOGIC( m_server_chat != 0,  "m_server_chat = 0" );
 	return *m_server_chat;
-}
-
-#define LOOP_PANELS(code) \
-for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) { \
-	ChatPanel* tmp = static_cast<ChatPanel*>(m_chat_tabs->GetPage( i )); \
-	code; \
 }
 
 
@@ -109,6 +103,11 @@ ChatPanel* MainChatTab::GetActiveChatPanel()
 		return static_cast< ChatPanel* >( m_chat_tabs->GetPage( selection ) );
 }
 
+#define LOOP_PANELS(code) \
+for ( unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++ ) { \
+	ChatPanel* tmp = static_cast<ChatPanel*>(m_chat_tabs->GetPage( i )); \
+	code; \
+}
 
 ChatPanel* MainChatTab::GetChannelChatPanel( const wxString& channel )
 {
@@ -214,15 +213,15 @@ void MainChatTab::RejoinChannels()
 			catch ( ... ) {}
 			if ( !alreadyin )
 			{
-				serverSelector().GetServer().JoinChannel( name, wxEmptyString );
-				tmp->SetChannel( &serverSelector().GetServer().GetChannel( name ) );
+				serverSelector().GetServer().JoinChannel(STD_STRING(name), "");
+				tmp->SetChannel( &serverSelector().GetServer().GetChannel(STD_STRING(name)));
 			}
 
 		} else if ( tmp->GetPanelType() == CPT_User )
 		{
 
 			wxString name = m_chat_tabs->GetPageText( i );
-			if ( serverSelector().GetServer().UserExists( name ) ) tmp->SetUser( &serverSelector().GetServer().GetUser( name ) );
+			if ( serverSelector().GetServer().UserExists(STD_STRING(name)) ) tmp->SetUser( &serverSelector().GetServer().GetUser(STD_STRING(name)) );
 
 		}
 	)

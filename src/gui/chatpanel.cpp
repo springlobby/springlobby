@@ -755,8 +755,8 @@ const Channel* ChatPanel::GetChannel() const
 
 void ChatPanel::SetChannel( Channel* chan )
 {
-	ASSERT_LOGIC( this, _T( "this==null" ) );
-	ASSERT_LOGIC( m_type == CPT_Channel, _T( "Not of type channel" ) );
+	ASSERT_LOGIC( this,  "this==null" );
+	ASSERT_LOGIC( m_type == CPT_Channel,  "Not of type channel");
 
 	if (( chan == 0 ) && ( m_channel != 0 ) ) {
 		m_channel->uidata.panel = 0;
@@ -785,7 +785,7 @@ const IServer* ChatPanel::GetServer()  const
 
 void ChatPanel::SetServer( IServer* serv )
 {
-	ASSERT_LOGIC( m_type == CPT_Server, _T( "Not of type server" ) );
+	ASSERT_LOGIC( m_type == CPT_Server, "Not of type server");
 	if (( serv == 0 ) && ( m_server != 0 ) ) {
 		m_server->uidata.panel = 0;
 		if ( m_nicklist ) {
@@ -808,7 +808,7 @@ const User* ChatPanel::GetUser() const
 
 void ChatPanel::SetUser( const User* usr )
 {
-	ASSERT_LOGIC( m_type == CPT_User, _T( "Not of type user" ) );
+	ASSERT_LOGIC( m_type == CPT_User, "Not of type user");
 
 	if ( usr == NULL ) {
 		if ( m_user != NULL ) {
@@ -883,8 +883,8 @@ bool ChatPanel::Say( const wxString& message )
 			}
 			if ( line.StartsWith( _T( "/" ) ) ) {
 				if ( m_channel->ExecuteSayCommand(STD_STRING(line) ) ) return true;
-				if ( m_channel->GetServer().ExecuteSayCommand( line ) ) return true;
-				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str()), sett().GetChatColorError());
+				if ( m_channel->GetServer().ExecuteSayCommand(STD_STRING(line ) )) return true;
+				OutputLine( wxString::Format( _(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str()), sett().GetChatColorError());
 				return true;
 			}
 			m_channel->Say( STD_STRING(line));
@@ -897,7 +897,7 @@ bool ChatPanel::Say( const wxString& message )
 			}
 			if ( line.StartsWith( _T( "/" ) ) ) {
 				if ( m_battle->ExecuteSayCommand( STD_STRING(line) ) ) return true;
-				if ( m_battle->GetServer().ExecuteSayCommand( line ) ) return true;
+				if ( m_battle->GetServer().ExecuteSayCommand(STD_STRING(line)) ) return true;
 				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str()), sett().GetChatColorError());
 				return true;
 			}
@@ -911,7 +911,7 @@ bool ChatPanel::Say( const wxString& message )
 			}
 			if ( line.StartsWith( _T( "/" ) ) ) {
 				if ( m_user->ExecuteSayCommand(STD_STRING(line))) return true;
-				if ( m_user->GetServer().ExecuteSayCommand( line ) ) return true;
+				if ( m_user->GetServer().ExecuteSayCommand(STD_STRING(line)) ) return true;
 				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str()), sett().GetChatColorError());
 				return true;
 			}
@@ -921,7 +921,7 @@ bool ChatPanel::Say( const wxString& message )
 			if ( m_server == 0 ) return true;
 
 			if ( line.StartsWith( _T( "/" ) ) ) {
-				if ( m_server->ExecuteSayCommand( line ) ) return true;
+				if ( m_server->ExecuteSayCommand(STD_STRING(line)) ) return true;
 				OutputLine( wxString::Format( _( " Error: Command (%s) does not exist, use /help for a list of available commands." ), line.c_str()), sett().GetChatColorError());
 				return true;
 			}
@@ -930,13 +930,13 @@ bool ChatPanel::Say( const wxString& message )
 			if (line.Upper().StartsWith( _T( "LEAVE" ) ) ) {
 				wxString channame = line.AfterFirst(' ').BeforeFirst(' ');
 				try {
-					Channel& chan = m_server->GetChannel( channame );
+					Channel& chan = m_server->GetChannel(STD_STRING(channame));
 					chan.Leave();
 					chan.uidata.panel = 0;
 				} catch( assert_exception ) {}
 			}
 
-			m_server->SendRaw( line );
+			m_server->SendRaw(STD_STRING(line));
 			OutputLine( _( " Sent: \"" ) + line + _( "\"" ), sett().GetChatColorNormal());
 		}
 	}

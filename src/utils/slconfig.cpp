@@ -129,7 +129,7 @@ void Default<T>::Get(const wxString& key, T& defValue) const {
 	auto it=defaultMap.find(key);
 	ASSERT_LOGIC(
 		it != defaultMap.end(),
-		wxString::Format(_T("no default set for: %s"), key.c_str())
+		stdprintf("no default set for: %s", STD_STRING(key).c_str())
 	);
 	defValue = it->second;
 };
@@ -140,7 +140,7 @@ void Default<T>::Set(const wxString& key, const T& defValue) {
 	auto ret = defaultMap.insert(std::pair<const wxString,const T>(key,defValue));
 	ASSERT_LOGIC(
 		ret.second,
-		wxString::Format(_T("default already exists: %s"), key.c_str())
+		stdprintf("default already exists: %s", STD_STRING(key).c_str())
 	);
 }
 

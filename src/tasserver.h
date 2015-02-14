@@ -16,8 +16,7 @@ lsl/networking/tasserver.h
 #ifndef SPRINGLOBBY_HEADERGUARD_TASSERVER_H
 #define SPRINGLOBBY_HEADERGUARD_TASSERVER_H
 
-#include <wx/string.h>
-#include <wx/longlong.h>
+#include <string>
 #include <wx/timer.h>
 #include <list>
 
@@ -31,7 +30,6 @@ class Socket;
 class User;
 struct UserBattleStatus;
 class IServerEvents;
-class wxString;
 class PingThread;
 
 //! @brief TASServer protocol implementation.
@@ -42,12 +40,12 @@ public:
 	~TASServer();
 
 	// Overloaded functions from Server
-	bool ExecuteSayCommand( const wxString& cmd );
+	bool ExecuteSayCommand( const std::string& cmd );
 
-	void Register( const wxString& servername, const wxString& host, const int port, const wxString& nick, const wxString& password);
+	void Register( const std::string& servername, const std::string& host, const int port, const std::string& nick, const std::string& password);
 	void AcceptAgreement();
 
-	void Connect( const wxString& servername, const wxString& addr, const int port );
+	void Connect( const std::string& servername, const std::string& addr, const int port );
 	void Disconnect();
 	bool IsConnected();
 
@@ -61,46 +59,46 @@ public:
 	/// generic udp "ping" function
 	/// return value: actual source port which was used. May differ from src_port
 	/// 0 if udp ping failed
-	unsigned int UdpPing(unsigned int src_port, const wxString &target, unsigned int target_port, const wxString &message);
+	unsigned int UdpPing(unsigned int src_port, const std::string &target, unsigned int target_port, const std::string &message);
 	/// specialized udp ping functions
-	void UdpPingTheServer( const wxString &message );/// used for nat travelsal. pings the server.
+	void UdpPingTheServer( const std::string &message );/// used for nat travelsal. pings the server.
 	void UdpPingAllClients();/// used when hosting with nat holepunching
 
 	const User& GetMe() const;
 	User& GetMe();
 
-	void JoinChannel( const wxString& channel, const wxString& key );
-	void PartChannel( const wxString& channel );
+	void JoinChannel( const std::string& channel, const std::string& key );
+	void PartChannel( const std::string& channel );
 
-	void DoActionChannel( const wxString& channel, const wxString& msg );
-	void SayChannel( const wxString& channel, const wxString& msg );
+	void DoActionChannel( const std::string& channel, const std::string& msg );
+	void SayChannel( const std::string& channel, const std::string& msg );
 
-	void DoActionPrivate( const wxString& nick, const wxString& msg );
-	void SayPrivate( const wxString& nick, const wxString& msg );
+	void DoActionPrivate( const std::string& nick, const std::string& msg );
+	void SayPrivate( const std::string& nick, const std::string& msg );
 
-	void SayBattle( int battleid, const wxString& msg );
-	void DoActionBattle( int battleid, const wxString& msg );
+	void SayBattle( int battleid, const std::string& msg );
+	void DoActionBattle( int battleid, const std::string& msg );
 
-	void Ring( const wxString& nick );
+	void Ring( const std::string& nick );
 
-	void ModeratorSetChannelTopic( const wxString& channel, const wxString& topic );
-	void ModeratorSetChannelKey( const wxString& channel, const wxString& key );
-	void ModeratorMute( const wxString& channel, const wxString& nick, int duration, bool byip );
-	void ModeratorUnmute( const wxString& channel, const wxString& nick );
-	void ModeratorKick( const wxString& channel, const wxString& reason );
-	void ModeratorBan( const wxString& nick, bool byip );
-	void ModeratorUnban( const wxString& nick );
-	void ModeratorGetIP( const wxString& nick );
-	void ModeratorGetLastLogin( const wxString& nick );
-	void ModeratorGetLastIP( const wxString& nick );
-	void ModeratorFindByIP( const wxString& ipadress );
+	void ModeratorSetChannelTopic( const std::string& channel, const std::string& topic );
+	void ModeratorSetChannelKey( const std::string& channel, const std::string& key );
+	void ModeratorMute( const std::string& channel, const std::string& nick, int duration, bool byip );
+	void ModeratorUnmute( const std::string& channel, const std::string& nick );
+	void ModeratorKick( const std::string& channel, const std::string& reason );
+	void ModeratorBan( const std::string& nick, bool byip );
+	void ModeratorUnban( const std::string& nick );
+	void ModeratorGetIP( const std::string& nick );
+	void ModeratorGetLastLogin( const std::string& nick );
+	void ModeratorGetLastIP( const std::string& nick );
+	void ModeratorFindByIP( const std::string& ipadress );
 
-	void AdminGetAccountAccess( const wxString& nick );
-	void AdminChangeAccountAccess( const wxString& nick, const wxString& accesscode );
-	void AdminSetBotMode( const wxString& nick, bool isbot );
+	void AdminGetAccountAccess( const std::string& nick );
+	void AdminChangeAccountAccess( const std::string& nick, const std::string& accesscode );
+	void AdminSetBotMode( const std::string& nick, bool isbot );
 
-	void HostBattle( BattleOptions bo, const wxString& password = wxEmptyString );
-	void JoinBattle( const int& battleid, const wxString& password = wxEmptyString );
+	void HostBattle( BattleOptions bo, const std::string& password = "" );
+	void JoinBattle( const int& battleid, const std::string& password = "" );
 	void LeaveBattle( const int& battleid );
 	void SendMyBattleStatus( UserBattleStatus& bs );
 	void SendMyUserStatus(const UserStatus& us);
@@ -113,50 +111,50 @@ public:
 	void BattleKickPlayer( int battleid, User& user );
 	void SetHandicap( int battleid, User& user, int handicap);
 
-	void AddBot( int battleid, const wxString& nick, UserBattleStatus& status );
+	void AddBot( int battleid, const std::string& nick, UserBattleStatus& status );
 	void RemoveBot( int battleid, User& bot );
 	void UpdateBot( int battleid, User& bot, UserBattleStatus& status );
 
 	void StartHostedBattle();
 	void SendHostInfo( HostInfo update );
-	void SendHostInfo( const wxString& Tag );
+	void SendHostInfo( const std::string& Tag );
 	void SendUserPosition( const User& user );
 
-	void SendRaw( const wxString& raw );
+	void SendRaw( const std::string& raw );
 
-	void RequestInGameTime( const wxString& nick );
+	void RequestInGameTime( const std::string& nick );
 
 	void SendUdpSourcePort( int udpport );
-	void SendNATHelperInfos( const wxString& username, const wxString& ip, int port );
+	void SendNATHelperInfos( const std::string& username, const std::string& ip, int port );
 
 	IBattle* GetCurrentBattle();
 
 	void RequestChannels();
 	// TASServer specific functions
-	void ExecuteCommand( const wxString& in );
-	void ExecuteCommand( const wxString& cmd, const wxString& inparams, int replyid = -1 );
+	void ExecuteCommand( const std::string& in );
+	void ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid = -1 );
 
 	void HandlePong( int replyid );
 
 	void OnConnected(Socket& sock );
 	void OnDisconnected(Socket& sock );
 	void OnDataReceived(Socket& sock );
-	void OnError(const wxString& err);
+	void OnError(const std::string& err);
 
-	bool IsPasswordHash( const wxString& pass )  const;
-	wxString GetPasswordHash( const wxString& pass ) const;
+	bool IsPasswordHash( const std::string& pass )  const;
+	std::string GetPasswordHash( const std::string& pass ) const;
 
 	int TestOpenPort( unsigned int port ) const;
 
 /*
-	void SendScriptToProxy( const wxString& script );
+	void SendScriptToProxy( const std::string& script );
 
-	void SendScriptToClients( const wxString& script );
+	void SendScriptToClients( const std::string& script );
 */
 
 	void SetRelayIngamePassword( const User& user );
 
-	wxArrayString GetRelayHostList() ;
+	LSL::StringVector GetRelayHostList() ;
 	virtual const IServerEvents* serverEvents() const {
 		return m_se;
 	}
@@ -180,7 +178,7 @@ private:
 	bool m_debug_dont_catch;
 	bool m_id_transmission;
 	bool m_redirecting;
-	wxString m_buffer;
+	std::string m_buffer;
 	int m_last_udp_ping;
 	int m_last_ping; //time last ping was sent
 	int m_last_net_packet; //time last packet was received
@@ -199,24 +197,23 @@ private:
 
 	std::string m_agreement;
 
-	wxString m_addr;
-	wxString m_delayed_open_command;
+	std::string m_addr;
+	std::string m_delayed_open_command;
 
 	bool m_do_finalize_join_battle;
 	int m_finalize_join_battle_id;
-	wxString m_finalize_join_battle_pw;
+	std::string m_finalize_join_battle_pw;
 	bool m_token_transmission;
 
 	void FinalizeJoinBattle();
 
-	void SendCmd( const wxString& command, const wxString& param = wxEmptyString );
-	void RelayCmd( const wxString& command, const wxString& param = wxEmptyString );
+	void SendCmd( const std::string& command, const std::string& param = "", bool relay=false);
+
 
 	std::string m_current_chan_name_mutelist;
 
-	wxArrayString m_relay_host_manager_list;
-
 private:
+	void RelayCmd( const std::string& command, const std::string& param = "" );
 	void Notify();
 
     std::string m_relay_host_bot;

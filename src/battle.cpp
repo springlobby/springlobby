@@ -77,7 +77,7 @@ void Battle::SendHostInfo( HostInfo update )
 
 void Battle::SendHostInfo( const std::string& Tag )
 {
-    m_serv.SendHostInfo(TowxString(Tag));
+    m_serv.SendHostInfo(Tag);
 }
 
 void Battle::Update( const std::string& Tag )
@@ -88,7 +88,7 @@ void Battle::Update( const std::string& Tag )
 
 void Battle::Join( const std::string& password )
 {
-    m_serv.JoinBattle( m_opts.battleid, TowxString(password));
+    m_serv.JoinBattle( m_opts.battleid, password);
     m_is_self_in = true;
 }
 
@@ -144,13 +144,13 @@ void Battle::SetImReady( bool ready )
 
 void Battle::Say( const std::string& msg )
 {
-    m_serv.SayBattle( m_opts.battleid, TowxString(msg));
+    m_serv.SayBattle( m_opts.battleid, msg);
 }
 
 
 void Battle::DoAction( const std::string& msg )
 {
-    m_serv.DoActionBattle( m_opts.battleid, TowxString(msg));
+    m_serv.DoActionBattle( m_opts.battleid, msg);
 }
 
 void Battle::SetLocalMap( const std::string& mapname )
@@ -317,7 +317,7 @@ void Battle::RingNotReadyPlayers()
         User& u = GetUser(i);
         UserBattleStatus& bs = u.BattleStatus();
         if ( bs.IsBot() ) continue;
-        if ( !bs.ready && !bs.spectator ) m_serv.Ring(TowxString(u.GetNick()) );
+        if ( !bs.ready && !bs.spectator ) m_serv.Ring(u.GetNick() );
     }
 }
 
@@ -328,7 +328,7 @@ void Battle::RingNotSyncedPlayers()
         User& u = GetUser(i);
         UserBattleStatus& bs = u.BattleStatus();
         if ( bs.IsBot() ) continue;
-        if ( !bs.sync && !bs.spectator ) m_serv.Ring(TowxString(u.GetNick()));
+        if ( !bs.sync && !bs.spectator ) m_serv.Ring(u.GetNick());
     }
 }
 
@@ -339,14 +339,14 @@ void Battle::RingNotSyncedAndNotReadyPlayers()
         User& u = GetUser(i);
         UserBattleStatus& bs = u.BattleStatus();
         if ( bs.IsBot() ) continue;
-        if ( ( !bs.sync || !bs.ready ) && !bs.spectator ) m_serv.Ring( TowxString(u.GetNick()));
+        if ( ( !bs.sync || !bs.ready ) && !bs.spectator ) m_serv.Ring( u.GetNick());
     }
 }
 
 void Battle::RingPlayer( const User& u )
 {
 	if ( u.BattleStatus().IsBot() ) return;
-	m_serv.Ring( TowxString(u.GetNick()));
+	m_serv.Ring( u.GetNick());
 }
 
 bool Battle::ExecuteSayCommand( const std::string& cmd )
@@ -354,7 +354,7 @@ bool Battle::ExecuteSayCommand( const std::string& cmd )
     wxString cmd_name=TowxString(cmd).BeforeFirst(' ').Lower();
     if ( cmd_name == _T("/me") )
     {
-        m_serv.DoActionBattle( m_opts.battleid, TowxString(cmd).AfterFirst(' ') );
+        m_serv.DoActionBattle( m_opts.battleid, LSL::Util::AfterFirst(cmd, " ") );
         return true;
     }
 		if ( cmd_name == _T("/replacehostip") )
@@ -512,7 +512,7 @@ bool Battle::GetLockExternalBalanceChanges()
 
 void Battle::AddBot( const std::string& nick, UserBattleStatus status )
 {
-    m_serv.AddBot( m_opts.battleid, TowxString(nick), status );
+    m_serv.AddBot( m_opts.battleid, nick, status );
 }
 
 
@@ -641,7 +641,7 @@ void Battle::StartHostedBattle()
 						f.Close();
 
 					} catch (...) {}
-					m_serv.SendScriptToProxy( hostscript );
+					m_serv.SendScriptToProxy( STD_STRING(hostscript));
 				}
 			}
 			if( GetAutoLockOnStart() )
@@ -757,15 +757,15 @@ void Battle::FixColours()
 
 bool PlayerRankCompareFunction( User *a, User *b ) // should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.
 {
-    ASSERT_LOGIC( a, _T("fail in Autobalance, NULL player") );
-    ASSERT_LOGIC( b, _T("fail in Autobalance, NULL player") );
+    ASSERT_LOGIC( a, "fail in Autobalance, NULL player");
+    ASSERT_LOGIC( b, "fail in Autobalance, NULL player");
     return ( a->GetBalanceRank() > b->GetBalanceRank() );
 }
 
 bool PlayerTeamCompareFunction( User *a, User *b ) // should never operate on nulls. Hence, ASSERT_LOGIC is appropriate here.
 {
-    ASSERT_LOGIC( a, _T("fail in Autobalance, NULL player") );
-    ASSERT_LOGIC( b, _T("fail in Autobalance, NULL player") );
+    ASSERT_LOGIC( a, "fail in Autobalance, NULL player");
+    ASSERT_LOGIC( b, "fail in Autobalance, NULL player");
     return ( a->BattleStatus().team > b->BattleStatus().team );
 }
 
@@ -994,7 +994,7 @@ void Battle::Autobalance( BalanceType balance_type, bool support_clans, bool str
     {
         for ( size_t j = 0; j < alliances[i].players.size(); ++j )
         {
-            ASSERT_LOGIC( alliances[i].players[j], _T("fail in Autobalance, NULL player") );
+            ASSERT_LOGIC( alliances[i].players[j], "fail in Autobalance, NULL player");
             int balanceteam = alliances[i].players[j]->BattleStatus().team;
             wxLogMessage( _T("setting team %d to alliance %d"), balanceteam, i );
             for ( size_t h = 0; h < totalplayers; h++ ) // change ally num of all players in the team
@@ -1160,7 +1160,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
     {
         for ( size_t j = 0; j < control_teams[i].players.size(); ++j )
         {
-            ASSERT_LOGIC( control_teams[i].players[j], _T("fail in Autobalance teams, NULL player") );
+            ASSERT_LOGIC( control_teams[i].players[j], "fail in Autobalance teams, NULL player");
 			wxString msg = wxString::Format( _T("setting player %s to team and ally %d"), TowxString(control_teams[i].players[j]->GetNick()).c_str(), i);
             wxLogMessage( _T("%s"), msg.c_str() );
             ForceTeam( *control_teams[i].players[j], control_teams[i].teamnum );
