@@ -74,7 +74,7 @@ SpringLobbyApp::SpringLobbyApp():
     quit_called( false ),
     m_translationhelper( NULL ),
     m_log_verbosity( 3 ),
-    m_log_console( false ),
+    m_log_console( true ),
     m_log_window_show( false ),
     m_crash_handle_disable( false ),
 	m_appname( _T("SpringLobby") )

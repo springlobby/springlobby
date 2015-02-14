@@ -92,7 +92,7 @@ void PlaybackListCtrl::RemovePlayback( const StoredGame& replay )
     if ( RemoveItem( &replay) )
         return;
 
-    wxLogError( _T("Didn't find the replay to remove.") );
+    wxLogWarning( _T("Didn't find the replay to remove.") );
 }
 
 void PlaybackListCtrl::OnDLMap( wxCommandEvent& /*unused*/ )
@@ -239,7 +239,7 @@ void PlaybackListCtrl::RemovePlayback( const int index )
         RefreshVisibleItems( );
         return;
     }
-    wxLogError( _T("Didn't find the replay to remove.") );
+    wxLogWarning( _T("Didn't find the replay to remove.") );
 }
 
 int PlaybackListCtrl::GetIndexFromData( const DataType& data ) const
@@ -249,7 +249,7 @@ int PlaybackListCtrl::GetIndexFromData( const DataType& data ) const
         if ( *it != 0 && data->Equals( *(*it) ) )
             return i;
     }
-    wxLogError( _T("PlaybackListCtrl: didn't find the battle.") );
+    wxLogWarning( _T("PlaybackListCtrl: didn't find the battle.") );
     return -1;
 }
 

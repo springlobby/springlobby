@@ -1,6 +1,7 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include <wx/log.h>
+#include <wx/msgdlg.h>
 
 #include "log.h"
 #include "utils/conversion.h"
@@ -31,28 +32,44 @@ public:
 
 	}
 
-	virtual void DoLogText(const wxString &msg)
+	// catch and process all log messages
+	virtual void DoLog(wxLogLevel loglevel, const wxChar* msg, time_t /*time*/)
 	{
-		const std::string std_msg = (STD_STRING(wxString(msg)) + "\n").c_str();
-		if (m_console) {
-			printf("%s",std_msg.c_str());
-		}
-		if (m_logfile != NULL) {
-			fwrite(std_msg.c_str(), std_msg.length(), 1, m_logfile);
-		}
+	  if(loglevel==wxLOG_Error || loglevel==wxLOG_FatalError) // show user only errors
+	    wxMessageBox( msg, _("Error"), wxOK );
+
+	  const std::string std_msg = LogLevelToString(loglevel) + (STD_STRING(wxString(msg)) + "\n");
+	  if (m_console) {
+		  std::cout << std_msg;
+	  }
+	  if (m_logfile != NULL) {
+		  fwrite(std_msg.c_str(), std_msg.length(), 1, m_logfile);
+	  }
 /*
-		if (m_gui) {
-			ChatPanel* p = ui().mw().GetChatTab().AddChatPanel();
-			if (p!=NULL) {
-				p->StatusMessage(TowxString(LogName(l)) + _T(" ") +TowxString(msg));
-			}
-		}
-*/
+	  if (m_gui) {
+		  ChatPanel* p = ui().mw().GetChatTab().AddChatPanel();
+		  if (p!=NULL) {
+			  p->StatusMessage(TowxString(LogName(l)) + _T(" ") +TowxString(msg));
+		  }
+	  }*/
 	}
 
-	virtual void DoLogString(const wxChar *msg, time_t timestamp)
+	std::string LogLevelToString(wxLogLevel level)
 	{
-		DoLogText(msg);
+		assert(level<8); // just in case
+
+	  const char * levelName[] = {
+	    "Fatal Error: ",
+	    "Error: ",
+	    "Warning: ",
+	    "Message: ",
+	    "Status: ",
+	    "Info: ",
+	    "Debug: ",
+	    "Trace: "
+	  };
+
+		return std::string(levelName[(int)level]);
 	}
 
 	void Flush()
@@ -130,5 +147,31 @@ extern void lsllogerror(const char* format, ...)
 	if (len > 0) {
 		const std::string msg(buf, len);
 		wxLogError(TowxString(msg));
+	}
+}
+
+extern void lsllogdebug(const char* format, ...)
+{
+	char buf[1024];
+	va_list args;
+	va_start(args, format);
+	const int len = vsnprintf(buf, 1024, format, args);
+	va_end(args);
+	if (len > 0) {
+		const std::string msg(buf, len);
+		wxLogDebug(TowxString(msg));
+	}
+}
+
+extern void lsllogwarning(const char* format, ...)
+{
+	char buf[1024];
+	va_list args;
+	va_start(args, format);
+	const int len = vsnprintf(buf, 1024, format, args);
+	va_end(args);
+	if (len > 0) {
+		const std::string msg(buf, len);
+		wxLogWarning(TowxString(msg));
 	}
 }
