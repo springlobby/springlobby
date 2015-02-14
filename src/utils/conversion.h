@@ -17,6 +17,7 @@ typedef __int64 int64_t;
 #define C_STRING(v) (v).mb_str(wxConvUTF8)
 
 #include <wx/string.h>
+#include <string>
 
 
 wxString TowxString(const std::string& arg);

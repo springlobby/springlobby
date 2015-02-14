@@ -18,7 +18,6 @@ lsl/spring/springprocess.cpp
 
 #include "springprocess.h"
 #include "spring.h"
-#include "utils/conversion.h"
 #include "utils/platform.h"
 #include "log.h"
 
