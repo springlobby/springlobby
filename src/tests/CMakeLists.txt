@@ -29,6 +29,7 @@ set(test_name Config)
 Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/config.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/slconfig.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
 )
 
 set(test_libs
@@ -67,6 +68,7 @@ set(test_name lslconversion)
 Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/lslconversion.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/lslconversion.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
 )
 
 set(test_libs
@@ -81,6 +83,7 @@ set(test_name slpaths)
 Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/slpaths.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/slpaths.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
 )
 
 set(test_libs
