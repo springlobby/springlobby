@@ -1050,9 +1050,9 @@ void Ui::CheckForUpdates(bool show)
 	if ( !latestVersion.IsSameAs(myVersion, false) ) {
 #ifdef __WXMSW__
 		int answer = customMessageBox(SL_MAIN_ICON,
-					      wxString::Format( _("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?") )
-					      % TowxString(getSpringlobbyName())
-					      % msg,
+					      wxString::Format( _("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?"),
+							TowxString(getSpringlobbyName()).c_str(),
+					      msg.c_str()),
 					      _("Not up to date"), wxOK|wxCANCEL);
 		if (answer == wxOK) {
 			if (!StartUpdate(STD_STRING(latestVersion))) {
