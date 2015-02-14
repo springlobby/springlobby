@@ -10,7 +10,6 @@
 #include <wx/intl.h>
 #include <wx/menu.h>
 #include <wx/datetime.h>
-#include <boost/algorithm/string.hpp>
 
 #include "downloadlistctrl.h"
 #include "prdownloader.h"
@@ -183,7 +182,7 @@ void DownloadListCtrl::HighlightItem( long /*item*/ )
 int DownloadListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const
 {
     switch ( col ) {
-        case 0: return dir * compareSimple(boost::to_lower_copy(std::string(u1.name.mb_str())), boost::to_lower_copy(std::string(u2.name.mb_str())));
+        case 0: return dir * compareSimple(strtolower(std::string(u1.name.mb_str())), strtolower(std::string(u2.name.mb_str())));
         //case 1: return dir * compareSimple( u1.numcopies, u2.numcopies );
 		//case 2: return dir * compareSimple( u1.downloadstatus, u2.downloadstatus );
 		case 3: return dir * compareSimple( u1.progress, u2.progress );

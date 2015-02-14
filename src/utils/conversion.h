@@ -21,6 +21,7 @@ typedef __int64 int64_t;
 
 wxString TowxString(const std::string& arg);
 wxString TowxString(int);
+std::string strtolower(std::string str);
 
 
 long FromwxString(const wxString& arg);

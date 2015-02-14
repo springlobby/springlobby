@@ -5,6 +5,7 @@
 #include <wx/arrstr.h>
 #include <wx/tokenzr.h>
 #include <sstream>
+#include <algorithm>
 
 StringtokenizerVectorized::StringtokenizerVectorized( wxStringTokenizer tokenizer )
 {
@@ -41,4 +42,11 @@ long FromwxString(const wxString& arg){
   int64_t ret;
   s >> ret;
   return ret;
+}
+
+
+std::string strtolower(std::string str)
+{
+	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+	return str;
 }
