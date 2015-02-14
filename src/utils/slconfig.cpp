@@ -93,7 +93,7 @@ wxString slConfig::GetFilePath() const {
 #ifdef __WXMSW__
 bool slConfig::DoWriteLong( const wxString& key, long lValue )
 {
-	return wxFileConfig::DoWriteString( key, TowxString<long>( lValue ) );
+	return wxFileConfig::DoWriteString( key, wxString::Format("%d",  lValue ));
 }
 #endif
 
