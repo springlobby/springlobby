@@ -1161,7 +1161,7 @@ void Battle::FixTeamIDs( BalanceType balance_type, bool support_clans, bool stro
         for ( size_t j = 0; j < control_teams[i].players.size(); ++j )
         {
             ASSERT_LOGIC( control_teams[i].players[j], _T("fail in Autobalance teams, NULL player") );
-			wxString msg = wxString::Format( _T("setting player %s to team and ally %d"), control_teams[i].players[j]->GetNick().c_str(), i);
+			wxString msg = wxString::Format( _T("setting player %s to team and ally %d"), TowxString(control_teams[i].players[j]->GetNick()).c_str(), i);
             wxLogMessage( _T("%s"), msg.c_str() );
             ForceTeam( *control_teams[i].players[j], control_teams[i].teamnum );
             ForceAlly( *control_teams[i].players[j], control_teams[i].teamnum );

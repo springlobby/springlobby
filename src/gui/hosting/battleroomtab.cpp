@@ -926,7 +926,7 @@ long BattleRoomTab::AddMMOptionsToList( long pos, LSL::Enum::GameOption optFlag 
 	for ( LSL::OptionsWrapper::stringTripleVec::const_iterator it = optlist.begin(); it != optlist.end(); ++it )
 	{
 		m_opts_list->InsertItem( pos, TowxString(it->second.first));
-		wxString tag = wxString::Format( _T( "%d_%s" ), optFlag, it->first.c_str());
+		wxString tag = wxString::Format( _T( "%d_%s" ), optFlag, TowxString(it->first).c_str());
 		m_opt_list_map[ tag ] = pos;
 		UpdateBattleInfo( tag );
 		pos++;

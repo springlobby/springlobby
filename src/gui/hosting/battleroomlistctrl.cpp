@@ -325,7 +325,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
         if ( is_bot ) {
             wxString botname = TowxString(user.BattleStatus().aishortname);
             if ( !user.BattleStatus().aiversion.empty() ) botname += _T(" ") + TowxString(user.BattleStatus().aiversion);
-            return wxString::Format(_T("%s - %s (%s)"), user.GetNick().c_str(), botname.c_str(), user.BattleStatus().owner.c_str());
+            return wxString::Format(_T("%s - %s (%s)"), TowxString(user.GetNick()).c_str(), botname.c_str(), TowxString(user.BattleStatus().owner).c_str());
         }
         else
             return TowxString(user.GetNick());
