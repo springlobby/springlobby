@@ -440,13 +440,13 @@ void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, cons
             {
                 key = key.AfterFirst( '/' );
                 battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::MapOption );
-                battle.Update(stdprintf("%d_%s", LSL::Enum::MapOption, key.c_str() ));
+                battle.Update(stdprintf("%d_%s", LSL::Enum::MapOption, STD_STRING(key).c_str() ));
             }
             else if ( key.Left( 11 ) == _T( "modoptions/" ) )
             {
                 key = key.AfterFirst( '/' );
                 battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::ModOption );
-                battle.Update(stdprintf("%d_%s", LSL::Enum::ModOption, key.c_str()));
+                battle.Update(stdprintf("%d_%s", LSL::Enum::ModOption, STD_STRING(key).c_str()));
             }
             else if ( key.Left( 8 ) == _T( "restrict" ) )
             {
@@ -487,7 +487,7 @@ void ServerEvents::OnSetBattleInfo( int battleid, const std::string& param, cons
 			battle.m_autohost_manager->RecognizeAutohost(value);
 		} else {
 			battle.CustomBattleOptions().setSingleOption( STD_STRING(key), value, LSL::Enum::EngineOption );
-			battle.Update(stdprintf("%d_%s", LSL::Enum::EngineOption, key.c_str() ));
+			battle.Update(stdprintf("%d_%s", LSL::Enum::EngineOption, STD_STRING(key).c_str() ));
 		}
         }
     }
