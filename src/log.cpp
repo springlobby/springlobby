@@ -52,9 +52,9 @@ public:
 
 	  if(loglevel==wxLOG_Error || loglevel==wxLOG_FatalError) // show user only errors
 	  {
-	    wxCommandEvent event(wxEVT_SHOW, ui().mw().mySHOW_ERROR_MESSAGE);
-	    event.SetString(msg);
-	    ui().mw().AddPendingEvent(event);
+	    wxCommandEvent *event = new wxCommandEvent(wxEVT_SHOW, ui().mw().mySHOW_ERROR_MESSAGE);
+	    event->SetString(wxString(msg).c_str());
+	    ui().mw().GetEventHandler()->QueueEvent(event);
 	  }
 
 
