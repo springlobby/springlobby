@@ -305,7 +305,8 @@ bool ChatPanelMenu::HasChanserv()
 void ChatPanelMenu::SayChanserv(const std::string& msg)
 {
 	assert(HasChanserv());
-	m_chatpanel->m_channel->GetUser("ChanServ");
+	const User &cs = m_chatpanel->m_channel->GetUser("ChanServ");
+	cs.Say(msg);
 }
 
 void ChatPanelMenu::OnChannelMenuInfo( wxCommandEvent& /*unused*/ )
