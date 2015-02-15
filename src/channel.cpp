@@ -209,7 +209,7 @@ bool Channel::ExecuteSayCommand( const std::string& in )
     return true;
   } else if(subcmd==_T("/userban")){
     m_banned_users.insert(STD_STRING(params));
-    m_serv.SayPrivate("ChanServ",stdprintf("!kick #%s %s", GetName().c_str(), params.c_str()));
+    m_serv.SayPrivate("ChanServ",stdprintf("!kick #%s %s", GetName().c_str(), STD_STRING(params).c_str()));
     return true;
   } else if(subcmd==_T("/userunban")){
     m_banned_users.erase(STD_STRING(params));
