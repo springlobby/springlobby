@@ -186,11 +186,11 @@ wxString PlaybackListCtrl::GetItemText(long item, long column) const
         case 0: return TowxString(replay.date_string);
         case 1: return TowxString(replay.battle.GetHostModName());
         case 2: return TowxString(replay.battle.GetHostMapName());
-		case 3: return wxString::Format(_T("%d"), replay.battle.GetNumUsers() - replay.battle.GetSpectators() );
+		case 3: return wxString::Format(_T("%d"), (int)replay.battle.GetNumUsers() - replay.battle.GetSpectators() );
         case 4: return wxString::Format(_T("%02ld:%02ld:%02ld")
-									, replay.duration / 3600
-									, (replay.duration%3600)/60
-									, (replay.duration%60)/60 ) ;
+									, (long)replay.duration / 3600
+									, (long)(replay.duration%3600)/60
+									, (long)(replay.duration%60)/60 ) ;
         case 5: return TowxString(replay.SpringVersion);
 		case 6: return wxString::Format( _T("%d KB"), replay.size/1024 );
         case 7: return TowxString(replay.Filename).AfterLast( wxFileName::GetPathSeparator() );
