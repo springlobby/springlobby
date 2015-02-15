@@ -1611,6 +1611,7 @@ void MapCtrl::OnMouseWheel( wxMouseEvent& event )
 
 void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 {
+	wxLogDebug(wxString::Format(_T("Map loaded (async) complete: %s"), TowxString(mapname).c_str() ));
     m_mutex.Lock();
 
     if (m_mapname.empty() || mapname.empty() || mapname != m_mapname ) {
