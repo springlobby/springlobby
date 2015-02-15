@@ -307,7 +307,7 @@ void MapSelectDialog::OnMapSelected( wxCommandEvent& /*event*/ )
 	m_map_opts_list->SetItem( 3, 1, wxString::Format( _T("%d"), map.info.gravity ));
 	m_map_opts_list->SetItem( 4, 1, wxString::Format( _T("%d"), map.info.extractorRadius ));
 	m_map_opts_list->SetItem( 5, 1, wxString::Format( _T("%.3f"), map.info.maxMetal ));
-	m_map_opts_list->SetItem( 6, 1, wxString::Format( _T("%d"), map.info.positions.size() ));
+	m_map_opts_list->SetItem( 6, 1, wxString::Format( _T("%d"), (int)map.info.positions.size() ));
 }
 
 void MapSelectDialog::OnMapLoadingCompleted( wxCommandEvent& /*unused*/ )
