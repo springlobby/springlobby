@@ -1,10 +1,12 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+#include <wx/wx.h>
 #include <wx/log.h>
-//#include <wx/msgdlg.h>
 
 #include "log.h"
 #include "utils/conversion.h"
+#include "gui/ui.h"
+#include "gui/mainwindow.h"
 
 #if wxUSE_STD_IOSTREAM
 #include <iostream>
@@ -47,10 +49,14 @@ public:
 	// catch and process all log messages
 	virtual void DoLog(wxLogLevel loglevel, const wxChar* msg, time_t /*time*/)
 	{
-/*
+
 	  if(loglevel==wxLOG_Error || loglevel==wxLOG_FatalError) // show user only errors
-	    wxMessageBox( msg, _("Error"), wxOK );
-*/
+	  {
+	    wxCommandEvent event(wxEVT_SHOW, ui().mw().mySHOW_ERROR_MESSAGE);
+	    event.SetString(msg);
+	    ui().mw().AddPendingEvent(event);
+	  }
+
 
 	  const std::string std_msg = LogLevelToString(loglevel) + (STD_STRING(wxString(msg)) + "\n");
 	  if (m_console) {
@@ -70,7 +76,7 @@ public:
 
 	std::string LogLevelToString(wxLogLevel level)
 	{
-		assert(level<8); // just in case
+	  assert(level<8); // just in case
 
 	  const char * levelName[] = {
 	    "Fatal Error: ",
@@ -83,7 +89,7 @@ public:
 	    "Trace: "
 	  };
 
-		return std::string(levelName[(int)level]);
+	  return std::string(levelName[(int)level]);
 	}
 
 	void Flush()
