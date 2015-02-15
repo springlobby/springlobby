@@ -98,7 +98,7 @@ void NotificationManager::OnTimer( wxTimerEvent& /*event*/ )
 		if ( m_eventDataBuffer.size() == 1 )
 			data = m_eventDataBuffer.front();
 		else
-			data.second = wxString::Format( _("%d more events"), m_eventDataBuffer.size());
+			data.second = wxString::Format( _("%d more events"), (int)m_eventDataBuffer.size());
 		m_eventDataBuffer.clear();
 		ShowNotification( data );
 	}
