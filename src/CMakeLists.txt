@@ -142,6 +142,7 @@ set(springlobbySrc
 	countrycodes.cpp
 	contentsearchresult.cpp
 	flagimages.cpp
+	httpfile.cpp
 	ibattle.cpp
 	iconimagelist.cpp
 	iplaybacklist.cpp
@@ -161,7 +162,6 @@ set(springlobbySrc
 	user.cpp
 	useractions.cpp
 	userlist.cpp
-	versionchecker.cpp
 
 	aui/auimanager.cpp
 

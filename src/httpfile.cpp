@@ -14,19 +14,15 @@
 
 #include "gui/customdialogs.h"
 #include "log.h"
-#include "utils/slconfig.h"
-
-SLCONFIG("/General/UpdateUrl", "http://version.springlobby.info/current.txt", "Url to check for updates" );
 
 //! @brief gets latest version from version.springlobby.info via HTTP
-wxString GetLatestVersion()
+wxString GetHttpFile(const wxString& httpurl)
 {
 	wxHTTP versionRequest;
 
 	versionRequest.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
-	const wxString updateurl = cfg().ReadString(_T("/General/UpdateUrl"));
-	const wxString host = updateurl.AfterFirst('/').AfterFirst('/').BeforeFirst('/');
-	const wxString url = updateurl.AfterFirst('/').AfterFirst('/').AfterFirst('/');
+	const wxString host = httpurl.AfterFirst('/').AfterFirst('/').BeforeFirst('/');
+	const wxString url = httpurl.AfterFirst('/').AfterFirst('/').AfterFirst('/');
 	// normal timeout is 10 minutes.. set to 10 secs.
 	versionRequest.SetTimeout(10);
 	versionRequest.Connect(host, 80);
@@ -79,11 +75,6 @@ wxString GetLatestVersion()
 
 	wxDELETE(stream);
 	versionRequest.Close();
-
-	// Need to replace crap chars or versions will always be inequal
-	result.Replace(_T(" "), wxEmptyString, true);
-	result.Replace(_T("\n"), wxEmptyString, true);
-	result.Replace(_T("\t"), wxEmptyString, true);
 
 	return result;
 }

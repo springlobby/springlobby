@@ -5,6 +5,6 @@
 
 class wxString;
 
-wxString GetLatestVersion();
+wxString GetHttpFile(const wxString& httpurl);
 
 #endif // SPRINGLOBBY_HEADERGUARD_VERSIONCHECKER_H

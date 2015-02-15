@@ -14,6 +14,7 @@
 #include "json/wx/jsonreader.h"
 #include "ui.h"
 #include "mainwindow.h"
+#include "httpfile.h"
 #include <lslunitsync/unitsync.h>
 
 #include <iostream>
@@ -153,14 +154,29 @@ ContentDownloadDialog::~ContentDownloadDialog()
 		m_search_thread->Wait();
 	}
 }
-void ContentDownloadDialog::OnSearch(wxCommandEvent& /*event*/)
+
+
+void ContentDownloadDialog::Search(const wxString& str)
 {
-	wxString search_query = m_searchbox->GetValue();
+/*
 	m_searchbutton->Enable(false);
-	m_search_thread = new SearchThread(this,search_query);
+	m_search_thread = new SearchThread(this,str);
 	m_search_thread->Create();
 	m_search_thread->Run();
+*/
+	//FIXME: make async. current implementation randomly crashes when run multiple times
+	const wxString query = wxString::Format(_("http://api.springfiles.com/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"), str.c_str(), str.c_str());
+	const wxString json = GetHttpFile(query);
+	wxCommandEvent e;
+	e.SetString(json);
+	OnSearchCompleted(e);
 }
+
+void ContentDownloadDialog::OnSearch(wxCommandEvent& /*event*/)
+{
+	Search(m_searchbox->GetValue());
+}
+
 void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 {
 	assert(wxThread::IsMain());
@@ -180,11 +196,8 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 	const wxJSONInternalArray * a = root.AsArray();
 	if ((a->GetCount() == 0) && (!wildcardsearch)) { //no results returned, try wildcard search
 		wildcardsearch = true;
-		wxString search_query = _T("*")+m_searchbox->GetValue()+_T("*");//By default the user would expect that
-		m_searchbutton->Enable(false);
-		m_search_thread = new SearchThread(this,search_query);
-		m_search_thread->Create();
-		m_search_thread->Run();
+		const wxString search_query = _T("*")+m_searchbox->GetValue()+_T("*");//By default the user would expect that
+		Search(search_query);
 		return;
 	}
 	wildcardsearch = false;

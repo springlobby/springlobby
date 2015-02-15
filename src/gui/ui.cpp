@@ -54,7 +54,7 @@
 #include "gui/agreementdialog.h"
 #include "updatehelper.h"
 #include "gui/customdialogs.h"
-#include "versionchecker.h"
+#include "httpfile.h"
 #include "gui/textentrydialog.h"
 #include "log.h"
 #include "settings.h"
@@ -69,6 +69,8 @@ SLCONFIG("/General/LastUpdateCheck", 0L, "Last time springlobby checked for an u
 SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere",true, "setting to spam the server messages in all channels");
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
+SLCONFIG("/General/UpdateUrl", "http://version.springlobby.info/current.txt", "Url to check for updates" );
+
 
 static unsigned int s_reconnect_delay_ms = 6 * 1000; //initial reconnect delay
 static const unsigned int s_max_reconnect_delay = 240 * 1000; //max delay for reconnecting
@@ -1037,7 +1039,12 @@ void Ui::OnDownloadComplete(wxCommandEvent& data)
 
 void Ui::CheckForUpdates(bool show)
 {
-	const wxString latestVersion = GetLatestVersion();
+	wxString latestVersion = GetHttpFile(cfg().ReadString("/General/UpdateUrl"));
+	// Need to replace crap chars or versions will always be inequal
+	latestVersion.Replace(_T(" "), wxEmptyString, true);
+	latestVersion.Replace(_T("\n"), wxEmptyString, true);
+	latestVersion.Replace(_T("\t"), wxEmptyString, true);
+
 
 	if (latestVersion.empty()) {
 		customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));

@@ -28,6 +28,7 @@ public:
 	void OnListDownload( wxListEvent& event );
 private:
 	DECLARE_EVENT_TABLE()
+	void Search(const wxString& str);
 
 	wxBoxSizer* m_main_sizer;
 	ContentSearchResultsListctrl* m_search_res_w;
