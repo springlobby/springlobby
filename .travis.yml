@@ -3,8 +3,11 @@ compiler:
   - gcc
 #  - clang # disabled, libboost-signals fails to compile: https://travis-ci.org/springlobby/springlobby/jobs/21325986
 before_script:
-  - sudo apt-cache search libboost
-  - sudo apt-get install libwxgtk2.8-dev libboost-thread1.48-dev libboost-system1.48-dev libboost-filesystem1.48-dev
+  - sudo add-apt-repository -y ppa:wxformbuilder/wxwidgets
+  - sudo apt-get update
+#  - sudo apt-cache search libboost
+  - sudo apt-cache search libwxgtk
+  - sudo apt-get install libwxgtk3.0-dev libboost-thread1.48-dev libboost-system1.48-dev libboost-filesystem1.48-dev
 # optional dependencies
   - sudo apt-get install libboost-test1.48-dev libalure-dev
   - git submodule update --init --recursive
