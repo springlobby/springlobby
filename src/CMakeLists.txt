@@ -60,7 +60,7 @@ execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--version-full"
 	OUTPUT_VARIABLE WX_VERSION
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-set(WX_VERSION_MIN "2.8")
+set(WX_VERSION_MIN "2.9")
 if("${WX_VERSION}" VERSION_LESS "${WX_VERSION_MIN}")
 	message(FATAL_ERROR "couldn't find wx-widgets >= ${WX_VERSION_MIN}, found ${WX_VERSION}")
 else()
