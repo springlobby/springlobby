@@ -485,7 +485,7 @@ void BattleRoomTab::UpdateMapInfoSummary()
 {
 	try   // updates map info summary
 	{
-		ASSERT_EXCEPTION( m_battle->MapExists(), _T( "Map does not exist." ) );
+		ASSERT_EXCEPTION( m_battle->MapExists(false), _T( "Map does not exist." ) );
 		LSL::UnitsyncMap map = m_battle->LoadMap();
 		m_opts_list->SetItem( m_opt_list_map[ _( "Size" ) ] , 1, wxString::Format( _T( "%.0fx%.0f" ), map.info.width / 512.0, map.info.height / 512.0  ));
 		m_opts_list->SetItem( m_opt_list_map[ _( "Windspeed" ) ], 1, wxString::Format( _T( "%d-%d" ), map.info.minWind, map.info.maxWind ));
