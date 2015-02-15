@@ -16,7 +16,7 @@
 #include "log.h"
 
 // convert a string to IRI: https://en.wikipedia.org/wiki/Internationalized_resource_identifier
-static wxString ConvToIRI(const wxString& str)
+wxString ConvToIRI(const wxString& str)
 {
 	std::string utf8(str.mb_str(wxMBConvUTF8()));
 	wxString escaped;
@@ -35,9 +35,8 @@ static wxString ConvToIRI(const wxString& str)
 //! @brief gets latest version from version.springlobby.info via HTTP
 wxString GetHttpFile(const wxString& httpurl)
 {
-	const wxString iri = ConvToIRI(httpurl);
-	const wxString host = iri.AfterFirst('/').AfterFirst('/').BeforeFirst('/');
-	const wxString url = iri.AfterFirst('/').AfterFirst('/').AfterFirst('/');
+	const wxString host = httpurl.AfterFirst('/').AfterFirst('/').BeforeFirst('/');
+	const wxString url = httpurl.AfterFirst('/').AfterFirst('/').AfterFirst('/');
 	wxHTTP versionRequest;
 	versionRequest.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
 	// normal timeout is 10 minutes.. set to 10 secs.
