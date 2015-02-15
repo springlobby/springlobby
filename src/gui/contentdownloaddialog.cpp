@@ -7,17 +7,11 @@
 #include <wx/textctrl.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
-#include <wx/protocol/http.h>
-#include <wx/sstream.h>
-#include <wx/thread.h>
-#include <wx/event.h>
 #include "json/wx/jsonreader.h"
-#include "ui.h"
-#include "mainwindow.h"
 #include "httpfile.h"
+#include "ui.h"
 #include <lslunitsync/unitsync.h>
 
-#include <iostream>
 DECLARE_EVENT_TYPE(SEARCH_FINISHED, wxID_ANY);
 DEFINE_EVENT_TYPE(SEARCH_FINISHED);
 BEGIN_EVENT_TABLE( ContentDownloadDialog, wxDialog )
