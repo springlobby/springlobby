@@ -261,7 +261,7 @@ wxWindowUpdateLocker noUpdates(m_user_list);
     int sep = line.Find(' ');
     wxString name = line.Mid(0, sep);
     if ( name.Find(filter) != wxNOT_FOUND || (filter == wxEmptyString) ) {
-      int flag = (int)FromwxString<long>( line.Mid(sep+1) ); // Flag is never < 0 or > intmax
+      int flag = (int)FromwxString( line.Mid(sep+1) ); // Flag is never < 0 or > intmax
       AddUserToList( name, flag );
       m_filtered_users.RemoveAt(i);
     }

@@ -17,33 +17,15 @@ typedef __int64 int64_t;
 #define C_STRING(v) (v).mb_str(wxConvUTF8)
 
 #include <wx/string.h>
-#include <sstream>
+#include <string>
 
-template<class T>
-static inline wxString TowxString(T arg){
-  std::stringstream s;
-  s << arg;
-  return wxString(s.str().c_str(),wxConvUTF8);
-}
 
-template<>
-inline wxString TowxString(wxString arg){
-  return arg;
-}
+wxString TowxString(const std::string& arg);
+wxString TowxString(int);
+std::string strtolower(std::string str);
 
-template<>
-inline wxString TowxString(const wxChar *arg){
-  return wxString(arg);
-}
 
-template<class T>
-inline T FromwxString(const wxString& arg){
-  std::stringstream s;
-  s << STD_STRING(arg);
-  int64_t ret;
-  s >> ret;
-  return (T)ret;
-}
+long FromwxString(const wxString& arg);
 
 #define WX_STRINGC(v) wxString(v,wxConvUTF8)
 
@@ -63,72 +45,6 @@ class StringtokenizerVectorized : public std::vector<wxString> {
     public:
         StringtokenizerVectorized( wxStringTokenizer tokenizer );
 };
-
-#include <boost/format.hpp>
-
-//! a wxString extension class to boost::format
-struct wxFormat : public boost::format
-{
-	explicit wxFormat( const wxString& format )
-		: boost::format( STD_STRING( format ) )
-	{}
-
-	explicit wxFormat( const std::string& format )
-		: boost::format( format )
-	{}
-
-	explicit wxFormat(const char* format)
-		: boost::format(format)
-	{}
-
-	wxString str() const
-	{
-		return TowxString( boost::format::str() );
-	}
-
-	wxString c_str() const
-	{
-		return TowxString( boost::format::str() ).c_str();
-	}
-
-	//! conversion operator to wxString
-	operator wxString () const
-	{
-		return str();
-	}
-
-    //! conversion operator to wxString
-    operator std::string () const
-    {
-        return boost::format::str();
-    }
-
-	//! overload the base class % operator to accept wxString input (and return our own type again)
-	template <class T>
-	wxFormat&  operator%(const T& x)
-	{
-		return static_cast<wxFormat&>( boost::format::operator % ( x ) );
-	}
-	//! this signature is needed to be able to specialize on wxChar and apply conversion
-	template <class T>
-	wxFormat&  operator%(const T* x)
-	{
-		return static_cast<wxFormat&>( boost::format::operator % ( x ) );
-	}
-
-};
-
-template <>
-inline wxFormat&  wxFormat::operator%(const wxString& x)
-{
-	return static_cast<wxFormat&>( boost::format::operator % ( STD_STRING(x) ) );
-}
-
-template <>
-inline wxFormat&  wxFormat::operator%(const wxChar* x)
-{
-	return operator % ( wxString(x) );
-}
 
 std::string stdprintf(const char* format, ...);
 

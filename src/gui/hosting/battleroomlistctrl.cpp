@@ -136,7 +136,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 
 		for ( unsigned int i = 0; i < SPRING_MAX_TEAMS; i++ )
 		{
-			wxMenuItem* team = new wxMenuItem( m_teams, BRLIST_TEAM + i, wxFormat( _T("%d") ) % (i+1), wxEmptyString, wxITEM_NORMAL );
+			wxMenuItem* team = new wxMenuItem( m_teams, BRLIST_TEAM + i, wxString::Format( _T("%d"), i+1), wxEmptyString, wxITEM_NORMAL );
 			m_teams->Append( team );
 			Connect( BRLIST_TEAM + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnTeamSelect ) );
 		}
@@ -145,7 +145,7 @@ BattleroomListCtrl::BattleroomListCtrl( wxWindow* parent, IBattle* battle, bool 
 		wxMenu* m_allies = new wxMenu();
 		for ( unsigned int i = 0; i < SPRING_MAX_ALLIES; i++ )
 		{
-			wxMenuItem* ally = new wxMenuItem( m_allies, BRLIST_ALLY + i, wxFormat( _T("%d") ) % (i+1), wxEmptyString, wxITEM_NORMAL );
+			wxMenuItem* ally = new wxMenuItem( m_allies, BRLIST_ALLY + i, wxString::Format( _T("%d"), i+1), wxEmptyString, wxITEM_NORMAL );
 			m_allies->Append( ally );
 			Connect( BRLIST_ALLY + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( BattleroomListCtrl::OnAllySelect ) );
 		}
@@ -297,7 +297,7 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 	if ( column == m_ally_column_index ) return -1;
 	if ( column == m_resourcebonus_column_index ) return -1;
 
-	const wxString msg =  wxFormat(_("column oob in BattleroomListCtrl::OnGetItemColumnImage: %d" )) % column;
+	const wxString msg =  wxString::Format(_("column oob in BattleroomListCtrl::OnGetItemColumnImage: %d" ), column);
 	wxLogWarning( msg);
 	return -1;
 }
@@ -317,7 +317,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
             ASSERT_EXCEPTION( user.BattleStatus().side < (long)sides.size(), _T("Side index too high") );
 		}
 		catch ( ... ) {
-			return wxFormat( _T("s%d") ) % (user.BattleStatus().side + 1);
+			return wxString::Format( _T("s%d"), user.BattleStatus().side + 1);
 		}
 		return wxEmptyString;
 	}
@@ -325,14 +325,14 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
         if ( is_bot ) {
             wxString botname = TowxString(user.BattleStatus().aishortname);
             if ( !user.BattleStatus().aiversion.empty() ) botname += _T(" ") + TowxString(user.BattleStatus().aiversion);
-            return (wxFormat(_T("%s - %s (%s)")) % user.GetNick() % botname % user.BattleStatus().owner);
+            return wxString::Format(_T("%s - %s (%s)"), TowxString(user.GetNick()).c_str(), botname.c_str(), TowxString(user.BattleStatus().owner).c_str());
         }
         else
             return TowxString(user.GetNick());
     }
-	if ( column == m_team_column_index ) return is_spec ? (wxString)wxEmptyString : (wxFormat( _T("%d") ) % ( user.BattleStatus().team + 1 ) );
-	if ( column == m_ally_column_index ) return is_spec ? (wxString)wxEmptyString : (wxFormat( _T("%d") ) % ( user.BattleStatus().ally + 1 ) );
-	if ( column == m_resourcebonus_column_index ) return is_spec ? (wxString)wxEmptyString : (wxFormat( _T("%d%%") ) % user.BattleStatus().handicap );
+	if ( column == m_team_column_index ) return is_spec ? wxString(wxEmptyString) : (wxString::Format( _T("%d"), user.BattleStatus().team + 1 ));
+	if ( column == m_ally_column_index ) return is_spec ? wxString(wxEmptyString) : (wxString::Format( _T("%d"), user.BattleStatus().ally + 1 ));
+	if ( column == m_resourcebonus_column_index ) return is_spec ? wxString(wxEmptyString) : (wxString::Format( _T("%d%%"), user.BattleStatus().handicap ));
 	if ( column == m_country_column_index ) return wxEmptyString;
 
 	return wxEmptyString;
@@ -455,7 +455,7 @@ void BattleroomListCtrl::OnKickPlayer( wxCommandEvent& /*unused*/ )
 void BattleroomListCtrl::OnRingPlayer( wxCommandEvent& /*unused*/ )
 {
 	slLogDebugFunc("");
-  if ( m_sel_user ) m_battle->GetServer().Ring( TowxString(m_sel_user->GetNick()));
+  if ( m_sel_user ) m_battle->GetServer().Ring(m_sel_user->GetNick());
 }
 
 void BattleroomListCtrl::Sort()

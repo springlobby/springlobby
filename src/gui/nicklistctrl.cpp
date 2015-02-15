@@ -45,7 +45,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
 							  wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | ( int )( !show_header ) * wxLC_NO_HEADER | ( int )( singleSelectList ) * wxLC_SINGLE_SEL,
 							  name, 3, &NickListCtrl::CompareOneCrit, highlight, UserActions::ActHighlight, true /*periodic sort*/ ),
     m_menu( popup )
-{	
+{
 	AddColumn( 0, 20, _( "s" ), _T( "Status" ) );
 	AddColumn( 1, 20, _( "c" ), _T( "Country" ) );
 	AddColumn( 2, 20, _( "r" ), _T( "Rank" ) );
@@ -65,7 +65,7 @@ NickListCtrl::NickListCtrl( wxWindow* parent, bool show_header, NickListCtrl::Us
 
 NickListCtrl::~NickListCtrl()
 {
-  
+
 }
 
 void NickListCtrl::AddUser( const User& user )
@@ -349,8 +349,8 @@ int NickListCtrl::CompareOneCrit( DataType u1, DataType u2, int col, int dir ) c
 int NickListCtrl::CompareUserStatus( DataType user1, DataType user2 )
 {
 
-	ASSERT_LOGIC( user1 != 0, _T( "user1 = 0" ) );
-	ASSERT_LOGIC( user2 != 0, _T( "user2 = 0" ) );
+	ASSERT_LOGIC( user1 != 0, "user1 = 0");
+	ASSERT_LOGIC( user2 != 0, "user2 = 0");
 
 	int u1 = 0, u2 = 0;
 

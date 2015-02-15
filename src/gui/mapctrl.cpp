@@ -293,7 +293,7 @@ double MapCtrl::GetStartRectMetalFraction( const BattleStartRect& sr ) const
 
 unsigned int MapCtrl::GetNewRectIndex() const
 {
-    ASSERT_LOGIC ( m_battle, _T("getting a rectangle index not in a battle"));
+    ASSERT_LOGIC ( m_battle, "getting a rectangle index not in a battle");
 	return m_battle->GetNextFreeRectIdx();
 }
 
@@ -583,19 +583,19 @@ void MapCtrl::DrawStartRect( wxDC& dc, int index, wxRect& sr, const wxColour& co
     if ( index != -1 )
     {
         int twidth, theight, tx, ty;
-		wxString strIndex = wxFormat( _T("%d") ) % ( index + 1 );
+		wxString strIndex = wxString::Format( _T("%d"), index + 1 );
         dc.GetTextExtent( strIndex, &twidth, &theight );
         dc.SetTextForeground( col );
         tx = sr.x + sr.width / 2 - twidth / 2;
         ty = sr.y + sr.height / 2 - theight / 2 - 1;
         DrawOutlinedText( dc, strIndex, tx, ty, wxColour( 50, 50, 50), *wxWHITE );
-        //dc.DrawText( wxFormat( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
+        //dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
 
         const double metal = GetStartRectMetalFraction( index );
         if ( metal != 0.0 )
         {
-            wxString strMetal = wxFormat( _("Metal: %.1f%%") )
-                    % ( std::isnan(metal) ? 0.0 :  metal * 100.0 );
+            wxString strMetal = wxString::Format( _("Metal: %.1f%%"),
+                    std::isnan(metal) ? 0.0 :  metal * 100.0 );
             dc.GetTextExtent( strMetal, &twidth, &theight );
             // don't cramp it in rect, but only display it if it actually fits
             if (sr.height >= 6 * theight && sr.width > twidth)
@@ -676,7 +676,7 @@ void MapCtrl::DrawBackground( wxDC& dc )
         img = m_heightmap;
         break;
     default:
-        ASSERT_LOGIC( false, _T("missing InfoMap IM_* enumeration constant in switch") );
+        ASSERT_LOGIC( false, "missing InfoMap IM_* enumeration constant in switch");
         break;
     }
 
@@ -767,8 +767,8 @@ void MapCtrl::DrawStartPositions( wxDC& dc )
             int y = (int)( (double)(m_map.info.positions[i].y / (double)m_map.info.height) * (double)mr.height ) - 8;
             dc.DrawBitmap( *m_start_ally, x+mr.x, y+mr.y, true );
             wxCoord w, h;
-			dc.GetTextExtent( wxFormat(_T("%d") ) % ( i+1 ), &w, &h );
-			dc.DrawText( wxFormat(_T("%d") ) % ( i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
+			dc.GetTextExtent( wxString::Format(_T("%d"), i+1), &w, &h );
+			dc.DrawText( wxString::Format(_T("%d"), i+1 ), x+mr.x+(8-w/2), y+mr.y+(8-h/2) );
         }
     }
     else
@@ -808,7 +808,7 @@ inline wxPoint
 FitInside(const wxRect& what, const wxRect& container)
 {
     ASSERT_LOGIC ( what.width <= container.width && what.height <= container.height,
-                   _T("Can't fit rect inside target container") );
+                   "Can't fit rect inside target container");
 
     wxPoint offset ( 0, 0 );
 
@@ -827,7 +827,7 @@ FitInside(const wxRect& what, const wxRect& container)
 
 wxRect MapCtrl::GetUserRect( const User& user, bool selected )
 {
-    ASSERT_LOGIC( m_battle != 0, _T("Bot == 0") );
+    ASSERT_LOGIC( m_battle != 0, "Bot == 0");
     m_map = m_battle->LoadMap();
 
     wxPoint absolute_position ( GetTranslatedScaledUserMapPosition(user) );
@@ -916,8 +916,8 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool /*unused*/ )
 
         /* Draw the Ally Number numeric select */
         wxRect updownallyrect = GetUserUpAllyButtonRect();
-		DrawOutlinedText( dc, wxFormat( _("ally:   %d") ) % ( user.BattleStatus().ally + 1 ), r.x+3, r.y+updownallyrect.y, wxColour(50,50,50), *wxWHITE );
-        //dc.DrawText( wxFormat( _("ally: %d"), bot.BattleStatus().ally + 1 ), r.x+4, r.y+40 );
+		DrawOutlinedText( dc, wxString::Format( _("ally:   %d"),  user.BattleStatus().ally + 1), r.x+3, r.y+updownallyrect.y, wxColour(50,50,50), *wxWHITE );
+        //dc.DrawText( wxString::Format( _("ally: %d"), bot.BattleStatus().ally + 1 ), r.x+4, r.y+40 );
 
         if ( m_rect_area == UpAllyButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
         else if ( m_rect_area == DownAllyButton ) dc.DrawBitmap( wxBitmap(up_downsel_xpm), r.x+updownallyrect.x, r.y+updownallyrect.y, true );
@@ -927,7 +927,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool /*unused*/ )
         wxRect updownhandicaprect = GetUserUpHandicapButtonRect();
         wxFont b( 6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT );
         dc.SetFont( b );
-		DrawOutlinedText( dc, wxFormat( _("bonus: %d%%") ) % user.BattleStatus().handicap, r.x+3, r.y+updownhandicaprect.y+2, wxColour(50,50,50), *wxWHITE );
+		DrawOutlinedText( dc, wxString::Format( _("bonus: %d%%"), user.BattleStatus().handicap), r.x+3, r.y+updownhandicaprect.y+2, wxColour(50,50,50), *wxWHITE );
         dc.SetFont( f );
 
         if ( m_rect_area == UpHandicapButton ) dc.DrawBitmap( wxBitmap(upsel_down_xpm), r.x+updownhandicaprect.x, r.y+updownhandicaprect.y, true );
@@ -957,7 +957,7 @@ void MapCtrl::DrawUser( wxDC& dc, User& user, bool selected, bool /*unused*/ )
         dc.DrawBitmap( *img, r.x+ USER_BOX_ICON_PADDING, r.y+USER_BOX_ICON_PADDING, true );
 
         int w, h;
-		wxString allystr = wxFormat( _T("%d") ) % ( user.BattleStatus().ally + 1 );
+		wxString allystr = wxString::Format( _T("%d"),  user.BattleStatus().ally + 1);
         dc.GetTextExtent( allystr, &w, &h );
 
         DrawOutlinedText( dc, allystr, r.width - w - 3 + r.x, r.height - h - 1 + r.y, wxColour(50,50,50), *wxWHITE );
@@ -1086,7 +1086,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
             User& user = *m_user_expanded;
             try
             {
-                ASSERT_LOGIC( &user != 0, _T("MapCtrl::OnMouseMove(): user = 0") );
+                ASSERT_LOGIC( &user != 0, "MapCtrl::OnMouseMove(): user = 0");
             }
             catch (...)
             {
@@ -1123,7 +1123,7 @@ void MapCtrl::OnMouseMove( wxMouseEvent& event )
             User& user = *m_user_expanded;
             try
             {
-                ASSERT_LOGIC( &user != 0, _T("MapCtrl::OnMouseMove(): user = 0") );
+                ASSERT_LOGIC( &user != 0, "MapCtrl::OnMouseMove(): user = 0");
             }
             catch (...)
             {
@@ -1313,7 +1313,7 @@ void MapCtrl::OnLeftDown( wxMouseEvent& event )
             User& user = *m_user_expanded;
             try
             {
-                ASSERT_LOGIC( &user != 0, _T("MapCtrl::OnLeftDown(): user = 0") );
+                ASSERT_LOGIC( &user != 0, "MapCtrl::OnLeftDown(): user = 0");
             }
             catch (...)
             {
@@ -1411,7 +1411,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
         User& user = *m_user_expanded;
         try
         {
-            ASSERT_LOGIC( &user != 0, _T("MapCtrl::OnLeftUp(): user == 0") );
+            ASSERT_LOGIC( &user != 0, "MapCtrl::OnLeftUp(): user == 0");
         }
         catch (...)
         {
@@ -1478,7 +1478,7 @@ void MapCtrl::OnLeftUp( wxMouseEvent& event )
             if ( m_mdown_area == Refreshing )
             {
 //				LSL::usync().AddReloadEvent();
-				m_battle->Update( wxFormat( _T("%d_mapname") ) % LSL::Enum::PrivateOptions );
+				m_battle->Update(stdprintf("%d_mapname", LSL::Enum::PrivateOptions ));
                 UpdateMinimap();
             }
             else if ( m_mdown_area == Download )
@@ -1574,7 +1574,7 @@ void MapCtrl::OnRightUp( wxMouseEvent& event )
                         bs.ally = m_battle->GetFreeAlly();
                         bs.colour = m_battle->GetNewColour();
                         User& bot = m_battle->OnBotAdded(STD_STRING(dlg.GetNick()), bs  );
-                        ASSERT_LOGIC( &bot != 0, _T("bot == 0") );
+                        ASSERT_LOGIC( &bot != 0, "bot == 0");
                         bot.BattleStatus().pos.x = x;
                         bot.BattleStatus().pos.y = y;
                         RefreshRect( GetUserRect( bot, false ), false );

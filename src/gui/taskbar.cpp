@@ -139,9 +139,9 @@ void TaskBar::UpdateProgress()
 	}
 
 	if (unfinishedTasks == 1 ) {
-		text->SetLabel(wxFormat( _("Downloading %s") ) % downloadName );
+		text->SetLabel(wxString::Format( _("Downloading %s"), downloadName.c_str() ));
 	} else {
-		text->SetLabel(wxFormat( _("Downloading %u files") ) % unfinishedTasks );
+		text->SetLabel(wxString::Format( _("Downloading %u files"), unfinishedTasks ));
 	}
 
 	if (overalPercent < 0) {

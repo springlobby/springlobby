@@ -57,7 +57,7 @@ void Channel::Said( User& who, const std::string& message )
 void Channel::Say( const std::string& message )
 {
 	slLogDebugFunc("");
-  m_serv.SayChannel( TowxString(m_name), TowxString(message));
+	m_serv.SayChannel(m_name, message);
 }
 
 
@@ -75,7 +75,7 @@ void Channel::DidAction( User& who, const std::string& action )
 void Channel::DoAction( const std::string& action )
 {
 	slLogDebugFunc("");
-	m_serv.DoActionChannel( TowxString(m_name), TowxString(action) );
+	m_serv.DoActionChannel( m_name, action );
 }
 
 
@@ -93,12 +93,12 @@ void Channel::Left( User& who, const std::string& reason )
 
 void Channel::Leave()
 {
-	m_serv.PartChannel( TowxString(m_name) );
+	m_serv.PartChannel(m_name);
 }
 
 void Channel::Rejoin()
 {
-	m_serv.JoinChannel( TowxString(m_name), TowxString(m_password));
+	m_serv.JoinChannel(m_name, m_password);
 }
 
 
@@ -159,12 +159,12 @@ void Channel::AddUser( User& user )
 void Channel::CheckBanned(const std::string& name){
   if(name=="ChanServ")return;
   if(m_banned_users.count(name)>0){
-    m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+TowxString(GetName())+_T(" ")+TowxString(name));
+    m_serv.SayPrivate("ChanServ","!kick #"+GetName()+std::string(" ") + name);
   }
   if(m_do_ban_regex&&m_ban_regex.IsValid()){
     if(m_ban_regex.Matches(TowxString(name))&&!(m_do_unban_regex&&m_unban_regex.IsValid()&&m_unban_regex.Matches(TowxString(name)))){
-      m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+TowxString(GetName())+_T(" ")+TowxString(name));
-      if(!m_ban_regex_msg.empty())m_serv.SayPrivate(TowxString(name),TowxString(m_ban_regex_msg));
+      m_serv.SayPrivate("ChanServ","!kick #" + GetName() +std::string(" ")+name);
+      if(!m_ban_regex_msg.empty()) m_serv.SayPrivate(name, m_ban_regex_msg);
     }
   }
 }
@@ -209,13 +209,13 @@ bool Channel::ExecuteSayCommand( const std::string& in )
     return true;
   } else if(subcmd==_T("/userban")){
     m_banned_users.insert(STD_STRING(params));
-    m_serv.SayPrivate(_T("ChanServ"),_T("!kick #")+TowxString(GetName())+_T(" ")+params);
+    m_serv.SayPrivate("ChanServ",stdprintf("!kick #%s %s", GetName().c_str(), params.c_str()));
     return true;
   } else if(subcmd==_T("/userunban")){
     m_banned_users.erase(STD_STRING(params));
     return true;
   } else if(subcmd==_T("/banregex")){
-    ui().OnChannelMessage(*this,_T("/banregex ")+params);
+    ui().OnChannelMessage(*this, "/banregex " + STD_STRING(params));
     m_do_ban_regex=!params.empty();
     if(m_do_ban_regex){
       #ifdef wxHAS_REGEX_ADVANCED
@@ -223,11 +223,11 @@ bool Channel::ExecuteSayCommand( const std::string& in )
       #else
       m_ban_regex.Compile(params, wxRE_EXTENDED);
       #endif
-      if(!m_ban_regex.IsValid())ui().OnChannelMessage(*this,_T("Invalid regular expression"));
+      if(!m_ban_regex.IsValid())ui().OnChannelMessage(*this, "Invalid regular expression");
     }
     return true;
   } else if(subcmd==_T("/unbanregex")){
-    ui().OnChannelMessage(*this,_T("/unbanregex ")+params);
+    ui().OnChannelMessage(*this, "/unbanregex " +STD_STRING(params));
     m_do_unban_regex=!params.empty();
     if(m_do_unban_regex){
       #ifdef wxHAS_REGEX_ADVANCED
@@ -235,21 +235,21 @@ bool Channel::ExecuteSayCommand( const std::string& in )
       #else
       m_unban_regex.Compile(params, wxRE_EXTENDED);
       #endif
-      if(!m_unban_regex.IsValid())ui().OnChannelMessage(*this,_T("Invalid regular expression"));
+      if(!m_unban_regex.IsValid())ui().OnChannelMessage(*this, "Invalid regular expression");
     }
     return true;
   } else if (subcmd==_T("/checkban")) {
     if(IsBanned(STD_STRING(params))){
-      ui().OnChannelMessage(*this,params+_T(" is banned"));
+      ui().OnChannelMessage(*this,STD_STRING(params)+ " is banned");
     }else{
-      ui().OnChannelMessage(*this,params+_T(" is not banned"));
+      ui().OnChannelMessage(*this,STD_STRING(params)+ " is not banned");
     }
     return true;
   }
 
 
   else if(subcmd==_T("/banregexmsg")){
-    ui().OnChannelMessage(*this,_T("/banregexmsg ")+params);
+    ui().OnChannelMessage(*this, "/banregexmsg " + STD_STRING(params));
     m_ban_regex_msg=STD_STRING(params);
     return true;
   }

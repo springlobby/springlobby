@@ -145,7 +145,7 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 {
 	Socket* sock = (Socket*)event.GetClientData();
 	if (sock == NULL) {
-		m_net_class.OnError(_T("sock = 0"));
+		m_net_class.OnError("sock = 0");
 		return;
 	}
 
@@ -156,7 +156,7 @@ void SocketEvents::OnSocketEvent(wxSocketEvent& event)
 	} else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
 		m_net_class.OnConnected( *sock );
 	} else {
-		m_net_class.OnError(_T("Unknown socket event."));
+		m_net_class.OnError("Unknown socket event.");
 	}
 }
 
@@ -210,11 +210,11 @@ void Socket::Connect( const wxString& addr, const int port )
 	m_buffer = "";
 
 	if (!wxaddr.Hostname( addr )) {
-		m_net_class.OnError(_T("Invalid Hostname"));
+		m_net_class.OnError("Invalid Hostname");
 		return;
 	}
 	if (!wxaddr.Service( port )) {
-		m_net_class.OnError(_T("Invalid Port"));
+		m_net_class.OnError("Invalid Port");
 		return;
 	}
 
@@ -259,7 +259,7 @@ bool Socket::_Send( const wxString& data )
 {
   if ( !m_sock )
   {
-    m_net_class.OnError( _T("Socket NULL") );
+    m_net_class.OnError("Socket NULL");
     return false;
   }
 
@@ -327,7 +327,7 @@ wxString Socket::Receive()
 {
 	wxString ret;
 	if ( m_sock == 0 ) {
-		m_net_class.OnError( _T("Socket NULL") );
+		m_net_class.OnError("Socket NULL");
 		return ret;
 	}
 

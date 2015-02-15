@@ -8,12 +8,12 @@
 #endif // _MSC_VER
 
 #include <wx/sstream.h>
+#include <wx/string.h>
 #include <wx/protocol/http.h>
 #include <wx/log.h>
 
 #include "gui/customdialogs.h"
 #include "log.h"
-#include "utils/conversion.h"
 #include "utils/slconfig.h"
 
 SLCONFIG("/General/UpdateUrl", "http://version.springlobby.info/current.txt", "Url to check for updates" );
@@ -70,9 +70,9 @@ wxString GetLatestVersion()
 			err = _T("Unknown Error");
 			break;
 		}
-
-		slLogDebugFunc("Error connecting! Error is: %s", STD_STRING(err).c_str());
-		customMessageBoxNoModal(SL_MAIN_ICON, _T("Error connecting! Error is: ") + err, wxEmptyString);
+		const wxString msg = wxString::Format(_T("Error connecting! Error is: %s"), err.c_str());
+		wxLogError(msg);
+		customMessageBoxNoModal(SL_MAIN_ICON, msg, wxEmptyString);
 
 		return wxEmptyString;
 	}

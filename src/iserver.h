@@ -3,8 +3,7 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SERVER_H
 #define SPRINGLOBBY_HEADERGUARD_SERVER_H
 
-#include <wx/string.h>
-#include <wx/arrstr.h>
+#include <string>
 
 #include "channellist.h"
 #include "userlist.h"
@@ -22,7 +21,7 @@ struct BattleOptions;
 class User;
 struct UserBattleStatus;
 class ChatPanel;
-class wxString;
+
 typedef int ServerError;
 namespace LSL {
 	class lslColor;
@@ -60,12 +59,12 @@ class IServer : public iNetClass, public SL::NonCopyable
 
     // Server interface
 
-    virtual bool ExecuteSayCommand( const wxString& /*cmd*/ ) {return true;};
+    virtual bool ExecuteSayCommand( const std::string& /*cmd*/ ) {return true;};
 
-    virtual void Register(const wxString& /*servername*/, const wxString& /*host*/, const int /*port*/, const wxString& /*user*/, const wxString& /*pass*/) {};
+    virtual void Register(const std::string& /*servername*/, const std::string& /*host*/, const int /*port*/, const std::string& /*user*/, const std::string& /*pass*/) {};
     virtual void AcceptAgreement() {};
 
-    virtual void Connect( const wxString& /*servername*/, const wxString& /*addr*/, const int /*port*/ ) {};
+    virtual void Connect( const std::string& /*servername*/, const std::string& /*addr*/, const int /*port*/ ) {};
     virtual void Disconnect() {};
     virtual bool IsConnected() {return true;};
 
@@ -73,38 +72,38 @@ class IServer : public iNetClass, public SL::NonCopyable
     virtual void Logout() {};
     virtual bool IsOnline()  const {return true;};
 
-    virtual void JoinChannel( const wxString& /*channel*/, const wxString& /*key*/ ) {};
-    virtual void PartChannel( const wxString& /*channel*/ ) {};
+    virtual void JoinChannel( const std::string& /*channel*/, const std::string& /*key*/ ) {};
+    virtual void PartChannel( const std::string& /*channel*/ ) {};
 
-    virtual void DoActionChannel( const wxString& /*channel*/, const wxString& /*msg*/ ) {};
-    virtual void SayChannel( const wxString& /*channel*/, const wxString& /*msg*/ ) {};
+    virtual void DoActionChannel( const std::string& /*channel*/, const std::string& /*msg*/ ) {};
+    virtual void SayChannel( const std::string& /*channel*/, const std::string& /*msg*/ ) {};
 
-    virtual void SayPrivate( const wxString& /*nick*/, const wxString& /*msg*/ ) {};
-    virtual void DoActionPrivate( const wxString& /*nick*/, const wxString& /*msg*/ ) {};
+    virtual void SayPrivate( const std::string& /*nick*/, const std::string& /*msg*/ ) {};
+    virtual void DoActionPrivate( const std::string& /*nick*/, const std::string& /*msg*/ ) {};
 
-    virtual void SayBattle( int /*battleid*/, const wxString& /*msg*/ ) {};
-    virtual void DoActionBattle( int /*battleid*/, const wxString& /*msg*/ ) {};
+    virtual void SayBattle( int /*battleid*/, const std::string& /*msg*/ ) {};
+    virtual void DoActionBattle( int /*battleid*/, const std::string& /*msg*/ ) {};
 
-    virtual void Ring( const wxString& /*nick*/ ) {};
+    virtual void Ring( const std::string& /*nick*/ ) {};
 
-    virtual void ModeratorSetChannelTopic( const wxString& /*channel*/, const wxString& /*topic*/ ) {};
-    virtual void ModeratorSetChannelKey( const wxString& /*channel*/, const wxString& /*key*/ ) {};
-    virtual void ModeratorMute( const wxString& /*channel*/, const wxString& /*nick*/, int /*duration*/, bool /*byip*/ ) {};
-    virtual void ModeratorUnmute( const wxString& /*channel*/, const wxString& /*nick*/) {};
-    virtual void ModeratorKick( const wxString& /*channel*/, const wxString& /*reason*/ ) {};
-    virtual void ModeratorBan( const wxString& /*nick*/, bool /*byip*/ ) {};
-    virtual void ModeratorUnban( const wxString& /*nick*/) {};
-    virtual void ModeratorGetIP( const wxString& /*nick*/) {};
-    virtual void ModeratorGetLastLogin( const wxString& /*nick*/) {};
-    virtual void ModeratorGetLastIP( const wxString& /*nick*/) {};
-    virtual void ModeratorFindByIP( const wxString& /*ipadress*/ ) {};
+    virtual void ModeratorSetChannelTopic( const std::string& /*channel*/, const std::string& /*topic*/ ) {};
+    virtual void ModeratorSetChannelKey( const std::string& /*channel*/, const std::string& /*key*/ ) {};
+    virtual void ModeratorMute( const std::string& /*channel*/, const std::string& /*nick*/, int /*duration*/, bool /*byip*/ ) {};
+    virtual void ModeratorUnmute( const std::string& /*channel*/, const std::string& /*nick*/) {};
+    virtual void ModeratorKick( const std::string& /*channel*/, const std::string& /*reason*/ ) {};
+    virtual void ModeratorBan( const std::string& /*nick*/, bool /*byip*/ ) {};
+    virtual void ModeratorUnban( const std::string& /*nick*/) {};
+    virtual void ModeratorGetIP( const std::string& /*nick*/) {};
+    virtual void ModeratorGetLastLogin( const std::string& /*nick*/) {};
+    virtual void ModeratorGetLastIP( const std::string& /*nick*/) {};
+    virtual void ModeratorFindByIP( const std::string& /*ipadress*/ ) {};
 
-    virtual void AdminGetAccountAccess( const wxString& /*nick*/) {};
-    virtual void AdminChangeAccountAccess( const wxString& /*nick*/, const wxString& /*accesscode*/ ) {};
-    virtual void AdminSetBotMode( const wxString& /*nick*/, bool /*isbot*/ ) {};
+    virtual void AdminGetAccountAccess( const std::string& /*nick*/) {};
+    virtual void AdminChangeAccountAccess( const std::string& /*nick*/, const std::string& /*accesscode*/ ) {};
+    virtual void AdminSetBotMode( const std::string& /*nick*/, bool /*isbot*/ ) {};
 
-    virtual void HostBattle( BattleOptions /*bo*/, const wxString& /*password*/ = wxEmptyString ) {};
-    virtual void JoinBattle( const int& /*battleid*/, const wxString& /*password*/ = wxEmptyString ) {};
+    virtual void HostBattle( BattleOptions /*bo*/, const std::string& /*password*/ = "" ) {};
+    virtual void JoinBattle( const int& /*battleid*/, const std::string& /*password*/ = "" ) {};
     virtual void LeaveBattle( const int& /*battleid*/ ) {};
     virtual void StartHostedBattle() {};
 
@@ -117,16 +116,16 @@ class IServer : public iNetClass, public SL::NonCopyable
     virtual void SetHandicap( int /*battleid*/, User& /*user*/, int /*handicap*/) {};
 
 
-    virtual void AddBot( int /*battleid*/, const wxString& /*nick*/, UserBattleStatus& /*status*/ ) {};
+    virtual void AddBot( int /*battleid*/, const std::string& /*nick*/, UserBattleStatus& /*status*/ ) {};
     virtual void RemoveBot( int /*battleid*/, User& /*user*/ ) {};
     virtual void UpdateBot( int /*battleid*/, User& /*user*/, UserBattleStatus& /*status*/) {};
 
     virtual void SendHostInfo( HostInfo /*update*/ ) {};
-    virtual void SendHostInfo( const wxString& /*Tag*/ ) {};
-    virtual void SendRaw( const wxString& /*raw*/ ) {};
+    virtual void SendHostInfo( const std::string& /*Tag*/ ) {};
+    virtual void SendRaw( const std::string& /*raw*/ ) {};
     virtual void SendUserPosition( const User& /*usr*/ ) {};
 
-    virtual void RequestInGameTime( const wxString& /*nick*/) {};
+    virtual void RequestInGameTime( const std::string& /*nick*/) {};
 
     virtual IBattle* GetCurrentBattle() {return NULL;};
 
@@ -135,16 +134,16 @@ class IServer : public iNetClass, public SL::NonCopyable
     virtual void SendMyBattleStatus( UserBattleStatus& /*bs*/ ) {};
     virtual void SendMyUserStatus(const UserStatus& /*us*/) {};
 
-    virtual void SetUsername( const wxString& username ) { m_user = username; }
-	virtual const wxString& GetUserName() const {return m_user; }
-    virtual void SetPassword( const wxString& password ) { m_pass = password; }
-	virtual const wxString& GetPassword() const {return m_pass; }
-    virtual bool IsPasswordHash( const wxString& /*pass*/ ) const {return true;};
-    virtual wxString GetPasswordHash( const wxString& /*pass*/ ) const {return wxEmptyString;};
+    virtual void SetUsername( const std::string& username ) { m_user = username; }
+	virtual const std::string& GetUserName() const {return m_user; }
+    virtual void SetPassword( const std::string& password ) { m_pass = password; }
+	virtual const std::string& GetPassword() const {return m_pass; }
+    virtual bool IsPasswordHash( const std::string& /*pass*/ ) const {return true;};
+    virtual std::string GetPasswordHash( const std::string& /*pass*/ ) const {return "";};
 
-    wxString GetRequiredSpring() const { return m_required_spring_ver; }
+    std::string GetRequiredSpring() const { return m_required_spring_ver; }
 
-    void SetRequiredSpring( const wxString& version ) { m_required_spring_ver = version; }
+    void SetRequiredSpring( const std::string& version ) { m_required_spring_ver = version; }
 
     virtual void OnConnected( Socket& /*sock*/ ) {};
     virtual void OnDisconnected( Socket& /*sock*/ ) {};
@@ -156,65 +155,63 @@ class IServer : public iNetClass, public SL::NonCopyable
 
     virtual const User& GetMe() const {return GetUser(m_user);};
     virtual User& GetMe() {return GetUser(m_user);};
-    User& GetUser( const wxString& nickname ) const;
-    bool UserExists( const wxString& nickname ) const;
+    User& GetUser( const std::string& nickname ) const;
+    bool UserExists( const std::string& nickname ) const;
 
-    Channel& GetChannel( const wxString& name );
+    Channel& GetChannel( const std::string& name );
     int GetNumChannels() const;
     Channel& GetChannel( const int& index );
-    bool ChannelExists( const wxString& name ) const;
+    bool ChannelExists( const std::string& name ) const;
 
     IBattle& GetBattle( const int& /*battleid*/ );
     bool BattleExists( const int& /*battleid*/ ) const;
 
     virtual int TestOpenPort( unsigned int /*port*/ ) const { return 0;};
 
-    virtual void SendScriptToProxy( const wxString& /*script*/ ) {};
+    virtual void SendScriptToProxy( const std::string& /*script*/ ) {};
 
-    virtual void SendScriptToClients( const wxString& /*script*/ ) {};
+    virtual void SendScriptToClients( const std::string& /*script*/ ) {};
 
-    std::map<wxString,wxString> m_channel_pw;  /// /*channel*/ name -> password, filled on /*channel*/ join
+    std::map<std::string,std::string> m_channel_pw;  /// /*channel*/ name -> password, filled on /*channel*/ join
 
     ///used to fill /*user*/list in groupuserdialog
     const UserList& GetUserList() const {return m_users;}
 
     unsigned int GetNumUsers() const { return m_users.GetNumUsers(); }
 
-    wxString GetServerName() const { return m_server_name; }
+    std::string GetServerName() const { return m_server_name; }
 
 	virtual void SetRelayIngamePassword( const User& /*user*/ ) {};
 
-	virtual wxArrayString GetRelayHostList();
+	virtual LSL::StringVector GetRelayHostList();
 
 protected:
 	Socket* m_sock;
-    wxString m_server_name;
+    std::string m_server_name;
     UserList m_users;
+    LSL::StringVector m_relay_host_manager_list;
 
 private:
-    wxString m_user;
-    wxString m_pass;
+    std::string m_user;
+    std::string m_pass;
 
     bool m_pass_hash;
-    wxString m_required_spring_ver;
+    std::string m_required_spring_ver;
 
     ChannelList m_channels;
     BattleList m_battles;
 
+    User& _AddUser( const std::string& /*user*/ );
+    void _RemoveUser( const std::string& nickname );
 
-    wxArrayString m_relay_host_manager_list;
-
-    User& _AddUser( const wxString& /*user*/ );
-    void _RemoveUser( const wxString& nickname );
-
-    Channel& _AddChannel( const wxString& chan );
-    void _RemoveChannel( const wxString& name );
+    Channel& _AddChannel( const std::string& chan );
+    void _RemoveChannel( const std::string& name );
 
     IBattle& _AddBattle( const int& id );
     void _RemoveBattle( const int& id );
 
-    virtual void SendCmd( const wxString& /*command*/, const wxString& /*param*/ ) {};
-    virtual void RelayCmd( const wxString& /*command*/, const wxString& /*param*/ ) {};
+    virtual void SendCmd( const std::string& /*command*/, const std::string& /*param*/ ) {};
+    virtual void RelayCmd( const std::string& /*command*/, const std::string& /*param*/ ) {};
 
 };
 

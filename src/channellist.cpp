@@ -42,7 +42,7 @@ void ChannelList::RemoveChannel( const std::string& name )
 Channel& ChannelList::GetChannel( const std::string& name )
 {
   channel_iter_t u = m_chans.find(name);
-  ASSERT_LOGIC( u != m_chans.end(), _T("ChannelList::GetChannel(\"") + TowxString(name) + _T("\"): no such channel"));
+  ASSERT_LOGIC( u != m_chans.end(), stdprintf("ChannelList::GetChannel(\"%s\"): no such channel", name.c_str()));
   return *u->second;
 }
 

@@ -79,6 +79,8 @@ class ChatPanelMenu : public wxEvtHandler , public SL::NonCopyable
 		ChatPanelMenu::UserMenu* GetUserMenuNoCreate();
 
 private:
+		bool HasChanserv();
+		void SayChanserv(const std::string& msg);
         void CreateNickListMenu();
 		void MutePlayer(long dur);
 

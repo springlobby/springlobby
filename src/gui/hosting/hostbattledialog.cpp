@@ -137,7 +137,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	m_port_lbl->Wrap( -1 );
 	topsizer->Add( m_port_lbl, 1, wxALL| wxALIGN_CENTER_VERTICAL, 5 );
 
-	m_port_text = new wxTextCtrl( m_panel, wxID_ANY, wxFormat( _T( "%d" ) ) % sett().GetLastHostPort(), wxDefaultPosition, wxDefaultSize, 0 );
+	m_port_text = new wxTextCtrl( m_panel, wxID_ANY, wxString::Format( _T( "%d" ), sett().GetLastHostPort()), wxDefaultPosition, wxDefaultSize, 0 );
 	m_port_text->SetToolTip( TE( _( "UDP port to host game on. Default is 8452." ) ) );
 	topsizer->Add( m_port_text, 1, wxALL| wxEXPAND, 5 );
 
@@ -160,7 +160,7 @@ HostBattleDialog::HostBattleDialog( wxWindow* parent )
 	wxMenuItem* manual_pick_relay = new wxMenuItem( m_relayhost_list, MANUAL_PICK_HOST, _("Manually enter the manager name"), _("You'll get prompted for the exact manager name"), wxITEM_RADIO );
 	m_relayhost_list->Append( manual_pick_relay );
 	m_relayhost_list->AppendSeparator();
-	m_relayhost_array_list = serverSelector().GetServer().GetRelayHostList();
+	m_relayhost_array_list = lslTowxArrayString(serverSelector().GetServer().GetRelayHostList());
 	for ( unsigned int i = 0; i < m_relayhost_array_list.GetCount(); i++ )
 	{
 		wxMenuItem* newitem = new wxMenuItem( m_relayhost_list, MANUAL_PICK_HOST + 1 + i, m_relayhost_array_list[i], wxEmptyString , wxITEM_RADIO );
@@ -462,25 +462,25 @@ void RunHostBattleDialog( wxWindow* parent )
 					break; // success
 				case IServer::porttest_pass_WX26 :
 					wxLogWarning( _T( "hosting port %d: test aborted (wx26)" ), bo.port  );
-					customMessageBoxNoModal( SL_MAIN_ICON, wxFormat( _( "Your using wxWidgets prior to version 2.8,\n "
-											 "port testing is not supported.\n Hosting may or may not work." ) ) % bo.port );
+					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "Your using wxWidgets prior to version 2.8,\n "
+											 "port testing is not supported.\n Hosting may or may not work." ), bo.port ));
 					sett().SetTestHostPort( false ); // no need to have it checked anymore
 					break;
 
 				case IServer::porttest_unreachable :
 					wxLogWarning( _T( "hosting port %d: test undetermined" ), bo.port  );
-					customMessageBoxNoModal( SL_MAIN_ICON, wxFormat( _( "The server used for testing your port %d "
-											 "is unreachable. \nHosting may or may not work with this setting." ) ) % bo.port );
+					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "The server used for testing your port %d "
+											 "is unreachable. \nHosting may or may not work with this setting." ), bo.port ));
 					break; //inconclusive test shouldn't hinder hosting imo (koshi)
 
 				case IServer::porttest_timeout :
 				case IServer::porttest_socketNotOk :
 				case IServer::porttest_socketError :
 					wxLogWarning( _T( "hosting port %d: test unsuccessful, closing battle" ), bo.port  );
-					customMessageBoxNoModal( SL_MAIN_ICON, wxFormat( _( "Battle not started because the port you selected (%d) "
-											 "is unable to-f /home/kosh/.springlobby/testing.conf recieve incoming packets\n checks your router & firewall configuration again or change port "
+					customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "Battle not started because the port you selected (%d) "
+											 "is unable to recieve incoming packets\n checks your router & firewall configuration again or change port "
 											 "in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n "
-											 "option in the hosting settings." ) ) % bo.port );
+											 "option in the hosting settings." ), bo.port ));
 					return;
 				default:
 					wxLogWarning( _T( "unknown port forward test result" ) );
@@ -490,10 +490,10 @@ void RunHostBattleDialog( wxWindow* parent )
 			if ( !ui().TestHostPort( bo.port ) )
 			{
 				wxLogWarning( _T( "hosting port %d: test unsuccessful, closing battle" ), bo.port  );
-				customMessageBoxNoModal( SL_MAIN_ICON, wxFormat( _( "Battle not started because the port you selected (%d) "
+				customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format( _( "Battle not started because the port you selected (%d) "
 										"is unable to recieve incoming packets\n checks your router & firewall configuration "
 										"again or change port in the dialog.\n\nIf everything else fails, enable the Hole "
-										"Punching NAT Traversal\n option in the hosting settings." ) ) % bo.port );
+										"Punching NAT Traversal\n option in the hosting settings." ), bo.port ));
 				return;
 			}
 		}
@@ -539,7 +539,7 @@ void RunHostBattleDialog( wxWindow* parent )
 		bo.engineName = "spring";
 		bo.engineVersion = LSL::usync().GetSpringVersion();
 
-		serverSelector().GetServer().HostBattle( bo, sett().GetLastHostPassword() );
+		serverSelector().GetServer().HostBattle( bo, STD_STRING(sett().GetLastHostPassword()));
 	}
 }
 } //end namespace SL

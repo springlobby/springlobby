@@ -64,7 +64,7 @@ void SpringieHandler::ClearStartBoxes()
 
 void SpringieHandler::AddStartBox(int posx,int posy,int w,int h)
 {
-    Send(STD_STRING(wxString::Format(wxT("!addbox %i %i %i %i"),posx,posy,w,h)));
+    Send(stdprintf("!addbox %i %i %i %i",posx,posy,w,h));
 }
 
 void SpringieHandler::Notify()

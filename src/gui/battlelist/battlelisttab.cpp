@@ -187,7 +187,7 @@ void BattleListTab::OnConnected()
 void BattleListTab::SetNumDisplayed()
 {
 	int num = m_battle_list->GetItemCount();
-	m_battle_num->SetLabel( wxFormat( _( "%d battles displayed" ) ) % num );
+	m_battle_num->SetLabel( wxString::Format( _( "%d battles displayed" ), num ));
 }
 
 void BattleListTab::SelectBattle( IBattle* battle )
@@ -199,8 +199,8 @@ void BattleListTab::SelectBattle( IBattle* battle )
 	{
 		m_map_text->SetLabel( TowxString(m_sel_battle->GetHostMapName()));
 		m_mod_text->SetLabel( TowxString(m_sel_battle->GetHostModName()) );
-		m_players_text->SetLabel( wxFormat( _T( "%d / %d" ) ) % (int( m_sel_battle->GetNumUsers() ) - int( m_sel_battle->GetSpectators() )) % int( m_sel_battle->GetMaxPlayers() ) );
-		m_spec_text->SetLabel( wxFormat( _T( "%d" ) ) % m_sel_battle->GetSpectators() );
+		m_players_text->SetLabel( wxString::Format( _T( "%d / %d" ), int( m_sel_battle->GetNumUsers() ) - int( m_sel_battle->GetSpectators() ), int( m_sel_battle->GetMaxPlayers() ) ));
+		m_spec_text->SetLabel( wxString::Format( _T( "%d" ), m_sel_battle->GetSpectators() ));
 		for ( unsigned int i = 0; i < m_sel_battle->GetNumUsers(); i++ )
 		{
 			User& usr = m_sel_battle->GetUser( i );
@@ -279,7 +279,7 @@ void BattleListTab::RemoveAllBattles()
 
 void BattleListTab::UpdateList() {
 
-	RemoveAllBattles(); //<- this is only solution I found to fix bug witch selects all battles in list 
+	RemoveAllBattles(); //<- this is only solution I found to fix bug witch selects all battles in list
 				// while user playing with filter options.
 				// may be need to separate battlelisttab`s logic from battlelistctrl?..
 
@@ -361,7 +361,7 @@ void BattleListTab::OnJoin( wxCommandEvent& /*unused*/ )
 {
 	try
 	{
-		ASSERT_LOGIC( m_battle_list != 0, _T( "m_battle_list = 0" ) );
+		ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0"  );
 	} catch ( ... ) {
 		return;
 	}
@@ -378,7 +378,7 @@ void BattleListTab::OnListJoin( wxListEvent& event )
 {
 	try
 	{
-		ASSERT_LOGIC( m_battle_list != 0, _T( "m_battle_list = 0" ) );
+		ASSERT_LOGIC( m_battle_list != 0, "m_battle_list = 0");
 	} catch ( ... ) {
 		return;
 	}

@@ -144,7 +144,7 @@ void SingleOptionDialog::OnOk( wxCommandEvent& /*unused*/ )
 	else if ( m_spinctrl )
 	{
 	    double d = m_spinctrl->GetValue() ;
-		value = wxFormat( _T("%f") ) % d;
+		value = wxString::Format(_T("%f"), d);
 		wxLogMessage( _T("Got VALUE: %s -- %f"), value.c_str(), d );
 	}
 	else if ( m_checkbox ) value = TowxString( m_checkbox->GetValue() );

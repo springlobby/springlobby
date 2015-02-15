@@ -111,7 +111,7 @@ wxString ChannelListctrl::GetInfo()
 {
     int displayed = GetItemCount();
     int total = m_data.size();
-	return wxFormat( _("Displaying %d out of %d channels") ) % displayed % total;
+	return wxString::Format( _("Displaying %d out of %d channels"), displayed, total);
 }
 
 void ChannelListctrl::FilterChannel( const wxString& partial )

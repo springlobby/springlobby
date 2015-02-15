@@ -92,7 +92,7 @@ bool Spring::Run( IBattle& battle )
 	if ( !wxFile::Exists(TowxString(executable)) ) {
 		executable = SlPaths::GetSpringBinary(SlPaths::GetCompatibleVersion(battle.GetEngineVersion())); //fallback, no exact version found, try fallback version
 		if ( !wxFile::Exists(TowxString(executable)) ) {
-			customMessageBoxNoModal( SL_MAIN_ICON, wxFormat(_T("The spring executable version '%s' was not found at the set location '%s', please re-check.")) % battle.GetEngineVersion() % executable, _T("Executable not found") );
+			customMessageBoxNoModal( SL_MAIN_ICON, wxString::Format(_T("The spring executable version '%s' was not found at the set location '%s', please re-check."), battle.GetEngineVersion().c_str(), executable.c_str()), _T("Executable not found") );
 			ui().mw().ShowConfigure( MainWindow::OPT_PAGE_SPRING );
 			return false;
 		}
@@ -446,10 +446,10 @@ wxString Spring::WriteScriptTxt( IBattle& battle ) const
 			if ( sr.IsOk() ) {
 				const char* old_locale = std::setlocale(LC_NUMERIC, "C");
 
-				tdf.Append("StartRectLeft", wxFormat( _T("%.3f") ) % ( sr.left / 200.0 ) );
-				tdf.Append("StartRectTop", wxFormat( _T("%.3f") ) % ( sr.top / 200.0 ) );
-				tdf.Append("StartRectRight", wxFormat( _T("%.3f") ) % ( sr.right / 200.0 ) );
-				tdf.Append("StartRectBottom", wxFormat( _T("%.3f") ) % ( sr.bottom / 200.0 ) );
+				tdf.Append("StartRectLeft", wxString::Format( _T("%.3f"), sr.left / 200.0 ) );
+				tdf.Append("StartRectTop", wxString::Format( _T("%.3f"),  sr.top / 200.0 ) );
+				tdf.Append("StartRectRight", wxString::Format( _T("%.3f"), sr.right / 200.0 ) );
+				tdf.Append("StartRectBottom", wxString::Format( _T("%.3f"), sr.bottom / 200.0 ) );
 
 				std::setlocale(LC_NUMERIC, old_locale);
 			}

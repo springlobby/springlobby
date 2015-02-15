@@ -279,7 +279,7 @@ void PlaybackTab::OnWatch( wxCommandEvent& /*unused*/ )
 			if ( rep.type == StoredGame::SAVEGAME )
                 versionfound = true; // quick hack to bypass spring version check
 			if ( !versionfound ) {
-				wxString message = wxFormat( _( "No compatible installed spring version has been found, this %s requires version: %s\n" ) ) % type% rep.battle.GetEngineVersion();
+				wxString message = wxString::Format( _( "No compatible installed spring version has been found, this %s requires version: %s\n"), type.c_str(), TowxString(rep.battle.GetEngineVersion()).c_str());
 				customMessageBox( SL_MAIN_ICON, message, _( "Spring error" ), wxICON_EXCLAMATION | wxOK );
 				wxLogWarning ( _T( "no spring version supported by this replay found" ) );
 				AskForceWatch( rep );

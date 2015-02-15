@@ -72,7 +72,7 @@ void* SearchThread::Entry()
 	wxHTTP get;
 	get.SetTimeout(10);
 	get.Connect(_("api.springfiles.com"));
-	const wxString query = wxFormat(_("/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"))  % searchescaped % searchescaped;
+	const wxString query = wxString::Format(_("/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"), searchescaped.c_str(), searchescaped.c_str());
 	wxInputStream * httpStream = get.GetInputStream(query);
 	wxString res;
 	if ( get.GetError() == wxPROTO_NOERR ) {
@@ -172,7 +172,7 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 	m_search_thread = NULL;
 	m_searchbutton->Enable(true);
 	if ( errors ) {
-		wxMessageBox(wxFormat("Failed to parse search results:\n%s") % json.c_str() ,_("Error"));
+		wxMessageBox(wxString::Format(_T("Failed to parse search results:\n%s"), json.c_str()) ,_("Error"));
 		return;
 	}
 	const wxJSONInternalArray * a = root.AsArray();

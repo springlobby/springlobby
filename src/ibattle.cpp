@@ -659,7 +659,7 @@ UserPosition IBattle::GetFreePosition()
 
 void IBattle::SetHostMap(const std::string& _mapname, const std::string& _hash)
 {
-	ASSERT_LOGIC(!_mapname.empty(), _T("Battle with empty map name!"));
+	ASSERT_LOGIC(!_mapname.empty(), "Battle with empty map name!");
 	const std::string mapname(_mapname);
 	const std::string hash(_hash);
 	if ( mapname != m_host_map.name || hash != m_host_map.hash ) {
@@ -672,7 +672,7 @@ void IBattle::SetHostMap(const std::string& _mapname, const std::string& _hash)
 
 void IBattle::SetLocalMap(const std::string& mapname)
 {
-	ASSERT_LOGIC(!mapname.empty(), _T("Battle with empty map name!"));
+	ASSERT_LOGIC(!mapname.empty(), "Battle with empty map name!");
 	LSL::UnitsyncMap map = LSL::usync().GetMap(mapname);
 	if ( map.name != m_local_map.name || map.hash != m_local_map.hash ) {
 		m_local_map = map;
@@ -884,7 +884,7 @@ bool IBattle::LoadOptionsPreset( const std::string& name )
 				RestrictUnit( STD_STRING(unitinfo.BeforeLast(_T('='))), s2l( unitinfo.AfterLast(_T('=')) ) );
 			}
 			SendHostInfo( HI_Restrictions );
-			Update( wxFormat( _T("%d_restrictions") ) % LSL::Enum::PrivateOptions );
+			Update(stdprintf("%d_restrictions", LSL::Enum::PrivateOptions));
 
 		}
 	}
