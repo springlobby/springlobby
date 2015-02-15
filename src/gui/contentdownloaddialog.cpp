@@ -28,84 +28,11 @@ BEGIN_EVENT_TABLE( ContentDownloadDialog, wxDialog )
 	EVT_LIST_ITEM_ACTIVATED ( LAUNCH_DOWNLOAD ,              ContentDownloadDialog::OnListDownload      )
 END_EVENT_TABLE()
 
-class SearchThread : public wxThread
-{
-public:
-	virtual void* Entry();
-	SearchThread(ContentDownloadDialog * content_dialog,wxString searchquery);
-	virtual ~SearchThread();
-
-private:
-
-	ContentDownloadDialog* m_content_dialog;
-	wxString m_search_query;
-
-};
-
-SearchThread::SearchThread(ContentDownloadDialog * content_dialog,wxString searchquery):
-	wxThread(wxTHREAD_DETACHED),
-	m_content_dialog(content_dialog),
-	m_search_query(searchquery)
-{
-}
-
-// convert a string to IRI: https://en.wikipedia.org/wiki/Internationalized_resource_identifier
-static wxString ConvToIRI(const wxString& str)
-{
-	std::string utf8(str.mb_str(wxMBConvUTF8()));
-	wxString escaped;
-	for (unsigned i=0; i<utf8.length(); i++) {
-		const unsigned char c = utf8[i];
-		if ( (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') ) {
-			escaped.append(wxChar(c));
-		} else { /* if (i+1<utf8.length())*/
-			escaped.append(wxString::Format(_T("%%%02x"),wxChar(c)));
-		}
-		//FIXME: this function is incomplete! tested only with german umlauts
-	}
-	return escaped;
-}
-
-void* SearchThread::Entry()
-{
-	const wxString searchescaped = ConvToIRI(m_search_query);
-
-
-//   std::cout << "Escaped search query: " << m_search_query.ToAscii().data() << std::endl;
-	wxHTTP get;
-	get.SetTimeout(10);
-	get.Connect(_("api.springfiles.com"));
-	const wxString query = wxString::Format(_("/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"), searchescaped.c_str(), searchescaped.c_str());
-	wxInputStream * httpStream = get.GetInputStream(query);
-	wxString res;
-	if ( get.GetError() == wxPROTO_NOERR ) {
-
-		wxStringOutputStream out_stream(&res);
-		httpStream->Read(out_stream);
-
-
-	}
-	wxDELETE(httpStream);
-	wxCommandEvent* notify = new wxCommandEvent(SEARCH_FINISHED,ContentDownloadDialog::ID_SEARCH_FINISHED);
-	notify->SetInt(0);
-	notify->SetString(res);
-	wxQueueEvent(m_content_dialog, notify);
-//   std::cout << "Search finished" << std::endl;
-	return NULL;
-}
-
-SearchThread::~SearchThread()
-{
-
-}
-
-
 ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long int style, const wxString& name):
 	wxDialog(parent, id, title, pos, size, style, name),
 	WindowAttributesPickle( _T("CONTENTDIALOG"), this, wxSize( 670, 400 )),
 	wildcardsearch(false)
 {
-	m_search_thread = NULL;
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 	{
 		m_search_res_w = new ContentSearchResultsListctrl(this,LAUNCH_DOWNLOAD);
@@ -150,21 +77,12 @@ bool ContentDownloadDialog::Show(bool show)
 
 ContentDownloadDialog::~ContentDownloadDialog()
 {
-	if ( m_search_thread ) {
-		m_search_thread->Wait();
-	}
 }
 
 
 void ContentDownloadDialog::Search(const wxString& str)
 {
-/*
-	m_searchbutton->Enable(false);
-	m_search_thread = new SearchThread(this,str);
-	m_search_thread->Create();
-	m_search_thread->Run();
-*/
-	//FIXME: make async. current implementation randomly crashes when run multiple times
+	//FIXME: use pr-downloader and make async!
 	const wxString query = wxString::Format(_("http://api.springfiles.com/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"), str.c_str(), str.c_str());
 	const wxString json = GetHttpFile(query);
 	wxCommandEvent e;
@@ -187,7 +105,6 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 	wxJSONReader reader;
 	wxJSONValue root;
 	int errors = reader.Parse(json,&root);
-	m_search_thread = NULL;
 	m_searchbutton->Enable(true);
 	if ( errors ) {
 		wxMessageBox(wxString::Format(_T("Failed to parse search results:\n%s"), json.c_str()) ,_("Error"));

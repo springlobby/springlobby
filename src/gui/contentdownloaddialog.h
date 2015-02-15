@@ -11,7 +11,6 @@ class wxStaticText;
 class wxButton;
 class wxTextCtrl;
 class ContentSearchResultsListctrl;
-class SearchThread;
 
 
 
@@ -38,7 +37,6 @@ private:
 	wxButton* m_download_button;
 	wxButton* m_close_button;
 
-	SearchThread* m_search_thread;
 	bool wildcardsearch;
 public:
 	enum {
