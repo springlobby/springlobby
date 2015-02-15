@@ -1,5 +1,8 @@
 ChangeLog of Springlobby
 
+## 0.211
+ - wxWidgets 2.9 is required to compile spring
+
 ## 0.210
  - fix autoupdater (Couldn't cleanup ...)
 
