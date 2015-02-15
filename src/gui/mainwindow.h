@@ -198,7 +198,7 @@ private:
 
 	const wxArrayString& GetTabNames();
 	
-	static const unsigned int mySHOW_ERROR_MESSAGE = 10000;
+	static const unsigned int mySHOW_ERROR_MESSAGE = wxID_HIGHEST + 1;
 
 private:
 
