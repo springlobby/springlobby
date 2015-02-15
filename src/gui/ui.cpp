@@ -463,7 +463,7 @@ bool Ui::DownloadArchives(const IBattle& battle)
         wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
 
 		if ( wxYES == customMessageBox( SL_MAIN_ICON,
-						wxString::Format(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded?"), engineName.c_str(), engineVersion.c_str(),
+						wxString::Format(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded?"), TowxString(engineName).c_str(), TowxString(engineVersion).c_str(),
 						_("Engine missing"),
 						wxYES_NO ) )) {
 			Download(PrDownloader::GetEngineCat(), engineVersion, "");
@@ -477,14 +477,14 @@ bool Ui::DownloadArchives(const IBattle& battle)
 
 	wxString prompt;
 	if (!battle.ModExists() ) {
-		prompt += wxString::Format(_("the game '%s'"), battle.GetHostModName().c_str());
+		prompt += wxString::Format(_("the game '%s'"), TowxString(battle.GetHostModName()).c_str());
 	}
 
 	if (!battle.MapExists() ) {
 		if (!prompt.empty()) {
 			prompt+= _(" and ");
 		}
-		prompt += wxString::Format(_("the map '%s'"), battle.GetHostMapName().c_str());
+		prompt += wxString::Format(_("the map '%s'"), TowxString(battle.GetHostMapName()).c_str());
 	}
 	if (prDownloader().IsRunning()) {
 		return true;

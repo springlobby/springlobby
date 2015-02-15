@@ -688,7 +688,7 @@ const LSL::UnitsyncMap& IBattle::LoadMap()
 {
 	if (( !m_map_loaded ) && (!m_host_map.name.empty())) {
 		try {
-			ASSERT_EXCEPTION( MapExists(), _T("Map does not exist: ") + TowxString(m_host_map.name) );
+			ASSERT_EXCEPTION( MapExists(false), _T("Map does not exist: ") + TowxString(m_host_map.name) );
 			m_local_map = LSL::usync().GetMap( m_host_map.name );
 			bool options_loaded = CustomBattleOptions().loadOptions( LSL::Enum::MapOption, m_host_map.name );
 			ASSERT_EXCEPTION( options_loaded, _T("couldn't load the map options") );

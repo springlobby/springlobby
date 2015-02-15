@@ -1,12 +1,7 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include <wx/log.h>
-<<<<<<< HEAD
-#include <wx/thread.h>
-#include <wx/intl.h>
-#include <wx/msgdlg.h>
-=======
->>>>>>> ffa7d08dc01554950818c83b21678904255e4d54
+//#include <wx/msgdlg.h>
 
 #include "log.h"
 #include "utils/conversion.h"
@@ -36,13 +31,27 @@ public:
 		}
 
 	}
-	
+
+	// don't remove this override, it is used & needed!
+	virtual void DoLogText(const wxString &msg)
+	{
+		DoLog(2, msg, 0);
+	}
+
+	// don't remove this override, it is used & needed!
+	virtual void DoLogString(const wxChar *msg, time_t timestamp)
+	{
+		DoLog(2, msg, timestamp);
+	}
+
 	// catch and process all log messages
 	virtual void DoLog(wxLogLevel loglevel, const wxChar* msg, time_t /*time*/)
 	{
+/*
 	  if(loglevel==wxLOG_Error || loglevel==wxLOG_FatalError) // show user only errors
 	    wxMessageBox( msg, _("Error"), wxOK );
-	  
+*/
+
 	  const std::string std_msg = LogLevelToString(loglevel) + (STD_STRING(wxString(msg)) + "\n");
 	  if (m_console) {
 		  std::cout << std_msg;
@@ -61,8 +70,8 @@ public:
 
 	std::string LogLevelToString(wxLogLevel level)
 	{
-	  assert(level<8); // just in case
-	  
+		assert(level<8); // just in case
+
 	  const char * levelName[] = {
 	    "Fatal Error: ",
 	    "Error: ",
@@ -73,10 +82,10 @@ public:
 	    "Debug: ",
 	    "Trace: "
 	  };
-	  
-	  return std::string(levelName[(int)level]);
+
+		return std::string(levelName[(int)level]);
 	}
-	
+
 	void Flush()
 	{
 		if (m_logfile != NULL) {
