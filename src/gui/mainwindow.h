@@ -92,7 +92,8 @@ class MainWindow : public wxFrame, public WindowAttributesPickle
 	void OnKillFocus(wxFocusEvent&);
     void OnMessage( wxCommandEvent& event );
     void AddMessageEvent( const wxString& message );
-
+    void OnShowErrorMessage( wxCommandEvent& event );
+    
     void OnTabsChanged( wxAuiNotebookEvent& event );
     MainChatTab& GetChatTab();
     BattleListTab& GetBattleListTab();
@@ -196,6 +197,8 @@ private:
         static const unsigned int OPT_PAGE_GROUPS   = 4;
 
 	const wxArrayString& GetTabNames();
+	
+	static const unsigned int mySHOW_ERROR_MESSAGE = wxID_HIGHEST + 1;
 
 private:
 

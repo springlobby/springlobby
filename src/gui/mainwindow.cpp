@@ -112,6 +112,7 @@ BEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_KILL_FOCUS(                       MainWindow::OnKillFocus             )
   EVT_AUINOTEBOOK_PAGE_CHANGED( MAIN_TABS, MainWindow::OnTabsChanged )
   EVT_CLOSE( MainWindow::OnClose )
+  EVT_COMMAND( mySHOW_ERROR_MESSAGE, wxEVT_SHOW, MainWindow::OnShowErrorMessage )
 END_EVENT_TABLE()
 
 MainWindow::MainWindow( )
@@ -589,6 +590,11 @@ void MainWindow::OnTabsChanged( wxAuiNotebookEvent& event )
 	if (panel!=NULL) {
 		panel->SetFocus();
 	}
+}
+
+void MainWindow::OnShowErrorMessage( wxCommandEvent& event )
+{
+    wxMessageBox( event.GetString(), _("Error"), wxOK, this );
 }
 
 void MainWindow::OnShowSettingsPP( wxCommandEvent&  )
