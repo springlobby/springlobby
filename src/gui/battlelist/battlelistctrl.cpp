@@ -133,8 +133,8 @@ int BattleListCtrl::GetItemColumnImage(long item, long column) const
 					break;
         }
 		case 2: return icons().GetRankLimitIcon( battle.GetRankNeeded(), false );
-        case 4: return battle.MapExists("") ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
-        case 5: return battle.ModExists("") ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+        case 4: return battle.MapExists(false) ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
+        case 5: return battle.ModExists(false) ? icons().ICON_EXISTS : icons().ICON_NEXISTS;
 		case 11:return SlPaths::GetCompatibleVersion(battle.GetEngineVersion()).empty() ? icons().ICON_NEXISTS: icons().ICON_EXISTS;
     }
     return -1; // simply to avoid compiler warning
@@ -202,8 +202,8 @@ void BattleListCtrl::OnListRightClick( wxListEvent& event )
     if ( idx < (long)m_data.size() && idx > -1 ) {
 
         DataType dt = m_data[idx];
-        const bool mod_missing = !dt->ModExists();
-        const bool map_missing = !dt->MapExists();
+        const bool mod_missing = !dt->ModExists(false);
+        const bool map_missing = !dt->MapExists(false);
 		const bool engine_missing = SlPaths::GetCompatibleVersion(dt->GetEngineVersion()).empty();
         m_popup = new wxMenu( wxEmptyString );
         // &m enables shortcout "alt + m" and underlines m
