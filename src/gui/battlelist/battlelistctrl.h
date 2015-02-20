@@ -53,8 +53,11 @@ private:
     static int ComparePlayer( DataType u1, DataType u2 );
 
 	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
+	
+public:	
     int GetIndexFromData( const DataType& data ) const;
 
+private:    
     wxMenu* m_popup;
 
     virtual void Sort();
