@@ -249,16 +249,19 @@ void BattleListTab::UpdateBattle( IBattle& battle )
 {
 	if ( !battle.GetGUIListActiv() ) {
 		AddBattle( battle );
-		return;
 	}
 	if ( m_filter->GetActiv() && !m_filter->FilterBattle( battle ) ) {
 		RemoveBattle( battle );
+		if( &battle == m_sel_battle ) {
+		  m_sel_battle = NULL;
+		  SelectBattle( NULL );
+		  m_battle_list->SetSelectedIndex( -1 );
+		}
 		return;
 	}
 	m_battle_list->UpdateBattle( battle );
 	if ( &battle == m_sel_battle )
 		SelectBattle( m_sel_battle );
-	m_battle_list->SetSelectedIndex(0);
 }
 
 
@@ -279,10 +282,8 @@ void BattleListTab::RemoveAllBattles()
 
 void BattleListTab::UpdateList() {
 
-	RemoveAllBattles(); //<- this is only solution I found to fix bug witch selects all battles in list
-				// while user playing with filter options.
-				// may be need to separate battlelisttab`s logic from battlelistctrl?..
-
+	m_battle_list->SetSelectedIndex( -1 );
+	
 	serverSelector().GetServer().battles_iter->IteratorBegin();
 	while ( ! serverSelector().GetServer().battles_iter->EOL() ) {
 		IBattle* b = serverSelector().GetServer().battles_iter->GetBattle();
@@ -291,6 +292,9 @@ void BattleListTab::UpdateList() {
 	}
 	m_battle_list->SortList(true);
 	m_battle_list->RefreshVisibleItems();
+	
+	if(m_sel_battle!=NULL)
+	  m_battle_list->SetSelectedIndex( m_battle_list->GetIndexFromData( m_sel_battle ) );
 }
 
 
