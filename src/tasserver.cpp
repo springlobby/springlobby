@@ -266,6 +266,7 @@ void TASServer::Disconnect()
 		return;
 	}
 	m_connected = false;
+	m_battle_id = -1;
 	SendCmd("EXIT " + STD_STRING(cfg().ReadString(_T("/Server/ExitMessage"))) ); // EXIT command for new protocol compatibility
 	m_sock->Disconnect();
 }
@@ -552,10 +553,16 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
 		m_se->OnUserQuit( nick );
 	} else if ( cmd == "BATTLECLOSED") {
 		const int id = GetIntParam( params );
-		if ( m_battle_id == id ) m_relay_host_bot.clear();
+		if ( m_battle_id == id ) {
+			m_relay_host_bot.clear();
+			m_battle_id = -1;
+		}
 		m_se->OnBattleClosed( id );
 	} else if ( cmd == "LEFTBATTLE" ) {
 		const int id = GetIntParam( params );
+		if (id == m_battle_id) {
+			m_battle_id = -1;
+		}
 		nick = GetWordParam( params );
 		m_se->OnUserLeftBattle( id, nick );
 	} else if ( cmd == "PONG" ) {
