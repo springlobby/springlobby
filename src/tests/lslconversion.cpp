@@ -43,7 +43,7 @@ void test_lslToLobbyColour(const unsigned char red, const unsigned char green, c
 	BOOST_CHECK(col2.Red() == red);
 	BOOST_CHECK(col2.Green() == green);
 	BOOST_CHECK(col2.Blue() == blue);
-	BOOST_CHECK(col2.Alpha() == 0);
+	BOOST_CHECK(col2.Alpha() == 255);
 }
 
 BOOST_AUTO_TEST_CASE( lslconversion )
