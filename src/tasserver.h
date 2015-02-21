@@ -55,15 +55,6 @@ public:
 
 	void Ping();
 
-	void UDPPing();/// used for nat travelsal
-	/// generic udp "ping" function
-	/// return value: actual source port which was used. May differ from src_port
-	/// 0 if udp ping failed
-	unsigned int UdpPing(unsigned int src_port, const std::string &target, unsigned int target_port, const std::string &message);
-	/// specialized udp ping functions
-	void UdpPingTheServer( const std::string &message );/// used for nat travelsal. pings the server.
-	void UdpPingAllClients();/// used when hosting with nat holepunching
-
 	const User& GetMe() const;
 	User& GetMe();
 
@@ -160,6 +151,22 @@ public:
 	}
 
 private:
+	void UDPPing();/// used for nat travelsal
+	/// generic udp "ping" function
+	/// return value: actual source port which was used. May differ from src_port
+	/// 0 if udp ping failed
+	unsigned int UdpPing(unsigned int src_port, const std::string &target, unsigned int target_port, const std::string &message);
+	/// specialized udp ping functions
+	void UdpPingTheServer( const std::string &message );/// used for nat travelsal. pings the server.
+	void UdpPingAllClients();/// used when hosting with nat holepunching
+	void FinalizeJoinBattle();
+
+	void SendCmd( const std::string& command, const std::string& param = "", bool relay=false);
+
+
+
+	void RelayCmd( const std::string& command, const std::string& param = "" );
+	void Notify();
 
 	//! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
 	struct TASPingListItem {
@@ -205,17 +212,7 @@ private:
 	std::string m_finalize_join_battle_pw;
 	bool m_token_transmission;
 
-	void FinalizeJoinBattle();
-
-	void SendCmd( const std::string& command, const std::string& param = "", bool relay=false);
-
-
 	std::string m_current_chan_name_mutelist;
-
-private:
-	void RelayCmd( const std::string& command, const std::string& param = "" );
-	void Notify();
-
     std::string m_relay_host_bot;
     std::string m_relay_host_manager;
 
