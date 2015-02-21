@@ -135,7 +135,7 @@ public:
 	bool IsPasswordHash( const std::string& pass )  const;
 	std::string GetPasswordHash( const std::string& pass ) const;
 
-//	int TestOpenPort( unsigned int port ) const;
+	int TestOpenPort( unsigned int port ) const;
 
 /*
 	void SendScriptToProxy( const std::string& script );

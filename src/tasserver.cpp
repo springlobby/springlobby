@@ -1808,7 +1808,7 @@ void TASServer::UdpPingAllClients()// used when hosting with nat holepunching. h
 	}
 }
 
-/*
+
 //! @brief used to check if the NAT is done properly when hosting
 int TASServer::TestOpenPort( unsigned int port ) const
 {
@@ -1836,8 +1836,6 @@ int TASServer::TestOpenPort( unsigned int port ) const
 	}
 	return porttest_pass;
 }
-
-*/
 
 LSL::StringVector TASServer::GetRelayHostList()
 {
