@@ -8,7 +8,6 @@
 #include <wx/log.h>
 
 #include "iserver.h"
-#include "socket.h"
 #include "battle.h"
 #include "channel.h"
 #include "user.h"
@@ -20,15 +19,12 @@ IServer::IServer():
 battles_iter(new BattleList_Iter(&m_battles)),
 m_pass_hash(false)
 {
-	m_sock = new Socket( *this);
 }
 
 IServer::~IServer()
 {
 	delete battles_iter;
 	if(uidata.panel)uidata.panel->SetServer(NULL);
-	delete m_sock;
-	m_sock = NULL;
 }
 
 

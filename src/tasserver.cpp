@@ -112,6 +112,7 @@ TASServer::TASServer():
 	m_do_finalize_join_battle(false),
 	m_finalize_join_battle_id(-1)
 {
+	m_sock = new Socket( *this);
 	m_se = new ServerEvents(*this);
 	m_relay_host_manager_list.clear();
 
@@ -124,6 +125,8 @@ TASServer::~TASServer()
 	Disconnect();
 	delete m_se;
 	m_se = NULL;
+	delete m_sock;
+	m_sock = NULL;
 }
 
 bool TASServer::ExecuteSayCommand( const std::string& cmd )

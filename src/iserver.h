@@ -186,7 +186,6 @@ class IServer : public iNetClass, public SL::NonCopyable
 	virtual LSL::StringVector GetRelayHostList() { return LSL::StringVector(); }
 
 protected:
-	Socket* m_sock;
     std::string m_server_name;
     UserList m_users;
 

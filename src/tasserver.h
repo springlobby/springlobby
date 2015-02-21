@@ -177,6 +177,8 @@ private:
 	CRC m_crc;
 
 	IServerEvents* m_se;
+	Socket* m_sock;
+
 	double m_ser_ver;
 	LSL::StringVector m_relay_host_manager_list;
 
