@@ -560,10 +560,10 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
 		m_se->OnBattleClosed( id );
 	} else if ( cmd == "LEFTBATTLE" ) {
 		const int id = GetIntParam( params );
-		if (id == m_battle_id) {
+		nick = GetWordParam( params );
+		if ((id == m_battle_id) && (nick == GetMe().GetNick())) {
 			m_battle_id = -1;
 		}
-		nick = GetWordParam( params );
 		m_se->OnUserLeftBattle( id, nick );
 	} else if ( cmd == "PONG" ) {
 		HandlePong( replyid );
