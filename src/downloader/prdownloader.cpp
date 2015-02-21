@@ -155,9 +155,9 @@ PrDownloader::PrDownloader():
 	UpdateSettings();
 	m_game_loaders.push_back(rapidDownload);
 	m_game_loaders.push_back(httpDownload);
-	m_game_loaders.push_back(plasmaDownload);
+//	m_game_loaders.push_back(plasmaDownload);
 	m_map_loaders.push_back(httpDownload);
-	m_map_loaders.push_back(plasmaDownload);
+//	m_map_loaders.push_back(plasmaDownload);
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringStarted, wxObjectEventFunction(&PrDownloader::OnSpringStarted));
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&PrDownloader::OnSpringTerminated));
 }
