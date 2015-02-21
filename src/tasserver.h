@@ -178,6 +178,7 @@ private:
 
 	IServerEvents* m_se;
 	double m_ser_ver;
+	LSL::StringVector m_relay_host_manager_list;
 
 	std::string m_last_denied;
 	bool m_connected;

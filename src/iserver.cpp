@@ -180,21 +180,3 @@ void IServer::OnDisconnected()
   }
 
 }
-
-LSL::StringVector IServer::GetRelayHostList()
-{
-	if ( UserExists("RelayHostManagerList")) SayPrivate("RelayHostManagerList", "!listmanagers");
-	LSL::StringVector ret;
-	for ( unsigned int i = 0; i < m_relay_host_manager_list.size(); i++ )
-	{
-		try
-		{
-			User& manager = GetUser( m_relay_host_manager_list[i] );
-			if ( manager.Status().in_game ) continue; // skip the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
-			if ( manager.Status().away ) continue;
-			ret.push_back( m_relay_host_manager_list[i] );
-		}
-		catch(...){}
-	}
-	return ret;
-}

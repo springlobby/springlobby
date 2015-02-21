@@ -183,13 +183,12 @@ class IServer : public iNetClass, public SL::NonCopyable
 
 	virtual void SetRelayIngamePassword( const User& /*user*/ ) {};
 
-	virtual LSL::StringVector GetRelayHostList();
+	virtual LSL::StringVector GetRelayHostList() { return LSL::StringVector(); }
 
 protected:
 	Socket* m_sock;
     std::string m_server_name;
     UserList m_users;
-    LSL::StringVector m_relay_host_manager_list;
 
 private:
     std::string m_user;
