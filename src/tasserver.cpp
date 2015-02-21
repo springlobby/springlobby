@@ -56,24 +56,6 @@ SLCONFIG("/General/CpuID", 0L, "CPUId to be used when logging int to lobbyserver
 #define UDP_REPLY_TIMEOUT 10000
 
 
-struct TASColor {
-unsigned int red :
-	8;
-unsigned int green :
-	8;
-unsigned int blue :
-	8;
-unsigned int zero:
-	8;
-};
-
-
-union UTASColor {
-	int data;
-	TASColor color;
-	UTASColor(): data(0) {}
-};
-
 #define CHECK_BATTLE_ID() \
 	try { \
 		ASSERT_LOGIC( m_battle_id != -1, "Invalid battle id"); \
@@ -675,9 +657,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
 		nick = GetWordParam( params );
 		tasbstatus = GetIntParam( params );
 		bstatus = ConvTasbattlestatus( tasbstatus );
-		UTASColor color;
-		color.data = GetIntParam( params );
-		bstatus.colour = LSL::lslColor(color.color.red, color.color.green, color.color.blue);
+		bstatus.colour = LSL::lslColor(GetIntParam( params ));
 		m_se->OnClientBattleStatus( m_battle_id, nick, bstatus );
 	} else if ( cmd == "ADDSTARTRECT" ) {
 		//ADDSTARTRECT allyno left top right bottom
@@ -735,9 +715,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
 		owner = GetWordParam( params );
 		tasbstatus = GetIntParam( params );
 		bstatus = ConvTasbattlestatus( tasbstatus );
-		UTASColor color;
-		color.data = GetIntParam( params );
-		bstatus.colour = LSL::lslColor( color.color.red, color.color.green, color.color.blue );
+		bstatus.colour = LSL::lslColor(GetIntParam( params ));
 		wxString ai = TowxString(GetSentenceParam( params ));
 		if ( ai.empty() ) {
 			wxLogWarning( wxString::Format( _T("Recieved illegal ADDBOT (empty dll field) from %s for battle %d"), nick.c_str(), id ) );
@@ -755,9 +733,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
 		nick = GetWordParam( params );
 		tasbstatus = GetIntParam( params );
 		bstatus = ConvTasbattlestatus( tasbstatus );
-		UTASColor color;
-		color.data = GetIntParam( params );
-		bstatus.colour = LSL::lslColor( color.color.red, color.color.green, color.color.blue );
+		bstatus.colour = LSL::lslColor(GetIntParam( params ));
 		m_se->OnBattleUpdateBot( id, nick, bstatus );
 		//UPDATEBOT BATTLE_ID name battlestatus teamcolor
 	} else if ( cmd == "REMOVEBOT" ) {
@@ -1432,15 +1408,9 @@ IBattle* TASServer::GetCurrentBattle()
 void TASServer::SendMyBattleStatus( UserBattleStatus& bs )
 {
 	slLogDebugFunc("");
-
 	const int tasbs = ConvTasbattlestatus( bs );
-	UTASColor tascl;
-	tascl.color.red = bs.colour.Red();
-	tascl.color.green = bs.colour.Green();
-	tascl.color.blue = bs.colour.Blue();
-	tascl.color.zero = 0;
 	//MYBATTLESTATUS battlestatus myteamcolor
-	SendCmd("MYBATTLESTATUS", stdprintf("%d %d", tasbs, tascl.data ) );
+	SendCmd("MYBATTLESTATUS", stdprintf("%d %d", tasbs, bs.colour.GetLobbyColor() ) );
 }
 
 
@@ -1561,13 +1531,8 @@ void TASServer::ForceColour( int battleid, User& user, const LSL::lslColor& col 
 		return;
 	}
 
-	UTASColor tascl;
-	tascl.color.red = col.Red();
-	tascl.color.green = col.Green();
-	tascl.color.blue = col.Blue();
-	tascl.color.zero = 0;
 	//FORCETEAMCOLOR username color
-	SendCmd("FORCETEAMCOLOR", user.GetNick() + std::string(" ") + stdprintf("%d", tascl.data ), GetBattle(battleid).IsProxy()  );
+	SendCmd("FORCETEAMCOLOR", user.GetNick() + std::string(" ") + stdprintf("%d", col.GetLobbyColor() ), GetBattle(battleid).IsProxy()  );
 }
 
 
@@ -1649,17 +1614,12 @@ void TASServer::AddBot( int battleid, const std::string& nick, UserBattleStatus&
 	CHECK_CURRENT_BATTLE_ID(battleid)
 
 	const int tasbs = ConvTasbattlestatus( status );
-	UTASColor tascl;
-	tascl.color.red = status.colour.Red();
-	tascl.color.green = status.colour.Green();
-	tascl.color.blue = status.colour.Blue();
-	tascl.color.zero = 0;
 	//ADDBOT name battlestatus teamcolor {AIDLL}
 	wxString msg;
 	wxString ailib;
 	ailib += TowxString(status.aishortname);
 	ailib += _T("|") +TowxString(status.aiversion);
-	SendCmd("ADDBOT", nick + stdprintf(" %d %d ", tasbs, tascl.data ) + STD_STRING(ailib));
+	SendCmd("ADDBOT", nick + stdprintf(" %d %d ", tasbs, status.colour.GetLobbyColor() ) + STD_STRING(ailib));
 }
 
 
@@ -1683,15 +1643,9 @@ void TASServer::RemoveBot( int battleid, User& bot )
 void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 {
 	CHECK_CURRENT_BATTLE_ID(battleid)
-
 	const int tasbs = ConvTasbattlestatus( status );
-	UTASColor tascl;
-	tascl.color.red = status.colour.Red();
-	tascl.color.green = status.colour.Green();
-	tascl.color.blue = status.colour.Blue();
-	tascl.color.zero = 0;
 	//UPDATEBOT name battlestatus teamcolor
-	SendCmd("UPDATEBOT", bot.GetNick() + stdprintf(" %d %d", tasbs, tascl.data ), GetBattle(battleid).IsProxy()  );
+	SendCmd("UPDATEBOT", bot.GetNick() + stdprintf(" %d %d", tasbs, status.colour.GetLobbyColor() ), GetBattle(battleid).IsProxy()  );
 }
 
 void TASServer::OnConnected(Socket& /*unused*/ )
