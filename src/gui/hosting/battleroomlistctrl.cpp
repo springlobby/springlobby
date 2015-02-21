@@ -236,7 +236,7 @@ void BattleroomListCtrl::RemoveUser( User& user )
     if ( RemoveItem( &user ) )
         return;
 
-    wxLogError( _T("Didn't find the user to remove in battleroomlistctrl.") );
+    wxLogWarning( _T("Didn't find the user to remove in battleroomlistctrl.") );
 }
 
 void BattleroomListCtrl::UpdateUser( User& user )
