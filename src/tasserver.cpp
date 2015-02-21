@@ -83,8 +83,10 @@ union UTASColor {
 	}
 
 #define CHECK_CURRENT_BATTLE_ID(battle_id) \
-	CHECK_BATTLE_ID() \
+	slLogDebugFunc(""); \
+	CHECK_BATTLE_ID(); \
 	try { \
+		CHECK_BATTLE_ID(); \
 		ASSERT_LOGIC( battleid == m_battle_id, "Not current battle"); \
 	} catch (...) { \
 		return; \
@@ -1352,12 +1354,7 @@ void TASServer::SendHostInfo( const std::string& Tag )
 {
 	slLogDebugFunc("");
 
-	try {
-		ASSERT_LOGIC( m_battle_id != -1, "invalid m_battle_id value");
-		ASSERT_LOGIC( BattleExists(m_battle_id), "battle doesn't exists");
-	} catch (...) {
-		return;
-	}
+	CHECK_BATTLE_ID();
 
 	IBattle& battle = GetBattle( m_battle_id );
 
@@ -1459,12 +1456,8 @@ void TASServer::SendMyUserStatus(const UserStatus& us)
 void TASServer::StartHostedBattle()
 {
 	slLogDebugFunc("");
-	try {
-		ASSERT_LOGIC( m_battle_id != -1, "Invalid m_battle_id");
-		ASSERT_LOGIC( BattleExists(m_battle_id), "battle doesn't exists");
-	} catch (...) {
-		return;
-	}
+	CHECK_BATTLE_ID();
+
 	IBattle *battle=GetCurrentBattle();
 	if (battle) {
 		if ( ( battle->GetNatType() == NAT_Hole_punching ) || ( battle->GetNatType() == NAT_Fixed_source_ports ) ) {
@@ -1479,14 +1472,7 @@ void TASServer::StartHostedBattle()
 
 void TASServer::ForceSide( int battleid, User& user, int side )
 {
-	slLogDebugFunc("");
-	try {
-		ASSERT_LOGIC( m_battle_id != -1, "Invalid m_battle_id");
-		ASSERT_LOGIC( BattleExists(m_battle_id), "battle doesn't exists");
-		ASSERT_LOGIC( battleid == m_battle_id, "Not current battle");
-	} catch (...) {
-		return;
-	}
+	CHECK_CURRENT_BATTLE_ID(battleid);
 
 	UserBattleStatus status = user.BattleStatus();
 
@@ -1505,14 +1491,8 @@ void TASServer::ForceSide( int battleid, User& user, int side )
 
 void TASServer::ForceTeam( int battleid, User& user, int team )
 {
-	slLogDebugFunc("");
-	try {
-		ASSERT_LOGIC( m_battle_id != -1, "Invalid m_battle_id");
-		ASSERT_LOGIC( BattleExists(m_battle_id), "battle doesn't exists");
-		ASSERT_LOGIC( battleid == m_battle_id, "Not current battle");
-	} catch (...) {
-		return;
-	}
+	CHECK_CURRENT_BATTLE_ID(battleid);
+
 	UserBattleStatus status = user.BattleStatus();
 	if ( status.IsBot() ) {
 		status.team = team;
@@ -1536,14 +1516,8 @@ void TASServer::ForceTeam( int battleid, User& user, int team )
 
 void TASServer::ForceAlly( int battleid, User& user, int ally )
 {
-	slLogDebugFunc("");
-	try {
-		ASSERT_LOGIC( m_battle_id != -1, "Invalid m_battle_id");
-		ASSERT_LOGIC( BattleExists(m_battle_id), "battle doesn't exists");
-		ASSERT_LOGIC( battleid == m_battle_id, "Not current battle");
-	} catch (...) {
-		return;
-	}
+	CHECK_CURRENT_BATTLE_ID(battleid);
+
 	UserBattleStatus status = user.BattleStatus();
 	if ( status.IsBot() ) {
 		status.ally = ally;
@@ -1569,14 +1543,8 @@ void TASServer::ForceAlly( int battleid, User& user, int ally )
 
 void TASServer::ForceColour( int battleid, User& user, const LSL::lslColor& col )
 {
-	slLogDebugFunc("");
-	try {
-		ASSERT_LOGIC( m_battle_id != -1, "Invalid m_battle_id");
-		ASSERT_LOGIC( BattleExists(m_battle_id), "battle doesn't exists");
-		ASSERT_LOGIC( battleid == m_battle_id, "Not current battle");
-	} catch (...) {
-		return;
-	}
+	CHECK_CURRENT_BATTLE_ID(battleid);
+
 	UserBattleStatus status = user.BattleStatus();
 	if ( status.IsBot() ) {
 		status.colour = col;
@@ -1605,14 +1573,8 @@ void TASServer::ForceColour( int battleid, User& user, const LSL::lslColor& col 
 
 void TASServer::ForceSpectator( int battleid, User& user, bool spectator )
 {
-	slLogDebugFunc("");
-	try {
-		ASSERT_LOGIC( m_battle_id != -1, "Invalid m_battle_id");
-		ASSERT_LOGIC( BattleExists(m_battle_id), "battle doesn't exists");
-		ASSERT_LOGIC( battleid == m_battle_id, "Not current battle");
-	} catch (...) {
-		return;
-	}
+	CHECK_CURRENT_BATTLE_ID(battleid);
+
 	UserBattleStatus status = user.BattleStatus();
 	if ( status.IsBot() ) {
 		status.spectator = spectator;
@@ -1637,7 +1599,6 @@ void TASServer::ForceSpectator( int battleid, User& user, bool spectator )
 
 void TASServer::BattleKickPlayer( int battleid, User& user )
 {
-	slLogDebugFunc("");
 	CHECK_CURRENT_BATTLE_ID(battlid)
 
 	UserBattleStatus status = user.BattleStatus();
@@ -1664,7 +1625,6 @@ void TASServer::BattleKickPlayer( int battleid, User& user )
 
 void TASServer::SetHandicap( int battleid, User& user, int handicap)
 {
-	slLogDebugFunc("");
 	CHECK_CURRENT_BATTLE_ID(battleid)
 
 	UserBattleStatus status = user.BattleStatus();
@@ -1686,7 +1646,6 @@ void TASServer::SetHandicap( int battleid, User& user, int handicap)
 
 void TASServer::AddBot( int battleid, const std::string& nick, UserBattleStatus& status )
 {
-	slLogDebugFunc("");
 	CHECK_CURRENT_BATTLE_ID(battleid)
 
 	const int tasbs = ConvTasbattlestatus( status );
@@ -1706,7 +1665,6 @@ void TASServer::AddBot( int battleid, const std::string& nick, UserBattleStatus&
 
 void TASServer::RemoveBot( int battleid, User& bot )
 {
-	slLogDebugFunc("");
 	CHECK_CURRENT_BATTLE_ID(battleid)
 
 	IBattle& battle = GetBattle( battleid );
@@ -1724,7 +1682,6 @@ void TASServer::RemoveBot( int battleid, User& bot )
 
 void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 {
-	slLogDebugFunc("");
 	CHECK_CURRENT_BATTLE_ID(battleid)
 
 	const int tasbs = ConvTasbattlestatus( status );
