@@ -245,7 +245,7 @@ void MapGridCtrl::AddMap( const wxString& mapname )
 	}
 
 	if (IsInGrid(_mapname)) {
-		wxLogError(_("Map %s already in grid!"), mapname.wc_str());
+		wxLogWarning(_("Map %s already in grid!"), mapname.wc_str());
 		return;
 	}
 
