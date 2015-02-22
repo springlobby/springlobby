@@ -144,35 +144,29 @@ void IServer::_RemoveBattle( const int& id )
 }
 
 
-void IServer::OnDisconnected()
+void IServer::Reset()
 {
-  while ( m_users.GetNumUsers() > 0 )
-  {
-    try
-    {
+	m_users.Nullify();
+
+	while ( m_users.GetNumUsers() > 0 ) {
+		try {
 			User* u = &m_users.GetUser( 0 );
 			m_users.RemoveUser( u->GetNick() );
 			delete u;
-    }
-    catch(std::runtime_error)
-    {
-    }
-  }
-  while ( battles_iter->GetNumBattles() > 0 )
-  {
-    battles_iter->IteratorBegin();
-    IBattle* b = battles_iter->GetBattle();
-    if (b!=0)
-    {
-        m_battles.RemoveBattle( b->GetBattleId() );
-        delete b;
-    }
-  }
-  while ( m_channels.GetNumChannels() > 0 )
-  {
-    Channel* c = &m_channels.GetChannel( 0 );
-    m_channels.RemoveChannel( c->GetName() );
-    delete c;
-  }
+		} catch(std::runtime_error) { }
+	}
 
+	while ( battles_iter->GetNumBattles() > 0 ) {
+		battles_iter->IteratorBegin();
+		IBattle* b = battles_iter->GetBattle();
+		if (b!=0) {
+			m_battles.RemoveBattle(b->GetBattleId());
+			delete b;
+		}
+	}
+	while ( m_channels.GetNumChannels() > 0 ) {
+		Channel* c = &m_channels.GetChannel( 0 );
+		m_channels.RemoveChannel( c->GetName() );
+		delete c;
+	}
 }

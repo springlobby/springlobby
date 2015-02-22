@@ -8,7 +8,6 @@
 #include "channellist.h"
 #include "userlist.h"
 #include "battlelist.h"
-#include "inetclass.h"
 #include "utils/mixins.h"
 #include "ibattle.h"
 
@@ -31,7 +30,7 @@ typedef int HostInfo;
 
 
 //! @brief Abstract baseclass that is used to implement a server protocol.
-class IServer : public iNetClass, public SL::NonCopyable
+class IServer : public SL::NonCopyable
 {
   public:
 	friend class ServerEvents;
@@ -145,12 +144,6 @@ class IServer : public iNetClass, public SL::NonCopyable
 
     void SetRequiredSpring( const std::string& version ) { m_required_spring_ver = version; }
 
-    virtual void OnConnected( Socket& /*sock*/ ) {};
-    virtual void OnDisconnected( Socket& /*sock*/ ) {};
-    virtual void OnDataReceived( Socket& /*sock*/ ) {};
-
-    virtual void OnDisconnected();
-
     BattleList_Iter* const battles_iter;
 
     virtual const User& GetMe() const {return GetUser(m_user);};
@@ -185,9 +178,10 @@ class IServer : public iNetClass, public SL::NonCopyable
 
 	virtual LSL::StringVector GetRelayHostList() { return LSL::StringVector(); }
 
+	void Reset();
+
 protected:
     std::string m_server_name;
-    UserList m_users;
 
 private:
     std::string m_user;
@@ -195,7 +189,7 @@ private:
 
     bool m_pass_hash;
     std::string m_required_spring_ver;
-
+    UserList m_users;
     ChannelList m_channels;
     BattleList m_battles;
 

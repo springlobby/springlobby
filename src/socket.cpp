@@ -29,7 +29,7 @@ lsl/networking/socket.cpp
 #include <algorithm>
 
 #include "socket.h"
-#include "iserver.h"
+#include "inetclass.h"
 #include "utils/conversion.h"
 
 #ifdef __WXMSW__

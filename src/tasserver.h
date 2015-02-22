@@ -21,6 +21,7 @@ lsl/networking/tasserver.h
 #include <list>
 
 #include "iserver.h"
+#include "inetclass.h"
 #include "utils/crc.h"
 
 const unsigned int FIRST_UDP_SOURCEPORT = 8300;
@@ -33,7 +34,7 @@ class IServerEvents;
 class PingThread;
 
 //! @brief TASServer protocol implementation.
-class TASServer : public IServer, public wxTimer
+class TASServer : public IServer, public iNetClass, public wxTimer
 {
 public:
 	TASServer();
@@ -127,9 +128,6 @@ public:
 
 	void HandlePong( int replyid );
 
-	void OnConnected(Socket& sock );
-	void OnDisconnected(Socket& sock );
-	void OnDataReceived(Socket& sock );
 	void OnError(const std::string& err);
 
 	bool IsPasswordHash( const std::string& pass )  const;
@@ -151,6 +149,11 @@ public:
 	}
 
 private:
+	void OnConnected(Socket& sock );
+	void OnDisconnected(Socket& sock );
+	void OnDataReceived(Socket& sock );
+	void OnDisconnected();
+
 	void UDPPing();/// used for nat travelsal
 	/// generic udp "ping" function
 	/// return value: actual source port which was used. May differ from src_port

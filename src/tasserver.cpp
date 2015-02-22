@@ -1683,10 +1683,9 @@ void TASServer::OnDisconnected(Socket& /*unused*/ )
 	m_relay_host_manager_list.clear();
 	m_last_id = 0;
 	m_pinglist.clear();
-	m_users.Nullify();
 	if (m_se != NULL) {
-		m_se->OnDisconnected( connectionwaspresent );
-		IServer::OnDisconnected();
+		m_se->OnDisconnected(connectionwaspresent);
+		IServer::Reset();
 	}
 }
 
