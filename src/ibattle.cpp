@@ -61,6 +61,7 @@ IBattle::~IBattle()
 	} catch (const LSL::Util::GlobalDestroyedError& err) {
 		/* If this is called during TAServer::~TAServer, then unitsync might be unavailable. */
 	}
+	SetGUIListActiv(false);
 }
 
 bool IBattle::IsSynced()

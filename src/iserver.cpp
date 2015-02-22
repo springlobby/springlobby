@@ -23,8 +23,9 @@ m_pass_hash(false)
 
 IServer::~IServer()
 {
-	Reset();
 	if(uidata.panel)uidata.panel->SetServer(NULL);
+	Reset();
+	delete battles_iter;
 }
 
 
@@ -147,7 +148,6 @@ void IServer::_RemoveBattle( const int& id )
 void IServer::Reset()
 {
 	m_users.Nullify();
-	delete battles_iter;
 	while ( m_users.GetNumUsers() > 0 ) {
 		try {
 			User* u = &m_users.GetUser( 0 );

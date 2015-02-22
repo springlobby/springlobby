@@ -268,13 +268,6 @@ void BattleListTab::UpdateBattle( IBattle& battle )
 void BattleListTab::RemoveAllBattles()
 {
 	SelectBattle( 0 );
-	serverSelector().GetServer().battles_iter->IteratorBegin();
-	while ( ! serverSelector().GetServer().battles_iter->EOL() )
-	{
-		IBattle* temp_battle = serverSelector().GetServer().battles_iter->GetBattle();
-		if ( temp_battle != 0 )
-			temp_battle->SetGUIListActiv( false );
-	}
 	m_battle_list->Clear();
 	SetNumDisplayed();
 }

@@ -41,6 +41,11 @@ BattleList::battle_map_t::size_type BattleList_Iter::GetNumBattles() const
   return (m_battlelist)?(m_battlelist->m_battles.size()):0;
 }
 
+BattleList_Iter::~BattleList_Iter()
+{
+	m_battlelist = NULL;
+}
+
 
 void BattleList_Iter::IteratorBegin()
 {

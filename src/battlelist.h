@@ -50,7 +50,7 @@ class BattleList_Iter : public SL::NonCopyable
 {
   public:
 	BattleList_Iter(BattleList* battlelist) : m_battlelist( battlelist ) {}
-	~BattleList_Iter() {}
+	~BattleList_Iter();
     void IteratorBegin();
     IBattle* GetBattle();
 	bool EOL() const;

@@ -1684,8 +1684,8 @@ void TASServer::OnDisconnected(Socket& /*unused*/ )
 	m_last_id = 0;
 	m_pinglist.clear();
 	if (m_se != NULL) {
-		m_se->OnDisconnected(connectionwaspresent);
 		IServer::Reset();
+		m_se->OnDisconnected(connectionwaspresent);
 	}
 }
 
