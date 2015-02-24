@@ -42,9 +42,6 @@ lsl/networking/socket.cpp
 #include <net/if.h>
 #endif
 
-#define LOCK_SOCKET wxCriticalSectionLocker criticalsection_lock(m_lock)
-
-
 #ifdef __WXMSW__
 
 bool GetMac(std::vector<unsigned char>& mac)
@@ -134,37 +131,32 @@ std::string _GetHandle()
 	return res;
 }
 
-BEGIN_EVENT_TABLE(SocketEvents, wxEvtHandler)
-
-EVT_SOCKET(SOCKET_ID, SocketEvents::OnSocketEvent)
-
+BEGIN_EVENT_TABLE(Socket, wxEvtHandler)
+EVT_SOCKET(SOCKET_ID, Socket::OnSocketEvent)
 END_EVENT_TABLE()
 
 
-void SocketEvents::OnSocketEvent(wxSocketEvent& event)
+void Socket::OnSocketEvent(wxSocketEvent& event)
 {
-	Socket* sock = (Socket*)event.GetClientData();
-	if (sock == NULL) {
-		m_net_class.OnError("sock = 0");
-		return;
-	}
-
-	if ( event.GetSocketEvent() == wxSOCKET_INPUT ) {
-		m_net_class.OnDataReceived( *sock );
-	} else if ( event.GetSocketEvent() == wxSOCKET_LOST ) {
-		m_net_class.OnDisconnected( *sock );
-	} else if ( event.GetSocketEvent() == wxSOCKET_CONNECTION ) {
-		m_net_class.OnConnected( *sock );
-	} else {
-		m_net_class.OnError("Unknown socket event.");
+	switch (event.GetSocketEvent()) {
+		case wxSOCKET_INPUT:
+			m_net_class.OnDataReceived();
+			break;
+		case wxSOCKET_LOST:
+			m_net_class.OnDisconnected();
+			break;
+		case wxSOCKET_CONNECTION:
+			m_net_class.OnConnected();
+			break;
+		default:
+			m_net_class.OnError("Unknown socket event.");
+			break;
 	}
 }
 
 
 //! @brief Constructor
 Socket::Socket( iNetClass& netclass):
-    m_sock( NULL ),
-    m_events( NULL ),
     m_handle( _GetHandle() ),
     m_connecting( false ),
     m_net_class(netclass),
@@ -178,33 +170,22 @@ Socket::Socket( iNetClass& netclass):
 //! @brief Destructor
 Socket::~Socket()
 {
-  LOCK_SOCKET;
-	if ( m_sock ) m_sock->Destroy();
-  delete m_events;
+	Disconnect();
 }
 
 
 //! @brief Creates an TCP socket and sets it up.
-wxSocketClient* Socket::_CreateSocket()
+void Socket::InitSocket(wxSocketClient& sock)
 {
-    wxSocketClient* sock = new wxSocketClient();
-
-    sock->SetClientData( (void*)this );
-	if ( m_events == 0 )
-		m_events = new SocketEvents( m_net_class );
-	sock->SetFlags( wxSOCKET_NOWAIT );
-
-	sock->SetEventHandler(*m_events, SOCKET_ID);
-	sock->SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
-	sock->Notify(true);
-    return sock;
+	sock.SetFlags(wxSOCKET_NOWAIT);
+	sock.SetEventHandler(*this, SOCKET_ID);
+	sock.SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
+	sock.Notify(true);
 }
 
 //! @brief Connect to remote host.
 void Socket::Connect( const wxString& addr, const int port )
 {
-	LOCK_SOCKET;
-
 	wxIPV4address wxaddr;
 	m_connecting = true;
 	m_buffer = "";
@@ -218,37 +199,29 @@ void Socket::Connect( const wxString& addr, const int port )
 		return;
 	}
 
-	if ( m_sock != 0 ) m_sock->Destroy();
-	m_sock = _CreateSocket();
-	m_sock->Connect( wxaddr, false);
-	m_sock->SetTimeout( 40 );
+	InitSocket(m_sock);
+	m_sock.Connect( wxaddr, false);
+	m_sock.SetTimeout( 40 );
 }
 
 void Socket::SetTimeout( const int seconds )
 {
-    if ( m_sock != 0 )
-        m_sock->SetTimeout( seconds );
+	m_sock.SetTimeout( seconds );
 }
 
 //! @brief Disconnect from remote host if connected.
 void Socket::Disconnect( )
 {
-  if ( m_sock ) m_sock->SetTimeout( 0 );
-  m_buffer = "";
+	m_buffer.clear();
 
-  if ( m_sock )
-  {
-    m_sock->Destroy();
-    m_sock = 0;
-  }
-  m_net_class.OnDisconnected( *this );
+	m_sock.Notify(false);
+	m_net_class.OnDisconnected();
 }
 
 
 //! @brief Send data over connection.
 bool Socket::Send( const wxString& data )
 {
-  LOCK_SOCKET;
   return _Send( data );
 }
 
@@ -257,29 +230,21 @@ bool Socket::Send( const wxString& data )
 //! @note Does not lock the criticalsection.
 bool Socket::_Send( const wxString& data )
 {
-  if ( !m_sock )
-  {
-    m_net_class.OnError("Socket NULL");
-    return false;
-  }
-
 	m_buffer += (const char*)data.mb_str(wxConvUTF8);
 	int crop = m_buffer.length();
-  if ( m_rate > 0 )
-  {
-  	 int max = m_rate - m_sent;
-  	 if ( crop > 0 ) crop = max;
-  }
+	if ( m_rate > 0 ) {
+		 int max = m_rate - m_sent;
+		 if ( crop > 0 ) crop = max;
+	}
 	std::string send = m_buffer.substr( 0, crop );
 	//wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
-	m_sock->Write( send.c_str(), send.length() );
-	if ( !m_sock->Error() )
-	{
-		wxUint32 sentdata = m_sock->LastCount();
+	m_sock.Write( send.c_str(), send.length() );
+	if ( !m_sock.Error() ) {
+		wxUint32 sentdata = m_sock.LastCount();
 		m_buffer.erase( 0, sentdata );
 		m_sent += sentdata;
 	}
-  return !m_sock->Error();
+	return !m_sock.Error();
 }
 
 
@@ -326,20 +291,13 @@ wxString convert(char* buff, const int len)
 wxString Socket::Receive()
 {
 	wxString ret;
-	if ( m_sock == 0 ) {
-		m_net_class.OnError("Socket NULL");
-		return ret;
-	}
-
-	LOCK_SOCKET;
-
 	static const int chunk_size = 1500;
 	char buf[chunk_size];
 	int readnum = 0;
 
 	do {
-		m_sock->Read( buf, chunk_size );
-		const int readnum = m_sock->LastCount();
+		m_sock.Read( buf, chunk_size );
+		const int readnum = m_sock.LastCount();
 		ret += convert(buf, readnum);
 	} while ( readnum > 0 );
 
@@ -349,10 +307,7 @@ wxString Socket::Receive()
 //! @brief Get curent socket state
 SockState Socket::State( )
 {
-  if ( m_sock == 0 ) return SS_Closed;
-
-  LOCK_SOCKET;
-  if ( m_sock->IsConnected() ) {
+  if ( m_sock.IsConnected() ) {
     m_connecting = false;
     return SS_Open;
   } else {
@@ -369,18 +324,18 @@ SockState Socket::State( )
 //! @todo Implement
 SockError Socket::Error( ) const
 {
-  return (SockError)-1;
+	return (SockError)-1;
 }
 
 
 //! @brief used to retrieve local ip address behind NAT to communicate to the server on login
 wxString Socket::GetLocalAddress() const
 {
-  if ( !m_sock || !m_sock->IsConnected() )
+  if (!m_sock.IsConnected() )
     return wxEmptyString;
 
   wxIPV4address localaddr;
-  m_sock->GetLocal( localaddr );
+  m_sock.GetLocal( localaddr );
 
   return localaddr.IPAddress();
 }
@@ -389,20 +344,19 @@ wxString Socket::GetLocalAddress() const
 //! @brief Set the maximum upload ratio.
 void Socket::SetSendRateLimit( int Bps )
 {
-  m_rate = Bps;
+	m_rate = Bps;
 }
 
 
-void Socket::OnTimer( int mselapsed )
+void Socket::Update( int mselapsed )
 {
-  LOCK_SOCKET;
-
-  if ( m_rate > 0 ) {
-    m_sent -= int( ( mselapsed / 1000.0 ) * m_rate );
-    if ( m_sent < 0 ) m_sent = 0;
-    if ( m_buffer.length() > 0 ) _Send(wxEmptyString);
-  } else {
-    m_sent = 0;
-  }
+	if ( m_rate > 0 ) {
+		m_sent -= int( ( mselapsed / 1000.0 ) * m_rate );
+		if ( m_sent < 0 ) m_sent = 0;
+		if ( m_buffer.length() > 0 ) {
+			_Send(wxEmptyString);
+		}
+	} else {
+		m_sent = 0;
+	}
 }
-

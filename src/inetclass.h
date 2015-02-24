@@ -13,9 +13,9 @@ public:
 	iNetClass() {}
 	virtual ~iNetClass() {}
 
-	virtual void OnConnected( Socket& /*sock*/ ) {}
-	virtual void OnDisconnected( Socket& /*sock*/ ) {}
-	virtual void OnDataReceived( Socket& /*sock*/ ) {}
+	virtual void OnConnected() {}
+	virtual void OnDisconnected() {}
+	virtual void OnDataReceived() {}
 	virtual void OnError(const std::string& /*error*/) {}
 	virtual void Ping() {}
 };

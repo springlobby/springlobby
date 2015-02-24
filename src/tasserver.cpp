@@ -92,6 +92,7 @@ IBattle::GameType IntToGameType( int gt );
 
 
 TASServer::TASServer():
+	m_sock(NULL),
 	m_ser_ver(0),
 	m_connected(false),
 	m_online(false),
@@ -112,7 +113,6 @@ TASServer::TASServer():
 	m_do_finalize_join_battle(false),
 	m_finalize_join_battle_id(-1)
 {
-	m_sock = new Socket( *this);
 	m_se = new ServerEvents(*this);
 	m_relay_host_manager_list.clear();
 
@@ -125,8 +125,6 @@ TASServer::~TASServer()
 	Disconnect();
 	delete m_se;
 	m_se = NULL;
-	delete m_sock;
-	m_sock = NULL;
 }
 
 bool TASServer::ExecuteSayCommand( const std::string& cmd )
@@ -245,6 +243,10 @@ void TASServer::Connect( const std::string& servername ,const std::string& addr,
 	m_server_name = servername;
 	m_addr = addr;
 	m_buffer.clear();
+	if (m_sock != NULL) {
+		Disconnect();
+	}
+	m_sock = new Socket( *this);
 	m_sock->Connect(TowxString(addr), port );
 	m_sock->SetSendRateLimit( 800 ); // 1250 is the server limit but 800 just to make sure :)
 	m_connected = false;
@@ -262,18 +264,21 @@ void TASServer::Connect( const std::string& servername ,const std::string& addr,
 
 void TASServer::Disconnect()
 {
-	if (!m_connected) {
+	if(m_sock == NULL) {
 		return;
 	}
+
 	m_connected = false;
 	m_battle_id = -1;
 	SendCmd("EXIT " + STD_STRING(cfg().ReadString(_T("/Server/ExitMessage"))) ); // EXIT command for new protocol compatibility
 	m_sock->Disconnect();
+	delete m_sock;
+	m_sock = NULL;
 }
 
 bool TASServer::IsConnected()
 {
-	return (m_sock->State() == SS_Open) && (m_connected);
+	return (m_sock != NULL) && (m_sock->State() == SS_Open) && (m_connected);
 }
 
 
@@ -364,13 +369,15 @@ void TASServer::AcceptAgreement()
 
 void TASServer::Notify()
 {
-	if (m_sock == NULL) return;
+	if (m_sock == NULL)
+		return;
+
 	const wxLongLong now = wxGetLocalTimeMillis();
 	const long diff = std::abs((now - m_lastnotify).ToLong());
 	const int interval = std::max<long>(GetInterval(), diff);
 	m_lastnotify = now;
 
-	m_sock->OnTimer(interval);
+	m_sock->Update(interval);
 	m_last_ping += interval;
 	m_last_net_packet += interval;
 	m_last_udp_ping += interval;
@@ -1658,7 +1665,7 @@ void TASServer::UpdateBot( int battleid, User& bot, UserBattleStatus& status )
 	SendCmd("UPDATEBOT", bot.GetNick() + stdprintf(" %d %d", tasbs, status.colour.GetLobbyColor() ), GetBattle(battleid).IsProxy()  );
 }
 
-void TASServer::OnConnected(Socket& /*unused*/ )
+void TASServer::OnConnected()
 {
 	slLogDebugFunc("");
 	//TASServer* serv = (TASServer*)sock->GetUserdata();
@@ -1671,7 +1678,7 @@ void TASServer::OnConnected(Socket& /*unused*/ )
 }
 
 
-void TASServer::OnDisconnected(Socket& /*unused*/ )
+void TASServer::OnDisconnected()
 {
 	slLogDebugFunc("%d", m_connected);
 	const bool connectionwaspresent = m_online || !m_last_denied.empty() || m_redirecting;
@@ -1690,10 +1697,12 @@ void TASServer::OnDisconnected(Socket& /*unused*/ )
 }
 
 
-void TASServer::OnDataReceived( Socket& sock )
+void TASServer::OnDataReceived()
 {
+	if (m_sock == NULL) return;
+
 	m_last_net_packet = 0;
-	wxString data = sock.Receive();
+	wxString data = m_sock->Receive();
 	m_buffer += STD_STRING(data);
 	LSL::Util::Replace(m_buffer, "\r\n", "\n");
 

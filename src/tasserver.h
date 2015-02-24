@@ -149,9 +149,8 @@ public:
 	}
 
 private:
-	void OnConnected(Socket& sock );
-	void OnDisconnected(Socket& sock );
-	void OnDataReceived(Socket& sock );
+	void OnConnected();
+	void OnDataReceived();
 	void OnDisconnected();
 
 	void UDPPing();/// used for nat travelsal

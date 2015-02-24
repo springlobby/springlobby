@@ -43,12 +43,11 @@ enum SockError
 const int SOCKET_ID = 100;
 
 
-class SocketEvents;
 class wxSocketEvent;
 class wxSocketClient;
 
 //! @brief Class that implements a TCP client socket.
-class Socket
+class Socket : public wxEvtHandler
 {
   public:
 
@@ -73,45 +72,31 @@ class Socket
 
     void SetSendRateLimit( int Bps = -1 );
     int GetSendRateLimit() {return m_rate;}
-    void OnTimer( int mselapsed );
+    void Update( int mselapsed );
 
     void SetTimeout( const int seconds );
 
 private:
+    void OnSocketEvent(wxSocketEvent& event);
+    bool _Send( const wxString& data );
+	void InitSocket(wxSocketClient& socket);
 
   // Socket variables
 
-    wxSocketClient* m_sock;
-    SocketEvents* m_events;
-
-    wxCriticalSection m_lock;
-
+    wxSocketClient m_sock;
     wxString m_ping_msg;
 	std::string m_handle;
-
     bool m_connecting;
     iNetClass& m_net_class;
-
     unsigned int m_udp_private_port;
     int m_rate;
     int m_sent;
     std::string m_buffer;
 
-    wxSocketClient* _CreateSocket();
-
-    bool _Send( const wxString& data );
+	DECLARE_EVENT_TABLE();
 };
 
-class SocketEvents: public wxEvtHandler
-{
-public:
-    SocketEvents( iNetClass& netclass ): wxEvtHandler(), m_net_class(netclass) {}
-    void OnSocketEvent(wxSocketEvent& event);
-private:
-	iNetClass& m_net_class;
-	DECLARE_EVENT_TABLE()
-};
 
-typedef void (*socket_callback)(Socket*);
+//typedef void (*socket_callback)(Socket*);
 
 #endif // SPRINGLOBBY_HEADERGUARD_SOCKET_H
