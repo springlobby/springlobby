@@ -61,9 +61,6 @@ class Socket : public wxEvtHandler
 
     bool Send( const wxString& data );
     wxString Receive();
-    //! used in plasmaservice, otherwise getting garbeld responses
-    wxString ReceiveSpecial();
-
     wxString GetLocalAddress() const;
     std::string GetHandle() const {return m_handle;}
 
@@ -96,7 +93,5 @@ private:
 	DECLARE_EVENT_TABLE();
 };
 
-
-//typedef void (*socket_callback)(Socket*);
 
 #endif // SPRINGLOBBY_HEADERGUARD_SOCKET_H
