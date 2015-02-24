@@ -868,7 +868,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
 	} else if ( cmd == "REGISTRATIONDENIED" ) {
 		m_se->RegistrationDenied(STD_STRING(params));
 	} else {
-		wxLogError(wxString::Format(_T("??? Cmd: %s params: %s"), TowxString(cmd).c_str(), params.c_str() ));
+		wxLogWarning(wxString::Format(_T("??? Cmd: %s params: %s"), TowxString(cmd).c_str(), params.c_str() ));
 		m_se->OnUnknownCommand( cmd, STD_STRING(params));
 	}
 }
