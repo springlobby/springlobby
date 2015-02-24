@@ -62,6 +62,7 @@ class Channel : public UserList, public SL::NonCopyable
 
     std::string GetPassword();
     void SetPassword( const std::string& pw );
+	bool IsSubscribed(); //subscribed to channel history?
 
 private:
     IServer& m_serv;

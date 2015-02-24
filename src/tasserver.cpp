@@ -243,6 +243,7 @@ void TASServer::Connect( const std::string& servername ,const std::string& addr,
 	m_server_name = servername;
 	m_addr = addr;
 	m_buffer.clear();
+	m_subscriptions.clear();
 	if (m_sock != NULL) {
 		Disconnect();
 	}
@@ -470,6 +471,22 @@ void TASServer::ExecuteCommand( const std::string& in )
 }
 
 
+static LSL::StringMap parseKeyValue(const std::string& str)
+{
+    const LSL::StringVector params = LSL::Util::StringTokenize(str, "\t");
+	LSL::StringMap result;
+	for(auto const param: params){
+		const LSL::StringVector keyvalue = LSL::Util::StringTokenize(param, "="); //FIXME: key=va=lue isn't supported
+		if (keyvalue.size() != 2) {
+			wxLogWarning(_T("Invalid keyvalue: %s"), TowxString(param).c_str());
+			continue;
+		}
+		result[keyvalue[0]] = keyvalue[1];
+	}
+	return result;
+}
+
+
 void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inparams, int replyid )
 {
 	wxString params = TowxString(inparams);
@@ -553,6 +570,7 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
 		m_se->OnBattleInfoUpdated( id, specs, haspass, hash, map );
 	} else if ( cmd == "LOGININFOEND" ) {
 		if ( UserExists("RelayHostManagerList") ) SayPrivate("RelayHostManagerList", "!lm");
+		SendCmd("LISTSUBSCRIPTIONS", "");
 		m_se->OnLoginInfoComplete();
 	} else if ( cmd == "REMOVEUSER" ) {
 		nick = GetWordParam( params );
@@ -867,6 +885,16 @@ void TASServer::ExecuteCommand( const std::string& cmd, const std::string& inpar
 		m_se->RegistrationAccepted(GetUserName(), GetPassword());
 	} else if ( cmd == "REGISTRATIONDENIED" ) {
 		m_se->RegistrationDenied(STD_STRING(params));
+	} else if ( cmd == "LISTSUBSCRIPTION") {
+		const LSL::StringMap keyvals = parseKeyValue(GetWordParam(params));
+		const std::string keyname = "chanName";
+		if (keyvals.find(keyname) != keyvals.end()) {
+			m_subscriptions.insert(keyvals.at(keyname));
+		}
+	} else if ( cmd == "STARTLISTSUBSCRIPTION") {
+		m_subscriptions.clear();
+	} else if ( cmd == "ENDLISTSUBSCRIPTION") {
+		//m_se->OnSubscriptons();
 	} else {
 		wxLogWarning(wxString::Format(_T("??? Cmd: %s params: %s"), TowxString(cmd).c_str(), params.c_str() ));
 		m_se->OnUnknownCommand( cmd, STD_STRING(params));

@@ -74,6 +74,7 @@ class ChatPanelMenu : public wxEvtHandler , public SL::NonCopyable
         void OnUserMenuCreateGroup( wxCommandEvent& event );
 
         void OnMenuItem( wxCommandEvent& event );
+		void OnChannelSubscribe( wxCommandEvent& unused );
 
         wxMenu* GetMenu();
 		ChatPanelMenu::UserMenu* GetUserMenuNoCreate();
@@ -91,6 +92,7 @@ private:
 
         wxMenuItem* displayjoinitem;
         wxMenuItem* m_autorejoin;
+		wxMenuItem* m_subscribe;
         wxMenuItem* m_append_menu;
 
         bool m_withChanserv;
@@ -104,6 +106,7 @@ static const long CHAT_MENU_DISABLE_APPEND          = wxNewId();
 static const long CHAT_MENU_CH_LEAVE                = wxNewId();
 static const long CHAT_MENU_CH_DISPLAYJOIN          = wxNewId();
 static const long CHAT_MENU_CH_AUTOJOIN             = wxNewId();
+static const long CHAT_MENU_CH_SUBSCRIBE            = wxNewId();
 
 static const long CHAT_MENU_CH_TOPIC                = wxNewId();
 static const long CHAT_MENU_CH_INFO                 = wxNewId();
@@ -127,7 +130,7 @@ static const long CHAT_MENU_SV_BROADCAST            = wxNewId();
 static const long CHAT_MENU_US_CHAT                 = wxNewId();
 static const long CHAT_MENU_US_JOIN                 = wxNewId();
 static const long CHAT_MENU_US_SLAP                 = wxNewId();
-//static const long CHAT_MENU_US_ADD_TO_GROUP         = wxNewId();
+static const long CHAT_MENU_US_ADD_TO_GROUP         = wxNewId();
 static const long CHAT_MENU_US_MUTE                 = wxNewId();
 static const long CHAT_MENU_US_UNMUTE               = wxNewId();
 static const long CHAT_MENU_US_KICK                 = wxNewId();

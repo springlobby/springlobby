@@ -135,18 +135,13 @@ public:
 
 	int TestOpenPort( unsigned int port ) const;
 
-/*
-	void SendScriptToProxy( const std::string& script );
-
-	void SendScriptToClients( const std::string& script );
-*/
-
 	void SetRelayIngamePassword( const User& user );
 
 	LSL::StringVector GetRelayHostList() ;
 	virtual const IServerEvents* serverEvents() const {
 		return m_se;
 	}
+	LSL::StringSet GetSubscriptions() { return m_subscriptions; }
 
 private:
 	void OnConnected();
@@ -183,6 +178,7 @@ private:
 
 	double m_ser_ver;
 	LSL::StringVector m_relay_host_manager_list;
+	LSL::StringSet m_subscriptions;
 
 	std::string m_last_denied;
 	bool m_connected;

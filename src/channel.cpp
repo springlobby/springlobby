@@ -269,3 +269,9 @@ void Channel::SetPassword( const std::string& pw )
   m_password = pw;
 }
 
+bool Channel::IsSubscribed()
+{
+	const LSL::StringSet subscriptions = m_serv.GetSubscriptions();
+	return (subscriptions.find(m_name) != subscriptions.end());
+}
+

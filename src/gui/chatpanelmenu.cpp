@@ -52,10 +52,14 @@ wxMenu* ChatPanelMenu::GetMenu()
 		wxLogMessage( _T( "channel" ) );
 		m_autorejoin = new wxMenuItem( m_menu_all, CHAT_MENU_CH_AUTOJOIN, _( "Auto join this channel" ), wxEmptyString, wxITEM_CHECK );
 		m_menu_all->Append( m_autorejoin );
-		if ( m_chatpanel->m_channel ) {
-			bool isautojoin = sett().GetChannelJoinIndex( TowxString(m_chatpanel->m_channel->GetName()) ) >= 0;
-			m_autorejoin->Check( isautojoin );
-		}
+		const bool isautojoin = sett().GetChannelJoinIndex( TowxString(m_chatpanel->m_channel->GetName()) ) >= 0;
+		m_autorejoin->Check( isautojoin );
+
+		m_subscribe = new wxMenuItem( m_menu_all, CHAT_MENU_CH_SUBSCRIBE, _( "Subscribe to this channel" ), wxEmptyString, wxITEM_CHECK );
+		m_menu_all->Append( m_subscribe );
+		m_subscribe->Check( m_chatpanel->m_channel->IsSubscribed() );
+
+
 		wxMenuItem* leaveitem = new wxMenuItem( m_menu_all, CHAT_MENU_CH_LEAVE, _( "Leave" ), wxEmptyString, wxITEM_NORMAL );
 		m_menu_all->Append( leaveitem );
 	}
@@ -699,6 +703,17 @@ void ChatPanelMenu::OnUserMenuCreateGroup( wxCommandEvent& /*unused*/ )
     }
 }
 
+void ChatPanelMenu::OnChannelSubscribe( wxCommandEvent& /*unused*/ )
+{
+	const std::string chan = m_chatpanel->m_channel->GetName();
+	IServer& serv = m_chatpanel->m_channel->GetServer();
+	if (!m_chatpanel->m_channel->IsSubscribed()) {
+		serv.SendRaw("SUBSCRIBE chanName=" + chan);
+	} else {
+		serv.SendRaw("UNSUBSCRIBE chanName=" + chan);
+	}
+}
+
 void ChatPanelMenu::OnMenuItem( wxCommandEvent& event )
 {
     if ( event.GetId() == CHAT_MENU_SHOW_MUTELIST ) OnChannelMenuShowMutelist( event );
@@ -758,9 +773,10 @@ void ChatPanelMenu::OnMenuItem( wxCommandEvent& event )
 
     else if ( event.GetId() == GROUP_ID_NEW  ) OnUserMenuCreateGroup( event );
     else if ( event.GetId() == GROUP_ID_REMOVE  ) OnUserMenuDeleteFromGroup( event );
-    else if ( event.GetId() == wxID_COPY ) {
-            m_chatpanel->m_chatlog_text->OnCopy(event);
-    }
+    else if ( event.GetId() == wxID_COPY ) m_chatpanel->m_chatlog_text->OnCopy(event);
+	else if ( event.GetId() == CHAT_MENU_CH_SUBSCRIBE ) OnChannelSubscribe(event);
+
     else OnUserMenuAddToGroup( event );
+
 
 }

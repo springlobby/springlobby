@@ -177,6 +177,7 @@ class IServer : public SL::NonCopyable
 	virtual void SetRelayIngamePassword( const User& /*user*/ ) {};
 
 	virtual LSL::StringVector GetRelayHostList() { return LSL::StringVector(); }
+	virtual LSL::StringSet GetSubscriptions() { return LSL::StringSet(); }
 
 	void Reset();
 
