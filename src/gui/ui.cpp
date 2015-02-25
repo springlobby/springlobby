@@ -444,7 +444,7 @@ void Ui::OnConnected( IServer& server, const wxString& server_name, const wxStri
 	std::map<std::string, LSL::SpringBundle> enginebundles = SlPaths::GetSpringVersionList();
 	if (enginebundles.size() == 0) {
 		if (Ask(_("Spring can't be found"), wxString::Format(_T("No useable spring engine can be found, download it? (spring %s)"), version.c_str()))) {
-			Download(PrDownloader::GetEngineCat(), "spring", STD_STRING(version));
+			Download(PrDownloader::GetEngineCat(), "spring " + STD_STRING(version), "");
 		}
 	}
 
