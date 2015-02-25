@@ -121,7 +121,6 @@ class IServer : public SL::NonCopyable
 
     virtual void SendHostInfo( HostInfo /*update*/ ) {};
     virtual void SendHostInfo( const std::string& /*Tag*/ ) {};
-    virtual void SendRaw( const std::string& /*raw*/ ) {};
     virtual void SendUserPosition( const User& /*usr*/ ) {};
 
     virtual void RequestInGameTime( const std::string& /*nick*/) {};

@@ -936,7 +936,7 @@ bool ChatPanel::Say( const wxString& message )
 				} catch( assert_exception ) {}
 			}
 
-			m_server->SendRaw(STD_STRING(line));
+			m_server->SendCmd(STD_STRING(line), "");
 			OutputLine( _( " Sent: \"" ) + line + _( "\"" ), sett().GetChatColorNormal());
 		}
 	}
