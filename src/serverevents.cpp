@@ -38,7 +38,7 @@ void ServerEvents::OnConnected( const std::string& server_name, const std::strin
 	slLogDebugFunc("%s %s", server_ver.c_str(), server_spring_ver.c_str());
     //Server version will include patchlevel from release 89 onwards
     m_serv.SetRequiredSpring( LSL::Util::BeforeFirst(server_spring_ver, ".") );
-    ui().OnConnected( m_serv, TowxString(server_name), TowxString(server_ver), supported );
+    ui().OnConnected( m_serv, TowxString(server_name), TowxString(server_spring_ver), supported );
     m_serv.Login();
 }
 

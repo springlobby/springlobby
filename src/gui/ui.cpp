@@ -426,7 +426,7 @@ ChatPanel* Ui::GetChannelChatPanel( const wxString& channel )
 //! @brief Called when connected to a server
 //!
 //! @todo Display in servertab
-void Ui::OnConnected( IServer& server, const wxString& server_name, const wxString& /*unused*/, bool /*supported*/ )
+void Ui::OnConnected( IServer& server, const wxString& server_name, const wxString& version, bool /*supported*/ )
 {
 	slLogDebugFunc("");
 	m_connect_retries = 10;
@@ -436,6 +436,18 @@ void Ui::OnConnected( IServer& server, const wxString& server_name, const wxStri
 
 	delete m_con_win;
 	m_con_win = 0;
+
+	if (version.empty()) {
+		wxLogWarning("default version supllied from server is empty!");
+		return;
+	}
+	std::map<std::string, LSL::SpringBundle> enginebundles = SlPaths::GetSpringVersionList();
+	if (enginebundles.size() == 0) {
+		if (Ask(_("Spring can't be found"), wxString::Format(_T("No useable spring engine can be found, download it? (spring %s)"), version.c_str()))) {
+			Download(PrDownloader::GetEngineCat(), "spring", STD_STRING(version));
+		}
+	}
+
 
 }
 
