@@ -33,12 +33,12 @@ class assert_exception : public std::runtime_error
 };
 
 #define ASSERT_LOGIC(cond,msg) if(!(cond)) {\
-	wxLogError(wxString::Format(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , TowxString(msg).c_str())); \
+	wxLogWarning(wxString::Format(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , TowxString(msg).c_str())); \
 	throw std::logic_error(msg);\
 }
 
 #define ASSERT_EXCEPTION(cond,msg) if(!(cond)) {\
-	wxLogError(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() ); \
+	wxLogWarning(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() ); \
 	throw assert_exception(std::string(wxString(msg).mb_str()));\
 }
 
