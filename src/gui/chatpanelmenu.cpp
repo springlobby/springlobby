@@ -654,7 +654,7 @@ void ChatPanelMenu::OnMenuToggleAppend( wxCommandEvent& /*unused*/ )
 void ChatPanelMenu::OnChannelMenuShowMutelist( wxCommandEvent& /*unused*/ )
 {
     if ( m_chatpanel->m_channel && ( m_chatpanel->m_type == CPT_Channel ) ) {
-       m_chatpanel->m_channel->GetServer().SendRaw( "MUTELIST " + m_chatpanel->m_channel->GetName());
+       m_chatpanel->m_channel->GetServer().SendCmd("MUTELIST",  m_chatpanel->m_channel->GetName());
     }
 }
 
@@ -708,9 +708,9 @@ void ChatPanelMenu::OnChannelSubscribe( wxCommandEvent& /*unused*/ )
 	const std::string chan = m_chatpanel->m_channel->GetName();
 	IServer& serv = m_chatpanel->m_channel->GetServer();
 	if (!m_chatpanel->m_channel->IsSubscribed()) {
-		serv.SendRaw("SUBSCRIBE chanName=" + chan);
+		serv.SendCmd("SUBSCRIBE","chanName=" + chan);
 	} else {
-		serv.SendRaw("UNSUBSCRIBE chanName=" + chan);
+		serv.SendCmd("UNSUBSCRIBE","chanName=" + chan);
 	}
 }
 

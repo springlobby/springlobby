@@ -112,8 +112,6 @@ public:
 	void SendHostInfo( const std::string& Tag );
 	void SendUserPosition( const User& user );
 
-	void SendRaw( const std::string& raw );
-
 	void RequestInGameTime( const std::string& nick );
 
 	void SendUdpSourcePort( int udpport );

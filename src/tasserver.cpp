@@ -1425,12 +1425,6 @@ void TASServer::SendUserPosition( const User& user )
 	}
 }
 
-void TASServer::SendRaw( const std::string& raw )
-{
-	SendCmd( raw );
-}
-
-
 void TASServer::RequestInGameTime( const std::string& nick )
 {
 	SendCmd("GETINGAMETIME", nick );

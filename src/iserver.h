@@ -180,6 +180,7 @@ class IServer : public SL::NonCopyable
 	virtual LSL::StringSet GetSubscriptions() { return LSL::StringSet(); }
 
 	void Reset();
+    virtual void SendCmd( const std::string& /*command*/, const std::string& /*param*/ ) {};
 
 protected:
     std::string m_server_name;
@@ -203,7 +204,6 @@ private:
     IBattle& _AddBattle( const int& id );
     void _RemoveBattle( const int& id );
 
-    virtual void SendCmd( const std::string& /*command*/, const std::string& /*param*/ ) {};
     virtual void RelayCmd( const std::string& /*command*/, const std::string& /*param*/ ) {};
 
 };
