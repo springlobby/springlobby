@@ -146,7 +146,7 @@ void BattleMapTab::Update()
 	LSL::UnitsyncMap map = m_battle->LoadMap();
 
 	m_map_opts_list->SetItem( 0, 1, wxString::Format( _T("%dx%d"), map.info.width / 512, map.info.height / 512));
-	m_map_opts_list->SetItem( 1, 1, wxString::Format( _T("%d-%d"), map.info.minWind % map.info.maxWind ));
+	m_map_opts_list->SetItem( 1, 1, wxString::Format( _T("%d-%d"), map.info.minWind, map.info.maxWind ));
 	m_map_opts_list->SetItem( 2, 1, wxString::Format( _T("%d"), map.info.tidalStrength ));
 	m_map_opts_list->SetItem( 3, 1, wxString::Format( _T("%d"), map.info.gravity ));
 	m_map_opts_list->SetItem( 4, 1, wxString::Format( _T("%d"), map.info.extractorRadius ));
