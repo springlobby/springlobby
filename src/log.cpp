@@ -166,7 +166,7 @@ extern void lsllogerror(const char* format, ...)
 	va_end(args);
 	if (len > 0) {
 		const std::string msg(buf, len);
-		wxLogError(TowxString(msg));
+		wxLogWarning(_T("Error: FIXME: ") + TowxString(msg)); //FIXME: lsl throws a lot of errors
 	}
 }
 
