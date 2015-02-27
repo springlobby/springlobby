@@ -78,10 +78,7 @@ void NickListCtrl::AddUser( const User& user )
 
 	m_real_users_list.push_back(&user);
 
-	if( m_UsersFilterString.empty() )
-		AddItem( &user );
-	else
-		DoUsersFilter();
+	DoUsersFilter();
 }
 
 void NickListCtrl::RemoveUser( const User& user )
@@ -90,7 +87,7 @@ void NickListCtrl::RemoveUser( const User& user )
 
 	if( i ==-1 )
 	{
-		wxLogError( _T( "Didn't find the user to remove." ) );
+		wxLogWarning( _T( "Didn't find the user to remove." ) );
 		return;
 	}
 
@@ -125,17 +122,19 @@ void NickListCtrl::SetUsersFilterString( wxString fs )
 
 void NickListCtrl::DoUsersFilter()
 {
-	Clear();
-
 	for( std::vector<const User*>::iterator it = m_real_users_list.begin();
 	it != m_real_users_list.end();
 	it++)
 		{
 			const User* user = *it;
 			wxString nick = wxString::FromAscii( user->GetNick().c_str() );
-			if( nick.Lower().Contains(m_UsersFilterString) )
+			if( nick.Lower().Contains(m_UsersFilterString) ) {
 				AddItem(user);
+			} else {
+				RemoveItem(user);
+			}
 		}
+		
 	Sort();
 }
 
