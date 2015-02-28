@@ -25,8 +25,7 @@ namespace LSL {
     struct UnitsyncMap;
 }
 
-// FIXME: WindowAttributesPickle calls SetSize which causes an wx-assertion
-class MapSelectDialog: public wxDialog, public GlobalEvent /*,public WindowAttributesPickle, */
+class MapSelectDialog: public wxDialog, public GlobalEvent, public WindowAttributesPickle
 {
 	public:
 
@@ -97,7 +96,6 @@ private:
 		wxArrayString m_maps;
 		wxArrayString m_replays;
 
-		static const wxString m_dialog_name;
 		enum {
 			m_filter_all_sett = 0,
 			m_filter_popular_sett = 1,
