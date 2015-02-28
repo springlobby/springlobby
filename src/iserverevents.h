@@ -18,7 +18,8 @@ lsl/networking/iserver.h
 
 
 //almost only needed for NAtType enum def
-#include "battle.h"
+#include "ibattle.h"
+#include <wx/longlong.h>
 #include <string>
 
 struct MessageSpamCheck
@@ -126,7 +127,7 @@ class IServerEvents
 	virtual void OnRedirect( const std::string& address,  unsigned int port, const std::string& CurrentNick, const std::string& CurrentPassword ) = 0;
 
 	/// use this function to check spam from clients and autokick from the battle
-	virtual void AutoCheckCommandSpam( Battle& battle, User& nick ) = 0;
+	virtual void AutoCheckCommandSpam( IBattle& battle, User& nick ) = 0;
 
 	virtual void OnMutelistBegin( const std::string& channel ) = 0;
 	virtual void OnMutelistItem( const std::string& channel, const std::string& mutee, const std::string& description ) = 0;

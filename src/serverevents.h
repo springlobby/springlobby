@@ -103,7 +103,7 @@ class ServerEvents : public IServerEvents
     void OnRedirect( const std::string& address,  unsigned int port, const std::string& CurrentNick, const std::string& CurrentPassword );
 
     /// use this function to check spam from clients and autokick from the battle
-    void AutoCheckCommandSpam( Battle& battle, User& nick );
+    void AutoCheckCommandSpam( IBattle& battle, User& nick );
 
     void OnMutelistBegin( const std::string& channel );
     void OnMutelistItem( const std::string& channel, const std::string& mutee, const std::string& description );

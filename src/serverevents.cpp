@@ -29,6 +29,7 @@
 #include "log.h"
 #include "utils/conversion.h"
 #include "autohostmanager.h"
+#include "autohost.h"
 
 #include <lslutils/globalsmanager.h>
 #include <exception>
@@ -909,7 +910,7 @@ void ServerEvents::OnRedirect( const std::string& address,  unsigned int port, c
 }
 
 
-void ServerEvents::AutoCheckCommandSpam( Battle& battle, User& user )
+void ServerEvents::AutoCheckCommandSpam( IBattle& battle, User& user )
 {
 	const std::string nick = user.GetNick();
     MessageSpamCheck info = m_spam_check[nick];
