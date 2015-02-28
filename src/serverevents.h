@@ -6,7 +6,6 @@
 #include "iserverevents.h"
 #include <wx/longlong.h>
 
-class Ui;
 struct UserStatus;
 struct UserBattleStatus;
 class Battle;

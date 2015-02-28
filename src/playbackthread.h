@@ -8,7 +8,6 @@
 #include <wx/event.h>
 #include <vector>
 
-#include "defines.h"
 class PlaybackTab;
 
 

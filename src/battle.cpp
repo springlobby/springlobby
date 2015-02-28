@@ -28,7 +28,6 @@
 #include "iconimagelist.h"
 #include "spring.h"
 #include "utils/conversion.h"
-#include "utils/globalevents.h"
 #include "autohostmanager.h"
 #include "log.h"
 #include "iserver.h"

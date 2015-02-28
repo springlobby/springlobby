@@ -8,9 +8,7 @@
 #include <wx/regex.h>
 #include "utils/mixins.h"
 
-class Channel;
 class IServer;
-class Ui;
 class ChatPanel;
 
 struct UiChannelData {

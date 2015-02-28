@@ -23,7 +23,6 @@ lsl/networking/socket.h
 
 class iNetClass;
 class wxCriticalSection;
-class PingThread;
 
 enum SockState
 {

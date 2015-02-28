@@ -3,8 +3,6 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_INETCLASS_H
 #define SPRINGLOBBY_HEADERGUARD_INETCLASS_H
 
-class Socket;
-
 //! @brief Abstract baseclass that is used when needed to interface with socket class
 class iNetClass
 {

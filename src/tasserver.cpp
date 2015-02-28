@@ -38,6 +38,7 @@ lsl/networking/tasserver.cpp
 #include "utils/conversion.h"
 #include "utils/platform.h"
 #include "serverevents.h"
+#include "iserverevents.h"
 #include "socket.h"
 #include "log.h"
 #include "utils/slconfig.h"

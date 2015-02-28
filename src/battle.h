@@ -9,7 +9,6 @@
 #include "utils/globalevents.h"
 #include "ibattle.h"
 
-class Ui;
 class IServer;
 class User;
 class wxTimerEvent;

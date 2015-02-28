@@ -13,7 +13,6 @@
 
 class ServerEvents;
 class SimpleServerEvents;
-class IServerEvents;
 class Channel;
 class Ui;
 struct BattleOptions;

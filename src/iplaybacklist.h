@@ -8,8 +8,6 @@
 #include <wx/event.h>
 #include "storedgame.h"
 
-class wxArrayString;
-
 class IPlaybackList : public wxEvtHandler
 {
   public:

@@ -21,7 +21,6 @@ lsl/spring/spring.h
 class wxCommandEvent;
 class IBattle;
 class SpringProcess;
-class wxSpringProcess;
 class wxString;
 
 
