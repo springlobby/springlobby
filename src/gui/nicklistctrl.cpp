@@ -87,12 +87,12 @@ void NickListCtrl::RemoveUser( const User& user )
 
 	if( i ==-1 )
 	{
-		wxLogWarning( _T( "Didn't find the user to remove." ) );
+		wxLogError( _T( "Didn't find the user to remove." ) );
 		return;
 	}
 
 	m_real_users_list.erase( m_real_users_list.begin() + (unsigned int)i );
-	DoUsersFilter();
+	RemoveItem(&user);
 }
 
 
