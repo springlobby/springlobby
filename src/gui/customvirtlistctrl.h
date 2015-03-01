@@ -56,6 +56,7 @@ protected:
 	wxTimer m_sort_timer;
 	//! always set to the currrently displayed tooltip text
 	wxString m_tiptext;
+	
 #if wxUSE_TIPWINDOW
 	//! some wx implementations do not support this yet
 	SLTipWindow* m_tipwindow;
@@ -98,7 +99,9 @@ private:
 	/*** these are only meaningful in single selection lists ***/
 	//! index of curently selected data
 	long m_selected_index;
-
+	// used for ListCtrl decoration
+	wxListItemAttr m_list_attr_one, m_list_attr_two;
+	
 	//! index of previously selected data
 	long m_prev_selected_index;
 	/***********************************************************/
