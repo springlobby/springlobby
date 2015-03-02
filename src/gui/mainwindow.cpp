@@ -125,6 +125,8 @@ MainWindow::MainWindow( )
 	m_log_win(NULL),
 	m_has_focus(true)
 {
+	SetMinSize( wxSize(720, 576) );
+	
 	m_tab_names.Add( _("Chat") );
 	m_tab_names.Add( _("Battlelist") );
 	m_tab_names.Add( _("Battleroom") );

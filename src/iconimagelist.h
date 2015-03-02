@@ -40,7 +40,9 @@ class IconImageList : public wxImageList
     int ICON_ADMIN_AWAY;
     int ICON_ADMIN_BROOM;
     int ICON_ADMIN_INGAME;
-
+	
+	int ICON_PLAYER;
+	
     int ICON_BOT;
     int ICON_BOT_BROOM;
     int ICON_BOT_INGAME;

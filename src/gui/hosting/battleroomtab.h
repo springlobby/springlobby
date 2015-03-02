@@ -159,6 +159,8 @@ private:
 //		wxStaticText* m_tidal_lbl;
 //		wxStaticText* m_size_lbl;
 		wxStaticText* m_ally_setup_lbl;
+		wxStaticText* m_specs_setup_lbl;
+		wxStaticText* m_players_setup_lbl;
 		wxStaticText* m_ok_count_lbl;
 
 		MapCtrl * m_minimap;
