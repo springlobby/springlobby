@@ -25,7 +25,7 @@
 #include <wx/image.h>
 #include <wx/choice.h>
 #include <wx/numdlg.h>
-#include <wx/statbmp.h>
+#include <wx/generic/statbmpg.h>
 
 #include <stdexcept>
 
@@ -295,7 +295,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 		m_side_sel_sizer->SetMinSize( side_sel_width, CONTROL_HEIGHT );
 	#endif
 	m_side_sel_sizer->Add( m_side_sel, 1, wxEXPAND );
-	
+
 	// Put widgets in place
 	m_player_sett_sizer->Add( m_team_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
 	m_player_sett_sizer->Add( m_team_sel, 0, wxEXPAND | wxALL, 2 );
@@ -309,13 +309,13 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 	m_player_sett_sizer->Add( m_auto_unspec_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->AddStretchSpacer();
-	m_player_sett_sizer->Add( (new wxStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_SPECTATOR))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_SPECTATOR))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_specs_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
-	m_player_sett_sizer->Add( (new wxStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_PLAYER))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_PLAYER))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_players_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
-	m_player_sett_sizer->Add( (new wxStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_STARTED_GAME))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_STARTED_GAME))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
-	m_player_sett_sizer->Add( (new wxStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_NREADY))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_NREADY))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ok_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 
 	m_players_sizer->Add( m_players, 1, wxEXPAND );
@@ -515,7 +515,7 @@ void BattleRoomTab::UpdateStatsLabels()
 	if (m_battle == NULL) return;
 	m_ok_count_lbl->SetLabel( wxString::Format( _( "%d " ), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ));
 	PrintAllySetup();
-	
+
 	m_player_sett_sizer->Layout();
 	m_players_sizer->Layout();
 }
@@ -913,7 +913,7 @@ void BattleRoomTab::OnUserLeft( User& user )
 	m_players->RemoveUser( user );
 
 	UpdateStatsLabels();
-	
+
 	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(UiEvents::StatusData( wxString::Format(_("%s left your active battle"), TowxString(user.GetNick()).c_str()), 1 ) );
 }
 
