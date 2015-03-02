@@ -8,7 +8,6 @@
 
 struct UserStatus;
 struct UserBattleStatus;
-class Battle;
 
 //! @brief Class that implements server event behaviour.
 class ServerEvents : public IServerEvents
