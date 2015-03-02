@@ -2914,6 +2914,11 @@ msgstr "Установите таймаут!"
 msgid "%s joined your active battle"
 msgstr "%s присоединился к вашему сражению"
 
+#: src/hosting/battleroomtab.cpp:
+#, c-format
+msgid "%s left your active battle"
+msgstr "%s покинул ваше сражение"
+
 #: src/hosting/battleroomtab.cpp:965
 msgid "Enter preset name"
 msgstr "Введите название опции"
