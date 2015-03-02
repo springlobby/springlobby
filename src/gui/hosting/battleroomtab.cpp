@@ -901,6 +901,8 @@ void BattleRoomTab::OnUserLeft( User& user )
 	m_players->RemoveUser( user );
 
 	UpdateStatsLabels();
+	
+	UiEvents::GetStatusEventSender( UiEvents::addStatusMessage ).SendEvent(UiEvents::StatusData( wxString::Format(_("%s left your active battle"), TowxString(user.GetNick()).c_str()), 1 ) );
 }
 
 
