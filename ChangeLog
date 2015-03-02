@@ -7,6 +7,8 @@ ChangeLog of Springlobby
  - only check map/game existence in battlelist (skip hash as it depends on used engine)
  - make content search blocking/non-threaded (should fix all/most issues)
  - add download prompt when no engine version can be found on lobby server connect
+ - replace setup info in BattleRoom with images
+ - add zebra striping effect in ListCtrl widgets
 
 ## 0.210
  - fix autoupdater (Couldn't cleanup ...)
