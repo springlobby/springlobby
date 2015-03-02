@@ -25,6 +25,7 @@
 #include <wx/image.h>
 #include <wx/choice.h>
 #include <wx/numdlg.h>
+#include <wx/statbmp.h>
 
 #include <stdexcept>
 
@@ -153,8 +154,10 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 	m_color_lbl = new wxStaticText( m_player_panel, -1, _( "Color" ) );
 	m_side_lbl = new wxStaticText( m_player_panel, -1, _( "Side" ) );
 
-	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, _( "Setup: " ) );
-	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, _( "Unready: 0" ) );
+	m_ally_setup_lbl = new wxStaticText( m_player_panel, -1, _( "setup: " ) );
+	m_specs_setup_lbl = new wxStaticText( m_player_panel, -1, _( "specs: " ) );
+	m_players_setup_lbl = new wxStaticText( m_player_panel, -1, _( "players: " ) );
+	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, _( "unready: 0" ) );
 
 	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, wxEmptyString, wxDefaultPosition, wxDefaultSize );
 
@@ -292,7 +295,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 		m_side_sel_sizer->SetMinSize( side_sel_width, CONTROL_HEIGHT );
 	#endif
 	m_side_sel_sizer->Add( m_side_sel, 1, wxEXPAND );
-
+	
 	// Put widgets in place
 	m_player_sett_sizer->Add( m_team_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
 	m_player_sett_sizer->Add( m_team_sel, 0, wxEXPAND | wxALL, 2 );
@@ -306,7 +309,13 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 	m_player_sett_sizer->Add( m_auto_unspec_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->AddStretchSpacer();
+	m_player_sett_sizer->Add( (new wxStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_SPECTATOR))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( m_specs_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_PLAYER))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( m_players_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_STARTED_GAME))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_NREADY))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ok_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 
 	m_players_sizer->Add( m_players, 1, wxEXPAND );
@@ -391,8 +400,8 @@ void BattleRoomTab::PrintAllySetup()
 	wxString setupstring;
 	if ( m_battle )
 	{
-		setupstring += _T("<") + TowxString( m_battle->GetSpectators() ) + _T("> ");
-		setupstring += _T(" [") + TowxString( m_battle->GetNumActivePlayers() ) + _T("]: ");
+		m_specs_setup_lbl->SetLabel( wxString::Format( "%d    ", m_battle->GetSpectators()) );
+		m_players_setup_lbl->SetLabel( wxString::Format( "%d    ", m_battle->GetNumActivePlayers()) );
 		wxString alliancesstring;
 		int previousalliancesize = 0;
 		bool ffamode = true;
@@ -411,9 +420,9 @@ void BattleRoomTab::PrintAllySetup()
 			//alliancesstring += wxString::Format( _T("(%d)") , itor->first );
 		}
 		if ( !ffamode ) setupstring += alliancesstring;
-		else setupstring += wxString::Format(_("%d way FFA"), previousalliancesize);
+		else setupstring += wxString::Format(_("%d way FFA   "), previousalliancesize);
 	}
-	m_ally_setup_lbl->SetLabel( wxString::Format( _( "Setup: %s" ), setupstring.c_str() ));
+	m_ally_setup_lbl->SetLabel( wxString::Format( _( "%s   " ), setupstring.c_str() ));
 	Layout();
 }
 
@@ -504,8 +513,11 @@ void BattleRoomTab::UpdateMapInfoSummary()
 void BattleRoomTab::UpdateStatsLabels()
 {
 	if (m_battle == NULL) return;
-	m_ok_count_lbl->SetLabel( wxString::Format( _( "Unready: %d" ), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ));
+	m_ok_count_lbl->SetLabel( wxString::Format( _( "%d " ), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ));
 	PrintAllySetup();
+	
+	m_player_sett_sizer->Layout();
+	m_players_sizer->Layout();
 }
 
 void BattleRoomTab::UpdateMyInfo() {

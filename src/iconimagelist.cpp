@@ -61,6 +61,7 @@
 #include "images/closed_full_pw_game.png.h"
 #include "images/closed_full_game.png.h"
 
+#include "images/player.xpm"
 
 #include "images/nexists.xpm"
 #include "images/exists.xpm"
@@ -97,6 +98,8 @@ IconImageList::IconImageList() : wxImageList(16,16,true)
     ICON_ADMIN_BROOM = Add( charArr2wxBitmap( admin_broom_png, sizeof(admin_broom_png) ) );
     ICON_ADMIN_INGAME = Add( charArr2wxBitmap( admin_ingame_png, sizeof(admin_ingame_png) ) );
 
+	ICON_PLAYER = Add( wxBitmap(player_xpm) );
+	
     ICON_BOT = Add( wxBitmap(bot_xpm) );
     ICON_BOT_BROOM = Add( charArr2wxBitmap( bot_broom_png, sizeof( bot_broom_png ) )  );
     ICON_BOT_INGAME = Add( charArr2wxBitmap( bot_ingame_png, sizeof( bot_ingame_png ) ) );
