@@ -12,6 +12,7 @@
 #include <iostream>
 #endif
 
+static bool gui = false;
 
 class myLogger: public wxLog
 {
@@ -50,7 +51,7 @@ public:
 	virtual void DoLog(wxLogLevel loglevel, const wxChar* msg, time_t /*time*/)
 	{
 
-	  if(loglevel==wxLOG_Error || loglevel==wxLOG_FatalError) // show user only errors
+	  if (gui && (loglevel==wxLOG_Error || loglevel==wxLOG_FatalError)) // show user only errors
 	  {
 	    wxCommandEvent *event = new wxCommandEvent(wxEVT_SHOW, ui().mw().mySHOW_ERROR_MESSAGE);
 	    event->SetString(wxString(msg).c_str());
@@ -152,9 +153,11 @@ void Logger::Shutdown()
 void Logger::ShowDebugWindow(bool show)
 {
 	gui = show;
+/*
 	if (show) {
 		wxLogDebug("enabled debug window");
 	}
+*/
 }
 
 extern void lsllogerror(const char* format, ...)
