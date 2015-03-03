@@ -309,13 +309,13 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 	m_player_sett_sizer->Add( m_auto_unspec_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->AddStretchSpacer();
-	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_SPECTATOR))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_SPECTATOR))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_specs_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
-	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_PLAYER))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_PLAYER))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_players_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
-	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_STARTED_GAME))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_STARTED_GAME))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
-	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(this, wxID_ANY, icons().GetIcon(icons().ICON_NREADY))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_NREADY))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ok_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 2 );
 
 	m_players_sizer->Add( m_players, 1, wxEXPAND );
@@ -517,7 +517,6 @@ void BattleRoomTab::UpdateStatsLabels()
 	PrintAllySetup();
 
 	m_player_sett_sizer->Layout();
-	m_players_sizer->Layout();
 }
 
 void BattleRoomTab::UpdateMyInfo() {
