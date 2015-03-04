@@ -9,6 +9,7 @@ ChangeLog of Springlobby
  - add download prompt when no engine version can be found on lobby server connect
  - replace setup info in BattleRoom with images
  - add zebra striping effect in ListCtrl widgets
+ - fix /help in battleroom
 
 ## 0.210
  - fix autoupdater (Couldn't cleanup ...)
