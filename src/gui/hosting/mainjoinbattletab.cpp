@@ -84,10 +84,7 @@ IBattle* MainJoinBattleTab::GetCurrentBattle()
 
 ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
 {
-	if ( m_tabs->GetSelection() == 1 ) {
-		return &GetBattleRoomTab().GetChatPanel();
-	}
-	return 0;
+	return &GetBattleRoomTab().GetChatPanel(); //battle chatpanel always exists
 }
 
 void MainJoinBattleTab::UpdateCurrentBattle()
