@@ -237,6 +237,7 @@ MainWindow::MainWindow( )
 
         //this should take off the firstload time considerably *ie nil it :P )
         mapSelectDialog(true, this);
+	Logger::ShowDebugWindow(true);
 //	Logger::ShowDebugWindow(cfg().ReadBool(_T("/debug")));
 }
 
@@ -273,6 +274,7 @@ void MainWindow::SetLogWin( wxLogWindow* log)
 }
 MainWindow::~MainWindow()
 {
+	Logger::ShowDebugWindow(false);
 	SetEvtHandlerEnabled( false );
 	if ( m_opts_dialog )
 	{
