@@ -138,7 +138,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 	m_ally_sel->SetToolTip( TE( _( "Players with the same ally number work together to achieve victory." ) ) );
 	m_color_sel = new ColorButton( m_player_panel, BROOM_COLOURSEL, wxColour (0,0,0), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_color_sel->SetToolTip( TE( _( "Select a color to identify your units in-game" ) ) );
-	m_side_sel = new wxBitmapComboBox( m_player_panel, BROOM_SIDESEL, wxEmptyString, wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ), wxArrayString(), wxCB_READONLY );
+	m_side_sel = new wxBitmapComboBox( m_player_panel, BROOM_SIDESEL, wxEmptyString, wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT ), wxArrayString(), wxCB_READONLY );
 	m_side_sel->SetToolTip( TE( _( "Select your faction" ) ) );
 	m_spec_chk = new wxCheckBox( m_player_panel, BROOM_SPEC, _( "Spectator" ), wxDefaultPosition, wxSize( -1, CONTROL_HEIGHT ) );
 	m_spec_chk->SetToolTip( TE( _( "Spectate (watch) the battle instead of playing" ) ) );
@@ -1192,6 +1192,9 @@ void BattleRoomTab::RegenerateOptionsList()
 			for ( unsigned int i = 0; i < sides.GetCount(); i++ ) {
 				m_side_sel->Append(sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
 			}
+			wxSize s = m_side_sel->GetEffectiveMinSize();
+			s.SetWidth(s.GetWidth() + 12); // HACK without this additional place, the image overflows the text on wxGtk
+			m_side_sel->SetMinSize(s);
 		}
 		catch ( ... ) {}
 	}
