@@ -20,7 +20,6 @@
 #include <wx/choicdlg.h>
 
 #include "utils/conversion.h"
-#include "defines.h"
 #include "settings.h"
 #include "images/springlobby.xpm"
 #include "images/springsettings.xpm"

@@ -17,7 +17,6 @@
 #include "settings.h"
 #include "utils/slconfig.h"
 #include "utils/conversion.h"
-#include "defines.h"
 
 #include "utils/platform.h"
 #include "utils/slpaths.h"

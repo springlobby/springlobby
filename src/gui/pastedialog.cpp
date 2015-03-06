@@ -16,10 +16,8 @@
 #include "utils/conversion.h"
 #include "iconimagelist.h"
 
-#ifdef HAVE_WX29
-	//in < 29 this is defined in wxDialogBase, which seems to have disappeared
-	enum { ButtonSizerFlags = wxOK|wxCANCEL|wxYES|wxNO|wxHELP|wxNO_DEFAULT };
-#endif
+//in < 29 this is defined in wxDialogBase, which seems to have disappeared
+enum { ButtonSizerFlags = wxOK|wxCANCEL|wxYES|wxNO|wxHELP|wxNO_DEFAULT };
 
 BEGIN_EVENT_TABLE(PasteDialog,wxDialog)
 		EVT_BUTTON(ID_PASTE_BUTTON, PasteDialog::OnPasteButton)

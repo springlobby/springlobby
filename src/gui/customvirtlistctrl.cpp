@@ -3,7 +3,6 @@
 #include "gui/customdialogs.h"
 #include "gui/controls.h"
 #include "settings.h"
-#include "defines.h"
 #include "iconimagelist.h"
 #include "uiutils.h"
 #include "gui/sltipwin.h"
@@ -69,15 +68,15 @@ CustomVirtListCtrl<T,L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, con
 
 	StartTimer();
 	Connect( ListctrlDoSortEventType, wxCommandEventHandler( ThisType::OnSortEvent ), NULL, this );
-	
+
 	unsigned char r = m_bg_color.Red();
 	unsigned char g = m_bg_color.Green();
 	unsigned char b = m_bg_color.Blue();
-	
+
 	r = r < 128 ? r+20 : r-20;
 	g = g < 128 ? g+20 : g-20;
 	b = b < 128 ? b+20 : b-20;
-	
+
 	m_list_attr_one.SetBackgroundColour( wxColour(r,g,b) );
 }
 
@@ -582,12 +581,12 @@ template < class T, class L >
 wxListItemAttr* CustomVirtListCtrl<T,L>::OnGetItemAttr(long item) const
 {
 	auto *_att = asImp().GetItemAttr(item);
-	
+
 	if(_att!=NULL) return _att;
-	
+
 	if( (item % 2) == 0 )
 		return const_cast<wxListItemAttr*>(&m_list_attr_one);
-	else 
+	else
 		return const_cast<wxListItemAttr*>(&m_list_attr_two);
 }
 

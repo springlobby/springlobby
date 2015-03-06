@@ -48,7 +48,6 @@
 #include "gui/notificationmanager.h"
 #include "utils/wxTranslationHelper.h"
 #include "gui/playback/playbacktab.h"
-#include "defines.h"
 #include "utils/slpaths.h"
 #include "downloader/lib/src/FileSystem/FileSystem.h"
 #include "log.h"
@@ -213,38 +212,23 @@ bool SpringLobbyApp::SelectLanguage()
 
 void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
-    #ifndef HAVE_WX29
-        #define STR _T
-    #else
-        #define STR
-    #endif
-
-	#ifndef HAVE_WX29
-		#define CSTR
-	#else
-		#define CSTR .c_str()
-	#endif
-
     static const wxCmdLineEntryDesc cmdLineDesc[] =
 	{
-		{ wxCMD_LINE_SWITCH, STR("h"), STR("help"), wxTRANSLATE("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-		{ wxCMD_LINE_SWITCH, STR("nc"), STR("no-crash-handler"), wxTRANSLATE("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, STR("fl"), STR("file-logging"),  wxTRANSLATE("dumps application log to a file ( enter path )"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-		{ wxCMD_LINE_SWITCH, STR("cl"), STR("console-logging"),  wxTRANSLATE("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_SWITCH, STR("gl"), STR("gui-logging"),  wxTRANSLATE("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_OPTION, STR("f"), STR("config-file"),  wxTRANSLATE("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
-		{ wxCMD_LINE_OPTION, STR("l"), STR("log-verbosity"),  wxTRANSLATE("overrides default logging verbosity, can be:\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
-		{ wxCMD_LINE_SWITCH, STR("ve"), STR("version"),  wxTRANSLATE("print version"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL},
-		{ wxCMD_LINE_OPTION, STR("n"), STR("name"),  wxTRANSLATE("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_SWITCH, "h",  "help", wxTRANSLATE("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+		{ wxCMD_LINE_SWITCH, "nc", "no-crash-handler", wxTRANSLATE("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, "fl", "file-logging",  wxTRANSLATE("dumps application log to a file ( enter path )"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
+		{ wxCMD_LINE_SWITCH, "cl", "console-logging",  wxTRANSLATE("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_SWITCH, "gl", "gui-logging",  wxTRANSLATE("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_OPTION, "f",  "config-file",  wxTRANSLATE("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR },
+		{ wxCMD_LINE_OPTION, "l",  "log-verbosity",  wxTRANSLATE("overrides default logging verbosity, can be:\n                                1: critical errors\n                                2: errors\n                                3: warnings (default)\n                                4: messages\n                                5: function trace"), wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL },
+		{ wxCMD_LINE_SWITCH, "ve", "version",  wxTRANSLATE("print version"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL},
+		{ wxCMD_LINE_OPTION, "n",  "name",  wxTRANSLATE("overrides default application name"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
 		{ wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL } //this is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
 
     };
 
     parser.SetDesc( cmdLineDesc );
     parser.SetSwitchChars (_T("-"));
-
-    #undef STR
-    #undef CSTR
 }
 
 //! @brief parses the command line and sets global app options like log verbosity or log target

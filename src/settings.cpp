@@ -9,7 +9,6 @@
 #include "springsettings/se_utils.h"
 #include "utils/wxTranslationHelper.h"
 #include "utils/slconfig.h"
-#include "defines.h" //to get HAVEWX??
 
 #include <wx/filename.h>
 #include <wx/filefn.h>
@@ -23,9 +22,7 @@
 #include <wx/wfstream.h>
 #include <wx/settings.h>
 #include <wx/tokenzr.h>
-#ifdef HAVE_WX29
-	#include <wx/colourdata.h>
-#endif
+#include <wx/colourdata.h>
 #include <set>
 #include <lslutils/misc.h>
 #include <lslutils/globalsmanager.h>

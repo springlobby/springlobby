@@ -32,10 +32,8 @@
 #include "battleroomtab.h"
 #include "user.h"
 #include "ibattle.h"
-#include "defines.h"
 #include "utils/conversion.h"
 #include "utils/uievents.h"
-#include "defines.h"
 #include "battleroomlistctrl.h"
 #include "gui/chatpanel.h"
 #include "gui/mapctrl.h"
@@ -290,10 +288,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
 	wxBoxSizer* m_side_sel_sizer = new wxBoxSizer( wxHORIZONTAL );
-	#ifndef HAVE_WX29
-		int side_sel_width = m_side_sel->GetWidestItemWidth();
-		m_side_sel_sizer->SetMinSize( side_sel_width, CONTROL_HEIGHT );
-	#endif
 	m_side_sel_sizer->Add( m_side_sel, 1, wxEXPAND );
 
 	// Put widgets in place
