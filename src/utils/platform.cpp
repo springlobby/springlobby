@@ -205,6 +205,10 @@ int BrowseFolder(const wxString& path)
 #endif
 }
 
+#ifndef __WXMSW__
+#include <signal.h>
+#include <time.h>
+#endif
 int WaitForExit(int pid)
 {
 #ifdef __WXMSW__
@@ -217,6 +221,11 @@ int WaitForExit(int pid)
 	GetExitCodeProcess(h, &exitCode);
 	CloseHandle(h);
 	return exitCode;
+#else
+	struct timespec delay;
+	delay.tv_sec = 0;
+	delay.tv_nsec = 100000; // 100ms
+	while ( (kill(pid, 0) == 0) && (nanosleep(&delay, NULL) == 0)) {}
 #endif
 	return 0;
 }

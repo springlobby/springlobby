@@ -16,13 +16,7 @@ void UpdateMainAppHasFocus( bool focus )
 
 const wxChar* TooltipEnable(const wxString& input)
 {
-#if !defined(HAVE_WX29) || defined(__WXOSX_COCOA__)
 	wxString dummy = wxEmptyString;
 	if (!main_app_has_focus) return dummy.wc_str();
 	return sett().GetShowTooltips() ? input.wc_str() : dummy.wc_str();
-#else
-	wxString dummy = wxEmptyString;
-	if (!main_app_has_focus) return dummy.wc_str();
-	return sett().GetShowTooltips() ? input.wc_str() : dummy.wc_str();
-#endif
 }

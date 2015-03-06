@@ -126,7 +126,7 @@ MainWindow::MainWindow( )
 	m_has_focus(true)
 {
 	SetMinSize( wxSize(720, 576) );
-	
+
 	m_tab_names.Add( _("Chat") );
 	m_tab_names.Add( _("Battlelist") );
 	m_tab_names.Add( _("Battleroom") );
@@ -417,7 +417,6 @@ ChatPanel* MainWindow::GetActiveChatPanel()
 {
   unsigned int index = m_func_tabs->GetSelection();
   if ( index == PAGE_CHAT ) return m_chat_tab->GetActiveChatPanel();
-  //! TODO (koshi) this doesn't work when in broom an and sending "/help (ShowMessage() )
   if ( index == PAGE_JOIN ) return m_join_tab->GetActiveChatPanel();
   return 0;
 }

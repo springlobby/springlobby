@@ -5,7 +5,6 @@
 #include "gui/chatpanel.h"
 #include "gui/chatpanelmenu.h"
 #include "gui/mainwindow.h"
-#include "defines.h"
 
 #include <wx/menu.h>
 #include <wx/scrolwin.h>
@@ -371,11 +370,7 @@ bool SLNotebook::LoadPerspective(const wxString& layout) {
 
 	// create a new tab frame
 	wxTabFrame* new_tabs = new wxTabFrame;
-	#ifdef HAVE_WX29
 	const int nextid = m_tabIdCounter++;
-	#else
-	const int nextid = m_tab_id_counter++;
-	#endif
 	new_tabs->m_tabs = new wxAuiTabCtrl(this,
 				nextid,
 				wxDefaultPosition,
