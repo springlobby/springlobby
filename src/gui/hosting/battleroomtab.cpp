@@ -1197,7 +1197,7 @@ void BattleRoomTab::RegenerateOptionsList()
 				m_side_sel->Append(sides[i], icons().GetBitmap( icons().GetSideIcon( m_battle->GetHostModName(), i ) ) );
 			}
 			wxSize s = m_side_sel->GetEffectiveMinSize();
-			s.SetWidth(s.GetWidth() + 12); // HACK without this additional place, the image overflows the text on wxGtk
+			s.SetWidth(s.GetWidth() + 16); // HACK without this additional place, the image overflows the text on wxGtk
 			m_side_sel->SetMinSize(s);
 		}
 		catch ( ... ) {}
