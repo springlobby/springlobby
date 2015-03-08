@@ -507,10 +507,12 @@ void BattleRoomTab::UpdateMapInfoSummary()
 void BattleRoomTab::UpdateStatsLabels()
 {
 	if (m_battle == NULL) return;
+	Freeze();
 	m_ok_count_lbl->SetLabel( wxString::Format( _( "%d " ), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers() ));
 	PrintAllySetup();
 
 	m_player_sett_sizer->Layout();
+	Thaw();
 }
 
 void BattleRoomTab::UpdateMyInfo() {
@@ -952,9 +954,11 @@ void BattleRoomTab::UpdateHighlights()
 void BattleRoomTab::UpdatePresetList()
 {
 	if ( !m_battle ) return;
+	Freeze();
 	m_options_preset_sel->Clear();
 	m_options_preset_sel->Append( sett().GetPresetList() );
 	m_options_preset_sel->SetStringSelection(TowxString(m_battle->GetCurrentPreset()));
+	Thaw();
 }
 
 

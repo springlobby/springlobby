@@ -247,6 +247,7 @@ void BattleListTab::UserUpdate( User& user )
 
 void BattleListTab::UpdateBattle( IBattle& battle )
 {
+	Freeze();
 	if ( !battle.GetGUIListActiv() ) {
 		AddBattle( battle );
 	}
@@ -257,11 +258,12 @@ void BattleListTab::UpdateBattle( IBattle& battle )
 		  SelectBattle( NULL );
 		  m_battle_list->SetSelectedIndex( -1 );
 		}
-		return;
+		Thaw();return;
 	}
 	m_battle_list->UpdateBattle( battle );
 	if ( &battle == m_sel_battle )
 		SelectBattle( m_sel_battle );
+	Thaw();
 }
 
 
@@ -275,6 +277,7 @@ void BattleListTab::RemoveAllBattles()
 
 void BattleListTab::UpdateList() {
 
+	Freeze();
 	m_battle_list->SetSelectedIndex( -1 );
 	
 	serverSelector().GetServer().battles_iter->IteratorBegin();
@@ -288,6 +291,7 @@ void BattleListTab::UpdateList() {
 	
 	if(m_sel_battle!=NULL)
 	  m_battle_list->SetSelectedIndex( m_battle_list->GetIndexFromData( m_sel_battle ) );
+	Thaw();
 }
 
 
