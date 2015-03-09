@@ -82,6 +82,7 @@
 #endif
 
 SLCONFIG("/GUI/UseTabIcons", true, "Show icons in main tabs");
+SLCONFIG("/GUI/DoubleBuffered", false, "Double buffer gui controls (reduces flickering)");
 
 BEGIN_EVENT_TABLE(MainWindow, wxFrame)
 
@@ -204,16 +205,16 @@ MainWindow::MainWindow( )
 	m_replay_tab = new PlaybackTab ( m_func_tabs, true);
 	m_torrent_tab = new MainDownloadTab( m_func_tabs);
 
-//WINDOWS ONLY: Prevents most of controls from flickering, but raises some minor graphical artifacts
-#if defined(__WXMSW__)
-	m_chat_tab->SetDoubleBuffered( true );
-	m_list_tab->SetDoubleBuffered( true );
-	m_join_tab->SetDoubleBuffered( true );
-	m_sp_tab->SetDoubleBuffered( true );
-//	m_savegame_tab->SetDoubleBuffered( true );
-	m_replay_tab->SetDoubleBuffered( true );
-	m_torrent_tab->SetDoubleBuffered( true );
-#endif
+	//WINDOWS ONLY: Prevents most of controls from flickering, but raises some minor graphical artifacts
+	if ( cfg().ReadBool(_T( "/GUI/DoubleBuffered" ))) {
+		m_chat_tab->SetDoubleBuffered( true );
+		m_list_tab->SetDoubleBuffered( true );
+		m_join_tab->SetDoubleBuffered( true );
+		m_sp_tab->SetDoubleBuffered( true );
+	//	m_savegame_tab->SetDoubleBuffered( true );
+		m_replay_tab->SetDoubleBuffered( true );
+		m_torrent_tab->SetDoubleBuffered( true );
+	}
 
     //use Insert so no Changepage events are triggered
     m_func_tabs->InsertPage( PAGE_CHAT,     m_chat_tab,     m_tab_names[PAGE_CHAT],     true  );
