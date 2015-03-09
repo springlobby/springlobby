@@ -9,11 +9,8 @@
 #include <algorithm>
 #include <lslutils/misc.h>
 
-#ifdef HAVE_WX29
 wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T,L)
-#else
-BEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T,L)
-#endif
+
 #if wxUSE_TIPWINDOW
 EVT_MOTION(CustomVirtListCtrl::OnMouseMotion)
 EVT_TIMER(IDD_TIP_TIMER, CustomVirtListCtrl::OnTimer)
