@@ -380,6 +380,7 @@ void BattleRoomTab::SplitSizerHorizontally( const bool horizontal )
 void BattleRoomTab::UpdateBattleInfo()
 {
 	if ( !m_battle ) return;
+	Freeze();
 	m_lock_chk->SetValue( m_battle->IsLocked() );
 	m_minimap->UpdateMinimap();
 	OptionListMap::iterator it;
@@ -387,6 +388,7 @@ void BattleRoomTab::UpdateBattleInfo()
 		UpdateBattleInfo(it->first);
 	}
 	UpdateMapInfoSummary();
+	Thaw();
 }
 
 void BattleRoomTab::PrintAllySetup()
@@ -517,8 +519,10 @@ void BattleRoomTab::UpdateStatsLabels()
 
 void BattleRoomTab::UpdateMyInfo() {
     if ( !m_battle ) return;
+	Freeze();
     m_players->UpdateUser(m_battle->GetMe());
     m_players->RefreshVisibleItems();
+	Thaw();
 }
 
 void BattleRoomTab::UpdateUser( User& user )
@@ -916,6 +920,7 @@ void BattleRoomTab::OnUserLeft( User& user )
 void BattleRoomTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 {
 	if ( !m_battle ) return;
+	Freeze();
 	//m_minimap->UpdateMinimap();//should happen automagically now
 	RegenerateOptionsList();
 	ReloadMaplist();
@@ -927,6 +932,7 @@ void BattleRoomTab::OnUnitsyncReloaded( wxCommandEvent& /*data*/ )
 	}
 	m_battle->SendMyBattleStatus(); // This should reset sync status.
 	ui().DownloadArchives(*m_battle);
+	Thaw();
 }
 
 long BattleRoomTab::AddMMOptionsToList( long pos, LSL::Enum::GameOption optFlag )
@@ -1090,6 +1096,7 @@ void BattleRoomTab::SortPlayerList()
 
 void BattleRoomTab::SetBattle(IBattle* battle)
 {
+	Freeze();
 	m_battle = battle;
 
 	m_team_sel->Enable(m_battle);
@@ -1160,6 +1167,7 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 	{
 		m_host_new_btn->Show( true );
 	}
+	Thaw();
 }
 
 void BattleRoomTab::RegenerateOptionsList()
