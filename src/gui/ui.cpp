@@ -4,14 +4,6 @@
 // Class: Ui
 //
 
-#ifdef _MSC_VER
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif // NOMINMAX
-#include <winsock2.h>
-#endif // _MSC_VER
-
-
 #include <wx/textdlg.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
