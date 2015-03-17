@@ -160,7 +160,6 @@ Socket::Socket( iNetClass& netclass):
     m_handle( _GetHandle() ),
     m_connecting( false ),
     m_net_class(netclass),
-	m_udp_private_port(0),
     m_rate(-1),
     m_sent(0)
 {

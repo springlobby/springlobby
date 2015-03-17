@@ -84,7 +84,6 @@ private:
 	std::string m_handle;
     bool m_connecting;
     iNetClass& m_net_class;
-    unsigned int m_udp_private_port;
     int m_rate;
     int m_sent;
     std::string m_buffer;
