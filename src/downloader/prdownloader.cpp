@@ -143,6 +143,7 @@ void SearchItem::Run()
 			return;
 		}
 	}
+	wxLogError(wxString::Format("Item (%s) requested for download could not be found. Sorry.", m_name.c_str()));
 	return;
 }
 
