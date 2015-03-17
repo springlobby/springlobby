@@ -15,6 +15,7 @@
 #include <wx/tooltip.h>
 #include <wx/textctrl.h>
 #include <wx/log.h>
+#include <wx/spinctrl.h>
 
 #include <lslunitsync/optionswrapper.h>
 #include <lslunitsync/unitsync.h>
@@ -24,7 +25,6 @@
 #include "gui/controls.h"
 #include "utils/conversion.h"
 #include "utils/lslconversion.h"
-#include "gui/spinctl/spinctrl.h"
 
 SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiontag ):
 	m_battle( battle ),
@@ -64,7 +64,7 @@ SingleOptionDialog::SingleOptionDialog( IBattle& battle, const wxString& optiont
         case LSL::Enum::opt_float:
 			{
                 const auto opt = optWrap.m_opts[optFlag].float_map[key];
-				m_spinctrl = new SlSpinCtrlDouble(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
+				m_spinctrl = new wxSpinCtrlDouble(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
                                     wxSP_ARROW_KEYS, double( opt.min ), double( opt.max ),
                                     double( opt.value ), double( opt.stepping ), TowxString(opt.key));
                 m_spinctrl->SetToolTip( TES( opt.description ) );

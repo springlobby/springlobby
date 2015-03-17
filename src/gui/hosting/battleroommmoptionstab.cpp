@@ -12,12 +12,12 @@
 #include <wx/tipwin.h>
 #include <wx/tooltip.h>
 #include <wx/textctrl.h>
+#include <wx/spinctrl.h>
 #include <map>
 
 #include "gui/controls.h"
 #include "utils/conversion.h"
 #include "battle.h"
-#include "gui/spinctl/spinctrl.h"
 #include "gui/customdialogs.h"
 #include "iserver.h"
 #include "settings.h"
@@ -39,7 +39,7 @@ BEGIN_EVENT_TABLE(BattleroomMMOptionsTab, wxScrolledWindow)
 	EVT_COMBOBOX					(wxID_ANY, BattleroomMMOptionsTab::OnComBoxChange)
 	EVT_CHECKBOX					(wxID_ANY, BattleroomMMOptionsTab::OnChkBoxChange)
 	EVT_TEXT_ENTER					(wxID_ANY, BattleroomMMOptionsTab::OnTextCtrlChange)
-	EVT_SLSPINCTRLDOUBLE			(wxID_ANY, BattleroomMMOptionsTab::OnSpinCtrlDoubleChange)
+	EVT_SPINCTRLDOUBLE			(wxID_ANY, BattleroomMMOptionsTab::OnSpinCtrlDoubleChange)
 //  EVT_BUTTON( BOPTS_LOADPRES, BattleroomMMOptionsTab::OnLoadPreset )
 //  EVT_BUTTON( BOPTS_SAVEPRES, BattleroomMMOptionsTab::OnSavePreset )
 //  EVT_BUTTON( BOPTS_DELETEPRES, BattleroomMMOptionsTab::OnDeletePreset )
@@ -212,7 +212,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
         if ( it.second.section == section.key )
         {
             const LSL::mmOptionFloat current = it.second;
-			SlSpinCtrlDouble* tempspin = new SlSpinCtrlDouble(this, FLOAT_START_ID+ctrl_count, _T(""),
+			wxSpinCtrlDouble* tempspin = new wxSpinCtrlDouble(this, FLOAT_START_ID+ctrl_count, _T(""),
 					wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, double(current.min), double(current.max),
                     double(current.value),double(current.stepping), TowxString(current.key));
             tempspin->SetSnapToTicks( true );
@@ -365,10 +365,10 @@ void BattleroomMMOptionsTab::OnTextCtrlChange(wxCommandEvent& event)
 	}
 }
 
-void BattleroomMMOptionsTab::OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event)
+void BattleroomMMOptionsTab::OnSpinCtrlDoubleChange(wxSpinDoubleEvent& event)
 {
 	if ( !m_battle ) return;
-	SlSpinCtrlDouble* box = (SlSpinCtrlDouble*) event.GetEventObject();
+	wxSpinCtrlDouble* box = (wxSpinCtrlDouble*) event.GetEventObject();
     const auto key = STD_STRING((box->GetName()).AfterFirst(sep));
 	long gameoption;
 	box->GetName().BeforeFirst(sep).ToLong(&gameoption);
@@ -423,7 +423,7 @@ void BattleroomMMOptionsTab::UpdateOptControls(const wxString& controlName)
 	{
          const long value = LSL::Util::FromString<long>(
                      m_battle->CustomBattleOptions().getSingleValue( optKey, (LSL::Enum::GameOption)gameoption ));
-		SlSpinCtrlDouble* cur = m_spinctrl_map[controlName] ;
+		wxSpinCtrlDouble* cur = m_spinctrl_map[controlName] ;
         cur->SetValue(value);
 	}
 

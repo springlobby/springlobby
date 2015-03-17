@@ -13,8 +13,8 @@
 #include <wx/radiobut.h>
 #include <wx/combobox.h>
 #include <wx/textctrl.h>
+#include <wx/spinctrl.h>
 
-#include "gui/spinctl/spinctrl.h"
 #include "utils/conversion.h"
 
 #include "ctrlconstants.h"
@@ -231,7 +231,7 @@ void tab_quality_video::initW4Sizer(wxSizer* sizer)
     sizer->Add( refractionCom, 0, wxEXPAND|wxALL, 4 );
 
     sizer->Add(new wxStaticText(this, -1, (W4_CONTROLS[6].lbl)) , 0, wxTOP|wxEXPAND, 5);
-    m_aniso_spin = new SlSpinCtrlDouble(this, W4_CONTROLS[6].id, wxEmptyString,
+    m_aniso_spin = new wxSpinCtrlDouble(this, W4_CONTROLS[6].id, wxEmptyString,
             wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0.f, 6.f,
             0.f,0.25f, wxEmptyString);
     m_aniso_spin->SetToolTip(W4_CONTROLS[6].tTip[0]);
@@ -323,7 +323,7 @@ void tab_quality_video::OnComboBoxChange(wxCommandEvent& event)
 }
 
 //! this just forwards the direct event receivier from the control to base class
-void tab_quality_video::OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event)
+void tab_quality_video::OnSpinCtrlDoubleChange(wxSpinDoubleEvent& event)
 {
     abstract_panel::OnSpinCtrlDoubleChange( event );
 }

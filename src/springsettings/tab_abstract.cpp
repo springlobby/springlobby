@@ -13,9 +13,9 @@
 #include <wx/combobox.h>
 #include <wx/textctrl.h>
 #include <wx/display.h>
+#include <wx/spinctrl.h>
 
 
-#include "gui/spinctl/spinctrl.h"
 #include "gui/customdialogs.h"
 #include "utils/conversion.h"
 #include "ctrlconstants.h"
@@ -558,11 +558,11 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event) {
 	}
 }
 
-void abstract_panel::OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event)
+void abstract_panel::OnSpinCtrlDoubleChange(wxSpinDoubleEvent& event)
 {
 	if (event.GetId()==ID_W4_BumpWaterAnisotropy)
 	{
-		SlSpinCtrlDouble* aniso = (SlSpinCtrlDouble*) event.GetEventObject();
+		wxSpinCtrlDouble* aniso = (wxSpinCtrlDouble*) event.GetEventObject();
 		(floatSettings)[W4_CONTROLS[6].key] = aniso->GetValue();
 		settingsChanged = true;
 	}

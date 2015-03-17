@@ -23,9 +23,9 @@ namespace LSL {
 class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
-class SlSpinCtrlDouble;
+class wxSpinCtrlDouble;
 class wxTextCtrl;
-class SlSpinDoubleEvent;
+class wxSpinDoubleEvent;
 class wxStaticText;
 class wxButton;
 class IBattle;
@@ -82,11 +82,11 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 
 //        typedef BattleroomMMOptionsTab<IBattle> ThisType;
 
-//        friend class SlSpinCtrlDouble<ThisType>; //so we don't have to make the event handler public for everyone
+//        friend class wxSpinCtrlDouble<ThisType>; //so we don't have to make the event handler public for everyone
 		//totally ok to store pointers here, since wx takes care of gui element destruction for us
         typedef std::map<wxString,wxCheckBox*> chkBoxMap;
         typedef std::map<wxString,wxComboBox*> comboBoxMap;
-        typedef std::map<wxString,SlSpinCtrlDouble* > spinCtrlMap;
+        typedef std::map<wxString,wxSpinCtrlDouble* > spinCtrlMap;
         typedef std::map<wxString,wxTextCtrl*> textCtrlMap;
         typedef std::map<wxString,wxStaticText*> staticTextMap;
         typedef std::map<wxString,wxButton*> buttonMap;
@@ -121,7 +121,7 @@ class BattleroomMMOptionsTab : public wxScrolledWindow
 		void OnComBoxChange(wxCommandEvent&);
 		void OnChkBoxChange(wxCommandEvent&);
 		void OnTextCtrlChange(wxCommandEvent& event);
-		void OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event);
+		void OnSpinCtrlDoubleChange(wxSpinDoubleEvent& event);
 		/** @} */
 
 		wxButton* getButton( const wxWindowID id, const wxString& name );

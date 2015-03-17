@@ -9,8 +9,8 @@ class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;
 class IBattle;
-class SlSpinCtrlDouble;
-class SlSpinDoubleEvent;
+class wxSpinCtrlDouble;
+class wxSpinDoubleEvent;
 class wxTextCtrl;
 class wxStaticText;
 class wxButton;
@@ -28,7 +28,7 @@ private:
 
 		wxCheckBox* m_checkbox;
 		wxComboBox* m_combobox;
-		SlSpinCtrlDouble* m_spinctrl;
+		wxSpinCtrlDouble* m_spinctrl;
 		wxTextCtrl* m_textctrl;
 		wxButton* m_cancel_button;
 		wxButton* m_ok_button;

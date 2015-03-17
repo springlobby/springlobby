@@ -19,8 +19,8 @@ class wxSize;
 class wxCloseEvent;
 class wxSlider;
 class wxStaticBoxSizer;
-class SlSpinCtrlDouble;
-class SlSpinDoubleEvent;
+class wxSpinCtrlDouble;
+class wxSpinDoubleEvent;
 
 class tab_quality_video : public abstract_panel
 {
@@ -36,7 +36,7 @@ class tab_quality_video : public abstract_panel
 		void initW4Sizer(wxSizer* );
 		void updateControls(int);
 		virtual void OnComboBoxChange(wxCommandEvent& event);
-		void OnSpinCtrlDoubleChange(SlSpinDoubleEvent& event);
+		void OnSpinCtrlDoubleChange(wxSpinDoubleEvent& event);
 
 	private:
 		void OnClose(wxCloseEvent& event);
@@ -74,7 +74,7 @@ class tab_quality_video : public abstract_panel
 
         std::vector<wxControl*> m_w4_controls;
 
-        SlSpinCtrlDouble* m_aniso_spin;
+        wxSpinCtrlDouble* m_aniso_spin;
 
 		DECLARE_EVENT_TABLE()
 };

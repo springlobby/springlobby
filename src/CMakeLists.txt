@@ -260,8 +260,6 @@ SET(SLSharedWithSettings
 	gui/sltipwin.cpp
 	gui/infodialog.cpp
 	gui/windowattributespickle.cpp
-	gui/spinctl/generic/spinctlg.cpp
-	gui/spinctl/generic/spinctrldouble.cpp
 	gui/aboutbox.cpp
 
 
