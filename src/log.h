@@ -19,7 +19,6 @@ public:
 	static void Shutdown();
 	static void ShowDebugWindow(bool show);
 private:
-	static bool gui;
 };
 
 #define slLogDebugFunc(format, ...)\

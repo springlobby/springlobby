@@ -106,7 +106,7 @@ private:
 };
 
 
-bool Logger::gui = false;
+
 
 Logger::Logger()
 {
