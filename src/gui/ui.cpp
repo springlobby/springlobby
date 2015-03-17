@@ -469,9 +469,9 @@ bool Ui::DownloadArchives(const IBattle& battle)
         wxLogWarning( _T( "trying to join battles with incompatible spring version" ) );
 
 		if ( wxYES == customMessageBox( SL_MAIN_ICON,
-						wxString::Format(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded?"), TowxString(engineName).c_str(), TowxString(engineVersion).c_str(),
+						wxString::Format(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded?"), TowxString(engineName).c_str(), TowxString(engineVersion).c_str()),
 						_("Engine missing"),
-						wxYES_NO ) )) {
+						wxYES_NO | wxICON_QUESTION ) ) {
 			Download(PrDownloader::GetEngineCat(), engineVersion, "");
 			return true;
 		}
