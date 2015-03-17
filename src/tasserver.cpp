@@ -1640,7 +1640,7 @@ void TASServer::SetHandicap( int battleid, User& user, int handicap)
 	}
 
 	if ( !GetBattle(battleid).IsFounderMe() ) {
-		DoActionBattle( battleid, "thinks " + user.GetNick() + " should get a " + stdprintf("%d", handicap + "% resource bonus"));
+		DoActionBattle( battleid, stdprintf("thinks %s should get a %d% resource bonus", user.GetNick().c_str(),  handicap));
 		return;
 	}
 
