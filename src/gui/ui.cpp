@@ -472,9 +472,9 @@ bool Ui::DownloadArchives(const IBattle& battle)
 						wxString::Format(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded?"), TowxString(engineName).c_str(), TowxString(engineVersion).c_str()),
 						_("Engine missing"),
 						wxYES_NO | wxICON_QUESTION ) ) {
-			Download(PrDownloader::GetEngineCat(), engineVersion, "");
-			return true;
+			ui().Download(PrDownloader::GetEngineCat(), engineVersion, "");
 		}
+		return false;
 	}
 
 	if (battle.MapExists() && battle.ModExists()) {
