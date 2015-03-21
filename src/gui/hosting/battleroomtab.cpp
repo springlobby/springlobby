@@ -157,13 +157,13 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 	m_players_setup_lbl = new wxStaticText( m_player_panel, -1, _( "players: " ) );
 	m_ok_count_lbl = new wxStaticText( m_player_panel, -1, _( "unready: 0" ) );
 
-	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, wxEmptyString, wxDefaultPosition, wxDefaultSize );
+	m_map_combo = new wxComboBox( this, BROOM_MAP_SEL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxArrayString(), wxCB_READONLY );
 
 	m_minimap = new MapCtrl( this, 162, m_battle, true, true, false );
 	m_minimap->SetToolTip( TE( _( "A preview of the selected map.  You can see the starting positions, or (if set) starting boxes." ) ) );
 
 	m_browse_map_btn = new wxButton( this, BROOM_MAP_BROWSE, _( "Map" ), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
+	//m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
 
 	m_players = new BattleroomListCtrl( m_player_panel, m_battle, false, true );
 	m_chat = new ChatPanel( m_splitter, m_battle );
@@ -287,9 +287,6 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 	//m_info1_sizer = new wxBoxSizer( wxHORIZONTAL );
 	m_main_sizer = new wxBoxSizer( wxVERTICAL );
 
-	wxBoxSizer* m_side_sel_sizer = new wxBoxSizer( wxHORIZONTAL );
-	m_side_sel_sizer->Add( m_side_sel, 1, wxEXPAND );
-
 	// Put widgets in place
 	m_player_sett_sizer->Add( m_team_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
 	m_player_sett_sizer->Add( m_team_sel, 0, wxEXPAND | wxALL, 2 );
@@ -298,18 +295,18 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 	m_player_sett_sizer->Add( m_color_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
 	m_player_sett_sizer->Add( m_color_sel, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->Add( m_side_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 2 );
-	m_player_sett_sizer->Add( m_side_sel_sizer, 0, wxEXPAND | wxALL, 2 );
+	m_player_sett_sizer->Add( m_side_sel, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->Add( m_spec_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->Add( m_auto_unspec_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ready_chk, 0, wxEXPAND | wxALL, 2 );
 	m_player_sett_sizer->AddStretchSpacer();
-	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_SPECTATOR))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT, 2 );
-	m_player_sett_sizer->Add( m_specs_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT, 2 );
-	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_PLAYER))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT, 2 );
-	m_player_sett_sizer->Add( m_players_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT, 2 );
-	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_STARTED_GAME))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT, 2 );
-	m_player_sett_sizer->Add( m_ally_setup_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT, 2 );
-	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_NREADY))), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_SPECTATOR))), 0, (wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT) | wxALL, 2  );
+	m_player_sett_sizer->Add( m_specs_setup_lbl, 0, (wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT) | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_PLAYER))), 0, (wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT) | wxALL, 2 );
+	m_player_sett_sizer->Add( m_players_setup_lbl, 0, (wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT) | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_STARTED_GAME))), 0, (wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT) | wxALL, 2 );
+	m_player_sett_sizer->Add( m_ally_setup_lbl, 0, (wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT) | wxALL, 2 );
+	m_player_sett_sizer->Add( (new wxGenericStaticBitmap(m_player_panel, wxID_ANY, icons().GetIcon(icons().ICON_NREADY))), 0, (wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT) | wxALL, 2 );
 	m_player_sett_sizer->Add( m_ok_count_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT, 2 );
 
 	m_players_sizer->Add( m_players, 1, wxEXPAND );
@@ -323,9 +320,9 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 	//m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
 
 	m_info_sizer->Add( m_minimap, 0, wxEXPAND );
-	m_map_select_sizer->Add( m_map_combo, 0, wxALL | wxEXPAND | wxALIGN_CENTER_VERTICAL );
-	m_map_select_sizer->Add( m_browse_map_btn, 0, wxALIGN_RIGHT );
-	m_info_sizer->Add( m_map_select_sizer, 0, wxALL );
+	m_map_select_sizer->Add( m_map_combo, 0, wxALL | wxEXPAND, 2 );
+	m_map_select_sizer->Add( m_browse_map_btn, 0, wxALIGN_RIGHT | wxALL, 2 );
+	m_info_sizer->Add( m_map_select_sizer, 0, wxEXPAND | wxALL, 2 );
 	//m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
 	//m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
 	m_info_sizer->Add( m_opts_list, 1, wxEXPAND | wxTOP, 4 );
@@ -356,7 +353,7 @@ BattleRoomTab::BattleRoomTab( wxWindow* parent, IBattle* battle )
 	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
 	SetSizer( m_main_sizer );
 	Layout();
-
+	
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
 }
 
