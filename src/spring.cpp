@@ -95,11 +95,11 @@ bool Spring::Run( IBattle& battle )
 
 	const std::string demopath = battle.GetPlayBackFilePath();
 	if (!demopath.empty()){
-		params.push_back(TowxString(demopath));
+		params.push_back(TowxStringForFS(demopath));
 		return LaunchEngine(executable, params);
 	}
 
-	const wxString scripttxt = TowxString(SlPaths::GetLobbyWriteDir()) + _T("script.txt");
+	const wxString scripttxt = TowxStringForFS(SlPaths::GetLobbyWriteDir()) + _T("script.txt");
 	try {
 
 		wxFile f( scripttxt, wxFile::write );
@@ -135,7 +135,7 @@ bool Spring::LaunchEngine(const std::string& cmd, wxArrayString& params)
 		params.push_back(_T("--safemode"));
 	}
 	wxLogMessage( _T("spring call params: %s"), TowxString(cmd).c_str() );
-	wxSetWorkingDirectory( TowxString(SlPaths::GetDataDir()) );
+	wxSetWorkingDirectory( TowxStringForFS(SlPaths::GetDataDir()) );
 
 	if ( m_process == 0 ) {
 		m_process = new SpringProcess( *this );

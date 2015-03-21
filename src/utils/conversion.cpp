@@ -29,6 +29,14 @@ wxString TowxString(const std::string& arg){
   s << arg;
   return wxString(s.str().c_str(),wxConvUTF8);
 }
+//FIXME: I think this is wrong way to do it. Usaga
+wxString TowxStringForFS(const std::string& arg){
+#ifdef WIN32	
+	return wxString(arg);
+#else
+	return TowxString(arg);
+#endif
+}
 
 wxString TowxString(int arg){
   std::stringstream s;

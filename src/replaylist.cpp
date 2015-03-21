@@ -23,15 +23,37 @@ ReplayList::ReplayList()
 
 void ReplayList::LoadPlaybacks(const std::vector<std::string> &filenames )
 {
+	bool errorsOccuredFlag = false;
+	std::vector<wxString> errorsList;
+	
 	m_replays.clear();
+	
 	for ( size_t i = 0; i < filenames.size(); ++i) {
 		const std::string wfilename = filenames[i];
 		StoredGame& playback = AddPlayback(i);
-		if (!GetReplayInfos(wfilename, playback)) {
-			// looks like funny add/remove logic, but the Replay contains OfflineBattle which is IBattle which is ultimately boost::noncopyable.
-			wxLogWarning(_T("Couldn't open replay %s"), TowxString(wfilename).c_str() );
+		try
+		{
+			GetReplayInfos(wfilename, playback);
+		}catch(wxString errorExceptionMessage)
+		{
+			if(	errorsList.size()<3 )
+			{
+				errorsList.push_back(errorExceptionMessage);
+				errorsOccuredFlag = true;
+			}
 			RemovePlayback(i);
 		}
+	}
+	
+	if( errorsOccuredFlag )
+	{
+		wxString errorMessage = "There have been errors in loading playback procedure! Here is some of them:";
+		for( auto& e : errorsList )
+		{
+			errorMessage += "\n";
+			errorMessage += e;
+		}
+		wxLogError(errorMessage);
 	}
 }
 
@@ -55,19 +77,19 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret )
 	ret.SpringVersion = LSL::Util::BeforeLast(LSL::Util::AfterLast(FileName, "_"),".");
 	ret.MapName = LSL::Util::BeforeLast(FileName, "_");
 
-	if (!wxFileExists(TowxString(ReplayPath))) {
-		return false;
+	if (!wxFileExists(TowxStringForFS(ReplayPath))) {
+		throw wxString::Format(_T("File %s does not exist!"), ReplayPath.c_str());
 	}
-	wxFile replay(TowxString(ReplayPath), wxFile::read );
+	wxFile replay(TowxStringForFS(ReplayPath), wxFile::read );
 	if (!replay.IsOpened()) {
-		return false;
+		throw wxString::Format(_T("Could not open file %s for reading!"), ReplayPath.c_str());
 	}
 
 	const int replay_version = replayVersion( replay );
 	ret.battle.SetScript(GetScriptFromReplay( replay, replay_version ));
 
 	if ( ret.battle.GetScript().empty() ) {
-		return false;
+		throw wxString::Format(_T("File %s have incompatible version!"), ReplayPath.c_str());
 	}
 
 	GetHeaderInfo(replay, ret, replay_version );
@@ -82,8 +104,7 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret )
 	wxDateTime rdate;
 
 	if (rdate.ParseFormat(TowxString(FileName), _T("%Y%m%d_%H%M%S")) == 0) {
-		wxLogError(_T("Parsing %s failed"), TowxString(FileName).c_str());
-		return false;
+		throw wxString::Format(_T("Name of the file %s could not be parsed!"), ReplayPath.c_str());
 	}
 	ret.date=rdate.GetTicks(); // now it is sorted properly
 	ret.date_string=STD_STRING(rdate.FormatISODate()+_T(" ")+rdate.FormatISOTime());
