@@ -85,6 +85,13 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret )
 		throw wxString::Format(_T("Could not open file %s for reading!"), ReplayPath.c_str());
 	}
 
+	if(replay.Length()==0)
+	{
+		replay.Close();
+		wxRemoveFile(TowxStringForFS(ReplayPath));
+		throw wxString::Format(_T("File %s was corrupted and was deleted!"), ReplayPath.c_str());
+	}
+	
 	const int replay_version = replayVersion( replay );
 	ret.battle.SetScript(GetScriptFromReplay( replay, replay_version ));
 
