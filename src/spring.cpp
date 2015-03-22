@@ -99,7 +99,7 @@ bool Spring::Run( IBattle& battle )
 		return LaunchEngine(executable, params);
 	}
 
-	const wxString scripttxt = TowxStringForFS(SlPaths::GetLobbyWriteDir()) + _T("script.txt");
+	const wxString scripttxt = TowxString(SlPaths::GetLobbyWriteDir()) + _T("script.txt");
 	try {
 
 		wxFile f( scripttxt, wxFile::write );
