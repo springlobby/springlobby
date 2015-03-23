@@ -150,6 +150,7 @@ private:
 	wxString m_last_used_backup_server;
 
 	bool m_first_update_trigger;
+	bool m_connecting;
 	int m_connect_retries;
 
 	EventReceiverFunc<Ui, BattleEvents::BattleEventData, &Ui::OnBattleInfoUpdated>
