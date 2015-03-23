@@ -7,20 +7,18 @@
 #include "utils/mixins.h"
 #include <wx/statbmp.h>
 #include <wx/popupwin.h>
-#include "gui/wxbackgroundimage.h"
-
+#include <wx/dc.h>
+#include <wx/custombgwin.h>
 
 
 class wxBackgroundBitmap;
 #if wxUSE_POPUPWIN
-	typedef wxPopupWindow
-		ToasterBase;
+	typedef wxPopupWindow ToasterBase;
 #else
-	typedef wxWindow
-		ToasterBase;
+	typedef wxWindow ToasterBase;
 #endif
 
-class ToasterBoxWindow: public ToasterBase, public wxTimer , public SL::NonCopyable
+class ToasterBoxWindow: public wxCustomBackgroundWindow<ToasterBase>, public wxTimer , public SL::NonCopyable
 {
   public:
     ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2);
@@ -54,7 +52,6 @@ class ToasterBoxWindow: public ToasterBase, public wxTimer , public SL::NonCopya
     int pauseTime;
 	wxColour textColor;
 	wxString popupText;
-	wxBackgroundBitmap m_background_bitmap;
 
 	wxStaticBitmap sbm;
 	wxString bitmapFile;

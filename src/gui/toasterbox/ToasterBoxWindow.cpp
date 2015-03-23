@@ -25,17 +25,16 @@ long ToasterBoxWindow::count = 0;
 //END_EVENT_TABLE ()
 
 ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
-	ToasterBase(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR),
 	startTime( wxGetLocalTime() ),
 	parent2( _parent2 ),
 	sleepTime( 10 ),
 	pauseTime( 1700 ),
 	textColor( *wxWHITE ),
 	popupText( _T("Change Me!") ),
-	m_background_bitmap( wxBitmap(charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png) ) ) ),
 	shrink(false)
 {
 	SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+	SetWindowStyleFlag(wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR);
 	count++;
 	//the size we want the dialog to be
 	wxSize dialogSize(150, 170);
@@ -44,7 +43,8 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
 
 	ToasterBase::Connect( wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)& ToasterBoxWindow::OnEraseBackground);
 	ToasterBase::Connect( wxEVT_PAINT, (wxObjectEventFunction)& ToasterBoxWindow::OnPaint);
-	PushEventHandler( &m_background_bitmap);
+	Create(parent, wxID_ANY);
+	SetBackgroundBitmap(charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png)));
 }
 
 ToasterBoxWindow::~ToasterBoxWindow()
