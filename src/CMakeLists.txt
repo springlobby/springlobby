@@ -190,7 +190,6 @@ set(springlobbySrc
 	gui/toasternotification.cpp
 	gui/taskbar.cpp
 	gui/ui.cpp
-	gui/wxbackgroundimage.cpp
 	gui/wxtextctrlhist.cpp
 
 	gui/battlelist/battlelistctrl.cpp

@@ -79,6 +79,8 @@ Ui::Ui() :
 	m_serv(0),
 	m_main_win(0),
 	m_con_win(0),
+	m_connecting(false),
+	m_connect_retries(0),
 	m_first_update_trigger(true),
 	m_battle_info_updatedSink( this, &BattleEvents::GetBattleEventSender( ( BattleEvents::BattleInfoUpdate ) ) )
 {
@@ -155,6 +157,7 @@ void Ui::ShowConnectWindow()
 //! @see DoConnect
 void Ui::Connect()
 {
+	if (m_connecting) return;
 	const wxString server_name = sett().GetDefaultServer();
 	const wxString nick = sett().GetServerAccountNick( server_name );
 	const wxString pass = sett().GetServerAccountPass( server_name );
@@ -164,6 +167,7 @@ void Ui::Connect()
 		return;
 	}
 	m_con_win = 0;
+	m_connecting = true;
 	DoConnect( server_name, nick, pass);
 }
 
@@ -520,6 +524,7 @@ void Ui::OnLoggedIn( )
 void Ui::OnDisconnected( IServer& server, bool wasonline )
 {
 	Start( s_reconnect_delay_ms, true );
+	m_connecting = false;
 
 	if ( m_main_win == 0 ) return;
 	slLogDebugFunc("");

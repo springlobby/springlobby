@@ -23,8 +23,6 @@ std::string strtolower(std::string str);
 
 long FromwxString(const wxString& arg);
 
-#define WX_STRINGC(v) wxString(v,wxConvUTF8)
-
 static inline long s2l( const wxString& arg )
 {
     long ret;

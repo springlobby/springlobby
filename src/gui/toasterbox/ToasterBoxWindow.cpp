@@ -12,15 +12,10 @@
 #include <wx/log.h>
 
 #include "ToasterBoxWindow.h"
-#include "gui/wxbackgroundimage.h"
 #include "images/notif_bg.png.h"
 #include "gui/uiutils.h"
 
-#ifndef __WXMSW__
-	typedef wxClientDC DCType;
-#else
-	typedef wxBufferedPaintDC DCType;
-#endif
+typedef wxClientDC DCType;
 
 long ToasterBoxWindow::count = 0;
 
@@ -30,17 +25,16 @@ long ToasterBoxWindow::count = 0;
 //END_EVENT_TABLE ()
 
 ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
-	ToasterBase(parent,  wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR),
 	startTime( wxGetLocalTime() ),
 	parent2( _parent2 ),
 	sleepTime( 10 ),
 	pauseTime( 1700 ),
 	textColor( *wxWHITE ),
 	popupText( _T("Change Me!") ),
-	m_background_bitmap( charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png) ) ),
 	shrink(false)
 {
 	SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+	SetWindowStyleFlag(wxNO_BORDER|wxSTAY_ON_TOP|wxFRAME_NO_TASKBAR);
 	count++;
 	//the size we want the dialog to be
 	wxSize dialogSize(150, 170);
@@ -49,10 +43,15 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer *_parent2):
 
 	ToasterBase::Connect( wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)& ToasterBoxWindow::OnEraseBackground);
 	ToasterBase::Connect( wxEVT_PAINT, (wxObjectEventFunction)& ToasterBoxWindow::OnPaint);
-#ifndef __WXMSW__
-	PushEventHandler( new wxBackgroundBitmap( m_background_bitmap ) );
-#endif
+	Create(parent, wxID_ANY);
+	SetBackgroundBitmap(charArr2wxBitmap( notif_bg_png, sizeof(notif_bg_png)));
 }
+
+ToasterBoxWindow::~ToasterBoxWindow()
+{
+	PopEventHandler();
+}
+
 
 void ToasterBoxWindow::SetPopupBitmap(wxBitmap& bitmap)
 {
@@ -189,15 +188,10 @@ void ToasterBoxWindow::ScrollDown( )
   else
 	wxLogDebug(_T("%s"), _T("not valid parent"));
 }
-#include "settings.h"
+
 void ToasterBoxWindow::DrawText()
 {
 	DCType dc( this );
-#ifdef __WXMSW__
-//	dc.SetBackground( *wxBLACK_BRUSH );
-//	dc.Clear();
-	dc.DrawBitmap(m_background_bitmap, 0, 0, false);
-#endif
   //width and height of text
   wxCoord w = 0, h = 0;
   //where we will set the text
