@@ -201,25 +201,29 @@ wxString PlaybackListCtrl::GetItemText(long item, long column) const
 
 int PlaybackListCtrl::GetItemImage(long item) const
 {
-    if ( m_data[item] == NULL )
-        return -1;
-
     return -1;//icons().GetBattleStatusIcon( *m_data[item] );
 }
 
-int PlaybackListCtrl::GetItemColumnImage(long /*item*/, long /*column*/) const
+int PlaybackListCtrl::GetItemColumnImage(long item, long column) const
 {
-    //nothing's been done here atm
-    return -1;
+    if ( m_data[item] == NULL )
+        return -1;
 
-//    if ( m_data[item] == NULL )
-//        return -1;
-//
-//    const StoredGame& replay = *m_data[item];
-//
-//    switch ( column ) {
-//        default: return -1;
-//    }
+    const StoredGame& replay = *m_data[item];
+
+    switch ( column ) {
+		
+		case 0:
+			if( replay.duration==0 )
+			{
+				return icons().ICON_NEXISTS;
+			}
+			return icons().ICON_EXISTS;
+			break;
+			
+        default: 
+			return -1;
+    }
 }
 
 wxListItemAttr* PlaybackListCtrl::GetItemAttr(long /*unused*/) const
