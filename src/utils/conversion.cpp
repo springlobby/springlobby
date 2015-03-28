@@ -24,18 +24,12 @@ std::string stdprintf(const char* format, ...)
 	return std::string(buf, count);
 }
 
+//IMPORTANT NOTE: wxString( blah, wxConvUTF8 ) since wx2.9 returns empty string
+//on Windows if "blah" contains non-english characters! 
+//wxString(std::string) works normally
 wxString TowxString(const std::string& arg){
-  std::stringstream s;
-  s << arg;
-  return wxString(s.str().c_str(),wxConvUTF8);
-}
-//FIXME: I think this is wrong way to do it. Usaga
-wxString TowxStringForFS(const std::string& arg){
-#ifdef WIN32	
-	return wxString(arg);
-#else
-	return TowxString(arg);
-#endif
+  wxString temproraryString = wxString(arg.c_str(),wxConvUTF8);
+  return temproraryString.IsEmpty() ? wxString(arg) : temproraryString;
 }
 
 wxString TowxString(int arg){

@@ -77,10 +77,10 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret )
 	ret.SpringVersion = LSL::Util::BeforeLast(LSL::Util::AfterLast(FileName, "_"),".");
 	ret.MapName = LSL::Util::BeforeLast(FileName, "_");
 
-	if (!wxFileExists(TowxStringForFS(ReplayPath))) {
+	if (!wxFileExists(TowxString(ReplayPath))) {
 		throw wxString::Format(_T("File %s does not exist!"), ReplayPath.c_str());
 	}
-	wxFile replay(TowxStringForFS(ReplayPath), wxFile::read );
+	wxFile replay(TowxString(ReplayPath), wxFile::read );
 	if (!replay.IsOpened()) {
 		throw wxString::Format(_T("Could not open file %s for reading!"), ReplayPath.c_str());
 	}
@@ -88,7 +88,7 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret )
 	if(replay.Length()==0)
 	{
 		replay.Close();
-		wxRemoveFile(TowxStringForFS(ReplayPath));
+		wxRemoveFile(TowxString(ReplayPath));
 		throw wxString::Format(_T("File %s was corrupted and was deleted!"), ReplayPath.c_str());
 	}
 	
