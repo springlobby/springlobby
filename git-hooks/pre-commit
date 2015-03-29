@@ -3,14 +3,15 @@
 # Check that the code follows a consistant code style
 #
 
-# Check for existence of astyle, and error out if not present.
-if [ ! -x "$(which astyle)" ]; then
+FORMATER=clang-format
+
+# Check for existence of clang-format, and error out if not present.
+if [ ! -x "$(which $FORMATER)" ]; then
 	echo "git pre-commit hook:"
-	echo "Did not find astyle, please install it before continuing."
+	echo "Did not find clang-format, please install it before continuing."
 	exit 1
 fi
 
-ASTYLE_PARAMETERS="--style=linux --indent=force-tab"
 FILE_PATTERN="\.(c|cpp|h)$"
 IGNORE_PATTERN="^src/lib/"
 
@@ -20,7 +21,7 @@ for file in `git diff-index --cached --name-only HEAD --diff-filter=ACMR| egrep 
 	# revision in the index (and not the checked out version).
 	nf=`git checkout-index --temp ${file} | cut -f 1`
 	newfile=`mktemp /tmp/${nf}.XXXXXX` || exit 1
-	astyle ${ASTYLE_PARAMETERS} < $nf > $newfile 2>> /dev/null
+	clang-format< $nf > $newfile 2>> /dev/null
 	diff -u -p "${nf}" "${newfile}"
 	r=$?
 	rm "${newfile}"
@@ -32,7 +33,7 @@ for file in `git diff-index --cached --name-only HEAD --diff-filter=ACMR| egrep 
 		echo " Please fix before committing. Don't forget to run git add before trying to commit again. "
 		echo " If the whole file is to be committed, this should work (run from the top-level directory): "
 		echo " "
-		echo " astyle ${ASTYLE_PARAMETERS} $file; git add $file; git commit"
+		echo " $FORMATER $file; git add $file; git commit"
 		echo " "
 		echo "================================================================================================="
 	exit 1
