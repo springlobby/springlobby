@@ -218,7 +218,11 @@ void SpringOptionsTab::OnFindSync(wxCommandEvent& /*unused*/)
 
 static wxString GetUnitsyncFilter()
 {
+#ifdef __APPLE__
+	return wxString(_T("Spring application or unitsync (*.app;*.dylib)|*.app;*.dylib"));
+#else
 	return wxString(_T("unitsync")) << _T("(*") << TowxString(LIBEXT) << _T(")|*") << TowxString(LIBEXT);
+#endif
 }
 
 static wxString GetSpringFilter()
@@ -248,14 +252,11 @@ void SpringOptionsTab::OnBrowseSync(wxCommandEvent& /*unused*/)
 
 void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 {
-	wxFileDialog pick( this, _( "Choose UnitSync library" ),
-				wxPathOnly(TowxString(SlPaths::GetUnitSync())),
-				wxFileName::FileName(TowxString(SlPaths::GetUnitSync())).GetFullName(),
-#ifdef __APPLE__ _T("Spring application or unitsync (*.app;*.dylib)|*.app;*.dylib"));
-#else
+	wxFileDialog pick(this, _("Choose UnitSync library"),
+			  wxPathOnly(TowxString(SlPaths::GetUnitSync())),
+			  wxFileName::FileName(TowxString(SlPaths::GetUnitSync())).GetFullName(),
 			  GetUnitsyncFilter());
-#endif
-	if ( pick.ShowModal() == wxID_OK ) {
+	if (pick.ShowModal() == wxID_OK) {
 		//get unitsync version & add to list
 		bool failed = false;
 		wxString failMessage;
