@@ -206,24 +206,20 @@ int PlaybackListCtrl::GetItemImage(long item) const
 
 int PlaybackListCtrl::GetItemColumnImage(long item, long column) const
 {
-    if ( m_data[item] == NULL )
-        return -1;
+	if ( m_data[item] == NULL )
+		return -1;
 
-    const StoredGame& replay = *m_data[item];
+	const StoredGame& replay = *m_data[item];
 
-    switch ( column ) {
-		
+	switch ( column ) {
 		case 0:
-			if( replay.duration==0 )
-			{
+			if( replay.duration==0 ) {
 				return icons().ICON_NEXISTS;
 			}
 			return icons().ICON_EXISTS;
-			break;
-			
-        default: 
+		default:
 			return -1;
-    }
+	}
 }
 
 wxListItemAttr* PlaybackListCtrl::GetItemAttr(long /*unused*/) const
