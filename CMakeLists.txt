@@ -84,6 +84,23 @@ IF( EXISTS ${CPPCHECK_BINARY} )
 	add_dependencies( cppcheck cppcheck-lite )
 ENDIF( EXISTS ${CPPCHECK_BINARY} )
 
+
+find_program(CLANG_FORMAT_BINARY NAMES clang-format-3.5 clang-format-3.4 clang-format)
+if (EXISTS ${CLANG_FORMAT_BINARY})
+	file(GLOB_RECURSE files {CMAKE_CURRENT_SOURCE_DIR} src/*.cpp src/*.hpp src/*.h)
+
+	foreach(exclude src/lsl;src/downloader/lib ) # exclude some files
+		foreach(file in ${files})
+			if (file MATCHES "^${CMAKE_CURRENT_SOURCE_DIR}/${exclude}")
+				list(REMOVE_ITEM files ${file})
+			endif()
+		endforeach()
+	endforeach()
+	add_custom_target(format COMMAND ${CLANG_FORMAT_BINARY} -i ${files})
+else()
+	message(WARNING "clang-format not found")
+endif()
+
 IF( WIN32 )
 	LIST( APPEND SLSharedWithSettings ${CMAKE_CURRENT_SOURCE_DIR}/src/stacktrace.c )
 ELSE( WIN32 )
