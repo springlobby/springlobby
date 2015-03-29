@@ -79,9 +79,9 @@ Ui::Ui() :
 	m_serv(0),
 	m_main_win(0),
 	m_con_win(0),
+	m_first_update_trigger(true),
 	m_connecting(false),
 	m_connect_retries(0),
-	m_first_update_trigger(true),
 	m_battle_info_updatedSink( this, &BattleEvents::GetBattleEventSender( ( BattleEvents::BattleInfoUpdate ) ) )
 {
 	m_main_win = new MainWindow( );
