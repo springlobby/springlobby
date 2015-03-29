@@ -21,19 +21,19 @@ lsl/spring/springprocess.h
 #include <wx/process.h>
 
 BEGIN_DECLARE_EVENT_TYPES()
-DECLARE_LOCAL_EVENT_TYPE( wxEVT_SPRING_EXIT, 1 )
+DECLARE_LOCAL_EVENT_TYPE(wxEVT_SPRING_EXIT, 1)
 END_DECLARE_EVENT_TYPES()
 
 class Spring;
 
-class SpringProcess: public wxThread
+class SpringProcess : public wxThread
 {
-  public:
-    SpringProcess( Spring& sp );
-    ~SpringProcess();
-    void OnExit();
-    void SetCommand(const wxString& cmd, const wxArrayString& params);
-    void* Entry();
+public:
+	SpringProcess(Spring& sp);
+	~SpringProcess();
+	void OnExit();
+	void SetCommand(const wxString& cmd, const wxArrayString& params);
+	void* Entry();
 
 private:
 	Spring& m_sp;

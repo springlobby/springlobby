@@ -11,16 +11,16 @@ class TaskBar;
 class Statusbar : public wxStatusBar
 {
 public:
-	Statusbar( wxWindow* parent );
+	Statusbar(wxWindow* parent);
 	~Statusbar();
-	void OnAddMessage	( UiEvents::StatusData data );
-	void OnRemoveMessage( UiEvents::StatusData data );
+	void OnAddMessage(UiEvents::StatusData data);
+	void OnRemoveMessage(UiEvents::StatusData data);
 
 private:
 	static const wxEventType UpdateMsgEvt;
 	void OnUpdateMsg(wxCommandEvent& evt);
-	EventReceiverFunc< Statusbar, UiEvents::StatusData, &Statusbar::OnAddMessage> m_addMessageSink;
-	EventReceiverFunc< Statusbar, UiEvents::StatusData, &Statusbar::OnRemoveMessage> m_removeMessageSink;
+	EventReceiverFunc<Statusbar, UiEvents::StatusData, &Statusbar::OnAddMessage> m_addMessageSink;
+	EventReceiverFunc<Statusbar, UiEvents::StatusData, &Statusbar::OnRemoveMessage> m_removeMessageSink;
 
 	TaskBar* taskBar;
 	DECLARE_EVENT_TABLE()

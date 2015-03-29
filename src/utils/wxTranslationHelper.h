@@ -18,9 +18,9 @@ class wxTranslationHelper
 {
 
 public:
-	wxTranslationHelper(const wxString& catalog, const wxString & search_path );
+	wxTranslationHelper(const wxString& catalog, const wxString& search_path);
 	~wxTranslationHelper();
-	wxLocale * GetLocale();
+	wxLocale* GetLocale();
 
 	/** \brief put names and ID for all found .mo files
 	\param current_selected will contain the index of currently in settings selected languageID
@@ -30,12 +30,11 @@ public:
 
 private:
 	bool Load(int language);
-	void GetInstalledLanguages( wxArrayString& names, wxArrayLong& identifiers);
+	void GetInstalledLanguages(wxArrayString& names, wxArrayLong& identifiers);
 	long GetLangID(const long index, const wxArrayLong& identifiers) const;
 	wxString m_SearchPath;
 	wxString catalogname;
-	wxLocale * m_Locale;
-
+	wxLocale* m_Locale;
 };
 
 #endif

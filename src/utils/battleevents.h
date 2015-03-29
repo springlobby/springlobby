@@ -7,17 +7,17 @@
 #include "ibattle.h"
 #include <utility>
 
-namespace BattleEvents {
-	enum BattleEventsTypes {
-		AddBattle = 0,
-		RemoveBattle = 1,
-		UpdateBattle = 2,
-		BattleInfoUpdate = 3
-	};
+namespace BattleEvents
+{
+enum BattleEventsTypes {
+	AddBattle = 0,
+	RemoveBattle = 1,
+	UpdateBattle = 2,
+	BattleInfoUpdate = 3
+};
 
-	typedef std::pair<IBattle*,std::string> BattleEventData;
+typedef std::pair<IBattle*, std::string> BattleEventData;
 
-	EventSender<BattleEventData> &GetBattleEventSender( BattleEventsTypes cmd );
-
+EventSender<BattleEventData>& GetBattleEventSender(BattleEventsTypes cmd);
 }
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLEEVENTS_H

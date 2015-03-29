@@ -17,7 +17,8 @@ PenaltyBreakComment: 45
 PenaltyBreakString: 1000
 PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 75
-PointerBindsToType: false
+PointerBindsToType: true
+PointerAlignment: Left
 SpacesBeforeTrailingComments: 1
 Standard:        Auto
 IndentWidth:     8

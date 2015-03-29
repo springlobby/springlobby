@@ -11,28 +11,33 @@ class BattleBot;
 class MainSinglePlayerTab;
 
 
-class SinglePlayerBattle: public IBattle
+class SinglePlayerBattle : public IBattle
 {
 public:
-
-	SinglePlayerBattle(MainSinglePlayerTab& msptab );
+	SinglePlayerBattle(MainSinglePlayerTab& msptab);
 	virtual ~SinglePlayerBattle();
 
-	virtual bool IsFounderMe() const {
+	virtual bool IsFounderMe() const
+	{
 		return true;
 	}
 
-	virtual User& GetMe() {
+	virtual User& GetMe()
+	{
 		return m_me;
 	}
-	virtual const User& GetMe() const {
+	virtual const User& GetMe() const
+	{
 		return m_me;
 	}
 
-	virtual void SendHostInfo( HostInfo update );
-	virtual void SendHostInfo( const std::string& /*unused*/ ) { }
+	virtual void SendHostInfo(HostInfo update);
+	virtual void SendHostInfo(const std::string& /*unused*/)
+	{
+	}
 
 	virtual void StartSpring();
+
 private:
 	void RemoveUnfittingBots();
 

@@ -17,7 +17,7 @@
 #define DELIM "/"
 #endif
 
-BOOST_AUTO_TEST_CASE( slpaths )
+BOOST_AUTO_TEST_CASE(slpaths)
 {
 	const std::string testdir = "testdir";
 	const std::string subdirs = testdir + DELIM + "dir1" + DELIM + "dir2";
@@ -27,6 +27,4 @@ BOOST_AUTO_TEST_CASE( slpaths )
 	BOOST_CHECK(SlPaths::mkDir(subdirs2));
 	BOOST_CHECK(wxFileName::DirExists(TowxString(subdirs)));
 	BOOST_CHECK(SlPaths::RmDir(testdir));
-
 }
-

@@ -8,6 +8,6 @@
 
 WX_DECLARE_LIST(ToasterBoxWindow, ToasterBoxWindowList);
 typedef ToasterBoxWindowList::compatibility_iterator
-		ToasterBoxWindowListNode;
+    ToasterBoxWindowListNode;
 
 #endif // SPRINGLOBBY_TOASTERWINDOWLIST_HEADERGUARD

@@ -8,7 +8,7 @@
 #include <map>
 
 // helper macros to expand __LINE__
-#define SLCONFIG__PASTE(a, b) a ## b
+#define SLCONFIG__PASTE(a, b) a##b
 #define SLCONFIG_PASTE(a, b) SLCONFIG__PASTE(a, b)
 
 //! interface for adding a default value for a config key, inspired by
@@ -39,22 +39,22 @@
 // SLCONFIG macro
 //
 #define SLCONFIG(name, defVal, description) \
-	static slConfigDefault SLCONFIG_PASTE(slCfgVar, __LINE__)  = slConfigDefault(_T( name ), defVal)
-
+	static slConfigDefault SLCONFIG_PASTE(slCfgVar, __LINE__) = slConfigDefault(_T(name), defVal)
 
 
 // local class to lookup and save defaults
 template <class T>
-class Default {
-	typedef std::map <wxString, T> DefaultMap;
+class Default
+{
+	typedef std::map<wxString, T> DefaultMap;
 
-	public:
-		Default();
-		void Get(const wxString& key, T& defValue) const;
-		void Set(const wxString& key, const T& defValue);
+public:
+	Default();
+	void Get(const wxString& key, T& defValue) const;
+	void Set(const wxString& key, const T& defValue);
 
-	private:
-		DefaultMap defaultMap;
+private:
+	DefaultMap defaultMap;
 };
 
 class wxFileInputStream;
@@ -65,58 +65,59 @@ class wxFileInputStream;
 // ReadLong(key), ReadDouble(key) or ReadBool(key)
 class slConfig : public wxFileConfig, public SL::NonCopyable
 {
+public:
+	slConfig(const wxString& localFilename, const wxString& globalFilename);
+
+	static slConfig* Get();
+
+#if wxUSE_STREAMS
+	slConfig(wxInputStream& in, const wxMBConv& conv = wxConvAuto());
+#endif // wxUSE_STREAMS
+
+	//		wxString GetFilePath() const;
+	void SaveFile();
+
+	//! container for default values
+	static Default<wxString>& GetDefaultsString();
+	static Default<long>& GetDefaultsLong();
+	static Default<double>& GetDefaultsDouble();
+	static Default<bool>& GetDefaultsBool();
+
+
+	//! easy to use methods to read config, IF default is set
+	wxString ReadString(const wxString& key) const;
+	long ReadLong(const wxString& key) const;
+	double ReadDouble(const wxString& key) const;
+	bool ReadBool(const wxString& key) const;
+
+	/// list all entries subkeys of a parent group
+	wxArrayString GetGroupList(const wxString& base_key);
+	/// list all groups subkeys of a parent group
+	wxArrayString GetEntryList(const wxString& base_key);
+	/// counts all groups subkeys of a parent group
+	unsigned int GetGroupCount(const wxString& base_key);
+
+	class PathGuard
+	{
+		slConfig* m_config;
+		const wxString m_old_path;
+		DECLARE_NO_COPY_CLASS(PathGuard)
 	public:
-		slConfig ( const wxString& localFilename, const wxString& globalFilename);
+		PathGuard(slConfig* config, const wxString& new_path)
+		    : m_config(config)
+		    , m_old_path(config ? config->GetPath() : wxString(wxEmptyString))
+		{
+			if (m_config)
+				m_config->SetPath(new_path);
+		}
 
-		static slConfig* Get();
-
-	#if wxUSE_STREAMS
-		slConfig ( wxInputStream& in, const wxMBConv& conv = wxConvAuto() );
-	#endif // wxUSE_STREAMS
-
-//		wxString GetFilePath() const;
-		void SaveFile();
-
-		//! container for default values
-		static Default<wxString>& GetDefaultsString();
-		static Default<long>& GetDefaultsLong();
-		static Default<double>& GetDefaultsDouble();
-		static Default<bool>& GetDefaultsBool();
-
-
-		//! easy to use methods to read config, IF default is set
-		wxString  ReadString(const wxString& key) const;
-		long      ReadLong(const wxString& key) const;
-		double    ReadDouble(const wxString& key) const;
-		bool      ReadBool(const wxString& key) const;
-
-		/// list all entries subkeys of a parent group
-		wxArrayString GetGroupList( const wxString& base_key );
-		/// list all groups subkeys of a parent group
-		wxArrayString GetEntryList( const wxString& base_key );
-		/// counts all groups subkeys of a parent group
-		unsigned int GetGroupCount( const wxString& base_key );
-
-		class PathGuard {
-				slConfig* m_config;
-				const wxString m_old_path;
-				DECLARE_NO_COPY_CLASS(PathGuard)
-			public:
-				PathGuard( slConfig* config, const wxString& new_path )
-					:m_config( config ),
-					m_old_path( config ? config->GetPath() : wxString(wxEmptyString) )
-				{
-					if ( m_config )
-						m_config->SetPath( new_path );
-				}
-
-				~PathGuard()
-				{
-					if ( m_config )
-						m_config->SetPath( m_old_path );
-				}
-		};
-		static wxString m_chosen_path;
+		~PathGuard()
+		{
+			if (m_config)
+				m_config->SetPath(m_old_path);
+		}
+	};
+	static wxString m_chosen_path;
 
 #ifdef __WXMSW__
 protected:
@@ -130,16 +131,16 @@ private:
 
 
 //! Helper class to define defaults for config keys
-class slConfigDefault {
-	public:
-		slConfigDefault(const wxString& key, const wxString& defVal);
-		slConfigDefault(const wxString& key, const char* defVal);
-		slConfigDefault(const wxString& key, const long& defVal);
-		slConfigDefault(const wxString& key, const double& defVal);
-		slConfigDefault(const wxString& key, const bool& defVal);
+class slConfigDefault
+{
+public:
+	slConfigDefault(const wxString& key, const wxString& defVal);
+	slConfigDefault(const wxString& key, const char* defVal);
+	slConfigDefault(const wxString& key, const long& defVal);
+	slConfigDefault(const wxString& key, const double& defVal);
+	slConfigDefault(const wxString& key, const bool& defVal);
 };
 
 slConfig& cfg();
 
 #endif // SLCONFIG_H
-

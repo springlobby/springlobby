@@ -8,4 +8,3 @@
 static wxAuiManager* m_global_aui_mngr = 0;
 
 #endif // SPRINGLOBBY_HEADERGUARD_GLOBALAUIMANAGER_H
-

@@ -15,30 +15,36 @@ class Logger
 public:
 	Logger();
 	~Logger();
-	static wxLogWindow* InitializeLoggingTargets( wxWindow* parent, bool console, const wxString&  logfilepath, bool showgui, int verbosity);
+	static wxLogWindow* InitializeLoggingTargets(wxWindow* parent, bool console, const wxString& logfilepath, bool showgui, int verbosity);
 	static void Shutdown();
 	static void ShowDebugWindow(bool show);
+
 private:
 };
 
-#define slLogDebugFunc(format, ...)\
+#define slLogDebugFunc(format, ...) \
 	wxLogDebug("%s:%d %s(): " format, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__);
 
 #include <stdexcept>
 class assert_exception : public std::runtime_error
 {
-  public:
-   assert_exception(std::string msg) : std::runtime_error(msg) {}
+public:
+	assert_exception(std::string msg)
+	    : std::runtime_error(msg)
+	{
+	}
 };
 
-#define ASSERT_LOGIC(cond,msg) if(!(cond)) {\
-	wxLogWarning(wxString::Format(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , TowxString(msg).c_str())); \
-	throw std::logic_error(msg);\
-}
+#define ASSERT_LOGIC(cond, msg)                                                                                                                   \
+	if (!(cond)) {                                                                                                                            \
+		wxLogWarning(wxString::Format(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(), __LINE__, TowxString(msg).c_str())); \
+		throw std::logic_error(msg);                                                                                                      \
+	}
 
-#define ASSERT_EXCEPTION(cond,msg) if(!(cond)) {\
-	wxLogWarning(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(),__LINE__ , wxString(msg).c_str() ); \
-	throw assert_exception(std::string(wxString(msg).mb_str()));\
-}
+#define ASSERT_EXCEPTION(cond, msg)                                                                                                 \
+	if (!(cond)) {                                                                                                              \
+		wxLogWarning(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(), __LINE__, wxString(msg).c_str()); \
+		throw assert_exception(std::string(wxString(msg).mb_str()));                                                        \
+	}
 
 #endif // LOG_H

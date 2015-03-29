@@ -15,18 +15,18 @@ class wxWindow;
  */
 class AutojoinChannelDialog : public wxDialog
 {
-	public:
-		/** Default constructor */
-		AutojoinChannelDialog( wxWindow* parent );
-		/** Default destructor */
-		virtual ~AutojoinChannelDialog();
+public:
+	/** Default constructor */
+	AutojoinChannelDialog(wxWindow* parent);
+	/** Default destructor */
+	virtual ~AutojoinChannelDialog();
+
 private:
+	wxTextCtrl* m_channel_list;
 
-		wxTextCtrl* m_channel_list;
-
-		void OnOk( wxCommandEvent& event );
-		void OnCancel( wxCommandEvent& event );
-		DECLARE_EVENT_TABLE()
+	void OnOk(wxCommandEvent& event);
+	void OnCancel(wxCommandEvent& event);
+	DECLARE_EVENT_TABLE()
 };
 
 #endif // AUTOJOINCHANNELDIALOG_H

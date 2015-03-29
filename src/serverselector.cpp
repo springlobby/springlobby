@@ -5,8 +5,9 @@
 #include <lslutils/globalsmanager.h>
 
 ServerSelector::ServerSelector()
-	: m_serv(NULL)
-{}
+    : m_serv(NULL)
+{
+}
 
 ServerSelector::~ServerSelector()
 {
@@ -20,25 +21,25 @@ bool ServerSelector::IsServerAvailible() const
 
 IServer& ServerSelector::GetServer()
 {
-	assert( m_serv != 0);
+	assert(m_serv != 0);
 	return *m_serv;
 }
 
 const IServer& ServerSelector::GetServer() const
 {
-	assert( m_serv != 0);
+	assert(m_serv != 0);
 	return *m_serv;
 }
 
 void ServerSelector::SetCurrentServer(IServer* server)
 {
-	assert( server != 0);
+	assert(server != 0);
 	m_serv = server;
 }
 
 ServerSelector& serverSelector()
 {
-	static LSL::Util::LineInfo<ServerSelector> m( AT );
-	static LSL::Util::GlobalObjectHolder<ServerSelector, LSL::Util::LineInfo<ServerSelector> > m_selector( m );
+	static LSL::Util::LineInfo<ServerSelector> m(AT);
+	static LSL::Util::GlobalObjectHolder<ServerSelector, LSL::Util::LineInfo<ServerSelector> > m_selector(m);
 	return m_selector;
 }

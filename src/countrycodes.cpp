@@ -5,7 +5,7 @@
 #include <wx/intl.h>
 #include <map>
 
-static std::map<wxString,wxString> m_cc_table;
+static std::map<wxString, wxString> m_cc_table;
 
 void InitTable()
 {
@@ -262,11 +262,11 @@ void InitTable()
 	m_cc_table[_T("ZW")] = _("Zimbabwe");
 }
 
-wxString GetFlagNameFromCountryCode( const wxString& cc )
+wxString GetFlagNameFromCountryCode(const wxString& cc)
 {
 	InitTable();
-	wxString ret = m_cc_table[ cc ];
-	if ( ret.IsEmpty() ) {
+	wxString ret = m_cc_table[cc];
+	if (ret.IsEmpty()) {
 		return cc + _T(" ") + _("(Full country name not found)");
 	}
 	return ret;

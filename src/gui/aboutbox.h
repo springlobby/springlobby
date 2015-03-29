@@ -2,7 +2,7 @@
 
 #include <wx/aboutdlg.h>
 
-class slAboutBox: public wxAboutDialogInfo
+class slAboutBox : public wxAboutDialogInfo
 {
 public:
 	slAboutBox();
@@ -12,10 +12,10 @@ public:
 	void openNewTicket();
 	void showDocs();
 	void showChangelog();
+
 private:
 	wxAboutDialogInfo* info;
 };
-
 
 
 slAboutBox& aboutbox();

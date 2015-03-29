@@ -9,7 +9,6 @@
 #include <wx/colour.h>
 
 
-
 void test_wxColourTolsl(const unsigned char red, const unsigned char green, const unsigned char blue, const unsigned char alpha)
 {
 	const wxColor wxcol(red, green, blue, alpha);
@@ -32,7 +31,7 @@ void test_lslTowxColour(const unsigned char red, const unsigned char green, cons
 
 void test_lslToLobbyColour(const unsigned char red, const unsigned char green, const unsigned char blue, const unsigned char alpha)
 {
-	const LSL::lslColor col (red, green, blue, alpha);
+	const LSL::lslColor col(red, green, blue, alpha);
 
 	BOOST_CHECK(col.Red() == red);
 	BOOST_CHECK(col.Green() == green);
@@ -46,19 +45,19 @@ void test_lslToLobbyColour(const unsigned char red, const unsigned char green, c
 	BOOST_CHECK(col2.Alpha() == 255);
 }
 
-BOOST_AUTO_TEST_CASE( lslconversion )
+BOOST_AUTO_TEST_CASE(lslconversion)
 {
-	test_wxColourTolsl(0,0,0,0);
-	test_wxColourTolsl(1,2,3,4);
-	test_wxColourTolsl(255,255,255,255);
+	test_wxColourTolsl(0, 0, 0, 0);
+	test_wxColourTolsl(1, 2, 3, 4);
+	test_wxColourTolsl(255, 255, 255, 255);
 
-	test_lslTowxColour(0,0,0,0);
-	test_lslTowxColour(1,2,3,4);
-	test_lslTowxColour(255,255,255,255);
+	test_lslTowxColour(0, 0, 0, 0);
+	test_lslTowxColour(1, 2, 3, 4);
+	test_lslTowxColour(255, 255, 255, 255);
 
-	test_lslToLobbyColour(0,0,0,0);
-	test_lslToLobbyColour(1,2,3,4);
-	test_lslToLobbyColour(255,255,255,255);
+	test_lslToLobbyColour(0, 0, 0, 0);
+	test_lslToLobbyColour(1, 2, 3, 4);
+	test_lslToLobbyColour(255, 255, 255, 255);
 
 	LSL::StringVector test;
 	test.push_back("line1");
@@ -72,5 +71,4 @@ BOOST_AUTO_TEST_CASE( lslconversion )
 	BOOST_CHECK(test[0] == tmp2[0]);
 	BOOST_CHECK(test[1] == tmp2[1]);
 	BOOST_CHECK(test[2] == tmp2[2]);
-
 }

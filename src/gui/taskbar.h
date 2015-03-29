@@ -12,7 +12,7 @@
 class TaskBar : public wxPanel
 {
 public:
-	TaskBar(wxWindow *parent);
+	TaskBar(wxWindow* parent);
 	~TaskBar();
 	void OnTimer(wxTimerEvent& /*event*/);
 

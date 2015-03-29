@@ -9,16 +9,15 @@ struct StoredGame;
 
 class SavegameList : public IPlaybackList
 {
-  public:
-
-   virtual  void LoadPlaybacks( const std::vector<std::string>& filenames );
-
-private:
-    SavegameList();
+public:
+	virtual void LoadPlaybacks(const std::vector<std::string>& filenames);
 
 private:
-	bool GetSavegameInfos ( const std::string& SavegamePath, StoredGame& ret ) const;
-	std::string GetScriptFromSavegame ( const std::string& SavegamePath ) const;
+	SavegameList();
+
+private:
+	bool GetSavegameInfos(const std::string& SavegamePath, StoredGame& ret) const;
+	std::string GetScriptFromSavegame(const std::string& SavegamePath) const;
 };
 
 #endif // SAVEGAMELIST_H

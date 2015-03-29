@@ -3,7 +3,8 @@
 
 class IServer;
 
-class ServerSelector {
+class ServerSelector
+{
 public:
 	ServerSelector();
 	~ServerSelector();
@@ -11,6 +12,7 @@ public:
 	const IServer& GetServer() const;
 	void SetCurrentServer(IServer* server);
 	bool IsServerAvailible() const;
+
 private:
 	IServer* m_serv;
 };

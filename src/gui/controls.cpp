@@ -8,15 +8,16 @@
 
 bool main_app_has_focus;
 
-void UpdateMainAppHasFocus( bool focus )
+void UpdateMainAppHasFocus(bool focus)
 {
 	main_app_has_focus = focus;
-	wxToolTip::Enable(sett().GetShowTooltips()&&main_app_has_focus);
+	wxToolTip::Enable(sett().GetShowTooltips() && main_app_has_focus);
 }
 
 const wxChar* TooltipEnable(const wxString& input)
 {
 	wxString dummy = wxEmptyString;
-	if (!main_app_has_focus) return dummy.wc_str();
+	if (!main_app_has_focus)
+		return dummy.wc_str();
 	return sett().GetShowTooltips() ? input.wc_str() : dummy.wc_str();
 }

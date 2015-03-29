@@ -18,7 +18,10 @@
 class SlPaths
 {
 public:
-	static void SetUserConfigPath(const std::string& path) {m_user_defined_config_path = path;}
+	static void SetUserConfigPath(const std::string& path)
+	{
+		m_user_defined_config_path = path;
+	}
 	static bool IsPortableMode();
 	static std::string GetLocalConfigPath();
 	static std::string GetDefaultConfigPath();
@@ -32,20 +35,20 @@ public:
 	 * @{
 	 */
 
-	static void RefreshSpringVersionList(bool autosearch=true, const LSL::SpringBundle* additionalbundle = NULL);
+	static void RefreshSpringVersionList(bool autosearch = true, const LSL::SpringBundle* additionalbundle = NULL);
 	static std::map<std::string, LSL::SpringBundle> GetSpringVersionList(); /// index -> version
 
 	static std::string GetCurrentUsedSpringIndex();
-	static void SetUsedSpringIndex(const std::string &index);
+	static void SetUsedSpringIndex(const std::string& index);
 
 	static void ReconfigureUnitsync();
 
-	static void DeleteSpringVersionbyIndex( const std::string& index = GetCurrentUsedSpringIndex() );
+	static void DeleteSpringVersionbyIndex(const std::string& index = GetCurrentUsedSpringIndex());
 
 	static std::string GetUnitSync(const std::string& index = GetCurrentUsedSpringIndex());
 	static void SetUnitSync(const std::string& path, const std::string& index = GetCurrentUsedSpringIndex());
 
-	static std::string GetSpringBinary(const std::string& index = GetCurrentUsedSpringIndex() );
+	static std::string GetSpringBinary(const std::string& index = GetCurrentUsedSpringIndex());
 	static void SetSpringBinary(const std::string& path, const std::string& index = GetCurrentUsedSpringIndex());
 
 	static std::string GetUikeys(const std::string& index = GetCurrentUsedSpringIndex());
@@ -54,7 +57,7 @@ public:
 	static std::string GetDownloadDir();
 
 	//!@brief meaningful only on mac
-	static void SetBundle( const std::string& index, const std::string& path );
+	static void SetBundle(const std::string& index, const std::string& path);
 
 
 	/*@}*/
@@ -63,7 +66,7 @@ public:
 	static std::string GetChatLogLoc();
 
 	static std::string GetEditorPath();
-	static void SetEditorPath( const std::string& path );
+	static void SetEditorPath(const std::string& path);
 
 	static std::string GetLobbyWriteDir();
 
@@ -81,7 +84,7 @@ private:
 
 	//! used for passing config file at command line, empty if not set
 	static std::string m_user_defined_config_path;
-	static bool IsSpringBin( const std::string& path );
+	static bool IsSpringBin(const std::string& path);
 	static std::map<std::string, LSL::SpringBundle> m_spring_versions;
 	static void PossibleEnginePaths(std::vector<std::string>& pl);
 };

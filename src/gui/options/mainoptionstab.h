@@ -28,56 +28,58 @@ class LobbyOptionsTab;
  */
 class MainOptionsTab : public wxScrolledWindow
 {
-	public:
-		MainOptionsTab( wxWindow* parent );
-		~MainOptionsTab();
+public:
+	MainOptionsTab(wxWindow* parent);
+	~MainOptionsTab();
 
-		/** \brief delegate the data setting to memeber panels */
-		void OnApply( wxCommandEvent& event );
-		void OnOk( wxCommandEvent& event );
-		void OnRestore( wxCommandEvent& event );
+	/** \brief delegate the data setting to memeber panels */
+	void OnApply(wxCommandEvent& event);
+	void OnOk(wxCommandEvent& event);
+	void OnRestore(wxCommandEvent& event);
 
-		void OnOpenGroupsTab();
-		void SetSelection( const unsigned int page );
-		GroupOptionsPanel& GetGroupOptionsPanel();
+	void OnOpenGroupsTab();
+	void SetSelection(const unsigned int page);
+	GroupOptionsPanel& GetGroupOptionsPanel();
 
-        void LoadPerspective( const wxString& perspective_name = wxEmptyString );
-        void SavePerspective( const wxString& perspective_name = wxEmptyString );
+	void LoadPerspective(const wxString& perspective_name = wxEmptyString);
+	void SavePerspective(const wxString& perspective_name = wxEmptyString);
 
 private:
-		wxBoxSizer* m_main_sizer;
+	wxBoxSizer* m_main_sizer;
 
-//		wxImageList* m_imagelist;
+	//		wxImageList* m_imagelist;
 
-		SLNotebook* m_tabs;
+	SLNotebook* m_tabs;
 
-		SpringOptionsTab* m_spring_opts;
-		ChatOptionsTab* m_chat_opts;
-		TorrentOptionsPanel* m_torrent_opts;
-		GroupOptionsPanel* m_groups_opts;
-		LobbyOptionsTab* m_lobby_opts;
+	SpringOptionsTab* m_spring_opts;
+	ChatOptionsTab* m_chat_opts;
+	TorrentOptionsPanel* m_torrent_opts;
+	GroupOptionsPanel* m_groups_opts;
+	LobbyOptionsTab* m_lobby_opts;
 
-		wxButton* m_apply_btn;
-		wxButton* m_cancel_btn;
-		wxButton* m_ok_btn;
+	wxButton* m_apply_btn;
+	wxButton* m_cancel_btn;
+	wxButton* m_ok_btn;
 
-		wxBoxSizer* m_button_sizer;
+	wxBoxSizer* m_button_sizer;
 
-		enum {
-			OPTIONS_TABS = wxID_HIGHEST
-		};
-	private:
-		wxWindow* frame;
+	enum {
+		OPTIONS_TABS = wxID_HIGHEST
+	};
 
-		DECLARE_EVENT_TABLE()
+private:
+	wxWindow* frame;
+
+	DECLARE_EVENT_TABLE()
 };
 
 class OptionsDialog : public wxDialog, public WindowAttributesPickle
 {
 public:
-	OptionsDialog( wxWindow* parent );
-	void SetSelection( const unsigned int page );
-	bool Show( bool show = true );
+	OptionsDialog(wxWindow* parent);
+	void SetSelection(const unsigned int page);
+	bool Show(bool show = true);
+
 private:
 	MainOptionsTab* m_options;
 	wxBoxSizer* m_main_sizer;

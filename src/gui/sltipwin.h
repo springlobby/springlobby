@@ -8,13 +8,14 @@
 #include <wx/tipwin.h>
 
 //! A wxTipWindow that gets canceled on mousewheel events
-class SLTipWindow : public wxTipWindow{
-    public:
-        SLTipWindow(wxWindow *parent, const wxString &text);
+class SLTipWindow : public wxTipWindow
+{
+public:
+	SLTipWindow(wxWindow* parent, const wxString& text);
 
-        void Cancel(wxMouseEvent& event);
+	void Cancel(wxMouseEvent& event);
 
-        DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 
 #endif

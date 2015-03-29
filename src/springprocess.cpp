@@ -28,11 +28,12 @@ lsl/spring/springprocess.cpp
 #endif
 
 
-DEFINE_LOCAL_EVENT_TYPE( wxEVT_SPRING_EXIT )
+DEFINE_LOCAL_EVENT_TYPE(wxEVT_SPRING_EXIT)
 
 
-SpringProcess::SpringProcess( Spring& sp ) :
-		m_sp( sp ), m_exit_code( 0 )
+SpringProcess::SpringProcess(Spring& sp)
+    : m_sp(sp)
+    , m_exit_code(0)
 {
 	slLogDebugFunc("");
 }
@@ -54,9 +55,9 @@ void SpringProcess::SetCommand(const wxString& cmd, const wxArrayString& params)
 void SpringProcess::OnExit()
 {
 	slLogDebugFunc("");
-	wxCommandEvent event( wxEVT_SPRING_EXIT, PROC_SPRING );
-	event.SetExtraLong( m_exit_code );
-	m_sp.AddPendingEvent( event );
+	wxCommandEvent event(wxEVT_SPRING_EXIT, PROC_SPRING);
+	event.SetExtraLong(m_exit_code);
+	m_sp.AddPendingEvent(event);
 }
 
 void* SpringProcess::Entry()
@@ -65,4 +66,3 @@ void* SpringProcess::Entry()
 	RunProcess(m_cmd, m_params);
 	return NULL;
 }
-

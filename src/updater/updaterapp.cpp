@@ -14,10 +14,10 @@
 
 IMPLEMENT_APP(UpdaterApp)
 
-UpdaterApp::UpdaterApp():
-	m_pid(0)
+UpdaterApp::UpdaterApp()
+    : m_pid(0)
 {
-	SetAppName( _T("springlobby_updater") );
+	SetAppName(_T("springlobby_updater"));
 }
 
 static wxString TrimQuotes(const wxString& str)
@@ -36,13 +36,13 @@ bool UpdaterApp::OnInit()
 	if (!wxApp::OnInit())
 		return false;
 
-	if ( m_paramcount == 5) {
+	if (m_paramcount == 5) {
 		WaitForExit(m_pid);
 		wxArrayString params;
 		if (!StartUpdate(TrimQuotes(m_source_dir), TrimQuotes(m_destination_dir), true)) { //update failed, try as admin
 			params.push_back(m_source_dir);
 			params.push_back(m_destination_dir);
-			RunProcess(m_updater_exe,  params, false, true);
+			RunProcess(m_updater_exe, params, false, true);
 			params.clear();
 		}
 		//start springlobby
@@ -55,25 +55,25 @@ bool UpdaterApp::OnInit()
 
 int UpdaterApp::OnRun()
 {
-    return 0; //instantly exit updater
+	return 0; //instantly exit updater
 }
 
 void UpdaterApp::OnInitCmdLine(wxCmdLineParser& parser)
 {
 	wxCmdLineEntryDesc cmdLineDesc[] = {
-		{ wxCMD_LINE_SWITCH, _("h"), _("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-		{ wxCMD_LINE_PARAM,  NULL, NULL, _("<parent pid> <springlobby.exe> <updater.exe> <source dir> <destination dir>"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE },
-		{ wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, 0 }//while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
+	    {wxCMD_LINE_SWITCH, _("h"), _("help"), _("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP},
+	    {wxCMD_LINE_PARAM, NULL, NULL, _("<parent pid> <springlobby.exe> <updater.exe> <source dir> <destination dir>"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_MULTIPLE},
+	    {wxCMD_LINE_NONE, NULL, NULL, NULL, wxCMD_LINE_VAL_NONE, 0} //while this throws warnings, it is mandatory according to http://docs.wxwidgets.org/stable/wx_wxcmdlineparser.html
 	};
 
-	parser.SetDesc( cmdLineDesc );
-	parser.SetSwitchChars (_T("-"));
+	parser.SetDesc(cmdLineDesc);
+	parser.SetSwitchChars(_T("-"));
 }
 
 //! @brief parses the command line
 bool UpdaterApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
-	if ( parser.Found(_T("help")) )
+	if (parser.Found(_T("help")))
 		return false; // not a syntax error, but program should stop if user asked for command line usage
 	m_paramcount = parser.GetParamCount();
 	if (m_paramcount == 2) {
@@ -99,14 +99,14 @@ static wxString TrimSep(const wxString& path)
 {
 	const wxString sep = wxFileName::GetPathSeparator();
 	if (path.EndsWith(sep)) {
-		return path.SubString(0, path.length()-2);
+		return path.SubString(0, path.length() - 2);
 	}
 	return path;
 }
 
-bool UpdaterApp::StartUpdate( const wxString& source, const wxString& destination, bool silent)
+bool UpdaterApp::StartUpdate(const wxString& source, const wxString& destination, bool silent)
 {
-	const bool ret = MoveDirWithFilebackupRename( TrimSep(source), TrimSep(destination), silent);
+	const bool ret = MoveDirWithFilebackupRename(TrimSep(source), TrimSep(destination), silent);
 	if (!ret) {
 		ErrorMsgBox(_T("Copy failed: \n") + source + _T("\n") + destination, silent);
 	}

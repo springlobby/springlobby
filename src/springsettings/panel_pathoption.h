@@ -19,26 +19,26 @@ class PathOptionPanel : public wxPanel
 {
 
 public:
-	PathOptionPanel(wxWindow*,settings_frame*);
+	PathOptionPanel(wxWindow*, settings_frame*);
 	virtual ~PathOptionPanel();
-	void SetUsyncPath(wxCommandEvent& );
-	void UsePaths(wxCommandEvent& );
+	void SetUsyncPath(wxCommandEvent&);
+	void UsePaths(wxCommandEvent&);
 
 private:
-	    wxStaticText* usync_loc_lbl;
-	    wxStaticText* explanation_text;
+	wxStaticText* usync_loc_lbl;
+	wxStaticText* explanation_text;
 
-	    wxButton* paths_ok_btn;
-	    wxButton* usync_browse_btn;
+	wxButton* paths_ok_btn;
+	wxButton* usync_browse_btn;
 
-	    wxTextCtrl* usync_ctrl;
-	    settings_frame* origin;
-	    wxFlexGridSizer* usync_sizer;
+	wxTextCtrl* usync_ctrl;
+	settings_frame* origin;
+	wxFlexGridSizer* usync_sizer;
 
-	    wxBoxSizer* parentSizer;
-	    wxStaticBoxSizer* main_sizer;
+	wxBoxSizer* parentSizer;
+	wxStaticBoxSizer* main_sizer;
 
-	    DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 
 #endif /*PANEL_PATHOPTION_H_*/

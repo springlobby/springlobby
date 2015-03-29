@@ -15,7 +15,10 @@ public:
 	void UpdateData(const std::string& buf);
 	void ResetCRC();
 
-	unsigned int GetCRC() const { return crc ^ 0xFFFFFFFF; }
+	unsigned int GetCRC() const
+	{
+		return crc ^ 0xFFFFFFFF;
+	}
 
 private:
 	static unsigned int crcTable[256];

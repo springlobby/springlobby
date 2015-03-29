@@ -11,7 +11,7 @@ key_binding::key_binding() //: m_nextOrderIdx(1)
 {
 }
 
-void key_binding::setMetaKey( const wxString& key )
+void key_binding::setMetaKey(const wxString& key)
 {
 	this->m_meta = key;
 }
@@ -21,126 +21,113 @@ const wxString& key_binding::getMetaKey() const
 	return this->m_meta;
 }
 
-void key_binding::bind( const wxString& cmd, const wxString& keyString )
+void key_binding::bind(const wxString& cmd, const wxString& keyString)
 {
-	if ( this->exists( cmd, keyString ) )
-	{
+	if (this->exists(cmd, keyString)) {
 		return;
 	}
 
 	wxString normKey;
-	if ( keyString.StartsWith( wxT("&") ) )
-	{
+	if (keyString.StartsWith(wxT("&"))) {
 		//key set
-		normKey = resolveKeySymSetName( KeynameConverter::normalizeSpringKey( keyString.SubString( 1, keyString.size() + 1 ) ) );
-	}
-	else
-	{
+		normKey = resolveKeySymSetName(KeynameConverter::normalizeSpringKey(keyString.SubString(1, keyString.size() + 1)));
+	} else {
 		//normal key
-		normKey = resolveKeySymName( KeynameConverter::normalizeSpringKey( keyString ) );
+		normKey = resolveKeySymName(KeynameConverter::normalizeSpringKey(keyString));
 	}
 
-	if ( normKey.StartsWith( wxT("Any+") ) )
-	{
-		m_groupsAny[ normKey ].push_back( cmd );
-		m_keyCmdSetAny.insert( std::make_pair( normKey, cmd ) );
-	}
-	else
-	{
-		m_groups[ normKey ].push_back( cmd );
-		m_keyCmdSet.insert( std::make_pair( normKey, cmd ) );
+	if (normKey.StartsWith(wxT("Any+"))) {
+		m_groupsAny[normKey].push_back(cmd);
+		m_keyCmdSetAny.insert(std::make_pair(normKey, cmd));
+	} else {
+		m_groups[normKey].push_back(cmd);
+		m_keyCmdSet.insert(std::make_pair(normKey, cmd));
 	}
 }
 
-void key_binding::addKeySymSet( const wxString& name, const wxString& keyString )
+void key_binding::addKeySymSet(const wxString& name, const wxString& keyString)
 {
 	const wxString normName = name.Lower();
-	const wxString normKey = this->resolveKeySymName( KeynameConverter::normalizeSpringKey( keyString ) );
+	const wxString normKey = this->resolveKeySymName(KeynameConverter::normalizeSpringKey(keyString));
 	this->m_keySymsSet[normName] = normKey;
 	this->m_keySymsSetRev[normKey] = normName;
 }
 
-void key_binding::addKeySym( const wxString& name, const wxString& keyString )
+void key_binding::addKeySym(const wxString& name, const wxString& keyString)
 {
 	const wxString normName = name.Lower();
-	const wxString normKey = KeynameConverter::normalizeSpringKey( keyString );
+	const wxString normKey = KeynameConverter::normalizeSpringKey(keyString);
 	this->m_keySyms[normName] = normKey;
-	this->m_keySymsRev[KeynameConverter::convertHexValueToKey( keyString )] = normName;
+	this->m_keySymsRev[KeynameConverter::convertHexValueToKey(keyString)] = normName;
 }
 
-const wxString key_binding::resolveKeySymSetName( const wxString& symName ) const
+const wxString key_binding::resolveKeySymSetName(const wxString& symName) const
 {
-	key_sym_set_map::const_iterator iter = this->m_keySymsSet.find( symName );
-	if ( iter == this->m_keySymsSet.end() )
-	{
+	key_sym_set_map::const_iterator iter = this->m_keySymsSet.find(symName);
+	if (iter == this->m_keySymsSet.end()) {
 		return symName;
 	}
 
 	return iter->second;
 }
 
-const wxString key_binding::resolveKeySymSetKey( const wxString& key ) const
+const wxString key_binding::resolveKeySymSetKey(const wxString& key) const
 {
-	key_sym_set_map::const_iterator iter = this->m_keySymsSetRev.find( key );
-	if ( iter == this->m_keySymsSetRev.end() )
-	{
+	key_sym_set_map::const_iterator iter = this->m_keySymsSetRev.find(key);
+	if (iter == this->m_keySymsSetRev.end()) {
 		return key;
 	}
 
 	return wxT("&") + iter->second;
 }
 
-const wxString key_binding::resolveKeySymName( const wxString& symName ) const
+const wxString key_binding::resolveKeySymName(const wxString& symName) const
 {
-	key_sym_map::const_iterator iter = this->m_keySyms.find( KeynameConverter::discardModifier( symName ) );
-	if ( iter == this->m_keySyms.end() )
-	{
+	key_sym_map::const_iterator iter = this->m_keySyms.find(KeynameConverter::discardModifier(symName));
+	if (iter == this->m_keySyms.end()) {
 		return symName;
 	}
 
-	KeynameConverter::ModifierList modList = KeynameConverter::stringToKeyModifier( symName );
-	return KeynameConverter::modifier2String( modList ) + KeynameConverter::convertHexValueToKey( iter->second );
+	KeynameConverter::ModifierList modList = KeynameConverter::stringToKeyModifier(symName);
+	return KeynameConverter::modifier2String(modList) + KeynameConverter::convertHexValueToKey(iter->second);
 }
 
-wxString key_binding::resolveKeySymKeyAndSet( const wxString& key ) const
+wxString key_binding::resolveKeySymKeyAndSet(const wxString& key) const
 {
-	wxString res = resolveKeySymSetKey( key );
+	wxString res = resolveKeySymSetKey(key);
 
 	return resolveKeySymKey(res);
 }
 
-wxString key_binding::resolveKeySymKey( const wxString& key ) const
+wxString key_binding::resolveKeySymKey(const wxString& key) const
 {
-	key_sym_map::const_iterator iter = this->m_keySymsRev.find( KeynameConverter::discardModifier( key ) );
-	if ( iter == this->m_keySymsRev.end() )
-	{
+	key_sym_map::const_iterator iter = this->m_keySymsRev.find(KeynameConverter::discardModifier(key));
+	if (iter == this->m_keySymsRev.end()) {
 		return key;
 	}
 
-	KeynameConverter::ModifierList modList = KeynameConverter::stringToKeyModifier( key );
-	return KeynameConverter::modifier2String( modList ) + iter->second;
+	KeynameConverter::ModifierList modList = KeynameConverter::stringToKeyModifier(key);
+	return KeynameConverter::modifier2String(modList) + iter->second;
 }
 
-void key_binding::setKeySymsSet( const key_sym_set_map& keySymsSet )
+void key_binding::setKeySymsSet(const key_sym_set_map& keySymsSet)
 {
 	this->m_keySymsSet = keySymsSet;
 
 	//update reverse map
-	for( key_sym_set_map::const_iterator iter = m_keySymsSet.begin(); iter != m_keySymsSet.end(); ++iter )
-	{
+	for (key_sym_set_map::const_iterator iter = m_keySymsSet.begin(); iter != m_keySymsSet.end(); ++iter) {
 		this->m_keySymsSetRev[iter->second] = iter->first;
 	}
 }
 
-void key_binding::setKeySyms( const key_sym_map& keySyms )
+void key_binding::setKeySyms(const key_sym_map& keySyms)
 {
 	this->m_keySyms = keySyms;
 
 	//update reverse map
-	for( key_sym_map::const_iterator iter = m_keySyms.begin(); iter != m_keySyms.end(); ++iter )
-	{
+	for (key_sym_map::const_iterator iter = m_keySyms.begin(); iter != m_keySyms.end(); ++iter) {
 		//hex convert is needed here (data could come from wxProfile which stores raw keys (0x62 etc))
-		this->m_keySymsRev[KeynameConverter::convertHexValueToKey( iter->second )] = iter->first;
+		this->m_keySymsRev[KeynameConverter::convertHexValueToKey(iter->second)] = iter->first;
 	}
 }
 
@@ -159,20 +146,16 @@ key_commands_sorted key_binding::getBinds() const
 	key_commands_sorted sortKeys;
 
 	//any keys
-	for( KeyGroupMap::const_iterator iter = m_groupsAny.begin(); iter != m_groupsAny.end(); ++iter )
-	{
-		for( size_t idx = 0; idx < iter->second.size(); ++idx )
-		{
-			sortKeys.push_back( key_command( iter->first, iter->second[ idx ] ) );
+	for (KeyGroupMap::const_iterator iter = m_groupsAny.begin(); iter != m_groupsAny.end(); ++iter) {
+		for (size_t idx = 0; idx < iter->second.size(); ++idx) {
+			sortKeys.push_back(key_command(iter->first, iter->second[idx]));
 		}
 	}
 
 	//normal keys
-	for( KeyGroupMap::const_iterator iter = m_groups.begin(); iter != m_groups.end(); ++iter )
-	{
-		for( size_t idx = 0; idx < iter->second.size(); ++idx )
-		{
-			sortKeys.push_back( key_command( iter->first, iter->second[ idx ] ) );
+	for (KeyGroupMap::const_iterator iter = m_groups.begin(); iter != m_groups.end(); ++iter) {
+		for (size_t idx = 0; idx < iter->second.size(); ++idx) {
+			sortKeys.push_back(key_command(iter->first, iter->second[idx]));
 		}
 	}
 
@@ -181,109 +164,88 @@ key_commands_sorted key_binding::getBinds() const
 
 bool key_binding::isEmpty() const
 {
-	if ( m_keyCmdSet.empty() && m_keyCmdSetAny.empty() )
-	{
+	if (m_keyCmdSet.empty() && m_keyCmdSetAny.empty()) {
 		return true;
 	}
 	return false;
 }
 
-void key_binding::unbindAllCmds( const wxString& cmd )
+void key_binding::unbindAllCmds(const wxString& cmd)
 {
 	key_command_set keyCmdSetCopy = m_keyCmdSet;
 	key_command_set keyCmdSetAnyCopy = m_keyCmdSetAny;
 
-	for ( key_command_set::const_iterator iter = keyCmdSetCopy.begin(); iter != keyCmdSetCopy.end(); ++iter )
-	{
-		if ( key_binding::isCmd1MatchingCmd2( cmd, iter->second ) )
-		{
-			this->unbind( iter->second, iter->first );
+	for (key_command_set::const_iterator iter = keyCmdSetCopy.begin(); iter != keyCmdSetCopy.end(); ++iter) {
+		if (key_binding::isCmd1MatchingCmd2(cmd, iter->second)) {
+			this->unbind(iter->second, iter->first);
 		}
 	}
 
-	for ( key_command_set::const_iterator iter = keyCmdSetAnyCopy.begin(); iter != keyCmdSetAnyCopy.end(); ++iter )
-	{
-		if ( key_binding::isCmd1MatchingCmd2( cmd, iter->second ) )
-		{
-			this->unbind( iter->second, iter->first );
+	for (key_command_set::const_iterator iter = keyCmdSetAnyCopy.begin(); iter != keyCmdSetAnyCopy.end(); ++iter) {
+		if (key_binding::isCmd1MatchingCmd2(cmd, iter->second)) {
+			this->unbind(iter->second, iter->first);
 		}
 	}
 }
 
-void key_binding::unbindAllKeys( const wxString& key )
+void key_binding::unbindAllKeys(const wxString& key)
 {
-	if ( !key.StartsWith( wxT("Any+") ) )
-	{
+	if (!key.StartsWith(wxT("Any+"))) {
 		key_command_set keyCmdSetCopy = m_keyCmdSet;
-		for ( key_command_set::const_iterator iter = keyCmdSetCopy.begin(); iter != keyCmdSetCopy.end(); ++iter )
-		{
-			if ( iter->first == key )
-			{
-				this->unbind( iter->second, iter->first );
+		for (key_command_set::const_iterator iter = keyCmdSetCopy.begin(); iter != keyCmdSetCopy.end(); ++iter) {
+			if (iter->first == key) {
+				this->unbind(iter->second, iter->first);
 			}
 		}
-	}
-	else
-	{
+	} else {
 		key_command_set keyCmdSetAnyCopy = m_keyCmdSetAny;
-		for ( key_command_set::const_iterator iter = keyCmdSetAnyCopy.begin(); iter != keyCmdSetAnyCopy.end(); ++iter )
-		{
-			if ( iter->first == key )
-			{
-				this->unbind( iter->second, iter->first );
+		for (key_command_set::const_iterator iter = keyCmdSetAnyCopy.begin(); iter != keyCmdSetAnyCopy.end(); ++iter) {
+			if (iter->first == key) {
+				this->unbind(iter->second, iter->first);
 			}
 		}
 	}
 }
 
-void key_binding::unbind( const wxString& cmd, const wxString& keyString )
+void key_binding::unbind(const wxString& cmd, const wxString& keyString)
 {
-	if ( !this->exists( cmd, keyString ) )
-	{
+	if (!this->exists(cmd, keyString)) {
 		return;
 	}
 
-	const wxString normKey = KeynameConverter::normalizeSpringKey( keyString );
-	if ( normKey.StartsWith( wxT("Any+") ) )
-	{
-		m_keyCmdSetAny.erase( std::make_pair( normKey, cmd ) );
+	const wxString normKey = KeynameConverter::normalizeSpringKey(keyString);
+	if (normKey.StartsWith(wxT("Any+"))) {
+		m_keyCmdSetAny.erase(std::make_pair(normKey, cmd));
 
-		key_binding::KeyGroupMap::iterator iter = m_groupsAny.find( normKey );
-		assert( iter != m_groupsAny.end() ); //we can assert this, since we checked for exists() at the beginning
-		iter->second.erase( std::find(iter->second.begin(), iter->second.end(), cmd) );
+		key_binding::KeyGroupMap::iterator iter = m_groupsAny.find(normKey);
+		assert(iter != m_groupsAny.end()); //we can assert this, since we checked for exists() at the beginning
+		iter->second.erase(std::find(iter->second.begin(), iter->second.end(), cmd));
 
-		if ( iter->second.size() == 0 )
-			m_groupsAny.erase( iter->first );
-	}
-	else
-	{
-		m_keyCmdSet.erase( std::make_pair( normKey, cmd ) );
+		if (iter->second.size() == 0)
+			m_groupsAny.erase(iter->first);
+	} else {
+		m_keyCmdSet.erase(std::make_pair(normKey, cmd));
 
-		key_binding::KeyGroupMap::iterator iter = m_groups.find( normKey );
-		assert( iter != m_groups.end() ); //we can assert this, since we checked for exists() at the beginning
-		iter->second.erase( std::find(iter->second.begin(), iter->second.end(), cmd) );
+		key_binding::KeyGroupMap::iterator iter = m_groups.find(normKey);
+		assert(iter != m_groups.end()); //we can assert this, since we checked for exists() at the beginning
+		iter->second.erase(std::find(iter->second.begin(), iter->second.end(), cmd));
 
-		if ( iter->second.size() == 0 )
-			m_groups.erase( iter->first );
+		if (iter->second.size() == 0)
+			m_groups.erase(iter->first);
 	}
 }
 
-bool key_binding::exists( const wxString& command, const wxString& key )
+bool key_binding::exists(const wxString& command, const wxString& key)
 {
-	const wxString& normKey = resolveKeySymName( KeynameConverter::normalizeSpringKey( key ) );
+	const wxString& normKey = resolveKeySymName(KeynameConverter::normalizeSpringKey(key));
 
 	bool found = false;
-	if ( normKey.StartsWith( wxT("Any+") ) )
-	{
-		if ( m_keyCmdSetAny.find( std::make_pair( normKey, command ) ) != m_keyCmdSetAny.end() )
-		{
+	if (normKey.StartsWith(wxT("Any+"))) {
+		if (m_keyCmdSetAny.find(std::make_pair(normKey, command)) != m_keyCmdSetAny.end()) {
 			found = true;
 		}
-	}
-	else
-	{
-		if ( m_keyCmdSet.find( std::make_pair( normKey, command ) ) != m_keyCmdSet.end() )
-		{
+	} else {
+		if (m_keyCmdSet.find(std::make_pair(normKey, command)) != m_keyCmdSet.end()) {
 			found = true;
 		}
 	}
@@ -311,51 +273,41 @@ bool key_binding::operator==(const key_binding& other) const
 	const bool meta = this->m_meta == other.m_meta;
 
 #ifdef __WXDEBUG__
-	if ( !groups )
-	{
-		for( key_binding::KeyGroupMap::const_iterator iter = this->m_groups.begin(); iter != this->m_groups.end(); ++iter )
-		{
-			key_binding::KeyGroupMap::const_iterator fiter = other.m_groups.find( iter->first );
+	if (!groups) {
+		for (key_binding::KeyGroupMap::const_iterator iter = this->m_groups.begin(); iter != this->m_groups.end(); ++iter) {
+			key_binding::KeyGroupMap::const_iterator fiter = other.m_groups.find(iter->first);
 
-			if ( fiter != other.m_groups.end() )
-			{
-				if ( iter->second != fiter->second )
-				{
-					wxLogWarning( wxT("Difference in hotkey group: ") + iter->first );
+			if (fiter != other.m_groups.end()) {
+				if (iter->second != fiter->second) {
+					wxLogWarning(wxT("Difference in hotkey group: ") + iter->first);
 
 					//const std::vector<wxString> cmdsA = iter->second;
 					//const std::vector<wxString> cmdsB = fiter->second;
 
-					int i=0;
+					int i = 0;
 					++i;
 				}
-			}
-			else
-				wxLogWarning( wxT("Group ") + iter->first + wxT(" not found in other group!") );
+			} else
+				wxLogWarning(wxT("Group ") + iter->first + wxT(" not found in other group!"));
 		}
 	}
 
-	if ( !groupsAny )
-	{
-		for( key_binding::KeyGroupMap::const_iterator iter = this->m_groupsAny.begin(); iter != this->m_groupsAny.end(); ++iter )
-		{
-			key_binding::KeyGroupMap::const_iterator fiter = other.m_groupsAny.find( iter->first );
+	if (!groupsAny) {
+		for (key_binding::KeyGroupMap::const_iterator iter = this->m_groupsAny.begin(); iter != this->m_groupsAny.end(); ++iter) {
+			key_binding::KeyGroupMap::const_iterator fiter = other.m_groupsAny.find(iter->first);
 
-			if ( fiter != other.m_groupsAny.end() )
-			{
-				if ( iter->second != fiter->second )
-				{
-					wxLogWarning( wxT("Difference in hotkey groupAny: ") + iter->first );
+			if (fiter != other.m_groupsAny.end()) {
+				if (iter->second != fiter->second) {
+					wxLogWarning(wxT("Difference in hotkey groupAny: ") + iter->first);
 
 					//const std::vector<wxString> cmdsA = iter->second;
 					//const std::vector<wxString> cmdsB = fiter->second;
 
-					int i=0;
+					int i = 0;
 					++i;
 				}
-			}
-			else
-				wxLogWarning( wxT("GroupAny ") + iter->first + wxT(" not found in other group!") );
+			} else
+				wxLogWarning(wxT("GroupAny ") + iter->first + wxT(" not found in other group!"));
 		}
 	}
 #endif
@@ -372,37 +324,31 @@ const key_binding key_binding::operator-(const key_binding& other) const
 	resBind.m_keyCmdSetAny.clear();
 
 	//normal keys
-	for( KeyGroupMap::const_iterator iter = m_groups.begin(); iter != m_groups.end(); ++iter )
-	{
+	for (KeyGroupMap::const_iterator iter = m_groups.begin(); iter != m_groups.end(); ++iter) {
 		bool diffs = false;
-		for( size_t idx = 0; idx < iter->second.size(); ++idx )
-		{
-			KeyGroupMap::const_iterator findIter = other.m_groups.find( iter->first );
-			if ( ( diffs ) ||
-				 ( findIter == other.m_groups.end() ) ||
-				 ( iter->second.empty() ) ||
-				 ( findIter->second.size() < (idx + 1) ) ||
-				 ( findIter->second[idx] != iter->second[idx] ) )
-			{
-				resBind.bind( iter->second[ idx ], iter->first );
+		for (size_t idx = 0; idx < iter->second.size(); ++idx) {
+			KeyGroupMap::const_iterator findIter = other.m_groups.find(iter->first);
+			if ((diffs) ||
+			    (findIter == other.m_groups.end()) ||
+			    (iter->second.empty()) ||
+			    (findIter->second.size() < (idx + 1)) ||
+			    (findIter->second[idx] != iter->second[idx])) {
+				resBind.bind(iter->second[idx], iter->first);
 				diffs = true;
 			}
 		}
 	}
 
 	//any-keys
-	for( KeyGroupMap::const_iterator iter = m_groupsAny.begin(); iter != m_groupsAny.end(); ++iter )
-	{
+	for (KeyGroupMap::const_iterator iter = m_groupsAny.begin(); iter != m_groupsAny.end(); ++iter) {
 		bool diffs = false;
-		for( size_t idx = 0; idx < iter->second.size(); ++idx )
-		{
-			KeyGroupMap::const_iterator findIter = other.m_groupsAny.find( iter->first );
-			if ( ( diffs ) ||
-				 ( findIter == other.m_groupsAny.end() ) ||
-				 ( findIter->second.size() < (idx + 1) ) ||
-				 ( findIter->second[idx] != iter->second[idx] ) )
-			{
-				resBind.bind( iter->second[ idx ], iter->first );
+		for (size_t idx = 0; idx < iter->second.size(); ++idx) {
+			KeyGroupMap::const_iterator findIter = other.m_groupsAny.find(iter->first);
+			if ((diffs) ||
+			    (findIter == other.m_groupsAny.end()) ||
+			    (findIter->second.size() < (idx + 1)) ||
+			    (findIter->second[idx] != iter->second[idx])) {
+				resBind.bind(iter->second[idx], iter->first);
 				diffs = true;
 			}
 		}
@@ -411,14 +357,14 @@ const key_binding key_binding::operator-(const key_binding& other) const
 	return resBind;
 }
 
-bool key_binding::isCmd1MatchingCmd2( const wxString& cmd1, const wxString& cmd2 )
+bool key_binding::isCmd1MatchingCmd2(const wxString& cmd1, const wxString& cmd2)
 {
-	int cmd1SepPos = cmd1.Find( _T(' ') );
-	int cmd2SepPos = cmd2.Find( _T(' ') );
+	int cmd1SepPos = cmd1.Find(_T(' '));
+	int cmd2SepPos = cmd2.Find(_T(' '));
 
-	if ( (cmd1SepPos != wxNOT_FOUND) || ((cmd1SepPos == wxNOT_FOUND) && (cmd2SepPos == wxNOT_FOUND)) )
+	if ((cmd1SepPos != wxNOT_FOUND) || ((cmd1SepPos == wxNOT_FOUND) && (cmd2SepPos == wxNOT_FOUND)))
 		return cmd1 == cmd2; //simple compare
 
 	//cmd1 has no params, cmd2 has params. like "specteam" and "specteam 5"
-	return ( cmd2.substr(0, cmd2SepPos) == cmd1 ); //just compare "specteam" and "specteam"
+	return (cmd2.substr(0, cmd2SepPos) == cmd1); //just compare "specteam" and "specteam"
 }

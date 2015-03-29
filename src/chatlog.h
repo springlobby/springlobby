@@ -49,7 +49,7 @@ public:
 	 */
 	bool LogEnabled();
 
-	const wxArrayString& GetLastLines( ) const;
+	const wxArrayString& GetLastLines() const;
 
 	bool SetLogFile(const wxString& logname);
 
@@ -83,7 +83,6 @@ private:
 	wxArrayString m_last_lines;
 
 	void FillLastLineArray();
-
 };
 
 #endif // CHATLOG_H_INCLUDED

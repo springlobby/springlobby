@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_HOSTBATTLEDIALOG_H
 
 
-
 #include <wx/dialog.h>
 #include "gui/windowattributespickle.h"
 class wxStaticText;
@@ -24,20 +23,20 @@ class wxScrolledWindow;
 class HostBattleDialog : public wxDialog, public WindowHintsPickle
 {
 public:
-	HostBattleDialog( wxWindow* parent );
+	HostBattleDialog(wxWindow* parent);
 
 
 private:
 	int GetSelectedRank();
 
-	void OnOk           ( wxCommandEvent& event );
-	void OnCancel       ( wxCommandEvent& event );
-	void OnNatChange    ( wxCommandEvent& event );
-	void OnReloadMods   ( wxCommandEvent& event );
-	void OnRelayChoice	( wxCommandEvent& event );
-	void OnUseRelay     ( wxCommandEvent& event );
-	void OnPickRelayHost( wxCommandEvent& event );
-	void OnEngineSelect ( wxCommandEvent& event );
+	void OnOk(wxCommandEvent& event);
+	void OnCancel(wxCommandEvent& event);
+	void OnNatChange(wxCommandEvent& event);
+	void OnReloadMods(wxCommandEvent& event);
+	void OnRelayChoice(wxCommandEvent& event);
+	void OnUseRelay(wxCommandEvent& event);
+	void OnPickRelayHost(wxCommandEvent& event);
+	void OnEngineSelect(wxCommandEvent& event);
 
 	void ReloadEngineList();
 	void ReloadModList();
@@ -53,9 +52,9 @@ private:
 	wxChoice* m_rank_direction;
 	wxStaticText* m_port_lbl;
 	wxTextCtrl* m_port_text;
-//	wxTextCtrl* m_relayhost_name;
-//    entirely disabled until functionality is in server
-//    wxCheckBox* m_port_test_check;
+	//	wxTextCtrl* m_relayhost_name;
+	//    entirely disabled until functionality is in server
+	//    wxCheckBox* m_port_test_check;
 	wxCheckBox* m_relayed_host_check;
 	wxCheckBox* m_desc_check;
 	wxSlider* m_players_slide;
@@ -105,7 +104,6 @@ private:
 
 	DECLARE_EVENT_TABLE()
 };
-
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_HOSTBATTLEDIALOG_H

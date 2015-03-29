@@ -7,14 +7,16 @@
 
 class AuiManagerContainer
 {
-  public:
-    AuiManagerContainer() : manager(NULL) {}
+public:
+	AuiManagerContainer()
+	    : manager(NULL)
+	{
+	}
 
-    wxAuiManager* manager;
+	wxAuiManager* manager;
 };
 
 AuiManagerContainer& GetAui();
-
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_AUIMANAGER_H

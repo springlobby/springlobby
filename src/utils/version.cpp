@@ -22,21 +22,21 @@ const std::string getSpringlobbyAgent()
 	agent += getSpringlobbyVersion();
 	agent += " (";
 #if WIN32
-	agent+="win";
+	agent += "win";
 #elif __APPLE__
-	agent+="osx";
+	agent += "osx";
 #else
-	agent+="unix";
+	agent += "unix";
 #endif
 
-	agent+=" ";
+	agent += " ";
 
 #if __WORDSIZE == 64
-	agent+="x64";
+	agent += "x64";
 #else
-	agent+="x32";
+	agent += "x32";
 #endif
-	agent+=")";
+	agent += ")";
 
 	return agent;
 }

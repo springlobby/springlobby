@@ -12,16 +12,14 @@ class ToasterNotification;
 
 class SnarlNotification : public INotification
 {
-	public:
-		SnarlNotification(wxWindow* parent);
-		virtual void Show(const wxBitmap& icon, const size_t pos, const UiEvents::NotficationData& data );
+public:
+	SnarlNotification(wxWindow* parent);
+	virtual void Show(const wxBitmap& icon, const size_t pos, const UiEvents::NotficationData& data);
 
-	protected:
-		ToasterNotification* m_fallback_wrapper;
-		Snarl::V39::SnarlInterface m_snarl_interface;
-
+protected:
+	ToasterNotification* m_fallback_wrapper;
+	Snarl::V39::SnarlInterface m_snarl_interface;
 };
 
 #endif // __WXMSW__
 #endif // SNARLNOTIFICATION_H
-

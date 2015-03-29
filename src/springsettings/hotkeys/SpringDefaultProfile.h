@@ -20,9 +20,9 @@ public:
 private:
 	SpringDefaultProfile();
 
-	static void addBinding( const wxString& key, const wxString& command );
+	static void addBinding(const wxString& key, const wxString& command);
 
-	static key_binding			m_bindings;
+	static key_binding m_bindings;
 };
 
 #endif

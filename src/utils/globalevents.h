@@ -8,7 +8,8 @@
 
 class wxEvtHandler;
 
-class GlobalEvent{
+class GlobalEvent
+{
 public:
 	static const wxEventType OnDownloadComplete;
 	static const wxEventType OnUnitsyncFirstTimeLoad;
@@ -29,7 +30,7 @@ public:
 	GlobalEvent();
 	~GlobalEvent();
 
-	void ConnectGlobalEvent(wxEvtHandler*evh, wxEventType id, wxObjectEventFunction func);
+	void ConnectGlobalEvent(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func);
 
 private:
 	static void _Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func);

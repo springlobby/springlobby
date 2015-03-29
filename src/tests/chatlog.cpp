@@ -10,10 +10,12 @@
 #include <wx/log.h>
 #include <wx/filefn.h>
 
-void customMessageBox(int, wxString const&, wxString const&, long, int, int) {}
+void customMessageBox(int, wxString const&, wxString const&, long, int, int)
+{
+}
 
 
-BOOST_AUTO_TEST_CASE( slconfig )
+BOOST_AUTO_TEST_CASE(slconfig)
 {
 	const wxString line1 = _T("this is line 1");
 	const wxString line2 = _T("this is line 2");
@@ -32,15 +34,15 @@ BOOST_AUTO_TEST_CASE( slconfig )
 
 	wxArrayString lines;
 	lines = logfile->GetLastLines();
-	for(auto line: lines) {
+	for (auto line : lines) {
 		wxLogMessage(_T("line: '%s'"), line.c_str());
 	}
 	BOOST_CHECK_MESSAGE(lines.GetCount() > 3, lines.GetCount());
 
 	const int skip = 11; //ignore date
-	BOOST_CHECK(lines[lines.GetCount()-4].Mid(skip) == line1);
-	BOOST_CHECK(lines[lines.GetCount()-3].Mid(skip) == line2);
-	BOOST_CHECK(lines[lines.GetCount()-2].Mid(skip) == line3);
+	BOOST_CHECK(lines[lines.GetCount() - 4].Mid(skip) == line1);
+	BOOST_CHECK(lines[lines.GetCount() - 3].Mid(skip) == line2);
+	BOOST_CHECK(lines[lines.GetCount() - 2].Mid(skip) == line3);
 
 	delete logfile;
 }

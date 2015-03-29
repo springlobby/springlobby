@@ -21,49 +21,47 @@ class ChatPanel;
 
 class MainJoinBattleTab : public wxScrolledWindow
 {
-  public:
-    MainJoinBattleTab( wxWindow* parent );
-     ~MainJoinBattleTab();
+public:
+	MainJoinBattleTab(wxWindow* parent);
+	~MainJoinBattleTab();
 
-    void HostBattle( IBattle& battle );
-    void JoinBattle( IBattle& battle );
-    //void UpdateCurrentBattle();
-    void UpdateCurrentBattle();
-    void UpdateCurrentBattle( const wxString& Tag );
-    void LeaveCurrentBattle( bool called_from_join = false );
-    IBattle* GetCurrentBattle();
-    ChatPanel* GetActiveChatPanel();
+	void HostBattle(IBattle& battle);
+	void JoinBattle(IBattle& battle);
+	//void UpdateCurrentBattle();
+	void UpdateCurrentBattle();
+	void UpdateCurrentBattle(const wxString& Tag);
+	void LeaveCurrentBattle(bool called_from_join = false);
+	IBattle* GetCurrentBattle();
+	ChatPanel* GetActiveChatPanel();
 
-    void BattleUserUpdated( User& user );
-    BattleRoomTab& GetBattleRoomTab();
+	void BattleUserUpdated(User& user);
+	BattleRoomTab& GetBattleRoomTab();
 
-    void ReloadPresetList();
+	void ReloadPresetList();
 
-    void LoadPerspective( const wxString& perspective_name = wxEmptyString );
-    void SavePerspective( const wxString& perspective_name = wxEmptyString );
-    bool UseBattlePerspective();
+	void LoadPerspective(const wxString& perspective_name = wxEmptyString);
+	void SavePerspective(const wxString& perspective_name = wxEmptyString);
+	bool UseBattlePerspective();
 
 private:
-    BattleMapTab& GetBattleMapTab();
-    BattleOptionsTab& GetOptionsTab();
-    BattleroomMMOptionsTab& GetMMOptionsTab();
-    wxBoxSizer* m_main_sizer;
+	BattleMapTab& GetBattleMapTab();
+	BattleOptionsTab& GetOptionsTab();
+	BattleroomMMOptionsTab& GetMMOptionsTab();
+	wxBoxSizer* m_main_sizer;
 
-    wxImageList* m_imagelist;
+	wxImageList* m_imagelist;
 
-    SLNotebook* m_tabs;
+	SLNotebook* m_tabs;
 
-    BattleRoomTab* m_battle_tab;
-    BattleMapTab* m_map_tab;
-    BattleOptionsTab* m_opts_tab;
-    BattleroomMMOptionsTab* m_mm_opts_tab;
+	BattleRoomTab* m_battle_tab;
+	BattleMapTab* m_map_tab;
+	BattleOptionsTab* m_opts_tab;
+	BattleroomMMOptionsTab* m_mm_opts_tab;
 
-    enum {
-        BATTLE_TABS = wxID_HIGHEST
-    };
-
+	enum {
+		BATTLE_TABS = wxID_HIGHEST
+	};
 };
-
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_MAINJOINBATTLETAB_H

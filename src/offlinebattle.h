@@ -8,27 +8,33 @@
 class OfflineBattle : public IBattle
 {
 public:
-	OfflineBattle (const int id = 0 );
+	OfflineBattle(const int id = 0);
 
-	OfflineBattle ( const OfflineBattle& ) = delete;
+	OfflineBattle(const OfflineBattle&) = delete;
 
-	OfflineBattle ( OfflineBattle&& );
+	OfflineBattle(OfflineBattle&&);
 
-	OfflineBattle& operator = ( const OfflineBattle& ) = delete;
-	OfflineBattle& operator = ( OfflineBattle&&  );
+	OfflineBattle& operator=(const OfflineBattle&) = delete;
+	OfflineBattle& operator=(OfflineBattle&&);
 
-	~OfflineBattle () {}
+	~OfflineBattle()
+	{
+	}
 
-	virtual User& GetMe() {
+	virtual User& GetMe()
+	{
 		return m_me;
 	}
-	virtual const User& GetMe() const {
+	virtual const User& GetMe() const
+	{
 		return m_me;
 	}
-	virtual bool IsFounderMe() const {
+	virtual bool IsFounderMe() const
+	{
 		return true;
 	}
 	virtual void StartSpring();
+
 private:
 	int m_id;
 	User m_me;

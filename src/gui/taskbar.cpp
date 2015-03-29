@@ -9,10 +9,10 @@
 #include <wx/artprov.h>
 #include <wx/sizer.h>
 
-const unsigned int TIMER_ID         = wxNewId();
+const unsigned int TIMER_ID = wxNewId();
 
 BEGIN_EVENT_TABLE(TaskBar, wxPanel)
-	EVT_TIMER(TIMER_ID, TaskBar::OnTimer)
+EVT_TIMER(TIMER_ID, TaskBar::OnTimer)
 END_EVENT_TABLE()
 
 enum {
@@ -21,21 +21,21 @@ enum {
 	STATE_HIDDEN
 };
 
-TaskBar::TaskBar(wxWindow *statusbar):
-	wxPanel(statusbar, wxID_ANY, wxPoint(3, 3),
-	wxSize(460 - (2 * 3), statusbar->GetSize().GetHeight())),
-	overalSize(0),
-	overalProgress(0),
-	unfinishedTasks(0),
-	finishedCounter(0)
+TaskBar::TaskBar(wxWindow* statusbar)
+    : wxPanel(statusbar, wxID_ANY, wxPoint(3, 3),
+	      wxSize(460 - (2 * 3), statusbar->GetSize().GetHeight()))
+    , overalSize(0)
+    , overalProgress(0)
+    , unfinishedTasks(0)
+    , finishedCounter(0)
 {
 	timer = new wxTimer(this, TIMER_ID);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
 	SetSizer(sizer);
 
-	wxStaticBitmap *refreshIcon = new wxStaticBitmap(
-		this, wxID_ANY, wxArtProvider::GetBitmap(wxART_INFORMATION));
+	wxStaticBitmap* refreshIcon = new wxStaticBitmap(
+	    this, wxID_ANY, wxArtProvider::GetBitmap(wxART_INFORMATION));
 	sizer->Add(refreshIcon);
 
 	text = new wxStaticText(this, wxID_ANY, wxEmptyString);
@@ -45,7 +45,7 @@ TaskBar::TaskBar(wxWindow *statusbar):
 	sizer->AddStretchSpacer();
 
 	gauge = new wxGauge(this, wxID_ANY, 100, wxPoint(-1, -1),
-						wxSize(100, 14), wxGA_SMOOTH);
+			    wxSize(100, 14), wxGA_SMOOTH);
 	sizer->Add(gauge, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
 
 	state = STATE_HIDDEN;
@@ -68,64 +68,64 @@ void TaskBar::UpdateDisplay()
 	unfinishedTasks = 0;
 	overalSize = 0;
 	overalProgress = 0;
-	DownloadsObserver& observ=downloadsObserver();
+	DownloadsObserver& observ = downloadsObserver();
 	std::list<ObserverDownloadInfo> list;
 	observ.GetList(list);
 	std::list<ObserverDownloadInfo>::iterator it;
-	for(it=list.begin(); it!=list.end(); ++it) {
+	for (it = list.begin(); it != list.end(); ++it) {
 		ObserverDownloadInfo info = (*it);
 		if (!info.finished) {
 			finished = false;
 			unfinishedTasks++;
 			downloadName = info.name;
 		}
-		overalSize+=info.size;
-		overalProgress+=info.progress;
+		overalSize += info.size;
+		overalProgress += info.progress;
 	}
 
 	// do state transition & actions
-	switch(state) {
-	case STATE_FINISHED:
-		if (finished) {
-			// wait 5sec and hide widget
-			if (finishedCounter < 50) {
-				finishedCounter++;
+	switch (state) {
+		case STATE_FINISHED:
+			if (finished) {
+				// wait 5sec and hide widget
+				if (finishedCounter < 50) {
+					finishedCounter++;
+				} else {
+					state = STATE_HIDDEN;
+					Hide();
+					finishedCounter = 0;
+				}
 			} else {
-				state = STATE_HIDDEN;
-				Hide();
-				finishedCounter = 0;
+				// change to STATE_WORKING
+				state = STATE_WORKING;
+				SetBackgroundColour(wxColour(255, 244, 168));
+				Show();
+				gauge->Show();
+				UpdateProgress();
 			}
-		} else {
-			// change to STATE_WORKING
-			state = STATE_WORKING;
-			SetBackgroundColour(wxColour(255, 244, 168));
-			Show();
-			gauge->Show();
-			UpdateProgress();
-		}
-		break;
-	case STATE_WORKING:
-		if (finished) {
-			state = STATE_FINISHED;
-			text->SetLabel(_("Download finished"));
-			gauge->Hide();
-			SetBackgroundColour(wxColour(0, 208, 10));
-		} else {
-			UpdateProgress();
-		}
-		break;
-	case STATE_HIDDEN:
-		if (finished) {
-			// nop
-		} else {
-			// change to STATE_WORKING
-			state = STATE_WORKING;
-			SetBackgroundColour(wxColour(255, 244, 168));
-			Show();
-			gauge->Show();
-			UpdateProgress();
-		}
-		break;
+			break;
+		case STATE_WORKING:
+			if (finished) {
+				state = STATE_FINISHED;
+				text->SetLabel(_("Download finished"));
+				gauge->Hide();
+				SetBackgroundColour(wxColour(0, 208, 10));
+			} else {
+				UpdateProgress();
+			}
+			break;
+		case STATE_HIDDEN:
+			if (finished) {
+				// nop
+			} else {
+				// change to STATE_WORKING
+				state = STATE_WORKING;
+				SetBackgroundColour(wxColour(255, 244, 168));
+				Show();
+				gauge->Show();
+				UpdateProgress();
+			}
+			break;
 	}
 	Layout();
 	Refresh();
@@ -134,14 +134,14 @@ void TaskBar::UpdateDisplay()
 void TaskBar::UpdateProgress()
 {
 	float overalPercent = -1; // -1 means unknown
-	if (overalSize > 0 ) {
-		overalPercent = ((float)overalProgress/overalSize) * 100;
+	if (overalSize > 0) {
+		overalPercent = ((float)overalProgress / overalSize) * 100;
 	}
 
-	if (unfinishedTasks == 1 ) {
-		text->SetLabel(wxString::Format( _("Downloading %s"), downloadName.c_str() ));
+	if (unfinishedTasks == 1) {
+		text->SetLabel(wxString::Format(_("Downloading %s"), downloadName.c_str()));
 	} else {
-		text->SetLabel(wxString::Format( _("Downloading %u files"), unfinishedTasks ));
+		text->SetLabel(wxString::Format(_("Downloading %u files"), unfinishedTasks));
 	}
 
 	if (overalPercent < 0) {

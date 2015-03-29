@@ -16,55 +16,54 @@ class Ui;
 
 /** \brief The ListCtrll contained in BattleListTab dispalying all currently active battles with their infos
  * \todo DOCMEMORE */
-class BattleListCtrl : public CustomVirtListCtrl< IBattle *, BattleListCtrl>
+class BattleListCtrl : public CustomVirtListCtrl<IBattle*, BattleListCtrl>
 {
-  public:
-    BattleListCtrl( wxWindow* parent );
-    ~BattleListCtrl();
+public:
+	BattleListCtrl(wxWindow* parent);
+	~BattleListCtrl();
 
-    void AddBattle( IBattle& battle );
-    void RemoveBattle( IBattle& battle );
-    void UpdateBattle( IBattle& battle );
+	void AddBattle(IBattle& battle);
+	void RemoveBattle(IBattle& battle);
+	void UpdateBattle(IBattle& battle);
 
 
-    void OnListRightClick( wxListEvent& event );
-    virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
+	void OnListRightClick(wxListEvent& event);
+	virtual void SetTipWindowText(const long item_hit, const wxPoint& position);
 
-    //these are overloaded to use list in virtual style
-    wxString GetItemText(long item, long column) const;
-    int GetItemImage(long item) const;
-    int GetItemColumnImage(long item, long column) const;
-    wxListItemAttr * GetItemAttr(long item) const;
+	//these are overloaded to use list in virtual style
+	wxString GetItemText(long item, long column) const;
+	int GetItemImage(long item) const;
+	int GetItemColumnImage(long item, long column) const;
+	wxListItemAttr* GetItemAttr(long item) const;
 
-    enum {
-        BLIST_LIST = wxID_HIGHEST,
-        BLIST_DLMOD,
-        BLIST_DLMAP,
+	enum {
+		BLIST_LIST = wxID_HIGHEST,
+		BLIST_DLMOD,
+		BLIST_DLMAP,
 		BLIST_DLENGINE
-    };
+	};
 
 
 private:
-    void OnDLMap( wxCommandEvent& event );
-    void OnDLMod( wxCommandEvent& event );
-    void OnDLEngine( wxCommandEvent& event );
+	void OnDLMap(wxCommandEvent& event);
+	void OnDLMod(wxCommandEvent& event);
+	void OnDLEngine(wxCommandEvent& event);
 
-    static int CompareStatus( DataType u1, DataType u2 );
-    static int ComparePlayer( DataType u1, DataType u2 );
+	static int CompareStatus(DataType u1, DataType u2);
+	static int ComparePlayer(DataType u1, DataType u2);
 
-	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
-	
-public:	
-    int GetIndexFromData( const DataType& data ) const;
+	int CompareOneCrit(DataType u1, DataType u2, int col, int dir) const;
 
-private:    
-    wxMenu* m_popup;
+public:
+	int GetIndexFromData(const DataType& data) const;
 
-    virtual void Sort();
+private:
+	wxMenu* m_popup;
 
-    DECLARE_EVENT_TABLE()
+	virtual void Sort();
+
+	DECLARE_EVENT_TABLE()
 };
-
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLELISTCTRL_H

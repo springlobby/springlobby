@@ -5,6 +5,6 @@
 
 class wxString;
 
-wxString GetFlagNameFromCountryCode( const wxString& cc );
+wxString GetFlagNameFromCountryCode(const wxString& cc);
 
 #endif // SPRINGLOBBY_HEADERGUARD_COUNTRYCODES_H

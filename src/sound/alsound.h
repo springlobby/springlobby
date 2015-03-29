@@ -4,7 +4,8 @@
 #define SPRINGLOBBY_HEADERGUARD_SDLSOUND_H
 
 class soundThread;
-class ALsound {
+class ALsound
+{
 public:
 	ALsound();
 	~ALsound();

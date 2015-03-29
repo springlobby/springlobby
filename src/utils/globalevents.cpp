@@ -26,20 +26,20 @@ const wxEventType GlobalEvent::OnUpdateFinished = wxNewEventType();
 static std::map<wxEventType, std::list<wxEvtHandler*>> evts;
 
 GlobalEvent::GlobalEvent()
-: m_handler(NULL)
+    : m_handler(NULL)
 {
-
 }
 
-GlobalEvent::~GlobalEvent(){
-	if(m_handler!=NULL)
+GlobalEvent::~GlobalEvent()
+{
+	if (m_handler != NULL)
 		_Disconnect(m_handler);
 }
 
 void GlobalEvent::Send(wxEventType type)
 {
 	wxCommandEvent evt = wxCommandEvent(type);
-	assert(evt.GetEventType()==type);
+	assert(evt.GetEventType() == type);
 	Send(evt);
 }
 
@@ -50,10 +50,10 @@ void GlobalEvent::Send(wxCommandEvent event)
 		return;
 	}
 	std::list<wxEvtHandler*>& evtlist = evts[event.GetEventType()];
-//	printf("AddPendingEvent %lu %lu\n", evts.size(), evtlist.size());
+	//	printf("AddPendingEvent %lu %lu\n", evts.size(), evtlist.size());
 	assert(event.GetString() == wxEmptyString); // using strings here isn't thread safe http://docs.wxwidgets.org/trunk/classwx_evt_handler.html#a0737c6d2cbcd5ded4b1ecdd53ed0def3
-	for(auto evt: evtlist) {
-//		printf("	AddPendingEvent %lu \n", evt);
+	for (auto evt : evtlist) {
+		//		printf("	AddPendingEvent %lu \n", evt);
 		evt->AddPendingEvent(event);
 	}
 
@@ -64,15 +64,15 @@ void GlobalEvent::Send(wxCommandEvent event)
 
 void GlobalEvent::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func)
 {
-	assert(evthandler!=NULL);
+	assert(evthandler != NULL);
 	std::list<wxEvtHandler*>& evtlist = evts[id];
-	for(auto evt: evtlist) {
+	for (auto evt : evtlist) {
 		if (evt == evthandler) {
-//			printf("Double Evthandler\n");
+			//			printf("Double Evthandler\n");
 			return;
 		}
 	}
-//	printf("connected event! %lu\n", evthandler);
+	//	printf("connected event! %lu\n", evthandler);
 	evthandler->Connect(id, func);
 	evtlist.push_back(evthandler);
 	assert(!evtlist.empty());
@@ -83,16 +83,16 @@ void GlobalEvent::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEve
 void GlobalEvent::_Disconnect(wxEvtHandler* evthandler, wxEventType id)
 {
 	std::map<wxEventType, std::list<wxEvtHandler*>>::iterator it;
-	for (it=evts.begin(); it!=evts.end(); ++it) {
+	for (it = evts.begin(); it != evts.end(); ++it) {
 		if ((id == 0) || (id == it->first)) {
-			for (std::list<wxEvtHandler*>::iterator it2 = it->second.begin(); it2!=it->second.end(); ++it2) {
+			for (std::list<wxEvtHandler*>::iterator it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
 				if (*it2 == evthandler) {
-//					printf("Disconnect %lu\n", evthandler);
-					if (id!=0) {
+					//					printf("Disconnect %lu\n", evthandler);
+					if (id != 0) {
 						evthandler->Disconnect(id);
 					}
 					it->second.erase(it2);
-//					printf("Deleted Handler\n");
+					//					printf("Deleted Handler\n");
 					break;
 				}
 			}
@@ -100,9 +100,9 @@ void GlobalEvent::_Disconnect(wxEvtHandler* evthandler, wxEventType id)
 	}
 }
 
-void GlobalEvent::ConnectGlobalEvent(wxEvtHandler*evh, wxEventType id, wxObjectEventFunction func)
+void GlobalEvent::ConnectGlobalEvent(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func)
 {
-	if (m_handler==NULL) {
+	if (m_handler == NULL) {
 		m_handler = evh;
 	}
 	assert(m_handler == evh); //assigning a different eventhandler from the same object shouldn't happen

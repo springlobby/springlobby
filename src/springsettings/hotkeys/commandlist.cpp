@@ -8,8 +8,7 @@ unsigned CommandList::m_nextCmdId = 1;
 
 void CommandList::InitializeCommandList()
 {
-	if ( !CommandList::m_commands.empty() )
-	{
+	if (!CommandList::m_commands.empty()) {
 		return;
 	}
 

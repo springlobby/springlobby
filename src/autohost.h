@@ -14,26 +14,25 @@ class wxString;
 //! @brief Autohost logic
 class AutoHost
 {
-  public:
+public:
+	AutoHost(IBattle& battle);
 
-    AutoHost( IBattle& battle );
+	void SetEnabled(const bool enabled);
+	bool GetEnabled() const;
 
-    void SetEnabled( const bool enabled );
-    bool GetEnabled() const;
+	void OnSaidBattle(const wxString& nick, const wxString& msg);
+	void OnUserAdded(User& user);
+	void OnUserRemoved(User& user);
 
-    void OnSaidBattle( const wxString& nick, const wxString& msg );
-    void OnUserAdded( User& user );
-    void OnUserRemoved( User& user );
-  private:
-
-    void StartBattle();
+private:
+	void StartBattle();
 	void DoAction(const wxString& str);
 
-    IBattle& m_battle;
+	IBattle& m_battle;
 
-    bool m_enabled;
-    time_t m_lastActionTime;
-    wxArrayString m_userlist;
+	bool m_enabled;
+	time_t m_lastActionTime;
+	wxArrayString m_userlist;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_AUTOHOST_H

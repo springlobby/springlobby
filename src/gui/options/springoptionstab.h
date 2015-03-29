@@ -19,32 +19,32 @@ class wxListBox;
 class SpringOptionsTab : public wxScrolledWindow
 {
 public:
-	SpringOptionsTab( wxWindow* parent );
+	SpringOptionsTab(wxWindow* parent);
 	~SpringOptionsTab();
 
-	void OnApply( wxCommandEvent& event );
-	void OnRestore( wxCommandEvent& event );
+	void OnApply(wxCommandEvent& event);
+	void OnRestore(wxCommandEvent& event);
 
 private:
 	void DoRestore();
 	void EnableSpringBox(bool enabled);
 	void EnableUnitsyncBox(bool enabled);
 
-	void OnBrowseExec( wxCommandEvent& event );
-	void OnBrowseSync( wxCommandEvent& event );
-	void OnAutoConf( wxCommandEvent& event );
-	void OnFindExec( wxCommandEvent& event );
-	void OnFindSync( wxCommandEvent& event );
+	void OnBrowseExec(wxCommandEvent& event);
+	void OnBrowseSync(wxCommandEvent& event);
+	void OnAutoConf(wxCommandEvent& event);
+	void OnFindExec(wxCommandEvent& event);
+	void OnFindSync(wxCommandEvent& event);
 	void OnAddBundle(wxCommandEvent& event);
 	void OnRemoveBundle(wxCommandEvent& event);
 
-	void OnDataDir( wxCommandEvent& event );
+	void OnDataDir(wxCommandEvent& event);
 
-	void OnDontSearch( wxCommandEvent& event );
-	void OnForceBundle( wxCommandEvent& event );
+	void OnDontSearch(wxCommandEvent& event);
+	void OnForceBundle(wxCommandEvent& event);
 
 	void SetupUserFolders();
-	void OnGroupListSelectionChange( wxCommandEvent& event );
+	void OnGroupListSelectionChange(wxCommandEvent& event);
 	void ReloadSpringList();
 	void SwitchUnitsync(const std::string& newIndex, const std::string& oldIndex);
 
@@ -59,10 +59,10 @@ private:
 
 	wxButton* m_auto_btn;
 
-//	wxRadioButton* m_exec_def_radio;
-//	wxRadioButton* m_exec_spec_radio;
-//	wxRadioButton* m_sync_def_radio;
-//	wxRadioButton* m_sync_spec_radio;
+	//	wxRadioButton* m_exec_def_radio;
+	//	wxRadioButton* m_exec_spec_radio;
+	//	wxRadioButton* m_sync_def_radio;
+	//	wxRadioButton* m_sync_spec_radio;
 
 	wxTextCtrl* m_exec_edit;
 	wxTextCtrl* m_sync_edit;

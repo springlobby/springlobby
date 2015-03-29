@@ -8,16 +8,16 @@
 class wxSpringCommand : public wxCmd
 {
 public:
-	wxSpringCommand( const wxString& name, const wxString& description, int id );
+	wxSpringCommand(const wxString& name, const wxString& description, int id);
 	~wxSpringCommand(void);
 
-	virtual wxCmd*	Clone() const;
-	virtual int		GetType() const;
+	virtual wxCmd* Clone() const;
+	virtual int GetType() const;
 
-	static unsigned short	type_id;
+	static unsigned short type_id;
 
 private:
-	virtual void Exec (wxObject *obj, wxEvtHandler *client);
+	virtual void Exec(wxObject* obj, wxEvtHandler* client);
 };
 
 #endif

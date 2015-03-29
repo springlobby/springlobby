@@ -26,55 +26,54 @@ struct BattleListFilterValues;
  * \todo DOCMEMORE */
 class BattleListFilter : public wxPanel, public SL::NonCopyable
 {
-	public:
-    BattleListFilter( wxWindow* parent, wxWindowID id, BattleListTab* parentBattleListTab, const wxPoint& pos, const wxSize& size, long style );
+public:
+	BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTab* parentBattleListTab, const wxPoint& pos, const wxSize& size, long style);
 
-    void OnRankButton     ( wxCommandEvent& event );
-    void OnPlayerButton   ( wxCommandEvent& event );
-    void OnMaxPlayerButton( wxCommandEvent& event );
-    void OnSpectatorButton( wxCommandEvent& event );
-    void OnActivate       ( wxCommandEvent& event );
+	void OnRankButton(wxCommandEvent& event);
+	void OnPlayerButton(wxCommandEvent& event);
+	void OnMaxPlayerButton(wxCommandEvent& event);
+	void OnSpectatorButton(wxCommandEvent& event);
+	void OnActivate(wxCommandEvent& event);
 
-    void SetActiv         ( bool state );
+	void SetActiv(bool state);
 
-    void OnChange            ( wxCommandEvent& event );
-    void OnChangeMap         ( wxCommandEvent& event );
-    void OnChangeMod         ( wxCommandEvent& event );
-    void OnChangeDescription ( wxCommandEvent& event );
-    void OnChangeHost        ( wxCommandEvent& event );
+	void OnChange(wxCommandEvent& event);
+	void OnChangeMap(wxCommandEvent& event);
+	void OnChangeMod(wxCommandEvent& event);
+	void OnChangeDescription(wxCommandEvent& event);
+	void OnChangeHost(wxCommandEvent& event);
 
-    void OnRankChange        ( wxCommandEvent& event );
-    void OnPlayerChange      ( wxCommandEvent& event );
-    void OnMaxPlayerChange   ( wxCommandEvent& event );
-    void OnSpectatorChange   ( wxCommandEvent& event );
+	void OnRankChange(wxCommandEvent& event);
+	void OnPlayerChange(wxCommandEvent& event);
+	void OnMaxPlayerChange(wxCommandEvent& event);
+	void OnSpectatorChange(wxCommandEvent& event);
 
-    bool FilterBattle(IBattle& battle);
-    bool GetActiv() const;
+	bool FilterBattle(IBattle& battle);
+	bool GetActiv() const;
 
-    void SetFilterHighlighted( bool state );
+	void SetFilterHighlighted(bool state);
 
-    void SaveFilterValues();
+	void SaveFilterValues();
 
-  enum ButtonMode {
-    BUTTON_MODE_EQUAL,
-    BUTTON_MODE_BIGGER,
-    BUTTON_MODE_SMALLER
-  };
+	enum ButtonMode {
+		BUTTON_MODE_EQUAL,
+		BUTTON_MODE_BIGGER,
+		BUTTON_MODE_SMALLER
+	};
 
 private:
+	wxString _GetButtonSign(ButtonMode value);
+	ButtonMode _GetNextMode(ButtonMode value);
+	ButtonMode _GetButtonMode(const wxString& sign);
+	bool _IntCompare(int a, int b, ButtonMode mode);
 
-    wxString _GetButtonSign(ButtonMode value);
-		ButtonMode _GetNextMode(ButtonMode value);
-		ButtonMode _GetButtonMode(const wxString& sign);
-		bool _IntCompare(int a,int b,ButtonMode mode);
+	/** A function callback used to transform an input string. */
+	typedef wxString (*StringTransformFunction)(const wxString& input);
 
-    /** A function callback used to transform an input string. */
-    typedef wxString (*StringTransformFunction)(const wxString& input);
+	bool m_activ;
 
-    bool m_activ;
-
-		BattleListTab* m_parent_battlelisttab;
-/*
+	BattleListTab* m_parent_battlelisttab;
+	/*
 #if wxUSE_TOGGLEBTN
 		wxToggleButton* m_filter_show;
 #else
@@ -84,70 +83,70 @@ private:
 
 		wxCheckBox* m_filter_activ;
 */
-        //Host
-		wxStaticText* m_filter_host_text;
-		wxTextCtrl*   m_filter_host_edit;
-        wxRegEx*      m_filter_host_expression;
+	//Host
+	wxStaticText* m_filter_host_text;
+	wxTextCtrl* m_filter_host_edit;
+	wxRegEx* m_filter_host_expression;
 
-        //Status
-		wxStaticText* m_filter_status_text;
-		wxStaticText* m_filter_status_text1;
-		wxCheckBox* m_filter_status_locked;
-		wxCheckBox* m_filter_status_pass;
-		wxCheckBox* m_filter_status_start;
-		wxCheckBox* m_filter_status_full;
-		wxCheckBox* m_filter_status_open;
+	//Status
+	wxStaticText* m_filter_status_text;
+	wxStaticText* m_filter_status_text1;
+	wxCheckBox* m_filter_status_locked;
+	wxCheckBox* m_filter_status_pass;
+	wxCheckBox* m_filter_status_start;
+	wxCheckBox* m_filter_status_full;
+	wxCheckBox* m_filter_status_open;
 
-        //Rank
-		wxStaticText* m_filter_rank_text;
-		ButtonMode m_filter_rank_mode;
-		wxButton* m_filter_rank_button;
-		wxBitmapComboBox* m_filter_rank_choice;
-		int m_filter_rank_choice_value;
+	//Rank
+	wxStaticText* m_filter_rank_text;
+	ButtonMode m_filter_rank_mode;
+	wxButton* m_filter_rank_button;
+	wxBitmapComboBox* m_filter_rank_choice;
+	int m_filter_rank_choice_value;
 
-        //Description
-		wxStaticText* m_filter_description_text;
-		wxTextCtrl* m_filter_description_edit;
-        wxRegEx*      m_filter_description_expression;
+	//Description
+	wxStaticText* m_filter_description_text;
+	wxTextCtrl* m_filter_description_edit;
+	wxRegEx* m_filter_description_expression;
 
 
-        //Player
-		wxStaticText* m_filter_player_text;
-		wxButton* m_filter_player_button;
-		ButtonMode m_filter_player_mode;
-		wxChoice* m_filter_player_choice;
-		int m_filter_player_choice_value;
+	//Player
+	wxStaticText* m_filter_player_text;
+	wxButton* m_filter_player_button;
+	ButtonMode m_filter_player_mode;
+	wxChoice* m_filter_player_choice;
+	int m_filter_player_choice_value;
 
-        //Map
-		wxStaticText* m_filter_map_text;
-		wxTextCtrl* m_filter_map_edit;
-		wxCheckBox* m_filter_map_show;
-        wxRegEx*    m_filter_map_expression;
+	//Map
+	wxStaticText* m_filter_map_text;
+	wxTextCtrl* m_filter_map_edit;
+	wxCheckBox* m_filter_map_show;
+	wxRegEx* m_filter_map_expression;
 
-        //Max Player
-		wxStaticText* m_filter_maxplayer_text;
-		wxButton* m_filter_maxplayer_button;
-		ButtonMode m_filter_maxplayer_mode;
-		wxChoice* m_filter_maxplayer_choice;
-		int m_filter_maxplayer_choice_value;
+	//Max Player
+	wxStaticText* m_filter_maxplayer_text;
+	wxButton* m_filter_maxplayer_button;
+	ButtonMode m_filter_maxplayer_mode;
+	wxChoice* m_filter_maxplayer_choice;
+	int m_filter_maxplayer_choice_value;
 
-        //Mod
-		wxStaticText* m_filter_mod_text;
-		wxTextCtrl* m_filter_mod_edit;
-		wxCheckBox* m_filter_mod_show;
-        wxRegEx*    m_filter_mod_expression;
+	//Mod
+	wxStaticText* m_filter_mod_text;
+	wxTextCtrl* m_filter_mod_edit;
+	wxCheckBox* m_filter_mod_show;
+	wxRegEx* m_filter_mod_expression;
 
-        //Spectator
-		wxStaticText* m_filter_spectator_text;
-		wxButton* m_filter_spectator_button;
-		ButtonMode m_filter_spectator_mode;
-		wxChoice* m_filter_spectator_choice;
-		int m_filter_spectator_choice_value;
+	//Spectator
+	wxStaticText* m_filter_spectator_text;
+	wxButton* m_filter_spectator_button;
+	ButtonMode m_filter_spectator_mode;
+	wxChoice* m_filter_spectator_choice;
+	int m_filter_spectator_choice_value;
 
-        wxCheckBox* m_filter_highlighted;
+	wxCheckBox* m_filter_highlighted;
 
-	public:
-		/** Test whether an input string matches a filter string.
+public:
+	/** Test whether an input string matches a filter string.
 		*  The filter will be tried as both a fixed string, and as a regular expression.
 		*
 		* @param input The input string to test.
@@ -165,38 +164,37 @@ private:
 		*
 		* @return @c true if the input or generated input matches the filter string, and @c false otherwise.
 		*/
-		static bool StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex = NULL, StringTransformFunction additional_transform = NULL, bool case_sensitive = false);
+	static bool StringMatches(const wxString& input, const wxString& filter_string, const wxRegEx* filter_regex = NULL, StringTransformFunction additional_transform = NULL, bool case_sensitive = false);
 
 private:
-		DECLARE_EVENT_TABLE()
-		BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
-		void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
-		wxString GetLastBattleFilterProfileName();
-		void SetBattleFilterActivState( const bool state );
+	DECLARE_EVENT_TABLE()
+	BattleListFilterValues GetBattleFilterValues(const wxString& profile_name = (_T("default")));
+	void SetBattleFilterValues(const BattleListFilterValues& blfValues, const wxString& profile_name = _T("default"));
+	wxString GetLastBattleFilterProfileName();
+	void SetBattleFilterActivState(const bool state);
 };
 
-enum
-{
-    BATTLE_FILTER_HOST_EDIT,
-    BATTLE_FILTER_DESCRIPTION_EDIT,
-    BATTLE_FILTER_MAP_EDIT,
-    BATTLE_FILTER_MOD_EDIT,
-    BATTLE_FILTER_LOCKED,
-    BATTLE_FILTER_OPEN,
-    BATTLE_FILTER_PASSWORDED,
-    BATTLE_FILTER_FULL,
-    BATTLE_FILTER_STARTED,
-    BATTLE_FILTER_RANK_CHOICE,
-    BATTLE_FILTER_RANK_BUTTON,
-    BATTLE_FILTER_PLAYER_CHOICE,
-    BATTLE_FILTER_MAXPLAYER_CHOICE,
-    BATTLE_FILTER_SPECTATOR_CHOICE,
-    BATTLE_FILTER_MAP_SHOW,
-    BATTLE_FILTER_MOD_SHOW,
-    BATTLE_FILTER_PLAYER_BUTTON,
-    BATTLE_FILTER_MAXPLAYER_BUTTON,
-    BATTLE_FILTER_SPECTATOR_BUTTON,
-    BATTLE_FILTER_HIGHLIGHTED
+enum {
+	BATTLE_FILTER_HOST_EDIT,
+	BATTLE_FILTER_DESCRIPTION_EDIT,
+	BATTLE_FILTER_MAP_EDIT,
+	BATTLE_FILTER_MOD_EDIT,
+	BATTLE_FILTER_LOCKED,
+	BATTLE_FILTER_OPEN,
+	BATTLE_FILTER_PASSWORDED,
+	BATTLE_FILTER_FULL,
+	BATTLE_FILTER_STARTED,
+	BATTLE_FILTER_RANK_CHOICE,
+	BATTLE_FILTER_RANK_BUTTON,
+	BATTLE_FILTER_PLAYER_CHOICE,
+	BATTLE_FILTER_MAXPLAYER_CHOICE,
+	BATTLE_FILTER_SPECTATOR_CHOICE,
+	BATTLE_FILTER_MAP_SHOW,
+	BATTLE_FILTER_MOD_SHOW,
+	BATTLE_FILTER_PLAYER_BUTTON,
+	BATTLE_FILTER_MAXPLAYER_BUTTON,
+	BATTLE_FILTER_SPECTATOR_BUTTON,
+	BATTLE_FILTER_HIGHLIGHTED
 };
 
 #endif //SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H

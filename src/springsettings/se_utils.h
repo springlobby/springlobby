@@ -12,16 +12,16 @@
 
 int fromString(const wxString& s);
 
-template<class T>
-wxString towxString(T arg){
-  std::stringstream s;
-  s << arg;
-  return wxString(s.str().c_str(),wxConvUTF8);
+template <class T>
+wxString towxString(T arg)
+{
+	std::stringstream s;
+	s << arg;
+	return wxString(s.str().c_str(), wxConvUTF8);
 }
 /** @} */
 
 bool IsSettingsStandAlone();
-void SetSettingsStandAlone( bool value );
+void SetSettingsStandAlone(bool value);
 
 #endif /*SE_UTILS_H_*/
-

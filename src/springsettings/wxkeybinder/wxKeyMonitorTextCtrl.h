@@ -17,36 +17,40 @@
 class wxKeyMonitorTextCtrl : public wxTextCtrl
 {
 public:
-    wxKeyMonitorTextCtrl(
-        wxWindow* parent,
-        wxWindowID id,
-        const wxString& value = wxEmptyString,
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxDefaultSize,
-        long style = wxTE_PROCESS_ENTER,
-        const wxValidator& validator = wxDefaultValidator,
-        const wxString& name = wxTextCtrlNameStr) :
-        wxTextCtrl(parent, id, value, pos, size, style, validator, name) {}
+	wxKeyMonitorTextCtrl(
+	    wxWindow* parent,
+	    wxWindowID id,
+	    const wxString& value = wxEmptyString,
+	    const wxPoint& pos = wxDefaultPosition,
+	    const wxSize& size = wxDefaultSize,
+	    long style = wxTE_PROCESS_ENTER,
+	    const wxValidator& validator = wxDefaultValidator,
+	    const wxString& name = wxTextCtrlNameStr)
+	    : wxTextCtrl(parent, id, value, pos, size, style, validator, name)
+	{
+	}
 
-    virtual ~wxKeyMonitorTextCtrl() {}
+	virtual ~wxKeyMonitorTextCtrl()
+	{
+	}
 
 public:
+	//! Handles the keypresses and changes accordingly
+	//! the text displayed in text ctrl.
+	void OnKey(wxKeyEvent&);
 
-    //! Handles the keypresses and changes accordingly
-    //! the text displayed in text ctrl.
-    void OnKey(wxKeyEvent &);
-
-    //! Returns TRUE if this window is containing a valid key combination.
-    bool IsValidKeyComb() const {
-        return !GetValue().IsEmpty(); //we allow '+' (&& GetValue().Last() != '+';)
-    }
+	//! Returns TRUE if this window is containing a valid key combination.
+	bool IsValidKeyComb() const
+	{
+		return !GetValue().IsEmpty(); //we allow '+' (&& GetValue().Last() != '+';)
+	}
 
 protected:
-    int overflow(int i);
+	int overflow(int i);
 
 private:
-    DECLARE_CLASS(wxKeyMonitorTextCtrl)
-    DECLARE_EVENT_TABLE()
+	DECLARE_CLASS(wxKeyMonitorTextCtrl)
+	DECLARE_EVENT_TABLE()
 };
 
 #endif

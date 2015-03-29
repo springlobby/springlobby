@@ -23,11 +23,11 @@ std::string strtolower(std::string str);
 
 long FromwxString(const wxString& arg);
 
-static inline long s2l( const wxString& arg )
+static inline long s2l(const wxString& arg)
 {
-    long ret;
-    arg.ToLong(&ret);
-    return ret;
+	long ret;
+	arg.ToLong(&ret);
+	return ret;
 }
 
 /** @} */
@@ -35,9 +35,10 @@ static inline long s2l( const wxString& arg )
 #include <vector>
 class wxStringTokenizer;
 //! converts a string tokneizer into a vector of string
-class StringtokenizerVectorized : public std::vector<wxString> {
-    public:
-        StringtokenizerVectorized( wxStringTokenizer tokenizer );
+class StringtokenizerVectorized : public std::vector<wxString>
+{
+public:
+	StringtokenizerVectorized(wxStringTokenizer tokenizer);
 };
 
 std::string stdprintf(const char* format, ...);

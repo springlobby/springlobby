@@ -27,8 +27,8 @@
 
 ALsound& slsound()
 {
-	static LSL::Util::LineInfo<ALsound> m( AT );
-	static LSL::Util::GlobalObjectHolder<ALsound, LSL::Util::LineInfo<ALsound> > m_sound( m );
+	static LSL::Util::LineInfo<ALsound> m(AT);
+	static LSL::Util::GlobalObjectHolder<ALsound, LSL::Util::LineInfo<ALsound> > m_sound(m);
 	return m_sound;
 }
 
@@ -38,17 +38,20 @@ static void eos_callback(void*, ALuint)
 	isdone = true;
 }
 
-class soundThread: public wxThread
+class soundThread : public wxThread
 {
 public:
-	soundThread(int idx): wxThread(wxTHREAD_JOINABLE) {
+	soundThread(int idx)
+	    : wxThread(wxTHREAD_JOINABLE)
+	{
 		m_idx = idx;
 		Create();
 	}
 
 private:
 	int m_idx;
-	ExitCode Entry() {
+	ExitCode Entry()
+	{
 		ALuint m_sources[1];
 		ALuint m_buffers[1];
 		//Init
@@ -56,9 +59,9 @@ private:
 		//*
 
 		//set up 3d sound
-		ALfloat	alpos[3];
-		ALfloat	alvel[3];
-		ALfloat	alori[6];
+		ALfloat alpos[3];
+		ALfloat alvel[3];
+		ALfloat alori[6];
 		alpos[0] = 0;
 		alpos[1] = 0;
 		alpos[2] = 0;
@@ -72,37 +75,37 @@ private:
 		alori[4] = 1;
 		alori[5] = 0;
 
-		alListenerfv(AL_POSITION,alpos);
-		alListenerfv(AL_VELOCITY,alvel);
-		alListenerfv(AL_ORIENTATION,alori);
+		alListenerfv(AL_POSITION, alpos);
+		alListenerfv(AL_VELOCITY, alvel);
+		alListenerfv(AL_ORIENTATION, alori);
 		alureInitDevice(0, 0);
 		//*
 
-		alGenSources(1,m_sources);
-		if(alGetError()!=AL_NO_ERROR) {
-			wxLogError( TowxString(alureGetErrorString()) );
+		alGenSources(1, m_sources);
+		if (alGetError() != AL_NO_ERROR) {
+			wxLogError(TowxString(alureGetErrorString()));
 			return NULL;
 		}
 
 		if (m_idx == 0) {
-			m_buffers[0] = alureCreateBufferFromMemory( pm_sound_data, sizeof(pm_sound_data)/sizeof(pm_sound_data[0]) );
+			m_buffers[0] = alureCreateBufferFromMemory(pm_sound_data, sizeof(pm_sound_data) / sizeof(pm_sound_data[0]));
 		} else {
-			m_buffers[0] = alureCreateBufferFromMemory( ring_sound_data, sizeof(ring_sound_data)/sizeof(ring_sound_data[0]) );
+			m_buffers[0] = alureCreateBufferFromMemory(ring_sound_data, sizeof(ring_sound_data) / sizeof(ring_sound_data[0]));
 		}
-		if ( alGetError()!=AL_NO_ERROR ) {
-			wxLogError( TowxString(alureGetErrorString()) );
+		if (alGetError() != AL_NO_ERROR) {
+			wxLogError(TowxString(alureGetErrorString()));
 			return NULL;
 		}
-		alSourcei(m_sources[0], AL_BUFFER, m_buffers[0] );
-		if ( alGetError()!=AL_NO_ERROR ) {
-			wxLogError( TowxString(alureGetErrorString()) );
+		alSourcei(m_sources[0], AL_BUFFER, m_buffers[0]);
+		if (alGetError() != AL_NO_ERROR) {
+			wxLogError(TowxString(alureGetErrorString()));
 			return NULL;
 		}
 		isdone = false;
 		if (alurePlaySource(m_sources[0], eos_callback, &isdone) == AL_FALSE) {
-			wxLogError( TowxString(alureGetErrorString()) );
+			wxLogError(TowxString(alureGetErrorString()));
 		}
-		while(!isdone) {
+		while (!isdone) {
 			alureSleep(0.125);
 			alureUpdate();
 		}
@@ -113,9 +116,9 @@ private:
 	}
 };
 
-ALsound::ALsound():m_thread(NULL)
+ALsound::ALsound()
+    : m_thread(NULL)
 {
-
 }
 
 ALsound::~ALsound()

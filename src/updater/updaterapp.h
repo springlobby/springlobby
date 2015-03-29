@@ -10,13 +10,14 @@ class UpdaterApp : public wxApp
 {
 public:
 	UpdaterApp();
+
 private:
 	virtual bool OnInit();
 	virtual int OnRun();
 
 	virtual void OnInitCmdLine(wxCmdLineParser& parser);
 	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
-	bool StartUpdate( const wxString& source, const wxString& destination, bool silent);
+	bool StartUpdate(const wxString& source, const wxString& destination, bool silent);
 
 	wxString m_source_dir;
 	wxString m_destination_dir;
@@ -24,7 +25,6 @@ private:
 	wxString m_updater_exe;
 	long m_pid;
 	long m_paramcount;
-
 };
 
 DECLARE_APP(UpdaterApp)

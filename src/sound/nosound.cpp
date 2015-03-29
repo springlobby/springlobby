@@ -22,4 +22,3 @@ ALsound& slsound()
 	static ALsound snd;
 	return snd;
 }
-

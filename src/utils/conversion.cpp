@@ -7,11 +7,11 @@
 #include <sstream>
 #include <algorithm>
 
-StringtokenizerVectorized::StringtokenizerVectorized( wxStringTokenizer tokenizer )
+StringtokenizerVectorized::StringtokenizerVectorized(wxStringTokenizer tokenizer)
 {
-    reserve( tokenizer.CountTokens() );
-    while ( tokenizer.HasMoreTokens() )
-        push_back( tokenizer.GetNextToken() );
+	reserve(tokenizer.CountTokens());
+	while (tokenizer.HasMoreTokens())
+		push_back(tokenizer.GetNextToken());
 }
 
 std::string stdprintf(const char* format, ...)
@@ -25,25 +25,28 @@ std::string stdprintf(const char* format, ...)
 }
 
 //IMPORTANT NOTE: wxString( blah, wxConvUTF8 ) since wx2.9 returns empty string
-//on Windows if "blah" contains non-english characters! 
+//on Windows if "blah" contains non-english characters!
 //wxString(std::string) works normally
-wxString TowxString(const std::string& arg){
-  wxString temproraryString = wxString(arg.c_str(),wxConvUTF8);
-  return temproraryString.IsEmpty() ? wxString(arg) : temproraryString;
+wxString TowxString(const std::string& arg)
+{
+	wxString temproraryString = wxString(arg.c_str(), wxConvUTF8);
+	return temproraryString.IsEmpty() ? wxString(arg) : temproraryString;
 }
 
-wxString TowxString(int arg){
-  std::stringstream s;
-  s << arg;
-  return wxString(s.str().c_str(),wxConvUTF8);
+wxString TowxString(int arg)
+{
+	std::stringstream s;
+	s << arg;
+	return wxString(s.str().c_str(), wxConvUTF8);
 }
 
-long FromwxString(const wxString& arg){
-  std::stringstream s;
-  s << STD_STRING(arg);
-  int64_t ret;
-  s >> ret;
-  return ret;
+long FromwxString(const wxString& arg)
+{
+	std::stringstream s;
+	s << STD_STRING(arg);
+	int64_t ret;
+	s >> ret;
+	return ret;
 }
 
 

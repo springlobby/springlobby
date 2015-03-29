@@ -7,13 +7,13 @@
 class ContentSearchResult
 {
 public:
-    ContentSearchResult();
-    ~ContentSearchResult();
-    wxString name;
-    wxString type;
-    wxImage * image;
-    unsigned int filesize;
-    bool is_downloaded;
+	ContentSearchResult();
+	~ContentSearchResult();
+	wxString name;
+	wxString type;
+	wxImage* image;
+	unsigned int filesize;
+	bool is_downloaded;
 };
 
 #endif // CONTENTSEARCHRESULT_H

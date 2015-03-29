@@ -10,7 +10,7 @@ unsigned int CRC::crcTable[256];
 void CRC::GenerateCRCTable()
 {
 	unsigned int crc, poly;
-	int	i, j;
+	int i, j;
 
 	poly = 0xEDB88320L;
 	for (i = 0; i < 256; i++) {
@@ -29,7 +29,8 @@ void CRC::GenerateCRCTable()
 /** @brief Construct a new CRC object.
     This generates the CRC table if it is the first CRC object being
 	constructed. */
-CRC::CRC() : crc(0xFFFFFFFF)
+CRC::CRC()
+    : crc(0xFFFFFFFF)
 {
 	if (crcTable[1] == 0)
 		GenerateCRCTable();
@@ -40,7 +41,7 @@ CRC::CRC() : crc(0xFFFFFFFF)
 void CRC::UpdateData(const unsigned char* buf, unsigned bytes)
 {
 	for (size_t i = 0; i < bytes; ++i)
-		crc = (crc>>8) ^ crcTable[ (crc^(buf[i])) & 0xFF ];
+		crc = (crc >> 8) ^ crcTable[(crc ^ (buf[i])) & 0xFF];
 }
 
 /** @brief Resets CRC data to original state. */
@@ -53,5 +54,5 @@ void CRC::ResetCRC()
 /** @brief Update CRC over the data in buf. */
 void CRC::UpdateData(const std::string& buf)
 {
-	UpdateData((const unsigned char*) buf.c_str(), buf.size());
+	UpdateData((const unsigned char*)buf.c_str(), buf.size());
 }

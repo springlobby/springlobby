@@ -11,19 +11,29 @@
 class StackTrace : public wxStackWalker
 {
 public:
-	StackTrace() {}
-	~StackTrace() {}
-	wxString GetStackTrace() const { return StackTraceString; }
+	StackTrace()
+	{
+	}
+	~StackTrace()
+	{
+	}
+	wxString GetStackTrace() const
+	{
+		return StackTraceString;
+	}
 
 private:
-	void OnStackFrame( const wxStackFrame& frame );
+	void OnStackFrame(const wxStackFrame& frame);
 	wxString StackTraceString;
 	wxString PartToHash;
 };
 #else
 class StackTrace
 {
-	wxString GetStackTrace() const { return wxEmptyString; }
+	wxString GetStackTrace() const
+	{
+		return wxEmptyString;
+	}
 };
 
 #endif

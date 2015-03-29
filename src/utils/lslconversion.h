@@ -5,9 +5,10 @@
 
 class wxColour;
 class wxArrayString;
-namespace LSL{
-	class lslColor;
-	typedef std::vector< std::string > StringVector;
+namespace LSL
+{
+class lslColor;
+typedef std::vector<std::string> StringVector;
 }
 
 wxColour lslTowxColour(const LSL::lslColor& col);

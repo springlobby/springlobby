@@ -11,78 +11,84 @@
 class IServer;
 class ChatPanel;
 
-struct UiChannelData {
-  UiChannelData(): panel(0) {}
+struct UiChannelData
+{
+	UiChannelData()
+	    : panel(0)
+	{
+	}
 
-  ChatPanel* panel;
+	ChatPanel* panel;
 };
 
 class Channel : public UserList, public SL::NonCopyable
 {
-  public:
+public:
+	UiChannelData uidata;
 
-    UiChannelData uidata;
+	//Channel(): m_serv(0),m_userdata(0) {}
+	Channel(IServer& serv);
+	virtual ~Channel();
 
-    //Channel(): m_serv(0),m_userdata(0) {}
-    Channel( IServer& serv );
-    virtual ~Channel();
+	IServer& GetServer()
+	{
+		return m_serv;
+	}
 
-    IServer& GetServer() { return m_serv; }
+	void SetName(const std::string& name);
+	std::string GetName() const;
+	User& GetMe();
 
-    void SetName( const std::string& name );
-    std::string GetName() const;
-    User& GetMe();
+	// filtering functions
+	void CheckBanned(const std::string& name);
+	bool IsBanned(const std::string& name);
 
-    // filtering functions
-    void CheckBanned(const std::string& name);
-    bool IsBanned(const std::string& name);
-
-    // Channel Functions
-    void Say( const std::string& message );
-    void DoAction( const std::string& action );
-    void Leave();
+	// Channel Functions
+	void Say(const std::string& message);
+	void DoAction(const std::string& action);
+	void Leave();
 	void Rejoin();
 
-    void Said( User& who, const std::string& message );
+	void Said(User& who, const std::string& message);
 
-    void DidAction( User& who, const std::string& action );
+	void DidAction(User& who, const std::string& action);
 
-    void Left( User& who, const std::string& reason );
-    void Joined( User& who );
+	void Left(User& who, const std::string& reason);
+	void Joined(User& who);
 
-    void OnChannelJoin( User& who );
+	void OnChannelJoin(User& who);
 
-    void SetTopic( const std::string& topic, const std::string& who );
-    std::string GetTopic();
-    std::string GetTopicSetBy();
+	void SetTopic(const std::string& topic, const std::string& who);
+	std::string GetTopic();
+	std::string GetTopicSetBy();
 
-    bool ExecuteSayCommand( const std::string& in );
+	bool ExecuteSayCommand(const std::string& in);
 
-    std::string GetPassword();
-    void SetPassword( const std::string& pw );
+	std::string GetPassword();
+	void SetPassword(const std::string& pw);
 	bool IsSubscribed(); //subscribed to channel history?
 
 private:
-    IServer& m_serv;
+	IServer& m_serv;
 
-    std::set<std::string> m_banned_users;
+	std::set<std::string> m_banned_users;
 
-    bool m_do_ban_regex;
-    wxRegEx m_ban_regex;
+	bool m_do_ban_regex;
+	wxRegEx m_ban_regex;
 
-    bool m_do_unban_regex;
-    wxRegEx m_unban_regex;
+	bool m_do_unban_regex;
+	wxRegEx m_unban_regex;
 
-    std::string m_ban_regex_msg;
+	std::string m_ban_regex_msg;
 
-    std::string m_topic;
-    std::string m_topic_nick;
-    std::string m_name;
+	std::string m_topic;
+	std::string m_topic_nick;
+	std::string m_name;
 
-    std::string m_password;
+	std::string m_password;
 
-    void AddUser( User& user );
-    void RemoveUser( const std::string& nick );
+	void AddUser(User& user);
+	void RemoveUser(const std::string& nick);
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHANNEL_H

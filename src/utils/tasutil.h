@@ -7,14 +7,14 @@
 #include <wx/wxchar.h>
 class wxString;
 
-std::string GetWordParam( wxString& params );
-std::string GetSentenceParam( wxString& params );
-long GetIntParam( wxString& params );
-bool GetBoolParam( wxString& params );
-wxString GetParamByChar( wxString& params, const wxChar& sep );
+std::string GetWordParam(wxString& params);
+std::string GetSentenceParam(wxString& params);
+long GetIntParam(wxString& params);
+bool GetBoolParam(wxString& params);
+wxString GetParamByChar(wxString& params, const wxChar& sep);
 
 //! matches against regex for printable ascii chars, excluding space
-bool IsValidNickname( const wxString& name );
+bool IsValidNickname(const wxString& name);
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVERUTIL_H

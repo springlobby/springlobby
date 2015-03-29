@@ -16,34 +16,32 @@ class BattleOptionsTab;
 class MainSinglePlayerTab : public wxScrolledWindow
 {
 public:
-    MainSinglePlayerTab( wxWindow* parent );
-    ~MainSinglePlayerTab();
+	MainSinglePlayerTab(wxWindow* parent);
+	~MainSinglePlayerTab();
 
-    void UpdateMinimap();
-    void OnUnitSyncReloaded();
+	void UpdateMinimap();
+	void OnUnitSyncReloaded();
 
-    void ReloadRestrictions();
-    void ReloadMapOptContrls();
-    void ReloadModOptContrls();
-    void ReloadPresetList();
+	void ReloadRestrictions();
+	void ReloadMapOptContrls();
+	void ReloadModOptContrls();
+	void ReloadPresetList();
 
-    SinglePlayerTab& GetSinglePlayerTab();
-    BattleOptionsTab& GetOptionsTab();
-    BattleroomMMOptionsTab& GetMMOptionsTab();
+	SinglePlayerTab& GetSinglePlayerTab();
+	BattleOptionsTab& GetOptionsTab();
+	BattleroomMMOptionsTab& GetMMOptionsTab();
 
-    void LoadPerspective( const wxString& perspective_name = wxEmptyString );
-    void SavePerspective( const wxString& perspective_name = wxEmptyString );
+	void LoadPerspective(const wxString& perspective_name = wxEmptyString);
+	void SavePerspective(const wxString& perspective_name = wxEmptyString);
 
 private:
+	wxBoxSizer* m_main_sizer;
+	wxImageList* m_imagelist;
+	SLNotebook* m_tabs;
 
-    wxBoxSizer* m_main_sizer;
-    wxImageList* m_imagelist;
-    SLNotebook* m_tabs;
-
-    SinglePlayerTab* m_sp_tab;
-    BattleOptionsTab* m_opts_tab;
-    BattleroomMMOptionsTab* m_mm_opts_tab;
-
+	SinglePlayerTab* m_sp_tab;
+	BattleOptionsTab* m_opts_tab;
+	BattleroomMMOptionsTab* m_mm_opts_tab;
 };
 
 

@@ -22,14 +22,15 @@ bool IsSettingsStandAlone()
 	return standalonemode;
 }
 
-void SetSettingsStandAlone( bool value )
+void SetSettingsStandAlone(bool value)
 {
 	standalonemode = value;
 }
 
 
-int fromString( const wxString& s ) {
+int fromString(const wxString& s)
+{
 	long temp = 0;
-	s.ToLong( &temp );
-	return int( temp );
+	s.ToLong(&temp);
+	return int(temp);
 }

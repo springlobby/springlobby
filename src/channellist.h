@@ -17,7 +17,6 @@ lsl/container/channellist.h
 **/
 
 
-
 #include <map>
 #include <wx/string.h>
 
@@ -31,20 +30,20 @@ typedef channel_map_t::iterator channel_iter_t;
 //! @brief List of Channel objects
 class ChannelList
 {
-  public:
-    ChannelList();
-    void AddChannel( Channel& channel );
-    void RemoveChannel( const std::string& name );
-    Channel& GetChannel( const std::string& name );
-    Channel& GetChannel( channel_map_t::size_type index );
-    bool ChannelExists( const std::string& name ) const;
-    channel_map_t::size_type GetNumChannels() const;
+public:
+	ChannelList();
+	void AddChannel(Channel& channel);
+	void RemoveChannel(const std::string& name);
+	Channel& GetChannel(const std::string& name);
+	Channel& GetChannel(channel_map_t::size_type index);
+	bool ChannelExists(const std::string& name) const;
+	channel_map_t::size_type GetNumChannels() const;
 
-  private:
-    channel_map_t m_chans;
-    // The following are used as internal cache to speed up random access:
-    mutable channel_iter_t m_seek;
-    mutable channel_map_t::size_type m_seekpos;
+private:
+	channel_map_t m_chans;
+	// The following are used as internal cache to speed up random access:
+	mutable channel_iter_t m_seek;
+	mutable channel_map_t::size_type m_seekpos;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CHANNELLIST_H

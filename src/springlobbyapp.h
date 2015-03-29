@@ -12,37 +12,35 @@ class wxTranslationHelper;
 //! @brief SpringLobby wxApp
 class SpringLobbyApp : public wxApp
 {
-  public:
-    SpringLobbyApp();
+public:
+	SpringLobbyApp();
 
-    virtual bool OnInit();
-    virtual int OnExit();
+	virtual bool OnInit();
+	virtual int OnExit();
 
-    virtual void OnFatalException();
+	virtual void OnFatalException();
 
-    // System Events
-    bool SelectLanguage();
+	// System Events
+	bool SelectLanguage();
 
-    virtual void OnInitCmdLine(wxCmdLineParser& parser);
-    virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+	virtual void OnInitCmdLine(wxCmdLineParser& parser);
+	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
-	void OnQuit( wxCommandEvent& data );
+	void OnQuit(wxCommandEvent& data);
 
 private:
+	bool quit_called;
 
+	wxTranslationHelper* m_translationhelper;
 
-    bool quit_called;
-
-    wxTranslationHelper* m_translationhelper;
-
-    long m_log_verbosity;
-    bool m_log_console;
+	long m_log_verbosity;
+	bool m_log_console;
 	wxString m_log_file_path;
-    bool m_log_window_show;
-    bool m_crash_handle_disable;
+	bool m_log_window_show;
+	bool m_crash_handle_disable;
 	wxString m_appname;
 
-    DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 
 DECLARE_APP(SpringLobbyApp)

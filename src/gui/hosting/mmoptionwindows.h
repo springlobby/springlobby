@@ -15,27 +15,27 @@ class wxTextCtrl;
 class wxStaticText;
 class wxButton;
 
-class SingleOptionDialog: public wxDialog
+class SingleOptionDialog : public wxDialog
 {
 
 public:
-		SingleOptionDialog( IBattle& battle, const wxString& optiontag );
-private:
-		void OnOk(wxCommandEvent& event);
-		void OnCancel(wxCommandEvent& event);
-		IBattle& m_battle;
-		wxString m_tag;
+	SingleOptionDialog(IBattle& battle, const wxString& optiontag);
 
-		wxCheckBox* m_checkbox;
-		wxComboBox* m_combobox;
-		wxSpinCtrlDouble* m_spinctrl;
-		wxTextCtrl* m_textctrl;
-		wxButton* m_cancel_button;
-		wxButton* m_ok_button;
+private:
+	void OnOk(wxCommandEvent& event);
+	void OnCancel(wxCommandEvent& event);
+	IBattle& m_battle;
+	wxString m_tag;
+
+	wxCheckBox* m_checkbox;
+	wxComboBox* m_combobox;
+	wxSpinCtrlDouble* m_spinctrl;
+	wxTextCtrl* m_textctrl;
+	wxButton* m_cancel_button;
+	wxButton* m_ok_button;
 };
 
-enum
-{
+enum {
 	ID_CANCEL = wxID_HIGHEST,
 	ID_OK
 };

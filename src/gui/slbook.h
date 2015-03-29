@@ -15,24 +15,25 @@ class ChatPanelMenu;
     http://trac.wxwidgets.org/ticket/10466
 
 **/
-class SLNotebook : public wxAuiNotebook {
+class SLNotebook : public wxAuiNotebook
+{
 
-    public:
-        SLNotebook (wxWindow* parent, const wxString& name, wxWindowID id = wxID_ANY,
-                        const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
-                        long style = wxAUI_NB_DEFAULT_STYLE);
-//        wxAuiManager& GetAuiManager() { return m_mgr; }
+public:
+	SLNotebook(wxWindow* parent, const wxString& name, wxWindowID id = wxID_ANY,
+		   const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
+		   long style = wxAUI_NB_DEFAULT_STYLE);
+	//        wxAuiManager& GetAuiManager() { return m_mgr; }
 
-        wxString SavePerspective();
-        bool LoadPerspective(const wxString& layout);
-		void AdvanceSelection( bool forward );
+	wxString SavePerspective();
+	bool LoadPerspective(const wxString& layout);
+	void AdvanceSelection(bool forward);
 
 private:
-        /** \brief call fitinside for each child page
+	/** \brief call fitinside for each child page
             useful after loading perspectives, since that does not generate OnSize events
             \note koshi: turns out it isn't strictly necessary on at least wxGTK
         **/
-        void FitChildPages();
+	void FitChildPages();
 };
 
 class ChatPanel;
@@ -40,29 +41,31 @@ class ChatPanel;
 /** \brief SLNotebook derived class that only accepts ChatPanel pages
     Provides a common context menu for all tab headers that has a the repective Chatpanel's context menu as a submenu
 **/
-class SLChatNotebook : public SLNotebook, public SL::NonCopyable {
+class SLChatNotebook : public SLNotebook, public SL::NonCopyable
+{
 
 public:
-        SLChatNotebook (wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxAUI_NB_DEFAULT_STYLE);
+	SLChatNotebook(wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxAUI_NB_DEFAULT_STYLE);
+
 private:
-        bool AddPage(ChatPanel* page, const wxString& caption, bool select = false, const wxBitmap& bitmap = wxNullBitmap);
+	bool AddPage(ChatPanel* page, const wxString& caption, bool select = false, const wxBitmap& bitmap = wxNullBitmap);
 
-        void OnHeaderRightClick(wxAuiNotebookEvent &event);
-        void OnMenuItem( wxCommandEvent& event );
-        void OnAllowNotebookDnD(wxAuiNotebookEvent& evt);
+	void OnHeaderRightClick(wxAuiNotebookEvent& event);
+	void OnMenuItem(wxCommandEvent& event);
+	void OnAllowNotebookDnD(wxAuiNotebookEvent& evt);
 
-        //prohibit adding other panels
-        bool AddPage(wxWindow* , const wxString& , bool , const wxBitmap& );
-		bool DeleteChatPage( size_t i );
+	//prohibit adding other panels
+	bool AddPage(wxWindow*, const wxString&, bool, const wxBitmap&);
+	bool DeleteChatPage(size_t i);
 
-        ChatPanelMenu* m_ch_menu;
-        ChatPanel* m_cur_page;
+	ChatPanelMenu* m_ch_menu;
+	ChatPanel* m_cur_page;
 
-		DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 
 //! Utility function that handles surrounding Layout updates in addition to loading a notebook perspective
-void LoadNotebookPerspective( SLNotebook* notebook, const wxString& perspective_name );
-void SaveNotebookPerspective( SLNotebook* notebook, const wxString& perspective_name );
+void LoadNotebookPerspective(SLNotebook* notebook, const wxString& perspective_name);
+void SaveNotebookPerspective(SLNotebook* notebook, const wxString& perspective_name);
 
 #endif // SPRINGLOBBY_HEADERGUARD_SLBOOK_H

@@ -23,130 +23,128 @@
 #include "images/battle_settings.xpm"
 
 
-MainSinglePlayerTab::MainSinglePlayerTab( wxWindow* parent )
-    : wxScrolledWindow( parent, -1 )
+MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
+    : wxScrolledWindow(parent, -1)
 {
-	m_main_sizer = new wxBoxSizer( wxVERTICAL );
-	GetAui().manager->AddPane( this, wxLEFT, _T( "mainsingleplayertab" ) );
-	m_tabs = new SLNotebook( this, _T( "mainsingleplayertab" ), -1, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE );
-	m_tabs->SetArtProvider( new wxAuiDefaultTabArt );
+	m_main_sizer = new wxBoxSizer(wxVERTICAL);
+	GetAui().manager->AddPane(this, wxLEFT, _T( "mainsingleplayertab" ));
+	m_tabs = new SLNotebook(this, _T( "mainsingleplayertab" ), -1, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE);
+	m_tabs->SetArtProvider(new wxAuiDefaultTabArt);
 
-	m_imagelist = new wxImageList( 12, 12 );
-	m_imagelist->Add( wxIcon( battle_xpm ) );
-	m_imagelist->Add( wxIcon( battle_settings_xpm ) );
+	m_imagelist = new wxImageList(12, 12);
+	m_imagelist->Add(wxIcon(battle_xpm));
+	m_imagelist->Add(wxIcon(battle_settings_xpm));
 
-	m_sp_tab = new SinglePlayerTab( m_tabs, *this );
-	m_tabs->AddPage( m_sp_tab, _( "Game" ), true, wxNullBitmap );
+	m_sp_tab = new SinglePlayerTab(m_tabs, *this);
+	m_tabs->AddPage(m_sp_tab, _("Game"), true, wxNullBitmap);
 	m_mm_opts_tab = new BattleroomMMOptionsTab(&m_sp_tab->GetBattle(), m_tabs);
-	m_tabs->InsertPage( 1, m_mm_opts_tab, _( "Options" ), false, wxIcon( battle_settings_xpm ) );
-	m_opts_tab = new BattleOptionsTab( m_tabs, &m_sp_tab->GetBattle() );
-	m_tabs->InsertPage( 2, m_opts_tab, _( "Unit Restrictions" ), false, wxIcon( battle_settings_xpm ) );
+	m_tabs->InsertPage(1, m_mm_opts_tab, _("Options"), false, wxIcon(battle_settings_xpm));
+	m_opts_tab = new BattleOptionsTab(m_tabs, &m_sp_tab->GetBattle());
+	m_tabs->InsertPage(2, m_opts_tab, _("Unit Restrictions"), false, wxIcon(battle_settings_xpm));
 
-	m_main_sizer->Add( m_tabs, 1, wxEXPAND );
+	m_main_sizer->Add(m_tabs, 1, wxEXPAND);
 
-	SetScrollRate( SCROLL_RATE, SCROLL_RATE );
-	SetSizer( m_main_sizer );
+	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
+	SetSizer(m_main_sizer);
 	Layout();
 }
 
 
 MainSinglePlayerTab::~MainSinglePlayerTab()
 {
-//    if ( sett().GetAutosavePerspective() )
-//        SavePerspective();
+	//    if ( sett().GetAutosavePerspective() )
+	//        SavePerspective();
 }
 
-void MainSinglePlayerTab::LoadPerspective( const wxString& perspective_name  )
+void MainSinglePlayerTab::LoadPerspective(const wxString& perspective_name)
 {
-    LoadNotebookPerspective( m_tabs, perspective_name );
+	LoadNotebookPerspective(m_tabs, perspective_name);
 }
 
-void MainSinglePlayerTab::SavePerspective( const wxString& perspective_name )
+void MainSinglePlayerTab::SavePerspective(const wxString& perspective_name)
 {
-    SaveNotebookPerspective( m_tabs, perspective_name );
+	SaveNotebookPerspective(m_tabs, perspective_name);
 }
 
 void MainSinglePlayerTab::UpdateMinimap()
 {
-	try
-	{
+	try {
 		GetSinglePlayerTab().UpdateMinimap();
-	} catch ( ... ) {}
+	} catch (...) {
+	}
 }
 
 
 void MainSinglePlayerTab::OnUnitSyncReloaded()
 {
 	slLogDebugFunc("");
-	try
-	{
+	try {
 		GetSinglePlayerTab().ResetUsername();
-		wxLogMessage( _T( "Reloading map list" ) );
+		wxLogMessage(_T( "Reloading map list" ));
 		GetSinglePlayerTab().ReloadMaplist();
-		wxLogMessage( _T( "Reloading game list" ) );
+		wxLogMessage(_T( "Reloading game list" ));
 		GetSinglePlayerTab().ReloadModlist();
-		wxLogMessage( _T( "Reloading minimap" ) );
+		wxLogMessage(_T( "Reloading minimap" ));
 		GetSinglePlayerTab().UpdateMinimap();
-	} catch ( ... ) {}
-
+	} catch (...) {
+	}
 }
 
 
 void MainSinglePlayerTab::ReloadRestrictions()
 {
-	try
-	{
+	try {
 		GetOptionsTab().ReloadRestrictions();
-	} catch ( ... ) {}
+	} catch (...) {
+	}
 }
 
 
 void MainSinglePlayerTab::ReloadMapOptContrls()
 {
-	try
-	{
-		GetMMOptionsTab().OnReloadControls( LSL::Enum::MapOption );
-	} catch ( ... ) {}
+	try {
+		GetMMOptionsTab().OnReloadControls(LSL::Enum::MapOption);
+	} catch (...) {
+	}
 }
 
 
 void MainSinglePlayerTab::ReloadModOptContrls()
 {
-	try
-	{
-		GetMMOptionsTab().OnReloadControls( LSL::Enum::ModOption );
-	} catch ( ... ) {}
-
+	try {
+		GetMMOptionsTab().OnReloadControls(LSL::Enum::ModOption);
+	} catch (...) {
+	}
 }
 
 SinglePlayerTab& MainSinglePlayerTab::GetSinglePlayerTab()
 {
-	ASSERT_EXCEPTION( m_sp_tab, _T( "m_sp_tab == 0" ) );
+	ASSERT_EXCEPTION(m_sp_tab, _T( "m_sp_tab == 0" ));
 	return *m_sp_tab;
 }
 
 BattleOptionsTab& MainSinglePlayerTab::GetOptionsTab()
 {
-	ASSERT_EXCEPTION( m_opts_tab, _T( "m_opts_tab == 0" ) );
+	ASSERT_EXCEPTION(m_opts_tab, _T( "m_opts_tab == 0" ));
 	return *m_opts_tab;
 }
 
 
 BattleroomMMOptionsTab& MainSinglePlayerTab::GetMMOptionsTab()
 {
-	ASSERT_EXCEPTION( m_mm_opts_tab, _T( "m_mm_opts_tab == 0" ) );
+	ASSERT_EXCEPTION(m_mm_opts_tab, _T( "m_mm_opts_tab == 0" ));
 	return *m_mm_opts_tab;
 }
 
 
 void MainSinglePlayerTab::ReloadPresetList()
 {
-	try
-	{
+	try {
 		GetSinglePlayerTab().UpdatePresetList();
-	} catch ( ... ) {}
-	try
-	{
+	} catch (...) {
+	}
+	try {
 		GetMMOptionsTab().UpdatePresetList();
-	} catch ( ... ) {}
+	} catch (...) {
+	}
 }

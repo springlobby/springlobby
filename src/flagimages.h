@@ -7,11 +7,11 @@
 
 class wxImageList;
 
-int GetFlagIndex( const std::string& flag );
-int AddFlagImages( wxImageList& imgs );
+int GetFlagIndex(const std::string& flag);
+int AddFlagImages(wxImageList& imgs);
 
 enum {
-  FLAG_NONE = -1
+	FLAG_NONE = -1
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_FLAGIMAGES_H

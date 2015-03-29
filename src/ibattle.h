@@ -30,21 +30,24 @@ class IBattle;
 class IServer;
 class AutoHost;
 class AutohostManager;
-namespace LSL {
-	class OptionsWrapper;
+namespace LSL
+{
+class OptionsWrapper;
 };
 
-struct BattleStartRect {
-	BattleStartRect() :
-		toadd(false),
-		todelete(false),
-		toresize(false),
-		exist(false),
-		ally(-1),
-		top(-1),
-		left(-1),
-		right(-1),
-		bottom(-1) {
+struct BattleStartRect
+{
+	BattleStartRect()
+	    : toadd(false)
+	    , todelete(false)
+	    , toresize(false)
+	    , exist(false)
+	    , ally(-1)
+	    , top(-1)
+	    , left(-1)
+	    , right(-1)
+	    , bottom(-1)
+	{
 	}
 
 	bool toadd;
@@ -58,7 +61,8 @@ struct BattleStartRect {
 	int right;
 	int bottom;
 
-	bool IsOk() const {
+	bool IsOk() const
+	{
 		return exist && !todelete;
 	}
 };
@@ -78,11 +82,25 @@ enum BattleType {
 };
 
 
-struct BattleOptions {
-	BattleOptions() :
-		battleid(-1),islocked(false),battletype(BT_Played),ispassworded(false),rankneeded(0),userelayhost(false),lockexternalbalancechanges(false),
-		nattype(NAT_None),port(DEFAULT_SERVER_PORT),externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT),maxplayers(0),spectators(0),
-		guilistactiv(false) {}
+struct BattleOptions
+{
+	BattleOptions()
+	    : battleid(-1)
+	    , islocked(false)
+	    , battletype(BT_Played)
+	    , ispassworded(false)
+	    , rankneeded(0)
+	    , userelayhost(false)
+	    , lockexternalbalancechanges(false)
+	    , nattype(NAT_None)
+	    , port(DEFAULT_SERVER_PORT)
+	    , externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT)
+	    , internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT)
+	    , maxplayers(0)
+	    , spectators(0)
+	    , guilistactiv(false)
+	{
+	}
 
 	int battleid;
 	bool islocked;
@@ -116,10 +134,9 @@ struct BattleOptions {
 	bool guilistactiv;
 };
 
-class IBattle: public UserList //, private SL::NonCopyable
+class IBattle : public UserList //, private SL::NonCopyable
 {
 public:
-
 	IBattle();
 	virtual ~IBattle();
 
@@ -140,8 +157,8 @@ public:
 		HI_Restrictions = 512,
 		HI_Map_Changed = 1024,
 		HI_Mod_Changed = 2048,
-		HI_User_Positions  = 4096,
-		HI_Send_All_opts  = 8192
+		HI_User_Positions = 4096,
+		HI_Send_All_opts = 8192
 	};
 
 	/**@}*/
@@ -170,7 +187,8 @@ public:
 	};
 
 
-	struct TeamInfoContainer {
+	struct TeamInfoContainer
+	{
 		bool exist;
 		int TeamLeader;
 		int StartPosX;
@@ -182,7 +200,8 @@ public:
 		int SideNum;
 	};
 
-	struct AllyInfoContainer {
+	struct AllyInfoContainer
+	{
 		bool exist;
 		int NumAllies;
 		int StartRectLeft;
@@ -194,27 +213,27 @@ public:
 
 	/**@}*/
 
-	virtual void SetHostMap( const std::string& mapname, const std::string& hash );
-	virtual void SetLocalMap( const std::string& mapname);
+	virtual void SetHostMap(const std::string& mapname, const std::string& hash);
+	virtual void SetLocalMap(const std::string& mapname);
 	virtual const LSL::UnitsyncMap& LoadMap();
 	virtual std::string GetHostMapName() const;
 	virtual std::string GetHostMapHash() const;
 
-	virtual void SetProxy( const std::string& proxyhost );
+	virtual void SetProxy(const std::string& proxyhost);
 	virtual std::string GetProxy() const;
 	virtual bool IsProxy() const;
 
 	virtual bool IsSynced(); //cannot be const
 
 	virtual bool IsFounderMe() const;
-	virtual bool IsFounder( const User& user ) const;
+	virtual bool IsFounder(const User& user) const;
 
 	virtual int GetMyPlayerNum() const;
 
-	virtual int GetPlayerNum( const User& user ) const;
+	virtual int GetPlayerNum(const User& user) const;
 
-	virtual void SetHostMod( const std::string& modname, const std::string& hash );
-	virtual void SetLocalMod( const LSL::UnitsyncMod& mod );
+	virtual void SetHostMod(const std::string& modname, const std::string& hash);
+	virtual void SetLocalMod(const LSL::UnitsyncMod& mod);
 	virtual const LSL::UnitsyncMod& LoadMod();
 	virtual std::string GetHostModName() const;
 	virtual std::string GetHostModHash() const;
@@ -222,192 +241,233 @@ public:
 	virtual bool MapExists(bool comparehash = true) const;
 	virtual bool ModExists(bool comparehash = true) const;
 
-	virtual BattleStartRect GetStartRect( unsigned int allyno ) const;
-	virtual User& OnUserAdded( User& user );
-	virtual void OnUserBattleStatusUpdated( User &user, UserBattleStatus status );
-	virtual void OnUserRemoved( User& user );
+	virtual BattleStartRect GetStartRect(unsigned int allyno) const;
+	virtual User& OnUserAdded(User& user);
+	virtual void OnUserBattleStatusUpdated(User& user, UserBattleStatus status);
+	virtual void OnUserRemoved(User& user);
 
 	virtual bool IsEveryoneReady() const;
 
-	virtual void ForceSide( User& user, int side );
-	virtual void ForceAlly( User& user, int ally );
-	virtual void ForceTeam( User& user, int team );
-	virtual void ForceColour( User& user, const LSL::lslColor& col );
-	virtual void ForceSpectator( User& user, bool spectator );
-	virtual void SetHandicap( User& user, int handicap);
-	virtual void KickPlayer( User& user );
+	virtual void ForceSide(User& user, int side);
+	virtual void ForceAlly(User& user, int ally);
+	virtual void ForceTeam(User& user, int team);
+	virtual void ForceColour(User& user, const LSL::lslColor& col);
+	virtual void ForceSpectator(User& user, bool spectator);
+	virtual void SetHandicap(User& user, int handicap);
+	virtual void KickPlayer(User& user);
 
 
-	virtual void AddStartRect( unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom );
-	virtual void RemoveStartRect( unsigned int allyno );
-	virtual void ResizeStartRect( unsigned int allyno );
-	virtual void StartRectRemoved( unsigned int allyno );
-	virtual void StartRectResized( unsigned int allyno );
-	virtual void StartRectAdded( unsigned int allyno );
+	virtual void AddStartRect(unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom);
+	virtual void RemoveStartRect(unsigned int allyno);
+	virtual void ResizeStartRect(unsigned int allyno);
+	virtual void StartRectRemoved(unsigned int allyno);
+	virtual void StartRectResized(unsigned int allyno);
+	virtual void StartRectAdded(unsigned int allyno);
 	virtual void ClearStartRects();
 	virtual unsigned int GetNumRects() const;
 	virtual unsigned int GetLastRectIdx() const;
 	virtual unsigned int GetNextFreeRectIdx() const;
 
-	virtual int GetFreeTeam( bool excludeme = false ) const;
+	virtual int GetFreeTeam(bool excludeme = false) const;
 
 	virtual User& GetMe() = 0;
 	virtual const User& GetMe() const = 0;
 
-	virtual void SendHostInfo( HostInfo /*update*/ ) {}
-	virtual void SendHostInfo( const std::string& /*Tag*/ ) {}
-	virtual void Update ( const std::string& /*Tag*/ ) {}
+	virtual void SendHostInfo(HostInfo /*update*/)
+	{
+	}
+	virtual void SendHostInfo(const std::string& /*Tag*/)
+	{
+	}
+	virtual void Update(const std::string& /*Tag*/)
+	{
+	}
 
 	virtual unsigned int GetNumBots() const;
-	virtual User& OnBotAdded( const std::string& nick, const UserBattleStatus& bs );
+	virtual User& OnBotAdded(const std::string& nick, const UserBattleStatus& bs);
 
-	virtual UserPosition GetFreePosition() ;
-	virtual int GetFreeAlly( bool excludeme = false ) const;
+	virtual UserPosition GetFreePosition();
+	virtual int GetFreeAlly(bool excludeme = false) const;
 
-	virtual void RestrictUnit( const std::string& unitname, int count = 0 );
-	virtual void UnrestrictUnit( const std::string& unitname );
+	virtual void RestrictUnit(const std::string& unitname, int count = 0);
+	virtual void UnrestrictUnit(const std::string& unitname);
 	virtual void UnrestrictAllUnits();
-	virtual std::map<std::string,int> RestrictedUnits() const;
+	virtual std::map<std::string, int> RestrictedUnits() const;
 
-	virtual LSL::OptionsWrapper& CustomBattleOptions() {
+	virtual LSL::OptionsWrapper& CustomBattleOptions()
+	{
 		return m_opt_wrap;
 	}
-	virtual const LSL::OptionsWrapper& CustomBattleOptions() const {
+	virtual const LSL::OptionsWrapper& CustomBattleOptions() const
+	{
 		return m_opt_wrap;
 	}
 
-	virtual bool LoadOptionsPreset( const std::string& name );
-	virtual void SaveOptionsPreset( const std::string& name );
+	virtual bool LoadOptionsPreset(const std::string& name);
+	virtual void SaveOptionsPreset(const std::string& name);
 	virtual std::string GetCurrentPreset();
-	virtual void DeletePreset( const std::string& name );
+	virtual void DeletePreset(const std::string& name);
 	virtual LSL::StringVector GetPresetList();
 
-	virtual std::vector<LSL::lslColor> &GetFixColoursPalette( int numteams ) const;
-	virtual int GetClosestFixColour(const LSL::lslColor &col, const std::vector<int> &excludes, int difference) const;
+	virtual std::vector<LSL::lslColor>& GetFixColoursPalette(int numteams) const;
+	virtual int GetClosestFixColour(const LSL::lslColor& col, const std::vector<int>& excludes, int difference) const;
 	virtual LSL::lslColor GetFixColour(int i) const;
-	virtual LSL::lslColor GetFreeColour( User &for_whom ) const;
-	virtual LSL::lslColor GetFreeColour( User *for_whom = NULL ) const;
+	virtual LSL::lslColor GetFreeColour(User& for_whom) const;
+	virtual LSL::lslColor GetFreeColour(User* for_whom = NULL) const;
 	virtual LSL::lslColor GetNewColour() const;
-	virtual int ColourDifference(const LSL::lslColor &a, const LSL::lslColor &b)  const;
+	virtual int ColourDifference(const LSL::lslColor& a, const LSL::lslColor& b) const;
 
 	virtual User& GetFounder() const;
 
-	virtual bool IsFull() const {
+	virtual bool IsFull() const
+	{
 		return GetMaxPlayers() == GetNumActivePlayers();
 	}
 
 	virtual unsigned int GetNumPlayers() const;
 	virtual unsigned int GetNumActivePlayers() const;
 
-	virtual unsigned int GetNumReadyPlayers() const {
+	virtual unsigned int GetNumReadyPlayers() const
+	{
 		return m_players_ready;
 	}
-	virtual unsigned int GetNumSyncedPlayers() const {
+	virtual unsigned int GetNumSyncedPlayers() const
+	{
 		return m_players_sync;
 	}
-	virtual unsigned int GetNumOkPlayers() const {
+	virtual unsigned int GetNumOkPlayers() const
+	{
 		return m_players_ok;
 	}
 
-	virtual int GetBattleId() const {
+	virtual int GetBattleId() const
+	{
 		return m_opts.battleid;
 	}
 
-	virtual bool GetGUIListActiv() const {
+	virtual bool GetGUIListActiv() const
+	{
 		return m_opts.guilistactiv;
 	}
-	virtual void SetGUIListActiv(bool Activ) {
+	virtual void SetGUIListActiv(bool Activ)
+	{
 		m_opts.guilistactiv = Activ;
 	}
 
-	virtual void SetInGame( bool ingame );
-	virtual bool GetInGame() const {
+	virtual void SetInGame(bool ingame);
+	virtual bool GetInGame() const
+	{
 		return m_ingame;
 	}
 
-	virtual void SetBattleType( BattleType type ) {
+	virtual void SetBattleType(BattleType type)
+	{
 		m_opts.battletype = type;
 	}
-	virtual BattleType GetBattleType() {
+	virtual BattleType GetBattleType()
+	{
 		return m_opts.battletype;
 	}
 
-	virtual void SetIsLocked( const bool islocked ) {
+	virtual void SetIsLocked(const bool islocked)
+	{
 		m_opts.islocked = islocked;
 	}
-	virtual bool IsLocked() const {
+	virtual bool IsLocked() const
+	{
 		return m_opts.islocked;
 	}
-	virtual void SetIsPassworded( const bool ispassworded ) {
+	virtual void SetIsPassworded(const bool ispassworded)
+	{
 		m_opts.ispassworded = ispassworded;
 	}
-	virtual bool IsPassworded() const {
+	virtual bool IsPassworded() const
+	{
 		return m_opts.ispassworded;
 	}
 
-	virtual void SetNatType( const NatType nattype ) {
+	virtual void SetNatType(const NatType nattype)
+	{
 		m_opts.nattype = nattype;
 	}
-	virtual NatType GetNatType() const {
+	virtual NatType GetNatType() const
+	{
 		return m_opts.nattype;
 	}
-	virtual void SetHostPort( unsigned int port) {
+	virtual void SetHostPort(unsigned int port)
+	{
 		m_opts.port = port;
 	}
 
-	virtual void SetMyExternalUdpSourcePort(unsigned int port) {
-		m_opts.externaludpsourceport=port;
+	virtual void SetMyExternalUdpSourcePort(unsigned int port)
+	{
+		m_opts.externaludpsourceport = port;
 	}
-	virtual unsigned int GetMyExternalUdpSourcePort() {
+	virtual unsigned int GetMyExternalUdpSourcePort()
+	{
 		return m_opts.externaludpsourceport;
 	}
 
-	virtual void SetMyInternalUdpSourcePort(unsigned int port) {
-		m_opts.internaludpsourceport=port;
+	virtual void SetMyInternalUdpSourcePort(unsigned int port)
+	{
+		m_opts.internaludpsourceport = port;
 	}
-	virtual unsigned int GetMyInternalUdpSourcePort() {
+	virtual unsigned int GetMyInternalUdpSourcePort()
+	{
 		return m_opts.internaludpsourceport;
 	}
 
-	virtual int GetHostPort() const {
+	virtual int GetHostPort() const
+	{
 		return m_opts.port;
 	}
-	virtual void SetFounder( const std::string& nick ) {
+	virtual void SetFounder(const std::string& nick)
+	{
 		m_opts.founder = nick;
 	}
-	virtual void SetHostIp( const std::string& ip ) {
+	virtual void SetHostIp(const std::string& ip)
+	{
 		m_opts.ip = ip;
 	}
-	virtual std::string GetHostIp() const {
+	virtual std::string GetHostIp() const
+	{
 		return m_opts.ip;
 	}
 
-	virtual void SetMaxPlayers( const int& maxplayers ) {
+	virtual void SetMaxPlayers(const int& maxplayers)
+	{
 		m_opts.maxplayers = maxplayers;
 	}
-	virtual unsigned int GetMaxPlayers() const {
+	virtual unsigned int GetMaxPlayers() const
+	{
 		return m_opts.maxplayers;
 	}
-	virtual void SetSpectators( const int& spectators ) {
+	virtual void SetSpectators(const int& spectators)
+	{
 		m_opts.spectators = spectators;
 	}
-	virtual int GetSpectators() const {
+	virtual int GetSpectators() const
+	{
 		return m_opts.spectators;
 	}
 
-	virtual void SetRankNeeded( const int& rankneeded ) {
+	virtual void SetRankNeeded(const int& rankneeded)
+	{
 		m_opts.rankneeded = rankneeded;
 	}
-	virtual int GetRankNeeded() const {
+	virtual int GetRankNeeded() const
+	{
 		return m_opts.rankneeded;
 	}
 
 	// virtual void SetMapHash( const std::string& maphash ) { m_opts.maphash = maphash; }
 	// virtual void SetMapname( const std::string& map ) { m_opts.mapname = map; }
-	virtual void SetDescription( const std::string& desc ) {
+	virtual void SetDescription(const std::string& desc)
+	{
 		m_opts.description = desc;
 	}
-	virtual std::string GetDescription() const {
+	virtual std::string GetDescription() const
+	{
 		return m_opts.description;
 	}
 	// virtual void SetModname( const std::string& mod ) { m_opts.modname = mod; }
@@ -417,7 +477,8 @@ public:
 	typedef UserVec::const_iterator UserVecCIter;
 	typedef UserVec::iterator UserVecIter;
 
-	virtual void SetBattleOptions( const BattleOptions& options ) {
+	virtual void SetBattleOptions(const BattleOptions& options)
+	{
 		m_opts = options;
 	}
 
@@ -432,66 +493,81 @@ public:
 	typedef AllyVec::const_iterator AllyVecCIter;
 	typedef AllyVec::iterator AllyVecIter;
 
-	virtual TeamVec GetParsedTeamsVec() {
+	virtual TeamVec GetParsedTeamsVec()
+	{
 		return m_parsed_teams;
 	}
-	virtual AllyVec GetParsedAlliesVec() {
+	virtual AllyVec GetParsedAlliesVec()
+	{
 		return m_parsed_allies;
 	}
 
-	virtual void SetParsedTeamsVec( const TeamVec& t ) {
+	virtual void SetParsedTeamsVec(const TeamVec& t)
+	{
 		m_parsed_teams = t;
 	}
-	virtual void SetParsedAlliesVec( const AllyVec& a ) {
+	virtual void SetParsedAlliesVec(const AllyVec& a)
+	{
 		m_parsed_allies = a;
 	}
 
-	virtual const BattleOptions& GetBattleOptions() const {
+	virtual const BattleOptions& GetBattleOptions() const
+	{
 		return m_opts;
 	}
 
-	virtual bool Equals( const IBattle& other ) const {
+	virtual bool Equals(const IBattle& other) const
+	{
 		return m_opts.battleid == other.GetBattleOptions().battleid;
 	}
 
-	virtual void DisableHostStatusInProxyMode( bool value ) {
+	virtual void DisableHostStatusInProxyMode(bool value)
+	{
 		m_generating_script = value;
 	}
 
-	virtual void UserPositionChanged( const User& usr );
+	virtual void UserPositionChanged(const User& usr);
 
-	virtual void SetScript( const std::string& script ) {
+	virtual void SetScript(const std::string& script)
+	{
 		m_script = script;
 	}
-	virtual void AppendScriptLine( const std::string& line ) {
+	virtual void AppendScriptLine(const std::string& line)
+	{
 		m_script += line;
 	}
-	virtual void ClearScript() {
+	virtual void ClearScript()
+	{
 		m_script.clear();
 	}
-	virtual std::string GetScript() const {
+	virtual std::string GetScript() const
+	{
 		return m_script;
 	}
 
-	virtual void SetPlayBackFilePath( const std::string& path ) {
+	virtual void SetPlayBackFilePath(const std::string& path)
+	{
 		m_playback_file_path = path;
 	}
-	virtual std::string GetPlayBackFilePath() const {
+	virtual std::string GetPlayBackFilePath() const
+	{
 		return m_playback_file_path;
 	}
 
-	virtual void AddUserFromDemo( User& user );
+	virtual void AddUserFromDemo(User& user);
 
-	void GetBattleFromScript( bool loadmapmod );
+	void GetBattleFromScript(bool loadmapmod);
 
 	virtual bool ShouldAutoStart() const;
 
 	virtual void StartSpring() = 0;
 
-	virtual std::map<int, int> GetAllySizes() {
+	virtual std::map<int, int> GetAllySizes()
+	{
 		return m_ally_sizes;
 	}
-	virtual std::map<int, int> GetTeamSizes() {
+	virtual std::map<int, int> GetTeamSizes()
+	{
 		return m_teams_sizes;
 	}
 
@@ -499,63 +575,122 @@ public:
 
 	virtual long GetBattleRunningTime() const; // returns 0 if not started
 
-	virtual void SetEngineName(const std::string& name) {
+	virtual void SetEngineName(const std::string& name)
+	{
 		m_opts.engineName = name;
 	}
-	virtual void SetEngineVersion(const std::string& version) {
+	virtual void SetEngineVersion(const std::string& version)
+	{
 		m_opts.engineVersion = version;
 	}
-	virtual std::string GetEngineName() const {
+	virtual std::string GetEngineName() const
+	{
 		return m_opts.engineName;
 	}
-	virtual std::string GetEngineVersion() const {
+	virtual std::string GetEngineVersion() const
+	{
 		return m_opts.engineVersion;
 	}
-	virtual bool ExecuteSayCommand(const std::string& /*line*/) {
+	virtual bool ExecuteSayCommand(const std::string& /*line*/)
+	{
 		return true;
 	}
-	virtual int GetID() const {
+	virtual int GetID() const
+	{
 		return 0;
 	}
-	virtual void Join( const std::string& /*password*/ = "" ) {}
+	virtual void Join(const std::string& /*password*/ = "")
+	{
+	}
 	virtual IServer& GetServer();
-	virtual void Say(const std::string& /*msg*/) {}
-	virtual bool CheckBan(User& /*user*/) {
+	virtual void Say(const std::string& /*msg*/)
+	{
+	}
+	virtual bool CheckBan(User& /*user*/)
+	{
 		return false;
 	}
-	virtual bool GetAutoLockOnStart() {
+	virtual bool GetAutoLockOnStart()
+	{
 		return false;
 	}
-	virtual void LoadMapDefaults(const std::string&) {}
-	virtual void SendMyBattleStatus() {}
-	virtual AutoHost* GetAutoHost() {
+	virtual void LoadMapDefaults(const std::string&)
+	{
+	}
+	virtual void SendMyBattleStatus()
+	{
+	}
+	virtual AutoHost* GetAutoHost()
+	{
 		return NULL;
 	}
-	virtual void Autobalance( BalanceType /*balance_type*/, bool /*support_clans*/, bool /*strong_clans*/, int /*numallyteams*/ ) {}
-	virtual void DoAction( const std::string& /*action*/) {}
-	virtual void RingPlayer(const User& /*user*/) {}
-	virtual void RingNotReadyPlayers() {}
-	virtual void FixColours() {}
-	virtual void FixTeamIDs( BalanceType /*balance_type*/ = balance_divide, bool /*clans*/ = true, bool /*strong_clans*/ = true, int /*controlteamsize*/ = 0 ) {}
-	virtual void ForceUnsyncedToSpectate() {}
-	virtual void StartHostedBattle() {}
-	virtual void SaveMapDefaults() {}
-	virtual void OnRequestBattleStatus() {}
-	virtual void Leave() {}
-	virtual bool GetAutoUnspec() {
+	virtual void Autobalance(BalanceType /*balance_type*/, bool /*support_clans*/, bool /*strong_clans*/, int /*numallyteams*/)
+	{
+	}
+	virtual void DoAction(const std::string& /*action*/)
+	{
+	}
+	virtual void RingPlayer(const User& /*user*/)
+	{
+	}
+	virtual void RingNotReadyPlayers()
+	{
+	}
+	virtual void FixColours()
+	{
+	}
+	virtual void FixTeamIDs(BalanceType /*balance_type*/ = balance_divide, bool /*clans*/ = true, bool /*strong_clans*/ = true, int /*controlteamsize*/ = 0)
+	{
+	}
+	virtual void ForceUnsyncedToSpectate()
+	{
+	}
+	virtual void StartHostedBattle()
+	{
+	}
+	virtual void SaveMapDefaults()
+	{
+	}
+	virtual void OnRequestBattleStatus()
+	{
+	}
+	virtual void Leave()
+	{
+	}
+	virtual bool GetAutoUnspec()
+	{
 		return false;
 	}
-	virtual void SetAutoUnspec(bool /*value*/) {}
-	virtual void SetImReady(bool /*ready*/) {}
-	virtual void SetLastAutolockStatus(bool /*autolock*/) {}
-	virtual void SetLockExternalBalanceChanges(bool /*block*/) {}
-	virtual void ForceUnReadyToSpectate() {}
-	virtual void ForceUnsyncedAndUnreadyToSpectate() {}
-	virtual void RingNotSyncedPlayers() {}
-	virtual void RingNotSyncedAndNotReadyPlayers() {}
-	virtual void SetAutoLockOnStart(bool /*autolock*/) {}
+	virtual void SetAutoUnspec(bool /*value*/)
+	{
+	}
+	virtual void SetImReady(bool /*ready*/)
+	{
+	}
+	virtual void SetLastAutolockStatus(bool /*autolock*/)
+	{
+	}
+	virtual void SetLockExternalBalanceChanges(bool /*block*/)
+	{
+	}
+	virtual void ForceUnReadyToSpectate()
+	{
+	}
+	virtual void ForceUnsyncedAndUnreadyToSpectate()
+	{
+	}
+	virtual void RingNotSyncedPlayers()
+	{
+	}
+	virtual void RingNotSyncedAndNotReadyPlayers()
+	{
+	}
+	virtual void SetAutoLockOnStart(bool /*autolock*/)
+	{
+	}
 
 	AutohostManager* m_autohost_manager;
+
 protected:
 	BattleOptions m_opts;
 	bool m_generating_script;
@@ -566,13 +701,13 @@ protected:
 	LSL::UnitsyncMod m_local_mod;
 
 private:
-	void LoadScriptMMOpts( const std::string& sectionname, const LSL::TDF::PDataList& node );
-	void LoadScriptMMOpts( const LSL::TDF::PDataList& node );
+	void LoadScriptMMOpts(const std::string& sectionname, const LSL::TDF::PDataList& node);
+	void LoadScriptMMOpts(const LSL::TDF::PDataList& node);
 
-	void PlayerLeftTeam( int team );
-	void PlayerLeftAlly( int ally );
-	void PlayerJoinedTeam( int team );
-	void PlayerJoinedAlly( int ally );
+	void PlayerLeftTeam(int team);
+	void PlayerLeftAlly(int ally);
+	void PlayerJoinedTeam(int team);
+	void PlayerJoinedAlly(int ally);
 
 	bool m_ingame;
 	bool m_map_loaded;
@@ -585,11 +720,11 @@ private:
 
 	LSL::OptionsWrapper m_opt_wrap;
 
-	std::map<unsigned int,BattleStartRect> m_rects;
+	std::map<unsigned int, BattleStartRect> m_rects;
 
 	unsigned int m_players_ready;
 	unsigned int m_players_sync;
-	unsigned int m_players_ok; // players which are ready and in sync
+	unsigned int m_players_ok;       // players which are ready and in sync
 	std::map<int, int> m_ally_sizes; // allyteam -> number of people in
 
 	std::string m_preset;

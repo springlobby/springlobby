@@ -9,18 +9,18 @@
 #include "gui/mainwindow.h"
 #include "utils/conversion.h"
 
-AutohostHandler::AutohostHandler():m_battle(0)
+AutohostHandler::AutohostHandler()
+    : m_battle(0)
 {
 }
 
 AutohostHandler::~AutohostHandler()
 {
-
 }
 
 void AutohostHandler::SetBattle(IBattle* battle)
 {
-    m_battle=battle;
+	m_battle = battle;
 }
 
 void AutohostHandler::Send(const std::string& cmd)
@@ -32,49 +32,48 @@ void AutohostHandler::Send(const std::string& cmd)
 //-------- Springie ------
 //========================
 
-SpringieHandler::SpringieHandler():AutohostHandler()
+SpringieHandler::SpringieHandler()
+    : AutohostHandler()
 {
-
 }
 
 SpringieHandler::~SpringieHandler()
 {
-
 }
 
 void SpringieHandler::Balance()
 {
-    Send("!balance");
+	Send("!balance");
 }
 
 void SpringieHandler::SetRandomMap()
 {
-    Send("!map");
+	Send("!map");
 }
 
 void SpringieHandler::SetMap(const std::string& map)
 {
-    Send("!map " + map);
+	Send("!map " + map);
 }
 
 void SpringieHandler::ClearStartBoxes()
 {
-    Send("!clear"); /// will check
+	Send("!clear"); /// will check
 }
 
-void SpringieHandler::AddStartBox(int posx,int posy,int w,int h)
+void SpringieHandler::AddStartBox(int posx, int posy, int w, int h)
 {
-    Send(stdprintf("!addbox %i %i %i %i",posx,posy,w,h));
+	Send(stdprintf("!addbox %i %i %i %i", posx, posy, w, h));
 }
 
 void SpringieHandler::Notify()
 {
-    Send("!notify");
+	Send("!notify");
 }
 
 void SpringieHandler::Start()
 {
-    Send("!start");
+	Send("!start");
 }
 
 //------------------------------
@@ -82,102 +81,99 @@ void SpringieHandler::Start()
 //========================
 //-------- Spads ---------
 //========================
-SpadsHandler::SpadsHandler():AutohostHandler()
+SpadsHandler::SpadsHandler()
+    : AutohostHandler()
 {
-
 }
 
 SpadsHandler::~SpadsHandler()
 {
-
 }
 
 void SpadsHandler::Balance()
 {
-    Send("!balance");
+	Send("!balance");
 }
 
 void SpadsHandler::SetRandomMap()
 {
-    Send("!map 1"); //not so random
+	Send("!map 1"); //not so random
 }
 
 void SpadsHandler::SetMap(const std::string& map)
 {
-    Send("!map "+map);
+	Send("!map " + map);
 }
 
 void SpadsHandler::ClearStartBoxes()
 {
-
 }
 
-void SpadsHandler::AddStartBox(int /*posx*/,int /*posy*/,int /*w*/,int /*h*/)
+void SpadsHandler::AddStartBox(int /*posx*/, int /*posy*/, int /*w*/, int /*h*/)
 {
-
 }
 
 void SpadsHandler::Notify()
 {
-    Send("!notify");
+	Send("!notify");
 }
 
 void SpadsHandler::Start()
 {
-    Send("!start");
+	Send("!start");
 }
 //-------------
 
 
-AutohostManager::AutohostManager():m_type(AUTOHOSTTYPE_NONE), m_battle(0)
+AutohostManager::AutohostManager()
+    : m_type(AUTOHOSTTYPE_NONE)
+    , m_battle(0)
 {
-
 }
 
 AutohostManager::~AutohostManager()
 {
-
 }
 
 void AutohostManager::SetBattle(IBattle* battle)
 {
-    m_type = AutohostManager::AUTOHOSTTYPE_NONE;
-    m_battle = battle;
+	m_type = AutohostManager::AUTOHOSTTYPE_NONE;
+	m_battle = battle;
 
-    m_springie.SetBattle(battle);
-    m_spads.SetBattle(battle);
-    m_emptyhandler.SetBattle(battle);
+	m_springie.SetBattle(battle);
+	m_spads.SetBattle(battle);
+	m_emptyhandler.SetBattle(battle);
 }
 
 AutohostHandler& AutohostManager::GetAutohostHandler()
 {
-    switch(m_type) {
-	case AUTOHOSTTYPE_SPRINGIE:
-		return GetSpringie();
-	case AUTOHOSTTYPE_SPADS:
-		return GetSpads();
-	case AUTOHOSTTYPE_NONE:
-	case AUTOHOSTTYPE_UNKNOWN:
-		return m_emptyhandler;
-    }
-    return m_emptyhandler;
+	switch (m_type) {
+		case AUTOHOSTTYPE_SPRINGIE:
+			return GetSpringie();
+		case AUTOHOSTTYPE_SPADS:
+			return GetSpads();
+		case AUTOHOSTTYPE_NONE:
+		case AUTOHOSTTYPE_UNKNOWN:
+			return m_emptyhandler;
+	}
+	return m_emptyhandler;
 }
 
 SpringieHandler& AutohostManager::GetSpringie()
 {
-    return m_springie;
+	return m_springie;
 }
 
 SpadsHandler& AutohostManager::GetSpads()
 {
-    return m_spads;
+	return m_spads;
 }
 
 bool AutohostManager::RecognizeAutohost(const std::string& type)
 {
 	if (type == "SPRINGIE") {
 		m_type = AutohostManager::AUTOHOSTTYPE_SPRINGIE;
-                return true;
+		return true;
 	}
 	if (type == "SPADS") {
 		m_type = AutohostManager::AUTOHOSTTYPE_SPADS;
@@ -185,12 +181,11 @@ bool AutohostManager::RecognizeAutohost(const std::string& type)
 	}
 
 	wxLogMessage(_T("Unknown autohost: %s"), type.c_str());
-	m_type=AutohostManager::AUTOHOSTTYPE_UNKNOWN;
+	m_type = AutohostManager::AUTOHOSTTYPE_UNKNOWN;
 	return false;
 }
 
 AutohostManager::AutohostType AutohostManager::GetAutohostType()
 {
-    return m_type;
+	return m_type;
 }
-

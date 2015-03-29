@@ -13,18 +13,19 @@ class wxBoxSize;
 
 class BattleRoomDownloadProgres;
 
-class BattleRoomDownloads: public wxPanel
+class BattleRoomDownloads : public wxPanel
 {
-    public:
-        BattleRoomDownloads(wxWindow* parent, IBattle* battle);
-        ~BattleRoomDownloads();
-        void OnUpdate();
-        void SetBattle( IBattle* battle );
-    private:
-        BattleRoomDownloadProgres* m_mod;
-        BattleRoomDownloadProgres* m_map;
+public:
+	BattleRoomDownloads(wxWindow* parent, IBattle* battle);
+	~BattleRoomDownloads();
+	void OnUpdate();
+	void SetBattle(IBattle* battle);
 
-        IBattle* m_battle;
+private:
+	BattleRoomDownloadProgres* m_mod;
+	BattleRoomDownloadProgres* m_map;
+
+	IBattle* m_battle;
 };
 
 #endif // BATTLEROOMDOWNLOADS_H

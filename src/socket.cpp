@@ -19,7 +19,7 @@ lsl/networking/socket.cpp
 
 #ifdef WIN32
 #ifndef NOMINMAX
-    #define NOMINMAX
+#define NOMINMAX
 #endif // NOMINMAX
 #include <winsock2.h>
 #endif // _MSC_VER
@@ -33,7 +33,7 @@ lsl/networking/socket.cpp
 #include "utils/conversion.h"
 
 #ifdef __WXMSW__
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #include <wx/msw/winundef.h>
 #include <iphlpapi.h>
@@ -46,15 +46,16 @@ lsl/networking/socket.cpp
 
 bool GetMac(std::vector<unsigned char>& mac)
 {
-    IP_ADAPTER_INFO AdapterInfo[16];       // Allocate information for 16 cards
-    DWORD dwBufLen = sizeof(AdapterInfo);  // Save memory size of buffer
+	IP_ADAPTER_INFO AdapterInfo[16];      // Allocate information for 16 cards
+	DWORD dwBufLen = sizeof(AdapterInfo); // Save memory size of buffer
 
-    DWORD dwStatus = GetAdaptersInfo ( AdapterInfo, &dwBufLen); // Get info
-                if (dwStatus != NO_ERROR) return wxEmptyString; // Check status
-	for(size_t i = 0; i<sizeof(AdapterInfo); i++) {
+	DWORD dwStatus = GetAdaptersInfo(AdapterInfo, &dwBufLen); // Get info
+	if (dwStatus != NO_ERROR)
+		return wxEmptyString; // Check status
+	for (size_t i = 0; i < sizeof(AdapterInfo); i++) {
 		mac.resize(AdapterInfo[i].AddressLength);
 		mac.assign(AdapterInfo[i].Address, AdapterInfo[i].Address + AdapterInfo[i].AddressLength);
-		for (size_t j=0; j< mac.size(); j++) {
+		for (size_t j = 0; j < mac.size(); j++) {
 			if (mac[j] != 0) {
 				return true;
 			}
@@ -83,21 +84,21 @@ bool GetMac(std::vector<unsigned char>& mac)
 
 bool GetMac(std::vector<unsigned char>& mac)
 {
-	ifaddrs * ifap = 0;
-	if(getifaddrs(&ifap) == 0) {
-		ifaddrs * iter = ifap;
-		while(iter) {
-				sockaddr_ll * sal = reinterpret_cast<sockaddr_ll*>(iter->ifa_addr);
-				if(sal->sll_family == AF_PACKET) {
-					mac.resize(sal->sll_halen);
-					mac.assign(sal->sll_addr, sal->sll_addr + sal->sll_halen);
-					for(size_t i=0; i < mac.size(); i++) {
-						if (mac[i] != 0) {
-							return true;
-						}
+	ifaddrs* ifap = 0;
+	if (getifaddrs(&ifap) == 0) {
+		ifaddrs* iter = ifap;
+		while (iter) {
+			sockaddr_ll* sal = reinterpret_cast<sockaddr_ll*>(iter->ifa_addr);
+			if (sal->sll_family == AF_PACKET) {
+				mac.resize(sal->sll_halen);
+				mac.assign(sal->sll_addr, sal->sll_addr + sal->sll_halen);
+				for (size_t i = 0; i < mac.size(); i++) {
+					if (mac[i] != 0) {
+						return true;
 					}
 				}
-				iter = iter->ifa_next;
+			}
+			iter = iter->ifa_next;
 		}
 		freeifaddrs(ifap);
 	}
@@ -109,11 +110,11 @@ bool GetMac(std::vector<unsigned char>& mac)
 std::string MacToString(std::vector<unsigned char>& mac)
 {
 	std::string res;
-	for(size_t i=0; i<mac.size(); i++) {
+	for (size_t i = 0; i < mac.size(); i++) {
 		char buf[3];
 		snprintf(buf, sizeof(buf), "%02X", mac[i]);
 		if (!res.empty())
-			res+=":";
+			res += ":";
 		res.append(buf, 2);
 	}
 	return res;
@@ -156,12 +157,12 @@ void Socket::OnSocketEvent(wxSocketEvent& event)
 
 
 //! @brief Constructor
-Socket::Socket( iNetClass& netclass):
-    m_handle( _GetHandle() ),
-    m_connecting( false ),
-    m_net_class(netclass),
-    m_rate(-1),
-    m_sent(0)
+Socket::Socket(iNetClass& netclass)
+    : m_handle(_GetHandle())
+    , m_connecting(false)
+    , m_net_class(netclass)
+    , m_rate(-1)
+    , m_sent(0)
 {
 }
 
@@ -178,38 +179,38 @@ void Socket::InitSocket(wxSocketClient& sock)
 {
 	sock.SetFlags(wxSOCKET_NOWAIT);
 	sock.SetEventHandler(*this, SOCKET_ID);
-	sock.SetNotify( wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG );
+	sock.SetNotify(wxSOCKET_CONNECTION_FLAG | wxSOCKET_INPUT_FLAG | wxSOCKET_LOST_FLAG);
 	sock.Notify(true);
 }
 
 //! @brief Connect to remote host.
-void Socket::Connect( const wxString& addr, const int port )
+void Socket::Connect(const wxString& addr, const int port)
 {
 	wxIPV4address wxaddr;
 	m_connecting = true;
 	m_buffer = "";
 
-	if (!wxaddr.Hostname( addr )) {
+	if (!wxaddr.Hostname(addr)) {
 		m_net_class.OnError("Invalid Hostname");
 		return;
 	}
-	if (!wxaddr.Service( port )) {
+	if (!wxaddr.Service(port)) {
 		m_net_class.OnError("Invalid Port");
 		return;
 	}
 
 	InitSocket(m_sock);
-	m_sock.Connect( wxaddr, false);
-	m_sock.SetTimeout( 40 );
+	m_sock.Connect(wxaddr, false);
+	m_sock.SetTimeout(40);
 }
 
-void Socket::SetTimeout( const int seconds )
+void Socket::SetTimeout(const int seconds)
 {
-	m_sock.SetTimeout( seconds );
+	m_sock.SetTimeout(seconds);
 }
 
 //! @brief Disconnect from remote host if connected.
-void Socket::Disconnect( )
+void Socket::Disconnect()
 {
 	m_buffer.clear();
 
@@ -219,28 +220,29 @@ void Socket::Disconnect( )
 
 
 //! @brief Send data over connection.
-bool Socket::Send( const wxString& data )
+bool Socket::Send(const wxString& data)
 {
-  return _Send( data );
+	return _Send(data);
 }
 
 
 //! @brief Internal send function.
 //! @note Does not lock the criticalsection.
-bool Socket::_Send( const wxString& data )
+bool Socket::_Send(const wxString& data)
 {
 	m_buffer += (const char*)data.mb_str(wxConvUTF8);
 	int crop = m_buffer.length();
-	if ( m_rate > 0 ) {
-		 int max = m_rate - m_sent;
-		 if ( crop > 0 ) crop = max;
+	if (m_rate > 0) {
+		int max = m_rate - m_sent;
+		if (crop > 0)
+			crop = max;
 	}
-	std::string send = m_buffer.substr( 0, crop );
+	std::string send = m_buffer.substr(0, crop);
 	//wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
-	m_sock.Write( send.c_str(), send.length() );
-	if ( !m_sock.Error() ) {
+	m_sock.Write(send.c_str(), send.length());
+	if (!m_sock.Error()) {
 		wxUint32 sentdata = m_sock.LastCount();
-		m_buffer.erase( 0, sentdata );
+		m_buffer.erase(0, sentdata);
 		m_sent += sentdata;
 	}
 	return !m_sock.Error();
@@ -249,23 +251,23 @@ bool Socket::_Send( const wxString& data )
 
 wxString convert(char* buff, const int len)
 {
-	wxString ret = wxString(buff, wxConvUTF8, len );
-	if ( !ret.IsEmpty() ) {
+	wxString ret = wxString(buff, wxConvUTF8, len);
+	if (!ret.IsEmpty()) {
 		return ret;
 	}
 	ret = wxString(buff, wxConvLibc, len);
 	if (!ret.empty()) {
 		return ret;
 	}
-	ret = wxString(buff, wxConvLocal, len );
-	if ( !ret.IsEmpty() ) {
+	ret = wxString(buff, wxConvLocal, len);
+	if (!ret.IsEmpty()) {
 		return ret;
 	}
-	ret = wxString(buff, wxConvISO8859_1, len );
+	ret = wxString(buff, wxConvISO8859_1, len);
 	if (!ret.empty()) {
 		return ret;
 	}
-	ret = wxString(buff, wxConvAuto(), len );
+	ret = wxString(buff, wxConvAuto(), len);
 	if (!ret.empty()) {
 		return ret;
 	}
@@ -273,12 +275,12 @@ wxString convert(char* buff, const int len)
 	wxLogDebug(_T("Error: invalid charset, replacing invalid chars: '%s'"), TowxString(tmp).c_str());
 
 	//worst case, couldn't convert, replace unknown chars!
-	for(int i=0; i<len; i++) {
-	if ((buff[i] < '!') || (buff[i] > '~')){
+	for (int i = 0; i < len; i++) {
+		if ((buff[i] < '!') || (buff[i] > '~')) {
 			buff[i] = '_';
 		}
 	}
-	ret = wxString(buff, wxConvUTF8, len );
+	ret = wxString(buff, wxConvUTF8, len);
 	if (!ret.empty()) {
 		return ret;
 	}
@@ -295,33 +297,33 @@ wxString Socket::Receive()
 	int readnum = 0;
 
 	do {
-		m_sock.Read( buf, chunk_size );
+		m_sock.Read(buf, chunk_size);
 		const int readnum = m_sock.LastCount();
 		ret += convert(buf, readnum);
-	} while ( readnum > 0 );
+	} while (readnum > 0);
 
 	return ret;
 }
 
 //! @brief Get curent socket state
-SockState Socket::State( )
+SockState Socket::State()
 {
-  if ( m_sock.IsConnected() ) {
-    m_connecting = false;
-    return SS_Open;
-  } else {
-    if ( m_connecting ) {
-      return SS_Connecting;
-    } else {
-      return SS_Closed;
-    }
-  }
+	if (m_sock.IsConnected()) {
+		m_connecting = false;
+		return SS_Open;
+	} else {
+		if (m_connecting) {
+			return SS_Connecting;
+		} else {
+			return SS_Closed;
+		}
+	}
 }
 
 
 //! @brief Get socket error code
 //! @todo Implement
-SockError Socket::Error( ) const
+SockError Socket::Error() const
 {
 	return (SockError)-1;
 }
@@ -330,29 +332,30 @@ SockError Socket::Error( ) const
 //! @brief used to retrieve local ip address behind NAT to communicate to the server on login
 wxString Socket::GetLocalAddress() const
 {
-  if (!m_sock.IsConnected() )
-    return wxEmptyString;
+	if (!m_sock.IsConnected())
+		return wxEmptyString;
 
-  wxIPV4address localaddr;
-  m_sock.GetLocal( localaddr );
+	wxIPV4address localaddr;
+	m_sock.GetLocal(localaddr);
 
-  return localaddr.IPAddress();
+	return localaddr.IPAddress();
 }
 
 
 //! @brief Set the maximum upload ratio.
-void Socket::SetSendRateLimit( int Bps )
+void Socket::SetSendRateLimit(int Bps)
 {
 	m_rate = Bps;
 }
 
 
-void Socket::Update( int mselapsed )
+void Socket::Update(int mselapsed)
 {
-	if ( m_rate > 0 ) {
-		m_sent -= int( ( mselapsed / 1000.0 ) * m_rate );
-		if ( m_sent < 0 ) m_sent = 0;
-		if ( m_buffer.length() > 0 ) {
+	if (m_rate > 0) {
+		m_sent -= int((mselapsed / 1000.0) * m_rate);
+		if (m_sent < 0)
+			m_sent = 0;
+		if (m_buffer.length() > 0) {
 			_Send(wxEmptyString);
 		}
 	} else {

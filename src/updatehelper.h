@@ -5,6 +5,6 @@
 
 #include <string>
 
-std::string GetDownloadUrl( const std::string& version );
+std::string GetDownloadUrl(const std::string& version);
 
 #endif

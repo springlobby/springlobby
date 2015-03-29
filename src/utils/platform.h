@@ -14,13 +14,15 @@ class wxString;
     this will copy dir (and everything below that recursively to /some/other/path/dir
     \return true if successful
 */
-bool MoveDirWithFilebackupRename( wxString from, wxString to, bool backup = true, bool silent = false);
+bool MoveDirWithFilebackupRename(wxString from, wxString to, bool backup = true, bool silent = false);
 
 //! set new cwd in ctor, reset to old in dtor
-class CwdGuard {
+class CwdGuard
+{
 public:
-	CwdGuard( const wxString& new_cwd );
+	CwdGuard(const wxString& new_cwd);
 	~CwdGuard();
+
 private:
 	wxString m_old_cwd;
 };

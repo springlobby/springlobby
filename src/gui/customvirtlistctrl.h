@@ -28,9 +28,10 @@ const wxEventType ListctrlDoSortEventType = wxNewEventType();
 class ListctrlSortEvent : public wxCommandEvent
 {
 public:
-	ListctrlSortEvent( int event_id = wxNewId() )
-		: wxCommandEvent( ListctrlDoSortEventType, event_id )
-	{}
+	ListctrlSortEvent(int event_id = wxNewId())
+	    : wxCommandEvent(ListctrlDoSortEventType, event_id)
+	{
+	}
 };
 
 class SLTipWindow;
@@ -42,13 +43,14 @@ class SLTipWindow;
  * Note: Tooltips are a bitch and anyone should feel free to revise them (koshi)
  * \tparam the type of stored data
  */
-template < class DataImp, class ListCtrlImp >
+template <class DataImp, class ListCtrlImp>
 class CustomVirtListCtrl : public wxListCtrl, public SL::NonCopyable
 {
 public:
 	typedef DataImp DataType;
+
 protected:
-	typedef CustomVirtListCtrl< DataImp, ListCtrlImp> BaseType;
+	typedef CustomVirtListCtrl<DataImp, ListCtrlImp> BaseType;
 	typedef UserActions::ActionType ActionType;
 	//! used to display tooltips for a certain amount of time
 	wxTimer m_tiptimer;
@@ -56,7 +58,7 @@ protected:
 	wxTimer m_sort_timer;
 	//! always set to the currrently displayed tooltip text
 	wxString m_tiptext;
-	
+
 #if wxUSE_TIPWINDOW
 	//! some wx implementations do not support this yet
 	SLTipWindow* m_tipwindow;
@@ -64,19 +66,22 @@ protected:
 #endif
 	unsigned int m_columnCount;
 
-	struct colInfo {
-		colInfo(int n, wxString l, wxString t, bool c, int s):
-			col_num(n),
-			label(l),
-			tip(t),
-			can_resize(c),
-			size(s)
-		{}
-		colInfo():
-			col_num(0),
-			can_resize(false),
-			size(0)
-		{}
+	struct colInfo
+	{
+		colInfo(int n, wxString l, wxString t, bool c, int s)
+		    : col_num(n)
+		    , label(l)
+		    , tip(t)
+		    , can_resize(c)
+		    , size(s)
+		{
+		}
+		colInfo()
+		    : col_num(0)
+		    , can_resize(false)
+		    , size(0)
+		{
+		}
 
 		int col_num;
 		wxString label;
@@ -88,32 +93,32 @@ protected:
 	typedef std::vector<colInfo> colInfoVec;
 
 	//! maps outward column index to internal
-	typedef std::map<unsigned int,unsigned int> ColumnMap;
+	typedef std::map<unsigned int, unsigned int> ColumnMap;
 
 	/** global Tooltip thingies (ms)
 	 */
-	static const unsigned int m_tooltip_delay    = 1000;
+	static const unsigned int m_tooltip_delay = 1000;
 	static const unsigned int m_tooltip_duration = 2000;
-	static const unsigned int m_sort_block_time  = 1500;
+	static const unsigned int m_sort_block_time = 1500;
+
 private:
 	/*** these are only meaningful in single selection lists ***/
 	//! index of curently selected data
 	long m_selected_index;
 	// used for ListCtrl decoration
 	wxListItemAttr m_list_attr_one, m_list_attr_two;
-	
+
 	//! index of previously selected data
 	long m_prev_selected_index;
 	/***********************************************************/
 protected:
-
 	//! stores info about the columns (wxString name,bool isResizable) - pairs
 	colInfoVec m_colinfovec;
 	//! primarily used to get coulumn index in mousevents (from cur. mouse pos)
 	int getColumnFromPosition(wxPoint pos);
 
 	//! map: index in visible list <--> index in data vector
-	typedef std::map<int,int> VisibilityMap;
+	typedef std::map<int, int> VisibilityMap;
 	typedef VisibilityMap::iterator VisibilityMapIter;
 	/** \brief list indexes of not-filtered items
 	 * use like this: when adding items set identity mapping \n
@@ -140,7 +145,7 @@ protected:
 	//! list should be sorted
 	bool m_dirty_sort;
 
-	virtual void SetTipWindowText( const long item_hit, const wxPoint& position);
+	virtual void SetTipWindowText(const long item_hit, const wxPoint& position);
 
 	ColumnMap m_column_map;
 
@@ -155,11 +160,12 @@ protected:
 	/** generic comparator that gets it's real functionality
 	 * in derived classes via comapre callbakc func that
 	 * performs the actual comparison of two items **/
-	template < class ObjImp >
-	struct ItemComparator {
+	template <class ObjImp>
+	struct ItemComparator
+	{
 		typedef ObjImp ObjType;
 		SortOrder& m_order;
-		typedef int (ListCtrlImp::*CmpFunc)  ( ObjType u1, ObjType u2, int, int ) const;
+		typedef int (ListCtrlImp::*CmpFunc)(ObjType u1, ObjType u2, int, int) const;
 		CmpFunc m_cmp_func;
 		const unsigned int m_num_criteria;
 		const BaseType* m_listctrl;
@@ -169,26 +175,28 @@ protected:
 		 * \param num_criteria set to 1,2 to limit sub-ordering
 		 * \todo make order const reference to eliminate assumption about existence of entries
 		 */
-		ItemComparator( const BaseType* listctrl, SortOrder& order,CmpFunc func, const unsigned int num_criteria = 3 )
-			:m_order(order),
-			 m_cmp_func(func),
-			 m_num_criteria(num_criteria),
-			 m_listctrl( listctrl )
-		{}
+		ItemComparator(const BaseType* listctrl, SortOrder& order, CmpFunc func, const unsigned int num_criteria = 3)
+		    : m_order(order)
+		    , m_cmp_func(func)
+		    , m_num_criteria(num_criteria)
+		    , m_listctrl(listctrl)
+		{
+		}
 
-		bool operator () ( ObjType u1, ObjType u2 ) const {
-			int res = (m_listctrl->asImp().*m_cmp_func)( u1, u2, m_order[0].col, m_order[0].direction );
-			if ( res != 0 )
+		bool operator()(ObjType u1, ObjType u2) const
+		{
+			int res = (m_listctrl->asImp().*m_cmp_func)(u1, u2, m_order[0].col, m_order[0].direction);
+			if (res != 0)
 				return res < 0;
 
-			if ( m_num_criteria > 1 ) {
-				res = (m_listctrl->asImp().*m_cmp_func)( u1, u2, m_order[1].col, m_order[1].direction );
-				if ( res != 0 )
+			if (m_num_criteria > 1) {
+				res = (m_listctrl->asImp().*m_cmp_func)(u1, u2, m_order[1].col, m_order[1].direction);
+				if (res != 0)
 					return res < 0;
 
-				if ( m_num_criteria > 2 ) {
-					res = (m_listctrl->asImp().*m_cmp_func)( u1, u2, m_order[2].col, m_order[2].direction );
-					if ( res != 0 )
+				if (m_num_criteria > 2) {
+					res = (m_listctrl->asImp().*m_cmp_func)(u1, u2, m_order[2].col, m_order[2].direction);
+					if (res != 0)
 						return res < 0;
 				}
 			}
@@ -199,34 +207,35 @@ protected:
 	typedef typename ItemComparator<DataImp>::CmpFunc CompareFunction;
 
 	//! compare func usable for types with well-defined ordering (and implemented ops <,>)
-	template < typename Type >
-	static inline int compareSimple( Type o1, Type o2 ) {
-		if ( o1 < o2 )
+	template <typename Type>
+	static inline int compareSimple(Type o1, Type o2)
+	{
+		if (o1 < o2)
 			return -1;
-		if ( o1 > o2 )
+		if (o1 > o2)
 			return 1;
 		return 0;
 	}
 
 	//! must be implemented in derived classes, should call the actual sorting on data and refreshitems
-	virtual void Sort( ) = 0;
+	virtual void Sort() = 0;
 
 public:
 	/** only sorts if data is marked dirty, or force is true
 	 * calls Freeze(), Sort(), Thaw() */
-	void SortList( bool force = false );
+	void SortList(bool force = false);
 	/** @}
 	 */
 
 public:
 	CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt,
-			   const wxSize& sz,long style, const wxString& name, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
+			   const wxSize& sz, long style, const wxString& name, unsigned int sort_criteria_count, CompareFunction func, bool highlight = true,
 			   UserActions::ActionType hlaction = UserActions::ActHighlight, bool periodic_sort = false, unsigned int periodic_sort_interval = 5000 /*miliseconds*/);
 
 	virtual ~CustomVirtListCtrl();
 
-	void OnSelected( wxListEvent& event );
-	void OnDeselected( wxListEvent& event );
+	void OnSelected(wxListEvent& event);
+	void OnDeselected(wxListEvent& event);
 	/** @name Single Selection methods
 	 * using these funcs in a multi selection list is meaningless at best, harmful in the worst case
 	 * \todo insert debug asserts to catch that
@@ -234,8 +243,8 @@ public:
 	 */
 	long GetSelectedIndex() const;
 	void SetSelectedIndex(const long newindex);
-	DataType GetDataFromIndex ( const  long index );
-	const DataType GetDataFromIndex ( const  long index ) const;
+	DataType GetDataFromIndex(const long index);
+	const DataType GetDataFromIndex(const long index) const;
 	DataType GetSelectedData();
 	/** @}
 	 */
@@ -274,9 +283,9 @@ public:
 	// funcs that should make things easier for group highlighting
 	///all that needs to be implemented in child class for UpdateHighlights to work
 
-	wxListItemAttr* HighlightItemUser( const wxString& name ) const;
+	wxListItemAttr* HighlightItemUser(const wxString& name) const;
 
-	void SetHighLightAction( UserActions::ActionType action );
+	void SetHighLightAction(UserActions::ActionType action);
 	void RefreshVisibleItems();
 
 	/** @name Multi Selection methods
@@ -313,18 +322,18 @@ public:
 	virtual void Clear();
 
 	//! handle sort order updates
-	void OnColClick( wxListEvent& event );
+	void OnColClick(wxListEvent& event);
 
-	virtual int GetIndexFromData( const DataType& data ) const = 0;
+	virtual int GetIndexFromData(const DataType& data) const = 0;
 
 	void ReverseOrder();
 
-	void OnQuit( wxCommandEvent& data );
+	void OnQuit(wxCommandEvent& data);
 	void StartTimer();
 	void StopTimer();
 
 protected:
-	typedef std::vector< DataImp > DataVector;
+	typedef std::vector<DataImp> DataVector;
 	typedef typename DataVector::iterator DataIter;
 	typedef typename DataVector::const_iterator DataCIter;
 	typedef typename DataVector::reverse_iterator DataRevIter;
@@ -332,48 +341,52 @@ protected:
 	DataVector m_data;
 
 	typedef DataType SelectedDataType;
-	typedef std::vector< SelectedDataType > SelectedDataVector;
+	typedef std::vector<SelectedDataType> SelectedDataVector;
 	SelectedDataVector m_selected_data;
 
 	//! the Comparator object passed to the SLInsertionSort function
 	ItemComparator<DataType> m_comparator;
 
-	bool RemoveItem( const DataImp& item );
-	bool AddItem( const DataImp& item );
+	bool RemoveItem(const DataImp& item);
+	bool AddItem(const DataImp& item);
 
 	long m_periodic_sort_timer_id;
 	wxTimer m_periodic_sort_timer;
 	bool m_periodic_sort;
 	unsigned int m_periodic_sort_interval;
-	void OnPeriodicSort( wxTimerEvent& evt );
+	void OnPeriodicSort(wxTimerEvent& evt);
 	//! this is the sink for a custom event that can be used for async sort
-	void OnSortEvent( wxCommandEvent& evt );
+	void OnSortEvent(wxCommandEvent& evt);
 
 public:
 	DECLARE_EVENT_TABLE()
 
 private:
 	typedef BaseType ThisType;
-	ListCtrlImp& asImp() {
+	ListCtrlImp& asImp()
+	{
 		return static_cast<ListCtrlImp&>(*this);
 	}
-	const ListCtrlImp& asImp() const {
+	const ListCtrlImp& asImp() const
+	{
 		return static_cast<const ListCtrlImp&>(*this);
 	}
-
 };
 
-template < class ListCtrlType > class SelectionSaver
+template <class ListCtrlType>
+class SelectionSaver
 {
 	ListCtrlType& m_list;
 
 public:
-	SelectionSaver( ListCtrlType& list)
-		: m_list( list ) {
+	SelectionSaver(ListCtrlType& list)
+	    : m_list(list)
+	{
 		m_list.SaveSelection();
 	}
 
-	~SelectionSaver() {
+	~SelectionSaver()
+	{
 		m_list.RestoreSelection();
 	}
 };
@@ -381,4 +394,3 @@ public:
 #include "customvirtlistctrl.cpp"
 
 #endif /*CUSTOMLISTITEM_H_*/
-

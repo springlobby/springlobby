@@ -11,19 +11,17 @@ class wxBoxSizer;
 
 class ChannelChooserDialog : public wxDialog, public WindowAttributesPickle
 {
-    public:
-        ChannelChooserDialog(wxWindow* parent, wxWindowID id, const wxString& title,
-            long style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE );
-        virtual ~ChannelChooserDialog();
+public:
+	ChannelChooserDialog(wxWindow* parent, wxWindowID id, const wxString& title,
+			     long style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE);
+	virtual ~ChannelChooserDialog();
 
-        void AddChannel( const wxString& name, int usercount, const wxString& topic = wxEmptyString );
-        void ClearChannels();
+	void AddChannel(const wxString& name, int usercount, const wxString& topic = wxEmptyString);
+	void ClearChannels();
 
 private:
-        ChannelChooserPanel* m_chooser_panel;
-        wxBoxSizer* m_main_sizer;
-
+	ChannelChooserPanel* m_chooser_panel;
+	wxBoxSizer* m_main_sizer;
 };
 
 #endif // SPRINGLOBBY_CHANNELCHOOSERDIALOG_H_INCLUDED
-

@@ -21,15 +21,18 @@ private:
 public:
 	struct Command
 	{
-		Command() : m_id(0) {}
+		Command()
+		    : m_id(0)
+		{
+		}
 
-		wxString		m_command;
-		wxString		m_category;
-		wxString		m_description;
-		unsigned		m_id;
+		wxString m_command;
+		wxString m_category;
+		wxString m_description;
+		unsigned m_id;
 	};
 
-	typedef std::map<wxString, CommandList::Command>		CommandMap;
+	typedef std::map<wxString, CommandList::Command> CommandMap;
 
 	static CommandList::CommandMap getCommands()
 	{
@@ -37,9 +40,8 @@ public:
 
 		CommandList::CommandMap merged = m_commands;
 
-		for ( CommandList::CommandMap::const_iterator iter = CommandList::m_customCommands.begin(); iter != CommandList::m_customCommands.end(); ++iter )
-		{
-			merged[ iter->first ] = iter->second;
+		for (CommandList::CommandMap::const_iterator iter = CommandList::m_customCommands.begin(); iter != CommandList::m_customCommands.end(); ++iter) {
+			merged[iter->first] = iter->second;
 		}
 
 		return merged;
@@ -49,12 +51,10 @@ public:
 	{
 		InitializeCommandList();
 
-		if ( m_commands.find( command ) == m_commands.end() )
-		{
-			if ( m_customCommands.find( command ) == m_customCommands.end() )
-			{
+		if (m_commands.find(command) == m_commands.end()) {
+			if (m_customCommands.find(command) == m_customCommands.end()) {
 				//add the command
-				addCustomCommand( command );
+				addCustomCommand(command);
 			}
 
 			return m_customCommands[command];
@@ -68,20 +68,18 @@ public:
 		wxString category = wxT("Custom");
 		wxString descr = wxT("Custom command");
 
-		if ( command.StartsWith( wxT("select ") ) )
-		{
+		if (command.StartsWith(wxT("select "))) {
 			category = wxT("Selection");
 			descr = wxT("User-defined selection command");
 		}
 
-		addCustomCommand( category, command, descr );
+		addCustomCommand(category, command, descr);
 	}
 
-	static void addCustomCommand(const wxString& category, const wxString& command, const wxString& description )
+	static void addCustomCommand(const wxString& category, const wxString& command, const wxString& description)
 	{
-		if ( CommandList::m_customCommands.find( command ) != CommandList::m_customCommands.end() )
-		{
-			throw HotkeyException( _("Command already exists! Not added!") );
+		if (CommandList::m_customCommands.find(command) != CommandList::m_customCommands.end()) {
+			throw HotkeyException(_("Command already exists! Not added!"));
 		}
 
 		//put new command to command list
@@ -98,7 +96,7 @@ public:
 private:
 	CommandList();
 
-	static void addCommand(const wxString& category, const wxString& command, const wxString& description )
+	static void addCommand(const wxString& category, const wxString& command, const wxString& description)
 	{
 		//put new command to command list
 		CommandList::m_commands[command] = Command();
@@ -111,11 +109,10 @@ private:
 		cmd.m_id = CommandList::m_nextCmdId++;
 	}
 
-	static unsigned												m_nextCmdId;
-	static CommandMap											m_commands;
-	static CommandMap											m_customCommands;
+	static unsigned m_nextCmdId;
+	static CommandMap m_commands;
+	static CommandMap m_customCommands;
 };
-
 
 
 #endif

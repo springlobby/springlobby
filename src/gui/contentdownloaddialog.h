@@ -13,18 +13,18 @@ class wxTextCtrl;
 class ContentSearchResultsListctrl;
 
 
-
 class ContentDownloadDialog : public wxDialog, public WindowAttributesPickle
 {
 public:
-	ContentDownloadDialog(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long int style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE , const wxString& name = wxDialogNameStr);
+	ContentDownloadDialog(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long int style = wxCAPTION | wxRESIZE_BORDER | wxCLOSE_BOX | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxDEFAULT_DIALOG_STYLE, const wxString& name = wxDialogNameStr);
 	virtual ~ContentDownloadDialog();
 	virtual bool Show(bool show = true);
-	void OnSearch( wxCommandEvent& event );
-	void OnSearchCompleted( wxCommandEvent& event);
-	void OnDownloadButton( wxCommandEvent& event);
-	void OnCloseButton( wxCommandEvent& event);
-	void OnListDownload( wxListEvent& event );
+	void OnSearch(wxCommandEvent& event);
+	void OnSearchCompleted(wxCommandEvent& event);
+	void OnDownloadButton(wxCommandEvent& event);
+	void OnCloseButton(wxCommandEvent& event);
+	void OnListDownload(wxListEvent& event);
+
 private:
 	DECLARE_EVENT_TABLE()
 	void Search(const wxString& str);
@@ -38,6 +38,7 @@ private:
 	wxButton* m_close_button;
 
 	bool wildcardsearch;
+
 public:
 	enum {
 		SEARCH_BUTTON = wxID_HIGHEST,

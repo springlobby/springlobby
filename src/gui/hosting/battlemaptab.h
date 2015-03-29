@@ -29,42 +29,45 @@ class wxMouseEvent;
 class BattleMapTab : public wxScrolledWindow, public GlobalEvent
 {
 public:
-    BattleMapTab( wxWindow* parent, IBattle* battle );
-     ~BattleMapTab();
+	BattleMapTab(wxWindow* parent, IBattle* battle);
+	~BattleMapTab();
 
-     void UpdateUser( User& user );
+	void UpdateUser(User& user);
 
-     void Update();
-     void Update( const wxString& Tag );
-     void ReloadMaplist();
+	void Update();
+	void Update(const wxString& Tag);
+	void ReloadMaplist();
 
-    void SetMap( int index );
-    void SetBattle( IBattle* battle );
+	void SetMap(int index);
+	void SetBattle(IBattle* battle);
 
 private:
-    IBattle* GetBattle() { return m_battle; }
-	void OnMapSelect( wxCommandEvent& event );
-	void OnMapBrowse( wxCommandEvent& event );
-	void OnStartTypeSelect( wxCommandEvent& event );
-	void OnUnitsyncReloaded( wxCommandEvent& /*data*/ );
+	IBattle* GetBattle()
+	{
+		return m_battle;
+	}
+	void OnMapSelect(wxCommandEvent& event);
+	void OnMapBrowse(wxCommandEvent& event);
+	void OnStartTypeSelect(wxCommandEvent& event);
+	void OnUnitsyncReloaded(wxCommandEvent& /*data*/);
 
-    IBattle* m_battle;
-    //LSL::UnitsyncMap m_map;
+	IBattle* m_battle;
+	//LSL::UnitsyncMap m_map;
 
-    MapCtrl* m_minimap;
-    wxChoice* m_map_combo;
-    wxButton* m_browse_btn;
-    wxRadioBox* m_start_radios;
-    wxListCtrl* m_map_opts_list;
-    wxStaticText* m_map_desc;
+	MapCtrl* m_minimap;
+	wxChoice* m_map_combo;
+	wxButton* m_browse_btn;
+	wxRadioBox* m_start_radios;
+	wxListCtrl* m_map_opts_list;
+	wxStaticText* m_map_desc;
 
-    enum {
-      BMAP_MAP_SEL = wxID_HIGHEST,
-      BMAP_MAP_BROWSE,
-      BMAP_START_TYPE
-    };
+	enum {
+		BMAP_MAP_SEL = wxID_HIGHEST,
+		BMAP_MAP_BROWSE,
+		BMAP_START_TYPE
+	};
 
-    DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 
 

@@ -14,36 +14,35 @@ class wxButton;
 class wxStaticText;
 class wxSpinCtrl;
 class wxStaticBoxSizer;
-class TorrentOptionsPanel: public wxScrolledWindow
+class TorrentOptionsPanel : public wxScrolledWindow
 {
-    public:
-        TorrentOptionsPanel( wxWindow* parent );
-        ~TorrentOptionsPanel();
+public:
+	TorrentOptionsPanel(wxWindow* parent);
+	~TorrentOptionsPanel();
 
-        void OnApply( wxCommandEvent& event );
-        void OnRestore( wxCommandEvent& event );
+	void OnApply(wxCommandEvent& event);
+	void OnRestore(wxCommandEvent& event);
 
-    private:
+private:
 	wxSpinCtrl* m_parallel_http;
 	wxStaticBoxSizer* m_parallel_http_sizer;
-        void EnableSettings( bool enable);
-        void SetStatusDisplay();
+	void EnableSettings(bool enable);
+	void SetStatusDisplay();
 
-        enum
-        {
-            ID_ENABLEP2P = wxID_HIGHEST,
-            ID_MAXUP,
-            ID_MAXDOWN,
-            ID_P2PPORT,
-            ID_MAXCONNECTIONS,
-            ID_APPLY,
-            ID_RESTORE,
-            ID_GAMESTART_RADIO,
-            ID_INGAME_UP,
-            ID_INGAME_DOWN
-        };
+	enum {
+		ID_ENABLEP2P = wxID_HIGHEST,
+		ID_MAXUP,
+		ID_MAXDOWN,
+		ID_P2PPORT,
+		ID_MAXCONNECTIONS,
+		ID_APPLY,
+		ID_RESTORE,
+		ID_GAMESTART_RADIO,
+		ID_INGAME_UP,
+		ID_INGAME_DOWN
+	};
 
-        DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 
 #endif // SPRINGLOBBY_HEADER_GUARD_TORRENTOPTIONSPANEL_H_INCLUDED

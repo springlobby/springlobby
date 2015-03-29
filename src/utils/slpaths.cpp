@@ -21,7 +21,6 @@
 #include "log.h"
 
 
-
 #ifdef WIN32
 #include <windows.h>
 #include <shlobj.h>
@@ -36,11 +35,13 @@ static std::string GetMyDocumentsDir()
 #ifdef WIN32
 	wchar_t my_documents[MAX_PATH];
 	HRESULT result = SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
-	if (result == S_OK) return LSL::Util::ws2s(my_documents);
+	if (result == S_OK)
+		return LSL::Util::ws2s(my_documents);
 	return "";
 #else
-	const char* envvar= getenv("HOME");
-	if (envvar == NULL) return "";
+	const char* envvar = getenv("HOME");
+	if (envvar == NULL)
+		return "";
 	return std::string(envvar);
 #endif
 }
@@ -52,17 +53,17 @@ SLCONFIG("/Spring/DownloadDir", TowxString(LSL::Util::EnsureDelimiter(GetMyDocum
 #endif
 
 
-std::string SlPaths::GetLocalConfigPath ()
+std::string SlPaths::GetLocalConfigPath()
 {
 	return GetExecutableFolder() + getSpringlobbyName(true) + ".conf";
 }
 
-std::string SlPaths::GetDefaultConfigPath ()
+std::string SlPaths::GetDefaultConfigPath()
 {
 	return GetConfigfileDir() + getSpringlobbyName(true) + ".conf";
 }
 
-bool SlPaths::IsPortableMode ()
+bool SlPaths::IsPortableMode()
 {
 	if (!m_user_defined_config_path.empty()) {
 		return false;
@@ -72,21 +73,21 @@ bool SlPaths::IsPortableMode ()
 }
 
 //returns the path to springlobby.conf
-std::string SlPaths::GetConfigPath ()
+std::string SlPaths::GetConfigPath()
 {
 	if (!m_user_defined_config_path.empty()) {
 		return m_user_defined_config_path;
 	}
-	return IsPortableMode() ?
-		   GetLocalConfigPath() : GetDefaultConfigPath();
+	return IsPortableMode() ? GetLocalConfigPath() : GetDefaultConfigPath();
 }
 
 //returns the lobby cache path
 std::string SlPaths::GetCachePath()
 {
 	const std::string path = LSL::Util::EnsureDelimiter(GetLobbyWriteDir() + "cache");
-	if ( !wxFileName::DirExists(TowxString(path)) ) {
-		if (!mkDir(path)) return "";
+	if (!wxFileName::DirExists(TowxString(path))) {
+		if (!mkDir(path))
+			return "";
 	}
 	return path;
 }
@@ -103,7 +104,7 @@ std::map<std::string, LSL::SpringBundle> SlPaths::GetSpringVersionList()
 void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
 {
 	pl.push_back(STD_STRING(wxFileName::GetCwd())); //current working directory
-	pl.push_back(GetExecutableFolder()); //dir of springlobby.exe
+	pl.push_back(GetExecutableFolder());		//dir of springlobby.exe
 
 	std::vector<std::string> basedirs;
 	basedirs.push_back(GetDownloadDir());
@@ -117,14 +118,14 @@ void SlPaths::PossibleEnginePaths(LSL::StringVector& pl)
 */
 void SlPaths::EngineSubPaths(const LSL::StringVector& basedirs, LSL::StringVector& paths)
 {
-	for (const std::string basedir: basedirs) {
-		const std::string enginedir = LSL::Util::EnsureDelimiter(LSL::Util::EnsureDelimiter(basedir)+ "engine");
+	for (const std::string basedir : basedirs) {
+		const std::string enginedir = LSL::Util::EnsureDelimiter(LSL::Util::EnsureDelimiter(basedir) + "engine");
 		wxDir dir(TowxString(enginedir));
 
-		if ( dir.IsOpened() ) {
+		if (dir.IsOpened()) {
 			wxString filename;
-			bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_DIRS|wxDIR_HIDDEN);
-			while ( cont ) {
+			bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_DIRS | wxDIR_HIDDEN);
+			while (cont) {
 				paths.push_back(enginedir + STD_STRING(filename));
 				cont = dir.GetNext(&filename);
 			}
@@ -157,7 +158,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 		std::vector<std::string> basedirs;
 		basedirs.push_back(GetLobbyWriteDir());
 		EngineSubPaths(basedirs, lobbysubpaths);
-		for (const std::string path: lobbysubpaths) {
+		for (const std::string path : lobbysubpaths) {
 			LSL::SpringBundle bundle;
 			bundle.path = path;
 			usync_paths.push_back(bundle);
@@ -170,7 +171,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 
 			std::vector<std::string> paths;
 			PossibleEnginePaths(paths);
-			for (const std::string path: paths) {
+			for (const std::string path : paths) {
 				LSL::SpringBundle bundle;
 				bundle.path = path;
 				usync_paths.push_back(bundle);
@@ -178,9 +179,9 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 		}
 	}
 
-	wxArrayString list = cfg().GetGroupList( _T( "/Spring/Paths" ) );
+	wxArrayString list = cfg().GetGroupList(_T( "/Spring/Paths" ));
 	const int count = list.GetCount();
-	for ( int i = 0; i < count; i++ ) {
+	for (int i = 0; i < count; i++) {
 		LSL::SpringBundle bundle;
 		const std::string configsection = STD_STRING(list[i]);
 		bundle.unitsync = GetUnitSync(configsection);
@@ -193,8 +194,8 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 
 	m_spring_versions.clear();
 	try {
-		const auto versions = LSL::SpringBundle::GetSpringVersionList( usync_paths );
-		for(const auto pair : versions) {
+		const auto versions = LSL::SpringBundle::GetSpringVersionList(usync_paths);
+		for (const auto pair : versions) {
 			const LSL::SpringBundle& bundle = pair.second;
 			const std::string version = bundle.version;
 			m_spring_versions[version] = bundle;
@@ -204,7 +205,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 		}
 	} catch (const std::runtime_error& e) {
 		wxLogError(wxString::Format(_T("Couldn't get list of spring versions: %s"), e.what()));
-	} catch ( ...) {
+	} catch (...) {
 		wxLogError(_T("Unknown Execption caught in SlPaths::RefreshSpringVersionList"));
 	}
 }
@@ -216,29 +217,29 @@ std::string SlPaths::GetCurrentUsedSpringIndex()
 	return STD_STRING(index);
 }
 
-void SlPaths::SetUsedSpringIndex( const std::string& index )
+void SlPaths::SetUsedSpringIndex(const std::string& index)
 {
-	cfg().Write( _T( "/Spring/CurrentIndex" ), TowxString(index) );
+	cfg().Write(_T( "/Spring/CurrentIndex" ), TowxString(index));
 	ReconfigureUnitsync();
 }
 
 void SlPaths::ReconfigureUnitsync()
 {
 	LSL::Util::config().ConfigurePaths(
-		SlPaths::GetCachePath(),
-		SlPaths::GetUnitSync(),
-		SlPaths::GetSpringBinary()
-	);
+	    SlPaths::GetCachePath(),
+	    SlPaths::GetUnitSync(),
+	    SlPaths::GetSpringBinary());
 }
 
 
-void SlPaths::DeleteSpringVersionbyIndex( const std::string& index )
+void SlPaths::DeleteSpringVersionbyIndex(const std::string& index)
 {
 	if (index.empty()) {
 		return;
 	}
-	cfg().DeleteGroup( _T( "/Spring/Paths/" ) + TowxString(index) );
-	if ( GetCurrentUsedSpringIndex() == index ) SetUsedSpringIndex("");
+	cfg().DeleteGroup(_T( "/Spring/Paths/" ) + TowxString(index));
+	if (GetCurrentUsedSpringIndex() == index)
+		SetUsedSpringIndex("");
 }
 
 
@@ -247,72 +248,75 @@ std::string SlPaths::GetSpringConfigFilePath(const std::string& /*FIXME: impleme
 	std::string path;
 	try {
 		path = LSL::usync().GetConfigFilePath();
-	} catch ( std::runtime_error& e) {
-		wxLogError( wxString::Format( _T("Couldn't get SpringConfigFilePath, exception caught:\n %s"), e.what()  ) );
+	} catch (std::runtime_error& e) {
+		wxLogError(wxString::Format(_T("Couldn't get SpringConfigFilePath, exception caught:\n %s"), e.what()));
 	}
 	return path;
 }
 
-std::string SlPaths::GetUnitSync( const std::string& index )
+std::string SlPaths::GetUnitSync(const std::string& index)
 {
-	return STD_STRING(cfg().Read( _T( "/Spring/Paths/" ) + TowxString(index) + _T( "/UnitSyncPath" ), wxEmptyString ));
+	return STD_STRING(cfg().Read(_T( "/Spring/Paths/" ) + TowxString(index) + _T( "/UnitSyncPath" ), wxEmptyString));
 }
 
-std::string SlPaths::GetSpringBinary( const std::string& index )
+std::string SlPaths::GetSpringBinary(const std::string& index)
 {
-	return STD_STRING(cfg().Read( _T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBinPath" ), wxEmptyString ));
+	return STD_STRING(cfg().Read(_T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBinPath" ), wxEmptyString));
 }
 
-void SlPaths::SetUnitSync( const std::string& index, const std::string& path )
+void SlPaths::SetUnitSync(const std::string& index, const std::string& path)
 {
-	cfg().Write( _T( "/Spring/Paths/" ) + TowxString(index) + _T( "/UnitSyncPath" ), TowxString(path));
+	cfg().Write(_T( "/Spring/Paths/" ) + TowxString(index) + _T( "/UnitSyncPath" ), TowxString(path));
 	// reconfigure unitsync in case it is reloaded
 	ReconfigureUnitsync();
 }
 
-void SlPaths::SetSpringBinary( const std::string& index, const std::string& path )
+void SlPaths::SetSpringBinary(const std::string& index, const std::string& path)
 {
-	cfg().Write( _T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBinPath" ), TowxString(path) );
+	cfg().Write(_T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBinPath" ), TowxString(path));
 }
 
-void SlPaths::SetBundle( const std::string& index, const std::string& path )
+void SlPaths::SetBundle(const std::string& index, const std::string& path)
 {
-	cfg().Write( _T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBundlePath" ), TowxString(path));
+	cfg().Write(_T( "/Spring/Paths/" ) + TowxString(index) + _T( "/SpringBundlePath" ), TowxString(path));
 }
 
 std::string SlPaths::GetChatLogLoc()
 {
 	const std::string path = GetLobbyWriteDir() + "chatlog";
-	if ( !LSL::Util::FileExists(path) ) {
-		if (!mkDir(path)) return "";
+	if (!LSL::Util::FileExists(path)) {
+		if (!mkDir(path))
+			return "";
 	}
 	return LSL::Util::EnsureDelimiter(path);
 }
 
 
-bool SlPaths::IsSpringBin( const std::string& path )
+bool SlPaths::IsSpringBin(const std::string& path)
 {
-	if ( !LSL::Util::FileExists(path) ) return false;
-	if ( !wxFileName::IsFileExecutable(TowxString(path)) ) return false;
+	if (!LSL::Util::FileExists(path))
+		return false;
+	if (!wxFileName::IsFileExecutable(TowxString(path)))
+		return false;
 	return true;
 }
 
-std::string SlPaths::GetEditorPath( )
+std::string SlPaths::GetEditorPath()
 {
 	wxString def = wxEmptyString;
 #if defined(__WXMSW__)
 	const wxChar sep = wxFileName::GetPathSeparator();
 	const wxString sepstring = wxString(sep);
 	def = wxGetOSDirectory() + sepstring + _T("system32") + sepstring + _T("notepad.exe");
-	if ( !wxFile::Exists( def ) )
+	if (!wxFile::Exists(def))
 		def = wxEmptyString;
 #endif
-	return STD_STRING(cfg().Read( _T( "/GUI/Editor" ) , def ));
+	return STD_STRING(cfg().Read(_T( "/GUI/Editor" ), def));
 }
 
-void SlPaths::SetEditorPath( const std::string& path )
+void SlPaths::SetEditorPath(const std::string& path)
 {
-	cfg().Write( _T( "/GUI/Editor" ) , TowxString(path));
+	cfg().Write(_T( "/GUI/Editor" ), TowxString(path));
 }
 
 
@@ -332,15 +336,15 @@ std::string SlPaths::GetUikeys(const std::string& index)
 
 bool SlPaths::CreateSpringDataDir(const std::string& dir)
 {
-	if ( dir.empty() ) {
+	if (dir.empty()) {
 		return false;
 	}
 	const std::string directory = LSL::Util::EnsureDelimiter(dir);
-	if ( !mkDir(directory) ||
-			!mkDir(directory + "games") ||
-			!mkDir(directory + "maps") ||
-			!mkDir(directory + "demos") ||
-			!mkDir(directory + "screenshots")) {
+	if (!mkDir(directory) ||
+	    !mkDir(directory + "games") ||
+	    !mkDir(directory + "maps") ||
+	    !mkDir(directory + "demos") ||
+	    !mkDir(directory + "screenshots")) {
 		return false;
 	}
 	LSL::usync().SetSpringDataPath(dir);
@@ -358,15 +362,16 @@ std::string SlPaths::GetDataDir(const std::string& /*FIXME: implement index */)
 std::string VersionGetMajor(const std::string& version)
 {
 	const int pos = version.find(".");
-	if (pos>0) {
+	if (pos > 0) {
 		return version.substr(0, pos);
 	}
 	return version;
 }
 
-bool VersionIsRelease(const std::string& version) { //try to detect if a version is major
+bool VersionIsRelease(const std::string& version)
+{ //try to detect if a version is major
 	const std::string allowedChars = "01234567890.";
-	for(size_t i=0; i<version.length(); i++) {
+	for (size_t i = 0; i < version.length(); i++) {
 		if (allowedChars.find(version[i]) == std::string::npos) { //found invalid char -> not stable version
 			return false;
 		}
@@ -379,8 +384,8 @@ bool VersionSyncCompatible(const std::string& ver1, const std::string& ver2)
 	if (ver1 == ver2) {
 		return true;
 	}
-	if ( (VersionIsRelease(ver1) &&  VersionIsRelease(ver2)) &&
-	 (VersionGetMajor(ver1) == VersionGetMajor(ver2))) {
+	if ((VersionIsRelease(ver1) && VersionIsRelease(ver2)) &&
+	    (VersionGetMajor(ver1) == VersionGetMajor(ver2))) {
 		return true;
 	}
 	const std::string ver1trimmed = LSL::Util::BeforeFirst(ver1, " ");
@@ -394,10 +399,10 @@ bool VersionSyncCompatible(const std::string& ver1, const std::string& ver2)
 std::string SlPaths::GetCompatibleVersion(const std::string& neededversion)
 {
 	const auto versionlist = SlPaths::GetSpringVersionList();
-	for ( const auto pair : versionlist ) {
+	for (const auto pair : versionlist) {
 		const std::string ver = pair.first;
 		const LSL::SpringBundle bundle = pair.second;
-		if ( VersionSyncCompatible(neededversion, ver)) {
+		if (VersionSyncCompatible(neededversion, ver)) {
 			return ver;
 		}
 	}
@@ -451,24 +456,24 @@ bool SlPaths::RmDir(const std::string& dir)
 	wxDir dirit(cachedir);
 	wxString file;
 	bool cont = dirit.GetFirst(&file);
-	while ( cont ) {
+	while (cont) {
 		const wxString absname = cachedir + wxFileName::GetPathSeparator() + file;
 		if (wxDirExists(absname)) {
 			if (!RmDir(STD_STRING(absname))) {
 				return false;
 			}
 		} else {
-			wxLogWarning( _T("deleting %s"), absname.c_str());
+			wxLogWarning(_T("deleting %s"), absname.c_str());
 			if (!wxRemoveFile(absname))
 				return false;
 		}
 		cont = dirit.GetNext(&file);
 	}
-	wxLogWarning( _T("deleting %s"), TowxString(dir).c_str());
+	wxLogWarning(_T("deleting %s"), TowxString(dir).c_str());
 	return rmdir(dir.c_str()) == 0;
 }
 
-bool SlPaths::mkDir(const std::string& dir) {
+bool SlPaths::mkDir(const std::string& dir)
+{
 	return wxFileName::Mkdir(TowxString(dir), 0755, wxPATH_MKDIR_FULL);
 }
-

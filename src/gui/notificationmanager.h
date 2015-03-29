@@ -16,30 +16,29 @@ class INotification;
 
 class NotificationManager : public SL::NonCopyable, public wxEvtHandler, public GlobalEvent
 {
-    public:
-        NotificationManager();
-        virtual ~NotificationManager();
+public:
+	NotificationManager();
+	virtual ~NotificationManager();
 
-		void OnShowNotification( UiEvents::NotficationData data );
+	void OnShowNotification(UiEvents::NotficationData data);
 
-		void OnQuit( wxCommandEvent& data );
+	void OnQuit(wxCommandEvent& data);
 
 private:
-		INotification* m_notification_wrapper;
+	INotification* m_notification_wrapper;
 
-		wxTimer m_rate_limit_timer;
-		const unsigned int m_rate_limit_ms;
-		typedef std::vector<UiEvents::NotficationData>
-			EventDataBuffer;
-		EventDataBuffer m_eventDataBuffer;
+	wxTimer m_rate_limit_timer;
+	const unsigned int m_rate_limit_ms;
+	typedef std::vector<UiEvents::NotficationData>
+	    EventDataBuffer;
+	EventDataBuffer m_eventDataBuffer;
 
-		void OnTimer( wxTimerEvent& /*event*/ );
-		void ShowNotification( const UiEvents::NotficationData& data );
+	void OnTimer(wxTimerEvent& /*event*/);
+	void ShowNotification(const UiEvents::NotficationData& data);
 
-		EventReceiverFunc< NotificationManager, UiEvents::NotficationData, &NotificationManager::OnShowNotification> m_showNotificationSink;
+	EventReceiverFunc<NotificationManager, UiEvents::NotficationData, &NotificationManager::OnShowNotification> m_showNotificationSink;
 
-		DECLARE_EVENT_TABLE()
-
+	DECLARE_EVENT_TABLE()
 };
 
 NotificationManager& notificationManager();

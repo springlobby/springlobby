@@ -22,7 +22,7 @@ LSL::lslColor wxColourTolsl(const wxColour& col)
 LSL::StringVector wxArrayStringToLSL(const wxArrayString& arr)
 {
 	LSL::StringVector ret;
-	for (const wxString& str: arr) {
+	for (const wxString& str : arr) {
 		ret.push_back(STD_STRING(str));
 	}
 	return ret;
@@ -31,7 +31,7 @@ LSL::StringVector wxArrayStringToLSL(const wxArrayString& arr)
 wxArrayString lslTowxArrayString(const LSL::StringVector& arr)
 {
 	wxArrayString ret;
-	for (size_t i=0; i<arr.size(); i++) {
+	for (size_t i = 0; i < arr.size(); i++) {
 		ret.Add(TowxString(arr[i]));
 	}
 	return ret;

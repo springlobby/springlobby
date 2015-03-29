@@ -10,27 +10,25 @@ class wxTranslationHelper;
 
 class Springsettings : public wxApp
 {
-	public:
-        Springsettings();
-		~Springsettings();
-		bool OnInit();
-		int OnExit();
-		virtual void OnFatalException();
+public:
+	Springsettings();
+	~Springsettings();
+	bool OnInit();
+	int OnExit();
+	virtual void OnFatalException();
 
-        virtual void OnInitCmdLine(wxCmdLineParser& parser);
-        virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+	virtual void OnInitCmdLine(wxCmdLineParser& parser);
+	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
 private:
+	wxTranslationHelper* m_translationhelper;
 
-		wxTranslationHelper* m_translationhelper;
-
-        long m_log_verbosity;
-        bool m_log_console;
-		bool m_log_file;
-		wxString m_log_file_path;
-        bool m_log_window_show;
-        bool m_crash_handle_disable;
-
+	long m_log_verbosity;
+	bool m_log_console;
+	bool m_log_file;
+	wxString m_log_file_path;
+	bool m_log_window_show;
+	bool m_crash_handle_disable;
 };
 
 #endif

@@ -22,10 +22,10 @@
 
 //! Returns the ID of the first menu item with the given name which
 //! is found inside the given menu bar.
-int wxFindMenuItem(wxMenuBar *, const wxString &strMenuItemName);
+int wxFindMenuItem(wxMenuBar*, const wxString& strMenuItemName);
 
 //! The command type identifier for a wxMenuCmd.
-#define wxMENUCMD_TYPE						0x1234
+#define wxMENUCMD_TYPE 0x1234
 
 //! The data associated to each node of a tree used by
 //! - wxMenuTreeWalker
@@ -43,14 +43,21 @@ protected:
 	int m_nMenuId;
 
 public:
-	wxExTreeItemData(int id = wxID_INVALID) : m_nMenuId(id) {}
-	virtual ~wxExTreeItemData() {}
+	wxExTreeItemData(int id = wxID_INVALID)
+	    : m_nMenuId(id)
+	{
+	}
+	virtual ~wxExTreeItemData()
+	{
+	}
 
-	void SetMenuItemId(int n) {
+	void SetMenuItemId(int n)
+	{
 		m_nMenuId = n;
 	}
 
-	int GetMenuItemId() {
+	int GetMenuItemId()
+	{
 		return m_nMenuId;
 	}
 };
@@ -67,19 +74,32 @@ protected:
 	wxArrayLong m_arrID;
 
 public:
-	wxExComboItemData() {}
-	virtual ~wxExComboItemData() {}
+	wxExComboItemData()
+	{
+	}
+	virtual ~wxExComboItemData()
+	{
+	}
 
 	int GetID(size_t n) const
- 		{ return m_arrID[n]; }
-	wxArrayString &GetCmdNameArr()
-		{ return m_arrStr; }
+	{
+		return m_arrID[n];
+	}
+	wxArrayString& GetCmdNameArr()
+	{
+		return m_arrStr;
+	}
 
-	void Append(const wxString &name, int id)
-		{ m_arrStr.Add(name); m_arrID.Add(id); }
+	void Append(const wxString& name, int id)
+	{
+		m_arrStr.Add(name);
+		m_arrID.Add(id);
+	}
 	void SetID(size_t n, int id)
-		{ m_arrID[n] = id; }
+	{
+		m_arrID[n] = id;
+	}
 };
 
 
-#endif		// __WX_MENUUTILS_H__
+#endif // __WX_MENUUTILS_H__

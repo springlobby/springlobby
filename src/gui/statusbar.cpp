@@ -7,15 +7,15 @@
 #include "utils/version.h"
 #include <wx/event.h>
 
-Statusbar::Statusbar( wxWindow* parent )
-	:wxStatusBar( parent, wxNewId() ),
-	m_addMessageSink( this, &GetStatusEventSender(UiEvents::addStatusMessage) ),
-	m_removeMessageSink( this, &GetStatusEventSender(UiEvents::removeStatusMessage) )
+Statusbar::Statusbar(wxWindow* parent)
+    : wxStatusBar(parent, wxNewId())
+    , m_addMessageSink(this, &GetStatusEventSender(UiEvents::addStatusMessage))
+    , m_removeMessageSink(this, &GetStatusEventSender(UiEvents::removeStatusMessage))
 
 {
-	int w[3] = {460,-1,120};
-	SetFieldsCount( 3, w );
-	PushStatusText( TowxString(getSpringlobbyVersion()), 1 );
+	int w[3] = {460, -1, 120};
+	SetFieldsCount(3, w);
+	PushStatusText(TowxString(getSpringlobbyVersion()), 1);
 	taskBar = new TaskBar(this);
 }
 
@@ -27,17 +27,18 @@ Statusbar::~Statusbar()
 DEFINE_EVENT_TYPE(PUSH_STATUS_MSG)
 DEFINE_EVENT_TYPE(POP_STATUS_MSG)
 
-BEGIN_EVENT_TABLE( Statusbar, wxStatusBar )
-	EVT_COMMAND(wxID_ANY, PUSH_STATUS_MSG, Statusbar::OnUpdateMsg)
-	EVT_COMMAND(wxID_ANY, POP_STATUS_MSG, Statusbar::OnUpdateMsg)
+BEGIN_EVENT_TABLE(Statusbar, wxStatusBar)
+EVT_COMMAND(wxID_ANY, PUSH_STATUS_MSG, Statusbar::OnUpdateMsg)
+EVT_COMMAND(wxID_ANY, POP_STATUS_MSG, Statusbar::OnUpdateMsg)
 END_EVENT_TABLE()
 
-void Statusbar::OnUpdateMsg(wxCommandEvent& evt) {
+void Statusbar::OnUpdateMsg(wxCommandEvent& evt)
+{
 	const int pos = evt.GetInt();
-//	const int id = evt.GetId();
+	//	const int id = evt.GetId();
 	SetStatusText(evt.GetString(), pos);
-//FIXME: Push/Pop seems to have never worked as it should, what should the code do?
-/*
+	//FIXME: Push/Pop seems to have never worked as it should, what should the code do?
+	/*
 	if (id == PUSH_STATUS_MSG) {
 		const wxString& msg = evt.GetString();
 		PushStatusText(msg, pos);
@@ -46,7 +47,7 @@ void Statusbar::OnUpdateMsg(wxCommandEvent& evt) {
 	}*/
 }
 
-void Statusbar::OnAddMessage( UiEvents::StatusData data )
+void Statusbar::OnAddMessage(UiEvents::StatusData data)
 {
 	// is called from a thread, wxPostEvent used for thread-safety!
 
@@ -58,7 +59,7 @@ void Statusbar::OnAddMessage( UiEvents::StatusData data )
 	wxPostEvent(this, evt);
 }
 
-void Statusbar::OnRemoveMessage( UiEvents::StatusData data )
+void Statusbar::OnRemoveMessage(UiEvents::StatusData data)
 {
 	// is called from a thread, wxPostEvent used for thread-safety!
 
@@ -69,4 +70,3 @@ void Statusbar::OnRemoveMessage( UiEvents::StatusData data )
 	evt.SetInt(data.second);
 	wxPostEvent(this, evt);
 }
-

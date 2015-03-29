@@ -35,136 +35,258 @@
 class AddSelectionCmdDlgBase : public wxDialog
 {
 protected:
-		wxRadioButton* m_radioBtnSrcMap;
-		wxRadioButton* m_radioBtnSrcView;
-		wxRadioButton* m_radioBtnSrcSel;
-		wxRadioButton* m_radioBtnSrcMouse;
-		wxTextCtrl* m_textCtrlSrcMouseDist;
+	wxRadioButton* m_radioBtnSrcMap;
+	wxRadioButton* m_radioBtnSrcView;
+	wxRadioButton* m_radioBtnSrcSel;
+	wxRadioButton* m_radioBtnSrcMouse;
+	wxTextCtrl* m_textCtrlSrcMouseDist;
 
-		wxCheckBox* m_checkBoxSrcDistCyl;
-		wxRadioButton* m_radioBtnSelAll;
-		wxRadioButton* m_radioBtnSelCount;
-		wxTextCtrl* m_textCtrlSelCount;
-		wxRadioButton* m_radioBtnSelOne;
-		wxRadioButton* m_radioBtnSelPerc;
-		wxTextCtrl* m_textCtrlSelPerc;
-		wxStaticText* m_staticText20;
-		wxCheckBox* m_checkBoxClearPrevSel;
-		wxStaticText* m_staticText9;
-		wxStaticText* m_staticText11;
+	wxCheckBox* m_checkBoxSrcDistCyl;
+	wxRadioButton* m_radioBtnSelAll;
+	wxRadioButton* m_radioBtnSelCount;
+	wxTextCtrl* m_textCtrlSelCount;
+	wxRadioButton* m_radioBtnSelOne;
+	wxRadioButton* m_radioBtnSelPerc;
+	wxTextCtrl* m_textCtrlSelPerc;
+	wxStaticText* m_staticText20;
+	wxCheckBox* m_checkBoxClearPrevSel;
+	wxStaticText* m_staticText9;
+	wxStaticText* m_staticText11;
 
-		wxStaticText* m_staticText12;
-		wxStaticText* m_staticText13;
-
-
-		wxCheckBox* m_checkBoxBuilderInc;
-		wxCheckBox* m_checkBoxBuilderEx;
-		wxStaticText* m_staticText14;
-		wxCheckBox* m_checkBoxBuildingInc;
-		wxCheckBox* m_checkBoxBuildingEx;
-		wxStaticText* m_staticText15;
-
-		wxCheckBox* m_checkBoxComInc;
-		wxCheckBox* m_checkBoxComEx;
-		wxStaticText* m_staticText17;
-		wxCheckBox* m_checkBoxTypeSelInc;
-		wxCheckBox* m_checkBoxTypeSelEx;
-		wxStaticText* m_staticText18;
-
-		wxCheckBox* m_checkBoxAirInc;
-		wxCheckBox* m_checkBoxAirEx;
-		wxStaticText* m_staticText19;
-		wxCheckBox* m_checkBoxWaitingInc;
-		wxCheckBox* m_checkBoxWaitingEx;
-		wxStaticText* m_staticText231;
-
-		wxCheckBox* m_checkBoxWeaponsInc;
-		wxCheckBox* m_checkBoxWeaponsEx;
-		wxStaticText* m_staticText21;
-		wxCheckBox* m_checkBoxWeapRangeInc;
-		wxCheckBox* m_checkBoxWeapRangeEx;
-		wxStaticText* m_staticText22;
-		wxTextCtrl* m_textCtrlWeapRange;
-		wxCheckBox* m_checkBoxIdleInc;
-		wxCheckBox* m_checkBoxIdleEx;
-		wxStaticText* m_staticText23;
-		wxCheckBox* m_checkBoxAbsHealthInc;
-		wxCheckBox* m_checkBoxAbsHealthEx;
-		wxStaticText* m_staticText24;
-		wxTextCtrl* m_textCtrlAbsHealth;
-		wxCheckBox* m_checkBoxRadarInc;
-		wxCheckBox* m_checkBoxRadarEx;
-		wxStaticText* m_staticText25;
-		wxCheckBox* m_checkBoxNameInc;
-		wxCheckBox* m_checkBoxNameEx;
-		wxStaticText* m_staticText26;
-		wxTextCtrl* m_textCtrlName;
-		wxCheckBox* m_checkBoxTransInc;
-		wxCheckBox* m_checkBoxTransEx;
-		wxStaticText* m_staticText27;
-		wxCheckBox* m_checkBoxCategoryInc;
-		wxCheckBox* m_checkBoxCategoryEx;
-		wxStaticText* m_staticText29;
-		wxTextCtrl* m_textCtrlCategory;
-		wxCheckBox* m_checkBoxHotkeyInc;
-		wxCheckBox* m_checkBoxHotkeyEx;
-		wxStaticText* m_staticText221;
-		wxCheckBox* m_checkBoxRelHealthInc;
-		wxCheckBox* m_checkBoxRelHealthEx;
-		wxStaticText* m_staticText32;
-		wxTextCtrl* m_textCtrlRelHealth;
-
-		wxButton* m_buttonOk;
-		wxButton* m_buttonCancel;
-
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnRadioBtnSrcMapClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnRadioBtnSrcViewClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnRadioBtnSrcSelClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnRadioBtnSrcDistClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnRadioBtnSelAllClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnRadioBtnSelCountClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnRadioBtnSelOneClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnRadioBtnSelPercClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondBuilderIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondBuilderExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondBuildingIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondBuildingExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondComIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondComExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondTypeSelIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondTypeSelExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondAirIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondAirExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondWaitingIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondWaitingExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondWeaponsIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondWeaponsExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondWeapRangeIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondWeapRangeExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondIdleIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondIdleExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondAbsHealthIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondAbsHealthExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondRadarIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondRadarExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondNameIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondNameExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondTransIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondTransExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondCategoryIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondCategoryExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondHotkeyIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondHotkeyExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondRelHealthIncClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnCheckBoxCondRelHealthExClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnButtonAddClick( wxCommandEvent& event ){ event.Skip(); }
+	wxStaticText* m_staticText12;
+	wxStaticText* m_staticText13;
 
 
-	public:
-		AddSelectionCmdDlgBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Add Selection Command"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxCAPTION );
-		~AddSelectionCmdDlgBase();
+	wxCheckBox* m_checkBoxBuilderInc;
+	wxCheckBox* m_checkBoxBuilderEx;
+	wxStaticText* m_staticText14;
+	wxCheckBox* m_checkBoxBuildingInc;
+	wxCheckBox* m_checkBoxBuildingEx;
+	wxStaticText* m_staticText15;
 
+	wxCheckBox* m_checkBoxComInc;
+	wxCheckBox* m_checkBoxComEx;
+	wxStaticText* m_staticText17;
+	wxCheckBox* m_checkBoxTypeSelInc;
+	wxCheckBox* m_checkBoxTypeSelEx;
+	wxStaticText* m_staticText18;
+
+	wxCheckBox* m_checkBoxAirInc;
+	wxCheckBox* m_checkBoxAirEx;
+	wxStaticText* m_staticText19;
+	wxCheckBox* m_checkBoxWaitingInc;
+	wxCheckBox* m_checkBoxWaitingEx;
+	wxStaticText* m_staticText231;
+
+	wxCheckBox* m_checkBoxWeaponsInc;
+	wxCheckBox* m_checkBoxWeaponsEx;
+	wxStaticText* m_staticText21;
+	wxCheckBox* m_checkBoxWeapRangeInc;
+	wxCheckBox* m_checkBoxWeapRangeEx;
+	wxStaticText* m_staticText22;
+	wxTextCtrl* m_textCtrlWeapRange;
+	wxCheckBox* m_checkBoxIdleInc;
+	wxCheckBox* m_checkBoxIdleEx;
+	wxStaticText* m_staticText23;
+	wxCheckBox* m_checkBoxAbsHealthInc;
+	wxCheckBox* m_checkBoxAbsHealthEx;
+	wxStaticText* m_staticText24;
+	wxTextCtrl* m_textCtrlAbsHealth;
+	wxCheckBox* m_checkBoxRadarInc;
+	wxCheckBox* m_checkBoxRadarEx;
+	wxStaticText* m_staticText25;
+	wxCheckBox* m_checkBoxNameInc;
+	wxCheckBox* m_checkBoxNameEx;
+	wxStaticText* m_staticText26;
+	wxTextCtrl* m_textCtrlName;
+	wxCheckBox* m_checkBoxTransInc;
+	wxCheckBox* m_checkBoxTransEx;
+	wxStaticText* m_staticText27;
+	wxCheckBox* m_checkBoxCategoryInc;
+	wxCheckBox* m_checkBoxCategoryEx;
+	wxStaticText* m_staticText29;
+	wxTextCtrl* m_textCtrlCategory;
+	wxCheckBox* m_checkBoxHotkeyInc;
+	wxCheckBox* m_checkBoxHotkeyEx;
+	wxStaticText* m_staticText221;
+	wxCheckBox* m_checkBoxRelHealthInc;
+	wxCheckBox* m_checkBoxRelHealthEx;
+	wxStaticText* m_staticText32;
+	wxTextCtrl* m_textCtrlRelHealth;
+
+	wxButton* m_buttonOk;
+	wxButton* m_buttonCancel;
+
+	// Virtual event handlers, overide them in your derived class
+	virtual void OnRadioBtnSrcMapClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnRadioBtnSrcViewClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnRadioBtnSrcSelClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnRadioBtnSrcDistClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnRadioBtnSelAllClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnRadioBtnSelCountClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnRadioBtnSelOneClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnRadioBtnSelPercClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondBuilderIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondBuilderExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondBuildingIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondBuildingExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondComIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondComExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondTypeSelIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondTypeSelExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondAirIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondAirExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondWaitingIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondWaitingExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondWeaponsIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondWeaponsExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondWeapRangeIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondWeapRangeExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondIdleIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondIdleExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondAbsHealthIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondAbsHealthExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondRadarIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondRadarExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondNameIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondNameExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondTransIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondTransExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondCategoryIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondCategoryExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondHotkeyIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondHotkeyExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondRelHealthIncClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnCheckBoxCondRelHealthExClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnButtonAddClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+
+
+public:
+	AddSelectionCmdDlgBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Add Selection Command"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxCAPTION);
+	~AddSelectionCmdDlgBase();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -173,24 +295,32 @@ protected:
 class CommandOrderDlgBase : public wxDialog
 {
 protected:
-		wxStaticText* m_staticText22;
+	wxStaticText* m_staticText22;
 
-		wxListBox* m_listBoxCommands;
-		wxButton* m_buttonUp;
-		wxButton* m_buttonDown;
-		wxButton* m_buttonOk;
-		wxButton* m_buttonCancel;
+	wxListBox* m_listBoxCommands;
+	wxButton* m_buttonUp;
+	wxButton* m_buttonDown;
+	wxButton* m_buttonOk;
+	wxButton* m_buttonCancel;
 
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnInitDialog( wxInitDialogEvent& event ){ event.Skip(); }
-		virtual void OnButtonUpClick( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnButtonDownClick( wxCommandEvent& event ){ event.Skip(); }
+	// Virtual event handlers, overide them in your derived class
+	virtual void OnInitDialog(wxInitDialogEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnButtonUpClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
+	virtual void OnButtonDownClick(wxCommandEvent& event)
+	{
+		event.Skip();
+	}
 
 
-	public:
-		CommandOrderDlgBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Change Order"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxCAPTION );
-		~CommandOrderDlgBase();
-
+public:
+	CommandOrderDlgBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Change Order"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(-1, -1), long style = wxCAPTION);
+	~CommandOrderDlgBase();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -199,21 +329,23 @@ protected:
 class ChangeMetaDlgBase : public wxDialog
 {
 protected:
-		wxStaticText* m_staticText24;
-		wxTextCtrl* m_textCtrlCurKey;
-		wxStaticText* m_staticText23;
-		wxKeyMonitorTextCtrl* m_ctrlNewKey;
-		wxButton* m_buttonOk;
-		wxButton* m_buttonCancel;
+	wxStaticText* m_staticText24;
+	wxTextCtrl* m_textCtrlCurKey;
+	wxStaticText* m_staticText23;
+	wxKeyMonitorTextCtrl* m_ctrlNewKey;
+	wxButton* m_buttonOk;
+	wxButton* m_buttonCancel;
 
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnInitDialog( wxInitDialogEvent& event ){ event.Skip(); }
+	// Virtual event handlers, overide them in your derived class
+	virtual void OnInitDialog(wxInitDialogEvent& event)
+	{
+		event.Skip();
+	}
 
 
-	public:
-		ChangeMetaDlgBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Change Meta key"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE );
-		~ChangeMetaDlgBase();
-
+public:
+	ChangeMetaDlgBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Change Meta key"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE);
+	~ChangeMetaDlgBase();
 };
 
 #endif //__HotkeyForms__

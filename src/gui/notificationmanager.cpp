@@ -17,14 +17,14 @@
 #include "images/springlobby_64.png.h"
 
 #ifdef HAVE_LIBNOTIFY
-	#include "libnotify.h"
-	typedef LibnotifyNotification NotificationWrapperType;
+#include "libnotify.h"
+typedef LibnotifyNotification NotificationWrapperType;
 //#elif defined(__WXMSW__) //this is currently completely screwed
 //	#include "snarlnotification.h"
 //	typedef SnarlNotification NotificationWrapperType;
 #else
-	#include "toasternotification.h"
-	typedef ToasterNotification NotificationWrapperType;
+#include "toasternotification.h"
+typedef ToasterNotification NotificationWrapperType;
 #endif
 
 
@@ -33,23 +33,23 @@ SLCONFIG("/GUI/NotificationPopupDisableIngame", false, "disable config notificat
 const int this_timer_id = wxNewId();
 
 BEGIN_EVENT_TABLE(NotificationManager, wxEvtHandler)
-	EVT_TIMER(this_timer_id, NotificationManager::OnTimer)
+EVT_TIMER(this_timer_id, NotificationManager::OnTimer)
 END_EVENT_TABLE()
 
 
 NotificationManager& notificationManager()
 {
-    static LSL::Util::LineInfo<NotificationManager> m( AT );
-    static LSL::Util::GlobalObjectHolder<NotificationManager, LSL::Util::LineInfo<NotificationManager> > m_manager( m );
-    return m_manager;
+	static LSL::Util::LineInfo<NotificationManager> m(AT);
+	static LSL::Util::GlobalObjectHolder<NotificationManager, LSL::Util::LineInfo<NotificationManager> > m_manager(m);
+	return m_manager;
 }
 
-NotificationManager::NotificationManager():
-	wxEvtHandler(),
-	m_notification_wrapper( new NotificationWrapperType( &ui().mw() ) ),
-	m_rate_limit_timer( this, this_timer_id ),
-	m_rate_limit_ms( 2000 ),
-	m_showNotificationSink( this, &UiEvents::GetNotificationEventSender( ) )
+NotificationManager::NotificationManager()
+    : wxEvtHandler()
+    , m_notification_wrapper(new NotificationWrapperType(&ui().mw()))
+    , m_rate_limit_timer(this, this_timer_id)
+    , m_rate_limit_ms(2000)
+    , m_showNotificationSink(this, &UiEvents::GetNotificationEventSender())
 {
 	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&NotificationManager::OnQuit));
 }
@@ -61,46 +61,45 @@ NotificationManager::~NotificationManager()
 	m_notification_wrapper = NULL;
 }
 
-void NotificationManager::OnQuit( wxCommandEvent& /*data*/ )
+void NotificationManager::OnQuit(wxCommandEvent& /*data*/)
 {
 	delete m_notification_wrapper;
 	m_notification_wrapper = NULL;
 }
 
-void NotificationManager::OnShowNotification( UiEvents::NotficationData data )
+void NotificationManager::OnShowNotification(UiEvents::NotficationData data)
 {
-	if ( m_rate_limit_timer.IsRunning() ) {
-		m_eventDataBuffer.push_back( data );
+	if (m_rate_limit_timer.IsRunning()) {
+		m_eventDataBuffer.push_back(data);
 		return;
 	}
-	ShowNotification( data );
-	m_rate_limit_timer.Start( m_rate_limit_ms, wxTIMER_ONE_SHOT );
+	ShowNotification(data);
+	m_rate_limit_timer.Start(m_rate_limit_ms, wxTIMER_ONE_SHOT);
 }
 
-void NotificationManager::ShowNotification( const UiEvents::NotficationData& data )
+void NotificationManager::ShowNotification(const UiEvents::NotficationData& data)
 {
-	if ( sett().GetUseNotificationPopups() ) {
+	if (sett().GetUseNotificationPopups()) {
 		const bool disable_if_ingame = cfg().ReadBool(_T("/GUI/NotificationPopupDisableIngame"));
-		if ( m_notification_wrapper &&  ! ( disable_if_ingame && spring().IsRunning() ) ) {
+		if (m_notification_wrapper && !(disable_if_ingame && spring().IsRunning())) {
 			//! \todo use image from customizations
-			wxBitmap nmp ( charArr2wxBitmap( springlobby_64_png, sizeof(springlobby_64_png) ) );
-			m_notification_wrapper->Show( nmp, sett().GetNotificationPopupPosition(), data );
+			wxBitmap nmp(charArr2wxBitmap(springlobby_64_png, sizeof(springlobby_64_png)));
+			m_notification_wrapper->Show(nmp, sett().GetNotificationPopupPosition(), data);
 		}
 	}
-	if ( sett().GetChatPMSoundNotificationEnabled() )
+	if (sett().GetChatPMSoundNotificationEnabled())
 		slsound().pm();
 }
 
-void NotificationManager::OnTimer( wxTimerEvent& /*event*/ )
+void NotificationManager::OnTimer(wxTimerEvent& /*event*/)
 {
 	UiEvents::NotficationData data;
-	if ( !m_eventDataBuffer.empty() ) {
-		if ( m_eventDataBuffer.size() == 1 )
+	if (!m_eventDataBuffer.empty()) {
+		if (m_eventDataBuffer.size() == 1)
 			data = m_eventDataBuffer.front();
 		else
-			data.second = wxString::Format( _("%d more events"), (int)m_eventDataBuffer.size());
+			data.second = wxString::Format(_("%d more events"), (int)m_eventDataBuffer.size());
 		m_eventDataBuffer.clear();
-		ShowNotification( data );
+		ShowNotification(data);
 	}
 }
-

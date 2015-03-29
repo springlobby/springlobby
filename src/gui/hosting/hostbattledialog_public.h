@@ -4,9 +4,10 @@
 #define SPRINGLOBBY_HEADERGUARD_HOSTBATTLEDIALOG_PUBLIC_H
 
 class wxWindow;
-namespace SL {
-	//! this shows an instance and handles everything wrt data feeding and input handling
-	void RunHostBattleDialog( wxWindow* parent );
+namespace SL
+{
+//! this shows an instance and handles everything wrt data feeding and input handling
+void RunHostBattleDialog(wxWindow* parent);
 }
 
 #endif // SPRINGLOBBY_HEADERGUARD_HOSTBATTLEDIALOG_PUBLIC_H

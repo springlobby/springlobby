@@ -5,202 +5,169 @@
 #include <sstream>
 #include "springsettings/wxkeybinder/keybinder.h"
 
-KeynameConverter::KeyMap		KeynameConverter::m_spring2keybinder;
-KeynameConverter::KeyMap		KeynameConverter::m_keybinder2spring;
+KeynameConverter::KeyMap KeynameConverter::m_spring2keybinder;
+KeynameConverter::KeyMap KeynameConverter::m_keybinder2spring;
 
 void KeynameConverter::initialize()
 {
-	KeynameConverter::addMapping( wxT("backspace"), wxT("BACK") );
-	KeynameConverter::addMapping( wxT("esc"), wxT("ESCAPE") );
-	KeynameConverter::addMapping( wxT("enter"), wxT("RETURN") );
+	KeynameConverter::addMapping(wxT("backspace"), wxT("BACK"));
+	KeynameConverter::addMapping(wxT("esc"), wxT("ESCAPE"));
+	KeynameConverter::addMapping(wxT("enter"), wxT("RETURN"));
 
-	KeynameConverter::addMapping( wxT("numpad*"), wxT("* (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad+"), wxT("+ (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad-"), wxT("- (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad."), wxT(". (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad/"), wxT("/ (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad0"), wxT("0 (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad1"), wxT("1 (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad2"), wxT("2 (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad3"), wxT("3 (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad4"), wxT("4 (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad5"), wxT("5 (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad6"), wxT("6 (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad7"), wxT("7 (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad8"), wxT("8 (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad9"), wxT("9 (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad="), wxT("= (numpad)") );
-	KeynameConverter::addMapping( wxT("numpad_enter"), wxT("ENTER (numpad)") );
+	KeynameConverter::addMapping(wxT("numpad*"), wxT("* (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad+"), wxT("+ (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad-"), wxT("- (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad."), wxT(". (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad/"), wxT("/ (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad0"), wxT("0 (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad1"), wxT("1 (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad2"), wxT("2 (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad3"), wxT("3 (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad4"), wxT("4 (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad5"), wxT("5 (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad6"), wxT("6 (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad7"), wxT("7 (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad8"), wxT("8 (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad9"), wxT("9 (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad="), wxT("= (numpad)"));
+	KeynameConverter::addMapping(wxT("numpad_enter"), wxT("ENTER (numpad)"));
 }
 
-void KeynameConverter::addMapping( const wxString& springKey, const wxString& keybinderKey )
+void KeynameConverter::addMapping(const wxString& springKey, const wxString& keybinderKey)
 {
 	KeynameConverter::m_keybinder2spring[keybinderKey] = springKey;
 	KeynameConverter::m_spring2keybinder[springKey] = keybinderKey;
 }
 
-wxString KeynameConverter::discardModifier( const wxString& keystring )
+wxString KeynameConverter::discardModifier(const wxString& keystring)
 {
 	wxString result;
-	if ( keystring.EndsWith(wxT("+")) )	//handle stuff like numpad+ or ctrl++
+	if (keystring.EndsWith(wxT("+"))) //handle stuff like numpad+ or ctrl++
 	{
 		wxString tmp = keystring;
 		result = tmp.RemoveLast().AfterLast(wxT('+')) + wxT('+');
-	}
-	else if ( keystring.StartsWith(wxT("+")) )	//handle stuff like "+ (numpad)"
+	} else if (keystring.StartsWith(wxT("+"))) //handle stuff like "+ (numpad)"
 	{
 		result = keystring;
-	}
-	else
-	{
+	} else {
 		size_t lastAdd = keystring.find_last_of(wxT('+'));
-		if ( ( lastAdd != keystring.npos ) && ( keystring.GetChar(lastAdd - 1) == wxT('+') ) )
-		{
-			assert( (lastAdd > 0) && "character '+' found in unexcepted location!" );
-			result = keystring.substr( lastAdd );
-		}
-		else
-		{
+		if ((lastAdd != keystring.npos) && (keystring.GetChar(lastAdd - 1) == wxT('+'))) {
+			assert((lastAdd > 0) && "character '+' found in unexcepted location!");
+			result = keystring.substr(lastAdd);
+		} else {
 			result = keystring.AfterLast(wxT('+'));
 		}
 	}
 	return result;
 }
 
-wxString KeynameConverter::convertHexValueToKey( const wxString& hexStr )
+wxString KeynameConverter::convertHexValueToKey(const wxString& hexStr)
 {
 	wxString res = hexStr;
-	if ( hexStr.StartsWith( wxT("0x") ) )
-	{
+	if (hexStr.StartsWith(wxT("0x"))) {
 		long value = 0;
-		if ( hexStr.ToLong( &value, 16 ) )
-		{
-			res = wxChar( value );
+		if (hexStr.ToLong(&value, 16)) {
+			res = wxChar(value);
 			res.MakeLower();
 		}
 	}
 	return res;
 }
 
-wxString KeynameConverter::normalizeSpringKey( const wxString& springKey )
+wxString KeynameConverter::normalizeSpringKey(const wxString& springKey)
 {
 	//get modifiers
-	KeynameConverter::ModifierList modifiers = stringToKeyModifier( springKey );
+	KeynameConverter::ModifierList modifiers = stringToKeyModifier(springKey);
 
-	wxString key = KeynameConverter::discardModifier( springKey );
+	wxString key = KeynameConverter::discardModifier(springKey);
 
-	if ( key.StartsWith( wxT("0x") ) )
-	{
-		key = KeynameConverter::convertHexValueToKey( key );
-	}
-	else
-	{
+	if (key.StartsWith(wxT("0x"))) {
+		key = KeynameConverter::convertHexValueToKey(key);
+	} else {
 		key.MakeLower();
 	}
 
-	if ( key == wxT("escape") )
-	{
+	if (key == wxT("escape")) {
 		key = wxT("esc");
 	}
 
-	return KeynameConverter::modifier2String( modifiers ) + key;
+	return KeynameConverter::modifier2String(modifiers) + key;
 }
 
-wxString KeynameConverter::spring2wxKeybinder( const wxString& keystring, bool reverse )
+wxString KeynameConverter::spring2wxKeybinder(const wxString& keystring, bool reverse)
 {
 	//get modifiers
-	KeynameConverter::ModifierList modifiers = stringToKeyModifier( keystring );
+	KeynameConverter::ModifierList modifiers = stringToKeyModifier(keystring);
 
 	//set conversion direction
 	const KeynameConverter::KeyMap* pCurKeyMap = &KeynameConverter::m_spring2keybinder;
-	if ( reverse )
-	{
+	if (reverse) {
 		pCurKeyMap = &KeynameConverter::m_keybinder2spring;
 	}
 
 	//find the correct key
-	wxString key = KeynameConverter::discardModifier( keystring );
+	wxString key = KeynameConverter::discardModifier(keystring);
 
 	wxString kbKey;
-	if ( pCurKeyMap->find( key ) != pCurKeyMap->end() )
-	{
-		kbKey = pCurKeyMap->find( key )->second;
-	}
-	else if ( key.StartsWith( wxT("0x") ) )
-	{
+	if (pCurKeyMap->find(key) != pCurKeyMap->end()) {
+		kbKey = pCurKeyMap->find(key)->second;
+	} else if (key.StartsWith(wxT("0x"))) {
 		kbKey = key;
-	}
-	else
-	{
+	} else {
 #ifdef __WXMSW__
-		if ( reverse )
-		{
-			if ( key.EndsWith( wxKeyBind::m_usMarker ) )
+		if (reverse) {
+			if (key.EndsWith(wxKeyBind::m_usMarker))
 				kbKey = key[0];
-			else if ( key.size() > 1 )
+			else if (key.size() > 1)
 				kbKey = key;
-			else
-			{
-				kbKey = wxMswKeyConverter::ConvertLocalToUs( key[0] );
-				if ( kbKey[0] == 0x00 )
-				{
+			else {
+				kbKey = wxMswKeyConverter::ConvertLocalToUs(key[0]);
+				if (kbKey[0] == 0x00) {
 					//when this happens its bad. it means we were able to translate us->local but the reverse ways fails for whatever reason
 					kbKey = key[0];
 				}
 			}
-		}
-		else
-		{
-			if ( key.size() == 1 )
-			{
-				kbKey = wxMswKeyConverter::ConvertUsToLocal( key[0] );
-				if ( kbKey[0] == 0x00 )
-				{
+		} else {
+			if (key.size() == 1) {
+				kbKey = wxMswKeyConverter::ConvertUsToLocal(key[0]);
+				if (kbKey[0] == 0x00) {
 					//we could not convert this key to local layout. so take the us-key and mark it as such
 					kbKey = key[0];
 					kbKey += wxKeyBind::m_usMarker;
 				}
-			}
-			else
+			} else
 				kbKey = key;
 		}
 #else
-			kbKey = key;
+		kbKey = key;
 #endif
 
-		if ( reverse )
+		if (reverse)
 			kbKey.MakeLower();
 		else
 			kbKey.MakeUpper();
 	}
 
-	return KeynameConverter::modifier2String( modifiers ) + kbKey;
+	return KeynameConverter::modifier2String(modifiers) + kbKey;
 }
 
-wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList& mod )
+wxString KeynameConverter::modifier2String(const KeynameConverter::ModifierList& mod)
 {
 	wxString modString;
 
-	if ( mod.find( ANY ) != mod.end() )
-	{
+	if (mod.find(ANY) != mod.end()) {
 		modString += wxT("Any+");
-	}
-	else
-	{
-		if ( mod.find( CTRL ) != mod.end() )
-		{
+	} else {
+		if (mod.find(CTRL) != mod.end()) {
 			modString += wxT("Ctrl+");
 		}
-		if ( mod.find( SHIFT ) != mod.end() )
-		{
+		if (mod.find(SHIFT) != mod.end()) {
 			modString += wxT("Shift+");
 		}
-		if ( mod.find( ALT ) != mod.end() )
-		{
+		if (mod.find(ALT) != mod.end()) {
 			modString += wxT("Alt+");
 		}
-		if ( mod.find( META ) != mod.end() )
-		{
+		if (mod.find(META) != mod.end()) {
 			modString += wxT("Meta+");
 		}
 	}
@@ -208,36 +175,31 @@ wxString KeynameConverter::modifier2String( const KeynameConverter::ModifierList
 	return modString;
 }
 
-KeynameConverter::ModifierList KeynameConverter::stringToKeyModifier(const wxString &keyModifier)
+KeynameConverter::ModifierList KeynameConverter::stringToKeyModifier(const wxString& keyModifier)
 {
 	ModifierList modifiers;
 
 	// this search must be case-insensitive
 	const wxString str = keyModifier.Upper();
 
-	if (str.Contains(wxT("ALT+")))
-	{
-		modifiers.insert( ALT );
+	if (str.Contains(wxT("ALT+"))) {
+		modifiers.insert(ALT);
 	}
 
-	if (str.Contains(wxT("CTRL+")))
-	{
-		modifiers.insert( CTRL );
+	if (str.Contains(wxT("CTRL+"))) {
+		modifiers.insert(CTRL);
 	}
 
-	if (str.Contains(wxT("SHIFT+")))
-	{
-		modifiers.insert( SHIFT );
+	if (str.Contains(wxT("SHIFT+"))) {
+		modifiers.insert(SHIFT);
 	}
 
-	if (str.Contains(wxT("ANY+")))
-	{
-		modifiers.insert( ANY );
+	if (str.Contains(wxT("ANY+"))) {
+		modifiers.insert(ANY);
 	}
 
-	if (str.Contains(wxT("META+")))
-	{
-		modifiers.insert( META );
+	if (str.Contains(wxT("META+"))) {
+		modifiers.insert(META);
 	}
 
 	return modifiers;

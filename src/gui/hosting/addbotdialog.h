@@ -23,70 +23,67 @@ class wxListEvent;
 class AddBotDialog : public wxDialog, public WindowAttributesPickle
 {
 public:
+	AddBotDialog(wxWindow* parent, IBattle& battle, bool singleplayer = false);
+	~AddBotDialog();
 
-    AddBotDialog( wxWindow* parent, IBattle& battle, bool singleplayer = false );
-    ~AddBotDialog( );
+	wxString GetNick();
+	wxString GetAIShortName();
+	wxString GetAiRawName();
+	wxString GetAIVersion();
+	int GetAIType();
 
-    wxString GetNick();
-    wxString GetAIShortName();
-    wxString GetAiRawName();
-    wxString GetAIVersion();
-    int GetAIType();
-
-    void ReloadAIList();
+	void ReloadAIList();
 
 private:
-    void ShowAIInfo();
+	void ShowAIInfo();
 
-    void OnClose( wxCommandEvent& event );
-    void OnAddBot( wxCommandEvent& event );
-    void OnSelectBot( wxCommandEvent& event );
+	void OnClose(wxCommandEvent& event);
+	void OnAddBot(wxCommandEvent& event);
+	void OnSelectBot(wxCommandEvent& event);
 
-    void OnOptionActivate( wxListEvent& event );
-    void UpdateOption( const wxString& Tag );
-    long AddMMOptionsToList( long pos, int optFlag );
-    void ShowAIOptions();
-
-
-    wxString Get(const std::string& section);
-    AddBotDialog( const AddBotDialog& );
-
-    wxStaticText* m_nick_lbl;
-    wxTextCtrl* m_nick;
-    wxStaticText* m_ai_lbl;
-    wxChoice* m_ai;
-    wxStaticLine* m_buttons_sep;
-    wxButton* m_cancel_btn;
-    wxButton* m_add_btn;
-    wxListCtrl* m_ai_infos_lst;
-    wxListCtrl* m_opts_list;
-
-    typedef std::map<wxString, long> OptionListMap;
-		OptionListMap m_opt_list_map;
-
-    wxBoxSizer* m_main_sizer;
-    wxBoxSizer* m_info_sizer;
+	void OnOptionActivate(wxListEvent& event);
+	void UpdateOption(const wxString& Tag);
+	long AddMMOptionsToList(long pos, int optFlag);
+	void ShowAIOptions();
 
 
-    IBattle& m_battle;
+	wxString Get(const std::string& section);
+	AddBotDialog(const AddBotDialog&);
 
-    wxArrayString m_ais;
+	wxStaticText* m_nick_lbl;
+	wxTextCtrl* m_nick;
+	wxStaticText* m_ai_lbl;
+	wxChoice* m_ai;
+	wxStaticLine* m_buttons_sep;
+	wxButton* m_cancel_btn;
+	wxButton* m_add_btn;
+	wxListCtrl* m_ai_infos_lst;
+	wxListCtrl* m_opts_list;
 
-    bool m_sp;
+	typedef std::map<wxString, long> OptionListMap;
+	OptionListMap m_opt_list_map;
 
-    wxString RefineAIName( const wxString& name );
+	wxBoxSizer* m_main_sizer;
+	wxBoxSizer* m_info_sizer;
 
-    enum
-    {
-      ADDBOT_ADD = wxID_HIGHEST,
-      ADDBOT_CANCEL,
-      ADDBOT_AI,
-	  ADDBOT_OPTIONLIST
-    };
 
-    DECLARE_EVENT_TABLE()
+	IBattle& m_battle;
+
+	wxArrayString m_ais;
+
+	bool m_sp;
+
+	wxString RefineAIName(const wxString& name);
+
+	enum {
+		ADDBOT_ADD = wxID_HIGHEST,
+		ADDBOT_CANCEL,
+		ADDBOT_AI,
+		ADDBOT_OPTIONLIST
+	};
+
+	DECLARE_EVENT_TABLE()
 };
-
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_ADDBOTDIALOG_H

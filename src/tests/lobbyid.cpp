@@ -6,29 +6,28 @@
 #include <stdio.h>
 #include "utils/crc.h"
 
-BOOST_AUTO_TEST_CASE( lobbyid )
+BOOST_AUTO_TEST_CASE(lobbyid)
 {
 
 	const int count = 3;
-	const unsigned char mac[count][6] ={
-			{0x00,0x01,0x02,0x03,0x04,0x05},
-			{0x00,0x00,0x00,0x00,0x00,0x00},
-			{0xFF,0xFF,0xFF,0xFF,0xFF,0xFF},
-		};
+	const unsigned char mac[count][6] = {
+	    {0x00, 0x01, 0x02, 0x03, 0x04, 0x05},
+	    {0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	    {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+	};
 
 	const unsigned int c[count] = {
-			820760394,
-			2982322595,
-			1104801024
-		};
+	    820760394,
+	    2982322595,
+	    1104801024};
 
 	CRC m_crc;
-	for (int i=0; i<count; i++) {
+	for (int i = 0; i < count; i++) {
 		m_crc.ResetCRC();
 		m_crc.UpdateData(mac[i], 6);
 		printf("Checksum of the mac ");
-		for(int j=0; j<6; j++) {
-			if (j>0)
+		for (int j = 0; j < 6; j++) {
+			if (j > 0)
 				printf(":");
 			printf("%02x", (int)(mac[i][j]));
 		}

@@ -14,32 +14,31 @@ class PlaybackTab;
 class PlaybackLoader : public wxEvtHandler
 {
 private:
-    class PlaybackLoaderThread : public wxThread
-    {
-        public:
-			PlaybackLoaderThread(PlaybackLoader* loader, PlaybackTab* parent);
-            void* Entry();
+	class PlaybackLoaderThread : public wxThread
+	{
+	public:
+		PlaybackLoaderThread(PlaybackLoader* loader, PlaybackTab* parent);
+		void* Entry();
 
-        protected:
-            PlaybackTab* m_parent;
-			PlaybackLoader* m_loader;
-    };
+	protected:
+		PlaybackTab* m_parent;
+		PlaybackLoader* m_loader;
+	};
 
 public:
 	static const wxEventType PlaybacksLoadedEvt;
 
-    PlaybackLoader( PlaybackTab* parent, bool IsReplayType);
-    ~PlaybackLoader();
-    void OnComplete();
-    void Run();
-    std::vector<std::string> GetPlaybackFilenames();
-private:
-    std::vector<std::string> m_filenames;
-    PlaybackTab* m_parent;
-    PlaybackLoaderThread* m_thread_loader;
-	bool m_isreplaytype;
+	PlaybackLoader(PlaybackTab* parent, bool IsReplayType);
+	~PlaybackLoader();
+	void OnComplete();
+	void Run();
+	std::vector<std::string> GetPlaybackFilenames();
 
+private:
+	std::vector<std::string> m_filenames;
+	PlaybackTab* m_parent;
+	PlaybackLoaderThread* m_thread_loader;
+	bool m_isreplaytype;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_PLAYBACKTHREAD
-

@@ -9,8 +9,8 @@
 /// Konstruktor
 ///
 //--------------------------------------------------------------------------------
-TextCompletionDatabase::TextCompletionDatabase() {
-
+TextCompletionDatabase::TextCompletionDatabase()
+{
 }
 
 //--------------------------------------------------------------------------------
@@ -18,8 +18,8 @@ TextCompletionDatabase::TextCompletionDatabase() {
 /// Destruktor
 ///
 //--------------------------------------------------------------------------------
-TextCompletionDatabase::~TextCompletionDatabase() {
-
+TextCompletionDatabase::~TextCompletionDatabase()
+{
 }
 
 //--------------------------------------------------------------------------------
@@ -31,7 +31,8 @@ TextCompletionDatabase::~TextCompletionDatabase() {
 ///
 //--------------------------------------------------------------------------------
 unsigned int
-TextCompletionDatabase::Size() {
+TextCompletionDatabase::Size()
+{
 
 	return hm.size();
 }
@@ -48,11 +49,12 @@ TextCompletionDatabase::Size() {
 ///
 //--------------------------------------------------------------------------------
 void
-TextCompletionDatabase::Insert_Mapping( const wxString& abbreviation, const wxString& mapping ) {
+TextCompletionDatabase::Insert_Mapping(const wxString& abbreviation, const wxString& mapping)
+{
 
-	HashMap_String_String::const_iterator iter = hm.find( abbreviation );
+	HashMap_String_String::const_iterator iter = hm.find(abbreviation);
 
-	if ( iter == hm.end() ) {
+	if (iter == hm.end()) {
 		hm[abbreviation] = mapping;
 	}
 }
@@ -66,12 +68,13 @@ TextCompletionDatabase::Insert_Mapping( const wxString& abbreviation, const wxSt
 ///
 //--------------------------------------------------------------------------------
 void
-TextCompletionDatabase::Delete_Mapping( const wxString& abbreviation ) {
+TextCompletionDatabase::Delete_Mapping(const wxString& abbreviation)
+{
 
-	HashMap_String_String::iterator iter = hm.find( abbreviation );
+	HashMap_String_String::iterator iter = hm.find(abbreviation);
 
-	if ( iter != hm.end() ) {
-		hm.erase( iter );
+	if (iter != hm.end()) {
+		hm.erase(iter);
 	}
 }
 
@@ -87,7 +90,8 @@ TextCompletionDatabase::Delete_Mapping( const wxString& abbreviation ) {
 ///
 //--------------------------------------------------------------------------------
 HashMap_String_String
-TextCompletionDatabase::GetMapping( wxString abbreviation ) {
+TextCompletionDatabase::GetMapping(wxString abbreviation)
+{
 
 	HashMap_String_String hashmap;
 
@@ -99,30 +103,30 @@ TextCompletionDatabase::GetMapping( wxString abbreviation ) {
 	// We build the regular Expression:
 
 	// We need to escape all regular Expression Characters, that have a special Meaning
-	abbreviation.Replace( _T("["), _T("\\[") );
-	abbreviation.Replace( _T("]"), _T("\\]") );
+	abbreviation.Replace(_T("["), _T("\\["));
+	abbreviation.Replace(_T("]"), _T("\\]"));
 
 	wxString regex_Text;
-	regex_Text.append( abbreviation );
-	regex_Text.append( wxT( ".*" ) );
+	regex_Text.append(abbreviation);
+	regex_Text.append(wxT(".*"));
 
-	// We compile the regular Expression and if it's correct, we store it in the Regex Container
-	#ifdef wxHAS_REGEX_ADVANCED
-        regex_Abbreviations.Compile( regex_Text, wxRE_ADVANCED | wxRE_ICASE );
-    #else
-        regex_Abbreviations.Compile( regex_Text, wxRE_EXTENDED | wxRE_ICASE );
-    #endif
+// We compile the regular Expression and if it's correct, we store it in the Regex Container
+#ifdef wxHAS_REGEX_ADVANCED
+	regex_Abbreviations.Compile(regex_Text, wxRE_ADVANCED | wxRE_ICASE);
+#else
+	regex_Abbreviations.Compile(regex_Text, wxRE_EXTENDED | wxRE_ICASE);
+#endif
 
 
 	// Now we iterate over all stored Abbreviations and search for Abbreviations containing the provided Abbreviation
 
 	// std::cout << "Abbr: (" << abbreviation.char_str() << ")" << std::endl;
 
-	for ( HashMap_String_String::const_iterator iter = hm.begin() ; iter != hm.end() ; ++iter ) {
+	for (HashMap_String_String::const_iterator iter = hm.begin(); iter != hm.end(); ++iter) {
 		// std::cout << "iter->first: (" << iter->first.char_str() << ")" << std::endl;
-		if ( regex_Abbreviations.Matches( iter->first ) ) {
+		if (regex_Abbreviations.Matches(iter->first)) {
 			// std::cout << "Match found!" << std::endl;
-			hashmap[ iter->first ] = iter->second;
+			hashmap[iter->first] = iter->second;
 		}
 	}
 

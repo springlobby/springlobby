@@ -40,7 +40,7 @@ struct DownloadInfo {
 };
 */
 
-class PrDownloader: public wxEvtHandler, public GlobalEvent
+class PrDownloader : public wxEvtHandler, public GlobalEvent
 {
 public:
 	PrDownloader();
@@ -48,11 +48,11 @@ public:
 
 	void ClearFinished();
 	void UpdateSettings();
-	void RemoveTorrentByName( const std::string& name );
+	void RemoveTorrentByName(const std::string& name);
 	//! returns true if name found and added to dl list
-	int GetDownload( const std::string& category, const std::string& name );
+	int GetDownload(const std::string& category, const std::string& name);
 	bool Download(const std::string& filename, const std::string& url);
-	void SetIngameStatus( bool ingame );
+	void SetIngameStatus(bool ingame);
 	void OnSpringStarted(wxCommandEvent& data);
 	void OnSpringTerminated(wxCommandEvent& data);
 	bool IsRunning();
@@ -60,7 +60,7 @@ public:
 
 private:
 	//! searches given loaders for filename and pushes fitting workitems into dl_thread
-	int Get(std::list<IDownloader*> loaders, const std::string& name, IDownload::category cat );
+	int Get(std::list<IDownloader*> loaders, const std::string& name, IDownload::category cat);
 	std::list<IDownloader*> m_game_loaders;
 	std::list<IDownloader*> m_map_loaders;
 	LSL::WorkerThread* m_dl_thread;

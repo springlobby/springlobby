@@ -5,7 +5,7 @@
 #include "gui/customvirtlistctrl.h"
 #include "contentsearchresult.h"
 
-class ContentSearchResultsListctrl : public CustomVirtListCtrl<ContentSearchResult*,ContentSearchResultsListctrl >
+class ContentSearchResultsListctrl : public CustomVirtListCtrl<ContentSearchResult*, ContentSearchResultsListctrl>
 {
 public:
 	ContentSearchResultsListctrl(wxWindow* parent, wxWindowID id, const wxString& name = _T("ContentSearchResultsListctrl"),
@@ -14,19 +14,22 @@ public:
 	wxString GetItemText(long item, long column) const;
 	int GetItemImage(long item) const;
 	int GetItemColumnImage(long item, long column) const;
-	wxListItemAttr* GetItemAttr(long /*unused*/) const {
+	wxListItemAttr* GetItemAttr(long /*unused*/) const
+	{
 		return 0;
 	}
 
-	virtual int GetIndexFromData(ContentSearchResult*const& data) const;
+	virtual int GetIndexFromData(ContentSearchResult* const& data) const;
 	virtual void Sort();
 	virtual ~ContentSearchResultsListctrl();
-	void AddContent( DataType& content);
+	void AddContent(DataType& content);
+
 public:
 	enum {
 		WIDGETLISTCTRL_ID
 	};
-	int CompareOneCrit( DataType u1, DataType u2, int col, int dir ) const;
+	int CompareOneCrit(DataType u1, DataType u2, int col, int dir) const;
+
 private:
 	DECLARE_EVENT_TABLE()
 };

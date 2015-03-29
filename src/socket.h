@@ -24,19 +24,17 @@ lsl/networking/socket.h
 class iNetClass;
 class wxCriticalSection;
 
-enum SockState
-{
-  SS_Closed,
-  SS_Connecting,
-  SS_Open
+enum SockState {
+	SS_Closed,
+	SS_Connecting,
+	SS_Open
 };
 
-enum SockError
-{
-  SE_No_Error,
-  SE_NotConnected,
-  SE_Resolve_Host_Failed,
-  SE_Connect_Host_Failed
+enum SockError {
+	SE_No_Error,
+	SE_NotConnected,
+	SE_Resolve_Host_Failed,
+	SE_Connect_Host_Failed
 };
 
 const int SOCKET_ID = 100;
@@ -48,45 +46,50 @@ class wxSocketClient;
 //! @brief Class that implements a TCP client socket.
 class Socket : public wxEvtHandler
 {
-  public:
+public:
+	Socket(iNetClass& netclass);
+	~Socket();
 
-    Socket( iNetClass& netclass);
-    ~Socket();
+	// Socket interface
 
-    // Socket interface
+	void Connect(const wxString& addr, const int port);
+	void Disconnect();
 
-    void Connect( const wxString& addr, const int port );
-    void Disconnect( );
+	bool Send(const wxString& data);
+	wxString Receive();
+	wxString GetLocalAddress() const;
+	std::string GetHandle() const
+	{
+		return m_handle;
+	}
 
-    bool Send( const wxString& data );
-    wxString Receive();
-    wxString GetLocalAddress() const;
-    std::string GetHandle() const {return m_handle;}
+	SockState State();
+	SockError Error() const;
 
-    SockState State( );
-    SockError Error( ) const;
+	void SetSendRateLimit(int Bps = -1);
+	int GetSendRateLimit()
+	{
+		return m_rate;
+	}
+	void Update(int mselapsed);
 
-    void SetSendRateLimit( int Bps = -1 );
-    int GetSendRateLimit() {return m_rate;}
-    void Update( int mselapsed );
-
-    void SetTimeout( const int seconds );
+	void SetTimeout(const int seconds);
 
 private:
-    void OnSocketEvent(wxSocketEvent& event);
-    bool _Send( const wxString& data );
+	void OnSocketEvent(wxSocketEvent& event);
+	bool _Send(const wxString& data);
 	void InitSocket(wxSocketClient& socket);
 
-  // Socket variables
+	// Socket variables
 
-    wxSocketClient m_sock;
-    wxString m_ping_msg;
+	wxSocketClient m_sock;
+	wxString m_ping_msg;
 	std::string m_handle;
-    bool m_connecting;
-    iNetClass& m_net_class;
-    int m_rate;
-    int m_sent;
-    std::string m_buffer;
+	bool m_connecting;
+	iNetClass& m_net_class;
+	int m_rate;
+	int m_sent;
+	std::string m_buffer;
 
 	DECLARE_EVENT_TABLE();
 };

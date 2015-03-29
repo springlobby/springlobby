@@ -13,9 +13,9 @@ slAboutBox::slAboutBox()
 {
 	info = new wxAboutDialogInfo();
 
-	info->SetName( TowxString(getSpringlobbyName()) );
-	info->SetVersion (TowxString(getSpringlobbyVersion()));
-	info->SetDescription( TowxString(getSpringlobbyName()) + _(" is a cross-platform lobby client for the Spring RTS engine"));
+	info->SetName(TowxString(getSpringlobbyName()));
+	info->SetVersion(TowxString(getSpringlobbyVersion()));
+	info->SetDescription(TowxString(getSpringlobbyName()) + _(" is a cross-platform lobby client for the Spring RTS engine"));
 	//info.SetCopyright(wxEmptyString;
 	info->SetWebSite(_T("http://springlobby.info"));
 	info->SetLicence(_T("GPL v2 or later"));
@@ -27,10 +27,10 @@ slAboutBox::slAboutBox()
 	info->AddDeveloper(_T("koshi"));
 	info->AddDeveloper(_T("semi_"));
 	info->AddDeveloper(_T("tc-"));
-    info->AddTranslator(_T("chaosch (simplified chinese)"));
+	info->AddTranslator(_T("chaosch (simplified chinese)"));
 	info->AddTranslator(_T("lejocelyn (french)"));
 	info->AddTranslator(_T("Suprano (german)"));
-    info->AddTranslator(_T("tc- (swedish)"));
+	info->AddTranslator(_T("tc- (swedish)"));
 	info->AddTranslator(_("The numerous contributors from launchpad.net"));
 }
 
@@ -46,8 +46,8 @@ void slAboutBox::Show()
 
 slAboutBox& aboutbox()
 {
-    static LSL::Util::LineInfo<slAboutBox> m( AT );
-    static LSL::Util::GlobalObjectHolder<slAboutBox, LSL::Util::LineInfo<slAboutBox> > m_sett( m );
+	static LSL::Util::LineInfo<slAboutBox> m(AT);
+	static LSL::Util::GlobalObjectHolder<slAboutBox, LSL::Util::LineInfo<slAboutBox> > m_sett(m);
 	return m_sett;
 }
 
@@ -63,10 +63,10 @@ void slAboutBox::openContactPage()
 
 void slAboutBox::showDocs()
 {
-	OpenWebBrowser( _T("https://github.com/springlobby/springlobby/wiki/"));
+	OpenWebBrowser(_T("https://github.com/springlobby/springlobby/wiki/"));
 }
 
 void slAboutBox::showChangelog()
 {
-	OpenWebBrowser( _T("https://github.com/springlobby/springlobby/blob/master/ChangeLog"));
+	OpenWebBrowser(_T("https://github.com/springlobby/springlobby/blob/master/ChangeLog"));
 }

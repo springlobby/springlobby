@@ -7,16 +7,28 @@
 class iNetClass
 {
 public:
+	iNetClass()
+	{
+	}
+	virtual ~iNetClass()
+	{
+	}
 
-	iNetClass() {}
-	virtual ~iNetClass() {}
-
-	virtual void OnConnected() {}
-	virtual void OnDisconnected() {}
-	virtual void OnDataReceived() {}
-	virtual void OnError(const std::string& /*error*/) {}
-	virtual void Ping() {}
+	virtual void OnConnected()
+	{
+	}
+	virtual void OnDisconnected()
+	{
+	}
+	virtual void OnDataReceived()
+	{
+	}
+	virtual void OnError(const std::string& /*error*/)
+	{
+	}
+	virtual void Ping()
+	{
+	}
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_INETCLASS_H
-

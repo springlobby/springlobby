@@ -7,7 +7,7 @@
 
 SLCONFIG("/General/DownloadUrl", "http://springlobby.info/windows/springlobby-%s-win32.zip", "Url for downloading a springlobby update, %s is replaced with the version");
 
-std::string GetDownloadUrl( const std::string& version )
+std::string GetDownloadUrl(const std::string& version)
 {
 	wxString url = cfg().ReadString(_T("/General/DownloadUrl"));
 	url.Replace(wxT("%s"), TowxString(version));

@@ -10,7 +10,7 @@
 class PasteDialog : public wxDialog
 {
 public:
-	PasteDialog( wxWindow *parent, const wxString& message );
+	PasteDialog(wxWindow* parent, const wxString& message);
 	virtual ~PasteDialog();
 
 	static const int pasteButtonReturnCode = wxID_HIGHEST + 1;
@@ -19,10 +19,9 @@ private:
 	enum {
 		ID_PASTE_BUTTON = wxID_HIGHEST
 	};
-	void OnPasteButton( wxCommandEvent& evt );
+	void OnPasteButton(wxCommandEvent& evt);
 	void OnOptionsNo(wxCommandEvent& event);
 	DECLARE_EVENT_TABLE()
-
 };
 
 #endif // PASTEDIALOG_H
