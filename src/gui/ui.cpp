@@ -1048,22 +1048,21 @@ bool Ui::StartUpdate(const std::string& latestVersion)
 	}
 	if (wxDirExists(updatedir)) {
 		if (!SlPaths::RmDir(STD_STRING(updatedir))) {
-			wxLogError(_T("Couldn't cleanup ") + updatedir);
+			wxLogWarning(_T("Couldn't cleanup ") + updatedir);
 		}
 	}
 	if (!wxMkdir(updatedir)) {
-		wxLogError(_T("couldn't create update directory") + updatedir);
+		wxLogWarning(_T("couldn't create update directory") + updatedir);
 	}
 
 	if (!wxFileName::IsDirWritable(updatedir)) {
 		wxLogError(_T("dir not writable: ") + updatedir);
-		customMessageBox(SL_MAIN_ICON, _("Unable to write to the lobby update directory:") + updatedir, _("Error"));
 		return false;
 	}
 
 	const std::string dlfilepath = SlPaths::GetLobbyWriteDir() + "springlobby-latest.zip";
 	if (wxFileExists(TowxString(dlfilepath)) && !(wxRemoveFile(TowxString(dlfilepath)))) {
-		customMessageBox(SL_MAIN_ICON, _T("couldn't delete: ") + TowxString(dlfilepath), _("Error"));
+		wxLogError(_T("couldn't delete: ") + TowxString(dlfilepath));
 		return false;
 	}
 	const std::string dlurl = GetDownloadUrl(latestVersion);
