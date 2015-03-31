@@ -12,6 +12,7 @@ CMakeFiles/
 /CPackConfig.cmake
 /CPackSourceConfig.cmake
 CTestTestfile.cmake
+Makefile
 
 # output
 /src/springlobby
@@ -21,6 +22,7 @@ CTestTestfile.cmake
 /src/tests/test_Config
 /src/tests/test_lobbyid
 *.a
+*.exe
 
 # temp files
 *.swp
