@@ -1,7 +1,7 @@
 ChangeLog of Springlobby
 
 ## 0.212
- - wxWidgets 2.9 is required to compile spring
+ - wxWidgets 2.9 is required to compile SpringLobby
  - fix logging (thanks Usaga!)
  - a lot of wx3 fixes
  - only check map/game existence in battlelist (skip hash as it depends on used engine)
