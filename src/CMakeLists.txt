@@ -252,6 +252,7 @@ SET(SLSharedWithSettings
 	log.cpp
 	settings.cpp
 	updatehelper.cpp
+	stacktrace.cpp
 
 	gui/uiutils.cpp
 	gui/controls.cpp
@@ -270,6 +271,7 @@ SET(SLSharedWithSettings
 	utils/uievents.cpp
 	utils/curlhelper.cpp
 	utils/slconfig.cpp
+
 )
 
 FILE( GLOB header "*.h" )
@@ -281,7 +283,6 @@ SET( templatesources
 	gui/customvirtlistctrl.cpp
 )
 
-list(APPEND SLSharedWithSettings stacktrace.cpp)
 add_library(slcommon STATIC
 		${SLSharedWithSettings}
 	)
@@ -289,7 +290,6 @@ target_link_libraries(slcommon
 		springlobbyversion
 		libsettings
 		lsl-unitsync
-		${CURL_LIBRARIES}
 	)
 
 add_subdirectory(downloader)
