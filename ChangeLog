@@ -1,6 +1,6 @@
 ChangeLog of Springlobby
 
-## 0.211
+## 0.212
  - wxWidgets 2.9 is required to compile spring
  - fix logging (thanks Usaga!)
  - a lot of wx3 fixes
@@ -11,6 +11,10 @@ ChangeLog of Springlobby
  - add zebra striping effect in ListCtrl widgets
  - fix /help in battleroom
  - try to reduce flickering
+ - completely remove dedicated springsettings (was disabled for quiet a while)
+
+## 0.211
+ - skipped due build error
 
 ## 0.210
  - fix autoupdater (Couldn't cleanup ...)
