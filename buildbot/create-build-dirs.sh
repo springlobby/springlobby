@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
 set -e
-cd $(dirname ${0})/..
 
+SOURCEDIR=$(readlink -f $(dirname $0)/..)
+DIR=$(readlink -f build-${1})
+
+echo SOURCEDIR=${SOURCEDIR}
+echo DIR=${DIR}
+
+cd ${SOURCEDIR}
 git submodule update --init
 
-DIR=build-${1}
 shift
 REV=${1}
 shift
@@ -24,5 +29,4 @@ echo configuring ${DIR} with $PARAMS
 cd ${DIR}
 rm -fv CMakeCache.txt CPackConfig.cmake CPackSourceConfig.cmake
 find -name cmake_install.cmake -delete
-cmake $PARAMS ..
-
+cmake $PARAMS $DIR/..
