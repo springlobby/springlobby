@@ -29,4 +29,4 @@ echo configuring ${DIR} with $PARAMS
 cd ${DIR}
 rm -fv CMakeCache.txt CPackConfig.cmake CPackSourceConfig.cmake
 find -name cmake_install.cmake -delete
-cmake $PARAMS $DIR/..
+cmake -DPKG_CONFIG_EXECUTABLE:PATH=/opt/mingw32/usr/bin/i686-w64-mingw32-pkg-config $PARAMS $DIR/..

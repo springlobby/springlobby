@@ -162,6 +162,11 @@ set(springlobbySrc
 	user.cpp
 	useractions.cpp
 	userlist.cpp
+	crashreport.cpp
+	log.cpp
+	settings.cpp
+	updatehelper.cpp
+	stacktrace.cpp
 
 	aui/auimanager.cpp
 
@@ -233,8 +238,6 @@ set(springlobbySrc
 	downloader/downloadlistctrl.cpp
 	downloader/downloadsobserver.cpp
 
-	springsettings/frame.cpp
-
 	utils/battleevents.cpp
 	utils/base64.cpp
 	utils/crc.cpp
@@ -243,16 +246,33 @@ set(springlobbySrc
 	utils/misc.cpp
 	utils/lslconversion.cpp
 	utils/tasutil.cpp
-	
-	lsl/src/lsl/battle/tdfcontainer.cpp #FIXME
-)
 
-SET(SLSharedWithSettings
-	crashreport.cpp
-	log.cpp
-	settings.cpp
-	updatehelper.cpp
-	stacktrace.cpp
+	springsettings/frame.cpp
+	springsettings/panel_pathoption.cpp
+	springsettings/se_utils.cpp
+	springsettings/tab_abstract.cpp
+	springsettings/tab_audio.cpp
+	springsettings/tab_quality_video.cpp
+	springsettings/tab_render_detail.cpp
+	springsettings/tab_simple.cpp
+	springsettings/tab_ui.cpp
+
+	springsettings/hotkeys/HotkeyForms.cpp
+	springsettings/hotkeys/AddSelectionCmdDlg.cpp
+	springsettings/hotkeys/commandlist.cpp
+	springsettings/hotkeys/hotkey_panel.cpp
+	springsettings/hotkeys/hotkey_parser.cpp
+	springsettings/hotkeys/KeynameConverter.cpp
+	springsettings/hotkeys/wxSpringCommand.cpp
+	springsettings/hotkeys/SpringDefaultProfile.cpp
+	springsettings/hotkeys/HotkeyTypes.cpp
+	springsettings/hotkeys/CommandOrderDlg.cpp
+	springsettings/hotkeys/ChangeMetaDlg.cpp
+
+	springsettings/wxkeybinder/keybinder.cpp
+	springsettings/wxkeybinder/wxKeyMonitorTextCtrl.cpp
+
+	lsl/src/lsl/battle/tdfcontainer.cpp #FIXME
 
 	gui/uiutils.cpp
 	gui/controls.cpp
@@ -283,15 +303,6 @@ SET( templatesources
 	gui/customvirtlistctrl.cpp
 )
 
-add_library(slcommon STATIC
-		${SLSharedWithSettings}
-	)
-target_link_libraries(slcommon
-		springlobbyversion
-		libsettings
-		lsl-unitsync
-	)
-
 add_subdirectory(downloader)
 add_subdirectory(utils)
 
@@ -305,7 +316,6 @@ Add_Subdirectory(lsl)
 INCLUDE_DIRECTORIES(lsl/src)
 remove_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
 
-add_subdirectory(springsettings)
 add_subdirectory(sound)
 add_subdirectory(json)
 
@@ -344,7 +354,7 @@ ELSE (WIN32)
 		)
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion libsettings slcommon
+TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion
 		${Boost_LIBRARIES}
 		${CURL_LIBRARIES}
 		${CURL_LINKFLAGS}
