@@ -18,13 +18,7 @@ ELSE(NOT MSVC)
 ENDIF(NOT MSVC)
 
 if(WIN32)
-	add_definitions(
-		-D__WXMSW__
-		-D_WIN32_WINNT=0x0501
-		-DBOOST_THREAD_USE_LIB
-		-DSTRICT
-		-DHAVE_W32API_H
-	)
+	add_definitions(-DBOOST_THREAD_USE_LIB)
 	set(Boost_THREADAPI win32)
 endif(WIN32)
 
