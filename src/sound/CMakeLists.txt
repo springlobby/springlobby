@@ -16,6 +16,10 @@ if   ( OPTION_SOUND AND NOT WIN32 ) # no sound support on windows yet
 		${ALURE_LIBRARIES}
 		${OPENAL_LIBRARY}
 	)
+elseif (WIN32)
+	message(STATUS "Sound enabled! (win32)")
+	add_library(sound STATIC winsound.cpp)
+	target_link_libraries(sound winmm.lib)
 else ()
 	# Disable sound.
 	message(STATUS "Sound disabled!")
