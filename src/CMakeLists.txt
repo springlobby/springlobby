@@ -340,7 +340,7 @@ IF(WIN32)
 		nettle
 		ws2_32
 	)
-	install(TARGETS springlobby RUNTIME DESTINATION .)
+	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
 ELSE (WIN32)
 	install(TARGETS springlobby 
 		RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin 

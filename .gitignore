@@ -32,6 +32,9 @@ Makefile
 /springlobby_config.h
 /VERSION
 /src/tests/Testing/Temporary
+/_CPack_Packages
+/install_manifest.txt
+/springlobby-*-win32.zip
 
 # codeblocks
 /springlobby.cbp
