@@ -1780,7 +1780,7 @@ void TASServer::OnDataReceived()
 
 void TASServer::OnError(const std::string& err)
 {
-	wxLogError(TowxString(err));
+	wxLogWarning(TowxString(err));
 	if (m_se != NULL) {
 		m_se->OnServerMessage(err);
 	}
