@@ -1,4 +1,8 @@
 ChangeLog of Springlobby
+## 0.214
+ - default disable notification popups on windows (got broken / crashes)
+ - no double-error messages on lobby server errors
+ - re-implement sound support for windows (ring, etc)
 
 ## 0.213
  - wxWidgets 2.9 is required to compile SpringLobby
