@@ -396,7 +396,6 @@ void ChatPanel::OutputLine(const ChatLine& line)
 	if (original_pos > 1.0f)
 		original_pos = 1.0f;
 
-
 	Freeze(); // disable windows redraws until we are done
 	// crop lines from history that exceeds limit
 	if ((maxlength > 0) && (numOfLines > maxlength)) {
@@ -462,14 +461,13 @@ void ChatPanel::OutputLine(const ChatLine& line)
 				m1 = m1.Mid(1);
 			}
 		}
+		m_chatlog_text->AppendText(_T("\n"));
 	} else
 #endif
 	{
 		m_chatlog_text->SetDefaultStyle(line.chatstyle);
-		m_chatlog_text->AppendText(line.chat);
+		m_chatlog_text->AppendText(line.chat + _T( "\n" ));
 	}
-
-	m_chatlog_text->AppendText(_T( "\n" ));
 
 
 	m_chatlog_text->ScrollLines(1);
