@@ -262,12 +262,14 @@ static size_t find_tail_sequences(wxFile& fd, const char* bytes, size_t bytes_le
 
 void ChatLog::FillLastLineArray()
 {
+	m_last_lines.Clear();
+
 	if (!m_logfile.IsOpened()) {
 		wxLogError(_T("%s: failed to open log file."), __PRETTY_FUNCTION__);
 		return;
 	}
 
-	if (!m_logfile.Length() <= 0 ) {
+	if (m_logfile.Length() <= 0) {
 		return;
 	}
 
@@ -277,7 +279,6 @@ void ChatLog::FillLastLineArray()
 	const size_t num_lines = sett().GetAutoloadedChatlogLinesCount();
 #endif
 
-	m_last_lines.Clear();
 	m_last_lines.Alloc(num_lines);
 
 	const wxChar* wc_EOL(wxTextBuffer::GetEOL());

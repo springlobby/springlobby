@@ -32,12 +32,12 @@ BOOST_AUTO_TEST_CASE(slconfig)
 	logfile = new ChatLog();
 	BOOST_CHECK(logfile->SetLogFile(_T("test")));
 
-	wxArrayString lines;
-	lines = logfile->GetLastLines();
+	wxArrayString lines = logfile->GetLastLines();
+
+	BOOST_CHECK_MESSAGE(lines.GetCount() > 3, lines.GetCount());
 	for (auto line : lines) {
 		wxLogMessage(_T("line: '%s'"), line.c_str());
 	}
-	BOOST_CHECK_MESSAGE(lines.GetCount() > 3, lines.GetCount());
 
 	const int skip = 11; //ignore date
 	BOOST_CHECK(lines[lines.GetCount() - 4].Mid(skip) == line1);
