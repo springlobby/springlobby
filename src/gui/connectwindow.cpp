@@ -324,4 +324,3 @@ void ConnectWindow::OnLoginDenied(const wxString& reason)
 	m_tabs->SetSelection(0);
 	Show();
 }
-
