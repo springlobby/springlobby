@@ -383,34 +383,16 @@ void SpringOptionsTab::ReloadSpringList()
 
 void SpringOptionsTab::SwitchUnitsync(const std::string& newIndex, const std::string& oldIndex /* can be empty */)
 {
-	wxDialog* notifyBox = new wxDialog(this, -1, _("Reloading unitsync"), wxDefaultPosition, wxDefaultSize, wxSTAY_ON_TOP);
-	wxString indexStr(newIndex.c_str(), wxConvUTF8);
-	wxString notifyMessage = wxString::Format(_T("%s is loading the %s engine unitsync library..."), getSpringlobbyName().c_str(), indexStr.c_str());
-	wxStaticText* notifyText = new wxStaticText(notifyBox, -1, notifyMessage, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL);
-	wxBoxSizer* vertSizer = new wxBoxSizer(wxVERTICAL);
-	vertSizer->Add(notifyText, 1, wxALL | wxEXPAND | wxALIGN_CENTRE_VERTICAL | wxALIGN_CENTRE_HORIZONTAL, 15, nullptr);
-	notifyBox->SetSizer(vertSizer);
-	notifyBox->Fit();
-	notifyBox->Layout();
-	notifyBox->Show(true);
-	::wxYield();
-
 	UiEvents::ScopedStatusMessage(_("Reloading unitsync"), 0);
 	SlPaths::SetUsedSpringIndex(newIndex);
 	if (!LSL::usync().LoadUnitSyncLib(SlPaths::GetUnitSync(newIndex))) { //FIXME: make LoadUnitSyncLib() async (partly done)
 		wxLogWarning(_T( "Cannot load UnitSync" ));
-		notifyBox->Show(false);
-		::wxYield();
 		customMessageBox(SL_MAIN_ICON,
 				 wxString::Format(_T("%s is unable to load your UnitSync library into the process.\n\nYou might want to take another look at your unitsync setting."), getSpringlobbyName().c_str()),
 				 _("Spring error"), wxOK);
 		SlPaths::SetUsedSpringIndex(oldIndex);
 		DoRestore();
 	}
-
-	notifyBox->Show(false);
-	::wxYield();
-	delete notifyBox;
 }
 
 void SpringOptionsTab::OnRemoveBundle(wxCommandEvent& /*event*/)
