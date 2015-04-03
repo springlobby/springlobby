@@ -384,12 +384,12 @@ void ChatPanel::OutputLine(const wxString& message, const wxColour& col, bool sh
 
 void ChatPanel::OutputLine(const ChatLine& line)
 {
-	int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);   // vertical scrolled window position
-	int end = m_chatlog_text->GetScrollRange(wxVERTICAL); // hight of complete scolled window
-	int height = m_chatlog_text->GetSize().GetHeight();
+	const int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);   // vertical scrolled window position
+	const int end = m_chatlog_text->GetScrollRange(wxVERTICAL); // hight of complete scolled window
+	const int height = m_chatlog_text->GetSize().GetHeight();
+	const int numOfLines = m_chatlog_text->GetNumberOfLines();
+	const int maxlenght = sett().GetChatHistoryLenght();
 	float original_pos = (float)(pos + height) / (float)end;
-	int numOfLines = m_chatlog_text->GetNumberOfLines();
-	int maxlenght = sett().GetChatHistoryLenght();
 
 	if (original_pos < 0.0f)
 		original_pos = 0.0f;
@@ -416,11 +416,7 @@ void ChatPanel::OutputLine(const ChatLine& line)
 		const wxColor oldcolor(line.chatstyle.GetTextColour());
 
 		while (m1.Len() > 0) {
-#if wxCHECK_VERSION(3, 0, 0)
 			const wxUniChar c = m1.GetChar(0);
-#else
-			const char c = m1.GetChar(0);
-#endif
 			if (c == 3 && m1.Len() > 1 && (m1.GetChar(1) >= 48 && m1.GetChar(1) <= 58)) { // Color
 				if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58)) {
 					color = (int(m1.GetChar(1)) - 48) * 10 + (int(m1.GetChar(2)) - 48);
