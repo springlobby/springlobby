@@ -266,6 +266,11 @@ void ChatLog::FillLastLineArray()
 		wxLogError(_T("%s: failed to open log file."), __PRETTY_FUNCTION__);
 		return;
 	}
+
+	if (!m_logfile.Length() <= 0 ) {
+		return;
+	}
+
 #ifdef TEST
 	const size_t num_lines = 6;
 #else
