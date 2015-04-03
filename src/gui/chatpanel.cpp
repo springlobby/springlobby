@@ -388,7 +388,7 @@ void ChatPanel::OutputLine(const ChatLine& line)
 	const int end = m_chatlog_text->GetScrollRange(wxVERTICAL); // hight of complete scolled window
 	const int height = m_chatlog_text->GetSize().GetHeight();
 	const int numOfLines = m_chatlog_text->GetNumberOfLines();
-	const int maxlenght = sett().GetChatHistoryLenght();
+	const int maxlength = sett().GetChatHistoryLenght();
 	float original_pos = (float)(pos + height) / (float)end;
 
 	if (original_pos < 0.0f)
@@ -397,7 +397,19 @@ void ChatPanel::OutputLine(const ChatLine& line)
 		original_pos = 1.0f;
 
 
-	wxWindowUpdateLocker noUpdates(m_chatlog_text);
+	Freeze(); // disable windows redraws until we are done
+	wxLogWarning(_T("max length: %d numOfLines %d"), maxlength, numOfLines);
+	// crop lines from history that exceeds limit
+	if ((maxlength > 0) && (numOfLines > maxlength)) {
+		int end_line = 0;
+		for (int i = 0; i < numOfLines - maxlength; i++) {
+			end_line += m_chatlog_text->GetLineLength(i) + 1;
+		}
+		if (end_line > 0) {
+			m_chatlog_text->Remove(0, end_line);
+		}
+	}
+
 	if (!line.time.empty()) {
 		m_chatlog_text->SetDefaultStyle(line.timestyle);
 		m_chatlog_text->AppendText(line.time);
@@ -460,14 +472,10 @@ void ChatPanel::OutputLine(const ChatLine& line)
 
 	m_chatlog_text->AppendText(_T( "\n" ));
 
-	// crop lines from history that exceeds limit
-	if ((maxlenght > 0) && (numOfLines > maxlenght)) {
-		int end_line = 0;
-		for (int i = 0; i < 20; i++)
-			end_line += m_chatlog_text->GetLineLength(i) + 1;
-		m_chatlog_text->Remove(0, end_line);
-	}
 
+	m_chatlog_text->ScrollLines(1);
+	m_chatlog_text->ShowPosition(m_chatlog_text->GetLastPosition());
+	Thaw();
 }
 
 
