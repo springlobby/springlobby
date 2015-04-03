@@ -139,6 +139,11 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 		case 28: {
 			SetDefaultServerSettings();
 		}
+		case 29: {
+			#ifdef WIN32 //popups cause crashes :-|
+			cfg().Write(_T("/GUI/UseNotificationPopups"), false);
+			#endif
+		}
 		default: {
 		}
 	}
