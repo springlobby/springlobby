@@ -398,7 +398,6 @@ void ChatPanel::OutputLine(const ChatLine& line)
 
 
 	Freeze(); // disable windows redraws until we are done
-	wxLogWarning(_T("max length: %d numOfLines %d"), maxlength, numOfLines);
 	// crop lines from history that exceeds limit
 	if ((maxlength > 0) && (numOfLines > maxlength)) {
 		int end_line = 0;
