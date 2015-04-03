@@ -310,6 +310,7 @@ void ChatPanel::CreateControls()
 	}
 
 	m_chatlog_text->SetBackgroundColour(sett().GetChatColorBackground());
+	m_chatlog_text->ShowPosition(m_chatlog_text->GetLastPosition());
 
 	m_say_text->SetBackgroundColour(sett().GetChatColorBackground());
 	m_say_text->SetForegroundColour(sett().GetChatColorNormal());
@@ -471,17 +472,6 @@ void ChatPanel::OutputLine(const ChatLine& line)
 		m_chatlog_text->Remove(0, end_line);
 	}
 
-	if (original_pos < 1.0f) {
-#ifndef __WXMSW__
-		const long original_line = original_pos * numOfLines;
-		wxString linetext = m_chatlog_text->GetLineText(original_line);
-		long zoomto = m_chatlog_text->GetValue().Find(linetext);
-		m_chatlog_text->ShowPosition(zoomto);
-#endif
-	} else {
-		m_chatlog_text->ScrollLines(10);
-		m_chatlog_text->ShowPosition(m_chatlog_text->GetLastPosition());
-	}
 }
 
 
