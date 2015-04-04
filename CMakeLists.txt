@@ -3,6 +3,8 @@ PROJECT(springlobby)
 #set minimum cmake version
 cmake_minimum_required(VERSION 2.8)
 
+CMAKE_POLICY(SET CMP0004 OLD)
+
 SET(CMAKE_COLOR_MAKEFILE ON)
 SET(CROSS_COMPILING "FALSE")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} )
