@@ -24,12 +24,14 @@ public:
 	void OnApply(wxCommandEvent& event);
 	void OnRestore(wxCommandEvent& event);
 
-	void OnBrowseWeb(wxCommandEvent& event);
-	void OnBrowseEditor(wxCommandEvent& event);
-	void OnDefaultWeb(wxCommandEvent& event);
 	void HandleWebloc(bool defloc);
 
 private:
+	void OnBrowseWeb(wxCommandEvent& event);
+	void OnBrowseEditor(wxCommandEvent& event);
+	void OnDefaultWeb(wxCommandEvent& event);
+	void OnTestNotification(wxCommandEvent& event);
+
 	wxCheckBox* m_autojoin;
 	wxCheckBox* m_updater;
 	wxCheckBox* m_show_tooltips;
@@ -52,6 +54,7 @@ private:
 	wxRadioButton* m_complete_method_new;
 	wxButton* m_web_browse_btn;
 	wxButton* m_editor_browse_btn;
+	wxButton* m_test_notification;
 	//        wxButton* m_select_locale;
 	wxRadioButton* m_web_def_radio;
 	wxRadioButton* m_web_spec_radio;
@@ -73,7 +76,8 @@ private:
 	enum {
 		SPRING_WEBBROWSE = wxID_HIGHEST,
 		SPRING_DEFWEB,
-		ID_BUT_EDITOR
+		ID_BUT_EDITOR,
+		TEST_NOTIFICATION
 	};
 
 

@@ -23,12 +23,16 @@
 #include "gui/ui.h"
 #include "gui/mainwindow.h"
 #include "utils/conversion.h"
+#include "utils/uievents.h"
+#include "gui/notificationmanager.h"
 
 BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
 
 EVT_BUTTON(SPRING_WEBBROWSE, LobbyOptionsTab::OnBrowseWeb)
 EVT_BUTTON(ID_BUT_EDITOR, LobbyOptionsTab::OnBrowseEditor)
+EVT_BUTTON(TEST_NOTIFICATION, LobbyOptionsTab::OnTestNotification)
 EVT_RADIOBUTTON(SPRING_DEFWEB, LobbyOptionsTab::OnDefaultWeb)
+
 
 END_EVENT_TABLE()
 
@@ -161,7 +165,10 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
 	m_x_on_all_tabs = new wxCheckBox(this, -1, _("Show close button on all tabs? (needs restart to take effect)"), wxDefaultPosition, wxDefaultSize, 0);
 	m_x_on_all_tabs->SetValue(sett().GetShowXallTabs());
+
+	m_test_notification = new wxButton(this, TEST_NOTIFICATION, _("Test Notification"));
 	m_misc_gui_sizer->Add(m_x_on_all_tabs, 1, wxEXPAND | wxALL, 5);
+	m_misc_gui_sizer->Add(m_test_notification, 1, wxEXPAND | wxALL, 5);
 	m_main_sizer->Add(m_misc_gui_sizer, 0, wxALL, 5);
 
 	wxStaticBoxSizer* m_start_tab_sizer = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Start tab"));
@@ -281,4 +288,9 @@ void LobbyOptionsTab::OnBrowseEditor(wxCommandEvent& /*unused*/)
 void LobbyOptionsTab::OnDefaultWeb(wxCommandEvent& /*unused*/)
 {
 	HandleWebloc(m_web_def_radio->GetValue());
+}
+
+void LobbyOptionsTab::OnTestNotification(wxCommandEvent& /*event*/)
+{
+	UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData(UiEvents::PrivateMessage, _T("Test Notification with umlauts äöü")));
 }
