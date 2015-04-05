@@ -30,6 +30,7 @@ Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/config.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/slconfig.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/platform.cpp"
 )
 
 set(test_libs

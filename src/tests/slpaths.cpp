@@ -4,6 +4,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "utils/slpaths.h"
+#include "utils/platform.h"
 #include "utils/conversion.h"
 
 #include <stdlib.h>
