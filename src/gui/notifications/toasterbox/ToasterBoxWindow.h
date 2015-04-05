@@ -76,7 +76,6 @@ private:
 
 	//!two dummy functions that do nothing currently
 	void OnPaint(wxPaintEvent& event);
-	void OnEraseBackground(wxEraseEvent& event);
 };
 
 #endif //#define TOASTERBOXWINDOW_HH_INCLUDED

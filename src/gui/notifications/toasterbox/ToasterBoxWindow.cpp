@@ -33,15 +33,12 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer* _parent2)
     , popupText(_T("Change Me!"))
     , shrink(false)
 {
-	SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 	SetWindowStyleFlag(wxNO_BORDER | wxSTAY_ON_TOP | wxFRAME_NO_TASKBAR);
 	count++;
 	//the size we want the dialog to be
 	wxSize dialogSize(150, 170);
 	bottomRight = wxPoint(wxGetDisplaySize().GetWidth(), wxGetDisplaySize().GetHeight());
 	SetSize(bottomRight.x, bottomRight.y, dialogSize.GetWidth(), dialogSize.GetHeight());
-
-	ToasterBase::Connect(wxEVT_ERASE_BACKGROUND, (wxObjectEventFunction)&ToasterBoxWindow::OnEraseBackground);
 	ToasterBase::Connect(wxEVT_PAINT, (wxObjectEventFunction)&ToasterBoxWindow::OnPaint);
 	Create(parent, wxID_ANY);
 	SetBackgroundBitmap(charArr2wxBitmap(notif_bg_png, sizeof(notif_bg_png)));
@@ -262,12 +259,6 @@ void ToasterBoxWindow::PrintInfo()
 }
 
 void ToasterBoxWindow::OnPaint(wxPaintEvent& /*event*/)
-{
-	DrawText();
-}
-
-/// wxEVT_ERASE_BACKGROUND event handler for ID_WXGRADIENTBUTTON
-void ToasterBoxWindow::OnEraseBackground(wxEraseEvent& /*event*/)
 {
 	DrawText();
 }
