@@ -1,7 +1,0 @@
-﻿This software in source and compiled form is provided AS IS, with no warranty.
-We make no guarantees about the quality of the product and take no responsibility
-for any damage or malfunction of hardware or software which uses this product.
-
-This software is FREE and you can use it in any way you see fit, as long as you 
-do not hold the authors responsible for any malfunction or failure. Please leave
-this license with the source files.
