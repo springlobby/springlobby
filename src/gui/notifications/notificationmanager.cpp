@@ -3,12 +3,12 @@
 #include "notificationmanager.h"
 
 #include <lslutils/globalsmanager.h>
-#include "uiutils.h"
-#include "ui.h"
+#include "gui/uiutils.h"
+#include "gui/ui.h"
 #include "utils/slconfig.h"
 #include "settings.h"
 #include "spring.h"
-#include "mainwindow.h"
+#include "gui/mainwindow.h"
 #include "utils/platform.h"
 #include "inotification.h"
 #include "sound/alsound.h"

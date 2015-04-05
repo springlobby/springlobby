@@ -45,7 +45,7 @@
 #include <lslutils/globalsmanager.h>
 #include <lslutils/config.h>
 #include <lslunitsync/unitsync.h>
-#include "gui/notificationmanager.h"
+#include "gui/notifications/notificationmanager.h"
 #include "utils/wxTranslationHelper.h"
 #include "gui/playback/playbacktab.h"
 #include "utils/slpaths.h"

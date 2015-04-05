@@ -24,7 +24,7 @@
 #include "gui/mainwindow.h"
 #include "utils/conversion.h"
 #include "utils/uievents.h"
-#include "gui/notificationmanager.h"
+#include "gui/notifications/notificationmanager.h"
 
 BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
 

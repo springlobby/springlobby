@@ -180,16 +180,20 @@ set(springlobbySrc
 	gui/mapgridctrl.cpp
 	gui/mapselectdialog.cpp
 	gui/nicklistctrl.cpp
-	gui/notificationmanager.cpp
 	gui/pastedialog.cpp
 	gui/slbook.cpp
 	gui/statusbar.cpp
 	gui/singleplayertab.cpp
 	gui/selectusersdialog.cpp
-	gui/toasternotification.cpp
 	gui/taskbar.cpp
 	gui/ui.cpp
 	gui/wxtextctrlhist.cpp
+
+	gui/notifications/notificationmanager.cpp
+	gui/notifications/toasternotification.cpp
+	gui/notifications/toasterbox/ToasterBox.cpp
+	gui/notifications/toasterbox/ToasterBoxWindow.cpp
+	gui/notifications/toasterbox/ToasterBoxWindowList.cpp
 
 	gui/battlelist/battlelistctrl.cpp
 	gui/battlelist/battlelistfilter.cpp
@@ -224,9 +228,6 @@ set(springlobbySrc
 	gui/playback/playbacklistctrl.cpp
 	gui/playback/playbacktab.cpp
 
-	gui/toasterbox/ToasterBox.cpp
-	gui/toasterbox/ToasterBoxWindow.cpp
-	gui/toasterbox/ToasterBoxWindowList.cpp
 
 	downloader/prdownloader.cpp
 	downloader/downloadlistctrl.cpp
