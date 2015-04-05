@@ -7,7 +7,6 @@
 #include "utils/uievents.h"
 
 class wxWindow;
-class ScreenPosition;
 class wxBitmap;
 
 class INotification

@@ -9,10 +9,8 @@
 #include "settings.h"
 #include "spring.h"
 #include "gui/mainwindow.h"
-#include "utils/platform.h"
 #include "inotification.h"
 #include "sound/alsound.h"
-#include "utils/conversion.h"
 
 #include "images/springlobby_64.png.h"
 
