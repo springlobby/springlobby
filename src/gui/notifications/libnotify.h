@@ -5,6 +5,7 @@
 
 #ifdef HAVE_LIBNOTIFY
 
+#include <wx/log.h>
 #include "inotification.h"
 #include "settings.h"
 #include "utils/version.h"
@@ -42,7 +43,7 @@ void LibnotifyNotification::Show(const wxBitmap& icon, const size_t /*pos*/, con
 	notify_notification_set_icon_from_pixbuf(n, icon.GetPixbuf());
 #endif
 	if (!notify_notification_show(n, NULL)) {
-		//	   g_error("Failed to send notification.\n");
+		wxLogWarning(_T("Failed to send notification."));
 	}
 	g_object_unref(G_OBJECT(n));
 }
