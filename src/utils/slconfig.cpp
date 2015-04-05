@@ -8,6 +8,7 @@
 
 #include "utils/slpaths.h"
 #include "utils/conversion.h"
+#include "utils/platform.h"
 #include "log.h"
 
 
@@ -36,11 +37,9 @@ slConfig* slConfig::Create()
 	// make sure config file & dir is created/writeable when not exists
 	wxString configDir;
 	wxFileName::SplitPath(m_chosen_path, &configDir, NULL, NULL);
-	if (!wxFileName::DirExists(configDir)) {
-		if (!wxMkdir(configDir)) {
-			wxLogError(_T("unable to create config dir"));
-			exit(-1);
-		}
+	if (!SafeMkdir(configDir)) {
+		wxLogError(_T("unable to create config dir"));
+		exit(-1);
 	}
 	if (!wxFileName::FileExists(m_chosen_path)) {
 		wxFileOutputStream outstream(m_chosen_path);

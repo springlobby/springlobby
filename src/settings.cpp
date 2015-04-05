@@ -72,9 +72,7 @@ void Settings::Setup(wxTranslationHelper* translationhelper)
 		cfg().Write(_T( "/General/CacheVersion" ), CACHE_VERSION);
 	}
 
-	if (!wxDirExists(userConfigDir)) {
-		wxMkdir(userConfigDir);
-	}
+	SafeMkdir(userConfigDir);
 
 	if (!cfg().ReadBool(_T("/General/firstrun"))) {
 		ConvertSettings(translationhelper, settversion);

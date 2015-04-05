@@ -1051,7 +1051,7 @@ bool Ui::StartUpdate(const std::string& latestVersion)
 			wxLogWarning(_T("Couldn't cleanup ") + updatedir);
 		}
 	}
-	if (!wxMkdir(updatedir)) {
+	if (!SafeMkdir(updatedir)) {
 		wxLogWarning(_T("couldn't create update directory") + updatedir);
 	}
 

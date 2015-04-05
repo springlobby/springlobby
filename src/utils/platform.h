@@ -3,9 +3,6 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 #define SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 
-class wxWindow;
-class wxString;
-
 #include <wx/string.h>
 #include <wx/arrstr.h>
 
@@ -31,6 +28,7 @@ int RunProcess(const wxString& cmd, const wxArrayString& params, const bool asyn
 int BrowseFolder(const wxString& path);
 int WaitForExit(int pid);
 void ErrorMsgBox(const wxString& err, bool silent = false);
+bool SafeMkdir(const wxString& dir);
 
 //!
 
