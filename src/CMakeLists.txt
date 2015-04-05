@@ -189,6 +189,7 @@ set(springlobbySrc
 	gui/ui.cpp
 	gui/wxtextctrlhist.cpp
 
+	gui/notifications/libnotify.cpp
 	gui/notifications/notificationmanager.cpp
 	gui/notifications/toasternotification.cpp
 	gui/notifications/toasterbox/ToasterBox.cpp
