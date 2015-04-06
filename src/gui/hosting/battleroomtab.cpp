@@ -378,7 +378,6 @@ void BattleRoomTab::UpdateBattleInfo()
 {
 	if (!m_battle)
 		return;
-	Freeze();
 	m_lock_chk->SetValue(m_battle->IsLocked());
 	m_minimap->UpdateMinimap();
 	OptionListMap::iterator it;
@@ -386,7 +385,6 @@ void BattleRoomTab::UpdateBattleInfo()
 		UpdateBattleInfo(it->first);
 	}
 	UpdateMapInfoSummary();
-	Thaw();
 }
 
 void BattleRoomTab::PrintAllySetup()
