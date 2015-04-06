@@ -521,8 +521,14 @@ void ServerEvents::OnChannelSaid(const std::string& channel, const std::string& 
 {
 	slLogDebugFunc("");
 	try {
-		if ((m_serv.GetMe().GetNick() == who) || !useractions().DoActionOnUser(UserActions::ActIgnoreChat, TowxString(who)))
-			m_serv.GetChannel(channel).Said(m_serv.GetUser(who), message);
+		if ((m_serv.GetMe().GetNick() == who) || !useractions().DoActionOnUser(UserActions::ActIgnoreChat, TowxString(who))) {
+			if (m_serv.UserExists(who)) {
+				m_serv.GetChannel(channel).Said(m_serv.GetUser(who), message);
+			} else {
+				User u(who);
+				m_serv.GetChannel(channel).Said(u, message); // offline message
+			}
+		}
 	} catch (std::runtime_error& except) {
 	}
 }
