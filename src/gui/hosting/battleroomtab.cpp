@@ -152,10 +152,10 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_color_lbl = new wxStaticText(m_player_panel, -1, _("Color"));
 	m_side_lbl = new wxStaticText(m_player_panel, -1, _("Side"));
 
-	m_ally_setup_lbl = new wxStaticText(m_player_panel, -1, _("0"));
-	m_specs_setup_lbl = new wxStaticText(m_player_panel, -1, _("0"));
-	m_players_setup_lbl = new wxStaticText(m_player_panel, -1, _("0"));
-	m_ok_count_lbl = new wxStaticText(m_player_panel, -1, _("0"));
+	m_ally_setup_lbl = new wxStaticText(m_player_panel, -1, _T("0"));
+	m_specs_setup_lbl = new wxStaticText(m_player_panel, -1, _T("0"));
+	m_players_setup_lbl = new wxStaticText(m_player_panel, -1, _T("0"));
+	m_ok_count_lbl = new wxStaticText(m_player_panel, -1, _T("0"));
 
 	m_map_combo = new wxComboBox(this, BROOM_MAP_SEL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxArrayString(), wxCB_READONLY);
 
