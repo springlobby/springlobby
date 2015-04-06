@@ -14,30 +14,22 @@ lsl/networking/tasserver.cpp
 
 
 #include <wx/string.h>
-#include <wx/regex.h>
 #include <wx/intl.h>
 #include <wx/protocol/http.h>
 #include <wx/socket.h>
 #include <wx/log.h>
-#include <wx/tokenzr.h>
-#include <wx/platinfo.h>
-#include <wx/stopwatch.h>
 #include <wx/timer.h>
 
 #include <stdexcept>
 #include <algorithm>
 #include <map>
 
-#include <lslunitsync/unitsync.h>
-
 #include "utils/base64.h"
 #include "utils/md5.h"
 #include "tasserver.h"
 #include "utils/tasutil.h"
 #include "utils/conversion.h"
-#include "utils/platform.h"
 #include "serverevents.h"
-#include "iserverevents.h"
 #include "socket.h"
 #include "log.h"
 #include "utils/slconfig.h"
