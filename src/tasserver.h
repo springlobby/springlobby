@@ -136,7 +136,7 @@ public:
 	void SetRelayIngamePassword(const User& user);
 
 	LSL::StringVector GetRelayHostList();
-	virtual const IServerEvents* serverEvents() const
+	virtual const ServerEvents* serverEvents() const
 	{
 		return m_se;
 	}
@@ -183,7 +183,7 @@ private:
 
 	CRC m_crc;
 
-	IServerEvents* m_se;
+	ServerEvents* m_se;
 	Socket* m_sock;
 
 	double m_ser_ver;

@@ -3,14 +3,23 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 #define SPRINGLOBBY_HEADERGUARD_SERVEREVENTS_H
 
-#include "iserverevents.h"
 #include <wx/longlong.h>
+#include "ibattle.h"
 
 struct UserStatus;
 struct UserBattleStatus;
+class IServer;
+typedef int Sockerror;
+typedef int Protocolerror;
+
+struct MessageSpamCheck
+{
+	time_t lastmessage;
+	unsigned int count;
+};
 
 //! @brief Class that implements server event behaviour.
-class ServerEvents : public IServerEvents
+class ServerEvents
 {
 public:
 	ServerEvents(IServer& serv)
