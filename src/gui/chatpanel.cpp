@@ -396,7 +396,6 @@ void ChatPanel::OutputLine(const ChatLine& line)
 	if (original_pos > 1.0f)
 		original_pos = 1.0f;
 
-	Freeze(); // disable windows redraws until we are done
 	// crop lines from history that exceeds limit
 	if ((maxlength > 0) && (numOfLines > maxlength)) {
 		int end_line = 0;
@@ -472,7 +471,6 @@ void ChatPanel::OutputLine(const ChatLine& line)
 
 	m_chatlog_text->ScrollLines(1);
 	m_chatlog_text->ShowPosition(m_chatlog_text->GetLastPosition());
-	Thaw();
 }
 
 
