@@ -502,22 +502,17 @@ void BattleRoomTab::UpdateStatsLabels()
 {
 	if (m_battle == NULL)
 		return;
-	Freeze();
 	m_ok_count_lbl->SetLabel(wxString::Format(_("%d "), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers()));
 	PrintAllySetup();
-
 	m_player_sett_sizer->Layout();
-	Thaw();
 }
 
 void BattleRoomTab::UpdateMyInfo()
 {
 	if (!m_battle)
 		return;
-	Freeze();
 	m_players->UpdateUser(m_battle->GetMe());
 	m_players->RefreshVisibleItems();
-	Thaw();
 }
 
 void BattleRoomTab::UpdateUser(User& user)
@@ -943,7 +938,6 @@ void BattleRoomTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 {
 	if (!m_battle)
 		return;
-	Freeze();
 	//m_minimap->UpdateMinimap();//should happen automagically now
 	RegenerateOptionsList();
 	ReloadMaplist();
@@ -955,7 +949,6 @@ void BattleRoomTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 	}
 	m_battle->SendMyBattleStatus(); // This should reset sync status.
 	ui().DownloadArchives(*m_battle);
-	Thaw();
 }
 
 long BattleRoomTab::AddMMOptionsToList(long pos, LSL::Enum::GameOption optFlag)
@@ -985,11 +978,9 @@ void BattleRoomTab::UpdatePresetList()
 {
 	if (!m_battle)
 		return;
-	Freeze();
 	m_options_preset_sel->Clear();
 	m_options_preset_sel->Append(sett().GetPresetList());
 	m_options_preset_sel->SetStringSelection(TowxString(m_battle->GetCurrentPreset()));
-	Thaw();
 }
 
 
@@ -1127,7 +1118,6 @@ void BattleRoomTab::SortPlayerList()
 
 void BattleRoomTab::SetBattle(IBattle* battle)
 {
-	Freeze();
 	m_battle = battle;
 
 	m_team_sel->Enable(m_battle);
@@ -1194,7 +1184,6 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 	} else {
 		m_host_new_btn->Show(true);
 	}
-	Thaw();
 }
 
 void BattleRoomTab::RegenerateOptionsList()
