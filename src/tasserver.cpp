@@ -1446,8 +1446,8 @@ void TASServer::SendUserPosition(const User& user)
 		ASSERT_LOGIC(battle.IsFounderMe(), "I'm not founder");
 
 		UserBattleStatus status = user.BattleStatus();
-		std::string msgx = stdprintf("game/Team%d/StartPosX=", status.team, status.pos.x);
-		std::string msgy = stdprintf("game/Team%d/StartPosY=", status.team, status.pos.y);
+		std::string msgx = stdprintf("game/Team%d/StartPosX=%d", status.team, status.pos.x);
+		std::string msgy = stdprintf("game/Team%d/StartPosY=%d", status.team, status.pos.y);
 		std::string netmessage = msgx + "\t" + msgy;
 		SendCmd("SETSCRIPTTAGS", netmessage, battle.IsProxy());
 	} catch (...) {
