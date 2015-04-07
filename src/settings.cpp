@@ -137,9 +137,9 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 		case 28: {
 			SetDefaultServerSettings();
 		}
-		case 29: {
-#ifdef WIN32 //popups cause crashes :-|
-			cfg().Write(_T("/GUI/UseNotificationPopups"), false);
+		case 30: {
+#ifdef WIN32 // https://github.com/springlobby/springlobby/issues/385
+			cfg().Write(_T("/GUI/UseNotificationPopups"), true);
 #endif
 		}
 		default: {
