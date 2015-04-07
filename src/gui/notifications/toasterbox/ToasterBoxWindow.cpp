@@ -46,7 +46,6 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer* _parent2)
 
 ToasterBoxWindow::~ToasterBoxWindow()
 {
-	PopEventHandler();
 }
 
 
