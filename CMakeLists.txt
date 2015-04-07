@@ -9,6 +9,14 @@ SET(CMAKE_COLOR_MAKEFILE ON)
 SET(CROSS_COMPILING "FALSE")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} )
 
+if (CMAKE_GENERATOR MATCHES "Ninja")
+	message(STATUS "Ninja detected, enabling install workarround")
+	# fixes "ninja install" error:
+	#	  file INSTALL cannot find
+	# "/home/abma/Projects/SpringLobby/src/CMakeFiles/CMakeRelink.dir/springlobby".
+	set(CMAKE_PLATFORM_HAS_INSTALLNAME 1)
+endif()
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	# workarround for include/c++/4.8/type_traits:268:39: error: use of undeclared identifier '__float128'
 	add_definitions("-D__STRICT_ANSI__")
