@@ -1,4 +1,11 @@
 ChangeLog of Springlobby
+## 0.215
+ - fix chat autoscroll on linux
+ - fix crash due notifications on windows
+ - add "Test Notification" button to settings
+ - default (re)enable notifications
+ - remove duplicate error messageboxes (registration/login denied/...)
+
 ## 0.214
  - default disable notification popups on windows (got broken / crashes)
  - no double-error messages on lobby server errors
