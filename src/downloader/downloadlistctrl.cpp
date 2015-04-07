@@ -29,9 +29,7 @@ EVT_LIST_ITEM_RIGHT_CLICK(TLIST_CLICK, DownloadListCtrl::OnListRightClick)
 EVT_MENU(TLIST_CANCEL, DownloadListCtrl::OnCancel)
 EVT_MENU(TLIST_RETRY, DownloadListCtrl::OnRetry)
 #if wxUSE_TIPWINDOW
-#ifndef __WXMSW__ //disables tooltips on win
 EVT_MOTION(DownloadListCtrl::OnMouseMotion)
-#endif
 #endif
 END_EVENT_TABLE()
 
