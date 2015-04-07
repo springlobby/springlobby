@@ -253,21 +253,6 @@ set(springlobbySrc
 	springsettings/tab_simple.cpp
 	springsettings/tab_ui.cpp
 
-	springsettings/hotkeys/HotkeyForms.cpp
-	springsettings/hotkeys/AddSelectionCmdDlg.cpp
-	springsettings/hotkeys/commandlist.cpp
-	springsettings/hotkeys/hotkey_panel.cpp
-	springsettings/hotkeys/hotkey_parser.cpp
-	springsettings/hotkeys/KeynameConverter.cpp
-	springsettings/hotkeys/wxSpringCommand.cpp
-	springsettings/hotkeys/SpringDefaultProfile.cpp
-	springsettings/hotkeys/HotkeyTypes.cpp
-	springsettings/hotkeys/CommandOrderDlg.cpp
-	springsettings/hotkeys/ChangeMetaDlg.cpp
-
-	springsettings/wxkeybinder/keybinder.cpp
-	springsettings/wxkeybinder/wxKeyMonitorTextCtrl.cpp
-
 	lsl/src/lsl/battle/tdfcontainer.cpp #FIXME
 
 	gui/uiutils.cpp
