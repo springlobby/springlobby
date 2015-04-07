@@ -153,6 +153,7 @@ MainWindow::MainWindow()
 	m_menuEdit->Append(MENU_RESET_LAYOUT, _("&Reset layout"));
 	m_menuEdit->Append(m_settings_menu);
 
+	m_menuEdit->Enable(MENU_SETTINGSPP, LSL::usync().IsLoaded()); //unitsync isn't loaded yet, disable menu entry
 
 	m_menuTools = new wxMenu;
 	m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -552,6 +553,7 @@ void MainWindow::OnMenuVersion(wxCommandEvent& /*unused*/)
 void MainWindow::OnUnitSyncReload(wxCommandEvent& /*unused*/)
 {
 	LSL::usync().ReloadUnitSyncLib();
+	m_menuEdit->Enable(MENU_SETTINGSPP, LSL::usync().IsLoaded());
 	GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
 }
 
