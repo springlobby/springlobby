@@ -1,10 +1,19 @@
 ChangeLog of Springlobby
-## 0.215
+## 0.217
+ - fix startpos not selectable in lobby
+ - fix demo file deleted when spring is already running (linux only)
+ - enable tooltips on windows
+ - usual code cleanup
+
+## 0.216
  - fix chat autoscroll on linux
  - fix crash due notifications on windows
  - add "Test Notification" button to settings
  - default (re)enable notifications
  - remove duplicate error messageboxes (registration/login denied/...)
+
+## 0.215
+ - skipped
 
 ## 0.214
  - default disable notification popups on windows (got broken / crashes)
