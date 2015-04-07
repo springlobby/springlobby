@@ -23,32 +23,12 @@ ReplayList::ReplayList()
 
 void ReplayList::LoadPlaybacks(const std::vector<std::string>& filenames)
 {
-	bool errorsOccuredFlag = false;
 	std::vector<wxString> errorsList;
 
 	m_replays.clear();
-
 	for (size_t i = 0; i < filenames.size(); ++i) {
-		const std::string wfilename = filenames[i];
 		StoredGame& playback = AddPlayback(i);
-		try {
-			GetReplayInfos(wfilename, playback);
-		} catch (wxString errorExceptionMessage) {
-			if (errorsList.size() < 3) {
-				errorsList.push_back(errorExceptionMessage);
-				errorsOccuredFlag = true;
-			}
-			RemovePlayback(i);
-		}
-	}
-
-	if (errorsOccuredFlag) {
-		wxString errorMessage = "There have been errors in loading playback procedure! Here is some of them:";
-		for (auto& e : errorsList) {
-			errorMessage += "\n";
-			errorMessage += e;
-		}
-		wxLogError(errorMessage);
+		GetReplayInfos(filenames[i], playback);
 	}
 }
 
@@ -63,6 +43,12 @@ int ReplayList::replayVersion(wxFile& replay) const
 	return version;
 }
 
+static void MarkBroken(StoredGame& ret)
+{
+	ret.battle.SetHostMap("broken", "");
+	ret.battle.SetHostMod("broken", "");
+}
+
 bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) const
 {
 	const std::string FileName = LSL::Util::AfterLast(ReplayPath, SEP); // strips file path
@@ -73,24 +59,30 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	ret.MapName = LSL::Util::BeforeLast(FileName, "_");
 
 	if (!wxFileExists(TowxString(ReplayPath))) {
-		throw wxString::Format(_T("File %s does not exist!"), ReplayPath.c_str());
+		wxLogWarning(wxString::Format(_T("File %s does not exist!"), ReplayPath.c_str()));
+		MarkBroken(ret);
+		return false;
 	}
 	wxFile replay(TowxString(ReplayPath), wxFile::read);
 	if (!replay.IsOpened()) {
-		throw wxString::Format(_T("Could not open file %s for reading!"), ReplayPath.c_str());
+		wxLogWarning(wxString::Format(_T("Could not open file %s for reading!"), ReplayPath.c_str()));
+		MarkBroken(ret);
+		return false;
 	}
 
 	if (replay.Length() == 0) {
 		replay.Close();
-		wxRemoveFile(TowxString(ReplayPath));
-		throw wxString::Format(_T("File %s was corrupted and was deleted!"), ReplayPath.c_str());
+		MarkBroken(ret);
+		return false;
 	}
 
 	const int replay_version = replayVersion(replay);
 	ret.battle.SetScript(GetScriptFromReplay(replay, replay_version));
 
 	if (ret.battle.GetScript().empty()) {
-		throw wxString::Format(_T("File %s have incompatible version!"), ReplayPath.c_str());
+		wxLogWarning(wxString::Format(_T("File %s have incompatible version!"), ReplayPath.c_str()));
+		MarkBroken(ret);
+		return false;
 	}
 
 	GetHeaderInfo(replay, ret, replay_version);
@@ -105,7 +97,9 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	wxDateTime rdate;
 
 	if (rdate.ParseFormat(TowxString(FileName), _T("%Y%m%d_%H%M%S")) == 0) {
-		throw wxString::Format(_T("Name of the file %s could not be parsed!"), ReplayPath.c_str());
+		wxLogWarning(wxString::Format(_T("Name of the file %s could not be parsed!"), ReplayPath.c_str()));
+		MarkBroken(ret);
+		return false;
 	}
 	ret.date = rdate.GetTicks(); // now it is sorted properly
 	ret.date_string = STD_STRING(rdate.FormatISODate() + _T(" ") + rdate.FormatISOTime());
