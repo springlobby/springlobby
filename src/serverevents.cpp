@@ -401,7 +401,7 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 				battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::ModOption);
 				battle.Update(stdprintf("%d_%s", LSL::Enum::ModOption, STD_STRING(key).c_str()));
 			} else if (key.Left(8) == _T( "restrict" )) {
-				OnBattleDisableUnit(battleid, STD_STRING(key.AfterFirst(_T('/'))), s2l(TowxString(value)));
+				OnBattleDisableUnit(battleid, STD_STRING(key.AfterFirst(_T('/'))), LSL::Util::FromString<int>(value));
 			} else if (key.Left(4) == _T( "team" ) && key.Find(_T("startpos")) != wxNOT_FOUND) {
 				int team = s2l(key.BeforeFirst(_T('/')).Mid(4));
 				if (key.Find(_T("startposx")) != wxNOT_FOUND) {
@@ -410,7 +410,7 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 						User& usr = battle.GetUser(i);
 						UserBattleStatus& status = usr.BattleStatus();
 						if (status.team == team) {
-							status.pos.x = s2l(TowxString(value));
+							status.pos.x = LSL::Util::FromString<int>(value);
 							battle.OnUserBattleStatusUpdated(usr, status);
 						}
 					}
@@ -420,7 +420,7 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 						User& usr = battle.GetUser(i);
 						UserBattleStatus& status = usr.BattleStatus();
 						if (status.team == team) {
-							status.pos.y = s2l(TowxString(value));
+							status.pos.y = LSL::Util::FromString<int>(value);
 							battle.OnUserBattleStatusUpdated(usr, status);
 						}
 					}
