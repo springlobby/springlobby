@@ -23,8 +23,6 @@ ReplayList::ReplayList()
 
 void ReplayList::LoadPlaybacks(const std::vector<std::string>& filenames)
 {
-	std::vector<wxString> errorsList;
-
 	m_replays.clear();
 	for (size_t i = 0; i < filenames.size(); ++i) {
 		StoredGame& playback = AddPlayback(i);
