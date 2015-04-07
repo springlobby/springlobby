@@ -2041,7 +2041,7 @@ void wxKeyConfigPanel::ShowSizer(wxSizer* toshow, bool show)
 
 	SetSizeHints(size.x, size.y, m_maxWidth, m_maxHeight);
 
-// don't change the width when expanding/collapsing
+	// don't change the width when expanding/collapsing
 	SetSize(wxDefaultCoord, size.y);
 
 	// VS: this is neccessary in order to force frame redraw under

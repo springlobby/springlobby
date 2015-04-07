@@ -41,7 +41,7 @@ void StackTrace::OnStackFrame(const wxStackFrame& frame)
 					StackTraceString += _T(",");
 			}
 		}
-		StackTraceString += _T(" ") + frame.GetFileName() + wxString::Format(_T(":%d"), frame.GetLine()); // File: file_name : line_number
+		StackTraceString += _T(" ") + frame.GetFileName() + wxString::Format(_T(":%ld"), frame.GetLine()); // File: file_name : line_number
 	}
 	StackTraceString += _T("\n");
 }
