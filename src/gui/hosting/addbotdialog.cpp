@@ -272,7 +272,7 @@ long AddBotDialog::AddMMOptionsToList(long pos, int optFlag)
 void AddBotDialog::UpdateOption(const wxString& Tag)
 {
 	const long index = m_opt_list_map[Tag];
-	const LSL::Enum::GameOption type = (LSL::Enum::GameOption)s2l(Tag.BeforeFirst('_'));
+	const LSL::Enum::GameOption type = (LSL::Enum::GameOption)FromwxString(Tag.BeforeFirst('_'));
 	const std::string key = STD_STRING(Tag.AfterFirst('_'));
 	std::string value;
 
@@ -302,7 +302,7 @@ void AddBotDialog::OnOptionActivate(wxListEvent& event)
 		}
 	}
 	LSL::OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
-	const LSL::Enum::GameOption optFlag = (LSL::Enum::GameOption)s2l(tag.BeforeFirst('_'));
+	const LSL::Enum::GameOption optFlag = (LSL::Enum::GameOption)FromwxString(tag.BeforeFirst('_'));
 	const std::string key = STD_STRING(tag.AfterFirst('_'));
 	LSL::Enum::OptionType type = optWrap.GetSingleOptionType(key);
 	if (!optWrap.keyExists(key, optFlag, false, type))

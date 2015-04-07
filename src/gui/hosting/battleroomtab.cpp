@@ -430,7 +430,7 @@ void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
 		return;
 	}
 
-	LSL::Enum::GameOption type = (LSL::Enum::GameOption)s2l(Tag.BeforeFirst('_'));
+	LSL::Enum::GameOption type = (LSL::Enum::GameOption)FromwxString(Tag.BeforeFirst('_'));
 	wxString key = Tag.AfterFirst('_');
 	if ((type == LSL::Enum::MapOption) || (type == LSL::Enum::ModOption) || (type == LSL::Enum::EngineOption)) {
 		LSL::Enum::OptionType DataType = m_battle->CustomBattleOptions().GetSingleOptionType(STD_STRING(key));
@@ -441,7 +441,7 @@ void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
 			m_opts_list->SetItemFont(index, wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
 		}
 		if (DataType == LSL::Enum::opt_bool) {
-			value = bool2yn(s2l(value)); // convert from 0/1 to literal Yes/No
+			value = bool2yn(FromwxString(value)); // convert from 0/1 to literal Yes/No
 		} else if (DataType == LSL::Enum::opt_list) {
 			value = TowxString(m_battle->CustomBattleOptions().GetNameListOptValue(STD_STRING(key), type)); // get the key full name not short key
 		}
@@ -1100,7 +1100,7 @@ void BattleRoomTab::OnOptionActivate(wxListEvent& event)
 		}
 	}
 	LSL::OptionsWrapper& optWrap = m_battle->CustomBattleOptions();
-	LSL::Enum::GameOption optFlag = (LSL::Enum::GameOption)s2l(tag.BeforeFirst('_'));
+	LSL::Enum::GameOption optFlag = (LSL::Enum::GameOption)FromwxString(tag.BeforeFirst('_'));
 	const std::string key = STD_STRING(tag.AfterFirst('_'));
 	LSL::Enum::OptionType type = optWrap.GetSingleOptionType(key);
 	if (!optWrap.keyExists(key, optFlag, false, type))

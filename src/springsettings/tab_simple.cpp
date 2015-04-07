@@ -44,8 +44,8 @@ void tab_simple::getSetUpResolutionCBX()
 		y_res = intSettings[RC_TEXT[1].key];
 	} else {
 		try {
-			x_res = LSL::usync().GetSpringConfigInt(STD_STRING(RC_TEXT[0].key), s2l(RC_TEXT[0].def));
-			y_res = LSL::usync().GetSpringConfigInt(STD_STRING(RC_TEXT[1].key), s2l(RC_TEXT[1].def));
+			x_res = LSL::usync().GetSpringConfigInt(STD_STRING(RC_TEXT[0].key), FromwxString(RC_TEXT[0].def));
+			y_res = LSL::usync().GetSpringConfigInt(STD_STRING(RC_TEXT[1].key), FromwxString(RC_TEXT[1].def));
 		} catch (...) {
 		}
 	}

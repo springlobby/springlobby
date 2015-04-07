@@ -908,12 +908,12 @@ bool IBattle::LoadOptionsPreset(const std::string& name)
 			}
 			SendHostInfo(IBattle::HI_StartRects);
 
-			unsigned int rectcount = s2l(options[_T("numrects")]);
+			unsigned int rectcount = FromwxString(options[_T("numrects")]);
 			for (unsigned int loadrect = 0; loadrect < rectcount; loadrect++) {
-				int ally = s2l(options[_T("rect_") + TowxString(loadrect) + _T("_ally")]);
+				int ally = FromwxString(options[_T("rect_") + TowxString(loadrect) + _T("_ally")]);
 				if (ally == 0)
 					continue;
-				AddStartRect(ally - 1, s2l(options[_T("rect_") + TowxString(loadrect) + _T("_left")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_top")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_right")]), s2l(options[_T("rect_") + TowxString(loadrect) + _T("_bottom")]));
+				AddStartRect(ally - 1, FromwxString(options[_T("rect_") + TowxString(loadrect) + _T("_left")]), FromwxString(options[_T("rect_") + TowxString(loadrect) + _T("_top")]), FromwxString(options[_T("rect_") + TowxString(loadrect) + _T("_right")]), FromwxString(options[_T("rect_") + TowxString(loadrect) + _T("_bottom")]));
 			}
 			SendHostInfo(HI_StartRects);
 
@@ -921,7 +921,7 @@ bool IBattle::LoadOptionsPreset(const std::string& name)
 			m_restricted_units.clear();
 			while (tkr.HasMoreTokens()) {
 				wxString unitinfo = tkr.GetNextToken();
-				RestrictUnit(STD_STRING(unitinfo.BeforeLast(_T('='))), s2l(unitinfo.AfterLast(_T('='))));
+				RestrictUnit(STD_STRING(unitinfo.BeforeLast(_T('='))), FromwxString(unitinfo.AfterLast(_T('='))));
 			}
 			SendHostInfo(HI_Restrictions);
 			Update(stdprintf("%d_restrictions", LSL::Enum::PrivateOptions));

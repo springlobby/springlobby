@@ -342,7 +342,7 @@ bool PlaybackListFilter::FilterPlayback(const StoredGame& playback)
 	if (!TowxString(battle.GetHostModName()).Upper().Contains(m_filter_mod_edit->GetValue().Upper()) && !TowxString(battle.GetHostModName()).Upper().Contains(m_filter_mod_edit->GetValue().Upper()) && !m_filter_mod_expression->Matches(TowxString(battle.GetHostModName())))
 		return false;
 
-	if ((!m_filter_filesize_edit->GetValue().IsEmpty()) && !_IntCompare(playback.size, 1024 * s2l(m_filter_filesize_edit->GetValue()), m_filter_filesize_mode))
+	if ((!m_filter_filesize_edit->GetValue().IsEmpty()) && !_IntCompare(playback.size, 1024 * FromwxString(m_filter_filesize_edit->GetValue()), m_filter_filesize_mode))
 		return false;
 
 	//duration
@@ -441,13 +441,13 @@ void PlaybackListFilter::SetDurationValue()
 			break;
 
 		case 0:
-			m_duration_value = s2l(dur);
+			m_duration_value = FromwxString(dur);
 			break;
 		case 1:
-			m_duration_value = s2l(dur.AfterFirst(*mysep)) + (s2l(dur.BeforeFirst(*mysep)) * 60);
+			m_duration_value = FromwxString(dur.AfterFirst(*mysep)) + (FromwxString(dur.BeforeFirst(*mysep)) * 60);
 			break;
 		case 2:
-			m_duration_value = s2l(dur.AfterLast(*mysep)) + (s2l(dur.AfterFirst(*mysep).BeforeFirst(*mysep)) * 60) + (s2l(dur.BeforeFirst(*mysep)) * 3600);
+			m_duration_value = FromwxString(dur.AfterLast(*mysep)) + (FromwxString(dur.AfterFirst(*mysep).BeforeFirst(*mysep)) * 60) + (FromwxString(dur.BeforeFirst(*mysep)) * 3600);
 			break;
 	}
 }

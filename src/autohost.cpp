@@ -57,11 +57,11 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 	if (command == _T( "!start" )) {
 		StartBattle();
 	} else if (command == _T( "!balance" )) {
-		unsigned int num = s2l(params);
+		unsigned int num = FromwxString(params);
 		m_battle.Autobalance(IBattle::balance_random, false, false, num);
 		DoAction(_T("is auto-balancing alliances ..."));
 	} else if (command == _T( "!cbalance" )) {
-		unsigned int num = s2l(params);
+		unsigned int num = FromwxString(params);
 		m_battle.Autobalance(IBattle::balance_random, true, false, num);
 		DoAction(_T( "is auto-balancing alliances ..." ));
 	} else if (command == _T( "!help" )) {
@@ -126,11 +126,11 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 		DoAction(_T( "has unlocked the battle." ));
 		m_battle.SendHostInfo(IBattle::HI_Locked);
 	} else if (command == _T( "!fixids" )) {
-		unsigned int num = s2l(params);
+		unsigned int num = FromwxString(params);
 		m_battle.FixTeamIDs(IBattle::balance_divide, false, false, num);
 		DoAction(_T( "is auto-balancing control teams ..." ));
 	} else if (command == _T( "!cfixids" )) {
-		unsigned int num = s2l(params);
+		unsigned int num = FromwxString(params);
 		m_battle.FixTeamIDs(IBattle::balance_divide, true, true, num);
 		DoAction(_T( "is auto-balancing control teams ..." ));
 	} else if (command == _T( "!spectunsynced" )) {

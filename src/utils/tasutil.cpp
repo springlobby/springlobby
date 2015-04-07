@@ -19,7 +19,7 @@ std::string GetSentenceParam(wxString& params)
 
 long GetIntParam(wxString& params)
 {
-	return s2l(GetParamByChar(params, _T(' ')));
+	return FromwxString(GetParamByChar(params, _T(' ')));
 }
 
 wxString GetParamByChar(wxString& params, const wxChar& sep)

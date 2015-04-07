@@ -20,15 +20,7 @@ wxString TowxString(const std::string& arg);
 wxString TowxString(int);
 std::string strtolower(std::string str);
 
-
 long FromwxString(const wxString& arg);
-
-static inline long s2l(const wxString& arg)
-{
-	long ret;
-	arg.ToLong(&ret);
-	return ret;
-}
 
 /** @} */
 

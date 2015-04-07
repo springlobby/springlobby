@@ -403,7 +403,7 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 			} else if (key.Left(8) == _T( "restrict" )) {
 				OnBattleDisableUnit(battleid, STD_STRING(key.AfterFirst(_T('/'))), LSL::Util::FromString<int>(value));
 			} else if (key.Left(4) == _T( "team" ) && key.Find(_T("startpos")) != wxNOT_FOUND) {
-				int team = s2l(key.BeforeFirst(_T('/')).Mid(4));
+				int team = FromwxString(key.BeforeFirst(_T('/')).Mid(4));
 				if (key.Find(_T("startposx")) != wxNOT_FOUND) {
 					int numusers = battle.GetNumUsers();
 					for (int i = 0; i < numusers; i++) {
