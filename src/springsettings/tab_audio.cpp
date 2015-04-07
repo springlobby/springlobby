@@ -1,7 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "tab_audio.h"
-#include "se_utils.h"
 #include <wx/string.h>
 #include <wx/sizer.h>
 #include <wx/event.h>

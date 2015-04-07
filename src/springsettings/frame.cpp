@@ -16,19 +16,15 @@
 #include "tab_ui.h"
 #include "tab_simple.h"
 #include "ctrlconstants.h"
-#include "panel_pathoption.h"
 #include "gui/customdialogs.h"
 #include "gui/controls.h"
 #include "images/springsettings.xpm"
-#include "se_utils.h"
 #include "utils/platform.h"
 #include "utils/version.h"
 #include "utils/conversion.h"
 #include "gui/aboutbox.h"
 
-#ifndef SPRINGSETTINGS_STANDALONE
 #include "gui/mainwindow.h"
-#endif
 
 const wxString simpleTabCap = _("Combined Options");
 const wxString qualityTabCap = _("Render quality / Video mode");
@@ -77,8 +73,6 @@ settings_frame::settings_frame(wxWindow* parent, const wxString& title, wxWindow
 	if (abstract_panel::loadValuesIntoMap()) {
 		CreateGUIControls();
 		initMenuBar();
-	} else {
-		notebook->AddPage(new PathOptionPanel(notebook, this), _("Error!"));
 	}
 
 	Layout();
@@ -96,8 +90,6 @@ void settings_frame::buildGuiFromErrorPanel()
 	if (abstract_panel::loadValuesIntoMap()) {
 		CreateGUIControls();
 		initMenuBar();
-	} else {
-		notebook->AddPage(new PathOptionPanel(notebook, this), _("Error!"));
 	}
 }
 
@@ -138,13 +130,11 @@ void settings_frame::doQuit()
 {
 	sett().SaveSettings();
 	Destroy();
-#ifndef SPRINGSETTINGS_STANDALONE
 	//we can only compile this in non-standalone
 	MainWindow* m = dynamic_cast<MainWindow*>(m_parent);
 	if (m) {
 		m->se_frame_active = false;
 	}
-#endif
 }
 
 void settings_frame::handleExit()

@@ -6,7 +6,6 @@
 
 #include "settings.h"
 
-#include "springsettings/se_utils.h"
 #include "utils/wxTranslationHelper.h"
 #include "utils/slconfig.h"
 
@@ -60,7 +59,6 @@ Settings::~Settings()
 
 void Settings::Setup(wxTranslationHelper* translationhelper)
 {
-	SetSettingsStandAlone(false);
 
 	long settversion = cfg().ReadLong(_T("/General/SettingsVersion"));
 	long cacheversion = cfg().ReadLong(_T( "/General/CacheVersion" ));

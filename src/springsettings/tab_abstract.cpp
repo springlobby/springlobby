@@ -19,7 +19,6 @@
 #include "gui/customdialogs.h"
 #include "utils/conversion.h"
 #include "ctrlconstants.h"
-#include "se_utils.h"
 #include "settings.h"
 #include "presets.h"
 
@@ -107,10 +106,10 @@ bool abstract_panel::loadValuesIntoMap()
 		//		const int current_y_res = LSL::susynclib().GetSpringConfigInt(RC_TEXT[1].key,display_rect.height);
 
 		for (int i = 0; i < intControls_size; ++i) {
-			intSettings[intControls[i].key] = LSL::usync().GetSpringConfigInt(STD_STRING(intControls[i].key), fromString(intControls[i].def));
+			intSettings[intControls[i].key] = LSL::usync().GetSpringConfigInt(STD_STRING(intControls[i].key), s2l(intControls[i].def));
 		}
 		for (int i = 0; i < floatControls_size; ++i) {
-			floatSettings[floatControls[i].key] = LSL::usync().GetSpringConfigFloat(STD_STRING(floatControls[i].key), fromString(floatControls[i].def));
+			floatSettings[floatControls[i].key] = LSL::usync().GetSpringConfigFloat(STD_STRING(floatControls[i].key), s2l(floatControls[i].def));
 		}
 	} catch (...) {
 		customMessageBox(SS_MAIN_ICON, _("Could not access your settings.\n"), _("Error"), wxOK | wxICON_HAND, 0);
@@ -125,76 +124,76 @@ void abstract_panel::loadDefaults()
 {
 	//const Control RO_SLI[9]
 	for (int i = 0; i < s_category_sizes[_T("RO_SLI")]; ++i)
-		intSettings[RO_SLI[i].key] = fromString(RO_SLI[i].def);
+		intSettings[RO_SLI[i].key] = s2l(RO_SLI[i].def);
 
 	//const Control VO_CBOX[3]
 	for (int i = 0; i < s_category_sizes[_T("VO_CBOX")]; ++i)
-		intSettings[VO_CBOX[i].key] = fromString(VO_CBOX[i].def);
+		intSettings[VO_CBOX[i].key] = s2l(VO_CBOX[i].def);
 
 	//const Control VO_RBUT[2]
 	for (int i = 0; i < s_category_sizes[_T("VO_RBUT")]; ++i)
-		intSettings[VO_RBUT[i].key] = fromString(VO_RBUT[i].def);
+		intSettings[VO_RBUT[i].key] = s2l(VO_RBUT[i].def);
 
 	//	const Control VO_SLI[1]
 	for (int i = 0; i < s_category_sizes[_T("VO_SLI")]; ++i)
-		intSettings[VO_SLI[i].key] = fromString(VO_SLI[i].def);
+		intSettings[VO_SLI[i].key] = s2l(VO_SLI[i].def);
 
 	//	const Control VO_SLI_EXT[1]
 	for (int i = 0; i < s_category_sizes[_T("VO_SLI_EXT")]; ++i)
-		intSettings[VO_SLI_EXT[i].key] = fromString(VO_SLI_EXT[i].def);
+		intSettings[VO_SLI_EXT[i].key] = s2l(VO_SLI_EXT[i].def);
 
 	//	const Control AO_SLI[3]
 	for (int i = 0; i < s_category_sizes[_T("AO_SLI")]; ++i)
-		intSettings[AO_SLI[i].key] = fromString(AO_SLI[i].def);
+		intSettings[AO_SLI[i].key] = s2l(AO_SLI[i].def);
 
 	//	const Control QA_CBOX[10]
 	for (int i = 0; i < s_category_sizes[_T("QA_CBOX")]; ++i)
-		intSettings[QA_CBOX[i].key] = fromString(QA_CBOX[i].def);
+		intSettings[QA_CBOX[i].key] = s2l(QA_CBOX[i].def);
 
 	//	const Control UI_CBOX[17]
 	for (int i = 0; i < s_category_sizes[_T("UI_CBOX")]; ++i)
-		intSettings[UI_CBOX[i].key] = fromString(UI_CBOX[i].def);
+		intSettings[UI_CBOX[i].key] = s2l(UI_CBOX[i].def);
 
 	//	const Control MO_SLI[5]
 	for (int i = 0; i < s_category_sizes[_T("MO_SLI")]; ++i)
-		intSettings[MO_SLI[i].key] = fromString(MO_SLI[i].def);
+		intSettings[MO_SLI[i].key] = s2l(MO_SLI[i].def);
 
 	//	const Control MO_SLI_EXT[5]
 	for (int i = 0; i < s_category_sizes[_T("MO_SLI_EXT")]; ++i)
-		intSettings[MO_SLI_EXT[i].key] = fromString(MO_SLI_EXT[i].def);
+		intSettings[MO_SLI_EXT[i].key] = s2l(MO_SLI_EXT[i].def);
 
 	//	const Control DO_SLI[1]
 	for (int i = 0; i < s_category_sizes[_T("DO_SLI")]; ++i)
-		intSettings[DO_SLI[i].key] = fromString(DO_SLI[i].def);
+		intSettings[DO_SLI[i].key] = s2l(DO_SLI[i].def);
 
 	//	const Control DO_CBOX[2]
 	for (int i = 0; i < s_category_sizes[_T("DO_CBOX")]; ++i)
-		intSettings[DO_CBOX[i].key] = fromString(DO_CBOX[i].def);
+		intSettings[DO_CBOX[i].key] = s2l(DO_CBOX[i].def);
 
 	//	const Control WR_COMBOX[4]
 	for (int i = 0; i < s_category_sizes[_T("WR_COMBOX")]; ++i)
-		intSettings[WR_COMBOX[i].key] = fromString(WR_COMBOX[i].def);
+		intSettings[WR_COMBOX[i].key] = s2l(WR_COMBOX[i].def);
 
 	//	const Control MO_CBOX[2]
 	for (int i = 0; i < s_category_sizes[_T("MO_CBOX")]; ++i)
-		intSettings[MO_CBOX[i].key] = fromString(MO_CBOX[i].def);
+		intSettings[MO_CBOX[i].key] = s2l(MO_CBOX[i].def);
 
 	//	const Control MO_RBUT[5]
 	for (int i = 0; i < s_category_sizes[_T("MO_RBUT")]; ++i)
-		intSettings[MO_RBUT[i].key] = fromString(MO_RBUT[i].def);
+		intSettings[MO_RBUT[i].key] = s2l(MO_RBUT[i].def);
 
 	//	const Control RC_TEXT[2]
 	for (int i = 0; i < s_category_sizes[_T("RC_TEXT")]; ++i)
-		intSettings[RC_TEXT[i].key] = fromString(RC_TEXT[i].def);
+		intSettings[RC_TEXT[i].key] = s2l(RC_TEXT[i].def);
 
 	//	const Control UI_ZOOM[1]
 	for (int i = 0; i < s_category_sizes[_T("UI_ZOOM")]; ++i)
-		intSettings[UI_ZOOM[i].key] = fromString(UI_ZOOM[i].def);
+		intSettings[UI_ZOOM[i].key] = s2l(UI_ZOOM[i].def);
 
 	for (int i = 0; i < s_category_sizes[_T("W4_CONTROLS")] - 1; ++i)
-		intSettings[W4_CONTROLS[i].key] = fromString(W4_CONTROLS[i].def);
+		intSettings[W4_CONTROLS[i].key] = s2l(W4_CONTROLS[i].def);
 
-	floatSettings[W4_CONTROLS[s_category_sizes[_T("W4_CONTROLS")]].key] = fromString(W4_CONTROLS[s_category_sizes[_T("W4_CONTROLS")]].def);
+	floatSettings[W4_CONTROLS[s_category_sizes[_T("W4_CONTROLS")]].key] = s2l(W4_CONTROLS[s_category_sizes[_T("W4_CONTROLS")]].def);
 }
 
 void abstract_panel::OnSliderMove(wxCommandEvent& event)

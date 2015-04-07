@@ -244,8 +244,6 @@ set(springlobbySrc
 	utils/tasutil.cpp
 
 	springsettings/frame.cpp
-	springsettings/panel_pathoption.cpp
-	springsettings/se_utils.cpp
 	springsettings/tab_abstract.cpp
 	springsettings/tab_audio.cpp
 	springsettings/tab_quality_video.cpp

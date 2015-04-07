@@ -17,7 +17,6 @@
 #include "log.h"
 
 #include "ctrlconstants.h"
-#include "se_utils.h"
 
 //TODO maybe use only one chkbox for minimap on left
 void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer)

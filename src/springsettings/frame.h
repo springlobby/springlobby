@@ -23,7 +23,6 @@ class wxPoint;
 class wxSize;
 class wxFlexGridSizer;
 class wxNotebookEvent;
-class PathOptionPanel;
 class wxIcon;
 
 class settings_frame : public wxFrame, public WindowAttributesPickle
@@ -56,7 +55,6 @@ private:
 	wxNotebook* notebook;
 	wxFlexGridSizer* book_sizer;
 	wxFlexGridSizer* book_sizer2;
-	PathOptionPanel* pathOpt_panel;
 
 	wxIcon* settingsIcon;
 

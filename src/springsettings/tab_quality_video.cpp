@@ -1,7 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "tab_quality_video.h"
-#include "se_utils.h"
 #include <wx/string.h>
 #include <wx/sizer.h>
 #include <wx/event.h>
@@ -128,7 +127,7 @@ void tab_quality_video::updateControls(int what_to_update)
 				case 4: {
 					int val = intSettings[W4_CONTROLS[i].key];
 					for (unsigned int j = 0; j < sizeof(W4_TEXSIZE_CHOICES) / sizeof(W4_TEXSIZE_CHOICES[0]); ++j) {
-						if (W4_TEXSIZE_CHOICES[j] == towxString(val))
+						if (W4_TEXSIZE_CHOICES[j] == TowxString(val))
 							((wxComboBox*)tmp)->SetValue(W4_TEXSIZE_CHOICES[j]);
 					}
 				} break;
