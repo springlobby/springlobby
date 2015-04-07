@@ -33,6 +33,7 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer* _parent2)
     , popupText(_T("Change Me!"))
     , shrink(false)
 {
+	Create(parent, wxID_ANY);
 	SetWindowStyleFlag(wxNO_BORDER | wxSTAY_ON_TOP | wxFRAME_NO_TASKBAR);
 	count++;
 	//the size we want the dialog to be
@@ -40,7 +41,6 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer* _parent2)
 	bottomRight = wxPoint(wxGetDisplaySize().GetWidth(), wxGetDisplaySize().GetHeight());
 	SetSize(bottomRight.x, bottomRight.y, dialogSize.GetWidth(), dialogSize.GetHeight());
 	ToasterBase::Connect(wxEVT_PAINT, (wxObjectEventFunction)&ToasterBoxWindow::OnPaint);
-	Create(parent, wxID_ANY);
 	SetBackgroundBitmap(charArr2wxBitmap(notif_bg_png, sizeof(notif_bg_png)));
 }
 
