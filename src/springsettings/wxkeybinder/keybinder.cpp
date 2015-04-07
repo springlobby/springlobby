@@ -698,9 +698,6 @@ wxString wxKeyBind::GetKeyStrokeString(wxKeyEvent& event)
 	event.GetRawKeyCode();
 
 	bool inputUs = false;
-#if defined(__WXMSW__) && !wxCHECK_VERSION(3, 0, 0) //TODO: check version (3?). we will probably get already local ascii chars in that version.
-	inputUs = true;
-#endif
 
 	const wxString str = KeyCodeToString(event.GetKeyCode(), inputUs);
 	int mods = GetKeyModifier(event);
@@ -2019,11 +2016,7 @@ void wxKeyConfigPanel::ShowSizer(wxSizer* toshow, bool show)
 	if (show)
 		main->Prepend(toshow, 0, wxGROW);
 	else
-#if wxCHECK_VERSION(2, 5, 1)
 		main->Detach(toshow);
-#else
-		main->Remove(toshow);
-#endif
 
 
 	// THIS PIECE OF CODE HAS BEEN COPIED & PASTED
@@ -2049,18 +2042,12 @@ void wxKeyConfigPanel::ShowSizer(wxSizer* toshow, bool show)
 	SetSizeHints(size.x, size.y, m_maxWidth, m_maxHeight);
 
 // don't change the width when expanding/collapsing
-#if wxCHECK_VERSION(2, 5, 1)
 	SetSize(wxDefaultCoord, size.y);
-#else
-	SetSize(-1, size.y);
-#endif
 
-#ifdef __WXGTK__
 	// VS: this is neccessary in order to force frame redraw under
 	// WindowMaker or fvwm2 (and probably other broken WMs).
 	// Otherwise, detailed list wouldn't be displayed.
 	Show();
-#endif // wxGTK
 }
 
 

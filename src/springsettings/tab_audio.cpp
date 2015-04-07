@@ -19,20 +19,12 @@ void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer)
 	for (int i = 0; i < ctrl_audio_sliders_size; ++i) {
 		ctrl_audio_sliders[i] = new wxSlider(this, AO_SLI[i].id, 1, 0, i == 0 ? 128 : 100, WX_DEF_P, WX_SLI_S, SLI_STYLE, WX_DEF_V);
 		ctrl_audio_sliders[i]->SetToolTip(AO_SLI[i].tTip[0]);
-#if wxCHECK_VERSION(2, 9, 2)
 		ctrl_audio_sliders[i]->SetTickFreq(10);
-#else
-		ctrl_audio_sliders[i]->SetTickFreq(10, 1);
-#endif
 		sizer->Add(new wxStaticText(this, -1, (AO_SLI[i].lbl)), 0, wxTOP, 15);
 		sizer->Add(ctrl_audio_sliders[i], 0, wxALIGN_LEFT, 0);
 	}
 
-#if wxCHECK_VERSION(2, 9, 2)
 	ctrl_audio_sliders[0]->SetTickFreq((128 / 10));
-#else
-	ctrl_audio_sliders[0]->SetTickFreq((128 / 10), 1);
-#endif
 }
 
 audio_panel::audio_panel(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
