@@ -1,12 +1,12 @@
 language: cpp
 compiler:
   - gcc
-  - clang # disabled, libboost-signals fails to compile: https://travis-ci.org/springlobby/springlobby/jobs/21325986
+  - clang
 before_script:
   - sudo add-apt-repository -y ppa:wxformbuilder/wxwidgets
   - sudo add-apt-repository -y ppa:boost-latest/ppa
   - sudo apt-get update
-  - sudo apt-cache search libboost
+#  - sudo apt-cache search libboost
 #  - sudo apt-cache search libwxgtk
   - sudo apt-get install libwxgtk3.0-dev libboost-thread1.55-dev libboost-system1.55-dev libboost-filesystem1.55-dev
 # optional dependencies
