@@ -298,7 +298,7 @@ void ChatPanelMenu::OnChannelAutoJoin(wxCommandEvent& /*unused*/)
 bool ChatPanelMenu::HasChanserv()
 {
 	if (m_chatpanel->m_channel == 0)
-		return NULL;
+		return false;
 	if (!m_chatpanel->m_channel->UserExists("ChanServ")) {
 		ui().ShowMessage(_("ChanServ error"), _("ChanServ is not in this channel."));
 		return false;
