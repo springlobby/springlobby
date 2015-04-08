@@ -505,7 +505,7 @@ bool CustomVirtListCtrl<T, L>::GetColumn(int col, wxListItem& item) const
 }
 
 template <class T, class L>
-bool CustomVirtListCtrl<T, L>::SetColumn(int col, wxListItem& item)
+bool CustomVirtListCtrl<T, L>::SetColumn(int col, const wxListItem& item)
 {
 	return wxListCtrl::SetColumn(col, item);
 }

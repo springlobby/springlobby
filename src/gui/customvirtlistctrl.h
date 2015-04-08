@@ -314,7 +314,7 @@ public:
 
 	//! when using the dummy column, we provide diff impl that adjust for that
 	bool GetColumn(int col, wxListItem& item) const;
-	bool SetColumn(int col, wxListItem& item);
+	bool SetColumn(int col, const wxListItem& item);
 	/** @}
 	 */
 
