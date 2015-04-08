@@ -4,6 +4,7 @@ ChangeLog of Springlobby
  - fix demo file deleted when spring is already running (linux only)
  - enable tooltips on windows
  - usual code cleanup
+ - fix vars not always initialized: current screen resolution now is 0x0 when unset
 
 ## 0.216
  - fix chat autoscroll on linux
