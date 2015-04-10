@@ -190,17 +190,22 @@ void PrDownloader::RemoveTorrentByName(const std::string& /*name*/)
 
 int PrDownloader::GetDownload(const std::string& category, const std::string& name)
 {
-	if (category == "map") {
+	std::string cat = category;
+	if (category == "engine") { //automaticly select engine from current platform
+		cat = PrDownloader::GetEngineCat();
+	}
+
+	if (cat == "map") {
 		return Get(m_map_loaders, name, IDownload::CAT_MAPS);
-	} else if (category == "game") {
+	} else if (cat == "game") {
 		return Get(m_game_loaders, name, IDownload::CAT_GAMES);
-	} else if (category == "engine_linux") {
+	} else if (cat == "engine_linux") {
 		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_LINUX);
-	} else if (category == "engine_linux64") {
+	} else if (cat == "engine_linux64") {
 		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_LINUX64);
-	} else if (category == "engine_windows") {
+	} else if (cat == "engine_windows") {
 		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_WINDOWS);
-	} else if (category == "engine_macosx") {
+	} else if (cat == "engine_macosx") {
 		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_MACOSX);
 	}
 	wxLogError(_T("Category %s not found"), category.c_str());
