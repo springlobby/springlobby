@@ -1,4 +1,6 @@
 ChangeLog of Springlobby
+## 0.218
+ - allow to download engine:spring 98.0
 ## 0.217
  - fix startpos not selectable in lobby
  - fix demo file deleted when spring is already running (linux only)
