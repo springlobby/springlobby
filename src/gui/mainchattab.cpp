@@ -40,6 +40,11 @@ EVT_AUINOTEBOOK_PAGE_CLOSE(CHAT_TABS, MainChatTab::OnTabClose)
 
 END_EVENT_TABLE()
 
+#define LOOP_PANELS(code)                                                          \
+	for (unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++) {           \
+		ChatPanel* tmp = static_cast<ChatPanel*>(m_chat_tabs->GetPage(i)); \
+		code;                                                              \
+	}
 
 MainChatTab::MainChatTab(wxWindow* parent)
     : wxScrolledWindow(parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr)
@@ -84,6 +89,21 @@ MainChatTab::MainChatTab(wxWindow* parent)
 
 MainChatTab::~MainChatTab()
 {
+	//Save opened channel tabs in AutoJoinChannels
+	//TODO: Maybe it is worth to leave user's autojoinlist intact 
+	//and save this some another way? (usaga)
+	sett().RemoveAllChannelsJoin();
+	
+	LOOP_PANELS(
+		if (tmp->GetPanelType() == CPT_Channel || tmp->GetPanelType() == CPT_User) {
+			wxString channelName = m_chat_tabs->GetPageText(i);
+			//TODO: This saves channels without their passwords!
+			wxString channelPassword = "";
+			
+			sett().AddChannelJoin( channelName, channelPassword );
+		})
+		
+	sett().SaveSettings();
 }
 
 ChatPanel& MainChatTab::ServerChat()
@@ -101,12 +121,6 @@ ChatPanel* MainChatTab::GetActiveChatPanel()
 	else
 		return static_cast<ChatPanel*>(m_chat_tabs->GetPage(selection));
 }
-
-#define LOOP_PANELS(code)                                                          \
-	for (unsigned int i = 0; i < m_chat_tabs->GetPageCount(); i++) {           \
-		ChatPanel* tmp = static_cast<ChatPanel*>(m_chat_tabs->GetPage(i)); \
-		code;                                                              \
-	}
 
 ChatPanel* MainChatTab::GetChannelChatPanel(const wxString& channel)
 {
