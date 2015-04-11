@@ -706,7 +706,7 @@ void MainWindow::OnMenuPathInfo(wxCommandEvent& /*event*/)
 void MainWindow::OnMenuDownload(wxCommandEvent& /*event*/)
 {
 	wxString lines;
-	if (!ui().AskText(_("Which Archives to download? Put each archive on a single line, for example \ngame:ba:stable\nmap:The Rock Final"), _("Download Archives"), lines, true))
+	if (!ui().AskText(_("Which Archives to download? Put each archive on a single line, for example \ngame:ba:stable\nmap:The Rock Final\nengine:spring 98.0"), _("Download Archives"), lines, true))
 		return;
 	size_t start = 0;
 	int pos = 0;
