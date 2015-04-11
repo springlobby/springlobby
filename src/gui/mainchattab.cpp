@@ -97,8 +97,11 @@ MainChatTab::~MainChatTab()
 	LOOP_PANELS(
 		if (tmp->GetPanelType() == CPT_Channel || tmp->GetPanelType() == CPT_User) {
 			wxString channelName = m_chat_tabs->GetPageText(i);
-			//TODO: This saves channels without their passwords!
-			wxString channelPassword = "";
+			wxString channelPassword;
+			if (tmp->GetPanelType() == CPT_Channel) {
+				const Channel* c = tmp->GetChannel();
+				channelPassword = TowxString(c->GetPassword());
+			}
 			
 			sett().AddChannelJoin( channelName, channelPassword );
 		})

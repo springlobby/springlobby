@@ -272,7 +272,7 @@ bool Channel::ExecuteSayCommand(const std::string& in)
 }
 
 
-std::string Channel::GetPassword()
+std::string Channel::GetPassword() const
 {
 	return m_password;
 }

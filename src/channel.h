@@ -64,7 +64,7 @@ public:
 
 	bool ExecuteSayCommand(const std::string& in);
 
-	std::string GetPassword();
+	std::string GetPassword() const;
 	void SetPassword(const std::string& pw);
 	bool IsSubscribed(); //subscribed to channel history?
 
