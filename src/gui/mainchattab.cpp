@@ -90,12 +90,12 @@ MainChatTab::MainChatTab(wxWindow* parent)
 MainChatTab::~MainChatTab()
 {
 	//Save opened channel tabs in AutoJoinChannels
-	//TODO: Maybe it is worth to leave user's autojoinlist intact 
+	//TODO: Maybe it is worth to leave user's autojoinlist intact
 	//and save this some another way? (usaga)
 	sett().RemoveAllChannelsJoin();
-	
+
 	LOOP_PANELS(
-		if (tmp->GetPanelType() == CPT_Channel || tmp->GetPanelType() == CPT_User) {
+	    if (tmp->GetPanelType() == CPT_Channel || tmp->GetPanelType() == CPT_User) {
 			wxString channelName = m_chat_tabs->GetPageText(i);
 			wxString channelPassword;
 			if (tmp->GetPanelType() == CPT_Channel) {
@@ -104,8 +104,8 @@ MainChatTab::~MainChatTab()
 			}
 			
 			sett().AddChannelJoin( channelName, channelPassword );
-		})
-		
+	    })
+
 	sett().SaveSettings();
 }
 
