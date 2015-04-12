@@ -392,18 +392,16 @@ void Settings::AddChannelJoin(const wxString& channel, const wxString& key)
 
 void Settings::RemoveChannelJoin(const wxString& channel)
 {
-	int index = GetChannelJoinIndex(channel);
-	if (index == -1)
-		return;
+	auto channelsList = GetChannelsJoin();
 	
-	int total = GetNumChannelsJoin();
+	RemoveAllChannelsJoin();
 	
-	cfg().DeleteGroup(wxString::Format(_T( "/Channels/AutoJoin/Channel%d" ), index));
-	
-	if( index<total )
+	for( auto& channelItem : channelsList )
 	{
-		cfg().RenameGroup(wxString::Format(_T( "/Channels/AutoJoin/Channel%d" ), (total - 1)), 
-		wxString::Format(_T( "/Channels/AutoJoin/Channel%d" ), index));
+		if(channelItem.name != channel)
+		{
+			AddChannelJoin(channelItem.name, channelItem.password);
+		}
 	}
 }
 
