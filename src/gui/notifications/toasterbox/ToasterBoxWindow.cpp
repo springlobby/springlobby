@@ -112,7 +112,7 @@ bool ToasterBoxWindow::DoesTextFit()
 {
 	wxCoord w, h;
 	wxClientDC dc(this);
-	dc.GetTextExtent(popupText, &w, &h);
+	dc.GetMultiLineTextExtent(popupText, &w, &h);
 	if (w > GetSize().GetWidth() || h > GetSize().GetHeight())
 		return false;
 	return true;
@@ -207,13 +207,13 @@ void ToasterBoxWindow::DrawText()
 	wxFont outFont(9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
 	dc.SetFont(outFont);
 
-	dc.GetTextExtent(pText, &w, &h);
+	dc.GetMultiLineTextExtent(pText, &w, &h);
 
 	//shrink the text to fit in the popup box
 	if (shrink) {
 		while ((w + (border_right + border_left)) > GetSize().GetWidth()) {
 			pText = pText.Left(pText.Length() - 1);
-			dc.GetTextExtent(pText, &w, &h);
+			dc.GetMultiLineTextExtent(pText, &w, &h);
 		}
 		textColumns = pText.Length();
 		//figure out how many lines of text we have

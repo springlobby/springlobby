@@ -292,5 +292,5 @@ void LobbyOptionsTab::OnDefaultWeb(wxCommandEvent& /*unused*/)
 
 void LobbyOptionsTab::OnTestNotification(wxCommandEvent& /*event*/)
 {
-	UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData(UiEvents::PrivateMessage, _T("Test Notification with umlauts äöü")));
+	UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData(UiEvents::PrivateMessage, _T("Test Notification with umlauts äöü\nsplitted in two line of text")));
 }
