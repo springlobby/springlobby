@@ -373,18 +373,14 @@ void Settings::SetServerAccountSavePass(const wxString& server_name, const bool 
 }
 
 
-int Settings::GetNumChannelsJoin()
-{
-	return cfg().GetGroupCount(_T( "/Channels/AutoJoin" ));
-}
-
 void Settings::AddChannelJoin(const wxString& channel, const wxString& key)
 {
-	int index = GetNumChannelsJoin();
+	int index = cfg().GetGroupCount(_T( "/Channels/AutoJoin" ));
 
 	//Does channel saved already?
-	if( GetChannelJoinIndex(channel)!=-1 ) return;
-	
+	if (GetChannelJoinIndex(channel) != -1)
+		return;
+
 	cfg().Write(wxString::Format(_T( "/Channels/AutoJoin/Channel%d/Name" ), index), channel);
 	cfg().Write(wxString::Format(_T( "/Channels/AutoJoin/Channel%d/Password" ), index), key);
 }
@@ -393,15 +389,14 @@ void Settings::AddChannelJoin(const wxString& channel, const wxString& key)
 void Settings::RemoveChannelJoin(const wxString& channel)
 {
 	auto channelsList = GetChannelsJoin();
-	
+
 	RemoveAllChannelsJoin();
-	
-	for( auto& channelItem : channelsList )
-	{
-		if(channelItem.name != channel)
-		{
-			AddChannelJoin(channelItem.name, channelItem.password);
+
+	for (auto& channelItem : channelsList) {
+		if ((channelItem.name == channel) || (channelItem.name.empty())) {
+			continue;
 		}
+		AddChannelJoin(channelItem.name, channelItem.password);
 	}
 }
 
@@ -413,7 +408,7 @@ void Settings::RemoveAllChannelsJoin()
 
 int Settings::GetChannelJoinIndex(const wxString& name)
 {
-	int numchannels = GetNumChannelsJoin();
+	int numchannels = cfg().GetGroupCount(_T( "/Channels/AutoJoin" ));
 	int ret = -1;
 	for (int i = 0; i < numchannels; i++) {
 		if (cfg().Read(wxString::Format(_T( "/Channels/AutoJoin/Channel%d/Name" ), i), wxEmptyString) == name)
@@ -425,7 +420,6 @@ int Settings::GetChannelJoinIndex(const wxString& name)
 std::vector<ChannelJoinInfo> Settings::GetChannelsJoin()
 {
 	std::vector<ChannelJoinInfo> ret;
-	//	int num = GetNumChannelsJoin();
 	wxArrayString channels = cfg().GetGroupList(_T("/Channels/AutoJoin/"));
 	slConfig::PathGuard pathguard(&cfg(), _T("/Channels/AutoJoin/"));
 	for (size_t i = 0; i < channels.Count(); ++i) {
