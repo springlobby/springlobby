@@ -50,10 +50,6 @@ wxMenu* ChatPanelMenu::GetMenu()
 
 	if (m_chatpanel->m_type == CPT_Channel) {
 		wxLogMessage(_T( "channel" ));
-		m_autorejoin = new wxMenuItem(m_menu_all, CHAT_MENU_CH_AUTOJOIN, _("Auto join this channel"), wxEmptyString, wxITEM_CHECK);
-		m_menu_all->Append(m_autorejoin);
-		const bool isautojoin = sett().GetChannelJoinIndex(TowxString(m_chatpanel->m_channel->GetName())) >= 0;
-		m_autorejoin->Check(isautojoin);
 
 		m_subscribe = new wxMenuItem(m_menu_all, CHAT_MENU_CH_SUBSCRIBE, _("Subscribe to this channel"), wxEmptyString, wxITEM_CHECK);
 		m_menu_all->Append(m_subscribe);
@@ -278,22 +274,6 @@ void ChatPanelMenu::OnChannelMenuDisplayJoinLeave(wxCommandEvent& /*unused*/)
 	//displayjoinitem->Check(!checked);
 }
 
-
-void ChatPanelMenu::OnChannelAutoJoin(wxCommandEvent& /*unused*/)
-{
-	if (m_chatpanel->m_channel == 0)
-		return;
-	if (m_autorejoin == 0)
-		return;
-
-	if (m_autorejoin->IsChecked()) {
-		sett().AddChannelJoin(TowxString(m_chatpanel->m_channel->GetName()), TowxString(m_chatpanel->m_channel->GetPassword()));
-		m_autorejoin->Check(true);
-	} else {
-		sett().RemoveChannelJoin(TowxString(m_chatpanel->m_channel->GetName()));
-		m_autorejoin->Check(false);
-	}
-}
 
 bool ChatPanelMenu::HasChanserv()
 {
@@ -763,8 +743,6 @@ void ChatPanelMenu::OnMenuItem(wxCommandEvent& event)
 		OnChannelMenuLeave(event);
 	else if (event.GetId() == CHAT_MENU_CH_DISPLAYJOIN)
 		OnChannelMenuDisplayJoinLeave(event);
-	else if (event.GetId() == CHAT_MENU_CH_AUTOJOIN)
-		OnChannelAutoJoin(event);
 
 	else if (event.GetId() == CHAT_MENU_CH_CLEAR)
 		OnChannelClearContents(event);

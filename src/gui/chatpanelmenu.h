@@ -21,7 +21,6 @@ public:
 
 	void OnChannelMenuLeave(wxCommandEvent& event);
 	void OnChannelMenuDisplayJoinLeave(wxCommandEvent& event);
-	void OnChannelAutoJoin(wxCommandEvent& event);
 	void OnChannelMenuInfo(wxCommandEvent& event);
 	void OnChannelMenuTopic(wxCommandEvent& event);
 	void OnChannelMenuMessage(wxCommandEvent& event);
