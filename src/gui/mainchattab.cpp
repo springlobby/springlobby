@@ -275,9 +275,6 @@ ChatPanel* MainChatTab::AddChatPanel(const User& user)
 	if (selection > 0)
 		m_chat_tabs->SetSelection(selection);
 	
-	//Add user to autojoinlist
-	sett().AddChannelJoin(TowxString(user.GetNick()), _T(""));
-	
 	return chat;
 }
 
@@ -323,7 +320,7 @@ void MainChatTab::OnTabClose(wxAuiNotebookEvent& event)
 			m_server_chat = NULL;
 		}
 		//Remove channel from autojoinlist
-		if (panel->GetPanelType() == CPT_Channel || panel->GetPanelType() == CPT_User) {
+		if (panel->GetPanelType() == CPT_Channel) {
 			sett().RemoveChannelJoin(panel->GetChannel()->GetName());
 			sett().SaveSettings();
 		}			
