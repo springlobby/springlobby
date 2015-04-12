@@ -393,7 +393,7 @@ void Settings::RemoveChannelJoin(const wxString& channel)
 	RemoveAllChannelsJoin();
 
 	for (auto& channelItem : channelsList) {
-		if ((channelItem.name == channel) || (channelItem.name.Trim().Trim(true).empty())) {
+		if ((channelItem.name == channel) || (channelItem.name.empty())) {
 			continue;
 		}
 		AddChannelJoin(channelItem.name, channelItem.password);
