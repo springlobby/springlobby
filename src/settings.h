@@ -201,10 +201,6 @@ public:
      * @{
      */
 
-	/** Fetch the number of channels in the autojoin list.
-     */
-	int GetNumChannelsJoin();
-
 
 	/** Add a channel to the autojoin list.
      */
@@ -223,17 +219,10 @@ public:
      */
 	std::vector<ChannelJoinInfo> GetChannelsJoin();
 
-
 	/** Deletes all autojoined channels
      *
      */
 	void RemoveAllChannelsJoin();
-
-	/** Returns the join order of a channel
-     *
-     * @returns the order of the channel during autojoin or -1 if not found
-     */
-	int GetChannelJoinIndex(const wxString& name);
 
 	bool ShouldAddDefaultChannelSettings();
 	/**@}*/
@@ -555,6 +544,15 @@ public:
 	void ConvertLists();
 
 private:
+	/** Returns the join order of a channel
+     *
+     * @returns the order of the channel during autojoin or -1 if not found
+     */
+	/** Fetch the number of channels in the autojoin list.
+     */
+	int GetNumChannelsJoin();
+
+	int GetChannelJoinIndex(const wxString& name);
 	void setFromList(const wxArrayString& list, const wxString& path);
 	wxArrayString getFromList(const wxString& path);
 };
