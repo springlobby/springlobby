@@ -2,6 +2,7 @@ ChangeLog of Springlobby
 ## 0.218
  - allow to download engine:spring 98.0
  - rejoin all channels which were open on restart
+ - automaticly rejoin all channels on restart
 
 ## 0.217
  - fix startpos not selectable in lobby
