@@ -89,24 +89,6 @@ MainChatTab::MainChatTab(wxWindow* parent)
 
 MainChatTab::~MainChatTab()
 {
-	//Save opened channel tabs in AutoJoinChannels
-	//TODO: Maybe it is worth to leave user's autojoinlist intact
-	//and save this some another way? (usaga)
-	sett().RemoveAllChannelsJoin();
-
-	LOOP_PANELS(
-	    if (tmp->GetPanelType() == CPT_Channel || tmp->GetPanelType() == CPT_User) {
-			wxString channelName = m_chat_tabs->GetPageText(i);
-			wxString channelPassword;
-			if (tmp->GetPanelType() == CPT_Channel) {
-				const Channel* c = tmp->GetChannel();
-				channelPassword = TowxString(c->GetPassword());
-			}
-			
-			sett().AddChannelJoin( channelName, channelPassword );
-	    })
-
-	sett().SaveSettings();
 }
 
 ChatPanel& MainChatTab::ServerChat()
@@ -254,6 +236,10 @@ ChatPanel* MainChatTab::AddChatPanel(Channel& channel, bool doFocus)
 	m_chat_tabs->InsertPage(m_chat_tabs->GetPageCount() - 1, chat, TowxString(channel.GetName()), doFocus, wxBitmap(channel_xpm));
 	if (doFocus)
 		chat->FocusInputBox();
+	
+	//Add channel to autojoinlist
+	sett().AddChannelJoin(channel.GetName(), channel.GetPassword());
+	
 	return chat;
 }
 
@@ -282,11 +268,16 @@ ChatPanel* MainChatTab::AddChatPanel(const User& user)
 				return tmp;
 			}
 	    })
+		
 	int selection = m_chat_tabs->GetSelection();
 	ChatPanel* chat = new ChatPanel(m_chat_tabs, user, m_imagelist);
 	m_chat_tabs->InsertPage(m_chat_tabs->GetPageCount() - 1, chat, TowxString(user.GetNick()), true, wxBitmap(userchat_xpm));
 	if (selection > 0)
 		m_chat_tabs->SetSelection(selection);
+	
+	//Add user to autojoinlist
+	sett().AddChannelJoin(TowxString(user.GetNick()), _T(""));
+	
 	return chat;
 }
 
@@ -409,6 +400,11 @@ bool MainChatTab::RemoveChatPanel(ChatPanel* panel)
 	LOOP_PANELS(
 	    if (tmp == panel && panel != 0) {
 			m_chat_tabs->DeletePage( i );
+			
+			//Remove channel from autojoinlist
+			if (tmp->GetPanelType() == CPT_Channel || tmp->GetPanelType() == CPT_User) {
+				sett().RemoveChannelJoin(panel->GetChannel()->GetName());
+			}			
 			return true;
 	    })
 	return false;

@@ -382,6 +382,9 @@ void Settings::AddChannelJoin(const wxString& channel, const wxString& key)
 {
 	int index = GetNumChannelsJoin();
 
+	//Does channel saved already?
+	if( GetChannelJoinIndex(channel)!=-1 ) return;
+	
 	cfg().Write(wxString::Format(_T( "/Channels/AutoJoin/Channel%d/Name" ), index), channel);
 	cfg().Write(wxString::Format(_T( "/Channels/AutoJoin/Channel%d/Password" ), index), key);
 }
