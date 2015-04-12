@@ -322,6 +322,11 @@ void MainChatTab::OnTabClose(wxAuiNotebookEvent& event)
 		if (panel->GetPanelType() == ChatPanelType::CPT_Server) {
 			m_server_chat = NULL;
 		}
+		//Remove channel from autojoinlist
+		if (panel->GetPanelType() == CPT_Channel || panel->GetPanelType() == CPT_User) {
+			sett().RemoveChannelJoin(panel->GetChannel()->GetName());
+			sett().SaveSettings();
+		}			
 	}
 }
 
@@ -398,13 +403,8 @@ wxImage MainChatTab::ReplaceChannelStatusColour(wxBitmap img, const wxColour& co
 bool MainChatTab::RemoveChatPanel(ChatPanel* panel)
 {
 	LOOP_PANELS(
-	    if (tmp == panel && panel != 0) {
-			m_chat_tabs->DeletePage( i );
-			
-			//Remove channel from autojoinlist
-			if (tmp->GetPanelType() == CPT_Channel || tmp->GetPanelType() == CPT_User) {
-				sett().RemoveChannelJoin(panel->GetChannel()->GetName());
-			}			
+	    if (tmp == panel && panel != 0) {		
+			m_chat_tabs->DeletePage( i );			
 			return true;
 	    })
 	return false;

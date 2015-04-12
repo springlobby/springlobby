@@ -395,9 +395,16 @@ void Settings::RemoveChannelJoin(const wxString& channel)
 	int index = GetChannelJoinIndex(channel);
 	if (index == -1)
 		return;
+	
 	int total = GetNumChannelsJoin();
-	cfg().DeleteGroup(_T( "/Channels/AutoJoin/Channel" ) + TowxString(index));
-	cfg().RenameGroup(_T( "/Channels/AutoJoin/Channel" ) + TowxString(total - 1), _T( "/Channels/AutoJoin/Channel" ) + TowxString(index));
+	
+	cfg().DeleteGroup(wxString::Format(_T( "/Channels/AutoJoin/Channel%d" ), index));
+	
+	if( index<total )
+	{
+		cfg().RenameGroup(wxString::Format(_T( "/Channels/AutoJoin/Channel%d" ), (total - 1)), 
+		wxString::Format(_T( "/Channels/AutoJoin/Channel%d" ), index));
+	}
 }
 
 void Settings::RemoveAllChannelsJoin()
