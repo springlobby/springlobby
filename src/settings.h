@@ -548,9 +548,6 @@ private:
      *
      * @returns the order of the channel during autojoin or -1 if not found
      */
-	/** Fetch the number of channels in the autojoin list.
-     */
-	int GetNumChannelsJoin();
 
 	int GetChannelJoinIndex(const wxString& name);
 	void setFromList(const wxArrayString& list, const wxString& path);
