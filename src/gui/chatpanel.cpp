@@ -562,8 +562,8 @@ void ChatPanel::Said(const wxString& who, const wxString& message)
 
 	if (req_user) {
 		bool inactive = ui().GetActiveChatPanel() != this || !wxTheApp->IsActive();
-		ui().mw().RequestUserAttention();
 		if (inactive) {
+			ui().mw().RequestUserAttention();
 			const wxString msg = wxString::Format(_T("%s:\n%s"), who.c_str(), message.Left(50).c_str());
 			UiEvents::GetNotificationEventSender().SendEvent(
 			    UiEvents::NotficationData(UiEvents::PrivateMessage, msg));
