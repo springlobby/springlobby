@@ -249,6 +249,8 @@ public:
 	/** @}
 	 */
 
+	void SetAutoResizableColumn(int columnIndex); 
+	 
 	/** @name Multi Selection methods
 	 * call this before example before sorting, inserting, etc
 	 */
@@ -357,7 +359,14 @@ protected:
 	void OnPeriodicSort(wxTimerEvent& evt);
 	//! this is the sink for a custom event that can be used for async sort
 	void OnSortEvent(wxCommandEvent& evt);
+	void OnSizeEvent(wxSizeEvent& );
 
+private:
+	void AdjustColumnsWidth();
+	
+private:
+	int autoResizableColumnIndex;
+	
 public:
 	DECLARE_EVENT_TABLE()
 
