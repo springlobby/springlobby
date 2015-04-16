@@ -8,6 +8,7 @@
 #include "gui/sltipwin.h"
 #include <algorithm>
 #include <lslutils/misc.h>
+#include <wx/msgdlg.h>
 
 wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T, L)
 
@@ -237,7 +238,6 @@ void CustomVirtListCtrl<T, L>::OnTimer(wxTimerEvent& /*unused*/)
 		m_tipwindow = new SLTipWindow(this, m_tiptext);
 		m_controlPointer = &m_tipwindow;
 		m_tipwindow->SetTipWindowPtr((wxTipWindow**)m_controlPointer);
-		m_tipwindow->SetBoundingRect(wxRect(1, 1, 50, 50));
 		m_tiptext = wxEmptyString;
 		m_tiptimer.Start(m_tooltip_duration, wxTIMER_ONE_SHOT);
 	} else {
@@ -245,6 +245,7 @@ void CustomVirtListCtrl<T, L>::OnTimer(wxTimerEvent& /*unused*/)
 		m_tiptimer.Stop();
 		if (m_controlPointer != 0 && *m_controlPointer != 0) {
 			m_tipwindow->Close();
+			delete m_tipwindow;
 			m_tipwindow = 0;
 		}
 	}
@@ -268,6 +269,7 @@ void CustomVirtListCtrl<T, L>::OnMouseMotion(wxMouseEvent& event)
 		m_tiptext = wxEmptyString;
 		if (m_tipwindow) {
 			m_tipwindow->Close();
+			delete m_tipwindow;
 			m_tipwindow = 0;
 		}
 		m_tiptimer.Stop();
@@ -302,7 +304,7 @@ void CustomVirtListCtrl<T, L>::SetTipWindowText(const long /*unused*/, const wxP
 		m_tiptext = wxEmptyString;
 	} else {
 		m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
-		m_tiptext = TE(m_colinfovec[column].tip);
+		m_tiptext = TE(_(m_colinfovec[column].tip));
 	}
 }
 

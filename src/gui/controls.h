@@ -28,15 +28,10 @@ const wxString DEFAULT_COLORDLG_TITLE = _("Choose color (only first 16 will be s
 wxColour GetColourFromUser(wxWindow* parent, const wxColour& colInit,
 			   const wxString& caption = DEFAULT_COLORDLG_TITLE, const wxString& palette = _T("Default"));
 
-#define TE(v) TooltipEnable(v)
+#define TE(v) (wxString(v))
 #define TES(v) TE(TowxString(v))
 
 //! call this function everytime map app loses/acquires focus to enable/disable tooltips
 void UpdateMainAppHasFocus(bool focus);
-
-/** @brief when setting tooltips use output of this func as input
-    it outputs empty string if tooltips are disabled in SL settings
-*/
-const wxChar* TooltipEnable(const wxString& input);
 
 #endif // SPRINGLOBBY_HEADERGUARD_CONTROLS_H
