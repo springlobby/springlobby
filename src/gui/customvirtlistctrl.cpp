@@ -644,6 +644,4 @@ void CustomVirtListCtrl<T, L>::AdjustColumnsWidth()
 	for (int columnIndex = 0; columnIndex < GetColumnCount(); ++columnIndex) {
 		sett().SetColumnWidth(m_name, columnIndex, GetColumnWidth(columnIndex));
 	}
-	
-	sett().SaveSettings();
 }
