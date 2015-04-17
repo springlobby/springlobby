@@ -236,10 +236,10 @@ ChatPanel* MainChatTab::AddChatPanel(Channel& channel, bool doFocus)
 	m_chat_tabs->InsertPage(m_chat_tabs->GetPageCount() - 1, chat, TowxString(channel.GetName()), doFocus, wxBitmap(channel_xpm));
 	if (doFocus)
 		chat->FocusInputBox();
-	
+
 	//Add channel to autojoinlist
 	sett().AddChannelJoin(channel.GetName(), channel.GetPassword());
-	
+
 	return chat;
 }
 
@@ -268,13 +268,13 @@ ChatPanel* MainChatTab::AddChatPanel(const User& user)
 				return tmp;
 			}
 	    })
-		
+
 	int selection = m_chat_tabs->GetSelection();
 	ChatPanel* chat = new ChatPanel(m_chat_tabs, user, m_imagelist);
 	m_chat_tabs->InsertPage(m_chat_tabs->GetPageCount() - 1, chat, TowxString(user.GetNick()), true, wxBitmap(userchat_xpm));
 	if (selection > 0)
 		m_chat_tabs->SetSelection(selection);
-	
+
 	return chat;
 }
 
@@ -323,7 +323,7 @@ void MainChatTab::OnTabClose(wxAuiNotebookEvent& event)
 		if (panel->GetPanelType() == CPT_Channel) {
 			sett().RemoveChannelJoin(panel->GetChannel()->GetName());
 			sett().SaveSettings();
-		}			
+		}
 	}
 }
 

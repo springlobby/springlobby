@@ -23,7 +23,7 @@ wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T, L)
     EVT_LIST_ITEM_DESELECTED(wxID_ANY, CustomVirtListCtrl::OnDeselected)
     EVT_LIST_DELETE_ITEM(wxID_ANY, CustomVirtListCtrl::OnDeselected)
     EVT_LIST_COL_CLICK(wxID_ANY, CustomVirtListCtrl::OnColClick)
-	EVT_SIZE(CustomVirtListCtrl::OnSizeEvent)
+    EVT_SIZE(CustomVirtListCtrl::OnSizeEvent)
     END_EVENT_TABLE()
 
 
@@ -62,8 +62,8 @@ wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T, L)
 		m_column_map[i] = i;
 	}
 
-	SetAutoResizableColumn( -1 );
-	
+	SetAutoResizableColumn(-1);
+
 	SetImageList(&icons(), wxIMAGE_LIST_NORMAL);
 	SetImageList(&icons(), wxIMAGE_LIST_SMALL);
 	m_sortorder = sett().GetSortOrder(name);
@@ -120,16 +120,16 @@ CustomVirtListCtrl<T, L>::~CustomVirtListCtrl()
 template <class T, class L>
 void CustomVirtListCtrl<T, L>::AddColumn(long i, int width, const wxString& label, const wxString& tip, bool modifiable)
 {
-	SetAutoResizableColumn( m_columnCount );
-	
+	SetAutoResizableColumn(m_columnCount);
+
 	m_columnCount++;
-	
+
 	//Lookup for user preferable width stored in settings
-	int realWidth = sett().GetColumnWidth( m_name, i );
-	if( realWidth==Settings::columnWidthUnset ) {
+	int realWidth = sett().GetColumnWidth(m_name, i);
+	if (realWidth == Settings::columnWidthUnset) {
 		realWidth = width;
 	}
-	
+
 	wxListCtrl::InsertColumn(i, label, wxLIST_FORMAT_LEFT, realWidth);
 	colInfo temp(i, label, tip, modifiable, realWidth);
 	m_colinfovec.push_back(temp);
@@ -332,7 +332,7 @@ void CustomVirtListCtrl<T, L>::OnEndResizeCol(wxListEvent& event)
 {
 	//Recalculate width of one column
 	AdjustColumnsWidth();
-	
+
 	//let the event go further
 	event.Skip();
 }
@@ -444,11 +444,10 @@ template <class T, class L>
 void CustomVirtListCtrl<T, L>::ResetColumnSizes()
 {
 	int columnsCount = GetColumnCount();
-	
-	for(int columnIndex = 0; columnIndex<columnsCount; ++columnIndex)
-	{
-		int columnWidth = sett().GetColumnWidth( m_name, columnIndex );
-		wxListCtrl::SetColumnWidth( columnIndex, columnWidth );
+
+	for (int columnIndex = 0; columnIndex < columnsCount; ++columnIndex) {
+		int columnWidth = sett().GetColumnWidth(m_name, columnIndex);
+		wxListCtrl::SetColumnWidth(columnIndex, columnWidth);
 	}
 }
 
@@ -595,7 +594,7 @@ wxListItemAttr* CustomVirtListCtrl<T, L>::OnGetItemAttr(long item) const
 template <class T, class L>
 void CustomVirtListCtrl<T, L>::OnPeriodicSort(wxTimerEvent& /*unused*/)
 {
-	
+
 	SortList();
 }
 
@@ -622,28 +621,27 @@ void CustomVirtListCtrl<T, L>::AdjustColumnsWidth()
 {
 	int columnsCount = GetColumnCount();
 	int totalColumnsWidth = 0;
-	
-	if( autoResizableColumnIndex<0 ) {
+
+	if (autoResizableColumnIndex < 0) {
 		return;
 	}
-	
-	if( autoResizableColumnIndex>=columnsCount ) {
+
+	if (autoResizableColumnIndex >= columnsCount) {
 		return;
 	}
-	
-	for( int colIndex = 0; colIndex<columnsCount; ++colIndex )
-	{
-		if( colIndex==autoResizableColumnIndex ) {
+
+	for (int colIndex = 0; colIndex < columnsCount; ++colIndex) {
+		if (colIndex == autoResizableColumnIndex) {
 			continue;
 		}
 		totalColumnsWidth += GetColumnWidth(colIndex);
 	}
-	
+
 	wxSize clientSize = GetClientSize();
-	SetColumnWidth( autoResizableColumnIndex, clientSize.GetWidth() - totalColumnsWidth );
-	
+	SetColumnWidth(autoResizableColumnIndex, clientSize.GetWidth() - totalColumnsWidth);
+
 	//Save all column sizes
-	for(int columnIndex=0; columnIndex<GetColumnCount(); ++columnIndex) {
-		sett().SetColumnWidth( m_name, columnIndex, GetColumnWidth(columnIndex) );
-	}	
+	for (int columnIndex = 0; columnIndex < GetColumnCount(); ++columnIndex) {
+		sett().SetColumnWidth(m_name, columnIndex, GetColumnWidth(columnIndex));
+	}
 }

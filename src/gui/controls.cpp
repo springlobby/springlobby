@@ -13,4 +13,3 @@ void UpdateMainAppHasFocus(bool focus)
 	main_app_has_focus = focus;
 	wxToolTip::Enable(sett().GetShowTooltips());
 }
-
