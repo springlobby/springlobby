@@ -41,6 +41,15 @@ SLCONFIG("/General/CacheVersion", CACHE_VERSION, "version of used cache");
 SLCONFIG("/General/firstrun", true, "true if app is run first time");
 
 
+// http://stackoverflow.com/questions/3025997/defining-static-const-integer-members-in-class-definition
+// definitions of static vars
+const int Settings::columnWidthMinimum;
+const int Settings::columnWidthUnset;
+const size_t ScreenPosition::bottom_right;
+const size_t ScreenPosition::bottom_left;
+const size_t ScreenPosition::top_right;
+const size_t ScreenPosition::top_left;
+
 Settings& sett()
 {
 	static LSL::Util::LineInfo<Settings> m(AT);
@@ -1113,8 +1122,8 @@ int Settings::GetColumnWidth(const wxString& list_name, const int column)
 {
 	const int orgwidth = cfg().Read(_T( "/GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString(column), columnWidthUnset);
 	int width = orgwidth;
-	if (orgwidth > -1)						    //-3 is unset, -2 and -1 used for auto size by wx
-		width = std::max(width, int(Settings::columnWidthMinimum)); //removing the temporary creation here gives me undefined ref error (koshi)
+	if (orgwidth > -1) //-3 is unset, -2 and -1 used for auto size by wx
+		width = std::max(width, Settings::columnWidthMinimum);
 	return width;
 }
 
