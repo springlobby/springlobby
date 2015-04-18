@@ -336,11 +336,22 @@ void CustomVirtListCtrl<T, L>::OnEndResizeCol(wxListEvent& event)
 template <class T, class L>
 bool CustomVirtListCtrl<T, L>::SetColumnWidth(int col, int width)
 {
+	int realWidth = width;
+	
 	assert(col < (long)m_columnCount);
 	assert(col >= 0);
-
-	sett().SetColumnWidth(m_name, col, width);
-	return wxListCtrl::SetColumnWidth(col, width);
+	
+	//If width is set to wxLIST_AUTOSIZE or wxLIST_AUTOSIZE_USEHEADER
+	//check settings for concrete value stored from last time 
+	if( width < 0 ) {
+	    realWidth = sett().GetColumnWidth(m_name, col);
+	    if( realWidth == Settings::columnWidthUnset ) {
+	      realWidth = width; //No value found in settings, use original
+	    }
+	}
+	
+	sett().SetColumnWidth(m_name, col, realWidth);
+	return wxListCtrl::SetColumnWidth(col, realWidth);
 }
 
 template <class T, class L>
