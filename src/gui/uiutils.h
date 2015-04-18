@@ -57,16 +57,8 @@ inline wxString bool2yn(const bool b)
 	return b ? _("Yes") : _("No");
 }
 
-#ifdef __WXMSW__
-const wxString DEFAULT_COLORDLG_TITLE = _("Choose color");
-#else
-const wxString DEFAULT_COLORDLG_TITLE = _("Choose color (only first 16 will be saved)");
-#endif
-
-
 //! when querying for a color, always use this (it'll autosave/retrieve custom defined colors)
-wxColour GetColourFromUser(wxWindow* parent, const wxColour& colInit,
-			   const wxString& caption = DEFAULT_COLORDLG_TITLE, const wxString& palette = _T("Default"));
+wxColour GetColourFromUser(wxWindow* parent, const wxColour& colInit);
 
 DECLARE_EVENT_TYPE(REFRESH_EVENT, wxID_ANY)
 

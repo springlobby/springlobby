@@ -306,7 +306,7 @@ void GroupOptionsPanel::OnGroupActionsChange(wxCommandEvent&)
 void GroupOptionsPanel::OnHighlightColorClick(wxCommandEvent& event)
 {
 	ColorButton* origin = (ColorButton*)event.GetEventObject();
-	wxColour c = GetColourFromUser(this, origin->GetColor(), m_current_group);
+	wxColour c = GetColourFromUser(this, origin->GetColor());
 	if (c.IsOk()) {
 		origin->SetColor(c);
 		useractions().SetGroupColor(m_current_group, c);
