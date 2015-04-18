@@ -10,6 +10,7 @@
 #include "iconimagelist.h"
 #include "gui/uiutils.h"
 #include "gui/ui.h"
+#include "gui/customdialogs.h"
 #include "utils/conversion.h"
 #include "playbacklistctrl.h"
 #include "replaylist.h"

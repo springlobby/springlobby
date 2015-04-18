@@ -6,6 +6,8 @@
 
 #include "utils/curlhelper.h" //has to be first include, as else it warns about winsock2.h should be included first
 #include "utils/conversion.h"
+#include "gui/customdialogs.h"
+#include "uiutils.h"
 
 #include "chatpanel.h"
 

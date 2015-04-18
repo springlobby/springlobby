@@ -1,14 +1,10 @@
 
 
-#include "gui/customdialogs.h"
-#include "gui/controls.h"
 #include "settings.h"
 #include "iconimagelist.h"
-#include "uiutils.h"
+#include "gui/controls.h"
 #include "gui/sltipwin.h"
-#include <algorithm>
 #include <lslutils/misc.h>
-#include <wx/msgdlg.h>
 
 wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T, L)
 

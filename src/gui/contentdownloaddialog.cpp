@@ -7,6 +7,7 @@
 #include <wx/textctrl.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
+#include <wx/msgdlg.h>
 #include "json/wx/jsonreader.h"
 #include "httpfile.h"
 #include "ui.h"

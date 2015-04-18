@@ -14,6 +14,8 @@
 #include "settings.h"
 #include "battlelist/battlelisttab.h"
 #include "utils/conversion.h"
+#include "gui/customdialogs.h"
+#include "uiutils.h"
 
 ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/)
     : wxEvtHandler()

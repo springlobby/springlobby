@@ -14,13 +14,10 @@
 #define IDD_SORT_TIMER 697
 
 #include <vector>
-
-#include <utility>
 #include <map>
 
 #include "useractions.h"
 #include "utils/sortutil.h"
-#include "utils/globalevents.h"
 #include "utils/mixins.h"
 
 const wxEventType ListctrlDoSortEventType = wxNewEventType();
