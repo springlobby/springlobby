@@ -87,12 +87,12 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 
 	//    wxBoxSizer* desc_sizer = new wxBoxSizer( wxVERTICAL );
 	m_desc_text = new wxTextCtrl(m_panel, wxID_ANY, sett().GetLastHostDescription(), wxDefaultPosition, wxDefaultSize, 0);
-	m_desc_text->SetToolTip(TE(_("A short description of the game, this will show up in the battle list.")));
+	m_desc_text->SetToolTip(_("A short description of the game, this will show up in the battle list."));
 	topsizer->Add(m_desc_text, 1, wxALL | wxEXPAND, 5);
 
 	m_desc_check = new wxCheckBox(m_panel, wxID_ANY, _("Autopaste description"));
 	m_desc_check->SetValue(sett().GetBattleLastAutoAnnounceDescription());
-	m_desc_check->SetToolTip(TE(_("Automatically write the battle description when a user joins.")));
+	m_desc_check->SetToolTip(_("Automatically write the battle description when a user joins."));
 
 	topsizer->AddStretchSpacer();
 	topsizer->Add(m_desc_check, 0, wxLEFT, 5);
@@ -105,7 +105,7 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	wxArrayString m_engine_picChoices;
 	wxBoxSizer* mod_choice_button_sizer2 = new wxBoxSizer(wxHORIZONTAL);
 	m_engine_pic = new wxChoice(m_panel, CHOOSE_ENGINE, wxDefaultPosition, wxDefaultSize, m_engine_picChoices, 0);
-	m_engine_pic->SetToolTip(TE(_("Select the engine version to play.")));
+	m_engine_pic->SetToolTip(_("Select the engine version to play."));
 	mod_choice_button_sizer2->Add(m_engine_pic, 0, wxALL, 5);
 	topsizer->Add(mod_choice_button_sizer2, 0, wxEXPAND | wxALL, 1);
 
@@ -116,7 +116,7 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	wxArrayString m_mod_picChoices;
 	wxBoxSizer* mod_choice_button_sizer = new wxBoxSizer(wxHORIZONTAL);
 	m_mod_pic = new wxChoice(m_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mod_picChoices, 0);
-	m_mod_pic->SetToolTip(TE(_("Select the game to play.")));
+	m_mod_pic->SetToolTip(_("Select the game to play."));
 	mod_choice_button_sizer->Add(m_mod_pic, 0, wxALL, 5);
 
 	wxBitmap mp = charArr2wxBitmap(arrow_refresh_png, sizeof(arrow_refresh_png));
@@ -130,7 +130,7 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	topsizer->Add(m_pwd_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_pwd_text = new wxTextCtrl(m_panel, wxID_ANY, sett().GetLastHostPassword(), wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
-	m_pwd_text->SetToolTip(TE(_("Password needed to join game. Keep empty for no password")));
+	m_pwd_text->SetToolTip(_("Password needed to join game. Keep empty for no password"));
 	topsizer->Add(m_pwd_text, 1, wxALL | wxEXPAND, 5);
 
 	m_port_lbl = new wxStaticText(m_panel, wxID_ANY, _("Port"), wxDefaultPosition, wxDefaultSize, 0);
@@ -138,7 +138,7 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	topsizer->Add(m_port_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_port_text = new wxTextCtrl(m_panel, wxID_ANY, wxString::Format(_T( "%d" ), sett().GetLastHostPort()), wxDefaultPosition, wxDefaultSize, 0);
-	m_port_text->SetToolTip(TE(_("UDP port to host game on. Default is 8452.")));
+	m_port_text->SetToolTip(_("UDP port to host game on. Default is 8452."));
 	topsizer->Add(m_port_text, 1, wxALL | wxEXPAND, 5);
 
 	//	m_port_test_check = new wxCheckBox( m_panel, wxID_ANY, _("Test firewall"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -147,7 +147,7 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 
 
 	m_relayed_host_check = new wxCheckBox(m_panel, CHK_USE_RELAY, _("Use relayhost"), wxDefaultPosition, wxDefaultSize, 0);
-	m_relayed_host_check->SetToolTip(TE(_("host and control game on remote server, helps if you have trouble hosting")));
+	m_relayed_host_check->SetToolTip(_("host and control game on remote server, helps if you have trouble hosting"));
 	m_relayed_host_pick = new wxButton(m_panel, PICK_RELAYHOST, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	m_relayed_host_pick->SetLabel(m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost);
 
@@ -179,7 +179,7 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 
 	m_players_box->SetMinSize(wxSize(-1, 60));
 	m_players_slide = new wxSlider(m_panel, wxID_ANY, sett().GetLastHostPlayerNum(), 2, SPRING_MAX_USERS, wxDefaultPosition, wxDefaultSize, wxSL_AUTOTICKS | wxSL_BOTH | wxSL_HORIZONTAL | wxSL_LABELS);
-	m_players_slide->SetToolTip(TE(_("The maximum number of players to allow in the battle.")));
+	m_players_slide->SetToolTip(_("The maximum number of players to allow in the battle."));
 	m_players_box->Add(m_players_slide, 0, wxALL | wxEXPAND, 5);
 
 	m_main_sizer->Add(m_players_box, 0, wxALL | wxEXPAND, 5);
@@ -197,7 +197,7 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	//m_nat_radios->Enable( false );
 	m_nat_radios->Enable(true);
 
-	m_nat_radios->SetToolTip(TE(_("NAT traversal to use.")));
+	m_nat_radios->SetToolTip(_("NAT traversal to use."));
 
 	m_pl_nat_sizer->Add(m_nat_radios, 1, wxALL | wxEXPAND, 5);
 
@@ -207,7 +207,7 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	rankFilterChoices.Add(_("At least"));
 	rankFilterChoices.Add(_("No greater than"));
 	m_rank_direction = new wxChoice(m_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, rankFilterChoices, 0);
-	m_rank_direction->SetToolTip(TE(_("Select the type of rank enforcement.")));
+	m_rank_direction->SetToolTip(_("Select the type of rank enforcement."));
 	m_rank_box->Add(m_rank_direction);
 
 	wxFlexGridSizer* m_rank_sizer;
@@ -280,7 +280,7 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	m_buttons_sizer->Add(m_cancel_btn, 0, wxALL, 5);
 
 	m_host_btn = new wxButton(m_panel, HOST_OK, _("Host"), wxDefaultPosition, wxDefaultSize, 0);
-	m_host_btn->SetToolTip(TE(_("Start hosting the battle.")));
+	m_host_btn->SetToolTip(_("Start hosting the battle."));
 
 	m_buttons_sizer->Add(m_host_btn, 0, wxALL, 5);
 

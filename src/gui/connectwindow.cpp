@@ -65,7 +65,7 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 
 	m_server_lbl = new wxStaticText(m_login_tab, -1, _("Server"));
 	m_server_combo = new wxComboBox(m_login_tab, CON_SERV_SEL, server);
-	m_server_combo->SetToolTip(TE(_("Server to connect to. You can connect to any server you like by typing in hostaddress:port format.")));
+	m_server_combo->SetToolTip(_("Server to connect to. You can connect to any server you like by typing in hostaddress:port format."));
 
 	m_ser_acc_line = new wxStaticLine(m_login_tab);
 
@@ -75,7 +75,7 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 	m_pass_text = new wxTextCtrl(m_login_tab, -1, password, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
 	m_rpass_check = new wxCheckBox(m_login_tab, -1, _("Remember password"));
 	m_autoconnect_check = new wxCheckBox(m_login_tab, -1, _("Autoconnect next time"));
-	m_autoconnect_check->SetToolTip(TE(_("remember connection details and automatically connect to server on next lobby startup")));
+	m_autoconnect_check->SetToolTip(_("remember connection details and automatically connect to server on next lobby startup"));
 
 	m_rpass_check->SetValue(savepass);
 	m_autoconnect_check->SetValue(autoconnect);

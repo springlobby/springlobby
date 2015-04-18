@@ -265,7 +265,7 @@ void ChatPanel::CreateControls()
 					wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL);
 	m_chan_opts_button = NULL;
 	if (m_type == CPT_Channel) {
-		m_chatlog_text->SetToolTip(TE(_("right click for options (like autojoin)")));
+		m_chatlog_text->SetToolTip(_("right click for options (like autojoin)"));
 	}
 
 	wxBitmap ico;

@@ -224,7 +224,7 @@ void CustomListCtrl::SetTipWindowText(const long /*unused*/, const wxPoint& posi
 		m_tiptext = wxEmptyString;
 	} else {
 		m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
-		m_tiptext = TE(m_colinfovec[column].first);
+		m_tiptext = m_colinfovec[column].first;
 	}
 }
 

@@ -70,7 +70,7 @@ AddBotDialog::AddBotDialog(wxWindow* parent, IBattle& battle, bool singleplayer)
 	m_ai_sizer->Add(m_ai_lbl, 1, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
 	m_ai = new wxChoice(this, ADDBOT_AI);
-	m_ai->SetToolTip(TE(_("Choose the AI library to use with this bot.")));
+	m_ai->SetToolTip(_("Choose the AI library to use with this bot."));
 
 	m_ai_sizer->Add(m_ai, 2, wxALL, 5);
 

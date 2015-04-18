@@ -300,7 +300,7 @@ void CustomVirtListCtrl<T, L>::SetTipWindowText(const long /*unused*/, const wxP
 		m_tiptext = wxEmptyString;
 	} else {
 		m_tiptimer.Start(m_tooltip_delay, wxTIMER_ONE_SHOT);
-		m_tiptext = TE(_(m_colinfovec[column].tip));
+		m_tiptext = _(m_colinfovec[column].tip);
 	}
 }
 

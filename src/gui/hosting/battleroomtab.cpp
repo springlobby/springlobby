@@ -133,19 +133,19 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_player_panel = new wxScrolledWindow(m_splitter, -1);
 	m_player_panel->SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 	m_team_sel = new wxComboBox(m_player_panel, BROOM_TEAMSEL, _T( "1" ), wxDefaultPosition, wxSize(50, CONTROL_HEIGHT), team_choices);
-	m_team_sel->SetToolTip(TE(_("Players with the same team number share control of their units.")));
+	m_team_sel->SetToolTip(_("Players with the same team number share control of their units."));
 	m_ally_sel = new wxComboBox(m_player_panel, BROOM_ALLYSEL, _T( "1" ), wxDefaultPosition, wxSize(50, CONTROL_HEIGHT), ally_choices);
-	m_ally_sel->SetToolTip(TE(_("Players with the same ally number work together to achieve victory.")));
+	m_ally_sel->SetToolTip(_("Players with the same ally number work together to achieve victory."));
 	m_color_sel = new ColorButton(m_player_panel, BROOM_COLOURSEL, wxColour(0, 0, 0), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
-	m_color_sel->SetToolTip(TE(_("Select a color to identify your units in-game")));
+	m_color_sel->SetToolTip(_("Select a color to identify your units in-game"));
 	m_side_sel = new wxBitmapComboBox(m_player_panel, BROOM_SIDESEL, wxEmptyString, wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT), wxArrayString(), wxCB_READONLY);
-	m_side_sel->SetToolTip(TE(_("Select your faction")));
+	m_side_sel->SetToolTip(_("Select your faction"));
 	m_spec_chk = new wxCheckBox(m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
-	m_spec_chk->SetToolTip(TE(_("Spectate (watch) the battle instead of playing")));
+	m_spec_chk->SetToolTip(_("Spectate (watch) the battle instead of playing"));
 	m_auto_unspec_chk = new wxCheckBox(m_player_panel, BROOM_UNSPEC, _("Auto un-spectate"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
-	m_auto_unspec_chk->SetToolTip(TE(_("automatically unspec when there's a free slot")));
+	m_auto_unspec_chk->SetToolTip(_("automatically unspec when there's a free slot"));
 	m_ready_chk = new wxCheckBox(m_player_panel, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
-	m_ready_chk->SetToolTip(TE(_("Click this if you are content with the battle settings.")));
+	m_ready_chk->SetToolTip(_("Click this if you are content with the battle settings."));
 
 	m_team_lbl = new wxStaticText(m_player_panel, -1, _("Team"));
 	m_ally_lbl = new wxStaticText(m_player_panel, -1, _("Ally"));
@@ -160,7 +160,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_map_combo = new wxComboBox(this, BROOM_MAP_SEL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxArrayString(), wxCB_READONLY);
 
 	m_minimap = new MapCtrl(this, 162, m_battle, true, true, false);
-	m_minimap->SetToolTip(TE(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes.")));
+	m_minimap->SetToolTip(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes."));
 
 	m_browse_map_btn = new wxButton(this, BROOM_MAP_BROWSE, _("Map"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	//m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
@@ -171,23 +171,23 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_command_line = new wxStaticLine(this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
 
 	m_host_new_btn = new wxButton(this, BROOM_HOST_NEW, _("Host new"), wxDefaultPosition, wxDefaultSize);
-	m_host_new_btn->SetToolTip(TE(_("Host a new battle")));
+	m_host_new_btn->SetToolTip(_("Host a new battle"));
 	m_leave_btn = new wxButton(this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
-	m_leave_btn->SetToolTip(TE(_("Leave the battle and return to the battle list")));
+	m_leave_btn->SetToolTip(_("Leave the battle and return to the battle list"));
 	m_start_btn = new wxButton(this, BROOM_START, _("Start"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
-	m_start_btn->SetToolTip(TE(_("Start the battle")));
+	m_start_btn->SetToolTip(_("Start the battle"));
 
 	m_manage_players_btn = new wxButton(this, BROOM_MANAGE_MENU, _("Player Management"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
-	m_manage_players_btn->SetToolTip(TE(_("Various functions to make team games simplers to setup")));
+	m_manage_players_btn->SetToolTip(_("Various functions to make team games simplers to setup"));
 
 	m_addbot_btn = new wxButton(this, BROOM_ADDBOT, _("Add Bot..."), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
-	m_addbot_btn->SetToolTip(TE(_("Add a computer-controlled player to the game")));
+	m_addbot_btn->SetToolTip(_("Add a computer-controlled player to the game"));
 	m_autolock_chk = new wxCheckBox(this, BROOM_AUTOLOCK, _("Autolock on start"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
-	m_autolock_chk->SetToolTip(TE(_("Automatically locks the battle when the game starts and unlock when it's finished.")));
+	m_autolock_chk->SetToolTip(_("Automatically locks the battle when the game starts and unlock when it's finished."));
 	m_autolock_chk->SetValue(sett().GetLastAutolockStatus());
 
 	m_lock_chk = new wxCheckBox(this, BROOM_LOCK, _("Locked"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
-	m_lock_chk->SetToolTip(TE(_("Prevent additional players from joining the battle")));
+	m_lock_chk->SetToolTip(_("Prevent additional players from joining the battle"));
 
 	m_manage_users_mnu = new wxMenu();
 
@@ -247,22 +247,22 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_preset_btns_sizer = new wxBoxSizer(wxHORIZONTAL);
 
 	m_options_preset_sel = new wxComboBox(this, BROOM_PRESETSEL, wxEmptyString, wxDefaultPosition, wxDefaultSize, sett().GetPresetList(), wxCB_READONLY);
-	m_options_preset_sel->SetToolTip(TE(_("Load battle preset")));
+	m_options_preset_sel->SetToolTip(_("Load battle preset"));
 
 	m_preset_sizer->Add(m_options_preset_sel, 0, wxEXPAND | wxALL);
 
 	m_save_btn = new wxButton(this, BROOM_SAVEPRES, _("Save"), wxDefaultPosition, wxDefaultSize);
-	m_save_btn->SetToolTip(TE(_("Save a set of options.")));
+	m_save_btn->SetToolTip(_("Save a set of options."));
 
 	m_preset_btns_sizer->Add(m_save_btn, 0, wxEXPAND);
 
 	m_delete_btn = new wxButton(this, BROOM_DELETEPRES, _("Delete"), wxDefaultPosition, wxDefaultSize);
-	m_delete_btn->SetToolTip(TE(_("Delete a set of options.")));
+	m_delete_btn->SetToolTip(_("Delete a set of options."));
 
 	m_preset_btns_sizer->Add(m_delete_btn, 0, wxEXPAND);
 
 	m_default_btn = new wxButton(this, BROOM_SETDEFAULTPRES, _("Set default"), wxDefaultPosition, wxDefaultSize);
-	m_default_btn->SetToolTip(TE(_("Use the current set of options as game's default.")));
+	m_default_btn->SetToolTip(_("Use the current set of options as game's default."));
 
 	m_preset_btns_sizer->Add(m_default_btn, 0, wxEXPAND);
 
@@ -272,7 +272,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_opts_list = new wxListCtrl(this, BROOM_OPTIONLIST, wxDefaultPosition, wxDefaultSize, wxLC_REPORT);
 	//m_opts_list->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNFACE ) );
 	m_opts_list->SetFont(wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT));
-	m_opts_list->SetToolTip(TE(_("Activate an element to quickly change it")));
+	m_opts_list->SetToolTip(_("Activate an element to quickly change it"));
 
 	m_opts_list->InsertColumn(0, _("Option"), wxLIST_FORMAT_LEFT, 160);
 	m_opts_list->InsertColumn(1, _("Value"), wxLIST_FORMAT_LEFT, 140);

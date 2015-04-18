@@ -326,7 +326,7 @@ ChatOptionsTab::ChatOptionsTab(wxWindow* parent)
 	sbHighlightSizer->Add(0, 0, 1, wxEXPAND, 5);
 
 	m_highlight_words = new wxTextCtrl(this, ID_HIWORDS, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	m_highlight_words->SetToolTip(TE(_("enter a ; seperated list")));
+	m_highlight_words->SetToolTip(_("enter a ; seperated list"));
 
 	sbHighlightSizer->Add(m_highlight_words, 0, wxALL | wxEXPAND, 5);
 

@@ -53,7 +53,7 @@ SingleOptionDialog::SingleOptionDialog(IBattle& battle, const wxString& optionta
 		case LSL::Enum::opt_bool: {
 			const auto opt = optWrap.m_opts[optFlag].bool_map[key];
 			m_checkbox = new wxCheckBox(this, wxID_ANY, TowxString(opt.name));
-			m_checkbox->SetToolTip(TES(opt.description));
+			m_checkbox->SetToolTip(opt.description);
 			m_checkbox->SetValue(opt.value);
 			m_main_sizer->Add(m_checkbox, 0, wxEXPAND);
 			break;
@@ -63,7 +63,7 @@ SingleOptionDialog::SingleOptionDialog(IBattle& battle, const wxString& optionta
 			m_spinctrl = new wxSpinCtrlDouble(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
 							  wxSP_ARROW_KEYS, double(opt.min), double(opt.max),
 							  double(opt.value), double(opt.stepping), TowxString(opt.key));
-			m_spinctrl->SetToolTip(TES(opt.description));
+			m_spinctrl->SetToolTip(opt.description);
 			m_main_sizer->Add(m_spinctrl, 0, wxEXPAND);
 			break;
 		}
@@ -71,7 +71,7 @@ SingleOptionDialog::SingleOptionDialog(IBattle& battle, const wxString& optionta
 			const auto opt = optWrap.m_opts[optFlag].string_map[key];
 			m_textctrl = new wxTextCtrl(this, wxID_ANY, TowxString(opt.value), wxDefaultPosition,
 						    wxDefaultSize, 0, wxDefaultValidator, TowxString(opt.key));
-			m_textctrl->SetToolTip(TES(opt.description));
+			m_textctrl->SetToolTip(opt.description);
 			m_main_sizer->Add(m_textctrl, 0, wxEXPAND);
 			break;
 		}
@@ -85,7 +85,7 @@ SingleOptionDialog::SingleOptionDialog(IBattle& battle, const wxString& optionta
 			for (const auto itor : opt.listitems) {
 				tooltip += "\n" + itor.name + ": " + itor.desc;
 			}
-			m_combobox->SetToolTip(TES(tooltip));
+			m_combobox->SetToolTip(tooltip);
 			m_main_sizer->Add(m_combobox, 0, wxEXPAND);
 			break;
 		}

@@ -60,27 +60,27 @@ BattleroomMMOptionsTab::BattleroomMMOptionsTab(IBattle* battle, wxWindow* parent
 	m_preset_sizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, _("Manage Presets")), wxHORIZONTAL);
 
 	m_options_preset_sel = new wxComboBox(this, BOPTS_CHOSEPRES, _T(""), wxDefaultPosition, wxDefaultSize, sett().GetPresetList(), wxCB_READONLY);
-	m_options_preset_sel->SetToolTip(TE(_("Set name.")));
+	m_options_preset_sel->SetToolTip(_("Set name."));
 
 	m_preset_sizer->Add(m_options_preset_sel, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
 	m_load_btn = new wxButton(this, BOPTS_LOADPRES, _("Load..."), wxDefaultPosition, wxDefaultSize, 0);
-	m_load_btn->SetToolTip(TE(_("Load a saved set of options.")));
+	m_load_btn->SetToolTip(_("Load a saved set of options."));
 
 	m_preset_sizer->Add(m_load_btn, 0, wxALL, 5);
 
 	m_save_btn = new wxButton(this, BOPTS_SAVEPRES, _("Save..."), wxDefaultPosition, wxDefaultSize, 0);
-	m_save_btn->SetToolTip(TE(_("Save a set of options.")));
+	m_save_btn->SetToolTip(_("Save a set of options."));
 
 	m_preset_sizer->Add(m_save_btn, 0, wxALL, 5);
 
 	m_delete_btn = new wxButton(this, BOPTS_DELETEPRES, _("Delete..."), wxDefaultPosition, wxDefaultSize, 0);
-	m_delete_btn->SetToolTip(TE(_("Delete a set of options.")));
+	m_delete_btn->SetToolTip(_("Delete a set of options."));
 
 	m_preset_sizer->Add(m_delete_btn, 0, wxALL, 5);
 
 	m_default_btn = new wxButton(this, BOPTS_SETDEFAULTPRES, _("Set default..."), wxDefaultPosition, wxDefaultSize, 0);
-	m_default_btn->SetToolTip(TE(_("Use the current set of options as game's default.")));
+	m_default_btn->SetToolTip(_("Use the current set of options as game's default."));
 
 	m_preset_sizer->Add(m_default_btn, 0, wxALL, 5);
 
@@ -185,7 +185,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 		if (i.second.section == section.key) {
 			LSL::mmOptionBool current = i.second;
 			wxCheckBox* temp = new wxCheckBox(this, BOOL_START_ID + ctrl_count, TowxString(current.name));
-			temp->SetToolTip(TES(current.description));
+			temp->SetToolTip(current.description);
 			m_name_info_map[pref + TowxString(current.key)] = TowxString(current.description);
 			temp->SetName(pref + TowxString(current.key));
 			m_chkbox_map[pref + TowxString(current.key)] = temp;
@@ -210,7 +210,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 									  wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, double(current.min), double(current.max),
 									  double(current.value), double(current.stepping), TowxString(current.key));
 			tempspin->SetSnapToTicks(true);
-			tempspin->SetToolTip(TES(current.description));
+			tempspin->SetToolTip(current.description);
 			const wxString pref_key = pref + TowxString(current.key);
 			m_name_info_map[pref_key] = TowxString(current.description);
 			tempspin->Enable(enable);
@@ -244,7 +244,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 			for (const auto itor : current.listitems) {
 				tooltip += TowxString(std::string("\n") + itor.name + std::string(": ") + itor.desc);
 			}
-			tempchoice->SetToolTip(TE(tooltip));
+			tempchoice->SetToolTip(tooltip);
 			const wxString pref_key = pref + TowxString(current.key);
 			m_name_info_map[pref_key] = tooltip;
 			tempchoice->SetName(pref_key);
@@ -269,7 +269,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 			const LSL::mmOptionString current = it.second;
 			wxTextCtrl* temptext = new wxTextCtrl(this, STRING_START_ID + ctrl_count, TowxString(current.value), wxDefaultPosition,
 							      wxDefaultSize, 0, wxDefaultValidator, TowxString(current.key));
-			temptext->SetToolTip(TES(current.description));
+			temptext->SetToolTip(current.description);
 			const wxString pref_key = pref + TowxString(current.key);
 			m_name_info_map[pref_key] = TowxString(current.description);
 			temptext->SetName(pref_key);

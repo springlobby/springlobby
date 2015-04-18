@@ -53,15 +53,15 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
 	m_web_def_radio = new wxRadioButton(this, SPRING_DEFWEB, _("Default Browser."),
 					    wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
-	m_web_def_radio->SetToolTip(TE(_("Use your system-wide browser preference")));
+	m_web_def_radio->SetToolTip(_("Use your system-wide browser preference"));
 
 	m_web_spec_radio = new wxRadioButton(this, SPRING_DEFWEB, _("Specify:"));
-	m_web_spec_radio->SetToolTip(TE(_("Specify the web browser you want to use")));
+	m_web_spec_radio->SetToolTip(_("Specify the web browser you want to use"));
 
 	m_web_edit = new wxTextCtrl(this, -1, sett().GetWebBrowserPath());
 
 	m_web_browse_btn = new wxButton(this, SPRING_WEBBROWSE, _("Browse"));
-	m_web_browse_btn->SetToolTip(TE(_("Use a file dialog to find the web browser")));
+	m_web_browse_btn->SetToolTip(_("Use a file dialog to find the web browser"));
 
 	if (sett().GetWebBrowserUseDefault())
 		m_web_def_radio->SetValue(true);
@@ -85,7 +85,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_editor_edit = new wxTextCtrl(this, -1, TowxString(SlPaths::GetEditorPath()));
 
 	m_editor_browse_btn = new wxButton(this, ID_BUT_EDITOR, _("Browse"));
-	m_editor_browse_btn->SetToolTip(TE(_("Use a file dialog to find the editor binary")));
+	m_editor_browse_btn->SetToolTip(_("Use a file dialog to find the editor binary"));
 
 	m_editor_loc_sizer = new wxBoxSizer(wxHORIZONTAL);
 	m_editor_loc_sizer->Add(m_editor_loc_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 2);

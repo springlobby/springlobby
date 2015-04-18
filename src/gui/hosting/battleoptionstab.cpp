@@ -65,7 +65,7 @@ BattleOptionsTab::BattleOptionsTab(wxWindow* parent, IBattle* battle)
 	m_allowed_sizer->Add(m_aloowed_lbl, 0, wxALL, 5);
 
 	m_allowed_list = new wxListBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_MULTIPLE | wxLB_NEEDED_SB | wxLB_SORT);
-	m_allowed_list->SetToolTip(TE(_("Units in this list will be available in the game.")));
+	m_allowed_list->SetToolTip(_("Units in this list will be available in the game."));
 
 	m_allowed_sizer->Add(m_allowed_list, 1, wxALL | wxEXPAND, 5);
 
@@ -77,15 +77,15 @@ BattleOptionsTab::BattleOptionsTab(wxWindow* parent, IBattle* battle)
 	m_mid_btn_sizer->Add(0, 50, 0, wxEXPAND, 0);
 
 	m_restrict_btn = new wxButton(this, BOPTS_RESTRICT, _T( ">" ), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
-	m_restrict_btn->SetToolTip(TE(_("Disable selected units.")));
+	m_restrict_btn->SetToolTip(_("Disable selected units."));
 	m_mid_btn_sizer->Add(m_restrict_btn, 0, wxALL, 5);
 
 	m_allow_btn = new wxButton(this, BOPTS_ALLOW, _T( "<" ), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
-	m_allow_btn->SetToolTip(TE(_("Re-enable selected units.")));
+	m_allow_btn->SetToolTip(_("Re-enable selected units."));
 	m_mid_btn_sizer->Add(m_allow_btn, 0, wxALL, 5);
 
 	m_clear_btn = new wxButton(this, BOPTS_CLEARRES, _("<<"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
-	m_clear_btn->SetToolTip(TE(_("Enable all units.")));
+	m_clear_btn->SetToolTip(_("Enable all units."));
 
 	m_mid_btn_sizer->Add(m_clear_btn, 0, wxALL, 5);
 
@@ -98,7 +98,7 @@ BattleOptionsTab::BattleOptionsTab(wxWindow* parent, IBattle* battle)
 	m_restricted_sizer->Add(m_restricted_lbl, 0, wxALL, 5);
 
 	m_restrict_list = new wxListBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_MULTIPLE | wxLB_NEEDED_SB | wxLB_SORT);
-	m_restrict_list->SetToolTip(TE(_("Units in this list will not be available in the game.")));
+	m_restrict_list->SetToolTip(_("Units in this list will not be available in the game."));
 
 	m_restricted_sizer->Add(m_restrict_list, 1, wxALL | wxEXPAND, 5);
 
