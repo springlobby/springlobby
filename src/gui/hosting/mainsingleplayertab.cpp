@@ -24,7 +24,7 @@
 
 
 MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
-    : wxScrolledWindow(parent, -1)
+    : wxPanel(parent, -1)
 {
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 	GetAui().manager->AddPane(this, wxLEFT, _T( "mainsingleplayertab" ));
@@ -44,7 +44,6 @@ MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
 
 	m_main_sizer->Add(m_tabs, 1, wxEXPAND);
 
-	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 	SetSizer(m_main_sizer);
 	Layout();
 }

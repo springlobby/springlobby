@@ -20,7 +20,7 @@ class ContentDownloadDialog;
 typedef std::map<wxString, DownloadInfo> map_infos;
 typedef map_infos::iterator map_infos_iter;
 
-class MainDownloadTab : public wxScrolledWindow
+class MainDownloadTab : public wxPanel
 {
 public:
 	MainDownloadTab(wxWindow* parent);

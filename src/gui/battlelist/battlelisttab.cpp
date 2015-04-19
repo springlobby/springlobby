@@ -60,7 +60,7 @@ SLCONFIG("/BattleListTab/ShowExtendedInfos", true, "determines if panels with ba
 
 
 BattleListTab::BattleListTab(wxWindow* parent)
-    : wxScrolledWindow(parent, -1)
+    : wxPanel(parent, -1)
     , m_sel_battle(0)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T( "battlelisttab" ));
@@ -162,7 +162,6 @@ BattleListTab::BattleListTab(wxWindow* parent)
 
 	m_filter->Hide();
 
-	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 	SetSizer(m_main_sizer);
 	Layout();
 

@@ -19,7 +19,7 @@ class SLNotebook;
 class wxNotebook;
 class ChatPanel;
 
-class MainJoinBattleTab : public wxScrolledWindow
+class MainJoinBattleTab : public wxPanel
 {
 public:
 	MainJoinBattleTab(wxWindow* parent);

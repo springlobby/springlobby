@@ -17,7 +17,7 @@ class wxImageList;
 class wxString;
 
 //! @brief The main chat tab.
-class MainChatTab : public wxScrolledWindow
+class MainChatTab : public wxPanel
 {
 public:
 	MainChatTab(wxWindow* parent);

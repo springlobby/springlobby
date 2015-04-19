@@ -32,7 +32,7 @@
 #include <stdexcept>
 
 MainJoinBattleTab::MainJoinBattleTab(wxWindow* parent)
-    : wxScrolledWindow(parent, -1)
+    : wxPanel(parent, -1)
     , m_battle_tab(0)
     , m_map_tab(0)
     , m_opts_tab(0)
@@ -65,7 +65,6 @@ MainJoinBattleTab::MainJoinBattleTab(wxWindow* parent)
 
 	m_main_sizer->Add(m_tabs, 1, wxEXPAND);
 
-	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 	SetSizer(m_main_sizer);
 	Layout();
 }

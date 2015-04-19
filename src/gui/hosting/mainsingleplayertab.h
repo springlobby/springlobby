@@ -13,7 +13,7 @@ class wxBoxSizer;
 class SinglePlayerTab;
 class BattleOptionsTab;
 
-class MainSinglePlayerTab : public wxScrolledWindow
+class MainSinglePlayerTab : public wxPanel
 {
 public:
 	MainSinglePlayerTab(wxWindow* parent);

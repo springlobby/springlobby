@@ -25,7 +25,7 @@ struct StoredGame;
 class PlaybackLoader;
 class PlaybackListFilter;
 
-class PlaybackTab : public GlobalEvent, public wxScrolledWindow
+class PlaybackTab : public GlobalEvent, public wxPanel
 {
 private:
 	friend class BattleListFilter; //! WTF?

@@ -47,7 +47,7 @@ END_EVENT_TABLE()
 	}
 
 MainChatTab::MainChatTab(wxWindow* parent)
-    : wxScrolledWindow(parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr)
+    : wxPanel(parent, -1, wxDefaultPosition, wxDefaultSize, 0, wxPanelNameStr)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T( "mainchattab" ));
 
@@ -81,7 +81,6 @@ MainChatTab::MainChatTab(wxWindow* parent)
 
 	SetSizer(m_main_sizer);
 	m_main_sizer->SetSizeHints(this);
-	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 
 	Layout();
 }

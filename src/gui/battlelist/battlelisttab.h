@@ -28,7 +28,7 @@ class wxToggleButton;
 class wxFlexGridSizer;
 /** \brief The panel containing a BattleListCtrl and a BattleListFilter
  * \todo DOCME */
-class BattleListTab : public wxScrolledWindow, public GlobalEvent, public SL::NonCopyable
+class BattleListTab : public wxPanel, public GlobalEvent, public SL::NonCopyable
 {
 	friend class BattleListFilter;
 

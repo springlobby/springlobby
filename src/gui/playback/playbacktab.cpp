@@ -32,7 +32,7 @@
 #include "gui/hosting/battleroomlistctrl.h"
 #include "log.h"
 
-BEGIN_EVENT_TABLE(PlaybackTab, wxScrolledWindow)
+BEGIN_EVENT_TABLE(PlaybackTab, wxPanel)
 
 EVT_BUTTON(PLAYBACK_WATCH, PlaybackTab::OnWatch)
 EVT_BUTTON(PLAYBACK_RELOAD, PlaybackTab::OnReload)
@@ -53,7 +53,7 @@ EVT_CHECKBOX(PLAYBACK_LIST_FILTER_BUTTON, PlaybackTab::OnFilter)
 END_EVENT_TABLE()
 
 PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
-    : wxScrolledWindow(parent, -1)
+    : wxPanel(parent, -1)
     , m_replay_loader(0)
     , m_isreplay(replay)
 {
@@ -155,7 +155,6 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 	//none selected --> shouldn't watch/delete that
 	Deselect();
 
-	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 	Layout();
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&PlaybackTab::OnUnitsyncReloaded));
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&PlaybackTab::OnSpringTerminated));

@@ -34,7 +34,7 @@ EVT_TIMER(ID_TIMER, MainDownloadTab::OnUpdate)
 END_EVENT_TABLE()
 
 MainDownloadTab::MainDownloadTab(wxWindow* parent)
-    : wxScrolledWindow(parent)
+    : wxPanel(parent)
     , m_widgets_dialog(NULL)
     , m_download_dialog(NULL)
 {
@@ -60,7 +60,6 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 	m_mainbox->Add(m_buttonbox, 0, wxALL, 5);
 
 	SetSizer(m_mainbox);
-	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 
 	//	info_map = torrent().CollectGuiInfos();
 
