@@ -47,7 +47,7 @@ END_EVENT_TABLE()
 
 
 BattleMapTab::BattleMapTab(wxWindow* parent, IBattle* battle)
-    : wxScrolledWindow(parent, -1)
+    : wxPanel(parent, -1)
     , m_battle(battle)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T( "battlemaptab" ));
@@ -120,7 +120,6 @@ BattleMapTab::BattleMapTab(wxWindow* parent, IBattle* battle)
 
 	SetBattle(battle);
 
-	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 	Layout();
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleMapTab::OnUnitsyncReloaded));
 }

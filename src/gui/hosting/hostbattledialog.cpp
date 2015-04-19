@@ -68,16 +68,12 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
     , WindowHintsPickle(_T("hostbattledialog"), this, wxSize(410, 520))
     , m_last_relayhost(sett().GetLastRelayedHost())
 {
-	//	this->SetSizeHints( GetSize(), wxDefaultSize );
+	SetMinSize(wxSize(400, 560));
 
-	m_panel = new wxScrolledWindow(this);
-	//		m_panel ->SetSizeHints( GetSize(), wxDefaultSize );
+	m_panel = new wxPanel(this);
 	wxBoxSizer* all_sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxFlexGridSizer* topsizer = new wxFlexGridSizer(2, 0, 10);
-	//	topsizer->AddGrowableCol( 1, 1 );
-
-	//	SetSizeHints( wxDefaultSize, wxDefaultSize );
 	wxBoxSizer* m_main_sizer;
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -85,7 +81,6 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	m_desc_lbl->Wrap(-1);
 	topsizer->Add(m_desc_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
-	//    wxBoxSizer* desc_sizer = new wxBoxSizer( wxVERTICAL );
 	m_desc_text = new wxTextCtrl(m_panel, wxID_ANY, sett().GetLastHostDescription(), wxDefaultPosition, wxDefaultSize, 0);
 	m_desc_text->SetToolTip(_("A short description of the game, this will show up in the battle list."));
 	topsizer->Add(m_desc_text, 1, wxALL | wxEXPAND, 5);
@@ -96,7 +91,6 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 
 	topsizer->AddStretchSpacer();
 	topsizer->Add(m_desc_check, 0, wxLEFT, 5);
-	//	topsizer->Add( desc_sizer , 0, wxEXPAND | wxALL, 0 );
 
 	m_mod_lbl = new wxStaticText(m_panel, wxID_ANY, _("Engine"), wxDefaultPosition, wxDefaultSize, 0);
 	m_mod_lbl->Wrap(-1);
@@ -194,7 +188,6 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	m_nat_radios = new wxRadioBox(m_panel, CHOSE_NAT, _("NAT traversal"), wxDefaultPosition, wxDefaultSize, m_nat_radiosNChoices, m_nat_radiosChoices, 1, wxRA_SPECIFY_COLS);
 	m_nat_radios->SetSelection(sett().GetLastHostNATSetting());
 
-	//m_nat_radios->Enable( false );
 	m_nat_radios->Enable(true);
 
 	m_nat_radios->SetToolTip(_("NAT traversal to use."));
@@ -289,7 +282,6 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	m_panel->SetSizer(m_main_sizer);
 	all_sizer->Add(m_panel, 1, wxEXPAND, 0);
 	this->SetSizer(all_sizer);
-	m_panel->SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 	this->Layout();
 	m_host_btn->SetFocus();
 

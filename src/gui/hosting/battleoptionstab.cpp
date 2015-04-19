@@ -47,7 +47,7 @@ BattleOptionsTab::BattleOptionsTab(wxWindow* parent, IBattle* battle)
 	GetAui().manager->AddPane(this, wxLEFT, _T( "battleoptionstab" ));
 
 	wxBoxSizer* m_main_sizer;
-	m_main_sizer = new wxBoxSizer(wxHORIZONTAL);
+	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
 	//	wxBoxSizer* m_main_options_sizer;
 	//	m_main_options_sizer = new wxBoxSizer( wxVERTICAL );

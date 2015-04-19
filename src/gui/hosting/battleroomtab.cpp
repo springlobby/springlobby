@@ -116,7 +116,7 @@ static wxArrayString CreateIntList(int count) {
 
 
 BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
-    : wxScrolledWindow(parent, -1)
+    : wxPanel(parent, -1)
     , m_battle(battle)
     , m_BattleActionSink(this, &UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent))
 {
@@ -347,7 +347,6 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 
 	SetBattle(battle);
 
-	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 	SetSizer(m_main_sizer);
 	Layout();
 

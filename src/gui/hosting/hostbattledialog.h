@@ -18,7 +18,7 @@ class wxButton;
 class wxBitmapButton;
 class wxCheckBox;
 class wxMenu;
-class wxScrolledWindow;
+class wxPanel;
 
 class HostBattleDialog : public wxDialog, public WindowHintsPickle
 {
@@ -41,7 +41,7 @@ private:
 	void ReloadEngineList();
 	void ReloadModList();
 
-	wxScrolledWindow* m_panel;
+	wxPanel* m_panel;
 	wxStaticText* m_desc_lbl;
 	wxTextCtrl* m_desc_text;
 	wxStaticText* m_mod_lbl;

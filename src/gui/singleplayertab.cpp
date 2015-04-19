@@ -50,7 +50,7 @@ END_EVENT_TABLE()
 
 
 SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
-    : wxScrolledWindow(parent, -1)
+    : wxPanel(parent, -1)
     , m_battle(msptab)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T("singleplayertab"));
@@ -146,7 +146,6 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 
 	m_main_sizer->Add(m_buttons_sizer, 0, wxEXPAND, 5);
 
-	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 	this->SetSizer(m_main_sizer);
 	this->Layout();
 

@@ -56,7 +56,7 @@ END_EVENT_TABLE()
 
 
 ChatOptionsTab::ChatOptionsTab(wxWindow* parent)
-    : wxScrolledWindow(parent, -1)
+    : wxPanel(parent, -1)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T( "chatoptionstab" ));
 
@@ -338,8 +338,6 @@ ChatOptionsTab::ChatOptionsTab(wxWindow* parent)
 	bMainSizerV->Add(bBotomSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5);
 
 	bMainSizerV->Add(0, 0, 1, wxEXPAND | wxALL, 5);
-
-	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 
 	SetSizer(bMainSizerV);
 	DoRestore();

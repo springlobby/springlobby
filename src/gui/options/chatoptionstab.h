@@ -18,7 +18,7 @@ class ColorButton;
 class wxSpinCtrl;
 
 
-class ChatOptionsTab : public wxScrolledWindow
+class ChatOptionsTab : public wxPanel
 {
 public:
 	ChatOptionsTab(wxWindow* parent);

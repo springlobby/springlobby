@@ -37,7 +37,7 @@ typedef std::map<wxString, long> OptionListMap;
 
 /** \brief container for BattleroomListCtrl, battle specific ChatPanel. Also displaying battle info summary
  * \todo DOCMEMORE */
-class BattleRoomTab : public wxScrolledWindow, public GlobalEvent
+class BattleRoomTab : public wxPanel, public GlobalEvent
 {
 public:
 	BattleRoomTab(wxWindow* parent, IBattle* battle);
