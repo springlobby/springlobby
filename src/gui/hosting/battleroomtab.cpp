@@ -106,19 +106,14 @@ EVT_LIST_ITEM_ACTIVATED(BROOM_OPTIONLIST, BattleRoomTab::OnOptionActivate)
 
 END_EVENT_TABLE()
 
-template <int N, int S = 1>
-class MyStrings : public wxArrayString
-{
-public:
-	MyStrings()
-	{
-		for (int i = S; i <= N; ++i)
-			Add(TowxString(i));
+static wxArrayString CreateIntList(int count) {
+	wxArrayString res;
+	for (int i = 1; i <= count; ++i) {
+		res.Add(TowxString(i));
 	}
-};
+	return res;
+}
 
-const MyStrings<SPRING_MAX_TEAMS> team_choices;
-const MyStrings<SPRING_MAX_ALLIES> ally_choices;
 
 BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
     : wxScrolledWindow(parent, -1)
@@ -129,6 +124,8 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 
 	// Create all widgets
 	m_splitter = new wxSplitterWindow(this, -1, wxDefaultPosition, wxSize(100, 60));
+	const wxArrayString team_choices = CreateIntList(SPRING_MAX_TEAMS);
+	const wxArrayString ally_choices = CreateIntList(SPRING_MAX_ALLIES);
 
 	m_player_panel = new wxScrolledWindow(m_splitter, -1);
 	m_player_panel->SetScrollRate(SCROLL_RATE, SCROLL_RATE);
