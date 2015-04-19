@@ -107,19 +107,23 @@ void settings_frame::OnKillFocus(wxFocusEvent&)
 
 void settings_frame::handleExternExit()
 {
-	if (!alreadyCalled) {
-		alreadyCalled = true;
-		if (settingsChangedAbstract()) {
-			int choice = customMessageBox(SS_MAIN_ICON, _("Save Spring settings before exiting?"), _("Confirmation needed"), wxYES | wxNO | wxICON_QUESTION);
-			if (choice == wxYES) {
-				saveSettingsAbstract();
-				if (simpleTab != 0)
-					simpleTab->saveCbxChoices();
-			}
-		}
+	if (alreadyCalled) {
+		return;
+	}
+	alreadyCalled = true;
+
+	if (!settingsChangedAbstract()) {
+		return;
 	}
 
-	sett().SaveSettings();
+	const int choice = customMessageBox(SS_MAIN_ICON, _("Save Spring settings before exiting?"), _("Confirmation needed"), wxYES | wxNO | wxICON_QUESTION);
+	if (choice == wxYES) {
+		saveSettingsAbstract();
+		if (simpleTab != 0) {
+			simpleTab->saveCbxChoices();
+		}
+		sett().SaveSettings();
+	}
 }
 
 void settings_frame::doQuit()
