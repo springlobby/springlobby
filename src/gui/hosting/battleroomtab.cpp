@@ -127,8 +127,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	const wxArrayString team_choices = CreateIntList(SPRING_MAX_TEAMS);
 	const wxArrayString ally_choices = CreateIntList(SPRING_MAX_ALLIES);
 
-	m_player_panel = new wxScrolledWindow(m_splitter, -1);
-	m_player_panel->SetScrollRate(SCROLL_RATE, SCROLL_RATE);
+	m_player_panel = new wxPanel(m_splitter, -1);
 	m_team_sel = new wxComboBox(m_player_panel, BROOM_TEAMSEL, _T( "1" ), wxDefaultPosition, wxSize(50, CONTROL_HEIGHT), team_choices);
 	m_team_sel->SetToolTip(_("Players with the same team number share control of their units."));
 	m_ally_sel = new wxComboBox(m_player_panel, BROOM_ALLYSEL, _T( "1" ), wxDefaultPosition, wxSize(50, CONTROL_HEIGHT), ally_choices);

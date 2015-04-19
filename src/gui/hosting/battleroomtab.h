@@ -3,8 +3,6 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
 
-#include <wx/scrolwin.h>
-
 #include <lslunitsync/optionswrapper.h>
 #include "utils/globalevents.h"
 #include "utils/uievents.h"
@@ -165,7 +163,7 @@ private:
 
 	MapCtrl* m_minimap;
 
-	wxScrolledWindow* m_player_panel;
+	wxPanel* m_player_panel;
 
 	wxComboBox* m_map_combo;
 
