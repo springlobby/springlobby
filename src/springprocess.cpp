@@ -13,7 +13,6 @@ lsl/spring/springprocess.cpp
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 **/
 
-
 #include <wx/log.h>
 
 #include "springprocess.h"
@@ -21,15 +20,7 @@ lsl/spring/springprocess.cpp
 #include "utils/platform.h"
 #include "log.h"
 
-#ifdef __WXMSW__
-#include <shlobj.h>
-#include <shlwapi.h>
-#include <objbase.h>
-#endif
-
-
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_SPRING_EXIT)
-
 
 SpringProcess::SpringProcess(Spring& sp)
     : m_sp(sp)
