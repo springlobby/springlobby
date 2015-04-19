@@ -1,6 +1,10 @@
 ChangeLog of Springlobby
 ## 0.218
+ - removed A LOT of scrollbars
  - allow to download engine:spring 98.0
+ - don't flash window titlebar when chat is active
+ - fix tooltips not shown on windows
+ - fix memleak: unitsync wasn't probably unloaded
  - rejoin all channels which were open on restart
  - automaticly rejoin all channels on restart
 
