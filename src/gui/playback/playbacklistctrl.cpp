@@ -213,7 +213,7 @@ wxString PlaybackListCtrl::GetItemText(long item, long column) const
 	}
 }
 
-int PlaybackListCtrl::GetItemImage(long item) const
+int PlaybackListCtrl::GetItemImage(long /*item*/) const
 {
 	return -1; //icons().GetBattleStatusIcon( *m_data[item] );
 }
