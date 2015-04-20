@@ -47,7 +47,7 @@ ELSE(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
 	SET(MESSAGES_POT_FILE ${springlobby_SOURCE_DIR}/po/springlobby.pot)
 	ADD_CUSTOM_TARGET(
 		update-potfile
-		COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C --directory ${springlobby_SOURCE_DIR} --msgid-bugs-address "devel@www.springlobby.info" -o ${MESSAGES_POT_FILE} ${srcfiles}
+		COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C --no-wrap --directory ${springlobby_SOURCE_DIR} --msgid-bugs-address "devel@www.springlobby.info" -o ${MESSAGES_POT_FILE} ${srcfiles}
 		DEPENDS springlobby
 		WORKING_DIRECTORY ${springlobby_SOURCE_DIR}
 	)
