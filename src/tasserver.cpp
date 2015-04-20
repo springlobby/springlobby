@@ -217,28 +217,32 @@ bool TASServer::ExecuteSayCommand(const std::string& cmd)
 	} else if (subcmd == "/quit") {
 		Disconnect();
 		return true;
-	} else if (subcmd == "/changepassword2") {
-		if (arrayparams.size() < 2) {
-			m_se->OnServerMessage("Missing parameter, usage: /changepassword2 newpassword");
-			return true;
-		}
-		const std::string oldpassword = STD_STRING(sett().GetServerAccountPass(TowxString(GetServerName())));
-		const std::string newpassword = GetPasswordHash(params);
-		if (oldpassword.empty() || !sett().GetServerAccountSavePass(TowxString(GetServerName()))) {
-			m_se->OnServerMessage("There is no saved password for this acsize, please use /changepassword oldpassword newpassword");
-			return true;
-		}
-		SendCmd("CHANGEPASSWORD", oldpassword + std::string(" ") + newpassword);
-		return true;
 	} else if (subcmd == "/changepassword") {
-		if (arrayparams.size() != 3) {
-			m_se->OnServerMessage("Invalid parameter size, usage: /changepassword oldpassword newpassword");
-			return true;
+		switch (arrayparams.size()) {
+			case 2: {
+				const std::string oldpassword = STD_STRING(sett().GetServerAccountPass(TowxString(GetServerName())));
+				const std::string newpassword = GetPasswordHash(params);
+				if (oldpassword.empty() || !sett().GetServerAccountSavePass(TowxString(GetServerName()))) {
+					m_se->OnServerMessage("There is no saved password for this account, please use /changepassword oldpassword newpassword");
+					return true;
+				}
+				SendCmd("CHANGEPASSWORD", oldpassword + std::string(" ") + newpassword);
+				return true;
+			}
+			case 3: {
+				const std::string oldpassword = GetPasswordHash(arrayparams[1]);
+				const std::string newpassword = GetPasswordHash(arrayparams[2]);
+				SendCmd("CHANGEPASSWORD", oldpassword + std::string(" ") + newpassword);
+				return true;
+			}
+			default: {
+				m_se->OnServerMessage("Invalid usage, use:");
+				m_se->OnServerMessage("        /changepassword newpassword");
+				m_se->OnServerMessage("or, when password isn't stored:");
+				m_se->OnServerMessage("        /changepassword oldpassword newpassword");
+				return true;
+			}
 		}
-		const std::string oldpassword = GetPasswordHash(arrayparams[1]);
-		const std::string newpassword = GetPasswordHash(arrayparams[2]);
-		SendCmd("CHANGEPASSWORD", oldpassword + std::string(" ") + newpassword);
-		return true;
 	} else if (subcmd == "/ping") {
 		Ping();
 		return true;
@@ -533,7 +537,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		contry = GetWordParam(params);
 		const int cpu = GetIntParam(params);
 		if (params.IsEmpty()) {
-			// if server didn't send any acsize id to us, fill with an always increasing number
+			// if server didn't send any account id to us, fill with an always increasing number
 			id = m_account_id_count;
 			m_account_id_count++;
 		} else {
