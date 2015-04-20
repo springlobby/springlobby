@@ -20,24 +20,22 @@ msgstr ""
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: src/chatlog.cpp:73
-#, fuzzy
 msgid "### Session Closed at [%Y-%m-%d %H:%M]"
-msgstr "### Sitzung geschlossen um ["
+msgstr "### Sitzung geschlossen um [%d.%m.%Y %H:%M]"
 
 #: src/countrycodes.cpp:15
 msgid "Anonymous Proxy"
-msgstr ""
+msgstr "Anonymer Proxy"
 
 #: src/countrycodes.cpp:16
 msgid "Satellite Provider"
-msgstr ""
+msgstr "Satelliten Anbierter"
 
 #: src/countrycodes.cpp:17
 msgid "Other Country"
-msgstr ""
+msgstr "Anderes Land"
 
 #: src/countrycodes.cpp:18
-#, fuzzy
 msgid "Andorra"
 msgstr " Andorra"
 
@@ -94,7 +92,6 @@ msgid "Australia"
 msgstr "Australien"
 
 #: src/countrycodes.cpp:32
-#, fuzzy
 msgid "Åland Islands"
 msgstr "Cayman Inseln"
 
@@ -935,7 +932,6 @@ msgid "Uganda"
 msgstr "Uganda"
 
 #: src/countrycodes.cpp:242
-#, fuzzy
 msgid "United Kingdom"
 msgstr "Vereinigtes Königreich (Großbritannien)"
 
@@ -1044,26 +1040,21 @@ msgid "N/A"
 msgstr ""
 
 #: src/downloader/downloadlistctrl.cpp:228
-#, fuzzy
 msgid "complete"
-msgstr "% complete"
+msgstr "vollständig"
 
 #: src/downloader/downloadlistctrl.cpp:230
-#, fuzzy
 msgid "downloading"
 msgstr "Herunterladen"
 
 #: src/downloader/prdownloader.cpp:54
-#, fuzzy
 msgid "Download complete: "
-msgstr "Download komplett."
+msgstr "Download abgeschlossen."
 
 #: src/gui/aboutbox.cpp:18
-#, fuzzy
 msgid " is a cross-platform lobby client for the Spring RTS engine"
 msgstr ""
-"Die SpringLobby ist ein Cross-Plattform Lobby-Client für die RTS-Spring "
-"Spiele-Engine"
+" ist ein Cross-Plattform Lobby-Client für die Spring RTS Spiele-Engine"
 
 #: src/gui/aboutbox.cpp:34
 msgid "The numerous contributors from launchpad.net"
@@ -1089,17 +1080,15 @@ msgstr "Ja"
 
 #: src/gui/battlelist/battlelistctrl.cpp:45
 #: src/gui/hosting/battleroomlistctrl.cpp:86
-#, fuzzy
 msgid "Status"
-msgstr "Status:"
+msgstr "Status"
 
 #: src/gui/battlelist/battlelistctrl.cpp:46
 #: src/gui/hosting/battleroomlistctrl.cpp:101
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #: src/gui/battlelist/battlelistctrl.cpp:47
-#, fuzzy
 msgid "Minimum rank to join"
 msgstr "Mindestrang benötigt"
 
@@ -1109,7 +1098,6 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #: src/gui/battlelist/battlelistctrl.cpp:48
-#, fuzzy
 msgid "Battle description"
 msgstr "Beschreibung"
 
@@ -1133,7 +1121,6 @@ msgid "Game"
 msgstr "Spiel"
 
 #: src/gui/battlelist/battlelistctrl.cpp:50
-#, fuzzy
 msgid "Gamename"
 msgstr "Spiel"
 
@@ -1143,17 +1130,14 @@ msgid "Host"
 msgstr "Host"
 
 #: src/gui/battlelist/battlelistctrl.cpp:51
-#, fuzzy
 msgid "Name of the Host"
 msgstr "Name der neuen Gruppe:"
 
 #: src/gui/battlelist/battlelistctrl.cpp:52
-#, fuzzy
 msgid "Spectators"
 msgstr "Zuschauer:"
 
 #: src/gui/battlelist/battlelistctrl.cpp:52
-#, fuzzy
 msgid "Number of Spectators"
 msgstr "Anzahl der Spieler"
 
@@ -1163,17 +1147,14 @@ msgid "Players"
 msgstr "Spieler"
 
 #: src/gui/battlelist/battlelistctrl.cpp:53
-#, fuzzy
 msgid "Number of Players joined"
 msgstr "Anzahl der Spieler"
 
 #: src/gui/battlelist/battlelistctrl.cpp:54
-#, fuzzy
 msgid "Max"
 msgstr "Karte"
 
 #: src/gui/battlelist/battlelistctrl.cpp:54
-#, fuzzy
 msgid "Maximum number of Players that can join"
 msgstr "Maximale Anzahl an Spielern die in dieser Schlacht erlaubt sind."
 
@@ -3169,7 +3150,7 @@ msgstr "&Trennen"
 
 #: src/gui/mainwindow.cpp:139
 msgid "&Reopen server panel"
-msgstr ""
+msgstr "Se&rver pannel öffnen"
 
 #: src/gui/mainwindow.cpp:143
 msgid "&Save options"
@@ -3180,13 +3161,12 @@ msgid "&Quit"
 msgstr "&Beenden"
 
 #: src/gui/mainwindow.cpp:149
-#, fuzzy
 msgid "&Autojoin channels"
 msgstr "&Autobeitreten von Kanälen..."
 
 #: src/gui/mainwindow.cpp:150
 msgid "&Preferences"
-msgstr ""
+msgstr "&Einstellungen"
 
 #: src/gui/mainwindow.cpp:151
 msgid "&Change language"
@@ -3215,17 +3195,15 @@ msgstr "Öffne privaten &Chat..."
 
 #: src/gui/mainwindow.cpp:162
 msgid "&Open Spring DataDir"
-msgstr ""
+msgstr "Öffene Spring &Datenverzeichnis"
 
 #: src/gui/mainwindow.cpp:164
-#, fuzzy
 msgid "&Download Archives"
-msgstr "Download fehlgeschlagen"
+msgstr "&Archive herunterladen"
 
 #: src/gui/mainwindow.cpp:166
-#, fuzzy
 msgid "&Reload maps/games"
-msgstr "&Maps/Mods neu laden"
+msgstr "&Maps/Spiele neu laden"
 
 #: src/gui/mainwindow.cpp:168
 msgid "Check for new Version"
@@ -3233,14 +3211,13 @@ msgstr "Auf neue Version prüfen"
 
 #: src/gui/mainwindow.cpp:171
 msgid "&Help, tutorial and FAQ"
-msgstr ""
+msgstr "&Hilfe, Turorial und FAQ"
 
 #: src/gui/mainwindow.cpp:172
 msgid "&About"
 msgstr "&Über uns"
 
 #: src/gui/mainwindow.cpp:173
-#, fuzzy
 msgid "&System Info"
 msgstr "System Informationen"
 
