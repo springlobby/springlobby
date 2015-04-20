@@ -205,7 +205,7 @@ bool TASServer::ExecuteSayCommand(const std::string& cmd)
 	} else if (subcmd == "/rename") {
 		if (arrayparams.size() != 2)
 			return false;
-		SendCmd("RENAMEACsize", arrayparams[1]);
+		SendCmd("RENAMEACCOUNT", arrayparams[1]);
 		sett().SetServerAccountNick(sett().GetDefaultServer(), TowxString(arrayparams[1])); // this code assumes that default server hasn't changed since login ( like it should atm )
 		return true;
 	} else if (subcmd == "/testmd5") {
