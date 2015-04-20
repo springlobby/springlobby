@@ -222,7 +222,7 @@ bool TASServer::ExecuteSayCommand(const std::string& cmd)
 			case 2: {
 				const std::string oldpassword = STD_STRING(sett().GetServerAccountPass(TowxString(GetServerName())));
 				const std::string newpassword = GetPasswordHash(params);
-				if (oldpassword.empty() || !sett().GetServerAccountSavePass(TowxString(GetServerName()))) {
+				if (oldpassword.empty() || params.empty()) {
 					m_se->OnServerMessage("There is no saved password for this account, please use /changepassword oldpassword newpassword");
 					return true;
 				}
