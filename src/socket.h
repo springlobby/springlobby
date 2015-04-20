@@ -19,6 +19,7 @@ lsl/networking/socket.h
 
 #include <wx/string.h>
 #include <wx/event.h>
+#include <wx/socket.h>
 #include <string>
 
 class iNetClass;
@@ -41,7 +42,6 @@ const int SOCKET_ID = 100;
 
 
 class wxSocketEvent;
-class wxSocketClient;
 
 //! @brief Class that implements a TCP client socket.
 class Socket : public wxEvtHandler

@@ -4,6 +4,9 @@
 #define SPRINGLOBBY_HEADERGUARD_INETCLASS_H
 
 //! @brief Abstract baseclass that is used when needed to interface with socket class
+
+#include <string>
+
 class iNetClass
 {
 public:
