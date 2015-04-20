@@ -106,7 +106,8 @@ EVT_LIST_ITEM_ACTIVATED(BROOM_OPTIONLIST, BattleRoomTab::OnOptionActivate)
 
 END_EVENT_TABLE()
 
-static wxArrayString CreateIntList(int count) {
+static wxArrayString CreateIntList(int count)
+{
 	wxArrayString res;
 	for (int i = 1; i <= count; ++i) {
 		res.Add(TowxString(i));

@@ -64,7 +64,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 
 	m_minimap = new MapCtrl(this, 100, &m_battle, false, true, true);
 	m_minimap->SetToolTip(_("You can drag the sun/bot icon around to define start position.\n "
-				   "Hover over the icon for a popup that lets you change side, ally and bonus."));
+				"Hover over the icon for a popup that lets you change side, ally and bonus."));
 	m_map_sizer->Add(m_minimap, 1, wxALL | wxEXPAND, 2);
 	m_mapabour_sizer->Add(m_map_sizer, 1, wxEXPAND, 2);
 

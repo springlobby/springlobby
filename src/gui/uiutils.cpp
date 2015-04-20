@@ -349,11 +349,11 @@ wxImage BorderInvariantResizeImage(const wxImage& image, int width, int height)
 
 wxColour GetColourFromUser(wxWindow* parent, const wxColour& colInit)
 {
-	#ifdef __WXMSW__
+#ifdef __WXMSW__
 	const wxString caption = _("Choose color");
-	#else
+#else
 	const wxString caption = _("Choose color (only first 16 will be saved)");
-	#endif
+#endif
 	const wxString palette = _T("Default");
 	wxColourData data;
 	data = sett().GetCustomColors(palette);

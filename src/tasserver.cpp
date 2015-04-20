@@ -24,17 +24,17 @@ lsl/networking/tasserver.cpp
 #include <algorithm>
 #include <map>
 
-#include "utils/base64.h"
-#include "utils/md5.h"
 #include "tasserver.h"
-#include "utils/tasutil.h"
-#include "utils/conversion.h"
 #include "serverevents.h"
 #include "socket.h"
 #include "log.h"
+#include "settings.h"
+#include "utils/base64.h"
+#include "utils/md5.h"
+#include "utils/tasutil.h"
+#include "utils/conversion.h"
 #include "utils/slconfig.h"
 #include "utils/version.h"
-#include "settings.h"
 
 
 SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which is send when leaving server");
