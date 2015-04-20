@@ -387,8 +387,8 @@ void BattleRoomTab::PrintAllySetup()
 {
 	wxString setupstring;
 	if (m_battle) {
-		m_specs_setup_lbl->SetLabel(wxString::Format("%d    ", m_battle->GetSpectators()));
-		m_players_setup_lbl->SetLabel(wxString::Format("%d    ", m_battle->GetNumActivePlayers()));
+		m_specs_setup_lbl->SetLabel(wxString::Format("%d", m_battle->GetSpectators()));
+		m_players_setup_lbl->SetLabel(wxString::Format("%d", m_battle->GetNumActivePlayers()));
 		wxString alliancesstring;
 		int previousalliancesize = 0;
 		bool ffamode = true;
@@ -407,11 +407,11 @@ void BattleRoomTab::PrintAllySetup()
 			//alliancesstring += wxString::Format( _T("(%d)") , itor->first );
 		}
 		if (!ffamode)
-			setupstring += alliancesstring;
+			setupstring += alliancesstring.empty() ? _T("0") : alliancesstring;
 		else
-			setupstring += wxString::Format(_("%d way FFA   "), previousalliancesize);
+			setupstring += wxString::Format(_("%d way FFA"), previousalliancesize);
 	}
-	m_ally_setup_lbl->SetLabel(wxString::Format(_("%s   "), setupstring.c_str()));
+	m_ally_setup_lbl->SetLabel(wxString::Format(_("%s"), setupstring.c_str()));
 	Layout();
 }
 
