@@ -220,13 +220,22 @@ bool TASServer::ExecuteSayCommand(const std::string& cmd)
 	} else if (subcmd == "/changepassword") {
 		switch (arrayparams.size()) {
 			case 2: {
-				const std::string oldpassword = STD_STRING(sett().GetServerAccountPass(TowxString(GetServerName())));
+				const std::string oldpassword = GetPasswordHash(STD_STRING(sett().GetServerAccountPass(TowxString(GetServerName()))));
 				const std::string newpassword = GetPasswordHash(params);
-				if (oldpassword.empty() || params.empty()) {
-					m_se->OnServerMessage("There is no saved password for this account, please use /changepassword oldpassword newpassword");
+				if (oldpassword == newpassword) {
+					m_se->OnServerMessage("Old password is the same as the new password!");
+					return true;
+				}
+				if (params.empty()) {
+					m_se->OnServerMessage("No new password specified!");
+					return true;
+				}
+				if (oldpassword.empty()) {
+					m_se->OnServerMessage("Couldn't load old password!");
 					return true;
 				}
 				SendCmd("CHANGEPASSWORD", oldpassword + std::string(" ") + newpassword);
+				sett().SetServerAccountPass(TowxString(GetServerName()), TowxString(newpassword));
 				return true;
 			}
 			case 3: {
