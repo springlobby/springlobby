@@ -218,7 +218,8 @@ set(springlobbySrc
 	gui/hosting/mmoptionwindows.cpp
 	gui/hosting/battleroomdownloads.cpp
 	gui/hosting/battleroommmoptionstab.cpp
-
+	gui/hosting/votepanel.cpp
+	
 	gui/options/downloadoptionspanel.cpp
 	gui/options/mainoptionstab.cpp
 	gui/options/springoptionstab.cpp

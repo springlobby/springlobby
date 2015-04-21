@@ -37,6 +37,7 @@ class SLNotebook;
 class wxNotebook;
 class wxImageList;
 class ChatPanelMenu;
+class VotePanel;
 
 enum ChatPanelType {
 	CPT_Channel,
@@ -117,10 +118,13 @@ public:
 
 	void UpdateNicklistHighlights();
 
+	void SetVotePanel(VotePanel* votePanel);
+	
+	bool Say(const wxString& message);
+	
 private:
 	void Init(const wxString& panelname);
 	//! @returns true on success ( blank line ), false otherwise
-	bool Say(const wxString& message);
 
 	wxString GetChatTypeStr() const;
 
@@ -162,6 +166,8 @@ private:
 	bool ContainsWordToHighlight(const wxString& message) const;
 	bool m_show_nick_list; //!< If the nicklist should be shown or not.
 
+	VotePanel* m_votePanel;
+	
 	wxBoxSizer* m_main_sizer; //!< Main sizer containing all other sizers.
 	wxBoxSizer* m_chat_sizer; //!< Sizer containing the chat messages, and send input and button.
 	wxBoxSizer* m_say_sizer;  //!< Sizer containing send input and button.

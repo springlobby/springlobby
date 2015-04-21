@@ -54,6 +54,7 @@
 #include "log.h"
 #include "utils/lslconversion.h"
 #include "autohostmanager.h"
+#include "votepanel.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -162,9 +163,11 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_browse_map_btn = new wxButton(this, BROOM_MAP_BROWSE, _("Map"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	//m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
 
+	m_votePanel = new VotePanel(this);
 	m_players = new BattleroomListCtrl(m_player_panel, m_battle, false, true);
 	m_chat = new ChatPanel(m_splitter, m_battle);
-
+	m_chat->SetVotePanel(m_votePanel);
+	
 	m_command_line = new wxStaticLine(this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
 
 	m_host_new_btn = new wxButton(this, BROOM_HOST_NEW, _("Host new"), wxDefaultPosition, wxDefaultSize);
@@ -329,6 +332,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_top_sizer->Add(m_splitter, 1, wxEXPAND | wxALL, 2);
 	m_top_sizer->Add(m_info_sizer, 0, wxEXPAND | wxALL, 2);
 
+	m_buttons_sizer->Add(m_votePanel);
 	m_buttons_sizer->AddStretchSpacer();
 	m_buttons_sizer->Add(m_host_new_btn, 0, wxEXPAND | wxALL, 2);
 	m_buttons_sizer->AddStretchSpacer();
@@ -1149,7 +1153,8 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 	m_minimap->SetBattle(m_battle);
 	m_players->SetBattle(m_battle);
 	m_chat->SetBattle(m_battle);
-
+	m_votePanel->ResetState();
+	
 	m_players->Clear();
 
 	if (m_battle) {

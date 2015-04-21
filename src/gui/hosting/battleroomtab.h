@@ -30,6 +30,7 @@ struct UnitSyncMap;
 class wxToggleButton;
 class wxChoice;
 class wxListEvent;
+class VotePanel;
 
 typedef std::map<wxString, long> OptionListMap;
 
@@ -127,6 +128,9 @@ private:
 
 	void SplitSizerHorizontally(const bool horizontal);
 
+private:
+	VotePanel* m_votePanel;
+	
 	IBattle* m_battle;
 	//		UnitSyncMap m_map; //not needed
 

@@ -35,6 +35,7 @@
 #include "gui/wxtextctrlhist.h"
 #include "log.h"
 #include "utils/slconfig.h"
+#include "gui/hosting/votepanel.h"
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
@@ -86,6 +87,7 @@ void ChatPanel::Init(const wxString& panelname)
 ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(true)
+    , m_votePanel(0)
     , m_nicklist(0)
     , m_chat_tabs((SLNotebook*)parent)
     , m_channel(&chan)
@@ -108,6 +110,7 @@ ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
 ChatPanel::ChatPanel(wxWindow* parent, const User& user, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
+    , m_votePanel(0)
     , m_nicklist(0)
     , m_chat_tabs((SLNotebook*)parent)
     , m_channel(0)
@@ -130,6 +133,7 @@ ChatPanel::ChatPanel(wxWindow* parent, const User& user, wxImageList* imaglist)
 ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(true)
+    , m_votePanel(0)
     , m_nicklist(0)
     , m_chat_tabs((SLNotebook*)parent)
     , m_channel(0)
@@ -152,6 +156,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
 ChatPanel::ChatPanel(wxWindow* parent, IBattle* battle)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
+    , m_votePanel(0)
     , m_nicklist(0)
     , m_chat_tabs(0)
     , m_channel(0)
@@ -171,6 +176,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IBattle* battle)
 ChatPanel::ChatPanel(wxWindow* parent)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
+    , m_votePanel(0)
     , m_nicklist(0)
     , m_chat_tabs(0)
     , m_channel(0)
@@ -528,7 +534,7 @@ void ChatPanel::OnPaste(wxClipboardTextEvent& event)
 //! @param who nick of the person who said something.
 //! @param message the message to be outputted.
 void ChatPanel::Said(const wxString& who, const wxString& message)
-{
+{ 
 	if (m_active_users.find(who) == m_active_users.end()) {
 		m_active_users.insert(who);
 	}
@@ -586,6 +592,11 @@ bool ChatPanel::ContainsWordToHighlight(const wxString& message) const
 
 void ChatPanel::DidAction(const wxString& who, const wxString& action)
 {
+  	//Handle vote events in chat by VotePanel
+	if( m_votePanel!=NULL ) {
+		m_votePanel->OnChatAction(who, action);
+	}
+ 
 	// change the image of the tab to show new events
 	SetIconHighlight(highlight_say);
 	OutputLine(_T( " * " ) + who + _T( " " ) + action, sett().GetChatColorAction());
@@ -1163,4 +1174,10 @@ void ChatPanel::SetLogFile(const wxString& name)
 	for (size_t i = start; i < lines.Count(); ++i) {
 		OutputLine(lines[i], sett().GetChatColorServer(), false);
 	}
+}
+
+void ChatPanel::SetVotePanel(VotePanel* votePanel)
+{
+  m_votePanel = votePanel;
+  m_votePanel->SetChatPanel(this);
 }
