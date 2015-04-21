@@ -160,7 +160,7 @@ private:
 	void UdpPingAllClients();			   /// used when hosting with nat holepunching
 	void FinalizeJoinBattle();
 
-	virtual void SendCmd(const std::string& command, const std::string& param)
+	void SendCmd(const std::string& command, const std::string& param)
 	{
 		SendCmd(command, param, false);
 	};
@@ -168,7 +168,7 @@ private:
 	{
 		SendCmd(command, "", false);
 	}
-	void SendCmd(const std::string& command, const std::string& param, bool relay);
+	virtual void SendCmd(const std::string& command, const std::string& param, bool relay);
 
 
 	void RelayCmd(const std::string& command, const std::string& param = "");

@@ -20,6 +20,7 @@
 #include <lslunitsync/unitsync.h>
 
 #include "ui.h"
+#include "offlineserver.h"
 #include "tasserver.h"
 #include "utils/slconfig.h"
 #include "iserver.h"
@@ -87,6 +88,7 @@ Ui::Ui()
 	m_main_win = new MainWindow();
 	CustomMessageBoxBase::setLobbypointer(m_main_win);
 	m_serv = new TASServer();
+//	m_serv = new OfflineServer();
 	serverSelector().SetCurrentServer(m_serv);
 	ConnectGlobalEvent(this, GlobalEvent::OnSpringTerminated, wxObjectEventFunction(&Ui::OnSpringTerminated));
 	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&Ui::OnQuit));

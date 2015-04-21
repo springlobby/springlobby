@@ -142,6 +142,7 @@ set(springlobbySrc
 	iplaybacklist.cpp
 	iserver.cpp
 	offlinebattle.cpp
+	offlineserver.cpp
 	playbackthread.cpp
 	replaylist.cpp
 	savegamelist.cpp
