@@ -61,6 +61,8 @@ void OfflineServer::SendCmd(const std::string& command, const std::string& param
 		TASServer::ExecuteCommand(stdprintf("ADDBOT %d %s %d %d %s", battleid, GetUserName().c_str(), battlestatus.c_str(), color.c_str(), dll.c_str()));
 	} else if (command == "SETSCRIPTTAGS") {
 		TASServer::ExecuteCommand(command + " " + param);
+	} else if (command == "LEAVEBATTLE") {
+		TASServer::ExecuteCommand(stdprintf("LEFTBATTLE %d %s",battleid, GetUserName().c_str()));
 	} else {
 		wxLogWarning("Unknown command: %s %s", command.c_str(), param.c_str());
 		TASServer::ExecuteCommand(command + " " + param);
