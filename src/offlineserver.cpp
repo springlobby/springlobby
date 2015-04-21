@@ -6,8 +6,8 @@
 #include "utils/conversion.h"
 #include <wx/log.h>
 
-OfflineServer::OfflineServer():
-	TASServer::TASServer()
+OfflineServer::OfflineServer()
+    : TASServer::TASServer()
 {
 	m_se = new ServerEvents(*this);
 }
@@ -36,7 +36,7 @@ void OfflineServer::SendCmd(const std::string& command, const std::string& param
 		const int port = GetIntParam(p);
 		const int maxplayers = GetIntParam(p);
 		const std::string gamehash = GetWordParam(p);
-		const int rank =  GetIntParam(p);
+		const int rank = GetIntParam(p);
 		const std::string maphash = GetWordParam(p);
 		const std::string engine = GetSentenceParam(p);
 		const std::string enginever = GetSentenceParam(p);
@@ -44,9 +44,8 @@ void OfflineServer::SendCmd(const std::string& command, const std::string& param
 		const std::string title = GetSentenceParam(p);
 		const std::string game = GetSentenceParam(p);
 		TASServer::ExecuteCommand(stdprintf("BATTLEOPENED %d %d %d %s %s %d %d %d %d %d %s\t%s\t%s\t%s\t%s",
-            battleid, type, nat, GetUserName().c_str(), "127.0.0.1", 0, 1, 0, 0,
-			maphash.c_str(), engine.c_str(), enginever.c_str(), map.c_str(), title.c_str(), game.c_str()
-		));
+						    battleid, type, nat, GetUserName().c_str(), "127.0.0.1", 0, 1, 0, 0,
+						    maphash.c_str(), engine.c_str(), enginever.c_str(), map.c_str(), title.c_str(), game.c_str()));
 		TASServer::ExecuteCommand("OPENBATTLE 1");
 		TASServer::ExecuteCommand("REQUESTBATTLESTATUS");
 	} else if (command == "MYBATTLESTATUS") {
@@ -62,7 +61,7 @@ void OfflineServer::SendCmd(const std::string& command, const std::string& param
 	} else if (command == "SETSCRIPTTAGS") {
 		TASServer::ExecuteCommand(command + " " + param);
 	} else if (command == "LEAVEBATTLE") {
-		TASServer::ExecuteCommand(stdprintf("LEFTBATTLE %d %s",battleid, GetUserName().c_str()));
+		TASServer::ExecuteCommand(stdprintf("LEFTBATTLE %d %s", battleid, GetUserName().c_str()));
 	} else {
 		wxLogWarning("Unknown command: %s %s", command.c_str(), param.c_str());
 		TASServer::ExecuteCommand(command + " " + param);

@@ -22,8 +22,13 @@ public:
 		SendCmd(command, "", false);
 	}
 	void SendCmd(const std::string& command, const std::string& param, bool relay);
-	void Login(){}
-	bool IsConnected(){return true;}
+	void Login()
+	{
+	}
+	bool IsConnected()
+	{
+		return true;
+	}
 
 private:
 	ServerEvents* m_se;
