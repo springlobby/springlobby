@@ -62,6 +62,10 @@ void OfflineServer::SendCmd(const std::string& command, const std::string& param
 		TASServer::ExecuteCommand(command + " " + param);
 	} else if (command == "LEAVEBATTLE") {
 		TASServer::ExecuteCommand(stdprintf("LEFTBATTLE %d %s", battleid, GetUserName().c_str()));
+	} else if (command == "PING") {
+		TASServer::ExecuteCommand("PONG " + param);
+	} else if (command == "MYSTATUS") {
+		TASServer::ExecuteCommand(stdprintf("CLIENTSTATUS %s %s", GetUserName().c_str(), param.c_str()));
 	} else {
 		wxLogWarning("Unknown command: %s %s", command.c_str(), param.c_str());
 		TASServer::ExecuteCommand(command + " " + param);
