@@ -1,4 +1,6 @@
 
+#include <wx\colour.h>
+
 #include "votepanel.h"
 
 wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
@@ -15,19 +17,24 @@ parentWnd(parentWindow)
 {
   mainSizer = new wxBoxSizer(wxHORIZONTAL);
   
-  voteTextLabel = new wxStaticText(this, wxID_ANY, wxEmptyString);
-  wxFont labelFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+  voteTextLabel = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
+  wxFont labelFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
   voteTextLabel->SetFont(labelFont);
-  voteTextLabel->Wrap(500);
   mainSizer->Add(voteTextLabel, 0, wxALIGN_CENTER, 2);
-    
-  yesButton = new wxButton(this, VotePanel::ID_YES_BUTTON, "!Y", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+   
+  wxFont buttonFont(9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+  yesButton = new wxButton(this, VotePanel::ID_YES_BUTTON, "yes", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  yesButton->SetFont(buttonFont);
+  yesButton->SetForegroundColour(*wxGREEN);
   mainSizer->Add(yesButton);
  
-  dontCareButton = new wxButton(this, VotePanel::ID_DONTCARE_BUTTON, "!B", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  dontCareButton = new wxButton(this, VotePanel::ID_DONTCARE_BUTTON, "ban", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  dontCareButton->SetFont(buttonFont);
   mainSizer->Add(dontCareButton);
 
-  noButton = new wxButton(this, VotePanel::ID_NO_BUTTON, "!N", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  noButton = new wxButton(this, VotePanel::ID_NO_BUTTON, "no", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+  noButton->SetFont(buttonFont);
+  noButton->SetForegroundColour(*wxRED);
   mainSizer->Add(noButton);
   
   SetSizer(mainSizer);
@@ -51,7 +58,6 @@ void VotePanel::OnChatAction(const wxString& actionAuthor, const wxString& actio
   
   //Vote has been started
   if( actionString.Find(VOTE_HAS_BEGAN)!=wxNOT_FOUND ) {
-    meAlreadyVoted = false;
     showButtons(true);
     voteTextLabel->SetLabel(actionDescription);
     parentWnd->Layout();
@@ -73,10 +79,7 @@ void VotePanel::ResetState()
     return;
   }
   
-  voteTextLabel->SetLabel(wxEmptyString);
-  
-  meAlreadyVoted = false;
-  
+  voteTextLabel->SetLabel(wxEmptyString); 
   showButtons(false);
 }
 
@@ -96,6 +99,8 @@ void VotePanel::showButtons(bool showState)
   yesButton->Show(showState);
   noButton->Show(showState);
   dontCareButton->Show(showState);
+  
+  //Force repaint parent window
   Layout();
   Update();
   parentWnd->Layout();
@@ -105,17 +110,17 @@ void VotePanel::showButtons(bool showState)
 void VotePanel::onYesButtonEvent(wxCommandEvent& )
 {
   chatPanel->Say(SAY_YES);
-  ResetState();
+  showButtons(false);
 }
 
 void VotePanel::onDontCareButtonEvent(wxCommandEvent& )
 {
   chatPanel->Say(SAY_DONTCARE);
-  ResetState();
+  showButtons(false);
 }
 
 void VotePanel::onNoButtonEvent(wxCommandEvent& )
 {
   chatPanel->Say(SAY_NO);
-  ResetState();  
+  showButtons(false);
 }
