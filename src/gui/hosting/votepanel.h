@@ -44,6 +44,7 @@ private:
   const wxString SAY_DONTCARE 	= _T("!vote b");
   const wxString SAY_NO 		= _T("!vote n");
   const wxString VOTING_END		= _T("VOTE FOR COMMAND");
+  const wxString VOTE_CANCELLED	= _T("VOTE CANCELLED");
   
 private:
   wxBoxSizer* mainSizer;

@@ -66,7 +66,7 @@ void VotePanel::OnChatAction(const wxString& actionAuthor, const wxString& actio
   }
   
   //Vote has ended
-  if( actionString.Find(VOTING_END)!=wxNOT_FOUND ) {
+  if( actionString.Find(VOTING_END)!=wxNOT_FOUND || actionString.Find(VOTE_CANCELLED)!=wxNOT_FOUND ) {
     ResetState();
     return;
   }
