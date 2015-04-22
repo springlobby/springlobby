@@ -1,6 +1,4 @@
 
-#include <wx\colour.h>
-
 #include "votepanel.h"
 
 wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
