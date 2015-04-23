@@ -45,7 +45,7 @@ VotePanel::~VotePanel()
 }
 
 //Process text messages from chat
-void VotePanel::OnChatAction(const wxString& actionAuthor, const wxString& actionDescription)
+void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& actionDescription)
 {
 	if (yesButton == NULL || noButton == NULL || dontCareButton == NULL) {
 		return;
