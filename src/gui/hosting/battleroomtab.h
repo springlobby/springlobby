@@ -130,7 +130,7 @@ private:
 
 private:
 	VotePanel* m_votePanel;
-	
+
 	IBattle* m_battle;
 	//		UnitSyncMap m_map; //not needed
 

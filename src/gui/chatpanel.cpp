@@ -534,7 +534,7 @@ void ChatPanel::OnPaste(wxClipboardTextEvent& event)
 //! @param who nick of the person who said something.
 //! @param message the message to be outputted.
 void ChatPanel::Said(const wxString& who, const wxString& message)
-{ 
+{
 	if (m_active_users.find(who) == m_active_users.end()) {
 		m_active_users.insert(who);
 	}
@@ -592,11 +592,11 @@ bool ChatPanel::ContainsWordToHighlight(const wxString& message) const
 
 void ChatPanel::DidAction(const wxString& who, const wxString& action)
 {
-  	//Handle vote events in chat by VotePanel
-	if( m_votePanel!=NULL ) {
+	//Handle vote events in chat by VotePanel
+	if (m_votePanel != NULL) {
 		m_votePanel->OnChatAction(who, action);
 	}
- 
+
 	// change the image of the tab to show new events
 	SetIconHighlight(highlight_say);
 	OutputLine(_T( " * " ) + who + _T( " " ) + action, sett().GetChatColorAction());
@@ -1178,6 +1178,6 @@ void ChatPanel::SetLogFile(const wxString& name)
 
 void ChatPanel::SetVotePanel(VotePanel* votePanel)
 {
-  m_votePanel = votePanel;
-  m_votePanel->SetChatPanel(this);
+	m_votePanel = votePanel;
+	m_votePanel->SetChatPanel(this);
 }

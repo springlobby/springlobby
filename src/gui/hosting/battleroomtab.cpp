@@ -167,7 +167,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_players = new BattleroomListCtrl(m_player_panel, m_battle, false, true);
 	m_chat = new ChatPanel(m_splitter, m_battle);
 	m_chat->SetVotePanel(m_votePanel);
-	
+
 	m_command_line = new wxStaticLine(this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
 
 	m_host_new_btn = new wxButton(this, BROOM_HOST_NEW, _("Host new"), wxDefaultPosition, wxDefaultSize);
@@ -1154,7 +1154,7 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 	m_players->SetBattle(m_battle);
 	m_chat->SetBattle(m_battle);
 	m_votePanel->ResetState();
-	
+
 	m_players->Clear();
 
 	if (m_battle) {
