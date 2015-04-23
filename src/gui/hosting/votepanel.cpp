@@ -1,5 +1,11 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/button.h>
 
 #include "votepanel.h"
+#include "gui/chatpanel.h"
 
 wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
     EVT_BUTTON(VotePanel::ID_YES_BUTTON, VotePanel::onYesButtonEvent)

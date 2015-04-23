@@ -1,3 +1,4 @@
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #ifndef _VOTE_PANEL_CPP_
 #define _VOTE_PANEL_CPP_
@@ -7,11 +8,13 @@
 //Designed for use in BattleRoomTab, but probably can be used anywhere
 //Depends: ChatPanel
 
-#include <wx/wx.h>
+
 #include <wx/panel.h>
 
-#include "gui/chatpanel.h"
-
+class ChatPanel;
+class wxBoxSizer;
+class wxButton;
+class wxStaticText;
 
 class VotePanel : public wxPanel
 {
