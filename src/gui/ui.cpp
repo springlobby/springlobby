@@ -456,7 +456,7 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 }
 
 
-bool Ui::IsSpringCompatible(const std::string& engine, const std::string& version)
+bool Ui::IsSpringCompatible(const std::string& /*engine*/, const std::string& version)
 {
 	assert(engine == "spring");
 	if (sett().GetDisableSpringVersionCheck())
@@ -1043,7 +1043,7 @@ void Ui::FirstRunWelcome()
 bool Ui::StartUpdate(const std::string& latestVersion)
 {
 	const wxString updatedir = TowxString(SlPaths::GetUpdateDir());
-	const int mindirlen = 9; // safety, minimal is/should be: C:\update
+	const size_t mindirlen = 9; // safety, minimal is/should be: C:\update
 	if ((updatedir.size() <= mindirlen)) {
 		wxLogError(_T("Invalid update dir: ") + updatedir);
 		return false;
