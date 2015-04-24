@@ -48,14 +48,10 @@ public:
 	SLChatNotebook(wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxAUI_NB_DEFAULT_STYLE);
 
 private:
-	bool AddPage(ChatPanel* page, const wxString& caption, bool select = false, const wxBitmap& bitmap = wxNullBitmap);
-
 	void OnHeaderRightClick(wxAuiNotebookEvent& event);
 	void OnMenuItem(wxCommandEvent& event);
 	void OnAllowNotebookDnD(wxAuiNotebookEvent& evt);
 
-	//prohibit adding other panels
-	bool AddPage(wxWindow*, const wxString&, bool, const wxBitmap&);
 	bool DeleteChatPage(size_t i);
 
 	ChatPanelMenu* m_ch_menu;

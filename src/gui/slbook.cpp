@@ -72,11 +72,6 @@ EVT_AUINOTEBOOK_TAB_RIGHT_UP(wxID_ANY, SLChatNotebook::OnHeaderRightClick)
 
 END_EVENT_TABLE()
 
-bool SLChatNotebook::AddPage(ChatPanel* page, const wxString& caption, bool select, const wxBitmap& bitmap)
-{
-	return SLNotebook::AddPage((wxWindow*)page, caption, select, bitmap);
-}
-
 /** @brief SLChatNotebook
   *
   * @todo: document this function
@@ -251,13 +246,6 @@ public:
 			}
 // TODO: else if (GetFlags() & wxAUI_NB_LEFT){}
 // TODO: else if (GetFlags() & wxAUI_NB_RIGHT){}
-
-#if wxUSE_MDI
-			if (page.window->IsKindOf(CLASSINFO(wxAuiMDIChildFrame))) {
-				wxAuiMDIChildFrame* wnd = (wxAuiMDIChildFrame*)page.window;
-				wnd->ApplyMDIChildFrameRect();
-			}
-#endif
 		}
 	}
 
