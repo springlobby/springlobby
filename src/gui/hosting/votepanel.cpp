@@ -3,9 +3,21 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
+#include <string>
 
-#include "votepanel.h"
 #include "gui/chatpanel.h"
+#include "utils/conversion.h"
+#include "votepanel.h"
+
+
+//FIXME: move this outside of gui/ (+ don't use any gui functions / wx widgets)
+static const std::string VOTE_HAS_BEGAN = "CALLED A VOTE FOR COMMAND";
+static const std::string SAY_YES = "!vote y";
+static const std::string SAY_DONTCARE = "!vote b";
+static const std::string SAY_NO = "!vote n";
+static const std::string VOTING_END = "VOTE FOR COMMAND";
+static const std::string VOTE_CANCELLED = "VOTE CANCELLED";
+
 
 wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
     EVT_BUTTON(VotePanel::ID_YES_BUTTON, VotePanel::onYesButtonEvent)
@@ -60,7 +72,7 @@ void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& a
 	wxString actionString = actionDescription.Upper();
 
 	//Vote has been started
-	if (actionString.Find(VOTE_HAS_BEGAN) != wxNOT_FOUND) {
+	if (actionString.find(VOTE_HAS_BEGAN) != std::string::npos) {
 		showButtons(true);
 		voteTextLabel->SetLabel(actionDescription);
 		parentWnd->Layout();
@@ -69,7 +81,7 @@ void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& a
 	}
 
 	//Vote has ended
-	if (actionString.Find(VOTING_END) != wxNOT_FOUND || actionString.Find(VOTE_CANCELLED) != wxNOT_FOUND) {
+	if (actionString.find(VOTING_END) != std::string::npos || actionString.find(VOTE_CANCELLED) != std::string::npos) {
 		ResetState();
 		return;
 	}
@@ -112,18 +124,18 @@ void VotePanel::showButtons(bool showState)
 
 void VotePanel::onYesButtonEvent(wxCommandEvent&)
 {
-	chatPanel->Say(SAY_YES);
+	chatPanel->Say(TowxString(SAY_YES));
 	showButtons(false);
 }
 
 void VotePanel::onDontCareButtonEvent(wxCommandEvent&)
 {
-	chatPanel->Say(SAY_DONTCARE);
+	chatPanel->Say(TowxString(SAY_DONTCARE));
 	showButtons(false);
 }
 
 void VotePanel::onNoButtonEvent(wxCommandEvent&)
 {
-	chatPanel->Say(SAY_NO);
+	chatPanel->Say(TowxString(SAY_NO));
 	showButtons(false);
 }
