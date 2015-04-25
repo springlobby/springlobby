@@ -23,13 +23,13 @@ wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
     EVT_BUTTON(VotePanel::ID_YES_BUTTON, VotePanel::onYesButtonEvent)
     EVT_BUTTON(VotePanel::ID_DONTCARE_BUTTON, VotePanel::onDontCareButtonEvent)
     EVT_BUTTON(VotePanel::ID_NO_BUTTON, VotePanel::onNoButtonEvent)
-    wxEND_EVENT_TABLE()
+wxEND_EVENT_TABLE()
 
 
-    VotePanel::VotePanel(wxWindow* parentWindow)
-    : wxPanel(parentWindow)
-    , chatPanel(0)
-    , parentWnd(parentWindow)
+VotePanel::VotePanel(wxWindow* parentWindow)
+: wxPanel(parentWindow)
+, chatPanel(0)
+, parentWnd(parentWindow)
 {
 	mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -55,6 +55,19 @@ wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
 
 	SetSizer(mainSizer);
 
+//Set up acceleration table for hotkeys
+    const int ENTRIES_COUNT = 3;
+
+    wxAcceleratorEntry accelEntries[ENTRIES_COUNT];
+    accelEntries[0].Set(wxACCEL_CTRL, (int)'Y', ID_YES_BUTTON);
+    accelEntries[1].Set(wxACCEL_CTRL, (int)'B', ID_DONTCARE_BUTTON);
+    accelEntries[2].Set(wxACCEL_CTRL, (int)'N', ID_NO_BUTTON);
+
+    wxAcceleratorTable accelTable(ENTRIES_COUNT, accelEntries);
+    //TODO: this line overrides parent's window acceleration table!
+    parentWindow->SetAcceleratorTable(accelTable);
+
+//Reset vote panel to "no vote" state
 	ResetState();
 }
 
