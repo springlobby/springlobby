@@ -17,7 +17,7 @@ static const std::string SAY_DONTCARE = "!vote b";
 static const std::string SAY_NO = "!vote n";
 static const std::string VOTING_END = "VOTE FOR COMMAND";
 static const std::string VOTE_CANCELLED = "VOTE CANCELLED";
-
+static const std::string VOTE_CANCELLING = "CANCELLING";
 
 wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
     EVT_BUTTON(VotePanel::ID_YES_BUTTON, VotePanel::onYesButtonEvent)
@@ -42,15 +42,18 @@ VotePanel::VotePanel(wxWindow* parentWindow)
 	yesButton = new wxButton(this, VotePanel::ID_YES_BUTTON, "yes", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	yesButton->SetFont(buttonFont);
 	yesButton->SetForegroundColour(*wxGREEN);
+    yesButton->SetToolTip(_("Vote for YES, (Ctrl-Y)"));
 	mainSizer->Add(yesButton);
 
 	dontCareButton = new wxButton(this, VotePanel::ID_DONTCARE_BUTTON, "ban", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	dontCareButton->SetFont(buttonFont);
+    dontCareButton->SetToolTip(_("Vote for BAN, (Ctrl-B)"));
 	mainSizer->Add(dontCareButton);
 
 	noButton = new wxButton(this, VotePanel::ID_NO_BUTTON, "no", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
-	noButton->SetFont(buttonFont);
+    noButton->SetFont(buttonFont);
 	noButton->SetForegroundColour(*wxRED);
+    noButton->SetToolTip(_("Vote for NO, (Ctrl-N)"));
 	mainSizer->Add(noButton);
 
 	SetSizer(mainSizer);
@@ -94,7 +97,8 @@ void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& a
 	}
 
 	//Vote has ended
-	if (actionString.find(VOTING_END) != std::string::npos || actionString.find(VOTE_CANCELLED) != std::string::npos) {
+    if (actionString.find(VOTING_END) != std::string::npos || actionString.find(VOTE_CANCELLED) != std::string::npos ||
+        actionString.find(VOTE_CANCELLING) != std::string::npos ) {
 		ResetState();
 		return;
 	}
