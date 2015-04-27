@@ -57,7 +57,7 @@ void OfflineServer::SendCmd(const std::string& command, const std::string& param
 		const std::string battlestatus = GetWordParam(p);
 		const std::string color = GetWordParam(p);
 		const std::string dll = GetSentenceParam(p);
-		TASServer::ExecuteCommand(stdprintf("ADDBOT %d %s %d %d %s", battleid, GetUserName().c_str(), battlestatus.c_str(), color.c_str(), dll.c_str()));
+		TASServer::ExecuteCommand(stdprintf("ADDBOT %d %s %s %d %d %s", battleid, name.c_str(), GetUserName().c_str(), battlestatus.c_str(), color.c_str(), dll.c_str()));
 	} else if (command == "SETSCRIPTTAGS") {
 		TASServer::ExecuteCommand(command + " " + param);
 	} else if (command == "LEAVEBATTLE") {
@@ -67,6 +67,8 @@ void OfflineServer::SendCmd(const std::string& command, const std::string& param
 		TASServer::ExecuteCommand("PONG " + param);
 	} else if (command == "MYSTATUS") {
 		TASServer::ExecuteCommand(stdprintf("CLIENTSTATUS %s %s", GetUserName().c_str(), param.c_str()));
+	} else if (command == "UPDATEBOT") {
+		TASServer::ExecuteCommand(stdprintf("UPDATEBOT %d %s", battleid, param.c_str()));
 	} else {
 		wxLogWarning("Unknown command: %s %s", command.c_str(), param.c_str());
 		TASServer::ExecuteCommand(command + " " + param);
