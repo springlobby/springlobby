@@ -330,15 +330,15 @@ SockError Socket::Error() const
 
 
 //! @brief used to retrieve local ip address behind NAT to communicate to the server on login
-wxString Socket::GetLocalAddress() const
+std::string Socket::GetLocalAddress() const
 {
 	if (!m_sock.IsConnected())
-		return wxEmptyString;
+		return "";
 
 	wxIPV4address localaddr;
 	m_sock.GetLocal(localaddr);
 
-	return localaddr.IPAddress();
+	return STD_STRING(localaddr.IPAddress());
 }
 
 

@@ -57,7 +57,7 @@ public:
 
 	bool Send(const wxString& data);
 	wxString Receive();
-	wxString GetLocalAddress() const;
+	std::string GetLocalAddress() const;
 	std::string GetHandle() const
 	{
 		return m_handle;

@@ -357,7 +357,7 @@ void TASServer::Login()
 {
 	slLogDebugFunc("");
 	const std::string pass = GetPasswordHash(GetPassword());
-	std::string localaddr = STD_STRING(m_sock->GetLocalAddress());
+	std::string localaddr = m_sock->GetLocalAddress();
 	if (localaddr.empty())
 		localaddr = "*";
 	m_id_transmission = false;
