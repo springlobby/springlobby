@@ -162,7 +162,6 @@ struct UserBattleStatus
 		stat.handicap = ((tas >> 11) & 127) % 101;
 		stat.sync = ((tas >> 22) & 3) % 3;
 		stat.side = (tas >> 24) & 15;
-		assert(tas == ToInt(stat));
 		return stat;
 	}
 

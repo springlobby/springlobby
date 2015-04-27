@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include "utils/lslconversion.h"
 #include <lslutils/misc.h>
+#include "user.h"
 #include <wx/colour.h>
 
 
@@ -71,4 +72,41 @@ BOOST_AUTO_TEST_CASE(lslconversion)
 	BOOST_CHECK(test[0] == tmp2[0]);
 	BOOST_CHECK(test[1] == tmp2[1]);
 	BOOST_CHECK(test[2] == tmp2[2]);
+}
+
+BOOST_AUTO_TEST_CASE(userconversion)
+{
+	UserBattleStatus bs;
+	BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
+	bs.ready = false;
+	BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
+
+	for(int i=0; i<=15; i++) {
+		bs.team = i;
+		BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
+	}
+
+	for(int i=0; i<=15; i++) {
+		bs.ally = i;
+		BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
+	}
+
+	bs.spectator = true;
+	BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
+
+	for(int i=0; i<=100; i++) {
+		bs.handicap = i;
+		BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
+	}
+
+	for(int i=0; i<=2; i++) {
+		bs.sync = i;
+		BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
+	}
+
+	for(int i=0; i<=15; i++) {
+		bs.side = i;
+		BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
+	}
+
 }
