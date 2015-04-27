@@ -244,8 +244,8 @@ public:
 				page.window->SetSize(m_rect.x, m_rect.y + m_tab_ctrl_height,
 						     m_rect.width, m_rect.height - m_tab_ctrl_height);
 			}
-// TODO: else if (GetFlags() & wxAUI_NB_LEFT){}
-// TODO: else if (GetFlags() & wxAUI_NB_RIGHT){}
+			// TODO: else if (GetFlags() & wxAUI_NB_LEFT){}
+			// TODO: else if (GetFlags() & wxAUI_NB_RIGHT){}
 		}
 	}
 
