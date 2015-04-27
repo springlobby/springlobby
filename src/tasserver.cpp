@@ -71,11 +71,6 @@ SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which
 myteamcolor:  Should be 32-bit signed integer in decimal form (e.g. 255 and not FF) where each color channel should occupy 1 byte (e.g. in hexdecimal: $00BBGGRR, B = blue, G = green, R = red). Example: 255 stands for $000000FF.
 
 */
-int ConvUserStatus(const UserStatus& us);
-UserStatus ConvTasclientstatus(const int);
-
-UserBattleStatus ConvTasbattlestatus(const int);
-int ConvTasbattlestatus(const UserBattleStatus);
 
 IBattle::StartType IntToStartType(int start);
 NatType IntToNatType(int nat);
@@ -558,7 +553,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "CLIENTSTATUS") {
 		nick = GetWordParam(params);
 		tasstatus = GetIntParam(params);
-		cstatus = ConvTasclientstatus(tasstatus);
+		cstatus = UserStatus::FromInt(tasstatus);
 		m_se->OnUserStatus(nick, cstatus);
 	} else if (cmd == "BATTLEOPENED") {
 		const int id = GetIntParam(params);
@@ -726,7 +721,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "CLIENTBATTLESTATUS") {
 		nick = GetWordParam(params);
 		tasbstatus = GetIntParam(params);
-		bstatus = ConvTasbattlestatus(tasbstatus);
+		bstatus = UserBattleStatus::FromInt(tasbstatus);
 		bstatus.colour = LSL::lslColor(GetIntParam(params));
 		m_se->OnClientBattleStatus(m_battle_id, nick, bstatus);
 	} else if (cmd == "ADDSTARTRECT") {
@@ -785,7 +780,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		nick = GetWordParam(params);
 		owner = GetWordParam(params);
 		tasbstatus = GetIntParam(params);
-		bstatus = ConvTasbattlestatus(tasbstatus);
+		bstatus = UserBattleStatus::FromInt(tasbstatus);
 		bstatus.colour = LSL::lslColor(GetIntParam(params));
 		wxString ai = TowxString(GetSentenceParam(params));
 		if (ai.empty()) {
@@ -803,7 +798,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		const int id = GetIntParam(params);
 		nick = GetWordParam(params);
 		tasbstatus = GetIntParam(params);
-		bstatus = ConvTasbattlestatus(tasbstatus);
+		bstatus = UserBattleStatus::FromInt(tasbstatus);
 		bstatus.colour = LSL::lslColor(GetIntParam(params));
 		m_se->OnBattleUpdateBot(id, nick, bstatus);
 		//UPDATEBOT BATTLE_ID name battlestatus teamcolor
@@ -1488,7 +1483,7 @@ IBattle* TASServer::GetCurrentBattle()
 void TASServer::SendMyBattleStatus(UserBattleStatus& bs)
 {
 	slLogDebugFunc("");
-	const int tasbs = ConvTasbattlestatus(bs);
+	const int tasbs = UserBattleStatus::ToInt(bs);
 	//MYBATTLESTATUS battlestatus myteamcolor
 	SendCmd("MYBATTLESTATUS", stdprintf("%d %d", tasbs, bs.colour.GetLobbyColor()));
 }
@@ -1497,7 +1492,7 @@ void TASServer::SendMyBattleStatus(UserBattleStatus& bs)
 void TASServer::SendMyUserStatus(const UserStatus& us)
 {
 	slLogDebugFunc("");
-	const int taus = ConvUserStatus(us);
+	const int taus = UserStatus::ToInt(us);
 	SendCmd("MYSTATUS", stdprintf("%d", taus));
 }
 
@@ -1694,8 +1689,7 @@ void TASServer::SetHandicap(int battleid, User& user, int handicap)
 void TASServer::AddBot(int battleid, const std::string& nick, UserBattleStatus& status)
 {
 	CHECK_CURRENT_BATTLE_ID(battleid)
-
-	const int tasbs = ConvTasbattlestatus(status);
+	const int tasbs = UserBattleStatus::ToInt(status);
 	//ADDBOT name battlestatus teamcolor {AIDLL}
 	wxString msg;
 	wxString ailib;
@@ -1725,7 +1719,7 @@ void TASServer::RemoveBot(int battleid, User& bot)
 void TASServer::UpdateBot(int battleid, User& bot, UserBattleStatus& status)
 {
 	CHECK_CURRENT_BATTLE_ID(battleid)
-	const int tasbs = ConvTasbattlestatus(status);
+	const int tasbs = UserBattleStatus::ToInt(status);
 	//UPDATEBOT name battlestatus teamcolor
 	SendCmd("UPDATEBOT", bot.GetNick() + stdprintf(" %d %d", tasbs, status.colour.GetLobbyColor()), GetBattle(battleid).IsProxy());
 }
@@ -1950,63 +1944,6 @@ LSL::StringVector TASServer::GetRelayHostList()
 ////////////////////////
 // Utility functions
 //////////////////////
-
-int ConvUserStatus(const UserStatus& us)
-{
-	int taus = 0;
-	taus += (us.in_game ? 1 : 0);
-	taus += (us.away ? 1 : 0) << 1;
-	taus += (us.rank % 16) << 2;
-	taus += (us.moderator ? 1 : 0) << 5;
-	taus += (us.bot ? 1 : 0) << 6;
-	return taus;
-}
-
-
-UserStatus ConvTasclientstatus(const int tas)
-{
-	//http://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYSTATUS:client
-	UserStatus stat;
-	stat.in_game = (tas >> 0) & 1;
-	stat.away = (tas >> 1) & 1;
-	stat.rank = (UserStatus::RankContainer)((tas >> 2) % 8);
-	stat.moderator = (tas >> 5) & 1;
-	stat.bot = (tas >> 6) & 1;
-	assert(ConvUserStatus(stat) == tas);
-	return stat;
-}
-
-UserBattleStatus ConvTasbattlestatus(const int tas)
-{
-	UserBattleStatus stat;
-	//http://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYBATTLESTATUS:client
-	stat.ready = (tas >> 1) & 1;
-	stat.team = (tas >> 2) & 15;
-	stat.ally = (tas >> 6) & 15;
-	stat.spectator = ((tas >> 10) & 1) == 0;
-	stat.handicap = ((tas >> 11) & 127) % 101;
-	stat.sync = ((tas >> 22) & 3) % 3;
-	stat.side = (tas >> 24) & 15;
-	assert(tas == ConvTasbattlestatus(stat));
-	return stat;
-}
-
-
-int ConvTasbattlestatus(UserBattleStatus bs)
-{
-	int ret = 0;			     // b0 is reserved
-	ret += (bs.ready ? 1 : 0) << 1;      // b1
-	ret += (bs.team % 16) << 2;	  //b2..b5
-	ret += (bs.ally % 16) << 6;	  //b6..b9
-	ret += (bs.spectator ? 0 : 1) << 10; //b10
-	ret += (bs.handicap % 101) << 11;    //b11..b17
-	//b18..b21 reserverd
-	ret += (bs.sync % 3) << 22;  //b22..b23
-	ret += (bs.side % 16) << 24; //b24..b27
-	//b28..31 is unused
-	return ret;
-}
-
 
 IBattle::StartType IntToStartType(int start)
 {

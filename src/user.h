@@ -54,7 +54,38 @@ struct UserStatus
 	    , bot(false)
 	{
 	}
+
+	bool operator==(const UserStatus& s) const
+	{
+		return ((in_game == s.in_game) && (away == s.away) && (rank == s.rank) && (moderator == s.moderator) && (bot == s.bot));
+	}
+
 	std::string GetDiffString(const UserStatus& other) const;
+
+	static int ToInt(const UserStatus& us)
+	{
+		int taus = 0;
+		taus += (us.in_game ? 1 : 0);
+		taus += (us.away ? 1 : 0) << 1;
+		taus += (us.rank % 16) << 2;
+		taus += (us.moderator ? 1 : 0) << 5;
+		taus += (us.bot ? 1 : 0) << 6;
+		assert(FromInt(taus) == us);
+		return taus;
+	}
+
+	static UserStatus FromInt(const int tas)
+	{
+		//http://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYSTATUS:client
+		UserStatus stat;
+		stat.in_game = (tas >> 0) & 1;
+		stat.away = (tas >> 1) & 1;
+		stat.rank = (UserStatus::RankContainer)((tas >> 2) % 8);
+		stat.moderator = (tas >> 5) & 1;
+		stat.bot = (tas >> 6) & 1;
+		assert(ToInt(stat) == tas);
+		return stat;
+	}
 };
 
 struct UserPosition
@@ -119,6 +150,37 @@ struct UserBattleStatus
 	bool operator!=(const UserBattleStatus& s) const
 	{
 		return ((team != s.team) || (colour != s.colour) || (handicap != s.handicap) || (side != s.side) || (sync != s.sync) || (spectator != s.spectator) || (ready != s.ready) || (owner != s.owner) || (aishortname != s.aishortname) || (isfromdemo != s.isfromdemo) || (aitype != s.aitype));
+	}
+
+	static UserBattleStatus FromInt(const int tas)
+	{
+		UserBattleStatus stat;
+		//http://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYBATTLESTATUS:client
+		stat.ready = (tas >> 1) & 1;
+		stat.team = (tas >> 2) & 15;
+		stat.ally = (tas >> 6) & 15;
+		stat.spectator = ((tas >> 10) & 1) == 0;
+		stat.handicap = ((tas >> 11) & 127) % 101;
+		stat.sync = ((tas >> 22) & 3) % 3;
+		stat.side = (tas >> 24) & 15;
+		assert(tas == ToInt(stat));
+		return stat;
+	}
+
+	static int ToInt(UserBattleStatus bs)
+	{
+		int ret = 0;			     // b0 is reserved
+		ret += (bs.ready ? 1 : 0) << 1;      // b1
+		ret += (bs.team % 16) << 2;	  //b2..b5
+		ret += (bs.ally % 16) << 6;	  //b6..b9
+		ret += (bs.spectator ? 0 : 1) << 10; //b10
+		ret += (bs.handicap % 101) << 11;    //b11..b17
+		//b18..b21 reserverd
+		ret += (bs.sync % 3) << 22;  //b22..b23
+		ret += (bs.side % 16) << 24; //b24..b27
+		//b28..31 is unused
+		assert(bs == FromInt(ret));
+		return ret;
 	}
 };
 
