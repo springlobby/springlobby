@@ -40,7 +40,6 @@
 #include "gui/uiutils.h"
 #include "addbotdialog.h"
 #include "iserver.h"
-#include "serverselector.h"
 #include "iconimagelist.h"
 #include "gui/customdialogs.h"
 #include "autobalancedialog.h"
@@ -695,7 +694,7 @@ void BattleRoomTab::OnAddBot(wxCommandEvent& /*unused*/)
 		bs.aiversion = STD_STRING(dlg.GetAIVersion());
 		bs.aitype = dlg.GetAIType();
 		bs.owner = m_battle->GetMe().GetNick();
-		serverSelector().GetServer().AddBot(m_battle->GetBattleId(), STD_STRING(dlg.GetNick()), bs);
+		m_battle->GetServer().AddBot(m_battle->GetBattleId(), STD_STRING(dlg.GetNick()), bs);
 	}
 }
 
