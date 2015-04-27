@@ -38,7 +38,6 @@ lsl/networking/tasserver.cpp
 
 
 SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which is send when leaving server");
-SLCONFIG("/General/CpuID", 0L, "CPUId to be used when logging int to lobbyserver");
 
 // times in milliseconds
 #define PING_TIME 30000
@@ -361,9 +360,8 @@ void TASServer::Login()
 	if (localaddr.empty())
 		localaddr = "*";
 	m_id_transmission = false;
-	const int cpuid = cfg().ReadLong(_T("/General/CpuID"));
-	SendCmd("LOGIN", stdprintf("%s %s %d %s %s\t%u\ta m sp cl p",
-				   GetUserName().c_str(), pass.c_str(), cpuid, localaddr.c_str(), getSpringlobbyAgent().c_str(), m_crc.GetCRC()));
+	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u\ta m sp cl p",
+				   GetUserName().c_str(), pass.c_str(), localaddr.c_str(), getSpringlobbyAgent().c_str(), m_crc.GetCRC()));
 	m_id_transmission = true;
 }
 
