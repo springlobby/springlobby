@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(lslconversion)
 	BOOST_CHECK(test[2] == tmp2[2]);
 }
 
-BOOST_AUTO_TEST_CASE(userconversion)
+BOOST_AUTO_TEST_CASE(battlestatus)
 {
 	UserBattleStatus bs;
 	BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
@@ -108,5 +108,31 @@ BOOST_AUTO_TEST_CASE(userconversion)
 		bs.side = i;
 		BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
 	}
+
+
+}
+
+BOOST_AUTO_TEST_CASE(userstatus)
+{
+	UserStatus us;
+	BOOST_CHECK(us == UserStatus::FromInt(UserStatus::ToInt(us)));
+
+	us.in_game = true;
+	BOOST_CHECK(us == UserStatus::FromInt(UserStatus::ToInt(us)));
+
+	us.away = true;
+	BOOST_CHECK(us == UserStatus::FromInt(UserStatus::ToInt(us)));
+
+	us.rank = UserStatus::RANK_1;
+	BOOST_CHECK(us == UserStatus::FromInt(UserStatus::ToInt(us)));
+
+	us.rank = UserStatus::RANK_8;
+	BOOST_CHECK(us == UserStatus::FromInt(UserStatus::ToInt(us)));
+
+	us.moderator = true;
+	BOOST_CHECK(us == UserStatus::FromInt(UserStatus::ToInt(us)));
+
+	us.bot= true;
+	BOOST_CHECK(us == UserStatus::FromInt(UserStatus::ToInt(us)));
 
 }
