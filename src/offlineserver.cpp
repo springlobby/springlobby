@@ -44,7 +44,7 @@ void OfflineServer::SendCmd(const std::string& command, const std::string& param
 		const std::string title = GetSentenceParam(p);
 		const std::string game = GetSentenceParam(p);
 		TASServer::ExecuteCommand(stdprintf("BATTLEOPENED %d %d %d %s %s %d %d %d %d %d %s\t%s\t%s\t%s\t%s",
-						    battleid, type, nat, GetUserName().c_str(), "127.0.0.1", port, 1, 0, rank,
+						    battleid, type, nat, GetUserName().c_str(), "127.0.0.1", port, maxplayers, 0, rank,
 						    maphash.c_str(), engine.c_str(), enginever.c_str(), map.c_str(), title.c_str(), game.c_str()));
 		TASServer::ExecuteCommand("OPENBATTLE 1");
 		TASServer::ExecuteCommand("REQUESTBATTLESTATUS");
@@ -54,10 +54,10 @@ void OfflineServer::SendCmd(const std::string& command, const std::string& param
 		TASServer::ExecuteCommand(stdprintf("UPDATEBATTLEINFO %d %s", battleid, param.c_str()));
 	} else if (command == "ADDBOT") {
 		const std::string name = GetWordParam(p);
-		const std::string battlestatus = GetWordParam(p);
-		const std::string color = GetWordParam(p);
+		const int battlestatus = GetIntParam(p);
+		const int color = GetIntParam(p);
 		const std::string dll = GetSentenceParam(p);
-		TASServer::ExecuteCommand(stdprintf("ADDBOT %d %s %s %d %d %s", battleid, name.c_str(), GetUserName().c_str(), battlestatus.c_str(), color.c_str(), dll.c_str()));
+		TASServer::ExecuteCommand(stdprintf("ADDBOT %d %s %s %d %d %s", battleid, name.c_str(), GetUserName().c_str(), battlestatus, color, dll.c_str()));
 	} else if (command == "SETSCRIPTTAGS") {
 		TASServer::ExecuteCommand(command + " " + param);
 	} else if (command == "LEAVEBATTLE") {
