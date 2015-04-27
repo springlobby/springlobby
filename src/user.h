@@ -70,7 +70,6 @@ struct UserStatus
 		taus += (us.rank % 16) << 2;
 		taus += (us.moderator ? 1 : 0) << 5;
 		taus += (us.bot ? 1 : 0) << 6;
-		assert(FromInt(taus) == us);
 		return taus;
 	}
 
@@ -179,7 +178,6 @@ struct UserBattleStatus
 		ret += (bs.sync % 3) << 22;  //b22..b23
 		ret += (bs.side % 16) << 24; //b24..b27
 		//b28..31 is unused
-		assert(bs == FromInt(ret));
 		return ret;
 	}
 };

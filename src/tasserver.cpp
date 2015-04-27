@@ -1550,7 +1550,7 @@ void TASServer::ForceTeam(int battleid, User& user, int team)
 		return;
 	}
 	if (!GetBattle(battleid).IsFounderMe()) {
-		DoActionBattle(battleid, "suggests that " + user.GetNick() + " changes to team #" + stdprintf("%d", team + 1) + ".");
+		DoActionBattle(battleid, stdprintf("suggests that %s changes to team #%d.",user.GetNick().c_str(), team + 1));
 		return;
 	}
 
@@ -1577,12 +1577,12 @@ void TASServer::ForceAlly(int battleid, User& user, int ally)
 	}
 
 	if (!GetBattle(battleid).IsFounderMe()) {
-		DoActionBattle(battleid, "suggests that " + user.GetNick() + " changes to ally #" + stdprintf("%d", ally + 1) + ".");
+		DoActionBattle(battleid, stdprintf("suggests that %s changes to ally #%d.", user.GetNick().c_str(), ally + 1));
 		return;
 	}
 
 	//FORCEALLYNO username teamno
-	SendCmd("FORCEALLYNO", user.GetNick() + stdprintf(" %d", ally), GetBattle(battleid).IsProxy());
+	SendCmd("FORCEALLYNO", stdprintf("%s %d", user.GetNick().c_str(), ally), GetBattle(battleid).IsProxy());
 }
 
 
@@ -1607,7 +1607,7 @@ void TASServer::ForceColour(int battleid, User& user, const LSL::lslColor& col)
 	}
 
 	//FORCETEAMCOLOR username color
-	SendCmd("FORCETEAMCOLOR", user.GetNick() + std::string(" ") + stdprintf("%d", col.GetLobbyColor()), GetBattle(battleid).IsProxy());
+	SendCmd("FORCETEAMCOLOR", stdprintf("%s %d", user.GetNick().c_str(), col.GetLobbyColor()), GetBattle(battleid).IsProxy());
 }
 
 
@@ -1682,7 +1682,7 @@ void TASServer::SetHandicap(int battleid, User& user, int handicap)
 	}
 
 	//HANDICAP username value
-	SendCmd("HANDICAP", user.GetNick() + stdprintf(" %d", handicap), GetBattle(battleid).IsProxy());
+	SendCmd("HANDICAP", stdprintf("%s %d", user.GetNick().c_str(), handicap), GetBattle(battleid).IsProxy());
 }
 
 
@@ -1691,11 +1691,7 @@ void TASServer::AddBot(int battleid, const std::string& nick, UserBattleStatus& 
 	CHECK_CURRENT_BATTLE_ID(battleid)
 	const int tasbs = UserBattleStatus::ToInt(status);
 	//ADDBOT name battlestatus teamcolor {AIDLL}
-	wxString msg;
-	wxString ailib;
-	ailib += TowxString(status.aishortname);
-	ailib += _T("|") + TowxString(status.aiversion);
-	SendCmd("ADDBOT", nick + stdprintf(" %d %d ", tasbs, status.colour.GetLobbyColor()) + STD_STRING(ailib));
+	SendCmd("ADDBOT", stdprintf("%s %d %d %s|%s", nick.c_str(), tasbs, status.colour.GetLobbyColor(), status.aishortname.c_str(), status.aiversion.c_str()));
 }
 
 
@@ -1721,7 +1717,7 @@ void TASServer::UpdateBot(int battleid, User& bot, UserBattleStatus& status)
 	CHECK_CURRENT_BATTLE_ID(battleid)
 	const int tasbs = UserBattleStatus::ToInt(status);
 	//UPDATEBOT name battlestatus teamcolor
-	SendCmd("UPDATEBOT", bot.GetNick() + stdprintf(" %d %d", tasbs, status.colour.GetLobbyColor()), GetBattle(battleid).IsProxy());
+	SendCmd("UPDATEBOT", stdprintf("%s %d %d",bot.GetNick().c_str(), tasbs, status.colour.GetLobbyColor()), GetBattle(battleid).IsProxy());
 }
 
 void TASServer::OnConnected()
