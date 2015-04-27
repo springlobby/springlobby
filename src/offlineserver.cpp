@@ -21,7 +21,7 @@ OfflineServer::~OfflineServer()
 void OfflineServer::Connect(const std::string& servername, const std::string& /*addr*/, const int /*port*/)
 {
 	m_se->OnConnected(servername, "", true, "", true);
-	m_se->OnNewUser(GetUserName(), "??", 0, 1);
+	TASServer::ExecuteCommand(stdprintf("ADDUSER %s ?? 0 1", GetUserName().c_str()));
 }
 
 const int battleid = 1;
