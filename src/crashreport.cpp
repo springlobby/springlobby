@@ -155,7 +155,7 @@ void CrashReport::GenerateReport()
 #if wxUSE_STD_IOSTREAM
 	report->AddText(_T( "AppLog.txt" ), TowxString(crashlog.str()), _("Application verbose log"));
 #endif
-	wxString script_file = TowxString(SlPaths::GetDataDir()) + wxFileName::GetPathSeparator() + _T("script.txt");
+	wxString script_file = TowxString(SlPaths::GetLobbyWriteDir()) + _T("script.txt");
 	if (wxFile::Exists(script_file))
 		report->AddFile(script_file, _("Last generated spring launching script"));
 
