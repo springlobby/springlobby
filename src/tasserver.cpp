@@ -350,6 +350,9 @@ const User& TASServer::GetMe() const
 void TASServer::Login()
 {
 	slLogDebugFunc("");
+	if (m_sock == NULL) {
+		return;
+	}
 	const std::string pass = GetPasswordHash(GetPassword());
 	std::string localaddr = m_sock->GetLocalAddress();
 	if (localaddr.empty())
