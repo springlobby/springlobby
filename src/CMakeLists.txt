@@ -56,10 +56,17 @@ execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--version-full"
 
 set(WX_VERSION_MIN "2.9")
 if("${WX_VERSION}" VERSION_LESS "${WX_VERSION_MIN}")
-	message(FATAL_ERROR "couldn't find wx-widgets >= ${WX_VERSION_MIN}, found ${WX_VERSION}")
-else()
-	message(STATUS "found wxwidgets: ${WX_VERSION}")
+	set(WX_VERSION_DEFAULT "${WX_VERSION}")
+	# Append version selector to find the right one in a multi-slot install if the default is lower than required.
+	set(wxWidgets_CONFIG_EXECUTABLE ${wxWidgets_CONFIG_EXECUTABLE} "--version=${WX_VERSION_MIN}")
+	execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--version-full"
+		OUTPUT_VARIABLE WX_VERSION
+		OUTPUT_STRIP_TRAILING_WHITESPACE)
+	if("${WX_VERSION}" VERSION_LESS "${WX_VERSION_MIN}")
+		message(FATAL_ERROR "couldn't find wx-widgets >= ${WX_VERSION_MIN}, found ${WX_VERSION_DEFAULT}")
+	endif()
 endif()
+message(STATUS "found wxwidgets: ${WX_VERSION}")
 
 execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--cppflags" "${WXSTATIC}"
 	OUTPUT_VARIABLE WX_CXX_FLAGS
