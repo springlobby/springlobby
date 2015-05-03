@@ -774,10 +774,10 @@ const LSL::UnitsyncMod& IBattle::LoadMod()
 	assert(!m_host_mod.name.empty());
 	if (!m_mod_loaded) {
 		try {
-			ASSERT_EXCEPTION(ModExists(), _T("Mod does not exist."));
+			ASSERT_EXCEPTION(ModExists(), wxString::Format("Game does not exist: %s hash:%s", m_host_mod.name.c_str(), m_host_mod.hash.c_str()));
 			m_local_mod = LSL::usync().GetMod(m_host_mod.name);
 			bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::ModOption, m_host_mod.name);
-			ASSERT_EXCEPTION(options_loaded, _T("couldn't load the mod options"));
+			ASSERT_EXCEPTION(options_loaded, _T("couldn't load the game options"));
 			m_mod_loaded = true;
 		} catch (...) {
 		}
