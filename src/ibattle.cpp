@@ -721,15 +721,16 @@ void IBattle::SetLocalMap(const std::string& mapname)
 const LSL::UnitsyncMap& IBattle::LoadMap()
 {
 	if ((!m_map_loaded) && (!m_host_map.name.empty())) {
+	    if( MapExists(false) == true ) { //Check if selected map available for engine?
 		try {
-			ASSERT_EXCEPTION(MapExists(false), _T("Map does not exist: ") + TowxString(m_host_map.name));
 			m_local_map = LSL::usync().GetMap(m_host_map.name);
 			bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::MapOption, m_host_map.name);
+			//TODO: maybe replace this with "silent" IF operator?
 			ASSERT_EXCEPTION(options_loaded, _T("couldn't load the map options"));
 			m_map_loaded = true;
-
 		} catch (...) {
 		}
+	    }
 	}
 	return m_local_map;
 }
@@ -771,7 +772,7 @@ void IBattle::SetLocalMod(const LSL::UnitsyncMod& mod)
 
 const LSL::UnitsyncMod& IBattle::LoadMod()
 {
-	assert(!m_host_mod.name.empty());
+	ASSERT_LOGIC(!m_host_mod.name.empty(), "m_host_mod.name.empty() is FALSE");
 	if (!m_mod_loaded) {
 		try {
 			ASSERT_EXCEPTION(ModExists(), wxString::Format("Game does not exist: %s hash:%s", m_host_mod.name.c_str(), m_host_mod.hash.c_str()));
