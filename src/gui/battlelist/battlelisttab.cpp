@@ -352,10 +352,17 @@ void BattleListTab::OnJoin(wxCommandEvent& /*unused*/)
 		return;
 	}
 
-	if (m_battle_list->GetSelectedIndex() < 0)
+	//Is there any battle selected?
+	if( m_battle_list->GetSelectedIndex() < 0 ) {
 		return;
+	}
+
 	const IBattle* battle = m_battle_list->GetSelectedData();
-	assert(battle != NULL);
+	try {
+		ASSERT_LOGIC(battle != NULL, "battle == null");
+	} catch (...) {
+		return;
+	}
 	const int id = battle->GetBattleId();
 	DoJoin(serverSelector().GetServer().battles_iter->GetBattle(id));
 }
@@ -365,11 +372,11 @@ void BattleListTab::OnListJoin(wxListEvent& event)
 {
 	try {
 		ASSERT_LOGIC(m_battle_list != 0, "m_battle_list = 0");
+		ASSERT_LOGIC(m_battle_list->GetSelectedIndex() >= 0, "m_battle_list->GetSelectedIndex() < 0");
+		ASSERT_LOGIC(m_battle_list->GetSelectedIndex() == event.GetIndex(), "m_battle_list->GetSelectedIndex() != event.GetIndex()");
 	} catch (...) {
 		return;
 	}
-	if (event.GetIndex() < 0)
-		return;
 
 	int id = m_battle_list->GetSelectedData()->GetBattleId();
 	DoJoin(serverSelector().GetServer().battles_iter->GetBattle(id));
@@ -382,11 +389,13 @@ void BattleListTab::DoJoin(IBattle& battle)
 
 	IBattle* curbattle = ui().mw().GetJoinTab().GetCurrentBattle();
 
+	//If trying to join battle player already joined
 	if (curbattle != 0 && curbattle->GetID() == battle.GetID()) {
 		ui().mw().ShowTab(MainWindow::PAGE_JOIN);
 		return;
 	}
 
+	//If player already in another battle
 	if (curbattle != 0) {
 		if (ui().Ask(_("Already in another battle"), _("You are already in a battle.\n\nDo you want to leave your current battle and join this one?"))) {
 			curbattle->Leave();
@@ -396,9 +405,11 @@ void BattleListTab::DoJoin(IBattle& battle)
 		}
 	}
 
+	//Ask password from player if it is needed
 	if (battle.IsPassworded()) {
 		wxPasswordEntryDialog pw(this, _("Battle password"), _("Enter password (spaces will be stripped)"));
 		pw.SetFocus();
+		//Player did not gave password
 		if (pw.ShowModal() != wxID_OK) {
 			return;
 		}
@@ -406,7 +417,10 @@ void BattleListTab::DoJoin(IBattle& battle)
 		password.Replace(_T(" "), wxEmptyString);
 	}
 
+	//Check if some content needs to be downloaded
 	if (!ui().DownloadArchives(battle)) {
+		//There is content needed but user reject it tobe downloaded
+		//or some error happend
 		return;
 	}
 
@@ -416,7 +430,6 @@ void BattleListTab::DoJoin(IBattle& battle)
 
 void BattleListTab::OnSelect(wxListEvent& event)
 {
-	slLogDebugFunc("");
 	if (event.GetIndex() == -1) {
 		SelectBattle(0);
 		return;
@@ -429,7 +442,8 @@ void BattleListTab::OnSelect(wxListEvent& event)
 
 void BattleListTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 {
-	assert(wxThread::IsMain());
+	ASSERT_LOGIC(wxThread::IsMain(), "wxThread::IsMain() == false");
+
 	if (!serverSelector().IsServerAvailible())
 		return;
 
