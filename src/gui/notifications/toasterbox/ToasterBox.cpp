@@ -124,7 +124,7 @@ void ToasterBox::Play()
 		//if we didn't show the window properly, remove it from the list
 		winList->DeleteNode(winList->Item(winList->GetCount() - 1));
 		//delete the object too.
-		tb = 0;
+		delete tb;
 		return;
 	}
 }
