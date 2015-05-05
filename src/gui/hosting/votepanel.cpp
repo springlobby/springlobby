@@ -45,9 +45,9 @@ wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
 	yesButton->SetToolTip(_("Vote for YES, (Ctrl-Y)"));
 	mainSizer->Add(yesButton);
 
-	dontCareButton = new wxButton(this, VotePanel::ID_DONTCARE_BUTTON, "ban", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+	dontCareButton = new wxButton(this, VotePanel::ID_DONTCARE_BUTTON, "don't care", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	dontCareButton->SetFont(buttonFont);
-	dontCareButton->SetToolTip(_("Vote for BAN, (Ctrl-B)"));
+	dontCareButton->SetToolTip(_("Vote for DON'T CARE, (Ctrl-B)"));
 	mainSizer->Add(dontCareButton);
 
 	noButton = new wxButton(this, VotePanel::ID_NO_BUTTON, "no", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
