@@ -9,7 +9,7 @@
 #include "userlist.h"
 #include "battlelist.h"
 #include "utils/mixins.h"
-#include "ibattle.h"
+#include <lslutils/type_forwards.h>
 
 class ServerEvents;
 class SimpleServerEvents;
@@ -18,6 +18,7 @@ class Ui;
 struct BattleOptions;
 class User;
 struct UserBattleStatus;
+struct UserStatus;
 class ChatPanel;
 
 typedef int ServerError;
