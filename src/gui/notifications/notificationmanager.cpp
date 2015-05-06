@@ -23,7 +23,7 @@ typedef ToasterNotification NotificationWrapperType;
 #endif
 
 
-SLCONFIG("/GUI/NotificationPopupDisableIngame", false, "disable config notifications when ingame");
+SLCONFIG("/GUI/NotificationPopupDisableIngame", true, "disable popup notifications when ingame");
 
 const int this_timer_id = wxNewId();
 
