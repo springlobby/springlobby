@@ -860,9 +860,9 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "CLIENTIPPORT") {
 		// clientipport username ip port
 		nick = GetWordParam(params);
-		wxString ip = TowxString(GetWordParam(params));
+		const std::string ip = GetWordParam(params);
 		unsigned int u_port = (unsigned int)GetIntParam(params);
-		m_se->OnClientIPPort(nick, STD_STRING(ip), u_port);
+		m_se->OnClientIPPort(nick, ip, u_port);
 	} else if (cmd == "SETSCRIPTTAGS") {
 		wxString command;
 		while ((command = TowxString(GetSentenceParam(params))) != wxEmptyString) {
