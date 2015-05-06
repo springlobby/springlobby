@@ -18,7 +18,7 @@ private:
 	typedef SL_GENERIC::UserMenu<ChatPanelMenu> UserMenu;
 
 public:
-	NickListCtrl(wxWindow* parent, bool show_header = true, UserMenu* popup = 0,
+	NickListCtrl(wxWindow* parent, bool show_header = true, ChatPanelMenu* popup = 0,
 		     bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true);
 	virtual ~NickListCtrl();
 
@@ -53,7 +53,7 @@ private:
 	int GetIndexFromRealData(const User& user);
 	int GetIndexFromData(const DataType& data) const;
 
-	UserMenu* m_menu;
+	ChatPanelMenu* m_menu;
 
 	wxString m_UsersFilterString;		    //<- String with filter pattern for nicklist
 	std::vector<const User*> m_real_users_list; //<- actual list of users (not filtered)

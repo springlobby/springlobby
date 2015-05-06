@@ -242,8 +242,7 @@ void ChatPanel::CreateControls()
 		m_usercount_label = new wxStaticText(m_nick_panel, wxID_ANY, wxString::Format(_("%d users"), numusers));
 		CreatePopup(); //ensures m_popup_menu is constructed
 		//SL_GENERIC::UserMenu<ChatPanelMenu>* usermenu  = m_popup_menu->GetUserMenu();
-		assert(m_popup_menu->GetUserMenu());
-		m_nicklist = new NickListCtrl(m_nick_panel, true, m_popup_menu->GetUserMenu());
+		m_nicklist = new NickListCtrl(m_nick_panel, true, m_popup_menu);
 
 		// m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
 		// m_nick_filter->Disable();
@@ -1181,3 +1180,4 @@ void ChatPanel::SetVotePanel(VotePanel* votePanel)
 	m_votePanel = votePanel;
 	m_votePanel->SetChatPanel(this);
 }
+

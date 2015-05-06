@@ -38,7 +38,7 @@ END_EVENT_TABLE()
 template <>
 SortOrder NickListCtrl::BaseType::m_sortorder = SortOrder();
 
-NickListCtrl::NickListCtrl(wxWindow* parent, bool show_header, NickListCtrl::UserMenu* popup, bool singleSelectList,
+NickListCtrl::NickListCtrl(wxWindow* parent, bool show_header, ChatPanelMenu* popup, bool singleSelectList,
 			   const wxString& name, bool highlight)
     : NickListCtrl::BaseType(parent, NICK_LIST, wxDefaultPosition, wxDefaultSize,
 			     wxLC_VIRTUAL | wxSUNKEN_BORDER | wxLC_REPORT | (int)(!show_header) * wxLC_NO_HEADER | (int)(singleSelectList) * wxLC_SINGLE_SEL,
@@ -168,8 +168,9 @@ void NickListCtrl::OnShowMenu(wxContextMenuEvent& /*unused*/)
 		if (selected != -1 && m_data[selected]) {
 			const User& user = *m_data[selected];
 			wxString nick = TowxString(user.GetNick());
-			m_menu->EnableItems((selected != -1), nick);
-			PopupMenu(m_menu);
+			NickListCtrl::UserMenu* popup = m_menu->GetUserMenu();
+			popup->EnableItems((selected != -1), nick);
+			PopupMenu(popup);
 		}
 	}
 }
