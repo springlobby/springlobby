@@ -114,7 +114,7 @@ public:
 	virtual void AdminChangeAccountAccess(const std::string& /*nick*/, const std::string& /*accesscode*/){};
 	virtual void AdminSetBotMode(const std::string& /*nick*/, bool /*isbot*/){};
 
-	virtual void HostBattle(BattleOptions /*bo*/, const std::string& /*password*/ = ""){};
+	virtual void HostBattle(const BattleOptions& /*bo*/, const std::string& /*password*/ = ""){};
 	virtual void JoinBattle(const int& /*battleid*/, const std::string& /*password*/ = ""){};
 	virtual void LeaveBattle(const int& /*battleid*/){};
 	virtual void StartHostedBattle(){};

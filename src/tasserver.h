@@ -89,7 +89,7 @@ public:
 	void AdminChangeAccountAccess(const std::string& nick, const std::string& accesscode);
 	void AdminSetBotMode(const std::string& nick, bool isbot);
 
-	void HostBattle(BattleOptions bo, const std::string& password = "");
+	void HostBattle(const BattleOptions& bo, const std::string& password = "");
 	void JoinBattle(const int& battleid, const std::string& password = "");
 	void LeaveBattle(const int& battleid);
 	void SendMyBattleStatus(UserBattleStatus& bs);

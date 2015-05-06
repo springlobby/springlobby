@@ -1196,7 +1196,7 @@ void TASServer::AdminSetBotMode(const std::string& nick, bool isbot)
 }
 
 
-void TASServer::HostBattle(BattleOptions bo, const std::string& password)
+void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 {
 	slLogDebugFunc("");
 
