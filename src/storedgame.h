@@ -34,6 +34,7 @@ struct StoredGame
 	    , duration(0)
 	    , size(0)
 	    , date(0)
+	    , type(REPLAY)
 	{
 	}
 

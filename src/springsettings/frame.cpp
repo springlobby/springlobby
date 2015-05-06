@@ -147,6 +147,8 @@ void settings_frame::handleExit()
 					(abstract_panel::settingsChanged) = false;
 				if (simpleTab != 0)
 					simpleTab->saveCbxChoices();
+				doQuit();
+				return;
 			case wxNO:
 				doQuit();
 				return;
@@ -155,9 +157,6 @@ void settings_frame::handleExit()
 			default:
 				return;
 		}
-	} else {
-		doQuit();
-		return;
 	}
 }
 

@@ -221,7 +221,6 @@ private:
 	bool m_do_finalize_join_battle;
 	int m_finalize_join_battle_id;
 	std::string m_finalize_join_battle_pw;
-	bool m_token_transmission;
 
 	std::string m_current_chan_name_mutelist;
 	std::string m_relay_host_bot;

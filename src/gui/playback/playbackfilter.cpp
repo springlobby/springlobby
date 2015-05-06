@@ -51,6 +51,7 @@ PlaybackListFilter::PlaybackListFilter(wxWindow* parent, wxWindowID id, Playback
 				       const wxPoint& pos, const wxSize& size, long style)
     : wxPanel(parent, id, pos, size, style)
     , m_parent_tab(parentTab)
+    , m_duration_value(0)
     , m_filter_map_edit(0)
     , m_filter_map_expression(0)
     , m_filter_mod_edit(0)

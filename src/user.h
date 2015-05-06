@@ -200,6 +200,7 @@ public:
 	CommonUser(const std::string& nick, const std::string& country, const int& cpu)
 	    : m_nick(std::string(nick))
 	    , m_country(std::string(country))
+	    , m_id(0)
 	    , m_cpu(cpu)
 	{
 	}
