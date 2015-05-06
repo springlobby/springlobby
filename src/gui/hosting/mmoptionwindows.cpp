@@ -29,11 +29,12 @@
 SingleOptionDialog::SingleOptionDialog(IBattle& battle, const wxString& optiontag)
     : m_battle(battle)
     , m_tag(optiontag)
-    , m_checkbox(0)
-    , m_combobox(0)
-    , m_spinctrl(0)
-    , m_textctrl(0)
-    , m_ok_button(0)
+    , m_checkbox(NULL)
+    , m_combobox(NULL)
+    , m_spinctrl(NULL)
+    , m_textctrl(NULL)
+    , m_cancel_button(NULL)
+    , m_ok_button(NULL)
 {
 	LSL::OptionsWrapper& optWrap = m_battle.CustomBattleOptions();
 	LSL::Enum::GameOption optFlag = (LSL::Enum::GameOption)FromwxString(optiontag.BeforeFirst('_'));
