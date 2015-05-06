@@ -20,10 +20,11 @@
 ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/)
     : wxEvtHandler()
     , m_chatpanel(parent)
-    , m_user_menu(0)
-    , m_menu_all(0)
-    , displayjoinitem(0)
-    , m_append_menu(0)
+    , m_user_menu(NULL)
+    , m_menu_all(NULL)
+    , displayjoinitem(NULL)
+    , m_subscribe(NULL)
+    , m_append_menu(NULL)
     , m_withChanserv(addChanServ)
 {
 }

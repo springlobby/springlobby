@@ -909,7 +909,7 @@ bool IBattle::LoadOptionsPreset(const std::string& name)
 			}
 			SendHostInfo(IBattle::HI_StartRects);
 
-			unsigned int rectcount = FromwxString(options[_T("numrects")]);
+			const unsigned int rectcount = FromwxString(options[_T("numrects")]);
 			for (unsigned int loadrect = 0; loadrect < rectcount; loadrect++) {
 				int ally = FromwxString(options[_T("rect_") + TowxString(loadrect) + _T("_ally")]);
 				if (ally == 0)

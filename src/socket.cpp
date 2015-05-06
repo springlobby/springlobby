@@ -298,7 +298,7 @@ wxString Socket::Receive()
 
 	do {
 		m_sock.Read(buf, chunk_size);
-		const int readnum = m_sock.LastCount();
+		readnum = m_sock.LastCount();
 		ret += convert(buf, readnum);
 	} while (readnum > 0);
 

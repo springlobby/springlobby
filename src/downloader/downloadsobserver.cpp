@@ -13,6 +13,7 @@ ObserverDownloadInfo::ObserverDownloadInfo()
 
 ObserverDownloadInfo::ObserverDownloadInfo(IDownload* dl)
     : size(dl->size)
+    , cat(dl->cat)
     , finished(0)
     , filename(wxString::FromUTF8(dl->name.c_str()))
     , name(wxString::FromUTF8(dl->origin_name.c_str()))

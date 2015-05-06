@@ -59,11 +59,8 @@ void UserList::RemoveUser(const std::string& nick)
 User& UserList::GetUser(const std::string& nick) const
 {
 	user_const_iter_t u = m_users.find(nick);
-	//ASSERT_EXCEPTION( u != m_users.end(), _T("UserList::GetUser(\"") + TowxString(nick) + _T("\"): no such user") );
-	if (u == m_users.end()) {
-		wxLogWarning(_T("UserList::GetUser(\"") + TowxString(nick) + _T("\"): no such user"));
-	}
-	//ASSERT_LOGIC( u != m_users.end(), _T("UserList::GetUser(\"") + nick + _T("\"): no such user") );
+	// user doesn't exist -> throw excpetion (else it will crash/invalid mem access / bad things will happen! in the next line)
+	ASSERT_EXCEPTION( u != m_users.end(), _T("UserList::GetUser(\"") + TowxString(nick) + _T("\"): no such user") );
 	return *u->second;
 }
 
