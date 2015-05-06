@@ -43,7 +43,7 @@ public:
 
 #define ASSERT_EXCEPTION(cond, msg)                                                                                                 \
 	if (!(cond)) {                                                                                                              \
-		wxLogError(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(), __LINE__, wxString(msg).c_str()); \
+		wxLogWarning(_T("runtime assertion ( %s:%d ): %s"), TowxString(__FILE__).c_str(), __LINE__, wxString(msg).c_str()); \
 		throw assert_exception(std::string(wxString(msg).mb_str()));                                                        \
 	}
 
