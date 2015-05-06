@@ -1,18 +1,31 @@
 language: cpp
 compiler:
-  - gcc
-  - clang
+- gcc
+- clang
+matrix:
+  exclude:
+    compiler: clang
+    env: COVERITY_SCAN_BRANCH=1
 before_script:
-  - sudo add-apt-repository -y ppa:wxformbuilder/wxwidgets
-  - sudo add-apt-repository -y ppa:boost-latest/ppa
-  - sudo apt-get update
-#  - sudo apt-cache search libboost
-#  - sudo apt-cache search libwxgtk
-  - sudo apt-get install libwxgtk3.0-dev libboost-thread1.55-dev libboost-system1.55-dev libboost-filesystem1.55-dev
-# optional dependencies
-  - sudo apt-get install libboost-test1.55-dev libalure-dev
-  - git submodule update --init --recursive
-  - cmake -DSPRINGLOBBY_UPDATER:BOOL=ON .
+- sudo add-apt-repository -y ppa:wxformbuilder/wxwidgets
+- sudo add-apt-repository -y ppa:boost-latest/ppa
+- sudo apt-get update
+- sudo apt-get install libwxgtk3.0-dev libboost-thread1.55-dev libboost-system1.55-dev
+  libboost-filesystem1.55-dev
+- sudo apt-get install libboost-test1.55-dev libalure-dev
+- git submodule update --init --recursive
+- cmake -DSPRINGLOBBY_UPDATER:BOOL=ON .
 script:
-  - make -j2 -k
-  - make -k check
+- make -k
+- make -k check
+addons:
+  coverity_scan:
+    project:
+      name: springlobby/springlobby
+    notification_email: spring@abma.de
+    build_command_prepend: cmake .
+    build_command: make
+    branch_pattern: coverity_scan
+env:
+  global:
+  - secure: HwVDrJtNPzguC2MnvmIAgaaOi+3/PanYyzwK1khwXOWgS/wlwwDyEmWR09DzCFvA7l+TCIZFV7fDrSsAzb31c45m+jBT8+YcwBzPJrGaiV+CUB1j7wu/zOmqdOOFGL5EF8p7GmrTz8HoopXEkK9M1jHHWfNdQa4N9x3zzwu3yWw=
