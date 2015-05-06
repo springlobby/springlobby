@@ -1,6 +1,10 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include "springlobby_config.h"
+#ifndef SPRINGLOBBY_CONFIGH
+#error SPRINGLOBBY_CONFIGH is not defined
+#endif
+
+#include SPRINGLOBBY_CONFIGH
 #include "version.h"
 
 const std::string getSpringlobbyName(bool lowercase)

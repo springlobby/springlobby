@@ -251,6 +251,7 @@ set(springlobbySrc
 	utils/misc.cpp
 	utils/lslconversion.cpp
 	utils/tasutil.cpp
+	utils/version.cpp
 
 	springsettings/frame.cpp
 	springsettings/tab_abstract.cpp
@@ -282,6 +283,10 @@ set(springlobbySrc
 
 )
 
+add_custom_target(version ALL ${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR})
+set_source_files_properties(utils/version.cpp PROPERTIES COMPILE_DEFINITIONS SPRINGLOBBY_CONFIGH="${springlobby_BINARY_DIR}/springlobby_config.h")
+
+
 FILE( GLOB header "*.h" )
 FILE( GLOB header2 "*/*.h" )
 # FILE( GLOB header3 "*/*/*.h" )
@@ -292,7 +297,6 @@ SET( templatesources
 )
 
 add_subdirectory(downloader)
-add_subdirectory(utils)
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
 	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
@@ -342,14 +346,13 @@ ELSE (WIN32)
 		)
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static json springlobbyversion
+TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static json
 		${Boost_LIBRARIES}
 		${CURL_LIBRARIES}
 		${CURL_LINKFLAGS}
 		${WX_LD_FLAGS}
 		sound
 	)
-#add_dependencies(springlobby version)
 IF(UNIX)
 	FIND_PACKAGE(X11 REQUIRED)
 	TARGET_LINK_LIBRARIES(springlobby ${X11_X11_LIB})
