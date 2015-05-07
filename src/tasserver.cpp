@@ -1553,7 +1553,7 @@ void TASServer::ForceTeam(int battleid, User& user, int team)
 		return;
 	}
 	if (!GetBattle(battleid).IsFounderMe()) {
-		DoActionBattle(battleid, stdprintf("suggests that %s changes to team #%d.",user.GetNick().c_str(), team + 1));
+		DoActionBattle(battleid, stdprintf("suggests that %s changes to team #%d.", user.GetNick().c_str(), team + 1));
 		return;
 	}
 
@@ -1720,7 +1720,7 @@ void TASServer::UpdateBot(int battleid, User& bot, UserBattleStatus& status)
 	CHECK_CURRENT_BATTLE_ID(battleid)
 	const int tasbs = UserBattleStatus::ToInt(status);
 	//UPDATEBOT name battlestatus teamcolor
-	SendCmd("UPDATEBOT", stdprintf("%s %d %d",bot.GetNick().c_str(), tasbs, status.colour.GetLobbyColor()), GetBattle(battleid).IsProxy());
+	SendCmd("UPDATEBOT", stdprintf("%s %d %d", bot.GetNick().c_str(), tasbs, status.colour.GetLobbyColor()), GetBattle(battleid).IsProxy());
 }
 
 void TASServer::OnConnected()

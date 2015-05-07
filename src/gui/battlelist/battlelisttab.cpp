@@ -353,7 +353,7 @@ void BattleListTab::OnJoin(wxCommandEvent& /*unused*/)
 	}
 
 	//Is there any battle selected?
-	if( m_battle_list->GetSelectedIndex() < 0 ) {
+	if (m_battle_list->GetSelectedIndex() < 0) {
 		return;
 	}
 

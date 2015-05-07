@@ -60,7 +60,8 @@ User& UserList::GetUser(const std::string& nick) const
 {
 	user_const_iter_t u = m_users.find(nick);
 	// user doesn't exist -> throw excpetion (else it will crash/invalid mem access / bad things will happen! in the next line)
-	ASSERT_EXCEPTION( u != m_users.end(), _T("UserList::GetUser(\"") + TowxString(nick) + _T("\"): no such user") );
+	ASSERT_EXCEPTION(u != m_users.end(), _T("UserList::GetUser(\"") + TowxString(nick) + _T("\"): no such user"));
+	assert(u != m_users.end());
 	return *u->second;
 }
 

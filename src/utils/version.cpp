@@ -44,4 +44,3 @@ const std::string getSpringlobbyAgent()
 
 	return agent;
 }
-

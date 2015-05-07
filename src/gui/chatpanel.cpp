@@ -1180,4 +1180,3 @@ void ChatPanel::SetVotePanel(VotePanel* votePanel)
 	m_votePanel = votePanel;
 	m_votePanel->SetChatPanel(this);
 }
-

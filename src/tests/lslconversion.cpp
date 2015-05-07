@@ -81,12 +81,12 @@ BOOST_AUTO_TEST_CASE(battlestatus)
 	bs.ready = false;
 	BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
 
-	for(int i=0; i<=15; i++) {
+	for (int i = 0; i <= 15; i++) {
 		bs.team = i;
 		BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
 	}
 
-	for(int i=0; i<=15; i++) {
+	for (int i = 0; i <= 15; i++) {
 		bs.ally = i;
 		BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
 	}
@@ -94,22 +94,20 @@ BOOST_AUTO_TEST_CASE(battlestatus)
 	bs.spectator = true;
 	BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
 
-	for(int i=0; i<=100; i++) {
+	for (int i = 0; i <= 100; i++) {
 		bs.handicap = i;
 		BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
 	}
 
-	for(int i=0; i<=2; i++) {
+	for (int i = 0; i <= 2; i++) {
 		bs.sync = i;
 		BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
 	}
 
-	for(int i=0; i<=15; i++) {
+	for (int i = 0; i <= 15; i++) {
 		bs.side = i;
 		BOOST_CHECK(bs == UserBattleStatus::FromInt(UserBattleStatus::ToInt(bs)));
 	}
-
-
 }
 
 BOOST_AUTO_TEST_CASE(userstatus)
@@ -132,7 +130,6 @@ BOOST_AUTO_TEST_CASE(userstatus)
 	us.moderator = true;
 	BOOST_CHECK(us == UserStatus::FromInt(UserStatus::ToInt(us)));
 
-	us.bot= true;
+	us.bot = true;
 	BOOST_CHECK(us == UserStatus::FromInt(UserStatus::ToInt(us)));
-
 }

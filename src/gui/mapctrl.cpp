@@ -717,8 +717,8 @@ void MapCtrl::DrawBackground(wxDC& dc)
 		//Draw "%MAPNAME% not found!"
 		wxString noMapFoundString = wxString::Format("Map \"%s\" not found!", m_battle->GetHostMapName());
 		int labelOrigin = (width / 2) - ((noMapFoundString.Length() / 2) * 6);
-		if( labelOrigin < 0 ) {
-		    labelOrigin = 0;
+		if (labelOrigin < 0) {
+			labelOrigin = 0;
 		}
 		DrawOutlinedText(dc, noMapFoundString, labelOrigin, 10, wxColour(50, 50, 50), *wxWHITE);
 	} else {

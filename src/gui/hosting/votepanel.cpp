@@ -31,7 +31,7 @@ wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
     , chatPanel(0)
     , parentWnd(parentWindow)
 {
-        mainSizer = new wxBoxSizer(wxHORIZONTAL);
+	mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
 	voteTextLabel = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
 	wxFont labelFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -156,16 +156,16 @@ void VotePanel::onNoButtonEvent(wxCommandEvent&)
 
 void VotePanel::onVoteBegins(const wxString& msg)
 {
-        //Parse vote description string to find text rounded by quotes
-        wxString voteDescr = "Vote for: " + msg.AfterFirst('"').BeforeFirst('"') + " ";
+	//Parse vote description string to find text rounded by quotes
+	wxString voteDescr = "Vote for: " + msg.AfterFirst('"').BeforeFirst('"') + " ";
 
-        showButtons(true);
-        voteTextLabel->SetLabel(voteDescr);
-        parentWnd->Layout();
-        parentWnd->Update();
+	showButtons(true);
+	voteTextLabel->SetLabel(voteDescr);
+	parentWnd->Layout();
+	parentWnd->Update();
 }
 
 void VotePanel::onVoteStopped()
 {
-        ResetState();
+	ResetState();
 }

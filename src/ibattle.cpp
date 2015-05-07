@@ -17,26 +17,22 @@ lsl/battle/ibattle.cpp
 #include <wx/tokenzr.h>
 #include <wx/log.h>
 
-#include <list>
 #include <algorithm>
-#include <cmath>
-#include <set>
-#include <sstream>
 
 #include <lslunitsync/unitsync.h>
+#include <lslutils/globalsmanager.h>
 
-#include "lslutils/globalsmanager.h"
-#include "ibattle.h"
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 #include "gui/uiutils.h"
-#include "settings.h"
 #include "gui/ui.h"
+#include "ibattle.h"
+#include "iserver.h"
+#include "settings.h"
 #include "spring.h"
 #include "springlobbyapp.h"
-#include "iserver.h"
 #include "serverselector.h"
 #include "log.h"
-#include "utils/lslconversion.h"
 
 
 IBattle::IBattle()
@@ -721,16 +717,16 @@ void IBattle::SetLocalMap(const std::string& mapname)
 const LSL::UnitsyncMap& IBattle::LoadMap()
 {
 	if ((!m_map_loaded) && (!m_host_map.name.empty())) {
-	    if( MapExists(false) == true ) { //Check if selected map available for engine?
-		try {
-			m_local_map = LSL::usync().GetMap(m_host_map.name);
-			bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::MapOption, m_host_map.name);
-			//TODO: maybe replace this with "silent" IF operator?
-			ASSERT_EXCEPTION(options_loaded, _T("couldn't load the map options"));
-			m_map_loaded = true;
-		} catch (...) {
+		if (MapExists(false) == true) { //Check if selected map available for engine?
+			try {
+				m_local_map = LSL::usync().GetMap(m_host_map.name);
+				bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::MapOption, m_host_map.name);
+				//TODO: maybe replace this with "silent" IF operator?
+				ASSERT_EXCEPTION(options_loaded, _T("couldn't load the map options"));
+				m_map_loaded = true;
+			} catch (...) {
+			}
 		}
-	    }
 	}
 	return m_local_map;
 }
