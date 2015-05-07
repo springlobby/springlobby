@@ -31,14 +31,14 @@ wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
     , chatPanel(0)
     , parentWnd(parentWindow)
 {
-	mainSizer = new wxBoxSizer(wxHORIZONTAL);
+        mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
 	voteTextLabel = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
 	wxFont labelFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 	voteTextLabel->SetFont(labelFont);
-	mainSizer->Add(voteTextLabel, 0, wxALIGN_CENTER, 2);
+	mainSizer->Add(voteTextLabel, 0, wxALIGN_CENTER, 0);
 
-	wxFont buttonFont(9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+	wxFont buttonFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 	yesButton = new wxButton(this, VotePanel::ID_YES_BUTTON, "yes", wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	yesButton->SetFont(buttonFont);
 	yesButton->SetForegroundColour(*wxGREEN);
@@ -89,17 +89,14 @@ void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& a
 
 	//Vote has been started
 	if (actionString.find(VOTE_HAS_BEGAN) != std::string::npos) {
-		showButtons(true);
-		voteTextLabel->SetLabel(actionDescription);
-		parentWnd->Layout();
-		parentWnd->Update();
+		onVoteBegins(actionDescription);
 		return;
 	}
 
 	//Vote has ended
 	if (actionString.find(VOTING_END) != std::string::npos || actionString.find(VOTE_CANCELLED) != std::string::npos ||
 	    actionString.find(VOTE_CANCELLING) != std::string::npos) {
-		ResetState();
+		onVoteStopped();
 		return;
 	}
 }
@@ -155,4 +152,20 @@ void VotePanel::onNoButtonEvent(wxCommandEvent&)
 {
 	chatPanel->Say(TowxString(SAY_NO));
 	showButtons(false);
+}
+
+void VotePanel::onVoteBegins(const wxString& msg)
+{
+        //Parse vote description string to find text rounded by quotes
+        wxString voteDescr = "Vote for: " + msg.AfterFirst('"').BeforeFirst('"') + " ";
+
+        showButtons(true);
+        voteTextLabel->SetLabel(voteDescr);
+        parentWnd->Layout();
+        parentWnd->Update();
+}
+
+void VotePanel::onVoteStopped()
+{
+        ResetState();
 }

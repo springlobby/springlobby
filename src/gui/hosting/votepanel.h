@@ -33,6 +33,9 @@ private:
 	void onDontCareButtonEvent(wxCommandEvent&);
 	void onNoButtonEvent(wxCommandEvent&);
 
+	void onVoteBegins(const wxString& msg);
+	void onVoteStopped();
+
 private:
 	enum {
 		ID_YES_BUTTON,
