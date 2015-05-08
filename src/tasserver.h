@@ -41,87 +41,97 @@ public:
 	~TASServer();
 
 	// Overloaded functions from Server
-	bool ExecuteSayCommand(const std::string& cmd);
+	bool ExecuteSayCommand(const std::string& cmd) override;
 
-	void Register(const std::string& servername, const std::string& host, const int port, const std::string& nick, const std::string& password);
-	void AcceptAgreement();
+	void Register(const std::string& servername, const std::string& host, const int port, const std::string& nick, const std::string& password) override;
+	void AcceptAgreement() override;
 
-	void Connect(const std::string& servername, const std::string& addr, const int port);
-	void Disconnect();
-	bool IsConnected();
+	void Connect(const std::string& servername, const std::string& addr, const int port) override;
+	void Disconnect() override;
+	bool IsConnected() override;
 
-	void Login();
-	void Logout();
-	bool IsOnline() const;
+	void Login() override;
+	void Logout() override;
+	bool IsOnline() const override;
 
-	void Ping();
+	void Ping() override;
 
-	const User& GetMe() const;
-	User& GetMe();
+	const User& GetMe() const override;
+	User& GetMe() override;
 
-	void JoinChannel(const std::string& channel, const std::string& key);
-	void PartChannel(const std::string& channel);
+	void JoinChannel(const std::string& channel, const std::string& key) override;
+	void PartChannel(const std::string& channel) override;
 
-	void DoActionChannel(const std::string& channel, const std::string& msg);
-	void SayChannel(const std::string& channel, const std::string& msg);
+	void DoActionChannel(const std::string& channel, const std::string& msg) override;
+	void SayChannel(const std::string& channel, const std::string& msg) override;
 
-	void DoActionPrivate(const std::string& nick, const std::string& msg);
-	void SayPrivate(const std::string& nick, const std::string& msg);
+	void DoActionPrivate(const std::string& nick, const std::string& msg) override;
+	void SayPrivate(const std::string& nick, const std::string& msg) override;
 
-	void SayBattle(int battleid, const std::string& msg);
-	void DoActionBattle(int battleid, const std::string& msg);
+	void SayBattle(int battleid, const std::string& msg) override;
+	void DoActionBattle(int battleid, const std::string& msg) override;
 
-	void Ring(const std::string& nick);
+	void Ring(const std::string& nick) override;
 
-	void ModeratorSetChannelTopic(const std::string& channel, const std::string& topic);
-	void ModeratorSetChannelKey(const std::string& channel, const std::string& key);
-	void ModeratorMute(const std::string& channel, const std::string& nick, int duration, bool byip);
-	void ModeratorUnmute(const std::string& channel, const std::string& nick);
-	void ModeratorKick(const std::string& channel, const std::string& reason);
-	void ModeratorBan(const std::string& nick, bool byip);
-	void ModeratorUnban(const std::string& nick);
-	void ModeratorGetIP(const std::string& nick);
-	void ModeratorGetLastLogin(const std::string& nick);
-	void ModeratorGetLastIP(const std::string& nick);
-	void ModeratorFindByIP(const std::string& ipadress);
+	void ModeratorSetChannelTopic(const std::string& channel, const std::string& topic) override;
+	void ModeratorSetChannelKey(const std::string& channel, const std::string& key) override;
+	void ModeratorMute(const std::string& channel, const std::string& nick, int duration, bool byip) override;
+	void ModeratorUnmute(const std::string& channel, const std::string& nick) override;
+	void ModeratorKick(const std::string& channel, const std::string& reason) override;
+	void ModeratorBan(const std::string& nick, bool byip) override;
+	void ModeratorUnban(const std::string& nick) override;
+	void ModeratorGetIP(const std::string& nick) override;
+	void ModeratorGetLastLogin(const std::string& nick) override;
+	void ModeratorGetLastIP(const std::string& nick) override;
+	void ModeratorFindByIP(const std::string& ipadress) override;
 
-	void AdminGetAccountAccess(const std::string& nick);
-	void AdminChangeAccountAccess(const std::string& nick, const std::string& accesscode);
-	void AdminSetBotMode(const std::string& nick, bool isbot);
+	void AdminGetAccountAccess(const std::string& nick) override;
+	void AdminChangeAccountAccess(const std::string& nick, const std::string& accesscode) override;
+	void AdminSetBotMode(const std::string& nick, bool isbot) override;
 
-	void HostBattle(const BattleOptions& bo, const std::string& password = "");
-	void JoinBattle(const int& battleid, const std::string& password = "");
-	void LeaveBattle(const int& battleid);
-	void SendMyBattleStatus(UserBattleStatus& bs);
-	void SendMyUserStatus(const UserStatus& us);
+	void HostBattle(const BattleOptions& bo, const std::string& password = "") override;
+	void JoinBattle(const int& battleid, const std::string& password = "") override;
+	void LeaveBattle(const int& battleid) override;
+	void SendMyBattleStatus(UserBattleStatus& bs) override;
+	void SendMyUserStatus(const UserStatus& us) override;
 
-	void ForceSide(int battleid, User& user, int side);
-	void ForceTeam(int battleid, User& user, int team);
-	void ForceAlly(int battleid, User& user, int ally);
-	void ForceColour(int battleid, User& user, const LSL::lslColor& col);
-	void ForceSpectator(int battleid, User& user, bool spectator);
-	void BattleKickPlayer(int battleid, User& user);
-	void SetHandicap(int battleid, User& user, int handicap);
+	void ForceSide(int battleid, User& user, int side) override;
+	void ForceTeam(int battleid, User& user, int team) override;
+	void ForceAlly(int battleid, User& user, int ally) override;
+	void ForceColour(int battleid, User& user, const LSL::lslColor& col) override;
+	void ForceSpectator(int battleid, User& user, bool spectator) override;
+	void BattleKickPlayer(int battleid, User& user) override;
+	void SetHandicap(int battleid, User& user, int handicap) override;
 
-	void AddBot(int battleid, const std::string& nick, UserBattleStatus& status);
-	void RemoveBot(int battleid, User& bot);
-	void UpdateBot(int battleid, User& bot, UserBattleStatus& status);
+	void AddBot(int battleid, const std::string& nick, UserBattleStatus& status) override;
+	void RemoveBot(int battleid, User& bot) override;
+	void UpdateBot(int battleid, User& bot, UserBattleStatus& status) override;
 
-	void StartHostedBattle();
-	void SendHostInfo(HostInfo update);
-	void SendHostInfo(const std::string& Tag);
-	void SendUserPosition(const User& user);
+	void StartHostedBattle() override;
+	void SendHostInfo(HostInfo update) override;
+	void SendHostInfo(const std::string& Tag) override;
+	void SendUserPosition(const User& user) override;
 
-	void RequestInGameTime(const std::string& nick);
+	void RequestInGameTime(const std::string& nick) override;
 
+	void RequestChannels() override;
+	LSL::StringVector GetRelayHostList() override;
+
+	virtual void ExecuteCommand(const std::string& in);
+private:
 	void SendUdpSourcePort(int udpport);
 	void SendNATHelperInfos(const std::string& username, const std::string& ip, int port);
 
-	IBattle* GetCurrentBattle();
-
-	void RequestChannels();
+	IBattle* GetCurrentBattle() override;
+	virtual const ServerEvents* serverEvents() const
+	{
+		return m_se;
+	}
+	LSL::StringSet GetSubscriptions() override
+	{
+		return m_subscriptions;
+	}
 	// TASServer specific functions
-	void ExecuteCommand(const std::string& in);
 	void ExecuteCommand(const std::string& cmd, const std::string& inparams, int replyid = -1);
 
 	void HandlePong(int replyid);
@@ -135,17 +145,6 @@ public:
 
 	void SetRelayIngamePassword(const User& user);
 
-	LSL::StringVector GetRelayHostList();
-	virtual const ServerEvents* serverEvents() const
-	{
-		return m_se;
-	}
-	LSL::StringSet GetSubscriptions()
-	{
-		return m_subscriptions;
-	}
-
-private:
 	void OnConnected();
 	void OnDataReceived();
 	void OnDisconnected();
@@ -160,11 +159,11 @@ private:
 	void UdpPingAllClients();			   /// used when hosting with nat holepunching
 	void FinalizeJoinBattle();
 
-	void SendCmd(const std::string& command, const std::string& param)
+	virtual void SendCmd(const std::string& command, const std::string& param) final
 	{
 		SendCmd(command, param, false);
-	};
-	void SendCmd(const std::string& command)
+	}
+	virtual void SendCmd(const std::string& command) final
 	{
 		SendCmd(command, "", false);
 	}

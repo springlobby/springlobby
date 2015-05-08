@@ -12,20 +12,12 @@ class OfflineServer : public TASServer
 public:
 	OfflineServer();
 	~OfflineServer();
-	void Connect(const std::string& servername, const std::string& addr, const int port);
-	void SendCmd(const std::string& command, const std::string& param)
-	{
-		SendCmd(command, param, false);
-	};
-	void SendCmd(const std::string& command)
-	{
-		SendCmd(command, "", false);
-	}
-	void SendCmd(const std::string& command, const std::string& param, bool relay);
-	void Login()
+	void Connect(const std::string& servername, const std::string& addr, const int port) override;
+	void SendCmd(const std::string& command, const std::string& param, bool relay) override;
+	void Login() override
 	{
 	}
-	bool IsConnected()
+	bool IsConnected() override
 	{
 		return true;
 	}
