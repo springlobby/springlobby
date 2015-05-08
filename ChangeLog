@@ -1,4 +1,12 @@
 ChangeLog of Springlobby
+## 0.219
+ - remove /changpassword2: merge into /changepassword
+ - add vote panel
+ - springlobby now requires at least gcc 4.7
+ - fix some minor memleaks
+ - fix crash on lobby server inconsistency
+ - default disable notification popups when ingame
+
 ## 0.218
  - removed A LOT of scrollbars
  - allow to download engine:spring 98.0
