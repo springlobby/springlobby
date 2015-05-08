@@ -21,19 +21,19 @@ public:
 	{
 	}
 
-	virtual User& GetMe()
+	virtual User& GetMe() override
 	{
 		return m_me;
 	}
-	virtual const User& GetMe() const
+	virtual const User& GetMe() const override
 	{
 		return m_me;
 	}
-	virtual bool IsFounderMe() const
+	virtual bool IsFounderMe() const override
 	{
 		return true;
 	}
-	virtual void StartSpring();
+	virtual void StartSpring() override;
 
 private:
 	int m_id;

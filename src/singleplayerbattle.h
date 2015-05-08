@@ -17,26 +17,26 @@ public:
 	SinglePlayerBattle(MainSinglePlayerTab& msptab);
 	virtual ~SinglePlayerBattle();
 
-	virtual bool IsFounderMe() const
+	virtual bool IsFounderMe() const override
 	{
 		return true;
 	}
 
-	virtual User& GetMe()
+	virtual User& GetMe() override
 	{
 		return m_me;
 	}
-	virtual const User& GetMe() const
+	virtual const User& GetMe() const override
 	{
 		return m_me;
 	}
 
-	virtual void SendHostInfo(HostInfo update);
-	virtual void SendHostInfo(const std::string& /*unused*/)
+	virtual void SendHostInfo(HostInfo update) override;
+	virtual void SendHostInfo(const std::string& /*unused*/) override
 	{
 	}
 
-	virtual void StartSpring();
+	virtual void StartSpring() override;
 
 private:
 	void RemoveUnfittingBots();
