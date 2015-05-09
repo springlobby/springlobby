@@ -44,9 +44,6 @@ const long MapSelectDialog::ID_MAPGRID = wxNewId();
 const long MapSelectDialog::ID_VERTICAL_DIRECTION = wxNewId();
 const long MapSelectDialog::ID_HORIZONTAL_DIRECTION = wxNewId();
 
-BEGIN_EVENT_TABLE(MapSelectDialog, wxDialog)
-END_EVENT_TABLE()
-
 MapSelectDialog::MapSelectDialog(wxWindow* parent)
     : wxDialog(parent, wxID_ANY, _("Select map (click and drag to scroll)"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX, _T("wxID_ANY"))
     , WindowAttributesPickle(_T("MapSelector"), this, wxSize(880, 600))

@@ -94,7 +94,6 @@ private:
 		m_filter_recent_sett = 2,
 	};
 
-	DECLARE_EVENT_TABLE()
 };
 
 wxString mapSelectDialog(bool hidden = false, wxWindow* parent = NULL);
