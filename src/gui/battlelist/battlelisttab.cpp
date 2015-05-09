@@ -63,9 +63,9 @@ BattleListTab::BattleListTab(wxWindow* parent)
     : wxPanel(parent, -1)
     , m_sel_battle(0)
 {
-	GetAui().manager->AddPane(this, wxLEFT, _T( "battlelisttab" ));
+        GetAui().manager->AddPane(this, wxLEFT, _T( "battlelisttab" ));
 
-	m_main_sizer = new wxBoxSizer(wxVERTICAL);
+        m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxBoxSizer* m_filter_sizer;
 	m_filter_sizer = new wxBoxSizer(wxVERTICAL);
@@ -372,11 +372,13 @@ void BattleListTab::OnListJoin(wxListEvent& event)
 {
 	try {
 		ASSERT_LOGIC(m_battle_list != 0, "m_battle_list = 0");
-		ASSERT_LOGIC(m_battle_list->GetSelectedIndex() >= 0, "m_battle_list->GetSelectedIndex() < 0");
-		ASSERT_LOGIC(m_battle_list->GetSelectedIndex() == event.GetIndex(), "m_battle_list->GetSelectedIndex() != event.GetIndex()");
 	} catch (...) {
 		return;
 	}
+
+        //TODO: This "crunch" selects item that is being double clicked
+        //Should solve some problems with wxListCtrl under Windows
+        m_battle_list->OnSelected(event);
 
 	int id = m_battle_list->GetSelectedData()->GetBattleId();
 	DoJoin(serverSelector().GetServer().battles_iter->GetBattle(id));
