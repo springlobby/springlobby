@@ -15,18 +15,19 @@ wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T, L)
     EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, CustomVirtListCtrl::OnStartResizeCol)
     EVT_LIST_COL_END_DRAG(wxID_ANY, CustomVirtListCtrl::OnEndResizeCol)
     EVT_LEAVE_WINDOW(CustomVirtListCtrl::noOp)
+    EVT_LIST_ITEM_ACTIVATED(wxID_ANY, CustomVirtListCtrl::OnActivated)
     EVT_LIST_ITEM_SELECTED(wxID_ANY, CustomVirtListCtrl::OnSelected)
     EVT_LIST_ITEM_DESELECTED(wxID_ANY, CustomVirtListCtrl::OnDeselected)
     EVT_LIST_DELETE_ITEM(wxID_ANY, CustomVirtListCtrl::OnDeselected)
     EVT_LIST_COL_CLICK(wxID_ANY, CustomVirtListCtrl::OnColClick)
     EVT_SIZE(CustomVirtListCtrl::OnSizeEvent)
-    END_EVENT_TABLE()
+END_EVENT_TABLE()
 
 
     template <class T, class L>
     CustomVirtListCtrl<T, L>::CustomVirtListCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pt, const wxSize& sz,
-						 long style, const wxString& name, unsigned int sort_criteria_count,
-						 CompareFunction func, bool highlight, UserActions::ActionType hlaction, bool periodic_sort, unsigned int periodic_sort_interval)
+                                                 long style, const wxString& name, unsigned int sort_criteria_count,
+                                                 CompareFunction func, bool highlight, UserActions::ActionType hlaction, bool periodic_sort, unsigned int periodic_sort_interval)
     : wxListCtrl(parent, id, pt, sz, style | wxLC_VIRTUAL)
     , m_tiptimer(this, IDD_TIP_TIMER)
     , m_sort_timer(this, IDD_SORT_TIMER)
@@ -162,6 +163,13 @@ void CustomVirtListCtrl<T, L>::ResetSelection()
 {
 	m_selected_data.clear();
 	m_selected_index = -1;
+}
+
+template <class T, class L>
+void CustomVirtListCtrl<T, L>::OnActivated(wxListEvent& event)
+{
+	m_selected_index = event.GetIndex();
+	event.Skip();
 }
 
 template <class T, class L>

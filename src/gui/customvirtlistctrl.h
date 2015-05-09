@@ -231,6 +231,7 @@ public:
 
 	virtual ~CustomVirtListCtrl();
 
+	void OnActivated(wxListEvent& event);
 	void OnSelected(wxListEvent& event);
 	void OnDeselected(wxListEvent& event);
 	/** @name Single Selection methods
