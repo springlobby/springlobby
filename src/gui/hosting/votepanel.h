@@ -15,6 +15,7 @@ class ChatPanel;
 class wxBoxSizer;
 class wxButton;
 class wxStaticText;
+class User;
 
 class VotePanel : public wxPanel
 {
@@ -25,9 +26,11 @@ public:
 	void OnChatAction(const wxString& actionAuthor, const wxString& actionDescription);
 	void ResetState();
 	void SetChatPanel(ChatPanel* chatPanel);
+	void SetCurrentPlayer(User* user);
 
 private:
 	void showButtons(bool showState);
+	void enableButtons(bool enableState = true);
 
 	void onYesButtonEvent(wxCommandEvent&);
 	void onDontCareButtonEvent(wxCommandEvent&);
@@ -52,6 +55,7 @@ private:
 
 	ChatPanel* chatPanel;
 	wxWindow* parentWnd;
+	User* player;
 
 	wxDECLARE_EVENT_TABLE();
 };

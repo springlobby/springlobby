@@ -8,7 +8,7 @@
 #include "gui/chatpanel.h"
 #include "utils/conversion.h"
 #include "votepanel.h"
-
+#include "user.h"
 
 //FIXME: move this outside of gui/ (+ don't use any gui functions / wx widgets)
 static const std::string VOTE_HAS_BEGAN = "CALLED A VOTE FOR COMMAND";
@@ -30,8 +30,9 @@ wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
     : wxPanel(parentWindow)
     , chatPanel(0)
     , parentWnd(parentWindow)
+    , player(0)
 {
-	mainSizer = new wxBoxSizer(wxHORIZONTAL);
+        mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
 	voteTextLabel = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
 	wxFont labelFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -81,8 +82,15 @@ VotePanel::~VotePanel()
 //Process text messages from chat
 void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& actionDescription)
 {
-	if (yesButton == NULL || noButton == NULL || dontCareButton == NULL) {
+	if (yesButton == nullptr || noButton == nullptr || dontCareButton == nullptr) {
 		return;
+	}
+
+	//Do not show this panel if player in spectator mode
+	if( player != nullptr ) {
+		if( player->GetBattleStatus().spectator == true) {
+		    return;
+		}
 	}
 
 	wxString actionString = actionDescription.Upper();
@@ -104,12 +112,15 @@ void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& a
 //Clear state of the panel, hide buttons
 void VotePanel::ResetState()
 {
-	if (yesButton == NULL || noButton == NULL || dontCareButton == NULL) {
+	if (yesButton == nullptr || noButton == nullptr || dontCareButton == nullptr) {
 		return;
 	}
 
 	voteTextLabel->SetLabel(wxEmptyString);
 	showButtons(false);
+
+	//Just to be safe. Maybe this is not needed
+	player = nullptr;
 }
 
 //Set pointer to ChatPanel that will receive vote commands
@@ -118,16 +129,26 @@ void VotePanel::SetChatPanel(ChatPanel* chatPanel)
 	this->chatPanel = chatPanel;
 }
 
+//Set pointer to Player. Needed to watch it's 'spec' state. Optional.
+void VotePanel::SetCurrentPlayer(User *user)
+{
+	player = user;
+}
+
 //Show/hide buttons of the panel
 void VotePanel::showButtons(bool showState)
 {
-	if (yesButton == NULL || noButton == NULL || dontCareButton == NULL) {
+	if (yesButton == nullptr || noButton == nullptr || dontCareButton == nullptr) {
 		return;
 	}
 
 	yesButton->Show(showState);
 	noButton->Show(showState);
 	dontCareButton->Show(showState);
+
+	if( showState == true ) {
+		enableButtons();
+	}
 
 	//Force repaint parent window
 	Layout();
@@ -136,22 +157,30 @@ void VotePanel::showButtons(bool showState)
 	parentWnd->Update();
 }
 
+//Enable/Disable buttons showing user he voted already
+void VotePanel::enableButtons(bool enableState)
+{
+	yesButton->Enable(enableState);
+	noButton->Enable(enableState);
+	dontCareButton->Enable(enableState);
+}
+
 void VotePanel::onYesButtonEvent(wxCommandEvent&)
 {
 	chatPanel->Say(TowxString(SAY_YES));
-	showButtons(false);
+	enableButtons(false);
 }
 
 void VotePanel::onDontCareButtonEvent(wxCommandEvent&)
 {
 	chatPanel->Say(TowxString(SAY_DONTCARE));
-	showButtons(false);
+	enableButtons(false);
 }
 
 void VotePanel::onNoButtonEvent(wxCommandEvent&)
 {
 	chatPanel->Say(TowxString(SAY_NO));
-	showButtons(false);
+	enableButtons(false);
 }
 
 void VotePanel::onVoteBegins(const wxString& msg)
