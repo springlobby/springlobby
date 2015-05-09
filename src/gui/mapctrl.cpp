@@ -70,7 +70,7 @@ const int USER_BOX_ICON_HALFWIDTH = (USER_BOX_ICON_WIDTH / 2);
 
 
 const wxSize user_box_icon_size(USER_BOX_ICON_WIDTH + 2 * USER_BOX_ICON_PADDING,
-				USER_BOX_ICON_HEIGHT + 2 * USER_BOX_ICON_PADDING);
+                                USER_BOX_ICON_HEIGHT + 2 * USER_BOX_ICON_PADDING);
 
 const wxSize user_box_expanded_size(USER_BOX_EXPANDED_WIDTH, USER_BOX_EXPANDED_HEIGHT);
 
@@ -99,7 +99,7 @@ static inline void WriteInt24(unsigned char* p, int i)
 
 static inline int ReadInt24(const unsigned char* p)
 {
-	return p[0] | (p[1] << 8) | (p[2] << 16);
+        return p[0] | (p[1] << 8) | (p[2] << 16);
 }
 
 MapCtrl::MapCtrl(wxWindow* parent, int size, IBattle* battle, bool readonly, bool draw_start_types, bool singleplayer)
@@ -583,17 +583,17 @@ void MapCtrl::DrawStartRect(wxDC& dc, int index, wxRect& sr, const wxColour& col
 	wxBitmap bmpimg(img);
 	dc.DrawBitmap(bmpimg, sr.x, sr.y, false);
 
-	/*  wxFont f( 12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL|wxFONTFLAG_ANTIALIASED, wxFONTWEIGHT_LIGHT );
+        /*  wxFont f( 12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL|wxFONTFLAG_ANTIALIASED, wxFONTWEIGHT_LIGHT );
       dc.SetFont( f );*/
-	if (index != -1) {
-		int twidth, theight, tx, ty;
-		wxString strIndex = wxString::Format(_T("%d"), index + 1);
-		dc.GetTextExtent(strIndex, &twidth, &theight);
-		dc.SetTextForeground(col);
-		tx = sr.x + sr.width / 2 - twidth / 2;
-		ty = sr.y + sr.height / 2 - theight / 2 - 1;
-		DrawOutlinedText(dc, strIndex, tx, ty, wxColour(50, 50, 50), *wxWHITE);
-		//dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
+        if (index != -1) {
+                int twidth, theight, tx, ty;
+                wxString strIndex = wxString::Format(_T("%d"), index + 1);
+                dc.GetTextExtent(strIndex, &twidth, &theight);
+                dc.SetTextForeground(col);
+                tx = sr.x + sr.width / 2 - twidth / 2;
+                ty = sr.y + sr.height / 2 - theight / 2 - 1;
+                DrawOutlinedText(dc, strIndex, tx, ty, wxColour(50, 50, 50), *wxWHITE);
+                //dc.DrawText( wxString::Format( _T("%d"), index+1), sr.x + sr.width / 2 - twidth / 2, sr.y + sr.height / 2 - theight / 2 - 1 );
 
 		const double metal = GetStartRectMetalFraction(index);
 		if (metal != 0.0) {
@@ -714,13 +714,26 @@ void MapCtrl::DrawBackground(wxDC& dc)
 			DrawOutlinedText(dc, _("Download"), 28, height - 50, wxColour(50, 50, 50), *wxWHITE);
 		else
 			DrawOutlinedText(dc, _("Download"), 28, height - 50, *wxWHITE, wxColour(50, 50, 50));
-		//Draw "%MAPNAME% not found!"
+
+		//Draw "%MAPNAME% not found!" label on minimap
 		wxString noMapFoundString = wxString::Format("Map \"%s\" not found!", m_battle->GetHostMapName());
-		int labelOrigin = (width / 2) - ((noMapFoundString.Length() / 2) * 6);
+		const int APPROXIMATE_FONT_SIZE = 6;
+		int labelOrigin = (width / 2) - ((noMapFoundString.Length() / 2) * APPROXIMATE_FONT_SIZE);
+		//If string do not fits to minimap's canvas reduce font size and reformate string
 		if (labelOrigin < 0) {
-			labelOrigin = 0;
+			dc.SetFont(wxFont(7, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+
+			const wxString strangeLabel[3] = {"Map", m_battle->GetHostMapName(), "not found!"};
+			for(int labelIndex=0;labelIndex<3;labelIndex++)
+			{
+				labelOrigin = (width / 2) - ((strangeLabel[labelIndex].Length() / 2) * (APPROXIMATE_FONT_SIZE - 1));
+				DrawOutlinedText(dc, strangeLabel[labelIndex], labelOrigin, 5 + (labelIndex * APPROXIMATE_FONT_SIZE * 2), wxColour(50, 50, 50), *wxWHITE);
+			}
 		}
-		DrawOutlinedText(dc, noMapFoundString, labelOrigin, 10, wxColour(50, 50, 50), *wxWHITE);
+		else
+		{
+			DrawOutlinedText(dc, noMapFoundString, labelOrigin, 10, wxColour(50, 50, 50), *wxWHITE);
+		}
 	} else {
 
 		wxRect r = GetMinimapRect();
