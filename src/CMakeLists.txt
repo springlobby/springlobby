@@ -179,7 +179,7 @@ set(springlobbySrc
 	gui/contentdownloaddialog.cpp
 	gui/contentsearchresultslistctrl.cpp
 	gui/connectwindow.cpp
-	gui/customlistctrl.cpp
+	gui/customvirtlistctrl.cpp
 	gui/colorbutton.cpp
 	gui/mainchattab.cpp
 	gui/maindownloadtab.cpp
@@ -226,7 +226,7 @@ set(springlobbySrc
 	gui/hosting/battleroomdownloads.cpp
 	gui/hosting/battleroommmoptionstab.cpp
 	gui/hosting/votepanel.cpp
-	
+
 	gui/options/downloadoptionspanel.cpp
 	gui/options/mainoptionstab.cpp
 	gui/options/springoptionstab.cpp
@@ -340,8 +340,8 @@ IF(WIN32)
 	)
 	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
 ELSE (WIN32)
-	install(TARGETS springlobby 
-		RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin 
+	install(TARGETS springlobby
+		RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
 		BUNDLE DESTINATION  ${CMAKE_INSTALL_PREFIX}/bin
 		)
 ENDIF (WIN32)
