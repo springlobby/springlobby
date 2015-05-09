@@ -6,8 +6,8 @@
 #include <vector>
 #include "gui/windowattributespickle.h"
 #include "utils/globalevents.h"
-//(*Headers(MapSelectDialog)
 #include <wx/dialog.h>
+
 class wxStdDialogButtonSizer;
 class wxTextCtrl;
 class MapGridCtrl;
@@ -17,10 +17,9 @@ class wxListCtrl;
 class wxBoxSizer;
 class wxStaticBoxSizer;
 class wxChoice;
-//*)
 class wxButton;
-
 class Ui;
+
 namespace LSL
 {
 struct UnitsyncMap;
@@ -37,7 +36,6 @@ public:
 	void OnUnitsyncReloaded(wxCommandEvent& data);
 
 private:
-	//(*Declarations(MapSelectDialog)
 	wxRadioButton* m_filter_recent;
 	wxStaticText* m_map_name;
 	wxRadioButton* m_filter_all;
@@ -48,11 +46,9 @@ private:
 	wxListCtrl* m_map_opts_list;
 	wxRadioButton* m_filter_popular;
 	wxStaticBoxSizer* m_map_details;
-	//*)
 	wxButton* m_vertical_direction_button;
 	wxButton* m_horizontal_direction_button;
 
-	//(*Identifiers(MapSelectDialog)
 	static const long ID_STATICTEXT2;
 	static const long ID_VERTICAL_CHOICE;
 	static const long ID_STATICTEXT1;
@@ -64,11 +60,9 @@ private:
 	static const long ID_MAP_NAME;
 	static const long ID_MAP_OPTS_LIST;
 	static const long ID_MAPGRID;
-	//*)
 	static const long ID_VERTICAL_DIRECTION;
 	static const long ID_HORIZONTAL_DIRECTION;
 
-	//(*Handlers(MapSelectDialog)
 	void OnInit(wxInitDialogEvent& event);
 	void OnSortKeySelect(wxCommandEvent& event);
 	void OnMapGridLeftDClick(wxMouseEvent& event);
@@ -76,7 +70,6 @@ private:
 	void OnFilterPopularSelect(wxCommandEvent& event);
 	void OnFilterRecentSelect(wxCommandEvent& event);
 	void OnFilterTextChanged(wxCommandEvent& event);
-	//*)
 
 	void OnMapSelected(wxCommandEvent& event);
 	void OnMapLoadingCompleted(wxCommandEvent& event);
