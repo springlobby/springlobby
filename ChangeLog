@@ -1,4 +1,7 @@
 ChangeLog of Springlobby
+## 0.220
+ - Add TrueSkill column to BattleRoomList
+
 ## 0.219
  - remove /changpassword2: merge into /changepassword
  - add vote panel
