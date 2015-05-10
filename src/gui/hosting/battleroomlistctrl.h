@@ -55,6 +55,7 @@ private:
 	void OnUserMenuAddToGroup(wxCommandEvent& event);
 
 	virtual void SetTipWindowText(const long item_hit, const wxPoint& position);
+	static int CompareTrueSkill(const DataType user1, const DataType user2);
 	static int CompareLobbyStatus(const DataType user1, const DataType user2);
 	static int CompareStatus(const DataType user1, const DataType user2, const IBattle* m_battle);
 	static int CompareSide(const DataType user1, const DataType user2);
@@ -95,6 +96,7 @@ private:
 	int m_colour_column_index;
 	int m_country_column_index;
 	int m_rank_column_index;
+	int m_trueskill_column_index;
 	int m_nick_column_index;
 	int m_team_column_index;
 	int m_ally_column_index;

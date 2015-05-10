@@ -202,6 +202,7 @@ public:
 	    , m_country(std::string(country))
 	    , m_id(0)
 	    , m_cpu(cpu)
+	    , m_trueSkill(0)
 	{
 	}
 
@@ -245,6 +246,16 @@ public:
 		m_id = id;
 	}
 
+	int GetTrueSkill() const
+	{
+		return m_trueSkill;
+	}
+
+	void SetTrueSkill(int newSkill)
+	{
+		m_trueSkill = newSkill;
+	}
+
 	UserStatus& Status()
 	{
 		return m_status;
@@ -277,7 +288,7 @@ public:
 	//void SetBattleStatus( const UserBattleStatus& status );/// dont use this to avoid overwriting data like ip and port, use following method.
 	void UpdateBattleStatus(const UserBattleStatus& status);
 
-	/*    void SetUserData( void* userdata ) { m_data = userdata; }
+        /*    void SetUserData( void* userdata ) { m_data = userdata; }
         void* GetUserData() { return m_data; }*/
 
 	bool Equals(const CommonUser& other) const
@@ -291,6 +302,7 @@ private:
 	std::string m_country;
 	int m_id;
 	int m_cpu;
+	int m_trueSkill;  //This data is not included into UserStatus because it is not part of MYSTATUS or MYBATTLESTATUS commands
 	UserStatus m_status;
 	UserBattleStatus m_bstatus;
 

@@ -56,9 +56,9 @@ END_EVENT_TABLE()
 
 BattleroomListCtrl::BattleroomListCtrl(wxWindow* parent, IBattle* battle, bool readonly, bool showingame)
     : CustomVirtListCtrl<User*, BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
-						    wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"),
-						    3, &BattleroomListCtrl::CompareOneCrit,
-						    true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/)
+                                                    wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"),
+                                                    3, &BattleroomListCtrl::CompareOneCrit,
+                                                    true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/)
     , m_battle(battle)
     , m_popup(0)
     , m_sel_user(0)
@@ -73,14 +73,15 @@ BattleroomListCtrl::BattleroomListCtrl(wxWindow* parent, IBattle* battle, bool r
     , m_colour_column_index(-1)
     , m_country_column_index(-1)
     , m_rank_column_index(-1)
+    , m_trueskill_column_index(-1)
     , m_nick_column_index(-1)
     , m_team_column_index(-1)
     , m_ally_column_index(-1)
     , m_resourcebonus_column_index(-1)
 {
-	GetAui().manager->AddPane(this, wxLEFT, _T("battleroomlistctrl"));
+        GetAui().manager->AddPane(this, wxLEFT, _T("battleroomlistctrl"));
 
-	wxListItem col;
+        wxListItem col;
 
 	int count = 0;
 	AddColumn(count, wxLIST_AUTOSIZE_USEHEADER, _("Status"), _T("Player/Bot"));
@@ -106,6 +107,9 @@ BattleroomListCtrl::BattleroomListCtrl(wxWindow* parent, IBattle* battle, bool r
 	count++;
 	AddColumn(count, 165, _("Nickname"), _T("Ingame name"));
 	m_nick_column_index = count;
+	count++;
+	AddColumn(count, wxLIST_AUTOSIZE_USEHEADER, _T("TrueSkill"), _T("TrueSkill")); //No translation for TrueSkill word
+	m_trueskill_column_index = count;
 	count++;
 	AddColumn(count, wxLIST_AUTOSIZE_USEHEADER, _("Team"), _T("Team number"));
 	m_team_column_index = count;
@@ -300,6 +304,8 @@ int BattleroomListCtrl::GetItemColumnImage(long item, long column) const
 		return -1;
 	if (column == m_resourcebonus_column_index)
 		return -1;
+	if (column == m_trueskill_column_index)
+		return -1;
 
 	const wxString msg = wxString::Format(_("column oob in BattleroomListCtrl::OnGetItemColumnImage: %d"), column);
 	wxLogWarning(msg);
@@ -341,6 +347,8 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 		return is_spec ? wxString(wxEmptyString) : (wxString::Format(_T("%d%%"), user.BattleStatus().handicap));
 	if (column == m_country_column_index)
 		return wxEmptyString;
+	if (column == m_trueskill_column_index)
+		return user.GetTrueSkill() == 0 ? _T("-") : (wxString::Format(_T("%d"), user.GetTrueSkill()));
 
 	return wxEmptyString;
 }
@@ -502,6 +510,14 @@ int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int di
 		return dir * CompareAlly(u1, u2);
 	if (col == m_resourcebonus_column_index)
 		return dir * CompareHandicap(u1, u2);
+	if (col == m_trueskill_column_index)
+		return dir * CompareTrueSkill(u1, u2);
+
+	return 0;
+}
+
+int BattleroomListCtrl::CompareTrueSkill(const DataType user1, const DataType user2)
+{
 	return 0;
 }
 
@@ -838,7 +854,10 @@ void BattleroomListCtrl::SetTipWindowText(const long item_hit, const wxPoint& po
 		} else if (column == m_nick_column_index) //name
 		{
 			m_tiptext = TowxString(user.GetNick());
-		} else
+		}else if (column == m_trueskill_column_index) //TrueSkill
+		{
+			m_tiptext = _("Player's TrueSkill rank");
+		}else
 			m_tiptext = m_colinfovec[column].tip;
 	}
 }
