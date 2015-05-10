@@ -518,6 +518,16 @@ int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int di
 
 int BattleroomListCtrl::CompareTrueSkill(const DataType user1, const DataType user2)
 {
+	if(user1->GetTrueSkill() > user2->GetTrueSkill())
+	{
+		return 1;
+	}
+
+	if(user1->GetTrueSkill() < user2->GetTrueSkill())
+	{
+		return -1;
+	}
+
 	return 0;
 }
 
