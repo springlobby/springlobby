@@ -348,7 +348,7 @@ wxString BattleroomListCtrl::GetItemText(long item, long column) const
 	if (column == m_country_column_index)
 		return wxEmptyString;
 	if (column == m_trueskill_column_index)
-		return user.GetTrueSkill() == 0 ? _T("-") : (wxString::Format(_T("%d"), user.GetTrueSkill()));
+		return user.GetTrueSkill() == 0 ? _T("-") : (wxString::Format(_T("%d"), (int)user.GetTrueSkill()));
 
 	return wxEmptyString;
 }

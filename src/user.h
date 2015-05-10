@@ -202,7 +202,7 @@ public:
 	    , m_country(std::string(country))
 	    , m_id(0)
 	    , m_cpu(cpu)
-	    , m_trueSkill(0)
+	    , m_trueSkill(0.0f)
 	{
 	}
 
@@ -246,14 +246,14 @@ public:
 		m_id = id;
 	}
 
-	int GetTrueSkill() const
+	double GetTrueSkill() const
 	{
 		return m_trueSkill;
 	}
 
 	void SetTrueSkill(double newSkill)
 	{
-		m_trueSkill = (int)newSkill; //Rounding of TrueSkill with some info loss
+		m_trueSkill = newSkill;
 	}
 
 	UserStatus& Status()
@@ -302,7 +302,7 @@ private:
 	std::string m_country;
 	int m_id;
 	int m_cpu;
-	int m_trueSkill;  //This data is not included into UserStatus because it is not part of MYSTATUS or MYBATTLESTATUS commands
+	double m_trueSkill;  //This data is not included into UserStatus because it is not part of MYSTATUS or MYBATTLESTATUS commands
 	UserStatus m_status;
 	UserBattleStatus m_bstatus;
 
