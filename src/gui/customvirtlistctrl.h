@@ -276,7 +276,7 @@ public:
 	//! does nothing
 	void noOp(wxMouseEvent& event);
 	//! automatically get saved column width if already saved, otherwise use parameter and save new width
-	virtual bool SetColumnWidth(int col, int width);
+	virtual bool SetColumnWidth(int col, int width) override;
 	//! reset columns with current set size (only effects columns with auto-size)
 	void ResetColumnSizes();
 
@@ -308,13 +308,13 @@ public:
 	 * these are used to display items in virtual lists
 	 * @{
 	*/
-	wxString OnGetItemText(long item, long column) const;
-	int OnGetItemColumnImage(long item, long column) const;
-	wxListItemAttr* OnGetItemAttr(long item) const;
+	wxString OnGetItemText(long item, long column) const override;
+	int OnGetItemColumnImage(long item, long column) const override;
+	wxListItemAttr* OnGetItemAttr(long item) const override;
 
 	//! when using the dummy column, we provide diff impl that adjust for that
-	bool GetColumn(int col, wxListItem& item) const;
-	bool SetColumn(int col, const wxListItem& item);
+	bool GetColumn(int col, wxListItem& item) const override;
+	bool SetColumn(int col, const wxListItem& item) override;
 	/** @}
 	 */
 
@@ -362,13 +362,10 @@ protected:
 private:
 	void AdjustColumnsWidth();
 
-private:
 	int autoResizableColumnIndex;
 
-public:
 	DECLARE_EVENT_TABLE()
 
-private:
 	typedef BaseType ThisType;
 	ListCtrlImp& asImp()
 	{
