@@ -283,6 +283,10 @@ public:
 	{
 	}
 
+	virtual void OnPlayerTrueskillChanged(const std::string& /*NickName*/, double /*TrueSkill value*/)
+	{
+	}
+
 	virtual unsigned int GetNumBots() const;
 	virtual User& OnBotAdded(const std::string& nick, const UserBattleStatus& bs);
 
@@ -571,7 +575,8 @@ public:
 		return m_teams_sizes;
 	}
 
-	std::map<std::string, std::string> m_script_tags; // extra script tags to reload in the case of map/mod reload
+	//Extra tags for numerious battle options
+	std::map<std::string, std::string> m_script_tags;
 
 	virtual long GetBattleRunningTime() const; // returns 0 if not started
 

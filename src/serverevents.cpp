@@ -400,6 +400,13 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 				key = key.AfterFirst('/');
 				battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::MapOption);
 				battle.Update(stdprintf("%d_%s", LSL::Enum::MapOption, STD_STRING(key).c_str()));
+			//Player's TrueSkill changed
+			} else if (key.Left(8) == _T( "players/" )) {
+			    wxString nickName = key.AfterFirst('/').BeforeFirst('/');
+			    wxString playerParam = key.AfterFirst('/').AfterFirst('/');
+			    if( playerParam == _T("skill") ) {
+				    battle.OnPlayerTrueskillChanged(nickName.ToStdString(), std::stod(value)); //(std::string& nickname, double trueskill_value)
+			    }
 			} else if (key.Left(11) == _T( "modoptions/" )) {
 				key = key.AfterFirst('/');
 				battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::ModOption);

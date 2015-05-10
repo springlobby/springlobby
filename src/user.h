@@ -251,9 +251,9 @@ public:
 		return m_trueSkill;
 	}
 
-	void SetTrueSkill(int newSkill)
+	void SetTrueSkill(double newSkill)
 	{
-		m_trueSkill = newSkill;
+		m_trueSkill = (int)newSkill; //Rounding of TrueSkill with some info loss
 	}
 
 	UserStatus& Status()

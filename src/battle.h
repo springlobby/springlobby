@@ -35,6 +35,8 @@ public:
 		return &m_ah;
 	}
 
+	virtual void OnPlayerTrueskillChanged(const std::string& NickName, double TrueSkill) override;
+
 	virtual void SendHostInfo(HostInfo update);
 	virtual void SendHostInfo(const std::string& Tag);
 
