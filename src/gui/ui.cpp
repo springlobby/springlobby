@@ -157,7 +157,6 @@ void Ui::ShowConnectWindow()
 
 //! @brief Connects to default server or opens the ConnectWindow
 //!
-//! @todo Fix Auto Connect
 //! @see DoConnect
 void Ui::Connect()
 {
@@ -188,7 +187,6 @@ void Ui::Reconnect()
 		ShowConnectWindow();
 		return;
 	}
-	Disconnect();
 	DoConnect(servname, sett().GetServerAccountNick(servname), pass);
 }
 
