@@ -150,6 +150,7 @@ private:
 	void OnLogin(wxCommandEvent& data);
 
 	void OutputLine(const wxString& message, const wxColour& col, bool showtime = true);
+	void OutputError(const wxString& message);
 
 	void OutputLine(const ChatLine& line);
 	void SetLogFile(const wxString& name);

@@ -635,6 +635,12 @@ void ChatPanel::UnknownCommand(const wxString& command, const wxString& params)
 	OutputLine(_(" !! Command: \"") + command + _("\" params: \"") + params + _T( "\"." ), sett().GetChatColorError());
 }
 
+void ChatPanel::OutputError(const wxString& message)
+{
+	OutputLine(wxString::Format(_(" Error: %s"), message.c_str()), sett().GetChatColorError());
+}
+
+
 wxString ChatPanel::GetChatTypeStr() const
 {
 	if (m_type == CPT_Channel)
@@ -835,6 +841,7 @@ ChatPanelType ChatPanel::GetPanelType() const
 	return m_type;
 }
 
+
 bool ChatPanel::Say(const wxString& message)
 {
 	static const unsigned int flood_threshold = 5;
@@ -882,7 +889,7 @@ bool ChatPanel::Say(const wxString& message)
 		if (m_type == CPT_Channel) {
 
 			if (m_channel == 0) {
-				OutputLine(_(" You are not in channel or channel does not exist."), sett().GetChatColorError());
+				OutputError(_("You are not in channel or channel does not exist."));
 				return true;
 			}
 			if (line.StartsWith(_T( "/" ))) {
@@ -890,7 +897,7 @@ bool ChatPanel::Say(const wxString& message)
 					return true;
 				if (m_channel->GetServer().ExecuteSayCommand(STD_STRING(line)))
 					return true;
-				OutputLine(wxString::Format(_(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str()), sett().GetChatColorError());
+				OutputError(wxString::Format(_("Command (%s) does not exist, use /help for a list of available commands."), line.c_str()));
 				return true;
 			}
 			m_channel->Say(STD_STRING(line));
@@ -898,7 +905,7 @@ bool ChatPanel::Say(const wxString& message)
 		} else if (m_type == CPT_Battle) {
 
 			if (m_battle == 0) {
-				OutputLine(_(" You are not in battle or battle does not exist, use /help for a list of available commands."), sett().GetChatColorError());
+				OutputError(_("You are not in battle or battle does not exist, use /help for a list of available commands."));
 				return true;
 			}
 			if (line.StartsWith(_T( "/" ))) {
@@ -906,7 +913,7 @@ bool ChatPanel::Say(const wxString& message)
 					return true;
 				if (m_battle->GetServer().ExecuteSayCommand(STD_STRING(line)))
 					return true;
-				OutputLine(wxString::Format(_(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str()), sett().GetChatColorError());
+				OutputError(wxString::Format(_("Command (%s) does not exist, use /help for a list of available commands."), line.c_str()));
 				return true;
 			}
 			m_battle->Say(STD_STRING(line));
@@ -914,7 +921,7 @@ bool ChatPanel::Say(const wxString& message)
 		} else if (m_type == CPT_User) {
 
 			if (m_user == 0) {
-				OutputLine(_(" User is offline."), sett().GetChatColorError());
+				OutputError(_(" User is offline."));
 				return true;
 			}
 			if (line.StartsWith(_T( "/" ))) {
@@ -922,19 +929,21 @@ bool ChatPanel::Say(const wxString& message)
 					return true;
 				if (m_user->GetServer().ExecuteSayCommand(STD_STRING(line)))
 					return true;
-				OutputLine(wxString::Format(_(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str()), sett().GetChatColorError());
+				OutputError(wxString::Format(_("Command (%s) does not exist, use /help for a list of available commands."), line.c_str()));
 				return true;
 			}
 			m_user->Say(STD_STRING(line));
 
 		} else if (m_type == CPT_Server) {
-			if (m_server == 0)
+			if (m_server == 0) {
+				OutputError(_("Not connected to server"));
 				return true;
+			}
 
 			if (line.StartsWith(_T( "/" ))) {
 				if (m_server->ExecuteSayCommand(STD_STRING(line)))
 					return true;
-				OutputLine(wxString::Format(_(" Error: Command (%s) does not exist, use /help for a list of available commands."), line.c_str()), sett().GetChatColorError());
+				OutputError(wxString::Format(_("Command (%s) does not exist, use /help for a list of available commands."), line.c_str()));
 				return true;
 			}
 
