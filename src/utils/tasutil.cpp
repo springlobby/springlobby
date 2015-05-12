@@ -24,15 +24,14 @@ long GetIntParam(wxString& params)
 
 wxString GetParamByChar(wxString& params, const wxChar& sep)
 {
-	int pos = params.Find(sep);
-	wxString ret;
-	if (pos != -1) {
-		ret = params.Left(pos);
-		params = params.Mid(pos + 1);
-	} else {
-		ret = params;
-		params = wxEmptyString;
+	const int pos = params.Find(sep);
+	if (pos == wxNOT_FOUND) { // no separator found, return params
+		const wxString ret = params;
+		params.clear();
+		return ret;
 	}
+	const wxString ret = params.Left(pos); //separator found, return before sep
+	params = params.Mid(pos + 1); //return everything after first seperator
 	return ret;
 }
 
