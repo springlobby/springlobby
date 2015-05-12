@@ -234,12 +234,8 @@ void ChatPanel::CreateControls()
 		m_chat_panel = new wxPanel(m_splitter, -1);
 
 		m_nick_sizer = new wxBoxSizer(wxVERTICAL);
-		unsigned int numusers = 0;
-		if (m_type == CPT_Channel)
-			numusers = GetChannel()->GetNumUsers();
-		else if (m_type == CPT_Server && m_server)
-			numusers = m_server->GetNumUsers();
-		m_usercount_label = new wxStaticText(m_nick_panel, wxID_ANY, wxString::Format(_("%d users"), numusers));
+		m_usercount_label = new wxStaticText(m_nick_panel, wxID_ANY, wxEmptyString);
+		UpdateUserCountLabel();
 		CreatePopup(); //ensures m_popup_menu is constructed
 		//SL_GENERIC::UserMenu<ChatPanelMenu>* usermenu  = m_popup_menu->GetUserMenu();
 		m_nicklist = new NickListCtrl(m_nick_panel, true, m_popup_menu);
@@ -662,12 +658,7 @@ void ChatPanel::Joined(User& who)
 	}
 
 	if (m_show_nick_list && (m_nicklist != 0)) {
-		unsigned int numusers = 0;
-		if (m_type == CPT_Channel)
-			numusers = GetChannel()->GetNumUsers();
-		else if (m_type == CPT_Server && m_server)
-			numusers = m_server->GetNumUsers();
-		m_usercount_label->SetLabel(wxString::Format(_("%d users"), numusers));
+		UpdateUserCountLabel();
 		m_nicklist->AddUser(who);
 	}
 	// Also add the User to the TextCompletionDatabase
@@ -678,12 +669,7 @@ void ChatPanel::OnChannelJoin(User& who)
 {
 	//    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
 	if (m_show_nick_list && (m_nicklist != 0)) {
-		unsigned int numusers = 0;
-		if (m_type == CPT_Channel)
-			numusers = GetChannel()->GetNumUsers();
-		else if (m_type == CPT_Server && m_server)
-			numusers = m_server->GetNumUsers();
-		m_usercount_label->SetLabel(wxString::Format(_("%d users"), numusers));
+		UpdateUserCountLabel();
 		m_nicklist->AddUser(who);
 	}
 	if (m_display_joinitem) {
@@ -717,12 +703,7 @@ void ChatPanel::Parted(User& who, const wxString& message)
 	} else if (m_type == CPT_Server && me_parted)
 		return;
 	if (m_show_nick_list && (m_nicklist != 0)) {
-		unsigned int numusers = 0;
-		if (m_type == CPT_Channel)
-			numusers = GetChannel()->GetNumUsers();
-		else if (m_type == CPT_Server && m_server)
-			numusers = m_server->GetNumUsers();
-		m_usercount_label->SetLabel(wxString::Format(_("%d users"), numusers));
+		UpdateUserCountLabel();
 		m_nicklist->RemoveUser(who);
 	}
 	// Also remove the User from the TextCompletionDatabase
@@ -783,6 +764,7 @@ void ChatPanel::SetChannel(Channel* chan)
 	}
 	if (m_show_nick_list && (m_nicklist != 0)) {
 		m_nicklist->ClearUsers();
+		UpdateUserCountLabel();
 	}
 
 	if (chan != 0) {
@@ -808,9 +790,10 @@ void ChatPanel::SetServer(IServer* serv)
 	ASSERT_LOGIC(m_type == CPT_Server, "Not of type server");
 	if ((serv == 0) && (m_server != 0)) {
 		m_server->uidata.panel = 0;
-		if (m_nicklist) {
+		if (m_nicklist != NULL) {
 			m_nicklist->StopTimer();
 			m_nicklist->ClearUsers();
+			UpdateUserCountLabel();
 		}
 	} else if (serv != 0) {
 		SetLogFile(_T("server"));
@@ -1179,4 +1162,22 @@ void ChatPanel::SetVotePanel(VotePanel* votePanel)
 {
 	m_votePanel = votePanel;
 	m_votePanel->SetChatPanel(this);
+}
+
+void ChatPanel::UpdateUserCountLabel()
+{
+	if (!m_show_nick_list)
+		return;
+	if (m_nicklist == NULL)
+		return;
+	if (m_usercount_label == NULL)
+		return;
+
+	unsigned int numusers = 0;
+	if (m_type == CPT_Channel) {
+		numusers = GetChannel()->GetNumUsers();
+	} else if ((m_type == CPT_Server) && (m_server != NULL)) {
+		numusers = m_server->GetNumUsers();
+	}
+	m_usercount_label->SetLabel(wxString::Format(_("%d users"), numusers));
 }

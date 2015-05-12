@@ -153,6 +153,7 @@ private:
 
 	void OutputLine(const ChatLine& line);
 	void SetLogFile(const wxString& name);
+	void UpdateUserCountLabel();
 
 	enum HighlightType {
 		highlight_say,
