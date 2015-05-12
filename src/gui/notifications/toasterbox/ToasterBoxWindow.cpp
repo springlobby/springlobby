@@ -246,7 +246,7 @@ void ToasterBoxWindow::DrawText()
 
 void ToasterBoxWindow::Notify()
 {
-	wxLogDebug(_T("Been up for: %i"), wxGetLocalTime() - startTime);
+	wxLogDebug(_T("Been up for: %d"), (int)(wxGetLocalTime() - startTime));
 	ScrollDown();
 }
 
