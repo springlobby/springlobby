@@ -263,7 +263,7 @@ void BattleListTab::UpdateBattle(IBattle& battle)
 }
 
 
-void BattleListTab::RemoveAllBattles()
+void BattleListTab::OnDisconnected()
 {
 	SelectBattle(0);
 	m_battle_list->Clear();

@@ -544,10 +544,9 @@ void Ui::OnDisconnected(IServer& server, bool wasonline)
 		return;
 	}
 
-	mw().GetJoinTab().LeaveCurrentBattle();
-	mw().GetBattleListTab().RemoveAllBattles();
-
-	mw().GetChatTab().LeaveChannels();
+	mw().GetJoinTab().OnDisconnected();
+	mw().GetBattleListTab().OnDisconnected();
+	mw().GetChatTab().OnDisconnected();
 
 	const wxString disconnect_msg = wxString::Format(_("disconnected from server: %s"), server.GetServerName().c_str());
 	UiEvents::GetStatusEventSender(UiEvents::addStatusMessage).SendEvent(UiEvents::StatusData(disconnect_msg, 1));

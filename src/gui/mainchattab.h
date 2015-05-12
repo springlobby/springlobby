@@ -38,7 +38,7 @@ public:
 
 
 	void RejoinChannels();
-	void LeaveChannels();
+	void OnDisconnected();
 
 	void BroadcastMessage(const wxString& message);
 

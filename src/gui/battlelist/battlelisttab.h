@@ -44,7 +44,7 @@ public:
 
 	void UserUpdate(User& user);
 
-	void RemoveAllBattles();
+	void OnDisconnected();
 
 	void UpdateList();
 

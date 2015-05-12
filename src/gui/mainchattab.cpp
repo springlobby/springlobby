@@ -165,7 +165,7 @@ void MainChatTab::OnUserDisconnected(User& user)
 	}
 }
 
-void MainChatTab::LeaveChannels()
+void MainChatTab::OnDisconnected()
 {
 	LOOP_PANELS(
 	    tmp->StatusMessage(_("Disconnected from server, chat closed."));
@@ -184,6 +184,8 @@ void MainChatTab::LeaveChannels()
 				break;
 			case CPT_Debug:
 				break;
+			default:
+				wxLogError("Invalid panel type: %d",tmp->GetPanelType());
 	    }
 
 	    )
