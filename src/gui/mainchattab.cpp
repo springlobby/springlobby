@@ -191,31 +191,37 @@ void MainChatTab::OnDisconnected()
 	    )
 }
 
-void MainChatTab::RejoinChannels()
+void MainChatTab::OnLoggedIn()
 {
+	IServer& server = serverSelector().GetServer();
 	LOOP_PANELS(
-	    if (tmp->GetPanelType() == CPT_Channel) {
-
-			// TODO: This will not rejoin passworded channels.
-			wxString name = m_chat_tabs->GetPageText( i );
-			bool alreadyin = false;
-			try
-			{
-				serverSelector().GetServer().GetMe();
-				alreadyin = true;
+		switch(tmp->GetPanelType()) {
+			case CPT_Channel: {
+				// TODO: This will not rejoin passworded channels.
+				wxString name = m_chat_tabs->GetPageText( i );
+				bool alreadyin = false;
+				try
+				{
+					server.GetMe();
+					alreadyin = true;
+				}
+				catch ( ... ) {}
+				if ( !alreadyin )
+				{
+					server.JoinChannel(STD_STRING(name), "");
+					tmp->SetChannel( &serverSelector().GetServer().GetChannel(STD_STRING(name)));
+				}
+				break;
 			}
-			catch ( ... ) {}
-			if ( !alreadyin )
-			{
-				serverSelector().GetServer().JoinChannel(STD_STRING(name), "");
-				tmp->SetChannel( &serverSelector().GetServer().GetChannel(STD_STRING(name)));
+			case CPT_User: {
+				wxString name = m_chat_tabs->GetPageText( i );
+				if ( server.UserExists(STD_STRING(name)) ) tmp->SetUser( &server.GetUser(STD_STRING(name)) );
+				break;
 			}
-
-	    } else if (tmp->GetPanelType() == CPT_User) {
-
-			wxString name = m_chat_tabs->GetPageText( i );
-			if ( serverSelector().GetServer().UserExists(STD_STRING(name)) ) tmp->SetUser( &serverSelector().GetServer().GetUser(STD_STRING(name)) );
-
+			case CPT_Server: {
+				break;
+			}
+			case CPT_Battle: case CPT_Debug: {}
 	    })
 }
 
@@ -401,8 +407,8 @@ wxImage MainChatTab::ReplaceChannelStatusColour(wxBitmap img, const wxColour& co
 bool MainChatTab::RemoveChatPanel(ChatPanel* panel)
 {
 	LOOP_PANELS(
-	    if (tmp == panel && panel != 0) {		
-			m_chat_tabs->DeletePage( i );			
+	    if (tmp == panel && panel != 0) {
+			m_chat_tabs->DeletePage( i );
 			return true;
 	    })
 	return false;

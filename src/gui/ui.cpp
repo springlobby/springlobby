@@ -526,7 +526,7 @@ void Ui::OnLoggedIn()
 {
 	if (m_main_win == 0)
 		return;
-	mw().GetChatTab().RejoinChannels();
+	mw().GetChatTab().OnLoggedIn();
 	mw().GetBattleListTab().SortBattleList();
 }
 

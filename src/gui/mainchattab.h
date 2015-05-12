@@ -37,7 +37,7 @@ public:
 	bool RemoveChatPanel(ChatPanel* panel);
 
 
-	void RejoinChannels();
+	void OnLoggedIn();
 	void OnDisconnected();
 
 	void BroadcastMessage(const wxString& message);
