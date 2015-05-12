@@ -65,7 +65,19 @@ private:
 	//! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
 	int CompareOneCrit(DataType u1, DataType u2, int col, int dir) const;
 
+	//! map: index in visible list <--> index in data vector
+	/** \brief list indexes of not-filtered items
+	 * use like this: when adding items set identity mapping \n
+		 m_visible_idxs[m_data.size() -1] = ( m_data.size() -1 ); \n
+	   when filtering clear the map, iterate thru data and only set mapping for matching items in data \n
+	   when acessing data (getColoumText etc.) always access data's index thru this map
+	 **/
+	typedef std::map<int, int> VisibilityMap;
+	typedef VisibilityMap::iterator VisibilityMapIter;
+	VisibilityMap m_visible_idxs;
+
 	wxString m_last_filter_value;
+	VisibilityMap m_visible_idxs;
 
 	DECLARE_EVENT_TABLE()
 };
