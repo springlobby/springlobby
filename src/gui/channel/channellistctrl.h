@@ -74,7 +74,6 @@ private:
 	 **/
 	typedef std::map<int, int> VisibilityMap;
 	typedef VisibilityMap::iterator VisibilityMapIter;
-	VisibilityMap m_visible_idxs;
 
 	wxString m_last_filter_value;
 	VisibilityMap m_visible_idxs;
