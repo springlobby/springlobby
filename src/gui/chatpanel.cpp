@@ -658,8 +658,8 @@ void ChatPanel::Joined(User& who)
 	}
 
 	if (m_show_nick_list && (m_nicklist != 0)) {
-		UpdateUserCountLabel();
 		m_nicklist->AddUser(who);
+		UpdateUserCountLabel();
 	}
 	// Also add the User to the TextCompletionDatabase
 	textcompletiondatabase.Insert_Mapping(TowxString(who.GetNick()), TowxString(who.GetNick()));
@@ -669,8 +669,8 @@ void ChatPanel::OnChannelJoin(User& who)
 {
 	//    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
 	if (m_show_nick_list && (m_nicklist != 0)) {
-		UpdateUserCountLabel();
 		m_nicklist->AddUser(who);
+		UpdateUserCountLabel();
 	}
 	if (m_display_joinitem) {
 		OutputLine(_T( " ** " ) + wxString::Format(_("%s joined %s."), TowxString(who.GetNick()).c_str(), GetChatTypeStr().c_str()), sett().GetChatColorJoinPart());
@@ -703,8 +703,8 @@ void ChatPanel::Parted(User& who, const wxString& message)
 	} else if (m_type == CPT_Server && me_parted)
 		return;
 	if (m_show_nick_list && (m_nicklist != 0)) {
-		UpdateUserCountLabel();
 		m_nicklist->RemoveUser(who);
+		UpdateUserCountLabel();
 	}
 	// Also remove the User from the TextCompletionDatabase
 	textcompletiondatabase.Delete_Mapping(TowxString(who.GetNick()));
@@ -762,7 +762,7 @@ void ChatPanel::SetChannel(Channel* chan)
 	if ((chan == 0) && (m_channel != 0)) {
 		m_channel->uidata.panel = 0;
 	}
-	if (m_show_nick_list && (m_nicklist != 0)) {
+	if (m_nicklist != 0) {
 		m_nicklist->ClearUsers();
 		UpdateUserCountLabel();
 	}
@@ -788,18 +788,18 @@ const IServer* ChatPanel::GetServer() const
 void ChatPanel::SetServer(IServer* serv)
 {
 	ASSERT_LOGIC(m_type == CPT_Server, "Not of type server");
-	if ((serv == 0) && (m_server != 0)) {
-		m_server->uidata.panel = 0;
-		if (m_nicklist != NULL) {
-			m_nicklist->StopTimer();
-			m_nicklist->ClearUsers();
-			UpdateUserCountLabel();
-		}
-	} else if (serv != 0) {
+	if (m_nicklist != NULL) {
+		m_nicklist->StopTimer();
+		m_nicklist->ClearUsers();
+		UpdateUserCountLabel();
+	}
+	if (serv != 0) {
 		SetLogFile(_T("server"));
 		serv->uidata.panel = this;
-		if (m_nicklist)
+		if (m_nicklist != NULL)
 			m_nicklist->StartTimer();
+	} else if (m_server != 0) {
+		m_server->uidata.panel = 0;
 	}
 	m_server = serv;
 }
