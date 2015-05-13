@@ -93,6 +93,7 @@ bool MoveDirWithFilebackupRename(wxString from, wxString to, bool backup, bool s
 				const wxString backupfile = dstfile + _T(".old");
 				if (!MoveFile(dstfile, backupfile)) {
 					ErrorMsgBox(wxString::Format(_T("could not rename %s to %s. copydir aborted"), dstfile.c_str(), backupfile.c_str()), silent);
+					return false;
 				}
 			}
 			//do the actual copy
