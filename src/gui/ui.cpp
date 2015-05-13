@@ -178,8 +178,8 @@ void Ui::Connect()
 
 void Ui::Reconnect()
 {
-	if (s_reconnect_delay_ms <= s_max_reconnect_delay) {
-		s_reconnect_delay_ms += std::max<unsigned int>(s_max_reconnect_delay * 0.50, 1000);
+	if (s_reconnect_delay_ms <= s_max_reconnect_delay) { //increase reconnect delay each time we try to reconnect
+		s_reconnect_delay_ms += std::max<unsigned int>(s_reconnect_delay_ms * 0.50, 1000);
 	}
 	const wxString servname = sett().GetDefaultServer();
 	const wxString pass = sett().GetServerAccountPass(servname);
