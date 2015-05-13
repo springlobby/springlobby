@@ -995,6 +995,7 @@ void BattleRoomTab::OnSavePreset(wxCommandEvent& /*unused*/)
 		return;
 	}
 	m_battle->SaveOptionsPreset(STD_STRING(presetname));
+	UpdatePresetList();
 }
 
 
@@ -1007,6 +1008,7 @@ void BattleRoomTab::OnDeletePreset(wxCommandEvent& /*unused*/)
 	if (result < 0)
 		return;
 	m_battle->DeletePreset(STD_STRING(choices[result]));
+	UpdatePresetList();
 }
 
 void BattleRoomTab::OnSetModDefaultPreset(wxCommandEvent& /*unused*/)
