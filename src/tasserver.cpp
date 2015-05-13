@@ -1207,24 +1207,23 @@ void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 	nat_type=1;
 	}*/
 	wxLogMessage(_T("hosting with nat type %d"), nat_type);
-	wxString wxpassword = TowxString(password);
-	wxString cmd = wxString::Format(_T("0 %d "), nat_type);
-	cmd += (wxpassword.IsEmpty()) ? _T("*") : wxpassword;
-	cmd += wxString::Format(_T(" %d %d "), bo.port, bo.maxplayers);
-	cmd += TowxString(LSL::Util::MakeHashSigned(bo.modhash));
-	cmd += wxString::Format(_T(" %d "), bo.rankneeded);
-	cmd += TowxString(LSL::Util::MakeHashSigned(bo.maphash) + std::string(" "));
+	std::string cmd = stdprintf("0 %d ", nat_type);
+	cmd += (password.empty()) ? "*" : password;
+	cmd += stdprintf(" %d %d ", bo.port, bo.maxplayers);
+	cmd += LSL::Util::MakeHashSigned(bo.modhash);
+	cmd += stdprintf(" %d ", bo.rankneeded);
+	cmd += LSL::Util::MakeHashSigned(bo.maphash) + std::string(" ");
 	if (!bo.userelayhost) { //FIXME: relay host hasn't multiversion support yet, see https://github.com/springlobby/springlobby/issues/98
-		cmd += TowxString(bo.engineName) + _T("\t");
-		cmd += TowxString(bo.engineVersion) + _T("\t");
+		cmd += bo.engineName + std::string("\t");
+		cmd += bo.engineVersion + std::string("\t");
 	}
-	cmd += TowxString(bo.mapname) + _T("\t");
-	cmd += TowxString(bo.description) + _T("\t");
-	cmd += TowxString(bo.modname);
+	cmd += bo.mapname + std::string("\t");
+	cmd += bo.description + std::string("\t");
+	cmd += bo.modname;
 
 	m_delayed_open_command = "";
 	if (!bo.userelayhost) {
-		SendCmd("OPENBATTLE", STD_STRING(cmd));
+		SendCmd("OPENBATTLE", cmd);
 	} else {
 		if (bo.relayhost.empty()) {
 			LSL::StringVector relaylist = GetRelayHostList();
@@ -1233,12 +1232,12 @@ void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 				srand(time(NULL));
 				unsigned int choice = rand() % numbots;
 				m_relay_host_manager = relaylist[choice];
-				m_delayed_open_command = STD_STRING(cmd);
+				m_delayed_open_command = cmd;
 				SayPrivate(m_relay_host_manager, "!spawn");
 			}
 		} else {
 			m_relay_host_manager = bo.relayhost;
-			m_delayed_open_command = STD_STRING(cmd);
+			m_delayed_open_command = cmd;
 			SayPrivate(bo.relayhost, "!spawn");
 		}
 	}
