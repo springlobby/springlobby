@@ -215,8 +215,12 @@ void Socket::SetTimeout(const int seconds)
 void Socket::Disconnect()
 {
 	if (m_sock.IsOk()) {
+		const bool wasconnected = m_sock.IsConnected();
 		m_buffer.clear();
 		m_sock.Close();
+		if (wasconnected) { //.Close() disables all events, fire it manually (as last to prevent recursions loops)
+			m_net_class.OnDisconnected();
+		}
 	}
 }
 
