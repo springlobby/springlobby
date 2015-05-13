@@ -29,7 +29,6 @@
 #include "log.h"
 
 
-
 const long MapSelectDialog::ID_STATICTEXT2 = wxNewId();
 const long MapSelectDialog::ID_VERTICAL_CHOICE = wxNewId();
 const long MapSelectDialog::ID_STATICTEXT1 = wxNewId();
@@ -113,8 +112,8 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
 	m_map_opts_list->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
 	m_map_opts_list->SetFont(wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT));
 
-	m_map_opts_list->InsertColumn(0, _("Option"),  wxLIST_FORMAT_LEFT, 90);
-	m_map_opts_list->InsertColumn(1, _("Value"),  wxLIST_FORMAT_LEFT, 80);
+	m_map_opts_list->InsertColumn(0, _("Option"), wxLIST_FORMAT_LEFT, 90);
+	m_map_opts_list->InsertColumn(1, _("Value"), wxLIST_FORMAT_LEFT, 80);
 
 	m_map_opts_list->InsertItem(0, _("Size"));
 	m_map_opts_list->InsertItem(1, _("Windspeed"));

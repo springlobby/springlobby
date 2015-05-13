@@ -94,18 +94,18 @@ void Battle::Join(const std::string& password)
 
 void Battle::Leave()
 {
-        m_serv.LeaveBattle(m_opts.battleid);
+	m_serv.LeaveBattle(m_opts.battleid);
 }
 
 void Battle::OnPlayerTrueskillChanged(const std::string& NickName, double TrueSkill)
 {
-        for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
-                User& u = GetUser(i);
-                if( TowxString(u.GetNick()).Lower() == TowxString(NickName) ) {
-                        u.SetTrueSkill(TrueSkill);
-                        return;
-                }
-        }
+	for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
+		User& u = GetUser(i);
+		if (TowxString(u.GetNick()).Lower() == TowxString(NickName)) {
+			u.SetTrueSkill(TrueSkill);
+			return;
+		}
+	}
 }
 
 void Battle::OnRequestBattleStatus()
@@ -152,7 +152,7 @@ void Battle::SetImReady(bool ready)
 
 void Battle::Say(const std::string& msg)
 {
-        m_serv.SayBattle(m_opts.battleid, msg);
+	m_serv.SayBattle(m_opts.battleid, msg);
 }
 
 

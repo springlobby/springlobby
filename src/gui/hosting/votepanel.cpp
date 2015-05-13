@@ -32,7 +32,7 @@ wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
     , parentWnd(parentWindow)
     , player(0)
 {
-        mainSizer = new wxBoxSizer(wxHORIZONTAL);
+	mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
 	voteTextLabel = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize);
 	wxFont labelFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
@@ -87,9 +87,9 @@ void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& a
 	}
 
 	//Do not show this panel if player in spectator mode
-	if( player != nullptr ) {
-		if( player->GetBattleStatus().spectator == true) {
-		    return;
+	if (player != nullptr) {
+		if (player->GetBattleStatus().spectator == true) {
+			return;
 		}
 	}
 
@@ -130,7 +130,7 @@ void VotePanel::SetChatPanel(ChatPanel* chatPanel)
 }
 
 //Set pointer to Player. Needed to watch it's 'spec' state. Optional.
-void VotePanel::SetCurrentPlayer(User *user)
+void VotePanel::SetCurrentPlayer(User* user)
 {
 	player = user;
 }
@@ -146,7 +146,7 @@ void VotePanel::showButtons(bool showState)
 	noButton->Show(showState);
 	dontCareButton->Show(showState);
 
-	if( showState == true ) {
+	if (showState == true) {
 		enableButtons();
 	}
 

@@ -121,7 +121,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
     , m_battle(battle)
     , m_BattleActionSink(this, &UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent))
 {
-        GetAui().manager->AddPane(this, wxLEFT, _T( "battleroomtab" ));
+	GetAui().manager->AddPane(this, wxLEFT, _T( "battleroomtab" ));
 
 	// Create all widgets
 	m_splitter = new wxSplitterWindow(this, -1, wxDefaultPosition, wxSize(100, 60));
@@ -1153,8 +1153,8 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 	m_players->SetBattle(m_battle);
 	m_chat->SetBattle(m_battle);
 	m_votePanel->ResetState();
-	if( battle!=nullptr ) {
-		m_votePanel->SetCurrentPlayer( &battle->GetMe() );
+	if (battle != nullptr) {
+		m_votePanel->SetCurrentPlayer(&battle->GetMe());
 	}
 	m_players->Clear();
 

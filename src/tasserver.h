@@ -118,6 +118,7 @@ public:
 	LSL::StringVector GetRelayHostList() override;
 
 	virtual void ExecuteCommand(const std::string& in);
+
 private:
 	void SendUdpSourcePort(int udpport);
 	void SendNATHelperInfos(const std::string& username, const std::string& ip, int port);

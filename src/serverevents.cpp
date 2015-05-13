@@ -390,13 +390,16 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 static bool parseSkill(const std::string& value, double& result)
 {
 	int res = sscanf(value.c_str(), "%lf", &result);
-	if (res == 1) return true;
+	if (res == 1)
+		return true;
 
 	res = sscanf(value.c_str(), "~%lf", &result);
-	if (res == 1) return true;
+	if (res == 1)
+		return true;
 
 	res = sscanf(value.c_str(), "(%lf)", &result);
-	if (res == 1) return true;
+	if (res == 1)
+		return true;
 
 	wxLogWarning("Invalid value for skill received: %s", value.c_str());
 	return false;
@@ -415,16 +418,16 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 				key = key.AfterFirst('/');
 				battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::MapOption);
 				battle.Update(stdprintf("%d_%s", LSL::Enum::MapOption, STD_STRING(key).c_str()));
-			//Player's TrueSkill changed
+				//Player's TrueSkill changed
 			} else if (key.Left(8) == _T( "players/" )) {
-			    wxString nickName = key.AfterFirst('/').BeforeFirst('/');
-			    wxString playerParam = key.AfterFirst('/').AfterFirst('/');
-			    if( playerParam == _T("skill") ) {
-						double skill;
-						if (parseSkill(value, skill)) {
-							battle.OnPlayerTrueskillChanged(STD_STRING(nickName), skill); //(std::string& nickname, double trueskill_value)
-						}
-			    }
+				wxString nickName = key.AfterFirst('/').BeforeFirst('/');
+				wxString playerParam = key.AfterFirst('/').AfterFirst('/');
+				if (playerParam == _T("skill")) {
+					double skill;
+					if (parseSkill(value, skill)) {
+						battle.OnPlayerTrueskillChanged(STD_STRING(nickName), skill); //(std::string& nickname, double trueskill_value)
+					}
+				}
 			} else if (key.Left(11) == _T( "modoptions/" )) {
 				key = key.AfterFirst('/');
 				battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::ModOption);

@@ -93,7 +93,6 @@ private:
 		m_filter_popular_sett = 1,
 		m_filter_recent_sett = 2,
 	};
-
 };
 
 wxString mapSelectDialog(bool hidden = false, wxWindow* parent = NULL);

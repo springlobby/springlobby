@@ -31,7 +31,10 @@ public:
 	void UpdateCurrentBattle();
 	void UpdateCurrentBattle(const wxString& Tag);
 	void LeaveCurrentBattle(bool called_from_join = false);
-	void OnDisconnected() {LeaveCurrentBattle();}
+	void OnDisconnected()
+	{
+		LeaveCurrentBattle();
+	}
 	IBattle* GetCurrentBattle();
 	ChatPanel* GetActiveChatPanel();
 

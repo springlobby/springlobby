@@ -56,9 +56,9 @@ END_EVENT_TABLE()
 
 BattleroomListCtrl::BattleroomListCtrl(wxWindow* parent, IBattle* battle, bool readonly, bool showingame)
     : CustomVirtListCtrl<User*, BattleroomListCtrl>(parent, BRLIST_LIST, wxDefaultPosition, wxDefaultSize,
-                                                    wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"),
-                                                    3, &BattleroomListCtrl::CompareOneCrit,
-                                                    true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/)
+						    wxSUNKEN_BORDER | wxLC_REPORT | wxLC_SINGLE_SEL, _T("BattleroomListCtrl"),
+						    3, &BattleroomListCtrl::CompareOneCrit,
+						    true /*highlight*/, UserActions::ActHighlight, !readonly /*periodic sort*/)
     , m_battle(battle)
     , m_popup(0)
     , m_sel_user(0)
@@ -79,9 +79,9 @@ BattleroomListCtrl::BattleroomListCtrl(wxWindow* parent, IBattle* battle, bool r
     , m_ally_column_index(-1)
     , m_resourcebonus_column_index(-1)
 {
-        GetAui().manager->AddPane(this, wxLEFT, _T("battleroomlistctrl"));
+	GetAui().manager->AddPane(this, wxLEFT, _T("battleroomlistctrl"));
 
-        wxListItem col;
+	wxListItem col;
 
 	int count = 0;
 	AddColumn(count, wxLIST_AUTOSIZE_USEHEADER, _("Status"), _T("Player/Bot"));
@@ -518,13 +518,11 @@ int BattleroomListCtrl::CompareOneCrit(DataType u1, DataType u2, int col, int di
 
 int BattleroomListCtrl::CompareTrueSkill(const DataType user1, const DataType user2)
 {
-	if(user1->GetTrueSkill() > user2->GetTrueSkill())
-	{
+	if (user1->GetTrueSkill() > user2->GetTrueSkill()) {
 		return 1;
 	}
 
-	if(user1->GetTrueSkill() < user2->GetTrueSkill())
-	{
+	if (user1->GetTrueSkill() < user2->GetTrueSkill()) {
 		return -1;
 	}
 
@@ -864,10 +862,10 @@ void BattleroomListCtrl::SetTipWindowText(const long item_hit, const wxPoint& po
 		} else if (column == m_nick_column_index) //name
 		{
 			m_tiptext = TowxString(user.GetNick());
-		}else if (column == m_trueskill_column_index) //TrueSkill
+		} else if (column == m_trueskill_column_index) //TrueSkill
 		{
 			m_tiptext = _("Player's TrueSkill rank");
-		}else
+		} else
 			m_tiptext = m_colinfovec[column].tip;
 	}
 }
