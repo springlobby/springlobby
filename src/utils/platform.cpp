@@ -67,24 +67,28 @@ bool MoveDirWithFilebackupRename(wxString from, wxString to, bool backup, bool s
 	}
 
 	do {
-		if (wxDirExists(from + filename)) {
-			MoveDirWithFilebackupRename(from + filename, to + filename, false, silent); //no backup in subdirs
+		const wxString srcfile = from + filename;
+		const wxString dstfile = to + filename;
+		if (wxDirExists(srcfile)) { //check if srcfile is a directory
+			MoveDirWithFilebackupRename(srcfile, dstfile, false, silent); //no backup in subdirs
 		} else {
 			//if files exists move it to backup, this way we can use this func on windows to replace 'active' files
-			if (backup && wxFileExists(to + filename)) {
+
+			if (backup && wxFileExists(srcfile)) {
 				//delete prev backup
-				if (wxFileExists(to + filename + _T(".old"))) {
-					wxRemoveFile(to + filename + _T(".old"));
+				const wxString backupfile = dstfile + _T(".old");
+				if (wxFileExists(backupfile)) {
+					wxRemoveFile(backupfile);
 				}
 				//make backup
-				if (!wxRenameFile(to + filename, to + filename + _T(".old"))) {
-					ErrorMsgBox(_T("could not rename %s, copydir aborted") + to + filename, silent);
+				if (!wxRenameFile(dstfile, backupfile)) {
+					ErrorMsgBox(wxString::Format(_T("could not rename %s to %s. copydir aborted"), dstfile.c_str(), backupfile.c_str()), silent);
 					return false;
 				}
 			}
 			//do the actual copy
-			if (!wxCopyFile(from + filename, to + filename, true)) {
-				ErrorMsgBox(_T("could not copy %s to %s, copydir aborted") + from + filename + _T("\n") + to + filename, silent);
+			if (!wxCopyFile(srcfile, dstfile, true)) {
+				ErrorMsgBox(wxString::Format(_T("could not copy %s to %s, copydir aborted"), srcfile, dstfile), silent);
 				return false;
 			}
 		}
