@@ -1,6 +1,8 @@
 ChangeLog of Springlobby
 ## 0.220
  - Add (rounded) TrueSkill column to BattleRoomList
+ - fix automatic reconnect
+ - fix crash after reconnect
 
 ## 0.219
  - remove /changpassword2: merge into /changepassword
