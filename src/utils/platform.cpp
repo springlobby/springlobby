@@ -28,6 +28,21 @@ void ErrorMsgBox(const wxString& err, bool silent)
 	}
 }
 
+// move file from source to dst, dst will be deleted if exists, dirs aren't created!
+bool MoveFile(const wxString& src, const wxString& dst)
+{
+	//delete destination file
+	if (wxFileExists(dst)) {
+		wxRemoveFile(dst);
+	}
+	//rename file
+	if (wxRenameFile(src, dst)) {
+		return true;
+	}
+	// rename failed, try to copy + delete
+	return wxCopyFile(src, dst) && wxRemoveFile(src);
+}
+
 bool MoveDirWithFilebackupRename(wxString from, wxString to, bool backup, bool silent)
 {
 	// first make sure that the source dir exists
@@ -74,16 +89,10 @@ bool MoveDirWithFilebackupRename(wxString from, wxString to, bool backup, bool s
 		} else {
 			//if files exists move it to backup, this way we can use this func on windows to replace 'active' files
 
-			if (backup && wxFileExists(srcfile)) {
-				//delete prev backup
+			if (backup && wxFileExists(dstfile)) {
 				const wxString backupfile = dstfile + _T(".old");
-				if (wxFileExists(backupfile)) {
-					wxRemoveFile(backupfile);
-				}
-				//make backup
-				if (!wxRenameFile(dstfile, backupfile)) {
+				if (!MoveFile(dstfile, backupfile)) {
 					ErrorMsgBox(wxString::Format(_T("could not rename %s to %s. copydir aborted"), dstfile.c_str(), backupfile.c_str()), silent);
-					return false;
 				}
 			}
 			//do the actual copy
