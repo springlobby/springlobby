@@ -145,12 +145,14 @@ void Socket::OnSocketEvent(wxSocketEvent& event)
 			break;
 		case wxSOCKET_LOST:
 			m_net_class.OnDisconnected();
+			m_sock.Close();
 			break;
 		case wxSOCKET_CONNECTION:
 			m_net_class.OnConnected();
 			break;
 		default:
 			m_net_class.OnError("Unknown socket event.");
+			m_sock.Close();
 			break;
 	}
 }
@@ -212,10 +214,10 @@ void Socket::SetTimeout(const int seconds)
 //! @brief Disconnect from remote host if connected.
 void Socket::Disconnect()
 {
-	m_buffer.clear();
-
-	m_sock.Notify(false);
-	m_net_class.OnDisconnected();
+	if (m_sock.IsOk()) {
+		m_buffer.clear();
+		m_sock.Close();
+	}
 }
 
 
