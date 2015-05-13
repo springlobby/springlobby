@@ -35,6 +35,7 @@ lsl/networking/tasserver.cpp
 #include "utils/conversion.h"
 #include "utils/slconfig.h"
 #include "utils/version.h"
+#include <lslutils/misc.h>
 
 
 SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which is send when leaving server");
@@ -1218,7 +1219,7 @@ void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 		cmd += bo.engineVersion + std::string("\t");
 	}
 	cmd += bo.mapname + std::string("\t");
-	cmd += bo.description + std::string("\t");
+	cmd += LSL::Util::Replace(bo.description, "\t", "    ") + std::string("\t");
 	cmd += bo.modname;
 
 	m_delayed_open_command = "";
