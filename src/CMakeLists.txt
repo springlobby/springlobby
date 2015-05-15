@@ -284,6 +284,12 @@ set(springlobbySrc
 )
 
 add_custom_target(version ALL ${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR})
+add_custom_command(OUTPUT ${springlobby_BINARY_DIR}/springlobby_config.h
+			COMMAND ${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR}
+		)
+
+set_property(SOURCE utils/version.cpp APPEND PROPERTY OBJECT_DEPENDS ${springlobby_BINARY_DIR}/springlobby_config.h)
+
 set_source_files_properties(utils/version.cpp PROPERTIES COMPILE_DEFINITIONS SPRINGLOBBY_CONFIGH="${springlobby_BINARY_DIR}/springlobby_config.h")
 
 
@@ -325,7 +331,7 @@ ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
 		${springlobbySrc}
 		${springlobby_RC_FILE}
 	)
-add_dependencies(springlobby version)
+
 IF( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
 	INCLUDE_DIRECTORIES( ${LIBNOTIFY_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS} )
 	TARGET_LINK_LIBRARIES(springlobby ${LIBNOTIFY_LIBRARIES} ${GLIB_LIBRARIES} )
