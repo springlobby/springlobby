@@ -22,15 +22,6 @@
 
 const wxEventType ListctrlDoSortEventType = wxNewEventType();
 
-class ListctrlSortEvent : public wxCommandEvent
-{
-public:
-	ListctrlSortEvent(int event_id = wxNewId())
-	    : wxCommandEvent(ListctrlDoSortEventType, event_id)
-	{
-	}
-};
-
 class SLTipWindow;
 
 /** \brief Used as base class for some ListCtrls throughout SL
@@ -89,9 +80,6 @@ protected:
 
 	typedef std::vector<colInfo> colInfoVec;
 
-	//! maps outward column index to internal
-	typedef std::map<unsigned int, unsigned int> ColumnMap;
-
 	/** global Tooltip thingies (ms)
 	 */
 	static const unsigned int m_tooltip_delay = 1000;
@@ -104,9 +92,6 @@ private:
 	long m_selected_index;
 	// used for ListCtrl decoration
 	wxListItemAttr m_list_attr_one, m_list_attr_two;
-
-	//! index of previously selected data
-	long m_prev_selected_index;
 	/***********************************************************/
 protected:
 	//! stores info about the columns (wxString name,bool isResizable) - pairs
@@ -131,8 +116,6 @@ protected:
 	bool m_dirty_sort;
 
 	virtual void SetTipWindowText(const long item_hit, const wxPoint& position);
-
-	ColumnMap m_column_map;
 
 	/** @name Sort functionality
 	 *
@@ -299,12 +282,15 @@ public:
 	wxString OnGetItemText(long item, long column) const override;
 	int OnGetItemColumnImage(long item, long column) const override;
 	wxListItemAttr* OnGetItemAttr(long item) const override;
-
+        
+        //Dymmy methods should be implemented in derived classes
+	virtual wxString GetItemText(long item, long column) const;
+	virtual int GetItemColumnImage(long item, long column) const;
+	virtual wxListItemAttr* GetItemAttr(long item) const;
+        
 	//! when using the dummy column, we provide diff impl that adjust for that
 	bool GetColumn(int col, wxListItem& item) const override;
 	bool SetColumn(int col, const wxListItem& item) override;
-	/** @}
-	 */
 
 	//! delete all data, selections, and whatnot
 	virtual void Clear();
@@ -362,25 +348,7 @@ private:
 	const ListCtrlImp& asImp() const
 	{
 		return static_cast<const ListCtrlImp&>(*this);
-	}
-};
-
-template <class ListCtrlType>
-class SelectionSaver
-{
-	ListCtrlType& m_list;
-
-public:
-	SelectionSaver(ListCtrlType& list)
-	    : m_list(list)
-	{
-		m_list.SaveSelection();
-	}
-
-	~SelectionSaver()
-	{
-		m_list.RestoreSelection();
-	}
+	}        
 };
 
 #include "customvirtlistctrl.cpp"

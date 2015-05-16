@@ -4,6 +4,7 @@
 #include "iconimagelist.h"
 #include "gui/controls.h"
 #include "gui/sltipwin.h"
+#include "customvirtlistctrl.h"
 #include <lslutils/misc.h>
 
 wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T, L)
@@ -40,7 +41,6 @@ END_EVENT_TABLE()
 #endif
     m_columnCount(0)
     , m_selected_index(-1)
-    , m_prev_selected_index(-1)
     , m_last_mouse_pos(wxPoint(-1, -1))
     , m_name(name)
     , m_highlight(highlight)
@@ -54,11 +54,6 @@ END_EVENT_TABLE()
     , m_periodic_sort(periodic_sort)
     , m_periodic_sort_interval(periodic_sort_interval)
 {
-	//dummy init , will later be replaced with loading from settings
-	for (unsigned int i = 0; i < m_columnCount; ++i) {
-		m_column_map[i] = i;
-	}
-
 	SetAutoResizableColumn(-1);
 
 	SetImageList(&icons(), wxIMAGE_LIST_NORMAL);
@@ -420,8 +415,9 @@ void CustomVirtListCtrl<T, L>::SortList(bool force)
 
 	{
 		wxWindowUpdateLocker upd(this);
-		SelectionSaver<ThisType>(*this);
+		SaveSelection();
 		Sort();
+                RestoreSelection();
 		m_dirty_sort = false;
 	}
 	RefreshVisibleItems(); //needs to be out of locker scope
@@ -583,19 +579,19 @@ wxString CustomVirtListCtrl<T, L>::OnGetItemText(long item, long column) const
 	//assert( item < (long)m_data.size() );
 	//assert( column < m_columnCount );
 	column = LSL::Util::Clamp(column, long(0), long(m_columnCount));
-	return asImp().GetItemText(item, column);
+	return GetItemText(item, column);
 }
 
 template <class T, class L>
 int CustomVirtListCtrl<T, L>::OnGetItemColumnImage(long item, long column) const
 {
-	return asImp().GetItemColumnImage(item, column);
+	return GetItemColumnImage(item, column);
 }
 
 template <class T, class L>
 wxListItemAttr* CustomVirtListCtrl<T, L>::OnGetItemAttr(long item) const
 {
-	auto* _att = asImp().GetItemAttr(item);
+	auto* _att = GetItemAttr(item);
 
 	if (_att != NULL)
 		return _att;
@@ -604,6 +600,24 @@ wxListItemAttr* CustomVirtListCtrl<T, L>::OnGetItemAttr(long item) const
 		return const_cast<wxListItemAttr*>(&m_list_attr_one);
 	else
 		return const_cast<wxListItemAttr*>(&m_list_attr_two);
+}
+
+template <class T, class L>
+wxString CustomVirtListCtrl<T, L>::GetItemText(long item, long column) const
+{
+        return wxEmptyString;
+}
+
+template <class T, class L>
+int CustomVirtListCtrl<T, L>::GetItemColumnImage(long item, long column) const
+{
+        return -1;
+}
+
+template <class T, class L>
+wxListItemAttr* CustomVirtListCtrl<T, L>::GetItemAttr(long item) const
+{
+        return nullptr;
 }
 
 template <class T, class L>
