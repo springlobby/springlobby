@@ -285,13 +285,17 @@ void TASServer::Disconnect()
 	if (m_sock == NULL) {
 		return;
 	}
-
+        
+        if( IsConnected() == true )
+        {
+            SendCmd("EXIT " + STD_STRING(cfg().ReadString(_T("/Server/ExitMessage")))); // EXIT command for new protocol compatibility
+            m_sock->Disconnect();
+        }
+        
 	m_connected = false;
 	m_battle_id = -1;
-	SendCmd("EXIT " + STD_STRING(cfg().ReadString(_T("/Server/ExitMessage")))); // EXIT command for new protocol compatibility
-	m_sock->Disconnect();
-	delete m_sock;
-	m_sock = NULL;
+        
+	wxDELETE(m_sock);
 }
 
 bool TASServer::IsConnected()

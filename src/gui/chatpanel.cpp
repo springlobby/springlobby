@@ -1183,10 +1183,12 @@ void ChatPanel::UpdateUserCountLabel()
 		return;
 
 	unsigned int numusers = 0;
-	if (m_type == CPT_Channel) {
-		numusers = GetChannel()->GetNumUsers();
-	} else if ((m_type == CPT_Server) && (m_server != NULL)) {
-		numusers = m_server->GetNumUsers();
-	}
+        if( GetChannel() != nullptr ) {
+            if (m_type == CPT_Channel) {
+                    numusers = GetChannel()->GetNumUsers();
+            } else if ((m_type == CPT_Server) && (m_server != NULL)) {
+                    numusers = m_server->GetNumUsers();
+            }
+        }
 	m_usercount_label->SetLabel(wxString::Format(_("%d users"), numusers));
 }
