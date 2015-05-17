@@ -288,9 +288,9 @@ add_custom_command(OUTPUT ${springlobby_BINARY_DIR}/springlobby_config.h
 			COMMAND ${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR}
 		)
 
-set_property(SOURCE utils/version.cpp APPEND PROPERTY OBJECT_DEPENDS ${springlobby_BINARY_DIR}/springlobby_config.h)
+set_property(SOURCE utils/version.cpp APPEND PROPERTY OBJECT_DEPENDS ${springlobby_SOURCE_DIR}/springlobby_config.h)
 
-set_source_files_properties(utils/version.cpp PROPERTIES COMPILE_DEFINITIONS SPRINGLOBBY_CONFIGH="${springlobby_BINARY_DIR}/springlobby_config.h")
+set_source_files_properties(utils/version.cpp PROPERTIES COMPILE_DEFINITIONS SPRINGLOBBY_CONFIGH="${springlobby_SOURCE_DIR}/springlobby_config.h")
 
 
 FILE( GLOB header "*.h" )
