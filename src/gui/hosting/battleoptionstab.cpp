@@ -297,14 +297,15 @@ void BattleOptionsTab::OnClearRestrictions(wxCommandEvent& /*unused*/)
 void BattleOptionsTab::SetBattle(IBattle* battle)
 {
 	m_battle = battle;
+        bool isBattleEnabled = (battle != nullptr);
+        
+	m_restrict_btn->Enable(isBattleEnabled);
+	m_allow_btn->Enable(isBattleEnabled);
+	m_clear_btn->Enable(isBattleEnabled);
+	m_allowed_list->Enable(isBattleEnabled);
+	m_restrict_list->Enable(isBattleEnabled);
 
-	m_restrict_btn->Enable(m_battle);
-	m_allow_btn->Enable(m_battle);
-	m_clear_btn->Enable(m_battle);
-	m_allowed_list->Enable(m_battle);
-	m_restrict_list->Enable(m_battle);
-
-	if (battle) {
+	if (isBattleEnabled) {
 		ReloadRestrictions();
 
 		if (!m_battle->IsFounderMe()) {

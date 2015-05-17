@@ -1120,47 +1120,46 @@ void BattleRoomTab::SortPlayerList()
 void BattleRoomTab::SetBattle(IBattle* battle)
 {
 	m_battle = battle;
+        bool isBattleEnabled = (battle != nullptr);
+        
+	m_team_sel->Enable(isBattleEnabled);
+	m_ally_sel->Enable(isBattleEnabled);
+	m_color_sel->Enable(isBattleEnabled);
+	m_side_sel->Enable(isBattleEnabled);
+	m_options_preset_sel->Enable(isBattleEnabled);
 
-	m_team_sel->Enable(m_battle);
-	m_ally_sel->Enable(m_battle);
-	m_color_sel->Enable(m_battle);
-	m_side_sel->Enable(m_battle);
-	m_options_preset_sel->Enable(m_battle);
+	m_minimap->Enable(isBattleEnabled);
 
-	m_minimap->Enable(m_battle);
+	m_player_panel->Enable(isBattleEnabled);
 
-	m_player_panel->Enable(m_battle);
+	m_map_combo->Enable(isBattleEnabled);
 
-	m_map_combo->Enable(m_battle);
+	m_players->Enable(isBattleEnabled);
 
-	m_players->Enable(m_battle);
+	m_leave_btn->Enable(isBattleEnabled);
+	m_start_btn->Enable(isBattleEnabled);
+	m_addbot_btn->Enable(isBattleEnabled);
+	m_manage_players_btn->Enable(isBattleEnabled);
+	m_save_btn->Enable(isBattleEnabled);
+	m_delete_btn->Enable(isBattleEnabled);
+	m_default_btn->Enable(isBattleEnabled);
+	m_browse_map_btn->Enable(isBattleEnabled);
 
-	m_leave_btn->Enable(m_battle);
-	m_start_btn->Enable(m_battle);
-	m_addbot_btn->Enable(m_battle);
-	m_manage_players_btn->Enable(m_battle);
-	m_save_btn->Enable(m_battle);
-	m_delete_btn->Enable(m_battle);
-	m_default_btn->Enable(m_battle);
-	m_browse_map_btn->Enable(m_battle);
+	m_ready_chk->Enable(isBattleEnabled);
+	m_spec_chk->Enable(isBattleEnabled);
+	m_lock_chk->Enable(isBattleEnabled);
+	m_autolock_chk->Enable(isBattleEnabled);
 
-	m_ready_chk->Enable(m_battle);
-	m_spec_chk->Enable(m_battle);
-	m_lock_chk->Enable(m_battle);
-	m_autolock_chk->Enable(m_battle);
-
-	m_opts_list->Enable(m_battle);
+	m_opts_list->Enable(isBattleEnabled);
 
 	m_minimap->SetBattle(m_battle);
 	m_players->SetBattle(m_battle);
 	m_chat->SetBattle(m_battle);
 	m_votePanel->ResetState();
-	if (battle != nullptr) {
-		m_votePanel->SetCurrentPlayer(&battle->GetMe());
-	}
 	m_players->Clear();
 
-	if (m_battle) {
+	if (isBattleEnabled) {
+                m_votePanel->SetCurrentPlayer(&battle->GetMe());
 		RegenerateOptionsList();
 		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostModName())));
 		m_color_sel->SetColor(lslTowxColour(m_battle->GetMe().BattleStatus().colour));

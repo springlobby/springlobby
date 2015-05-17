@@ -576,25 +576,26 @@ void BattleroomMMOptionsTab::OnInfoButton(wxCommandEvent& event)
 void BattleroomMMOptionsTab::SetBattle(IBattle* battle)
 {
 	m_battle = battle;
+        bool isBattleEnabled = (battle != nullptr);
 
-
-	m_options_preset_sel->Enable(m_battle);
-	m_load_btn->Enable(m_battle);
-	m_save_btn->Enable(m_battle);
-	m_delete_btn->Enable(m_battle);
-	m_default_btn->Enable(m_battle);
+	m_options_preset_sel->Enable(isBattleEnabled);
+	m_load_btn->Enable(isBattleEnabled);
+	m_save_btn->Enable(isBattleEnabled);
+	m_delete_btn->Enable(isBattleEnabled);
+	m_default_btn->Enable(isBattleEnabled);
+        
 	for (chkBoxMap::iterator itor = m_chkbox_map.begin(); itor != m_chkbox_map.end(); ++itor)
-		itor->second->Enable(m_battle);
+		itor->second->Enable(isBattleEnabled);
 	for (comboBoxMap::iterator itor = m_combox_map.begin(); itor != m_combox_map.end(); ++itor)
-		itor->second->Enable(m_battle);
+		itor->second->Enable(isBattleEnabled);
 	for (typename spinCtrlMap::iterator itor = m_spinctrl_map.begin(); itor != m_spinctrl_map.end(); ++itor)
-		itor->second->Enable(m_battle);
+		itor->second->Enable(isBattleEnabled);
 	for (textCtrlMap::iterator itor = m_textctrl_map.begin(); itor != m_textctrl_map.end(); ++itor)
-		itor->second->Enable(m_battle);
+		itor->second->Enable(isBattleEnabled);
 	for (buttonMap::iterator itor = m_button_map.begin(); itor != m_button_map.end(); ++itor)
-		itor->second->Enable(m_battle);
+		itor->second->Enable(isBattleEnabled);
 
-	if (m_battle) {
+	if (isBattleEnabled) {
 		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostModName())));
 		if (!m_battle->IsFounderMe()) {
 			m_options_preset_sel->Disable();

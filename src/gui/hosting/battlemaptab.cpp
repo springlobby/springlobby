@@ -277,14 +277,17 @@ void BattleMapTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 void BattleMapTab::SetBattle(IBattle* battle)
 {
 	m_battle = battle;
-
-	m_start_radios->Enable(m_battle);
-	m_minimap->Enable(m_battle);
-	m_map_combo->Enable(m_battle);
-	m_browse_btn->Enable(m_battle);
-	m_map_opts_list->Enable(m_battle);
+        bool isBattleEnabled = (battle != nullptr);
+        
+	m_start_radios->Enable(isBattleEnabled);
+	m_minimap->Enable(isBattleEnabled);
+	m_map_combo->Enable(isBattleEnabled);
+	m_browse_btn->Enable(isBattleEnabled);
+	m_map_opts_list->Enable(isBattleEnabled);
+        
 	m_minimap->SetBattle(m_battle);
-	if (m_battle) {
+        
+	if (isBattleEnabled) {
 		m_minimap->SetReadOnly(!m_battle->IsFounderMe());
 		m_start_radios->Enable(m_battle->IsFounderMe());
 		ReloadMaplist();
