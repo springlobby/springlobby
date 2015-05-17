@@ -190,7 +190,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
 LobbyOptionsTab::~LobbyOptionsTab()
 {
-	//dtor
+        delete this->GetSizer();
 }
 
 void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)

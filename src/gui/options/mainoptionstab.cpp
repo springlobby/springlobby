@@ -103,6 +103,7 @@ MainOptionsTab::~MainOptionsTab()
 {
 	//   if ( sett().GetAutosavePerspective() )
 	//        SavePerspective();
+        delete this->GetSizer();
 }
 
 

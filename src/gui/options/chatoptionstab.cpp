@@ -349,6 +349,7 @@ ChatOptionsTab::ChatOptionsTab(wxWindow* parent)
 
 ChatOptionsTab::~ChatOptionsTab()
 {
+        delete this->GetSizer();
 }
 
 

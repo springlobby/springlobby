@@ -91,3 +91,8 @@ InfoDialog::InfoDialog(wxWindow* parent)
 	SetSizer(main_sizer);
 	Layout();
 }
+
+InfoDialog::~InfoDialog()
+{
+        delete this->GetSizer();
+}

@@ -53,6 +53,7 @@ TorrentOptionsPanel::TorrentOptionsPanel(wxWindow* parent)
 
 TorrentOptionsPanel::~TorrentOptionsPanel()
 {
+        delete this->GetSizer();
 }
 
 void TorrentOptionsPanel::OnApply(wxCommandEvent& /*unused*/)

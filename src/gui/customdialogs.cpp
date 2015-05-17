@@ -118,6 +118,7 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon, wxWindow* parent, const wxStrin
 
 CustomMessageBox::~CustomMessageBox()
 {
+        delete this->GetSizer();
 }
 
 

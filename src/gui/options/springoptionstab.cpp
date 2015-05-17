@@ -159,6 +159,7 @@ SpringOptionsTab::SpringOptionsTab(wxWindow* parent)
 
 SpringOptionsTab::~SpringOptionsTab()
 {
+        delete this->GetSizer();
 }
 
 void SpringOptionsTab::EnableSpringBox(bool enabled)
