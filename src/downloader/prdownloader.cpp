@@ -53,7 +53,11 @@ public:
 			//we create this in avance cause m_item gets freed
 			wxString d(_("Download complete: "));
 			d += TowxString(m_item.front()->name);
-			m_loader->download(m_item, sett().GetHTTPMaxParallelDownloads());
+			bool downloadFailed = (m_loader->download(m_item, sett().GetHTTPMaxParallelDownloads()) != true);
+                        if(downloadFailed) {
+                                wxString errorMessage = wxString::Format(_("Failed to download %s!"), m_item.front()->name);
+                                wxLogError(errorMessage);
+                        }
 			std::list<IDownload*>::iterator it;
 			bool reload = false;
 			bool lobbydl = false;
