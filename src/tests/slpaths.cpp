@@ -28,4 +28,5 @@ BOOST_AUTO_TEST_CASE(slpaths)
 	BOOST_CHECK(SlPaths::mkDir(subdirs2));
 	BOOST_CHECK(wxFileName::DirExists(TowxString(subdirs)));
 	BOOST_CHECK(SlPaths::RmDir(testdir));
+	BOOST_CHECK_MESSAGE(SlPaths::SantinizeFilename(":<>test:end") == std::string("___test_end"), SlPaths::SantinizeFilename(":()test:end"));
 }

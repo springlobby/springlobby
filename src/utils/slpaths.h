@@ -79,6 +79,8 @@ public:
 	//recursive create dir
 	static bool mkDir(const std::string& dir);
 
+	static std::string SantinizeFilename(const std::string& filename);
+
 private:
 	static void EngineSubPaths(const std::vector<std::string>& basedirs, std::vector<std::string>& paths);
 

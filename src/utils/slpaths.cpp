@@ -1,7 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "slpaths.h"
-
 #include <wx/string.h>
 #include <wx/stdpaths.h>
 #include <wx/dir.h>
@@ -19,6 +18,7 @@
 #include "conversion.h"
 #include "utils/version.h"
 #include "log.h"
+#include <algorithm>
 
 
 #ifdef WIN32
@@ -476,4 +476,14 @@ bool SlPaths::RmDir(const std::string& dir)
 bool SlPaths::mkDir(const std::string& dir)
 {
 	return wxFileName::Mkdir(TowxString(dir), 0755, wxPATH_MKDIR_FULL);
+}
+
+std::string SlPaths::SantinizeFilename(const std::string& filename)
+{
+	static const std::string invalid_chars("<>:\"/\\|?*");
+	std::string res = filename;
+	for (unsigned int i = 0; i < invalid_chars.length(); ++i) {
+		std::replace (res.begin(), res.end(), invalid_chars[i], '_');
+	}
+	return res;
 }
