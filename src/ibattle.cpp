@@ -1171,7 +1171,7 @@ void IBattle::GetBattleFromScript(bool loadmapmod)
 						teaminfos.StartPosX = team->GetInt("StartPosX", -1);
 						teaminfos.StartPosY = team->GetInt("StartPosY", -1);
 						teaminfos.AllyTeam = team->GetInt("AllyTeam", 0);
-						teaminfos.RGBColor = LSL::Util::ColorFromFloatString(team->GetString("RGBColor"));
+						teaminfos.RGBColor = LSL::lslColor::FromFloatString(team->GetString("RGBColor"));
 						teaminfos.SideName = team->GetString("Side", "");
 						teaminfos.Handicap = team->GetInt("Handicap", 0);
 						const int sidepos = LSL::Util::IndexInSequence(sides, teaminfos.SideName);

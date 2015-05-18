@@ -70,6 +70,7 @@ Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/lslconversion.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/lslconversion.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
+	"${springlobby_SOURCE_DIR}/src/lsl/src/lslutils/misc.cpp"
 )
 
 set(test_libs

@@ -110,6 +110,41 @@ BOOST_AUTO_TEST_CASE(battlestatus)
 	}
 }
 
+BOOST_AUTO_TEST_CASE(colorconv)
+{
+    const std::string whitestr("1 1 1");
+	const LSL::lslColor whitecol(255,255,255);
+
+	const std::string blackstr("0 0 0");
+	const LSL::lslColor blackcol(0,0,0);
+
+	BOOST_CHECK(whitecol == LSL::lslColor::FromFloatString(whitestr));
+	BOOST_CHECK_MESSAGE(whitestr == LSL::lslColor::ToFloatString(whitecol), LSL::lslColor::ToFloatString(whitecol));
+
+	BOOST_CHECK(blackcol == LSL::lslColor::FromFloatString(blackstr));
+	BOOST_CHECK_MESSAGE(blackstr == LSL::lslColor::ToFloatString(blackcol), LSL::lslColor::ToFloatString(blackcol));
+
+
+
+	for (int c=0; c<3; c++) {
+		float r = 0.f, g = 0.f, b = 0.f;
+		for (int i=0; i<256; i++) {
+			if (c == 0) {
+				r = i;
+			} else if (c == 1) {
+				g = i;
+			} else {
+				b = i;
+			}
+			const LSL::lslColor col(r, g, b);
+			const std::string res = LSL::lslColor::ToFloatString(col);
+			const LSL::lslColor rescol = LSL::lslColor::FromFloatString(res);
+			BOOST_CHECK(rescol == col);
+		}
+	}
+
+}
+
 BOOST_AUTO_TEST_CASE(userstatus)
 {
 	UserStatus us;
