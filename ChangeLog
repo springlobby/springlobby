@@ -3,6 +3,10 @@ ChangeLog of Springlobby
  - Add (rounded) TrueSkill column to BattleRoomList
  - fix automatic reconnect
  - fix crash after reconnect
+ - fix game preset load/save
+ - fix compile on gentoo
+ - fix colors when hosting
+ - fix chatlog couldn't be written when using local lobby server
 
 ## 0.219
  - remove /changpassword2: merge into /changepassword
