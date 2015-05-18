@@ -285,7 +285,7 @@ set(springlobbySrc
 
 
 if (EXISTS ${springlobby_SOURCE_DIR}/springlobby_config.h)
-	set(SPRINGLOBBY_CONFIGH_DIR ${springlobby_SOURCE_DIR})
+	set(SPRINGLOBBY_CONFIGH_DIR ${springlobby_SOURCE_DIR}) # needed for out of source builds with a tarball
 else()
 	set(SPRINGLOBBY_CONFIGH_DIR ${springlobby_BINARY_DIR})
 endif()
