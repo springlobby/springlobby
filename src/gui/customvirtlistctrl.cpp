@@ -603,19 +603,19 @@ wxListItemAttr* CustomVirtListCtrl<T, L>::OnGetItemAttr(long item) const
 }
 
 template <class T, class L>
-wxString CustomVirtListCtrl<T, L>::GetItemText(long item, long column) const
+wxString CustomVirtListCtrl<T, L>::GetItemText(long /*item*/, long /*column*/) const
 {
         return wxEmptyString;
 }
 
 template <class T, class L>
-int CustomVirtListCtrl<T, L>::GetItemColumnImage(long item, long column) const
+int CustomVirtListCtrl<T, L>::GetItemColumnImage(long /*item*/, long /*column*/) const
 {
         return -1;
 }
 
 template <class T, class L>
-wxListItemAttr* CustomVirtListCtrl<T, L>::GetItemAttr(long item) const
+wxListItemAttr* CustomVirtListCtrl<T, L>::GetItemAttr(long /*item*/) const
 {
         return nullptr;
 }
