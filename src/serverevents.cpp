@@ -324,7 +324,7 @@ void ServerEvents::OnUserJoinedBattle(int battleid, const std::string& nick, con
 	try {
 		slLogDebugFunc("");
 		if (!m_serv.UserExists(nick)) {
-			wxLogError("OnUserJoinedBattle(): Lobby server inconsistency: user in battle which doesn't exist. Please report as lobby server bug!");
+			wxLogWarning("OnUserJoinedBattle(): Lobby server inconsistency: user in battle which doesn't exist. Please report as lobby server bug!");
 			return;
 		}
 		User& user = m_serv.GetUser(nick);
