@@ -102,6 +102,8 @@ public:
 	void OnOptionsNo(wxCommandEvent& event);
 
 private:
+	wxBoxSizer* m_topsizer;
+	wxBoxSizer* m_icon_text;
 	DECLARE_EVENT_TABLE()
 };
 

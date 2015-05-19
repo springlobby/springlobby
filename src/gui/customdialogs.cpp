@@ -50,9 +50,9 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon, wxWindow* parent, const wxStrin
 	//******** copied from wxsource/generic/msgdlgg.cpp with small modifications***********************************************************
 
 
-	wxBoxSizer* topsizer = new wxBoxSizer(wxVERTICAL);
+	m_topsizer = new wxBoxSizer(wxVERTICAL);
 
-	wxBoxSizer* icon_text = new wxBoxSizer(wxHORIZONTAL);
+	m_icon_text = new wxBoxSizer(wxHORIZONTAL);
 
 
 	// 1) icon
@@ -82,13 +82,13 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon, wxWindow* parent, const wxStrin
 	}
 
 	wxStaticBitmap* info_icon = new wxStaticBitmap(this, wxID_ANY, bitmap);
-	icon_text->Add(info_icon, 0, wxCENTER);
+	m_icon_text->Add(info_icon, 0, wxCENTER);
 
 	// 2) text
-	icon_text->Add(CreateTextSizer(message), 0, wxALIGN_TOP | wxLEFT, 10);
+	m_icon_text->Add(CreateTextSizer(message), 0, wxALIGN_TOP | wxLEFT, 10);
 
-	topsizer->Add(icon_text, 1, wxCENTER | wxLEFT | wxRIGHT | wxTOP, 10);
-	topsizer->Add(0, 10);
+	m_topsizer->Add(m_icon_text, 1, wxCENTER | wxLEFT | wxRIGHT | wxTOP, 10);
+	m_topsizer->Add(0, 10);
 
 	// 3) buttons
 	int center_flag = wxEXPAND;
@@ -96,14 +96,14 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon, wxWindow* parent, const wxStrin
 		center_flag = wxALIGN_CENTRE;
 	wxSizer* sizerBtn = CreateButtonSizer(style & slButtonSizerFlags);
 	if (sizerBtn)
-		topsizer->Add(sizerBtn, 0, center_flag | wxALL, 10);
+		m_topsizer->Add(sizerBtn, 0, center_flag | wxALL, 10);
 
 
 	SetAutoLayout(true);
-	SetSizer(topsizer);
+	SetSizer(m_topsizer);
 
-	topsizer->SetSizeHints(this);
-	topsizer->Fit(this);
+	m_topsizer->SetSizeHints(this);
+	m_topsizer->Fit(this);
 	/*
 	wxSize size( GetSize() );
 	if (size.x > size.y*3/2)
@@ -118,7 +118,8 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon, wxWindow* parent, const wxStrin
 
 CustomMessageBox::~CustomMessageBox()
 {
-	delete this->GetSizer();
+	wxDELETE(m_topsizer);
+	wxDELETE(m_icon_text);
 }
 
 
