@@ -1120,8 +1120,8 @@ void BattleRoomTab::SortPlayerList()
 void BattleRoomTab::SetBattle(IBattle* battle)
 {
 	m_battle = battle;
-        bool isBattleEnabled = (battle != nullptr);
-        
+	bool isBattleEnabled = (battle != nullptr);
+
 	m_team_sel->Enable(isBattleEnabled);
 	m_ally_sel->Enable(isBattleEnabled);
 	m_color_sel->Enable(isBattleEnabled);
@@ -1159,7 +1159,7 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 	m_players->Clear();
 
 	if (isBattleEnabled) {
-                m_votePanel->SetCurrentPlayer(&battle->GetMe());
+		m_votePanel->SetCurrentPlayer(&battle->GetMe());
 		RegenerateOptionsList();
 		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostModName())));
 		m_color_sel->SetColor(lslTowxColour(m_battle->GetMe().BattleStatus().colour));

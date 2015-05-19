@@ -483,7 +483,7 @@ std::string SlPaths::SantinizeFilename(const std::string& filename)
 	static const std::string invalid_chars("<>:\"/\\|?*");
 	std::string res = filename;
 	for (unsigned int i = 0; i < invalid_chars.length(); ++i) {
-		std::replace (res.begin(), res.end(), invalid_chars[i], '_');
+		std::replace(res.begin(), res.end(), invalid_chars[i], '_');
 	}
 	return res;
 }

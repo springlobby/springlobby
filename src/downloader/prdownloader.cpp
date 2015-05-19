@@ -54,10 +54,10 @@ public:
 			wxString d(_("Download complete: "));
 			d += TowxString(m_item.front()->name);
 			bool downloadFailed = (m_loader->download(m_item, sett().GetHTTPMaxParallelDownloads()) != true);
-                        if(downloadFailed) {
-                                wxString errorMessage = wxString::Format(_("Failed to download %s!"), m_item.front()->name);
-                                wxLogError(errorMessage);
-                        }
+			if (downloadFailed) {
+				wxString errorMessage = wxString::Format(_("Failed to download %s!"), m_item.front()->name);
+				wxLogError(errorMessage);
+			}
 			std::list<IDownload*>::iterator it;
 			bool reload = false;
 			bool lobbydl = false;

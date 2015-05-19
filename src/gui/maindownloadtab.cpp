@@ -84,8 +84,8 @@ MainDownloadTab::~MainDownloadTab()
 	timer->Stop();
 	delete timer;
 	timer = NULL;
-        
-        delete this->GetSizer();
+
+	delete this->GetSizer();
 }
 
 void MainDownloadTab::OnClearFinished(wxCommandEvent& /*event*/)

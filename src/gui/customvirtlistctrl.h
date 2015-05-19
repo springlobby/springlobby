@@ -282,12 +282,12 @@ public:
 	wxString OnGetItemText(long item, long column) const override;
 	int OnGetItemColumnImage(long item, long column) const override;
 	wxListItemAttr* OnGetItemAttr(long item) const override;
-        
-        //Dymmy methods should be implemented in derived classes
+
+	//Dymmy methods should be implemented in derived classes
 	virtual wxString GetItemText(long item, long column) const;
 	virtual int GetItemColumnImage(long item, long column) const;
 	virtual wxListItemAttr* GetItemAttr(long item) const;
-        
+
 	//! when using the dummy column, we provide diff impl that adjust for that
 	bool GetColumn(int col, wxListItem& item) const override;
 	bool SetColumn(int col, const wxListItem& item) override;
@@ -348,7 +348,7 @@ private:
 	const ListCtrlImp& asImp() const
 	{
 		return static_cast<const ListCtrlImp&>(*this);
-	}        
+	}
 };
 
 #include "customvirtlistctrl.cpp"

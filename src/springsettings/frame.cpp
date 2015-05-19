@@ -71,9 +71,9 @@ settings_frame::settings_frame(wxWindow* parent, const wxString& title, wxWindow
 		initMenuBar();
 	}
 
-        //Dialog just created, no setting were changed yet
-        abstract_panel::settingsChanged = false;
-        
+	//Dialog just created, no setting were changed yet
+	abstract_panel::settingsChanged = false;
+
 	Layout();
 	Center();
 
@@ -160,9 +160,9 @@ void settings_frame::handleExit()
 			default:
 				return;
 		}
-	}else {
-                doQuit();
-        }
+	} else {
+		doQuit();
+	}
 }
 
 void settings_frame::CreateGUIControls()

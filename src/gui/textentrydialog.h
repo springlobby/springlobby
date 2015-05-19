@@ -27,11 +27,11 @@ public:
 		SetSizerAndFit(sizer);
 	}
 
-        virtual ~TextEntryDialog()
-        {
-            delete this->GetSizer();
-        }
-            
+	virtual ~TextEntryDialog()
+	{
+		delete this->GetSizer();
+	}
+
 	void SetValue(const wxString& value)
 	{
 		input->SetValue(value);

@@ -576,14 +576,14 @@ void BattleroomMMOptionsTab::OnInfoButton(wxCommandEvent& event)
 void BattleroomMMOptionsTab::SetBattle(IBattle* battle)
 {
 	m_battle = battle;
-        bool isBattleEnabled = (battle != nullptr);
+	bool isBattleEnabled = (battle != nullptr);
 
 	m_options_preset_sel->Enable(isBattleEnabled);
 	m_load_btn->Enable(isBattleEnabled);
 	m_save_btn->Enable(isBattleEnabled);
 	m_delete_btn->Enable(isBattleEnabled);
 	m_default_btn->Enable(isBattleEnabled);
-        
+
 	for (chkBoxMap::iterator itor = m_chkbox_map.begin(); itor != m_chkbox_map.end(); ++itor)
 		itor->second->Enable(isBattleEnabled);
 	for (comboBoxMap::iterator itor = m_combox_map.begin(); itor != m_combox_map.end(); ++itor)

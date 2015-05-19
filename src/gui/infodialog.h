@@ -9,7 +9,7 @@ class InfoDialog : public wxDialog
 {
 public:
 	InfoDialog(wxWindow* parent);
-        virtual ~InfoDialog();
+	virtual ~InfoDialog();
 };
 
 #endif // INFODIALOG_H

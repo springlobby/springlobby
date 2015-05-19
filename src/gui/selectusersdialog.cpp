@@ -102,8 +102,8 @@ SelectUsersDialog::SelectUsersDialog(wxWindow* parent, wxWindowID id, const wxSt
 SelectUsersDialog::~SelectUsersDialog()
 {
 	ClearList();
-        
-        delete this->GetSizer();
+
+	delete this->GetSizer();
 }
 
 void SelectUsersDialog::Initialize()

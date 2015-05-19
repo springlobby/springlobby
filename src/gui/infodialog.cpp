@@ -94,5 +94,5 @@ InfoDialog::InfoDialog(wxWindow* parent)
 
 InfoDialog::~InfoDialog()
 {
-        delete this->GetSizer();
+	delete this->GetSizer();
 }

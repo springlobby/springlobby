@@ -199,7 +199,7 @@ void GroupOptionsPanel::Initialize()
 
 GroupOptionsPanel::~GroupOptionsPanel()
 {
-        delete this->GetSizer();
+	delete this->GetSizer();
 }
 
 void GroupOptionsPanel::ShowGroup(const wxString& group)

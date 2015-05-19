@@ -289,9 +289,9 @@ void Ui::Quit()
 void Ui::Download(const std::string& category, const std::string& name, const std::string& /*hash */)
 {
 	int count = prDownloader().GetDownload(category, name);
-        if( count < 1 ) {
-                wxLogError(_("prDownloader failed to create thread!"));
-        }
+	if (count < 1) {
+		wxLogError(_("prDownloader failed to create thread!"));
+	}
 }
 
 //! @brief Display a dialog asking a question with OK and Canel buttons

@@ -415,7 +415,7 @@ wxString Spring::WriteScriptTxt(IBattle& battle) const
 		}
 
 		tdf.Append("AllyTeam", status.ally);
-		tdf.Append("RGBColor",  LSL::lslColor::ToFloatString(status.colour) );
+		tdf.Append("RGBColor", LSL::lslColor::ToFloatString(status.colour));
 
 		unsigned int side = status.side;
 		if (side < sides.size())

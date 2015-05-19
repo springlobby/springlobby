@@ -297,8 +297,8 @@ void BattleOptionsTab::OnClearRestrictions(wxCommandEvent& /*unused*/)
 void BattleOptionsTab::SetBattle(IBattle* battle)
 {
 	m_battle = battle;
-        bool isBattleEnabled = (battle != nullptr);
-        
+	bool isBattleEnabled = (battle != nullptr);
+
 	m_restrict_btn->Enable(isBattleEnabled);
 	m_allow_btn->Enable(isBattleEnabled);
 	m_clear_btn->Enable(isBattleEnabled);

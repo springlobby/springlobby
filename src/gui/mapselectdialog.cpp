@@ -156,8 +156,8 @@ MapSelectDialog::~MapSelectDialog()
 
 	if (IsShown())
 		EndModal(0);
-        
-        delete this->GetSizer();
+
+	delete this->GetSizer();
 }
 
 

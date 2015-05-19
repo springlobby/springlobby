@@ -274,8 +274,8 @@ MainWindow::~MainWindow()
 		m_opts_dialog->Show(false);
 		m_opts_dialog->Destroy();
 	}
-        
-        delete this->GetSizer();
+
+	delete this->GetSizer();
 }
 
 void MainWindow::OnClose(wxCloseEvent& /*unused*/)

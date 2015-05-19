@@ -31,7 +31,7 @@ wxString GetParamByChar(wxString& params, const wxChar& sep)
 		return ret;
 	}
 	const wxString ret = params.Left(pos); //separator found, return before sep
-	params = params.Mid(pos + 1); //return everything after first seperator
+	params = params.Mid(pos + 1);	  //return everything after first seperator
 	return ret;
 }
 

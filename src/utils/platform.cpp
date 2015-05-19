@@ -84,7 +84,7 @@ bool MoveDirWithFilebackupRename(wxString from, wxString to, bool backup, bool s
 	do {
 		const wxString srcfile = from + filename;
 		const wxString dstfile = to + filename;
-		if (wxDirExists(srcfile)) { //check if srcfile is a directory
+		if (wxDirExists(srcfile)) {					      //check if srcfile is a directory
 			MoveDirWithFilebackupRename(srcfile, dstfile, false, silent); //no backup in subdirs
 		} else {
 			//if files exists move it to backup, this way we can use this func on windows to replace 'active' files
