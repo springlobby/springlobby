@@ -134,7 +134,7 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* parent_sizer,
 			parent_sizer->Add(section_sizer, 0, wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0);
 			num_options++;
 		} else
-			delete section_sizer;
+			wxDELETE(section_sizer);
 	}
 
 	//adds options with no asociated section

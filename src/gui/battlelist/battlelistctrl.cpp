@@ -70,7 +70,7 @@ BattleListCtrl::BattleListCtrl(wxWindow* parent)
 
 BattleListCtrl::~BattleListCtrl()
 {
-	delete m_popup;
+	wxDELETE(m_popup);
 }
 
 wxString BattleListCtrl::GetItemText(long item, long column) const

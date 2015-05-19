@@ -174,6 +174,7 @@ PrDownloader::PrDownloader()
 PrDownloader::~PrDownloader()
 {
 	delete m_dl_thread;
+	m_dl_thread = nullptr;
 	IDownloader::Shutdown();
 }
 
