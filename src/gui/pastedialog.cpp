@@ -30,7 +30,7 @@ PasteDialog::PasteDialog(wxWindow* parent, const wxString& message)
 	SetIcon(icons().GetIcon(icons().ICON_SPRINGLOBBY));
 
 	//******** copied from wxsource/generic/msgdlgg.cpp with small modifications***********************************************************
-	wxBoxSizer* topsizer = new wxBoxSizer(wxVERTICAL);
+	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxBoxSizer* icon_text = new wxBoxSizer(wxHORIZONTAL);
 
@@ -42,24 +42,24 @@ PasteDialog::PasteDialog(wxWindow* parent, const wxString& message)
 	// 2) text
 	icon_text->Add(CreateTextSizer(message), 0, wxALIGN_TOP | wxLEFT, 10);
 
-	topsizer->Add(icon_text, 1, wxCENTER | wxLEFT | wxRIGHT | wxTOP, 10);
-	topsizer->Add(0, 10);
+	m_main_sizer->Add(icon_text, 1, wxCENTER | wxLEFT | wxRIGHT | wxTOP, 10);
+	m_main_sizer->Add(0, 10);
 
 	// 3) buttons
 	wxSizer* sizerBtn = CreateButtonSizer(wxYES_NO);
 	if (sizerBtn) {
 		wxButton* but = new wxButton(this, ID_PASTE_BUTTON, _("Use pastebin"));
 		sizerBtn->Add(but, 0, wxALL, 10);
-		topsizer->Add(sizerBtn, 0, wxALIGN_CENTRE | wxALL, 10);
+		m_main_sizer->Add(sizerBtn, 0, wxALIGN_CENTRE | wxALL, 10);
 		but->SetFocus();
 	}
 
 
 	SetAutoLayout(true);
-	SetSizer(topsizer);
+	SetSizer(m_main_sizer);
 
-	topsizer->SetSizeHints(this);
-	topsizer->Fit(this);
+	m_main_sizer->SetSizeHints(this);
+	m_main_sizer->Fit(this);
 
 	Centre(wxBOTH | wxCENTER_FRAME);
 	/***************************************************************************************************/
@@ -67,7 +67,7 @@ PasteDialog::PasteDialog(wxWindow* parent, const wxString& message)
 
 PasteDialog::~PasteDialog()
 {
-	delete this->GetSizer();
+	wxDELETE(m_main_sizer);
 }
 
 void PasteDialog::OnPasteButton(wxCommandEvent& /*evt*/)

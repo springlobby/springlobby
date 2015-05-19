@@ -55,7 +55,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T("singleplayertab"));
 
-	wxBoxSizer* m_main_sizer = new wxBoxSizer(wxVERTICAL);
+	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxBoxSizer* m_mapabour_sizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -157,7 +157,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 
 SinglePlayerTab::~SinglePlayerTab()
 {
-	delete this->GetSizer();
+	wxDELETE(m_main_sizer);
 }
 
 

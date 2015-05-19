@@ -42,8 +42,7 @@ END_EVENT_TABLE()
 GroupOptionsPanel::GroupOptionsPanel(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
     : wxPanel(parent, id, pos, size, style)
 {
-	wxBoxSizer* mainSizer;
-	mainSizer = new wxBoxSizer(wxHORIZONTAL);
+	m_main_sizer = new wxBoxSizer(wxHORIZONTAL);
 
 	wxBoxSizer* groupListSizer;
 	groupListSizer = new wxBoxSizer(wxVERTICAL);
@@ -76,7 +75,7 @@ GroupOptionsPanel::GroupOptionsPanel(wxWindow* parent, wxWindowID id, const wxPo
 
 	groupListSizer->Add(groupListButtonsSizer, 0, wxEXPAND | wxBOTTOM, 5);
 
-	mainSizer->Add(groupListSizer, 2, wxEXPAND, 5);
+	m_main_sizer->Add(groupListSizer, 2, wxEXPAND, 5);
 
 	m_group_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxTAB_TRAVERSAL);
 	wxBoxSizer* mainGroupPanelSizer;
@@ -182,9 +181,9 @@ GroupOptionsPanel::GroupOptionsPanel(wxWindow* parent, wxWindowID id, const wxPo
 	m_group_panel->SetSizer(mainGroupPanelSizer);
 	m_group_panel->Layout();
 	mainGroupPanelSizer->Fit(m_group_panel);
-	mainSizer->Add(m_group_panel, 3, wxALL | wxEXPAND, 5);
+	m_main_sizer->Add(m_group_panel, 3, wxALL | wxEXPAND, 5);
 
-	this->SetSizer(mainSizer);
+	this->SetSizer(m_main_sizer);
 	this->Layout();
 
 	Initialize();
@@ -199,7 +198,7 @@ void GroupOptionsPanel::Initialize()
 
 GroupOptionsPanel::~GroupOptionsPanel()
 {
-	delete this->GetSizer();
+	wxDELETE(m_main_sizer);
 }
 
 void GroupOptionsPanel::ShowGroup(const wxString& group)

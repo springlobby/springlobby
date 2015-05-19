@@ -41,8 +41,7 @@ SelectUsersDialog::SelectUsersDialog(wxWindow* parent, wxWindowID id, const wxSt
 {
 	this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 
-	wxBoxSizer* mainSizer;
-	mainSizer = new wxBoxSizer(wxVERTICAL);
+	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
 	m_users_panel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(-1, -1), wxTAB_TRAVERSAL);
 	wxBoxSizer* bUsersListSizer;
@@ -68,7 +67,7 @@ SelectUsersDialog::SelectUsersDialog(wxWindow* parent, wxWindowID id, const wxSt
 	m_users_panel->SetSizer(bUsersListSizer);
 	m_users_panel->Layout();
 	bUsersListSizer->Fit(m_users_panel);
-	mainSizer->Add(m_users_panel, 1, wxEXPAND, 5);
+	m_main_sizer->Add(m_users_panel, 1, wxEXPAND, 5);
 
 	wxBoxSizer* bNameSizer;
 	bNameSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -80,10 +79,10 @@ SelectUsersDialog::SelectUsersDialog(wxWindow* parent, wxWindowID id, const wxSt
 	m_selection_text = new wxTextCtrl(this, NAME_TEXT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	bNameSizer->Add(m_selection_text, 1, wxBOTTOM | wxRIGHT | wxLEFT, 5);
 
-	mainSizer->Add(bNameSizer, 0, wxEXPAND, 5);
+	m_main_sizer->Add(bNameSizer, 0, wxEXPAND, 5);
 
 	m_buttons_hr = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
-	mainSizer->Add(m_buttons_hr, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5);
+	m_main_sizer->Add(m_buttons_hr, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5);
 
 	m_dialog_buttons = new wxStdDialogButtonSizer();
 	m_dialog_buttonsOK = new wxButton(this, wxID_OK);
@@ -91,9 +90,9 @@ SelectUsersDialog::SelectUsersDialog(wxWindow* parent, wxWindowID id, const wxSt
 	m_dialog_buttonsCancel = new wxButton(this, wxID_CANCEL);
 	m_dialog_buttons->AddButton(m_dialog_buttonsCancel);
 	m_dialog_buttons->Realize();
-	mainSizer->Add(m_dialog_buttons, 0, wxBOTTOM | wxEXPAND | wxLEFT | wxRIGHT, 5);
+	m_main_sizer->Add(m_dialog_buttons, 0, wxBOTTOM | wxEXPAND | wxLEFT | wxRIGHT, 5);
 
-	this->SetSizer(mainSizer);
+	this->SetSizer(m_main_sizer);
 	this->Layout();
 
 	Initialize();
@@ -103,7 +102,7 @@ SelectUsersDialog::~SelectUsersDialog()
 {
 	ClearList();
 
-	delete this->GetSizer();
+	wxDELETE(m_main_sizer);
 }
 
 void SelectUsersDialog::Initialize()

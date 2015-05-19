@@ -37,7 +37,7 @@ inline wxString BtS(bool q, std::string y = "yes", std::string n = "no")
 InfoDialog::InfoDialog(wxWindow* parent)
     : wxDialog(parent, wxID_ANY, _("Paths"), wxDefaultPosition, wxSize(620, 400), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX)
 {
-	wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
+	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
 	typedef std::vector<std::pair<std::string, wxString> > Paths;
 	Paths paths;
@@ -87,12 +87,13 @@ InfoDialog::InfoDialog(wxWindow* parent)
 	*out << _T("Started with: \n");
 	for (int i = 0; i < wxTheApp->argc; ++i)
 		*out << wxTheApp->argv[i] << _T(" ");
-	main_sizer->Add(out, 1, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 0);
-	SetSizer(main_sizer);
+	m_main_sizer->Add(out, 1, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 0);
+	SetSizer(m_main_sizer);
 	Layout();
 }
 
 InfoDialog::~InfoDialog()
 {
-	delete this->GetSizer();
+	wxDELETE(m_main_sizer);
 }
+

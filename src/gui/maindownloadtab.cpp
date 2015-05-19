@@ -40,12 +40,12 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T( "maintorrenttab" ));
 
-	m_mainbox = new wxBoxSizer(wxVERTICAL);
+	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxBoxSizer* m_buttonbox = new wxBoxSizer(wxHORIZONTAL);
 
 	m_dl_listctrl = new DownloadListCtrl(this);
-	m_mainbox->Add(m_dl_listctrl, 2, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL, 0);
+	m_main_sizer->Add(m_dl_listctrl, 2, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL, 0);
 
 	m_but_cancel = new wxButton(this, ID_BUTTON_CANCEL, _("Cancel Download"));
 	//m_but_cancel->Disable();
@@ -57,9 +57,9 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 	//	m_but_widgets = new wxButton( this, ID_BUTTON_WIDGETS, _( "Download Lua widgets" ) );
 	//	m_buttonbox->Add( m_but_widgets, 1, wxALL | wxALIGN_RIGHT | wxALIGN_BOTTOM, 5 );
 
-	m_mainbox->Add(m_buttonbox, 0, wxALL, 5);
+	m_main_sizer->Add(m_buttonbox, 0, wxALL, 5);
 
-	SetSizer(m_mainbox);
+	SetSizer(m_main_sizer);
 
 	//	info_map = torrent().CollectGuiInfos();
 
@@ -82,10 +82,8 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 MainDownloadTab::~MainDownloadTab()
 {
 	timer->Stop();
-	delete timer;
-	timer = NULL;
-
-	delete this->GetSizer();
+	wxDELETE(timer);
+	wxDELETE(m_main_sizer);
 }
 
 void MainDownloadTab::OnClearFinished(wxCommandEvent& /*event*/)

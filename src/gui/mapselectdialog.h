@@ -36,6 +36,7 @@ public:
 	void OnUnitsyncReloaded(wxCommandEvent& data);
 
 private:
+	wxBoxSizer* m_main_sizer;
 	wxRadioButton* m_filter_recent;
 	wxStaticText* m_map_name;
 	wxRadioButton* m_filter_all;

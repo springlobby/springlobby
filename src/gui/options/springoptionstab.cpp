@@ -66,7 +66,7 @@ END_EVENT_TABLE()
 SpringOptionsTab::SpringOptionsTab(wxWindow* parent)
     : wxScrolledWindow(parent, -1)
 {
-	wxBoxSizer* windowSizer = new wxBoxSizer(wxHORIZONTAL);
+	m_main_sizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* groupListSizer = new wxBoxSizer(wxVERTICAL);
 
 	m_spring_list = new wxListBox(this, SPRING_LIST, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_ALWAYS_SB | wxLB_SINGLE | wxLB_SORT);
@@ -145,9 +145,9 @@ SpringOptionsTab::SpringOptionsTab(wxWindow* parent)
 	m_main_sizer->Add(m_aconf_sizer, 0, wxEXPAND | wxALL, 5);
 	m_main_sizer->AddStretchSpacer();
 
-	windowSizer->Add(groupListSizer, 0, wxEXPAND | wxBOTTOM | wxLEFT);
-	windowSizer->Add(m_main_sizer, 1, wxEXPAND);
-	SetSizer(windowSizer);
+	m_main_sizer->Add(groupListSizer, 0, wxEXPAND | wxBOTTOM | wxLEFT);
+	m_main_sizer->Add(m_main_sizer, 1, wxEXPAND);
+	SetSizer(m_main_sizer);
 
 	SetScrollRate(SCROLL_RATE, SCROLL_RATE);
 
@@ -159,7 +159,7 @@ SpringOptionsTab::SpringOptionsTab(wxWindow* parent)
 
 SpringOptionsTab::~SpringOptionsTab()
 {
-	delete this->GetSizer();
+	wxDELETE(m_main_sizer);
 }
 
 void SpringOptionsTab::EnableSpringBox(bool enabled)

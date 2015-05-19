@@ -50,7 +50,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
     , m_vertical_direction(sett().GetVerticalSortorder())
 {
 
-	wxBoxSizer* BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
+	m_main_sizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* BoxSizer2 = new wxBoxSizer(wxVERTICAL);
 	wxStaticText* StaticText2 = new wxStaticText(this, ID_STATICTEXT2, _("Vertical sort key"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT2"));
 	BoxSizer2->Add(StaticText2, 0, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 5);
@@ -93,12 +93,12 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
 	StdDialogButtonSizer1->AddButton(new wxButton(this, wxID_CANCEL, wxEmptyString));
 	StdDialogButtonSizer1->Realize();
 	BoxSizer2->Add(StdDialogButtonSizer1, 0, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
-	BoxSizer1->Add(BoxSizer2, 0, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
+	m_main_sizer->Add(BoxSizer2, 0, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
 	m_mapgrid = new MapGridCtrl(this, wxSize(600, 400), ID_MAPGRID);
-	BoxSizer1->Add(m_mapgrid, 1, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
-	SetSizer(BoxSizer1);
-	BoxSizer1->Fit(this);
-	BoxSizer1->SetSizeHints(this);
+	m_main_sizer->Add(m_mapgrid, 1, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
+	SetSizer(m_main_sizer);
+	m_main_sizer->Fit(this);
+	m_main_sizer->SetSizeHints(this);
 	Center();
 
 
@@ -157,7 +157,7 @@ MapSelectDialog::~MapSelectDialog()
 	if (IsShown())
 		EndModal(0);
 
-	delete this->GetSizer();
+	wxDELETE(m_main_sizer);
 }
 
 

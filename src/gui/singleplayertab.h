@@ -58,6 +58,7 @@ public:
 	void SetMod(unsigned int index);
 
 private:
+	wxBoxSizer* m_main_sizer;
 	SinglePlayerBattle m_battle;
 
 	MapCtrl* m_minimap;

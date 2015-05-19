@@ -13,6 +13,7 @@ class wxCheckBox;
 class wxStaticText;
 class wxListBox;
 class wxButton;
+class wxBoxSizer;
 
 class GroupOptionsPanel : public wxPanel
 {
@@ -36,7 +37,7 @@ private:
 		ADD_USER,
 		REMOVE_USER
 	};
-
+	wxBoxSizer* m_main_sizer;
 	wxListBox* m_group_list;
 	wxButton* m_remove_group_button;
 	wxButton* m_rename_group_button;

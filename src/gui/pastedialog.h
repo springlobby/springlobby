@@ -21,6 +21,7 @@ private:
 	};
 	void OnPasteButton(wxCommandEvent& evt);
 	void OnOptionsNo(wxCommandEvent& event);
+	wxBoxSizer* m_main_sizer;
 	DECLARE_EVENT_TABLE()
 };
 

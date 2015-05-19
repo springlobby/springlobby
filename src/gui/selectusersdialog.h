@@ -26,6 +26,7 @@ private:
 		NAME_TEXT
 	};
 
+	wxBoxSizer* m_main_sizer;
 	wxPanel* m_users_panel;
 	wxStaticText* m_filter_names_staticText;
 	wxTextCtrl* m_name_filter_text;

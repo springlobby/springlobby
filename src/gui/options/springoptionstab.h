@@ -48,6 +48,7 @@ private:
 	void ReloadSpringList();
 	void SwitchUnitsync(const std::string& newIndex, const std::string& oldIndex);
 
+	wxBoxSizer* m_main_sizer;
 	wxStaticText* m_exec_loc_text;
 	wxStaticText* m_sync_loc_text;
 

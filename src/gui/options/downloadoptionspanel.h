@@ -24,6 +24,7 @@ public:
 	void OnRestore(wxCommandEvent& event);
 
 private:
+	wxBoxSizer* m_main_sizer;
 	wxSpinCtrl* m_parallel_http;
 	wxStaticBoxSizer* m_parallel_http_sizer;
 	void EnableSettings(bool enable);

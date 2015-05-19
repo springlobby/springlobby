@@ -70,7 +70,7 @@ bool ContentDownloadDialog::Show(bool show)
 
 ContentDownloadDialog::~ContentDownloadDialog()
 {
-	delete this->GetSizer();
+	wxDELETE(m_main_sizer);
 }
 
 

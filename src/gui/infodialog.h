@@ -5,11 +5,15 @@
 
 #include <wx/dialog.h>
 
+class wxBoxSizer;
+
 class InfoDialog : public wxDialog
 {
 public:
 	InfoDialog(wxWindow* parent);
 	virtual ~InfoDialog();
+private:
+	wxBoxSizer* m_main_sizer;
 };
 
 #endif // INFODIALOG_H

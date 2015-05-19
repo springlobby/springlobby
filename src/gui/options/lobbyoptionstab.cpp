@@ -190,7 +190,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
 LobbyOptionsTab::~LobbyOptionsTab()
 {
-	delete this->GetSizer();
+	wxDELETE(m_main_sizer);
 }
 
 void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)

@@ -52,7 +52,7 @@ private:
 	void OnDLWidgets(wxCommandEvent& event);
 	void OnClearFinished(wxCommandEvent& event);
 
-	wxBoxSizer* m_mainbox;
+	wxBoxSizer* m_main_sizer;
 
 private:
 	//(*Handlers(MainTorrentTab)

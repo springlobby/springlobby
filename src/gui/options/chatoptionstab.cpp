@@ -60,8 +60,7 @@ ChatOptionsTab::ChatOptionsTab(wxWindow* parent)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T( "chatoptionstab" ));
 
-	wxBoxSizer* bMainSizerV;
-	bMainSizerV = new wxBoxSizer(wxVERTICAL);
+	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticBoxSizer* sbColorsSizer;
 	sbColorsSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, _("Colors and font")), wxHORIZONTAL);
@@ -270,7 +269,7 @@ ChatOptionsTab::ChatOptionsTab(wxWindow* parent)
 
 	sbColorsSizer->Add(bColorsVSizer, 1, wxEXPAND, 5);
 
-	bMainSizerV->Add(sbColorsSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT | wxTOP, 5);
+	m_main_sizer->Add(sbColorsSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT | wxTOP, 5);
 
 
 	wxStaticBoxSizer* sbBehaviorSizer;
@@ -290,7 +289,7 @@ ChatOptionsTab::ChatOptionsTab(wxWindow* parent)
 	m_broadcast_check->SetValue(cfg().ReadBool(_T("/Chat/BroadcastEverywhere")));
 	sbBehaviorSizer->Add(m_broadcast_check, 0, wxALL, 5);
 
-	bMainSizerV->Add(sbBehaviorSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5);
+	m_main_sizer->Add(sbBehaviorSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5);
 
 	wxBoxSizer* bBotomSizer;
 	bBotomSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -335,11 +334,11 @@ ChatOptionsTab::ChatOptionsTab(wxWindow* parent)
 
 	bBotomSizer->Add(sbHighlightSizer, 1, wxEXPAND, 5);
 
-	bMainSizerV->Add(bBotomSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5);
+	m_main_sizer->Add(bBotomSizer, 0, wxEXPAND | wxBOTTOM | wxRIGHT | wxLEFT, 5);
 
-	bMainSizerV->Add(0, 0, 1, wxEXPAND | wxALL, 5);
+	m_main_sizer->Add(0, 0, 1, wxEXPAND | wxALL, 5);
 
-	SetSizer(bMainSizerV);
+	SetSizer(m_main_sizer);
 	DoRestore();
 	UpdateTextSample();
 	UpdateFontLabel();
@@ -349,7 +348,7 @@ ChatOptionsTab::ChatOptionsTab(wxWindow* parent)
 
 ChatOptionsTab::~ChatOptionsTab()
 {
-	delete this->GetSizer();
+	wxDELETE(m_main_sizer);
 }
 
 
