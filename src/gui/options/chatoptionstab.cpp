@@ -348,7 +348,6 @@ ChatOptionsTab::ChatOptionsTab(wxWindow* parent)
 
 ChatOptionsTab::~ChatOptionsTab()
 {
-	wxDELETE(m_main_sizer);
 }
 
 

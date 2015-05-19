@@ -103,7 +103,6 @@ MainOptionsTab::~MainOptionsTab()
 {
 	//   if ( sett().GetAutosavePerspective() )
 	//        SavePerspective();
-	wxDELETE(m_main_sizer);
 }
 
 

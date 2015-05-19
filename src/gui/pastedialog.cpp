@@ -67,7 +67,6 @@ PasteDialog::PasteDialog(wxWindow* parent, const wxString& message)
 
 PasteDialog::~PasteDialog()
 {
-	wxDELETE(m_main_sizer);
 }
 
 void PasteDialog::OnPasteButton(wxCommandEvent& /*evt*/)

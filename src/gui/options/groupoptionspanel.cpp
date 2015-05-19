@@ -198,7 +198,6 @@ void GroupOptionsPanel::Initialize()
 
 GroupOptionsPanel::~GroupOptionsPanel()
 {
-	wxDELETE(m_main_sizer);
 }
 
 void GroupOptionsPanel::ShowGroup(const wxString& group)

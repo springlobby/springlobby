@@ -83,7 +83,6 @@ MainDownloadTab::~MainDownloadTab()
 {
 	timer->Stop();
 	wxDELETE(timer);
-	wxDELETE(m_main_sizer);
 }
 
 void MainDownloadTab::OnClearFinished(wxCommandEvent& /*event*/)

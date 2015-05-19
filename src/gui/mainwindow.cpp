@@ -274,7 +274,6 @@ MainWindow::~MainWindow()
 		m_opts_dialog->Show(false);
 		m_opts_dialog->Destroy();
 	}
-	wxDELETE(m_main_sizer);
 }
 
 void MainWindow::OnClose(wxCloseEvent& /*unused*/)

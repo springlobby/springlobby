@@ -157,7 +157,6 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 
 SinglePlayerTab::~SinglePlayerTab()
 {
-	wxDELETE(m_main_sizer);
 }
 
 

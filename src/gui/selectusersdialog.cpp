@@ -102,7 +102,6 @@ SelectUsersDialog::~SelectUsersDialog()
 {
 	ClearList();
 
-	wxDELETE(m_main_sizer);
 }
 
 void SelectUsersDialog::Initialize()

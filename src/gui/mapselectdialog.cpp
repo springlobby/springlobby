@@ -157,7 +157,6 @@ MapSelectDialog::~MapSelectDialog()
 	if (IsShown())
 		EndModal(0);
 
-	wxDELETE(m_main_sizer);
 }
 
 

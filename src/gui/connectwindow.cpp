@@ -211,7 +211,6 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 //! @brief Destructor
 ConnectWindow::~ConnectWindow()
 {
-	wxDELETE(m_main_sizer);
 }
 
 

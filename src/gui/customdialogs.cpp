@@ -118,8 +118,6 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon, wxWindow* parent, const wxStrin
 
 CustomMessageBox::~CustomMessageBox()
 {
-	wxDELETE(m_topsizer);
-	wxDELETE(m_icon_text);
 }
 
 

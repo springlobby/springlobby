@@ -88,7 +88,6 @@ MainChatTab::MainChatTab(wxWindow* parent)
 
 MainChatTab::~MainChatTab()
 {
-	wxDELETE(m_main_sizer);
 }
 
 ChatPanel& MainChatTab::ServerChat()
