@@ -951,13 +951,10 @@ void TASServer::RelayCmd(const std::string& command, const std::string& param)
 		wxLogWarning(_T("Trying to send relayed commands but no relay bot is set!"));
 		return;
 	}
-	wxString wxcmd = TowxString(command);
-	wxString wxparam = TowxString(param);
-	wxString msg = _T("!"); // prefix commands with !
-	if (param.empty())
-		msg = wxcmd.Lower();
-	else
-		msg = wxcmd.Lower() + _T(" ") + wxparam;
+	wxString msg = _T("!") + TowxString(command).Lower(); // prefix commands with !
+	if (!param.empty()) {
+		msg += + _T(" ") + TowxString(param);
+	}
 	SayPrivate(m_relay_host_bot, STD_STRING(msg));
 }
 
