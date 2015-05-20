@@ -28,6 +28,11 @@ void AutohostHandler::Send(const std::string& cmd)
 	m_battle->Say(cmd);
 }
 
+void AutohostHandler::SayFounder(const std::string& cmd)
+{
+	m_battle->GetFounder().Say(cmd);
+}
+
 //========================
 //-------- Springie ------
 //========================
@@ -122,6 +127,20 @@ void SpadsHandler::Start()
 {
 	Send("!start");
 }
+
+RelayHandler::RelayHandler()
+{
+}
+
+RelayHandler::~RelayHandler()
+{
+}
+
+void RelayHandler::Start()
+{
+	SayFounder("!stargame");
+}
+
 //-------------
 
 
@@ -149,24 +168,16 @@ AutohostHandler& AutohostManager::GetAutohostHandler()
 {
 	switch (m_type) {
 		case AUTOHOSTTYPE_SPRINGIE:
-			return GetSpringie();
+			return m_springie;
 		case AUTOHOSTTYPE_SPADS:
-			return GetSpads();
+			return m_spads;
+		case AUTOHOSTTYPE_RELAYHOST:
+			return m_relayhandler;
 		case AUTOHOSTTYPE_NONE:
 		case AUTOHOSTTYPE_UNKNOWN:
 			return m_emptyhandler;
 	}
 	return m_emptyhandler;
-}
-
-SpringieHandler& AutohostManager::GetSpringie()
-{
-	return m_springie;
-}
-
-SpadsHandler& AutohostManager::GetSpads()
-{
-	return m_spads;
 }
 
 bool AutohostManager::RecognizeAutohost(const std::string& type)
@@ -177,6 +188,10 @@ bool AutohostManager::RecognizeAutohost(const std::string& type)
 	}
 	if (type == "SPADS") {
 		m_type = AutohostManager::AUTOHOSTTYPE_SPADS;
+		return true;
+	}
+	if (type == "RELAY") {
+		m_type = AutohostManager::AUTOHOSTTYPE_RELAYHOST;
 		return true;
 	}
 

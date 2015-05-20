@@ -23,7 +23,7 @@ public:
 
 protected:
 	virtual void Send(const std::string& /*cmd*/);
-
+	virtual void SayFounder(const std::string& /*cmd*/);
 private:
 	void SetBattle(IBattle* battle);
 	IBattle* m_battle;
@@ -38,13 +38,13 @@ public:
 	SpringieHandler();
 	~SpringieHandler();
 
-	void Balance();
-	void SetRandomMap();
-	void SetMap(const std::string& map);
-	void ClearStartBoxes();
-	void AddStartBox(int posx, int posy, int w, int h);
-	void Notify();
-	void Start();
+	void Balance() override;
+	void SetRandomMap() override;
+	void SetMap(const std::string& map) override;
+	void ClearStartBoxes() override;
+	void AddStartBox(int posx, int posy, int w, int h) override;
+	void Notify() override;
+	void Start() override;
 };
 
 class SpadsHandler : virtual public AutohostHandler
@@ -53,14 +53,23 @@ public:
 	SpadsHandler();
 	~SpadsHandler();
 
-	void Balance();
-	void SetRandomMap();
-	void SetMap(const std::string& map);
-	void ClearStartBoxes();
-	void AddStartBox(int posx, int posy, int w, int h);
-	void Notify();
-	void Start();
+	void Balance() override;
+	void SetRandomMap() override;
+	void SetMap(const std::string& map) override;
+	void ClearStartBoxes() override;
+	void AddStartBox(int posx, int posy, int w, int h) override;
+	void Notify() override;
+	void Start() override;
 };
+
+class RelayHandler : virtual public AutohostHandler
+{
+public:
+	RelayHandler();
+	~RelayHandler();
+	void Start() override;
+};
+
 
 class AutohostManager
 {
@@ -69,6 +78,7 @@ public:
 		AUTOHOSTTYPE_NONE,
 		AUTOHOSTTYPE_UNKNOWN,
 		AUTOHOSTTYPE_SPRINGIE,
+		AUTOHOSTTYPE_RELAYHOST,
 		AUTOHOSTTYPE_SPADS
 	};
 
@@ -83,13 +93,12 @@ public:
 
 	AutohostHandler& GetAutohostHandler();
 
-	SpringieHandler& GetSpringie();
-	SpadsHandler& GetSpads();
-
 private:
+
 	SpringieHandler m_springie;
 	SpadsHandler m_spads;
 	AutohostHandler m_emptyhandler;
+	RelayHandler m_relayhandler;
 
 	AutohostType m_type;
 	IBattle* m_battle;

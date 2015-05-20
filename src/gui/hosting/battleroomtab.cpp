@@ -602,7 +602,12 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 			else
 				customMessageBoxNoModal(SL_MAIN_ICON, _("Spring is already running."), _("Error"));
 		} else {
-			m_battle->m_autohost_manager->GetAutohostHandler().Start();
+			wxLogError(TowxString(m_battle->GetProxy()));
+			if (m_battle->GetProxy().empty()) {
+				m_battle->m_autohost_manager->GetAutohostHandler().Start();
+			} else {
+				m_battle->GetFounder().Say("!startgame"); //FIXME: fix detection of AutoHostHandler
+			}
 			//customMessageBoxNoModal( SL_MAIN_ICON, _("Host is not ingame."), _("Error") );
 		}
 	}
