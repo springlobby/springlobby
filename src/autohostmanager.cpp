@@ -18,11 +18,6 @@ AutohostHandler::~AutohostHandler()
 {
 }
 
-void AutohostHandler::SetBattle(IBattle* battle)
-{
-	m_battle = battle;
-}
-
 void AutohostHandler::Send(const std::string& cmd)
 {
 	m_battle->Say(cmd);
@@ -158,10 +153,6 @@ void AutohostManager::SetBattle(IBattle* battle)
 {
 	m_type = AutohostManager::AUTOHOSTTYPE_NONE;
 	m_battle = battle;
-
-	m_springie.SetBattle(battle);
-	m_spads.SetBattle(battle);
-	m_emptyhandler.SetBattle(battle);
 }
 
 AutohostHandler& AutohostManager::GetAutohostHandler()
@@ -174,6 +165,9 @@ AutohostHandler& AutohostManager::GetAutohostHandler()
 		case AUTOHOSTTYPE_RELAYHOST:
 			return m_relayhandler;
 		case AUTOHOSTTYPE_NONE:
+			if (!m_battle->GetPresetList().empty()) { //FIXME: relayhost should set hosttype!
+				return m_relayhandler;
+			}
 		case AUTOHOSTTYPE_UNKNOWN:
 			return m_emptyhandler;
 	}
