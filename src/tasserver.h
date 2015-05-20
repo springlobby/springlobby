@@ -119,6 +119,8 @@ public:
 
 	virtual void ExecuteCommand(const std::string& in);
 
+	void SendScriptToProxy( const std::string& script ) override;
+
 private:
 	void SendUdpSourcePort(int udpport);
 	void SendNATHelperInfos(const std::string& username, const std::string& ip, int port);
