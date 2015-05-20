@@ -450,7 +450,7 @@ int MapCtrl::LoadMinimap()
 		return -1;
 	if (m_minimap)
 		return -1;
-	if (!m_battle->MapExists())
+	if (!m_battle->MapExists(false))
 		return -1;
 
 	const std::string map = m_battle->GetHostMapName();
@@ -996,7 +996,7 @@ void MapCtrl::DrawUserPositions(wxDC& dc)
 	slLogDebugFunc("");
 	if (m_battle == 0)
 		return;
-	if (!m_battle->MapExists())
+	if (!m_battle->MapExists(false))
 		return;
 
 	wxRect mr = GetMinimapRect();
@@ -1103,7 +1103,7 @@ void MapCtrl::OnMouseMove(wxMouseEvent& event)
 
 	if (longval == IBattle::ST_Pick) {
 
-		if (!m_battle->MapExists())
+		if (!m_battle->MapExists(false))
 			return;
 		if (m_maction == Moved) {
 			User& user = *m_user_expanded;
@@ -1500,7 +1500,7 @@ void MapCtrl::OnRightUp(wxMouseEvent& event)
 							     .getSingleValue("startpostype", LSL::Enum::EngineOption));
 	if (longval == IBattle::ST_Pick) {
 
-		if (!m_battle->MapExists())
+		if (!m_battle->MapExists(false))
 			return;
 
 		if (m_maction != Moved) {

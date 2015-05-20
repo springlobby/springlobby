@@ -717,7 +717,7 @@ void IBattle::SetLocalMap(const std::string& mapname)
 const LSL::UnitsyncMap& IBattle::LoadMap()
 {
 	if ((!m_map_loaded) && (!m_host_map.name.empty())) {
-		if (MapExists(false) == true) { //Check if selected map available for engine?
+		if (MapExists(false)) { //Check if selected map available for engine?
 			try {
 				m_local_map = LSL::usync().GetMap(m_host_map.name);
 				bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::MapOption, m_host_map.name);
