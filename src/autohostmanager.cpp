@@ -123,19 +123,6 @@ void SpadsHandler::Start()
 	Send("!start");
 }
 
-RelayHandler::RelayHandler()
-{
-}
-
-RelayHandler::~RelayHandler()
-{
-}
-
-void RelayHandler::Start()
-{
-	SayFounder("!stargame");
-}
-
 //-------------
 
 
@@ -162,12 +149,7 @@ AutohostHandler& AutohostManager::GetAutohostHandler()
 			return m_springie;
 		case AUTOHOSTTYPE_SPADS:
 			return m_spads;
-		case AUTOHOSTTYPE_RELAYHOST:
-			return m_relayhandler;
 		case AUTOHOSTTYPE_NONE:
-			if (!m_battle->GetPresetList().empty()) { //FIXME: relayhost should set hosttype!
-				return m_relayhandler;
-			}
 		case AUTOHOSTTYPE_UNKNOWN:
 			return m_emptyhandler;
 	}
@@ -182,10 +164,6 @@ bool AutohostManager::RecognizeAutohost(const std::string& type)
 	}
 	if (type == "SPADS") {
 		m_type = AutohostManager::AUTOHOSTTYPE_SPADS;
-		return true;
-	}
-	if (type == "RELAY") {
-		m_type = AutohostManager::AUTOHOSTTYPE_RELAYHOST;
 		return true;
 	}
 

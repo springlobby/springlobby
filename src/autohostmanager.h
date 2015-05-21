@@ -62,15 +62,6 @@ public:
 	void Start() override;
 };
 
-class RelayHandler : virtual public AutohostHandler
-{
-public:
-	RelayHandler();
-	~RelayHandler();
-	void Start() override;
-};
-
-
 class AutohostManager
 {
 public:
@@ -78,7 +69,6 @@ public:
 		AUTOHOSTTYPE_NONE,
 		AUTOHOSTTYPE_UNKNOWN,
 		AUTOHOSTTYPE_SPRINGIE,
-		AUTOHOSTTYPE_RELAYHOST,
 		AUTOHOSTTYPE_SPADS
 	};
 
@@ -98,7 +88,6 @@ private:
 	SpringieHandler m_springie;
 	SpadsHandler m_spads;
 	AutohostHandler m_emptyhandler;
-	RelayHandler m_relayhandler;
 
 	AutohostType m_type;
 	IBattle* m_battle;
