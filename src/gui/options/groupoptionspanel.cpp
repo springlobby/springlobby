@@ -42,7 +42,7 @@ END_EVENT_TABLE()
 GroupOptionsPanel::GroupOptionsPanel(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
     : wxPanel(parent, id, pos, size, style)
 {
-	m_main_sizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer* m_main_sizer = new wxBoxSizer(wxHORIZONTAL);
 
 	wxBoxSizer* groupListSizer;
 	groupListSizer = new wxBoxSizer(wxVERTICAL);

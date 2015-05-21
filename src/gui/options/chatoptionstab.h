@@ -67,7 +67,6 @@ private:
 		ID_HL_REQ
 	};
 
-	wxBoxSizer* m_main_sizer;
 	wxStaticText* m_fontname;
 	wxStaticText* m_font_label;
 	wxButton* m_select_font;

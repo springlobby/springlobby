@@ -60,7 +60,7 @@ ChatOptionsTab::ChatOptionsTab(wxWindow* parent)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T( "chatoptionstab" ));
 
-	m_main_sizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
 	wxStaticBoxSizer* sbColorsSizer;
 	sbColorsSizer = new wxStaticBoxSizer(new wxStaticBox(this, -1, _("Colors and font")), wxHORIZONTAL);

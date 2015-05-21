@@ -60,7 +60,6 @@ private:
 	wxRadioButton* m_web_spec_radio;
 
 
-	wxBoxSizer* m_main_sizer;
 	wxStaticBoxSizer* m_web_box_sizer;
 	wxStaticBoxSizer* m_editor_box_sizer;
 	wxBoxSizer* m_web_loc_sizer;

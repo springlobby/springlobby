@@ -42,7 +42,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T("lobbyoptionstab"));
 
-	m_main_sizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
 	/* ================================
    * Web browser

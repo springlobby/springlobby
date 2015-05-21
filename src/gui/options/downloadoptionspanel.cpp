@@ -33,7 +33,7 @@ TorrentOptionsPanel::TorrentOptionsPanel(wxWindow* parent)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T("torrentoptionspanel"));
 
-	m_main_sizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* m_main_sizer = new wxBoxSizer(wxVERTICAL);
 	m_parallel_http = new wxSpinCtrl(this, wxID_ANY, wxString::Format(_T("%d"), sett().GetHTTPMaxParallelDownloads()));
 	m_parallel_http->SetRange(1, 10);
 	m_parallel_http_sizer = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Parallel HTTP Connections when downloading content"));

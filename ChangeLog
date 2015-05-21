@@ -1,4 +1,8 @@
 ChangeLog of Springlobby
+
+## 0.221
+ - fix crash when going into edit/preferences
+
 ## 0.220
  - Add (rounded) TrueSkill column to BattleRoomList
  - fix usage of relayhost
