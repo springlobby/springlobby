@@ -1,6 +1,8 @@
 ChangeLog of Springlobby
 ## 0.220
  - Add (rounded) TrueSkill column to BattleRoomList
+ - fix usage of relayhost
+ - fix crash when only .bmp sideicon was available for a game
  - fix automatic reconnect
  - fix crash after reconnect
  - fix game preset load/save
