@@ -29,7 +29,6 @@ public:
 
 	virtual ~TextEntryDialog()
 	{
-		delete this->GetSizer();
 	}
 
 	void SetValue(const wxString& value)
