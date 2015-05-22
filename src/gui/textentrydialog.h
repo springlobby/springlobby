@@ -25,6 +25,7 @@ public:
 		sizer->Add(input, 1, wxEXPAND | wxALL, 5);
 		sizer->Add(buttons, 0, wxEXPAND | wxALL, 5);
 		SetSizerAndFit(sizer);
+		input->SetFocus();
 	}
 
 	virtual ~TextEntryDialog()
