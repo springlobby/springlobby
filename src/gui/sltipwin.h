@@ -6,16 +6,27 @@
 #include <wx/platform.h>
 #if wxUSE_TIPWINDOW
 #include <wx/tipwin.h>
+#include <wx/eventfilter.h>
 
 //! A wxTipWindow that gets canceled on mousewheel events
-class SLTipWindow : public wxTipWindow
+class SLTipWindow : public wxTipWindow, public wxEventFilter
 {
 public:
 	SLTipWindow(wxWindow* parent, const wxString& text);
-
-	void Cancel(wxMouseEvent& event);
-
-	DECLARE_EVENT_TABLE()
+	virtual ~SLTipWindow();
+        
+	virtual int FilterEvent(wxEvent&);
+	
+private:
+	bool isMouseEvent(wxEvent&);
+	
+private:
+	wxWindow* parentWindow;
+	bool isHookInstalled;
+	time_t creationTime;
+	
+private:
+	const int MOTION_DETECTION_DELAY = 1;
 };
 
 #endif
