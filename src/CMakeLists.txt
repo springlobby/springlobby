@@ -194,6 +194,7 @@ set(springlobbySrc
 	gui/singleplayertab.cpp
 	gui/selectusersdialog.cpp
 	gui/taskbar.cpp
+	gui/textentrydialog.cpp
 	gui/ui.cpp
 	gui/wxtextctrlhist.cpp
 
