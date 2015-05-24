@@ -1,5 +1,9 @@
 ChangeLog of Springlobby
 
+## 0.222
+ - fix crash when going to tools/download archives
+ - (try to) fix bug: tipwindow consumes first mouse events
+
 ## 0.221
  - fix crash when going into edit/preferences
 
