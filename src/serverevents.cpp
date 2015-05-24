@@ -458,7 +458,9 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 					}
 				}
 			} else if (key.Left(8) == _T("hosttype")) {
-				battle.m_autohost_manager->RecognizeAutohost(value);
+				if(battle.m_autohost_manager->RecognizeAutohost(value) == true) {
+					battle.m_autohost_manager->Configure();
+				}
 			} else {
 				battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::EngineOption);
 				battle.Update(stdprintf("%d_%s", LSL::Enum::EngineOption, STD_STRING(key).c_str()));

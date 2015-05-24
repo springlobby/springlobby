@@ -8,6 +8,7 @@
 #include "user.h"
 #include "gui/mainwindow.h"
 #include "utils/conversion.h"
+#include "autohost.h"
 
 AutohostHandler::AutohostHandler()
     : m_battle(0)
@@ -20,12 +21,23 @@ AutohostHandler::~AutohostHandler()
 
 void AutohostHandler::Send(const std::string& cmd)
 {
+	if(m_battle == nullptr) {
+		return;
+	}
 	m_battle->Say(cmd);
 }
 
 void AutohostHandler::SayFounder(const std::string& cmd)
 {
+	if(m_battle == nullptr) {
+		return;
+	}
 	m_battle->GetFounder().Say(cmd);
+}
+
+void AutohostHandler::SetBattle(IBattle* battle)
+{
+	m_battle = battle;
 }
 
 //========================
@@ -170,6 +182,11 @@ bool AutohostManager::RecognizeAutohost(const std::string& type)
 	wxLogMessage(_T("Unknown autohost: %s"), type.c_str());
 	m_type = AutohostManager::AUTOHOSTTYPE_UNKNOWN;
 	return false;
+}
+
+void AutohostManager::Configure()
+{
+	GetAutohostHandler().SetBattle(m_battle);
 }
 
 AutohostManager::AutohostType AutohostManager::GetAutohostType()

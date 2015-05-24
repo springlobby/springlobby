@@ -20,12 +20,13 @@ public:
 	virtual void AddStartBox(int /*posx*/, int /*posy*/, int /*w*/, int /*h*/){};
 	virtual void Notify(){};
 	virtual void Start(){};
-
+	void SetBattle(IBattle* battle);
+	
 protected:
 	virtual void Send(const std::string& /*cmd*/);
 	virtual void SayFounder(const std::string& /*cmd*/);
+	
 private:
-	void SetBattle(IBattle* battle);
 	IBattle* m_battle;
 
 
@@ -76,7 +77,7 @@ public:
 	~AutohostManager();
 
 	void SetBattle(IBattle* bt);
-
+	void Configure();
 	bool RecognizeAutohost(const std::string& type);
 
 	AutohostType GetAutohostType();
