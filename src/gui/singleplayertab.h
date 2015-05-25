@@ -32,6 +32,7 @@ public:
 	void UpdateMinimap();
 	void ReloadMaplist();
 	void ReloadModlist();
+	void ReloadEngineList();
 	void UpdatePresetList();
 
 	IBattle& GetBattle()
@@ -43,6 +44,7 @@ public:
 
 	void OnMapSelect(wxCommandEvent& event);
 	void OnModSelect(wxCommandEvent& event);
+	void OnEngineSelect(wxCommandEvent& event);
 	void OnMapBrowse(wxCommandEvent& event);
 	void OnAddBot(wxCommandEvent& event);
 	void OnStart(wxCommandEvent& event);
@@ -56,6 +58,7 @@ public:
 
 	void SetMap(unsigned int index);
 	void SetMod(unsigned int index);
+	void SetEngine(unsigned int index);
 
 private:
 	wxBoxSizer* m_main_sizer;
@@ -64,6 +67,7 @@ private:
 	MapCtrl* m_minimap;
 	wxChoice* m_map_pick;
 	wxChoice* m_mod_pick;
+	wxChoice* m_engine_pic;
 	wxStaticText* m_map_lbl;
 	wxStaticText* m_mod_lbl;
 	wxButton* m_select_btn;
@@ -81,6 +85,7 @@ private:
 	enum {
 		SP_MAP_PICK = wxID_HIGHEST,
 		SP_MOD_PICK,
+		SP_ENGINE_PICK,
 		SP_BROWSE_MAP,
 		SP_ADD_BOT,
 		SP_RESET,
