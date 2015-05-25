@@ -8,7 +8,6 @@
 #include "user.h"
 #include "gui/mainwindow.h"
 #include "utils/conversion.h"
-#include "autohost.h"
 
 AutohostHandler::AutohostHandler()
     : m_battle(0)
@@ -172,10 +171,12 @@ bool AutohostManager::RecognizeAutohost(const std::string& type)
 {
 	if (type == "SPRINGIE") {
 		m_type = AutohostManager::AUTOHOSTTYPE_SPRINGIE;
+		Configure();
 		return true;
 	}
 	if (type == "SPADS") {
 		m_type = AutohostManager::AUTOHOSTTYPE_SPADS;
+		Configure();
 		return true;
 	}
 
