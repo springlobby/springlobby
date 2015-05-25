@@ -32,6 +32,7 @@ public:
 	void UpdateMinimap();
 	void ReloadMaplist();
 	void ReloadModlist();
+	void ReloadEngineList();
 	void UpdatePresetList();
 
 	IBattle& GetBattle()
