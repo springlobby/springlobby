@@ -8,7 +8,6 @@
 #include "user.h"
 #include "gui/mainwindow.h"
 #include "utils/conversion.h"
-#include "autohost.h"
 
 AutohostHandler::AutohostHandler()
     : m_battle(0)
