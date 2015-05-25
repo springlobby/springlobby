@@ -227,7 +227,7 @@ void SinglePlayerTab::ReloadEngineList()
                 m_engine_pic->SetSelection(0);
         }
         //unitsync change needs a refresh of games as well
-        ReloadModList();
+	ReloadModlist();
 }
 
 void SinglePlayerTab::SetMap(unsigned int index)
