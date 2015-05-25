@@ -66,7 +66,7 @@ private:
 	MapCtrl* m_minimap;
 	wxChoice* m_map_pick;
 	wxChoice* m_mod_pick;
-	wxChoice* m_eng_pick;
+	wxChoice* m_engine_pic;
 	wxStaticText* m_map_lbl;
 	wxStaticText* m_mod_lbl;
 	wxButton* m_select_btn;
