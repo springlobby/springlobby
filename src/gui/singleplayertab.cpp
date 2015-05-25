@@ -38,6 +38,7 @@ BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
 EVT_CHOICE(SP_MAP_PICK, SinglePlayerTab::OnMapSelect)
 EVT_CHOICE(SP_MOD_PICK, SinglePlayerTab::OnModSelect)
+EVT_CHOICE(SP_ENGINE_PICK, SinglePlayerTab::OnEngineSelect)
 EVT_BUTTON(SP_BROWSE_MAP, SinglePlayerTab::OnMapBrowse)
 EVT_BUTTON(SP_ADD_BOT, SinglePlayerTab::OnAddBot)
 EVT_BUTTON(SP_RESET, SinglePlayerTab::OnReset)
@@ -117,6 +118,15 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	m_mod_pick = new wxChoice(this, SP_MOD_PICK);
 	m_ctrl_sizer->Add(m_mod_pick, 1, wxALL, 5);
 
+	m_mod_lbl = new wxStaticText(this, -1, _("Engine:"));
+	m_ctrl_sizer->Add(m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+
+	wxArrayString m_engine_picChoices;
+	wxBoxSizer* mod_choice_button_sizer2 = new wxBoxSizer(wxHORIZONTAL);
+	m_engine_pic = new wxChoice(m_panel, SP_ENGINE_PICK, wxDefaultPosition, wxDefaultSize, m_engine_picChoices, 0);
+	m_engine_pic->SetToolTip(_("Select the engine version to play."));
+	mod_choice_button_sizer2->Add(m_engine_pic, 0, wxALL, 5);
+	m_ctrl_sizer->Add(mod_choice_button_sizer2, 0, wxEXPAND | wxALL, 1);
 
 	//  m_ctrl_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
@@ -295,6 +305,12 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 		customMessageBoxNoModal(SL_MAIN_ICON, _("Incompatible bots have been removed after game selection changed."), _("Bots removed"));
 }
 
+void HostBattleDialog::OnEngineSelect(wxCommandEvent& /*event*/)
+{
+	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
+	LSL::usync().ReloadUnitSyncLib();
+	ReloadEngineList();
+}
 
 void SinglePlayerTab::OnMapBrowse(wxCommandEvent& /*unused*/)
 {
