@@ -77,7 +77,6 @@ public:
 	~AutohostManager();
 
 	void SetBattle(IBattle* bt);
-	void Configure();
 	bool RecognizeAutohost(const std::string& type);
 
 	AutohostType GetAutohostType();
@@ -85,6 +84,7 @@ public:
 	AutohostHandler& GetAutohostHandler();
 
 private:
+	void Configure();
 
 	SpringieHandler m_springie;
 	SpadsHandler m_spads;

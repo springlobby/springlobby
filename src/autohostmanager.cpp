@@ -172,10 +172,12 @@ bool AutohostManager::RecognizeAutohost(const std::string& type)
 {
 	if (type == "SPRINGIE") {
 		m_type = AutohostManager::AUTOHOSTTYPE_SPRINGIE;
+		Configure();
 		return true;
 	}
 	if (type == "SPADS") {
 		m_type = AutohostManager::AUTOHOSTTYPE_SPADS;
+		Configure();
 		return true;
 	}
 
