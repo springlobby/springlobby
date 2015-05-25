@@ -123,7 +123,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 
 	wxArrayString m_engine_picChoices;
 	wxBoxSizer* mod_choice_button_sizer2 = new wxBoxSizer(wxHORIZONTAL);
-	m_engine_pic = new wxChoice(m_panel, SP_ENGINE_PICK, wxDefaultPosition, wxDefaultSize, m_engine_picChoices, 0);
+	m_engine_pic = new wxChoice(this, SP_ENGINE_PICK, wxDefaultPosition, wxDefaultSize, m_engine_picChoices, 0);
 	m_engine_pic->SetToolTip(_("Select the engine version to play."));
 	mod_choice_button_sizer2->Add(m_engine_pic, 0, wxALL, 5);
 	m_ctrl_sizer->Add(mod_choice_button_sizer2, 0, wxEXPAND | wxALL, 1);
@@ -305,7 +305,7 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 		customMessageBoxNoModal(SL_MAIN_ICON, _("Incompatible bots have been removed after game selection changed."), _("Bots removed"));
 }
 
-void HostBattleDialog::OnEngineSelect(wxCommandEvent& /*event*/)
+void SinglePlayerTab::OnEngineSelect(wxCommandEvent& /*event*/)
 {
 	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
 	LSL::usync().ReloadUnitSyncLib();
