@@ -1,5 +1,9 @@
 ChangeLog of Springlobby
 
+## 0.233
+ - set focus to text input when prompting
+ - allow to select engine version for singleplayer games
+
 ## 0.222
  - fix crash when going to tools/download archives
  - (try to) fix bug: tipwindow consumes first mouse events
