@@ -328,7 +328,7 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 
 void SinglePlayerTab::OnEngineSelect(wxCommandEvent& /*event*/)
 {
-//	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
+	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
 	LSL::usync().ReloadUnitSyncLib();
 	m_battle.SetEngineName("spring");
 	m_battle.SetEngineVersion(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
