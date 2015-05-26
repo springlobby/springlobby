@@ -35,20 +35,8 @@ public:
 		}
 	}
 
-	// don't remove this override, it is used & needed!
-	virtual void DoLogText(const wxString& msg)
-	{
-		DoLog(2, msg, 0);
-	}
-
-	// don't remove this override, it is used & needed!
-	virtual void DoLogString(const wxChar* msg, time_t timestamp)
-	{
-		DoLog(2, msg, timestamp);
-	}
-
 	// catch and process all log messages
-	virtual void DoLog(wxLogLevel loglevel, const wxChar* msg, time_t /*time*/)
+	void DoLog(wxLogLevel loglevel, const wxChar* msg, time_t /*time*/) override
 	{
 
 		if (gui && (loglevel == wxLOG_Error || loglevel == wxLOG_FatalError)) // show user only errors
