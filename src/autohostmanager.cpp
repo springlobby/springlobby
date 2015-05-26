@@ -20,7 +20,7 @@ AutohostHandler::~AutohostHandler()
 
 void AutohostHandler::Send(const std::string& cmd)
 {
-	if(m_battle == nullptr) {
+	if (m_battle == nullptr) {
 		return;
 	}
 	m_battle->Say(cmd);
@@ -28,7 +28,7 @@ void AutohostHandler::Send(const std::string& cmd)
 
 void AutohostHandler::SayFounder(const std::string& cmd)
 {
-	if(m_battle == nullptr) {
+	if (m_battle == nullptr) {
 		return;
 	}
 	m_battle->GetFounder().Say(cmd);

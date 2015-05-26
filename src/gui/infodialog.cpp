@@ -95,4 +95,3 @@ InfoDialog::InfoDialog(wxWindow* parent)
 InfoDialog::~InfoDialog()
 {
 }
-

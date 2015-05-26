@@ -12,6 +12,7 @@ public:
 	virtual ~TextEntryDialog();
 	void SetValue(const wxString& value);
 	const wxString GetValue();
+
 private:
 	wxTextCtrl* input;
 };

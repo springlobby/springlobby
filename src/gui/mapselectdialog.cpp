@@ -156,7 +156,6 @@ MapSelectDialog::~MapSelectDialog()
 
 	if (IsShown())
 		EndModal(0);
-
 }
 
 

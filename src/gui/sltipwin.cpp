@@ -7,11 +7,12 @@
 #if wxUSE_TIPWINDOW
 
 SLTipWindow::SLTipWindow(wxWindow* parent, const wxString& text)
-    : wxTipWindow(parent, text), wxEventFilter()
+    : wxTipWindow(parent, text)
+    , wxEventFilter()
 {
 	parentWindow = parent;
 	creationTime = wxDateTime::GetTimeNow();
-	
+
 	//Register event hook
 	wxEvtHandler::AddFilter(this);
 	isHookInstalled = true;
@@ -19,7 +20,7 @@ SLTipWindow::SLTipWindow(wxWindow* parent, const wxString& text)
 
 SLTipWindow::~SLTipWindow()
 {
-	if( isHookInstalled == true ) {
+	if (isHookInstalled == true) {
 		wxEvtHandler::RemoveFilter(this);
 		isHookInstalled = false;
 	}
@@ -29,15 +30,15 @@ SLTipWindow::~SLTipWindow()
 int SLTipWindow::FilterEvent(wxEvent& hookedEvent)
 {
 	//Only mouse events are in interest
-	if( isMouseEvent(hookedEvent) == true ) {
+	if (isMouseEvent(hookedEvent) == true) {
 		//Remove hook before proceed, prevents deadlock
 		wxEvtHandler::RemoveFilter(this);
 		isHookInstalled = false;
-		
+
 		//Send event to parent control
 		wxEvent* clonedEvent = hookedEvent.Clone();
 		parentWindow->GetEventHandler()->QueueEvent(clonedEvent);
-		
+
 		//Close tip window
 		Close();
 		return Event_Processed;
@@ -50,22 +51,21 @@ int SLTipWindow::FilterEvent(wxEvent& hookedEvent)
 bool SLTipWindow::isMouseEvent(wxEvent& hookedEvent)
 {
 	wxEventType et = hookedEvent.GetEventType();
-	
+
 	//Check for almost all possible mouse events
-	if( et == wxEVT_LEFT_DOWN ||
-		et == wxEVT_RIGHT_DOWN ||
-		et == wxEVT_MIDDLE_DOWN ||
-		et == wxEVT_LEFT_DCLICK ||
-		et == wxEVT_RIGHT_DCLICK ||
-		et == wxEVT_MIDDLE_DCLICK ||
-		et == wxEVT_MOUSEWHEEL )
-	{
+	if (et == wxEVT_LEFT_DOWN ||
+	    et == wxEVT_RIGHT_DOWN ||
+	    et == wxEVT_MIDDLE_DOWN ||
+	    et == wxEVT_LEFT_DCLICK ||
+	    et == wxEVT_RIGHT_DCLICK ||
+	    et == wxEVT_MIDDLE_DCLICK ||
+	    et == wxEVT_MOUSEWHEEL) {
 		return true;
 	}
-	
+
 	//Detect mouse motion only after some delay
-	if( wxDateTime::GetTimeNow() - creationTime >= MOTION_DETECTION_DELAY ) {
-		if( et == wxEVT_MOTION ) {
+	if (wxDateTime::GetTimeNow() - creationTime >= MOTION_DETECTION_DELAY) {
+		if (et == wxEVT_MOTION) {
 			return true;
 		}
 	}

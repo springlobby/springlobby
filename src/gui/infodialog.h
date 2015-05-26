@@ -12,6 +12,7 @@ class InfoDialog : public wxDialog
 public:
 	InfoDialog(wxWindow* parent);
 	virtual ~InfoDialog();
+
 private:
 	wxBoxSizer* m_main_sizer;
 };

@@ -211,22 +211,22 @@ void SinglePlayerTab::ReloadModlist()
 
 void SinglePlayerTab::ReloadEngineList()
 {
-        m_engine_pic->Clear();
-        std::map<std::string, LSL::SpringBundle> versions = SlPaths::GetSpringVersionList();
-        const std::string last = SlPaths::GetCurrentUsedSpringIndex();
-        int i = 0;
-        for (auto pair : versions) {
-                m_engine_pic->Insert(TowxString(pair.first), i);
-                if (last == pair.first) {
-                        m_engine_pic->SetSelection(i);
-                }
-                i++;
-        }
+	m_engine_pic->Clear();
+	std::map<std::string, LSL::SpringBundle> versions = SlPaths::GetSpringVersionList();
+	const std::string last = SlPaths::GetCurrentUsedSpringIndex();
+	int i = 0;
+	for (auto pair : versions) {
+		m_engine_pic->Insert(TowxString(pair.first), i);
+		if (last == pair.first) {
+			m_engine_pic->SetSelection(i);
+		}
+		i++;
+	}
 
-        if (m_engine_pic->GetSelection() == wxNOT_FOUND) {
-                m_engine_pic->SetSelection(0);
-        }
-        //unitsync change needs a refresh of games as well
+	if (m_engine_pic->GetSelection() == wxNOT_FOUND) {
+		m_engine_pic->SetSelection(0);
+	}
+	//unitsync change needs a refresh of games as well
 	ReloadModlist();
 }
 

@@ -953,7 +953,7 @@ void TASServer::RelayCmd(const std::string& command, const std::string& param)
 	}
 	wxString msg = _T("!") + TowxString(command).Lower(); // prefix commands with !
 	if (!param.empty()) {
-		msg += + _T(" ") + TowxString(param);
+		msg += _T(" ") + TowxString(param);
 	}
 	SayPrivate(m_relay_host_bot, STD_STRING(msg));
 }
@@ -1992,19 +1992,19 @@ IBattle::GameType IntToGameType(int gt)
 }
 
 // send script.txt to relayhost
-void TASServer::SendScriptToProxy( const std::string& script )
+void TASServer::SendScriptToProxy(const std::string& script)
 {
 	LSL::StringVector strings = LSL::Util::StringTokenize(script, "\n");
 	int relaylenghtprefix = 10 + 1 + m_relay_host_bot.length() + 2; // SAYPRIVATE + space + botname + space + exclamation mark lenght
 	int lenght = script.size();
-	lenght += relaylenghtprefix + 11 + 1; // CLEANSCRIPT command size
-	lenght += strings.size() * ( relaylenghtprefix + 16 + 1 ); // num lines * APPENDSCRIPTLINE + space command size ( \n is already counted in script.size)
-	lenght += relaylenghtprefix + 9 + 1; // STARTGAME command size
-	const int time = lenght / m_sock->GetSendRateLimit(); // calculate time in seconds to upload script
-	DoActionBattle( m_battle_id, stdprintf("is preparing to start the game, game will start in approximately %d seconds",time));
+	lenght += relaylenghtprefix + 11 + 1;			 // CLEANSCRIPT command size
+	lenght += strings.size() * (relaylenghtprefix + 16 + 1); // num lines * APPENDSCRIPTLINE + space command size ( \n is already counted in script.size)
+	lenght += relaylenghtprefix + 9 + 1;			 // STARTGAME command size
+	const int time = lenght / m_sock->GetSendRateLimit();    // calculate time in seconds to upload script
+	DoActionBattle(m_battle_id, stdprintf("is preparing to start the game, game will start in approximately %d seconds", time));
 	RelayCmd("CLEANSCRIPT");
 
-	for (const std::string& line: strings) {
+	for (const std::string& line : strings) {
 		RelayCmd("APPENDSCRIPTLINE", line);
 	}
 	RelayCmd("STARTGAME");

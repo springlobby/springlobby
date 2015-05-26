@@ -21,11 +21,11 @@ public:
 	virtual void Notify(){};
 	virtual void Start(){};
 	void SetBattle(IBattle* battle);
-	
+
 protected:
 	virtual void Send(const std::string& /*cmd*/);
 	virtual void SayFounder(const std::string& /*cmd*/);
-	
+
 private:
 	IBattle* m_battle;
 

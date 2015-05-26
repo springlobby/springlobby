@@ -119,7 +119,7 @@ public:
 
 	virtual void ExecuteCommand(const std::string& in);
 
-	void SendScriptToProxy( const std::string& script ) override;
+	void SendScriptToProxy(const std::string& script) override;
 
 private:
 	void SendUdpSourcePort(int udpport);

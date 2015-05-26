@@ -6,7 +6,7 @@
 #include <wx/textctrl.h>
 
 TextEntryDialog::TextEntryDialog(wxWindow* parent, const wxString& title, const wxString& heading, const wxString& answer, bool multiline)
-	    : wxDialog(parent, -1, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+    : wxDialog(parent, -1, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
 	wxStaticText* text = new wxStaticText(this, -1, heading);
 	long inputstyle = 0;
@@ -38,5 +38,3 @@ const wxString TextEntryDialog::GetValue()
 {
 	return input->GetValue();
 }
-
-

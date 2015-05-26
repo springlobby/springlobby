@@ -420,17 +420,17 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 
 	switch (vec.size()) {
 		case 3: { // depth 3
-			if (param.find("game/mapoptions") == 0 ) {
+			if (param.find("game/mapoptions") == 0) {
 				battle.CustomBattleOptions().setSingleOption(vec[2], value, LSL::Enum::MapOption);
 				battle.Update(stdprintf("%d_%s", LSL::Enum::MapOption, vec[2].c_str()));
 				return;
 			}
-			if (param.find("game/modoptions/") == 0 ) {
+			if (param.find("game/modoptions/") == 0) {
 				battle.CustomBattleOptions().setSingleOption(vec[2], value, LSL::Enum::ModOption);
 				battle.Update(stdprintf("%d_%s", LSL::Enum::ModOption, vec[2].c_str()));
 				return;
 			}
-			if (param.find("game/restrict") == 0 ) {
+			if (param.find("game/restrict") == 0) {
 				OnBattleDisableUnit(battleid, vec[2], LSL::Util::FromString<int>(value));
 				return;
 			}
@@ -463,7 +463,7 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 		case 4: { //depth 4
 			if (param.find("game/players/") == 0) {
 				if (vec[3] == "skill") {
-					const std::string nick = vec[2] ;
+					const std::string nick = vec[2];
 					double skill;
 					if (parseSkill(value, skill)) {
 						battle.OnPlayerTrueskillChanged(nick, skill); //(std::string& nickname, double trueskill_value)
@@ -488,7 +488,7 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 			battle.Update(stdprintf("%d_%s", LSL::Enum::EngineOption, vec[1].c_str()));
 			return;
 		}
-/*
+			/*
 		//seems unused
 		case 1: { //depth 1
 			battle.CustomBattleOptions().setSingleOption(vec[0], value, LSL::Enum::EngineOption);
