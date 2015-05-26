@@ -434,7 +434,7 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 				OnBattleDisableUnit(battleid, vec[2], LSL::Util::FromString<int>(value));
 				return;
 			}
-			if (vec[0] == "game") { //game/team0/startposx=1692.
+			if (param.find("game/") == 0) { //game/team0/startposx=1692.
 				int team = -1;
 				if (parseTeam(vec[1], team)) {
 					const bool xpos = vec[2] == "startposx";
