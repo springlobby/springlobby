@@ -328,8 +328,10 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 
 void SinglePlayerTab::OnEngineSelect(wxCommandEvent& /*event*/)
 {
-	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
+//	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
 	LSL::usync().ReloadUnitSyncLib();
+	m_battle.SetEngineName("spring");
+	m_battle.SetEngineVersion(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
 	ReloadEngineList();
 }
 
@@ -387,9 +389,6 @@ void SinglePlayerTab::OnStart(wxCommandEvent& /*unused*/)
 		customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION);
 		return;
 	}
-
-	m_battle.SetEngineName("spring");
-	m_battle.SetEngineVersion(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection()))); //FIXME: make engine version selectable
 
 	if (ValidSetup())
 		m_battle.StartSpring();
