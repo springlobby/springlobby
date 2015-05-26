@@ -405,67 +405,99 @@ static bool parseSkill(const std::string& value, double& result)
 	return false;
 }
 
+static bool parseTeam(const std::string& value, int& result)
+{
+	const int res = sscanf(value.c_str(), "team%d", &result);
+	return res == 1;
+}
+
 void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const std::string& value)
 {
 	slLogDebugFunc("%s, %s", param.c_str(), value.c_str());
-	try {
-		IBattle& battle = m_serv.GetBattle(battleid);
-		battle.m_script_tags[param] = value;
-		wxString key = TowxString(param);
-		if (key.Left(5) == _T("game/")) {
-			key = key.AfterFirst('/');
-			if (key.Left(11) == _T( "mapoptions/" )) {
-				key = key.AfterFirst('/');
-				battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::MapOption);
-				battle.Update(stdprintf("%d_%s", LSL::Enum::MapOption, STD_STRING(key).c_str()));
-				//Player's TrueSkill changed
-			} else if (key.Left(8) == _T( "players/" )) {
-				wxString nickName = key.AfterFirst('/').BeforeFirst('/');
-				wxString playerParam = key.AfterFirst('/').AfterFirst('/');
-				if (playerParam == _T("skill")) {
+	IBattle& battle = m_serv.GetBattle(battleid);
+	battle.m_script_tags[param] = value;
+	const LSL::StringVector vec = LSL::Util::StringTokenize(param, "/"); //split string by slash
+
+	switch (vec.size()) {
+		case 3: { // depth 3
+			if (param.find("game/mapoptions") == 0 ) {
+				battle.CustomBattleOptions().setSingleOption(vec[2], value, LSL::Enum::MapOption);
+				battle.Update(stdprintf("%d_%s", LSL::Enum::MapOption, vec[2].c_str()));
+				return;
+			}
+			if (param.find("game/modoptions/") == 0 ) {
+				battle.CustomBattleOptions().setSingleOption(vec[2], value, LSL::Enum::ModOption);
+				battle.Update(stdprintf("%d_%s", LSL::Enum::ModOption, vec[2].c_str()));
+				return;
+			}
+			if (param.find("game/restrict") == 0 ) {
+				OnBattleDisableUnit(battleid, vec[2], LSL::Util::FromString<int>(value));
+				return;
+			}
+			if (vec[0] == "game") { //game/team0/startposx=1692.
+				int team = -1;
+				if (parseTeam(vec[1], team)) {
+					const bool xpos = vec[2] == "startposx";
+					const bool ypos = vec[2] == "startposy";
+					if (xpos || ypos) {
+						int numusers = battle.GetNumUsers();
+						for (int i = 0; i < numusers; i++) {
+							User& usr = battle.GetUser(i);
+							UserBattleStatus& status = usr.BattleStatus();
+							if (status.team == team) {
+								if (xpos) {
+									status.pos.x = LSL::Util::FromString<int>(value);
+								}
+								if (ypos) {
+									status.pos.y = LSL::Util::FromString<int>(value);
+								}
+								battle.OnUserBattleStatusUpdated(usr, status);
+							}
+						}
+						return;
+					}
+				}
+			}
+			break;
+		}
+		case 4: { //depth 4
+			if (param.find("game/players/") == 0) {
+				if (vec[3] == "skill") {
+					const std::string nick = vec[2] ;
 					double skill;
 					if (parseSkill(value, skill)) {
-						battle.OnPlayerTrueskillChanged(STD_STRING(nickName), skill); //(std::string& nickname, double trueskill_value)
+						battle.OnPlayerTrueskillChanged(nick, skill); //(std::string& nickname, double trueskill_value)
 					}
+					return;
 				}
-			} else if (key.Left(11) == _T( "modoptions/" )) {
-				key = key.AfterFirst('/');
-				battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::ModOption);
-				battle.Update(stdprintf("%d_%s", LSL::Enum::ModOption, STD_STRING(key).c_str()));
-			} else if (key.Left(8) == _T( "restrict" )) {
-				OnBattleDisableUnit(battleid, STD_STRING(key.AfterFirst(_T('/'))), LSL::Util::FromString<int>(value));
-			} else if (key.Left(4) == _T( "team" ) && key.Find(_T("startpos")) != wxNOT_FOUND) {
-				int team = FromwxString(key.BeforeFirst(_T('/')).Mid(4));
-				if (key.Find(_T("startposx")) != wxNOT_FOUND) {
-					int numusers = battle.GetNumUsers();
-					for (int i = 0; i < numusers; i++) {
-						User& usr = battle.GetUser(i);
-						UserBattleStatus& status = usr.BattleStatus();
-						if (status.team == team) {
-							status.pos.x = LSL::Util::FromString<int>(value);
-							battle.OnUserBattleStatusUpdated(usr, status);
-						}
-					}
-				} else if (key.Find(_T("startposy")) != wxNOT_FOUND) {
-					int numusers = battle.GetNumUsers();
-					for (int i = 0; i < numusers; i++) {
-						User& usr = battle.GetUser(i);
-						UserBattleStatus& status = usr.BattleStatus();
-						if (status.team == team) {
-							status.pos.y = LSL::Util::FromString<int>(value);
-							battle.OnUserBattleStatusUpdated(usr, status);
-						}
-					}
+				if (vec[3] == "skilluncertainty") { //this is ignored
+					return;
 				}
-			} else if (key.Left(8) == _T("hosttype")) {
-				battle.m_autohost_manager->RecognizeAutohost(value);
-			} else {
-				battle.CustomBattleOptions().setSingleOption(STD_STRING(key), value, LSL::Enum::EngineOption);
-				battle.Update(stdprintf("%d_%s", LSL::Enum::EngineOption, STD_STRING(key).c_str()));
 			}
+			break;
 		}
-	} catch (assert_exception) {
+		case 2: { //depth 2
+			if (param == "game/hosttype") {
+				if (battle.m_autohost_manager->RecognizeAutohost(value)) {
+					OnSaidBattle(battleid, battle.GetMe().GetNick(), stdprintf("detected %s autohost", value.c_str())); //FIXME: add event for that + add a label?!
+				}
+				return;
+			}
+			// i.e. game/startpostype
+			battle.CustomBattleOptions().setSingleOption(vec[1], value);
+			battle.Update(stdprintf("%d_%s", LSL::Enum::EngineOption, vec[1].c_str()));
+			return;
+		}
+/*
+		//seems unused
+		case 1: { //depth 1
+			battle.CustomBattleOptions().setSingleOption(vec[0], value, LSL::Enum::EngineOption);
+			battle.Update(stdprintf("%d_%s", LSL::Enum::EngineOption, vec[0].c_str()));
+			return;
+		}
+*/
 	}
+	wxLogWarning("Unhandled SETSCRIPTTAGS: %s=%s", param.c_str(), value.c_str());
 }
 
 void ServerEvents::OnUnsetBattleInfo(int /*battleid*/, const std::string& /*param*/)
