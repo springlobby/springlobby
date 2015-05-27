@@ -1338,11 +1338,10 @@ void TASServer::SendHostInfo(HostInfo update)
 
 	if ((update & (IBattle::HI_Map | IBattle::HI_Locked | IBattle::HI_Spectators)) > 0) {
 		// UPDATEBATTLEINFO Spectatorsize locked maphash {mapname}
-		wxString cmd = wxString::Format(_T("%d %d "), battle.GetSpectators(), battle.IsLocked());
-		cmd += TowxString(LSL::Util::MakeHashSigned(battle.LoadMap().hash) + " ");
-		cmd += TowxString(battle.LoadMap().name);
+		std::string cmd = stdprintf("%d %d %s %s", battle.GetSpectators(), battle.IsLocked(),
+				LSL::Util::MakeHashSigned(battle.LoadMap().hash).c_str(), battle.LoadMap().name.c_str());
 
-		SendCmd("UPDATEBATTLEINFO", STD_STRING(cmd), battle.IsProxy());
+		SendCmd("UPDATEBATTLEINFO", cmd, battle.IsProxy());
 	}
 	if ((update & IBattle::HI_Send_All_opts) > 0) {
 		std::string cmd;
