@@ -6,7 +6,9 @@
 #include <stdio.h>
 #include "utils/lslconversion.h"
 #include <lslutils/misc.h>
+#include <lslutils/conversion.h>
 #include "user.h"
+#include "utils/conversion.h"
 #include <wx/colour.h>
 
 
@@ -166,3 +168,20 @@ BOOST_AUTO_TEST_CASE(userstatus)
 	us.bot = true;
 	BOOST_CHECK(us == UserStatus::FromInt(UserStatus::ToInt(us)));
 }
+
+BOOST_AUTO_TEST_CASE(hashes)
+{
+	const int negative = -2147483648;
+	const unsigned int overflow = 2232970410; //this
+
+	BOOST_CHECK(stdprintf("%d", overflow) == LSL::Util::MakeHashSigned(LSL::Util::ToString(overflow)));
+	BOOST_CHECK(stdprintf("%d", negative) == LSL::Util::MakeHashSigned(LSL::Util::ToString(negative)));
+
+	BOOST_CHECK(stdprintf("%u", overflow) == LSL::Util::MakeHashUnsigned(LSL::Util::ToString(overflow)));
+	BOOST_CHECK(stdprintf("%u", negative) == LSL::Util::MakeHashUnsigned(LSL::Util::ToString(negative)));
+
+	BOOST_CHECK(stdprintf("%u", overflow) == LSL::Util::MakeHashUnsigned(stdprintf("%d", overflow)));
+	BOOST_CHECK(stdprintf("%u", negative) == LSL::Util::MakeHashUnsigned(stdprintf("%d", negative)));
+
+}
+
