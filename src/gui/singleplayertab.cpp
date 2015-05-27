@@ -156,13 +156,17 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 
 	m_main_sizer->Add(m_buttons_sizer, 0, wxEXPAND, 5);
 
-	this->SetSizer(m_main_sizer);
-	this->Layout();
+	m_battle.SetEngineName("spring");
+	m_battle.SetEngineVersion(SlPaths::GetCurrentUsedSpringIndex());
 
 	ReloadMaplist();
 	ReloadModlist();
 	ReloadEngineList();
 	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&SinglePlayerTab::OnUnitsyncReloaded));
+
+	this->SetSizer(m_main_sizer);
+	this->Layout();
+
 }
 
 
@@ -330,7 +334,6 @@ void SinglePlayerTab::OnEngineSelect(wxCommandEvent& /*event*/)
 {
 	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
 	LSL::usync().ReloadUnitSyncLib();
-	m_battle.SetEngineName("spring");
 	m_battle.SetEngineVersion(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
 	ReloadEngineList();
 }
@@ -423,40 +426,6 @@ void SinglePlayerTab::OnColorButton(wxCommandEvent& /*unused*/)
 	m_battle.ForceColour(u, wxColourTolsl(CurrentColour));
 	UpdateMinimap();
 }
-/*
-void SinglePlayerTab::UpdateTag( const wxString& Tag )
-{
-    long type;
-    Tag.BeforeFirst( '_' ).ToLong( &type );
-    const wxString key = Tag.AfterFirst( '_' );
-    if ( type == LSL::OptionsWrapper::PrivateOptions ) {
-        if ( key == _T("mapname") ) {
-            m_addbot_btn->Enable( false );
-            try
-            {
-                m_map_pick->SetSelection(LSL::usync().GetMapIndex(m_battle.GetHostMapName()));
-                UpdateMinimap();
-                m_addbot_btn->Enable( true );
-            }
-            catch (...) {}
-        }
-        else if ( key == _T("modname") ) {
-            try
-            {
-//                int pln = m_battle.GetNumUsers();
-//                int botn = m_battle.GetNumBots();
-                UpdateMinimap();
-//                pln -= m_battle.GetNumUsers();
-//                botn -= m_battle.GetNumBots();
-//                assert( pln == 0 );
-//                assert( botn == 0 );
-
-            }
-            catch (...) {}
-        }
-    }
-}
-*/
 
 void SinglePlayerTab::UpdatePresetList()
 {
