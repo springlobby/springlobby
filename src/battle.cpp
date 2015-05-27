@@ -20,7 +20,6 @@
 #include "utils/conversion.h"
 #include "utils/uievents.h"
 #include "utils/battleevents.h"
-#include "utils/slpaths.h"
 #include "gui/uiutils.h"
 #include "settings.h"
 #include "useractions.h"
