@@ -593,18 +593,6 @@ void Battle::StartHostedBattle()
 				if (UserExists(GetProxy()) && !GetUser(GetProxy()).Status().in_game) {
 					// DON'T set m_generating_script here, it will trick the script generating code to think we're the host
 					wxString hostscript = spring().WriteScriptTxt(*this);
-					try {
-						wxString path = TowxString(SlPaths::GetDataDir()) + _T("relayhost_script.txt");
-						if (!wxFile::Access(path, wxFile::write)) {
-							wxLogError(_T("Access denied to script.txt."));
-						}
-
-						wxFile f(path, wxFile::write);
-						f.Write(hostscript);
-						f.Close();
-
-					} catch (...) {
-					}
 					m_serv.SendScriptToProxy(STD_STRING(hostscript));
 				}
 			}
