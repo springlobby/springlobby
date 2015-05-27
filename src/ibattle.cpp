@@ -65,19 +65,31 @@ bool IBattle::IsSynced()
 {
 	LoadMod();
 	LoadMap();
-	bool synced = true;
-	if (!m_host_map.hash.empty() && m_host_map.hash != "0" && m_host_map.hash != m_local_map.hash) {
-		synced = false;
-	} else if (!m_host_map.name.empty() && m_local_map.name != m_host_map.name) {
-		synced = false;
-	} else if (!m_host_mod.hash.empty() && m_host_mod.hash != "0" && m_host_mod.hash != m_local_mod.hash) {
-		synced = false;
-	} else if (!m_host_mod.name.empty() && m_local_mod.name != m_host_mod.name) {
-		synced = false;
-	} else if (!MapExists() || !ModExists()) {
-		synced = false;
+	if (!m_host_mod.name.empty() && m_local_mod.name != m_host_mod.name) {
+		wxLogWarning("Not synced: game name doesn't match: %s %s", m_host_mod.name.c_str(), m_local_mod.name.c_str());
+		return false;
 	}
-	return synced;
+	if (!m_host_map.name.empty() && m_local_map.name != m_host_map.name) {
+		wxLogWarning("Not synced: map name doesn't match: %s %s", m_host_map.name.c_str(), m_local_map.name.c_str());
+		return false;
+	}
+	if (!m_host_mod.hash.empty() && m_host_mod.hash != "0" && m_host_mod.hash != m_local_mod.hash) {
+		wxLogWarning("Not synced: game hash doesn't match: %s %s", m_host_mod.hash.c_str(), m_host_mod.hash.c_str());
+		return false;
+	}
+	if (!m_host_map.hash.empty() && m_host_map.hash != "0" && m_host_map.hash != m_local_map.hash) {
+		wxLogWarning("Not synced: map hash doesn't match: %s %s", m_host_map.hash.c_str(), m_local_map.hash.c_str());
+		return false;
+	}
+	if (!ModExists()) {
+		wxLogWarning("Not synced: game doesn't exist: %s %s", m_host_mod.name.c_str());
+		return false;
+	}
+	if (!MapExists()) {
+		wxLogWarning("Not synced: map doesn't exist: %s %s", m_host_map.name.c_str());
+		return false;
+	}
+	return true;
 }
 
 std::vector<LSL::lslColor>& IBattle::GetFixColoursPalette(int numteams) const
