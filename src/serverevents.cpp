@@ -484,7 +484,7 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 				return;
 			}
 			// i.e. game/startpostype
-			battle.CustomBattleOptions().setSingleOption(vec[1], value);
+			battle.CustomBattleOptions().setSingleOption(vec[1], value, LSL::Enum::EngineOption);
 			battle.Update(stdprintf("%d_%s", LSL::Enum::EngineOption, vec[1].c_str()));
 			return;
 		}
