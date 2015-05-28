@@ -1,5 +1,8 @@
 ChangeLog of Springlobby
 
+## 0.224
+ - fix startposition type ignored
+
 ## 0.223
  - fix invalid sync check (makes relayhost/hosting work again)
  - set focus to text input when prompting
