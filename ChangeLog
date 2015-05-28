@@ -1,5 +1,8 @@
 ChangeLog of Springlobby
 
+## 0.225
+ - fix start position loading from cache
+
 ## 0.224
  - fix startposition type ignored
 
