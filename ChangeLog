@@ -1,8 +1,9 @@
 ChangeLog of Springlobby
 
-## 0.233
+## 0.223
+ - fix invalid sync check (makes relayhost/hosting work again)
  - set focus to text input when prompting
- - allow to select engine version for singleplayer games
+ - allow to select engine version for singleplayer games (thanks OursDesCavernes!)
 
 ## 0.222
  - fix crash when going to tools/download archives
