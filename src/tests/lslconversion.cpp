@@ -171,17 +171,19 @@ BOOST_AUTO_TEST_CASE(userstatus)
 
 BOOST_AUTO_TEST_CASE(hashes)
 {
-	const int negative = -2147483648;
 	const unsigned int overflow = 2232970410; //this
+	const int negative = -2147483648;
 
-	BOOST_CHECK(stdprintf("%d", overflow) == LSL::Util::MakeHashSigned(LSL::Util::ToString(overflow)));
+	BOOST_CHECK("-2061996886" == LSL::Util::MakeHashSigned(LSL::Util::ToString(overflow)));
 	BOOST_CHECK(stdprintf("%d", negative) == LSL::Util::MakeHashSigned(LSL::Util::ToString(negative)));
 
-	BOOST_CHECK(stdprintf("%u", overflow) == LSL::Util::MakeHashUnsigned(LSL::Util::ToString(overflow)));
+	BOOST_CHECK("2232970410" == LSL::Util::MakeHashUnsigned(LSL::Util::ToString(overflow)));
 	BOOST_CHECK(stdprintf("%u", negative) == LSL::Util::MakeHashUnsigned(LSL::Util::ToString(negative)));
 
-	BOOST_CHECK(stdprintf("%u", overflow) == LSL::Util::MakeHashUnsigned(stdprintf("%d", overflow)));
+	BOOST_CHECK("2232970410" == LSL::Util::MakeHashUnsigned(stdprintf("%d", overflow)));
 	BOOST_CHECK(stdprintf("%u", negative) == LSL::Util::MakeHashUnsigned(stdprintf("%d", negative)));
 
+	BOOST_CHECK("2232970410" == LSL::Util::MakeHashUnsigned(stdprintf("%u", overflow)));
+	BOOST_CHECK("2147483648" == LSL::Util::MakeHashUnsigned(stdprintf("%u", negative)));
 }
 
