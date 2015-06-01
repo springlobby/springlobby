@@ -1202,7 +1202,7 @@ void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 	slLogDebugFunc("");
 
 	int nat_type = bo.nattype;
-	if(bo.userelayhost){
+	if(bo.userelayhost){ // FIXME: relayhost should ignore this
 		nat_type=1;
 	}
 	std::string cmd = stdprintf("0 %d ", nat_type);
