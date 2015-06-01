@@ -1201,13 +1201,10 @@ void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 {
 	slLogDebugFunc("");
 
-	// to see ip addresses of users as they join (in the log), pretend you're hosting with NAT.
 	int nat_type = bo.nattype;
-	/*
-	if(nat_type==0 && sett().GetShowIPAddresses()){
-	nat_type=1;
-	}*/
-	wxLogMessage(_T("hosting with nat type %d"), nat_type);
+	if(bo.userelayhost){
+		nat_type=1;
+	}
 	std::string cmd = stdprintf("0 %d ", nat_type);
 	cmd += (password.empty()) ? "*" : password;
 	cmd += stdprintf(" %d %d ", bo.port, bo.maxplayers);
