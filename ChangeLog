@@ -2,6 +2,7 @@ ChangeLog of Springlobby
 
 ## 0.225
  - fix start position loading from cache
+ - fix network timeout when using NAT + relayhost
 
 ## 0.224
  - fix startposition type ignored
