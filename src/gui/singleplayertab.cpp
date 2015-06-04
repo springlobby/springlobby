@@ -121,13 +121,10 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	m_mod_lbl = new wxStaticText(this, -1, _("Engine:"));
 	m_ctrl_sizer->Add(m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
-	wxArrayString m_engine_picChoices;
-	wxBoxSizer* mod_choice_button_sizer2 = new wxBoxSizer(wxHORIZONTAL);
-	m_engine_pic = new wxChoice(this, SP_ENGINE_PICK, wxDefaultPosition, wxDefaultSize, m_engine_picChoices, 0);
-	m_engine_pic->SetToolTip(_("Select the engine version to play."));
-	mod_choice_button_sizer2->Add(m_engine_pic, 0, wxALL, 5);
-	m_ctrl_sizer->Add(mod_choice_button_sizer2, 0, wxEXPAND | wxALL, 1);
-
+	m_engine_pick = new wxChoice(this, SP_ENGINE_PICK);
+	m_engine_pick->SetToolTip(_("Select the engine version to play."));
+	m_ctrl_sizer->Add(m_engine_pick, 1, wxALL, 5);
+	
 	//  m_ctrl_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
 	m_addbot_btn = new wxButton(this, SP_ADD_BOT, _("Add bot..."), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0);
@@ -215,20 +212,22 @@ void SinglePlayerTab::ReloadModlist()
 
 void SinglePlayerTab::ReloadEngineList()
 {
-	m_engine_pic->Clear();
+	m_engine_pick->Clear();
+
 	std::map<std::string, LSL::SpringBundle> versions = SlPaths::GetSpringVersionList();
 	const std::string last = SlPaths::GetCurrentUsedSpringIndex();
 	int i = 0;
+	
 	for (auto pair : versions) {
-		m_engine_pic->Insert(TowxString(pair.first), i);
+		m_engine_pick->Insert(TowxString(pair.first), i);
 		if (last == pair.first) {
-			m_engine_pic->SetSelection(i);
+			m_engine_pick->SetSelection(i);
 		}
 		i++;
 	}
 
-	if (m_engine_pic->GetSelection() == wxNOT_FOUND) {
-		m_engine_pic->SetSelection(0);
+	if (m_engine_pick->GetSelection() == wxNOT_FOUND) {
+		m_engine_pick->SetSelection(0);
 	}
 	//unitsync change needs a refresh of games as well
 	ReloadModlist();
@@ -332,10 +331,9 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 
 void SinglePlayerTab::OnEngineSelect(wxCommandEvent& /*event*/)
 {
-	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
+	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pick->GetString(m_engine_pick->GetSelection())));
 	LSL::usync().ReloadUnitSyncLib();
-	m_battle.SetEngineVersion(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
-	ReloadEngineList();
+	m_battle.SetEngineVersion(STD_STRING(m_engine_pick->GetString(m_engine_pick->GetSelection())));
 }
 
 void SinglePlayerTab::OnMapBrowse(wxCommandEvent& /*unused*/)
@@ -375,6 +373,7 @@ void SinglePlayerTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 	try {
 		ReloadMaplist();
 		ReloadModlist();
+		ReloadEngineList();
 		UpdateMinimap();
 	} catch (...) {
 		slLogDebugFunc("");

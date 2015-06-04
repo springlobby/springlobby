@@ -71,6 +71,8 @@ public:
 						fileSystem->extractEngine(dl->name, dl->version);
 						SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
 						SlPaths::SetUsedSpringIndex(dl->version);
+						//Inform all application components about new engine been available
+						GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
 						break;
 					}
 					case IDownload::CAT_LOBBYCLIENTS:
