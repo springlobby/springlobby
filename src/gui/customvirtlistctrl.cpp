@@ -149,6 +149,9 @@ void CustomVirtListCtrl<T, L>::RestoreSelection()
 		SelectedDataType data = m_selected_data.back();
 		m_selected_data.pop_back();
 		int idx = GetIndexFromData(data);
+		if ((idx < 0) || (idx >= GetItemCount())) { //check if idx is valid (could be deleted)
+			continue;
+		}
 		SetItemState(idx, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 	}
 }
