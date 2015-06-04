@@ -559,21 +559,21 @@ template <class T, class L>
 bool CustomVirtListCtrl<T, L>::RemoveItem(const T& item)
 {
 	int index = GetIndexFromData(item);
-	if ((index >= 0) && (index < (long)m_data.size())) {
-		SaveSelection();
-		m_data.erase(m_data.begin() + index);
-		SetItemCount(m_data.size());
-		if (index > (long)m_data.size() - 1)
-			index--;
-		if (m_data.size() > 0) {
-			RefreshItems(index, m_data.size() - 1);
-			RestoreSelection();
-		} else {
-			Clear();
-		}
-		return true;
+	if ((index < 0) || (index > (long)m_data.size())) {
+		return false;
 	}
-	return false;
+	SaveSelection();
+	m_data.erase(m_data.begin() + index);
+	SetItemCount(m_data.size());
+	if (index > (long)m_data.size() - 1)
+		index--;
+	if (m_data.size() > 0) {
+		RestoreSelection();
+		RefreshVisibleItems();
+	} else {
+		Clear();
+	}
+	return true;
 }
 
 template <class T, class L>
