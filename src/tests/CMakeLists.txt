@@ -10,6 +10,7 @@ If      (NOT (WIN32 OR Boost_USE_STATIC_LIBS))
 	#Win32 tests links static
 	add_definitions(-DBOOST_TEST_DYN_LINK)
 EndIf   (NOT (WIN32 OR Boost_USE_STATIC_LIBS))
+add_definitions(-DTESTS)
 
 add_custom_target(tests)
 add_custom_target(check ${CMAKE_CTEST_COMMAND} --output-on-failure -V)
