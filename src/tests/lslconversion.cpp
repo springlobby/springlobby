@@ -200,3 +200,18 @@ BOOST_AUTO_TEST_CASE(hashes)
 	BOOST_CHECK("2147483648" == LSL::Util::MakeHashUnsigned(stdprintf("%u", negative)));
 }
 
+BOOST_AUTO_TEST_CASE(convertfloat)
+{
+	const float a = 1.0f;
+	const float b = -1.5f;
+	const float c = 1.999f;
+
+	BOOST_CHECK(a == LSL::Util::FromFloatString("1.0"));
+	BOOST_CHECK(b == LSL::Util::FromFloatString("-1.5"));
+	BOOST_CHECK(c == LSL::Util::FromFloatString("1.999"));
+
+	BOOST_CHECK(a == LSL::Util::FromFloatString(LSL::Util::ToFloatString(a)));
+	BOOST_CHECK(b == LSL::Util::FromFloatString(LSL::Util::ToFloatString(b)));
+	BOOST_CHECK(c == LSL::Util::FromFloatString(LSL::Util::ToFloatString(c)));
+
+}
