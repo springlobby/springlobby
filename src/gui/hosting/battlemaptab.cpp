@@ -135,7 +135,7 @@ void BattleMapTab::Update()
 {
 	if (!m_battle)
 		return;
-	const long longval = LSL::Util::FromString<long>(
+	const long longval = LSL::Util::FromIntString(
 	    m_battle->CustomBattleOptions().getSingleValue("startpostype", LSL::Enum::EngineOption));
 	m_start_radios->SetSelection(longval);
 
@@ -170,7 +170,7 @@ void BattleMapTab::Update(const wxString& Tag)
 	long type;
 	Tag.BeforeFirst('_').ToLong(&type);
 	const std::string key = STD_STRING(Tag.AfterFirst('_'));
-	const long longval = LSL::Util::FromString<long>(
+	const long longval = LSL::Util::FromIntString(
 	    m_battle->CustomBattleOptions().getSingleValue(key, (LSL::Enum::GameOption)type));
 	if (type == LSL::Enum::EngineOption) {
 		if (key == "startpostype") {

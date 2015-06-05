@@ -20,7 +20,7 @@ SinglePlayerBattle::SinglePlayerBattle(MainSinglePlayerTab& msptab)
 	OnUserAdded(m_me);
 	m_me.BattleStatus().side = sett().GetBattleLastSideSel(TowxString(GetHostModName()));
 	m_me.BattleStatus().colour = wxColourTolsl(sett().GetBattleLastColour());
-	CustomBattleOptions().setSingleOption("startpostype", LSL::Util::ToString(ST_Pick), LSL::Enum::EngineOption);
+	CustomBattleOptions().setSingleOption("startpostype", LSL::Util::ToIntString(ST_Pick), LSL::Enum::EngineOption);
 }
 
 

@@ -358,7 +358,7 @@ void MapCtrl::_SetCursor()
 	}
 
 	if (m_battle != 0) {
-		const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+		const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 								     .getSingleValue("startpostype", LSL::Enum::EngineOption));
 		if (longval != IBattle::ST_Choose) {
 			SetCursor(wxCursor(wxCURSOR_ARROW));
@@ -509,7 +509,7 @@ void MapCtrl::UpdateMinimap()
 
 			if (!just_resize && loaded_ok == 0) // if a new map is loaded, reset start positions
 			{
-				const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+				const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 										     .getSingleValue("startpostype", LSL::Enum::EngineOption));
 				if (longval == IBattle::ST_Pick)
 					RelocateUsers();
@@ -773,7 +773,7 @@ void MapCtrl::DrawStartPositions(wxDC& dc)
 	wxRect mr = GetMinimapRect();
 	m_map = m_battle->LoadMap();
 	RequireImages();
-	const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 							     .getSingleValue("startpostype", LSL::Enum::EngineOption));
 	if (longval == IBattle::ST_Fixed) {
 
@@ -1057,7 +1057,7 @@ void MapCtrl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 	if (!m_minimap)
 		return;
-	const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 							     .getSingleValue("startpostype", LSL::Enum::EngineOption));
 
 
@@ -1098,7 +1098,7 @@ void MapCtrl::OnMouseMove(wxMouseEvent& event)
 		return;
 	if (p == wxDefaultPosition)
 		return;
-	const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 							     .getSingleValue("startpostype", LSL::Enum::EngineOption));
 
 	if (longval == IBattle::ST_Pick) {
@@ -1300,7 +1300,7 @@ void MapCtrl::OnLeftDown(wxMouseEvent& event)
 	if (m_battle == 0)
 		return;
 
-	const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 							     .getSingleValue("startpostype", LSL::Enum::EngineOption));
 
 	if (!m_ro) {
@@ -1383,7 +1383,7 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 	if (m_battle == 0)
 		return;
 
-	const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 							     .getSingleValue("startpostype", LSL::Enum::EngineOption));
 	if (longval == IBattle::ST_Pick) {
 		if (!m_user_expanded)
@@ -1496,7 +1496,7 @@ void MapCtrl::OnRightUp(wxMouseEvent& event)
 	if (p == wxDefaultPosition)
 		return;
 
-	const long longval = LSL::Util::FromString<long>(m_battle->CustomBattleOptions()
+	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 							     .getSingleValue("startpostype", LSL::Enum::EngineOption));
 	if (longval == IBattle::ST_Pick) {
 

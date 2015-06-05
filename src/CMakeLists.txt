@@ -262,7 +262,9 @@ set(springlobbySrc
 	springsettings/tab_simple.cpp
 	springsettings/tab_ui.cpp
 
+
 	lsl/src/lsl/battle/tdfcontainer.cpp #FIXME
+	lsl/src/lslutils/conversion.cpp #FIXME
 
 	gui/uiutils.cpp
 	gui/controls.cpp

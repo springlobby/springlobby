@@ -32,7 +32,7 @@ public:
 
 	bool IsRunning() const;
 	bool Run(IBattle& battle);
-	wxString WriteScriptTxt(IBattle& battle) const;
+	std::string WriteScriptTxt(IBattle& battle) const;
 	/* start engine */
 	bool LaunchEngine(wxArrayString& params);
 

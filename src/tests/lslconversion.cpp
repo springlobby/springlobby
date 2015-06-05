@@ -4,12 +4,13 @@
 #include <boost/test/unit_test.hpp>
 
 #include <stdio.h>
-#include "utils/lslconversion.h"
+#include <wx/colour.h>
 #include <lslutils/misc.h>
 #include <lslutils/conversion.h>
+
 #include "user.h"
+#include "utils/lslconversion.h"
 #include "utils/conversion.h"
-#include <wx/colour.h>
 
 
 void test_wxColourTolsl(const unsigned char red, const unsigned char green, const unsigned char blue, const unsigned char alpha)
@@ -120,11 +121,22 @@ BOOST_AUTO_TEST_CASE(colorconv)
 	const std::string blackstr("0 0 0");
 	const LSL::lslColor blackcol(0, 0, 0);
 
+	const std::string greystr("0.501961 0.501961 0.501961");
+	const LSL::lslColor greycol(128, 128, 128);
+
+	BOOST_CHECK(greycol.Red() == 128);
+
+
 	BOOST_CHECK(whitecol == LSL::lslColor::FromFloatString(whitestr));
 	BOOST_CHECK_MESSAGE(whitestr == LSL::lslColor::ToFloatString(whitecol), LSL::lslColor::ToFloatString(whitecol));
 
 	BOOST_CHECK(blackcol == LSL::lslColor::FromFloatString(blackstr));
 	BOOST_CHECK_MESSAGE(blackstr == LSL::lslColor::ToFloatString(blackcol), LSL::lslColor::ToFloatString(blackcol));
+
+	BOOST_CHECK(greycol == LSL::lslColor::FromFloatString(greystr));
+	BOOST_CHECK_MESSAGE(greystr == LSL::lslColor::ToFloatString(greycol), LSL::lslColor::ToFloatString(greycol));
+
+
 
 
 	for (int c = 0; c < 3; c++) {
@@ -143,6 +155,7 @@ BOOST_AUTO_TEST_CASE(colorconv)
 			BOOST_CHECK(rescol == col);
 		}
 	}
+
 }
 
 BOOST_AUTO_TEST_CASE(userstatus)
@@ -174,11 +187,11 @@ BOOST_AUTO_TEST_CASE(hashes)
 	const unsigned int overflow = 2232970410; //this
 	const int negative = -2147483648;
 
-	BOOST_CHECK("-2061996886" == LSL::Util::MakeHashSigned(LSL::Util::ToString(overflow)));
-	BOOST_CHECK(stdprintf("%d", negative) == LSL::Util::MakeHashSigned(LSL::Util::ToString(negative)));
+	BOOST_CHECK("-2061996886" == LSL::Util::MakeHashSigned(LSL::Util::ToIntString(overflow)));
+	BOOST_CHECK(stdprintf("%d", negative) == LSL::Util::MakeHashSigned(LSL::Util::ToIntString(negative)));
 
-	BOOST_CHECK("2232970410" == LSL::Util::MakeHashUnsigned(LSL::Util::ToString(overflow)));
-	BOOST_CHECK(stdprintf("%u", negative) == LSL::Util::MakeHashUnsigned(LSL::Util::ToString(negative)));
+	BOOST_CHECK("2232970410" == LSL::Util::MakeHashUnsigned(LSL::Util::ToIntString(overflow)));
+	BOOST_CHECK(stdprintf("%u", negative) == LSL::Util::MakeHashUnsigned(LSL::Util::ToIntString(negative)));
 
 	BOOST_CHECK("2232970410" == LSL::Util::MakeHashUnsigned(stdprintf("%d", overflow)));
 	BOOST_CHECK(stdprintf("%u", negative) == LSL::Util::MakeHashUnsigned(stdprintf("%d", negative)));

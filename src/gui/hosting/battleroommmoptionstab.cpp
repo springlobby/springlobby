@@ -382,7 +382,7 @@ void BattleroomMMOptionsTab::UpdateOptControls(const wxString& controlName)
 	}
 
 	if (m_chkbox_map.find(controlName) != m_chkbox_map.end()) {
-		const long value = LSL::Util::FromString<long>(
+		const long value = LSL::Util::FromIntString(
 		    m_battle->CustomBattleOptions().getSingleValue(optKey, (LSL::Enum::GameOption)gameoption));
 		wxCheckBox* cur = m_chkbox_map[controlName];
 		cur->SetValue(value);
@@ -402,7 +402,7 @@ void BattleroomMMOptionsTab::UpdateOptControls(const wxString& controlName)
 	}
 
 	if (m_spinctrl_map.find(controlName) != m_spinctrl_map.end()) {
-		const long value = LSL::Util::FromString<long>(
+		const long value = LSL::Util::FromIntString(
 		    m_battle->CustomBattleOptions().getSingleValue(optKey, (LSL::Enum::GameOption)gameoption));
 		wxSpinCtrlDouble* cur = m_spinctrl_map[controlName];
 		cur->SetValue(value);

@@ -124,7 +124,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	m_engine_pick = new wxChoice(this, SP_ENGINE_PICK);
 	m_engine_pick->SetToolTip(_("Select the engine version to play."));
 	m_ctrl_sizer->Add(m_engine_pick, 1, wxALL, 5);
-	
+
 	//  m_ctrl_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
 	m_addbot_btn = new wxButton(this, SP_ADD_BOT, _("Add bot..."), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0);
@@ -217,7 +217,7 @@ void SinglePlayerTab::ReloadEngineList()
 	std::map<std::string, LSL::SpringBundle> versions = SlPaths::GetSpringVersionList();
 	const std::string last = SlPaths::GetCurrentUsedSpringIndex();
 	int i = 0;
-	
+
 	for (auto pair : versions) {
 		m_engine_pick->Insert(TowxString(pair.first), i);
 		if (last == pair.first) {
@@ -401,10 +401,10 @@ void SinglePlayerTab::OnRandomCheck(wxCommandEvent& /*unused*/)
 {
 	if (m_random_check->IsChecked())
 		m_battle.CustomBattleOptions().setSingleOption("startpostype",
-							       LSL::Util::ToString(IBattle::ST_Random), LSL::Enum::EngineOption);
+							       LSL::Util::ToIntString(IBattle::ST_Random), LSL::Enum::EngineOption);
 	else
 		m_battle.CustomBattleOptions().setSingleOption("startpostype",
-							       LSL::Util::ToString(IBattle::ST_Pick), LSL::Enum::EngineOption);
+							       LSL::Util::ToIntString(IBattle::ST_Pick), LSL::Enum::EngineOption);
 	m_battle.SendHostInfo(IBattle::HI_StartType);
 }
 

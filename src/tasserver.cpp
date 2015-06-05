@@ -1421,7 +1421,7 @@ void TASServer::SendHostInfo(const std::string& Tag)
 	}
 
 	std::string cmd;
-	const long type = LSL::Util::FromString<long>(LSL::Util::BeforeFirst(Tag, "_"));
+	const long type = LSL::Util::FromIntString(LSL::Util::BeforeFirst(Tag, "_"));
 	const std::string key = LSL::Util::AfterFirst(Tag, "_");
 
 	switch (type) {

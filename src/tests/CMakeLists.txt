@@ -71,6 +71,7 @@ Set(test_src
 	"${springlobby_SOURCE_DIR}/src/utils/lslconversion.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
 	"${springlobby_SOURCE_DIR}/src/lsl/src/lslutils/misc.cpp"
+	"${springlobby_SOURCE_DIR}/src/lsl/src/lslutils/conversion.cpp"
 )
 
 set(test_libs

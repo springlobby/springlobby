@@ -283,7 +283,7 @@ void AddBotDialog::UpdateOption(const wxString& Tag)
 	else
 		m_opts_list->SetItemFont(index, wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
 	if (DataType == LSL::Enum::opt_bool) {
-		value = STD_STRING(bool2yn(LSL::Util::FromString<long>(value))); // convert from 0/1 to literal Yes/No
+		value = STD_STRING(bool2yn(LSL::Util::FromIntString(value))); // convert from 0/1 to literal Yes/No
 	} else if (DataType == LSL::Enum::opt_list) {
 		value = m_battle.CustomBattleOptions().GetNameListOptValue(key, type); // get the key full name not short key
 	}

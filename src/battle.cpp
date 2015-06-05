@@ -969,7 +969,7 @@ void Battle::FixTeamIDs(BalanceType balance_type, bool support_clans, bool stron
 	if (numcontrolteams == 0 || numcontrolteams == -1)
 		numcontrolteams = GetNumUsers() - GetSpectators(); // 0 or -1 -> use num players, will use comshare only if no available team slots
 	IBattle::StartType position_type = (IBattle::StartType)
-	    LSL::Util::FromString<long>(CustomBattleOptions().getSingleValue("startpostype", LSL::Enum::EngineOption));
+	    LSL::Util::FromIntString(CustomBattleOptions().getSingleValue("startpostype", LSL::Enum::EngineOption));
 	if ((position_type == ST_Fixed) || (position_type == ST_Random)) // if fixed start pos type or random, use max teams = start pos count
 	{
 		try {

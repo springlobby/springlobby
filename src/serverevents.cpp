@@ -431,7 +431,7 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 				return;
 			}
 			if (param.find("game/restrict") == 0) {
-				OnBattleDisableUnit(battleid, vec[2], LSL::Util::FromString<int>(value));
+				OnBattleDisableUnit(battleid, vec[2], LSL::Util::FromIntString(value));
 				return;
 			}
 			if (param.find("game/") == 0) { //game/team0/startposx=1692.
@@ -446,10 +446,10 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 							UserBattleStatus& status = usr.BattleStatus();
 							if (status.team == team) {
 								if (xpos) {
-									status.pos.x = LSL::Util::FromString<int>(value);
+									status.pos.x = LSL::Util::FromIntString(value);
 								}
 								if (ypos) {
-									status.pos.y = LSL::Util::FromString<int>(value);
+									status.pos.y = LSL::Util::FromIntString(value);
 								}
 								battle.OnUserBattleStatusUpdated(usr, status);
 							}

@@ -959,7 +959,7 @@ void IBattle::SaveOptionsPreset(const std::string& name)
 			std::map<wxString, wxString> opts;
 			opts[_T("mapname")] = TowxString(GetHostMapName());
 			unsigned int validrectcount = 0;
-			if (LSL::Util::FromString<long>(
+			if (LSL::Util::FromIntString(
 				CustomBattleOptions().getSingleValue("startpostype", LSL::Enum::EngineOption)) == ST_Choose) {
 				unsigned int boxcount = GetLastRectIdx();
 				for (unsigned int boxnum = 0; boxnum <= boxcount; boxnum++) {
