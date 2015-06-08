@@ -49,21 +49,15 @@ Battle::Battle(IServer& serv, int id)
     , m_id(id)
     , m_timer(NULL)
 {
-	m_autohost_manager = new AutohostManager(); //FIXME: don't instantiate for each battle, only for the battle we've joined
-	m_autohost_manager->SetBattle(this);
-	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
+	m_autohost_manager = nullptr;
 	m_opts.battleid = m_id;
 }
 
 
 Battle::~Battle()
 {
-	if (m_timer != NULL) {
-		delete m_timer;
-		m_timer = NULL;
-	}
-	delete m_autohost_manager;
-	m_autohost_manager = NULL;
+	wxDELETE(m_timer);
+	wxDELETE(m_autohost_manager);
 }
 
 
@@ -86,6 +80,11 @@ void Battle::Update(const std::string& Tag)
 
 void Battle::Join(const std::string& password)
 {
+	if (m_autohost_manager == nullptr) {
+		m_autohost_manager = new AutohostManager();
+		m_autohost_manager->SetBattle(this);
+		ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
+	}
 	m_serv.JoinBattle(m_opts.battleid, password);
 	m_is_self_in = true;
 }
@@ -94,6 +93,7 @@ void Battle::Join(const std::string& password)
 void Battle::Leave()
 {
 	m_serv.LeaveBattle(m_opts.battleid);
+	m_is_self_in = false;
 }
 
 void Battle::OnPlayerTrueskillChanged(const std::string& NickName, double TrueSkill)
