@@ -1,71 +1,110 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include "globalevents.h"
 #include <wx/app.h>
 #include <list>
 #include <map>
 
+#include "globalevents.h"
 
-const wxEventType GlobalEvent::OnDownloadComplete = wxNewEventType();
-const wxEventType GlobalEvent::OnUnitsyncFirstTimeLoad = wxNewEventType();
-const wxEventType GlobalEvent::OnUnitsyncReloaded = wxNewEventType();
-const wxEventType GlobalEvent::OnLobbyDownloaded = wxNewEventType();
-const wxEventType GlobalEvent::OnSpringTerminated = wxNewEventType();
-const wxEventType GlobalEvent::OnSpringStarted = wxNewEventType();
-const wxEventType GlobalEvent::UpdateFinished = wxNewEventType();
-const wxEventType GlobalEvent::OnQuit = wxNewEventType();
-const wxEventType GlobalEvent::OnLogin = wxNewEventType();
-const wxEventType GlobalEvent::PlasmaResourceListParsed = wxNewEventType();
-const wxEventType GlobalEvent::PlasmaResourceListFailedDownload = wxNewEventType();
-const wxEventType GlobalEvent::BattleSyncReload = wxNewEventType();
-const wxEventType GlobalEvent::OnUpdateFinished = wxNewEventType();
+const wxEventType GlobalEventManager::OnDownloadComplete = wxNewEventType();
+const wxEventType GlobalEventManager::OnUnitsyncFirstTimeLoad = wxNewEventType();
+const wxEventType GlobalEventManager::OnUnitsyncReloaded = wxNewEventType();
+const wxEventType GlobalEventManager::OnLobbyDownloaded = wxNewEventType();
+const wxEventType GlobalEventManager::OnSpringTerminated = wxNewEventType();
+const wxEventType GlobalEventManager::OnSpringStarted = wxNewEventType();
+const wxEventType GlobalEventManager::UpdateFinished = wxNewEventType();
+const wxEventType GlobalEventManager::OnQuit = wxNewEventType();
+const wxEventType GlobalEventManager::OnLogin = wxNewEventType();
+const wxEventType GlobalEventManager::PlasmaResourceListParsed = wxNewEventType();
+const wxEventType GlobalEventManager::PlasmaResourceListFailedDownload = wxNewEventType();
+const wxEventType GlobalEventManager::BattleSyncReload = wxNewEventType();
+const wxEventType GlobalEventManager::OnUpdateFinished = wxNewEventType();
 
-//const wxEventType GlobalEvent::OnTimerUpdates = wxNewEventType();
+bool GlobalEventManager::m_eventsDisabled = false;
 
-//static wxEvtHandler* _evthandler=NULL;
-static std::map<wxEventType, std::list<wxEvtHandler*>> evts;
+GlobalEventManager* GlobalEventManager::m_battleEvents	= nullptr;
+GlobalEventManager* GlobalEventManager::m_uiEvents	= nullptr;
+GlobalEventManager* GlobalEventManager::m_serverEvents	= nullptr;
+GlobalEventManager* GlobalEventManager::m_globalEvents	= nullptr;
 
-GlobalEvent::GlobalEvent()
-    : m_handler(NULL)
+GlobalEventManager::GlobalEventManager()
 {
 }
 
-GlobalEvent::~GlobalEvent()
+GlobalEventManager::~GlobalEventManager()
 {
-	if (m_handler != NULL)
-		_Disconnect(m_handler);
 }
 
-void GlobalEvent::Send(wxEventType type)
+GlobalEventManager* GlobalEventManager::GlobalEvents()
+{
+	if (m_globalEvents == nullptr) {
+		m_globalEvents = new GlobalEventManager();
+	}
+	return m_globalEvents;
+}
+
+GlobalEventManager* GlobalEventManager::BattleEvents()
+{
+	if (m_battleEvents == nullptr) {
+		m_battleEvents = new GlobalEventManager();
+	}
+	return m_battleEvents;
+}
+
+GlobalEventManager* GlobalEventManager::UiEvents()
+{
+	if (m_uiEvents == nullptr) {
+		m_uiEvents = new GlobalEventManager();
+	}
+	return m_uiEvents;
+}
+
+GlobalEventManager* GlobalEventManager::ServerEvents()
+{
+	if (m_serverEvents == nullptr) {
+		m_serverEvents = new GlobalEventManager();
+	}
+	return m_serverEvents;
+}
+
+void GlobalEventManager::Send(wxEventType type)
 {
 	wxCommandEvent evt = wxCommandEvent(type);
-	assert(evt.GetEventType() == type);
 	Send(evt);
 }
 
-static bool disabled = false;
-void GlobalEvent::Send(wxCommandEvent event)
+void GlobalEventManager::Send(wxCommandEvent event)
 {
-	if (disabled) {
+	if (m_eventsDisabled) {
 		return;
 	}
-	std::list<wxEvtHandler*>& evtlist = evts[event.GetEventType()];
-	//	printf("AddPendingEvent %lu %lu\n", evts.size(), evtlist.size());
+	
+	std::list<wxEvtHandler*>& evtlist = m_eventsTable[event.GetEventType()];
 	assert(event.GetString() == wxEmptyString); // using strings here isn't thread safe http://docs.wxwidgets.org/trunk/classwx_evt_handler.html#a0737c6d2cbcd5ded4b1ecdd53ed0def3
+	
 	for (auto evt : evtlist) {
-		//		printf("	AddPendingEvent %lu \n", evt);
 		evt->AddPendingEvent(event);
 	}
 
-	if (event.GetEventType() == GlobalEvent::OnQuit) {
-		disabled = true;
+	if (event.GetEventType() == GlobalEventManager::OnQuit) {
+		m_eventsDisabled = true;
 	}
 }
 
-void GlobalEvent::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func)
+void GlobalEventManager::Subscribe(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func)
+{
+	GlobalEventManager::_Connect(evh, id, func);
+}
+
+void GlobalEventManager::UnSubscribe(wxEvtHandler* evh, wxEventType id)
+{
+	GlobalEventManager::_Disconnect(evh, id);
+}
+
+void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func)
 {
 	assert(evthandler != NULL);
-	std::list<wxEvtHandler*>& evtlist = evts[id];
+	std::list<wxEvtHandler*>& evtlist = m_eventsTable[id];
 	for (auto evt : evtlist) {
 		if (evt == evthandler) {
 			//			printf("Double Evthandler\n");
@@ -78,21 +117,17 @@ void GlobalEvent::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEve
 	assert(!evtlist.empty());
 }
 
-//static std::map<wxEventType, std::list<wxEvtHandler*>> evts;
-
-void GlobalEvent::_Disconnect(wxEvtHandler* evthandler, wxEventType id)
+void GlobalEventManager::_Disconnect(wxEvtHandler* evthandler, wxEventType id)
 {
-	std::map<wxEventType, std::list<wxEvtHandler*>>::iterator it;
-	for (it = evts.begin(); it != evts.end(); ++it) {
+	std::map<wxEventType, std::list<wxEvtHandler*> >::iterator it;
+	for (it = m_eventsTable.begin(); it != m_eventsTable.end(); ++it) {
 		if ((id == 0) || (id == it->first)) {
 			for (std::list<wxEvtHandler*>::iterator it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
 				if (*it2 == evthandler) {
-					//					printf("Disconnect %lu\n", evthandler);
 					if (id != 0) {
 						evthandler->Disconnect(id);
 					}
 					it->second.erase(it2);
-					//					printf("Deleted Handler\n");
 					break;
 				}
 			}
@@ -100,11 +135,3 @@ void GlobalEvent::_Disconnect(wxEvtHandler* evthandler, wxEventType id)
 	}
 }
 
-void GlobalEvent::ConnectGlobalEvent(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func)
-{
-	if (m_handler == NULL) {
-		m_handler = evh;
-	}
-	assert(m_handler == evh); //assigning a different eventhandler from the same object shouldn't happen
-	GlobalEvent::_Connect(evh, id, func);
-}

@@ -18,7 +18,7 @@ class wxTimer;
 
 /** \brief model of a sp/mp battle
  * \todo DOCME */
-class Battle : public IBattle, public GlobalEvent, public wxEvtHandler
+class Battle : public IBattle, public wxEvtHandler
 {
 public:
 	Battle(IServer& serv, int id);

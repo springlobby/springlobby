@@ -46,7 +46,7 @@ NotificationManager::NotificationManager()
     , m_rate_limit_ms(2000)
     , m_showNotificationSink(this, &UiEvents::GetNotificationEventSender())
 {
-	ConnectGlobalEvent(this, GlobalEvent::OnQuit, wxObjectEventFunction(&NotificationManager::OnQuit));
+	GlobalEventManager::GlobalEvents()->Subscribe(this, GlobalEventManager::OnQuit, wxObjectEventFunction(&NotificationManager::OnQuit));
 }
 
 NotificationManager::~NotificationManager()

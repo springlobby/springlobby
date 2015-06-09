@@ -353,7 +353,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	SetSizer(m_main_sizer);
 	Layout();
 
-	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
+	GlobalEventManager::GlobalEvents()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
 }
 
 

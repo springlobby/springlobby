@@ -63,7 +63,7 @@ struct ChatLine
  * The nick list is optional and can be removed by setting show_nick_list in the
  * constructor to false.
  */
-class ChatPanel : public wxPanel, public GlobalEvent, public SL::NonCopyable
+class ChatPanel : public wxPanel, public SL::NonCopyable
 {
 public:
 	ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist);

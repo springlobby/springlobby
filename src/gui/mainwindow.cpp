@@ -279,7 +279,7 @@ MainWindow::~MainWindow()
 void MainWindow::OnClose(wxCloseEvent& /*unused*/)
 {
 	Logger::ShowDebugWindow(false);
-	GlobalEvent::Send(GlobalEvent::OnQuit);
+	GlobalEventManager::GlobalEvents()->Send(GlobalEventManager::OnQuit);
 	//	GlobalEvent::Disconnect(MainWindow::OnClose, GlobalEvent::)
 	//	SetEvtHandlerEnabled(false);
 	{
@@ -554,7 +554,7 @@ void MainWindow::OnUnitSyncReload(wxCommandEvent& /*unused*/)
 {
 	LSL::usync().ReloadUnitSyncLib();
 	m_menuEdit->Enable(MENU_SETTINGSPP, LSL::usync().IsLoaded());
-	GlobalEvent::Send(GlobalEvent::OnUnitsyncReloaded);
+	GlobalEventManager::GlobalEvents()->Send(GlobalEventManager::OnUnitsyncReloaded);
 }
 
 void MainWindow::MainWindow::OnShowWriteableDir(wxCommandEvent& /*unused*/)

@@ -121,7 +121,7 @@ BattleMapTab::BattleMapTab(wxWindow* parent, IBattle* battle)
 	SetBattle(battle);
 
 	Layout();
-	ConnectGlobalEvent(this, GlobalEvent::OnUnitsyncReloaded, wxObjectEventFunction(&BattleMapTab::OnUnitsyncReloaded));
+	GlobalEventManager::GlobalEvents()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&BattleMapTab::OnUnitsyncReloaded));
 }
 
 

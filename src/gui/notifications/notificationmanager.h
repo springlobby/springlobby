@@ -14,7 +14,7 @@
 
 class INotification;
 
-class NotificationManager : public SL::NonCopyable, public wxEvtHandler, public GlobalEvent
+class NotificationManager : public SL::NonCopyable, public wxEvtHandler
 {
 public:
 	NotificationManager();

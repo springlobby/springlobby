@@ -23,7 +23,7 @@ class wxCheckBox;
 class wxMouseEvent;
 class ColorButton;
 
-class SinglePlayerTab : public wxPanel, public GlobalEvent
+class SinglePlayerTab : public wxPanel
 {
 public:
 	SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab);

@@ -25,7 +25,7 @@ namespace LSL
 struct UnitsyncMap;
 }
 
-class MapSelectDialog : public wxDialog, public GlobalEvent, public WindowAttributesPickle
+class MapSelectDialog : public wxDialog, public WindowAttributesPickle
 {
 public:
 	MapSelectDialog(wxWindow* parent);

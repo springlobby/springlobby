@@ -26,7 +26,7 @@ class wxMouseEvent;
 
 /** \brief select map, draw startboxes (in sp define startpos)
  * \todo DOCMEMORE */
-class BattleMapTab : public wxPanel, public GlobalEvent
+class BattleMapTab : public wxPanel
 {
 public:
 	BattleMapTab(wxWindow* parent, IBattle* battle);

@@ -71,7 +71,7 @@ void ServerEvents::OnLoginInfoComplete()
 		sett().SetHighlightedWords(highlights);
 	}
 	//m_serv.RequestChannels();
-	GlobalEvent::Send(GlobalEvent::OnLogin);
+	GlobalEventManager::GlobalEvents()->Send(GlobalEventManager::OnLogin);
 	std::vector<ChannelJoinInfo> autojoin = sett().GetChannelsJoin();
 	for (std::vector<ChannelJoinInfo>::const_iterator itor = autojoin.begin(); itor != autojoin.end(); ++itor) {
 		if (itor->name.IsEmpty())

@@ -3,13 +3,35 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H
 #define SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H
 
+#include <map>
+#include <list>
 
+#include <wx/wx.h>
 #include <wx/event.h>
 
-class wxEvtHandler;
 
-class GlobalEvent
+class GlobalEventManager
 {
+private:
+	GlobalEventManager();
+	~GlobalEventManager();
+
+public:
+	static GlobalEventManager* GlobalEvents();
+	static GlobalEventManager* BattleEvents();
+	static GlobalEventManager* UiEvents();
+	static GlobalEventManager* ServerEvents();
+	
+public:
+	void Subscribe(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func);
+	void UnSubscribe(wxEvtHandler* evh, wxEventType id = 0);
+	void Send(wxEventType type);
+	void Send(wxCommandEvent event);
+	
+private:
+	void _Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func);
+	void _Disconnect(wxEvtHandler* evthandler, wxEventType id = 0);
+	
 public:
 	static const wxEventType OnDownloadComplete;
 	static const wxEventType OnUnitsyncFirstTimeLoad;
@@ -24,18 +46,16 @@ public:
 	static const wxEventType BattleSyncReload;
 	static const wxEventType OnUpdateFinished;
 	static const wxEventType OnLobbyDownloaded;
-	static void Send(wxEventType type);
-	static void Send(wxCommandEvent event);
-
-	GlobalEvent();
-	~GlobalEvent();
-
-	void ConnectGlobalEvent(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func);
+	
+private:
+	static GlobalEventManager* m_globalEvents;
+	static GlobalEventManager* m_battleEvents;
+	static GlobalEventManager* m_uiEvents;
+	static GlobalEventManager* m_serverEvents;
+	static bool m_eventsDisabled;
 
 private:
-	static void _Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func);
-	static void _Disconnect(wxEvtHandler* evthandler, wxEventType id = 0);
-	wxEvtHandler* m_handler;
+	std::map<wxEventType, std::list<wxEvtHandler*> > m_eventsTable;
 };
 
 

@@ -22,7 +22,7 @@ class wxEvtHandler;
 #include "utils/mixins.h"
 
 //! @brief UI main class
-class Ui : public wxTimer, public GlobalEvent, public SL::NonCopyable
+class Ui : public wxTimer, public SL::NonCopyable
 {
 public:
 	Ui();

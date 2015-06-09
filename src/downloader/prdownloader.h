@@ -40,7 +40,7 @@ struct DownloadInfo {
 };
 */
 
-class PrDownloader : public wxEvtHandler, public GlobalEvent
+class PrDownloader : public wxEvtHandler
 {
 public:
 	PrDownloader();
