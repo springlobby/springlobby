@@ -170,10 +170,9 @@ void BattleMapTab::Update(const wxString& Tag)
 	long type;
 	Tag.BeforeFirst('_').ToLong(&type);
 	const std::string key = STD_STRING(Tag.AfterFirst('_'));
-	const long longval = LSL::Util::FromIntString(
-	    m_battle->CustomBattleOptions().getSingleValue(key, (LSL::Enum::GameOption)type));
 	if (type == LSL::Enum::EngineOption) {
 		if (key == "startpostype") {
+			const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions().getSingleValue(key, (LSL::Enum::GameOption)type));
 			m_start_radios->SetSelection(longval);
 			m_minimap->UpdateMinimap();
 		}
