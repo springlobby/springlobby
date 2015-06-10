@@ -19,6 +19,7 @@ const wxEventType GlobalEventManager::PlasmaResourceListParsed = wxNewEventType(
 const wxEventType GlobalEventManager::PlasmaResourceListFailedDownload = wxNewEventType();
 const wxEventType GlobalEventManager::BattleSyncReload = wxNewEventType();
 const wxEventType GlobalEventManager::BattleStartedEvent = wxNewEventType();
+const wxEventType GlobalEventManager::UserBattleStatusChangedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::OnUpdateFinished = wxNewEventType();
 
 bool GlobalEventManager::m_eventsDisabled = false;

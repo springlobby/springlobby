@@ -94,6 +94,8 @@ Ui::Ui()
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringTerminated, wxObjectEventFunction(&Ui::OnSpringTerminated));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnQuit, wxObjectEventFunction(&Ui::OnQuit));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnLobbyDownloaded, wxObjectEventFunction(&Ui::OnDownloadComplete));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::UserBattleStatusChangedEvent, wxObjectEventFunction(&Ui::OnUserBattleStatus));
+
 }
 
 Ui::~Ui()
@@ -846,12 +848,15 @@ void Ui::OnHostedBattle(IBattle& battle)
 }
 
 
-void Ui::OnUserBattleStatus(IBattle& battle, User& user)
+void Ui::OnUserBattleStatus(wxCommandEvent& event)
 {
-	if (m_main_win == 0)
+	if (m_main_win == 0) {
 		return;
-	mw().GetJoinTab().BattleUserUpdated(user);
-	OnBattleInfoUpdated(std::make_pair(&battle, ""));
+	}
+
+	User* user = static_cast<User*>(event.GetClientData());
+	mw().GetJoinTab().BattleUserUpdated(*user);
+	OnBattleInfoUpdated(std::make_pair(user->GetBattle(), ""));
 }
 
 
@@ -865,15 +870,6 @@ void Ui::OnRequestBattleStatus(IBattle& battle)
 		}
 	} catch (...) {
 	}
-}
-
-
-void Ui::OnBattleStarted(IBattle& battle)
-{
-	if (m_main_win == 0)
-		return;
-	slLogDebugFunc("");
-	mw().GetBattleListTab().UpdateBattle(battle);
 }
 
 

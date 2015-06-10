@@ -30,7 +30,6 @@
 #include "autohostmanager.h"
 #include "log.h"
 #include "iserver.h"
-#include "gui/ui.h"
 #include "utils/globalevents.h"
 
 
@@ -290,7 +289,7 @@ void Battle::OnUserBattleStatusUpdated(User& user, UserBattleStatus status)
 		}
 	}
 	ShouldAutoUnspec();
-	ui().OnUserBattleStatus(*this, user);
+	GlobalEventManager::Instance()->Send(GlobalEventManager::UserBattleStatusChangedEvent, &user);
 }
 
 
@@ -623,7 +622,6 @@ void Battle::StartSpring()
 		m_generating_script = false;
 		GetMe().SendMyUserStatus();
 	}
-	ui().OnBattleStarted(*this);
 }
 
 void Battle::OnTimer(wxTimerEvent&)
