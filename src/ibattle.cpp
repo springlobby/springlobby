@@ -74,7 +74,7 @@ bool IBattle::IsSynced()
 		return false;
 	}
 	if (!m_host_mod.hash.empty() && m_host_mod.hash != "0" && m_host_mod.hash != m_local_mod.hash) {
-		wxLogWarning("Not synced: game hash doesn't match: '%s' '%s'", m_host_mod.hash.c_str(), m_host_mod.hash.c_str());
+		wxLogWarning("Not synced: game hash doesn't match: '%s' '%s'", m_host_mod.hash.c_str(), m_local_mod.hash.c_str());
 		return false;
 	}
 	if (!m_host_map.hash.empty() && m_host_map.hash != "0" && m_host_map.hash != m_local_map.hash) {
