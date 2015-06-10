@@ -157,8 +157,8 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 	Deselect();
 
 	Layout();
-	GlobalEventManager::GlobalEvents()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&PlaybackTab::OnUnitsyncReloaded));
-	GlobalEventManager::GlobalEvents()->Subscribe(this, GlobalEventManager::OnSpringTerminated, wxObjectEventFunction(&PlaybackTab::OnSpringTerminated));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&PlaybackTab::OnUnitsyncReloaded));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringTerminated, wxObjectEventFunction(&PlaybackTab::OnSpringTerminated));
 }
 
 PlaybackTab::~PlaybackTab()

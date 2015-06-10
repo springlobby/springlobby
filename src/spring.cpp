@@ -146,7 +146,7 @@ bool Spring::LaunchEngine(const std::string& cmd, wxArrayString& params)
 	m_process->SetCommand(TowxString(cmd), params);
 	m_process->Run();
 	m_running = true;
-	GlobalEventManager::GlobalEvents()->Send(GlobalEventManager::OnSpringStarted);
+	GlobalEventManager::Instance()->Send(GlobalEventManager::OnSpringStarted);
 	return true;
 }
 
@@ -156,7 +156,7 @@ void Spring::OnTerminated(wxCommandEvent& event)
 	m_running = false;
 	m_process = NULL;
 	event.SetEventType(GlobalEventManager::OnSpringTerminated);
-	GlobalEventManager::GlobalEvents()->Send(event);
+	GlobalEventManager::Instance()->Send(event);
 }
 
 std::string Spring::WriteScriptTxt(IBattle& battle) const

@@ -271,5 +271,5 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
 void SpringLobbyApp::OnQuit(wxCommandEvent& /*data*/)
 {
-	GlobalEventManager::GlobalEvents()->Send(GlobalEventManager::OnQuit);
+	GlobalEventManager::Instance()->Send(GlobalEventManager::OnQuit);
 }

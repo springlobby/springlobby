@@ -72,7 +72,7 @@ public:
 						SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
 						SlPaths::SetUsedSpringIndex(dl->version);
 						//Inform all application components about new engine been available
-						GlobalEventManager::GlobalEvents()->Send(GlobalEventManager::OnUnitsyncReloaded);
+						GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 						break;
 					}
 					case IDownload::CAT_LOBBYCLIENTS:
@@ -105,10 +105,10 @@ public:
 				}
 
 				//notify about finished download
-				GlobalEventManager::GlobalEvents()->Send(GlobalEventManager::OnUnitsyncReloaded);
+				GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 			}
 			if (lobbydl) {
-				GlobalEventManager::GlobalEvents()->Send(GlobalEventManager::OnLobbyDownloaded);
+				GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
 			}
 		}
 	}
@@ -169,8 +169,8 @@ PrDownloader::PrDownloader()
 	//	m_game_loaders.push_back(plasmaDownload);
 	m_map_loaders.push_back(httpDownload);
 	//	m_map_loaders.push_back(plasmaDownload);
-	GlobalEventManager::GlobalEvents()->Subscribe(this, GlobalEventManager::OnSpringStarted, wxObjectEventFunction(&PrDownloader::OnSpringStarted));
-	GlobalEventManager::GlobalEvents()->Subscribe(this, GlobalEventManager::OnSpringTerminated, wxObjectEventFunction(&PrDownloader::OnSpringTerminated));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringStarted, wxObjectEventFunction(&PrDownloader::OnSpringStarted));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringTerminated, wxObjectEventFunction(&PrDownloader::OnSpringTerminated));
 }
 
 PrDownloader::~PrDownloader()

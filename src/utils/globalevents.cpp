@@ -18,14 +18,12 @@ const wxEventType GlobalEventManager::OnLogin = wxNewEventType();
 const wxEventType GlobalEventManager::PlasmaResourceListParsed = wxNewEventType();
 const wxEventType GlobalEventManager::PlasmaResourceListFailedDownload = wxNewEventType();
 const wxEventType GlobalEventManager::BattleSyncReload = wxNewEventType();
+const wxEventType GlobalEventManager::BattleStartedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::OnUpdateFinished = wxNewEventType();
 
 bool GlobalEventManager::m_eventsDisabled = false;
 
-GlobalEventManager* GlobalEventManager::m_battleEvents	= nullptr;
-GlobalEventManager* GlobalEventManager::m_uiEvents	= nullptr;
-GlobalEventManager* GlobalEventManager::m_serverEvents	= nullptr;
-GlobalEventManager* GlobalEventManager::m_globalEvents	= nullptr;
+GlobalEventManager* GlobalEventManager::m_Instance	= nullptr;
 
 GlobalEventManager::GlobalEventManager()
 {
@@ -35,41 +33,24 @@ GlobalEventManager::~GlobalEventManager()
 {
 }
 
-GlobalEventManager* GlobalEventManager::GlobalEvents()
+GlobalEventManager* GlobalEventManager::Instance()
 {
-	if (m_globalEvents == nullptr) {
-		m_globalEvents = new GlobalEventManager();
+	if (m_Instance == nullptr) {
+		m_Instance = new GlobalEventManager();
 	}
-	return m_globalEvents;
-}
-
-GlobalEventManager* GlobalEventManager::BattleEvents()
-{
-	if (m_battleEvents == nullptr) {
-		m_battleEvents = new GlobalEventManager();
-	}
-	return m_battleEvents;
-}
-
-GlobalEventManager* GlobalEventManager::UiEvents()
-{
-	if (m_uiEvents == nullptr) {
-		m_uiEvents = new GlobalEventManager();
-	}
-	return m_uiEvents;
-}
-
-GlobalEventManager* GlobalEventManager::ServerEvents()
-{
-	if (m_serverEvents == nullptr) {
-		m_serverEvents = new GlobalEventManager();
-	}
-	return m_serverEvents;
+	return m_Instance;
 }
 
 void GlobalEventManager::Send(wxEventType type)
 {
 	wxCommandEvent evt = wxCommandEvent(type);
+	Send(evt);
+}
+
+void GlobalEventManager::Send(wxEventType type, void *clientData)
+{
+	wxCommandEvent evt = wxCommandEvent(type);
+	evt.SetClientData(clientData);
 	Send(evt);
 }
 

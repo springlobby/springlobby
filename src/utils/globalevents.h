@@ -17,16 +17,14 @@ private:
 	~GlobalEventManager();
 
 public:
-	static GlobalEventManager* GlobalEvents();
-	static GlobalEventManager* BattleEvents();
-	static GlobalEventManager* UiEvents();
-	static GlobalEventManager* ServerEvents();
+	static GlobalEventManager* Instance();
 	
 public:
 	void Subscribe(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func);
 	void UnSubscribe(wxEvtHandler* evh, wxEventType id = 0);
 	void Send(wxEventType type);
 	void Send(wxCommandEvent event);
+	void Send(wxEventType type, void *clientData);
 	
 private:
 	void _Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func);
@@ -43,15 +41,14 @@ public:
 	static const wxEventType OnLogin;
 	static const wxEventType PlasmaResourceListParsed;
 	static const wxEventType PlasmaResourceListFailedDownload;
-	static const wxEventType BattleSyncReload;
 	static const wxEventType OnUpdateFinished;
 	static const wxEventType OnLobbyDownloaded;
 	
+	static const wxEventType BattleSyncReload;
+	static const wxEventType BattleStartedEvent;
+	
 private:
-	static GlobalEventManager* m_globalEvents;
-	static GlobalEventManager* m_battleEvents;
-	static GlobalEventManager* m_uiEvents;
-	static GlobalEventManager* m_serverEvents;
+	static GlobalEventManager* m_Instance;
 	static bool m_eventsDisabled;
 
 private:
