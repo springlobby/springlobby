@@ -52,6 +52,7 @@
 #include "autohost.h"
 #include "log.h"
 #include "utils/lslconversion.h"
+#include "utils/globalevents.h"
 #include "autohostmanager.h"
 #include "votepanel.h"
 

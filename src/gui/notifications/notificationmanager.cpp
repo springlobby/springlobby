@@ -6,6 +6,7 @@
 #include "gui/uiutils.h"
 #include "gui/ui.h"
 #include "utils/slconfig.h"
+#include "utils/globalevents.h"
 #include "settings.h"
 #include "spring.h"
 #include "gui/mainwindow.h"

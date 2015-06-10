@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
 
 #include <lslunitsync/optionswrapper.h>
-#include "utils/globalevents.h"
 #include "utils/uievents.h"
 #include <map>
 

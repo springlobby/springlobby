@@ -35,6 +35,7 @@
 #include "useractions.h"
 #include "gui/customdialogs.h"
 #include "utils/slconfig.h"
+#include "utils/globalevents.h"
 #include "log.h"
 
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;

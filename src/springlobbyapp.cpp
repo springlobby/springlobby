@@ -39,6 +39,7 @@
 #include "gui/controls.h"
 #include "utils/platform.h"
 #include "utils/version.h"
+#include "utils/globalevents.h"
 #include "channel.h"
 #include "gui/customdialogs.h"
 #include "downloader/prdownloader.h"

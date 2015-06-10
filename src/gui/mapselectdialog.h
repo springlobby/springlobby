@@ -5,7 +5,6 @@
 
 #include <vector>
 #include "gui/windowattributespickle.h"
-#include "utils/globalevents.h"
 #include <wx/dialog.h>
 
 class wxStdDialogButtonSizer;

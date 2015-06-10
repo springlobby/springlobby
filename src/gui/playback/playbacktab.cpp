@@ -27,6 +27,7 @@
 #include "iconimagelist.h"
 #include "storedgame.h"
 #include "utils/conversion.h"
+#include "utils/globalevents.h"
 
 #include "gui/customdialogs.h"
 #include "gui/hosting/battleroomlistctrl.h"

@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
 
 #include <wx/scrolwin.h>
-#include "utils/globalevents.h"
 #include "utils/mixins.h"
 
 class User;

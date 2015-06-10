@@ -36,6 +36,7 @@
 #include "log.h"
 #include "utils/slconfig.h"
 #include "gui/hosting/votepanel.h"
+#include "utils/globalevents.h"
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 

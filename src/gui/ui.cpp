@@ -34,6 +34,7 @@
 #include "utils/uievents.h"
 #include "utils/slpaths.h"
 #include "utils/version.h"
+#include "utils/globalevents.h"
 #include "gui/uiutils.h"
 #include "gui/chatpanel.h"
 #include "gui/battlelist/battlelisttab.h"

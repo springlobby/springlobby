@@ -6,9 +6,9 @@
 #include <string>
 #include <queue>
 #include <list>
+#include <wx/event.h>
 
 #include "lib/src/Downloader/Download.h"
-#include "utils/globalevents.h"
 
 class IDownloader;
 

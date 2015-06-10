@@ -30,6 +30,7 @@
 #include "utils/conversion.h"
 #include "autohostmanager.h"
 #include "autohost.h"
+#include "utils/globalevents.h"
 
 #include <lslutils/globalsmanager.h>
 #include <exception>

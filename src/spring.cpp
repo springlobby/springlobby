@@ -39,6 +39,7 @@ lsl/spring/spring.cpp
 #include "utils/conversion.h"
 #include "utils/slpaths.h"
 #include "utils/slconfig.h"
+#include "utils/globalevents.h"
 #include "settings.h"
 #include "ibattle.h"
 #include "log.h"

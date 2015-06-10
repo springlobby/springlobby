@@ -4,9 +4,9 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLE_H
 
 #include <set>
+#include <wx/event.h>
 
 #include "autohost.h"
-#include "utils/globalevents.h"
 #include "ibattle.h"
 
 class IServer;

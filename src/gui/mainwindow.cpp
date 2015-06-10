@@ -32,6 +32,7 @@
 #include "serverselector.h"
 #include "utils/platform.h"
 #include "utils/version.h"
+#include "utils/globalevents.h"
 #include "battlelist/battlelisttab.h"
 #include "mainchattab.h"
 #include "hosting/mainjoinbattletab.h"

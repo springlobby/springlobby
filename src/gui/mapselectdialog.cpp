@@ -25,6 +25,7 @@
 #include "gui/controls.h"
 #include "utils/conversion.h"
 #include "utils/lslconversion.h"
+#include "utils/globalevents.h"
 #include "settings.h"
 #include "log.h"
 

@@ -31,6 +31,7 @@
 #include "log.h"
 #include "iserver.h"
 #include "gui/ui.h"
+#include "utils/globalevents.h"
 
 
 const unsigned int TIMER_INTERVAL = 1000;

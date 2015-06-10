@@ -32,6 +32,7 @@
 #include "settings.h"
 #include "aui/auimanager.h"
 #include "utils/conversion.h"
+#include "utils/globalevents.h"
 #include "log.h"
 #include "gui/mapctrl.h"
 

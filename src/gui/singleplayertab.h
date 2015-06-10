@@ -6,7 +6,6 @@
 #include <wx/scrolwin.h>
 
 #include "singleplayerbattle.h"
-#include "utils/globalevents.h"
 
 class Ui;
 class MapCtrl;

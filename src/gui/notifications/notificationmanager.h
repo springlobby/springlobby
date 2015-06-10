@@ -5,7 +5,6 @@
 
 
 #include "utils/uievents.h"
-#include "utils/globalevents.h"
 #include "utils/mixins.h"
 #include <lslutils/globalsmanager.h>
 #include <wx/timer.h>
