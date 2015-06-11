@@ -198,6 +198,7 @@ BOOST_AUTO_TEST_CASE(hashes)
 
 	BOOST_CHECK("2232970410" == LSL::Util::MakeHashUnsigned(stdprintf("%u", overflow)));
 	BOOST_CHECK("2147483648" == LSL::Util::MakeHashUnsigned(stdprintf("%u", negative)));
+	BOOST_CHECK(LSL::Util::MakeHashUnsigned("3807049253") == LSL::Util::MakeHashUnsigned("-487918043"));
 }
 
 BOOST_AUTO_TEST_CASE(convertfloat)
@@ -215,3 +216,45 @@ BOOST_AUTO_TEST_CASE(convertfloat)
 	BOOST_CHECK(c == LSL::Util::FromFloatString(LSL::Util::ToFloatString(c)));
 
 }
+
+BOOST_AUTO_TEST_CASE(tokenize)
+{
+	std::vector<std::string> v;
+	v = LSL::Util::StringTokenize("", " ");
+	BOOST_CHECK(v.empty());
+
+	v = LSL::Util::StringTokenize("0 1 2", " ");
+	BOOST_CHECK(v.size() == 3);
+	BOOST_CHECK(v[0] == "0");
+	BOOST_CHECK(v[1] == "1");
+	BOOST_CHECK(v[2] == "2");
+
+	v = LSL::Util::StringTokenize(" 0 1 2 ", " ");
+	BOOST_CHECK(v.size() == 3);
+	BOOST_CHECK(v[0] == "0");
+	BOOST_CHECK(v[1] == "1");
+	BOOST_CHECK(v[2] == "2");
+
+	v = LSL::Util::StringTokenize(" 0:1 2 ", " :");
+	BOOST_CHECK(v.size() == 3);
+	BOOST_CHECK(v[0] == "0");
+	BOOST_CHECK(v[1] == "1");
+	BOOST_CHECK(v[2] == "2");
+
+	v = LSL::Util::StringTokenize(" ", " :");
+	BOOST_CHECK(v.size() == 0);
+
+	v = LSL::Util::StringTokenize(" 0", " :");
+	BOOST_CHECK(v.size() == 1);
+	BOOST_CHECK(v[0] == "0");
+
+	v = LSL::Util::StringTokenize(" 0 ", " :");
+	BOOST_CHECK(v.size() == 1);
+	BOOST_CHECK(v[0] == "0");
+
+	v = LSL::Util::StringTokenize("0 ", " :");
+	BOOST_CHECK(v.size() == 1);
+	BOOST_CHECK(v[0] == "0");
+
+}
+
