@@ -699,11 +699,9 @@ UserPosition IBattle::GetFreePosition()
 }
 
 
-void IBattle::SetHostMap(const std::string& _mapname, const std::string& _hash)
+void IBattle::SetHostMap(const std::string& mapname, const std::string& hash)
 {
-	ASSERT_LOGIC(!_mapname.empty(), "Battle with empty map name!");
-	const std::string mapname(_mapname);
-	const std::string hash(_hash);
+	ASSERT_LOGIC(!mapname.empty(), "Battle with empty map name!");
 	if (mapname != m_host_map.name || hash != m_host_map.hash) {
 		m_map_loaded = false;
 		m_host_map.name = mapname;
@@ -756,10 +754,8 @@ std::string IBattle::GetHostMapHash() const
 }
 
 
-void IBattle::SetHostMod(const std::string& _modname, const std::string& _hash)
+void IBattle::SetHostMod(const std::string& modname, const std::string& hash)
 {
-	const std::string modname(_modname);
-	const std::string hash(_hash);
 	if (m_host_mod.name != modname || m_host_mod.hash != hash) {
 		m_mod_loaded = false;
 		m_host_mod.name = modname;
