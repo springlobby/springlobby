@@ -28,7 +28,7 @@
 #include "utils/globalevents.h"
 #include "settings.h"
 #include "log.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 
 
 const long MapSelectDialog::ID_STATICTEXT2 = wxNewId();
@@ -146,7 +146,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
 MapSelectDialog::~MapSelectDialog()
 {
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
-	
+
 	sett().SetHorizontalSortkeyIndex(m_horizontal_choice->GetSelection());
 	sett().SetVerticalSortkeyIndex(m_vertical_choice->GetSelection());
 	sett().SetHorizontalSortorder(m_horizontal_direction);

@@ -19,7 +19,7 @@
 #include "utils/conversion.h"
 #include "utils/slpaths.h"
 #include "downloader/prdownloader.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 
 template <>
 SortOrder CustomVirtListCtrl<IBattle*, BattleListCtrl>::m_sortorder = SortOrder();

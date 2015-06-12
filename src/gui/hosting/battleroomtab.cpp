@@ -55,7 +55,7 @@
 #include "utils/globalevents.h"
 #include "autohostmanager.h"
 #include "votepanel.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -362,7 +362,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 BattleRoomTab::~BattleRoomTab()
 {
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
-	
+
 	if (GetAui().manager)
 		GetAui().manager->DetachPane(this);
 }

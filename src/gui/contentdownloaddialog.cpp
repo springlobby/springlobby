@@ -11,7 +11,7 @@
 #include "json/wx/jsonreader.h"
 #include "httpfile.h"
 #include "ui.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 #include <lslunitsync/unitsync.h>
 
 DECLARE_EVENT_TYPE(SEARCH_FINISHED, wxID_ANY);

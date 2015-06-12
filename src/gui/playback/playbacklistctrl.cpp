@@ -14,7 +14,7 @@
 #include "utils/conversion.h"
 #include "playbacklistctrl.h"
 #include "replaylist.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 
 BEGIN_EVENT_TABLE(PlaybackListCtrl, CustomVirtListCtrl)
 

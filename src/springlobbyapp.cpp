@@ -54,7 +54,7 @@
 #include "log.h"
 #include "utils/conversion.h"
 #include "gui/ui.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 
 #include <wx/debugrpt.h>
 #include <wx/intl.h>

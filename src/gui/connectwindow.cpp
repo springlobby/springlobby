@@ -27,7 +27,7 @@
 #include "gui/controls.h"
 #include "utils/tasutil.h"
 #include "utils/conversion.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 
 // Define events.
 BEGIN_EVENT_TABLE(ConnectWindow, wxDialog)

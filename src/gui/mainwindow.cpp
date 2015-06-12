@@ -57,7 +57,7 @@
 #include "gui/controls.h"
 #include "gui/ui.h"
 #include "log.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 #include <lslunitsync/unitsync.h>
 
 #include "iconimagelist.h"

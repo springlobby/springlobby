@@ -28,7 +28,7 @@
 #include "iconimagelist.h"
 #include "hosting/addbotdialog.h"
 #include "log.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"

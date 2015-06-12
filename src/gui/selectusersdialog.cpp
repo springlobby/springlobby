@@ -25,7 +25,7 @@
 #include "user.h"
 #include "utils/conversion.h"
 #include "useractions.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 
 BEGIN_EVENT_TABLE(SelectUsersDialog, wxDialog)
 EVT_TEXT(FILTER_TEXT, SelectUsersDialog::OnNameFilterChange)

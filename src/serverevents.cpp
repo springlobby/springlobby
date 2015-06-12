@@ -31,7 +31,7 @@
 #include "autohostmanager.h"
 #include "autohost.h"
 #include "utils/globalevents.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 
 #include <lslutils/globalsmanager.h>
 #include <exception>

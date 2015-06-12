@@ -52,7 +52,7 @@
 #include "gui/textentrydialog.h"
 #include "log.h"
 #include "settings.h"
-#include "ServerManager.h"
+#include "servermanager.h"
 
 #ifndef DISABLE_SOUND
 #include "sound/alsound.h"
