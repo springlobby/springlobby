@@ -266,7 +266,9 @@ void BattleListTab::UpdateBattle(IBattle& battle)
 		SelectBattle(m_sel_battle);
 }
 
-
+/**
+ * Process "Disconnected From Server" global event
+ */
 void BattleListTab::OnDisconnected()
 {
 	SelectBattle(0);
@@ -323,7 +325,10 @@ void BattleListTab::OnHost(wxCommandEvent& /*unused*/)
 	SL::RunHostBattleDialog(this);
 }
 
-
+/**
+ * Procees "Show Filtes" toggle buttton clicked. Show/hides filters options panel
+ * @param 
+ */
 void BattleListTab::OnFilter(wxCommandEvent& /*unused*/)
 {
 	if (m_filter_show->GetValue()) {
@@ -335,7 +340,10 @@ void BattleListTab::OnFilter(wxCommandEvent& /*unused*/)
 	}
 }
 
-
+/**
+ * Process "Turn On Filters" button event. Activates/deactivates battlelist filtering
+ * @param 
+ */
 void BattleListTab::OnFilterActiv(wxCommandEvent& /*unused*/)
 {
 	bool active = m_filter_activ->GetValue();
@@ -348,6 +356,10 @@ void BattleListTab::OnFilterActiv(wxCommandEvent& /*unused*/)
 	SetNumDisplayed();
 }
 
+/**
+ * Process "JOIN" button clicked. Join selected battle, if any
+ * @param
+ */
 void BattleListTab::OnJoin(wxCommandEvent& /*unused*/)
 {
 	try {
@@ -371,7 +383,10 @@ void BattleListTab::OnJoin(wxCommandEvent& /*unused*/)
 	DoJoin(serverSelector().GetServer().battles_iter->GetBattle(id));
 }
 
-
+/**
+ * Process double clicking on battle in battlelist. Join selected battle
+ * @param event Selected battle
+ */
 void BattleListTab::OnListJoin(wxListEvent& event)
 {
 	try {
@@ -388,7 +403,10 @@ void BattleListTab::OnListJoin(wxListEvent& event)
 	DoJoin(serverSelector().GetServer().battles_iter->GetBattle(id));
 }
 
-
+/**
+ * Check conditions for joining battle and try to join
+ * @param battle Battle been joined
+ */
 void BattleListTab::DoJoin(IBattle& battle)
 {
 	wxString password = wxEmptyString;
@@ -431,9 +449,14 @@ void BattleListTab::DoJoin(IBattle& battle)
 	}
 
 	battle.Join(STD_STRING(password));
+	//Change Tab to show user joining to battle is in progress
+	ui().mw().ShowTab(MainWindow::PAGE_JOIN);
 }
 
-
+/**
+ * Process "select" for battlelist. Selects currentbattle for info panel.
+ * @param event Battle been selected
+ */
 void BattleListTab::OnSelect(wxListEvent& event)
 {
 	if (event.GetIndex() == -1) {
@@ -445,7 +468,10 @@ void BattleListTab::OnSelect(wxListEvent& event)
 		SelectBattle(b);
 }
 
-
+/**
+ * Global event handler. Fires when unitsync library is reloaded
+ * @param 
+ */
 void BattleListTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 {
 	ASSERT_LOGIC(wxThread::IsMain(), "wxThread::IsMain() == false");
