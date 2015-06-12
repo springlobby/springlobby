@@ -54,6 +54,7 @@
 #include "log.h"
 #include "utils/conversion.h"
 #include "gui/ui.h"
+#include "ServerManager.h"
 
 #include <wx/debugrpt.h>
 #include <wx/intl.h>
@@ -189,6 +190,7 @@ int SpringLobbyApp::OnExit()
 
 	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
+	ServerManager::Release();
 	GlobalEventManager::Release();
 	SetEvtHandlerEnabled(false);
 	UiEvents::GetNotificationEventSender().Enable(false);
