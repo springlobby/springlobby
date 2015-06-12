@@ -178,11 +178,10 @@ bool SpringLobbyApp::OnInit()
 //! @brief Finalizes the application
 int SpringLobbyApp::OnExit()
 {
-	if (quit_called)
+	if (quit_called) {
 		return 0;
-
+	}
 	quit_called = true;
-	slLogDebugFunc("");
 
 	if (m_translationhelper) {
 		wxDELETE(m_translationhelper);
@@ -190,10 +189,11 @@ int SpringLobbyApp::OnExit()
 
 	sett().SaveSettings(); // to make sure that cache path gets saved before destroying unitsync
 
+	GlobalEventManager::Release();
 	SetEvtHandlerEnabled(false);
 	UiEvents::GetNotificationEventSender().Enable(false);
 	LSL::Util::DestroyGlobals();
-
+	
 	return 0;
 }
 
