@@ -4,9 +4,7 @@
 /**
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-DO NOT CHANGE THIS FILE!
-
-this file is deprecated and will be replaced with
+TODO: remove all wx stuff & merge / move to
 
 lsl/battle/ibattle.cpp
 
@@ -701,6 +699,7 @@ UserPosition IBattle::GetFreePosition()
 
 void IBattle::SetHostMap(const std::string& mapname, const std::string& hash)
 {
+	assert(hash.empty() || LSL::Util::MakeHashUnsigned(hash) == hash);
 	ASSERT_LOGIC(!mapname.empty(), "Battle with empty map name!");
 	if (mapname != m_host_map.name || hash != m_host_map.hash) {
 		m_map_loaded = false;
@@ -766,6 +765,7 @@ void IBattle::SetHostMod(const std::string& modname, const std::string& hash)
 
 void IBattle::SetLocalMod(const LSL::UnitsyncMod& mod)
 {
+	assert(LSL::Util::MakeHashUnsigned(mod.hash) == mod.hash);
 	if (mod.name != m_local_mod.name || mod.hash != m_local_mod.hash) {
 		m_previous_local_mod_name = m_local_mod.name;
 		m_local_mod = mod;
@@ -1258,4 +1258,19 @@ IServer& IBattle::GetServer()
 User& IBattle::GetFounder() const
 {
 	return GetUser(m_opts.founder);
+}
+
+void IBattle::RemoveUnfittingBots()
+{
+	const auto old_ais = LSL::usync().GetAIList(m_previous_local_mod_name);
+	const auto new_ais = LSL::usync().GetAIList(m_local_mod.name);
+	LSL::StringVector diff(old_ais.size());
+	LSL::StringVector::iterator end = std::set_difference(old_ais.begin(), old_ais.end(), new_ais.begin(), new_ais.end(), diff.begin());
+	for (auto it = diff.begin(); it != end; ++it) {
+		for (size_t j = 0; j < GetNumUsers(); ++j) {
+			User& u = GetUser(j);
+			if (u.GetBattleStatus().airawname == *it)
+				KickPlayer(u);
+		}
+	}
 }

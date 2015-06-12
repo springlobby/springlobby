@@ -39,7 +39,6 @@ public:
 	virtual void StartSpring() override;
 
 private:
-	void RemoveUnfittingBots();
 
 	MainSinglePlayerTab& m_sptab;
 
