@@ -111,7 +111,7 @@ void ServerManager::JoinChannel(const wxString& name, const wxString& password)
 //Download engine, map or mod
 bool ServerManager::DownloadContent(const std::string& category, const std::string& name, const std::string& /*hash*/)
 {
-	int downloadJobsCreated = PrDownloader().GetDownload(category, name);
+	int downloadJobsCreated = prDownloader().GetDownload(category, name);
 	
 	if (downloadJobsCreated < 1) {
 		wxLogError(_("prDownloader failed to create thread!"));
