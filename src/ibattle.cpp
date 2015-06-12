@@ -729,6 +729,7 @@ const LSL::UnitsyncMap& IBattle::LoadMap()
 		if (MapExists(false)) { //Check if selected map available for engine?
 			try {
 				m_local_map = LSL::usync().GetMap(m_host_map.name);
+				assert(LSL::Util::MakeHashUnsigned(m_local_map.hash) == m_local_map.hash);
 				bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::MapOption, m_host_map.name);
 				//TODO: maybe replace this with "silent" IF operator?
 				ASSERT_EXCEPTION(options_loaded, _T("couldn't load the map options"));
@@ -755,6 +756,7 @@ std::string IBattle::GetHostMapHash() const
 
 void IBattle::SetHostMod(const std::string& modname, const std::string& hash)
 {
+	assert(hash.empty() || LSL::Util::MakeHashUnsigned(hash) == hash);
 	if (m_host_mod.name != modname || m_host_mod.hash != hash) {
 		m_mod_loaded = false;
 		m_host_mod.name = modname;
@@ -765,7 +767,7 @@ void IBattle::SetHostMod(const std::string& modname, const std::string& hash)
 
 void IBattle::SetLocalMod(const LSL::UnitsyncMod& mod)
 {
-	assert(LSL::Util::MakeHashUnsigned(mod.hash) == mod.hash);
+	assert(LSL::Util::MakeHashUnsigned(mod.hash) == mod.hash); // hash has to be in unsigned format
 	if (mod.name != m_local_mod.name || mod.hash != m_local_mod.hash) {
 		m_previous_local_mod_name = m_local_mod.name;
 		m_local_mod = mod;
@@ -779,8 +781,8 @@ const LSL::UnitsyncMod& IBattle::LoadMod()
 	ASSERT_LOGIC(!m_host_mod.name.empty(), "m_host_mod.name.empty() is FALSE");
 	if (!m_mod_loaded) {
 		try {
-			ASSERT_EXCEPTION(ModExists(), wxString::Format("Game does not exist: %s hash:%s", m_host_mod.name.c_str(), m_host_mod.hash.c_str()));
-			m_local_mod = LSL::usync().GetMod(m_host_mod.name);
+			ASSERT_EXCEPTION(ModExists(false), wxString::Format("Game does not exist: %s hash:%s", m_host_mod.name.c_str(), m_host_mod.hash.c_str()));
+			SetLocalMod(LSL::usync().GetMod(m_host_mod.name));
 			bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::ModOption, m_host_mod.name);
 			ASSERT_EXCEPTION(options_loaded, _T("couldn't load the game options"));
 			m_mod_loaded = true;
