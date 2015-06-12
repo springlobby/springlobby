@@ -188,17 +188,19 @@ BOOST_AUTO_TEST_CASE(hashes)
 	const int negative = -2147483648;
 
 	BOOST_CHECK("-2061996886" == LSL::Util::MakeHashSigned(LSL::Util::ToIntString(overflow)));
-	BOOST_CHECK(stdprintf("%d", negative) == LSL::Util::MakeHashSigned(LSL::Util::ToIntString(negative)));
+	BOOST_CHECK("-2147483648" == LSL::Util::MakeHashSigned(LSL::Util::ToIntString(negative)));
 
 	BOOST_CHECK("2232970410" == LSL::Util::MakeHashUnsigned(LSL::Util::ToIntString(overflow)));
-	BOOST_CHECK(stdprintf("%u", negative) == LSL::Util::MakeHashUnsigned(LSL::Util::ToIntString(negative)));
+	BOOST_CHECK("2147483648" == LSL::Util::MakeHashUnsigned(LSL::Util::ToIntString(negative)));
 
-	BOOST_CHECK("2232970410" == LSL::Util::MakeHashUnsigned(stdprintf("%d", overflow)));
-	BOOST_CHECK(stdprintf("%u", negative) == LSL::Util::MakeHashUnsigned(stdprintf("%d", negative)));
+	BOOST_CHECK("2232970410" == LSL::Util::MakeHashUnsigned("-2061996886"));
+	BOOST_CHECK("2147483648" == LSL::Util::MakeHashUnsigned("-2147483648"));
 
-	BOOST_CHECK("2232970410" == LSL::Util::MakeHashUnsigned(stdprintf("%u", overflow)));
-	BOOST_CHECK("2147483648" == LSL::Util::MakeHashUnsigned(stdprintf("%u", negative)));
 	BOOST_CHECK(LSL::Util::MakeHashUnsigned("3807049253") == LSL::Util::MakeHashUnsigned("-487918043"));
+	BOOST_CHECK(LSL::Util::MakeHashUnsigned("-2567621") == LSL::Util::MakeHashUnsigned("4292399675"));
+
+	BOOST_CHECK(LSL::Util::MakeHashSigned("3807049253") == LSL::Util::MakeHashSigned("-487918043"));
+	BOOST_CHECK(LSL::Util::MakeHashSigned("-2567621") == LSL::Util::MakeHashSigned("4292399675"));
 }
 
 BOOST_AUTO_TEST_CASE(convertfloat)
