@@ -7,9 +7,7 @@
 /**
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-DO NOT CHANGE THIS FILE!
-
-this file is deprecated and will be replaced with
+TODO: remove all wx stuff & merge / move to
 
 lsl/battle/ibattle.h
 
