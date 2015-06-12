@@ -28,6 +28,7 @@
 #include "gui/controls.h"
 #include "utils/conversion.h"
 #include "log.h"
+#include "utils/globalevents.h"
 
 #include "images/torrentoptionspanel_icon.png.h"
 #include "images/spring.xpm"
@@ -120,6 +121,8 @@ void MainOptionsTab::OnApply(wxCommandEvent& event)
 	m_lobby_opts->OnApply(event);
 
 	sett().SaveSettings();
+	
+	GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 }
 
 void MainOptionsTab::OnOk(wxCommandEvent& event)
