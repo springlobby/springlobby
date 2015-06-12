@@ -40,18 +40,8 @@ public:
 
 	void ShowMainWindow();
 	void ShowConnectWindow();
-	void Connect();
-	void Disconnect();
-	void Reconnect();
-	void DoConnect(const wxString& servername, const wxString& username, const wxString& password);
-	void AddServerWindow(const wxString& servername);
 	void ReopenServerTab();
-
-	void DoRegister(const wxString& servername, const wxString& username, const wxString& password);
-
-	bool IsConnected() const;
-	void JoinChannel(const wxString& name, const wxString& password);
-
+	
 	bool IsSpringCompatible(const std::string& engine, const std::string& version);
 	bool DownloadArchives(const IBattle& battle);
 
@@ -59,8 +49,9 @@ public:
 
 	void Quit();
 
-	void Download(const std::string& category, const std::string& name, const std::string& hash);
-
+	//TODO: remove it
+	void AddServerWindow(const wxString&);
+	
 	bool Ask(const wxString& heading, const wxString& question) const;
 	bool AskText(const wxString& heading, const wxString& question, wxString& answer, bool multiline = false);
 	bool AskPassword(const wxString& heading, const wxString& message, wxString& password);

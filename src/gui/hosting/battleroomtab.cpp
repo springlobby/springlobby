@@ -55,6 +55,7 @@
 #include "utils/globalevents.h"
 #include "autohostmanager.h"
 #include "votepanel.h"
+#include "ServerManager.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -1243,7 +1244,7 @@ void BattleRoomTab::OnBattleActionEvent(UiEvents::UiEventData data)
 
 void BattleRoomTab::OnHostNew(wxCommandEvent& /*event*/)
 {
-	if (!ui().IsConnected()) {
+	if (!ServerManager::Instance()->IsConnected()) {
 		wxLogWarning(_T( "Trying to host while offline" ));
 		customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK);
 		ui().ShowConnectWindow();

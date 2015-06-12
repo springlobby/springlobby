@@ -152,6 +152,7 @@ set(springlobbySrc
 	offlineserver.cpp
 	playbackthread.cpp
 	replaylist.cpp
+	servermanager.cpp
 	savegamelist.cpp
 	singleplayerbattle.cpp
 	serverselector.cpp

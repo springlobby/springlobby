@@ -52,6 +52,7 @@
 #include "gui/textentrydialog.h"
 #include "log.h"
 #include "settings.h"
+#include "ServerManager.h"
 
 #ifndef DISABLE_SOUND
 #include "sound/alsound.h"
@@ -147,8 +148,9 @@ void Ui::ShowMainWindow()
 //! @note It will create the ConnectWindow if not allready created
 void Ui::ShowConnectWindow()
 {
-	if (IsConnected())
+	if (ServerManager::Instance()->IsConnected()) {
 		return;
+	}
 	if (m_con_win == 0) {
 		ASSERT_LOGIC(m_main_win != 0, "m_main_win = 0");
 		m_con_win = new ConnectWindow(m_main_win, *this);
@@ -157,86 +159,6 @@ void Ui::ShowConnectWindow()
 	m_con_win->Show(true);
 	m_con_win->Raise();
 }
-
-
-//! @brief Connects to default server or opens the ConnectWindow
-//!
-//! @see DoConnect
-void Ui::Connect()
-{
-	if (m_connecting)
-		return;
-	const wxString server_name = sett().GetDefaultServer();
-	const wxString nick = sett().GetServerAccountNick(server_name);
-	const wxString pass = sett().GetServerAccountPass(server_name);
-	bool autoconnect = cfg().ReadBool(_T( "/Server/Autoconnect" ));
-	if (!autoconnect || server_name.IsEmpty() || nick.IsEmpty() || pass.IsEmpty()) {
-		ShowConnectWindow();
-		return;
-	}
-	m_con_win = 0;
-	m_connecting = true;
-	DoConnect(server_name, nick, pass);
-}
-
-
-void Ui::Reconnect()
-{
-	if (s_reconnect_delay_ms <= s_max_reconnect_delay) { //increase reconnect delay each time we try to reconnect
-		s_reconnect_delay_ms += std::max<unsigned int>(s_reconnect_delay_ms * 0.50, 1000);
-		wxLogDebug("changed reconnect delay to %d", s_reconnect_delay_ms / 1000);
-	}
-	const wxString servname = sett().GetDefaultServer();
-	const wxString pass = sett().GetServerAccountPass(servname);
-	if (!sett().GetServerAccountSavePass(servname)) {
-		ShowConnectWindow();
-		return;
-	}
-	DoConnect(servname, sett().GetServerAccountNick(servname), pass);
-}
-
-
-void Ui::Disconnect()
-{
-	if (m_serv != 0) {
-		if (IsConnected()) {
-			m_serv->Disconnect();
-		}
-	}
-}
-
-
-//! @brief Opens the accutial connection to a server.
-void Ui::DoConnect(const wxString& servername, const wxString& username, const wxString& password)
-{
-	if ((m_serv != NULL) && (m_serv->GetServerName() == STD_STRING(servername)) && IsConnected() &&
-	    (m_serv->GetUserName() == STD_STRING(username)) && (m_serv->GetPassword() == STD_STRING(password))) {
-		//nothing changed & already connected, do nothing
-		return;
-	}
-
-	Disconnect();
-
-	m_serv->SetUsername(STD_STRING(username));
-	m_serv->SetPassword(STD_STRING(password));
-
-	const wxString host = sett().GetServerHost(servername);
-	const int port = sett().GetServerPort(servername);
-
-	AddServerWindow(servername);
-	m_serv->uidata.panel->StatusMessage(_T("Connecting to server ") + servername + _T("..."));
-
-	// Connect
-	m_serv->Connect(STD_STRING(servername), STD_STRING(host), port);
-}
-
-void Ui::AddServerWindow(const wxString& servername)
-{
-	if (!m_serv->uidata.panel) {
-		m_serv->uidata.panel = m_main_win->GetChatTab().AddChatPanel(*m_serv, servername);
-	}
-}
-
 
 void Ui::ReopenServerTab()
 {
@@ -250,28 +172,12 @@ void Ui::ReopenServerTab()
 	}
 }
 
-void Ui::DoRegister(const wxString& servername, const wxString& username, const wxString& password)
+void Ui::AddServerWindow(const wxString& servername)
 {
-	if (!sett().ServerExists(servername)) {
-		OnRegistrationDenied(_T("Server does not exist in settings"));
-		return;
+	if (m_serv->uidata.panel == nullptr) {
+		m_serv->uidata.panel = ui().mw().GetChatTab().AddChatPanel(*m_serv, servername);
 	}
-	m_serv->Register(STD_STRING(servername), STD_STRING(sett().GetServerHost(servername)), sett().GetServerPort(servername), STD_STRING(username), STD_STRING(password));
 }
-
-bool Ui::IsConnected() const
-{
-	if (m_serv == 0)
-		return false;
-	return m_serv->IsConnected();
-}
-
-void Ui::JoinChannel(const wxString& name, const wxString& password)
-{
-	if (m_serv != 0)
-		m_serv->JoinChannel(STD_STRING(name), STD_STRING(password));
-}
-
 
 bool Ui::IsSpringRunning() const
 {
@@ -282,19 +188,11 @@ bool Ui::IsSpringRunning() const
 //! @brief Quits the entire application
 void Ui::Quit()
 {
-	Disconnect();
+	ServerManager::Instance()->DisconnectFromServer();
 	if (m_con_win != 0) {
 		m_con_win->Close();
 		delete m_con_win;
 		m_con_win = NULL;
-	}
-}
-
-void Ui::Download(const std::string& category, const std::string& name, const std::string& /*hash */)
-{
-	int count = prDownloader().GetDownload(category, name);
-	if (count < 1) {
-		wxLogError(_("prDownloader failed to create thread!"));
 	}
 }
 
@@ -333,12 +231,13 @@ void Ui::ShowMessage(const wxString& heading, const wxString& message) const
 	serverMessageBox(SL_MAIN_ICON, message, heading, wxOK);
 }
 
-
+//TODO: Move this to anywhere else
 bool Ui::ExecuteSayCommand(const wxString& cmd)
 {
-	if (!IsConnected())
+	if (ServerManager::Instance()->IsConnected() == false) {
 		return false;
-
+	}
+	
 	if ((cmd.BeforeFirst(' ').Lower() == _T("/join")) || (cmd.BeforeFirst(' ').Lower() == _T("/j"))) {
 		wxString channel = cmd.AfterFirst(' ');
 		const wxString pass = channel.AfterFirst(' ');
@@ -354,7 +253,7 @@ bool Ui::ExecuteSayCommand(const wxString& cmd)
 		mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
 		return true;
 	} else if (cmd.BeforeFirst(' ').Lower() == _T("/back")) {
-		if (IsConnected()) {
+		if (ServerManager::Instance()->IsConnected()) {
 			m_serv->GetMe().Status().away = false;
 			m_serv->GetMe().SendMyUserStatus();
 			mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
@@ -455,7 +354,7 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 	std::map<std::string, LSL::SpringBundle> enginebundles = SlPaths::GetSpringVersionList();
 	if (enginebundles.size() == 0) {
 		if (Ask(_("Spring can't be found"), wxString::Format(_T("No useable spring engine can be found, download it? (spring %s)"), version.c_str()))) {
-			Download(PrDownloader::GetEngineCat(), "spring " + STD_STRING(version), "");
+			ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), "spring " + STD_STRING(version), "");
 		}
 	}
 }
@@ -490,7 +389,7 @@ bool Ui::DownloadArchives(const IBattle& battle)
 					      wxString::Format(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded?"), TowxString(engineName).c_str(), TowxString(engineVersion).c_str()),
 					      _("Engine missing"),
 					      wxYES_NO | wxICON_QUESTION)) {
-			ui().Download(PrDownloader::GetEngineCat(), engineVersion, "");
+			ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), engineVersion, "");
 		}
 		return false;
 	}
@@ -516,10 +415,10 @@ bool Ui::DownloadArchives(const IBattle& battle)
 	if (customMessageBox(SL_MAIN_ICON, wxString::Format(_("You need to download %s to be able to play.\n\n Shall I download it?"), prompt.c_str()),
 			     _("Content needed to be downloaded"), wxYES_NO | wxICON_QUESTION) == wxYES) {
 		if (!battle.MapExists()) {
-			ui().Download("map", battle.GetHostMapName(), battle.GetHostMapHash());
+			ServerManager::Instance()->DownloadContent("map", battle.GetHostMapName(), battle.GetHostMapHash());
 		}
 		if (!battle.ModExists()) {
-			ui().Download("game", battle.GetHostModName(), battle.GetHostModHash());
+			ServerManager::Instance()->DownloadContent("game", battle.GetHostModName(), battle.GetHostModHash());
 		}
 		return true;
 	}
@@ -954,7 +853,7 @@ bool Ui::IsThisMe(User* other) const
 bool Ui::IsThisMe(const wxString& other) const
 {
 	//if i'm not connected i have no identity
-	if (!IsConnected() || m_serv == 0)
+	if (!ServerManager::Instance()->IsConnected() || m_serv == 0)
 		return false;
 	else
 		return (STD_STRING(other) == m_serv->GetMe().GetNick());
@@ -985,7 +884,7 @@ bool Ui::OnPresetRequiringMap(const wxString& mapname)
                                     Please reselect the preset after download finished"),
 				      _("Map missing"),
 				      wxYES_NO)) {
-		Download("map", STD_STRING(mapname), "");
+		ServerManager::Instance()->DownloadContent("map", STD_STRING(mapname), "");
 		return true;
 	}
 	return false;
@@ -1012,7 +911,7 @@ void Ui::OnInit()
 		FirstRunWelcome();
 	} else {
 		if (cfg().ReadBool(_T( "/Server/Autoconnect" ))) {
-			Connect(); // OnConnect changes tab
+			ServerManager::Instance()->ConnectToServer(); // OnConnect changes tab
 		}
 		mw().ShowTab(cfg().ReadLong(_T( "/GUI/StartTab" )));
 		//don't ask for updates on first run, that's a bit much for a newbie
@@ -1139,7 +1038,7 @@ void Ui::CheckForUpdates(bool show)
 
 void Ui::OnQuit(wxCommandEvent& /*data*/)
 {
-	Disconnect();
+	ServerManager::Instance()->DisconnectFromServer();
 	delete m_serv;
 	m_serv = NULL;
 }
@@ -1150,7 +1049,7 @@ void Ui::Notify()
 	if (m_serv->IsConnected() || (m_con_win != NULL && m_con_win->IsVisible())) {
 		Stop();
 	} else {
-		Reconnect();
+		ServerManager::Instance()->ReconnectToServer();
 	}
 }
 
@@ -1168,7 +1067,7 @@ void Ui::OnRegistrationDenied(const wxString& reason)
 		m_con_win = new ConnectWindow(m_main_win, *this);
 	}
 	m_con_win->OnRegistrationDenied(reason);
-	Disconnect();
+	ServerManager::Instance()->DisconnectFromServer();
 }
 
 void Ui::OnLoginDenied(const std::string& reason)
@@ -1177,5 +1076,5 @@ void Ui::OnLoginDenied(const std::string& reason)
 		m_con_win = new ConnectWindow(m_main_win, *this);
 	}
 	m_con_win->OnLoginDenied(TowxString(reason));
-	Disconnect();
+	ServerManager::Instance()->DisconnectFromServer();
 }

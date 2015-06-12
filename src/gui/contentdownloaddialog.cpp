@@ -11,6 +11,7 @@
 #include "json/wx/jsonreader.h"
 #include "httpfile.h"
 #include "ui.h"
+#include "ServerManager.h"
 #include <lslunitsync/unitsync.h>
 
 DECLARE_EVENT_TYPE(SEARCH_FINISHED, wxID_ANY);
@@ -151,12 +152,12 @@ void ContentDownloadDialog::OnDownloadButton(wxCommandEvent& /*event*/)
 	long item_index = m_search_res_w->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
 	if (item_index != -1) {
 		const ContentSearchResult* res = m_search_res_w->GetDataFromIndex(item_index);
-		ui().Download(STD_STRING(res->type), STD_STRING(res->name), "");
+		ServerManager::Instance()->DownloadContent(STD_STRING(res->type), STD_STRING(res->name), "");
 	}
 }
 
 void ContentDownloadDialog::OnListDownload(wxListEvent& event)
 {
 	const ContentSearchResult* res = m_search_res_w->GetDataFromIndex(event.GetIndex());
-	ui().Download(STD_STRING(res->type), STD_STRING(res->name), "");
+	ServerManager::Instance()->DownloadContent(STD_STRING(res->type), STD_STRING(res->name), "");
 }

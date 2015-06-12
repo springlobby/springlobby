@@ -28,6 +28,7 @@
 #include "iconimagelist.h"
 #include "hosting/addbotdialog.h"
 #include "log.h"
+#include "ServerManager.h"
 
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
@@ -1447,7 +1448,7 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 				m_battle->Update(stdprintf("%d_mapname", LSL::Enum::PrivateOptions));
 				UpdateMinimap();
 			} else if (m_mdown_area == Download) {
-				ui().Download("map", m_battle->GetHostMapName(), m_battle->GetHostMapHash());
+				ServerManager::Instance()->DownloadContent("map", m_battle->GetHostMapName(), m_battle->GetHostMapHash());
 			}
 		}
 		m_mdown_area = Main;

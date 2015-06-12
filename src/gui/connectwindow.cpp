@@ -27,6 +27,7 @@
 #include "gui/controls.h"
 #include "utils/tasutil.h"
 #include "utils/conversion.h"
+#include "ServerManager.h"
 
 // Define events.
 BEGIN_EVENT_TABLE(ConnectWindow, wxDialog)
@@ -272,7 +273,7 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 			sett().SetServerAccountPass(HostAddress, m_pass_text->GetValue());
 		}
 		CleanHide();
-		m_ui.DoConnect(HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue());
+		ServerManager::Instance()->DoConnectToServer(HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue());
 		return;
 	} else {
 		sett().SetServerAccountNick(HostAddress, m_regnick_text->GetValue());
@@ -290,7 +291,7 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 		return;
 	}
 	CleanHide();
-	m_ui.DoRegister(HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue());
+	ServerManager::Instance()->RegisterNewUser(HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue());
 }
 
 void ConnectWindow::OnCancel(wxCommandEvent&)

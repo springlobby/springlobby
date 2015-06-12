@@ -19,6 +19,7 @@
 #include "utils/conversion.h"
 #include "utils/slpaths.h"
 #include "downloader/prdownloader.h"
+#include "ServerManager.h"
 
 template <>
 SortOrder CustomVirtListCtrl<IBattle*, BattleListCtrl>::m_sortorder = SortOrder();
@@ -235,7 +236,7 @@ void BattleListCtrl::OnDLMap(wxCommandEvent& /*unused*/)
 
 	if (GetSelectedIndex() >= 0) {
 		DataType dt = m_data[GetSelectedIndex()];
-		ui().Download("map", dt->GetHostMapName(), dt->GetHostMapHash());
+		ServerManager::Instance()->DownloadContent("map", dt->GetHostMapName(), dt->GetHostMapHash());
 	}
 }
 
@@ -243,7 +244,7 @@ void BattleListCtrl::OnDLMod(wxCommandEvent& /*unused*/)
 {
 	if (GetSelectedIndex() >= 0) {
 		DataType dt = m_data[GetSelectedIndex()];
-		ui().Download("game", dt->GetHostModName(), dt->GetHostModHash());
+		ServerManager::Instance()->DownloadContent("game", dt->GetHostModName(), dt->GetHostModHash());
 	}
 }
 
@@ -251,7 +252,7 @@ void BattleListCtrl::OnDLEngine(wxCommandEvent& /*unused*/)
 {
 	if (GetSelectedIndex() >= 0) {
 		DataType dt = m_data[GetSelectedIndex()];
-		ui().Download(PrDownloader::GetEngineCat(), dt->GetEngineVersion(), "");
+		ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), dt->GetEngineVersion(), "");
 	}
 }
 

@@ -31,6 +31,7 @@
 #include "autohostmanager.h"
 #include "autohost.h"
 #include "utils/globalevents.h"
+#include "ServerManager.h"
 
 #include <lslutils/globalsmanager.h>
 #include <exception>
@@ -870,7 +871,8 @@ void ServerEvents::OnRedirect(const std::string& address, unsigned int port, con
 {
 	const wxString name = TowxString(address) + _T(":") + TowxString(port);
 	sett().SetServer(name, TowxString(address), port);
-	ui().DoConnect(name, TowxString(CurrentNick), TowxString(CurrentPassword));
+	//TODO: Rework this. Server calls it`s own method through another object!
+	ServerManager::Instance()->DoConnectToServer(name, TowxString(CurrentNick), TowxString(CurrentPassword));
 }
 
 

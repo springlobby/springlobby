@@ -37,6 +37,7 @@
 #include "utils/slconfig.h"
 #include "utils/globalevents.h"
 #include "log.h"
+#include "ServerManager.h"
 
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
@@ -302,7 +303,7 @@ void BattleListTab::SetFilterActiv(bool activ)
 
 void BattleListTab::OnHost(wxCommandEvent& /*unused*/)
 {
-	if (!ui().IsConnected()) {
+	if (!ServerManager::Instance()->IsConnected()) {
 		wxLogWarning(_T( "Trying to host while offline" ));
 		customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK);
 		ui().ShowConnectWindow();
@@ -338,7 +339,7 @@ void BattleListTab::OnFilter(wxCommandEvent& /*unused*/)
 void BattleListTab::OnFilterActiv(wxCommandEvent& /*unused*/)
 {
 	bool active = m_filter_activ->GetValue();
-	if (!ui().IsConnected()) {
+	if (!ServerManager::Instance()->IsConnected()) {
 		m_filter_activ->SetValue(!active);
 		return;
 	}

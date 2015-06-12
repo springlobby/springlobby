@@ -25,7 +25,7 @@
 #include "user.h"
 #include "utils/conversion.h"
 #include "useractions.h"
-
+#include "ServerManager.h"
 
 BEGIN_EVENT_TABLE(SelectUsersDialog, wxDialog)
 EVT_TEXT(FILTER_TEXT, SelectUsersDialog::OnNameFilterChange)
@@ -115,7 +115,7 @@ void SelectUsersDialog::Initialize()
 void SelectUsersDialog::PopulateUsersList()
 {
 	ClearList();
-	if (ui().IsConnected()) {
+	if (ServerManager::Instance()->IsConnected()) {
 		const UserList& userlist = serverSelector().GetServer().GetUserList();
 
 		wxWindowUpdateLocker noUpdates(m_user_list);

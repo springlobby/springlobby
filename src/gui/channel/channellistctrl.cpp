@@ -3,9 +3,9 @@
 #include "channellistctrl.h"
 #include "iconimagelist.h"
 #include "utils/conversion.h"
-#include "gui/ui.h"
 #include <algorithm>
 #include "utils/sortutil.h"
+#include "ServerManager.h"
 
 template <>
 SortOrder CustomVirtListCtrl<ChannelInfo, ChannelListctrl>::m_sortorder = SortOrder();
@@ -104,7 +104,7 @@ void ChannelListctrl::OnActivateItem(wxListEvent& event)
 	if (index == -1)
 		return;
 	wxString chan_name = m_data[m_visible_idxs[index]].name;
-	ui().JoinChannel(chan_name, wxEmptyString);
+	ServerManager::Instance()->JoinChannel(chan_name, wxEmptyString);
 }
 
 void ChannelListctrl::ClearChannels()

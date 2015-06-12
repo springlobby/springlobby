@@ -28,6 +28,7 @@
 #include "utils/globalevents.h"
 #include "settings.h"
 #include "log.h"
+#include "ServerManager.h"
 
 
 const long MapSelectDialog::ID_STATICTEXT2 = wxNewId();
@@ -180,9 +181,9 @@ void MapSelectDialog::OnInit(wxInitDialogEvent& /*unused*/)
 	m_replays = lslTowxArrayString(LSL::usync().GetPlaybackList(true));
 
 	const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
-	m_filter_popular->Enable(ui().IsConnected());
+	m_filter_popular->Enable(ServerManager::Instance()->IsConnected());
 
-	if ((lastFilter == m_filter_popular_sett) && (ui().IsConnected())) {
+	if ((lastFilter == m_filter_popular_sett) && (ServerManager::Instance()->IsConnected())) {
 		m_filter_popular->SetValue(true);
 		LoadPopular();
 	} else if ((lastFilter == m_filter_recent_sett) && (!m_replays.empty())) {

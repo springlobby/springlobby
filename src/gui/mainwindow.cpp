@@ -57,6 +57,7 @@
 #include "gui/controls.h"
 #include "gui/ui.h"
 #include "log.h"
+#include "ServerManager.h"
 #include <lslunitsync/unitsync.h>
 
 #include "iconimagelist.h"
@@ -479,7 +480,7 @@ void MainWindow::ShowChannelChooser()
 	if ((m_channel_chooser == NULL) || (m_channel_chooser && m_channel_chooser->IsShown()))
 		return;
 
-	if (!ui().IsConnected()) {
+	if (!ServerManager::Instance()->IsConnected()) {
 		customMessageBox(SL_MAIN_ICON, _("You need to be connected to a server to view the channel list"), _("Not connected"));
 	} else {
 		m_channel_chooser->ClearChannels();
@@ -492,11 +493,11 @@ void MainWindow::ShowChannelChooser()
 void MainWindow::OnMenuJoin(wxCommandEvent& /*unused*/)
 {
 
-	if (!ui().IsConnected())
+	if (!ServerManager::Instance()->IsConnected())
 		return;
 	wxString answer;
 	if (ui().AskText(_("Join channel..."), _("Name of channel to join"), answer)) {
-		ui().JoinChannel(answer, wxEmptyString);
+		ServerManager::Instance()->JoinChannel(answer, wxEmptyString);
 	}
 }
 
@@ -504,7 +505,7 @@ void MainWindow::OnMenuJoin(wxCommandEvent& /*unused*/)
 void MainWindow::OnMenuChat(wxCommandEvent& /*unused*/)
 {
 
-	if (!ui().IsConnected())
+	if (!ServerManager::Instance()->IsConnected())
 		return;
 	wxString answer;
 	if (ui().AskText(_("Open Private Chat..."), _("Name of user"), answer)) {
@@ -528,7 +529,7 @@ void MainWindow::OnMenuConnect(wxCommandEvent& /*unused*/)
 
 void MainWindow::OnMenuDisconnect(wxCommandEvent& /*unused*/)
 {
-	ui().Disconnect();
+	ServerManager::Instance()->DisconnectFromServer();
 }
 
 void MainWindow::OnMenuServerTab(wxCommandEvent& /*unused*/)
@@ -580,8 +581,9 @@ void MainWindow::OnTabsChanged(wxAuiNotebookEvent& event)
 	int newsel = event.GetSelection();
 
 	if (newsel == 0 || newsel == 1) {
-		if (!ui().IsConnected() && ui().IsMainWindowCreated())
-			ui().Connect();
+		if (!ServerManager::Instance()->IsConnected() && ui().IsMainWindowCreated()) {
+			ServerManager::Instance()->ConnectToServer();
+		}
 	}
 
 	ChatPanel* panel = ui().GetActiveChatPanel(); //set input focus to edit field on tab change

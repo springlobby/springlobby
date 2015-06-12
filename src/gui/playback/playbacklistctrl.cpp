@@ -14,7 +14,7 @@
 #include "utils/conversion.h"
 #include "playbacklistctrl.h"
 #include "replaylist.h"
-
+#include "ServerManager.h"
 
 BEGIN_EVENT_TABLE(PlaybackListCtrl, CustomVirtListCtrl)
 
@@ -100,7 +100,7 @@ void PlaybackListCtrl::OnDLMap(wxCommandEvent& /*unused*/)
 {
 	if (GetSelectedIndex() >= 0) {
 		const OfflineBattle& battle = m_data[GetSelectedIndex()]->battle;
-		ui().Download("map", battle.GetHostMapName(), battle.GetHostMapHash());
+		ServerManager::Instance()->DownloadContent("map", battle.GetHostMapName(), battle.GetHostMapHash());
 	}
 }
 
@@ -108,7 +108,7 @@ void PlaybackListCtrl::OnDLMod(wxCommandEvent& /*unused*/)
 {
 	if (GetSelectedIndex() >= 0) {
 		const OfflineBattle& battle = m_data[GetSelectedIndex()]->battle;
-		ui().Download("game", battle.GetHostModName(), battle.GetHostModHash());
+		ServerManager::Instance()->DownloadContent("game", battle.GetHostModName(), battle.GetHostModHash());
 	}
 }
 

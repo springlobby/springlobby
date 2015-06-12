@@ -405,13 +405,13 @@ void ChatPanelMenu::OnChannelMenuSpamIsOn(wxCommandEvent& /*unused*/)
 
 void ChatPanelMenu::OnServerMenuDisconnect(wxCommandEvent& /*unused*/)
 {
-	ui().Disconnect();
+	ServerManager::Instance()->DisconnectFromServer();
 }
 
 
 void ChatPanelMenu::OnServerMenuReconnect(wxCommandEvent& /*unused*/)
 {
-	ui().Reconnect();
+	ServerManager::Instance()->ReconnectToServer();
 }
 
 
