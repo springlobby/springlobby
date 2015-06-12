@@ -701,6 +701,7 @@ UserPosition IBattle::GetFreePosition()
 
 void IBattle::SetHostMap(const std::string& mapname, const std::string& hash)
 {
+	assert(hash.empty() || LSL::Util::MakeHashUnsigned(hash) == hash);
 	ASSERT_LOGIC(!mapname.empty(), "Battle with empty map name!");
 	if (mapname != m_host_map.name || hash != m_host_map.hash) {
 		m_map_loaded = false;
@@ -766,6 +767,7 @@ void IBattle::SetHostMod(const std::string& modname, const std::string& hash)
 
 void IBattle::SetLocalMod(const LSL::UnitsyncMod& mod)
 {
+	assert(LSL::Util::MakeHashUnsigned(mod.hash) == mod.hash);
 	if (mod.name != m_local_mod.name || mod.hash != m_local_mod.hash) {
 		m_previous_local_mod_name = m_local_mod.name;
 		m_local_mod = mod;
