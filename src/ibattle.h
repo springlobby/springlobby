@@ -693,7 +693,7 @@ public:
 	virtual void SetAutoLockOnStart(bool /*autolock*/)
 	{
 	}
-
+	void RemoveUnfittingBots();
 	AutohostManager* m_autohost_manager;
 
 protected:
@@ -702,8 +702,6 @@ protected:
 	std::map<int, int> m_teams_sizes; // controlteam -> number of people in
 	bool m_is_self_in;
 	std::map<std::string, time_t> m_ready_up_map; // player name -> time counting from join/unspect
-	std::string m_previous_local_mod_name;
-	LSL::UnitsyncMod m_local_mod;
 
 private:
 	void LoadScriptMMOpts(const std::string& sectionname, const LSL::TDF::PDataList& node);
@@ -720,8 +718,10 @@ private:
 	LSL::UnitsyncMap m_local_map;
 	LSL::UnitsyncMap m_host_map;
 	LSL::UnitsyncMod m_host_mod;
+	LSL::UnitsyncMod m_local_mod;
 
 	std::map<std::string, int> m_restricted_units;
+	std::string m_previous_local_mod_name;
 
 	LSL::OptionsWrapper m_opt_wrap;
 
