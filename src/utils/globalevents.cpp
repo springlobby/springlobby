@@ -42,6 +42,14 @@ GlobalEventManager* GlobalEventManager::Instance()
 	return m_Instance;
 }
 
+void GlobalEventManager::Release()
+{
+	if (m_Instance != nullptr) {
+		delete m_Instance;
+	}	
+	m_Instance = nullptr;
+}
+
 void GlobalEventManager::Send(wxEventType type)
 {
 	wxCommandEvent evt = wxCommandEvent(type);
@@ -83,6 +91,11 @@ void GlobalEventManager::UnSubscribe(wxEvtHandler* evh, wxEventType id)
 	GlobalEventManager::_Disconnect(evh, id);
 }
 
+void GlobalEventManager::UnSubscribeAll(wxEvtHandler* evh)
+{
+	_Disconnect(evh, ANY_EVENT);
+}
+
 void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func)
 {
 	assert(evthandler != NULL);
@@ -102,13 +115,12 @@ void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxOb
 void GlobalEventManager::_Disconnect(wxEvtHandler* evthandler, wxEventType id)
 {
 	std::map<wxEventType, std::list<wxEvtHandler*> >::iterator it;
+	
 	for (it = m_eventsTable.begin(); it != m_eventsTable.end(); ++it) {
-		if ((id == 0) || (id == it->first)) {
+		if ((id == ANY_EVENT) || (id == it->first)) {
 			for (std::list<wxEvtHandler*>::iterator it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
 				if (*it2 == evthandler) {
-					if (id != 0) {
-						evthandler->Disconnect(id);
-					}
+					evthandler->Disconnect(it->first);
 					it->second.erase(it2);
 					break;
 				}

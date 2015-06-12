@@ -174,6 +174,8 @@ BattleListTab::BattleListTab(wxWindow* parent)
 
 BattleListTab::~BattleListTab()
 {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
+	
 	if (m_filter != 0)
 		m_filter->SaveFilterValues();
 }

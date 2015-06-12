@@ -360,6 +360,8 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 
 BattleRoomTab::~BattleRoomTab()
 {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
+	
 	if (GetAui().manager)
 		GetAui().manager->DetachPane(this);
 }

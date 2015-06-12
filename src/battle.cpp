@@ -56,6 +56,8 @@ Battle::Battle(IServer& serv, int id)
 
 Battle::~Battle()
 {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
+	
 	wxDELETE(m_timer);
 	wxDELETE(m_autohost_manager);
 }

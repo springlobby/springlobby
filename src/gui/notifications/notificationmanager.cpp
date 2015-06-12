@@ -52,6 +52,8 @@ NotificationManager::NotificationManager()
 
 NotificationManager::~NotificationManager()
 {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
+	
 	m_rate_limit_timer.Stop();
 	delete m_notification_wrapper;
 	m_notification_wrapper = NULL;

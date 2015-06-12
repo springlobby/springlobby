@@ -18,10 +18,13 @@ private:
 
 public:
 	static GlobalEventManager* Instance();
+	static void Release();
 	
 public:
 	void Subscribe(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func);
 	void UnSubscribe(wxEvtHandler* evh, wxEventType id = 0);
+	void UnSubscribeAll(wxEvtHandler* evh);
+	
 	void Send(wxEventType type);
 	void Send(wxCommandEvent event);
 	void Send(wxEventType type, void *clientData);
@@ -54,6 +57,7 @@ private:
 
 private:
 	std::map<wxEventType, std::list<wxEvtHandler*> > m_eventsTable;
+	const int ANY_EVENT = 0;
 };
 
 

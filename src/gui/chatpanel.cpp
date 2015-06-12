@@ -196,6 +196,8 @@ ChatPanel::ChatPanel(wxWindow* parent)
 //! @brief ChatPanel destructor.
 ChatPanel::~ChatPanel()
 {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
+	
 	if (m_server != 0) {
 		if (m_server->uidata.panel == this)
 			m_server->uidata.panel = 0;

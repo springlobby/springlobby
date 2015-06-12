@@ -100,6 +100,7 @@ Ui::Ui()
 
 Ui::~Ui()
 {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
 	delete m_serv;
 	m_serv = NULL;
 }

@@ -144,6 +144,8 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
 
 MapSelectDialog::~MapSelectDialog()
 {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
+	
 	sett().SetHorizontalSortkeyIndex(m_horizontal_choice->GetSelection());
 	sett().SetVerticalSortkeyIndex(m_vertical_choice->GetSelection());
 	sett().SetHorizontalSortorder(m_horizontal_direction);
