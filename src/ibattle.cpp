@@ -1259,3 +1259,18 @@ User& IBattle::GetFounder() const
 {
 	return GetUser(m_opts.founder);
 }
+
+void IBattle::RemoveUnfittingBots()
+{
+	const auto old_ais = LSL::usync().GetAIList(m_previous_local_mod_name);
+	const auto new_ais = LSL::usync().GetAIList(m_local_mod.name);
+	LSL::StringVector diff(old_ais.size());
+	LSL::StringVector::iterator end = std::set_difference(old_ais.begin(), old_ais.end(), new_ais.begin(), new_ais.end(), diff.begin());
+	for (auto it = diff.begin(); it != end; ++it) {
+		for (size_t j = 0; j < GetNumUsers(); ++j) {
+			User& u = GetUser(j);
+			if (u.GetBattleStatus().airawname == *it)
+				KickPlayer(u);
+		}
+	}
+}
