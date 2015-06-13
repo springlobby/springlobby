@@ -382,14 +382,11 @@ void NickListCtrl::UserFilterShowPlayersOnly(bool showOnlyPlayers) {
  */
 bool NickListCtrl::checkFilteringConditions(const User* user) {
 	//Filter out bots
-	if (m_userFilterShowPlayersOnly == true) {
-		if(user->GetStatus().bot == true) { //Get lost, filthy bot!
-			return false;
-		}
+	if ((m_userFilterShowPlayersOnly) && (user->GetStatus().bot)) {
+		return false;
 	}
 	//Check users nicks
-	wxString nick = wxString::FromAscii(user->GetNick().c_str());
-	if (nick.Lower().Contains(m_UsersFilterString) == false) {
+	if (!TowxString(user->GetNick()).Lower().Contains(m_UsersFilterString)) {
 		return false;
 	}
 	//All is good, user passed
