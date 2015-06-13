@@ -168,49 +168,45 @@ void NickListCtrl::OnShowMenu(wxContextMenuEvent& /*unused*/)
 
 void NickListCtrl::SetTipWindowText(const long item_hit, const wxPoint& position)
 {
-
 	int column = getColumnFromPosition(position);
 	if (column > (int)m_colinfovec.size() || column < 0 || item_hit < 0 || item_hit > (long)m_data.size() || m_data[item_hit] == NULL) {
 		m_tiptext = wxEmptyString;
-	} else {
+		return;
+	}
+	const User& user = *m_data[item_hit];
+	switch (column) {
+		case 0: // status
+			m_tiptext = _T( "This " );
+			if (user.GetStatus().bot)
+				m_tiptext << _T( "bot " );
+			else if (user.GetStatus().moderator)
+				m_tiptext << _T( "moderator " );
+			else
+				m_tiptext << _T( "player " );
 
-		const User& user = *m_data[item_hit];
-		{
-			switch (column) {
-				case 0: // status
-					m_tiptext = _T( "This " );
-					if (user.GetStatus().bot)
-						m_tiptext << _T( "bot " );
-					else if (user.GetStatus().moderator)
-						m_tiptext << _T( "moderator " );
-					else
-						m_tiptext << _T( "player " );
+			if (user.GetStatus().in_game)
+				m_tiptext << _T( "is ingame" );
+			else if (user.GetStatus().away)
+				m_tiptext << _T( "is away" );
+			else
+				m_tiptext << _T( "is available" );
+			break;
 
-					if (user.GetStatus().in_game)
-						m_tiptext << _T( "is ingame" );
-					else if (user.GetStatus().away)
-						m_tiptext << _T( "is away" );
-					else
-						m_tiptext << _T( "is available" );
-					break;
+		case 1: // country
+			m_tiptext = GetFlagNameFromCountryCode(TowxString(user.GetCountry()).Upper());
+			break;
 
-				case 1: // country
-					m_tiptext = GetFlagNameFromCountryCode(TowxString(user.GetCountry()).Upper());
-					break;
+		case 2: // rank
+			m_tiptext = TowxString(user.GetRankName(user.GetStatus().rank));
+			break;
 
-				case 2: // rank
-					m_tiptext = TowxString(user.GetRankName(user.GetStatus().rank));
-					break;
+		case 3: // nickname
+			m_tiptext = TowxString(user.GetNick());
+			break;
 
-				case 3: // nickname
-					m_tiptext = TowxString(user.GetNick());
-					break;
-
-				default:
-					m_tiptext = m_colinfovec[column].tip;
-					break;
-			}
-		}
+		default:
+			m_tiptext = m_colinfovec[column].tip;
+			break;
 	}
 }
 
