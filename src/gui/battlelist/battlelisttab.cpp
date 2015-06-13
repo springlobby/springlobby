@@ -203,12 +203,7 @@ void BattleListTab::SelectBattle(IBattle* battle)
 		m_mod_text->SetLabel(TowxString(m_sel_battle->GetHostModName()));
 		m_players_text->SetLabel(wxString::Format(_T( "%d / %d" ), int(m_sel_battle->GetNumUsers()) - int(m_sel_battle->GetSpectators()), int(m_sel_battle->GetMaxPlayers())));
 		m_spec_text->SetLabel(wxString::Format(_T( "%d" ), m_sel_battle->GetSpectators()));
-		for (unsigned int i = 0; i < m_sel_battle->GetNumUsers(); i++) {
-			User& usr = m_sel_battle->GetUser(i);
-			if (usr.BattleStatus().IsBot())
-				continue;
-			m_players->AddUser(usr);
-		}
+		m_players->SetUsers(m_sel_battle->GetUsers());
 	} else {
 		m_map_text->SetLabel(wxEmptyString);
 		m_mod_text->SetLabel(wxEmptyString);
@@ -327,7 +322,7 @@ void BattleListTab::OnHost(wxCommandEvent& /*unused*/)
 
 /**
  * Procees "Show Filtes" toggle buttton clicked. Show/hides filters options panel
- * @param 
+ * @param
  */
 void BattleListTab::OnFilter(wxCommandEvent& /*unused*/)
 {
@@ -342,7 +337,7 @@ void BattleListTab::OnFilter(wxCommandEvent& /*unused*/)
 
 /**
  * Process "Turn On Filters" button event. Activates/deactivates battlelist filtering
- * @param 
+ * @param
  */
 void BattleListTab::OnFilterActiv(wxCommandEvent& /*unused*/)
 {
@@ -470,7 +465,7 @@ void BattleListTab::OnSelect(wxListEvent& event)
 
 /**
  * Global event handler. Fires when unitsync library is reloaded
- * @param 
+ * @param
  */
 void BattleListTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 {

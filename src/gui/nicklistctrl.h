@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include "customvirtlistctrl.h"
+#include "userlist.h"
 
 class User;
 class UserList;
@@ -25,6 +26,7 @@ public:
 	void AddUser(const User& user);
 	void RemoveUser(const User& user);
 	void UserUpdated(const User& user);
+	void SetUsers(const UserList::user_map_t& userlist);
 	void ClearUsers();
 	int GetUsersCount();
 

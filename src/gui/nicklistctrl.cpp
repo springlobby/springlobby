@@ -81,6 +81,18 @@ void NickListCtrl::AddUser(const User& user)
 	DoUsersFilter();
 }
 
+void NickListCtrl::SetUsers(const UserList::user_map_t& userlist)
+{
+	ClearUsers();
+	for(const auto item: userlist) {
+		m_real_users_list[item.second->GetNick()] = item.second;
+	}
+	DoUsersFilter();
+	Sort();
+	Update();
+}
+
+
 void NickListCtrl::RemoveUser(const User& user)
 {
 	const auto it = m_real_users_list.find(user.GetNick());
