@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 
 #include "customvirtlistctrl.h"
-#include "usermenu.h"
 
 class User;
 class UserList;
@@ -14,9 +13,6 @@ class UserMenu;
 
 class NickListCtrl : public CustomVirtListCtrl<const User*, NickListCtrl>
 {
-private:
-	typedef SL_GENERIC::UserMenu<ChatPanelMenu> UserMenu;
-
 public:
 	NickListCtrl(wxWindow* parent, bool show_header = true, ChatPanelMenu* popup = 0,
 		     bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true);

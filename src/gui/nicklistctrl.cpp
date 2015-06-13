@@ -166,7 +166,6 @@ void NickListCtrl::OnActivateItem(wxListEvent& event)
 	SetSelectedIndex(index);
 }
 
-
 void NickListCtrl::OnShowMenu(wxContextMenuEvent& /*unused*/)
 {
 	slLogDebugFunc("");
@@ -176,7 +175,7 @@ void NickListCtrl::OnShowMenu(wxContextMenuEvent& /*unused*/)
 		if (selected != -1 && m_data[selected]) {
 			const User& user = *m_data[selected];
 			wxString nick = TowxString(user.GetNick());
-			NickListCtrl::UserMenu* popup = m_menu->GetUserMenu();
+			SL_GENERIC::UserMenu<ChatPanelMenu>* popup = m_menu->GetUserMenu();
 			popup->EnableItems((selected != -1), nick);
 			PopupMenu(popup);
 		}
