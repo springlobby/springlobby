@@ -22,36 +22,36 @@ public:
 		     bool singleSelectList = true, const wxString& name = _T("NickListCtrl"), bool highlight = true);
 	virtual ~NickListCtrl();
 
-	virtual void AddUser(const User& user);
-	void RemoveUser(const User& user);
-
-	void UserUpdated(const User& user);
-
-	void ClearUsers();
-	void SetUsersFilterString(wxString fs);
 	void UserFilterShowPlayersOnly(bool);
-	void DoUsersFilter();
+	void SetUsersFilterString(const wxString& fs);
+	void AddUser(const User& user);
+	void RemoveUser(const User& user);
+	void UserUpdated(const User& user);
+	void ClearUsers();
 	int GetUsersCount();
 
-	void OnActivateItem(wxListEvent& event);
-	void OnShowMenu(wxContextMenuEvent& event);
-	virtual void SetTipWindowText(const long item_hit, const wxPoint& position);
+private:
 
-	void HighlightItem(long item);
 
 	//these are overloaded to use list in virtual style
-	wxString GetItemText(long item, long column) const;
-	int GetItemColumnImage(long item, long column) const;
-	wxListItemAttr* GetItemAttr(long item) const;
+	wxString GetItemText(long item, long column) const override;
+	int GetItemColumnImage(long item, long column) const override;
+	wxListItemAttr* GetItemAttr(long item) const override;
 
-private:
+	void DoUsersFilter();
+	void SetTipWindowText(const long item_hit, const wxPoint& position) override;
+
+	void HighlightItem(long item);
+	void OnActivateItem(wxListEvent& event);
+	void OnShowMenu(wxContextMenuEvent& event);
+
 	bool checkFilteringConditions(const User*);
 	//! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
 	int CompareOneCrit(DataType u1, DataType u2, int col, int dir) const;
 	//! utils func for comparing user status, so the CompareOneCrit doesn't get too crowded
 	static int CompareUserStatus(DataType u1, DataType u2);
 	//! required per base clase
-	virtual void Sort();
+	void Sort() override;
 
 	int GetIndexFromRealData(const User& user);
 	int GetIndexFromData(const DataType& data) const;

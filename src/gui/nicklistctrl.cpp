@@ -113,7 +113,7 @@ void NickListCtrl::ClearUsers()
 	Clear();
 }
 
-void NickListCtrl::SetUsersFilterString(wxString fs)
+void NickListCtrl::SetUsersFilterString(const wxString& fs)
 {
 	m_UsersFilterString = fs.Lower();
 	DoUsersFilter();
@@ -126,10 +126,7 @@ void NickListCtrl::SetUsersFilterString(wxString fs)
  */
 void NickListCtrl::DoUsersFilter()
 {
-	for (std::vector<const User*>::iterator it = m_real_users_list.begin();
-			it != m_real_users_list.end(); it++) {
-		const User* user = *it;
-
+	for (const User* user: m_real_users_list) {
 		if (checkFilteringConditions(user) == true) {
 			//User passed filter. Add him/her to the list.
 			AddItem(user);
