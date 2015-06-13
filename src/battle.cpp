@@ -57,7 +57,7 @@ Battle::Battle(IServer& serv, int id)
 Battle::~Battle()
 {
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
-	
+
 	wxDELETE(m_timer);
 	wxDELETE(m_autohost_manager);
 }
@@ -94,6 +94,7 @@ void Battle::Join(const std::string& password)
 
 void Battle::Leave()
 {
+	GlobalEventManager::Instance()->UnSubscribe(this, GlobalEventManager::OnUnitsyncReloaded);
 	m_serv.LeaveBattle(m_opts.battleid);
 	m_is_self_in = false;
 }
