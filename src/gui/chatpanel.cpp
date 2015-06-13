@@ -38,6 +38,7 @@
 #include "gui/hosting/votepanel.h"
 #include "utils/globalevents.h"
 
+
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 
 EVT_TEXT_ENTER(CHAT_TEXT, ChatPanel::OnSay)
@@ -47,7 +48,7 @@ EVT_BUTTON(CHAT_SEND, ChatPanel::OnSay)
 EVT_TEXT_URL(CHAT_LOG, ChatPanel::OnLinkEvent)
 EVT_MENU(wxID_ANY, ChatPanel::OnMenuItem)
 EVT_TEXT(FILTER_USERS, ChatPanel::OnFilterUsers)
-
+EVT_CHECKBOX(SHOW_PLAYERS_ONLY_CHECK, ChatPanel::OnShowPlayerOnlyCheck)
 END_EVENT_TABLE()
 
 static const wxString chan_prefix = _("channel_");
@@ -238,6 +239,12 @@ void ChatPanel::CreateControls()
 
 		m_nick_sizer = new wxBoxSizer(wxVERTICAL);
 		m_usercount_label = new wxStaticText(m_nick_panel, wxID_ANY, wxEmptyString);
+		m_showPlayerOnlyCheck = new wxCheckBox(m_nick_panel, SHOW_PLAYERS_ONLY_CHECK, _("Hide bots"));
+
+		wxBoxSizer* nickListHeaderSizer = new wxBoxSizer(wxHORIZONTAL);
+		nickListHeaderSizer->Add(m_usercount_label, 1, wxEXPAND);
+		nickListHeaderSizer->Add(m_showPlayerOnlyCheck, 0, wxALIGN_RIGHT);
+
 		UpdateUserCountLabel();
 		CreatePopup(); //ensures m_popup_menu is constructed
 		//SL_GENERIC::UserMenu<ChatPanelMenu>* usermenu  = m_popup_menu->GetUserMenu();
@@ -247,13 +254,17 @@ void ChatPanel::CreateControls()
 		// m_nick_filter->Disable();
 
 		m_nick_filter = new wxTextCtrl(m_nick_panel, FILTER_USERS);
-		m_nick_sizer->Add(m_usercount_label, 0);
+		m_nick_sizer->Add(nickListHeaderSizer, 0, wxEXPAND);
 		m_nick_sizer->Add(m_nicklist, 1, wxEXPAND);
 		m_nick_sizer->Add(m_nick_filter, 0, wxEXPAND);
 		// m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
 
 		m_nick_panel->SetSizer(m_nick_sizer);
-
+		//Hide bots in players list by default
+		//TODO: store this value in settings and read on init!
+		bool defaultState = true;
+		m_nicklist->UserFilterShowPlayersOnly(defaultState);
+		m_showPlayerOnlyCheck->SetValue(defaultState);
 	} else {
 
 		m_chat_panel = this;
@@ -507,6 +518,7 @@ void ChatPanel::OnSay(wxCommandEvent& /*unused*/)
 void ChatPanel::OnFilterUsers(wxCommandEvent& /*unused*/)
 {
 	m_nicklist->SetUsersFilterString(m_nick_filter->GetValue());
+	UpdateUserCountLabel();
 }
 
 void ChatPanel::OnPaste(wxClipboardTextEvent& event)
@@ -1176,16 +1188,38 @@ void ChatPanel::SetVotePanel(VotePanel* votePanel)
 	m_votePanel->SetChatPanel(this);
 }
 
+/**
+ * Update User Count label on top of users list
+ * If available shows filtered number of users
+ */
 void ChatPanel::UpdateUserCountLabel()
 {
 	if (m_usercount_label == NULL)
 		return;
 
 	unsigned int numusers = 0;
+
+	//Regular channel
 	if ((m_type == CPT_Channel) && (GetChannel() != nullptr)) {
-		numusers = GetChannel()->GetNumUsers();
+		if (m_nicklist != nullptr) {
+			numusers = m_nicklist->GetUsersCount();
+		} else {
+			numusers = GetChannel()->GetNumUsers();
+		}
+	//Server channel
 	} else if ((m_type == CPT_Server) && (m_server != NULL)) {
-		numusers = m_server->GetNumUsers();
+		if (m_nicklist != nullptr) {
+			numusers = m_nicklist->GetUsersCount();
+		} else {
+			numusers = m_server->GetNumUsers();
+		}
 	}
+	//Update label
 	m_usercount_label->SetLabel(wxString::Format(_("%d users"), numusers));
+}
+
+
+void ChatPanel::OnShowPlayerOnlyCheck(wxCommandEvent& event) {
+	m_nicklist->UserFilterShowPlayersOnly( event.IsChecked() );
+	UpdateUserCountLabel();
 }

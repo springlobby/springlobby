@@ -27,6 +27,7 @@
 #include "utils/sortutil.h"
 #include "log.h"
 
+
 BEGIN_EVENT_TABLE(NickListCtrl, NickListCtrl::BaseType)
 EVT_LIST_ITEM_ACTIVATED(NICK_LIST, NickListCtrl::OnActivateItem)
 EVT_CONTEXT_MENU(NickListCtrl::OnShowMenu)
@@ -60,6 +61,9 @@ NickListCtrl::NickListCtrl(wxWindow* parent, bool show_header, ChatPanelMenu* po
 		m_sortorder[3].col = 1;
 		m_sortorder[3].direction = 1;
 	}
+
+	//Hide all bots in users list by default.
+	m_userFilterShowPlayersOnly = true;
 }
 
 NickListCtrl::~NickListCtrl()
@@ -115,21 +119,28 @@ void NickListCtrl::SetUsersFilterString(wxString fs)
 	DoUsersFilter();
 }
 
+/**
+ * Do filtering of the players list
+ * Conditions for filtering: part of nick name (m_UsersFilterString)
+ * and PlayersOnly boolean flag (m_userFilterShowPlayersOnly)
+ */
 void NickListCtrl::DoUsersFilter()
 {
 	for (std::vector<const User*>::iterator it = m_real_users_list.begin();
-	     it != m_real_users_list.end();
-	     it++) {
+			it != m_real_users_list.end(); it++) {
 		const User* user = *it;
-		wxString nick = wxString::FromAscii(user->GetNick().c_str());
-		if (nick.Lower().Contains(m_UsersFilterString)) {
+
+		if (checkFilteringConditions(user) == true) {
+			//User passed filter. Add him/her to the list.
 			AddItem(user);
 		} else {
+			//Remove user from the list. No need to check if user in the list, method will do it.
 			RemoveItem(user);
 		}
 	}
 
 	Sort();
+	Update();
 }
 
 int NickListCtrl::GetIndexFromRealData(const User& user)
@@ -358,4 +369,37 @@ int NickListCtrl::CompareUserStatus(DataType user1, DataType user2)
 		return 1;
 
 	return 0;
+}
+
+/**
+ * Setter for showOnlyPlayer variable
+ * Triggers filtering updating
+ */
+void NickListCtrl::UserFilterShowPlayersOnly(bool showOnlyPlayers) {
+	m_userFilterShowPlayersOnly = showOnlyPlayers;
+	DoUsersFilter();
+}
+
+/**
+ * Check conditions for users list filtering
+ * return true if User passes filter
+ */
+bool NickListCtrl::checkFilteringConditions(const User* user) {
+	//Filter out bots
+	if (m_userFilterShowPlayersOnly == true) {
+		if(user->GetStatus().bot == true) { //Get lost, filthy bot!
+			return false;
+		}
+	}
+	//Check users nicks
+	wxString nick = wxString::FromAscii(user->GetNick().c_str());
+	if (nick.Lower().Contains(m_UsersFilterString) == false) {
+		return false;
+	}
+	//All is good, user passed
+	return true;
+}
+
+int NickListCtrl::GetUsersCount() {
+	return m_data.size();
 }

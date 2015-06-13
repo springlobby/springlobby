@@ -5,6 +5,7 @@
 
 #include <wx/panel.h>
 #include <wx/textctrl.h>
+#include <wx/checkbox.h>
 #include <vector>
 #include <set>
 
@@ -132,6 +133,7 @@ private:
 
 	void SortNickList();
 	void OnFilterUsers(wxCommandEvent&);
+	void OnShowPlayerOnlyCheck(wxCommandEvent&);
 
 	void OnChanOpts(wxCommandEvent& event);
 	void OnSay(wxCommandEvent& event);
@@ -178,7 +180,7 @@ private:
 	wxPanel* m_chat_panel;	//!< Panel containing the chat. Only used when nicklist is visible.
 	wxPanel* m_nick_panel;	//!< Panel containing the nicklist.
 	wxTextCtrl* m_nick_filter;    //!< Textcontrol for filtering nicklist
-
+	wxCheckBox* m_showPlayerOnlyCheck; //!< CheckBox for showing only live players (not bots)
 	wxTextCtrl* m_chatlog_text;	 //!< The chat log textcontrol.
 	wxTextCtrlHist* m_say_text;	 //!< The say textcontrol.
 	wxBitmapButton* m_chan_opts_button; //!< The channel options button.
@@ -235,6 +237,7 @@ enum {
 	CHAT_TEXT,
 	CHAT_LOG,
 	CHAT_CHAN_OPTS,
-	FILTER_USERS
+	FILTER_USERS,
+	SHOW_PLAYERS_ONLY_CHECK
 };
 #endif // SPRINGLOBBY_HEADERGUARD_CHATPANEL_H

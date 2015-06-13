@@ -29,7 +29,9 @@ public:
 
 	void ClearUsers();
 	void SetUsersFilterString(wxString fs);
+	void UserFilterShowPlayersOnly(bool);
 	void DoUsersFilter();
+	int GetUsersCount();
 
 	void OnActivateItem(wxListEvent& event);
 	void OnShowMenu(wxContextMenuEvent& event);
@@ -43,6 +45,7 @@ public:
 	wxListItemAttr* GetItemAttr(long item) const;
 
 private:
+	bool checkFilteringConditions(const User*);
 	//! passed as callback to generic ItemComparator, returns -1,0,1 as per defined ordering
 	int CompareOneCrit(DataType u1, DataType u2, int col, int dir) const;
 	//! utils func for comparing user status, so the CompareOneCrit doesn't get too crowded
@@ -53,6 +56,8 @@ private:
 	int GetIndexFromRealData(const User& user);
 	int GetIndexFromData(const DataType& data) const;
 
+private:
+	bool m_userFilterShowPlayersOnly;
 	ChatPanelMenu* m_menu;
 
 	wxString m_UsersFilterString;		    //<- String with filter pattern for nicklist
