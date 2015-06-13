@@ -613,11 +613,13 @@ void ChatPanel::CheckForPromotion(const wxString& who, const wxString& action) {
 		return;
 	}
 
-	//TODO: Make promote templates be user-configurable
+	//TODO: Make promote templates be user-configurable and uses regexp
 	const wxString promoteMessageTemplate = _T(" player(s) needed for battle \"");
+	const wxString promoteMessageTemplate2 = _T("). Come play and enjoy !");
 
 	//Detect event and notify user
-	if (action.Contains(promoteMessageTemplate)) {
+	//TODO: Rework for using array of regexps, not shit crap
+	if (action.Contains(promoteMessageTemplate) || action.Contains(promoteMessageTemplate2)) {
 		wxCommandEvent promoteEvent = wxCommandEvent(GlobalEventManager::GamePromotedEvent);
 		promoteEvent.SetString(action);//Send action string with that should be shown
 		GlobalEventManager::Instance()->Send(promoteEvent);

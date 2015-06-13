@@ -20,13 +20,16 @@ ToasterNotification::ToasterNotification(wxWindow* parent)
 	//	m_toasterbox->SetPopupScrollSpeed(pScrollSpeed);
 }
 
+/**
+ * Prepare and show notification window
+ */
 void ToasterNotification::Show(const wxBitmap& /*icon*/, const size_t pos, const UiEvents::NotficationData& data)
 {
 	m_toasterbox->SetPopupPauseTime(sett().GetNotificationPopupDisplayTime() * 1000);
 	//	m_toasterbox->SetPopupBitmap( icon );
 	//call this before showing everytime to accout for desktop resolution changes
 	SetPopupPosition(pos);
-	m_toasterbox->SetPopupText(data.second, false);
+	m_toasterbox->SetPopupData(data, false);
 	m_toasterbox->Play();
 }
 

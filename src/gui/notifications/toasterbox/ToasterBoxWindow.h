@@ -23,7 +23,8 @@ class ToasterBoxWindow : public wxCustomBackgroundWindow<ToasterBase>, public wx
 public:
 	ToasterBoxWindow(wxWindow* parent, wxTimer* _parent2);
 	~ToasterBoxWindow();
-	void SetPopupText(wxString _text, bool _shrink = false);
+	void SetPopupText(const wxString& _text, bool _shrink = false);
+	void SetPopupHeaderText(const wxString& _header);
 	void SetPopupSize(int x, int y);
 	void SetPopupPosition(int x, int y);
 	void SetPopupPauseTime(int milliseconds)
@@ -64,7 +65,9 @@ private:
 	//how long the box hangs around for
 	int pauseTime;
 	wxColour textColor;
+	wxColour headerTextColor;
 	wxString popupText;
+	wxString popupHeaderText;
 
 	wxStaticBitmap sbm;
 	wxString bitmapFile;

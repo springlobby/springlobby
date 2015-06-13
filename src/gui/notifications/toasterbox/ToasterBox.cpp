@@ -19,6 +19,8 @@
 #include <wx/timer.h>
 #include <wx/log.h>
 
+#include "utils/uievents.h"
+
 ToasterBox::ToasterBox(wxWindow* _parent)
     : parent(_parent)
     , sleepTime(10)
@@ -89,20 +91,35 @@ void ToasterBox::SetPopupTextColor(int r, int g, int b)
 	colFg = wxColour(r, g, b);
 }
 
+/**
+ * Draw notification window
+ */
 void ToasterBox::Play()
 {
 	//create new window
 	ToasterBoxWindow* tb = new ToasterBoxWindow(parent, this);
-	tb->SetPopupSize(popupSize.GetWidth(), popupSize.GetHeight());
-	tb->SetPopupPosition(popupPosition.x, popupPosition.y);
-	tb->SetPopupPauseTime(pauseTime);
+	//If it is GamePromotion make window wider and show it a bit longer
+	if (notificationType == UiEvents::EventType::GamePromoted) {
+		const int widthCorrection = 100;
+		const int pauseCorrection = 1000; //Add one second above standard pause
+		tb->SetPopupSize(popupSize.GetWidth() + widthCorrection, popupSize.GetHeight());
+		tb->SetPopupPosition(popupPosition.x - widthCorrection, popupPosition.y);
+		tb->SetPopupPauseTime(pauseTime + pauseCorrection);
+		tb->SetPopupHeaderText("GAME PROMOTED!");
+	}else {
+		tb->SetPopupSize(popupSize.GetWidth(), popupSize.GetHeight());
+		tb->SetPopupPosition(popupPosition.x, popupPosition.y);
+		tb->SetPopupPauseTime(pauseTime);
+	}
 	tb->SetPopupScrollSpeed(sleepTime);
 	tb->SetPopupTextColor(colFg.Red(), colFg.Green(), colFg.Blue());
 	tb->SetPopupBackgroundColor(colBg.Red(), colBg.Green(), colBg.Blue());
-	if (m_bitmap.IsOk())
+	if (m_bitmap.IsOk()) {
 		tb->SetPopupBitmap(m_bitmap);
-	if (!bitmapFile.IsEmpty())
+	}
+	if (!bitmapFile.IsEmpty()) {
 		tb->SetPopupBitmap(bitmapFile);
+	}
 	tb->SetPopupText(popupText, true);
 
 	//clean up the list

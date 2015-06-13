@@ -6,6 +6,7 @@
 #include "ToasterBoxWindow.h"
 #include "ToasterBoxWindowList.h"
 #include "utils/mixins.h"
+#include "utils/uievents.h"
 /*
   The toasterbox class should stay resident in memory.
   It creates and displays popups and handles the
@@ -18,9 +19,10 @@ class ToasterBox : public wxTimer
 {
 public:
 	~ToasterBox();
-	void SetPopupText(wxString _text, bool /*_shrink*/ = false)
+	void SetPopupData(const UiEvents::NotficationData& data, bool /*_shrink*/ = false)
 	{
-		popupText = _text;
+		notificationType = data.first;
+		popupText = data.second;
 	}
 	void SetPopupSize(int x, int y)
 	{
@@ -65,6 +67,8 @@ public:
 private:
 	friend class ToasterNotification;
 	ToasterBox(wxWindow* _parent = (wxWindow*)NULL);
+
+	UiEvents::EventType notificationType; //used to determine type of notification to show
 
 	wxWindow* parent;
 	int sleepTime;
