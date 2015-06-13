@@ -77,7 +77,7 @@ void NickListCtrl::AddUser(const User& user)
 		wxLogWarning(_T( "User already in list." ));
 		return;
 	}
-	m_real_users_list[user.GetNick()] = &user;
+	it->second = &user;
 	DoUsersFilter();
 }
 
@@ -100,7 +100,7 @@ void NickListCtrl::UserUpdated(const User& user)
 		wxLogWarning(_T( "NickListCtrl::UserUpdated error, index == -1 ." ));
 		return;
 	}
-	m_real_users_list[user.GetNick()] = &user;
+	it->second = &user;
 	DoUsersFilter();
 }
 
