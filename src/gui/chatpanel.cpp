@@ -103,7 +103,7 @@ ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
     , m_disable_append(false)
     , m_display_joinitem(false)
     , m_topic_set(false)
-	, m_reactOnPromoteEvents(true)//TODO: move init to cfg reading
+    , m_reactOnPromoteEvents(true) //TODO: move init to cfg reading
 {
 	Init(TowxString(chan.GetName()));
 	SetChannel(&chan);
@@ -127,7 +127,7 @@ ChatPanel::ChatPanel(wxWindow* parent, const User& user, wxImageList* imaglist)
     , m_disable_append(false)
     , m_display_joinitem(true)
     , m_topic_set(false)
-	, m_reactOnPromoteEvents(false)
+    , m_reactOnPromoteEvents(false)
 {
 	Init(_T("chatpanel-pm-") + TowxString(user.GetNick()));
 	SetUser(&user);
@@ -151,7 +151,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
     , m_disable_append(false)
     , m_display_joinitem(false)
     , m_topic_set(false)
-	, m_reactOnPromoteEvents(false)
+    , m_reactOnPromoteEvents(false)
 {
 	Init(_T("chatpanel-server"));
 	SetServer(&serv);
@@ -173,7 +173,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IBattle* battle)
     , m_disable_append(false)
     , m_display_joinitem(true)
     , m_topic_set(false)
-	, m_reactOnPromoteEvents(false)
+    , m_reactOnPromoteEvents(false)
 {
 	Init(_T("BATTLE"));
 	SetBattle(battle);
@@ -194,7 +194,7 @@ ChatPanel::ChatPanel(wxWindow* parent)
     , m_disable_append(false)
     , m_display_joinitem(true)
     , m_topic_set(false)
-	, m_reactOnPromoteEvents(false)
+    , m_reactOnPromoteEvents(false)
 {
 	Init(_T("debug"));
 }
@@ -608,8 +608,9 @@ bool ChatPanel::ContainsWordToHighlight(const wxString& message) const
 /**
  *	Check if there is "promote" event and notify user if needed
  */
-void ChatPanel::CheckForPromotion(const wxString& who, const wxString& action) {
-	if (m_reactOnPromoteEvents == false) {	//If this feature disabled in options do nothing
+void ChatPanel::CheckForPromotion(const wxString& who, const wxString& action)
+{
+	if (m_reactOnPromoteEvents == false) { //If this feature disabled in options do nothing
 		return;
 	}
 
@@ -621,7 +622,7 @@ void ChatPanel::CheckForPromotion(const wxString& who, const wxString& action) {
 	//TODO: Rework for using array of regexps, not shit crap
 	if (action.Contains(promoteMessageTemplate) || action.Contains(promoteMessageTemplate2)) {
 		wxCommandEvent promoteEvent = wxCommandEvent(GlobalEventManager::GamePromotedEvent);
-		promoteEvent.SetString(action);//Send action string with that should be shown
+		promoteEvent.SetString(action); //Send action string with that should be shown
 		GlobalEventManager::Instance()->Send(promoteEvent);
 	}
 }
@@ -1239,7 +1240,7 @@ void ChatPanel::UpdateUserCountLabel()
 		} else {
 			numusers = GetChannel()->GetNumUsers();
 		}
-	//Server channel
+		//Server channel
 	} else if ((m_type == CPT_Server) && (m_server != NULL)) {
 		if (m_nicklist != nullptr) {
 			numusers = m_nicklist->GetUsersCount();
@@ -1252,7 +1253,8 @@ void ChatPanel::UpdateUserCountLabel()
 }
 
 
-void ChatPanel::OnShowPlayerOnlyCheck(wxCommandEvent& event) {
-	m_nicklist->UserFilterShowPlayersOnly( event.IsChecked() );
+void ChatPanel::OnShowPlayerOnlyCheck(wxCommandEvent& event)
+{
+	m_nicklist->UserFilterShowPlayersOnly(event.IsChecked());
 	UpdateUserCountLabel();
 }

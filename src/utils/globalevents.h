@@ -27,7 +27,7 @@ public:
 
 	void Send(wxEventType type);
 	void Send(wxCommandEvent event);
-	void Send(wxEventType type, void *clientData);
+	void Send(wxEventType type, void* clientData);
 
 private:
 	void _Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func);

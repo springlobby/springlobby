@@ -84,7 +84,7 @@ void NickListCtrl::AddUser(const User& user)
 void NickListCtrl::SetUsers(const UserList::user_map_t& userlist)
 {
 	ClearUsers();
-	for(const auto item: userlist) {
+	for (const auto item : userlist) {
 		m_real_users_list[item.second->GetNick()] = item.second;
 	}
 	DoUsersFilter();
@@ -135,7 +135,7 @@ void NickListCtrl::SetUsersFilterString(const wxString& fs)
  */
 void NickListCtrl::DoUsersFilter()
 {
-	for (auto const item: m_real_users_list) {
+	for (auto const item : m_real_users_list) {
 		if (checkFilteringConditions(item.second)) {
 			//User passed filter. Add him/her to the list.
 			AddItem(item.second);
@@ -363,7 +363,8 @@ int NickListCtrl::CompareUserStatus(DataType user1, DataType user2)
  * Setter for showOnlyPlayer variable
  * Triggers filtering updating
  */
-void NickListCtrl::UserFilterShowPlayersOnly(bool showOnlyPlayers) {
+void NickListCtrl::UserFilterShowPlayersOnly(bool showOnlyPlayers)
+{
 	m_userFilterShowPlayersOnly = showOnlyPlayers;
 	DoUsersFilter();
 }
@@ -372,7 +373,8 @@ void NickListCtrl::UserFilterShowPlayersOnly(bool showOnlyPlayers) {
  * Check conditions for users list filtering
  * return true if User passes filter
  */
-bool NickListCtrl::checkFilteringConditions(const User* user) {
+bool NickListCtrl::checkFilteringConditions(const User* user)
+{
 	//Filter out bots
 	if ((m_userFilterShowPlayersOnly) && (user->GetStatus().bot)) {
 		return false;
@@ -385,6 +387,7 @@ bool NickListCtrl::checkFilteringConditions(const User* user) {
 	return true;
 }
 
-int NickListCtrl::GetUsersCount() {
+int NickListCtrl::GetUsersCount()
+{
 	return m_data.size();
 }

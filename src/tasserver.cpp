@@ -1200,8 +1200,8 @@ void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 	slLogDebugFunc("");
 
 	int nat_type = bo.nattype;
-	if(bo.userelayhost){ // FIXME: relayhost should ignore this
-		nat_type=1;
+	if (bo.userelayhost) { // FIXME: relayhost should ignore this
+		nat_type = 1;
 	}
 	std::string cmd = stdprintf("0 %d ", nat_type);
 	cmd += (password.empty()) ? "*" : password;
@@ -1334,7 +1334,7 @@ void TASServer::SendHostInfo(HostInfo update)
 	if ((update & (IBattle::HI_Map | IBattle::HI_Locked | IBattle::HI_Spectators)) > 0) {
 		// UPDATEBATTLEINFO Spectatorsize locked maphash {mapname}
 		std::string cmd = stdprintf("%d %d %s %s", battle.GetSpectators(), battle.IsLocked(),
-				LSL::Util::MakeHashSigned(battle.LoadMap().hash).c_str(), battle.LoadMap().name.c_str());
+					    LSL::Util::MakeHashSigned(battle.LoadMap().hash).c_str(), battle.LoadMap().name.c_str());
 
 		SendCmd("UPDATEBATTLEINFO", cmd, battle.IsProxy());
 	}

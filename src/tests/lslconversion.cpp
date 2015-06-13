@@ -137,8 +137,6 @@ BOOST_AUTO_TEST_CASE(colorconv)
 	BOOST_CHECK_MESSAGE(greystr == LSL::lslColor::ToFloatString(greycol), LSL::lslColor::ToFloatString(greycol));
 
 
-
-
 	for (int c = 0; c < 3; c++) {
 		float r = 0.f, g = 0.f, b = 0.f;
 		for (int i = 0; i < 256; i++) {
@@ -155,7 +153,6 @@ BOOST_AUTO_TEST_CASE(colorconv)
 			BOOST_CHECK(rescol == col);
 		}
 	}
-
 }
 
 BOOST_AUTO_TEST_CASE(userstatus)
@@ -216,7 +213,6 @@ BOOST_AUTO_TEST_CASE(convertfloat)
 	BOOST_CHECK(a == LSL::Util::FromFloatString(LSL::Util::ToFloatString(a)));
 	BOOST_CHECK(b == LSL::Util::FromFloatString(LSL::Util::ToFloatString(b)));
 	BOOST_CHECK(c == LSL::Util::FromFloatString(LSL::Util::ToFloatString(c)));
-
 }
 
 BOOST_AUTO_TEST_CASE(tokenize)
@@ -257,6 +253,4 @@ BOOST_AUTO_TEST_CASE(tokenize)
 	v = LSL::Util::StringTokenize("0 ", " :");
 	BOOST_CHECK(v.size() == 1);
 	BOOST_CHECK(v[0] == "0");
-
 }
-

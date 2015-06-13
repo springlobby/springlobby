@@ -357,7 +357,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 		if (!status.IsBot())
 			continue;
 		tdf.EnterSection(stdprintf("AI%d", i));
-		tdf.AppendStr("Name", user.GetNick());	  // AI's nick;
+		tdf.AppendStr("Name", user.GetNick());		// AI's nick;
 		tdf.AppendStr("ShortName", status.aishortname); // AI libtype
 		tdf.AppendStr("Version", status.aiversion);     // AI libtype version
 		tdf.AppendInt("Team", teams_to_sorted_teams[status.team]);

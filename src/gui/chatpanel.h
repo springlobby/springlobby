@@ -183,11 +183,11 @@ private:
 	wxBoxSizer* m_say_sizer;  //!< Sizer containing send input and button.
 	wxBoxSizer* m_nick_sizer; //!< Sizer containing the nicklist.
 
-	wxSplitterWindow* m_splitter; //!< The splitter.
-	wxPanel* m_chat_panel;	//!< Panel containing the chat. Only used when nicklist is visible.
-	wxPanel* m_nick_panel;	//!< Panel containing the nicklist.
-	wxTextCtrl* m_nick_filter;    //!< Textcontrol for filtering nicklist
-	wxCheckBox* m_showPlayerOnlyCheck; //!< CheckBox for showing only live players (not bots)
+	wxSplitterWindow* m_splitter;       //!< The splitter.
+	wxPanel* m_chat_panel;		    //!< Panel containing the chat. Only used when nicklist is visible.
+	wxPanel* m_nick_panel;		    //!< Panel containing the nicklist.
+	wxTextCtrl* m_nick_filter;	  //!< Textcontrol for filtering nicklist
+	wxCheckBox* m_showPlayerOnlyCheck;  //!< CheckBox for showing only live players (not bots)
 	wxTextCtrl* m_chatlog_text;	 //!< The chat log textcontrol.
 	wxTextCtrlHist* m_say_text;	 //!< The say textcontrol.
 	wxBitmapButton* m_chan_opts_button; //!< The channel options button.

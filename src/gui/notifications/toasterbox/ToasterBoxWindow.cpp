@@ -30,7 +30,7 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer* _parent2)
     , sleepTime(10)
     , pauseTime(1700)
     , textColor(*wxWHITE)
-	, headerTextColor(*wxBLUE)
+    , headerTextColor(*wxBLUE)
     , popupText(_T("Change Me!"))
     , shrink(false)
 {
@@ -233,7 +233,6 @@ void ToasterBoxWindow::DrawText()
 	//    y = (GetSize().GetHeight() - h) / 2;
 
 
-
 	//  //if we have multiple lines
 	if (textLines > 1) {
 		if (haveHeader) {
@@ -245,7 +244,7 @@ void ToasterBoxWindow::DrawText()
 			const int headerY = 3;
 			dc.DrawText(popupHeaderText, headerX, headerY);
 			dc.SetTextForeground(headerTextColor);
-			dc.DrawText(popupHeaderText, headerX + 1, headerY + 1);//This makes "shadow" effect
+			dc.DrawText(popupHeaderText, headerX + 1, headerY + 1); //This makes "shadow" effect
 		}
 		dc.SetTextForeground(textColor);
 		//how many lines we can fit in the height available
@@ -286,6 +285,7 @@ void ToasterBoxWindow::OnPaint(wxPaintEvent& /*event*/)
 	DrawText();
 }
 
-void ToasterBoxWindow::SetPopupHeaderText(const wxString& _header) {
+void ToasterBoxWindow::SetPopupHeaderText(const wxString& _header)
+{
 	popupHeaderText = _header;
 }

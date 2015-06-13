@@ -39,7 +39,8 @@ public:
 	user_map_t::size_type GetNumUsers() const;
 
 	void Nullify();
-	const user_map_t& GetUsers() const {
+	const user_map_t& GetUsers() const
+	{
 		return m_users;
 	}
 	/*

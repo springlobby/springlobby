@@ -39,7 +39,6 @@ public:
 	virtual void StartSpring() override;
 
 private:
-
 	MainSinglePlayerTab& m_sptab;
 
 	User m_me;

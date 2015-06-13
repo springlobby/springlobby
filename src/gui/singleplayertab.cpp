@@ -163,7 +163,6 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 
 	this->SetSizer(m_main_sizer);
 	this->Layout();
-
 }
 
 

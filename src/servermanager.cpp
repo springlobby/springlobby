@@ -19,10 +19,12 @@
 #include "gui/mainchattab.h"
 #include "utils/slconfig.h"
 
-ServerManager::ServerManager() {
+ServerManager::ServerManager()
+{
 }
 
-ServerManager::~ServerManager() {
+ServerManager::~ServerManager()
+{
 }
 
 //Get instance of single object
@@ -50,12 +52,12 @@ void ServerManager::ConnectToServer()
 		//TODO: Maybe call ReconnectToServer() before return?
 		return;
 	}
-	
+
 	const wxString server_name = sett().GetDefaultServer();
 	const wxString nick = sett().GetServerAccountNick(server_name);
 	const wxString pass = sett().GetServerAccountPass(server_name);
 	bool autoconnect = cfg().ReadBool(_T( "/Server/Autoconnect" ));
-	
+
 	//TODO: Do not ask user about credentials in such way.
 	if (!autoconnect || server_name.IsEmpty() || nick.IsEmpty() || pass.IsEmpty()) {
 		ui().ShowConnectWindow();
@@ -72,13 +74,13 @@ void ServerManager::ReconnectToServer()
 	//TODO: Implement reconnection delay here!
 	const wxString servname = sett().GetDefaultServer();
 	const wxString pass = sett().GetServerAccountPass(servname);
-	
+
 	//TODO: Need to be reworked
 	if (sett().GetServerAccountSavePass(servname) == false) {
 		ui().ShowConnectWindow();
 		return;
 	}
-	
+
 	//Do actual connection
 	DoConnectToServer(servname, sett().GetServerAccountNick(servname), pass);
 }
@@ -112,7 +114,7 @@ void ServerManager::JoinChannel(const wxString& name, const wxString& password)
 bool ServerManager::DownloadContent(const std::string& category, const std::string& name, const std::string& /*hash*/)
 {
 	int downloadJobsCreated = prDownloader().GetDownload(category, name);
-	
+
 	if (downloadJobsCreated < 1) {
 		wxLogError(_("prDownloader failed to create thread!"));
 		return false;
@@ -130,12 +132,12 @@ bool ServerManager::IsConnected()
 void ServerManager::DoConnectToServer(const wxString& servername, const wxString& username, const wxString& password)
 {
 	IServer* server = &serverSelector().GetServer();
-	
+
 	//Disconnect from server if not done before
-	if( server->IsConnected() == true) {
+	if (server->IsConnected() == true) {
 		server->Disconnect();
 	}
-	
+
 	//FIXME: Does this two methods are really needed?
 	server->SetUsername(STD_STRING(username));
 	server->SetPassword(STD_STRING(password));

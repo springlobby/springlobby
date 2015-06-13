@@ -195,7 +195,7 @@ int SpringLobbyApp::OnExit()
 	SetEvtHandlerEnabled(false);
 	UiEvents::GetNotificationEventSender().Enable(false);
 	LSL::Util::DestroyGlobals();
-	
+
 	return 0;
 }
 

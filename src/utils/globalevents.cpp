@@ -25,7 +25,7 @@ const wxEventType GlobalEventManager::GamePromotedEvent = wxNewEventType();
 
 bool GlobalEventManager::m_eventsDisabled = false;
 
-GlobalEventManager* GlobalEventManager::m_Instance	= nullptr;
+GlobalEventManager* GlobalEventManager::m_Instance = nullptr;
 
 GlobalEventManager::GlobalEventManager()
 {
@@ -57,7 +57,7 @@ void GlobalEventManager::Send(wxEventType type)
 	Send(evt);
 }
 
-void GlobalEventManager::Send(wxEventType type, void *clientData)
+void GlobalEventManager::Send(wxEventType type, void* clientData)
 {
 	wxCommandEvent evt = wxCommandEvent(type);
 	evt.SetClientData(clientData);
@@ -129,4 +129,3 @@ void GlobalEventManager::_Disconnect(wxEvtHandler* evthandler, wxEventType id)
 		}
 	}
 }
-

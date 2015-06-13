@@ -121,7 +121,7 @@ void MainOptionsTab::OnApply(wxCommandEvent& event)
 	m_lobby_opts->OnApply(event);
 
 	sett().SaveSettings();
-	
+
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 }
 

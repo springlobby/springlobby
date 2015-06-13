@@ -106,7 +106,7 @@ void ToasterBox::Play()
 		tb->SetPopupPosition(popupPosition.x - widthCorrection, popupPosition.y);
 		tb->SetPopupPauseTime(pauseTime + pauseCorrection);
 		tb->SetPopupHeaderText("GAME PROMOTED!");
-	}else {
+	} else {
 		tb->SetPopupSize(popupSize.GetWidth(), popupSize.GetHeight());
 		tb->SetPopupPosition(popupPosition.x, popupPosition.y);
 		tb->SetPopupPauseTime(pauseTime);

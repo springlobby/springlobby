@@ -129,7 +129,7 @@ BattleMapTab::BattleMapTab(wxWindow* parent, IBattle* battle)
 BattleMapTab::~BattleMapTab()
 {
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
-	
+
 	if (GetAui().manager)
 		GetAui().manager->DetachPane(this);
 }

@@ -164,7 +164,7 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 PlaybackTab::~PlaybackTab()
 {
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
-	
+
 	m_minimap->SetBattle(NULL);
 	if (m_filter != 0)
 		m_filter->SaveFilterValues();

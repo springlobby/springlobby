@@ -728,7 +728,8 @@ void MainWindow::OnMenuDownload(wxCommandEvent& /*event*/)
 	} while (pos != wxNOT_FOUND);
 }
 
-void MainWindow::OnGamePromoted(wxCommandEvent& promoteEvent) {
+void MainWindow::OnGamePromoted(wxCommandEvent& promoteEvent)
+{
 	//Promote user without checking his status
 	//TODO: Maybe need to separate users by status to groups which one should be notified
 	//and which one should not be.

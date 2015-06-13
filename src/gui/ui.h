@@ -41,7 +41,7 @@ public:
 	void ShowMainWindow();
 	void ShowConnectWindow();
 	void ReopenServerTab();
-	
+
 	bool IsSpringCompatible(const std::string& engine, const std::string& version);
 	bool DownloadArchives(const IBattle& battle);
 
@@ -51,7 +51,7 @@ public:
 
 	//TODO: remove it
 	void AddServerWindow(const wxString&);
-	
+
 	bool Ask(const wxString& heading, const wxString& question) const;
 	bool AskText(const wxString& heading, const wxString& question, wxString& answer, bool multiline = false);
 	bool AskPassword(const wxString& heading, const wxString& message, wxString& password);
