@@ -3,6 +3,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_NICKLISTCTRL_H
 
+#include <string>
+#include <map>
 #include "customvirtlistctrl.h"
 
 class User;
@@ -49,15 +51,14 @@ private:
 	//! required per base clase
 	void Sort() override;
 
-	int GetIndexFromRealData(const User& user);
 	int GetIndexFromData(const DataType& data) const;
 
 private:
 	bool m_userFilterShowPlayersOnly;
 	ChatPanelMenu* m_menu;
 
-	wxString m_UsersFilterString;		    //<- String with filter pattern for nicklist
-	std::vector<const User*> m_real_users_list; //<- actual list of users (not filtered)
+	std::string m_UsersFilterString;		    //<- String with filter pattern for nicklist
+	std::map<std::string, const User*> m_real_users_list; //<- actual list of users (not filtered)
 
 	enum {
 		NICK_LIST = 31765 //wxID_HIGHEST

@@ -72,39 +72,36 @@ NickListCtrl::~NickListCtrl()
 
 void NickListCtrl::AddUser(const User& user)
 {
-	if (GetIndexFromRealData(user) != -1) {
-		wxLogWarning(_T( "Useralready in list." ));
+	const auto it = m_real_users_list.find(user.GetNick());
+	if (it != m_real_users_list.end()) {
+		wxLogWarning(_T( "User already in list." ));
 		return;
 	}
-
-	m_real_users_list.push_back(&user);
-
+	m_real_users_list[user.GetNick()] = &user;
 	DoUsersFilter();
 }
 
 void NickListCtrl::RemoveUser(const User& user)
 {
-	int i = GetIndexFromRealData(user);
-
-	if (i == -1) {
-		wxLogError(_T( "Didn't find the user to remove." ));
+	const auto it = m_real_users_list.find(user.GetNick());
+	if (it == m_real_users_list.end()) {
+		wxLogWarning(_T( "Didn't find the user to remove." ));
 		return;
 	}
-
-	m_real_users_list.erase(m_real_users_list.begin() + (unsigned int)i);
+	m_real_users_list.erase(it);
 	RemoveItem(&user);
 }
 
 
 void NickListCtrl::UserUpdated(const User& user)
 {
-	int index = GetIndexFromRealData(user);
-	if (index != -1) {
-		m_real_users_list[index] = &user;
-		DoUsersFilter();
-	} else {
+	const auto it = m_real_users_list.find(user.GetNick());
+	if (it == m_real_users_list.end()) {
 		wxLogWarning(_T( "NickListCtrl::UserUpdated error, index == -1 ." ));
+		return;
 	}
+	m_real_users_list[user.GetNick()] = &user;
+	DoUsersFilter();
 }
 
 void NickListCtrl::ClearUsers()
@@ -126,31 +123,18 @@ void NickListCtrl::SetUsersFilterString(const wxString& fs)
  */
 void NickListCtrl::DoUsersFilter()
 {
-	for (const User* user: m_real_users_list) {
-		if (checkFilteringConditions(user) == true) {
+	for (auto const item: m_real_users_list) {
+		if (checkFilteringConditions(item.second)) {
 			//User passed filter. Add him/her to the list.
-			AddItem(user);
+			AddItem(item.second);
 		} else {
 			//Remove user from the list. No need to check if user in the list, method will do it.
-			RemoveItem(user);
+			RemoveItem(item.second);
 		}
 	}
 
 	Sort();
 	Update();
-}
-
-int NickListCtrl::GetIndexFromRealData(const User& user)
-{
-	unsigned int i;
-
-	for (i = 0;
-	     i < m_real_users_list.size();
-	     i++)
-		if (m_real_users_list.at(i)->GetNick().compare(user.GetNick()) == 0)
-			return i;
-
-	return -1;
 }
 
 void NickListCtrl::OnActivateItem(wxListEvent& event)
