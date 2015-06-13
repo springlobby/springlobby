@@ -77,7 +77,7 @@ void NickListCtrl::AddUser(const User& user)
 		wxLogWarning(_T( "User already in list." ));
 		return;
 	}
-	it->second = &user;
+	m_real_users_list[user.GetNick()] = &user;
 	DoUsersFilter();
 }
 
