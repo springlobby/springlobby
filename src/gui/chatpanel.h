@@ -123,6 +123,12 @@ public:
 	bool Say(const wxString& message);
 
 private:
+	enum HighlightType {
+		highlight_say,
+		highlight_join_leave,
+		highlight_important
+	};
+
 	void Init(const wxString& panelname);
 	//! @returns true on success ( blank line ), false otherwise
 
@@ -157,16 +163,17 @@ private:
 	void SetLogFile(const wxString& name);
 	void UpdateUserCountLabel();
 
-	enum HighlightType {
-		highlight_say,
-		highlight_join_leave,
-		highlight_important
-	};
-
 	void SetIconHighlight(HighlightType highlight);
 	wxString FindUrl(const long pos) const;
 
 	bool ContainsWordToHighlight(const wxString& message) const;
+
+	void LogTime();
+	void CreateControls();
+	void CreatePopup();
+	void CheckForPromotion(const wxString& who, const wxString& action);
+
+private:
 	bool m_show_nick_list; //!< If the nicklist should be shown or not.
 
 	VotePanel* m_votePanel;
@@ -206,9 +213,6 @@ private:
 
 	ChatLog m_chat_log;
 
-	void LogTime();
-	void CreateControls();
-	void CreatePopup();
 	size_t m_icon_index;
 
 	wxImageList* m_imagelist;
@@ -228,6 +232,7 @@ private:
 
 	//used to avoid marking channel as changed when it's just been created.
 	bool m_topic_set;
+	bool m_reactOnPromoteEvents;
 
 	DECLARE_EVENT_TABLE()
 };

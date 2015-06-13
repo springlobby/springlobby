@@ -21,6 +21,7 @@ const wxEventType GlobalEventManager::BattleSyncReload = wxNewEventType();
 const wxEventType GlobalEventManager::BattleStartedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::UserBattleStatusChangedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::OnUpdateFinished = wxNewEventType();
+const wxEventType GlobalEventManager::GamePromotedEvent = wxNewEventType();
 
 bool GlobalEventManager::m_eventsDisabled = false;
 
@@ -46,7 +47,7 @@ void GlobalEventManager::Release()
 {
 	if (m_Instance != nullptr) {
 		delete m_Instance;
-	}	
+	}
 	m_Instance = nullptr;
 }
 
@@ -68,10 +69,10 @@ void GlobalEventManager::Send(wxCommandEvent event)
 	if (m_eventsDisabled) {
 		return;
 	}
-	
+
 	std::list<wxEvtHandler*>& evtlist = m_eventsTable[event.GetEventType()];
 	assert(event.GetString() == wxEmptyString); // using strings here isn't thread safe http://docs.wxwidgets.org/trunk/classwx_evt_handler.html#a0737c6d2cbcd5ded4b1ecdd53ed0def3
-	
+
 	for (auto evt : evtlist) {
 		evt->AddPendingEvent(event);
 	}
@@ -115,7 +116,7 @@ void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxOb
 void GlobalEventManager::_Disconnect(wxEvtHandler* evthandler, wxEventType id)
 {
 	std::map<wxEventType, std::list<wxEvtHandler*> >::iterator it;
-	
+
 	for (it = m_eventsTable.begin(); it != m_eventsTable.end(); ++it) {
 		if ((id == ANY_EVENT) || (id == it->first)) {
 			for (std::list<wxEvtHandler*>::iterator it2 = it->second.begin(); it2 != it->second.end(); ++it2) {

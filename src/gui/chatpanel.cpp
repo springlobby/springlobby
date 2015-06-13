@@ -103,6 +103,7 @@ ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
     , m_disable_append(false)
     , m_display_joinitem(false)
     , m_topic_set(false)
+	, m_reactOnPromoteEvents(true)//TODO: move init to cfg reading
 {
 	Init(TowxString(chan.GetName()));
 	SetChannel(&chan);
@@ -126,6 +127,7 @@ ChatPanel::ChatPanel(wxWindow* parent, const User& user, wxImageList* imaglist)
     , m_disable_append(false)
     , m_display_joinitem(true)
     , m_topic_set(false)
+	, m_reactOnPromoteEvents(false)
 {
 	Init(_T("chatpanel-pm-") + TowxString(user.GetNick()));
 	SetUser(&user);
@@ -149,6 +151,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
     , m_disable_append(false)
     , m_display_joinitem(false)
     , m_topic_set(false)
+	, m_reactOnPromoteEvents(false)
 {
 	Init(_T("chatpanel-server"));
 	SetServer(&serv);
@@ -170,6 +173,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IBattle* battle)
     , m_disable_append(false)
     , m_display_joinitem(true)
     , m_topic_set(false)
+	, m_reactOnPromoteEvents(false)
 {
 	Init(_T("BATTLE"));
 	SetBattle(battle);
@@ -190,6 +194,7 @@ ChatPanel::ChatPanel(wxWindow* parent)
     , m_disable_append(false)
     , m_display_joinitem(true)
     , m_topic_set(false)
+	, m_reactOnPromoteEvents(false)
 {
 	Init(_T("debug"));
 }
@@ -198,7 +203,7 @@ ChatPanel::ChatPanel(wxWindow* parent)
 ChatPanel::~ChatPanel()
 {
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
-	
+
 	if (m_server != 0) {
 		if (m_server->uidata.panel == this)
 			m_server->uidata.panel = 0;
@@ -600,12 +605,38 @@ bool ChatPanel::ContainsWordToHighlight(const wxString& message) const
 	return false;
 }
 
+/**
+ *	Check if there is "promote" event and notify user if needed
+ */
+void ChatPanel::CheckForPromotion(const wxString& who, const wxString& action) {
+	if (m_reactOnPromoteEvents == false) {	//If this feature disabled in options do nothing
+		return;
+	}
+
+	//TODO: Make promote templates be user-configurable
+	const wxString promoteMessageTemplate = _T(" player(s) needed for battle \"");
+
+	//Detect event and notify user
+	if (action.Contains(promoteMessageTemplate)) {
+		wxCommandEvent promoteEvent = wxCommandEvent(GlobalEventManager::GamePromotedEvent);
+		promoteEvent.SetString(action);//Send action string with that should be shown
+		GlobalEventManager::Instance()->Send(promoteEvent);
+	}
+}
+
+/**
+ * Process text sent by the server, not users
+ * Check for vote events, promote events and something else
+ */
 void ChatPanel::DidAction(const wxString& who, const wxString& action)
 {
 	//Handle vote events in chat by VotePanel
 	if (m_votePanel != NULL) {
 		m_votePanel->OnChatAction(who, action);
 	}
+
+	//Look for "promote" notifications from server
+	CheckForPromotion(who, action);
 
 	// change the image of the tab to show new events
 	SetIconHighlight(highlight_say);

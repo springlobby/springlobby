@@ -28,7 +28,8 @@ enum EventType {
 	PrivateMessage,
 	ServerConnection,
 	Battleroom,
-	UserAction
+	UserAction,
+	GamePromoted
 };
 
 typedef std::pair<EventType, wxString>

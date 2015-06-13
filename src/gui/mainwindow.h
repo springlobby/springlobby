@@ -114,6 +114,9 @@ public:
 	void SavePerspectives(const wxString& perspective_name = wxEmptyString);
 
 private:
+	void OnGamePromoted(wxCommandEvent&);
+
+private:
 	wxMenuItem* m_settings_menu;
 	wxMenuBar* m_menubar;
 	wxMenu* m_menuTools;
