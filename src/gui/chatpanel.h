@@ -174,9 +174,9 @@ private:
 	void CheckForPromotion(const wxString& who, const wxString& action);
 
 	void OnSettingsChanged(wxCommandEvent&);
-	void ReadSettings();
 
 private:
+	void ReadSettings();
 	bool m_show_nick_list; //!< If the nicklist should be shown or not.
 	bool m_ShowPlayersOnlyFlag;
 
