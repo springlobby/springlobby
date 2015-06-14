@@ -77,14 +77,14 @@ static wxColor m_irc_colors[16] = {
 
 void ChatPanel::Init(const wxString& panelname)
 {
+	m_chatpanelname = panelname;
+
 	//Clear some controls pointer that can be used in ReadSettings
 	m_say_text = nullptr;
 	m_chatlog_text = nullptr;
 
 	//Read settings
 	ReadSettings();
-
-	m_chatpanelname = panelname;
 	CreateControls();
 	SetLogFile(panelname);
 
@@ -1267,6 +1267,7 @@ void ChatPanel::OnSettingsChanged(wxCommandEvent&) {
 }
 
 void ChatPanel::ReadSettings() {
+
 	m_reactOnPromoteEvents = cfg().ReadBool("/GUI/ShowPromotions");
 	m_display_joinitem = cfg().Read(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
 
