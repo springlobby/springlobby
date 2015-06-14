@@ -156,20 +156,22 @@ void ServerEvents::OnUserStatus(const std::string& nick, UserStatus status)
 				actNotifBox(SL_MAIN_ICON, TowxString(nick) + _(" is now ") + diffString);
 		}
 
-		if (!m_serv.IsOnline()) { //login info isn't complete yet
-			return;
+		if (m_serv.IsOnline()) { //login info isn't complete yet
+			ui().OnUserStatusChanged(user);
 		}
-		ui().OnUserStatusChanged(user);
+
 		if (user.GetBattle() != 0) {
 			IBattle& battle = *user.GetBattle();
 			try {
 				if (battle.GetFounder().GetNick() == user.GetNick()) {
 					if (status.in_game != battle.GetInGame()) {
 						battle.SetInGame(status.in_game);
-						if (status.in_game) {
-							battle.StartSpring();
-						} else {
-							BattleEvents::GetBattleEventSender(BattleEvents::BattleInfoUpdate).SendEvent(std::make_pair(user.GetBattle(), ""));
+						if (m_serv.IsOnline()) {
+							if (status.in_game) {
+								battle.StartSpring();
+							} else {
+								BattleEvents::GetBattleEventSender(BattleEvents::BattleInfoUpdate).SendEvent(std::make_pair(user.GetBattle(), ""));
+							}
 						}
 					}
 				}
