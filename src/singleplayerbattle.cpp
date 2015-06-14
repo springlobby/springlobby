@@ -6,17 +6,19 @@
 #include "singleplayerbattle.h"
 #include "gui/hosting/mainsingleplayertab.h"
 #include "iserver.h"
+#include "utils/slconfig.h"
 #include "settings.h"
 #include "spring.h"
 #include <lslutils/conversion.h>
-#include <lslunitsync/unitsync.h>
 #include "utils/conversion.h"
 #include "utils/lslconversion.h"
 
+SLCONFIG("/Spring/DefaultName", "Player", "playername for singleplayer battles");
+
 SinglePlayerBattle::SinglePlayerBattle(MainSinglePlayerTab& msptab)
     : m_sptab(msptab)
-    , m_me(User(STD_STRING(sett().GetDefaultNick())))
 {
+	m_me = STD_STRING(cfg().ReadString("/Spring/DefaultName"));
 	OnUserAdded(m_me);
 	m_me.BattleStatus().side = sett().GetBattleLastSideSel(TowxString(GetHostModName()));
 	m_me.BattleStatus().colour = wxColourTolsl(sett().GetBattleLastColour());

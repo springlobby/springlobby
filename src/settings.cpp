@@ -23,9 +23,7 @@
 #include <wx/tokenzr.h>
 #include <wx/colourdata.h>
 #include <set>
-#include <lslutils/misc.h>
 #include <lslutils/globalsmanager.h>
-#include <lslunitsync/unitsync.h>
 
 #include "utils/conversion.h"
 #include "utils/platform.h"
@@ -1492,10 +1490,4 @@ void Settings::SetNotificationPopupDisplayTime(const unsigned int seconds)
 unsigned int Settings::GetNotificationPopupDisplayTime()
 {
 	return cfg().Read(_T("/GUI/NotificationPopupDisplayTime"), 5l);
-}
-
-
-wxString Settings::GetDefaultNick()
-{
-	return TowxString(LSL::usync().GetSpringConfigString("name", "Player"));
 }

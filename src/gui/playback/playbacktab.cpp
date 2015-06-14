@@ -21,7 +21,7 @@
 #include "gui/ui.h"
 #include "gui/chatpanel.h"
 #include "gui/uiutils.h"
-#include "settings.h"
+#include "utils/slconfig.h"
 #include "gui/mapctrl.h"
 #include "playbackfilter.h"
 #include "iconimagelist.h"
@@ -287,7 +287,7 @@ void PlaybackTab::OnWatch(wxCommandEvent& /*unused*/)
 				AskForceWatch(rep);
 				return;
 			}
-			rep.battle.GetMe().SetNick(STD_STRING(sett().GetDefaultNick()));
+			rep.battle.GetMe().SetNick(STD_STRING(cfg().ReadString("/Spring/DefaultName")));
 			bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
 			if (watchable) {
 				rep.battle.StartSpring();

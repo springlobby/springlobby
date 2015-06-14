@@ -33,6 +33,7 @@
 #include "utils/globalevents.h"
 #include "log.h"
 #include "utils/lslconversion.h"
+#include "utils/slconfig.h"
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
@@ -266,7 +267,7 @@ void SinglePlayerTab::SetMap(unsigned int index)
 
 void SinglePlayerTab::ResetUsername()
 {
-	m_battle.GetMe().SetNick(STD_STRING(sett().GetDefaultNick()));
+	m_battle.GetMe().SetNick(STD_STRING(cfg().ReadString("/Spring/DefaultName")));
 }
 
 void SinglePlayerTab::SetMod(unsigned int index)
