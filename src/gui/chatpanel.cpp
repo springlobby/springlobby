@@ -54,7 +54,7 @@ END_EVENT_TABLE()
 static const wxString chan_prefix = _("channel_");
 
 SLCONFIG("/Channel/bridgebot", (const wxString&) _T("TIZBOT"), "Name of the Bridgebot (which forwards traffic between #sy and irc channels)");
-
+SLCONFIG("/GUI/ShowPromotions", true, "Show promotion messages as popup");
 
 /// table for irc colors
 static wxColor m_irc_colors[16] = {
@@ -1267,7 +1267,7 @@ void ChatPanel::OnSettingsChanged(wxCommandEvent&) {
 }
 
 void ChatPanel::ReadSettings() {
-	m_reactOnPromoteEvents = sett().GetShowPromotions();
+	m_reactOnPromoteEvents = cfg().ReadBool("/GUI/ShowPromotions");
 	m_display_joinitem = cfg().Read(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
 
 	//Hide bots by default

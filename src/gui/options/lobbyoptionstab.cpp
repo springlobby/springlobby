@@ -131,7 +131,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
 	wxStaticBoxSizer* m_show_promotions_sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("Battle Promotion"));
 	m_show_promotions = new wxCheckBox(this, -1, _("Show notifications when someone promotes battle?"), wxDefaultPosition, wxDefaultSize, 0);
-	m_show_promotions->SetValue(sett().GetShowPromotions());
+	m_show_promotions->SetValue(cfg().ReadBool("/GUI/ShowPromotions"));
 	m_show_promotions_sizer->Add(m_show_promotions, 0, wxEXPAND | wxALL, 5);
 
 	wxStaticBoxSizer* m_complete_method_sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("Tab completion method"));
@@ -210,7 +210,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 	bool show = m_show_tooltips->IsChecked();
 	wxToolTip::Enable(show);
 	sett().SetShowTooltips(show);
-	sett().SetShowPromotions(m_show_promotions->IsChecked());
+	cfg().Write(_T("/GUI/ShowPromotions"), m_show_promotions->IsChecked());
 
 	sett().SetCompletionMethod(m_complete_method_new->GetValue() ? Settings::MatchNearest : Settings::MatchExact);
 
@@ -237,7 +237,7 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 	m_show_tooltips->SetValue(show);
 	wxToolTip::Enable(show);
 
-	m_show_promotions->SetValue(sett().GetShowPromotions());
+	m_show_promotions->SetValue(cfg().ReadBool("/GUI/ShowPromotions"));
 
 	m_complete_method_old->SetValue(sett().GetCompletionMethod() == Settings::MatchExact);
 	m_complete_method_new->SetValue(sett().GetCompletionMethod() == Settings::MatchNearest);

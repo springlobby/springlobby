@@ -1499,11 +1499,3 @@ wxString Settings::GetDefaultNick()
 {
 	return TowxString(LSL::usync().GetSpringConfigString("name", "Player"));
 }
-
-void Settings::SetShowPromotions(bool show) {
-	cfg().Write(_T("/GUI/ShowPromotions"), show);
-}
-
-bool Settings::GetShowPromotions() {
-	return cfg().Read(_T( "/GUI/ShowPromotions" ), 1l);
-}
