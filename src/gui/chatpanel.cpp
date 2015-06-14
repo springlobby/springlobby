@@ -266,8 +266,8 @@ void ChatPanel::CreateControls()
 		// m_nick_filter->Disable();
 
 		m_nick_filter = new wxTextCtrl(m_nick_panel, FILTER_USERS);
-		m_nick_sizer->Add(nickListHeaderSizer, 0, wxEXPAND);
 		m_nick_sizer->Add(m_nicklist, 1, wxEXPAND);
+		m_nick_sizer->Add(nickListHeaderSizer, 0, wxEXPAND);
 		m_nick_sizer->Add(m_nick_filter, 0, wxEXPAND);
 		// m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
 
