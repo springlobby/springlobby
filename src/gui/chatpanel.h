@@ -173,8 +173,12 @@ private:
 	void CreatePopup();
 	void CheckForPromotion(const wxString& who, const wxString& action);
 
+	void OnSettingsChanged(wxCommandEvent&);
+	void ReadSettings();
+
 private:
 	bool m_show_nick_list; //!< If the nicklist should be shown or not.
+	bool m_ShowPlayersOnlyFlag;
 
 	VotePanel* m_votePanel;
 

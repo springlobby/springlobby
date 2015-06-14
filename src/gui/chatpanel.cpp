@@ -77,13 +77,22 @@ static wxColor m_irc_colors[16] = {
 
 void ChatPanel::Init(const wxString& panelname)
 {
+	//Clear some controls pointer that can be used in ReadSettings
+	m_say_text = nullptr;
+	m_chatlog_text = nullptr;
+
+	//Read settings
+	ReadSettings();
+
 	m_chatpanelname = panelname;
 	CreateControls();
 	SetLogFile(panelname);
-	m_display_joinitem = cfg().Read(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
+
 	GetAui().manager->AddPane(this, wxLEFT, _T("chatpanel-channel-") + panelname);
 	m_chatlog_text->Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, this);
+
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnLogin, wxObjectEventFunction(&ChatPanel::OnLogin));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::ApplicationSettingsChangedEvent, wxObjectEventFunction(&ChatPanel::OnSettingsChanged));
 }
 
 ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
@@ -103,7 +112,7 @@ ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
     , m_disable_append(false)
     , m_display_joinitem(false)
     , m_topic_set(false)
-    , m_reactOnPromoteEvents(true) //TODO: move init to cfg reading
+    , m_reactOnPromoteEvents(true)
 {
 	Init(TowxString(chan.GetName()));
 	SetChannel(&chan);
@@ -228,8 +237,6 @@ ChatPanel::~ChatPanel()
 
 void ChatPanel::CreateControls()
 {
-	slLogDebugFunc("");
-
 	// Creating sizers
 	m_main_sizer = new wxBoxSizer(wxHORIZONTAL);
 	m_chat_sizer = new wxBoxSizer(wxVERTICAL);
@@ -265,11 +272,8 @@ void ChatPanel::CreateControls()
 		// m_nick_sizer->Add( m_nick_filter, 0, wxEXPAND | wxTOP, 2 );
 
 		m_nick_panel->SetSizer(m_nick_sizer);
-		//Hide bots in players list by default
-		//TODO: store this value in settings and read on init!
-		bool defaultState = true;
-		m_nicklist->UserFilterShowPlayersOnly(defaultState);
-		m_showPlayerOnlyCheck->SetValue(defaultState);
+		m_nicklist->UserFilterShowPlayersOnly(m_ShowPlayersOnlyFlag);
+		m_showPlayerOnlyCheck->SetValue(m_ShowPlayersOnlyFlag);
 	} else {
 
 		m_chat_panel = this;
@@ -331,9 +335,8 @@ void ChatPanel::CreateControls()
 		m_splitter->SetSashPosition(s.GetWidth() - 238, true);
 	}
 
-	m_chatlog_text->SetBackgroundColour(sett().GetChatColorBackground());
 	m_chatlog_text->ShowPosition(m_chatlog_text->GetLastPosition());
-
+	m_chatlog_text->SetBackgroundColour(sett().GetChatColorBackground());
 	m_say_text->SetBackgroundColour(sett().GetChatColorBackground());
 	m_say_text->SetForegroundColour(sett().GetChatColorNormal());
 
@@ -1257,4 +1260,24 @@ void ChatPanel::OnShowPlayerOnlyCheck(wxCommandEvent& event)
 {
 	m_nicklist->UserFilterShowPlayersOnly(event.IsChecked());
 	UpdateUserCountLabel();
+}
+
+void ChatPanel::OnSettingsChanged(wxCommandEvent&) {
+	ReadSettings();
+}
+
+void ChatPanel::ReadSettings() {
+	m_reactOnPromoteEvents = sett().GetShowPromotions();
+	m_display_joinitem = cfg().Read(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
+
+	//Hide bots by default
+	m_ShowPlayersOnlyFlag = true;
+
+	if (m_chatlog_text != nullptr) {
+		m_chatlog_text->SetBackgroundColour(sett().GetChatColorBackground());
+	}
+	if (m_say_text != nullptr) {
+		m_say_text->SetBackgroundColour(sett().GetChatColorBackground());
+		m_say_text->SetForegroundColour(sett().GetChatColorNormal());
+	}
 }

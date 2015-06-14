@@ -14,11 +14,11 @@ class wxButton;
 class wxStaticText;
 class wxSpinCtrl;
 class wxStaticBoxSizer;
-class TorrentOptionsPanel : public wxScrolledWindow
+class DownloadOptionsPanel : public wxScrolledWindow
 {
 public:
-	TorrentOptionsPanel(wxWindow* parent);
-	~TorrentOptionsPanel();
+	DownloadOptionsPanel(wxWindow* parent);
+	~DownloadOptionsPanel();
 
 	void OnApply(wxCommandEvent& event);
 	void OnRestore(wxCommandEvent& event);

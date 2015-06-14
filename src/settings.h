@@ -239,6 +239,9 @@ public:
 	void SetShowTooltips(bool show);
 	bool GetShowTooltips();
 
+	void SetShowPromotions(bool show);
+	bool GetShowPromotions();
+
 	ColumnMap GetColumnMap(const wxString& name);
 	void GetColumnMap(const wxString& name, const ColumnMap& map);
 

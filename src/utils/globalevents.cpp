@@ -22,6 +22,7 @@ const wxEventType GlobalEventManager::BattleStartedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::UserBattleStatusChangedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::OnUpdateFinished = wxNewEventType();
 const wxEventType GlobalEventManager::GamePromotedEvent = wxNewEventType();
+const wxEventType GlobalEventManager::ApplicationSettingsChangedEvent = wxNewEventType();
 
 bool GlobalEventManager::m_eventsDisabled = false;
 

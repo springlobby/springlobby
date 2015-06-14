@@ -25,10 +25,10 @@
 #include "gui/controls.h"
 
 
-BEGIN_EVENT_TABLE(TorrentOptionsPanel, wxScrolledWindow)
+BEGIN_EVENT_TABLE(DownloadOptionsPanel, wxScrolledWindow)
 END_EVENT_TABLE()
 
-TorrentOptionsPanel::TorrentOptionsPanel(wxWindow* parent)
+DownloadOptionsPanel::DownloadOptionsPanel(wxWindow* parent)
     : wxScrolledWindow(parent, -1)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T("torrentoptionspanel"));
@@ -51,11 +51,11 @@ TorrentOptionsPanel::TorrentOptionsPanel(wxWindow* parent)
 	Layout();
 }
 
-TorrentOptionsPanel::~TorrentOptionsPanel()
+DownloadOptionsPanel::~DownloadOptionsPanel()
 {
 }
 
-void TorrentOptionsPanel::OnApply(wxCommandEvent& /*unused*/)
+void DownloadOptionsPanel::OnApply(wxCommandEvent& /*unused*/)
 {
 
 	sett().SetHTTPMaxParallelDownloads(m_parallel_http->GetValue());
@@ -63,7 +63,7 @@ void TorrentOptionsPanel::OnApply(wxCommandEvent& /*unused*/)
 	prDownloader().UpdateSettings();
 }
 
-void TorrentOptionsPanel::OnRestore(wxCommandEvent& /*unused*/)
+void DownloadOptionsPanel::OnRestore(wxCommandEvent& /*unused*/)
 {
 	m_parallel_http->SetValue(sett().GetHTTPMaxParallelDownloads());
 }

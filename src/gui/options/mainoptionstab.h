@@ -17,7 +17,7 @@ class SpringOptionsTab;
 class ChatOptionsTab;
 class wxButton;
 class wxBoxSizer;
-class TorrentOptionsPanel;
+class DownloadOptionsPanel;
 class GroupOptionsPanel;
 class LobbyOptionsTab;
 
@@ -53,7 +53,7 @@ private:
 
 	SpringOptionsTab* m_spring_opts;
 	ChatOptionsTab* m_chat_opts;
-	TorrentOptionsPanel* m_torrent_opts;
+	DownloadOptionsPanel* m_download_opts;
 	GroupOptionsPanel* m_groups_opts;
 	LobbyOptionsTab* m_lobby_opts;
 

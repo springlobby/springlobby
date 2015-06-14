@@ -25,6 +25,7 @@
 #include "utils/conversion.h"
 #include "utils/uievents.h"
 #include "gui/notifications/notificationmanager.h"
+#include "utils/globalevents.h"
 
 BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
 
@@ -107,7 +108,6 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 
 	m_main_sizer->Add(m_web_box_sizer, 0, wxEXPAND | wxALL, 5);
 	m_main_sizer->Add(m_editor_box_sizer, 0, wxEXPAND | wxALL, 5);
-	m_main_sizer->Add(m_autojoin_sizer, 0, wxALL, 5);
 	wxStaticBoxSizer* m_updater_sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("Automatic updates"));
 	m_updater_label = new wxStaticText(this,
 					   -1,
@@ -117,7 +117,10 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_updater_sizer->Add(m_updater_label, 1, wxEXPAND | wxALL, 5);
 	m_updater_sizer->Add(m_updater, 0, wxEXPAND | wxALL, 5);
 
-	m_main_sizer->Add(m_updater_sizer, 0, wxALL, 5);
+	wxBoxSizer* pairBoxSizer = new wxBoxSizer(wxHORIZONTAL);
+	pairBoxSizer->Add(m_autojoin_sizer, 0, wxEXPAND | wxALL, 5);
+	pairBoxSizer->Add(m_updater_sizer, 0, wxEXPAND | wxALL, 5);
+	m_main_sizer->Add(pairBoxSizer, 0, wxEXPAND | wxALL, 5);
 
 	wxStaticBoxSizer* m_show_tooltips_sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("Tooltips"));
 	m_show_tooltips = new wxCheckBox(this, -1, _("Show Tooltips?"), wxDefaultPosition, wxDefaultSize, 0);
@@ -128,7 +131,10 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 #endif
 	m_show_tooltips_sizer->Add(m_show_tooltips, 0, wxEXPAND | wxALL, 5);
 
-	m_main_sizer->Add(m_show_tooltips_sizer, 0, wxALL, 5);
+	wxStaticBoxSizer* m_show_promotions_sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("Battle Promotion"));
+	m_show_promotions = new wxCheckBox(this, -1, _("Show notifications when someone promotes battle?"), wxDefaultPosition, wxDefaultSize, 0);
+	m_show_promotions->SetValue(sett().GetShowPromotions());
+	m_show_promotions_sizer->Add(m_show_promotions, 0, wxEXPAND | wxALL, 5);
 
 	wxStaticBoxSizer* m_complete_method_sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("Tab completion method"));
 	m_complete_method_label = new wxStaticText(this, -1, _("\"Match exact\" will complete a word if there is one and only one match.\n"
@@ -141,7 +147,14 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_complete_method_sizer->Add(m_complete_method_old, 0, wxEXPAND | wxALL, 5);
 	m_complete_method_sizer->Add(m_complete_method_new, 0, wxEXPAND | wxALL, 5);
 
-	m_main_sizer->Add(m_complete_method_sizer, 0, wxALL, 5);
+	wxBoxSizer* showStuffSizer = new wxBoxSizer(wxVERTICAL);
+	showStuffSizer->Add(m_show_tooltips_sizer, 0, wxEXPAND | wxALL, 5);
+	showStuffSizer->Add(m_show_promotions_sizer, 0, wxEXPAND | wxALL, 5);
+
+	pairBoxSizer = new wxBoxSizer(wxHORIZONTAL);
+	pairBoxSizer->Add(showStuffSizer, 0, wxEXPAND | wxALL, 5);
+	pairBoxSizer->Add(m_complete_method_sizer, 0, wxEXPAND | wxALL, 5);
+	m_main_sizer->Add(pairBoxSizer, 0, wxEXPAND | wxALL, 5);
 
 	wxStaticBoxSizer* m_misc_gui_sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("Misc GUI"));
 	m_use_tabicons = new wxCheckBox(this, -1, _("Show big icons in mainwindow tabs?"), wxDefaultPosition, wxDefaultSize, 0);
@@ -169,15 +182,18 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_test_notification = new wxButton(this, TEST_NOTIFICATION, _("Test Notification"));
 	m_misc_gui_sizer->Add(m_x_on_all_tabs, 1, wxEXPAND | wxALL, 5);
 	m_misc_gui_sizer->Add(m_test_notification, 1, wxEXPAND | wxALL, 5);
-	m_main_sizer->Add(m_misc_gui_sizer, 0, wxALL, 5);
 
 	wxStaticBoxSizer* m_start_tab_sizer = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Start tab"));
 	m_start_tab = new wxChoice(this, -1, wxDefaultPosition, wxDefaultSize, ui().mw().GetTabNames());
 	m_start_tab->SetSelection(cfg().ReadLong(_T( "/GUI/StartTab" )));
 	wxStaticText* m_start_tab_label = new wxStaticText(this, -1, _("Select which tab to show at startup"));
 	m_start_tab_sizer->Add(m_start_tab_label, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
-	m_start_tab_sizer->Add(m_start_tab, 0, wxALIGN_CENTER_VERTICAL, 5);
-	m_main_sizer->Add(m_start_tab_sizer, 0, wxALL, 5);
+	m_start_tab_sizer->Add(m_start_tab, 0, wxEXPAND | wxALIGN_TOP, 5);
+
+	pairBoxSizer = new wxBoxSizer(wxHORIZONTAL);
+	pairBoxSizer->Add(m_misc_gui_sizer, 0, wxEXPAND | wxALL, 5);
+	pairBoxSizer->Add(m_start_tab_sizer, 0, wxEXPAND | wxALL, 5);
+	m_main_sizer->Add(pairBoxSizer, 0, wxEXPAND | wxALL, 5);
 
 	//dummy event that updates controls to correct state
 	wxCommandEvent evt;
@@ -203,6 +219,7 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 	bool show = m_show_tooltips->IsChecked();
 	wxToolTip::Enable(show);
 	sett().SetShowTooltips(show);
+	sett().SetShowPromotions(m_show_promotions->IsChecked());
 
 	sett().SetCompletionMethod(m_complete_method_new->GetValue() ? Settings::MatchNearest : Settings::MatchExact);
 
@@ -216,6 +233,8 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 	sett().SetUseNotificationPopups(m_use_notif_popups->IsChecked());
 	sett().SetNotificationPopupPosition(m_notif_popup_pos->GetSelection());
 	sett().SetNotificationPopupDisplayTime(m_notif_popup_time->GetValue());
+
+	GlobalEventManager::Instance()->Send(GlobalEventManager::ApplicationSettingsChangedEvent);
 }
 
 
@@ -226,6 +245,8 @@ void LobbyOptionsTab::OnRestore(wxCommandEvent& /*unused*/)
 	bool show = sett().GetShowTooltips();
 	m_show_tooltips->SetValue(show);
 	wxToolTip::Enable(show);
+
+	m_show_promotions->SetValue(sett().GetShowPromotions());
 
 	m_complete_method_old->SetValue(sett().GetCompletionMethod() == Settings::MatchExact);
 	m_complete_method_new->SetValue(sett().GetCompletionMethod() == Settings::MatchNearest);

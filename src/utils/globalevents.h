@@ -52,6 +52,7 @@ public:
 	static const wxEventType UserBattleStatusChangedEvent;
 
 	static const wxEventType GamePromotedEvent;
+	static const wxEventType ApplicationSettingsChangedEvent;
 
 private:
 	static GlobalEventManager* m_Instance;
