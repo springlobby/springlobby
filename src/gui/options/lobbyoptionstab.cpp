@@ -117,10 +117,8 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_updater_sizer->Add(m_updater_label, 1, wxEXPAND | wxALL, 5);
 	m_updater_sizer->Add(m_updater, 0, wxEXPAND | wxALL, 5);
 
-	wxBoxSizer* pairBoxSizer = new wxBoxSizer(wxHORIZONTAL);
-	pairBoxSizer->Add(m_autojoin_sizer, 0, wxEXPAND | wxALL, 5);
-	pairBoxSizer->Add(m_updater_sizer, 0, wxEXPAND | wxALL, 5);
-	m_main_sizer->Add(pairBoxSizer, 0, wxEXPAND | wxALL, 5);
+	m_main_sizer->Add(m_autojoin_sizer, 0, wxEXPAND | wxALL, 5);
+	m_main_sizer->Add(m_updater_sizer, 0, wxEXPAND | wxALL, 5);
 
 	wxStaticBoxSizer* m_show_tooltips_sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("Tooltips"));
 	m_show_tooltips = new wxCheckBox(this, -1, _("Show Tooltips?"), wxDefaultPosition, wxDefaultSize, 0);
@@ -147,14 +145,9 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_complete_method_sizer->Add(m_complete_method_old, 0, wxEXPAND | wxALL, 5);
 	m_complete_method_sizer->Add(m_complete_method_new, 0, wxEXPAND | wxALL, 5);
 
-	wxBoxSizer* showStuffSizer = new wxBoxSizer(wxVERTICAL);
-	showStuffSizer->Add(m_show_tooltips_sizer, 0, wxEXPAND | wxALL, 5);
-	showStuffSizer->Add(m_show_promotions_sizer, 0, wxEXPAND | wxALL, 5);
-
-	pairBoxSizer = new wxBoxSizer(wxHORIZONTAL);
-	pairBoxSizer->Add(showStuffSizer, 0, wxEXPAND | wxALL, 5);
-	pairBoxSizer->Add(m_complete_method_sizer, 0, wxEXPAND | wxALL, 5);
-	m_main_sizer->Add(pairBoxSizer, 0, wxEXPAND | wxALL, 5);
+	m_main_sizer->Add(m_show_tooltips_sizer, 0, wxEXPAND | wxALL, 5);
+	m_main_sizer->Add(m_show_promotions_sizer, 0, wxEXPAND | wxALL, 5);
+	m_main_sizer->Add(m_complete_method_sizer, 0, wxEXPAND | wxALL, 5);
 
 	wxStaticBoxSizer* m_misc_gui_sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("Misc GUI"));
 	m_use_tabicons = new wxCheckBox(this, -1, _("Show big icons in mainwindow tabs?"), wxDefaultPosition, wxDefaultSize, 0);
@@ -190,10 +183,8 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_start_tab_sizer->Add(m_start_tab_label, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
 	m_start_tab_sizer->Add(m_start_tab, 0, wxEXPAND | wxALIGN_TOP, 5);
 
-	pairBoxSizer = new wxBoxSizer(wxHORIZONTAL);
-	pairBoxSizer->Add(m_misc_gui_sizer, 0, wxEXPAND | wxALL, 5);
-	pairBoxSizer->Add(m_start_tab_sizer, 0, wxEXPAND | wxALL, 5);
-	m_main_sizer->Add(pairBoxSizer, 0, wxEXPAND | wxALL, 5);
+	m_main_sizer->Add(m_misc_gui_sizer, 0, wxEXPAND | wxALL, 5);
+	m_main_sizer->Add(m_start_tab_sizer, 0, wxEXPAND | wxALL, 5);
 
 	//dummy event that updates controls to correct state
 	wxCommandEvent evt;
