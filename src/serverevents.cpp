@@ -132,12 +132,12 @@ void ServerEvents::OnNewUser(const std::string& nick, const std::string& country
 		return;
 	}
 	User& user = m_serv._AddUser(nick);
-	if (useractions().DoActionOnUser(UserActions::ActNotifLogin, TowxString(nick))) {
-		actNotifBox(SL_MAIN_ICON, TowxString(nick) + _(" is online"));
-	}
 	user.SetCountry(country);
 	user.SetCpu(cpu);
 	user.SetID(id);
+	if (!m_serv.IsOnline()) { //login info isn't complete yet
+		return;
+	}
 	ui().OnUserOnline(user);
 }
 
@@ -156,6 +156,9 @@ void ServerEvents::OnUserStatus(const std::string& nick, UserStatus status)
 				actNotifBox(SL_MAIN_ICON, TowxString(nick) + _(" is now ") + diffString);
 		}
 
+		if (!m_serv.IsOnline()) { //login info isn't complete yet
+			return;
+		}
 		ui().OnUserStatusChanged(user);
 		if (user.GetBattle() != 0) {
 			IBattle& battle = *user.GetBattle();
@@ -163,10 +166,11 @@ void ServerEvents::OnUserStatus(const std::string& nick, UserStatus status)
 				if (battle.GetFounder().GetNick() == user.GetNick()) {
 					if (status.in_game != battle.GetInGame()) {
 						battle.SetInGame(status.in_game);
-						if (status.in_game)
+						if (status.in_game) {
 							battle.StartSpring();
-						else
+						} else {
 							BattleEvents::GetBattleEventSender(BattleEvents::BattleInfoUpdate).SendEvent(std::make_pair(user.GetBattle(), ""));
+						}
 					}
 				}
 			} catch (...) {
@@ -234,8 +238,12 @@ void ServerEvents::OnBattleOpened(int id, BattleType type, NatType nat, const st
 		battle.SetEngineName(engineName);
 		battle.SetEngineVersion(engineVersion);
 
-		if (useractions().DoActionOnUser(UserActions::ActNotifBattle, TowxString(user.GetNick())))
+		if (useractions().DoActionOnUser(UserActions::ActNotifBattle, TowxString(user.GetNick()))) {
 			actNotifBox(SL_MAIN_ICON, TowxString(user.GetNick()) + _(" opened battle ") + TowxString(title));
+		}
+		if (!m_serv.IsOnline()) { //login info isn't complete yet
+			return;
+		}
 
 		ui().OnBattleOpened(battle);
 		if (user.Status().in_game) {

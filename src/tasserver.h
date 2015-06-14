@@ -50,7 +50,7 @@ public:
 
 	void Login() override;
 	void Logout() override;
-	bool IsOnline() const override;
+	bool IsOnline() const override; //returns true when user is successfully logged in
 
 	void Ping() override;
 

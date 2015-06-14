@@ -300,6 +300,11 @@ bool TASServer::IsConnected()
 	return (m_sock != NULL) && (m_sock->State() == SS_Open) && (m_connected);
 }
 
+bool TASServer::IsOnline() const
+{
+	return m_connected && m_online;
+}
+
 
 void TASServer::Register(const std::string& servername, const std::string& host, const int port, const std::string& nick, const std::string& password)
 {
@@ -370,14 +375,6 @@ void TASServer::Logout()
 	slLogDebugFunc("");
 	Disconnect();
 }
-
-bool TASServer::IsOnline() const
-{
-	if (!m_connected)
-		return false;
-	return m_online;
-}
-
 
 void TASServer::RequestChannels()
 {
@@ -533,7 +530,6 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "ACCEPTED") {
 		if (m_online)
 			return; // in case is the server sends WTF
-		m_online = true;
 		SetUsername(STD_STRING(params));
 		m_se->OnLogin();
 	} else if (cmd == "MOTD") {
@@ -595,6 +591,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		map = GetSentenceParam(params);
 		m_se->OnBattleInfoUpdated(id, specs, haspass, hash, map);
 	} else if (cmd == "LOGININFOEND") {
+		m_online = true;
 		if (UserExists("RelayHostManagerList"))
 			SayPrivate("RelayHostManagerList", "!lm");
 		SendCmd("LISTSUBSCRIPTIONS", "");

@@ -1199,8 +1199,19 @@ void ChatPanel::SetBattle(IBattle* battle)
 
 void ChatPanel::OnLogin(wxCommandEvent& /*data*/)
 {
-	if (m_type == CPT_Channel && m_channel) {
-		m_channel->Rejoin();
+	switch (m_type){
+		case CPT_Channel:
+			if (m_channel) {
+				m_channel->Rejoin();
+			}
+			break;
+		case CPT_Server:
+			m_nicklist->SetUsers(m_server->GetUserList().GetUsers());
+			UpdateUserCountLabel();
+		case CPT_Battle:
+		case CPT_User:
+		case CPT_Debug:
+			break;
 	}
 }
 
