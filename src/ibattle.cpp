@@ -767,7 +767,10 @@ void IBattle::SetHostMod(const std::string& modname, const std::string& hash)
 
 void IBattle::SetLocalMod(const LSL::UnitsyncMod& mod)
 {
-	assert(LSL::Util::MakeHashUnsigned(mod.hash) == mod.hash); // hash has to be in unsigned format
+	assert(mod.hash.empty() || LSL::Util::MakeHashUnsigned(mod.hash) == mod.hash); // hash has to be in unsigned format
+	if (mod.hash.empty()) {
+		wxLogWarning("empty hash: %s", mod.name);
+	}
 	if (mod.name != m_local_mod.name || mod.hash != m_local_mod.hash) {
 		m_previous_local_mod_name = m_local_mod.name;
 		m_local_mod = mod;
