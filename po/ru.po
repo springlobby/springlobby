@@ -1277,6 +1277,25 @@ msgstr "Макс. количество игроков:"
 msgid "Game:"
 msgstr "Игра:"
 
+#: src/gui/singleplayertab.cpp:x
+msgid "Engine:"
+msgstr "Движок:"
+
+msgid "Select the engine version to play."
+msgsrt "Выберите игровой движок."
+
+msgid "Hide bots"
+msgstr "Не показывать боты"
+
+msgid "Show notifications when someone promotes battle?"
+msgstr "Показывать всплывающие уведомления когда кто-то зовёт в сражение?"
+
+msgid "Battle Promotion"
+msgstr "Извещения о сражениях"
+
+msgid "Player's TrueSkill rank"
+msgstr "TrueSkill игрока"
+
 #: src/gui/battlelist/battlelistfilter.cpp:320
 #: src/gui/playback/playbackfilter.cpp:155
 msgid "Only games I have"
