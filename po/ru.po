@@ -1281,9 +1281,6 @@ msgstr "Игра:"
 msgid "Engine:"
 msgstr "Движок:"
 
-msgid "Select the engine version to play."
-msgsrt "Выберите игровой движок."
-
 msgid "Hide bots"
 msgstr "Не показывать боты"
 
