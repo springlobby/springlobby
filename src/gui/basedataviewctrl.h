@@ -149,11 +149,13 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	{
 		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
 		wxDataViewColumn* column = GetColumn(columnIndex);
+		if (colWidth > 0) { //Probably width is undefined yet?
+			column->SetWidth(colWidth);
+		}
 		if (columnIndex == sortingColumnIndex) {
-			if (colWidth > 0) { //Probably width is undefined yet?
-				column->SetWidth(colWidth);
-			}
 			column->SetSortOrder(sortOrderAscending);
+		} else {
+			column->UnsetAsSortKey();
 		}
 	}
 }
