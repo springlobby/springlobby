@@ -7,18 +7,9 @@
 
 #include "playbackdataview.h"
 
+#include <wx/wx.h>
 #include <wx/dataview.h>
-#include <wx/defs.h>
-#include <wx/dvrenderers.h>
-#include <wx/event.h>
-#include <wx/gdicmn.h>
-#include <wx/menu.h>
-#include <wx/msw/menu.h>
-#include <wx/string.h>
-#include <wx/stringimpl.h>
-#include <wx/translation.h>
-#include <wx/window.h>
-#include <stdexcept>
+
 
 #include "../../iplaybacklist.h"
 #include "../../replaylist.h"
