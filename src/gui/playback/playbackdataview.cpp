@@ -11,12 +11,12 @@
 #include <wx/dataview.h>
 
 
-#include "../../iplaybacklist.h"
-#include "../../replaylist.h"
-#include "../../servermanager.h"
-#include "../../storedgame.h"
-#include "../basedataviewmodel.h"
-#include "../customdialogs.h"
+#include "iplaybacklist.h"
+#include "replaylist.h"
+#include "servermanager.h"
+#include "storedgame.h"
+#include "gui/basedataviewmodel.h"
+#include "gui/customdialogs.h"
 #include "playbackdatamodel.h"
 
 BEGIN_EVENT_TABLE(PlaybackDataView, BaseDataViewCtrl)
@@ -38,7 +38,7 @@ PlaybackDataView::PlaybackDataView(wxString& dataViewName, wxWindow* parent) : B
 	AppendTextColumn(_("Filesize"), FILESIZE, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("File"), FILENAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
-	auto* m_PlaybackDataModel = new PlaybackDataModel();
+	PlaybackDataModel* m_PlaybackDataModel = new PlaybackDataModel();
 	AssociateModel(m_PlaybackDataModel);
 
 	m_ContextMenu = new wxMenu(wxEmptyString);
