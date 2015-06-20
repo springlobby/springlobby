@@ -18,8 +18,8 @@ IconsCollection::IconsCollection() {
 }
 
 IconsCollection::~IconsCollection() {
-	delete iconExists;
-	delete iconNExists;
+	wxDELETE(iconExists);
+	wxDELETE(iconNExists);
 }
 
 IconsCollection* IconsCollection::Instance() {

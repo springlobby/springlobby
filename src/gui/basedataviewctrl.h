@@ -75,7 +75,7 @@ inline void BaseDataViewCtrl<DataType>::AdjustColumnsWidth() {
 }
 
 BEGIN_EVENT_TABLE_TEMPLATE1(BaseDataViewCtrl, wxDataViewCtrl, DataType)
-    EVT_SIZE(BaseDataViewCtrl::OnSizeEvent)
+    EVT_SIZE(BaseDataViewCtrl<DataType>::OnSizeEvent)
 END_EVENT_TABLE()
 
 template<class DataType>
@@ -151,7 +151,7 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	if (sortingColumnIndex < 0) {
 		return;
 	}
-	SetSortingColumnIndex(sortingColumnIndex);
+	wxDataViewCtrl::SetSortingColumnIndex(sortingColumnIndex);
 	//Set up sorting order
 	bool sortOrderAscending;
 	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
@@ -171,7 +171,7 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties() {
 	}
 
 	//Save sorting column
-	int sortingColumnIndex = GetSortingColumnIndex();
+	int sortingColumnIndex = wxDataViewCtrl::GetSortingColumnIndex();
 	cfg().Write(wxString(m_DataViewName + _T("/sorting_column")), sortingColumnIndex);
 	//Save sorting order
 	wxDataViewColumn* column = GetColumn(sortingColumnIndex);
