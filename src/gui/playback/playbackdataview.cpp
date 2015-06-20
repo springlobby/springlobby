@@ -5,7 +5,7 @@
  *      Author: Руслан
  */
 
-#include "PlaybackDataView.h"
+#include "playbackdataview.h"
 
 #include <wx/dataview.h>
 #include <wx/defs.h>
@@ -24,9 +24,9 @@
 #include "../../replaylist.h"
 #include "../../servermanager.h"
 #include "../../storedgame.h"
-#include "../BaseDataViewModel.h"
+#include "../basedataviewmodel.h"
 #include "../customdialogs.h"
-#include "PlaybackDataModel.h"
+#include "playbackdatamodel.h"
 
 BEGIN_EVENT_TABLE(PlaybackDataView, BaseDataViewCtrl)
 	EVT_DATAVIEW_ITEM_CONTEXT_MENU(REPLAY_DATAVIEW_ID, PlaybackDataView::OnContextMenu)

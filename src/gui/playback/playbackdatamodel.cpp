@@ -5,7 +5,7 @@
  *      Author: Руслан
  */
 
-#include "PlaybackDataModel.h"
+#include "playbackdatamodel.h"
 
 #include "storedgame.h"
 #include "gui/iconscollection.h"

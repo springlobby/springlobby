@@ -31,7 +31,7 @@
 #include "gui/customdialogs.h"
 #include "gui/hosting/battleroomlistctrl.h"
 #include "log.h"
-#include "PlaybackDataView.h"
+#include "playbackdataview.h"
 
 BEGIN_EVENT_TABLE(PlaybackTab, wxPanel)
 

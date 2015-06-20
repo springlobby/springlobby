@@ -5,7 +5,7 @@
  *      Author: Руслан
  */
 
-#include "IconsCollection.h"
+#include "iconscollection.h"
 
 #include "images/exists.xpm"
 #include "images/nexists.xpm"
