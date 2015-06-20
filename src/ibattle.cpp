@@ -726,7 +726,7 @@ void IBattle::SetLocalMap(const std::string& mapname)
 const LSL::UnitsyncMap& IBattle::LoadMap()
 {
 	if ((!m_map_loaded) && (!m_host_map.name.empty())) {
-		if (MapExists(false)) { //Check if selected map available for engine?
+		if (MapExists(true)) { //Check if selected map available for engine?
 			try {
 				m_local_map = LSL::usync().GetMap(m_host_map.name);
 				assert(LSL::Util::MakeHashUnsigned(m_local_map.hash) == m_local_map.hash);
@@ -783,13 +783,14 @@ const LSL::UnitsyncMod& IBattle::LoadMod()
 {
 	ASSERT_LOGIC(!m_host_mod.name.empty(), "m_host_mod.name.empty() is FALSE");
 	if (!m_mod_loaded) {
-		try {
-			ASSERT_EXCEPTION(ModExists(false), wxString::Format("Game does not exist: %s hash:%s", m_host_mod.name.c_str(), m_host_mod.hash.c_str()));
-			SetLocalMod(LSL::usync().GetMod(m_host_mod.name));
-			bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::ModOption, m_host_mod.name);
-			ASSERT_EXCEPTION(options_loaded, _T("couldn't load the game options"));
-			m_mod_loaded = true;
-		} catch (...) {
+		if (ModExists(true)) {
+			try {
+				SetLocalMod(LSL::usync().GetMod(m_host_mod.name));
+				bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::ModOption, m_host_mod.name);
+				ASSERT_EXCEPTION(options_loaded, _T("couldn't load the game options"));
+				m_mod_loaded = true;
+			} catch (...) {
+			}
 		}
 	}
 	return m_local_mod;
