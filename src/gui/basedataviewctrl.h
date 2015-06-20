@@ -144,7 +144,8 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 		wxDataViewColumn* column = GetColumn(columnIndex);
 		column->SetWidth(colWidth);
 	}
-
+//TODO: Looks like GetSortingColumnIndex is not supported under Travis or Linux
+#if FALSE
 	//Set up sorting column
 	int sortingColumnIndex;
 	cfg().Read(wxString(m_DataViewName + _T("/sorting_column")), &sortingColumnIndex, -1);
@@ -157,6 +158,7 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
 	wxDataViewColumn* column = GetColumn(sortingColumnIndex);
 	column->SetSortOrder(sortOrderAscending);
+#endif
 }
 
 template<class DataType>
@@ -169,7 +171,8 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties() {
 		const int colWidth = column->GetWidth();
 		sett().SetColumnWidth(m_DataViewName, columnIndex, colWidth);
 	}
-
+//TODO: Looks like SetSortingColumnIndex is not supported under Travis or Linux
+#if FALSE
 	//Save sorting column
 	int sortingColumnIndex = wxDataViewCtrl::GetSortingColumnIndex();
 	cfg().Write(wxString(m_DataViewName + _T("/sorting_column")), sortingColumnIndex);
@@ -177,6 +180,7 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties() {
 	wxDataViewColumn* column = GetColumn(sortingColumnIndex);
 	bool sortOrderAscending = column->IsSortOrderAscending();
 	cfg().Write(wxString(m_DataViewName + _T("/sorting_order")), sortOrderAscending);
+#endif
 }
 
 template<class DataType>
