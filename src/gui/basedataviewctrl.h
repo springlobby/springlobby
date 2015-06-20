@@ -135,52 +135,46 @@ template<class DataType>
 inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	const int columnCount = GetColumnCount();
 
-	for(int columnIndex = 0; columnIndex < columnCount; columnIndex++)
-	{
-		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
-		if (colWidth < 0) { //Probably width is undefined yet?
-			continue;
-		}
-		wxDataViewColumn* column = GetColumn(columnIndex);
-		column->SetWidth(colWidth);
-	}
-//TODO: Looks like GetSortingColumnIndex is not supported under Travis or Linux
-#if FALSE
 	//Set up sorting column
 	int sortingColumnIndex;
 	cfg().Read(wxString(m_DataViewName + _T("/sorting_column")), &sortingColumnIndex, -1);
 	if (sortingColumnIndex < 0) {
 		return;
 	}
-	wxDataViewCtrl::SetSortingColumnIndex(sortingColumnIndex);
 	//Set up sorting order
 	bool sortOrderAscending;
 	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
-	wxDataViewColumn* column = GetColumn(sortingColumnIndex);
-	column->SetSortOrder(sortOrderAscending);
-#endif
+
+	for(int columnIndex = 0; columnIndex < columnCount; columnIndex++)
+	{
+		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
+		wxDataViewColumn* column = GetColumn(columnIndex);
+		if (columnIndex == sortingColumnIndex) {
+			if (colWidth > 0) { //Probably width is undefined yet?
+				column->SetWidth(colWidth);
+			}
+			column->SetSortOrder(sortOrderAscending);
+		}
+	}
 }
 
 template<class DataType>
 inline void BaseDataViewCtrl<DataType>::SaveColumnProperties() {
 	const int columnCount = GetColumnCount();
 
-	for(int columnIndex = 0; columnIndex < columnCount; columnIndex++)
-	{
+	for(int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
 		wxDataViewColumn* column = GetColumn(columnIndex);
 		const int colWidth = column->GetWidth();
 		sett().SetColumnWidth(m_DataViewName, columnIndex, colWidth);
+
+		if (column->IsSortKey()) {
+			//Save sorting column
+			cfg().Write(wxString(m_DataViewName + _T("/sorting_column")), columnIndex);
+			//Save sorting order
+			const bool sortOrderAscending = column->IsSortOrderAscending();
+			cfg().Write(wxString(m_DataViewName + _T("/sorting_order")), sortOrderAscending);
+		}
 	}
-//TODO: Looks like SetSortingColumnIndex is not supported under Travis or Linux
-#if FALSE
-	//Save sorting column
-	int sortingColumnIndex = wxDataViewCtrl::GetSortingColumnIndex();
-	cfg().Write(wxString(m_DataViewName + _T("/sorting_column")), sortingColumnIndex);
-	//Save sorting order
-	wxDataViewColumn* column = GetColumn(sortingColumnIndex);
-	bool sortOrderAscending = column->IsSortOrderAscending();
-	cfg().Write(wxString(m_DataViewName + _T("/sorting_order")), sortOrderAscending);
-#endif
 }
 
 template<class DataType>
