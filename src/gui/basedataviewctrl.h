@@ -11,7 +11,7 @@
 #include <wx/wx.h>
 #include <wx/dataview.h>
 
-#include "BaseDataViewModel.h"
+#include "basedataviewmodel.h"
 
 #include "settings.h"
 #include "utils/slconfig.h"
