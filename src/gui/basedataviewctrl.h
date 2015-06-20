@@ -138,9 +138,6 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	//Set up sorting column
 	int sortingColumnIndex;
 	cfg().Read(wxString(m_DataViewName + _T("/sorting_column")), &sortingColumnIndex, -1);
-	if (sortingColumnIndex < 0) {
-		return;
-	}
 	//Set up sorting order
 	bool sortOrderAscending;
 	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
@@ -149,7 +146,7 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	{
 		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
 		wxDataViewColumn* column = GetColumn(columnIndex);
-		if (colWidth > 0) { //Probably width is undefined yet?
+		if (colWidth > 0) {
 			column->SetWidth(colWidth);
 		}
 		if (columnIndex == sortingColumnIndex) {
@@ -158,6 +155,7 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 			column->UnsetAsSortKey();
 		}
 	}
+	Resort();
 }
 
 template<class DataType>
