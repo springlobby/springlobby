@@ -4,6 +4,7 @@ ChangeLog of Springlobby
  - fix start position loading from cache
  - fix network timeout when using NAT + relayhost
  - fix sync check on 32 bit platforms (mostly windows)
+ - allow to hide bots in user list
 
 ## 0.224
  - fix startposition type ignored
