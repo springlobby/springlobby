@@ -15,13 +15,13 @@ wxBEGIN_EVENT_TABLE_TEMPLATE2(CustomVirtListCtrl, wxListCtrl, T, L)
 #endif
     EVT_LIST_COL_BEGIN_DRAG(wxID_ANY, CustomVirtListCtrl::OnStartResizeCol)
     EVT_LIST_COL_END_DRAG(wxID_ANY, CustomVirtListCtrl::OnEndResizeCol)
+    EVT_SIZE(CustomVirtListCtrl::OnSizeEvent)
     EVT_LEAVE_WINDOW(CustomVirtListCtrl::noOp)
     EVT_LIST_ITEM_ACTIVATED(wxID_ANY, CustomVirtListCtrl::OnActivated)
     EVT_LIST_ITEM_SELECTED(wxID_ANY, CustomVirtListCtrl::OnSelected)
     EVT_LIST_ITEM_DESELECTED(wxID_ANY, CustomVirtListCtrl::OnDeselected)
     EVT_LIST_DELETE_ITEM(wxID_ANY, CustomVirtListCtrl::OnDeselected)
     EVT_LIST_COL_CLICK(wxID_ANY, CustomVirtListCtrl::OnColClick)
-    EVT_SIZE(CustomVirtListCtrl::OnSizeEvent)
     END_EVENT_TABLE()
 
 

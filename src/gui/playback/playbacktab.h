@@ -10,7 +10,7 @@ class Ui;
 class MapCtrl;
 class BattleroomListCtrl;
 class wxCommandEvent;
-class wxListEvent;
+class wxDataViewEvent;
 class wxStaticText;
 class wxComboBox;
 class wxButton;
@@ -19,10 +19,10 @@ class wxStaticText;
 class wxStaticLine;
 class wxCheckBox;
 class wxToggleButton;
-class PlaybackListCtrl;
 struct StoredGame;
 class PlaybackLoader;
 class PlaybackListFilter;
+class PlaybackDataView;
 
 class PlaybackTab : public wxPanel
 {
@@ -38,7 +38,6 @@ public:
 	//! adds a single replay to listctrl
 	void AddPlayback(const StoredGame& Replay);
 	void RemovePlayback(const StoredGame& Replay);
-	void RemovePlayback(const int index);
 	void UpdatePlayback(const StoredGame& Replay);
 
 	//! add all replays in m_replays to listctrl
@@ -60,13 +59,12 @@ public:
 	void OnFilterActiv(wxCommandEvent& event);
 
 	//! sets m_sel_replay_id according to selected listitem
-	void OnSelect(wxListEvent& event);
+	void OnSelect(wxDataViewEvent& event);
 	//! does nothing yet
 	void SetFilterActiv(bool activ);
 
 	void Deselect();
 	void Deselected();
-	void OnDeselect(wxListEvent& event);
 
 	void OnSpringTerminated(wxCommandEvent& data);
 	void OnUnitsyncReloaded(wxCommandEvent& data);
@@ -74,7 +72,7 @@ public:
 private:
 	void OnChar(wxKeyEvent& event);
 	PlaybackListFilter* m_filter;
-	PlaybackListCtrl* m_replay_listctrl;
+	PlaybackDataView* m_replay_dataview;
 	PlaybackLoader* m_replay_loader;
 	MapCtrl* m_minimap;
 	wxStaticText* m_map_lbl;

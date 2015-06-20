@@ -198,7 +198,8 @@ set(springlobbySrc
 	gui/textentrydialog.cpp
 	gui/ui.cpp
 	gui/wxtextctrlhist.cpp
-
+	gui/iconscollection.cpp
+	
 	gui/notifications/libnotify.cpp
 	gui/notifications/notificationmanager.cpp
 	gui/notifications/toasternotification.cpp
@@ -237,10 +238,10 @@ set(springlobbySrc
 	gui/options/chatoptionstab.cpp
 
 	gui/playback/playbackfilter.cpp
-	gui/playback/playbacklistctrl.cpp
 	gui/playback/playbacktab.cpp
-
-
+	gui/playback/playbackdataview.cpp
+	gui/playback/playbackdatamodel.cpp
+	
 	downloader/prdownloader.cpp
 	downloader/downloadlistctrl.cpp
 	downloader/downloadsobserver.cpp
@@ -310,7 +311,9 @@ FILE( GLOB header2 "*/*.h" )
 
 #grep -lR cpp\"$ * | sed -e "s/\.h/\.cpp/g"
 SET( templatesources
+	gui/basedataviewmodel.cpp
 	gui/customvirtlistctrl.cpp
+	gui/virtualdatactrl.cpp
 )
 
 add_subdirectory(downloader)

@@ -15,7 +15,6 @@
 #endif
 
 #include "playbacktab.h"
-#include "playbacklistctrl.h"
 #include "replaylist.h"
 #include "playbackthread.h"
 #include "gui/ui.h"
@@ -32,15 +31,14 @@
 #include "gui/customdialogs.h"
 #include "gui/hosting/battleroomlistctrl.h"
 #include "log.h"
+#include "PlaybackDataView.h"
 
 BEGIN_EVENT_TABLE(PlaybackTab, wxPanel)
 
 EVT_BUTTON(PLAYBACK_WATCH, PlaybackTab::OnWatch)
 EVT_BUTTON(PLAYBACK_RELOAD, PlaybackTab::OnReload)
 EVT_BUTTON(PLAYBACK_DELETE, PlaybackTab::OnDelete)
-EVT_LIST_ITEM_SELECTED(RLIST_LIST, PlaybackTab::OnSelect)
-// this doesn't get triggered (?)
-EVT_LIST_ITEM_DESELECTED(wxID_ANY, PlaybackTab::OnDeselect)
+EVT_DATAVIEW_SELECTION_CHANGED(PlaybackDataView::REPLAY_DATAVIEW_ID, PlaybackTab::OnSelect)
 EVT_CHECKBOX(PLAYBACK_LIST_FILTER_ACTIV, PlaybackTab::OnFilterActiv)
 EVT_COMMAND(wxID_ANY, PlaybackLoader::PlaybacksLoadedEvt, PlaybackTab::AddAllPlaybacks)
 EVT_KEY_DOWN(PlaybackTab::OnChar)
@@ -71,8 +69,9 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 	wxBoxSizer* m_replaylist_sizer;
 	m_replaylist_sizer = new wxBoxSizer(wxVERTICAL);
 
-	m_replay_listctrl = new PlaybackListCtrl(this);
-	m_replaylist_sizer->Add(m_replay_listctrl, 1, wxEXPAND);
+	wxString name("replays_dataview");
+	m_replay_dataview = new PlaybackDataView(name, this);
+	m_replaylist_sizer->Add(m_replay_dataview, 1, wxEXPAND);
 
 	m_main_sizer->Add(m_replaylist_sizer, 1, wxEXPAND);
 	;
@@ -180,7 +179,7 @@ void PlaybackTab::AddAllPlaybacks(wxCommandEvent& /*unused*/)
 	for (auto i = replays.begin(); i != replays.end(); ++i) {
 		AddPlayback(i->second);
 	}
-	m_replay_listctrl->SortList(true);
+	m_replay_dataview->Resort();
 }
 
 void PlaybackTab::AddPlayback(const StoredGame& replay)
@@ -190,31 +189,12 @@ void PlaybackTab::AddPlayback(const StoredGame& replay)
 		return;
 	}
 
-	m_replay_listctrl->AddPlayback(replay);
+	m_replay_dataview->AddPlayback(replay);
 }
 
 void PlaybackTab::RemovePlayback(const StoredGame& replay)
 {
-	int index = m_replay_listctrl->GetIndexFromData(&replay);
-
-	if (index == -1)
-		return;
-
-	if (index == m_replay_listctrl->GetSelectedIndex())
-		Deselect();
-
-	m_replay_listctrl->RemovePlayback(replay);
-}
-
-void PlaybackTab::RemovePlayback(const int index)
-{
-	if (index == -1)
-		return;
-
-	if (index == m_replay_listctrl->GetSelectedIndex())
-		Deselect();
-
-	m_replay_listctrl->RemovePlayback(index);
+	m_replay_dataview->RemovePlayback(replay);
 }
 
 void PlaybackTab::UpdatePlayback(const StoredGame& replay)
@@ -224,17 +204,18 @@ void PlaybackTab::UpdatePlayback(const StoredGame& replay)
 		return;
 	}
 
-	int index = m_replay_listctrl->GetIndexFromData(&replay);
+	bool contains = m_replay_dataview->ContainsItem(replay);
 
-	if (index != -1)
-		m_replay_listctrl->RefreshItem(index);
-	else
+	if (contains) {
+		m_replay_dataview->RefreshItem(replay);
+	} else {
 		AddPlayback(replay);
+	}
 }
 
 void PlaybackTab::RemoveAllPlaybacks()
 {
-	m_replay_listctrl->Clear();
+	m_replay_dataview->Clear();
 	//shouldn't list be cleared too here? (koshi)
 }
 
@@ -246,7 +227,7 @@ void PlaybackTab::UpdateList()
 	for (auto i = replays.begin(); i != replays.end(); ++i) {
 		UpdatePlayback(i->second);
 	}
-	m_replay_listctrl->RefreshVisibleItems();
+	m_replay_dataview->Refresh();
 }
 
 
@@ -269,8 +250,10 @@ void PlaybackTab::OnFilter(wxCommandEvent& /*unused*/)
 
 void PlaybackTab::OnWatch(wxCommandEvent& /*unused*/)
 {
-	if (m_replay_listctrl->GetSelectedIndex() != -1) {
-		int m_sel_replay_id = m_replay_listctrl->GetSelectedData()->id;
+	const StoredGame* storedGame = m_replay_dataview->GetSelectedItem();
+
+	if (storedGame != nullptr) {
+		int m_sel_replay_id = storedGame->id;
 
 		wxString type = m_isreplay ? _("replay") : _("savegame");
 		wxLogMessage(_T( "Watching %s %d " ), type.c_str(), m_sel_replay_id);
@@ -294,7 +277,7 @@ void PlaybackTab::OnWatch(wxCommandEvent& /*unused*/)
 			} else {
 				ui().DownloadArchives(rep.battle);
 			}
-		} catch (std::runtime_error) {
+		} catch (std::runtime_error&) {
 			return;
 		}
 	} else {
@@ -311,7 +294,7 @@ void PlaybackTab::AskForceWatch(StoredGame& rep) const
 
 void PlaybackTab::OnDelete(wxCommandEvent& /*unused*/)
 {
-	m_replay_listctrl->DeletePlayback();
+	m_replay_dataview->DeletePlayback();
 	Deselect();
 }
 
@@ -320,24 +303,20 @@ void PlaybackTab::OnFilterActiv(wxCommandEvent& /*unused*/)
 	m_filter->SetActiv(m_filter_activ->GetValue());
 }
 
-void PlaybackTab::OnSelect(wxListEvent& event)
+void PlaybackTab::OnSelect(wxDataViewEvent& event)
 {
-	slLogDebugFunc("");
-	if (event.GetIndex() == -1) {
+	const StoredGame* storedGame = m_replay_dataview->GetSelectedItem();
+
+	if (storedGame == nullptr) {
 		Deselect();
 	} else {
 		try {
 			m_watch_btn->Enable(true);
 			m_delete_btn->Enable(true);
-			int index = event.GetIndex();
-			m_replay_listctrl->SetSelectedIndex(index);
 
 			//this might seem a bit backwards, but it's currently the only way that doesn't involve casting away constness
-			int m_sel_replay_id = m_replay_listctrl->GetDataFromIndex(index)->id;
+			int m_sel_replay_id = storedGame->id;
 			StoredGame& rep = replaylist().GetPlaybackById(m_sel_replay_id);
-
-
-			wxLogMessage(_T( "Selected replay %d " ), m_sel_replay_id);
 
 			m_players_text->SetLabel(wxEmptyString);
 			m_map_text->SetLabel(TowxString(rep.battle.GetHostMapName()));
@@ -361,14 +340,9 @@ void PlaybackTab::OnSelect(wxListEvent& event)
 	}
 }
 
-void PlaybackTab::OnDeselect(wxListEvent& /*unused*/)
-{
-	Deselected();
-}
-
 void PlaybackTab::Deselect()
 {
-	m_replay_listctrl->SelectNone();
+	m_replay_dataview->UnselectAll();
 	Deselected();
 }
 
@@ -389,7 +363,7 @@ void PlaybackTab::Deselected()
 void PlaybackTab::ReloadList()
 {
 	Deselect();
-	m_replay_listctrl->Clear();
+	m_replay_dataview->Clear();
 	m_replay_loader->Run();
 }
 
@@ -412,7 +386,7 @@ void PlaybackTab::OnChar(wxKeyEvent& event)
 {
 	const int keyCode = event.GetKeyCode();
 	if (keyCode == WXK_DELETE) {
-		m_replay_listctrl->DeletePlayback();
+		m_replay_dataview->DeletePlayback();
 		Deselect();
 	} else {
 		event.Skip();
