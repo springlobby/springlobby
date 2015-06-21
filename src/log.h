@@ -23,7 +23,7 @@ private:
 };
 
 #define slLogDebugFunc(format, ...) \
-	wxLogDebug("%s:%d %s(): " format, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__);
+	wxLogDebug(format, ##__VA_ARGS__);
 
 #include <stdexcept>
 class assert_exception : public std::runtime_error
