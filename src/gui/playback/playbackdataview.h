@@ -1,9 +1,4 @@
-/*
- * PlaybackDataView.h
- *
- *  Created on: 19 июня 2015 г.
- *      Author: Руслан
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #ifndef SRC_GUI_PLAYBACK_PLAYBACKDATAVIEW_H_
 #define SRC_GUI_PLAYBACK_PLAYBACKDATAVIEW_H_
@@ -17,7 +12,8 @@ class wxListEvent;
 class wxCommandEvent;
 class wxPoint;
 
-class PlaybackDataView: public BaseDataViewCtrl<StoredGame> {
+class PlaybackDataView : public BaseDataViewCtrl<StoredGame>
+{
 public:
 	PlaybackDataView(wxString& dataViewName, wxWindow* parent);
 	virtual ~PlaybackDataView();
@@ -42,8 +38,7 @@ private:
 	wxMenu* m_ContextMenu;
 
 private:
-	enum ColumnIndexes
-	{
+	enum ColumnIndexes {
 		DATE = 0,
 		GAME,
 		MAP,

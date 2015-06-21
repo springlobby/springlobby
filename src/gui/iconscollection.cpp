@@ -1,9 +1,4 @@
-/*
- * IconsCollection.cpp
- *
- *  Created on: 20 июня 2015 г.
- *      Author: Руслан
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "iconscollection.h"
 
@@ -12,37 +7,43 @@
 
 #include <wx/icon.h>
 
-IconsCollection::IconsCollection() {
+IconsCollection::IconsCollection()
+{
 	iconExists = nullptr;
 	iconNExists = nullptr;
 }
 
-IconsCollection::~IconsCollection() {
+IconsCollection::~IconsCollection()
+{
 	wxDELETE(iconExists);
 	wxDELETE(iconNExists);
 }
 
-IconsCollection* IconsCollection::Instance() {
+IconsCollection* IconsCollection::Instance()
+{
 	if (m_Instance == nullptr) {
 		m_Instance = new IconsCollection();
 	}
 	return m_Instance;
 }
 
-void IconsCollection::Release() {
+void IconsCollection::Release()
+{
 	if (m_Instance != nullptr) {
 		delete m_Instance;
 	}
 }
 
-wxIcon& IconsCollection::IconExists() {
+wxIcon& IconsCollection::IconExists()
+{
 	if (iconExists == nullptr) {
 		iconExists = new wxIcon(exists_xpm);
 	}
 	return *iconExists;
 }
 
-wxIcon& IconsCollection::IconNExists() {
+wxIcon& IconsCollection::IconNExists()
+{
 	if (iconNExists == nullptr) {
 		iconNExists = new wxIcon(nexists_xpm);
 	}

@@ -237,7 +237,7 @@ bool Ui::ExecuteSayCommand(const wxString& cmd)
 	if (ServerManager::Instance()->IsConnected() == false) {
 		return false;
 	}
-	
+
 	if ((cmd.BeforeFirst(' ').Lower() == _T("/join")) || (cmd.BeforeFirst(' ').Lower() == _T("/j"))) {
 		wxString channel = cmd.AfterFirst(' ');
 		const wxString pass = channel.AfterFirst(' ');

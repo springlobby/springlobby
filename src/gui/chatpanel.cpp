@@ -1199,7 +1199,7 @@ void ChatPanel::SetBattle(IBattle* battle)
 
 void ChatPanel::OnLogin(wxCommandEvent& /*data*/)
 {
-	switch (m_type){
+	switch (m_type) {
 		case CPT_Channel:
 			if (m_channel) {
 				m_channel->Rejoin();
@@ -1273,11 +1273,13 @@ void ChatPanel::OnShowPlayerOnlyCheck(wxCommandEvent& event)
 	UpdateUserCountLabel();
 }
 
-void ChatPanel::OnSettingsChanged(wxCommandEvent&) {
+void ChatPanel::OnSettingsChanged(wxCommandEvent&)
+{
 	ReadSettings();
 }
 
-void ChatPanel::ReadSettings() {
+void ChatPanel::ReadSettings()
+{
 
 	m_reactOnPromoteEvents = cfg().ReadBool("/GUI/ShowPromotions");
 	m_display_joinitem = cfg().Read(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);

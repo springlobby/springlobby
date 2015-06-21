@@ -1,9 +1,4 @@
-/*
- * PlaybackDataView.cpp
- *
- *  Created on: 19 июня 2015 г.
- *      Author: Руслан
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "playbackdataview.h"
 
@@ -20,12 +15,14 @@
 #include "playbackdatamodel.h"
 
 BEGIN_EVENT_TABLE(PlaybackDataView, BaseDataViewCtrl)
-	EVT_DATAVIEW_ITEM_CONTEXT_MENU(REPLAY_DATAVIEW_ID, PlaybackDataView::OnContextMenu)
-	EVT_MENU(REPLAY_DATAVIEW_DLMAP_ID, PlaybackDataView::OnDLMap)
-	EVT_MENU(REPLAY_DATAVIEW_DLMOD_ID, PlaybackDataView::OnDLMod)
+EVT_DATAVIEW_ITEM_CONTEXT_MENU(REPLAY_DATAVIEW_ID, PlaybackDataView::OnContextMenu)
+EVT_MENU(REPLAY_DATAVIEW_DLMAP_ID, PlaybackDataView::OnDLMap)
+EVT_MENU(REPLAY_DATAVIEW_DLMOD_ID, PlaybackDataView::OnDLMod)
 END_EVENT_TABLE()
 
-PlaybackDataView::PlaybackDataView(wxString& dataViewName, wxWindow* parent) : BaseDataViewCtrl(dataViewName, parent, REPLAY_DATAVIEW_ID) {
+PlaybackDataView::PlaybackDataView(wxString& dataViewName, wxWindow* parent)
+    : BaseDataViewCtrl(dataViewName, parent, REPLAY_DATAVIEW_ID)
+{
 	// TODO Auto-generated constructor stub
 
 	const int DEFAULT_SIZE = -1;
@@ -48,23 +45,27 @@ PlaybackDataView::PlaybackDataView(wxString& dataViewName, wxWindow* parent) : B
 	LoadColumnProperties();
 }
 
-PlaybackDataView::~PlaybackDataView() {
+PlaybackDataView::~PlaybackDataView()
+{
 	// TODO Auto-generated destructor stub
 }
 
-void PlaybackDataView::AddPlayback(const StoredGame& replay) {
+void PlaybackDataView::AddPlayback(const StoredGame& replay)
+{
 	m_DataModel->AddItem(replay);
 
 	Refresh();
 }
 
-void PlaybackDataView::RemovePlayback(const StoredGame& replay) {
+void PlaybackDataView::RemovePlayback(const StoredGame& replay)
+{
 	m_DataModel->RemoveItem(replay);
 
 	Refresh();
 }
 
-void PlaybackDataView::OnContextMenu(wxDataViewEvent& event) {
+void PlaybackDataView::OnContextMenu(wxDataViewEvent& event)
+{
 	const StoredGame* storedGame = GetSelectedItem();
 
 	if (storedGame == nullptr) {
@@ -73,7 +74,8 @@ void PlaybackDataView::OnContextMenu(wxDataViewEvent& event) {
 	PopupMenu(m_ContextMenu);
 }
 
-void PlaybackDataView::OnDLMap(wxCommandEvent& event) {
+void PlaybackDataView::OnDLMap(wxCommandEvent& event)
+{
 	const StoredGame* storedGame = GetSelectedItem();
 
 	if (storedGame == nullptr) {
@@ -84,7 +86,8 @@ void PlaybackDataView::OnDLMap(wxCommandEvent& event) {
 	ServerManager::Instance()->DownloadContent("map", battle.GetHostMapName(), battle.GetHostMapHash());
 }
 
-void PlaybackDataView::OnDLMod(wxCommandEvent& event) {
+void PlaybackDataView::OnDLMod(wxCommandEvent& event)
+{
 	const StoredGame* storedGame = GetSelectedItem();
 
 	if (storedGame == nullptr) {
@@ -95,7 +98,8 @@ void PlaybackDataView::OnDLMod(wxCommandEvent& event) {
 	ServerManager::Instance()->DownloadContent("game", battle.GetHostModName(), battle.GetHostModHash());
 }
 
-void PlaybackDataView::DeletePlayback() {
+void PlaybackDataView::DeletePlayback()
+{
 	const StoredGame* storedGame = GetSelectedItem();
 
 	if (storedGame == nullptr) {
@@ -116,10 +120,12 @@ void PlaybackDataView::DeletePlayback() {
 }
 
 void PlaybackDataView::SetTipWindowText(const long item_hit,
-		const wxPoint& position) {
+					const wxPoint& position)
+{
 	//TODO: Implement
 }
 
-void PlaybackDataView::HighlightItem(long longInt) {
+void PlaybackDataView::HighlightItem(long longInt)
+{
 	//TODO: Implement
 }
