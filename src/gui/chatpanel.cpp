@@ -255,7 +255,7 @@ void ChatPanel::CreateControls()
 
 		wxBoxSizer* nickListHeaderSizer = new wxBoxSizer(wxHORIZONTAL);
 		nickListHeaderSizer->Add(m_usercount_label, 1, wxEXPAND);
-		nickListHeaderSizer->Add(m_showPlayerOnlyCheck, 0, wxALIGN_RIGHT);
+		nickListHeaderSizer->Add(m_showPlayerOnlyCheck, 0, wxEXPAND);
 
 		UpdateUserCountLabel();
 		CreatePopup(); //ensures m_popup_menu is constructed

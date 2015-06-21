@@ -55,49 +55,49 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
 	m_main_sizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* BoxSizer2 = new wxBoxSizer(wxVERTICAL);
 	wxStaticText* StaticText2 = new wxStaticText(this, ID_STATICTEXT2, _("Vertical sort key"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT2"));
-	BoxSizer2->Add(StaticText2, 0, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer2->Add(StaticText2, 0, wxALL | wxALIGN_LEFT, 5);
 	wxBoxSizer* boxSizerVertical = new wxBoxSizer(wxHORIZONTAL);
 	m_vertical_choice = new wxChoice(this, ID_VERTICAL_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_VERTICAL_CHOICE"));
 	boxSizerVertical->Add(m_vertical_choice, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
-	BoxSizer2->Add(boxSizerVertical, 0, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 0);
+	BoxSizer2->Add(boxSizerVertical, 0, wxALL | wxEXPAND, 0);
 	wxStaticText* StaticText1 = new wxStaticText(this, ID_STATICTEXT1, _("Horizontal sort key"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
-	BoxSizer2->Add(StaticText1, 0, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer2->Add(StaticText1, 0, wxALL | wxALIGN_LEFT, 5);
 	wxBoxSizer* boxSizerHorizontal = new wxBoxSizer(wxHORIZONTAL);
 	m_horizontal_choice = new wxChoice(this, ID_HORIZONTAL_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_HORIZONTAL_CHOICE"));
 	boxSizerHorizontal->Add(m_horizontal_choice, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
-	BoxSizer2->Add(boxSizerHorizontal, 0, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 0);
+	BoxSizer2->Add(boxSizerHorizontal, 0, wxALL | wxEXPAND, 0);
 	wxStaticBoxSizer* StaticBoxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Show"));
 	m_filter_all = new wxRadioButton(this, ID_FILTER_ALL, _("All maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_ALL"));
 	m_filter_all->SetToolTip(_("Shows all available maps"));
-	StaticBoxSizer1->Add(m_filter_all, 0, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 0);
+	StaticBoxSizer1->Add(m_filter_all, 0, wxALL | wxEXPAND, 0);
 	m_filter_popular = new wxRadioButton(this, ID_FILTER_POPULAR, _("Popular maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_POPULAR"));
 	m_filter_popular->SetToolTip(_("Shows only maps which are currently being player on the server. You must be online to use this."));
-	StaticBoxSizer1->Add(m_filter_popular, 0, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 0);
+	StaticBoxSizer1->Add(m_filter_popular, 0, wxALL | wxEXPAND, 0);
 	m_filter_recent = new wxRadioButton(this, ID_FILTER_RECENT, _("Recently played maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_RECENT"));
 	m_filter_recent->SetValue(true);
 	m_filter_recent->SetToolTip(_("Shows only maps you played recently. (Based on your replays.)"));
-	StaticBoxSizer1->Add(m_filter_recent, 0, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 0);
-	BoxSizer2->Add(StaticBoxSizer1, 0, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
+	StaticBoxSizer1->Add(m_filter_recent, 0, wxALL | wxEXPAND, 0);
+	BoxSizer2->Add(StaticBoxSizer1, 0, wxALL | wxEXPAND, 5);
 	wxStaticBoxSizer* StaticBoxSizer2 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Filter"));
 	m_filter_text = new wxTextCtrl(this, ID_FILTER_TEXT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_TEXT"));
 	m_filter_text->SetToolTip(_("Shows only maps which contain this text in their name or description."));
 	StaticBoxSizer2->Add(m_filter_text, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 0);
-	BoxSizer2->Add(StaticBoxSizer2, 0, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer2->Add(StaticBoxSizer2, 0, wxALL | wxEXPAND, 5);
 	m_map_details = new wxStaticBoxSizer(wxVERTICAL, this, _("Map details"));
 	m_map_name = new wxStaticText(this, ID_MAP_NAME, wxEmptyString, wxDefaultPosition, wxSize(170, 90), wxST_NO_AUTORESIZE, _T("ID_MAP_NAME"));
 	m_map_name->SetLabel(wxEmptyString);
-	m_map_details->Add(m_map_name, 0, wxTOP | wxLEFT | wxRIGHT | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
+	m_map_details->Add(m_map_name, 0, wxTOP | wxLEFT | wxRIGHT | wxEXPAND, 5);
 	m_map_opts_list = new wxListCtrl(this, ID_MAP_OPTS_LIST, wxDefaultPosition, wxSize(170, 120), wxLC_REPORT | wxLC_NO_HEADER | wxNO_BORDER, wxDefaultValidator, _T("ID_MAP_OPTS_LIST"));
-	m_map_details->Add(m_map_opts_list, 1, wxBOTTOM | wxLEFT | wxRIGHT | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
-	BoxSizer2->Add(m_map_details, 1, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
+	m_map_details->Add(m_map_opts_list, 1, wxBOTTOM | wxLEFT | wxRIGHT | wxEXPAND, 5);
+	BoxSizer2->Add(m_map_details, 1, wxALL | wxEXPAND, 5);
 	wxStdDialogButtonSizer* StdDialogButtonSizer1 = new wxStdDialogButtonSizer();
 	StdDialogButtonSizer1->AddButton(new wxButton(this, wxID_OK, wxEmptyString));
 	StdDialogButtonSizer1->AddButton(new wxButton(this, wxID_CANCEL, wxEmptyString));
 	StdDialogButtonSizer1->Realize();
 	BoxSizer2->Add(StdDialogButtonSizer1, 0, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
-	m_main_sizer->Add(BoxSizer2, 0, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
+	m_main_sizer->Add(BoxSizer2, 0, wxALL | wxEXPAND, 5);
 	m_mapgrid = new MapGridCtrl(this, wxSize(600, 400), ID_MAPGRID);
-	m_main_sizer->Add(m_mapgrid, 1, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
+	m_main_sizer->Add(m_mapgrid, 1, wxALL | wxEXPAND, 5);
 	SetSizer(m_main_sizer);
 	m_main_sizer->Fit(this);
 	m_main_sizer->SetSizeHints(this);
@@ -105,9 +105,9 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
 
 
 	m_vertical_direction_button = new wxButton(this, ID_VERTICAL_DIRECTION, _T("ᴧ"), wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_VERTICAL_DIRECTION"));
-	boxSizerVertical->Add(m_vertical_direction_button, 0, wxALL | wxEXPAND | wxSHAPED | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
+	boxSizerVertical->Add(m_vertical_direction_button, 0, wxALL | wxEXPAND | wxSHAPED, 5);
 	m_horizontal_direction_button = new wxButton(this, ID_HORIZONTAL_DIRECTION, _T("<"), wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT), 0, wxDefaultValidator, _T("ID_HORIZONTAL_DIRECTION"));
-	boxSizerHorizontal->Add(m_horizontal_direction_button, 0, wxALL | wxEXPAND | wxSHAPED | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
+	boxSizerHorizontal->Add(m_horizontal_direction_button, 0, wxALL | wxEXPAND | wxSHAPED, 5);
 
 
 	// TODO: refactor, this is copied from battlemaptab.cpp

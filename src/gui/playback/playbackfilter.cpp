@@ -90,7 +90,7 @@ PlaybackListFilter::PlaybackListFilter(wxWindow* parent, wxWindowID id, Playback
 
 	m_filter_player_choice->SetMinSize(wxSize(140, -1));
 
-	m_filter_body_row2_sizer->Add(m_filter_player_choice, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_body_row2_sizer->Add(m_filter_player_choice, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_filter_player_button = new wxButton(this, PLAYBACK_FILTER_PLAYER_BUTTON, f_values.player_mode, wxDefaultPosition, wxSize(25, 25), 0);
 	m_filter_body_row2_sizer->Add(m_filter_player_button, 0, wxALIGN_LEFT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
@@ -124,7 +124,7 @@ PlaybackListFilter::PlaybackListFilter(wxWindow* parent, wxWindowID id, Playback
 	m_filter_map_show->SetValue(f_values.map_show);
 	m_filter_map_show->SetMinSize(wxSize(140, -1));
 
-	m_filter_only_map_sizer->Add(m_filter_map_show, 0, wxEXPAND | wxALIGN_LEFT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_only_map_sizer->Add(m_filter_map_show, 0, wxEXPAND | wxALIGN_LEFT | wxALL, 5);
 
 	m_filter_body_row3_sizer->Add(m_filter_only_map_sizer, 0, wxEXPAND, 5);
 
@@ -157,7 +157,7 @@ PlaybackListFilter::PlaybackListFilter(wxWindow* parent, wxWindowID id, Playback
 	m_filter_mod_show->SetValue(f_values.mod_show);
 	m_filter_mod_show->SetMinSize(wxSize(140, -1));
 
-	m_filter_only_mod_sizer->Add(m_filter_mod_show, 0, wxALIGN_LEFT | wxALL | wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
+	m_filter_only_mod_sizer->Add(m_filter_mod_show, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5);
 
 	m_filter_body_row4_sizer->Add(m_filter_only_mod_sizer, 0, wxALIGN_LEFT | wxEXPAND, 5);
 
@@ -227,8 +227,8 @@ PlaybackListFilter::PlaybackListFilter(wxWindow* parent, wxWindowID id, Playback
 	m_col2_sizer->Add(m_filter_body_row6_sizer, 1, wxEXPAND, 5);
 
 
-	m_filter_sizer->Add(m_col1_sizer, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL, 5);
-	m_filter_sizer->Add(m_col2_sizer, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL, 5);
+	m_filter_sizer->Add(m_col1_sizer, 1, wxEXPAND, 5);
+	m_filter_sizer->Add(m_col2_sizer, 1, wxEXPAND, 5);
 
 	m_activ = false;
 	m_filter_player_mode = _GetButtonMode(f_values.player_mode);

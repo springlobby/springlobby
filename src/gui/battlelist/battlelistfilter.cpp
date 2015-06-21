@@ -119,22 +119,22 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 
 	m_filter_status_text = new wxStaticText(this, wxID_ANY, _("Status:"), wxPoint(-1, -1), wxDefaultSize, 0);
 	m_filter_status_text->Wrap(-1);
-	m_filter_status_sizer1->Add(m_filter_status_text, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_status_sizer1->Add(m_filter_status_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_filter_status_locked = new wxCheckBox(this, BATTLE_FILTER_LOCKED, _("Locked"), wxDefaultPosition, wxDefaultSize, 0);
 	m_filter_status_locked->SetValue(f_values.status_locked);
 
-	m_filter_status_sizer1->Add(m_filter_status_locked, 0, wxALL | wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
+	m_filter_status_sizer1->Add(m_filter_status_locked, 0, wxALL | wxEXPAND, 5);
 
 	m_filter_status_pass = new wxCheckBox(this, BATTLE_FILTER_PASSWORDED, _("Passworded"), wxDefaultPosition, wxDefaultSize, 0);
 	m_filter_status_pass->SetValue(f_values.status_passworded);
 
-	m_filter_status_sizer1->Add(m_filter_status_pass, 0, wxALL | wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
+	m_filter_status_sizer1->Add(m_filter_status_pass, 0, wxALL | wxEXPAND, 5);
 
 	m_filter_highlighted = new wxCheckBox(this, BATTLE_FILTER_HIGHLIGHTED, _("Highlighted only"), wxDefaultPosition, wxDefaultSize, 0);
 	m_filter_highlighted->SetValue(f_values.highlighted_only);
 
-	m_filter_status_sizer1->Add(m_filter_highlighted, 0, wxALL | wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
+	m_filter_status_sizer1->Add(m_filter_highlighted, 0, wxALL | wxEXPAND, 5);
 
 	m_filter_body_row1_sizer->Add(m_filter_status_sizer1, 1, wxEXPAND, 5);
 
@@ -143,10 +143,10 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 
 	m_filter_rank_text = new wxStaticText(this, wxID_ANY, _("Rank Limit:"), wxDefaultPosition, wxDefaultSize, 0);
 	m_filter_rank_text->Wrap(-1);
-	m_filter_rank_sizer->Add(m_filter_rank_text, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_rank_sizer->Add(m_filter_rank_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_filter_rank_button = new wxButton(this, BATTLE_FILTER_RANK_BUTTON, f_values.rank_mode, wxDefaultPosition, wxSize(25, 25), 0);
-	m_filter_rank_sizer->Add(m_filter_rank_button, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_rank_sizer->Add(m_filter_rank_button, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_filter_rank_choice = new wxBitmapComboBox(this, BATTLE_FILTER_RANK_CHOICE, _("All"), wxDefaultPosition, wxSize(-1, -1), 0, NULL, wxSIMPLE_BORDER | wxCB_READONLY);
 	m_filter_rank_choice->Append(_("All"));
@@ -162,7 +162,7 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	m_filter_rank_choice->SetSelection(GetIntParam(f_values.rank));
 	m_filter_rank_choice->SetMinSize(wxSize(60, -1));
 
-	m_filter_rank_sizer->Add(m_filter_rank_choice, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_rank_sizer->Add(m_filter_rank_choice, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_filter_body_row1_sizer->Add(m_filter_rank_sizer, 0, wxEXPAND, 5);
 
@@ -198,17 +198,17 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	m_filter_status_start = new wxCheckBox(this, BATTLE_FILTER_STARTED, _("Started"), wxDefaultPosition, wxDefaultSize, 0);
 	m_filter_status_start->SetValue(f_values.status_start);
 
-	m_filter_sizer2->Add(m_filter_status_start, 0, wxALL | wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
+	m_filter_sizer2->Add(m_filter_status_start, 0, wxALL | wxEXPAND, 5);
 
 	m_filter_status_full = new wxCheckBox(this, BATTLE_FILTER_FULL, _("Full"), wxDefaultPosition, wxDefaultSize, 0);
 	m_filter_status_full->SetValue(f_values.status_full);
 
-	m_filter_sizer2->Add(m_filter_status_full, 0, wxALL | wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
+	m_filter_sizer2->Add(m_filter_status_full, 0, wxALL | wxEXPAND, 5);
 
 	m_filter_status_open = new wxCheckBox(this, BATTLE_FILTER_OPEN, _("Open"), wxDefaultPosition, wxDefaultSize, 0);
 	m_filter_status_open->SetValue(f_values.status_open);
 
-	m_filter_sizer2->Add(m_filter_status_open, 0, wxALL | wxALIGN_CENTER_VERTICAL | wxEXPAND, 5);
+	m_filter_sizer2->Add(m_filter_status_open, 0, wxALL | wxEXPAND, 5);
 
 	m_filter_body_row2_sizer->Add(m_filter_sizer2, 1, wxEXPAND, 5);
 
@@ -217,10 +217,10 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 
 	m_filter_player_text = new wxStaticText(this, wxID_ANY, _("Player:"), wxDefaultPosition, wxSize(-1, -1), 0);
 	m_filter_player_text->Wrap(-1);
-	m_filter_player_sizer->Add(m_filter_player_text, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_player_sizer->Add(m_filter_player_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_filter_player_button = new wxButton(this, BATTLE_FILTER_PLAYER_BUTTON, f_values.player_mode, wxDefaultPosition, wxSize(25, 25), 0);
-	m_filter_player_sizer->Add(m_filter_player_button, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_player_sizer->Add(m_filter_player_button, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	wxArrayString m_filter_player_choiceChoices;
 
@@ -232,7 +232,7 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	m_filter_player_choice->SetSelection(GetIntParam(f_values.player_num));
 	m_filter_player_choice->SetMinSize(wxSize(60, -1));
 
-	m_filter_player_sizer->Add(m_filter_player_choice, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_player_sizer->Add(m_filter_player_choice, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_filter_body_row2_sizer->Add(m_filter_player_sizer, 0, wxEXPAND | wxLEFT, 5);
 
@@ -265,7 +265,7 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	m_filter_map_show->SetValue(f_values.map_show);
 	m_filter_map_show->SetMinSize(wxSize(220, -1));
 
-	m_filter_map_sizer->Add(m_filter_map_show, 1, wxEXPAND | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_map_sizer->Add(m_filter_map_show, 1, wxEXPAND | wxALL, 5);
 
 	//m_filter_body_row3_sizer->Add( m_filter_only_map_sizer, 1, wxEXPAND, 5 );
 
@@ -274,10 +274,10 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 
 	m_filter_maxplayer_text = new wxStaticText(this, wxID_ANY, _("Max.Player:"), wxDefaultPosition, wxSize(-1, -1), 0);
 	m_filter_maxplayer_text->Wrap(-1);
-	m_filter_maxplayer_sizer->Add(m_filter_maxplayer_text, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_maxplayer_sizer->Add(m_filter_maxplayer_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_filter_maxplayer_button = new wxButton(this, BATTLE_FILTER_MAXPLAYER_BUTTON, f_values.maxplayer_mode, wxDefaultPosition, wxSize(25, 25), 0);
-	m_filter_maxplayer_sizer->Add(m_filter_maxplayer_button, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_maxplayer_sizer->Add(m_filter_maxplayer_button, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	wxArrayString m_filter_maxplayer_choiceChoices;
 	m_filter_maxplayer_choiceChoices.Add(_("All"));
@@ -331,10 +331,10 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 
 	m_filter_spectator_text = new wxStaticText(this, wxID_ANY, _("    Spectator:"), wxDefaultPosition, wxSize(-1, -1), 0);
 	m_filter_spectator_text->Wrap(-1);
-	m_filter_spectator_sizer->Add(m_filter_spectator_text, 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL | wxALL, 5);
+	m_filter_spectator_sizer->Add(m_filter_spectator_text, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
 	m_filter_spectator_button = new wxButton(this, BATTLE_FILTER_SPECTATOR_BUTTON, f_values.spectator_mode, wxDefaultPosition, wxSize(25, 25), 0);
-	m_filter_spectator_sizer->Add(m_filter_spectator_button, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_spectator_sizer->Add(m_filter_spectator_button, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	wxArrayString m_filter_spectator_choiceChoices;
 	m_filter_spectator_choiceChoices.Add(_("All"));
@@ -345,13 +345,13 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	m_filter_spectator_choice->SetSelection(GetIntParam(f_values.spectator));
 	m_filter_spectator_choice->SetMinSize(wxSize(60, -1));
 
-	m_filter_spectator_sizer->Add(m_filter_spectator_choice, 0, wxALIGN_RIGHT | wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_spectator_sizer->Add(m_filter_spectator_choice, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_filter_body_row4_sizer->Add(m_filter_spectator_sizer, 0, wxEXPAND, 5);
 
 	m_filter_body_sizer->Add(m_filter_body_row4_sizer, 1, wxEXPAND, 5);
 
-	m_filter_sizer->Add(m_filter_body_sizer, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL, 5);
+	m_filter_sizer->Add(m_filter_body_sizer, 1, wxEXPAND, 5);
 
 	m_activ = false;
 	m_filter_rank_mode = _GetButtonMode(f_values.rank_mode);

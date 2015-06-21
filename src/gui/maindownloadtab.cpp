@@ -45,15 +45,15 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 	wxBoxSizer* m_buttonbox = new wxBoxSizer(wxHORIZONTAL);
 
 	m_dl_listctrl = new DownloadListCtrl(this);
-	m_main_sizer->Add(m_dl_listctrl, 2, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL, 0);
+	m_main_sizer->Add(m_dl_listctrl, 2, wxALL | wxEXPAND, 0);
 
 	m_but_cancel = new wxButton(this, ID_BUTTON_CANCEL, _("Cancel Download"));
 	//m_but_cancel->Disable();
-	m_buttonbox->Add(m_but_cancel, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5);
+	m_buttonbox->Add(m_but_cancel, 1, wxALL | wxALIGN_BOTTOM, 5);
 	m_but_clear = new wxButton(this, ID_BUTTON_CLEAR, _("Clear finished"));
-	m_buttonbox->Add(m_but_clear, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5);
+	m_buttonbox->Add(m_but_clear, 1, wxALL | wxALIGN_BOTTOM, 5);
 	m_but_download = new wxButton(this, ID_DOWNLOAD_DIALOG, _("Search file"));
-	m_buttonbox->Add(m_but_download, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_BOTTOM, 5);
+	m_buttonbox->Add(m_but_download, 1, wxALL | wxALIGN_BOTTOM, 5);
 	//	m_but_widgets = new wxButton( this, ID_BUTTON_WIDGETS, _( "Download Lua widgets" ) );
 	//	m_buttonbox->Add( m_but_widgets, 1, wxALL | wxALIGN_RIGHT | wxALIGN_BOTTOM, 5 );
 
