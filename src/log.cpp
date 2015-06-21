@@ -35,7 +35,7 @@ public:
 	}
 
 	// catch and process all log messages
-	void DoLog(wxLogLevel loglevel, const wxChar* msg, time_t /*time*/) override
+	void DoLogRecord(wxLogLevel loglevel, const wxString &msg, const wxLogRecordInfo &info) override
 	{
 
 		if (gui && (loglevel == wxLOG_Error || loglevel == wxLOG_FatalError)) // show user only errors
