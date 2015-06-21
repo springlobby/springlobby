@@ -271,7 +271,7 @@ void CustomVirtListCtrl<T, L>::OnMouseMotion(wxMouseEvent& event)
 		m_tiptext = wxEmptyString;
 		if (m_tipwindow) {
 			m_tipwindow->Close();
-			delete m_tipwindow;
+//			delete m_tipwindow;
 			m_tipwindow = 0;
 		}
 		m_tiptimer.Stop();
