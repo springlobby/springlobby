@@ -46,7 +46,7 @@ public:
 		}
 
 
-		const std::string std_msg = LogLevelToString(loglevel) + (STD_STRING(wxString(msg)) + "\n");
+		const std::string std_msg = stdprintf("%s %s:%d %s\n", LogLevelToString(loglevel).c_str(), info.filename , info.line, (STD_STRING(wxString(msg))).c_str());
 		if (m_console) {
 			std::cout << std_msg;
 		}
@@ -67,14 +67,14 @@ public:
 		assert(level < 8); // just in case
 
 		const char* levelName[] = {
-		    "Fatal Error: ",
-		    "Error: ",
-		    "Warning: ",
-		    "Message: ",
-		    "Status: ",
-		    "Info: ",
-		    "Debug: ",
-		    "Trace: "};
+		    "Fatal   ",
+		    "Error   ",
+		    "Warning ",
+		    "Message ",
+		    "Status  ",
+		    "Info    ",
+		    "Debug   ",
+		    "Trace   "};
 
 		return std::string(levelName[(int)level]);
 	}
