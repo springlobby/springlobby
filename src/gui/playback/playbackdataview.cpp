@@ -2,9 +2,8 @@
 
 #include "playbackdataview.h"
 
-#include <wx/wx.h>
 #include <wx/dataview.h>
-
+#include <wx/menu.h>
 
 #include "iplaybacklist.h"
 #include "replaylist.h"

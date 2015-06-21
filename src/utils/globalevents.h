@@ -6,7 +6,6 @@
 #include <map>
 #include <list>
 
-#include <wx/wx.h>
 #include <wx/event.h>
 
 

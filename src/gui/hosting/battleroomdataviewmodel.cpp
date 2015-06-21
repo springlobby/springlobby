@@ -6,7 +6,6 @@
 #include "user.h"
 #include "battle.h"
 
-#include <wx/wx.h>
 #include <wx/dataview.h>
 
 BattleroomDataViewModel::BattleroomDataViewModel() {

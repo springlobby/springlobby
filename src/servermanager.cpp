@@ -1,10 +1,4 @@
-/* 
- * File:   ServerManager.cpp
- * Author: Руслан
- * 
- * Created on 12 июня 2015 г., 15:01
- */
-#include <wx/wx.h>
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "servermanager.h"
 #include "user.h"
@@ -18,6 +12,7 @@
 #include "gui/chatpanel.h"
 #include "gui/mainchattab.h"
 #include "utils/slconfig.h"
+#include <wx/log.h>
 
 ServerManager::ServerManager()
 {

@@ -3,7 +3,6 @@
 #ifndef SRC_GUI_BASEDATAVIEWCTRL_H_
 #define SRC_GUI_BASEDATAVIEWCTRL_H_
 
-#include <wx/wx.h>
 #include <wx/dataview.h>
 
 #include "basedataviewmodel.h"

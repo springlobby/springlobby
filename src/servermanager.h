@@ -1,14 +1,11 @@
-/* 
- * File:   ServerManager.h
- * Author: Руслан
- *
- * Created on 12 июня 2015 г., 15:01
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #ifndef SERVERMANAGER_H
 #define SERVERMANAGER_H
 
 #include <string>
+
+class wxString;
 
 class ServerManager
 {

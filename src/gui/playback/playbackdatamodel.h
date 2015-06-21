@@ -3,7 +3,6 @@
 #ifndef SRC_GUI_PLAYBACK_PLAYBACKDATAMODEL_H_
 #define SRC_GUI_PLAYBACK_PLAYBACKDATAMODEL_H_
 
-#include <wx/wx.h>
 #include <wx/dataview.h>
 #include "gui/basedataviewmodel.h"
 

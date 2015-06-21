@@ -1,4 +1,4 @@
-/* This file is part of the Springlobby (GPL v2 or later), see COPYING */ 
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "playbackdatamodel.h"
 
@@ -6,6 +6,7 @@
 #include "gui/iconscollection.h"
 
 #include <wx/filename.h>
+#include <wx/log.h>
 
 PlaybackDataModel::PlaybackDataModel() {
 	// TODO Auto-generated constructor stub
