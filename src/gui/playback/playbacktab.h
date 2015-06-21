@@ -23,6 +23,7 @@ struct StoredGame;
 class PlaybackLoader;
 class PlaybackListFilter;
 class PlaybackDataView;
+class BattleroomDataViewCtrl;
 
 class PlaybackTab : public wxPanel
 {
@@ -87,7 +88,7 @@ private:
 	wxButton* m_delete_btn;
 	wxButton* m_reload_btn;
 
-	BattleroomListCtrl* m_players;
+	BattleroomDataViewCtrl* m_players;
 
 	wxCheckBox* m_filter_activ;
 	bool m_isreplay;

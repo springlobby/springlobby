@@ -1,4 +1,4 @@
-/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */ 
 
 #include "playbackdatamodel.h"
 
@@ -7,18 +7,15 @@
 
 #include <wx/filename.h>
 
-PlaybackDataModel::PlaybackDataModel()
-{
+PlaybackDataModel::PlaybackDataModel() {
 	// TODO Auto-generated constructor stub
 }
 
-PlaybackDataModel::~PlaybackDataModel()
-{
+PlaybackDataModel::~PlaybackDataModel() {
 	// TODO Auto-generated destructor stub
 }
 
-void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const
-{
+void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const {
 
 	const StoredGame* storedGame = static_cast<const StoredGame*>(item.GetID());
 
@@ -27,48 +24,52 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 	}
 
 	switch (col) {
-		case DATE: {
+	case DATE:
+		{
 			wxDataViewIconText iconText(wxString(storedGame->date_string));
 			IconsCollection* icons = IconsCollection::Instance();
 
 			if (storedGame->duration == 0) {
-				iconText.SetIcon(icons->IconNExists());
+				iconText.SetIcon(icons->ICON_NEXISTS);
 			} else {
-				iconText.SetIcon(icons->IconExists());
+				iconText.SetIcon(icons->ICON_EXISTS);
 			}
 			variant = wxVariant(iconText);
-		} break;
+		}
+		break;
 
-		case GAME:
-			variant = wxString(storedGame->battle.GetHostModName());
-			break;
+	case GAME:
+		variant = wxString(storedGame->battle.GetHostModName());
+		break;
 
-		case MAP:
-			variant = wxString(storedGame->battle.GetHostMapName());
-			break;
+	case MAP:
+		variant = wxString(storedGame->battle.GetHostMapName());
+		break;
 
-		case PLAYERS:
-			variant = wxString::Format(_T("%d"), (int)storedGame->battle.GetNumUsers() - storedGame->battle.GetSpectators());
-			break;
+	case PLAYERS:
+		variant = wxString::Format(_T("%d"), (int)storedGame->battle.GetNumUsers() - storedGame->battle.GetSpectators());
+		break;
 
-		case DURATION:
-			//FIXME: this seems to give incorrect result
-			variant = wxString::Format(_T("%02ld:%02ld:%02ld"), (long)storedGame->duration / 3600, (long)(storedGame->duration % 3600) / 60, (long)(storedGame->duration % 60) / 60);
-			break;
+	case DURATION:
+		//FIXME: this seems to give incorrect result
+		variant = wxString::Format(_T("%02ld:%02ld:%02ld"), (long)storedGame->duration / 3600, (long)(storedGame->duration % 3600) / 60, (long)(storedGame->duration % 60) / 60);
+		break;
 
-		case VERSION:
-			variant = wxString(storedGame->SpringVersion);
-			break;
+	case VERSION:
+		variant = wxString(storedGame->SpringVersion);
+		break;
 
-		case FILESIZE:
-			variant = wxString::Format(_T("%d KB"), storedGame->size / 1024);
-			break;
+	case FILESIZE:
+		variant = wxString::Format(_T("%d KB"), storedGame->size / 1024);
+		break;
 
-		case FILENAME:
-			variant = wxString(storedGame->Filename).AfterLast(wxFileName::GetPathSeparator());
-			break;
+	case FILENAME:
+		variant = wxString(storedGame->Filename).AfterLast(wxFileName::GetPathSeparator());
+		break;
 
-		default:
-			wxASSERT(false);
+	default:
+		wxLogError(wxString::Format("PlaybackDataModel::GetValue: column=%d", static_cast<int>(col)));
+		wxASSERT(false);
 	}
 }
+

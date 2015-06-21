@@ -229,7 +229,9 @@ set(springlobbySrc
 	gui/hosting/battleroomdownloads.cpp
 	gui/hosting/battleroommmoptionstab.cpp
 	gui/hosting/votepanel.cpp
-
+	gui/hosting/battleroomdataviewctrl.cpp
+	gui/hosting/battleroomdataviewmodel.cpp
+	
 	gui/options/downloadoptionspanel.cpp
 	gui/options/mainoptionstab.cpp
 	gui/options/springoptionstab.cpp

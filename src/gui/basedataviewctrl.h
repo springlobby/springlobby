@@ -1,4 +1,9 @@
-/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+/*
+ * VirtualDataViewCtrl.h
+ *
+ *  Created on: 19 июня 2015 г.
+ *      Author: Руслан
+ */
 
 #ifndef SRC_GUI_BASEDATAVIEWCTRL_H_
 #define SRC_GUI_BASEDATAVIEWCTRL_H_
@@ -11,9 +16,8 @@
 #include "settings.h"
 #include "utils/slconfig.h"
 
-template <class DataType>
-class BaseDataViewCtrl : public wxDataViewCtrl
-{
+template<class DataType>
+class BaseDataViewCtrl: public wxDataViewCtrl {
 public:
 	BaseDataViewCtrl(wxString&, wxWindow*, wxWindowID);
 	virtual ~BaseDataViewCtrl();
@@ -41,9 +45,8 @@ protected:
 	DECLARE_EVENT_TABLE()
 };
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::AdjustColumnsWidth()
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::AdjustColumnsWidth() {
 	const int columnsCount = GetColumnCount();
 	const int autoResizableColumnIndex = columnsCount - 1;
 
@@ -72,62 +75,53 @@ inline void BaseDataViewCtrl<DataType>::AdjustColumnsWidth()
 }
 
 BEGIN_EVENT_TABLE_TEMPLATE1(BaseDataViewCtrl, wxDataViewCtrl, DataType)
-EVT_SIZE(BaseDataViewCtrl<DataType>::OnSizeEvent)
+    EVT_SIZE(BaseDataViewCtrl<DataType>::OnSizeEvent)
 END_EVENT_TABLE()
 
-template <class DataType>
-BaseDataViewCtrl<DataType>::BaseDataViewCtrl(wxString& dataViewName, wxWindow* parent, wxWindowID id)
-    : wxDataViewCtrl(parent, id)
-{
+template<class DataType>
+BaseDataViewCtrl<DataType>::BaseDataViewCtrl(wxString& dataViewName, wxWindow* parent, wxWindowID id) : wxDataViewCtrl(parent, id) {
 	m_DataModel = nullptr;
 	m_DataViewName = dataViewName;
 }
 
-template <class DataType>
-BaseDataViewCtrl<DataType>::~BaseDataViewCtrl()
-{
+template<class DataType>
+BaseDataViewCtrl<DataType>::~BaseDataViewCtrl() {
 	SaveColumnProperties();
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::Resort()
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::Resort() {
 	wxASSERT(m_DataModel != nullptr);
 	m_DataModel->Resort();
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item)
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item) {
 	wxASSERT(m_DataModel != nullptr);
 	m_DataModel->UpdateItem(item);
 }
 
-template <class DataType>
-inline bool BaseDataViewCtrl<DataType>::ContainsItem(const DataType& item)
-{
+template<class DataType>
+inline bool BaseDataViewCtrl<DataType>::ContainsItem(const DataType& item) {
 	wxASSERT(m_DataModel != nullptr);
 	return m_DataModel->ContainsItem(item);
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::Clear()
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::Clear() {
 	wxASSERT(m_DataModel != nullptr);
 	m_DataModel->Clear();
 }
 
-template <class DataType>
-inline bool BaseDataViewCtrl<DataType>::AssociateModel(BaseDataViewModel<DataType>* model)
-{
+template<class DataType>
+inline bool BaseDataViewCtrl<DataType>::AssociateModel(BaseDataViewModel<DataType>* model) {
 	m_DataModel = model;
 
 	return wxDataViewCtrl::AssociateModel(model);
 }
 
-template <class DataType>
-inline const DataType* BaseDataViewCtrl<DataType>::GetSelectedItem()
-{
+template<class DataType>
+inline const DataType* BaseDataViewCtrl<DataType>::GetSelectedItem() {
 	wxDataViewItem item = GetSelection();
 
 	if (item.IsOk() == false) {
@@ -137,9 +131,8 @@ inline const DataType* BaseDataViewCtrl<DataType>::GetSelectedItem()
 	}
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::LoadColumnProperties()
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	const int columnCount = GetColumnCount();
 
 	//Set up sorting column
@@ -149,7 +142,8 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties()
 	bool sortOrderAscending;
 	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
 
-	for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+	for(int columnIndex = 0; columnIndex < columnCount; columnIndex++)
+	{
 		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
 		wxDataViewColumn* column = GetColumn(columnIndex);
 		if (colWidth > 0) {
@@ -161,15 +155,13 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties()
 			column->UnsetAsSortKey();
 		}
 	}
-	Resort();
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::SaveColumnProperties()
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::SaveColumnProperties() {
 	const int columnCount = GetColumnCount();
 
-	for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+	for(int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
 		wxDataViewColumn* column = GetColumn(columnIndex);
 		const int colWidth = column->GetWidth();
 		sett().SetColumnWidth(m_DataViewName, columnIndex, colWidth);
@@ -184,9 +176,8 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties()
 	}
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::OnSizeEvent(wxSizeEvent& event)
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::OnSizeEvent(wxSizeEvent& event) {
 	AdjustColumnsWidth();
 	event.Skip();
 }

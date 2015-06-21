@@ -29,7 +29,7 @@
 #include "utils/globalevents.h"
 
 #include "gui/customdialogs.h"
-#include "gui/hosting/battleroomlistctrl.h"
+#include "gui/hosting/battleroomdataviewctrl.h"
 #include "log.h"
 #include "playbackdataview.h"
 
@@ -105,7 +105,8 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 
 	m_info_sizer->Add(m_data_sizer, 1, wxEXPAND | wxALL, 0);
 
-	m_players = new BattleroomListCtrl(this, 0, true, false);
+	wxString battleName(_T("playback_battleroom_view"));
+	m_players = new BattleroomDataViewCtrl(battleName, this, nullptr /*battle*/, true /*readonly*/, false /*show ingname status*/);
 	m_info_sizer->Add(m_players, 2, wxALL | wxEXPAND, 0);
 
 	m_main_sizer->Add(m_info_sizer, 0, wxEXPAND, 5);
