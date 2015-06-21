@@ -96,7 +96,7 @@ void tab_simple::initInfoSizer(wxFlexGridSizer* sizer)
 void tab_simple::initButSizer(wxSizer* sizer)
 {
 	goExpert_BUT = new wxButton(this, ID_SIMPLE_GOEXPERT_BUT, button_lbl, wxPoint(-1, -1), wxSize(-1, -1), wxBU_EXACTFIT);
-	sizer->Add(goExpert_BUT, 0, wxALIGN_CENTER_VERTICAL);
+//	sizer->Add(goExpert_BUT, 0, wxEXPAND);
 }
 
 tab_simple::tab_simple(settings_frame* _origin, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
@@ -130,7 +130,7 @@ tab_simple::tab_simple(settings_frame* _origin, wxWindow* parent, wxWindowID id,
 
 	leftSizer->Add(boxA, 1, wxEXPAND);
 	leftSizer->Add(boxB, 1, wxEXPAND);
-	rightSizer->Add(Sizer_BUT, 1, wxEXPAND | wxALIGN_CENTER);
+	rightSizer->Add(Sizer_BUT, 1, wxALIGN_CENTER);
 
 	parentSizer->Add(leftSizer, 1, wxALL | wxEXPAND, 15);
 	parentSizer->Add(goExpert_BUT, 0, wxLEFT | wxALIGN_CENTER, 35);

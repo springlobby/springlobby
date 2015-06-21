@@ -41,7 +41,7 @@ void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer)
 	subSizer->Add(5, 0, 0);
 	subSizer->Add(new wxStaticText(this, -1, wxT("x")), 0, wxTOP | wxBOTTOM, 0);
 	subSizer->Add(5, 0, 0);
-	subSizer->Add(ctrl_y_res, 0, wxALIGN_RIGHT, 10);
+	subSizer->Add(ctrl_y_res, 0, wxALIGN_LEFT, 10);
 
 	wxSizer* subSizer2 = new wxBoxSizer(wxVERTICAL);
 	subSizer2->Add(new wxStaticText(this, -1, _("Screen Resolution")), 1, wxTOP | wxEXPAND, 10);

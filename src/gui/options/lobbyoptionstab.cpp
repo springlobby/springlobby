@@ -180,7 +180,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_start_tab = new wxChoice(this, -1, wxDefaultPosition, wxDefaultSize, ui().mw().GetTabNames());
 	m_start_tab->SetSelection(cfg().ReadLong(_T( "/GUI/StartTab" )));
 	wxStaticText* m_start_tab_label = new wxStaticText(this, -1, _("Select which tab to show at startup"));
-	m_start_tab_sizer->Add(m_start_tab_label, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL, 5);
+	m_start_tab_sizer->Add(m_start_tab_label, 0, wxEXPAND | wxALL, 5);
 	m_start_tab_sizer->Add(m_start_tab, 0, wxEXPAND | wxALIGN_TOP, 5);
 
 	m_main_sizer->Add(m_misc_gui_sizer, 0, wxEXPAND | wxALL, 5);

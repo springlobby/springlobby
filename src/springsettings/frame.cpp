@@ -266,13 +266,12 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event)
 				simpleTab->updateControls(UPDATE_ALL);
 
 				//if not on ui page goto simple
-				if (notebook->GetSelection() != 1)
+				if (notebook->GetSelection() != 1) {
 					notebook->SetSelection(0);
-
-				notebook->DeletePage(5);
-				notebook->DeletePage(4);
-				notebook->DeletePage(3);
-				notebook->DeletePage(2);
+				}
+				for (int i = notebook->GetPageCount() - 1; i > 1; i--) { //delete all pages expect page 0 + 1
+					notebook->DeletePage(i);
+				}
 				qualityTab = 0;
 				detailTab = 0;
 				audioTab = 0;
