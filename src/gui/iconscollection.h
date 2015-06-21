@@ -38,8 +38,10 @@
 #include "images/rank7.xpm"
 #include "images/rank_unknown.xpm"
 
+/*
 #include "images/major.xpm"
 #include "images/minor.xpm"
+*/
 
 #include "images/open_game.png.h"
 #include "images/open_pw_game.png.h"

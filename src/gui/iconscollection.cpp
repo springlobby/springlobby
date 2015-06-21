@@ -1,7 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "iconscollection.h"
-
 #include "user.h"
 
 #include <wx/icon.h>
@@ -118,13 +117,16 @@ wxBitmap& IconsCollection::GetUserListStateIcon(const UserStatus& us, bool chano
 }
 
 wxBitmap& IconsCollection::GetFlagBmp(wxString& country) {
+	//FIXME
 	return BMP_ADMIN;
 }
 
 wxBitmap& IconsCollection::GetRankBmp(RankContainer& rank) {
+	//FIXME
 	return BMP_ADMIN;
 }
 
 wxBitmap& IconsCollection::GetColourBmp(LSL::lslColor& colour) {
+	//FIXME
 	return BMP_ADMIN;
 }
