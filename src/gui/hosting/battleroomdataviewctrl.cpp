@@ -1,9 +1,4 @@
-/*
- * battleroomdataviewctrl.cpp
- *
- *  Created on: 20 июня 2015 г.
- *      Author: Руслан
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "battleroomdataviewctrl.h"
 #include "battleroomdataviewmodel.h"
