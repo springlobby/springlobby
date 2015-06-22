@@ -81,7 +81,7 @@
 
 #include "gui/uiutils.h"
 
-class RankContainer;
+class UserStatus;
 class wxString;
 
 namespace LSL

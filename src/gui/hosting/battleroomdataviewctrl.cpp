@@ -28,7 +28,7 @@ BattleroomDataViewCtrl::BattleroomDataViewCtrl(wxString& dataViewName, wxWindow*
 	AppendTextColumn(_("Ally"), ALLY, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("Resource Bonus"), BONUS, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
-	auto* model = new BattleroomDataViewModel();
+	BattleroomDataViewModel* model = new BattleroomDataViewModel();
 	AssociateModel(model);
 
 	//Hide "ingame" column if not needed
@@ -46,6 +46,7 @@ BattleroomDataViewCtrl::BattleroomDataViewCtrl(wxString& dataViewName, wxWindow*
 }
 
 BattleroomDataViewCtrl::~BattleroomDataViewCtrl() {
+	//TODO: implement
 //	wxDELETE(m_PopupMenu);
 	m_Battle = nullptr;
 
@@ -53,6 +54,7 @@ BattleroomDataViewCtrl::~BattleroomDataViewCtrl() {
 }
 
 void BattleroomDataViewCtrl::SetBattle(IBattle* battle) {
+	//TODO: implement
 	//Remove all users from view (if any)
 	Clear();
 
@@ -60,6 +62,7 @@ void BattleroomDataViewCtrl::SetBattle(IBattle* battle) {
 }
 
 void BattleroomDataViewCtrl::AddUser(User& user) {
+	//TODO: implement
 	if (m_DataModel->ContainsItem(user) == true) {
 		return;
 	}
@@ -67,6 +70,7 @@ void BattleroomDataViewCtrl::AddUser(User& user) {
 }
 
 void BattleroomDataViewCtrl::RemoveUser(User& user) {
+	//TODO: implement
 	if (m_DataModel->ContainsItem(user) == false) {
 		return;
 	}
@@ -75,4 +79,5 @@ void BattleroomDataViewCtrl::RemoveUser(User& user) {
 
 void BattleroomDataViewCtrl::SetTipWindowText(const long item_hit,
 		const wxPoint& position) {
+	//TODO: implement
 }
