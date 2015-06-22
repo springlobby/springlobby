@@ -139,16 +139,16 @@ public:
 	wxBitmap BMP_UP = wxBitmap(up_xpm);
 	wxBitmap BMP_DOWN = wxBitmap(down_xpm);
 
-	wxBitmap BMP_RANK_NONE = wxBitmap(rank0_xpm);
+	wxBitmap BMP_RANK_NONE = wxBitmap(empty_xpm);
 	wxBitmap BMP_RANK_UNKNOWN = wxBitmap(rank_unknown_xpm);
-	wxBitmap BMP_RANK1 = wxBitmap(rank1_xpm);
-	wxBitmap BMP_RANK2 = wxBitmap(rank2_xpm);
-	wxBitmap BMP_RANK3 = wxBitmap(rank3_xpm);
-	wxBitmap BMP_RANK4 = wxBitmap(rank4_xpm);
-	wxBitmap BMP_RANK5 = wxBitmap(rank5_xpm);
-	wxBitmap BMP_RANK6 = wxBitmap(rank6_xpm);
-	wxBitmap BMP_RANK7 = wxBitmap(rank7_xpm);
-	wxBitmap BMP_RANK8 = wxBitmap(rank_unknown_xpm);
+	wxBitmap BMP_RANK1 = wxBitmap(rank0_xpm);
+	wxBitmap BMP_RANK2 = wxBitmap(rank1_xpm);
+	wxBitmap BMP_RANK3 = wxBitmap(rank2_xpm);
+	wxBitmap BMP_RANK4 = wxBitmap(rank3_xpm);
+	wxBitmap BMP_RANK5 = wxBitmap(rank4_xpm);
+	wxBitmap BMP_RANK6 = wxBitmap(rank5_xpm);
+	wxBitmap BMP_RANK7 = wxBitmap(rank6_xpm);
+	wxBitmap BMP_RANK8 = wxBitmap(rank7_xpm);
 
 	wxBitmap BMP_GAME_UNKNOWN = wxBitmap();
 	wxBitmap BMP_OPEN_GAME = charArr2wxBitmap(open_game_png, sizeof(open_game_png));
