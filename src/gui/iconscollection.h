@@ -83,7 +83,7 @@
 
 class RankContainer;
 class wxString;
-class UserStatus;
+
 namespace LSL
 {
 	class lslColor;
@@ -103,7 +103,7 @@ public:
 	wxBitmap& GetReadyBmp(bool isSpec, bool isReady, bool inSync, bool isBot);
 	wxBitmap& GetUserListStateIcon(const UserStatus& us, bool chanop, bool inbroom);
 	wxBitmap& GetFlagBmp(wxString& country);
-	wxBitmap& GetRankBmp(RankContainer& rank);
+	wxBitmap& GetRankBmp(unsigned int rank, bool showLowet = true);
 	wxBitmap& GetColourBmp(LSL::lslColor& colour);
 
 private:

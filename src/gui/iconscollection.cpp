@@ -121,12 +121,10 @@ wxBitmap& IconsCollection::GetFlagBmp(wxString& country) {
 	return BMP_ADMIN;
 }
 
-wxBitmap& IconsCollection::GetRankBmp(RankContainer& rank) {
-	//TODO: understand what commented code does and reimplement it
-	/*
-	if (!showlowest && rank == UserStatus::RANK_1) {
+wxBitmap& IconsCollection::GetRankBmp(unsigned int rank, bool showLowest) {
+	if ( (showLowest == false) && (rank == UserStatus::RANK_1) ) {
 		return BMP_RANK_NONE;
-	}*/
+	}
 	
 	switch (rank) {
 		case UserStatus::RANK_1:
