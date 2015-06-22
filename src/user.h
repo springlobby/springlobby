@@ -345,7 +345,7 @@ public:
 	static std::string GetRankName(UserStatus::RankContainer rank);
 
 	float GetBalanceRank();
-	UserStatus::RankContainer GetRank();
+	UserStatus::RankContainer GetRank() const;
 	std::string GetClan();
 
 	int GetFlagIconIndex() const

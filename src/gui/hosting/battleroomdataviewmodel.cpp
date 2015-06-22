@@ -9,8 +9,7 @@
 #include <wx/dataview.h>
 
 BattleroomDataViewModel::BattleroomDataViewModel() {
-	// TODO Auto-generated constructor stub
-
+	m_Battle = nullptr;
 }
 
 BattleroomDataViewModel::~BattleroomDataViewModel() {
@@ -34,7 +33,11 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 		if (isBot) {
 			variant = wxVariant(iconsCollection->BMP_BOT);
 		} else {
-			variant = wxVariant(iconsCollection->GetReadyBmp(isSpectator, user->BattleStatus().ready, user->BattleStatus().sync, isBot));
+			if (GetBattle()->IsFounder(*user)) {
+				variant = wxVariant(iconsCollection->GetHostBmp(isSpectator));
+			} else {
+				variant = wxVariant(iconsCollection->GetReadyBmp(isSpectator, user->BattleStatus().ready, user->BattleStatus().sync, isBot));
+			}
 		}
 		break;
 
@@ -45,8 +48,9 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 	case FACTION:
 		if (isSpectator) {
 			variant = wxVariant(iconsCollection->BMP_EMPTY);
+		} else {
+			variant = wxVariant(iconsCollection->GetFractionBmp(GetBattle()->GetHostModName(), user->BattleStatus().side));
 		}
-		variant = wxVariant(iconsCollection->BMP_EMPTY);
 		break;
 
 	case COLOUR:
@@ -69,7 +73,7 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 		if (isBot) {
 			variant = wxVariant(iconsCollection->BMP_EMPTY);
 		} else {
-			variant = wxVariant(iconsCollection->GetRankBmp(user->GetStatus().rank));
+			variant = wxVariant(iconsCollection->GetRankBmp(user->GetRank()));
 		}
 		break;
 
@@ -123,4 +127,14 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 	default:
 		wxASSERT(false);
 	}
+}
+
+IBattle* BattleroomDataViewModel::GetBattle() const {
+	wxASSERT(m_Battle != nullptr);
+
+	return m_Battle;
+}
+
+void BattleroomDataViewModel::SetBattle(IBattle* battle) {
+	m_Battle = battle;
 }

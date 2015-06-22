@@ -1,7 +1,14 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+#define HAVE_WX	//needed for LSL::UnitsyncImage::wxbitmap!
+
 #include "iconscollection.h"
+
 #include "user.h"
+#include "utils/conversion.h"
+#include "log.h"
+#include "lslunitsync/image.h"
+#include "lslunitsync/unitsync.h"
 
 #include <wx/icon.h>
 #include <wx/image.h>
@@ -125,7 +132,7 @@ wxBitmap& IconsCollection::GetRankBmp(unsigned int rank, bool showLowest) {
 	if ( (showLowest == false) && (rank == UserStatus::RANK_1) ) {
 		return BMP_RANK_NONE;
 	}
-	
+
 	switch (rank) {
 		case UserStatus::RANK_1:
 			return BMP_RANK1;
@@ -151,4 +158,37 @@ wxBitmap& IconsCollection::GetRankBmp(unsigned int rank, bool showLowest) {
 wxBitmap& IconsCollection::GetColourBmp(LSL::lslColor& colour) {
 	//FIXME
 	return BMP_ADMIN;
+}
+
+wxBitmap& IconsCollection::GetFractionBmp(const std::string& modName, int fractionId) {
+
+	wxASSERT(-1 < fractionId);
+	wxASSERT(modName.empty() == false);
+
+	const auto sides = LSL::usync().GetSides(modName);
+
+	//This can happen whenever in time, so must be caught in release build too
+	ASSERT_LOGIC(sides.empty() == false, "LSL::usync().GetSides() failed!");
+	ASSERT_LOGIC(fractionId < static_cast<int>(sides.size()), "LSL::usync().GetSides() < fractionID!");
+
+	std::string sideName;
+
+	sideName = sides[fractionId];
+
+	const std::string cacheString = modName + "_" + sideName;
+
+	//Check if image already in cache
+	if (m_cachedFractionBmps.find(cacheString) != m_cachedFractionBmps.end()) {
+		return m_cachedFractionBmps[cacheString];
+	//Create one and add to cache
+	} else {
+		try {
+			const LSL::UnitsyncImage img = LSL::usync().GetSidePicture(modName, sideName);
+			m_cachedFractionBmps[cacheString] = img.wxbitmap();
+		} catch (...) {
+		//unitsync can fail!
+			ASSERT_LOGIC(false, "LSL::usync().GetSidePicture() failed!");
+		}
+		return m_cachedFractionBmps[cacheString];
+	}
 }

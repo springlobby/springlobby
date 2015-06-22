@@ -209,7 +209,7 @@ bool User::ExecuteSayCommand(const std::string& cmd) const
 	return false;
 }
 
-UserStatus::RankContainer User::GetRank()
+UserStatus::RankContainer User::GetRank() const
 {
 	return GetStatus().rank;
 }

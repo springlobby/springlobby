@@ -6,6 +6,7 @@
 #include "gui/basedataviewmodel.h"
 
 class User;
+class IBattle;
 
 class BattleroomDataViewModel: public BaseDataViewModel<User> {
 public:
@@ -13,6 +14,12 @@ public:
 	virtual ~BattleroomDataViewModel();
 
     virtual void GetValue( wxVariant &variant, const wxDataViewItem &item, unsigned int col ) const override;
+
+    IBattle* GetBattle() const;
+    void SetBattle(IBattle*);
+
+private:
+    IBattle* m_Battle;
 
 private:
 	enum ColumnIndexes

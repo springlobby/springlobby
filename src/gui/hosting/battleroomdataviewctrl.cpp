@@ -59,6 +59,8 @@ void BattleroomDataViewCtrl::SetBattle(IBattle* battle) {
 	Clear();
 
 	m_Battle = battle;
+	//Inform model about new battle
+	static_cast<BattleroomDataViewModel*>(GetModel())->SetBattle(battle);
 }
 
 void BattleroomDataViewCtrl::AddUser(User& user) {

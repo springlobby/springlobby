@@ -7,6 +7,8 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 
+#include <map>
+
 #include "images/bot.xpm"
 #include "images/bot_broom.png.h"
 #include "images/bot_ingame.png.h"
@@ -105,9 +107,11 @@ public:
 	wxBitmap& GetFlagBmp(wxString& country);
 	wxBitmap& GetRankBmp(unsigned int rank, bool showLowest = true);
 	wxBitmap& GetColourBmp(LSL::lslColor& colour);
+	wxBitmap& GetFractionBmp(const std::string& modName, int fractionId);
 
 private:
 	static IconsCollection* m_Instance;
+	std::map<std::string, wxBitmap> m_cachedFractionBmps;
 
 public:
 	wxIcon ICON_EXISTS = wxIcon(exists_xpm);
