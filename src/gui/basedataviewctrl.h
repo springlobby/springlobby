@@ -73,7 +73,7 @@ BEGIN_EVENT_TABLE_TEMPLATE1(BaseDataViewCtrl, wxDataViewCtrl, DataType)
 END_EVENT_TABLE()
 
 template<class DataType>
-BaseDataViewCtrl<DataType>::BaseDataViewCtrl(wxString& dataViewName, wxWindow* parent, wxWindowID id) : wxDataViewCtrl(parent, id) {
+BaseDataViewCtrl<DataType>::BaseDataViewCtrl(wxString& dataViewName, wxWindow* parent, wxWindowID id) : wxDataViewCtrl(parent, id, wxDefaultPosition, wxDefaultSize, wxDV_SINGLE | wxDV_ROW_LINES) {
 	m_DataModel = nullptr;
 	m_DataViewName = dataViewName;
 }
