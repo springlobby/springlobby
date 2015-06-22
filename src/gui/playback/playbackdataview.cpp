@@ -17,12 +17,13 @@ BEGIN_EVENT_TABLE(PlaybackDataView, BaseDataViewCtrl)
 EVT_DATAVIEW_ITEM_CONTEXT_MENU(REPLAY_DATAVIEW_ID, PlaybackDataView::OnContextMenu)
 EVT_MENU(REPLAY_DATAVIEW_DLMAP_ID, PlaybackDataView::OnDLMap)
 EVT_MENU(REPLAY_DATAVIEW_DLMOD_ID, PlaybackDataView::OnDLMod)
+EVT_KEY_DOWN(PlaybackDataView::OnKeyDown)
 END_EVENT_TABLE()
 
 PlaybackDataView::PlaybackDataView(wxString& dataViewName, wxWindow* parent)
     : BaseDataViewCtrl(dataViewName, parent, REPLAY_DATAVIEW_ID)
 {
-	// TODO Auto-generated constructor stub
+	m_Parent = parent;
 
 	const int DEFAULT_SIZE = -1;
 	AppendIconTextColumn(_("Date"), DATE, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
@@ -127,4 +128,15 @@ void PlaybackDataView::SetTipWindowText(const long item_hit,
 void PlaybackDataView::HighlightItem(long longInt)
 {
 	//TODO: Implement
+}
+
+//React on DEL key, resend event to parent
+void PlaybackDataView::OnKeyDown(wxKeyEvent& event)
+{
+	const int keyCode = event.GetKeyCode();
+	if ((keyCode == WXK_DELETE) && (m_Parent != NULL)) {
+		wxPostEvent(m_Parent, event);
+		return;
+	}
+	event.Skip();
 }

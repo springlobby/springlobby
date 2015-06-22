@@ -27,6 +27,9 @@ public:
 	virtual void SetTipWindowText(const long item_hit, const wxPoint& position);
 	virtual void HighlightItem(long /*unused*/);
 
+private:
+	void OnKeyDown(wxKeyEvent& event);
+	
 public:
 	enum {
 		REPLAY_DATAVIEW_ID,
@@ -36,7 +39,8 @@ public:
 
 private:
 	wxMenu* m_ContextMenu;
-
+	wxWindow* m_Parent;
+	
 private:
 	enum ColumnIndexes {
 		DATE = 0,
