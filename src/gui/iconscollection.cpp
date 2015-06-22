@@ -122,8 +122,32 @@ wxBitmap& IconsCollection::GetFlagBmp(wxString& country) {
 }
 
 wxBitmap& IconsCollection::GetRankBmp(RankContainer& rank) {
-	//FIXME
-	return BMP_ADMIN;
+	//TODO: understand what commented code does and reimplement it
+	/*
+	if (!showlowest && rank == UserStatus::RANK_1) {
+		return BMP_RANK_NONE;
+	}*/
+	
+	switch (rank) {
+		case UserStatus::RANK_1:
+			return BMP_RANK1;
+		case UserStatus::RANK_2:
+			return BMP_RANK2;
+		case UserStatus::RANK_3:
+			return BMP_RANK3;
+		case UserStatus::RANK_4:
+			return BMP_RANK4;
+		case UserStatus::RANK_5:
+			return BMP_RANK5;
+		case UserStatus::RANK_6:
+			return BMP_RANK6;
+		case UserStatus::RANK_7:
+			return BMP_RANK7;
+		case UserStatus::RANK_8:
+			return BMP_RANK8;
+		default:
+			return BMP_RANK_UNKNOWN;
+	}
 }
 
 wxBitmap& IconsCollection::GetColourBmp(LSL::lslColor& colour) {
