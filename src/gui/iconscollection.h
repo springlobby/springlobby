@@ -103,7 +103,7 @@ public:
 	wxBitmap& GetReadyBmp(bool isSpec, bool isReady, bool inSync, bool isBot);
 	wxBitmap& GetUserListStateIcon(const UserStatus& us, bool chanop, bool inbroom);
 	wxBitmap& GetFlagBmp(wxString& country);
-	wxBitmap& GetRankBmp(unsigned int rank, bool showLowet = true);
+	wxBitmap& GetRankBmp(unsigned int rank, bool showLowest = true);
 	wxBitmap& GetColourBmp(LSL::lslColor& colour);
 
 private:
