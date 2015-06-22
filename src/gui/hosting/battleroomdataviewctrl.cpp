@@ -31,10 +31,15 @@ BattleroomDataViewCtrl::BattleroomDataViewCtrl(wxString& dataViewName, wxWindow*
 	auto* model = new BattleroomDataViewModel();
 	AssociateModel(model);
 
-	//ReadOnly means quick info about battle
-	if(readOnly == false)
+	//Hide "ingame" column if not needed
+	if (showInGame == false)
 	{
-
+		GetColumn(INGAME)->SetHidden(true);
+	}
+	//ReadOnly means quick info about battle
+	if (readOnly == false)
+	{
+		//TODO: implement!
 	}
 
 	LoadColumnProperties();
