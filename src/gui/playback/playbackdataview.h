@@ -11,6 +11,7 @@ class StoredGame;
 class wxListEvent;
 class wxCommandEvent;
 class wxPoint;
+class wxKeyEvent;
 
 class PlaybackDataView : public BaseDataViewCtrl<StoredGame>
 {
