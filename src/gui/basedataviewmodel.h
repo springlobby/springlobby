@@ -20,7 +20,6 @@ public:
 	virtual unsigned int GetChildren(const wxDataViewItem& item, wxDataViewItemArray& children) const override;
 	virtual int Compare(const wxDataViewItem& item1, const wxDataViewItem& item2, unsigned int column, bool ascending) const override;
 	virtual bool IsListModel() const override;
-	virtual void Resort() override;
 
 public:
 	//Custom methods
@@ -170,11 +169,5 @@ wxString BaseDataViewModel<DataType>::GetColumnType(unsigned int col) const
 {
 	return wxEmptyString; //Does nothing
 }
-
-template <class DataType>
-void BaseDataViewModel<DataType>::Resort()
-{
-}
-
 
 #endif /* SRC_GUI_BASEDATAVIEWMODEL_H_ */
