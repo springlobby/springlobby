@@ -62,8 +62,10 @@ public:
 private:
 	wxBoxSizer* m_main_sizer;
 	SinglePlayerBattle m_battle;
+	bool unitsync_ready;
 
 	MapCtrl* m_minimap;
+	wxPanel* m_nominimap;
 	wxChoice* m_map_pick;
 	wxChoice* m_mod_pick;
 	wxChoice* m_engine_pick;
