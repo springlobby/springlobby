@@ -1,4 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#ifndef FLAG_IMAGE_DATA_H
+#define FLAG_IMAGE_DATA_H
 
 // this header file is automatically generated with a script
 #include "images/flags/AD.xpm"
@@ -246,7 +248,7 @@
 #include "images/flags/ZM.xpm"
 #include "images/flags/ZW.xpm"
 
-const char* flag_str[] = {
+static const char* flag_str[] = {
     "AD",
     "AE",
     "AF",
@@ -493,7 +495,7 @@ const char* flag_str[] = {
     "ZW",
     0};
 
-const char* const* flag_xpm[] = {
+static const char* const* flag_xpm[] = {
     AD_xpm,
     AE_xpm,
     AF_xpm,
@@ -739,3 +741,5 @@ const char* const* flag_xpm[] = {
     ZM_xpm,
     ZW_xpm,
     0};
+
+#endif //FLAG_IMAGE_DATA_H

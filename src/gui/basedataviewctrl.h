@@ -42,29 +42,23 @@ protected:
 template<class DataType>
 inline void BaseDataViewCtrl<DataType>::AdjustColumnsWidth() {
 	const int columnsCount = GetColumnCount();
-	const int autoResizableColumnIndex = columnsCount - 1;
-
-	if (autoResizableColumnIndex < 0) {
-		return;
-	}
-
-	if (autoResizableColumnIndex >= columnsCount) {
-		return;
-	}
+	int autoResizableColumnIndex = 0;
 
 	int totalColumnsWidth = 0;
 	for (int colIndex = 0; colIndex < columnsCount; ++colIndex) {
-		if (colIndex == autoResizableColumnIndex) {
-			continue;
-		}
 		const wxDataViewColumn* column = GetColumn(colIndex);
-		totalColumnsWidth += column->GetWidth();
+		//Calculate total columns width (only visible)
+		if (column->IsHidden() == false) {
+			totalColumnsWidth += column->GetWidth();
+			//Resize only visible column, last non-hidden column will be resized
+			autoResizableColumnIndex = colIndex;
+		}
 	}
 
 	wxSize clientSize = GetClientSize();
 
 	wxDataViewColumn* column = GetColumn(autoResizableColumnIndex);
-	const int newSize = clientSize.GetWidth() - totalColumnsWidth;
+	const int newSize = clientSize.GetWidth() - (totalColumnsWidth - column->GetWidth());
 	column->SetWidth(newSize);
 }
 
@@ -129,12 +123,13 @@ template<class DataType>
 inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	const int columnCount = GetColumnCount();
 
+//FIXME: this code causes weird behavior of wxDataViewModel
 	//Set up sorting column
-	int sortingColumnIndex;
-	cfg().Read(wxString(m_DataViewName + _T("/sorting_column")), &sortingColumnIndex, -1);
-	//Set up sorting order
-	bool sortOrderAscending;
-	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
+//	int sortingColumnIndex;
+//	cfg().Read(wxString(m_DataViewName + _T("/sorting_column")), &sortingColumnIndex, -1);
+//	//Set up sorting order
+//	bool sortOrderAscending;
+//	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
 
 	for(int columnIndex = 0; columnIndex < columnCount; columnIndex++)
 	{
@@ -143,11 +138,12 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 		if (colWidth > 0) {
 			column->SetWidth(colWidth);
 		}
-		if (columnIndex == sortingColumnIndex) {
-			column->SetSortOrder(sortOrderAscending);
-		} else {
-			column->UnsetAsSortKey();
-		}
+//FIXME: this code causes weird behavior of wxDataViewModel
+//		if (columnIndex == sortingColumnIndex) {
+//			column->SetSortOrder(sortOrderAscending);
+//		} else {
+//			column->UnsetAsSortKey();
+//		}
 	}
 }
 

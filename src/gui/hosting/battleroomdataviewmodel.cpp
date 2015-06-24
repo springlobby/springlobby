@@ -56,17 +56,18 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 	case COLOUR:
 		if (isSpectator) {
 			variant = wxVariant(iconsCollection->BMP_EMPTY);
+		} else {
+			//TODO: implement!
+			variant = wxVariant(iconsCollection->GetColourBmp(user->GetColor()));
 		}
-		//TODO: implement!
-		variant = wxVariant(iconsCollection->BMP_EMPTY);
 		break;
 
 	case COUNTRY:
 		if (isBot) {
 			variant = wxVariant(iconsCollection->BMP_EMPTY);
+		} else {
+			variant = wxVariant(iconsCollection->GetFlagBmp(wxString(user->GetCountry())));
 		}
-		//TODO: implement!
-		variant = wxVariant(iconsCollection->BMP_EMPTY);
 		break;
 
 	case RANK:

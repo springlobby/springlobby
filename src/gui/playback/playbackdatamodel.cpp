@@ -68,6 +68,10 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 		variant = wxString(storedGame->Filename).AfterLast(wxFileName::GetPathSeparator());
 		break;
 
+	case -1:
+		//FIXME: this is workaround. Do not know why this happens on Linux.
+		break;
+
 	default:
 		wxLogError(wxString::Format("PlaybackDataModel::GetValue: column=%d", static_cast<int>(col)));
 		wxASSERT(false);
