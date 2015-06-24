@@ -154,7 +154,7 @@ wxBitmap& IconsCollection::GetFlagBmp(wxString& country) {
 	    (country == "A1") || // anonymous proxy
 	    (country == "A2") || // satellite provider
 	    (country == "O1"))   // other country
-		return FLAG_NONE;	
+		return BMP_UNK_FLAG;	
 	
 	//Search for flag by country's name
 	map<wxString, wxBitmap>::const_iterator itor = m_countryFlagBmps.find(country);
@@ -164,7 +164,7 @@ wxBitmap& IconsCollection::GetFlagBmp(wxString& country) {
 	//Return empty image otherwise
 	} else {
 		//Just return nothing. I think there is no need for triggering assert
-		return FLAG_NONE;
+		return BMP_UNK_FLAG;
 	}
 }
 
