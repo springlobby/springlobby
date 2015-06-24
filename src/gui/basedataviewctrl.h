@@ -42,29 +42,23 @@ protected:
 template<class DataType>
 inline void BaseDataViewCtrl<DataType>::AdjustColumnsWidth() {
 	const int columnsCount = GetColumnCount();
-	const int autoResizableColumnIndex = columnsCount - 1;
-
-	if (autoResizableColumnIndex < 0) {
-		return;
-	}
-
-	if (autoResizableColumnIndex >= columnsCount) {
-		return;
-	}
+	int autoResizableColumnIndex = 0;
 
 	int totalColumnsWidth = 0;
 	for (int colIndex = 0; colIndex < columnsCount; ++colIndex) {
-		if (colIndex == autoResizableColumnIndex) {
-			continue;
-		}
 		const wxDataViewColumn* column = GetColumn(colIndex);
-		totalColumnsWidth += column->GetWidth();
+		//Calculate total columns width (only visible)
+		if (column->IsHidden() == false) {
+			totalColumnsWidth += column->GetWidth();
+			//Resize only visible column, last non-hidden column will be resized
+			autoResizableColumnIndex = colIndex;
+		}
 	}
 
 	wxSize clientSize = GetClientSize();
 
 	wxDataViewColumn* column = GetColumn(autoResizableColumnIndex);
-	const int newSize = clientSize.GetWidth() - totalColumnsWidth;
+	const int newSize = clientSize.GetWidth() - (totalColumnsWidth - column->GetWidth());
 	column->SetWidth(newSize);
 }
 
