@@ -129,12 +129,13 @@ template<class DataType>
 inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	const int columnCount = GetColumnCount();
 
+//FIXME: this code causes weird behavior of wxDataViewModel
 	//Set up sorting column
-	int sortingColumnIndex;
-	cfg().Read(wxString(m_DataViewName + _T("/sorting_column")), &sortingColumnIndex, -1);
-	//Set up sorting order
-	bool sortOrderAscending;
-	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
+//	int sortingColumnIndex;
+//	cfg().Read(wxString(m_DataViewName + _T("/sorting_column")), &sortingColumnIndex, -1);
+//	//Set up sorting order
+//	bool sortOrderAscending;
+//	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
 
 	for(int columnIndex = 0; columnIndex < columnCount; columnIndex++)
 	{
@@ -143,11 +144,12 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 		if (colWidth > 0) {
 			column->SetWidth(colWidth);
 		}
-		if (columnIndex == sortingColumnIndex) {
-			column->SetSortOrder(sortOrderAscending);
-		} else {
-			column->UnsetAsSortKey();
-		}
+//FIXME: this code causes weird behavior of wxDataViewModel
+//		if (columnIndex == sortingColumnIndex) {
+//			column->SetSortOrder(sortOrderAscending);
+//		} else {
+//			column->UnsetAsSortKey();
+//		}
 	}
 }
 
