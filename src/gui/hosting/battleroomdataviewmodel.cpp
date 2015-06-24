@@ -58,7 +58,7 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 			variant = wxVariant(iconsCollection->BMP_EMPTY);
 		} else {
 			//TODO: implement!
-			variant = wxVariant(iconsCollection->BMP_EMPTY);
+			variant = wxVariant(iconsCollection->GetColourBmp(user->GetColor()));
 		}
 		break;
 

@@ -6,6 +6,7 @@
 
 #include "user.h"
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 #include "log.h"
 #include "lslunitsync/image.h"
 #include "lslunitsync/unitsync.h"
@@ -195,9 +196,19 @@ wxBitmap& IconsCollection::GetRankBmp(unsigned int rank, bool showLowest) {
 	}
 }
 
-wxBitmap& IconsCollection::GetColourBmp(LSL::lslColor& colour) {
-	//FIXME
-	return BMP_ADMIN;
+wxBitmap& IconsCollection::GetColourBmp(const LSL::lslColor& colour) {
+
+	const wxString key = lslTowxColour(colour).GetAsString(wxC2S_HTML_SYNTAX).AfterFirst('#');
+
+	//Search needed colour in collection (cache) and return it if found
+	std::map<wxString, wxBitmap>::iterator itor = m_playerColorBmps.find(key);
+	if (itor != m_playerColorBmps.end()) {
+		return itor->second;
+	//Or add new colour to collection
+	} else {
+		m_playerColorBmps[key] = getColourIcon(lslTowxColour(colour));
+		return m_playerColorBmps[key];
+	}
 }
 
 wxBitmap& IconsCollection::GetFractionBmp(const std::string& modName, int fractionId) {

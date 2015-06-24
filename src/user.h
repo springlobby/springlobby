@@ -191,6 +191,10 @@ struct UiUserData
 	ChatPanel* panel;
 };
 
+namespace LSL
+{
+class lslColor;
+}
 //! parent class leaving out server related functionality
 class CommonUser
 {
@@ -371,6 +375,8 @@ public:
 	{
 		m_sideicon_idx = idx;
 	}
+
+	LSL::lslColor GetColor() const;
 
 private:
 	// User variables

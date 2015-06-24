@@ -260,6 +260,9 @@ void CommonUser::SetStatus(const UserStatus& status)
 	m_status = status;
 }
 
+LSL::lslColor User::GetColor() const {
+	return BattleStatus().colour;
+}
 //User& User::operator= ( const User& other )
 //{
 //    if( this != &other ) {

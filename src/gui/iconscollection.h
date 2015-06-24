@@ -107,13 +107,14 @@ public:
 	wxBitmap& GetUserListStateIcon(const UserStatus& us, bool chanop, bool inbroom);
 	wxBitmap& GetFlagBmp(const wxString& country);
 	wxBitmap& GetRankBmp(unsigned int rank, bool showLowest = true);
-	wxBitmap& GetColourBmp(LSL::lslColor& colour);
+	wxBitmap& GetColourBmp(const LSL::lslColor& colour);
 	wxBitmap& GetFractionBmp(const std::string& modName, int fractionId);
 
 private:
 	static IconsCollection* m_Instance;
 	std::map<std::string, wxBitmap> m_cachedFractionBmps;
 	std::map<wxString, wxBitmap> m_countryFlagBmps;
+	std::map<wxString, wxBitmap> m_playerColorBmps;
 
 public:
 	wxIcon ICON_EXISTS = wxIcon(exists_xpm);
