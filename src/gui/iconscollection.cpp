@@ -43,20 +43,18 @@ IconsCollection* IconsCollection::m_Instance = nullptr;
 //Create collection populated with flags images
 void IconsCollection::loadCountryFlags()
 {
-	//Just in case - empty collection
-	m_countryFlagBmps.clear();
-	
 	int flagIndex = 0;
-	for (flagIndex = 0 ; flag_str[flagIndex] != nullptr; flagIndex++)
+	m_countryFlagBmps.clear();
+	for (flagIndex = 0 ; flag_str[flagIndex] != NULL; flagIndex++)
 	{
 		//Just in case (these two arrays must have same size!)
-		wxASSERT(flag_xpm[flagIndex] != nullptr);
+		wxASSERT(flag_xpm[flagIndex] != NULL);
 		//Load flag image and store it in collection
-		m_countryFlagBmps[wxString(flag_str[flagIndex])] = wxBitmap(flag_xpm[flagIndex]);
+		m_countryFlagBmps[flag_str[flagIndex]] = wxBitmap(flag_xpm[flagIndex]);
 	}
-	
+
 	//Just in case (these two arrays must have same size!)
-	wxASSERT( (flag_str[flagIndex] == nullptr) && (flag_xpm[flagIndex] == nullptr) );
+	wxASSERT( (flag_str[flagIndex] == NULL) && (flag_xpm[flagIndex] == NULL) );
 }
 
 wxBitmap& IconsCollection::GetHostBmp(bool isSpec) {
@@ -148,7 +146,7 @@ wxBitmap& IconsCollection::GetUserListStateIcon(const UserStatus& us, bool chano
 }
 
 //Get flag image from collection
-wxBitmap& IconsCollection::GetFlagBmp(wxString& country) {
+wxBitmap& IconsCollection::GetFlagBmp(const wxString& country) {
 	//Check for some predefined values
 	if ((country.empty()) ||
 	    (country == "??") || // unknown
@@ -156,13 +154,13 @@ wxBitmap& IconsCollection::GetFlagBmp(wxString& country) {
 	    (country == "A1") || // anonymous proxy
 	    (country == "A2") || // satellite provider
 	    (country == "O1"))   // other country
-		return BMP_UNK_FLAG;	
-	
+		return BMP_UNK_FLAG;
+
 	//Search for flag by country's name
-	std::map<wxString, wxBitmap>::const_iterator itor = m_countryFlagBmps.find(country);
+	std::map<wxString, wxBitmap>::iterator itor = m_countryFlagBmps.find(country);
 	//Return flag image if found
 	if (itor != m_countryFlagBmps.end()) {
-		return itor->second();
+		return itor->second;
 	//Return empty image otherwise
 	} else {
 		//Just return nothing. I think there is no need for triggering assert
