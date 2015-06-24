@@ -6,15 +6,21 @@
 
 #include "user.h"
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 #include "log.h"
 #include "lslunitsync/image.h"
 #include "lslunitsync/unitsync.h"
+
+#include "flagimagedata.h"
 
 #include <wx/icon.h>
 #include <wx/image.h>
 #include <wx/bitmap.h>
 
+#include <map>
+
 IconsCollection::IconsCollection() {
+	loadCountryFlags();
 }
 
 IconsCollection::~IconsCollection() {
@@ -34,6 +40,23 @@ void IconsCollection::Release() {
 }
 
 IconsCollection* IconsCollection::m_Instance = nullptr;
+
+//Create collection populated with flags images
+void IconsCollection::loadCountryFlags()
+{
+	int flagIndex = 0;
+	m_countryFlagBmps.clear();
+	for (flagIndex = 0 ; flag_str[flagIndex] != NULL; flagIndex++)
+	{
+		//Just in case (these two arrays must have same size!)
+		wxASSERT(flag_xpm[flagIndex] != NULL);
+		//Load flag image and store it in collection
+		m_countryFlagBmps[flag_str[flagIndex]] = wxBitmap(flag_xpm[flagIndex]);
+	}
+
+	//Just in case (these two arrays must have same size!)
+	wxASSERT( (flag_str[flagIndex] == NULL) && (flag_xpm[flagIndex] == NULL) );
+}
 
 wxBitmap& IconsCollection::GetHostBmp(bool isSpec) {
 	if (isSpec) {
@@ -123,9 +146,27 @@ wxBitmap& IconsCollection::GetUserListStateIcon(const UserStatus& us, bool chano
 	return BMP_NOSTATE;
 }
 
-wxBitmap& IconsCollection::GetFlagBmp(wxString& country) {
-	//FIXME
-	return BMP_ADMIN;
+//Get flag image from collection
+wxBitmap& IconsCollection::GetFlagBmp(const wxString& country) {
+	//Check for some predefined values
+	if ((country.empty()) ||
+	    (country == "??") || // unknown
+	    (country == "XX") || // not sure where this come from, very likely from incomplete bootstrap at login
+	    (country == "A1") || // anonymous proxy
+	    (country == "A2") || // satellite provider
+	    (country == "O1"))   // other country
+		return BMP_UNK_FLAG;
+
+	//Search for flag by country's name
+	std::map<wxString, wxBitmap>::iterator itor = m_countryFlagBmps.find(country);
+	//Return flag image if found
+	if (itor != m_countryFlagBmps.end()) {
+		return itor->second;
+	//Return empty image otherwise
+	} else {
+		//Just return nothing. I think there is no need for triggering assert
+		return BMP_UNK_FLAG;
+	}
 }
 
 wxBitmap& IconsCollection::GetRankBmp(unsigned int rank, bool showLowest) {
@@ -155,9 +196,19 @@ wxBitmap& IconsCollection::GetRankBmp(unsigned int rank, bool showLowest) {
 	}
 }
 
-wxBitmap& IconsCollection::GetColourBmp(LSL::lslColor& colour) {
-	//FIXME
-	return BMP_ADMIN;
+wxBitmap& IconsCollection::GetColourBmp(const LSL::lslColor& colour) {
+
+	const wxString key = lslTowxColour(colour).GetAsString(wxC2S_HTML_SYNTAX).AfterFirst('#');
+
+	//Search needed colour in collection (cache) and return it if found
+	std::map<wxString, wxBitmap>::iterator itor = m_playerColorBmps.find(key);
+	if (itor != m_playerColorBmps.end()) {
+		return itor->second;
+	//Or add new colour to collection
+	} else {
+		m_playerColorBmps[key] = getColourIcon(lslTowxColour(colour));
+		return m_playerColorBmps[key];
+	}
 }
 
 wxBitmap& IconsCollection::GetFractionBmp(const std::string& modName, int fractionId) {

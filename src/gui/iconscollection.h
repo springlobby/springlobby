@@ -77,8 +77,6 @@
 #include "images/channel_options.xpm"
 #include "images/springlobby.xpm"
 
-#include "flagimages.h"
-
 #include "images/empty.xpm"
 
 #include "gui/uiutils.h"
@@ -100,18 +98,23 @@ public:
 	static IconsCollection* Instance();
 	static void Release();
 
+private:
+	void loadCountryFlags();
+
 public:
 	wxBitmap& GetHostBmp(bool isSpec);
 	wxBitmap& GetReadyBmp(bool isSpec, bool isReady, bool inSync, bool isBot);
 	wxBitmap& GetUserListStateIcon(const UserStatus& us, bool chanop, bool inbroom);
-	wxBitmap& GetFlagBmp(wxString& country);
+	wxBitmap& GetFlagBmp(const wxString& country);
 	wxBitmap& GetRankBmp(unsigned int rank, bool showLowest = true);
-	wxBitmap& GetColourBmp(LSL::lslColor& colour);
+	wxBitmap& GetColourBmp(const LSL::lslColor& colour);
 	wxBitmap& GetFractionBmp(const std::string& modName, int fractionId);
 
 private:
 	static IconsCollection* m_Instance;
 	std::map<std::string, wxBitmap> m_cachedFractionBmps;
+	std::map<wxString, wxBitmap> m_countryFlagBmps;
+	std::map<wxString, wxBitmap> m_playerColorBmps;
 
 public:
 	wxIcon ICON_EXISTS = wxIcon(exists_xpm);
