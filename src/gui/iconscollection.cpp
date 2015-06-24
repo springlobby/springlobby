@@ -16,6 +16,8 @@
 #include <wx/image.h>
 #include <wx/bitmap.h>
 
+#include <map>
+
 IconsCollection::IconsCollection() {
 	loadCountryFlags();
 }
@@ -54,7 +56,7 @@ void IconsCollection::loadCountryFlags()
 	}
 	
 	//Just in case (these two arrays must have same size!)
-	wxASSERT(flag_str[flagIndex] == flag_xpm[flagIndex]);
+	wxASSERT( (flag_str[flagIndex] == nullptr) && (flag_xpm[flagIndex] == nullptr) );
 }
 
 wxBitmap& IconsCollection::GetHostBmp(bool isSpec) {
@@ -157,7 +159,7 @@ wxBitmap& IconsCollection::GetFlagBmp(wxString& country) {
 		return BMP_UNK_FLAG;	
 	
 	//Search for flag by country's name
-	map<wxString, wxBitmap>::const_iterator itor = m_countryFlagBmps.find(country);
+	std::map<wxString, wxBitmap>::const_iterator itor = m_countryFlagBmps.find(country);
 	//Return flag image if found
 	if (itor != m_countryFlagBmps.end()) {
 		return itor->second();
