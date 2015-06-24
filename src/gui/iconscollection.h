@@ -100,6 +100,9 @@ public:
 	static IconsCollection* Instance();
 	static void Release();
 
+private:
+	void loadCountryFlags();
+	
 public:
 	wxBitmap& GetHostBmp(bool isSpec);
 	wxBitmap& GetReadyBmp(bool isSpec, bool isReady, bool inSync, bool isBot);
@@ -112,7 +115,8 @@ public:
 private:
 	static IconsCollection* m_Instance;
 	std::map<std::string, wxBitmap> m_cachedFractionBmps;
-
+	std::map<wxString, wxBitmap> m_countryFlagBmps;
+	
 public:
 	wxIcon ICON_EXISTS = wxIcon(exists_xpm);
 	wxIcon ICON_NEXISTS = wxIcon(nexists_xpm);

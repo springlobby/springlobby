@@ -10,11 +10,14 @@
 #include "lslunitsync/image.h"
 #include "lslunitsync/unitsync.h"
 
+#include "flagimagedata.h"
+
 #include <wx/icon.h>
 #include <wx/image.h>
 #include <wx/bitmap.h>
 
 IconsCollection::IconsCollection() {
+	loadCountryFlags();
 }
 
 IconsCollection::~IconsCollection() {
@@ -34,6 +37,25 @@ void IconsCollection::Release() {
 }
 
 IconsCollection* IconsCollection::m_Instance = nullptr;
+
+//Create collection populated with flags images
+void IconsCollection::loadCountryFlags()
+{
+	//Just in case - empty collection
+	m_countryFlagBmps.clear();
+	
+	int flagIndex = 0;
+	for (flagIndex = 0 ; flag_str[flagIndex] != nullptr; flagIndex++)
+	{
+		//Just in case (these two arrays must have same size!)
+		wxASSERT(flag_xpm[flagIndex] != nullptr);
+		//Load flag image and store it in collection
+		m_countryFlagBmps[wxString(flag_str[flagIndex])] = wxBitmap(flag_xpm[flagIndex]);
+	}
+	
+	//Just in case (these two arrays must have same size!)
+	wxASSERT(flag_str[flagIndex] == flag_xpm[flagIndex]);
+}
 
 wxBitmap& IconsCollection::GetHostBmp(bool isSpec) {
 	if (isSpec) {
@@ -123,9 +145,27 @@ wxBitmap& IconsCollection::GetUserListStateIcon(const UserStatus& us, bool chano
 	return BMP_NOSTATE;
 }
 
+//Get flag image from collection
 wxBitmap& IconsCollection::GetFlagBmp(wxString& country) {
-	//FIXME
-	return BMP_ADMIN;
+	//Check for some predefined values
+	if ((country.empty()) ||
+	    (country == "??") || // unknown
+	    (country == "XX") || // not sure where this come from, very likely from incomplete bootstrap at login
+	    (country == "A1") || // anonymous proxy
+	    (country == "A2") || // satellite provider
+	    (country == "O1"))   // other country
+		return FLAG_NONE;	
+	
+	//Search for flag by country's name
+	map<wxString, wxBitmap>::const_iterator itor = m_countryFlagBmps.find(country);
+	//Return flag image if found
+	if (itor != m_countryFlagBmps.end()) {
+		return itor->second();
+	//Return empty image otherwise
+	} else {
+		//Just return nothing. I think there is no need for triggering assert
+		return FLAG_NONE;
+	}
 }
 
 wxBitmap& IconsCollection::GetRankBmp(unsigned int rank, bool showLowest) {
