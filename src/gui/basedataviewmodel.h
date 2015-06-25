@@ -15,10 +15,10 @@ public:
 
 public:
 	//Overriden methods from wxDataViewModel
-	virtual void GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const override = 0;
-	virtual wxDataViewItem GetParent(const wxDataViewItem& item) const override;
-	virtual unsigned int GetChildren(const wxDataViewItem& item, wxDataViewItemArray& children) const override;
-	virtual int Compare(const wxDataViewItem& item1, const wxDataViewItem& item2, unsigned int column, bool ascending) const override;
+	virtual void GetValue(wxVariant& , const wxDataViewItem& , unsigned int ) const override = 0;
+	virtual wxDataViewItem GetParent(const wxDataViewItem& ) const override;
+	virtual unsigned int GetChildren(const wxDataViewItem& , wxDataViewItemArray& ) const override;
+	virtual int Compare(const wxDataViewItem& , const wxDataViewItem& , unsigned int , bool ) const override;
 	virtual bool IsListModel() const override;
 
 public:
@@ -32,9 +32,9 @@ public:
 public:
 	//These methods from wxDataViewModel does not require to be overriden in derived classes
 	unsigned int GetColumnCount() const override;
-	bool IsContainer(const wxDataViewItem& item) const override;
-	bool SetValue(const wxVariant& variant, const wxDataViewItem& item, unsigned int col) override;
-	wxString GetColumnType(unsigned int col) const override;
+	bool IsContainer(const wxDataViewItem& ) const override;
+	bool SetValue(const wxVariant& , const wxDataViewItem& , unsigned int ) override;
+	wxString GetColumnType(unsigned int ) const override;
 
 private:
 	std::list<const DataType*> m_ModelData;
@@ -121,8 +121,8 @@ bool BaseDataViewModel<DataType>::IsContainer(const wxDataViewItem& item) const
 }
 
 template <class DataType>
-bool BaseDataViewModel<DataType>::SetValue(const wxVariant& variant,
-					   const wxDataViewItem& item, unsigned int col)
+bool BaseDataViewModel<DataType>::SetValue(const wxVariant& ,
+					   const wxDataViewItem& , unsigned int )
 {
 	return true; //Dymmy method
 }
@@ -165,7 +165,7 @@ inline void BaseDataViewModel<DataType>::UpdateItem(const DataType& item)
 }
 
 template <class DataType>
-wxString BaseDataViewModel<DataType>::GetColumnType(unsigned int col) const
+wxString BaseDataViewModel<DataType>::GetColumnType(unsigned int ) const
 {
 	return wxEmptyString; //Does nothing
 }
