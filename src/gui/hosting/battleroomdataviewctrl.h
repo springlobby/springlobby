@@ -32,8 +32,8 @@ public:
 	void OnUserMenuCreateGroup(wxCommandEvent& event);
 
 private:
-	void UpdateUser(const int& index);
-	void UpdateList();
+	void OnItemActivatedEvent(wxDataViewEvent& event);
+	void OnContextMenuEvent(wxDataViewEvent& event);
 
 	void OnListRightClick(wxListEvent& event);
 	void OnColClick(wxListEvent& event);
@@ -43,7 +43,6 @@ private:
 	void OnSideSelect(wxCommandEvent& event);
 	void OnHandicapSelect(wxCommandEvent& event);
 	void OnSpecSelect(wxCommandEvent& event);
-	void OnItemActivatedEvent(wxDataViewEvent& event);
 
 	void OnKickPlayer(wxCommandEvent& event);
 	void OnRingPlayer(wxCommandEvent& event);

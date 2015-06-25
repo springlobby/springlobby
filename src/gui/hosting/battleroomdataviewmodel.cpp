@@ -139,3 +139,186 @@ IBattle* BattleroomDataViewModel::GetBattle() const {
 void BattleroomDataViewModel::SetBattle(IBattle* battle) {
 	m_Battle = battle;
 }
+
+int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
+		const wxDataViewItem& itemB, unsigned int column, bool ascending) const {
+
+	const User* userA = static_cast<const User*>(itemA.GetID());
+	const User* userB = static_cast<const User*>(itemB.GetID());
+
+	wxASSERT(userA != nullptr);
+	wxASSERT(userB != nullptr);
+
+	int sortingResult;
+
+	switch(column)
+	{
+	case STATUS:
+	{
+		int status1 = 0;
+		if (userA->IsBot()) {
+			status1 = 9;
+		} else {
+			if (userA->BattleStatus().ready)
+				status1 += 5;
+			if (userA->BattleStatus().sync)
+				status1 += 7;
+			if (userA->BattleStatus().spectator)
+				status1 += 10;
+		}
+
+		int status2 = 0;
+		if (userB->IsBot()) {
+			status2 = 9;
+		} else {
+			if (userB->BattleStatus().ready)
+				status2 += 5;
+			if (userB->BattleStatus().sync)
+				status2 += 7;
+			if (userB->BattleStatus().spectator)
+				status2 += 10;
+		}
+
+		if (status1 < status2) {
+			sortingResult = -1;
+		} else if (status1 > status2) {
+			sortingResult = 1;
+		} else {
+			sortingResult = 0;
+		}
+	}
+	break;
+
+	case INGAME:
+	{
+		int u1 = 0, u2 = 0;
+
+		if (userA->GetStatus().bot)
+			u1 += 1000;
+		if (userB->GetStatus().bot)
+			u2 += 1000;
+		if (userA->GetStatus().moderator)
+			u1 += 100;
+		if (userB->GetStatus().moderator)
+			u2 += 100;
+		if (userA->GetStatus().in_game)
+			u1 += -10;
+		if (userB->GetStatus().in_game)
+			u2 += -10;
+		if (userA->GetStatus().away)
+			u1 += -5;
+		if (userB->GetStatus().away)
+			u2 += -5;
+
+		// inverse the order
+		if (u1 < u2) {
+			sortingResult = -1;
+		} else if (u1 > u2) {
+			sortingResult = 1;
+		} else {
+			sortingResult = 0;
+		}
+	}
+	break;
+
+	case FACTION:
+		if (userA->BattleStatus().spectator) {
+			sortingResult = -1;
+		} else if(userB->BattleStatus().spectator) {
+			sortingResult = 1;
+		} else {
+			sortingResult = (userA->BattleStatus().side - userB->BattleStatus().side);
+		}
+		break;
+
+	case COLOUR:
+	{
+		int color1_r, color1_g, color1_b;
+
+		if (userA->BattleStatus().spectator) {
+			sortingResult = -1;
+			break;
+		}
+		color1_r = userA->BattleStatus().colour.Red();
+		color1_g = userA->BattleStatus().colour.Green();
+		color1_b = userA->BattleStatus().colour.Blue();
+
+		int color2_r, color2_g, color2_b;
+
+		if (userB->BattleStatus().spectator) {
+			sortingResult = 1;
+			break;
+		}
+		color2_r = userB->BattleStatus().colour.Red();
+		color2_g = userB->BattleStatus().colour.Green();
+		color2_b = userB->BattleStatus().colour.Blue();
+
+		if ((color1_r + color1_g + color1_b) / 3 < (color2_r + color2_g + color2_b) / 3) {
+			sortingResult = -1;
+		} else if ((color1_r + color1_g + color1_b) / 3 > (color2_r + color2_g + color2_b) / 3) {
+			sortingResult = 1;
+		} else {
+			sortingResult = 0;
+		}
+	}
+	break;
+
+	case COUNTRY:
+		if (userA->GetCountry() < userB->GetCountry()) {
+			sortingResult = -1;
+		} else if(userA->GetCountry() > userB->GetCountry()) {
+			sortingResult = 1;
+		} else {
+			sortingResult = 0;
+		}
+		break;
+
+	case RANK:
+		sortingResult = (userA->GetRank() - userB->GetRank());
+		break;
+
+	case NICKNAME:
+		sortingResult = BaseDataViewModel::Compare(itemA, itemB, column, true);
+		break;
+
+	case TRUESKILL:
+		sortingResult =(userA->GetTrueSkill() - userB->GetTrueSkill());
+		break;
+
+	case TEAM:
+		if (userA->BattleStatus().spectator) {
+			sortingResult = -1;
+		} else if(userB->BattleStatus().spectator) {
+			sortingResult = 1;
+		} else {
+			sortingResult = (userA->BattleStatus().team - userB->BattleStatus().team);
+		}
+		break;
+
+	case ALLY:
+		if (userA->BattleStatus().spectator) {
+			sortingResult = -1;
+		} else if(userB->BattleStatus().spectator) {
+			sortingResult = 1;
+		} else {
+			sortingResult = (userA->BattleStatus().ally - userB->BattleStatus().ally);
+		}
+		break;
+
+	case BONUS:
+		if (userA->BattleStatus().spectator) {
+			sortingResult = -1;
+		} else if(userB->BattleStatus().spectator) {
+			sortingResult = 1;
+		} else {
+			sortingResult = (userA->BattleStatus().handicap - userB->BattleStatus().handicap);
+		}
+		break;
+
+	default:
+		wxASSERT(false);
+		sortingResult = 0;
+	}
+
+	return ascending ? sortingResult : (sortingResult * (-1));
+}

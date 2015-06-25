@@ -7,10 +7,11 @@
 #include "gui\ui.h"
 #include "gui\mainwindow.h"
 
+
 BEGIN_EVENT_TABLE(BattleroomDataViewCtrl, BaseDataViewCtrl)
-//	EVT_LIST_ITEM_RIGHT_CLICK(BRLIST_LIST, BattleroomDataViewCtrl::OnListRightClick)
 //	EVT_MENU(BRLIST_SPEC, BattleroomDataViewCtrl::OnSpecSelect)
 //	EVT_MENU(BRLIST_KICK, BattleroomDataViewCtrl::OnKickPlayer)
+	EVT_DATAVIEW_ITEM_CONTEXT_MENU(BATTLEROOM_VIEW_ID, BattleroomDataViewCtrl::OnContextMenuEvent)
 	EVT_DATAVIEW_ITEM_ACTIVATED(BATTLEROOM_VIEW_ID, BattleroomDataViewCtrl::OnItemActivatedEvent)
 //	EVT_MENU(BRLIST_RING, BattleroomDataViewCtrl::OnRingPlayer)
 //	EVT_MENU(BRLIST_COLOUR, BattleroomDataViewCtrl::OnColourSelect)
@@ -111,4 +112,23 @@ void BattleroomDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& event) {
 	}
 
 	ui().mw().OpenPrivateChat(*user);
+}
+
+
+void BattleroomDataViewCtrl::OnContextMenuEvent(wxDataViewEvent& event) {
+	if (m_ViewIsReadOnly) {
+		return;
+	}
+
+	const User* user = GetSelectedItem();
+
+	if (user == nullptr) {
+		return;
+	}
+
+	if (user->IsBot()) {
+
+	} else {
+
+	}
 }

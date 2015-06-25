@@ -220,7 +220,6 @@ set(springlobbySrc
 	gui/hosting/autobalancedialog.cpp
 	gui/hosting/battlemaptab.cpp
 	gui/hosting/battleoptionstab.cpp
-	gui/hosting/battleroomlistctrl.cpp
 	gui/hosting/battleroomtab.cpp
 	gui/hosting/hostbattledialog.cpp
 	gui/hosting/mainjoinbattletab.cpp

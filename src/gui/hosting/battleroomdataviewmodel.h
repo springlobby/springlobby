@@ -14,6 +14,7 @@ public:
 	virtual ~BattleroomDataViewModel();
 
     virtual void GetValue( wxVariant &variant, const wxDataViewItem &item, unsigned int col ) const override;
+    virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
 
     IBattle* GetBattle() const;
     void SetBattle(IBattle*);
