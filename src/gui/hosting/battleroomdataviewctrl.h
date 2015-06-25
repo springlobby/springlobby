@@ -43,7 +43,7 @@ private:
 	void OnSideSelect(wxCommandEvent& event);
 	void OnHandicapSelect(wxCommandEvent& event);
 	void OnSpecSelect(wxCommandEvent& event);
-	void OnActivateItem(wxListEvent& event);
+	void OnItemActivatedEvent(wxDataViewEvent& event);
 
 	void OnKickPlayer(wxCommandEvent& event);
 	void OnRingPlayer(wxCommandEvent& event);
@@ -70,15 +70,15 @@ private:
 private:
 	enum {
 		BATTLEROOM_VIEW_ID = wxID_HIGHEST,
-		BRLIST_TEAM,
-		BRLIST_ALLY = BRLIST_TEAM + 1000,
-		BRLIST_COLOUR = BRLIST_ALLY + 1000,
-		BRLIST_SIDE = BRLIST_COLOUR + 1000,
-		BRLIST_HANDICAP = BRLIST_SIDE + 1000,
-		BRLIST_SPEC,
-		BRLIST_KICK,
-		BRLIST_RING,
-		BRLIST_ADDTOGROUP
+		BATTLEROOM_VIEW_TEAM,
+		BATTLEROOM_VIEW_ALLY = BATTLEROOM_VIEW_TEAM + 1000,
+		BATTLEROOM_VIEW_COLOUR = BATTLEROOM_VIEW_ALLY + 1000,
+		BATTLEROOM_VIEW_SIDE = BATTLEROOM_VIEW_COLOUR + 1000,
+		BATTLEROOM_VIEW_HANDICAP = BATTLEROOM_VIEW_SIDE + 1000,
+		BATTLEROOM_VIEW_SPEC,
+		BATTLEROOM_VIEW_KICK,
+		BATTLEROOM_VIEW_RING,
+		BATTLEROOM_VIEW_ADDTOGROUP
 	};
 	enum ColumnIndexes
 	{
@@ -94,6 +94,7 @@ private:
 		ALLY,
 		BONUS
 	};
+
 	DECLARE_EVENT_TABLE()
 };
 

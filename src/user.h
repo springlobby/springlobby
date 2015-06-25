@@ -352,6 +352,9 @@ public:
 	UserStatus::RankContainer GetRank() const;
 	std::string GetClan();
 
+	bool IsHuman() const;
+	bool IsBot() const;
+
 	int GetFlagIconIndex() const
 	{
 		return m_flagicon_idx;

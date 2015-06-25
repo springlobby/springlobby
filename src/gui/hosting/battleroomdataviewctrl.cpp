@@ -3,9 +3,18 @@
 #include "battleroomdataviewctrl.h"
 #include "battleroomdataviewmodel.h"
 
+#include "user.h"
+#include "gui\ui.h"
+#include "gui\mainwindow.h"
 
 BEGIN_EVENT_TABLE(BattleroomDataViewCtrl, BaseDataViewCtrl)
-
+//	EVT_LIST_ITEM_RIGHT_CLICK(BRLIST_LIST, BattleroomDataViewCtrl::OnListRightClick)
+//	EVT_MENU(BRLIST_SPEC, BattleroomDataViewCtrl::OnSpecSelect)
+//	EVT_MENU(BRLIST_KICK, BattleroomDataViewCtrl::OnKickPlayer)
+	EVT_DATAVIEW_ITEM_ACTIVATED(BATTLEROOM_VIEW_ID, BattleroomDataViewCtrl::OnItemActivatedEvent)
+//	EVT_MENU(BRLIST_RING, BattleroomDataViewCtrl::OnRingPlayer)
+//	EVT_MENU(BRLIST_COLOUR, BattleroomDataViewCtrl::OnColourSelect)
+//	EVT_MENU(BRLIST_HANDICAP, BattleroomDataViewCtrl::OnHandicapSelect)
 END_EVENT_TABLE()
 
 BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxWindow* parent, IBattle* battle, bool readOnly, bool showInGame) :
@@ -88,4 +97,18 @@ void BattleroomDataViewCtrl::UpdateUser(User& user) {
 	wxASSERT(m_DataModel != nullptr);
 
 	m_DataModel->UpdateItem(user);
+}
+
+void BattleroomDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& event) {
+	if (m_ViewIsReadOnly) {
+		return;
+	}
+
+	const User* user = GetSelectedItem();
+
+	if (user == nullptr || user->IsBot()) {
+		return;
+	}
+
+	ui().mw().OpenPrivateChat(*user);
 }
