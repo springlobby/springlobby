@@ -10,7 +10,7 @@
 class Ui;
 class IBattle;
 struct BattleBot;
-class BattleroomListCtrl;
+class BattleroomDataViewCtrl;
 class User;
 class ChatPanel;
 class wxCommandEvent;
@@ -41,9 +41,7 @@ public:
 	BattleRoomTab(wxWindow* parent, IBattle* battle);
 	~BattleRoomTab();
 
-	BattleroomListCtrl& GetPlayersListCtrl();
-
-	void UpdateUser(User& user);
+	void UpdateUser(User& user, bool userJustAdded = false);
 
 	IBattle* GetBattle();
 	ChatPanel& GetChatPanel();
@@ -170,7 +168,7 @@ private:
 
 	wxComboBox* m_map_combo;
 
-	BattleroomListCtrl* m_players;
+	BattleroomDataViewCtrl* m_players;
 	ChatPanel* m_chat;
 	wxSplitterWindow* m_splitter;
 

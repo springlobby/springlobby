@@ -20,7 +20,7 @@ BEGIN_EVENT_TABLE(PlaybackDataView, BaseDataViewCtrl)
 	EVT_CHAR(PlaybackDataView::OnKeyDown)
 END_EVENT_TABLE()
 
-PlaybackDataView::PlaybackDataView(wxString& dataViewName, wxWindow* parent)
+PlaybackDataView::PlaybackDataView(const wxString& dataViewName, wxWindow* parent)
     : BaseDataViewCtrl(dataViewName, parent, REPLAY_DATAVIEW_ID)
 {
 	m_Parent = parent;

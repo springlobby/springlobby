@@ -16,7 +16,7 @@ class wxKeyEvent;
 class PlaybackDataView : public BaseDataViewCtrl<StoredGame>
 {
 public:
-	PlaybackDataView(wxString& dataViewName, wxWindow* parent);
+	PlaybackDataView(const wxString& dataViewName, wxWindow* parent);
 	virtual ~PlaybackDataView();
 
 	void AddPlayback(const StoredGame& replay);
@@ -30,7 +30,7 @@ public:
 
 private:
 	void OnKeyDown(wxKeyEvent& event);
-	
+
 public:
 	enum {
 		REPLAY_DATAVIEW_ID,
@@ -41,7 +41,7 @@ public:
 private:
 	wxMenu* m_ContextMenu;
 	wxWindow* m_Parent;
-	
+
 private:
 	enum ColumnIndexes {
 		DATE = 0,

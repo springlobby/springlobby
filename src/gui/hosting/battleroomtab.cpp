@@ -26,6 +26,7 @@
 #include <wx/choice.h>
 #include <wx/numdlg.h>
 #include <wx/generic/statbmpg.h>
+#include <wx/menu.h>
 
 #include <stdexcept>
 
@@ -34,7 +35,7 @@
 #include "ibattle.h"
 #include "utils/conversion.h"
 #include "utils/uievents.h"
-#include "battleroomlistctrl.h"
+#include "battleroomdataviewctrl.h"
 #include "gui/chatpanel.h"
 #include "gui/mapctrl.h"
 #include "gui/uiutils.h"
@@ -56,6 +57,8 @@
 #include "autohostmanager.h"
 #include "votepanel.h"
 #include "servermanager.h"
+#include "gui/controls.h"
+#include "gui/ui.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -165,7 +168,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	//m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
 
 	m_votePanel = new VotePanel(this);
-	m_players = new BattleroomListCtrl(m_player_panel, m_battle, false, true);
+	m_players = new BattleroomDataViewCtrl("BattleroomDataViewCtrl_Battleroom", m_player_panel, m_battle, false, true);
 	m_chat = new ChatPanel(m_splitter, m_battle);
 	m_chat->SetVotePanel(m_votePanel);
 
@@ -476,11 +479,7 @@ void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
 	}
 }
 
-BattleroomListCtrl& BattleRoomTab::GetPlayersListCtrl()
-{
-	ASSERT_LOGIC(m_players != 0, "m_players = 0");
-	return *m_players;
-}
+
 
 void BattleRoomTab::UpdateMapInfoSummary()
 {
@@ -512,18 +511,23 @@ void BattleRoomTab::UpdateStatsLabels()
 
 void BattleRoomTab::UpdateMyInfo()
 {
-	if (!m_battle)
+	if (m_battle == nullptr) {
 		return;
+	}
 	m_players->UpdateUser(m_battle->GetMe());
-	m_players->RefreshVisibleItems();
 }
 
-void BattleRoomTab::UpdateUser(User& user)
-{
 
-	if (!m_battle)
+void BattleRoomTab::UpdateUser(User& user, bool userJustAdded)
+{
+	if (m_battle == nullptr) {
 		return;
-	m_players->UpdateUser(user);
+	}
+
+	//Do not update user that was just added (he already updated)
+	if (userJustAdded == false) {
+		m_players->UpdateUser(user);
+	}
 
 	m_minimap->UpdateMinimap();
 
@@ -615,7 +619,7 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 
 void BattleRoomTab::OnLeave(wxCommandEvent& /*unused*/)
 {
-	if (m_battle == NULL)
+	if (m_battle == nullptr)
 		return;
 	m_battle->Leave();
 }
@@ -900,24 +904,26 @@ void BattleRoomTab::OnRingUnreadyUnsynced(wxCommandEvent& /*unused*/)
 
 void BattleRoomTab::OnShowManagePlayersMenu(wxCommandEvent& /*unused*/)
 {
-	if (!m_battle)
+	if (m_battle == nullptr) {
 		return;
+	}
 	PopupMenu(m_manage_users_mnu);
 }
 
 void BattleRoomTab::OnUserJoined(User& user)
 {
-	if (!m_battle)
+	if (m_battle == nullptr) {
 		return;
-	if (!user.BattleStatus().IsBot())
+	}
+
+	if (user.BattleStatus().IsBot() == false) {
 		m_chat->Joined(user);
+	}
+
 	m_players->AddUser(user);
 
-	UpdateUser(user);
+	UpdateUser(user, true /*do not update user twice*/);
 
-	if (&user == &m_battle->GetMe()) {
-		m_players->SetSelectedIndex(m_players->GetIndexFromData(&user));
-	}
 	UpdateStatsLabels();
 
 	UiEvents::GetStatusEventSender(UiEvents::addStatusMessage).SendEvent(UiEvents::StatusData(wxString::Format(_("%s joined your active battle"), TowxString(user.GetNick()).c_str()), 1));
@@ -971,9 +977,10 @@ long BattleRoomTab::AddMMOptionsToList(long pos, LSL::Enum::GameOption optFlag)
 
 void BattleRoomTab::UpdateHighlights()
 {
-	if (!m_battle)
+	if (m_battle == nullptr) {
 		return;
-	m_players->RefreshVisibleItems();
+	}
+	m_players->Refresh();
 }
 
 
@@ -1116,9 +1123,10 @@ void BattleRoomTab::OnOptionActivate(wxListEvent& event)
 
 void BattleRoomTab::SortPlayerList()
 {
-	if (!m_battle)
+	if (m_battle == nullptr) {
 		return;
-	m_players->SortList();
+	}
+	m_players->Resort();
 }
 
 void BattleRoomTab::SetBattle(IBattle* battle)
@@ -1168,6 +1176,7 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostModName())));
 		m_color_sel->SetColor(lslTowxColour(m_battle->GetMe().BattleStatus().colour));
 		for (UserList::user_map_t::size_type i = 0; i < m_battle->GetNumUsers(); i++) {
+			//TODO: disable UI update while adding users?
 			m_players->AddUser(m_battle->GetUser(i));
 		}
 

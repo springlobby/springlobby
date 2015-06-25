@@ -8,7 +8,7 @@ BEGIN_EVENT_TABLE(BattleroomDataViewCtrl, BaseDataViewCtrl)
 
 END_EVENT_TABLE()
 
-BattleroomDataViewCtrl::BattleroomDataViewCtrl(wxString& dataViewName, wxWindow* parent, IBattle* battle, bool readOnly, bool showInGame) :
+BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxWindow* parent, IBattle* battle, bool readOnly, bool showInGame) :
 	BaseDataViewCtrl(dataViewName, parent, BATTLEROOM_VIEW_ID){
 
 	m_ViewIsReadOnly = readOnly;
@@ -82,4 +82,10 @@ void BattleroomDataViewCtrl::RemoveUser(User& user) {
 void BattleroomDataViewCtrl::SetTipWindowText(const long item_hit,
 		const wxPoint& position) {
 	//TODO: implement
+}
+
+void BattleroomDataViewCtrl::UpdateUser(User& user) {
+	wxASSERT(m_DataModel != nullptr);
+
+	m_DataModel->UpdateItem(user);
 }

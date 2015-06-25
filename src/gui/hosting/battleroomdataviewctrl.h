@@ -18,7 +18,7 @@ class wxMenuItem;
 
 class BattleroomDataViewCtrl: public BaseDataViewCtrl<User> {
 public:
-	BattleroomDataViewCtrl(wxString& dataViewName, wxWindow* parent, IBattle* battle, bool readOnly, bool showInGame);
+	BattleroomDataViewCtrl(const wxString& dataViewName, wxWindow* parent, IBattle* battle, bool readOnly, bool showInGame);
 	virtual ~BattleroomDataViewCtrl();
 
 	void SetBattle(IBattle* battle);

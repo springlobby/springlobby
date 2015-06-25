@@ -69,8 +69,7 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 	wxBoxSizer* m_replaylist_sizer;
 	m_replaylist_sizer = new wxBoxSizer(wxVERTICAL);
 
-	wxString name("replays_dataview");
-	m_replay_dataview = new PlaybackDataView(name, this);
+	m_replay_dataview = new PlaybackDataView("replays_dataview", this);
 	m_replaylist_sizer->Add(m_replay_dataview, 1, wxEXPAND);
 
 	m_main_sizer->Add(m_replaylist_sizer, 1, wxEXPAND);
@@ -105,8 +104,7 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 
 	m_info_sizer->Add(m_data_sizer, 1, wxEXPAND | wxALL, 0);
 
-	wxString battleName(_T("playback_battleroom_view"));
-	m_players = new BattleroomDataViewCtrl(battleName, this, nullptr /*battle*/, true /*readonly*/, false /*show ingname status*/);
+	m_players = new BattleroomDataViewCtrl("playback_battleroom_view", this, nullptr /*battle*/, true /*readonly*/, false /*show ingname status*/);
 	m_info_sizer->Add(m_players, 2, wxALL | wxEXPAND, 0);
 
 	m_main_sizer->Add(m_info_sizer, 0, wxEXPAND, 5);
