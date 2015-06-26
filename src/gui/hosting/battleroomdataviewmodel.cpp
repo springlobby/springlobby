@@ -222,10 +222,12 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 	break;
 
 	case FACTION:
-		if (userA->BattleStatus().spectator) {
-			sortingResult = -1;
-		} else if(userB->BattleStatus().spectator) {
-			sortingResult = 1;
+		if (userA->BattleStatus().spectator && (userB->BattleStatus().spectator == false)) {
+			return 1;
+		} else if(userB->BattleStatus().spectator && (userA->BattleStatus().spectator == false)) {
+			return -1;
+		} else if (userA->BattleStatus().spectator && userB->BattleStatus().spectator) {
+			return 0;
 		} else {
 			sortingResult = (userA->BattleStatus().side - userB->BattleStatus().side);
 		}
@@ -286,30 +288,36 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 		break;
 
 	case TEAM:
-		if (userA->BattleStatus().spectator) {
-			sortingResult = -1;
-		} else if(userB->BattleStatus().spectator) {
-			sortingResult = 1;
+		if (userA->BattleStatus().spectator && (userB->BattleStatus().spectator == false)) {
+			return 1;
+		} else if(userB->BattleStatus().spectator && (userA->BattleStatus().spectator == false)) {
+			return -1;
+		} else if (userA->BattleStatus().spectator && userB->BattleStatus().spectator) {
+			return 0;
 		} else {
 			sortingResult = (userA->BattleStatus().team - userB->BattleStatus().team);
 		}
 		break;
 
 	case ALLY:
-		if (userA->BattleStatus().spectator) {
-			sortingResult = -1;
-		} else if(userB->BattleStatus().spectator) {
-			sortingResult = 1;
+		if (userA->BattleStatus().spectator && (userB->BattleStatus().spectator == false)) {
+			return 1;
+		} else if(userB->BattleStatus().spectator && (userA->BattleStatus().spectator == false)) {
+			return -1;
+		} else if (userA->BattleStatus().spectator && userB->BattleStatus().spectator) {
+			return 0;
 		} else {
 			sortingResult = (userA->BattleStatus().ally - userB->BattleStatus().ally);
 		}
 		break;
 
 	case BONUS:
-		if (userA->BattleStatus().spectator) {
-			sortingResult = -1;
-		} else if(userB->BattleStatus().spectator) {
-			sortingResult = 1;
+		if (userA->BattleStatus().spectator && (userB->BattleStatus().spectator == false)) {
+			return 1;
+		} else if(userB->BattleStatus().spectator && (userA->BattleStatus().spectator == false)) {
+			return -1;
+		} else if (userA->BattleStatus().spectator && userB->BattleStatus().spectator) {
+			return 0;
 		} else {
 			sortingResult = (userA->BattleStatus().handicap - userB->BattleStatus().handicap);
 		}
@@ -320,5 +328,6 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 		sortingResult = 0;
 	}
 
+	//Return direct sort order or reversed depending on ascending flag
 	return ascending ? sortingResult : (sortingResult * (-1));
 }
