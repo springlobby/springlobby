@@ -69,7 +69,7 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 		break;
 
 	default:
-		wxLogError(wxString::Format("PlaybackDataModel::GetValue: column=%d", static_cast<int>(col)));
+		wxLogWarning(wxString::Format("PlaybackDataModel::GetValue: column=%d", static_cast<int>(col)));
 		wxASSERT(false);
 	}
 }
