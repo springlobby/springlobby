@@ -5,6 +5,8 @@
 
 #include "gui/basedataviewctrl.h"
 
+#include "gui/usermenu.h"
+
 #include <vector>
 
 class User;
@@ -16,29 +18,29 @@ class wxString;
 class wxMenu;
 class wxMenuItem;
 
+
+
 class BattleroomDataViewCtrl: public BaseDataViewCtrl<User> {
 public:
 	BattleroomDataViewCtrl(const wxString& dataViewName, wxWindow* parent, IBattle* battle, bool readOnly, bool showInGame);
 	virtual ~BattleroomDataViewCtrl();
 
 	void SetBattle(IBattle* battle);
-	IBattle& GetBattle();
 
 	void AddUser(User& user);
 	void RemoveUser(User& user);
 	void UpdateUser(User& user);
 
-	void OnUserMenuDeleteFromGroup(wxCommandEvent& event);
 	void OnUserMenuCreateGroup(wxCommandEvent& event);
+	void OnUserMenuAddToGroup(wxCommandEvent& event);
+	void OnUserMenuDeleteFromGroup(wxCommandEvent& event);
 
 private:
-	void OnItemActivatedEvent(wxDataViewEvent& event);
 	void OnContextMenuEvent(wxDataViewEvent& event);
+	void OnItemActivatedEvent(wxDataViewEvent& event);
+	void OnAllySelectEvent(wxCommandEvent& event);
+	void OnTeamSelectEvent(wxCommandEvent& event);
 
-	void OnListRightClick(wxListEvent& event);
-	void OnColClick(wxListEvent& event);
-	void OnTeamSelect(wxCommandEvent& event);
-	void OnAllySelect(wxCommandEvent& event);
 	void OnColourSelect(wxCommandEvent& event);
 	void OnSideSelect(wxCommandEvent& event);
 	void OnHandicapSelect(wxCommandEvent& event);
@@ -46,25 +48,24 @@ private:
 
 	void OnKickPlayer(wxCommandEvent& event);
 	void OnRingPlayer(wxCommandEvent& event);
-	void OnUserMenuAddToGroup(wxCommandEvent& event);
 
 	virtual void SetTipWindowText(const long item_hit, const wxPoint& position);
 
 private:
-	wxString GetSelectedUserNick();
+	void CreateContextMenu();
+	void UpdateContextMenuSides();
 
+private:
 	IBattle* m_Battle;
-
-	User* m_sel_user;
-
-	wxMenu* m_sides;
-	std::vector<wxMenuItem*> side_vector;
-	wxMenuItem* m_spec_item;
-
-	wxMenuItem* m_handicap_item;
 
 	bool m_ViewIsReadOnly;
 	bool m_ShowInGame;
+
+	SL_GENERIC::UserMenu<BattleroomDataViewCtrl>* m_contextMenu;
+	wxMenu* m_sides;
+	std::vector<wxMenuItem*> side_vector;
+	wxMenuItem* m_spec_item;
+	wxMenuItem* m_handicap_item;
 
 private:
 	enum {

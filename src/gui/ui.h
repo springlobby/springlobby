@@ -112,7 +112,7 @@ public:
 	bool OnPresetRequiringMap(const wxString& mapname);
 
 	bool IsThisMe(User& other) const;
-	bool IsThisMe(User* other) const;
+	bool IsThisMe(const User* other) const;
 	bool IsThisMe(const wxString& other) const;
 
 	int TestHostPort(unsigned int port) const;

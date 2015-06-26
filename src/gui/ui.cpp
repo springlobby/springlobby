@@ -68,7 +68,6 @@ SLCONFIG("/General/UpdateUrl", "http://version.springlobby.info/current.txt", "U
 
 
 static unsigned int s_reconnect_delay_ms = 6 * 1000;	  //initial reconnect delay
-static const unsigned int s_max_reconnect_delay = 240 * 1000; //max delay for reconnecting
 
 Ui& ui()
 {
@@ -845,9 +844,9 @@ bool Ui::IsThisMe(User& other) const
 	return IsThisMe(TowxString(other.GetNick()));
 }
 
-bool Ui::IsThisMe(User* other) const
+bool Ui::IsThisMe(const User* other) const
 {
-	return ((other != 0) && IsThisMe(TowxString(other->GetNick())));
+	return ((other != nullptr) && IsThisMe(TowxString(other->GetNick())));
 }
 
 bool Ui::IsThisMe(const wxString& other) const
