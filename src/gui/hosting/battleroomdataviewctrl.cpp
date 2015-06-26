@@ -4,8 +4,8 @@
 #include "battleroomdataviewmodel.h"
 
 #include "user.h"
-#include "gui\ui.h"
-#include "gui\mainwindow.h"
+#include "gui/ui.h"
+#include "gui/mainwindow.h"
 
 
 BEGIN_EVENT_TABLE(BattleroomDataViewCtrl, BaseDataViewCtrl)
