@@ -39,31 +39,7 @@ protected:
 	DECLARE_EVENT_TABLE()
 };
 
-template<class DataType>
-inline void BaseDataViewCtrl<DataType>::AdjustColumnsWidth() {
-	const int columnsCount = GetColumnCount();
-	int autoResizableColumnIndex = 0;
-
-	int totalColumnsWidth = 0;
-	for (int colIndex = 0; colIndex < columnsCount; ++colIndex) {
-		const wxDataViewColumn* column = GetColumn(colIndex);
-		//Calculate total columns width (only visible)
-		if (column->IsHidden() == false) {
-			totalColumnsWidth += column->GetWidth();
-			//Resize only visible column, last non-hidden column will be resized
-			autoResizableColumnIndex = colIndex;
-		}
-	}
-
-	wxSize clientSize = GetClientSize();
-
-	wxDataViewColumn* column = GetColumn(autoResizableColumnIndex);
-	const int newSize = clientSize.GetWidth() - (totalColumnsWidth - column->GetWidth());
-	column->SetWidth(newSize);
-}
-
 BEGIN_EVENT_TABLE_TEMPLATE1(BaseDataViewCtrl, wxDataViewCtrl, DataType)
-    EVT_SIZE(BaseDataViewCtrl<DataType>::OnSizeEvent)
 END_EVENT_TABLE()
 
 template<class DataType>
@@ -164,12 +140,6 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties() {
 			cfg().Write(wxString(m_DataViewName + _T("/sorting_order")), sortOrderAscending);
 		}
 	}
-}
-
-template<class DataType>
-inline void BaseDataViewCtrl<DataType>::OnSizeEvent(wxSizeEvent& event) {
-	AdjustColumnsWidth();
-	event.Skip();
 }
 
 #endif /* SRC_GUI_BASEDATAVIEWCTRL_H_ */

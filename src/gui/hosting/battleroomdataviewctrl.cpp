@@ -33,7 +33,7 @@ BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxW
 	m_Battle = nullptr;
 	m_sides = nullptr;
 
-	const int DEFAULT_SIZE = -1;
+	const int DEFAULT_SIZE = wxDVC_DEFAULT_WIDTH;
 	AppendBitmapColumn(_("Status"), STATUS, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendBitmapColumn(_("Ingame"), INGAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendBitmapColumn(_("Faction"), FACTION, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
