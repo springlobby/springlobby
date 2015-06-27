@@ -28,7 +28,7 @@
 #include "iserver.h"
 #include "serverselector.h"
 #include "gui/mapctrl.h"
-#include "gui/nicklistctrl.h"
+#include "gui/nickdataviewctrl.h"
 #include "gui/mainwindow.h"
 #include "battlelistfilter.h"
 #include "iconimagelist.h"
@@ -42,19 +42,18 @@
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
-
-EVT_BUTTON(BattleListTab::BATTLE_JOIN, BattleListTab::OnJoin)
-EVT_BUTTON(BattleListTab::BATTLE_HOST, BattleListTab::OnHost)
-EVT_LIST_ITEM_ACTIVATED(BattleListCtrl::BLIST_LIST, BattleListTab::OnListJoin)
-EVT_LIST_ITEM_SELECTED(BattleListCtrl::BLIST_LIST, BattleListTab::OnSelect)
-EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_ACTIV, BattleListTab::OnFilterActiv)
-#if wxUSE_TOGGLEBTN
-EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
-EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnInfoShow)
-#else
-EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
-EVT_CHECKBOX(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnOnInfoShow)
-#endif
+	EVT_BUTTON(BattleListTab::BATTLE_JOIN, BattleListTab::OnJoin)
+	EVT_BUTTON(BattleListTab::BATTLE_HOST, BattleListTab::OnHost)
+	EVT_LIST_ITEM_ACTIVATED(BattleListCtrl::BLIST_LIST, BattleListTab::OnListJoin)
+	EVT_LIST_ITEM_SELECTED(BattleListCtrl::BLIST_LIST, BattleListTab::OnSelect)
+	EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_ACTIV, BattleListTab::OnFilterActiv)
+	#if wxUSE_TOGGLEBTN
+	EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
+	EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnInfoShow)
+	#else
+	EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
+	EVT_CHECKBOX(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnOnInfoShow)
+	#endif
 END_EVENT_TABLE()
 
 SLCONFIG("/BattleFilter/Active", false, "determines if battle list filter is active");
@@ -114,7 +113,7 @@ BattleListTab::BattleListTab(wxWindow* parent)
 
 	m_info_sizer->Add(m_data_sizer, 1, wxEXPAND, 5);
 
-	m_players = new NickListCtrl(this, false, 0, true, _T("battlelist_nicklist"));
+	m_players = new NickDataViewCtrl(_T("NickDataViewCtrl_BattleListTab"), this, false, 0, true, _T("battlelist_nicklist"));
 	m_info_sizer->Add(m_players, 1, wxALL | wxEXPAND, 5);
 
 	m_main_sizer->Add(m_info_sizer, 0, wxEXPAND, 5);

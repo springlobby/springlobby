@@ -199,6 +199,8 @@ set(springlobbySrc
 	gui/ui.cpp
 	gui/wxtextctrlhist.cpp
 	gui/iconscollection.cpp
+	gui/nickdataviewctrl.cpp
+	gui/nickdataviewmodel.cpp
 	
 	gui/notifications/libnotify.cpp
 	gui/notifications/notificationmanager.cpp

@@ -13,7 +13,7 @@ class Battle;
 class BattleListCtrl;
 class BattleListFilter;
 class MapCtrl;
-class NickListCtrl;
+class NickDataViewCtrl;
 class wxCommandEvent;
 class wxListEvent;
 class wxStaticText;
@@ -80,7 +80,7 @@ private:
 	wxStaticText* m_spec_lbl;
 	wxStaticText* m_spec_text;
 	wxStaticText* m_battle_num;
-	NickListCtrl* m_players;
+	NickDataViewCtrl* m_players;
 	wxStaticLine* m_buttons_sep;
 	wxButton* m_host_btn;
 	wxButton* m_join_btn;

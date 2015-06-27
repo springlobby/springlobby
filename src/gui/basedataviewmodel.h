@@ -25,9 +25,10 @@ public:
 	//Custom methods
 	bool AddItem(const DataType&);
 	bool RemoveItem(const DataType&);
-	bool ContainsItem(const DataType&);
+	bool ContainsItem(const DataType&) const;
 	void Clear();
 	void UpdateItem(const DataType&);
+	int GetItemsCount() const;
 
 public:
 	//These methods from wxDataViewModel does not require to be overriden in derived classes
@@ -135,7 +136,7 @@ inline bool BaseDataViewModel<DataType>::IsListModel() const
 }
 
 template <class DataType>
-inline bool BaseDataViewModel<DataType>::ContainsItem(const DataType& checkedItem)
+inline bool BaseDataViewModel<DataType>::ContainsItem(const DataType& checkedItem) const
 {
 	const DataType* checkItemPointer = &checkedItem;
 	for (const DataType* item : m_ModelData) {
@@ -168,6 +169,12 @@ template <class DataType>
 wxString BaseDataViewModel<DataType>::GetColumnType(unsigned int ) const
 {
 	return wxEmptyString; //Does nothing
+}
+
+template <class DataType>
+int BaseDataViewModel<DataType>::GetItemsCount() const
+{
+	return static_cast<int>(m_ModelData.size());
 }
 
 #endif /* SRC_GUI_BASEDATAVIEWMODEL_H_ */
