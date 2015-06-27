@@ -1,9 +1,4 @@
-/*
- * nickdataviewctrl.cpp
- *
- *  Created on: 27 июня 2015 г.
- *      Author: Руслан
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "nickdataviewctrl.h"
 
@@ -29,7 +24,7 @@ BEGIN_EVENT_TABLE(NickDataViewCtrl, BaseDataViewCtrl)
 	EVT_DATAVIEW_ITEM_CONTEXT_MENU(NICK_DATAVIEW_CTRL_ID, NickDataViewCtrl::OnContextMenuEvent)
 END_EVENT_TABLE()
 
-NickDataViewCtrl::NickDataViewCtrl(const wxString& dataViewName, wxWindow* parent, bool show_header, ChatPanelMenu* popup, bool highlight)
+NickDataViewCtrl::NickDataViewCtrl(const wxString& dataViewName, wxWindow* parent, bool show_header, ChatPanelMenu* popup, bool /*highlight*/)
 	: BaseDataViewCtrl(dataViewName, parent, NICK_DATAVIEW_CTRL_ID) {
 	m_menu = popup;
 
@@ -182,7 +177,7 @@ bool NickDataViewCtrl::IsContainsRealUser(const User& user) const {
 	return true;
 }
 
-void NickDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& event) {
+void NickDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& /*event*/) {
 
 	const User* user = GetSelectedItem();
 
@@ -190,16 +185,18 @@ void NickDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& event) {
 		return;
 	}
 
+	//Open private chat with user
 	ui().mw().OpenPrivateChat(*user, true); //true --> setfoucs
 }
 
-void NickDataViewCtrl::OnContextMenuEvent(wxDataViewEvent& event) {
+void NickDataViewCtrl::OnContextMenuEvent(wxDataViewEvent& /*event*/) {
 	if (m_menu != nullptr) {
 		//no need to popup the menu when there's no user selected
 		const User* user = GetSelectedItem();
 		if (user == nullptr) {
 			return;
 		}
+
 		wxString nick = wxString(user->GetNick());
 		SL_GENERIC::UserMenu<ChatPanelMenu>* popup = m_menu->GetUserMenu();
 		popup->EnableItems(true, nick);

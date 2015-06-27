@@ -1,9 +1,4 @@
-/*
- * nickdataviewctrl.h
- *
- *  Created on: 27 июня 2015 г.
- *      Author: Руслан
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #ifndef SRC_GUI_NICKDATAVIEWCTRL_H_
 #define SRC_GUI_NICKDATAVIEWCTRL_H_
@@ -48,8 +43,6 @@ private:
 	void SetTipWindowText(const long item_hit, const wxPoint& position);
 
 	void HighlightItem(long item);
-//	void OnActivateItem(wxListEvent& event);
-//	void OnShowMenu(wxContextMenuEvent& event);
 
 	bool checkFilteringConditions(const User*) const;
 
