@@ -41,6 +41,8 @@ private:
 	void ClearRealUsers();
 	bool IsContainsRealUser(const User& user) const;
 
+	void OnItemActivatedEvent(wxDataViewEvent& event);
+
 	void DoUsersFilter();
 	void SetTipWindowText(const long item_hit, const wxPoint& position);
 

@@ -19,6 +19,7 @@
 #include <wx/dataobj.h>
 #include <wx/bmpbuttn.h>
 #include <wx/stattext.h>
+#include <wx/wupdlock.h>
 
 #include "aui/auimanager.h"
 #include "gui/slbook.h"
@@ -28,7 +29,7 @@
 #include "iserver.h"
 #include "serverselector.h"
 #include "ibattle.h"
-#include "nicklistctrl.h"
+#include "nickdataviewctrl.h"
 #include "mainwindow.h"
 #include "chatpanelmenu.h"
 #include "gui/pastedialog.h"
@@ -37,18 +38,18 @@
 #include "utils/slconfig.h"
 #include "gui/hosting/votepanel.h"
 #include "utils/globalevents.h"
-
+#include "iconimagelist.h"
+#include "gui/controls.h"
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
-
-EVT_TEXT_ENTER(CHAT_TEXT, ChatPanel::OnSay)
-EVT_TEXT_PASTE(CHAT_TEXT, ChatPanel::OnPaste)
-EVT_BUTTON(CHAT_CHAN_OPTS, ChatPanel::OnChanOpts)
-EVT_BUTTON(CHAT_SEND, ChatPanel::OnSay)
-EVT_TEXT_URL(CHAT_LOG, ChatPanel::OnLinkEvent)
-EVT_MENU(wxID_ANY, ChatPanel::OnMenuItem)
-EVT_TEXT(FILTER_USERS, ChatPanel::OnFilterUsers)
-EVT_CHECKBOX(SHOW_PLAYERS_ONLY_CHECK, ChatPanel::OnShowPlayerOnlyCheck)
+	EVT_TEXT_ENTER(CHAT_TEXT, ChatPanel::OnSay)
+	EVT_TEXT_PASTE(CHAT_TEXT, ChatPanel::OnPaste)
+	EVT_BUTTON(CHAT_CHAN_OPTS, ChatPanel::OnChanOpts)
+	EVT_BUTTON(CHAT_SEND, ChatPanel::OnSay)
+	EVT_TEXT_URL(CHAT_LOG, ChatPanel::OnLinkEvent)
+	EVT_MENU(wxID_ANY, ChatPanel::OnMenuItem)
+	EVT_TEXT(FILTER_USERS, ChatPanel::OnFilterUsers)
+	EVT_CHECKBOX(SHOW_PLAYERS_ONLY_CHECK, ChatPanel::OnShowPlayerOnlyCheck)
 END_EVENT_TABLE()
 
 static const wxString chan_prefix = _("channel_");
@@ -260,7 +261,7 @@ void ChatPanel::CreateControls()
 		UpdateUserCountLabel();
 		CreatePopup(); //ensures m_popup_menu is constructed
 		//SL_GENERIC::UserMenu<ChatPanelMenu>* usermenu  = m_popup_menu->GetUserMenu();
-		m_nicklist = new NickListCtrl(m_nick_panel, true, m_popup_menu);
+		m_nicklist = new NickDataViewCtrl(_T("NickDataViewCtrl_ChatPanel"), m_nick_panel, true, m_popup_menu);
 
 		// m_nick_filter = new wxComboBox( m_nick_panel, -1, _("Show all"), wxDefaultPosition, wxSize(80,CONTROL_HEIGHT), 0, 0, wxCB_READONLY );
 		// m_nick_filter->Disable();
@@ -366,10 +367,7 @@ const User* ChatPanel::GetSelectedUser() const
 	if (!m_show_nick_list || (m_nicklist == 0))
 		return 0;
 
-	if (m_nicklist->GetSelectedItemCount() > 0)
-		return m_nicklist->GetSelectedData();
-	else
-		return 0;
+	return m_nicklist->GetSelectedItem();
 }
 
 
@@ -715,7 +713,7 @@ void ChatPanel::Joined(User& who)
 		OutputLine(_T( " ** " ) + wxString::Format(_("%s joined %s."), TowxString(who.GetNick()).c_str(), GetChatTypeStr().c_str()), sett().GetChatColorJoinPart());
 	}
 
-	if (m_show_nick_list && (m_nicklist != 0)) {
+	if (m_show_nick_list && (m_nicklist != nullptr)) {
 		m_nicklist->AddUser(who);
 		UpdateUserCountLabel();
 	}
@@ -726,7 +724,7 @@ void ChatPanel::Joined(User& who)
 void ChatPanel::OnChannelJoin(User& who)
 {
 	//    assert( m_type == CPT_Channel || m_type == CPT_Server || m_type == CPT_Battle || m_type == CPT_User );
-	if (m_show_nick_list && (m_nicklist != 0)) {
+	if (m_show_nick_list && (m_nicklist != nullptr)) {
 		m_nicklist->AddUser(who);
 		UpdateUserCountLabel();
 	}
@@ -760,7 +758,7 @@ void ChatPanel::Parted(User& who, const wxString& message)
 		}
 	} else if (m_type == CPT_Server && me_parted)
 		return;
-	if (m_show_nick_list && (m_nicklist != 0)) {
+	if (m_show_nick_list && (m_nicklist != nullptr)) {
 		m_nicklist->RemoveUser(who);
 		UpdateUserCountLabel();
 	}
@@ -798,7 +796,7 @@ void ChatPanel::UserStatusUpdated(User& who)
 	if ((m_type == CPT_User) && (m_user == &who) && (m_chan_opts_button != NULL)) {
 		m_chan_opts_button->SetBitmapLabel(icons().GetBitmap(icons().GetUserListStateIcon(who.GetStatus(), false, who.GetBattle() != 0)));
 	}
-	if (!m_show_nick_list || (m_nicklist == 0))
+	if (!m_show_nick_list || (m_nicklist == nullptr))
 		return;
 	try {
 		m_nicklist->UserUpdated(who);
@@ -820,7 +818,7 @@ void ChatPanel::SetChannel(Channel* chan)
 	if ((chan == 0) && (m_channel != 0)) {
 		m_channel->uidata.panel = 0;
 	}
-	if (m_nicklist != 0) {
+	if (m_nicklist != nullptr) {
 		m_nicklist->ClearUsers();
 		UpdateUserCountLabel();
 	}
@@ -846,20 +844,18 @@ const IServer* ChatPanel::GetServer() const
 void ChatPanel::SetServer(IServer* serv)
 {
 	ASSERT_LOGIC(m_type == CPT_Server, "Not of type server");
-	if (m_nicklist != NULL) {
-		m_nicklist->StopTimer();
+	if (m_nicklist != nullptr) {
 		m_nicklist->ClearUsers();
 		UpdateUserCountLabel();
 	}
 	if (serv != 0) {
 		SetLogFile(_T("server"));
 		serv->uidata.panel = this;
-		if (m_nicklist != NULL)
-			m_nicklist->StartTimer();
-	} else if (m_server != 0) {
-		m_server->uidata.panel = 0;
+		if (m_server != nullptr) {
+			m_server->uidata.panel = 0;
+		}
+		m_server = serv;
 	}
-	m_server = serv;
 }
 
 const User* ChatPanel::GetUser() const
@@ -1110,15 +1106,15 @@ void ChatPanel::OnMouseDown(wxMouseEvent& event)
 
 void ChatPanel::UpdateNicklistHighlights()
 {
-	if (m_show_nick_list && (m_nicklist != 0)) {
-		m_nicklist->RefreshVisibleItems();
+	if (m_show_nick_list && (m_nicklist != nullptr)) {
+		m_nicklist->Refresh();
 	}
 }
 
 void ChatPanel::SortNickList()
 {
 	if (m_show_nick_list && (m_nicklist != 0))
-		m_nicklist->SortList();
+		m_nicklist->Resort();
 }
 
 void ChatPanel::SetIconHighlight(HighlightType highlight)

@@ -84,8 +84,6 @@ void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 int NickDataViewModel::Compare(const wxDataViewItem& itemA,
 		const wxDataViewItem& itemB, unsigned int column,
 		bool ascending) const {
-	return BaseDataViewModel::Compare(itemA, itemB, column, ascending);
-
 	const User* userA = static_cast<const User*>(itemA.GetID());
 	const User* userB = static_cast<const User*>(itemB.GetID());
 

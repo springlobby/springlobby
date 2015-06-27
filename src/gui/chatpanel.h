@@ -23,7 +23,7 @@ class wxTextUrlEvent;
 class wxComboBox;
 class wxButton;
 class wxBitmapButton;
-class NickListCtrl;
+class NickDataViewCtrl;
 class Channel;
 class User;
 class ChatLog;
@@ -196,7 +196,7 @@ private:
 	wxTextCtrlHist* m_say_text;	 //!< The say textcontrol.
 	wxBitmapButton* m_chan_opts_button; //!< The channel options button.
 
-	NickListCtrl* m_nicklist; //!< The nicklist.
+	NickDataViewCtrl* m_nicklist; //!< The nicklist.
 	//wxComboBox* m_nick_filter;  //!< The filter combo.
 
 	wxButton* m_say_button; //!< The say button.

@@ -19,10 +19,12 @@
 #include "user.h"
 #include "utils/conversion.h"
 #include "nickdataviewmodel.h"
-
+#include "gui/ui.h"
+#include "gui/mainwindow.h"
 
 
 BEGIN_EVENT_TABLE(NickDataViewCtrl, BaseDataViewCtrl)
+	EVT_DATAVIEW_ITEM_ACTIVATED(NICK_DATAVIEW_CTRL_ID, NickDataViewCtrl::OnItemActivatedEvent)
 END_EVENT_TABLE()
 
 NickDataViewCtrl::NickDataViewCtrl(const wxString& dataViewName, wxWindow* parent, bool show_header, ChatPanelMenu* popup, bool highlight)
@@ -32,7 +34,7 @@ NickDataViewCtrl::NickDataViewCtrl(const wxString& dataViewName, wxWindow* paren
 	AppendBitmapColumn(_("s"), STATUS, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendBitmapColumn(_("c"), COUNTRY, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendBitmapColumn(_("r"), RANK, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Nickname"), NICKNAME, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_WIDTH, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+	AppendTextColumn(_("Nickname"), NICKNAME, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_WIDTH + 10 /*add 10 px to let some nicks to fit better*/, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
 	if (show_header == false) {
 		//TODO: implement "no header" style somehow
@@ -122,6 +124,7 @@ void NickDataViewCtrl::DoUsersFilter() {
 	}
 
 	Resort();
+	Refresh();
 }
 
 void NickDataViewCtrl::SetTipWindowText(const long item_hit,
@@ -135,7 +138,7 @@ void NickDataViewCtrl::HighlightItem(long item) {
 
 bool NickDataViewCtrl::checkFilteringConditions(const User* user) const{
 	//Filter out bots
-	if ((m_userFilterShowPlayersOnly) && (user->IsBot())) {
+	if ((m_userFilterShowPlayersOnly) && (user->GetStatus().bot)) {
 		return false;
 	}
 	//Check users nicks
@@ -177,3 +180,13 @@ bool NickDataViewCtrl::IsContainsRealUser(const User& user) const {
 	return true;
 }
 
+void NickDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& event) {
+
+	const User* user = GetSelectedItem();
+
+	if (user == nullptr) {
+		return;
+	}
+
+	ui().mw().OpenPrivateChat(*user, true); //true --> setfoucs
+}
