@@ -188,7 +188,6 @@ set(springlobbySrc
 	gui/mapctrl.cpp
 	gui/mapgridctrl.cpp
 	gui/mapselectdialog.cpp
-	gui/nicklistctrl.cpp
 	gui/pastedialog.cpp
 	gui/slbook.cpp
 	gui/statusbar.cpp

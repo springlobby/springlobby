@@ -21,10 +21,12 @@
 #include "nickdataviewmodel.h"
 #include "gui/ui.h"
 #include "gui/mainwindow.h"
-
+#include "gui/usermenu.h"
+#include "gui/chatpanelmenu.h"
 
 BEGIN_EVENT_TABLE(NickDataViewCtrl, BaseDataViewCtrl)
 	EVT_DATAVIEW_ITEM_ACTIVATED(NICK_DATAVIEW_CTRL_ID, NickDataViewCtrl::OnItemActivatedEvent)
+	EVT_DATAVIEW_ITEM_CONTEXT_MENU(NICK_DATAVIEW_CTRL_ID, NickDataViewCtrl::OnContextMenuEvent)
 END_EVENT_TABLE()
 
 NickDataViewCtrl::NickDataViewCtrl(const wxString& dataViewName, wxWindow* parent, bool show_header, ChatPanelMenu* popup, bool highlight)
@@ -189,4 +191,18 @@ void NickDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& event) {
 	}
 
 	ui().mw().OpenPrivateChat(*user, true); //true --> setfoucs
+}
+
+void NickDataViewCtrl::OnContextMenuEvent(wxDataViewEvent& event) {
+	if (m_menu != nullptr) {
+		//no need to popup the menu when there's no user selected
+		const User* user = GetSelectedItem();
+		if (user == nullptr) {
+			return;
+		}
+		wxString nick = wxString(user->GetNick());
+		SL_GENERIC::UserMenu<ChatPanelMenu>* popup = m_menu->GetUserMenu();
+		popup->EnableItems(true, nick);
+		PopupMenu(popup);
+	}
 }
