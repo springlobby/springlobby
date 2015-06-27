@@ -3,12 +3,6 @@
 #include "nickdataviewmodel.h"
 
 #include <wx/dataview.h>
-#include <wx/debug.h>
-#include <wx/itemid.h>
-#include <wx/msw/bitmap.h>
-#include <wx/string.h>
-#include <wx/variant.h>
-#include <string>
 
 #include "ibattle.h"
 #include "user.h"

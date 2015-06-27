@@ -9,7 +9,6 @@
 #include "iserver.h"
 #include "serverselector.h"
 #include "user.h"
-#include "nicklistctrl.h"
 #include "mainwindow.h"
 #include "settings.h"
 #include "battlelist/battlelisttab.h"
