@@ -23,7 +23,7 @@ class wxPoint;
 class NickDataViewCtrl: public BaseDataViewCtrl<User> {
 public:
 	NickDataViewCtrl(const wxString& dataViewName, wxWindow* parent, bool show_header = true, ChatPanelMenu* popup = 0,
-    bool singleSelectList = true, bool highlight = true);
+    bool highlight = true);
 	virtual ~NickDataViewCtrl();
 
 	void UserFilterShowPlayersOnly(bool);

@@ -25,8 +25,8 @@
 BEGIN_EVENT_TABLE(NickDataViewCtrl, BaseDataViewCtrl)
 END_EVENT_TABLE()
 
-NickDataViewCtrl::NickDataViewCtrl(const wxString& dataViewName, wxWindow* parent, bool show_header, ChatPanelMenu* popup,
-	     bool singleSelectList, bool highlight) : BaseDataViewCtrl(dataViewName, parent, NICK_DATAVIEW_CTRL_ID) {
+NickDataViewCtrl::NickDataViewCtrl(const wxString& dataViewName, wxWindow* parent, bool show_header, ChatPanelMenu* popup, bool highlight)
+	: BaseDataViewCtrl(dataViewName, parent, NICK_DATAVIEW_CTRL_ID) {
 	m_menu = popup;
 
 	AppendBitmapColumn(_("s"), STATUS, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);

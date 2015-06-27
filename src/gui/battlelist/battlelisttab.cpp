@@ -113,7 +113,7 @@ BattleListTab::BattleListTab(wxWindow* parent)
 
 	m_info_sizer->Add(m_data_sizer, 1, wxEXPAND, 5);
 
-	m_players = new NickDataViewCtrl(_T("NickDataViewCtrl_BattleListTab"), this, false, 0, true, _T("battlelist_nicklist"));
+	m_players = new NickDataViewCtrl(_T("NickDataViewCtrl_BattleListTab"), this, false, 0, true);
 	m_info_sizer->Add(m_players, 1, wxALL | wxEXPAND, 5);
 
 	m_main_sizer->Add(m_info_sizer, 0, wxEXPAND, 5);
