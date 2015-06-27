@@ -66,7 +66,7 @@ wxBitmap& IconsCollection::GetHostBmp(bool isSpec) {
 	}
 }
 
-wxBitmap& IconsCollection::GetReadyBmp(bool isSpec, bool isReady, bool inSync,
+wxBitmap& IconsCollection::GetReadyBmp(bool isSpec, bool isReady, unsigned int inSync,
 		bool isBot) {
 
 	if (isBot) {
@@ -74,7 +74,7 @@ wxBitmap& IconsCollection::GetReadyBmp(bool isSpec, bool isReady, bool inSync,
 	}
 
 	if (isSpec) {
-		if (inSync) {
+		if (inSync == SYNC_SYNCED) {
 			return BMP_SPECTATOR;
 		} else {
 			return BMP_SPECTATOR_UNSYNC;
@@ -82,13 +82,13 @@ wxBitmap& IconsCollection::GetReadyBmp(bool isSpec, bool isReady, bool inSync,
 	}
 
 	if (isReady) {
-		if (inSync) {
+		if (inSync == SYNC_SYNCED) {
 			return BMP_READY;
 		} else {
 			return BMP_READY_UNSYNC;
 		}
 	} else {
-		if (inSync) {
+		if (inSync == SYNC_SYNCED) {
 			return BMP_NREADY;
 		} else {
 			return BMP_NREADY_UNSYNC;
