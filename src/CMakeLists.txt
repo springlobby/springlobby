@@ -247,7 +247,9 @@ set(springlobbySrc
 	downloader/prdownloader.cpp
 	downloader/downloadlistctrl.cpp
 	downloader/downloadsobserver.cpp
-
+	downloader/downloaddataviewctrl.cpp
+	downloader/downloaddataviewmodel.cpp
+	
 	utils/battleevents.cpp
 	utils/base64.cpp
 	utils/crc.cpp
