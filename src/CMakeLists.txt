@@ -208,10 +208,11 @@ set(springlobbySrc
 	gui/notifications/toasterbox/ToasterBoxWindow.cpp
 	gui/notifications/toasterbox/ToasterBoxWindowList.cpp
 
-	gui/battlelist/battlelistctrl.cpp
 	gui/battlelist/battlelistfilter.cpp
 	gui/battlelist/battlelisttab.cpp
-
+	gui/battlelist/battledataviewcttrl.cpp
+	gui/battlelist/battledataviewmodel.cpp
+	
 	gui/channel/channelchooser.cpp
 	gui/channel/channelchooserdialog.cpp
 	gui/channel/autojoinchanneldialog.cpp

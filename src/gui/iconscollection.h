@@ -83,6 +83,7 @@
 
 class UserStatus;
 class wxString;
+class IBattle;
 
 namespace LSL
 {
@@ -105,6 +106,7 @@ public:
 	wxBitmap& GetHostBmp(bool isSpec);
 	wxBitmap& GetReadyBmp(bool isSpec, bool isReady, unsigned int inSync, bool isBot);
 	wxBitmap& GetUserListStateIcon(const UserStatus& us, bool chanop, bool inbroom);
+	wxBitmap& GetBattleStatusBmp(const IBattle& battle) const;
 	wxBitmap& GetFlagBmp(const wxString& country);
 	wxBitmap& GetRankBmp(unsigned int rank, bool showLowest = true);
 	wxBitmap& GetColourBmp(const LSL::lslColor& colour);
@@ -115,6 +117,25 @@ private:
 	std::map<std::string, wxBitmap> m_cachedFractionBmps;
 	std::map<wxString, wxBitmap> m_countryFlagBmps;
 	std::map<wxString, wxBitmap> m_playerColorBmps;
+
+	wxBitmap* battleStatuses[16] = {
+	    /* -                                 */ &BMP_OPEN_GAME,
+	    /* passworded                        */ &BMP_OPEN_PW_GAME,
+	    /* full                              */ &BMP_OPEN_FULL_GAME,
+	    /* full, passworded                  */ &BMP_OPEN_FULL_PW_GAME,
+	    /* locked                            */ &BMP_CLOSED_GAME,
+	    /* locked, passworded                */ &BMP_CLOSED_PW_GAME,
+	    /* locked, full                      */ &BMP_CLOSED_FULL_GAME,
+	    /* locked, full, passworded          */ &BMP_CLOSED_FULL_PW_GAME,
+	    /* in game                           */ &BMP_STARTED_GAME,
+	    /* in game, passworded               */ &BMP_STARTED_GAME,
+	    /* in game, full                     */ &BMP_STARTED_GAME,
+	    /* in game, full, passworded         */ &BMP_STARTED_GAME,
+	    /* in game, locked                   */ &BMP_STARTED_GAME_LOCKED,
+	    /* in game, locked, passworded       */ &BMP_STARTED_GAME_LOCKED,
+	    /* in game, locked, full             */ &BMP_STARTED_GAME_LOCKED,
+	    /* in game, locked, full, passworded */ &BMP_STARTED_GAME_LOCKED,
+	};
 
 public:
 	wxIcon ICON_EXISTS = wxIcon(exists_xpm);
@@ -166,8 +187,8 @@ public:
 	wxBitmap BMP_CLOSED_PW_GAME = charArr2wxBitmap(closed_pw_game_png, sizeof(closed_pw_game_png));
 	wxBitmap BMP_CLOSED_FULL_PW_GAME = charArr2wxBitmap(closed_full_pw_game_png, sizeof(closed_full_pw_game_png));
 	wxBitmap BMP_CLOSED_FULL_GAME = charArr2wxBitmap(closed_full_game_png, sizeof(closed_full_game_png));
-	wxBitmap BMP_STARTED_GAME = wxBitmap();
-	wxBitmap BMP_STARTED_GAME_LOCKED = wxBitmap();
+	wxBitmap BMP_STARTED_GAME = wxBitmap(BMP_INGAME);
+	wxBitmap BMP_STARTED_GAME_LOCKED = wxBitmap(BMP_INGAME);
 
 	wxBitmap BMP_READY_UNSYNC = wxBitmap(ready_unsync_xpm);
 	wxBitmap BMP_NREADY_UNSYNC = wxBitmap(nready_unsync_xpm);

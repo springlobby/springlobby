@@ -22,7 +22,6 @@
 
 #include "battlelistfilter.h"
 #include "battlelistfiltervalues.h"
-#include "battlelistctrl.h"
 #include "ibattle.h"
 #include "gui/uiutils.h"
 #include "utils/tasutil.h"

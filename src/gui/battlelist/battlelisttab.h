@@ -10,7 +10,7 @@ class User;
 class Ui;
 class IBattle;
 class Battle;
-class BattleListCtrl;
+class BattleDataViewCtrl;
 class BattleListFilter;
 class MapCtrl;
 class NickDataViewCtrl;
@@ -25,6 +25,8 @@ class wxStaticLine;
 class wxCheckBox;
 class wxToggleButton;
 class wxFlexGridSizer;
+class wxDataViewEvent;
+
 /** \brief The panel containing a BattleListCtrl and a BattleListFilter
  * \todo DOCME */
 class BattleListTab : public wxPanel, public SL::NonCopyable
@@ -55,12 +57,12 @@ public:
 	void OnFilterActiv(wxCommandEvent& event);
 	void SetFilterActiv(bool activ);
 	void OnJoin(wxCommandEvent& event);
-	void OnListJoin(wxListEvent& event);
+	void OnListJoin(wxDataViewEvent& event);
 	void ShowExtendedInfos(bool show);
 
 	void DoJoin(IBattle& battle);
 
-	void OnSelect(wxListEvent& event);
+	void OnSelect(wxDataViewEvent& event);
 	void OnUnitsyncReloaded(wxCommandEvent& data);
 
 	void UpdateHighlights();
@@ -69,7 +71,7 @@ public:
 
 private:
 	BattleListFilter* m_filter;
-	BattleListCtrl* m_battle_list;
+	BattleDataViewCtrl* m_battle_list;
 	MapCtrl* m_minimap;
 	wxStaticText* m_map_lbl;
 	wxStaticText* m_map_text;

@@ -21,6 +21,7 @@ public:
 	void Resort();
 	void RefreshItem(const DataType&);
 	bool ContainsItem(const DataType&);
+	int GetItemsCount() const;
 	void Clear();
 	const DataType* GetSelectedItem();
 
@@ -28,16 +29,13 @@ protected:
 	virtual void LoadColumnProperties();
 	virtual void SaveColumnProperties();
 
-private:
-	void OnSizeEvent(wxSizeEvent&);
-	void AdjustColumnsWidth();
-
 protected:
 	BaseDataViewModel<DataType>* m_DataModel;
 	wxString m_DataViewName;
 
 	DECLARE_EVENT_TABLE()
 };
+
 
 BEGIN_EVENT_TABLE_TEMPLATE1(BaseDataViewCtrl, wxDataViewCtrl, DataType)
 END_EVENT_TABLE()
@@ -140,6 +138,13 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties() {
 			cfg().Write(wxString(m_DataViewName + _T("/sorting_order")), sortOrderAscending);
 		}
 	}
+}
+
+template<class DataType>
+inline int BaseDataViewCtrl<DataType>::GetItemsCount() const {
+	wxASSERT(m_DataModel != nullptr);
+
+	return m_DataModel->GetItemsCount();
 }
 
 #endif /* SRC_GUI_BASEDATAVIEWCTRL_H_ */

@@ -17,7 +17,7 @@
 
 #include "aui/auimanager.h"
 #include "battlelisttab.h"
-#include "battlelistctrl.h"
+#include "battledataviewcttrl.h"
 #include "gui/ui.h"
 #include "gui/chatpanel.h"
 #include "utils/conversion.h"
@@ -44,8 +44,8 @@
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
 	EVT_BUTTON(BattleListTab::BATTLE_JOIN, BattleListTab::OnJoin)
 	EVT_BUTTON(BattleListTab::BATTLE_HOST, BattleListTab::OnHost)
-	EVT_LIST_ITEM_ACTIVATED(BattleListCtrl::BLIST_LIST, BattleListTab::OnListJoin)
-	EVT_LIST_ITEM_SELECTED(BattleListCtrl::BLIST_LIST, BattleListTab::OnSelect)
+	EVT_DATAVIEW_ITEM_ACTIVATED(BattleDataViewCtrl::BATTLELIST_DATAVIEW_ID, BattleListTab::OnListJoin)
+	EVT_DATAVIEW_SELECTION_CHANGED(BattleDataViewCtrl::BATTLELIST_DATAVIEW_ID, BattleListTab::OnSelect)
 	EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_ACTIV, BattleListTab::OnFilterActiv)
 	#if wxUSE_TOGGLEBTN
 	EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
@@ -74,8 +74,8 @@ BattleListTab::BattleListTab(wxWindow* parent)
 
 	m_battlelist_sizer = new wxBoxSizer(wxVERTICAL);
 
-	m_battle_list = new BattleListCtrl(this);
-	m_battle_list->SetHighLightAction(UserActions::ActHighlight);
+	m_battle_list = new BattleDataViewCtrl(_T("BattleDataViewCtrl_BattleList"), this);
+//	m_battle_list->SetHighLightAction(UserActions::ActHighlight);
 	m_battlelist_sizer->Add(m_battle_list, 1, wxEXPAND);
 
 	m_main_sizer->Add(m_battlelist_sizer, 1, wxEXPAND);
@@ -188,7 +188,7 @@ void BattleListTab::OnConnected()
 
 void BattleListTab::SetNumDisplayed()
 {
-	int num = m_battle_list->GetItemCount();
+	int num = m_battle_list->GetItemsCount();
 	m_battle_num->SetLabel(wxString::Format(_("%d battles displayed"), num));
 }
 
@@ -251,7 +251,6 @@ void BattleListTab::UpdateBattle(IBattle& battle)
 		if (&battle == m_sel_battle) {
 			m_sel_battle = NULL;
 			SelectBattle(NULL);
-			m_battle_list->SetSelectedIndex(-1);
 		}
 		return;
 	}
@@ -273,19 +272,14 @@ void BattleListTab::OnDisconnected()
 
 void BattleListTab::UpdateList()
 {
-	m_battle_list->SetSelectedIndex(-1);
-
 	serverSelector().GetServer().battles_iter->IteratorBegin();
 	while (!serverSelector().GetServer().battles_iter->EOL()) {
 		IBattle* b = serverSelector().GetServer().battles_iter->GetBattle();
 		if (b != 0)
 			UpdateBattle(*b);
 	}
-	m_battle_list->SortList(true);
-	m_battle_list->RefreshVisibleItems();
-
-	if (m_sel_battle != NULL)
-		m_battle_list->SetSelectedIndex(m_battle_list->GetIndexFromData(m_sel_battle));
+	m_battle_list->Resort();
+	m_battle_list->Refresh();
 }
 
 
@@ -294,7 +288,6 @@ void BattleListTab::SetFilterActiv(bool activ)
 	m_filter->SetActiv(activ);
 	m_filter_activ->SetValue(activ);
 	cfg().Write(_T( "/BattleFilter/Active" ), activ);
-	m_battle_list->MarkDirtySort();
 }
 
 void BattleListTab::OnHost(wxCommandEvent& /*unused*/)
@@ -356,23 +349,14 @@ void BattleListTab::OnFilterActiv(wxCommandEvent& /*unused*/)
  */
 void BattleListTab::OnJoin(wxCommandEvent& /*unused*/)
 {
-	try {
-		ASSERT_LOGIC(m_battle_list != 0, "m_battle_list = 0");
-	} catch (...) {
-		return;
-	}
+	wxASSERT(m_battle_list != nullptr);
 
 	//Is there any battle selected?
-	if (m_battle_list->GetSelectedIndex() < 0) {
+	const IBattle* battle = m_battle_list->GetSelectedItem();
+	if (battle == nullptr) {
 		return;
 	}
 
-	const IBattle* battle = m_battle_list->GetSelectedData();
-	try {
-		ASSERT_LOGIC(battle != NULL, "battle == null");
-	} catch (...) {
-		return;
-	}
 	const int id = battle->GetBattleId();
 	DoJoin(serverSelector().GetServer().battles_iter->GetBattle(id));
 }
@@ -381,19 +365,18 @@ void BattleListTab::OnJoin(wxCommandEvent& /*unused*/)
  * Process double clicking on battle in battlelist. Join selected battle
  * @param event Selected battle
  */
-void BattleListTab::OnListJoin(wxListEvent& event)
+void BattleListTab::OnListJoin(wxDataViewEvent& /*event*/)
 {
-	try {
-		ASSERT_LOGIC(m_battle_list != 0, "m_battle_list = 0");
-	} catch (...) {
+	wxASSERT(m_battle_list != nullptr);
+
+	const IBattle* battle = m_battle_list->GetSelectedItem();
+	if (battle == nullptr) {
 		return;
 	}
 
-	//TODO: This "crunch" selects item that is being double clicked
-	//Should solve some problems with wxListCtrl under Windows
-	m_battle_list->OnSelected(event);
+	SelectBattle(const_cast<IBattle*>(battle));
 
-	int id = m_battle_list->GetSelectedData()->GetBattleId();
+	int id = battle->GetBattleId();
 	DoJoin(serverSelector().GetServer().battles_iter->GetBattle(id));
 }
 
@@ -451,15 +434,15 @@ void BattleListTab::DoJoin(IBattle& battle)
  * Process "select" for battlelist. Selects currentbattle for info panel.
  * @param event Battle been selected
  */
-void BattleListTab::OnSelect(wxListEvent& event)
+void BattleListTab::OnSelect(wxDataViewEvent& /*event*/)
 {
-	if (event.GetIndex() == -1) {
-		SelectBattle(0);
+	const IBattle* battle = m_battle_list->GetSelectedItem();
+	if (battle == nullptr) {
+		SelectBattle(nullptr);
 		return;
+	} else {
+		SelectBattle(const_cast<IBattle*>(battle));
 	}
-	IBattle* b = (m_battle_list->GetSelectedData());
-	if (b != 0)
-		SelectBattle(b);
 }
 
 /**
@@ -478,13 +461,13 @@ void BattleListTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 
 void BattleListTab::UpdateHighlights()
 {
-	m_battle_list->RefreshVisibleItems();
+	m_battle_list->Refresh();
 }
 
 
 void BattleListTab::SortBattleList()
 {
-	m_battle_list->SortList();
+	m_battle_list->Resort();
 }
 
 void BattleListTab::ShowExtendedInfos(bool show)

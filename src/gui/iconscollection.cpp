@@ -4,6 +4,7 @@
 
 #include "iconscollection.h"
 
+#include "ibattle.h"
 #include "user.h"
 #include "utils/conversion.h"
 #include "utils/lslconversion.h"
@@ -194,6 +195,14 @@ wxBitmap& IconsCollection::GetRankBmp(unsigned int rank, bool showLowest) {
 		default:
 			return BMP_RANK_UNKNOWN;
 	}
+}
+
+wxBitmap& IconsCollection::GetBattleStatusBmp(const IBattle& battle) const
+{
+	unsigned idx = battle.GetInGame() << 3 | battle.IsLocked() << 2 | battle.IsFull() << 1 | battle.IsPassworded() << 0;
+
+	return *battleStatuses[idx];
+	// return ICON_GAME_UNKNOWN;
 }
 
 wxBitmap& IconsCollection::GetColourBmp(const LSL::lslColor& colour) {
