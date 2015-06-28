@@ -11,7 +11,7 @@ class wxString;
 class wxMenu;
 class wxCommandEvent;
 class wxPoint;
-
+class wxDataViewEvent;
 
 class BattleDataViewCtrl: public BaseDataViewCtrl<IBattle> {
 public:
@@ -28,6 +28,7 @@ private:
 	void OnDLMap(wxCommandEvent& event);
 	void OnDLMod(wxCommandEvent& event);
 	void OnDLEngine(wxCommandEvent& event);
+	void OnContextMenu(wxDataViewEvent& event);
 
 private:
 	wxMenu* m_popup;

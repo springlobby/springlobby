@@ -2,9 +2,16 @@
 
 #include "battledataviewcttrl.h"
 
+#include <wx/menu.h>
+
 #include "battledataviewmodel.h"
+#include "utils/slpaths.h"
+#include "servermanager.h"
+#include "ibattle.h"
+#include "downloader/prdownloader.h"
 
 BEGIN_EVENT_TABLE(BattleDataViewCtrl, BaseDataViewCtrl)
+	EVT_DATAVIEW_ITEM_CONTEXT_MENU(BATTLELIST_DATAVIEW_ID, BattleDataViewCtrl::OnContextMenu)
 	EVT_MENU(BATTLELIST_DATAVIEW_DLMAP, BattleDataViewCtrl::OnDLMap)
 	EVT_MENU(BATTLELIST_DATAVIEW_DLMOD, BattleDataViewCtrl::OnDLMod)
 	EVT_MENU(BATTLELIST_DATAVIEW_DLENGINE, BattleDataViewCtrl::OnDLEngine)
@@ -66,10 +73,62 @@ void BattleDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
 }
 
 void BattleDataViewCtrl::OnDLMap(wxCommandEvent& /*event*/) {
+	const IBattle* battle = GetSelectedItem();
+
+	if (battle == nullptr) {
+		return;
+	} else {
+		ServerManager::Instance()->DownloadContent("map", battle->GetHostMapName(), battle->GetHostMapHash());
+	}
 }
 
 void BattleDataViewCtrl::OnDLMod(wxCommandEvent& /*event*/) {
+	const IBattle* battle = GetSelectedItem();
+
+	if (battle == nullptr) {
+		return;
+	} else {
+		ServerManager::Instance()->DownloadContent("game", battle->GetHostModName(), battle->GetHostModHash());
+	}
 }
 
 void BattleDataViewCtrl::OnDLEngine(wxCommandEvent& /*event*/) {
+	const IBattle* battle = GetSelectedItem();
+
+	if (battle == nullptr) {
+		return;
+	} else {
+		ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), battle->GetEngineVersion(), "");
+	}
+}
+
+void BattleDataViewCtrl::OnContextMenu(wxDataViewEvent& /*event*/) {
+
+	const IBattle* battle = GetSelectedItem();
+
+	if (battle == nullptr) {
+		return;
+	}
+
+	const bool mod_missing = battle->ModExists(false) == false;
+	const bool map_missing = battle->MapExists(false) == false;
+	const bool engine_missing = SlPaths::GetCompatibleVersion(battle->GetEngineVersion()).empty();
+
+	m_popup = new wxMenu(wxEmptyString);
+
+	if (map_missing) {
+		m_popup->Append(BATTLELIST_DATAVIEW_DLMAP, _("Download &map"));
+	}
+
+	if (mod_missing) {
+		m_popup->Append(BATTLELIST_DATAVIEW_DLMOD, _("Download &game"));
+	}
+
+	if (engine_missing) {
+		m_popup->Append(BATTLELIST_DATAVIEW_DLENGINE, _("Download &engine"));
+	}
+
+	if (map_missing || mod_missing || engine_missing) {
+		PopupMenu(m_popup);
+	}
 }
