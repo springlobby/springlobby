@@ -111,7 +111,7 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	{
 		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
 		wxDataViewColumn* column = GetColumn(columnIndex);
-		if (colWidth > 0) {
+		if (colWidth >= (wxDVC_DEFAULT_MINWIDTH - 5)) {
 			column->SetWidth(colWidth);
 		}
 //FIXME: this code causes weird behavior of wxDataViewModel
