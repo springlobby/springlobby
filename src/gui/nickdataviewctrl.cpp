@@ -75,7 +75,10 @@ void NickDataViewCtrl::RemoveUser(const User& user) {
 		return;
 	}
 
-	m_DataModel->RemoveItem(user);
+	//Only remove added users
+	if (m_DataModel->ContainsItem(user)) {
+		m_DataModel->RemoveItem(user);
+	}
 }
 
 void NickDataViewCtrl::UserUpdated(const User& user) {
