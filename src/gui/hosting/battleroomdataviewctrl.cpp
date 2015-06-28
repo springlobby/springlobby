@@ -25,7 +25,7 @@ BEGIN_EVENT_TABLE(BattleroomDataViewCtrl, BaseDataViewCtrl)
 	EVT_MENU(BATTLEROOM_VIEW_HANDICAP, BattleroomDataViewCtrl::OnHandicapSelect)
 END_EVENT_TABLE()
 
-BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxWindow* parent, IBattle* battle, bool readOnly, bool showInGame) :
+BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxWindow* parent, IBattle* /*battle*/, bool readOnly, bool showInGame) :
 	BaseDataViewCtrl(dataViewName, parent, BATTLEROOM_VIEW_ID){
 
 	m_ViewIsReadOnly = readOnly;
@@ -99,8 +99,8 @@ void BattleroomDataViewCtrl::RemoveUser(User& user) {
 	m_DataModel->RemoveItem(user);
 }
 
-void BattleroomDataViewCtrl::SetTipWindowText(const long item_hit,
-		const wxPoint& position) {
+void BattleroomDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
+		const wxPoint& /*position*/) {
 	//TODO: implement
 }
 
@@ -110,7 +110,7 @@ void BattleroomDataViewCtrl::UpdateUser(User& user) {
 	m_DataModel->UpdateItem(user);
 }
 
-void BattleroomDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& event) {
+void BattleroomDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& /*event*/) {
 	if (m_ViewIsReadOnly) {
 		return;
 	}
@@ -124,7 +124,7 @@ void BattleroomDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& event) {
 	ui().mw().OpenPrivateChat(*user);
 }
 
-void BattleroomDataViewCtrl::OnContextMenuEvent(wxDataViewEvent& event) {
+void BattleroomDataViewCtrl::OnContextMenuEvent(wxDataViewEvent& /*event*/) {
 	if (m_ViewIsReadOnly) {
 		return;
 	}
@@ -226,7 +226,7 @@ void BattleroomDataViewCtrl::OnTeamSelectEvent(wxCommandEvent& event) {
 }
 
 void BattleroomDataViewCtrl::OnUserMenuDeleteFromGroup(
-		wxCommandEvent& event) {
+		wxCommandEvent& /*event*/) {
 	const User* user = GetSelectedItem();
 
 	if (user == nullptr) {
@@ -238,7 +238,7 @@ void BattleroomDataViewCtrl::OnUserMenuDeleteFromGroup(
 	useractions().RemoveUser(nick);
 }
 
-void BattleroomDataViewCtrl::OnUserMenuCreateGroup(wxCommandEvent& event) {
+void BattleroomDataViewCtrl::OnUserMenuCreateGroup(wxCommandEvent& /*event*/) {
 	const User* user = GetSelectedItem();
 
 	if (user == nullptr) {
@@ -273,7 +273,7 @@ void BattleroomDataViewCtrl::OnUserMenuAddToGroup(wxCommandEvent& event) {
 	Disconnect(GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(BattleroomDataViewCtrl::OnUserMenuCreateGroup), 0, this);
 }
 
-void BattleroomDataViewCtrl::OnColourSelect(wxCommandEvent& event) {
+void BattleroomDataViewCtrl::OnColourSelect(wxCommandEvent& /*event*/) {
 	const User* user = GetSelectedItem();
 
 	if (user == nullptr) {
@@ -300,7 +300,7 @@ void BattleroomDataViewCtrl::OnSideSelect(wxCommandEvent& event) {
 	}
 }
 
-void BattleroomDataViewCtrl::OnHandicapSelect(wxCommandEvent& event) {
+void BattleroomDataViewCtrl::OnHandicapSelect(wxCommandEvent& /*event*/) {
 	const User* user = GetSelectedItem();
 
 	if (user == nullptr) {
@@ -313,7 +313,7 @@ void BattleroomDataViewCtrl::OnHandicapSelect(wxCommandEvent& event) {
 	}
 }
 
-void BattleroomDataViewCtrl::OnSpecSelect(wxCommandEvent& event) {
+void BattleroomDataViewCtrl::OnSpecSelect(wxCommandEvent& /*event*/) {
 	const User* user = GetSelectedItem();
 
 	if (user != nullptr) {
@@ -321,7 +321,7 @@ void BattleroomDataViewCtrl::OnSpecSelect(wxCommandEvent& event) {
 	}
 }
 
-void BattleroomDataViewCtrl::OnKickPlayer(wxCommandEvent& event) {
+void BattleroomDataViewCtrl::OnKickPlayer(wxCommandEvent& /*event*/) {
 	const User* user = GetSelectedItem();
 
 	if (user != nullptr) {
@@ -329,7 +329,7 @@ void BattleroomDataViewCtrl::OnKickPlayer(wxCommandEvent& event) {
 	}
 }
 
-void BattleroomDataViewCtrl::OnRingPlayer(wxCommandEvent& event) {
+void BattleroomDataViewCtrl::OnRingPlayer(wxCommandEvent& /*event*/) {
 	const User* user = GetSelectedItem();
 
 	if (user != nullptr) {

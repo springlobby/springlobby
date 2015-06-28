@@ -124,12 +124,12 @@ void NickDataViewCtrl::DoUsersFilter() {
 	Refresh();
 }
 
-void NickDataViewCtrl::SetTipWindowText(const long item_hit,
-		const wxPoint& position) {
+void NickDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
+		const wxPoint& /*position*/) {
 	//TODO: implement!
 }
 
-void NickDataViewCtrl::HighlightItem(long item) {
+void NickDataViewCtrl::HighlightItem(long /*item*/) {
 	//TODO: implement!
 }
 

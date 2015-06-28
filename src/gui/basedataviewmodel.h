@@ -65,7 +65,7 @@ int BaseDataViewModel<DataType>::Compare(const wxDataViewItem& item1, const wxDa
 }
 
 template <class DataType>
-wxDataViewItem BaseDataViewModel<DataType>::GetParent(const wxDataViewItem& item) const
+wxDataViewItem BaseDataViewModel<DataType>::GetParent(const wxDataViewItem& /*item*/) const
 {
 	return wxDataViewItem(nullptr); //Root is only one possible parent
 }

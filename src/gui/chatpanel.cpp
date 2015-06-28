@@ -52,7 +52,6 @@ BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 	EVT_CHECKBOX(SHOW_PLAYERS_ONLY_CHECK, ChatPanel::OnShowPlayerOnlyCheck)
 END_EVENT_TABLE()
 
-static const wxString chan_prefix = _("channel_");
 
 SLCONFIG("/Channel/bridgebot", (const wxString&) _T("TIZBOT"), "Name of the Bridgebot (which forwards traffic between #sy and irc channels)");
 SLCONFIG("/GUI/ShowPromotions", true, "Show promotion messages as popup");
@@ -609,7 +608,7 @@ bool ChatPanel::ContainsWordToHighlight(const wxString& message) const
 /**
  *	Check if there is "promote" event and notify user if needed
  */
-void ChatPanel::CheckForPromotion(const wxString& who, const wxString& action)
+void ChatPanel::CheckForPromotion(const wxString& /*who*/, const wxString& action)
 {
 	if (m_reactOnPromoteEvents == false) { //If this feature disabled in options do nothing
 		return;

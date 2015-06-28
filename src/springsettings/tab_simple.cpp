@@ -93,7 +93,7 @@ void tab_simple::initInfoSizer(wxFlexGridSizer* sizer)
 	sizer->Add(infoText, 0, wxALL, 10);
 }
 
-void tab_simple::initButSizer(wxSizer* sizer)
+void tab_simple::initButSizer(wxSizer* /*sizer*/)
 {
 	goExpert_BUT = new wxButton(this, ID_SIMPLE_GOEXPERT_BUT, button_lbl, wxPoint(-1, -1), wxSize(-1, -1), wxBU_EXACTFIT);
 //	sizer->Add(goExpert_BUT, 0, wxEXPAND);

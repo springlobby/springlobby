@@ -64,7 +64,7 @@ void PlaybackDataView::RemovePlayback(const StoredGame& replay)
 	Refresh();
 }
 
-void PlaybackDataView::OnContextMenu(wxDataViewEvent& event)
+void PlaybackDataView::OnContextMenu(wxDataViewEvent& /*event*/)
 {
 	const StoredGame* storedGame = GetSelectedItem();
 
@@ -74,7 +74,7 @@ void PlaybackDataView::OnContextMenu(wxDataViewEvent& event)
 	PopupMenu(m_ContextMenu);
 }
 
-void PlaybackDataView::OnDLMap(wxCommandEvent& event)
+void PlaybackDataView::OnDLMap(wxCommandEvent& /*event*/)
 {
 	const StoredGame* storedGame = GetSelectedItem();
 
@@ -86,7 +86,7 @@ void PlaybackDataView::OnDLMap(wxCommandEvent& event)
 	ServerManager::Instance()->DownloadContent("map", battle.GetHostMapName(), battle.GetHostMapHash());
 }
 
-void PlaybackDataView::OnDLMod(wxCommandEvent& event)
+void PlaybackDataView::OnDLMod(wxCommandEvent& /*event*/)
 {
 	const StoredGame* storedGame = GetSelectedItem();
 
@@ -119,13 +119,13 @@ void PlaybackDataView::DeletePlayback()
 	}
 }
 
-void PlaybackDataView::SetTipWindowText(const long item_hit,
-					const wxPoint& position)
+void PlaybackDataView::SetTipWindowText(const long /*item_hit*/,
+					const wxPoint& /*position*/)
 {
 	//TODO: Implement
 }
 
-void PlaybackDataView::HighlightItem(long longInt)
+void PlaybackDataView::HighlightItem(long /*longInt*/)
 {
 	//TODO: Implement
 }

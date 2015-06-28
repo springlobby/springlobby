@@ -32,10 +32,10 @@ void DownloadDataViewCtrl::HighlightItem(long /*item*/) {
 	//TODO: implement!
 }
 
-void DownloadDataViewCtrl::OnCancel(wxCommandEvent& event) {
+void DownloadDataViewCtrl::OnCancel(wxCommandEvent& /*event*/) {
 	//TODO: implement!
 }
 
-void DownloadDataViewCtrl::OnRetry(wxCommandEvent& event) {
+void DownloadDataViewCtrl::OnRetry(wxCommandEvent& /*event*/) {
 	//TODO: implement!
 }

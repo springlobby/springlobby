@@ -8,8 +8,8 @@ DownloadDataViewModel::DownloadDataViewModel() {
 DownloadDataViewModel::~DownloadDataViewModel() {
 }
 
-void DownloadDataViewModel::GetValue(wxVariant& variant,
-		const wxDataViewItem& item, unsigned int col) const {
+void DownloadDataViewModel::GetValue(wxVariant& /*variant*/,
+		const wxDataViewItem& /*item*/, unsigned int /*col*/) const {
 	//TODO: implement!
 }
 

@@ -24,7 +24,6 @@ void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 
 	wxASSERT(user != nullptr);
 
-	bool isSpectator = user->BattleStatus().spectator;
 	bool isBot = user->BattleStatus().IsBot();
 
 	switch (col) {
