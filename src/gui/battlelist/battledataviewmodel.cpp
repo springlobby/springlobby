@@ -1,9 +1,4 @@
-/*
- * battledataviewmodel.cpp
- *
- *  Created on: 28 июня 2015 г.
- *      Author: Руслан
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "battledataviewmodel.h"
 
@@ -12,12 +7,9 @@
 #include "utils/slpaths.h"
 
 BattleDataViewModel::BattleDataViewModel() {
-	// TODO Auto-generated constructor stub
-
 }
 
 BattleDataViewModel::~BattleDataViewModel() {
-	// TODO Auto-generated destructor stub
 }
 
 void BattleDataViewModel::GetValue(wxVariant& variant,
@@ -89,6 +81,96 @@ void BattleDataViewModel::GetValue(wxVariant& variant,
 int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 		const wxDataViewItem& itemB, unsigned int column,
 		bool ascending) const {
-	//TODO: implement!
-	return BaseDataViewModel::Compare(itemA, itemB, column, ascending);
+
+	const IBattle* battleA = static_cast<const IBattle*>(itemA.GetID());
+	const IBattle* battleB = static_cast<const IBattle*>(itemB.GetID());
+
+	wxASSERT(battleA != nullptr);
+	wxASSERT(battleB != nullptr);
+
+	int sortingResult;
+
+	switch (column) {
+	case STATUS:
+	{
+		int b1 = 0, b2 = 0;
+
+		if (battleA->GetNumActivePlayers() == 0)
+			b1 += 2000;
+		if (battleB->GetNumActivePlayers() == 0)
+			b2 += 2000;
+		if (battleA->GetInGame())
+			b1 += 1000;
+		if (battleB->GetInGame())
+			b2 += 1000;
+		if (battleA->IsLocked())
+			b1 += 100;
+		if (battleB->IsLocked())
+			b2 += 100;
+		if (battleA->IsPassworded())
+			b1 += 50;
+		if (battleB->IsPassworded())
+			b2 += 50;
+		if (battleA->IsFull())
+			b1 += 25;
+		if (battleB->IsFull())
+			b2 += 25;
+
+		// inverse the order
+		if (b1 < b2) {
+			sortingResult = -1;
+		} else if (b1 > b2) {
+			sortingResult = 1;
+		} else {
+			sortingResult = 0;
+		}
+	}
+		break;
+
+	case COUNTRY:
+		if (battleA->GetFounder().GetCountry() < battleB->GetFounder().GetCountry()) {
+			sortingResult = -1;
+		} else if (battleA->GetFounder().GetCountry() > battleB->GetFounder().GetCountry()) {
+			sortingResult = 1;
+		} else {
+			sortingResult = 0;
+		}
+		break;
+
+	case RANK:
+		sortingResult = (battleA->GetRankNeeded() - battleB->GetRankNeeded());
+		break;
+
+	case DESCRIPTION:
+	case MAP:
+	case GAME:
+	case HOST:
+	case ENGINE:
+	case RUNNING:
+		return BaseDataViewModel::Compare(itemA, itemB, column, ascending);
+		break;
+
+	case SPECTATORS:
+		sortingResult = battleA->GetSpectators() - battleB->GetSpectators();
+		break;
+
+	case MAXIMUM:
+		sortingResult = battleA->GetMaxPlayers() - battleB->GetMaxPlayers();
+		break;
+
+	case PLAYERS:
+	{
+		int playersA = battleA->GetNumPlayers() - battleA->GetSpectators();
+		int playersB = battleB->GetNumPlayers() - battleB->GetSpectators();
+		sortingResult = playersA - playersB;
+	}
+	break;
+
+	default:
+		wxASSERT(false);
+		sortingResult = 0;
+	}
+
+	//Return direct sort order or reversed depending on ascending flag
+	return ascending ? sortingResult : (sortingResult * (-1));
 }
