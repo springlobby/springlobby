@@ -166,7 +166,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	m_battle.SetEngineVersion(SlPaths::GetCurrentUsedSpringIndex());
 
 	ReloadMaplist();
-	ReloadModlist();
+//	ReloadModlist(); //Called from ReloadEngineList() too
 	ReloadEngineList();
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&SinglePlayerTab::OnUnitsyncReloaded));
 
@@ -244,10 +244,12 @@ void SinglePlayerTab::ReloadEngineList()
 	if(i == 0) {
 		m_minimap->Hide();
 		m_nominimap->Show();
+		m_start_btn->Enable(false);
 	}
 	else {
 		m_nominimap->Hide();
 		m_minimap->Show();
+		m_start_btn->Enable(true);
 	}
 	//unitsync change needs a refresh of games as well
 	ReloadModlist();
