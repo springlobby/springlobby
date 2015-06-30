@@ -62,7 +62,6 @@ public:
 private:
 	wxBoxSizer* m_main_sizer;
 	SinglePlayerBattle m_battle;
-	bool unitsync_ready;
 
 	MapCtrl* m_minimap;
 	wxPanel* m_nominimap;
