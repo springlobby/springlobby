@@ -66,11 +66,15 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 
 
 	// empty panel to replace minimap
-	m_nominimap = new wxPanel(this, -1, wxDefaultPosition, wxSize(100, 100), wxSIMPLE_BORDER | wxFULL_REPAINT_ON_RESIZE);
+	m_nominimap = new wxWindow(this, -1, wxDefaultPosition, wxSize(100, 100), wxSIMPLE_BORDER | wxFULL_REPAINT_ON_RESIZE);
+
 	m_nominimap->SetToolTip(_("No Unitsync configured."));
+	m_nominimap->SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+	m_nominimap->SetBackgroundColour(*wxLIGHT_GREY);
 	m_nominimap->Hide();
 	m_map_sizer->Add(m_nominimap, 1, wxALL | wxEXPAND, 2);
 
+//	Regular minimap
 
 	m_minimap = new MapCtrl(this, 100, &m_battle, false, true, true);
 	m_minimap->SetToolTip(_("You can drag the sun/bot icon around to define start position.\n "
