@@ -64,6 +64,18 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	wxBoxSizer* m_map_sizer = new wxBoxSizer(wxHORIZONTAL);
 	// m_map_sizer->SetMinSize( wxSize( 352, -1 ) );
 
+
+	// empty panel to replace minimap
+	m_nominimap = new wxWindow(this, -1, wxDefaultPosition, wxSize(100, 100), wxSIMPLE_BORDER | wxFULL_REPAINT_ON_RESIZE);
+
+	m_nominimap->SetToolTip(_("No Unitsync configured."));
+	m_nominimap->SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+	m_nominimap->SetBackgroundColour(*wxLIGHT_GREY);
+	m_nominimap->Hide();
+	m_map_sizer->Add(m_nominimap, 1, wxALL | wxEXPAND, 2);
+
+//	Regular minimap
+
 	m_minimap = new MapCtrl(this, 100, &m_battle, false, true, true);
 	m_minimap->SetToolTip(_("You can drag the sun/bot icon around to define start position.\n "
 				"Hover over the icon for a popup that lets you change side, ally and bonus."));
@@ -158,7 +170,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	m_battle.SetEngineVersion(SlPaths::GetCurrentUsedSpringIndex());
 
 	ReloadMaplist();
-	ReloadModlist();
+//	ReloadModlist(); //Called from ReloadEngineList() too
 	ReloadEngineList();
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&SinglePlayerTab::OnUnitsyncReloaded));
 
@@ -211,6 +223,8 @@ void SinglePlayerTab::ReloadModlist()
 	}
 }
 
+
+
 void SinglePlayerTab::ReloadEngineList()
 {
 	m_engine_pick->Clear();
@@ -229,6 +243,17 @@ void SinglePlayerTab::ReloadEngineList()
 
 	if (m_engine_pick->GetSelection() == wxNOT_FOUND) {
 		m_engine_pick->SetSelection(0);
+	}
+
+	if(i == 0) {
+		m_minimap->Hide();
+		m_nominimap->Show();
+		m_start_btn->Enable(false);
+	}
+	else {
+		m_nominimap->Hide();
+		m_minimap->Show();
+		m_start_btn->Enable(true);
 	}
 	//unitsync change needs a refresh of games as well
 	ReloadModlist();

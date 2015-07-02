@@ -64,6 +64,7 @@ private:
 	SinglePlayerBattle m_battle;
 
 	MapCtrl* m_minimap;
+	wxWindow* m_nominimap;
 	wxChoice* m_map_pick;
 	wxChoice* m_mod_pick;
 	wxChoice* m_engine_pick;
