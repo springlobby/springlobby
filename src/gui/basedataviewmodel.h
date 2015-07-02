@@ -20,6 +20,7 @@ public:
 	virtual unsigned int GetChildren(const wxDataViewItem& , wxDataViewItemArray& ) const override;
 	virtual int Compare(const wxDataViewItem& , const wxDataViewItem& , unsigned int , bool ) const override;
 	virtual bool IsListModel() const override;
+	virtual bool GetAttr(const wxDataViewItem&, unsigned int, wxDataViewItemAttr&) const override;
 
 public:
 	//Custom methods
@@ -163,6 +164,12 @@ inline void BaseDataViewModel<DataType>::UpdateItem(const DataType& item)
 	} else {
 		return;
 	}
+}
+
+template<class DataType>
+inline bool BaseDataViewModel<DataType>::GetAttr(const wxDataViewItem&,
+		unsigned int, wxDataViewItemAttr&) const {
+	return false;
 }
 
 template <class DataType>

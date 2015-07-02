@@ -2,9 +2,12 @@
 
 #include "battledataviewmodel.h"
 
+#include <wx/colour.h>
+
 #include "gui/iconscollection.h"
 #include "ibattle.h"
 #include "utils/slpaths.h"
+#include "useractions.h"
 
 BattleDataViewModel::BattleDataViewModel() {
 }
@@ -173,4 +176,31 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 
 	//Return direct sort order or reversed depending on ascending flag
 	return ascending ? sortingResult : (sortingResult * (-1));
+}
+
+bool BattleDataViewModel::GetAttr(const wxDataViewItem& item,
+		unsigned int, wxDataViewItemAttr& attr) const {
+
+	const IBattle* battle = static_cast<const IBattle*>(item.GetID());
+
+	wxASSERT(battle != nullptr);
+
+	//If founder is cause of highlight
+	wxString groupName = useractions().GetGroupOfUser(battle->GetFounder().GetNick());
+	if (groupName != wxEmptyString) {
+		wxColour color = useractions().GetGroupHLColor(groupName);
+		attr.SetBackgroundColour(color);
+		return true;
+	//If user is cause of highlight
+	} else {
+		for (unsigned int i = 0; i < battle->GetNumUsers(); ++i) {
+			groupName = useractions().GetGroupOfUser(battle->GetUser(i).GetNick());
+			if (groupName != wxEmptyString) {
+				wxColour color = useractions().GetGroupHLColor(groupName);
+				attr.SetBackgroundColour(color);
+				return true;
+			}
+		}
+	}
+	return false;
 }

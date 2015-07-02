@@ -266,7 +266,11 @@ UserActions::ActionType UserActions::GetGroupAction(const wxString& group) const
 wxString UserActions::GetGroupOfUser(const wxString& user) const
 {
 	const PeopleGroupMap::const_iterator res = m_peopleGroup.find(user);
-	return res->second;
+	if (res == m_peopleGroup.end()) {
+		return wxEmptyString;
+	} else {
+		return res->second;
+	}
 }
 
 void UserActions::SetGroupColor(const wxString& group, const wxColour& color)
