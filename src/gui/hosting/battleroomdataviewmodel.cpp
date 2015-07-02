@@ -5,6 +5,7 @@
 #include "gui/iconscollection.h"
 #include "user.h"
 #include "battle.h"
+#include "useractions.h"
 
 #include <wx/dataview.h>
 
@@ -330,4 +331,20 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 
 	//Return direct sort order or reversed depending on ascending flag
 	return ascending ? sortingResult : (sortingResult * (-1));
+}
+
+bool BattleroomDataViewModel::GetAttr(const wxDataViewItem& item,
+		unsigned int, wxDataViewItemAttr& attr) const {
+	const User* user = static_cast<const User*>(item.GetID());
+
+	wxASSERT(user != nullptr);
+
+	wxString groupName = useractions().GetGroupOfUser(user->GetNick());
+	if (groupName == wxEmptyString) {
+		return false;
+	} else {
+		wxColour color = useractions().GetGroupHLColor(groupName);
+		attr.SetBackgroundColour(color);
+		return true;
+	}
 }
