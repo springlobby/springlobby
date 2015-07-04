@@ -65,6 +65,10 @@ void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 		}
 		break;
 
+	case DEFAULT_COLUMN:
+		//Do nothing
+		break;
+
 	default:
 		wxASSERT(false);
 	}
@@ -130,6 +134,10 @@ int NickDataViewModel::Compare(const wxDataViewItem& itemA,
 
 	case NICKNAME:
 		sortingResult = BaseDataViewModel::Compare(itemA, itemB, column, true);
+		break;
+
+	case DEFAULT_COLUMN:
+		sortingResult = 0;
 		break;
 
 	default:

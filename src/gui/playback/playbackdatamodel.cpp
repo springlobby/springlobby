@@ -68,8 +68,8 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 		variant = wxString(storedGame->Filename).AfterLast(wxFileName::GetPathSeparator());
 		break;
 
-	case (unsigned int)(-1):
-		//STUB: do not know why this happen on linux
+	case DEFAULT_COLUMN:
+		//Do nothing
 		break;
 
 	default:

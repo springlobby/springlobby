@@ -126,6 +126,10 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 		}
 		break;
 
+	case DEFAULT_COLUMN:
+		//Do nothing
+		break;
+
 	default:
 		wxASSERT(false);
 	}
@@ -322,6 +326,10 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 		} else {
 			sortingResult = (userA->BattleStatus().handicap - userB->BattleStatus().handicap);
 		}
+		break;
+
+	case DEFAULT_COLUMN:
+		sortingResult = 0;
 		break;
 
 	default:

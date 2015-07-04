@@ -6,6 +6,11 @@
 #include <wx/dataview.h>
 #include <list>
 
+#include <climits>
+
+#define DEFAULT_COLUMN UINT_MAX
+
+
 template <class DataType>
 class BaseDataViewModel : public wxDataViewModel
 {

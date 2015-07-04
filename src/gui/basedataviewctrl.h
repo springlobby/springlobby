@@ -97,27 +97,28 @@ template<class DataType>
 inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	const int columnCount = GetColumnCount();
 
-//FIXME: this code causes weird behavior of wxDataViewModel
 	//Set up sorting column
-//	int sortingColumnIndex;
-//	cfg().Read(wxString(m_DataViewName + _T("/sorting_column")), &sortingColumnIndex, -1);
-//	//Set up sorting order
-//	bool sortOrderAscending;
-//	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
+	int sortingColumnIndex;
+	cfg().Read(wxString(m_DataViewName + _T("/sorting_column")), &sortingColumnIndex, -1);
+	//Set up sorting order
+	bool sortOrderAscending;
+	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
 
+	//Loop through existing columns and set their sizes and sort orders
 	for(int columnIndex = 0; columnIndex < columnCount; columnIndex++)
 	{
+		//Set up column's width
 		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
 		wxDataViewColumn* column = GetColumn(columnIndex);
 		if (colWidth >= (wxDVC_DEFAULT_MINWIDTH - 5)) {
 			column->SetWidth(colWidth);
 		}
-//FIXME: this code causes weird behavior of wxDataViewModel
-//		if (columnIndex == sortingColumnIndex) {
-//			column->SetSortOrder(sortOrderAscending);
-//		} else {
-//			column->UnsetAsSortKey();
-//		}
+		//Set up column's sort order (if any)
+		if (columnIndex == sortingColumnIndex) {
+			column->SetSortOrder(sortOrderAscending);
+		} else {
+			/*column->UnsetAsSortKey(); <- this method breaks sorting of any column that was or will be set as sort key! (wxMSW3.0)*/
+		}
 	}
 }
 

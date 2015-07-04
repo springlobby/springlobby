@@ -76,6 +76,10 @@ void BattleDataViewModel::GetValue(wxVariant& variant,
 				SlPaths::GetCompatibleVersion(battle->GetEngineVersion()).empty() ? iconsCollection->ICON_NEXISTS : iconsCollection->ICON_EXISTS));
 		break;
 
+	case DEFAULT_COLUMN:
+		//Do nothing
+		break;
+
 	default:
 		wxASSERT(false);
 	}
@@ -168,6 +172,10 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 		sortingResult = playersA - playersB;
 	}
 	break;
+
+	case DEFAULT_COLUMN:
+		sortingResult = 0;
+		break;
 
 	default:
 		wxASSERT(false);
