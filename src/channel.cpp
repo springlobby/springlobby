@@ -87,7 +87,7 @@ void Channel::Left(User& who, const std::string& reason)
 	RemoveUser(who.GetNick());
 	//wxLogDebugFunc( wxEmptyString );
 	if (uidata.panel == 0) {
-		wxLogError(_T("OnUserLeftChannel: ud->panel NULL"));
+		wxLogWarning(_T("OnUserLeftChannel: ud->panel NULL"));
 		return;
 	}
 	uidata.panel->Parted(who, TowxString(reason));
