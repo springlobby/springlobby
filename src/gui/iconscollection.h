@@ -98,6 +98,7 @@ private:
 public:
 	static IconsCollection* Instance();
 	static void Release();
+	static wxBitmap CreateBitmap(const char * const *); /* Used to create transparent bitmaps under Windows 7 and Windows XP */
 
 private:
 	void loadCountryFlags();
@@ -147,38 +148,38 @@ public:
 	wxBitmap BMP_ADMIN_BROOM = charArr2wxBitmap(admin_broom_png, sizeof(admin_broom_png));
 	wxBitmap BMP_ADMIN_INGAME = charArr2wxBitmap(admin_ingame_png, sizeof(admin_ingame_png));
 
-	wxBitmap BMP_PLAYER = wxBitmap(player_xpm);
+	wxBitmap BMP_PLAYER = IconsCollection::CreateBitmap(player_xpm);
 
-	wxBitmap BMP_BOT = wxBitmap(bot_xpm);
+	wxBitmap BMP_BOT = IconsCollection::CreateBitmap(bot_xpm);
 	wxBitmap BMP_BOT_BROOM = charArr2wxBitmap(bot_broom_png, sizeof(bot_broom_png));
 	wxBitmap BMP_BOT_INGAME = charArr2wxBitmap(bot_ingame_png, sizeof(bot_ingame_png));
-	wxBitmap BMP_BOT_AWAY = wxBitmap(bot_away_xpm);
+	wxBitmap BMP_BOT_AWAY = IconsCollection::CreateBitmap(bot_away_xpm);
 
-	wxBitmap BMP_NOSTATE = wxBitmap(empty_xpm);
+	wxBitmap BMP_NOSTATE = IconsCollection::CreateBitmap(empty_xpm);
 	wxBitmap BMP_AWAY = charArr2wxBitmap(away_png, sizeof(away_png));
 	wxBitmap BMP_BROOM = charArr2wxBitmap(broom_png, sizeof(broom_png));
 	wxBitmap BMP_INGAME = charArr2wxBitmap(ingame_png, sizeof(ingame_png));
 
-	wxBitmap BMP_OP = wxBitmap(chanop_xpm);
-	wxBitmap BMP_OP_AWAY = wxBitmap(chanop_away_xpm);
-	wxBitmap BMP_OP_BROOM = wxBitmap(chanop_broom_xpm);
-	wxBitmap BMP_OP_INGAME = wxBitmap(chanop_ingame_xpm);
+	wxBitmap BMP_OP = IconsCollection::CreateBitmap(chanop_xpm);
+	wxBitmap BMP_OP_AWAY = IconsCollection::CreateBitmap(chanop_away_xpm);
+	wxBitmap BMP_OP_BROOM = IconsCollection::CreateBitmap(chanop_broom_xpm);
+	wxBitmap BMP_OP_INGAME = IconsCollection::CreateBitmap(chanop_ingame_xpm);
 
-	wxBitmap BMP_UP = wxBitmap(up_xpm);
-	wxBitmap BMP_DOWN = wxBitmap(down_xpm);
+	wxBitmap BMP_UP = IconsCollection::CreateBitmap(up_xpm);
+	wxBitmap BMP_DOWN = IconsCollection::CreateBitmap(down_xpm);
 
-	wxBitmap BMP_RANK_NONE = wxBitmap(empty_xpm);
-	wxBitmap BMP_RANK_UNKNOWN = wxBitmap(rank_unknown_xpm);
-	wxBitmap BMP_RANK1 = wxBitmap(rank0_xpm);
-	wxBitmap BMP_RANK2 = wxBitmap(rank1_xpm);
-	wxBitmap BMP_RANK3 = wxBitmap(rank2_xpm);
-	wxBitmap BMP_RANK4 = wxBitmap(rank3_xpm);
-	wxBitmap BMP_RANK5 = wxBitmap(rank4_xpm);
-	wxBitmap BMP_RANK6 = wxBitmap(rank5_xpm);
-	wxBitmap BMP_RANK7 = wxBitmap(rank6_xpm);
-	wxBitmap BMP_RANK8 = wxBitmap(rank7_xpm);
+	wxBitmap BMP_RANK_NONE = IconsCollection::CreateBitmap(empty_xpm);
+	wxBitmap BMP_RANK_UNKNOWN = IconsCollection::CreateBitmap(rank_unknown_xpm);
+	wxBitmap BMP_RANK1 = IconsCollection::CreateBitmap(rank0_xpm);
+	wxBitmap BMP_RANK2 = IconsCollection::CreateBitmap(rank1_xpm);
+	wxBitmap BMP_RANK3 = IconsCollection::CreateBitmap(rank2_xpm);
+	wxBitmap BMP_RANK4 = IconsCollection::CreateBitmap(rank3_xpm);
+	wxBitmap BMP_RANK5 = IconsCollection::CreateBitmap(rank4_xpm);
+	wxBitmap BMP_RANK6 = IconsCollection::CreateBitmap(rank5_xpm);
+	wxBitmap BMP_RANK7 = IconsCollection::CreateBitmap(rank6_xpm);
+	wxBitmap BMP_RANK8 = IconsCollection::CreateBitmap(rank7_xpm);
 
-	wxBitmap BMP_GAME_UNKNOWN = wxBitmap();
+	wxBitmap BMP_GAME_UNKNOWN = IconsCollection::CreateBitmap(empty_xpm);
 	wxBitmap BMP_OPEN_GAME = charArr2wxBitmap(open_game_png, sizeof(open_game_png));
 	wxBitmap BMP_OPEN_PW_GAME = charArr2wxBitmap(open_pw_game_png, sizeof(open_pw_game_png));
 	wxBitmap BMP_OPEN_FULL_PW_GAME = charArr2wxBitmap(open_full_pw_game_png, sizeof(open_full_pw_game_png));
@@ -187,37 +188,37 @@ public:
 	wxBitmap BMP_CLOSED_PW_GAME = charArr2wxBitmap(closed_pw_game_png, sizeof(closed_pw_game_png));
 	wxBitmap BMP_CLOSED_FULL_PW_GAME = charArr2wxBitmap(closed_full_pw_game_png, sizeof(closed_full_pw_game_png));
 	wxBitmap BMP_CLOSED_FULL_GAME = charArr2wxBitmap(closed_full_game_png, sizeof(closed_full_game_png));
-	wxBitmap BMP_STARTED_GAME = wxBitmap(BMP_INGAME);
-	wxBitmap BMP_STARTED_GAME_LOCKED = wxBitmap(BMP_INGAME);
+	wxBitmap BMP_STARTED_GAME = BMP_INGAME;
+	wxBitmap BMP_STARTED_GAME_LOCKED = BMP_INGAME;
 
-	wxBitmap BMP_READY_UNSYNC = wxBitmap(ready_unsync_xpm);
-	wxBitmap BMP_NREADY_UNSYNC = wxBitmap(nready_unsync_xpm);
-	wxBitmap BMP_READY_QSYNC = wxBitmap(ready_q_xpm);
-	wxBitmap BMP_NREADY_QSYNC = wxBitmap(nready_q_xpm);
+	wxBitmap BMP_READY_UNSYNC = IconsCollection::CreateBitmap(ready_unsync_xpm);
+	wxBitmap BMP_NREADY_UNSYNC = IconsCollection::CreateBitmap(nready_unsync_xpm);
+	wxBitmap BMP_READY_QSYNC = IconsCollection::CreateBitmap(ready_q_xpm);
+	wxBitmap BMP_NREADY_QSYNC = IconsCollection::CreateBitmap(nready_q_xpm);
 	wxBitmap BMP_NREADY = charArr2wxBitmap(closed_game_png, sizeof(closed_game_png));
 	wxBitmap BMP_READY = charArr2wxBitmap(open_game_png, sizeof(open_game_png));
 
-	wxBitmap BMP_NEXISTS = wxBitmap(nexists_xpm);
-	wxBitmap BMP_EXISTS = wxBitmap(exists_xpm);
+	wxBitmap BMP_NEXISTS = IconsCollection::CreateBitmap(nexists_xpm);
+	wxBitmap BMP_EXISTS = IconsCollection::CreateBitmap(exists_xpm);
 
 	wxBitmap BMP_SPECTATOR = charArr2wxBitmap(spectator_png, sizeof(spectator_png));
 	wxBitmap BMP_SPECTATOR_UNSYNC = charArr2wxBitmapWithBlending(spectator_png, sizeof(spectator_png), warning_small_png, sizeof(warning_small_png));
-	wxBitmap BMP_HOST = wxBitmap(host_xpm);
-	wxBitmap BMP_HOST_SPECTATOR = wxBitmap(host_spectator_xpm);
+	wxBitmap BMP_HOST = IconsCollection::CreateBitmap(host_xpm);
+	wxBitmap BMP_HOST_SPECTATOR = IconsCollection::CreateBitmap(host_spectator_xpm);
 
-	wxBitmap BMP_SIDEPIC_0 = wxBitmap();
-	wxBitmap BMP_SIDEPIC_1 = wxBitmap();
+	wxBitmap BMP_SIDEPIC_0 = IconsCollection::CreateBitmap(empty_xpm);
+	wxBitmap BMP_SIDEPIC_1 = IconsCollection::CreateBitmap(empty_xpm);
 
-	wxBitmap BMP_UNK_FLAG = wxBitmap(unknown_flag_xpm);
-	wxBitmap BMP_FLAGS_BASE = wxBitmap();
+	wxBitmap BMP_UNK_FLAG = IconsCollection::CreateBitmap(unknown_flag_xpm);
+	wxBitmap BMP_FLAGS_BASE = IconsCollection::CreateBitmap(empty_xpm);
 
-	wxBitmap BMP_WARNING_OVERLAY = wxBitmap();
+	wxBitmap BMP_WARNING_OVERLAY = IconsCollection::CreateBitmap(empty_xpm);
 
-	wxBitmap BMP_CHANNEL_OPTIONS = wxBitmap(channel_options_xpm);
+	wxBitmap BMP_CHANNEL_OPTIONS = IconsCollection::CreateBitmap(channel_options_xpm);
 
-	wxBitmap BMP_EMPTY = wxBitmap(empty_xpm);
+	wxBitmap BMP_EMPTY = IconsCollection::CreateBitmap(empty_xpm);
 
-	wxBitmap BMP_SPRINGLOBBY = wxBitmap(springlobby_xpm);
+	wxBitmap BMP_SPRINGLOBBY = IconsCollection::CreateBitmap(springlobby_xpm);
 };
 
 #endif /* SRC_GUI_ICONSCOLLECTION_H_ */

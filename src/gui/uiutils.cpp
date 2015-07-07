@@ -163,7 +163,11 @@ wxBitmap charArr2wxBitmap(const unsigned char* arg, int size)
 wxImage charArr2wxImage(const unsigned char* arg, int size)
 {
 	wxMemoryInputStream istream(arg, size);
-	return wxImage(istream, wxBITMAP_TYPE_PNG);
+	wxImage img = wxImage(istream, wxBITMAP_TYPE_PNG);
+	if (img.HasAlpha() == false) {
+		img.InitAlpha();
+	}
+	return img;
 }
 
 wxBitmap charArr2wxBitmapWithBlending(const unsigned char* dest, int dest_size, const unsigned char* text, int text_size)

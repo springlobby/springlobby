@@ -252,3 +252,12 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& modName, int fracti
 		return m_cachedFractionBmps[cacheString];
 	}
 }
+
+/* Used to create transparent bitmaps under Windows 7 and Windows XP */
+wxBitmap IconsCollection::CreateBitmap(const char* const * data) {
+	wxImage img = wxImage(data);
+	if (img.HasAlpha() == false) {
+		img.InitAlpha();
+	}
+	return wxBitmap(img);
+}
