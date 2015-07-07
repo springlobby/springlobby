@@ -9,7 +9,7 @@
 
 class wxStaticText;
 class wxButton;
-class DownloadListCtrl;
+class DownloadDataViewCtrl;
 class Ui;
 struct DownloadInfo;
 class wxBoxSizer;
@@ -44,7 +44,7 @@ private:
 
 	wxButton* m_but_cancel;
 	wxButton* m_but_clear;
-	DownloadListCtrl* m_dl_listctrl;
+	DownloadDataViewCtrl* m_DownloadDataView;
 	WidgetDownloadDialog* m_widgets_dialog;
 
 	void OnCancelButton(wxCommandEvent& event);

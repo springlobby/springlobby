@@ -16,29 +16,29 @@ public:
 	DownloadDataViewCtrl(const wxString dataViewName, wxWindow* parent);
 	virtual ~DownloadDataViewCtrl();
 
-	virtual void SetTipWindowText(const long item_hit, const wxPoint& position);
-//	bool AddTorrentInfo(const DataType& info);
-//	bool RemoveTorrentInfo(const DataType& info);
-//	void UpdateTorrentInfo(const DataType& info);
+	virtual void SetTipWindowText(const long, const wxPoint&);
+	bool AddDownloadInfo(const ObserverDownloadInfo&);
+	bool RemoveDownloadInfo(const ObserverDownloadInfo&);
+	void UpdateDownloadInfo(const ObserverDownloadInfo&);
+	void UpdateDownloadsList();
 
-	void UpdateTorrentsList();
+	virtual void HighlightItem(long);
 
-	virtual void HighlightItem(long item);
-
-	void OnCancel(wxCommandEvent& event);
-	void OnRetry(wxCommandEvent& event);
+	void OnCancel(wxCommandEvent&);
+	void OnRetry(wxCommandEvent&);
 
 private:
-//	bool IsTorrentActive(const DataType& info) const;
+	bool IsTorrentActive(const ObserverDownloadInfo&) const;
 
-	wxMenu* m_popup;
+private:
+	std::list<ObserverDownloadInfo> downloadInfoList;
 
 private:
 	enum ColumnIndexes
 	{
 		NAME = 0,
 		STATUS,
-		COMPLETE,
+		P_COMPLETE,
 		SPEED,
 		ETA,
 		FILESIZE

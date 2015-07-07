@@ -15,7 +15,7 @@
 #include <wx/button.h>
 #include <wx/msgdlg.h>
 
-#include "downloader/downloadlistctrl.h"
+#include "downloader/downloaddataviewctrl.h"
 #include "utils/conversion.h"
 #include "gui/controls.h"
 #include "gui/colorbutton.h"
@@ -27,10 +27,10 @@
 BEGIN_EVENT_TABLE(MainDownloadTab, wxPanel)
 //(*EventTable(MainTorrentTab)
 //*)
-EVT_BUTTON(ID_BUTTON_CANCEL, MainDownloadTab::OnCancelButton)
-EVT_BUTTON(ID_BUTTON_CLEAR, MainDownloadTab::OnClearFinished)
-EVT_BUTTON(ID_DOWNLOAD_DIALOG, MainDownloadTab::OnDownloadDialog)
-EVT_TIMER(ID_TIMER, MainDownloadTab::OnUpdate)
+	EVT_BUTTON(ID_BUTTON_CANCEL, MainDownloadTab::OnCancelButton)
+	EVT_BUTTON(ID_BUTTON_CLEAR, MainDownloadTab::OnClearFinished)
+	EVT_BUTTON(ID_DOWNLOAD_DIALOG, MainDownloadTab::OnDownloadDialog)
+	EVT_TIMER(ID_TIMER, MainDownloadTab::OnUpdate)
 END_EVENT_TABLE()
 
 MainDownloadTab::MainDownloadTab(wxWindow* parent)
@@ -44,8 +44,8 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 
 	wxBoxSizer* m_buttonbox = new wxBoxSizer(wxHORIZONTAL);
 
-	m_dl_listctrl = new DownloadListCtrl(this);
-	m_main_sizer->Add(m_dl_listctrl, 2, wxALL | wxEXPAND, 0);
+	m_DownloadDataView = new DownloadDataViewCtrl(_T("DownloadDataViewCtrl_MainDownloadTab"), this);
+	m_main_sizer->Add(m_DownloadDataView, 2, wxALL | wxEXPAND, 0);
 
 	m_but_cancel = new wxButton(this, ID_BUTTON_CANCEL, _("Cancel Download"));
 	//m_but_cancel->Disable();
@@ -89,12 +89,12 @@ void MainDownloadTab::OnClearFinished(wxCommandEvent& /*event*/)
 {
 	downloadsObserver().ClearFinished();
 
-	m_dl_listctrl->Clear();
+	m_DownloadDataView->Clear();
 }
 
 void MainDownloadTab::OnUpdate(wxTimerEvent& /*event*/)
 {
-	m_dl_listctrl->UpdateTorrentsList();
+	m_DownloadDataView->UpdateDownloadsList();
 }
 
 

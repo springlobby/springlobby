@@ -20,7 +20,7 @@ private:
 	{
 		NAME = 0,
 		STATUS,
-		COMPLETE,
+		P_COMPLETE,
 		SPEED,
 		ETA,
 		FILESIZE
