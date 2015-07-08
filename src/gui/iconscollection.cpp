@@ -52,7 +52,7 @@ void IconsCollection::loadCountryFlags()
 		//Just in case (these two arrays must have same size!)
 		wxASSERT(flag_xpm[flagIndex] != NULL);
 		//Load flag image and store it in collection
-		m_countryFlagBmps[flag_str[flagIndex]] = wxBitmap(flag_xpm[flagIndex]);
+		m_countryFlagBmps[flag_str[flagIndex]] = IconsCollection::CreateBitmap(flag_xpm[flagIndex]);
 	}
 
 	//Just in case (these two arrays must have same size!)
