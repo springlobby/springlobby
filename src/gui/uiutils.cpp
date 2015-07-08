@@ -457,7 +457,7 @@ wxBitmap getColourIcon(const wxColour& colour)
 	g = colour.Green() + 80;
 	b = colour.Blue() + 80;
 	img.Replace(2, 2, 2, r > 255 ? 255 : r, g > 255 ? 255 : g, b > 255 ? 255 : b);
-	if (img.HasAlpha())
+	if (img.HasAlpha() == false)
 	{
 		img.InitAlpha();
 	}
