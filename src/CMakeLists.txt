@@ -200,7 +200,7 @@ set(springlobbySrc
 	gui/iconscollection.cpp
 	gui/nickdataviewctrl.cpp
 	gui/nickdataviewmodel.cpp
-	
+
 	gui/notifications/libnotify.cpp
 	gui/notifications/notificationmanager.cpp
 	gui/notifications/toasternotification.cpp
@@ -212,7 +212,7 @@ set(springlobbySrc
 	gui/battlelist/battlelisttab.cpp
 	gui/battlelist/battledataviewcttrl.cpp
 	gui/battlelist/battledataviewmodel.cpp
-	
+
 	gui/channel/channelchooser.cpp
 	gui/channel/channelchooserdialog.cpp
 	gui/channel/autojoinchanneldialog.cpp
@@ -232,7 +232,7 @@ set(springlobbySrc
 	gui/hosting/votepanel.cpp
 	gui/hosting/battleroomdataviewctrl.cpp
 	gui/hosting/battleroomdataviewmodel.cpp
-	
+
 	gui/options/downloadoptionspanel.cpp
 	gui/options/mainoptionstab.cpp
 	gui/options/springoptionstab.cpp
@@ -244,12 +244,12 @@ set(springlobbySrc
 	gui/playback/playbacktab.cpp
 	gui/playback/playbackdataview.cpp
 	gui/playback/playbackdatamodel.cpp
-	
+
 	downloader/prdownloader.cpp
 	downloader/downloadsobserver.cpp
 	downloader/downloaddataviewctrl.cpp
 	downloader/downloaddataviewmodel.cpp
-	
+
 	utils/battleevents.cpp
 	utils/base64.cpp
 	utils/crc.cpp
