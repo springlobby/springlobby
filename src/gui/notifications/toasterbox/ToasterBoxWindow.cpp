@@ -34,14 +34,14 @@ ToasterBoxWindow::ToasterBoxWindow(wxWindow* parent, wxTimer* _parent2)
     , popupText(_T("Change Me!"))
     , shrink(false)
 {
-	Create(parent, wxID_ANY);
+	Create(parent);
 	SetWindowStyleFlag(wxNO_BORDER | wxSTAY_ON_TOP | wxFRAME_NO_TASKBAR);
 	count++;
 	//the size we want the dialog to be
 	wxSize dialogSize(150, 170);
 	bottomRight = wxPoint(wxGetDisplaySize().GetWidth(), wxGetDisplaySize().GetHeight());
 	SetSize(bottomRight.x, bottomRight.y, dialogSize.GetWidth(), dialogSize.GetHeight());
-	ToasterBase::Connect(wxEVT_PAINT, (wxObjectEventFunction)&ToasterBoxWindow::OnPaint);
+//	ToasterBase::Connect(wxEVT_PAINT, (wxObjectEventFunction)&ToasterBoxWindow::OnPaint);
 	SetBackgroundBitmap(charArr2wxBitmap(notif_bg_png, sizeof(notif_bg_png)));
 }
 
@@ -194,9 +194,9 @@ void ToasterBoxWindow::DrawText()
 	//border from sides and top to text (in pixels)
 	int border_right = 7;
 	int border_left = 102;
-	if (sbm.GetBitmap().IsOk()) {
-		border_left += sbm.GetBitmap().GetWidth();
-	}
+//	if (sbm.GetBitmap().IsOk()) {
+//		border_left += sbm.GetBitmap().GetWidth();
+//	}
 	//how much space between text lines
 	int textPadding = 4;
 	//how much can we have on a line?

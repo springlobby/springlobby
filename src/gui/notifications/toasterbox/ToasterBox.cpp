@@ -116,9 +116,11 @@ void ToasterBox::Play()
 	tb->SetPopupBackgroundColor(colBg.Red(), colBg.Green(), colBg.Blue());
 	if (m_bitmap.IsOk()) {
 		tb->SetPopupBitmap(m_bitmap);
-	}
-	if (!bitmapFile.IsEmpty()) {
+	} else if (bitmapFile.IsEmpty() == false) {
 		tb->SetPopupBitmap(bitmapFile);
+	} else {
+		//No image for ToasterBox???
+//		wxASSERT(false);
 	}
 	tb->SetPopupText(popupText, true);
 
