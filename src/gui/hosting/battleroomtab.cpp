@@ -142,6 +142,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_color_sel->SetToolTip(_("Select a color to identify your units in-game"));
 	m_side_sel = new wxBitmapComboBox(m_player_panel, BROOM_SIDESEL, wxEmptyString, wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT), wxArrayString(), wxCB_READONLY);
 	m_side_sel->SetToolTip(_("Select your faction"));
+	m_side_sel->SetMaxSize(wxSize(80,40));
 	m_spec_chk = new wxCheckBox(m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
 	m_spec_chk->SetToolTip(_("Spectate (watch) the battle instead of playing"));
 	m_auto_unspec_chk = new wxCheckBox(m_player_panel, BROOM_UNSPEC, _("Auto un-spectate"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
@@ -1205,6 +1206,8 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 void BattleRoomTab::RegenerateOptionsList()
 {
 	long pos = 0;
+	m_opts_list->Freeze(); /*Try to prevent flickering*/
+
 	m_opts_list->DeleteAllItems();
 	m_opts_list->InsertItem(pos, _("Size"));
 	m_opt_list_map.clear();
@@ -1229,6 +1232,7 @@ void BattleRoomTab::RegenerateOptionsList()
 	pos++;
 	m_map_opts_index = pos;
 	pos = AddMMOptionsToList(m_map_opts_index, LSL::Enum::MapOption);
+
 	m_side_sel->Clear();
 	if (m_battle != NULL) {
 		try {
@@ -1237,11 +1241,12 @@ void BattleRoomTab::RegenerateOptionsList()
 				m_side_sel->Append(sides[i], icons().GetBitmap(icons().GetSideIcon(m_battle->GetHostModName(), i)));
 			}
 			wxSize s = m_side_sel->GetEffectiveMinSize();
-			s.SetWidth(s.GetWidth() + 16); // HACK without this additional place, the image overflows the text on wxGtk
 			m_side_sel->SetMinSize(s);
 		} catch (...) {
 		}
 	}
+
+	m_opts_list->Thaw();
 }
 
 void BattleRoomTab::OnBattleActionEvent(UiEvents::UiEventData data)
