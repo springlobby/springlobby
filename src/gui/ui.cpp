@@ -358,7 +358,7 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 	}
 }
 
-
+/*REIMPLEMENTED! TO BE REMOVED*/
 bool Ui::IsSpringCompatible(const std::string& engine, const std::string& version)
 {
 	assert(engine == "spring");
@@ -376,6 +376,7 @@ bool Ui::IsSpringCompatible(const std::string& engine, const std::string& versio
 	return false; // no compatible version found
 }
 
+/*REIMPLEMENTED! TO BE REMOVED*/
 bool Ui::DownloadArchives(const IBattle& battle)
 {
 	const std::string engineVersion = battle.GetBattleOptions().engineVersion;
@@ -935,7 +936,7 @@ void Ui::FirstRunWelcome()
 	ShowConnectWindow();
 }
 
-
+/*REIMPLEMETED! TO BE DELETED!*/
 bool Ui::StartUpdate(const std::string& latestVersion)
 {
 	const wxString updatedir = TowxString(SlPaths::GetUpdateDir());
@@ -994,6 +995,7 @@ void Ui::OnDownloadComplete(wxCommandEvent& data)
 	mw().Close();
 }
 
+/*REIMPLEMENTED! TO BE DELETED!*/
 void Ui::CheckForUpdates(bool show)
 {
 	wxString latestVersion = GetHttpFile(cfg().ReadString("/General/UpdateUrl"));

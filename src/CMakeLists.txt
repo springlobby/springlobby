@@ -170,7 +170,10 @@ set(springlobbySrc
 	settings.cpp
 	updatehelper.cpp
 	stacktrace.cpp
-
+	exception.cpp
+	contentmanager.cpp
+	contentdownloadrequest.cpp
+	
 	aui/auimanager.cpp
 
 	gui/activitynotice.cpp
