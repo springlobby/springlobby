@@ -34,7 +34,7 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 
 	case P_COMPLETE:
 		if (downloadInfo->GetSize() < 1) { /* Prevent from division by zero */
-			variant = wxVariant(wxString(_T("downloadInfo->size < 1")));
+			variant = wxVariant(wxString(_T("Indeterminate")));
 		} else {
 			variant = wxVariant(wxString::Format(wxT("%i%%"), downloadInfo->GetProgressPercent()));
 		}

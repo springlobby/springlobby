@@ -1,4 +1,5 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "contentmanager.h"
 
 #include "downloadsobserver.h"
 
@@ -41,12 +42,16 @@ static const DownloadsObserver& DownloadsObserver::Instance()
 */
 void DownloadsObserver::Add(IDownload* dl)
 {
+	ContentManager::Instance()->OnDownloadStarted(dl);
+
 	wxMutexLocker lock(mutex);
 	m_ActiveDownloadsList.push_back(dl);
 }
 
 void DownloadsObserver::Remove(IDownload* dl)
 {
+	ContentManager::Instance()->OnDownloadFinished(dl);
+
 	wxMutexLocker lock(mutex);
 	m_ActiveDownloadsList.remove(dl);
 
