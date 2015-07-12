@@ -228,7 +228,10 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& modName, int fracti
 	const auto sides = LSL::usync().GetSides(modName);
 
 	//This can happen whenever in time, so must be caught in release build too
-	ASSERT_LOGIC(sides.empty() == false, "LSL::usync().GetSides() failed!");
+	if (sides.empty()) {
+		wxLogWarning("IconsCollection::GetFractionBmp(): sides.empty()");
+		return BMP_EMPTY;
+	}
 	ASSERT_LOGIC(fractionId < static_cast<int>(sides.size()), "LSL::usync().GetSides() < fractionID!");
 
 	std::string sideName;
