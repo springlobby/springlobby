@@ -8,10 +8,16 @@
 #ifndef SRC_CONTENTMANAGER_H_
 #define SRC_CONTENTMANAGER_H_
 
-class wxString;
+#include <vector>
+
+#include <wx/thread.h>
+#include <wx/string.h>
+
 class ContentDownloadRequest;
 class IBattle;
 class Exception;
+class IDownload;
+class DownloadInfo;
 
 class ContentManager {
 
@@ -27,12 +33,19 @@ public:
 	ContentDownloadRequest WhatContentForBattleIsRequired(const IBattle& battle);
 	bool DownloadContent(const ContentDownloadRequest& request);
 
+	void OnDownloadStarted(IDownload* download);
+	void OnDownloadFinished(IDownload* download);
+
+	bool IsContentAlreadyBeingDownloaded(const wxString& name);
+
 private:
 	ContentManager();
 	virtual ~ContentManager();
 
 private:
 	wxString latestApplicationVersionAvailable;
+	std::vector<DownloadInfo*> downloadsList;
+	wxMutex mutex;
 
 private:
 	static ContentManager* m_Instance;

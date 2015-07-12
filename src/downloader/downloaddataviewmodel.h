@@ -5,9 +5,9 @@
 
 #include "gui/basedataviewmodel.h"
 
-class ObserverDownloadInfo;
+class DownloadInfo;
 
-class DownloadDataViewModel: public BaseDataViewModel<ObserverDownloadInfo> {
+class DownloadDataViewModel: public BaseDataViewModel<DownloadInfo> {
 public:
 	DownloadDataViewModel();
 	virtual ~DownloadDataViewModel();

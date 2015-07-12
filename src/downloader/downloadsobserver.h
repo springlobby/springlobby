@@ -75,10 +75,10 @@ private:
 	ObserverDownloadInfo GetInfo(IDownload* dl);
 
 	//! List with downloads which are in process
-	std::list<IDownload*> m_dl_list;
+	std::list<IDownload*> m_ActiveDownloadsList;
 
 	//! List with finished downloads
-	std::list<ObserverDownloadInfo> m_finished_list;
+	std::list<ObserverDownloadInfo> m_FinishedDownloadsList;
 
 	//! Mutex fir functions Add, Remove, GetList, GetMap
 	wxMutex mutex;

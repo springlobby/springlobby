@@ -3,6 +3,8 @@
 #ifndef SRC_GUI_BASEDATAVIEWCTRL_H_
 #define SRC_GUI_BASEDATAVIEWCTRL_H_
 
+#include <vector>
+
 #include <wx/dataview.h>
 
 #include "basedataviewmodel.h"
@@ -24,6 +26,7 @@ public:
 	int GetItemsCount() const;
 	void Clear();
 	const DataType* GetSelectedItem();
+	std::list<const DataType*>& GetItemsContainer();
 
 protected:
 	virtual void LoadColumnProperties();
@@ -146,6 +149,11 @@ inline int BaseDataViewCtrl<DataType>::GetItemsCount() const {
 	wxASSERT(m_DataModel != nullptr);
 
 	return m_DataModel->GetItemsCount();
+}
+
+template<class DataType>
+inline std::list<const DataType*>& BaseDataViewCtrl<DataType>::GetItemsContainer() {
+	return m_DataModel->GetItemsContainer();
 }
 
 #endif /* SRC_GUI_BASEDATAVIEWCTRL_H_ */

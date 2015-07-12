@@ -52,6 +52,9 @@ private:
 	void OnDLWidgets(wxCommandEvent& event);
 	void OnClearFinished(wxCommandEvent& event);
 
+	void OnNewDownloadStarted(wxCommandEvent& event);
+	void OnDownloadComplete(wxCommandEvent& event);
+
 	wxBoxSizer* m_main_sizer;
 
 private:

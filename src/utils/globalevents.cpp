@@ -6,6 +6,7 @@
 
 #include "globalevents.h"
 
+const wxEventType GlobalEventManager::OnDownloadStarted = wxNewEventType();
 const wxEventType GlobalEventManager::OnDownloadComplete = wxNewEventType();
 const wxEventType GlobalEventManager::OnUnitsyncFirstTimeLoad = wxNewEventType();
 const wxEventType GlobalEventManager::OnUnitsyncReloaded = wxNewEventType();

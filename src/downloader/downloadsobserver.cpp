@@ -42,43 +42,45 @@ static const DownloadsObserver& DownloadsObserver::Instance()
 void DownloadsObserver::Add(IDownload* dl)
 {
 	wxMutexLocker lock(mutex);
-	m_dl_list.push_back(dl);
+	m_ActiveDownloadsList.push_back(dl);
 }
 
 void DownloadsObserver::Remove(IDownload* dl)
 {
 	wxMutexLocker lock(mutex);
-	m_dl_list.remove(dl);
+	m_ActiveDownloadsList.remove(dl);
+
 	ObserverDownloadInfo di = GetInfo(dl);
 	di.finished = 1;
-	m_finished_list.push_back(di);
+
+	m_FinishedDownloadsList.push_back(di);
 }
 
 void DownloadsObserver::GetList(std::list<ObserverDownloadInfo>& lst)
 {
 	wxMutexLocker lock(mutex);
 	std::list<IDownload*>::iterator it;
-	for (it = m_dl_list.begin(); it != m_dl_list.end(); ++it) {
+	for (it = m_ActiveDownloadsList.begin(); it != m_ActiveDownloadsList.end(); ++it) {
 		ObserverDownloadInfo di = GetInfo((*it));
 		if (di.size > 0)
 			lst.push_back(di);
 	}
 
-	lst.splice(lst.begin(), m_finished_list);
+	lst.splice(lst.begin(), m_FinishedDownloadsList);
 }
 
 void DownloadsObserver::GetMap(std::map<wxString, ObserverDownloadInfo>& map)
 {
 	wxMutexLocker lock(mutex);
 	std::list<IDownload*>::iterator it_dl;
-	for (it_dl = m_dl_list.begin(); it_dl != m_dl_list.end(); ++it_dl) {
+	for (it_dl = m_ActiveDownloadsList.begin(); it_dl != m_ActiveDownloadsList.end(); ++it_dl) {
 		ObserverDownloadInfo di = GetInfo((*it_dl));
 		if (di.size > 0)
 			map[di.name] = di;
 	}
 
 	std::list<ObserverDownloadInfo>::iterator it_di;
-	for (it_di = m_finished_list.begin(); it_di != m_finished_list.end(); ++it_di) {
+	for (it_di = m_FinishedDownloadsList.begin(); it_di != m_FinishedDownloadsList.end(); ++it_di) {
 		ObserverDownloadInfo di = (*it_di);
 		if (di.size > 0)
 			map[di.name] = di;
@@ -87,7 +89,7 @@ void DownloadsObserver::GetMap(std::map<wxString, ObserverDownloadInfo>& map)
 
 void DownloadsObserver::ClearFinished()
 {
-	m_finished_list.clear();
+	m_FinishedDownloadsList.clear();
 }
 
 ObserverDownloadInfo DownloadsObserver::GetInfo(IDownload* dl)
@@ -104,5 +106,5 @@ DownloadsObserver& downloadsObserver()
 
 bool DownloadsObserver::IsEmpty()
 {
-	return m_dl_list.empty();
+	return m_ActiveDownloadsList.empty();
 }

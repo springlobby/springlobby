@@ -3,7 +3,7 @@
 #include "downloaddataviewctrl.h"
 
 #include "downloaddataviewmodel.h"
-#include "downloadsobserver.h"
+#include "downloadinfo.h"
 
 BEGIN_EVENT_TABLE(DownloadDataViewCtrl, BaseDataViewCtrl)
 	EVT_MENU(DOWNLOAD_DATAVIEW_CANCEL, DownloadDataViewCtrl::OnCancel)
@@ -35,51 +35,11 @@ void DownloadDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
 
 void DownloadDataViewCtrl::UpdateDownloadsList() {
 
-	/* Make new list every time */
-	m_DataModel->Clear();
-	downloadInfoList.clear();
-
-	DownloadsObserver& observ = downloadsObserver();
-	observ.GetList(downloadInfoList);
-
-	for(const ObserverDownloadInfo& downloadItem : downloadInfoList)
+	for(auto item : GetItemsContainer())
 	{
-		UpdateDownloadInfo(downloadItem);
+		const_cast<DownloadInfo*>(item)->UpdateInfo();
+		RefreshItem(*item);
 	}
-}
-
-void DownloadDataViewCtrl::UpdateDownloadInfo(const ObserverDownloadInfo& downloadInfo) {
-	if (ContainsItem(downloadInfo) == false) {
-		if (IsTorrentActive(downloadInfo))
-		{
-			AddDownloadInfo(downloadInfo);
-		}
-		return;
-	} else {
-		RefreshItem(downloadInfo);
-	}
-}
-
-bool DownloadDataViewCtrl::AddDownloadInfo(const ObserverDownloadInfo& downloadInfo) {
-	if (ContainsItem(downloadInfo)) {
-		return false;
-	} else {
-		m_DataModel->AddItem(downloadInfo);
-		return true;
-	}
-}
-
-bool DownloadDataViewCtrl::RemoveDownloadInfo(const ObserverDownloadInfo& downloadInfo) {
-	if (ContainsItem(downloadInfo) == false) {
-		return false;
-	} else {
-		m_DataModel->RemoveItem(downloadInfo);
-		return true;
-	}
-}
-
-bool DownloadDataViewCtrl::IsTorrentActive(const ObserverDownloadInfo& downloadInfo) const {
-	return (downloadInfo.finished == false);
 }
 
 void DownloadDataViewCtrl::HighlightItem(long /*item*/) {
@@ -87,23 +47,14 @@ void DownloadDataViewCtrl::HighlightItem(long /*item*/) {
 }
 
 void DownloadDataViewCtrl::OnCancel(wxCommandEvent& /*event*/) {
-	const ObserverDownloadInfo * downloadInfo = GetSelectedItem();
-
-	if (downloadInfo == nullptr) {
-		return;
-	} else {
-		RemoveDownloadInfo(*downloadInfo);
-	}
+	//TODO: implement download cancellation in ContentManager
 }
 
 void DownloadDataViewCtrl::OnRetry(wxCommandEvent& /*event*/) {
 
 	//TODO: this is just a stub! Need implementation!
-	const ObserverDownloadInfo * downloadInfo = GetSelectedItem();
+}
 
-	if (downloadInfo == nullptr) {
-		return;
-	} else {
-		RemoveDownloadInfo(*downloadInfo);
-	}
+void DownloadDataViewCtrl::AddDownloadInfo(DownloadInfo* dInfo) {
+	static_cast<DownloadDataViewModel*>(m_DataModel)->AddItem(*dInfo);
 }

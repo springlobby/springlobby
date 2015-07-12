@@ -19,9 +19,9 @@
 #include "utils/conversion.h"
 #include "gui/controls.h"
 #include "gui/colorbutton.h"
-#include "downloader/downloadsobserver.h"
 #include "aui/auimanager.h"
 #include "gui/contentdownloaddialog.h"
+#include "utils/globalevents.h"
 
 
 BEGIN_EVENT_TABLE(MainDownloadTab, wxPanel)
@@ -48,35 +48,24 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 	m_main_sizer->Add(m_DownloadDataView, 2, wxALL | wxEXPAND, 0);
 
 	m_but_cancel = new wxButton(this, ID_BUTTON_CANCEL, _("Cancel Download"));
-	//m_but_cancel->Disable();
 	m_buttonbox->Add(m_but_cancel, 1, wxALL | wxALIGN_BOTTOM, 5);
 	m_but_clear = new wxButton(this, ID_BUTTON_CLEAR, _("Clear finished"));
 	m_buttonbox->Add(m_but_clear, 1, wxALL | wxALIGN_BOTTOM, 5);
 	m_but_download = new wxButton(this, ID_DOWNLOAD_DIALOG, _("Search file"));
 	m_buttonbox->Add(m_but_download, 1, wxALL | wxALIGN_BOTTOM, 5);
-	//	m_but_widgets = new wxButton( this, ID_BUTTON_WIDGETS, _( "Download Lua widgets" ) );
-	//	m_buttonbox->Add( m_but_widgets, 1, wxALL | wxALIGN_RIGHT | wxALIGN_BOTTOM, 5 );
+
 
 	m_main_sizer->Add(m_buttonbox, 0, wxALL, 5);
 
 	SetSizer(m_main_sizer);
 
-	//	info_map = torrent().CollectGuiInfos();
-
-	//	m_dl_listctrl->Layout();
-
-	//	for ( map_infos_iter iter = info_map.begin(); iter != info_map.end(); ++iter )
-	//	{
-	//	    if (iter->first == wxString(_T("global")))
-	//            continue;
-	//		m_dl_listctrl->AddTorrentInfo( iter->second );
-	//	}
-
 	Layout();
-	//Disable();
 
 	timer = new wxTimer(this, ID_TIMER);
 	timer->Start(1000 * 2);
+
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction(&MainDownloadTab::OnNewDownloadStarted));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadComplete, wxObjectEventFunction(&MainDownloadTab::OnDownloadComplete));
 }
 
 MainDownloadTab::~MainDownloadTab()
@@ -87,9 +76,9 @@ MainDownloadTab::~MainDownloadTab()
 
 void MainDownloadTab::OnClearFinished(wxCommandEvent& /*event*/)
 {
-	downloadsObserver().ClearFinished();
-
 	m_DownloadDataView->Clear();
+
+	//TODO: clear finished from ContentManager
 }
 
 void MainDownloadTab::OnUpdate(wxTimerEvent& /*event*/)
@@ -97,9 +86,9 @@ void MainDownloadTab::OnUpdate(wxTimerEvent& /*event*/)
 	m_DownloadDataView->UpdateDownloadsList();
 }
 
-
 void MainDownloadTab::OnCancelButton(wxCommandEvent& /*unused*/)
 {
+	//TODO: implement download cancellation in ContentManager
 }
 
 void MainDownloadTab::OnDownloadDialog(wxCommandEvent& /*unused*/)
@@ -107,9 +96,19 @@ void MainDownloadTab::OnDownloadDialog(wxCommandEvent& /*unused*/)
 	if (m_download_dialog && m_download_dialog->IsShown()) {
 		m_download_dialog->SetFocus();
 	} else {
-
-
 		m_download_dialog = new ContentDownloadDialog(this, wxID_ANY, _("Search for maps and games"));
 		m_download_dialog->Show(true);
 	}
+}
+
+void MainDownloadTab::OnNewDownloadStarted(wxCommandEvent& event) {
+	DownloadInfo* dInfo = static_cast<DownloadInfo*>(event.GetClientData());
+
+	wxASSERT(dInfo != nullptr);
+
+	m_DownloadDataView->AddDownloadInfo(dInfo);
+}
+
+void MainDownloadTab::OnDownloadComplete(wxCommandEvent& /*event*/) {
+	m_DownloadDataView->UpdateDownloadsList();
 }

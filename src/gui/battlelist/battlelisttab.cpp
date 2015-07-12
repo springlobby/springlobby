@@ -40,6 +40,7 @@
 #include "servermanager.h"
 #include "contentmanager.h"
 #include "contentdownloadrequest.h"
+#include "exception.h"
 
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
@@ -427,7 +428,12 @@ void BattleListTab::DoJoin(IBattle& battle)
 					      _("This battle needs some content to be downloaded! Shall I download it for you?"),
 					      _("Content needed"),
 					      wxYES_NO | wxICON_QUESTION)) {
-			ContentManager::Instance()->DownloadContent(req);
+			try {
+				ContentManager::Instance()->DownloadContent(req);
+			} catch (Exception& e) {
+				wxLogError(e.Reason());
+				return;
+			}
 		} else {
 			return;
 		}

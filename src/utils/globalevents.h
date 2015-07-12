@@ -33,6 +33,7 @@ private:
 	void _Disconnect(wxEvtHandler* evthandler, wxEventType id = 0);
 
 public:
+	static const wxEventType OnDownloadStarted;
 	static const wxEventType OnDownloadComplete;
 	static const wxEventType OnUnitsyncFirstTimeLoad;
 	static const wxEventType OnUnitsyncReloaded;

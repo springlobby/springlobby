@@ -1,8 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "downloaddataviewmodel.h"
-#include "downloadsobserver.h"
-#include <wx/msgdlg.h>
+#include "downloadinfo.h"
+
 DownloadDataViewModel::DownloadDataViewModel() {
 }
 
@@ -12,7 +12,7 @@ DownloadDataViewModel::~DownloadDataViewModel() {
 void DownloadDataViewModel::GetValue(wxVariant& variant,
 		const wxDataViewItem& item, unsigned int column) const {
 
-	ObserverDownloadInfo * downloadInfo = static_cast<ObserverDownloadInfo*>(item.GetID());
+	DownloadInfo * downloadInfo = static_cast<DownloadInfo*>(item.GetID());
 
 	wxASSERT(downloadInfo != nullptr);
 
@@ -21,11 +21,11 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 	switch(column)
 	{
 	case NAME:
-		variant = wxVariant(downloadInfo->name);
+		variant = wxVariant(downloadInfo->GetName());
 		break;
 
 	case STATUS:
-		if (downloadInfo->finished) {
+		if (downloadInfo->IsFinished()) {
 			variant = wxVariant(wxString(_("complete")));
 		} else {
 			variant = wxVariant(wxString(_("downloading")));
@@ -33,10 +33,10 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 		break;
 
 	case P_COMPLETE:
-		if (downloadInfo->size < 1) { /* Prevent from division by zero */
+		if (downloadInfo->GetSize() < 1) { /* Prevent from division by zero */
 			variant = wxVariant(wxString(_T("downloadInfo->size < 1")));
 		} else {
-			variant = wxVariant(wxString::Format(wxT("%i%%"), (int)((double)100.0 * downloadInfo->progress / (double)downloadInfo->size)));
+			variant = wxVariant(wxString::Format(wxT("%i%%"), downloadInfo->GetProgressPercent()));
 		}
 		break;
 
@@ -51,7 +51,7 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 		break;
 
 	case FILESIZE:
-		variant = wxVariant(downloadInfo->size > 0 ? wxString::Format(wxT("%i"), downloadInfo->size / MB) : wxString(_T("0")));
+		variant = wxVariant(downloadInfo->GetSize() > 0 ? wxString::Format(wxT("%i"), downloadInfo->GetSize() / MB) : wxString(_T("0")));
 		break;
 
 	case DEFAULT_COLUMN:

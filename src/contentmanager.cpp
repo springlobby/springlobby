@@ -23,6 +23,8 @@
 #include "updatehelper.h"
 #include "downloader/prdownloader.h"
 #include "lslunitsync/unitsync.h"
+#include "utils/globalevents.h"
+#include "downloadinfo.h"
 
 #include "contentmanager.h"
 
@@ -150,15 +152,26 @@ bool ContentManager::DownloadContent(const ContentDownloadRequest& request) {
 		return false;
 	}
 
+	//TODO: check if content already exists on HDD or was just downloaded!
+
 	if (request.IsEngineRequested()) {
+		if (IsContentAlreadyBeingDownloaded(request.GetEngineVersion())) {
+			throw new Exception(_("Engine being downloaded alredy! Please wait!"));
+		}
 		ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), request.GetEngineVersion().ToStdString(), "");
 	}
 
 	if (request.IsMapRequested()) {
+		if (IsContentAlreadyBeingDownloaded(request.GetMapName())) {
+			throw new Exception(_("Map being downloaded alredy! Please wait!"));
+		}
 		ServerManager::Instance()->DownloadContent("map", request.GetMapName().ToStdString(), request.GetMapHash().ToStdString());
 	}
 
 	if (request.IsModRequested()) {
+		if (IsContentAlreadyBeingDownloaded(request.GetModName())) {
+			throw new Exception(_("Mod being downloaded alredy! Please wait!"));
+		}
 		ServerManager::Instance()->DownloadContent("game", request.GetModName().ToStdString(), request.GetModHash().ToStdString());
 	}
 
@@ -175,8 +188,62 @@ wxString ContentManager::GetLatestApplicationVersionAvailable() {
 	return latestApplicationVersionAvailable;
 }
 
+bool ContentManager::IsContentAlreadyBeingDownloaded(const wxString& name) {
+
+	if (name == wxEmptyString) {
+		return false;
+	}
+
+	for(auto downloadItem : downloadsList)
+	{
+		if (downloadItem->IsFinished() == false) {
+			if (downloadItem->GetName().Lower() == name.Lower()) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 ContentManager::~ContentManager() {
 	// TODO Auto-generated destructor stub
 }
 
 ContentManager* ContentManager::m_Instance = nullptr;
+
+void ContentManager::OnDownloadStarted(IDownload* download) {
+	wxMutexLocker locker(mutex);
+
+	wxASSERT(download != nullptr);
+
+	for(auto downloadItem : downloadsList)
+	{
+		if (downloadItem->GetIDownload() == download) {
+			wxASSERT(false);
+		}
+	}
+
+	DownloadInfo* dInfo = new DownloadInfo(download);
+	downloadsList.push_back(dInfo);
+
+	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadStarted, dInfo);
+}
+
+void ContentManager::OnDownloadFinished(IDownload* download) {
+	wxMutexLocker locker(mutex);
+
+	wxASSERT(download != nullptr);
+
+	for(auto downloadItem : downloadsList)
+	{
+		if (downloadItem->GetIDownload() == download) {
+			downloadItem->DownloadFinished();
+
+			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadComplete, downloadItem);
+			return;
+		}
+	}
+
+	wxASSERT(false);
+}

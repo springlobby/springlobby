@@ -5,33 +5,26 @@
 
 #include "gui/basedataviewctrl.h"
 
-class ObserverDownloadInfo;
 class wxString;
 class wxWindow;
 class wxCommandEvent;
 class wxPoint;
+class DownloadInfo;
 
-class DownloadDataViewCtrl: public BaseDataViewCtrl<ObserverDownloadInfo> {
+class DownloadDataViewCtrl: public BaseDataViewCtrl<DownloadInfo> {
 public:
 	DownloadDataViewCtrl(const wxString dataViewName, wxWindow* parent);
 	virtual ~DownloadDataViewCtrl();
 
 	virtual void SetTipWindowText(const long, const wxPoint&);
-	bool AddDownloadInfo(const ObserverDownloadInfo&);
-	bool RemoveDownloadInfo(const ObserverDownloadInfo&);
-	void UpdateDownloadInfo(const ObserverDownloadInfo&);
 	void UpdateDownloadsList();
+
+	void AddDownloadInfo(DownloadInfo* dInfo);
 
 	virtual void HighlightItem(long);
 
 	void OnCancel(wxCommandEvent&);
 	void OnRetry(wxCommandEvent&);
-
-private:
-	bool IsTorrentActive(const ObserverDownloadInfo&) const;
-
-private:
-	std::list<ObserverDownloadInfo> downloadInfoList;
 
 private:
 	enum ColumnIndexes

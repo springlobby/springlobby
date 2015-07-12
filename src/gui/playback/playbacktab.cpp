@@ -34,6 +34,7 @@
 #include "gui/hosting/battleroomdataviewctrl.h"
 #include "log.h"
 #include "playbackdataview.h"
+#include "exception.h"
 
 BEGIN_EVENT_TABLE(PlaybackTab, wxPanel)
 
@@ -282,7 +283,12 @@ void PlaybackTab::OnWatch(wxCommandEvent& /*unused*/)
 								      _("This battle needs some content to be downloaded! Shall I download it for you?"),
 								      _("Content needed"),
 								      wxYES_NO | wxICON_QUESTION)) {
-						ContentManager::Instance()->DownloadContent(req);
+						try {
+							ContentManager::Instance()->DownloadContent(req);
+						} catch (Exception& e) {
+							wxLogError(e.Reason());
+							return;
+						}
 					}
 				}
 			}

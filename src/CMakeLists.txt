@@ -171,6 +171,7 @@ set(springlobbySrc
 	updatehelper.cpp
 	stacktrace.cpp
 	exception.cpp
+	downloadinfo.cpp
 	contentmanager.cpp
 	contentdownloadrequest.cpp
 	
