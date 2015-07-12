@@ -11,15 +11,17 @@
 class wxString;
 class ContentDownloadRequest;
 class IBattle;
+class Exception;
 
 class ContentManager {
 
 public:
-	ContentManager* Instance();
-	void Release();
+	static ContentManager* Instance();
+	static void Release();
 
 	bool IsNewApplicationVersionAvailable();
-	bool UpdateApplication(const wxString& latestVersion);
+	bool UpdateApplication();
+	wxString GetLatestApplicationVersionAvailable();
 
 	bool IsHavingSpringVersion(const wxString& engineString, const wxString& versionString);
 	ContentDownloadRequest WhatContentForBattleIsRequired(const IBattle& battle);
@@ -28,6 +30,9 @@ public:
 private:
 	ContentManager();
 	virtual ~ContentManager();
+
+private:
+	wxString latestApplicationVersionAvailable;
 
 private:
 	static ContentManager* m_Instance;

@@ -53,6 +53,8 @@
 #include "log.h"
 #include "settings.h"
 #include "servermanager.h"
+#include "contentmanager.h"
+#include "exception.h"
 
 #ifndef DISABLE_SOUND
 #include "sound/alsound.h"
@@ -358,74 +360,6 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 	}
 }
 
-/*REIMPLEMENTED! TO BE REMOVED*/
-bool Ui::IsSpringCompatible(const std::string& engine, const std::string& version)
-{
-	assert(engine == "spring");
-	if (sett().GetDisableSpringVersionCheck())
-		return true;
-	const std::string ver = SlPaths::GetCompatibleVersion(version);
-	if (!ver.empty()) {
-		if (SlPaths::GetCurrentUsedSpringIndex() != ver) {
-			wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), TowxString(ver).c_str(), TowxString(ver).c_str());
-			SlPaths::SetUsedSpringIndex(ver);
-			LSL::usync().ReloadUnitSyncLib();
-		}
-		return true;
-	}
-	return false; // no compatible version found
-}
-
-/*REIMPLEMENTED! TO BE REMOVED*/
-bool Ui::DownloadArchives(const IBattle& battle)
-{
-	const std::string engineVersion = battle.GetBattleOptions().engineVersion;
-	const std::string engineName = battle.GetBattleOptions().engineName;
-
-	if (!IsSpringCompatible(engineName, engineVersion)) {
-		wxLogWarning(_T( "trying to join battles with incompatible spring version" ));
-
-		if (wxYES == customMessageBox(SL_MAIN_ICON,
-					      wxString::Format(_("The selected preset requires the engine '%s' version '%s'. Should it be downloaded?"), TowxString(engineName).c_str(), TowxString(engineVersion).c_str()),
-					      _("Engine missing"),
-					      wxYES_NO | wxICON_QUESTION)) {
-			ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), engineVersion, "");
-		}
-		return false;
-	}
-
-	if (battle.MapExists() && battle.ModExists()) {
-		return true;
-	}
-
-	wxString prompt;
-	if (!battle.ModExists()) {
-		prompt += wxString::Format(_("the game '%s'"), TowxString(battle.GetHostModName()).c_str());
-	}
-
-	if (!battle.MapExists()) {
-		if (!prompt.empty()) {
-			prompt += _(" and ");
-		}
-		prompt += wxString::Format(_("the map '%s'"), TowxString(battle.GetHostMapName()).c_str());
-	}
-	if (prDownloader().IsRunning()) {
-		return true;
-	}
-	if (customMessageBox(SL_MAIN_ICON, wxString::Format(_("You need to download %s to be able to play.\n\n Shall I download it?"), prompt.c_str()),
-			     _("Content needed to be downloaded"), wxYES_NO | wxICON_QUESTION) == wxYES) {
-		if (!battle.MapExists()) {
-			ServerManager::Instance()->DownloadContent("map", battle.GetHostMapName(), battle.GetHostMapHash());
-		}
-		if (!battle.ModExists()) {
-			ServerManager::Instance()->DownloadContent("game", battle.GetHostModName(), battle.GetHostModHash());
-		}
-		return true;
-	}
-	return false;
-}
-
-
 void Ui::OnLoggedIn()
 {
 	if (m_main_win == 0)
@@ -433,7 +367,6 @@ void Ui::OnLoggedIn()
 	mw().GetChatTab().OnLoggedIn();
 	mw().GetBattleListTab().SortBattleList();
 }
-
 
 void Ui::OnDisconnected(IServer& server, bool wasonline)
 {
@@ -478,7 +411,6 @@ void Ui::OnJoinedChannelSuccessful(Channel& chan, bool doFocus)
 	}
 	mw().OpenChannelChat(chan, doFocus);
 }
-
 
 void Ui::OnChannelMessage(Channel& chan, const std::string& msg)
 {
@@ -936,38 +868,6 @@ void Ui::FirstRunWelcome()
 	ShowConnectWindow();
 }
 
-/*REIMPLEMETED! TO BE DELETED!*/
-bool Ui::StartUpdate(const std::string& latestVersion)
-{
-	const wxString updatedir = TowxString(SlPaths::GetUpdateDir());
-	const size_t mindirlen = 9; // safety, minimal is/should be: C:\update
-	if ((updatedir.size() <= mindirlen)) {
-		wxLogError(_T("Invalid update dir: ") + updatedir);
-		return false;
-	}
-	if (wxDirExists(updatedir)) {
-		if (!SlPaths::RmDir(STD_STRING(updatedir))) {
-			wxLogWarning(_T("Couldn't cleanup ") + updatedir);
-		}
-	}
-	if (!SafeMkdir(updatedir)) {
-		wxLogWarning(_T("couldn't create update directory") + updatedir);
-	}
-
-	if (!wxFileName::IsDirWritable(updatedir)) {
-		wxLogError(_T("dir not writable: ") + updatedir);
-		return false;
-	}
-
-	const std::string dlfilepath = SlPaths::GetLobbyWriteDir() + "springlobby-latest.zip";
-	if (wxFileExists(TowxString(dlfilepath)) && !(wxRemoveFile(TowxString(dlfilepath)))) {
-		wxLogError(_T("couldn't delete: ") + TowxString(dlfilepath));
-		return false;
-	}
-	const std::string dlurl = GetDownloadUrl(latestVersion);
-	return prDownloader().Download(dlfilepath, dlurl);
-}
-
 void Ui::OnDownloadComplete(wxCommandEvent& data)
 {
 	if (data.GetInt() != 0) {
@@ -995,18 +895,20 @@ void Ui::OnDownloadComplete(wxCommandEvent& data)
 	mw().Close();
 }
 
-/*REIMPLEMENTED! TO BE DELETED!*/
 void Ui::CheckForUpdates(bool show)
 {
-	wxString latestVersion = GetHttpFile(cfg().ReadString("/General/UpdateUrl"));
+	ContentManager* contMan = ContentManager::Instance();
+
+	wxString latestVersion = contMan->GetLatestApplicationVersionAvailable();
 	// Need to replace crap chars or versions will always be inequal
 	latestVersion.Replace(_T(" "), wxEmptyString, true);
 	latestVersion.Replace(_T("\n"), wxEmptyString, true);
 	latestVersion.Replace(_T("\t"), wxEmptyString, true);
 
-
 	if (latestVersion.empty()) {
-		customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+		if (show) {
+			customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+		}
 		return;
 	}
 	//get current rev w/o AUX_VERSION added
@@ -1021,11 +923,20 @@ void Ui::CheckForUpdates(bool show)
 							       msg.c_str()),
 					      _("Not up to date"), wxOK | wxCANCEL);
 		if (answer == wxOK) {
-			if (!StartUpdate(STD_STRING(latestVersion))) {
+			try{
+			if (contMan->UpdateApplication() == false) {
 				//this will also happen if updater exe is not present so we don't really ne special check for existance of it
 				customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser.") + msg, _("Updater error."));
 				OpenWebBrowser(_T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary"));
 				OpenWebBrowser(TowxString(GetDownloadUrl(STD_STRING(latestVersion))));
+			}
+			}catch(Exception& ex)
+			{
+				//this will also happen if updater exe is not present so we don't really ne special check for existance of it
+				customMessageBox(SL_MAIN_ICON, _("Automatic update failed\n\nyou will be redirected to a web page with instructions and the download link will be opened in your browser.") + msg, _("Updater error."));
+				OpenWebBrowser(_T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary"));
+				OpenWebBrowser(TowxString(GetDownloadUrl(STD_STRING(latestVersion))));
+				return;
 			}
 		}
 #else

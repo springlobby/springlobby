@@ -38,6 +38,8 @@
 #include "utils/globalevents.h"
 #include "log.h"
 #include "servermanager.h"
+#include "contentmanager.h"
+#include "contentdownloadrequest.h"
 
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
@@ -419,10 +421,16 @@ void BattleListTab::DoJoin(IBattle& battle)
 	}
 
 	//Check if some content needs to be downloaded
-	if (!ui().DownloadArchives(battle)) {
-		//There is content needed but user reject it tobe downloaded
-		//or some error happend
-		return;
+	ContentDownloadRequest req = ContentManager::Instance()->WhatContentForBattleIsRequired(battle);
+	if (req.IsSomethingNeeded()) {
+		if (wxYES == customMessageBox(SL_MAIN_ICON,
+					      _("This battle needs some content to be downloaded! Shall I download it for you?"),
+					      _("Content needed"),
+					      wxYES_NO | wxICON_QUESTION)) {
+			ContentManager::Instance()->DownloadContent(req);
+		} else {
+			return;
+		}
 	}
 
 	battle.Join(STD_STRING(password));

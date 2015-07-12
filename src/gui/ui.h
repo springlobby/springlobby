@@ -42,9 +42,6 @@ public:
 	void ShowConnectWindow();
 	void ReopenServerTab();
 
-	bool IsSpringCompatible(const std::string& engine, const std::string& version);
-	bool DownloadArchives(const IBattle& battle);
-
 	bool IsSpringRunning() const;
 
 	void Quit();
@@ -127,7 +124,6 @@ public:
 	void EnableDebug(bool enable);
 
 private:
-	bool StartUpdate(const std::string& latestVersion);
 	void OnDownloadComplete(wxCommandEvent& /*data*/);
 	void Notify();
 

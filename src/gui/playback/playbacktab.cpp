@@ -27,6 +27,8 @@
 #include "storedgame.h"
 #include "utils/conversion.h"
 #include "utils/globalevents.h"
+#include "contentmanager.h"
+#include "contentdownloadrequest.h"
 
 #include "gui/customdialogs.h"
 #include "gui/hosting/battleroomdataviewctrl.h"
@@ -259,7 +261,7 @@ void PlaybackTab::OnWatch(wxCommandEvent& /*unused*/)
 		try {
 			StoredGame& rep = replaylist().GetPlaybackById(m_sel_replay_id);
 
-			bool versionfound = ui().IsSpringCompatible("spring", rep.SpringVersion);
+			bool versionfound = ContentManager::Instance()->IsHavingSpringVersion("spring", rep.SpringVersion);
 			if (rep.type == StoredGame::SAVEGAME)
 				versionfound = true; // quick hack to bypass spring version check
 			if (!versionfound) {
@@ -274,7 +276,15 @@ void PlaybackTab::OnWatch(wxCommandEvent& /*unused*/)
 			if (watchable) {
 				rep.battle.StartSpring();
 			} else {
-				ui().DownloadArchives(rep.battle);
+				ContentDownloadRequest req = ContentManager::Instance()->WhatContentForBattleIsRequired(rep.battle);
+				if (req.IsSomethingNeeded()) {
+					if (wxYES == customMessageBox(SL_MAIN_ICON,
+								      _("This battle needs some content to be downloaded! Shall I download it for you?"),
+								      _("Content needed"),
+								      wxYES_NO | wxICON_QUESTION)) {
+						ContentManager::Instance()->DownloadContent(req);
+					}
+				}
 			}
 		} catch (std::runtime_error&) {
 			return;

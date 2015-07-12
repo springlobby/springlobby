@@ -59,6 +59,8 @@
 #include "servermanager.h"
 #include "gui/controls.h"
 #include "gui/ui.h"
+#include "contentmanager.h"
+#include "contentdownloadrequest.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -480,8 +482,6 @@ void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
 	}
 }
 
-
-
 void BattleRoomTab::UpdateMapInfoSummary()
 {
 	try // updates map info summary
@@ -517,7 +517,6 @@ void BattleRoomTab::UpdateMyInfo()
 	}
 	m_players->UpdateUser(m_battle->GetMe());
 }
-
 
 void BattleRoomTab::UpdateUser(User& user, bool userJustAdded)
 {
@@ -574,12 +573,10 @@ void BattleRoomTab::UpdateUser(User& user, bool userJustAdded)
 	m_color_sel->SetColor(lslTowxColour(user.BattleStatus().colour));
 }
 
-
 IBattle* BattleRoomTab::GetBattle()
 {
 	return m_battle;
 }
-
 
 ChatPanel& BattleRoomTab::GetChatPanel()
 {
@@ -587,7 +584,6 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 	ASSERT_LOGIC(m_chat != 0, "m_chat = 0");
 	return *m_chat;
 }
-
 
 void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 {
@@ -616,7 +612,6 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 		}
 	}
 }
-
 
 void BattleRoomTab::OnLeave(wxCommandEvent& /*unused*/)
 {
@@ -946,8 +941,9 @@ void BattleRoomTab::OnUserLeft(User& user)
 
 void BattleRoomTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 {
-	if (!m_battle)
+	if (m_battle == nullptr) {
 		return;
+	}
 	//m_minimap->UpdateMinimap();//should happen automagically now
 	RegenerateOptionsList();
 	ReloadMaplist();
@@ -958,7 +954,17 @@ void BattleRoomTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 		UpdateUser(m_battle->GetUser(i));
 	}
 	m_battle->SendMyBattleStatus(); // This should reset sync status.
-	ui().DownloadArchives(*m_battle);
+
+	/*May be there is some content needed?*/
+	ContentDownloadRequest req = ContentManager::Instance()->WhatContentForBattleIsRequired(*m_battle);
+	if (req.IsSomethingNeeded()) {
+		if (wxYES == customMessageBox(SL_MAIN_ICON,
+					      _("This battle needs some content to be downloaded! Shall I download it for you?"),
+					      _("Content needed"),
+					      wxYES_NO | wxICON_QUESTION)) {
+			ContentManager::Instance()->DownloadContent(req);
+		}
+	}
 }
 
 long BattleRoomTab::AddMMOptionsToList(long pos, LSL::Enum::GameOption optFlag)

@@ -47,8 +47,7 @@ void ContentManager::Release() {
 }
 
 bool ContentManager::IsNewApplicationVersionAvailable() {
-	//TODO: run in async???
-	wxString latestVersion = GetHttpFile(cfg().ReadString("/General/UpdateUrl"));
+	wxString latestVersion = GetLatestApplicationVersionAvailable();
 	// Need to replace crap chars or versions will always be inequal
 	latestVersion.Replace(_T(" "), wxEmptyString, true);
 	latestVersion.Replace(_T("\n"), wxEmptyString, true);
@@ -70,7 +69,8 @@ bool ContentManager::IsNewApplicationVersionAvailable() {
 	}
 }
 
-bool ContentManager::UpdateApplication(const wxString& latestVersion) {
+bool ContentManager::UpdateApplication(){
+	const wxString latestVersion = GetLatestApplicationVersionAvailable();
 	const wxString updatedir = TowxString(SlPaths::GetUpdateDir());
 	const size_t mindirlen = 9; // safety, minimal is/should be: C:\update
 	if ((updatedir.size() <= mindirlen)) {
@@ -88,13 +88,11 @@ bool ContentManager::UpdateApplication(const wxString& latestVersion) {
 
 	if (!wxFileName::IsDirWritable(updatedir)) {
 		throw new Exception(_T("dir not writable: ") + updatedir);
-		return false;
 	}
 
 	const std::string dlfilepath = SlPaths::GetLobbyWriteDir() + "springlobby-latest.zip";
 	if (wxFileExists(TowxString(dlfilepath)) && !(wxRemoveFile(TowxString(dlfilepath)))) {
 		throw new Exception(_T("couldn't delete: ") + TowxString(dlfilepath));
-		return false;
 	}
 	const std::string dlurl = GetDownloadUrl(latestVersion.ToStdString());
 	return prDownloader().Download(dlfilepath, dlurl);
@@ -165,6 +163,16 @@ bool ContentManager::DownloadContent(const ContentDownloadRequest& request) {
 	}
 
 	return true;
+}
+
+wxString ContentManager::GetLatestApplicationVersionAvailable() {
+	if (latestApplicationVersionAvailable == wxEmptyString) {
+		latestApplicationVersionAvailable = GetHttpFile(cfg().ReadString("/General/UpdateUrl"));
+	} else {
+		//TODO: update cache if needed
+	}
+
+	return latestApplicationVersionAvailable;
 }
 
 ContentManager::~ContentManager() {
