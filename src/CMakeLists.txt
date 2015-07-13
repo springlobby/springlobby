@@ -345,7 +345,7 @@ set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
 #mylink( ${EXTRA_LIB_DIRS} ${link_directories} )
 
 IF(WIN32)
-	set(springlobby_RC_FILE springlobby.rc)
+	set(springlobby_RC_FILE springlobby.rc springlobby.exe.manifest)
 ENDIF()
 add_subdirectory(updater)
 

@@ -16,6 +16,7 @@ if (SPRINGLOBBY_UPDATER)
 		updaterapp.cpp
 		../utils/platform.cpp
 		${updater_RC_FILE}
+		springlobby_updater.exe.manifest
 	)
 
 	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${updater_RC_FILE} )
