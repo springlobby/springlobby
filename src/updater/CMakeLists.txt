@@ -11,14 +11,14 @@ if (SPRINGLOBBY_UPDATER)
 		        OUTPUT_VARIABLE WX_UPDATER_LD_FLAGS
 			OUTPUT_STRIP_TRAILING_WHITESPACE
 		)
-	set(update_RC_FILE updater.rc)
 	SET(updaterSrc
 		updaterapp.cpp
 		../utils/platform.cpp
-		${updater_RC_FILE}
+		updater.rc
+		springlobby_updater.exe.manifest
 	)
 
-	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc} ${updater_RC_FILE} )
+	ADD_EXECUTABLE(springlobby_updater WIN32 MACOSX_BUNDLE ${updaterSrc})
 	TARGET_LINK_LIBRARIES(springlobby_updater
 			${WX_UPDATER_LD_FLAGS}
 		)
