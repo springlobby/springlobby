@@ -149,12 +149,21 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 		break;
 
 	case DESCRIPTION:
-	case MAP:
-	case GAME:
 	case HOST:
-	case ENGINE:
 	case RUNNING:
 		return BaseDataViewModel::Compare(itemA, itemB, column, ascending);
+		break;
+
+	case MAP:
+		sortingResult = battleA->GetHostMapName().compare(battleB->GetHostMapName());
+		break;
+
+	case GAME:
+		sortingResult = battleA->GetHostModName().compare(battleB->GetHostModName());
+		break;
+
+	case ENGINE:
+		sortingResult = battleA->GetEngineVersion().compare(battleB->GetEngineVersion());
 		break;
 
 	case SPECTATORS:
