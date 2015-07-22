@@ -188,7 +188,7 @@ template<class DataType>
 inline void BaseDataViewCtrl<DataType>::OnHideColumn(wxCommandEvent& event) {
 	int columnIndex = static_cast<int>(event.GetExtraLong());
 
-	wxASSERT(columnIndex > 0);
+	wxASSERT(columnIndex >= 0);
 	wxASSERT(columnIndex < GetColumnCount());
 
 	wxDataViewColumn* column = GetColumn(columnIndex);
