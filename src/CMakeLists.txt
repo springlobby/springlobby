@@ -204,7 +204,8 @@ set(springlobbySrc
 	gui/iconscollection.cpp
 	gui/nickdataviewctrl.cpp
 	gui/nickdataviewmodel.cpp
-
+	gui/dataviewctrlheadermenu.cpp
+	
 	gui/notifications/libnotify.cpp
 	gui/notifications/notificationmanager.cpp
 	gui/notifications/toasternotification.cpp

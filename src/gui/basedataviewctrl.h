@@ -8,6 +8,7 @@
 #include <wx/dataview.h>
 
 #include "basedataviewmodel.h"
+#include "dataviewvtrlheadermenu.h"
 
 #include "settings.h"
 #include "utils/slconfig.h"
@@ -32,6 +33,11 @@ protected:
 	virtual void LoadColumnProperties();
 	virtual void SaveColumnProperties();
 
+private:
+	void OnColumnHeaderContext(wxDataViewEvent&);
+	void OnHideColumn(wxCommandEvent&);
+	void OnShowColumns(wxCommandEvent&);
+
 protected:
 	BaseDataViewModel<DataType>* m_DataModel;
 	wxString m_DataViewName;
@@ -39,14 +45,19 @@ protected:
 	DECLARE_EVENT_TABLE()
 };
 
-
 BEGIN_EVENT_TABLE_TEMPLATE1(BaseDataViewCtrl, wxDataViewCtrl, DataType)
+//	EVT_DATAVIEW_COLUMN_HEADER_RIGHT_CLICK(wxID_ANY, OnColumnHeaderContext)
 END_EVENT_TABLE()
 
 template<class DataType>
 BaseDataViewCtrl<DataType>::BaseDataViewCtrl(const wxString& dataViewName, wxWindow* parent, wxWindowID id) : wxDataViewCtrl(parent, id, wxDefaultPosition, wxDefaultSize, wxDV_SINGLE | wxDV_ROW_LINES) {
 	m_DataModel = nullptr;
 	m_DataViewName = dataViewName;
+
+	/*Link events and handlers*/
+	Connect(wxEVT_DATAVIEW_COLUMN_HEADER_RIGHT_CLICK, wxObjectEventFunction(&BaseDataViewCtrl::OnColumnHeaderContext));
+	Connect(DataViewCtrlHeaderMenu::HIDE_COLUMN_EVT, wxObjectEventFunction(&BaseDataViewCtrl::OnHideColumn));
+	Connect(DataViewCtrlHeaderMenu::SHOW_ALL_COLUMNS_EVT, wxObjectEventFunction(&BaseDataViewCtrl::OnShowColumns));
 }
 
 template<class DataType>
@@ -112,6 +123,7 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	{
 		//Set up column's width
 		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
+		const bool isHidden = sett().GetColumnVisibility(m_DataViewName, columnIndex);
 		wxDataViewColumn* column = GetColumn(columnIndex);
 		if (colWidth >= (wxDVC_DEFAULT_MINWIDTH - 5)) {
 			column->SetWidth(colWidth);
@@ -122,6 +134,8 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 		} else {
 			/*column->UnsetAsSortKey(); <- this method breaks sorting of any column that was or will be set as sort key! (wxMSW3.0)*/
 		}
+		//Set column's visibility
+		column->SetHidden(isHidden);
 	}
 }
 
@@ -133,7 +147,7 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties() {
 		wxDataViewColumn* column = GetColumn(columnIndex);
 		const int colWidth = column->GetWidth();
 		sett().SetColumnWidth(m_DataViewName, columnIndex, colWidth);
-
+		sett().SetColumnVisibility(m_DataViewName, columnIndex, column->IsHidden());
 		if (column->IsSortKey()) {
 			//Save sorting column
 			cfg().Write(wxString(m_DataViewName + _T("/sorting_column")), columnIndex);
@@ -154,6 +168,48 @@ inline int BaseDataViewCtrl<DataType>::GetItemsCount() const {
 template<class DataType>
 inline std::list<const DataType*>& BaseDataViewCtrl<DataType>::GetItemsContainer() {
 	return m_DataModel->GetItemsContainer();
+}
+
+
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::OnColumnHeaderContext(
+		wxDataViewEvent& event) {
+
+	int columnIndex = event.GetColumn();
+
+	wxMenu* menu = new DataViewCtrlHeaderMenu(this, columnIndex);
+
+	PopupMenu(menu);
+
+	delete menu;
+}
+
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::OnHideColumn(wxCommandEvent& event) {
+	int columnIndex = static_cast<int>(event.GetExtraLong());
+
+	wxASSERT(columnIndex > 0);
+	wxASSERT(columnIndex < GetColumnCount());
+
+	wxDataViewColumn* column = GetColumn(columnIndex);
+
+	wxASSERT(column != nullptr);
+	wxASSERT(column->IsHidden() == false);
+
+	column->SetHidden(true);
+}
+
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::OnShowColumns(wxCommandEvent&) {
+	int totalColumnsCount = GetColumnCount();
+
+	for ( int i = 0;  i < totalColumnsCount; ++i) {
+		wxDataViewColumn* column = GetColumn(i);
+		if (column->IsHidden()) {
+			column->SetHidden(false);
+		}
+	}
+
 }
 
 #endif /* SRC_GUI_BASEDATAVIEWCTRL_H_ */

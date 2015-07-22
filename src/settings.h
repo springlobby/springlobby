@@ -246,7 +246,10 @@ public:
 	void SetSortOrder(const wxString& list_name, const SortOrder& order);
 
 	void SetColumnWidth(const wxString& list_name, const int column_ind, const int column_width);
+	void SetColumnVisibility(const wxString&, const int, const bool);
+
 	int GetColumnWidth(const wxString& list_name, const int column);
+	bool GetColumnVisibility(const wxString& list_name, const int column);
 	//! used to signal unset column width in Get...
 	static const int columnWidthUnset = -3;
 	static const int columnWidthMinimum = 5;

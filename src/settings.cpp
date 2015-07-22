@@ -1116,6 +1116,11 @@ void Settings::SetColumnWidth(const wxString& list_name, const int column_ind, c
 	cfg().Write(_T( "GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString(column_ind), column_width);
 }
 
+void Settings::SetColumnVisibility(const wxString& list_name, const int column_ind, const bool columnIsHidden)
+{
+	cfg().Write(_T( "GUI/ColumnVisibilities/" ) + list_name + _T( "/" ) + TowxString(column_ind), columnIsHidden);
+}
+
 int Settings::GetColumnWidth(const wxString& list_name, const int column)
 {
 	const int orgwidth = cfg().Read(_T( "/GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString(column), columnWidthUnset);
@@ -1123,6 +1128,15 @@ int Settings::GetColumnWidth(const wxString& list_name, const int column)
 	if (orgwidth > -1) //-3 is unset, -2 and -1 used for auto size by wx
 		width = std::max(width, Settings::columnWidthMinimum);
 	return width;
+}
+
+bool Settings::GetColumnVisibility(const wxString& list_name, const int column)
+{
+	bool isHidden;
+
+	cfg().Read(_T( "/GUI/ColumnVisibilities/" ) + list_name + _T( "/" ) + TowxString(column), &isHidden, false);
+
+	return isHidden;
 }
 
 void Settings::SaveCustomColors(const wxColourData& _cdata, const wxString& paletteName)
