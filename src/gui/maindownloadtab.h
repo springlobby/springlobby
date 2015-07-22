@@ -11,7 +11,7 @@ class wxStaticText;
 class wxButton;
 class DownloadDataViewCtrl;
 class Ui;
-struct DownloadInfo;
+class DownloadInfo;
 class wxBoxSizer;
 class ColorButton;
 class WidgetDownloadDialog;

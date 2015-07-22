@@ -7,7 +7,7 @@
 
 class wxWindow;
 class PlaybackDataModel;
-class StoredGame;
+struct StoredGame;
 class wxListEvent;
 class wxCommandEvent;
 class wxPoint;
