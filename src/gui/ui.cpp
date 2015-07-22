@@ -66,7 +66,6 @@ SLCONFIG("/General/LastUpdateCheck", 0L, "Last time springlobby checked for an u
 SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere", true, "setting to spam the server messages in all channels");
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
-SLCONFIG("/General/UpdateUrl", "http://version.springlobby.info/current.txt", "Url to check for updates");
 
 
 static unsigned int s_reconnect_delay_ms = 6 * 1000;	  //initial reconnect delay

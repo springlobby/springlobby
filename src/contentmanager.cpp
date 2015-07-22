@@ -180,7 +180,7 @@ bool ContentManager::DownloadContent(const ContentDownloadRequest& request) {
 
 wxString ContentManager::GetLatestApplicationVersionAvailable() {
 	if (latestApplicationVersionAvailable == wxEmptyString) {
-		latestApplicationVersionAvailable = GetHttpFile(cfg().ReadString("/General/UpdateUrl"));
+		latestApplicationVersionAvailable = GetHttpFile(GetLatestVersionUrl());
 	} else {
 		//TODO: update cache if needed
 	}
