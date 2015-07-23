@@ -61,6 +61,8 @@ DownloadOptionsPanel::DownloadOptionsPanel(wxWindow* parent)
 		outerSizer->Add(innerSizer, 1, wxALL | wxEXPAND);
 
 		m_main_sizer->Add(outerSizer, 0, wxALL | wxEXPAND, 5);
+
+		m_DownloadDirectoryTextCtrl->SetValue(TowxString(SlPaths::GetDownloadDir()));
 	}
 
 
