@@ -22,12 +22,17 @@ public:
 
 	void OnApply(wxCommandEvent& event);
 	void OnRestore(wxCommandEvent& event);
+	void OnNewDirectory(wxCommandEvent& event);
+
+private:
+	void EnableSettings(bool enable);
+	void SetStatusDisplay();
 
 private:
 	wxSpinCtrl* m_parallel_http;
 	wxStaticBoxSizer* m_parallel_http_sizer;
-	void EnableSettings(bool enable);
-	void SetStatusDisplay();
+	wxButton* m_NewDownloadDirButton;
+	wxTextCtrl* m_DownloadDirectoryTextCtrl;
 
 	enum {
 		ID_ENABLEP2P = wxID_HIGHEST,
@@ -39,7 +44,8 @@ private:
 		ID_RESTORE,
 		ID_GAMESTART_RADIO,
 		ID_INGAME_UP,
-		ID_INGAME_DOWN
+		ID_INGAME_DOWN,
+		ID_SELECT_NEW_DIRECTORY
 	};
 
 	DECLARE_EVENT_TABLE()

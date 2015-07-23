@@ -55,6 +55,7 @@ public:
 	static std::string GetDataDir(const std::string& index = GetCurrentUsedSpringIndex());
 	static std::string GetSpringConfigFilePath(const std::string& index = GetCurrentUsedSpringIndex());
 	static std::string GetDownloadDir();
+	static void SetDownloadDir(const std::string& newDir);
 
 	//!@brief meaningful only on mac
 	static void SetBundle(const std::string& index, const std::string& path);

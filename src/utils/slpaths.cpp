@@ -487,3 +487,9 @@ std::string SlPaths::SantinizeFilename(const std::string& filename)
 	}
 	return res;
 }
+
+void SlPaths::SetDownloadDir(const std::string& newDir) {
+	std::string newDownloadDir = LSL::Util::EnsureDelimiter(newDir);
+
+	cfg().Write(_T("/Spring/DownloadDir"), TowxString(newDownloadDir));
+}
