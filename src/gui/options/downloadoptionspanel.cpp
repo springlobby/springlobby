@@ -55,14 +55,10 @@ DownloadOptionsPanel::DownloadOptionsPanel(wxWindow* parent)
 			secondInnerSizer->Add(m_NewDownloadDirButton, 0, wxALL, 5);
 		innerSizer->Add(secondInnerSizer, 1, wxALL | wxEXPAND);
 
-		wxStaticText* statText = new wxStaticText(this, wxID_ANY, _("May need restart if changed!"));
-		statText->SetFont(wxFont(8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-		innerSizer->Add(statText, 0, wxALL, 3);
 		outerSizer->Add(innerSizer, 1, wxALL | wxEXPAND);
 
 		m_main_sizer->Add(outerSizer, 0, wxALL | wxEXPAND, 5);
 
-		m_DownloadDirectoryTextCtrl->SetValue(TowxString(SlPaths::GetDownloadDir()));
 	}
 
 
@@ -81,15 +77,15 @@ DownloadOptionsPanel::~DownloadOptionsPanel()
 
 void DownloadOptionsPanel::OnApply(wxCommandEvent& /*unused*/)
 {
-
 	sett().SetHTTPMaxParallelDownloads(m_parallel_http->GetValue());
-
+	SlPaths::SetDownloadDir(STD_STRING(m_DownloadDirectoryTextCtrl->GetValue()));
 	prDownloader().UpdateSettings();
 }
 
 void DownloadOptionsPanel::OnRestore(wxCommandEvent& /*unused*/)
 {
 	m_parallel_http->SetValue(sett().GetHTTPMaxParallelDownloads());
+	m_DownloadDirectoryTextCtrl->SetValue(TowxString(SlPaths::GetDownloadDir()));
 }
 
 void DownloadOptionsPanel::OnNewDirectory(wxCommandEvent&) {
@@ -98,6 +94,5 @@ void DownloadOptionsPanel::OnNewDirectory(wxCommandEvent&) {
 
 	if (pick.ShowModal() == wxID_OK) {
 		m_DownloadDirectoryTextCtrl->SetValue(pick.GetPath());
-		SlPaths::SetDownloadDir(pick.GetPath().ToStdString());
 	}
 }
