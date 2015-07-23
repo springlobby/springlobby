@@ -449,52 +449,6 @@ void SlPaths::SetDownloadDir(const std::string& newDir) {
 	cfg().Write(_T("/Spring/DownloadDir"), TowxString(newDownloadDir));
 }
 
-#endif
-
-bool SlPaths::RmDir(const std::string& dir)
-{
-	if (dir.empty())
-		return false;
-	const wxString cachedir = TowxString(dir);
-	if (!wxDirExists(cachedir)) {
-		return false;
-	}
-	wxDir dirit(cachedir);
-	wxString file;
-	bool cont = dirit.GetFirst(&file);
-	while (cont) {
-		const wxString absname = cachedir + wxFileName::GetPathSeparator() + file;
-		if (wxDirExists(absname)) {
-			if (!RmDir(STD_STRING(absname))) {
-				return false;
-			}
-		} else {
-			wxLogWarning(_T("deleting %s"), absname.c_str());
-			if (!wxRemoveFile(absname))
-				return false;
-		}
-		cont = dirit.GetNext(&file);
-	}
-	wxLogWarning(_T("deleting %s"), TowxString(dir).c_str());
-	return rmdir(dir.c_str()) == 0;
-}
-
-bool SlPaths::mkDir(const std::string& dir)
-{
-	return wxFileName::Mkdir(TowxString(dir), 0755, wxPATH_MKDIR_FULL);
-}
-
-std::string SlPaths::SantinizeFilename(const std::string& filename)
-{
-	static const std::string invalid_chars("<>:\"/\\|?*");
-	std::string res = filename;
-	for (unsigned int i = 0; i < invalid_chars.length(); ++i) {
-		std::replace(res.begin(), res.end(), invalid_chars[i], '_');
-	}
-	return res;
-}
-
-
 bool SlPaths::ValidatePaths() {
 
 	std::vector<std::string> dirs = std::vector<std::string>();
@@ -543,3 +497,49 @@ bool SlPaths::CheckDirExistAndWritable(const std::string& dir) {
 	//TODO: Maybe check HDD capacity?
 	return true;
 }
+
+#endif
+
+bool SlPaths::RmDir(const std::string& dir)
+{
+	if (dir.empty())
+		return false;
+	const wxString cachedir = TowxString(dir);
+	if (!wxDirExists(cachedir)) {
+		return false;
+	}
+	wxDir dirit(cachedir);
+	wxString file;
+	bool cont = dirit.GetFirst(&file);
+	while (cont) {
+		const wxString absname = cachedir + wxFileName::GetPathSeparator() + file;
+		if (wxDirExists(absname)) {
+			if (!RmDir(STD_STRING(absname))) {
+				return false;
+			}
+		} else {
+			wxLogWarning(_T("deleting %s"), absname.c_str());
+			if (!wxRemoveFile(absname))
+				return false;
+		}
+		cont = dirit.GetNext(&file);
+	}
+	wxLogWarning(_T("deleting %s"), TowxString(dir).c_str());
+	return rmdir(dir.c_str()) == 0;
+}
+
+bool SlPaths::mkDir(const std::string& dir)
+{
+	return wxFileName::Mkdir(TowxString(dir), 0755, wxPATH_MKDIR_FULL);
+}
+
+std::string SlPaths::SantinizeFilename(const std::string& filename)
+{
+	static const std::string invalid_chars("<>:\"/\\|?*");
+	std::string res = filename;
+	for (unsigned int i = 0; i < invalid_chars.length(); ++i) {
+		std::replace(res.begin(), res.end(), invalid_chars[i], '_');
+	}
+	return res;
+}
+
