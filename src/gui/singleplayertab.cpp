@@ -227,6 +227,8 @@ void SinglePlayerTab::ReloadModlist()
 
 void SinglePlayerTab::ReloadEngineList()
 {
+	SlPaths::ValidatePaths();
+
 	m_engine_pick->Clear();
 
 	std::map<std::string, LSL::SpringBundle> versions = SlPaths::GetSpringVersionList();

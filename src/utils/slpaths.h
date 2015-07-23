@@ -57,6 +57,10 @@ public:
 	static std::string GetDownloadDir();
 	static void SetDownloadDir(const std::string& newDir);
 
+	/*Check all paths for write access*/
+	static bool ValidatePaths();
+	static bool CheckDirExistAndWritable(const std::string&);
+
 	//!@brief meaningful only on mac
 	static void SetBundle(const std::string& index, const std::string& path);
 

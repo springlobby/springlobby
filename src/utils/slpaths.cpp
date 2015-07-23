@@ -494,3 +494,52 @@ std::string SlPaths::SantinizeFilename(const std::string& filename)
 	return res;
 }
 
+
+bool SlPaths::ValidatePaths() {
+
+	std::vector<std::string> dirs = std::vector<std::string>();
+
+	/*Make list of dirs t be checked*/
+	dirs.push_back(GetDownloadDir());
+	dirs.push_back(GetUpdateDir());
+	dirs.push_back(GetConfigfileDir());
+	dirs.push_back(GetLobbyWriteDir());
+	dirs.push_back(GetCachePath());
+	dirs.push_back(GetDataDir());
+
+	/*Check dirs*/
+	try{
+		for(std::string& dir : dirs)
+		{
+			if( CheckDirExistAndWritable(dir) == false) {
+				wxLogError(wxString::Format(_("Directory %s is not accessible!"), TowxString(dir)));
+				return false;
+			}
+		}
+	}catch(...)
+	{
+		wxLogError(_("SlPaths::ValidatePaths() : Failed to validate data directories!"));
+		return false;
+	}
+
+	return true;
+}
+
+bool SlPaths::CheckDirExistAndWritable(const std::string& dir) {
+
+	/*Convert path to UTF-8 string*/
+	wxString targetDir = TowxString(dir);
+
+	/*Check if exists and if not try to create one*/
+	if (wxFileName::Exists(targetDir) == false) {
+		return mkDir(targetDir.ToStdString());
+	}
+
+	/*Check if dir is writable*/
+	if (wxFileName::IsDirWritable(targetDir) == false) {
+		return false;
+	}
+
+	//TODO: Maybe check HDD capacity?
+	return true;
+}

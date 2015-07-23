@@ -140,6 +140,8 @@ void Ui::ShowMainWindow()
 {
 	ASSERT_LOGIC(m_main_win != 0, "m_main_win = 0");
 	mw().Show(true);
+
+	SlPaths::ValidatePaths();
 }
 
 
