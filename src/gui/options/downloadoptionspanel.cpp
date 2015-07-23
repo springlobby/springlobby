@@ -61,14 +61,6 @@ DownloadOptionsPanel::DownloadOptionsPanel(wxWindow* parent)
 		outerSizer->Add(innerSizer, 1, wxALL | wxEXPAND);
 
 		m_main_sizer->Add(outerSizer, 0, wxALL | wxEXPAND, 5);
-
-		/*Block controls if no engine available*/
-		if (SlPaths::GetSpringVersionList().size() == 0) {
-			m_DownloadDirectoryTextCtrl->Enable(false);
-			m_NewDownloadDirButton->Enable(false);
-		} else {
-			m_DownloadDirectoryTextCtrl->SetValue(TowxString(SlPaths::GetDownloadDir()));
-		}
 	}
 
 
