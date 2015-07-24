@@ -81,7 +81,7 @@
 
 #include "gui/uiutils.h"
 
-class UserStatus;
+struct UserStatus;
 class wxString;
 class IBattle;
 
