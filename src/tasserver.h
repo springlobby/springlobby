@@ -137,7 +137,6 @@ private:
 
 	void HandlePong(int replyid);
 
-	void OnError(const std::string& err);
 
 	bool IsPasswordHash(const std::string& pass) const;
 	std::string GetPasswordHash(const std::string& pass) const;
@@ -146,9 +145,10 @@ private:
 
 	void SetRelayIngamePassword(const User& user);
 
-	void OnConnected();
-	void OnDataReceived();
-	void OnDisconnected();
+	void OnConnected() override;
+	void OnDisconnected() override;
+	void OnDataReceived() override;
+	void OnError(const std::string& err) override;
 
 	void UDPPing(); /// used for nat travelsal
 	/// generic udp "ping" function
