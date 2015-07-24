@@ -19,12 +19,15 @@ IServer::IServer()
     : battles_iter(new BattleList_Iter(&m_battles))
     , m_pass_hash(false)
 {
+	assert(uidata.panel == NULL);
 }
 
 IServer::~IServer()
 {
-	if (uidata.panel)
+	if (uidata.panel) {
 		uidata.panel->SetServer(NULL);
+		uidata.panel = nullptr;
+	}
 	Reset();
 	delete battles_iter;
 }

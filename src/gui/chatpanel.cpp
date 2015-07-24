@@ -228,6 +228,7 @@ ChatPanel::~ChatPanel()
 	cfg().Write(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
 
 	m_chatlog_text->Disconnect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, 0);
+	wxDELETE(m_chatlog_text);
 
 	if (GetAui().manager) {
 		GetAui().manager->DetachPane(this);
@@ -406,17 +407,8 @@ void ChatPanel::OutputLine(const wxString& message, const wxColour& col, bool sh
 
 void ChatPanel::OutputLine(const ChatLine& line)
 {
-	const int pos = m_chatlog_text->GetScrollPos(wxVERTICAL);   // vertical scrolled window position
-	const int end = m_chatlog_text->GetScrollRange(wxVERTICAL); // hight of complete scolled window
-	const int height = m_chatlog_text->GetSize().GetHeight();
 	const int numOfLines = m_chatlog_text->GetNumberOfLines();
 	const int maxlength = sett().GetChatHistoryLenght();
-	float original_pos = (float)(pos + height) / (float)end;
-
-	if (original_pos < 0.0f)
-		original_pos = 0.0f;
-	if (original_pos > 1.0f)
-		original_pos = 1.0f;
 
 	// crop lines from history that exceeds limit
 	if ((maxlength > 0) && (numOfLines > maxlength)) {

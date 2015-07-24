@@ -32,11 +32,13 @@ ChatLog::ChatLog()
 
 ChatLog::ChatLog(const wxString& logname)
     : m_logname(logname)
-    , m_active(LogEnabled())
+    , m_active(false)
     , m_logfile()
 {
 	wxLogMessage(_T( "ChatLog::ChatLog( %s )" ), logname.c_str());
-	SetLogFile(logname);
+	if (LogEnabled()) {
+		m_active = SetLogFile(logname);
+	}
 }
 
 bool ChatLog::SetLogFile(const wxString& logname)
