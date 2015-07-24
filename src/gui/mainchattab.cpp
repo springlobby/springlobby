@@ -255,8 +255,8 @@ ChatPanel* MainChatTab::AddChatPanel(IServer& server, const wxString& name)
 
 	LOOP_PANELS(
 	    if (tmp->GetPanelType() == CPT_Server) {
-			m_chat_tabs->DeletePage( i );
-			i--;
+			tmp->SetServer(&server);
+			return tmp;
 	    })
 
 	ChatPanel* chat = new ChatPanel(m_chat_tabs, server, m_imagelist);
