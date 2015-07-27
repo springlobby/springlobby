@@ -459,13 +459,17 @@ bool SlPaths::ValidatePaths() {
 	dirs.push_back(GetConfigfileDir());
 	dirs.push_back(GetLobbyWriteDir());
 	dirs.push_back(GetCachePath());
-	dirs.push_back(GetDataDir());
+	
+	/*This method can return empty string if no engine found*/
+	if (GetDataDir().empty() == false) {
+		dirs.push_back(GetDataDir());
+	}
 
 	/*Check dirs*/
 	try{
 		for(std::string& dir : dirs)
 		{
-			if( CheckDirExistAndWritable(dir) == false) {
+			if (CheckDirExistAndWritable(dir) == false) {
 				wxLogError(wxString::Format(_("Directory %s is not accessible!"), TowxString(dir)));
 				return false;
 			}
