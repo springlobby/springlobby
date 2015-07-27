@@ -41,8 +41,10 @@ class DownloadItem : public LSL::WorkItem
 {
 public:
 	DownloadItem(std::list<IDownload*> item, IDownloader* loader)
-	    : m_item(item)
-	    , m_loader(loader)
+		: m_item(item)
+		, m_loader(loader)
+		, m_reload(false)
+		, m_lobbydl(false)
 	{
 	}
 
@@ -60,44 +62,13 @@ public:
 			wxString errorMessage = wxString::Format(_("Failed to download %s!"), m_item.front()->name);
 			wxLogError(errorMessage);
 		}
-		bool reload = false;
-		bool lobbydl = false;
 
 		for (IDownload* dl: m_item) {
-			switch (dl->cat) {
-				case IDownload::CAT_ENGINE_LINUX:
-				case IDownload::CAT_ENGINE_WINDOWS:
-				case IDownload::CAT_ENGINE_LINUX64:
-				case IDownload::CAT_ENGINE_MACOSX:
-					if (fileSystem->extractEngine(dl->name, dl->version) == false) {
-						wxLogError(_("Failed to extract downloaded engine!"));
-						break;
-					}
-					SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
-					SlPaths::SetUsedSpringIndex(dl->version);
-					//Inform all application components about new engine been available
-					GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
-					break;
-
-				case IDownload::CAT_LOBBYCLIENTS:
-					lobbydl = true;
-					if (fileSystem->extract(dl->name, SlPaths::GetUpdateDir(), true) == false) {
-						wxLogError(_("Failed to extract downloaded lobby client!"));
-					}
-					break;
-
-				case IDownload::CAT_MAPS:
-				case IDownload::CAT_GAMES:
-					reload = true;
-					break;
-
-				default:
-					break;
-			}
+			DownloadFinished(dl);
 		}
 
 		UiEvents::ScopedStatusMessage msgcomplete(d, 0);
-		if (reload) {
+		if (m_reload) {
 			LSL::usync().ReloadUnitSyncLib();
 			// prefetch map data after a download as well
 			for (IDownload* dl: m_item) {
@@ -115,15 +86,52 @@ public:
 			//notify about finished download
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 		}
-		if (lobbydl) {
+		if (m_lobbydl) {
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
 		}
 		m_loader->freeResult(m_item);
 	}
 
 private:
+	void DownloadFinished(IDownload* dl)
+	{
+			switch (dl->cat) {
+				case IDownload::CAT_ENGINE_LINUX:
+				case IDownload::CAT_ENGINE_WINDOWS:
+				case IDownload::CAT_ENGINE_LINUX64:
+				case IDownload::CAT_ENGINE_MACOSX:
+					if (fileSystem->extractEngine(dl->name, dl->version) == false) {
+						wxLogError(_("Failed to extract downloaded engine!"));
+						break;
+					}
+					SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
+					SlPaths::SetUsedSpringIndex(dl->version);
+					//Inform all application components about new engine been available
+					GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
+					break;
+
+				case IDownload::CAT_LOBBYCLIENTS:
+					m_lobbydl = true;
+					if (fileSystem->extract(dl->name, SlPaths::GetUpdateDir(), true) == false) {
+						wxLogError(_("Failed to extract downloaded lobby client!"));
+					}
+					break;
+
+				case IDownload::CAT_MAPS:
+				case IDownload::CAT_GAMES:
+					m_reload = true;
+					break;
+
+				default:
+					break;
+			}
+	}
+
+private:
 	std::list<IDownload*> m_item;
 	IDownloader* m_loader;
+	bool m_reload;
+	bool m_lobbydl;
 };
 
 class SearchItem : public LSL::WorkItem
