@@ -151,11 +151,10 @@ void SearchItem::Run()
 {
 	rapidDownload->setOption("forceupdate", "");
 	std::list<IDownload*> results;
-	std::list<IDownloader*>::const_iterator it = m_loaders.begin();
-	for (; it != m_loaders.end(); ++it) {
-		(*it)->search(results, m_name, m_cat);
+	for (IDownloader* loader: m_loaders) {
+		loader->search(results, m_name, m_cat);
 		if (!results.empty()) {
-			DownloadItem* dl_item = new DownloadItem(results, *it);
+			DownloadItem* dl_item = new DownloadItem(results, loader);
 			prDownloader().m_dl_thread->DoWork(dl_item);
 			m_result_size = results.size();
 			return;
