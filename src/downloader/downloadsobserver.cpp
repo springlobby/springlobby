@@ -1,6 +1,5 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 #include "contentmanager.h"
-
 #include "downloadsobserver.h"
 
 ObserverDownloadInfo::ObserverDownloadInfo()
@@ -64,9 +63,8 @@ void DownloadsObserver::Remove(IDownload* dl)
 void DownloadsObserver::GetList(std::list<ObserverDownloadInfo>& lst)
 {
 	wxMutexLocker lock(mutex);
-	std::list<IDownload*>::iterator it;
-	for (it = m_ActiveDownloadsList.begin(); it != m_ActiveDownloadsList.end(); ++it) {
-		ObserverDownloadInfo di = GetInfo((*it));
+	for (IDownload* dl: m_ActiveDownloadsList) {
+		ObserverDownloadInfo di = GetInfo(dl);
 		if (di.size > 0)
 			lst.push_back(di);
 	}
@@ -77,16 +75,13 @@ void DownloadsObserver::GetList(std::list<ObserverDownloadInfo>& lst)
 void DownloadsObserver::GetMap(std::map<wxString, ObserverDownloadInfo>& map)
 {
 	wxMutexLocker lock(mutex);
-	std::list<IDownload*>::iterator it_dl;
-	for (it_dl = m_ActiveDownloadsList.begin(); it_dl != m_ActiveDownloadsList.end(); ++it_dl) {
-		ObserverDownloadInfo di = GetInfo((*it_dl));
+	for (IDownload* dl: m_ActiveDownloadsList) {
+		ObserverDownloadInfo di = GetInfo(dl);
 		if (di.size > 0)
 			map[di.name] = di;
 	}
 
-	std::list<ObserverDownloadInfo>::iterator it_di;
-	for (it_di = m_FinishedDownloadsList.begin(); it_di != m_FinishedDownloadsList.end(); ++it_di) {
-		ObserverDownloadInfo di = (*it_di);
+	for (ObserverDownloadInfo di: m_FinishedDownloadsList) {
 		if (di.size > 0)
 			map[di.name] = di;
 	}
