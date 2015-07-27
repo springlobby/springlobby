@@ -58,12 +58,10 @@ public:
 				wxString errorMessage = wxString::Format(_("Failed to download %s!"), m_item.front()->name);
 				wxLogError(errorMessage);
 			}
-			std::list<IDownload*>::iterator it;
 			bool reload = false;
 			bool lobbydl = false;
 
-			for (it = m_item.begin(); it != m_item.end(); ++it) {
-				IDownload* dl = *it;
+			for (IDownload* dl: m_item) {
 
 				switch (dl->cat) {
 					case IDownload::CAT_ENGINE_LINUX:
@@ -102,8 +100,7 @@ public:
 			if (reload) {
 				LSL::usync().ReloadUnitSyncLib();
 				// prefetch map data after a download as well
-				for (it = m_item.begin(); it != m_item.end(); ++it) {
-					IDownload* dl = *it;
+				for (IDownload* dl: m_item) {
 					switch (dl->cat) {
 						case IDownload::CAT_MAPS: {
 							LSL::usync().PrefetchMap(dl->name); //FIXME: do the same for games, too
