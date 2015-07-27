@@ -95,7 +95,6 @@ public:
 				}
 			}
 
-			m_loader->freeResult(m_item);
 			UiEvents::ScopedStatusMessage msgcomplete(d, 0);
 			if (reload) {
 				LSL::usync().ReloadUnitSyncLib();
@@ -118,6 +117,7 @@ public:
 			if (lobbydl) {
 				GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
 			}
+			m_loader->freeResult(m_item);
 		}
 	}
 
