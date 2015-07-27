@@ -48,77 +48,77 @@ public:
 
 	void Run()
 	{
-		if (!m_item.empty()) {
-			UiEvents::ScopedStatusMessage msg("Downloading: " + m_item.front()->name, 0);
-			//we create this in avance cause m_item gets freed
-			wxString d(_("Download complete: "));
-			d += TowxString(m_item.front()->name);
-			bool downloadFailed = (m_loader->download(m_item, sett().GetHTTPMaxParallelDownloads()) != true);
-			if (downloadFailed) {
-				wxString errorMessage = wxString::Format(_("Failed to download %s!"), m_item.front()->name);
-				wxLogError(errorMessage);
+		if (m_item.empty()) {
+			return;
+		}
+		UiEvents::ScopedStatusMessage msg("Downloading: " + m_item.front()->name, 0);
+		//we create this in avance cause m_item gets freed
+		wxString d(_("Download complete: "));
+		d += TowxString(m_item.front()->name);
+		bool downloadFailed = (m_loader->download(m_item, sett().GetHTTPMaxParallelDownloads()) != true);
+		if (downloadFailed) {
+			wxString errorMessage = wxString::Format(_("Failed to download %s!"), m_item.front()->name);
+			wxLogError(errorMessage);
+		}
+		bool reload = false;
+		bool lobbydl = false;
+
+		for (IDownload* dl: m_item) {
+			switch (dl->cat) {
+				case IDownload::CAT_ENGINE_LINUX:
+				case IDownload::CAT_ENGINE_WINDOWS:
+				case IDownload::CAT_ENGINE_LINUX64:
+				case IDownload::CAT_ENGINE_MACOSX:
+					if (fileSystem->extractEngine(dl->name, dl->version) == false) {
+						wxLogError(_("Failed to extract downloaded engine!"));
+						break;
+					}
+					SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
+					SlPaths::SetUsedSpringIndex(dl->version);
+					//Inform all application components about new engine been available
+					GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
+					break;
+
+				case IDownload::CAT_LOBBYCLIENTS:
+					lobbydl = true;
+					if (fileSystem->extract(dl->name, SlPaths::GetUpdateDir(), true) == false) {
+						wxLogError(_("Failed to extract downloaded lobby client!"));
+					}
+					break;
+
+				case IDownload::CAT_MAPS:
+				case IDownload::CAT_GAMES:
+					reload = true;
+					break;
+
+				default:
+					break;
 			}
-			bool reload = false;
-			bool lobbydl = false;
+		}
 
+		UiEvents::ScopedStatusMessage msgcomplete(d, 0);
+		if (reload) {
+			LSL::usync().ReloadUnitSyncLib();
+			// prefetch map data after a download as well
 			for (IDownload* dl: m_item) {
-
 				switch (dl->cat) {
-					case IDownload::CAT_ENGINE_LINUX:
-					case IDownload::CAT_ENGINE_WINDOWS:
-					case IDownload::CAT_ENGINE_LINUX64:
-					case IDownload::CAT_ENGINE_MACOSX:
-						if (fileSystem->extractEngine(dl->name, dl->version) == false) {
-							wxLogError(_("Failed to extract downloaded engine!"));
-							break;
-						}
-						SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
-						SlPaths::SetUsedSpringIndex(dl->version);
-						//Inform all application components about new engine been available
-						GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
-						break;
-
-					case IDownload::CAT_LOBBYCLIENTS:
-						lobbydl = true;
-						if (fileSystem->extract(dl->name, SlPaths::GetUpdateDir(), true) == false) {
-							wxLogError(_("Failed to extract downloaded lobby client!"));
-						}
-						break;
-
-					case IDownload::CAT_MAPS:
-					case IDownload::CAT_GAMES:
-						reload = true;
-						break;
+					case IDownload::CAT_MAPS: {
+						LSL::usync().PrefetchMap(dl->name); //FIXME: do the same for games, too
+					}
+					break;
 
 					default:
-						break;
+						continue;
 				}
 			}
 
-			UiEvents::ScopedStatusMessage msgcomplete(d, 0);
-			if (reload) {
-				LSL::usync().ReloadUnitSyncLib();
-				// prefetch map data after a download as well
-				for (IDownload* dl: m_item) {
-					switch (dl->cat) {
-						case IDownload::CAT_MAPS: {
-							LSL::usync().PrefetchMap(dl->name); //FIXME: do the same for games, too
-						}
-						break;
-
-						default:
-							continue;
-					}
-				}
-
-				//notify about finished download
-				GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
-			}
-			if (lobbydl) {
-				GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
-			}
-			m_loader->freeResult(m_item);
+			//notify about finished download
+			GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 		}
+		if (lobbydl) {
+			GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
+		}
+		m_loader->freeResult(m_item);
 	}
 
 private:
