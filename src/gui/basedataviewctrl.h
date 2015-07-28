@@ -101,7 +101,7 @@ inline const DataType* BaseDataViewCtrl<DataType>::GetSelectedItem() {
 	
 	/*Prevent from returning undefined object if model is empty*/
 	if (GetItemsCount() == 0) {
-		return;
+		return nullptr;
 	}
 	
 	wxDataViewItem item = GetSelection();
