@@ -195,7 +195,6 @@ wxArrayString UserActions::GetPeopleList(const wxString& group) const
 void UserActions::AddGroup(const wxString& group)
 {
 	if (!cfg().Exists(_T( "/Groups/" ) + group)) {
-		cfg().Write(_T( "/Groups/" ), group);
 		//set defaults
 		SetGroupActions(group, UserActions::ActNone);
 		SetGroupHLColor(defaultHLcolor, group);
