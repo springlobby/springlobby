@@ -732,7 +732,7 @@ void ChatPanel::Parted(User& who, const wxString& message)
 	const bool me_parted = m_channel && &who == &m_channel->GetMe();
 	const wxString nick = TowxString(who.GetNick());
 	const bool wasactive = m_active_users.erase(nick) > 0;
-	if (m_display_joinitem || wasactive) {
+	if (m_display_joinitem || (wasactive && !who.IsBot())) {
 		OutputLine(_T( " ** " ) + wxString::Format(_("%s left %s (%s)."), nick.c_str(), GetChatTypeStr().c_str(), message.c_str()), sett().GetChatColorJoinPart());
 	}
 	if (m_type == CPT_Channel) {
