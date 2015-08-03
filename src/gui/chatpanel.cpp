@@ -839,14 +839,15 @@ void ChatPanel::SetServer(IServer* serv)
 		m_nicklist->ClearUsers();
 		UpdateUserCountLabel();
 	}
-	if (serv != 0) {
+
+	if (serv != nullptr) {
 		SetLogFile(_T("server"));
 		serv->uidata.panel = this;
-		if (m_server != nullptr) {
-			m_server->uidata.panel = 0;
-		}
-		m_server = serv;
 	}
+	if (m_server != nullptr) {
+		m_server->uidata.panel = 0;
+	}
+	m_server = serv;
 }
 
 const User* ChatPanel::GetUser() const
