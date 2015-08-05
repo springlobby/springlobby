@@ -27,7 +27,7 @@ void ContentDownloadRequest::MapRequired(const wxString& mapName, const wxString
 	this->mapHash = mapHash;
 }
 
-void ContentDownloadRequest::ModRequired(const wxString& modName, const wxString& modHash) {
+void ContentDownloadRequest::GameRequired(const wxString& modName, const wxString& modHash) {
 	this->modName = modName;
 	this->modHash = modHash;
 }

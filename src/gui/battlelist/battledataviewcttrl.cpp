@@ -99,7 +99,7 @@ void BattleDataViewCtrl::OnDLMod(wxCommandEvent& /*event*/) {
 		return;
 	} else {
 		ContentDownloadRequest req;
-		req.ModRequired(battle->GetHostModName(), battle->GetHostModHash());
+		req.GameRequired(battle->GetHostModName(), battle->GetHostModHash());
 		try{
 			ContentManager::Instance()->DownloadContent(req);
 		}catch(Exception& e) {

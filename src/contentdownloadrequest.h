@@ -17,7 +17,7 @@ public:
 
 	void EngineRequired(const wxString& engineVesrion);
 	void MapRequired(const wxString& mapName, const wxString& mapHash);
-	void ModRequired(const wxString& modName, const wxString& modHash);
+	void GameRequired(const wxString& modName, const wxString& modHash);
 
 	bool IsSomethingNeeded() const;
 	bool NothingIsRequired() const;

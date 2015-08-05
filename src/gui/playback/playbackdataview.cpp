@@ -108,7 +108,7 @@ void PlaybackDataView::OnDLMod(wxCommandEvent& /*event*/)
 	const OfflineBattle& battle = storedGame->battle;
 	ContentDownloadRequest req;
 
-	req.ModRequired(battle.GetHostModName(), battle.GetHostModHash());
+	req.GameRequired(battle.GetHostModName(), battle.GetHostModHash());
 	try{
 		ContentManager::Instance()->DownloadContent(req);
 	}catch(Exception& e) {
