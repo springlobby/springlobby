@@ -13,12 +13,13 @@
 #include <wx/log.h>
 
 #include "gui/customdialogs.h"
+#include "utils/conversion.h"
 #include "log.h"
 
 // convert a string to IRI: https://en.wikipedia.org/wiki/Internationalized_resource_identifier
-wxString ConvToIRI(const wxString& str)
+std::string ConvToIRI(const std::string& str)
 {
-	std::string utf8(str.mb_str(wxMBConvUTF8()));
+	std::string utf8(wxString(str).mb_str(wxMBConvUTF8()));
 	wxString escaped;
 	for (unsigned i = 0; i < utf8.length(); i++) {
 		const unsigned char c = utf8[i];
@@ -29,14 +30,14 @@ wxString ConvToIRI(const wxString& str)
 		}
 		//FIXME: this function is incomplete! tested only with german umlauts
 	}
-	return escaped;
+	return STD_STRING(escaped);
 }
 
 //! @brief gets latest version from version.springlobby.info via HTTP
-wxString GetHttpFile(const wxString& httpurl)
+std::string GetHttpFile(const std::string& httpurl)
 {
-	const wxString host = httpurl.AfterFirst('/').AfterFirst('/').BeforeFirst('/');
-	const wxString url = httpurl.AfterFirst('/').AfterFirst('/').AfterFirst('/');
+	const wxString host = TowxString(httpurl).AfterFirst('/').AfterFirst('/').BeforeFirst('/');
+	const wxString url = TowxString(httpurl).AfterFirst('/').AfterFirst('/').AfterFirst('/');
 	wxHTTP versionRequest;
 	versionRequest.SetHeader(_T("Content-type"), _T("text/html; charset=utf-8"));
 	// normal timeout is 10 minutes.. set to 10 secs.
@@ -86,11 +87,11 @@ wxString GetHttpFile(const wxString& httpurl)
 		wxLogError(msg);
 		customMessageBoxNoModal(SL_MAIN_ICON, msg, wxEmptyString);
 
-		return wxEmptyString;
+		return "";
 	}
 
 	wxDELETE(stream);
 	versionRequest.Close();
 
-	return result;
+	return STD_STRING(result);
 }

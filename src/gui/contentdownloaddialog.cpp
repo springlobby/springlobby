@@ -77,8 +77,8 @@ ContentDownloadDialog::~ContentDownloadDialog()
 void ContentDownloadDialog::Search(const wxString& str)
 {
 	//FIXME: use pr-downloader and make async!
-	const wxString param = ConvToIRI(str);
-	const wxString query = wxString::Format(_("http://api.springfiles.com/json.php?nosensitive=on&logical=or&springname=%s&tag=%s"), param.c_str(), param.c_str());
+	const std::string param = ConvToIRI(STD_STRING(str));
+	const std::string query = stdprintf("http://api.springfiles.com/json.php?nosensitive=on&logical=or&springname=%s&tag=%s", param.c_str(), param.c_str());
 	const wxString json = GetHttpFile(query);
 	wxCommandEvent e;
 	e.SetString(json);

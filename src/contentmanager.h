@@ -6,7 +6,7 @@
 #include <vector>
 
 #include <wx/thread.h>
-#include <wx/string.h>
+#include <string>
 
 class ContentDownloadRequest;
 class IBattle;
@@ -22,23 +22,23 @@ public:
 
 	bool IsNewApplicationVersionAvailable();
 	bool UpdateApplication();
-	wxString GetLatestApplicationVersionAvailable();
+	std::string GetLatestApplicationVersionAvailable();
 
-	bool IsHavingSpringVersion(const wxString& engineString, const wxString& versionString);
+	bool IsHavingSpringVersion(const std::string& engineString, const std::string& versionString);
 	ContentDownloadRequest WhatContentForBattleIsRequired(const IBattle& battle);
 	bool DownloadContent(const ContentDownloadRequest& request);
 
 	void OnDownloadStarted(IDownload* download);
 	void OnDownloadFinished(IDownload* download);
 
-	bool IsContentAlreadyBeingDownloaded(const wxString& name);
+	bool IsContentAlreadyBeingDownloaded(const std::string& name);
 
 private:
 	ContentManager();
 	virtual ~ContentManager();
 
 private:
-	wxString latestApplicationVersionAvailable;
+	std::string latestApplicationVersionAvailable;
 	std::vector<DownloadInfo*> downloadsList;
 	wxMutex mutex;
 

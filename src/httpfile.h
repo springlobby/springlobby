@@ -3,9 +3,9 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_VERSIONCHECKER_H
 #define SPRINGLOBBY_HEADERGUARD_VERSIONCHECKER_H
 
-class wxString;
+#include <string>
 // convert a string to IRI: https://en.wikipedia.org/wiki/Internationalized_resource_identifier
-wxString ConvToIRI(const wxString& str);
-wxString GetHttpFile(const wxString& httpurl);
+std::string ConvToIRI(const std::string& str);
+std::string GetHttpFile(const std::string& httpurl);
 
 #endif // SPRINGLOBBY_HEADERGUARD_VERSIONCHECKER_H

@@ -1,6 +1,5 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include <wx/string.h>
 #include <wx/log.h>
 
 #include <string>
@@ -47,7 +46,7 @@ void ContentManager::Release() {
 }
 
 bool ContentManager::IsNewApplicationVersionAvailable() {
-	wxString latestVersion = GetLatestApplicationVersionAvailable();
+	std::string latestVersion = GetLatestApplicationVersionAvailable();
 	// Need to replace crap chars or versions will always be inequal
 
 	/*Some error occurred*/
@@ -56,26 +55,21 @@ bool ContentManager::IsNewApplicationVersionAvailable() {
 	}
 
 	//get current rev w/o AUX_VERSION added
-	const wxString myVersion = TowxString(getSpringlobbyVersion());
+	const std::string myVersion = getSpringlobbyVersion();
 
 	/*Check versions for equality*/
-	if (latestVersion.IsSameAs(myVersion, false) == false) {
-		return true;
-	} else {
-		return false;
-	}
+	return (latestVersion != myVersion);
 }
 
 bool ContentManager::UpdateApplication(){
-	const wxString latestVersion = GetLatestApplicationVersionAvailable();
-	const wxString updatedir = TowxString(SlPaths::GetUpdateDir());
+	const std::string latestVersion = GetLatestApplicationVersionAvailable();
+	const std::string updatedir = SlPaths::GetUpdateDir();
 	const size_t mindirlen = 9; // safety, minimal is/should be: C:\update
 	if ((updatedir.size() <= mindirlen)) {
 		throw Exception(_T("Invalid update dir: ") + updatedir);
-		return false;
 	}
 	if (wxDirExists(updatedir)) {
-		if (!SlPaths::RmDir(updatedir.ToStdString())) {
+		if (!SlPaths::RmDir(updatedir)) {
 			throw Exception(_T("Couldn't cleanup ") + updatedir);
 		}
 	}
@@ -88,15 +82,15 @@ bool ContentManager::UpdateApplication(){
 	}
 
 	const std::string dlfilepath = SlPaths::GetLobbyWriteDir() + "springlobby-latest.zip";
-	if (wxFileExists(TowxString(dlfilepath)) && !(wxRemoveFile(TowxString(dlfilepath)))) {
-		throw Exception(_T("couldn't delete: ") + TowxString(dlfilepath));
+	if (wxFileExists(dlfilepath) && !(wxRemoveFile(dlfilepath))) {
+		throw Exception(_T("couldn't delete: ") + dlfilepath);
 	}
-	const std::string dlurl = GetDownloadUrl(latestVersion.ToStdString());
+	const std::string dlurl = GetDownloadUrl(latestVersion);
 	return prDownloader().Download(dlfilepath, dlurl);
 }
 
-bool ContentManager::IsHavingSpringVersion(const wxString& engineString,
-		const wxString& versionString) {
+bool ContentManager::IsHavingSpringVersion(const std::string& engineString,
+		const std::string& versionString) {
 
 	wxASSERT(engineString == _T("spring"));
 
@@ -104,10 +98,10 @@ bool ContentManager::IsHavingSpringVersion(const wxString& engineString,
 		return true;
 	}
 
-	const std::string ver = SlPaths::GetCompatibleVersion(versionString.ToStdString());
+	const std::string ver = SlPaths::GetCompatibleVersion(versionString);
 	if (ver.empty() == false) {
 		if (SlPaths::GetCurrentUsedSpringIndex() != ver) {
-//			wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), TowxString(ver).c_str(), TowxString(ver).c_str());
+//			wxLogMessage(_T("server enforce usage of version: %s, switching to profile: %s"), ver).c_str(), ver).c_str());
 			SlPaths::SetUsedSpringIndex(ver);
 			LSL::usync().ReloadUnitSyncLib();
 		}
@@ -173,10 +167,10 @@ bool ContentManager::DownloadContent(const ContentDownloadRequest& request) {
 	return true;
 }
 
-wxString ContentManager::GetLatestApplicationVersionAvailable() {
+std::string ContentManager::GetLatestApplicationVersionAvailable() {
 	if (latestApplicationVersionAvailable.empty()) {
-		wxString version = GetHttpFile(GetLatestVersionUrl());
-		latestApplicationVersionAvailable = version.Trim().Trim(false);
+		std::string version = GetHttpFile(GetLatestVersionUrl());
+		latestApplicationVersionAvailable = TowxString(version).Trim().Trim(false);
 	} else {
 		//TODO: update cache if needed
 	}
@@ -184,16 +178,16 @@ wxString ContentManager::GetLatestApplicationVersionAvailable() {
 	return latestApplicationVersionAvailable;
 }
 
-bool ContentManager::IsContentAlreadyBeingDownloaded(const wxString& name) {
+bool ContentManager::IsContentAlreadyBeingDownloaded(const std::string& name) {
 
-	if (name == wxEmptyString) {
+	if (name.empty()) {
 		return false;
 	}
 
 	for(auto downloadItem : downloadsList)
 	{
 		if (downloadItem->IsFinished() == false) {
-			if (downloadItem->GetName().Lower() == name.Lower()) {
+			if (downloadItem->GetName() == name) {
 				return true;
 			}
 		}
