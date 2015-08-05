@@ -98,12 +98,12 @@ inline bool BaseDataViewCtrl<DataType>::AssociateModel(BaseDataViewModel<DataTyp
 
 template<class DataType>
 inline const DataType* BaseDataViewCtrl<DataType>::GetSelectedItem() {
-	
+
 	/*Prevent from returning undefined object if model is empty*/
 	if (GetItemsCount() == 0) {
 		return nullptr;
 	}
-	
+
 	wxDataViewItem item = GetSelection();
 
 	if (item.IsOk() == false) {

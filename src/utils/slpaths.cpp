@@ -461,7 +461,7 @@ bool SlPaths::ValidatePaths() {
 	dirs.push_back(GetCachePath());
 	
 	/*This method can return empty string if no engine found*/
-	if (GetDataDir().empty() == false) {
+	if (!GetDataDir().empty()) {
 		dirs.push_back(GetDataDir());
 	}
 
@@ -469,7 +469,7 @@ bool SlPaths::ValidatePaths() {
 	try{
 		for(std::string& dir : dirs)
 		{
-			if (CheckDirExistAndWritable(dir) == false) {
+			if (!CheckDirExistAndWritable(dir)) {
 				wxLogError(wxString::Format(_("Directory %s is not accessible!"), TowxString(dir)));
 				return false;
 			}
@@ -489,12 +489,12 @@ bool SlPaths::CheckDirExistAndWritable(const std::string& dir) {
 	wxString targetDir = TowxString(dir);
 
 	/*Check if exists and if not try to create one*/
-	if (wxFileName::Exists(targetDir) == false) {
+	if (!wxFileName::Exists(targetDir)) {
 		return mkDir(targetDir.ToStdString());
 	}
 
 	/*Check if dir is writable*/
-	if (wxFileName::IsDirWritable(targetDir) == false) {
+	if (!wxFileName::IsDirWritable(targetDir)) {
 		return false;
 	}
 
