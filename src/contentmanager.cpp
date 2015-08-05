@@ -179,8 +179,9 @@ bool ContentManager::DownloadContent(const ContentDownloadRequest& request) {
 }
 
 wxString ContentManager::GetLatestApplicationVersionAvailable() {
-	if (latestApplicationVersionAvailable == wxEmptyString) {
-		latestApplicationVersionAvailable = GetHttpFile(GetLatestVersionUrl());
+	if (latestApplicationVersionAvailable.empty()) {
+		wxString version = GetHttpFile(GetLatestVersionUrl());
+		latestApplicationVersionAvailable = version.Trim().Trim(false);
 	} else {
 		//TODO: update cache if needed
 	}
