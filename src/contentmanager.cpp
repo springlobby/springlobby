@@ -1,11 +1,7 @@
-/*
- * contentmanager.cpp
- *
- *  Created on: 11 июля 2015 г.
- *      Author: Руслан
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include <wx/string.h>
+#include <wx/log.h>
 
 #include <string>
 
@@ -51,9 +47,6 @@ void ContentManager::Release() {
 bool ContentManager::IsNewApplicationVersionAvailable() {
 	wxString latestVersion = GetLatestApplicationVersionAvailable();
 	// Need to replace crap chars or versions will always be inequal
-	latestVersion.Replace(_T(" "), wxEmptyString, true);
-	latestVersion.Replace(_T("\n"), wxEmptyString, true);
-	latestVersion.Replace(_T("\t"), wxEmptyString, true);
 
 	/*Some error occurred*/
 	if (latestVersion.empty()) {
