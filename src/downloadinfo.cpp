@@ -26,6 +26,8 @@ IDownload* DownloadInfo::GetIDownload() const {
 }
 
 void DownloadInfo::DownloadFinished() {
+	wxMutexLocker locker(mutex);
+
 	iDownload = nullptr;
 	finishedFlag = true;
 	downloadedSize = totalSize;
@@ -36,6 +38,8 @@ wxString DownloadInfo::GetName() const {
 }
 
 bool DownloadInfo::IsFinished() const {
+	wxMutexLocker locker(mutex);
+
 	return finishedFlag;
 }
 
@@ -45,12 +49,17 @@ int DownloadInfo::GetSize() const {
 
 int DownloadInfo::GetProgressPercent() const {
 
+	if (totalSize == 0) {
+		return 0;
+	}
+
 	int computedProgress = static_cast<int>( (downloadedSize * 100.0F) / totalSize );
 
 	return computedProgress;
 }
 
 void DownloadInfo::UpdateInfo() {
+	wxMutexLocker locker(mutex);
 
 	if (iDownload == nullptr) {
 		return;

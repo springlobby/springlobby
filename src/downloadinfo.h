@@ -9,6 +9,7 @@
 #define SRC_DOWNLOADINFO_H_
 
 #include <wx/string.h>
+#include <wx/thread.h>
 
 class IDownload;
 
@@ -28,6 +29,8 @@ public:
 private:
 	IDownload* iDownload;
 	wxString downloadName;
+	mutable wxMutex mutex;
+
 	bool finishedFlag;
 	int totalSize;
 	int downloadedSize;

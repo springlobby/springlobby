@@ -41,17 +41,17 @@ static const DownloadsObserver& DownloadsObserver::Instance()
 */
 void DownloadsObserver::Add(IDownload* dl)
 {
-	ContentManager::Instance()->OnDownloadStarted(dl);
-
 	wxMutexLocker lock(mutex);
+
+	ContentManager::Instance()->OnDownloadStarted(dl);
 	m_ActiveDownloadsList.push_back(dl);
 }
 
 void DownloadsObserver::Remove(IDownload* dl)
 {
-	ContentManager::Instance()->OnDownloadFinished(dl);
-
 	wxMutexLocker lock(mutex);
+
+	ContentManager::Instance()->OnDownloadFinished(dl);
 	m_ActiveDownloadsList.remove(dl);
 
 	ObserverDownloadInfo di = GetInfo(dl);

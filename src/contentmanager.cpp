@@ -26,8 +26,6 @@
 #include "contentmanager.h"
 
 ContentManager::ContentManager() {
-	// TODO Auto-generated constructor stub
-
 }
 
 ContentManager* ContentManager::Instance() {
