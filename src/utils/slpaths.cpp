@@ -13,6 +13,7 @@
 #include <lslutils/misc.h>
 
 #include "utils/slconfig.h"
+#include "downloader/lib/src/FileSystem/FileSystem.h"
 
 #include "platform.h"
 #include "conversion.h"
@@ -459,7 +460,7 @@ bool SlPaths::ValidatePaths() {
 	dirs.push_back(GetConfigfileDir());
 	dirs.push_back(GetLobbyWriteDir());
 	dirs.push_back(GetCachePath());
-	
+
 	/*This method can return empty string if no engine found*/
 	if (!GetDataDir().empty()) {
 		dirs.push_back(GetDataDir());
@@ -509,32 +510,33 @@ bool SlPaths::RmDir(const std::string& dir) //FIXME: get rid of wx functions / m
 	if (dir.empty())
 		return false;
 	const wxString cachedir = TowxString(dir);
-	if (!wxDirExists(cachedir)) {
+	if (!CFileSystem::directoryExists(dir)) {
 		return false;
 	}
 	wxDir dirit(cachedir);
 	wxString file;
 	bool cont = dirit.GetFirst(&file);
 	while (cont) {
-		const wxString absname = TowxString(LSL::Util::EnsureDelimiter(dir)) + file;
-		if (wxDirExists(absname)) {
-			if (!RmDir(STD_STRING(absname))) {
+		const std::string absname = LSL::Util::EnsureDelimiter(dir) + STD_STRING(file);
+		if (CFileSystem::directoryExists(absname)) {
+			if (!RmDir(absname)) {
 				return false;
 			}
 		} else {
 			wxLogWarning(_T("deleting %s"), absname.c_str());
-			if (!wxRemoveFile(absname))
+			if (!CFileSystem::removeFile(absname))
 				return false;
 		}
 		cont = dirit.GetNext(&file);
 	}
+	dirit.Close();
 	wxLogWarning(_T("deleting %s"), TowxString(dir).c_str());
-	return rmdir(dir.c_str()) == 0;
+	return CFileSystem::removeDir(dir);
 }
 
 bool SlPaths::mkDir(const std::string& dir)
 {
-	return wxFileName::Mkdir(TowxString(dir), 0755, wxPATH_MKDIR_FULL);
+	return CFileSystem::createSubdirs(dir);
 }
 
 std::string SlPaths::SantinizeFilename(const std::string& filename)
