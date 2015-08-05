@@ -39,7 +39,10 @@ bool UpdaterApp::OnInit()
 	if (m_paramcount == 5) {
 		WaitForExit(m_pid);
 		wxArrayString params;
-		if (!StartUpdate(TrimQuotes(m_source_dir), TrimQuotes(m_destination_dir), true)) { //update failed, try as admin
+		const wxString src = TrimQuotes(m_source_dir);
+		const wxString dst = TrimQuotes(m_destination_dir);
+
+		if ( !wxFileName::IsDirWritable(dst) || !StartUpdate(src, dst, true)) { //update failed, try as admin
 			params.push_back(m_source_dir);
 			params.push_back(m_destination_dir);
 			RunProcess(m_updater_exe, params, false, true);
@@ -47,7 +50,8 @@ bool UpdaterApp::OnInit()
 		}
 		//start springlobby
 		return RunProcess(m_springlobby_exe, params, true);
-	} else if (m_paramcount != 2) {
+	}
+	if (m_paramcount != 2) {
 		return false;
 	}
 	return StartUpdate(TrimQuotes(m_source_dir), TrimQuotes(m_destination_dir), false);
