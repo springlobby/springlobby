@@ -47,7 +47,7 @@ void BattleDataViewModel::GetValue(wxVariant& variant,
 		break;
 
 	case GAME:
-		variant = wxVariant(wxDataViewIconText(wxString(battle->GetHostModName()), battle->ModExists(false) ? iconsCollection->ICON_EXISTS : iconsCollection->ICON_NEXISTS));
+		variant = wxVariant(wxDataViewIconText(wxString(battle->GetHostGameName()), battle->GameExists(false) ? iconsCollection->ICON_EXISTS : iconsCollection->ICON_NEXISTS));
 		break;
 
 	case HOST:
@@ -159,7 +159,7 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 		break;
 
 	case GAME:
-		sortingResult = battleA->GetHostModName().compare(battleB->GetHostModName());
+		sortingResult = battleA->GetHostGameName().compare(battleB->GetHostGameName());
 		break;
 
 	case ENGINE:

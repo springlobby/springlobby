@@ -643,15 +643,15 @@ void Settings::DeletePreset(const wxString& name)
 }
 
 
-wxString Settings::GetModDefaultPresetName(const wxString& modname)
+wxString Settings::GetModDefaultPresetName(const wxString& gamename)
 {
-	return cfg().Read(_T( "/Hosting/ModDefaultPreset/" ) + modname);
+	return cfg().Read(_T( "/Hosting/ModDefaultPreset/" ) + gamename);
 }
 
 
-void Settings::SetModDefaultPresetName(const wxString& modname, const wxString& presetname)
+void Settings::SetModDefaultPresetName(const wxString& gamename, const wxString& presetname)
 {
-	cfg().Write(_T( "/Hosting/ModDefaultPreset/" ) + modname, presetname);
+	cfg().Write(_T( "/Hosting/ModDefaultPreset/" ) + gamename, presetname);
 }
 
 
@@ -1026,16 +1026,16 @@ void Settings::SetBattleLastAutoAnnounceDescription(bool value)
 	cfg().Write(_T( "/Hosting/AutoAnnounceDescription" ), value);
 }
 
-void Settings::SetBattleLastSideSel(const wxString& modname, int sidenum)
+void Settings::SetBattleLastSideSel(const wxString& gamename, int sidenum)
 {
-	cfg().Write(_T("/Battle/Sides/" + modname), sidenum);
+	cfg().Write(_T("/Battle/Sides/" + gamename), sidenum);
 }
 
-int Settings::GetBattleLastSideSel(const wxString& modname)
+int Settings::GetBattleLastSideSel(const wxString& gamename)
 {
-	if (modname.IsEmpty())
+	if (gamename.IsEmpty())
 		return 0;
-	return cfg().Read(_T("/Battle/Sides/" + modname), 0l);
+	return cfg().Read(_T("/Battle/Sides/" + gamename), 0l);
 }
 
 void Settings::SetMapLastStartPosType(const wxString& mapname, const wxString& startpostype)

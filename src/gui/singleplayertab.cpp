@@ -213,10 +213,10 @@ void SinglePlayerTab::ReloadModlist()
 	m_mod_pick->Clear();
 	m_mod_pick->Append(lslTowxArrayString(LSL::usync().GetModList()));
 	m_mod_pick->Insert(_("-- Select one --"), m_mod_pick->GetCount());
-	if (m_battle.GetHostModName().empty()) {
+	if (m_battle.GetHostGameName().empty()) {
 		m_mod_pick->SetSelection(m_mod_pick->GetCount() - 1);
 	} else {
-		m_mod_pick->SetStringSelection(TowxString(m_battle.GetHostModName()));
+		m_mod_pick->SetStringSelection(TowxString(m_battle.GetHostGameName()));
 		if (m_mod_pick->GetStringSelection().empty()) {
 			SetMod(m_mod_pick->GetCount() - 1);
 		}
@@ -301,18 +301,18 @@ void SinglePlayerTab::SetMod(unsigned int index)
 {
 	//ui().ReloadUnitSync();
 	if (index >= m_mod_pick->GetCount() - 1) {
-		m_battle.SetHostMod("", "");
+		m_battle.SetHostGame("", "");
 	} else {
 		try {
-			LSL::UnitsyncMod mod = LSL::usync().GetMod(index);
-			m_battle.SetLocalMod(mod);
-			m_battle.SetHostMod(mod.name, mod.hash);
+			LSL::UnitsyncGame mod = LSL::usync().GetMod(index);
+			m_battle.SetLocalGame(mod);
+			m_battle.SetHostGame(mod.name, mod.hash);
 		} catch (...) {
 		}
 	}
 	m_minimap->UpdateMinimap();
 	m_battle.SendHostInfo(IBattle::HI_Restrictions); // Update restrictions in options.
-	m_battle.SendHostInfo(IBattle::HI_Mod_Changed);  // reload mod options
+	m_battle.SendHostInfo(IBattle::HI_Game_Changed);  // reload mod options
 	m_mod_pick->SetSelection(index);
 }
 

@@ -44,7 +44,7 @@ bool SavegameList::GetSavegameInfos(const std::string& SavegamePath, StoredGame&
 		return false;
 
 	ret.battle.GetBattleFromScript(false);
-	ret.ModName = ret.battle.GetHostModName();
+	ret.GameName = ret.battle.GetHostGameName();
 	ret.battle.SetBattleType(BT_Savegame);
 	ret.size = wxFileName::GetSize(TowxString(SavegamePath)).ToULong();
 

@@ -98,7 +98,7 @@ void BattleRoomDownloads::OnUpdate()
 	observ.GetMap(dlmap);
 
 	try {
-		wxString game = TowxString(m_battle->GetHostModName());
+		wxString game = TowxString(m_battle->GetHostGameName());
 		ObserverDownloadInfo obi = dlmap.at(game);
 		m_mod->Show();
 		m_mod->UpdateDownload(obi);

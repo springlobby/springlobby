@@ -1,9 +1,4 @@
-/*
- * downloadinfo.cpp
- *
- *  Created on: 12 июля 2015 г.
- *      Author: Руслан
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "downloadinfo.h"
 

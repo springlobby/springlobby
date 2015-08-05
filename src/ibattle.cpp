@@ -39,7 +39,7 @@ IBattle::IBattle()
     , m_is_self_in(false)
     , m_ingame(false)
     , m_map_loaded(false)
-    , m_mod_loaded(false)
+    , m_game_loaded(false)
     , m_players_ready(0)
     , m_players_sync(0)
     , m_players_ok(0)
@@ -61,26 +61,26 @@ IBattle::~IBattle()
 
 bool IBattle::IsSynced()
 {
-	LoadMod();
+	LoadGame();
 	LoadMap();
-	if (!m_host_mod.name.empty() && m_local_mod.name != m_host_mod.name) {
-		wxLogWarning("Not synced: game name doesn't match: '%s' '%s'", m_host_mod.name.c_str(), m_local_mod.name.c_str());
+	if (!m_host_game.name.empty() && m_local_game.name != m_host_game.name) {
+		wxLogWarning("Not synced: game name doesn't match: '%s' '%s'", m_host_game.name.c_str(), m_local_game.name.c_str());
 		return false;
 	}
 	if (!m_host_map.name.empty() && m_local_map.name != m_host_map.name) {
 		wxLogWarning("Not synced: map name doesn't match: '%s' '%s'", m_host_map.name.c_str(), m_local_map.name.c_str());
 		return false;
 	}
-	if (!m_host_mod.hash.empty() && m_host_mod.hash != "0" && m_host_mod.hash != m_local_mod.hash) {
-		wxLogWarning("Not synced: game hash doesn't match: '%s' '%s'", m_host_mod.hash.c_str(), m_local_mod.hash.c_str());
+	if (!m_host_game.hash.empty() && m_host_game.hash != "0" && m_host_game.hash != m_local_game.hash) {
+		wxLogWarning("Not synced: game hash doesn't match: '%s' '%s'", m_host_game.hash.c_str(), m_local_game.hash.c_str());
 		return false;
 	}
 	if (!m_host_map.hash.empty() && m_host_map.hash != "0" && m_host_map.hash != m_local_map.hash) {
 		wxLogWarning("Not synced: map hash doesn't match: '%s' '%s'", m_host_map.hash.c_str(), m_local_map.hash.c_str());
 		return false;
 	}
-	if (!ModExists()) {
-		wxLogWarning("Not synced: game doesn't exist: %s %s", m_host_mod.name.c_str());
+	if (!GameExists()) {
+		wxLogWarning("Not synced: game doesn't exist: %s %s", m_host_game.name.c_str());
 		return false;
 	}
 	if (!MapExists()) {
@@ -754,58 +754,58 @@ std::string IBattle::GetHostMapHash() const
 }
 
 
-void IBattle::SetHostMod(const std::string& modname, const std::string& hash)
+void IBattle::SetHostGame(const std::string& gamename, const std::string& hash)
 {
 	assert(hash.empty() || LSL::Util::MakeHashUnsigned(hash) == hash);
-	if (m_host_mod.name != modname || m_host_mod.hash != hash) {
-		m_mod_loaded = false;
-		m_host_mod.name = modname;
-		m_host_mod.hash = hash;
+	if (m_host_game.name != gamename || m_host_game.hash != hash) {
+		m_game_loaded = false;
+		m_host_game.name = gamename;
+		m_host_game.hash = hash;
 	}
 }
 
 
-void IBattle::SetLocalMod(const LSL::UnitsyncMod& mod)
+void IBattle::SetLocalGame(const LSL::UnitsyncGame& mod)
 {
 	assert(mod.hash.empty() || LSL::Util::MakeHashUnsigned(mod.hash) == mod.hash); // hash has to be in unsigned format
 	if (mod.hash.empty()) {
 		wxLogWarning("empty hash: %s", mod.name);
 	}
-	if (mod.name != m_local_mod.name || mod.hash != m_local_mod.hash) {
-		m_previous_local_mod_name = m_local_mod.name;
-		m_local_mod = mod;
-		m_mod_loaded = true;
+	if (mod.name != m_local_game.name || mod.hash != m_local_game.hash) {
+		m_previous_local_game_name = m_local_game.name;
+		m_local_game = mod;
+		m_game_loaded = true;
 	}
 }
 
 
-const LSL::UnitsyncMod& IBattle::LoadMod()
+const LSL::UnitsyncGame& IBattle::LoadGame()
 {
-	ASSERT_LOGIC(!m_host_mod.name.empty(), "m_host_mod.name.empty() is FALSE");
-	if (!m_mod_loaded) {
-		if (ModExists(true)) {
+	ASSERT_LOGIC(!m_host_game.name.empty(), "m_host_game.name.empty() is FALSE");
+	if (!m_game_loaded) {
+		if (GameExists(true)) {
 			try {
-				SetLocalMod(LSL::usync().GetMod(m_host_mod.name));
-				bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::ModOption, m_host_mod.name);
+				SetLocalGame(LSL::usync().GetMod(m_host_game.name));
+				bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::ModOption, m_host_game.name);
 				ASSERT_EXCEPTION(options_loaded, _T("couldn't load the game options"));
-				m_mod_loaded = true;
+				m_game_loaded = true;
 			} catch (...) {
 			}
 		}
 	}
-	return m_local_mod;
+	return m_local_game;
 }
 
 
-std::string IBattle::GetHostModName() const
+std::string IBattle::GetHostGameName() const
 {
-	return m_host_mod.name;
+	return m_host_game.name;
 }
 
 
-std::string IBattle::GetHostModHash() const
+std::string IBattle::GetHostGameHash() const
 {
-	return m_host_mod.hash;
+	return m_host_game.hash;
 }
 
 
@@ -818,11 +818,11 @@ bool IBattle::MapExists(bool comparehash) const
 }
 
 
-bool IBattle::ModExists(bool comparehash) const
+bool IBattle::GameExists(bool comparehash) const
 {
 	if (comparehash)
-		return LSL::usync().ModExists(m_host_mod.name, m_host_mod.hash);
-	return LSL::usync().ModExists(m_host_mod.name, "");
+		return LSL::usync().GameExists(m_host_game.name, m_host_game.hash);
+	return LSL::usync().GameExists(m_host_game.name, "");
 }
 
 void IBattle::RestrictUnit(const std::string& unitname, int count)
@@ -1098,18 +1098,18 @@ void IBattle::GetBattleFromScript(bool loadmapmod)
 	LSL::TDF::PDataList replayNode(script->Find("GAME"));
 	if (replayNode.ok()) {
 
-		std::string modname = replayNode->GetString("GameType");
-		std::string modhash = replayNode->GetString("ModHash");
-		if (!modhash.empty())
-			modhash = LSL::Util::MakeHashUnsigned(modhash);
-		SetHostMod(modname, modhash);
+		std::string gamename = replayNode->GetString("GameType");
+		std::string gamehash = replayNode->GetString("ModHash");
+		if (!gamehash.empty())
+			gamehash = LSL::Util::MakeHashUnsigned(gamehash);
+		SetHostGame(gamename, gamehash);
 
 		//don't have the maphash, what to do?
 		//ui download function works with mapname if hash is empty, so works for now
 		std::string mapname = replayNode->GetString("MapName");
 		std::string maphash = replayNode->GetString("MapHash");
-		if (!modhash.empty())
-			modhash = LSL::Util::MakeHashUnsigned(maphash);
+		if (!gamehash.empty())
+			gamehash = LSL::Util::MakeHashUnsigned(maphash);
 		SetHostMap(mapname, maphash);
 
 		//        opts.ip         = replayNode->GetString( _T("HostIP") );
@@ -1126,7 +1126,7 @@ void IBattle::GetBattleFromScript(bool loadmapmod)
 
 		LSL::StringVector sides;
 		if (loadmapmod) {
-			sides = LSL::usync().GetSides(modname);
+			sides = LSL::usync().GetSides(gamename);
 		}
 
 		IBattle::TeamVec parsed_teams = GetParsedTeamsVec();
@@ -1268,8 +1268,8 @@ User& IBattle::GetFounder() const
 
 void IBattle::RemoveUnfittingBots()
 {
-	const auto old_ais = LSL::usync().GetAIList(m_previous_local_mod_name);
-	const auto new_ais = LSL::usync().GetAIList(m_local_mod.name);
+	const auto old_ais = LSL::usync().GetAIList(m_previous_local_game_name);
+	const auto new_ais = LSL::usync().GetAIList(m_local_game.name);
 	LSL::StringVector diff(old_ais.size());
 	LSL::StringVector::iterator end = std::set_difference(old_ais.begin(), old_ais.end(), new_ais.begin(), new_ais.end(), diff.begin());
 	for (auto it = diff.begin(); it != end; ++it) {

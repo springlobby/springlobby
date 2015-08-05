@@ -367,8 +367,8 @@ public:
 	wxArrayString GetPresetList();
 	void DeletePreset(const wxString& name);
 
-	wxString GetModDefaultPresetName(const wxString& modname);
-	void SetModDefaultPresetName(const wxString& modname, const wxString& presetname);
+	wxString GetModDefaultPresetName(const wxString& gamename);
+	void SetModDefaultPresetName(const wxString& gamename, const wxString& presetname);
 
 	/**@}*/
 
@@ -426,8 +426,8 @@ public:
 	bool GetBattleLastAutoAnnounceDescription();
 	void SetBattleLastAutoAnnounceDescription(bool value);
 
-	void SetBattleLastSideSel(const wxString& modname, int sidenum);
-	int GetBattleLastSideSel(const wxString& modname);
+	void SetBattleLastSideSel(const wxString& gamename, int sidenum);
+	int GetBattleLastSideSel(const wxString& gamename);
 
 	struct SettStartBox
 	{

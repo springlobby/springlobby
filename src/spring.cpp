@@ -203,11 +203,11 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 
 	tdf.AppendLineBreak();
 
-	tdf.AppendStr("ModHash", battle.LoadMod().hash);
+	tdf.AppendStr("ModHash", battle.LoadGame().hash);
 	tdf.AppendStr("MapHash", battle.LoadMap().hash);
 
 	tdf.AppendStr("Mapname", battle.GetHostMapName());
-	tdf.AppendStr("GameType", battle.GetHostModName());
+	tdf.AppendStr("GameType", battle.GetHostGameName());
 
 	tdf.AppendLineBreak();
 
@@ -378,7 +378,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 	tdf.AppendLineBreak();
 
 	std::set<int> parsedteams;
-	const auto sides = LSL::usync().GetSides(battle.GetHostModName());
+	const auto sides = LSL::usync().GetSides(battle.GetHostGameName());
 	for (unsigned int i = 0; i < NumUsers; i++) {
 		User& usr = battle.GetUser(i);
 		UserBattleStatus& status = usr.BattleStatus();

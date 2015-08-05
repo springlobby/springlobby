@@ -499,11 +499,11 @@ void RunHostBattleDialog(wxWindow* parent)
 		}
 
 		// Get selected mod from unitsync.
-		LSL::UnitsyncMod mod;
+		LSL::UnitsyncGame mod;
 		try {
 			mod = LSL::usync().GetMod(STD_STRING(sett().GetLastHostMod()));
-			bo.modhash = mod.hash;
-			bo.modname = mod.name;
+			bo.gamehash = mod.hash;
+			bo.gamename = mod.name;
 		} catch (...) {
 			wxLogWarning(_T( "can't host: game not found" ));
 			customMessageBoxNoModal(SL_MAIN_ICON, _("Battle not started beacuse the game you selected could not be found. "), _("Error starting battle."), wxOK);

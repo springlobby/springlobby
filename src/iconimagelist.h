@@ -32,7 +32,7 @@ public:
 	int GetHostIcon(const bool& spectator = false) const;
 	int GetColourIcon(const LSL::lslColor& colour) const;
 	void SetColourIcon(const LSL::lslColor& colour);
-	int GetSideIcon(const std::string& modname, int side);
+	int GetSideIcon(const std::string& gamename, int side);
 	int GetReadyIcon(const bool& spectator, const bool& ready, const unsigned int& sync, const bool& bot);
 
 	int ICON_NONE;

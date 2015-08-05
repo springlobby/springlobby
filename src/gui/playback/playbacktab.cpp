@@ -273,7 +273,7 @@ void PlaybackTab::OnWatch(wxCommandEvent& /*unused*/)
 				return;
 			}
 			rep.battle.GetMe().SetNick(STD_STRING(cfg().ReadString("/Spring/DefaultName")));
-			bool watchable = rep.battle.MapExists() && rep.battle.ModExists();
+			bool watchable = rep.battle.MapExists() && rep.battle.GameExists();
 			if (watchable) {
 				rep.battle.StartSpring();
 			} else {
@@ -335,7 +335,7 @@ void PlaybackTab::OnSelect(wxDataViewEvent& event)
 
 			m_players_text->SetLabel(wxEmptyString);
 			m_map_text->SetLabel(TowxString(rep.battle.GetHostMapName()));
-			m_mod_text->SetLabel(TowxString(rep.battle.GetHostModName()));
+			m_mod_text->SetLabel(TowxString(rep.battle.GetHostGameName()));
 			m_minimap->SetBattle(&(rep.battle));
 			m_minimap->UpdateMinimap();
 

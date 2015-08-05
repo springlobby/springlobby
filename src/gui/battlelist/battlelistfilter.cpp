@@ -595,7 +595,7 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 		return false;
 
 	//Only Mods i have Check
-	if (m_filter_mod_show->GetValue() && !battle.ModExists())
+	if (m_filter_mod_show->GetValue() && !battle.GameExists())
 		return false;
 
 	//Strings Plain Text & RegEx Check (Case insensitiv)
@@ -622,7 +622,7 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 		return false;
 
 	//Mod:
-	if (!StringMatches(TowxString(battle.GetHostModName()),
+	if (!StringMatches(TowxString(battle.GetHostGameName()),
 			   m_filter_mod_edit->GetValue(),
 			   m_filter_mod_expression))
 		return false;

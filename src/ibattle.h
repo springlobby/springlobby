@@ -121,13 +121,13 @@ struct BattleOptions
 	unsigned int spectators;
 	std::string relayhost;
 	std::string maphash;
-	std::string modhash;
+	std::string gamehash;
 
 	std::string description;
 	std::string engineVersion;
 	std::string engineName;
 	std::string mapname;
-	std::string modname;
+	std::string gamename;
 
 	bool guilistactiv;
 };
@@ -154,7 +154,7 @@ public:
 		HI_StartRects = 256,
 		HI_Restrictions = 512,
 		HI_Map_Changed = 1024,
-		HI_Mod_Changed = 2048,
+		HI_Game_Changed = 2048,
 		HI_User_Positions = 4096,
 		HI_Send_All_opts = 8192
 	};
@@ -230,14 +230,14 @@ public:
 
 	virtual int GetPlayerNum(const User& user) const;
 
-	virtual void SetHostMod(const std::string& modname, const std::string& hash);
-	virtual void SetLocalMod(const LSL::UnitsyncMod& mod);
-	virtual const LSL::UnitsyncMod& LoadMod();
-	virtual std::string GetHostModName() const;
-	virtual std::string GetHostModHash() const;
+	virtual void SetHostGame(const std::string& gamename, const std::string& hash);
+	virtual void SetLocalGame(const LSL::UnitsyncGame& game);
+	virtual const LSL::UnitsyncGame& LoadGame();
+	virtual std::string GetHostGameName() const;
+	virtual std::string GetHostGameHash() const;
 
 	virtual bool MapExists(bool comparehash = true) const;
-	virtual bool ModExists(bool comparehash = true) const;
+	virtual bool GameExists(bool comparehash = true) const;
 
 	virtual BattleStartRect GetStartRect(unsigned int allyno) const;
 	virtual User& OnUserAdded(User& user);
@@ -472,7 +472,7 @@ public:
 	{
 		return m_opts.description;
 	}
-	// virtual void SetModname( const std::string& mod ) { m_opts.modname = mod; }
+	// virtual void SetGamename( const std::string& game ) { m_opts.gamename = game; }
 
 
 	typedef std::map<std::string, User> UserVec;
@@ -712,14 +712,14 @@ private:
 
 	bool m_ingame;
 	bool m_map_loaded;
-	bool m_mod_loaded;
+	bool m_game_loaded;
 	LSL::UnitsyncMap m_local_map;
 	LSL::UnitsyncMap m_host_map;
-	LSL::UnitsyncMod m_host_mod;
-	LSL::UnitsyncMod m_local_mod;
+	LSL::UnitsyncGame m_host_game;
+	LSL::UnitsyncGame m_local_game;
 
 	std::map<std::string, int> m_restricted_units;
-	std::string m_previous_local_mod_name;
+	std::string m_previous_local_game_name;
 
 	LSL::OptionsWrapper m_opt_wrap;
 

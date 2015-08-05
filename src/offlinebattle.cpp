@@ -42,7 +42,7 @@ OfflineBattle& OfflineBattle::operator=(OfflineBattle&& moved)
 		OnUserAdded(m_me);
 	}
 	//	m_map_loaded = moved.m_map_loaded;
-	//	m_mod_loaded = moved.m_mod_loaded;
+	//	m_game_loaded = moved.m_game_loaded;
 	//	m_local_map = moved.m_local_map;
 	//	m_local_mod = moved.m_local_mod;
 	//	m_host_map = moved.m_host_map;

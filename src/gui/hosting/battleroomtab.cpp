@@ -825,7 +825,7 @@ void BattleRoomTab::OnSideSel(wxCommandEvent& /*unused*/)
 	if (!m_battle)
 		return;
 	m_battle->ForceSide(m_battle->GetMe(), m_side_sel->GetSelection());
-	sett().SetBattleLastSideSel(TowxString(m_battle->GetHostModName()), m_side_sel->GetSelection());
+	sett().SetBattleLastSideSel(TowxString(m_battle->GetHostGameName()), m_side_sel->GetSelection());
 }
 
 
@@ -1043,7 +1043,7 @@ void BattleRoomTab::OnSetModDefaultPreset(wxCommandEvent& /*unused*/)
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"), _("Set game default preset"), choices);
 	if (result < 0)
 		return;
-	sett().SetModDefaultPresetName(TowxString(m_battle->GetHostModName()), choices[result]);
+	sett().SetModDefaultPresetName(TowxString(m_battle->GetHostGameName()), choices[result]);
 }
 
 
@@ -1186,7 +1186,7 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 	if (isBattleEnabled) {
 		m_votePanel->SetCurrentPlayer(&battle->GetMe());
 		RegenerateOptionsList();
-		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostModName())));
+		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostGameName())));
 		m_color_sel->SetColor(lslTowxColour(m_battle->GetMe().BattleStatus().colour));
 		for (UserList::user_map_t::size_type i = 0; i < m_battle->GetNumUsers(); i++) {
 			//TODO: disable UI update while adding users?
@@ -1248,9 +1248,9 @@ void BattleRoomTab::RegenerateOptionsList()
 	m_side_sel->Clear();
 	if (m_battle != NULL) {
 		try {
-			const wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(m_battle->GetHostModName()));
+			const wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(m_battle->GetHostGameName()));
 			for (unsigned int i = 0; i < sides.GetCount(); i++) {
-				m_side_sel->Append(sides[i], icons().GetBitmap(icons().GetSideIcon(m_battle->GetHostModName(), i)));
+				m_side_sel->Append(sides[i], icons().GetBitmap(icons().GetSideIcon(m_battle->GetHostGameName(), i)));
 			}
 			wxSize s = m_side_sel->GetEffectiveMinSize();
 			m_side_sel->SetMinSize(s);

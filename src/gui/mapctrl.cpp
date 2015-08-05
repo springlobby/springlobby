@@ -935,7 +935,7 @@ void MapCtrl::DrawUser(wxDC& dc, User& user, bool selected, bool /*unused*/)
 			DrawStartRect(dc, -1, tmp, col, false);
 		}
 
-		wxBitmap bmp = icons().GetBitmap(icons().GetSideIcon(m_battle->GetHostModName(), user.BattleStatus().side));
+		wxBitmap bmp = icons().GetBitmap(icons().GetSideIcon(m_battle->GetHostGameName(), user.BattleStatus().side));
 		dc.DrawBitmap(bmp, r.x + siderect.x, r.y + siderect.y, true);
 
 		/* Draw the Ally Number numeric select */
@@ -1422,7 +1422,7 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 
 		} else if (m_mdown_area == Side) {
 			try {
-				const auto sides = LSL::usync().GetSides(m_battle->GetHostModName());
+				const auto sides = LSL::usync().GetSides(m_battle->GetHostGameName());
 				const unsigned int sidecount = sides.size();
 				if (sidecount > 0)
 					user.BattleStatus().side = (user.BattleStatus().side + 1) % sidecount;

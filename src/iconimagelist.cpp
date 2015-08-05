@@ -391,20 +391,20 @@ void IconImageList::SetColourIcon(const LSL::lslColor& colour)
 }
 
 
-int IconImageList::GetSideIcon(const std::string& modname, int side)
+int IconImageList::GetSideIcon(const std::string& gamename, int side)
 {
-	const auto sides = LSL::usync().GetSides(modname);
+	const auto sides = LSL::usync().GetSides(gamename);
 	std::string sidename;
 	if (side < (int)sides.size()) {
 		sidename = sides[side];
 	}
-	const std::string cachestring = modname + "_" + sidename;
+	const std::string cachestring = gamename + "_" + sidename;
 	if (m_cached_side_icons.find(cachestring) != m_cached_side_icons.end()) { //already cached
 		return m_cached_side_icons[cachestring];
 	}
 
 	try {
-		const LSL::UnitsyncImage img = LSL::usync().GetSidePicture(modname, sidename);
+		const LSL::UnitsyncImage img = LSL::usync().GetSidePicture(gamename, sidename);
 		int IconPosition = Add(wxBitmap(img.wxbitmap()), wxNullBitmap);
 		m_cached_side_icons[cachestring] = IconPosition;
 		return IconPosition;

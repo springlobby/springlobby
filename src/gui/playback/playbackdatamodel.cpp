@@ -40,7 +40,7 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 		break;
 
 	case GAME:
-		variant = wxString(storedGame->battle.GetHostModName());
+		variant = wxString(storedGame->battle.GetHostGameName());
 		break;
 
 	case MAP:

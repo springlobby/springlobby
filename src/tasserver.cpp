@@ -1203,7 +1203,7 @@ void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 	std::string cmd = stdprintf("0 %d ", nat_type);
 	cmd += (password.empty()) ? "*" : password;
 	cmd += stdprintf(" %d %d ", bo.port, bo.maxplayers);
-	cmd += LSL::Util::MakeHashSigned(bo.modhash);
+	cmd += LSL::Util::MakeHashSigned(bo.gamehash);
 	cmd += stdprintf(" %d ", bo.rankneeded);
 	cmd += LSL::Util::MakeHashSigned(bo.maphash) + std::string(" ");
 	if (!bo.userelayhost) { //FIXME: relay host hasn't multiversion support yet, see https://github.com/springlobby/springlobby/issues/98
@@ -1212,7 +1212,7 @@ void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 	}
 	cmd += bo.mapname + std::string("\t");
 	cmd += LSL::Util::Replace(bo.description, "\t", "    ") + std::string("\t");
-	cmd += bo.modname;
+	cmd += bo.gamename;
 
 	m_delayed_open_command = "";
 	if (!bo.userelayhost) {
@@ -1238,7 +1238,7 @@ void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 	if (bo.nattype > 0)
 		UdpPingTheServer(GetUserName());
 
-	// OPENBATTLE type natType password port maphash {map} {title} {modname}
+	// OPENBATTLE type natType password port maphash {map} {title} {gamename}
 }
 
 

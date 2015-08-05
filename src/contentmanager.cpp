@@ -129,8 +129,8 @@ ContentDownloadRequest ContentManager::WhatContentForBattleIsRequired(
 	}
 
 	/*Mod (game) is needed*/
-	if (battle.ModExists() == false) {
-		contentNeeded.GameRequired(battle.GetHostModName(), battle.GetHostModHash());
+	if (battle.GameExists() == false) {
+		contentNeeded.GameRequired(battle.GetHostGameName(), battle.GetHostGameHash());
 	}
 
 	return contentNeeded;

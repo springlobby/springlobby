@@ -99,7 +99,7 @@ void BattleDataViewCtrl::OnDLMod(wxCommandEvent& /*event*/) {
 		return;
 	} else {
 		ContentDownloadRequest req;
-		req.GameRequired(battle->GetHostModName(), battle->GetHostModHash());
+		req.GameRequired(battle->GetHostGameName(), battle->GetHostGameHash());
 		try{
 			ContentManager::Instance()->DownloadContent(req);
 		}catch(Exception& e) {
@@ -132,7 +132,7 @@ void BattleDataViewCtrl::OnContextMenu(wxDataViewEvent& /*event*/) {
 		return;
 	}
 
-	const bool mod_missing = battle->ModExists(false) == false;
+	const bool mod_missing = battle->GameExists(false) == false;
 	const bool map_missing = battle->MapExists(false) == false;
 	const bool engine_missing = SlPaths::GetCompatibleVersion(battle->GetEngineVersion()).empty();
 

@@ -44,7 +44,7 @@ int ReplayList::replayVersion(wxFile& replay) const
 static void MarkBroken(StoredGame& ret)
 {
 	ret.battle.SetHostMap("broken", "");
-	ret.battle.SetHostMod("broken", "");
+	ret.battle.SetHostGame("broken", "");
 }
 
 bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) const
@@ -85,7 +85,7 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 
 	GetHeaderInfo(replay, ret, replay_version);
 	ret.battle.GetBattleFromScript(false);
-	ret.ModName = ret.battle.GetHostModName();
+	ret.GameName = ret.battle.GetHostGameName();
 	ret.battle.SetBattleType(BT_Replay);
 	ret.battle.SetEngineName("spring");
 	ret.battle.SetEngineVersion(ret.SpringVersion);

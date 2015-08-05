@@ -119,7 +119,7 @@ void Battle::OnRequestBattleStatus()
 	const wxColor col = sett().GetBattleLastColour();
 	bs.colour = LSL::lslColor(col.Red(), col.Green(), col.Blue());
 	//FIXME ? bs.colour = GetFreeColour( GetMe() );
-	bs.side = sett().GetBattleLastSideSel(TowxString(GetHostModName()));
+	bs.side = sett().GetBattleLastSideSel(TowxString(GetHostGameName()));
 	SendMyBattleStatus();
 }
 
@@ -148,7 +148,7 @@ void Battle::SetImReady(bool ready)
 
 /*bool Battle::HasMod()
 {
-  return LSL::usync().ModExists( m_opts.modname );
+  return LSL::usync().GameExists( m_opts.gamename );
 }*/
 
 

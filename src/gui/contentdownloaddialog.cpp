@@ -134,7 +134,7 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 		if (category == _("map"))
 			res->is_downloaded = LSL::usync().MapExists(std::string(name.mb_str()));
 		else if (category == _("game"))
-			res->is_downloaded = LSL::usync().ModExists(std::string(name.mb_str()));
+			res->is_downloaded = LSL::usync().GameExists(std::string(name.mb_str()));
 		else
 			res->is_downloaded = 0;
 

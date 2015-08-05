@@ -329,7 +329,7 @@ bool PlaybackListFilter::FilterPlayback(const StoredGame& playback)
 		return false;
 
 	//Only Mods i have Check
-	if (m_filter_mod_show->GetValue() && !battle.ModExists())
+	if (m_filter_mod_show->GetValue() && !battle.GameExists())
 		return false;
 
 	//Strings Plain Text & RegEx Check (Case insensitiv)
@@ -339,7 +339,7 @@ bool PlaybackListFilter::FilterPlayback(const StoredGame& playback)
 		return false;
 
 	//Mod:
-	if (!TowxString(battle.GetHostModName()).Upper().Contains(m_filter_mod_edit->GetValue().Upper()) && !TowxString(battle.GetHostModName()).Upper().Contains(m_filter_mod_edit->GetValue().Upper()) && !m_filter_mod_expression->Matches(TowxString(battle.GetHostModName())))
+	if (!TowxString(battle.GetHostGameName()).Upper().Contains(m_filter_mod_edit->GetValue().Upper()) && !TowxString(battle.GetHostGameName()).Upper().Contains(m_filter_mod_edit->GetValue().Upper()) && !m_filter_mod_expression->Matches(TowxString(battle.GetHostGameName())))
 		return false;
 
 	if ((!m_filter_filesize_edit->GetValue().IsEmpty()) && !_IntCompare(playback.size, 1024 * FromwxString(m_filter_filesize_edit->GetValue()), m_filter_filesize_mode))
