@@ -8,9 +8,9 @@
 #ifndef TESTS
 #include <lslunitsync/unitsync.h>
 #include <lslutils/config.h>
-#include <lslutils/misc.h>
 #include <lslutils/conversion.h>
 #endif
+#include <lslutils/misc.h>
 
 #include "utils/slconfig.h"
 

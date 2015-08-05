@@ -91,6 +91,8 @@ Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/slpaths.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/slpaths.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
+	"${springlobby_SOURCE_DIR}/src/lsl/src/lslutils/misc.cpp"
+	"${springlobby_SOURCE_DIR}/src/lsl/src/lslutils/conversion.cpp"
 )
 
 set(test_libs
