@@ -504,7 +504,7 @@ bool SlPaths::CheckDirExistAndWritable(const std::string& dir) {
 
 #endif
 
-bool SlPaths::RmDir(const std::string& dir)
+bool SlPaths::RmDir(const std::string& dir) //FIXME: get rid of wx functions / move to lsl
 {
 	if (dir.empty())
 		return false;
@@ -516,7 +516,7 @@ bool SlPaths::RmDir(const std::string& dir)
 	wxString file;
 	bool cont = dirit.GetFirst(&file);
 	while (cont) {
-		const wxString absname = cachedir + wxFileName::GetPathSeparator() + file;
+		const wxString absname = TowxString(LSL::Util::EnsureDelimiter(cachedir)) + file;
 		if (wxDirExists(absname)) {
 			if (!RmDir(STD_STRING(absname))) {
 				return false;
