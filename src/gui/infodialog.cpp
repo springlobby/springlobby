@@ -58,12 +58,12 @@ InfoDialog::InfoDialog(wxWindow* parent)
 	for (size_t i = 0; i < paths.size(); ++i) {
 		const wxString path = TowxString(paths[i].first);
 		*out << wxString::Format(_T("%s (%s)\n"), paths[i].second.c_str(), path.c_str());
-		wxString dummy_fn = path + wxFileName::GetPathSeparator() + _T("dummy.txt");
 		const bool wx = wxFileName::IsDirWritable(path);
 		const bool posix = access(STD_STRING(path).c_str(), WRITABLE) == 0;
 		bool tried = false;
 		try {
 			std::ofstream of;
+			const wxString dummy_fn = path + wxFileName::GetPathSeparator() + _T("dummy.txt");
 			of.open(STD_STRING(dummy_fn).c_str());
 
 			if (of.is_open()) {
