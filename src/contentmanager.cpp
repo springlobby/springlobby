@@ -64,19 +64,19 @@ bool ContentManager::UpdateApplication(){
 	const std::string updatedir = SlPaths::GetUpdateDir();
 	const size_t mindirlen = 9; // safety, minimal is/should be: C:\update
 	if ((updatedir.size() <= mindirlen)) {
-		throw Exception(_T("Invalid update dir: ") + updatedir);
+		throw Exception(_T("Invalid update dir: ") + TowxString(updatedir));
 	}
 	if (wxDirExists(updatedir)) {
 		if (!SlPaths::RmDir(updatedir)) {
-			throw Exception(_T("Couldn't cleanup ") + updatedir);
+			throw Exception(_T("Couldn't cleanup ") + TowxString(updatedir));
 		}
 	}
 	if (!SafeMkdir(updatedir)) {
-		throw Exception(_T("couldn't create update directory") + updatedir);
+		throw Exception(_T("couldn't create update directory") + TowxString(updatedir));
 	}
 
 	if (!wxFileName::IsDirWritable(updatedir)) {
-		throw Exception(_T("dir not writable: ") + updatedir);
+		throw Exception(_T("dir not writable: ") + TowxString(updatedir));
 	}
 
 	const std::string dlfilepath = SlPaths::GetLobbyWriteDir() + "springlobby-latest.zip";
