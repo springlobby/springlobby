@@ -38,7 +38,6 @@ private:
 	virtual ~ContentManager();
 
 private:
-	std::string latestApplicationVersionAvailable;
 	std::vector<DownloadInfo*> downloadsList;
 	wxMutex mutex;
 

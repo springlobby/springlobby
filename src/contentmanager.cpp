@@ -166,14 +166,8 @@ bool ContentManager::DownloadContent(const ContentDownloadRequest& request) {
 }
 
 std::string ContentManager::GetLatestApplicationVersionAvailable() {
-	if (latestApplicationVersionAvailable.empty()) {
-		std::string version = GetHttpFile(GetLatestVersionUrl());
-		latestApplicationVersionAvailable = TowxString(version).Trim().Trim(false);
-	} else {
-		//TODO: update cache if needed
-	}
-
-	return latestApplicationVersionAvailable;
+	std::string version = GetHttpFile(GetLatestVersionUrl());
+	return STD_STRING(TowxString(version).Trim().Trim(false));
 }
 
 bool ContentManager::IsContentAlreadyBeingDownloaded(const std::string& name) {
