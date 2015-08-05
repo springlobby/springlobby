@@ -1451,7 +1451,7 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 				UpdateMinimap();
 			} else if (m_mdown_area == Download) {
 				ContentDownloadRequest req;
-				req.ModRequired(m_battle->GetHostMapName(), m_battle->GetHostMapHash());
+				req.MapRequired(m_battle->GetHostMapName(), m_battle->GetHostMapHash());
 				try{
 					ContentManager::Instance()->DownloadContent(req);
 				}catch(Exception& e) {

@@ -89,7 +89,7 @@ void PlaybackDataView::OnDLMap(wxCommandEvent& /*event*/)
 	const OfflineBattle& battle = storedGame->battle;
 	ContentDownloadRequest req;
 
-	req.ModRequired(battle.GetHostMapName(), battle.GetHostMapHash());
+	req.MapRequired(battle.GetHostMapName(), battle.GetHostMapHash());
 	try{
 		ContentManager::Instance()->DownloadContent(req);
 	}catch(Exception& e) {
