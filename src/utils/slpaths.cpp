@@ -516,7 +516,7 @@ bool SlPaths::RmDir(const std::string& dir) //FIXME: get rid of wx functions / m
 	wxString file;
 	bool cont = dirit.GetFirst(&file);
 	while (cont) {
-		const wxString absname = TowxString(LSL::Util::EnsureDelimiter(cachedir)) + file;
+		const wxString absname = TowxString(LSL::Util::EnsureDelimiter(dir)) + file;
 		if (wxDirExists(absname)) {
 			if (!RmDir(STD_STRING(absname))) {
 				return false;
