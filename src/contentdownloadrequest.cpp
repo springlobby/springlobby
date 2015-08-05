@@ -1,41 +1,36 @@
-/*
- * contentdownloadrequest.cpp
- *
- *  Created on: 11 июля 2015 г.
- *      Author: Руслан
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "contentdownloadrequest.h"
 
-ContentDownloadRequest::ContentDownloadRequest() {
-	// TODO Auto-generated constructor stub
-	engineVersion = wxEmptyString;
-	mapName = wxEmptyString;
-	modName = wxEmptyString;
+ContentDownloadRequest::ContentDownloadRequest()
+{
+	engineVersion.clear();
+	mapName.clear();
+	gameName.clear();
 }
 
-ContentDownloadRequest::~ContentDownloadRequest() {
-	// TODO Auto-generated destructor stub
+ContentDownloadRequest::~ContentDownloadRequest()
+{
 }
 
-void ContentDownloadRequest::EngineRequired(const wxString& engineVersion) {
+void ContentDownloadRequest::EngineRequired(const std::string& engineVersion) {
 	this->engineVersion = engineVersion;
 }
 
-void ContentDownloadRequest::MapRequired(const wxString& mapName, const wxString& mapHash) {
+void ContentDownloadRequest::MapRequired(const std::string& mapName, const std::string& mapHash) {
 	this->mapName = mapName;
 	this->mapHash = mapHash;
 }
 
-void ContentDownloadRequest::GameRequired(const wxString& modName, const wxString& modHash) {
-	this->modName = modName;
-	this->modHash = modHash;
+void ContentDownloadRequest::GameRequired(const std::string& gameName, const std::string& gameHash) {
+	this->gameName = gameName;
+	this->gameHash = gameHash;
 }
 
 bool ContentDownloadRequest::IsSomethingNeeded() const {
-	if (engineVersion != wxEmptyString ||
-		mapName != wxEmptyString 	||
-		modName != wxEmptyString ) {
+	if (!engineVersion.empty() ||
+		!mapName.empty()||
+		!gameName.empty() ) {
 		return true;
 	} else {
 		return false;
@@ -47,33 +42,33 @@ bool ContentDownloadRequest::NothingIsRequired() const {
 }
 
 bool ContentDownloadRequest::IsEngineRequested() const {
-	return (engineVersion != wxEmptyString);
+	return (!engineVersion.empty());
 }
 
 bool ContentDownloadRequest::IsMapRequested() const {
-	return (mapName != wxEmptyString);
+	return (!mapName.empty());
 }
 
-bool ContentDownloadRequest::IsModRequested() const {
-	return (modName != wxEmptyString);
+bool ContentDownloadRequest::IsGameRequested() const {
+	return (!gameName.empty());
 }
 
-wxString ContentDownloadRequest::GetEngineVersion() const {
+std::string ContentDownloadRequest::GetEngineVersion() const {
 	return engineVersion;
 }
 
-wxString ContentDownloadRequest::GetMapName() const {
+std::string ContentDownloadRequest::GetMapName() const {
 	return mapName;
 }
 
-wxString ContentDownloadRequest::GetModName() const {
-	return modName;
+std::string ContentDownloadRequest::GetGameName() const {
+	return gameName;
 }
 
-wxString ContentDownloadRequest::GetModHash() const {
-	return modHash;
+std::string ContentDownloadRequest::GetGameHash() const {
+	return gameHash;
 }
 
-wxString ContentDownloadRequest::GetMapHash() const {
+std::string ContentDownloadRequest::GetMapHash() const {
 	return mapHash;
 }

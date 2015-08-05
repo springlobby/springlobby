@@ -358,7 +358,7 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 	if (enginebundles.size() == 0) {
 		if (Ask(_("Spring can't be found"), wxString::Format(_T("No useable spring engine can be found, download it? (spring %s)"), version.c_str()))) {
 			ContentDownloadRequest req;
-			req.EngineRequired(_T("spring ") + version);
+			req.EngineRequired("spring " + STD_STRING(version));
 			try {
 				ContentManager::Instance()->DownloadContent(req);
 			} catch (Exception& e) {
@@ -825,7 +825,7 @@ bool Ui::OnPresetRequiringMap(const wxString& mapname)
 				      _("Map missing"),
 				      wxYES_NO)) {
 		ContentDownloadRequest req;
-		req.MapRequired(mapname, "");
+		req.MapRequired(STD_STRING(mapname), "");
 		try {
 			ContentManager::Instance()->DownloadContent(req);
 		} catch (Exception& e) {

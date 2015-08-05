@@ -151,23 +151,23 @@ bool ContentManager::DownloadContent(const ContentDownloadRequest& request) {
 
 	if (request.IsEngineRequested()) {
 		if (IsContentAlreadyBeingDownloaded(request.GetEngineVersion())) {
-			throw Exception(_("Engine being downloaded alredy! Please wait!"));
+			throw Exception(_("Engine being downloaded already! Please wait!"));
 		}
-		ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), request.GetEngineVersion().ToStdString(), "");
+		ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), request.GetEngineVersion(), "");
 	}
 
 	if (request.IsMapRequested()) {
 		if (IsContentAlreadyBeingDownloaded(request.GetMapName())) {
 			throw Exception(_("Map being downloaded alredy! Please wait!"));
 		}
-		ServerManager::Instance()->DownloadContent("map", request.GetMapName().ToStdString(), request.GetMapHash().ToStdString());
+		ServerManager::Instance()->DownloadContent("map", request.GetMapName(), request.GetMapHash());
 	}
 
-	if (request.IsModRequested()) {
-		if (IsContentAlreadyBeingDownloaded(request.GetModName())) {
+	if (request.IsGameRequested()) {
+		if (IsContentAlreadyBeingDownloaded(request.GetGameName())) {
 			throw Exception(_("Mod being downloaded alredy! Please wait!"));
 		}
-		ServerManager::Instance()->DownloadContent("game", request.GetModName().ToStdString(), request.GetModHash().ToStdString());
+		ServerManager::Instance()->DownloadContent("game", request.GetGameName(), request.GetGameHash());
 	}
 
 	return true;

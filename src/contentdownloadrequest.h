@@ -1,43 +1,38 @@
-/*
- * contentdownloadrequest.h
- *
- *  Created on: 11 июля 2015 г.
- *      Author: Руслан
- */
+/* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #ifndef SRC_CONTENTDOWNLOADREQUEST_H_
 #define SRC_CONTENTDOWNLOADREQUEST_H_
 
-#include <wx/string.h>
+#include <string>
 
 class ContentDownloadRequest {
 public:
 	ContentDownloadRequest();
 	virtual ~ContentDownloadRequest();
 
-	void EngineRequired(const wxString& engineVesrion);
-	void MapRequired(const wxString& mapName, const wxString& mapHash);
-	void GameRequired(const wxString& modName, const wxString& modHash);
+	void EngineRequired(const std::string& engineVersion);
+	void MapRequired(const std::string& mapName, const std::string& mapHash);
+	void GameRequired(const std::string& gameName, const std::string& gameHash);
 
 	bool IsSomethingNeeded() const;
 	bool NothingIsRequired() const;
 
 	bool IsEngineRequested() const;
 	bool IsMapRequested() const;
-	bool IsModRequested() const;
+	bool IsGameRequested() const;
 
-	wxString GetEngineVersion() const;
-	wxString GetMapName() const;
-	wxString GetModName() const;
-	wxString GetModHash() const;
-	wxString GetMapHash() const;
+	std::string GetEngineVersion() const;
+	std::string GetGameName() const;
+	std::string GetGameHash() const;
+	std::string GetMapName() const;
+	std::string GetMapHash() const;
 
 private:
-	wxString engineVersion;
-	wxString mapName;
-	wxString modName;
-	wxString modHash;
-	wxString mapHash;
+	std::string engineVersion;
+	std::string mapName;
+	std::string mapHash;
+	std::string gameName;
+	std::string gameHash;
 };
 
 #endif /* SRC_CONTENTDOWNLOADREQUEST_H_ */
