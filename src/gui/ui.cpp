@@ -55,6 +55,7 @@
 #include "servermanager.h"
 #include "contentmanager.h"
 #include "exception.h"
+#include "contentdownloadrequest.h"
 
 #ifndef DISABLE_SOUND
 #include "sound/alsound.h"
@@ -356,7 +357,13 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 	std::map<std::string, LSL::SpringBundle> enginebundles = SlPaths::GetSpringVersionList();
 	if (enginebundles.size() == 0) {
 		if (Ask(_("Spring can't be found"), wxString::Format(_T("No useable spring engine can be found, download it? (spring %s)"), version.c_str()))) {
-			ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), "spring " + STD_STRING(version), "");
+			ContentDownloadRequest req;
+			req.EngineRequired(_T("spring ") + version);
+			try {
+				ContentManager::Instance()->DownloadContent(req);
+			} catch (Exception& e) {
+				wxLogError(_("Failed to download engine: ") + e.Reason());
+			}
 		}
 	}
 }
@@ -817,7 +824,14 @@ bool Ui::OnPresetRequiringMap(const wxString& mapname)
                                     Please reselect the preset after download finished"),
 				      _("Map missing"),
 				      wxYES_NO)) {
-		ServerManager::Instance()->DownloadContent("map", STD_STRING(mapname), "");
+		ContentDownloadRequest req;
+		req.MapRequired(mapname, "");
+		try {
+			ContentManager::Instance()->DownloadContent(req);
+		} catch (Exception& e) {
+			wxLogError(_("Failed to download map: ") + e.Reason());
+			return false;
+		}
 		return true;
 	}
 	return false;

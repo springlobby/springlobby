@@ -9,6 +9,10 @@
 #include "servermanager.h"
 #include "ibattle.h"
 #include "downloader/prdownloader.h"
+#include "log.h"
+#include "exception.h"
+#include "contentmanager.h"
+#include "contentdownloadrequest.h"
 
 BEGIN_EVENT_TABLE(BattleDataViewCtrl, BaseDataViewCtrl)
 	EVT_DATAVIEW_ITEM_CONTEXT_MENU(BATTLELIST_DATAVIEW_ID, BattleDataViewCtrl::OnContextMenu)
@@ -78,7 +82,13 @@ void BattleDataViewCtrl::OnDLMap(wxCommandEvent& /*event*/) {
 	if (battle == nullptr) {
 		return;
 	} else {
-		ServerManager::Instance()->DownloadContent("map", battle->GetHostMapName(), battle->GetHostMapHash());
+		ContentDownloadRequest req;
+		req.MapRequired(battle->GetHostMapName(), battle->GetHostMapHash());
+		try{
+			ContentManager::Instance()->DownloadContent(req);
+		}catch(Exception& e) {
+			wxLogError(_("Failed to download map: ") + e.Reason());
+		}
 	}
 }
 
@@ -88,7 +98,13 @@ void BattleDataViewCtrl::OnDLMod(wxCommandEvent& /*event*/) {
 	if (battle == nullptr) {
 		return;
 	} else {
-		ServerManager::Instance()->DownloadContent("game", battle->GetHostModName(), battle->GetHostModHash());
+		ContentDownloadRequest req;
+		req.ModRequired(battle->GetHostModName(), battle->GetHostModHash());
+		try{
+			ContentManager::Instance()->DownloadContent(req);
+		}catch(Exception& e) {
+			wxLogError(_("Failed to download mod: ") + e.Reason());
+		}
 	}
 }
 
@@ -98,7 +114,13 @@ void BattleDataViewCtrl::OnDLEngine(wxCommandEvent& /*event*/) {
 	if (battle == nullptr) {
 		return;
 	} else {
-		ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), battle->GetEngineVersion(), "");
+		ContentDownloadRequest req;
+		req.EngineRequired(battle->GetEngineVersion());
+		try{
+			ContentManager::Instance()->DownloadContent(req);
+		}catch(Exception& e) {
+			wxLogError(_("Failed to download engine: ") + e.Reason());
+		}
 	}
 }
 

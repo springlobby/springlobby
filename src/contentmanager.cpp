@@ -22,6 +22,8 @@
 #include "utils/globalevents.h"
 #include "downloadinfo.h"
 
+#include "exception.h"
+#include "contentdownloadrequest.h"
 #include "contentmanager.h"
 
 ContentManager::ContentManager() {
@@ -69,25 +71,25 @@ bool ContentManager::UpdateApplication(){
 	const wxString updatedir = TowxString(SlPaths::GetUpdateDir());
 	const size_t mindirlen = 9; // safety, minimal is/should be: C:\update
 	if ((updatedir.size() <= mindirlen)) {
-		throw new Exception(_T("Invalid update dir: ") + updatedir);
+		throw Exception(_T("Invalid update dir: ") + updatedir);
 		return false;
 	}
 	if (wxDirExists(updatedir)) {
 		if (!SlPaths::RmDir(updatedir.ToStdString())) {
-			throw new Exception(_T("Couldn't cleanup ") + updatedir);
+			throw Exception(_T("Couldn't cleanup ") + updatedir);
 		}
 	}
 	if (!SafeMkdir(updatedir)) {
-		throw new Exception(_T("couldn't create update directory") + updatedir);
+		throw Exception(_T("couldn't create update directory") + updatedir);
 	}
 
 	if (!wxFileName::IsDirWritable(updatedir)) {
-		throw new Exception(_T("dir not writable: ") + updatedir);
+		throw Exception(_T("dir not writable: ") + updatedir);
 	}
 
 	const std::string dlfilepath = SlPaths::GetLobbyWriteDir() + "springlobby-latest.zip";
 	if (wxFileExists(TowxString(dlfilepath)) && !(wxRemoveFile(TowxString(dlfilepath)))) {
-		throw new Exception(_T("couldn't delete: ") + TowxString(dlfilepath));
+		throw Exception(_T("couldn't delete: ") + TowxString(dlfilepath));
 	}
 	const std::string dlurl = GetDownloadUrl(latestVersion.ToStdString());
 	return prDownloader().Download(dlfilepath, dlurl);
@@ -149,21 +151,21 @@ bool ContentManager::DownloadContent(const ContentDownloadRequest& request) {
 
 	if (request.IsEngineRequested()) {
 		if (IsContentAlreadyBeingDownloaded(request.GetEngineVersion())) {
-			throw new Exception(_("Engine being downloaded alredy! Please wait!"));
+			throw Exception(_("Engine being downloaded alredy! Please wait!"));
 		}
 		ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), request.GetEngineVersion().ToStdString(), "");
 	}
 
 	if (request.IsMapRequested()) {
 		if (IsContentAlreadyBeingDownloaded(request.GetMapName())) {
-			throw new Exception(_("Map being downloaded alredy! Please wait!"));
+			throw Exception(_("Map being downloaded alredy! Please wait!"));
 		}
 		ServerManager::Instance()->DownloadContent("map", request.GetMapName().ToStdString(), request.GetMapHash().ToStdString());
 	}
 
 	if (request.IsModRequested()) {
 		if (IsContentAlreadyBeingDownloaded(request.GetModName())) {
-			throw new Exception(_("Mod being downloaded alredy! Please wait!"));
+			throw Exception(_("Mod being downloaded alredy! Please wait!"));
 		}
 		ServerManager::Instance()->DownloadContent("game", request.GetModName().ToStdString(), request.GetModHash().ToStdString());
 	}
