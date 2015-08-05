@@ -1,5 +1,11 @@
 ChangeLog of Springlobby
 
+## 0.226
+ - fix autoupdater always requested admin access
+ - add UpdateChannel setting to switch between release and develop
+ - fix several wx3.1 errors / warnings
+ - fix engine download bug in pr-downloader
+
 ## 0.225
  - fix start position loading from cache
  - fix network timeout when using NAT + relayhost
