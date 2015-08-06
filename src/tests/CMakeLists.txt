@@ -98,6 +98,7 @@ Set(test_src
 set(test_libs
 	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 	${Boost_SYSTEM_LIBRARY}
+	pr-downloader_static
 	${WX_LD_FLAGS}
 )
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")

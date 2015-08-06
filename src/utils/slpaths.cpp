@@ -491,7 +491,7 @@ bool SlPaths::CheckDirExistAndWritable(const std::string& dir) {
 
 	/*Check if exists and if not try to create one*/
 	if (!wxFileName::Exists(targetDir)) {
-		return mkDir(targetDir.ToStdString());
+		return mkDir(STD_STRING(targetDir));
 	}
 
 	/*Check if dir is writable*/
