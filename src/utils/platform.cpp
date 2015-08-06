@@ -14,7 +14,7 @@
 #include "conversion.h"
 #include "gui/customdialogs.h"
 
-bool SafeMkdir(const wxString& dir)
+static bool SafeMkdir(const wxString& dir)
 {
 	if (!wxDirExists(dir))
 		return wxMkdir(dir);

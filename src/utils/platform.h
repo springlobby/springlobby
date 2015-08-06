@@ -28,7 +28,6 @@ int RunProcess(const wxString& cmd, const wxArrayString& params, const bool asyn
 int BrowseFolder(const wxString& path);
 int WaitForExit(int pid);
 void ErrorMsgBox(const wxString& err, bool silent = false);
-bool SafeMkdir(const wxString& dir);
 
 //!
 

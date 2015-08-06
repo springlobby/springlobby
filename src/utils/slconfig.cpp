@@ -37,7 +37,7 @@ slConfig* slConfig::Create()
 	// make sure config file & dir is created/writeable when not exists
 	wxString configDir;
 	wxFileName::SplitPath(m_chosen_path, &configDir, NULL, NULL);
-	if (!SafeMkdir(configDir)) {
+	if (!SlPaths::mkDir(STD_STRING((configDir)))) {
 		wxLogError(_T("unable to create config dir"));
 		exit(-1);
 	}

@@ -71,7 +71,7 @@ bool ContentManager::UpdateApplication(){
 			throw Exception(_T("Couldn't cleanup ") + TowxString(updatedir));
 		}
 	}
-	if (!SafeMkdir(updatedir)) {
+	if (!SlPaths::mkDir(updatedir)) {
 		throw Exception(_T("couldn't create update directory") + TowxString(updatedir));
 	}
 

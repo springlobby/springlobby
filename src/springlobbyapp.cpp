@@ -138,7 +138,7 @@ bool SpringLobbyApp::OnInit()
 	m_translationhelper = new wxTranslationHelper(GetAppName().Lower(), path);
 
 	const wxString configdir = TowxString(SlPaths::GetConfigfileDir());
-	SafeMkdir(configdir);
+	SlPaths::mkDir(STD_STRING((configdir)));
 
 	if (cfg().ReadBool(_T("/ResetLayout"))) {
 		//we do this early on and reset the config var a little later so we can save a def. perps once mw is created
