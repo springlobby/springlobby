@@ -33,14 +33,16 @@ set(test_name Config)
 Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/config.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/slconfig.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/slpaths.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
-	"${springlobby_SOURCE_DIR}/src/utils/platform.cpp"
 )
 
 set(test_libs
 	${WX_LD_FLAGS}
 	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 	${Boost_SYSTEM_LIBRARY}
+	lsl-utils
+	pr-downloader_static
 )
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "")
 ################################################################################
