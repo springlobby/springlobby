@@ -59,9 +59,6 @@
 #include "servermanager.h"
 #include "gui/controls.h"
 #include "gui/ui.h"
-#include "contentmanager.h"
-#include "contentdownloadrequest.h"
-#include "exception.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
