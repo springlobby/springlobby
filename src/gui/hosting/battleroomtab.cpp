@@ -362,12 +362,25 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	SetSizer(m_main_sizer);
 	Layout();
 
+	/*Restore player panel size*/
+	int p;
+	cfg().Read(_T("/BattleRoomTab/PlayerPanelSashPosition"), &p, -1);
+	if (0 < p) {
+		m_splitter->SetSashPosition(p, true);
+	}
+
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
 }
 
 
 BattleRoomTab::~BattleRoomTab()
 {
+	if (m_splitter != nullptr) {
+		int p = m_splitter->GetSashPosition();
+
+		cfg().Write(_T("/BattleRoomTab/PlayerPanelSashPosition"), p);
+	}
+
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
 
 	if (GetAui().manager)
