@@ -955,22 +955,6 @@ void BattleRoomTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 		UpdateUser(m_battle->GetUser(i));
 	}
 	m_battle->SendMyBattleStatus(); // This should reset sync status.
-
-	/*May be there is some content needed?*/
-	ContentDownloadRequest req = ContentManager::Instance()->WhatContentForBattleIsRequired(*m_battle);
-	if (req.IsSomethingNeeded()) {
-		if (wxYES == customMessageBox(SL_MAIN_ICON,
-				TowxString(req.GetRequiredContentAsString()) + _("Shall I download it for you?"),
-				_("Content is needed"),
-				wxYES_NO | wxICON_QUESTION)) {
-			try {
-				ContentManager::Instance()->DownloadContent(req);
-			} catch (Exception& e) {
-				wxLogError(e.Reason());
-				return;
-			}
-		}
-	}
 }
 
 long BattleRoomTab::AddMMOptionsToList(long pos, LSL::Enum::GameOption optFlag)
