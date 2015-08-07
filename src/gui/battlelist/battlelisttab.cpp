@@ -425,9 +425,9 @@ void BattleListTab::DoJoin(IBattle& battle)
 	ContentDownloadRequest req = ContentManager::Instance()->WhatContentForBattleIsRequired(battle);
 	if (req.IsSomethingNeeded()) {
 		if (wxYES == customMessageBox(SL_MAIN_ICON,
-					      _("This battle needs some content to be downloaded! Shall I download it for you?"),
-					      _("Content needed"),
-					      wxYES_NO | wxICON_QUESTION)) {
+				TowxString(req.GetRequiredContentAsString()) + _("Shall I download it for you?"),
+				_("Content is needed"),
+				wxYES_NO | wxICON_QUESTION)) {
 			try {
 				ContentManager::Instance()->DownloadContent(req);
 			} catch (Exception& e) {

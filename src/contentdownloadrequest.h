@@ -27,6 +27,8 @@ public:
 	std::string GetMapName() const;
 	std::string GetMapHash() const;
 
+	std::string GetRequiredContentAsString() const;
+
 private:
 	std::string engineVersion;
 	std::string mapName;

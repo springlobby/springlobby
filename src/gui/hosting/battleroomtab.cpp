@@ -487,9 +487,9 @@ void BattleRoomTab::UpdateMapInfoSummary()
 {
 	try // updates map info summary
 	{
-		//ASSERT_EXCEPTION( m_battle->MapExists(false), _T( "Map does not exist." ) );
-		if (m_battle->MapExists(false) == false)
+		if (m_battle->MapExists(false) == false) {
 			throw assert_exception(0);
+		}
 		LSL::UnitsyncMap map = m_battle->LoadMap();
 		m_opts_list->SetItem(m_opt_list_map[_("Size")], 1, wxString::Format(_T( "%.0fx%.0f" ), map.info.width / 512.0, map.info.height / 512.0));
 		m_opts_list->SetItem(m_opt_list_map[_("Windspeed")], 1, wxString::Format(_T( "%d-%d" ), map.info.minWind, map.info.maxWind));
@@ -960,9 +960,9 @@ void BattleRoomTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 	ContentDownloadRequest req = ContentManager::Instance()->WhatContentForBattleIsRequired(*m_battle);
 	if (req.IsSomethingNeeded()) {
 		if (wxYES == customMessageBox(SL_MAIN_ICON,
-					      _("This battle needs some content to be downloaded! Shall I download it for you?"),
-					      _("Content needed"),
-					      wxYES_NO | wxICON_QUESTION)) {
+				TowxString(req.GetRequiredContentAsString()) + _("Shall I download it for you?"),
+				_("Content is needed"),
+				wxYES_NO | wxICON_QUESTION)) {
 			try {
 				ContentManager::Instance()->DownloadContent(req);
 			} catch (Exception& e) {

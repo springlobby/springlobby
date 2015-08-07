@@ -2,6 +2,8 @@
 
 #include "contentdownloadrequest.h"
 
+#include <vector>
+
 ContentDownloadRequest::ContentDownloadRequest()
 {
 	engineVersion.clear();
@@ -71,4 +73,41 @@ std::string ContentDownloadRequest::GetGameHash() const {
 
 std::string ContentDownloadRequest::GetMapHash() const {
 	return mapHash;
+}
+
+std::string ContentDownloadRequest::GetRequiredContentAsString() const {
+
+	std::vector<std::string> itemsNeeded;
+
+	if (IsMapRequested()) {
+		itemsNeeded.push_back("map");
+	}
+	if (IsGameRequested()) {
+		itemsNeeded.push_back("game");
+	}
+	if (IsEngineRequested()) {
+		itemsNeeded.push_back("engine");
+	}
+
+	std::string resultingString;
+	std::string prefixString;
+
+	if (IsSomethingNeeded()) {
+		resultingString = "This battle requires";
+
+		for (size_t i = 0; i < itemsNeeded.size(); ++i) {
+			if (i == (itemsNeeded.size() - 1) && i!=0 ) {
+				prefixString = " and ";
+			} else if (i == 0) {
+				prefixString = " ";
+			} else {
+				prefixString = ", ";
+			}
+			resultingString += prefixString + itemsNeeded[i];
+		}
+
+		resultingString += " to be downloaded! ";
+	}
+
+	return resultingString;
 }
