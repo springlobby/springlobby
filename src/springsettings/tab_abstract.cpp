@@ -193,7 +193,8 @@ void abstract_panel::loadDefaults()
 	for (int i = 0; i < s_category_sizes[_T("W4_CONTROLS")] - 1; ++i)
 		intSettings[W4_CONTROLS[i].key] = FromwxString(W4_CONTROLS[i].def);
 
-	floatSettings[W4_CONTROLS[s_category_sizes[_T("W4_CONTROLS")]].key] = FromwxString(W4_CONTROLS[s_category_sizes[_T("W4_CONTROLS")]].def);
+	const size_t idx = s_category_sizes[_T("W4_CONTROLS")] - 1;
+	floatSettings[W4_CONTROLS[idx].key] = FromwxString(W4_CONTROLS[idx].def); //TODO add comment: what does this do?
 }
 
 void abstract_panel::OnSliderMove(wxCommandEvent& event)
