@@ -696,7 +696,12 @@ void Ui::OnUserBattleStatus(wxCommandEvent& event)
 
 	User* user = static_cast<User*>(event.GetClientData());
 	mw().GetJoinTab().BattleUserUpdated(*user);
-	OnBattleInfoUpdated(std::make_pair(user->GetBattle(), ""));
+	IBattle* battle = user->GetBattle();
+	if (battle == nullptr) {
+		wxLogWarning("trying to update non-existing battle");
+		return;
+	}
+	OnBattleInfoUpdated(std::make_pair(battle, ""));
 }
 
 
