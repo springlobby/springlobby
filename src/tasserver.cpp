@@ -394,7 +394,7 @@ void TASServer::Notify()
 		return;
 
 	const wxLongLong now = wxGetLocalTimeMillis();
-	const long diff = std::abs((now - m_lastnotify).ToLong());
+	const long diff = static_cast<long>(std::abs(static_cast<double>((now - m_lastnotify).ToLong())));
 	const int interval = std::max<long>(GetInterval(), diff);
 	m_lastnotify = now;
 
