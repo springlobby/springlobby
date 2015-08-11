@@ -157,8 +157,8 @@ inline bool BaseDataViewModel<DataType>::ContainsItem(const DataType& checkedIte
 template <class DataType>
 inline void BaseDataViewModel<DataType>::Clear()
 {
-	m_ModelData.clear();
 	Cleared();
+	m_ModelData.clear();
 }
 
 template <class DataType>
