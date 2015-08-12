@@ -120,11 +120,7 @@ unsigned int BaseDataViewModel<DataType>::GetColumnCount() const
 template <class DataType>
 bool BaseDataViewModel<DataType>::IsContainer(const wxDataViewItem& item) const
 {
-	if (item.IsOk() == true) { //Only root can containt items
-		return false;
-	} else {
-		return true;
-	}
+	return !item.IsOk(); //Only root can containt items
 }
 
 template <class DataType>
