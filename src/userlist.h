@@ -28,9 +28,8 @@ public:
 	typedef user_map_t::const_iterator user_const_iter_t;
 
 	UserList();
-	virtual ~UserList()
-	{
-	}
+	~UserList();
+
 	void AddUser(User& user);
 	void RemoveUser(std::string const& nick);
 	User& GetUser(std::string const& nick) const;

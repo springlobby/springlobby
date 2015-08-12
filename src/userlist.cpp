@@ -28,19 +28,11 @@ UserList::UserList()
 {
 }
 
-/*
-UserList& UserList::operator= (const UserList&& other)
+UserList::~UserList()
 {
-	// CAUTION: This list is being moved, but the m_users map contains pointers to objects.
-	//   If those objects are part of a subclass of the other object, then they are also about
-	//   to be deleted, so subclasses of UserList (OfflineBattle) need to take action in their
-	//   own move assignment function.
-	m_users = other.m_users;
 	m_seek = m_users.end();
 	m_seekpos = SEEKPOS_INVALID;
-	return *this;
 }
-*/
 
 void UserList::AddUser(User& user)
 {
