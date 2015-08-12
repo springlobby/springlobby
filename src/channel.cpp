@@ -16,7 +16,8 @@
 #include "log.h"
 
 Channel::Channel(IServer& serv)
-    : m_serv(serv)
+    : uidata(nullptr)
+    , m_serv(serv)
     , m_do_ban_regex(false)
     , m_do_unban_regex(false)
 {
@@ -24,8 +25,10 @@ Channel::Channel(IServer& serv)
 
 Channel::~Channel()
 {
-	if (uidata.panel)
-		uidata.panel->SetChannel(NULL);
+	if (uidata) {
+		uidata->SetChannel(nullptr);
+		uidata = nullptr;
+	}
 }
 
 void Channel::SetName(const std::string& name)
@@ -49,11 +52,11 @@ User& Channel::GetMe()
 void Channel::Said(User& who, const std::string& message)
 {
 	slLogDebugFunc("");
-	if (uidata.panel == 0) {
+	if (uidata == nullptr) {
 		wxLogError(_T("OnChannelSaid: ud->panel NULL"));
 		return;
 	}
-	uidata.panel->Said(TowxString(who.GetNick()), TowxString(message));
+	uidata->Said(TowxString(who.GetNick()), TowxString(message));
 }
 
 
@@ -67,11 +70,11 @@ void Channel::Say(const std::string& message)
 void Channel::DidAction(User& who, const std::string& action)
 {
 	slLogDebugFunc("");
-	if (uidata.panel == 0) {
+	if (uidata == nullptr) {
 		wxLogError(_T("OnChannelDidAction: ud->panel NULL"));
 		return;
 	}
-	uidata.panel->DidAction(TowxString(who.GetNick()), TowxString(action));
+	uidata->DidAction(TowxString(who.GetNick()), TowxString(action));
 }
 
 
@@ -86,11 +89,11 @@ void Channel::Left(User& who, const std::string& reason)
 {
 	RemoveUser(who.GetNick());
 	//wxLogDebugFunc( wxEmptyString );
-	if (uidata.panel == 0) {
+	if (uidata == nullptr) {
 		wxLogWarning(_T("OnUserLeftChannel: ud->panel NULL"));
 		return;
 	}
-	uidata.panel->Parted(who, TowxString(reason));
+	uidata->Parted(who, TowxString(reason));
 }
 
 
@@ -108,11 +111,11 @@ void Channel::Rejoin()
 void Channel::Joined(User& who)
 {
 	AddUser(who);
-	if (uidata.panel == 0) {
+	if (uidata == nullptr) {
 		wxLogError(_T("OnUserJoinedChannel: ud->panel NULL"));
 		return;
 	}
-	uidata.panel->Joined(who);
+	uidata->Joined(who);
 }
 
 
@@ -120,11 +123,11 @@ void Channel::OnChannelJoin(User& who)
 {
 	AddUser(who);
 	//wxLogDebugFunc( wxEmptyString );
-	if (uidata.panel == 0) {
+	if (uidata == 0) {
 		wxLogError(_T("OnChannelJoin: ud->panel NULL"));
 		return;
 	}
-	uidata.panel->OnChannelJoin(who);
+	uidata->OnChannelJoin(who);
 }
 
 
@@ -134,11 +137,11 @@ void Channel::SetTopic(const std::string& topic, const std::string& who)
 	m_topic_nick = who;
 
 	slLogDebugFunc("");
-	if (uidata.panel == 0) {
+	if (uidata == nullptr) {
 		wxLogError(_T("OnChannelTopic: ud->panel NULL"));
 		return;
 	}
-	uidata.panel->SetTopic(TowxString(who), TowxString(topic));
+	uidata->SetTopic(TowxString(who), TowxString(topic));
 }
 
 std::string Channel::GetTopicSetBy()
@@ -213,7 +216,7 @@ bool Channel::ExecuteSayCommand(const std::string& in)
 		return true;
 	} else if ((in == "/part") || (in == "/p")) {
 		Leave();
-		uidata.panel = 0;
+		uidata = nullptr;
 		return true;
 	} else if (param == _T("/sayver")) {
 		//!this instance is not replaced with GetAppname for sake of help/debug online

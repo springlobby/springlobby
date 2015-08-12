@@ -465,8 +465,8 @@ void Ui::OnUserStatusChanged(User& user)
 		return;
 	for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 		Channel& chan = m_serv->GetChannel(i);
-		if ((chan.UserExists(user.GetNick())) && (chan.uidata.panel != 0)) {
-			chan.uidata.panel->UserStatusUpdated(user);
+		if ((chan.UserExists(user.GetNick())) && (chan.uidata != nullptr)) {
+			chan.uidata->UserStatusUpdated(user);
 		}
 	}
 	if (user.uidata.panel) {
@@ -565,8 +565,8 @@ void Ui::OnBattleOpened(IBattle& battle)
 		User& user = battle.GetFounder();
 		for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 			Channel& chan = m_serv->GetChannel(i);
-			if ((chan.UserExists(user.GetNick())) && (chan.uidata.panel != 0)) {
-				chan.uidata.panel->UserStatusUpdated(user);
+			if ((chan.UserExists(user.GetNick())) && (chan.uidata != nullptr)) {
+				chan.uidata->UserStatusUpdated(user);
 			}
 		}
 	} catch (...) {
@@ -592,8 +592,8 @@ void Ui::OnBattleClosed(IBattle& battle)
 		user.SetBattle(0);
 		for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 			Channel& chan = m_serv->GetChannel(i);
-			if ((chan.UserExists(user.GetNick())) && (chan.uidata.panel != 0)) {
-				chan.uidata.panel->UserStatusUpdated(user);
+			if ((chan.UserExists(user.GetNick())) && (chan.uidata != nullptr)) {
+				chan.uidata->UserStatusUpdated(user);
 			}
 		}
 	}
@@ -616,8 +616,8 @@ void Ui::OnUserJoinedBattle(IBattle& battle, User& user)
 
 	for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 		Channel& chan = m_serv->GetChannel(i);
-		if ((chan.UserExists(user.GetNick())) && (chan.uidata.panel != 0)) {
-			chan.uidata.panel->UserStatusUpdated(user);
+		if ((chan.UserExists(user.GetNick())) && (chan.uidata != nullptr)) {
+			chan.uidata->UserStatusUpdated(user);
 		}
 	}
 }
@@ -646,8 +646,8 @@ void Ui::OnUserLeftBattle(IBattle& battle, User& user, bool isbot)
 		return;
 	for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 		Channel& chan = m_serv->GetChannel(i);
-		if ((chan.UserExists(user.GetNick())) && (chan.uidata.panel != 0)) {
-			chan.uidata.panel->UserStatusUpdated(user);
+		if ((chan.UserExists(user.GetNick())) && (chan.uidata != nullptr)) {
+			chan.uidata->UserStatusUpdated(user);
 		}
 	}
 }

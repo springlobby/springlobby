@@ -222,8 +222,8 @@ ChatPanel::~ChatPanel()
 			m_user->uidata.panel = 0;
 	}
 	if (m_channel != 0) {
-		if (m_channel->uidata.panel == this)
-			m_channel->uidata.panel = 0;
+		if (m_channel->uidata == this)
+			m_channel->uidata = nullptr;
 	}
 	cfg().Write(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
 
@@ -739,7 +739,7 @@ void ChatPanel::Parted(User& who, const wxString& message)
 		if (m_channel == 0)
 			return;
 		if (me_parted) {
-			m_channel->uidata.panel = 0;
+			m_channel->uidata = nullptr;
 			SetChannel(0);
 			return;
 		}
@@ -807,7 +807,7 @@ void ChatPanel::SetChannel(Channel* chan)
 	ASSERT_LOGIC(m_type == CPT_Channel, "Not of type channel");
 
 	if ((chan == 0) && (m_channel != 0)) {
-		m_channel->uidata.panel = 0;
+		m_channel->uidata = nullptr;
 	}
 	if (m_nicklist != nullptr) {
 		m_nicklist->ClearUsers();
@@ -815,7 +815,7 @@ void ChatPanel::SetChannel(Channel* chan)
 	}
 
 	if (chan != 0) {
-		chan->uidata.panel = this;
+		chan->uidata = this;
 		if (chan != m_channel) {
 			SetLogFile(TowxString(chan->GetName()));
 		}
@@ -993,7 +993,7 @@ bool ChatPanel::Say(const wxString& message)
 				try {
 					Channel& chan = m_server->GetChannel(STD_STRING(channame));
 					chan.Leave();
-					chan.uidata.panel = 0;
+					chan.uidata = 0;
 				} catch (assert_exception) {
 				}
 			}
@@ -1012,7 +1012,7 @@ void ChatPanel::Part()
 		if (m_channel == 0)
 			return;
 		m_channel->Leave();
-		m_channel->uidata.panel = 0;
+		m_channel->uidata = 0;
 	}
 }
 

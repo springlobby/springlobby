@@ -11,20 +11,10 @@
 class IServer;
 class ChatPanel;
 
-struct UiChannelData
-{
-	UiChannelData()
-	    : panel(0)
-	{
-	}
-
-	ChatPanel* panel;
-};
-
 class Channel : public UserList, public SL::NonCopyable
 {
 public:
-	UiChannelData uidata;
+	ChatPanel* uidata; //FIXME: privatize
 
 	//Channel(): m_serv(0),m_userdata(0) {}
 	Channel(IServer& serv);
