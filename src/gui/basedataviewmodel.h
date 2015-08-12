@@ -73,7 +73,7 @@ int BaseDataViewModel<DataType>::Compare(const wxDataViewItem& item1, const wxDa
 template <class DataType>
 wxDataViewItem BaseDataViewModel<DataType>::GetParent(const wxDataViewItem& /*item*/) const
 {
-	return wxDataViewItem(nullptr); //Root is only one possible parent
+	return wxDataViewItem(); //Root is only one possible parent
 }
 
 template <class DataType>
@@ -127,7 +127,8 @@ template <class DataType>
 bool BaseDataViewModel<DataType>::SetValue(const wxVariant& ,
 					   const wxDataViewItem& , unsigned int )
 {
-	return true; //Dymmy method
+	assert(false);
+	return true; //Dummy method
 }
 
 //Needed to inform model that there will be no expanders (make view looks like list)
@@ -181,6 +182,7 @@ inline std::list<const DataType*>& BaseDataViewModel<DataType>::GetItemsContaine
 template <class DataType>
 wxString BaseDataViewModel<DataType>::GetColumnType(unsigned int ) const
 {
+	assert(false);
 	return wxEmptyString; //Does nothing
 }
 
