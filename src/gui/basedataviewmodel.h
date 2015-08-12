@@ -94,6 +94,7 @@ unsigned int BaseDataViewModel<DataType>::GetChildren(const wxDataViewItem& item
 template <class DataType>
 bool BaseDataViewModel<DataType>::AddItem(const DataType& data)
 {
+	assert(!ContainsItem(data));
 	m_ModelData.push_back(&data);
 
 	//Inform model about new item
@@ -105,9 +106,6 @@ bool BaseDataViewModel<DataType>::AddItem(const DataType& data)
 template <class DataType>
 bool BaseDataViewModel<DataType>::RemoveItem(const DataType& data)
 {
-	if (!ContainsItem(data)) { //FIXME: remove this / shouldn't happen (=double free)
-		return false;
-	}
 	assert(ContainsItem(data));
 
 	//Inform model about deleted item
@@ -159,6 +157,10 @@ inline bool BaseDataViewModel<DataType>::ContainsItem(const DataType& checkedIte
 template <class DataType>
 inline void BaseDataViewModel<DataType>::Clear()
 {
+	if (m_ModelData.empty()) {
+		return;
+	}
+
 	for(const DataType* item: m_ModelData) {
 		RemoveItem(*item);
 	}
