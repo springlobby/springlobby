@@ -109,7 +109,7 @@ bool BaseDataViewModel<DataType>::RemoveItem(const DataType& data)
 	assert(ContainsItem(data));
 
 	//Inform model about deleted item
-	const wxDataViewItem item(const_cast<DataType*>(&data));
+	const wxDataViewItem item = wxDataViewItem(const_cast<DataType*>(&data));
 	ItemDeleted(GetParent(item), item);
 	m_ModelData.remove(&data);
 	return true;
@@ -145,6 +145,8 @@ inline bool BaseDataViewModel<DataType>::IsListModel() const
 template <class DataType>
 inline bool BaseDataViewModel<DataType>::ContainsItem(const DataType& checkedItem) const
 {
+	assert(&checkedItem != nullptr);
+
 	const DataType* checkItemPointer = &checkedItem;
 	for (const DataType* item : m_ModelData) {
 		if (item == checkItemPointer) {
