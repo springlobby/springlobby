@@ -98,9 +98,8 @@ void NickDataViewCtrl::SetUsers(const UserList::user_map_t& userlist) {
 }
 
 void NickDataViewCtrl::ClearUsers() {
-	ClearRealUsers();
-
 	m_DataModel->Clear();
+	ClearRealUsers();
 }
 
 int NickDataViewCtrl::GetUsersCount() const{
