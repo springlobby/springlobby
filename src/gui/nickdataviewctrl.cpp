@@ -182,7 +182,7 @@ bool NickDataViewCtrl::IsContainsRealUser(const User& user) const {
 
 void NickDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& /*event*/) {
 
-	const User* user = GetSelectedItem();
+	User* user = GetSelectedItem();
 
 	if (user == nullptr) {
 		return;

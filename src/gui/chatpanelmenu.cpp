@@ -453,8 +453,8 @@ void ChatPanelMenu::OnServerMenuBroadcast(wxCommandEvent& /*unused*/)
 
 void ChatPanelMenu::OnUserMenuOpenChat(wxCommandEvent& /*unused*/)
 {
-	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	User* user = m_chatpanel->GetSelectedUser();
+	if (user == nullptr)
 		return;
 
 	ui().mw().OpenPrivateChat(*user);

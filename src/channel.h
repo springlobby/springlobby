@@ -14,7 +14,7 @@ class ChatPanel;
 class Channel : public UserList, public SL::NonCopyable
 {
 public:
-	ChatPanel* uidata; //FIXME: privatize
+	ChatPanel* panel; //FIXME: privatize
 
 	//Channel(): m_serv(0),m_userdata(0) {}
 	Channel(IServer& serv);

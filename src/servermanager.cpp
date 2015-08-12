@@ -141,10 +141,10 @@ void ServerManager::DoConnectToServer(const wxString& servername, const wxString
 	const int port = sett().GetServerPort(servername);
 
 	//TODO: Rework this!!!
-	if (server->uidata.panel == nullptr) {
-		server->uidata.panel = ui().mw().GetChatTab().AddChatPanel(*server, servername);
+	if (server->panel == nullptr) {
+		server->panel = ui().mw().GetChatTab().AddChatPanel(*server, servername);
 	}
-	server->uidata.panel->StatusMessage(_T("Connecting to server ") + servername + _T("..."));
+	server->panel->StatusMessage(_T("Connecting to server ") + servername + _T("..."));
 
 	// Connect
 	server->Connect(STD_STRING(servername), STD_STRING(host), port);

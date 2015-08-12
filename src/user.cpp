@@ -25,6 +25,7 @@ lsl/user/user.cpp
 
 User::User(IServer& serv)
     : CommonUser("", "", 0)
+    , panel(nullptr)
     , m_serv(&serv)
     , m_battle(0)
     , m_flagicon_idx(icons().GetFlagIcon(""))
@@ -36,6 +37,7 @@ User::User(IServer& serv)
 
 User::User(const std::string& nick, IServer& serv)
     : CommonUser(nick, "", 0)
+    , panel(nullptr)
     , m_serv(&serv)
     , m_battle(0)
     , m_flagicon_idx(icons().GetFlagIcon(""))
@@ -47,6 +49,7 @@ User::User(const std::string& nick, IServer& serv)
 
 User::User(const std::string& nick, const std::string& country, const int& cpu, IServer& serv)
     : CommonUser(nick, country, cpu)
+    , panel(nullptr)
     , m_serv(&serv)
     , m_battle(0)
     , m_flagicon_idx(icons().GetFlagIcon(country))
@@ -58,6 +61,7 @@ User::User(const std::string& nick, const std::string& country, const int& cpu, 
 
 User::User(const std::string& nick)
     : CommonUser(nick, "", 0)
+    , panel(nullptr)
     , m_serv(0)
     , m_battle(0)
     , m_flagicon_idx(icons().GetFlagIcon(""))
@@ -69,6 +73,7 @@ User::User(const std::string& nick)
 
 User::User(const std::string& nick, const std::string& country, const int& cpu)
     : CommonUser(nick, country, cpu)
+    , panel(nullptr)
     , m_serv(0)
     , m_battle(0)
     , m_flagicon_idx(icons().GetFlagIcon(country))
@@ -80,6 +85,7 @@ User::User(const std::string& nick, const std::string& country, const int& cpu)
 
 User::User()
     : CommonUser("", "", 0)
+    , panel(nullptr)
     , m_serv(0)
     , m_battle(0)
     , m_flagicon_idx(icons().GetFlagIcon(""))
@@ -91,8 +97,11 @@ User::User()
 
 User::~User()
 {
-	if (uidata.panel)
-		uidata.panel->SetUser(0);
+	if (panel != nullptr) {
+		ChatPanel* tmp = panel;
+		panel = nullptr;
+		tmp->SetUser(0);
+	}
 }
 
 std::string UserStatus::GetDiffString(const UserStatus& old) const

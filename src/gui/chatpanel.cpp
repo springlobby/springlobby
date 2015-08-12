@@ -119,7 +119,7 @@ ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
 }
 
 
-ChatPanel::ChatPanel(wxWindow* parent, const User& user, wxImageList* imaglist)
+ChatPanel::ChatPanel(wxWindow* parent, User& user, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
     , m_votePanel(0)
@@ -214,16 +214,16 @@ ChatPanel::~ChatPanel()
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
 
 	if (m_server != 0) {
-		if (m_server->uidata.panel == this)
-			m_server->uidata.panel = 0;
+		if (m_server->panel == this)
+			m_server->panel = 0;
 	}
 	if (m_user != 0) {
-		if (m_user->uidata.panel == this)
-			m_user->uidata.panel = 0;
+		if (m_user->panel == this)
+			m_user->panel = nullptr;
 	}
 	if (m_channel != 0) {
-		if (m_channel->uidata == this)
-			m_channel->uidata = nullptr;
+		if (m_channel->panel == this)
+			m_channel->panel = nullptr;
 	}
 	cfg().Write(_T( "/Channels/DisplayJoinLeave/" ) + m_chatpanelname, m_display_joinitem);
 
@@ -359,7 +359,7 @@ void ChatPanel::CreatePopup()
 	m_popup_menu = new ChatPanelMenu(this);
 }
 
-const User* ChatPanel::GetSelectedUser() const
+User* ChatPanel::GetSelectedUser() const
 {
 	if (m_type == CPT_User) {
 		return m_user;
@@ -739,7 +739,7 @@ void ChatPanel::Parted(User& who, const wxString& message)
 		if (m_channel == 0)
 			return;
 		if (me_parted) {
-			m_channel->uidata = nullptr;
+			m_channel->panel = nullptr;
 			SetChannel(0);
 			return;
 		}
@@ -807,7 +807,7 @@ void ChatPanel::SetChannel(Channel* chan)
 	ASSERT_LOGIC(m_type == CPT_Channel, "Not of type channel");
 
 	if ((chan == 0) && (m_channel != 0)) {
-		m_channel->uidata = nullptr;
+		m_channel->panel = nullptr;
 	}
 	if (m_nicklist != nullptr) {
 		m_nicklist->ClearUsers();
@@ -815,7 +815,7 @@ void ChatPanel::SetChannel(Channel* chan)
 	}
 
 	if (chan != 0) {
-		chan->uidata = this;
+		chan->panel = this;
 		if (chan != m_channel) {
 			SetLogFile(TowxString(chan->GetName()));
 		}
@@ -842,10 +842,10 @@ void ChatPanel::SetServer(IServer* serv)
 
 	if (serv != nullptr) {
 		SetLogFile(_T("server"));
-		serv->uidata.panel = this;
+		serv->panel = this;
 	}
 	if (m_server != nullptr) {
-		m_server->uidata.panel = 0;
+		m_server->panel = 0;
 	}
 	m_server = serv;
 }
@@ -855,19 +855,19 @@ const User* ChatPanel::GetUser() const
 	return m_user;
 }
 
-void ChatPanel::SetUser(const User* usr)
+void ChatPanel::SetUser(User* usr)
 {
 	ASSERT_LOGIC(m_type == CPT_User, "Not of type user");
 
 	if (usr == NULL) {
 		if (m_user != NULL) {
-			m_user->uidata.panel = 0;
+			m_user->panel = nullptr;
 			if (m_chan_opts_button != NULL) {
 				m_chan_opts_button->SetBitmapLabel(icons().GetBitmap(icons().ICON_EMPTY));
 			}
 		}
 	} else {
-		usr->uidata.panel = this;
+		usr->panel = this;
 		if (m_chan_opts_button != NULL) {
 			const wxBitmap icon = icons().GetBitmap(icons().GetUserListStateIcon(usr->GetStatus(), false, usr->GetBattle() != 0));
 			m_chan_opts_button->SetBitmapLabel(icon);
@@ -993,7 +993,7 @@ bool ChatPanel::Say(const wxString& message)
 				try {
 					Channel& chan = m_server->GetChannel(STD_STRING(channame));
 					chan.Leave();
-					chan.uidata = 0;
+					chan.panel = 0;
 				} catch (assert_exception) {
 				}
 			}
@@ -1012,7 +1012,7 @@ void ChatPanel::Part()
 		if (m_channel == 0)
 			return;
 		m_channel->Leave();
-		m_channel->uidata = 0;
+		m_channel->panel = 0;
 	}
 }
 

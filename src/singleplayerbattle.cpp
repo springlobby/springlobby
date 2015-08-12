@@ -17,8 +17,8 @@ SLCONFIG("/Spring/DefaultName", "Player", "playername for singleplayer battles")
 
 SinglePlayerBattle::SinglePlayerBattle(MainSinglePlayerTab& msptab)
     : m_sptab(msptab)
+    , m_me(STD_STRING(cfg().ReadString("/Spring/DefaultName")))
 {
-	m_me = STD_STRING(cfg().ReadString("/Spring/DefaultName"));
 	OnUserAdded(m_me);
 	m_me.BattleStatus().side = sett().GetBattleLastSideSel(TowxString(GetHostGameName()));
 	m_me.BattleStatus().colour = wxColourTolsl(sett().GetBattleLastColour());

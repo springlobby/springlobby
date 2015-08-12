@@ -67,7 +67,7 @@ class ChatPanel : public wxPanel, public SL::NonCopyable
 {
 public:
 	ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist);
-	ChatPanel(wxWindow* parent, const User& user, wxImageList* imaglist);
+	ChatPanel(wxWindow* parent, User& user, wxImageList* imaglist);
 	ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist);
 	ChatPanel(wxWindow* parent, IBattle* battle);
 	ChatPanel(wxWindow* parent); //debug chatpanel
@@ -94,7 +94,7 @@ public:
 	void SetServer(IServer* serv);
 
 	const User* GetUser() const;
-	void SetUser(const User* usr);
+	void SetUser(User* usr);
 
 	ChatPanelType GetPanelType() const;
 
@@ -135,7 +135,7 @@ private:
 	wxString GetChatTypeStr() const;
 
 	const User& GetMe() const;
-	const User* GetSelectedUser() const;
+	User* GetSelectedUser() const;
 
 	void SortNickList();
 	void OnFilterUsers(wxCommandEvent&);
@@ -204,7 +204,7 @@ private:
 
 	Channel* m_channel; //!< Channel object.
 	IServer* m_server;  //!< Server object.
-	const User* m_user; //!< User object.
+	User* m_user; //!< User object.
 	IBattle* m_battle;  //!< User object.
 
 	wxStaticText* m_usercount_label;

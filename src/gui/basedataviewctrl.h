@@ -26,7 +26,7 @@ public:
 	bool ContainsItem(const DataType&);
 	int GetItemsCount() const;
 	void Clear();
-	const DataType* GetSelectedItem();
+	DataType* GetSelectedItem();
 	std::list<const DataType*>& GetItemsContainer();
 
 protected:
@@ -97,7 +97,7 @@ inline bool BaseDataViewCtrl<DataType>::AssociateModel(BaseDataViewModel<DataTyp
 }
 
 template<class DataType>
-inline const DataType* BaseDataViewCtrl<DataType>::GetSelectedItem() {
+inline DataType* BaseDataViewCtrl<DataType>::GetSelectedItem() {
 
 	/*Prevent from returning undefined object if model is empty*/
 	if (GetItemsCount() == 0) {

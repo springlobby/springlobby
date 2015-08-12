@@ -52,7 +52,7 @@ public:
 
 	// MainWindow interface
 	void OpenChannelChat(Channel& channel, bool doFocus = true);
-	void OpenPrivateChat(const User& user, bool doFocus = false);
+	void OpenPrivateChat(User& user, bool doFocus = false);
 
 	void ShowConfigure(const unsigned int page = OPT_PAGE_SPRING);
 	void ShowTab(const unsigned int idx);

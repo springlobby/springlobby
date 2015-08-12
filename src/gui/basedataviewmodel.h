@@ -97,17 +97,23 @@ bool BaseDataViewModel<DataType>::AddItem(const DataType& data)
 	m_ModelData.push_back(&data);
 
 	//Inform model about new item
-	ItemAdded(wxDataViewItem(nullptr), wxDataViewItem(const_cast<DataType*>(&data)));
+	const wxDataViewItem item = wxDataViewItem(const_cast<DataType*>(&data));
+	ItemAdded(GetParent(item), item);
 	return true;
 }
 
 template <class DataType>
 bool BaseDataViewModel<DataType>::RemoveItem(const DataType& data)
 {
-	m_ModelData.remove(&data);
+	if (!ContainsItem(data)) { //FIXME: remove this / shouldn't happen (=double free)
+		return false;
+	}
+	assert(ContainsItem(data));
 
 	//Inform model about deleted item
-	ItemDeleted(wxDataViewItem(nullptr), wxDataViewItem(const_cast<DataType*>(&data)));
+	const wxDataViewItem item(const_cast<DataType*>(&data));
+	ItemDeleted(GetParent(item), item);
+	m_ModelData.remove(&data);
 	return true;
 }
 
@@ -153,8 +159,11 @@ inline bool BaseDataViewModel<DataType>::ContainsItem(const DataType& checkedIte
 template <class DataType>
 inline void BaseDataViewModel<DataType>::Clear()
 {
+	for(const DataType* item: m_ModelData) {
+		RemoveItem(*item);
+	}
+	assert(m_ModelData.empty());
 	Cleared();
-	m_ModelData.clear();
 }
 
 template <class DataType>

@@ -16,17 +16,18 @@
 #include "log.h"
 
 IServer::IServer()
-    : battles_iter(new BattleList_Iter(&m_battles))
+	: panel(nullptr)
+    , battles_iter(new BattleList_Iter(&m_battles))
     , m_pass_hash(false)
 {
-	assert(uidata.panel == NULL);
 }
 
 IServer::~IServer()
 {
-	if (uidata.panel) {
-		uidata.panel->SetServer(NULL);
-		uidata.panel = nullptr;
+	if (panel = nullptr) {
+		ChatPanel* tmp = panel;
+		panel = nullptr;
+		tmp->SetServer(NULL);
 	}
 	Reset();
 	delete battles_iter;

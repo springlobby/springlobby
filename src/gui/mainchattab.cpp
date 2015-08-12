@@ -265,7 +265,7 @@ ChatPanel* MainChatTab::AddChatPanel(IServer& server, const wxString& name)
 	return chat;
 }
 
-ChatPanel* MainChatTab::AddChatPanel(const User& user)
+ChatPanel* MainChatTab::AddChatPanel(User& user)
 {
 	LOOP_PANELS(
 	    if (tmp->GetPanelType() == CPT_User) {

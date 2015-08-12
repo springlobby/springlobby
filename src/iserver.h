@@ -46,16 +46,7 @@ public:
 		porttest_unreachable = 5
 	};
 
-	struct UiServerData
-	{
-		UiServerData()
-		    : panel(0)
-		{
-		}
-		ChatPanel* panel;
-	};
-
-	UiServerData uidata;
+	ChatPanel* panel;
 
 
 	IServer();

@@ -439,7 +439,7 @@ void MainWindow::OpenChannelChat(Channel& channel, bool doFocus)
 //! @brief Open a new chat tab with a private chat
 //!
 //! @param nick The user to whom the chatwindow should be opened to
-void MainWindow::OpenPrivateChat(const User& user, bool doFocus)
+void MainWindow::OpenPrivateChat(User& user, bool doFocus)
 {
 	ASSERT_LOGIC(m_chat_tab != 0, "m_chat_tab");
 	m_func_tabs->SetSelection(PAGE_CHAT);

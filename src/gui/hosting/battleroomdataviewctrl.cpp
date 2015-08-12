@@ -115,7 +115,7 @@ void BattleroomDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& /*event*/) {
 		return;
 	}
 
-	const User* user = GetSelectedItem();
+	User* user = GetSelectedItem();
 
 	if (user == nullptr || user->IsBot()) {
 		return;

@@ -182,15 +182,6 @@ struct UserBattleStatus
 class ChatPanel;
 class IBattle;
 
-struct UiUserData
-{
-	UiUserData()
-	    : panel(0)
-	{
-	}
-	ChatPanel* panel;
-};
-
 namespace LSL
 {
 class lslColor;
@@ -315,7 +306,7 @@ private:
 class User : public CommonUser
 {
 public:
-	mutable UiUserData uidata;
+	ChatPanel* panel; //FIXME: privatize
 
 	User(IServer& serv);
 	User(const std::string& nick, IServer& serv);

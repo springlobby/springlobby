@@ -170,15 +170,15 @@ void Ui::ReopenServerTab()
 		// re-add all users to the user list
 		const UserList& list = m_serv->GetUserList();
 		for (unsigned int i = 0; i < list.GetNumUsers(); i++) {
-			m_serv->uidata.panel->OnChannelJoin(list.GetUser(i));
+			m_serv->panel->OnChannelJoin(list.GetUser(i));
 		}
 	}
 }
 
 void Ui::AddServerWindow(const wxString& servername)
 {
-	if (m_serv->uidata.panel == nullptr) {
-		m_serv->uidata.panel = ui().mw().GetChatTab().AddChatPanel(*m_serv, servername);
+	if (m_serv->panel == nullptr) {
+		m_serv->panel = ui().mw().GetChatTab().AddChatPanel(*m_serv, servername);
 	}
 }
 
@@ -343,8 +343,8 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 	slLogDebugFunc("");
 	m_connect_retries = 10;
 
-	if (server.uidata.panel)
-		server.uidata.panel->StatusMessage(_T("Connected to ") + server_name + _T("."));
+	if (server.panel != nullptr)
+		server.panel->StatusMessage(_T("Connected to ") + server_name + _T("."));
 	mw().GetBattleListTab().OnConnected();
 
 	delete m_con_win;
@@ -398,9 +398,9 @@ void Ui::OnDisconnected(IServer& server, bool wasonline)
 	if (!wxTheApp->IsActive()) {
 		UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData(UiEvents::ServerConnection, disconnect_msg));
 	}
-	if (server.uidata.panel) {
-		server.uidata.panel->StatusMessage(disconnect_msg);
-		server.uidata.panel->SetServer(0);
+	if (server.panel != nullptr) {
+		server.panel->StatusMessage(disconnect_msg);
+		server.panel->SetServer(0);
 	}
 	if ((!wasonline) && (m_connect_retries <= 0)) { // couldn't even estabilish a socket, prompt the user to switch to another server
 		ShowConnectWindow();
@@ -452,9 +452,9 @@ void Ui::OnUserOffline(User& user)
 	if (m_main_win == 0)
 		return;
 	mw().GetChatTab().OnUserDisconnected(user);
-	if (user.uidata.panel) {
-		user.uidata.panel->SetUser(0);
-		user.uidata.panel = 0;
+	if (user.panel != nullptr) {
+		user.panel->SetUser(0);
+		user.panel = nullptr;
 	}
 }
 
@@ -465,12 +465,12 @@ void Ui::OnUserStatusChanged(User& user)
 		return;
 	for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 		Channel& chan = m_serv->GetChannel(i);
-		if ((chan.UserExists(user.GetNick())) && (chan.uidata != nullptr)) {
-			chan.uidata->UserStatusUpdated(user);
+		if ((chan.UserExists(user.GetNick())) && (chan.panel != nullptr)) {
+			chan.panel->UserStatusUpdated(user);
 		}
 	}
-	if (user.uidata.panel) {
-		user.uidata.panel->UserStatusUpdated(user);
+	if (user.panel != nullptr) {
+		user.panel->UserStatusUpdated(user);
 	}
 	if (user.GetStatus().in_game)
 		mw().GetBattleListTab().UserUpdate(user);
@@ -484,15 +484,15 @@ void Ui::OnUserStatusChanged(User& user)
 
 void Ui::OnUnknownCommand(IServer& server, const wxString& command, const wxString& params)
 {
-	if (server.uidata.panel != 0)
-		server.uidata.panel->UnknownCommand(command, params);
+	if (server.panel != nullptr)
+		server.panel->UnknownCommand(command, params);
 }
 
 
 void Ui::OnMotd(IServer& server, const wxString& message)
 {
-	if (server.uidata.panel != 0)
-		server.uidata.panel->Motd(message);
+	if (server.panel != nullptr)
+		server.panel->Motd(message);
 }
 
 void Ui::OnServerBroadcast(IServer& /*server*/, const wxString& message)
@@ -510,16 +510,16 @@ void Ui::OnServerBroadcast(IServer& /*server*/, const wxString& message)
 void Ui::OnServerMessage(IServer& server, const wxString& message)
 {
 	if (!cfg().ReadBool(_T("/Chat/BroadcastEverywhere"))) {
-		if (server.uidata.panel != 0)
-			server.uidata.panel->StatusMessage(message);
+		if (server.panel != nullptr)
+			server.panel->StatusMessage(message);
 	} else {
-		if (server.uidata.panel != 0)
-			server.uidata.panel->StatusMessage(message);
-		if (m_main_win == 0)
+		if (server.panel != nullptr)
+			server.panel->StatusMessage(message);
+		if (m_main_win == nullptr)
 			return;
 		ChatPanel* activepanel = mw().GetChatTab().GetActiveChatPanel();
-		if (activepanel != 0) {
-			if (activepanel != server.uidata.panel)
+		if (activepanel != nullptr) {
+			if (activepanel != server.panel)
 				activepanel->StatusMessage(message); // don't send it twice to the server tab
 		}
 		try { // send it to battleroom too
@@ -534,26 +534,26 @@ void Ui::OnUserSaid(User& user, const wxString& message, bool fromme)
 {
 	if (m_main_win == 0)
 		return;
-	if (user.uidata.panel == 0) {
+	if (user.panel == nullptr) {
 		mw().OpenPrivateChat(user);
 	}
 	if (fromme)
-		user.uidata.panel->Said(TowxString(m_serv->GetMe().GetNick()), message);
+		user.panel->Said(TowxString(m_serv->GetMe().GetNick()), message);
 	else
-		user.uidata.panel->Said(TowxString(user.GetNick()), message);
+		user.panel->Said(TowxString(user.GetNick()), message);
 }
 
 void Ui::OnUserSaidEx(User& user, const wxString& action, bool fromme)
 {
 	if (m_main_win == 0)
 		return;
-	if (user.uidata.panel == 0) {
+	if (user.panel == 0) {
 		mw().OpenPrivateChat(user);
 	}
 	if (fromme)
-		user.uidata.panel->DidAction(TowxString(m_serv->GetMe().GetNick()), action);
+		user.panel->DidAction(TowxString(m_serv->GetMe().GetNick()), action);
 	else
-		user.uidata.panel->DidAction(TowxString(user.GetNick()), action);
+		user.panel->DidAction(TowxString(user.GetNick()), action);
 }
 
 void Ui::OnBattleOpened(IBattle& battle)
@@ -565,8 +565,8 @@ void Ui::OnBattleOpened(IBattle& battle)
 		User& user = battle.GetFounder();
 		for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 			Channel& chan = m_serv->GetChannel(i);
-			if ((chan.UserExists(user.GetNick())) && (chan.uidata != nullptr)) {
-				chan.uidata->UserStatusUpdated(user);
+			if ((chan.UserExists(user.GetNick())) && (chan.panel != nullptr)) {
+				chan.panel->UserStatusUpdated(user);
 			}
 		}
 	} catch (...) {
@@ -592,8 +592,8 @@ void Ui::OnBattleClosed(IBattle& battle)
 		user.SetBattle(0);
 		for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 			Channel& chan = m_serv->GetChannel(i);
-			if ((chan.UserExists(user.GetNick())) && (chan.uidata != nullptr)) {
-				chan.uidata->UserStatusUpdated(user);
+			if ((chan.UserExists(user.GetNick())) && (chan.panel != nullptr)) {
+				chan.panel->UserStatusUpdated(user);
 			}
 		}
 	}
@@ -616,8 +616,8 @@ void Ui::OnUserJoinedBattle(IBattle& battle, User& user)
 
 	for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 		Channel& chan = m_serv->GetChannel(i);
-		if ((chan.UserExists(user.GetNick())) && (chan.uidata != nullptr)) {
-			chan.uidata->UserStatusUpdated(user);
+		if ((chan.UserExists(user.GetNick())) && (chan.panel != nullptr)) {
+			chan.panel->UserStatusUpdated(user);
 		}
 	}
 }
@@ -646,8 +646,8 @@ void Ui::OnUserLeftBattle(IBattle& battle, User& user, bool isbot)
 		return;
 	for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 		Channel& chan = m_serv->GetChannel(i);
-		if ((chan.UserExists(user.GetNick())) && (chan.uidata != nullptr)) {
-			chan.uidata->UserStatusUpdated(user);
+		if ((chan.UserExists(user.GetNick())) && (chan.panel != nullptr)) {
+			chan.panel->UserStatusUpdated(user);
 		}
 	}
 }

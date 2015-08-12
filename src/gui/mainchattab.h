@@ -31,7 +31,7 @@ public:
 
 	ChatPanel* AddChatPanel(Channel& channel, bool doFocus);
 	ChatPanel* AddChatPanel(IServer& server, const wxString& name);
-	ChatPanel* AddChatPanel(const User& user);
+	ChatPanel* AddChatPanel(User& user);
 	ChatPanel* AddChatPanel();
 	/** \brief this is only used if channel is left via raw command in server tab */
 	bool RemoveChatPanel(ChatPanel* panel);
