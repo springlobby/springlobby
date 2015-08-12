@@ -26,6 +26,7 @@ public:
 	virtual int Compare(const wxDataViewItem& , const wxDataViewItem& , unsigned int , bool ) const override;
 	virtual bool IsListModel() const override;
 	virtual bool GetAttr(const wxDataViewItem&, unsigned int, wxDataViewItemAttr&) const override;
+	virtual unsigned int GetColumnCount() const override;
 
 public:
 	//Custom methods
@@ -34,12 +35,10 @@ public:
 	bool ContainsItem(const DataType&) const;
 	void Clear();
 	void UpdateItem(const DataType&);
-	int GetItemsCount() const;
 	std::list<const DataType*>& GetItemsContainer();
 
 public:
 	//These methods from wxDataViewModel does not require to be overriden in derived classes
-	unsigned int GetColumnCount() const override;
 	bool IsContainer(const wxDataViewItem& ) const override;
 	bool SetValue(const wxVariant& , const wxDataViewItem& , unsigned int ) override;
 	wxString GetColumnType(unsigned int ) const override;
@@ -115,7 +114,7 @@ bool BaseDataViewModel<DataType>::RemoveItem(const DataType& data)
 template <class DataType>
 unsigned int BaseDataViewModel<DataType>::GetColumnCount() const
 {
-	return 0; //This value does not matters
+	return m_ModelData.size();
 }
 
 template <class DataType>
@@ -187,12 +186,6 @@ template <class DataType>
 wxString BaseDataViewModel<DataType>::GetColumnType(unsigned int ) const
 {
 	return wxEmptyString; //Does nothing
-}
-
-template <class DataType>
-int BaseDataViewModel<DataType>::GetItemsCount() const
-{
-	return static_cast<int>(m_ModelData.size());
 }
 
 #endif /* SRC_GUI_BASEDATAVIEWMODEL_H_ */
