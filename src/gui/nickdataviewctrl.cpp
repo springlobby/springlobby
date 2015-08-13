@@ -103,7 +103,7 @@ void NickDataViewCtrl::ClearUsers() {
 }
 
 int NickDataViewCtrl::GetUsersCount() const{
-	return m_DataModel->GetColumnCount();
+	return m_DataModel->GetItemCount();
 }
 
 void NickDataViewCtrl::DoUsersFilter() {

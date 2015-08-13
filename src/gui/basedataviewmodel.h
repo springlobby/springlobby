@@ -26,7 +26,7 @@ public:
 	virtual int Compare(const wxDataViewItem& , const wxDataViewItem& , unsigned int , bool ) const override;
 	virtual bool IsListModel() const override;
 	virtual bool GetAttr(const wxDataViewItem&, unsigned int, wxDataViewItemAttr&) const override;
-	virtual unsigned int GetColumnCount() const override;
+	size_t GetItemsCount() const { return m_ModelData.size(); }
 
 public:
 	//Custom methods
@@ -42,6 +42,11 @@ public:
 	bool IsContainer(const wxDataViewItem& ) const override;
 	bool SetValue(const wxVariant& , const wxDataViewItem& , unsigned int ) override;
 	wxString GetColumnType(unsigned int ) const override;
+	virtual unsigned int GetColumnCount() const override
+	{
+		assert(false);
+		return 0;
+	}
 
 private:
 	std::list<const DataType*> m_ModelData;
@@ -113,12 +118,6 @@ bool BaseDataViewModel<DataType>::RemoveItem(const DataType& data)
 	ItemDeleted(GetParent(item), item);
 	m_ModelData.remove(&data);
 	return true;
-}
-
-template <class DataType>
-unsigned int BaseDataViewModel<DataType>::GetColumnCount() const
-{
-	return m_ModelData.size();
 }
 
 template <class DataType>
