@@ -23,7 +23,8 @@ private:
 		P_COMPLETE,
 		SPEED,
 		ETA,
-		FILESIZE
+		FILESIZE,
+		COLUMN_COUNT
 	};
 };
 

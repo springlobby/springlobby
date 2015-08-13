@@ -9,7 +9,9 @@
 
 #include <wx/dataview.h>
 
-BattleroomDataViewModel::BattleroomDataViewModel() {
+BattleroomDataViewModel::BattleroomDataViewModel()
+	: BaseDataViewModel<User>::BaseDataViewModel(COLUMN_COUNT)
+{
 	m_Battle = nullptr;
 }
 

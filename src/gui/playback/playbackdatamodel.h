@@ -25,7 +25,8 @@ private:
 		DURATION,
 		VERSION,
 		FILESIZE,
-		FILENAME
+		FILENAME,
+		COLUMN_COUNT
 	};
 };
 

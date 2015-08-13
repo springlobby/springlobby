@@ -9,7 +9,9 @@
 #include "utils/slpaths.h"
 #include "useractions.h"
 
-BattleDataViewModel::BattleDataViewModel() {
+BattleDataViewModel::BattleDataViewModel()
+	: BaseDataViewModel<IBattle>::BaseDataViewModel(COLUMN_COUNT)
+{
 }
 
 BattleDataViewModel::~BattleDataViewModel() {

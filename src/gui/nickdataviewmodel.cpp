@@ -9,8 +9,9 @@
 #include "iconscollection.h"
 #include "useractions.h"
 
-NickDataViewModel::NickDataViewModel() {
-	// TODO Auto-generated constructor stub
+NickDataViewModel::NickDataViewModel()
+	:BaseDataViewModel<User>::BaseDataViewModel(COLUMN_COUNT)
+{
 
 }
 

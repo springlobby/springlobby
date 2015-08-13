@@ -15,7 +15,7 @@ template <class DataType>
 class BaseDataViewModel : public wxDataViewModel
 {
 public:
-	BaseDataViewModel();
+	BaseDataViewModel(size_t columns): m_columns(columns){}
 	virtual ~BaseDataViewModel();
 
 public:
@@ -44,23 +44,17 @@ public:
 	wxString GetColumnType(unsigned int ) const override;
 	virtual unsigned int GetColumnCount() const override
 	{
-		assert(false);
-		return 0;
+		return m_columns;
 	}
 
 private:
+	size_t m_columns;
 	std::list<const DataType*> m_ModelData;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// Implementation ////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////
-
-template <class DataType>
-BaseDataViewModel<DataType>::BaseDataViewModel()
-{
-	// TODO Auto-generated constructor stub
-}
 
 template <class DataType>
 BaseDataViewModel<DataType>::~BaseDataViewModel()

@@ -8,8 +8,9 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 
-PlaybackDataModel::PlaybackDataModel() {
-	// TODO Auto-generated constructor stub
+PlaybackDataModel::PlaybackDataModel()
+	: BaseDataViewModel<StoredGame>::BaseDataViewModel(COLUMN_COUNT)
+{
 }
 
 PlaybackDataModel::~PlaybackDataModel() {

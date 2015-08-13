@@ -36,7 +36,8 @@ private:
 		TRUESKILL,
 		TEAM,
 		ALLY,
-		BONUS
+		BONUS,
+		COLUMN_COUNT
 	};
 };
 

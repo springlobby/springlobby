@@ -22,7 +22,8 @@ private:
 		STATUS = 0,
 		COUNTRY,
 		RANK,
-		NICKNAME
+		NICKNAME,
+		COLUMN_COUNT
 	};
 };
 

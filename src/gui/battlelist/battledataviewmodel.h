@@ -29,7 +29,8 @@ private:
 		PLAYERS,
 		MAXIMUM,
 		RUNNING,
-		ENGINE
+		ENGINE,
+		COLUMN_COUNT
 	};
 };
 

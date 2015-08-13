@@ -3,7 +3,9 @@
 #include "downloaddataviewmodel.h"
 #include "downloadinfo.h"
 
-DownloadDataViewModel::DownloadDataViewModel() {
+DownloadDataViewModel::DownloadDataViewModel()
+	:BaseDataViewModel<DownloadInfo>::BaseDataViewModel(COLUMN_COUNT)
+{
 }
 
 DownloadDataViewModel::~DownloadDataViewModel() {
