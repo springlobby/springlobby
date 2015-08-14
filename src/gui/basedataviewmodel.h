@@ -175,7 +175,6 @@ inline void BaseDataViewModel<DataType>::Clear()
 
 	m_ModelData.clear();
 
-	assert(m_ModelData.empty());
 	Cleared();
 }
 

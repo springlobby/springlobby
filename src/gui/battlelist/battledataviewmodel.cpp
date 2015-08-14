@@ -24,10 +24,6 @@ void BattleDataViewModel::GetValue(wxVariant& variant,
 
 	wxASSERT(battle != nullptr);
 
-	if (ContainsItem(*battle) == false) {
-		return;
-	}
-
 	IconsCollection* iconsCollection = IconsCollection::Instance();
 	const BattleOptions& opts = battle->GetBattleOptions();
 
