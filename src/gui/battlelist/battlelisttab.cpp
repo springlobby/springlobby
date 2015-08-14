@@ -372,12 +372,12 @@ void BattleListTab::OnListJoin(wxDataViewEvent& /*event*/)
 {
 	wxASSERT(m_battle_list != nullptr);
 
-	const IBattle* battle = m_battle_list->GetSelectedItem();
+	IBattle* battle = m_battle_list->GetSelectedItem();
 	if (battle == nullptr) {
 		return;
 	}
 
-	SelectBattle(const_cast<IBattle*>(battle));
+	SelectBattle(battle);
 
 	int id = battle->GetBattleId();
 	DoJoin(serverSelector().GetServer().battles_iter->GetBattle(id));
@@ -450,12 +450,12 @@ void BattleListTab::DoJoin(IBattle& battle)
  */
 void BattleListTab::OnSelect(wxDataViewEvent& /*event*/)
 {
-	const IBattle* battle = m_battle_list->GetSelectedItem();
+	IBattle* battle = m_battle_list->GetSelectedItem();
 	if (battle == nullptr) {
 		SelectBattle(nullptr);
 		return;
 	} else {
-		SelectBattle(const_cast<IBattle*>(battle));
+		SelectBattle(battle);
 	}
 }
 
