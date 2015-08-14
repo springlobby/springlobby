@@ -30,7 +30,7 @@ public:
 	int GetItemsCount() const;
 	void Clear();
 	DataType* GetSelectedItem();
-	std::list<const DataType*>& GetItemsContainer();
+	const std::list<const DataType*>& GetItemsContainer() const;
 
 protected:
 	virtual void LoadColumnProperties();
@@ -176,7 +176,8 @@ inline int BaseDataViewCtrl<DataType>::GetItemsCount() const {
 }
 
 template<class DataType>
-inline std::list<const DataType*>& BaseDataViewCtrl<DataType>::GetItemsContainer() {
+inline const std::list<const DataType*>& BaseDataViewCtrl<DataType>::GetItemsContainer() const
+{
 	return m_DataModel->GetItemsContainer();
 }
 
