@@ -24,7 +24,7 @@ IServer::IServer()
 
 IServer::~IServer()
 {
-	if (panel == nullptr) {
+	if (panel != nullptr) {
 		ChatPanel* tmp = panel;
 		panel = nullptr;
 		tmp->SetServer(NULL);

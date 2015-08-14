@@ -162,7 +162,9 @@ inline void BaseDataViewModel<DataType>::Clear()
 		return;
 	}
 
-	for(const DataType* item: m_ModelData) {
+
+	std::list<const DataType*> tmp = m_ModelData;
+	for(const DataType* item: tmp) {
 		RemoveItem(*item);
 	}
 	assert(m_ModelData.empty());
