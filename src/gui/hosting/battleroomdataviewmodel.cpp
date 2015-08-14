@@ -27,6 +27,10 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 
 	wxASSERT(user != nullptr);
 
+	if (ContainsItem(*user) == false) {
+		return;
+	}
+
 	bool isSpectator = user->BattleStatus().spectator;
 	bool isBot = user->BattleStatus().IsBot();
 

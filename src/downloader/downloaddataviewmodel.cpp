@@ -18,6 +18,10 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 
 	wxASSERT(downloadInfo != nullptr);
 
+	if (ContainsItem(*downloadInfo) == false) {
+		return;
+	}
+
 	const int MB = 1024 * 1024;
 
 	switch(column)

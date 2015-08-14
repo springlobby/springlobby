@@ -26,6 +26,10 @@ void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 
 	wxASSERT(user != nullptr);
 
+	if (ContainsItem(*user) == false) {
+		return;
+	}
+
 	bool isBot = user->BattleStatus().IsBot();
 
 	switch (col) {

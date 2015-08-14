@@ -25,6 +25,10 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 		wxASSERT(false);
 	}
 
+	if (ContainsItem(*storedGame) == false) {
+		return;
+	}
+
 	switch (col) {
 	case DATE:
 		{
