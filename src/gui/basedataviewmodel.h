@@ -8,6 +8,8 @@
 
 #include <climits>
 
+#include "log.h"
+
 #define DEFAULT_COLUMN UINT_MAX
 
 
@@ -101,6 +103,7 @@ bool BaseDataViewModel<DataType>::AddItem(const DataType& data)
 {
 	if (ContainsItem(data)) {
 		wxASSERT(false);
+		wxLogWarning(_T("BaseDataViewModel<DataType>::AddItem: Item already presents in model!"));
 		return false;
 	}
 
@@ -117,6 +120,7 @@ bool BaseDataViewModel<DataType>::RemoveItem(const DataType& data)
 {
 	if (!ContainsItem(data)) {
 		wxASSERT(false);
+		wxLogWarning(_T("BaseDataViewModel<DataType>::RemoveItem: No item presents in model!"));
 		return false;
 	}
 
@@ -185,6 +189,8 @@ inline bool BaseDataViewModel<DataType>::UpdateItem(const DataType& item)
 		ItemChanged(wxDataViewItem(const_cast<DataType*>(&item)));
 		return true;
 	} else {
+		wxASSERT(false);
+		wxLogWarning(_T("BaseDataViewModel<DataType>::RemoveItem: No item presents in model!"));
 		return false;
 	}
 }
