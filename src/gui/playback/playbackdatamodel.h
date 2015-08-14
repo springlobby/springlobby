@@ -14,6 +14,7 @@ public:
 	virtual ~PlaybackDataModel();
 
     virtual void GetValue( wxVariant &variant, const wxDataViewItem &item, unsigned int col ) const override;
+    virtual wxString GetColumnType(unsigned int columnt) const override;
 
 private:
 	enum ColumnIndexes

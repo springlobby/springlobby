@@ -41,11 +41,17 @@ public:
 	//These methods from wxDataViewModel does not require to be overriden in derived classes
 	bool IsContainer(const wxDataViewItem& ) const override;
 	bool SetValue(const wxVariant& , const wxDataViewItem& , unsigned int ) override;
-	wxString GetColumnType(unsigned int ) const override;
+	//Must be reimplemented!
+	wxString GetColumnType(unsigned int) const override = 0;
 	virtual unsigned int GetColumnCount() const override
 	{
 		return m_columns;
 	}
+
+protected:
+	const wxString COL_TYPE_TEXT = _T("string");
+	const wxString COL_TYPE_ICONTEXT = _T("icontext");
+	const wxString COL_TYPE_BITMAP = _T("bitmap");
 
 private:
 	size_t m_columns;

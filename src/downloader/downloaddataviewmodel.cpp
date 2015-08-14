@@ -71,3 +71,10 @@ int DownloadDataViewModel::Compare(const wxDataViewItem& itemA,
 		bool ascending) const {
 	return BaseDataViewModel::Compare(itemA, itemB, column, ascending);
 }
+
+wxString DownloadDataViewModel::GetColumnType(unsigned int) const {
+
+	wxString colTypeString = COL_TYPE_TEXT;
+
+	return colTypeString;
+}

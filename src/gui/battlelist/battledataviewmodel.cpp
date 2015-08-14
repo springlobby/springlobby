@@ -223,3 +223,39 @@ bool BattleDataViewModel::GetAttr(const wxDataViewItem& item,
 	}
 	return false;
 }
+
+wxString BattleDataViewModel::GetColumnType(unsigned int column) const {
+
+	wxString colTypeString;
+
+	switch (column) {
+	case STATUS:
+	case COUNTRY:
+	case RANK:
+		colTypeString = COL_TYPE_BITMAP;
+		break;
+
+
+	case MAP:
+	case GAME:
+	case ENGINE:
+		colTypeString = COL_TYPE_ICONTEXT;
+		break;
+
+	case DESCRIPTION:
+	case HOST:
+	case RUNNING:
+	case SPECTATORS:
+	case MAXIMUM:
+	case PLAYERS:
+	case DEFAULT_COLUMN:
+		colTypeString = COL_TYPE_TEXT;
+		break;
+
+	default:
+		wxASSERT(false);
+		colTypeString = COL_TYPE_TEXT;
+	}
+
+	return colTypeString;
+}

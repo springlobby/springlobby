@@ -78,3 +78,30 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 	}
 }
 
+wxString PlaybackDataModel::GetColumnType(unsigned int columnt) const {
+
+	wxString colTypeString;
+
+	switch (columnt) {
+	case DATE:
+		colTypeString = COL_TYPE_ICONTEXT;
+		break;
+
+	case GAME:
+	case MAP:
+	case PLAYERS:
+	case DURATION:
+	case VERSION:
+	case FILESIZE:
+	case FILENAME:
+	case DEFAULT_COLUMN:
+		colTypeString = COL_TYPE_TEXT;
+		break;
+
+	default:
+		wxASSERT(false);
+		colTypeString = COL_TYPE_TEXT;
+	}
+
+	return colTypeString;
+}

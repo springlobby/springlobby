@@ -19,7 +19,7 @@ public:
 	BaseDataViewCtrl(const wxString&, wxWindow*, wxWindowID);
 	virtual ~BaseDataViewCtrl();
 
-	bool AssociateModel(BaseDataViewModel<DataType>*);
+	virtual bool AssociateModel(BaseDataViewModel<DataType>*);
 
 	void Resort();
 	void RefreshItem(const DataType&);

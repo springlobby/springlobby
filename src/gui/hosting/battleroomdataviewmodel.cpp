@@ -358,3 +358,35 @@ bool BattleroomDataViewModel::GetAttr(const wxDataViewItem& item,
 		return true;
 	}
 }
+
+wxString BattleroomDataViewModel::GetColumnType(unsigned int column) const {
+	wxString colTypeString;
+
+	switch(column)
+	{
+	case STATUS:
+	case INGAME:
+	case FACTION:
+	case COLOUR:
+	case COUNTRY:
+	case RANK:
+		colTypeString = COL_TYPE_BITMAP;
+		break;
+
+	case NICKNAME:
+	case TRUESKILL:
+	case TEAM:
+	case ALLY:
+	case BONUS:
+	case DEFAULT_COLUMN:
+		colTypeString = COL_TYPE_TEXT;
+		break;
+
+	default:
+		wxASSERT(false);
+		colTypeString = COL_TYPE_TEXT;
+	}
+
+
+	return colTypeString;
+}
