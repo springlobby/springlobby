@@ -35,7 +35,7 @@ public:
 	bool ContainsItem(const DataType&) const;
 	void Clear();
 	bool UpdateItem(const DataType&);
-	std::list<const DataType*>& GetItemsContainer();
+	const std::list<const DataType*>& GetItemsContainer() const;
 
 public:
 	//These methods from wxDataViewModel does not require to be overriden in derived classes
@@ -189,7 +189,8 @@ inline bool BaseDataViewModel<DataType>::GetAttr(const wxDataViewItem&,
 }
 
 template<class DataType>
-inline std::list<const DataType*>& BaseDataViewModel<DataType>::GetItemsContainer() {
+inline const std::list<const DataType*>& BaseDataViewModel<DataType>::GetItemsContainer() const
+{
 	return m_ModelData;
 }
 
