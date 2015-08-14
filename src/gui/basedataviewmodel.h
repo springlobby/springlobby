@@ -100,6 +100,7 @@ template <class DataType>
 bool BaseDataViewModel<DataType>::AddItem(const DataType& data)
 {
 	if (ContainsItem(data)) {
+		wxASSERT(false);
 		return false;
 	}
 
@@ -115,6 +116,7 @@ template <class DataType>
 bool BaseDataViewModel<DataType>::RemoveItem(const DataType& data)
 {
 	if (!ContainsItem(data)) {
+		wxASSERT(false);
 		return false;
 	}
 
