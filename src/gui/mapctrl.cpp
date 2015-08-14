@@ -497,26 +497,23 @@ void MapCtrl::UpdateMinimap()
 {
 	assert(wxThread::IsMain());
 	_SetCursor();
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 	int w, h;
 	GetClientSize(&w, &h);
 
 	m_mutex.Lock();
-	if (m_battle) //needs to be looked into, crahses with replaytab (koshi)
-	{
-		bool just_resize = (m_lastsize != wxSize(-1, -1) && m_lastsize != wxSize(w, h));
-		if ((m_mapname != m_battle->GetHostMapName()) || just_resize) {
-			FreeMinimap();
-			int loaded_ok = LoadMinimap();
+	const bool just_resize = (m_lastsize != wxSize(-1, -1) && m_lastsize != wxSize(w, h));
+	if ((m_mapname != m_battle->GetHostMapName()) || just_resize) {
+		FreeMinimap();
+		int loaded_ok = LoadMinimap();
 
-			if (!just_resize && loaded_ok == 0) // if a new map is loaded, reset start positions
-			{
-				const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
-										     .getSingleValue("startpostype", LSL::Enum::EngineOption));
-				if (longval == IBattle::ST_Pick)
-					RelocateUsers();
-			}
+		if (!just_resize && loaded_ok == 0) // if a new map is loaded, reset start positions
+		{
+			const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
+										 .getSingleValue("startpostype", LSL::Enum::EngineOption));
+			if (longval == IBattle::ST_Pick)
+				RelocateUsers();
 		}
 	}
 	m_mutex.Unlock();
