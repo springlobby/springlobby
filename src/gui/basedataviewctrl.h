@@ -90,6 +90,9 @@ inline bool BaseDataViewCtrl<DataType>::ContainsItem(const DataType& item) {
 template<class DataType>
 inline void BaseDataViewCtrl<DataType>::Clear() {
 	wxASSERT(m_DataModel != nullptr);
+
+	UnselectAll();
+
 	m_DataModel->Clear();
 }
 
