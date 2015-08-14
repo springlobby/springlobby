@@ -115,7 +115,7 @@ inline DataType* BaseDataViewCtrl<DataType>::GetSelectedItem() {
 	} else {
 		DataType* dataItem = static_cast<DataType*>(item.GetID());
 
-		if (ContainsItem(dataItem)) {
+		if (ContainsItem(*dataItem)) {
 			return dataItem;
 		}
 
