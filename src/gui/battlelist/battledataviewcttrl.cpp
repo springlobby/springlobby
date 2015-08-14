@@ -51,13 +51,13 @@ void BattleDataViewCtrl::AddBattle(IBattle& battle) {
 	if (ContainsItem(battle)) {
 		return;
 	} else {
-		m_DataModel->AddItem(battle);
+		AddItem(battle);
 	}
 }
 
 void BattleDataViewCtrl::RemoveBattle(IBattle& battle) {
 	if (ContainsItem(battle)) {
-		m_DataModel->RemoveItem(battle);
+		RemoveItem(battle);
 	} else {
 		return;
 	}

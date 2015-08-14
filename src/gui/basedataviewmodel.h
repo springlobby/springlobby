@@ -34,7 +34,7 @@ public:
 	bool RemoveItem(const DataType&);
 	bool ContainsItem(const DataType&) const;
 	void Clear();
-	void UpdateItem(const DataType&);
+	bool UpdateItem(const DataType&);
 	std::list<const DataType*>& GetItemsContainer();
 
 public:
@@ -162,7 +162,6 @@ inline void BaseDataViewModel<DataType>::Clear()
 		return;
 	}
 
-
 	std::list<const DataType*> tmp = m_ModelData;
 	for(const DataType* item: tmp) {
 		RemoveItem(*item);
@@ -172,13 +171,14 @@ inline void BaseDataViewModel<DataType>::Clear()
 }
 
 template <class DataType>
-inline void BaseDataViewModel<DataType>::UpdateItem(const DataType& item)
+inline bool BaseDataViewModel<DataType>::UpdateItem(const DataType& item)
 {
 	if (ContainsItem(item) == true) {
 		//FIXME: Maybe update item in m_ModelData. At this moment it stores pointer and does not need to be updated
 		ItemChanged(wxDataViewItem(const_cast<DataType*>(&item)));
+		return true;
 	} else {
-		return;
+		return false;
 	}
 }
 

@@ -76,13 +76,13 @@ void NickDataViewCtrl::RemoveUser(const User& user) {
 	}
 
 	//Only remove added users
-	if (m_DataModel->ContainsItem(user)) {
-		m_DataModel->RemoveItem(user);
+	if (ContainsItem(user)) {
+		RemoveItem(user);
 	}
 }
 
 void NickDataViewCtrl::UserUpdated(const User& user) {
-	m_DataModel->UpdateItem(user);
+	RefreshItem(user);
 
 	DoUsersFilter();
 }
@@ -98,12 +98,12 @@ void NickDataViewCtrl::SetUsers(const UserList::user_map_t& userlist) {
 }
 
 void NickDataViewCtrl::ClearUsers() {
-	m_DataModel->Clear();
+	Clear();
 	ClearRealUsers();
 }
 
 int NickDataViewCtrl::GetUsersCount() const{
-	return m_DataModel->GetItemsCount();
+	return GetItemsCount();
 }
 
 void NickDataViewCtrl::DoUsersFilter() {
@@ -111,13 +111,13 @@ void NickDataViewCtrl::DoUsersFilter() {
 	for (auto const item : m_real_users_list) {
 		if (checkFilteringConditions(item.second)) {
 			//User passed filter. Add him/her to the list.
-			if (m_DataModel->ContainsItem(*item.second) == false) {
-				m_DataModel->AddItem(*item.second);
+			if (ContainsItem(*item.second) == false) {
+				AddItem(*item.second);
 			}
 		} else {
 			//Remove user from the list.
-			if (m_DataModel->ContainsItem(*item.second) == true) {
-				m_DataModel->RemoveItem(*item.second);
+			if (ContainsItem(*item.second) == true) {
+				RemoveItem(*item.second);
 			}
 		}
 	}

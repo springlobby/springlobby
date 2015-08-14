@@ -22,7 +22,10 @@ public:
 	virtual bool AssociateModel(BaseDataViewModel<DataType>*);
 
 	void Resort();
-	void RefreshItem(const DataType&);
+
+	bool AddItem(const DataType&);
+	bool RemoveItem(const DataType&);
+	bool RefreshItem(const DataType&);
 	bool ContainsItem(const DataType&);
 	int GetItemsCount() const;
 	void Clear();
@@ -44,6 +47,7 @@ protected:
 
 	DECLARE_EVENT_TABLE()
 };
+
 
 BEGIN_EVENT_TABLE_TEMPLATE1(BaseDataViewCtrl, wxDataViewCtrl, DataType)
 //	EVT_DATAVIEW_COLUMN_HEADER_RIGHT_CLICK(wxID_ANY, OnColumnHeaderContext)
@@ -72,9 +76,9 @@ inline void BaseDataViewCtrl<DataType>::Resort() {
 }
 
 template<class DataType>
-inline void BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item) {
+inline bool BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item) {
 	wxASSERT(m_DataModel != nullptr);
-	m_DataModel->UpdateItem(item);
+	return m_DataModel->UpdateItem(item);
 }
 
 template<class DataType>
@@ -215,6 +219,16 @@ inline void BaseDataViewCtrl<DataType>::OnShowColumns(wxCommandEvent&) {
 		}
 	}
 
+}
+
+template<class DataType>
+inline bool BaseDataViewCtrl<DataType>::AddItem(const DataType& item) {
+	return m_DataModel->AddItem(item);
+}
+
+template<class DataType>
+inline bool BaseDataViewCtrl<DataType>::RemoveItem(const DataType& item) {
+	return m_DataModel->RemoveItem(item);
 }
 
 #endif /* SRC_GUI_BASEDATAVIEWCTRL_H_ */

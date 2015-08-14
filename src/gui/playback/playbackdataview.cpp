@@ -56,14 +56,14 @@ PlaybackDataView::~PlaybackDataView()
 
 void PlaybackDataView::AddPlayback(const StoredGame& replay)
 {
-	m_DataModel->AddItem(replay);
+	AddItem(replay);
 
 	Refresh();
 }
 
 void PlaybackDataView::RemovePlayback(const StoredGame& replay)
 {
-	m_DataModel->RemoveItem(replay);
+	RemoveItem(replay);
 
 	Refresh();
 }

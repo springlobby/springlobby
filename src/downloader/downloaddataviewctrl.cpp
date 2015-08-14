@@ -56,5 +56,5 @@ void DownloadDataViewCtrl::OnRetry(wxCommandEvent& /*event*/) {
 }
 
 void DownloadDataViewCtrl::AddDownloadInfo(DownloadInfo* dInfo) {
-	static_cast<DownloadDataViewModel*>(m_DataModel)->AddItem(*dInfo);
+	AddItem(*dInfo);
 }

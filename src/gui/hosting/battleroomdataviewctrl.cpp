@@ -85,18 +85,18 @@ void BattleroomDataViewCtrl::SetBattle(IBattle* battle) {
 
 void BattleroomDataViewCtrl::AddUser(User& user) {
 	//TODO: implement
-	if (m_DataModel->ContainsItem(user) == true) {
+	if (ContainsItem(user) == true) {
 		return;
 	}
-	m_DataModel->AddItem(user);
+	AddItem(user);
 }
 
 void BattleroomDataViewCtrl::RemoveUser(User& user) {
 	//TODO: implement
-	if (m_DataModel->ContainsItem(user) == false) {
+	if (ContainsItem(user) == false) {
 		return;
 	}
-	m_DataModel->RemoveItem(user);
+	RemoveItem(user);
 }
 
 void BattleroomDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
@@ -105,9 +105,7 @@ void BattleroomDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
 }
 
 void BattleroomDataViewCtrl::UpdateUser(User& user) {
-	wxASSERT(m_DataModel != nullptr);
-
-	m_DataModel->UpdateItem(user);
+	RefreshItem(user);
 }
 
 void BattleroomDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& /*event*/) {
