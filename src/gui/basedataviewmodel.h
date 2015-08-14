@@ -99,7 +99,10 @@ unsigned int BaseDataViewModel<DataType>::GetChildren(const wxDataViewItem& item
 template <class DataType>
 bool BaseDataViewModel<DataType>::AddItem(const DataType& data)
 {
-	assert(!ContainsItem(data));
+	if (ContainsItem(data)) {
+		return false;
+	}
+
 	m_ModelData.push_back(&data);
 
 	//Inform model about new item
@@ -111,7 +114,9 @@ bool BaseDataViewModel<DataType>::AddItem(const DataType& data)
 template <class DataType>
 bool BaseDataViewModel<DataType>::RemoveItem(const DataType& data)
 {
-	assert(ContainsItem(data));
+	if (!ContainsItem(data)) {
+		return false;
+	}
 
 	//Inform model about deleted item
 	const wxDataViewItem item = wxDataViewItem(const_cast<DataType*>(&data));

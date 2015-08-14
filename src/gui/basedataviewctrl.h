@@ -113,7 +113,13 @@ inline DataType* BaseDataViewCtrl<DataType>::GetSelectedItem() {
 	if (item.IsOk() == false) {
 		return nullptr;
 	} else {
-		return (static_cast<DataType*>(item.GetID()));
+		DataType* dataItem = static_cast<DataType*>(item.GetID());
+
+		if (ContainsItem(dataItem)) {
+			return dataItem;
+		}
+
+		return nullptr;
 	}
 }
 
