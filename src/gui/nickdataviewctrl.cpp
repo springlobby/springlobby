@@ -82,8 +82,10 @@ void NickDataViewCtrl::RemoveUser(const User& user) {
 }
 
 void NickDataViewCtrl::UserUpdated(const User& user) {
-	RefreshItem(user);
 
+	if (ContainsItem(user)) {
+		RefreshItem(user);
+	}
 	DoUsersFilter();
 }
 
