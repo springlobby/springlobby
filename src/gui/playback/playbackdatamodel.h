@@ -6,7 +6,7 @@
 #include <wx/dataview.h>
 #include "gui/basedataviewmodel.h"
 
-class StoredGame;
+struct StoredGame;
 
 class PlaybackDataModel: public BaseDataViewModel<StoredGame>{
 public:

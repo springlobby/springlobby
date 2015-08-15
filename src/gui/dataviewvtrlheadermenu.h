@@ -32,7 +32,7 @@ private:
 	enum{
 		HIDE_COLUMN_ID,
 		SHOW_ALL_COLUMNS_ID
-	}MENU_ID;
+	};
 
 private:
 	wxDataViewCtrl* parentDataView;
