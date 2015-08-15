@@ -196,6 +196,10 @@ inline void BaseDataViewCtrl<DataType>::OnColumnHeaderContext(
 		wxDataViewEvent& event) {
 
 	int columnIndex = event.GetColumn();
+	if (columnIndex < 0 || columnIndex >= GetColumnCount()) {
+		wxLogWarning(_T("BaseDataViewCtrl<DataType>::OnColumnHeaderContext() :  event.GetColumn() returned invalid index"));
+		return;
+	}
 
 	wxMenu* menu = new DataViewCtrlHeaderMenu(this, columnIndex);
 
@@ -208,12 +212,25 @@ template<class DataType>
 inline void BaseDataViewCtrl<DataType>::OnHideColumn(wxCommandEvent& event) {
 	unsigned int columnIndex = static_cast<unsigned int>(event.GetExtraLong());
 
-	wxASSERT(columnIndex < GetColumnCount());
+	if (columnIndex >= GetColumnCount()) {
+		wxASSERT(false);
+		wxLogWarning(_T("BaseDataViewCtrl<DataType>::OnHideColumn() : columnIndex >= GetColumnCount()"));
+		return;
+	}
 
 	wxDataViewColumn* column = GetColumn(columnIndex);
 
-	wxASSERT(column != nullptr);
-	wxASSERT(column->IsHidden() == false);
+	if (column == nullptr) {
+		wxASSERT(false);
+		wxLogWarning(_T("BaseDataViewCtrl<DataType>::OnHideColumn() : column == nullptr"));
+		return;
+	}
+
+	if (column->IsHidden() == true) {
+		wxASSERT(false);
+		wxLogWarning(_T("BaseDataViewCtrl<DataType>::OnHideColumn() : column->IsHidden() == true"));
+		return;
+	}
 
 	column->SetHidden(true);
 }
