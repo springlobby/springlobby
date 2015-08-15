@@ -25,9 +25,27 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 		wxASSERT(false);
 	}
 
-	if (ContainsItem(*storedGame) == false) {
-		return;
-	}
+    /* In case if wxGTK will try to render invalid item */
+    if (storedGame == nullptr || ContainsItem(*storedGame) == false) {
+        switch (col) {
+        case DATE:
+            variant = wxVariant(wxDataViewIconText(wxEmptyString));
+            break;
+
+        case GAME:
+        case MAP:
+        case PLAYERS:
+        case DURATION:
+        case VERSION:
+        case FILESIZE:
+        case FILENAME:
+        case DEFAULT_COLUMN:
+        default:
+            variant = wxVariant(wxEmptyString);
+        }
+        return;
+    }
+
 
 	switch (col) {
 	case DATE:

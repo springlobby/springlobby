@@ -18,9 +18,11 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 
 	wxASSERT(downloadInfo != nullptr);
 
-	if (ContainsItem(*downloadInfo) == false) {
-		return;
-	}
+    /* In case if wxGTK will try to render invalid item */
+    if (downloadInfo == nullptr || ContainsItem(*downloadInfo) == false) {
+        variant = wxVariant(wxEmptyString);
+        return;
+    }
 
 	const int MB = 1024 * 1024;
 

@@ -24,12 +24,38 @@ void BattleDataViewModel::GetValue(wxVariant& variant,
 
 	wxASSERT(battle != nullptr);
 
-	if (ContainsItem(*battle) == false) {
-		return;
-	}
-
 	IconsCollection* iconsCollection = IconsCollection::Instance();
-	const BattleOptions& opts = battle->GetBattleOptions();
+
+    /* In case if wxGTK will try to render invalid item */
+    if (battle == nullptr || ContainsItem(*battle) == false) {
+
+        switch (col) {
+        case STATUS:
+        case COUNTRY:
+        case RANK:
+            variant = wxVariant(iconsCollection->BMP_EMPTY);
+            break;
+
+        case MAP:
+        case GAME:
+        case ENGINE:
+            variant = wxVariant(wxDataViewIconText(wxEmptyString));
+            break;
+
+        case DESCRIPTION:
+        case HOST:
+        case SPECTATORS:
+        case PLAYERS:
+        case MAXIMUM:
+        case RUNNING:
+        case DEFAULT_COLUMN:
+        default:
+            variant = wxVariant(wxEmptyString);
+        }
+        return;
+    }
+
+    const BattleOptions& opts = battle->GetBattleOptions();
 
 	switch (col) {
 	case STATUS:
@@ -207,6 +233,10 @@ bool BattleDataViewModel::GetAttr(const wxDataViewItem& item,
 	const IBattle* battle = static_cast<const IBattle*>(item.GetID());
 
 	wxASSERT(battle != nullptr);
+
+    if (battle == nullptr || ContainsItem(*battle) == false) {
+        return false;
+    }
 
 	//If founder is cause of highlight
 	wxString groupName = useractions().GetGroupOfUser(battle->GetFounder().GetNick());

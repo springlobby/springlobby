@@ -27,9 +27,30 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 
 	wxASSERT(user != nullptr);
 
-	if (ContainsItem(*user) == false) {
-		return;
-	}
+    /* In case if wxGTK will try to render invalid item */
+    if (user == nullptr || ContainsItem(*user) == false) {
+        switch(col)
+        {
+        case STATUS:
+        case INGAME:
+        case FACTION:
+        case COLOUR:
+        case COUNTRY:
+        case RANK:
+            variant = wxVariant(iconsCollection->BMP_EMPTY);
+            break;
+
+        case NICKNAME:
+        case TRUESKILL:
+        case TEAM:
+        case ALLY:
+        case BONUS:
+        case DEFAULT_COLUMN:
+        default:
+            variant = wxVariant(wxEmptyString);
+        }
+        return;
+    }
 
 	bool isSpectator = user->BattleStatus().spectator;
 	bool isBot = user->BattleStatus().IsBot();
@@ -352,6 +373,10 @@ bool BattleroomDataViewModel::GetAttr(const wxDataViewItem& item,
 	const User* user = static_cast<const User*>(item.GetID());
 
 	wxASSERT(user != nullptr);
+
+    if (user == nullptr || ContainsItem(*user) == false) {
+        return false;
+    }
 
 	wxString groupName = useractions().GetGroupOfUser(user->GetNick());
 	if (groupName == wxEmptyString) {
