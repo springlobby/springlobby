@@ -181,7 +181,7 @@ template<class DataType>
 inline int BaseDataViewCtrl<DataType>::GetItemsCount() const {
 	wxASSERT(m_DataModel != nullptr);
 
-	return m_DataModel->GetColumnCount();
+	return m_DataModel->GetItemsCount();
 }
 
 template<class DataType>
