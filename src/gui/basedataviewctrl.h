@@ -196,7 +196,21 @@ inline void BaseDataViewCtrl<DataType>::OnColumnHeaderContext(
 		wxDataViewEvent& event) {
 
 	int columnIndex = event.GetColumn();
-	if (columnIndex < 0 || columnIndex >= GetColumnCount()) {
+        if (columnIndex < 0 ) {
+            wxDataViewColumn* column = event.GetDataViewColumn();
+            if (column == nullptr) {
+                /*Looks like this function is unsupported*/
+                return;
+            }
+            
+            columnIndex = GetColumnPosition(column);
+            if (columnIndex < 0 ) {
+                /*Looks like this function is unsupported*/
+                return;                
+            }
+        }
+        
+	if (static_cast<unsigned int>(columnIndex) >= m_DataModel->GetColumnCount()) {
 		wxLogWarning(_T("BaseDataViewCtrl<DataType>::OnColumnHeaderContext() :  event.GetColumn() returned invalid index"));
 		return;
 	}
