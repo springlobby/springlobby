@@ -1467,7 +1467,7 @@ bool Settings::PerspectiveExists(const wxString& perspective_name)
 
 void Settings::SetAutoloadedChatlogLinesCount(const int count)
 {
-	cfg().Write(_T( "/GUI/AutoloadedChatlogLinesCount" ), std::abs(static_cast<double>(count)));
+	cfg().Write(_T( "/GUI/AutoloadedChatlogLinesCount" ), std::abs(count));
 }
 
 int Settings::GetAutoloadedChatlogLinesCount()
