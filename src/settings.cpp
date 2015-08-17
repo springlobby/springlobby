@@ -23,6 +23,7 @@
 #include <wx/tokenzr.h>
 #include <wx/colourdata.h>
 #include <set>
+#include <cstdlib>
 #include <lslutils/globalsmanager.h>
 
 #include "utils/conversion.h"
