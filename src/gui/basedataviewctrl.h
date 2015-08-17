@@ -79,7 +79,14 @@ inline void BaseDataViewCtrl<DataType>::Resort() {
 template<class DataType>
 inline bool BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item) {
 	wxASSERT(m_DataModel != nullptr);
-	return m_DataModel->UpdateItem(item);
+	
+	bool result = m_DataModel->UpdateItem(item);
+	
+	if (result) {
+		Resort();
+	}
+	
+	return result;
 }
 
 template<class DataType>
@@ -265,12 +272,24 @@ inline void BaseDataViewCtrl<DataType>::OnShowColumns(wxCommandEvent&) {
 
 template<class DataType>
 inline bool BaseDataViewCtrl<DataType>::AddItem(const DataType& item) {
-	return m_DataModel->AddItem(item);
+	bool result = m_DataModel->AddItem(item);
+	
+	if (result) {
+		Resort();
+	}
+	
+	return result;	
 }
 
 template<class DataType>
 inline bool BaseDataViewCtrl<DataType>::RemoveItem(const DataType& item) {
-	return m_DataModel->RemoveItem(item);
+	bool result = m_DataModel->RemoveItem(item);
+	
+	if (result) {
+		Resort();
+	}
+	
+	return result;	
 }
 
 #endif /* SRC_GUI_BASEDATAVIEWCTRL_H_ */
