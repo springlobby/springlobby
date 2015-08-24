@@ -491,7 +491,7 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 		case 2: { //depth 2
 			if (param == "game/hosttype") {
 				if (battle.m_autohost_manager->RecognizeAutohost(value)) {
-					OnSaidBattle(battleid, battle.GetMe().GetNick(), stdprintf("detected %s autohost", value.c_str())); //FIXME: add event for that + add a label?!
+					wxLogInfo("detected %s autohost", value.c_str()); //FIXME: add event for that + add a label?!
 				}
 				return;
 			}
