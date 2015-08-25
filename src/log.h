@@ -32,6 +32,7 @@ public:
 	assert_exception(std::string msg)
 	    : std::runtime_error(msg)
 	{
+		wxLogWarning("%s", msg.c_str());
 	}
 };
 
