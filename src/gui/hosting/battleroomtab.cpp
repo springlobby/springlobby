@@ -495,11 +495,13 @@ void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
 
 void BattleRoomTab::UpdateMapInfoSummary()
 {
+	if (m_battle == nullptr)
+		return;
 	if (!m_battle->MapExists(false)) {
 		m_opts_list->SetItem(m_opt_list_map[_("Size")], 1, _T( "?x?" ));
 		m_opts_list->SetItem(m_opt_list_map[_("Windspeed")], 1, _T( "?-?" ));
 		m_opts_list->SetItem(m_opt_list_map[_("Tidal strength")], 1, _T( "?" ));
-		return
+		return;
 	}
 	LSL::UnitsyncMap map = m_battle->LoadMap();
 	m_opts_list->SetItem(m_opt_list_map[_("Size")], 1, wxString::Format(_T( "%.0fx%.0f" ), map.info.width / 512.0, map.info.height / 512.0));
