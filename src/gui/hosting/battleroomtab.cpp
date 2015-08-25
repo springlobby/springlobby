@@ -495,21 +495,16 @@ void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
 
 void BattleRoomTab::UpdateMapInfoSummary()
 {
-	try // updates map info summary
-	{
-		if (m_battle->MapExists(false) == false) {
-			throw assert_exception(0);
-		}
-		LSL::UnitsyncMap map = m_battle->LoadMap();
-		m_opts_list->SetItem(m_opt_list_map[_("Size")], 1, wxString::Format(_T( "%.0fx%.0f" ), map.info.width / 512.0, map.info.height / 512.0));
-		m_opts_list->SetItem(m_opt_list_map[_("Windspeed")], 1, wxString::Format(_T( "%d-%d" ), map.info.minWind, map.info.maxWind));
-		m_opts_list->SetItem(m_opt_list_map[_("Tidal strength")], 1, wxString::Format(_T( "%d" ), map.info.tidalStrength));
-		//    m_opts_list->SetItem( 0, 1,  );
-	} catch (...) {
+	if (!m_battle->MapExists(false)) {
 		m_opts_list->SetItem(m_opt_list_map[_("Size")], 1, _T( "?x?" ));
 		m_opts_list->SetItem(m_opt_list_map[_("Windspeed")], 1, _T( "?-?" ));
 		m_opts_list->SetItem(m_opt_list_map[_("Tidal strength")], 1, _T( "?" ));
+		return
 	}
+	LSL::UnitsyncMap map = m_battle->LoadMap();
+	m_opts_list->SetItem(m_opt_list_map[_("Size")], 1, wxString::Format(_T( "%.0fx%.0f" ), map.info.width / 512.0, map.info.height / 512.0));
+	m_opts_list->SetItem(m_opt_list_map[_("Windspeed")], 1, wxString::Format(_T( "%d-%d" ), map.info.minWind, map.info.maxWind));
+	m_opts_list->SetItem(m_opt_list_map[_("Tidal strength")], 1, wxString::Format(_T( "%d" ), map.info.tidalStrength));
 }
 
 void BattleRoomTab::UpdateStatsLabels()
