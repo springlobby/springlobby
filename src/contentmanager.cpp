@@ -1,6 +1,7 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include <wx/log.h>
+#include <wx/msgdlg.h>
 
 #include <string>
 
@@ -93,6 +94,7 @@ bool ContentManager::IsHavingSpringVersion(const std::string& engineString,
 	wxASSERT(engineString == _T("spring"));
 
 	if (sett().GetDisableSpringVersionCheck()) {
+		wxMessageBox(_T("Spring Engine version check has been disabled!\nPlease note that game may desync!"), _T("Warning"));
 		return true;
 	}
 
