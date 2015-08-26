@@ -156,7 +156,7 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 		if (exists) {
 			bool result = m_battle.CustomBattleOptions().setSingleOption(key, value);
 			if (result) {
-				auto section = m_battle.CustomBattleOptions().GetSection(key);
+				const LSL::Enum::GameOption section = m_battle.CustomBattleOptions().GetSection(key);
 				m_battle.SendHostInfo(stdprintf("%d_%s", section, key.c_str()));
 				DoAction(TowxString("has set option " + key + " to value " + value));
 			} else
