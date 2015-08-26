@@ -509,8 +509,11 @@ unsigned int IBattle::GetNumRects() const
 //key of last start rect in the map
 unsigned int IBattle::GetLastRectIdx() const
 {
-	if (GetNumRects() > 0)
-		return m_rects.rbegin()->first;
+	if (GetNumRects() > 0) {
+		const unsigned int res = m_rects.rbegin()->first;
+		assert(res < MAX_TEAMS);
+		return res;
+	}
 
 	return 0;
 }
@@ -518,12 +521,17 @@ unsigned int IBattle::GetLastRectIdx() const
 //return  the lowest currently unused key in the map of rects.
 unsigned int IBattle::GetNextFreeRectIdx() const
 {
+	const size_t num = GetNumRects();
+	if (num == 0) //rects start at 1
+		return 1;
 	//check for unused allyno keys
 	for (unsigned int i = 0; i <= GetLastRectIdx(); i++) {
-		if (!GetStartRect(i).IsOk())
+		if (!GetStartRect(i).IsOk()) {
+			assert(i<MAX_TEAMS);
 			return i;
+		}
 	}
-	return GetNumRects(); //if all rects are in use, or no elements exist, return first possible available allyno.
+	return num;//if all rects are in use, or no elements exist, return first possible available allyno.
 }
 
 void IBattle::ClearStartRects()

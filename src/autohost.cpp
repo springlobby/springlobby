@@ -45,11 +45,11 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 		return;
 
 	// protect against command spam
-
 	time_t currentTime = time(NULL);
-
 	if ((currentTime - m_lastActionTime) < 5)
 		return;
+	m_lastActionTime = currentTime;
+
 
 	// check for autohost commands
 	wxString command = msg.BeforeFirst(_T(' '));
@@ -165,49 +165,41 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 			DoAction(TowxString("cannot find option entry " + key));
 		}
 	} else if (command == _T( "!addbox" )) {
-		long allynumber;
-		long topleftx;
-		long toplefty;
-		long bottomrightx;
-		long bottomrighty;
+		long var[5]; // 0-3 = positions, 4 = ally
 		wxArrayString values = wxStringTokenize(params, _T( " " ));
-		int numvalues = values.GetCount();
-		if (numvalues > 4 || numvalues < 3)
-			DoAction(_T( "has recieved an invalid number of params for !addbox" ));
-		else {
-			bool valueok = values[0].ToLong(&topleftx);
-			valueok = valueok && values[1].ToLong(&toplefty);
-			valueok = valueok && values[2].ToLong(&bottomrightx);
-			valueok = valueok && values[3].ToLong(&bottomrighty);
-			if (numvalues == 5) {
-				valueok = valueok && values[4].ToLong(&allynumber);
-				valueok = valueok && (allynumber > 0);
-			} else {
-				allynumber = m_battle.GetNextFreeRectIdx();
-			}
-			valueok = valueok && (topleftx >= 0) && (topleftx <= 200);
-			valueok = valueok && (toplefty >= 0) && (toplefty <= 200);
-			valueok = valueok && (bottomrightx >= 0) && (bottomrightx <= 200);
-			valueok = valueok && (bottomrighty >= 0) && (bottomrighty <= 200);
-			if (valueok) {
-				allynumber = allynumber - 1;
-				BattleStartRect rect = m_battle.GetStartRect(allynumber);
-				if (rect.IsOk()) {
-					DoAction(_T( "cannot add a startbox for allyteam " ) + TowxString(allynumber) + _T( " because one is already present." ));
-				} else {
-					m_battle.AddStartRect(allynumber, topleftx, toplefty, bottomrightx, bottomrighty);
-					m_battle.SendHostInfo(IBattle::HI_StartRects);
-					DoAction(_T( "has added start box for allyteam " ) + TowxString(allynumber));
-				}
-			} else {
-				DoAction(_T( "has recieved an invalid param for !addbox" ));
-			}
+		const size_t numvalues = values.GetCount();
+		if (numvalues < 3 || numvalues > 4) {
+			DoAction(_T( "has received an invalid number of params for !addbox" ));
+			return;
 		}
+		bool valueok = true;
+		for (size_t i=0; i<numvalues; i++) {
+			valueok &= values[i].ToLong(&var[i]);
+		}
+		for (size_t i=0; i<4; i++) { // check if vars are in reasonable range
+			valueok &= (var[i] >= 0) && (var[i] <= 200);
+		}
+		if (numvalues == 5) {
+			valueok &= var[4] >= 0 && var[4] <= 255;
+		} else {
+			var[4] = m_battle.GetNextFreeRectIdx();
+		}
+		if (!valueok) {
+			DoAction(_T( "has received an invalid param for !addbox" ));
+			return;
+		}
+		BattleStartRect rect = m_battle.GetStartRect(var[4]);
+		if (rect.IsOk()) {
+			DoAction(wxString::Format(_T("cannot add a startbox for allyteam %d because one is already present."), var[4]));
+			return;
+		}
+		m_battle.AddStartRect(var[4], var[0], var[1], var[2], var[3]);
+		m_battle.SendHostInfo(IBattle::HI_StartRects);
+		DoAction(_T( "has added start box for allyteam " ) + TowxString(var[4]));
 	} else if (command == _T( "!removebox" )) {
 		long boxnumber;
 		bool numberok = params.ToLong(&boxnumber);
 		if (numberok) {
-			boxnumber = boxnumber - 1;
 			BattleStartRect rect = m_battle.GetStartRect(boxnumber);
 			if (rect.IsOk()) {
 				m_battle.RemoveStartRect(boxnumber);
@@ -221,7 +213,6 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 		}
 	} else
 		return;
-	m_lastActionTime = currentTime;
 }
 
 
