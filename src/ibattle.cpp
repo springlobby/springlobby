@@ -525,7 +525,7 @@ unsigned int IBattle::GetNextFreeRectIdx() const
 	if (num == 0) //rects start at 1
 		return 1;
 	//check for unused allyno keys
-	for (unsigned int i = 0; i <= GetLastRectIdx(); i++) {
+	for (unsigned int i = 1; i <= GetLastRectIdx(); i++) {
 		if (!GetStartRect(i).IsOk()) {
 			assert(i<MAX_TEAMS);
 			return i;
