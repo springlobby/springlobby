@@ -5,6 +5,7 @@
 
 #include <time.h>
 #include <wx/arrstr.h>
+#include <string>
 
 class IBattle;
 class User;
@@ -25,7 +26,7 @@ public:
 
 private:
 	void StartBattle();
-	void DoAction(const wxString& str);
+	void DoAction(const std::string& str);
 
 	IBattle& m_battle;
 
