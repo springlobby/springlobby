@@ -153,17 +153,19 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 		const std::string key = STD_STRING(params.BeforeFirst(_T(' ')));
 		const std::string value = STD_STRING(params.AfterFirst(_T(' ')));
 		const bool exists = m_battle.CustomBattleOptions().keyExists(key);
-		if (exists) {
-			bool result = m_battle.CustomBattleOptions().setSingleOption(key, value);
-			if (result) {
-				const LSL::Enum::GameOption section = m_battle.CustomBattleOptions().GetSection(key);
-				m_battle.SendHostInfo(stdprintf("%d_%s", section, key.c_str()));
-				DoAction(TowxString("has set option " + key + " to value " + value));
-			} else
-				DoAction(TowxString("cannot set option " + key + " to value " + value + ", reason: invalid value."));
-		} else {
+		if (!exists) {
 			DoAction(TowxString("cannot find option entry " + key));
+			return;
 		}
+		const LSL::Enum::GameOption section = m_battle.CustomBattleOptions().GetSection(key);
+		const bool result = m_battle.CustomBattleOptions().setSingleOption(key, value, section);
+		if (!result) {
+			DoAction(TowxString("cannot set option " + key + " to value " + value + ", reason: invalid value."));
+			return;
+		}
+
+		m_battle.SendHostInfo(stdprintf("%d_%s", section, key.c_str()));
+		DoAction(TowxString("has set option " + key + " to value " + value));
 	} else if (command == _T( "!addbox" )) {
 		long var[5]; // 0-3 = positions, 4 = ally
 		wxArrayString values = wxStringTokenize(params, _T( " " ));
