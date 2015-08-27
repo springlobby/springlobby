@@ -1886,11 +1886,12 @@ LSL::StringVector TASServer::GetRelayHostList()
 	LSL::StringVector ret;
 	for (unsigned int i = 0; i < m_relay_host_manager_list.size(); i++) {
 		try {
-			User& manager = GetUser(m_relay_host_manager_list[i]);
-			if (manager.Status().in_game)
-				continue; // skip the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
-			if (manager.Status().away)
+			if (!UserExists(m_relay_host_manager_list[i])) {
 				continue;
+			}
+			User& manager = GetUser(m_relay_host_manager_list[i]);
+			if (manager.Status().in_game || manager.Status().away)
+				continue; // skip the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
 			ret.push_back(m_relay_host_manager_list[i]);
 		} catch (...) {
 		}
