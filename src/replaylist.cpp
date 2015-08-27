@@ -107,7 +107,6 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 
 std::string ReplayList::GetScriptFromReplay(wxFile& replay, const int version) const
 {
-
 	std::string script;
 	if (!replay.IsOpened())
 		return script;
@@ -140,19 +139,5 @@ void ReplayList::GetHeaderInfo(wxFile& replay, StoredGame& rep, const int versio
 	replay.Read(&gametime, 4);
 	rep.duration = gametime;
 	rep.size = replay.Length();
-	//! \todo don't use long long? (pedantic)
-	if (replay.Seek(296) == wxInvalidOffset) {
-		return;
-	}
-	uint64_t unixtime = 0;
-	replay.Read(&unixtime, 8);
-	wxDateTime dt;
-	dt.Set((time_t)unixtime);
-
-	if (!dt.IsValid()) {
-		return;
-	}
-	rep.date = dt.GetTicks(); // now it is sorted properly
-	rep.date_string = STD_STRING(dt.FormatISODate() + _T(" ") + dt.FormatISOTime());
 }
 
