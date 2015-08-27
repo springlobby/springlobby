@@ -443,9 +443,7 @@ void HostBattleDialog::OnEngineSelect(wxCommandEvent& /*event*/)
 }
 
 
-namespace SL
-{
-void RunHostBattleDialog(wxWindow* parent)
+void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 {
 	HostBattleDialog dlg(parent);
 	if (dlg.ShowModal() == wxID_OK) {
@@ -540,4 +538,3 @@ void RunHostBattleDialog(wxWindow* parent)
 		serverSelector().GetServer().HostBattle(bo, STD_STRING(sett().GetLastHostPassword()));
 	}
 }
-} //end namespace SL

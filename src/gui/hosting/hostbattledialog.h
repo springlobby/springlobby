@@ -24,7 +24,7 @@ class HostBattleDialog : public wxDialog, public WindowHintsPickle
 {
 public:
 	HostBattleDialog(wxWindow* parent);
-
+	static void RunHostBattleDialog(wxWindow* parent);
 
 private:
 	int GetSelectedRank();
@@ -104,6 +104,12 @@ private:
 
 	DECLARE_EVENT_TABLE()
 };
+
+namespace SL
+{
+//! this shows an instance and handles everything wrt data feeding and input handling
+
+}
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_HOSTBATTLEDIALOG_H

@@ -23,7 +23,7 @@
 #include "utils/conversion.h"
 #include "gui/controls.h"
 #include "gui/uiutils.h"
-#include "gui/hosting/hostbattledialog_public.h"
+#include "gui/hosting/hostbattledialog.h"
 #include "gui/hosting/mainjoinbattletab.h"
 #include "iserver.h"
 #include "serverselector.h"
@@ -312,7 +312,7 @@ void BattleListTab::OnHost(wxCommandEvent& /*unused*/)
 		}
 	}
 
-	SL::RunHostBattleDialog(this);
+	HostBattleDialog::RunHostBattleDialog(this);
 }
 
 /**

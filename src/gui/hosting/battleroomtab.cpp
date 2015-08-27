@@ -49,7 +49,7 @@
 #include "gui/mapselectdialog.h"
 #include "mmoptionwindows.h"
 #include "aui/auimanager.h"
-#include "hostbattledialog_public.h"
+#include "hostbattledialog.h"
 #include "autohost.h"
 #include "log.h"
 #include "utils/lslconversion.h"
@@ -1267,5 +1267,5 @@ void BattleRoomTab::OnHostNew(wxCommandEvent& /*event*/)
 		ui().ShowConnectWindow();
 		return;
 	}
-	SL::RunHostBattleDialog(this);
+	HostBattleDialog::RunHostBattleDialog(this);
 }
