@@ -37,15 +37,6 @@ public:
 	friend class ServerEvents;
 	friend class SimpleServerEvents;
 
-	enum PortTestCode {
-		porttest_pass_WX26 = 0,
-		porttest_pass = 1,
-		porttest_timeout = 2,
-		porttest_socketNotOk = 3,
-		porttest_socketError = 4,
-		porttest_unreachable = 5
-	};
-
 	ChatPanel* panel;
 
 

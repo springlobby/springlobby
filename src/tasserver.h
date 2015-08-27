@@ -141,8 +141,6 @@ private:
 	bool IsPasswordHash(const std::string& pass) const;
 	std::string GetPasswordHash(const std::string& pass) const;
 
-	int TestOpenPort(unsigned int port) const;
-
 	void SetRelayIngamePassword(const User& user);
 
 	void OnConnected() override;

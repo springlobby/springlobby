@@ -6,6 +6,7 @@
 
 #include <wx/dialog.h>
 #include "gui/windowattributespickle.h"
+
 class wxStaticText;
 class wxTextCtrl;
 class wxChoice;

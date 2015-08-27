@@ -804,11 +804,6 @@ bool Ui::IsThisMe(const wxString& other) const
 		return (STD_STRING(other) == m_serv->GetMe().GetNick());
 }
 
-int Ui::TestHostPort(unsigned int port) const
-{
-	return m_serv->TestOpenPort(port);
-}
-
 void Ui::ReloadPresetList()
 {
 	try {

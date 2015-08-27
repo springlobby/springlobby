@@ -442,99 +442,58 @@ void HostBattleDialog::OnEngineSelect(wxCommandEvent& /*event*/)
 	ReloadEngineList();
 }
 
-
 void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 {
 	HostBattleDialog dlg(parent);
-	if (dlg.ShowModal() == wxID_OK) {
-		BattleOptions bo;
-		bo.description = STD_STRING(sett().GetLastHostDescription());
-		bo.port = sett().GetLastHostPort();
+	if (dlg.ShowModal() != wxID_OK) {
+		return;
+	}
+
+	BattleOptions bo;
+	bo.description = STD_STRING(sett().GetLastHostDescription());
+	bo.port = sett().GetLastHostPort();
+	bo.userelayhost = sett().GetLastHostRelayedMode();
+	if (bo.userelayhost) {
+		bo.nattype = NAT_None;
+	} else {
 		bo.nattype = NatType(sett().GetLastHostNATSetting());
+	}
 
-		if (bo.nattype == NAT_None && sett().GetTestHostPort()) {
-			switch (ui().TestHostPort(bo.port)) {
-				case IServer::porttest_pass:
-					break; // success
-				case IServer::porttest_pass_WX26:
-					wxLogWarning(_T( "hosting port %d: test aborted (wx26)" ), bo.port);
-					customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format(_("Your using wxWidgets prior to version 2.8,\n "
-												 "port testing is not supported.\n Hosting may or may not work."),
-											       bo.port));
-					sett().SetTestHostPort(false); // no need to have it checked anymore
-					break;
+	bo.rankneeded = sett().GetLastRankLimit();
+	bo.maxplayers = sett().GetLastHostPlayerNum();
+	bo.relayhost = STD_STRING(sett().GetLastRelayedHost());
+	bo.engineName = "spring";
+	bo.engineVersion = LSL::usync().GetSpringVersion();
 
-				case IServer::porttest_unreachable:
-					wxLogWarning(_T( "hosting port %d: test undetermined" ), bo.port);
-					customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format(_("The server used for testing your port %d "
-												 "is unreachable. \nHosting may or may not work with this setting."),
-											       bo.port));
-					break; //inconclusive test shouldn't hinder hosting imo (koshi)
+	// Get selected mod from unitsync.
+	LSL::UnitsyncGame mod;
+	try {
+		mod = LSL::usync().GetMod(STD_STRING(sett().GetLastHostMod()));
+		bo.gamehash = mod.hash;
+		bo.gamename = mod.name;
+	} catch (...) {
+		wxLogWarning(_T( "can't host: game not found" ));
+		customMessageBoxNoModal(SL_MAIN_ICON, _("Battle not started beacuse the game you selected could not be found. "), _("Error starting battle."), wxOK);
+		return;
+	}
 
-				case IServer::porttest_timeout:
-				case IServer::porttest_socketNotOk:
-				case IServer::porttest_socketError:
-					wxLogWarning(_T( "hosting port %d: test unsuccessful, closing battle" ), bo.port);
-					customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format(_("Battle not started because the port you selected (%d) "
-												 "is unable to recieve incoming packets\n checks your router & firewall configuration again or change port "
-												 "in the dialog.\n\nIf everything else fails, enable the Hole Punching NAT Traversal\n "
-												 "option in the hosting settings."),
-											       bo.port));
-					return;
-				default:
-					wxLogWarning(_T( "unknown port forward test result" ));
-					break;
-			}
-			if (!ui().TestHostPort(bo.port)) {
-				wxLogWarning(_T( "hosting port %d: test unsuccessful, closing battle" ), bo.port);
-				customMessageBoxNoModal(SL_MAIN_ICON, wxString::Format(_("Battle not started because the port you selected (%d) "
-											 "is unable to recieve incoming packets\n checks your router & firewall configuration "
-											 "again or change port in the dialog.\n\nIf everything else fails, enable the Hole "
-											 "Punching NAT Traversal\n option in the hosting settings."),
-										       bo.port));
-				return;
-			}
-		}
-
-		// Get selected mod from unitsync.
-		LSL::UnitsyncGame mod;
-		try {
-			mod = LSL::usync().GetMod(STD_STRING(sett().GetLastHostMod()));
-			bo.gamehash = mod.hash;
-			bo.gamename = mod.name;
-		} catch (...) {
-			wxLogWarning(_T( "can't host: game not found" ));
-			customMessageBoxNoModal(SL_MAIN_ICON, _("Battle not started beacuse the game you selected could not be found. "), _("Error starting battle."), wxOK);
+	LSL::UnitsyncMap map;
+	const auto mname = STD_STRING(sett().GetLastHostMap());
+	if (LSL::usync().MapExists(mname)) {
+		map = LSL::usync().GetMap(mname);
+	} else {
+		std::vector<std::string> maps = LSL::usync().GetMapList();
+		if (maps.size() <= 0) {
+			wxLogWarning(_T( "no maps found" ));
+			customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK);
 			return;
 		}
-
-		LSL::UnitsyncMap map;
-		const auto mname = STD_STRING(sett().GetLastHostMap());
-		if (LSL::usync().MapExists(mname)) {
-			map = LSL::usync().GetMap(mname);
-		} else {
-			std::vector<std::string> maps = LSL::usync().GetMapList();
-			if (maps.size() <= 0) {
-				wxLogWarning(_T( "no maps found" ));
-				customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK);
-				return;
-			}
-			map = LSL::usync().GetMap(maps[0]);
-		}
-
-		bo.maphash = map.hash;
-		bo.mapname = map.name;
-
-		bo.rankneeded = sett().GetLastRankLimit();
-
-		bo.maxplayers = sett().GetLastHostPlayerNum();
-		bo.userelayhost = sett().GetLastHostRelayedMode();
-		if (bo.userelayhost)
-			bo.nattype = NAT_None;
-		bo.relayhost = STD_STRING(sett().GetLastRelayedHost());
-		bo.engineName = "spring";
-		bo.engineVersion = LSL::usync().GetSpringVersion();
-
-		serverSelector().GetServer().HostBattle(bo, STD_STRING(sett().GetLastHostPassword()));
+		map = LSL::usync().GetMap(maps[0]);
 	}
+
+	bo.maphash = map.hash;
+	bo.mapname = map.name;
+
+	serverSelector().GetServer().HostBattle(bo, STD_STRING(sett().GetLastHostPassword()));
+
 }

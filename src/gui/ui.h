@@ -112,8 +112,6 @@ public:
 	bool IsThisMe(const User* other) const;
 	bool IsThisMe(const wxString& other) const;
 
-	int TestHostPort(unsigned int port) const;
-
 	void ReloadPresetList();
 
 	void OpenFileInEditor(const wxString& filepath);

@@ -1197,9 +1197,7 @@ void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 	slLogDebugFunc("");
 
 	int nat_type = bo.nattype;
-	if (bo.userelayhost) { // FIXME: relayhost should ignore this
-		nat_type = 1;
-	}
+
 	std::string cmd = stdprintf("0 %d ", nat_type);
 	cmd += (password.empty()) ? "*" : password;
 	cmd += stdprintf(" %d %d ", bo.port, bo.maxplayers);
@@ -1879,37 +1877,6 @@ void TASServer::UdpPingAllClients() // used when hosting with nat holepunching. 
 			UdpPing(src_port, STD_STRING(ip), port, "hai!");
 		}
 	}
-}
-
-
-//! @brief used to check if the NAT is done properly when hosting
-int TASServer::TestOpenPort(unsigned int port) const
-{
-	wxIPV4address local_addr;
-	local_addr.AnyAddress(); // <--- THATS ESSENTIAL!
-	local_addr.Service(port);
-
-	wxSocketServer udp_socket(local_addr, wxSOCKET_NONE);
-
-	wxHTTP connect_to_server;
-	connect_to_server.SetTimeout(10);
-
-	if (!connect_to_server.Connect(_T("zjt3.com")))
-		return porttest_unreachable;
-	connect_to_server.GetInputStream(wxString::Format(_T("/porttest.php?port=%u"), port));
-
-	if (udp_socket.IsOk()) {
-		if (!udp_socket.WaitForAccept(10))
-			return porttest_timeout;
-	} else {
-		wxLogMessage(_T("socket's IsOk() is false, no UDP packets can be checked"));
-		return porttest_socketNotOk;
-	}
-	if (udp_socket.Error()) {
-		wxLogMessage(_T("Error=%d"), udp_socket.LastError());
-		return porttest_socketError;
-	}
-	return porttest_pass;
 }
 
 LSL::StringVector TASServer::GetRelayHostList()
