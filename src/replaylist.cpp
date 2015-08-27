@@ -68,6 +68,17 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 		return false;
 	}
 
+	//try to get date from filename
+	wxDateTime rdate;
+
+	if (rdate.ParseFormat(TowxString(FileName), _T("%Y%m%d_%H%M%S")) == 0) {
+		wxLogWarning(wxString::Format(_T("Name of the file %s could not be parsed!"), ReplayPath.c_str()));
+		MarkBroken(ret);
+		return false;
+	}
+	ret.date = rdate.GetTicks(); // now it is sorted properly
+	ret.date_string = STD_STRING(rdate.FormatISODate() + _T(" ") + rdate.FormatISOTime());
+
 	if (replay.Length() == 0) {
 		replay.Close();
 		MarkBroken(ret);
@@ -90,17 +101,6 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	ret.battle.SetEngineName("spring");
 	ret.battle.SetEngineVersion(ret.SpringVersion);
 	ret.battle.SetPlayBackFilePath(ReplayPath);
-
-	//getting this from filename seems more reliable than from demoheader
-	wxDateTime rdate;
-
-	if (rdate.ParseFormat(TowxString(FileName), _T("%Y%m%d_%H%M%S")) == 0) {
-		wxLogWarning(wxString::Format(_T("Name of the file %s could not be parsed!"), ReplayPath.c_str()));
-		MarkBroken(ret);
-		return false;
-	}
-	ret.date = rdate.GetTicks(); // now it is sorted properly
-	ret.date_string = STD_STRING(rdate.FormatISODate() + _T(" ") + rdate.FormatISOTime());
 
 	return true;
 }
@@ -130,10 +130,10 @@ std::string ReplayList::GetScriptFromReplay(wxFile& replay, const int version) c
 	return script;
 }
 
+// see https://github.com/spring/spring/blob/develop/rts/System/LoadSave/demofile.h
 void ReplayList::GetHeaderInfo(wxFile& replay, StoredGame& rep, const int version) const
 {
-	const int seek = 72 + (version < 5 ? 0 : 240);
-	if (replay.Seek(seek) == wxInvalidOffset) {
+	if (replay.Seek(304) == wxInvalidOffset) {
 		return;
 	}
 	int gametime = 0;
@@ -141,14 +141,18 @@ void ReplayList::GetHeaderInfo(wxFile& replay, StoredGame& rep, const int versio
 	rep.duration = gametime;
 	rep.size = replay.Length();
 	//! \todo don't use long long? (pedantic)
-	wxLongLong_t unixtime = 0;
-	if (replay.Seek(56) == wxInvalidOffset) {
+	if (replay.Seek(296) == wxInvalidOffset) {
 		return;
 	}
+	uint64_t unixtime = 0;
 	replay.Read(&unixtime, 8);
 	wxDateTime dt;
 	dt.Set((time_t)unixtime);
-	// todo: add 2 strings one for date other for time?
+
+	if (!dt.IsValid()) {
+		return;
+	}
+	rep.date = dt.GetTicks(); // now it is sorted properly
 	rep.date_string = STD_STRING(dt.FormatISODate() + _T(" ") + dt.FormatISOTime());
-	//  rep.date = (time_t) unixtime ;
 }
+
