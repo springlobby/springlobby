@@ -7,7 +7,7 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 
-#include "channellistctrl.h"
+#include "channellistview.h"
 #include "iserver.h"
 #include "channel.h"
 
@@ -24,7 +24,7 @@ ChannelChooserPanel::ChannelChooserPanel(wxWindow* parent, wxWindowID id, const 
 	wxStaticText* join_label = new wxStaticText(this, -1, _("Double click to join"));
 	m_main_sizer->Add(join_label, 0, wxALL | wxEXPAND, 5);
 
-	m_channellist = new ChannelListctrl(this, -1, _T("channellistctrl"));
+	m_channellist = new ChannelListView(_T("ChannelChooser_ChannelListView"), this);
 	m_main_sizer->Add(m_channellist, 1, wxALL | wxEXPAND, 5);
 
 	wxBoxSizer* search_sizer = new wxBoxSizer(wxHORIZONTAL);

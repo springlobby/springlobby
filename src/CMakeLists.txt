@@ -221,8 +221,9 @@ set(springlobbySrc
 	gui/channel/channelchooser.cpp
 	gui/channel/channelchooserdialog.cpp
 	gui/channel/autojoinchanneldialog.cpp
-	gui/channel/channellistctrl.cpp
-
+	gui/channel/channellistview.cpp
+	gui/channel/channellistdataviewmodel.cpp
+	
 	gui/hosting/addbotdialog.cpp
 	gui/hosting/autobalancedialog.cpp
 	gui/hosting/battlemaptab.cpp

@@ -6,7 +6,7 @@
 #include <wx/scrolwin.h>
 #include "utils/mixins.h"
 
-class ChannelListctrl;
+class ChannelListView;
 class wxBoxSizer;
 class wxButton;
 class wxTextCtrl;
@@ -29,7 +29,7 @@ private:
 	//        wxButton* m_join_channels;
 	//        wxButton* m_mark_autojoin;
 	wxBoxSizer* m_main_sizer;
-	ChannelListctrl* m_channellist;
+	ChannelListView* m_channellist;
 	wxTextCtrl* m_search_text;
 	wxStaticText* m_info_label;
 
