@@ -1,27 +1,30 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "contentdownloaddialog.h"
-#include "contentsearchresultslistctrl.h"
+#include "contentsearchresultview.h"
 #include "utils/conversion.h"
+
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/msgdlg.h>
+
 #include "json/wx/jsonreader.h"
 #include "httpfile.h"
 #include "ui.h"
 #include "servermanager.h"
+
 #include <lslunitsync/unitsync.h>
 
 DECLARE_EVENT_TYPE(SEARCH_FINISHED, wxID_ANY);
 DEFINE_EVENT_TYPE(SEARCH_FINISHED);
 BEGIN_EVENT_TABLE(ContentDownloadDialog, wxDialog)
-EVT_BUTTON(SEARCH_BUTTON, ContentDownloadDialog::OnSearch)
-EVT_BUTTON(CLOSE_BUTTON, ContentDownloadDialog::OnCloseButton)
-EVT_BUTTON(DOWNLOAD_BUTTON, ContentDownloadDialog::OnDownloadButton)
-EVT_COMMAND(ID_SEARCH_FINISHED, SEARCH_FINISHED, ContentDownloadDialog::OnSearchCompleted)
-EVT_LIST_ITEM_ACTIVATED(LAUNCH_DOWNLOAD, ContentDownloadDialog::OnListDownload)
+	EVT_BUTTON(SEARCH_BUTTON, ContentDownloadDialog::OnSearch)
+	EVT_BUTTON(CLOSE_BUTTON, ContentDownloadDialog::OnCloseButton)
+	EVT_BUTTON(DOWNLOAD_BUTTON, ContentDownloadDialog::OnDownloadButton)
+	EVT_COMMAND(ID_SEARCH_FINISHED, SEARCH_FINISHED, ContentDownloadDialog::OnSearchCompleted)
+	EVT_DATAVIEW_ITEM_ACTIVATED(LAUNCH_DOWNLOAD, ContentDownloadDialog::OnListDownload)
 END_EVENT_TABLE()
 
 ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long int style, const wxString& name)
@@ -31,7 +34,7 @@ ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, co
 {
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 	{
-		m_search_res_w = new ContentSearchResultsListctrl(this, LAUNCH_DOWNLOAD);
+		m_search_res_w = new ContentSearchResultView(this, LAUNCH_DOWNLOAD, _T("ContentDownloadDialog_ContentSearchResultView"));
 		{
 			m_main_sizer->Add(m_search_res_w, 2, wxALL | wxEXPAND, 5);
 		}
@@ -138,7 +141,7 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 		else
 			res->is_downloaded = 0;
 
-		m_search_res_w->AddContent(res);
+		m_search_res_w->AddContent(*res);
 	}
 }
 
@@ -149,15 +152,17 @@ void ContentDownloadDialog::OnCloseButton(wxCommandEvent& /*event*/)
 
 void ContentDownloadDialog::OnDownloadButton(wxCommandEvent& /*event*/)
 {
-	long item_index = m_search_res_w->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-	if (item_index != -1) {
-		const ContentSearchResult* res = m_search_res_w->GetDataFromIndex(item_index);
-		ServerManager::Instance()->DownloadContent(STD_STRING(res->type), STD_STRING(res->name), "");
-	}
+	wxDataViewEvent dummy;
+	OnListDownload(dummy);
 }
 
-void ContentDownloadDialog::OnListDownload(wxListEvent& event)
+void ContentDownloadDialog::OnListDownload(wxDataViewEvent& /*event*/)
 {
-	const ContentSearchResult* res = m_search_res_w->GetDataFromIndex(event.GetIndex());
+	const ContentSearchResult* res = static_cast<ContentSearchResult*>(m_search_res_w->GetSelection().GetID());
+
+	if (res == nullptr) {
+		return;
+	}
+
 	ServerManager::Instance()->DownloadContent(STD_STRING(res->type), STD_STRING(res->name), "");
 }

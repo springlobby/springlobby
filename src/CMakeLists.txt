@@ -182,9 +182,9 @@ set(springlobbySrc
 	gui/chatpanelmenu.cpp
 	gui/chatpanel.cpp
 	gui/contentdownloaddialog.cpp
-	gui/contentsearchresultslistctrl.cpp
+	gui/contentsearchresultview.cpp
+	gui/contentsearchresultdatamodel.cpp
 	gui/connectwindow.cpp
-	gui/customvirtlistctrl.cpp
 	gui/colorbutton.cpp
 	gui/mainchattab.cpp
 	gui/maindownloadtab.cpp
@@ -322,7 +322,6 @@ FILE( GLOB header2 "*/*.h" )
 #grep -lR cpp\"$ * | sed -e "s/\.h/\.cpp/g"
 SET( templatesources
 	gui/basedataviewmodel.cpp
-	gui/customvirtlistctrl.cpp
 	gui/virtualdatactrl.cpp
 )
 

@@ -4,14 +4,16 @@
 #define CONTENTDOWNLOADDIALOG_H
 
 #include "windowattributespickle.h"
+
 #include <wx/dialog.h>
 #include <wx/listbase.h>
+
 class wxBoxSizer;
 class wxStaticText;
 class wxButton;
 class wxTextCtrl;
-class ContentSearchResultsListctrl;
-
+class ContentSearchResultView;
+class wxDataViewEvent;
 
 class ContentDownloadDialog : public wxDialog, public WindowAttributesPickle
 {
@@ -23,14 +25,14 @@ public:
 	void OnSearchCompleted(wxCommandEvent& event);
 	void OnDownloadButton(wxCommandEvent& event);
 	void OnCloseButton(wxCommandEvent& event);
-	void OnListDownload(wxListEvent& event);
+	void OnListDownload(wxDataViewEvent& event);
 
 private:
 	DECLARE_EVENT_TABLE()
 	void Search(const wxString& str);
 
 	wxBoxSizer* m_main_sizer;
-	ContentSearchResultsListctrl* m_search_res_w;
+	ContentSearchResultView* m_search_res_w;
 	wxBoxSizer* m_searchsizer;
 	wxTextCtrl* m_searchbox;
 	wxButton* m_searchbutton;
