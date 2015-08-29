@@ -16,7 +16,7 @@ static const std::string SAY_YES = "!vote y";
 static const std::string SAY_DONTCARE = "!vote b";
 static const std::string SAY_NO = "!vote n";
 static const std::string VOTING_END = "VOTE FOR COMMAND";
-static const std::string VOTE_CANCELLED = "VOTE CANCELLED";
+static const std::string VOTE_CANCELLED = "VOTE CANCELED";
 static const std::string VOTE_CANCELLING = "CANCELLING";
 
 wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
