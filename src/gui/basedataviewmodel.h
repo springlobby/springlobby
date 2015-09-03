@@ -4,7 +4,7 @@
 #define SRC_GUI_BASEDATAVIEWMODEL_H_
 
 #include <wx/dataview.h>
-#include <set>
+#include <list>
 
 #include <climits>
 
@@ -37,7 +37,7 @@ public:
 	bool ContainsItem(const DataType&) const;
 	void Clear();
 	bool UpdateItem(const DataType&);
-	const std::set<const DataType*>& GetItemsContainer() const;
+	const std::list<const DataType*>& GetItemsContainer() const;
 
 public:
 	//These methods from wxDataViewModel does not require to be overriden in derived classes
@@ -57,7 +57,7 @@ protected:
 
 private:
 	size_t m_columns;
-	std::set<const DataType*> m_ModelData;
+	std::list<const DataType*> m_ModelData;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -107,7 +107,7 @@ bool BaseDataViewModel<DataType>::AddItem(const DataType& data)
 		return false;
 	}
 
-	m_ModelData.insert(&data);
+	m_ModelData.push_back(&data);
 
 	//Inform model about new item
 	const wxDataViewItem item = wxDataViewItem(const_cast<DataType*>(&data));
@@ -118,8 +118,7 @@ bool BaseDataViewModel<DataType>::AddItem(const DataType& data)
 template <class DataType>
 bool BaseDataViewModel<DataType>::RemoveItem(const DataType& data)
 {
-	auto it = m_ModelData.find(&data);
-	if (it == m_ModelData.end()) {
+	if (!ContainsItem(data)) {
 		wxASSERT(false);
 		wxLogWarning(_T("BaseDataViewModel<DataType>::RemoveItem: No item presents in model!"));
 		return false;
@@ -128,7 +127,7 @@ bool BaseDataViewModel<DataType>::RemoveItem(const DataType& data)
 	//Inform model about deleted item
 	const wxDataViewItem item = wxDataViewItem(const_cast<DataType*>(&data));
 	ItemDeleted(GetParent(item), item);
-	m_ModelData.erase(it, m_ModelData.end());
+	m_ModelData.remove(&data);
 	return true;
 }
 
@@ -157,7 +156,14 @@ template <class DataType>
 inline bool BaseDataViewModel<DataType>::ContainsItem(const DataType& checkedItem) const
 {
 	assert(&checkedItem != nullptr);
-	return m_ModelData.find(&checkedItem) != m_ModelData.end();
+
+	const DataType* checkItemPointer = &checkedItem;
+	for (const DataType* item : m_ModelData) {
+		if (item == checkItemPointer) {
+			return true;
+		}
+	}
+	return false;
 }
 
 template <class DataType>
@@ -175,7 +181,7 @@ inline void BaseDataViewModel<DataType>::Clear()
 template <class DataType>
 inline bool BaseDataViewModel<DataType>::UpdateItem(const DataType& item)
 {
-	if (ContainsItem(item)) {
+	if (ContainsItem(item) == true) {
 		//FIXME: Maybe update item in m_ModelData. At this moment it stores pointer and does not need to be updated
 		ItemChanged(wxDataViewItem(const_cast<DataType*>(&item)));
 		return true;
@@ -193,7 +199,7 @@ inline bool BaseDataViewModel<DataType>::GetAttr(const wxDataViewItem&,
 }
 
 template<class DataType>
-inline const std::set<const DataType*>& BaseDataViewModel<DataType>::GetItemsContainer() const
+inline const std::list<const DataType*>& BaseDataViewModel<DataType>::GetItemsContainer() const
 {
 	return m_ModelData;
 }

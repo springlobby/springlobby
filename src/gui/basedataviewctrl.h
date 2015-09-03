@@ -31,7 +31,7 @@ public:
 	int GetItemsCount() const;
 	void Clear();
 	DataType* GetSelectedItem();
-	const std::set<const DataType*>& GetItemsContainer() const;
+	const std::list<const DataType*>& GetItemsContainer() const;
 
 protected:
 	virtual void LoadColumnProperties();
@@ -79,14 +79,13 @@ inline void BaseDataViewCtrl<DataType>::Resort() {
 template<class DataType>
 inline bool BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item) {
 	wxASSERT(m_DataModel != nullptr);
-
+	
 	bool result = m_DataModel->UpdateItem(item);
-
+	
 	if (result) {
 		Resort();
 	}
 	
-
 	return result;
 }
 
@@ -194,7 +193,7 @@ inline int BaseDataViewCtrl<DataType>::GetItemsCount() const {
 }
 
 template<class DataType>
-inline const std::set<const DataType*>& BaseDataViewCtrl<DataType>::GetItemsContainer() const
+inline const std::list<const DataType*>& BaseDataViewCtrl<DataType>::GetItemsContainer() const
 {
 	return m_DataModel->GetItemsContainer();
 }
@@ -211,14 +210,14 @@ inline void BaseDataViewCtrl<DataType>::OnColumnHeaderContext(
                 /*Looks like this function is unsupported*/
                 return;
             }
-
+            
             columnIndex = GetColumnPosition(column);
             if (columnIndex < 0 ) {
                 /*Looks like this function is unsupported*/
-                return;
+                return;                
             }
         }
-
+        
 	if (static_cast<unsigned int>(columnIndex) >= m_DataModel->GetColumnCount()) {
 		wxLogWarning(_T("BaseDataViewCtrl<DataType>::OnColumnHeaderContext() :  event.GetColumn() returned invalid index"));
 		return;
@@ -274,24 +273,23 @@ inline void BaseDataViewCtrl<DataType>::OnShowColumns(wxCommandEvent&) {
 template<class DataType>
 inline bool BaseDataViewCtrl<DataType>::AddItem(const DataType& item) {
 	bool result = m_DataModel->AddItem(item);
-
+	
 	if (result) {
 		Resort();
 	}
 	
-
-	return result;
+	return result;	
 }
 
 template<class DataType>
 inline bool BaseDataViewCtrl<DataType>::RemoveItem(const DataType& item) {
 	bool result = m_DataModel->RemoveItem(item);
-
+	
 	if (result) {
 		Resort();
 	}
-
-	return result;
+	
+	return result;	
 }
 
 #endif /* SRC_GUI_BASEDATAVIEWCTRL_H_ */
