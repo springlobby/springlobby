@@ -12,7 +12,8 @@
 
 class wxDataViewCtrl;
 
-class DataViewCtrlHeaderMenu : public wxMenu{
+class DataViewCtrlHeaderMenu : public wxMenu
+{
 public:
 	DataViewCtrlHeaderMenu(wxDataViewCtrl* parentDataView, int columnIndex);
 	virtual ~DataViewCtrlHeaderMenu();
@@ -29,7 +30,7 @@ public:
 	static wxEventType SHOW_ALL_COLUMNS_EVT;
 
 private:
-	enum{
+	enum {
 		HIDE_COLUMN_ID,
 		SHOW_ALL_COLUMNS_ID
 	};

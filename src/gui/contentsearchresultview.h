@@ -7,7 +7,8 @@
 
 #include "contentsearchresult.h"
 
-class ContentSearchResultView: public BaseDataViewCtrl<ContentSearchResult> {
+class ContentSearchResultView : public BaseDataViewCtrl<ContentSearchResult>
+{
 public:
 	ContentSearchResultView(wxWindow* parent, wxWindowID id, const wxString& dataViewName);
 	virtual ~ContentSearchResultView();
@@ -18,7 +19,7 @@ public:
 		WIDGETLISTCTRL_ID
 	};
 
-	enum{
+	enum {
 		NAME,
 		PREVIEW,
 		TYPE,
