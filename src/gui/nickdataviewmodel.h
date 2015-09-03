@@ -7,19 +7,19 @@
 
 class User;
 
-class NickDataViewModel: public BaseDataViewModel<User> {
+class NickDataViewModel : public BaseDataViewModel<User>
+{
 public:
 	NickDataViewModel();
 	virtual ~NickDataViewModel();
 
-    virtual void GetValue( wxVariant &variant, const wxDataViewItem &item, unsigned int col ) const override;
-    virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
-    virtual bool GetAttr(const wxDataViewItem&, unsigned int, wxDataViewItemAttr&) const override;
-    virtual wxString GetColumnType(unsigned int column) const override;
+	virtual void GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const override;
+	virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
+	virtual bool GetAttr(const wxDataViewItem&, unsigned int, wxDataViewItemAttr&) const override;
+	virtual wxString GetColumnType(unsigned int column) const override;
 
 private:
-	enum ColumnIndexes
-	{
+	enum ColumnIndexes {
 		STATUS = 0,
 		COUNTRY,
 		RANK,

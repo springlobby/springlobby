@@ -204,7 +204,7 @@ private:
 
 	Channel* m_channel; //!< Channel object.
 	IServer* m_server;  //!< Server object.
-	User* m_user; //!< User object.
+	User* m_user;       //!< User object.
 	IBattle* m_battle;  //!< User object.
 
 	wxStaticText* m_usercount_label;

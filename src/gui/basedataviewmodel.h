@@ -17,18 +17,24 @@ template <class DataType>
 class BaseDataViewModel : public wxDataViewModel
 {
 public:
-	BaseDataViewModel(size_t columns): m_columns(columns){}
+	BaseDataViewModel(size_t columns)
+	    : m_columns(columns)
+	{
+	}
 	virtual ~BaseDataViewModel();
 
 public:
 	//Overriden methods from wxDataViewModel
-	virtual void GetValue(wxVariant& , const wxDataViewItem& , unsigned int ) const override = 0;
-	virtual wxDataViewItem GetParent(const wxDataViewItem& ) const override;
-	virtual unsigned int GetChildren(const wxDataViewItem& , wxDataViewItemArray& ) const override;
-	virtual int Compare(const wxDataViewItem& , const wxDataViewItem& , unsigned int , bool ) const override;
+	virtual void GetValue(wxVariant&, const wxDataViewItem&, unsigned int) const override = 0;
+	virtual wxDataViewItem GetParent(const wxDataViewItem&) const override;
+	virtual unsigned int GetChildren(const wxDataViewItem&, wxDataViewItemArray&) const override;
+	virtual int Compare(const wxDataViewItem&, const wxDataViewItem&, unsigned int, bool) const override;
 	virtual bool IsListModel() const override;
 	virtual bool GetAttr(const wxDataViewItem&, unsigned int, wxDataViewItemAttr&) const override;
-	size_t GetItemsCount() const { return m_ModelData.size(); }
+	size_t GetItemsCount() const
+	{
+		return m_ModelData.size();
+	}
 
 public:
 	//Custom methods
@@ -41,8 +47,8 @@ public:
 
 public:
 	//These methods from wxDataViewModel does not require to be overriden in derived classes
-	bool IsContainer(const wxDataViewItem& ) const override;
-	bool SetValue(const wxVariant& , const wxDataViewItem& , unsigned int ) override;
+	bool IsContainer(const wxDataViewItem&) const override;
+	bool SetValue(const wxVariant&, const wxDataViewItem&, unsigned int) override;
 	//Must be reimplemented!
 	wxString GetColumnType(unsigned int) const override = 0;
 	virtual unsigned int GetColumnCount() const override
@@ -138,8 +144,8 @@ bool BaseDataViewModel<DataType>::IsContainer(const wxDataViewItem& item) const
 }
 
 template <class DataType>
-bool BaseDataViewModel<DataType>::SetValue(const wxVariant& ,
-					   const wxDataViewItem& , unsigned int )
+bool BaseDataViewModel<DataType>::SetValue(const wxVariant&,
+					   const wxDataViewItem&, unsigned int)
 {
 	assert(false);
 	return true; //Dummy method
@@ -192,20 +198,21 @@ inline bool BaseDataViewModel<DataType>::UpdateItem(const DataType& item)
 	}
 }
 
-template<class DataType>
+template <class DataType>
 inline bool BaseDataViewModel<DataType>::GetAttr(const wxDataViewItem&,
-		unsigned int, wxDataViewItemAttr&) const {
+						 unsigned int, wxDataViewItemAttr&) const
+{
 	return false;
 }
 
-template<class DataType>
+template <class DataType>
 inline const std::list<const DataType*>& BaseDataViewModel<DataType>::GetItemsContainer() const
 {
 	return m_ModelData;
 }
 
 template <class DataType>
-wxString BaseDataViewModel<DataType>::GetColumnType(unsigned int ) const
+wxString BaseDataViewModel<DataType>::GetColumnType(unsigned int) const
 {
 	assert(false);
 	return wxEmptyString; //Does nothing
