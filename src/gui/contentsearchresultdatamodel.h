@@ -6,18 +6,17 @@
 #include "contentsearchresult.h"
 #include "basedataviewmodel.h"
 
-class ContentSearchResultDataModel : public BaseDataViewModel<ContentSearchResult>
-{
+class ContentSearchResultDataModel: public BaseDataViewModel<ContentSearchResult> {
 public:
 	ContentSearchResultDataModel();
 	virtual ~ContentSearchResultDataModel();
 
-	virtual void GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const override;
-	virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
-	virtual wxString GetColumnType(unsigned int column) const override;
+	virtual void GetValue( wxVariant &variant, const wxDataViewItem &item, unsigned int col ) const override;
+    virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
+    virtual wxString GetColumnType(unsigned int column) const override;
 
 public:
-	enum {
+	enum{
 		NAME,
 		PREVIEW,
 		TYPE,

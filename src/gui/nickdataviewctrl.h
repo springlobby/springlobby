@@ -15,11 +15,10 @@ class wxString;
 class User;
 class wxPoint;
 
-class NickDataViewCtrl : public BaseDataViewCtrl<User>
-{
+class NickDataViewCtrl: public BaseDataViewCtrl<User> {
 public:
 	NickDataViewCtrl(const wxString& dataViewName, wxWindow* parent, bool show_header = true, ChatPanelMenu* popup = 0,
-			 bool highlight = true);
+    bool highlight = true);
 	virtual ~NickDataViewCtrl();
 
 	void UserFilterShowPlayersOnly(bool);
@@ -51,14 +50,15 @@ private:
 	bool m_userFilterShowPlayersOnly;
 	ChatPanelMenu* m_menu;
 
-	wxString m_UsersFilterString;			      //<- String with filter pattern for nicklist
+	wxString m_UsersFilterString;		    //<- String with filter pattern for nicklist
 	std::map<std::string, const User*> m_real_users_list; //<- actual list of users (not filtered)
 
 private:
 	enum {
 		NICK_DATAVIEW_CTRL_ID = 31765 //wxID_HIGHEST
 	};
-	enum ColumnIndexes {
+	enum ColumnIndexes
+	{
 		STATUS = 0,
 		COUNTRY,
 		RANK,

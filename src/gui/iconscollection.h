@@ -87,11 +87,10 @@ class IBattle;
 
 namespace LSL
 {
-class lslColor;
+	class lslColor;
 }
 
-class IconsCollection
-{
+class IconsCollection {
 private:
 	IconsCollection();
 	virtual ~IconsCollection();
@@ -99,7 +98,7 @@ private:
 public:
 	static IconsCollection* Instance();
 	static void Release();
-	static wxBitmap CreateBitmap(const char* const*); /* Used to create transparent bitmaps under Windows 7 and Windows XP */
+	static wxBitmap CreateBitmap(const char * const *); /* Used to create transparent bitmaps under Windows 7 and Windows XP */
 
 private:
 	void loadCountryFlags();

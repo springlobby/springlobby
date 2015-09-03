@@ -13,9 +13,8 @@
 #include "settings.h"
 #include "utils/slconfig.h"
 
-template <class DataType>
-class BaseDataViewCtrl : public wxDataViewCtrl
-{
+template<class DataType>
+class BaseDataViewCtrl: public wxDataViewCtrl {
 public:
 	BaseDataViewCtrl(const wxString&, wxWindow*, wxWindowID);
 	virtual ~BaseDataViewCtrl();
@@ -55,10 +54,8 @@ BEGIN_EVENT_TABLE_TEMPLATE1(BaseDataViewCtrl, wxDataViewCtrl, DataType)
 //	EVT_DATAVIEW_COLUMN_HEADER_RIGHT_CLICK(wxID_ANY, OnColumnHeaderContext)
 END_EVENT_TABLE()
 
-template <class DataType>
-BaseDataViewCtrl<DataType>::BaseDataViewCtrl(const wxString& dataViewName, wxWindow* parent, wxWindowID id)
-    : wxDataViewCtrl(parent, id, wxDefaultPosition, wxDefaultSize, wxDV_SINGLE | wxDV_ROW_LINES)
-{
+template<class DataType>
+BaseDataViewCtrl<DataType>::BaseDataViewCtrl(const wxString& dataViewName, wxWindow* parent, wxWindowID id) : wxDataViewCtrl(parent, id, wxDefaultPosition, wxDefaultSize, wxDV_SINGLE | wxDV_ROW_LINES) {
 	m_DataModel = nullptr;
 	m_DataViewName = dataViewName;
 
@@ -68,22 +65,19 @@ BaseDataViewCtrl<DataType>::BaseDataViewCtrl(const wxString& dataViewName, wxWin
 	Connect(DataViewCtrlHeaderMenu::SHOW_ALL_COLUMNS_EVT, wxObjectEventFunction(&BaseDataViewCtrl::OnShowColumns));
 }
 
-template <class DataType>
-BaseDataViewCtrl<DataType>::~BaseDataViewCtrl()
-{
+template<class DataType>
+BaseDataViewCtrl<DataType>::~BaseDataViewCtrl() {
 	SaveColumnProperties();
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::Resort()
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::Resort() {
 	wxASSERT(m_DataModel != nullptr);
 	m_DataModel->Resort();
 }
 
-template <class DataType>
-inline bool BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item)
-{
+template<class DataType>
+inline bool BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item) {
 	wxASSERT(m_DataModel != nullptr);
 
 	bool result = m_DataModel->UpdateItem(item);
@@ -91,21 +85,19 @@ inline bool BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item)
 	if (result) {
 		Resort();
 	}
-
+	
 
 	return result;
 }
 
-template <class DataType>
-inline bool BaseDataViewCtrl<DataType>::ContainsItem(const DataType& item)
-{
+template<class DataType>
+inline bool BaseDataViewCtrl<DataType>::ContainsItem(const DataType& item) {
 	wxASSERT(m_DataModel != nullptr);
 	return m_DataModel->ContainsItem(item);
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::Clear()
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::Clear() {
 	wxASSERT(m_DataModel != nullptr);
 
 	UnselectAll();
@@ -113,17 +105,15 @@ inline void BaseDataViewCtrl<DataType>::Clear()
 	m_DataModel->Clear();
 }
 
-template <class DataType>
-inline bool BaseDataViewCtrl<DataType>::AssociateModel(BaseDataViewModel<DataType>* model)
-{
+template<class DataType>
+inline bool BaseDataViewCtrl<DataType>::AssociateModel(BaseDataViewModel<DataType>* model) {
 	m_DataModel = model;
 
 	return wxDataViewCtrl::AssociateModel(model);
 }
 
-template <class DataType>
-inline DataType* BaseDataViewCtrl<DataType>::GetSelectedItem()
-{
+template<class DataType>
+inline DataType* BaseDataViewCtrl<DataType>::GetSelectedItem() {
 
 	/*Prevent from returning undefined object if model is empty*/
 	if (GetItemsCount() == 0) {
@@ -145,9 +135,8 @@ inline DataType* BaseDataViewCtrl<DataType>::GetSelectedItem()
 	}
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::LoadColumnProperties()
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::LoadColumnProperties() {
 	const int columnCount = GetColumnCount();
 
 	//Set up sorting column
@@ -158,7 +147,8 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties()
 	cfg().Read(wxString(m_DataViewName + _T("/sorting_order")), &sortOrderAscending, true);
 
 	//Loop through existing columns and set their sizes and sort orders
-	for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+	for(int columnIndex = 0; columnIndex < columnCount; columnIndex++)
+	{
 		//Set up column's width
 		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
 		const bool isHidden = sett().GetColumnVisibility(m_DataViewName, columnIndex);
@@ -177,12 +167,11 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties()
 	}
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::SaveColumnProperties()
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::SaveColumnProperties() {
 	const int columnCount = GetColumnCount();
 
-	for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+	for(int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
 		wxDataViewColumn* column = GetColumn(columnIndex);
 		const int colWidth = column->GetWidth();
 		sett().SetColumnWidth(m_DataViewName, columnIndex, colWidth);
@@ -197,40 +186,38 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties()
 	}
 }
 
-template <class DataType>
-inline int BaseDataViewCtrl<DataType>::GetItemsCount() const
-{
+template<class DataType>
+inline int BaseDataViewCtrl<DataType>::GetItemsCount() const {
 	wxASSERT(m_DataModel != nullptr);
 
 	return m_DataModel->GetItemsCount();
 }
 
-template <class DataType>
+template<class DataType>
 inline const std::set<const DataType*>& BaseDataViewCtrl<DataType>::GetItemsContainer() const
 {
 	return m_DataModel->GetItemsContainer();
 }
 
 
-template <class DataType>
+template<class DataType>
 inline void BaseDataViewCtrl<DataType>::OnColumnHeaderContext(
-    wxDataViewEvent& event)
-{
+		wxDataViewEvent& event) {
 
 	int columnIndex = event.GetColumn();
-	if (columnIndex < 0) {
-		wxDataViewColumn* column = event.GetDataViewColumn();
-		if (column == nullptr) {
-			/*Looks like this function is unsupported*/
-			return;
-		}
+        if (columnIndex < 0 ) {
+            wxDataViewColumn* column = event.GetDataViewColumn();
+            if (column == nullptr) {
+                /*Looks like this function is unsupported*/
+                return;
+            }
 
-		columnIndex = GetColumnPosition(column);
-		if (columnIndex < 0) {
-			/*Looks like this function is unsupported*/
-			return;
-		}
-	}
+            columnIndex = GetColumnPosition(column);
+            if (columnIndex < 0 ) {
+                /*Looks like this function is unsupported*/
+                return;
+            }
+        }
 
 	if (static_cast<unsigned int>(columnIndex) >= m_DataModel->GetColumnCount()) {
 		wxLogWarning(_T("BaseDataViewCtrl<DataType>::OnColumnHeaderContext() :  event.GetColumn() returned invalid index"));
@@ -244,9 +231,8 @@ inline void BaseDataViewCtrl<DataType>::OnColumnHeaderContext(
 	delete menu;
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::OnHideColumn(wxCommandEvent& event)
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::OnHideColumn(wxCommandEvent& event) {
 	unsigned int columnIndex = static_cast<unsigned int>(event.GetExtraLong());
 
 	if (columnIndex >= GetColumnCount()) {
@@ -272,35 +258,33 @@ inline void BaseDataViewCtrl<DataType>::OnHideColumn(wxCommandEvent& event)
 	column->SetHidden(true);
 }
 
-template <class DataType>
-inline void BaseDataViewCtrl<DataType>::OnShowColumns(wxCommandEvent&)
-{
+template<class DataType>
+inline void BaseDataViewCtrl<DataType>::OnShowColumns(wxCommandEvent&) {
 	int totalColumnsCount = GetColumnCount();
 
-	for (int i = 0; i < totalColumnsCount; ++i) {
+	for ( int i = 0;  i < totalColumnsCount; ++i) {
 		wxDataViewColumn* column = GetColumn(i);
 		if (column->IsHidden()) {
 			column->SetHidden(false);
 		}
 	}
+
 }
 
-template <class DataType>
-inline bool BaseDataViewCtrl<DataType>::AddItem(const DataType& item)
-{
+template<class DataType>
+inline bool BaseDataViewCtrl<DataType>::AddItem(const DataType& item) {
 	bool result = m_DataModel->AddItem(item);
 
 	if (result) {
 		Resort();
 	}
-
+	
 
 	return result;
 }
 
-template <class DataType>
-inline bool BaseDataViewCtrl<DataType>::RemoveItem(const DataType& item)
-{
+template<class DataType>
+inline bool BaseDataViewCtrl<DataType>::RemoveItem(const DataType& item) {
 	bool result = m_DataModel->RemoveItem(item);
 
 	if (result) {
