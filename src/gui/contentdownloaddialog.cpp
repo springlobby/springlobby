@@ -123,7 +123,7 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& /*event*/)
 
 		m_search_res_w->AddContent(*res);
 	}
-	dls.clear();
+	IDownloader::freeResult(dls);
 }
 
 void ContentDownloadDialog::OnCloseButton(wxCommandEvent& /*event*/)
