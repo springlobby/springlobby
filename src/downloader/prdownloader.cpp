@@ -218,22 +218,12 @@ int PrDownloader::GetDownload(const std::string& category, const std::string& na
 	if (category == "engine") { //automaticly select engine from current platform
 		cat = PrDownloader::GetEngineCat();
 	}
-
-	if (cat == "map") {
-		return Get(m_map_loaders, name, IDownload::CAT_MAPS);
-	} else if (cat == "game") {
-		return Get(m_game_loaders, name, IDownload::CAT_GAMES);
-	} else if (cat == "engine_linux") {
-		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_LINUX);
-	} else if (cat == "engine_linux64") {
-		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_LINUX64);
-	} else if (cat == "engine_windows") {
-		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_WINDOWS);
-	} else if (cat == "engine_macosx") {
-		return Get(m_map_loaders, name, IDownload::CAT_ENGINE_MACOSX);
+	const IDownload::category prcat = IDownload::getCatFromStr(cat);
+	if (prcat == IDownload::CAT_NONE) {
+        wxLogError("Invalid category: %s", name.c_str());
+		return 0;
 	}
-	wxLogError(_T("Category %s not found"), category.c_str());
-	return -1;
+	return Get(m_map_loaders, name, prcat);
 }
 
 bool PrDownloader::Download(const std::string& filename, const std::string& url)
