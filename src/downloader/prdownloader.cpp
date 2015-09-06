@@ -219,11 +219,16 @@ int PrDownloader::GetDownload(const std::string& category, const std::string& na
 		cat = PrDownloader::GetEngineCat();
 	}
 	const IDownload::category prcat = IDownload::getCatFromStr(cat);
-	if (prcat == IDownload::CAT_NONE) {
-        wxLogError("Invalid category: %s", name.c_str());
-		return 0;
+	switch(prcat) {
+		case IDownload::CAT_GAMES:
+			return Get(m_game_loaders, name, prcat);
+		case IDownload::CAT_MAPS:
+			return Get(m_map_loaders, name, prcat);
+		default:
+			break;
 	}
-	return Get(m_map_loaders, name, prcat);
+	wxLogWarning("Unhandled category: %s", category.c_str());
+	return false;
 }
 
 bool PrDownloader::Download(const std::string& filename, const std::string& url)
