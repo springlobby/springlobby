@@ -10,7 +10,8 @@
 #include <wx/button.h>
 #include <wx/msgdlg.h>
 
-#include "json/wx/jsonreader.h"
+#include "downloader/lib/src/Downloader/Http/HttpDownloader.h"
+
 #include "httpfile.h"
 #include "ui.h"
 #include "servermanager.h"
@@ -76,15 +77,17 @@ ContentDownloadDialog::~ContentDownloadDialog()
 {
 }
 
+static std::list<IDownload*> dls;
 
 void ContentDownloadDialog::Search(const wxString& str)
 {
 	//FIXME: use pr-downloader and make async!
 	const std::string param = ConvToIRI(STD_STRING(str));
 	const std::string query = stdprintf("http://api.springfiles.com/json.php?nosensitive=on&logical=or&springname=%s&tag=%s", param.c_str(), param.c_str());
-	const wxString json = GetHttpFile(query);
+	std::string res;
+	CHttpDownloader::DownloadUrl(query, res);
+	CHttpDownloader::ParseResult(STD_STRING(str), IDownload::CAT_NONE, res, dls);
 	wxCommandEvent e;
-	e.SetString(json);
 	OnSearchCompleted(e);
 }
 
@@ -97,19 +100,7 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 {
 	assert(wxThread::IsMain());
 
-	wxString json = event.GetString();
-	//   std::cout << json.ToAscii().data() << std::endl;
-
-	wxJSONReader reader;
-	wxJSONValue root;
-	int errors = reader.Parse(json, &root);
-	m_searchbutton->Enable(true);
-	if (errors) {
-		wxMessageBox(wxString::Format(_T("Failed to parse search results:\n%s"), json.c_str()), _("Error"));
-		return;
-	}
-	const wxJSONInternalArray* a = root.AsArray();
-	if ((a->GetCount() == 0) && (!wildcardsearch)) { //no results returned, try wildcard search
+	if (dls.empty() && (!wildcardsearch)) { //no results returned, try wildcard search
 		wildcardsearch = true;
 		const wxString search_query = _T("*") + m_searchbox->GetValue() + _T("*"); //By default the user would expect that
 		Search(search_query);
@@ -118,31 +109,21 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
 	wildcardsearch = false;
 	m_search_res_w->Clear();
 
-	for (unsigned i = 0; i < a->GetCount(); i++) {
-		wxJSONValue val = a->Item(i);
-		wxString category = val[_("category")].AsString();
-
-		long size = 0;
-		if (val[_("size")].IsInt()) {
-			size = val[_("size")].AsInt();
-		} else if (val[_("size")].IsLong()) {
-			size = val[_("size")].AsLong();
-		}
-		wxString name = val[_("springname")].AsString();
-		//     std::cout << category.ToAscii().data() << "," << name.ToAscii().data() << "," << size << std::endl;
+	for (const IDownload* dl:dls) {
 		ContentSearchResult* res = new ContentSearchResult();
-		res->name = name;
-		res->filesize = size;
-		res->type = category;
-		if (category == _("map"))
-			res->is_downloaded = LSL::usync().MapExists(std::string(name.mb_str()));
-		else if (category == _("game"))
-			res->is_downloaded = LSL::usync().GameExists(std::string(name.mb_str()));
+		res->name = dl->origin_name;
+		res->filesize = dl->size;
+		res->type = dl->getCat(dl->cat);
+		if (res->type == "map")
+			res->is_downloaded = LSL::usync().MapExists(dl->name);
+		else if (res->type == "game")
+			res->is_downloaded = LSL::usync().GameExists(dl->name);
 		else
-			res->is_downloaded = 0;
+			res->is_downloaded = false;
 
 		m_search_res_w->AddContent(*res);
 	}
+	dls.clear();
 }
 
 void ContentDownloadDialog::OnCloseButton(wxCommandEvent& /*event*/)

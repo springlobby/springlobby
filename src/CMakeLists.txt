@@ -338,7 +338,6 @@ INCLUDE_DIRECTORIES(lsl/src)
 remove_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
 
 add_subdirectory(sound)
-add_subdirectory(json)
 
 
 set_source_files_properties(  ${templatesources} PROPERTIES HEADER_FILE_ONLY 1 )
@@ -376,7 +375,7 @@ ELSE (WIN32)
 		)
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static json
+TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static
 		${Boost_LIBRARIES}
 		${CURL_LIBRARIES}
 		${CURL_LINKFLAGS}
