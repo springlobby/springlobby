@@ -81,7 +81,7 @@ static std::list<IDownload*> dls;
 
 void ContentDownloadDialog::Search(const wxString& str)
 {
-	//FIXME: use pr-downloader and make async!
+	//FIXME: make async!
 	const std::string param = ConvToIRI(STD_STRING(str));
 	const std::string query = stdprintf("http://api.springfiles.com/json.php?nosensitive=on&logical=or&springname=%s&tag=%s", param.c_str(), param.c_str());
 	std::string res;
@@ -96,7 +96,7 @@ void ContentDownloadDialog::OnSearch(wxCommandEvent& /*event*/)
 	Search(m_searchbox->GetValue());
 }
 
-void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& event)
+void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& /*event*/)
 {
 	assert(wxThread::IsMain());
 
