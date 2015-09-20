@@ -22,6 +22,10 @@ if (SPRINGLOBBY_UPDATER)
 	TARGET_LINK_LIBRARIES(springlobby_updater
 			${WX_UPDATER_LD_FLAGS}
 		)
+	target_include_directories(springlobby_updater
+			PRIVATE ${springlobby_SOURCE_DIR}/src
+			PRIVATE ${springlobby_SOURCE_DIR}/src/lsl/src
+		)
 	install(TARGETS springlobby_updater RUNTIME DESTINATION .)
 endif()
 
