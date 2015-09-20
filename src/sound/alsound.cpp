@@ -17,8 +17,8 @@
 
 #include <alure.h>
 
-#include "sound/ring_sound.h"
-#include "sound/pm_sound.h"
+#include "ring_sound.h"
+#include "pm_sound.h"
 #include <wx/log.h>
 #include "utils/conversion.h"
 #include <lslutils/globalsmanager.h>

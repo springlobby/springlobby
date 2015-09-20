@@ -7,7 +7,6 @@ option(OPTION_SOUND "enable sound support (requires alure / openal)" ON)
 if   ( OPTION_SOUND AND NOT WIN32 ) # no sound support on windows yet
 	message(STATUS "Sound enabled!")
 	find_package(Alure REQUIRED)
-	include_directories(${ALURE_INCLUDE_DIRS})
 	find_package(OpenAL REQUIRED)
 	add_library(sound STATIC
 		alsound.cpp
@@ -15,6 +14,11 @@ if   ( OPTION_SOUND AND NOT WIN32 ) # no sound support on windows yet
 	target_link_libraries(sound
 		${ALURE_LIBRARIES}
 		${OPENAL_LIBRARY}
+	)
+	target_include_directories(sound
+		PRIVATE ${ALURE_INCLUDE_DIRS}
+		PRIVATE ${springlobby_SOURCE_DIR}/src
+		PRIVATE ${springlobby_SOURCE_DIR}/src/lsl/src
 	)
 elseif (WIN32)
 	message(STATUS "Sound enabled! (win32)")

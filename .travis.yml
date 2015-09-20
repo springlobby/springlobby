@@ -6,6 +6,7 @@ before_install:
   - sudo add-apt-repository -y ppa:wxformbuilder/wxwidgets
   - sudo add-apt-repository -y ppa:boost-latest/ppa
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo add-apt-repository -y ppa:george-edison55/precise-backports #cmake
   - sudo apt-get update -q
 
 install:
@@ -13,7 +14,7 @@ install:
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.7 90
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.7 90
   - sudo apt-get install libwxgtk3.0-dev libboost-thread1.55-dev libboost-system1.55-dev libboost-filesystem1.55-dev
-  - sudo apt-get install libboost-test1.55-dev libalure-dev
+  - sudo apt-get install libboost-test1.55-dev libalure-dev cmake cmake-data
 
 before_script:
 # optional dependencies

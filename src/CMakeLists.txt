@@ -1,5 +1,3 @@
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
-
 INCLUDE(compat_flags)
 
 
@@ -29,7 +27,6 @@ if( ${CMAKE_CROSSCOMPILING} )
 endif()
 
 FIND_PACKAGE(Boost 1.42.0 COMPONENTS thread system REQUIRED)
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
 ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 
@@ -120,7 +117,6 @@ endif()
 
 ADD_DEFINITIONS( ${CURL_CFLAGS} )
 #add_to_global(link_directories  ${CURL_LIB_DIRS} )
-INCLUDE_DIRECTORIES( ${CURL_INCLUDE_DIR} )
 
 #----------------------------------------------------------------------------------------------------
 # libnotify dependency check
@@ -334,7 +330,6 @@ set(LSLSERVER OFF CACHE BOOL "build lsl server" FORCE)
 
 add_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
 Add_Subdirectory(lsl)
-INCLUDE_DIRECTORIES(lsl/src)
 remove_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
 
 add_subdirectory(sound)
@@ -355,9 +350,9 @@ ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
 	)
 
 IF( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
-	INCLUDE_DIRECTORIES( ${LIBNOTIFY_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS} )
 	TARGET_LINK_LIBRARIES(springlobby ${LIBNOTIFY_LIBRARIES} ${GLIB_LIBRARIES} )
-	ADD_DEFINITIONS( -DHAVE_LIBNOTIFY )
+	target_include_directories(springlobby PRIVATE ${LIBNOTIFY_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS})
+	target_compile_definitions(springlobby PRIVATE -DHAVE_LIBNOTIFY)
 ENDIF( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
 
 #the updater needs to be build for windows only
@@ -382,6 +377,11 @@ TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static
 		${WX_LD_FLAGS}
 		sound
 	)
+target_include_directories(springlobby
+		PRIVATE ${springlobby_SOURCE_DIR}/src
+		PRIVATE ${springlobby_SOURCE_DIR}/src/lsl/src
+	)
+
 IF(UNIX)
 	FIND_PACKAGE(X11 REQUIRED)
 	TARGET_LINK_LIBRARIES(springlobby ${X11_X11_LIB})

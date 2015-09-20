@@ -1,7 +1,7 @@
 PROJECT(springlobby)
 
 #set minimum cmake version
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.11)
 
 CMAKE_POLICY(SET CMP0004 OLD)
 
