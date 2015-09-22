@@ -1,8 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include <windows.h>
-#include "sound/ring_sound.h"
-#include "sound/pm_sound.h"
+#include "ring_sound.h"
+#include "pm_sound.h"
 #include "alsound.h"
 
 
