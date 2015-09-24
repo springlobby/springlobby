@@ -4,7 +4,7 @@
 
 option(OPTION_SOUND "enable sound support (requires alure / openal)" ON)
 
-if   ( OPTION_SOUND AND NOT WIN32 ) # no sound support on windows yet
+if   ( OPTION_SOUND AND NOT WIN32 )
 	message(STATUS "Sound enabled!")
 	find_package(Alure REQUIRED)
 	find_package(OpenAL REQUIRED)
