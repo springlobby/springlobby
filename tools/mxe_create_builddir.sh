@@ -13,6 +13,7 @@ git reset --hard $COMMIT
 git clean -f -d -x
 
 (
+	echo 'JOBS := 2'
 	echo 'MXE_TARGETS := i686-w64-mingw32.static'
 	echo 'LOCAL_PKG_LIST := boost curl wxwidgets'
 	echo '.DEFAULT local-pkg-list:'
