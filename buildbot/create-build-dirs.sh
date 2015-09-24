@@ -2,6 +2,13 @@
 
 set -e
 
+if [ -z "$CMAKE" ]; then
+	echo "CMAKE isn't set, using default 'cmake'"
+	CMAKE=cmake
+else
+	echo "Using $CMAKE"
+fi
+
 SOURCEDIR=$(readlink -f $(dirname $0)/..)
 DIR=$(readlink -f build-${1})
 
@@ -29,4 +36,5 @@ echo configuring ${DIR} with $PARAMS
 cd ${DIR}
 rm -fv CMakeCache.txt CPackConfig.cmake CPackSourceConfig.cmake
 find -name cmake_install.cmake -delete
-cmake -DPKG_CONFIG_EXECUTABLE:PATH=/opt/mingw32/usr/bin/i686-w64-mingw32-pkg-config $PARAMS $DIR/..
+
+$CMAKE $CMAKE_PARAMS $PARAMS $DIR/..
