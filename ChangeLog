@@ -3,6 +3,7 @@ ChangeLog of Springlobby
 ## 0.227
  - show a warning when version check is disabled
  - fix osx crash when joining a battle and map isn't available local
+ - fix memleak
 
 ## 0.226
  - reimplemented all lists (battle/demos/users), should fix flickering / not updating
