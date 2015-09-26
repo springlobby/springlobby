@@ -211,7 +211,7 @@ void SinglePlayerTab::ReloadMaplist()
 void SinglePlayerTab::ReloadModlist()
 {
 	m_mod_pick->Clear();
-	m_mod_pick->Append(lslTowxArrayString(LSL::usync().GetModList()));
+	m_mod_pick->Append(lslTowxArrayString(LSL::usync().GetGameList()));
 	m_mod_pick->Insert(_("-- Select one --"), m_mod_pick->GetCount());
 	if (m_battle.GetHostGameName().empty()) {
 		m_mod_pick->SetSelection(m_mod_pick->GetCount() - 1);
@@ -304,7 +304,7 @@ void SinglePlayerTab::SetMod(unsigned int index)
 		m_battle.SetHostGame("", "");
 	} else {
 		try {
-			LSL::UnitsyncGame mod = LSL::usync().GetMod(index);
+			LSL::UnitsyncGame mod = LSL::usync().GetGame(index);
 			m_battle.SetLocalGame(mod);
 			m_battle.SetHostGame(mod.name, mod.hash);
 		} catch (...) {

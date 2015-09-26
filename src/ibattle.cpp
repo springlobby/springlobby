@@ -54,7 +54,7 @@ IBattle::~IBattle()
 {
 	try {
 		if (m_is_self_in)
-			LSL::usync().UnSetCurrentMod();
+			LSL::usync().UnSetCurrentArchive();
 	} catch (const LSL::Util::GlobalDestroyedError& err) {
 		/* If this is called during TAServer::~TAServer, then unitsync might be unavailable. */
 	}
@@ -803,7 +803,7 @@ const LSL::UnitsyncGame& IBattle::LoadGame()
 	if (!m_game_loaded) {
 		if (GameExists(true)) {
 			try {
-				SetLocalGame(LSL::usync().GetMod(m_host_game.name));
+				SetLocalGame(LSL::usync().GetGame(m_host_game.name));
 				bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::ModOption, m_host_game.name);
 				ASSERT_EXCEPTION(options_loaded, _T("couldn't load the game options"));
 				m_game_loaded = true;
@@ -887,7 +887,7 @@ void IBattle::OnSelfLeftBattle()
 	m_players_ready = 0;
 	m_players_sync = 0;
 	m_players_ok = 0;
-	LSL::usync().UnSetCurrentMod(); //left battle
+	LSL::usync().UnSetCurrentArchive(); //left battle
 }
 
 static std::string FixPresetName(const std::string& name)

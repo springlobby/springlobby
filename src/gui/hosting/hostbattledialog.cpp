@@ -293,7 +293,7 @@ void HostBattleDialog::ReloadModList()
 {
 	m_mod_pic->Clear();
 
-	wxArrayString modlist = lslTowxArrayString(LSL::usync().GetModList());
+	wxArrayString modlist = lslTowxArrayString(LSL::usync().GetGameList());
 	wxString last = sett().GetLastHostMod();
 
 	size_t nummods = modlist.Count();
@@ -468,7 +468,7 @@ void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 	// Get selected mod from unitsync.
 	LSL::UnitsyncGame mod;
 	try {
-		mod = LSL::usync().GetMod(STD_STRING(sett().GetLastHostMod()));
+		mod = LSL::usync().GetGame(STD_STRING(sett().GetLastHostMod()));
 		bo.gamehash = mod.hash;
 		bo.gamename = mod.name;
 	} catch (...) {
