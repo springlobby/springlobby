@@ -5,6 +5,7 @@
 #include <wx/settings.h>
 #include <wx/log.h>
 
+#define HAVE_WX
 #include "mapgridctrl.h"
 
 #include "settings.h"
@@ -13,7 +14,6 @@
 
 
 #include <algorithm>
-#define HAVE_WX
 #include <lslutils/misc.h>
 #include <lslunitsync/image.h>
 #include "log.h"
