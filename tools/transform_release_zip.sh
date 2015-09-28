@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#set -e
+set -e
 cd $(dirname $0)/..
 
 #assumes absolute path
@@ -26,5 +26,11 @@ ZIPFILEBASE=$(echo $(basename $1))
 TOPLEVELDIR=${ZIPFILEBASE%".zip"}
 unzip ${ZIPFILE}
 rm ${ZIPFILE}
-cd ${TOPLEVELDIR} && rm -f *pr-downloader* springsettings.exe && zip -r ${ZIPFILE} * locale/\* || exit 1
-exit 0
+cd ${TOPLEVELDIR}
+rm -f *pr-downloader*
+
+$STRIP springlobby.exe
+$STRIP springlobby_updater.exe
+
+zip -r ${ZIPFILE} * locale/\*
+
