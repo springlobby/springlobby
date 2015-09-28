@@ -4,6 +4,13 @@ ChangeLog of Springlobby
  - show a warning when version check is disabled
  - fix osx crash when joining a battle and map isn't available local
  - fix memleak
+ - fix hang !addbox is used in autohost mode
+ - fix relayhostmanager user not found error message
+ - fix hide vote buttons on vote cancelation
+ - update pr-downloader: switch from xmlrpc to json api
+ - use pr-downloader for update check (fixes proxy support)
+ - cleanup cmake: only add required include dirs to targets (requires cmake >=2.8.11)
+ - update win32 buildslave: most recent version of gcc/curl/boost/wxwidgets is used
 
 ## 0.226
  - reimplemented all lists (battle/demos/users), should fix flickering / not updating
