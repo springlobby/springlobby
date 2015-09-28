@@ -1,6 +1,6 @@
 ChangeLog of Springlobby
 
-## 0.232
+## 0.236
  - show a warning when version check is disabled
  - fix osx crash when joining a battle and map isn't available local
  - fix memleak
@@ -12,7 +12,7 @@ ChangeLog of Springlobby
  - cleanup cmake: only add required include dirs to targets (requires cmake >=2.8.11)
  - update win32 buildslave: most recent version of gcc/curl/boost/wxwidgets is used
 
-## 0.227 - 0.331
+## 0.227 - 0.235
  - skipped due build error
 
 ## 0.226
