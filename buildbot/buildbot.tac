@@ -2,7 +2,7 @@
 from twisted.application import service
 from buildbot.master import BuildMaster
 
-basedir = r'/var/lib/buildbot/master/springlobby'
+basedir = r'/home/buildbot/springlobby'
 configfile = r'master.cfg'
 
 application = service.Application('buildmaster')
