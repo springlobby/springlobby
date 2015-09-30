@@ -63,13 +63,15 @@ option( OPTION_TRANSLATION_SUPPORT "Enables translation support to the programs 
 option( OPTION_NOTIFY "Enables libnotify support for popup status messages (requires libnotify)" TRUE)
 option( BUILD_SHARED_LIBS "Chooses whether to link dynamic or static libraries. Recommend keeping this activated unless you know what you're doing." FALSE)
 
-SET(SHARE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share" CACHE PATH "Share directory name")
+
+
+SET(SHARE_INSTALL_DIR "/share" CACHE PATH "Share directory name")
 
 SET(SPRINGLOBBY_REV "${SPRINGLOBBY_REV}")
 if (WIN32)
 	SET(LOCALE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/locale")
 else()
-	SET(LOCALE_INSTALL_DIR "${SHARE_INSTALL_DIR}/locale")
+	SET(LOCALE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/locale")
 endif()
 
 IF( AUX_VERSION )
@@ -136,10 +138,10 @@ INCLUDE(cmake/package_config.cmake)
 IF(WIN32)
 	install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION ${CMAKE_INSTALL_PREFIX})
 ELSE (WIN32)
-	install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION "${SHARE_INSTALL_DIR}/doc/springlobby")
-	install(FILES src/images/springlobby.svg DESTINATION "${SHARE_INSTALL_DIR}/icons/hicolor/scalable/apps")
-	install(FILES src/springlobby.desktop DESTINATION "${SHARE_INSTALL_DIR}/applications")
-	install(FILES share/freedesktop.org/springlobby.appdata.xml DESTINATION "${SHARE_INSTALL_DIR}/appdata")
+	install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/doc/springlobby")
+	install(FILES src/images/springlobby.svg DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/icons/hicolor/scalable/apps")
+	install(FILES src/springlobby.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/applications")
+	install(FILES share/freedesktop.org/springlobby.appdata.xml DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/appdata")
 ENDIF (WIN32)
 
 add_custom_target(pack ${CMAKE_MAKE_PROGRAM} package
