@@ -1022,7 +1022,7 @@ msgid "(Full country name not found)"
 msgstr "（国家名称未找到）"
 
 #: src/crashreport.cpp:154
-msgid "System informations"
+msgid "System information"
 msgstr "系统信息"
 
 #: src/crashreport.cpp:156
@@ -3502,7 +3502,7 @@ msgid "Words to highlight in chat:"
 msgstr "聊天中高亮显示字："
 
 #: src/gui/options/chatoptionstab.cpp:329
-msgid "enter a ; seperated list"
+msgid "enter a ; separated list"
 msgstr "输入一个由 ; 分隔开的列表"
 
 #: src/gui/options/chatoptionstab.cpp:333
@@ -5523,7 +5523,7 @@ msgid ""
 "Select the resolution fitting your monitor(s).\n"
 "\t\t\tSelecting a dual screen resolution will automatically enable dual "
 "screen mode.\n"
-"\t\t\tIf the appropiate resolution is not available you can set it manually "
+"\t\t\tIf the appropriate resolution is not available you can set it manually "
 "in expert mode.\n"
 "\t\t\tPlease also contact the author so it can be added in future releases."
 msgstr ""
@@ -7041,7 +7041,7 @@ msgstr "语言"
 #~ msgstr "模组未选择。"
 
 #, fuzzy
-#~ msgid "you can also enter a ';' seperated list of usernames:"
+#~ msgid "you can also enter a ';' separated list of usernames:"
 #~ msgstr "输入一个由 ; 分隔开的列表"
 
 #, fuzzy

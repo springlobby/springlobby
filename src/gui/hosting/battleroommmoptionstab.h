@@ -108,7 +108,7 @@ private:
 
 	/** \brief generate Gui elements from loaded MMoptions
          * for all values in all option maps create a control (pointer),
-         * set the controls name to the option key and add it to the appropiate map and sizer.
+         * set the controls name to the option key and add it to the appropriate map and sizer.
          * \return the total num of controls in the sizer
          */
 	int setupOptionsSectionSizer(const LSL::mmOptionSection& section, wxBoxSizer* parent_sizer,

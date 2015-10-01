@@ -1023,7 +1023,7 @@ msgid "(Full country name not found)"
 msgstr "(Numele complet al ţării nu a fost găsit)"
 
 #: src/crashreport.cpp:154
-msgid "System informations"
+msgid "System information"
 msgstr "Informaţii de sistem"
 
 #: src/crashreport.cpp:156
@@ -3586,7 +3586,7 @@ msgid "Words to highlight in chat:"
 msgstr "Cuvinte de evidențiat în chat:"
 
 #: src/gui/options/chatoptionstab.cpp:329
-msgid "enter a ; seperated list"
+msgid "enter a ; separated list"
 msgstr "introduceţi o listă separată prin \";\""
 
 #: src/gui/options/chatoptionstab.cpp:333
@@ -5645,7 +5645,7 @@ msgid ""
 "Select the resolution fitting your monitor(s).\n"
 "\t\t\tSelecting a dual screen resolution will automatically enable dual "
 "screen mode.\n"
-"\t\t\tIf the appropiate resolution is not available you can set it manually "
+"\t\t\tIf the appropriate resolution is not available you can set it manually "
 "in expert mode.\n"
 "\t\t\tPlease also contact the author so it can be added in future releases."
 msgstr "Alegeţi rezoluţia pentru monitorul/arele dvs."
@@ -6930,7 +6930,7 @@ msgstr ""
 #~ msgstr "Nici un mod ales."
 
 #, fuzzy
-#~ msgid "you can also enter a ';' seperated list of usernames:"
+#~ msgid "you can also enter a ';' separated list of usernames:"
 #~ msgstr "introduceţi o listă separată prin \";\""
 
 #, fuzzy
