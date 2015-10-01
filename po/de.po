@@ -1020,7 +1020,7 @@ msgid "(Full country name not found)"
 msgstr "(Vollen Ländernamen nicht gefunden)"
 
 #: src/crashreport.cpp:154
-msgid "System informations"
+msgid "System information"
 msgstr "System Informationen"
 
 #: src/crashreport.cpp:156
@@ -3540,7 +3540,7 @@ msgid "Words to highlight in chat:"
 msgstr "Wörter die im Chat hervorgehoben werden sollen:"
 
 #: src/gui/options/chatoptionstab.cpp:329
-msgid "enter a ; seperated list"
+msgid "enter a ; separated list"
 msgstr "gib eine Liste mit ; als Trennzeichen ein"
 
 #: src/gui/options/chatoptionstab.cpp:333
@@ -5599,7 +5599,7 @@ msgid ""
 "Select the resolution fitting your monitor(s).\n"
 "\t\t\tSelecting a dual screen resolution will automatically enable dual "
 "screen mode.\n"
-"\t\t\tIf the appropiate resolution is not available you can set it manually "
+"\t\t\tIf the appropriate resolution is not available you can set it manually "
 "in expert mode.\n"
 "\t\t\tPlease also contact the author so it can be added in future releases."
 msgstr ""

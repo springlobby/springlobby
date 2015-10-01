@@ -151,7 +151,7 @@ void CrashReport::GenerateReport()
 	SystemInfos += _T( "SpringLobby version " ) + TowxString(getSpringlobbyVersion()) + _T( "\n" );
 	SystemInfos += _T( "Built from " ) + wxString(wxVERSION_STRING) + _T(" on ") + wxPlatformInfo::Get().GetOperatingSystemIdName() + _T( "\n" );
 
-	report->AddText(_T( "SystemInfos.txt" ), SystemInfos, _("System informations"));
+	report->AddText(_T( "SystemInfos.txt" ), SystemInfos, _("System information"));
 #if wxUSE_STD_IOSTREAM
 	report->AddText(_T( "AppLog.txt" ), TowxString(crashlog.str()), _("Application verbose log"));
 #endif
