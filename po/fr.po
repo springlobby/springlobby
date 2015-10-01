@@ -1023,7 +1023,7 @@ msgid "(Full country name not found)"
 msgstr "(nom complet du pays non trouvé)"
 
 #: src/crashreport.cpp:154
-msgid "System informations"
+msgid "System information"
 msgstr "Information sur le système"
 
 #: src/crashreport.cpp:156
@@ -3556,7 +3556,7 @@ msgid "Words to highlight in chat:"
 msgstr "Mots à surligner dans le chat"
 
 #: src/gui/options/chatoptionstab.cpp:329
-msgid "enter a ; seperated list"
+msgid "enter a ; separated list"
 msgstr "entre une liste séparée par des ;"
 
 #: src/gui/options/chatoptionstab.cpp:333
@@ -4228,7 +4228,7 @@ msgid ""
 "information about a command."
 msgstr ""
 "  \"/help [sujet]\" - Ajoutez \"sujet\" si vous voulez obtenir des "
-"informations plus spécifiques sur une commande."
+"information plus spécifiques sur une commande."
 
 #: src/gui/ui.cpp:394
 #, fuzzy
@@ -5588,7 +5588,7 @@ msgid ""
 "Select the resolution fitting your monitor(s).\n"
 "\t\t\tSelecting a dual screen resolution will automatically enable dual "
 "screen mode.\n"
-"\t\t\tIf the appropiate resolution is not available you can set it manually "
+"\t\t\tIf the appropriate resolution is not available you can set it manually "
 "in expert mode.\n"
 "\t\t\tPlease also contact the author so it can be added in future releases."
 msgstr ""

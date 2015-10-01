@@ -211,7 +211,7 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 				DoAction("cannot find start box " + STD_STRING(params));
 			}
 		} else {
-			DoAction("has recieved an invalid param to !removebox command" );
+			DoAction("has received an invalid param to !removebox command" );
 		}
 	} else
 		return;

@@ -65,7 +65,7 @@ public:
 	//! Fill out map with downloads (Key: Original name)
 	void GetMap(std::map<wxString, ObserverDownloadInfo>& map);
 
-	//! Delete all informations about finished downloads
+	//! Delete all information about finished downloads
 	void ClearFinished();
 
 	bool IsEmpty();
