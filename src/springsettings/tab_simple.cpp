@@ -77,7 +77,7 @@ void tab_simple::initOptSizer(wxFlexGridSizer* sizer)
 	getSetUpResolutionCBX();
 	videoMode_CBX->SetToolTip(_("Select the resolution fitting your monitor(s).\n\
 			Selecting a dual screen resolution will automatically enable dual screen mode.\n\
-			If the appropiate resolution is not available you can set it manually in expert mode.\n\
+			If the appropriate resolution is not available you can set it manually in expert mode.\n\
 			Please also contact the author so it can be added in future releases."));
 	sizer->Add(videoMode_CBX, 0, wxBOTTOM, 15);
 
