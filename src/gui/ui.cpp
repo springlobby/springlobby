@@ -296,7 +296,7 @@ void Ui::ConsoleHelp(const wxString& topic)
 		panel->ClientMessage(_("Global commands:"));
 		panel->ClientMessage(_("  \"/away\" - Sets your status to away."));
 		panel->ClientMessage(_("  \"/back\" - Resets your away status."));
-		panel->ClientMessage(_("  \"/changepassword2 newpassword\" - Changes the current active account's password, needs the old password saved in login box"));
+		panel->ClientMessage(_("  \"/changepassword newpassword\" - Changes the current active account's password, needs the old password saved in login box"));
 		panel->ClientMessage(_("  \"/changepassword oldpassword newpassword\" - Changes the current active account's password, password cannot contain spaces"));
 		panel->ClientMessage(_("  \"/channels\" - Lists currently active channels."));
 		panel->ClientMessage(_("  \"/help [topic]\" - Put topic if you want to know more specific information about a command."));
