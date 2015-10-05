@@ -15,7 +15,7 @@ class wxString;
 class AutoHost
 {
 public:
-	AutoHost(IBattle& battle);
+	explicit AutoHost(IBattle& battle);
 
 	void SetEnabled(const bool enabled);
 	bool GetEnabled() const;

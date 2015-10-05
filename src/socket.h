@@ -45,7 +45,7 @@ class wxSocketEvent;
 class Socket : public wxEvtHandler
 {
 public:
-	Socket(iNetClass& netclass);
+	explicit Socket(iNetClass& netclass);
 	~Socket();
 
 	// Socket interface

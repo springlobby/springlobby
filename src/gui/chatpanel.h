@@ -70,7 +70,7 @@ public:
 	ChatPanel(wxWindow* parent, User& user, wxImageList* imaglist);
 	ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist);
 	ChatPanel(wxWindow* parent, IBattle* battle);
-	ChatPanel(wxWindow* parent); //debug chatpanel
+	explicit ChatPanel(wxWindow* parent); //debug chatpanel
 	~ChatPanel();
 
 	void Said(const wxString& who, const wxString& message);

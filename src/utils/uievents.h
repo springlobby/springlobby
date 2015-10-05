@@ -55,7 +55,7 @@ public:
 	{
 	}
 	//! this is to be used for removing a message (we wont care about the message here)
-	StatusData(unsigned int slot = 0)
+	explicit StatusData(unsigned int slot = 0)
 	    : BaseType(wxEmptyString, slot)
 	{
 	}

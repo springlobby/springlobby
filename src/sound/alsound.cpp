@@ -41,7 +41,7 @@ static void eos_callback(void*, ALuint)
 class soundThread : public wxThread
 {
 public:
-	soundThread(int idx)
+	explicit soundThread(int idx)
 	    : wxThread(wxTHREAD_JOINABLE)
 	{
 		m_idx = idx;

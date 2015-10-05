@@ -18,7 +18,7 @@ public:
 	 * @param logname Name of the logfile this object will
 	 * accept messages for.
 	 */
-	ChatLog(const wxString& logname);
+	explicit ChatLog(const wxString& logname);
 	ChatLog();
 
 

@@ -14,7 +14,7 @@ class MainSinglePlayerTab;
 class SinglePlayerBattle : public IBattle
 {
 public:
-	SinglePlayerBattle(MainSinglePlayerTab& msptab);
+	explicit SinglePlayerBattle(MainSinglePlayerTab& msptab);
 	virtual ~SinglePlayerBattle();
 
 	virtual bool IsFounderMe() const override

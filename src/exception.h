@@ -8,7 +8,7 @@
 class Exception {
 public:
 	Exception();
-	Exception(const wxString& reason);
+	explicit Exception(const wxString& reason);
 	virtual ~Exception();
 
 	wxString Reason() const;

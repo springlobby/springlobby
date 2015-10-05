@@ -308,10 +308,10 @@ class User : public CommonUser
 public:
 	ChatPanel* panel; //FIXME: privatize
 
-	User(IServer& serv);
+	explicit User(IServer& serv);
+	explicit User(const std::string& nick);
 	User(const std::string& nick, IServer& serv);
 	User(const std::string& nick, const std::string& country, const int& cpu, IServer& serv);
-	User(const std::string& nick);
 	User(const std::string& nick, const std::string& country, const int& cpu);
 	User();
 

@@ -15,7 +15,7 @@
 class NetDebugReport : public wxDebugReportCompress
 {
 public:
-	NetDebugReport(const char* url);
+	explicit NetDebugReport(const char* url);
 
 	//! the real workhorse
 	bool Process();

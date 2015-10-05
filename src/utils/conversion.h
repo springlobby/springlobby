@@ -30,7 +30,7 @@ class wxStringTokenizer;
 class StringtokenizerVectorized : public std::vector<wxString>
 {
 public:
-	StringtokenizerVectorized(wxStringTokenizer tokenizer);
+	explicit StringtokenizerVectorized(wxStringTokenizer tokenizer);
 };
 
 std::string stdprintf(const char* format, ...);

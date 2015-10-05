@@ -512,7 +512,6 @@ static LSL::StringMap parseKeyValue(const std::string& str)
 void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inparams, int replyid)
 {
 	wxString params = TowxString(inparams);
-	bool haspass, lanmode = false;
 	std::string nick, contry, host, map, title, channel, error, msg, owner, topic, engineName, engineVersion;
 	//NatType ntype;
 	UserStatus cstatus;
@@ -524,7 +523,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_ser_ver = GetIntParam(params);
 		const std::string supported_spring_version = GetWordParam(params);
 		m_nat_helper_port = (unsigned long)GetIntParam(params);
-		lanmode = GetBoolParam(params);
+		const bool lanmode = GetBoolParam(params);
 		m_server_lanmode = lanmode;
 		m_se->OnConnected(m_server_name, "", (m_ser_ver > 0), supported_spring_version, lanmode);
 	} else if (cmd == "ACCEPTED") {
@@ -564,7 +563,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		host = GetWordParam(params);
 		const int port = GetIntParam(params);
 		const int maxplayers = GetIntParam(params);
-		haspass = GetBoolParam(params);
+		const bool haspass = GetBoolParam(params);
 		const int rank = GetIntParam(params);
 		const std::string hash = LSL::Util::MakeHashUnsigned(GetWordParam(params));
 		engineName = GetSentenceParam(params);
@@ -586,7 +585,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "UPDATEBATTLEINFO") {
 		const int id = GetIntParam(params);
 		const int specs = GetIntParam(params);
-		haspass = GetBoolParam(params);
+		const bool haspass = GetBoolParam(params);
 		const std::string hash = LSL::Util::MakeHashUnsigned(GetWordParam(params));
 		map = GetSentenceParam(params);
 		m_se->OnBattleInfoUpdated(id, specs, haspass, hash, map);

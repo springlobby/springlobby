@@ -47,7 +47,7 @@ private:
 class BattleList_Iter : public SL::NonCopyable
 {
 public:
-	BattleList_Iter(BattleList* battlelist)
+	explicit BattleList_Iter(BattleList* battlelist)
 	    : m_battlelist(battlelist)
 	{
 	}

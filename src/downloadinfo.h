@@ -15,7 +15,7 @@ class IDownload;
 
 class DownloadInfo {
 public:
-	DownloadInfo(IDownload* download);
+	explicit DownloadInfo(IDownload* download);
 	virtual ~DownloadInfo();
 
 	IDownload* GetIDownload() const;

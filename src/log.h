@@ -29,7 +29,7 @@ private:
 class assert_exception : public std::runtime_error
 {
 public:
-	assert_exception(std::string msg)
+	explicit assert_exception(std::string msg)
 	    : std::runtime_error(msg)
 	{
 		wxLogWarning("%s", msg.c_str());

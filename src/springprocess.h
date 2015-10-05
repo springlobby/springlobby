@@ -27,7 +27,7 @@ class Spring;
 class SpringProcess : public wxThread
 {
 public:
-	SpringProcess(Spring& sp);
+	explicit SpringProcess(Spring& sp);
 	~SpringProcess();
 	void OnExit();
 	void SetCommand(const wxString& cmd, const wxArrayString& params);

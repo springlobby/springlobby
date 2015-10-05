@@ -17,7 +17,7 @@ bool MoveDirWithFilebackupRename(wxString from, wxString to, bool backup = true,
 class CwdGuard
 {
 public:
-	CwdGuard(const wxString& new_cwd);
+	explicit CwdGuard(const wxString& new_cwd);
 	~CwdGuard();
 
 private:

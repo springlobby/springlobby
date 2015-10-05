@@ -17,7 +17,7 @@ public:
 	ChatPanel* panel; //FIXME: privatize
 
 	//Channel(): m_serv(0),m_userdata(0) {}
-	Channel(IServer& serv);
+	explicit Channel(IServer& serv);
 	virtual ~Channel();
 
 	IServer& GetServer()

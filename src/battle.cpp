@@ -734,7 +734,7 @@ struct Alliance
 	    , allynum(-1)
 	{
 	}
-	Alliance(int i)
+	explicit Alliance(int i)
 	    : ranksum(0)
 	    , allynum(i)
 	{
@@ -767,7 +767,7 @@ struct ControlTeam
 	    , teamnum(-1)
 	{
 	}
-	ControlTeam(int i)
+	explicit ControlTeam(int i)
 	    : ranksum(0)
 	    , teamnum(i)
 	{
