@@ -4,6 +4,7 @@
 // Classes: NetDebugReport CrashReport
 //
 #include "utils/curlhelper.h" // has to be first, else compiler will warn about "please include winsock2.h before windows.h"
+#include <curl/curl.h>
 #include "crashreport.h"
 
 #include <wx/intl.h>
