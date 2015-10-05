@@ -17,7 +17,7 @@ template <class DataType>
 class BaseDataViewModel : public wxDataViewModel
 {
 public:
-	BaseDataViewModel(size_t columns)
+	explicit BaseDataViewModel(size_t columns)
 	    : m_columns(columns)
 	{
 	}

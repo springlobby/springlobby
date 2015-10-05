@@ -34,7 +34,7 @@ class BattleListTab : public wxPanel, public SL::NonCopyable
 	friend class BattleListFilter;
 
 public:
-	BattleListTab(wxWindow* parent);
+	explicit BattleListTab(wxWindow* parent);
 	~BattleListTab();
 
 	void OnConnected();

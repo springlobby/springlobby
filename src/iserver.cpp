@@ -124,6 +124,7 @@ Channel& IServer::_AddChannel(const std::string& chan)
 }
 
 
+/*
 void IServer::_RemoveChannel(const std::string& name)
 {
 	Channel* c = &m_channels.GetChannel(name);
@@ -131,6 +132,7 @@ void IServer::_RemoveChannel(const std::string& name)
 	ASSERT_LOGIC(c != 0, "IServer::_RemoveChannel(\"" + name + "\"): GetChannel returned NULL pointer");
 	delete c;
 }
+*/
 
 IBattle& IServer::_AddBattle(const int& id)
 {

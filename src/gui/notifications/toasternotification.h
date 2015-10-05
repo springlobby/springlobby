@@ -9,7 +9,7 @@ class ToasterBox;
 class ToasterNotification : public INotification
 {
 public:
-	ToasterNotification(wxWindow* parent);
+	explicit ToasterNotification(wxWindow* parent);
 	virtual ~ToasterNotification();
 	virtual void Show(const wxBitmap& icon, const size_t pos, const UiEvents::NotficationData& data);
 

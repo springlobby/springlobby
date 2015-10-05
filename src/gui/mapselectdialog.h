@@ -27,7 +27,7 @@ struct UnitsyncMap;
 class MapSelectDialog : public wxDialog, public WindowAttributesPickle
 {
 public:
-	MapSelectDialog(wxWindow* parent);
+	explicit MapSelectDialog(wxWindow* parent);
 	virtual ~MapSelectDialog();
 
 	LSL::UnitsyncMap* GetSelectedMap() const;

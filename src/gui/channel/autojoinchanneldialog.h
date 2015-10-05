@@ -17,7 +17,7 @@ class AutojoinChannelDialog : public wxDialog
 {
 public:
 	/** Default constructor */
-	AutojoinChannelDialog(wxWindow* parent);
+	explicit AutojoinChannelDialog(wxWindow* parent);
 	/** Default destructor */
 	virtual ~AutojoinChannelDialog();
 

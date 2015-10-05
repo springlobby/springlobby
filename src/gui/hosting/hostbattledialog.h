@@ -24,7 +24,7 @@ class wxPanel;
 class HostBattleDialog : public wxDialog, public WindowHintsPickle
 {
 public:
-	HostBattleDialog(wxWindow* parent);
+	explicit HostBattleDialog(wxWindow* parent);
 	static void RunHostBattleDialog(wxWindow* parent);
 
 private:
