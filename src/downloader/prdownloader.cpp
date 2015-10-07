@@ -181,9 +181,8 @@ PrDownloader::PrDownloader()
 	UpdateSettings();
 	m_game_loaders.push_back(rapidDownload);
 	m_game_loaders.push_back(httpDownload);
-	//	m_game_loaders.push_back(plasmaDownload);
 	m_map_loaders.push_back(httpDownload);
-	//	m_map_loaders.push_back(plasmaDownload);
+	m_engine_loaders.push_back(httpDownload);
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringStarted, wxObjectEventFunction(&PrDownloader::OnSpringStarted));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringTerminated, wxObjectEventFunction(&PrDownloader::OnSpringTerminated));
 }
@@ -224,6 +223,11 @@ int PrDownloader::GetDownload(const std::string& category, const std::string& na
 			return Get(m_game_loaders, name, prcat);
 		case IDownload::CAT_MAPS:
 			return Get(m_map_loaders, name, prcat);
+		case IDownload::CAT_ENGINE_LINUX:
+		case IDownload::CAT_ENGINE_WINDOWS:
+		case IDownload::CAT_ENGINE_LINUX64:
+		case IDownload::CAT_ENGINE_MACOSX:
+			return Get(m_engine_loaders, name, prcat);
 		default:
 			break;
 	}

@@ -63,6 +63,7 @@ private:
 	int Get(std::list<IDownloader*> loaders, const std::string& name, IDownload::category cat);
 	std::list<IDownloader*> m_game_loaders;
 	std::list<IDownloader*> m_map_loaders;
+	std::list<IDownloader*> m_engine_loaders;
 	LSL::WorkerThread* m_dl_thread;
 
 	friend class SearchItem;
