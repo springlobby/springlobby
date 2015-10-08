@@ -1,5 +1,8 @@
 ChangeLog of Springlobby
 
+## 0.237
+ - fix engine downloading
+
 ## 0.236
  - show a warning when version check is disabled
  - fix osx crash when joining a battle and map isn't available local
