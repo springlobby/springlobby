@@ -86,11 +86,16 @@ inline bool BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item)
 {
 	wxASSERT(m_DataModel != nullptr);
 
+    wxDataViewItem selectedItem = GetSelection();
+
 	bool result = m_DataModel->UpdateItem(item);
 
 	if (result) {
 		Resort();
 	}
+
+    /*Preserve selection*/
+    Select(selectedItem);
 
 	return result;
 }
@@ -287,11 +292,16 @@ inline void BaseDataViewCtrl<DataType>::OnShowColumns(wxCommandEvent&)
 template <class DataType>
 inline bool BaseDataViewCtrl<DataType>::AddItem(const DataType& item)
 {
+    wxDataViewItem selectedItem = GetSelection();
+
 	bool result = m_DataModel->AddItem(item);
 
 	if (result) {
 		Resort();
 	}
+
+    /*Preserve selection*/
+    Select(selectedItem);
 
 	return result;
 }
