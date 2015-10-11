@@ -27,6 +27,6 @@ installer/make_uninstall_nsh.py $1 >installer/uninstall.nsh
 
 makensis -V3 $NSISDEFINES -DNSI_UNINSTALL_FILES=uninstall.nsh \
 -DSP_BASENAME=SpringLobby-$TAG \
--DSPRINGLOBBY_ARCHIVE=latest.zip \
+-DSPRINGLOBBY_ARCHIVE=$1 \
  installer/springlobby.nsi
 
