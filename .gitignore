@@ -39,3 +39,7 @@ Makefile
 # codeblocks
 /springlobby.cbp
 /springlobby.layout
+
+# installer stuff
+/installer/*.zip
+/installer/uninstall.nsh
