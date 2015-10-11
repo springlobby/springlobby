@@ -27,6 +27,11 @@ def parseArgv(argv):
 		prefix=config[1]
 	return config[0], prefix
 
+def sortPaths(argv):
+	argv.sort(key=lambda x: x.count("\\"), reverse=True)
+	return argv
+
+
 def getContents(archives):
 	"""
 		parses the output of 7z for file and returns a list of files/paths found inside it
@@ -80,5 +85,5 @@ if len(sys.argv)<2:
 	sys.exit(1)
 else:
 	files, paths = getContents(sys.argv[1:])
-	writeNsh(files, paths, sys.argv[1:])
+	writeNsh(files, sortPaths(paths), sys.argv[1:])
 
