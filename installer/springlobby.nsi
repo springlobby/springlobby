@@ -13,7 +13,7 @@ SetCompressor /FINAL /SOLID lzma
 
 ; this registry entry is deprecated (march 2011, use HKLM\Software\Spring\SpringEngine[Helper] instead)
 !define PRODUCT_NAME "SpringLobby"
-!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\spring.exe"
+!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\springlobby.exe"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_ROOT_KEY "HKLM"
@@ -56,7 +56,7 @@ SetCompressor /FINAL /SOLID lzma
 !define MUI_FINISHPAGE_TEXT "${PRODUCT_NAME} version ${PRODUCT_VERSION} has been successfully installed or updated from a previous version.  You should configure Spring settings now if this is a fresh installation.  If you did not install spring to C:\Program Files\Spring you will need to point the settings program to the install location."
 
 !define MUI_FINISHPAGE_LINK "SpringLobby User Guide"
-!define MUI_FINISHPAGE_LINK_LOCATION ${PRODUCT_WEB_SITE}
+!define MUI_FINISHPAGE_LINK_LOCATION "https://github.com/springlobby/springlobby/wiki/Userdoc"
 !define MUI_FINISHPAGE_NOREBOOTSUPPORT
 
 !insertmacro MUI_PAGE_FINISH
@@ -149,11 +149,11 @@ Section -Post
 		; Create uninstaller
 		WriteUninstaller "$INSTDIR\uninst.exe"
 		${If} $REGISTRY = 1
-			WriteRegStr ${PRODUCT_ROOT_KEY} "${PRODUCT_DIR_REGKEY}" "@" "$INSTDIR\spring.exe"
+			WriteRegStr ${PRODUCT_ROOT_KEY} "${PRODUCT_DIR_REGKEY}" "@" "$INSTDIR\springlobby.exe"
 			WriteRegStr ${PRODUCT_ROOT_KEY} "${PRODUCT_DIR_REGKEY}" "Path" "$INSTDIR"
 			WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
 			WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninst.exe"
-			WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\spring.exe"
+			WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\springlobby.exe"
 			WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
 			WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
 			WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"

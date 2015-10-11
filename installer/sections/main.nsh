@@ -2,7 +2,7 @@
 	!include "include/zipdll.nsh"
 	SetOutPath "$INSTDIR"
 	SetOverWrite on
-	File "${SPRINGLOBBY_ARCHIVE}"
+	File /oname=$TEMP\springlobby.zip "${SPRINGLOBBY_ARCHIVE}"
 
 	${If} ${FileExists} "$INSTDIR\uninst.exe"
 		MessageBox MB_ICONINFORMATION|MB_YESNO "Spring is already installed in this directory, do you want to uninstall it before continueing?" /SD IDYES IDNO fail
@@ -15,7 +15,8 @@
 
 	${!echonow} "Processing: engine"
 
-	!insertmacro ZIPDLL_EXTRACT "${SPRINGLOBBY_ARCHIVE}" "$INSTDIR" "<ALL>"
+	!insertmacro ZIPDLL_EXTRACT "$TEMP\springlobby.zip" "$INSTDIR" "<ALL>"
+	Delete "$TEMP\springlobby.zip"
 
 !else
 	${!echonow} "Processing: main: Uninstall"
