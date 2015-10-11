@@ -1,5 +1,12 @@
 ChangeLog of Springlobby
 
+## 0.241
+ - keep selection when lists are resorted
+ - intergrate installer createion to the build process
+
+## 0.238 - 0.240
+ - skipped due build error
+
 ## 0.237
  - fix engine downloading
 
