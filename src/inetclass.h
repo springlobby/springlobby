@@ -6,6 +6,7 @@
 //! @brief Abstract baseclass that is used when needed to interface with socket class
 
 #include <string>
+#include <wx/socket.h>
 
 class iNetClass
 {
@@ -20,7 +21,7 @@ public:
 	virtual void OnConnected()
 	{
 	}
-	virtual void OnDisconnected()
+	virtual void OnDisconnected(wxSocketError)
 	{
 	}
 	virtual void OnDataReceived()

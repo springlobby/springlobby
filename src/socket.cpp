@@ -142,7 +142,7 @@ void Socket::OnSocketEvent(wxSocketEvent& event)
 			m_net_class.OnDataReceived();
 			break;
 		case wxSOCKET_LOST:
-			m_net_class.OnDisconnected();
+			m_net_class.OnDisconnected(m_sock.LastError());
 			m_sock.Close();
 			break;
 		case wxSOCKET_CONNECTION:
@@ -216,7 +216,7 @@ void Socket::Disconnect()
 	m_buffer.clear();
 	m_sock.Close();
 	if (wasconnected) { //.Close() disables all events, fire it manually (as last to prevent recursions loops)
-		m_net_class.OnDisconnected();
+		m_net_class.OnDisconnected(wxSOCKET_NOERROR);
 	}
 }
 

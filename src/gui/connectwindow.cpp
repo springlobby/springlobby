@@ -241,6 +241,10 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 	wxString HostAddress = m_server_combo->GetValue();
 	// We assume that the server is given as : "host:port" so we split based on ":"
 	wxArrayString serverString = wxStringTokenize(HostAddress, _T(":"));
+	if (serverString.GetCount() > 2) {
+		OnLoginDenied(_T("invalid host/port."));
+		return;
+	}
 	if (serverString.GetCount() == 2) {
 		long port;
 		if (!serverString[1].ToLong(&port)) {
@@ -256,11 +260,6 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 	sett().SetDefaultServer(HostAddress);
 	cfg().Write(_T( "/Server/Autoconnect" ), m_autoconnect_check->IsChecked());
 
-	if (serverString.GetCount() > 2) {
-		OnLoginDenied(_T("invalid host/port."));
-		return;
-	}
-
 	//if autoconnect enabled force saving of pw, actual saving is done in Ui::DoConnect
 
 	sett().SaveSettings();
@@ -275,18 +274,19 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 		CleanHide();
 		ServerManager::Instance()->DoConnectToServer(HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue());
 		return;
-	} else {
-		sett().SetServerAccountNick(HostAddress, m_regnick_text->GetValue());
-		if (m_rpass_check->IsChecked()) {
-			sett().SetServerAccountPass(HostAddress, m_regpass1_text->GetValue());
-		}
+	}
+
+	sett().SetServerAccountNick(HostAddress, m_regnick_text->GetValue());
+	if (m_rpass_check->IsChecked()) {
+		sett().SetServerAccountPass(HostAddress, m_regpass1_text->GetValue());
 	}
 
 	// register new nick
 	if (!IsValidNickname(m_regnick_text->GetValue())) {
 		OnRegistrationDenied(_("The entered nickname contains invalid characters like )? &%.\n Please try again"));
 		return;
-	} else if (m_regpass2_text->GetValue() != m_regpass1_text->GetValue() || m_regpass1_text->GetValue().IsEmpty()) {
+	}
+	if (m_regpass2_text->GetValue() != m_regpass1_text->GetValue() || m_regpass1_text->GetValue().IsEmpty()) {
 		OnRegistrationDenied(_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty passwort)"));
 		return;
 	}

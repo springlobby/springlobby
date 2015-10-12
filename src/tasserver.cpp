@@ -1724,9 +1724,11 @@ void TASServer::OnConnected()
 }
 
 
-void TASServer::OnDisconnected()
+void TASServer::OnDisconnected(wxSocketError err)
 {
-	slLogDebugFunc("%d", m_connected);
+	if (err != wxSOCKET_NOERROR ) {
+		wxLogWarning("Socket disconnected: %d", err);
+	}
 	const bool connectionwaspresent = m_online || !m_last_denied.empty() || m_redirecting;
 	m_last_denied.clear();
 	m_connected = false;

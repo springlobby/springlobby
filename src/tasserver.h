@@ -144,7 +144,7 @@ private:
 	void SetRelayIngamePassword(const User& user);
 
 	void OnConnected() override;
-	void OnDisconnected() override;
+	void OnDisconnected(wxSocketError err) override;
 	void OnDataReceived() override;
 	void OnError(const std::string& err) override;
 
