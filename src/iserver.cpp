@@ -18,7 +18,6 @@
 IServer::IServer()
 	: panel(nullptr)
     , battles_iter(new BattleList_Iter(&m_battles))
-    , m_pass_hash(false)
 {
 }
 

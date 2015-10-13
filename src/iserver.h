@@ -243,7 +243,6 @@ protected:
 
 private:
 
-	bool m_pass_hash;
 	std::string m_required_spring_ver;
 	UserList m_users;
 	ChannelList m_channels;
