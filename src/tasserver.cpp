@@ -253,17 +253,17 @@ bool TASServer::ExecuteSayCommand(const std::string& cmd)
 }
 
 
-void TASServer::Connect(const std::string& servername, const std::string& addr, const int port)
+void TASServer::Connect(const ServerLoginInfo& server)
 {
-	m_server_name = servername;
-	m_addr = addr;
+
+	m_serverinfo = server;
 	m_buffer.clear();
 	m_subscriptions.clear();
 	if (m_sock != NULL) {
 		Disconnect();
 	}
 	m_sock = new Socket(*this);
-	m_sock->Connect(TowxString(addr), port);
+	m_sock->Connect(TowxString(server.hostname), server.port);
 	m_sock->SetSendRateLimit(800); // 1250 is the server limit but 800 just to make sure :)
 	m_connected = false;
 	m_online = false;
@@ -306,12 +306,10 @@ bool TASServer::IsOnline() const
 }
 
 
-void TASServer::Register(const std::string& servername, const std::string& host, const int port, const std::string& nick, const std::string& password)
+void TASServer::Register(const ServerLoginInfo& server)
 {
-	SetUsername(nick);
-	SetPassword(password);
-	Connect(servername, host, port);
-	SendCmd("REGISTER", nick + std::string(" ") + GetPasswordHash(password));
+	Connect(server);
+	SendCmd("REGISTER", server.username + std::string(" ") + GetPasswordHash(server.password));
 }
 
 
@@ -525,7 +523,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_nat_helper_port = (unsigned long)GetIntParam(params);
 		const bool lanmode = GetBoolParam(params);
 		m_server_lanmode = lanmode;
-		m_se->OnConnected(m_server_name, "", (m_ser_ver > 0), supported_spring_version, lanmode);
+		m_se->OnConnected(m_serverinfo.description, "", (m_ser_ver > 0), supported_spring_version, lanmode);
 	} else if (cmd == "ACCEPTED") {
 		if (m_online)
 			return; // in case is the server sends WTF
@@ -1808,7 +1806,7 @@ unsigned int TASServer::UdpPing(unsigned int src_port, const std::string& target
 
 void TASServer::UdpPingTheServer(const std::string& message)
 {
-	unsigned int port = UdpPing(m_udp_private_port, m_addr, m_nat_helper_port, message);
+	unsigned int port = UdpPing(m_udp_private_port, m_serverinfo.hostname, m_nat_helper_port, message);
 	if (port > 0) {
 		m_udp_private_port = port;
 		m_se->OnMyInternalUdpSourcePort(m_udp_private_port);

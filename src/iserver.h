@@ -34,6 +34,16 @@ typedef int HostInfo;
 class IServer : public SL::NonCopyable
 {
 public:
+	class ServerLoginInfo
+	{
+	public:
+		std::string username;
+		std::string password;
+		std::string hostname;
+		std::string description;
+		int port;
+	};
+
 	friend class ServerEvents;
 	friend class SimpleServerEvents;
 
@@ -50,10 +60,10 @@ public:
 		return true;
 	};
 
-	virtual void Register(const std::string& /*servername*/, const std::string& /*host*/, const int /*port*/, const std::string& /*user*/, const std::string& /*pass*/){};
+	virtual void Register(const ServerLoginInfo&){};
 	virtual void AcceptAgreement(){};
 
-	virtual void Connect(const std::string& /*servername*/, const std::string& /*addr*/, const int /*port*/){};
+	virtual void Connect(const ServerLoginInfo&){};
 	virtual void Disconnect(){};
 	virtual bool IsConnected()
 	{
@@ -133,19 +143,19 @@ public:
 
 	virtual void SetUsername(const std::string& username)
 	{
-		m_user = username;
+		m_serverinfo.username= username;
 	}
 	virtual const std::string& GetUserName() const
 	{
-		return m_user;
+		return m_serverinfo.username;
 	}
 	virtual void SetPassword(const std::string& password)
 	{
-		m_pass = password;
+		m_serverinfo.password = password;
 	}
 	virtual const std::string& GetPassword() const
 	{
-		return m_pass;
+		return m_serverinfo.password;
 	}
 	virtual bool IsPasswordHash(const std::string& /*pass*/) const
 	{
@@ -170,11 +180,11 @@ public:
 
 	virtual const User& GetMe() const
 	{
-		return GetUser(m_user);
+		return GetUser(m_serverinfo.username);
 	};
 	virtual User& GetMe()
 	{
-		return GetUser(m_user);
+		return GetUser(m_serverinfo.username);
 	};
 	User& GetUser(const std::string& nickname) const;
 	bool UserExists(const std::string& nickname) const;
@@ -211,7 +221,7 @@ public:
 
 	std::string GetServerName() const
 	{
-		return m_server_name;
+		return m_serverinfo.description;
 	}
 
 	virtual void SetRelayIngamePassword(const User& /*user*/){};
@@ -229,11 +239,9 @@ public:
 	virtual void SendCmd(const std::string& /*command*/, const std::string& /*param*/){};
 
 protected:
-	std::string m_server_name;
+	ServerLoginInfo m_serverinfo;
 
 private:
-	std::string m_user;
-	std::string m_pass;
 
 	bool m_pass_hash;
 	std::string m_required_spring_ver;

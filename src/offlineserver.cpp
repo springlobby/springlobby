@@ -18,9 +18,9 @@ OfflineServer::~OfflineServer()
 	m_se = NULL;
 }
 
-void OfflineServer::Connect(const std::string& servername, const std::string& /*addr*/, const int /*port*/)
+void OfflineServer::Connect(const ServerLoginInfo& info)
 {
-	m_se->OnConnected(servername, "", true, "", true);
+	m_se->OnConnected(info.description, "", true, "", true);
 	TASServer::ExecuteCommand(stdprintf("ADDUSER %s ?? 0 1", GetUserName().c_str()));
 }
 

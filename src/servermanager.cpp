@@ -96,7 +96,13 @@ void ServerManager::RegisterNewUser(const wxString& servername, const wxString& 
 		ui().OnRegistrationDenied(_T("Server does not exist in settings"));
 		return;
 	}
-	serverSelector().GetServer().Register(STD_STRING(servername), STD_STRING(sett().GetServerHost(servername)), sett().GetServerPort(servername), STD_STRING(username), STD_STRING(password));
+	IServer::ServerLoginInfo info;
+	info.description = STD_STRING(servername);
+	info.hostname = STD_STRING(sett().GetServerHost(servername));
+	info.port = sett().GetServerPort(servername);
+	info.username = STD_STRING(username);
+	info.password = STD_STRING(password);
+	serverSelector().GetServer().Register(info);
 }
 
 //Join chat channel
@@ -133,9 +139,6 @@ void ServerManager::DoConnectToServer(const wxString& servername, const wxString
 		server->Disconnect();
 	}
 
-	//FIXME: Does this two methods are really needed?
-	server->SetUsername(STD_STRING(username));
-	server->SetPassword(STD_STRING(password));
 
 	const wxString host = sett().GetServerHost(servername);
 	const int port = sett().GetServerPort(servername);
@@ -147,7 +150,13 @@ void ServerManager::DoConnectToServer(const wxString& servername, const wxString
 	server->panel->StatusMessage(_T("Connecting to server ") + servername + _T("..."));
 
 	// Connect
-	server->Connect(STD_STRING(servername), STD_STRING(host), port);
+	IServer::ServerLoginInfo info;
+	info.description = STD_STRING(servername);
+	info.hostname = STD_STRING(host);
+	info.port = port;
+	info.username = STD_STRING(username);
+	info.password = STD_STRING(password);
+	server->Connect(info);
 }
 
 ServerManager* ServerManager::m_Instance = nullptr;

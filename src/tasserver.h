@@ -41,10 +41,10 @@ public:
 	// Overloaded functions from Server
 	bool ExecuteSayCommand(const std::string& cmd) override;
 
-	void Register(const std::string& servername, const std::string& host, const int port, const std::string& nick, const std::string& password) override;
+	void Register(const ServerLoginInfo& server) override;
 	void AcceptAgreement() override;
 
-	void Connect(const std::string& servername, const std::string& addr, const int port) override;
+	void Connect(const ServerLoginInfo& server) override;
 	void Disconnect() override;
 	bool IsConnected() override;
 
@@ -213,7 +213,6 @@ private:
 
 	std::string m_agreement;
 
-	std::string m_addr;
 	std::string m_delayed_open_command;
 
 	bool m_do_finalize_join_battle;
