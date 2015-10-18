@@ -499,7 +499,7 @@ void MainWindow::OnMenuJoin(wxCommandEvent& /*unused*/)
 		return;
 	wxString answer;
 	if (ui().AskText(_("Join channel..."), _("Name of channel to join"), answer)) {
-		ServerManager::Instance()->JoinChannel(answer, wxEmptyString);
+		ServerManager::Instance()->JoinChannel(STD_STRING(answer), "");
 	}
 }
 

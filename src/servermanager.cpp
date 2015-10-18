@@ -48,13 +48,13 @@ void ServerManager::ConnectToServer()
 		return;
 	}
 
-	const wxString server_name = sett().GetDefaultServer();
-	const wxString nick = sett().GetServerAccountNick(server_name);
-	const wxString pass = sett().GetServerAccountPass(server_name);
+	const std::string server_name = STD_STRING(sett().GetDefaultServer());
+	const std::string nick = STD_STRING(sett().GetServerAccountNick(server_name));
+	const std::string pass = STD_STRING(sett().GetServerAccountPass(server_name));
 	bool autoconnect = cfg().ReadBool(_T( "/Server/Autoconnect" ));
 
 	//TODO: Do not ask user about credentials in such way.
-	if (!autoconnect || server_name.IsEmpty() || nick.IsEmpty() || pass.IsEmpty()) {
+	if (!autoconnect || server_name.empty() || nick.empty() || pass.empty()) {
 		ui().ShowConnectWindow();
 		return;
 	}
@@ -67,8 +67,8 @@ void ServerManager::ConnectToServer()
 void ServerManager::ReconnectToServer()
 {
 	//TODO: Implement reconnection delay here!
-	const wxString servname = sett().GetDefaultServer();
-	const wxString pass = sett().GetServerAccountPass(servname);
+	const std::string servname = STD_STRING(sett().GetDefaultServer());
+	const std::string pass = STD_STRING(sett().GetServerAccountPass(servname));
 
 	//TODO: Need to be reworked
 	if (sett().GetServerAccountSavePass(servname) == false) {
@@ -77,7 +77,7 @@ void ServerManager::ReconnectToServer()
 	}
 
 	//Do actual connection
-	DoConnectToServer(servname, sett().GetServerAccountNick(servname), pass);
+	DoConnectToServer(servname, STD_STRING(sett().GetServerAccountNick(servname)), pass);
 }
 
 //Disconnect from server
@@ -89,7 +89,7 @@ void ServerManager::DisconnectFromServer()
 }
 
 //Register new Player on server
-void ServerManager::RegisterNewUser(const wxString& servername, const wxString& username, const wxString& password)
+void ServerManager::RegisterNewUser(const std::string& servername, const std::string& username, const std::string& password)
 {
 	//TODO: No ui calls here!
 	if (sett().ServerExists(servername) == false) {
@@ -97,18 +97,18 @@ void ServerManager::RegisterNewUser(const wxString& servername, const wxString& 
 		return;
 	}
 	IServer::ServerLoginInfo info;
-	info.description = STD_STRING(servername);
+	info.description = servername;
 	info.hostname = STD_STRING(sett().GetServerHost(servername));
 	info.port = sett().GetServerPort(servername);
-	info.username = STD_STRING(username);
-	info.password = STD_STRING(password);
+	info.username = username;
+	info.password = password;
 	serverSelector().GetServer().Register(info);
 }
 
 //Join chat channel
-void ServerManager::JoinChannel(const wxString& name, const wxString& password)
+void ServerManager::JoinChannel(const std::string& name, const std::string& password)
 {
-	serverSelector().GetServer().JoinChannel(STD_STRING(name), STD_STRING(password));
+	serverSelector().GetServer().JoinChannel(name, password);
 }
 
 //Download engine, map or mod
@@ -130,7 +130,7 @@ bool ServerManager::IsConnected()
 }
 
 //Opens the accutial connection to a server.
-void ServerManager::DoConnectToServer(const wxString& servername, const wxString& username, const wxString& password)
+void ServerManager::DoConnectToServer(const std::string& servername, const std::string& username, const std::string& password)
 {
 	IServer* server = &serverSelector().GetServer();
 
@@ -151,11 +151,11 @@ void ServerManager::DoConnectToServer(const wxString& servername, const wxString
 
 	// Connect
 	IServer::ServerLoginInfo info;
-	info.description = STD_STRING(servername);
-	info.hostname = STD_STRING(host);
+	info.description = servername;
+	info.hostname = host;
 	info.port = port;
-	info.username = STD_STRING(username);
-	info.password = STD_STRING(password);
+	info.username = username;
+	info.password = password;
 	server->Connect(info);
 }
 

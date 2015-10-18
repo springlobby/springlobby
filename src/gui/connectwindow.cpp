@@ -272,7 +272,7 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 			sett().SetServerAccountPass(HostAddress, m_pass_text->GetValue());
 		}
 		CleanHide();
-		ServerManager::Instance()->DoConnectToServer(HostAddress, m_nick_text->GetValue(), m_pass_text->GetValue());
+		ServerManager::Instance()->DoConnectToServer(STD_STRING(HostAddress), STD_STRING(m_nick_text->GetValue()), STD_STRING(m_pass_text->GetValue()));
 		return;
 	}
 
@@ -291,7 +291,7 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 		return;
 	}
 	CleanHide();
-	ServerManager::Instance()->RegisterNewUser(HostAddress, m_regnick_text->GetValue(), m_regpass1_text->GetValue());
+	ServerManager::Instance()->RegisterNewUser(STD_STRING(HostAddress), STD_STRING(m_regnick_text->GetValue()), STD_STRING(m_regpass1_text->GetValue()));
 }
 
 void ConnectWindow::OnCancel(wxCommandEvent&)

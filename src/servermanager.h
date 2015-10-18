@@ -5,8 +5,6 @@
 
 #include <string>
 
-class wxString;
-
 class ServerManager
 {
 private:
@@ -20,9 +18,9 @@ public:
 	void ConnectToServer();
 	void ReconnectToServer();
 	void DisconnectFromServer();
-	void RegisterNewUser(const wxString&, const wxString&, const wxString&);
-	void DoConnectToServer(const wxString&, const wxString&, const wxString&);
-	void JoinChannel(const wxString&, const wxString&);
+	void RegisterNewUser(const std::string&, const std::string&, const std::string&);
+	void DoConnectToServer(const std::string&, const std::string&, const std::string&);
+	void JoinChannel(const std::string&, const std::string&);
 	bool DownloadContent(const std::string&, const std::string&, const std::string&);
 
 	bool IsConnected();

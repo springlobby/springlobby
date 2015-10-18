@@ -4,6 +4,7 @@
 
 #include "servermanager.h"
 #include "channellistdataviewmodel.h"
+#include "utils/conversion.h"
 
 
 BEGIN_EVENT_TABLE(ChannelListView, BaseDataViewCtrl<ChannelInfo>)
@@ -71,7 +72,7 @@ void ChannelListView::OnItemActivated(wxDataViewEvent& /*event*/) {
 	}
 
 	wxString chan_name = channelInfo->name;
-	ServerManager::Instance()->JoinChannel(chan_name, wxEmptyString);
+	ServerManager::Instance()->JoinChannel(STD_STRING(chan_name), "");
 }
 
 bool ChannelListView::AddRealItem(ChannelInfo* channel) {
