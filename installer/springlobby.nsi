@@ -130,6 +130,8 @@ SectionEnd
 
 
 Section /o "Portable" SEC_PORTABLE
+	; make this section read-only -> portable is currently broken / not fully implemented
+	SectionIn RO
 	!define INSTALL
 		${!echonow} "Processing: Portable"
 		!include "sections\portable.nsh"
