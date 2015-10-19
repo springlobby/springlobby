@@ -5,7 +5,7 @@
 	File /oname=$TEMP\springlobby.zip "${SPRINGLOBBY_ARCHIVE}"
 
 	${If} ${FileExists} "$INSTDIR\uninst.exe"
-		MessageBox MB_ICONINFORMATION|MB_YESNO "Spring is already installed in this directory, do you want to uninstall it before continueing?" /SD IDYES IDNO fail
+		MessageBox MB_ICONINFORMATION|MB_YESNO "SpringLobby is already installed in this directory, do you want to uninstall it before continueing?" /SD IDYES IDNO fail
 		ExecWait '"$INSTDIR\uninst.exe" /S _?=$INSTDIR' $0
 		${If} $0 != 0
 			fail:

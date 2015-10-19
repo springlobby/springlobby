@@ -11,7 +11,6 @@ SetCompressor /FINAL /SOLID lzma
 !include "WordFunc.nsh"
 !insertmacro VersionCompare
 
-; this registry entry is deprecated (march 2011, use HKLM\Software\Spring\SpringEngine[Helper] instead)
 !define PRODUCT_NAME "SpringLobby"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\springlobby.exe"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -112,8 +111,6 @@ Section "SpringLobby" SEC_MAIN
 	!define INSTALL
 		${!echonow} "Processing: main"
 		!include "sections\main.nsh"
-		${!echonow} "Processing: deprecated"
-	        !include "sections\deprecated.nsh"
 	!undef INSTALL
 SectionEnd
 
@@ -189,10 +186,6 @@ Section Uninstall
 	${!echonow} "Processing: Uninstall"
 
 	!include "sections\main.nsh"
-	!include "sections\deprecated.nsh"
-
-	; FIXME workaround part2
-	Delete "$INSTDIR\pthreadGC2.dll"
 
 	!include "sections\shortcuts_startMenu.nsh"
 	!include "sections\shortcuts_desktop.nsh"
