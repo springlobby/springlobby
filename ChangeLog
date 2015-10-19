@@ -1,10 +1,13 @@
 ChangeLog of Springlobby
 
-## 0.241
- - keep selection when lists are resorted
- - intergrate installer createion to the build process
+## 0.243
+ - remove /installer from source tarbal
 
-## 0.238 - 0.240
+## 0.242
+ - keep selection when lists are resorted
+ - intergrate windows installer to the build process
+
+## 0.238 - 0.241
  - skipped due build error
 
 ## 0.237
@@ -21,6 +24,7 @@ ChangeLog of Springlobby
  - use pr-downloader for update check (fixes proxy support)
  - cleanup cmake: only add required include dirs to targets (requires cmake >=2.8.11)
  - update win32 buildslave: most recent version of gcc/curl/boost/wxwidgets is used
+ - relicensed src/lsl as GPL to simplify release notes
 
 ## 0.227 - 0.235
  - skipped due build error
