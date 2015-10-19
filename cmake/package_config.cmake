@@ -44,5 +44,6 @@ set(CPACK_SOURCE_IGNORE_FILES
 "^${springlobby_SOURCE_DIR}/doc/"
 "^${springlobby_SOURCE_DIR}/m4/"
 "^${springlobby_SOURCE_DIR}/obj/"
+"^${springlobby_SOURCE_DIR}/installer/"
 )
 INCLUDE(CPack)
