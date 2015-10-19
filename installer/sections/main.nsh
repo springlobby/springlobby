@@ -38,14 +38,4 @@
 	DeleteRegKey ${PRODUCT_ROOT_KEY} ${PRODUCT_KEY}
 	DeleteRegKey HKCR "spring"
 
-	MessageBox MB_YESNO|MB_ICONQUESTION "Do you want me to completely remove all spring related files?$\n\
-			All maps, games, screenshots and your settings will be removed. $\n\
-			CAREFULL: ALL CONTENTS OF YOUR SPRING INSTALLATION DIRECTORY WILL BE REMOVED! " \
-			/SD IDNO IDNO skip_purge
-		RmDir /r "$INSTDIR"
-		RmDir /r "$DOCUMENTS\My Games\Spring"
-		Delete "$LOCALAPPDATA\springsettings.cfg"
-		Delete "$APPDATA\springlobby.conf"
-	skip_purge:
-
 !endif
