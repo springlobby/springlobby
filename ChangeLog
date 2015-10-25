@@ -1,7 +1,10 @@
 ChangeLog of Springlobby
 
 ## 0.243
- - remove /installer from source tarbal
+ - remove /installer from source tarball
+ - installer: remove functionality to delete user content
+ - installer: cleanup
+ - disable broken popular/recent in map select dialog (fixes a bunch of problems)
 
 ## 0.242
  - keep selection when lists are resorted
