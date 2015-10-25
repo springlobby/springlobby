@@ -153,7 +153,7 @@ private:
 	void DrawBackground(wxDC& dc);
 	void SetMinimap(MapData& mapdata, const wxBitmap& minimap);
 	void SelectMap(MapData* map);
-	bool IsInGrid(const std::string& mapname);
+	bool IsInGrid(const wxString& mapname);
 	MapData* GetMaxPriorityMap(std::list<MapData*>& maps);
 
 	LSL::UnitSyncAsyncOps m_async_image;

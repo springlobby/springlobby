@@ -241,9 +241,9 @@ void MapGridCtrl::Clear()
 }
 
 
-bool MapGridCtrl::IsInGrid(const std::string& mapname)
+bool MapGridCtrl::IsInGrid(const wxString& mapname)
 {
-	for (auto gridentry : m_grid) {
+	for (const MapData* gridentry : m_grid) {
 		if (gridentry->name == mapname) {
 			return true;
 		}
@@ -256,8 +256,7 @@ void MapGridCtrl::AddMap(const wxString& mapname)
 	assert(wxThread::IsMain());
 	assert(!mapname.empty());
 
-	const std::string _mapname(mapname.mb_str());
-	if (!LSL::usync().MapExists(_mapname)) {
+	if (!LSL::usync().MapExists(STD_STRING(mapname))) {
 		//FIXME: offer download button on image instead?
 		wxLogError(_("Map %s doesn't exist!"), mapname.wc_str());
 		return;
@@ -273,7 +272,7 @@ void MapGridCtrl::AddMap(const wxString& mapname)
 		UpdateAsyncFetches();
 	}
 
-	if (IsInGrid(_mapname)) {
+	if (IsInGrid(mapname)) {
 		wxLogWarning(_("Map %s already in grid!"), mapname.wc_str());
 		return;
 	}
