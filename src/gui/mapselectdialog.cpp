@@ -340,6 +340,7 @@ void MapSelectDialog::LoadAll()
 	m_mapgrid->Refresh();
 }
 
+/*
 void MapSelectDialog::LoadPopular()
 {
 	slLogDebugFunc("");
@@ -382,6 +383,7 @@ void MapSelectDialog::LoadRecent()
 
 	m_mapgrid->Refresh();
 }
+*/
 
 // filter event handlers
 
