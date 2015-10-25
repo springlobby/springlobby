@@ -829,6 +829,9 @@ std::string IBattle::GetHostGameHash() const
 
 bool IBattle::MapExists(bool comparehash) const
 {
+	if (m_host_map.name.empty()) {
+		return false;
+	}
 	if (comparehash) {
 		return LSL::usync().MapExists(m_host_map.name, m_host_map.hash);
 	}
