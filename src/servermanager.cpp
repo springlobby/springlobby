@@ -140,7 +140,7 @@ void ServerManager::DoConnectToServer(const std::string& servername, const std::
 	}
 
 
-	const wxString host = sett().GetServerHost(servername);
+	const std::string host = STD_STRING(sett().GetServerHost(servername));
 	const int port = sett().GetServerPort(servername);
 
 	//TODO: Rework this!!!
