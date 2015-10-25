@@ -352,11 +352,8 @@ void MapSelectDialog::LoadPopular()
 			IBattle* b = serverSelector().GetServer().battles_iter->GetBattle();
 			const std::string mapname = b->GetHostMapName();
 			assert(!mapname.empty());
-			if (b == NULL)
-				continue;
-			if (!LSL::usync().MapExists(mapname))
-				continue;
-			m_mapgrid->AddMap(TowxString(mapname));
+			if (b != NULL)
+				m_mapgrid->AddMap(TowxString(mapname));
 		}
 	} catch (...) {
 	} // ui().GetServer may throw when disconnected...
