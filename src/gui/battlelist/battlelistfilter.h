@@ -28,6 +28,7 @@ class BattleListFilter : public wxPanel, public SL::NonCopyable
 {
 public:
 	BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTab* parentBattleListTab, const wxPoint& pos, const wxSize& size, long style);
+	~BattleListFilter();
 
 	void OnRankButton(wxCommandEvent& event);
 	void OnPlayerButton(wxCommandEvent& event);

@@ -158,6 +158,11 @@ MapCtrl::~MapCtrl()
 	delete m_nfound_img;
 	delete m_reload_img;
 	delete m_dl_img;
+	delete m_start_ally;
+	delete m_start_enemy;
+	delete m_start_unused;
+	delete m_player_img;
+	delete m_bot_img;
 }
 
 

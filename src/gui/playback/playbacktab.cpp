@@ -169,8 +169,9 @@ PlaybackTab::~PlaybackTab()
 	m_minimap->SetBattle(NULL);
 	if (m_filter != 0)
 		m_filter->SaveFilterValues();
+	delete m_replay_loader;
 
-	wxLogDebug("%s");
+	wxLogDebug("");
 }
 
 void PlaybackTab::AddAllPlaybacks(wxCommandEvent& /*unused*/)

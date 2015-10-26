@@ -42,6 +42,7 @@ ChannelChooserPanel::ChannelChooserPanel(wxWindow* parent, wxWindowID id, const 
 
 ChannelChooserPanel::~ChannelChooserPanel()
 {
+	wxDELETE(m_channellist);
 	//dtor
 }
 

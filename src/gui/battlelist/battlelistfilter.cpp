@@ -393,6 +393,14 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	OnChange(dummy);
 }
 
+BattleListFilter::~BattleListFilter()
+{
+	delete m_filter_map_expression;
+	delete m_filter_mod_expression;
+	delete m_filter_description_expression;
+	delete m_filter_host_expression;
+}
+
 BattleListFilter::ButtonMode BattleListFilter::_GetButtonMode(const wxString& sign)
 {
 	if (sign == _T( "<" ))

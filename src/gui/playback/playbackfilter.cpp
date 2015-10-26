@@ -249,6 +249,12 @@ PlaybackListFilter::PlaybackListFilter(wxWindow* parent, wxWindowID id, Playback
 	OnChange(dummy);
 }
 
+PlaybackListFilter::~PlaybackListFilter()
+{
+	delete m_filter_map_expression;
+	delete m_filter_mod_expression;
+}
+
 PlaybackListFilter::m_button_mode PlaybackListFilter::_GetButtonMode(wxString sign)
 {
 	if (sign == _T("<"))

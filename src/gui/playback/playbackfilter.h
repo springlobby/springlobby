@@ -24,6 +24,7 @@ class PlaybackListFilter : public wxPanel
 {
 public:
 	PlaybackListFilter(wxWindow* parent, wxWindowID id, PlaybackTab* parentTab, const wxPoint& pos, const wxSize& size, long style);
+	~PlaybackListFilter();
 
 	void OnPlayerButton(wxCommandEvent& event);
 	void OnFilesizeButton(wxCommandEvent& event);

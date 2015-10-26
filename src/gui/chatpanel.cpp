@@ -229,6 +229,7 @@ ChatPanel::~ChatPanel()
 
 	m_chatlog_text->Disconnect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, 0);
 	wxDELETE(m_chatlog_text);
+	wxDELETE(m_popup_menu);
 
 	if (GetAui().manager) {
 		GetAui().manager->DetachPane(this);

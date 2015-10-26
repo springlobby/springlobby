@@ -462,7 +462,7 @@ void BattleroomMMOptionsTab::OnReloadControls(const LSL::Enum::GameOption& flag)
 	//this->SetSizer( m_main_sizer, true );
 	m_main_sizer->FitInside(this);
 
-	this->Layout();
+	Layout();
 	SetScrollbars(10, 10, 62, 62);
 }
 
