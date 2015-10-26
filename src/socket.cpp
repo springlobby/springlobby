@@ -92,6 +92,7 @@ bool GetMac(std::vector<unsigned char>& mac)
 				mac.assign(sal->sll_addr, sal->sll_addr + sal->sll_halen);
 				for (size_t i = 0; i < mac.size(); i++) {
 					if (mac[i] != 0) {
+						freeifaddrs(ifap);
 						return true;
 					}
 				}
