@@ -74,10 +74,13 @@ public:
 			for (IDownload* dl: m_item) {
 				switch (dl->cat) {
 					case IDownload::CAT_MAPS: {
-						LSL::usync().PrefetchMap(dl->name); //FIXME: do the same for games, too
+						LSL::usync().PrefetchMap(dl->name);
+						break;
 					}
-					break;
-
+					case IDownload::CAT_GAMES: {
+						LSL::usync().PrefetchGame(dl->name);
+						break;
+					}
 					default:
 						continue;
 				}
