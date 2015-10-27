@@ -693,6 +693,9 @@ void Ui::OnUserBattleStatus(wxCommandEvent& event)
 	if (m_main_win == 0) {
 		return;
 	}
+	if (m_serv == 0 || !m_serv->IsOnline()) {
+		return;
+	}
 
 	User* user = static_cast<User*>(event.GetClientData());
 	mw().GetJoinTab().BattleUserUpdated(*user);
