@@ -69,11 +69,9 @@ void TaskBar::UpdateDisplay()
 	overalSize = 0;
 	overalProgress = 0;
 	DownloadsObserver& observ = downloadsObserver();
-	std::list<ObserverDownloadInfo> list;
-	observ.GetList(list);
-	std::list<ObserverDownloadInfo>::iterator it;
-	for (it = list.begin(); it != list.end(); ++it) {
-		ObserverDownloadInfo info = (*it);
+	std::list<ObserverDownloadInfo> activedownloads;
+	observ.GetActiveDownloads(activedownloads);
+	for (ObserverDownloadInfo info: activedownloads) {
 		if (!info.finished) {
 			finished = false;
 			unfinishedTasks++;

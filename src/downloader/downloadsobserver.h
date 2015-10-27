@@ -59,11 +59,11 @@ public:
 	//! This function called from IDownload::~IDownload
 	virtual void Remove(IDownload* dl);
 
-	//! Fill out list with donwloads
-	void GetList(std::list<ObserverDownloadInfo>& lst);
+	//! Fill out list with all active downloads
+	void GetActiveDownloads(std::list<ObserverDownloadInfo>& lst);
 
 	//! Fill out map with downloads (Key: Original name)
-	void GetMap(std::map<wxString, ObserverDownloadInfo>& map);
+	bool GetActiveDownloadInfo(const wxString& name, ObserverDownloadInfo& info);
 
 	//! Delete all information about finished downloads
 	void ClearFinished();
@@ -75,9 +75,9 @@ private:
 	ObserverDownloadInfo GetInfo(IDownload* dl);
 
 	//! List with downloads which are in process
-	std::list<IDownload*> m_ActiveDownloadsList;
+	std::list<IDownload*> m_DownloadList;
 
-	//! List with finished downloads
+    //! List with finished downloads
 	std::list<ObserverDownloadInfo> m_FinishedDownloadsList;
 
 	//! Mutex fir functions Add, Remove, GetList, GetMap

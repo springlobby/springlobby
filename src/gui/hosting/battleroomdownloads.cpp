@@ -94,24 +94,21 @@ void BattleRoomDownloads::OnUpdate()
 	}
 
 	DownloadsObserver& observ = downloadsObserver();
-	std::map<wxString, ObserverDownloadInfo> dlmap;
-	observ.GetMap(dlmap);
 
-	try {
-		wxString game = TowxString(m_battle->GetHostGameName());
-		ObserverDownloadInfo obi = dlmap.at(game);
+	const wxString game = TowxString(m_battle->GetHostGameName());
+	ObserverDownloadInfo obi ;
+	if (observ.GetActiveDownloadInfo(game, obi)) {
 		m_mod->Show();
 		m_mod->UpdateDownload(obi);
-	} catch (...) {
+	} else {
 		m_mod->Hide();
 	}
 
-	try {
-		wxString map = TowxString(m_battle->GetHostMapName());
-		ObserverDownloadInfo obi = dlmap.at(map);
+	const wxString map = TowxString(m_battle->GetHostMapName());
+	if (observ.GetActiveDownloadInfo(map, obi)) {
 		m_map->Show();
 		m_map->UpdateDownload(obi);
-	} catch (...) {
+	} else {
 		m_map->Hide();
 	}
 }

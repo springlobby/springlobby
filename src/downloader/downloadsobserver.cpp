@@ -32,59 +32,43 @@ DownloadsObserver::DownloadsObserver()
 DownloadsObserver::~DownloadsObserver()
 {
 }
-/*
-static const DownloadsObserver& DownloadsObserver::Instance()
-{
-    static DownloadsObserver downloadsObserver;
-    return downloadsObserver;
-}
-*/
+
 void DownloadsObserver::Add(IDownload* dl)
 {
 	wxMutexLocker lock(mutex);
 
 	ContentManager::Instance()->OnDownloadStarted(dl);
-	m_ActiveDownloadsList.push_back(dl);
+	m_DownloadList.push_back(dl);
 }
 
 void DownloadsObserver::Remove(IDownload* dl)
 {
 	wxMutexLocker lock(mutex);
-
 	ContentManager::Instance()->OnDownloadFinished(dl);
-	m_ActiveDownloadsList.remove(dl);
-
-	ObserverDownloadInfo di = GetInfo(dl);
-	di.finished = 1;
-
-	m_FinishedDownloadsList.push_back(di);
+	m_DownloadList.remove(dl);
+	m_FinishedDownloadsList.push_back(GetInfo(dl));
 }
 
-void DownloadsObserver::GetList(std::list<ObserverDownloadInfo>& lst)
+void DownloadsObserver::GetActiveDownloads(std::list<ObserverDownloadInfo>& lst)
 {
 	wxMutexLocker lock(mutex);
-	for (IDownload* dl: m_ActiveDownloadsList) {
+	for (IDownload* dl: m_DownloadList) {
 		ObserverDownloadInfo di = GetInfo(dl);
-		if (di.size > 0)
-			lst.push_back(di);
+		lst.push_back(di);
 	}
-
-	lst.splice(lst.begin(), m_FinishedDownloadsList);
 }
 
-void DownloadsObserver::GetMap(std::map<wxString, ObserverDownloadInfo>& map)
+ bool DownloadsObserver::GetActiveDownloadInfo(const wxString& name, ObserverDownloadInfo& info)
 {
 	wxMutexLocker lock(mutex);
-	for (IDownload* dl: m_ActiveDownloadsList) {
+	for (IDownload* dl: m_DownloadList) {
 		ObserverDownloadInfo di = GetInfo(dl);
-		if (di.size > 0)
-			map[di.name] = di;
+		if (di.name == name) {
+			info = di;
+			return true;
+		}
 	}
-
-	for (ObserverDownloadInfo di: m_FinishedDownloadsList) {
-		if (di.size > 0)
-			map[di.name] = di;
-	}
+	return false;
 }
 
 void DownloadsObserver::ClearFinished()
@@ -106,5 +90,5 @@ DownloadsObserver& downloadsObserver()
 
 bool DownloadsObserver::IsEmpty()
 {
-	return m_ActiveDownloadsList.empty();
+	return m_DownloadList.empty();
 }
