@@ -149,6 +149,8 @@ MapCtrl::MapCtrl(wxWindow* parent, int size, IBattle* battle, bool readonly, boo
 
 MapCtrl::~MapCtrl()
 {
+	m_mutex.Lock();
+	m_async.Disconnect();
 	FreeMinimap();
 	delete m_close_img;
 	delete m_close_hi_img;
@@ -160,6 +162,7 @@ MapCtrl::~MapCtrl()
 	delete m_dl_img;
 	delete m_player_img;
 	delete m_bot_img;
+	m_mutex.Unlock();
 }
 
 
@@ -477,6 +480,7 @@ int MapCtrl::LoadMinimap()
 		m_lastsize = wxSize(w, h);
 	} catch (...) {
 		FreeMinimap();
+		m_mutex.Unlock();
 		return -3;
 	}
 	return 0;
@@ -518,8 +522,8 @@ void MapCtrl::UpdateMinimap()
 				RelocateUsers();
 		}
 	}
-	m_mutex.Unlock();
 	Refresh();
+	m_mutex.Unlock();
 }
 
 
@@ -1569,10 +1573,14 @@ void MapCtrl::OnMouseWheel(wxMouseEvent& event)
 
 void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 {
-	wxLogDebug(wxString::Format(_T("Map loaded (async) complete: %s"), TowxString(mapname).c_str()));
 	m_mutex.Lock();
+	wxLogDebug(wxString::Format(_T("Map loaded (async) complete: %s"), TowxString(mapname).c_str()));
+	if (!m_async.Connected()) { //was closed, abort
+		m_mutex.Unlock();
+		return;
+	}
 
-	if (m_mapname.empty() || mapname.empty() || mapname != m_mapname) {
+	if (m_mapname.empty() || mapname.empty() || mapname != m_mapname) { //selected doesn't match fetched map, abort
 		m_mutex.Unlock();
 		return;
 	}
@@ -1581,19 +1589,19 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 	const int h = m_lastsize.GetHeight();
 
 	if (m_minimap == NULL) {
-		m_minimap = new wxBitmap(LSL::usync().GetMinimap(m_mapname, w, h).wxbitmap());
+		m_minimap = new wxBitmap(LSL::usync().GetMinimap(mapname, w, h).wxbitmap());
 		// this ensures metalmap and heightmap aren't loaded in battlelist
 		if (m_draw_start_types) {
-			m_async.GetMetalmap(m_mapname, w, h);
+			m_async.GetMetalmap(mapname, w, h);
 		}
 	} else if (m_metalmap == NULL) {
-		m_metalmap = new wxBitmap(LSL::usync().GetMetalmap(m_mapname, w, h).wxbitmap());
+		m_metalmap = new wxBitmap(LSL::usync().GetMetalmap(mapname, w, h).wxbitmap());
 		// singleplayer mode doesn't allow startboxes anyway
-		m_metalmap_cumulative = LSL::usync().GetMetalmap(m_mapname, w, h).wximage();
+		m_metalmap_cumulative = LSL::usync().GetMetalmap(mapname, w, h).wximage();
 		Accumulate(m_metalmap_cumulative);
-		m_async.GetHeightmap(m_mapname, w, h);
+		m_async.GetHeightmap(mapname, w, h);
 	} else if (m_heightmap == NULL) {
-		m_heightmap = new wxBitmap(LSL::usync().GetHeightmap(m_mapname, w, h).wxbitmap());
+		m_heightmap = new wxBitmap(LSL::usync().GetHeightmap(mapname, w, h).wxbitmap());
 	}
 
 	// never ever call a gui function here, it will crash! (in 1/100 cases)

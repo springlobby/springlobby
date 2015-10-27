@@ -190,6 +190,7 @@ private:
 	wxImage m_img_foreground;
 	/// this is displayed for maps whose minimap has not yet been loaded
 	wxBitmap m_img_minimap_loading;
+	wxMutex m_mutex;
 
 	DECLARE_EVENT_TABLE()
 };

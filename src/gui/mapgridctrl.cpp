@@ -76,12 +76,16 @@ MapGridCtrl::MapGridCtrl(wxWindow* parent, wxSize size, wxWindowID id)
 
 MapGridCtrl::~MapGridCtrl()
 {
+	m_mutex.Lock();
+	m_async_ex.Disconnect();
+	m_async_image.Disconnect();
 	Clear();
 	m_pending_mapimages.clear();
 	m_pending_mapinfos.clear();
 	m_async_ops_count = 0;
 	m_grid.clear();
 	m_maps.clear();
+	m_mutex.Unlock();
 }
 
 
@@ -523,9 +527,12 @@ void MapGridCtrl::SelectMap(MapData* map)
 
 void MapGridCtrl::OnGetMapImageAsyncCompleted(const std::string& _mapname)
 {
+	m_mutex.Lock();
 	// if mapname is empty, some error occurred in LSL::usync().GetMinimap...
-	if (_mapname.empty())
+	if (!m_async_ex.Connected() || !m_async_image.Connected() || _mapname.empty()) {
+		m_mutex.Unlock();
 		return;
+	}
 	const wxString mapname = TowxString(_mapname);
 	wxImage minimap(LSL::usync().GetMinimap(_mapname, MINIMAP_SIZE, MINIMAP_SIZE).wximage());
 
@@ -549,19 +556,24 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted(const std::string& _mapname)
 	wxCommandEvent evt(REFRESH_EVENT, GetId());
 	evt.SetEventObject(this);
 	wxPostEvent(this, evt);
+	m_mutex.Unlock();
 }
 
 
 void MapGridCtrl::OnGetMapExAsyncCompleted(const std::string& _mapname)
 {
+	m_mutex.Lock();
 	// if mapname is empty, some error occurred in LSL::usync().GetMapEx...
-	if (_mapname.empty())
+	if (!m_async_ex.Connected() || !m_async_image.Connected() || _mapname.empty()) {
+		m_mutex.Unlock();
 		return;
+	}
 	const wxString mapname = TowxString(_mapname);
 	LSL::UnitsyncMap m = LSL::usync().GetMap(_mapname);
 	m_maps[mapname].hash = m.hash;
 	m_maps[mapname].info = m.info;
 	m_async_ops_count--;
+	m_mutex.Unlock();
 }
 
 void MapGridCtrl::OnRefresh(wxCommandEvent& /*event*/)
