@@ -182,6 +182,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 SinglePlayerTab::~SinglePlayerTab()
 {
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
+	wxDELETE(m_minimap);
 }
 
 
