@@ -63,11 +63,6 @@ public:
 			wxLogError(errorMessage);
 		}
 
-		for (IDownload* dl: m_item) {
-			DownloadFinished(dl);
-		}
-
-		UiEvents::ScopedStatusMessage msgcomplete(d, 0);
 		if (m_reload) {
 			LSL::usync().ReloadUnitSyncLib();
 			// prefetch map data after a download as well
@@ -89,6 +84,11 @@ public:
 			//notify about finished download
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 		}
+		for (IDownload* dl: m_item) {
+			DownloadFinished(dl);
+		}
+
+		UiEvents::ScopedStatusMessage msgcomplete(d, 0);
 		if (m_lobbydl) {
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
 		}
