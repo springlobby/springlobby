@@ -64,8 +64,11 @@ void DownloadInfo::UpdateInfo() {
 	if (iDownload == nullptr) {
 		return;
 	}
-
-	downloadName = iDownload->origin_name;
+	if (iDownload->origin_name.empty()) {
+		downloadName = iDownload->name;
+	} else {
+		downloadName = iDownload->origin_name;
+	}
 	totalSize = iDownload->size;
 	downloadedSize = iDownload->progress;
 }
