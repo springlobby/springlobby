@@ -50,10 +50,10 @@ int DownloadInfo::GetSize() const {
 int DownloadInfo::GetProgressPercent() const {
 
 	if (totalSize == 0) {
-		return 0;
+		return 100.0f;
 	}
 
-	int computedProgress = static_cast<int>( (downloadedSize * 100.0F) / totalSize );
+	int computedProgress = static_cast<int>( (downloadedSize / totalSize ) * 100.0f);
 
 	return computedProgress;
 }
