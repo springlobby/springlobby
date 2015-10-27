@@ -51,6 +51,7 @@ MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
 
 MainSinglePlayerTab::~MainSinglePlayerTab()
 {
+	wxDELETE(m_imagelist);
 	//    if ( sett().GetAutosavePerspective() )
 	//        SavePerspective();
 }
