@@ -474,7 +474,7 @@ int MapCtrl::LoadMinimap()
 
 		// start chain of asynchronous map image fetches
 		// first minimap, then metalmap and heightmap
-		m_async.GetMinimap(map, w, h);
+		m_async.GetMapImageAsync(map, LSL::IMAGE_MAP, w, h);
 
 		m_mapname = map;
 		m_lastsize = wxSize(w, h);
@@ -1589,19 +1589,19 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 	const int h = m_lastsize.GetHeight();
 
 	if (m_minimap == NULL) {
-		m_minimap = new wxBitmap(LSL::usync().GetMinimap(mapname, w, h).wxbitmap());
+		m_minimap = new wxBitmap(LSL::usync().GetScaledMapImage(mapname,LSL::IMAGE_MAP, w, h).wxbitmap());
 		// this ensures metalmap and heightmap aren't loaded in battlelist
 		if (m_draw_start_types) {
-			m_async.GetMetalmap(mapname, w, h);
+			m_async.GetMapImageAsync(mapname, LSL::IMAGE_MAP, w, h);
 		}
 	} else if (m_metalmap == NULL) {
-		m_metalmap = new wxBitmap(LSL::usync().GetMetalmap(mapname, w, h).wxbitmap());
+		m_metalmap = new wxBitmap(LSL::usync().GetScaledMapImage(mapname, LSL::IMAGE_METALMAP, w, h).wxbitmap());
 		// singleplayer mode doesn't allow startboxes anyway
-		m_metalmap_cumulative = LSL::usync().GetMetalmap(mapname, w, h).wximage();
+		m_metalmap_cumulative = LSL::usync().GetScaledMapImage(mapname, LSL::IMAGE_METALMAP, w, h).wximage();
 		Accumulate(m_metalmap_cumulative);
-		m_async.GetHeightmap(mapname, w, h);
+		m_async.GetMapImageAsync(mapname,LSL::IMAGE_HEIGHTMAP, w, h);
 	} else if (m_heightmap == NULL) {
-		m_heightmap = new wxBitmap(LSL::usync().GetHeightmap(mapname, w, h).wxbitmap());
+		m_heightmap = new wxBitmap(LSL::usync().GetScaledMapImage(mapname, LSL::IMAGE_HEIGHTMAP, w, h).wxbitmap());
 	}
 
 	// never ever call a gui function here, it will crash! (in 1/100 cases)
