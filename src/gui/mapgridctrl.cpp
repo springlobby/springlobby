@@ -343,7 +343,7 @@ void MapGridCtrl::UpdateAsyncFetches()
 	if (!m_pending_mapinfos.empty()) {
 		m_async_ops_count++;
 		const MapData* m = GetMaxPriorityMap(m_pending_mapinfos);
-		m_async_ex.GetMapImageAsync(m->name, LSL::IMAGE_MAP, MINIMAP_SIZE, MINIMAP_SIZE);
+		m_async_ex.GetMapImageAsync(m->name, LSL::IMAGE_MAP_THUMB, MINIMAP_SIZE, MINIMAP_SIZE);
 	} else if (!m_pending_mapimages.empty()) {
 		MapData* m = GetMaxPriorityMap(m_pending_mapimages);
 		if (m->state != MapState_NoMinimap) //FIXME: this shouldn never happen
@@ -351,7 +351,7 @@ void MapGridCtrl::UpdateAsyncFetches()
 		m_async_ops_count++;
 
 		m->state = MapState_GetMinimap;
-		m_async_image.GetMapImageAsync(m->name, LSL::IMAGE_MAP, MINIMAP_SIZE, MINIMAP_SIZE);
+		m_async_image.GetMapImageAsync(m->name, LSL::IMAGE_MAP_THUMB, MINIMAP_SIZE, MINIMAP_SIZE);
 	} else {
 		wxCommandEvent evt(LoadingCompletedEvt, GetId());
 		evt.SetEventObject(this);
@@ -534,7 +534,7 @@ void MapGridCtrl::OnGetMapImageAsyncCompleted(const std::string& _mapname)
 		return;
 	}
 	const wxString mapname = TowxString(_mapname);
-	wxImage minimap(LSL::usync().GetScaledMapImage(_mapname, LSL::IMAGE_MAP, MINIMAP_SIZE, MINIMAP_SIZE).wximage());
+	wxImage minimap(LSL::usync().GetScaledMapImage(_mapname, LSL::IMAGE_MAP_THUMB, MINIMAP_SIZE, MINIMAP_SIZE).wximage());
 
 	const int w = minimap.GetWidth();
 	const int h = minimap.GetHeight();
