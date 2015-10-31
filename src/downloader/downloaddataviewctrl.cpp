@@ -56,5 +56,15 @@ void DownloadDataViewCtrl::OnRetry(wxCommandEvent& /*event*/) {
 }
 
 void DownloadDataViewCtrl::AddDownloadInfo(DownloadInfo* dInfo) {
+
+    wxString dName = dInfo->GetName().Lower();
+
+    //Ignore/do not add repository content list downloads
+    //(this is not useful for users to such weird things in download list)
+    if (dName.Contains(_T("versions.gz")))
+    {
+        return;
+    }
+
 	AddItem(*dInfo);
 }
