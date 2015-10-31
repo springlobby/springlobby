@@ -309,11 +309,19 @@ inline bool BaseDataViewCtrl<DataType>::AddItem(const DataType& item)
 template <class DataType>
 inline bool BaseDataViewCtrl<DataType>::RemoveItem(const DataType& item)
 {
+    wxDataViewItem selectedItem = GetSelection();
+
 	bool result = m_DataModel->RemoveItem(item);
 
 	if (result) {
 		Resort();
 	}
+
+    //Do no try to select removed item
+    if ( (selectedItem.GetID()) != (&item) )
+    {
+        Select(selectedItem);
+    }
 
 	return result;
 }
