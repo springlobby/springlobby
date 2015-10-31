@@ -53,7 +53,7 @@ int DownloadInfo::GetProgressPercent() const {
 		return 100.0f;
 	}
 
-	int computedProgress = static_cast<int>( (downloadedSize / totalSize ) * 100.0f);
+    int computedProgress = static_cast<int>( (((float)downloadedSize) / ((float)totalSize) ) * 100.0f);
 
 	return computedProgress;
 }
