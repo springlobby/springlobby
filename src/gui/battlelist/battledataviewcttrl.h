@@ -28,6 +28,7 @@ private:
 	void OnDLMap(wxCommandEvent& event);
 	void OnDLMod(wxCommandEvent& event);
 	void OnDLEngine(wxCommandEvent& event);
+    void OnNotifyGameEnd(wxCommandEvent& event);
 	void OnContextMenu(wxDataViewEvent& event);
 
 private:
@@ -38,7 +39,8 @@ public:
 		BATTLELIST_DATAVIEW_ID = wxID_HIGHEST,
 		BATTLELIST_DATAVIEW_DLMOD,
 		BATTLELIST_DATAVIEW_DLMAP,
-		BATTLELIST_DATAVIEW_DLENGINE
+        BATTLELIST_DATAVIEW_DLENGINE,
+        BATTLELIST_DATAVIEW_NOTIFYGAMEENDS
 	};
 
 private:

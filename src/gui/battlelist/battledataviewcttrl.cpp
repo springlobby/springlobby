@@ -19,6 +19,7 @@ BEGIN_EVENT_TABLE(BattleDataViewCtrl, BaseDataViewCtrl)
 	EVT_MENU(BATTLELIST_DATAVIEW_DLMAP, BattleDataViewCtrl::OnDLMap)
 	EVT_MENU(BATTLELIST_DATAVIEW_DLMOD, BattleDataViewCtrl::OnDLMod)
 	EVT_MENU(BATTLELIST_DATAVIEW_DLENGINE, BattleDataViewCtrl::OnDLEngine)
+    EVT_MENU(BATTLELIST_DATAVIEW_NOTIFYGAMEENDS, BattleDataViewCtrl::OnNotifyGameEnd)
 END_EVENT_TABLE()
 
 BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* parent) : BaseDataViewCtrl(dataViewName, parent, BATTLELIST_DATAVIEW_ID) {
@@ -124,6 +125,19 @@ void BattleDataViewCtrl::OnDLEngine(wxCommandEvent& /*event*/) {
 	}
 }
 
+void BattleDataViewCtrl::OnNotifyGameEnd(wxCommandEvent& /*unused*/)
+{
+    const IBattle* battle = GetSelectedItem();
+
+    if (battle == nullptr) {
+        return;
+    }
+
+    //Send user (belived to be autohost bot) private message with "!notify" command
+    User founder = battle->GetFounder();
+    founder.Say("!notify");
+}
+
 void BattleDataViewCtrl::OnContextMenu(wxDataViewEvent& /*event*/) {
 
 	const IBattle* battle = GetSelectedItem();
@@ -150,7 +164,7 @@ void BattleDataViewCtrl::OnContextMenu(wxDataViewEvent& /*event*/) {
 		m_popup->Append(BATTLELIST_DATAVIEW_DLENGINE, _("Download &engine"));
 	}
 
-	if (map_missing || mod_missing || engine_missing) {
-		PopupMenu(m_popup);
-	}
+    m_popup->Append(BATTLELIST_DATAVIEW_NOTIFYGAMEENDS, _("Notify me when game has ended"));
+
+    PopupMenu(m_popup);
 }
