@@ -28,7 +28,8 @@
 const static int slButtonSizerFlags = wxOK | wxCANCEL | wxYES | wxNO | wxHELP | wxNO_DEFAULT;
 
 BEGIN_EVENT_TABLE(CustomMessageBox, wxDialog)
-EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
+    EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
+    EVT_CLOSE(CustomMessageBox::OnCloseEvent)
 END_EVENT_TABLE()
 
 wxWindow* CustomMessageBoxBase::m_settingsWindow = 0;
@@ -123,7 +124,17 @@ CustomMessageBox::~CustomMessageBox()
 
 void CustomMessageBox::OnOptionsNo(wxCommandEvent& /*unused*/)
 {
-	EndModal(wxID_NO);
+    CloseDialog();
+}
+
+void CustomMessageBox::OnCloseEvent(wxCloseEvent& /*unused*/)
+{
+    CloseDialog();
+}
+
+void CustomMessageBox::CloseDialog()
+{
+    EndModal(wxID_NO);
 }
 
 void CustomMessageBoxBase::setLobbypointer(wxWindow* arg)

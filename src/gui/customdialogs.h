@@ -99,7 +99,10 @@ public:
 			 long style = wxOK | wxICON_INFORMATION, const wxPoint& pos = wxDefaultPosition);
 	virtual ~CustomMessageBox();
 
+protected:
 	void OnOptionsNo(wxCommandEvent& event);
+    void OnCloseEvent(wxCloseEvent& event);
+    void CloseDialog();
 
 private:
 	wxBoxSizer* m_topsizer;
