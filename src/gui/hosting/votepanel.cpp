@@ -16,7 +16,8 @@ static const std::string SAY_YES = "!vote y";
 static const std::string SAY_DONTCARE = "!vote b";
 static const std::string SAY_NO = "!vote n";
 static const std::string VOTING_END = "VOTE FOR COMMAND";
-static const std::string VOTE_CANCELLED = "VOTE CANCELED";
+static const std::string VOTE_CANCELLED = "VOTE CANCELLED";
+static const std::string VOTE_CANCELED = "VOTE CANCELED";
 static const std::string VOTE_CANCELLING = "CANCELLING";
 
 wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
@@ -103,7 +104,7 @@ void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& a
 
 	//Vote has ended
 	if (actionString.find(VOTING_END) != std::string::npos || actionString.find(VOTE_CANCELLED) != std::string::npos ||
-	    actionString.find(VOTE_CANCELLING) != std::string::npos) {
+        actionString.find(VOTE_CANCELED) != std::string::npos || actionString.find(VOTE_CANCELLING) != std::string::npos) {
 		onVoteStopped();
 		return;
 	}
