@@ -12,7 +12,7 @@
 #include "useractions.h"
 #include "utils/sortutil.h"
 
-const long CACHE_VERSION = 14;
+const long CACHE_VERSION = 15;
 const long SETTINGS_VERSION = 31;
 
 
