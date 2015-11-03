@@ -21,7 +21,6 @@ public:
 	void RegisterNewUser(const std::string&, const std::string&, const std::string&);
 	void DoConnectToServer(const std::string&, const std::string&, const std::string&);
 	void JoinChannel(const std::string&, const std::string&);
-	bool DownloadContent(const std::string&, const std::string&, const std::string&);
 
 	bool IsConnected();
 

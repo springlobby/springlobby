@@ -5,7 +5,6 @@
 #include "serverselector.h"
 #include "iserver.h"
 #include "utils/conversion.h"
-#include "downloader/prdownloader.h"
 #include "settings.h"
 #include "gui/ui.h"
 #include "gui/mainwindow.h"
@@ -109,18 +108,6 @@ void ServerManager::RegisterNewUser(const std::string& servername, const std::st
 void ServerManager::JoinChannel(const std::string& name, const std::string& password)
 {
 	serverSelector().GetServer().JoinChannel(name, password);
-}
-
-//Download engine, map or mod
-bool ServerManager::DownloadContent(const std::string& category, const std::string& name, const std::string& /*hash*/)
-{
-	int downloadJobsCreated = prDownloader().GetDownload(category, name);
-
-	if (downloadJobsCreated < 1) {
-		wxLogError(_("prDownloader failed to create thread!"));
-		return false;
-	}
-	return true;
 }
 
 //Simple wrapper. Maybe not needed

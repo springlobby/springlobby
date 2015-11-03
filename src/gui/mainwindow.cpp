@@ -722,7 +722,7 @@ void MainWindow::OnMenuDownload(wxCommandEvent& /*event*/)
 		const std::string category = STD_STRING(line.BeforeFirst(':'));
 		const std::string archive = STD_STRING(line.AfterFirst(':'));
 		if (!category.empty() && !archive.empty()) {
-			prDownloader().GetDownload(category, archive);
+			prDownloader().Download(DownloadEnum::getCatFromStr(category), archive);
 		}
 		start = pos + 1;
 	} while (pos != wxNOT_FOUND);

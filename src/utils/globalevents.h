@@ -35,6 +35,8 @@ private:
 public:
 	static const wxEventType OnDownloadStarted;
 	static const wxEventType OnDownloadComplete;
+	static const wxEventType OnDownloadFailed;
+	static const wxEventType OnDownloadProgress;
 	static const wxEventType OnUnitsyncFirstTimeLoad;
 	static const wxEventType OnUnitsyncReloaded;
 	static const wxEventType OnSpringTerminated;
@@ -42,8 +44,6 @@ public:
 	static const wxEventType UpdateFinished;
 	static const wxEventType OnQuit;
 	static const wxEventType OnLogin;
-	static const wxEventType PlasmaResourceListParsed;
-	static const wxEventType PlasmaResourceListFailedDownload;
 	static const wxEventType OnUpdateFinished;
 	static const wxEventType OnLobbyDownloaded;
 

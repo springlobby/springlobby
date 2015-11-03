@@ -8,6 +8,9 @@
 
 const wxEventType GlobalEventManager::OnDownloadStarted = wxNewEventType();
 const wxEventType GlobalEventManager::OnDownloadComplete = wxNewEventType();
+const wxEventType GlobalEventManager::OnDownloadFailed = wxNewEventType();
+const wxEventType GlobalEventManager::OnDownloadProgress = wxNewEventType();
+
 const wxEventType GlobalEventManager::OnUnitsyncFirstTimeLoad = wxNewEventType();
 const wxEventType GlobalEventManager::OnUnitsyncReloaded = wxNewEventType();
 const wxEventType GlobalEventManager::OnLobbyDownloaded = wxNewEventType();
@@ -16,8 +19,6 @@ const wxEventType GlobalEventManager::OnSpringStarted = wxNewEventType();
 const wxEventType GlobalEventManager::UpdateFinished = wxNewEventType();
 const wxEventType GlobalEventManager::OnQuit = wxNewEventType();
 const wxEventType GlobalEventManager::OnLogin = wxNewEventType();
-const wxEventType GlobalEventManager::PlasmaResourceListParsed = wxNewEventType();
-const wxEventType GlobalEventManager::PlasmaResourceListFailedDownload = wxNewEventType();
 const wxEventType GlobalEventManager::BattleSyncReload = wxNewEventType();
 const wxEventType GlobalEventManager::BattleStartedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::UserBattleStatusChangedEvent = wxNewEventType();

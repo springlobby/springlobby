@@ -10,7 +10,8 @@
 #include <wx/button.h>
 #include <wx/msgdlg.h>
 
-#include "downloader/lib/src/Downloader/Http/HttpDownloader.h"
+#include "downloader/lib/src/Downloader/Http/HttpDownloader.h" //FIXME: remove this
+#include "downloader/prdownloader.h"
 
 #include "httpfile.h"
 #include "ui.h"
@@ -113,7 +114,8 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& /*event*/)
 		ContentSearchResult* res = new ContentSearchResult();
 		res->name = dl->origin_name;
 		res->filesize = dl->size;
-		res->type = dl->getCat(dl->cat);
+		res->type = DownloadEnum::getCat(dl->cat);
+		res->category = dl->cat;
 		if (res->type == "map")
 			res->is_downloaded = LSL::usync().MapExists(dl->name);
 		else if (res->type == "game")
@@ -144,6 +146,5 @@ void ContentDownloadDialog::OnListDownload(wxDataViewEvent& /*event*/)
 	if (res == nullptr) {
 		return;
 	}
-
-	ServerManager::Instance()->DownloadContent(STD_STRING(res->type), STD_STRING(res->name), "");
+	prDownloader().Download(res->category, STD_STRING(res->name));
 }

@@ -60,7 +60,7 @@ bool ContentManager::IsNewApplicationVersionAvailable() {
 	return (latestVersion != myVersion);
 }
 
-bool ContentManager::UpdateApplication(){
+void ContentManager::UpdateApplication(){
 	const std::string latestVersion = GetLatestApplicationVersionAvailable();
 	const std::string updatedir = SlPaths::GetUpdateDir();
 	const size_t mindirlen = 9; // safety, minimal is/should be: C:\update
@@ -85,7 +85,7 @@ bool ContentManager::UpdateApplication(){
 		throw Exception(_T("couldn't delete: ") + dlfilepath);
 	}
 	const std::string dlurl = GetDownloadUrl(latestVersion);
-	return prDownloader().Download(dlfilepath, dlurl);
+	prDownloader().Download(DownloadEnum::CAT_SPRINGLOBBY, dlfilepath, dlurl);
 }
 
 bool ContentManager::IsHavingSpringVersion(const std::string& engineString,
@@ -147,21 +147,21 @@ bool ContentManager::DownloadContent(const ContentDownloadRequest& request) {
 		if (IsContentAlreadyBeingDownloaded(request.GetEngineVersion())) {
 			throw Exception(_("Engine being downloaded already! Please wait!"));
 		}
-		ServerManager::Instance()->DownloadContent(PrDownloader::GetEngineCat(), request.GetEngineVersion(), "");
+		prDownloader().Download(DownloadEnum::CAT_ENGINE, request.GetEngineVersion(), "");
 	}
 
 	if (request.IsMapRequested()) {
 		if (IsContentAlreadyBeingDownloaded(request.GetMapName())) {
 			throw Exception(_("Map being downloaded already! Please wait!"));
 		}
-		ServerManager::Instance()->DownloadContent("map", request.GetMapName(), request.GetMapHash());
+		prDownloader().Download(DownloadEnum::CAT_MAP, request.GetMapName(), request.GetMapHash());
 	}
 
 	if (request.IsGameRequested()) {
 		if (IsContentAlreadyBeingDownloaded(request.GetGameName())) {
 			throw Exception(_("Game being downloaded already! Please wait!"));
 		}
-		ServerManager::Instance()->DownloadContent("game", request.GetGameName(), request.GetGameHash());
+		prDownloader().Download(DownloadEnum::CAT_GAME, request.GetGameName(), request.GetGameHash());
 	}
 
 	return true;

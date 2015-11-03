@@ -7,7 +7,6 @@
 #include <wx/thread.h>
 #include <wx/string.h>
 #include "lib/src/Downloader/Download.h"
-#include "lib/src/Downloader/IDownloadsObserver.h"
 
 class wxMutex;
 class wxString;
@@ -25,7 +24,7 @@ public:
 	unsigned int progress;
 
 	//! Category of file
-	IDownload::category cat;
+	DownloadEnum::Category cat;
 
 	//! Is file downloaded
 	bool finished;
@@ -45,7 +44,7 @@ private:
 
 //! DownloadsObserver collect and control information about downloads
 //! This class is thread-safe
-class DownloadsObserver : public IDownloadsObserver
+class DownloadsObserver
 {
 public:
 	DownloadsObserver();

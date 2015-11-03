@@ -4,12 +4,14 @@
 #define CONTENTSEARCHRESULT_H
 #include <wx/string.h>
 #include <wx/image.h>
+#include "downloader/lib/src/Downloader/DownloadEnum.h"
 class ContentSearchResult
 {
 public:
 	ContentSearchResult();
 	~ContentSearchResult();
 	wxString name;
+	DownloadEnum::Category category;
 	wxString type;
 	wxImage* image;
 	unsigned int filesize;

@@ -21,7 +21,7 @@ public:
 	static void Release();
 
 	bool IsNewApplicationVersionAvailable();
-	bool UpdateApplication();
+	void UpdateApplication(); //throws
 	std::string GetLatestApplicationVersionAvailable();
 
 	bool IsHavingSpringVersion(const std::string& engineString, const std::string& versionString);
