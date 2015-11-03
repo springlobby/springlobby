@@ -49,9 +49,9 @@ public:
 
 		downloadInfo info;
 		const bool hasdlinfo = DownloadGetInfo(0, info);
+		assert(hasdlinfo);
 		const bool downloadFailed = DownloadStart();
-
-		UiEvents::ScopedStatusMessage msg("Downloading: " + m_name, 0);
+		UiEvents::ScopedStatusMessage msg("Downloading: " + m_name +std::string(" ") + info.filename, 0);
 		//we create this in avance cause m_item gets freed
 		wxString d(_("Download complete: " + m_name));
 
@@ -60,7 +60,6 @@ public:
 		if (downloadFailed) {
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 		} else {
-			assert(hasdlinfo);
 			DownloadFinished(m_category, info);
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadComplete);
 		}
@@ -69,31 +68,34 @@ public:
 private:
 	void DownloadFinished(DownloadEnum::Category cat, const downloadInfo& info)
 	{
-			switch (cat) {
-				case DownloadEnum::CAT_ENGINE_LINUX:
-				case DownloadEnum::CAT_ENGINE_WINDOWS:
-				case DownloadEnum::CAT_ENGINE_LINUX64:
-				case DownloadEnum::CAT_ENGINE_MACOSX:
-					SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
-					SlPaths::SetUsedSpringIndex(info.filename);
-					//Inform all application components about new engine been available
-					LSL::usync().ReloadUnitSyncLib();
-					GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
-					break;
+		switch (cat) {
+			case DownloadEnum::CAT_ENGINE_LINUX:
+			case DownloadEnum::CAT_ENGINE_WINDOWS:
+			case DownloadEnum::CAT_ENGINE_LINUX64:
+			case DownloadEnum::CAT_ENGINE_MACOSX:
+				SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
+				SlPaths::SetUsedSpringIndex(info.filename);
+				//Inform all application components about new engine been available
+				LSL::usync().ReloadUnitSyncLib();
+				GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
+				break;
 
-				case DownloadEnum::CAT_SPRINGLOBBY:
-					GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
-					break;
-				case DownloadEnum::CAT_MAP:
-				case DownloadEnum::CAT_GAME:
-					LSL::usync().ReloadUnitSyncLib();
+			case DownloadEnum::CAT_SPRINGLOBBY:
+				GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
+				break;
+			case DownloadEnum::CAT_MAP:
+			case DownloadEnum::CAT_GAME:
+				LSL::usync().ReloadUnitSyncLib();
+				if (cat == DownloadEnum::CAT_MAP) {
 					LSL::usync().PrefetchMap(m_name);
+				} else {
 					LSL::usync().PrefetchGame(m_name);
-					GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
-					break;
-				default:
-					break;
-			}
+				}
+				GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
+				break;
+			default:
+				break;
+		}
 	}
 };
 
