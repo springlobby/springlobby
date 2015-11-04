@@ -64,7 +64,7 @@ private:
 	ActivityNotice* m_window;
 };
 
-typedef std::auto_ptr<ActivityNoticeContainer>
+typedef std::unique_ptr<ActivityNoticeContainer>
     ScopedActivityNotice;
 
 ScopedActivityNotice scopedActivityNotice(wxWindow* parent, const wxString& notice, const wxSize& gauge_size = wxSize(80, 5));
