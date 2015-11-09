@@ -938,8 +938,10 @@ void MapCtrl::DrawUser(wxDC& dc, User& user, bool selected, bool /*unused*/)
 			DrawStartRect(dc, -1, tmp, col, false);
 		}
 
-		wxBitmap bmp = icons().GetBitmap(icons().GetSideIcon(m_battle->GetHostGameName(), user.BattleStatus().side));
-		dc.DrawBitmap(bmp, r.x + siderect.x, r.y + siderect.y, true);
+		if (!m_battle->GetHostGameName().empty()){ //game isn't set -> no side known
+			wxBitmap bmp = icons().GetBitmap(icons().GetSideIcon(m_battle->GetHostGameName(), user.BattleStatus().side));
+			dc.DrawBitmap(bmp, r.x + siderect.x, r.y + siderect.y, true);
+		}
 
 		/* Draw the Ally Number numeric select */
 		wxRect updownallyrect = GetUserUpAllyButtonRect();
