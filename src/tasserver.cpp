@@ -1085,9 +1085,9 @@ void TASServer::Ring(const std::string& nick)
 
 void TASServer::ModeratorSetChannelTopic(const std::string& channel, const std::string& topic)
 {
-	wxString msgcopy = TowxString(topic);
-	msgcopy.Replace(_T("\n"), _T("\\n"));
-	SendCmd("CHANNELTOPIC", channel + std::string(" ") + STD_STRING(msgcopy));
+
+	const std::string msgcopy = LSL::Util::Replace(topic, "\n", "\\n");
+	SendCmd("CHANNELTOPIC", channel + std::string(" ") + msgcopy);
 }
 
 
@@ -1345,7 +1345,7 @@ void TASServer::SendHostInfo(HostInfo update)
 	if ((update & IBattle::HI_StartRects) > 0) { // Startrects should be updated.
 		unsigned int numrects = battle.GetLastRectIdx();
 		for (unsigned int i = 0; i <= numrects; i++) { // Loop through all, and remove updated or deleted.
-			wxString cmd;
+			//wxString cmd;
 			BattleStartRect sr = battle.GetStartRect(i);
 			if (!sr.exist)
 				continue;
@@ -1366,14 +1366,14 @@ void TASServer::SendHostInfo(HostInfo update)
 		std::map<std::string, int> units = battle.RestrictedUnits();
 		SendCmd("ENABLEALLUNITS", "", battle.IsProxy());
 		if (!units.empty()) {
-			wxString msg;
-			wxString scriptmsg;
+			std::string msg;
+			std::string scriptmsg;
 			for (std::map<std::string, int>::const_iterator itor = units.begin(); itor != units.end(); ++itor) {
-				msg << TowxString(itor->first) + _T(" ");
-				scriptmsg << _T("game/restrict/") + TowxString(itor->first) + _T("=") + TowxString(itor->second) + _T('\t'); // this is a serious protocol abuse, but on the other hand, the protocol fucking suck and it's unmaintained so it will do for now
+				msg += itor->first + " ";
+				scriptmsg += stdprintf("game/restrict/%s=%d\t", itor->first.c_str(), itor->second); // this is a serious protocol abuse, but on the other hand, the protocol fucking suck and it's unmaintained so it will do for now
 			}
-			SendCmd("DISABLEUNITS", STD_STRING(msg), battle.IsProxy());
-			SendCmd("SETSCRIPTTAGS", STD_STRING(scriptmsg), battle.IsProxy());
+			SendCmd("DISABLEUNITS", msg, battle.IsProxy());
+			SendCmd("SETSCRIPTTAGS", scriptmsg, battle.IsProxy());
 		}
 	}
 }
@@ -1756,9 +1756,7 @@ void TASServer::OnDataReceived()
 		return;
 
 	m_last_net_packet = 0;
-	wxString data = m_sock->Receive();
-	m_buffer += STD_STRING(data);
-	LSL::Util::Replace(m_buffer, "\r\n", "\n");
+	m_buffer += LSL::Util::Replace(STD_STRING(m_sock->Receive()), "\r", "");
 
 	size_t returnpos = m_buffer.find("\n");
 	while (returnpos != std::string::npos) {
@@ -1869,7 +1867,7 @@ void TASServer::UdpPingAllClients() // used when hosting with nat holepunching. 
 	for (int i = 0; i < int(ordered_users.size()); ++i) {
 		User& user = battle->GetUser(ordered_users[i].index);
 
-		wxString ip = TowxString(user.BattleStatus().ip);
+		const std::string ip = user.BattleStatus().ip;
 		unsigned int port = user.BattleStatus().udpport;
 
 		unsigned int src_port = m_udp_private_port;
@@ -1880,7 +1878,7 @@ void TASServer::UdpPingAllClients() // used when hosting with nat holepunching. 
 		wxLogMessage(_T(" pinging nick=%s , ip=%s , port=%u"), user.GetNick().c_str(), ip.c_str(), port);
 
 		if (port != 0 && !ip.empty()) {
-			UdpPing(src_port, STD_STRING(ip), port, "hai!");
+			UdpPing(src_port, ip, port, "hai!");
 		}
 	}
 }
