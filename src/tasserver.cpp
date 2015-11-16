@@ -46,25 +46,6 @@ SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which
 #define UDP_REPLY_TIMEOUT 10000
 
 
-#define CHECK_BATTLE_ID()                                                         \
-	try {                                                                     \
-		ASSERT_LOGIC(m_battle_id != -1, "Invalid battle id");             \
-		ASSERT_LOGIC(BattleExists(m_battle_id), "battle doesn't exists"); \
-	} catch (...) {                                                           \
-		return;                                                           \
-	}
-
-#define CHECK_CURRENT_BATTLE_ID(battle_id)                                   \
-	slLogDebugFunc("");                                                  \
-	CHECK_BATTLE_ID();                                                   \
-	try {                                                                \
-		CHECK_BATTLE_ID();                                           \
-		ASSERT_LOGIC(battleid == m_battle_id, "Not current battle"); \
-	} catch (...) {                                                      \
-		return;                                                      \
-	}
-
-
 /*
 
 myteamcolor:  Should be 32-bit signed integer in decimal form (e.g. 255 and not FF) where each color channel should occupy 1 byte (e.g. in hexdecimal: $00BBGGRR, B = blue, G = green, R = red). Example: 255 stands for $000000FF.
@@ -1312,7 +1293,9 @@ void TASServer::SendHostInfo(HostInfo update)
 {
 	slLogDebugFunc("");
 
-	CHECK_BATTLE_ID();
+	if (!BattleExists(m_battle_id)) {
+		return;
+	}
 
 	IBattle& battle = GetBattle(m_battle_id);
 	try {
@@ -1400,7 +1383,9 @@ void TASServer::SendHostInfo(const std::string& Tag)
 {
 	slLogDebugFunc("");
 
-	CHECK_BATTLE_ID();
+	if (!BattleExists(m_battle_id)) {
+		return;
+	}
 
 	IBattle& battle = GetBattle(m_battle_id);
 
@@ -1489,7 +1474,9 @@ void TASServer::SendMyUserStatus(const UserStatus& us)
 void TASServer::StartHostedBattle()
 {
 	slLogDebugFunc("");
-	CHECK_BATTLE_ID();
+	if (!BattleExists(m_battle_id)) {
+		return;
+	}
 
 	IBattle* battle = GetCurrentBattle();
 	if (battle) {
@@ -1506,7 +1493,9 @@ void TASServer::StartHostedBattle()
 
 void TASServer::ForceSide(int battleid, User& user, int side)
 {
-	CHECK_CURRENT_BATTLE_ID(battleid);
+	if (!IsCurrentBattle(battleid)) {
+		return;
+	}
 
 	UserBattleStatus status = user.BattleStatus();
 
@@ -1525,7 +1514,9 @@ void TASServer::ForceSide(int battleid, User& user, int side)
 
 void TASServer::ForceTeam(int battleid, User& user, int team)
 {
-	CHECK_CURRENT_BATTLE_ID(battleid);
+	if (!IsCurrentBattle(battleid)) {
+		return;
+	}
 
 	UserBattleStatus status = user.BattleStatus();
 	if (status.IsBot()) {
@@ -1550,7 +1541,9 @@ void TASServer::ForceTeam(int battleid, User& user, int team)
 
 void TASServer::ForceAlly(int battleid, User& user, int ally)
 {
-	CHECK_CURRENT_BATTLE_ID(battleid);
+	if (!IsCurrentBattle(battleid)) {
+		return;
+	}
 
 	UserBattleStatus status = user.BattleStatus();
 	if (status.IsBot()) {
@@ -1577,7 +1570,9 @@ void TASServer::ForceAlly(int battleid, User& user, int ally)
 
 void TASServer::ForceColour(int battleid, User& user, const LSL::lslColor& col)
 {
-	CHECK_CURRENT_BATTLE_ID(battleid);
+	if (!IsCurrentBattle(battleid)) {
+		return;
+	}
 
 	UserBattleStatus status = user.BattleStatus();
 	if (status.IsBot()) {
@@ -1602,7 +1597,9 @@ void TASServer::ForceColour(int battleid, User& user, const LSL::lslColor& col)
 
 void TASServer::ForceSpectator(int battleid, User& user, bool spectator)
 {
-	CHECK_CURRENT_BATTLE_ID(battleid);
+	if (!IsCurrentBattle(battleid)) {
+		return;
+	}
 
 	UserBattleStatus status = user.BattleStatus();
 	if (status.IsBot()) {
@@ -1630,7 +1627,9 @@ void TASServer::ForceSpectator(int battleid, User& user, bool spectator)
 
 void TASServer::BattleKickPlayer(int battleid, User& user)
 {
-	CHECK_CURRENT_BATTLE_ID(battlid)
+	if (!IsCurrentBattle(battleid)) {
+		return;
+	}
 
 	UserBattleStatus status = user.BattleStatus();
 	if (status.IsBot()) {
@@ -1656,7 +1655,9 @@ void TASServer::BattleKickPlayer(int battleid, User& user)
 
 void TASServer::SetHandicap(int battleid, User& user, int handicap)
 {
-	CHECK_CURRENT_BATTLE_ID(battleid)
+	if (!IsCurrentBattle(battleid)) {
+		return;
+	}
 
 	UserBattleStatus status = user.BattleStatus();
 	if (status.IsBot()) {
@@ -1677,7 +1678,9 @@ void TASServer::SetHandicap(int battleid, User& user, int handicap)
 
 void TASServer::AddBot(int battleid, const std::string& nick, UserBattleStatus& status)
 {
-	CHECK_CURRENT_BATTLE_ID(battleid)
+	if (!IsCurrentBattle(battleid)) {
+		return;
+	}
 	const int tasbs = UserBattleStatus::ToInt(status);
 	//ADDBOT name battlestatus teamcolor {AIDLL}
 	SendCmd("ADDBOT", stdprintf("%s %d %d %s|%s", nick.c_str(), tasbs, status.colour.GetLobbyColor(), status.aishortname.c_str(), status.aiversion.c_str()));
@@ -1686,7 +1689,9 @@ void TASServer::AddBot(int battleid, const std::string& nick, UserBattleStatus& 
 
 void TASServer::RemoveBot(int battleid, User& bot)
 {
-	CHECK_CURRENT_BATTLE_ID(battleid)
+	if (!IsCurrentBattle(battleid)) {
+		return;
+	}
 
 	IBattle& battle = GetBattle(battleid);
 	ASSERT_LOGIC(&bot != 0, "Bot does not exist.");
@@ -1703,7 +1708,9 @@ void TASServer::RemoveBot(int battleid, User& bot)
 
 void TASServer::UpdateBot(int battleid, User& bot, UserBattleStatus& status)
 {
-	CHECK_CURRENT_BATTLE_ID(battleid)
+	if (!IsCurrentBattle(battleid)) {
+		return;
+	}
 	const int tasbs = UserBattleStatus::ToInt(status);
 	//UPDATEBOT name battlestatus teamcolor
 	SendCmd("UPDATEBOT", stdprintf("%s %d %d", bot.GetNick().c_str(), tasbs, status.colour.GetLobbyColor()), GetBattle(battleid).IsProxy());
@@ -1966,4 +1973,17 @@ void TASServer::SendScriptToProxy(const std::string& script)
 		RelayCmd("APPENDSCRIPTLINE", line);
 	}
 	RelayCmd("STARTGAME");
+}
+
+bool TASServer::IsCurrentBattle(int battle_id)
+{
+	if (!BattleExists(m_battle_id)) {
+		wxLogWarning("Battle doesn't exist!");
+		return false;
+	}
+	if (m_battle_id != battle_id) {
+		wxLogWarning("Specified battleid doesn't match current battle!");
+		return false;
+	}
+	return true;
 }

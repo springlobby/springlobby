@@ -171,6 +171,7 @@ private:
 
 	void RelayCmd(const std::string& command, const std::string& param = "");
 	void Notify();
+	bool IsCurrentBattle(int battle_id);
 
 	//! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
 	struct TASPingListItem
