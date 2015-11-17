@@ -431,9 +431,6 @@ void IBattle::RemoveStartRect(unsigned int allyno)
 		return;
 
 	rect_it->second.todelete = true;
-	//BattleStartRect sr = m_rects[allyno];
-	//sr.todelete = true;
-	//m_rects[allyno] = sr;
 }
 
 
@@ -445,9 +442,6 @@ void IBattle::ResizeStartRect(unsigned int allyno)
 		return;
 
 	rect_it->second.toresize = true;
-	//BattleStartRect sr = m_rects[allyno];
-	//&&sr.toresize = true;
-	//m_rects[allyno] = sr;
 }
 
 
@@ -471,9 +465,6 @@ void IBattle::StartRectResized(unsigned int allyno)
 		return;
 
 	rect_it->second.toresize = false;
-	//BattleStartRect sr = m_rects[allyno];
-	//sr.toresize = false;
-	//m_rects[allyno] = sr;
 }
 
 
@@ -485,9 +476,6 @@ void IBattle::StartRectAdded(unsigned int allyno)
 		return;
 
 	rect_it->second.toadd = false;
-	//BattleStartRect sr = m_rects[allyno];
-	//sr.toadd = false;
-	//m_rects[allyno] = sr;
 }
 
 
