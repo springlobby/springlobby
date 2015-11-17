@@ -521,17 +521,14 @@ unsigned int IBattle::GetLastRectIdx() const
 //return  the lowest currently unused key in the map of rects.
 unsigned int IBattle::GetNextFreeRectIdx() const
 {
-	const size_t num = GetNumRects();
-	if (num == 0) //rects start at 1
-		return 1;
 	//check for unused allyno keys
-	for (unsigned int i = 1; i <= GetLastRectIdx(); i++) {
+	for (unsigned int i = 0; i <= GetNumRects(); i++) {
 		if (!GetStartRect(i).IsOk()) {
 			assert(i<MAX_TEAMS);
 			return i;
 		}
 	}
-	return num;//if all rects are in use, or no elements exist, return first possible available allyno.
+	return 1; //rects start at 1
 }
 
 void IBattle::ClearStartRects()
