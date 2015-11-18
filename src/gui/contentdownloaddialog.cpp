@@ -16,6 +16,7 @@
 #include "httpfile.h"
 #include "ui.h"
 #include "servermanager.h"
+#include "utils/slpaths.h"
 
 #include <lslunitsync/unitsync.h>
 
@@ -116,13 +117,23 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& /*event*/)
 		res->filesize = dl->size;
 		res->type = DownloadEnum::getCat(dl->cat);
 		res->category = dl->cat;
-		if (res->type == "map")
-			res->is_downloaded = LSL::usync().MapExists(dl->name);
-		else if (res->type == "game")
-			res->is_downloaded = LSL::usync().GameExists(dl->name);
-		else
-			res->is_downloaded = false;
-
+		switch(dl->cat) {
+			case DownloadEnum::CAT_MAP:
+				res->is_downloaded = LSL::usync().MapExists(dl->origin_name);
+				break;
+			case DownloadEnum::CAT_GAME:
+				res->is_downloaded = LSL::usync().GameExists(dl->origin_name);
+				break;
+			case DownloadEnum::CAT_ENGINE: //FIXME: check if platform matches / filter out different platform (?)
+			case DownloadEnum::CAT_ENGINE_LINUX:
+			case DownloadEnum::CAT_ENGINE_LINUX64:
+			case DownloadEnum::CAT_ENGINE_MACOSX:
+			case DownloadEnum::CAT_ENGINE_WINDOWS:
+				res->is_downloaded = !SlPaths::GetCompatibleVersion(dl->version).empty();
+				break;
+			default:
+				res->is_downloaded = false;
+		}
 		m_search_res_w->AddContent(*res);
 	}
 	IDownloader::freeResult(dls);
