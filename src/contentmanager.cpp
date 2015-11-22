@@ -85,7 +85,7 @@ void ContentManager::UpdateApplication(){
 		throw Exception(_T("couldn't delete: ") + dlfilepath);
 	}
 	const std::string dlurl = GetDownloadUrl(latestVersion);
-	prDownloader().Download(DownloadEnum::CAT_SPRINGLOBBY, dlfilepath, dlurl);
+	prDownloader().Download(DownloadEnum::CAT_SPRINGLOBBY, dlurl, dlfilepath);
 }
 
 bool ContentManager::IsHavingSpringVersion(const std::string& engineString,

@@ -5,6 +5,7 @@
 #include <lslutils/globalsmanager.h>
 #include "lib/src/pr-downloader.h"
 #include "lib/src/Downloader/IDownloader.h" //FIXME: remove this include
+#include "lib/src/FileSystem/FileSystem.h"  //FIXME
 #include "utils/uievents.h"
 #include "utils/conversion.h"
 #include "utils/globalevents.h"
@@ -28,11 +29,13 @@ class DownloadItem : public LSL::WorkItem
 private:
 	DownloadEnum::Category m_category;
 	std::string m_name;
+	std::string m_filename;
 	bool m_reload;
 public:
-	DownloadItem(const DownloadEnum::Category cat, const std::string& name, const std::string& /*filename*/) //FIXME: add support for filename
+	DownloadItem(const DownloadEnum::Category cat, const std::string& name, const std::string& filename)
 		: m_category(cat)
 		, m_name(name)
+		, m_filename(filename)
 		, m_reload(false)
 	{
 	}
@@ -41,7 +44,15 @@ public:
 	{
 		const bool force = true;
 		DownloadSetConfig(CONFIG_RAPID_FORCEUPDATE, &force);
-		const int results = DownloadSearch(m_category, m_name.c_str());
+		int results = 0;
+		switch(m_category) {
+			case DownloadEnum::CAT_SPRINGLOBBY:
+			case DownloadEnum::CAT_HTTP:
+				results = DownloadAddByUrl(m_category, m_filename.c_str(), m_name.c_str());
+				break;
+			default:
+				results = DownloadSearch(m_category, m_filename.c_str());
+		}
 		for (int i=0; i < results; i++) {
 			DownloadAdd(i);
 			break; //only add one result
@@ -81,6 +92,7 @@ private:
 				break;
 
 			case DownloadEnum::CAT_SPRINGLOBBY:
+				fileSystem->extract(info.filename, SlPaths::GetUpdateDir());
 				GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
 				break;
 			case DownloadEnum::CAT_MAP:
