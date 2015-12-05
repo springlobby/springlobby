@@ -54,9 +54,9 @@ PlaybackDataView::~PlaybackDataView()
 	// TODO Auto-generated destructor stub
 }
 
-void PlaybackDataView::AddPlayback(const StoredGame& replay)
+void PlaybackDataView::AddPlayback(const StoredGame& replay, bool resortIsNeeded)
 {
-	AddItem(replay);
+    AddItem(replay, resortIsNeeded);
 
 	Refresh();
 }

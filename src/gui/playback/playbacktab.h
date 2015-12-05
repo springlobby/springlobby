@@ -37,7 +37,7 @@ public:
 	~PlaybackTab();
 
 	//! adds a single replay to listctrl
-	void AddPlayback(const StoredGame& Replay);
+    void AddPlayback(const StoredGame& Replay, bool resortIsNeeded = true);
 	void RemovePlayback(const StoredGame& Replay);
 	void UpdatePlayback(const StoredGame& Replay);
 

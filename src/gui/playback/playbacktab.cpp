@@ -180,19 +180,18 @@ void PlaybackTab::AddAllPlaybacks(wxCommandEvent& /*unused*/)
 	const auto& replays = replaylist().GetPlaybacksMap();
 
 	for (auto i = replays.begin(); i != replays.end(); ++i) {
-		AddPlayback(i->second);
+        AddPlayback(i->second, false);
 	}
 	m_replay_dataview->Resort();
 }
 
-void PlaybackTab::AddPlayback(const StoredGame& replay)
+void PlaybackTab::AddPlayback(const StoredGame& replay, bool resortIsNeeded)
 {
-
 	if (m_filter->GetActiv() && !m_filter->FilterPlayback(replay)) {
 		return;
 	}
 
-	m_replay_dataview->AddPlayback(replay);
+    m_replay_dataview->AddPlayback(replay, resortIsNeeded);
 }
 
 void PlaybackTab::RemovePlayback(const StoredGame& replay)

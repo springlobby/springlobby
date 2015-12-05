@@ -19,7 +19,7 @@ public:
 	PlaybackDataView(const wxString& dataViewName, wxWindow* parent);
 	virtual ~PlaybackDataView();
 
-	void AddPlayback(const StoredGame& replay);
+    void AddPlayback(const StoredGame& replay, bool resortIsNeeded = true);
 	void RemovePlayback(const StoredGame& replay);
 	void OnContextMenu(wxDataViewEvent& event);
 	void OnDLMap(wxCommandEvent& event);

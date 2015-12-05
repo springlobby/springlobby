@@ -25,7 +25,7 @@ public:
 
 	void Resort();
 
-	bool AddItem(const DataType&);
+        bool AddItem(const DataType&, bool resortIsNeeded = true);
 	bool RemoveItem(const DataType&);
 	bool RefreshItem(const DataType&);
 	bool ContainsItem(const DataType&);
@@ -290,13 +290,13 @@ inline void BaseDataViewCtrl<DataType>::OnShowColumns(wxCommandEvent&)
 }
 
 template <class DataType>
-inline bool BaseDataViewCtrl<DataType>::AddItem(const DataType& item)
+inline bool BaseDataViewCtrl<DataType>::AddItem(const DataType& item, bool resortIsNeeded)
 {
     wxDataViewItem selectedItem = GetSelection();
 
 	bool result = m_DataModel->AddItem(item);
 
-	if (result) {
+        if (result && resortIsNeeded) {
 		Resort();
 	}
 
