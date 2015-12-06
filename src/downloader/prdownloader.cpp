@@ -51,7 +51,7 @@ public:
 				results = DownloadAddByUrl(m_category, m_filename.c_str(), m_name.c_str());
 				break;
 			default:
-				results = DownloadSearch(m_category, m_filename.c_str());
+				results = DownloadSearch(m_category, m_name.c_str());
 		}
 		for (int i=0; i < results; i++) {
 			DownloadAdd(i);
