@@ -399,6 +399,7 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 	}
 }
 
+// https://springrts.com/phpbb/viewtopic.php?f=88&p=574686
 static bool parseSkill(const std::string& value, double& result)
 {
 	int res = sscanf(value.c_str(), "%lf", &result);
@@ -410,6 +411,10 @@ static bool parseSkill(const std::string& value, double& result)
 		return true;
 
 	res = sscanf(value.c_str(), "(%lf)", &result);
+	if (res == 1)
+		return true;
+
+	res = sscanf(value.c_str(), "#%lf#", &result);
 	if (res == 1)
 		return true;
 
