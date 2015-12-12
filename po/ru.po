@@ -1190,6 +1190,9 @@ msgstr "Скачать &игру"
 msgid "Download &engine"
 msgstr "Скачать &игру"
 
+msgid "Notify me when game has ended"
+msgstr "Уведомить меня когда игра закончится"
+
 #: src/gui/battlelist/battlelistctrl.cpp:398
 #: src/gui/battlelist/battlelisttab.cpp:107
 msgid "Spectators:"

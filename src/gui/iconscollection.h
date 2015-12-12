@@ -192,12 +192,12 @@ public:
 	wxBitmap BMP_STARTED_GAME = BMP_INGAME;
 	wxBitmap BMP_STARTED_GAME_LOCKED = BMP_INGAME;
 
-	wxBitmap BMP_READY_UNSYNC = IconsCollection::CreateBitmap(ready_unsync_xpm);
-	wxBitmap BMP_NREADY_UNSYNC = IconsCollection::CreateBitmap(nready_unsync_xpm);
-	wxBitmap BMP_READY_QSYNC = IconsCollection::CreateBitmap(ready_q_xpm);
-	wxBitmap BMP_NREADY_QSYNC = IconsCollection::CreateBitmap(nready_q_xpm);
 	wxBitmap BMP_NREADY = charArr2wxBitmap(closed_game_png, sizeof(closed_game_png));
 	wxBitmap BMP_READY = charArr2wxBitmap(open_game_png, sizeof(open_game_png));
+	wxBitmap BMP_READY_UNSYNC = BlendBitmaps(BMP_READY, charArr2wxBitmap(warning_small_png, sizeof(warning_small_png)));
+	wxBitmap BMP_NREADY_UNSYNC = BlendBitmaps(BMP_NREADY, charArr2wxBitmap(warning_small_png, sizeof(warning_small_png)));
+	wxBitmap BMP_READY_QSYNC = IconsCollection::CreateBitmap(ready_q_xpm);
+	wxBitmap BMP_NREADY_QSYNC = IconsCollection::CreateBitmap(nready_q_xpm);
 
 	wxBitmap BMP_NEXISTS = IconsCollection::CreateBitmap(nexists_xpm);
 	wxBitmap BMP_EXISTS = IconsCollection::CreateBitmap(exists_xpm);
