@@ -4,7 +4,7 @@
 #define SRC_GUI_BASEDATAVIEWMODEL_H_
 
 #include <wx/dataview.h>
-#include <list>
+#include <set>
 
 #include <climits>
 
@@ -43,7 +43,7 @@ public:
 	bool ContainsItem(const DataType&) const;
 	void Clear();
 	bool UpdateItem(const DataType&);
-	const std::list<const DataType*>& GetItemsContainer() const;
+	const std::set<const DataType*>& GetItemsContainer() const;
 
 public:
 	//These methods from wxDataViewModel does not require to be overriden in derived classes
@@ -63,7 +63,8 @@ protected:
 
 private:
 	size_t m_columns;
-	std::list<const DataType*> m_ModelData;
+//	std::list<const DataType*> m_ModelData;
+	std::set<const DataType*> m_ModelData;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -113,7 +114,7 @@ bool BaseDataViewModel<DataType>::AddItem(const DataType& data)
 		return false;
 	}
 
-	m_ModelData.push_back(&data);
+	m_ModelData.insert(&data);
 
 	//Inform model about new item
 	const wxDataViewItem item = wxDataViewItem(const_cast<DataType*>(&data));
@@ -133,7 +134,7 @@ bool BaseDataViewModel<DataType>::RemoveItem(const DataType& data)
 	//Inform model about deleted item
 	const wxDataViewItem item = wxDataViewItem(const_cast<DataType*>(&data));
 	ItemDeleted(GetParent(item), item);
-	m_ModelData.remove(&data);
+	m_ModelData.erase(&data);
 	return true;
 }
 
@@ -164,12 +165,7 @@ inline bool BaseDataViewModel<DataType>::ContainsItem(const DataType& checkedIte
 	assert(&checkedItem != nullptr);
 
 	const DataType* checkItemPointer = &checkedItem;
-	for (const DataType* item : m_ModelData) {
-		if (item == checkItemPointer) {
-			return true;
-		}
-	}
-	return false;
+	return m_ModelData.find(checkItemPointer) != m_ModelData.end();
 }
 
 template <class DataType>
@@ -206,7 +202,7 @@ inline bool BaseDataViewModel<DataType>::GetAttr(const wxDataViewItem&,
 }
 
 template <class DataType>
-inline const std::list<const DataType*>& BaseDataViewModel<DataType>::GetItemsContainer() const
+inline const std::set<const DataType*>& BaseDataViewModel<DataType>::GetItemsContainer() const
 {
 	return m_ModelData;
 }
