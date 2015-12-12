@@ -255,8 +255,8 @@ void ChatPanel::CreateControls()
 		m_usercount_label = new wxStaticText(m_nick_panel, wxID_ANY, wxEmptyString);
 		m_showPlayerOnlyCheck = new wxCheckBox(m_nick_panel, SHOW_PLAYERS_ONLY_CHECK, _("Hide bots"));
 
-		wxBoxSizer* nickListHeaderSizer = new wxBoxSizer(wxHORIZONTAL);
-		nickListHeaderSizer->Add(m_usercount_label, 1, wxEXPAND);
+		wxBoxSizer* nickListHeaderSizer = new wxBoxSizer(wxVERTICAL);
+		nickListHeaderSizer->Add(m_usercount_label, 0, wxEXPAND);
 		nickListHeaderSizer->Add(m_showPlayerOnlyCheck, 0, wxEXPAND);
 
 		UpdateUserCountLabel();
