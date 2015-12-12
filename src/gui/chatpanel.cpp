@@ -323,7 +323,7 @@ void ChatPanel::CreateControls()
 	if (m_show_nick_list) {
 		m_chat_panel->SetSizer(m_chat_sizer);
 		m_splitter->SplitVertically(m_chat_panel, m_nick_panel, 100);
-		m_splitter->SetMinimumPaneSize(30);
+		m_splitter->SetMinimumPaneSize(MINIMUM_PANE_SIZE);
 		m_main_sizer->Add(m_splitter, 1, wxEXPAND | wxALL, 2);
 	} else {
 		m_main_sizer->Add(m_chat_sizer, 4, wxEXPAND | wxALL, 2);
@@ -334,7 +334,7 @@ void ChatPanel::CreateControls()
 
 	if (m_show_nick_list) {
 		wxSize s = m_splitter->GetSize();
-		m_splitter->SetSashPosition(s.GetWidth() - 238, true);
+		m_splitter->SetSashPosition(s.GetWidth() - MINIMUM_PANE_SIZE, true);
 	}
 
 	m_chatlog_text->ShowPosition(m_chatlog_text->GetLastPosition());

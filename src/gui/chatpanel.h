@@ -237,6 +237,7 @@ private:
 	//used to avoid marking channel as changed when it's just been created.
 	bool m_topic_set;
 	bool m_reactOnPromoteEvents;
+	static const int MINIMUM_PANE_SIZE = 250;
 
 	DECLARE_EVENT_TABLE()
 };
