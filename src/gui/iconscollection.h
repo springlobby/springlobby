@@ -59,9 +59,7 @@
 #include "images/nexists.xpm"
 #include "images/exists.xpm"
 
-#include "images/ready_unsync.xpm"
 #include "images/ready_q.xpm"
-#include "images/nready_unsync.xpm"
 #include "images/nready_q.xpm"
 
 #include "images/spectator.png.h"

@@ -63,7 +63,6 @@ protected:
 
 private:
 	size_t m_columns;
-//	std::list<const DataType*> m_ModelData;
 	std::set<const DataType*> m_ModelData;
 };
 
