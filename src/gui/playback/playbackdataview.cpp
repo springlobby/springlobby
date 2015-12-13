@@ -29,7 +29,7 @@ PlaybackDataView::PlaybackDataView(const wxString& dataViewName, wxWindow* paren
 {
 	m_Parent = parent;
 
-	const int DEFAULT_SIZE = wxDVC_DEFAULT_WIDTH;
+	const int DEFAULT_SIZE = wxCOL_WIDTH_AUTOSIZE;
 	AppendIconTextColumn(_("Date"), DATE, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("Game"), GAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("Map"), MAP, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
