@@ -1,14 +1,14 @@
 /*
  * dataviewctrlheadermenu.cpp
  *
- *  Created on: 22 июля 2015 г.
- *      Author: Руслан
+ *  Created on: 22 пїЅпїЅпїЅпїЅ 2015 пїЅ.
+ *      Author: пїЅпїЅпїЅпїЅпїЅпїЅ
  */
 #include <wx/dataview.h>
 
 #include "dataviewvtrlheadermenu.h"
 
-DataViewCtrlHeaderMenu::DataViewCtrlHeaderMenu(wxDataViewCtrl* parent, int column) : wxMenu(_("Header Managing")){
+DataViewCtrlHeaderMenu::DataViewCtrlHeaderMenu(wxDataViewCtrl* parent, int column) : wxMenu(){
 	parentDataView = parent;
 	columnIndex = column;
 

@@ -1237,6 +1237,12 @@ msgstr "Требуемый уровень:"
 msgid "All"
 msgstr "Все"
 
+msgid "Hide this column"
+msgstr "Спрятать эту колонку"
+
+msgid "Show all columns"
+msgstr "Показать все колонки"
+
 #: src/gui/battlelist/battlelistfilter.cpp:177
 msgid "Description:"
 msgstr "Описание:"

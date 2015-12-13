@@ -25,7 +25,7 @@ public:
 
 	void Resort();
 
-        bool AddItem(const DataType&, bool resortIsNeeded = true);
+    bool AddItem(const DataType&, bool resortIsNeeded = true);
 	bool RemoveItem(const DataType&);
 	bool RefreshItem(const DataType&);
 	bool ContainsItem(const DataType&);
@@ -167,6 +167,12 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties()
 		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
 		const bool isHidden = sett().GetColumnVisibility(m_DataViewName, columnIndex);
 		wxDataViewColumn* column = GetColumn(columnIndex);
+
+		//This weird code prevents columns in wxDataViewCtrl under Linux to loose ability to resize
+		//https://groups.google.com/forum/#!searchin/wx-users/wxDataViewCtrl/wx-users/8khN3gsYWcg/_hOa30I6dqoJ
+		//Hope this will be fixed someday...
+		column->SetResizeable(true);
+
 		if (colWidth >= (wxDVC_DEFAULT_MINWIDTH - 5)) {
 			column->SetWidth(colWidth);
 		}
