@@ -35,7 +35,7 @@ inline wxString BtS(bool q, std::string y = "yes", std::string n = "no")
 }
 
 InfoDialog::InfoDialog(wxWindow* parent)
-    : wxDialog(parent, wxID_ANY, _("Paths"), wxDefaultPosition, wxSize(620, 400), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX)
+    : wxDialog(parent, wxID_ANY, _("Paths"), wxDefaultPosition, wxSize(620, 400), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxCLOSE_BOX)
 {
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
