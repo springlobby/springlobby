@@ -473,7 +473,7 @@ void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 		bo.gamename = mod.name;
 	} catch (...) {
 		wxLogWarning(_T( "can't host: game not found" ));
-		customMessageBoxNoModal(SL_MAIN_ICON, _("Battle not started beacuse the game you selected could not be found. "), _("Error starting battle."), wxOK);
+		customMessageBoxModal(SL_MAIN_ICON, _("Battle not started beacuse the game you selected could not be found. "), _("Error starting battle."), wxOK);
 		return;
 	}
 
@@ -485,7 +485,7 @@ void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 		std::vector<std::string> maps = LSL::usync().GetMapList();
 		if (maps.size() <= 0) {
 			wxLogWarning(_T( "no maps found" ));
-			customMessageBoxNoModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK);
+			customMessageBoxModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK);
 			return;
 		}
 		map = LSL::usync().GetMap(maps[0]);

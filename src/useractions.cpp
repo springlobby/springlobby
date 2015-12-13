@@ -304,7 +304,7 @@ bool UserActions::IsKnown(const wxString& name, bool outputWarning) const
 {
 	bool ret = m_knownUsers.Index(name) != -1;
 	if (outputWarning) {
-		customMessageBoxNoModal(SL_MAIN_ICON, _("To prevent logical inconsistencies, adding a user to more than one group is not allowed"),
+		customMessageBoxModal(SL_MAIN_ICON, _("To prevent logical inconsistencies, adding a user to more than one group is not allowed"),
 					_("Cannot add user to group"));
 	}
 

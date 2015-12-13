@@ -25,10 +25,17 @@
 #include "images/springsettings.xpm"
 #include "utils/uievents.h"
 
-const static int slButtonSizerFlags = wxOK | wxCANCEL | wxYES | wxNO | wxHELP | wxNO_DEFAULT;
+const static int slButtonSizerFlags = wxOK | wxCANCEL | wxYES | wxNO | wxAPPLY | wxCLOSE | wxHELP | wxNO_DEFAULT;
 
 BEGIN_EVENT_TABLE(CustomMessageBox, wxDialog)
+	EVT_BUTTON(wxID_OK, CustomMessageBox::OnOptionsNo)
+    EVT_BUTTON(wxID_CANCEL, CustomMessageBox::OnOptionsNo)
+	EVT_BUTTON(wxID_YES, CustomMessageBox::OnOptionsNo)
     EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
+	EVT_BUTTON(wxID_APPLY, CustomMessageBox::OnOptionsNo)
+    EVT_BUTTON(wxID_CLOSE, CustomMessageBox::OnOptionsNo)
+	EVT_BUTTON(wxID_HELP, CustomMessageBox::OnOptionsNo)
+    EVT_BUTTON(wxNO_DEFAULT, CustomMessageBox::OnOptionsNo)
     EVT_CLOSE(CustomMessageBox::OnCloseEvent)
 END_EVENT_TABLE()
 
@@ -45,16 +52,13 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon, wxWindow* parent, const wxStrin
 				   long style, const wxPoint& pos)
     : wxDialog(parent, -1, caption, pos, wxDefaultSize, style | wxFRAME_FLOAT_ON_PARENT | wxDEFAULT_DIALOG_STYLE)
 {
-	if (icon)
+	if (icon) {
 		SetIcon(*icon);
-
+	}
 	//******** copied from wxsource/generic/msgdlgg.cpp with small modifications***********************************************************
 
-
 	m_topsizer = new wxBoxSizer(wxVERTICAL);
-
 	m_icon_text = new wxBoxSizer(wxHORIZONTAL);
-
 
 	// 1) icon
 
@@ -95,6 +99,11 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon, wxWindow* parent, const wxStrin
 	int center_flag = wxEXPAND;
 	if (style & wxYES_NO)
 		center_flag = wxALIGN_CENTRE;
+
+	if ((style & slButtonSizerFlags) == 0) {
+		style = wxCLOSE;
+	}
+
 	wxSizer* sizerBtn = CreateButtonSizer(style & slButtonSizerFlags);
 	if (sizerBtn)
 		m_topsizer->Add(sizerBtn, 0, center_flag | wxALL, 10);
@@ -121,20 +130,23 @@ CustomMessageBox::~CustomMessageBox()
 {
 }
 
-
 void CustomMessageBox::OnOptionsNo(wxCommandEvent& /*unused*/)
 {
     CloseDialog();
 }
 
-void CustomMessageBox::OnCloseEvent(wxCloseEvent& /*unused*/)
+void CustomMessageBox::OnCloseEvent(wxCloseEvent& e/*unused*/)
 {
-    CloseDialog();
+	CloseDialog();
 }
 
 void CustomMessageBox::CloseDialog()
 {
-    EndModal(wxID_NO);
+	if (IsModal()) {
+		EndModal(wxID_CLOSE);
+	} else {
+		Close(false);
+	}
 }
 
 void CustomMessageBoxBase::setLobbypointer(wxWindow* arg)
@@ -236,13 +248,13 @@ void timedMessageBoxNoModal(int whichIcon, const wxString& message,
 	s_timedMessageBox->Show(true);
 }
 
-void customMessageBoxNoModal(int whichIcon, const wxString& message, const wxString& caption,
+void customMessageBoxModal(int whichIcon, const wxString& message, const wxString& caption,
 			     long style, int x, int y)
 {
 	wxWindow* parent = getParent(whichIcon);
 	wxIcon icon = getIcon(whichIcon);
 	s_nonmodbox = new CustomMessageBox(&icon, parent, message, caption, style, wxPoint(x, y));
-	s_nonmodbox->Show(true);
+	s_nonmodbox->ShowModal();
 }
 
 template <class T>

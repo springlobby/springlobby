@@ -297,7 +297,7 @@ void BattleListTab::OnHost(wxCommandEvent& /*unused*/)
 {
 	if (!ServerManager::Instance()->IsConnected()) {
 		wxLogWarning(_T( "Trying to host while offline" ));
-		customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK);
+		customMessageBoxModal(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK);
 		ui().ShowConnectWindow();
 		return;
 	}

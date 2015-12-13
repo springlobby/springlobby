@@ -582,7 +582,7 @@ void Ui::OnBattleClosed(IBattle& battle)
 	try {
 		if (mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle) {
 			if (!battle.IsFounderMe())
-				customMessageBoxNoModal(SL_MAIN_ICON, _("The current battle was closed by the host."), _("Battle closed"));
+				customMessageBoxModal(SL_MAIN_ICON, _("The current battle was closed by the host."), _("Battle closed"));
 			mw().GetJoinTab().LeaveCurrentBattle();
 		}
 	} catch (...) {
@@ -844,13 +844,13 @@ void Ui::OpenFileInEditor(const wxString& filepath)
 {
 	const wxString editor_path = TowxString(SlPaths::GetEditorPath());
 	if (editor_path == wxEmptyString) {
-		customMessageBoxNoModal(SL_MAIN_ICON, _T("You have not chosen an external text editor to open files with.\nPlease Select one now."), _T("No editor set"));
+		customMessageBoxModal(SL_MAIN_ICON, _T("You have not chosen an external text editor to open files with.\nPlease Select one now."), _T("No editor set"));
 		mw().ShowConfigure(MainWindow::OPT_PAGE_GENERAL);
 		return;
 	}
 	bool success = (wxExecute(editor_path + _T(" \"") + filepath + _T("\""), wxEXEC_ASYNC) != 0);
 	if (!success) {
-		customMessageBoxNoModal(SL_MAIN_ICON, _T("There was a problem launching the editor.\nPlease make sure the path is correct and the binary executable for your user.\nNote it's currently not possible to use shell-only editors like ed, vi, etc."), _T("Problem launching editor"));
+		customMessageBoxModal(SL_MAIN_ICON, _T("There was a problem launching the editor.\nPlease make sure the path is correct and the binary executable for your user.\nNote it's currently not possible to use shell-only editors like ed, vi, etc."), _T("Problem launching editor"));
 		mw().ShowConfigure(MainWindow::OPT_PAGE_GENERAL);
 	}
 }
@@ -921,7 +921,7 @@ void Ui::CheckForUpdates(bool show)
 
 	if (latestVersion.empty()) {
 		if (show) {
-			customMessageBoxNoModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+			customMessageBoxModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
 		}
 		return;
 	}
@@ -931,7 +931,7 @@ void Ui::CheckForUpdates(bool show)
 	const wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
 	if (latestVersion.IsSameAs(myVersion, false)) {
 		if (show) {
-				customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date"));
+				customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date"));
 		}
 		return;
 	}
@@ -956,7 +956,7 @@ void Ui::CheckForUpdates(bool show)
 			}
 		}
 #else
-		customMessageBoxNoModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date"));
+		customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date"));
 #endif
 }
 

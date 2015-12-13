@@ -899,7 +899,7 @@ bool ChatPanel::Say(const wxString& message)
 					Say(url);
 					return true;
 				} else {
-					customMessageBoxNoModal(SL_MAIN_ICON, _("Failed to post to pastebin.com."));
+					customMessageBoxModal(SL_MAIN_ICON, _("Failed to post to pastebin.com."));
 					return false;
 				}
 			}

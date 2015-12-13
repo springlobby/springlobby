@@ -878,7 +878,7 @@ void ServerEvents::OnClientIPPort(const std::string& username, const std::string
 
 void ServerEvents::OnKickedFromBattle()
 {
-	customMessageBoxNoModal(SL_MAIN_ICON, _("You were kicked from the battle!"), _("Kicked by Host"));
+	customMessageBoxModal(SL_MAIN_ICON, _("You were kicked from the battle!"), _("Kicked by Host"));
 }
 
 

@@ -480,7 +480,7 @@ void BattleroomMMOptionsTab::OnLoadPreset(wxCommandEvent& /*unused*/)
 		return;
 	std::string presetname = STD_STRING(m_options_preset_sel->GetValue());
 	if (presetname.empty()) {
-		customMessageBoxNoModal(SL_MAIN_ICON, _("Cannot load an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION | wxOK);
+		customMessageBoxModal(SL_MAIN_ICON, _("Cannot load an options set without a name\nPlease select one from the list and try again."), _("error"), wxICON_EXCLAMATION | wxOK);
 		return;
 	}
 	m_battle->LoadOptionsPreset(presetname);
@@ -497,7 +497,7 @@ void BattleroomMMOptionsTab::OnSavePreset(wxCommandEvent& /*unused*/)
 	if (!ui().AskText(_("Enter preset name"), _("Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten"), presetname))
 		return;
 	if (presetname.empty()) {
-		customMessageBoxNoModal(SL_MAIN_ICON, _("Cannot save an options set without a name."), _("error"), wxICON_EXCLAMATION | wxOK);
+		customMessageBoxModal(SL_MAIN_ICON, _("Cannot save an options set without a name."), _("error"), wxICON_EXCLAMATION | wxOK);
 		return;
 	}
 	m_battle->SaveOptionsPreset(STD_STRING(presetname));

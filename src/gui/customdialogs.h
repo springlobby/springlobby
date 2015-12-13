@@ -42,7 +42,7 @@ int customMessageBox(int whichIcon, const wxString& message,
  * It is possible to use this with other styles than wxOK|wxICON_INFORMATION,
  * but since it's displayed non-modal nothing would come of it
  */
-void customMessageBoxNoModal(int whichIcon, const wxString& message,
+void customMessageBoxModal(int whichIcon, const wxString& message,
 			     const wxString& caption = wxMessageBoxCaptionStr,
 			     long style = wxOK | wxICON_INFORMATION, const int x = -1, const int y = -1);
 

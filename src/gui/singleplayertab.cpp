@@ -355,7 +355,7 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 	size_t num_bots = m_battle.GetNumBots();
 	SetMod(index);
 	if (num_bots != m_battle.GetNumBots())
-		customMessageBoxNoModal(SL_MAIN_ICON, _("Incompatible bots have been removed after game selection changed."), _("Bots removed"));
+		customMessageBoxModal(SL_MAIN_ICON, _("Incompatible bots have been removed after game selection changed."), _("Bots removed"));
 }
 
 void SinglePlayerTab::OnEngineSelect(wxCommandEvent& /*event*/)
@@ -417,7 +417,7 @@ void SinglePlayerTab::OnStart(wxCommandEvent& /*unused*/)
 
 	if (ui().IsSpringRunning()) {
 		wxLogWarning(_T("trying to start spring while another instance is running"));
-		customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION);
+		customMessageBoxModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION);
 		return;
 	}
 

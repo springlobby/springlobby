@@ -613,7 +613,7 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 			if (!ui().IsSpringRunning())
 				m_battle->StartSpring();
 			else
-				customMessageBoxNoModal(SL_MAIN_ICON, _("Spring is already running."), _("Error"));
+				customMessageBoxModal(SL_MAIN_ICON, _("Spring is already running."), _("Error"));
 		} else {
 			m_battle->m_autohost_manager->GetAutohostHandler().Start();
 			//customMessageBoxNoModal( SL_MAIN_ICON, _("Host is not ingame."), _("Error") );
@@ -1006,7 +1006,7 @@ void BattleRoomTab::OnSavePreset(wxCommandEvent& /*unused*/)
 	if (!ui().AskText(_("Enter a name to save the current set of options\nIf a preset with the same name already exist, it will be overwritten"), _("Enter preset name"), presetname))
 		return;
 	if (presetname.IsEmpty()) {
-		customMessageBoxNoModal(SL_MAIN_ICON, _("Cannot save an options set without a name."), _("error"), wxICON_EXCLAMATION | wxOK);
+		customMessageBoxModal(SL_MAIN_ICON, _("Cannot save an options set without a name."), _("error"), wxICON_EXCLAMATION | wxOK);
 		return;
 	}
 	m_battle->SaveOptionsPreset(STD_STRING(presetname));
@@ -1263,7 +1263,7 @@ void BattleRoomTab::OnHostNew(wxCommandEvent& /*event*/)
 {
 	if (!ServerManager::Instance()->IsConnected()) {
 		wxLogWarning(_T( "Trying to host while offline" ));
-		customMessageBoxNoModal(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK);
+		customMessageBoxModal(SL_MAIN_ICON, _("You cannot host a game while being offline. Please connect to a lobby server."), _("Not Online."), wxOK);
 		ui().ShowConnectWindow();
 		return;
 	}
