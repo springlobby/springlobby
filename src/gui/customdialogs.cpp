@@ -28,15 +28,10 @@
 const static int slButtonSizerFlags = wxOK | wxCANCEL | wxYES | wxNO | wxAPPLY | wxCLOSE | wxHELP | wxNO_DEFAULT;
 
 BEGIN_EVENT_TABLE(CustomMessageBox, wxDialog)
-	EVT_BUTTON(wxID_OK, CustomMessageBox::OnOptionsNo)
-    EVT_BUTTON(wxID_CANCEL, CustomMessageBox::OnOptionsNo)
-	EVT_BUTTON(wxID_YES, CustomMessageBox::OnOptionsNo)
-    EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
-	EVT_BUTTON(wxID_APPLY, CustomMessageBox::OnOptionsNo)
-    EVT_BUTTON(wxID_CLOSE, CustomMessageBox::OnOptionsNo)
-	EVT_BUTTON(wxID_HELP, CustomMessageBox::OnOptionsNo)
-    EVT_BUTTON(wxNO_DEFAULT, CustomMessageBox::OnOptionsNo)
-    EVT_CLOSE(CustomMessageBox::OnCloseEvent)
+	EVT_BUTTON(wxID_CANCEL, CustomMessageBox::OnOptionsNo)
+	EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
+	EVT_BUTTON(wxID_CLOSE, CustomMessageBox::OnOptionsNo)
+	EVT_CLOSE(CustomMessageBox::OnCloseEvent)
 END_EVENT_TABLE()
 
 wxWindow* CustomMessageBoxBase::m_settingsWindow = 0;
@@ -132,10 +127,10 @@ CustomMessageBox::~CustomMessageBox()
 
 void CustomMessageBox::OnOptionsNo(wxCommandEvent& /*unused*/)
 {
-    CloseDialog();
+	CloseDialog();
 }
 
-void CustomMessageBox::OnCloseEvent(wxCloseEvent& e/*unused*/)
+void CustomMessageBox::OnCloseEvent(wxCloseEvent& /*unused*/)
 {
 	CloseDialog();
 }
@@ -143,7 +138,7 @@ void CustomMessageBox::OnCloseEvent(wxCloseEvent& e/*unused*/)
 void CustomMessageBox::CloseDialog()
 {
 	if (IsModal()) {
-		EndModal(wxID_CLOSE);
+		EndModal(wxID_NO);
 	} else {
 		Close(false);
 	}
