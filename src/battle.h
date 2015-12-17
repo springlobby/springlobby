@@ -26,101 +26,101 @@ public:
 
 	//const BattleOptions& opts() { return m_opts; }
 
-	IServer& GetServer()
+	IServer& GetServer() override
 	{
 		return m_serv;
 	}
-	AutoHost* GetAutoHost()
+	AutoHost* GetAutoHost() override
 	{
 		return &m_ah;
 	}
 
 	virtual void OnPlayerTrueskillChanged(const std::string& NickName, double TrueSkill) override;
 
-	virtual void SendHostInfo(HostInfo update);
-	virtual void SendHostInfo(const std::string& Tag);
+	virtual void SendHostInfo(HostInfo update) override;
+	virtual void SendHostInfo(const std::string& Tag) override;
 
-	virtual void Update(const std::string& Tag);
+	virtual void Update(const std::string& Tag) override;
 
-	virtual void Join(const std::string& password = "");
-	virtual void Leave();
+	virtual void Join(const std::string& password = "") override;
+	virtual void Leave() override;
 
-	virtual void KickPlayer(User& user);
+	virtual void KickPlayer(User& user) override;
 
-	virtual void RingNotReadyPlayers();
-	virtual void RingNotSyncedPlayers();
-	virtual void RingNotSyncedAndNotReadyPlayers();
-	virtual void RingPlayer(const User& u);
+	virtual void RingNotReadyPlayers() override;
+	virtual void RingNotSyncedPlayers() override;
+	virtual void RingNotSyncedAndNotReadyPlayers() override;
+	virtual void RingPlayer(const User& u) override;
 
-	virtual void Say(const std::string& msg);
-	virtual void DoAction(const std::string& msg);
+	virtual void Say(const std::string& msg) override;
+	virtual void DoAction(const std::string& msg) override;
 
-	virtual void SetLocalMap(const std::string& mapname);
+	virtual void SetLocalMap(const std::string& mapname) override;
 
-	virtual void OnRequestBattleStatus();
-	virtual void SendMyBattleStatus();
+	virtual void OnRequestBattleStatus() override;
+	virtual void SendMyBattleStatus() override;
 
-	virtual bool ExecuteSayCommand(const std::string& cmd);
+	virtual bool ExecuteSayCommand(const std::string& cmd) override;
 
 	virtual void AddBot(const std::string& nick, UserBattleStatus status);
 
-	virtual void ForceSide(User& user, int side);
-	virtual void ForceTeam(User& user, int team);
-	virtual void ForceAlly(User& user, int ally);
-	virtual void ForceColour(User& user, const LSL::lslColor& col);
-	virtual void ForceSpectator(User& user, bool spectator);
+	virtual void ForceSide(User& user, int side) override;
+	virtual void ForceTeam(User& user, int team) override;
+	virtual void ForceAlly(User& user, int ally) override;
+	virtual void ForceColour(User& user, const LSL::lslColor& col) override;
+	virtual void ForceSpectator(User& user, bool spectator) override;
 	//    virtual void BattleKickPlayer( User& user );
-	virtual void SetHandicap(User& user, int handicap);
+	virtual void SetHandicap(User& user, int handicap) override;
 
-	virtual User& OnUserAdded(User& user);
-	virtual void OnUserBattleStatusUpdated(User& user, UserBattleStatus status);
-	virtual void OnUserRemoved(User& user);
+	virtual User& OnUserAdded(User& user) override;
+	virtual void OnUserBattleStatusUpdated(User& user, UserBattleStatus status) override;
+	virtual void OnUserRemoved(User& user) override;
 
-	virtual void ForceUnsyncedToSpectate();
-	virtual void ForceUnReadyToSpectate();
-	virtual void ForceUnsyncedAndUnreadyToSpectate();
+	virtual void ForceUnsyncedToSpectate() override;
+	virtual void ForceUnReadyToSpectate() override;
+	virtual void ForceUnsyncedAndUnreadyToSpectate() override;
 
-	virtual void SetAutoLockOnStart(bool value);
-	virtual bool GetAutoLockOnStart();
+	virtual void SetAutoLockOnStart(bool value) override;
+	virtual bool GetAutoLockOnStart() override;
 
-	virtual void SetLockExternalBalanceChanges(bool value);
+	virtual void SetLockExternalBalanceChanges(bool value) override;
 	virtual bool GetLockExternalBalanceChanges();
 
-	virtual void FixColours();
-	virtual void Autobalance(BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0);
-	virtual void FixTeamIDs(BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0);
+	virtual void FixColours() override;
+	virtual void Autobalance(BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int allyteamsize = 0) override;
+	virtual void FixTeamIDs(BalanceType balance_type = balance_divide, bool clans = true, bool strong_clans = true, int controlteamsize = 0) override;
 
 	//	virtual void SendScriptToClients();
 
-	virtual bool CheckBan(User& user);
+	virtual bool CheckBan(User& user) override;
 
-	virtual void SetImReady(bool ready);
+	virtual void SetImReady(bool ready) override;
 
-	virtual User& GetMe();
-	virtual const User& GetMe() const;
+	virtual User& GetMe() override;
+	virtual const User& GetMe() const override;
 
-	virtual void UserPositionChanged(const User& user);
+	virtual void UserPositionChanged(const User& user) override;
 
-	virtual int GetID() const
+	virtual int GetID() const override
 	{
 		return m_id;
 	}
 
-	virtual void SaveMapDefaults();
-	virtual void LoadMapDefaults(const std::string& mapname);
+	virtual void SaveMapDefaults() override;
+	virtual void LoadMapDefaults(const std::string& mapname) override;
 
-	virtual void StartHostedBattle();
-	virtual void StartSpring();
+	virtual void StartHostedBattle() override;
+	virtual void StartSpring() override;
 
 	virtual void OnTimer(wxTimerEvent& /*event*/);
 
-	virtual void SetInGame(bool ingame);
+	virtual void SetInGame(bool ingame) override;
 
 	virtual void OnUnitsyncReloaded(wxEvent& data);
 
 
-	virtual void SetAutoUnspec(bool value);
-	virtual bool GetAutoUnspec()
+	virtual void SetAutoUnspec(bool value) override;
+	virtual bool GetAutoUnspec() override
 	{
 		return m_auto_unspec;
 	}
