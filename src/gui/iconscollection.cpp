@@ -225,6 +225,11 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& modName, int fracti
 	wxASSERT(-1 < fractionId);
 	wxASSERT(modName.empty() == false);
 
+	if (!LSL::usync().GameExists(modName)){
+		// game doesn't exist, dl needed?!
+		return BMP_EMPTY;
+	}
+
 	const auto sides = LSL::usync().GetSides(modName);
 
 	//This can happen whenever in time, so must be caught in release build too
