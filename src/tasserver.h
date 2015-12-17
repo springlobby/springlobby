@@ -138,10 +138,10 @@ private:
 	void HandlePong(int replyid);
 
 
-	bool IsPasswordHash(const std::string& pass) const;
-	std::string GetPasswordHash(const std::string& pass) const;
+	bool IsPasswordHash(const std::string& pass) const override;
+	std::string GetPasswordHash(const std::string& pass) const override;
 
-	void SetRelayIngamePassword(const User& user);
+	void SetRelayIngamePassword(const User& user) override;
 
 	void OnConnected() override;
 	void OnDisconnected(wxSocketError err) override;
@@ -169,8 +169,8 @@ private:
 	virtual void SendCmd(const std::string& command, const std::string& param, bool relay);
 
 
-	void RelayCmd(const std::string& command, const std::string& param = "");
-	void Notify();
+	void RelayCmd(const std::string& command, const std::string& param = "") override;
+	void Notify() override;
 	bool IsCurrentBattle(int battle_id);
 
 	//! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
