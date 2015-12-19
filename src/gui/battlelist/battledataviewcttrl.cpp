@@ -25,6 +25,9 @@ END_EVENT_TABLE()
 BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* parent) : BaseDataViewCtrl(dataViewName, parent, BATTLELIST_DATAVIEW_ID) {
 	m_popup = nullptr;
 
+	BattleDataViewModel* m_BattleDataModel = new BattleDataViewModel();
+	AssociateModel(m_BattleDataModel);
+
 	const int DEFAULT_SIZE = wxCOL_WIDTH_AUTOSIZE;
 	AppendBitmapColumn(_("S"), STATUS, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendBitmapColumn(_("C"), COUNTRY, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
@@ -38,9 +41,6 @@ BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* p
 	AppendTextColumn(_("Max"), MAXIMUM, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("Running"), RUNNING, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendIconTextColumn(_("Engine"), ENGINE, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-
-	BattleDataViewModel* m_BattleDataModel = new BattleDataViewModel();
-	AssociateModel(m_BattleDataModel);
 
 	LoadColumnProperties();
 }

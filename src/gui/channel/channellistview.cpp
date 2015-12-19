@@ -13,13 +13,13 @@ END_EVENT_TABLE()
 
 
 ChannelListView::ChannelListView(const wxString& dataViewName, wxWindow* parent) : BaseDataViewCtrl(dataViewName, parent, CHANNELLIST_ID){
+	ChannelListDataViewModel* model = new ChannelListDataViewModel();
+	AssociateModel(model);
+
 	const int DEFAULT_SIZE = wxCOL_WIDTH_AUTOSIZE;
 	AppendTextColumn(_("Channel"), CHANNEL_NAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("# users"), USERS_COUNT, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("Topic"), TOPIC, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-
-	ChannelListDataViewModel* model = new ChannelListDataViewModel();
-	AssociateModel(model);
 
 	LoadColumnProperties();
 }

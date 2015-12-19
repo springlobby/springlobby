@@ -168,6 +168,7 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties()
 		const bool isHidden = sett().GetColumnVisibility(m_DataViewName, columnIndex);
 		wxDataViewColumn* column = GetColumn(columnIndex);
 
+		//WORKAROUND!
 		//This weird code prevents columns in wxDataViewCtrl under Linux to loose ability to resize
 		//https://groups.google.com/forum/#!searchin/wx-users/wxDataViewCtrl/wx-users/8khN3gsYWcg/_hOa30I6dqoJ
 		//Hope this will be fixed someday...
@@ -194,7 +195,17 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties()
 
 	for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
 		wxDataViewColumn* column = GetColumn(columnIndex);
+		//Get column width
 		const int colWidth = column->GetWidth();
+		//If column's width was set to wxCOL_WIDTH_AUTOSIZE then column->GetWidth()
+		//will return calculated value (that will be taken from wxDataViewCtrl::GetBestColumnWidth()).
+		//This is not acceptable here because at this moment control is empty (has no items) and
+		//calculation will take in account only header's caption. This is not what user expected to see after restart.
+		//Just do not save such column's width and let application to calculate it again after new launch.
+		if (colWidth == this->GetBestColumnWidth(columnIndex)) {
+			continue;
+		}
+		//Save column's width and other properties.
 		sett().SetColumnWidth(m_DataViewName, columnIndex, colWidth);
 		sett().SetColumnVisibility(m_DataViewName, columnIndex, column->IsHidden());
 		if (column->IsSortKey()) {
