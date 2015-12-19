@@ -380,6 +380,8 @@ TARGET_LINK_LIBRARIES(springlobby lsl-utils lsl-unitsync pr-downloader_static
 		sound
 	)
 target_include_directories(springlobby
+		PRIVATE ${CURL_INCLUDE_DIR}
+		PRIVATE ${Boost_INCLUDE_DIRS}
 		PRIVATE ${springlobby_SOURCE_DIR}/src
 		PRIVATE ${springlobby_SOURCE_DIR}/src/lsl/src
 	)

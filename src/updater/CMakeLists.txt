@@ -23,6 +23,7 @@ if (SPRINGLOBBY_UPDATER)
 			${WX_UPDATER_LD_FLAGS}
 		)
 	target_include_directories(springlobby_updater
+			PRIVATE ${Boost_INCLUDE_DIRS}
 			PRIVATE ${springlobby_SOURCE_DIR}/src
 			PRIVATE ${springlobby_SOURCE_DIR}/src/lsl/src
 		)
