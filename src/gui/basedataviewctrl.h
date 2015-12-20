@@ -202,11 +202,11 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties()
 		//This is not acceptable here because at this moment control is empty (has no items) and
 		//calculation will take in account only header's caption. This is not what user expected to see after restart.
 		//Just do not save such column's width and let application to calculate it again after new launch.
-		if (colWidth == this->GetBestColumnWidth(columnIndex)) {
-			continue;
+		if (colWidth != this->GetBestColumnWidth(columnIndex)) {
+			//Save column's width if it is not wxCOL_WIDTH_AUTOSIZE
+			sett().SetColumnWidth(m_DataViewName, columnIndex, colWidth);
 		}
-		//Save column's width and other properties.
-		sett().SetColumnWidth(m_DataViewName, columnIndex, colWidth);
+		//Save other properties
 		sett().SetColumnVisibility(m_DataViewName, columnIndex, column->IsHidden());
 		if (column->IsSortKey()) {
 			//Save sorting column
