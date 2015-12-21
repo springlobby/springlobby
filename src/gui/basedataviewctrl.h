@@ -197,6 +197,7 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties()
 		wxDataViewColumn* column = GetColumn(columnIndex);
 		//Get column width
 		const int colWidth = column->GetWidth();
+#ifdef WIN32
 		//If column's width was set to wxCOL_WIDTH_AUTOSIZE then column->GetWidth()
 		//will return calculated value (that will be taken from wxDataViewCtrl::GetBestColumnWidth()).
 		//This is not acceptable here because at this moment control is empty (has no items) and
@@ -206,6 +207,9 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties()
 			//Save column's width if it is not wxCOL_WIDTH_AUTOSIZE
 			sett().SetColumnWidth(m_DataViewName, columnIndex, colWidth);
 		}
+#else
+		sett().SetColumnWidth(m_DataViewName, columnIndex, colWidth);
+#endif
 		//Save other properties
 		sett().SetColumnVisibility(m_DataViewName, columnIndex, column->IsHidden());
 		if (column->IsSortKey()) {
