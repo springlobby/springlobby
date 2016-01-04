@@ -243,27 +243,6 @@ int IconImageList::GetUserListStateIcon(const UserStatus& us, bool chanop, bool 
 	return ICON_NOSTATE;
 }
 
-
-int IconImageList::GetUserBattleStateIcon(const UserStatus& us) const
-{
-	if (us.bot)
-		return ICON_BOT;
-	if (us.moderator) {
-		if (us.in_game)
-			return ICON_ADMIN_INGAME;
-		if (us.away)
-			return ICON_ADMIN_AWAY;
-		return ICON_ADMIN;
-	}
-
-	if (us.in_game)
-		return ICON_INGAME;
-	if (us.away)
-		return ICON_AWAY;
-
-	return ICON_NOSTATE;
-}
-
 int IconImageList::GetRankIcon(const unsigned int& rank, const bool& showlowest) const
 {
 	if (!showlowest && rank == UserStatus::RANK_1)

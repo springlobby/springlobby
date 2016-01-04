@@ -39,6 +39,7 @@
 #include "gui/hosting/votepanel.h"
 #include "utils/globalevents.h"
 #include "iconimagelist.h"
+#include "gui/iconscollection.h"
 #include "gui/controls.h"
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
@@ -296,14 +297,9 @@ void ChatPanel::CreateControls()
 
 	wxBitmap ico;
 	if (m_type == CPT_User && (m_user != NULL)) {
-		const int userstatus = icons().GetUserBattleStateIcon(m_user->GetStatus());
-		if (userstatus == icons().ICON_NOSTATE) {
-			ico = icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS);
-		} else {
-			ico = icons().GetBitmap(userstatus);
-		}
+		ico = IconsCollection::Instance()->GetUserBattleStateBmp(m_user->GetStatus());
 	} else {
-		ico = icons().GetBitmap(icons().ICON_CHANNEL_OPTIONS);
+		ico = IconsCollection::Instance()->BMP_CHANNEL_OPTIONS;
 	}
 	m_chan_opts_button = new wxBitmapButton(m_chat_panel, CHAT_CHAN_OPTS, ico, wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT));
 
@@ -864,7 +860,7 @@ void ChatPanel::SetUser(User* usr)
 		if (m_user != NULL) {
 			m_user->panel = nullptr;
 			if (m_chan_opts_button != NULL) {
-				m_chan_opts_button->SetBitmapLabel(icons().GetBitmap(icons().ICON_EMPTY));
+				m_chan_opts_button->SetBitmapLabel(IconsCollection::Instance()->BMP_EMPTY);
 			}
 		}
 	} else {

@@ -269,3 +269,27 @@ wxBitmap IconsCollection::CreateBitmap(const char* const * data) {
 	}
 	return wxBitmap(img);
 }
+
+wxBitmap& IconsCollection::GetUserBattleStateBmp(const UserStatus& us) {
+	if (us.bot) {
+		return BMP_BOT;
+	}
+	if (us.moderator) {
+		if (us.in_game) {
+			return BMP_ADMIN_INGAME;
+		}
+		if (us.away) {
+			return BMP_ADMIN_AWAY;
+		}
+		return BMP_ADMIN;
+	}
+
+	if (us.in_game) {
+		return BMP_INGAME;
+	}
+	if (us.away) {
+		return BMP_AWAY;
+	}
+
+	return BMP_CHANNEL_OPTIONS;
+}

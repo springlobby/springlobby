@@ -22,7 +22,6 @@ public:
 	IconImageList();
 
 	int GetUserListStateIcon(const UserStatus& us, bool chanop, bool inbroom) const;
-	int GetUserBattleStateIcon(const UserStatus& us) const;
 
 	int GetRankIcon(const unsigned int& rank, const bool& showlowest = true) const;
 	int GetFlagIcon(const std::string& flagname) const;

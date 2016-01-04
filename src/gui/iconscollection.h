@@ -111,6 +111,7 @@ public:
 	wxBitmap& GetRankBmp(unsigned int rank, bool showLowest = true);
 	wxBitmap& GetColourBmp(const LSL::lslColor& colour);
 	wxBitmap& GetFractionBmp(const std::string& modName, int fractionId);
+	wxBitmap& GetUserBattleStateBmp(const UserStatus& us);
 
 private:
 	static IconsCollection* m_Instance;
