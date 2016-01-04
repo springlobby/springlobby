@@ -60,7 +60,8 @@
 #include "servermanager.h"
 #include <lslunitsync/unitsync.h>
 
-#include "iconimagelist.h"
+#include "gui/iconscollection.h"
+
 #include "images/chat_icon.png.h"
 #include "images/join_icon.png.h"
 #include "images/single_player_icon.png.h"
@@ -131,7 +132,9 @@ MainWindow::MainWindow()
 	m_tab_names.Add(_("Replays"));
 	m_tab_names.Add(_("Downloads"));
 
-	SetIcon(icons().GetIcon(icons().ICON_SPRINGLOBBY));
+	wxIcon mainIcon = wxIcon();
+	mainIcon.CopyFromBitmap(IconsCollection::Instance()->BMP_SPRINGLOBBY);
+	SetIcon(mainIcon);
 
 	GetAui().manager = new wxAuiManager(this);
 

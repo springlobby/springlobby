@@ -37,8 +37,6 @@
 #include "images/broom.png.h"
 #include "images/ingame.png.h"
 
-#include "images/up.xpm"
-#include "images/down.xpm"
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"
 #include "images/rank2.xpm"
@@ -61,28 +59,9 @@
 #include "images/closed_full_pw_game.png.h"
 #include "images/closed_full_game.png.h"
 
-#include "images/player.xpm"
-
-#include "images/nexists.xpm"
-#include "images/exists.xpm"
-
-#include "images/ready_unsync.xpm"
-#include "images/ready_q.xpm"
-#include "images/nready_unsync.xpm"
-#include "images/nready_q.xpm"
-
-#include "images/spectator.png.h"
-#include "images/host.xpm"
-#include "images/host_spectator.xpm"
-
 #include "images/no1_icon.png.h"
 #include "images/no2_icon.png.h"
 #include "images/warning_small.png.h"
-
-#include "images/unknown_flag.xpm"
-
-#include "images/channel_options.xpm"
-#include "images/springlobby.xpm"
 
 #include "flagimages.h"
 
@@ -99,8 +78,6 @@ IconImageList::IconImageList()
 	ICON_ADMIN_BROOM = Add(charArr2wxBitmap(admin_broom_png, sizeof(admin_broom_png)));
 	ICON_ADMIN_INGAME = Add(charArr2wxBitmap(admin_ingame_png, sizeof(admin_ingame_png)));
 
-	ICON_PLAYER = Add(wxBitmap(player_xpm));
-
 	ICON_BOT = Add(wxBitmap(bot_xpm));
 	ICON_BOT_BROOM = Add(charArr2wxBitmap(bot_broom_png, sizeof(bot_broom_png)));
 	ICON_BOT_INGAME = Add(charArr2wxBitmap(bot_ingame_png, sizeof(bot_ingame_png)));
@@ -115,9 +92,6 @@ IconImageList::IconImageList()
 	ICON_OP_BROOM = Add(wxBitmap(chanop_broom_xpm));
 	ICON_OP_INGAME = Add(wxBitmap(chanop_ingame_xpm));
 
-	ICON_UP = Add(wxBitmap(up_xpm));
-	ICON_DOWN = Add(wxBitmap(down_xpm));
-
 	ICON_RANK_UNKNOWN = Add(wxBitmap(rank_unknown_xpm));
 	ICON_RANK1 = Add(wxBitmap(rank0_xpm));
 	ICON_RANK2 = Add(wxBitmap(rank1_xpm));
@@ -127,7 +101,6 @@ IconImageList::IconImageList()
 	ICON_RANK6 = Add(wxBitmap(rank5_xpm));
 	ICON_RANK7 = Add(wxBitmap(rank6_xpm));
 	ICON_RANK8 = Add(wxBitmap(rank7_xpm));
-	ICON_SPRINGLOBBY = Add(wxBitmap(springlobby_xpm));
 
 	m_rank_requirements.push_back(ICON_RANK1);
 	m_rank_requirements.push_back(ICON_RANK2);
@@ -147,52 +120,9 @@ IconImageList::IconImageList()
 		m_rank_requirements.push_back(Add(BlendBitmaps(to_blend, minor_bitmap))); // add new blended with minor
 	}
 
-	ICON_READY = ICON_OPEN_GAME = Add(charArr2wxBitmap(open_game_png, sizeof(open_game_png)));
-	ICON_OPEN_PW_GAME = Add(charArr2wxBitmap(open_pw_game_png, sizeof(open_pw_game_png)));
-	ICON_OPEN_FULL_PW_GAME = Add(charArr2wxBitmap(open_full_pw_game_png, sizeof(open_full_pw_game_png)));
-	ICON_OPEN_FULL_GAME = Add(charArr2wxBitmap(open_full_game_png, sizeof(open_full_game_png)));
-	ICON_NREADY = ICON_CLOSED_GAME = Add(charArr2wxBitmap(closed_game_png, sizeof(closed_game_png)));
-	ICON_CLOSED_PW_GAME = Add(charArr2wxBitmap(closed_pw_game_png, sizeof(closed_pw_game_png)));
-	ICON_CLOSED_FULL_PW_GAME = Add(charArr2wxBitmap(closed_full_pw_game_png, sizeof(closed_full_pw_game_png)));
-	ICON_CLOSED_FULL_GAME = Add(charArr2wxBitmap(closed_full_game_png, sizeof(closed_full_game_png)));
-	ICON_STARTED_GAME = Add(charArr2wxBitmap(ingame_png, sizeof(ingame_png)));
-
-	ICON_STARTED_GAME_LOCKED = Add(charArr2wxBitmapWithBlending(closed_game_png, sizeof(closed_game_png), ingame_png, sizeof(ingame_png)));
-
-
-	ICON_READY_UNSYNC = Add(wxBitmap(ready_unsync_xpm));
-	ICON_NREADY_UNSYNC = Add(wxBitmap(nready_unsync_xpm));
-	ICON_READY_QSYNC = Add(wxBitmap(ready_q_xpm));
-	ICON_NREADY_QSYNC = Add(wxBitmap(nready_q_xpm));
-
-	ICON_NEXISTS = Add(wxBitmap(nexists_xpm));
-	ICON_EXISTS = Add(wxBitmap(exists_xpm));
-
-	ICON_SPECTATOR = Add(charArr2wxBitmap(spectator_png, sizeof(spectator_png)));
-	ICON_HOST = Add(wxBitmap(host_xpm));
-	ICON_HOST_SPECTATOR = Add(wxBitmap(host_spectator_xpm));
-
-	ICON_SIDEPIC_0 = Add(charArr2wxBitmap(no1_icon_png, sizeof(no1_icon_png)));
-	ICON_SIDEPIC_1 = Add(charArr2wxBitmap(no2_icon_png, sizeof(no2_icon_png)));
-
-	ICON_CHANNEL_OPTIONS = Add(wxBitmap(channel_options_xpm));
-
-	//	SetColourIcon( wxColour( 255,   0,   0 ) );
-	//	SetColourIcon( wxColour(   0, 255,   0 ) );
-	//	SetColourIcon( wxColour(   0,   0, 255 ) );
-
-
-	//ICON_FIXCOLOURS_PALETTE = Add( wxBitmap(fixcolours_palette_xpm) );
-
-	ICON_UNK_FLAG = Add(wxBitmap(unknown_flag_xpm));
-
 	ICON_FLAGS_BASE = AddFlagImages(*this);
 
-	ICON_EMPTY = Add(wxBitmap(empty_xpm));
-
-	ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = ICON_GAME_UNKNOWN = ICON_EMPTY;
-
-	ICON_WARNING_OVERLAY = Add(charArr2wxBitmap(warning_small_png, sizeof(warning_small_png)));
+	ICON_NONE = ICON_NOSTATE = ICON_RANK_NONE = Add(wxBitmap(empty_xpm));
 }
 
 
@@ -274,7 +204,3 @@ int IconImageList::GetFlagIcon(const std::string& flagname) const
 	return ICON_FLAGS_BASE + GetFlagIndex(flagname);
 }
 
-wxString getColourIconKey(const wxColour& colour)
-{
-	return colour.GetAsString(wxC2S_HTML_SYNTAX).AfterFirst('#');
-}

@@ -14,7 +14,7 @@
 #include <wx/listctrl.h>
 
 #include "utils/conversion.h"
-#include "iconimagelist.h"
+#include "gui/iconscollection.h"
 
 //in < 29 this is defined in wxDialogBase, which seems to have disappeared
 enum { ButtonSizerFlags = wxOK | wxCANCEL | wxYES | wxNO | wxHELP | wxNO_DEFAULT };
@@ -27,7 +27,9 @@ END_EVENT_TABLE()
 PasteDialog::PasteDialog(wxWindow* parent, const wxString& message)
     : wxDialog(parent, -1, _("Flood warning"), wxDefaultPosition, wxDefaultSize, wxFRAME_FLOAT_ON_PARENT | wxDEFAULT_DIALOG_STYLE)
 {
-	SetIcon(icons().GetIcon(icons().ICON_SPRINGLOBBY));
+	wxIcon mainIcon = wxIcon();
+	mainIcon.CopyFromBitmap(IconsCollection::Instance()->BMP_SPRINGLOBBY);
+	SetIcon(mainIcon);
 
 	//******** copied from wxsource/generic/msgdlgg.cpp with small modifications***********************************************************
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);

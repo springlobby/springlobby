@@ -38,7 +38,6 @@
 #include "utils/slconfig.h"
 #include "gui/hosting/votepanel.h"
 #include "utils/globalevents.h"
-#include "iconimagelist.h"
 #include "gui/iconscollection.h"
 #include "gui/controls.h"
 
@@ -782,7 +781,7 @@ void ChatPanel::SetTopic(const wxString& who, const wxString& message)
 void ChatPanel::UserStatusUpdated(User& who)
 {
 	if ((m_type == CPT_User) && (m_user == &who) && (m_chan_opts_button != NULL)) {
-		m_chan_opts_button->SetBitmapLabel(icons().GetBitmap(icons().GetUserListStateIcon(who.GetStatus(), false, who.GetBattle() != 0)));
+		m_chan_opts_button->SetBitmapLabel(IconsCollection::Instance()->GetUserListStateBmp(who.GetStatus(), false, who.GetBattle() != 0));
 	}
 	if (!m_show_nick_list || (m_nicklist == nullptr))
 		return;
@@ -866,7 +865,7 @@ void ChatPanel::SetUser(User* usr)
 	} else {
 		usr->panel = this;
 		if (m_chan_opts_button != NULL) {
-			const wxBitmap icon = icons().GetBitmap(icons().GetUserListStateIcon(usr->GetStatus(), false, usr->GetBattle() != 0));
+			const wxBitmap icon = IconsCollection::Instance()->GetUserListStateIcon(usr->GetStatus(), false, usr->GetBattle() != 0);
 			m_chan_opts_button->SetBitmapLabel(icon);
 		}
 	}

@@ -293,3 +293,43 @@ wxBitmap& IconsCollection::GetUserBattleStateBmp(const UserStatus& us) {
 
 	return BMP_CHANNEL_OPTIONS;
 }
+
+wxBitmap& IconsCollection::GetUserListStateBmp(const UserStatus& us,
+		bool chanop, bool inbroom) {
+	if (us.bot) {
+		if (us.in_game)
+			return BMP_BOT_INGAME;
+		if (inbroom)
+			return BMP_BOT_BROOM;
+		if (us.away)
+			return BMP_BOT_AWAY;
+		return BMP_BOT;
+	}
+	if (us.moderator) {
+		if (us.in_game)
+			return BMP_ADMIN_INGAME;
+		if (us.away)
+			return BMP_ADMIN_AWAY;
+		if (inbroom)
+			return BMP_ADMIN_BROOM;
+		return BMP_ADMIN;
+	}
+	if (chanop) {
+		if (us.in_game)
+			return BMP_OP_INGAME;
+		if (us.away)
+			return BMP_OP_AWAY;
+		if (inbroom)
+			return BMP_OP_BROOM;
+		return BMP_OP;
+	}
+
+	if (us.in_game)
+		return BMP_INGAME;
+	if (us.away)
+		return BMP_AWAY;
+	if (inbroom)
+		return BMP_BROOM;
+
+	return BMP_NOSTATE;
+}

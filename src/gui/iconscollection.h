@@ -112,6 +112,7 @@ public:
 	wxBitmap& GetColourBmp(const LSL::lslColor& colour);
 	wxBitmap& GetFractionBmp(const std::string& modName, int fractionId);
 	wxBitmap& GetUserBattleStateBmp(const UserStatus& us);
+	wxBitmap& GetUserListStateBmp(const UserStatus& us, bool chanop, bool inbroom);
 
 private:
 	static IconsCollection* m_Instance;
