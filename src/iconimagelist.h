@@ -24,16 +24,8 @@ public:
 	int GetUserListStateIcon(const UserStatus& us, bool chanop, bool inbroom) const;
 	int GetUserBattleStateIcon(const UserStatus& us) const;
 
-	int GetRankLimitIcon(int rank, bool showlowest = true) const;
 	int GetRankIcon(const unsigned int& rank, const bool& showlowest = true) const;
 	int GetFlagIcon(const std::string& flagname) const;
-	int GetBattleStatusIcon(const IBattle& battle) const;
-	wxString GetBattleStatus(const IBattle& battle) const;
-	int GetHostIcon(const bool& spectator = false) const;
-	int GetColourIcon(const LSL::lslColor& colour) const;
-	void SetColourIcon(const LSL::lslColor& colour);
-	int GetSideIcon(const std::string& gamename, int side);
-	int GetReadyIcon(const bool& spectator, const bool& ready, const unsigned int& sync, const bool& bot);
 
 	int ICON_NONE;
 

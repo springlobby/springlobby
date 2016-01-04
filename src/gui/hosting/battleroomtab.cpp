@@ -59,6 +59,7 @@
 #include "servermanager.h"
 #include "gui/controls.h"
 #include "gui/ui.h"
+#include "gui/iconscollection.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -577,7 +578,6 @@ void BattleRoomTab::UpdateUser(User& user, bool userJustAdded)
 		m_battle->SetAutoUnspec(false);
 	}
 
-	icons().SetColourIcon(user.BattleStatus().colour);
 	m_color_sel->SetColor(lslTowxColour(user.BattleStatus().colour));
 }
 
@@ -1241,7 +1241,7 @@ void BattleRoomTab::RegenerateOptionsList()
 		try {
 			const wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(m_battle->GetHostGameName()));
 			for (unsigned int i = 0; i < sides.GetCount(); i++) {
-				m_side_sel->Append(sides[i], icons().GetBitmap(icons().GetSideIcon(m_battle->GetHostGameName(), i)));
+				m_side_sel->Append(sides[i], IconsCollection::Instance()->GetFractionBmp(m_battle->GetHostGameName(), i));
 			}
 			wxSize s = m_side_sel->GetEffectiveMinSize();
 			m_side_sel->SetMinSize(s);

@@ -25,7 +25,7 @@
 #include "iserver.h"
 #include "ibattle.h"
 #include "settings.h"
-#include "iconimagelist.h"
+#include "iconscollection.h"
 #include "hosting/addbotdialog.h"
 #include "log.h"
 #include "contentmanager.h"
@@ -37,10 +37,6 @@
 #include "images/start_ally.xpm"
 #include "images/start_enemy.xpm"
 #include "images/start_unused.xpm"
-#include "images/player.xpm"
-#include "images/bot.xpm"
-#include "images/no1_icon.png.h"
-#include "images/no2_icon.png.h"
 #include "images/up_down.xpm"
 #include "images/upsel_down.xpm"
 #include "images/up_downsel.xpm"
@@ -939,7 +935,7 @@ void MapCtrl::DrawUser(wxDC& dc, User& user, bool selected, bool /*unused*/)
 		}
 
 		if (!m_battle->GetHostGameName().empty()){ //game isn't set -> no side known
-			wxBitmap bmp = icons().GetBitmap(icons().GetSideIcon(m_battle->GetHostGameName(), user.BattleStatus().side));
+			wxBitmap bmp = IconsCollection::Instance()->GetFractionBmp(m_battle->GetHostGameName(), user.BattleStatus().side);
 			dc.DrawBitmap(bmp, r.x + siderect.x, r.y + siderect.y, true);
 		}
 
