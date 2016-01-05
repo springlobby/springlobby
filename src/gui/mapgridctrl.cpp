@@ -76,9 +76,9 @@ MapGridCtrl::MapGridCtrl(wxWindow* parent, wxSize size, wxWindowID id)
 
 MapGridCtrl::~MapGridCtrl()
 {
-	m_mutex.Lock();
 	m_async_ex.Disconnect();
 	m_async_image.Disconnect();
+	m_mutex.Lock();
 	Clear();
 	m_pending_mapimages.clear();
 	m_pending_mapinfos.clear();
