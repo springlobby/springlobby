@@ -61,8 +61,10 @@ public:
 		downloadInfo info;
 		const bool hasdlinfo = DownloadGetInfo(0, info);
 		assert(hasdlinfo);
+
+		UiEvents::ScopedStatusMessage msg("Downloading: " + m_name, 0);
+
 		const bool downloadFailed = DownloadStart();
-		UiEvents::ScopedStatusMessage msg("Downloading: " + m_name +std::string(" ") + info.filename, 0);
 		//we create this in avance cause m_item gets freed
 		wxString d(_("Download complete: " + m_name));
 
