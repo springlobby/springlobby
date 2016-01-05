@@ -18,7 +18,7 @@ std::string GetDownloadUrl(const std::string& version)
 	if (isReleaseChannel()) {
 		return stdprintf("http://springlobby.info/windows/springlobby-%s-win32.zip", version.c_str());
 	}
-	return "http://springlobby.info/temp/builds/abma/sl_master.zip";
+	return "http://springlobby.info/temp/builds/develop/sl_master.zip";
 }
 
 std::string GetLatestVersionUrl()
@@ -26,5 +26,5 @@ std::string GetLatestVersionUrl()
 	if (isReleaseChannel()) {
 		return std::string("http://version.springlobby.info/current.txt");
 	}
-	return std::string("http://springlobby.info/temp/builds/abma/current.txt");
+	return std::string("http://springlobby.info/temp/builds/develop/current.txt");
 }
