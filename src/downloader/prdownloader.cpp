@@ -82,6 +82,7 @@ private:
 	void DownloadFinished(DownloadEnum::Category cat, const downloadInfo& info)
 	{
 		switch (cat) {
+			case DownloadEnum::CAT_ENGINE:
 			case DownloadEnum::CAT_ENGINE_LINUX:
 			case DownloadEnum::CAT_ENGINE_WINDOWS:
 			case DownloadEnum::CAT_ENGINE_LINUX64:
