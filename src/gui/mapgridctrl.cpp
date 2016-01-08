@@ -76,16 +76,16 @@ MapGridCtrl::MapGridCtrl(wxWindow* parent, wxSize size, wxWindowID id)
 
 MapGridCtrl::~MapGridCtrl()
 {
+	//m_mutex.Lock(); //FIXME: deadlocks sometimes, WTF?!
 	m_async_ex.Disconnect();
 	m_async_image.Disconnect();
-	m_mutex.Lock();
 	Clear();
 	m_pending_mapimages.clear();
 	m_pending_mapinfos.clear();
 	m_async_ops_count = 0;
 	m_grid.clear();
 	m_maps.clear();
-	m_mutex.Unlock();
+	//m_mutex.Unlock();
 }
 
 
