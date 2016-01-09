@@ -109,6 +109,8 @@ private:
 				GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 				break;
 			default:
+				wxLogError("Unknown category: %d", cat);
+				assert(false);
 				break;
 		}
 	}
