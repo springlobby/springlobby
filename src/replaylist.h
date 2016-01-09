@@ -48,6 +48,8 @@ private:
 	std::string GetScriptFromReplay(wxFile& ReplayPath, const int version) const;
 	//! saves relevant infos from header into replay struct
 	void GetHeaderInfo(wxFile& ReplayPath, StoredGame& rep, const int version) const;
+	int FindPlayback(const std::string& filename) const;
+	bool FindFilename(const std::vector<std::string>& filenames, const std::string& filename) const;
 };
 
 IPlaybackList& replaylist();
