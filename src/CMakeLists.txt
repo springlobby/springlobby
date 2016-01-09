@@ -162,7 +162,6 @@ set(springlobbySrc
 	user.cpp
 	useractions.cpp
 	userlist.cpp
-	crashreport.cpp
 	log.cpp
 	settings.cpp
 	updatehelper.cpp

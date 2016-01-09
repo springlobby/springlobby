@@ -35,6 +35,7 @@
 #include "utils/slpaths.h"
 #include "utils/version.h"
 #include "utils/globalevents.h"
+#include "utils/platform.h"
 #include "gui/uiutils.h"
 #include "gui/chatpanel.h"
 #include "gui/battlelist/battlelisttab.h"
@@ -42,7 +43,6 @@
 #include "gui/hosting/mainjoinbattletab.h"
 #include "gui/hosting/mainsingleplayertab.h"
 #include "gui/mainchattab.h"
-#include "crashreport.h"
 #include "gui/maindownloadtab.h"
 #include "downloader/prdownloader.h"
 #include "gui/agreementdialog.h"
@@ -749,12 +749,6 @@ void Ui::OnSpringTerminated(wxCommandEvent& data)
 			battle->SendHostInfo(IBattle::HI_Locked);
 		}
 	} catch (assert_exception) {
-	}
-
-	if (exit_code != 0) {
-		SpringDebugReport report;
-		if (wxDebugReportPreviewStd().Show(report))
-			report.Process();
 	}
 }
 

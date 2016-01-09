@@ -35,7 +35,6 @@
 #include "gui/mainwindow.h"
 #include "settings.h"
 #include "utils/slconfig.h"
-#include "crashreport.h"
 #include "gui/controls.h"
 #include "utils/platform.h"
 #include "utils/version.h"
@@ -204,7 +203,7 @@ int SpringLobbyApp::OnExit()
 //! @brief is called when the app crashes
 void SpringLobbyApp::OnFatalException()
 {
-	CrashReport::instance().GenerateReport();
+	wxLogError("Fatal exception!");
 }
 
 
