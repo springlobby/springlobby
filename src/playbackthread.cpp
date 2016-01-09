@@ -32,7 +32,6 @@ void PlaybackLoader::Run()
 	if (m_thread_loader)
 		return; // a thread is already running
 	m_filenames = LSL::usync().GetPlaybackList(m_isreplaytype);
-	replaylist().RemoveAll();
 	m_thread_loader = new PlaybackLoaderThread(this, m_parent);
 	m_thread_loader->Create();
 	m_thread_loader->Run();

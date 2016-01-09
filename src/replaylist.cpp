@@ -44,7 +44,7 @@ void ReplayList::LoadPlaybacks(const std::vector<std::string>& filenames)
 	for (size_t i = 0; i < filenames.size(); ++i) { //add replays which doesn't exist yet
 		const std::string filename = filenames[i];
 		const int pos = FindPlayback(filename);
-		if (pos != -1) {
+		if (pos == -1) {
 			StoredGame& playback = AddPlayback(i);
 			GetReplayInfos(filename, playback);
 		}
