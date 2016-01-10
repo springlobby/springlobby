@@ -41,6 +41,7 @@ bool ReplayList::FindFilename(const std::vector<std::string>& filenames, const s
 
 void ReplayList::LoadPlaybacks(const std::vector<std::string>& filenames)
 {
+	//FIXME: speed the functions FindPlayback / FindFilename up
 	for (size_t i = 0; i < filenames.size(); ++i) { //add replays which doesn't exist yet
 		const std::string filename = filenames[i];
 		const int pos = FindPlayback(filename);
