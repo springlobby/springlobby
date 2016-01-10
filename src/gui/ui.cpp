@@ -750,6 +750,7 @@ void Ui::OnSpringTerminated(wxCommandEvent& data)
 		}
 	} catch (assert_exception) {
 	}
+	wxLogInfo("Exiting with %d", exit_code);
 }
 
 

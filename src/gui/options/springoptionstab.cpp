@@ -44,6 +44,7 @@
 #include "gui/customdialogs.h"
 #include <lslunitsync/springbundle.h>
 #include <lslunitsync/unitsync.h>
+#include <lslutils/debug.h>
 
 
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
