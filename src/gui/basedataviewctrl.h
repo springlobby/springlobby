@@ -196,7 +196,7 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties()
 	for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
 		wxDataViewColumn* column = GetColumn(columnIndex);
 		//Get column width
-		const int colWidth = column->GetWidth();
+		const size_t colWidth = column->GetWidth();
 #ifdef WIN32
 		//If column's width was set to wxCOL_WIDTH_AUTOSIZE then column->GetWidth()
 		//will return calculated value (that will be taken from wxDataViewCtrl::GetBestColumnWidth()).
