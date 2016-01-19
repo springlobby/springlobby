@@ -495,6 +495,10 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 		}
 		case 2: { //depth 2
 			if (param == "game/hosttype") {
+				if (battle.m_autohost_manager == nullptr) {
+					wxLogWarning("FIXME: battle.m_autohost_manager == nullptr");
+					return;
+				}
 				if (battle.m_autohost_manager->RecognizeAutohost(value)) {
 					wxLogInfo("detected %s autohost", value.c_str()); //FIXME: add event for that + add a label?!
 				}
