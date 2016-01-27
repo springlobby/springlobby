@@ -1,5 +1,16 @@
 ChangeLog of Springlobby
 
+## 0.244
+ - fix memleaks
+ - improve metadata caching (i.e. map images are stored in small + large size, json is used for metadata)
+ - add "Notify me when game has ended" to context menu (sends !notify)
+ - don't show rapid meta files in downloads (i.e. version.gz)
+ - a lot of code simplifications / refactorings
+ - use prdownloader c-api (instead of using hacks to get download info)
+ - remove broken + unused crashreporter
+ - speedup demo reloading: only new files are parsed
+ - fix crash in FORCEJOINBATTLE
+
 ## 0.243
  - remove /installer from source tarball
  - installer: remove functionality to delete user content
