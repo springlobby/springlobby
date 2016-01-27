@@ -60,7 +60,11 @@ public:
 
 		downloadInfo info;
 		const bool hasdlinfo = DownloadGetInfo(0, info);
-		assert(hasdlinfo);
+		//In case if something gone wrong
+		if (!hasdlinfo) {
+			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
+			return;
+		}
 
 		UiEvents::ScopedStatusMessage msg("Downloading: " + m_name, 0);
 

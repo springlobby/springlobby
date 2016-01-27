@@ -74,6 +74,7 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction(&MainDownloadTab::OnNewDownloadStarted));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadComplete, wxObjectEventFunction(&MainDownloadTab::OnDownloadComplete));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadFailed, wxObjectEventFunction(&MainDownloadTab::OnDownloadFailed));
 }
 
 MainDownloadTab::~MainDownloadTab()
@@ -119,4 +120,8 @@ void MainDownloadTab::OnNewDownloadStarted(wxCommandEvent& event) {
 
 void MainDownloadTab::OnDownloadComplete(wxCommandEvent& /*event*/) {
 	m_DownloadDataView->UpdateDownloadsList();
+}
+
+void MainDownloadTab::OnDownloadFailed(wxCommandEvent& event) {
+	wxMessageBox(_("Failed to download selected item!"), _("Error"), wxOK, this);
 }

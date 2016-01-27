@@ -54,6 +54,7 @@ private:
 
 	void OnNewDownloadStarted(wxCommandEvent& event);
 	void OnDownloadComplete(wxCommandEvent& event);
+	void OnDownloadFailed(wxCommandEvent& event);
 
 	wxBoxSizer* m_main_sizer;
 
