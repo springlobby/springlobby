@@ -79,6 +79,8 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 
 MainDownloadTab::~MainDownloadTab()
 {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
+
 	timer->Stop();
 	wxDELETE(timer);
 }
@@ -122,6 +124,6 @@ void MainDownloadTab::OnDownloadComplete(wxCommandEvent& /*event*/) {
 	m_DownloadDataView->UpdateDownloadsList();
 }
 
-void MainDownloadTab::OnDownloadFailed(wxCommandEvent& event) {
+void MainDownloadTab::OnDownloadFailed(wxCommandEvent& /*event*/) {
 	wxMessageBox(_("Failed to download selected item!"), _("Error"), wxOK, this);
 }
