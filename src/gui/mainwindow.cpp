@@ -244,6 +244,8 @@ MainWindow::MainWindow()
 
 wxBitmap MainWindow::GetTabIcon(const unsigned char* data, size_t size) const
 {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
+
 	if (cfg().ReadBool(_T( "/GUI/UseTabIcons" )))
 		return charArr2wxBitmap(data, size);
 	else
