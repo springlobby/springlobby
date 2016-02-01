@@ -36,6 +36,7 @@ GlobalEventManager::GlobalEventManager()
 
 GlobalEventManager::~GlobalEventManager()
 {
+	assert(m_eventsTable.empty()); // all subcribers must have unsubscribed before exit (else it possible crashes)
 }
 
 GlobalEventManager* GlobalEventManager::Instance()
