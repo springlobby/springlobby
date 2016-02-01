@@ -105,7 +105,7 @@ void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxOb
 {
 	assert(evthandler != NULL);
 	std::set<wxEvtHandler*>& evtlist = m_eventsTable[id];
-	if (evtlist.find(evthandler) == evtlist.end())
+	if (evtlist.find(evthandler) != evtlist.end())
 		return;
 	//	printf("connected event! %lu\n", evthandler);
 	evthandler->Connect(id, func);
