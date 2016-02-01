@@ -4,7 +4,7 @@
 #define SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H
 
 #include <map>
-#include <list>
+#include <set>
 
 #include <wx/event.h>
 
@@ -59,7 +59,7 @@ private:
 	static bool m_eventsDisabled;
 
 private:
-	std::map<wxEventType, std::list<wxEvtHandler*> > m_eventsTable;
+	std::map<wxEventType, std::set<wxEvtHandler*> > m_eventsTable;
 	const int ANY_EVENT = 0;
 };
 

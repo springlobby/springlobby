@@ -1,8 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include <wx/app.h>
-#include <list>
-#include <map>
 
 #include "globalevents.h"
 
@@ -70,11 +68,13 @@ void GlobalEventManager::Send(wxEventType type, void* clientData)
 
 void GlobalEventManager::Send(wxCommandEvent event)
 {
-	if (m_eventsDisabled) {
+	if (m_eventsDisabled)
 		return;
-	}
 
-	std::list<wxEvtHandler*>& evtlist = m_eventsTable[event.GetEventType()];
+	if (m_eventsTable.find(event.GetEventType()) == m_eventsTable.end())
+		return;
+
+	std::set<wxEvtHandler*>& evtlist = m_eventsTable[event.GetEventType()];
 //	assert(event.GetString() == wxEmptyString); // using strings here isn't thread safe http://docs.wxwidgets.org/trunk/classwx_evt_handler.html#a0737c6d2cbcd5ded4b1ecdd53ed0def3
 
 	for (auto evt : evtlist) {
@@ -104,32 +104,30 @@ void GlobalEventManager::UnSubscribeAll(wxEvtHandler* evh)
 void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func)
 {
 	assert(evthandler != NULL);
-	std::list<wxEvtHandler*>& evtlist = m_eventsTable[id];
-	for (auto evt : evtlist) {
-		if (evt == evthandler) {
-			//			printf("Double Evthandler\n");
-			return;
-		}
-	}
+	std::set<wxEvtHandler*>& evtlist = m_eventsTable[id];
+	if (evtlist.find(evthandler) == evtlist.end())
+		return;
 	//	printf("connected event! %lu\n", evthandler);
 	evthandler->Connect(id, func);
-	evtlist.push_back(evthandler);
+	evtlist.emplace(evthandler);
 	assert(!evtlist.empty());
 }
 
+
+// removes the given eventhandler for the specified event type
 void GlobalEventManager::_Disconnect(wxEvtHandler* evthandler, wxEventType id)
 {
-	std::map<wxEventType, std::list<wxEvtHandler*> >::iterator it;
 
-	for (it = m_eventsTable.begin(); it != m_eventsTable.end(); ++it) {
-		if ((id == ANY_EVENT) || (id == it->first)) {
-			for (std::list<wxEvtHandler*>::iterator it2 = it->second.begin(); it2 != it->second.end(); ++it2) {
-				if (*it2 == evthandler) {
-					evthandler->Disconnect(it->first);
-					it->second.erase(it2);
-					break;
-				}
-			}
+	for (auto it : m_eventsTable) {
+		if ((id != it.first) && (id != ANY_EVENT))
+			continue;
+		auto pos = it.second.find(evthandler);
+		if (pos == it.second.end())
+			continue;
+		evthandler->Disconnect(it.first);
+		it.second.erase(pos);
+		if (it.second.empty()) {
+			m_eventsTable.erase(it.first);
 		}
 	}
 }
