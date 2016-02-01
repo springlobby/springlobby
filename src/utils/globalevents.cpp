@@ -109,7 +109,7 @@ void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxOb
 		return;
 	//	printf("connected event! %lu\n", evthandler);
 	evthandler->Connect(id, func);
-	evtlist.emplace(evthandler);
+	evtlist.insert(evthandler);
 	assert(!evtlist.empty());
 }
 
