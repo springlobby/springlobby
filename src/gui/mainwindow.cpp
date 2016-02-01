@@ -275,6 +275,7 @@ void MainWindow::SetLogWin(wxLogWindow* log)
 }
 MainWindow::~MainWindow()
 {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
 	Logger::ShowDebugWindow(false);
 	SetEvtHandlerEnabled(false);
 	if (m_opts_dialog) {
