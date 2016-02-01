@@ -41,7 +41,7 @@ class OptionsDialog;
 class ReplayTraits;
 class wxFocusEvent;
 
-static const wxEventType MainwindowMessageEvent = wxNewEventType();
+extern const wxEventType MainwindowMessageEvent;
 
 //! @brief wxFrame that contains the main window of the client.
 class MainWindow : public wxFrame, public WindowAttributesPickle

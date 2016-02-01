@@ -77,6 +77,9 @@
 #include <iostream>
 #endif
 
+const wxEventType MainwindowMessageEvent = wxNewEventType();
+
+
 SLCONFIG("/GUI/UseTabIcons", true, "Show icons in main tabs");
 SLCONFIG("/GUI/DoubleBuffered", false, "Double buffer gui controls (reduces flickering)");
 
