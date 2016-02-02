@@ -324,7 +324,7 @@ SET( templatesources
 add_subdirectory(downloader)
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
-	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init")
+	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init\nIf you used a tarball, please download from http://springlobby.info\n the tarballs from github.com are broken! :-(")
 endif()
 set(ADD_WXCONVERT ON CACHE BOOL "" FORCE)
 set(LSLSERVER OFF CACHE BOOL "build lsl server" FORCE)
