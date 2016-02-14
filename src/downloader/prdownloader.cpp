@@ -53,6 +53,10 @@ public:
 			default:
 				results = DownloadSearch(m_category, m_name.c_str());
 		}
+		if (results <= 0) {
+			wxLogInfo("Nothing found to download");
+			return;
+		}
 		for (int i=0; i < results; i++) {
 			DownloadAdd(i);
 			break; //only add one result
