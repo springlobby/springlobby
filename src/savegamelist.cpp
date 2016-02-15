@@ -13,20 +13,6 @@ SavegameList::SavegameList()
 }
 
 
-void SavegameList::LoadPlaybacks(const std::vector<std::string>& filenames)
-{
-	m_replays.clear();
-	const size_t size = filenames.size();
-	for (size_t i = 0; i < size; ++i) {
-		const std::string fn = filenames[i];
-		StoredGame& rep_ref = AddPlayback(i);
-
-		if (!GetSavegameInfos(fn, rep_ref)) {
-			RemovePlayback(rep_ref.id);
-		}
-	}
-}
-
 bool SavegameList::GetSavegameInfos(const std::string& SavegamePath, StoredGame& ret) const
 {
 	//wxLogMessage(_T("GetSavegameInfos %s"), SavegamePath.c_str());

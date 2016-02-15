@@ -39,17 +39,14 @@ class wxFile;
 class ReplayList : public IPlaybackList
 {
 public:
-	virtual void LoadPlaybacks(const std::vector<std::string>& filenames);
 	ReplayList();
 
 private:
-	bool GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) const;
+	bool GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) const override;
 	int replayVersion(wxFile& ReplayPath) const;
 	std::string GetScriptFromReplay(wxFile& ReplayPath, const int version) const;
 	//! saves relevant infos from header into replay struct
 	void GetHeaderInfo(wxFile& ReplayPath, StoredGame& rep, const int version) const;
-	int FindPlayback(const std::string& filename) const;
-	bool FindFilename(const std::vector<std::string>& filenames, const std::string& filename) const;
 };
 
 IPlaybackList& replaylist();

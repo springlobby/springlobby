@@ -21,50 +21,6 @@ ReplayList::ReplayList()
 {
 }
 
-int ReplayList::FindPlayback(const std::string& filename) const //returns id when the filename already exists in m_replays
-{
-	for (const auto& playback: m_replays){
-        if (playback.second.Filename == filename)
-			return playback.first;
-	}
-	return -1;
-}
-
-bool ReplayList::FindFilename(const std::vector<std::string>& filenames, const std::string& filename) const //search
-{
-	for (size_t i = 0; i < filenames.size(); ++i) {
-		if (filenames[i] == filename)
-			return true;
-	}
-	return false;
-}
-
-void ReplayList::LoadPlaybacks(const std::vector<std::string>& filenames)
-{
-	//FIXME: speed the functions FindPlayback / FindFilename up
-	for (size_t i = 0; i < filenames.size(); ++i) { //add replays which doesn't exist yet
-		const std::string filename = filenames[i];
-		const int pos = FindPlayback(filename);
-		if (pos == -1) {
-			StoredGame& playback = AddPlayback(i);
-			GetReplayInfos(filename, playback);
-		}
-	}
-
-	std::list<unsigned int> todel;
-	for (const auto& playback: m_replays){ //remove not re-added playbacks (deleted?!)
-		if (!FindFilename(filenames, playback.second.Filename)) {
-			todel.push_back(playback.first);
-		}
-	}
-
-	for (unsigned int id: todel) {
-			DeletePlayback(id);
-	}
-
-	assert(m_replays.size() == filenames.size());
-}
-
 
 int ReplayList::replayVersion(wxFile& replay) const
 {

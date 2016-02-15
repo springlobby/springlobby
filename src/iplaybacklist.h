@@ -16,31 +16,28 @@ public:
 	{
 	}
 
-	//! @brief mapping from playback id number to playback object
-	typedef std::map<unsigned int, StoredGame> playback_map_t;
-	//! @brief iterator for playback map
-	typedef typename playback_map_t::iterator playback_iter_t;
-	//! @brief const iterator for playback map
-	typedef typename playback_map_t::const_iterator playback_const_iter_t;
+	virtual void LoadPlaybacks(const std::vector<std::string>& filenames);
 
-	virtual void LoadPlaybacks(const std::vector<std::string>& filenames) = 0;
-
-	StoredGame& AddPlayback(const size_t index);
+	StoredGame& AddPlayback();
 	void RemovePlayback(unsigned int const id);
 
 	StoredGame& GetPlaybackById(unsigned int const id);
 
 	bool PlaybackExists(unsigned int const id) const;
 	bool DeletePlayback(unsigned int const id);
-	typename playback_map_t::size_type GetNumPlaybacks() const;
+	size_t GetNumPlaybacks() const;
 
 	void RemoveAll();
 
-	const playback_map_t& GetPlaybacksMap() const;
-
+	const std::map<size_t, StoredGame>& GetPlaybacksMap() const;
+	virtual bool GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) const = 0;
 
 protected:
-	playback_map_t m_replays;
+	std::map<size_t, StoredGame> m_replays;
+private:
+	int FindPlayback(const std::string& filename) const;
+	bool FindFilename(const std::vector<std::string>& filenames, const std::string& filename) const;
+
 };
 
 #endif // SL_PLAYBACKLIST_H_INCLUDED

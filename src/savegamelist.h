@@ -9,8 +9,6 @@ struct StoredGame;
 
 class SavegameList : public IPlaybackList
 {
-public:
-	virtual void LoadPlaybacks(const std::vector<std::string>& filenames);
 
 private:
 	SavegameList();
