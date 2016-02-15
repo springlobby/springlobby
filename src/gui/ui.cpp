@@ -587,8 +587,11 @@ void Ui::OnBattleClosed(IBattle& battle)
 		}
 	} catch (...) {
 	}
-	for (unsigned int b = 0; b < battle.GetNumUsers(); b++) {
-		User& user = battle.GetUser(b);
+
+	for (auto userpair: battle.GetUsers()) {
+		assert(userpair.second != nullptr);
+
+		User& user = *userpair.second;
 		user.SetBattle(0);
 		for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 			Channel& chan = m_serv->GetChannel(i);
