@@ -9,10 +9,12 @@
 
 int IPlaybackList::FindPlayback(const std::string& filename) const //returns id when the filename already exists in m_replays
 {
-	for (const auto& playback: m_replays){
-		if (playback.second.Filename == filename)
-			return playback.first;
+	auto playbackId = m_replays_filename_index.find(filename);
+
+	if (playbackId != m_replays_filename_index.end()) {
+		return playbackId->second;
 	}
+
 	return -1;
 }
 
@@ -27,41 +29,46 @@ bool IPlaybackList::FindFilename(const std::vector<std::string>& filenames, cons
 
 void IPlaybackList::LoadPlaybacks(const std::vector<std::string>& filenames)
 {
-	//FIXME: speed the functions FindPlayback / FindFilename up
+	//FIXME: speed the function FindFilename up
 	for (size_t i = 0; i < filenames.size(); ++i) { //add replays which doesn't exist yet
 		const std::string filename = filenames[i];
 		const int pos = FindPlayback(filename);
 		if (pos == -1) {
-			StoredGame& playback = AddPlayback();
+			StoredGame& playback = AddPlayback(filename);
 			GetReplayInfos(filename, playback);
 		}
 	}
 
-	std::list<unsigned int> todel;
-	for (const auto& playback: m_replays){ //remove not re-added playbacks (deleted?!)
-		if (!FindFilename(filenames, playback.second.Filename)) {
-			todel.push_back(playback.first);
+	if (m_replays.size() > filenames.size()) {
+		std::list<unsigned int> todel;
+		for (const auto& playback: m_replays){ //remove not re-added playbacks (deleted?!)
+			if (!FindFilename(filenames, playback.second.Filename)) {
+				todel.push_back(playback.first);
+			}
+		}
+
+		for (unsigned int id: todel) {
+			DeletePlayback(id);
 		}
 	}
 
-	for (unsigned int id: todel) {
-		DeletePlayback(id);
-	}
-
 	assert(m_replays.size() == filenames.size());
+	assert(m_replays_filename_index.size() == filenames.size());
 }
 
-StoredGame& IPlaybackList::AddPlayback()
+StoredGame& IPlaybackList::AddPlayback(const std::string& filename)
 {
 	const size_t replays = m_replays.size();
 	if (!PlaybackExists(replays)) { //last id should be mostly free
 		m_replays[replays].id = replays;
+		m_replays_filename_index[filename] = replays;
 		return m_replays[replays];
 	}
 
 	for(size_t i = 0; i < replays; i++) { //item was deleted, try to reuse id's / fill gaps
 		if (!PlaybackExists(i)) {
 			m_replays[i].id = i;
+			m_replays_filename_index[filename] = i;
 			return m_replays[i];
 		}
 	}
@@ -71,6 +78,8 @@ StoredGame& IPlaybackList::AddPlayback()
 
 void IPlaybackList::RemovePlayback(unsigned int const id)
 {
+	const StoredGame& rep = m_replays[id];
+	m_replays_filename_index.erase(rep.Filename);
 	m_replays.erase(id);
 }
 
@@ -97,6 +106,7 @@ bool IPlaybackList::DeletePlayback(unsigned int const id)
 {
 	const StoredGame& rep = m_replays[id];
 	if (wxRemoveFile(TowxString(rep.Filename))) {
+		m_replays_filename_index.erase(rep.Filename);
 		m_replays.erase(id);
 		return true;
 	}
@@ -105,6 +115,7 @@ bool IPlaybackList::DeletePlayback(unsigned int const id)
 
 void IPlaybackList::RemoveAll()
 {
+	m_replays_filename_index.clear();
 	m_replays.clear();
 }
 

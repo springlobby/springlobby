@@ -18,7 +18,7 @@ public:
 
 	virtual void LoadPlaybacks(const std::vector<std::string>& filenames);
 
-	StoredGame& AddPlayback();
+	StoredGame& AddPlayback(const std::string& filename);
 	void RemovePlayback(unsigned int const id);
 
 	StoredGame& GetPlaybackById(unsigned int const id);
@@ -34,6 +34,8 @@ public:
 
 protected:
 	std::map<size_t, StoredGame> m_replays;
+	std::map<const std::string, size_t> m_replays_filename_index;
+
 private:
 	int FindPlayback(const std::string& filename) const;
 	bool FindFilename(const std::vector<std::string>& filenames, const std::string& filename) const;
