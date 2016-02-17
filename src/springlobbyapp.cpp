@@ -192,10 +192,10 @@ int SpringLobbyApp::OnExit()
 
 	IconsCollection::Release();
 	ServerManager::Release();
-	GlobalEventManager::Release();
 	SetEvtHandlerEnabled(false);
 	UiEvents::GetNotificationEventSender().Enable(false);
 	LSL::Util::DestroyGlobals();
+	GlobalEventManager::Release();
 
 	return 0;
 }
