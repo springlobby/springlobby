@@ -36,15 +36,12 @@ public:
 
 private:
 	wxBoxSizer* m_main_sizer;
-//	wxRadioButton* m_filter_recent;
 	wxStaticText* m_map_name;
-//	wxRadioButton* m_filter_all;
 	MapGridCtrl* m_mapgrid;
 	wxChoice* m_vertical_choice;
 	wxChoice* m_horizontal_choice;
 	wxTextCtrl* m_filter_text;
 	wxListCtrl* m_map_opts_list;
-//	wxRadioButton* m_filter_popular;
 	wxStaticBoxSizer* m_map_details;
 	wxButton* m_vertical_direction_button;
 	wxButton* m_horizontal_direction_button;
@@ -86,14 +83,6 @@ private:
 	bool m_horizontal_direction;
 	bool m_vertical_direction;
 	wxArrayString m_maps;
-	wxArrayString m_replays;
-/*
-	enum {
-		m_filter_all_sett = 0,
-		m_filter_popular_sett = 1,
-		m_filter_recent_sett = 2,
-	};
-*/
 };
 
 wxString mapSelectDialog(bool hidden = false, wxWindow* parent = NULL);

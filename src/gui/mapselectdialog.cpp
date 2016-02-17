@@ -35,11 +35,6 @@ const long MapSelectDialog::ID_STATICTEXT2 = wxNewId();
 const long MapSelectDialog::ID_VERTICAL_CHOICE = wxNewId();
 const long MapSelectDialog::ID_STATICTEXT1 = wxNewId();
 const long MapSelectDialog::ID_HORIZONTAL_CHOICE = wxNewId();
-/*
-const long MapSelectDialog::ID_FILTER_ALL = wxNewId();
-const long MapSelectDialog::ID_FILTER_POPULAR = wxNewId();
-const long MapSelectDialog::ID_FILTER_RECENT = wxNewId();
-*/
 const long MapSelectDialog::ID_FILTER_TEXT = wxNewId();
 const long MapSelectDialog::ID_MAP_NAME = wxNewId();
 const long MapSelectDialog::ID_MAP_OPTS_LIST = wxNewId();
@@ -68,20 +63,6 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
 	m_horizontal_choice = new wxChoice(this, ID_HORIZONTAL_CHOICE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_HORIZONTAL_CHOICE"));
 	boxSizerHorizontal->Add(m_horizontal_choice, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer2->Add(boxSizerHorizontal, 0, wxALL | wxEXPAND, 0);
-/*
-	wxStaticBoxSizer* StaticBoxSizer1 = new wxStaticBoxSizer(wxVERTICAL, this, _("Show"));
-	m_filter_all = new wxRadioButton(this, ID_FILTER_ALL, _("All maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_ALL"));
-	m_filter_all->SetToolTip(_("Shows all available maps"));
-	StaticBoxSizer1->Add(m_filter_all, 0, wxALL | wxEXPAND, 0);
-	m_filter_popular = new wxRadioButton(this, ID_FILTER_POPULAR, _("Popular maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_POPULAR"));
-	m_filter_popular->SetToolTip(_("Shows only maps which are currently being player on the server. You must be online to use this."));
-	StaticBoxSizer1->Add(m_filter_popular, 0, wxALL | wxEXPAND, 0);
-	m_filter_recent = new wxRadioButton(this, ID_FILTER_RECENT, _("Recently played maps"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_RECENT"));
-	m_filter_recent->SetValue(true);
-	m_filter_recent->SetToolTip(_("Shows only maps you played recently. (Based on your replays.)"));
-	StaticBoxSizer1->Add(m_filter_recent, 0, wxALL | wxEXPAND, 0);
-	BoxSizer2->Add(StaticBoxSizer1, 0, wxALL | wxEXPAND, 5);
-*/
 	wxStaticBoxSizer* StaticBoxSizer2 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Filter"));
 	m_filter_text = new wxTextCtrl(this, ID_FILTER_TEXT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTER_TEXT"));
 	m_filter_text->SetToolTip(_("Shows only maps which contain this text in their name or description."));
@@ -133,11 +114,6 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
 
 	Connect(ID_VERTICAL_CHOICE, wxEVT_COMMAND_CHOICE_SELECTED, (wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
 	Connect(ID_HORIZONTAL_CHOICE, wxEVT_COMMAND_CHOICE_SELECTED, (wxObjectEventFunction)&MapSelectDialog::OnSortKeySelect);
-/*
-	Connect(ID_FILTER_ALL, wxEVT_COMMAND_RADIOBUTTON_SELECTED, (wxObjectEventFunction)&MapSelectDialog::OnFilterAllSelect);
-	Connect(ID_FILTER_POPULAR, wxEVT_COMMAND_RADIOBUTTON_SELECTED, (wxObjectEventFunction)&MapSelectDialog::OnFilterPopularSelect);
-	Connect(ID_FILTER_RECENT, wxEVT_COMMAND_RADIOBUTTON_SELECTED, (wxObjectEventFunction)&MapSelectDialog::OnFilterRecentSelect);
-*/
 	Connect(ID_FILTER_TEXT, wxEVT_COMMAND_TEXT_UPDATED, (wxObjectEventFunction)&MapSelectDialog::OnFilterTextChanged);
 	m_mapgrid->Connect(ID_MAPGRID, wxEVT_LEFT_DCLICK, (wxObjectEventFunction)&MapSelectDialog::OnMapGridLeftDClick, 0, this);
 	Connect(wxID_ANY, wxEVT_INIT_DIALOG, (wxObjectEventFunction)&MapSelectDialog::OnInit);
@@ -157,14 +133,6 @@ MapSelectDialog::~MapSelectDialog()
 	sett().SetVerticalSortkeyIndex(m_vertical_choice->GetSelection());
 	sett().SetHorizontalSortorder(m_horizontal_direction);
 	sett().SetVerticalSortorder(m_vertical_direction);
-/*
-	if (m_filter_popular->GetValue())
-		sett().SetMapSelectorFilterRadio(m_filter_popular_sett);
-	else if (m_filter_recent->GetValue())
-		sett().SetMapSelectorFilterRadio(m_filter_recent_sett);
-	else
-		sett().SetMapSelectorFilterRadio(m_filter_all_sett);
-*/
 	if (IsShown())
 		EndModal(0);
 }
@@ -184,25 +152,7 @@ void MapSelectDialog::OnInit(wxInitDialogEvent& /*unused*/)
 	m_vertical_direction_button->SetLabel(m_vertical_direction ? _T("ᴠ") : _T("ᴧ"));
 
 	m_maps = lslTowxArrayString(LSL::usync().GetMapList());
-	//true meaning replays, false meaning savegames
-	m_replays = lslTowxArrayString(LSL::usync().GetPlaybackList(true));
-
-/*
-	const unsigned int lastFilter = sett().GetMapSelectorFilterRadio();
-	m_filter_popular->Enable(ServerManager::Instance()->IsConnected());
-	if ((lastFilter == m_filter_popular_sett) && (ServerManager::Instance()->IsConnected())) {
-		m_filter_popular->SetValue(true);
-		LoadPopular();
-	} else if ((lastFilter == m_filter_recent_sett) && (!m_replays.empty())) {
-		m_filter_recent->Enable(true);
-		m_filter_recent->SetValue(true);
-		LoadRecent();
-	} else {
-		m_filter_all->SetValue(true);
-		LoadAll();
-	}
-*/
-    LoadAll();
+	LoadAll();
 
 	UpdateSortAndFilter();
 
@@ -339,73 +289,6 @@ void MapSelectDialog::LoadAll()
 
 	m_mapgrid->Refresh();
 }
-
-/*
-void MapSelectDialog::LoadPopular()
-{
-	slLogDebugFunc("");
-
-	m_mapgrid->Clear();
-
-	try {
-		serverSelector().GetServer().battles_iter->IteratorBegin();
-		while (!serverSelector().GetServer().battles_iter->EOL()) {
-			IBattle* b = serverSelector().GetServer().battles_iter->GetBattle();
-			const std::string mapname = b->GetHostMapName();
-			assert(!mapname.empty());
-			if (b != NULL)
-				m_mapgrid->AddMap(TowxString(mapname));
-		}
-	} catch (...) {
-	} // ui().GetServer may throw when disconnected...
-
-	m_mapgrid->Refresh();
-}
-
-void MapSelectDialog::LoadRecent()
-{
-	slLogDebugFunc("");
-	const int count = m_maps.size();
-
-	m_mapgrid->Clear();
-
-	// just check whether map names are contained in replay names
-	// not the most elegant solution but, hey, it works
-	for (int i = 0; i < count; ++i) {
-		// prefix and suffix with underscore to prevent most common partial matches
-		const wxString mapname = _T("_") + m_maps[i].BeforeLast('.') + _T("_");
-		long replaycount = long(m_replays.GetCount());
-		for (int replaynum = 0; replaynum < replaycount; replaynum++) {
-			if (m_replays[replaynum].Find(mapname) != wxNOT_FOUND)
-				m_mapgrid->AddMap(m_maps[i]);
-		}
-	}
-
-	m_mapgrid->Refresh();
-}
-*/
-
-// filter event handlers
-
-/*
-void MapSelectDialog::OnFilterAllSelect(wxCommandEvent&)
-{
-	slLogDebugFunc("");
-	LoadAll();
-}
-
-void MapSelectDialog::OnFilterPopularSelect(wxCommandEvent&)
-{
-	slLogDebugFunc("");
-	LoadPopular();
-}
-
-void MapSelectDialog::OnFilterRecentSelect(wxCommandEvent&)
-{
-	slLogDebugFunc("");
-	LoadRecent();
-}
-*/
 
 void MapSelectDialog::OnFilterTextChanged(wxCommandEvent& /*unused*/)
 {
