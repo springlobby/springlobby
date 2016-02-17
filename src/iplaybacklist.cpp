@@ -18,20 +18,9 @@ int IPlaybackList::FindPlayback(const std::string& filename) const //returns id 
 	return -1;
 }
 
-bool IPlaybackList::FindFilename(const std::vector<std::string>& filenames, const std::string& filename) const //search
+void IPlaybackList::LoadPlaybacks(const std::set<std::string>& filenames)
 {
-	for (size_t i = 0; i < filenames.size(); ++i) {
-		if (filenames[i] == filename)
-			return true;
-	}
-	return false;
-}
-
-void IPlaybackList::LoadPlaybacks(const std::vector<std::string>& filenames)
-{
-	//FIXME: speed the function FindFilename up
-	for (size_t i = 0; i < filenames.size(); ++i) { //add replays which doesn't exist yet
-		const std::string filename = filenames[i];
+	for (const std::string& filename: filenames) { //add replays which doesn't exist yet
 		const int pos = FindPlayback(filename);
 		if (pos == -1) {
 			StoredGame& playback = AddPlayback(filename);
@@ -42,7 +31,7 @@ void IPlaybackList::LoadPlaybacks(const std::vector<std::string>& filenames)
 	if (m_replays.size() > filenames.size()) {
 		std::list<unsigned int> todel;
 		for (const auto& playback: m_replays){ //remove not re-added playbacks (deleted?!)
-			if (!FindFilename(filenames, playback.second.Filename)) {
+			if (filenames.find(playback.second.Filename) == filenames.end()) {
 				todel.push_back(playback.first);
 			}
 		}

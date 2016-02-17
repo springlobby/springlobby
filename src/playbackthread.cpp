@@ -31,8 +31,8 @@ void PlaybackLoader::Run()
 		return;
 	if (m_thread_loader)
 		return; // a thread is already running
-	m_filenames = LSL::usync().GetPlaybackList(m_isreplaytype);
-	m_thread_loader = new PlaybackLoaderThread(this, m_parent);
+
+	m_thread_loader = new PlaybackLoaderThread(this, m_parent, m_isreplaytype);
 	m_thread_loader->Create();
 	m_thread_loader->Run();
 }
@@ -46,14 +46,10 @@ void PlaybackLoader::OnComplete()
 	m_thread_loader = NULL; // the thread object deleted itself
 }
 
-std::vector<std::string> PlaybackLoader::GetPlaybackFilenames()
-{
-	return m_filenames;
-}
-
-PlaybackLoader::PlaybackLoaderThread::PlaybackLoaderThread(PlaybackLoader* loader, PlaybackTab* parent)
+PlaybackLoader::PlaybackLoaderThread::PlaybackLoaderThread(PlaybackLoader* loader, PlaybackTab* parent, bool isreplaytype)
     : m_parent(parent)
     , m_loader(loader)
+	, m_isreplaytype(isreplaytype)
 {
 	assert(m_parent != NULL);
 }
@@ -61,9 +57,14 @@ PlaybackLoader::PlaybackLoaderThread::PlaybackLoaderThread(PlaybackLoader* loade
 void* PlaybackLoader::PlaybackLoaderThread::Entry()
 {
 	if (m_parent) {
-		replaylist().LoadPlaybacks(m_loader->GetPlaybackFilenames());
+		std::set<std::string> filenames;
+		if (!LSL::usync().GetPlaybackList(filenames, m_isreplaytype)) {
+			wxLogWarning("Couldn't load list of playbacks.");
+			return nullptr;
+		}
+		replaylist().LoadPlaybacks(filenames);
 		m_loader->OnComplete();
 	}
 
-	return NULL;
+	return nullptr;
 }

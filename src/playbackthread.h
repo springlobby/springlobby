@@ -6,7 +6,7 @@
 #include <wx/string.h>
 #include <wx/thread.h>
 #include <wx/event.h>
-#include <vector>
+#include <set>
 
 class PlaybackTab;
 
@@ -17,12 +17,13 @@ private:
 	class PlaybackLoaderThread : public wxThread
 	{
 	public:
-		PlaybackLoaderThread(PlaybackLoader* loader, PlaybackTab* parent);
+		PlaybackLoaderThread(PlaybackLoader* loader, PlaybackTab* parent, bool isreplaytype);
 		void* Entry();
 
 	protected:
 		PlaybackTab* m_parent;
 		PlaybackLoader* m_loader;
+		bool m_isreplaytype;
 	};
 
 public:
@@ -32,10 +33,9 @@ public:
 	~PlaybackLoader();
 	void OnComplete();
 	void Run();
-	std::vector<std::string> GetPlaybackFilenames();
 
 private:
-	std::vector<std::string> m_filenames;
+	std::set<std::string> m_filenames;
 	PlaybackTab* m_parent;
 	PlaybackLoaderThread* m_thread_loader;
 	bool m_isreplaytype;

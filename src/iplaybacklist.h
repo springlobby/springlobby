@@ -4,7 +4,7 @@
 #define SL_PLAYBACKLIST_H_INCLUDED
 
 #include <map>
-#include <vector>
+#include <set>
 #include <wx/event.h>
 #include "storedgame.h"
 
@@ -16,7 +16,7 @@ public:
 	{
 	}
 
-	virtual void LoadPlaybacks(const std::vector<std::string>& filenames);
+	virtual void LoadPlaybacks(const std::set<std::string>& filenames);
 
 	StoredGame& AddPlayback(const std::string& filename);
 	void RemovePlayback(unsigned int const id);
@@ -38,7 +38,6 @@ protected:
 
 private:
 	int FindPlayback(const std::string& filename) const;
-	bool FindFilename(const std::vector<std::string>& filenames, const std::string& filename) const;
 
 };
 
