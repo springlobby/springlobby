@@ -51,7 +51,7 @@ PlaybackDataView::PlaybackDataView(const wxString& dataViewName, wxWindow* paren
 
 PlaybackDataView::~PlaybackDataView()
 {
-	// TODO Auto-generated destructor stub
+	SaveColumnProperties();
 }
 
 void PlaybackDataView::AddPlayback(const StoredGame& replay, bool resortIsNeeded)
