@@ -51,7 +51,6 @@ PlaybackDataView::PlaybackDataView(const wxString& dataViewName, wxWindow* paren
 
 PlaybackDataView::~PlaybackDataView()
 {
-	SaveColumnProperties();
 }
 
 void PlaybackDataView::AddPlayback(const StoredGame& replay, bool resortIsNeeded)
