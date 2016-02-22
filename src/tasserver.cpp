@@ -506,8 +506,6 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_server_lanmode = lanmode;
 		m_se->OnConnected(m_serverinfo.description, "", (m_ser_ver > 0), supported_spring_version, lanmode);
 	} else if (cmd == "ACCEPTED") {
-		if (m_online)
-			return; // in case is the server sends WTF
 		SetUsername(STD_STRING(params));
 		m_se->OnLogin();
 	} else if (cmd == "MOTD") {
@@ -818,8 +816,6 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_se->OnChannelPart(channel, GetMe().GetNick(), "Kicked by <" + nick + "> " + msg);
 		//FORCELEAVECHANNEL channame username [{reason}]
 	} else if (cmd == "DENIED") {
-		if (m_online)
-			return;
 		m_last_denied = msg = GetSentenceParam(params);
 		m_se->OnLoginDenied(msg);
 		Disconnect();
