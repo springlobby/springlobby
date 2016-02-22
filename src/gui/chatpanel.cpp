@@ -1190,6 +1190,7 @@ void ChatPanel::OnLogin(wxCommandEvent& /*data*/)
 			}
 			break;
 		case CPT_Server:
+			assert(m_server != nullptr);
 			m_nicklist->SetUsers(m_server->GetUserList().GetUsers());
 			UpdateUserCountLabel();
 		case CPT_Battle:

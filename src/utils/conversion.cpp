@@ -19,7 +19,7 @@ std::string stdprintf(const char* format, ...)
 	char buf[1024];
 	va_list args;
 	va_start(args, format);
-	int count = vsnprintf(buf, 1024, format, args);
+	const int count = vsnprintf(buf, 1024, format, args);
 	va_end(args);
 	return std::string(buf, std::min(count, 1024));
 }
