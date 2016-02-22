@@ -120,19 +120,17 @@ bool TASServer::ExecuteSayCommand(const std::string& cmdstr) //FIXME: all the /c
 		GetMe().Status().away = false;
 		GetMe().SendMyUserStatus();
 		return true;
-	} else if (cmd == "/ingame") {
-		const std::string nick = LSL::Util::AfterFirst(cmd, " ");
-		RequestInGameTime(nick);
-		return true;
 	} else if (cmd == "/msg") {
-		const std::string user = LSL::Util::BeforeFirst(LSL::Util::AfterFirst(cmd, " "), " ");
-		const std::string msg = LSL::Util::AfterFirst(LSL::Util::AfterFirst(cmd, " "), " ");
+		const std::string user = LSL::Util::BeforeFirst(LSL::Util::AfterFirst(cmdstr, " "), " ");
+		const std::string msg = LSL::Util::AfterFirst(LSL::Util::AfterFirst(cmdstr, " "), " ");
 		SayPrivate(user, msg);
 		return true;
 	} else if (cmd == "/ingame") {
-		if (arrayparams.size() != 2)
-			return false;
-		SendCmd("GETINGAMETIME", arrayparams[1]);
+		if (arrayparams.size() == 2) {
+			RequestInGameTime(arrayparams[1]);
+			return true;
+		}
+		RequestInGameTime("");
 		return true;
 	} else if (cmd == "/kick") {
 		if (arrayparams.size() < 2)
