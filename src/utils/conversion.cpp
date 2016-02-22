@@ -21,7 +21,7 @@ std::string stdprintf(const char* format, ...)
 	va_start(args, format);
 	int count = vsnprintf(buf, 1024, format, args);
 	va_end(args);
-	return std::string(buf, count);
+	return std::string(buf, std::min(count, 1024));
 }
 
 //IMPORTANT NOTE: wxString( blah, wxConvUTF8 ) since wx2.9 returns empty string
