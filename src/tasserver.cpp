@@ -62,7 +62,6 @@ TASServer::TASServer()
     , m_ser_ver(0)
     , m_connected(false)
     , m_online(false)
-    , m_debug_dont_catch(false)
     , m_id_transmission(true)
     , m_redirecting(false)
     , m_buffer("")
@@ -487,13 +486,10 @@ void TASServer::ExecuteCommand(const std::string& in)
 	cmd = params.BeforeFirst(' ').MakeUpper();
 	params = params.AfterFirst(' ');
 
-	if (m_debug_dont_catch) {
+	try {
 		ExecuteCommand(STD_STRING(cmd), STD_STRING(params), replyid);
-	} else {
-		try {
-			ExecuteCommand(STD_STRING(cmd), STD_STRING(params), replyid);
-		} catch (...) { // catch everything so the app doesn't crash, may makes odd beahviours but it's better than crashing randomly for normal users
-		}
+	} catch (...) { // catch everything so the app doesn't crash, may makes odd beahviours but it's better than crashing randomly for normal users
+		wxLogWarning("Exception in ExecuteCommand");
 	}
 }
 
@@ -961,17 +957,14 @@ void TASServer::SendCmd(const std::string& command, const std::string& param, bo
 		return;
 	}
 
-	wxString cmd, msg;
-	if (m_id_transmission) {
-		m_last_id++;
-		msg = msg + _T("#") + TowxString(m_last_id) + _T(" ");
-	}
-	cmd = TowxString(command);
+	std::string msg;
+	m_last_id++;
+
 	if (param.empty())
-		msg = msg + cmd + _T("\n");
+		msg = stdprintf("#%d %s", m_last_id, command.c_str());
 	else
-		msg = msg + cmd + _T(" ") + TowxString(param) + _T("\n");
-	bool send_success = m_sock->Send(msg);
+		msg = stdprintf("#%d %s %s", m_last_id, command.c_str(), param.c_str());
+	const bool send_success = m_sock->Send(msg + std::string("\n"));
 	if ((command == "LOGIN") || command == "CHANGEPASSWORD") {
 		wxLogMessage(_T("sent: %s ... <password removed>"), TowxString(command).c_str());
 		return;
@@ -979,9 +972,9 @@ void TASServer::SendCmd(const std::string& command, const std::string& param, bo
 
 	if (command != "PING") { //don't log PING
 		if (send_success)
-			wxLogMessage(wxString::Format(_T("sent: %s"), msg.RemoveLast().c_str()));
+			wxLogMessage(wxString::Format(_T("sent: %s"), msg.c_str()));
 		else
-			wxLogMessage(wxString::Format(_T("sending: %s failed"), msg.RemoveLast().c_str()));
+			wxLogMessage(wxString::Format(_T("sending: %s failed"), msg.c_str()));
 	}
 }
 
