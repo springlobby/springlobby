@@ -103,14 +103,15 @@ bool TASServer::ExecuteSayCommand(const std::string& cmdstr) //FIXME: all the /c
 	const std::string& params = LSL::Util::AfterFirst(cmd, " ");
 
 	if ((cmd == "/join") || (cmd == "/j")) {
-		std::string channel = LSL::Util::AfterFirst(cmd, " ");
-		const std::string pass = LSL::Util::AfterFirst(channel, " ");
-		if (!pass.empty())
-			channel = LSL::Util::BeforeFirst(channel, " ");
-		if (LSL::Util::BeginsWith(channel, "#"))
-			channel.erase(0, 1);
-		JoinChannel(channel, pass);
-		return true;
+		if (arrayparams.size() == 3) {
+			JoinChannel(arrayparams[1], arrayparams[2]);
+			return true;
+		}
+		if (arrayparams.size() == 2) {
+			JoinChannel(arrayparams[1], "");
+			return true;
+		}
+		return false;
 	} else if (cmd == "/away") {
 		GetMe().Status().away = true;
 		GetMe().SendMyUserStatus();
@@ -1025,9 +1026,7 @@ void TASServer::JoinChannel(const std::string& channel, const std::string& key)
 	slLogDebugFunc("");
 
 	m_channel_pw[channel] = key;
-	m_id_transmission = false; // workaround a retarded server bug
 	SendCmd("JOIN", channel + std::string(" ") + key);
-	m_id_transmission = true;
 }
 
 
