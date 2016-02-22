@@ -94,104 +94,131 @@ TASServer::~TASServer()
 	m_se = NULL;
 }
 
-bool TASServer::ExecuteSayCommand(const std::string& cmd)
+bool TASServer::ExecuteSayCommand(const std::string& cmdstr) //FIXME: all the /commands should be moved to a dedicated file (as its not part of lobby server protocol)
 {
-	LSL::StringVector arrayparams = LSL::Util::StringTokenize(cmd, " ");
+	LSL::StringVector arrayparams = LSL::Util::StringTokenize(cmdstr, " ");
 	if (arrayparams.empty())
 		return false;
-	const std::string subcmd = arrayparams[0];
-	const std::string params = LSL::Util::AfterFirst(cmd, " ");
-	if (subcmd == "/ingame") {
+	const std::string& cmd = arrayparams[0];
+	const std::string& params = LSL::Util::AfterFirst(cmd, " ");
+
+	if ((cmd == "/join") || (cmd == "/j")) {
+		std::string channel = LSL::Util::AfterFirst(cmd, " ");
+		const std::string pass = LSL::Util::AfterFirst(channel, " ");
+		if (!pass.empty())
+			channel = LSL::Util::BeforeFirst(channel, " ");
+		if (LSL::Util::BeginsWith(channel, "#"))
+			channel.erase(0, 1);
+		JoinChannel(channel, pass);
+		return true;
+	} else if (cmd == "/away") {
+		GetMe().Status().away = true;
+		GetMe().SendMyUserStatus();
+		return true;
+	} else if (cmd == "/back") {
+		GetMe().Status().away = false;
+		GetMe().SendMyUserStatus();
+		return true;
+	} else if (cmd == "/ingame") {
+		const std::string nick = LSL::Util::AfterFirst(cmd, " ");
+		RequestInGameTime(nick);
+		return true;
+	} else if (cmd == "/msg") {
+		const std::string user = LSL::Util::BeforeFirst(LSL::Util::AfterFirst(cmd, " "), " ");
+		const std::string msg = LSL::Util::AfterFirst(LSL::Util::AfterFirst(cmd, " "), " ");
+		SayPrivate(user, msg);
+		return true;
+	} else if (cmd == "/ingame") {
 		if (arrayparams.size() != 2)
 			return false;
 		SendCmd("GETINGAMETIME", arrayparams[1]);
 		return true;
-	} else if (subcmd == "/kick") {
+	} else if (cmd == "/kick") {
 		if (arrayparams.size() < 2)
 			return false;
 		SendCmd("KICKUSER", params);
 		return true;
-	} else if (subcmd == "/ban") {
+	} else if (cmd == "/ban") {
 		if (arrayparams.size() < 2)
 			return false;
 		SendCmd("BAN", params);
 		return true;
-	} else if (subcmd == "/unban") {
+	} else if (cmd == "/unban") {
 		if (arrayparams.size() != 2)
 			return false;
 		SendCmd("UNBAN", arrayparams[1]);
 		return true;
-	} else if (subcmd == "/banlist") {
+	} else if (cmd == "/banlist") {
 		SendCmd("BANLIST");
 		return true;
-	} else if (subcmd == "/topic") {
+	} else if (cmd == "/topic") {
 		std::string cmd = params;
 		LSL::Util::Replace(cmd, "\n", "\\n");
 		SendCmd("CHANNELTOPIC", cmd);
 		return true;
-	} else if (subcmd == "/chanmsg") {
+	} else if (cmd == "/chanmsg") {
 		if (arrayparams.size() < 2)
 			return false;
 		SendCmd("CHANNELMESSAGE", params);
 		return true;
-	} else if (subcmd == "/ring") {
+	} else if (cmd == "/ring") {
 		if (arrayparams.size() != 2)
 			return false;
 		SendCmd("RING", arrayparams[1]);
 		return true;
-	} else if (subcmd == "/ip") {
+	} else if (cmd == "/ip") {
 		if (arrayparams.size() != 2)
 			return false;
 		SendCmd("GETIP", arrayparams[1]);
 		return true;
-	} else if (subcmd == "/mute") {
+	} else if (cmd == "/mute") {
 		if (arrayparams.size() < 4)
 			return false;
 		if (arrayparams.size() > 5)
 			return false;
 		SendCmd("MUTE", params);
 		return true;
-	} else if (subcmd == "/unmute") {
+	} else if (cmd == "/unmute") {
 		if (arrayparams.size() != 3)
 			return false;
 		SendCmd("UNMUTE", arrayparams[1] + std::string(" ") + arrayparams[2]);
 		return true;
-	} else if (subcmd == "/mutelist") {
+	} else if (cmd == "/mutelist") {
 		if (arrayparams.size() != 2)
 			return false;
 		SendCmd("MUTELIST", arrayparams[1]);
 		return true;
-	} else if (subcmd == "/lastlogin") {
+	} else if (cmd == "/lastlogin") {
 		if (arrayparams.size() != 2)
 			return false;
 		SendCmd("GETLASTLOGINTIME", arrayparams[1]);
 		return true;
-	} else if (subcmd == "/findip") {
+	} else if (cmd == "/findip") {
 		if (arrayparams.size() != 2)
 			return false;
 		SendCmd("FINDIP", arrayparams[1]);
 		return true;
-	} else if (subcmd == "/lastip") {
+	} else if (cmd == "/lastip") {
 		if (arrayparams.size() != 2)
 			return false;
 		SendCmd("GETLASTIP", arrayparams[1]);
 		return true;
-	} else if (subcmd == "/rename") {
+	} else if (cmd == "/rename") {
 		if (arrayparams.size() != 2)
 			return false;
 		SendCmd("RENAMEACCOUNT", arrayparams[1]); //FIXME: this assumes that the rename is successful!
 		sett().SetServerAccountNick(TowxString(GetServerName()), TowxString(arrayparams[1]));
 		return true;
-	} else if (subcmd == "/testmd5") {
+	} else if (cmd == "/testmd5") {
 		ExecuteCommand("SERVERMSG", GetPasswordHash(params));
 		return true;
-	} else if (subcmd == "/hook") {
+	} else if (cmd == "/hook") {
 		SendCmd("HOOK", params);
 		return true;
-	} else if (subcmd == "/quit") {
+	} else if (cmd == "/quit") {
 		Disconnect();
 		return true;
-	} else if (subcmd == "/changepassword") {
+	} else if (cmd == "/changepassword") {
 		switch (arrayparams.size()) {
 			case 2: {
 				const std::string oldpassword = GetPasswordHash(STD_STRING(sett().GetServerAccountPass(TowxString(GetServerName()))));
@@ -226,7 +253,7 @@ bool TASServer::ExecuteSayCommand(const std::string& cmd)
 				return true;
 			}
 		}
-	} else if (subcmd == "/ping") {
+	} else if (cmd == "/ping") {
 		Ping();
 		return true;
 	}

@@ -35,7 +35,6 @@ public:
 	ChatPanel* GetActiveChatPanel();
 	ChatPanel* GetChannelChatPanel(const wxString& channel);
 
-	bool ExecuteSayCommand(const wxString& cmd);
 	void ConsoleHelp();
 
 	void ShowMainWindow();

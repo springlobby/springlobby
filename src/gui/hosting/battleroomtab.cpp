@@ -518,14 +518,6 @@ void BattleRoomTab::UpdateStatsLabels()
 	m_player_sett_sizer->Layout();
 }
 
-void BattleRoomTab::UpdateMyInfo()
-{
-	if (m_battle == nullptr) {
-		return;
-	}
-	m_players->UpdateUser(m_battle->GetMe());
-}
-
 void BattleRoomTab::UpdateUser(User& user, bool userJustAdded)
 {
 	if (m_battle == nullptr) {

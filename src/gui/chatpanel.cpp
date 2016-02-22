@@ -40,6 +40,7 @@
 #include "utils/globalevents.h"
 #include "gui/iconscollection.h"
 #include "gui/controls.h"
+#include "gui/mainwindow.h"
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 	EVT_TEXT_ENTER(CHAT_TEXT, ChatPanel::OnSay)
@@ -878,7 +879,7 @@ ChatPanelType ChatPanel::GetPanelType() const
 }
 
 
-bool ChatPanel::Say(const wxString& message)
+bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / tokenizing / ... to dedicated file
 {
 	static const unsigned int flood_threshold = 5;
 	slLogDebugFunc("");
@@ -906,9 +907,14 @@ bool ChatPanel::Say(const wxString& message)
 		wxString line = lines.GetNextToken();
 		wxLogMessage(_T( "line: %s" ), line.c_str());
 
-		if (line.Find('/') == 0) {
-			if (ui().ExecuteSayCommand(line))
-				return true;
+		if (line == "/help") {
+			ui().ConsoleHelp();
+			return true;
+		}
+
+		if (line == "/channels") {
+			ui().mw().ShowChannelChooser();
+			return true;
 		}
 
 		if (line == _T( "/ver" )) {

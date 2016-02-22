@@ -67,7 +67,6 @@ public:
 	void SetBattle(IBattle* battle);
 
 	void PrintAllySetup();
-	void UpdateMyInfo();
 
 private:
 	void RegenerateOptionsList();

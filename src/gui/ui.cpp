@@ -234,55 +234,6 @@ void Ui::ShowMessage(const wxString& heading, const wxString& message) const
 	serverMessageBox(SL_MAIN_ICON, message, heading, wxOK);
 }
 
-//TODO: Move this to anywhere else
-bool Ui::ExecuteSayCommand(const wxString& cmdstr)
-{
-	if (ServerManager::Instance()->IsConnected() == false) {
-		return false;
-	}
-
-	const wxString cmd = cmdstr.BeforeFirst(' ').Lower();
-	if ((cmd == _T("/join")) || (cmd == _T("/j"))) {
-		wxString channel = cmd.AfterFirst(' ');
-		const wxString pass = channel.AfterFirst(' ');
-		if (!pass.IsEmpty())
-			channel = channel.BeforeFirst(' ');
-		if (channel.StartsWith(_T("#")))
-			channel.Remove(0, 1);
-		m_serv->JoinChannel(STD_STRING(channel), STD_STRING(pass));
-		return true;
-	} else if (cmd == _T("/away")) {
-		m_serv->GetMe().Status().away = true;
-		m_serv->GetMe().SendMyUserStatus();
-		mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
-		return true;
-	} else if (cmd == _T("/back")) {
-		if (ServerManager::Instance()->IsConnected()) {
-			m_serv->GetMe().Status().away = false;
-			m_serv->GetMe().SendMyUserStatus();
-			mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
-			return true;
-		}
-	} else if (cmd == _T("/ingame")) {
-		const wxString nick = cmd.AfterFirst(' ');
-		m_serv->RequestInGameTime(STD_STRING(nick));
-		return true;
-	} else if (cmd == _T("/help")) {
-		ConsoleHelp();
-		return true;
-	} else if (cmd == _T("/msg")) {
-		const wxString user = cmd.AfterFirst(' ').BeforeFirst(' ');
-		const wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
-		m_serv->SayPrivate(STD_STRING(user), STD_STRING(msg));
-		return true;
-	} else if (cmd == _T("/channels")) {
-		mw().ShowChannelChooser();
-		return true;
-	}
-	return false;
-}
-
-
 void Ui::ConsoleHelp()
 {
 	ChatPanel* panel = GetActiveChatPanel();
