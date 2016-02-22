@@ -209,7 +209,7 @@ void MainChatTab::OnLoggedIn()
 				if ( !alreadyin )
 				{
 					server.JoinChannel(STD_STRING(name), "");
-					tmp->SetChannel( &serverSelector().GetServer().GetChannel(STD_STRING(name)));
+					tmp->SetChannel( &server.GetChannel(STD_STRING(name)));
 				}
 				break;
 			}
