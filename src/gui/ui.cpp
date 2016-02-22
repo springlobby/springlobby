@@ -235,13 +235,14 @@ void Ui::ShowMessage(const wxString& heading, const wxString& message) const
 }
 
 //TODO: Move this to anywhere else
-bool Ui::ExecuteSayCommand(const wxString& cmd)
+bool Ui::ExecuteSayCommand(const wxString& cmdstr)
 {
 	if (ServerManager::Instance()->IsConnected() == false) {
 		return false;
 	}
 
-	if ((cmd.BeforeFirst(' ').Lower() == _T("/join")) || (cmd.BeforeFirst(' ').Lower() == _T("/j"))) {
+	const wxString cmd = cmdstr.BeforeFirst(' ').Lower();
+	if ((cmd == _T("/join")) || (cmd == _T("/j"))) {
 		wxString channel = cmd.AfterFirst(' ');
 		const wxString pass = channel.AfterFirst(' ');
 		if (!pass.IsEmpty())
@@ -250,32 +251,31 @@ bool Ui::ExecuteSayCommand(const wxString& cmd)
 			channel.Remove(0, 1);
 		m_serv->JoinChannel(STD_STRING(channel), STD_STRING(pass));
 		return true;
-	} else if (cmd.BeforeFirst(' ').Lower() == _T("/away")) {
+	} else if (cmd == _T("/away")) {
 		m_serv->GetMe().Status().away = true;
 		m_serv->GetMe().SendMyUserStatus();
 		mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
 		return true;
-	} else if (cmd.BeforeFirst(' ').Lower() == _T("/back")) {
+	} else if (cmd == _T("/back")) {
 		if (ServerManager::Instance()->IsConnected()) {
 			m_serv->GetMe().Status().away = false;
 			m_serv->GetMe().SendMyUserStatus();
 			mw().GetJoinTab().GetBattleRoomTab().UpdateMyInfo();
 			return true;
 		}
-	} else if (cmd.BeforeFirst(' ').Lower() == _T("/ingame")) {
+	} else if (cmd == _T("/ingame")) {
 		const wxString nick = cmd.AfterFirst(' ');
 		m_serv->RequestInGameTime(STD_STRING(nick));
 		return true;
-	} else if (cmd.BeforeFirst(' ').Lower() == _T("/help")) {
-		const wxString topic = cmd.AfterFirst(' ');
-		ConsoleHelp(topic.Lower());
+	} else if (cmd == _T("/help")) {
+		ConsoleHelp();
 		return true;
-	} else if (cmd.BeforeFirst(' ').Lower() == _T("/msg")) {
+	} else if (cmd == _T("/msg")) {
 		const wxString user = cmd.AfterFirst(' ').BeforeFirst(' ');
 		const wxString msg = cmd.AfterFirst(' ').AfterFirst(' ');
 		m_serv->SayPrivate(STD_STRING(user), STD_STRING(msg));
 		return true;
-	} else if (cmd.BeforeFirst(' ').Lower() == _T("/channels")) {
+	} else if (cmd == _T("/channels")) {
 		mw().ShowChannelChooser();
 		return true;
 	}
@@ -283,47 +283,39 @@ bool Ui::ExecuteSayCommand(const wxString& cmd)
 }
 
 
-void Ui::ConsoleHelp(const wxString& topic)
+void Ui::ConsoleHelp()
 {
 	ChatPanel* panel = GetActiveChatPanel();
 	if (panel == 0) {
 		wxLogError(_T("GetActiveChatPanel() failed: couldn't find current active panel."));
 		return;
 	}
-	if (topic == wxEmptyString) {
-		panel->ClientMessage(_("SpringLobby commands help."));
-		panel->ClientMessage(wxEmptyString);
-		panel->ClientMessage(_("Global commands:"));
-		panel->ClientMessage(_("  \"/away\" - Sets your status to away."));
-		panel->ClientMessage(_("  \"/back\" - Resets your away status."));
-		panel->ClientMessage(_("  \"/changepassword newpassword\" - Changes the current active account's password, needs the old password saved in login box"));
-		panel->ClientMessage(_("  \"/changepassword oldpassword newpassword\" - Changes the current active account's password, password cannot contain spaces"));
-		panel->ClientMessage(_("  \"/channels\" - Lists currently active channels."));
-		panel->ClientMessage(_("  \"/help [topic]\" - Put topic if you want to know more specific information about a command."));
-		panel->ClientMessage(_("  \"/join channel [password]\" - Joins a channel."));
-		panel->ClientMessage(_("  \"/j\" - Alias to /join."));
-		panel->ClientMessage(_("  \"/ingame\" - Shows how much time you have in game."));
-		panel->ClientMessage(_("  \"/msg username [text]\" - Sends a private message containing text to username."));
-		panel->ClientMessage(_("  \"/part\" - Leaves current channel."));
-		panel->ClientMessage(_("  \"/p\" - Alias to /part."));
-		panel->ClientMessage(_("  \"/rename newalias\" - Changes your nickname to newalias."));
-		panel->ClientMessage(_("  \"/sayver\" - Says what version of SpringLobby you have in chat."));
-		panel->ClientMessage(_("  \"/testmd5 text\" - Returns md5-b64 hash of given text."));
-		panel->ClientMessage(_("  \"/ver\" - Displays what version of SpringLobby you have."));
-		panel->ClientMessage(_("  \"/clear\" - Clears all text from current chat panel"));
-		panel->ClientMessage(wxEmptyString);
-		panel->ClientMessage(_("Chat commands:"));
-		panel->ClientMessage(_("  \"/me action\" - Say IRC style action message."));
-		panel->ClientMessage(wxEmptyString);
-		panel->ClientMessage(_("If you are missing any commands, go to #springlobby and try to type it there :)"));
-		//    panel->ClientMessage( _("  \"/\" - .") );
-	} else if (topic == _T("topics")) {
-		panel->ClientMessage(_("No topics written yet."));
-	} else {
-		panel->ClientMessage(_("The topic \"") + topic + _("\" was not found. Type \"/help topics\" only for available topics."));
-	}
+	panel->ClientMessage(_("SpringLobby commands help."));
+	panel->ClientMessage(wxEmptyString);
+	panel->ClientMessage(_("Global commands:"));
+	panel->ClientMessage(_("  \"/away\" - Sets your status to away."));
+	panel->ClientMessage(_("  \"/back\" - Resets your away status."));
+	panel->ClientMessage(_("  \"/changepassword newpassword\" - Changes the current active account's password, needs the old password saved in login box"));
+	panel->ClientMessage(_("  \"/changepassword oldpassword newpassword\" - Changes the current active account's password, password cannot contain spaces"));
+	panel->ClientMessage(_("  \"/channels\" - Lists currently active channels."));
+	panel->ClientMessage(_("  \"/help [topic]\" - Put topic if you want to know more specific information about a command."));
+	panel->ClientMessage(_("  \"/join channel [password]\" - Joins a channel."));
+	panel->ClientMessage(_("  \"/j\" - Alias to /join."));
+	panel->ClientMessage(_("  \"/ingame\" - Shows how much time you have in game."));
+	panel->ClientMessage(_("  \"/msg username [text]\" - Sends a private message containing text to username."));
+	panel->ClientMessage(_("  \"/part\" - Leaves current channel."));
+	panel->ClientMessage(_("  \"/p\" - Alias to /part."));
+	panel->ClientMessage(_("  \"/rename newalias\" - Changes your nickname to newalias."));
+	panel->ClientMessage(_("  \"/sayver\" - Says what version of SpringLobby you have in chat."));
+	panel->ClientMessage(_("  \"/testmd5 text\" - Returns md5-b64 hash of given text."));
+	panel->ClientMessage(_("  \"/ver\" - Displays what version of SpringLobby you have."));
+	panel->ClientMessage(_("  \"/clear\" - Clears all text from current chat panel"));
+	panel->ClientMessage(wxEmptyString);
+	panel->ClientMessage(_("Chat commands:"));
+	panel->ClientMessage(_("  \"/me action\" - Say IRC style action message."));
+	panel->ClientMessage(wxEmptyString);
+	panel->ClientMessage(_("If you are missing any commands, go to #springlobby and try to type it there :)"));
 }
-
 
 ChatPanel* Ui::GetChannelChatPanel(const wxString& channel)
 {
