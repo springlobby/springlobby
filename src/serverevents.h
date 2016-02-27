@@ -88,8 +88,8 @@ public:
 	void OnChannelList(const std::string& channel, const int& numusers, const std::string& topic);
 	void OnUserJoinChannel(const std::string& channel, const std::string& who);
 
-	void OnPrivateMessage(const std::string& user, const std::string& message);
-	void OnPrivateMessageEx(const std::string& user, const std::string& action);
+	void OnPrivateMessage(User& chan, User& who, const std::string& message);
+	void OnPrivateMessageEx(User& chan, User& who, const std::string& action);
 
 	void OnRequestBattleStatus(int battleid);
 	void OnSaidBattle(int battleid, const std::string& nick, const std::string& msg);

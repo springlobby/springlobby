@@ -660,24 +660,22 @@ void ServerEvents::OnChannelAction(const std::string& channel, const std::string
 }
 
 
-void ServerEvents::OnPrivateMessage(const std::string& user, const std::string& message)
+void ServerEvents::OnPrivateMessage(User& chan, User& who, const std::string& message)
 {
 	slLogDebugFunc("");
 	try {
-		User& who = m_serv.GetUser(user);
 		if (!useractions().DoActionOnUser(UserActions::ActIgnorePM, TowxString(who.GetNick())))
-			ui().OnUserSaid(who, TowxString(message));
+			ui().OnUserSaid(chan, who, TowxString(message));
 	} catch (std::runtime_error& except) {
 	}
 }
 
-void ServerEvents::OnPrivateMessageEx(const std::string& user, const std::string& action)
+void ServerEvents::OnPrivateMessageEx(User& chan, User& who, const std::string& action)
 {
 	slLogDebugFunc("");
 	try {
-		User& who = m_serv.GetUser(user);
 		if (!useractions().DoActionOnUser(UserActions::ActIgnorePM, TowxString(who.GetNick())))
-			ui().OnUserSaidEx(who, TowxString(action));
+			ui().OnUserSaidEx(chan, who, TowxString(action));
 	} catch (std::runtime_error& except) {
 	}
 }

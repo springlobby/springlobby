@@ -473,24 +473,24 @@ void Ui::OnServerMessage(IServer& server, const wxString& message)
 }
 
 
-void Ui::OnUserSaid(User& user, const wxString& message)
+void Ui::OnUserSaid(User& chan, User& user, const wxString& message)
 {
 	if (m_main_win == 0)
 		return;
-	if (user.panel == nullptr) {
-		mw().OpenPrivateChat(user);
+	if (chan.panel == nullptr) {
+		mw().OpenPrivateChat(chan);
 	}
-	user.panel->Said(TowxString(user.GetNick()), message);
+	chan.panel->Said(TowxString(user.GetNick()), message);
 }
 
-void Ui::OnUserSaidEx(User& user, const wxString& action)
+void Ui::OnUserSaidEx(User& chan, User& user, const wxString& action)
 {
 	if (m_main_win == 0)
 		return;
-	if (user.panel == 0) {
-		mw().OpenPrivateChat(user);
+	if (chan.panel == 0) {
+		mw().OpenPrivateChat(chan);
 	}
-	user.panel->DidAction(TowxString(user.GetNick()), action);
+	chan.panel->DidAction(TowxString(user.GetNick()), action);
 }
 
 void Ui::OnBattleOpened(IBattle& battle)

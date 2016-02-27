@@ -71,8 +71,8 @@ public:
 	void OnUserOnline(User& user);
 	void OnUserOffline(User& user);
 	void OnUserStatusChanged(User& user);
-	void OnUserSaid(User& user, const wxString& message);
-	void OnUserSaidEx(User& user, const wxString& action);
+	void OnUserSaid(User& chan, User& user, const wxString& message);
+	void OnUserSaidEx(User& chan, User& user, const wxString& action);
 
 	void OnUnknownCommand(IServer& server, const wxString& command, const wxString& params);
 	void OnMotd(IServer& server, const wxString& message);

@@ -660,10 +660,12 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 			if (params.StartsWith(_T("stats.report")))
 				return;
 		}
-		m_se->OnPrivateMessage(nick, STD_STRING(params));
+		User& user = GetUser(nick);
+		m_se->OnPrivateMessage(user, GetMe(), STD_STRING(params));
 	} else if (cmd == "SAYPRIVATEEX") {
 		nick = GetWordParam(params);
-		m_se->OnPrivateMessageEx(nick, STD_STRING(params));
+		User& user = GetUser(nick);
+		m_se->OnPrivateMessageEx(user, GetMe(), STD_STRING(params));
 	} else if (cmd == "SAIDPRIVATE") {
 		nick = GetWordParam(params);
 		if (nick == m_relay_host_bot) {
@@ -703,10 +705,12 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 				return;
 			}
 		}
-		m_se->OnPrivateMessage(nick, STD_STRING(params));
+		User& user = GetUser(nick);
+		m_se->OnPrivateMessage(user, user, STD_STRING(params));
 	} else if (cmd == "SAIDPRIVATEEX") {
 		nick = GetWordParam(params);
-		m_se->OnPrivateMessageEx(nick, STD_STRING(params));
+		User& user = GetUser(nick);
+		m_se->OnPrivateMessageEx(user, user, STD_STRING(params));
 	} else if (cmd == "JOINBATTLE") {
 		const int id = GetIntParam(params);
 		const std::string hash = LSL::Util::MakeHashUnsigned(GetWordParam(params));
