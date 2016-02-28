@@ -221,17 +221,8 @@ void Socket::Disconnect()
 	}
 }
 
-
 //! @brief Send data over connection.
 bool Socket::Send(const wxString& data)
-{
-	return _Send(data);
-}
-
-
-//! @brief Internal send function.
-//! @note Does not lock the criticalsection.
-bool Socket::_Send(const wxString& data)
 {
 	m_buffer += (const char*)data.mb_str(wxConvUTF8);
 	int crop = m_buffer.length();
@@ -275,7 +266,7 @@ wxString convert(char* buff, const int len)
 		return ret;
 	}
 	std::string tmp(buff, len);
-	wxLogDebug(_T("Error: invalid charset, replacing invalid chars: '%s'"), TowxString(tmp).c_str());
+	wxLogWarning(_T("Error: invalid charset, replacing invalid chars: '%s'"), TowxString(tmp).c_str());
 
 	//worst case, couldn't convert, replace unknown chars!
 	for (int i = 0; i < len; i++) {
@@ -287,7 +278,7 @@ wxString convert(char* buff, const int len)
 	if (!ret.empty()) {
 		return ret;
 	}
-	wxLogDebug(_T("Fatal Error: couldn't convert: '%s' in socket.receive()"), TowxString(tmp).c_str());
+	wxLogWarning(_T("Fatal Error: couldn't convert: '%s'"), TowxString(tmp).c_str());
 	return wxEmptyString;
 }
 
@@ -361,7 +352,7 @@ void Socket::Update(int mselapsed)
 		if (m_sent < 0)
 			m_sent = 0;
 		if (m_buffer.length() > 0) {
-			_Send(wxEmptyString);
+			Send(wxEmptyString);
 		}
 	} else {
 		m_sent = 0;

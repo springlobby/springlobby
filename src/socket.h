@@ -75,7 +75,6 @@ public:
 
 private:
 	void OnSocketEvent(wxSocketEvent& event);
-	bool _Send(const wxString& data);
 	void InitSocket(wxSocketClient& socket);
 
 	// Socket variables
