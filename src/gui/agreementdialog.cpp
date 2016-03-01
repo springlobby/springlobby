@@ -56,11 +56,11 @@ AgreementDialog::AgreementDialog(wxWindow* parent, const wxString& agreement)
 
 void AgreementDialog::OnYes(wxCommandEvent& /*unused*/)
 {
-	EndModal(1);
+	EndModal(wxID_OK);
 }
 
 
 void AgreementDialog::OnNo(wxCommandEvent& /*unused*/)
 {
-	EndModal(0);
+	EndModal(wxID_CANCEL);
 }

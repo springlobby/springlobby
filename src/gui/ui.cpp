@@ -165,7 +165,7 @@ void Ui::ShowConnectWindow()
 
 void Ui::ReopenServerTab()
 {
-	if (m_serv->IsOnline()) {
+	if (m_serv->IsConnected()) {
 		AddServerWindow(TowxString(m_serv->GetServerName()));
 		// re-add all users to the user list
 		const UserList& list = m_serv->GetUserList();
@@ -284,17 +284,19 @@ ChatPanel* Ui::GetChannelChatPanel(const wxString& channel)
 void Ui::OnConnected(IServer& server, const wxString& server_name, const wxString& version, bool /*supported*/)
 {
 	slLogDebugFunc("");
+
+	delete m_con_win;
+	m_con_win = 0;
 	m_connect_retries = 10;
 
 	if (server.panel != nullptr)
 		server.panel->StatusMessage(_T("Connected to ") + server_name + _T("."));
 	mw().GetBattleListTab().OnConnected();
 
-	delete m_con_win;
-	m_con_win = 0;
+	ReopenServerTab();
 
 	if (version.empty()) {
-		wxLogWarning("default version supllied from server is empty!");
+		wxLogWarning("default version supplied from server is empty!");
 		return;
 	}
 	std::map<std::string, LSL::SpringBundle> enginebundles = SlPaths::GetSpringVersionList();
@@ -697,9 +699,8 @@ void Ui::OnSpringTerminated(wxCommandEvent& data)
 void Ui::OnAcceptAgreement(const wxString& agreement)
 {
 	AgreementDialog dlg(m_main_win, agreement);
-	if (dlg.ShowModal() == 1) {
+	if (dlg.ShowModal() == wxID_OK) {
 		m_serv->AcceptAgreement();
-		m_serv->Login();
 	} else {
 		m_connect_retries = 0;
 		m_serv->Disconnect();

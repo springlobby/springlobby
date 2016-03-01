@@ -389,6 +389,7 @@ void TASServer::RequestChannels()
 void TASServer::AcceptAgreement()
 {
 	SendCmd("CONFIRMAGREEMENT");
+	Login();
 }
 
 
