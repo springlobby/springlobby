@@ -222,9 +222,9 @@ void Socket::Disconnect()
 }
 
 //! @brief Send data over connection.
-bool Socket::Send(const wxString& data)
+bool Socket::Send(const std::string& data)
 {
-	m_buffer += (const char*)data.mb_str(wxConvUTF8);
+	m_buffer += (const char*)data.c_str();
 	int crop = m_buffer.length();
 	if (m_rate > 0) {
 		int max = m_rate - m_sent;
@@ -352,7 +352,7 @@ void Socket::Update(int mselapsed)
 		if (m_sent < 0)
 			m_sent = 0;
 		if (m_buffer.length() > 0) {
-			Send(wxEmptyString);
+			Send("");
 		}
 	} else {
 		m_sent = 0;

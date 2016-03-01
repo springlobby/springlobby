@@ -53,7 +53,7 @@ public:
 	void Connect(const wxString& addr, const int port);
 	void Disconnect();
 
-	bool Send(const wxString& data);
+	bool Send(const std::string& data);
 	wxString Receive();
 	std::string GetLocalAddress() const;
 	std::string GetHandle() const
