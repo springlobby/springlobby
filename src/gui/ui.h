@@ -104,8 +104,8 @@ public:
 	void OnRegistrationDenied(const wxString& reason);
 	void OnLoginDenied(const std::string& reason);
 
-	//! ask to download missing map, return true if download attempted
-	bool OnPresetRequiringMap(const wxString& mapname);
+	// return true when engine/game/map is missing & prompts user to dl when needed
+	bool NeedsDownload(const IBattle* battle);
 
 	bool IsThisMe(User& other) const;
 	bool IsThisMe(const User* other) const;

@@ -17,6 +17,8 @@ public:
 	void OnTimer(wxTimerEvent& /*event*/);
 
 private:
+	void OnDownloadStarted();
+	void OnDownloadComplete();
 	void UpdateDisplay();
 	void UpdateProgress();
 

@@ -6,7 +6,7 @@
 #include <string>
 #include <wx/event.h>
 
-#include "lib/src/pr-downloader.h"
+#include "lib/src/Downloader/DownloadEnum.h"
 
 class IDownloader;
 
@@ -19,8 +19,21 @@ class PrDownloader : public wxEvtHandler
 {
 public:
 	struct DownloadProgress {
+		DownloadProgress():
+			filesize(0),
+			downloaded(0),
+			finished(false)
+		{}
+		std::string name;
 		int filesize;
 		int downloaded;
+		bool finished;
+		float GetProgressPercent()
+		{
+			if (filesize == 0)
+				return 0;
+			return (float)filesize/downloaded;
+		}
 	};
 	PrDownloader();
 	~PrDownloader();
@@ -44,7 +57,7 @@ public:
 	void OnSpringTerminated(wxCommandEvent& data);
 	bool IsRunning();
 	static void GetProgress(DownloadProgress& progress);
-
+	void UpdateApplication(const std::string& updateurl);
 private:
 	LSL::WorkerThread* m_dl_thread;
 

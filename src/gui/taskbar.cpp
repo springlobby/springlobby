@@ -1,8 +1,9 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "taskbar.h"
-#include "downloader/downloadsobserver.h"
 #include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "downloader/prdownloader.h"
 
 #include <wx/colour.h>
 #include <wx/statbmp.h>
@@ -52,6 +53,10 @@ TaskBar::TaskBar(wxWindow* statusbar)
 	Hide();
 
 	timer->Start(100);
+
+
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction());
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadComplete, wxObjectEventFunction());
 }
 
 TaskBar::~TaskBar()
@@ -59,6 +64,17 @@ TaskBar::~TaskBar()
 	timer->Stop();
 	wxDELETE(timer);
 }
+
+void TaskBar::OnDownloadStarted()
+{
+	//FIXME: implement this
+	//prDownloader()::GetProgress(...)
+}
+
+void TaskBar::OnDownloadComplete()
+{
+}
+
 
 void TaskBar::UpdateDisplay()
 {
@@ -68,9 +84,7 @@ void TaskBar::UpdateDisplay()
 	unfinishedTasks = 0;
 	overalSize = 0;
 	overalProgress = 0;
-	DownloadsObserver& observ = downloadsObserver();
-	std::list<ObserverDownloadInfo> activedownloads;
-	observ.GetActiveDownloads(activedownloads);
+/*
 	for (ObserverDownloadInfo info: activedownloads) {
 		if (!info.finished) {
 			finished = false;
@@ -80,7 +94,7 @@ void TaskBar::UpdateDisplay()
 		overalSize += info.size;
 		overalProgress += info.progress;
 	}
-
+*/
 	// do state transition & actions
 	switch (state) {
 		case STATE_FINISHED:

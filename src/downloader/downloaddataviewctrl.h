@@ -4,6 +4,7 @@
 #define SRC_DOWNLOADER_DOWNLOADDATAVIEWCTRL_H_
 
 #include "gui/basedataviewctrl.h"
+#include "downloader/prdownloader.h"
 
 class wxString;
 class wxWindow;
@@ -11,7 +12,7 @@ class wxCommandEvent;
 class wxPoint;
 class DownloadInfo;
 
-class DownloadDataViewCtrl: public BaseDataViewCtrl<DownloadInfo> {
+class DownloadDataViewCtrl: public BaseDataViewCtrl<PrDownloader::DownloadProgress> {
 public:
 	DownloadDataViewCtrl(const wxString dataViewName, wxWindow* parent);
 	virtual ~DownloadDataViewCtrl();
@@ -19,7 +20,7 @@ public:
 	virtual void SetTipWindowText(const long, const wxPoint&);
 	void UpdateDownloadsList();
 
-	void AddDownloadInfo(DownloadInfo* dInfo);
+	void AddDownloadInfo(PrDownloader::DownloadProgress* dInfo);
 
 	virtual void HighlightItem(long);
 

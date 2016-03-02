@@ -11,7 +11,6 @@
 #include "utils/globalevents.h"
 #include "utils/slpaths.h"
 #include "gui/mainwindow.h"
-#include "downloadsobserver.h"
 
 #include <list>
 #include <wx/log.h>
@@ -20,9 +19,10 @@
 #include "settings.h"
 #include "utils/slconfig.h"
 
-
 SLCONFIG("/Spring/PortableDownload", false, "true to download portable versions of spring, if false cache/settings/etc are shared (bogous!)");
 SLCONFIG("/Spring/RapidMasterUrl", "http://repos.springrts.com/repos.gz", "master url for rapid downloads");
+
+static PrDownloader::DownloadProgress *m_progress = nullptr;
 
 class DownloadItem : public LSL::WorkItem
 {
@@ -42,6 +42,9 @@ public:
 
 	void Run()
 	{
+		if (m_progress == nullptr)
+			m_progress = new PrDownloader::DownloadProgress();
+		m_progress->name = m_name;
 		const bool force = true;
 		DownloadSetConfig(CONFIG_RAPID_FORCEUPDATE, &force);
 		int results = 0;
@@ -54,6 +57,7 @@ public:
 				results = DownloadSearch(m_category, m_name.c_str());
 		}
 		if (results <= 0) {
+			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 			wxLogInfo("Nothing found to download");
 			return;
 		}
@@ -69,8 +73,10 @@ public:
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 			return;
 		}
+		m_progress->name = m_name; //update to fetched name
 
 		UiEvents::ScopedStatusMessage msg("Downloading: " + m_name, 0);
+		GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadStarted);
 
 		const bool downloadFailed = DownloadStart();
 		//we create this in avance cause m_item gets freed
@@ -124,21 +130,26 @@ private:
 	}
 };
 
-static int m_filesize = 0;
-static int m_downloaded = 0;
-
 void PrDownloader::GetProgress(DownloadProgress& progress)
 {
+	assert(wxThread::IsMain());
+	if (m_progress == nullptr)
+		return;
 	//TODO: add mutex
-	progress.downloaded = m_downloaded;
-	progress.filesize = m_filesize;
+	progress.name = m_progress->name;
+	progress.downloaded = m_progress->downloaded;
+	progress.filesize = m_progress->filesize;
+	wxLogDebug("%s %s %s", progress.name.c_str(), progress.downloaded, progress.filesize);
 }
 
 void updatelistener(int downloaded, int filesize)
 {
+	assert(!wxThread::IsMain());
 	//TODO: add mutex
-	m_filesize = filesize;
-	m_downloaded = downloaded;
+	if (m_progress == nullptr)
+		m_progress = new PrDownloader::DownloadProgress();
+	m_progress->filesize = filesize;
+	m_progress->downloaded = downloaded;
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadProgress);
 }
 
@@ -202,5 +213,37 @@ PrDownloader& prDownloader()
 
 bool PrDownloader::IsRunning()
 {
-	return !downloadsObserver().IsEmpty();
+	return m_progress != nullptr && !m_progress->finished;
+}
+
+void PrDownloader::UpdateApplication(const std::string& updateurl)
+{
+	const std::string updatedir = SlPaths::GetUpdateDir();
+	const size_t mindirlen = 9; // safety, minimal is/should be: C:\update
+	if ((updatedir.size() <= mindirlen)) {
+		wxLogError(_T("Invalid update dir: ") + TowxString(updatedir));
+		return;
+	}
+	if (wxDirExists(updatedir)) {
+		if (!SlPaths::RmDir(updatedir)) {
+			wxLogError(_T("Couldn't cleanup ") + TowxString(updatedir));
+			return;
+		}
+	}
+	if (!SlPaths::mkDir(updatedir)) {
+		wxLogError(_T("couldn't create update directory") + TowxString(updatedir));
+		return;
+	}
+
+	if (!wxFileName::IsDirWritable(updatedir)) {
+		wxLogError(_T("dir not writable: ") + TowxString(updatedir));
+		return;
+	}
+
+	const std::string dlfilepath = SlPaths::GetLobbyWriteDir() + "springlobby-latest.zip";
+	if (wxFileExists(dlfilepath) && !(wxRemoveFile(dlfilepath))) {
+		wxLogError(_T("couldn't delete: ") + dlfilepath);
+		return;
+	}
+	Download(DownloadEnum::CAT_SPRINGLOBBY, updateurl, dlfilepath);
 }

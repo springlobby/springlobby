@@ -4,10 +4,9 @@
 #define SRC_DOWNLOADER_DOWNLOADDATAVIEWMODEL_H_
 
 #include "gui/basedataviewmodel.h"
+#include "downloader/prdownloader.h"
 
-class DownloadInfo;
-
-class DownloadDataViewModel: public BaseDataViewModel<DownloadInfo> {
+class DownloadDataViewModel: public BaseDataViewModel<PrDownloader::DownloadProgress> {
 public:
 	DownloadDataViewModel();
 	virtual ~DownloadDataViewModel();

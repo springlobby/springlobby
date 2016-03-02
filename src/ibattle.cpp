@@ -22,6 +22,7 @@ lsl/battle/ibattle.cpp
 
 #include "utils/conversion.h"
 #include "utils/lslconversion.h"
+#include "utils/slpaths.h"
 #include "gui/uiutils.h"
 #include "gui/ui.h"
 #include "ibattle.h"
@@ -909,13 +910,9 @@ bool IBattle::LoadOptionsPreset(const std::string& name)
 			}
 		} else {
 			if (!options[_T("mapname")].IsEmpty()) {
-				if (LSL::usync().MapExists(STD_STRING(options[_T("mapname")]))) {
+				if (!ui().NeedsDownload(this)) {
 					SetLocalMap(STD_STRING(options[_T("mapname")]));
 					SendHostInfo(HI_Map);
-				} else if (!ui().OnPresetRequiringMap(options[_T("mapname")])) {
-					//user didn't want to download the missing map, so set to empty to not have it tried to be loaded again
-					options[_T("mapname")] = wxEmptyString;
-					sett().SetHostingPreset(TowxString(m_preset), i, options);
 				}
 			}
 
@@ -1285,4 +1282,9 @@ void IBattle::RemoveUnfittingBots()
 				KickPlayer(u);
 		}
 	}
+}
+
+bool IBattle::EngineExists() const
+{
+	return !SlPaths::GetCompatibleVersion(GetEngineVersion()).empty();
 }

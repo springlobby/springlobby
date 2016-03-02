@@ -1,10 +1,9 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "downloaddataviewmodel.h"
-#include "downloadinfo.h"
 
 DownloadDataViewModel::DownloadDataViewModel()
-	:BaseDataViewModel<DownloadInfo>::BaseDataViewModel(COLUMN_COUNT)
+	:BaseDataViewModel<PrDownloader::DownloadProgress>::BaseDataViewModel(COLUMN_COUNT)
 {
 }
 
@@ -14,7 +13,7 @@ DownloadDataViewModel::~DownloadDataViewModel() {
 void DownloadDataViewModel::GetValue(wxVariant& variant,
 		const wxDataViewItem& item, unsigned int column) const {
 
-	DownloadInfo * downloadInfo = static_cast<DownloadInfo*>(item.GetID());
+	PrDownloader::DownloadProgress* downloadInfo = static_cast<PrDownloader::DownloadProgress*>(item.GetID());
 
 	wxASSERT(downloadInfo != nullptr);
 
@@ -29,11 +28,11 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 	switch(column)
 	{
 	case NAME:
-		variant = wxVariant(downloadInfo->GetName());
+		variant = wxVariant(downloadInfo->name);
 		break;
 
 	case STATUS:
-		if (downloadInfo->IsFinished()) {
+		if (downloadInfo->finished) {
 			variant = wxVariant(wxString(_("complete")));
 		} else {
 			variant = wxVariant(wxString(_("downloading")));
@@ -55,7 +54,7 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 		break;
 
 	case FILESIZE:
-		variant = wxVariant(downloadInfo->GetSize() > 0 ? wxString::Format(wxT("%i"), downloadInfo->GetSize() / MB) : wxString(_T("0")));
+		variant = wxVariant(wxString::Format(wxT("%i"), downloadInfo->filesize / MB));
 		break;
 
 	case DEFAULT_COLUMN:

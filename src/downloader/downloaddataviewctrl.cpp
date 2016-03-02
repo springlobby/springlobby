@@ -3,7 +3,6 @@
 #include "downloaddataviewctrl.h"
 
 #include "downloaddataviewmodel.h"
-#include "downloadinfo.h"
 
 BEGIN_EVENT_TABLE(DownloadDataViewCtrl, BaseDataViewCtrl)
 	EVT_MENU(DOWNLOAD_DATAVIEW_CANCEL, DownloadDataViewCtrl::OnCancel)
@@ -38,7 +37,6 @@ void DownloadDataViewCtrl::UpdateDownloadsList() {
 
 	for(auto item : GetItemsContainer())
 	{
-		const_cast<DownloadInfo*>(item)->UpdateInfo();
 		RefreshItem(*item);
 	}
 }
@@ -56,16 +54,8 @@ void DownloadDataViewCtrl::OnRetry(wxCommandEvent& /*event*/) {
 	//TODO: this is just a stub! Need implementation!
 }
 
-void DownloadDataViewCtrl::AddDownloadInfo(DownloadInfo* dInfo) {
-
-    wxString dName = dInfo->GetName().Lower();
-
-    //Ignore/do not add repository content list downloads
-    //(this is not useful for users to such weird things in download list)
-    if (dName.Contains(_T("versions.gz")))
-    {
-        return;
-    }
-
+void DownloadDataViewCtrl::AddDownloadInfo(PrDownloader::DownloadProgress* dInfo)
+{
+	assert(dInfo != nullptr);
 	AddItem(*dInfo);
 }

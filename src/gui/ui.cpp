@@ -53,9 +53,7 @@
 #include "log.h"
 #include "settings.h"
 #include "servermanager.h"
-#include "contentmanager.h"
 #include "exception.h"
-#include "contentdownloadrequest.h"
 
 #ifndef DISABLE_SOUND
 #include "sound/alsound.h"
@@ -302,13 +300,7 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 	std::map<std::string, LSL::SpringBundle> enginebundles = SlPaths::GetSpringVersionList();
 	if (enginebundles.size() == 0) {
 		if (Ask(_("Spring can't be found"), wxString::Format(_T("No useable spring engine can be found, download it? (spring %s)"), version.c_str()))) {
-			ContentDownloadRequest req;
-			req.EngineRequired("spring " + STD_STRING(version));
-			try {
-				ContentManager::Instance()->DownloadContent(req);
-			} catch (Exception& e) {
-				wxLogError(_("Failed to download engine: ") + e.Reason());
-			}
+			PrDownloader().Download(DownloadEnum::CAT_ENGINE, "spring " + STD_STRING(version));
 		}
 	}
 }
@@ -755,27 +747,6 @@ void Ui::ReloadPresetList()
 	}
 }
 
-bool Ui::OnPresetRequiringMap(const wxString& mapname)
-{
-	if (wxYES == customMessageBox(SL_MAIN_ICON,
-				      _("The selected preset requires the map ") + mapname + _(". Should it be downloaded? \
-                                    \n Selecting \"no\" will remove the missing map from the preset.\n\
-                                    Please reselect the preset after download finished"),
-				      _("Map missing"),
-				      wxYES_NO)) {
-		ContentDownloadRequest req;
-		req.MapRequired(STD_STRING(mapname), "");
-		try {
-			ContentManager::Instance()->DownloadContent(req);
-		} catch (Exception& e) {
-			wxLogError(_("Failed to download map: ") + e.Reason());
-			return false;
-		}
-		return true;
-	}
-	return false;
-}
-
 void Ui::OpenFileInEditor(const wxString& filepath)
 {
 	const wxString editor_path = TowxString(SlPaths::GetEditorPath());
@@ -851,35 +822,35 @@ void Ui::OnDownloadComplete(wxCommandEvent& data)
 
 void Ui::CheckForUpdates(bool show)
 {
-	ContentManager* contMan = ContentManager::Instance();
+	std::string latestversion = GetHttpFile(GetLatestVersionUrl());
+	latestversion = STD_STRING(TowxString(latestversion).Trim().Trim(false));
 
-	const wxString latestVersion = contMan->GetLatestApplicationVersionAvailable();
-
-	if (latestVersion.empty()) {
+	if (latestversion.empty()) {
 		if (show) {
 			customMessageBoxModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
 		}
 		return;
 	}
 	//get current rev w/o AUX_VERSION added
-	const wxString myVersion = TowxString(getSpringlobbyVersion());
+	const std::string myVersion = getSpringlobbyVersion();
 
-	const wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestVersion;
-	if (latestVersion.IsSameAs(myVersion, false)) {
+	const wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestversion;
+	if (latestversion == myVersion) {
 		if (show) {
 				customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date"));
 		}
 		return;
 	}
-#ifdef __WXMSW__
+//#ifdef __WXMSW__
 		int answer = customMessageBox(SL_MAIN_ICON,
 					      wxString::Format(_("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?"),
 							       TowxString(getSpringlobbyName()).c_str(),
 							       msg.c_str()),
 					      _("Not up to date"), wxOK | wxCANCEL);
 		if (answer == wxOK) {
+
 			try{
-				contMan->UpdateApplication();
+				prDownloader().UpdateApplication(GetDownloadUrl(latestversion));
 			} catch(Exception& ex) {
 				//this will also happen if updater exe is not present so we don't really ne special check for existance of it
 				const wxString errormsg = wxString::Format(_("Automatic update failed\n\
@@ -887,13 +858,13 @@ void Ui::CheckForUpdates(bool show)
 						you will be redirected to a web page with instructions and the download link will be opened in your browser. %s"), ex.Reason(), msg);
 				customMessageBox(SL_MAIN_ICON, errormsg, _("Updater error."));
 				OpenWebBrowser(_T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary"));
-				OpenWebBrowser(TowxString(GetDownloadUrl(STD_STRING(latestVersion))));
+				OpenWebBrowser(TowxString(GetDownloadUrl(latestversion)));
 				return;
 			}
 		}
-#else
-		customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date"));
-#endif
+//#else
+//		customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date"));
+//#endif
 }
 
 
@@ -938,4 +909,41 @@ void Ui::OnLoginDenied(const std::string& reason)
 	}
 	m_con_win->OnLoginDenied(TowxString(reason));
 	ServerManager::Instance()->DisconnectFromServer();
+}
+
+bool Ui::NeedsDownload(const IBattle* battle)
+{
+	if (battle == nullptr) {
+		wxLogWarning("Battle is null, nothing required!");
+		return true;
+	}
+	std::string prompt = "The ";
+	std::list<std::pair<DownloadEnum::Category, std::string>> todl;
+
+	if (!battle->MapExists(false)) {
+		prompt+= "map " + battle->GetHostMapName();
+		todl.push_back(std::make_pair(DownloadEnum::CAT_MAP, battle->GetHostMapName()));
+	}
+	if (!battle->GameExists(false)) {
+		prompt += "game " + battle->GetHostGameName();
+		todl.push_back(std::make_pair(DownloadEnum::CAT_MAP, battle->GetHostGameName()));
+	}
+
+	if (!battle->EngineExists()) {
+		prompt += "engine " + battle->GetEngineName();
+		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE, battle->GetEngineName()));
+	}
+
+	if (todl.empty())
+		return false;
+	if (wxYES == customMessageBox(SL_MAIN_ICON,
+				      prompt + _(" is required to play. Should it be downloaded?"),
+				      _("Content is missing"),
+				      wxYES_NO)) {
+		for (auto dl: todl) {
+			prDownloader().Download(dl.first, dl.second);
+		}
+
+	}
+	return true;
 }

@@ -167,9 +167,6 @@ set(springlobbySrc
 	updatehelper.cpp
 	stacktrace.cpp
 	exception.cpp
-	downloadinfo.cpp
-	contentmanager.cpp
-	contentdownloadrequest.cpp
 	
 	aui/auimanager.cpp
 
@@ -248,7 +245,6 @@ set(springlobbySrc
 	gui/playback/playbackdatamodel.cpp
 
 	downloader/prdownloader.cpp
-	downloader/downloadsobserver.cpp
 	downloader/downloaddataviewctrl.cpp
 	downloader/downloaddataviewmodel.cpp
 

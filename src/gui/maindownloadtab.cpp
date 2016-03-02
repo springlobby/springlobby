@@ -16,6 +16,7 @@
 #include <wx/msgdlg.h>
 
 #include "downloader/downloaddataviewctrl.h"
+#include "downloader/prdownloader.h"
 #include "utils/conversion.h"
 #include "gui/controls.h"
 #include "gui/colorbutton.h"
@@ -113,11 +114,9 @@ void MainDownloadTab::OnDownloadDialog(wxCommandEvent& /*unused*/)
 }
 
 void MainDownloadTab::OnNewDownloadStarted(wxCommandEvent& event) {
-	DownloadInfo* dInfo = static_cast<DownloadInfo*>(event.GetClientData());
-
-	wxASSERT(dInfo != nullptr);
-
-	m_DownloadDataView->AddDownloadInfo(dInfo);
+	PrDownloader::DownloadProgress p;
+	PrDownloader::GetProgress(p);
+	m_DownloadDataView->AddDownloadInfo(&p);
 }
 
 void MainDownloadTab::OnDownloadComplete(wxCommandEvent& /*event*/) {

@@ -38,8 +38,6 @@
 #include "utils/globalevents.h"
 #include "log.h"
 #include "servermanager.h"
-#include "contentmanager.h"
-#include "contentdownloadrequest.h"
 #include "exception.h"
 
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;
@@ -421,23 +419,8 @@ void BattleListTab::DoJoin(IBattle& battle)
 		password.Replace(_T(" "), wxEmptyString);
 	}
 
-	//Check if some content needs to be downloaded
-	ContentDownloadRequest req = ContentManager::Instance()->WhatContentForBattleIsRequired(battle);
-	if (req.IsSomethingNeeded()) {
-		if (wxYES == customMessageBox(SL_MAIN_ICON,
-				TowxString(req.GetRequiredContentAsString()) + _("Shall I download it for you?"),
-				_("Content is needed"),
-				wxYES_NO | wxICON_QUESTION)) {
-			try {
-				ContentManager::Instance()->DownloadContent(req);
-			} catch (Exception& e) {
-				wxLogError(e.Reason());
-				return;
-			}
-		} else {
-			return;
-		}
-	}
+	if (ui().NeedsDownload(&battle))
+		return;
 
 	battle.Join(STD_STRING(password));
 	//Change Tab to show user joining to battle is in progress

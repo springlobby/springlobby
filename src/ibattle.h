@@ -578,6 +578,8 @@ public:
 
 	virtual long GetBattleRunningTime() const; // returns 0 if not started
 
+	virtual bool EngineExists() const;
+
 	virtual void SetEngineName(const std::string& name)
 	{
 		m_opts.engineName = name;

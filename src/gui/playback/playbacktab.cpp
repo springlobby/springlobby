@@ -27,8 +27,6 @@
 #include "storedgame.h"
 #include "utils/conversion.h"
 #include "utils/globalevents.h"
-#include "contentmanager.h"
-#include "contentdownloadrequest.h"
 
 #include "gui/customdialogs.h"
 #include "gui/hosting/battleroomdataviewctrl.h"
@@ -254,50 +252,22 @@ void PlaybackTab::OnWatch(wxCommandEvent& /*unused*/)
 {
 	const StoredGame* storedGame = m_replay_dataview->GetSelectedItem();
 
-	if (storedGame != nullptr) {
-		int m_sel_replay_id = storedGame->id;
-
-		wxString type = m_isreplay ? _("replay") : _("savegame");
-		wxLogMessage(_T( "Watching %s %d " ), type.c_str(), m_sel_replay_id);
-		try {
-			StoredGame& rep = replaylist().GetPlaybackById(m_sel_replay_id);
-
-			bool versionfound = ContentManager::Instance()->IsHavingSpringVersion("spring", rep.SpringVersion);
-			if (rep.type == StoredGame::SAVEGAME)
-				versionfound = true; // quick hack to bypass spring version check
-			if (!versionfound) {
-				wxString message = wxString::Format(_("No compatible installed spring version has been found, this %s requires version: %s\n"), type.c_str(), TowxString(rep.battle.GetEngineVersion()).c_str());
-				customMessageBox(SL_MAIN_ICON, message, _("Spring error"), wxICON_EXCLAMATION | wxOK);
-				wxLogWarning(_T( "no spring version supported by this replay found" ));
-				AskForceWatch(rep);
-				return;
-			}
-			rep.battle.GetMe().SetNick(STD_STRING(cfg().ReadString("/Spring/DefaultName")));
-			bool watchable = rep.battle.MapExists() && rep.battle.GameExists();
-			if (watchable) {
-				rep.battle.StartSpring();
-			} else {
-				ContentDownloadRequest req = ContentManager::Instance()->WhatContentForBattleIsRequired(rep.battle);
-				if (req.IsSomethingNeeded()) {
-					if (wxYES == customMessageBox(SL_MAIN_ICON,
-								      _("This battle needs some content to be downloaded! Shall I download it for you?"),
-								      _("Content needed"),
-								      wxYES_NO | wxICON_QUESTION)) {
-						try {
-							ContentManager::Instance()->DownloadContent(req);
-						} catch (Exception& e) {
-							wxLogError(e.Reason());
-							return;
-						}
-					}
-				}
-			}
-		} catch (std::runtime_error&) {
-			return;
-		}
-	} else {
+	if (storedGame == nullptr) {
 		Deselected();
+		return;
 	}
+
+	const int m_sel_replay_id = storedGame->id;
+
+	wxString type = m_isreplay ? _("replay") : _("savegame");
+	wxLogMessage(_T( "Watching %s %d " ), type.c_str(), m_sel_replay_id);
+	StoredGame& rep = replaylist().GetPlaybackById(m_sel_replay_id);
+	if (ui().NeedsDownload(&rep.battle)) {
+		return;
+	}
+
+	rep.battle.GetMe().SetNick(STD_STRING(cfg().ReadString("/Spring/DefaultName")));
+	rep.battle.StartSpring();
 }
 
 void PlaybackTab::AskForceWatch(StoredGame& rep) const

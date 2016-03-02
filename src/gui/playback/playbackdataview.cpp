@@ -11,11 +11,10 @@
 #include "storedgame.h"
 #include "gui/basedataviewmodel.h"
 #include "gui/customdialogs.h"
+#include "gui/ui.h"
 #include "playbackdatamodel.h"
 #include "log.h"
 #include "exception.h"
-#include "contentmanager.h"
-#include "contentdownloadrequest.h"
 
 BEGIN_EVENT_TABLE(PlaybackDataView, BaseDataViewCtrl)
 	EVT_DATAVIEW_ITEM_CONTEXT_MENU(REPLAY_DATAVIEW_ID, PlaybackDataView::OnContextMenu)
@@ -80,20 +79,10 @@ void PlaybackDataView::OnContextMenu(wxDataViewEvent& /*event*/)
 void PlaybackDataView::OnDLMap(wxCommandEvent& /*event*/)
 {
 	const StoredGame* storedGame = GetSelectedItem();
-
 	if (storedGame == nullptr) {
 		return;
 	}
-
-	const OfflineBattle& battle = storedGame->battle;
-	ContentDownloadRequest req;
-
-	req.MapRequired(battle.GetHostMapName(), battle.GetHostMapHash());
-	try{
-		ContentManager::Instance()->DownloadContent(req);
-	}catch(Exception& e) {
-		wxLogError(_("Failed to download map: ") + e.Reason());
-	}
+	ui().NeedsDownload(&storedGame->battle);
 }
 
 void PlaybackDataView::OnDLMod(wxCommandEvent& /*event*/)
@@ -104,15 +93,7 @@ void PlaybackDataView::OnDLMod(wxCommandEvent& /*event*/)
 		return;
 	}
 
-	const OfflineBattle& battle = storedGame->battle;
-	ContentDownloadRequest req;
-
-	req.GameRequired(battle.GetHostGameName(), battle.GetHostGameHash());
-	try{
-		ContentManager::Instance()->DownloadContent(req);
-	}catch(Exception& e) {
-		wxLogError(_("Failed to download mod: ") + e.Reason());
-	}
+	ui().NeedsDownload(&storedGame->battle);
 }
 
 void PlaybackDataView::DeletePlayback()

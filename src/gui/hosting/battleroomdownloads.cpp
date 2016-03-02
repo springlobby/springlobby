@@ -8,8 +8,8 @@
 #include <wx/string.h>
 #include <map>
 #include "ibattle.h"
-#include "downloader/downloadsobserver.h"
 #include "utils/conversion.h"
+#include "downloader/prdownloader.h"
 
 class BattleRoomDownloadProgres : public wxPanel
 {
@@ -48,11 +48,11 @@ public:
 		Layout();
 	}
 
-	void UpdateDownload(ObserverDownloadInfo dl_info)
+	void UpdateDownload(int dlprogress, int dlsize)
 	{
-		m_progres->SetRange(dl_info.size);
-		m_progres->SetValue(dl_info.progress);
-		m_info->SetLabel(wxString::Format(wxT("%i%%"), (int)((double)100.0 * dl_info.progress / (double)dl_info.size)));
+		m_progres->SetRange(dlsize);
+		m_progres->SetValue(dlprogress);
+		m_info->SetLabel(wxString::Format(wxT("%i%%"), (int)((double)100.0 * dlprogress / (double)dlsize)));
 	}
 };
 
@@ -93,22 +93,20 @@ void BattleRoomDownloads::OnUpdate()
 		return;
 	}
 
-	DownloadsObserver& observ = downloadsObserver();
+//FIXME: use events!
+/*	prDownloader::DownloadProgress p;
+	prDownloader()::GetProgress(p);
 
-	const wxString game = TowxString(m_battle->GetHostGameName());
-	ObserverDownloadInfo obi ;
-	if (observ.GetActiveDownloadInfo(game, obi)) {
+	switch(p.type) {
+	case ...
 		m_mod->Show();
 		m_mod->UpdateDownload(obi);
-	} else {
 		m_mod->Hide();
-	}
 
-	const wxString map = TowxString(m_battle->GetHostMapName());
-	if (observ.GetActiveDownloadInfo(map, obi)) {
+	case ...
 		m_map->Show();
 		m_map->UpdateDownload(obi);
-	} else {
 		m_map->Hide();
 	}
+*/
 }

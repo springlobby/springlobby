@@ -11,8 +11,7 @@
 #include "downloader/prdownloader.h"
 #include "log.h"
 #include "exception.h"
-#include "contentmanager.h"
-#include "contentdownloadrequest.h"
+#include "gui/ui.h"
 
 BEGIN_EVENT_TABLE(BattleDataViewCtrl, BaseDataViewCtrl)
 	EVT_DATAVIEW_ITEM_CONTEXT_MENU(BATTLELIST_DATAVIEW_ID, BattleDataViewCtrl::OnContextMenu)
@@ -78,51 +77,15 @@ void BattleDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
 }
 
 void BattleDataViewCtrl::OnDLMap(wxCommandEvent& /*event*/) {
-	const IBattle* battle = GetSelectedItem();
-
-	if (battle == nullptr) {
-		return;
-	} else {
-		ContentDownloadRequest req;
-		req.MapRequired(battle->GetHostMapName(), battle->GetHostMapHash());
-		try{
-			ContentManager::Instance()->DownloadContent(req);
-		}catch(Exception& e) {
-			wxLogError(_("Failed to download map: ") + e.Reason());
-		}
-	}
+	ui().NeedsDownload(GetSelectedItem());
 }
 
 void BattleDataViewCtrl::OnDLMod(wxCommandEvent& /*event*/) {
-	const IBattle* battle = GetSelectedItem();
-
-	if (battle == nullptr) {
-		return;
-	} else {
-		ContentDownloadRequest req;
-		req.GameRequired(battle->GetHostGameName(), battle->GetHostGameHash());
-		try{
-			ContentManager::Instance()->DownloadContent(req);
-		}catch(Exception& e) {
-			wxLogError(_("Failed to download mod: ") + e.Reason());
-		}
-	}
+	ui().NeedsDownload(GetSelectedItem());
 }
 
 void BattleDataViewCtrl::OnDLEngine(wxCommandEvent& /*event*/) {
-	const IBattle* battle = GetSelectedItem();
-
-	if (battle == nullptr) {
-		return;
-	} else {
-		ContentDownloadRequest req;
-		req.EngineRequired(battle->GetEngineVersion());
-		try{
-			ContentManager::Instance()->DownloadContent(req);
-		}catch(Exception& e) {
-			wxLogError(_("Failed to download engine: ") + e.Reason());
-		}
-	}
+	ui().NeedsDownload(GetSelectedItem());
 }
 
 void BattleDataViewCtrl::OnNotifyGameEnd(wxCommandEvent& /*unused*/)
