@@ -121,7 +121,7 @@ public:
 	void EnableDebug(bool enable);
 
 private:
-	void OnDownloadComplete(wxCommandEvent& /*data*/);
+	void OnLobbyDownloaded(wxCommandEvent& /*data*/);
 	void Notify();
 
 	IServer* m_serv;

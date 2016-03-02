@@ -93,7 +93,7 @@ Ui::Ui()
 	serverSelector().SetCurrentServer(m_serv);
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringTerminated, wxObjectEventFunction(&Ui::OnSpringTerminated));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnQuit, wxObjectEventFunction(&Ui::OnQuit));
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnLobbyDownloaded, wxObjectEventFunction(&Ui::OnDownloadComplete));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnLobbyDownloaded, wxObjectEventFunction(&Ui::OnLobbyDownloaded));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::UserBattleStatusChangedEvent, wxObjectEventFunction(&Ui::OnUserBattleStatus));
 
 }
@@ -793,7 +793,7 @@ void Ui::FirstRunWelcome()
 	ShowConnectWindow();
 }
 
-void Ui::OnDownloadComplete(wxCommandEvent& data)
+void Ui::OnLobbyDownloaded(wxCommandEvent& data)
 {
 	if (data.GetInt() != 0) {
 		wxLogError(_T("Download springlobby update failed"));
