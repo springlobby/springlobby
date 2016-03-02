@@ -15,7 +15,7 @@
 #include <wx/button.h>
 #include <wx/msgdlg.h>
 
-#include "downloader/downloaddataviewctrl.h"
+#include "gui/downloaddataviewctrl.h"
 #include "downloader/prdownloader.h"
 #include "utils/conversion.h"
 #include "gui/controls.h"

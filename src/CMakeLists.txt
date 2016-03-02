@@ -245,8 +245,8 @@ set(springlobbySrc
 	gui/playback/playbackdatamodel.cpp
 
 	downloader/prdownloader.cpp
-	downloader/downloaddataviewctrl.cpp
-	downloader/downloaddataviewmodel.cpp
+	gui/downloaddataviewctrl.cpp
+	gui/downloaddataviewmodel.cpp
 
 	utils/battleevents.cpp
 	utils/base64.cpp
