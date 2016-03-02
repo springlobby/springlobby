@@ -841,7 +841,7 @@ void Ui::CheckForUpdates(bool show)
 		}
 		return;
 	}
-//#ifdef __WXMSW__
+#ifdef __WXMSW__
 		int answer = customMessageBox(SL_MAIN_ICON,
 					      wxString::Format(_("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?"),
 							       TowxString(getSpringlobbyName()).c_str(),
@@ -862,9 +862,9 @@ void Ui::CheckForUpdates(bool show)
 				return;
 			}
 		}
-//#else
-//		customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date"));
-//#endif
+#else
+		customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date"));
+#endif
 }
 
 
