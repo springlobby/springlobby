@@ -125,7 +125,7 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 		if (user->GetTrueSkill() == 0) {
 			variant = wxString(_T("-"));
 		} else {
-			variant = wxString::Format(_T("%d"), static_cast<int>(user->GetTrueSkill()));
+			variant = wxString::Format(_T("%ld"), std::lround(user->GetTrueSkill()));
 		}
 		break;
 

@@ -36,6 +36,10 @@
 #include <lslutils/globalsmanager.h>
 #include <exception>
 
+
+#include <sstream>
+#include <locale>
+
 void ServerEvents::OnConnected(const std::string& server_name, const std::string& server_ver, bool supported, const std::string& server_spring_ver, bool /*unused*/)
 {
 	slLogDebugFunc("%s %s", server_ver.c_str(), server_spring_ver.c_str());
@@ -399,27 +403,38 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 	}
 }
 
-// https://springrts.com/phpbb/viewtopic.php?f=88&p=574686
+bool IsCrap(char c)
+{
+    switch(c)
+    {
+    case '~':
+    case '(':
+    case ')':
+    case '#':
+        return true;
+    default:
+        return false;
+    }
+}
+
+/*
+parse TrueSkill values to a float:
+https://springrts.com/phpbb/viewtopic.php?f=88&p=574686
+FIXME: move to LSL
+*/
 static bool parseSkill(const std::string& value, double& result)
 {
-	int res = sscanf(value.c_str(), "%lf", &result);
-	if (res == 1)
-		return true;
+	if (value == "-")
+		return false;
 
-	res = sscanf(value.c_str(), "~%lf", &result);
-	if (res == 1)
-		return true;
-
-	res = sscanf(value.c_str(), "(%lf)", &result);
-	if (res == 1)
-		return true;
-
-	res = sscanf(value.c_str(), "#%lf#", &result);
-	if (res == 1)
-		return true;
-
-	wxLogWarning("Invalid value for skill received: %s", value.c_str());
-	return false;
+	std::string str = value;
+	str.erase(std::remove_if(str.begin(), str.end(), &IsCrap), str.end());
+	std::istringstream istr(str);
+	istr.imbue(std::locale("C"));
+	double res = -1.0f;
+	istr >> res;
+	result = res;
+	return res != -1.0f;
 }
 
 static bool parseTeam(const std::string& value, int& result)
