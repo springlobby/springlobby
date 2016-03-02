@@ -27,6 +27,7 @@ DownloadDataViewCtrl::DownloadDataViewCtrl(const wxString dataViewName, wxWindow
 }
 
 DownloadDataViewCtrl::~DownloadDataViewCtrl() {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
 }
 
 void DownloadDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
