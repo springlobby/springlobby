@@ -13,7 +13,6 @@
 const unsigned int TIMER_ID = wxNewId();
 
 BEGIN_EVENT_TABLE(TaskBar, wxPanel)
-EVT_TIMER(TIMER_ID, TaskBar::OnTimer)
 END_EVENT_TABLE()
 
 enum {
@@ -30,7 +29,6 @@ TaskBar::TaskBar(wxWindow* statusbar)
     , unfinishedTasks(0)
     , finishedCounter(0)
 {
-	timer = new wxTimer(this, TIMER_ID);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
 	SetSizer(sizer);
@@ -52,26 +50,22 @@ TaskBar::TaskBar(wxWindow* statusbar)
 	state = STATE_HIDDEN;
 	Hide();
 
-	timer->Start(100);
-
-
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction());
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadComplete, wxObjectEventFunction());
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction(&TaskBar::OnDownloadStarted));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadComplete, wxObjectEventFunction(&TaskBar::OnDownloadComplete));
 }
 
 TaskBar::~TaskBar()
 {
-	timer->Stop();
-	wxDELETE(timer);
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
 }
 
-void TaskBar::OnDownloadStarted()
+void TaskBar::OnDownloadStarted(wxCommandEvent& /*event*/)
 {
 	//FIXME: implement this
 	//prDownloader()::GetProgress(...)
 }
 
-void TaskBar::OnDownloadComplete()
+void TaskBar::OnDownloadComplete(wxCommandEvent& /*event*/)
 {
 }
 
@@ -162,10 +156,4 @@ void TaskBar::UpdateProgress()
 	} else {
 		gauge->SetValue(overalPercent);
 	}
-}
-
-
-void TaskBar::OnTimer(wxTimerEvent& /*event*/)
-{
-	UpdateDisplay();
 }

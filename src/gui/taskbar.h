@@ -7,22 +7,19 @@
 #include <wx/panel.h>
 #include <wx/stattext.h>
 #include <wx/event.h>
-#include <wx/timer.h>
 
 class TaskBar : public wxPanel
 {
 public:
 	TaskBar(wxWindow* parent);
 	~TaskBar();
-	void OnTimer(wxTimerEvent& /*event*/);
 
 private:
-	void OnDownloadStarted();
-	void OnDownloadComplete();
+	void OnDownloadStarted(wxCommandEvent& event);;
+	void OnDownloadComplete(wxCommandEvent& event);;
 	void UpdateDisplay();
 	void UpdateProgress();
 
-	wxTimer* timer;
 	wxStaticText* text;
 	wxGauge* gauge;
 	int state;
