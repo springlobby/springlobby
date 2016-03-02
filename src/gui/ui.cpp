@@ -920,18 +920,17 @@ bool Ui::NeedsDownload(const IBattle* battle)
 	std::string prompt = "The ";
 	std::list<std::pair<DownloadEnum::Category, std::string>> todl;
 
+	if (!battle->EngineExists()) {
+		prompt += "engine " + battle->GetEngineName();
+		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE, battle->GetEngineName()));
+	}
 	if (!battle->MapExists(false)) {
 		prompt+= "map " + battle->GetHostMapName();
 		todl.push_back(std::make_pair(DownloadEnum::CAT_MAP, battle->GetHostMapName()));
 	}
 	if (!battle->GameExists(false)) {
 		prompt += "game " + battle->GetHostGameName();
-		todl.push_back(std::make_pair(DownloadEnum::CAT_MAP, battle->GetHostGameName()));
-	}
-
-	if (!battle->EngineExists()) {
-		prompt += "engine " + battle->GetEngineName();
-		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE, battle->GetEngineName()));
+		todl.push_back(std::make_pair(DownloadEnum::CAT_GAME, battle->GetHostGameName()));
 	}
 
 	if (todl.empty())
