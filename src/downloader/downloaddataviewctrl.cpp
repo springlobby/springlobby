@@ -1,8 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "downloaddataviewctrl.h"
-
 #include "downloaddataviewmodel.h"
+#include "utils/globalevents.h"
 
 BEGIN_EVENT_TABLE(DownloadDataViewCtrl, BaseDataViewCtrl)
 	EVT_MENU(DOWNLOAD_DATAVIEW_CANCEL, DownloadDataViewCtrl::OnCancel)
@@ -23,6 +23,7 @@ DownloadDataViewCtrl::DownloadDataViewCtrl(const wxString dataViewName, wxWindow
 	AppendTextColumn(_("Filesize (MB)"), FILESIZE, wxDATAVIEW_CELL_INERT, DEFAULT_WIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
 	LoadColumnProperties();
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction());
 }
 
 DownloadDataViewCtrl::~DownloadDataViewCtrl() {
@@ -31,14 +32,6 @@ DownloadDataViewCtrl::~DownloadDataViewCtrl() {
 void DownloadDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
 		const wxPoint& /*position*/) {
 	//TODO: implement!
-}
-
-void DownloadDataViewCtrl::UpdateDownloadsList() {
-
-	for(auto item : GetItemsContainer())
-	{
-		RefreshItem(*item);
-	}
 }
 
 void DownloadDataViewCtrl::HighlightItem(long /*item*/) {
@@ -54,8 +47,9 @@ void DownloadDataViewCtrl::OnRetry(wxCommandEvent& /*event*/) {
 	//TODO: this is just a stub! Need implementation!
 }
 
-void DownloadDataViewCtrl::AddDownloadInfo(PrDownloader::DownloadProgress* dInfo)
+void DownloadDataViewCtrl::OnDownloadStarted()
 {
-	assert(dInfo != nullptr);
-	AddItem(*dInfo);
+	PrDownloader::DownloadProgress p;
+	prDownloader().GetProgress(p);
+	AddItem(p, true);
 }

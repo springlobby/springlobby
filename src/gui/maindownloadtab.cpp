@@ -22,7 +22,6 @@
 #include "gui/colorbutton.h"
 #include "aui/auimanager.h"
 #include "gui/contentdownloaddialog.h"
-#include "utils/globalevents.h"
 #include "utils/slpaths.h"
 
 BEGIN_EVENT_TABLE(MainDownloadTab, wxPanel)
@@ -31,7 +30,6 @@ BEGIN_EVENT_TABLE(MainDownloadTab, wxPanel)
 	EVT_BUTTON(ID_BUTTON_CANCEL, MainDownloadTab::OnCancelButton)
 	EVT_BUTTON(ID_BUTTON_CLEAR, MainDownloadTab::OnClearFinished)
 	EVT_BUTTON(ID_DOWNLOAD_DIALOG, MainDownloadTab::OnDownloadDialog)
-	EVT_TIMER(ID_TIMER, MainDownloadTab::OnUpdate)
 END_EVENT_TABLE()
 
 MainDownloadTab::MainDownloadTab(wxWindow* parent)
@@ -70,20 +68,10 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 
 	Layout();
 
-	timer = new wxTimer(this, ID_TIMER);
-	timer->Start(1000 * 2);
-
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction(&MainDownloadTab::OnNewDownloadStarted));
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadComplete, wxObjectEventFunction(&MainDownloadTab::OnDownloadComplete));
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadFailed, wxObjectEventFunction(&MainDownloadTab::OnDownloadFailed));
 }
 
 MainDownloadTab::~MainDownloadTab()
 {
-	GlobalEventManager::Instance()->UnSubscribeAll(this);
-
-	timer->Stop();
-	wxDELETE(timer);
 }
 
 void MainDownloadTab::OnClearFinished(wxCommandEvent& /*event*/)
@@ -91,11 +79,6 @@ void MainDownloadTab::OnClearFinished(wxCommandEvent& /*event*/)
 	m_DownloadDataView->Clear();
 
 	//TODO: clear finished from ContentManager
-}
-
-void MainDownloadTab::OnUpdate(wxTimerEvent& /*event*/)
-{
-	m_DownloadDataView->UpdateDownloadsList();
 }
 
 void MainDownloadTab::OnCancelButton(wxCommandEvent& /*unused*/)
@@ -111,18 +94,4 @@ void MainDownloadTab::OnDownloadDialog(wxCommandEvent& /*unused*/)
 		m_download_dialog = new ContentDownloadDialog(this, wxID_ANY, _("Search for maps and games"));
 		m_download_dialog->Show(true);
 	}
-}
-
-void MainDownloadTab::OnNewDownloadStarted(wxCommandEvent& event) {
-	PrDownloader::DownloadProgress p;
-	PrDownloader::GetProgress(p);
-	m_DownloadDataView->AddDownloadInfo(&p);
-}
-
-void MainDownloadTab::OnDownloadComplete(wxCommandEvent& /*event*/) {
-	m_DownloadDataView->UpdateDownloadsList();
-}
-
-void MainDownloadTab::OnDownloadFailed(wxCommandEvent& /*event*/) {
-	wxMessageBox(_("Failed to download selected item!"), _("Error"), wxOK, this);
 }

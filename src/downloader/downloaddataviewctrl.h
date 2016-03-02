@@ -18,16 +18,13 @@ public:
 	virtual ~DownloadDataViewCtrl();
 
 	virtual void SetTipWindowText(const long, const wxPoint&);
-	void UpdateDownloadsList();
-
-	void AddDownloadInfo(PrDownloader::DownloadProgress* dInfo);
-
 	virtual void HighlightItem(long);
 
 	void OnCancel(wxCommandEvent&);
 	void OnRetry(wxCommandEvent&);
 
 private:
+	void OnDownloadStarted();
 	enum ColumnIndexes
 	{
 		NAME = 0,

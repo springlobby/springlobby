@@ -4,7 +4,6 @@
 #define MAINTORRENTTAB_H
 
 #include <wx/scrolwin.h>
-#include <wx/timer.h>
 #include <map>
 
 class wxStaticText;
@@ -26,8 +25,6 @@ public:
 	MainDownloadTab(wxWindow* parent);
 	~MainDownloadTab();
 
-	void OnUpdate(wxTimerEvent& /*event*/);
-
 private:
 	enum {
 		ID_LIST = wxID_HIGHEST,
@@ -39,7 +36,6 @@ private:
 		ID_DOWNLOAD_DIALOG,
 		ID_BUTTON_CLEAR,
 		ID_BUTTON_WIDGETS,
-		ID_TIMER
 	};
 
 	wxButton* m_but_cancel;
@@ -52,7 +48,7 @@ private:
 	void OnDLWidgets(wxCommandEvent& event);
 	void OnClearFinished(wxCommandEvent& event);
 
-	void OnNewDownloadStarted(wxCommandEvent& event);
+	void OnDownloadStarted(wxCommandEvent& event);
 	void OnDownloadComplete(wxCommandEvent& event);
 	void OnDownloadFailed(wxCommandEvent& event);
 
@@ -65,7 +61,6 @@ private:
 	DECLARE_EVENT_TABLE()
 	ContentDownloadDialog* m_download_dialog;
 	wxButton* m_but_download;
-	wxTimer* timer;
 };
 
 #endif
