@@ -170,6 +170,8 @@ PrDownloader::~PrDownloader()
 	delete m_dl_thread;
 	m_dl_thread = nullptr;
 	IDownloader::Shutdown();
+	delete m_progress;
+	m_progress = nullptr;
 }
 
 void PrDownloader::ClearFinished()
