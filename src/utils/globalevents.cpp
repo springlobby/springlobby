@@ -102,6 +102,7 @@ void GlobalEventManager::UnSubscribeAll(wxEvtHandler* evh) {
 void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id,
 		wxObjectEventFunction func) {
 	assert(evthandler != nullptr);
+	assert(func != nullptr);
 
 	std::set<wxEvtHandler*>& evtlist = m_eventsTable[id];
 	if (evtlist.find(evthandler) != evtlist.end()) {

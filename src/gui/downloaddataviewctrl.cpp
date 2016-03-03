@@ -23,7 +23,7 @@ DownloadDataViewCtrl::DownloadDataViewCtrl(const wxString dataViewName, wxWindow
 	AppendTextColumn(_("Filesize (MB)"), FILESIZE, wxDATAVIEW_CELL_INERT, DEFAULT_WIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
 	LoadColumnProperties();
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction());
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadStarted));
 }
 
 DownloadDataViewCtrl::~DownloadDataViewCtrl() {

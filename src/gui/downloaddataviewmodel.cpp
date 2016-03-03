@@ -1,6 +1,7 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "downloaddataviewmodel.h"
+#include "utils/conversion.h"
 
 DownloadDataViewModel::DownloadDataViewModel()
 	:BaseDataViewModel<PrDownloader::DownloadProgress>::BaseDataViewModel(COLUMN_COUNT)
@@ -28,7 +29,7 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 	switch(column)
 	{
 	case NAME:
-		variant = wxVariant(downloadInfo->name);
+		variant = wxVariant(TowxString(downloadInfo->name));
 		break;
 
 	case STATUS:
@@ -40,7 +41,7 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 		break;
 
 	case P_COMPLETE:
-		variant = wxVariant(wxString::Format(wxT("%i%%"), downloadInfo->GetProgressPercent()));
+		variant = wxVariant(wxString::Format(wxT("%f%%"), downloadInfo->GetProgressPercent()));
 		break;
 
 	case SPEED:

@@ -72,6 +72,7 @@ void TaskBar::OnDownloadComplete(wxCommandEvent& /*event*/)
 
 void TaskBar::UpdateDisplay()
 {
+	return; //FIXME: implement / move to OnDownload... Events
 	bool finished = true;
 
 	// get status of all downloads

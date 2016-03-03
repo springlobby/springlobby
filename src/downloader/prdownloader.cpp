@@ -139,7 +139,7 @@ void PrDownloader::GetProgress(DownloadProgress& progress)
 	progress.name = m_progress->name;
 	progress.downloaded = m_progress->downloaded;
 	progress.filesize = m_progress->filesize;
-	wxLogDebug("%s %s %s", progress.name.c_str(), progress.downloaded, progress.filesize);
+	wxLogDebug("%s %d %d", progress.name.c_str(), progress.downloaded, progress.filesize);
 }
 
 void updatelistener(int downloaded, int filesize)

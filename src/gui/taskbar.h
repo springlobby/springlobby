@@ -15,8 +15,8 @@ public:
 	~TaskBar();
 
 private:
-	void OnDownloadStarted(wxCommandEvent& event);;
-	void OnDownloadComplete(wxCommandEvent& event);;
+	void OnDownloadStarted(wxCommandEvent& event);
+	void OnDownloadComplete(wxCommandEvent& event);
 	void UpdateDisplay();
 	void UpdateProgress();
 
