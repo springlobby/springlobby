@@ -202,11 +202,6 @@ void PrDownloader::Download(DownloadEnum::Category cat, const std::string& filen
 {
 	DownloadItem* dl_item = new DownloadItem(this, cat, filename, url);
 	m_dl_thread->DoWork(dl_item);
-
-	if (m_progress == nullptr) {
-		m_progress = new PrDownloader::DownloadProgress();
-	}
-	m_progress->name = filename;
 }
 
 
@@ -277,21 +272,13 @@ void PrDownloader::UpdateApplication(const std::string& updateurl)
 }
 
 void PrDownloader::DownloadStarted(const DownloadItem* item) {
-	wxString d(_("Downloading: " + item->getName()));
-	UiEvents::ScopedStatusMessage msg(d, 0);
-
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadStarted);
 }
 
 void PrDownloader::DownloadFailed(const DownloadItem* item) {
-	UiEvents::ScopedStatusMessage msgcomplete(wxEmptyString, 0);
-
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 }
 
 void PrDownloader::DownloadFinished(const DownloadItem* item) {
-	wxString d(_("Download complete: " + item->getName()));
-	UiEvents::ScopedStatusMessage msgcomplete(d, 0);
-
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadComplete);
 }

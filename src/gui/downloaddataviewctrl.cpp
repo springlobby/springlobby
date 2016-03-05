@@ -75,6 +75,7 @@ void DownloadDataViewCtrl::OnDownloadProgress()
 
 	existingItem = item->second;
 	existingItem->downloaded = p.downloaded;
+	existingItem->filesize = p.filesize;
 	if (existingItem->downloaded >= existingItem->filesize) {
 		existingItem->finished = true;
 	}

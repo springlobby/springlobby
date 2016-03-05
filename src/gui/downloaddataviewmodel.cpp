@@ -41,7 +41,7 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 		break;
 
 	case P_COMPLETE:
-		variant = wxVariant(wxString::Format(wxT("%f%%"), downloadInfo->GetProgressPercent()));
+		variant = wxVariant(wxString::Format(wxT("%.2f%%"), downloadInfo->GetProgressPercent()));
 		break;
 
 	case SPEED:

@@ -23,6 +23,8 @@
 #include "aui/auimanager.h"
 #include "gui/contentdownloaddialog.h"
 #include "utils/slpaths.h"
+#include "utils/globalevents.h"
+#include "gui/customdialogs.h"
 
 BEGIN_EVENT_TABLE(MainDownloadTab, wxPanel)
 //(*EventTable(MainTorrentTab)
@@ -67,10 +69,13 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 	SetSizer(m_main_sizer);
 
 	Layout();
+
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadFailed, wxObjectEventFunction(&MainDownloadTab::OnDownloadFailed));
 }
 
 MainDownloadTab::~MainDownloadTab()
 {
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
 }
 
 void MainDownloadTab::OnClearFinished(wxCommandEvent& /*event*/)
@@ -91,4 +96,8 @@ void MainDownloadTab::OnDownloadDialog(wxCommandEvent& /*unused*/)
 		m_download_dialog = new ContentDownloadDialog(this, wxID_ANY, _("Search for maps and games"));
 		m_download_dialog->Show(true);
 	}
+}
+
+void MainDownloadTab::OnDownloadFailed() {
+	customMessageBox(SL_MAIN_ICON, _("Failed to download selected item."), _("Failed to download"), wxOK);
 }

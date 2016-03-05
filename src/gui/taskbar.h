@@ -3,10 +3,12 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_TASKBAR_H
 #define SPRINGLOBBY_HEADERGUARD_TASKBAR_H
 
-#include <wx/gauge.h>
 #include <wx/panel.h>
-#include <wx/stattext.h>
-#include <wx/event.h>
+
+class wxTimer;
+class wxStaticText;
+class wxGauge;
+class wxTimerEvent;
 
 class TaskBar : public wxPanel
 {
@@ -17,17 +19,14 @@ public:
 private:
 	void OnDownloadStarted(wxCommandEvent& event);
 	void OnDownloadComplete(wxCommandEvent& event);
-	void UpdateDisplay();
+	void OnDownloadFailed(wxCommandEvent& event);
 	void UpdateProgress();
+	void OnTimer(wxTimerEvent&);
 
+	wxTimer* timer;
 	wxStaticText* text;
 	wxGauge* gauge;
-	int state;
-	wxString downloadName;
-	int overalSize;
-	unsigned int overalProgress;
-	int unfinishedTasks;
-	int finishedCounter;
+
 	DECLARE_EVENT_TABLE()
 };
 

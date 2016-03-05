@@ -48,11 +48,10 @@ private:
 	void OnDLWidgets(wxCommandEvent& event);
 	void OnClearFinished(wxCommandEvent& event);
 
-	void OnDownloadStarted(wxCommandEvent& event);
-	void OnDownloadComplete(wxCommandEvent& event);
-	void OnDownloadFailed(wxCommandEvent& event);
-
 	wxBoxSizer* m_main_sizer;
+
+private:
+	void OnDownloadFailed();
 
 private:
 	//(*Handlers(MainTorrentTab)

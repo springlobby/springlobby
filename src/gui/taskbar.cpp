@@ -9,26 +9,23 @@
 #include <wx/statbmp.h>
 #include <wx/artprov.h>
 #include <wx/sizer.h>
+#include <wx/gauge.h>
+#include <wx/stattext.h>
+#include <wx/event.h>
+#include <wx/timer.h>
 
+const unsigned int TIMER_INTERVAL = 5000;
 const unsigned int TIMER_ID = wxNewId();
 
 BEGIN_EVENT_TABLE(TaskBar, wxPanel)
+	EVT_TIMER(TIMER_ID, TaskBar::OnTimer)
 END_EVENT_TABLE()
-
-enum {
-	STATE_FINISHED,
-	STATE_WORKING,
-	STATE_HIDDEN
-};
 
 TaskBar::TaskBar(wxWindow* statusbar)
     : wxPanel(statusbar, wxID_ANY, wxPoint(3, 3),
 	      wxSize(460 - (2 * 3), statusbar->GetSize().GetHeight()))
-    , overalSize(0)
-    , overalProgress(0)
-    , unfinishedTasks(0)
-    , finishedCounter(0)
 {
+	timer = nullptr;
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
 	SetSizer(sizer);
@@ -47,11 +44,12 @@ TaskBar::TaskBar(wxWindow* statusbar)
 			    wxSize(100, 14), wxGA_SMOOTH);
 	sizer->Add(gauge, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, 5);
 
-	state = STATE_HIDDEN;
 	Hide();
 
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction(&TaskBar::OnDownloadStarted));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadFailed, wxObjectEventFunction(&TaskBar::OnDownloadFailed));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadComplete, wxObjectEventFunction(&TaskBar::OnDownloadComplete));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadProgress, wxObjectEventFunction(&TaskBar::UpdateProgress));
 }
 
 TaskBar::~TaskBar()
@@ -61,100 +59,64 @@ TaskBar::~TaskBar()
 
 void TaskBar::OnDownloadStarted(wxCommandEvent& /*event*/)
 {
-	//FIXME: implement this
-	//prDownloader()::GetProgress(...)
+	if (timer != nullptr) {
+		timer->Stop();
+		wxDELETE(timer);
+	}
+
+	SetBackgroundColour(wxColour(255, 244, 168));
+	Show();
+	gauge->Show();
+
+	UpdateProgress();
+
+	Layout();
+	Refresh();
+}
+
+void TaskBar::OnDownloadFailed(wxCommandEvent& /*event*/)
+{
+	text->SetLabel(_("Download failed"));
+	gauge->Hide();
+	SetBackgroundColour(wxColour(208, 10, 10));
+
+	timer = new wxTimer(this, TIMER_ID);
+	timer->Start(TIMER_INTERVAL);
+
+	Layout();
+	Refresh();
 }
 
 void TaskBar::OnDownloadComplete(wxCommandEvent& /*event*/)
 {
+	text->SetLabel(_("Download finished"));
+	gauge->Hide();
+	SetBackgroundColour(wxColour(0, 208, 10));
+
+	timer = new wxTimer(this, TIMER_ID);
+	timer->Start(TIMER_INTERVAL);
+
+	Layout();
+	Refresh();
 }
 
-
-void TaskBar::UpdateDisplay()
+void TaskBar::OnTimer(wxTimerEvent&)
 {
-	return; //FIXME: implement / move to OnDownload... Events
-	bool finished = true;
+	timer->Stop();
+	wxDELETE(timer);
 
-	// get status of all downloads
-	unfinishedTasks = 0;
-	overalSize = 0;
-	overalProgress = 0;
-/*
-	for (ObserverDownloadInfo info: activedownloads) {
-		if (!info.finished) {
-			finished = false;
-			unfinishedTasks++;
-			downloadName = info.name;
-		}
-		overalSize += info.size;
-		overalProgress += info.progress;
-	}
-*/
-	// do state transition & actions
-	switch (state) {
-		case STATE_FINISHED:
-			if (finished) {
-				// wait 5sec and hide widget
-				if (finishedCounter < 50) {
-					finishedCounter++;
-				} else {
-					state = STATE_HIDDEN;
-					Hide();
-					finishedCounter = 0;
-				}
-			} else {
-				// change to STATE_WORKING
-				state = STATE_WORKING;
-				SetBackgroundColour(wxColour(255, 244, 168));
-				Show();
-				gauge->Show();
-				UpdateProgress();
-			}
-			break;
-		case STATE_WORKING:
-			if (finished) {
-				state = STATE_FINISHED;
-				text->SetLabel(_("Download finished"));
-				gauge->Hide();
-				SetBackgroundColour(wxColour(0, 208, 10));
-			} else {
-				UpdateProgress();
-			}
-			break;
-		case STATE_HIDDEN:
-			if (finished) {
-				// nop
-			} else {
-				// change to STATE_WORKING
-				state = STATE_WORKING;
-				SetBackgroundColour(wxColour(255, 244, 168));
-				Show();
-				gauge->Show();
-				UpdateProgress();
-			}
-			break;
-	}
+	Hide();
+
 	Layout();
 	Refresh();
 }
 
 void TaskBar::UpdateProgress()
 {
-	float overalPercent = -1; // -1 means unknown
-	if (overalSize > 0) {
-		overalPercent = ((float)overalProgress / overalSize) * 100;
-	}
+	PrDownloader::DownloadProgress p;
+	prDownloader().GetProgress(p);
 
-	if (unfinishedTasks == 1) {
-		text->SetLabel(wxString::Format(_("Downloading %s"), downloadName.c_str()));
-	} else {
-		text->SetLabel(wxString::Format(_("Downloading %d files"), unfinishedTasks));
-	}
-
-	if (overalPercent < 0) {
-		// just pulse the bar, if the progress is unknown
-		gauge->Pulse();
-	} else {
-		gauge->SetValue(overalPercent);
-	}
+	int progress = (int)p.GetProgressPercent();
+	text->SetLabel(wxString::Format(_("Downloading %s"), p.name));
+	gauge->SetValue(progress);
 }
