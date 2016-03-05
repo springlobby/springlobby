@@ -76,6 +76,8 @@ void TaskBar::OnDownloadStarted(wxCommandEvent& /*event*/)
 
 void TaskBar::OnDownloadFailed(wxCommandEvent& /*event*/)
 {
+	Show();
+
 	text->SetLabel(_("Download failed"));
 	gauge->Hide();
 	SetBackgroundColour(wxColour(208, 10, 10));
@@ -113,10 +115,14 @@ void TaskBar::OnTimer(wxTimerEvent&)
 
 void TaskBar::UpdateProgress()
 {
+	Freeze();
+
 	PrDownloader::DownloadProgress p;
 	prDownloader().GetProgress(p);
 
 	int progress = (int)p.GetProgressPercent();
 	text->SetLabel(wxString::Format(_("Downloading %s"), p.name));
 	gauge->SetValue(progress);
+
+	Thaw();
 }
