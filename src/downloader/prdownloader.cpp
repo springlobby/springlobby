@@ -31,12 +31,15 @@ private:
 	std::string m_name;
 	std::string m_filename;
 	bool m_reload;
+	IDownloadItemListener* m_listener;
+
 public:
-	DownloadItem(const DownloadEnum::Category cat, const std::string& name, const std::string& filename)
+	DownloadItem(IDownloadItemListener* listener, const DownloadEnum::Category cat, const std::string& name, const std::string& filename)
 		: m_category(cat)
 		, m_name(name)
 		, m_filename(filename)
 		, m_reload(false)
+		, m_listener(listener)
 	{
 	}
 
@@ -45,6 +48,7 @@ public:
 		if (m_progress == nullptr)
 			m_progress = new PrDownloader::DownloadProgress();
 		m_progress->name = m_name;
+
 		const bool force = true;
 		DownloadSetConfig(CONFIG_RAPID_FORCEUPDATE, &force);
 		int results = 0;
@@ -57,7 +61,7 @@ public:
 				results = DownloadSearch(m_category, m_name.c_str());
 		}
 		if (results <= 0) {
-			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
+			m_listener->DownloadFailed(this);
 			wxLogInfo("Nothing found to download");
 			return;
 		}
@@ -70,26 +74,31 @@ public:
 		const bool hasdlinfo = DownloadGetInfo(0, info);
 		//In case if something gone wrong
 		if (!hasdlinfo) {
-			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
+			m_listener->DownloadFailed(this);
 			return;
 		}
 		m_progress->name = m_name; //update to fetched name
 
-		UiEvents::ScopedStatusMessage msg("Downloading: " + m_name, 0);
-		GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadStarted);
+		m_listener->DownloadStarted(this);
 
 		const bool downloadFailed = DownloadStart();
-		//we create this in avance cause m_item gets freed
-		wxString d(_("Download complete: " + m_name));
-
-		UiEvents::ScopedStatusMessage msgcomplete(d, 0);
 
 		if (downloadFailed) {
-			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
+			m_listener->DownloadFailed(this);
 		} else {
 			DownloadFinished(m_category, info);
-			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadComplete);
+			m_listener->DownloadFinished(this);
 		}
+	}
+
+	DownloadEnum::Category getCategory() const {
+		return m_category;
+	}
+	const std::string& getFilename() const {
+		return m_filename;
+	}
+	const std::string& getName() const {
+		return m_name;
 	}
 
 private:
@@ -191,8 +200,13 @@ void PrDownloader::RemoveTorrentByName(const std::string& /*name*/)
 
 void PrDownloader::Download(DownloadEnum::Category cat, const std::string& filename, const std::string& url)
 {
-	DownloadItem* dl_item = new DownloadItem(cat, filename, url);
+	DownloadItem* dl_item = new DownloadItem(this, cat, filename, url);
 	m_dl_thread->DoWork(dl_item);
+
+	if (m_progress == nullptr) {
+		m_progress = new PrDownloader::DownloadProgress();
+	}
+	m_progress->name = filename;
 }
 
 
@@ -260,4 +274,24 @@ void PrDownloader::UpdateApplication(const std::string& updateurl)
 		return;
 	}
 	Download(DownloadEnum::CAT_SPRINGLOBBY, updateurl, dlfilepath);
+}
+
+void PrDownloader::DownloadStarted(const DownloadItem* item) {
+	wxString d(_("Downloading: " + item->getName()));
+	UiEvents::ScopedStatusMessage msg(d, 0);
+
+	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadStarted);
+}
+
+void PrDownloader::DownloadFailed(const DownloadItem* item) {
+	UiEvents::ScopedStatusMessage msgcomplete(wxEmptyString, 0);
+
+	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
+}
+
+void PrDownloader::DownloadFinished(const DownloadItem* item) {
+	wxString d(_("Download complete: " + item->getName()));
+	UiEvents::ScopedStatusMessage msgcomplete(d, 0);
+
+	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadComplete);
 }

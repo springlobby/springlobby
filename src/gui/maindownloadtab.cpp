@@ -67,7 +67,6 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 	SetSizer(m_main_sizer);
 
 	Layout();
-
 }
 
 MainDownloadTab::~MainDownloadTab()
@@ -77,8 +76,6 @@ MainDownloadTab::~MainDownloadTab()
 void MainDownloadTab::OnClearFinished(wxCommandEvent& /*event*/)
 {
 	m_DownloadDataView->Clear();
-
-	//TODO: clear finished from ContentManager
 }
 
 void MainDownloadTab::OnCancelButton(wxCommandEvent& /*unused*/)

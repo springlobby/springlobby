@@ -4,6 +4,7 @@
 #include "downloaddataviewmodel.h"
 #include "utils/globalevents.h"
 
+
 BEGIN_EVENT_TABLE(DownloadDataViewCtrl, BaseDataViewCtrl)
 	EVT_MENU(DOWNLOAD_DATAVIEW_CANCEL, DownloadDataViewCtrl::OnCancel)
 	EVT_MENU(DOWNLOAD_DATAVIEW_RETRY, DownloadDataViewCtrl::OnRetry)
@@ -23,11 +24,15 @@ DownloadDataViewCtrl::DownloadDataViewCtrl(const wxString dataViewName, wxWindow
 	AppendTextColumn(_("Filesize (MB)"), FILESIZE, wxDATAVIEW_CELL_INERT, DEFAULT_WIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
 	LoadColumnProperties();
+
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadStarted));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadProgress, wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadProgress));
 }
 
 DownloadDataViewCtrl::~DownloadDataViewCtrl() {
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
+
+	Clear();
 }
 
 void DownloadDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
@@ -50,7 +55,42 @@ void DownloadDataViewCtrl::OnRetry(wxCommandEvent& /*event*/) {
 
 void DownloadDataViewCtrl::OnDownloadStarted()
 {
+	PrDownloader::DownloadProgress *p = new PrDownloader::DownloadProgress;
+	prDownloader().GetProgress(*p);
+	AddItem(p);
+}
+
+void DownloadDataViewCtrl::OnDownloadProgress()
+{
+	PrDownloader::DownloadProgress *existingItem;
 	PrDownloader::DownloadProgress p;
 	prDownloader().GetProgress(p);
-	AddItem(p, true);
+
+	auto item = itemsIndex.find(p.name);
+	if (item == itemsIndex.end()) {
+		existingItem = new PrDownloader::DownloadProgress(p);
+		AddItem(existingItem);
+		return;
+	}
+
+	existingItem = item->second;
+	existingItem->downloaded = p.downloaded;
+	if (existingItem->downloaded >= existingItem->filesize) {
+		existingItem->finished = true;
+	}
+	RefreshItem(*existingItem);
+}
+
+void DownloadDataViewCtrl::AddItem(PrDownloader::DownloadProgress* p) {
+	BaseDataViewCtrl::AddItem(*p, true);
+
+	itemsIndex[p->name] = p;
+}
+
+void DownloadDataViewCtrl::Clear() {
+	for(const PrDownloader::DownloadProgress *p : m_DataModel->GetItemsContainer()) {
+		delete p;
+	}
+
+	BaseDataViewCtrl::Clear();
 }

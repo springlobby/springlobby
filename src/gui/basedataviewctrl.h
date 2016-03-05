@@ -23,16 +23,16 @@ public:
 	using wxDataViewCtrl::AssociateModel;
 	virtual bool AssociateModel(BaseDataViewModel<DataType>*);
 
-	void Resort();
+	virtual void Resort();
 
-    bool AddItem(const DataType&, bool resortIsNeeded = true);
-	bool RemoveItem(const DataType&);
-	bool RefreshItem(const DataType&);
-	bool ContainsItem(const DataType&);
-	int GetItemsCount() const;
-	void Clear();
-	DataType* GetSelectedItem();
-	const std::set<const DataType*>& GetItemsContainer() const;
+	virtual bool AddItem(const DataType&, bool resortIsNeeded = true);
+	virtual bool RemoveItem(const DataType&);
+	virtual bool RefreshItem(const DataType&);
+	virtual bool ContainsItem(const DataType&);
+	virtual int GetItemsCount() const;
+	virtual void Clear();
+	virtual DataType* GetSelectedItem();
+	virtual const std::set<const DataType*>& GetItemsContainer() const;
 
 protected:
 	virtual void LoadColumnProperties();

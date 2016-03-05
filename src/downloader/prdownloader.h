@@ -15,7 +15,19 @@ namespace LSL
 class WorkerThread;
 }
 
-class PrDownloader : public wxEvtHandler
+class DownloadItem;
+
+class IDownloadItemListener
+{
+public:
+	virtual ~IDownloadItemListener(){}
+
+	virtual void DownloadStarted(const DownloadItem* item) = 0;
+	virtual void DownloadFailed(const DownloadItem* item) = 0;
+	virtual void DownloadFinished(const DownloadItem* item) = 0;
+};
+
+class PrDownloader : public wxEvtHandler, public IDownloadItemListener
 {
 public:
 	struct DownloadProgress {
@@ -32,7 +44,7 @@ public:
 		{
 			if (filesize == 0)
 				return 0;
-			return (float)filesize/downloaded;
+			return (float)(downloaded * 100.0)/filesize;
 		}
 	};
 	PrDownloader();
@@ -62,6 +74,11 @@ public:
 	bool IsRunning();
 	static void GetProgress(DownloadProgress& progress);
 	void UpdateApplication(const std::string& updateurl);
+
+	//IDownloadItemListener
+	void DownloadStarted(const DownloadItem* item) override;
+	void DownloadFailed(const DownloadItem* item) override;
+	void DownloadFinished(const DownloadItem* item) override;
 
 private:
 	LSL::WorkerThread* m_dl_thread;

@@ -23,8 +23,17 @@ public:
 	void OnCancel(wxCommandEvent&);
 	void OnRetry(wxCommandEvent&);
 
+	virtual void AddItem(PrDownloader::DownloadProgress*);
+	virtual void Clear() override;
+
 private:
 	void OnDownloadStarted();
+	void OnDownloadProgress();
+
+private:
+	std::map<const std::string, PrDownloader::DownloadProgress*> itemsIndex;
+
+private:
 	enum ColumnIndexes
 	{
 		NAME = 0,
