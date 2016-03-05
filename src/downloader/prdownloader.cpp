@@ -224,7 +224,7 @@ PrDownloader& prDownloader()
 
 bool PrDownloader::IsRunning()
 {
-	return m_progress != nullptr && !m_progress->finished;
+	return m_progress != nullptr && !m_progress->IsFinished();
 }
 
 void PrDownloader::DownloadMap(const std::string& filename) {

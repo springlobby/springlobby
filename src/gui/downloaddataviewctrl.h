@@ -25,6 +25,7 @@ public:
 
 	virtual void AddItem(PrDownloader::DownloadProgress*);
 	virtual void Clear() override;
+	void ClearFinished();
 
 private:
 	void OnDownloadStarted();

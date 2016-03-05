@@ -33,18 +33,26 @@ public:
 	struct DownloadProgress {
 		DownloadProgress():
 			filesize(0),
-			downloaded(0),
-			finished(false)
+			downloaded(0)
 		{}
 		std::string name;
 		int filesize;
 		int downloaded;
-		bool finished;
+		bool IsFinished() const
+		{
+			return downloaded >= filesize;
+		}
 		float GetProgressPercent()
 		{
 			if (filesize == 0)
 				return 0;
 			return (float)(downloaded * 100.0)/filesize;
+		}
+		void CopyTo(DownloadProgress& prg)
+		{
+			prg.downloaded = downloaded;
+			prg.filesize = filesize;
+			prg.name = name;
 		}
 	};
 	PrDownloader();

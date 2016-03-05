@@ -80,7 +80,7 @@ MainDownloadTab::~MainDownloadTab()
 
 void MainDownloadTab::OnClearFinished(wxCommandEvent& /*event*/)
 {
-	m_DownloadDataView->Clear();
+	m_DownloadDataView->ClearFinished();
 }
 
 void MainDownloadTab::OnCancelButton(wxCommandEvent& /*unused*/)
