@@ -16,6 +16,7 @@ class HttpDownloaderThread;
 class wxEvtHandler;
 
 #include "utils/battleevents.h"
+#include "downloader/prdownloader.h"
 #include <wx/string.h>
 #include <wx/timer.h>
 #include "utils/mixins.h"
@@ -105,7 +106,7 @@ public:
 	void OnLoginDenied(const std::string& reason);
 
 	// return true when engine/game/map is missing & prompts user to dl when needed
-	bool NeedsDownload(const IBattle* battle);
+	bool NeedsDownload(const IBattle* battle, bool uiprompt = true,DownloadEnum::Category cat = DownloadEnum::CAT_NONE);
 
 	bool IsThisMe(User& other) const;
 	bool IsThisMe(const User* other) const;

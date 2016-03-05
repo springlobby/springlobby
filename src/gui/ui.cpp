@@ -911,7 +911,16 @@ void Ui::OnLoginDenied(const std::string& reason)
 	ServerManager::Instance()->DisconnectFromServer();
 }
 
-bool Ui::NeedsDownload(const IBattle* battle)
+static bool requested(DownloadEnum::Category req, DownloadEnum::Category cat)
+{
+	if (req == cat)
+		return true;
+	if (req == DownloadEnum::CAT_NONE)
+		return true;
+	return false;
+}
+
+bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Category cat)
 {
 	if (battle == nullptr) {
 		wxLogWarning("Battle is null, nothing required!");
@@ -920,25 +929,25 @@ bool Ui::NeedsDownload(const IBattle* battle)
 	std::string prompt = "The ";
 	std::list<std::pair<DownloadEnum::Category, std::string>> todl;
 
-	if (!battle->EngineExists()) {
+	if (requested(cat, DownloadEnum::CAT_ENGINE) && !battle->EngineExists()) {
 		prompt += "engine " + battle->GetEngineName();
 		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE, battle->GetEngineName()));
 	}
-	if (!battle->MapExists(false)) {
+	if (requested(cat, DownloadEnum::CAT_MAP) && !battle->MapExists(false)) {
 		prompt+= "map " + battle->GetHostMapName();
 		todl.push_back(std::make_pair(DownloadEnum::CAT_MAP, battle->GetHostMapName()));
 	}
-	if (!battle->GameExists(false)) {
+	if (requested(cat, DownloadEnum::CAT_GAME) && !battle->GameExists(false)) {
 		prompt += "game " + battle->GetHostGameName();
 		todl.push_back(std::make_pair(DownloadEnum::CAT_GAME, battle->GetHostGameName()));
 	}
 
 	if (todl.empty())
 		return false;
-	if (wxYES == customMessageBox(SL_MAIN_ICON,
+	if (uiprompt || (wxYES == customMessageBox(SL_MAIN_ICON,
 				      prompt + _(" is required to play. Should it be downloaded?"),
 				      _("Content is missing"),
-				      wxYES_NO)) {
+				      wxYES_NO))) {
 		for (auto dl: todl) {
 			prDownloader().Download(dl.first, dl.second);
 		}

@@ -78,30 +78,15 @@ void BattleDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
 }
 
 void BattleDataViewCtrl::OnDLMap(wxCommandEvent& /*event*/) {
-	const IBattle* battle = GetSelectedItem();
-	if (battle == nullptr) {
-		return;
-	}
-
-	prDownloader().DownloadMap(battle->GetHostMapName());
+	ui().NeedsDownload(GetSelectedItem(), false, DownloadEnum::CAT_MAP);
 }
 
 void BattleDataViewCtrl::OnDLMod(wxCommandEvent& /*event*/) {
-	const IBattle* battle = GetSelectedItem();
-	if (battle == nullptr) {
-		return;
-	}
-
-	prDownloader().DownloadGame(battle->GetHostGameName());
+	ui().NeedsDownload(GetSelectedItem(), false, DownloadEnum::CAT_GAME);
 }
 
 void BattleDataViewCtrl::OnDLEngine(wxCommandEvent& /*event*/) {
-	const IBattle* battle = GetSelectedItem();
-	if (battle == nullptr) {
-		return;
-	}
-
-	prDownloader().DownloadEngine(battle->GetEngineName());
+	ui().NeedsDownload(GetSelectedItem(), false, DownloadEnum::CAT_ENGINE);
 }
 
 void BattleDataViewCtrl::OnNotifyGameEnd(wxCommandEvent& /*unused*/)
