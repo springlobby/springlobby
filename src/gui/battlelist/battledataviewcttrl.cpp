@@ -45,6 +45,7 @@ BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* p
 }
 
 BattleDataViewCtrl::~BattleDataViewCtrl() {
+	m_popup = nullptr;
 }
 
 void BattleDataViewCtrl::AddBattle(IBattle& battle) {
@@ -77,15 +78,30 @@ void BattleDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
 }
 
 void BattleDataViewCtrl::OnDLMap(wxCommandEvent& /*event*/) {
-	ui().NeedsDownload(GetSelectedItem());
+	const IBattle* battle = GetSelectedItem();
+	if (battle == nullptr) {
+		return;
+	}
+
+	prDownloader().DownloadMap(battle->GetHostMapName());
 }
 
 void BattleDataViewCtrl::OnDLMod(wxCommandEvent& /*event*/) {
-	ui().NeedsDownload(GetSelectedItem());
+	const IBattle* battle = GetSelectedItem();
+	if (battle == nullptr) {
+		return;
+	}
+
+	prDownloader().DownloadGame(battle->GetHostGameName());
 }
 
 void BattleDataViewCtrl::OnDLEngine(wxCommandEvent& /*event*/) {
-	ui().NeedsDownload(GetSelectedItem());
+	const IBattle* battle = GetSelectedItem();
+	if (battle == nullptr) {
+		return;
+	}
+
+	prDownloader().DownloadEngine(battle->GetEngineName());
 }
 
 void BattleDataViewCtrl::OnNotifyGameEnd(wxCommandEvent& /*unused*/)

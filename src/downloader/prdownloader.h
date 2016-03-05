@@ -51,13 +51,18 @@ public:
 		CAT_LOBBY ""             /tmp/lobby.zip
 		CAT_HTTP  http://.../f.  /tmp/f.zip
 	*/
-	void Download(DownloadEnum::Category cat, const std::string& url, const std::string& filename="");
+	void Download(DownloadEnum::Category cat, const std::string& filename, const std::string& url="");
+	void DownloadMap(const std::string& filename);
+	void DownloadGame(const std::string& filename);
+	void DownloadEngine(const std::string& filename);
+
 	void SetIngameStatus(bool ingame);
 	void OnSpringStarted(wxCommandEvent& data);
 	void OnSpringTerminated(wxCommandEvent& data);
 	bool IsRunning();
 	static void GetProgress(DownloadProgress& progress);
 	void UpdateApplication(const std::string& updateurl);
+
 private:
 	LSL::WorkerThread* m_dl_thread;
 

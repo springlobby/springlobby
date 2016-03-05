@@ -218,6 +218,18 @@ bool PrDownloader::IsRunning()
 	return m_progress != nullptr && !m_progress->finished;
 }
 
+void PrDownloader::DownloadMap(const std::string& filename) {
+	Download(DownloadEnum::CAT_MAP, filename);
+}
+
+void PrDownloader::DownloadGame(const std::string& filename) {
+	Download(DownloadEnum::CAT_GAME, filename);
+}
+
+void PrDownloader::DownloadEngine(const std::string& filename) {
+	Download(DownloadEnum::CAT_ENGINE, filename);
+}
+
 void PrDownloader::UpdateApplication(const std::string& updateurl)
 {
 	const std::string updatedir = SlPaths::GetUpdateDir();
