@@ -396,6 +396,8 @@ void BattleRoomTab::SplitSizerHorizontally(const bool horizontal)
 
 void BattleRoomTab::UpdateBattleInfo()
 {
+	Freeze();
+
 	if (!m_battle)
 		return;
 	m_lock_chk->SetValue(m_battle->IsLocked());
@@ -405,6 +407,8 @@ void BattleRoomTab::UpdateBattleInfo()
 		UpdateBattleInfo(it->first);
 	}
 	UpdateMapInfoSummary();
+
+	Thaw();
 }
 
 void BattleRoomTab::PrintAllySetup()

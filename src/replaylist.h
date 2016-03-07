@@ -3,7 +3,6 @@
 #ifndef SPRINGLOBBY_REPLAYLIST_H_INCLUDED
 #define SPRINGLOBBY_REPLAYLIST_H_INCLUDED
 
-
 #include <wx/string.h>
 
 #include "iplaybacklist.h"
@@ -34,7 +33,8 @@ struct DemoFileHeader {
 */
 
 struct StoredGame;
-class wxFile;
+class PlayBackDataReader;
+class wxInputStream;
 
 class ReplayList : public IPlaybackList
 {
@@ -43,10 +43,11 @@ public:
 
 private:
 	bool GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) const override;
-	int replayVersion(wxFile& ReplayPath) const;
-	std::string GetScriptFromReplay(wxFile& ReplayPath, const int version) const;
+	int replayVersion(PlayBackDataReader& replay) const;
+	std::string GetScriptFromReplay(PlayBackDataReader& replay, const int version) const;
 	//! saves relevant infos from header into replay struct
-	void GetHeaderInfo(wxFile& ReplayPath, StoredGame& rep, const int version) const;
+	void GetHeaderInfo(PlayBackDataReader& replay, StoredGame& rep, const int version) const;
+	size_t getUnzippedData(unsigned char* ptr, size_t bufSize, wxInputStream& inputStream) const;
 };
 
 IPlaybackList& replaylist();
