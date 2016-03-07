@@ -6,10 +6,8 @@
 #include <wx/log.h>
 #include <wx/datetime.h>
 #include <wx/wfstream.h>
-#include <wx/mstream.h>
 #include <zlib.h>
 
-#include "gui/customdialogs.h"
 #include "replaylist.h"
 #include "storedgame.h"
 #include "utils/conversion.h"
