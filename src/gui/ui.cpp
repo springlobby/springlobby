@@ -942,9 +942,6 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 		todl.push_back(std::make_pair(DownloadEnum::CAT_GAME, battle->GetHostGameName()));
 	}
 
-	if (todl.empty())
-		return false;
-
 	std::string prompt = "The " + promptCollection[0];
 	for(size_t i = 1;i < promptCollection.size();i++) {
 		if (i == promptCollection.size() - 1) {
@@ -956,12 +953,29 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 	}
 	prompt += _(" is required to play. Should it be downloaded?");
 
-	if (!uiprompt || (wxYES == customMessageBox(SL_MAIN_ICON,
-				      prompt, _("Content is missing"), wxYES_NO))) {
+
+	if (!todl.empty() && (!uiprompt || (wxYES == customMessageBox(SL_MAIN_ICON,
+				      prompt,
+				      _("Content is missing"),
+				      wxYES_NO)))) {
 		for (auto dl: todl) {
 			prDownloader().Download(dl.first, dl.second);
 		}
-
+		return true;
 	}
+
+	if (battle->GetEngineVersion().empty()) {
+		wxLogWarning("No engine version in battle set, assuming no prequesites");
+		return false;
+	}
+
+	const std::string compatversion = SlPaths::GetCompatibleVersion(battle->GetEngineVersion());
+	if (compatversion == SlPaths::GetCurrentUsedSpringIndex()) {
+		return false;
+	}
+	wxLogWarning("Required engine version doesn't match current selected version, switching to %s", compatversion.c_str());
+	SlPaths::SetUsedSpringIndex(compatversion);
+	LSL::usync().ReloadUnitSyncLib();
+
 	return true;
 }
