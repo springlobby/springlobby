@@ -926,6 +926,7 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 		wxLogWarning("Battle is null, nothing required!");
 		return true;
 	}
+	bool needstuff = false;
 	std::vector<std::string> promptCollection;
 	std::list<std::pair<DownloadEnum::Category, std::string>> todl;
 
@@ -944,6 +945,7 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 
 
 	if (!todl.empty()) {
+		needstuff = true;
 		if (uiprompt) {
 			std::string prompt = "The " + promptCollection[0];
 			for(size_t i = 1; i < promptCollection.size();i++) {
@@ -962,17 +964,16 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 		for (auto dl: todl) {
 			prDownloader().Download(dl.first, dl.second);
 		}
-		return true;
 	}
 
 	if (battle->GetEngineVersion().empty()) {
 		wxLogWarning("No engine version in battle set, assuming no prequesites");
-		return false;
+		return needstuff;
 	}
 
 	const std::string compatversion = SlPaths::GetCompatibleVersion(battle->GetEngineVersion());
 	if (compatversion == SlPaths::GetCurrentUsedSpringIndex()) {
-		return false;
+		return needstuff;
 	}
 	wxLogWarning("Required engine version doesn't match current selected version, switching to %s", compatversion.c_str());
 	SlPaths::SetUsedSpringIndex(compatversion);
