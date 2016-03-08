@@ -942,22 +942,23 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 		todl.push_back(std::make_pair(DownloadEnum::CAT_GAME, battle->GetHostGameName()));
 	}
 
-	std::string prompt = "The " + promptCollection[0];
-	for(size_t i = 1;i < promptCollection.size();i++) {
-		if (i == promptCollection.size() - 1) {
-			prompt += " and ";
-		} else {
-			prompt += " ,";
+
+	if (!todl.empty()) {
+		if (uiprompt) {
+			std::string prompt = "The " + promptCollection[0];
+			for(size_t i = 1; i < promptCollection.size();i++) {
+				if (i == promptCollection.size() - 1) {
+					prompt += " and ";
+				} else {
+					prompt += " ,";
+				}
+				prompt += promptCollection[i];
+			}
+			prompt += _(" is required to play. Should it be downloaded?");
+			if (wxYES != customMessageBox(SL_MAIN_ICON, prompt, _("Content is missing"), wxYES_NO))
+				return true;
 		}
-		prompt += promptCollection[i];
-	}
-	prompt += _(" is required to play. Should it be downloaded?");
 
-
-	if (!todl.empty() && (!uiprompt || (wxYES == customMessageBox(SL_MAIN_ICON,
-				      prompt,
-				      _("Content is missing"),
-				      wxYES_NO)))) {
 		for (auto dl: todl) {
 			prDownloader().Download(dl.first, dl.second);
 		}
