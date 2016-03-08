@@ -56,10 +56,11 @@ Battle::Battle(IServer& serv, int id)
 
 Battle::~Battle()
 {
-	GlobalEventManager::Instance()->UnSubscribeAll(this);
-
 	wxDELETE(m_timer);
 	wxDELETE(m_autohost_manager);
+	if (m_is_self_in) {
+		Leave();
+	}
 }
 
 
@@ -85,10 +86,10 @@ void Battle::Join(const std::string& password)
 	if (m_autohost_manager == nullptr) {
 		m_autohost_manager = new AutohostManager();
 		m_autohost_manager->SetBattle(this);
-		GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
 	}
 	m_serv.JoinBattle(m_opts.battleid, password);
 	m_is_self_in = true;
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
 }
 
 
