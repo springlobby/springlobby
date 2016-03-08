@@ -227,7 +227,7 @@ std::string ReplayList::GetScriptFromReplay(PlayBackDataReader& replay, const in
 }
 
 // see https://github.com/spring/spring/blob/develop/rts/System/LoadSave/demofile.h
-void ReplayList::GetHeaderInfo(PlayBackDataReader& replay, StoredGame& rep, const int version) const
+void ReplayList::GetHeaderInfo(PlayBackDataReader& replay, StoredGame& rep, const int /*version*/) const
 {
 	if (replay.Seek(304) == wxInvalidOffset) {
 		return;

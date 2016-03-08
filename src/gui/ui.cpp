@@ -926,28 +926,38 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 		wxLogWarning("Battle is null, nothing required!");
 		return true;
 	}
-	std::string prompt = "The ";
+	std::vector<std::string> promptCollection;
 	std::list<std::pair<DownloadEnum::Category, std::string>> todl;
 
 	if (requested(cat, DownloadEnum::CAT_ENGINE) && !battle->EngineExists()) {
-		prompt += "engine " + battle->GetEngineName();
+		promptCollection.push_back("engine " + battle->GetEngineName());
 		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE, battle->GetEngineName()));
 	}
 	if (requested(cat, DownloadEnum::CAT_MAP) && !battle->MapExists(false)) {
-		prompt+= "map " + battle->GetHostMapName();
+		promptCollection.push_back("map " + battle->GetHostMapName());
 		todl.push_back(std::make_pair(DownloadEnum::CAT_MAP, battle->GetHostMapName()));
 	}
 	if (requested(cat, DownloadEnum::CAT_GAME) && !battle->GameExists(false)) {
-		prompt += "game " + battle->GetHostGameName();
+		promptCollection.push_back("game " + battle->GetHostGameName());
 		todl.push_back(std::make_pair(DownloadEnum::CAT_GAME, battle->GetHostGameName()));
 	}
 
 	if (todl.empty())
 		return false;
+
+	std::string prompt = "The " + promptCollection[0];
+	for(size_t i = 1;i < promptCollection.size();i++) {
+		if (i == promptCollection.size() - 1) {
+			prompt += " and ";
+		} else {
+			prompt += " ,";
+		}
+		prompt += promptCollection[i];
+	}
+	prompt += _(" is required to play. Should it be downloaded?");
+
 	if (!uiprompt || (wxYES == customMessageBox(SL_MAIN_ICON,
-				      prompt + _(" is required to play. Should it be downloaded?"),
-				      _("Content is missing"),
-				      wxYES_NO))) {
+				      prompt, _("Content is missing"), wxYES_NO))) {
 		for (auto dl: todl) {
 			prDownloader().Download(dl.first, dl.second);
 		}
