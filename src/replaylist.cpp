@@ -139,7 +139,7 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 		return false;
 	}
 
-	std::unique_ptr<unsigned char> ptr;
+	std::unique_ptr<unsigned char[]> ptr;
 	std::unique_ptr<PlayBackDataReader> replay;
 
 	if (ReplayPath.substr(ReplayPath.length() - 5) == ".sdfz") {
@@ -179,10 +179,10 @@ size_t ReplayList::getUnzippedData(unsigned char* ptr, size_t bufSize, wxInputSt
 	wxASSERT(ptr != nullptr);
 	wxASSERT(bufSize > 0);
 
-    z_stream strm = {0};
+    z_stream strm;
+    memset(&strm, 0, sizeof(strm));
 
-    std::unique_ptr<unsigned char> inBuff;
-    inBuff.reset(new unsigned char[bufSize]);
+    std::unique_ptr<unsigned char[]> inBuff(new unsigned char[bufSize]);
 
     strm.zalloc = Z_NULL;
     strm.zfree = Z_NULL;
