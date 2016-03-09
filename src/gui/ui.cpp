@@ -932,7 +932,7 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 
 	if (requested(cat, DownloadEnum::CAT_ENGINE) && !battle->EngineExists()) {
 		promptCollection.push_back("engine " + battle->GetEngineName());
-		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE, battle->GetEngineName()));
+		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE,battle->GetEngineName() + " " + battle->GetEngineVersion()));
 	}
 	if (requested(cat, DownloadEnum::CAT_MAP) && !battle->MapExists(false)) {
 		promptCollection.push_back("map " + battle->GetHostMapName());
