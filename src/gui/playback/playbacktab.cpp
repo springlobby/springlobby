@@ -59,7 +59,6 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 {
 	wxLogMessage(_T( "PlaybackTab::PlaybackTab()" ));
 
-	m_replay_loader = new PlaybackLoader(this, true);
 
 	wxBoxSizer* m_main_sizer;
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
@@ -149,8 +148,6 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 	m_filter->Hide();
 
 	SetSizer(m_main_sizer);
-
-	ReloadList();
 
 	//none selected --> shouldn't watch/delete that
 	Deselect();
@@ -349,6 +346,9 @@ void PlaybackTab::ReloadList()
 {
 	Deselect();
 	m_replay_dataview->Clear();
+	if (m_replay_loader == nullptr) {
+		m_replay_loader = new PlaybackLoader(this, true);
+	}
 	m_replay_loader->Run();
 }
 
