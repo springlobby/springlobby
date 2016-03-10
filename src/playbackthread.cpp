@@ -27,8 +27,8 @@ PlaybackLoader::~PlaybackLoader()
 
 void PlaybackLoader::Run()
 {
-	if (!LSL::usync().IsLoaded())
-		return;
+	assert(LSL::usync().IsLoaded());
+
 	if (m_thread_loader)
 		return; // a thread is already running
 

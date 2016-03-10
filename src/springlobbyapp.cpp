@@ -158,10 +158,6 @@ bool SpringLobbyApp::OnInit()
 	// configure unitsync paths before trying to load
 	SlPaths::ReconfigureUnitsync();
 
-	//unitsync first load, NEEDS to be blocking
-	SlPaths::RefreshSpringVersionList();
-	LSL::usync().ReloadUnitSyncLib();
-
 
 	sett().Setup(m_translationhelper);
 
@@ -172,6 +168,12 @@ bool SpringLobbyApp::OnInit()
 	ui().OnInit();
 
 	ui().mw().SetLogWin(loggerwin);
+
+	//unitsync first load, FIXME move to a thread!
+	SlPaths::RefreshSpringVersionList();
+	LSL::usync().ReloadUnitSyncLib();
+	GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
+
 	return true;
 }
 
