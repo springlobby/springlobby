@@ -563,9 +563,13 @@ void MainWindow::OnMenuVersion(wxCommandEvent& /*unused*/)
 
 void MainWindow::OnUnitSyncReload(wxCommandEvent& /*unused*/)
 {
-	LSL::usync().ReloadUnitSyncLib();
+	bool res = LSL::usync().ReloadUnitSyncLib();
 	m_menuEdit->Enable(MENU_SETTINGSPP, LSL::usync().IsLoaded());
-	GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
+	if (res) {
+		GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
+		return;
+	}
+	wxLogWarning("Couldn't reload unitsync");
 }
 
 void MainWindow::MainWindow::OnShowWriteableDir(wxCommandEvent& /*unused*/)

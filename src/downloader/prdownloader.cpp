@@ -113,7 +113,10 @@ private:
 				SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
 				SlPaths::SetUsedSpringIndex(info.filename);
 				//Inform all application components about new engine been available
-				LSL::usync().ReloadUnitSyncLib();
+				if (!LSL::usync().ReloadUnitSyncLib()) {
+					wxLogWarning("Couldn't load downloaded unitsync %s!", info.filename);
+					break;
+				}
 				GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 				break;
 
@@ -123,7 +126,10 @@ private:
 				break;
 			case DownloadEnum::CAT_MAP:
 			case DownloadEnum::CAT_GAME:
-				LSL::usync().ReloadUnitSyncLib();
+				if (!LSL::usync().ReloadUnitSyncLib()) {
+					wxLogWarning("Couldn't reload unitsync!");
+					break;
+				}
 				if (cat == DownloadEnum::CAT_MAP) {
 					LSL::usync().PrefetchMap(m_name);
 				} else {

@@ -171,8 +171,11 @@ bool SpringLobbyApp::OnInit()
 
 	//unitsync first load, FIXME move to a thread!
 	SlPaths::RefreshSpringVersionList();
-	LSL::usync().ReloadUnitSyncLib();
-	GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
+	if (LSL::usync().ReloadUnitSyncLib()) {
+		GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
+	} else {
+		wxLogWarning("Couldn't load unitsync");
+	}
 
 	return true;
 }
