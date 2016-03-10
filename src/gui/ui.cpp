@@ -957,7 +957,8 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 				prompt += promptCollection[i];
 			}
 			prompt += _(" is required to play. Should it be downloaded?");
-			if (wxYES != customMessageBox(SL_MAIN_ICON, prompt, _("Content is missing"), wxYES_NO))
+
+			if (Ask(_("Content is missing"), prompt))
 				return true;
 		}
 
