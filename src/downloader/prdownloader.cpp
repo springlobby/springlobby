@@ -31,15 +31,13 @@ private:
 	std::string m_name;
 	std::string m_filename;
 	bool m_reload;
-	IDownloadItemListener* m_listener;
 
 public:
-	DownloadItem(IDownloadItemListener* listener, const DownloadEnum::Category cat, const std::string& name, const std::string& filename)
+	DownloadItem(const DownloadEnum::Category cat, const std::string& name, const std::string& filename)
 		: m_category(cat)
 		, m_name(name)
 		, m_filename(filename)
 		, m_reload(false)
-		, m_listener(listener)
 	{
 	}
 
@@ -61,7 +59,7 @@ public:
 				results = DownloadSearch(m_category, m_name.c_str());
 		}
 		if (results <= 0) {
-			m_listener->DownloadFailed(this);
+			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 			wxLogInfo("Nothing found to download");
 			return;
 		}
@@ -74,20 +72,20 @@ public:
 		const bool hasdlinfo = DownloadGetInfo(0, info);
 		//In case if something gone wrong
 		if (!hasdlinfo) {
-			m_listener->DownloadFailed(this);
+			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 			return;
 		}
 		m_progress->name = m_name; //update to fetched name
 
-		m_listener->DownloadStarted(this);
+		GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadStarted);
 
 		const bool downloadFailed = DownloadStart();
 
 		if (downloadFailed) {
-			m_listener->DownloadFailed(this);
+			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 		} else {
 			DownloadFinished(m_category, info);
-			m_listener->DownloadFinished(this);
+			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadComplete);
 		}
 	}
 
@@ -206,7 +204,7 @@ void PrDownloader::RemoveTorrentByName(const std::string& /*name*/)
 
 void PrDownloader::Download(DownloadEnum::Category cat, const std::string& filename, const std::string& url)
 {
-	DownloadItem* dl_item = new DownloadItem(this, cat, filename, url);
+	DownloadItem* dl_item = new DownloadItem(cat, filename, url);
 	m_dl_thread->DoWork(dl_item);
 }
 
@@ -265,14 +263,3 @@ void PrDownloader::UpdateApplication(const std::string& updateurl)
 	Download(DownloadEnum::CAT_SPRINGLOBBY, updateurl, dlfilepath);
 }
 
-void PrDownloader::DownloadStarted(const DownloadItem* item) {
-	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadStarted);
-}
-
-void PrDownloader::DownloadFailed(const DownloadItem* item) {
-	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
-}
-
-void PrDownloader::DownloadFinished(const DownloadItem* item) {
-	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadComplete);
-}
