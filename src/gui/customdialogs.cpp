@@ -92,8 +92,10 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon, wxWindow* parent, const wxStrin
 
 	// 3) buttons
 	int center_flag = wxEXPAND;
-	if (style & wxYES_NO)
+	if (style & wxYES_NO) {
+		assert(style & wxCANCEL); // It is recommended to always use wxCANCEL with this style as otherwise the message box won't have a close button under wxMSW and the user will be forced to answer it.
 		center_flag = wxALIGN_CENTRE;
+	}
 
 	if ((style & slButtonSizerFlags) == 0) {
 		style = wxCLOSE;

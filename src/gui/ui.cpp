@@ -203,7 +203,7 @@ void Ui::Quit()
 //! @note this does not return until the user pressed any of the buttons or closed the dialog.
 bool Ui::Ask(const wxString& heading, const wxString& question) const
 {
-	int answer = customMessageBox(SL_MAIN_ICON, question, heading, wxYES_NO);
+	int answer = customMessageBox(SL_MAIN_ICON, question, heading, wxYES_NO|wxCANCEL);
 	return (answer == wxYES);
 }
 
