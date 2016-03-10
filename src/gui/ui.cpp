@@ -931,7 +931,7 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 	std::list<std::pair<DownloadEnum::Category, std::string>> todl;
 
 	if (requested(cat, DownloadEnum::CAT_ENGINE) && !battle->EngineExists()) {
-		promptCollection.push_back("engine " + battle->GetEngineName());
+		promptCollection.push_back("engine " + battle->GetEngineName() + " " + battle->GetEngineVersion());
 		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE,battle->GetEngineName() + " " + battle->GetEngineVersion()));
 	}
 	if (requested(cat, DownloadEnum::CAT_MAP) && !battle->MapExists(false)) {
