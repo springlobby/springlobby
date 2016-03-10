@@ -107,17 +107,24 @@ private:
 			case DownloadEnum::CAT_ENGINE_LINUX:
 			case DownloadEnum::CAT_ENGINE_WINDOWS:
 			case DownloadEnum::CAT_ENGINE_LINUX64:
-			case DownloadEnum::CAT_ENGINE_MACOSX:
+			case DownloadEnum::CAT_ENGINE_MACOSX: {
 				SlPaths::RefreshSpringVersionList(); //FIXME: maybe not thread-save!
-				SlPaths::SetUsedSpringIndex(info.filename);
+				std::string version;
+				const std::string prefix = "spring ";
+				if (m_name.compare(0, prefix.size(), prefix) == 0)
+					version = m_name.substr(prefix.size()); //FIXME: hack
+				else
+					version = m_name;
+
+				SlPaths::SetUsedSpringIndex(version);
 				//Inform all application components about new engine been available
 				if (!LSL::usync().ReloadUnitSyncLib()) {
-					wxLogWarning("Couldn't load downloaded unitsync %s!", info.filename);
+					wxLogWarning("Couldn't load downloaded unitsync %s!", version.c_str());
 					break;
 				}
 				GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 				break;
-
+			}
 			case DownloadEnum::CAT_SPRINGLOBBY:
 				fileSystem->extract(info.filename, SlPaths::GetUpdateDir());
 				GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
@@ -204,6 +211,7 @@ void PrDownloader::RemoveTorrentByName(const std::string& /*name*/)
 
 void PrDownloader::Download(DownloadEnum::Category cat, const std::string& filename, const std::string& url)
 {
+	wxLogDebug("Starting download of %s, %s %d", filename.c_str(), url.c_str(), cat);
 	DownloadItem* dl_item = new DownloadItem(cat, filename, url);
 	m_dl_thread->DoWork(dl_item);
 }
