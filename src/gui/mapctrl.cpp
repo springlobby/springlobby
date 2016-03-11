@@ -1449,7 +1449,7 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 				m_battle->Update(stdprintf("%d_mapname", LSL::Enum::PrivateOptions));
 				UpdateMinimap();
 			} else if (m_mdown_area == Download) {
-				ui().NeedsDownload(m_battle);
+				ui().NeedsDownload(m_battle, false, DownloadEnum::CAT_MAP);
 			}
 		}
 		m_mdown_area = Main;
