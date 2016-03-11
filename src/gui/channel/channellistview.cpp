@@ -37,6 +37,8 @@ void ChannelListView::AddChannel(const wxString& channel,
 }
 
 void ChannelListView::ClearChannels() {
+	m_realChannelCollection.clear();
+
 	Clear();
 }
 
