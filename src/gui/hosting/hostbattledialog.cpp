@@ -479,7 +479,7 @@ void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 
 	LSL::UnitsyncMap map;
 	const auto mname = STD_STRING(sett().GetLastHostMap());
-	if (LSL::usync().MapExists(mname)) {
+	if (!mname.empty() && LSL::usync().MapExists(mname)) {
 		map = LSL::usync().GetMap(mname);
 	} else {
 		std::vector<std::string> maps = LSL::usync().GetMapList();
