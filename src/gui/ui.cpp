@@ -958,7 +958,7 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 			}
 			prompt += _(" is required to play. Should it be downloaded?");
 
-			if (Ask(_("Content is missing"), prompt))
+			if (!Ask(_("Content is missing"), prompt))
 				return true;
 		}
 
