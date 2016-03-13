@@ -115,7 +115,6 @@ void TaskBar::OnTimer(wxTimerEvent&)
 
 void TaskBar::UpdateProgress()
 {
-	Freeze();
 
 	PrDownloader::DownloadProgress p;
 	prDownloader().GetProgress(p);
@@ -124,5 +123,4 @@ void TaskBar::UpdateProgress()
 	text->SetLabel(wxString::Format(_("Downloading %s"), p.name));
 	gauge->SetValue(progress);
 
-	Thaw();
 }

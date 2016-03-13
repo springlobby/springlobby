@@ -396,7 +396,6 @@ void BattleRoomTab::SplitSizerHorizontally(const bool horizontal)
 
 void BattleRoomTab::UpdateBattleInfo()
 {
-	Freeze();
 
 	if (!m_battle)
 		return;
@@ -408,7 +407,6 @@ void BattleRoomTab::UpdateBattleInfo()
 	}
 	UpdateMapInfoSummary();
 
-	Thaw();
 }
 
 void BattleRoomTab::PrintAllySetup()
@@ -1204,7 +1202,6 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 void BattleRoomTab::RegenerateOptionsList()
 {
 	long pos = 0;
-	m_opts_list->Freeze(); /*Try to prevent flickering*/
 
 	m_opts_list->DeleteAllItems();
 	m_opts_list->InsertItem(pos, _("Size"));
@@ -1244,7 +1241,6 @@ void BattleRoomTab::RegenerateOptionsList()
 		}
 	}
 
-	m_opts_list->Thaw();
 }
 
 void BattleRoomTab::OnBattleActionEvent(UiEvents::UiEventData data)
