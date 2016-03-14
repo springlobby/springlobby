@@ -58,9 +58,7 @@ Battle::~Battle()
 {
 	wxDELETE(m_timer);
 	wxDELETE(m_autohost_manager);
-	if (m_is_self_in) {
-		Leave();
-	}
+	Leave();
 }
 
 
@@ -95,8 +93,11 @@ void Battle::Join(const std::string& password)
 
 void Battle::Leave()
 {
-	GlobalEventManager::Instance()->UnSubscribe(this, GlobalEventManager::OnUnitsyncReloaded);
 	m_serv.LeaveBattle(m_opts.battleid);
+	if (!m_is_self_in) {
+		return;
+	}
+	GlobalEventManager::Instance()->UnSubscribe(this, GlobalEventManager::OnUnitsyncReloaded);
 	m_is_self_in = false;
 }
 
