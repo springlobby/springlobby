@@ -130,9 +130,8 @@ void ServerEvents::OnPong(wxLongLong ping_time)
 void ServerEvents::OnNewUser(const std::string& nick, const std::string& country, int cpu, int id)
 {
 	slLogDebugFunc("");
-	try {
-		ASSERT_LOGIC(!m_serv.UserExists(nick), ("New user from server, but already exists!"));
-	} catch (...) {
+	if (m_serv.UserExists(nick)) {
+		wxLogWarning("New user from server, but already exists: %s", nick.c_str());
 		return;
 	}
 	User& user = m_serv._AddUser(nick);
