@@ -188,6 +188,8 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 		bundle.unitsync = GetUnitSync(configsection);
 		bundle.spring = GetSpringBinary(configsection);
 		bundle.version = configsection;
+		if (!bundle.IsValid()) //skip broken bundles
+			continue;
 		usync_paths.push_back(bundle);
 	}
 
