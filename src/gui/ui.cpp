@@ -298,10 +298,10 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 		return;
 	}
 	std::map<std::string, LSL::SpringBundle> enginebundles = SlPaths::GetSpringVersionList();
-	if (enginebundles.size() == 0) {
-		if (Ask(_("Spring can't be found"), wxString::Format(_T("No useable spring engine can be found, download it? (spring %s)"), version.c_str()))) {
-			PrDownloader().Download(DownloadEnum::CAT_ENGINE, "spring " + STD_STRING(version));
-		}
+	if (!GetCompatibleVersion(version).empty())
+		return;
+	if (Ask(_("Spring can't be found"), wxString::Format(_T("No engine compatible to the lobby server default version spring %s can be found, try download it?"), version.c_str()))) {
+		PrDownloader().Download(DownloadEnum::CAT_ENGINE, "spring " + STD_STRING(version));
 	}
 }
 
