@@ -93,10 +93,10 @@ void Battle::Join(const std::string& password)
 
 void Battle::Leave()
 {
-	m_serv.LeaveBattle(m_opts.battleid);
 	if (!m_is_self_in) {
 		return;
 	}
+	m_serv.LeaveBattle(m_opts.battleid);
 	GlobalEventManager::Instance()->UnSubscribe(this, GlobalEventManager::OnUnitsyncReloaded);
 	m_is_self_in = false;
 }
