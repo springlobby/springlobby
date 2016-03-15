@@ -282,4 +282,12 @@ BOOST_AUTO_TEST_CASE(tasutils)
 	BOOST_CHECK(!GetBoolParam(input));
 	BOOST_CHECK( GetBoolParam(input));
 	BOOST_CHECK(input.empty());
+
+	BOOST_CHECK(LSL::Util::ToLower("AbCdEfghIJ") == "abcdefghij");
+	BOOST_CHECK(LSL::Util::ToLower("A") == "a");
+	BOOST_CHECK(LSL::Util::ToLower("") == "");
+
+
+	BOOST_CHECK(LSL::Util::FromLongString("1238129312390") == 1238129312390l);
+	BOOST_CHECK(LSL::Util::FromLongString("-1238129312390") == -1238129312390l);
 }
