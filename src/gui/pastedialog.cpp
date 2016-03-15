@@ -48,7 +48,7 @@ PasteDialog::PasteDialog(wxWindow* parent, const wxString& message)
 	m_main_sizer->Add(0, 10);
 
 	// 3) buttons
-	wxSizer* sizerBtn = CreateButtonSizer(wxYES_NO);
+	wxSizer* sizerBtn = CreateButtonSizer(wxYES_NO | wxCANCEL);
 	if (sizerBtn) {
 		wxButton* but = new wxButton(this, ID_PASTE_BUTTON, _("Use pastebin"));
 		sizerBtn->Add(but, 0, wxALL, 10);

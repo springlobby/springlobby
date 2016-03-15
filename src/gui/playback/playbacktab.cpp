@@ -269,7 +269,7 @@ void PlaybackTab::OnWatch(wxCommandEvent& /*unused*/)
 
 void PlaybackTab::AskForceWatch(StoredGame& rep) const
 {
-	if (customMessageBox(SL_MAIN_ICON, _("I don't think you will be able to watch this replay.\nTry anyways? (MIGHT CRASH!)"), _("Invalid replay"), wxYES_NO | wxICON_QUESTION) == wxYES) {
+	if (customMessageBox(SL_MAIN_ICON, _("I don't think you will be able to watch this replay.\nTry anyways? (MIGHT CRASH!)"), _("Invalid replay"), wxYES_NO | wxICON_QUESTION | wxCANCEL) == wxYES) {
 		rep.battle.StartSpring();
 	}
 }

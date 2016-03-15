@@ -252,7 +252,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event)
 			break;
 
 		case ID_MENUITEM_RESET:
-			if ((customMessageBox(SS_MAIN_ICON, _("Reset ALL settings to default values?"), _("Confirmation needed"), wxYES_NO)) == wxYES) {
+			if ((customMessageBox(SS_MAIN_ICON, _("Reset ALL settings to default values?"), _("Confirmation needed"), wxYES_NO | wxCANCEL)) == wxYES) {
 				resetSettings();
 			}
 			break;

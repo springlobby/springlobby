@@ -593,7 +593,7 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 	if (m_battle->IsFounderMe()) {
 		m_battle->GetMe().BattleStatus().ready = true;
 		if (!m_battle->IsEveryoneReady()) {
-			int answer = customMessageBox(SL_MAIN_ICON, _("Some Players are not ready yet\nDo you want to force start?"), _("Not ready"), wxYES_NO);
+			int answer = customMessageBox(SL_MAIN_ICON, _("Some Players are not ready yet\nDo you want to force start?"), _("Not ready"), wxYES_NO | wxCANCEL);
 			if (answer == wxNO)
 				return;
 		}

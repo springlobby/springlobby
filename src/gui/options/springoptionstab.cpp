@@ -349,7 +349,7 @@ void SpringOptionsTab::OnDontSearch(wxCommandEvent& /*unused*/)
 
 void SpringOptionsTab::OnDataDir(wxCommandEvent& /*unused*/)
 {
-	int result = wxMessageBox(_("Do you want to change spring's datadir location? (select yes only if you know what you're doing)"), _("Data dir wizard"), wxICON_QUESTION | wxYES_NO, &ui().mw());
+	int result = wxMessageBox(_("Do you want to change spring's datadir location? (select yes only if you know what you're doing)"), _("Data dir wizard"), wxICON_QUESTION | wxYES_NO | wxCANCEL, &ui().mw());
 
 	if (result != wxYES) {
 		return;
