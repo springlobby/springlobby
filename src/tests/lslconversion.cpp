@@ -11,6 +11,7 @@
 #include "user.h"
 #include "utils/lslconversion.h"
 #include "utils/conversion.h"
+#include "utils/tasutil.h"
 
 
 void test_wxColourTolsl(const unsigned char red, const unsigned char green, const unsigned char blue, const unsigned char alpha)
@@ -253,4 +254,32 @@ BOOST_AUTO_TEST_CASE(tokenize)
 	v = LSL::Util::StringTokenize("0 ", " :");
 	BOOST_CHECK(v.size() == 1);
 	BOOST_CHECK(v[0] == "0");
+}
+
+
+BOOST_AUTO_TEST_CASE(tasutils)
+{
+	std::string input = "BATTLECLOSED 18172";
+	BOOST_CHECK(GetWordParam(input) == "BATTLECLOSED");
+	BOOST_CHECK(GetIntParam(input) == 18172);
+	BOOST_CHECK(input.empty());
+
+	input = "A B C";
+
+	BOOST_CHECK(GetParamByChar(input, ' ') == "A");
+	BOOST_CHECK(GetParamByChar(input, ' ') == "B");
+	BOOST_CHECK(GetParamByChar(input, ' ') == "C");
+	BOOST_CHECK(input.empty());
+
+	input = "A\tB\tC";
+	BOOST_CHECK(GetSentenceParam(input) == "A");
+	BOOST_CHECK(GetSentenceParam(input) == "B");
+	BOOST_CHECK(GetSentenceParam(input) == "C");
+	BOOST_CHECK(input.empty());
+
+	input = "1 0 1";
+	BOOST_CHECK( GetBoolParam(input));
+	BOOST_CHECK(!GetBoolParam(input));
+	BOOST_CHECK( GetBoolParam(input));
+	BOOST_CHECK(input.empty());
 }
