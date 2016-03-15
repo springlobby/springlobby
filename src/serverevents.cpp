@@ -555,14 +555,13 @@ void ServerEvents::OnBattleInfoUpdated(int battleid)
 void ServerEvents::OnBattleClosed(int battleid)
 {
 	slLogDebugFunc("");
-	try {
-		IBattle& battle = m_serv.GetBattle(battleid);
-
-		ui().OnBattleClosed(battle);
-
-		m_serv._RemoveBattle(battleid);
-	} catch (assert_exception) {
+	if (!m_serv.BattleExists(battleid)) {
+		wxLogWarning("Tried to close non-existing battle %d", battleid);
+		return;
 	}
+	IBattle& battle = m_serv.GetBattle(battleid);
+	ui().OnBattleClosed(battle);
+	m_serv._RemoveBattle(battleid);
 }
 
 
