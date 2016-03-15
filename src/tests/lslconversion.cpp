@@ -269,18 +269,21 @@ BOOST_AUTO_TEST_CASE(tasutils)
 	BOOST_CHECK(GetParamByChar(input, ' ') == "A");
 	BOOST_CHECK(GetParamByChar(input, ' ') == "B");
 	BOOST_CHECK(GetParamByChar(input, ' ') == "C");
+	BOOST_CHECK(GetParamByChar(input, ' ').empty());
 	BOOST_CHECK(input.empty());
 
 	input = "A\tB\tC";
 	BOOST_CHECK(GetSentenceParam(input) == "A");
 	BOOST_CHECK(GetSentenceParam(input) == "B");
 	BOOST_CHECK(GetSentenceParam(input) == "C");
+	BOOST_CHECK(GetSentenceParam(input).empty());
 	BOOST_CHECK(input.empty());
 
 	input = "1 0 1";
 	BOOST_CHECK( GetBoolParam(input));
 	BOOST_CHECK(!GetBoolParam(input));
 	BOOST_CHECK( GetBoolParam(input));
+	BOOST_CHECK(!GetBoolParam(input)); //input is already empty
 	BOOST_CHECK(input.empty());
 
 	BOOST_CHECK(LSL::Util::ToLower("AbCdEfghIJ") == "abcdefghij");
@@ -290,4 +293,5 @@ BOOST_AUTO_TEST_CASE(tasutils)
 
 	BOOST_CHECK(LSL::Util::FromLongString("1238129312390") == 1238129312390l);
 	BOOST_CHECK(LSL::Util::FromLongString("-1238129312390") == -1238129312390l);
+	BOOST_CHECK(LSL::Util::FromLongString("") == 0l);
 }
