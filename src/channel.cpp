@@ -207,13 +207,13 @@ bool Channel::ExecuteSayCommand(const std::string& in)
 	if (in[0] != '/')
 		return false;
 
-	wxString subcmd = TowxString(in).BeforeFirst(' ').Lower();
-	wxString params = TowxString(in).AfterFirst(' ');
+	std::string subcmd = LSL::Util::ToLower(LSL::Util::BeforeFirst(in, " "));
+	std::string params = LSL::Util::AfterFirst(in, " ");
 
-	wxString cmdline = TowxString(in);
-	wxString param = TowxString(GetWordParam(cmdline));
+	std::string cmdline = in;
+	std::string param = GetWordParam(cmdline);
 	if (param == _T("/me")) {
-		DoAction(STD_STRING(cmdline));
+		DoAction(cmdline);
 		return true;
 	} else if ((in == "/part") || (in == "/p")) {
 		Leave();
@@ -224,14 +224,14 @@ bool Channel::ExecuteSayCommand(const std::string& in)
 		DoAction("is using SpringLobby v" + getSpringlobbyVersion());
 		return true;
 	} else if (subcmd == _T("/userban")) {
-		m_banned_users.insert(STD_STRING(params));
-		m_serv.SayPrivate("ChanServ", stdprintf("!kick #%s %s", GetName().c_str(), STD_STRING(params).c_str()));
+		m_banned_users.insert(params);
+		m_serv.SayPrivate("ChanServ", stdprintf("!kick #%s %s", GetName().c_str(), params.c_str()));
 		return true;
 	} else if (subcmd == _T("/userunban")) {
-		m_banned_users.erase(STD_STRING(params));
+		m_banned_users.erase(params);
 		return true;
 	} else if (subcmd == _T("/banregex")) {
-		ui().OnChannelMessage(*this, "/banregex " + STD_STRING(params));
+		ui().OnChannelMessage(*this, "/banregex " + params);
 		m_do_ban_regex = !params.empty();
 		if (m_do_ban_regex) {
 #ifdef wxHAS_REGEX_ADVANCED
@@ -244,7 +244,7 @@ bool Channel::ExecuteSayCommand(const std::string& in)
 		}
 		return true;
 	} else if (subcmd == _T("/unbanregex")) {
-		ui().OnChannelMessage(*this, "/unbanregex " + STD_STRING(params));
+		ui().OnChannelMessage(*this, "/unbanregex " + params);
 		m_do_unban_regex = !params.empty();
 		if (m_do_unban_regex) {
 #ifdef wxHAS_REGEX_ADVANCED
@@ -257,18 +257,18 @@ bool Channel::ExecuteSayCommand(const std::string& in)
 		}
 		return true;
 	} else if (subcmd == _T("/checkban")) {
-		if (IsBanned(STD_STRING(params))) {
-			ui().OnChannelMessage(*this, STD_STRING(params) + " is banned");
+		if (IsBanned(params)) {
+			ui().OnChannelMessage(*this, params + " is banned");
 		} else {
-			ui().OnChannelMessage(*this, STD_STRING(params) + " is not banned");
+			ui().OnChannelMessage(*this, params + " is not banned");
 		}
 		return true;
 	}
 
 
 	else if (subcmd == _T("/banregexmsg")) {
-		ui().OnChannelMessage(*this, "/banregexmsg " + STD_STRING(params));
-		m_ban_regex_msg = STD_STRING(params);
+		ui().OnChannelMessage(*this, "/banregexmsg " + params);
+		m_ban_regex_msg = params;
 		return true;
 	}
 

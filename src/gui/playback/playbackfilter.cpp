@@ -83,7 +83,9 @@ PlaybackListFilter::PlaybackListFilter(wxWindow* parent, wxWindowID id, Playback
 		m_filter_player_choiceChoices.Add(i.ToString());
 
 	m_filter_player_choice = new wxChoice(this, PLAYBACK_FILTER_PLAYER_CHOICE, wxDefaultPosition, wxSize(-1, -1), m_filter_player_choiceChoices, 0);
-	m_filter_player_choice->SetSelection(GetIntParam(f_values.player_num));
+	long value = 0;
+	value = f_values.player_num.ToLong(&value);
+	m_filter_player_choice->SetSelection(value);
 	if (m_filter_player_choice->GetSelection() == -1)
 		m_filter_player_choice->SetSelection(0);
 

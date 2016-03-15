@@ -282,7 +282,7 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 	}
 
 	// register new nick
-	if (!IsValidNickname(m_regnick_text->GetValue())) {
+	if (!IsValidNickname(STD_STRING(m_regnick_text->GetValue()))) {
 		OnRegistrationDenied(_("The entered nickname contains invalid characters like )? &%.\n Please try again"));
 		return;
 	}

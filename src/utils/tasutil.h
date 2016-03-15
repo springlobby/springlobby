@@ -3,18 +3,16 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_SERVERUTIL_H
 #define SPRINGLOBBY_HEADERGUARD_SERVERUTIL_H
 
-#include <wx/string.h>
-#include <wx/wxchar.h>
-class wxString;
+#include <string>
 
-std::string GetWordParam(wxString& params);
-std::string GetSentenceParam(wxString& params);
-long GetIntParam(wxString& params);
-bool GetBoolParam(wxString& params);
-wxString GetParamByChar(wxString& params, const wxChar& sep);
+std::string GetWordParam(std::string& params);
+std::string GetSentenceParam(std::string& params);
+long GetIntParam(std::string& params);
+bool GetBoolParam(std::string& params);
+std::string GetParamByChar(std::string& params, const char sep);
 
 //! matches against regex for printable ascii chars, excluding space
-bool IsValidNickname(const wxString& name);
+bool IsValidNickname(const std::string& name);
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_SERVERUTIL_H

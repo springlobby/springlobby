@@ -932,7 +932,7 @@ void ServerEvents::OnMutelistItem(const std::string& /*unused*/, const std::stri
 {
 	wxString message = TowxString(mutee);
 	wxString desc = TowxString(description);
-	wxString mutetime = TowxString(GetWordParam(desc));
+	wxString mutetime = desc.AfterFirst(wxChar(' '));
 	long time;
 	if (mutetime == _T("indefinite"))
 		message << _(" indefinite time remaining");

@@ -28,7 +28,7 @@ const int battleid = 1;
 
 void OfflineServer::SendCmd(const std::string& command, const std::string& param, bool /*relay*/)
 {
-	wxString p = param;
+	std::string p = param;
 	if (command == "OPENBATTLE") {
 		const int type = GetIntParam(p);
 		const int nat = GetIntParam(p);

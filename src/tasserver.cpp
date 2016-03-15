@@ -513,7 +513,7 @@ static LSL::StringMap parseKeyValue(const std::string& str)
 
 void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inparams, int replyid)
 {
-	wxString params = TowxString(inparams);
+	std::string params = inparams;
 	std::string nick, contry, host, map, title, channel, error, msg, owner, topic, engineName, engineVersion;
 	//NatType ntype;
 	UserStatus cstatus;
@@ -529,16 +529,16 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_server_lanmode = lanmode;
 		m_se->OnConnected(m_serverinfo.description, "", (m_ser_ver > 0), supported_spring_version, lanmode);
 	} else if (cmd == "ACCEPTED") {
-		SetUsername(STD_STRING(params));
+		SetUsername(params);
 		m_se->OnLogin();
 	} else if (cmd == "MOTD") {
-		m_se->OnMotd(STD_STRING(params));
+		m_se->OnMotd(params);
 	} else if (cmd == "ADDUSER") {
 		int id;
 		nick = GetWordParam(params);
 		contry = GetWordParam(params);
 		const int cpu = GetIntParam(params);
-		if (params.IsEmpty()) {
+		if (params.empty()) {
 			// if server didn't send any account id to us, fill with an always increasing number
 			id = m_account_id_count;
 			m_account_id_count++;
@@ -626,7 +626,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "SAID") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
-		m_se->OnChannelSaid(channel, nick, STD_STRING(params));
+		m_se->OnChannelSaid(channel, nick, params);
 	} else if (cmd == "JOINED") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
@@ -640,12 +640,12 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
 		int pos = GetIntParam(params);
-		params.Replace(_T("\\n"), _T("\n"));
-		m_se->OnChannelTopic(channel, nick, STD_STRING(params), pos / 1000);
+		params = LSL::Util::Replace(params, "\\n", "\n");
+		m_se->OnChannelTopic(channel, nick, params, pos / 1000);
 	} else if (cmd == "SAIDEX") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
-		m_se->OnChannelAction(channel, nick, STD_STRING(params));
+		m_se->OnChannelAction(channel, nick, params);
 	} else if (cmd == "CLIENTS") {
 		channel = GetWordParam(params);
 		while (!(nick = GetWordParam(params)).empty()) {
@@ -653,24 +653,24 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		}
 	} else if (cmd == "SAYPRIVATE") {
 		nick = GetWordParam(params);
-		if (((nick == m_relay_host_bot) || (nick == m_relay_host_manager)) && params.StartsWith(_T("!")))
+		if (((nick == m_relay_host_bot) || (nick == m_relay_host_manager)) && LSL::Util::BeginsWith(params, "!"))
 			return; // drop the message
-		if ((nick == "RelayHostManagerList") && (params == _T("!lm")))
+		if ((nick == "RelayHostManagerList") && (params == "!lm"))
 			return; // drop the message
 		if (nick == "SL_bot") {
-			if (params.StartsWith(_T("stats.report")))
+			if (LSL::Util::BeginsWith(params, "stats.report"))
 				return;
 		}
 		User& user = GetUser(nick);
-		m_se->OnPrivateMessage(user, GetMe(), STD_STRING(params));
+		m_se->OnPrivateMessage(user, GetMe(), params);
 	} else if (cmd == "SAYPRIVATEEX") {
 		nick = GetWordParam(params);
 		User& user = GetUser(nick);
-		m_se->OnPrivateMessageEx(user, GetMe(), STD_STRING(params));
+		m_se->OnPrivateMessageEx(user, GetMe(), params);
 	} else if (cmd == "SAIDPRIVATE") {
 		nick = GetWordParam(params);
 		if (nick == m_relay_host_bot) {
-			if (params.StartsWith(_T("JOINEDBATTLE"))) {
+			if (LSL::Util::BeginsWith(params, "JOINEDBATTLE")) {
 				GetWordParam(params); // skip first word, it's the message itself
 				/*id =*/
 				GetIntParam(params);
@@ -691,27 +691,27 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 			}
 		}
 		if (nick == m_relay_host_manager) {
-			if (params.StartsWith(_T("\001"))) { // error code
-				m_se->OnServerMessageBox(STD_STRING(params.AfterFirst(_T(' '))));
+			if (LSL::Util::BeginsWith(params,"\001")) { // error code
+				m_se->OnServerMessageBox(LSL::Util::AfterFirst(params, " "));
 			} else {
-				m_relay_host_bot = STD_STRING(params);
+				m_relay_host_bot = params;
 			}
 			m_relay_host_manager.clear();
 			return;
 		}
 		if (nick == "RelayHostManagerList") {
-			if (params.StartsWith(_T("list "))) {
-				const std::string list = LSL::Util::AfterFirst(STD_STRING(params), " ");
+			if (LSL::Util::BeginsWith(params, "list ")) {
+				const std::string list = LSL::Util::AfterFirst(params, " ");
 				m_relay_host_manager_list = LSL::Util::StringTokenize(list, "\t");
 				return;
 			}
 		}
 		User& user = GetUser(nick);
-		m_se->OnPrivateMessage(user, user, STD_STRING(params));
+		m_se->OnPrivateMessage(user, user, params);
 	} else if (cmd == "SAIDPRIVATEEX") {
 		nick = GetWordParam(params);
 		User& user = GetUser(nick);
-		m_se->OnPrivateMessageEx(user, user, STD_STRING(params));
+		m_se->OnPrivateMessageEx(user, user, params);
 	} else if (cmd == "JOINBATTLE") {
 		const int id = GetIntParam(params);
 		const std::string hash = LSL::Util::MakeHashUnsigned(GetWordParam(params));
@@ -766,10 +766,10 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_se->OnRequestBattleStatus(m_battle_id);
 	} else if (cmd == "SAIDBATTLE") {
 		nick = GetWordParam(params);
-		m_se->OnSaidBattle(m_battle_id, nick, STD_STRING(params));
+		m_se->OnSaidBattle(m_battle_id, nick, params);
 	} else if (cmd == "SAIDBATTLEEX") {
 		nick = GetWordParam(params);
-		m_se->OnBattleAction(m_battle_id, nick, STD_STRING(params));
+		m_se->OnBattleAction(m_battle_id, nick, params);
 	} else if (cmd == "AGREEMENT") {
 		msg = GetSentenceParam(params);
 		m_agreement += msg + "\n";
@@ -817,7 +817,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_se->OnRing(nick);
 		//RING username
 	} else if (cmd == "SERVERMSG") {
-		m_se->OnServerMessage(STD_STRING(params));
+		m_se->OnServerMessage(params);
 		//SERVERMSG {message}
 	} else if (cmd == "JOINBATTLEFAILED") {
 		msg = GetSentenceParam(params);
@@ -834,7 +834,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		//JOINFAILED channame {reason}
 	} else if (cmd == "CHANNELMESSAGE") {
 		channel = GetWordParam(params);
-		m_se->OnChannelMessage(channel, STD_STRING(params));
+		m_se->OnChannelMessage(channel, params);
 		//CHANNELMESSAGE channame {message}
 	} else if (cmd == "FORCELEAVECHANNEL") {
 		channel = GetWordParam(params);
@@ -885,15 +885,15 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_se->OnScriptEnd(m_battle_id);
 		// !! Command: "SCRIPTEND" params: ""
 	} else if (cmd == "SCRIPT") {
-		m_se->OnScriptLine(m_battle_id, STD_STRING(params));
+		m_se->OnScriptLine(m_battle_id, params);
 		// !! Command: "SCRIPT" params: "[game]"
 	} else if (cmd == "FORCEQUITBATTLE") {
 		m_relay_host_bot.clear();
 		m_se->OnKickedFromBattle();
 	} else if (cmd == "BROADCAST") {
-		m_se->OnServerBroadcast(STD_STRING(params));
+		m_se->OnServerBroadcast(params);
 	} else if (cmd == "SERVERMSGBOX") {
-		m_se->OnServerMessageBox(STD_STRING(params));
+		m_se->OnServerMessageBox(params);
 	} else if (cmd == "REDIRECT") {
 		if (m_online)
 			return;
@@ -923,7 +923,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "REGISTRATIONACCEPTED") {
 		m_se->RegistrationAccepted(GetUserName(), GetPassword());
 	} else if (cmd == "REGISTRATIONDENIED") {
-		m_se->RegistrationDenied(STD_STRING(params));
+		m_se->RegistrationDenied(params);
 	} else if (cmd == "LISTSUBSCRIPTION") {
 		const LSL::StringMap keyvals = parseKeyValue(GetWordParam(params));
 		const std::string keyname = "chanName";
@@ -936,7 +936,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		//m_se->OnSubscriptons();
 	} else {
 		wxLogWarning(wxString::Format(_T("??? Cmd: %s params: %s"), TowxString(cmd).c_str(), params.c_str()));
-		m_se->OnUnknownCommand(cmd, STD_STRING(params));
+		m_se->OnUnknownCommand(cmd, params);
 	}
 }
 

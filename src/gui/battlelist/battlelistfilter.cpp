@@ -158,7 +158,9 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	m_filter_rank_choice->Append(_T("7"), wxBitmap(rank6_xpm));
 	m_filter_rank_choice->Append(_T("8"), wxBitmap(rank7_xpm));
 
-	m_filter_rank_choice->SetSelection(GetIntParam(f_values.rank));
+	long value = 0;
+	value = f_values.rank.ToLong(&value);
+	m_filter_rank_choice->SetSelection(value);
 	m_filter_rank_choice->SetMinSize(wxSize(60, -1));
 
 	m_filter_rank_sizer->Add(m_filter_rank_choice, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
@@ -228,7 +230,10 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 		m_filter_player_choiceChoices.Add(i.ToString());
 
 	m_filter_player_choice = new wxChoice(this, BATTLE_FILTER_PLAYER_CHOICE, wxDefaultPosition, wxSize(-1, -1), m_filter_player_choiceChoices, 0);
-	m_filter_player_choice->SetSelection(GetIntParam(f_values.player_num));
+
+	value = 0;
+	value = f_values.player_num.ToLong(&value);
+	m_filter_player_choice->SetSelection(value);
 	m_filter_player_choice->SetMinSize(wxSize(60, -1));
 
 	m_filter_player_sizer->Add(m_filter_player_choice, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
@@ -284,7 +289,9 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 		m_filter_maxplayer_choiceChoices.Add(i.ToString());
 
 	m_filter_maxplayer_choice = new wxChoice(this, BATTLE_FILTER_MAXPLAYER_CHOICE, wxDefaultPosition, wxSize(-1, -1), m_filter_maxplayer_choiceChoices, 0);
-	m_filter_maxplayer_choice->SetSelection(GetIntParam(f_values.maxplayer));
+	value = 0;
+	f_values.maxplayer.ToLong(&value);
+	m_filter_maxplayer_choice->SetSelection(value);
 	m_filter_maxplayer_choice->SetMinSize(wxSize(60, -1));
 
 	m_filter_maxplayer_sizer->Add(m_filter_maxplayer_choice, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
@@ -341,7 +348,9 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 		m_filter_spectator_choiceChoices.Add(i.ToString());
 
 	m_filter_spectator_choice = new wxChoice(this, BATTLE_FILTER_SPECTATOR_CHOICE, wxDefaultPosition, wxSize(-1, -1), m_filter_spectator_choiceChoices, 0);
-	m_filter_spectator_choice->SetSelection(GetIntParam(f_values.spectator));
+	value = 0;
+	f_values.spectator.ToLong(&value);
+	m_filter_spectator_choice->SetSelection(value);
 	m_filter_spectator_choice->SetMinSize(wxSize(60, -1));
 
 	m_filter_spectator_sizer->Add(m_filter_spectator_choice, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
