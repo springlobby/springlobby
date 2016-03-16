@@ -86,19 +86,12 @@ void Battle::Join(const std::string& password)
 		m_autohost_manager->SetBattle(this);
 	}
 	m_serv.JoinBattle(m_opts.battleid, password);
-	m_is_self_in = true;
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
 }
 
 
 void Battle::Leave()
 {
-	if (!m_is_self_in) {
-		return;
-	}
 	m_serv.LeaveBattle(m_opts.battleid);
-	GlobalEventManager::Instance()->UnSubscribe(this, GlobalEventManager::OnUnitsyncReloaded);
-	m_is_self_in = false;
 }
 
 void Battle::OnPlayerTrueskillChanged(const std::string& NickName, double TrueSkill)
@@ -234,6 +227,11 @@ User& Battle::OnUserAdded(User& user)
 	user.SetBattle(this);
 	user.BattleStatus().isfromdemo = false;
 
+	if (&user == &GetMe()) {
+		m_is_self_in = true;
+		GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
+	}
+
 	if (IsFounderMe()) {
 		if (CheckBan(user))
 			return user;
@@ -303,6 +301,11 @@ void Battle::OnUserRemoved(User& user)
 	m_ah.OnUserRemoved(user);
 	IBattle::OnUserRemoved(user);
 	ShouldAutoUnspec();
+
+	if (&user == &GetMe()) {
+		GlobalEventManager::Instance()->UnSubscribe(this, GlobalEventManager::OnUnitsyncReloaded);
+		m_is_self_in = false;
+	}
 }
 
 
