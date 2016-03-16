@@ -59,6 +59,10 @@ Battle::~Battle()
 	wxDELETE(m_timer);
 	wxDELETE(m_autohost_manager);
 	Leave();
+	if (m_is_self_in) {
+		GlobalEventManager::Instance()->UnSubscribe(this, GlobalEventManager::OnUnitsyncReloaded);
+		m_is_self_in = false;
+	}
 }
 
 
@@ -139,13 +143,6 @@ void Battle::SetImReady(bool ready)
 	//m_serv.GetMe().SetBattleStatus( bs );
 	SendMyBattleStatus();
 }
-
-
-/*bool Battle::HasMod()
-{
-  return LSL::usync().GameExists( m_opts.gamename );
-}*/
-
 
 void Battle::Say(const std::string& msg)
 {
@@ -228,6 +225,7 @@ User& Battle::OnUserAdded(User& user)
 	user.BattleStatus().isfromdemo = false;
 
 	if (&user == &GetMe()) {
+		assert(!m_is_self_in);
 		m_is_self_in = true;
 		GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
 	}
@@ -304,7 +302,6 @@ void Battle::OnUserRemoved(User& user)
 
 	if (&user == &GetMe()) {
 		GlobalEventManager::Instance()->UnSubscribe(this, GlobalEventManager::OnUnitsyncReloaded);
-		m_is_self_in = false;
 	}
 }
 
