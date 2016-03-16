@@ -188,8 +188,6 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 		bundle.unitsync = GetUnitSync(configsection);
 		bundle.spring = GetSpringBinary(configsection);
 		bundle.version = configsection;
-		if (!bundle.IsValid()) //skip broken bundles
-			continue;
 		usync_paths.push_back(bundle);
 	}
 
@@ -197,14 +195,28 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 
 	m_spring_versions.clear();
 	try {
-		const auto versions = LSL::SpringBundle::GetSpringVersionList(usync_paths);
-		for (const auto pair : versions) {
-			const LSL::SpringBundle& bundle = pair.second;
+		auto versions = LSL::SpringBundle::GetSpringVersionList(usync_paths);
+		const std::string defaultver = GetCurrentUsedSpringIndex();
+		std::string lastver;
+		bool defaultexists = false;
+		for (auto& pair : versions) {
+			LSL::SpringBundle& bundle = pair.second;
 			const std::string version = bundle.version;
+			if (!bundle.IsValid()) {
+				wxLogWarning("Invalid spring bundle: %s", version.c_str());
+				continue;
+			}
 			m_spring_versions[version] = bundle;
 			SetSpringBinary(version, bundle.spring);
 			SetUnitSync(version, bundle.unitsync);
 			SetBundle(version, bundle.path);
+			lastver = version;
+			if (version == defaultver)
+				defaultexists = true;
+		}
+		if (!defaultexists) {
+			wxLogWarning("The default engine version couldn't be found, resetting to %s", lastver.c_str());
+			SetUsedSpringIndex(lastver);
 		}
 	} catch (const std::runtime_error& e) {
 		wxLogError(wxString::Format(_T("Couldn't get list of spring versions: %s"), e.what()));
