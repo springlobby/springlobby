@@ -7,6 +7,8 @@
 
 #include "bitmapcombobox.h"
 
+#include <wx/settings.h>
+
 namespace GUI {
 namespace Controls {
 
@@ -23,7 +25,7 @@ BitmapComboBox::~BitmapComboBox() {
 	// TODO Auto-generated destructor stub
 }
 
-void BitmapComboBox::OnDrawBackground(wxDC& dc, const wxRect& rect, int item,
+void BitmapComboBox::OnDrawBackground(wxDC& dc, const wxRect& rect, int /*item*/,
 		int flags) const {
 
     if ( flags & wxODCB_PAINTING_SELECTED )
@@ -52,7 +54,7 @@ void BitmapComboBox::OnDrawBackground(wxDC& dc, const wxRect& rect, int item,
 }
 
 void BitmapComboBox::OnDrawItem(wxDC& dc, const wxRect& rect, int item,
-		int flags) const {
+		int /*flags*/) const {
 
     if ( item == wxNOT_FOUND )
          return;
@@ -77,7 +79,7 @@ void BitmapComboBox::OnDrawItem(wxDC& dc, const wxRect& rect, int item,
                     rect.y + (rect.height-dc.GetCharHeight())/2);
 }
 
-wxCoord BitmapComboBox::OnMeasureItem(size_t item) const {
+wxCoord BitmapComboBox::OnMeasureItem(size_t /*item*/) const {
     if ( m_usedImgSize.y >= 0 )
     {
         int imgHeightArea = m_usedImgSize.y + 2;
@@ -96,7 +98,7 @@ int BitmapComboBox::Append(const wxString& item, const wxBitmap& bitmap) {
 	return itemID;
 }
 
-wxCoord BitmapComboBox::OnMeasureItemWidth(size_t item) const {
+wxCoord BitmapComboBox::OnMeasureItemWidth(size_t /*item*/) const {
 	return -1;
 }
 
