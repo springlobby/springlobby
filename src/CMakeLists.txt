@@ -170,6 +170,8 @@ set(springlobbySrc
 	
 	aui/auimanager.cpp
 
+	gui/controls/bitmapcombobox.cpp
+	
 	gui/activitynotice.cpp
 	gui/agreementdialog.cpp
 	gui/chatpanelmenu.cpp

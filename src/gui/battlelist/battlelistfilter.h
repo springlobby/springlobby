@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H
 
 #include <wx/panel.h>
-#include <wx/bmpcbox.h>
 
 #include "battlelisttab.h"
 #include "utils/mixins.h"
@@ -20,6 +19,10 @@ class wxButton;
 class wxRegEx;
 class wxStaticText;
 struct BattleListFilterValues;
+
+namespace GUI { namespace Controls {
+class BitmapComboBox;
+}}
 
 
 /** \brief The panel contained in BattleListTab used to filter for diff info of battles
@@ -102,7 +105,7 @@ private:
 	wxStaticText* m_filter_rank_text;
 	ButtonMode m_filter_rank_mode;
 	wxButton* m_filter_rank_button;
-	wxBitmapComboBox* m_filter_rank_choice;
+	GUI::Controls::BitmapComboBox* m_filter_rank_choice;
 	int m_filter_rank_choice_value;
 
 	//Description
