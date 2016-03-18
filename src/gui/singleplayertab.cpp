@@ -408,6 +408,7 @@ void SinglePlayerTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 		slLogDebugFunc("");
 		wxLogError(_T("unitsync reload sink failed"));
 	}
+	Layout();
 }
 
 
@@ -462,3 +463,4 @@ void SinglePlayerTab::UpdatePresetList()
 void SinglePlayerTab::OnReset(wxCommandEvent& /*unused*/)
 {
 }
+
