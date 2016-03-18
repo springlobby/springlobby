@@ -160,7 +160,7 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	m_filter_rank_choice->Append(_T("8"), wxBitmap(rank7_xpm));
 
 	long value = 0;
-	value = f_values.rank.ToLong(&value);
+	f_values.rank.ToLong(&value);
 	m_filter_rank_choice->SetSelection(value);
 	m_filter_rank_choice->SetMinSize(wxSize(60, -1));
 
@@ -233,7 +233,7 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	m_filter_player_choice = new wxChoice(this, BATTLE_FILTER_PLAYER_CHOICE, wxDefaultPosition, wxSize(-1, -1), m_filter_player_choiceChoices, 0);
 
 	value = 0;
-	value = f_values.player_num.ToLong(&value);
+	f_values.player_num.ToLong(&value);
 	m_filter_player_choice->SetSelection(value);
 	m_filter_player_choice->SetMinSize(wxSize(60, -1));
 
