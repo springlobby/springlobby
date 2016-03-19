@@ -7,6 +7,10 @@
 #include "utils/uievents.h"
 #include <map>
 
+namespace GUI { namespace Controls {
+class BitmapComboBox;
+}}
+
 class Ui;
 class IBattle;
 struct BattleBot;
@@ -24,7 +28,6 @@ class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
 class ColorButton;
-class wxBitmapComboBox;
 struct UnitSyncMap;
 class wxToggleButton;
 class wxChoice;
@@ -146,7 +149,7 @@ private:
 	wxComboBox* m_team_sel;
 	wxComboBox* m_ally_sel;
 	ColorButton* m_color_sel;
-	wxBitmapComboBox* m_side_sel;
+	GUI::Controls::BitmapComboBox* m_side_sel;
 	wxComboBox* m_options_preset_sel;
 
 	wxStaticText* m_team_lbl;
