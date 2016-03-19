@@ -1,8 +1,8 @@
 /*
  * BitmapComboBox.cpp
  *
- *  Created on: 18 марта 2016 г.
- *      Author: Руслан
+ *  Created on: 18 пїЅпїЅпїЅпїЅпїЅ 2016 пїЅ.
+ *      Author: пїЅпїЅпїЅпїЅпїЅпїЅ
  */
 
 #include "bitmapcombobox.h"
@@ -46,7 +46,11 @@ void BitmapComboBox::OnDrawBackground(wxDC& dc, const wxRect& rect, int /*item*/
     {
         dc.SetTextForeground(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
 
+#ifdef WIN32
         wxColour selCol = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
+#else
+        wxColour selCol = wxSystemSettings::GetColour(wxSYS_COLOUR_BACKGROUND);
+#endif
         dc.SetPen(selCol);
         dc.SetBrush(selCol);
         dc.DrawRectangle(rect);

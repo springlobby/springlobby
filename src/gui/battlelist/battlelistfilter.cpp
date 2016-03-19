@@ -148,7 +148,7 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	m_filter_rank_button = new wxButton(this, BATTLE_FILTER_RANK_BUTTON, f_values.rank_mode, wxDefaultPosition, wxSize(25, 25), 0);
 	m_filter_rank_sizer->Add(m_filter_rank_button, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
-	m_filter_rank_choice = new GUI::Controls::BitmapComboBox(this, BATTLE_FILTER_RANK_CHOICE, _("All"), wxDefaultPosition, wxSize(-1, -1), 0, NULL, wxSIMPLE_BORDER | wxCB_READONLY);
+	m_filter_rank_choice = new GUI::Controls::BitmapComboBox(this, BATTLE_FILTER_RANK_CHOICE, _("All"), wxDefaultPosition, wxSize(-1, -1), 0, NULL, wxCB_READONLY);
 	m_filter_rank_choice->Append(_("All"));
 	m_filter_rank_choice->Append(_T("1"), wxBitmap(rank0_xpm));
 	m_filter_rank_choice->Append(_T("2"), wxBitmap(rank1_xpm));
