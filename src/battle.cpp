@@ -95,7 +95,9 @@ void Battle::Join(const std::string& password)
 
 void Battle::Leave()
 {
-	m_serv.LeaveBattle(m_opts.battleid);
+	if (m_is_self_in) {
+		m_serv.LeaveBattle(m_opts.battleid);
+	}
 }
 
 void Battle::OnPlayerTrueskillChanged(const std::string& NickName, double TrueSkill)
