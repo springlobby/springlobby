@@ -19,7 +19,7 @@ ChannelListView::ChannelListView(const wxString& dataViewName, wxWindow* parent)
 	const int DEFAULT_SIZE = wxCOL_WIDTH_AUTOSIZE;
 	AppendTextColumn(_("Channel"), CHANNEL_NAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("# users"), USERS_COUNT, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Topic"), TOPIC, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+	AppendTextColumn(_("Topic"), TOPIC, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_LEFT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
 	LoadColumnProperties();
 }
@@ -30,7 +30,9 @@ ChannelListView::~ChannelListView() {
 void ChannelListView::AddChannel(const wxString& channel,
 		unsigned int num_users, const wxString& topic) {
 
-	ChannelInfo* data = new ChannelInfo(channel, num_users, topic);
+	wxString filteredTopic = topic;
+	filteredTopic.Replace(_T("\\n"), wxEmptyString, true);
+	ChannelInfo* data = new ChannelInfo(channel, num_users, filteredTopic);
 
 	AddRealItem(data);
 	AddItem(*data);
