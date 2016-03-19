@@ -303,6 +303,7 @@ void Battle::OnUserRemoved(User& user)
 	ShouldAutoUnspec();
 
 	if (&user == &GetMe()) {
+		m_is_self_in = false;
 		GlobalEventManager::Instance()->UnSubscribe(this, GlobalEventManager::OnUnitsyncReloaded);
 	}
 }
