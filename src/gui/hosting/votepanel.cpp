@@ -83,15 +83,13 @@ VotePanel::~VotePanel()
 //Process text messages from chat
 void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& actionDescription)
 {
-	if (yesButton == nullptr || noButton == nullptr || dontCareButton == nullptr) {
+	if (yesButton == nullptr || noButton == nullptr || dontCareButton == nullptr || player == nullptr) {
 		return;
 	}
 
 	//Do not show this panel if player in spectator mode
-	if (player != nullptr) {
-		if (player->GetBattleStatus().spectator == true) {
-			return;
-		}
+	if (player->GetBattleStatus().spectator == true) {
+		return;
 	}
 
 	wxString actionString = actionDescription.Upper();
