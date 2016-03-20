@@ -27,6 +27,7 @@
 #include "images/away.png.h"
 #include "images/broom.png.h"
 #include "images/ingame.png.h"
+#include "images/ingame_pw.png.h"
 
 #include "images/up.xpm"
 #include "images/down.xpm"
@@ -130,7 +131,7 @@ private:
 	    /* locked, full                      */ &BMP_CLOSED_FULL_GAME,
 	    /* locked, full, passworded          */ &BMP_CLOSED_FULL_PW_GAME,
 	    /* in game                           */ &BMP_STARTED_GAME,
-	    /* in game, passworded               */ &BMP_STARTED_GAME,
+	    /* in game, passworded               */ &BMP_STARTED_PW_GAME,
 	    /* in game, full                     */ &BMP_STARTED_GAME,
 	    /* in game, full, passworded         */ &BMP_STARTED_GAME,
 	    /* in game, locked                   */ &BMP_STARTED_GAME_LOCKED,
@@ -191,6 +192,7 @@ public:
 	wxBitmap BMP_CLOSED_FULL_GAME = charArr2wxBitmap(closed_full_game_png, sizeof(closed_full_game_png));
 	wxBitmap BMP_STARTED_GAME = BMP_INGAME;
 	wxBitmap BMP_STARTED_GAME_LOCKED = BMP_INGAME;
+	wxBitmap BMP_STARTED_PW_GAME = charArr2wxBitmap(ingame_pw_png, sizeof(ingame_pw_png));
 
 	wxBitmap BMP_NREADY = charArr2wxBitmap(closed_game_png, sizeof(closed_game_png));
 	wxBitmap BMP_READY = charArr2wxBitmap(open_game_png, sizeof(open_game_png));
