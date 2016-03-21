@@ -16,7 +16,7 @@
   <p>
     You'll need to download the spring RTS engine and supply lobby with
     its installation path.
-    After that, springlobbylobby will let you create an account and you're set to go!
+    After that, springlobby will let you create an account and you're set to go!
   </p>
   <p>Popular games that use the spring engine are:</p>
   <ul>
@@ -29,30 +29,18 @@
    <li>XTA</li>
    <li>Lots more developed regularly!</li>
   </ul>
-  <p>The springlobby home page can be found at http://www.springlobby.info/ or you can visit our project page
-       on github at http://www.github.com/springlobby/springlobby/.</p>
-  <p>You can find out more about the spring engine and its games at http://www.springrts.com/.</p>
+  <p>The springlobby home page can be found at http://springlobby.info/ or you can visit our project page
+       on github at https://github.com/springlobby/springlobby/.</p>
+  <p>You can find out more about the spring engine and its games at https://springrts.com/.</p>
  </description>
  <screenshots>
   <screenshot type="default">
-    <image width="892" height="751">http://springlobby.info/landing/screenshots/11_chat.png</image>
-    <caption>The main chat tab</caption>
+    <image width="892" height="751">http://springlobby.info/landing/screenshots/01.png</image>
+    <caption>The connect window</caption>
   </screenshot>
   <screenshot>
-    <image width="978" height="660">http://springlobby.info/landing/screenshots/01_welcome.png</image>
-    <caption>First start window</caption>
-  </screenshot>
-  <screenshot>
-     <image width="1344" height="820">http://springlobby.info/landing/screenshots/31_tabs.png</image>
-    <caption>Customized gui</caption>
-  </screenshot>
-  <screenshot>
-    <image width="970" height="653">http://springlobby.info/landing/screenshots/10_sp.png</image>
-    <caption>Singleplayer tab</caption>
-  </screenshot>
-  <screenshot>
-    <image width="704" height="461">http://springlobby.info/landing/screenshots/98_chat_prefs.png</image>
-    <caption>Preferences dialog, chat settings</caption>
+    <image width="892" height="751">http://springlobby.info/landing/screenshots/02.png</image>
+    <caption>Singleplayer</caption>
   </screenshot>
  </screenshots>
  <url type="homepage">http://springlobby.info/</url>
