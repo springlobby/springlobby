@@ -34,6 +34,7 @@ END_EVENT_TABLE()
 
 void Statusbar::OnUpdateMsg(wxCommandEvent& evt)
 {
+	assert(wxThread::IsMain());
 	const int pos = evt.GetInt();
 	//	const int id = evt.GetId();
 	SetStatusText(evt.GetString(), pos);
@@ -49,6 +50,7 @@ void Statusbar::OnUpdateMsg(wxCommandEvent& evt)
 
 void Statusbar::OnAddMessage(UiEvents::StatusData data)
 {
+	assert(wxThread::IsMain());
 	// is called from a thread, wxPostEvent used for thread-safety!
 
 	wxCommandEvent evt(PUSH_STATUS_MSG, GetId());
