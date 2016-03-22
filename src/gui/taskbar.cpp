@@ -22,10 +22,10 @@ BEGIN_EVENT_TABLE(TaskBar, wxPanel)
 END_EVENT_TABLE()
 
 TaskBar::TaskBar(wxWindow* statusbar)
-    : wxPanel(statusbar, wxID_ANY, wxPoint(3, 3),
-	      wxSize(460 - (2 * 3), statusbar->GetSize().GetHeight()))
+	: wxPanel(statusbar, wxID_ANY, wxPoint(3, 3)
+	, wxSize(460 - (2 * 3), statusbar->GetSize().GetHeight()))
+	, timer(nullptr)
 {
-	timer = nullptr;
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
 	SetSizer(sizer);
@@ -54,6 +54,10 @@ TaskBar::TaskBar(wxWindow* statusbar)
 
 TaskBar::~TaskBar()
 {
+	if (timer != nullptr) {
+		timer->Stop();
+		wxDELETE(timer);
+	}
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
 }
 

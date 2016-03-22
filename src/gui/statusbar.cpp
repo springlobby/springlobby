@@ -36,22 +36,12 @@ void Statusbar::OnUpdateMsg(wxCommandEvent& evt)
 {
 	assert(wxThread::IsMain());
 	const int pos = evt.GetInt();
-	//	const int id = evt.GetId();
 	SetStatusText(evt.GetString(), pos);
-	//FIXME: Push/Pop seems to have never worked as it should, what should the code do?
-	/*
-	if (id == PUSH_STATUS_MSG) {
-		const wxString& msg = evt.GetString();
-		PushStatusText(msg, pos);
-	} else if (id == POP_STATUS_MSG) {
-		PopStatusText(pos);
-	}*/
 }
 
 void Statusbar::OnAddMessage(UiEvents::StatusData data)
 {
 	assert(wxThread::IsMain());
-	// is called from a thread, wxPostEvent used for thread-safety!
 
 	wxCommandEvent evt(PUSH_STATUS_MSG, GetId());
 	evt.SetEventObject(this);
@@ -63,7 +53,7 @@ void Statusbar::OnAddMessage(UiEvents::StatusData data)
 
 void Statusbar::OnRemoveMessage(UiEvents::StatusData data)
 {
-	// is called from a thread, wxPostEvent used for thread-safety!
+	assert(wxThread::IsMain());
 
 	wxCommandEvent evt(POP_STATUS_MSG, GetId());
 	evt.SetEventObject(this);
