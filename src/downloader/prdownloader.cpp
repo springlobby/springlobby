@@ -126,7 +126,12 @@ private:
 				break;
 			}
 			case DownloadEnum::CAT_SPRINGLOBBY:
-				fileSystem->extract(info.filename, SlPaths::GetUpdateDir());
+				const std::string& updatedir = SlPaths::GetUpdateDir();
+				const std::string& zipfile = info.filename;
+				if (!fileSystem->extract(zipfile, updatedir)) {
+					wxLogError("Couldn't extract %s to %s", zipfile.c_str(), updatedir.c_str());
+					break;
+				}
 				GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
 				break;
 			case DownloadEnum::CAT_MAP:
