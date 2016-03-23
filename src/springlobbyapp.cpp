@@ -164,9 +164,6 @@ bool SpringLobbyApp::OnInit()
 	notificationManager(); //needs to be initialized too
 	ui().ShowMainWindow();
 	SetTopWindow(&ui().mw());
-
-	ui().OnInit();
-
 	ui().mw().SetLogWin(loggerwin);
 
 	//unitsync first load, FIXME move to a thread!
@@ -177,6 +174,7 @@ bool SpringLobbyApp::OnInit()
 		wxLogWarning("Couldn't load unitsync");
 	}
 
+	ui().OnInit();
 	return true;
 }
 
