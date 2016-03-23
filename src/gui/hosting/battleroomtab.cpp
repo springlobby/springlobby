@@ -408,7 +408,6 @@ void BattleRoomTab::UpdateBattleInfo()
 		UpdateBattleInfo(it->first);
 	}
 	UpdateMapInfoSummary();
-
 }
 
 void BattleRoomTab::PrintAllySetup()
@@ -1198,6 +1197,10 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 		UpdateStatsLabels();
 	} else {
 		m_host_new_btn->Show(true);
+	}
+
+	if (battle != nullptr) { //prevents deadlock at start
+		ui().NeedsDownload(battle);
 	}
 }
 

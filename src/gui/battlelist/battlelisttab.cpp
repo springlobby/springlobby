@@ -423,8 +423,6 @@ void BattleListTab::DoJoin(IBattle& battle)
 	battle.Join(STD_STRING(password));
 	//Change Tab to show user joining to battle is in progress
 	ui().mw().ShowTab(MainWindow::PAGE_JOIN);
-
-	ui().NeedsDownload(&battle, false);
 }
 
 /**
