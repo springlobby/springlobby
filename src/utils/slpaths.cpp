@@ -215,7 +215,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 				defaultexists = true;
 		}
 		if (!defaultexists) {
-			wxLogWarning("The default engine version couldn't be found, resetting to %s", lastver.c_str());
+			wxLogWarning("The default engine version %s couldn't be found, resetting to %s",version.c_str(), lastver.c_str());
 			SetUsedSpringIndex(lastver);
 		}
 	} catch (const std::runtime_error& e) {
