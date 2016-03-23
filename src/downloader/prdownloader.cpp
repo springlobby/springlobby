@@ -125,7 +125,7 @@ private:
 				GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 				break;
 			}
-			case DownloadEnum::CAT_SPRINGLOBBY:
+			case DownloadEnum::CAT_SPRINGLOBBY: {
 				const std::string& updatedir = SlPaths::GetUpdateDir();
 				const std::string& zipfile = info.filename;
 				if (!fileSystem->extract(zipfile, updatedir)) {
@@ -134,6 +134,7 @@ private:
 				}
 				GlobalEventManager::Instance()->Send(GlobalEventManager::OnLobbyDownloaded);
 				break;
+			}
 			case DownloadEnum::CAT_MAP:
 			case DownloadEnum::CAT_GAME:
 				if (!LSL::usync().ReloadUnitSyncLib()) {
