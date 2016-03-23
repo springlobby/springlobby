@@ -2,15 +2,18 @@
 
 set -e
 
-COMMIT=a65e97c541d9fd6a881771b89fa7190bdfc49650
+COMMIT=34451075836cdd23cb03b69ef285cf4a4ac9489f
 
 if [ ! -d mxe ]; then
 	git clone https://github.com/mxe/mxe.git
+	cd mxe
+else
+	cd mxe
+	git fetch origin
+	git clean -f -d -x
 fi
 
-cd mxe
 git reset --hard $COMMIT
-git clean -f -d -x
 
 (
 	echo 'JOBS := 2'
