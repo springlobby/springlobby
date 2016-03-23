@@ -95,22 +95,32 @@ TASServer::~TASServer()
 
 bool TASServer::ExecuteSayCommand(const std::string& cmdstr) //FIXME: all the /commands should be moved to a dedicated file (as its not part of lobby server protocol)
 {
-	LSL::StringVector arrayparams = LSL::Util::StringTokenize(cmdstr, " ");
+	const LSL::StringVector arrayparams = LSL::Util::StringTokenize(cmdstr, " ");
 	if (arrayparams.empty())
 		return false;
 	const std::string& cmd = arrayparams[0];
 	const std::string& params = LSL::Util::AfterFirst(cmd, " ");
 
 	if ((cmd == "/join") || (cmd == "/j")) {
-		if (arrayparams.size() == 3) {
-			JoinChannel(arrayparams[1], arrayparams[2]);
-			return true;
+		std::string channel;
+		std::string password;
+		switch(arrayparams.size()) {
+			case 3:
+				password = arrayparams[2];
+				// no break wanted, next assignement is required
+			case 2:
+				channel = arrayparams[1];
+				break;
+			default:
+				return false;
 		}
-		if (arrayparams.size() == 2) {
-			JoinChannel(arrayparams[1], "");
-			return true;
+		if (channel.empty())
+			return false;
+		if (channel[0] == '#') {
+			channel = channel.substr(1);
 		}
-		return false;
+		JoinChannel(channel, password);
+		return true;
 	} else if (cmd == "/away") {
 		GetMe().Status().away = true;
 		GetMe().SendMyUserStatus();
