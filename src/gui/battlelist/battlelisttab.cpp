@@ -419,8 +419,7 @@ void BattleListTab::DoJoin(IBattle& battle)
 		password.Replace(_T(" "), wxEmptyString);
 	}
 
-	if (ui().NeedsDownload(&battle))
-		return;
+	ui().NeedsDownload(&battle);
 
 	battle.Join(STD_STRING(password));
 	//Change Tab to show user joining to battle is in progress
