@@ -122,6 +122,7 @@ private:
 	void OnAutohostNotify(wxCommandEvent& event);
 
 	void OnUnitsyncReloaded(wxCommandEvent& /*data*/);
+	void OnDownloadFailed(wxCommandEvent& /*data*/);
 
 	long AddMMOptionsToList(long pos, LSL::Enum::GameOption optFlag);
 

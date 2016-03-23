@@ -368,6 +368,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	}
 
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadFailed, wxObjectEventFunction(&BattleRoomTab::OnDownloadFailed));
 }
 
 
@@ -1260,4 +1261,9 @@ void BattleRoomTab::OnHostNew(wxCommandEvent& /*event*/)
 		return;
 	}
 	HostBattleDialog::RunHostBattleDialog(this);
+}
+
+void BattleRoomTab::OnDownloadFailed(wxCommandEvent& /*data*/)
+{
+	m_battle->ForceSpectator(m_battle->GetMe(), true); //auto set spectator because of failed download
 }
