@@ -220,17 +220,16 @@ wxBitmap& IconsCollection::GetColourBmp(const LSL::lslColor& colour) {
 	}
 }
 
-wxBitmap& IconsCollection::GetFractionBmp(const std::string& modName, int fractionId) {
+wxBitmap& IconsCollection::GetFractionBmp(const std::string& gameName, int fractionId)
+{
 
-	wxASSERT(-1 < fractionId);
-	wxASSERT(modName.empty() == false);
-
-	if (!LSL::usync().GameExists(modName)){
+	if (gameName.empty() || !LSL::usync().GameExists(gameName) || fractionId < 0) {
+		wxLogWarning("SideIcon %d for game %s not found!", fractionId, gameName.c_str());
 		// game doesn't exist, dl needed?!
 		return BMP_EMPTY;
 	}
 
-	const auto sides = LSL::usync().GetSides(modName);
+	const auto sides = LSL::usync().GetSides(gameName);
 
 	//This can happen whenever in time, so must be caught in release build too
 	if (sides.empty()) {
@@ -243,7 +242,7 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& modName, int fracti
 
 	sideName = sides[fractionId];
 
-	const std::string cacheString = modName + "_" + sideName;
+	const std::string cacheString = gameName + "_" + sideName;
 
 	//Check if image already in cache
 	if (m_cachedFractionBmps.find(cacheString) != m_cachedFractionBmps.end()) {
@@ -251,7 +250,7 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& modName, int fracti
 	//Create one and add to cache
 	} else {
 		try {
-			const LSL::UnitsyncImage img = LSL::usync().GetSidePicture(modName, sideName);
+			const LSL::UnitsyncImage img = LSL::usync().GetSidePicture(gameName, sideName);
 			m_cachedFractionBmps[cacheString] = img.wxbitmap();
 		} catch (...) {
 		//unitsync can fail!
