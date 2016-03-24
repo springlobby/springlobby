@@ -30,14 +30,12 @@ private:
 	DownloadEnum::Category m_category;
 	std::string m_name;
 	std::string m_filename;
-	bool m_reload;
 
 public:
 	DownloadItem(const DownloadEnum::Category cat, const std::string& name, const std::string& filename)
 		: m_category(cat)
 		, m_name(name)
 		, m_filename(filename)
-		, m_reload(false)
 	{
 	}
 
