@@ -79,7 +79,7 @@ public:
 		return std::string(levelName[(int)level]);
 	}
 
-	void Flush()
+	void Flush() override
 	{
 		if (m_logfile != NULL) {
 			fflush(m_logfile);
