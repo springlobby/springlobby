@@ -1015,6 +1015,8 @@ void MapCtrl::DrawUserPositions(wxDC& dc)
 			User& tbot = m_battle->GetUser(bi);
 			if (&tbot == 0)
 				continue;
+			if (tbot.BattleStatus().spectator)
+				continue;
 			if ((tbot.BattleStatus().pos.x == m_map.info.positions[i].x) && (tbot.BattleStatus().pos.y == m_map.info.positions[i].y)) {
 				bot = &tbot;
 				break;
