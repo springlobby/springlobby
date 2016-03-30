@@ -125,6 +125,7 @@ void DownloadDataViewCtrl::ClearFinished() {
 	for (const PrDownloader::DownloadProgress *pp : toBeRemoved) {
 		RemoveItem(*pp);
 		auto item = itemsIndex.find(pp->name);
+		assert(item != itemsIndex.end());
 		itemsIndex.erase(item);
 		delete pp;
 	}
