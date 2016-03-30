@@ -23,6 +23,7 @@ wxTranslationHelper::wxTranslationHelper(const wxString& catalog, const wxString
 	}
 	long language = cfg().ReadLong(_T("/General/LanguageID"));
 	if (!Load(language)) { //fallback when something went wrong
+		wxLogWarning("Couldn't load locale %ld, fallback to default", language);
 		int localeid = wxLocale::GetSystemLanguage();
 		Load(localeid);
 	}
