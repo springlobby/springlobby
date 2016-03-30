@@ -158,7 +158,7 @@ void PrDownloader::GetProgress(DownloadProgress& progress)
 {
 	assert(wxThread::IsMain());
 	if (m_progress == nullptr) {
-		assert(!"m_progress == nullptr");
+		assert(false);
 		return;
 	}
 	//TODO: add mutex
