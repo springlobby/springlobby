@@ -55,17 +55,18 @@ void GlobalEventManager::Release() {
 }
 
 void GlobalEventManager::Send(wxEventType type) {
-	wxCommandEvent evt = wxCommandEvent(type);
-	Send(evt);
+	Send(wxCommandEvent(type));
 }
 
-void GlobalEventManager::Send(wxEventType type, void* clientData) {
-	wxCommandEvent evt = wxCommandEvent(type);
+void GlobalEventManager::Send(wxEventType type, void* clientData)
+{
+	wxCommandEvent evt(type);
 	evt.SetClientData(clientData);
 	Send(evt);
 }
 
-void GlobalEventManager::Send(wxCommandEvent event) {
+void GlobalEventManager::Send(wxCommandEvent event)
+{
 	if (m_eventsDisabled)
 		return;
 
@@ -84,23 +85,25 @@ void GlobalEventManager::Send(wxCommandEvent event) {
 	}
 }
 
-void GlobalEventManager::Subscribe(wxEvtHandler* evh, wxEventType id,
-		wxObjectEventFunction func) {
+void GlobalEventManager::Subscribe(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func)
+{
 	GlobalEventManager::_Connect(evh, id, func);
 }
 
-void GlobalEventManager::UnSubscribe(wxEvtHandler* evh, wxEventType id) {
+void GlobalEventManager::UnSubscribe(wxEvtHandler* evh, wxEventType id)
+{
 	GlobalEventManager::_Disconnect(evh, id);
 }
 
-void GlobalEventManager::UnSubscribeAll(wxEvtHandler* evh) {
+void GlobalEventManager::UnSubscribeAll(wxEvtHandler* evh)
+{
 	assert(m_eventsTable.size() != 0);
 
 	_Disconnect(evh, ANY_EVENT);
 }
 
-void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id,
-		wxObjectEventFunction func) {
+void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func)
+{
 	assert(evthandler != nullptr);
 	assert(func != nullptr);
 
