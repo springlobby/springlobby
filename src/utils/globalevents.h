@@ -26,7 +26,6 @@ public:
 
 	void Send(wxEventType type);
 	void Send(wxCommandEvent event);
-	void Send(wxEventType type, void* clientData);
 
 private:
 	void _Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func);
@@ -49,7 +48,6 @@ public:
 
 	static const wxEventType BattleSyncReload;
 	static const wxEventType BattleStartedEvent;
-	static const wxEventType UserBattleStatusChangedEvent;
 
 	static const wxEventType GamePromotedEvent;
 	static const wxEventType ApplicationSettingsChangedEvent;

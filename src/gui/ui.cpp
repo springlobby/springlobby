@@ -94,7 +94,6 @@ Ui::Ui()
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringTerminated, wxObjectEventFunction(&Ui::OnSpringTerminated));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnQuit, wxObjectEventFunction(&Ui::OnQuit));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnLobbyDownloaded, wxObjectEventFunction(&Ui::OnLobbyDownloaded));
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::UserBattleStatusChangedEvent, wxObjectEventFunction(&Ui::OnUserBattleStatus));
 
 }
 

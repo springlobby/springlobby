@@ -22,8 +22,6 @@ const wxEventType GlobalEventManager::OnQuit = wxNewEventType();
 const wxEventType GlobalEventManager::OnLogin = wxNewEventType();
 const wxEventType GlobalEventManager::BattleSyncReload = wxNewEventType();
 const wxEventType GlobalEventManager::BattleStartedEvent = wxNewEventType();
-const wxEventType GlobalEventManager::UserBattleStatusChangedEvent =
-		wxNewEventType();
 const wxEventType GlobalEventManager::OnUpdateFinished = wxNewEventType();
 const wxEventType GlobalEventManager::GamePromotedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::ApplicationSettingsChangedEvent =
@@ -56,13 +54,6 @@ void GlobalEventManager::Release() {
 
 void GlobalEventManager::Send(wxEventType type) {
 	Send(wxCommandEvent(type));
-}
-
-void GlobalEventManager::Send(wxEventType type, void* clientData)
-{
-	wxCommandEvent evt(type);
-	evt.SetClientData(clientData);
-	Send(evt);
 }
 
 void GlobalEventManager::Send(wxCommandEvent event)
