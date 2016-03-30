@@ -54,19 +54,13 @@ TaskBar::TaskBar(wxWindow* statusbar)
 
 TaskBar::~TaskBar()
 {
-	if (timer != nullptr) {
-		timer->Stop();
-		wxDELETE(timer);
-	}
+	EnsureTimerRemoved();
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
 }
 
 void TaskBar::OnDownloadStarted(wxCommandEvent& /*event*/)
 {
-	if (timer != nullptr) {
-		timer->Stop();
-		wxDELETE(timer);
-	}
+	EnsureTimerRemoved();
 
 	SetBackgroundColour(wxColour(255, 244, 168));
 	Show();
@@ -80,6 +74,8 @@ void TaskBar::OnDownloadStarted(wxCommandEvent& /*event*/)
 
 void TaskBar::OnDownloadFailed(wxCommandEvent& /*event*/)
 {
+	EnsureTimerRemoved();
+
 	Show();
 
 	text->SetLabel(_("Download failed"));
@@ -95,6 +91,8 @@ void TaskBar::OnDownloadFailed(wxCommandEvent& /*event*/)
 
 void TaskBar::OnDownloadComplete(wxCommandEvent& /*event*/)
 {
+	EnsureTimerRemoved();
+
 	text->SetLabel(_("Download finished"));
 	gauge->Hide();
 	SetBackgroundColour(wxColour(0, 208, 10));
@@ -108,8 +106,7 @@ void TaskBar::OnDownloadComplete(wxCommandEvent& /*event*/)
 
 void TaskBar::OnTimer(wxTimerEvent&)
 {
-	timer->Stop();
-	wxDELETE(timer);
+	EnsureTimerRemoved();
 
 	Hide();
 
@@ -119,12 +116,20 @@ void TaskBar::OnTimer(wxTimerEvent&)
 
 void TaskBar::UpdateProgress()
 {
-
 	PrDownloader::DownloadProgress p;
 	prDownloader().GetProgress(p);
 
 	int progress = (int)p.GetProgressPercent();
 	text->SetLabel(wxString::Format(_("Downloading %s"), p.name));
 	gauge->SetValue(progress);
+}
 
+void TaskBar::EnsureTimerRemoved()
+{
+	if (timer != nullptr) {
+		if(timer->IsRunning()) {
+			timer->Stop();
+		}
+		wxDELETE(timer);
+	}
 }

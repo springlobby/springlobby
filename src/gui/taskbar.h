@@ -22,6 +22,7 @@ private:
 	void OnDownloadFailed(wxCommandEvent& event);
 	void UpdateProgress();
 	void OnTimer(wxTimerEvent&);
+	void EnsureTimerRemoved();
 
 	wxTimer* timer;
 	wxStaticText* text;
