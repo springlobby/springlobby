@@ -120,7 +120,7 @@ void TaskBar::UpdateProgress()
 	prDownloader().GetProgress(p);
 
 	int progress = (int)p.GetProgressPercent();
-	text->SetLabel(wxString::Format(_("Downloading %s"), p.name));
+	text->SetLabel(wxString::Format(_("Downloading %s"), TowxString(p.name)));
 	gauge->SetValue(progress);
 }
 

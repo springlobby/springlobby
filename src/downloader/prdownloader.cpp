@@ -157,12 +157,15 @@ private:
 void PrDownloader::GetProgress(DownloadProgress& progress)
 {
 	assert(wxThread::IsMain());
-	if (m_progress == nullptr)
+	if (m_progress == nullptr) {
+		assert(!"m_progress == nullptr");
 		return;
+	}
 	//TODO: add mutex
 	progress.name = m_progress->name;
 	progress.downloaded = m_progress->downloaded;
 	progress.filesize = m_progress->filesize;
+
 	wxLogDebug("%s %d %d", progress.name.c_str(), progress.downloaded, progress.filesize);
 }
 
