@@ -56,7 +56,7 @@ execute_process(COMMAND ${wxWidgets_CONFIG_EXECUTABLE} "--version-full"
 	OUTPUT_VARIABLE WX_VERSION
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-set(WX_VERSION_MIN "2.9")
+set(WX_VERSION_MIN "3.0")
 if("${WX_VERSION}" VERSION_LESS "${WX_VERSION_MIN}")
 	set(WX_VERSION_DEFAULT "${WX_VERSION}")
 	# Append version selector to find the right one in a multi-slot install if the default is lower than required.
