@@ -1268,5 +1268,8 @@ void BattleRoomTab::OnHostNew(wxCommandEvent& /*event*/)
 
 void BattleRoomTab::OnDownloadFailed(wxCommandEvent& /*data*/)
 {
+	if (m_battle == nullptr) {
+		return;
+	}
 	m_battle->ForceSpectator(m_battle->GetMe(), true); //auto set spectator because of failed download
 }
