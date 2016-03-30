@@ -6,7 +6,7 @@ sudo: required
 dist: trusty
 
 install:
-  - sudo apt-get install -y libwxgtk3.0-dev libboost-thread1.55-dev libboost-system1.55-dev libboost-filesystem1.55-dev
+  - sudo apt-get install -y libwxgtk3.0-dev libboost-thread1.55-dev libboost-system1.55-dev
   - sudo apt-get install -y libboost-test1.55-dev libalure-dev cmake cmake-data
 
 before_script:
