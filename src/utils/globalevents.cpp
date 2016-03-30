@@ -58,6 +58,7 @@ void GlobalEventManager::Send(wxEventType type) {
 
 void GlobalEventManager::Send(wxCommandEvent event)
 {
+	assert(wxThread::IsMain() || event.GetString().empty()); // using strings here isn't thread safe http://docs.wxwidgets.org/trunk/classwx_evt_handler.html#a0737c6d2cbcd5ded4b1ecdd53ed0def3
 	if (m_eventsDisabled)
 		return;
 
@@ -65,8 +66,6 @@ void GlobalEventManager::Send(wxCommandEvent event)
 		return;
 
 	std::set<wxEvtHandler*>& evtlist = m_eventsTable[event.GetEventType()];
-	assert(wxThread::IsMain() || event.GetString().empty()); // using strings here isn't thread safe http://docs.wxwidgets.org/trunk/classwx_evt_handler.html#a0737c6d2cbcd5ded4b1ecdd53ed0def3
-
 	for (auto evt : evtlist) {
 		evt->AddPendingEvent(event);
 	}
@@ -113,14 +112,14 @@ void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxOb
 void GlobalEventManager::_Disconnect(wxEvtHandler* evthandler, wxEventType id) {
 	//Unlink event handler from all kinds of event types
 	if (id == ANY_EVENT) {
-		std::vector<wxEventType> removalCollection(10);
+		std::vector<wxEventType> removalCollection;
 
 		for (auto& it : m_eventsTable) {
 			auto pos = it.second.find(evthandler);
-			if (pos != it.second.end()) {
-				evthandler->Disconnect(it.first);
-				it.second.erase(pos);
-			}
+			if (pos == it.second.end())
+				continue;
+			evthandler->Disconnect(it.first);
+			it.second.erase(pos);
 			if (it.second.empty()) {
 				removalCollection.push_back(it.first);
 			}
@@ -132,24 +131,20 @@ void GlobalEventManager::_Disconnect(wxEvtHandler* evthandler, wxEventType id) {
 		}
 	} else {
 		//Unlink event handler from only specified event type
-		bool unneededEvent = false;
 
 		auto it = m_eventsTable.find(id);
-		if (it != m_eventsTable.end()) {
-			auto pos = it->second.find(evthandler);
-			if (pos != it->second.end()) {
-				evthandler->Disconnect(it->first);
-				it->second.erase(pos);
-				if (it->second.empty()) {
-					unneededEvent = true;
-				}
-			} else {
-				assert(false);
-			}
-		} else {
+		if (it == m_eventsTable.end()) {
 			assert(false);
+			return;
 		}
-		if (unneededEvent) {
+		auto pos = it->second.find(evthandler);
+		if (pos == it->second.end()) {
+			assert(false);
+			return;
+		}
+		evthandler->Disconnect(it->first);
+		it->second.erase(pos);
+		if (it->second.empty()) {
 			m_eventsTable.erase(id);
 		}
 	}
