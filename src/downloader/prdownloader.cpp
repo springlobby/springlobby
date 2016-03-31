@@ -177,7 +177,11 @@ void updatelistener(int downloaded, int filesize)
 		m_progress = new PrDownloader::DownloadProgress();
 	m_progress->filesize = filesize;
 	m_progress->downloaded = downloaded;
+
+// FIXME!!!
+#ifndef WIN32
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadProgress);
+#endif
 }
 
 PrDownloader::PrDownloader()
