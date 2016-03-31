@@ -7,6 +7,7 @@
 
 #include <wx/filename.h>
 #include <wx/log.h>
+#include "utils/conversion.h"
 
 PlaybackDataModel::PlaybackDataModel()
 	: BaseDataViewModel<StoredGame>::BaseDataViewModel(COLUMN_COUNT)
@@ -50,7 +51,7 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 	switch (col) {
 	case DATE:
 		{
-			wxDataViewIconText iconText(wxString(storedGame->date_string));
+			wxDataViewIconText iconText(TowxString(storedGame->date_string));
 			IconsCollection* icons = IconsCollection::Instance();
 
 			if (storedGame->duration == 0) {
@@ -63,11 +64,11 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 		break;
 
 	case GAME:
-		variant = wxString(storedGame->battle.GetHostGameName());
+		variant = TowxString(storedGame->battle.GetHostGameName());
 		break;
 
 	case MAP:
-		variant = wxString(storedGame->battle.GetHostMapName());
+		variant = TowxString(storedGame->battle.GetHostMapName());
 		break;
 
 	case PLAYERS:
@@ -80,7 +81,7 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 		break;
 
 	case VERSION:
-		variant = wxString(storedGame->SpringVersion);
+		variant = TowxString(storedGame->SpringVersion);
 		break;
 
 	case FILESIZE:
@@ -88,7 +89,7 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 		break;
 
 	case FILENAME:
-		variant = wxString(storedGame->Filename).AfterLast(wxFileName::GetPathSeparator());
+		variant = TowxString(storedGame->Filename).AfterLast(wxFileName::GetPathSeparator());
 		break;
 
 	case DEFAULT_COLUMN:
