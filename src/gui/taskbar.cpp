@@ -4,6 +4,7 @@
 #include "utils/conversion.h"
 #include "utils/globalevents.h"
 #include "downloader/prdownloader.h"
+#include "log.h"
 
 #include <wx/colour.h>
 #include <wx/statbmp.h>
@@ -60,6 +61,8 @@ TaskBar::~TaskBar()
 
 void TaskBar::OnDownloadStarted(wxCommandEvent& /*event*/)
 {
+	slLogDebugFunc("");
+
 	EnsureTimerRemoved();
 
 	SetBackgroundColour(wxColour(255, 244, 168));
@@ -74,6 +77,8 @@ void TaskBar::OnDownloadStarted(wxCommandEvent& /*event*/)
 
 void TaskBar::OnDownloadFailed(wxCommandEvent& /*event*/)
 {
+	slLogDebugFunc("");
+
 	EnsureTimerRemoved();
 
 	Show();
@@ -91,6 +96,8 @@ void TaskBar::OnDownloadFailed(wxCommandEvent& /*event*/)
 
 void TaskBar::OnDownloadComplete(wxCommandEvent& /*event*/)
 {
+	slLogDebugFunc("");
+
 	EnsureTimerRemoved();
 
 	text->SetLabel(_("Download finished"));
@@ -106,6 +113,8 @@ void TaskBar::OnDownloadComplete(wxCommandEvent& /*event*/)
 
 void TaskBar::OnTimer(wxTimerEvent&)
 {
+	slLogDebugFunc("");
+
 	EnsureTimerRemoved();
 
 	Hide();
@@ -116,6 +125,8 @@ void TaskBar::OnTimer(wxTimerEvent&)
 
 void TaskBar::UpdateProgress()
 {
+	slLogDebugFunc("");
+
 	PrDownloader::DownloadProgress p;
 	prDownloader().GetProgress(p);
 

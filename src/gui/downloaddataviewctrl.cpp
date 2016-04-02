@@ -35,22 +35,22 @@ DownloadDataViewCtrl::DownloadDataViewCtrl(const wxString dataViewName,
 	LoadColumnProperties();
 
 //FIXME!!!!
-#ifndef WIN32
+//#ifndef WIN32
 	GlobalEventManager::Instance()->Subscribe(this,
 			GlobalEventManager::OnDownloadStarted,
 			wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadStarted));
 	GlobalEventManager::Instance()->Subscribe(this,
 			GlobalEventManager::OnDownloadProgress,
 			wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadProgress));
-#endif
+//#endif
 }
 
 DownloadDataViewCtrl::~DownloadDataViewCtrl()
 {
 //FIXME!!!!
-#ifndef WIN32
+//#ifndef WIN32
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
-#endif
+//#endif
 	Clear();
 }
 
@@ -73,12 +73,16 @@ void DownloadDataViewCtrl::OnRetry(wxCommandEvent& /*event*/) {
 }
 
 void DownloadDataViewCtrl::OnDownloadStarted() {
+	slLogDebugFunc("");
+
 	PrDownloader::DownloadProgress *p = new PrDownloader::DownloadProgress;
 	prDownloader().GetProgress(*p);
 	AddItem(p);
 }
 
 void DownloadDataViewCtrl::OnDownloadProgress() {
+	slLogDebugFunc("");
+
 	PrDownloader::DownloadProgress *existingItem;
 	PrDownloader::DownloadProgress p;
 	prDownloader().GetProgress(p);
@@ -96,12 +100,16 @@ void DownloadDataViewCtrl::OnDownloadProgress() {
 }
 
 void DownloadDataViewCtrl::AddItem(PrDownloader::DownloadProgress* p) {
+	slLogDebugFunc("");
+
 	BaseDataViewCtrl::AddItem(*p, true);
 
 	itemsIndex[p->name] = p;
 }
 
 void DownloadDataViewCtrl::Clear() {
+	slLogDebugFunc("");
+
 	UnselectAll();
 
 	std::vector<const PrDownloader::DownloadProgress*> toBeRemoved;
@@ -118,6 +126,8 @@ void DownloadDataViewCtrl::Clear() {
 }
 
 void DownloadDataViewCtrl::ClearFinished() {
+	slLogDebugFunc("");
+
 	UnselectAll();
 
 	std::vector<const PrDownloader::DownloadProgress*> toBeRemoved;

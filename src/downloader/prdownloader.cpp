@@ -11,8 +11,11 @@
 #include "utils/globalevents.h"
 #include "utils/slpaths.h"
 #include "gui/mainwindow.h"
+#include "log.h"
 
 #include <list>
+#include <mutex>
+#include <memory>
 #include <wx/log.h>
 #include <lslunitsync/unitsync.h>
 #include <lslutils/thread.h>
@@ -23,6 +26,7 @@ SLCONFIG("/Spring/PortableDownload", false, "true to download portable versions 
 SLCONFIG("/Spring/RapidMasterUrl", "http://repos.springrts.com/repos.gz", "master url for rapid downloads");
 
 static PrDownloader::DownloadProgress *m_progress = nullptr;
+static std::mutex dlProgressMutex;
 
 class DownloadItem : public LSL::WorkItem
 {
@@ -37,13 +41,20 @@ public:
 		, m_name(name)
 		, m_filename(filename)
 	{
+		slLogDebugFunc("");
 	}
 
 	void Run()
 	{
-		if (m_progress == nullptr)
-			m_progress = new PrDownloader::DownloadProgress();
-		m_progress->name = m_name;
+		slLogDebugFunc("");
+
+		{
+			std::lock_guard<std::mutex> lock(dlProgressMutex);
+
+			if (m_progress == nullptr)
+				m_progress = new PrDownloader::DownloadProgress();
+			m_progress->name = m_name;
+		}
 
 		const bool force = true;
 		DownloadSetConfig(CONFIG_RAPID_FORCEUPDATE, &force);
@@ -73,7 +84,6 @@ public:
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 			return;
 		}
-		m_progress->name = m_name; //update to fetched name
 
 		GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadStarted);
 
@@ -100,6 +110,8 @@ public:
 private:
 	void DownloadFinished(DownloadEnum::Category cat, const downloadInfo& info)
 	{
+		slLogDebugFunc("");
+
 		switch (cat) {
 			case DownloadEnum::CAT_ENGINE:
 			case DownloadEnum::CAT_ENGINE_LINUX:
@@ -156,12 +168,15 @@ private:
 
 void PrDownloader::GetProgress(DownloadProgress& progress)
 {
-	assert(wxThread::IsMain());
+	slLogDebugFunc("");
+
+	std::lock_guard<std::mutex> lock(dlProgressMutex);
+
 	if (m_progress == nullptr) {
 		assert(false);
 		return;
 	}
-	//TODO: add mutex
+
 	progress.name = m_progress->name;
 	progress.downloaded = m_progress->downloaded;
 	progress.filesize = m_progress->filesize;
@@ -171,23 +186,28 @@ void PrDownloader::GetProgress(DownloadProgress& progress)
 
 void updatelistener(int downloaded, int filesize)
 {
-	assert(!wxThread::IsMain());
-	//TODO: add mutex
+	slLogDebugFunc("");
+
+	std::lock_guard<std::mutex> lock(dlProgressMutex);
+
 	if (m_progress == nullptr)
 		m_progress = new PrDownloader::DownloadProgress();
+
 	m_progress->filesize = filesize;
 	m_progress->downloaded = downloaded;
 
 // FIXME!!!
-#ifndef WIN32
+//#ifndef WIN32
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadProgress);
-#endif
+//#endif
 }
 
 PrDownloader::PrDownloader()
     : wxEvtHandler()
     , m_dl_thread(new LSL::WorkerThread())
 {
+	slLogDebugFunc("");
+
 	IDownloader::setProcessUpdateListener(updatelistener);
 	UpdateSettings();
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringStarted, wxObjectEventFunction(&PrDownloader::OnSpringStarted));
@@ -196,21 +216,31 @@ PrDownloader::PrDownloader()
 
 PrDownloader::~PrDownloader()
 {
+	slLogDebugFunc("");
+
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
 
-	delete m_dl_thread;
-	m_dl_thread = nullptr;
+	if (!m_dl_thread) {
+		delete m_dl_thread;
+		m_dl_thread = nullptr;
+	}
 	IDownloader::Shutdown();
-	delete m_progress;
-	m_progress = nullptr;
+
+	if (!!m_progress) {
+		delete m_progress;
+		m_progress = nullptr;
+	}
 }
 
 void PrDownloader::ClearFinished()
 {
+	slLogDebugFunc("");
 }
 
 void PrDownloader::UpdateSettings()
 {
+	slLogDebugFunc("");
+
 	DownloadSetConfig(CONFIG_FILESYSTEM_WRITEPATH, SlPaths::GetDownloadDir().c_str());
 	//FIXME: fileSystem->setEnginePortableDownload(cfg().ReadBool(_T("/Spring/PortableDownload")));
 	// rapidDownload->setOption("masterurl", STD_STRING(cfg().ReadString(_T("/Spring/RapidMasterUrl"))));
@@ -218,10 +248,13 @@ void PrDownloader::UpdateSettings()
 
 void PrDownloader::RemoveTorrentByName(const std::string& /*name*/)
 {
+	slLogDebugFunc("");
 }
 
 void PrDownloader::Download(DownloadEnum::Category cat, const std::string& filename, const std::string& url)
 {
+	slLogDebugFunc("");
+
 	wxLogDebug("Starting download of %s, %s %d", filename.c_str(), url.c_str(), cat);
 	DownloadItem* dl_item = new DownloadItem(cat, filename, url);
 	m_dl_thread->DoWork(dl_item);
@@ -230,11 +263,13 @@ void PrDownloader::Download(DownloadEnum::Category cat, const std::string& filen
 
 void PrDownloader::OnSpringStarted(wxCommandEvent& /*data*/)
 {
+	slLogDebugFunc("");
 	//FIXME: pause downloads
 }
 
 void PrDownloader::OnSpringTerminated(wxCommandEvent& /*data*/)
 {
+	slLogDebugFunc("");
 	//FIXME: resume downloads
 }
 
@@ -247,11 +282,15 @@ PrDownloader& prDownloader()
 
 bool PrDownloader::IsRunning()
 {
+	slLogDebugFunc("");
+
 	return m_progress != nullptr && !m_progress->IsFinished();
 }
 
 void PrDownloader::UpdateApplication(const std::string& updateurl)
 {
+	slLogDebugFunc("");
+
 	const std::string updatedir = SlPaths::GetUpdateDir();
 	const size_t mindirlen = 9; // safety, minimal is/should be: C:\update
 	if ((updatedir.size() <= mindirlen)) {

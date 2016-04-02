@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "globalevents.h"
+#include "log.h"
 
 const wxEventType GlobalEventManager::OnDownloadStarted = wxNewEventType();
 const wxEventType GlobalEventManager::OnDownloadComplete = wxNewEventType();
@@ -32,6 +33,7 @@ bool GlobalEventManager::m_eventsDisabled = false;
 GlobalEventManager* GlobalEventManager::m_Instance = nullptr;
 
 GlobalEventManager::GlobalEventManager() {
+	slLogDebugFunc("");
 }
 
 GlobalEventManager::~GlobalEventManager() {
@@ -46,6 +48,8 @@ GlobalEventManager* GlobalEventManager::Instance() {
 }
 
 void GlobalEventManager::Release() {
+	slLogDebugFunc("");
+
 	if (m_Instance != nullptr) {
 		delete m_Instance;
 	}
@@ -58,6 +62,8 @@ void GlobalEventManager::Send(wxEventType type) {
 
 void GlobalEventManager::Send(wxCommandEvent event)
 {
+	slLogDebugFunc("");
+
 	assert(wxThread::IsMain() || event.GetString().empty()); // using strings here isn't thread safe http://docs.wxwidgets.org/trunk/classwx_evt_handler.html#a0737c6d2cbcd5ded4b1ecdd53ed0def3
 	if (m_eventsDisabled)
 		return;
@@ -77,16 +83,22 @@ void GlobalEventManager::Send(wxCommandEvent event)
 
 void GlobalEventManager::Subscribe(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func)
 {
+	slLogDebugFunc("");
+
 	GlobalEventManager::_Connect(evh, id, func);
 }
 
 void GlobalEventManager::UnSubscribe(wxEvtHandler* evh, wxEventType id)
 {
+	slLogDebugFunc("");
+
 	GlobalEventManager::_Disconnect(evh, id);
 }
 
 void GlobalEventManager::UnSubscribeAll(wxEvtHandler* evh)
 {
+	slLogDebugFunc("");
+
 	assert(m_eventsTable.size() != 0);
 
 	_Disconnect(evh, ANY_EVENT);
