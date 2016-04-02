@@ -220,7 +220,7 @@ PrDownloader::~PrDownloader()
 
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
 
-	if (!m_dl_thread) {
+	if (!!m_dl_thread) {
 		delete m_dl_thread;
 		m_dl_thread = nullptr;
 	}
