@@ -14,7 +14,7 @@
 #include "log.h"
 
 #include <list>
-#include <mutex>
+#include <boost/thread/mutex.hpp>
 #include <memory>
 #include <wx/log.h>
 #include <lslunitsync/unitsync.h>
@@ -26,7 +26,7 @@ SLCONFIG("/Spring/PortableDownload", false, "true to download portable versions 
 SLCONFIG("/Spring/RapidMasterUrl", "http://repos.springrts.com/repos.gz", "master url for rapid downloads");
 
 static PrDownloader::DownloadProgress *m_progress = nullptr;
-static std::mutex dlProgressMutex;
+static boost::mutex dlProgressMutex;
 
 class DownloadItem : public LSL::WorkItem
 {
@@ -49,7 +49,7 @@ public:
 		slLogDebugFunc("");
 
 		{
-			std::lock_guard<std::mutex> lock(dlProgressMutex);
+			boost::mutex::scoped_lock lock(dlProgressMutex);
 
 			if (m_progress == nullptr)
 				m_progress = new PrDownloader::DownloadProgress();
@@ -170,7 +170,7 @@ void PrDownloader::GetProgress(DownloadProgress& progress)
 {
 	slLogDebugFunc("");
 
-	std::lock_guard<std::mutex> lock(dlProgressMutex);
+	boost::mutex::scoped_lock lock(dlProgressMutex);
 
 	if (m_progress == nullptr) {
 		assert(false);
@@ -188,7 +188,7 @@ void updatelistener(int downloaded, int filesize)
 {
 	slLogDebugFunc("");
 
-	std::lock_guard<std::mutex> lock(dlProgressMutex);
+	boost::mutex::scoped_lock lock(dlProgressMutex);
 
 	if (m_progress == nullptr)
 		m_progress = new PrDownloader::DownloadProgress();
