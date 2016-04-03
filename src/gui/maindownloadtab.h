@@ -51,7 +51,7 @@ private:
 	wxBoxSizer* m_main_sizer;
 
 private:
-	void OnDownloadFailed();
+	void OnDownloadFailed(wxCommandEvent& /*event*/);
 
 private:
 	//(*Handlers(MainTorrentTab)

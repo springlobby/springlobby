@@ -98,6 +98,6 @@ void MainDownloadTab::OnDownloadDialog(wxCommandEvent& /*unused*/)
 	}
 }
 
-void MainDownloadTab::OnDownloadFailed() {
+void MainDownloadTab::OnDownloadFailed(wxCommandEvent& /*event*/) {
 	customMessageBox(SL_MAIN_ICON, _("Failed to download selected item."), _("Failed to download"), wxOK);
 }
