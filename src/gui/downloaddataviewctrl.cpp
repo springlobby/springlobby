@@ -34,23 +34,17 @@ DownloadDataViewCtrl::DownloadDataViewCtrl(const wxString dataViewName,
 
 	LoadColumnProperties();
 
-//FIXME!!!!
-#ifndef WIN32
 	GlobalEventManager::Instance()->Subscribe(this,
 			GlobalEventManager::OnDownloadStarted,
 			wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadStarted));
 	GlobalEventManager::Instance()->Subscribe(this,
 			GlobalEventManager::OnDownloadProgress,
 			wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadProgress));
-#endif
 }
 
 DownloadDataViewCtrl::~DownloadDataViewCtrl()
 {
-//FIXME!!!!
-#ifndef WIN32
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
-#endif
 	Clear();
 }
 
@@ -72,7 +66,7 @@ void DownloadDataViewCtrl::OnRetry(wxCommandEvent& /*event*/) {
 	//TODO: this is just a stub! Need implementation!
 }
 
-void DownloadDataViewCtrl::OnDownloadStarted() {
+void DownloadDataViewCtrl::OnDownloadStarted(wxCommandEvent& /*event*/) {
 	slLogDebugFunc("");
 
 	PrDownloader::DownloadProgress *p = new PrDownloader::DownloadProgress;
@@ -80,8 +74,7 @@ void DownloadDataViewCtrl::OnDownloadStarted() {
 	AddItem(p);
 }
 
-void DownloadDataViewCtrl::OnDownloadProgress() {
-	slLogDebugFunc("");
+void DownloadDataViewCtrl::OnDownloadProgress(wxCommandEvent& /*event*/) {
 
 	PrDownloader::DownloadProgress *existingItem;
 	PrDownloader::DownloadProgress p;

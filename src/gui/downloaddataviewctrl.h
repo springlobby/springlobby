@@ -28,8 +28,8 @@ public:
 	void ClearFinished();
 
 private:
-	void OnDownloadStarted();
-	void OnDownloadProgress();
+	void OnDownloadStarted(wxCommandEvent& event);
+	void OnDownloadProgress(wxCommandEvent& event);
 
 private:
 	std::map<const std::string, PrDownloader::DownloadProgress*> itemsIndex;
