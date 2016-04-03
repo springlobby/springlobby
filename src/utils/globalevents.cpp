@@ -73,7 +73,7 @@ void GlobalEventManager::Send(wxCommandEvent event)
 
 	std::set<wxEvtHandler*>& evtlist = m_eventsTable[event.GetEventType()];
 	for (auto evt : evtlist) {
-		evt->AddPendingEvent(event);
+		evt->QueueEvent(event.Clone());
 	}
 
 	if (event.GetEventType() == GlobalEventManager::OnQuit) {
