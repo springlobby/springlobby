@@ -128,7 +128,7 @@ void TaskBar::UpdateProgress()
 	slLogDebugFunc("");
 
 	PrDownloader::DownloadProgress p;
-	prDownloader().GetProgress(p);
+//	prDownloader().GetProgress(p);
 
 //	int progress = (int)p.GetProgressPercent();
 	text->SetLabel(wxString::Format(_("Downloading %s"), TowxString(p.name)));
