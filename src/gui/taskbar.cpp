@@ -125,15 +125,13 @@ void TaskBar::OnTimer(wxTimerEvent&)
 
 void TaskBar::UpdateProgress()
 {
-	slLogDebugFunc("");
+//	slLogDebugFunc("");
 
-	this->GetEventHandler()->CallAfter([&](){
 //	PrDownloader::DownloadProgress p;
 //	prDownloader().GetProgress(p);
 
 //	int progress = (int)p.GetProgressPercent();
-	text->SetLabel(wxString::Format(_("Downloading %s"), TowxString("<EMPTY>")));
-	});
+//	text->SetLabel(wxString::Format(_("Downloading %s"), TowxString("<EMPTY>")));
 //	gauge->SetValue(progress);
 }
 
