@@ -130,9 +130,9 @@ void TaskBar::UpdateProgress()
 	PrDownloader::DownloadProgress p;
 	prDownloader().GetProgress(p);
 
-	int progress = (int)p.GetProgressPercent();
+//	int progress = (int)p.GetProgressPercent();
 	text->SetLabel(wxString::Format(_("Downloading %s"), TowxString(p.name)));
-	gauge->SetValue(progress);
+//	gauge->SetValue(progress);
 }
 
 void TaskBar::EnsureTimerRemoved()
