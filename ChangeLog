@@ -11,6 +11,7 @@ ChangeLog of Springlobby
  - speedup demo reloading: only new files are parsed
  - fix crash in FORCEJOINBATTLE
  - drop Boost.Filesystem dependency
+ - add support for .sdfz replay format
 
 ## 0.243
  - remove /installer from source tarball
