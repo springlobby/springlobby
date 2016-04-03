@@ -35,22 +35,22 @@ DownloadDataViewCtrl::DownloadDataViewCtrl(const wxString dataViewName,
 	LoadColumnProperties();
 
 //FIXME!!!!
-//#ifndef WIN32
+#ifndef WIN32
 	GlobalEventManager::Instance()->Subscribe(this,
 			GlobalEventManager::OnDownloadStarted,
 			wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadStarted));
 	GlobalEventManager::Instance()->Subscribe(this,
 			GlobalEventManager::OnDownloadProgress,
 			wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadProgress));
-//#endif
+#endif
 }
 
 DownloadDataViewCtrl::~DownloadDataViewCtrl()
 {
 //FIXME!!!!
-//#ifndef WIN32
+#ifndef WIN32
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
-//#endif
+#endif
 	Clear();
 }
 
