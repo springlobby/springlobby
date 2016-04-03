@@ -50,7 +50,7 @@ TaskBar::TaskBar(wxWindow* statusbar)
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction(&TaskBar::OnDownloadStarted));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadFailed, wxObjectEventFunction(&TaskBar::OnDownloadFailed));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadComplete, wxObjectEventFunction(&TaskBar::OnDownloadComplete));
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadProgress, wxObjectEventFunction(&TaskBar::UpdateProgress));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadProgress, wxObjectEventFunction(&TaskBar::OnDownloadProgress));
 }
 
 TaskBar::~TaskBar()
@@ -111,6 +111,10 @@ void TaskBar::OnDownloadComplete(wxCommandEvent& /*event*/)
 	Refresh();
 }
 
+void TaskBar::OnDownloadProgress(wxCommandEvent& /*event*/) {
+	UpdateProgress();
+}
+
 void TaskBar::OnTimer(wxTimerEvent&)
 {
 	slLogDebugFunc("");
@@ -125,14 +129,12 @@ void TaskBar::OnTimer(wxTimerEvent&)
 
 void TaskBar::UpdateProgress()
 {
-//	slLogDebugFunc("");
+	PrDownloader::DownloadProgress p;
+	prDownloader().GetProgress(p);
 
-//	PrDownloader::DownloadProgress p;
-//	prDownloader().GetProgress(p);
-
-//	int progress = (int)p.GetProgressPercent();
-//	text->SetLabel(wxString::Format(_("Downloading %s"), TowxString("<EMPTY>")));
-//	gauge->SetValue(progress);
+	int progress = (int)p.GetProgressPercent();
+	text->SetLabel(wxString::Format(_("Downloading %s"), TowxString(p.name)));
+	gauge->SetValue(progress);
 }
 
 void TaskBar::EnsureTimerRemoved()

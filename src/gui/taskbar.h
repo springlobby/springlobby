@@ -20,6 +20,8 @@ private:
 	void OnDownloadStarted(wxCommandEvent& event);
 	void OnDownloadComplete(wxCommandEvent& event);
 	void OnDownloadFailed(wxCommandEvent& event);
+	void OnDownloadProgress(wxCommandEvent& event);
+
 	void UpdateProgress();
 	void OnTimer(wxTimerEvent&);
 	void EnsureTimerRemoved();
