@@ -47,16 +47,16 @@ TaskBar::TaskBar(wxWindow* statusbar)
 
 	Hide();
 
-//	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction(&TaskBar::OnDownloadStarted));
-//	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadFailed, wxObjectEventFunction(&TaskBar::OnDownloadFailed));
-//	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadComplete, wxObjectEventFunction(&TaskBar::OnDownloadComplete));
-//	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadProgress, wxObjectEventFunction(&TaskBar::UpdateProgress));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadStarted, wxObjectEventFunction(&TaskBar::OnDownloadStarted));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadFailed, wxObjectEventFunction(&TaskBar::OnDownloadFailed));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadComplete, wxObjectEventFunction(&TaskBar::OnDownloadComplete));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadProgress, wxObjectEventFunction(&TaskBar::UpdateProgress));
 }
 
 TaskBar::~TaskBar()
 {
 	EnsureTimerRemoved();
-//	GlobalEventManager::Instance()->UnSubscribeAll(this);
+	GlobalEventManager::Instance()->UnSubscribeAll(this);
 }
 
 void TaskBar::OnDownloadStarted(wxCommandEvent& /*event*/)
