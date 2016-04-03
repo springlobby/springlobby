@@ -58,52 +58,44 @@ public:
 		}
 
 		const bool force = true;
-		slLogDebugFunc("");
 		DownloadSetConfig(CONFIG_RAPID_FORCEUPDATE, &force);
 		int results = 0;
 
 		switch(m_category) {
 			case DownloadEnum::CAT_SPRINGLOBBY:
 			case DownloadEnum::CAT_HTTP:
-				slLogDebugFunc("");
 				results = DownloadAddByUrl(m_category, m_filename.c_str(), m_name.c_str());
 				break;
 			default:
-				slLogDebugFunc("");
 				results = DownloadSearch(m_category, m_name.c_str());
+				break;
 		}
 		if (results <= 0) {
-			slLogDebugFunc("");
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 			wxLogInfo("Nothing found to download");
 			return;
 		}
+
 		for (int i=0; i < results; i++) {
 			DownloadAdd(i);
 			break; //only add one result
 		}
 
 		downloadInfo info;
-		slLogDebugFunc("");
 		const bool hasdlinfo = DownloadGetInfo(0, info);
 		//In case if something gone wrong
 		if (!hasdlinfo) {
-			slLogDebugFunc("");
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 			return;
 		}
 
-		slLogDebugFunc("");
 		GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadStarted);
 
-		slLogDebugFunc("");
 		const bool downloadFailed = DownloadStart();
 
 		if (downloadFailed) {
-			slLogDebugFunc("");
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 		} else {
-			slLogDebugFunc("");
 			DownloadFinished(m_category, info);
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadComplete);
 		}
@@ -180,8 +172,6 @@ private:
 
 void PrDownloader::GetProgress(DownloadProgress& progress)
 {
-	slLogDebugFunc("");
-
 	boost::mutex::scoped_lock lock(dlProgressMutex);
 
 	if (m_progress == nullptr) {
@@ -198,8 +188,6 @@ void PrDownloader::GetProgress(DownloadProgress& progress)
 
 void updatelistener(int downloaded, int filesize)
 {
-	slLogDebugFunc("");
-
 	boost::mutex::scoped_lock lock(dlProgressMutex);
 
 	if (m_progress == nullptr)
