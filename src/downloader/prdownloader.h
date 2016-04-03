@@ -34,9 +34,9 @@ public:
 		}
 		float GetProgressPercent()
 		{
-			if (filesize == 0)
+			if (filesize == 0 || downloaded == 0)
 				return 0;
-			return (float)(downloaded * 100.0)/filesize;
+			return ((float)(downloaded)/(float)filesize) * 100.0;
 		}
 		void CopyTo(DownloadProgress& prg)
 		{
