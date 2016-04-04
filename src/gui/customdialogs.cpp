@@ -203,19 +203,19 @@ int customMessageBox(int whichIcon, const wxString& message, const wxString& cap
 	int re = dlg.ShowModal();
 	switch (re) {
 		case wxID_OK:
-			wxLogDebug("returning wxOK");
+			wxLogDebug("%s: returning wxOK", message.c_str());
 			return wxOK;
 		case wxID_CANCEL:
-			wxLogDebug("returning wxCANCEL");
+			wxLogDebug("%s: returning wxCANCEL", message.c_str());
 			return wxCANCEL;
 		case wxID_YES:
-			wxLogDebug("returning wxYES");
+			wxLogDebug("%s: returning wxYES", message.c_str());
 			return wxYES;
 		case wxID_NO:
-			wxLogDebug("returning wxNO");
+			wxLogDebug("%s: returning wxNO", message.c_str());
 			return wxNO;
 		default:
-			wxLogDebug("returning undefined");
+			wxLogDebug("%s: returning undefined", message.c_str());
 			assert(false);
 			return wxNO;
 	}
