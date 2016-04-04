@@ -33,9 +33,6 @@ struct TestInitializer{
 	wxApp* _wxApp;
 };
 
-DECLARE_APP(wxApp)
-IMPLEMENT_APP(wxApp)
-
 BOOST_GLOBAL_FIXTURE(TestInitializer);
 
 namespace SlPaths
