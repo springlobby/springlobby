@@ -26,6 +26,7 @@ macro (add_springlobby_test target sources libraries flags)
 	target_include_directories(test_${target}
 		PRIVATE ${springlobby_SOURCE_DIR}/src
 		PRIVATE ${springlobby_SOURCE_DIR}/src/lsl/src
+		PRIVATE ${Boost_INCLUDE_DIRS}
 	)
 	set_target_properties(test_${target} PROPERTIES COMPILE_FLAGS "${flags}")
 	#install(TARGETS test_${target} DESTINATION ${BINDIR})
