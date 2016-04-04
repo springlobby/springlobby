@@ -28,11 +28,9 @@ const wxEventType GlobalEventManager::GamePromotedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::ApplicationSettingsChangedEvent =
 		wxNewEventType();
 
-bool GlobalEventManager::m_eventsDisabled = false;
-
 GlobalEventManager* GlobalEventManager::m_Instance = nullptr;
 
-GlobalEventManager::GlobalEventManager() {
+GlobalEventManager::GlobalEventManager() : m_eventsDisabled(false){
 	slLogDebugFunc("");
 }
 
@@ -68,16 +66,16 @@ void GlobalEventManager::Send(wxCommandEvent event)
 	if (m_eventsDisabled)
 		return;
 
+	if (event.GetEventType() == GlobalEventManager::OnQuit) {
+		m_eventsDisabled = true;
+	}
+
 	if (m_eventsTable.find(event.GetEventType()) == m_eventsTable.end())
 		return;
 
 	std::set<wxEvtHandler*>& evtlist = m_eventsTable[event.GetEventType()];
 	for (auto evt : evtlist) {
 		evt->QueueEvent(event.Clone());
-	}
-
-	if (event.GetEventType() == GlobalEventManager::OnQuit) {
-		m_eventsDisabled = true;
 	}
 }
 

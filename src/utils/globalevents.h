@@ -54,9 +54,9 @@ public:
 
 private:
 	static GlobalEventManager* m_Instance;
-	static bool m_eventsDisabled;
 
 private:
+	bool m_eventsDisabled;
 	std::map<wxEventType, std::set<wxEvtHandler*> > m_eventsTable;
 	const int ANY_EVENT = 0;
 };
