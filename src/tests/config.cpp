@@ -3,9 +3,12 @@
 #define BOOST_TEST_MODULE slconfig
 #include <boost/test/unit_test.hpp>
 
+#include "testingstuff/silent_logger.h"
+
 #include "utils/slconfig.h"
 #include "utils/conversion.h"
 
+#include <wx/app.h>
 #include <wx/string.h>
 #include <wx/filename.h>
 
@@ -15,9 +18,28 @@ SLCONFIG("/test/double", -321.123, "test double");
 SLCONFIG("/test/bool", true, "test bool");
 SLCONFIG("/test/notbool", false, "test bool");
 
+struct TestInitializer{
+	TestInitializer()
+	{
+		InitWxLogger();
+
+		_wxApp = new wxApp();
+	}
+	~TestInitializer()
+	{
+		delete _wxApp;
+	}
+
+	wxApp* _wxApp;
+};
+
+DECLARE_APP(wxApp)
+IMPLEMENT_APP(wxApp)
+
+BOOST_GLOBAL_FIXTURE(TestInitializer);
+
 namespace SlPaths
 {
-
 std::string GetConfigPath()
 {
 	return STD_STRING(wxFileName::GetTempDir()) + "/sltest.config";

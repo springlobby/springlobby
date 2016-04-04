@@ -18,9 +18,9 @@ std::string GetSentenceParam(std::string& params)
 }
 
 
-long GetIntParam(std::string& params)
+int GetIntParam(std::string& params)
 {
-	return LSL::Util::FromLongString(GetParamByChar(params, ' '));
+	return LSL::Util::FromIntString(GetParamByChar(params, ' '));
 }
 
 std::string GetParamByChar(std::string& params, const char sep)

@@ -3,6 +3,8 @@
 #define BOOST_TEST_MODULE slconfig
 #include <boost/test/unit_test.hpp>
 
+#include "testingstuff/silent_logger.h"
+
 #include "utils/slpaths.h"
 #include "utils/platform.h"
 #include "utils/conversion.h"
@@ -17,6 +19,13 @@
 #else
 #define DELIM "/"
 #endif
+
+struct TestInitializer{
+	TestInitializer(){InitWxLogger();}
+	~TestInitializer(){}
+};
+
+BOOST_GLOBAL_FIXTURE(TestInitializer);
 
 BOOST_AUTO_TEST_CASE(slpaths)
 {

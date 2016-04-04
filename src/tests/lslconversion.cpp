@@ -3,6 +3,8 @@
 #define BOOST_TEST_MODULE lobbyid
 #include <boost/test/unit_test.hpp>
 
+#include "testingstuff/silent_logger.h"
+
 #include <stdio.h>
 #include <wx/colour.h>
 #include <lslutils/misc.h>
@@ -13,6 +15,12 @@
 #include "utils/conversion.h"
 #include "utils/tasutil.h"
 
+struct TestInitializer{
+	TestInitializer(){InitWxLogger();}
+	~TestInitializer(){}
+};
+
+BOOST_GLOBAL_FIXTURE(TestInitializer);
 
 void test_wxColourTolsl(const unsigned char red, const unsigned char green, const unsigned char blue, const unsigned char alpha)
 {
@@ -290,8 +298,13 @@ BOOST_AUTO_TEST_CASE(tasutils)
 	BOOST_CHECK(LSL::Util::ToLower("A") == "a");
 	BOOST_CHECK(LSL::Util::ToLower("") == "");
 
-
 	BOOST_CHECK(LSL::Util::FromLongString("1238129312390") == 1238129312390l);
 	BOOST_CHECK(LSL::Util::FromLongString("-1238129312390") == -1238129312390l);
 	BOOST_CHECK(LSL::Util::FromLongString("") == 0l);
+
+	BOOST_CHECK(LSL::Util::FromIntString("2147483647") == INT_MAX);
+	//Check for overflow
+	BOOST_CHECK(LSL::Util::FromIntString("2147483648") == INT_MIN);
+	BOOST_CHECK(LSL::Util::FromIntString("-2147483647") == INT_MIN + 1);
+	BOOST_CHECK(LSL::Util::FromIntString("") == 0);
 }
