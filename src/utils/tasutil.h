@@ -7,7 +7,7 @@
 
 std::string GetWordParam(std::string& params);
 std::string GetSentenceParam(std::string& params);
-long GetIntParam(std::string& params);
+int GetIntParam(std::string& params);
 bool GetBoolParam(std::string& params);
 std::string GetParamByChar(std::string& params, const char sep);
 
