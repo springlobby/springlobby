@@ -69,6 +69,7 @@ public:
 	bool IsRunning();
 	static void GetProgress(DownloadProgress& progress);
 	void UpdateApplication(const std::string& updateurl);
+	bool DownloadUrl(const std::string& httpurl, std::string& res);
 
 private:
 	LSL::WorkerThread* m_dl_thread;

@@ -3,7 +3,7 @@
 
 #include "utils/conversion.h"
 #include "log.h"
-#include "downloader/lib/src/Downloader/Http/HttpDownloader.h"
+#include "downloader/prdownloader.h"
 
 // convert a string to IRI: https://en.wikipedia.org/wiki/Internationalized_resource_identifier
 std::string ConvToIRI(const std::string& str)
@@ -26,7 +26,7 @@ std::string ConvToIRI(const std::string& str)
 std::string GetHttpFile(const std::string& httpurl)
 {
 	std::string res;
-	if (!CHttpDownloader::DownloadUrl(httpurl, res)) {
+	if (!prDownloader().DownloadUrl(httpurl, res)) {
 		wxLogWarning("Error downloading %s", httpurl.c_str());
 	}
 	return res;

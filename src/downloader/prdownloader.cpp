@@ -6,6 +6,7 @@
 #include "lib/src/pr-downloader.h"
 #include "lib/src/Downloader/IDownloader.h" //FIXME: remove this include
 #include "lib/src/FileSystem/FileSystem.h"  //FIXME
+#include "lib/src/Downloader/Http/HttpDownloader.h" //FIXME
 #include "utils/uievents.h"
 #include "utils/conversion.h"
 #include "utils/globalevents.h"
@@ -318,3 +319,7 @@ void PrDownloader::UpdateApplication(const std::string& updateurl)
 	Download(DownloadEnum::CAT_SPRINGLOBBY, updateurl, dlfilepath);
 }
 
+bool PrDownloader::DownloadUrl(const std::string& httpurl, std::string& res)
+{
+	return CHttpDownloader::DownloadUrl(httpurl, res);
+}
