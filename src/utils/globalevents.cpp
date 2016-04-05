@@ -22,6 +22,7 @@ const wxEventType GlobalEventManager::UpdateFinished = wxNewEventType();
 const wxEventType GlobalEventManager::OnQuit = wxNewEventType();
 const wxEventType GlobalEventManager::OnLogin = wxNewEventType();
 const wxEventType GlobalEventManager::BattleSyncReload = wxNewEventType();
+const wxEventType GlobalEventManager::UserBattleStatusChangedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::BattleStartedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::OnUpdateFinished = wxNewEventType();
 const wxEventType GlobalEventManager::GamePromotedEvent = wxNewEventType();
@@ -77,6 +78,13 @@ void GlobalEventManager::Send(wxCommandEvent event)
 	for (auto evt : evtlist) {
 		evt->QueueEvent(event.Clone());
 	}
+}
+
+void GlobalEventManager::Send(wxEventType type, void* clientData)
+{
+	wxCommandEvent evt(type);
+	evt.SetClientData(clientData);
+	Send(evt);
 }
 
 void GlobalEventManager::Subscribe(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func)

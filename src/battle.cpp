@@ -292,6 +292,7 @@ void Battle::OnUserBattleStatusUpdated(User& user, UserBattleStatus status)
 		}
 	}
 	ShouldAutoUnspec();
+	GlobalEventManager::Instance()->Send(GlobalEventManager::UserBattleStatusChangedEvent, &user);
 }
 
 
