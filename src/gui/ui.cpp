@@ -300,7 +300,7 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 	if (!SlPaths::GetCompatibleVersion(STD_STRING(version)).empty())
 		return;
 	if (Ask(_("Spring can't be found"), wxString::Format(_T("No engine compatible to the lobby server default version spring %s can be found, try to download it?"), version.c_str()))) {
-		PrDownloader().Download(DownloadEnum::CAT_ENGINE, "spring " + STD_STRING(version));
+		prDownloader().Download(DownloadEnum::CAT_ENGINE, "spring " + STD_STRING(version));
 	}
 }
 
