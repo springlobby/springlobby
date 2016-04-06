@@ -22,7 +22,6 @@ const wxEventType GlobalEventManager::UpdateFinished = wxNewEventType();
 const wxEventType GlobalEventManager::OnQuit = wxNewEventType();
 const wxEventType GlobalEventManager::OnLogin = wxNewEventType();
 const wxEventType GlobalEventManager::BattleSyncReload = wxNewEventType();
-const wxEventType GlobalEventManager::UserBattleStatusChangedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::BattleStartedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::OnUpdateFinished = wxNewEventType();
 const wxEventType GlobalEventManager::GamePromotedEvent = wxNewEventType();
