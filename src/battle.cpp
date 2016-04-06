@@ -15,7 +15,6 @@
 #include <wx/filename.h>
 #include <wx/file.h>
 
-
 #include "user.h"
 #include "utils/conversion.h"
 #include "utils/uievents.h"
@@ -31,7 +30,6 @@
 #include "log.h"
 #include "iserver.h"
 #include "utils/globalevents.h"
-
 
 const unsigned int TIMER_INTERVAL = 1000;
 const unsigned int TIMER_ID = wxNewId();
@@ -292,7 +290,6 @@ void Battle::OnUserBattleStatusUpdated(User& user, UserBattleStatus status)
 		}
 	}
 	ShouldAutoUnspec();
-	GlobalEventManager::Instance()->Send(GlobalEventManager::UserBattleStatusChangedEvent, &user);
 }
 
 

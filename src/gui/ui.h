@@ -88,7 +88,7 @@ public:
 
 	void OnJoinedBattle(IBattle& battle);
 	void OnHostedBattle(IBattle& battle);
-	void OnUserBattleStatus(wxCommandEvent& event);
+	void OnUserBattleStatus(User& user);
 	void OnRequestBattleStatus(IBattle& battle);
 
 	void OnSaidBattle(IBattle& battle, const wxString& nick, const wxString& msg);

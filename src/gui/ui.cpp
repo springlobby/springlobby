@@ -94,7 +94,6 @@ Ui::Ui()
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringTerminated, wxObjectEventFunction(&Ui::OnSpringTerminated));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnQuit, wxObjectEventFunction(&Ui::OnQuit));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnLobbyDownloaded, wxObjectEventFunction(&Ui::OnLobbyDownloaded));
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::UserBattleStatusChangedEvent, wxObjectEventFunction(&Ui::OnUserBattleStatus));
 }
 
 Ui::~Ui()
@@ -621,7 +620,7 @@ void Ui::OnHostedBattle(IBattle& battle)
 }
 
 
-void Ui::OnUserBattleStatus(wxCommandEvent& event)
+void Ui::OnUserBattleStatus(User& user)
 {
 	if (m_main_win == 0) {
 		return;
@@ -630,9 +629,8 @@ void Ui::OnUserBattleStatus(wxCommandEvent& event)
 		return;
 	}
 
-	User* user = static_cast<User*>(event.GetClientData());
-	mw().GetJoinTab().BattleUserUpdated(*user);
-	IBattle* battle = user->GetBattle();
+	mw().GetJoinTab().BattleUserUpdated(user);
+	IBattle* battle = user.GetBattle();
 	if (battle == nullptr) {
 		wxLogWarning("trying to update non-existing battle");
 		return;

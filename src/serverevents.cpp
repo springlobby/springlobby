@@ -329,6 +329,7 @@ void ServerEvents::OnClientBattleStatus(int battleid, const std::string& nick, U
 
 		status.color_index = user.BattleStatus().color_index;
 		battle.OnUserBattleStatusUpdated(user, status);
+		ui().OnUserBattleStatus(user);
 	} catch (std::runtime_error& except) {
 	}
 }
@@ -483,6 +484,7 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 									status.pos.y = LSL::Util::FromIntString(value);
 								}
 								battle.OnUserBattleStatusUpdated(usr, status);
+								ui().OnUserBattleStatus(usr);
 							}
 						}
 						return;
