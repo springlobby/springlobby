@@ -2,6 +2,8 @@
 
 #include "notificationmanager.h"
 
+#include <wx/bitmap.h>
+
 #include <lslutils/globalsmanager.h>
 #include "gui/uiutils.h"
 #include "gui/ui.h"
