@@ -1448,7 +1448,6 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 		if (m_mdown_area == m_rect_area) {
 			if (m_mdown_area == Refreshing) {
 				//				LSL::usync().AddReloadEvent();
-				m_battle->Update(stdprintf("%d_mapname", LSL::Enum::PrivateOptions));
 				UpdateMinimap();
 			} else if (m_mdown_area == Download) {
 				ui().NeedsDownload(m_battle, false, DownloadEnum::CAT_MAP);

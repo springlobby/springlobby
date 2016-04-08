@@ -75,12 +75,6 @@ void Battle::SendHostInfo(const std::string& Tag)
 	m_serv.SendHostInfo(Tag);
 }
 
-void Battle::Update(const std::string& Tag)
-{
-	BattleEvents::GetBattleEventSender(BattleEvents::BattleInfoUpdate).SendEvent(std::make_pair(this, Tag));
-}
-
-
 void Battle::Join(const std::string& password)
 {
 	if (m_autohost_manager == nullptr) {

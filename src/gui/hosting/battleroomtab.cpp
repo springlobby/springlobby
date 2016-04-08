@@ -447,6 +447,11 @@ void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
 	if (!m_battle)
 		return;
 
+	if (m_opt_list_map.find(Tag) == m_opt_list_map.end()) {
+		wxLogWarning("Tag %s not found in options list", STD_STRING(Tag).c_str());
+		return;
+	}
+
 	const long index = m_opt_list_map[Tag];
 	if (index >= m_opts_list->GetItemCount()) {
 		wxLogDebug(_T("UpdateBattleInfo: Invalid index %d %d %s"), index, m_opts_list->GetItemCount(), Tag.c_str());

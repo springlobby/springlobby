@@ -395,7 +395,6 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 		if ((oldmap != map) && (battle.UserExists(m_serv.GetMe().GetNick()))) {
 			battle.SendMyBattleStatus();
 			battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, map);
-			battle.Update(stdprintf("%d_mapname", LSL::Enum::PrivateOptions));
 		}
 
 		BattleEvents::GetBattleEventSender(BattleEvents::BattleInfoUpdate).SendEvent(std::make_pair(&battle, ""));
@@ -454,12 +453,10 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 		case 3: { // depth 3
 			if (param.find("game/mapoptions") == 0) {
 				battle.CustomBattleOptions().setSingleOption(vec[2], value, LSL::Enum::MapOption);
-				battle.Update(stdprintf("%d_%s", LSL::Enum::MapOption, vec[2].c_str()));
 				return;
 			}
 			if (param.find("game/modoptions/") == 0) {
 				battle.CustomBattleOptions().setSingleOption(vec[2], value, LSL::Enum::ModOption);
-				battle.Update(stdprintf("%d_%s", LSL::Enum::ModOption, vec[2].c_str()));
 				return;
 			}
 			if (param.find("game/restrict") == 0) {
@@ -522,7 +519,6 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 			}
 			// i.e. game/startpostype
 			battle.CustomBattleOptions().setSingleOption(vec[1], value, LSL::Enum::EngineOption);
-			battle.Update(stdprintf("%d_%s", LSL::Enum::EngineOption, vec[1].c_str()));
 			return;
 		}
 			/*
@@ -573,7 +569,6 @@ void ServerEvents::OnBattleDisableUnit(int battleid, const std::string& unitname
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.RestrictUnit(unitname, count);
-		battle.Update(stdprintf("%d_restrictions", LSL::Enum::PrivateOptions));
 	} catch (assert_exception) {
 	}
 }
@@ -585,7 +580,6 @@ void ServerEvents::OnBattleEnableUnit(int battleid, const std::string& unitname)
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.UnrestrictUnit(unitname);
-		battle.Update(stdprintf("%d_restrictions", LSL::Enum::PrivateOptions));
 	} catch (assert_exception) {
 	}
 }
@@ -597,7 +591,6 @@ void ServerEvents::OnBattleEnableAllUnits(int battleid)
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.UnrestrictAllUnits();
-		battle.Update(stdprintf("%d_restrictions", LSL::Enum::PrivateOptions));
 	} catch (assert_exception) {
 	}
 }
@@ -752,7 +745,6 @@ void ServerEvents::OnBattleStartRectAdd(int battleid, int allyno, int left, int 
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.AddStartRect(allyno, left, top, right, bottom);
 		battle.StartRectAdded(allyno);
-		battle.Update(stdprintf("%d_mapname", LSL::Enum::PrivateOptions));
 	} catch (assert_exception) {
 	}
 }
@@ -764,7 +756,6 @@ void ServerEvents::OnBattleStartRectRemove(int battleid, int allyno)
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.RemoveStartRect(allyno);
 		battle.StartRectRemoved(allyno);
-		battle.Update(stdprintf("%d_mapname", LSL::Enum::PrivateOptions));
 	} catch (assert_exception) {
 	}
 }

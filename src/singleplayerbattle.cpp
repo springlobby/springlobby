@@ -40,7 +40,6 @@ void SinglePlayerBattle::SendHostInfo(HostInfo update)
 	if ((update & HI_Map_Changed) != 0) {
 		LoadMap();
 		m_sptab.ReloadMapOptContrls();
-		Update(stdprintf("%d_%s", LSL::Enum::PrivateOptions, "mapname"));
 	}
 	if ((update & HI_Game_Changed) != 0) {
 		RemoveUnfittingBots();
@@ -51,14 +50,6 @@ void SinglePlayerBattle::SendHostInfo(HostInfo update)
 			SendHostInfo(HI_Send_All_opts);
 		}
 		m_sptab.ReloadModOptContrls();
-		Update(stdprintf("%d_%s", LSL::Enum::PrivateOptions, "gamename"));
-	}
-	if ((update & HI_Send_All_opts) != 0) {
-		for (int i = 0; i < (int)LSL::Enum::LastOption; i++) {
-			for (const auto pair : CustomBattleOptions().getOptionsMap((LSL::Enum::GameOption)i)) {
-				Update(stdprintf("%d_%s", i, pair.first.c_str()));
-			}
-		}
 	}
 }
 

@@ -277,9 +277,6 @@ public:
 	virtual void SendHostInfo(const std::string& /*Tag*/)
 	{
 	}
-	virtual void Update(const std::string& /*Tag*/)
-	{
-	}
 
 	virtual void OnPlayerTrueskillChanged(const std::string& /*NickName*/, double /*TrueSkill value*/)
 	{

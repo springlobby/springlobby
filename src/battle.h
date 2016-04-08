@@ -40,8 +40,6 @@ public:
 	virtual void SendHostInfo(HostInfo update) override;
 	virtual void SendHostInfo(const std::string& Tag) override;
 
-	virtual void Update(const std::string& Tag) override;
-
 	virtual void Join(const std::string& password = "") override;
 	virtual void Leave() override;
 

@@ -145,17 +145,6 @@ void User::SetBattle(IBattle* battle)
 void User::SetStatus(const UserStatus& status)
 {
 	CommonUser::SetStatus(status);
-	// If user is host of a game, then his in_game status tells if the game is on!
-	if (m_battle != 0) {
-		try {
-			User& user = m_battle->GetFounder();
-			if (user.GetNick() == GetNick()) {
-				m_battle->Update("");
-			}
-		} catch (...) {
-		}
-	}
-
 	m_statusicon_idx = icons().GetUserListStateIcon(GetStatus(), false, m_battle != 0);
 	m_rankicon_idx = icons().GetRankIcon(GetStatus().rank);
 }
