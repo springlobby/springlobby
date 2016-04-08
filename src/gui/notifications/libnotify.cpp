@@ -10,6 +10,7 @@
 #include "utils/version.h"
 
 #include <wx/log.h>
+#include <wx/bitmap.h>
 #include <libnotify/notify.h>
 
 

@@ -4,10 +4,10 @@
 #define SPRINGLOBBY_HEADERGUARD_UIEVENTS_H
 
 #include "events.h"
-#include <wx/arrstr.h>
-#include <wx/bitmap.h>
 #include <map>
 #include <utility>
+#include <wx/string.h>
+#include <wx/arrstr.h>
 
 namespace UiEvents
 {
