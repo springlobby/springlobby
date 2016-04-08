@@ -18,7 +18,6 @@
 #include "user.h"
 #include "utils/conversion.h"
 #include "utils/uievents.h"
-#include "utils/battleevents.h"
 #include "gui/uiutils.h"
 #include "settings.h"
 #include "useractions.h"

@@ -9,6 +9,7 @@
 #include "user.h"
 #include "utils/tasutil.h"
 #include "utils/version.h"
+#include <lslutils/conversion.h>
 #include <wx/regex.h>
 #include <wx/log.h>
 #include "gui/chatpanel.h"

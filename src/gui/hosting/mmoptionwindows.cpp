@@ -25,6 +25,7 @@
 #include "gui/controls.h"
 #include "utils/conversion.h"
 #include "utils/lslconversion.h"
+#include "ibattle.h"
 
 SingleOptionDialog::SingleOptionDialog(IBattle& battle, const wxString& optiontag)
     : m_battle(battle)

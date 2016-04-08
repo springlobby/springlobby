@@ -254,7 +254,6 @@ set(springlobbySrc
 	gui/downloaddataviewctrl.cpp
 	gui/downloaddataviewmodel.cpp
 
-	utils/battleevents.cpp
 	utils/base64.cpp
 	utils/crc.cpp
 	utils/TextCompletionDatabase.cpp

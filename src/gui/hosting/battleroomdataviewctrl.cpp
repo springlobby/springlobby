@@ -10,6 +10,7 @@
 #include "gui/uiutils.h"
 #include "lslunitsync/unitsync.h"
 #include "iserver.h"
+#include "ibattle.h"
 
 #include <wx/generic/numdlgg.h>
 

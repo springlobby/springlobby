@@ -15,7 +15,6 @@ class ChatPanel;
 class HttpDownloaderThread;
 class wxEvtHandler;
 
-#include "utils/battleevents.h"
 #include "downloader/prdownloader.h"
 #include <wx/string.h>
 #include <wx/timer.h>
@@ -84,7 +83,7 @@ public:
 	void OnBattleClosed(IBattle& battle);
 	void OnUserJoinedBattle(IBattle& battle, User& user);
 	void OnUserLeftBattle(IBattle& battle, User& user, bool isbot);
-	void OnBattleInfoUpdated(BattleEvents::BattleEventData data);
+	void OnBattleInfoUpdated(IBattle& battle, const wxString& Tag);
 
 	void OnJoinedBattle(IBattle& battle);
 	void OnHostedBattle(IBattle& battle);
@@ -135,8 +134,6 @@ private:
 	bool m_connecting;
 	int m_connect_retries;
 
-	EventReceiverFunc<Ui, BattleEvents::BattleEventData, &Ui::OnBattleInfoUpdated>
-	    m_battle_info_updatedSink;
 };
 
 Ui& ui();

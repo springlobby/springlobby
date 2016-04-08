@@ -38,9 +38,11 @@
 #include "utils/lslconversion.h"
 #include "gui/ui.h"
 #include "iserver.h"
+#include "ibattle.h"
 #include "serverselector.h"
 #include <lslunitsync/springbundle.h>
 #include <lslunitsync/unitsync.h>
+#include <lslunitsync/optionswrapper.h>
 
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"

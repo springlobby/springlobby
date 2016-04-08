@@ -54,6 +54,7 @@
 #include "settings.h"
 #include "servermanager.h"
 #include "exception.h"
+#include "ibattle.h"
 
 #ifndef DISABLE_SOUND
 #include "sound/alsound.h"
@@ -84,7 +85,6 @@ Ui::Ui()
     , m_first_update_trigger(true)
     , m_connecting(false)
     , m_connect_retries(0)
-    , m_battle_info_updatedSink(this, &BattleEvents::GetBattleEventSender((BattleEvents::BattleInfoUpdate)))
 {
 	m_main_win = new MainWindow();
 	CustomMessageBoxBase::setLobbypointer(m_main_win);
@@ -541,7 +541,7 @@ void Ui::OnUserJoinedBattle(IBattle& battle, User& user)
 	try {
 		if (mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle) {
 			mw().GetJoinTab().GetBattleRoomTab().OnUserJoined(user);
-			OnBattleInfoUpdated(std::make_pair(&battle, ""));
+			OnBattleInfoUpdated(battle, wxEmptyString);
 		}
 	} catch (...) {
 	}
@@ -566,7 +566,7 @@ void Ui::OnUserLeftBattle(IBattle& battle, User& user, bool isbot)
 	try {
 		if (mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle) {
 			mw().GetJoinTab().GetBattleRoomTab().OnUserLeft(user);
-			OnBattleInfoUpdated(std::make_pair(&battle, ""));
+			OnBattleInfoUpdated(battle, wxEmptyString);
 			if (&user == &m_serv->GetMe()) {
 				mw().GetJoinTab().LeaveCurrentBattle();
 				mw().ShowTab(MainWindow::PAGE_LIST);
@@ -584,10 +584,8 @@ void Ui::OnUserLeftBattle(IBattle& battle, User& user, bool isbot)
 	}
 }
 
-void Ui::OnBattleInfoUpdated(BattleEvents::BattleEventData data)
+void Ui::OnBattleInfoUpdated(IBattle& battle, const wxString& Tag)
 {
-	IBattle& battle = *data.first;
-	const wxString Tag = TowxString(data.second);
 	if (m_main_win == 0)
 		return;
 	mw().GetBattleListTab().UpdateBattle(battle);
@@ -635,7 +633,7 @@ void Ui::OnUserBattleStatus(User& user)
 		wxLogWarning("trying to update non-existing battle");
 		return;
 	}
-	OnBattleInfoUpdated(std::make_pair(battle, ""));
+	OnBattleInfoUpdated(*battle, wxEmptyString);
 }
 
 

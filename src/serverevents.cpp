@@ -173,7 +173,7 @@ void ServerEvents::OnUserStatus(const std::string& nick, UserStatus status)
 							if (status.in_game) {
 								battle.StartSpring();
 							} else {
-								BattleEvents::GetBattleEventSender(BattleEvents::BattleInfoUpdate).SendEvent(std::make_pair(user.GetBattle(), ""));
+								ui().OnBattleInfoUpdated(battle, wxEmptyString);
 							}
 						}
 					}
@@ -397,7 +397,7 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 			battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, map);
 		}
 
-		BattleEvents::GetBattleEventSender(BattleEvents::BattleInfoUpdate).SendEvent(std::make_pair(&battle, ""));
+		ui().OnBattleInfoUpdated(battle, wxEmptyString);
 	} catch (assert_exception) {
 	}
 }
@@ -452,11 +452,15 @@ void ServerEvents::OnSetBattleInfo(int battleid, const std::string& param, const
 	switch (vec.size()) {
 		case 3: { // depth 3
 			if (param.find("game/mapoptions") == 0) {
-				battle.CustomBattleOptions().setSingleOption(vec[2], value, LSL::Enum::MapOption);
+				if (!battle.CustomBattleOptions().setSingleOption(vec[2], value, LSL::Enum::MapOption)) {
+					wxLogWarning("OnSetBattleInfo: Couldn't set map option %s", vec[2].c_str());
+				}
 				return;
 			}
 			if (param.find("game/modoptions/") == 0) {
-				battle.CustomBattleOptions().setSingleOption(vec[2], value, LSL::Enum::ModOption);
+				if (!battle.CustomBattleOptions().setSingleOption(vec[2], value, LSL::Enum::ModOption)) {
+					wxLogWarning("OnSetBattleInfo: Couldn't set game option %s", vec[2].c_str());
+				}
 				return;
 			}
 			if (param.find("game/restrict") == 0) {
@@ -544,7 +548,7 @@ void ServerEvents::OnBattleInfoUpdated(int battleid)
 	slLogDebugFunc("");
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
-		BattleEvents::GetBattleEventSender(BattleEvents::BattleInfoUpdate).SendEvent(std::make_pair(&battle, ""));
+		ui().OnBattleInfoUpdated(battle, wxEmptyString);
 	} catch (assert_exception) {
 	}
 }
