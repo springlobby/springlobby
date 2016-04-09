@@ -15,7 +15,7 @@
 #include "settings.h"
 #include "mainjoinbattletab.h"
 #include "ibattleroomtab.h"
-#include "battlemaptab.h"
+#include "ibattlemaptab.h"
 #include "battleoptionstab.h"
 #include "utils/conversion.h"
 #include "battleroommmoptionstab.h"
@@ -54,7 +54,7 @@ MainJoinBattleTab::MainJoinBattleTab(wxWindow* parent)
 	m_battle_tab = IBattleRoomTab::CreateInstance(m_tabs, 0);
 	m_tabs->InsertPage(0, m_battle_tab, _("Battleroom"), true, wxIcon(battle_xpm));
 
-	m_map_tab = new BattleMapTab(m_tabs, 0);
+	m_map_tab = IBattleMapTab::CreateInstance(m_tabs, 0);
 	m_tabs->InsertPage(1, m_map_tab, _("Map"), false, wxIcon(battle_map_xpm));
 
 	m_mm_opts_tab = new BattleroomMMOptionsTab(0, m_tabs);
@@ -159,7 +159,7 @@ IBattleRoomTab& MainJoinBattleTab::GetBattleRoomTab()
 }
 
 
-BattleMapTab& MainJoinBattleTab::GetBattleMapTab()
+IBattleMapTab& MainJoinBattleTab::GetBattleMapTab()
 {
 	ASSERT_EXCEPTION(m_map_tab, _T( "m_map_tab == 0" ));
 	return *m_map_tab;

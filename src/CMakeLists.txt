@@ -226,6 +226,7 @@ set(springlobbySrc
 	gui/hosting/addbotdialog.cpp
 	gui/hosting/autobalancedialog.cpp
 	gui/hosting/battlemaptab.cpp
+	gui/hosting/ibattlemaptab.cpp
 	gui/hosting/battleoptionstab.cpp
 	gui/hosting/battleroomtab.cpp
 	gui/hosting/ibattleroomtab.cpp

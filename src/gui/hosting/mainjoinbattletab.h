@@ -9,7 +9,7 @@
 class IBattle;
 class User;
 class IBattleRoomTab;
-class BattleMapTab;
+class IBattleMapTab;
 class BattleOptionsTab;
 class wxBoxSizer;
 class wxImageList;
@@ -46,7 +46,7 @@ public:
 	bool UseBattlePerspective();
 
 private:
-	BattleMapTab& GetBattleMapTab();
+	IBattleMapTab& GetBattleMapTab();
 	BattleOptionsTab& GetOptionsTab();
 	BattleroomMMOptionsTab& GetMMOptionsTab();
 	wxBoxSizer* m_main_sizer;
@@ -56,7 +56,7 @@ private:
 	SLNotebook* m_tabs;
 
 	IBattleRoomTab* m_battle_tab;
-	BattleMapTab* m_map_tab;
+	IBattleMapTab* m_map_tab;
 	BattleOptionsTab* m_opts_tab;
 	BattleroomMMOptionsTab* m_mm_opts_tab;
 

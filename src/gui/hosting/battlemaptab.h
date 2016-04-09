@@ -5,6 +5,8 @@
 
 #include <wx/scrolwin.h>
 
+#include "ibattlemaptab.h"
+
 class Ui;
 class IBattle;
 class User;
@@ -25,20 +27,20 @@ class wxMouseEvent;
 
 /** \brief select map, draw startboxes (in sp define startpos)
  * \todo DOCMEMORE */
-class BattleMapTab : public wxPanel
+class BattleMapTab : public IBattleMapTab
 {
 public:
 	BattleMapTab(wxWindow* parent, IBattle* battle);
-	~BattleMapTab();
+	virtual ~BattleMapTab();
 
-	void UpdateUser(User& user);
+	virtual void UpdateUser(User& user) override;
 
-	void Update();
-	void Update(const wxString& Tag);
-	void ReloadMaplist();
+	virtual void Update() override;
+	virtual void Update(const wxString& Tag) override;
+	virtual void ReloadMaplist() override;
 
-	void SetMap(int index);
-	void SetBattle(IBattle* battle);
+	virtual void SetMap(int index) override;
+	virtual void SetBattle(IBattle* battle) override;
 
 private:
 	IBattle* GetBattle()
