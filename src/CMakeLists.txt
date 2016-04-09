@@ -228,6 +228,7 @@ set(springlobbySrc
 	gui/hosting/battlemaptab.cpp
 	gui/hosting/battleoptionstab.cpp
 	gui/hosting/battleroomtab.cpp
+	gui/hosting/ibattleroomtab.cpp
 	gui/hosting/hostbattledialog.cpp
 	gui/hosting/mainjoinbattletab.cpp
 	gui/hosting/mainsingleplayertab.cpp

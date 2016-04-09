@@ -8,7 +8,7 @@
 
 class IBattle;
 class User;
-class BattleRoomTab;
+class IBattleRoomTab;
 class BattleMapTab;
 class BattleOptionsTab;
 class wxBoxSizer;
@@ -37,7 +37,7 @@ public:
 	ChatPanel* GetActiveChatPanel();
 
 	void BattleUserUpdated(User& user);
-	BattleRoomTab& GetBattleRoomTab();
+	IBattleRoomTab& GetBattleRoomTab();
 
 	void ReloadPresetList();
 
@@ -55,7 +55,7 @@ private:
 
 	SLNotebook* m_tabs;
 
-	BattleRoomTab* m_battle_tab;
+	IBattleRoomTab* m_battle_tab;
 	BattleMapTab* m_map_tab;
 	BattleOptionsTab* m_opts_tab;
 	BattleroomMMOptionsTab* m_mm_opts_tab;
