@@ -16,14 +16,12 @@ class wxPanel;
 class wxBitmap;
 class wxDC;
 
-class Battle;
 struct BattleStartRect;
-class Ui;
+
 namespace LSL
 {
 struct UnitsyncMap;
 }
-class BattleRoomTab;
 
 class MapCtrl : public wxPanel
 {

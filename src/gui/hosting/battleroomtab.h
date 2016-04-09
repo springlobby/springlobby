@@ -15,9 +15,7 @@ class BitmapComboBox;
 }
 }
 
-class Ui;
 class IBattle;
-struct BattleBot;
 class BattleroomDataViewCtrl;
 class User;
 class ChatPanel;
@@ -32,9 +30,6 @@ class wxCheckBox;
 class wxListCtrl;
 class MapCtrl;
 class ColorButton;
-struct UnitSyncMap;
-class wxToggleButton;
-class wxChoice;
 class wxListEvent;
 class VotePanel;
 

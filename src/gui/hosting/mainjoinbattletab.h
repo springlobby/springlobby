@@ -6,8 +6,6 @@
 #include <wx/scrolwin.h>
 #include "battleroommmoptionstab.h"
 
-class Ui;
-class BattleListTab;
 class IBattle;
 class User;
 class BattleRoomTab;
