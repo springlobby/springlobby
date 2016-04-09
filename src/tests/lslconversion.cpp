@@ -225,6 +225,10 @@ BOOST_AUTO_TEST_CASE(convertfloat)
 	BOOST_CHECK(b == LSL::Util::FromFloatString("-1.5"));
 	BOOST_CHECK(c == LSL::Util::FromFloatString("1.999"));
 
+	BOOST_CHECK(a == LSL::Util::FromFloatString("1,0"));
+	BOOST_CHECK(b == LSL::Util::FromFloatString("-1,5"));
+	BOOST_CHECK(c == LSL::Util::FromFloatString("1,999"));
+
 	BOOST_CHECK(a == LSL::Util::FromFloatString(LSL::Util::ToFloatString(a)));
 	BOOST_CHECK(b == LSL::Util::FromFloatString(LSL::Util::ToFloatString(b)));
 	BOOST_CHECK(c == LSL::Util::FromFloatString(LSL::Util::ToFloatString(c)));
