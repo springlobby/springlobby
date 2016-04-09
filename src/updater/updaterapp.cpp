@@ -42,7 +42,7 @@ bool UpdaterApp::OnInit()
 		const wxString src = TrimQuotes(m_source_dir);
 		const wxString dst = TrimQuotes(m_destination_dir);
 
-		if ( !wxFileName::IsDirWritable(dst) || !StartUpdate(src, dst, true)) { //update failed, try as admin
+		if (!wxFileName::IsDirWritable(dst) || !StartUpdate(src, dst, true)) { //update failed, try as admin
 			params.push_back(m_source_dir);
 			params.push_back(m_destination_dir);
 			RunProcess(m_updater_exe, params, false, true);

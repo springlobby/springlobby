@@ -497,5 +497,4 @@ void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 	bo.mapname = map.name;
 
 	serverSelector().GetServer().HostBattle(bo, STD_STRING(sett().GetLastHostPassword()));
-
 }

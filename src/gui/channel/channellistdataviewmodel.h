@@ -8,18 +8,18 @@
 #include "../basedataviewmodel.h"
 #include "channellistview.h"
 
-class ChannelListDataViewModel: public BaseDataViewModel<ChannelInfo> {
+class ChannelListDataViewModel : public BaseDataViewModel<ChannelInfo>
+{
 public:
 	ChannelListDataViewModel();
 	virtual ~ChannelListDataViewModel();
 
-    virtual void GetValue( wxVariant &variant, const wxDataViewItem &item, unsigned int col ) const override;
-    virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
-    virtual wxString GetColumnType(unsigned int column) const override;
+	virtual void GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const override;
+	virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
+	virtual wxString GetColumnType(unsigned int column) const override;
 
 public:
-	enum ColumnIndexes
-	{
+	enum ColumnIndexes {
 		CHANNEL_NAME = 0,
 		USERS_COUNT,
 		TOPIC,

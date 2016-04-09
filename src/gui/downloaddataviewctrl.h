@@ -12,7 +12,8 @@ class wxCommandEvent;
 class wxPoint;
 class DownloadInfo;
 
-class DownloadDataViewCtrl: public BaseDataViewCtrl<PrDownloader::DownloadProgress> {
+class DownloadDataViewCtrl : public BaseDataViewCtrl<PrDownloader::DownloadProgress>
+{
 public:
 	DownloadDataViewCtrl(const wxString dataViewName, wxWindow* parent);
 	virtual ~DownloadDataViewCtrl();
@@ -35,8 +36,7 @@ private:
 	std::map<const std::string, PrDownloader::DownloadProgress*> itemsIndex;
 
 private:
-	enum ColumnIndexes
-	{
+	enum ColumnIndexes {
 		NAME = 0,
 		STATUS,
 		P_COMPLETE,

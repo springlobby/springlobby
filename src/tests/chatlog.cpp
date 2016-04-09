@@ -13,9 +13,15 @@
 #include <wx/log.h>
 #include <wx/filefn.h>
 
-struct TestInitializer{
-	TestInitializer(){InitWxLogger();}
-	~TestInitializer(){}
+struct TestInitializer
+{
+	TestInitializer()
+	{
+		InitWxLogger();
+	}
+	~TestInitializer()
+	{
+	}
 };
 
 BOOST_GLOBAL_FIXTURE(TestInitializer);

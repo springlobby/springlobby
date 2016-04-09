@@ -102,7 +102,7 @@ void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& a
 
 	//Vote has ended
 	if (actionString.find(VOTING_END) != std::string::npos || actionString.find(VOTE_CANCELLED) != std::string::npos ||
-        actionString.find(VOTE_CANCELED) != std::string::npos || actionString.find(VOTE_CANCELLING) != std::string::npos) {
+	    actionString.find(VOTE_CANCELED) != std::string::npos || actionString.find(VOTE_CANCELLING) != std::string::npos) {
 		onVoteStopped();
 		return;
 	}

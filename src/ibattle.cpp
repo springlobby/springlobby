@@ -406,7 +406,7 @@ bool IBattle::IsEveryoneReady() const
 
 void IBattle::AddStartRect(unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom)
 {
-	assert(allyno<MAX_TEAMS);
+	assert(allyno < MAX_TEAMS);
 
 	BattleStartRect sr;
 
@@ -426,7 +426,7 @@ void IBattle::AddStartRect(unsigned int allyno, unsigned int left, unsigned int 
 
 void IBattle::RemoveStartRect(unsigned int allyno)
 {
-	assert(allyno<MAX_TEAMS);
+	assert(allyno < MAX_TEAMS);
 	std::map<unsigned int, BattleStartRect>::iterator rect_it = m_rects.find(allyno);
 	if (rect_it == m_rects.end())
 		return;
@@ -437,7 +437,7 @@ void IBattle::RemoveStartRect(unsigned int allyno)
 
 void IBattle::ResizeStartRect(unsigned int allyno)
 {
-	assert(allyno<MAX_TEAMS);
+	assert(allyno < MAX_TEAMS);
 	std::map<unsigned int, BattleStartRect>::iterator rect_it = m_rects.find(allyno);
 	if (rect_it == m_rects.end())
 		return;
@@ -448,7 +448,7 @@ void IBattle::ResizeStartRect(unsigned int allyno)
 
 void IBattle::StartRectRemoved(unsigned int allyno)
 {
-	assert(allyno<MAX_TEAMS);
+	assert(allyno < MAX_TEAMS);
 	std::map<unsigned int, BattleStartRect>::const_iterator rect_it = m_rects.find(allyno);
 	if (rect_it == m_rects.end())
 		return;
@@ -460,7 +460,7 @@ void IBattle::StartRectRemoved(unsigned int allyno)
 
 void IBattle::StartRectResized(unsigned int allyno)
 {
-	assert(allyno<MAX_TEAMS);
+	assert(allyno < MAX_TEAMS);
 	std::map<unsigned int, BattleStartRect>::iterator rect_it = m_rects.find(allyno);
 	if (rect_it == m_rects.end())
 		return;
@@ -471,7 +471,7 @@ void IBattle::StartRectResized(unsigned int allyno)
 
 void IBattle::StartRectAdded(unsigned int allyno)
 {
-	assert(allyno<MAX_TEAMS);
+	assert(allyno < MAX_TEAMS);
 	std::map<unsigned int, BattleStartRect>::iterator rect_it = m_rects.find(allyno);
 	if (rect_it == m_rects.end())
 		return;
@@ -482,7 +482,7 @@ void IBattle::StartRectAdded(unsigned int allyno)
 
 BattleStartRect IBattle::GetStartRect(unsigned int allyno) const
 {
-	assert(allyno<MAX_TEAMS);
+	assert(allyno < MAX_TEAMS);
 	std::map<unsigned int, BattleStartRect>::const_iterator rect_it = m_rects.find(allyno);
 	if (rect_it != m_rects.end())
 		return (*rect_it).second;
@@ -513,7 +513,7 @@ unsigned int IBattle::GetNextFreeRectIdx() const
 	//check for unused allyno keys
 	for (unsigned int i = 0; i <= GetNumRects(); i++) {
 		if (!GetStartRect(i).IsOk()) {
-			assert(i<MAX_TEAMS);
+			assert(i < MAX_TEAMS);
 			return i;
 		}
 	}

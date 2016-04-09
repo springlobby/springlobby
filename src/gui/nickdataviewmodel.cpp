@@ -10,92 +10,94 @@
 #include "useractions.h"
 
 NickDataViewModel::NickDataViewModel()
-	:BaseDataViewModel<User>::BaseDataViewModel(COLUMN_COUNT)
+    : BaseDataViewModel<User>::BaseDataViewModel(COLUMN_COUNT)
 {
-
 }
 
-NickDataViewModel::~NickDataViewModel() {
+NickDataViewModel::~NickDataViewModel()
+{
 	// TODO Auto-generated destructor stub
 }
 
 void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
-		unsigned int col) const {
+				 unsigned int col) const
+{
 	const User* user = static_cast<const User*>(item.GetID());
 	IconsCollection* iconsCollection = IconsCollection::Instance();
 
 	wxASSERT(user != nullptr);
 
-    /* In case if wxGTK will try to render invalid item */
-    if (user == nullptr || ContainsItem(*user) == false) {
-        switch (col) {
-        case STATUS:
-        case COUNTRY:
-        case RANK:
-            variant = wxVariant(iconsCollection->BMP_EMPTY);
-            break;
+	/* In case if wxGTK will try to render invalid item */
+	if (user == nullptr || ContainsItem(*user) == false) {
+		switch (col) {
+			case STATUS:
+			case COUNTRY:
+			case RANK:
+				variant = wxVariant(iconsCollection->BMP_EMPTY);
+				break;
 
-        case NICKNAME:
-        case DEFAULT_COLUMN:
-        default:
-            variant = wxVariant(wxEmptyString);
-        }
-        return;
-    }
+			case NICKNAME:
+			case DEFAULT_COLUMN:
+			default:
+				variant = wxVariant(wxEmptyString);
+		}
+		return;
+	}
 
 
 	bool isBot = user->BattleStatus().IsBot();
 
 	switch (col) {
-	case STATUS:
-		variant = wxVariant(iconsCollection->GetUserListStateIcon(user->GetStatus(), false /*channel operator?*/, (user->GetBattle() != nullptr) /*in broom?*/));
-		break;
+		case STATUS:
+			variant = wxVariant(iconsCollection->GetUserListStateIcon(user->GetStatus(), false /*channel operator?*/, (user->GetBattle() != nullptr) /*in broom?*/));
+			break;
 
-	case COUNTRY:
-		if (isBot) {
-			variant = wxVariant(iconsCollection->BMP_EMPTY);
-		} else {
-			variant = wxVariant(
-					iconsCollection->GetFlagBmp(wxString(user->GetCountry())));
-		}
-		break;
-
-	case RANK:
-		if (isBot) {
-			variant = wxVariant(iconsCollection->BMP_EMPTY);
-		} else {
-			variant = wxVariant(iconsCollection->GetRankBmp(user->GetRank()));
-		}
-		break;
-
-	case NICKNAME:
-		if (isBot) {
-			wxString botName = wxString(user->BattleStatus().aishortname);
-			wxString ownerName = wxString(user->BattleStatus().owner);
-			wxString playerName = wxString(user->GetNick());
-
-			if (user->BattleStatus().aiversion.empty() == false) {
-				botName += _T(" ") + user->BattleStatus().aiversion;
+		case COUNTRY:
+			if (isBot) {
+				variant = wxVariant(iconsCollection->BMP_EMPTY);
+			} else {
+				variant = wxVariant(
+				    iconsCollection->GetFlagBmp(wxString(user->GetCountry())));
 			}
-			variant = wxString::Format(_T("%s - %s (%s)"), playerName, botName,
-					ownerName);
-		} else {
-			variant = wxString(user->GetNick());
-		}
-		break;
+			break;
 
-	case DEFAULT_COLUMN:
-		//Do nothing
-		break;
+		case RANK:
+			if (isBot) {
+				variant = wxVariant(iconsCollection->BMP_EMPTY);
+			} else {
+				variant = wxVariant(iconsCollection->GetRankBmp(user->GetRank()));
+			}
+			break;
 
-	default:
-		wxASSERT(false);
+		case NICKNAME:
+			if (isBot) {
+				wxString botName = wxString(user->BattleStatus().aishortname);
+				wxString ownerName = wxString(user->BattleStatus().owner);
+				wxString playerName = wxString(user->GetNick());
+
+				if (user->BattleStatus().aiversion.empty() == false) {
+					botName += _T(" ") + user->BattleStatus().aiversion;
+				}
+				variant = wxString::Format(_T("%s - %s (%s)"), playerName, botName,
+							   ownerName);
+			} else {
+				variant = wxString(user->GetNick());
+			}
+			break;
+
+		case DEFAULT_COLUMN:
+			//Do nothing
+			break;
+
+		default:
+			wxASSERT(false);
 	}
 }
 
 int NickDataViewModel::Compare(const wxDataViewItem& itemA,
-		const wxDataViewItem& itemB, unsigned int column,
-		bool ascending) const {
+			       const wxDataViewItem& itemB, unsigned int column,
+			       bool ascending) const
+{
 	const User* userA = static_cast<const User*>(itemA.GetID());
 	const User* userB = static_cast<const User*>(itemB.GetID());
 
@@ -105,63 +107,61 @@ int NickDataViewModel::Compare(const wxDataViewItem& itemA,
 	int sortingResult;
 
 	switch (column) {
-	case STATUS:
-	{
-		int u1 = 0, u2 = 0;
+		case STATUS: {
+			int u1 = 0, u2 = 0;
 
-		if (userA->GetStatus().bot)
-			u1 += 1000;
-		if (userB->GetStatus().bot)
-			u2 += 1000;
-		if (userA->GetStatus().moderator)
-			u1 += 100;
-		if (userB->GetStatus().moderator)
-			u2 += 100;
-		if (userA->GetStatus().in_game)
-			u1 += -10;
-		if (userB->GetStatus().in_game)
-			u2 += -10;
-		if (userA->GetStatus().away)
-			u1 += -5;
-		if (userB->GetStatus().away)
-			u2 += -5;
+			if (userA->GetStatus().bot)
+				u1 += 1000;
+			if (userB->GetStatus().bot)
+				u2 += 1000;
+			if (userA->GetStatus().moderator)
+				u1 += 100;
+			if (userB->GetStatus().moderator)
+				u2 += 100;
+			if (userA->GetStatus().in_game)
+				u1 += -10;
+			if (userB->GetStatus().in_game)
+				u2 += -10;
+			if (userA->GetStatus().away)
+				u1 += -5;
+			if (userB->GetStatus().away)
+				u2 += -5;
 
-		// inverse the order
-		if (u1 < u2) {
-			sortingResult = -1;
-		} else if (u1 > u2) {
-			sortingResult = 1;
-		} else {
+			// inverse the order
+			if (u1 < u2) {
+				sortingResult = -1;
+			} else if (u1 > u2) {
+				sortingResult = 1;
+			} else {
+				sortingResult = 0;
+			}
+		} break;
+
+		case COUNTRY:
+			if (userA->GetCountry() < userB->GetCountry()) {
+				sortingResult = -1;
+			} else if (userA->GetCountry() > userB->GetCountry()) {
+				sortingResult = 1;
+			} else {
+				sortingResult = 0;
+			}
+			break;
+
+		case RANK:
+			sortingResult = (userA->GetRank() - userB->GetRank());
+			break;
+
+		case NICKNAME:
+			sortingResult = BaseDataViewModel::Compare(itemA, itemB, column, true);
+			break;
+
+		case DEFAULT_COLUMN:
 			sortingResult = 0;
-		}
-	}
-		break;
+			break;
 
-	case COUNTRY:
-		if (userA->GetCountry() < userB->GetCountry()) {
-			sortingResult = -1;
-		} else if (userA->GetCountry() > userB->GetCountry()) {
-			sortingResult = 1;
-		} else {
+		default:
+			wxASSERT(false);
 			sortingResult = 0;
-		}
-		break;
-
-	case RANK:
-		sortingResult = (userA->GetRank() - userB->GetRank());
-		break;
-
-	case NICKNAME:
-		sortingResult = BaseDataViewModel::Compare(itemA, itemB, column, true);
-		break;
-
-	case DEFAULT_COLUMN:
-		sortingResult = 0;
-		break;
-
-	default:
-		wxASSERT(false);
-		sortingResult = 0;
 	}
 
 	//Return direct sort order or reversed depending on ascending flag
@@ -169,14 +169,15 @@ int NickDataViewModel::Compare(const wxDataViewItem& itemA,
 }
 
 bool NickDataViewModel::GetAttr(const wxDataViewItem& item, unsigned int,
-		wxDataViewItemAttr& attr) const {
+				wxDataViewItemAttr& attr) const
+{
 	const User* user = static_cast<const User*>(item.GetID());
 
 	wxASSERT(user != nullptr);
 
-    if (user == nullptr || ContainsItem(*user) == false) {
-        return false;
-    }
+	if (user == nullptr || ContainsItem(*user) == false) {
+		return false;
+	}
 
 	wxString groupName = useractions().GetGroupOfUser(user->GetNick());
 	if (groupName == wxEmptyString) {
@@ -188,25 +189,26 @@ bool NickDataViewModel::GetAttr(const wxDataViewItem& item, unsigned int,
 	}
 }
 
-wxString NickDataViewModel::GetColumnType(unsigned int column) const {
+wxString NickDataViewModel::GetColumnType(unsigned int column) const
+{
 
 	wxString colTypeString;
 
 	switch (column) {
-	case STATUS:
-	case COUNTRY:
-	case RANK:
-		colTypeString = COL_TYPE_BITMAP;
-		break;
+		case STATUS:
+		case COUNTRY:
+		case RANK:
+			colTypeString = COL_TYPE_BITMAP;
+			break;
 
-	case NICKNAME:
-	case DEFAULT_COLUMN:
-		colTypeString = COL_TYPE_TEXT;
-		break;
+		case NICKNAME:
+		case DEFAULT_COLUMN:
+			colTypeString = COL_TYPE_TEXT;
+			break;
 
-	default:
-		wxASSERT(false);
-		colTypeString = COL_TYPE_TEXT;
+		default:
+			wxASSERT(false);
+			colTypeString = COL_TYPE_TEXT;
 	}
 
 

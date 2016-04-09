@@ -27,7 +27,7 @@
 #include "utils/slpaths.h"
 
 BEGIN_EVENT_TABLE(DownloadOptionsPanel, wxScrolledWindow)
-	EVT_BUTTON(ID_SELECT_NEW_DIRECTORY, DownloadOptionsPanel::OnNewDirectory)
+EVT_BUTTON(ID_SELECT_NEW_DIRECTORY, DownloadOptionsPanel::OnNewDirectory)
 END_EVENT_TABLE()
 
 DownloadOptionsPanel::DownloadOptionsPanel(wxWindow* parent)
@@ -48,17 +48,16 @@ DownloadOptionsPanel::DownloadOptionsPanel(wxWindow* parent)
 		wxStaticBoxSizer* outerSizer = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Current download directory"));
 
 		wxBoxSizer* innerSizer = new wxBoxSizer(wxVERTICAL);
-			wxBoxSizer* secondInnerSizer = new wxBoxSizer(wxHORIZONTAL);
-			m_DownloadDirectoryTextCtrl = new wxTextCtrl(this, -1, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY);
-			secondInnerSizer->Add(m_DownloadDirectoryTextCtrl, 1, wxALL | wxEXPAND, 5);
-			m_NewDownloadDirButton = new wxButton(this, ID_SELECT_NEW_DIRECTORY, _("Browse"));
-			secondInnerSizer->Add(m_NewDownloadDirButton, 0, wxALL, 5);
+		wxBoxSizer* secondInnerSizer = new wxBoxSizer(wxHORIZONTAL);
+		m_DownloadDirectoryTextCtrl = new wxTextCtrl(this, -1, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY);
+		secondInnerSizer->Add(m_DownloadDirectoryTextCtrl, 1, wxALL | wxEXPAND, 5);
+		m_NewDownloadDirButton = new wxButton(this, ID_SELECT_NEW_DIRECTORY, _("Browse"));
+		secondInnerSizer->Add(m_NewDownloadDirButton, 0, wxALL, 5);
 		innerSizer->Add(secondInnerSizer, 1, wxALL | wxEXPAND);
 
 		outerSizer->Add(innerSizer, 1, wxALL | wxEXPAND);
 
 		m_main_sizer->Add(outerSizer, 0, wxALL | wxEXPAND, 5);
-
 	}
 
 
@@ -88,9 +87,10 @@ void DownloadOptionsPanel::OnRestore(wxCommandEvent& /*unused*/)
 	m_DownloadDirectoryTextCtrl->SetValue(TowxString(SlPaths::GetDownloadDir()));
 }
 
-void DownloadOptionsPanel::OnNewDirectory(wxCommandEvent&) {
+void DownloadOptionsPanel::OnNewDirectory(wxCommandEvent&)
+{
 	wxDirDialog pick(this, _("Choose a directory for downloading"),
-			  wxPathOnly(TowxString(SlPaths::GetDownloadDir())),  wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+			 wxPathOnly(TowxString(SlPaths::GetDownloadDir())), wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
 
 	if (pick.ShowModal() == wxID_OK) {
 		m_DownloadDirectoryTextCtrl->SetValue(pick.GetPath());

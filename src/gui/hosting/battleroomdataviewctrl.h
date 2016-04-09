@@ -19,8 +19,8 @@ class wxMenu;
 class wxMenuItem;
 
 
-
-class BattleroomDataViewCtrl: public BaseDataViewCtrl<User> {
+class BattleroomDataViewCtrl : public BaseDataViewCtrl<User>
+{
 public:
 	BattleroomDataViewCtrl(const wxString& dataViewName, wxWindow* parent, IBattle* battle, bool readOnly, bool showInGame);
 	virtual ~BattleroomDataViewCtrl();
@@ -80,8 +80,7 @@ private:
 		BATTLEROOM_VIEW_RING,
 		BATTLEROOM_VIEW_ADDTOGROUP
 	};
-	enum ColumnIndexes
-	{
+	enum ColumnIndexes {
 		STATUS = 0,
 		INGAME,
 		FACTION,

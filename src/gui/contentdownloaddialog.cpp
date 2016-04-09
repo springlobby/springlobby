@@ -23,11 +23,11 @@
 DECLARE_EVENT_TYPE(SEARCH_FINISHED, wxID_ANY);
 DEFINE_EVENT_TYPE(SEARCH_FINISHED);
 BEGIN_EVENT_TABLE(ContentDownloadDialog, wxDialog)
-	EVT_BUTTON(SEARCH_BUTTON, ContentDownloadDialog::OnSearch)
-	EVT_BUTTON(CLOSE_BUTTON, ContentDownloadDialog::OnCloseButton)
-	EVT_BUTTON(DOWNLOAD_BUTTON, ContentDownloadDialog::OnDownloadButton)
-	EVT_COMMAND(ID_SEARCH_FINISHED, SEARCH_FINISHED, ContentDownloadDialog::OnSearchCompleted)
-	EVT_DATAVIEW_ITEM_ACTIVATED(LAUNCH_DOWNLOAD, ContentDownloadDialog::OnListDownload)
+EVT_BUTTON(SEARCH_BUTTON, ContentDownloadDialog::OnSearch)
+EVT_BUTTON(CLOSE_BUTTON, ContentDownloadDialog::OnCloseButton)
+EVT_BUTTON(DOWNLOAD_BUTTON, ContentDownloadDialog::OnDownloadButton)
+EVT_COMMAND(ID_SEARCH_FINISHED, SEARCH_FINISHED, ContentDownloadDialog::OnSearchCompleted)
+EVT_DATAVIEW_ITEM_ACTIVATED(LAUNCH_DOWNLOAD, ContentDownloadDialog::OnListDownload)
 END_EVENT_TABLE()
 
 ContentDownloadDialog::ContentDownloadDialog(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long int style, const wxString& name)
@@ -111,13 +111,13 @@ void ContentDownloadDialog::OnSearchCompleted(wxCommandEvent& /*event*/)
 	wildcardsearch = false;
 	m_search_res_w->Clear();
 
-	for (const IDownload* dl:dls) {
+	for (const IDownload* dl : dls) {
 		ContentSearchResult* res = new ContentSearchResult();
 		res->name = dl->origin_name;
 		res->filesize = dl->size;
 		res->type = DownloadEnum::getCat(dl->cat);
 		res->category = dl->cat;
-		switch(dl->cat) {
+		switch (dl->cat) {
 			case DownloadEnum::CAT_MAP:
 				res->is_downloaded = LSL::usync().MapExists(dl->origin_name);
 				break;

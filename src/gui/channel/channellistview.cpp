@@ -8,11 +8,13 @@
 
 
 BEGIN_EVENT_TABLE(ChannelListView, BaseDataViewCtrl<ChannelInfo>)
-	EVT_DATAVIEW_ITEM_ACTIVATED(CHANNELLIST_ID, ChannelListView::OnItemActivated)
+EVT_DATAVIEW_ITEM_ACTIVATED(CHANNELLIST_ID, ChannelListView::OnItemActivated)
 END_EVENT_TABLE()
 
 
-ChannelListView::ChannelListView(const wxString& dataViewName, wxWindow* parent) : BaseDataViewCtrl(dataViewName, parent, CHANNELLIST_ID){
+ChannelListView::ChannelListView(const wxString& dataViewName, wxWindow* parent)
+    : BaseDataViewCtrl(dataViewName, parent, CHANNELLIST_ID)
+{
 	ChannelListDataViewModel* model = new ChannelListDataViewModel();
 	AssociateModel(model);
 
@@ -24,11 +26,13 @@ ChannelListView::ChannelListView(const wxString& dataViewName, wxWindow* parent)
 	LoadColumnProperties();
 }
 
-ChannelListView::~ChannelListView() {
+ChannelListView::~ChannelListView()
+{
 }
 
 void ChannelListView::AddChannel(const wxString& channel,
-		unsigned int num_users, const wxString& topic) {
+				 unsigned int num_users, const wxString& topic)
+{
 
 	wxString filteredTopic = topic;
 	filteredTopic.Replace(_T("\\n"), wxEmptyString, true);
@@ -38,22 +42,25 @@ void ChannelListView::AddChannel(const wxString& channel,
 	AddItem(*data);
 }
 
-void ChannelListView::ClearChannels() {
+void ChannelListView::ClearChannels()
+{
 	m_realChannelCollection.clear();
 
 	Clear();
 }
 
-wxString ChannelListView::GetInfo() {
+wxString ChannelListView::GetInfo()
+{
 	int itemsCount = GetItemsCount();
 	int totalItems = m_realChannelCollection.size();
 	return wxString::Format(_("Displaying %d out of %d channels"), itemsCount, totalItems);
 }
 
-void ChannelListView::FilterChannel(const wxString& partial) {
+void ChannelListView::FilterChannel(const wxString& partial)
+{
 
 	for (auto const item : m_realChannelCollection) {
-		if ( (partial.IsEmpty()) || (item.second->name.Contains(partial))) {
+		if ((partial.IsEmpty()) || (item.second->name.Contains(partial))) {
 			if (ContainsItem(*item.second) == false) {
 				AddItem(*item.second);
 			}
@@ -68,7 +75,8 @@ void ChannelListView::FilterChannel(const wxString& partial) {
 	Refresh();
 }
 
-void ChannelListView::OnItemActivated(wxDataViewEvent& /*event*/) {
+void ChannelListView::OnItemActivated(wxDataViewEvent& /*event*/)
+{
 	ChannelInfo* channelInfo = static_cast<ChannelInfo*>(GetSelection().GetID());
 
 	if (channelInfo == nullptr) {
@@ -79,7 +87,8 @@ void ChannelListView::OnItemActivated(wxDataViewEvent& /*event*/) {
 	ServerManager::Instance()->JoinChannel(STD_STRING(chan_name), "");
 }
 
-bool ChannelListView::AddRealItem(ChannelInfo* channel) {
+bool ChannelListView::AddRealItem(ChannelInfo* channel)
+{
 	if (IsContainsRealItem(channel)) {
 		return false;
 	}
@@ -88,7 +97,8 @@ bool ChannelListView::AddRealItem(ChannelInfo* channel) {
 	return true;
 }
 
-bool ChannelListView::IsContainsRealItem(ChannelInfo* channel) const {
+bool ChannelListView::IsContainsRealItem(ChannelInfo* channel) const
+{
 	const auto it = m_realChannelCollection.find(channel->name);
 	if (it == m_realChannelCollection.end()) {
 		return false;

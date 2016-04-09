@@ -1,6 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#define HAVE_WX	//needed for LSL::UnitsyncImage::wxbitmap!
+#define HAVE_WX //needed for LSL::UnitsyncImage::wxbitmap!
 
 #include "iconscollection.h"
 
@@ -20,21 +20,25 @@
 
 #include <map>
 
-IconsCollection::IconsCollection() {
+IconsCollection::IconsCollection()
+{
 	loadCountryFlags();
 }
 
-IconsCollection::~IconsCollection() {
+IconsCollection::~IconsCollection()
+{
 }
 
-IconsCollection* IconsCollection::Instance() {
+IconsCollection* IconsCollection::Instance()
+{
 	if (m_Instance == nullptr) {
 		m_Instance = new IconsCollection();
 	}
 	return m_Instance;
 }
 
-void IconsCollection::Release() {
+void IconsCollection::Release()
+{
 	if (m_Instance != nullptr) {
 		delete m_Instance;
 	}
@@ -47,8 +51,7 @@ void IconsCollection::loadCountryFlags()
 {
 	int flagIndex = 0;
 	m_countryFlagBmps.clear();
-	for (flagIndex = 0 ; flag_str[flagIndex] != NULL; flagIndex++)
-	{
+	for (flagIndex = 0; flag_str[flagIndex] != NULL; flagIndex++) {
 		//Just in case (these two arrays must have same size!)
 		wxASSERT(flag_xpm[flagIndex] != NULL);
 		//Load flag image and store it in collection
@@ -56,10 +59,11 @@ void IconsCollection::loadCountryFlags()
 	}
 
 	//Just in case (these two arrays must have same size!)
-	wxASSERT( (flag_str[flagIndex] == NULL) && (flag_xpm[flagIndex] == NULL) );
+	wxASSERT((flag_str[flagIndex] == NULL) && (flag_xpm[flagIndex] == NULL));
 }
 
-wxBitmap& IconsCollection::GetHostBmp(bool isSpec) {
+wxBitmap& IconsCollection::GetHostBmp(bool isSpec)
+{
 	if (isSpec) {
 		return BMP_HOST_SPECTATOR;
 	} else {
@@ -68,7 +72,8 @@ wxBitmap& IconsCollection::GetHostBmp(bool isSpec) {
 }
 
 wxBitmap& IconsCollection::GetReadyBmp(bool isSpec, bool isReady, unsigned int inSync,
-		bool isBot) {
+				       bool isBot)
+{
 
 	if (isBot) {
 		return BMP_BOT;
@@ -148,7 +153,8 @@ wxBitmap& IconsCollection::GetUserListStateIcon(const UserStatus& us, bool chano
 }
 
 //Get flag image from collection
-wxBitmap& IconsCollection::GetFlagBmp(const wxString& country) {
+wxBitmap& IconsCollection::GetFlagBmp(const wxString& country)
+{
 	//Check for some predefined values
 	if ((country.empty()) ||
 	    (country == "??") || // unknown
@@ -163,15 +169,16 @@ wxBitmap& IconsCollection::GetFlagBmp(const wxString& country) {
 	//Return flag image if found
 	if (itor != m_countryFlagBmps.end()) {
 		return itor->second;
-	//Return empty image otherwise
+		//Return empty image otherwise
 	} else {
 		//Just return nothing. I think there is no need for triggering assert
 		return BMP_UNK_FLAG;
 	}
 }
 
-wxBitmap& IconsCollection::GetRankBmp(unsigned int rank, bool showLowest) {
-	if ( (showLowest == false) && (rank == UserStatus::RANK_1) ) {
+wxBitmap& IconsCollection::GetRankBmp(unsigned int rank, bool showLowest)
+{
+	if ((showLowest == false) && (rank == UserStatus::RANK_1)) {
 		return BMP_RANK_NONE;
 	}
 
@@ -205,7 +212,8 @@ wxBitmap& IconsCollection::GetBattleStatusBmp(const IBattle& battle) const
 	// return ICON_GAME_UNKNOWN;
 }
 
-wxBitmap& IconsCollection::GetColourBmp(const LSL::lslColor& colour) {
+wxBitmap& IconsCollection::GetColourBmp(const LSL::lslColor& colour)
+{
 
 	const wxString key = lslTowxColour(colour).GetAsString(wxC2S_HTML_SYNTAX).AfterFirst('#');
 
@@ -213,7 +221,7 @@ wxBitmap& IconsCollection::GetColourBmp(const LSL::lslColor& colour) {
 	std::map<wxString, wxBitmap>::iterator itor = m_playerColorBmps.find(key);
 	if (itor != m_playerColorBmps.end()) {
 		return itor->second;
-	//Or add new colour to collection
+		//Or add new colour to collection
 	} else {
 		m_playerColorBmps[key] = getColourIcon(lslTowxColour(colour));
 		return m_playerColorBmps[key];
@@ -247,13 +255,13 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& gameName, int fract
 	//Check if image already in cache
 	if (m_cachedFractionBmps.find(cacheString) != m_cachedFractionBmps.end()) {
 		return m_cachedFractionBmps[cacheString];
-	//Create one and add to cache
+		//Create one and add to cache
 	} else {
 		try {
 			const LSL::UnitsyncImage img = LSL::usync().GetSidePicture(gameName, sideName);
 			m_cachedFractionBmps[cacheString] = img.wxbitmap();
 		} catch (...) {
-		//unitsync can fail!
+			//unitsync can fail!
 			ASSERT_LOGIC(false, "LSL::usync().GetSidePicture() failed!");
 		}
 		return m_cachedFractionBmps[cacheString];
@@ -261,7 +269,8 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& gameName, int fract
 }
 
 /* Used to create transparent bitmaps under Windows 7 and Windows XP */
-wxBitmap IconsCollection::CreateBitmap(const char* const * data) {
+wxBitmap IconsCollection::CreateBitmap(const char* const* data)
+{
 	wxImage img = wxImage(data);
 	if (img.HasAlpha() == false) {
 		img.InitAlpha();
@@ -269,7 +278,8 @@ wxBitmap IconsCollection::CreateBitmap(const char* const * data) {
 	return wxBitmap(img);
 }
 
-wxBitmap& IconsCollection::GetUserBattleStateBmp(const UserStatus& us) {
+wxBitmap& IconsCollection::GetUserBattleStateBmp(const UserStatus& us)
+{
 	if (us.bot) {
 		return BMP_BOT;
 	}
@@ -294,7 +304,8 @@ wxBitmap& IconsCollection::GetUserBattleStateBmp(const UserStatus& us) {
 }
 
 wxBitmap& IconsCollection::GetUserListStateBmp(const UserStatus& us,
-		bool chanop, bool inbroom) {
+					       bool chanop, bool inbroom)
+{
 	if (us.bot) {
 		if (us.in_game)
 			return BMP_BOT_INGAME;

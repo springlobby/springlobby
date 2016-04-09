@@ -105,7 +105,7 @@ public:
 	void OnLoginDenied(const std::string& reason);
 
 	// return true when engine/game/map is missing & prompts user to dl when needed
-	bool NeedsDownload(const IBattle* battle, bool uiprompt = true,DownloadEnum::Category cat = DownloadEnum::CAT_NONE);
+	bool NeedsDownload(const IBattle* battle, bool uiprompt = true, DownloadEnum::Category cat = DownloadEnum::CAT_NONE);
 
 	bool IsThisMe(User& other) const;
 	bool IsThisMe(const User* other) const;
@@ -133,7 +133,6 @@ private:
 	bool m_first_update_trigger;
 	bool m_connecting;
 	int m_connect_retries;
-
 };
 
 Ui& ui();

@@ -3,20 +3,23 @@
 #include "exception.h"
 #include <wx/log.h>
 
-Exception::Exception() {
+Exception::Exception()
+{
 	// TODO Auto-generated constructor stub
-
 }
 
-Exception::Exception(const wxString& reason) {
+Exception::Exception(const wxString& reason)
+{
 	this->reason = reason;
 	wxLogWarning(reason);
 }
 
-Exception::~Exception() {
+Exception::~Exception()
+{
 	// TODO Auto-generated destructor stub
 }
 
-wxString Exception::Reason() const {
+wxString Exception::Reason() const
+{
 	return reason;
 }

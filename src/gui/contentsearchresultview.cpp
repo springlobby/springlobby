@@ -8,7 +8,9 @@ BEGIN_EVENT_TABLE(ContentSearchResultView, BaseDataViewCtrl)
 
 END_EVENT_TABLE()
 
-ContentSearchResultView::ContentSearchResultView(wxWindow* parent, wxWindowID id, const wxString& dataViewName) : BaseDataViewCtrl(dataViewName, parent, id) {
+ContentSearchResultView::ContentSearchResultView(wxWindow* parent, wxWindowID id, const wxString& dataViewName)
+    : BaseDataViewCtrl(dataViewName, parent, id)
+{
 
 	ContentSearchResultDataModel* model = new ContentSearchResultDataModel();
 	AssociateModel(model);
@@ -23,9 +25,11 @@ ContentSearchResultView::ContentSearchResultView(wxWindow* parent, wxWindowID id
 	LoadColumnProperties();
 }
 
-ContentSearchResultView::~ContentSearchResultView() {
+ContentSearchResultView::~ContentSearchResultView()
+{
 }
 
-void ContentSearchResultView::AddContent(ContentSearchResult& content) {
+void ContentSearchResultView::AddContent(ContentSearchResult& content)
+{
 	AddItem(content);
 }

@@ -15,9 +15,15 @@
 #include "utils/conversion.h"
 #include "utils/tasutil.h"
 
-struct TestInitializer{
-	TestInitializer(){InitWxLogger();}
-	~TestInitializer(){}
+struct TestInitializer
+{
+	TestInitializer()
+	{
+		InitWxLogger();
+	}
+	~TestInitializer()
+	{
+	}
 };
 
 BOOST_GLOBAL_FIXTURE(TestInitializer);
@@ -288,9 +294,9 @@ BOOST_AUTO_TEST_CASE(tasutils)
 	BOOST_CHECK(input.empty());
 
 	input = "1 0 1";
-	BOOST_CHECK( GetBoolParam(input));
+	BOOST_CHECK(GetBoolParam(input));
 	BOOST_CHECK(!GetBoolParam(input));
-	BOOST_CHECK( GetBoolParam(input));
+	BOOST_CHECK(GetBoolParam(input));
 	BOOST_CHECK(!GetBoolParam(input)); //input is already empty
 	BOOST_CHECK(input.empty());
 

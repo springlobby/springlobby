@@ -141,9 +141,9 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_ally_sel->SetToolTip(_("Players with the same ally number work together to achieve victory."));
 	m_color_sel = new ColorButton(m_player_panel, BROOM_COLOURSEL, wxColour(0, 0, 0), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
 	m_color_sel->SetToolTip(_("Select a color to identify your units in-game"));
-	m_side_sel = new GUI::Controls::BitmapComboBox(m_player_panel, BROOM_SIDESEL, wxEmptyString, wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT),0, NULL, wxCB_READONLY);
+	m_side_sel = new GUI::Controls::BitmapComboBox(m_player_panel, BROOM_SIDESEL, wxEmptyString, wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT), 0, NULL, wxCB_READONLY);
 	m_side_sel->SetToolTip(_("Select your faction"));
-	m_side_sel->SetMaxSize(wxSize(100,40));
+	m_side_sel->SetMaxSize(wxSize(100, 40));
 	m_spec_chk = new wxCheckBox(m_player_panel, BROOM_SPEC, _("Spectator"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
 	m_spec_chk->SetToolTip(_("Spectate (watch) the battle instead of playing"));
 	m_auto_unspec_chk = new wxCheckBox(m_player_panel, BROOM_UNSPEC, _("Auto un-spectate"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
@@ -1250,7 +1250,6 @@ void BattleRoomTab::RegenerateOptionsList()
 		} catch (...) {
 		}
 	}
-
 }
 
 void BattleRoomTab::OnBattleActionEvent(UiEvents::UiEventData data)

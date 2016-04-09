@@ -49,7 +49,7 @@ void PlaybackLoader::OnComplete()
 PlaybackLoader::PlaybackLoaderThread::PlaybackLoaderThread(PlaybackLoader* loader, PlaybackTab* parent, bool isreplaytype)
     : m_parent(parent)
     , m_loader(loader)
-	, m_isreplaytype(isreplaytype)
+    , m_isreplaytype(isreplaytype)
 {
 	assert(m_parent != NULL);
 }

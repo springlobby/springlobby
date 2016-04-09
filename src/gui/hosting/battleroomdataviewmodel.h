@@ -8,25 +8,25 @@
 class User;
 class IBattle;
 
-class BattleroomDataViewModel: public BaseDataViewModel<User> {
+class BattleroomDataViewModel : public BaseDataViewModel<User>
+{
 public:
 	BattleroomDataViewModel();
 	virtual ~BattleroomDataViewModel();
 
-    virtual void GetValue( wxVariant &variant, const wxDataViewItem &item, unsigned int col ) const override;
-    virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
-    virtual bool GetAttr(const wxDataViewItem&, unsigned int, wxDataViewItemAttr&) const override;
-    virtual wxString GetColumnType(unsigned int column) const override;
+	virtual void GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const override;
+	virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
+	virtual bool GetAttr(const wxDataViewItem&, unsigned int, wxDataViewItemAttr&) const override;
+	virtual wxString GetColumnType(unsigned int column) const override;
 
-    IBattle* GetBattle() const;
-    void SetBattle(IBattle*);
-
-private:
-    IBattle* m_Battle;
+	IBattle* GetBattle() const;
+	void SetBattle(IBattle*);
 
 private:
-	enum ColumnIndexes
-	{
+	IBattle* m_Battle;
+
+private:
+	enum ColumnIndexes {
 		STATUS = 0,
 		INGAME,
 		FACTION,

@@ -458,13 +458,15 @@ std::string SlPaths::GetUpdateDir()
 	return SlPaths::GetLobbyWriteDir() + "update" + SEP;
 }
 
-void SlPaths::SetDownloadDir(const std::string& newDir) {
+void SlPaths::SetDownloadDir(const std::string& newDir)
+{
 	std::string newDownloadDir = LSL::Util::EnsureDelimiter(newDir);
 
 	cfg().Write(_T("/Spring/DownloadDir"), TowxString(newDownloadDir));
 }
 
-bool SlPaths::ValidatePaths() {
+bool SlPaths::ValidatePaths()
+{
 
 	std::vector<std::string> dirs = std::vector<std::string>();
 
@@ -481,16 +483,14 @@ bool SlPaths::ValidatePaths() {
 	}
 
 	/*Check dirs*/
-	try{
-		for(std::string& dir : dirs)
-		{
+	try {
+		for (std::string& dir : dirs) {
 			if (!CheckDirExistAndWritable(dir)) {
 				wxLogError(wxString::Format(_("Directory %s is not accessible!"), TowxString(dir)));
 				return false;
 			}
 		}
-	}catch(...)
-	{
+	} catch (...) {
 		wxLogError(_("SlPaths::ValidatePaths() : Failed to validate data directories!"));
 		return false;
 	}
@@ -498,7 +498,8 @@ bool SlPaths::ValidatePaths() {
 	return true;
 }
 
-bool SlPaths::CheckDirExistAndWritable(const std::string& dir) {
+bool SlPaths::CheckDirExistAndWritable(const std::string& dir)
+{
 
 	/*Convert path to UTF-8 string*/
 	wxString targetDir = TowxString(dir);
@@ -562,4 +563,3 @@ std::string SlPaths::SantinizeFilename(const std::string& filename)
 	}
 	return res;
 }
-

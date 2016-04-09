@@ -634,9 +634,9 @@ void MainWindow::OnMenuSelectLocale(wxCommandEvent& /*unused*/)
 {
 	if (wxGetApp().SelectLanguage()) {
 		customMessageBoxModal(SL_MAIN_ICON,
-					_("You need to restart SpringLobby for the language change to take effect."),
-					_("Restart required"),
-					wxICON_EXCLAMATION | wxOK);
+				      _("You need to restart SpringLobby for the language change to take effect."),
+				      _("Restart required"),
+				      wxICON_EXCLAMATION | wxOK);
 	}
 }
 

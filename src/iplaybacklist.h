@@ -38,7 +38,6 @@ protected:
 
 private:
 	int FindPlayback(const std::string& filename) const;
-
 };
 
 #endif // SL_PLAYBACKLIST_H_INCLUDED

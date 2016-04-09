@@ -104,10 +104,10 @@ bool TASServer::ExecuteSayCommand(const std::string& cmdstr) //FIXME: all the /c
 	if ((cmd == "/join") || (cmd == "/j")) {
 		std::string channel;
 		std::string password;
-		switch(arrayparams.size()) {
+		switch (arrayparams.size()) {
 			case 3:
 				password = arrayparams[2];
-				// no break wanted, next assignement is required
+			// no break wanted, next assignement is required
 			case 2:
 				channel = arrayparams[1];
 				break;
@@ -701,7 +701,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 			}
 		}
 		if (nick == m_relay_host_manager) {
-			if (LSL::Util::BeginsWith(params,"\001")) { // error code
+			if (LSL::Util::BeginsWith(params, "\001")) { // error code
 				m_se->OnServerMessageBox(LSL::Util::AfterFirst(params, " "));
 			} else {
 				m_relay_host_bot = params;
@@ -1759,7 +1759,7 @@ void TASServer::OnConnected()
 
 void TASServer::OnDisconnected(wxSocketError err)
 {
-	if (err != wxSOCKET_NOERROR ) {
+	if (err != wxSOCKET_NOERROR) {
 		wxLogWarning("Socket disconnected: %d", err);
 	}
 	const bool connectionwaspresent = m_online || !m_last_denied.empty() || m_redirecting;

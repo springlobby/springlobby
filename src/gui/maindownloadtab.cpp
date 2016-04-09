@@ -29,9 +29,9 @@
 BEGIN_EVENT_TABLE(MainDownloadTab, wxPanel)
 //(*EventTable(MainTorrentTab)
 //*)
-	EVT_BUTTON(ID_BUTTON_CANCEL, MainDownloadTab::OnCancelButton)
-	EVT_BUTTON(ID_BUTTON_CLEAR, MainDownloadTab::OnClearFinished)
-	EVT_BUTTON(ID_DOWNLOAD_DIALOG, MainDownloadTab::OnDownloadDialog)
+EVT_BUTTON(ID_BUTTON_CANCEL, MainDownloadTab::OnCancelButton)
+EVT_BUTTON(ID_BUTTON_CLEAR, MainDownloadTab::OnClearFinished)
+EVT_BUTTON(ID_DOWNLOAD_DIALOG, MainDownloadTab::OnDownloadDialog)
 END_EVENT_TABLE()
 
 MainDownloadTab::MainDownloadTab(wxWindow* parent)
@@ -98,6 +98,7 @@ void MainDownloadTab::OnDownloadDialog(wxCommandEvent& /*unused*/)
 	}
 }
 
-void MainDownloadTab::OnDownloadFailed(wxCommandEvent& /*event*/) {
+void MainDownloadTab::OnDownloadFailed(wxCommandEvent& /*event*/)
+{
 	customMessageBox(SL_MAIN_ICON, _("Failed to download selected item."), _("Failed to download"), wxOK);
 }

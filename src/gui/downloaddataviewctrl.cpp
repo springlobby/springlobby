@@ -5,41 +5,42 @@
 #include "utils/globalevents.h"
 
 BEGIN_EVENT_TABLE(DownloadDataViewCtrl, BaseDataViewCtrl) EVT_MENU(DOWNLOAD_DATAVIEW_CANCEL, DownloadDataViewCtrl::OnCancel)
-EVT_MENU(DOWNLOAD_DATAVIEW_RETRY, DownloadDataViewCtrl::OnRetry)
-END_EVENT_TABLE()
+    EVT_MENU(DOWNLOAD_DATAVIEW_RETRY, DownloadDataViewCtrl::OnRetry)
+    END_EVENT_TABLE()
 
-DownloadDataViewCtrl::DownloadDataViewCtrl(const wxString dataViewName,
-		wxWindow* parent) :
-		BaseDataViewCtrl(dataViewName, parent, DOWNLOAD_DATAVIEW_ID) {
+    DownloadDataViewCtrl::DownloadDataViewCtrl(const wxString dataViewName,
+					       wxWindow* parent)
+    : BaseDataViewCtrl(dataViewName, parent, DOWNLOAD_DATAVIEW_ID)
+{
 
 	DownloadDataViewModel* model = new DownloadDataViewModel();
 	AssociateModel(model);
 
 	const int DEFAULT_WIDTH = wxCOL_WIDTH_AUTOSIZE;
 	AppendTextColumn(_("Name"), NAME, wxDATAVIEW_CELL_INERT, DEFAULT_WIDTH,
-			wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+			 wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("Status"), STATUS, wxDATAVIEW_CELL_INERT, DEFAULT_WIDTH,
-			wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+			 wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("% complete"), P_COMPLETE, wxDATAVIEW_CELL_INERT,
-			DEFAULT_WIDTH, wxALIGN_CENTER,
-			wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+			 DEFAULT_WIDTH, wxALIGN_CENTER,
+			 wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("KB/s down"), SPEED, wxDATAVIEW_CELL_INERT,
-			DEFAULT_WIDTH, wxALIGN_CENTER,
-			wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+			 DEFAULT_WIDTH, wxALIGN_CENTER,
+			 wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("ETA"), ETA, wxDATAVIEW_CELL_INERT, DEFAULT_WIDTH,
-			wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+			 wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("Filesize (MB)"), FILESIZE, wxDATAVIEW_CELL_INERT,
-			DEFAULT_WIDTH, wxALIGN_CENTER,
-			wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+			 DEFAULT_WIDTH, wxALIGN_CENTER,
+			 wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
 	LoadColumnProperties();
 
 	GlobalEventManager::Instance()->Subscribe(this,
-			GlobalEventManager::OnDownloadStarted,
-			wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadStarted));
+						  GlobalEventManager::OnDownloadStarted,
+						  wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadStarted));
 	GlobalEventManager::Instance()->Subscribe(this,
-			GlobalEventManager::OnDownloadProgress,
-			wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadProgress));
+						  GlobalEventManager::OnDownloadProgress,
+						  wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadProgress));
 }
 
 DownloadDataViewCtrl::~DownloadDataViewCtrl()
@@ -49,34 +50,40 @@ DownloadDataViewCtrl::~DownloadDataViewCtrl()
 }
 
 void DownloadDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
-		const wxPoint& /*position*/) {
+					    const wxPoint& /*position*/)
+{
 	//TODO: implement!
 }
 
-void DownloadDataViewCtrl::HighlightItem(long /*item*/) {
+void DownloadDataViewCtrl::HighlightItem(long /*item*/)
+{
 	//TODO: implement!
 }
 
-void DownloadDataViewCtrl::OnCancel(wxCommandEvent& /*event*/) {
+void DownloadDataViewCtrl::OnCancel(wxCommandEvent& /*event*/)
+{
 	//TODO: implement download cancellation in ContentManager
 }
 
-void DownloadDataViewCtrl::OnRetry(wxCommandEvent& /*event*/) {
+void DownloadDataViewCtrl::OnRetry(wxCommandEvent& /*event*/)
+{
 
 	//TODO: this is just a stub! Need implementation!
 }
 
-void DownloadDataViewCtrl::OnDownloadStarted(wxCommandEvent& /*event*/) {
+void DownloadDataViewCtrl::OnDownloadStarted(wxCommandEvent& /*event*/)
+{
 	slLogDebugFunc("");
 
-	PrDownloader::DownloadProgress *p = new PrDownloader::DownloadProgress;
+	PrDownloader::DownloadProgress* p = new PrDownloader::DownloadProgress;
 	prDownloader().GetProgress(*p);
 	AddItem(p);
 }
 
-void DownloadDataViewCtrl::OnDownloadProgress(wxCommandEvent& /*event*/) {
+void DownloadDataViewCtrl::OnDownloadProgress(wxCommandEvent& /*event*/)
+{
 
-	PrDownloader::DownloadProgress *existingItem;
+	PrDownloader::DownloadProgress* existingItem;
 	PrDownloader::DownloadProgress p;
 	prDownloader().GetProgress(p);
 
@@ -92,7 +99,8 @@ void DownloadDataViewCtrl::OnDownloadProgress(wxCommandEvent& /*event*/) {
 	RefreshItem(*existingItem);
 }
 
-void DownloadDataViewCtrl::AddItem(PrDownloader::DownloadProgress* p) {
+void DownloadDataViewCtrl::AddItem(PrDownloader::DownloadProgress* p)
+{
 	slLogDebugFunc("");
 
 	BaseDataViewCtrl::AddItem(*p, true);
@@ -100,38 +108,40 @@ void DownloadDataViewCtrl::AddItem(PrDownloader::DownloadProgress* p) {
 	itemsIndex[p->name] = p;
 }
 
-void DownloadDataViewCtrl::Clear() {
+void DownloadDataViewCtrl::Clear()
+{
 	slLogDebugFunc("");
 
 	UnselectAll();
 
 	std::vector<const PrDownloader::DownloadProgress*> toBeRemoved;
 
-	for (const PrDownloader::DownloadProgress *p : m_DataModel->GetItemsContainer()) {
+	for (const PrDownloader::DownloadProgress* p : m_DataModel->GetItemsContainer()) {
 		toBeRemoved.push_back(p);
 	}
 
 	BaseDataViewCtrl::Clear();
 
-	for (const PrDownloader::DownloadProgress *p : toBeRemoved) {
+	for (const PrDownloader::DownloadProgress* p : toBeRemoved) {
 		delete p;
 	}
 }
 
-void DownloadDataViewCtrl::ClearFinished() {
+void DownloadDataViewCtrl::ClearFinished()
+{
 	slLogDebugFunc("");
 
 	UnselectAll();
 
 	std::vector<const PrDownloader::DownloadProgress*> toBeRemoved;
 
-	for (const PrDownloader::DownloadProgress *p : m_DataModel->GetItemsContainer()) {
+	for (const PrDownloader::DownloadProgress* p : m_DataModel->GetItemsContainer()) {
 		if (p->IsFinished()) {
 			toBeRemoved.push_back(p);
 		}
 	}
 
-	for (const PrDownloader::DownloadProgress *pp : toBeRemoved) {
+	for (const PrDownloader::DownloadProgress* pp : toBeRemoved) {
 		RemoveItem(*pp);
 		auto item = itemsIndex.find(pp->name);
 		assert(item != itemsIndex.end());

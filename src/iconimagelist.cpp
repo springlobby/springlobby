@@ -203,4 +203,3 @@ int IconImageList::GetFlagIcon(const std::string& flagname) const
 {
 	return ICON_FLAGS_BASE + GetFlagIndex(flagname);
 }
-

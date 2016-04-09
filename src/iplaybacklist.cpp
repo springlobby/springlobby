@@ -20,7 +20,7 @@ int IPlaybackList::FindPlayback(const std::string& filename) const //returns id 
 
 void IPlaybackList::LoadPlaybacks(const std::set<std::string>& filenames)
 {
-	for (const std::string& filename: filenames) { //add replays which doesn't exist yet
+	for (const std::string& filename : filenames) { //add replays which doesn't exist yet
 		const int pos = FindPlayback(filename);
 		if (pos == -1) {
 			StoredGame& playback = AddPlayback(filename);
@@ -30,13 +30,13 @@ void IPlaybackList::LoadPlaybacks(const std::set<std::string>& filenames)
 
 	if (m_replays.size() > filenames.size()) {
 		std::list<unsigned int> todel;
-		for (const auto& playback: m_replays){ //remove not re-added playbacks (deleted?!)
+		for (const auto& playback : m_replays) { //remove not re-added playbacks (deleted?!)
 			if (filenames.find(playback.second.Filename) == filenames.end()) {
 				todel.push_back(playback.first);
 			}
 		}
 
-		for (unsigned int id: todel) {
+		for (unsigned int id : todel) {
 			DeletePlayback(id);
 		}
 	}
@@ -54,7 +54,7 @@ StoredGame& IPlaybackList::AddPlayback(const std::string& filename)
 		return m_replays[replays];
 	}
 
-	for(size_t i = 0; i < replays; i++) { //item was deleted, try to reuse id's / fill gaps
+	for (size_t i = 0; i < replays; i++) { //item was deleted, try to reuse id's / fill gaps
 		if (!PlaybackExists(i)) {
 			m_replays[i].id = i;
 			m_replays_filename_index[filename] = i;

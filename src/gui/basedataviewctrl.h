@@ -86,7 +86,7 @@ inline bool BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item)
 {
 	wxASSERT(m_DataModel != nullptr);
 
-    wxDataViewItem selectedItem = GetSelection();
+	wxDataViewItem selectedItem = GetSelection();
 
 	bool result = m_DataModel->UpdateItem(item);
 
@@ -94,8 +94,8 @@ inline bool BaseDataViewCtrl<DataType>::RefreshItem(const DataType& item)
 		Resort();
 	}
 
-    /*Preserve selection*/
-    Select(selectedItem);
+	/*Preserve selection*/
+	Select(selectedItem);
 
 	return result;
 }
@@ -313,16 +313,16 @@ inline void BaseDataViewCtrl<DataType>::OnShowColumns(wxCommandEvent&)
 template <class DataType>
 inline bool BaseDataViewCtrl<DataType>::AddItem(const DataType& item, bool resortIsNeeded)
 {
-    wxDataViewItem selectedItem = GetSelection();
+	wxDataViewItem selectedItem = GetSelection();
 
 	bool result = m_DataModel->AddItem(item);
 
-        if (result && resortIsNeeded) {
+	if (result && resortIsNeeded) {
 		Resort();
 	}
 
-    /*Preserve selection*/
-    Select(selectedItem);
+	/*Preserve selection*/
+	Select(selectedItem);
 
 	return result;
 }
@@ -330,7 +330,7 @@ inline bool BaseDataViewCtrl<DataType>::AddItem(const DataType& item, bool resor
 template <class DataType>
 inline bool BaseDataViewCtrl<DataType>::RemoveItem(const DataType& item)
 {
-    wxDataViewItem selectedItem = GetSelection();
+	wxDataViewItem selectedItem = GetSelection();
 
 	bool result = m_DataModel->RemoveItem(item);
 
@@ -338,11 +338,10 @@ inline bool BaseDataViewCtrl<DataType>::RemoveItem(const DataType& item)
 		Resort();
 	}
 
-    //Do no try to select removed item
-    if ( (selectedItem.GetID()) != (&item) )
-    {
-        Select(selectedItem);
-    }
+	//Do no try to select removed item
+	if ((selectedItem.GetID()) != (&item)) {
+		Select(selectedItem);
+	}
 
 	return result;
 }

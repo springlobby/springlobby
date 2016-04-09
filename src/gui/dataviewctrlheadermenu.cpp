@@ -8,7 +8,9 @@
 
 #include "dataviewvtrlheadermenu.h"
 
-DataViewCtrlHeaderMenu::DataViewCtrlHeaderMenu(wxDataViewCtrl* parent, int column) : wxMenu(){
+DataViewCtrlHeaderMenu::DataViewCtrlHeaderMenu(wxDataViewCtrl* parent, int column)
+    : wxMenu()
+{
 	parentDataView = parent;
 	columnIndex = column;
 
@@ -17,15 +19,18 @@ DataViewCtrlHeaderMenu::DataViewCtrlHeaderMenu(wxDataViewCtrl* parent, int colum
 	ConnectEvents();
 }
 
-DataViewCtrlHeaderMenu::~DataViewCtrlHeaderMenu() {
+DataViewCtrlHeaderMenu::~DataViewCtrlHeaderMenu()
+{
 }
 
-void DataViewCtrlHeaderMenu::ConnectEvents() {
+void DataViewCtrlHeaderMenu::ConnectEvents()
+{
 	Connect(HIDE_COLUMN_ID, wxEVT_COMMAND_MENU_SELECTED, wxObjectEventFunction(&DataViewCtrlHeaderMenu::OnHideColumn));
 	Connect(SHOW_ALL_COLUMNS_ID, wxEVT_COMMAND_MENU_SELECTED, wxObjectEventFunction(&DataViewCtrlHeaderMenu::OnShowColumns));
 }
 
-void DataViewCtrlHeaderMenu::OnHideColumn(wxCommandEvent&) {
+void DataViewCtrlHeaderMenu::OnHideColumn(wxCommandEvent&)
+{
 	wxCommandEvent newEvent;
 
 	newEvent.SetEventType(HIDE_COLUMN_EVT);
@@ -34,7 +39,8 @@ void DataViewCtrlHeaderMenu::OnHideColumn(wxCommandEvent&) {
 	parentDataView->GetEventHandler()->ProcessEvent(newEvent);
 }
 
-void DataViewCtrlHeaderMenu::CreateMenuItems() {
+void DataViewCtrlHeaderMenu::CreateMenuItems()
+{
 	int visibleColumnsCount = CountVisibleColumns();
 
 	if (visibleColumnsCount > 1) {
@@ -48,12 +54,13 @@ void DataViewCtrlHeaderMenu::CreateMenuItems() {
 	}
 }
 
-int DataViewCtrlHeaderMenu::CountVisibleColumns() {
+int DataViewCtrlHeaderMenu::CountVisibleColumns()
+{
 
 	int totalVisibleColumnsCount = 0;
 	int totalColumnsCount = parentDataView->GetColumnCount();
 
-	for ( int i = 0;  i < totalColumnsCount; ++i) {
+	for (int i = 0; i < totalColumnsCount; ++i) {
 		wxDataViewColumn* column = parentDataView->GetColumn(i);
 		if (column->IsHidden() == false) {
 			totalVisibleColumnsCount++;
@@ -63,7 +70,8 @@ int DataViewCtrlHeaderMenu::CountVisibleColumns() {
 	return totalVisibleColumnsCount;
 }
 
-void DataViewCtrlHeaderMenu::OnShowColumns(wxCommandEvent&) {
+void DataViewCtrlHeaderMenu::OnShowColumns(wxCommandEvent&)
+{
 	wxCommandEvent newEvent;
 
 	newEvent.SetEventType(SHOW_ALL_COLUMNS_EVT);

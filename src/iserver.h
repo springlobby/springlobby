@@ -143,7 +143,7 @@ public:
 
 	virtual void SetUsername(const std::string& username)
 	{
-		m_serverinfo.username= username;
+		m_serverinfo.username = username;
 	}
 	virtual const std::string& GetUserName() const
 	{
@@ -242,7 +242,6 @@ protected:
 	ServerLoginInfo m_serverinfo;
 
 private:
-
 	std::string m_required_spring_ver;
 	UserList m_users;
 	ChannelList m_channels;

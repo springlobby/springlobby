@@ -14,14 +14,16 @@
 #include "gui/ui.h"
 
 BEGIN_EVENT_TABLE(BattleDataViewCtrl, BaseDataViewCtrl)
-	EVT_DATAVIEW_ITEM_CONTEXT_MENU(BATTLELIST_DATAVIEW_ID, BattleDataViewCtrl::OnContextMenu)
-	EVT_MENU(BATTLELIST_DATAVIEW_DLMAP, BattleDataViewCtrl::OnDLMap)
-	EVT_MENU(BATTLELIST_DATAVIEW_DLMOD, BattleDataViewCtrl::OnDLMod)
-	EVT_MENU(BATTLELIST_DATAVIEW_DLENGINE, BattleDataViewCtrl::OnDLEngine)
-    EVT_MENU(BATTLELIST_DATAVIEW_NOTIFYGAMEENDS, BattleDataViewCtrl::OnNotifyGameEnd)
+EVT_DATAVIEW_ITEM_CONTEXT_MENU(BATTLELIST_DATAVIEW_ID, BattleDataViewCtrl::OnContextMenu)
+EVT_MENU(BATTLELIST_DATAVIEW_DLMAP, BattleDataViewCtrl::OnDLMap)
+EVT_MENU(BATTLELIST_DATAVIEW_DLMOD, BattleDataViewCtrl::OnDLMod)
+EVT_MENU(BATTLELIST_DATAVIEW_DLENGINE, BattleDataViewCtrl::OnDLEngine)
+EVT_MENU(BATTLELIST_DATAVIEW_NOTIFYGAMEENDS, BattleDataViewCtrl::OnNotifyGameEnd)
 END_EVENT_TABLE()
 
-BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* parent) : BaseDataViewCtrl(dataViewName, parent, BATTLELIST_DATAVIEW_ID) {
+BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* parent)
+    : BaseDataViewCtrl(dataViewName, parent, BATTLELIST_DATAVIEW_ID)
+{
 	m_popup = nullptr;
 
 	BattleDataViewModel* m_BattleDataModel = new BattleDataViewModel();
@@ -44,11 +46,13 @@ BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* p
 	LoadColumnProperties();
 }
 
-BattleDataViewCtrl::~BattleDataViewCtrl() {
+BattleDataViewCtrl::~BattleDataViewCtrl()
+{
 	m_popup = nullptr;
 }
 
-void BattleDataViewCtrl::AddBattle(IBattle& battle) {
+void BattleDataViewCtrl::AddBattle(IBattle& battle)
+{
 	if (ContainsItem(battle)) {
 		return;
 	} else {
@@ -56,7 +60,8 @@ void BattleDataViewCtrl::AddBattle(IBattle& battle) {
 	}
 }
 
-void BattleDataViewCtrl::RemoveBattle(IBattle& battle) {
+void BattleDataViewCtrl::RemoveBattle(IBattle& battle)
+{
 	if (ContainsItem(battle)) {
 		RemoveItem(battle);
 	} else {
@@ -64,7 +69,8 @@ void BattleDataViewCtrl::RemoveBattle(IBattle& battle) {
 	}
 }
 
-void BattleDataViewCtrl::UpdateBattle(IBattle& battle) {
+void BattleDataViewCtrl::UpdateBattle(IBattle& battle)
+{
 	if (ContainsItem(battle)) {
 		RefreshItem(battle);
 	} else {
@@ -73,36 +79,41 @@ void BattleDataViewCtrl::UpdateBattle(IBattle& battle) {
 }
 
 void BattleDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
-		const wxPoint& /*position*/) {
+					  const wxPoint& /*position*/)
+{
 	//TODO: implement!
 }
 
-void BattleDataViewCtrl::OnDLMap(wxCommandEvent& /*event*/) {
+void BattleDataViewCtrl::OnDLMap(wxCommandEvent& /*event*/)
+{
 	ui().NeedsDownload(GetSelectedItem(), false, DownloadEnum::CAT_MAP);
 }
 
-void BattleDataViewCtrl::OnDLMod(wxCommandEvent& /*event*/) {
+void BattleDataViewCtrl::OnDLMod(wxCommandEvent& /*event*/)
+{
 	ui().NeedsDownload(GetSelectedItem(), false, DownloadEnum::CAT_GAME);
 }
 
-void BattleDataViewCtrl::OnDLEngine(wxCommandEvent& /*event*/) {
+void BattleDataViewCtrl::OnDLEngine(wxCommandEvent& /*event*/)
+{
 	ui().NeedsDownload(GetSelectedItem(), false, DownloadEnum::CAT_ENGINE);
 }
 
 void BattleDataViewCtrl::OnNotifyGameEnd(wxCommandEvent& /*unused*/)
 {
-    const IBattle* battle = GetSelectedItem();
+	const IBattle* battle = GetSelectedItem();
 
-    if (battle == nullptr) {
-        return;
-    }
+	if (battle == nullptr) {
+		return;
+	}
 
-    //Send user (belived to be autohost bot) private message with "!notify" command
-    User founder = battle->GetFounder();
-    founder.Say("!notify");
+	//Send user (belived to be autohost bot) private message with "!notify" command
+	User founder = battle->GetFounder();
+	founder.Say("!notify");
 }
 
-void BattleDataViewCtrl::OnContextMenu(wxDataViewEvent& /*event*/) {
+void BattleDataViewCtrl::OnContextMenu(wxDataViewEvent& /*event*/)
+{
 
 	const IBattle* battle = GetSelectedItem();
 
@@ -128,7 +139,7 @@ void BattleDataViewCtrl::OnContextMenu(wxDataViewEvent& /*event*/) {
 		m_popup->Append(BATTLELIST_DATAVIEW_DLENGINE, _("Download &engine"));
 	}
 
-    m_popup->Append(BATTLELIST_DATAVIEW_NOTIFYGAMEENDS, _("Notify me when game has ended"));
+	m_popup->Append(BATTLELIST_DATAVIEW_NOTIFYGAMEENDS, _("Notify me when game has ended"));
 
-    PopupMenu(m_popup);
+	PopupMenu(m_popup);
 }

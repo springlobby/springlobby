@@ -7,15 +7,16 @@
 
 class IBattle;
 
-class BattleDataViewModel: public BaseDataViewModel<IBattle> {
+class BattleDataViewModel : public BaseDataViewModel<IBattle>
+{
 public:
 	BattleDataViewModel();
 	virtual ~BattleDataViewModel();
 
-    virtual void GetValue( wxVariant &variant, const wxDataViewItem &item, unsigned int col ) const override;
-    virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
-    virtual bool GetAttr(const wxDataViewItem&, unsigned int, wxDataViewItemAttr&) const override;
-    virtual wxString GetColumnType(unsigned int column) const override;
+	virtual void GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const override;
+	virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
+	virtual bool GetAttr(const wxDataViewItem&, unsigned int, wxDataViewItemAttr&) const override;
+	virtual wxString GetColumnType(unsigned int column) const override;
 
 private:
 	enum ColumnIndexes {

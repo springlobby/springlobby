@@ -17,10 +17,10 @@
 #include "exception.h"
 
 BEGIN_EVENT_TABLE(PlaybackDataView, BaseDataViewCtrl)
-	EVT_DATAVIEW_ITEM_CONTEXT_MENU(REPLAY_DATAVIEW_ID, PlaybackDataView::OnContextMenu)
-	EVT_MENU(REPLAY_DATAVIEW_DLMAP_ID, PlaybackDataView::OnDLMap)
-	EVT_MENU(REPLAY_DATAVIEW_DLMOD_ID, PlaybackDataView::OnDLMod)
-	EVT_CHAR(PlaybackDataView::OnKeyDown)
+EVT_DATAVIEW_ITEM_CONTEXT_MENU(REPLAY_DATAVIEW_ID, PlaybackDataView::OnContextMenu)
+EVT_MENU(REPLAY_DATAVIEW_DLMAP_ID, PlaybackDataView::OnDLMap)
+EVT_MENU(REPLAY_DATAVIEW_DLMOD_ID, PlaybackDataView::OnDLMod)
+EVT_CHAR(PlaybackDataView::OnKeyDown)
 END_EVENT_TABLE()
 
 PlaybackDataView::PlaybackDataView(const wxString& dataViewName, wxWindow* parent)
@@ -54,7 +54,7 @@ PlaybackDataView::~PlaybackDataView()
 
 void PlaybackDataView::AddPlayback(const StoredGame& replay, bool resortIsNeeded)
 {
-    AddItem(replay, resortIsNeeded);
+	AddItem(replay, resortIsNeeded);
 
 	Refresh();
 }

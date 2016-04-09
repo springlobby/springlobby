@@ -20,9 +20,13 @@ class wxRegEx;
 class wxStaticText;
 struct BattleListFilterValues;
 
-namespace GUI { namespace Controls {
+namespace GUI
+{
+namespace Controls
+{
 class BitmapComboBox;
-}}
+}
+}
 
 
 /** \brief The panel contained in BattleListTab used to filter for diff info of battles

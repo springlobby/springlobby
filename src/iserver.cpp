@@ -16,7 +16,7 @@
 #include "log.h"
 
 IServer::IServer()
-	: panel(nullptr)
+    : panel(nullptr)
     , battles_iter(new BattleList_Iter(&m_battles))
 {
 }

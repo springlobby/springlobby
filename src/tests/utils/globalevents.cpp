@@ -6,11 +6,14 @@
 
 #include "../testingstuff/silent_logger.h"
 
-struct TestInitializer {
-	TestInitializer() {
+struct TestInitializer
+{
+	TestInitializer()
+	{
 		InitWxLogger();
 	}
-	~TestInitializer() {
+	~TestInitializer()
+	{
 	}
 };
 
@@ -18,18 +21,21 @@ BOOST_GLOBAL_FIXTURE(TestInitializer);
 
 #include "utils/globalevents.h"
 
-class FakeEvtHandler: public wxEvtHandler {
+class FakeEvtHandler : public wxEvtHandler
+{
 public:
-	FakeEvtHandler() :
-			CallCount { 0 } {
+	FakeEvtHandler()
+	    : CallCount{0}
+	{
 	}
 
-	virtual void QueueEvent(wxEvent *event) override
+	virtual void QueueEvent(wxEvent* event) override
 	{
 		CallCount++;
 	}
 
-	void DummyTarget(wxCommandEvent&) {
+	void DummyTarget(wxCommandEvent&)
+	{
 		//DUMMY
 	}
 
@@ -37,7 +43,8 @@ public:
 	int CallCount;
 };
 
-BOOST_AUTO_TEST_CASE(TestIfCallsProperHandler) {
+BOOST_AUTO_TEST_CASE(TestIfCallsProperHandler)
+{
 	GlobalEventManager* gem = GlobalEventManager::Instance();
 
 	FakeEvtHandler DownloadStartedHandler;
@@ -47,13 +54,13 @@ BOOST_AUTO_TEST_CASE(TestIfCallsProperHandler) {
 
 	//Prepare
 	gem->Subscribe(&DownloadStartedHandler, gem->OnDownloadStarted,
-			wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
 	gem->Subscribe(&DownloadInProgressHandler, gem->OnDownloadProgress,
-			wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
 	gem->Subscribe(&DownloadInProgressHandler2, gem->OnDownloadProgress,
-			wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
 	gem->Subscribe(&DownloadCompletedHandler, gem->OnDownloadComplete,
-			wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
 
 	//Make test
 	gem->Send(gem->OnDownloadProgress);
@@ -73,13 +80,14 @@ BOOST_AUTO_TEST_CASE(TestIfCallsProperHandler) {
 	gem->Release();
 }
 
-BOOST_AUTO_TEST_CASE(TestIfDisabledAfterOnQuitEvent) {
+BOOST_AUTO_TEST_CASE(TestIfDisabledAfterOnQuitEvent)
+{
 	GlobalEventManager* gem = GlobalEventManager::Instance();
 
 	FakeEvtHandler DownloadStartedHandler;
 
 	gem->Subscribe(&DownloadStartedHandler, gem->OnDownloadStarted,
-			wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
 
 	//Make first test
 	gem->Send(gem->OnDownloadStarted);
@@ -96,7 +104,8 @@ BOOST_AUTO_TEST_CASE(TestIfDisabledAfterOnQuitEvent) {
 	gem->Release();
 }
 
-BOOST_AUTO_TEST_CASE(TestIfUnsubscribedProperly) {
+BOOST_AUTO_TEST_CASE(TestIfUnsubscribedProperly)
+{
 	GlobalEventManager* gem = GlobalEventManager::Instance();
 
 	FakeEvtHandler DownloadStartedHandler;
@@ -106,13 +115,13 @@ BOOST_AUTO_TEST_CASE(TestIfUnsubscribedProperly) {
 
 	//Prepare
 	gem->Subscribe(&DownloadStartedHandler, gem->OnDownloadStarted,
-			wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
 	gem->Subscribe(&DownloadInProgressHandler, gem->OnDownloadProgress,
-			wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
 	gem->Subscribe(&DownloadInProgressHandler2, gem->OnDownloadProgress,
-			wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
 	gem->Subscribe(&DownloadCompletedHandler, gem->OnDownloadComplete,
-			wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
 
 	//Make test
 	gem->Send(gem->OnDownloadProgress);

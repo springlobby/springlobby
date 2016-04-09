@@ -43,18 +43,18 @@
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)
-	EVT_BUTTON(BattleListTab::BATTLE_JOIN, BattleListTab::OnJoin)
-	EVT_BUTTON(BattleListTab::BATTLE_HOST, BattleListTab::OnHost)
-	EVT_DATAVIEW_ITEM_ACTIVATED(BattleDataViewCtrl::BATTLELIST_DATAVIEW_ID, BattleListTab::OnListJoin)
-	EVT_DATAVIEW_SELECTION_CHANGED(BattleDataViewCtrl::BATTLELIST_DATAVIEW_ID, BattleListTab::OnSelect)
-	EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_ACTIV, BattleListTab::OnFilterActiv)
-	#if wxUSE_TOGGLEBTN
-	EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
-	EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnInfoShow)
-	#else
-	EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
-	EVT_CHECKBOX(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnOnInfoShow)
-	#endif
+EVT_BUTTON(BattleListTab::BATTLE_JOIN, BattleListTab::OnJoin)
+EVT_BUTTON(BattleListTab::BATTLE_HOST, BattleListTab::OnHost)
+EVT_DATAVIEW_ITEM_ACTIVATED(BattleDataViewCtrl::BATTLELIST_DATAVIEW_ID, BattleListTab::OnListJoin)
+EVT_DATAVIEW_SELECTION_CHANGED(BattleDataViewCtrl::BATTLELIST_DATAVIEW_ID, BattleListTab::OnSelect)
+EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_ACTIV, BattleListTab::OnFilterActiv)
+#if wxUSE_TOGGLEBTN
+EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
+EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnInfoShow)
+#else
+EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
+EVT_CHECKBOX(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnOnInfoShow)
+#endif
 END_EVENT_TABLE()
 
 SLCONFIG("/BattleFilter/Active", false, "determines if battle list filter is active");

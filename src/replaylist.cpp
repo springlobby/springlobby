@@ -29,18 +29,21 @@ public:
 		dataSourceSize = 0;
 		dataSourcePosition = 0;
 	}
-	explicit PlayBackDataReader(wxInputStream* inputStream) : PlayBackDataReader()
+	explicit PlayBackDataReader(wxInputStream* inputStream)
+	    : PlayBackDataReader()
 	{
 		this->inputStream = inputStream;
 	}
 
-	explicit PlayBackDataReader(unsigned char* p, size_t size) : PlayBackDataReader()
+	explicit PlayBackDataReader(unsigned char* p, size_t size)
+	    : PlayBackDataReader()
 	{
 		this->dataSource = p;
 		this->dataSourceSize = size;
 	}
 
-	int Seek(size_t pos) {
+	int Seek(size_t pos)
+	{
 		if (inputStream != nullptr) {
 			return inputStream->SeekI(pos);
 		} else {
@@ -179,29 +182,29 @@ size_t ReplayList::getUnzippedData(unsigned char* ptr, size_t bufSize, wxInputSt
 	wxASSERT(ptr != nullptr);
 	wxASSERT(bufSize > 0);
 
-    z_stream strm;
-    memset(&strm, 0, sizeof(strm));
+	z_stream strm;
+	memset(&strm, 0, sizeof(strm));
 
-    std::unique_ptr<unsigned char[]> inBuff(new unsigned char[bufSize]);
+	std::unique_ptr<unsigned char[]> inBuff(new unsigned char[bufSize]);
 
-    strm.zalloc = Z_NULL;
-    strm.zfree = Z_NULL;
-    strm.opaque = Z_NULL;
-    strm.next_in = inBuff.get();
+	strm.zalloc = Z_NULL;
+	strm.zfree = Z_NULL;
+	strm.opaque = Z_NULL;
+	strm.next_in = inBuff.get();
 
-    inflateInit2 (& strm, 15 | 32);
+	inflateInit2(&strm, 15 | 32);
 
-    inputStream.Read(inBuff.get(), bufSize);
-    strm.avail_in = inputStream.LastRead();
-    strm.avail_out = bufSize;
-    strm.next_out = ptr;
+	inputStream.Read(inBuff.get(), bufSize);
+	strm.avail_in = inputStream.LastRead();
+	strm.avail_out = bufSize;
+	strm.next_out = ptr;
 
-    inflate (&strm, Z_NO_FLUSH);
-    size_t readBytes = bufSize - strm.avail_out;
+	inflate(&strm, Z_NO_FLUSH);
+	size_t readBytes = bufSize - strm.avail_out;
 
-    inflateEnd (&strm);
+	inflateEnd(&strm);
 
-    return readBytes;
+	return readBytes;
 }
 
 std::string ReplayList::GetScriptFromReplay(PlayBackDataReader& replay, const int version) const
@@ -237,4 +240,3 @@ void ReplayList::GetHeaderInfo(PlayBackDataReader& replay, StoredGame& rep, cons
 	rep.duration = gametime;
 	rep.size = replay.GetLength();
 }
-

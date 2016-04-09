@@ -5,7 +5,8 @@
 
 #include <wx/string.h>
 
-class Exception {
+class Exception
+{
 public:
 	Exception();
 	explicit Exception(const wxString& reason);

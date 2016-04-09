@@ -20,11 +20,13 @@ class DownloadItem;
 class PrDownloader : public wxEvtHandler
 {
 public:
-	struct DownloadProgress {
-		DownloadProgress():
-			filesize(0),
-			downloaded(0)
-		{}
+	struct DownloadProgress
+	{
+		DownloadProgress()
+		    : filesize(0)
+		    , downloaded(0)
+		{
+		}
 		std::string name;
 		int filesize;
 		int downloaded;
@@ -36,7 +38,7 @@ public:
 		{
 			if (filesize == 0 || downloaded == 0)
 				return 0;
-			return ((float)(downloaded)/(float)filesize) * 100.0;
+			return ((float)(downloaded) / (float)filesize) * 100.0;
 		}
 		void CopyTo(DownloadProgress& prg)
 		{
@@ -61,7 +63,7 @@ public:
 		CAT_LOBBY ""             /tmp/lobby.zip
 		CAT_HTTP  http://.../f.  /tmp/f.zip
 	*/
-	void Download(DownloadEnum::Category cat, const std::string& filename, const std::string& url="");
+	void Download(DownloadEnum::Category cat, const std::string& filename, const std::string& url = "");
 
 	void SetIngameStatus(bool ingame);
 	void OnSpringStarted(wxCommandEvent& data);

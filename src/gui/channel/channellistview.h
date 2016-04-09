@@ -32,7 +32,8 @@ struct ChannelInfo
 	wxString topic;
 };
 
-class ChannelListView: public BaseDataViewCtrl<ChannelInfo> {
+class ChannelListView : public BaseDataViewCtrl<ChannelInfo>
+{
 public:
 	ChannelListView(const wxString& dataViewName, wxWindow* parent);
 	virtual ~ChannelListView();
@@ -52,8 +53,7 @@ public:
 	enum {
 		CHANNELLIST_ID = wxID_HIGHEST
 	};
-	enum ColumnIndexes
-	{
+	enum ColumnIndexes {
 		CHANNEL_NAME = 0,
 		USERS_COUNT,
 		TOPIC,

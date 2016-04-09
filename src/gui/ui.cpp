@@ -68,13 +68,13 @@ SLCONFIG("/Chat/BroadcastEverywhere", true, "setting to spam the server messages
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
 
 
-static unsigned int s_reconnect_delay_ms = 6 * 1000;	  //initial reconnect delay
+static unsigned int s_reconnect_delay_ms = 6 * 1000; //initial reconnect delay
 
 Ui& ui()
 {
 	assert(wxThread::IsMain());
 	static LSL::Util::LineInfo<Ui> m(AT);
-	static LSL::Util::GlobalObjectHolder<Ui, LSL::Util::LineInfo<Ui> > m_ui(m);
+	static LSL::Util::GlobalObjectHolder<Ui, LSL::Util::LineInfo<Ui>> m_ui(m);
 	return m_ui;
 }
 
@@ -89,7 +89,7 @@ Ui::Ui()
 	m_main_win = new MainWindow();
 	CustomMessageBoxBase::setLobbypointer(m_main_win);
 	m_serv = new TASServer();
-//	m_serv = new OfflineServer();
+	//	m_serv = new OfflineServer();
 	serverSelector().SetCurrentServer(m_serv);
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringTerminated, wxObjectEventFunction(&Ui::OnSpringTerminated));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnQuit, wxObjectEventFunction(&Ui::OnQuit));
@@ -201,7 +201,7 @@ void Ui::Quit()
 //! @note this does not return until the user pressed any of the buttons or closed the dialog.
 bool Ui::Ask(const wxString& heading, const wxString& question) const
 {
-	int answer = customMessageBox(SL_MAIN_ICON, question, heading, wxYES_NO|wxCANCEL);
+	int answer = customMessageBox(SL_MAIN_ICON, question, heading, wxYES_NO | wxCANCEL);
 	return (answer == wxYES);
 }
 
@@ -517,7 +517,7 @@ void Ui::OnBattleClosed(IBattle& battle)
 	} catch (...) {
 	}
 
-	for (auto userpair: battle.GetUsers()) {
+	for (auto userpair : battle.GetUsers()) {
 		assert(userpair.second != nullptr);
 
 		User& user = *userpair.second;
@@ -832,33 +832,34 @@ void Ui::CheckForUpdates(bool show)
 	const wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestversion;
 	if (latestversion == myVersion) {
 		if (show) {
-				customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date"));
+			customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date"));
 		}
 		return;
 	}
 #ifdef __WXMSW__
-		const wxString message = wxString::Format(_("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?"),
-							       TowxString(getSpringlobbyName()).c_str(),
-							       msg.c_str());
-		const wxString heading = _("Update Springlobby?");
-		if (!Ask(heading, message))
-			return;
-		try{
-			prDownloader().UpdateApplication(GetDownloadUrl(latestversion));
-		} catch(Exception& ex) {
-			//this will also happen if updater exe is not present so we don't really ne special check for existance of it
-			const wxString errormsg = wxString::Format(_("Automatic update failed\n\
+	const wxString message = wxString::Format(_("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?"),
+						  TowxString(getSpringlobbyName()).c_str(),
+						  msg.c_str());
+	const wxString heading = _("Update Springlobby?");
+	if (!Ask(heading, message))
+		return;
+	try {
+		prDownloader().UpdateApplication(GetDownloadUrl(latestversion));
+	} catch (Exception& ex) {
+		//this will also happen if updater exe is not present so we don't really ne special check for existance of it
+		const wxString errormsg = wxString::Format(_("Automatic update failed\n\
 					%s\n\
-					you will be redirected to a web page with instructions and the download link will be opened in your browser. %s"), ex.Reason(), msg);
-			customMessageBox(SL_MAIN_ICON, errormsg, _("Updater error."));
-			OpenWebBrowser(_T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary"));
-			OpenWebBrowser(TowxString(GetDownloadUrl(latestversion)));
-			return;
-		} catch (...) {
-			wxLogError("Unknown exception");
-		}
+					you will be redirected to a web page with instructions and the download link will be opened in your browser. %s"),
+							   ex.Reason(), msg);
+		customMessageBox(SL_MAIN_ICON, errormsg, _("Updater error."));
+		OpenWebBrowser(_T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary"));
+		OpenWebBrowser(TowxString(GetDownloadUrl(latestversion)));
+		return;
+	} catch (...) {
+		wxLogError("Unknown exception");
+	}
 #else
-		customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date"));
+	customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date"));
 #endif
 }
 
@@ -927,7 +928,7 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 
 	if (requested(cat, DownloadEnum::CAT_ENGINE) && !battle->EngineExists()) {
 		promptCollection.push_back("engine " + battle->GetEngineName() + " " + battle->GetEngineVersion());
-		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE,battle->GetEngineName() + " " + battle->GetEngineVersion()));
+		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE, battle->GetEngineName() + " " + battle->GetEngineVersion()));
 	}
 	if (requested(cat, DownloadEnum::CAT_MAP) && !battle->MapExists(false)) {
 		promptCollection.push_back("map " + battle->GetHostMapName());
@@ -943,7 +944,7 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 		needstuff = true;
 		if (uiprompt) {
 			std::string prompt = "The " + promptCollection[0];
-			for(size_t i = 1; i < promptCollection.size();i++) {
+			for (size_t i = 1; i < promptCollection.size(); i++) {
 				if (i == promptCollection.size() - 1) {
 					prompt += " and ";
 				} else {
@@ -957,7 +958,7 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 				return true;
 		}
 
-		for (auto dl: todl) {
+		for (auto dl : todl) {
 			prDownloader().Download(dl.first, dl.second);
 		}
 	}

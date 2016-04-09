@@ -14,7 +14,7 @@ public:
 		this->totalSilence = totalSilence;
 	}
 
-	void DoLogRecord(wxLogLevel loglevel, const wxString &msg, const wxLogRecordInfo &info) override
+	void DoLogRecord(wxLogLevel loglevel, const wxString& msg, const wxLogRecordInfo& info) override
 	{
 		if (totalSilence == false) {
 			const std::string msg_str = msg.ToStdString();

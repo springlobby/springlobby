@@ -43,8 +43,8 @@ int customMessageBox(int whichIcon, const wxString& message,
  * but since it's displayed non-modal nothing would come of it
  */
 void customMessageBoxModal(int whichIcon, const wxString& message,
-			     const wxString& caption = wxMessageBoxCaptionStr,
-			     long style = wxOK | wxICON_INFORMATION, const int x = -1, const int y = -1);
+			   const wxString& caption = wxMessageBoxCaptionStr,
+			   long style = wxOK | wxICON_INFORMATION, const int x = -1, const int y = -1);
 
 /** \brief displays server messages when no chat window has focus
  * If dialog currently isn't shown, it's brought up. If dialog already is shown (not necessarily having focus)
@@ -101,8 +101,8 @@ public:
 
 protected:
 	void OnOptionsNo(wxCommandEvent& event);
-    void OnCloseEvent(wxCloseEvent& event);
-    void CloseDialog();
+	void OnCloseEvent(wxCloseEvent& event);
+	void CloseDialog();
 
 private:
 	wxBoxSizer* m_topsizer;

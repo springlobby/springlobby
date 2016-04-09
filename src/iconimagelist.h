@@ -60,8 +60,8 @@ public:
 	int ICON_RANK8;
 
 	int ICON_FLAGS_BASE;
-private:
 
+private:
 	std::vector<int> m_rank_requirements;
 	int m_minimum_rank_requirement_border;
 };

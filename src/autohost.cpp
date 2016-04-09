@@ -63,26 +63,26 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 	} else if (command == _T( "!cbalance" )) {
 		unsigned int num = FromwxString(params);
 		m_battle.Autobalance(IBattle::balance_random, true, false, num);
-		DoAction("is auto-balancing alliances ..." );
+		DoAction("is auto-balancing alliances ...");
 	} else if (command == _T( "!help" )) {
-		DoAction("The following commands are available ( <> = mandatory value, {} = optional value ):" );
-		DoAction("!addbox <topx> <topy> <bottomx> <bottomy> {allynumber}: adds a <allynumber> start restriction to the given coordinates, coordinates range from 0 to 200." );
-		DoAction("!balance {number}: tries to put players into allyteams by how many start boxes there are, uses {number} allyteams if present." );
-		DoAction("!cbalance {number}: see !balance but tries to put clanmates together first." );
-		DoAction("!fixcolors: changes players duplicate colours so they are unique." );
-		DoAction("!fixids {number}: tries to put players into control teams by number, if number is omitted it assignes as different controlteam per player." );
-		DoAction("!cfixids {number}: see !fixids but tries to put clanmates together first." );
-		DoAction("!help: this guide." );
-		DoAction("!listprofiles: lists the available battle profiles." );
-		DoAction("!loadprofile profilename: loads an available battle profile." );
-		DoAction("!lock: prevents more people to join." );
-		DoAction("!map <name>: switches to <name>." );
-		DoAction("!removebox <allynumber>: deletes <allynumber> start restriction's box." );
-		DoAction("!ring {name}: rings players that are not ready or {name} if specified." );
-		DoAction("!set <optionname> <value>: sets battle option <optionname> to <value>" );
-		DoAction("!spectunsynced: sets all players with unsynced status to be spectators." );
-		DoAction("!start: starts the battle." );
-		DoAction("!unlock: opens the battle again." );
+		DoAction("The following commands are available ( <> = mandatory value, {} = optional value ):");
+		DoAction("!addbox <topx> <topy> <bottomx> <bottomy> {allynumber}: adds a <allynumber> start restriction to the given coordinates, coordinates range from 0 to 200.");
+		DoAction("!balance {number}: tries to put players into allyteams by how many start boxes there are, uses {number} allyteams if present.");
+		DoAction("!cbalance {number}: see !balance but tries to put clanmates together first.");
+		DoAction("!fixcolors: changes players duplicate colours so they are unique.");
+		DoAction("!fixids {number}: tries to put players into control teams by number, if number is omitted it assignes as different controlteam per player.");
+		DoAction("!cfixids {number}: see !fixids but tries to put clanmates together first.");
+		DoAction("!help: this guide.");
+		DoAction("!listprofiles: lists the available battle profiles.");
+		DoAction("!loadprofile profilename: loads an available battle profile.");
+		DoAction("!lock: prevents more people to join.");
+		DoAction("!map <name>: switches to <name>.");
+		DoAction("!removebox <allynumber>: deletes <allynumber> start restriction's box.");
+		DoAction("!ring {name}: rings players that are not ready or {name} if specified.");
+		DoAction("!set <optionname> <value>: sets battle option <optionname> to <value>");
+		DoAction("!spectunsynced: sets all players with unsynced status to be spectators.");
+		DoAction("!start: starts the battle.");
+		DoAction("!unlock: opens the battle again.");
 	} else if (command == _T( "!ring" )) {
 		if (!params.IsEmpty()) {
 			const std::string user = STD_STRING(GetBestMatch(m_userlist, params));
@@ -116,19 +116,19 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 			DoAction("has loaded profile: " + profilename);
 	} else if (command == _T( "!fixcolors" )) {
 		m_battle.FixColours();
-		DoAction("is fixing colors." );
+		DoAction("is fixing colors.");
 	} else if (command == _T( "!lock" )) {
 		m_battle.SetIsLocked(true);
 		DoAction("has locked the battle.");
 		m_battle.SendHostInfo(IBattle::HI_Locked);
 	} else if (command == _T( "!unlock" )) {
 		m_battle.SetIsLocked(false);
-		DoAction("has unlocked the battle." );
+		DoAction("has unlocked the battle.");
 		m_battle.SendHostInfo(IBattle::HI_Locked);
 	} else if (command == _T( "!fixids" )) {
 		unsigned int num = FromwxString(params);
 		m_battle.FixTeamIDs(IBattle::balance_divide, false, false, num);
-		DoAction("is auto-balancing control teams ..." );
+		DoAction("is auto-balancing control teams ...");
 	} else if (command == _T( "!cfixids" )) {
 		unsigned int num = FromwxString(params);
 		m_battle.FixTeamIDs(IBattle::balance_divide, true, true, num);
@@ -175,10 +175,10 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 			return;
 		}
 		bool valueok = true;
-		for (size_t i=0; i<numvalues; i++) {
+		for (size_t i = 0; i < numvalues; i++) {
 			valueok &= values[i].ToLong(&var[i]);
 		}
-		for (size_t i=0; i<4; i++) { // check if vars are in reasonable range
+		for (size_t i = 0; i < 4; i++) { // check if vars are in reasonable range
 			valueok &= (var[i] >= 0) && (var[i] <= 200);
 		}
 		if (numvalues == 5) {
@@ -187,7 +187,7 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 			var[4] = m_battle.GetNextFreeRectIdx();
 		}
 		if (!valueok) {
-			DoAction("has received an invalid param for !addbox" );
+			DoAction("has received an invalid param for !addbox");
 			return;
 		}
 		BattleStartRect rect = m_battle.GetStartRect(var[4]);
@@ -211,7 +211,7 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 				DoAction("cannot find start box " + STD_STRING(params));
 			}
 		} else {
-			DoAction("has received an invalid param to !removebox command" );
+			DoAction("has received an invalid param to !removebox command");
 		}
 	} else
 		return;

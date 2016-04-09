@@ -8,17 +8,17 @@
 
 struct StoredGame;
 
-class PlaybackDataModel: public BaseDataViewModel<StoredGame>{
+class PlaybackDataModel : public BaseDataViewModel<StoredGame>
+{
 public:
 	PlaybackDataModel();
 	virtual ~PlaybackDataModel();
 
-    virtual void GetValue( wxVariant &variant, const wxDataViewItem &item, unsigned int col ) const override;
-    virtual wxString GetColumnType(unsigned int columnt) const override;
+	virtual void GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const override;
+	virtual wxString GetColumnType(unsigned int columnt) const override;
 
 private:
-	enum ColumnIndexes
-	{
+	enum ColumnIndexes {
 		DATE = 0,
 		GAME,
 		MAP,

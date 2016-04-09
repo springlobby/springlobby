@@ -225,7 +225,6 @@ void SinglePlayerTab::ReloadModlist()
 }
 
 
-
 void SinglePlayerTab::ReloadEngineList()
 {
 	SlPaths::ValidatePaths();
@@ -248,12 +247,11 @@ void SinglePlayerTab::ReloadEngineList()
 		m_engine_pick->SetSelection(0);
 	}
 
-	if(i == 0) {
+	if (i == 0) {
 		m_minimap->Hide();
 		m_nominimap->Show();
 		m_start_btn->Enable(false);
-	}
-	else {
+	} else {
 		m_nominimap->Hide();
 		m_minimap->Show();
 		m_start_btn->Enable(true);
@@ -313,7 +311,7 @@ void SinglePlayerTab::SetMod(unsigned int index)
 	}
 	m_minimap->UpdateMinimap();
 	m_battle.SendHostInfo(IBattle::HI_Restrictions); // Update restrictions in options.
-	m_battle.SendHostInfo(IBattle::HI_Game_Changed);  // reload mod options
+	m_battle.SendHostInfo(IBattle::HI_Game_Changed); // reload mod options
 	m_mod_pick->SetSelection(index);
 }
 
@@ -463,4 +461,3 @@ void SinglePlayerTab::UpdatePresetList()
 void SinglePlayerTab::OnReset(wxCommandEvent& /*unused*/)
 {
 }
-

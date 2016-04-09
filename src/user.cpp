@@ -258,15 +258,18 @@ void CommonUser::SetStatus(const UserStatus& status)
 	m_status = status;
 }
 
-LSL::lslColor User::GetColor() const {
+LSL::lslColor User::GetColor() const
+{
 	return BattleStatus().colour;
 }
 
-bool User::IsHuman() const {
+bool User::IsHuman() const
+{
 	return (BattleStatus().IsBot() == false);
 }
 
-bool User::IsBot() const {
+bool User::IsBot() const
+{
 	return BattleStatus().IsBot();
 }
 //User& User::operator= ( const User& other )

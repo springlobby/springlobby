@@ -7,9 +7,13 @@
 #include "utils/uievents.h"
 #include <map>
 
-namespace GUI { namespace Controls {
+namespace GUI
+{
+namespace Controls
+{
 class BitmapComboBox;
-}}
+}
+}
 
 class Ui;
 class IBattle;

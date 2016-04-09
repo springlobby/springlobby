@@ -43,14 +43,14 @@
 #include "gui/mainwindow.h"
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
-	EVT_TEXT_ENTER(CHAT_TEXT, ChatPanel::OnSay)
-	EVT_TEXT_PASTE(CHAT_TEXT, ChatPanel::OnPaste)
-	EVT_BUTTON(CHAT_CHAN_OPTS, ChatPanel::OnChanOpts)
-	EVT_BUTTON(CHAT_SEND, ChatPanel::OnSay)
-	EVT_TEXT_URL(CHAT_LOG, ChatPanel::OnLinkEvent)
-	EVT_MENU(wxID_ANY, ChatPanel::OnMenuItem)
-	EVT_TEXT(FILTER_USERS, ChatPanel::OnFilterUsers)
-	EVT_CHECKBOX(SHOW_PLAYERS_ONLY_CHECK, ChatPanel::OnShowPlayerOnlyCheck)
+EVT_TEXT_ENTER(CHAT_TEXT, ChatPanel::OnSay)
+EVT_TEXT_PASTE(CHAT_TEXT, ChatPanel::OnPaste)
+EVT_BUTTON(CHAT_CHAN_OPTS, ChatPanel::OnChanOpts)
+EVT_BUTTON(CHAT_SEND, ChatPanel::OnSay)
+EVT_TEXT_URL(CHAT_LOG, ChatPanel::OnLinkEvent)
+EVT_MENU(wxID_ANY, ChatPanel::OnMenuItem)
+EVT_TEXT(FILTER_USERS, ChatPanel::OnFilterUsers)
+EVT_CHECKBOX(SHOW_PLAYERS_ONLY_CHECK, ChatPanel::OnShowPlayerOnlyCheck)
 END_EVENT_TABLE()
 
 

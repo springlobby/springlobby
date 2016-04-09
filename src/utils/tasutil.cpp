@@ -32,7 +32,7 @@ std::string GetParamByChar(std::string& params, const char sep)
 		return ret;
 	}
 	const std::string ret = params.substr(0, pos); //separator found, return before sep
-	params = params.substr(pos + 1);	  //return everything after first seperator
+	params = params.substr(pos + 1);	       //return everything after first seperator
 	return ret;
 }
 

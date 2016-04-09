@@ -13,7 +13,7 @@ const wxEventType GlobalEventManager::OnDownloadFailed = wxNewEventType();
 const wxEventType GlobalEventManager::OnDownloadProgress = wxNewEventType();
 
 const wxEventType GlobalEventManager::OnUnitsyncFirstTimeLoad =
-		wxNewEventType();
+    wxNewEventType();
 const wxEventType GlobalEventManager::OnUnitsyncReloaded = wxNewEventType();
 const wxEventType GlobalEventManager::OnLobbyDownloaded = wxNewEventType();
 const wxEventType GlobalEventManager::OnSpringTerminated = wxNewEventType();
@@ -26,26 +26,31 @@ const wxEventType GlobalEventManager::BattleStartedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::OnUpdateFinished = wxNewEventType();
 const wxEventType GlobalEventManager::GamePromotedEvent = wxNewEventType();
 const wxEventType GlobalEventManager::ApplicationSettingsChangedEvent =
-		wxNewEventType();
+    wxNewEventType();
 
 GlobalEventManager* GlobalEventManager::m_Instance = nullptr;
 
-GlobalEventManager::GlobalEventManager() : m_eventsDisabled(false){
+GlobalEventManager::GlobalEventManager()
+    : m_eventsDisabled(false)
+{
 	slLogDebugFunc("");
 }
 
-GlobalEventManager::~GlobalEventManager() {
+GlobalEventManager::~GlobalEventManager()
+{
 	assert(m_eventsTable.empty()); // all subcribers must have unsubscribed before exit (else it possible crashes)
 }
 
-GlobalEventManager* GlobalEventManager::Instance() {
+GlobalEventManager* GlobalEventManager::Instance()
+{
 	if (m_Instance == nullptr) {
 		m_Instance = new GlobalEventManager();
 	}
 	return m_Instance;
 }
 
-void GlobalEventManager::Release() {
+void GlobalEventManager::Release()
+{
 	slLogDebugFunc("");
 
 	if (m_Instance != nullptr) {
@@ -54,7 +59,8 @@ void GlobalEventManager::Release() {
 	m_Instance = nullptr;
 }
 
-void GlobalEventManager::Send(wxEventType type) {
+void GlobalEventManager::Send(wxEventType type)
+{
 	Send(wxCommandEvent(type));
 }
 
@@ -126,7 +132,8 @@ void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxOb
 }
 
 // removes the given eventhandler for the specified event type
-void GlobalEventManager::_Disconnect(wxEvtHandler* evthandler, wxEventType id) {
+void GlobalEventManager::_Disconnect(wxEvtHandler* evthandler, wxEventType id)
+{
 	//Unlink event handler from all kinds of event types
 	if (id == ANY_EVENT) {
 		std::vector<wxEventType> removalCollection;

@@ -36,10 +36,10 @@ public:
 	}
 };
 
-#define ASSERT_LOGIC(cond, msg)                                                                                                                 \
-	if (!(cond)) {                                                                                                                          \
+#define ASSERT_LOGIC(cond, msg)                                                                                                                   \
+	if (!(cond)) {                                                                                                                            \
 		wxLogWarning(wxString::Format(_T("logic error ( %s:%d ): %s"), TowxString(__FILE__).c_str(), __LINE__, TowxString(msg).c_str())); \
-		throw std::logic_error(msg);                                                                                                    \
+		throw std::logic_error(msg);                                                                                                      \
 	}
 
 #define ASSERT_EXCEPTION(cond, msg)                                                                                                 \

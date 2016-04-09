@@ -20,12 +20,13 @@
 #include "gui/chatpanelmenu.h"
 
 BEGIN_EVENT_TABLE(NickDataViewCtrl, BaseDataViewCtrl)
-	EVT_DATAVIEW_ITEM_ACTIVATED(NICK_DATAVIEW_CTRL_ID, NickDataViewCtrl::OnItemActivatedEvent)
-	EVT_DATAVIEW_ITEM_CONTEXT_MENU(NICK_DATAVIEW_CTRL_ID, NickDataViewCtrl::OnContextMenuEvent)
+EVT_DATAVIEW_ITEM_ACTIVATED(NICK_DATAVIEW_CTRL_ID, NickDataViewCtrl::OnItemActivatedEvent)
+EVT_DATAVIEW_ITEM_CONTEXT_MENU(NICK_DATAVIEW_CTRL_ID, NickDataViewCtrl::OnContextMenuEvent)
 END_EVENT_TABLE()
 
 NickDataViewCtrl::NickDataViewCtrl(const wxString& dataViewName, wxWindow* parent, bool show_header, ChatPanelMenu* popup, bool /*highlight*/)
-	: BaseDataViewCtrl(dataViewName, parent, NICK_DATAVIEW_CTRL_ID) {
+    : BaseDataViewCtrl(dataViewName, parent, NICK_DATAVIEW_CTRL_ID)
+{
 	m_menu = popup;
 
 	AppendBitmapColumn(_("s"), STATUS, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
@@ -46,22 +47,26 @@ NickDataViewCtrl::NickDataViewCtrl(const wxString& dataViewName, wxWindow* paren
 	LoadColumnProperties();
 }
 
-NickDataViewCtrl::~NickDataViewCtrl() {
+NickDataViewCtrl::~NickDataViewCtrl()
+{
 }
 
-void NickDataViewCtrl::UserFilterShowPlayersOnly(bool showOnlyPlayers) {
+void NickDataViewCtrl::UserFilterShowPlayersOnly(bool showOnlyPlayers)
+{
 	m_userFilterShowPlayersOnly = showOnlyPlayers;
 
 	DoUsersFilter();
 }
 
-void NickDataViewCtrl::SetUsersFilterString(const wxString& fs) {
+void NickDataViewCtrl::SetUsersFilterString(const wxString& fs)
+{
 	m_UsersFilterString = fs.Lower();
 
 	DoUsersFilter();
 }
 
-void NickDataViewCtrl::AddUser(const User& user) {
+void NickDataViewCtrl::AddUser(const User& user)
+{
 	if (AddRealUser(user) == false) {
 		//User already added to widget
 		return;
@@ -70,7 +75,8 @@ void NickDataViewCtrl::AddUser(const User& user) {
 	DoUsersFilter();
 }
 
-void NickDataViewCtrl::RemoveUser(const User& user) {
+void NickDataViewCtrl::RemoveUser(const User& user)
+{
 	if (RemoveRealUser(user) == false) {
 		return;
 	}
@@ -81,7 +87,8 @@ void NickDataViewCtrl::RemoveUser(const User& user) {
 	}
 }
 
-void NickDataViewCtrl::UserUpdated(const User& user) {
+void NickDataViewCtrl::UserUpdated(const User& user)
+{
 
 	if (ContainsItem(user)) {
 		RefreshItem(user);
@@ -89,7 +96,8 @@ void NickDataViewCtrl::UserUpdated(const User& user) {
 	DoUsersFilter();
 }
 
-void NickDataViewCtrl::SetUsers(const UserList::user_map_t& userlist) {
+void NickDataViewCtrl::SetUsers(const UserList::user_map_t& userlist)
+{
 	ClearUsers();
 
 	for (const auto item : userlist) {
@@ -99,16 +107,19 @@ void NickDataViewCtrl::SetUsers(const UserList::user_map_t& userlist) {
 	DoUsersFilter();
 }
 
-void NickDataViewCtrl::ClearUsers() {
+void NickDataViewCtrl::ClearUsers()
+{
 	Clear();
 	ClearRealUsers();
 }
 
-int NickDataViewCtrl::GetUsersCount() const{
+int NickDataViewCtrl::GetUsersCount() const
+{
 	return GetItemsCount();
 }
 
-void NickDataViewCtrl::DoUsersFilter() {
+void NickDataViewCtrl::DoUsersFilter()
+{
 
 	for (auto const item : m_real_users_list) {
 		if (checkFilteringConditions(item.second)) {
@@ -129,15 +140,18 @@ void NickDataViewCtrl::DoUsersFilter() {
 }
 
 void NickDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
-		const wxPoint& /*position*/) {
+					const wxPoint& /*position*/)
+{
 	//TODO: implement!
 }
 
-void NickDataViewCtrl::HighlightItem(long /*item*/) {
+void NickDataViewCtrl::HighlightItem(long /*item*/)
+{
 	//TODO: implement!
 }
 
-bool NickDataViewCtrl::checkFilteringConditions(const User* user) const{
+bool NickDataViewCtrl::checkFilteringConditions(const User* user) const
+{
 	//Filter out bots
 	if ((m_userFilterShowPlayersOnly) && (user->GetStatus().bot)) {
 		return false;
@@ -150,7 +164,8 @@ bool NickDataViewCtrl::checkFilteringConditions(const User* user) const{
 	return true;
 }
 
-bool NickDataViewCtrl::AddRealUser(const User& user) {
+bool NickDataViewCtrl::AddRealUser(const User& user)
+{
 	if (IsContainsRealUser(user)) {
 		return false;
 	}
@@ -159,7 +174,8 @@ bool NickDataViewCtrl::AddRealUser(const User& user) {
 	return true;
 }
 
-bool NickDataViewCtrl::RemoveRealUser(const User& user) {
+bool NickDataViewCtrl::RemoveRealUser(const User& user)
+{
 	const auto it = m_real_users_list.find(user.GetNick());
 	if (it == m_real_users_list.end()) {
 		return false;
@@ -169,11 +185,13 @@ bool NickDataViewCtrl::RemoveRealUser(const User& user) {
 	return true;
 }
 
-void NickDataViewCtrl::ClearRealUsers() {
+void NickDataViewCtrl::ClearRealUsers()
+{
 	m_real_users_list.clear();
 }
 
-bool NickDataViewCtrl::IsContainsRealUser(const User& user) const {
+bool NickDataViewCtrl::IsContainsRealUser(const User& user) const
+{
 	const auto it = m_real_users_list.find(user.GetNick());
 	if (it == m_real_users_list.end()) {
 		return false;
@@ -181,7 +199,8 @@ bool NickDataViewCtrl::IsContainsRealUser(const User& user) const {
 	return true;
 }
 
-void NickDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& /*event*/) {
+void NickDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& /*event*/)
+{
 
 	User* user = GetSelectedItem();
 
@@ -193,7 +212,8 @@ void NickDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& /*event*/) {
 	ui().mw().OpenPrivateChat(*user, true); //true --> setfoucs
 }
 
-void NickDataViewCtrl::OnContextMenuEvent(wxDataViewEvent& /*event*/) {
+void NickDataViewCtrl::OnContextMenuEvent(wxDataViewEvent& /*event*/)
+{
 	if (m_menu != nullptr) {
 		//no need to popup the menu when there's no user selected
 		const User* user = GetSelectedItem();

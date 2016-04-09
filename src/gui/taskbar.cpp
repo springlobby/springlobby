@@ -19,13 +19,12 @@ const unsigned int TIMER_INTERVAL = 5000;
 const unsigned int TIMER_ID = wxNewId();
 
 BEGIN_EVENT_TABLE(TaskBar, wxPanel)
-	EVT_TIMER(TIMER_ID, TaskBar::OnTimer)
+EVT_TIMER(TIMER_ID, TaskBar::OnTimer)
 END_EVENT_TABLE()
 
 TaskBar::TaskBar(wxWindow* statusbar)
-	: wxPanel(statusbar, wxID_ANY, wxPoint(3, 3)
-	, wxSize(460 - (2 * 3), statusbar->GetSize().GetHeight()))
-	, timer(nullptr)
+    : wxPanel(statusbar, wxID_ANY, wxPoint(3, 3), wxSize(460 - (2 * 3), statusbar->GetSize().GetHeight()))
+    , timer(nullptr)
 {
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -111,7 +110,8 @@ void TaskBar::OnDownloadComplete(wxCommandEvent& /*event*/)
 	Refresh();
 }
 
-void TaskBar::OnDownloadProgress(wxCommandEvent& /*event*/) {
+void TaskBar::OnDownloadProgress(wxCommandEvent& /*event*/)
+{
 	UpdateProgress();
 }
 
@@ -140,7 +140,7 @@ void TaskBar::UpdateProgress()
 void TaskBar::EnsureTimerRemoved()
 {
 	if (timer != nullptr) {
-		if(timer->IsRunning()) {
+		if (timer->IsRunning()) {
 			timer->Stop();
 		}
 		wxDELETE(timer);

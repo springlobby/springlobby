@@ -36,7 +36,7 @@ public:
 	}
 
 	// catch and process all log messages
-	void DoLogRecord(wxLogLevel loglevel, const wxString &msg, const wxLogRecordInfo &info) override
+	void DoLogRecord(wxLogLevel loglevel, const wxString& msg, const wxLogRecordInfo& info) override
 	{
 		boost::mutex::scoped_lock lock(m_mutex);
 
@@ -48,7 +48,7 @@ public:
 		}
 
 
-		const std::string std_msg = stdprintf("%s %s:%d %s\n", LogLevelToString(loglevel).c_str(), info.filename , info.line, (STD_STRING(wxString(msg))).c_str());
+		const std::string std_msg = stdprintf("%s %s:%d %s\n", LogLevelToString(loglevel).c_str(), info.filename, info.line, (STD_STRING(wxString(msg))).c_str());
 		if (m_console) {
 			std::cout << std_msg;
 		}

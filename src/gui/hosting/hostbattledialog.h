@@ -109,7 +109,6 @@ private:
 namespace SL
 {
 //! this shows an instance and handles everything wrt data feeding and input handling
-
 }
 
 

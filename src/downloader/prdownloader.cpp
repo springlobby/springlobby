@@ -4,10 +4,9 @@
 
 #include <lslutils/globalsmanager.h>
 #include "lib/src/pr-downloader.h"
-#include "lib/src/Downloader/IDownloader.h" //FIXME: remove this include
-#include "lib/src/FileSystem/FileSystem.h"  //FIXME
+#include "lib/src/Downloader/IDownloader.h"	 //FIXME: remove this include
+#include "lib/src/FileSystem/FileSystem.h"	  //FIXME
 #include "lib/src/Downloader/Http/HttpDownloader.h" //FIXME
-#include "utils/uievents.h"
 #include "utils/conversion.h"
 #include "utils/globalevents.h"
 #include "utils/slpaths.h"
@@ -26,7 +25,7 @@
 SLCONFIG("/Spring/PortableDownload", false, "true to download portable versions of spring, if false cache/settings/etc are shared (bogous!)");
 SLCONFIG("/Spring/RapidMasterUrl", "http://repos.springrts.com/repos.gz", "master url for rapid downloads");
 
-static PrDownloader::DownloadProgress *m_progress = nullptr;
+static PrDownloader::DownloadProgress* m_progress = nullptr;
 static boost::mutex dlProgressMutex;
 
 class DownloadItem : public LSL::WorkItem
@@ -38,9 +37,9 @@ private:
 
 public:
 	DownloadItem(const DownloadEnum::Category cat, const std::string& name, const std::string& filename)
-		: m_category(cat)
-		, m_name(name)
-		, m_filename(filename)
+	    : m_category(cat)
+	    , m_name(name)
+	    , m_filename(filename)
 	{
 		slLogDebugFunc("");
 	}
@@ -62,7 +61,7 @@ public:
 		DownloadSetConfig(CONFIG_RAPID_FORCEUPDATE, &force);
 		int results = 0;
 
-		switch(m_category) {
+		switch (m_category) {
 			case DownloadEnum::CAT_SPRINGLOBBY:
 			case DownloadEnum::CAT_HTTP:
 				results = DownloadAddByUrl(m_category, m_filename.c_str(), m_name.c_str());
@@ -77,7 +76,7 @@ public:
 			return;
 		}
 
-		for (int i=0; i < results; i++) {
+		for (int i = 0; i < results; i++) {
 			DownloadAdd(i);
 			break; //only add one result
 		}
@@ -102,13 +101,16 @@ public:
 		}
 	}
 
-	DownloadEnum::Category getCategory() const {
+	DownloadEnum::Category getCategory() const
+	{
 		return m_category;
 	}
-	const std::string& getFilename() const {
+	const std::string& getFilename() const
+	{
 		return m_filename;
 	}
-	const std::string& getName() const {
+	const std::string& getName() const
+	{
 		return m_name;
 	}
 

@@ -28,10 +28,10 @@
 const static int slButtonSizerFlags = wxOK | wxCANCEL | wxYES | wxNO | wxAPPLY | wxCLOSE | wxHELP | wxNO_DEFAULT;
 
 BEGIN_EVENT_TABLE(CustomMessageBox, wxDialog)
-	EVT_BUTTON(wxID_CANCEL, CustomMessageBox::OnOptionsNo)
-	EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
-	EVT_BUTTON(wxID_CLOSE, CustomMessageBox::OnOptionsNo)
-	EVT_CLOSE(CustomMessageBox::OnCloseEvent)
+EVT_BUTTON(wxID_CANCEL, CustomMessageBox::OnOptionsNo)
+EVT_BUTTON(wxID_NO, CustomMessageBox::OnOptionsNo)
+EVT_BUTTON(wxID_CLOSE, CustomMessageBox::OnOptionsNo)
+EVT_CLOSE(CustomMessageBox::OnCloseEvent)
 END_EVENT_TABLE()
 
 wxWindow* CustomMessageBoxBase::m_settingsWindow = 0;
@@ -252,7 +252,7 @@ void timedMessageBoxNoModal(int whichIcon, const wxString& message,
 }
 
 void customMessageBoxModal(int whichIcon, const wxString& message, const wxString& caption,
-			     long style, int x, int y)
+			   long style, int x, int y)
 {
 	wxWindow* parent = getParent(whichIcon);
 	wxIcon icon = getIcon(whichIcon);

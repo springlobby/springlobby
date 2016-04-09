@@ -13,7 +13,8 @@ class wxCommandEvent;
 class wxPoint;
 class wxDataViewEvent;
 
-class BattleDataViewCtrl: public BaseDataViewCtrl<IBattle> {
+class BattleDataViewCtrl : public BaseDataViewCtrl<IBattle>
+{
 public:
 	BattleDataViewCtrl(const wxString& dataViewName, wxWindow* parent);
 	virtual ~BattleDataViewCtrl();
@@ -28,7 +29,7 @@ private:
 	void OnDLMap(wxCommandEvent& event);
 	void OnDLMod(wxCommandEvent& event);
 	void OnDLEngine(wxCommandEvent& event);
-    void OnNotifyGameEnd(wxCommandEvent& event);
+	void OnNotifyGameEnd(wxCommandEvent& event);
 	void OnContextMenu(wxDataViewEvent& event);
 
 private:
@@ -39,8 +40,8 @@ public:
 		BATTLELIST_DATAVIEW_ID = wxID_HIGHEST,
 		BATTLELIST_DATAVIEW_DLMOD,
 		BATTLELIST_DATAVIEW_DLMAP,
-        BATTLELIST_DATAVIEW_DLENGINE,
-        BATTLELIST_DATAVIEW_NOTIFYGAMEENDS
+		BATTLELIST_DATAVIEW_DLENGINE,
+		BATTLELIST_DATAVIEW_NOTIFYGAMEENDS
 	};
 
 private:

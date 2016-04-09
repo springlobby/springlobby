@@ -404,16 +404,15 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 
 bool IsCrap(char c)
 {
-    switch(c)
-    {
-    case '~':
-    case '(':
-    case ')':
-    case '#':
-        return true;
-    default:
-        return false;
-    }
+	switch (c) {
+		case '~':
+		case '(':
+		case ')':
+		case '#':
+			return true;
+		default:
+			return false;
+	}
 }
 
 /*

@@ -15,19 +15,19 @@
 #include <wx/generic/numdlgg.h>
 
 
-
 BEGIN_EVENT_TABLE(BattleroomDataViewCtrl, BaseDataViewCtrl)
-	EVT_MENU(BATTLEROOM_VIEW_SPEC, BattleroomDataViewCtrl::OnSpecSelect)
-	EVT_MENU(BATTLEROOM_VIEW_KICK, BattleroomDataViewCtrl::OnKickPlayer)
-	EVT_DATAVIEW_ITEM_CONTEXT_MENU(BATTLEROOM_VIEW_ID, BattleroomDataViewCtrl::OnContextMenuEvent)
-	EVT_DATAVIEW_ITEM_ACTIVATED(BATTLEROOM_VIEW_ID, BattleroomDataViewCtrl::OnItemActivatedEvent)
-	EVT_MENU(BATTLEROOM_VIEW_RING, BattleroomDataViewCtrl::OnRingPlayer)
-	EVT_MENU(BATTLEROOM_VIEW_COLOUR, BattleroomDataViewCtrl::OnColourSelect)
-	EVT_MENU(BATTLEROOM_VIEW_HANDICAP, BattleroomDataViewCtrl::OnHandicapSelect)
+EVT_MENU(BATTLEROOM_VIEW_SPEC, BattleroomDataViewCtrl::OnSpecSelect)
+EVT_MENU(BATTLEROOM_VIEW_KICK, BattleroomDataViewCtrl::OnKickPlayer)
+EVT_DATAVIEW_ITEM_CONTEXT_MENU(BATTLEROOM_VIEW_ID, BattleroomDataViewCtrl::OnContextMenuEvent)
+EVT_DATAVIEW_ITEM_ACTIVATED(BATTLEROOM_VIEW_ID, BattleroomDataViewCtrl::OnItemActivatedEvent)
+EVT_MENU(BATTLEROOM_VIEW_RING, BattleroomDataViewCtrl::OnRingPlayer)
+EVT_MENU(BATTLEROOM_VIEW_COLOUR, BattleroomDataViewCtrl::OnColourSelect)
+EVT_MENU(BATTLEROOM_VIEW_HANDICAP, BattleroomDataViewCtrl::OnHandicapSelect)
 END_EVENT_TABLE()
 
-BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxWindow* parent, IBattle* /*battle*/, bool readOnly, bool showInGame) :
-	BaseDataViewCtrl(dataViewName, parent, BATTLEROOM_VIEW_ID){
+BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxWindow* parent, IBattle* /*battle*/, bool readOnly, bool showInGame)
+    : BaseDataViewCtrl(dataViewName, parent, BATTLEROOM_VIEW_ID)
+{
 
 	m_ViewIsReadOnly = readOnly;
 	m_ShowInGame = showInGame;
@@ -51,28 +51,28 @@ BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxW
 	AppendTextColumn(_("Resource Bonus"), BONUS, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
 	//Hide "ingame" column if not needed
-	if (showInGame == false)
-	{
+	if (showInGame == false) {
 		GetColumn(INGAME)->SetHidden(true);
 	}
 	//ReadOnly means quick info about battle
-	if (readOnly == false)
-	{
+	if (readOnly == false) {
 		CreateContextMenu();
 	}
 
 	LoadColumnProperties();
 }
 
-BattleroomDataViewCtrl::~BattleroomDataViewCtrl() {
+BattleroomDataViewCtrl::~BattleroomDataViewCtrl()
+{
 	//TODO: implement
-//	wxDELETE(m_PopupMenu);
+	//	wxDELETE(m_PopupMenu);
 	m_Battle = nullptr;
 
 	SaveColumnProperties();
 }
 
-void BattleroomDataViewCtrl::SetBattle(IBattle* battle) {
+void BattleroomDataViewCtrl::SetBattle(IBattle* battle)
+{
 	//TODO: implement
 	//Remove all users from view (if any)
 	Clear();
@@ -84,7 +84,8 @@ void BattleroomDataViewCtrl::SetBattle(IBattle* battle) {
 	UpdateContextMenuSides();
 }
 
-void BattleroomDataViewCtrl::AddUser(User& user) {
+void BattleroomDataViewCtrl::AddUser(User& user)
+{
 	//TODO: implement
 	if (ContainsItem(user) == true) {
 		return;
@@ -92,7 +93,8 @@ void BattleroomDataViewCtrl::AddUser(User& user) {
 	AddItem(user);
 }
 
-void BattleroomDataViewCtrl::RemoveUser(User& user) {
+void BattleroomDataViewCtrl::RemoveUser(User& user)
+{
 	//TODO: implement
 	if (ContainsItem(user) == false) {
 		return;
@@ -101,15 +103,18 @@ void BattleroomDataViewCtrl::RemoveUser(User& user) {
 }
 
 void BattleroomDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
-		const wxPoint& /*position*/) {
+					      const wxPoint& /*position*/)
+{
 	//TODO: implement
 }
 
-void BattleroomDataViewCtrl::UpdateUser(User& user) {
+void BattleroomDataViewCtrl::UpdateUser(User& user)
+{
 	RefreshItem(user);
 }
 
-void BattleroomDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& /*event*/) {
+void BattleroomDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& /*event*/)
+{
 	if (m_ViewIsReadOnly) {
 		return;
 	}
@@ -123,7 +128,8 @@ void BattleroomDataViewCtrl::OnItemActivatedEvent(wxDataViewEvent& /*event*/) {
 	ui().mw().OpenPrivateChat(*user);
 }
 
-void BattleroomDataViewCtrl::OnContextMenuEvent(wxDataViewEvent& /*event*/) {
+void BattleroomDataViewCtrl::OnContextMenuEvent(wxDataViewEvent& /*event*/)
+{
 	if (m_ViewIsReadOnly) {
 		return;
 	}
@@ -158,7 +164,8 @@ void BattleroomDataViewCtrl::OnContextMenuEvent(wxDataViewEvent& /*event*/) {
 	PopupMenu(m_contextMenu);
 }
 
-void BattleroomDataViewCtrl::CreateContextMenu() {
+void BattleroomDataViewCtrl::CreateContextMenu()
+{
 
 	m_contextMenu = new SL_GENERIC::UserMenu<BattleroomDataViewCtrl>(nullptr, this);
 
@@ -204,7 +211,8 @@ void BattleroomDataViewCtrl::CreateContextMenu() {
 	m_contextMenu->Append(ring);
 }
 
-void BattleroomDataViewCtrl::OnAllySelectEvent(wxCommandEvent& event) {
+void BattleroomDataViewCtrl::OnAllySelectEvent(wxCommandEvent& event)
+{
 	int ally = event.GetId() - BATTLEROOM_VIEW_ALLY;
 
 	const User* user = GetSelectedItem();
@@ -214,7 +222,8 @@ void BattleroomDataViewCtrl::OnAllySelectEvent(wxCommandEvent& event) {
 	}
 }
 
-void BattleroomDataViewCtrl::OnTeamSelectEvent(wxCommandEvent& event) {
+void BattleroomDataViewCtrl::OnTeamSelectEvent(wxCommandEvent& event)
+{
 	int team = event.GetId() - BATTLEROOM_VIEW_TEAM;
 
 	const User* user = GetSelectedItem();
@@ -225,7 +234,8 @@ void BattleroomDataViewCtrl::OnTeamSelectEvent(wxCommandEvent& event) {
 }
 
 void BattleroomDataViewCtrl::OnUserMenuDeleteFromGroup(
-		wxCommandEvent& /*event*/) {
+    wxCommandEvent& /*event*/)
+{
 	const User* user = GetSelectedItem();
 
 	if (user == nullptr) {
@@ -237,7 +247,8 @@ void BattleroomDataViewCtrl::OnUserMenuDeleteFromGroup(
 	useractions().RemoveUser(nick);
 }
 
-void BattleroomDataViewCtrl::OnUserMenuCreateGroup(wxCommandEvent& /*event*/) {
+void BattleroomDataViewCtrl::OnUserMenuCreateGroup(wxCommandEvent& /*event*/)
+{
 	const User* user = GetSelectedItem();
 
 	if (user == nullptr) {
@@ -255,7 +266,8 @@ void BattleroomDataViewCtrl::OnUserMenuCreateGroup(wxCommandEvent& /*event*/) {
 	}
 }
 
-void BattleroomDataViewCtrl::OnUserMenuAddToGroup(wxCommandEvent& event) {
+void BattleroomDataViewCtrl::OnUserMenuAddToGroup(wxCommandEvent& event)
+{
 	const User* user = GetSelectedItem();
 
 	if (user == nullptr) {
@@ -272,7 +284,8 @@ void BattleroomDataViewCtrl::OnUserMenuAddToGroup(wxCommandEvent& event) {
 	Disconnect(GROUP_ID_NEW, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(BattleroomDataViewCtrl::OnUserMenuCreateGroup), 0, this);
 }
 
-void BattleroomDataViewCtrl::OnColourSelect(wxCommandEvent& /*event*/) {
+void BattleroomDataViewCtrl::OnColourSelect(wxCommandEvent& /*event*/)
+{
 	const User* user = GetSelectedItem();
 
 	if (user == nullptr) {
@@ -289,7 +302,8 @@ void BattleroomDataViewCtrl::OnColourSelect(wxCommandEvent& /*event*/) {
 	m_Battle->ForceColour(*const_cast<User*>(user), wxColourTolsl(CurrentColour));
 }
 
-void BattleroomDataViewCtrl::OnSideSelect(wxCommandEvent& event) {
+void BattleroomDataViewCtrl::OnSideSelect(wxCommandEvent& event)
+{
 	int side = event.GetId() - BATTLEROOM_VIEW_SIDE;
 
 	const User* user = GetSelectedItem();
@@ -299,7 +313,8 @@ void BattleroomDataViewCtrl::OnSideSelect(wxCommandEvent& event) {
 	}
 }
 
-void BattleroomDataViewCtrl::OnHandicapSelect(wxCommandEvent& /*event*/) {
+void BattleroomDataViewCtrl::OnHandicapSelect(wxCommandEvent& /*event*/)
+{
 	const User* user = GetSelectedItem();
 
 	if (user == nullptr) {
@@ -312,7 +327,8 @@ void BattleroomDataViewCtrl::OnHandicapSelect(wxCommandEvent& /*event*/) {
 	}
 }
 
-void BattleroomDataViewCtrl::OnSpecSelect(wxCommandEvent& /*event*/) {
+void BattleroomDataViewCtrl::OnSpecSelect(wxCommandEvent& /*event*/)
+{
 	const User* user = GetSelectedItem();
 
 	if (user != nullptr) {
@@ -320,7 +336,8 @@ void BattleroomDataViewCtrl::OnSpecSelect(wxCommandEvent& /*event*/) {
 	}
 }
 
-void BattleroomDataViewCtrl::OnKickPlayer(wxCommandEvent& /*event*/) {
+void BattleroomDataViewCtrl::OnKickPlayer(wxCommandEvent& /*event*/)
+{
 	const User* user = GetSelectedItem();
 
 	if (user != nullptr) {
@@ -328,7 +345,8 @@ void BattleroomDataViewCtrl::OnKickPlayer(wxCommandEvent& /*event*/) {
 	}
 }
 
-void BattleroomDataViewCtrl::OnRingPlayer(wxCommandEvent& /*event*/) {
+void BattleroomDataViewCtrl::OnRingPlayer(wxCommandEvent& /*event*/)
+{
 	const User* user = GetSelectedItem();
 
 	if (user != nullptr) {
@@ -336,7 +354,8 @@ void BattleroomDataViewCtrl::OnRingPlayer(wxCommandEvent& /*event*/) {
 	}
 }
 
-void BattleroomDataViewCtrl::UpdateContextMenuSides() {
+void BattleroomDataViewCtrl::UpdateContextMenuSides()
+{
 	if (m_sides == nullptr) {
 		return;
 	}
