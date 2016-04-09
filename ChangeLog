@@ -12,6 +12,7 @@ ChangeLog of Springlobby
  - fix crash in FORCEJOINBATTLE
  - drop Boost.Filesystem dependency
  - add support for .sdfz replay format
+ - wxWidgets >= 3.0 is required to compile springlobby
 
 ## 0.243
  - remove /installer from source tarball
