@@ -510,8 +510,10 @@ void Ui::OnBattleClosed(IBattle& battle)
 	mw().GetBattleListTab().RemoveBattle(battle);
 	try {
 		if (mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle) {
-			if (!battle.IsFounderMe())
-				customMessageBoxModal(SL_MAIN_ICON, _("The current battle was closed by the host."), _("Battle closed"));
+			if (!battle.IsFounderMe()) {
+				const wxString msg = _("The current battle was closed by the host.");
+				UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData(UiEvents::ServerConnection, msg));
+			}
 			mw().GetJoinTab().LeaveCurrentBattle();
 		}
 	} catch (...) {
