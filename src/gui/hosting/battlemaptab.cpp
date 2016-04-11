@@ -48,7 +48,7 @@ END_EVENT_TABLE()
 
 
 BattleMapTab::BattleMapTab(wxWindow* parent, IBattle* battle)
-    : IBattleMapTab(parent, -1)
+    : wxPanel(parent, -1)
     , m_battle(battle)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T( "battlemaptab" ));

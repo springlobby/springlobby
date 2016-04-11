@@ -39,7 +39,7 @@
 #include "gui/uiutils.h"
 #include "gui/chatpanel.h"
 #include "gui/battlelist/battlelisttab.h"
-#include "gui/hosting/ibattleroomtab.h"
+#include "gui/hosting/battleroomtab.h"
 #include "gui/hosting/mainjoinbattletab.h"
 #include "gui/hosting/mainsingleplayertab.h"
 #include "gui/mainchattab.h"

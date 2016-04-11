@@ -3,14 +3,14 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
 
-#include "ibattleroomtab.h"
-
 #include <lslunitsync/optionswrapper.h>
 #include "utils/uievents.h"
 #include <map>
 
-namespace GUI {
-namespace Controls {
+namespace GUI
+{
+namespace Controls
+{
 class BitmapComboBox;
 }
 }
@@ -37,34 +37,38 @@ typedef std::map<wxString, long> OptionListMap;
 
 /** \brief container for BattleroomListCtrl, battle specific ChatPanel. Also displaying battle info summary
  * \todo DOCMEMORE */
-class BattleRoomTab : public IBattleRoomTab
+class BattleRoomTab : public wxPanel
 {
 public:
 	BattleRoomTab(wxWindow* parent, IBattle* battle);
-	virtual ~BattleRoomTab();
+	~BattleRoomTab();
 
-	virtual void UpdateUser(User& user, bool userJustAdded = false) override;
+	void UpdateUser(User& user, bool userJustAdded = false);
 
-	virtual IBattle* GetBattle() override;
-	virtual ChatPanel& GetChatPanel() override;
+	IBattle* GetBattle();
+	ChatPanel& GetChatPanel();
 
-	virtual void UpdateBattleInfo() override;
-	virtual void UpdateBattleInfo(const wxString& Tag) override;
+	void UpdateBattleInfo();
+	void UpdateBattleInfo(const wxString& Tag);
 
-	virtual void OnBattleActionEvent(UiEvents::UiEventData data) override;
 
-	virtual void OnUserJoined(User& user) override;
-	virtual void OnUserLeft(User& user) override;
+	void OnBattleActionEvent(UiEvents::UiEventData data);
 
-	virtual void ReloadMaplist() override;
-	virtual void SetMap(int index) override;
+	void OnUserJoined(User& user);
+	void OnUserLeft(User& user);
 
-	virtual void UpdateHighlights() override;
-	virtual void UpdatePresetList() override;
-	virtual void SortPlayerList() override;
-	virtual void SetBattle(IBattle* battle) override;
+	void ReloadMaplist();
+	void SetMap(int index);
 
-	virtual void PrintAllySetup() override;
+	void UpdateHighlights();
+
+	void UpdatePresetList();
+
+	void SortPlayerList();
+
+	void SetBattle(IBattle* battle);
+
+	void PrintAllySetup();
 
 private:
 	void RegenerateOptionsList();
@@ -127,6 +131,7 @@ private:
 	VotePanel* m_votePanel;
 
 	IBattle* m_battle;
+	//		UnitSyncMap m_map; //not needed
 
 	long m_mod_opts_index;
 	long m_map_opts_index;

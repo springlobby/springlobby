@@ -16,7 +16,7 @@
 #include "gui/mainwindow.h"
 #include "gui/mainchattab.h"
 #include "gui/hosting/mainjoinbattletab.h"
-#include "gui/hosting/ibattleroomtab.h"
+#include "gui/hosting/battleroomtab.h"
 #include "gui/battlelist/battlelisttab.h"
 #include "gui/ui.h"
 

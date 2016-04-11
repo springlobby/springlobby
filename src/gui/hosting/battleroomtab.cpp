@@ -121,8 +121,9 @@ static wxArrayString CreateIntList(int count)
 	return res;
 }
 
+
 BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
-    : IBattleRoomTab(parent, -1)
+    : wxPanel(parent, -1)
     , m_battle(battle)
     , m_BattleActionSink(this, &UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent))
 {
@@ -369,6 +370,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadFailed, wxObjectEventFunction(&BattleRoomTab::OnDownloadFailed));
 }
+
 
 BattleRoomTab::~BattleRoomTab()
 {

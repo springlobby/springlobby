@@ -14,8 +14,8 @@
 
 #include "settings.h"
 #include "mainjoinbattletab.h"
-#include "ibattleroomtab.h"
-#include "ibattlemaptab.h"
+#include "battleroomtab.h"
+#include "battlemaptab.h"
 #include "battleoptionstab.h"
 #include "utils/conversion.h"
 #include "battleroommmoptionstab.h"
@@ -51,10 +51,10 @@ MainJoinBattleTab::MainJoinBattleTab(wxWindow* parent)
 	m_imagelist->Add(wxIcon(battle_map_xpm));
 	m_imagelist->Add(wxIcon(battle_settings_xpm));
 
-	m_battle_tab = IBattleRoomTab::CreateInstance(m_tabs, 0);
+	m_battle_tab = new BattleRoomTab(m_tabs, 0);
 	m_tabs->InsertPage(0, m_battle_tab, _("Battleroom"), true, wxIcon(battle_xpm));
 
-	m_map_tab = IBattleMapTab::CreateInstance(m_tabs, 0);
+	m_map_tab = new BattleMapTab(m_tabs, 0);
 	m_tabs->InsertPage(1, m_map_tab, _("Map"), false, wxIcon(battle_map_xpm));
 
 	m_mm_opts_tab = new BattleroomMMOptionsTab(0, m_tabs);
@@ -152,14 +152,14 @@ void MainJoinBattleTab::ReloadPresetList()
 }
 
 
-IBattleRoomTab& MainJoinBattleTab::GetBattleRoomTab()
+BattleRoomTab& MainJoinBattleTab::GetBattleRoomTab()
 {
 	ASSERT_EXCEPTION(m_battle_tab, _T( "m_battle_tab == 0" ));
 	return *m_battle_tab;
 }
 
 
-IBattleMapTab& MainJoinBattleTab::GetBattleMapTab()
+BattleMapTab& MainJoinBattleTab::GetBattleMapTab()
 {
 	ASSERT_EXCEPTION(m_map_tab, _T( "m_map_tab == 0" ));
 	return *m_map_tab;

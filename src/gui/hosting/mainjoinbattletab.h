@@ -8,8 +8,8 @@
 
 class IBattle;
 class User;
-class IBattleRoomTab;
-class IBattleMapTab;
+class BattleRoomTab;
+class BattleMapTab;
 class BattleOptionsTab;
 class wxBoxSizer;
 class wxImageList;
@@ -37,7 +37,7 @@ public:
 	ChatPanel* GetActiveChatPanel();
 
 	void BattleUserUpdated(User& user);
-	IBattleRoomTab& GetBattleRoomTab();
+	BattleRoomTab& GetBattleRoomTab();
 
 	void ReloadPresetList();
 
@@ -46,7 +46,7 @@ public:
 	bool UseBattlePerspective();
 
 private:
-	IBattleMapTab& GetBattleMapTab();
+	BattleMapTab& GetBattleMapTab();
 	BattleOptionsTab& GetOptionsTab();
 	BattleroomMMOptionsTab& GetMMOptionsTab();
 	wxBoxSizer* m_main_sizer;
@@ -55,8 +55,8 @@ private:
 
 	SLNotebook* m_tabs;
 
-	IBattleRoomTab* m_battle_tab;
-	IBattleMapTab* m_map_tab;
+	BattleRoomTab* m_battle_tab;
+	BattleMapTab* m_map_tab;
 	BattleOptionsTab* m_opts_tab;
 	BattleroomMMOptionsTab* m_mm_opts_tab;
 
