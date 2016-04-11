@@ -84,7 +84,6 @@ public:
 	void OnShowChannelChooser(wxCommandEvent& event);
 	void OnShowWriteableDir(wxCommandEvent& event);
 	void forceSettingsFrameClose();
-	void OnUnitSyncReloaded();
 	void OnChannelList(const wxString& channel, const int& numusers, const wxString& topic);
 	void OnChannelListStart();
 	void OnClose(wxCloseEvent&);
@@ -115,6 +114,7 @@ public:
 
 private:
 	void OnGamePromoted(wxCommandEvent&);
+	void OnUnitSyncReloaded(wxCommandEvent& /*unused*/);
 
 private:
 	wxMenuItem* m_settings_menu;

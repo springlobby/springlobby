@@ -162,7 +162,7 @@ MainWindow::MainWindow()
 	m_menuEdit->Append(MENU_RESET_LAYOUT, _("&Reset layout"));
 	m_menuEdit->Append(m_settings_menu);
 
-	m_menuEdit->Enable(MENU_SETTINGSPP, LSL::usync().IsLoaded()); //unitsync isn't loaded yet, disable menu entry
+	m_menuEdit->Enable(MENU_SETTINGSPP, false); //unitsync isn't loaded yet, disable menu entry
 
 	m_menuTools = new wxMenu;
 	m_menuTools->Append(MENU_JOIN, _("&Join channel..."));
@@ -244,6 +244,7 @@ MainWindow::MainWindow()
 	//	Logger::ShowDebugWindow(cfg().ReadBool(_T("/debug")));
 
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::GamePromotedEvent, wxObjectEventFunction(&MainWindow::OnGamePromoted));
+	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&MainWindow::OnUnitSyncReloaded));
 }
 
 wxBitmap MainWindow::GetTabIcon(const unsigned char* data, size_t size) const
@@ -565,12 +566,17 @@ void MainWindow::OnMenuVersion(wxCommandEvent& /*unused*/)
 void MainWindow::OnUnitSyncReload(wxCommandEvent& /*unused*/)
 {
 	bool res = LSL::usync().ReloadUnitSyncLib();
-	m_menuEdit->Enable(MENU_SETTINGSPP, LSL::usync().IsLoaded());
+	m_menuEdit->Enable(MENU_SETTINGSPP, false);
 	if (res) {
 		GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
 		return;
 	}
 	wxLogWarning("Couldn't reload unitsync");
+}
+
+void MainWindow::OnUnitSyncReloaded(wxCommandEvent& /*unused*/)
+{
+	m_menuEdit->Enable(MENU_SETTINGSPP, true);
 }
 
 void MainWindow::MainWindow::OnShowWriteableDir(wxCommandEvent& /*unused*/)
