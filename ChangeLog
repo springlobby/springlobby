@@ -1,5 +1,12 @@
 ChangeLog of Springlobby
 
+## 0.245
+ - fix crash on battle close
+ - fix springsettings always greyed out
+ - fix vote panel shown only once
+ - fix notification on user login
+ - fix osx compile
+
 ## 0.244
  - fix memleaks
  - improve metadata caching (i.e. map images are stored in small + large size, json is used for metadata)
