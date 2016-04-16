@@ -195,5 +195,6 @@ void VotePanel::onVoteBegins(const wxString& msg)
 
 void VotePanel::onVoteStopped()
 {
-	ResetState();
+	voteTextLabel->SetLabel(wxEmptyString);
+	showButtons(false);
 }
