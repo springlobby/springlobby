@@ -142,6 +142,10 @@ void ServerEvents::OnNewUser(const std::string& nick, const std::string& country
 		return;
 	}
 	ui().OnUserOnline(user);
+
+	if (useractions().DoActionOnUser(UserActions::ActNotifLogin, TowxString(nick))) {
+		actNotifBox(SL_MAIN_ICON, TowxString(nick) + _(" just connected"));
+	}
 }
 
 
