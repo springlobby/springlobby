@@ -85,6 +85,7 @@ public:
 		const bool hasdlinfo = DownloadGetInfo(0, info);
 		//In case if something gone wrong
 		if (!hasdlinfo) {
+			wxLogWarning("Download has no downloadinfo!");
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 			return;
 		}
