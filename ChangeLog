@@ -1,5 +1,9 @@
 ChangeLog of Springlobby
 
+## 0.246
+ - fix can't download more than one engine per session
+ - delete .sdp when rapid download failed
+
 ## 0.245
  - fix crash on battle close
  - fix springsettings always greyed out
