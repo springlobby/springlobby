@@ -215,6 +215,9 @@ void AddBotDialog::OnClose(wxCommandEvent& /*event*/)
 
 void AddBotDialog::OnAddBot(wxCommandEvent& /*event*/)
 {
+	if (m_nick->GetValue().empty()) {
+		return;
+	}
 	sett().SetLastAI(m_ai->GetStringSelection());
 	EndModal(wxID_OK);
 }
