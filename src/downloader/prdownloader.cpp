@@ -324,5 +324,11 @@ void PrDownloader::UpdateApplication(const std::string& updateurl)
 
 bool PrDownloader::DownloadUrl(const std::string& httpurl, std::string& res)
 {
+	{
+		boost::mutex::scoped_lock lock(dlProgressMutex);
+		if (m_progress == nullptr)
+			m_progress = new PrDownloader::DownloadProgress();
+		m_progress->name = httpurl;
+	}
 	return CHttpDownloader::DownloadUrl(httpurl, res);
 }
