@@ -228,10 +228,10 @@ wxBitmap& IconsCollection::GetColourBmp(const LSL::lslColor& colour)
 	}
 }
 
-wxBitmap& IconsCollection::GetFractionBmp(const std::string& gameName, int fractionId)
+wxBitmap& IconsCollection::GetFractionBmp(const std::string& gameName, size_t fractionId)
 {
 
-	if (gameName.empty() || !LSL::usync().GameExists(gameName) || fractionId < 0) {
+	if (gameName.empty() || !LSL::usync().GameExists(gameName)) {
 		wxLogWarning("SideIcon %d for game %s not found!", fractionId, gameName.c_str());
 		// game doesn't exist, dl needed?!
 		return BMP_EMPTY;
@@ -244,7 +244,11 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& gameName, int fract
 		wxLogWarning("IconsCollection::GetFractionBmp(): sides.empty()");
 		return BMP_EMPTY;
 	}
-	ASSERT_LOGIC(fractionId < static_cast<int>(sides.size()), "LSL::usync().GetSides() < fractionID!");
+
+	if (fractionId >= sides.size()) {
+		wxLogWarning("Invalid side requested: %s:%d", gameName.c_str(), fractionId);
+		return BMP_EMPTY;
+	}
 
 	std::string sideName;
 

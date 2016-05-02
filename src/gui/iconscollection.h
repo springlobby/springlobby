@@ -111,7 +111,7 @@ public:
 	wxBitmap& GetFlagBmp(const wxString& country);
 	wxBitmap& GetRankBmp(unsigned int rank, bool showLowest = true);
 	wxBitmap& GetColourBmp(const LSL::lslColor& colour);
-	wxBitmap& GetFractionBmp(const std::string& modName, int fractionId);
+	wxBitmap& GetFractionBmp(const std::string& modName, size_t fractionId);
 	wxBitmap& GetUserBattleStateBmp(const UserStatus& us);
 	wxBitmap& GetUserListStateBmp(const UserStatus& us, bool chanop, bool inbroom);
 
