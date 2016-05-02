@@ -1,5 +1,9 @@
 ChangeLog of Springlobby
 
+## 0.247
+ - fix crash
+ - fix rapid tags downloaded twice
+
 ## 0.246
  - fix can't download more than one engine per session
  - delete .sdp when rapid download failed
