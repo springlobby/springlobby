@@ -861,7 +861,9 @@ void Ui::CheckForUpdates(bool show)
 		wxLogError("Unknown exception");
 	}
 #else
-	customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.\n\n") + msg, _("Not up to Date"));
+	const wxString motivation = _("Please update to the latest version before reporting bugs.");
+	const wxString doublenl = _T("\n\n");
+	customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.") + doublenl + msg + doublenl + motivation, _("Not up to Date"));
 #endif
 }
 
