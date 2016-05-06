@@ -262,7 +262,7 @@ void MapGridCtrl::AddMap(const wxString& mapname)
 
 	if (!LSL::usync().MapExists(STD_STRING(mapname))) {
 		//FIXME: offer download button on image instead?
-		wxLogError(_("Map %s doesn't exist!"), mapname.wc_str());
+		wxLogWarning(_("Map %s doesn't exist!"), mapname.wc_str());
 		return;
 	}
 
