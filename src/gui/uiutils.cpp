@@ -164,7 +164,7 @@ wxImage charArr2wxImage(const unsigned char* arg, int size)
 {
 	wxMemoryInputStream istream(arg, size);
 	wxImage img = wxImage(istream, wxBITMAP_TYPE_PNG);
-	if (img.HasAlpha() == false) {
+	if (!img.HasAlpha()) {
 		img.InitAlpha();
 	}
 	return img;
@@ -457,7 +457,7 @@ wxBitmap getColourIcon(const wxColour& colour)
 	g = colour.Green() + 80;
 	b = colour.Blue() + 80;
 	img.Replace(2, 2, 2, r > 255 ? 255 : r, g > 255 ? 255 : g, b > 255 ? 255 : b);
-	if (img.HasAlpha() == false) {
+	if (!img.HasAlpha()) {
 		img.InitAlpha();
 	}
 	/*r = colour.Red()-60; g = colour.Green()-60; b = colour.Blue()-60;

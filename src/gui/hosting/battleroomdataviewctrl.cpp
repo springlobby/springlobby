@@ -51,11 +51,11 @@ BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxW
 	AppendTextColumn(_("Resource Bonus"), BONUS, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
 	//Hide "ingame" column if not needed
-	if (showInGame == false) {
+	if (!showInGame) {
 		GetColumn(INGAME)->SetHidden(true);
 	}
 	//ReadOnly means quick info about battle
-	if (readOnly == false) {
+	if (!readOnly) {
 		CreateContextMenu();
 	}
 
@@ -87,7 +87,7 @@ void BattleroomDataViewCtrl::SetBattle(IBattle* battle)
 void BattleroomDataViewCtrl::AddUser(User& user)
 {
 	//TODO: implement
-	if (ContainsItem(user) == true) {
+	if (ContainsItem(user)) {
 		return;
 	}
 	AddItem(user);
@@ -96,7 +96,7 @@ void BattleroomDataViewCtrl::AddUser(User& user)
 void BattleroomDataViewCtrl::RemoveUser(User& user)
 {
 	//TODO: implement
-	if (ContainsItem(user) == false) {
+	if (!ContainsItem(user)) {
 		return;
 	}
 	RemoveItem(user);
@@ -295,7 +295,7 @@ void BattleroomDataViewCtrl::OnColourSelect(wxCommandEvent& /*event*/)
 	wxColour CurrentColour = lslTowxColour(user->BattleStatus().colour);
 	CurrentColour = GetColourFromUser(this, CurrentColour);
 
-	if (CurrentColour.IsOk() == false) {
+	if (!CurrentColour.IsOk()) {
 		return;
 	}
 

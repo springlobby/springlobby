@@ -28,7 +28,7 @@ void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 	wxASSERT(user != nullptr);
 
 	/* In case if wxGTK will try to render invalid item */
-	if (user == nullptr || ContainsItem(*user) == false) {
+	if (user == nullptr || !ContainsItem(*user)) {
 		switch (col) {
 			case STATUS:
 			case COUNTRY:
@@ -75,7 +75,7 @@ void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 				wxString ownerName = wxString(user->BattleStatus().owner);
 				wxString playerName = wxString(user->GetNick());
 
-				if (user->BattleStatus().aiversion.empty() == false) {
+				if (!user->BattleStatus().aiversion.empty()) {
 					botName += _T(" ") + user->BattleStatus().aiversion;
 				}
 				variant = wxString::Format(_T("%s - %s (%s)"), playerName, botName,
@@ -175,7 +175,7 @@ bool NickDataViewModel::GetAttr(const wxDataViewItem& item, unsigned int,
 
 	wxASSERT(user != nullptr);
 
-	if (user == nullptr || ContainsItem(*user) == false) {
+	if (user == nullptr || !ContainsItem(*user)) {
 		return false;
 	}
 

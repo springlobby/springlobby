@@ -106,7 +106,7 @@ void PlaybackDataView::DeletePlayback()
 
 	try {
 		const int m_sel_replay_id = storedGame->id;
-		if (replaylist().DeletePlayback(m_sel_replay_id) == false) {
+		if (!replaylist().DeletePlayback(m_sel_replay_id)) {
 			wxString fn = wxString(storedGame->Filename);
 			customMessageBoxModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn, _("Error"));
 		} else {

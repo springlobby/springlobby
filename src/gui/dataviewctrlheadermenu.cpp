@@ -62,7 +62,7 @@ int DataViewCtrlHeaderMenu::CountVisibleColumns()
 
 	for (int i = 0; i < totalColumnsCount; ++i) {
 		wxDataViewColumn* column = parentDataView->GetColumn(i);
-		if (column->IsHidden() == false) {
+		if (!column->IsHidden()) {
 			totalVisibleColumnsCount++;
 		}
 	}

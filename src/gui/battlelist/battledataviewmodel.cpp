@@ -29,7 +29,7 @@ void BattleDataViewModel::GetValue(wxVariant& variant,
 	IconsCollection* iconsCollection = IconsCollection::Instance();
 
 	/* In case if wxGTK will try to render invalid item */
-	if (battle == nullptr || ContainsItem(*battle) == false) {
+	if (battle == nullptr || !ContainsItem(*battle)) {
 
 		switch (col) {
 			case STATUS:
@@ -234,7 +234,7 @@ bool BattleDataViewModel::GetAttr(const wxDataViewItem& item,
 
 	wxASSERT(battle != nullptr);
 
-	if (battle == nullptr || ContainsItem(*battle) == false) {
+	if (battle == nullptr || !ContainsItem(*battle)) {
 		return false;
 	}
 

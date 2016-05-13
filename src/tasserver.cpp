@@ -300,7 +300,7 @@ void TASServer::Disconnect()
 		return;
 	}
 
-	if (IsConnected() == true) {
+	if (IsConnected()) {
 		SendCmd("EXIT " + STD_STRING(cfg().ReadString(_T("/Server/ExitMessage")))); // EXIT command for new protocol compatibility
 		m_sock->Disconnect();
 	}

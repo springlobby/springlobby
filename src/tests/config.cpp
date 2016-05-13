@@ -54,8 +54,8 @@ BOOST_AUTO_TEST_CASE(slconfig)
 	BOOST_CHECK(cfg().ReadDouble(_T("/test/double")) == -321.123);
 	BOOST_CHECK(cfg().Read(_T("/test/double")) == _T("-321.123"));
 
-	BOOST_CHECK(cfg().ReadBool(_T("/test/bool")) == true);
-	BOOST_CHECK(cfg().ReadBool(_T("/test/notbool")) == false);
+	BOOST_CHECK(cfg().ReadBool(_T("/test/bool")));
+	BOOST_CHECK(!cfg().ReadBool(_T("/test/notbool")));
 	BOOST_CHECK(cfg().Read(_T("/test/bool")) == _T("1"));
 
 	BOOST_CHECK(cfg().ReadString(_T("/test/string")) == _T("hello world!"));
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(slconfig)
 	BOOST_CHECK(cfg().ReadDouble(_T("/test/double")) == 10.3);
 
 	BOOST_CHECK(cfg().Write(_T("/test/bool"), false));
-	BOOST_CHECK(cfg().ReadBool(_T("/test/bool")) == false);
+	BOOST_CHECK(!cfg().ReadBool(_T("/test/bool")));
 
 	BOOST_CHECK(cfg().Write(_T("/test/string"), (const wxString&)_T("test2")));
 	BOOST_CHECK(cfg().Read(_T("/test/string")) == _T("test2"));

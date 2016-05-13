@@ -61,11 +61,11 @@ void ChannelListView::FilterChannel(const wxString& partial)
 
 	for (auto const item : m_realChannelCollection) {
 		if ((partial.IsEmpty()) || (item.second->name.Contains(partial))) {
-			if (ContainsItem(*item.second) == false) {
+			if (!ContainsItem(*item.second)) {
 				AddItem(*item.second);
 			}
 		} else {
-			if (ContainsItem(*item.second) == true) {
+			if (ContainsItem(*item.second)) {
 				RemoveItem(*item.second);
 			}
 		}

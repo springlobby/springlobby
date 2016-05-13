@@ -576,7 +576,7 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 		if (m_filter_status_open->GetValue())
 			bResult |= (!battle.IsPassworded() && !battle.IsLocked() && !battle.GetInGame() && !battle.IsFull());
 
-		if (bResult == false)
+		if (!bResult)
 			return false;
 	}
 

@@ -93,7 +93,7 @@ template <class DataType>
 unsigned int BaseDataViewModel<DataType>::GetChildren(const wxDataViewItem& item,
 						      wxDataViewItemArray& children) const
 {
-	if (item.IsOk() == true) { //Return items only for root!
+	if (item.IsOk()) { //Return items only for root!
 		return 0;
 	} else {
 
@@ -182,7 +182,7 @@ inline void BaseDataViewModel<DataType>::Clear()
 template <class DataType>
 inline bool BaseDataViewModel<DataType>::UpdateItem(const DataType& item)
 {
-	if (ContainsItem(item) == true) {
+	if (ContainsItem(item)) {
 		//FIXME: Maybe update item in m_ModelData. At this moment it stores pointer and does not need to be updated
 		ItemChanged(wxDataViewItem(const_cast<DataType*>(&item)));
 		return true;

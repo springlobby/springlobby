@@ -121,8 +121,8 @@ void BattleDataViewCtrl::OnContextMenu(wxDataViewEvent& /*event*/)
 		return;
 	}
 
-	const bool mod_missing = battle->GameExists(false) == false;
-	const bool map_missing = battle->MapExists(false) == false;
+	const bool mod_missing = !battle->GameExists(false);
+	const bool map_missing = !battle->MapExists(false);
 	const bool engine_missing = SlPaths::GetCompatibleVersion(battle->GetEngineVersion()).empty();
 
 	m_popup = new wxMenu(wxEmptyString);

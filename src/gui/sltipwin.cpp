@@ -20,7 +20,7 @@ SLTipWindow::SLTipWindow(wxWindow* parent, const wxString& text)
 
 SLTipWindow::~SLTipWindow()
 {
-	if (isHookInstalled == true) {
+	if (isHookInstalled) {
 		wxEvtHandler::RemoveFilter(this);
 		isHookInstalled = false;
 	}
@@ -30,7 +30,7 @@ SLTipWindow::~SLTipWindow()
 int SLTipWindow::FilterEvent(wxEvent& hookedEvent)
 {
 	//Only mouse events are in interest
-	if (isMouseEvent(hookedEvent) == true) {
+	if (isMouseEvent(hookedEvent)) {
 		//Remove hook before proceed, prevents deadlock
 		wxEvtHandler::RemoveFilter(this);
 		isHookInstalled = false;

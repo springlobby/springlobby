@@ -20,7 +20,7 @@ void ContentSearchResultDataModel::GetValue(wxVariant& variant,
 	wxASSERT(searchResult != nullptr);
 
 	/* In case if wxGTK will try to render invalid item */
-	if (searchResult == nullptr || ContainsItem(*searchResult) == false) {
+	if (searchResult == nullptr || !ContainsItem(*searchResult)) {
 		variant = wxVariant(wxEmptyString);
 		return;
 	}

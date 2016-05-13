@@ -533,7 +533,7 @@ void BattleRoomTab::UpdateUser(User& user, bool userJustAdded)
 	}
 
 	//Do not update user that was just added (he already updated)
-	if (userJustAdded == false) {
+	if (!userJustAdded) {
 		m_players->UpdateUser(user);
 	}
 
@@ -919,7 +919,7 @@ void BattleRoomTab::OnUserJoined(User& user)
 		return;
 	}
 
-	if (user.BattleStatus().IsBot() == false) {
+	if (!user.BattleStatus().IsBot()) {
 		m_chat->Joined(user);
 	}
 

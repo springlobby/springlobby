@@ -42,7 +42,7 @@ void ServerManager::Release()
 //Try to connect to server
 void ServerManager::ConnectToServer()
 {
-	if (serverSelector().GetServer().IsConnected() == true) {
+	if (serverSelector().GetServer().IsConnected()) {
 		//TODO: Maybe call ReconnectToServer() before return?
 		return;
 	}
@@ -70,7 +70,7 @@ void ServerManager::ReconnectToServer()
 	const std::string pass = STD_STRING(sett().GetServerAccountPass(servname));
 
 	//TODO: Need to be reworked
-	if (sett().GetServerAccountSavePass(servname) == false) {
+	if (!sett().GetServerAccountSavePass(servname)) {
 		ui().ShowConnectWindow();
 		return;
 	}
@@ -91,7 +91,7 @@ void ServerManager::DisconnectFromServer()
 void ServerManager::RegisterNewUser(const std::string& servername, const std::string& username, const std::string& password)
 {
 	//TODO: No ui calls here!
-	if (sett().ServerExists(servername) == false) {
+	if (!sett().ServerExists(servername)) {
 		ui().OnRegistrationDenied(_T("Server does not exist in settings"));
 		return;
 	}
@@ -122,7 +122,7 @@ void ServerManager::DoConnectToServer(const std::string& servername, const std::
 	IServer* server = &serverSelector().GetServer();
 
 	//Disconnect from server if not done before
-	if (server->IsConnected() == true) {
+	if (server->IsConnected()) {
 		server->Disconnect();
 	}
 

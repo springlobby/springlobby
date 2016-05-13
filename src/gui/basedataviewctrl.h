@@ -136,7 +136,7 @@ inline DataType* BaseDataViewCtrl<DataType>::GetSelectedItem()
 
 	wxDataViewItem item = GetSelection();
 
-	if (item.IsOk() == false) {
+	if (!item.IsOk()) {
 		return nullptr;
 	} else {
 		DataType* dataItem = static_cast<DataType*>(item.GetID());
@@ -288,9 +288,9 @@ inline void BaseDataViewCtrl<DataType>::OnHideColumn(wxCommandEvent& event)
 		return;
 	}
 
-	if (column->IsHidden() == true) {
+	if (column->IsHidden()) {
 		wxASSERT(false);
-		wxLogWarning(_T("BaseDataViewCtrl<DataType>::OnHideColumn() : column->IsHidden() == true"));
+		wxLogWarning(_T("BaseDataViewCtrl<DataType>::OnHideColumn() : column->IsHidden()"));
 		return;
 	}
 

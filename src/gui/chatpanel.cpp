@@ -599,7 +599,7 @@ bool ChatPanel::ContainsWordToHighlight(const wxString& message) const
  */
 void ChatPanel::CheckForPromotion(const wxString& /*who*/, const wxString& action)
 {
-	if (m_reactOnPromoteEvents == false) { //If this feature disabled in options do nothing
+	if (!m_reactOnPromoteEvents) { //If this feature disabled in options do nothing
 		return;
 	}
 

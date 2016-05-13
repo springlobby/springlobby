@@ -19,7 +19,7 @@ void ChannelListDataViewModel::GetValue(wxVariant& variant,
 	wxASSERT(channelInfo != nullptr);
 
 	/* In case if wxGTK will try to render invalid item */
-	if (channelInfo == nullptr || ContainsItem(*channelInfo) == false) {
+	if (channelInfo == nullptr || !ContainsItem(*channelInfo)) {
 		variant = wxVariant(wxEmptyString);
 		return;
 	}

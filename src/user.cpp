@@ -265,7 +265,7 @@ LSL::lslColor User::GetColor() const
 
 bool User::IsHuman() const
 {
-	return (BattleStatus().IsBot() == false);
+	return (!BattleStatus().IsBot());
 }
 
 bool User::IsBot() const

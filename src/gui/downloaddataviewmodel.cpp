@@ -21,7 +21,7 @@ void DownloadDataViewModel::GetValue(wxVariant& variant,
 	wxASSERT(downloadInfo != nullptr);
 
 	/* In case if wxGTK will try to render invalid item */
-	if (downloadInfo == nullptr || ContainsItem(*downloadInfo) == false) {
+	if (downloadInfo == nullptr || !ContainsItem(*downloadInfo)) {
 		variant = wxVariant(wxEmptyString);
 		return;
 	}

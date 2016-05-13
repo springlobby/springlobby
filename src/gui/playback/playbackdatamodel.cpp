@@ -29,7 +29,7 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 	}
 
 	/* In case if wxGTK will try to render invalid item */
-	if (storedGame == nullptr || ContainsItem(*storedGame) == false) {
+	if (storedGame == nullptr || !ContainsItem(*storedGame)) {
 		switch (col) {
 			case DATE:
 				variant = wxVariant(wxDataViewIconText(wxEmptyString));

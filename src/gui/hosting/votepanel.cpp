@@ -88,7 +88,7 @@ void VotePanel::OnChatAction(const wxString& /*actionAuthor*/, const wxString& a
 	}
 
 	//Do not show this panel if player in spectator mode
-	if (player->GetBattleStatus().spectator == true) {
+	if (player->GetBattleStatus().spectator) {
 		return;
 	}
 
@@ -145,7 +145,7 @@ void VotePanel::showButtons(bool showState)
 	noButton->Show(showState);
 	dontCareButton->Show(showState);
 
-	if (showState == true) {
+	if (showState) {
 		enableButtons();
 	}
 

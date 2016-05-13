@@ -30,7 +30,7 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 	wxASSERT(user != nullptr);
 
 	/* In case if wxGTK will try to render invalid item */
-	if (user == nullptr || ContainsItem(*user) == false) {
+	if (user == nullptr || !ContainsItem(*user)) {
 		switch (col) {
 			case STATUS:
 			case INGAME:
@@ -112,7 +112,7 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 				wxString ownerName = wxString(user->BattleStatus().owner);
 				wxString playerName = wxString(user->GetNick());
 
-				if (user->BattleStatus().aiversion.empty() == false) {
+				if (!user->BattleStatus().aiversion.empty()) {
 					botName += _T(" ") + user->BattleStatus().aiversion;
 				}
 				variant = wxString::Format(_T("%s - %s (%s)"), playerName, botName, ownerName);
@@ -252,9 +252,9 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 		} break;
 
 		case FACTION:
-			if (userA->BattleStatus().spectator && (userB->BattleStatus().spectator == false)) {
+			if (userA->BattleStatus().spectator && (!userB->BattleStatus().spectator)) {
 				return 1;
-			} else if (userB->BattleStatus().spectator && (userA->BattleStatus().spectator == false)) {
+			} else if (userB->BattleStatus().spectator && (!userA->BattleStatus().spectator)) {
 				return -1;
 			} else if (userA->BattleStatus().spectator && userB->BattleStatus().spectator) {
 				return 0;
@@ -316,9 +316,9 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 			break;
 
 		case TEAM:
-			if (userA->BattleStatus().spectator && (userB->BattleStatus().spectator == false)) {
+			if (userA->BattleStatus().spectator && (!userB->BattleStatus().spectator)) {
 				return 1;
-			} else if (userB->BattleStatus().spectator && (userA->BattleStatus().spectator == false)) {
+			} else if (userB->BattleStatus().spectator && (!userA->BattleStatus().spectator)) {
 				return -1;
 			} else if (userA->BattleStatus().spectator && userB->BattleStatus().spectator) {
 				return 0;
@@ -328,9 +328,9 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 			break;
 
 		case ALLY:
-			if (userA->BattleStatus().spectator && (userB->BattleStatus().spectator == false)) {
+			if (userA->BattleStatus().spectator && (!userB->BattleStatus().spectator)) {
 				return 1;
-			} else if (userB->BattleStatus().spectator && (userA->BattleStatus().spectator == false)) {
+			} else if (userB->BattleStatus().spectator && (!userA->BattleStatus().spectator)) {
 				return -1;
 			} else if (userA->BattleStatus().spectator && userB->BattleStatus().spectator) {
 				return 0;
@@ -340,9 +340,9 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 			break;
 
 		case BONUS:
-			if (userA->BattleStatus().spectator && (userB->BattleStatus().spectator == false)) {
+			if (userA->BattleStatus().spectator && (!userB->BattleStatus().spectator)) {
 				return 1;
-			} else if (userB->BattleStatus().spectator && (userA->BattleStatus().spectator == false)) {
+			} else if (userB->BattleStatus().spectator && (!userA->BattleStatus().spectator)) {
 				return -1;
 			} else if (userA->BattleStatus().spectator && userB->BattleStatus().spectator) {
 				return 0;
@@ -371,7 +371,7 @@ bool BattleroomDataViewModel::GetAttr(const wxDataViewItem& item,
 
 	wxASSERT(user != nullptr);
 
-	if (user == nullptr || ContainsItem(*user) == false) {
+	if (user == nullptr || !ContainsItem(*user)) {
 		return false;
 	}
 

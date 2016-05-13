@@ -178,7 +178,7 @@ wxBitmap& IconsCollection::GetFlagBmp(const wxString& country)
 
 wxBitmap& IconsCollection::GetRankBmp(unsigned int rank, bool showLowest)
 {
-	if ((showLowest == false) && (rank == UserStatus::RANK_1)) {
+	if ((!showLowest) && (rank == UserStatus::RANK_1)) {
 		return BMP_RANK_NONE;
 	}
 
@@ -276,7 +276,7 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& gameName, size_t fr
 wxBitmap IconsCollection::CreateBitmap(const char* const* data)
 {
 	wxImage img = wxImage(data);
-	if (img.HasAlpha() == false) {
+	if (!img.HasAlpha()) {
 		img.InitAlpha();
 	}
 	return wxBitmap(img);

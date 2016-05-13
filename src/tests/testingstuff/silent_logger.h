@@ -16,7 +16,7 @@ public:
 
 	void DoLogRecord(wxLogLevel loglevel, const wxString& msg, const wxLogRecordInfo& info) override
 	{
-		if (totalSilence == false) {
+		if (!totalSilence) {
 			const std::string msg_str = msg.ToStdString();
 			const std::string std_msg = wxString::Format(_T("%s %s:%d %s\n"), LogLevelToString(loglevel).c_str(), info.filename, info.line, msg_str.c_str()).ToStdString();
 			std::cout << std_msg;

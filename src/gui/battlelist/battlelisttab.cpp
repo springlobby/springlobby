@@ -446,7 +446,7 @@ void BattleListTab::OnSelect(wxDataViewEvent& /*event*/)
  */
 void BattleListTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 {
-	ASSERT_LOGIC(wxThread::IsMain(), "wxThread::IsMain() == false");
+	ASSERT_LOGIC(wxThread::IsMain(), "wxThread::IsMain()");
 
 	if (!serverSelector().IsServerAvailible())
 		return;
