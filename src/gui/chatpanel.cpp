@@ -610,9 +610,7 @@ void ChatPanel::CheckForPromotion(const wxString& /*who*/, const wxString& actio
 	//Detect event and notify user
 	//TODO: Rework for using array of regexps, not shit crap
 	if (action.Contains(promoteMessageTemplate) || action.Contains(promoteMessageTemplate2)) {
-		wxCommandEvent promoteEvent = wxCommandEvent(GlobalEventManager::GamePromotedEvent);
-		promoteEvent.SetString(action); //Send action string with that should be shown
-		GlobalEventManager::Instance()->Send(promoteEvent);
+		UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData(UiEvents::GamePromoted, action));
 	}
 }
 

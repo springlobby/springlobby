@@ -113,7 +113,6 @@ public:
 	void SavePerspectives(const wxString& perspective_name = wxEmptyString);
 
 private:
-	void OnGamePromoted(wxCommandEvent&);
 	void OnUnitSyncReloaded(wxCommandEvent& /*unused*/);
 
 private:

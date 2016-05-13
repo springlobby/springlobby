@@ -49,7 +49,6 @@ public:
 
 	static const wxEventType BattleSyncReload;
 	static const wxEventType BattleStartedEvent;
-	static const wxEventType GamePromotedEvent;
 	static const wxEventType ApplicationSettingsChangedEvent;
 
 private:

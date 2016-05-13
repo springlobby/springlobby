@@ -243,7 +243,6 @@ MainWindow::MainWindow()
 	Logger::ShowDebugWindow(true);
 	//	Logger::ShowDebugWindow(cfg().ReadBool(_T("/debug")));
 
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::GamePromotedEvent, wxObjectEventFunction(&MainWindow::OnGamePromoted));
 	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&MainWindow::OnUnitSyncReloaded));
 }
 
@@ -746,11 +745,3 @@ void MainWindow::OnMenuDownload(wxCommandEvent& /*event*/)
 	} while (pos != wxNOT_FOUND);
 }
 
-void MainWindow::OnGamePromoted(wxCommandEvent& promoteEvent)
-{
-	//Promote user without checking his status
-	//TODO: Maybe need to separate users by status to groups which one should be notified
-	//and which one should not be.
-	wxString msg = promoteEvent.GetString();
-	UiEvents::GetNotificationEventSender().SendEvent(UiEvents::NotficationData(UiEvents::GamePromoted, msg));
-}
