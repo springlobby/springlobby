@@ -80,6 +80,7 @@ CustomMessageBox::CustomMessageBox(wxIcon* icon, wxWindow* parent, const wxStrin
 			bitmap = wxArtProvider::GetIcon(wxART_QUESTION, wxART_MESSAGE_BOX);
 			break;
 	}
+	wxLogMessage(message);
 
 	wxStaticBitmap* info_icon = new wxStaticBitmap(this, wxID_ANY, bitmap);
 	m_icon_text->Add(info_icon, 0, wxCENTER);

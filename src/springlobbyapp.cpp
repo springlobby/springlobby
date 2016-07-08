@@ -74,7 +74,7 @@ END_EVENT_TABLE()
 SpringLobbyApp::SpringLobbyApp()
     : quit_called(false)
     , m_translationhelper(NULL)
-    , m_log_verbosity(3)
+    , m_log_verbosity(4)
     , m_log_console(true)
     , m_log_window_show(false)
     , m_crash_handle_disable(false)
@@ -111,6 +111,8 @@ bool SpringLobbyApp::OnInit()
 #if wxUSE_ON_FATAL_EXCEPTION
 	wxHandleFatalExceptions(!m_crash_handle_disable);
 #endif
+
+	const wxString m_log_file_path = SlPaths::GetLobbyWriteDir() + "springlobby.log";
 
 	//initialize all loggers, we'll use the returned pointer to set correct parent window later
 	wxLogWindow* loggerwin = Logger::InitializeLoggingTargets(0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity);
@@ -221,7 +223,6 @@ void SpringLobbyApp::OnInitCmdLine(wxCmdLineParser& parser)
 	    {
 	     {wxCMD_LINE_SWITCH, "h", "help", wxTRANSLATE("show this help message"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP},
 	     {wxCMD_LINE_SWITCH, "nc", "no-crash-handler", wxTRANSLATE("don't use the crash handler (useful for debugging)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL},
-	     {wxCMD_LINE_OPTION, "fl", "file-logging", wxTRANSLATE("dumps application log to a file ( enter path )"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR},
 	     {wxCMD_LINE_SWITCH, "cl", "console-logging", wxTRANSLATE("shows application log to the console(if available)"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL},
 	     {wxCMD_LINE_SWITCH, "gl", "gui-logging", wxTRANSLATE("enables application log window"), wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL},
 	     {wxCMD_LINE_OPTION, "f", "config-file", wxTRANSLATE("override default choice for config-file"), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL | wxCMD_LINE_NEEDS_SEPARATOR},
@@ -242,7 +243,6 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 	if (!parser.Parse(true)) {
 		m_log_console = parser.Found(_T("console-logging"));
 		m_log_window_show = parser.Found(_T("gui-logging"));
-		parser.Found(_T("file-logging"), &m_log_file_path);
 		m_crash_handle_disable = parser.Found(_T("no-crash-handler"));
 		parser.Found(_T("log-verbosity"), &m_log_verbosity);
 
