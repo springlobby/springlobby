@@ -1,5 +1,9 @@
 ChangeLog of Springlobby
 
+## 0.248
+ - don't autodetect system installed spring to avoid crashes (see #707)
+ - always log to ~/.springlobby/springlobby.log
+
 ## 0.247
  - fix crash
  - fix rapid tags downloaded twice
