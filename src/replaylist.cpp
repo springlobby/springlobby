@@ -32,6 +32,7 @@ public:
 	explicit PlayBackDataReader(wxInputStream* inputStream)
 	    : PlayBackDataReader()
 	{
+		wxASSERT(inputStream != nullptr);
 		this->inputStream = inputStream;
 	}
 
@@ -58,6 +59,7 @@ public:
 
 	void Read(void* target, size_t size)
 	{
+		wxASSERT(size > 0);
 		if (inputStream != nullptr) {
 			inputStream->Read(target, size);
 			return;
