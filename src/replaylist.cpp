@@ -152,7 +152,11 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 		unsigned char* buf = new unsigned char[CHUNK_SIZE];
 		ptr.reset(buf);
 
-		size_t dataSourceSize = getUnzippedData(buf, CHUNK_SIZE, inputFileStream);
+		const size_t dataSourceSize = getUnzippedData(buf, CHUNK_SIZE, inputFileStream);
+		if (dataSourceSize == 0) {
+			wxLogWarning("Couldn't extract %s", ReplayPath.c_str());
+			return false;
+		}
 
 		replay.reset(new PlayBackDataReader(buf, dataSourceSize));
 	} else {
@@ -194,15 +198,21 @@ size_t ReplayList::getUnzippedData(unsigned char* ptr, size_t bufSize, wxInputSt
 	strm.opaque = Z_NULL;
 	strm.next_in = inBuff.get();
 
-	inflateInit2(&strm, 15 | 32);
+	if (inflateInit2(&strm, 15 | 32) != Z_OK) {
+		wxLogWarning("Error in inflateInit2()");
+		return 0;
+	}
 
 	inputStream.Read(inBuff.get(), bufSize);
 	strm.avail_in = inputStream.LastRead();
 	strm.avail_out = bufSize;
 	strm.next_out = ptr;
 
-	inflate(&strm, Z_NO_FLUSH);
-	size_t readBytes = bufSize - strm.avail_out;
+	if (inflate(&strm, Z_NO_FLUSH) != Z_OK) {
+		wxLogWarning("Error inflate() %z %z", bufSize, strm.avail_out);
+		return 0;
+	}
+	const size_t readBytes = bufSize - strm.avail_out;
 
 	inflateEnd(&strm);
 
