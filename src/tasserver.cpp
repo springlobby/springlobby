@@ -461,10 +461,10 @@ void TASServer::Notify()
 		// Is it time for a nat traversal PING?
 		m_last_udp_ping = 0;
 		// Nat travelsal "ping"
-		if (m_battle_id != -1) {
+		if (BattleExists(m_battle_id)) {
 			IBattle* battle = GetCurrentBattle();
-			if ((battle) &&
-			    (battle->GetNatType() == NAT_Hole_punching || (battle->GetNatType() == NAT_Fixed_source_ports)) && !battle->GetInGame()) {
+			if ((battle != nullptr &&
+				battle->GetNatType() == NAT_Hole_punching || (battle->GetNatType() == NAT_Fixed_source_ports)) && !battle->GetInGame()) {
 				UdpPingTheServer(GetUserName());
 				if (battle->IsFounderMe()) {
 					UdpPingAllClients();
