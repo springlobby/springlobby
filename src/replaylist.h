@@ -47,7 +47,6 @@ private:
 	std::string GetScriptFromReplay(PlayBackDataReader& replay, const int version) const;
 	//! saves relevant infos from header into replay struct
 	void GetHeaderInfo(PlayBackDataReader& replay, StoredGame& rep, const int version) const;
-	size_t getUnzippedData(unsigned char* ptr, size_t bufSize, wxInputStream& inputStream) const;
 };
 
 IPlaybackList& replaylist();

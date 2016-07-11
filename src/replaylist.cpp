@@ -6,6 +6,7 @@
 #include <wx/log.h>
 #include <wx/datetime.h>
 #include <wx/wfstream.h>
+#include <wx/filename.h>
 #include <zlib.h>
 
 #include "replaylist.h"
@@ -17,30 +18,38 @@ class PlayBackDataReader
 {
 private:
 	wxInputStream* inputStream;
-	unsigned char* dataSource;
-	size_t dataSourceSize;
-	size_t dataSourcePosition;
+	gzFile gzInputStream;
+	std::string m_name;
 
 public:
 	PlayBackDataReader()
+		: inputStream(nullptr)
+		, gzInputStream(nullptr)
 	{
-		inputStream = nullptr;
-		dataSource = nullptr;
-		dataSourceSize = 0;
-		dataSourcePosition = 0;
-	}
-	explicit PlayBackDataReader(wxInputStream* inputStream)
-	    : PlayBackDataReader()
-	{
-		wxASSERT(inputStream != nullptr);
-		this->inputStream = inputStream;
 	}
 
-	explicit PlayBackDataReader(unsigned char* p, size_t size)
-	    : PlayBackDataReader()
+	~PlayBackDataReader()
 	{
-		this->dataSource = p;
-		this->dataSourceSize = size;
+		gzclose(gzInputStream);
+		gzInputStream = nullptr;
+
+		delete inputStream;
+		inputStream = nullptr;
+	}
+
+	explicit PlayBackDataReader(const std::string& name)
+		: PlayBackDataReader()
+	{
+		m_name = name;
+		if (name.substr(name.length() - 5) == ".sdfz") {
+			gzInputStream = gzopen(name.c_str(), "rb");
+			if (gzInputStream == nullptr) {
+				wxLogWarning("Couldn't open %s",name.c_str());
+				return;
+			}
+		} else {
+			inputStream = new wxFileInputStream(name);
+		}
 	}
 
 	int Seek(size_t pos)
@@ -48,33 +57,30 @@ public:
 		if (inputStream != nullptr) {
 			return inputStream->SeekI(pos);
 		} else {
-			if (pos >= dataSourceSize) {
-				return -1;
-			}
-
-			dataSourcePosition = pos;
-			return pos;
+			return gzseek(gzInputStream, pos, SEEK_SET);
 		}
 	}
 
-	void Read(void* target, size_t size)
+	size_t Read(void* target, size_t size)
 	{
 		wxASSERT(size > 0);
 		if (inputStream != nullptr) {
 			inputStream->Read(target, size);
-			return;
+			return inputStream->LastRead();
 		} else {
-			memcpy(target, &dataSource[dataSourcePosition], size);
+			const int res = gzread(gzInputStream, target, size);
+			if (res <= 0) {
+				wxLogWarning("Couldn't read from %s", m_name.c_str());
+			}
+			return res;
 		}
 	}
 
-	size_t GetLength()
-	{
-		if (inputStream != nullptr) {
-			return inputStream->GetLength();
-		}
+	const std::string& GetName() const { return m_name; }
 
-		return dataSourceSize;
+	bool IsOk() const
+	{
+		return gzInputStream != nullptr || inputStream != nullptr;
 	}
 };
 
@@ -114,16 +120,10 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	ret.battle.SetPlayBackFilePath(ReplayPath);
 	ret.SpringVersion = LSL::Util::BeforeLast(LSL::Util::AfterLast(FileName, "_"), ".");
 	ret.MapName = LSL::Util::BeforeLast(FileName, "_");
+	ret.size = wxFileName::GetSize(ReplayPath).GetLo(); //FIXME: use longlong
 
 	if (!wxFileExists(TowxString(ReplayPath))) {
 		wxLogWarning(wxString::Format(_T("File %s does not exist!"), ReplayPath.c_str()));
-		MarkBroken(ret);
-		return false;
-	}
-	wxFileInputStream inputFileStream(ReplayPath);
-
-	if (!inputFileStream) {
-		wxLogWarning(wxString::Format(_T("Could not open file %s for reading!"), ReplayPath.c_str()));
 		MarkBroken(ret);
 		return false;
 	}
@@ -139,29 +139,20 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	ret.date = rdate.GetTicks(); // now it is sorted properly
 	ret.date_string = STD_STRING(rdate.FormatISODate() + _T(" ") + rdate.FormatISOTime());
 
-	if (inputFileStream.GetLength() == 0) {
+	if (ret.size <= 0) {
 		MarkBroken(ret);
 		return false;
 	}
 
-	std::unique_ptr<unsigned char[]> ptr;
-	std::unique_ptr<PlayBackDataReader> replay;
+	PlayBackDataReader* replay = new PlayBackDataReader(ReplayPath);
 
-	if (ReplayPath.substr(ReplayPath.length() - 5) == ".sdfz") {
-		const size_t CHUNK_SIZE = 20480;
-		unsigned char* buf = new unsigned char[CHUNK_SIZE];
-		ptr.reset(buf);
-
-		const size_t dataSourceSize = getUnzippedData(buf, CHUNK_SIZE, inputFileStream);
-		if (dataSourceSize == 0) {
-			wxLogWarning("Couldn't extract %s", ReplayPath.c_str());
-			return false;
-		}
-
-		replay.reset(new PlayBackDataReader(buf, dataSourceSize));
-	} else {
-		replay.reset(new PlayBackDataReader(&inputFileStream));
+	if (!replay->IsOk()) {
+		wxLogWarning(wxString::Format(_T("Could not open file %s for reading!"), ReplayPath.c_str()));
+		MarkBroken(ret);
+		delete replay;
+		return false;
 	}
+
 
 	const int replay_version = replayVersion(*replay);
 	ret.battle.SetScript(GetScriptFromReplay(*replay, replay_version));
@@ -169,6 +160,7 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	if (ret.battle.GetScript().empty()) {
 		wxLogWarning(wxString::Format(_T("File %s have incompatible version!"), ReplayPath.c_str()));
 		MarkBroken(ret);
+		delete replay;
 		return false;
 	}
 
@@ -179,44 +171,8 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	ret.battle.SetEngineName("spring");
 	ret.battle.SetEngineVersion(ret.SpringVersion);
 	ret.battle.SetPlayBackFilePath(ReplayPath);
-
+	delete replay;
 	return true;
-}
-
-size_t ReplayList::getUnzippedData(unsigned char* ptr, size_t bufSize, wxInputStream& inputStream) const
-{
-	wxASSERT(ptr != nullptr);
-	wxASSERT(bufSize > 0);
-
-	z_stream strm;
-	memset(&strm, 0, sizeof(strm));
-
-	std::unique_ptr<unsigned char[]> inBuff(new unsigned char[bufSize]);
-
-	strm.zalloc = Z_NULL;
-	strm.zfree = Z_NULL;
-	strm.opaque = Z_NULL;
-	strm.next_in = inBuff.get();
-
-	if (inflateInit2(&strm, 15 | 32) != Z_OK) {
-		wxLogWarning("Error in inflateInit2()");
-		return 0;
-	}
-
-	inputStream.Read(inBuff.get(), bufSize);
-	strm.avail_in = inputStream.LastRead();
-	strm.avail_out = bufSize;
-	strm.next_out = ptr;
-
-	if (inflate(&strm, Z_NO_FLUSH) != Z_OK) {
-		wxLogWarning("Error inflate() %z %z", bufSize, strm.avail_out);
-		return 0;
-	}
-	const size_t readBytes = bufSize - strm.avail_out;
-
-	inflateEnd(&strm);
-
-	return readBytes;
 }
 
 std::string ReplayList::GetScriptFromReplay(PlayBackDataReader& replay, const int version) const
@@ -229,13 +185,19 @@ std::string ReplayList::GetScriptFromReplay(PlayBackDataReader& replay, const in
 	replay.Read(&headerSize, 4);
 	const int seek = 64 + (version < 5 ? 0 : 240);
 	if (replay.Seek(seek) == wxInvalidOffset) {
+		wxLogWarning("Couldn't seek to scriptsize from demo: %s", replay.GetName().c_str());
 		return script;
 	}
 	wxFileOffset scriptSize = 0;
 	replay.Read(&scriptSize, 4);
-	scriptSize = LSL::Util::Clamp(wxFileOffset(scriptSize), wxFileOffset(0), (wxFileOffset)replay.GetLength());
-	if (replay.Seek(headerSize) == wxInvalidOffset)
+	if (scriptSize <= 0) {
+		wxLogWarning("Demo contains empty script: %s (%d)", replay.GetName().c_str(), (int)scriptSize);
 		return script;
+	}
+	if (replay.Seek(headerSize) == wxInvalidOffset) {
+		wxLogWarning("Couldn't seek to script from demo: %s (%d)", replay.GetName().c_str());
+		return script;
+	}
 	script.resize(scriptSize, 0);
 	replay.Read(&script[0], scriptSize);
 	return script;
@@ -250,5 +212,4 @@ void ReplayList::GetHeaderInfo(PlayBackDataReader& replay, StoredGame& rep, cons
 	int gametime = 0;
 	replay.Read(&gametime, 4);
 	rep.duration = gametime;
-	rep.size = replay.GetLength();
 }
