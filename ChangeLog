@@ -1,5 +1,8 @@
 ChangeLog of Springlobby
 
+## 0.251
+ - slightly refactor irc colors handling
+
 ## 0.250
  - heavily increase performance of chat output (fixes a DoS)
 
