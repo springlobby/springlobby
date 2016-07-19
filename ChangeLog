@@ -1,5 +1,8 @@
 ChangeLog of Springlobby
 
+## 0.250
+ - heavily increase performance of chat output (fixes a DoS)
+
 ## 0.249
  - fix crash when parsing .sdfz (compressed spring demo file)
  - fix crash with broken SpringData dirs
