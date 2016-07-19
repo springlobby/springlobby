@@ -440,7 +440,7 @@ void ChatPanel::OutputLine(const ChatLine& line)
 			wxUniChar c = m1.GetChar(0);
 			wxUniChar tmp = c;
 			size_t len = 0;
-			while(tmp != 1 && tmp != 2 && tmp != 0x0F && len < m1.Len()) { //get all text until first irc color is found
+			while(tmp != 0x1f && tmp != 0x1d && tmp!=0x03 && tmp != 0x02 && tmp != 0x016 && tmp != 0x0F && len < m1.Len()) { //get all text until first irc color is found
 				c = tmp;
 				tmp = m1.GetChar(len++);
 			}
