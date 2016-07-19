@@ -420,6 +420,8 @@ void ChatPanel::OutputLine(const ChatLine& line)
 	if (!line.time.empty()) {
 		m_chatlog_text->SetDefaultStyle(line.timestyle);
 		m_chatlog_text->AppendText(line.time);
+	} else {
+		m_chatlog_text->SetDefaultStyle(line.chatstyle);
 	}
 
 #ifndef __WXOSX_COCOA__
@@ -443,44 +445,49 @@ void ChatPanel::OutputLine(const ChatLine& line)
 				tmp = m1.GetChar(len++);
 			}
 			if (len > 0) { //unformated text found, add as whole
+					wxFont font = oldfont; //isn't needed any more in wx3.0
+					at = line.chatstyle;
+					if (bold)
+						font.SetWeight(wxFONTWEIGHT_BOLD);
+					at.SetFont(font);
+					at.SetTextColour(curcolor);
+					m_chatlog_text->SetDefaultStyle(at);
+					m_chatlog_text->AppendText(m1.Mid(0, 1));
 				m_chatlog_text->AppendText(m1.Mid(0, len));
 				m1 = m1.Mid(len);
 			}
 
+			switch((int)c) { //  http://en.wikichip.org/wiki/irc/colors
+				case 0x1f: //underline
+					break;
+				case 0x1d: //italics
+					continue;
+				case 0x03: {
+					if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58)) {
+						color = (int(m1.GetChar(1)) - 48) * 10 + (int(m1.GetChar(2)) - 48);
+						m1 = m1.Mid(2);
+					} else {
+						color = int(m1.GetChar(1)) - 48;
+						m1 = m1.Mid(1);
+					}
 
-			if (c == 3 && m1.Len() > 1 && (m1.GetChar(1) >= 48 && m1.GetChar(1) <= 58)) { // Color
-				if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58)) {
-					color = (int(m1.GetChar(1)) - 48) * 10 + (int(m1.GetChar(2)) - 48);
-					m1 = m1.Mid(3);
-				} else {
-					color = int(m1.GetChar(1)) - 48;
-					m1 = m1.Mid(2);
+					wxColor dummy(0, 0, 0);
+					if ((color > -1) && (color < long((sizeof(m_irc_colors) / sizeof(dummy))))) {
+						curcolor = m_irc_colors[color];
+					}
+					break;
 				}
-
-				wxColor dummy(0, 0, 0);
-				if ((color > -1) && (color < long((sizeof(m_irc_colors) / sizeof(dummy))))) {
-					curcolor = m_irc_colors[color];
-				}
-
-			} else if (c == 2) { //Bold
-				bold = !bold;
-				m1 = m1.Mid(1);
-			} else if (c == 0x0F) { //Reset formatting
-				bold = false;
-				curcolor = oldcolor;
-				m1 = m1.Mid(1);
-			} else {
-
-				wxFont font = oldfont; //isn't needed any more in wx3.0
-				at = line.chatstyle;
-				if (bold)
-					font.SetWeight(wxFONTWEIGHT_BOLD);
-				at.SetFont(font);
-				at.SetTextColour(curcolor);
-				m_chatlog_text->SetDefaultStyle(at);
-				m_chatlog_text->AppendText(m1.Mid(0, 1));
-				m1 = m1.Mid(1);
+				case 0x02: //bold
+					bold = !bold;
+					break;
+				case 0x16: //reverse;
+					break;
+				case 0x0F: //reset formating
+					bold = false;
+					curcolor = oldcolor;
+					break;
 			}
+			m1 = m1.Mid(1);
 		}
 		m_chatlog_text->AppendText(_T("\n"));
 	} else
