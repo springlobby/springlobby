@@ -379,16 +379,13 @@ void ChatPanel::OutputLine(const wxString& message, const wxColour& col, bool sh
 	if (!m_chatlog_text)
 		return;
 
-	wxDateTime now = wxDateTime::Now();
-	wxTextAttr timestyle(sett().GetChatColorTime(), sett().GetChatColorBackground());
-	wxTextAttr chatstyle(col, sett().GetChatColorBackground());
-
 	ChatLine newline;
-	newline.chat = wxString(message.c_str());
-	newline.chatstyle = chatstyle;
+	newline.chat = message;
+	newline.chatstyle = wxTextAttr(col, sett().GetChatColorBackground());
 	if (showtime) {
+		wxDateTime now = wxDateTime::Now();
 		newline.time = _T( "[" ) + now.Format(_T( "%H:%M:%S" )) + _T( "]" );
-		newline.timestyle = timestyle;
+		newline.timestyle = wxTextAttr(sett().GetChatColorTime(), sett().GetChatColorBackground());
 		m_chat_log.AddMessage(message);
 	} else {
 		newline.time.clear();
@@ -440,35 +437,38 @@ void ChatPanel::OutputLine(const ChatLine& line)
 			wxUniChar c = m1.GetChar(0);
 			wxUniChar tmp = c;
 			size_t len = 0;
-			while(tmp != 0x1f && tmp != 0x1d && tmp!=0x03 && tmp != 0x02 && tmp != 0x016 && tmp != 0x0F && len < m1.Len()) { //get all text until first irc color is found
+			unsigned char uc = c;
+			while(uc!=0x1f && uc!=0x1d && uc!=0x03 && uc!=0x02 && uc!=0x016 && uc!=0x0F && len < m1.Len()) { //get all text until first irc color is found
 				c = tmp;
 				tmp = m1.GetChar(len++);
 			}
 			if (len > 0) { //unformated text found, add as whole
-					wxFont font = oldfont; //isn't needed any more in wx3.0
-					at = line.chatstyle;
-					if (bold)
-						font.SetWeight(wxFONTWEIGHT_BOLD);
-					at.SetFont(font);
-					at.SetTextColour(curcolor);
-					m_chatlog_text->SetDefaultStyle(at);
-					m_chatlog_text->AppendText(m1.Mid(0, 1));
+				wxFont font = oldfont; //isn't needed any more in wx3.0
+				at = line.chatstyle;
+				if (bold)
+					font.SetWeight(wxFONTWEIGHT_BOLD);
+				at.SetFont(font);
+				at.SetTextColour(curcolor);
+				m_chatlog_text->SetDefaultStyle(at);
 				m_chatlog_text->AppendText(m1.Mid(0, len));
 				m1 = m1.Mid(len);
+				if (m1.Len() <= 0) { //no chars left, abort
+					break;
+				}
 			}
-
-			switch((int)c) { //  http://en.wikichip.org/wiki/irc/colors
+			uc = c;
+			switch(uc) { //  http://en.wikichip.org/wiki/irc/colors
 				case 0x1f: //underline
 					break;
 				case 0x1d: //italics
-					continue;
+					break;
 				case 0x03: {
 					if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58)) {
 						color = (int(m1.GetChar(1)) - 48) * 10 + (int(m1.GetChar(2)) - 48);
-						m1 = m1.Mid(2);
+						m1 = m1.Mid(2); //next chars
 					} else {
 						color = int(m1.GetChar(1)) - 48;
-						m1 = m1.Mid(1);
+						m1 = m1.Mid(1); //next char
 					}
 
 					wxColor dummy(0, 0, 0);
@@ -487,7 +487,7 @@ void ChatPanel::OutputLine(const ChatLine& line)
 					curcolor = oldcolor;
 					break;
 			}
-			m1 = m1.Mid(1);
+			m1 = m1.Mid(1); //next char!
 		}
 		m_chatlog_text->AppendText(_T("\n"));
 	} else
