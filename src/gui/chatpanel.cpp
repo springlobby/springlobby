@@ -401,7 +401,6 @@ void ChatPanel::OutputLine(const wxString& message, const wxColour& col, bool sh
 	}
 }
 
-
 void ChatPanel::OutputLine(const ChatLine& line)
 {
 	const int numOfLines = m_chatlog_text->GetNumberOfLines();
@@ -436,7 +435,19 @@ void ChatPanel::OutputLine(const ChatLine& line)
 		const wxColor oldcolor(line.chatstyle.GetTextColour());
 
 		while (m1.Len() > 0) {
-			const wxUniChar c = m1.GetChar(0);
+			wxUniChar c = m1.GetChar(0);
+			wxUniChar tmp = c;
+			size_t len = 0;
+			while(tmp != 1 && tmp != 2 && tmp != 0x0F && len < m1.Len()) { //get all text until first irc color is found
+				c = tmp;
+				tmp = m1.GetChar(len++);
+			}
+			if (len > 0) { //unformated text found, add as whole
+				m_chatlog_text->AppendText(m1.Mid(0, len));
+				m1 = m1.Mid(len);
+			}
+
+
 			if (c == 3 && m1.Len() > 1 && (m1.GetChar(1) >= 48 && m1.GetChar(1) <= 58)) { // Color
 				if (m1.Len() > 2 && (m1.GetChar(2) >= 48 && m1.GetChar(2) <= 58)) {
 					color = (int(m1.GetChar(1)) - 48) * 10 + (int(m1.GetChar(2)) - 48);
