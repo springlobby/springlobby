@@ -33,19 +33,24 @@ inline wxString BtS(bool q, std::string y = "yes", std::string n = "no")
 {
 	return q ? TowxString(y) : TowxString(n);
 }
+typedef std::vector<std::pair<std::string, std::string> > Paths;
+
+static void getWritePaths(Paths& paths)
+{
+	paths.push_back(std::make_pair(SlPaths::GetLobbyWriteDir(), "LobbyWriteDir"));
+	paths.push_back(std::make_pair(SlPaths::GetCachePath(), "CachePath"));
+	paths.push_back(std::make_pair(SlPaths::GetExecutableFolder(), "ExecutableFolder"));
+	paths.push_back(std::make_pair(SlPaths::GetDownloadDir(), "DownloadDir"));
+	paths.push_back(std::make_pair(SlPaths::GetDataDir(), "Current SpringData:"));
+}
 
 InfoDialog::InfoDialog(wxWindow* parent)
     : wxDialog(parent, wxID_ANY, _("Paths"), wxDefaultPosition, wxSize(620, 400), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxCLOSE_BOX)
 {
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 
-	typedef std::vector<std::pair<std::string, wxString> > Paths;
 	Paths paths;
-	paths.push_back(std::make_pair(SlPaths::GetLobbyWriteDir(), _T("LobbyWriteDir")));
-	paths.push_back(std::make_pair(SlPaths::GetCachePath(), _T("CachePath")));
-	paths.push_back(std::make_pair(SlPaths::GetExecutableFolder(), _T("ExecutableFolder")));
-	paths.push_back(std::make_pair(SlPaths::GetDownloadDir(), _T("DownloadDir")));
-	paths.push_back(std::make_pair(SlPaths::GetDataDir(), _T("Current SpringData:")));
+	getWritePaths(paths);
 
 	wxTextCtrl* out = new wxTextCtrl(this, wxNewId(), wxEmptyString, wxDefaultPosition, wxDefaultSize,
 					 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL);
