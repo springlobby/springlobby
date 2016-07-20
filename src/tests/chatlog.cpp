@@ -33,6 +33,8 @@ void customMessageBox(int, wxString const&, wxString const&, long, int, int)
 
 BOOST_AUTO_TEST_CASE(slconfig)
 {
+	//delete wxLog::SetActiveTarget(new wxLogStderr(NULL));
+
 	const wxString line1 = _T("this is line 1");
 	const wxString line2 = _T("this is line 2");
 	const wxString line3 = _T("this is line 3");
@@ -55,10 +57,9 @@ BOOST_AUTO_TEST_CASE(slconfig)
 		wxLogMessage(_T("line: '%s'"), line.c_str());
 	}
 
-	const int skip = 11; //ignore date
-	BOOST_CHECK(lines[lines.GetCount() - 4].Mid(skip) == line1);
-	BOOST_CHECK(lines[lines.GetCount() - 3].Mid(skip) == line2);
-	BOOST_CHECK(lines[lines.GetCount() - 2].Mid(skip) == line3);
+	BOOST_CHECK(lines[lines.GetCount() - 4] == line1);
+	BOOST_CHECK(lines[lines.GetCount() - 3] == line2);
+	BOOST_CHECK(lines[lines.GetCount() - 2] == line3);
 
 	delete logfile;
 }
