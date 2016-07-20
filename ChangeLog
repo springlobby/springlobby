@@ -1,5 +1,9 @@
 ChangeLog of Springlobby
 
+## 0.252
+ - log help->system info into springlobby.log
+ - some cleanup
+
 ## 0.251
  - slightly refactor irc colors handling
 
