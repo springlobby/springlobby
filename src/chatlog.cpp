@@ -7,7 +7,6 @@
 #include <wx/file.h>
 #include <wx/filefn.h>
 #include <wx/dir.h>
-#include <wx/datetime.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
 #include <wx/log.h>
@@ -72,13 +71,13 @@ void ChatLog::CloseSession()
 		return;
 	}
 
-	AddMessage(wxEmptyString, _("### Session Closed at [%Y-%m-%d %H:%M]"));
+	AddMessage(wxDateTime::Now().Format(_("### Session Closed at [%Y-%m-%d %H:%M]")));
 	m_logfile.Flush();
 	m_active = false;
 	m_logfile.Close();
 }
 
-bool ChatLog::AddMessage(const wxString& text, const wxString& timeformat)
+bool ChatLog::AddMessage(const wxString& text)
 {
 	if (!LogEnabled()) {
 		return true;
@@ -86,8 +85,7 @@ bool ChatLog::AddMessage(const wxString& text, const wxString& timeformat)
 	if (!m_active) { //logging is enabled, logfile should be writeable
 		return false;
 	}
-	wxString logtime = wxDateTime::Now().Format(timeformat);
-	const bool res = m_logfile.Write(logtime + text + wxTextBuffer::GetEOL(), wxConvUTF8);
+	const bool res = m_logfile.Write(text + wxTextBuffer::GetEOL(), wxConvUTF8);
 	if (!res) {
 		wxLogWarning(_T("Couldn't write to %s"), m_logname.c_str());
 		m_logfile.Close();
@@ -135,7 +133,7 @@ bool ChatLog::OpenLogFile()
 	FillLastLineArray();
 	m_active = true;
 
-	return AddMessage(wxEmptyString, _T( "### Session Start at [%Y-%m-%d %H:%M]" ));
+	return AddMessage(wxDateTime::Now().Format(_( "### Session Start at [%Y-%m-%d %H:%M]" )));
 }
 
 const wxArrayString& ChatLog::GetLastLines() const
@@ -299,4 +297,5 @@ void ChatLog::FillLastLineArray()
 #ifdef WIN32
 	delete[] eol;
 #endif
+	m_logfile.SeekEnd();
 }

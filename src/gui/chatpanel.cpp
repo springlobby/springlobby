@@ -386,7 +386,7 @@ void ChatPanel::OutputLine(const wxString& message, const wxColour& col, bool sh
 		wxDateTime now = wxDateTime::Now();
 		newline.time = _T( "[" ) + now.Format(_T( "%H:%M:%S" )) + _T( "]" );
 		newline.timestyle = wxTextAttr(sett().GetChatColorTime(), sett().GetChatColorBackground());
-		m_chat_log.AddMessage(message);
+		m_chat_log.AddMessage(newline.time + _T(" ") + message);
 	} else {
 		newline.time.clear();
 	}
@@ -416,7 +416,7 @@ void ChatPanel::OutputLine(const ChatLine& line)
 
 	if (!line.time.empty()) {
 		m_chatlog_text->SetDefaultStyle(line.timestyle);
-		m_chatlog_text->AppendText(line.time);
+		m_chatlog_text->AppendText(line.time + _T(" "));
 	} else {
 		m_chatlog_text->SetDefaultStyle(line.chatstyle);
 	}
@@ -584,9 +584,9 @@ void ChatPanel::Said(const wxString& who, const wxString& message)
 		wxString message2;
 		who2 = message.BeforeFirst('>').AfterFirst('<');
 		message2 = message.AfterFirst('>');
-		OutputLine(_T( " <" ) + who2 + _T( "> " ) + message2, col);
+		OutputLine(_T( "<" ) + who2 + _T( "> " ) + message2, col);
 	} else {
-		OutputLine(_T( " <" ) + who + _T( "> " ) + message, col);
+		OutputLine(_T( "<" ) + who + _T( "> " ) + message, col);
 	}
 
 
@@ -648,7 +648,7 @@ void ChatPanel::DidAction(const wxString& who, const wxString& action)
 
 	// change the image of the tab to show new events
 	SetIconHighlight(highlight_say);
-	OutputLine(_T( " * " ) + who + _T( " " ) + action, sett().GetChatColorAction());
+	OutputLine(_T( "* " ) + who + _T( " " ) + action, sett().GetChatColorAction());
 	if (m_type == CPT_User && (ui().GetActiveChatPanel() != this || !wxTheApp->IsActive())) {
 		const wxString msg = wxString::Format(_T("%s \n%s"), who.c_str(), action.Left(50).c_str());
 		UiEvents::GetNotificationEventSender().SendEvent(
@@ -663,7 +663,7 @@ void ChatPanel::Motd(const wxString& message)
 {
 	// change the image of the tab to show new events
 	SetIconHighlight(highlight_say);
-	OutputLine(_T( " ** motd ** " ) + message, sett().GetChatColorServer());
+	OutputLine(_T( "** motd ** " ) + message, sett().GetChatColorServer());
 }
 
 void ChatPanel::StatusMessage(const wxString& message)
@@ -673,25 +673,25 @@ void ChatPanel::StatusMessage(const wxString& message)
 	} else {
 		if (CPT_Server == m_type)
 			SetIconHighlight(highlight_important);
-		OutputLine(_T( " ** Server ** " ) + message, sett().GetChatColorServer());
+		OutputLine(_T( "** Server ** " ) + message, sett().GetChatColorServer());
 	}
 }
 
 void ChatPanel::ClientMessage(const wxString& message)
 {
-	OutputLine(_T( " ** " ) + message, sett().GetChatColorClient());
+	OutputLine(_T( "** " ) + message, sett().GetChatColorClient());
 }
 
 void ChatPanel::UnknownCommand(const wxString& command, const wxString& params)
 {
 	// change the image of the tab to show new events
 	SetIconHighlight(highlight_important);
-	OutputLine(_(" !! Command: \"") + command + _("\" params: \"") + params + _T( "\"." ), sett().GetChatColorError());
+	OutputLine(_("!! Command: \"") + command + _("\" params: \"") + params + _T( "\"." ), sett().GetChatColorError());
 }
 
 void ChatPanel::OutputError(const wxString& message)
 {
-	OutputLine(wxString::Format(_(" Error: %s"), message.c_str()), sett().GetChatColorError());
+	OutputLine(wxString::Format(_("Error: %s"), message.c_str()), sett().GetChatColorError());
 }
 
 
@@ -714,7 +714,7 @@ void ChatPanel::Joined(User& who)
 		if (m_type == CPT_Channel) {
 			SetIconHighlight(highlight_join_leave);
 		}
-		OutputLine(_T( " ** " ) + wxString::Format(_("%s joined %s."), TowxString(who.GetNick()).c_str(), GetChatTypeStr().c_str()), sett().GetChatColorJoinPart());
+		OutputLine(_T( "** " ) + wxString::Format(_("%s joined %s."), TowxString(who.GetNick()).c_str(), GetChatTypeStr().c_str()), sett().GetChatColorJoinPart());
 	}
 
 	if (m_show_nick_list && (m_nicklist != nullptr)) {
@@ -733,7 +733,7 @@ void ChatPanel::OnChannelJoin(User& who)
 		UpdateUserCountLabel();
 	}
 	if (m_display_joinitem) {
-		OutputLine(_T( " ** " ) + wxString::Format(_("%s joined %s."), TowxString(who.GetNick()).c_str(), GetChatTypeStr().c_str()), sett().GetChatColorJoinPart());
+		OutputLine(_T( "** " ) + wxString::Format(_("%s joined %s."), TowxString(who.GetNick()).c_str(), GetChatTypeStr().c_str()), sett().GetChatColorJoinPart());
 	}
 	// Also add the User to the TextCompletionDatabase
 	textcompletiondatabase.Insert_Mapping(TowxString(who.GetNick()), TowxString(who.GetNick()));
@@ -746,7 +746,7 @@ void ChatPanel::Parted(User& who, const wxString& message)
 	const wxString nick = TowxString(who.GetNick());
 	const bool wasactive = m_active_users.erase(nick) > 0;
 	if (m_display_joinitem || (wasactive && !who.IsBot())) {
-		OutputLine(_T( " ** " ) + wxString::Format(_("%s left %s (%s)."), nick.c_str(), GetChatTypeStr().c_str(), message.c_str()), sett().GetChatColorJoinPart());
+		OutputLine(_T( "** " ) + wxString::Format(_("%s left %s (%s)."), nick.c_str(), GetChatTypeStr().c_str(), message.c_str()), sett().GetChatColorJoinPart());
 	}
 	if (m_type == CPT_Channel) {
 		if (m_channel == 0)
@@ -785,13 +785,13 @@ void ChatPanel::SetTopic(const wxString& who, const wxString& message)
 	// change the image of the tab to show new events
 	if (m_topic_set)
 		SetIconHighlight(highlight_say);
-	OutputLine(_(" ** Channel topic:"), col);
+	OutputLine(_("** Channel topic:"), col);
 	wxStringTokenizer tkz(message, _T("\n"));
 	while (tkz.HasMoreTokens()) {
 		wxString msg = tkz.GetNextToken();
 		OutputLine(_T(" ") + msg, col);
 	}
-	OutputLine(_(" ** Set by ") + who, col);
+	OutputLine(_("** Set by ") + who, col);
 	m_topic_set = true;
 }
 
@@ -935,7 +935,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 
 		if (line == _T( "/ver" )) {
 			//!this instance is not replaced with GetAppname for sake of help/debug online
-			OutputLine(_(" You have SpringLobby v") + TowxString(getSpringlobbyVersion()), sett().GetChatColorNormal());
+			OutputLine(_("You have SpringLobby v") + TowxString(getSpringlobbyVersion()), sett().GetChatColorNormal());
 			return true;
 		}
 
@@ -1017,7 +1017,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 			}
 
 			m_server->SendCmd(STD_STRING(line), "");
-			OutputLine(_(" Sent: \"") + line + _("\""), sett().GetChatColorNormal());
+			OutputLine(_("Sent: \"") + line + _("\""), sett().GetChatColorNormal());
 		}
 	}
 	return true;
@@ -1051,14 +1051,14 @@ void ChatPanel::OnUserDisconnected()
 {
 	// change the image of the tab to show new events
 	SetIconHighlight(highlight_join_leave);
-	OutputLine(_(" ** User is now offline."), sett().GetChatColorJoinPart());
+	OutputLine(_("** User is now offline."), sett().GetChatColorJoinPart());
 }
 
 void ChatPanel::OnUserConnected()
 {
 	// change the image of the tab to show new events
 	SetIconHighlight(highlight_join_leave);
-	OutputLine(_(" ** User just got online."), sett().GetChatColorJoinPart());
+	OutputLine(_("** User just got online."), sett().GetChatColorJoinPart());
 }
 
 
@@ -1184,7 +1184,7 @@ void ChatPanel::SetBattle(IBattle* battle)
 	}
 
 	if (m_battle != NULL) {
-		OutputLine(_(" ** Left Battle."), sett().GetChatColorNotification());
+		OutputLine(_("** Left Battle."), sett().GetChatColorNotification());
 	}
 
 	if (battle == NULL) {
@@ -1192,7 +1192,7 @@ void ChatPanel::SetBattle(IBattle* battle)
 		return;
 	}
 
-	OutputLine(_(" ** Joined Battle."), sett().GetChatColorNotification());
+	OutputLine(_("** Joined Battle."), sett().GetChatColorNotification());
 
 	for (unsigned int i = 0; i < battle->GetNumUsers(); ++i) {
 		const wxString nick = TowxString(battle->GetUser(i).GetNick());

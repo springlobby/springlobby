@@ -40,7 +40,7 @@ public:
 	 *
 	 * @see LogEnabled LogTime
 	 */
-	bool AddMessage(const wxString& text, const wxString& timeformat = _T("[%H:%M:%S] "));
+	bool AddMessage(const wxString& text);
 
 	/** Check if chat logging is enabled.
 	 *
