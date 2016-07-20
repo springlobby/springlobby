@@ -55,6 +55,7 @@
 #include "gui/ui.h"
 #include "servermanager.h"
 #include "gui/iconscollection.h"
+#include "sysinfo.h"
 
 #include <wx/debugrpt.h>
 #include <wx/intl.h>
@@ -160,7 +161,6 @@ bool SpringLobbyApp::OnInit()
 	// configure unitsync paths before trying to load
 	SlPaths::ReconfigureUnitsync();
 
-
 	sett().Setup(m_translationhelper);
 
 	notificationManager(); //needs to be initialized too
@@ -175,6 +175,8 @@ bool SpringLobbyApp::OnInit()
 	} else {
 		wxLogWarning("Couldn't load unitsync");
 	}
+
+	wxLogWarning("%s", TowxString(GetSpringlobbyInfo()).c_str());
 
 	ui().OnInit();
 	return true;

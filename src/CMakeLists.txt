@@ -162,6 +162,7 @@ set(springlobbySrc
 	spring.cpp
 	springlobbyapp.cpp
 	springprocess.cpp
+	sysinfo.cpp
 	tasserver.cpp
 	user.cpp
 	useractions.cpp
