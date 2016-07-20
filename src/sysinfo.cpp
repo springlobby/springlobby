@@ -67,6 +67,9 @@ std::string GetSpringlobbyInfo()
 			}
 		} catch (...) {
 		}
+		if (!wx || !posix | !tried){
+			wxLogError("%s is not writeable!", path.c_str());
+		}
 		res += stdprintf(("\tWX: %s POSIX: %s TRY: %s\n"), BtS(wx).c_str(), BtS(posix).c_str(), BtS(tried).c_str());
 	}
 
