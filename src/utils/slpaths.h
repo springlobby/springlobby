@@ -51,7 +51,6 @@ public:
 	static std::string GetSpringBinary(const std::string& index = GetCurrentUsedSpringIndex());
 	static void SetSpringBinary(const std::string& path, const std::string& index = GetCurrentUsedSpringIndex());
 
-	static std::string GetUikeys(const std::string& index = GetCurrentUsedSpringIndex());
 	static std::string GetDataDir(const std::string& index = GetCurrentUsedSpringIndex());
 	static std::string GetSpringConfigFilePath(const std::string& index = GetCurrentUsedSpringIndex());
 	static std::string GetDownloadDir();

@@ -84,8 +84,6 @@ InfoDialog::InfoDialog(wxWindow* parent)
 
 	*out << wxString::Format(_T("Current unitsync: %s\n"), TowxString(SlPaths::GetUnitSync()).c_str());
 	*out << wxString::Format(_T("Current spring executable: %s\n"), TowxString(SlPaths::GetSpringBinary()).c_str());
-	*out << wxString::Format(_T("Current uikeys.txt: %s\n"), TowxString(SlPaths::GetUikeys()).c_str());
-
 	*out << wxString::Format(_T("Portable mode: %s\n"), BtS(SlPaths::IsPortableMode()).c_str());
 
 	*out << wxString::Format(_T("Compiled with wxWidgets %d.%d.%d.%d"), wxMAJOR_VERSION, wxMINOR_VERSION, wxRELEASE_NUMBER, wxSUBRELEASE_NUMBER) + _T("\n");

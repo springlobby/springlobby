@@ -347,11 +347,6 @@ std::string SlPaths::GetLobbyWriteDir()
 	return LSL::Util::EnsureDelimiter(GetConfigfileDir());
 }
 
-std::string SlPaths::GetUikeys(const std::string& index)
-{
-	return GetDataDir(index) + "uikeys.txt";
-}
-
 bool SlPaths::CreateSpringDataDir(const std::string& dir)
 {
 	if (dir.empty()) {
