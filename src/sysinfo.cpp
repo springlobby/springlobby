@@ -43,9 +43,9 @@ std::string GetSpringlobbyInfo()
 	std::string res;
 	res  = getSpringlobbyAgent() + nl;
 	const bool configwriteable = wxFileName::IsFileWritable(TowxString(SlPaths::GetConfigPath()));
-	res += stdprintf("SpringLobby config file: %s (%s writable)\n",
+	res += stdprintf("SpringLobby config file: %s (%swritable)\n",
 				 SlPaths::GetConfigPath().c_str(),
-				 BtS(configwriteable, "", "not").c_str());
+				 BtS(configwriteable, "", "not ").c_str());
 	Paths paths;
 	getWritePaths(paths);
 	for (size_t i = 0; i < paths.size(); ++i) {
