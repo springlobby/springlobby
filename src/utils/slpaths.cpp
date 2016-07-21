@@ -243,7 +243,6 @@ void SlPaths::SetUsedSpringIndex(const std::string& index)
 
 void SlPaths::ReconfigureUnitsync()
 {
-	setenv("SPRING_WRITEDIR", GetDownloadDir().c_str(), 1);
 	LSL::Util::config().ConfigurePaths(
 	    SlPaths::GetCachePath(),
 	    SlPaths::GetUnitSync(),
