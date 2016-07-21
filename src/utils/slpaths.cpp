@@ -461,8 +461,8 @@ std::string SlPaths::GetUpdateDir()
 void SlPaths::SetDownloadDir(const std::string& newDir)
 {
 	std::string newDownloadDir = LSL::Util::EnsureDelimiter(newDir);
-	LSL::usync().SetSpringDataPath(newDownloadDir);
 	cfg().Write(_T("/Spring/DownloadDir"), TowxString(newDownloadDir));
+	ReconfigureUnitsync();
 }
 
 bool SlPaths::ValidatePaths()
