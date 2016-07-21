@@ -243,6 +243,7 @@ void SlPaths::SetUsedSpringIndex(const std::string& index)
 
 void SlPaths::ReconfigureUnitsync()
 {
+	setenv("SPRING_WRITEDIR", GetDownloadDir().c_str(), 1);
 	LSL::Util::config().ConfigurePaths(
 	    SlPaths::GetCachePath(),
 	    SlPaths::GetUnitSync(),
@@ -460,7 +461,7 @@ std::string SlPaths::GetUpdateDir()
 
 void SlPaths::SetDownloadDir(const std::string& newDir)
 {
-	std::string newDownloadDir = LSL::Util::EnsureDelimiter(newDir);
+	const std::string newDownloadDir = LSL::Util::EnsureDelimiter(newDir);
 	cfg().Write(_T("/Spring/DownloadDir"), TowxString(newDownloadDir));
 	ReconfigureUnitsync();
 }
