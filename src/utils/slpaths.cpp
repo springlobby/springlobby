@@ -246,7 +246,9 @@ void SlPaths::ReconfigureUnitsync()
 	LSL::Util::config().ConfigurePaths(
 	    SlPaths::GetCachePath(),
 	    SlPaths::GetUnitSync(),
-	    SlPaths::GetSpringBinary());
+	    SlPaths::GetSpringBinary(),
+	    SlPaths::GetDownloadDir()
+	);
 }
 
 
