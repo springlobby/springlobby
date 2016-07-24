@@ -37,7 +37,11 @@ GlobalEventManager::GlobalEventManager()
 
 GlobalEventManager::~GlobalEventManager()
 {
-	assert(m_eventsTable.empty()); // all subcribers must have unsubscribed before exit (else it possible crashes)
+	if (!m_eventsTable.empty()) {
+		wxLogWarning("GlobalEventManager::~GlobalEventManager(): not all subscribers had unsubscibed (expect a crash after this!)");
+		m_eventsTable.clear();
+	}
+	m_Instance = nullptr;
 }
 
 GlobalEventManager* GlobalEventManager::Instance()
