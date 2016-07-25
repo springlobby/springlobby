@@ -26,17 +26,32 @@ inline std::string BtS(bool q, const std::string& yes = "yes", const std::string
 {
 	return q ? yes : no;
 }
-typedef std::vector<std::pair<std::string, std::string> > Paths;
+
+class PathInfo {
+public:
+	PathInfo(const std::string& path, const std::string description, bool requireswrite)
+		: m_path(path)
+		, m_desc(description)
+		, m_requireswrite(requireswrite)
+	{}
+
+	std::string m_path;
+	std::string m_desc;
+	bool m_requireswrite;
+};
+
+typedef std::vector<PathInfo> Paths;
 
 static void getWritePaths(Paths& paths)
 {
-	paths.push_back(std::make_pair(SlPaths::GetLobbyWriteDir(), "LobbyWriteDir"));
-	paths.push_back(std::make_pair(SlPaths::GetCachePath(), "CachePath"));
-	paths.push_back(std::make_pair(SlPaths::GetExecutableFolder(), "ExecutableFolder"));
-	paths.push_back(std::make_pair(SlPaths::GetDownloadDir(), "DownloadDir"));
-	paths.push_back(std::make_pair(SlPaths::GetDataDir(), "Current SpringData:"));
+	paths.push_back(PathInfo(SlPaths::GetLobbyWriteDir(), "LobbyWriteDir", true));
+	paths.push_back(PathInfo(SlPaths::GetCachePath(), "CachePath", true));
+	paths.push_back(PathInfo(SlPaths::GetExecutableFolder(), "ExecutableFolder", false));
+	paths.push_back(PathInfo(SlPaths::GetDownloadDir(), "DownloadDir", true));
+	paths.push_back(PathInfo(SlPaths::GetDataDir(), "Current SpringData:", true));
 }
 
+//FIXME: merge with basicly duplicate in slpaths.cpp
 std::string GetSpringlobbyInfo()
 {
 	static const std::string nl = std::string("\n");
@@ -49,8 +64,8 @@ std::string GetSpringlobbyInfo()
 	Paths paths;
 	getWritePaths(paths);
 	for (size_t i = 0; i < paths.size(); ++i) {
-		const std::string path = paths[i].first;
-		res += stdprintf("%s (%s)\n", paths[i].second.c_str(), path.c_str());
+		const std::string path = paths[i].m_path;
+		res += stdprintf("%s (%s)\n", paths[i].m_desc.c_str(), path.c_str());
 		const bool wx = wxFileName::IsDirWritable(path);
 		const bool posix = access(path.c_str(), WRITABLE) == 0;
 		bool tried = false;
@@ -67,7 +82,7 @@ std::string GetSpringlobbyInfo()
 			}
 		} catch (...) {
 		}
-		if (!wx || !posix || !tried){
+		if (paths[i].m_requireswrite && (!wx || !posix || !tried)){
 			wxLogError("%s is not writeable!", path.c_str());
 		}
 		res += stdprintf(("\tWX: %s POSIX: %s TRY: %s\n"), BtS(wx).c_str(), BtS(posix).c_str(), BtS(tried).c_str());
