@@ -17,7 +17,7 @@ static const long ID_NEW_TAB = wxNewId();
 
 SLNotebook::SLNotebook(wxWindow* parent, const wxString& name, wxWindowID id,
 		       const wxPoint& pos, const wxSize& size, long style)
-    : wxAuiNotebook(parent, id, pos, size, style)
+    : wxAuiNotebook(parent, id, pos, size, style | wxCLIP_CHILDREN)
 {
 	SetName(name);
 	m_mgr.SetFlags(wxAUI_MGR_ALLOW_FLOATING |
