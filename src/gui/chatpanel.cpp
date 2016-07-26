@@ -534,6 +534,7 @@ void ChatPanel::OnSay(wxCommandEvent& /*unused*/)
 		m_say_text->SetValue(wxEmptyString);
 /*
 	Say("\x02Test\x02Test");
+	Say("\x02\x02Test\x02Test");
 	Say("Test\x02Test");
 	Say("TestTes\x02t");
 	Say("TestTest\x02");
