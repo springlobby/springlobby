@@ -398,6 +398,20 @@ void ChatPanel::OutputLine(const wxString& message, const wxColour& col, bool sh
 	}
 }
 
+static size_t FirstSpecialChar(const wxString& str)
+{
+	for(size_t pos = 0; pos < str.Len(); pos++) {
+		if (!str.GetChar(pos).IsAscii()) {
+			continue;
+		}
+		const unsigned char uc = str.GetChar(pos);
+		if (uc==0x1f || uc==0x1d || uc==0x03 || uc==0x02 || uc==0x016 || uc==0x0F) { //get all text until first irc color is found
+			return pos;
+		}
+	}
+	return -1;
+}
+
 void ChatPanel::OutputLine(const ChatLine& line)
 {
 	const int numOfLines = m_chatlog_text->GetNumberOfLines();
@@ -434,15 +448,8 @@ void ChatPanel::OutputLine(const ChatLine& line)
 		const wxColor oldcolor(line.chatstyle.GetTextColour());
 
 		while (m1.Len() > 0) {
-			wxUniChar c = m1.GetChar(0);
-			wxUniChar tmp = c;
-			size_t len = 0;
-			unsigned char uc = c;
-			while(uc!=0x1f && uc!=0x1d && uc!=0x03 && uc!=0x02 && uc!=0x016 && uc!=0x0F && len < m1.Len()) { //get all text until first irc color is found
-				c = tmp;
-				tmp = m1.GetChar(len++);
-			}
-			if (len > 0) { //unformated text found, add as whole
+			const size_t firstspec = FirstSpecialChar(m1);
+			if (firstspec > 0) { //unformated text found, add as whole
 				wxFont font = oldfont; //isn't needed any more in wx3.0
 				at = line.chatstyle;
 				if (bold)
@@ -450,13 +457,13 @@ void ChatPanel::OutputLine(const ChatLine& line)
 				at.SetFont(font);
 				at.SetTextColour(curcolor);
 				m_chatlog_text->SetDefaultStyle(at);
-				m_chatlog_text->AppendText(m1.Mid(0, len));
-				m1 = m1.Mid(len);
+				m_chatlog_text->AppendText(m1.Mid(0, firstspec));
+				m1 = m1.Mid(firstspec);
 				if (m1.Len() <= 0) { //no chars left, abort
 					break;
 				}
 			}
-			uc = c;
+			const unsigned char uc = m1.GetChar(0);
 			switch(uc) { //  http://en.wikichip.org/wiki/irc/colors
 				case 0x1f: //underline
 					break;
@@ -525,6 +532,12 @@ void ChatPanel::OnSay(wxCommandEvent& /*unused*/)
 {
 	if (Say(m_say_text->GetValue()))
 		m_say_text->SetValue(wxEmptyString);
+/*
+	Say("\x02Test\x02Test");
+	Say("Test\x02Test");
+	Say("TestTes\x02t");
+	Say("TestTest\x02");
+*/
 }
 
 void ChatPanel::OnFilterUsers(wxCommandEvent& /*unused*/)
