@@ -1,5 +1,9 @@
 ChangeLog of Springlobby
 
+## 0.254
+ - fix /changepassword
+ - fix minor memleaks
+
 ## 0.253
  - force SpringData to be set to DownloadDir
  - fix irc colors
