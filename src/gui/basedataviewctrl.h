@@ -72,6 +72,10 @@ template <class DataType>
 BaseDataViewCtrl<DataType>::~BaseDataViewCtrl()
 {
 	SaveColumnProperties();
+	Clear();
+	wxDataViewCtrl::AssociateModel(nullptr);
+	delete m_DataModel;
+	m_DataModel = nullptr;
 }
 
 template <class DataType>
