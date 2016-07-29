@@ -295,7 +295,6 @@ void MainWindow::OnClose(wxCloseEvent& /*unused*/)
 	//	GlobalEvent::Disconnect(MainWindow::OnClose, GlobalEvent::)
 	//	SetEvtHandlerEnabled(false);
 	{
-		wxWindowUpdateLocker lock(this);
 		SavePerspectives();
 		wxAuiManager* manager = GetAui().manager;
 		if (manager) {
