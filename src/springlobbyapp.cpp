@@ -279,5 +279,7 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
 void SpringLobbyApp::OnQuit(wxCommandEvent& /*data*/)
 {
+	wxLogWarning("MainWindow::OnClose");
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnQuit);
 }
+

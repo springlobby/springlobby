@@ -290,6 +290,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnClose(wxCloseEvent& /*unused*/)
 {
+	wxLogWarning("MainWindow::OnClose");
 	Logger::ShowDebugWindow(false);
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnQuit);
 	//	GlobalEvent::Disconnect(MainWindow::OnClose, GlobalEvent::)
