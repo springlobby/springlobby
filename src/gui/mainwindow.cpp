@@ -112,7 +112,7 @@ EVT_SET_FOCUS(MainWindow::OnSetFocus)
 EVT_KILL_FOCUS(MainWindow::OnKillFocus)
 EVT_AUINOTEBOOK_PAGE_CHANGED(MAIN_TABS, MainWindow::OnTabsChanged)
 EVT_CLOSE(MainWindow::OnClose)
-EVT_END_SESSION(MainWindow::OnClose)
+//EVT_END_SESSION(MainWindow::OnClose)
 EVT_COMMAND(mySHOW_ERROR_MESSAGE, wxEVT_SHOW, MainWindow::OnShowErrorMessage)
 END_EVENT_TABLE()
 
