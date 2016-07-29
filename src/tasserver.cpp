@@ -99,7 +99,7 @@ bool TASServer::ExecuteSayCommand(const std::string& cmdstr) //FIXME: all the /c
 	if (arrayparams.empty())
 		return false;
 	const std::string& cmd = arrayparams[0];
-	const std::string& params = LSL::Util::AfterFirst(cmd, " ");
+	const std::string& params = LSL::Util::AfterFirst(cmdstr, " ");
 
 	if ((cmd == "/join") || (cmd == "/j")) {
 		std::string channel;
