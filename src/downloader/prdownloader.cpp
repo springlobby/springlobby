@@ -7,6 +7,13 @@
 #include "lib/src/Downloader/IDownloader.h"	 //FIXME: remove this include
 #include "lib/src/FileSystem/FileSystem.h"	  //FIXME
 #include "lib/src/Downloader/Http/HttpDownloader.h" //FIXME
+
+// Resolves names collision: CreateDialog from WxWidgets and CreateDialog macro from WINUSER.H
+// Remove with HttpDownloader.h header inclusion
+#ifdef CreateDialog
+	#undef CreateDialog
+#endif
+
 #include "utils/conversion.h"
 #include "utils/globalevents.h"
 #include "utils/slpaths.h"
