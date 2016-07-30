@@ -111,6 +111,8 @@ bool SpringLobbyApp::OnInit()
 	SetAppName(m_appname);
 #if wxUSE_ON_FATAL_EXCEPTION
 	wxHandleFatalExceptions(!m_crash_handle_disable);
+#else
+	try{
 #endif
 
 	const wxString m_log_file_path = SlPaths::GetLobbyWriteDir() + "springlobby.log";
@@ -179,6 +181,13 @@ bool SpringLobbyApp::OnInit()
 	wxLogWarning("%s", TowxString(GetSpringlobbyInfo()).c_str());
 
 	ui().OnInit();
+
+#if !wxUSE_ON_FATAL_EXCEPTION
+	}catch(std::exception& ex) {
+		wxLogError(_T("Error had happened: " + wxString(ex.what())));
+	}
+#endif
+
 	return true;
 }
 
