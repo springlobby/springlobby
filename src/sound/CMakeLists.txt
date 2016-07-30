@@ -18,7 +18,7 @@ if   ( OPTION_SOUND AND NOT WIN32 )
 	target_include_directories(sound
 		PRIVATE ${ALURE_INCLUDE_DIRS}
 		PRIVATE ${springlobby_SOURCE_DIR}/src
-		PRIVATE ${springlobby_SOURCE_DIR}/src/lsl/src
+		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl
 	)
 elseif (WIN32)
 	message(STATUS "Sound enabled! (win32)")

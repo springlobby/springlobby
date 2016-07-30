@@ -273,8 +273,8 @@ set(springlobbySrc
 	springsettings/tab_ui.cpp
 
 
-	lsl/src/lsl/battle/tdfcontainer.cpp #FIXME
-	lsl/src/lslutils/conversion.cpp #FIXME
+	downloader/lib/src/lsl/lsl/battle/tdfcontainer.cpp #FIXME
+	downloader/lib/src/lsl/lslutils/conversion.cpp #FIXME
 
 	gui/uiutils.cpp
 	gui/controls.cpp
@@ -325,14 +325,6 @@ SET( templatesources
 
 add_subdirectory(downloader)
 
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsl/CMakeLists.txt")
-	MESSAGE(FATAL_ERROR "lsl/CMakeLists.txt doesn't exist, please run \ngit submodule update --init\nIf you used a tarball, please download from http://springlobby.info\n the tarballs from github.com are broken! :-(")
-endif()
-set(ADD_WXCONVERT ON CACHE BOOL "" FORCE)
-set(LSLSERVER OFF CACHE BOOL "build lsl server" FORCE)
-
-add_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
-Add_Subdirectory(lsl)
 remove_definitions(-DHAVE_WX -DHAVE_SPRINGLOBBY)
 
 add_subdirectory(sound)
@@ -384,7 +376,7 @@ target_include_directories(springlobby
 		PRIVATE ${CURL_INCLUDE_DIR}
 		PRIVATE ${Boost_INCLUDE_DIRS}
 		PRIVATE ${springlobby_SOURCE_DIR}/src
-		PRIVATE ${springlobby_SOURCE_DIR}/src/lsl/src
+		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl
 	)
 
 IF(UNIX)
