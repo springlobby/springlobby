@@ -80,19 +80,17 @@ std::string GetSpringlobbyInfo()
 			}
 			dummy_fn +=  _T("dummy.txt");
 
-			const std::string dummyFileString = dummy_fn.ToStdString();
-
+			std::string dummyFileString = dummy_fn.ToStdString();
 #if defined(__WIN32__) || defined(_MSC_VER)
-			of.open(Utf8ToLocalEncoding(dummyFileString.c_str()));
-#else
-			of.open(STD_STRING(dummy_fn));
+			dummyFileString = Utf8ToLocalEncoding(dummyFileString.c_str());
 #endif
+			of.open(dummyFileString);
 
 			if (of.is_open()) {
 				of << "fhreuohgeiuhguie";
 				of.flush();
 				of.close();
-				tried = wxRemoveFile(Utf8ToLocalEncoding(dummyFileString.c_str()));
+				tried = wxRemoveFile(dummyFileString);
 			}
 		} catch (...) {
 		}
