@@ -117,7 +117,6 @@ BattleMapTab::BattleMapTab(wxWindow* parent, IBattle* battle)
 	m_main_sizer->Add(m_opts_sizer, 0, wxEXPAND, 5);
 	//m_main_sizer->AddStretchSpacer();
 	SetSizer(m_main_sizer);
-	Layout();
 
 	SetBattle(battle);
 
