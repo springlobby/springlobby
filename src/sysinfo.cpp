@@ -64,7 +64,7 @@ std::string GetSpringlobbyInfo()
 	Paths paths;
 	getWritePaths(paths);
 	for (size_t i = 0; i < paths.size(); ++i) {
-		const std::string path = paths[i].m_path;
+		const std::string path =paths[i].m_path;
 		res += stdprintf("%s (%s)\n", paths[i].m_desc.c_str(), path.c_str());
 		const bool wx = wxFileName::IsDirWritable(path);
 		const bool posix = access(path.c_str(), WRITABLE) == 0;
@@ -72,7 +72,12 @@ std::string GetSpringlobbyInfo()
 		try {
 			std::ofstream of;
 			const wxString dummy_fn = path + wxFileName::GetPathSeparator() + _T("dummy.txt");
-			of.open(STD_STRING(dummy_fn).c_str());
+
+#if defined(__WIN32__) || defined(_MSC_VER)
+			of.open(Utf8ToLocalEncoding(STD_STRING(dummy_fn).c_str()));
+#else
+			of.open(STD_STRING(dummy_fn));
+#endif
 
 			if (of.is_open()) {
 				of << "fhreuohgeiuhguie";

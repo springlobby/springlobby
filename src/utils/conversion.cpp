@@ -7,6 +7,10 @@
 #include <sstream>
 #include <algorithm>
 
+#if defined(__WIN32__) || defined(_MSC_VER)
+#include <windows.h>
+#endif
+
 StringtokenizerVectorized::StringtokenizerVectorized(wxStringTokenizer tokenizer)
 {
 	reserve(tokenizer.CountTokens());
@@ -55,3 +59,72 @@ std::string strtolower(std::string str)
 	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
 	return str;
 }
+
+#if defined(__WIN32__) || defined(_MSC_VER)
+std::string Utf8ToLocalEncoding(const char *multyByteString)
+{
+	std::string res;
+	int result_u, result_c;
+
+	result_u = MultiByteToWideChar(CP_UTF8,
+		0,
+		multyByteString,
+		-1,
+		0,
+		0);
+
+	if (!result_u) {
+		return 0;
+	}
+
+	wchar_t *ures = new wchar_t[result_u];
+
+	if(!MultiByteToWideChar(CP_UTF8,
+		0,
+		multyByteString,
+		-1,
+		ures,
+		result_u))
+	{
+		delete[] ures;
+		return 0;
+	}
+
+
+	result_c = WideCharToMultiByte(
+		GetACP(),
+		0,
+		ures,
+		-1,
+		0,
+		0,
+		0, 0);
+
+	if(!result_c)
+	{
+		delete[] ures;
+		return 0;
+	}
+
+	char *cres = new char[result_c];
+
+	if(!WideCharToMultiByte(
+		GetACP(),
+		0,
+		ures,
+		-1,
+		cres,
+		result_c,
+		0, 0))
+	{
+		delete[] ures;
+		delete[] cres;
+		return 0;
+	}
+
+	delete[] ures;
+	res.append(cres);
+	delete[] cres;
+	return res;
+}
+#endif
