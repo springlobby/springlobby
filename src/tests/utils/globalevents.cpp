@@ -54,13 +54,13 @@ BOOST_AUTO_TEST_CASE(TestIfCallsProperHandler)
 
 	//Prepare
 	gem->Subscribe(&DownloadStartedHandler, gem->OnDownloadStarted,
-		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget), "");
 	gem->Subscribe(&DownloadInProgressHandler, gem->OnDownloadProgress,
-		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget), "");
 	gem->Subscribe(&DownloadInProgressHandler2, gem->OnDownloadProgress,
-		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget), "");
 	gem->Subscribe(&DownloadCompletedHandler, gem->OnDownloadComplete,
-		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget), "");
 
 	//Make test
 	gem->Send(gem->OnDownloadProgress);
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(TestIfDisabledAfterOnQuitEvent)
 	FakeEvtHandler DownloadStartedHandler;
 
 	gem->Subscribe(&DownloadStartedHandler, gem->OnDownloadStarted,
-		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget), "");
 
 	//Make first test
 	gem->Send(gem->OnDownloadStarted);
@@ -115,13 +115,13 @@ BOOST_AUTO_TEST_CASE(TestIfUnsubscribedProperly)
 
 	//Prepare
 	gem->Subscribe(&DownloadStartedHandler, gem->OnDownloadStarted,
-		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget), "");
 	gem->Subscribe(&DownloadInProgressHandler, gem->OnDownloadProgress,
-		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget), "");
 	gem->Subscribe(&DownloadInProgressHandler2, gem->OnDownloadProgress,
-		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget), "");
 	gem->Subscribe(&DownloadCompletedHandler, gem->OnDownloadComplete,
-		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget));
+		       wxObjectEventFunction(&FakeEvtHandler::DummyTarget), "");
 
 	//Make test
 	gem->Send(gem->OnDownloadProgress);
