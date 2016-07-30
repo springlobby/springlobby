@@ -64,5 +64,4 @@ private:
 	GlobalEventManager::Instance()->Subscribe(this, event, wxObjectEventFunction(&callbackfunc), stdprintf("%s:%d %s()", __FILE__, __LINE__, __func__))
 
 
-
 #endif // SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H

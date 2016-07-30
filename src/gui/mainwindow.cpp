@@ -744,4 +744,3 @@ void MainWindow::OnMenuDownload(wxCommandEvent& /*event*/)
 		start = pos + 1;
 	} while (pos != wxNOT_FOUND);
 }
-

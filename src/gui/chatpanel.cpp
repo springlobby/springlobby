@@ -400,12 +400,12 @@ void ChatPanel::OutputLine(const wxString& message, const wxColour& col, bool sh
 
 static size_t FirstSpecialChar(const wxString& str)
 {
-	for(size_t pos = 0; pos < str.Len(); pos++) {
+	for (size_t pos = 0; pos < str.Len(); pos++) {
 		if (!str.GetChar(pos).IsAscii()) {
 			continue;
 		}
 		const unsigned char uc = str.GetChar(pos);
-		if (uc==0x1f || uc==0x1d || uc==0x03 || uc==0x02 || uc==0x016 || uc==0x0F) { //get all text until first irc color is found
+		if (uc == 0x1f || uc == 0x1d || uc == 0x03 || uc == 0x02 || uc == 0x016 || uc == 0x0F) { //get all text until first irc color is found
 			return pos;
 		}
 	}
@@ -449,7 +449,7 @@ void ChatPanel::OutputLine(const ChatLine& line)
 
 		while (m1.Len() > 0) {
 			const size_t firstspec = FirstSpecialChar(m1);
-			if (firstspec > 0) { //unformated text found, add as whole
+			if (firstspec > 0) {	   //unformated text found, add as whole
 				wxFont font = oldfont; //isn't needed any more in wx3.0
 				at = line.chatstyle;
 				if (bold)
@@ -464,7 +464,7 @@ void ChatPanel::OutputLine(const ChatLine& line)
 				}
 			}
 			const unsigned char uc = m1.GetChar(0);
-			switch(uc) { //  http://en.wikichip.org/wiki/irc/colors
+			switch (uc) {      //  http://en.wikichip.org/wiki/irc/colors
 				case 0x1f: //underline
 					break;
 				case 0x1d: //italics
@@ -532,7 +532,7 @@ void ChatPanel::OnSay(wxCommandEvent& /*unused*/)
 {
 	if (Say(m_say_text->GetValue()))
 		m_say_text->SetValue(wxEmptyString);
-/*
+	/*
 	Say("\x02Test\x02Test");
 	Say("\x02\x02Test\x02Test");
 	Say("Test\x02Test");

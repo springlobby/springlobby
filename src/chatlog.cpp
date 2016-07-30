@@ -133,7 +133,7 @@ bool ChatLog::OpenLogFile()
 	FillLastLineArray();
 	m_active = true;
 
-	return AddMessage(wxDateTime::Now().Format(_( "### Session Start at [%Y-%m-%d %H:%M]" )));
+	return AddMessage(wxDateTime::Now().Format(_("### Session Start at [%Y-%m-%d %H:%M]")));
 }
 
 const wxArrayString& ChatLog::GetLastLines() const

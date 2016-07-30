@@ -61,62 +61,35 @@ std::string strtolower(std::string str)
 }
 
 #if defined(__WIN32__) || defined(_MSC_VER)
-std::string Utf8ToLocalEncoding(const char *multyByteString)
+std::string Utf8ToLocalEncoding(const char* multyByteString)
 {
 	std::string res;
 	int result_u, result_c;
 
-	result_u = MultiByteToWideChar(CP_UTF8,
-		0,
-		multyByteString,
-		-1,
-		0,
-		0);
+	result_u = MultiByteToWideChar(CP_UTF8, 0, multyByteString, -1, 0, 0);
 
 	if (!result_u) {
 		return 0;
 	}
 
-	wchar_t *ures = new wchar_t[result_u];
+	wchar_t* ures = new wchar_t[result_u];
 
-	if(!MultiByteToWideChar(CP_UTF8,
-		0,
-		multyByteString,
-		-1,
-		ures,
-		result_u))
-	{
+	if (!MultiByteToWideChar(CP_UTF8, 0, multyByteString, -1, ures, result_u)) {
 		delete[] ures;
 		return 0;
 	}
 
 
-	result_c = WideCharToMultiByte(
-		GetACP(),
-		0,
-		ures,
-		-1,
-		0,
-		0,
-		0, 0);
+	result_c = WideCharToMultiByte(GetACP(), 0, ures, -1, 0, 0, 0, 0);
 
-	if(!result_c)
-	{
+	if (!result_c) {
 		delete[] ures;
 		return 0;
 	}
 
-	char *cres = new char[result_c];
+	char* cres = new char[result_c];
 
-	if(!WideCharToMultiByte(
-		GetACP(),
-		0,
-		ures,
-		-1,
-		cres,
-		result_c,
-		0, 0))
-	{
+	if (!WideCharToMultiByte(GetACP(), 0, ures, -1, cres, result_c, 0, 0)) {
 		delete[] ures;
 		delete[] cres;
 		return 0;

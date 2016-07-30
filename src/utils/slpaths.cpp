@@ -165,7 +165,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 			usync_paths.push_back(bundle);
 		}
 		if (!SlPaths::IsPortableMode()) {
-/*
+			/*
 //FIXME: reenable when #707 is fixed / spring 102.0 is "established"
 			LSL::SpringBundle systembundle;
 			if (LSL::SpringBundle::LocateSystemInstalledSpring(systembundle)) {
@@ -247,8 +247,7 @@ void SlPaths::ReconfigureUnitsync()
 	    SlPaths::GetCachePath(),
 	    SlPaths::GetUnitSync(),
 	    SlPaths::GetSpringBinary(),
-	    SlPaths::GetDownloadDir()
-	);
+	    SlPaths::GetDownloadDir());
 }
 
 

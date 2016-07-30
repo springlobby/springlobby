@@ -11,7 +11,7 @@
 // Resolves names collision: CreateDialog from WxWidgets and CreateDialog macro from WINUSER.H
 // Remove with HttpDownloader.h header inclusion
 #ifdef CreateDialog
-	#undef CreateDialog
+#undef CreateDialog
 #endif
 
 #include "utils/conversion.h"

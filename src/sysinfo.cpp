@@ -27,13 +27,15 @@ inline std::string BtS(bool q, const std::string& yes = "yes", const std::string
 	return q ? yes : no;
 }
 
-class PathInfo {
+class PathInfo
+{
 public:
 	PathInfo(const std::string& path, const std::string description, bool requireswrite)
-		: m_path(path)
-		, m_desc(description)
-		, m_requireswrite(requireswrite)
-	{}
+	    : m_path(path)
+	    , m_desc(description)
+	    , m_requireswrite(requireswrite)
+	{
+	}
 
 	std::string m_path;
 	std::string m_desc;
@@ -56,11 +58,11 @@ std::string GetSpringlobbyInfo()
 {
 	static const std::string nl = std::string("\n");
 	std::string res;
-	res  = getSpringlobbyAgent() + nl;
+	res = getSpringlobbyAgent() + nl;
 	const bool configwriteable = wxFileName::IsFileWritable(TowxString(SlPaths::GetConfigPath()));
 	res += stdprintf("SpringLobby config file: %s (%swritable)\n",
-				 SlPaths::GetConfigPath().c_str(),
-				 BtS(configwriteable, "", "not ").c_str());
+			 SlPaths::GetConfigPath().c_str(),
+			 BtS(configwriteable, "", "not ").c_str());
 	Paths paths;
 	getWritePaths(paths);
 	for (size_t i = 0; i < paths.size(); ++i) {
@@ -75,10 +77,10 @@ std::string GetSpringlobbyInfo()
 		try {
 			std::ofstream of;
 			wxString dummy_fn = paths[i].m_path;
-			if(!wxEndsWithPathSeparator(dummy_fn)) {
+			if (!wxEndsWithPathSeparator(dummy_fn)) {
 				dummy_fn += wxFileName::GetPathSeparator();
 			}
-			dummy_fn +=  _T("dummy.txt");
+			dummy_fn += _T("dummy.txt");
 
 			std::string dummyFileString = dummy_fn.ToStdString();
 #if defined(__WIN32__) || defined(_MSC_VER)
@@ -94,7 +96,7 @@ std::string GetSpringlobbyInfo()
 			}
 		} catch (...) {
 		}
-		if (paths[i].m_requireswrite && (!wx || !posix || !tried)){
+		if (paths[i].m_requireswrite && (!wx || !posix || !tried)) {
 			wxLogError("%s is not writeable!", path.c_str());
 		}
 		res += stdprintf(("\tWX: %s POSIX: %s TRY: %s\n"), BtS(wx).c_str(), BtS(posix).c_str(), BtS(tried).c_str());
@@ -110,4 +112,3 @@ std::string GetSpringlobbyInfo()
 		res += STD_STRING(wxTheApp->argv[i]) + std::string(" ");
 	return res;
 }
-

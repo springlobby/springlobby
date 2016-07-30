@@ -112,7 +112,7 @@ bool SpringLobbyApp::OnInit()
 #if wxUSE_ON_FATAL_EXCEPTION
 	wxHandleFatalExceptions(!m_crash_handle_disable);
 #else
-	try{
+	try {
 #endif
 
 	const wxString m_log_file_path = SlPaths::GetLobbyWriteDir() + "springlobby.log";
@@ -132,11 +132,11 @@ bool SpringLobbyApp::OnInit()
 	wxString path = wxPathOnly(wxStandardPaths::Get().GetExecutablePath()) + wxFileName::GetPathSeparator() + _T("locale");
 #else
 #if defined(LOCALE_INSTALL_DIR)
-	wxString path(_T(LOCALE_INSTALL_DIR));
+		wxString path(_T(LOCALE_INSTALL_DIR));
 #else
-	// use a dummy name here, we're only interested in the base path
-	wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"), wxStandardPaths::ResourceCat_Messages);
-	path = path.Left(path.First(_T("noneWH")));
+		// use a dummy name here, we're only interested in the base path
+		wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"), wxStandardPaths::ResourceCat_Messages);
+		path = path.Left(path.First(_T("noneWH")));
 #endif
 #endif
 	m_translationhelper = new wxTranslationHelper(GetAppName().Lower(), path);
@@ -183,12 +183,14 @@ bool SpringLobbyApp::OnInit()
 	ui().OnInit();
 
 #if !wxUSE_ON_FATAL_EXCEPTION
-	}catch(std::exception& ex) {
-		wxLogError(_T("Error had happened: " + wxString(ex.what())));
-	}
+}
+catch (std::exception& ex)
+{
+	wxLogError(_T("Error had happened: " + wxString(ex.what())));
+}
 #endif
 
-	return true;
+return true;
 }
 
 
@@ -291,4 +293,3 @@ void SpringLobbyApp::OnQuit(wxCommandEvent& /*data*/)
 	wxLogWarning("MainWindow::OnClose");
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnQuit);
 }
-

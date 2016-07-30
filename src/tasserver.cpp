@@ -464,7 +464,7 @@ void TASServer::Notify()
 		if (BattleExists(m_battle_id)) {
 			IBattle* battle = GetCurrentBattle();
 			if ((battle != nullptr) &&
-				((battle->GetNatType() == NAT_Hole_punching) || (battle->GetNatType() == NAT_Fixed_source_ports)) && !battle->GetInGame()) {
+			    ((battle->GetNatType() == NAT_Hole_punching) || (battle->GetNatType() == NAT_Fixed_source_ports)) && !battle->GetInGame()) {
 				UdpPingTheServer(GetUserName());
 				if (battle->IsFounderMe()) {
 					UdpPingAllClients();

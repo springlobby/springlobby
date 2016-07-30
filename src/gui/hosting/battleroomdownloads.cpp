@@ -93,8 +93,8 @@ void BattleRoomDownloads::OnUpdate()
 		return;
 	}
 
-//FIXME: use events!
-/*	prDownloader::DownloadProgress p;
+	//FIXME: use events!
+	/*	prDownloader::DownloadProgress p;
 	prDownloader()::GetProgress(p);
 
 	switch(p.type) {

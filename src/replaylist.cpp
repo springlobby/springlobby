@@ -23,8 +23,8 @@ private:
 
 public:
 	PlayBackDataReader()
-		: inputStream(nullptr)
-		, gzInputStream(nullptr)
+	    : inputStream(nullptr)
+	    , gzInputStream(nullptr)
 	{
 	}
 
@@ -38,13 +38,13 @@ public:
 	}
 
 	explicit PlayBackDataReader(const std::string& name)
-		: PlayBackDataReader()
+	    : PlayBackDataReader()
 	{
 		m_name = name;
 		if (name.substr(name.length() - 5) == ".sdfz") {
 			gzInputStream = gzopen(name.c_str(), "rb");
 			if (gzInputStream == nullptr) {
-				wxLogWarning("Couldn't open %s",name.c_str());
+				wxLogWarning("Couldn't open %s", name.c_str());
 				return;
 			}
 		} else {
@@ -76,7 +76,10 @@ public:
 		}
 	}
 
-	const std::string& GetName() const { return m_name; }
+	const std::string& GetName() const
+	{
+		return m_name;
+	}
 
 	bool IsOk() const
 	{

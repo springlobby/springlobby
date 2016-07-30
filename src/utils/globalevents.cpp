@@ -39,8 +39,8 @@ GlobalEventManager::~GlobalEventManager()
 {
 	if (!m_eventsTable.empty()) {
 		wxLogWarning("GlobalEventManager::~GlobalEventManager(): not all subscribers had unsubscibed (expect a crash after this!)");
-		for (const auto& evts: m_eventsTable) {
-			for (const auto& evt: evts.second) {
+		for (const auto& evts : m_eventsTable) {
+			for (const auto& evt : evts.second) {
 				wxLogWarning("%s", evt.second.c_str());
 			}
 		}
