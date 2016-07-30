@@ -92,8 +92,8 @@ void ChatPanel::Init(const wxString& panelname)
 	GetAui().manager->AddPane(this, wxLEFT, _T("chatpanel-channel-") + panelname);
 	m_chatlog_text->Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(ChatPanel::OnMouseDown), 0, this);
 
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnLogin, wxObjectEventFunction(&ChatPanel::OnLogin));
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::ApplicationSettingsChangedEvent, wxObjectEventFunction(&ChatPanel::OnSettingsChanged));
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnLogin, ChatPanel::OnLogin);
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::ApplicationSettingsChangedEvent, ChatPanel::OnSettingsChanged);
 }
 
 ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)

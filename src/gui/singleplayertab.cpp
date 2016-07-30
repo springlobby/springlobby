@@ -172,7 +172,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	ReloadMaplist();
 //	ReloadModlist(); //Called from ReloadEngineList() too
 	ReloadEngineList();
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&SinglePlayerTab::OnUnitsyncReloaded));
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnUnitsyncReloaded, SinglePlayerTab::OnUnitsyncReloaded);
 
 	this->SetSizer(m_main_sizer);
 	this->Layout();

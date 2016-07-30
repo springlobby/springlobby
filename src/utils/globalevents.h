@@ -7,7 +7,7 @@
 #include <set>
 
 #include <wx/event.h>
-
+#include "utils/conversion.h"
 
 class GlobalEventManager
 {
@@ -20,7 +20,7 @@ public:
 	static void Release();
 
 public:
-	void Subscribe(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func);
+	void Subscribe(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func, const std::string& debuginfo);
 	void UnSubscribe(wxEvtHandler* evh, wxEventType id = 0);
 	void UnSubscribeAll(wxEvtHandler* evh);
 
@@ -29,7 +29,7 @@ public:
 	void Send(wxEventType type, void* clientData);
 
 private:
-	void _Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func);
+	void _Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func, const std::string& debuginfo);
 	void _Disconnect(wxEvtHandler* evthandler, wxEventType id = 0);
 
 public:
@@ -56,9 +56,13 @@ private:
 
 private:
 	bool m_eventsDisabled;
-	std::map<wxEventType, std::set<wxEvtHandler*> > m_eventsTable;
+	std::map<wxEventType, std::map<wxEvtHandler*, const std::string> > m_eventsTable;
 	const int ANY_EVENT = 0;
 };
+
+#define SUBSCRIBE_GLOBAL_EVENT(event, callbackfunc) \
+	GlobalEventManager::Instance()->Subscribe(this, event, wxObjectEventFunction(&callbackfunc), stdprintf("%s:%d %s()", __FILE__, __LINE__, __func__))
+
 
 
 #endif // SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H

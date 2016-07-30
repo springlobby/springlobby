@@ -122,7 +122,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
 	Connect(ID_VERTICAL_DIRECTION, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&MapSelectDialog::OnVerticalDirectionClicked);
 	Connect(ID_HORIZONTAL_DIRECTION, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction)&MapSelectDialog::OnHorizontalDirectionClicked);
 
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&MapSelectDialog::OnUnitsyncReloaded));
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnUnitsyncReloaded, MapSelectDialog::OnUnitsyncReloaded);
 }
 
 MapSelectDialog::~MapSelectDialog()

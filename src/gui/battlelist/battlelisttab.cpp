@@ -169,7 +169,7 @@ BattleListTab::BattleListTab(wxWindow* parent)
 
 	SelectBattle(0);
 	ShowExtendedInfos(cfg().ReadBool(_T("/BattleListTab/ShowExtendedInfos")));
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&BattleListTab::OnUnitsyncReloaded));
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnUnitsyncReloaded, BattleListTab::OnUnitsyncReloaded);
 }
 
 

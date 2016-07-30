@@ -39,6 +39,11 @@ GlobalEventManager::~GlobalEventManager()
 {
 	if (!m_eventsTable.empty()) {
 		wxLogWarning("GlobalEventManager::~GlobalEventManager(): not all subscribers had unsubscibed (expect a crash after this!)");
+		for (const auto& evts: m_eventsTable) {
+			for (const auto& evt: evts.second) {
+				wxLogWarning("%s", evt.second.c_str());
+			}
+		}
 		m_eventsTable.clear();
 	}
 	m_Instance = nullptr;
@@ -82,9 +87,9 @@ void GlobalEventManager::Send(wxCommandEvent event)
 	if (m_eventsTable.find(event.GetEventType()) == m_eventsTable.end())
 		return;
 
-	std::set<wxEvtHandler*>& evtlist = m_eventsTable[event.GetEventType()];
-	for (auto evt : evtlist) {
-		evt->QueueEvent(event.Clone());
+	const auto& evtlist = m_eventsTable[event.GetEventType()];
+	for (const auto evt : evtlist) {
+		evt.first->QueueEvent(event.Clone());
 	}
 }
 
@@ -95,11 +100,11 @@ void GlobalEventManager::Send(wxEventType type, void* clientData)
 	Send(evt);
 }
 
-void GlobalEventManager::Subscribe(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func)
+void GlobalEventManager::Subscribe(wxEvtHandler* evh, wxEventType id, wxObjectEventFunction func, const std::string& debuginfo)
 {
 	slLogDebugFunc("");
 
-	GlobalEventManager::_Connect(evh, id, func);
+	GlobalEventManager::_Connect(evh, id, func, debuginfo);
 }
 
 void GlobalEventManager::UnSubscribe(wxEvtHandler* evh, wxEventType id)
@@ -118,19 +123,19 @@ void GlobalEventManager::UnSubscribeAll(wxEvtHandler* evh)
 	_Disconnect(evh, ANY_EVENT);
 }
 
-void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func)
+void GlobalEventManager::_Connect(wxEvtHandler* evthandler, wxEventType id, wxObjectEventFunction func, const std::string& debuginfo)
 {
 	assert(evthandler != nullptr);
 	assert(func != nullptr);
 
-	std::set<wxEvtHandler*>& evtlist = m_eventsTable[id];
+	std::map<wxEvtHandler*, const std::string>& evtlist = m_eventsTable[id];
 	if (evtlist.find(evthandler) != evtlist.end()) {
 		assert(false);
 		return;
 	}
 	//	printf("connected event! %lu\n", evthandler);
 	evthandler->Connect(id, func);
-	evtlist.insert(evthandler);
+	evtlist.insert(std::make_pair(evthandler, debuginfo));
 	assert(!evtlist.empty());
 }
 

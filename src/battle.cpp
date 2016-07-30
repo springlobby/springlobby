@@ -220,7 +220,7 @@ User& Battle::OnUserAdded(User& user)
 	if (&user == &GetMe()) {
 		assert(!m_is_self_in);
 		m_is_self_in = true;
-		GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&Battle::OnUnitsyncReloaded));
+		SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnUnitsyncReloaded, Battle::OnUnitsyncReloaded);
 	}
 
 	if (IsFounderMe()) {

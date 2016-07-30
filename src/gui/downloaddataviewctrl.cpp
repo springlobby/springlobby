@@ -35,12 +35,8 @@ BEGIN_EVENT_TABLE(DownloadDataViewCtrl, BaseDataViewCtrl) EVT_MENU(DOWNLOAD_DATA
 
 	LoadColumnProperties();
 
-	GlobalEventManager::Instance()->Subscribe(this,
-						  GlobalEventManager::OnDownloadStarted,
-						  wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadStarted));
-	GlobalEventManager::Instance()->Subscribe(this,
-						  GlobalEventManager::OnDownloadProgress,
-						  wxObjectEventFunction(&DownloadDataViewCtrl::OnDownloadProgress));
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnDownloadStarted, DownloadDataViewCtrl::OnDownloadStarted);
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnDownloadProgress, DownloadDataViewCtrl::OnDownloadProgress);
 }
 
 DownloadDataViewCtrl::~DownloadDataViewCtrl()

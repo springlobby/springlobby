@@ -243,7 +243,7 @@ MainWindow::MainWindow()
 	Logger::ShowDebugWindow(true);
 	//	Logger::ShowDebugWindow(cfg().ReadBool(_T("/debug")));
 
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&MainWindow::OnUnitSyncReloaded));
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnUnitsyncReloaded, MainWindow::OnUnitSyncReloaded);
 }
 
 wxBitmap MainWindow::GetTabIcon(const unsigned char* data, size_t size) const

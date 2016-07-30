@@ -367,8 +367,8 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 		m_splitter->SetSashPosition(p, true);
 	}
 
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnUnitsyncReloaded, wxObjectEventFunction(&BattleRoomTab::OnUnitsyncReloaded));
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadFailed, wxObjectEventFunction(&BattleRoomTab::OnDownloadFailed));
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnUnitsyncReloaded, BattleRoomTab::OnUnitsyncReloaded);
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnDownloadFailed, BattleRoomTab::OnDownloadFailed);
 }
 
 

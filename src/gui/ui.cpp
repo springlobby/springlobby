@@ -91,9 +91,9 @@ Ui::Ui()
 	m_serv = new TASServer();
 	//	m_serv = new OfflineServer();
 	serverSelector().SetCurrentServer(m_serv);
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnSpringTerminated, wxObjectEventFunction(&Ui::OnSpringTerminated));
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnQuit, wxObjectEventFunction(&Ui::OnQuit));
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnLobbyDownloaded, wxObjectEventFunction(&Ui::OnLobbyDownloaded));
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnSpringTerminated, Ui::OnSpringTerminated);
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnQuit, Ui::OnQuit);
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnLobbyDownloaded, Ui::OnLobbyDownloaded);
 }
 
 Ui::~Ui()

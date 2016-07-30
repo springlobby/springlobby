@@ -70,7 +70,7 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 
 	Layout();
 
-	GlobalEventManager::Instance()->Subscribe(this, GlobalEventManager::OnDownloadFailed, wxObjectEventFunction(&MainDownloadTab::OnDownloadFailed));
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnDownloadFailed, MainDownloadTab::OnDownloadFailed);
 }
 
 MainDownloadTab::~MainDownloadTab()
