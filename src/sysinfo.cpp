@@ -64,17 +64,26 @@ std::string GetSpringlobbyInfo()
 	Paths paths;
 	getWritePaths(paths);
 	for (size_t i = 0; i < paths.size(); ++i) {
-		const std::string path =paths[i].m_path;
+		std::string path = paths[i].m_path;
+#if defined(__WIN32__) || defined(_MSC_VER)
+		path = Utf8ToLocalEncoding(path.c_str());
+#endif
 		res += stdprintf("%s (%s)\n", paths[i].m_desc.c_str(), path.c_str());
 		const bool wx = wxFileName::IsDirWritable(path);
 		const bool posix = access(path.c_str(), WRITABLE) == 0;
 		bool tried = false;
 		try {
 			std::ofstream of;
-			const wxString dummy_fn = path + wxFileName::GetPathSeparator() + _T("dummy.txt");
+			wxString dummy_fn = paths[i].m_path;
+			if(!wxEndsWithPathSeparator(dummy_fn)) {
+				dummy_fn += wxFileName::GetPathSeparator();
+			}
+			dummy_fn +=  _T("dummy.txt");
+
+			const std::string dummyFileString = dummy_fn.ToStdString();
 
 #if defined(__WIN32__) || defined(_MSC_VER)
-			of.open(Utf8ToLocalEncoding(STD_STRING(dummy_fn).c_str()));
+			of.open(Utf8ToLocalEncoding(dummyFileString.c_str()));
 #else
 			of.open(STD_STRING(dummy_fn));
 #endif
@@ -83,7 +92,7 @@ std::string GetSpringlobbyInfo()
 				of << "fhreuohgeiuhguie";
 				of.flush();
 				of.close();
-				tried = wxRemoveFile(dummy_fn);
+				tried = wxRemoveFile(Utf8ToLocalEncoding(dummyFileString.c_str()));
 			}
 		} catch (...) {
 		}
