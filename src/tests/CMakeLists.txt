@@ -25,7 +25,7 @@ macro (add_springlobby_test target sources libraries flags)
 	target_link_libraries(test_${target} ${libraries})
 	target_include_directories(test_${target}
 		PRIVATE ${springlobby_SOURCE_DIR}/src
-		PRIVATE ${springlobby_SOURCE_DIR}/src/lsl/src
+		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl
 		PRIVATE ${Boost_INCLUDE_DIRS}
 	)
 	set_target_properties(test_${target} PROPERTIES COMPILE_FLAGS "${flags}")

@@ -25,7 +25,7 @@ if (SPRINGLOBBY_UPDATER)
 	target_include_directories(springlobby_updater
 			PRIVATE ${Boost_INCLUDE_DIRS}
 			PRIVATE ${springlobby_SOURCE_DIR}/src
-			PRIVATE ${springlobby_SOURCE_DIR}/src/lsl/src
+			PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl
 		)
 	install(TARGETS springlobby_updater RUNTIME DESTINATION .)
 endif()
