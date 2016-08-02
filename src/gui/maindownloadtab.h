@@ -26,6 +26,17 @@ public:
 	~MainDownloadTab();
 
 private:
+	void OnCancelButton(wxCommandEvent& event);
+	void OnDownloadDialog(wxCommandEvent& event);
+	void OnDLWidgets(wxCommandEvent& event);
+	void OnClearFinished(wxCommandEvent& event);
+
+	void OnDownloadFailed(wxCommandEvent& /*event*/);
+	void OnUnitsyncReloaded(wxCommandEvent& /*event*/);
+
+	void UpdateDownloadDir();
+
+private:
 	enum {
 		ID_LIST = wxID_HIGHEST,
 		ID_BUTTON_CANCEL,
@@ -42,24 +53,13 @@ private:
 	wxButton* m_but_clear;
 	DownloadDataViewCtrl* m_DownloadDataView;
 	WidgetDownloadDialog* m_widgets_dialog;
-
-	void OnCancelButton(wxCommandEvent& event);
-	void OnDownloadDialog(wxCommandEvent& event);
-	void OnDLWidgets(wxCommandEvent& event);
-	void OnClearFinished(wxCommandEvent& event);
-
+	wxStaticText* m_currDownloadDirText;
 	wxBoxSizer* m_main_sizer;
-
-private:
-	void OnDownloadFailed(wxCommandEvent& /*event*/);
-
-private:
-	//(*Handlers(MainTorrentTab)
-	//*)
-
-	DECLARE_EVENT_TABLE()
 	ContentDownloadDialog* m_download_dialog;
 	wxButton* m_but_download;
+
+private:
+	DECLARE_EVENT_TABLE()
 };
 
 #endif

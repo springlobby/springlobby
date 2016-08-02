@@ -56,8 +56,8 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 	m_buttonbox->Add(m_but_download, 0, wxALL | wxALIGN_BOTTOM, 5);
 
 	wxStaticBoxSizer* currDownloadDirSizer = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Current download directory"));
-	wxString downloadDir = TowxString(SlPaths::GetDownloadDir());
-	wxStaticText* m_currDownloadDirText = new wxStaticText(this, wxID_ANY, downloadDir);
+
+	m_currDownloadDirText = new wxStaticText(this, wxID_ANY, wxEmptyString);
 	currDownloadDirSizer->Add(m_currDownloadDirText, 1, wxALL | wxEXPAND, 5);
 
 	wxBoxSizer* manageAndInfoSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -71,6 +71,9 @@ MainDownloadTab::MainDownloadTab(wxWindow* parent)
 	Layout();
 
 	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnDownloadFailed, MainDownloadTab::OnDownloadFailed);
+	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnUnitsyncReloaded, MainDownloadTab::OnUnitsyncReloaded);
+
+	UpdateDownloadDir();
 }
 
 MainDownloadTab::~MainDownloadTab()
@@ -102,3 +105,15 @@ void MainDownloadTab::OnDownloadFailed(wxCommandEvent& /*event*/)
 {
 	customMessageBox(SL_MAIN_ICON, _("Failed to download selected item."), _("Failed to download"), wxOK);
 }
+
+void MainDownloadTab::OnUnitsyncReloaded(wxCommandEvent &/*event*/)
+{
+	UpdateDownloadDir();
+}
+
+void MainDownloadTab::UpdateDownloadDir()
+{
+	wxString downloadDir = TowxString(SlPaths::GetDownloadDir());
+	m_currDownloadDirText->SetLabelText(downloadDir);
+}
+
