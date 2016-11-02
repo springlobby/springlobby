@@ -376,6 +376,7 @@ target_include_directories(springlobby
 		PRIVATE ${CURL_INCLUDE_DIR}
 		PRIVATE ${Boost_INCLUDE_DIRS}
 		PRIVATE ${springlobby_SOURCE_DIR}/src
+		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src
 		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl
 	)
 
