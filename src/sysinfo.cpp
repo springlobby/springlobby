@@ -67,6 +67,11 @@ std::string GetSpringlobbyInfo()
 	getWritePaths(paths);
 	for (size_t i = 0; i < paths.size(); ++i) {
 		std::string path = paths[i].m_path;
+
+		if (path.empty()) {
+			continue;
+		}
+		
 #if defined(__WIN32__) || defined(_MSC_VER)
 		path = Utf8ToLocalEncoding(path.c_str());
 #endif
