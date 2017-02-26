@@ -31,6 +31,7 @@
 #include <wx/utils.h>
 #include <wx/wfstream.h>
 
+#include "stacktrace.h"
 #include "springlobbyapp.h"
 #include "gui/mainwindow.h"
 #include "settings.h"
@@ -222,6 +223,12 @@ int SpringLobbyApp::OnExit()
 void SpringLobbyApp::OnFatalException()
 {
 	wxLogError("Fatal exception!");
+
+	StackTrace stackTracer;
+	stackTracer.WalkFromException();
+	auto trace = stackTracer.GetStackTrace();
+
+	wxLogError("Stack trace: " + trace);	
 }
 
 
