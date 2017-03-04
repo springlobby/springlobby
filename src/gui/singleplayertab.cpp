@@ -343,6 +343,9 @@ bool SinglePlayerTab::ValidSetup() const
 void SinglePlayerTab::OnMapSelect(wxCommandEvent& /*unused*/)
 {
 	unsigned int index = (unsigned int)m_map_pick->GetCurrentSelection();
+
+	if (index >= m_map_pick->GetCount() - 1) { return; } 
+
 	SetMap(index);
 }
 
@@ -350,6 +353,9 @@ void SinglePlayerTab::OnMapSelect(wxCommandEvent& /*unused*/)
 void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 {
 	unsigned int index = (unsigned int)m_mod_pick->GetCurrentSelection();
+
+	if (index >= m_mod_pick->GetCount() - 1) { return; }
+
 	size_t num_bots = m_battle.GetNumBots();
 	SetMod(index);
 	if (num_bots != m_battle.GetNumBots())
@@ -358,9 +364,13 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 
 void SinglePlayerTab::OnEngineSelect(wxCommandEvent& /*event*/)
 {
-	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pick->GetString(m_engine_pick->GetSelection())));
+	int index = m_engine_pick->GetSelection();
+
+	if (static_cast<unsigned int>(index) >= (m_engine_pick->GetCount() - 1)) { return; }	
+
+	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pick->GetString(index)));
 	LSL::usync().ReloadUnitSyncLib();
-	m_battle.SetEngineVersion(STD_STRING(m_engine_pick->GetString(m_engine_pick->GetSelection())));
+	m_battle.SetEngineVersion(STD_STRING(m_engine_pick->GetString(index)));
 }
 
 void SinglePlayerTab::OnMapBrowse(wxCommandEvent& /*unused*/)
