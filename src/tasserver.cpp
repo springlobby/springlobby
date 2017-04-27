@@ -985,12 +985,20 @@ void TASServer::SendCmd(const std::string& command, const std::string& param, bo
 		return;
 	}
 
-	if (command != "PING") { //don't log PING
-		if (send_success)
-			wxLogMessage(wxString::Format(_T("sent: %s"), msg.c_str()));
-		else
-			wxLogMessage(wxString::Format(_T("sending: %s failed"), msg.c_str()));
-	}
+	if (command == "PING") return;
+	if (command == "SAY") return;
+	if (command == "SAYEX") return;
+	if (command == "SAYPRIVATE") return;
+	if (command == "SAYPRIVATEEX") return;
+	if (command == "SAYBATTLE") return;
+	if (command == "SAYBATTLEEX") return;
+	if (command == "SAYBATTLEPRIVATE") return;
+	if (command == "SAYBATTLEPRIVATEEX") return;
+
+	if (send_success)
+		wxLogMessage(wxString::Format(_T("sent: %s"), msg.c_str()));
+	else
+		wxLogMessage(wxString::Format(_T("sending: %s failed"), msg.c_str()));
 }
 
 void TASServer::SetRelayIngamePassword(const User& user)
