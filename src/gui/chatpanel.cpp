@@ -935,7 +935,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 	}
 	while (lines.HasMoreTokens()) {
 		wxString line = lines.GetNextToken();
-		wxLogMessage(_T( "line: %s" ), line.c_str());
+		wxLogDebug(_T( "line: %s" ), line.c_str());
 
 		if (line == "/help") {
 			ui().ConsoleHelp();
