@@ -67,19 +67,19 @@ bool IBattle::IsSynced()
 	LoadGame();
 	LoadMap();
 	if (!m_host_game.name.empty() && m_local_game.name != m_host_game.name) {
-		wxLogWarning("Not synced: game name doesn't match: '%s' '%s'", m_host_game.name.c_str(), m_local_game.name.c_str());
+		wxLogWarning("Not synced: game name doesn't match host:'%s' local:'%s'", m_host_game.name.c_str(), m_local_game.name.c_str());
 		return false;
 	}
 	if (!m_host_map.name.empty() && m_local_map.name != m_host_map.name) {
-		wxLogWarning("Not synced: map name doesn't match: '%s' '%s'", m_host_map.name.c_str(), m_local_map.name.c_str());
+		wxLogWarning("Not synced: map name doesn't match host:'%s' local:'%s'", m_host_map.name.c_str(), m_local_map.name.c_str());
 		return false;
 	}
 	if (!m_host_game.hash.empty() && m_host_game.hash != "0" && m_host_game.hash != m_local_game.hash) {
-		wxLogWarning("Not synced: game hash doesn't match: '%s' '%s'", m_host_game.hash.c_str(), m_local_game.hash.c_str());
+		wxLogWarning("Not synced: game hash doesn't match host:'%s' local:'%s'", m_host_game.hash.c_str(), m_local_game.hash.c_str());
 		return false;
 	}
 	if (!m_host_map.hash.empty() && m_host_map.hash != "0" && m_host_map.hash != m_local_map.hash) {
-		wxLogWarning("Not synced: map hash doesn't match: '%s' '%s'", m_host_map.hash.c_str(), m_local_map.hash.c_str());
+		wxLogWarning("Not synced: map hash doesn't match host:'%s' local:'%s'", m_host_map.hash.c_str(), m_local_map.hash.c_str());
 		return false;
 	}
 	if (!GameExists()) {
