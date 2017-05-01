@@ -724,7 +724,10 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_se->OnPrivateMessageEx(user, user, params);
 	} else if (cmd == "JOINBATTLE") {
 		const int id = GetIntParam(params);
-		const std::string hash = LSL::Util::MakeHashUnsigned(GetWordParam(params));
+		std::string hash = LSL::Util::MakeHashUnsigned(GetWordParam(params));
+		if (hash == "0") {
+			hash.clear();
+		}
 		m_battle_id = id;
 		m_se->OnJoinedBattle(id, hash);
 		m_se->OnBattleInfoUpdated(m_battle_id);
