@@ -801,22 +801,6 @@ void shuffle(std::vector<User*>& players) // proper shuffle.
 	}
 }
 
-/*
-bool ClanRemovalFunction(const std::map<wxString, Alliance>::value_type &v){
-  return v.second.players.size()<2;
-}
-*/
-/*
-struct ClannersRemovalPredicate{
-  std::map<wxString, Alliance> &clans;
-  PlayerRemovalPredicate(std::map<wxString, Alliance> &clans_):clans(clans_)
-  {
-  }
-  bool operator()(User *u) const{
-    return clans.find(u->GetClan());
-  }
-}*/
-
 void Battle::Autobalance(BalanceType balance_type, bool support_clans, bool strong_clans, int numallyteams)
 {
 	wxLogMessage(_T("Autobalancing alliances, type=%d, clans=%d, strong_clans=%d, numallyteams=%d"), balance_type, support_clans, strong_clans, numallyteams);
@@ -1108,8 +1092,9 @@ void Battle::FixTeamIDs(BalanceType balance_type, bool support_clans, bool stron
 
 void Battle::OnUnitsyncReloaded(wxEvent& /*data*/)
 {
-	if (m_is_self_in)
+	if (m_is_self_in) {
 		SendMyBattleStatus();
+	}
 }
 
 void Battle::ShouldAutoUnspec()

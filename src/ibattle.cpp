@@ -761,11 +761,12 @@ std::string IBattle::GetHostMapHash() const
 void IBattle::SetHostGame(const std::string& gamename, const std::string& hash)
 {
 	assert(hash.empty() || LSL::Util::MakeHashUnsigned(hash) == hash);
-	if (m_host_game.name != gamename || m_host_game.hash != hash) {
-		m_game_loaded = false;
-		m_host_game.name = gamename;
-		m_host_game.hash = hash;
+	if ((m_host_game.name == gamename) && (m_host_game.hash == hash)) {
+		return;
 	}
+	m_game_loaded = false;
+	m_host_game.name = gamename;
+	m_host_game.hash = hash;
 }
 
 
@@ -775,28 +776,31 @@ void IBattle::SetLocalGame(const LSL::UnitsyncGame& mod)
 	if (mod.hash.empty()) {
 		wxLogWarning("empty hash: %s", mod.name);
 	}
-	if (mod.name != m_local_game.name || mod.hash != m_local_game.hash) {
-		m_previous_local_game_name = m_local_game.name;
-		m_local_game = mod;
-		m_game_loaded = true;
+	if ((mod.name == m_local_game.name) && (mod.hash == m_local_game.hash)) {
+		return;
 	}
+	m_previous_local_game_name = m_local_game.name;
+	m_local_game = mod;
+	m_game_loaded = true;
 }
 
 
 const LSL::UnitsyncGame& IBattle::LoadGame()
 {
 	ASSERT_LOGIC(!m_host_game.name.empty(), "m_host_game.name.empty() is FALSE");
-	if (!m_game_loaded) {
-		if (GameExists(true)) {
-			try {
-				SetLocalGame(LSL::usync().GetGame(m_host_game.name));
-				bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::ModOption, m_host_game.name);
-				ASSERT_EXCEPTION(options_loaded, _T("couldn't load the game options"));
-				m_game_loaded = true;
-			} catch (...) {
-			}
-		}
+	if (m_game_loaded) {
+		return m_local_game;
 	}
+	if (!GameExists(true)) {
+		wxLogWarning("Game doesn't exist");
+		return m_local_game;
+	}
+	try {
+		SetLocalGame(LSL::usync().GetGame(m_host_game.name));
+		bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::ModOption, m_host_game.name);
+		ASSERT_EXCEPTION(options_loaded, _T("couldn't load the game options"));
+		m_game_loaded = true;
+	} catch (...) {	}
 	return m_local_game;
 }
 
