@@ -638,20 +638,6 @@ void Ui::OnUserBattleStatus(User& user)
 	OnBattleInfoUpdated(*battle, wxEmptyString);
 }
 
-
-void Ui::OnRequestBattleStatus(IBattle& battle)
-{
-	if (m_main_win == 0)
-		return;
-	try {
-		if (mw().GetJoinTab().GetBattleRoomTab().GetBattle() == &battle) {
-			mw().GetJoinTab().GetBattleRoomTab().GetBattle()->OnRequestBattleStatus();
-		}
-	} catch (...) {
-	}
-}
-
-
 void Ui::OnSaidBattle(IBattle& /*battle*/, const wxString& nick, const wxString& msg)
 {
 	if (m_main_win == 0)

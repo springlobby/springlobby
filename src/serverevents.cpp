@@ -715,7 +715,7 @@ void ServerEvents::OnRequestBattleStatus(int battleid)
 {
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
-		ui().OnRequestBattleStatus(battle);
+		battle.OnRequestBattleStatus();
 	} catch (assert_exception) {
 	}
 }
