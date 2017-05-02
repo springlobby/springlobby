@@ -1,5 +1,11 @@
 ChangeLog of Springlobby
 
+## 0.256
+ - lazy init of unitsync (faster startup)
+ - fix crash when Scroll wheel over games in single player tab
+ - always validate rapid downloads
+ - don't log private conversations to springlobby.log
+
 ## 0.255
  - fix downloading with special chars in springlobby's data dirs
  - merge lsl into prdownloader submodule
