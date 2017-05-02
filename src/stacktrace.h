@@ -30,6 +30,7 @@ private:
 #else
 class StackTrace
 {
+public:
 	wxString GetStackTrace() const
 	{
 		return wxEmptyString;
