@@ -35,6 +35,7 @@ public:
 	{
 		return wxEmptyString;
 	}
+	void WalkFromException() {}
 };
 
 #endif
