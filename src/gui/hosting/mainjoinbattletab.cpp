@@ -89,12 +89,6 @@ ChatPanel* MainJoinBattleTab::GetActiveChatPanel()
 	return NULL;
 }
 
-void MainJoinBattleTab::UpdateCurrentBattle()
-{
-	GetBattleRoomTab().UpdateBattleInfo();
-	GetBattleMapTab().Update();
-}
-
 void MainJoinBattleTab::UpdateCurrentBattle(const wxString& Tag)
 {
 	GetBattleRoomTab().UpdateBattleInfo(Tag);

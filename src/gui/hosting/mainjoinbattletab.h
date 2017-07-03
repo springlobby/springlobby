@@ -25,8 +25,6 @@ public:
 
 	void HostBattle(IBattle& battle);
 	void JoinBattle(IBattle& battle);
-	//void UpdateCurrentBattle();
-	void UpdateCurrentBattle();
 	void UpdateCurrentBattle(const wxString& Tag);
 	void LeaveCurrentBattle(bool called_from_join = false);
 	void OnDisconnected()

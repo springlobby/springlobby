@@ -592,10 +592,7 @@ void Ui::OnBattleInfoUpdated(IBattle& battle, const wxString& Tag)
 		return;
 	mw().GetBattleListTab().UpdateBattle(battle);
 	if (mw().GetJoinTab().GetCurrentBattle() == &battle) {
-		if (Tag.IsEmpty())
-			mw().GetJoinTab().UpdateCurrentBattle();
-		else
-			mw().GetJoinTab().UpdateCurrentBattle(Tag);
+		mw().GetJoinTab().UpdateCurrentBattle(Tag);
 	}
 }
 

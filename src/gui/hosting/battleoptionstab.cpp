@@ -125,13 +125,7 @@ void BattleOptionsTab::UpdateBattle(const wxString& Tag)
 {
 	if (!m_battle)
 		return;
-	long type;
-	Tag.BeforeFirst('_').ToLong(&type);
-	wxString key = Tag.AfterFirst('_');
-	if (type == LSL::Enum::PrivateOptions) {
-		if (key == _T( "restrictions" ))
-			ReloadRestrictions();
-	}
+	ReloadRestrictions();
 }
 
 void BattleOptionsTab::ReloadRestrictions()
