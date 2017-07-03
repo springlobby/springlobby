@@ -48,7 +48,6 @@ public:
 	IBattle* GetBattle();
 	ChatPanel& GetChatPanel();
 
-	void UpdateBattleInfo();
 	void UpdateBattleInfo(const wxString& Tag);
 
 
@@ -71,6 +70,7 @@ public:
 	void PrintAllySetup();
 
 private:
+	void UpdateBattleInfo();
 	void RegenerateOptionsList();
 
 	void UpdateStatsLabels();

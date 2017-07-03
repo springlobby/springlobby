@@ -169,6 +169,11 @@ void BattleMapTab::Update(const wxString& Tag)
 {
 	if (!m_battle)
 		return;
+	if (Tag.empty()) {
+		Update();
+		return;
+	}
+
 	long type;
 	Tag.BeforeFirst('_').ToLong(&type);
 	const std::string key = STD_STRING(Tag.AfterFirst('_'));

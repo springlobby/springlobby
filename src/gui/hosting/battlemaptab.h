@@ -33,7 +33,6 @@ public:
 
 	void UpdateUser(User& user);
 
-	void Update();
 	void Update(const wxString& Tag);
 	void ReloadMaplist();
 
@@ -45,6 +44,7 @@ private:
 	{
 		return m_battle;
 	}
+	void Update();
 	void OnMapSelect(wxCommandEvent& event);
 	void OnMapBrowse(wxCommandEvent& event);
 	void OnStartTypeSelect(wxCommandEvent& event);

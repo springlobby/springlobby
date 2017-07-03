@@ -446,6 +446,10 @@ void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
 {
 	if (!m_battle)
 		return;
+	if (Tag.empty()) {
+		UpdateBattleInfo();
+		return;
+	}
 
 	if (m_opt_list_map.find(Tag) == m_opt_list_map.end()) {
 		wxLogWarning("Tag %s not found in options list", STD_STRING(Tag).c_str());
