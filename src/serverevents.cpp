@@ -403,6 +403,7 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 
 		ui().OnBattleInfoUpdated(battle, wxEmptyString);
 	} catch (assert_exception) {
+		wxLogWarning("Exception in OnBattleInfoUpdated");
 	}
 }
 
@@ -553,6 +554,7 @@ void ServerEvents::OnBattleInfoUpdated(int battleid)
 		IBattle& battle = m_serv.GetBattle(battleid);
 		ui().OnBattleInfoUpdated(battle, wxEmptyString);
 	} catch (assert_exception) {
+		wxLogWarning("Exception in OnBattleInfoUpdated(%d)", battleid);
 	}
 }
 
@@ -576,6 +578,7 @@ void ServerEvents::OnBattleDisableUnit(int battleid, const std::string& unitname
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.RestrictUnit(unitname, count);
+		wxLogDebug("OnBattleDisableUnit %d %s %d", battleid, unitname.c_str(), count);
 	} catch (assert_exception) {
 	}
 }
