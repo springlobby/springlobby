@@ -25,7 +25,6 @@ public:
 	BattleOptionsTab(wxWindow* parent, IBattle* battle);
 	~BattleOptionsTab();
 
-	void UpdateBattle(const wxString& Tag);
 	void ReloadRestrictions();
 	void SetBattle(IBattle* battle);
 
@@ -43,8 +42,6 @@ private:
 	void OnRestrict(wxCommandEvent& event);
 	void OnAllow(wxCommandEvent& event);
 	void OnClearRestrictions(wxCommandEvent& event);
-
-	void UpdateBattle();
 
 	IBattle* m_battle;
 

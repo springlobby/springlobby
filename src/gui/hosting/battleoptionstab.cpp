@@ -121,13 +121,6 @@ BattleOptionsTab::~BattleOptionsTab()
 }
 
 
-void BattleOptionsTab::UpdateBattle(const wxString& Tag)
-{
-	if (!m_battle)
-		return;
-	ReloadRestrictions();
-}
-
 void BattleOptionsTab::ReloadRestrictions()
 {
 	if (!m_battle)

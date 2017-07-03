@@ -93,7 +93,7 @@ void MainJoinBattleTab::UpdateCurrentBattle(const wxString& Tag)
 {
 	GetBattleRoomTab().UpdateBattleInfo(Tag);
 	GetBattleMapTab().Update(Tag);
-	GetOptionsTab().UpdateBattle(Tag);
+	GetOptionsTab().ReloadRestrictions();
 	GetMMOptionsTab().UpdateOptControls(Tag);
 }
 
