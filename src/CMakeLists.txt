@@ -227,7 +227,7 @@ set(springlobbySrc
 	gui/hosting/addbotdialog.cpp
 	gui/hosting/autobalancedialog.cpp
 	gui/hosting/battlemaptab.cpp
-	gui/hosting/battleoptionstab.cpp
+	gui/hosting/battlerestrictionstab.cpp
 	gui/hosting/battleroomtab.cpp
 	gui/hosting/hostbattledialog.cpp
 	gui/hosting/mainjoinbattletab.cpp

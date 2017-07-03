@@ -10,7 +10,7 @@ class IBattle;
 class User;
 class BattleRoomTab;
 class BattleMapTab;
-class BattleOptionsTab;
+class BattleRestrictionsTab;
 class wxBoxSizer;
 class wxImageList;
 class SLNotebook;
@@ -45,7 +45,7 @@ public:
 
 private:
 	BattleMapTab& GetBattleMapTab();
-	BattleOptionsTab& GetOptionsTab();
+	BattleRestrictionsTab& GetOptionsTab();
 	BattleroomMMOptionsTab& GetMMOptionsTab();
 	wxBoxSizer* m_main_sizer;
 
@@ -55,7 +55,7 @@ private:
 
 	BattleRoomTab* m_battle_tab;
 	BattleMapTab* m_map_tab;
-	BattleOptionsTab* m_opts_tab;
+	BattleRestrictionsTab* m_opts_tab;
 	BattleroomMMOptionsTab* m_mm_opts_tab;
 
 	enum {

@@ -19,11 +19,11 @@ class wxCheckListBox;
 
 /** \brief manipulate "standard" engine options, unit restriction list
  * \todo DOCMEMORE */
-class BattleOptionsTab : public wxScrolledWindow
+class BattleRestrictionsTab : public wxScrolledWindow
 {
 public:
-	BattleOptionsTab(wxWindow* parent, IBattle* battle);
-	~BattleOptionsTab();
+	BattleRestrictionsTab(wxWindow* parent, IBattle* battle);
+	~BattleRestrictionsTab();
 
 	void ReloadRestrictions();
 	void SetBattle(IBattle* battle);

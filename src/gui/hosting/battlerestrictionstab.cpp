@@ -1,10 +1,10 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 //
-// Class: BattleOptionsTab
+// Class: BattleRestrictionsTab
 //
 
-#include "battleoptionstab.h"
+#include "battlerestrictionstab.h"
 
 #include <wx/splitter.h>
 #include <wx/intl.h>
@@ -20,7 +20,6 @@
 #include <wx/checklst.h>
 #include <wx/numdlg.h>
 
-#include "battleoptionstab.h"
 #include "ibattle.h"
 #include "gui/controls.h"
 #include "utils/conversion.h"
@@ -31,16 +30,16 @@
 #include "aui/auimanager.h"
 
 
-BEGIN_EVENT_TABLE(BattleOptionsTab, wxPanel)
+BEGIN_EVENT_TABLE(BattleRestrictionsTab, wxPanel)
 
-EVT_BUTTON(BOPTS_RESTRICT, BattleOptionsTab::OnRestrict)
-EVT_BUTTON(BOPTS_ALLOW, BattleOptionsTab::OnAllow)
-EVT_BUTTON(BOPTS_CLEARRES, BattleOptionsTab::OnClearRestrictions)
+EVT_BUTTON(BOPTS_RESTRICT, BattleRestrictionsTab::OnRestrict)
+EVT_BUTTON(BOPTS_ALLOW, BattleRestrictionsTab::OnAllow)
+EVT_BUTTON(BOPTS_CLEARRES, BattleRestrictionsTab::OnClearRestrictions)
 
 END_EVENT_TABLE()
 
 
-BattleOptionsTab::BattleOptionsTab(wxWindow* parent, IBattle* battle)
+BattleRestrictionsTab::BattleRestrictionsTab(wxWindow* parent, IBattle* battle)
     : wxScrolledWindow(parent, -1)
     , m_battle(battle)
 {
@@ -114,14 +113,14 @@ BattleOptionsTab::BattleOptionsTab(wxWindow* parent, IBattle* battle)
 }
 
 
-BattleOptionsTab::~BattleOptionsTab()
+BattleRestrictionsTab::~BattleRestrictionsTab()
 {
 	if (GetAui().manager)
 		GetAui().manager->DetachPane(this);
 }
 
 
-void BattleOptionsTab::ReloadRestrictions()
+void BattleRestrictionsTab::ReloadRestrictions()
 {
 	if (!m_battle)
 		return;
@@ -142,7 +141,7 @@ void BattleOptionsTab::ReloadRestrictions()
 }
 
 
-int BattleOptionsTab::GetAllowedUnitIndex(const wxString& name)
+int BattleRestrictionsTab::GetAllowedUnitIndex(const wxString& name)
 {
 	if (!m_battle)
 		return -1;
@@ -157,7 +156,7 @@ int BattleOptionsTab::GetAllowedUnitIndex(const wxString& name)
 }
 
 
-int BattleOptionsTab::GetRestrictedUnitIndex(const wxString& name)
+int BattleRestrictionsTab::GetRestrictedUnitIndex(const wxString& name)
 {
 	if (!m_battle)
 		return -1;
@@ -172,13 +171,13 @@ int BattleOptionsTab::GetRestrictedUnitIndex(const wxString& name)
 }
 
 
-bool BattleOptionsTab::IsRestricted(const wxString& name)
+bool BattleRestrictionsTab::IsRestricted(const wxString& name)
 {
 	return (GetRestrictedUnitIndex(name) >= 0);
 }
 
 
-void BattleOptionsTab::Restrict(const wxString& name, int count)
+void BattleRestrictionsTab::Restrict(const wxString& name, int count)
 {
 	if (!m_battle)
 		return;
@@ -187,7 +186,7 @@ void BattleOptionsTab::Restrict(const wxString& name, int count)
 }
 
 
-void BattleOptionsTab::Allow(const wxString& name)
+void BattleRestrictionsTab::Allow(const wxString& name)
 {
 	if (!m_battle)
 		return;
@@ -196,7 +195,7 @@ void BattleOptionsTab::Allow(const wxString& name)
 }
 
 
-void BattleOptionsTab::Restrict(int index, int count)
+void BattleRestrictionsTab::Restrict(int index, int count)
 {
 	if (!m_battle)
 		return;
@@ -208,7 +207,7 @@ void BattleOptionsTab::Restrict(int index, int count)
 }
 
 
-void BattleOptionsTab::Allow(int index)
+void BattleRestrictionsTab::Allow(int index)
 {
 	if (!m_battle)
 		return;
@@ -225,7 +224,7 @@ void BattleOptionsTab::Allow(int index)
 //////////////////////////////////////////////////////////////////////////
 
 
-void BattleOptionsTab::OnRestrict(wxCommandEvent& /*unused*/)
+void BattleRestrictionsTab::OnRestrict(wxCommandEvent& /*unused*/)
 {
 	if (!m_battle)
 		return;
@@ -250,7 +249,7 @@ void BattleOptionsTab::OnRestrict(wxCommandEvent& /*unused*/)
 }
 
 
-void BattleOptionsTab::OnAllow(wxCommandEvent& /*unused*/)
+void BattleRestrictionsTab::OnAllow(wxCommandEvent& /*unused*/)
 {
 	if (!m_battle)
 		return;
@@ -273,7 +272,7 @@ void BattleOptionsTab::OnAllow(wxCommandEvent& /*unused*/)
 }
 
 
-void BattleOptionsTab::OnClearRestrictions(wxCommandEvent& /*unused*/)
+void BattleRestrictionsTab::OnClearRestrictions(wxCommandEvent& /*unused*/)
 {
 	if (!m_battle)
 		return;
@@ -281,7 +280,7 @@ void BattleOptionsTab::OnClearRestrictions(wxCommandEvent& /*unused*/)
 	ReloadRestrictions();
 }
 
-void BattleOptionsTab::SetBattle(IBattle* battle)
+void BattleRestrictionsTab::SetBattle(IBattle* battle)
 {
 	m_battle = battle;
 	bool isBattleEnabled = (battle != nullptr);
@@ -303,7 +302,7 @@ void BattleOptionsTab::SetBattle(IBattle* battle)
 	}
 }
 
-IBattle* BattleOptionsTab::GetBattle()
+IBattle* BattleRestrictionsTab::GetBattle()
 {
 	return m_battle;
 }

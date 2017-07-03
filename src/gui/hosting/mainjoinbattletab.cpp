@@ -16,7 +16,7 @@
 #include "mainjoinbattletab.h"
 #include "battleroomtab.h"
 #include "battlemaptab.h"
-#include "battleoptionstab.h"
+#include "battlerestrictionstab.h"
 #include "utils/conversion.h"
 #include "battleroommmoptionstab.h"
 #include "aui/auimanager.h"
@@ -60,7 +60,7 @@ MainJoinBattleTab::MainJoinBattleTab(wxWindow* parent)
 	m_mm_opts_tab = new BattleroomMMOptionsTab(0, m_tabs);
 	m_tabs->InsertPage(2, m_mm_opts_tab, _("Options"), false, wxIcon(battle_settings_xpm));
 
-	m_opts_tab = new BattleOptionsTab(m_tabs, 0);
+	m_opts_tab = new BattleRestrictionsTab(m_tabs, 0);
 	m_tabs->InsertPage(3, m_opts_tab, _("Unit Restrictions"), false, wxIcon(battle_settings_xpm));
 
 	m_main_sizer->Add(m_tabs, 1, wxEXPAND);
@@ -160,7 +160,7 @@ BattleMapTab& MainJoinBattleTab::GetBattleMapTab()
 }
 
 
-BattleOptionsTab& MainJoinBattleTab::GetOptionsTab()
+BattleRestrictionsTab& MainJoinBattleTab::GetOptionsTab()
 {
 	ASSERT_EXCEPTION(m_opts_tab, _T( "m_opts_tab == 0" ));
 	return *m_opts_tab;

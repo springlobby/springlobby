@@ -12,7 +12,7 @@
 #include "aui/auimanager.h"
 #include "gui/slbook.h"
 #include "gui/singleplayertab.h"
-#include "gui/hosting/battleoptionstab.h"
+#include "gui/hosting/battlerestrictionstab.h"
 #include "gui/hosting/mainsingleplayertab.h"
 #include "gui/hosting/battleroommmoptionstab.h"
 #include "utils/conversion.h"
@@ -39,7 +39,7 @@ MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
 	m_tabs->AddPage(m_sp_tab, _("Game"), true, wxNullBitmap);
 	m_mm_opts_tab = new BattleroomMMOptionsTab(&m_sp_tab->GetBattle(), m_tabs);
 	m_tabs->InsertPage(1, m_mm_opts_tab, _("Options"), false, wxIcon(battle_settings_xpm));
-	m_opts_tab = new BattleOptionsTab(m_tabs, &m_sp_tab->GetBattle());
+	m_opts_tab = new BattleRestrictionsTab(m_tabs, &m_sp_tab->GetBattle());
 	m_tabs->InsertPage(2, m_opts_tab, _("Unit Restrictions"), false, wxIcon(battle_settings_xpm));
 
 	m_main_sizer->Add(m_tabs, 1, wxEXPAND);
@@ -123,7 +123,7 @@ SinglePlayerTab& MainSinglePlayerTab::GetSinglePlayerTab()
 	return *m_sp_tab;
 }
 
-BattleOptionsTab& MainSinglePlayerTab::GetOptionsTab()
+BattleRestrictionsTab& MainSinglePlayerTab::GetOptionsTab()
 {
 	ASSERT_EXCEPTION(m_opts_tab, _T( "m_opts_tab == 0" ));
 	return *m_opts_tab;

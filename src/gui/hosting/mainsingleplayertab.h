@@ -11,7 +11,7 @@ class SLNotebook;
 class wxImageList;
 class wxBoxSizer;
 class SinglePlayerTab;
-class BattleOptionsTab;
+class BattleRestrictionsTab;
 
 class MainSinglePlayerTab : public wxPanel
 {
@@ -28,7 +28,7 @@ public:
 	void ReloadPresetList();
 
 	SinglePlayerTab& GetSinglePlayerTab();
-	BattleOptionsTab& GetOptionsTab();
+	BattleRestrictionsTab& GetOptionsTab();
 	BattleroomMMOptionsTab& GetMMOptionsTab();
 
 	void LoadPerspective(const wxString& perspective_name = wxEmptyString);
@@ -40,7 +40,7 @@ private:
 	SLNotebook* m_tabs;
 
 	SinglePlayerTab* m_sp_tab;
-	BattleOptionsTab* m_opts_tab;
+	BattleRestrictionsTab* m_opts_tab;
 	BattleroomMMOptionsTab* m_mm_opts_tab;
 };
 
