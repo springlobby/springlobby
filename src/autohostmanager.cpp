@@ -82,6 +82,11 @@ void SpringieHandler::Notify()
 	Send("!notify");
 }
 
+void SpringieHandler::Promote()
+{
+	// TODO
+}
+
 void SpringieHandler::Start()
 {
 	Send("!start");
@@ -127,6 +132,11 @@ void SpadsHandler::AddStartBox(int /*posx*/, int /*posy*/, int /*w*/, int /*h*/)
 void SpadsHandler::Notify()
 {
 	Send("!notify");
+}
+
+void SpadsHandler::Promote()
+{
+	Send("!promote");
 }
 
 void SpadsHandler::Start()
