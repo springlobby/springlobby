@@ -35,7 +35,6 @@ lsl/networking/tasserver.cpp
 #include "utils/version.h"
 #include <lslutils/misc.h>
 
-
 SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which is send when leaving server");
 
 // times in milliseconds
@@ -532,12 +531,19 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	UserBattleStatus bstatus;
 
 	if (cmd == "TASSERVER") {
-		m_ser_ver = GetIntParam(params);
-		const std::string supported_spring_version = GetWordParam(params);
-		m_nat_helper_port = (unsigned long)GetIntParam(params);
-		const bool lanmode = GetBoolParam(params);
-		m_server_lanmode = lanmode;
-		m_se->OnConnected(m_serverinfo.description, "", (m_ser_ver > 0), supported_spring_version, lanmode);
+//#ifdef SSL_SUPPORT
+		if (!m_sock->IsTLS()) {
+			SendCmd("STARTTLS", "");
+			m_sock->StartTLS();
+		} else {
+//#endif
+			m_ser_ver = GetIntParam(params);
+			const std::string supported_spring_version = GetWordParam(params);
+			m_nat_helper_port = (unsigned long)GetIntParam(params);
+			const bool lanmode = GetBoolParam(params);
+			m_server_lanmode = lanmode;
+			m_se->OnConnected(m_serverinfo.description, "", (m_ser_ver > 0), supported_spring_version, lanmode);
+		}
 	} else if (cmd == "ACCEPTED") {
 		SetUsername(params);
 		m_se->OnLogin();

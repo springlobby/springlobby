@@ -23,6 +23,10 @@ lsl/networking/socket.h
 class iNetClass;
 class wxCriticalSection;
 
+#ifdef SSL_SUPPORT
+#include <openssl/ssl.h>
+#endif
+
 enum SockState {
 	SS_Closed,
 	SS_Connecting,
@@ -73,6 +77,9 @@ public:
 
 	void SetTimeout(const int seconds);
 
+	void StartTLS();
+	void HandleTLS();
+	bool IsTLS() { return m_starttls; }
 private:
 	void OnSocketEvent(wxSocketEvent& event);
 	void InitSocket(wxSocketClient& socket);
@@ -87,6 +94,13 @@ private:
 	int m_rate;
 	int m_sent;
 	std::string m_buffer;
+#ifdef SSL_SUPPORT
+	bool m_starttls;
+	SSL_CTX *m_sslctx;
+	SSL *m_ssl;
+	BIO *m_inbio;
+	BIO *m_outbio;
+#endif
 
 	DECLARE_EVENT_TABLE();
 };

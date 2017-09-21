@@ -33,6 +33,7 @@ endif()
 
 FIND_PACKAGE(Boost 1.42.0 COMPONENTS thread system REQUIRED)
 
+
 ADD_DEFINITIONS( -DLOCALE_INSTALL_DIR="${LOCALE_INSTALL_DIR}" )
 
 
@@ -343,6 +344,14 @@ ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
 		${springlobbySrc}
 		${springlobby_RC_FILE}
 	)
+
+FIND_PACKAGE(OpenSSL)
+if(OpenSSL_FOUND)
+	message(STATUS "Building with OpenSSL support: ${OPENSSL_VERSION}")
+	target_compile_definitions(springlobby PRIVATE -DSSL_SUPPORT)
+	target_include_directories(springlobby PRIVATE ${OPENSSL_INCLUDE_DIR})
+	target_link_libraries(springlobby ${OPENSSL_LIBRARIES})
+endif()
 
 IF( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
 	TARGET_LINK_LIBRARIES(springlobby ${LIBNOTIFY_LIBRARIES} ${GLIB_LIBRARIES} )
