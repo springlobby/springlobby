@@ -78,7 +78,6 @@ public:
 	void SetTimeout(const int seconds);
 
 	void StartTLS();
-	void HandleTLS();
 	bool IsTLS() { return m_starttls; }
 private:
 	void OnSocketEvent(wxSocketEvent& event);

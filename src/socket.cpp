@@ -286,6 +286,7 @@ void Socket::Disconnect()
 //! @brief Send data over connection.
 bool Socket::Send(const std::string& data)
 {
+	wxLogWarning("Socket::Send");
 	m_buffer += (const char*)data.c_str();
 	int crop = m_buffer.length();
 	if (m_rate > 0) {
@@ -296,13 +297,14 @@ bool Socket::Send(const std::string& data)
 	std::string send = m_buffer.substr(0, crop);
 
 	if (m_starttls) {
-		const int res = SSL_write(m_ssl, send.c_str(), send.length());
 		if(!SSL_is_init_finished(m_ssl)) {
 			SSL_do_handshake(m_ssl);
 		}
+		const int res = SSL_write(m_ssl, send.c_str(), send.length());
 		if (BIO_ctrl_pending(m_outbio) > 0) {
 			char outbuf[4096];
 			int read = BIO_read(m_outbio, outbuf, sizeof(outbuf));
+			assert(read > 0);
 			m_sock.Write(outbuf, read);
 		}
 		m_buffer.erase(0, res);
@@ -361,13 +363,10 @@ wxString convert(char* buff, const int len)
 	return wxEmptyString;
 }
 
-void Socket::HandleTLS()
-{
-}
-
 //! @brief Receive data from connection
 wxString Socket::Receive()
 {
+	wxLogWarning("Socket::Receive");
 	wxString ret;
 	static const int chunk_size = 4096;
 	char buf[chunk_size];
@@ -383,15 +382,14 @@ wxString Socket::Receive()
 			BIO_write(m_inbio, buf, readnum);
 			if(!SSL_is_init_finished(m_ssl)) {
 				SSL_do_handshake(m_ssl);
+				Send("");
 			} else {
 				int decodedbytes = 0;
 				do {
 				decodedbytes = SSL_read(m_ssl, buf, chunk_size);
 				if (decodedbytes >= 0) {
 					const std::string str(buf, decodedbytes);
-					printf("decoded bytes: %s", str.c_str());
 					ret += convert(buf, decodedbytes);
-					wxLogWarning("decoded bytes %d", decodedbytes);
 				}
 				} while(decodedbytes > 0);
 			}
