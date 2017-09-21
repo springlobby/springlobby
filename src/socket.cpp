@@ -182,36 +182,6 @@ Socket::Socket(iNetClass& netclass)
 
 // http://roxlu.com/2014/042/using-openssl-with-memory-bios
 
-void HandleTraffic(SSL* m_ssl, BIO* m_inbio, BIO* m_outbio)
-{
-
-  // Did SSL write something into the out buffer
-  char outbuf[4096];
-  int written = 0;
-  int read = 0;
-  int pending = BIO_ctrl_pending(m_outbio);
-
-  if(pending > 0) {
-    read = BIO_read(m_outbio, outbuf, sizeof(outbuf));
-  }
-//  printf("%s Pending %d, and read: %d\n", from->name, pending, read);
-
-  if(read > 0) {
-    written = BIO_write(m_inbio, outbuf, read);
-  }
-
-  if(written > 0) {
-    if(!SSL_is_init_finished(m_ssl)) {
-      SSL_do_handshake(m_ssl);
-    }
-    else {
-      //read = SSL_read(m_ssl, outbuf, sizeof(outbuf));
-//      printf("%s read: %s\n", to->name, outbuf);
-    }
-  }
-
-}
-
 void InitializeSSL()
 {
 	SSL_load_error_strings();
@@ -248,6 +218,7 @@ void Socket::StartTLS()
 	BIO_set_mem_eof_return(m_outbio, -1);
 	SSL_set_bio(m_ssl, m_inbio, m_outbio);
 
+	Send("");
 }
 
 
@@ -312,15 +283,6 @@ void Socket::Disconnect()
 	}
 }
 
-void ProcessSSL(SSL* m_ssl, BIO* m_input, BIO* m_output)
-{
-/*	if (!SSL_is_init_finished(m_ssl)) {
-		SSL_do_handshake(m_ssl);
-	}
-	*/
-	HandleTraffic(m_ssl, m_input, m_output);
-}
-
 //! @brief Send data over connection.
 bool Socket::Send(const std::string& data)
 {
@@ -332,17 +294,16 @@ bool Socket::Send(const std::string& data)
 			crop = max;
 	}
 	std::string send = m_buffer.substr(0, crop);
-	assert(send.length() > 0);
 
 	if (m_starttls) {
-		ProcessSSL(m_ssl, m_inbio, m_outbio);
 		const int res = SSL_write(m_ssl, send.c_str(), send.length());
-
-		while(BIO_ctrl_pending(m_outbio) > 0) {
+		if(!SSL_is_init_finished(m_ssl)) {
+			SSL_do_handshake(m_ssl);
+		}
+		if (BIO_ctrl_pending(m_outbio) > 0) {
 			char outbuf[4096];
 			int read = BIO_read(m_outbio, outbuf, sizeof(outbuf));
 			m_sock.Write(outbuf, read);
-			//wxUint32 sentdata = m_sock.LastCount();
 		}
 		m_buffer.erase(0, res);
 		m_sent += res;
@@ -402,17 +363,6 @@ wxString convert(char* buff, const int len)
 
 void Socket::HandleTLS()
 {
-	return;
-/*
-  int inpending = BIO_ctrl_pending(m_inbio);
-  int outpending = BIO_ctrl_pending(m_outbio);
-  if (inpending > 0) {
-	Receive("");
-  }
-  if (outpending > 0) {
-	Send("");
-  }
-*/
 }
 
 //! @brief Receive data from connection
@@ -427,22 +377,20 @@ wxString Socket::Receive()
 		m_sock.Read(buf, chunk_size);
 		readnum = m_sock.LastCount();
 		wxLogWarning("Receive() %d", readnum);
+		if (readnum == 0) { return ret; }
 
 		if (m_starttls) {
-//			ProcessSSL(m_ssl, m_inbio, m_outbio);
 			BIO_write(m_inbio, buf, readnum);
-			HandleTLS();
 			if(!SSL_is_init_finished(m_ssl)) {
 				SSL_do_handshake(m_ssl);
-				while(BIO_ctrl_pending(m_outbio) > 0) {
-					char outbuf[4096];
-					int read = BIO_read(m_outbio, outbuf, sizeof(outbuf));
-					m_sock.Write(outbuf, read);
-					//wxUint32 sentdata = m_sock.LastCount();
-				}
 			} else {
 				const int decodedbytes = SSL_read(m_ssl, buf, chunk_size);
-				ret += convert(buf, decodedbytes);
+				if (decodedbytes >= 0) {
+					const std::string str(buf, decodedbytes);
+					printf("decoded bytes: %s", str.c_str());
+					ret += convert(buf, decodedbytes);
+					wxLogWarning("decoded bytes %d", decodedbytes);
+				}
 			}
 		} else {
 			ret += convert(buf, readnum);
