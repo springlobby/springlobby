@@ -384,13 +384,16 @@ wxString Socket::Receive()
 			if(!SSL_is_init_finished(m_ssl)) {
 				SSL_do_handshake(m_ssl);
 			} else {
-				const int decodedbytes = SSL_read(m_ssl, buf, chunk_size);
+				int decodedbytes = 0;
+				do {
+				decodedbytes = SSL_read(m_ssl, buf, chunk_size);
 				if (decodedbytes >= 0) {
 					const std::string str(buf, decodedbytes);
 					printf("decoded bytes: %s", str.c_str());
 					ret += convert(buf, decodedbytes);
 					wxLogWarning("decoded bytes %d", decodedbytes);
 				}
+				} while(decodedbytes > 0);
 			}
 		} else {
 			ret += convert(buf, readnum);
