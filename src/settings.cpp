@@ -366,7 +366,7 @@ void Settings::SetServerAccountPass(const wxString& server_name, const wxString&
 //! @todo Implement
 bool Settings::GetServerAccountSavePass(const wxString& server_name)
 {
-	return cfg().Read(_T( "/Server/Servers/" ) + server_name + _T( "/savepass" ), (long int)false);
+	return cfg().Read(_T( "/Server/Servers/" ) + server_name + _T( "/savepass" ), (long int)DEFSETT_SAVE_PASSWORD);
 }
 
 
