@@ -80,6 +80,7 @@ public:
 	void StartTLS();
 	bool IsTLS() { return m_starttls; }
 private:
+	void StopTLS();
 	void OnSocketEvent(wxSocketEvent& event);
 	void InitSocket(wxSocketClient& socket);
 

@@ -182,31 +182,26 @@ Socket::Socket(iNetClass& netclass)
 
 // http://roxlu.com/2014/042/using-openssl-with-memory-bios
 
-void InitializeSSL()
+void Socket::StopTLS()
 {
-	SSL_load_error_strings();
-	SSL_library_init();
-	ERR_load_BIO_strings();
-	OpenSSL_add_all_algorithms();
-}
-
-void DestroySSL()
-{
-    ERR_free_strings();
-    EVP_cleanup();
-}
-
-void ShutdownSSL(SSL *ssl)
-{
-    SSL_shutdown(ssl);
-    SSL_free(ssl);
+	if (m_ssl != nullptr) {
+		SSL_free(m_ssl);
+		m_ssl = nullptr;
+		SSL_CTX_free(m_sslctx);
+		m_sslctx = nullptr;
+	}
+	ERR_free_strings();
+	EVP_cleanup();
 }
 
 void Socket::StartTLS()
 {
 	wxLogMessage("Starting TLS...");
 	m_starttls = true;
-	InitializeSSL();
+	SSL_load_error_strings();
+	SSL_library_init();
+	ERR_load_BIO_strings();
+	OpenSSL_add_all_algorithms();
 	m_sslctx = SSL_CTX_new(SSLv23_client_method());
 	SSL_CTX_set_options(m_sslctx, SSL_OP_NO_SSLv3);
 	m_ssl = SSL_new(m_sslctx);
@@ -218,6 +213,7 @@ void Socket::StartTLS()
 	BIO_set_mem_eof_return(m_outbio, -1);
 	SSL_set_bio(m_ssl, m_inbio, m_outbio);
 
+	SSL_do_handshake(m_ssl);
 	Send("");
 }
 
@@ -279,7 +275,7 @@ void Socket::Disconnect()
 		m_net_class.OnDisconnected(wxSOCKET_NOERROR);
 	}
 	if (m_starttls) {
-		ShutdownSSL(m_ssl);
+		StopTLS();
 	}
 }
 
@@ -297,13 +293,19 @@ bool Socket::Send(const std::string& data)
 	std::string send = m_buffer.substr(0, crop);
 
 	if (m_starttls) {
+		int res = 0;
 		if(!SSL_is_init_finished(m_ssl)) {
 			SSL_do_handshake(m_ssl);
 		}
-		const int res = SSL_write(m_ssl, send.c_str(), send.length());
+		if (send.length() > 0) {
+			const int written = SSL_write(m_ssl, send.c_str(), send.length());
+			if (written > 0) {
+				res += written;
+			}
+		}
 		if (BIO_ctrl_pending(m_outbio) > 0) {
 			char outbuf[4096];
-			int read = BIO_read(m_outbio, outbuf, sizeof(outbuf));
+			const int read = BIO_read(m_outbio, outbuf, sizeof(outbuf));
 			assert(read > 0);
 			m_sock.Write(outbuf, read);
 		}
@@ -376,13 +378,13 @@ wxString Socket::Receive()
 		m_sock.Read(buf, chunk_size);
 		readnum = m_sock.LastCount();
 		wxLogWarning("Receive() %d", readnum);
-		if (readnum == 0) { return ret; }
 
 		if (m_starttls) {
-			BIO_write(m_inbio, buf, readnum);
+			if (readnum > 0) {
+				BIO_write(m_inbio, buf, readnum);
+			}
 			if(!SSL_is_init_finished(m_ssl)) {
 				SSL_do_handshake(m_ssl);
-				Send("");
 			} else {
 				int decodedbytes = 0;
 				do {
