@@ -51,6 +51,7 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 	wxString password;
 	bool savepass;
 	bool autoconnect;
+	bool tls;
 
 	SetIcon(wxIcon(connect_xpm));
 
@@ -59,6 +60,8 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 	password = sett().GetServerAccountPass(sett().GetDefaultServer());
 	savepass = sett().GetServerAccountSavePass(sett().GetDefaultServer());
 	autoconnect = cfg().ReadBool(_T( "/Server/Autoconnect" ));
+	tls = cfg().ReadBool(_T( "/Server/TLS" ));
+
 	// Create all UI elements.
 	m_tabs = new wxNotebook(this, -1);
 	m_login_tab = new wxPanel(m_tabs, -1);
@@ -78,8 +81,12 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 	m_autoconnect_check = new wxCheckBox(m_login_tab, -1, _("Autoconnect next time"));
 	m_autoconnect_check->SetToolTip(_("remember connection details and automatically connect to server on next lobby startup"));
 
+	m_tls_check = new wxCheckBox(m_login_tab, -1, _("TLS"));
+	m_tls_check->SetToolTip(_("Use encrypted connection to connect to the Lobby server"));
+
 	m_rpass_check->SetValue(savepass);
 	m_autoconnect_check->SetValue(autoconnect);
+	m_tls_check->SetValue(tls);
 
 	m_acc_note_line = new wxStaticLine(m_login_tab);
 
@@ -111,6 +118,7 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 
 	m_rpass_sizer->Add(m_rpass_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4);
 	m_rpass_sizer->Add(m_autoconnect_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4);
+	m_rpass_sizer->Add(m_tls_check, 2, wxEXPAND | wxALL | wxALIGN_RIGHT, 4);
 
 	m_pass_sizer->Add(m_pass_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4);
 	m_pass_sizer->Add(m_pass_text, 2, wxEXPAND | wxALL, 4);
@@ -259,6 +267,7 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 	}
 	sett().SetDefaultServer(HostAddress);
 	cfg().Write(_T( "/Server/Autoconnect" ), m_autoconnect_check->IsChecked());
+	cfg().Write(_T( "/Server/TLS" ), m_tls_check->IsChecked());
 
 	//if autoconnect enabled force saving of pw, actual saving is done in Ui::DoConnect
 
