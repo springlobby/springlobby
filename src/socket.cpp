@@ -194,6 +194,36 @@ void Socket::StopTLS()
 	EVP_cleanup();
 }
 
+void Socket::DoSSLHandshake()
+{
+	const int ret = SSL_do_handshake(m_ssl);
+	wxLogWarning("SSL_do_handshake(): ret %d", ret);
+	if (ret < 0) { // fatal error
+		const int r = SSL_get_error(m_ssl, ret);
+		if (SSL_ERROR_WANT_READ == r) {
+			wxLogWarning("SSL_ERROR_WANT_READ");
+			int pending = BIO_ctrl_pending(m_outbio);
+			if (pending > 0) {
+				wxLogWarning("SSL_do_handshake(): m_outbio pending == %d", pending);
+				char buf[4096];
+				const int read = BIO_read(m_outbio, buf, sizeof(buf));
+				if (read > 0) {
+					wxLogWarning("BIO_read() m_outbio: %d", read);
+					m_sock.Write(buf, read);
+				}
+			}
+			pending = BIO_ctrl_pending(m_inbio);
+			if (pending > 0) {
+				wxLogWarning("SSL_do_handshake(): m_inbio pending == %d", pending);
+			}
+
+		} else {
+			wxLogError("SSL_get_error(): %d", r);
+		}
+	} else if (ret == 2) { //controlled shutdown
+	} // ret == 1 is successful
+}
+
 void Socket::StartTLS()
 {
 	wxLogMessage("Starting TLS...");
@@ -213,8 +243,8 @@ void Socket::StartTLS()
 	BIO_set_mem_eof_return(m_outbio, -1);
 	SSL_set_bio(m_ssl, m_inbio, m_outbio);
 
-	SSL_do_handshake(m_ssl);
-	Send("");
+	DoSSLHandshake();
+
 }
 
 
@@ -295,12 +325,16 @@ bool Socket::Send(const std::string& data)
 	if (m_starttls) {
 		int res = 0;
 		if(!SSL_is_init_finished(m_ssl)) {
-			SSL_do_handshake(m_ssl);
+			DoSSLHandshake();
 		}
 		if (send.length() > 0) {
-			const int written = SSL_write(m_ssl, send.c_str(), send.length());
-			if (written > 0) {
-				res += written;
+			const int ret = SSL_write(m_ssl, send.c_str(), send.length());
+			if (ret > 0) {
+				res += ret;
+			} else if (ret == 0) {
+				wxLogWarning("SSL_read(); %d", ret);
+			} else {
+				wxLogWarning("SSL_read(); %d", ret);
 			}
 		}
 		if (BIO_ctrl_pending(m_outbio) > 0) {
@@ -369,7 +403,7 @@ wxString convert(char* buff, const int len)
 wxString Socket::Receive()
 {
 	wxLogWarning("Socket::Receive");
-	wxString ret;
+	wxString res;
 	static const int chunk_size = 4096;
 	char buf[chunk_size];
 	int readnum = 0;
@@ -381,26 +415,33 @@ wxString Socket::Receive()
 
 		if (m_starttls) {
 			if (readnum > 0) {
-				BIO_write(m_inbio, buf, readnum);
+				const int written = BIO_write(m_inbio, buf, readnum);
+				if (written <= 0) {
+					wxLogWarning("BIO_write(): %d", written);
+				}
 			}
 			if(!SSL_is_init_finished(m_ssl)) {
-				SSL_do_handshake(m_ssl);
+				DoSSLHandshake();
 			} else {
-				int decodedbytes = 0;
+				int ret = 0;
 				do {
-				decodedbytes = SSL_read(m_ssl, buf, chunk_size);
-				if (decodedbytes >= 0) {
-					const std::string str(buf, decodedbytes);
-					ret += convert(buf, decodedbytes);
-				}
-				} while(decodedbytes > 0);
+					ret = SSL_read(m_ssl, buf, chunk_size);
+					if (ret >= 0) {
+						const std::string str(buf, ret);
+						res += convert(buf, ret);
+					} else if (ret == 0) {
+						wxLogWarning("SSL_read(); %d", ret);
+					} else {
+						wxLogWarning("SSL_read(): %d", ret);
+					}
+				} while(ret > 0);
 			}
 		} else {
-			ret += convert(buf, readnum);
+			res += convert(buf, readnum);
 		}
 	} while (readnum > 0);
 
-	return ret;
+	return res;
 }
 
 //! @brief Get curent socket state

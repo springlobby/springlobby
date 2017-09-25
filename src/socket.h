@@ -95,6 +95,7 @@ private:
 	int m_sent;
 	std::string m_buffer;
 #ifdef SSL_SUPPORT
+	void DoSSLHandshake();
 	bool m_starttls;
 	SSL_CTX *m_sslctx;
 	SSL *m_ssl;
