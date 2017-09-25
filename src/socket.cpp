@@ -343,6 +343,11 @@ bool Socket::VerifyCertificate()
 	m_fingerprint = fingerprint;
 	wxLogWarning("Certificate fingerprint: %s", m_fingerprint.c_str());
 
+	//FIXME: read from config and prompt when missmatch / doesn't exist
+	if (fingerprint != "0124dc0f4295b401a2d81ade3dc81b7a467eb9a70b0a4912b5e15fede735fe73") {
+		return false;
+	}
+
 /* // we prefer certificate pinnig
 
 	long res = SSL_get_verify_result(ssl);
@@ -479,6 +484,11 @@ wxString Socket::Receive()
 			if(!SSL_is_init_finished(m_ssl)) {
 				DoSSLHandshake();
 			} else {
+				if (!VerifyCertificate()) {
+					wxLogError("Couldn't verify certificate, closing connection");
+					m_sock.Close();
+					return wxEmptyString;
+				}
 				int ret = 0;
 				do {
 					ret = SSL_read(m_ssl, buf, chunk_size);
