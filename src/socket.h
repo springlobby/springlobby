@@ -96,11 +96,14 @@ private:
 	std::string m_buffer;
 #ifdef SSL_SUPPORT
 	void DoSSLHandshake();
+	bool VerifyCertificate();
+	bool m_verified;
 	bool m_starttls;
 	SSL_CTX *m_sslctx;
 	SSL *m_ssl;
 	BIO *m_inbio;
 	BIO *m_outbio;
+	std::string m_fingerprint;
 #endif
 
 	DECLARE_EVENT_TABLE();

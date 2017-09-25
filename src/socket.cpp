@@ -43,6 +43,7 @@ lsl/networking/socket.cpp
 #include <openssl/bio.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <openssl/x509.h>
 
 
 #endif
@@ -171,6 +172,7 @@ Socket::Socket(iNetClass& netclass)
     , m_net_class(netclass)
     , m_rate(-1)
     , m_sent(0)
+    , m_verified(false)
     , m_starttls(false)
     , m_sslctx(nullptr)
     , m_ssl(nullptr)
@@ -184,6 +186,8 @@ Socket::Socket(iNetClass& netclass)
 
 void Socket::StopTLS()
 {
+	m_starttls = false;
+	m_verified = false;
 	if (m_ssl != nullptr) {
 		SSL_free(m_ssl);
 		m_ssl = nullptr;
@@ -227,6 +231,7 @@ void Socket::DoSSLHandshake()
 void Socket::StartTLS()
 {
 	wxLogMessage("Starting TLS...");
+	assert(!m_starttls);
 	m_starttls = true;
 	SSL_load_error_strings();
 	SSL_library_init();
@@ -309,6 +314,48 @@ void Socket::Disconnect()
 	}
 }
 
+bool Socket::VerifyCertificate()
+{
+	if (m_verified) {
+		return true;
+	}
+
+	X509* cert = SSL_get_peer_certificate(m_ssl);
+	if (cert  == nullptr) {
+		return false;
+	}
+
+	const EVP_MD *fprint_type = EVP_sha256();
+	unsigned char fprint[EVP_MAX_MD_SIZE];
+	unsigned int fprint_size = 0;
+
+	if (!X509_digest(cert, fprint_type, fprint, &fprint_size)) {
+		return false;
+	}
+
+	std::string fingerprint;
+	char buf[4];
+	for(size_t i=0; i<fprint_size; i++) {
+		snprintf(buf, sizeof(buf), "%02x", fprint[i]);
+		fingerprint += buf[0];
+		fingerprint += buf[1];
+	}
+	m_fingerprint = fingerprint;
+	wxLogWarning("Certificate fingerprint: %s", m_fingerprint.c_str());
+
+/* // we prefer certificate pinnig
+
+	long res = SSL_get_verify_result(ssl);
+	if(!(X509_V_OK == res)) {
+	}
+*/
+
+
+	X509_free(cert);
+	m_verified = true;
+	return true;
+}
+
 //! @brief Send data over connection.
 bool Socket::Send(const std::string& data)
 {
@@ -326,7 +373,13 @@ bool Socket::Send(const std::string& data)
 		int res = 0;
 		if(!SSL_is_init_finished(m_ssl)) {
 			DoSSLHandshake();
+		} else {
+			if (!VerifyCertificate()) {
+				wxLogError("Couldn't verify certificate, closing connection");
+				m_sock.Close();
+			}
 		}
+
 		if (send.length() > 0) {
 			const int ret = SSL_write(m_ssl, send.c_str(), send.length());
 			if (ret > 0) {
