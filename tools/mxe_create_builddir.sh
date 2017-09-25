@@ -18,7 +18,7 @@ git reset --hard $COMMIT
 (
 	echo 'JOBS := 2'
 	echo 'MXE_TARGETS := i686-w64-mingw32.static'
-	echo 'LOCAL_PKG_LIST := boost curl wxwidgets'
+	echo 'LOCAL_PKG_LIST := openssl boost curl wxwidgets'
 	echo '.DEFAULT local-pkg-list:'
 	echo 'local-pkg-list: $(LOCAL_PKG_LIST)'
 ) > settings.mk
