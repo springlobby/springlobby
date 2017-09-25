@@ -530,20 +530,22 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	UserBattleStatus bstatus;
 
 	if (cmd == "TASSERVER") {
-//#ifdef SSL_SUPPORT
+#ifdef SSL_SUPPORT
 		const bool tls = cfg().ReadBool(_T( "/Server/TLS" ));
 		if (tls && !m_sock->IsTLS()) {
 			SendCmd("STARTTLS", "");
 			m_sock->StartTLS();
 		} else {
-//#endif
+#endif
 			m_ser_ver = GetIntParam(params);
 			const std::string supported_spring_version = GetWordParam(params);
 			m_nat_helper_port = (unsigned long)GetIntParam(params);
 			const bool lanmode = GetBoolParam(params);
 			m_server_lanmode = lanmode;
 			m_se->OnConnected(m_serverinfo.description, "", (m_ser_ver > 0), supported_spring_version, lanmode);
+#ifdef SSL_SUPPORT
 		}
+#endif
 	} else if (cmd == "ACCEPTED") {
 		SetUsername(params);
 		m_se->OnLogin();

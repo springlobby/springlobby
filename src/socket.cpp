@@ -37,15 +37,11 @@ lsl/networking/socket.cpp
 #include <net/if.h>
 #endif
 
-#define SSL_SUPPORT 1
 #ifdef SSL_SUPPORT
-//#include <openssl/applink.h>
 #include <openssl/bio.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <openssl/x509.h>
-
-
 #endif
 
 #ifdef __WXMSW__
@@ -172,12 +168,15 @@ Socket::Socket(iNetClass& netclass)
     , m_net_class(netclass)
     , m_rate(-1)
     , m_sent(0)
-    , m_verified(false)
-    , m_starttls(false)
-    , m_sslctx(nullptr)
-    , m_ssl(nullptr)
 
 {
+#ifdef SSL_SUPPORT
+m_starttls = false;
+m_verified = false;
+m_sslctx = nullptr;
+m_ssl = nullptr;
+#endif
+
 }
 
 #ifdef SSL_SUPPORT
@@ -253,6 +252,52 @@ void Socket::StartTLS()
 
 }
 
+bool Socket::VerifyCertificate()
+{
+	if (m_verified) {
+		return true;
+	}
+
+	X509* cert = SSL_get_peer_certificate(m_ssl);
+	if (cert  == nullptr) {
+		return false;
+	}
+
+	const EVP_MD *fprint_type = EVP_sha256();
+	unsigned char fprint[EVP_MAX_MD_SIZE];
+	unsigned int fprint_size = 0;
+
+	if (!X509_digest(cert, fprint_type, fprint, &fprint_size)) {
+		return false;
+	}
+
+	std::string fingerprint;
+	char buf[4];
+	for(size_t i=0; i<fprint_size; i++) {
+		snprintf(buf, sizeof(buf), "%02x", fprint[i]);
+		fingerprint += buf[0];
+		fingerprint += buf[1];
+	}
+	m_fingerprint = fingerprint;
+	wxLogMessage("Certificate fingerprint: %s", m_fingerprint.c_str());
+
+	//FIXME: read from config and prompt when missmatch / doesn't exist
+	if (fingerprint != "0124dc0f4295b401a2d81ade3dc81b7a467eb9a70b0a4912b5e15fede735fe73") {
+		return false;
+	}
+
+/* // we prefer certificate pinnig
+
+	long res = SSL_get_verify_result(ssl);
+	if(!(X509_V_OK == res)) {
+	}
+*/
+
+
+	X509_free(cert);
+	m_verified = true;
+	return true;
+}
 
 #endif
 
@@ -310,56 +355,11 @@ void Socket::Disconnect()
 	if (wasconnected) { //.Close() disables all events, fire it manually (as last to prevent recursions loops)
 		m_net_class.OnDisconnected(wxSOCKET_NOERROR);
 	}
+#ifdef SSL_SUPPORT
 	if (m_starttls) {
 		StopTLS();
 	}
-}
-
-bool Socket::VerifyCertificate()
-{
-	if (m_verified) {
-		return true;
-	}
-
-	X509* cert = SSL_get_peer_certificate(m_ssl);
-	if (cert  == nullptr) {
-		return false;
-	}
-
-	const EVP_MD *fprint_type = EVP_sha256();
-	unsigned char fprint[EVP_MAX_MD_SIZE];
-	unsigned int fprint_size = 0;
-
-	if (!X509_digest(cert, fprint_type, fprint, &fprint_size)) {
-		return false;
-	}
-
-	std::string fingerprint;
-	char buf[4];
-	for(size_t i=0; i<fprint_size; i++) {
-		snprintf(buf, sizeof(buf), "%02x", fprint[i]);
-		fingerprint += buf[0];
-		fingerprint += buf[1];
-	}
-	m_fingerprint = fingerprint;
-	wxLogMessage("Certificate fingerprint: %s", m_fingerprint.c_str());
-
-	//FIXME: read from config and prompt when missmatch / doesn't exist
-	if (fingerprint != "0124dc0f4295b401a2d81ade3dc81b7a467eb9a70b0a4912b5e15fede735fe73") {
-		return false;
-	}
-
-/* // we prefer certificate pinnig
-
-	long res = SSL_get_verify_result(ssl);
-	if(!(X509_V_OK == res)) {
-	}
-*/
-
-
-	X509_free(cert);
-	m_verified = true;
-	return true;
+#endif
 }
 
 //! @brief Send data over connection.
@@ -374,7 +374,7 @@ bool Socket::Send(const std::string& data)
 			crop = max;
 	}
 	std::string send = m_buffer.substr(0, crop);
-
+#ifdef SSL_SUPPORT
 	if (m_starttls) {
 		int res = 0;
 		if(!SSL_is_init_finished(m_ssl)) {
@@ -407,7 +407,7 @@ bool Socket::Send(const std::string& data)
 		return true;
 	}
 	//wxLogMessage( _T("send: %d  sent: %d  max: %d   :  buff: %d"), send.length() , m_sent, max, m_buffer.length() );
-
+#endif
 	m_sock.Write(send.c_str(), send.length());
 	if (m_sock.Error()) {
 		return false;
@@ -470,11 +470,13 @@ wxString Socket::Receive()
 	do {
 		m_sock.Read(buf, chunk_size);
 		readnum = m_sock.LastCount();
+#ifdef SSL_SUPPORT
 		if (!m_starttls && (readnum == 0)) {
 			return res;
 		}
+#endif
 		wxLogDebug("Receive() %d", readnum);
-
+#ifdef SSL_SUPPORT
 		if (m_starttls) {
 			if (readnum > 0) {
 				const int written = BIO_write(m_inbio, buf, readnum);
@@ -504,8 +506,11 @@ wxString Socket::Receive()
 				} while(ret > 0);
 			}
 		} else {
+#endif
 			res += convert(buf, readnum);
+#ifdef SSL_SUPPORT
 		}
+#endif
 	} while (readnum > 0);
 
 	return res;

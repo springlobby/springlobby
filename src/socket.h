@@ -76,11 +76,11 @@ public:
 	void Update(int mselapsed);
 
 	void SetTimeout(const int seconds);
-
+#ifdef SSL_SUPPORT
 	void StartTLS();
 	bool IsTLS() { return m_starttls; }
+#endif
 private:
-	void StopTLS();
 	void OnSocketEvent(wxSocketEvent& event);
 	void InitSocket(wxSocketClient& socket);
 
@@ -95,6 +95,7 @@ private:
 	int m_sent;
 	std::string m_buffer;
 #ifdef SSL_SUPPORT
+	void StopTLS();
 	void DoSSLHandshake();
 	bool VerifyCertificate();
 	bool m_verified;
