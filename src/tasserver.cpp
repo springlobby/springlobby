@@ -531,7 +531,8 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 
 	if (cmd == "TASSERVER") {
 //#ifdef SSL_SUPPORT
-		if (!m_sock->IsTLS()) {
+		const bool tls = cfg().ReadBool(_T( "/Server/TLS" ));
+		if (tls && !m_sock->IsTLS()) {
 			SendCmd("STARTTLS", "");
 			m_sock->StartTLS();
 		} else {

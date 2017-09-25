@@ -464,6 +464,9 @@ wxString Socket::Receive()
 	do {
 		m_sock.Read(buf, chunk_size);
 		readnum = m_sock.LastCount();
+		if (!m_starttls && (readnum == 0)) {
+			return res;
+		}
 		wxLogWarning("Receive() %d", readnum);
 
 		if (m_starttls) {
