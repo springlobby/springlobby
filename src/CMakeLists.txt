@@ -346,7 +346,7 @@ ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
 	)
 
 FIND_PACKAGE(OpenSSL)
-if(OpenSSL_FOUND)
+if(OPENSSL_FOUND)
 	message(STATUS "Building with OpenSSL support: ${OPENSSL_VERSION}")
 	target_compile_definitions(springlobby PRIVATE -DSSL_SUPPORT)
 	target_include_directories(springlobby PRIVATE ${OPENSSL_INCLUDE_DIR})
