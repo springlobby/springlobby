@@ -201,18 +201,18 @@ void Socket::StopTLS()
 void Socket::DoSSLHandshake()
 {
 	const int ret = SSL_do_handshake(m_ssl);
-	wxLogWarning("SSL_do_handshake(): ret %d", ret);
+	wxLogDebug("SSL_do_handshake(): ret %d", ret);
 	if (ret < 0) { // fatal error
 		const int r = SSL_get_error(m_ssl, ret);
 		if (SSL_ERROR_WANT_READ == r) {
-			wxLogWarning("SSL_ERROR_WANT_READ");
+			wxLogDebug("SSL_ERROR_WANT_READ");
 			int pending = BIO_ctrl_pending(m_outbio);
 			if (pending > 0) {
-				wxLogWarning("SSL_do_handshake(): m_outbio pending == %d", pending);
+				wxLogDebug("SSL_do_handshake(): m_outbio pending == %d", pending);
 				char buf[4096];
 				const int read = BIO_read(m_outbio, buf, sizeof(buf));
 				if (read > 0) {
-					wxLogWarning("BIO_read() m_outbio: %d", read);
+					wxLogDebug("BIO_read() m_outbio: %d", read);
 					m_sock.Write(buf, read);
 				}
 			}
@@ -223,6 +223,7 @@ void Socket::DoSSLHandshake()
 
 		} else {
 			wxLogError("SSL_get_error(): %d", r);
+			Disconnect();
 		}
 	} else if (ret == 2) { //controlled shutdown
 	} // ret == 1 is successful
@@ -341,7 +342,7 @@ bool Socket::VerifyCertificate()
 		fingerprint += buf[1];
 	}
 	m_fingerprint = fingerprint;
-	wxLogWarning("Certificate fingerprint: %s", m_fingerprint.c_str());
+	wxLogMessage("Certificate fingerprint: %s", m_fingerprint.c_str());
 
 	//FIXME: read from config and prompt when missmatch / doesn't exist
 	if (fingerprint != "0124dc0f4295b401a2d81ade3dc81b7a467eb9a70b0a4912b5e15fede735fe73") {
@@ -364,7 +365,7 @@ bool Socket::VerifyCertificate()
 //! @brief Send data over connection.
 bool Socket::Send(const std::string& data)
 {
-	wxLogWarning("Socket::Send");
+	wxLogDebug("Socket::Send");
 	m_buffer += (const char*)data.c_str();
 	int crop = m_buffer.length();
 	if (m_rate > 0) {
@@ -381,7 +382,7 @@ bool Socket::Send(const std::string& data)
 		} else {
 			if (!VerifyCertificate()) {
 				wxLogError("Couldn't verify certificate, closing connection");
-				m_sock.Close();
+				Disconnect();
 			}
 		}
 
@@ -390,7 +391,7 @@ bool Socket::Send(const std::string& data)
 			if (ret > 0) {
 				res += ret;
 			} else if (ret == 0) {
-				wxLogWarning("SSL_read(); %d", ret);
+				wxLogDebug("SSL_read(); %d", ret);
 			} else {
 				wxLogWarning("SSL_read(); %d", ret);
 			}
@@ -460,7 +461,7 @@ wxString convert(char* buff, const int len)
 //! @brief Receive data from connection
 wxString Socket::Receive()
 {
-	wxLogWarning("Socket::Receive");
+	wxLogDebug("Socket::Receive");
 	wxString res;
 	static const int chunk_size = 4096;
 	char buf[chunk_size];
@@ -472,13 +473,13 @@ wxString Socket::Receive()
 		if (!m_starttls && (readnum == 0)) {
 			return res;
 		}
-		wxLogWarning("Receive() %d", readnum);
+		wxLogDebug("Receive() %d", readnum);
 
 		if (m_starttls) {
 			if (readnum > 0) {
 				const int written = BIO_write(m_inbio, buf, readnum);
 				if (written <= 0) {
-					wxLogWarning("BIO_write(): %d", written);
+					wxLogDebug("BIO_write(): %d", written);
 				}
 			}
 			if(!SSL_is_init_finished(m_ssl)) {
@@ -486,7 +487,7 @@ wxString Socket::Receive()
 			} else {
 				if (!VerifyCertificate()) {
 					wxLogError("Couldn't verify certificate, closing connection");
-					m_sock.Close();
+					Disconnect();
 					return wxEmptyString;
 				}
 				int ret = 0;
@@ -498,7 +499,7 @@ wxString Socket::Receive()
 					} else if (ret == 0) {
 						wxLogWarning("SSL_read(); %d", ret);
 					} else {
-						wxLogWarning("SSL_read(): %d", ret);
+						wxLogDebug("SSL_read(): %d", ret);
 					}
 				} while(ret > 0);
 			}
