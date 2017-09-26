@@ -1,4 +1,7 @@
 ChangeLog of Springlobby
+## 0.257
+ - fix unit restrictions
+ - add experimental tls support (default disabled)
 
 ## 0.256
  - lazy init of unitsync (faster startup)
