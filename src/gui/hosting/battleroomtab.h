@@ -75,6 +75,7 @@ private:
 
 	void UpdateStatsLabels();
 	void UpdateMapInfoSummary();
+	void OnPromote(wxCommandEvent& event);
 	void OnStart(wxCommandEvent& event);
 	void OnHostNew(wxCommandEvent& event);
 	void OnLeave(wxCommandEvent& event);
@@ -177,6 +178,7 @@ private:
 	wxStaticLine* m_command_line;
 
 	wxButton* m_leave_btn;
+	wxButton* m_promote_btn;
 	wxButton* m_start_btn;
 	wxButton* m_addbot_btn;
 	wxButton* m_manage_players_btn;
@@ -216,6 +218,7 @@ private:
 		BROOM_ALLYSEL,
 		BROOM_COLOURSEL,
 		BROOM_SIDESEL,
+		BROOM_PROMOTE,
 		BROOM_START,
 		BROOM_ADDBOT,
 		BROOM_BALANCE,
