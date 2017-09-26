@@ -13,7 +13,9 @@
 #include <wx/event.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
+#include "servermanager.h"
 #include "settings.h"
+#include "utils/conversion.h"
 
 BEGIN_EVENT_TABLE(AutojoinChannelDialog, wxDialog)
 
@@ -77,6 +79,9 @@ void AutojoinChannelDialog::OnOk(wxCommandEvent& /*unused*/)
 		else
 			chan = line;
 		wxString key = line.AfterFirst(_T(' '));
+
+		if (ServerManager::Instance()->IsConnected())
+			ServerManager::Instance()->JoinChannel(STD_STRING(chan), STD_STRING(key));
 		sett().AddChannelJoin(chan, key);
 	}
 	sett().SaveSettings();

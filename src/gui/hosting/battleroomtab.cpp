@@ -63,6 +63,7 @@
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
+EVT_BUTTON(BROOM_PROMOTE, BattleRoomTab::OnPromote)
 EVT_BUTTON(BROOM_START, BattleRoomTab::OnStart)
 EVT_BUTTON(BROOM_LEAVE, BattleRoomTab::OnLeave)
 EVT_BUTTON(BROOM_ADDBOT, BattleRoomTab::OnAddBot)
@@ -180,6 +181,8 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_host_new_btn->SetToolTip(_("Host a new battle"));
 	m_leave_btn = new wxButton(this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
 	m_leave_btn->SetToolTip(_("Leave the battle and return to the battle list"));
+	m_promote_btn = new wxButton(this, BROOM_PROMOTE, _("Promote"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
+	m_promote_btn->SetToolTip(_("Promote the battle in some chat channels"));
 	m_start_btn = new wxButton(this, BROOM_START, _("Start"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
 	m_start_btn->SetToolTip(_("Start the battle"));
 
@@ -347,6 +350,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_buttons_sizer->Add(m_autolock_chk, 0, wxEXPAND | wxALL, 2);
 	m_buttons_sizer->Add(m_lock_chk, 0, wxEXPAND | wxALL, 2);
 	m_buttons_sizer->Add(m_manage_players_btn, 0, wxEXPAND | wxALL, 2);
+	m_buttons_sizer->Add(m_promote_btn, 0, wxEXPAND | wxALL, 2);
 	m_buttons_sizer->Add(m_start_btn, 0, wxEXPAND | wxALL, 2);
 
 	m_main_sizer->Add(m_top_sizer, 1, wxEXPAND);
@@ -594,6 +598,18 @@ ChatPanel& BattleRoomTab::GetChatPanel()
 	slLogDebugFunc("");
 	ASSERT_LOGIC(m_chat != 0, "m_chat = 0");
 	return *m_chat;
+}
+
+void BattleRoomTab::OnPromote(wxCommandEvent& /*unused*/)
+{
+	if (!m_battle)
+		return;
+
+	if (m_battle->IsFounderMe()) {
+		customMessageBoxModal(SL_MAIN_ICON, _("You need to be in an autohost for this to work."), _("Error"));
+	} else {
+		m_battle->m_autohost_manager->GetAutohostHandler().Promote();
+	}
 }
 
 void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
@@ -1156,6 +1172,7 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 	m_players->Enable(isBattleEnabled);
 
 	m_leave_btn->Enable(isBattleEnabled);
+	m_promote_btn->Enable(isBattleEnabled);
 	m_start_btn->Enable(isBattleEnabled);
 	m_addbot_btn->Enable(isBattleEnabled);
 	m_manage_players_btn->Enable(isBattleEnabled);
