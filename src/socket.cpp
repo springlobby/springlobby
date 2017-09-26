@@ -281,6 +281,12 @@ bool Socket::VerifyCertificate()
 	m_fingerprint = fingerprint;
 	wxLogMessage("Certificate fingerprint: %s", m_fingerprint.c_str());
 
+	const char* version = SSL_get_version(m_ssl);
+	wxLogMessage("Using %s", version);
+
+	const char* name = SSL_get_cipher_name(m_ssl);
+	wxLogMessage("Using cipher %s", name);
+
 	//FIXME: read from config and prompt when missmatch / doesn't exist
 	if (fingerprint != "0124dc0f4295b401a2d81ade3dc81b7a467eb9a70b0a4912b5e15fede735fe73") {
 		return false;
