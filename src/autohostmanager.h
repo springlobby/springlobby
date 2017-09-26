@@ -19,7 +19,6 @@ public:
 	virtual void ClearStartBoxes(){};
 	virtual void AddStartBox(int /*posx*/, int /*posy*/, int /*w*/, int /*h*/){};
 	virtual void Notify(){};
-	virtual void Promote(){};
 	virtual void Start(){};
 	void SetBattle(IBattle* battle);
 
@@ -46,7 +45,6 @@ public:
 	void ClearStartBoxes() override;
 	void AddStartBox(int posx, int posy, int w, int h) override;
 	void Notify() override;
-	void Promote() override;
 	void Start() override;
 };
 
@@ -62,7 +60,6 @@ public:
 	void ClearStartBoxes() override;
 	void AddStartBox(int posx, int posy, int w, int h) override;
 	void Notify() override;
-	void Promote() override;
 	void Start() override;
 };
 
