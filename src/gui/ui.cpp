@@ -320,10 +320,6 @@ void Ui::OnDisconnected(IServer& server, bool wasonline)
 	if (m_main_win == 0)
 		return;
 	slLogDebugFunc("");
-	if (!&server) {
-		wxLogError(_T("WTF got null reference!!!"));
-		return;
-	}
 
 	mw().GetJoinTab().OnDisconnected();
 	mw().GetBattleListTab().OnDisconnected();
@@ -965,4 +961,19 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 	LSL::usync().ReloadUnitSyncLib();
 
 	return true;
+}
+
+void Ui::OnInvalidFingerprintReceived(const std::string& fingerprint, const std::string& expected_fingerprint)
+{
+	int answer = wxCANCEL;
+	if (expected_fingerprint.empty()) {
+		answer = customMessageBox(SL_MAIN_ICON, _("The certificate by the server is unkown. Do you want to trust it? Please verify the fingerprint:\n") + TowxString(fingerprint)  , _("Unknown Certificate"), wxYES_NO | wxCANCEL);
+	} else {
+		answer = customMessageBox(SL_MAIN_ICON, _("The certificate by the server is invalid! Maybe there is a MITM ongoing. Do you want ignore this warning?:\n") + TowxString(fingerprint)  , _("Unknown Certificate"), wxYES_NO | wxCANCEL);
+	}
+	if (answer != wxYES) {
+		return;
+	}
+
+	sett().SetServerFingerprint(m_serv->GetServerName(), fingerprint);
 }

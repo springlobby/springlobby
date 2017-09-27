@@ -56,11 +56,11 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 	SetIcon(wxIcon(connect_xpm));
 
 	server = sett().GetDefaultServer();
-	username = sett().GetServerAccountNick(sett().GetDefaultServer());
-	password = sett().GetServerAccountPass(sett().GetDefaultServer());
-	savepass = sett().GetServerAccountSavePass(sett().GetDefaultServer());
+	username = sett().GetServerAccountNick(server);
+	password = sett().GetServerAccountPass(server);
+	savepass = sett().GetServerAccountSavePass(server);
 	autoconnect = cfg().ReadBool(_T( "/Server/Autoconnect" ));
-	tls = cfg().ReadBool(_T( "/Server/TLS" ));
+	tls = sett().IsServerTLS(STD_STRING(server));
 
 	// Create all UI elements.
 	m_tabs = new wxNotebook(this, -1);
@@ -267,7 +267,7 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 	}
 	sett().SetDefaultServer(HostAddress);
 	cfg().Write(_T( "/Server/Autoconnect" ), m_autoconnect_check->IsChecked());
-	cfg().Write(_T( "/Server/TLS" ), m_tls_check->IsChecked());
+	sett().SetServerTLS(STD_STRING(HostAddress), m_tls_check->IsChecked());
 
 	//if autoconnect enabled force saving of pw, actual saving is done in Ui::DoConnect
 

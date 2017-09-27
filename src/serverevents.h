@@ -130,6 +130,7 @@ public:
 	void RegistrationAccepted(const std::string& user, const std::string& pass);
 	void RegistrationDenied(const std::string& reason);
 	void OnLoginDenied(const std::string& reason);
+	void OnInvalidFingerprintReceived(const std::string& fingerprint, const std::string& expected_fingerprint);
 
 private:
 	IServer& m_serv;

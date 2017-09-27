@@ -33,6 +33,10 @@ public:
 	virtual void Ping()
 	{
 	}
+
+	virtual void OnInvalidFingerprintReceived(const std::string& /*fingerprint*/)
+	{
+	}
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_INETCLASS_H

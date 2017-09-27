@@ -1002,3 +1002,10 @@ void ServerEvents::OnLoginDenied(const std::string& reason)
 {
 	ui().OnLoginDenied(reason);
 }
+
+void ServerEvents::OnInvalidFingerprintReceived(const std::string& fingerprint, const std::string& expected_fingerprint)
+{
+	ui().OnInvalidFingerprintReceived(fingerprint, expected_fingerprint);
+}
+
+

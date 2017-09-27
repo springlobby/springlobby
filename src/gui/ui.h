@@ -118,6 +118,7 @@ public:
 	void FirstRunWelcome();
 	void CheckForUpdates(bool show);
 	void EnableDebug(bool enable);
+	void OnInvalidFingerprintReceived(const std::string& fingerprint, const std::string& expected_fingerprint);
 
 private:
 	void OnLobbyDownloaded(wxCommandEvent& /*data*/);

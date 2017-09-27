@@ -228,9 +228,10 @@ void Socket::DoSSLHandshake()
 	} // ret == 1 is successful
 }
 
-void Socket::StartTLS()
+void Socket::StartTLS(const std::string& fingerprint)
 {
 	wxLogMessage("Starting TLS...");
+	m_excepted_fingerprint = fingerprint;
 	assert(!m_starttls);
 	m_starttls = true;
 	SSL_load_error_strings();
@@ -288,7 +289,8 @@ bool Socket::VerifyCertificate()
 	wxLogMessage("Using cipher %s", name);
 
 	//FIXME: read from config and prompt when missmatch / doesn't exist
-	if (fingerprint != "0124dc0f4295b401a2d81ade3dc81b7a467eb9a70b0a4912b5e15fede735fe73") {
+	if (fingerprint != m_excepted_fingerprint) {
+		m_net_class.OnInvalidFingerprintReceived(fingerprint);
 		return false;
 	}
 
@@ -355,17 +357,17 @@ void Socket::SetTimeout(const int seconds)
 //! @brief Disconnect from remote host if connected.
 void Socket::Disconnect()
 {
+#ifdef SSL_SUPPORT
+	if (m_starttls) {
+		StopTLS();
+	}
+#endif
 	const bool wasconnected = m_sock.IsConnected();
 	m_buffer.clear();
 	m_sock.Close();
 	if (wasconnected) { //.Close() disables all events, fire it manually (as last to prevent recursions loops)
 		m_net_class.OnDisconnected(wxSOCKET_NOERROR);
 	}
-#ifdef SSL_SUPPORT
-	if (m_starttls) {
-		StopTLS();
-	}
-#endif
 }
 
 //! @brief Send data over connection.
@@ -387,7 +389,7 @@ bool Socket::Send(const std::string& data)
 			DoSSLHandshake();
 		} else {
 			if (!VerifyCertificate()) {
-				wxLogError("Couldn't verify certificate, closing connection");
+				wxLogWarning("Couldn't verify certificate, closing connection");
 				Disconnect();
 			}
 		}
@@ -494,7 +496,7 @@ wxString Socket::Receive()
 				DoSSLHandshake();
 			} else {
 				if (!VerifyCertificate()) {
-					wxLogError("Couldn't verify certificate, closing connection");
+					wxLogWarning("Couldn't verify certificate, closing connection");
 					Disconnect();
 					return wxEmptyString;
 				}

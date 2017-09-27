@@ -531,10 +531,9 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 
 	if (cmd == "TASSERVER") {
 #ifdef SSL_SUPPORT
-		const bool tls = cfg().ReadBool(_T( "/Server/TLS" ));
-		if (tls && !m_sock->IsTLS()) {
+		if (!m_sock->IsTLS() && sett().IsServerTLS(GetServerName()) ) {
 			SendCmd("STARTTLS", "");
-			m_sock->StartTLS();
+			m_sock->StartTLS(sett().GetServerFingerprint(GetServerName()));
 		} else {
 #endif
 			m_ser_ver = GetIntParam(params);
@@ -1741,7 +1740,6 @@ void TASServer::RemoveBot(int battleid, User& bot)
 	}
 
 	IBattle& battle = GetBattle(battleid);
-	ASSERT_LOGIC(&bot != 0, "Bot does not exist.");
 
 	if (!(battle.IsFounderMe() || (bot.BattleStatus().owner == GetMe().GetNick()))) {
 		DoActionBattle(battleid, "thinks the bot " + bot.GetNick() + " should be removed.");
@@ -2032,3 +2030,10 @@ bool TASServer::IsCurrentBattle(int battle_id)
 	}
 	return true;
 }
+
+void TASServer::OnInvalidFingerprintReceived(const std::string& fingerprint)
+{
+	const std::string expected_fingerprint = sett().GetServerFingerprint(GetServerName());
+	m_se->OnInvalidFingerprintReceived(fingerprint, expected_fingerprint);
+}
+
