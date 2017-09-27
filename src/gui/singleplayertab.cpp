@@ -400,7 +400,6 @@ void SinglePlayerTab::OnAddBot(wxCommandEvent& /*unused*/)
 		bs.ally = m_battle.GetFreeAlly();
 		bs.colour = m_battle.GetNewColour();
 		User& bot = m_battle.OnBotAdded(STD_STRING(dlg.GetNick()), bs);
-		ASSERT_LOGIC(&bot != 0, "bot == 0");
 		m_minimap->UpdateMinimap();
 	}
 }

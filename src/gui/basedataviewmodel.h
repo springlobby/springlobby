@@ -161,7 +161,6 @@ inline bool BaseDataViewModel<DataType>::IsListModel() const
 template <class DataType>
 inline bool BaseDataViewModel<DataType>::ContainsItem(const DataType& checkedItem) const
 {
-	assert(&checkedItem != nullptr);
 
 	const DataType* checkItemPointer = &checkedItem;
 	return m_ModelData.find(checkItemPointer) != m_ModelData.end();

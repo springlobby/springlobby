@@ -830,7 +830,6 @@ const Channel* ChatPanel::GetChannel() const
 
 void ChatPanel::SetChannel(Channel* chan)
 {
-	ASSERT_LOGIC(this, "this==null");
 	ASSERT_LOGIC(m_type == CPT_Channel, "Not of type channel");
 
 	if ((chan == 0) && (m_channel != 0)) {

@@ -1013,8 +1013,6 @@ void MapCtrl::DrawUserPositions(wxDC& dc)
 		User* bot = 0;
 		for (unsigned int bi = 0; bi < m_battle->GetNumUsers(); bi++) {
 			User& tbot = m_battle->GetUser(bi);
-			if (&tbot == 0)
-				continue;
 			if (tbot.BattleStatus().spectator)
 				continue;
 			if ((tbot.BattleStatus().pos.x == m_map.info.positions[i].x) && (tbot.BattleStatus().pos.y == m_map.info.positions[i].y)) {
@@ -1031,8 +1029,6 @@ void MapCtrl::DrawUserPositions(wxDC& dc)
 	int previousteam = -1;
 	for (unsigned int i = 0; i < m_battle->GetNumUsers(); i++) {
 		User& usr = m_battle->GetUser(i);
-		if (&usr == 0)
-			continue;
 		if (usr.BattleStatus().spectator)
 			continue;
 		int currentteam = usr.BattleStatus().team;
@@ -1111,11 +1107,6 @@ void MapCtrl::OnMouseMove(wxMouseEvent& event)
 			return;
 		if (m_maction == Moved) {
 			User& user = *m_user_expanded;
-			try {
-				ASSERT_LOGIC(&user != 0, "MapCtrl::OnMouseMove(): user = 0");
-			} catch (...) {
-				return;
-			}
 			m_map = m_battle->LoadMap();
 
 			wxRect mr = GetMinimapRect();
@@ -1141,13 +1132,8 @@ void MapCtrl::OnMouseMove(wxMouseEvent& event)
 		if (!m_user_expanded || !m_battle->UserExists(m_user_expanded->GetNick()))
 			m_user_expanded = 0;
 
-		if (m_user_expanded) {
+		if (m_user_expanded != nullptr) {
 			User& user = *m_user_expanded;
-			try {
-				ASSERT_LOGIC(&user != 0, "MapCtrl::OnMouseMove(): user = 0");
-			} catch (...) {
-				return;
-			}
 			wxRect r = GetUserRect(user, true);
 			if (r.Contains(event.GetX(), event.GetY())) {
 				RectangleArea last = m_rect_area;
@@ -1161,8 +1147,6 @@ void MapCtrl::OnMouseMove(wxMouseEvent& event)
 		} else {
 			for (unsigned int i = 0; i < m_battle->GetNumUsers(); i++) {
 				User& user = m_battle->GetUser(i);
-				if (&user == 0)
-					continue;
 				wxRect r = GetUserRect(user, false);
 				if (r.Contains(event.GetX(), event.GetY())) {
 					m_rect_area = GetUserRectArea(r, event.GetX(), event.GetY());
@@ -1317,12 +1301,9 @@ void MapCtrl::OnLeftDown(wxMouseEvent& event)
 				m_maction = Moved;
 			else
 				m_maction = None;
-			User& user = *m_user_expanded;
-			try {
-				ASSERT_LOGIC(&user != 0, "MapCtrl::OnLeftDown(): user = 0");
-			} catch (...) {
+			if (m_user_expanded == nullptr)
 				return;
-			}
+			User& user = *m_user_expanded;
 			RefreshRect(GetUserRect(user, true), false);
 			return;
 		}
@@ -1390,16 +1371,11 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 							  .getSingleValue("startpostype", LSL::Enum::EngineOption));
 	if (longval == IBattle::ST_Pick) {
-		if (!m_user_expanded)
+		if (m_user_expanded == nullptr)
 			return;
 		if (m_rect_area != m_mdown_area)
 			return;
 		User& user = *m_user_expanded;
-		try {
-			ASSERT_LOGIC(&user != 0, "MapCtrl::OnLeftUp(): user == 0");
-		} catch (...) {
-			return;
-		}
 		if ((m_mdown_area == Move) && (m_maction == Moved)) {
 			m_battle->UserPositionChanged(user);
 		} else if (m_mdown_area == UpAllyButton) {
@@ -1531,7 +1507,6 @@ void MapCtrl::OnRightUp(wxMouseEvent& event)
 						bs.ally = m_battle->GetFreeAlly();
 						bs.colour = m_battle->GetNewColour();
 						User& bot = m_battle->OnBotAdded(STD_STRING(dlg.GetNick()), bs);
-						ASSERT_LOGIC(&bot != 0, "bot == 0");
 						bot.BattleStatus().pos.x = x;
 						bot.BattleStatus().pos.y = y;
 						RefreshRect(GetUserRect(bot, false), false);
