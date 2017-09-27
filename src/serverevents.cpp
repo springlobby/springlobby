@@ -778,7 +778,6 @@ void ServerEvents::OnBattleAddBot(int battleid, const std::string& nick, UserBat
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.OnBotAdded(nick, status);
 		User& bot = battle.GetUser(nick);
-		ASSERT_LOGIC(&bot != 0, "Bot null after add.");
 		ui().OnUserJoinedBattle(battle, bot);
 	} catch (assert_exception) {
 	}
