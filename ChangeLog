@@ -1,7 +1,7 @@
 ChangeLog of Springlobby
 ## 0.257
  - fix unit restrictions
- - add experimental tls support (default disabled)
+ - add tls support
  - battleroom: Add a promote button that sends !promote
  - settings: make the lobby remember account password by default
  - Edit->Autojoin channels joins immidiately if possible.
