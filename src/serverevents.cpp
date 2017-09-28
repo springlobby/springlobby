@@ -902,7 +902,7 @@ void ServerEvents::OnKickedFromBattle()
 void ServerEvents::OnRedirect(const std::string& address, unsigned int port, const std::string& CurrentNick, const std::string& CurrentPassword)
 {
 	const std::string name = stdprintf("%s:%d", address.c_str(), port);
-	sett().SetServer(name, TowxString(address), port);
+	sett().SetServer(name, TowxString(address), port, "");
 	//TODO: Rework this. Server calls it`s own method through another object!
 	ServerManager::Instance()->DoConnectToServer(name, CurrentNick, CurrentPassword);
 }

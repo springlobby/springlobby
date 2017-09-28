@@ -12,9 +12,6 @@
 #include "useractions.h"
 #include "utils/sortutil.h"
 
-const long CACHE_VERSION = 15;
-const long SETTINGS_VERSION = 31;
-
 
 const wxString DEFSETT_DEFAULT_SERVER_NAME = _T("Official server");
 const wxString DEFSETT_DEFAULT_SERVER_HOST = _T("lobby.springrts.com");
@@ -172,7 +169,7 @@ public:
 
 	wxArrayString GetServers();
 	bool ServerExists(const wxString& server_name);
-	void SetServer(const wxString& server_name, const wxString& url, int port);
+	void SetServer(const wxString& server_name, const wxString& url, int port, const wxString& fingerprint);
 	void DeleteServer(const wxString& server_name);
 
 	bool ShouldAddDefaultServerSettings();

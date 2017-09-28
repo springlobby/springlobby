@@ -263,7 +263,7 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 			OnLoginDenied(_T("Port number out of range.\n\nIt must be an integer between 1 and 65535"));
 			return;
 		}
-		sett().SetServer(HostAddress, serverString[0], port);
+		sett().SetServer(HostAddress, serverString[0], port, "");
 	}
 	sett().SetDefaultServer(HostAddress);
 	cfg().Write(_T( "/Server/Autoconnect" ), m_autoconnect_check->IsChecked());

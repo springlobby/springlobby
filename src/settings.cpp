@@ -35,6 +35,8 @@
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);
 
+const long CACHE_VERSION = 15;
+const long SETTINGS_VERSION = 32;
 SLCONFIG("/General/SettingsVersion", SETTINGS_VERSION, "version of settings file");
 SLCONFIG("/General/CacheVersion", CACHE_VERSION, "version of used cache");
 SLCONFIG("/General/firstrun", true, "true if app is run first time");
@@ -107,7 +109,7 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 			//the dummy column hack was removed on win
 			cfg().DeleteGroup(_T("/GUI/ColumnWidths/"));
 		}
-		case 21: {
+		case 19: case 20: case 21: {
 			if (translationhelper) {
 				// add locale's language code to autojoin
 				if (translationhelper->GetLocale()) {
@@ -122,13 +124,7 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 		case 22: {
 			ConvertLists();
 		}
-		case 23: {
-			DeleteServer(_T("Backup server"));
-			DeleteServer(_T("Backup server 1"));
-			DeleteServer(_T("Backup server 2"));
-			SetDefaultServerSettings();
-		}
-		case 24: {
+		case 23: case 24: {
 			SetDisableSpringVersionCheck(false);
 		}
 		case 25: { // language id before was stored by index, now its stored by the id
@@ -140,14 +136,17 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 		case 27: {
 			RemoveChannelJoin(_("main"));
 		}
-		case 28: {
-			SetDefaultServerSettings();
-		}
-		case 30: {
+		case 28: case 29: case 30: {
 #ifdef WIN32 // https://github.com/springlobby/springlobby/issues/385
 			cfg().Write(_T("/GUI/UseNotificationPopups"), true);
 #endif
 		}
+		case 31: {
+			DeleteServer(_T("Backup server 1"));
+			DeleteServer(_T("Backup server 2"));
+			SetDefaultServerSettings();
+		}
+
 		default: {
 		}
 	}
@@ -241,10 +240,8 @@ bool Settings::ShouldAddDefaultServerSettings()
 //! @brief Restores default settings
 void Settings::SetDefaultServerSettings()
 {
-	SetServer(DEFSETT_DEFAULT_SERVER_NAME, DEFSETT_DEFAULT_SERVER_HOST, DEFSETT_DEFAULT_SERVER_PORT);
-	SetServer(_T( "Backup server 1" ), _T( "lobby1.springlobby.info" ), 8200);
-	SetServer(_T( "Backup server 2" ), _T( "lobby2.springlobby.info" ), 8200);
-	SetServer(_T( "Test server" ), _T( "lobby.springrts.com" ), 7000);
+	SetServer(DEFSETT_DEFAULT_SERVER_NAME, DEFSETT_DEFAULT_SERVER_HOST, DEFSETT_DEFAULT_SERVER_PORT, "0124dc0f4295b401a2d81ade3dc81b7a467eb9a70b0a4912b5e15fede735fe73");
+	SetServer("Test server",               "lobby.springrts.com", 7000,                        "bafee3142009baa105ade65b0f712ca5fcf30de8e91664a8825e0185a609277c");
 	SetDefaultServer(DEFSETT_DEFAULT_SERVER_NAME);
 }
 
@@ -290,10 +287,12 @@ wxString Settings::GetServerHost(const wxString& server_name)
 //! @param server_name the server name/alias
 //! @param the host url address
 //! @param the port where the service is run
-void Settings::SetServer(const wxString& server_name, const wxString& url, int port)
+void Settings::SetServer(const wxString& server_name, const wxString& url, int port, const wxString& fingerprint)
 {
 	cfg().Write(_T( "/Server/Servers/" ) + server_name + _T( "/Host" ), url);
 	cfg().Write(_T( "/Server/Servers/" ) + server_name + _T( "/Port" ), port);
+	cfg().Write(_T( "/Server/Servers/" ) + server_name + _T( "/TLS" ), true);
+	cfg().Write(_T( "/Server/Servers/" ) + server_name + _T( "/Certificate" ), fingerprint);
 }
 
 //! @brief Deletes a server from the list.
