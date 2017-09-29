@@ -44,7 +44,6 @@ public:
 	void Register(const ServerLoginInfo& server) override;
 	void AcceptAgreement() override;
 
-	void Connect(const ServerLoginInfo& server) override;
 	void Disconnect() override;
 	bool IsConnected() override;
 
@@ -120,6 +119,7 @@ public:
 	void SendScriptToProxy(const std::string& script) override;
 
 private:
+	void Connect(const ServerLoginInfo& server) override;
 	void SendUdpSourcePort(int udpport);
 	void SendNATHelperInfos(const std::string& username, const std::string& ip, int port);
 
