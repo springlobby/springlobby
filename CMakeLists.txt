@@ -137,7 +137,7 @@ ELSE (WIN32)
 	install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/doc/springlobby")
 	install(FILES src/images/springlobby.svg DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/icons/hicolor/scalable/apps")
 	install(FILES src/springlobby.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/applications")
-	install(FILES share/freedesktop.org/springlobby.appdata.xml DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/appdata")
+	install(FILES share/freedesktop.org/springlobby.appdata.xml DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/metainfo")
 ENDIF (WIN32)
 
 add_custom_target(pack ${CMAKE_MAKE_PROGRAM} package
