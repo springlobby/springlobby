@@ -1,4 +1,9 @@
 ChangeLog of Springlobby
+
+## 0.258
+ - fix regression #787: broken user registering due TLS support
+ - Install appdata file into canonical directory
+
 ## 0.257
  - fix unit restrictions
  - add tls support
