@@ -76,6 +76,7 @@ TASServer::TASServer()
     , m_server_lanmode(false)
     , m_account_id_count(0)
     , m_do_finalize_join_battle(false)
+    , m_do_register(false)
     , m_finalize_join_battle_id(-1)
 {
 	m_se = new ServerEvents(*this);
@@ -324,7 +325,7 @@ bool TASServer::IsOnline() const
 void TASServer::Register(const ServerLoginInfo& server)
 {
 	Connect(server);
-	SendCmd("REGISTER", server.username + std::string(" ") + GetPasswordHash(server.password));
+	m_do_register = true;
 }
 
 
@@ -537,11 +538,15 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		} else {
 #endif
 			m_ser_ver = GetIntParam(params);
-			const std::string supported_spring_version = GetWordParam(params);
+			m_supported_spring_version = GetWordParam(params);
 			m_nat_helper_port = (unsigned long)GetIntParam(params);
-			const bool lanmode = GetBoolParam(params);
-			m_server_lanmode = lanmode;
-			m_se->OnConnected(m_serverinfo.description, "", (m_ser_ver > 0), supported_spring_version, lanmode);
+			m_server_lanmode = GetBoolParam(params);
+
+			if (m_do_register) {
+				SendCmd("REGISTER", m_serverinfo.username + std::string(" ") + GetPasswordHash(m_serverinfo.password));
+			} else {
+				m_se->OnConnected(m_serverinfo.description, "", true, m_supported_spring_version, m_server_lanmode);
+			}
 #ifdef SSL_SUPPORT
 		}
 #endif
@@ -941,7 +946,9 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		const std::string scriptpw = GetWordParam(params);
 		m_se->OnForceJoinBattle(battleID, scriptpw);
 	} else if (cmd == "REGISTRATIONACCEPTED") {
+		m_do_register = false;
 		m_se->RegistrationAccepted(GetUserName(), GetPassword());
+		m_se->OnConnected(m_serverinfo.description, "", true, m_supported_spring_version, m_server_lanmode);
 	} else if (cmd == "REGISTRATIONDENIED") {
 		m_se->RegistrationDenied(params);
 	} else if (cmd == "LISTSUBSCRIPTION") {
@@ -1788,6 +1795,9 @@ void TASServer::OnDisconnected(wxSocketError err)
 	m_relay_host_manager_list.clear();
 	m_last_id = 0;
 	m_pinglist.clear();
+	m_do_register = false;
+	m_server_lanmode = false;
+	m_supported_spring_version.clear();
 	if (m_se != NULL) {
 		IServer::Reset();
 		m_se->OnDisconnected(connectionwaspresent);

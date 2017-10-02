@@ -218,12 +218,14 @@ private:
 	std::string m_delayed_open_command;
 
 	bool m_do_finalize_join_battle;
+	bool m_do_register;
 	int m_finalize_join_battle_id;
 	std::string m_finalize_join_battle_pw;
 
 	std::string m_current_chan_name_mutelist;
 	std::string m_relay_host_bot;
 	std::string m_relay_host_manager;
+	std::string m_supported_spring_version;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_TASSERVER_H
