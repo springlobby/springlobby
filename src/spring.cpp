@@ -83,6 +83,7 @@ bool Spring::Run(IBattle& battle)
 {
 	std::string executable = SlPaths::GetSpringBinary(battle.GetEngineVersion());
 	if (!wxFile::Exists(TowxString(executable))) {
+		wxLogMessage("Executable %s not found, trying to fallback to a compatible version.", executable.c_str());
 		executable = SlPaths::GetSpringBinary(SlPaths::GetCompatibleVersion(battle.GetEngineVersion())); //fallback, no exact version found, try fallback version
 		if (!wxFile::Exists(TowxString(executable))) {
 			customMessageBoxModal(SL_MAIN_ICON, wxString::Format(_T("The spring executable version '%s' was not found at the set location '%s', please re-check."), battle.GetEngineVersion().c_str(), executable.c_str()), _T("Executable not found"));
@@ -90,6 +91,7 @@ bool Spring::Run(IBattle& battle)
 			return false;
 		}
 	}
+	wxLogMessage("Going to start version %s with %s", battle.GetEngineVersion().c_str(), executable.c_str());
 
 	wxArrayString params;
 
