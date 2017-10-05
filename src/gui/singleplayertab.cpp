@@ -364,13 +364,18 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 
 void SinglePlayerTab::OnEngineSelect(wxCommandEvent& /*event*/)
 {
-	int index = m_engine_pick->GetSelection();
+	const size_t index = m_engine_pick->GetSelection();
+	const std::string selection = STD_STRING(m_engine_pick->GetString(index));
 
-	if (static_cast<unsigned int>(index) >= (m_engine_pick->GetCount() - 1)) { return; }	
+	wxLogMessage("Selected engine version %s", selection.c_str());
+	if (index > m_engine_pick->GetCount()) {
+		wxLogError("Invalid index selected: %d > %d", index, m_engine_pick->GetCount());
+		return;
+	}
 
-	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pick->GetString(index)));
+	SlPaths::SetUsedSpringIndex(selection);
+	m_battle.SetEngineVersion(selection);
 	LSL::usync().ReloadUnitSyncLib();
-	m_battle.SetEngineVersion(STD_STRING(m_engine_pick->GetString(index)));
 }
 
 void SinglePlayerTab::OnMapBrowse(wxCommandEvent& /*unused*/)
