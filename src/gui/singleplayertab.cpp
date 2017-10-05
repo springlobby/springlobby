@@ -318,13 +318,13 @@ void SinglePlayerTab::SetMod(unsigned int index)
 
 bool SinglePlayerTab::ValidSetup() const
 {
-	if ((unsigned int)m_mod_pick->GetSelection() >= m_mod_pick->GetCount() - 1) {
+	if (m_mod_pick->GetSelection() == wxNOT_FOUND) {
 		wxLogWarning(_T("no game selected"));
 		customMessageBox(SL_MAIN_ICON, _("You have to select a game first."), _("Game setup error"));
 		return false;
 	}
 
-	if ((unsigned int)m_map_pick->GetSelection() >= m_map_pick->GetCount() - 1) {
+	if (m_map_pick->GetSelection() == wxNOT_FOUND) {
 		wxLogWarning(_T("no map selected"));
 		customMessageBox(SL_MAIN_ICON, _("You have to select a map first."), _("Game setup error"));
 		return false;
@@ -342,9 +342,9 @@ bool SinglePlayerTab::ValidSetup() const
 
 void SinglePlayerTab::OnMapSelect(wxCommandEvent& /*unused*/)
 {
-	unsigned int index = (unsigned int)m_map_pick->GetCurrentSelection();
+	const int index = m_map_pick->GetCurrentSelection();
 
-	if (index >= m_map_pick->GetCount() - 1) { return; } 
+	if (index == wxNOT_FOUND) { return; }
 
 	SetMap(index);
 }
@@ -352,9 +352,9 @@ void SinglePlayerTab::OnMapSelect(wxCommandEvent& /*unused*/)
 
 void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 {
-	unsigned int index = (unsigned int)m_mod_pick->GetCurrentSelection();
+	const int index = m_mod_pick->GetCurrentSelection();
 
-	if (index >= m_mod_pick->GetCount() - 1) { return; }
+	if (index == wxNOT_FOUND) { return; }
 
 	size_t num_bots = m_battle.GetNumBots();
 	SetMod(index);
@@ -364,14 +364,14 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 
 void SinglePlayerTab::OnEngineSelect(wxCommandEvent& /*event*/)
 {
-	const size_t index = m_engine_pick->GetSelection();
-	const std::string selection = STD_STRING(m_engine_pick->GetString(index));
+	const int index = m_engine_pick->GetSelection();
 
-	wxLogMessage("Selected engine version %s", selection.c_str());
-	if (index > m_engine_pick->GetCount()) {
+	if (index == wxNOT_FOUND) {
 		wxLogError("Invalid index selected: %d > %d", index, m_engine_pick->GetCount());
 		return;
 	}
+	const std::string selection = STD_STRING(m_engine_pick->GetString(index));
+	wxLogMessage("Selected engine version %s", selection.c_str());
 
 	SlPaths::SetUsedSpringIndex(selection);
 	m_battle.SetEngineVersion(selection);
