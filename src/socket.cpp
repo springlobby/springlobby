@@ -57,8 +57,11 @@ bool GetMacType(std::vector<unsigned char>& mac, const unsigned int mactype)
 	for (size_t i = 0; i < sizeof(AdapterInfo); i++) {
 		mac.resize(AdapterInfo[i].AddressLength);
 		mac.assign(AdapterInfo[i].Address, AdapterInfo[i].Address + AdapterInfo[i].AddressLength);
+
+		if ((mactype != 0) && (AdapterInfo[i].Type != mactype)) //skip not wanted type
+			continue;
 		for (size_t j = 0; j < mac.size(); j++) {
-			if ((mac[j] != 0) && ((mactype == 0) || (AdapterInfo[i].Type == mactype))) {
+			if (mac[j] != 0) {
 				return true;
 			}
 		}
