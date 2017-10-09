@@ -81,10 +81,8 @@ public:
 	void Update(int mselapsed);
 
 	void SetTimeout(const int seconds);
-#ifdef SSL_SUPPORT
 	void StartTLS(const std::string& fingerprint);
 	bool IsTLS() { return m_starttls; }
-#endif
 private:
 	void OnSocketEvent(wxSocketEvent& event);
 	void InitSocket(wxSocketClient& socket);
@@ -99,12 +97,12 @@ private:
 	int m_rate;
 	int m_sent;
 	std::string m_buffer;
+	bool m_starttls;
 #ifdef SSL_SUPPORT
 	void StopTLS();
 	void DoSSLHandshake();
 	bool VerifyCertificate();
 	bool m_verified;
-	bool m_starttls;
 	SSL_CTX *m_sslctx;
 	SSL *m_ssl;
 	BIO *m_inbio;

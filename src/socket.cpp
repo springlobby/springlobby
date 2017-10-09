@@ -46,7 +46,7 @@ lsl/networking/socket.cpp
 
 #ifdef __WXMSW__
 
-bool GetMac(std::vector<unsigned char>& mac)
+bool GetMacType(std::vector<unsigned char>& mac, const unsigned int mactype)
 {
 	IP_ADAPTER_INFO AdapterInfo[16];      // Allocate information for 16 cards
 	DWORD dwBufLen = sizeof(AdapterInfo); // Save memory size of buffer
@@ -58,12 +58,22 @@ bool GetMac(std::vector<unsigned char>& mac)
 		mac.resize(AdapterInfo[i].AddressLength);
 		mac.assign(AdapterInfo[i].Address, AdapterInfo[i].Address + AdapterInfo[i].AddressLength);
 		for (size_t j = 0; j < mac.size(); j++) {
-			if (mac[j] != 0) {
+			if ((mac[j] != 0) && ((mactype == 0) || (AdapterInfo[i].Type == mactype))) {
 				return true;
 			}
 		}
 	}
 	return false;
+}
+
+
+bool GetMac(std::vector<unsigned char>& mac)
+{
+	if (GetMacType(mac, MIB_IF_TYPE_ETHERNET))
+		return true;
+	if (GetMacType(mac, IF_TYPE_IEEE80211))
+		return true;
+	return (GetMacType(mac, 0));
 }
 
 #elif defined(__APPLE__)
@@ -168,10 +178,11 @@ Socket::Socket(iNetClass& netclass)
     , m_net_class(netclass)
     , m_rate(-1)
     , m_sent(0)
+    , m_starttls(false)
 
 {
+
 #ifdef SSL_SUPPORT
-m_starttls = false;
 m_verified = false;
 m_sslctx = nullptr;
 m_ssl = nullptr;
@@ -306,7 +317,11 @@ bool Socket::VerifyCertificate()
 	m_verified = true;
 	return true;
 }
-
+#else
+void Socket::StartTLS(const std::string& fingerprint)
+{
+	wxLogWarning("TLS requested but not supported!");
+}
 #endif
 
 

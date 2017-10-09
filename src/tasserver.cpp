@@ -551,11 +551,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 #endif
 	} else if (cmd == "OK") {
 		if (!m_sock->IsTLS() && sett().IsServerTLS(GetServerName()) ) {
-#ifdef SSL_SUPPORT
 			m_sock->StartTLS(sett().GetServerFingerprint(GetServerName()));
-#else
-			wxLogWarning("TLS requested but TLS isn't supported!");
-#endif
 		}
 	} else if (cmd == "ACCEPTED") {
 		SetUsername(params);
