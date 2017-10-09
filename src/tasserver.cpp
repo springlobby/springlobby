@@ -533,8 +533,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	if (cmd == "TASSERVER") {
 #ifdef SSL_SUPPORT
 		if (!m_sock->IsTLS() && sett().IsServerTLS(GetServerName()) ) {
-			SendCmd("STARTTLS", "");
-			m_sock->StartTLS(sett().GetServerFingerprint(GetServerName()));
+			SendCmd("STLS", "");
 		} else {
 #endif
 			m_ser_ver = GetIntParam(params);
@@ -550,6 +549,14 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 #ifdef SSL_SUPPORT
 		}
 #endif
+	} else if (cmd == "OK") {
+		if (!m_sock->IsTLS() && sett().IsServerTLS(GetServerName()) ) {
+#ifdef SSL_SUPPORT
+			m_sock->StartTLS(sett().GetServerFingerprint(GetServerName()));
+#else
+			wxLogWarning("TLS requested but TLS isn't supported!");
+#endif
+		}
 	} else if (cmd == "ACCEPTED") {
 		SetUsername(params);
 		m_se->OnLogin();
