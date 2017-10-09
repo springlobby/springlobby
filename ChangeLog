@@ -1,5 +1,10 @@
 ChangeLog of Springlobby
 
+## 0.259
+ - fix #791: cannot select last entry in engine list
+ - use more robust TLS handshake on connect (should solve issues when registering new username)
+ - don't write password to log when registering
+
 ## 0.258
  - fix regression #787: broken user registering due TLS support
  - Install appdata file into canonical directory
