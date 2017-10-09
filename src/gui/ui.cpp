@@ -976,4 +976,5 @@ void Ui::OnInvalidFingerprintReceived(const std::string& fingerprint, const std:
 	}
 
 	sett().SetServerFingerprint(m_serv->GetServerName(), fingerprint);
+	sett().SaveSettings();
 }
