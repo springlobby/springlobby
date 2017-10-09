@@ -1004,7 +1004,7 @@ void TASServer::SendCmd(const std::string& command, const std::string& param, bo
 	else
 		msg = stdprintf("#%d %s %s", m_last_id, command.c_str(), param.c_str());
 	const bool send_success = m_sock->Send(msg + std::string("\n"));
-	if ((command == "LOGIN") || command == "CHANGEPASSWORD") {
+	if ((command == "LOGIN") || command == "CHANGEPASSWORD" || command == "REGISTER") {
 		wxLogMessage(_T("sent: %s ... <password removed>"), TowxString(command).c_str());
 		return;
 	}
