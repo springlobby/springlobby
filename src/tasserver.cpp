@@ -640,10 +640,6 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "JOIN") {
 		channel = GetWordParam(params);
 		m_se->OnJoinChannelResult(true, channel, "");
-	} else if (cmd == "JOIN") {
-		channel = GetWordParam(params);
-		error = GetSentenceParam(params);
-		m_se->OnJoinChannelResult(false, channel, error);
 	} else if (cmd == "SAID") {
 		LSL::StringMap vals = parseKeyValue(inparams);
 		if ((vals.find("chanName") != vals.end())
