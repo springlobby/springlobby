@@ -274,7 +274,6 @@ void TASServer::Connect(const ServerLoginInfo& server)
 
 	m_serverinfo = server;
 	m_buffer.clear();
-	m_subscriptions.clear();
 	if (m_sock != NULL) {
 		Disconnect();
 	}
@@ -503,7 +502,7 @@ void TASServer::ExecuteCommand(const std::string& in)
 	}
 }
 
-
+/*
 static LSL::StringMap parseKeyValue(const std::string& str)
 {
 	const LSL::StringVector params = LSL::Util::StringTokenize(str, "\t");
@@ -518,7 +517,7 @@ static LSL::StringMap parseKeyValue(const std::string& str)
 	}
 	return result;
 }
-
+*/
 
 void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inparams, int replyid)
 {
@@ -618,7 +617,6 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_online = true;
 		if (UserExists("RelayHostManagerList"))
 			SayPrivate("RelayHostManagerList", "!lm");
-		SendCmd("LISTSUBSCRIPTIONS", "");
 		m_se->OnLoginInfoComplete();
 	} else if (cmd == "REMOVEUSER") {
 		nick = GetWordParam(params);
@@ -954,18 +952,8 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_se->OnConnected(m_serverinfo.description, "", true, m_supported_spring_version, m_server_lanmode);
 	} else if (cmd == "REGISTRATIONDENIED") {
 		m_se->RegistrationDenied(params);
-	} else if (cmd == "LISTSUBSCRIPTION") {
-		const LSL::StringMap keyvals = parseKeyValue(GetWordParam(params));
-		const std::string keyname = "chanName";
-		if (keyvals.find(keyname) != keyvals.end()) {
-			m_subscriptions.insert(keyvals.at(keyname));
-		}
-	} else if (cmd == "STARTLISTSUBSCRIPTION") {
-		m_subscriptions.clear();
-	} else if (cmd == "ENDLISTSUBSCRIPTION") {
-		//m_se->OnSubscriptons();
 	} else {
-		wxLogWarning(wxString::Format(_T("??? Cmd: %s params: %s"), TowxString(cmd).c_str(), params.c_str()));
+		wxLogWarning(wxString::Format("??? Cmd: %s params: %s" , cmd.c_str(), params.c_str()));
 		m_se->OnUnknownCommand(cmd, params);
 	}
 }

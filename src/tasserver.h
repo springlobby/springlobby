@@ -128,10 +128,6 @@ private:
 	{
 		return m_se;
 	}
-	LSL::StringSet GetSubscriptions() override
-	{
-		return m_subscriptions;
-	}
 	// TASServer specific functions
 	void ExecuteCommand(const std::string& cmd, const std::string& inparams, int replyid = -1);
 
@@ -188,7 +184,6 @@ private:
 
 	double m_ser_ver;
 	LSL::StringVector m_relay_host_manager_list;
-	LSL::StringSet m_subscriptions;
 
 	std::string m_last_denied;
 	bool m_connected;
