@@ -502,7 +502,6 @@ void TASServer::ExecuteCommand(const std::string& in)
 	}
 }
 
-/*
 static LSL::StringMap parseKeyValue(const std::string& str)
 {
 	const LSL::StringVector params = LSL::Util::StringTokenize(str, "\t");
@@ -517,7 +516,6 @@ static LSL::StringMap parseKeyValue(const std::string& str)
 	}
 	return result;
 }
-*/
 
 void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inparams, int replyid)
 {
@@ -647,9 +645,19 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		error = GetSentenceParam(params);
 		m_se->OnJoinChannelResult(false, channel, error);
 	} else if (cmd == "SAID") {
-		channel = GetWordParam(params);
-		nick = GetWordParam(params);
-		m_se->OnChannelSaid(channel, nick, params);
+		LSL::StringMap vals = parseKeyValue(inparams);
+		if ((vals.find("chanName") != vals.end())
+			&& (vals.find("msg") != vals.end())
+			&& (vals.find("userName") != vals.end())) {
+			std::string msg = vals["time"];
+			msg += " ";
+			msg += vals["msg"];
+			m_se->OnChannelSaid(vals["chanName"], vals["userName"], msg);
+		} else {
+			channel = GetWordParam(params);
+			nick = GetWordParam(params);
+			m_se->OnChannelSaid(channel, nick, params);
+		}
 	} else if (cmd == "JOINED") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
