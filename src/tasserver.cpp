@@ -33,6 +33,9 @@ lsl/networking/tasserver.cpp
 #include "utils/conversion.h"
 #include "utils/slconfig.h"
 #include "utils/version.h"
+
+//FIXME: unhard-code
+#include "downloader/lib/src/lib/jsoncpp/include/json/reader.h"
 #include <lslutils/misc.h>
 
 SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which is send when leaving server");
@@ -502,6 +505,7 @@ void TASServer::ExecuteCommand(const std::string& in)
 	}
 }
 
+/*
 static LSL::StringMap parseKeyValue(const std::string& str)
 {
 	const LSL::StringVector params = LSL::Util::StringTokenize(str, "\t");
@@ -516,6 +520,7 @@ static LSL::StringMap parseKeyValue(const std::string& str)
 	}
 	return result;
 }
+*/
 
 void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inparams, int replyid)
 {
@@ -641,19 +646,11 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		channel = GetWordParam(params);
 		m_se->OnJoinChannelResult(true, channel, "");
 	} else if (cmd == "SAID") {
-		LSL::StringMap vals = parseKeyValue(inparams);
-		if ((vals.find("chanName") != vals.end())
-			&& (vals.find("msg") != vals.end())
-			&& (vals.find("userName") != vals.end())) {
-			std::string msg = vals["time"];
-			msg += " ";
-			msg += vals["msg"];
-			m_se->OnChannelSaid(vals["chanName"], vals["userName"], msg);
-		} else {
-			channel = GetWordParam(params);
-			nick = GetWordParam(params);
-			m_se->OnChannelSaid(channel, nick, params);
-		}
+		channel = GetWordParam(params);
+		nick = GetWordParam(params);
+		m_se->OnChannelSaid(channel, nick, params);
+	} else if (cmd == "JSON") {
+		ParseJson(inparams);
 	} else if (cmd == "JOINED") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
@@ -960,6 +957,34 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		wxLogWarning(wxString::Format("??? Cmd: %s params: %s" , cmd.c_str(), params.c_str()));
 		m_se->OnUnknownCommand(cmd, params);
 	}
+}
+
+void TASServer::ParseJson(const std::string& jsonstr)
+{
+        Json::Value js; // will contains the root value after parsing.
+        Json::Reader reader;
+        const bool parsingSuccessful = reader.parse(jsonstr, js);
+	if (!parsingSuccessful) {
+		wxLogWarning("Invalid json: %s", jsonstr.c_str());
+		return;
+	}
+
+	if (!js.isObject()) {
+		wxLogWarning("Invalid json, object excepted: %s", jsonstr.c_str());
+		return;
+	}
+
+	if (js["said"].isObject()) {
+		wxLogWarning("Invalid json, object excepted: %s", jsonstr.c_str());
+		return;
+	}
+
+	Json::Value said = js["said"];
+	m_se->OnChannelSaid(said["chanName"].asString(), said["userName"].asString(), said["msg"].asString());
+
+	//TODO: store last id for channel
+	//said["time"].asInt64();
+	//said["id"].asUInt64();
 }
 
 
