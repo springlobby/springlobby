@@ -961,6 +961,8 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 
 void TASServer::ParseJson(const std::string& jsonstr)
 {
+	wxLogMessage("JSON %s", jsonstr.c_str());
+
         Json::Value js; // will contains the root value after parsing.
         Json::Reader reader;
         const bool parsingSuccessful = reader.parse(jsonstr, js);
@@ -974,12 +976,12 @@ void TASServer::ParseJson(const std::string& jsonstr)
 		return;
 	}
 
-	if (js["said"].isObject()) {
+	if (!js["SAID"].isObject()) {
 		wxLogWarning("Invalid json, object excepted: %s", jsonstr.c_str());
 		return;
 	}
 
-	Json::Value said = js["said"];
+	Json::Value said = js["SAID"];
 	m_se->OnChannelSaid(said["chanName"].asString(), said["userName"].asString(), said["msg"].asString());
 
 	//TODO: store last id for channel
