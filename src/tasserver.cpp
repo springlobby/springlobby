@@ -644,7 +644,10 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		HandlePong(replyid);
 	} else if (cmd == "JOIN") {
 		channel = GetWordParam(params);
+		int lastid = 0;
+		cfg().Read(wxString::Format("/Channels/%s/lastid", channel.c_str()), &lastid);
 		m_se->OnJoinChannelResult(true, channel, "");
+		SendCmd("GETCHANNELMESSAGES", stdprintf("%s %d", channel.c_str(), lastid));
 	} else if (cmd == "SAID") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
@@ -982,6 +985,7 @@ void TASServer::ParseJson(const std::string& jsonstr)
 	}
 
 	Json::Value said = js["SAID"];
+	cfg().Write(wxString::Format("/Channels/%s/lastid", said["chanName"].asString()), said["id"].asInt());
 	m_se->OnChannelSaid(said["chanName"].asString(), said["userName"].asString(), said["msg"].asString());
 
 	//TODO: store last id for channel
