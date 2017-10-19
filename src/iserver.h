@@ -230,10 +230,6 @@ public:
 	{
 		return LSL::StringVector();
 	}
-	virtual LSL::StringSet GetSubscriptions()
-	{
-		return LSL::StringSet();
-	}
 
 	void Reset();
 	virtual void SendCmd(const std::string& /*command*/, const std::string& /*param*/){};

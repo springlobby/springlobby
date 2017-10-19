@@ -56,7 +56,6 @@ public:
 
 	std::string GetPassword() const;
 	void SetPassword(const std::string& pw);
-	bool IsSubscribed(); //subscribed to channel history?
 
 private:
 	IServer& m_serv;

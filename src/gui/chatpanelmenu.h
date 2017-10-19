@@ -103,7 +103,6 @@ static const long CHAT_MENU_DISABLE_APPEND = wxNewId();
 
 static const long CHAT_MENU_CH_LEAVE = wxNewId();
 static const long CHAT_MENU_CH_DISPLAYJOIN = wxNewId();
-static const long CHAT_MENU_CH_SUBSCRIBE = wxNewId();
 
 static const long CHAT_MENU_CH_TOPIC = wxNewId();
 static const long CHAT_MENU_CH_INFO = wxNewId();
