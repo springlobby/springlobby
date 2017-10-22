@@ -611,7 +611,7 @@ void Battle::StartHostedBattle()
 
 void Battle::StartSpring()
 {
-	const User& me = GetMe();
+	User& me = GetMe();
 	if (!UserExists(me.GetNick()))
 		return;
 	if (me.Status().in_game)
