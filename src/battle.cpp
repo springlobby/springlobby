@@ -611,15 +611,18 @@ void Battle::StartHostedBattle()
 
 void Battle::StartSpring()
 {
-	if (UserExists(GetMe().GetNick()) && !GetMe().Status().in_game) {
-		GetMe().BattleStatus().ready = false;
-		SendMyBattleStatus();
-		// set m_generating_script, this will make the script.txt writer realize we're just clients even if using a relayhost
-		m_generating_script = true;
-		GetMe().Status().in_game = spring().Run(*this);
-		m_generating_script = false;
-		GetMe().SendMyUserStatus();
-	}
+	const User& me = GetMe();
+	if (!UserExists(me.GetNick()))
+		return;
+	if (me.Status().in_game)
+		return;
+	me.BattleStatus().ready = false;
+	SendMyBattleStatus();
+	// set m_generating_script, this will make the script.txt writer realize we're just clients even if using a relayhost
+	m_generating_script = true;
+	me.Status().in_game = spring().Run(*this);
+	m_generating_script = false;
+	me.SendMyUserStatus();
 }
 
 void Battle::OnTimer(wxTimerEvent&)
