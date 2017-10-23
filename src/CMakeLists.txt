@@ -89,6 +89,13 @@ message(STATUS "Using WX_LD_FLAGS: ${WX_LD_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${WX_CXX_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${WX_C_FLAGS}")
 
+
+include(CheckIncludeFileCXX)
+CHECK_INCLUDE_FILE_CXX(wx/config.h HAS_WXGTKHEADERS)
+if (NOT HAS_WXGTKHEADERS)
+	message(FATAL_ERROR "Couldn't find wx/config.h, is wxgtk-dev installed?")
+endif()
+
 #----------------------------------------------------------------------------------------------------
 # openAL libs dependency check
 #----------------------------------------------------------------------------------------------------
