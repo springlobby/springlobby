@@ -614,7 +614,8 @@ void BattleRoomTab::OnPromote(wxCommandEvent& /*unused*/)
 
 void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 {
-	if (!m_battle)
+	slLogDebugFunc("");
+	if (m_battle == nullptr)
 		return;
 	if (m_battle->IsFounderMe()) {
 		m_battle->GetMe().BattleStatus().ready = true;
@@ -628,6 +629,11 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 
 		m_battle->StartHostedBattle();
 	} else {
+		if (ui().NeedsDownload(m_battle)) {
+			wxLogWarning("Cannot start, need to download first!");
+			return;
+		}
+
 		if (m_battle->GetFounder().Status().in_game) {
 			if (!ui().IsSpringRunning())
 				m_battle->StartSpring();
