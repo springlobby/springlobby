@@ -535,6 +535,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	if (cmd == "TASSERVER") {
 #ifdef SSL_SUPPORT
 		if (!m_sock->IsTLS() && sett().IsServerTLS(GetServerName()) ) {
+			Stop(); //don't send ping until TLS handshake is complete
 			SendCmd("STLS", "");
 		} else {
 #endif
@@ -554,6 +555,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "OK") {
 		if (!m_sock->IsTLS() && sett().IsServerTLS(GetServerName()) ) {
 			m_sock->StartTLS(sett().GetServerFingerprint(GetServerName()));
+			Start(); //restart ping as server + client have startet TLS
 		}
 	} else if (cmd == "ACCEPTED") {
 		SetUsername(params);
