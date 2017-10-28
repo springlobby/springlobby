@@ -1,5 +1,11 @@
 ChangeLog of Springlobby
 
+## 0.260
+ - reimplement channel history
+ - check if synced before game start / prompt for download
+ - don't send plain text PING when tls-handshaking
+ - increase default log verbosity
+
 ## 0.259
  - fix #791: cannot select last entry in engine list
  - use more robust TLS handshake on connect (should solve issues when registering new username)
