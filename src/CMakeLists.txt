@@ -96,6 +96,14 @@ if (NOT HAS_WXGTKHEADERS)
 	message(FATAL_ERROR "Couldn't find wx/config.h, is wxgtk-dev installed?")
 endif()
 
+find_package(Jsoncpp)
+if (${Jsoncpp_FOUND})
+	OPTION(PRD_JSONCPP_INTERNAL "use bundled JsonCpp" FALSE)
+else()
+	OPTION(PRD_JSONCPP_INTERNAL "use bundled JsonCpp" TRUE)
+endif()
+
+
 if (PRD_JSONCPP_INTERNAL)
 	# use bundled JsonCpp
 	set(PRD_JSONCPP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/downloader/lib/src/lib/jsoncpp/include/)
