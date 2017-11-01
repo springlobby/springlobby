@@ -174,9 +174,6 @@ public:
 
 	bool ShouldAddDefaultServerSettings();
 
-	bool IsServerTLS(const std::string& server_name);
-	void SetServerTLS(const std::string& server_name, bool enabled);
-
 	std::string GetServerFingerprint(const std::string& server_name);
 	void SetServerFingerprint(const std::string& serve_name, const std::string& fingerprint);
 

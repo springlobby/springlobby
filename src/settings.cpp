@@ -1506,16 +1506,6 @@ unsigned int Settings::GetNotificationPopupDisplayTime()
 	return cfg().Read(_T("/GUI/NotificationPopupDisplayTime"), 5l);
 }
 
-bool Settings::IsServerTLS(const std::string& server_name)
-{
-	return cfg().Read(_T( "/Server/Servers/" ) + TowxString(server_name) + _T( "/TLS" ), true);
-}
-
-void Settings::SetServerTLS(const std::string& server_name, bool enabled)
-{
-	cfg().Write(_T( "/Server/Servers/" ) + TowxString(server_name) + _T( "/TLS" ), enabled);
-}
-
 std::string Settings::GetServerFingerprint(const std::string& server_name)
 {
 	return STD_STRING(cfg().Read(_T( "/Server/Servers/" ) + TowxString(server_name) + _T( "/Certificate" ), ""));
