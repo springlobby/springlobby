@@ -34,8 +34,7 @@ lsl/networking/tasserver.cpp
 #include "utils/slconfig.h"
 #include "utils/version.h"
 
-//FIXME: unhard-code
-#include "downloader/lib/src/lib/jsoncpp/include/json/reader.h"
+#include <json/reader.h>
 #include <lslutils/misc.h>
 
 SLCONFIG("/Server/ExitMessage", "Using http://springlobby.info/", "Message which is send when leaving server");

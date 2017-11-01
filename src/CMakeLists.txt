@@ -96,6 +96,17 @@ if (NOT HAS_WXGTKHEADERS)
 	message(FATAL_ERROR "Couldn't find wx/config.h, is wxgtk-dev installed?")
 endif()
 
+if (PRD_JSONCPP_INTERNAL)
+	# use bundled JsonCpp
+	set(PRD_JSONCPP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/downloader/lib/src/lib/jsoncpp/include/)
+	set(PRD_JSONCPP_LIBRARIES "")
+else()
+	find_package(Jsoncpp REQUIRED)
+	set(PRD_JSONCPP_INCLUDE_DIR ${Jsoncpp_INCLUDE_DIR})
+	set(PRD_JSONCPP_LIBRARIES ${Jsoncpp_LIBRARY})
+endif()
+
+
 #----------------------------------------------------------------------------------------------------
 # openAL libs dependency check
 #----------------------------------------------------------------------------------------------------
@@ -351,6 +362,11 @@ ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
 		${springlobbySrc}
 		${springlobby_RC_FILE}
 	)
+
+target_include_directories(springlobby
+                PRIVATE ${PRD_JSONCPP_INCLUDE_DIR}
+        )
+
 
 FIND_PACKAGE(OpenSSL)
 if(OPENSSL_FOUND)
