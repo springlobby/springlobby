@@ -54,12 +54,17 @@ bool GetMacType(std::vector<unsigned char>& mac, const unsigned int mactype)
 	DWORD dwStatus = GetAdaptersInfo(AdapterInfo, &dwBufLen); // Get info
 	if (dwStatus != NO_ERROR)
 		return false; // Check status
-	for (size_t i = 0; i < sizeof(AdapterInfo); i++) {
-		mac.resize(AdapterInfo[i].AddressLength);
-		mac.assign(AdapterInfo[i].Address, AdapterInfo[i].Address + AdapterInfo[i].AddressLength);
+
+	if (dwBufLen >= 16) {
+		wxLogError("To small buffer size");
+		return false;
+	}
+	for (size_t i = 0; i < dwBufLen; i++) {
 
 		if ((mactype != 0) && (AdapterInfo[i].Type != mactype)) //skip not wanted type
 			continue;
+		mac.resize(AdapterInfo[i].AddressLength);
+		mac.assign(AdapterInfo[i].Address, AdapterInfo[i].Address + AdapterInfo[i].AddressLength);
 		for (size_t j = 0; j < mac.size(); j++) {
 			if (mac[j] != 0) {
 				return true;
@@ -142,8 +147,8 @@ std::string _GetHandle()
 	std::string res;
 	if (GetMac(mac)) {
 		res.assign(mac.begin(), mac.end());
-		wxLogDebug(_T("Found mac: %s"), TowxString(MacToString(mac)).c_str());
-		return std::string(mac.begin(), mac.end());
+		wxLogDebug(wxString::Format("Found mac: %s", MacToString(mac).c_str()));
+		return res;
 	}
 	return res;
 }
