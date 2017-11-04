@@ -63,6 +63,10 @@ bool GetMacType(std::vector<unsigned char>& mac, const unsigned int mactype)
 
 		if ((mactype != 0) && (AdapterInfo[i].Type != mactype)) //skip not wanted type
 			continue;
+		if (AdapterInfo[i].AddressLength == 0) {
+			wxLogWarning("Zero Address length for adapter");
+			continue;
+		}
 		mac.resize(AdapterInfo[i].AddressLength);
 		mac.assign(AdapterInfo[i].Address, AdapterInfo[i].Address + AdapterInfo[i].AddressLength);
 		for (size_t j = 0; j < mac.size(); j++) {
