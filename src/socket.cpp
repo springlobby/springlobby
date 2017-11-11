@@ -52,13 +52,13 @@ bool GetMacType(std::vector<unsigned char>& mac, const unsigned int mactype)
 	DWORD dwBufLen = sizeof(AdapterInfo); // Save memory size of buffer
 
 	DWORD dwStatus = GetAdaptersInfo(AdapterInfo, &dwBufLen); // Get info
+	if (dwStatus == ERROR_BUFFER_OVERFLOW) {
+		wxLogError(wxString::Format("To small buffer size: %d", dwStatus));
+		return false;
+	}
 	if (dwStatus != NO_ERROR)
 		return false; // Check status
 
-	if (dwBufLen >= 16) {
-		wxLogError("To small buffer size");
-		return false;
-	}
 	for (size_t i = 0; i < dwBufLen; i++) {
 
 		if ((mactype != 0) && (AdapterInfo[i].Type != mactype)) //skip not wanted type
