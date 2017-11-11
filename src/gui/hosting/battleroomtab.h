@@ -83,6 +83,11 @@ private:
 	void OnFixTeams(wxCommandEvent& event);
 	void OnFixColours(wxCommandEvent& event);
 	void OnAddBot(wxCommandEvent& event);
+	void OnAutolaunch();
+	void OnAutolaunch(wxCommandEvent& /*unused*/)
+	{
+		OnAutolaunch();
+	}
 	void OnImReady(wxCommandEvent& event);
 	void OnLock(wxCommandEvent& event);
 	void OnAutoHost(wxCommandEvent& event);
@@ -196,6 +201,7 @@ private:
 	wxMenuItem* m_autocontrol_mnu;
 	wxMenuItem* m_autopaste_mnu;
 
+	wxCheckBox* m_autolaunch_chk;
 	wxCheckBox* m_ready_chk;
 	wxCheckBox* m_spec_chk;
 	wxCheckBox* m_auto_unspec_chk;
@@ -208,6 +214,7 @@ private:
 
 	enum {
 		BROOM_LEAVE = wxID_HIGHEST,
+		BROOM_AUTOLAUNCH,
 		BROOM_IMREADY,
 		BROOM_LOCK,
 		BROOM_LOCK_BALANCE,
