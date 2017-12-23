@@ -330,7 +330,7 @@ bool Socket::VerifyCertificate()
 	return true;
 }
 #else
-void Socket::StartTLS(const std::string& fingerprint)
+void Socket::StartTLS(const std::string& /*fingerprint*/)
 {
 	wxLogWarning("TLS requested but not supported!");
 }
@@ -456,6 +456,10 @@ bool Socket::Send(const std::string& data)
 
 wxString convert(char* buff, const int len)
 {
+
+	if (len == 0) {
+		return wxEmptyString;
+	}
 	wxString ret = wxString(buff, wxConvUTF8, len);
 	if (!ret.IsEmpty()) {
 		return ret;
