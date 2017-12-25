@@ -27,6 +27,7 @@ Makefile
 # temp files
 *.swp
 /po/*.gmo
+/po/locale/
 *~
 *.orig
 /springlobby_config.h

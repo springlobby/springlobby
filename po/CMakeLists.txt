@@ -6,29 +6,41 @@ IF(NOT GETTEXT_MSGFMT_EXECUTABLE)
                  NOTE: msgfmt not found. Translations will *not* be installed
 ------")
 ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
-
 	SET(catalogname springlobby)
-	FILE(GLOB PO_FILES  ${CMAKE_SOURCE_DIR}/po/*.po)
+	# ls *.po
+	set(LANGUAGES
+		ar
+		cs
+		da
+		de
+		el
+		es
+		fi
+		fr
+		it
+		pl
+		pt
+		ro
+		ru
+		sv
+		uk
+		zh_CN
+	)
 
 	SET(gmofiles "")
-	FOREACH(_poFile ${PO_FILES})
-		GET_FILENAME_COMPONENT(_poFileName ${_poFile} NAME)
-		STRING(REGEX REPLACE "^${catalogname}_?" "" _langCode ${_poFileName} )
-		STRING(REGEX REPLACE "\\.po$" "" _langCode ${_langCode} )
-		IF( _langCode )
-			GET_FILENAME_COMPONENT(_lang ${_poFile} NAME_WE)
-			SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${_lang}.gmo)
-
-			ADD_CUSTOM_COMMAND(
-				OUTPUT ${_gmoFile}
-				COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check -o ${_gmoFile} ${_poFile}
-				DEPENDS ${_poFile})
-			INSTALL(FILES ${_gmoFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_langCode}/LC_MESSAGES/ RENAME ${catalogname}.mo)
-			LIST(APPEND gmofiles ${_gmoFile})
-		ENDIF( _langCode )
-
-	ENDFOREACH(_poFile ${PO_FILES})
-	add_custom_target(translations ALL DEPENDS ${gmofiles})
+	FOREACH(_lang ${LANGUAGES})
+		set(moDir ${CMAKE_CURRENT_BINARY_DIR}/locale/${_lang}/LC_MESSAGES)
+		set(moFile ${moDir}/${catalogname}.mo)
+		set(poFile ${CMAKE_CURRENT_SOURCE_DIR}/${_lang}.po)
+		file(MAKE_DIRECTORY ${moDir})
+		ADD_CUSTOM_COMMAND(
+			OUTPUT ${moFile}
+			COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check -o ${moFile} ${poFile}
+			DEPENDS ${poFile})
+		INSTALL(FILES ${moFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_lang}/LC_MESSAGES/)
+		LIST(APPEND mofiles ${moFile})
+	ENDFOREACH()
+	add_custom_target(translations ALL DEPENDS ${mofiles})
 ENDIF(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
 file(GLOB_RECURSE srcfiles RELATIVE ${springlobby_SOURCE_DIR}/ FOLLOW_SYMLINKS
@@ -60,12 +72,11 @@ ELSE(${MSGMERGE} STREQUAL "MSGMERGE-NOTFOUND")
 	MESSAGE(STATUS "Found msgmerge: ${MSGMERGE}")
 
 	ADD_CUSTOM_TARGET( update-po )
-	FILE(GLOB PO_FILES  ${CMAKE_SOURCE_DIR}/po/*.po)
 	SET( POTFILE ${springlobby_SOURCE_DIR}/po/springlobby.pot )
 
-	FOREACH(_poFile ${PO_FILES})
+	FOREACH(_poFile ${LANGUAGES})
 			ADD_CUSTOM_COMMAND(TARGET update-po
-						COMMAND ${MSGMERGE} -vU ${_poFile} ${POTFILE} 
+						COMMAND ${MSGMERGE} -vU ${_poFile}.po ${POTFILE}
 						DEPENDS ${_poFile})
 	ENDFOREACH(_poFile ${PO_FILES})
   
