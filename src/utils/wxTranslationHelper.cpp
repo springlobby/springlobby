@@ -84,17 +84,17 @@ void wxTranslationHelper::GetInstalledLanguages(wxArrayString& names, wxArrayLon
 
 	for (bool cont = dir.GetFirst(&filename, wxEmptyString, wxDIR_DIRS); cont; cont = dir.GetNext(&filename)) {
 		langinfo = wxLocale::FindLanguageInfo(filename);
-		if (langinfo != NULL) {
-			wxString mo_file = dir.GetName() + wxFileName::GetPathSeparator() + filename + wxFileName::GetPathSeparator() + _T("LC_MESSAGES") + wxFileName::GetPathSeparator() + catalogname + wxT(".mo");
-			wxLogInfo(_("SEARCHING FOR %s"), mo_file.GetData());
-			if (wxFileExists(mo_file)) {
-				if (langinfo->Language == localeid)
-					names.Add(langinfo->Description + _(" (Default)"));
-				else
-					names.Add(langinfo->Description);
-				identifiers.Add(langinfo->Language);
-			}
-		}
+		if (langinfo == nullptr)
+			continue;
+		wxString mo_file = dir.GetName() + wxFileName::GetPathSeparator() + filename + wxFileName::GetPathSeparator() + _T("LC_MESSAGES") + wxFileName::GetPathSeparator() + catalogname + wxT(".mo");
+		wxLogInfo(_("SEARCHING FOR %s"), mo_file.GetData());
+		if (!wxFileExists(mo_file))
+			continue;
+		if (langinfo->Language == localeid)
+			names.Add(langinfo->Description + _(" (Default)"));
+		else
+			names.Add(langinfo->Description);
+		identifiers.Add(langinfo->Language);
 	}
 }
 
