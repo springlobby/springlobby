@@ -399,7 +399,7 @@ void BattleListTab::DoJoin(IBattle& battle)
 
 	//If player already in another battle
 	if (curbattle != 0) {
-		if (ui().Ask(_("Already in another battle"), _("You are already in a battle.\n\nDo you want to leave your current battle and join this one?"))) {
+		if (ui().Ask(_("Already in another battle"), _("You are already in a battle.") + _("Do you want to leave your current battle and join this one?"))) {
 			curbattle->Leave();
 			ui().mw().GetJoinTab().LeaveCurrentBattle();
 		} else {

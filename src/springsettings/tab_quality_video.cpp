@@ -64,8 +64,8 @@ void tab_quality_video::updateControls(int what_to_update)
 	}
 
 	if (what_to_update == UPDATE_VIDEO_MODE || what_to_update == UPDATE_ALL) {
-		ctrl_x_res->SetValue(wxString::Format(_("%d"), intSettings[RC_TEXT[0].key]));
-		ctrl_y_res->SetValue(wxString::Format(_("%d"), intSettings[RC_TEXT[1].key]));
+		ctrl_x_res->SetValue(wxString::Format(_T("%d"), intSettings[RC_TEXT[0].key]));
+		ctrl_y_res->SetValue(wxString::Format(_T("%d"), intSettings[RC_TEXT[1].key]));
 	}
 	if (what_to_update == UPDATE_QA_BOXES || what_to_update == UPDATE_ALL) {
 		//option 7-9 are not on presets

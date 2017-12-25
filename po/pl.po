@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 23:54+0100\n"
+"POT-Creation-Date: 2017-12-26 00:02+0100\n"
 "PO-Revision-Date: 2008-08-22 06:20+0000\n"
 "Last-Translator: Roman Skrzypiński <romano473@gmail.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -1219,17 +1219,6 @@ msgstr "Tylko mapy które mam"
 msgid "    Spectator:"
 msgstr "    Obserwator:"
 
-#: src/gui/battlelist/battlelistfilter.cpp:752
-#: src/gui/battlelist/battlelistfilter.cpp:757
-#: src/gui/battlelist/battlelistfilter.cpp:758
-#: src/gui/battlelist/battlelistfilter.cpp:760
-#: src/gui/playback/playbackfilter.cpp:434
-#: src/springsettings/tab_quality_video.cpp:67
-#: src/springsettings/tab_quality_video.cpp:68
-#, c-format
-msgid "%d"
-msgstr ""
-
 #: src/gui/battlelist/battlelisttab.cpp:103 src/gui/playback/playbacktab.cpp:99
 msgid "Players:"
 msgstr "Gracze:"
@@ -1300,10 +1289,11 @@ msgid "Already in another battle"
 msgstr ""
 
 #: src/gui/battlelist/battlelisttab.cpp:402
-msgid ""
-"You are already in a battle.\n"
-"\n"
-"Do you want to leave your current battle and join this one?"
+msgid "You are already in a battle."
+msgstr ""
+
+#: src/gui/battlelist/battlelisttab.cpp:402
+msgid "Do you want to leave your current battle and join this one?"
 msgstr ""
 
 #: src/gui/battlelist/battlelisttab.cpp:412
