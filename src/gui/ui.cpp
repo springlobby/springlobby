@@ -910,15 +910,15 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 	std::vector<std::string> promptCollection;
 	std::list<std::pair<DownloadEnum::Category, std::string>> todl;
 
-	if (requested(cat, DownloadEnum::CAT_ENGINE) && !battle->EngineExists()) {
+	if (requested(cat, DownloadEnum::CAT_ENGINE) && !battle->EngineExists() && !battle->GetEngineName().empty() && !battle->GetEngineVersion().empty()) {
 		promptCollection.push_back("engine " + battle->GetEngineName() + " " + battle->GetEngineVersion());
 		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE, battle->GetEngineName() + " " + battle->GetEngineVersion()));
 	}
-	if (requested(cat, DownloadEnum::CAT_MAP) && !battle->MapExists(false)) {
+	if (requested(cat, DownloadEnum::CAT_MAP) && !battle->MapExists(false) && !battle->GetHostMapName().empty()) {
 		promptCollection.push_back("map " + battle->GetHostMapName());
 		todl.push_back(std::make_pair(DownloadEnum::CAT_MAP, battle->GetHostMapName()));
 	}
-	if (requested(cat, DownloadEnum::CAT_GAME) && !battle->GameExists(false)) {
+	if (requested(cat, DownloadEnum::CAT_GAME) && !battle->GameExists(false) && !battle->GetHostGameName().empty()) {
 		promptCollection.push_back("game " + battle->GetHostGameName());
 		todl.push_back(std::make_pair(DownloadEnum::CAT_GAME, battle->GetHostGameName()));
 	}
