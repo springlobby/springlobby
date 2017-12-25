@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 18:56+0100\n"
+"POT-Creation-Date: 2017-12-25 22:44+0100\n"
 "PO-Revision-Date: 2010-01-03 22:54+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -1384,7 +1384,7 @@ msgstr "\" параметры: \""
 #: src/gui/chatpanel.cpp:708
 #, fuzzy, c-format
 msgid "Error: %s"
-msgstr "Ошибка"
+msgstr "Ошибка: %s"
 
 #: src/gui/chatpanel.cpp:715
 msgid "the channel"
@@ -1410,13 +1410,13 @@ msgstr "%s покинул %s (%s)."
 
 #: src/gui/chatpanel.cpp:802
 #, fuzzy
-msgid "** Channel topic:"
+msgid "Channel topic"
 msgstr " ** Тема канала:"
 
 #: src/gui/chatpanel.cpp:808
-#, fuzzy
-msgid "** Set by "
-msgstr " ** Установлено "
+#, fuzzy, c-format
+msgid "Set by %s"
+msgstr "Установлено %s"
 
 #: src/gui/chatpanel.cpp:917
 #, c-format
@@ -1982,9 +1982,8 @@ msgstr "Показать все колонки"
 msgid "Status"
 msgstr "Статус"
 
-#: src/gui/downloaddataviewctrl.cpp:24
-#, fuzzy, c-format
-msgid "% complete"
+#: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
+msgid "complete"
 msgstr "Завершено"
 
 #: src/gui/downloaddataviewctrl.cpp:27
@@ -1999,10 +1998,6 @@ msgstr "осталось (сек.)"
 #: src/gui/downloaddataviewctrl.cpp:32
 msgid "Filesize (MB)"
 msgstr "Размер файла (MB)"
-
-#: src/gui/downloaddataviewmodel.cpp:38
-msgid "complete"
-msgstr "Завершено"
 
 #: src/gui/downloaddataviewmodel.cpp:40
 msgid "downloading"
@@ -2678,16 +2673,6 @@ msgstr "Активировать элемент для быстрого изме
 #, fuzzy, c-format
 msgid "%d way FFA"
 msgstr "FFA на %d"
-
-#: src/gui/hosting/battleroomtab.cpp:445
-#, fuzzy, c-format
-msgid "%s"
-msgstr "с"
-
-#: src/gui/hosting/battleroomtab.cpp:532
-#, fuzzy, c-format
-msgid "%d "
-msgstr "%d"
 
 #: src/gui/hosting/battleroomtab.cpp:609
 msgid "You need to be in an autohost for this to work."
@@ -4111,14 +4096,15 @@ msgid "Up to Date"
 msgstr "Обновление не нужно"
 
 #: src/gui/ui.cpp:822
-#, c-format
-msgid ""
-"Your %s version is not up to date.\n"
-"\n"
-"%s\n"
-"\n"
-"Would you like to update to the new version?"
+#, fuzzy, c-format
+msgid "Your %s version is not up to date."
+msgstr "Версия %s Вашего SpringLobby не обновлена."
+
+#: src/gui/ui.cpp:822
+#, fuzzy
+msgid "Would you like to update to the new version?"
 msgstr ""
+"Вы хотите посетить страницу с инструкциями по загрузке последней версии?"
 
 #: src/gui/ui.cpp:825
 #, fuzzy
@@ -4126,56 +4112,56 @@ msgid "Update Springlobby?"
 msgstr "SpringLobby"
 
 #: src/gui/ui.cpp:832
-#, c-format
+#, fuzzy
+msgid "Automatic update failed."
+msgstr "Автоматические обновления"
+
+#: src/gui/ui.cpp:833
 msgid ""
-"Automatic update failed\n"
-"\t\t\t\t\t%s\n"
-"\t\t\t\t\tyou will be redirected to a web page with instructions and the "
-"download link will be opened in your browser. %s"
+"you will be redirected to a web page with instructions and the download link "
+"will be opened in your browser."
 msgstr ""
 
-#: src/gui/ui.cpp:836
+#: src/gui/ui.cpp:835
 #, fuzzy
 msgid "Updater error."
 msgstr "Ошибка обновления."
 
-#: src/gui/ui.cpp:844
+#: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
 msgstr ""
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 #, fuzzy
 msgid "Your SpringLobby version is not up to date."
-msgstr ""
-"Версия Вашего SpringLobby не обновлена.\n"
-"\n"
+msgstr "Версия Вашего SpringLobby не обновлена."
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 msgid "Not up to Date"
 msgstr "Не обновлено"
 
-#: src/gui/ui.cpp:939
+#: src/gui/ui.cpp:938
 #, fuzzy
 msgid " is required to play. Should it be downloaded?"
 msgstr ""
 "Для данной игры требуется движок '%s' версии '%s'. Приступить к закачке?"
 
-#: src/gui/ui.cpp:941
+#: src/gui/ui.cpp:940
 #, fuzzy
 msgid "Content is missing"
 msgstr "Нет движка"
 
-#: src/gui/ui.cpp:970
+#: src/gui/ui.cpp:969
 msgid ""
 "The certificate by the server is unkown. Do you want to trust it? Please "
 "verify the fingerprint:\n"
 msgstr ""
 
-#: src/gui/ui.cpp:970 src/gui/ui.cpp:972
+#: src/gui/ui.cpp:969 src/gui/ui.cpp:971
 msgid "Unknown Certificate"
 msgstr ""
 
-#: src/gui/ui.cpp:972
+#: src/gui/ui.cpp:971
 msgid ""
 "The certificate by the server is invalid! Maybe there is a MITM ongoing. Do "
 "you want ignore this warning?:\n"
@@ -4277,8 +4263,9 @@ msgid "Kicked by Host"
 msgstr "Был выгнан сервером"
 
 #: src/serverevents.cpp:930
-msgid "Begin mutelist for "
-msgstr "Начать список молчания для "
+#, fuzzy, c-format
+msgid "Begin mutelist for channel %s"
+msgstr "Начать список молчания для %s"
 
 #: src/serverevents.cpp:930
 #, c-format
@@ -5389,26 +5376,51 @@ msgstr ""
 msgid "SlPaths::ValidatePaths() : Failed to validate data directories!"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:74
+#: src/utils/wxTranslationHelper.cpp:57
+#, c-format
+msgid "Loaded locale %s %d %s %s"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:71
 msgid "English"
 msgstr "Английский"
 
-#: src/utils/wxTranslationHelper.cpp:90
+#: src/utils/wxTranslationHelper.cpp:87
 #, c-format
 msgid "SEARCHING FOR %s"
 msgstr "ПОИСК %s"
 
-#: src/utils/wxTranslationHelper.cpp:94
+#: src/utils/wxTranslationHelper.cpp:91
 msgid " (Default)"
 msgstr "(По умолчанию)"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Select the language"
 msgstr "Выберите язык"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Language"
 msgstr "Язык"
+
+#, fuzzy
+#~ msgid "%d "
+#~ msgstr "%d"
+
+#, fuzzy
+#~ msgid "% complete"
+#~ msgstr "% Завершено"
+
+#, fuzzy
+#~ msgid "%s"
+#~ msgstr "с"
+
+#, fuzzy
+#~ msgid "the battle2"
+#~ msgstr "сражение"
+
+#, fuzzy
+#~ msgid "%s has joined %s"
+#~ msgstr "%s присоединился к %s."
 
 #~ msgid "System information"
 #~ msgstr "Информация об системе"
@@ -7074,16 +7086,6 @@ msgstr "Язык"
 
 #~ msgid "Browse..."
 #~ msgstr "Выбрать..."
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Would you like to visit a page with instructions on how to download the "
-#~ "newest version?"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Вы хотите посетить страницу с инструкциями по загрузке последней версии?"
 
 #~ msgid "Sets the amount of metal that players will start with"
 #~ msgstr "Устанавливает начальное количество метала у игроков"

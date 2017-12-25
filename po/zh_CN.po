@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 18:56+0100\n"
+"POT-Creation-Date: 2017-12-25 22:44+0100\n"
 "PO-Revision-Date: 2010-07-08 14:24+1000\n"
 "Last-Translator: Jie <lililjlj@gmail.com>\n"
 "Language-Team: Simplified Chinese <18n-translation@lists.linux.net.cn>\n"
@@ -1391,7 +1391,7 @@ msgstr "” 参数：“"
 #: src/gui/chatpanel.cpp:708
 #, fuzzy, c-format
 msgid "Error: %s"
-msgstr "错误"
+msgstr "错误 %s"
 
 #: src/gui/chatpanel.cpp:715
 #, fuzzy
@@ -1411,7 +1411,7 @@ msgstr "服务器"
 #: src/gui/chatpanel.cpp:731 src/gui/chatpanel.cpp:750
 #, fuzzy, c-format
 msgid "%s joined %s."
-msgstr " 加入 "
+msgstr "%s 加入 %s"
 
 #: src/gui/chatpanel.cpp:763
 #, c-format
@@ -1420,13 +1420,13 @@ msgstr ""
 
 #: src/gui/chatpanel.cpp:802
 #, fuzzy
-msgid "** Channel topic:"
+msgid "Channel topic"
 msgstr " ** 频道主题："
 
 #: src/gui/chatpanel.cpp:808
-#, fuzzy
-msgid "** Set by "
-msgstr "** 设置"
+#, fuzzy, c-format
+msgid "Set by %s"
+msgstr "设置 %s"
 
 #: src/gui/chatpanel.cpp:917
 #, c-format
@@ -1991,9 +1991,9 @@ msgstr "，列"
 msgid "Status"
 msgstr "状态："
 
-#: src/gui/downloaddataviewctrl.cpp:24
-#, fuzzy, c-format
-msgid "% complete"
+#: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
+#, fuzzy
+msgid "complete"
 msgstr "%c 完成"
 
 #: src/gui/downloaddataviewctrl.cpp:27
@@ -2008,11 +2008,6 @@ msgstr "估计剩余时间（秒）"
 #: src/gui/downloaddataviewctrl.cpp:32
 msgid "Filesize (MB)"
 msgstr "文件大小（MB)"
-
-#: src/gui/downloaddataviewmodel.cpp:38
-#, fuzzy
-msgid "complete"
-msgstr "%c 完成"
 
 #: src/gui/downloaddataviewmodel.cpp:40
 #, fuzzy
@@ -2689,16 +2684,6 @@ msgstr "激活一个元素快速改变它"
 msgid "%d way FFA"
 msgstr ""
 
-#: src/gui/hosting/battleroomtab.cpp:445
-#, fuzzy, c-format
-msgid "%s"
-msgstr "状态"
-
-#: src/gui/hosting/battleroomtab.cpp:532
-#, fuzzy, c-format
-msgid "%d "
-msgstr "%d"
-
 #: src/gui/hosting/battleroomtab.cpp:609
 msgid "You need to be in an autohost for this to work."
 msgstr ""
@@ -3192,7 +3177,7 @@ msgstr "加成：%d%%"
 #: src/gui/mapgridctrl.cpp:265
 #, fuzzy, c-format
 msgid "Map %s doesn't exist!"
-msgstr "地图不存在。"
+msgstr "地图不存在。%s"
 
 #: src/gui/mapgridctrl.cpp:280
 #, c-format
@@ -3772,9 +3757,7 @@ msgstr "选择文件夹"
 #: src/gui/options/springoptionstab.cpp:361
 #, fuzzy, c-format
 msgid "Something went wrong when creating the directory: %s"
-msgstr ""
-"创建目录时发生错误\n"
-"请手动创建下列目录："
+msgstr "请手动创建下列目录：%s"
 
 #: src/gui/options/springoptionstab.cpp:387
 #, fuzzy
@@ -3978,7 +3961,7 @@ msgstr "下载失败"
 #: src/gui/taskbar.cpp:136
 #, fuzzy, c-format
 msgid "Downloading %s"
-msgstr "下载"
+msgstr "下载 %s"
 
 #: src/gui/ui.cpp:241
 #, fuzzy
@@ -4091,7 +4074,7 @@ msgstr ""
 #: src/gui/ui.cpp:328
 #, fuzzy, c-format
 msgid "disconnected from server: %s"
-msgstr "服务器传来未知答案"
+msgstr "服务器传来未知答案 %s"
 
 #: src/gui/ui.cpp:367
 msgid "no active chat panels open."
@@ -4100,7 +4083,7 @@ msgstr "没有活动的聊天面板开启"
 #: src/gui/ui.cpp:370
 #, fuzzy, c-format
 msgid "%s (%d users)"
-msgstr "(%d 名用户）"
+msgstr "%s (%d 名用户）"
 
 #: src/gui/ui.cpp:511
 msgid "The current battle was closed by the host."
@@ -4146,16 +4129,13 @@ msgstr "最新的"
 
 #: src/gui/ui.cpp:822
 #, fuzzy, c-format
-msgid ""
-"Your %s version is not up to date.\n"
-"\n"
-"%s\n"
-"\n"
-"Would you like to update to the new version?"
-msgstr ""
-"\n"
-"\n"
-"需要自动下载新版本吗？重新启动后将会使用。"
+msgid "Your %s version is not up to date."
+msgstr "你的 %s 版本不是最新的"
+
+#: src/gui/ui.cpp:822
+#, fuzzy
+msgid "Would you like to update to the new version?"
+msgstr "需要自动下载新版本吗？重新启动后将会使用。"
 
 #: src/gui/ui.cpp:825
 #, fuzzy
@@ -4163,55 +4143,55 @@ msgid "Update Springlobby?"
 msgstr " 您使用 SpringLobby v"
 
 #: src/gui/ui.cpp:832
-#, c-format
+#, fuzzy
+msgid "Automatic update failed."
+msgstr "自动升级"
+
+#: src/gui/ui.cpp:833
 msgid ""
-"Automatic update failed\n"
-"\t\t\t\t\t%s\n"
-"\t\t\t\t\tyou will be redirected to a web page with instructions and the "
-"download link will be opened in your browser. %s"
+"you will be redirected to a web page with instructions and the download link "
+"will be opened in your browser."
 msgstr ""
 
-#: src/gui/ui.cpp:836
+#: src/gui/ui.cpp:835
 #, fuzzy
 msgid "Updater error."
 msgstr "玩家数量"
 
-#: src/gui/ui.cpp:844
+#: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
 msgstr ""
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 #, fuzzy
 msgid "Your SpringLobby version is not up to date."
-msgstr ""
-"你的 SpringLobby 版本不是最新的。\n"
-"\n"
+msgstr "你的 SpringLobby 版本不是最新的。"
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 msgid "Not up to Date"
 msgstr "不是最新的"
 
-#: src/gui/ui.cpp:939
+#: src/gui/ui.cpp:938
 #, fuzzy
 msgid " is required to play. Should it be downloaded?"
 msgstr "选择的预设需要这个地图"
 
-#: src/gui/ui.cpp:941
+#: src/gui/ui.cpp:940
 #, fuzzy
 msgid "Content is missing"
 msgstr "地图缺失"
 
-#: src/gui/ui.cpp:970
+#: src/gui/ui.cpp:969
 msgid ""
 "The certificate by the server is unkown. Do you want to trust it? Please "
 "verify the fingerprint:\n"
 msgstr ""
 
-#: src/gui/ui.cpp:970 src/gui/ui.cpp:972
+#: src/gui/ui.cpp:969 src/gui/ui.cpp:971
 msgid "Unknown Certificate"
 msgstr ""
 
-#: src/gui/ui.cpp:972
+#: src/gui/ui.cpp:971
 msgid ""
 "The certificate by the server is invalid! Maybe there is a MITM ongoing. Do "
 "you want ignore this warning?:\n"
@@ -4313,8 +4293,9 @@ msgid "Kicked by Host"
 msgstr "被主机踢出"
 
 #: src/serverevents.cpp:930
-msgid "Begin mutelist for "
-msgstr "开始静音列表"
+#, fuzzy, c-format
+msgid "Begin mutelist for channel %s"
+msgstr "开始静音列表 %s"
 
 #: src/serverevents.cpp:930
 #, c-format
@@ -5440,27 +5421,52 @@ msgstr ""
 msgid "SlPaths::ValidatePaths() : Failed to validate data directories!"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:74
+#: src/utils/wxTranslationHelper.cpp:57
+#, c-format
+msgid "Loaded locale %s %d %s %s"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:71
 msgid "English"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:90
+#: src/utils/wxTranslationHelper.cpp:87
 #, c-format
 msgid "SEARCHING FOR %s"
 msgstr "搜索 %s"
 
-#: src/utils/wxTranslationHelper.cpp:94
+#: src/utils/wxTranslationHelper.cpp:91
 #, fuzzy
 msgid " (Default)"
 msgstr "默认"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Select the language"
 msgstr "选择语言"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Language"
 msgstr "语言"
+
+#, fuzzy
+#~ msgid "%d "
+#~ msgstr "%d"
+
+#, fuzzy
+#~ msgid "% complete"
+#~ msgstr "%c 完成"
+
+#, fuzzy
+#~ msgid "%s"
+#~ msgstr "状态"
+
+#, fuzzy
+#~ msgid "the battle2"
+#~ msgstr "开始战斗"
+
+#, fuzzy
+#~ msgid "%s has joined %s"
+#~ msgstr " 加入 "
 
 #~ msgid "System information"
 #~ msgstr "系统信息"

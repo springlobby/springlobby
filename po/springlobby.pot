@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 19:34+0100\n"
+"POT-Creation-Date: 2017-12-25 22:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1390,11 +1390,12 @@ msgid "%s left %s (%s)."
 msgstr ""
 
 #: src/gui/chatpanel.cpp:802
-msgid "** Channel topic:"
+msgid "Channel topic"
 msgstr ""
 
 #: src/gui/chatpanel.cpp:808
-msgid "** Set by "
+#, c-format
+msgid "Set by %s"
 msgstr ""
 
 #: src/gui/chatpanel.cpp:917
@@ -1927,9 +1928,8 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/gui/downloaddataviewctrl.cpp:24
-#, c-format
-msgid "% complete"
+#: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
+msgid "complete"
 msgstr ""
 
 #: src/gui/downloaddataviewctrl.cpp:27
@@ -1942,10 +1942,6 @@ msgstr ""
 
 #: src/gui/downloaddataviewctrl.cpp:32
 msgid "Filesize (MB)"
-msgstr ""
-
-#: src/gui/downloaddataviewmodel.cpp:38
-msgid "complete"
 msgstr ""
 
 #: src/gui/downloaddataviewmodel.cpp:40
@@ -2577,16 +2573,6 @@ msgstr ""
 #: src/gui/hosting/battleroomtab.cpp:443
 #, c-format
 msgid "%d way FFA"
-msgstr ""
-
-#: src/gui/hosting/battleroomtab.cpp:445
-#, c-format
-msgid "%s"
-msgstr ""
-
-#: src/gui/hosting/battleroomtab.cpp:532
-#, c-format
-msgid "%d "
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:609
@@ -3932,12 +3918,11 @@ msgstr ""
 
 #: src/gui/ui.cpp:822
 #, c-format
-msgid ""
-"Your %s version is not up to date.\n"
-"\n"
-"%s\n"
-"\n"
-"Would you like to update to the new version?"
+msgid "Your %s version is not up to date."
+msgstr ""
+
+#: src/gui/ui.cpp:822
+msgid "Would you like to update to the new version?"
 msgstr ""
 
 #: src/gui/ui.cpp:825
@@ -3945,46 +3930,46 @@ msgid "Update Springlobby?"
 msgstr ""
 
 #: src/gui/ui.cpp:832
-#, c-format
-msgid ""
-"Automatic update failed\n"
-"\t\t\t\t\t%s\n"
-"\t\t\t\t\tyou will be redirected to a web page with instructions and the download link will be opened in your browser. %s"
+msgid "Automatic update failed."
 msgstr ""
 
-#: src/gui/ui.cpp:836
+#: src/gui/ui.cpp:833
+msgid "you will be redirected to a web page with instructions and the download link will be opened in your browser."
+msgstr ""
+
+#: src/gui/ui.cpp:835
 msgid "Updater error."
 msgstr ""
 
-#: src/gui/ui.cpp:844
+#: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
 msgstr ""
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 msgid "Your SpringLobby version is not up to date."
 msgstr ""
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 msgid "Not up to Date"
 msgstr ""
 
-#: src/gui/ui.cpp:939
+#: src/gui/ui.cpp:938
 msgid " is required to play. Should it be downloaded?"
 msgstr ""
 
-#: src/gui/ui.cpp:941
+#: src/gui/ui.cpp:940
 msgid "Content is missing"
 msgstr ""
 
-#: src/gui/ui.cpp:970
+#: src/gui/ui.cpp:969
 msgid "The certificate by the server is unkown. Do you want to trust it? Please verify the fingerprint:\n"
 msgstr ""
 
-#: src/gui/ui.cpp:970 src/gui/ui.cpp:972
+#: src/gui/ui.cpp:969 src/gui/ui.cpp:971
 msgid "Unknown Certificate"
 msgstr ""
 
-#: src/gui/ui.cpp:972
+#: src/gui/ui.cpp:971
 msgid "The certificate by the server is invalid! Maybe there is a MITM ongoing. Do you want ignore this warning?:\n"
 msgstr ""
 
@@ -4081,7 +4066,8 @@ msgid "Kicked by Host"
 msgstr ""
 
 #: src/serverevents.cpp:930
-msgid "Begin mutelist for "
+#, c-format
+msgid "Begin mutelist for channel %s"
 msgstr ""
 
 #: src/serverevents.cpp:930
@@ -5120,23 +5106,28 @@ msgstr ""
 msgid "SlPaths::ValidatePaths() : Failed to validate data directories!"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:74
+#: src/utils/wxTranslationHelper.cpp:57
+#, c-format
+msgid "Loaded locale %s %d %s %s"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:71
 msgid "English"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:90
+#: src/utils/wxTranslationHelper.cpp:87
 #, c-format
 msgid "SEARCHING FOR %s"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:94
+#: src/utils/wxTranslationHelper.cpp:91
 msgid " (Default)"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Select the language"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Language"
 msgstr ""

@@ -442,7 +442,7 @@ void BattleRoomTab::PrintAllySetup()
 		else
 			setupstring += wxString::Format(_("%d way FFA"), previousalliancesize);
 	}
-	m_ally_setup_lbl->SetLabel(wxString::Format(_("%s"), setupstring.c_str()));
+	m_ally_setup_lbl->SetLabel(wxString::Format(_T("%s"), setupstring.c_str()));
 	Layout();
 }
 
@@ -529,7 +529,7 @@ void BattleRoomTab::UpdateStatsLabels()
 {
 	if (m_battle == NULL)
 		return;
-	m_ok_count_lbl->SetLabel(wxString::Format(_("%d "), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers()));
+	m_ok_count_lbl->SetLabel(wxString::Format(_T("%d "), m_battle->GetNumActivePlayers() - m_battle->GetNumOkPlayers()));
 	PrintAllySetup();
 	m_player_sett_sizer->Layout();
 }
@@ -955,7 +955,9 @@ void BattleRoomTab::OnUserJoined(User& user)
 
 	UpdateStatsLabels();
 
-	UiEvents::GetStatusEventSender(UiEvents::addStatusMessage).SendEvent(UiEvents::StatusData(wxString::Format(_("%s joined your active battle"), TowxString(user.GetNick()).c_str()), 1));
+	if (user == m_battle->GetMe())
+		return;
+	UiEvents::GetStatusEventSender(UiEvents::addStatusMessage).SendEvent(UiEvents::StatusData(wxString::Format(_("%s joined your battle"), TowxString(user.GetNick()).c_str()), 1));
 }
 
 

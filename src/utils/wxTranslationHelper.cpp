@@ -7,7 +7,6 @@
 #include <wx/intl.h>
 
 #include "utils/slconfig.h"
-#include "utils/slpaths.h"
 #include "utils/conversion.h"
 #include "gui/customdialogs.h"
 
@@ -18,9 +17,6 @@ wxTranslationHelper::wxTranslationHelper(const wxString& catalog, const wxString
     , catalogname(catalog)
     , m_Locale(NULL)
 {
-	if (search_path.IsEmpty()) {
-		m_SearchPath = TowxString(SlPaths::GetExecutableFolder());
-	}
 	wxLogWarning(_T("Using LocalePath %s"), m_SearchPath.c_str());
 	long language = cfg().ReadLong(_T("/General/LanguageID"));
 	if (!Load(language)) { //fallback when something went wrong
@@ -53,12 +49,13 @@ bool wxTranslationHelper::Load(int language)
 			if (m_Locale) {
 				wxDELETE(m_Locale);
 			}
-			m_Locale = new wxLocale;
-			m_Locale->Init(identifiers[i]);
+			m_Locale = new wxLocale(identifiers[i]);
+			//bool res = m_Locale->Init(identifiers[i]);
 			m_Locale->AddCatalogLookupPathPrefix(m_SearchPath);
 			m_Locale->AddCatalog(catalogname);
-			m_Locale->AddCatalog(_T("wxstd"));
-			return true;
+			//m_Locale->AddCatalog(_T("wxstd"));
+			wxLogWarning(wxString::Format(_("Loaded locale %s %d %s %s"), m_Locale->GetName().c_str(), m_Locale->IsOk(), m_SearchPath.c_str(), m_Locale->GetCanonicalName().c_str()));
+			return m_Locale->IsOk();
 		}
 	}
 	return false;

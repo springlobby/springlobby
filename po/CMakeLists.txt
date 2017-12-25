@@ -35,7 +35,7 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 		file(MAKE_DIRECTORY ${moDir})
 		ADD_CUSTOM_COMMAND(
 			OUTPUT ${moFile}
-			COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check -o ${moFile} ${poFile}
+			COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check -f -v -o ${moFile} ${poFile}
 			DEPENDS ${poFile})
 		INSTALL(FILES ${moFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_lang}/LC_MESSAGES/)
 		LIST(APPEND mofiles ${moFile})
@@ -59,7 +59,7 @@ ELSE(${XGETTEXT} STREQUAL "XGETTEXT-NOTFOUND")
 	SET(MESSAGES_POT_FILE ${springlobby_SOURCE_DIR}/po/springlobby.pot)
 	ADD_CUSTOM_TARGET(
 		update-potfile
-		COMMAND ${XGETTEXT} -k_ --from-code=utf-8 -C --no-wrap --directory ${springlobby_SOURCE_DIR} --msgid-bugs-address "devel@www.springlobby.info" -o ${MESSAGES_POT_FILE} ${srcfiles}
+		COMMAND ${XGETTEXT} -d springlobby --keyword=_ --from-code=utf-8 --no-wrap --directory ${springlobby_SOURCE_DIR} --msgid-bugs-address "devel@www.springlobby.info" -o ${MESSAGES_POT_FILE} ${srcfiles}
 		DEPENDS springlobby
 		WORKING_DIRECTORY ${springlobby_SOURCE_DIR}
 	)

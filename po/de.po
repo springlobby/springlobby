@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpringLobby 0.0.1.10128\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 18:56+0100\n"
+"POT-Creation-Date: 2017-12-25 22:44+0100\n"
 "PO-Revision-Date: 2010-01-10 00:17+0000\n"
 "Last-Translator: Alexander Minges <Unknown>\n"
 "Language-Team: German\n"
@@ -1389,7 +1389,7 @@ msgstr "\" Parameter: \""
 #: src/gui/chatpanel.cpp:708
 #, fuzzy, c-format
 msgid "Error: %s"
-msgstr "Fehler"
+msgstr "Fehler: %s"
 
 #: src/gui/chatpanel.cpp:715
 #, fuzzy
@@ -1418,12 +1418,12 @@ msgstr "%s hat den %s verlassen (%s)."
 
 #: src/gui/chatpanel.cpp:802
 #, fuzzy
-msgid "** Channel topic:"
+msgid "Channel topic"
 msgstr " ** Kanal-Thema:"
 
 #: src/gui/chatpanel.cpp:808
-#, fuzzy
-msgid "** Set by "
+#, fuzzy, c-format
+msgid "Set by %s"
 msgstr " **Eingerichtet von "
 
 #: src/gui/chatpanel.cpp:917
@@ -1998,9 +1998,8 @@ msgstr " , Spalte "
 msgid "Status"
 msgstr "Status"
 
-#: src/gui/downloaddataviewctrl.cpp:24
-#, fuzzy, c-format
-msgid "% complete"
+#: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
+msgid "complete"
 msgstr "vollständig"
 
 #: src/gui/downloaddataviewctrl.cpp:27
@@ -2015,10 +2014,6 @@ msgstr "ETA (s)"
 #: src/gui/downloaddataviewctrl.cpp:32
 msgid "Filesize (MB)"
 msgstr "Dateigrösse (MB)"
-
-#: src/gui/downloaddataviewmodel.cpp:38
-msgid "complete"
-msgstr "vollständig"
 
 #: src/gui/downloaddataviewmodel.cpp:40
 msgid "downloading"
@@ -2717,16 +2712,6 @@ msgstr "Aktiviere ein Element, um es direkt zu ändern"
 msgid "%d way FFA"
 msgstr ""
 
-#: src/gui/hosting/battleroomtab.cpp:445
-#, fuzzy, c-format
-msgid "%s"
-msgstr "s"
-
-#: src/gui/hosting/battleroomtab.cpp:532
-#, fuzzy, c-format
-msgid "%d "
-msgstr "%d"
-
 #: src/gui/hosting/battleroomtab.cpp:609
 msgid "You need to be in an autohost for this to work."
 msgstr ""
@@ -3229,7 +3214,7 @@ msgstr "Bonus: %d%%"
 #: src/gui/mapgridctrl.cpp:265
 #, fuzzy, c-format
 msgid "Map %s doesn't exist!"
-msgstr "Die Map ist nicht verfügbar."
+msgstr "Die Map %s ist nicht verfügbar."
 
 #: src/gui/mapgridctrl.cpp:280
 #, c-format
@@ -3825,9 +3810,7 @@ msgstr "Wähle einen Ordner"
 #: src/gui/options/springoptionstab.cpp:361
 #, fuzzy, c-format
 msgid "Something went wrong when creating the directory: %s"
-msgstr ""
-"Beim erstellen eines Ordners trat ein Fehler auf\n"
-"Bitte erstellen sie Manuell folgenden Ordner:"
+msgstr "Beim erstellen des Ordners %s trat ein Fehler auf"
 
 #: src/gui/options/springoptionstab.cpp:387
 #, fuzzy
@@ -4035,7 +4018,7 @@ msgstr "Download fehlgeschlagen"
 #: src/gui/taskbar.cpp:136
 #, fuzzy, c-format
 msgid "Downloading %s"
-msgstr "Herunterladen"
+msgstr "Lade %s"
 
 #: src/gui/ui.cpp:241
 #, fuzzy
@@ -4158,7 +4141,7 @@ msgstr ""
 #: src/gui/ui.cpp:328
 #, fuzzy, c-format
 msgid "disconnected from server: %s"
-msgstr "Verbindung zum Server getrennt."
+msgstr "Verbindung zum Server %s getrennt."
 
 #: src/gui/ui.cpp:367
 msgid "no active chat panels open."
@@ -4167,7 +4150,7 @@ msgstr "Keine aktiven Kanalfelder offen."
 #: src/gui/ui.cpp:370
 #, fuzzy, c-format
 msgid "%s (%d users)"
-msgstr "(%d Benutzer)"
+msgstr "%s (%d Benutzer)"
 
 #: src/gui/ui.cpp:511
 msgid "The current battle was closed by the host."
@@ -4214,17 +4197,18 @@ msgstr "Auf dem neusten Stand"
 
 #: src/gui/ui.cpp:822
 #, fuzzy, c-format
-msgid ""
-"Your %s version is not up to date.\n"
+msgid "Your %s version is not up to date."
+msgstr "Ihre SpringLobby Version ist nicht auf dem neusten Stand."
+
+#: src/gui/ui.cpp:822
+#, fuzzy
+msgid "Would you like to update to the new version?"
+msgstr ""
+"Deine %s version ist nicht aktuell.\n"
 "\n"
 "%s\n"
 "\n"
-"Would you like to update to the new version?"
-msgstr ""
-"\n"
-"\n"
-"Soll ich die aktuelle Version automat. laden? Änderungen werden mit dem "
-"nächsten Lobbystart effektiv."
+"Soll auf die neueste Version aktualisiert werden?"
 
 #: src/gui/ui.cpp:825
 #, fuzzy
@@ -4232,55 +4216,55 @@ msgid "Update Springlobby?"
 msgstr " Du hast SpringLobby v"
 
 #: src/gui/ui.cpp:832
-#, c-format
+#, fuzzy
+msgid "Automatic update failed."
+msgstr "Automatisches Aktualisieren"
+
+#: src/gui/ui.cpp:833
 msgid ""
-"Automatic update failed\n"
-"\t\t\t\t\t%s\n"
-"\t\t\t\t\tyou will be redirected to a web page with instructions and the "
-"download link will be opened in your browser. %s"
+"you will be redirected to a web page with instructions and the download link "
+"will be opened in your browser."
 msgstr ""
 
-#: src/gui/ui.cpp:836
+#: src/gui/ui.cpp:835
 #, fuzzy
 msgid "Updater error."
 msgstr "ChanServ Fehler"
 
-#: src/gui/ui.cpp:844
+#: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
 msgstr ""
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 #, fuzzy
 msgid "Your SpringLobby version is not up to date."
-msgstr ""
-"Ihre SpringLobby Version ist nicht auf dem neusten Stand.\n"
-"\n"
+msgstr "Ihre SpringLobby Version ist nicht auf dem neusten Stand."
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 msgid "Not up to Date"
 msgstr "Nicht auf dem neusten Stand"
 
-#: src/gui/ui.cpp:939
+#: src/gui/ui.cpp:938
 #, fuzzy
 msgid " is required to play. Should it be downloaded?"
 msgstr "Die gewählte Voreinstellung benötigt die Karte "
 
-#: src/gui/ui.cpp:941
+#: src/gui/ui.cpp:940
 #, fuzzy
 msgid "Content is missing"
 msgstr "Karte fehlt"
 
-#: src/gui/ui.cpp:970
+#: src/gui/ui.cpp:969
 msgid ""
 "The certificate by the server is unkown. Do you want to trust it? Please "
 "verify the fingerprint:\n"
 msgstr ""
 
-#: src/gui/ui.cpp:970 src/gui/ui.cpp:972
+#: src/gui/ui.cpp:969 src/gui/ui.cpp:971
 msgid "Unknown Certificate"
 msgstr ""
 
-#: src/gui/ui.cpp:972
+#: src/gui/ui.cpp:971
 msgid ""
 "The certificate by the server is invalid! Maybe there is a MITM ongoing. Do "
 "you want ignore this warning?:\n"
@@ -4382,7 +4366,8 @@ msgid "Kicked by Host"
 msgstr "Vom Host rausgeworfen"
 
 #: src/serverevents.cpp:930
-msgid "Begin mutelist for "
+#, fuzzy, c-format
+msgid "Begin mutelist for channel %s"
 msgstr "Beginn der Stummliste für "
 
 #: src/serverevents.cpp:930
@@ -5528,27 +5513,55 @@ msgstr ""
 msgid "SlPaths::ValidatePaths() : Failed to validate data directories!"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:74
+#: src/utils/wxTranslationHelper.cpp:57
+#, c-format
+msgid "Loaded locale %s %d %s %s"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:71
 msgid "English"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:90
+#: src/utils/wxTranslationHelper.cpp:87
 #, c-format
 msgid "SEARCHING FOR %s"
 msgstr "SUCHEN NACH %s"
 
-#: src/utils/wxTranslationHelper.cpp:94
+#: src/utils/wxTranslationHelper.cpp:91
 #, fuzzy
 msgid " (Default)"
 msgstr "Standard"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Select the language"
 msgstr "Sprache wählen"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Language"
 msgstr "Sprache"
+
+#, fuzzy
+#~ msgid "%d "
+#~ msgstr "%d"
+
+#, fuzzy
+#~ msgid "% complete"
+#~ msgstr "%% vollständig"
+
+#, fuzzy
+#~ msgid "%s"
+#~ msgstr "%s"
+
+#, fuzzy
+#~ msgid "the battle2"
+#~ msgstr "die Schlacht ist tot"
+
+#~ msgid "my custom translation blabla"
+#~ msgstr "meine übersetzung"
+
+#, fuzzy
+#~ msgid "%s has joined %s"
+#~ msgstr "%s betrat %s"
 
 #~ msgid "System information"
 #~ msgstr "System Informationen"

@@ -927,7 +927,7 @@ void ServerEvents::AutoCheckCommandSpam(IBattle& battle, User& user)
 
 void ServerEvents::OnMutelistBegin(const std::string& channel)
 {
-	mutelistWindow(_("Begin mutelist for ") + TowxString(channel), wxString::Format(_("%s mutelist"), channel.c_str()));
+	mutelistWindow(wxString::Format(_("Begin mutelist for channel %s"), channel.c_str()), wxString::Format(_("%s mutelist"), channel.c_str()));
 }
 
 void ServerEvents::OnMutelistItem(const std::string& /*unused*/, const std::string& mutee, const std::string& description)

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 18:56+0100\n"
+"POT-Creation-Date: 2017-12-25 22:44+0100\n"
 "PO-Revision-Date: 2008-08-22 06:20+0000\n"
 "Last-Translator: Roman Skrzypiński <romano473@gmail.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -1379,7 +1379,7 @@ msgstr ""
 #: src/gui/chatpanel.cpp:708
 #, fuzzy, c-format
 msgid "Error: %s"
-msgstr "Błąd"
+msgstr "Błąd %s"
 
 #: src/gui/chatpanel.cpp:715
 #, fuzzy
@@ -1408,11 +1408,12 @@ msgstr ""
 
 #: src/gui/chatpanel.cpp:802
 #, fuzzy
-msgid "** Channel topic:"
+msgid "Channel topic"
 msgstr "kanał"
 
 #: src/gui/chatpanel.cpp:808
-msgid "** Set by "
+#, c-format
+msgid "Set by %s"
 msgstr ""
 
 #: src/gui/chatpanel.cpp:917
@@ -1960,9 +1961,9 @@ msgstr ""
 msgid "Status"
 msgstr "Status:"
 
-#: src/gui/downloaddataviewctrl.cpp:24
-#, fuzzy, c-format
-msgid "% complete"
+#: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
+#, fuzzy
+msgid "complete"
 msgstr "Ściągnij &mape"
 
 #: src/gui/downloaddataviewctrl.cpp:27
@@ -1976,11 +1977,6 @@ msgstr ""
 #: src/gui/downloaddataviewctrl.cpp:32
 msgid "Filesize (MB)"
 msgstr ""
-
-#: src/gui/downloaddataviewmodel.cpp:38
-#, fuzzy
-msgid "complete"
-msgstr "Ściągnij &mape"
 
 #: src/gui/downloaddataviewmodel.cpp:40
 #, fuzzy
@@ -2663,16 +2659,6 @@ msgstr ""
 msgid "%d way FFA"
 msgstr ""
 
-#: src/gui/hosting/battleroomtab.cpp:445
-#, c-format
-msgid "%s"
-msgstr ""
-
-#: src/gui/hosting/battleroomtab.cpp:532
-#, fuzzy, c-format
-msgid "%d "
-msgstr "%d%"
-
 #: src/gui/hosting/battleroomtab.cpp:609
 msgid "You need to be in an autohost for this to work."
 msgstr ""
@@ -3160,7 +3146,7 @@ msgstr ""
 #: src/gui/mapgridctrl.cpp:265
 #, fuzzy, c-format
 msgid "Map %s doesn't exist!"
-msgstr "Mapa nie istnieje"
+msgstr "Mapa %s nie istnieje"
 
 #: src/gui/mapgridctrl.cpp:280
 #, c-format
@@ -3932,7 +3918,7 @@ msgstr "Ściągnij &mape"
 #: src/gui/taskbar.cpp:136
 #, fuzzy, c-format
 msgid "Downloading %s"
-msgstr "Ściągnij &mape"
+msgstr "Ściągnij %s"
 
 #: src/gui/ui.cpp:241
 msgid "SpringLobby commands help."
@@ -4048,7 +4034,7 @@ msgstr ""
 #: src/gui/ui.cpp:370
 #, fuzzy, c-format
 msgid "%s (%d users)"
-msgstr "(%d użytkowników)"
+msgstr "%s (%d użytkowników)"
 
 #: src/gui/ui.cpp:511
 msgid "The current battle was closed by the host."
@@ -4088,12 +4074,11 @@ msgstr ""
 
 #: src/gui/ui.cpp:822
 #, c-format
-msgid ""
-"Your %s version is not up to date.\n"
-"\n"
-"%s\n"
-"\n"
-"Would you like to update to the new version?"
+msgid "Your %s version is not up to date."
+msgstr ""
+
+#: src/gui/ui.cpp:822
+msgid "Would you like to update to the new version?"
 msgstr ""
 
 #: src/gui/ui.cpp:825
@@ -4101,49 +4086,50 @@ msgid "Update Springlobby?"
 msgstr ""
 
 #: src/gui/ui.cpp:832
-#, c-format
-msgid ""
-"Automatic update failed\n"
-"\t\t\t\t\t%s\n"
-"\t\t\t\t\tyou will be redirected to a web page with instructions and the "
-"download link will be opened in your browser. %s"
+msgid "Automatic update failed."
 msgstr ""
 
-#: src/gui/ui.cpp:836
+#: src/gui/ui.cpp:833
+msgid ""
+"you will be redirected to a web page with instructions and the download link "
+"will be opened in your browser."
+msgstr ""
+
+#: src/gui/ui.cpp:835
 msgid "Updater error."
 msgstr ""
 
-#: src/gui/ui.cpp:844
+#: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
 msgstr ""
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 msgid "Your SpringLobby version is not up to date."
 msgstr ""
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 msgid "Not up to Date"
 msgstr ""
 
-#: src/gui/ui.cpp:939
+#: src/gui/ui.cpp:938
 msgid " is required to play. Should it be downloaded?"
 msgstr ""
 
-#: src/gui/ui.cpp:941
+#: src/gui/ui.cpp:940
 msgid "Content is missing"
 msgstr ""
 
-#: src/gui/ui.cpp:970
+#: src/gui/ui.cpp:969
 msgid ""
 "The certificate by the server is unkown. Do you want to trust it? Please "
 "verify the fingerprint:\n"
 msgstr ""
 
-#: src/gui/ui.cpp:970 src/gui/ui.cpp:972
+#: src/gui/ui.cpp:969 src/gui/ui.cpp:971
 msgid "Unknown Certificate"
 msgstr ""
 
-#: src/gui/ui.cpp:972
+#: src/gui/ui.cpp:971
 msgid ""
 "The certificate by the server is invalid! Maybe there is a MITM ongoing. Do "
 "you want ignore this warning?:\n"
@@ -4244,7 +4230,8 @@ msgid "Kicked by Host"
 msgstr ""
 
 #: src/serverevents.cpp:930
-msgid "Begin mutelist for "
+#, c-format
+msgid "Begin mutelist for channel %s"
 msgstr ""
 
 #: src/serverevents.cpp:930
@@ -5306,28 +5293,45 @@ msgstr ""
 msgid "SlPaths::ValidatePaths() : Failed to validate data directories!"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:74
+#: src/utils/wxTranslationHelper.cpp:57
+#, c-format
+msgid "Loaded locale %s %d %s %s"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:71
 msgid "English"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:90
+#: src/utils/wxTranslationHelper.cpp:87
 #, c-format
 msgid "SEARCHING FOR %s"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:94
+#: src/utils/wxTranslationHelper.cpp:91
 #, fuzzy
 msgid " (Default)"
 msgstr "domyślny"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 #, fuzzy
 msgid "Select the language"
 msgstr "kanał"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Language"
 msgstr ""
+
+#, fuzzy
+#~ msgid "%d "
+#~ msgstr "%d%"
+
+#, fuzzy
+#~ msgid "% complete"
+#~ msgstr "Ściągnij &mape"
+
+#, fuzzy
+#~ msgid "the battle2"
+#~ msgstr "Rozpocznij bitwe"
 
 #, fuzzy
 #~ msgid "Download complete: "

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 18:56+0100\n"
+"POT-Creation-Date: 2017-12-25 22:44+0100\n"
 "PO-Revision-Date: 2008-07-30 23:31+0000\n"
 "Last-Translator: SpringLobby_Buildbot <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -1401,7 +1401,7 @@ msgstr "\" parametrit: \""
 #: src/gui/chatpanel.cpp:708
 #, fuzzy, c-format
 msgid "Error: %s"
-msgstr "Virhe"
+msgstr "Virhe %s"
 
 #: src/gui/chatpanel.cpp:715
 #, fuzzy
@@ -1421,7 +1421,7 @@ msgstr "palvelin"
 #: src/gui/chatpanel.cpp:731 src/gui/chatpanel.cpp:750
 #, fuzzy, c-format
 msgid "%s joined %s."
-msgstr " liityit peliin "
+msgstr "%s liityit peliin %s"
 
 #: src/gui/chatpanel.cpp:763
 #, c-format
@@ -1430,15 +1430,13 @@ msgstr ""
 
 #: src/gui/chatpanel.cpp:802
 #, fuzzy
-msgid "** Channel topic:"
+msgid "Channel topic"
 msgstr "Kanavan tiedot"
 
 #: src/gui/chatpanel.cpp:808
-#, fuzzy
-msgid "** Set by "
-msgstr ""
-"\n"
-" * Asettaja "
+#, fuzzy, c-format
+msgid "Set by %s"
+msgstr "Asettaja %s"
 
 #: src/gui/chatpanel.cpp:917
 #, c-format
@@ -1996,9 +1994,9 @@ msgstr ""
 msgid "Status"
 msgstr "Tila:"
 
-#: src/gui/downloaddataviewctrl.cpp:24
-#, fuzzy, c-format
-msgid "% complete"
+#: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
+#, fuzzy
+msgid "complete"
 msgstr "Ei modia valittuna."
 
 #: src/gui/downloaddataviewctrl.cpp:27
@@ -2013,11 +2011,6 @@ msgstr ""
 #, fuzzy
 msgid "Filesize (MB)"
 msgstr "&Tiedosto"
-
-#: src/gui/downloaddataviewmodel.cpp:38
-#, fuzzy
-msgid "complete"
-msgstr "Ei modia valittuna."
 
 #: src/gui/downloaddataviewmodel.cpp:40
 #, fuzzy
@@ -2701,16 +2694,6 @@ msgstr ""
 #: src/gui/hosting/battleroomtab.cpp:443
 #, c-format
 msgid "%d way FFA"
-msgstr ""
-
-#: src/gui/hosting/battleroomtab.cpp:445
-#, fuzzy, c-format
-msgid "%s"
-msgstr "s"
-
-#: src/gui/hosting/battleroomtab.cpp:532
-#, c-format
-msgid "%d "
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:609
@@ -3629,9 +3612,7 @@ msgstr ""
 #: src/gui/options/lobbyoptionstab.cpp:127
 #, fuzzy
 msgid "Requires SpringLobby restart to take effect."
-msgstr ""
-"SpringLobby versio on ajan tasalla!\n"
-"\n"
+msgstr "SpringLobby versio on ajan tasalla!"
 
 #: src/gui/options/lobbyoptionstab.cpp:132
 #, fuzzy
@@ -4014,7 +3995,7 @@ msgstr "Lataa"
 #: src/gui/taskbar.cpp:136
 #, fuzzy, c-format
 msgid "Downloading %s"
-msgstr "Lataa"
+msgstr "Lataa %s"
 
 #: src/gui/ui.cpp:241
 #, fuzzy
@@ -4128,7 +4109,7 @@ msgstr ""
 #: src/gui/ui.cpp:328
 #, fuzzy, c-format
 msgid "disconnected from server: %s"
-msgstr "Tuntematon vastaus palvelimelta"
+msgstr "Tuntematon vastaus palvelimelta %s"
 
 #: src/gui/ui.cpp:367
 msgid "no active chat panels open."
@@ -4137,7 +4118,7 @@ msgstr "Ei aktiivisia keskusteluikkunoita auki."
 #: src/gui/ui.cpp:370
 #, fuzzy, c-format
 msgid "%s (%d users)"
-msgstr "(%d käyttäjät)"
+msgstr "%s (%d käyttäjät)"
 
 #: src/gui/ui.cpp:511
 msgid "The current battle was closed by the host."
@@ -4182,14 +4163,14 @@ msgid "Up to Date"
 msgstr "Ajan tasalla"
 
 #: src/gui/ui.cpp:822
-#, c-format
-msgid ""
-"Your %s version is not up to date.\n"
-"\n"
-"%s\n"
-"\n"
-"Would you like to update to the new version?"
-msgstr ""
+#, fuzzy, c-format
+msgid "Your %s version is not up to date."
+msgstr "%s versiosi on vanha."
+
+#: src/gui/ui.cpp:822
+#, fuzzy
+msgid "Would you like to update to the new version?"
+msgstr "Haluatko siirtyä sivulle jolta voit ladata uusimman version?"
 
 #: src/gui/ui.cpp:825
 #, fuzzy
@@ -4197,53 +4178,52 @@ msgid "Update Springlobby?"
 msgstr " Sinulla on käytössä SpringLobby v"
 
 #: src/gui/ui.cpp:832
-#, c-format
-msgid ""
-"Automatic update failed\n"
-"\t\t\t\t\t%s\n"
-"\t\t\t\t\tyou will be redirected to a web page with instructions and the "
-"download link will be opened in your browser. %s"
+msgid "Automatic update failed."
 msgstr ""
 
-#: src/gui/ui.cpp:836
+#: src/gui/ui.cpp:833
+msgid ""
+"you will be redirected to a web page with instructions and the download link "
+"will be opened in your browser."
+msgstr ""
+
+#: src/gui/ui.cpp:835
 #, fuzzy
 msgid "Updater error."
 msgstr "Pelaajien määrä"
 
-#: src/gui/ui.cpp:844
+#: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
 msgstr ""
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 #, fuzzy
 msgid "Your SpringLobby version is not up to date."
-msgstr ""
-"SpringLobby versiosi on vanha.\n"
-"\n"
+msgstr "SpringLobby versiosi on vanha."
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 msgid "Not up to Date"
 msgstr "Ei ajan tasalla"
 
-#: src/gui/ui.cpp:939
+#: src/gui/ui.cpp:938
 msgid " is required to play. Should it be downloaded?"
 msgstr ""
 
-#: src/gui/ui.cpp:941
+#: src/gui/ui.cpp:940
 msgid "Content is missing"
 msgstr ""
 
-#: src/gui/ui.cpp:970
+#: src/gui/ui.cpp:969
 msgid ""
 "The certificate by the server is unkown. Do you want to trust it? Please "
 "verify the fingerprint:\n"
 msgstr ""
 
-#: src/gui/ui.cpp:970 src/gui/ui.cpp:972
+#: src/gui/ui.cpp:969 src/gui/ui.cpp:971
 msgid "Unknown Certificate"
 msgstr ""
 
-#: src/gui/ui.cpp:972
+#: src/gui/ui.cpp:971
 msgid ""
 "The certificate by the server is invalid! Maybe there is a MITM ongoing. Do "
 "you want ignore this warning?:\n"
@@ -4350,13 +4330,14 @@ msgid "Kicked by Host"
 msgstr ""
 
 #: src/serverevents.cpp:930
-msgid "Begin mutelist for "
+#, c-format
+msgid "Begin mutelist for channel %s"
 msgstr ""
 
 #: src/serverevents.cpp:930
 #, fuzzy, c-format
 msgid "%s mutelist"
-msgstr "Pelilistaus"
+msgstr "%s Pelilistaus"
 
 #: src/serverevents.cpp:940
 msgid " indefinite time remaining"
@@ -5423,28 +5404,49 @@ msgstr ""
 msgid "SlPaths::ValidatePaths() : Failed to validate data directories!"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:74
+#: src/utils/wxTranslationHelper.cpp:57
+#, c-format
+msgid "Loaded locale %s %d %s %s"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:71
 msgid "English"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:90
+#: src/utils/wxTranslationHelper.cpp:87
 #, c-format
 msgid "SEARCHING FOR %s"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:94
+#: src/utils/wxTranslationHelper.cpp:91
 #, fuzzy
 msgid " (Default)"
 msgstr "oletus"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 #, fuzzy
 msgid "Select the language"
 msgstr "Kanavan tiedot"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Language"
 msgstr ""
+
+#, fuzzy
+#~ msgid "% complete"
+#~ msgstr "Ei modia valittuna."
+
+#, fuzzy
+#~ msgid "%s"
+#~ msgstr "s"
+
+#, fuzzy
+#~ msgid "the battle2"
+#~ msgstr "peli"
+
+#, fuzzy
+#~ msgid "%s has joined %s"
+#~ msgstr " liityit peliin "
 
 #~ msgid "System information"
 #~ msgstr "Järjestelmän tiedot"
@@ -6206,16 +6208,6 @@ msgstr ""
 
 #~ msgid "Map/Mod Options"
 #~ msgstr "Kartta/Modi Asetukset"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Would you like to visit a page with instructions on how to download the "
-#~ "newest version?"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Haluatko siirtyä sivulle jolta voit ladata uusimman version?"
 
 #~ msgid "Limit D-Gun"
 #~ msgstr "D-Gun rajoitus"

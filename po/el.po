@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 18:56+0100\n"
+"POT-Creation-Date: 2017-12-25 22:44+0100\n"
 "PO-Revision-Date: 2008-08-31 17:39+0000\n"
 "Last-Translator: Antonis Kanouras <antonis@metadosis.gr>\n"
 "Language-Team: Greek <el@li.org>\n"
@@ -1402,7 +1402,7 @@ msgstr "\" παράμετροι: \""
 #: src/gui/chatpanel.cpp:708
 #, fuzzy, c-format
 msgid "Error: %s"
-msgstr "Σφάλμα"
+msgstr "Σφάλμα %s"
 
 #: src/gui/chatpanel.cpp:715
 #, fuzzy
@@ -1422,7 +1422,7 @@ msgstr "εξυπηρετητής"
 #: src/gui/chatpanel.cpp:731 src/gui/chatpanel.cpp:750
 #, fuzzy, c-format
 msgid "%s joined %s."
-msgstr " εισήλθε στο "
+msgstr "%s εισήλθε στο %s"
 
 #: src/gui/chatpanel.cpp:763
 #, c-format
@@ -1431,15 +1431,13 @@ msgstr ""
 
 #: src/gui/chatpanel.cpp:802
 #, fuzzy
-msgid "** Channel topic:"
+msgid "Channel topic"
 msgstr "Πληροφορίες καναλιού"
 
 #: src/gui/chatpanel.cpp:808
-#, fuzzy
-msgid "** Set by "
-msgstr ""
-"\n"
-" * Ορίστηκε από "
+#, fuzzy, c-format
+msgid "Set by %s"
+msgstr "** Ορίστηκε από "
 
 #: src/gui/chatpanel.cpp:917
 #, c-format
@@ -2013,9 +2011,9 @@ msgstr ""
 msgid "Status"
 msgstr "Κατάσταση:"
 
-#: src/gui/downloaddataviewctrl.cpp:24
-#, fuzzy, c-format
-msgid "% complete"
+#: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
+#, fuzzy
+msgid "complete"
 msgstr "Λήψη ολοκληρώθηκε"
 
 #: src/gui/downloaddataviewctrl.cpp:27
@@ -2030,11 +2028,6 @@ msgstr "Χρόνος (δευ.)"
 #: src/gui/downloaddataviewctrl.cpp:32
 msgid "Filesize (MB)"
 msgstr "μέγεθος (MB)"
-
-#: src/gui/downloaddataviewmodel.cpp:38
-#, fuzzy
-msgid "complete"
-msgstr "Λήψη ολοκληρώθηκε"
 
 #: src/gui/downloaddataviewmodel.cpp:40
 #, fuzzy
@@ -2737,16 +2730,6 @@ msgstr ""
 msgid "%d way FFA"
 msgstr ""
 
-#: src/gui/hosting/battleroomtab.cpp:445
-#, fuzzy, c-format
-msgid "%s"
-msgstr "κ"
-
-#: src/gui/hosting/battleroomtab.cpp:532
-#, fuzzy, c-format
-msgid "%d "
-msgstr "%d"
-
 #: src/gui/hosting/battleroomtab.cpp:609
 msgid "You need to be in an autohost for this to work."
 msgstr ""
@@ -3250,7 +3233,7 @@ msgstr "επίδομα: %d%%"
 #: src/gui/mapgridctrl.cpp:265
 #, fuzzy, c-format
 msgid "Map %s doesn't exist!"
-msgstr "Δεν υπάρχει ο χάρτης."
+msgstr "Δεν %s υπάρχει ο χάρτης."
 
 #: src/gui/mapgridctrl.cpp:280
 #, c-format
@@ -3669,9 +3652,7 @@ msgstr "Εμφάνιση συμβουλών"
 #: src/gui/options/lobbyoptionstab.cpp:127
 #, fuzzy
 msgid "Requires SpringLobby restart to take effect."
-msgstr ""
-"H έκδοση του SpringLobby είναι ενημερωμένη!\n"
-"\n"
+msgstr "H έκδοση του SpringLobby είναι ενημερωμένη!"
 
 #: src/gui/options/lobbyoptionstab.cpp:132
 #, fuzzy
@@ -3855,9 +3836,7 @@ msgstr "Επιλογή φακέλου"
 #: src/gui/options/springoptionstab.cpp:361
 #, fuzzy, c-format
 msgid "Something went wrong when creating the directory: %s"
-msgstr ""
-"Κάτι πήγε στραβά κατά τη δημιουργία των φακέλων\n"
-"Παρακαλώ δημιουργήστε με το χέρι τους παρακάτω φάκελους:"
+msgstr "Παρακαλώ δημιουργήστε με το χέρι τους παρακάτω φάκελους: %s"
 
 #: src/gui/options/springoptionstab.cpp:387
 msgid "Reloading unitsync"
@@ -4069,7 +4048,7 @@ msgstr "Αποτυχία λήψης"
 #: src/gui/taskbar.cpp:136
 #, fuzzy, c-format
 msgid "Downloading %s"
-msgstr "Λήψη αρχείου"
+msgstr "Λήψη αρχείου %s"
 
 #: src/gui/ui.cpp:241
 #, fuzzy
@@ -4200,7 +4179,7 @@ msgstr ""
 #: src/gui/ui.cpp:328
 #, fuzzy, c-format
 msgid "disconnected from server: %s"
-msgstr "Άγνωστη απάντηση από τον εξυπηρετητή"
+msgstr "Άγνωστη απάντηση από τον εξυπηρετητή: %s"
 
 #: src/gui/ui.cpp:367
 msgid "no active chat panels open."
@@ -4209,7 +4188,7 @@ msgstr "καμία ενεργή συνομιλία ανοιχτή."
 #: src/gui/ui.cpp:370
 #, fuzzy, c-format
 msgid "%s (%d users)"
-msgstr "(%d χρήστες)"
+msgstr "%s (%d χρήστες)"
 
 #: src/gui/ui.cpp:511
 msgid "The current battle was closed by the host."
@@ -4255,14 +4234,18 @@ msgid "Up to Date"
 msgstr "Ενημερωμένο"
 
 #: src/gui/ui.cpp:822
-#, c-format
-msgid ""
-"Your %s version is not up to date.\n"
-"\n"
-"%s\n"
-"\n"
-"Would you like to update to the new version?"
+#, fuzzy, c-format
+msgid "Your %s version is not up to date."
+msgstr "Η έκδοση του SpringLobby δεν είναι ενημερωμένη."
+
+#: src/gui/ui.cpp:822
+#, fuzzy
+msgid "Would you like to update to the new version?"
 msgstr ""
+"\n"
+"\n"
+"Θέλετε να επισκεφθείτε μια σελίδα με οδηγίες σχετικά με το πως να κατεβάσετε "
+"την τελευταία έκδοση;"
 
 #: src/gui/ui.cpp:825
 #, fuzzy
@@ -4270,53 +4253,52 @@ msgid "Update Springlobby?"
 msgstr " Χρησιμοποιείτε το SpringLobby v"
 
 #: src/gui/ui.cpp:832
-#, c-format
-msgid ""
-"Automatic update failed\n"
-"\t\t\t\t\t%s\n"
-"\t\t\t\t\tyou will be redirected to a web page with instructions and the "
-"download link will be opened in your browser. %s"
+msgid "Automatic update failed."
 msgstr ""
 
-#: src/gui/ui.cpp:836
+#: src/gui/ui.cpp:833
+msgid ""
+"you will be redirected to a web page with instructions and the download link "
+"will be opened in your browser."
+msgstr ""
+
+#: src/gui/ui.cpp:835
 #, fuzzy
 msgid "Updater error."
 msgstr "Αριθμός παικτών"
 
-#: src/gui/ui.cpp:844
+#: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
 msgstr ""
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 #, fuzzy
 msgid "Your SpringLobby version is not up to date."
-msgstr ""
-"Η έκδοση του SpringLobby δεν είναι ενημερωμένη.\n"
-"\n"
+msgstr "Η έκδοση του SpringLobby δεν είναι ενημερωμένη."
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 msgid "Not up to Date"
 msgstr "Μη Ενημερωμένο"
 
-#: src/gui/ui.cpp:939
+#: src/gui/ui.cpp:938
 msgid " is required to play. Should it be downloaded?"
 msgstr ""
 
-#: src/gui/ui.cpp:941
+#: src/gui/ui.cpp:940
 msgid "Content is missing"
 msgstr ""
 
-#: src/gui/ui.cpp:970
+#: src/gui/ui.cpp:969
 msgid ""
 "The certificate by the server is unkown. Do you want to trust it? Please "
 "verify the fingerprint:\n"
 msgstr ""
 
-#: src/gui/ui.cpp:970 src/gui/ui.cpp:972
+#: src/gui/ui.cpp:969 src/gui/ui.cpp:971
 msgid "Unknown Certificate"
 msgstr ""
 
-#: src/gui/ui.cpp:972
+#: src/gui/ui.cpp:971
 msgid ""
 "The certificate by the server is invalid! Maybe there is a MITM ongoing. Do "
 "you want ignore this warning?:\n"
@@ -4423,13 +4405,14 @@ msgid "Kicked by Host"
 msgstr "Αποπομπή από Οικοδεσπότη"
 
 #: src/serverevents.cpp:930
-msgid "Begin mutelist for "
+#, c-format
+msgid "Begin mutelist for channel %s"
 msgstr ""
 
 #: src/serverevents.cpp:930
 #, fuzzy, c-format
 msgid "%s mutelist"
-msgstr "Λίστα μαχών"
+msgstr "%s Λίστα μαχών"
 
 #: src/serverevents.cpp:940
 msgid " indefinite time remaining"
@@ -5576,29 +5559,54 @@ msgstr ""
 msgid "SlPaths::ValidatePaths() : Failed to validate data directories!"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:74
+#: src/utils/wxTranslationHelper.cpp:57
+#, c-format
+msgid "Loaded locale %s %d %s %s"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:71
 msgid "English"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:90
+#: src/utils/wxTranslationHelper.cpp:87
 #, c-format
 msgid "SEARCHING FOR %s"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:94
+#: src/utils/wxTranslationHelper.cpp:91
 #, fuzzy
 msgid " (Default)"
 msgstr "προεπιλογή"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 #, fuzzy
 msgid "Select the language"
 msgstr "Πληροφορίες καναλιού"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 #, fuzzy
 msgid "Language"
 msgstr "Καταγωγή"
+
+#, fuzzy
+#~ msgid "%d "
+#~ msgstr "%d"
+
+#, fuzzy
+#~ msgid "% complete"
+#~ msgstr "Λήψη ολοκληρώθηκε"
+
+#, fuzzy
+#~ msgid "%s"
+#~ msgstr "κ"
+
+#, fuzzy
+#~ msgid "the battle2"
+#~ msgstr "Έναρξη μάχης"
+
+#, fuzzy
+#~ msgid "%s has joined %s"
+#~ msgstr " εισήλθε στο "
 
 #~ msgid "System information"
 #~ msgstr "Πληροφορίες συστήματος"
@@ -7013,17 +7021,6 @@ msgstr "Καταγωγή"
 
 #~ msgid "Map/Mod Options"
 #~ msgstr "Επιλογές Χάρτη/Mod"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Would you like to visit a page with instructions on how to download the "
-#~ "newest version?"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Θέλετε να επισκεφθείτε μια σελίδα με οδηγίες σχετικά με το πως να "
-#~ "κατεβάσετε την τελευταία έκδοση;"
 
 #~ msgid "Limit D-Gun"
 #~ msgstr "Περιορισμός D-Gun"

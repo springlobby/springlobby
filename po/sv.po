@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpringLobby 0.0.1-svn\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 18:56+0100\n"
+"POT-Creation-Date: 2017-12-25 22:44+0100\n"
 "PO-Revision-Date: 2008-08-02 17:18+0000\n"
 "Last-Translator: nanker <Unknown>\n"
 "Language-Team: Swedish\n"
@@ -1400,7 +1400,7 @@ msgstr ""
 #: src/gui/chatpanel.cpp:708
 #, fuzzy, c-format
 msgid "Error: %s"
-msgstr "Felmedelanden"
+msgstr "Felmedelanden: %s"
 
 #: src/gui/chatpanel.cpp:715
 #, fuzzy
@@ -1420,7 +1420,7 @@ msgstr "server"
 #: src/gui/chatpanel.cpp:731 src/gui/chatpanel.cpp:750
 #, fuzzy, c-format
 msgid "%s joined %s."
-msgstr " gick med i "
+msgstr "%s gick med i %s"
 
 #: src/gui/chatpanel.cpp:763
 #, c-format
@@ -1429,15 +1429,13 @@ msgstr ""
 
 #: src/gui/chatpanel.cpp:802
 #, fuzzy
-msgid "** Channel topic:"
+msgid "Channel topic"
 msgstr "Kanal information"
 
 #: src/gui/chatpanel.cpp:808
-#, fuzzy
-msgid "** Set by "
-msgstr ""
-"\n"
-" * Satt av "
+#, fuzzy, c-format
+msgid "Set by %s"
+msgstr "Satt av %s"
 
 #: src/gui/chatpanel.cpp:917
 #, c-format
@@ -1999,9 +1997,9 @@ msgstr ""
 msgid "Status"
 msgstr "Status:"
 
-#: src/gui/downloaddataviewctrl.cpp:24
-#, fuzzy, c-format
-msgid "% complete"
+#: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
+#, fuzzy
+msgid "complete"
 msgstr "Ingen mod vald."
 
 #: src/gui/downloaddataviewctrl.cpp:27
@@ -2016,11 +2014,6 @@ msgstr ""
 #, fuzzy
 msgid "Filesize (MB)"
 msgstr "&Arkiv"
-
-#: src/gui/downloaddataviewmodel.cpp:38
-#, fuzzy
-msgid "complete"
-msgstr "Ingen mod vald."
 
 #: src/gui/downloaddataviewmodel.cpp:40
 #, fuzzy
@@ -2705,16 +2698,6 @@ msgstr ""
 #, c-format
 msgid "%d way FFA"
 msgstr ""
-
-#: src/gui/hosting/battleroomtab.cpp:445
-#, fuzzy, c-format
-msgid "%s"
-msgstr "s"
-
-#: src/gui/hosting/battleroomtab.cpp:532
-#, fuzzy, c-format
-msgid "%d "
-msgstr "%d%"
 
 #: src/gui/hosting/battleroomtab.cpp:609
 msgid "You need to be in an autohost for this to work."
@@ -3631,9 +3614,7 @@ msgstr ""
 #: src/gui/options/lobbyoptionstab.cpp:127
 #, fuzzy
 msgid "Requires SpringLobby restart to take effect."
-msgstr ""
-"Din SpringLobby version är redan uppdaterad.\n"
-"\n"
+msgstr "Din SpringLobby version är redan uppdaterad."
 
 #: src/gui/options/lobbyoptionstab.cpp:132
 #, fuzzy
@@ -4016,7 +3997,7 @@ msgstr "Ladda ner"
 #: src/gui/taskbar.cpp:136
 #, fuzzy, c-format
 msgid "Downloading %s"
-msgstr "Ladda ner"
+msgstr "Ladda ner %s"
 
 #: src/gui/ui.cpp:241
 #, fuzzy
@@ -4132,7 +4113,7 @@ msgstr ""
 #: src/gui/ui.cpp:328
 #, fuzzy, c-format
 msgid "disconnected from server: %s"
-msgstr "Anslut till lobby server"
+msgstr "Anslut till lobby server %s"
 
 #: src/gui/ui.cpp:367
 msgid "no active chat panels open."
@@ -4141,7 +4122,7 @@ msgstr "inga aktiva chat paneler öppna."
 #: src/gui/ui.cpp:370
 #, fuzzy, c-format
 msgid "%s (%d users)"
-msgstr "(%d användare)"
+msgstr "%s (%d användare)"
 
 #: src/gui/ui.cpp:511
 msgid "The current battle was closed by the host."
@@ -4186,14 +4167,14 @@ msgid "Up to Date"
 msgstr "Uppdaterad"
 
 #: src/gui/ui.cpp:822
-#, c-format
-msgid ""
-"Your %s version is not up to date.\n"
-"\n"
-"%s\n"
-"\n"
-"Would you like to update to the new version?"
-msgstr ""
+#, fuzzy, c-format
+msgid "Your %s version is not up to date."
+msgstr "Du har en äldre version av %s."
+
+#: src/gui/ui.cpp:822
+#, fuzzy
+msgid "Would you like to update to the new version?"
+msgstr "Vill du gå till sidan som beskriver hur du uppdaterar?"
 
 #: src/gui/ui.cpp:825
 #, fuzzy
@@ -4201,53 +4182,52 @@ msgid "Update Springlobby?"
 msgstr " Du har SpringLobby v"
 
 #: src/gui/ui.cpp:832
-#, c-format
-msgid ""
-"Automatic update failed\n"
-"\t\t\t\t\t%s\n"
-"\t\t\t\t\tyou will be redirected to a web page with instructions and the "
-"download link will be opened in your browser. %s"
+msgid "Automatic update failed."
 msgstr ""
 
-#: src/gui/ui.cpp:836
+#: src/gui/ui.cpp:833
+msgid ""
+"you will be redirected to a web page with instructions and the download link "
+"will be opened in your browser."
+msgstr ""
+
+#: src/gui/ui.cpp:835
 #, fuzzy
 msgid "Updater error."
 msgstr "Antal spelare"
 
-#: src/gui/ui.cpp:844
+#: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
 msgstr ""
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 #, fuzzy
 msgid "Your SpringLobby version is not up to date."
-msgstr ""
-"Du har en äldre version av SpringLobby.\n"
-"\n"
+msgstr "Du har en äldre version av SpringLobby."
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 msgid "Not up to Date"
 msgstr "Inte uppdaterad"
 
-#: src/gui/ui.cpp:939
+#: src/gui/ui.cpp:938
 msgid " is required to play. Should it be downloaded?"
 msgstr ""
 
-#: src/gui/ui.cpp:941
+#: src/gui/ui.cpp:940
 msgid "Content is missing"
 msgstr ""
 
-#: src/gui/ui.cpp:970
+#: src/gui/ui.cpp:969
 msgid ""
 "The certificate by the server is unkown. Do you want to trust it? Please "
 "verify the fingerprint:\n"
 msgstr ""
 
-#: src/gui/ui.cpp:970 src/gui/ui.cpp:972
+#: src/gui/ui.cpp:969 src/gui/ui.cpp:971
 msgid "Unknown Certificate"
 msgstr ""
 
-#: src/gui/ui.cpp:972
+#: src/gui/ui.cpp:971
 msgid ""
 "The certificate by the server is invalid! Maybe there is a MITM ongoing. Do "
 "you want ignore this warning?:\n"
@@ -4354,13 +4334,14 @@ msgid "Kicked by Host"
 msgstr "Ut sparkad ur spelet"
 
 #: src/serverevents.cpp:930
-msgid "Begin mutelist for "
+#, c-format
+msgid "Begin mutelist for channel %s"
 msgstr ""
 
 #: src/serverevents.cpp:930
 #, fuzzy, c-format
 msgid "%s mutelist"
-msgstr "Spel lista"
+msgstr "%s Spel lista"
 
 #: src/serverevents.cpp:940
 msgid " indefinite time remaining"
@@ -5427,28 +5408,53 @@ msgstr ""
 msgid "SlPaths::ValidatePaths() : Failed to validate data directories!"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:74
+#: src/utils/wxTranslationHelper.cpp:57
+#, c-format
+msgid "Loaded locale %s %d %s %s"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:71
 msgid "English"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:90
+#: src/utils/wxTranslationHelper.cpp:87
 #, c-format
 msgid "SEARCHING FOR %s"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:94
+#: src/utils/wxTranslationHelper.cpp:91
 #, fuzzy
 msgid " (Default)"
 msgstr "standard"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 #, fuzzy
 msgid "Select the language"
 msgstr "Kanal information"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Language"
 msgstr ""
+
+#, fuzzy
+#~ msgid "%d "
+#~ msgstr "%d%"
+
+#, fuzzy
+#~ msgid "% complete"
+#~ msgstr "Ingen mod vald."
+
+#, fuzzy
+#~ msgid "%s"
+#~ msgstr "s"
+
+#, fuzzy
+#~ msgid "the battle2"
+#~ msgstr "spel"
+
+#, fuzzy
+#~ msgid "%s has joined %s"
+#~ msgstr " gick med i "
 
 #~ msgid "System information"
 #~ msgstr "System information"
@@ -6288,16 +6294,6 @@ msgstr ""
 
 #~ msgid "Map/Mod Options"
 #~ msgstr "Kart/mod alternativ"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Would you like to visit a page with instructions on how to download the "
-#~ "newest version?"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Vill du gå till sidan som beskriver hur du uppdaterar?"
 
 #~ msgid "Limit D-Gun"
 #~ msgstr "Begränsa d-gun"

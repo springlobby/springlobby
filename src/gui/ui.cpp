@@ -819,7 +819,7 @@ void Ui::CheckForUpdates(bool show)
 		return;
 	}
 #ifdef __WXMSW__
-	const wxString message = wxString::Format(_("Your %s version is not up to date.\n\n%s\n\nWould you like to update to the new version?"),
+	const wxString message = wxString::Format(_("Your %s version is not up to date.") + _T("\n\n%s\n\n") + _("Would you like to update to the new version?"),
 						  TowxString(getSpringlobbyName()).c_str(),
 						  msg.c_str());
 	const wxString heading = _("Update Springlobby?");
@@ -829,9 +829,8 @@ void Ui::CheckForUpdates(bool show)
 		prDownloader().UpdateApplication(GetDownloadUrl(latestversion));
 	} catch (Exception& ex) {
 		//this will also happen if updater exe is not present so we don't really ne special check for existance of it
-		const wxString errormsg = wxString::Format(_("Automatic update failed\n\
-					%s\n\
-					you will be redirected to a web page with instructions and the download link will be opened in your browser. %s"),
+		const wxString errormsg = wxString::Format(_("Automatic update failed.") +_T("\n%s\n%s\n") +
+					_("you will be redirected to a web page with instructions and the download link will be opened in your browser."),
 							   ex.Reason(), msg);
 		customMessageBox(SL_MAIN_ICON, errormsg, _("Updater error."));
 		OpenWebBrowser(_T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary"));

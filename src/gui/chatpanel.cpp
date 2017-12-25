@@ -799,13 +799,13 @@ void ChatPanel::SetTopic(const wxString& who, const wxString& message)
 	// change the image of the tab to show new events
 	if (m_topic_set)
 		SetIconHighlight(highlight_say);
-	OutputLine(_("** Channel topic:"), col);
+	OutputLine(_T("** ") + _("Channel topic"), col);
 	wxStringTokenizer tkz(message, _T("\n"));
 	while (tkz.HasMoreTokens()) {
 		wxString msg = tkz.GetNextToken();
 		OutputLine(_T(" ") + msg, col);
 	}
-	OutputLine(_("** Set by ") + who, col);
+	OutputLine(_T("** ") + wxString::Format(_("Set by %s"), who), col);
 	m_topic_set = true;
 }
 

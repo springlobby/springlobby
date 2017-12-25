@@ -284,7 +284,7 @@ public:
 	/*    void SetUserData( void* userdata ) { m_data = userdata; }
         void* GetUserData() { return m_data; }*/
 
-	bool Equals(const CommonUser& other) const
+	bool operator == (const CommonUser& other) const
 	{
 		return (m_nick == other.GetNick());
 	}

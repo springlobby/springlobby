@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 18:56+0100\n"
+"POT-Creation-Date: 2017-12-25 22:44+0100\n"
 "PO-Revision-Date: 2008-09-07 20:22+0000\n"
 "Last-Translator: Danut Haiduc <danuthaiduc@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -1404,7 +1404,7 @@ msgstr "\" parametri: \""
 #: src/gui/chatpanel.cpp:708
 #, fuzzy, c-format
 msgid "Error: %s"
-msgstr "Eroare"
+msgstr "Eroare: %s"
 
 #: src/gui/chatpanel.cpp:715
 #, fuzzy
@@ -1424,7 +1424,7 @@ msgstr "server"
 #: src/gui/chatpanel.cpp:731 src/gui/chatpanel.cpp:750
 #, fuzzy, c-format
 msgid "%s joined %s."
-msgstr " a intrat în "
+msgstr "%s a intrat în %s"
 
 #: src/gui/chatpanel.cpp:763
 #, c-format
@@ -1433,15 +1433,13 @@ msgstr ""
 
 #: src/gui/chatpanel.cpp:802
 #, fuzzy
-msgid "** Channel topic:"
+msgid "Channel topic"
 msgstr "Informaţii canal"
 
 #: src/gui/chatpanel.cpp:808
-#, fuzzy
-msgid "** Set by "
-msgstr ""
-"\n"
-" * Setată de "
+#, fuzzy, c-format
+msgid "Set by %s"
+msgstr "Setată de %s"
 
 #: src/gui/chatpanel.cpp:917
 #, c-format
@@ -2013,9 +2011,9 @@ msgstr ""
 msgid "Status"
 msgstr "Stare:"
 
-#: src/gui/downloaddataviewctrl.cpp:24
-#, fuzzy, c-format
-msgid "% complete"
+#: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
+#, fuzzy
+msgid "complete"
 msgstr "% complet"
 
 #: src/gui/downloaddataviewctrl.cpp:27
@@ -2030,11 +2028,6 @@ msgstr "Timp estimat (s)"
 #: src/gui/downloaddataviewctrl.cpp:32
 msgid "Filesize (MB)"
 msgstr "Mărime fişier (MB)"
-
-#: src/gui/downloaddataviewmodel.cpp:38
-#, fuzzy
-msgid "complete"
-msgstr "% complet"
 
 #: src/gui/downloaddataviewmodel.cpp:40
 #, fuzzy
@@ -2735,16 +2728,6 @@ msgstr ""
 msgid "%d way FFA"
 msgstr ""
 
-#: src/gui/hosting/battleroomtab.cpp:445
-#, fuzzy, c-format
-msgid "%s"
-msgstr "s"
-
-#: src/gui/hosting/battleroomtab.cpp:532
-#, fuzzy, c-format
-msgid "%d "
-msgstr "%d"
-
 #: src/gui/hosting/battleroomtab.cpp:609
 msgid "You need to be in an autohost for this to work."
 msgstr ""
@@ -3250,7 +3233,7 @@ msgstr "bonus: %d%%"
 #: src/gui/mapgridctrl.cpp:265
 #, fuzzy, c-format
 msgid "Map %s doesn't exist!"
-msgstr "Harta nu există."
+msgstr "Harta %s nu există."
 
 #: src/gui/mapgridctrl.cpp:280
 #, c-format
@@ -3668,9 +3651,7 @@ msgstr "Arată ponturi"
 #: src/gui/options/lobbyoptionstab.cpp:127
 #, fuzzy
 msgid "Requires SpringLobby restart to take effect."
-msgstr ""
-"Versiunea dvs. de SpringLobby e actuală!\n"
-"\n"
+msgstr "Versiunea dvs. de SpringLobby e actuală!"
 
 #: src/gui/options/lobbyoptionstab.cpp:132
 #, fuzzy
@@ -3854,8 +3835,8 @@ msgstr "Alegeţi un director"
 #, fuzzy, c-format
 msgid "Something went wrong when creating the directory: %s"
 msgstr ""
-"Ceva a eşuat în crearea directoarelor\n"
-"Vă rog creaţi manual următoarele foldere:"
+"Ceva a eşuat în crearea directoarelor Vă rog creaţi manual următoarele "
+"foldere %s"
 
 #: src/gui/options/springoptionstab.cpp:387
 msgid "Reloading unitsync"
@@ -4067,7 +4048,7 @@ msgstr "Descărcare eşuată"
 #: src/gui/taskbar.cpp:136
 #, fuzzy, c-format
 msgid "Downloading %s"
-msgstr "Descarcă"
+msgstr "Descarcă %s"
 
 #: src/gui/ui.cpp:241
 #, fuzzy
@@ -4191,7 +4172,7 @@ msgstr ""
 #: src/gui/ui.cpp:328
 #, fuzzy, c-format
 msgid "disconnected from server: %s"
-msgstr "Răspuns necunoscut de la server"
+msgstr "Răspuns necunoscut de la server %s"
 
 #: src/gui/ui.cpp:367
 msgid "no active chat panels open."
@@ -4200,7 +4181,7 @@ msgstr "nu sunt deschise panouri chat active."
 #: src/gui/ui.cpp:370
 #, fuzzy, c-format
 msgid "%s (%d users)"
-msgstr "(%d utilizatori)"
+msgstr "%s (%d utilizatori)"
 
 #: src/gui/ui.cpp:511
 msgid "The current battle was closed by the host."
@@ -4246,14 +4227,16 @@ msgid "Up to Date"
 msgstr "Actualizat"
 
 #: src/gui/ui.cpp:822
-#, c-format
-msgid ""
-"Your %s version is not up to date.\n"
-"\n"
-"%s\n"
-"\n"
-"Would you like to update to the new version?"
+#, fuzzy, c-format
+msgid "Your %s version is not up to date."
+msgstr "Versiunea dvs. %s nu e actualizată."
+
+#: src/gui/ui.cpp:822
+#, fuzzy
+msgid "Would you like to update to the new version?"
 msgstr ""
+"Aţi dori să vizitaţi o pagină cu instrucţiuni cum să descărcaţi ultima "
+"versiune?"
 
 #: src/gui/ui.cpp:825
 #, fuzzy
@@ -4261,53 +4244,52 @@ msgid "Update Springlobby?"
 msgstr " Aveţi SpringLobby v"
 
 #: src/gui/ui.cpp:832
-#, c-format
-msgid ""
-"Automatic update failed\n"
-"\t\t\t\t\t%s\n"
-"\t\t\t\t\tyou will be redirected to a web page with instructions and the "
-"download link will be opened in your browser. %s"
+msgid "Automatic update failed."
 msgstr ""
 
-#: src/gui/ui.cpp:836
+#: src/gui/ui.cpp:833
+msgid ""
+"you will be redirected to a web page with instructions and the download link "
+"will be opened in your browser."
+msgstr ""
+
+#: src/gui/ui.cpp:835
 #, fuzzy
 msgid "Updater error."
 msgstr "Numărul jucătorilor"
 
-#: src/gui/ui.cpp:844
+#: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
 msgstr ""
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 #, fuzzy
 msgid "Your SpringLobby version is not up to date."
-msgstr ""
-"Versiunea dvs. SpringLobby nu e actualizată.\n"
-"\n"
+msgstr "Versiunea dvs. SpringLobby nu e actualizată."
 
-#: src/gui/ui.cpp:846
+#: src/gui/ui.cpp:845
 msgid "Not up to Date"
 msgstr "Neactualizat"
 
-#: src/gui/ui.cpp:939
+#: src/gui/ui.cpp:938
 msgid " is required to play. Should it be downloaded?"
 msgstr ""
 
-#: src/gui/ui.cpp:941
+#: src/gui/ui.cpp:940
 msgid "Content is missing"
 msgstr ""
 
-#: src/gui/ui.cpp:970
+#: src/gui/ui.cpp:969
 msgid ""
 "The certificate by the server is unkown. Do you want to trust it? Please "
 "verify the fingerprint:\n"
 msgstr ""
 
-#: src/gui/ui.cpp:970 src/gui/ui.cpp:972
+#: src/gui/ui.cpp:969 src/gui/ui.cpp:971
 msgid "Unknown Certificate"
 msgstr ""
 
-#: src/gui/ui.cpp:972
+#: src/gui/ui.cpp:971
 msgid ""
 "The certificate by the server is invalid! Maybe there is a MITM ongoing. Do "
 "you want ignore this warning?:\n"
@@ -4414,13 +4396,14 @@ msgid "Kicked by Host"
 msgstr "Dat afară de către gazdă"
 
 #: src/serverevents.cpp:930
-msgid "Begin mutelist for "
+#, c-format
+msgid "Begin mutelist for channel %s"
 msgstr ""
 
 #: src/serverevents.cpp:930
 #, fuzzy, c-format
 msgid "%s mutelist"
-msgstr "Listă de lupte"
+msgstr "%s Listă de lupte"
 
 #: src/serverevents.cpp:940
 msgid " indefinite time remaining"
@@ -5546,28 +5529,53 @@ msgstr ""
 msgid "SlPaths::ValidatePaths() : Failed to validate data directories!"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:74
+#: src/utils/wxTranslationHelper.cpp:57
+#, c-format
+msgid "Loaded locale %s %d %s %s"
+msgstr ""
+
+#: src/utils/wxTranslationHelper.cpp:71
 msgid "English"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:90
+#: src/utils/wxTranslationHelper.cpp:87
 #, c-format
 msgid "SEARCHING FOR %s"
 msgstr ""
 
-#: src/utils/wxTranslationHelper.cpp:94
+#: src/utils/wxTranslationHelper.cpp:91
 #, fuzzy
 msgid " (Default)"
 msgstr "implicit"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 #, fuzzy
 msgid "Select the language"
 msgstr "Informaţii canal"
 
-#: src/utils/wxTranslationHelper.cpp:122
+#: src/utils/wxTranslationHelper.cpp:119
 msgid "Language"
 msgstr ""
+
+#, fuzzy
+#~ msgid "%d "
+#~ msgstr "%d"
+
+#, fuzzy
+#~ msgid "% complete"
+#~ msgstr "% complet"
+
+#, fuzzy
+#~ msgid "%s"
+#~ msgstr "s"
+
+#, fuzzy
+#~ msgid "the battle2"
+#~ msgstr "luptă"
+
+#, fuzzy
+#~ msgid "%s has joined %s"
+#~ msgstr " a intrat în "
 
 #~ msgid "System information"
 #~ msgstr "Informaţii de sistem"
@@ -6945,17 +6953,6 @@ msgstr ""
 
 #~ msgid "Map/Mod Options"
 #~ msgstr "Opţiuni hartă/mod"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Would you like to visit a page with instructions on how to download the "
-#~ "newest version?"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Aţi dori să vizitaţi o pagină cu instrucţiuni cum să descărcaţi ultima "
-#~ "versiune?"
 
 #~ msgid "Limit D-Gun"
 #~ msgstr "Limitează D-Gun"
