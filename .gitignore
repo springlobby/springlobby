@@ -28,6 +28,7 @@ Makefile
 *.swp
 /po/*.gmo
 /po/locale/
+/po/springlobby.pot
 *~
 *.orig
 /springlobby_config.h
