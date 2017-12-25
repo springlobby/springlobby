@@ -59,7 +59,6 @@
 #include "sysinfo.h"
 
 #include <wx/debugrpt.h>
-#include <wx/intl.h>
 
 #if wxUSE_UNIX
 #include <X11/Xlib.h>
@@ -99,6 +98,29 @@ The error was 'RenderBadPicture (invalid Picture parameter)'.
 #endif
 }
 
+SLCONFIG("/General/LocalePath", "", "Path to locales");
+
+static wxString getLocalePath()
+{
+	wxString path = cfg().ReadString("/General/LocalePath");
+
+	if (path.empty()) {
+#ifdef __WXMSW__
+		path = wxPathOnly(wxStandardPaths::Get().GetExecutablePath()) + wxFileName::GetPathSeparator() + _T("locale");
+#else
+#if defined(LOCALE_INSTALL_DIR)
+		path = _T(LOCALE_INSTALL_DIR);
+#else
+	// use a dummy name here, we're only interested in the base path
+		path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"), wxStandardPaths::ResourceCat_Messages);
+		path = path.Left(path.First(_T("noneWH")));
+#endif
+#endif
+		cfg().Write("/General/LocalePath", path);
+	}
+	return path;
+}
+
 //! @brief Initializes the application.
 //!
 //! It will open the main window and connect default to server or open the connect window.
@@ -129,18 +151,7 @@ bool SpringLobbyApp::OnInit()
 	wxSocketBase::Initialize();
 
 
-#ifdef __WXMSW__
-	wxString path = wxPathOnly(wxStandardPaths::Get().GetExecutablePath()) + wxFileName::GetPathSeparator() + _T("locale");
-#else
-#if defined(LOCALE_INSTALL_DIR)
-		wxString path(_T(LOCALE_INSTALL_DIR));
-#else
-		// use a dummy name here, we're only interested in the base path
-		wxString path = wxStandardPaths::Get().GetLocalizedResourcesDir(_T("noneWH"), wxStandardPaths::ResourceCat_Messages);
-		path = path.Left(path.First(_T("noneWH")));
-#endif
-#endif
-	m_translationhelper = new wxTranslationHelper(GetAppName().Lower(), path);
+	m_translationhelper = new wxTranslationHelper(GetAppName().Lower(), getLocalePath());
 
 	const wxString configdir = TowxString(SlPaths::GetConfigfileDir());
 	SlPaths::mkDir(STD_STRING((configdir)));

@@ -21,6 +21,7 @@ wxTranslationHelper::wxTranslationHelper(const wxString& catalog, const wxString
 	if (search_path.IsEmpty()) {
 		m_SearchPath = TowxString(SlPaths::GetExecutableFolder());
 	}
+	wxLogWarning(_T("Using LocalePath %s"), m_SearchPath.c_str());
 	long language = cfg().ReadLong(_T("/General/LanguageID"));
 	if (!Load(language)) { //fallback when something went wrong
 		wxLogWarning("Couldn't load locale %ld, fallback to default", language);
