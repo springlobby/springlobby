@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpringLobby 0.0.1-svn\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 22:44+0100\n"
+"POT-Creation-Date: 2017-12-25 23:54+0100\n"
 "PO-Revision-Date: 2008-08-02 17:18+0000\n"
 "Last-Translator: nanker <Unknown>\n"
 "Language-Team: Swedish\n"
@@ -21,15 +21,15 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-Basepath: ..\n"
 
-#: src/chatlog.cpp:74
-#, fuzzy
-msgid "### Session Closed at [%Y-%m-%d %H:%M]"
-msgstr "### Sessionen avslutad ["
+#: src/chatlog.cpp:79
+#, c-format
+msgid "Session Closed at %s"
+msgstr ""
 
-#: src/chatlog.cpp:136
-#, fuzzy
-msgid "### Session Start at [%Y-%m-%d %H:%M]"
-msgstr "### Sessionen avslutad ["
+#: src/chatlog.cpp:141
+#, c-format
+msgid "Session started at %s"
+msgstr ""
 
 #: src/countrycodes.cpp:15
 msgid "Anonymous Proxy"
@@ -1280,7 +1280,7 @@ msgid "%d battles displayed"
 msgstr ""
 
 #: src/gui/battlelist/battlelisttab.cpp:298
-#: src/gui/hosting/battleroomtab.cpp:1293
+#: src/gui/hosting/battleroomtab.cpp:1295
 msgid ""
 "You cannot host a game while being offline. Please connect to a lobby server."
 msgstr ""
@@ -1288,7 +1288,7 @@ msgstr ""
 "lobby serven."
 
 #: src/gui/battlelist/battlelisttab.cpp:298
-#: src/gui/hosting/battleroomtab.cpp:1293
+#: src/gui/hosting/battleroomtab.cpp:1295
 msgid "Not Online."
 msgstr "Inte uppkopplad."
 
@@ -1967,8 +1967,8 @@ msgstr ""
 
 #: src/gui/contentsearchresultview.cpp:22 src/gui/hosting/battlemaptab.cpp:95
 #: src/gui/hosting/battleroomtab.cpp:517 src/gui/hosting/battleroomtab.cpp:523
-#: src/gui/hosting/battleroomtab.cpp:1244
-#: src/gui/hosting/battleroomtab.cpp:1246 src/gui/mapselectdialog.cpp:105
+#: src/gui/hosting/battleroomtab.cpp:1246
+#: src/gui/hosting/battleroomtab.cpp:1248 src/gui/mapselectdialog.cpp:105
 #: src/gui/singleplayertab.cpp:101
 msgid "Size"
 msgstr "Storlek"
@@ -2131,15 +2131,15 @@ msgid "Value"
 msgstr "Värde"
 
 #: src/gui/hosting/battlemaptab.cpp:96 src/gui/hosting/battleroomtab.cpp:518
-#: src/gui/hosting/battleroomtab.cpp:524 src/gui/hosting/battleroomtab.cpp:1248
-#: src/gui/hosting/battleroomtab.cpp:1249 src/gui/mapselectdialog.cpp:106
+#: src/gui/hosting/battleroomtab.cpp:524 src/gui/hosting/battleroomtab.cpp:1250
+#: src/gui/hosting/battleroomtab.cpp:1251 src/gui/mapselectdialog.cpp:106
 #: src/gui/singleplayertab.cpp:102
 msgid "Windspeed"
 msgstr "Vindhastighet"
 
 #: src/gui/hosting/battlemaptab.cpp:97 src/gui/hosting/battleroomtab.cpp:519
-#: src/gui/hosting/battleroomtab.cpp:525 src/gui/hosting/battleroomtab.cpp:1251
-#: src/gui/hosting/battleroomtab.cpp:1252 src/gui/mapselectdialog.cpp:107
+#: src/gui/hosting/battleroomtab.cpp:525 src/gui/hosting/battleroomtab.cpp:1253
+#: src/gui/hosting/battleroomtab.cpp:1254 src/gui/mapselectdialog.cpp:107
 #: src/gui/mapselectdialog.cpp:174 src/gui/singleplayertab.cpp:103
 msgid "Tidal strength"
 msgstr "Strömstyrka"
@@ -2379,42 +2379,42 @@ msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:483
 #: src/gui/hosting/battleroommmoptionstab.cpp:500
-#: src/gui/hosting/battleroomtab.cpp:1034 src/gui/ui.cpp:367
+#: src/gui/hosting/battleroomtab.cpp:1036 src/gui/ui.cpp:367
 msgid "error"
 msgstr "fel"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:497
-#: src/gui/hosting/battleroomtab.cpp:1031
+#: src/gui/hosting/battleroomtab.cpp:1033
 msgid "Enter preset name"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:497
-#: src/gui/hosting/battleroomtab.cpp:1031
+#: src/gui/hosting/battleroomtab.cpp:1033
 msgid ""
 "Enter a name to save the current set of options\n"
 "If a preset with the same name already exist, it will be overwritten"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:500
-#: src/gui/hosting/battleroomtab.cpp:1034
+#: src/gui/hosting/battleroomtab.cpp:1036
 msgid "Cannot save an options set without a name."
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:511
 #: src/gui/hosting/battleroommmoptionstab.cpp:522
-#: src/gui/hosting/battleroomtab.cpp:1047
-#: src/gui/hosting/battleroomtab.cpp:1059
+#: src/gui/hosting/battleroomtab.cpp:1049
+#: src/gui/hosting/battleroomtab.cpp:1061
 msgid "Pick an existing option set from the list"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:511
-#: src/gui/hosting/battleroomtab.cpp:1047
+#: src/gui/hosting/battleroomtab.cpp:1049
 #, fuzzy
 msgid "Delete preset"
 msgstr "Välj"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:522
-#: src/gui/hosting/battleroomtab.cpp:1059
+#: src/gui/hosting/battleroomtab.cpp:1061
 #, fuzzy
 msgid "Set game default preset"
 msgstr "standard"
@@ -2738,12 +2738,12 @@ msgstr ""
 msgid "Set Timeout"
 msgstr "standard"
 
-#: src/gui/hosting/battleroomtab.cpp:958
+#: src/gui/hosting/battleroomtab.cpp:960
 #, c-format
-msgid "%s joined your active battle"
+msgid "%s joined your battle"
 msgstr ""
 
-#: src/gui/hosting/battleroomtab.cpp:971
+#: src/gui/hosting/battleroomtab.cpp:973
 #, c-format
 msgid "%s left your active battle"
 msgstr ""
@@ -5436,958 +5436,3 @@ msgstr "Kanal information"
 msgid "Language"
 msgstr ""
 
-#, fuzzy
-#~ msgid "%d "
-#~ msgstr "%d%"
-
-#, fuzzy
-#~ msgid "% complete"
-#~ msgstr "Ingen mod vald."
-
-#, fuzzy
-#~ msgid "%s"
-#~ msgstr "s"
-
-#, fuzzy
-#~ msgid "the battle2"
-#~ msgstr "spel"
-
-#, fuzzy
-#~ msgid "%s has joined %s"
-#~ msgstr " gick med i "
-
-#~ msgid "System information"
-#~ msgstr "System information"
-
-#~ msgid "Application verbose log"
-#~ msgstr "Programmets utförliga logg"
-
-#~ msgid "Last generated spring launching script"
-#~ msgstr "Det senast skapade start skriptet"
-
-#, fuzzy
-#~ msgid "Download complete: "
-#~ msgstr "Ingen mod vald."
-
-#, fuzzy
-#~ msgid "Minimum rank to join"
-#~ msgstr "Minsta rang som behövs"
-
-#, fuzzy
-#~ msgid "Mapname"
-#~ msgstr "Smeknamn"
-
-#, fuzzy
-#~ msgid "Gamename"
-#~ msgstr "Spel"
-
-#, fuzzy
-#~ msgid "Name of the Host"
-#~ msgstr "Namn på användaren"
-
-#, fuzzy
-#~ msgid "Number of Spectators"
-#~ msgstr "Antal spelare"
-
-#, fuzzy
-#~ msgid "Number of Players joined"
-#~ msgstr "Antal spelare"
-
-#, fuzzy
-#~ msgid "Maximum number of Players that can join"
-#~ msgstr "Maximala antalet spelare tillåtna i spelet."
-
-#, fuzzy
-#~ msgid "Active Players:"
-#~ msgstr "Spelare:"
-
-#, fuzzy
-#~ msgid "Subscribe to this channel"
-#~ msgstr "Gå med denna kanalen automatiskt"
-
-#, fuzzy
-#~ msgid "size"
-#~ msgstr "&Arkiv"
-
-#, fuzzy
-#~ msgid "springname"
-#~ msgstr "Spring"
-
-#, fuzzy
-#~ msgid "map"
-#~ msgstr "Karta"
-
-#, fuzzy
-#~ msgid "game"
-#~ msgstr "Smeknamn"
-
-#, fuzzy
-#~ msgid "AI (bot)\n"
-#~ msgstr "Lägg till bot"
-
-#, fuzzy
-#~ msgid "Spectator\n"
-#~ msgstr "Spektator"
-
-#, fuzzy
-#~ msgid "Player\n"
-#~ msgstr "Spelare:"
-
-#, fuzzy
-#~ msgid "Host\n"
-#~ msgstr "Värd"
-
-#, fuzzy
-#~ msgid "Client\n"
-#~ msgstr "Klient"
-
-#, fuzzy
-#~ msgid "Not ready\n"
-#~ msgstr "Inte redo"
-
-#, fuzzy
-#~ msgid "Show"
-#~ msgstr "Visa alla"
-
-#, fuzzy
-#~ msgid "Game name"
-#~ msgstr "Sätt åtkomst..."
-
-#, fuzzy
-#~ msgid "Downloading %u files"
-#~ msgstr "Ladda ner"
-
-#~ msgid "No topics written yet."
-#~ msgstr "Det finns inga ämnen ännu."
-
-#~ msgid "The topic \""
-#~ msgstr "Ämnet \""
-
-#~ msgid "\" was not found. Type \"/help topics\" only for available topics."
-#~ msgstr "\" hittades inte. Skriv \"/help\" för att se vilka som finns."
-
-#, fuzzy
-#~ msgid "Not up to date"
-#~ msgstr "Inte uppdaterad"
-
-#, fuzzy
-#~ msgid "Game is closed."
-#~ msgstr "Chat stängd."
-
-#, fuzzy
-#~ msgid " is online"
-#~ msgstr " Användaren är ner kopplad."
-
-#, fuzzy
-#~ msgid "Game not available"
-#~ msgstr "Kartan inte tillgänglig"
-
-#~ msgid "Map not available"
-#~ msgstr "Kartan inte tillgänglig"
-
-#~ msgid "]"
-#~ msgstr "]"
-
-#, fuzzy
-#~ msgid " joined "
-#~ msgstr " gick med i "
-
-#~ msgid "ChanServ is not on this server."
-#~ msgstr "ChanServ finns inte på servern."
-
-#~ msgid "Invalid port."
-#~ msgstr "Felaktig port."
-
-#~ msgid "Invalid port"
-#~ msgstr "Felaktig port"
-
-#~ msgid ""
-#~ "Port number out of range.\n"
-#~ "\n"
-#~ "It must be an integer between 1 and 65535"
-#~ msgstr ""
-#~ "Portnumret är utanför tillåtet intervall.\n"
-#~ "\n"
-#~ "Det måste liga inom 1 till 65535"
-
-#~ msgid "Invalid host/port."
-#~ msgstr "Felaktig host/port"
-
-#~ msgid "Invalid host"
-#~ msgstr "Felaktig host"
-
-#, fuzzy
-#~ msgid "Invalid nickname"
-#~ msgstr "Felaktigt nummer"
-
-#~ msgid "Registration failed."
-#~ msgstr "Registreringen misslyckades."
-
-#, fuzzy
-#~ msgid "Filename:"
-#~ msgstr "Smeknamn:"
-
-#, fuzzy
-#~ msgid "delete"
-#~ msgstr "Välj"
-
-#, fuzzy
-#~ msgid "Choose a filename"
-#~ msgstr "Välj i spelet"
-
-#, fuzzy
-#~ msgid "Success"
-#~ msgstr "Sätt åtkomst..."
-
-#, fuzzy
-#~ msgid "Couldn't save file"
-#~ msgstr "Kunde inte starta webbläsaren."
-
-#, fuzzy
-#~ msgid "No files found"
-#~ msgstr "Inga kartor funna"
-
-#~ msgid "Library"
-#~ msgstr "Bibliotek"
-
-#~ msgid "Any File"
-#~ msgstr "Alla filer"
-
-#~ msgid "Download m&od"
-#~ msgstr "Ladda ner &mod"
-
-#, fuzzy
-#~ msgid "Reconnect Dialog"
-#~ msgstr "Återanslut"
-
-#, fuzzy
-#~ msgid "Try Reconnecting"
-#~ msgstr "Återanslut"
-
-#, fuzzy
-#~ msgid "Do nothing"
-#~ msgstr "Hole punching"
-
-#, fuzzy
-#~ msgid "There was an error downloading for the latest version.\n"
-#~ msgstr ""
-#~ "Ett fel uppstod under kontrollen för ny version.\n"
-#~ "Försök igen senare.\n"
-#~ "Om problemet kvarstår var god rapportera detta."
-
-#, fuzzy
-#~ msgid "Invalid Value"
-#~ msgstr "Felaktigt nummer"
-
-#, fuzzy
-#~ msgid "Action Aborted"
-#~ msgstr "Startade"
-
-#, fuzzy
-#~ msgid "Reconnection Error"
-#~ msgstr "Återanslut"
-
-#, fuzzy
-#~ msgid "Download complete."
-#~ msgstr "Ingen mod vald."
-
-#, fuzzy
-#~ msgid "Couldn't launch installer. File location is: "
-#~ msgstr "Kunde inte starta webläsaren. URL: "
-
-#, fuzzy
-#~ msgid "Couldn't launch installer."
-#~ msgstr "Kunde inte starta webbläsaren."
-
-#~ msgid ""
-#~ "The application has generated a fatal error and will be terminated\n"
-#~ "Generating a bug report is not possible\n"
-#~ "\n"
-#~ "please get a wxWidgets library that supports wxUSE_DEBUGREPORT"
-#~ msgstr ""
-#~ "Programmet har genererat ett allvarligt fel och kommer att avslutas.\n"
-#~ "Kan inte generera en bugg rapport.\n"
-#~ "\n"
-#~ "Var god fixa en wxWidgets version som har stöd för wxUSE_DEBUGREPORT"
-
-#~ msgid "Critical error"
-#~ msgstr "Kritiskt fel"
-
-#, fuzzy
-#~ msgid "Invalid input"
-#~ msgstr "Felaktig port"
-
-#, fuzzy
-#~ msgid "Hotkey Error"
-#~ msgstr "Hjälp fel"
-
-#, fuzzy
-#~ msgid "Enter new command:"
-#~ msgstr "Chat kommandon:"
-
-#, fuzzy
-#~ msgid "Hotkey SaveSettings error"
-#~ msgstr "Spring inställnings fel"
-
-#, fuzzy
-#~ msgid "New hotkey profile found"
-#~ msgstr "Inga kartor funna"
-
-#, fuzzy
-#~ msgid "hotkey_parser: invalid filename"
-#~ msgstr "Välj i spelet"
-
-#~ msgid "Choose an unitsync library"
-#~ msgstr "Ange unitsync bibliotek"
-
-#~ msgid "Server password"
-#~ msgstr "Lösenord"
-
-#~ msgid ""
-#~ "Registration successful,\n"
-#~ "you should now be able to login."
-#~ msgstr ""
-#~ "Registreringen lyckades,\n"
-#~ "du ska nu kunna logga in."
-
-#~ msgid "Registration successful"
-#~ msgstr "Registreringen lyckades"
-
-#~ msgid "Registration failed, the reason was:\n"
-#~ msgstr "Registreringen misslyckades med meddelandet:\n"
-
-#~ msgid "Help error"
-#~ msgstr "Hjälp fel"
-
-#~ msgid ""
-#~ "Your spring settings are probably not configured correctly,\n"
-#~ "you should take another look at your settings before trying\n"
-#~ "to play online."
-#~ msgstr ""
-#~ "Dina Spring inställningar är förmodligen inte korrekt inställda,\n"
-#~ "du bör ta en titt på dem innan du spelar multiplayer."
-
-#~ msgid "Spring settings error"
-#~ msgstr "Spring inställnings fel"
-
-#, fuzzy
-#~ msgid ""
-#~ "There was an error downloading for the latest version.\n"
-#~ "Please try again later.\n"
-#~ "If the problem persists, please use Help->Report Bug to report this bug."
-#~ msgstr ""
-#~ "Ett fel uppstod under kontrollen för ny version.\n"
-#~ "Försök igen senare.\n"
-#~ "Om problemet kvarstår var god rapportera detta."
-
-#, fuzzy
-#~ msgid ""
-#~ "There was an error while trying to replace the current executable "
-#~ "version.\n"
-#~ " Please manually copy springlobby.exe from: %s\n"
-#~ " to: %s\n"
-#~ msgstr ""
-#~ "Ett fel uppstod under kontrollen för ny version.\n"
-#~ "Försök igen senare.\n"
-#~ "Om problemet kvarstår var god rapportera detta."
-
-#, fuzzy
-#~ msgid "Warning"
-#~ msgstr "Log varning"
-
-#~ msgid "Newbie"
-#~ msgstr "Ny nybörjare"
-
-#~ msgid "Beginner"
-#~ msgstr "Nybörjare"
-
-#~ msgid "Average"
-#~ msgstr "Medelmåttig"
-
-#~ msgid "Above average"
-#~ msgstr "Duktig"
-
-#~ msgid "Experienced"
-#~ msgstr "Erfaren"
-
-#~ msgid "Highly experienced"
-#~ msgstr "Mycket erfaren"
-
-#~ msgid "Veteran"
-#~ msgstr "Veteran"
-
-#~ msgid ""
-#~ "Couldn't create folder. \n"
-#~ "Be sure that there isn't a write protection.\n"
-#~ msgstr ""
-#~ "Kunde inte skapa katalog.\n"
-#~ "Kontrollera att den inte är skrivskyddad.\n"
-
-#~ msgid "Log function is disabled until restart SpringLobby."
-#~ msgstr "Log funktionen är avstängd tills du startar om SpringLobby."
-
-#~ msgid "Log Warning"
-#~ msgstr "Log varning"
-
-#~ msgid ""
-#~ "Couldn't write message to log.\n"
-#~ "Logging will be disabled for room "
-#~ msgstr ""
-#~ "Kunde inte skriva log meddelandet till loggen.\n"
-#~ "Loggningen kommer att stängas av för kanalen "
-
-#~ msgid ""
-#~ ".\n"
-#~ "\n"
-#~ "Rejoin room to reactivate logging."
-#~ msgstr ""
-#~ ".\n"
-#~ "\n"
-#~ "Gå in i kanalen igen för att aktivera loggning."
-
-#, fuzzy
-#~ msgid ""
-#~ "\".\n"
-#~ "Be sure that there isn't a write protection.\n"
-#~ msgstr ""
-#~ "Kunde inte skapa log filen.\n"
-#~ "Kontrollera att den inte är skrivskyddad.\n"
-
-#, fuzzy
-#~ msgid " left "
-#~ msgstr " gick ur "
-
-#~ msgid "Chat closed."
-#~ msgstr "Chat stängd."
-
-#~ msgid "default"
-#~ msgstr "standard"
-
-#~ msgid "Admin"
-#~ msgstr "Administrering"
-
-#~ msgid "Nick"
-#~ msgstr "Smeknamn"
-
-#, fuzzy
-#~ msgid "Host is not ingame."
-#~ msgstr "Välj i spelet"
-
-#, fuzzy
-#~ msgid "&Save layout"
-#~ msgstr "Kart alternativ"
-
-#, fuzzy
-#~ msgid "This profile is write protected, please choose another name"
-#~ msgstr "Detta spelet är lösenords skyddat skriv in lösenordet."
-
-#, fuzzy
-#~ msgid "Which profile do you want to load?"
-#~ msgstr "Vilket användar konto vill du ta bort idag?"
-
-#~ msgid "Use system colors"
-#~ msgstr "Använd systemfärger"
-
-#, fuzzy
-#~ msgid "Spring Version"
-#~ msgstr "Spring fel"
-
-#, fuzzy
-#~ msgid "Coulnd't load required unitsync library"
-#~ msgstr "Ange unitsync bibliotek"
-
-#, fuzzy
-#~ msgid ""
-#~ "Hi %s,\n"
-#~ "It looks like this is your first time using %s. I have guessed a "
-#~ "configuration that I think will work for you but you should review it, "
-#~ "especially the Spring configuration."
-#~ msgstr ""
-#~ "Det ser ut som om detta är den första gången du använder SpringLobby. Jag "
-#~ "har gissat mig till en konfiguration som jag tror skall fungera men du "
-#~ "borde kolla igenom den för säkerhets skull.\n"
-#~ "När du är klar är det bara att börja spel Spring :)"
-
-#~ msgid "Welcome"
-#~ msgstr "Välkommen"
-
-#~ msgid "Hosting is disabled due to the incompatible version you're using"
-#~ msgstr ""
-#~ "Du kan inte skapa spel eftersom din version av Spring inte är kompatibel."
-
-#~ msgid ""
-#~ "Joining battles is disabled due to the incompatible spring version you're "
-#~ "using."
-#~ msgstr ""
-#~ "Du kan inte gå med i nätverks spel eftersom din Spring version är "
-#~ "inkompatibel."
-
-#, fuzzy
-#~ msgid "not found"
-#~ msgstr "Inga kartor funna"
-
-#, fuzzy
-#~ msgid "Newbies guide"
-#~ msgstr "Ny nybörjare"
-
-#, fuzzy
-#~ msgid "Joining a battle:\n"
-#~ msgstr "Gå med samma spel"
-
-#, fuzzy
-#~ msgid "Hosting a battle:\n"
-#~ msgstr "Starta nytt spel"
-
-#, fuzzy
-#~ msgid "Spring overview"
-#~ msgstr "Spring fel"
-
-#, fuzzy
-#~ msgid "Change &username"
-#~ msgstr "Kanal information"
-
-#, fuzzy
-#~ msgid "Rename"
-#~ msgstr "Ta bort..."
-
-#~ msgid "Start Position Type"
-#~ msgstr "Start positioner"
-
-#, fuzzy
-#~ msgid ""
-#~ "How players will select where to be spawned in the map\n"
-#~ "0: fixed map positions\n"
-#~ "1: random map positions\n"
-#~ "2: choose in game\n"
-#~ "3: choose in the lobby before starting"
-#~ msgstr ""
-#~ "Hur spelare väljer vart de vill starta på kartan\n"
-#~ "0: fixerade kart positioner\n"
-#~ "1: Slumpmässiga kart positioner\n"
-#~ "2: Välja inne i spelet\n"
-#~ "3: Välja i spel lobbyn"
-
-#, fuzzy
-#~ msgid "Choose in-game"
-#~ msgstr "Välj i spelet"
-
-#, fuzzy
-#~ msgid "Choose before game"
-#~ msgstr "Välj i spelet"
-
-#, fuzzy
-#~ msgid "List of restricted units"
-#~ msgstr "Begränsade enheter"
-
-#, fuzzy
-#~ msgid "Couldn't get your spring versions from any unitsync library."
-#~ msgstr ""
-#~ "Kunde inte läsa din Spring version från unitsync biblioteket.\n"
-#~ "\n"
-#~ "Multiplayer spel kommer att inaktiveras."
-
-#, fuzzy
-#~ msgid "Download update"
-#~ msgstr "Ladda ner &karta"
-
-#, fuzzy
-#~ msgid "Fatal error"
-#~ msgstr "Kritiskt fel"
-
-#, fuzzy
-#~ msgid "loading unitsync"
-#~ msgstr "Tillåtna enheter"
-
-#, fuzzy
-#~ msgid ""
-#~ "Couldn't get your spring versions from any unitsync library.\n"
-#~ "\n"
-#~ "Online play is currently disabled."
-#~ msgstr ""
-#~ "Kunde inte läsa din Spring version från unitsync biblioteket.\n"
-#~ "\n"
-#~ "Multiplayer spel kommer att inaktiveras."
-
-#, fuzzy
-#~ msgid "Online play is currently disabled."
-#~ msgstr "Multiplayer spel kommer att inaktiveras."
-
-#, fuzzy
-#~ msgid "Import settings?"
-#~ msgstr "Spring inställningar"
-
-#, fuzzy
-#~ msgid "Games"
-#~ msgstr "Spel"
-
-#, fuzzy
-#~ msgid "Compatible games"
-#~ msgstr "Normal"
-
-#, fuzzy
-#~ msgid "Suitable games"
-#~ msgstr "Spara..."
-
-#, fuzzy
-#~ msgid "Current version"
-#~ msgstr "Din Spring version"
-
-#, fuzzy
-#~ msgid "Changelog"
-#~ msgstr "Avbryt"
-
-#, fuzzy
-#~ msgid "Settings"
-#~ msgstr "Spring inställningar"
-
-#, fuzzy
-#~ msgid "Help"
-#~ msgstr "&Hjälp"
-
-#~ msgid "Mod"
-#~ msgstr "Mod"
-
-#, fuzzy
-#~ msgid "spectators"
-#~ msgstr "Spektatorer:"
-
-#~ msgid "Mod:"
-#~ msgstr "Mod:"
-
-#~ msgid "Only mods i have"
-#~ msgstr "Bara moddar som jag har"
-
-#~ msgid ""
-#~ "You already are running a Spring instance, close it first in order to be "
-#~ "able to host a new game"
-#~ msgstr ""
-#~ "Spring körs redan, stäng det innan du försöker starta ett nytt spel."
-
-#~ msgid ""
-#~ "You already are running a Spring instance, close it first in order to be "
-#~ "able to join another battle."
-#~ msgstr ""
-#~ "Spring körs redan, stäng det innan du försöker starta ett nytt spel."
-
-#, fuzzy
-#~ msgid "team"
-#~ msgstr "Team"
-
-#, fuzzy
-#~ msgid "ally"
-#~ msgstr "Allians"
-
-#~ msgid "cpu"
-#~ msgstr "cpu"
-
-#~ msgid "Mod Options"
-#~ msgstr "Mod alternativ"
-
-#~ msgid "Select the mod to play with."
-#~ msgstr "Välj den mod som ska användas."
-
-#~ msgid "Test firewall"
-#~ msgstr "Testa firewallen"
-
-#, fuzzy
-#~ msgid "Tab icons"
-#~ msgstr "Kart alternativ"
-
-#~ msgid "&File"
-#~ msgstr "&Arkiv"
-
-#, fuzzy
-#~ msgid "Modname"
-#~ msgstr "Smeknamn"
-
-#, fuzzy
-#~ msgid "Download started"
-#~ msgstr "Ingen mod vald."
-
-#, fuzzy
-#~ msgid "Disconnecting"
-#~ msgstr "Koppla ned"
-
-#, fuzzy
-#~ msgid "Player"
-#~ msgstr "Spelare:"
-
-#~ msgid "Hi "
-#~ msgstr "Hej "
-
-#, fuzzy
-#~ msgid "Notice"
-#~ msgstr "Ingen"
-
-#~ msgid "Type /help in a chat box."
-#~ msgstr "Skriv /help i chatten."
-
-#~ msgid "Server message"
-#~ msgstr "Server medelanden"
-
-#, fuzzy
-#~ msgid "Grouping size"
-#~ msgstr "Händelse"
-
-#~ msgid "a"
-#~ msgstr "a"
-
-#~ msgid "p"
-#~ msgstr "p"
-
-#~ msgid "m"
-#~ msgstr "m"
-
-#~ msgid "t"
-#~ msgstr "t"
-
-#~ msgid "Not a number"
-#~ msgstr "Inget nummer"
-
-#~ msgid ""
-#~ "Value out of range.\n"
-#~ " Enter an integer between 0 & 100."
-#~ msgstr "Numret ligger utanför intervallet 0 och 100."
-
-#~ msgid "Bot team sharing."
-#~ msgstr "Bot team delning."
-
-#~ msgid ""
-#~ "You're using a wxwidgets library of the 2.6.x series\n"
-#~ " battle filtering, advanced gui and joining/hosting games using nat "
-#~ "traversal\n"
-#~ " won't be available"
-#~ msgstr ""
-#~ "Du använder en wxWidgets version i 2.6.x serien\n"
-#~ "vissa funktioner kommer att bli avstängda. Skaffa\n"
-#~ "en nyare version för att få full funktionalitet."
-
-#~ msgid "Missing Functionality"
-#~ msgstr "Saknad funktionalitet"
-
-#, fuzzy
-#~ msgid "Not online"
-#~ msgstr "Inte uppkopplad."
-
-#~ msgid ""
-#~ "This game uses NAT traversal that is not supported by wx 2.6 build of "
-#~ "springlobby. \n"
-#~ "\n"
-#~ "You will not be able to play in this battle. \n"
-#~ "Update your wxwidgets to 2.8 or newer to enable NAT traversal support."
-#~ msgstr ""
-#~ "Det här spelet använder NAT traversal som inte stödjs för wxWidgets 2.6.x."
-
-#~ msgid "Invalid host/port or servername."
-#~ msgstr "Felaktigt host/port eller servernamn."
-
-#~ msgid "Active chat channels:"
-#~ msgstr "Aktiva chat kanaler:"
-
-#~ msgid "no rank"
-#~ msgstr "ingen rank"
-
-#, fuzzy
-#~ msgid "Battle filter is active"
-#~ msgstr "Spel lista"
-
-#~ msgid "Select all"
-#~ msgstr "Markera allt"
-
-#, fuzzy
-#~ msgid "Add user"
-#~ msgstr "(%d användare)"
-
-#, fuzzy
-#~ msgid "Remove selected"
-#~ msgstr "Ingen mod vald."
-
-#, fuzzy
-#~ msgid "Invalid usernames"
-#~ msgstr "Felaktigt nummer"
-
-#, fuzzy
-#~ msgid ""
-#~ "A short description of the game, this will show up in the battle list. "
-#~ "This will be read-only for ladder"
-#~ msgstr "En kort beskrivning, denna kommer visas i spel listan."
-
-#, fuzzy
-#~ msgid "Unitsync error"
-#~ msgstr "Unitsync bibliotek"
-
-#~ msgid ""
-#~ "Please enter password needed to join this channel, leave blank for no "
-#~ "passwrd."
-#~ msgstr ""
-#~ "Var vänlig skriv in kanalen lösenord om detta behövs, annars lämnar du "
-#~ "det tomt."
-
-#~ msgid "Fixed source ports"
-#~ msgstr "Fixed source ports"
-
-#~ msgid ""
-#~ "NAT traversal to use, currently this feature is not supported by "
-#~ "SpringLobby."
-#~ msgstr ""
-#~ "NAT traversal att använda, detta stöds för tillfället inte av SpringLobby."
-
-#~ msgid "LuaAI"
-#~ msgstr "LuaAI"
-
-#~ msgid "Bot%d"
-#~ msgstr "Bot%d"
-
-#~ msgid "%Y-%m-%d %H:%M"
-#~ msgstr "%Y-%m-%d %H:%M"
-
-#~ msgid "["
-#~ msgstr "["
-
-#~ msgid "%H:%M"
-#~ msgstr "%H:%M"
-
-#~ msgid "?"
-#~ msgstr "?"
-
-#~ msgid "..."
-#~ msgstr "..."
-
-#~ msgid "Continue if commander dies"
-#~ msgstr "Fortsätt on din commander dör"
-
-#~ msgid "End if commander dies"
-#~ msgstr "Avsluta don din commander dör"
-
-#~ msgid "End condition"
-#~ msgstr "Spelets avslutning"
-
-#~ msgid "Resources"
-#~ msgstr "Resurser"
-
-#~ msgid "The amount of metal each player starts with."
-#~ msgstr "Hur mycket metall varje spelare startar med."
-
-#~ msgid "Start Energy"
-#~ msgstr "Start energi"
-
-#~ msgid "The amount of energy each player starts with."
-#~ msgstr "Hur mycket energi varje spelare startar med."
-
-#~ msgid "Max units"
-#~ msgstr "Max enheter"
-
-#~ msgid "Limit d-gun"
-#~ msgstr "Begränsa d-gun"
-
-#~ msgid "Ghosted buildings"
-#~ msgstr "Spök byggnader"
-
-#~ msgid "Diminishing metal makers"
-#~ msgstr "Av tagande metall skapare"
-
-#~ msgid "Save to:"
-#~ msgstr "Spara till:"
-
-#~ msgid "Browse..."
-#~ msgstr "Bläddra..."
-
-#~ msgid "Map/Mod Options"
-#~ msgstr "Kart/mod alternativ"
-
-#~ msgid "Limit D-Gun"
-#~ msgstr "Begränsa d-gun"
-
-#~ msgid ""
-#~ "Disables commander's D-gun when being too far away from the starting point"
-#~ msgstr ""
-#~ "Stänger av en commanders D-gun nät han går för långt från sin start "
-#~ "position"
-
-#~ msgid "Ghosted Buildings"
-#~ msgstr "Spök byggnader"
-
-#~ msgid ""
-#~ "Enemy buildings will leave a ghost image on the map after losing LoS on "
-#~ "them"
-#~ msgstr ""
-#~ "Fientliga byggnader lämna en spökbild på kartan efter att de kommit utom "
-#~ "synhåll"
-
-#~ msgid "Diminishing MM"
-#~ msgstr "Avtagande MM"
-
-#~ msgid ""
-#~ "Efficiency of MetalMakers will progressively reduce as much as you build "
-#~ "them"
-#~ msgstr "Effektiviteten av dina metall skapare sjunker ju fler du bygger"
-
-#~ msgid "Game Ending condition"
-#~ msgstr "Spelets avslutning"
-
-#~ msgid ""
-#~ "The condition that will end the game\n"
-#~ "0: when all units will be destroyed\n"
-#~ "1: when the commander will be destroyed\n"
-#~ "2: lineage mode (see option 1, but given away units will still die"
-#~ msgstr ""
-#~ "Spelet avlutnings villkor\n"
-#~ "0: Alla enheter döda\n"
-#~ "1: När commandern dör\n"
-#~ "2: lineage mode"
-
-#~ msgid "Sets the amount of metal that players will start with"
-#~ msgstr "Hur mycket metall en spelare startar med"
-
-#~ msgid "Sets the amount of energy that players will start with"
-#~ msgstr "Hur mycket energi en spelare startar med"
-
-#~ msgid "Max Units Allowed"
-#~ msgstr "Max antal enheter"
-
-#~ msgid ""
-#~ "Sets the maximum amount of units that a player will be allowed to build"
-#~ msgstr "Maximalt antal enheter en spelare kan ha"
-
-#~ msgid "Reset"
-#~ msgstr "Återställ"
-
-#~ msgid ""
-#~ "You have bots that are not assingled to startpositions. In the current "
-#~ "version of spring you are only allowed to use start positions positioning "
-#~ "them freely is not allowed.\n"
-#~ "\n"
-#~ "This will be fixed in next version of Spring."
-#~ msgstr ""
-#~ "Du har botar som inte är knutna till någon startposition. I denna "
-#~ "versionen av Spring är detta inte tillåtet."
-
-#~ msgid ""
-#~ "You are not using consecutive start position numbers.\n"
-#~ "\n"
-#~ "In the current version of spring you are not allowed to skip any "
-#~ "startpositions. You have to use all consecutive position.\n"
-#~ "\n"
-#~ "Example: if you have 2 bots + yourself you have to use start positions "
-#~ "1,2,3 not 1,3,4 or 2,3,4.\n"
-#~ "\n"
-#~ "This will be fixed in next version of Spring."
-#~ msgstr ""
-#~ "Du använder inte konsekutiva startpositions nummer, detta krävs i den här "
-#~ "versionen av Spring."
-
-#~ msgid "Spring directory"
-#~ msgstr "Spring katalogen"
-
-#~ msgid "Default location."
-#~ msgstr "Standard plats"
-
-#~ msgid "is not supported by the lobby server that requires version"
-#~ msgstr "supportras inte av lobby servern som kräver version"
-
-#~ msgid ""
-#~ "This is the SpringLobby channel, please report any problems you are "
-#~ "having with SpringLobby here and the friendly developers will help you."
-#~ msgstr ""
-#~ "Det här är SpringLobby kanalen, var god rapportera alla problem du har i "
-#~ "denna kanalen, så hjälper de välliga utvecklarna dig."

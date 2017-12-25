@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 22:44+0100\n"
+"POT-Creation-Date: 2017-12-25 23:54+0100\n"
 "PO-Revision-Date: 2010-01-02 04:01+0000\n"
 "Last-Translator: Federico Vera <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "X-Launchpad-Export-Date: 2010-01-03 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: src/chatlog.cpp:74
-#, fuzzy
-msgid "### Session Closed at [%Y-%m-%d %H:%M]"
-msgstr "### Sesión Cerrada ["
+#: src/chatlog.cpp:79
+#, c-format
+msgid "Session Closed at %s"
+msgstr ""
 
-#: src/chatlog.cpp:136
-#, fuzzy
-msgid "### Session Start at [%Y-%m-%d %H:%M]"
-msgstr "### Sesión Cerrada ["
+#: src/chatlog.cpp:141
+#, c-format
+msgid "Session started at %s"
+msgstr ""
 
 #: src/countrycodes.cpp:15
 msgid "Anonymous Proxy"
@@ -1276,7 +1276,7 @@ msgid "%d battles displayed"
 msgstr "%d batallas mostradas"
 
 #: src/gui/battlelist/battlelisttab.cpp:298
-#: src/gui/hosting/battleroomtab.cpp:1293
+#: src/gui/hosting/battleroomtab.cpp:1295
 msgid ""
 "You cannot host a game while being offline. Please connect to a lobby server."
 msgstr ""
@@ -1284,7 +1284,7 @@ msgstr ""
 "favor favor, conéctate a un servidor."
 
 #: src/gui/battlelist/battlelisttab.cpp:298
-#: src/gui/hosting/battleroomtab.cpp:1293
+#: src/gui/hosting/battleroomtab.cpp:1295
 msgid "Not Online."
 msgstr "No estás en línea"
 
@@ -1962,8 +1962,8 @@ msgstr "Tipo"
 
 #: src/gui/contentsearchresultview.cpp:22 src/gui/hosting/battlemaptab.cpp:95
 #: src/gui/hosting/battleroomtab.cpp:517 src/gui/hosting/battleroomtab.cpp:523
-#: src/gui/hosting/battleroomtab.cpp:1244
-#: src/gui/hosting/battleroomtab.cpp:1246 src/gui/mapselectdialog.cpp:105
+#: src/gui/hosting/battleroomtab.cpp:1246
+#: src/gui/hosting/battleroomtab.cpp:1248 src/gui/mapselectdialog.cpp:105
 #: src/gui/singleplayertab.cpp:101
 msgid "Size"
 msgstr "Tamaño"
@@ -2132,15 +2132,15 @@ msgid "Value"
 msgstr "Valor"
 
 #: src/gui/hosting/battlemaptab.cpp:96 src/gui/hosting/battleroomtab.cpp:518
-#: src/gui/hosting/battleroomtab.cpp:524 src/gui/hosting/battleroomtab.cpp:1248
-#: src/gui/hosting/battleroomtab.cpp:1249 src/gui/mapselectdialog.cpp:106
+#: src/gui/hosting/battleroomtab.cpp:524 src/gui/hosting/battleroomtab.cpp:1250
+#: src/gui/hosting/battleroomtab.cpp:1251 src/gui/mapselectdialog.cpp:106
 #: src/gui/singleplayertab.cpp:102
 msgid "Windspeed"
 msgstr "Windspeed"
 
 #: src/gui/hosting/battlemaptab.cpp:97 src/gui/hosting/battleroomtab.cpp:519
-#: src/gui/hosting/battleroomtab.cpp:525 src/gui/hosting/battleroomtab.cpp:1251
-#: src/gui/hosting/battleroomtab.cpp:1252 src/gui/mapselectdialog.cpp:107
+#: src/gui/hosting/battleroomtab.cpp:525 src/gui/hosting/battleroomtab.cpp:1253
+#: src/gui/hosting/battleroomtab.cpp:1254 src/gui/mapselectdialog.cpp:107
 #: src/gui/mapselectdialog.cpp:174 src/gui/singleplayertab.cpp:103
 msgid "Tidal strength"
 msgstr ""
@@ -2374,43 +2374,43 @@ msgstr "No se puede guardar las opciones sin un nombre."
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:483
 #: src/gui/hosting/battleroommmoptionstab.cpp:500
-#: src/gui/hosting/battleroomtab.cpp:1034 src/gui/ui.cpp:367
+#: src/gui/hosting/battleroomtab.cpp:1036 src/gui/ui.cpp:367
 msgid "error"
 msgstr "error"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:497
-#: src/gui/hosting/battleroomtab.cpp:1031
+#: src/gui/hosting/battleroomtab.cpp:1033
 #, fuzzy
 msgid "Enter preset name"
 msgstr "Ingrese un nombre de perfil"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:497
-#: src/gui/hosting/battleroomtab.cpp:1031
+#: src/gui/hosting/battleroomtab.cpp:1033
 msgid ""
 "Enter a name to save the current set of options\n"
 "If a preset with the same name already exist, it will be overwritten"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:500
-#: src/gui/hosting/battleroomtab.cpp:1034
+#: src/gui/hosting/battleroomtab.cpp:1036
 msgid "Cannot save an options set without a name."
 msgstr "No se puede guardar las opciones sin un nombre."
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:511
 #: src/gui/hosting/battleroommmoptionstab.cpp:522
-#: src/gui/hosting/battleroomtab.cpp:1047
-#: src/gui/hosting/battleroomtab.cpp:1059
+#: src/gui/hosting/battleroomtab.cpp:1049
+#: src/gui/hosting/battleroomtab.cpp:1061
 msgid "Pick an existing option set from the list"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:511
-#: src/gui/hosting/battleroomtab.cpp:1047
+#: src/gui/hosting/battleroomtab.cpp:1049
 #, fuzzy
 msgid "Delete preset"
 msgstr "Eliminar"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:522
-#: src/gui/hosting/battleroomtab.cpp:1059
+#: src/gui/hosting/battleroomtab.cpp:1061
 #, fuzzy
 msgid "Set game default preset"
 msgstr "predeterminado"
@@ -2744,12 +2744,12 @@ msgstr ""
 msgid "Set Timeout"
 msgstr "Asignar nombre."
 
-#: src/gui/hosting/battleroomtab.cpp:958
+#: src/gui/hosting/battleroomtab.cpp:960
 #, c-format
-msgid "%s joined your active battle"
+msgid "%s joined your battle"
 msgstr ""
 
-#: src/gui/hosting/battleroomtab.cpp:971
+#: src/gui/hosting/battleroomtab.cpp:973
 #, c-format
 msgid "%s left your active battle"
 msgstr ""
@@ -5436,836 +5436,3 @@ msgstr "Seleccione el idioma"
 #: src/utils/wxTranslationHelper.cpp:119
 msgid "Language"
 msgstr "Idioma"
-
-#, fuzzy
-#~ msgid "%d "
-#~ msgstr "%d"
-
-#, fuzzy
-#~ msgid "% complete"
-#~ msgstr "% completado"
-
-#, fuzzy
-#~ msgid "%s"
-#~ msgstr "s"
-
-#, fuzzy
-#~ msgid "the battle2"
-#~ msgstr "Iniciar la batalla"
-
-#, fuzzy
-#~ msgid "%s has joined %s"
-#~ msgstr " se unió a "
-
-#~ msgid "System information"
-#~ msgstr "Información del sistema"
-
-#, fuzzy
-#~ msgid "Download complete: "
-#~ msgstr "Descarga completa."
-
-#, fuzzy
-#~ msgid "Minimum rank to join"
-#~ msgstr "Rango mínimo requerido"
-
-#, fuzzy
-#~ msgid "Gamename"
-#~ msgstr "Juego"
-
-#, fuzzy
-#~ msgid "Name of the Host"
-#~ msgstr "Nombre del nuevo grupo:"
-
-#, fuzzy
-#~ msgid "Number of Spectators"
-#~ msgstr "Número de jugadores"
-
-#, fuzzy
-#~ msgid "Number of Players joined"
-#~ msgstr "Número de jugadores"
-
-#, fuzzy
-#~ msgid "Maximum number of Players that can join"
-#~ msgstr "El máximo número de jugadores permitidos en esta batalla."
-
-#~ msgid "Active Players:"
-#~ msgstr "Jugadores Activos:"
-
-#~ msgid "channel_"
-#~ msgstr "canal_"
-
-#, fuzzy
-#~ msgid "Subscribe to this channel"
-#~ msgstr "Unirse automáticamente a este canal"
-
-#, fuzzy
-#~ msgid "size"
-#~ msgstr "Tamaño del archivo"
-
-#, fuzzy
-#~ msgid "springname"
-#~ msgstr "/.spring"
-
-#, fuzzy
-#~ msgid "map"
-#~ msgstr "Mapa"
-
-#~ msgid "AI (bot)\n"
-#~ msgstr "IA (bot)\n"
-
-#~ msgid "Human\n"
-#~ msgstr "Humano\n"
-
-#~ msgid "Spectator\n"
-#~ msgstr "Espectador\n"
-
-#~ msgid "Player\n"
-#~ msgstr "Jugador\n"
-
-#~ msgid "Host\n"
-#~ msgstr "Anfitrión\n"
-
-#~ msgid "Client\n"
-#~ msgstr "Cliente\n"
-
-#~ msgid "Ready\n"
-#~ msgstr "Listo\n"
-
-#~ msgid "Not ready\n"
-#~ msgstr "No está listo\n"
-
-#~ msgid "In sync"
-#~ msgstr "Sincronizado"
-
-#~ msgid "Not in sync"
-#~ msgstr "no sincronizado"
-
-#~ msgid "Show"
-#~ msgstr "Mostrar"
-
-#~ msgid "Date of recording"
-#~ msgstr "Fecha de grabación"
-
-#~ msgid "Filesize in kilobyte"
-#~ msgstr "Tamaño del archivo en kilobytes"
-
-#, fuzzy
-#~ msgid "Downloading %u files"
-#~ msgstr "Descarga"
-
-#~ msgid "No topics written yet."
-#~ msgstr "No hay temas escritos aún."
-
-#~ msgid "Battle closed"
-#~ msgstr "Batalla cerrada"
-
-#~ msgid "Game is open."
-#~ msgstr "El juego está abierto."
-
-#~ msgid "Game is password-protected."
-#~ msgstr "El juego está protegido por contraseña."
-
-#~ msgid "Game is full."
-#~ msgstr "El juego está completo."
-
-#~ msgid "Game is full and password-protected."
-#~ msgstr "El juego está completo y protegido por contraseña."
-
-#~ msgid "Game is closed."
-#~ msgstr "El juego está cerrado"
-
-#~ msgid "Game is closed and password-protected."
-#~ msgstr "El juego está cerrado y protegido por contraseña."
-
-#~ msgid "Game is closed and full."
-#~ msgstr "El juego está cerrado y completo."
-
-#~ msgid "Game is closed, full and password-protected."
-#~ msgstr "El juego está cerrado, completo y protegido por contraseña."
-
-#~ msgid "Game is in progress."
-#~ msgstr "El juego está en progreso."
-
-#~ msgid "Game is in progress and password-protected."
-#~ msgstr "El juego está en progreso y protegido por contraseña."
-
-#~ msgid "Game is in progress and full."
-#~ msgstr "El juego está en progreso y completo."
-
-#~ msgid "Game is in progress, full and password-protected."
-#~ msgstr "El juego está en progreso, completo y protegido por contraseña."
-
-#~ msgid "Game is in progress and closed."
-#~ msgstr "El juego está en progreso y cerrado."
-
-#~ msgid "Game is in progress, closed and password-protected."
-#~ msgstr "El juego está en progreso, cerrado y protegido por contraseña."
-
-#~ msgid "Game is in progress, closed and full."
-#~ msgstr "El juego está en progreso, cerrado y completo."
-
-#~ msgid "Game is in progress, closed, full and password-protected."
-#~ msgstr ""
-#~ "El juego está en progreso, cerrado, completo y protegido por contraseña."
-
-#~ msgid " is online"
-#~ msgstr " está conectado"
-
-#, fuzzy
-#~ msgid "Game not available"
-#~ msgstr "Mapa no avalible"
-
-#~ msgid "Map not available"
-#~ msgstr "Mapa no avalible"
-
-#~ msgid "]"
-#~ msgstr "]"
-
-#, fuzzy
-#~ msgid " joined "
-#~ msgstr " se unió a "
-
-#~ msgid "Invalid port."
-#~ msgstr "puerto inválido."
-
-#~ msgid "Invalid port"
-#~ msgstr "puerto inválido"
-
-#~ msgid "Invalid host/port."
-#~ msgstr "Anfitrión/puerto inválido."
-
-#~ msgid "Invalid host"
-#~ msgstr "host inválido"
-
-#~ msgid "Invalid nickname"
-#~ msgstr "Apodo inválido"
-
-#~ msgid "Registration failed."
-#~ msgstr "Registro fallido."
-
-#~ msgid "unknown"
-#~ msgstr "desconocido"
-
-#~ msgid "Search and download files"
-#~ msgstr "Buscar y descargar archivos"
-
-#~ msgid "Files displayed"
-#~ msgstr "Archivos mostrados"
-
-#~ msgid "%u files displayed"
-#~ msgstr "%u archivos mostrados"
-
-#, fuzzy
-#~ msgid "Filename:"
-#~ msgstr "Filtrar nombres"
-
-#, fuzzy
-#~ msgid "Filetype:"
-#~ msgstr "Archivo"
-
-#~ msgid ""
-#~ "\n"
-#~ "successfully saved to:\n"
-#~ msgstr ""
-#~ "\n"
-#~ "guardado correctamente en:\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "successfully unzipped in:\n"
-#~ msgstr ""
-#~ "\n"
-#~ "descomprimido correctamente en:\n"
-
-#~ msgid ""
-#~ "\n"
-#~ " unzipping failed, please correct manually"
-#~ msgstr ""
-#~ "\n"
-#~ " falló la descompresión, por favor soluciónelo manualmente"
-
-#~ msgid "Could not save\n"
-#~ msgstr "No se pudo guardar\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Error number: "
-#~ msgstr ""
-#~ "\n"
-#~ "Error número: "
-
-#~ msgid "previous"
-#~ msgstr "anterior"
-
-#~ msgid "next"
-#~ msgstr "siguiente"
-
-#~ msgid "delete"
-#~ msgstr "eliminar"
-
-#~ msgid "save as"
-#~ msgstr "guardar como"
-
-#~ msgid "couldn't remove file"
-#~ msgstr "no se pudo eliminar el archivo"
-
-#~ msgid "Choose a filename"
-#~ msgstr "Elija un nombre de archivo"
-
-#~ msgid "File successfully saved"
-#~ msgstr "Archivo guardado correctamente"
-
-#~ msgid "Success"
-#~ msgstr "Éxito"
-
-#~ msgid "Couldn't save file"
-#~ msgstr "No se pudo guardar el archivo"
-
-#~ msgid "Map does not exist."
-#~ msgstr "El mapa no existe."
-
-#~ msgid "&View screenshots"
-#~ msgstr "&Ver capturas de pantalla"
-
-#~ msgid "No files found"
-#~ msgstr "No se encontraron archivos"
-
-#, fuzzy
-#~ msgid "Rename an existing spring version"
-#~ msgstr "Renombrar un grupo existente"
-
-#~ msgid "Library"
-#~ msgstr "Librería"
-
-#~ msgid "Any File"
-#~ msgstr "Cualquier archivo"
-
-#~ msgid "Download m&od"
-#~ msgstr "Descargar m&od"
-
-#, fuzzy
-#~ msgid "Reconnect Dialog"
-#~ msgstr "Reconectar"
-
-#, fuzzy
-#~ msgid "Try Reconnecting"
-#~ msgstr "Reconectar"
-
-#, fuzzy
-#~ msgid "Tries to connect to the next server in the list."
-#~ msgstr "Necesita estar conectado al servidor para ver la lista de canales"
-
-#, fuzzy
-#~ msgid "There was an error downloading for the latest version.\n"
-#~ msgstr ""
-#~ "Ocurrió un error descargando la última versión.\n"
-#~ "Por favor actualice manualmente desde http://springrts.com"
-
-#, fuzzy
-#~ msgid "Invalid Value"
-#~ msgstr "Número inválido"
-
-#, fuzzy
-#~ msgid "File doesn't exit"
-#~ msgstr "El mapa no existe."
-
-#, fuzzy
-#~ msgid "Action Aborted"
-#~ msgstr "Activado"
-
-#, fuzzy
-#~ msgid "Reconnection Error"
-#~ msgstr "Reconectar"
-
-#, fuzzy
-#~ msgid "Unknown Error"
-#~ msgstr "Respuesta desconocida del servidor"
-
-#~ msgid "Download complete, location is: "
-#~ msgstr "Descarga completa, la ubicación del archivo es: "
-
-#~ msgid "Download complete."
-#~ msgstr "Descarga completa."
-
-#~ msgid "Couldn't launch installer. File location is: "
-#~ msgstr "No se pudo ejecutar el instalador. La ubicación del archivo es: "
-
-#~ msgid "Couldn't launch installer."
-#~ msgstr "No se pudo ejecutar el instalador."
-
-#~ msgid "Critical error"
-#~ msgstr "Error crítico"
-
-#~ msgid "Error!"
-#~ msgstr "¡Error!"
-
-#~ msgid "Kloot"
-#~ msgstr "Kloot"
-
-#, fuzzy
-#~ msgid "Invalid input"
-#~ msgstr "puerto inválido"
-
-#, fuzzy
-#~ msgid "Enter new command:"
-#~ msgstr "Comandos de chat:"
-
-#, fuzzy
-#~ msgid "Hotkey SaveSettings error"
-#~ msgstr "Error en la configuración de Spring"
-
-#, fuzzy
-#~ msgid "New hotkey profile found"
-#~ msgstr "No se encontraron archivos"
-
-#, fuzzy
-#~ msgid "hotkey_parser: invalid filename"
-#~ msgstr "Elija un nombre de archivo"
-
-#~ msgid "Use this path"
-#~ msgstr "Usar esta ruta"
-
-#~ msgid "libunitsync.so on linux, unitsync.dll on windows"
-#~ msgstr "libunitsync.so en linux, unitsync.dll en windows"
-
-#~ msgid "Path settings"
-#~ msgstr "Configuración de ruta"
-
-#~ msgid "can't launch default browser"
-#~ msgstr "No se puede lanzar el explorador predeterminado"
-
-#~ msgid "Connection timed out"
-#~ msgstr "Expiró la conexión"
-
-#~ msgid "Unknown answer from server"
-#~ msgstr "Respuesta desconocida del servidor"
-
-#~ msgid "line "
-#~ msgstr "línea "
-
-#~ msgid "Server password"
-#~ msgstr "Contraseña de servidor"
-
-#~ msgid "Help error"
-#~ msgstr "Error en ayuda"
-
-#, fuzzy
-#~ msgid ""
-#~ "There was an error while trying to replace the current executable "
-#~ "version.\n"
-#~ " Please manually copy springlobby.exe from: %s\n"
-#~ " to: %s\n"
-#~ msgstr ""
-#~ "Ocurrió un error descargando la última versión.\n"
-#~ "Por favor actualice manualmente desde http://springrts.com"
-
-#~ msgid "Newbie"
-#~ msgstr "Novato en canzoncillos"
-
-#~ msgid "Beginner"
-#~ msgstr "Principiante"
-
-#~ msgid "Average"
-#~ msgstr "Avanzado"
-
-#~ msgid "Above average"
-#~ msgstr "Muy avanzado"
-
-#~ msgid "Experienced"
-#~ msgstr "Experimentado"
-
-#~ msgid "Highly experienced"
-#~ msgstr "Altamente experimentado"
-
-#~ msgid "Veteran"
-#~ msgstr "Veterano"
-
-#~ msgid ""
-#~ "Couldn't create folder. \n"
-#~ "Be sure that there isn't a write protection.\n"
-#~ msgstr ""
-#~ "No se pudo crear la carpeta. \n"
-#~ "Asegúrate de que no esté protegida contra escritura.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\".\n"
-#~ "Be sure that there isn't a write protection.\n"
-#~ msgstr ""
-#~ "No se pudo crear la carpeta. \n"
-#~ "Asegúrate de que no esté protegida contra escritura.\n"
-
-#~ msgid "Chat closed."
-#~ msgstr "Chat cerrado"
-
-#~ msgid "Pick"
-#~ msgstr "Elegir"
-
-#~ msgid "Continue"
-#~ msgstr "Continuar"
-
-#~ msgid "End"
-#~ msgstr "Fin"
-
-#~ msgid "battle"
-#~ msgstr "batalla"
-
-#~ msgid "Admin"
-#~ msgstr "Administrador"
-
-#~ msgid "Nick"
-#~ msgstr "Apodo"
-
-#~ msgid "Array of language names and identifiers should have the same size."
-#~ msgstr ""
-#~ "Los arreglos de nombres de idiomas e identificadores deben tener el mismo "
-#~ "tamaño."
-
-#, fuzzy
-#~ msgid "Host is not ingame."
-#~ msgstr "Elegir durante el juego"
-
-#, fuzzy
-#~ msgid "Which profile do you want to load?"
-#~ msgstr "¿Qué perfil desea cargar?"
-
-#~ msgid "Use system colors"
-#~ msgstr "Utilice los colores del sistema"
-
-#~ msgid "Spring Version"
-#~ msgstr "Version de Spring"
-
-#~ msgid "Welcome"
-#~ msgstr "Bienvenido"
-
-#~ msgid "Hosting is disabled due to the incompatible version you're using"
-#~ msgstr ""
-#~ "No puedes ser servidor, lo tienes desactivado debido a que estás usando "
-#~ "una versión incompatible"
-
-#~ msgid ""
-#~ "Joining battles is disabled due to the incompatible spring version you're "
-#~ "using."
-#~ msgstr ""
-#~ "Unirse a las batallas está desactivado debido a que la versión que usas "
-#~ "de Spring es incompatible."
-
-#~ msgid "#"
-#~ msgstr "#"
-
-#, fuzzy
-#~ msgid "not found"
-#~ msgstr "No se encontraron mapas"
-
-#~ msgid "queued"
-#~ msgstr "en cola"
-
-#, fuzzy
-#~ msgid "Newbies guide"
-#~ msgstr "Novato en canzoncillos"
-
-#, fuzzy
-#~ msgid "Spring overview"
-#~ msgstr "Version de Spring"
-
-#, fuzzy
-#~ msgid "Singleplayer gamee"
-#~ msgstr "Un jugador"
-
-#, fuzzy
-#~ msgid "Multiplayer gamee"
-#~ msgstr "Multijugador"
-
-#~ msgid "Transfers in progress: "
-#~ msgstr "Transferencias en progreso: "
-
-#~ msgid "Total Incoming: "
-#~ msgstr "Total Entrante: "
-
-#, fuzzy
-#~ msgid "Change &username"
-#~ msgstr "&Cambiar idioma"
-
-#, fuzzy
-#~ msgid "Rename"
-#~ msgstr "Renombrar..."
-
-#, fuzzy
-#~ msgid "Enter new nickname"
-#~ msgstr "Ingrese nombre"
-
-#~ msgid "Start Position Type"
-#~ msgstr "Tipo de posición inicial"
-
-#, fuzzy
-#~ msgid "Choose before game"
-#~ msgstr "Elegir antes el juego"
-
-#~ msgid "List of restricted units"
-#~ msgstr "Lista de unidades restringidas"
-
-#~ msgid "Map name"
-#~ msgstr "Nombre del mapa"
-
-#~ msgid "Pause all torrents"
-#~ msgstr "Detener todos los torrents"
-
-#~ msgid "Throttle speeds:"
-#~ msgstr "Regular velocidad:"
-
-#~ msgid "upload (KB/s)"
-#~ msgstr "subida (KB/s)"
-
-#~ msgid "download (KB/s)"
-#~ msgstr "bajada (KB/s)"
-
-#~ msgid "Numbers"
-#~ msgstr "Números"
-
-#~ msgid "maximum upload speed in KB/sec(-1 for infinite)"
-#~ msgstr "velocidad de subida máxima en KB/sec (-1 para infinito)"
-
-#~ msgid "maximum download speed in KB/sec (-1 for infinite)"
-#~ msgstr "velocidad de descarga máxima en KB/sec (-1 para infinito)"
-
-#~ msgid "port used for torrent connections"
-#~ msgstr "Puertos usados para las conexiones de los torrents"
-
-#~ msgid "maximum number of concurrent connections"
-#~ msgstr "Número máximo de conexiones simultaneas"
-
-#~ msgid "Report statistics"
-#~ msgstr "Estadísticas del informe"
-
-#~ msgid "report statistics"
-#~ msgstr "estadísticas del informe"
-
-#~ msgid "Your current installed versions are:"
-#~ msgstr "Sus versiones actualmente instalados son:"
-
-#~ msgid "Download update"
-#~ msgstr "Descargar actualización"
-
-#, fuzzy
-#~ msgid "Fatal error"
-#~ msgstr "Error crítico"
-
-#, fuzzy
-#~ msgid "loading unitsync"
-#~ msgstr "Unidades permitidas"
-
-#, fuzzy
-#~ msgid "Games"
-#~ msgstr "Juego"
-
-#, fuzzy
-#~ msgid "Suitable games"
-#~ msgstr "Filtrar nombres"
-
-#, fuzzy
-#~ msgid "Settings"
-#~ msgstr "Guardar configuración"
-
-#, fuzzy
-#~ msgid "Help"
-#~ msgstr "Ayuda"
-
-#~ msgid "Mod"
-#~ msgstr "Mod"
-
-#~ msgid "spectators"
-#~ msgstr "espectadores"
-
-#~ msgid "players"
-#~ msgstr "jugadores"
-
-#~ msgid "max"
-#~ msgstr "máx"
-
-#~ msgid "Mod:"
-#~ msgstr "Mod:"
-
-#~ msgid "Only mods i have"
-#~ msgstr "Sólo mods que tengo"
-
-#~ msgid ""
-#~ "You already are running a Spring instance, close it first in order to be "
-#~ "able to host a new game"
-#~ msgstr ""
-#~ "Ya estás corriendo un Spring, cierra este primero para poder ser servidor "
-#~ "en juego nuevo"
-
-#~ msgid ""
-#~ "You already are running a Spring instance, close it first in order to be "
-#~ "able to join another battle."
-#~ msgstr ""
-#~ "Ya estás ejecutando un Spring, cierra primero éste para poder unirte a "
-#~ "otra batalla."
-
-#~ msgid "Do you want me to take you to the download page?"
-#~ msgstr "¿Desea que lo lleve a la página de descargas?"
-
-#~ msgid "Mod not available"
-#~ msgstr "Mot no disponible"
-
-#~ msgid "team"
-#~ msgstr "equipo"
-
-#~ msgid "ally"
-#~ msgstr "aliado"
-
-#~ msgid "cpu"
-#~ msgstr "cpu"
-
-#~ msgid "Mod Options"
-#~ msgstr "Opciones de Mod"
-
-#~ msgid "Hash"
-#~ msgstr "Hash"
-
-#~ msgid "unknown hash "
-#~ msgstr "hash desconocido "
-
-#~ msgid "Test firewall"
-#~ msgstr "Probar firewall"
-
-#~ msgid "P2P"
-#~ msgstr "P2P"
-
-#~ msgid "Total Outgoing: "
-#~ msgstr "Total Saliente: "
-
-#~ msgid "Publish new file"
-#~ msgstr "Publicar un nuevo archivo"
-
-#~ msgid "seeding"
-#~ msgstr "enviando"
-
-#~ msgid "Status: not connected"
-#~ msgstr "Estado: no conectado"
-
-#~ msgid "Status: connected"
-#~ msgstr "Estado: conectado"
-
-#~ msgid "Status: unknown"
-#~ msgstr "Estado: desconocido"
-
-#~ msgid "Total Outgoing: %.2f KB/s"
-#~ msgstr "Total Saliente: %.2f KB/s"
-
-#~ msgid "Total Incoming: %.2f KB/s"
-#~ msgstr "Total Entrante: %.2f KB/s"
-
-#~ msgid "&File"
-#~ msgstr "Archivo"
-
-#~ msgid "Which profile do you want to be default?"
-#~ msgstr "¿Cuál es el perfil que desea utilizar como predeterminado?"
-
-#~ msgid "Download started"
-#~ msgstr "Descarga iniciada"
-
-#~ msgid "You refused a mandatory update, you will be disconnected now."
-#~ msgstr ""
-#~ "Usted se rehusó a realizar una actualización obligatoria, será "
-#~ "desconectado inmediatamente."
-
-#~ msgid "Disconnecting"
-#~ msgstr "Desconectando"
-
-#~ msgid "Debug"
-#~ msgstr "Depuración"
-
-#~ msgid "Debug Options"
-#~ msgstr "Opciones de depuración"
-
-#~ msgid "Player"
-#~ msgstr "Jugador"
-
-#~ msgid "Hi "
-#~ msgstr "Hola "
-
-#~ msgid "Notice"
-#~ msgstr "Aviso"
-
-#~ msgid "MB downloaded"
-#~ msgstr "MB descargados"
-
-#~ msgid "MB uploaded"
-#~ msgstr "MB subidos"
-
-#~ msgid "status"
-#~ msgstr "estado"
-
-#~ msgid "KB/s up"
-#~ msgstr "KB/s subiendo"
-
-#~ msgid "Torrent system autostart"
-#~ msgstr "Autocomenzar sistema de torrent"
-
-#~ msgid "manual"
-#~ msgstr "manual"
-
-#~ msgid "Type /help in a chat box."
-#~ msgstr "Escribir /help en una ventana de chat"
-
-#~ msgid "a"
-#~ msgstr "a"
-
-#~ msgid "m"
-#~ msgstr "m"
-
-#~ msgid "%d%"
-#~ msgstr "%d%"
-
-#~ msgid "t"
-#~ msgstr "t"
-
-#~ msgid "Not a number"
-#~ msgstr "No un número"
-
-#~ msgid "_SERVER"
-#~ msgstr "_SERVER"
-
-#~ msgid "Missing Functionality"
-#~ msgstr "Funcionalidad perdida"
-
-#~ msgid "Download OTA content?"
-#~ msgstr "¿Descargar contenido OTA?"
-
-#~ msgid "Create a folder in a custom path (you'll get prompted for the path)"
-#~ msgstr ""
-#~ "Crear una carpeta en la ruta definida (tendrás que escribir la ruta)"
-
-#~ msgid "Active chat channels:"
-#~ msgstr "Activar canales de chat:"
-
-#~ msgid "no rank"
-#~ msgstr "Sin rango"
-
-#~ msgid "You have one or more bots sharing team, this is not possible."
-#~ msgstr "Tienes uno o más robots compatiendo equipo, esto no es posible."
-
-#~ msgid "Start system"
-#~ msgstr "Comenzar sistema"
-
-#~ msgid "Stop system"
-#~ msgstr "Parar sistema"
-
-#~ msgid "End condition"
-#~ msgstr "Fin de condición"
-
-#~ msgid "Max units"
-#~ msgstr "Unidades máximas"
-
-#~ msgid "Limit d-gun"
-#~ msgstr "Límite d-gun"
-
-#~ msgid "Reset"
-#~ msgstr "Restablecer"
-
-#~ msgid "Spring directory"
-#~ msgstr "Directorio Spring"
-
-#~ msgid "Default location."
-#~ msgstr "Localización predefinida"

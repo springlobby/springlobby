@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-25 22:44+0100\n"
+"POT-Creation-Date: 2017-12-25 23:54+0100\n"
 "PO-Revision-Date: 2008-07-30 23:43+0000\n"
 "Last-Translator: SpringLobby_Buildbot <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -18,12 +18,14 @@ msgstr ""
 "X-Launchpad-Export-Date: 2008-09-20 21:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: src/chatlog.cpp:74
-msgid "### Session Closed at [%Y-%m-%d %H:%M]"
+#: src/chatlog.cpp:79
+#, c-format
+msgid "Session Closed at %s"
 msgstr ""
 
-#: src/chatlog.cpp:136
-msgid "### Session Start at [%Y-%m-%d %H:%M]"
+#: src/chatlog.cpp:141
+#, c-format
+msgid "Session started at %s"
 msgstr ""
 
 #: src/countrycodes.cpp:15
@@ -1271,7 +1273,7 @@ msgid "%d battles displayed"
 msgstr ""
 
 #: src/gui/battlelist/battlelisttab.cpp:298
-#: src/gui/hosting/battleroomtab.cpp:1293
+#: src/gui/hosting/battleroomtab.cpp:1295
 msgid ""
 "You cannot host a game while being offline. Please connect to a lobby server."
 msgstr ""
@@ -1279,7 +1281,7 @@ msgstr ""
 "зайдіть на сервер."
 
 #: src/gui/battlelist/battlelisttab.cpp:298
-#: src/gui/hosting/battleroomtab.cpp:1293
+#: src/gui/hosting/battleroomtab.cpp:1295
 msgid "Not Online."
 msgstr "Не Підключено"
 
@@ -1933,8 +1935,8 @@ msgstr ""
 
 #: src/gui/contentsearchresultview.cpp:22 src/gui/hosting/battlemaptab.cpp:95
 #: src/gui/hosting/battleroomtab.cpp:517 src/gui/hosting/battleroomtab.cpp:523
-#: src/gui/hosting/battleroomtab.cpp:1244
-#: src/gui/hosting/battleroomtab.cpp:1246 src/gui/mapselectdialog.cpp:105
+#: src/gui/hosting/battleroomtab.cpp:1246
+#: src/gui/hosting/battleroomtab.cpp:1248 src/gui/mapselectdialog.cpp:105
 #: src/gui/singleplayertab.cpp:101
 msgid "Size"
 msgstr ""
@@ -2092,15 +2094,15 @@ msgid "Value"
 msgstr ""
 
 #: src/gui/hosting/battlemaptab.cpp:96 src/gui/hosting/battleroomtab.cpp:518
-#: src/gui/hosting/battleroomtab.cpp:524 src/gui/hosting/battleroomtab.cpp:1248
-#: src/gui/hosting/battleroomtab.cpp:1249 src/gui/mapselectdialog.cpp:106
+#: src/gui/hosting/battleroomtab.cpp:524 src/gui/hosting/battleroomtab.cpp:1250
+#: src/gui/hosting/battleroomtab.cpp:1251 src/gui/mapselectdialog.cpp:106
 #: src/gui/singleplayertab.cpp:102
 msgid "Windspeed"
 msgstr ""
 
 #: src/gui/hosting/battlemaptab.cpp:97 src/gui/hosting/battleroomtab.cpp:519
-#: src/gui/hosting/battleroomtab.cpp:525 src/gui/hosting/battleroomtab.cpp:1251
-#: src/gui/hosting/battleroomtab.cpp:1252 src/gui/mapselectdialog.cpp:107
+#: src/gui/hosting/battleroomtab.cpp:525 src/gui/hosting/battleroomtab.cpp:1253
+#: src/gui/hosting/battleroomtab.cpp:1254 src/gui/mapselectdialog.cpp:107
 #: src/gui/mapselectdialog.cpp:174 src/gui/singleplayertab.cpp:103
 msgid "Tidal strength"
 msgstr ""
@@ -2326,41 +2328,41 @@ msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:483
 #: src/gui/hosting/battleroommmoptionstab.cpp:500
-#: src/gui/hosting/battleroomtab.cpp:1034 src/gui/ui.cpp:367
+#: src/gui/hosting/battleroomtab.cpp:1036 src/gui/ui.cpp:367
 msgid "error"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:497
-#: src/gui/hosting/battleroomtab.cpp:1031
+#: src/gui/hosting/battleroomtab.cpp:1033
 msgid "Enter preset name"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:497
-#: src/gui/hosting/battleroomtab.cpp:1031
+#: src/gui/hosting/battleroomtab.cpp:1033
 msgid ""
 "Enter a name to save the current set of options\n"
 "If a preset with the same name already exist, it will be overwritten"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:500
-#: src/gui/hosting/battleroomtab.cpp:1034
+#: src/gui/hosting/battleroomtab.cpp:1036
 msgid "Cannot save an options set without a name."
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:511
 #: src/gui/hosting/battleroommmoptionstab.cpp:522
-#: src/gui/hosting/battleroomtab.cpp:1047
-#: src/gui/hosting/battleroomtab.cpp:1059
+#: src/gui/hosting/battleroomtab.cpp:1049
+#: src/gui/hosting/battleroomtab.cpp:1061
 msgid "Pick an existing option set from the list"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:511
-#: src/gui/hosting/battleroomtab.cpp:1047
+#: src/gui/hosting/battleroomtab.cpp:1049
 msgid "Delete preset"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:522
-#: src/gui/hosting/battleroomtab.cpp:1059
+#: src/gui/hosting/battleroomtab.cpp:1061
 msgid "Set game default preset"
 msgstr ""
 
@@ -2672,12 +2674,12 @@ msgstr ""
 msgid "Set Timeout"
 msgstr ""
 
-#: src/gui/hosting/battleroomtab.cpp:958
+#: src/gui/hosting/battleroomtab.cpp:960
 #, c-format
-msgid "%s joined your active battle"
+msgid "%s joined your battle"
 msgstr ""
 
-#: src/gui/hosting/battleroomtab.cpp:971
+#: src/gui/hosting/battleroomtab.cpp:973
 #, c-format
 msgid "%s left your active battle"
 msgstr ""
@@ -5263,215 +5265,3 @@ msgstr ""
 #: src/utils/wxTranslationHelper.cpp:119
 msgid "Language"
 msgstr ""
-
-#, fuzzy
-#~ msgid "% complete"
-#~ msgstr "Скачати &мапу"
-
-#, fuzzy
-#~ msgid "the battle2"
-#~ msgstr "Помилка при запуску битви."
-
-#, fuzzy
-#~ msgid "Download complete: "
-#~ msgstr "Скачати &мапу"
-
-#, fuzzy
-#~ msgid "Mapname"
-#~ msgstr "Прізвисько:"
-
-#, fuzzy
-#~ msgid "Gamename"
-#~ msgstr "Прізвисько:"
-
-#, fuzzy
-#~ msgid "Number of Spectators"
-#~ msgstr "    Спостерігач:"
-
-#, fuzzy
-#~ msgid "Active Players:"
-#~ msgstr "Гравці:"
-
-#, fuzzy
-#~ msgid "map"
-#~ msgstr "Мапа"
-
-#, fuzzy
-#~ msgid "game"
-#~ msgstr "Прізвисько:"
-
-#, fuzzy
-#~ msgid "AI (bot)\n"
-#~ msgstr "Додати бота"
-
-#, fuzzy
-#~ msgid "Spectator\n"
-#~ msgstr "Спостерігачі:"
-
-#, fuzzy
-#~ msgid "Player\n"
-#~ msgstr "Гравець:"
-
-#, fuzzy
-#~ msgid "Host\n"
-#~ msgstr "Хост"
-
-#, fuzzy
-#~ msgid "Ready\n"
-#~ msgstr "Завжди"
-
-#~ msgid ""
-#~ "Battle not started because the port you selected (%d) is unable to "
-#~ "recieve incoming packets\n"
-#~ " checks your router & firewall configuration again or change port in the "
-#~ "dialog.\n"
-#~ "\n"
-#~ "If everything else fails, enable the Hole Punching NAT Traversal\n"
-#~ " option in the hosting settings."
-#~ msgstr ""
-#~ "Битву не розпочато через неможливість обраного (%d) порту приймати "
-#~ "пакети. Перевірте налаштування мережевого екрану та шлюзу або змініть "
-#~ "порт. Якщо нічого не допомогло, задійте у налаштуваннях опцію \"Hole "
-#~ "Punching NAT Traversal\"."
-
-#, fuzzy
-#~ msgid "Game name"
-#~ msgstr "Прізвисько:"
-
-#, fuzzy
-#~ msgid "Downloading %u files"
-#~ msgstr "Скачати &мапу"
-
-#, fuzzy
-#~ msgid "Filename:"
-#~ msgstr "Прізвисько:"
-
-#, fuzzy
-#~ msgid "Choose a filename"
-#~ msgstr "Прізвисько:"
-
-#, fuzzy
-#~ msgid ""
-#~ "Battle not started because the port you selected (%d) is unable to-f /"
-#~ "home/kosh/.springlobby/testing.conf recieve incoming packets\n"
-#~ " checks your router & firewall configuration again or change port in the "
-#~ "dialog.\n"
-#~ "\n"
-#~ "If everything else fails, enable the Hole Punching NAT Traversal\n"
-#~ " option in the hosting settings."
-#~ msgstr ""
-#~ "Битву не розпочато через неможливість обраного (%d) порту приймати "
-#~ "пакети. Перевірте налаштування мережевого екрану та шлюзу або змініть "
-#~ "порт. Якщо нічого не допомогло, задійте у налаштуваннях опцію \"Hole "
-#~ "Punching NAT Traversal\"."
-
-#, fuzzy
-#~ msgid "No files found"
-#~ msgstr "Не знайдено жодної мапи"
-
-#, fuzzy
-#~ msgid "Action Aborted"
-#~ msgstr "Розпочато"
-
-#, fuzzy
-#~ msgid "Download complete."
-#~ msgstr "Скачати &мапу"
-
-#, fuzzy
-#~ msgid "New hotkey profile found"
-#~ msgstr "Не знайдено жодної мапи"
-
-#, fuzzy
-#~ msgid "hotkey_parser: invalid filename"
-#~ msgstr "Прізвисько:"
-
-#, fuzzy
-#~ msgid "away"
-#~ msgstr "Завжди"
-
-#, fuzzy
-#~ msgid "Host is not ingame."
-#~ msgstr "Прізвисько:"
-
-#, fuzzy
-#~ msgid "Spring Version"
-#~ msgstr "Помилка Spring"
-
-#~ msgid "Hosting is disabled due to the incompatible version you're using"
-#~ msgstr "Ви не можете створити гру через несумісність Вашої версії"
-
-#, fuzzy
-#~ msgid "not found"
-#~ msgstr "Не знайдено жодної мапи"
-
-#, fuzzy
-#~ msgid "Hosting a battle:\n"
-#~ msgstr "Помилка при запуску битви."
-
-#, fuzzy
-#~ msgid "Spring overview"
-#~ msgstr "Помилка Spring"
-
-#, fuzzy
-#~ msgid "Rename"
-#~ msgstr "Прізвисько:"
-
-#, fuzzy
-#~ msgid "Choose in-game"
-#~ msgstr "Прізвисько:"
-
-#, fuzzy
-#~ msgid "Choose before game"
-#~ msgstr "Прізвисько:"
-
-#, fuzzy
-#~ msgid "Download update"
-#~ msgstr "Скачати &мапу"
-
-#, fuzzy
-#~ msgid "Current version"
-#~ msgstr "Помилка Spring"
-
-#, fuzzy
-#~ msgid "Changelog"
-#~ msgstr "Скасувати"
-
-#~ msgid "Mod"
-#~ msgstr "Модифікація"
-
-#, fuzzy
-#~ msgid "spectators"
-#~ msgstr "Спостерігачі:"
-
-#, fuzzy
-#~ msgid "players"
-#~ msgstr "Гравці:"
-
-#~ msgid "Mod:"
-#~ msgstr "Модифікація:"
-
-#~ msgid "Only mods i have"
-#~ msgstr "Тільки модифікації, що є у мене"
-
-#~ msgid ""
-#~ "You already are running a Spring instance, close it first in order to be "
-#~ "able to host a new game"
-#~ msgstr ""
-#~ "Ви вже маєте копію Spring у запущенному стані, для створенні нової гри її "
-#~ "треба закрити"
-
-#, fuzzy
-#~ msgid "Download started"
-#~ msgstr "Скачати &мапу"
-
-#, fuzzy
-#~ msgid "Player"
-#~ msgstr "Гравець:"
-
-#, fuzzy
-#~ msgid "Notice"
-#~ msgstr "Немає"
-
-#, fuzzy
-#~ msgid "Not online"
-#~ msgstr "Не Підключено"

@@ -40,6 +40,11 @@ ChatLog::ChatLog(const wxString& logname)
 	}
 }
 
+static wxString GetDateTimeString()
+{
+	return wxDateTime::Now().Format(_T("%Y-%m-%d %H:%M"));
+}
+
 bool ChatLog::SetLogFile(const wxString& logname)
 {
 	if (logname == wxEmptyString) {
@@ -71,7 +76,7 @@ void ChatLog::CloseSession()
 		return;
 	}
 
-	AddMessage(wxDateTime::Now().Format(_("### Session Closed at [%Y-%m-%d %H:%M]")));
+	AddMessage(_T("### ") + wxString::Format(_("Session Closed at %s"), GetDateTimeString()));
 	m_logfile.Flush();
 	m_active = false;
 	m_logfile.Close();
@@ -133,7 +138,7 @@ bool ChatLog::OpenLogFile()
 	FillLastLineArray();
 	m_active = true;
 
-	return AddMessage(wxDateTime::Now().Format(_("### Session Start at [%Y-%m-%d %H:%M]")));
+	return AddMessage(_T("### ") + wxString::Format(_("Session started at %s"), GetDateTimeString()));
 }
 
 const wxArrayString& ChatLog::GetLastLines() const
