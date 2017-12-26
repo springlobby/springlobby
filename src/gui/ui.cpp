@@ -63,7 +63,7 @@
 
 SLCONFIG("/General/AutoUpdate", true, "Determines if springlobby should check for updates on startup");
 SLCONFIG("/General/LastUpdateCheck", 0L, "Last time springlobby checked for an update");
-SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_SINGLEPLAYER, "which tab to show on startup");
+SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_BATTLELIST, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere", true, "setting to spam the server messages in all channels");
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
 SLCONFIG("/Server/TLS", false, "Use encrypted connection to the lobby server");
