@@ -22,12 +22,12 @@ msgstr ""
 #: src/chatlog.cpp:79
 #, c-format
 msgid "Session Closed at %s"
-msgstr "Sitzung beendet am"
+msgstr "Sitzung beendet am %s"
 
 #: src/chatlog.cpp:141
 #, c-format
 msgid "Session started at %s"
-msgstr "Sitzung gestartet am"
+msgstr "Sitzung gestartet am %s"
 
 #: src/countrycodes.cpp:15
 msgid "Anonymous Proxy"
@@ -1939,7 +1939,7 @@ msgstr "Heruntergeladen"
 #: src/gui/customdialogs.cpp:518 src/gui/customdialogs.cpp:562
 #, c-format
 msgid "Please standby %d seconds"
-msgstr "Bitte %s Sekunden warten"
+msgstr "Bitte %d Sekunden warten"
 
 #: src/gui/dataviewctrlheadermenu.cpp:47
 msgid "Hide this column"
