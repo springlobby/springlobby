@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 02:14+0100\n"
+"POT-Creation-Date: 2017-12-26 02:26+0100\n"
 "PO-Revision-Date: 2010-10-23 17:35+0200\n"
 "Last-Translator: frezzer1 <Unknown>\n"
 "Language-Team: french\n"
@@ -2282,10 +2282,6 @@ msgstr "Choisir le bonus de ressources"
 #: src/gui/hosting/battleroomdataviewctrl.cpp:324
 msgid "Please enter a value between 0 and 100"
 msgstr "Veuillez entrer une valeur entre 0 et 100"
-
-#: src/gui/hosting/battleroomdownloads.cpp:35
-msgid " "
-msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:60
 #: src/gui/hosting/battleroomtab.cpp:253

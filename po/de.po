@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpringLobby 0.0.1.10128\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 02:14+0100\n"
+"POT-Creation-Date: 2017-12-26 02:26+0100\n"
 "PO-Revision-Date: 2010-01-10 00:17+0000\n"
 "Last-Translator: Alexander Minges <Unknown>\n"
 "Language-Team: German\n"
@@ -1963,7 +1963,6 @@ msgid "KB/s down"
 msgstr "KB/s down"
 
 #: src/gui/downloaddataviewctrl.cpp:30
-#, fuzzy
 msgid "ETA"
 msgstr "ETA (s)"
 
@@ -2248,10 +2247,6 @@ msgstr "Rohstoff-Bonus setzen"
 msgid "Please enter a value between 0 and 100"
 msgstr "Bitte einen Wert zwischen 0 und 100 eingeben"
 
-#: src/gui/hosting/battleroomdownloads.cpp:35
-msgid " "
-msgstr " "
-
 #: src/gui/hosting/battleroommmoptionstab.cpp:60
 #: src/gui/hosting/battleroomtab.cpp:253
 msgid "Manage Presets"
@@ -2293,23 +2288,20 @@ msgstr "Setze als Standard..."
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:83
 #: src/gui/hosting/battleroomtab.cpp:274
-#, fuzzy
 msgid "Use the current set of options as game's default."
-msgstr "Nutze die aktuelle Reihe von Optionen als Standard für Mods."
+msgstr "Nutze die aktuelle Reihe von Optionen als Standard für Spiele."
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:91
-#, fuzzy
 msgid "Game Options"
-msgstr "Karten Optionen"
+msgstr "Spiel Optionen"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:96
 msgid "Map Options"
 msgstr "Karten Optionen"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:146
-#, fuzzy
 msgid "no options available"
-msgstr "nicht verfügbar"
+msgstr "keine Einstellungen verfügbar"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:152
 msgid "other"
@@ -2363,9 +2355,8 @@ msgstr "Voreinstellung löschen"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:522
 #: src/gui/hosting/battleroomtab.cpp:1061
-#, fuzzy
 msgid "Set game default preset"
-msgstr "Setze Standardvoreinstellungen für Mods"
+msgstr "Setze Standardvoreinstellungen für Spiele"
 
 #: src/gui/hosting/battleroomtab.cpp:140
 msgid "Players with the same team number share control of their units."
@@ -2393,14 +2384,12 @@ msgid "Spectate (watch) the battle instead of playing"
 msgstr "Beobachte das Spiel anstatt aktiv daran teil zu nehmen."
 
 #: src/gui/hosting/battleroomtab.cpp:150
-#, fuzzy
 msgid "Auto un-spectate"
-msgstr "Automatisch wählen"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:151
-#, fuzzy
 msgid "automatically unspec when there's a free slot"
-msgstr "aumatisches Prüfen auf Aktualisierungen"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:152
 msgid "I'm ready"
@@ -2423,12 +2412,10 @@ msgstr ""
 "sehen."
 
 #: src/gui/hosting/battleroomtab.cpp:180
-#, fuzzy
 msgid "Host new"
 msgstr "Host eröffnen"
 
 #: src/gui/hosting/battleroomtab.cpp:181
-#, fuzzy
 msgid "Host a new battle"
 msgstr "Neue Schlacht eröffnen"
 
@@ -2497,18 +2484,16 @@ msgstr ""
 "'!balance' und '!start' zu kontrollieren."
 
 #: src/gui/hosting/battleroomtab.cpp:208
-#, fuzzy
 msgid "AutoPaste Description"
-msgstr "Beschreibung"
+msgstr "Beschreibung automatisch kopieren"
 
 #: src/gui/hosting/battleroomtab.cpp:208
 msgid "Automatically paste battle's descriptoin when a new user joins"
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:211
-#, fuzzy
 msgid "AutoSpect"
-msgstr "Automatisch wählen"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:211
 msgid ""
@@ -2527,16 +2512,12 @@ msgid ""
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:217
-#, fuzzy
 msgid "AutoStart"
-msgstr "Start"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:217
-#, fuzzy
 msgid "Automatically start the battle when all players are ready and synced"
 msgstr ""
-"Automatisches Sperren des Kampfes wenn das Spiel gestartet wird und "
-"entsperren wenn es beendet wurde."
 
 #: src/gui/hosting/battleroomtab.cpp:221
 msgid "Lock Balance"
@@ -2557,9 +2538,8 @@ msgid "Rings all players that don't have ready status and aren't spectators"
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:228
-#, fuzzy
 msgid "Ring unsynced"
-msgstr "synchron"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:228
 msgid "Rings all players that don't have sync status and aren't spectators"
@@ -2576,12 +2556,10 @@ msgid ""
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:232
-#, fuzzy
 msgid "Ring ..."
 msgstr "Klingeln"
 
 #: src/gui/hosting/battleroomtab.cpp:235
-#, fuzzy
 msgid "Spect unready"
 msgstr "Nicht Bereit"
 
@@ -2607,9 +2585,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:241
-#, fuzzy
 msgid "Force spectate ..."
-msgstr "Start erzwingen?"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:243
 msgid "Balance alliances"
@@ -2691,16 +2668,15 @@ msgstr ""
 #: src/gui/hosting/battleroomtab.cpp:771
 #, fuzzy
 msgid "Set description"
-msgstr "Beschreibung"
+msgstr "Beschreibung setzen"
 
 #: src/gui/hosting/battleroomtab.cpp:796
 msgid "Enter timeout before autospeccing a player in minutes"
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:796
-#, fuzzy
 msgid "Set Timeout"
-msgstr "Ping Timeout!"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:960
 #, c-format
@@ -2723,33 +2699,26 @@ msgstr ""
 "auftauchen wird."
 
 #: src/gui/hosting/hostbattledialog.cpp:90
-#, fuzzy
 msgid "Autopaste description"
-msgstr "Beschreibung"
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:92
-#, fuzzy
 msgid "Automatically write the battle description when a user joins."
 msgstr ""
-"Automatisches Sperren des Kampfes wenn das Spiel gestartet wird und "
-"entsperren wenn es beendet wurde."
 
 #: src/gui/hosting/hostbattledialog.cpp:104 src/gui/singleplayertab.cpp:138
-#, fuzzy
 msgid "Select the engine version to play."
-msgstr "Wähle den Mod aus mit dem du spielen willst."
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:115
-#, fuzzy
 msgid "Select the game to play."
-msgstr "Wähle den Mod aus mit dem du spielen willst."
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:124
-#, fuzzy
 msgid ""
 "Password\n"
 "(no spaces)"
-msgstr "kennwortgeschützt"
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:129
 msgid "Password needed to join game. Keep empty for no password"
@@ -3322,9 +3291,8 @@ msgid "Play notification sounds"
 msgstr "Spiele Mitteilungston"
 
 #: src/gui/options/chatoptionstab.cpp:288
-#, fuzzy
 msgid "Copy server messages in current channel"
-msgstr "  \"/part\" - Verlässt den Kanal"
+msgstr "Server Nachrichten im aktuellen Kanal anzeigen"
 
 #: src/gui/options/chatoptionstab.cpp:298
 msgid "Chat logs"

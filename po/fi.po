@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 02:14+0100\n"
+"POT-Creation-Date: 2017-12-26 02:26+0100\n"
 "PO-Revision-Date: 2008-07-30 23:31+0000\n"
 "Last-Translator: SpringLobby_Buildbot <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -2272,10 +2272,6 @@ msgstr "Aseta resurssilisä"
 #: src/gui/hosting/battleroomdataviewctrl.cpp:324
 msgid "Please enter a value between 0 and 100"
 msgstr "Anna arvo väliltä 0 - 100"
-
-#: src/gui/hosting/battleroomdownloads.cpp:35
-msgid " "
-msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:60
 #: src/gui/hosting/battleroomtab.cpp:253

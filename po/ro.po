@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 02:14+0100\n"
+"POT-Creation-Date: 2017-12-26 02:26+0100\n"
 "PO-Revision-Date: 2008-09-07 20:22+0000\n"
 "Last-Translator: Danut Haiduc <danuthaiduc@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -2296,10 +2296,6 @@ msgstr "Setează bonusul de resurse"
 #: src/gui/hosting/battleroomdataviewctrl.cpp:324
 msgid "Please enter a value between 0 and 100"
 msgstr "Vă rog introduceţi o valoare între 0 şi 100"
-
-#: src/gui/hosting/battleroomdownloads.cpp:35
-msgid " "
-msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:60
 #: src/gui/hosting/battleroomtab.cpp:253

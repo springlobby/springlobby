@@ -32,7 +32,7 @@ public:
 					m_data_sizer->Add(m_text, 0, wxALL, 2);
 				}
 
-				m_info = new wxStaticText(this, -1, _(" "), wxDefaultPosition, wxSize(-1, -1), wxALIGN_CENTRE);
+				m_info = new wxStaticText(this, -1, _T(" "), wxDefaultPosition, wxSize(-1, -1), wxALIGN_CENTRE);
 				{
 					m_data_sizer->Add(m_info, 0, wxALL, 2);
 				}
