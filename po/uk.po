@@ -1087,20 +1087,17 @@ msgid "Host"
 msgstr "Хост"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:40
-#, fuzzy
 msgid "Spectators"
-msgstr "Спостерігачі:"
+msgstr ""
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:41
 #: src/gui/playback/playbackdataview.cpp:38
-#, fuzzy
 msgid "Players"
-msgstr "Гравці:"
+msgstr ""
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:42
-#, fuzzy
 msgid "Max"
-msgstr "Мапа"
+msgstr ""
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:43
 msgid "Running"
@@ -1118,14 +1115,12 @@ msgstr "Скачати &мапу"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:135
 #: src/gui/playback/playbackdataview.cpp:46
-#, fuzzy
 msgid "Download &game"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:139
-#, fuzzy
 msgid "Download &engine"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:142
 msgid "Notify me when game has ended"
@@ -1211,9 +1206,8 @@ msgstr ""
 
 #: src/gui/battlelist/battlelistfilter.cpp:327
 #: src/gui/playback/playbackfilter.cpp:157
-#, fuzzy
 msgid "Only games I have"
-msgstr "Тільки мапи, що є у мене"
+msgstr ""
 
 #: src/gui/battlelist/battlelistfilter.cpp:339
 msgid "    Spectator:"
@@ -1235,9 +1229,8 @@ msgstr ""
 
 #: src/gui/battlelist/battlelisttab.cpp:143
 #: src/gui/playback/playbacktab.cpp:132
-#, fuzzy
 msgid "Activated"
-msgstr "Розпочато"
+msgstr ""
 
 #: src/gui/battlelist/battlelisttab.cpp:147
 #: src/gui/battlelist/battlelisttab.cpp:149
@@ -1288,9 +1281,8 @@ msgstr ""
 "Ви дійсно бажаєте залишити поточну битву та створити нову?"
 
 #: src/gui/battlelist/battlelisttab.cpp:402
-#, fuzzy
 msgid "Already in another battle"
-msgstr "Вже у битві"
+msgstr ""
 
 #: src/gui/battlelist/battlelisttab.cpp:402
 msgid "You are already in a battle."
@@ -1332,9 +1324,8 @@ msgid "Choose channels to join"
 msgstr ""
 
 #: src/gui/channel/channellistview.cpp:22 src/gui/slbook.cpp:116
-#, fuzzy
 msgid "Channel"
-msgstr "Скасувати"
+msgstr ""
 
 #: src/gui/channel/channellistview.cpp:23
 msgid "# users"
@@ -1350,9 +1341,8 @@ msgid "Displaying %d out of %d channels"
 msgstr ""
 
 #: src/gui/chatpanel.cpp:257
-#, fuzzy
 msgid "Hide bots"
-msgstr "Додати бота"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:295
 msgid "right click for options (like autojoin)"
@@ -1376,14 +1366,12 @@ msgid "Error: %s"
 msgstr ""
 
 #: src/gui/chatpanel.cpp:715
-#, fuzzy
 msgid "the channel"
-msgstr "Скасувати"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:717
-#, fuzzy
 msgid "the battle"
-msgstr "Помилка при запуску битви."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:719
 msgid "the server"
@@ -1400,9 +1388,8 @@ msgid "%s left %s (%s)."
 msgstr ""
 
 #: src/gui/chatpanel.cpp:802
-#, fuzzy
 msgid "Channel topic"
-msgstr "Скасувати"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:808
 #, c-format
@@ -1486,9 +1473,8 @@ msgid "Copy link location"
 msgstr ""
 
 #: src/gui/chatpanelmenu.cpp:48
-#, fuzzy
 msgid "Clear"
-msgstr "Клани"
+msgstr ""
 
 #: src/gui/chatpanelmenu.cpp:55 src/gui/hosting/battleroomtab.cpp:182
 msgid "Leave"
@@ -1905,9 +1891,8 @@ msgstr ""
 
 #: src/gui/contentsearchresultview.cpp:19 src/gui/downloaddataviewctrl.cpp:20
 #: src/gui/mapselectdialog.cpp:173 src/gui/selectusersdialog.cpp:75
-#, fuzzy
 msgid "Name"
-msgstr "Прізвисько:"
+msgstr ""
 
 #: src/gui/contentsearchresultview.cpp:20
 msgid "Preview"
@@ -1926,9 +1911,8 @@ msgid "Size"
 msgstr ""
 
 #: src/gui/contentsearchresultview.cpp:23
-#, fuzzy
 msgid "Downloaded"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/customdialogs.cpp:518 src/gui/customdialogs.cpp:562
 #, c-format
@@ -1945,14 +1929,12 @@ msgstr ""
 
 #: src/gui/downloaddataviewctrl.cpp:22
 #: src/gui/hosting/battleroomdataviewctrl.cpp:41
-#, fuzzy
 msgid "Status"
-msgstr "Стан:"
+msgstr ""
 
 #: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
-#, fuzzy
 msgid "complete"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/downloaddataviewctrl.cpp:27
 msgid "KB/s down"
@@ -1967,9 +1949,8 @@ msgid "Filesize (MB)"
 msgstr ""
 
 #: src/gui/downloaddataviewmodel.cpp:40
-#, fuzzy
 msgid "downloading"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/hosting/addbotdialog.cpp:37
 msgid "Add bot"
@@ -2167,14 +2148,12 @@ msgid "Unit restriction"
 msgstr ""
 
 #: src/gui/hosting/battleroomdataviewctrl.cpp:42
-#, fuzzy
 msgid "Ingame"
-msgstr "Прізвисько:"
+msgstr ""
 
 #: src/gui/hosting/battleroomdataviewctrl.cpp:43
-#, fuzzy
 msgid "Faction"
-msgstr "Опис"
+msgstr ""
 
 #: src/gui/hosting/battleroomdataviewctrl.cpp:44
 msgid "Colour"
@@ -2245,9 +2224,8 @@ msgid "Manage Presets"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:63
-#, fuzzy
 msgid "Set name."
-msgstr "Прізвисько:"
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:67
 msgid "Load..."
@@ -2393,14 +2371,12 @@ msgid ""
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:180
-#, fuzzy
 msgid "Host new"
-msgstr "Створити нову гру"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:181
-#, fuzzy
 msgid "Host a new battle"
-msgstr "Помилка при запуску битви."
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:183
 msgid "Leave the battle and return to the battle list"
@@ -2463,9 +2439,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:208
-#, fuzzy
 msgid "AutoPaste Description"
-msgstr "Опис"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:208
 msgid "Automatically paste battle's descriptoin when a new user joins"
@@ -2492,9 +2467,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:217
-#, fuzzy
 msgid "AutoStart"
-msgstr "Розпочато"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:217
 msgid "Automatically start the battle when all players are ready and synced"
@@ -2539,9 +2513,8 @@ msgid "Ring ..."
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:235
-#, fuzzy
 msgid "Spect unready"
-msgstr "Спостерігачі:"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:235
 msgid "Force to spectate all players that don't have ready status"
@@ -2642,9 +2615,8 @@ msgid "Enter a battle description"
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:771
-#, fuzzy
 msgid "Set description"
-msgstr "Опис"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:796
 msgid "Enter timeout before autospeccing a player in minutes"
@@ -2673,9 +2645,8 @@ msgid "A short description of the game, this will show up in the battle list."
 msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:90
-#, fuzzy
 msgid "Autopaste description"
-msgstr "Опис"
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:92
 msgid "Automatically write the battle description when a user joins."
@@ -2690,11 +2661,10 @@ msgid "Select the game to play."
 msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:124
-#, fuzzy
 msgid ""
 "Password\n"
 "(no spaces)"
-msgstr "Захищено паролем"
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:129
 msgid "Password needed to join game. Keep empty for no password"
@@ -2778,18 +2748,16 @@ msgid "You have to select a game first."
 msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:339
-#, fuzzy
 msgid "No game selected."
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:345
 msgid "You have to select a engine version first."
 msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:345
-#, fuzzy
 msgid "No engine selected."
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:424
 msgid "Manually chose a manager"
@@ -2800,9 +2768,8 @@ msgid "Please type the nick of the manager you want to use ( case sensitive )"
 msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:478
-#, fuzzy
 msgid "Battle not started beacuse the game you selected could not be found. "
-msgstr "Битву не розпочато через неможливість знайти обрану модифікацію. "
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:478
 msgid "Error starting battle."
@@ -2860,9 +2827,8 @@ msgid "Disconnected from server, chat closed."
 msgstr ""
 
 #: src/gui/maindownloadtab.cpp:46
-#, fuzzy
 msgid "Manage downloads"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/maindownloadtab.cpp:51
 msgid "Cancel Download"
@@ -2885,14 +2851,12 @@ msgid "Search for maps and games"
 msgstr ""
 
 #: src/gui/maindownloadtab.cpp:106
-#, fuzzy
 msgid "Failed to download selected item."
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/maindownloadtab.cpp:106
-#, fuzzy
 msgid "Failed to download"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:131 src/gui/options/mainoptionstab.cpp:73
 msgid "Chat"
@@ -2907,14 +2871,12 @@ msgid "Singleplayer"
 msgstr ""
 
 #: src/gui/mainwindow.cpp:136
-#, fuzzy
 msgid "Replays"
-msgstr "Завжди"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:137 src/gui/options/mainoptionstab.cpp:70
-#, fuzzy
 msgid "Downloads"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:146
 msgid "&Connect..."
@@ -2949,9 +2911,8 @@ msgid "&Change language"
 msgstr ""
 
 #: src/gui/mainwindow.cpp:161
-#, fuzzy
 msgid "&Spring settings"
-msgstr "Помилка Spring"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:162
 msgid "&Reset layout"
@@ -2974,9 +2935,8 @@ msgid "&Open Spring DataDir"
 msgstr ""
 
 #: src/gui/mainwindow.cpp:173
-#, fuzzy
 msgid "&Download Archives"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:175
 msgid "&Reload maps/games"
@@ -3067,9 +3027,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/mainwindow.cpp:731
-#, fuzzy
 msgid "Download Archives"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/mapctrl.cpp:600
 #, c-format
@@ -3117,9 +3076,8 @@ msgid "Horizontal sort key"
 msgstr ""
 
 #: src/gui/mapselectdialog.cpp:66
-#, fuzzy
 msgid "Filter"
-msgstr "Чесно"
+msgstr ""
 
 #: src/gui/mapselectdialog.cpp:68
 msgid "Shows only maps which contain this text in their name or description."
@@ -3150,9 +3108,8 @@ msgid "Size (map area)"
 msgstr ""
 
 #: src/gui/mapselectdialog.cpp:182
-#, fuzzy
 msgid "Aspect ratio"
-msgstr "Спостерігачі:"
+msgstr ""
 
 #: src/gui/mapselectdialog.cpp:183
 msgid "Number of start positions"
@@ -3488,9 +3445,8 @@ msgid "Requires SpringLobby restart to take effect."
 msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:132
-#, fuzzy
 msgid "Battle Promotion"
-msgstr "Опис"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:133
 msgid "Show notifications when someone promotes battle?"
@@ -3544,9 +3500,8 @@ msgid "Test Notification"
 msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:179
-#, fuzzy
 msgid "Start tab"
-msgstr "Розпочато"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:182
 msgid "Select which tab to show at startup"
@@ -3597,9 +3552,8 @@ msgid "Remove an existing spring version"
 msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:86
-#, fuzzy
 msgid "Add new spring version"
-msgstr "Помилка Spring"
+msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:90
 msgid "Auto Configure"
@@ -3638,9 +3592,8 @@ msgid "Choose UnitSync library"
 msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:294
-#, fuzzy
 msgid "Configuration error"
-msgstr "Помилка Spring"
+msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:352
 msgid ""
@@ -3682,14 +3635,12 @@ msgid "Date"
 msgstr ""
 
 #: src/gui/playback/playbackdataview.cpp:39
-#, fuzzy
 msgid "Duration"
-msgstr "Опис"
+msgstr ""
 
 #: src/gui/playback/playbackdataview.cpp:40
-#, fuzzy
 msgid "Version"
-msgstr "Помилка Spring"
+msgstr ""
 
 #: src/gui/playback/playbackdataview.cpp:41
 msgid "Filesize"
@@ -3708,9 +3659,8 @@ msgid "Filter settings"
 msgstr ""
 
 #: src/gui/playback/playbackfilter.cpp:124
-#, fuzzy
 msgid "Only maps I have"
-msgstr "Тільки мапи, що є у мене"
+msgstr ""
 
 #: src/gui/playback/playbackfilter.cpp:175
 msgid "Filesize in KB:"
@@ -3733,9 +3683,8 @@ msgid "Reload list"
 msgstr ""
 
 #: src/gui/playback/playbacktab.cpp:259
-#, fuzzy
 msgid "replay"
-msgstr "Завжди"
+msgstr ""
 
 #: src/gui/playback/playbacktab.cpp:259
 msgid "savegame"
@@ -3782,9 +3731,8 @@ msgid "Add bot..."
 msgstr ""
 
 #: src/gui/singleplayertab.cpp:158
-#, fuzzy
 msgid "Spectate only"
-msgstr "Спостерігачі:"
+msgstr ""
 
 #: src/gui/singleplayertab.cpp:161
 msgid "Random start positions"
@@ -3842,19 +3790,17 @@ msgid "Panel"
 msgstr ""
 
 #: src/gui/taskbar.cpp:85
-#, fuzzy
 msgid "Download failed"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/taskbar.cpp:102
-#, fuzzy
 msgid "Download finished"
-msgstr "Скачати &мапу"
+msgstr ""
 
 #: src/gui/taskbar.cpp:136
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading %s"
-msgstr "Скачати &мапу %s"
+msgstr ""
 
 #: src/gui/ui.cpp:241
 msgid "SpringLobby commands help."
@@ -4032,9 +3978,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/ui.cpp:835
-#, fuzzy
 msgid "Updater error."
-msgstr "Помилка Spring"
+msgstr ""
 
 #: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
@@ -4808,9 +4753,8 @@ msgid "Reflection texture size"
 msgstr ""
 
 #: src/springsettings/ctrlconstants.h:390
-#, fuzzy
 msgid "Refraction"
-msgstr "Опис"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:390
 msgid ""
@@ -5118,9 +5062,8 @@ msgid ""
 msgstr ""
 
 #: src/useractions.cpp:55
-#, fuzzy
 msgid "none"
-msgstr "Немає"
+msgstr ""
 
 #: src/useractions.cpp:56
 msgid "highlight"

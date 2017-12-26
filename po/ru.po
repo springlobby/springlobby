@@ -1025,9 +1025,8 @@ msgid "(Full country name not found)"
 msgstr "(Имя страны не найдено)"
 
 #: src/gui/aboutbox.cpp:18
-#, fuzzy
 msgid " is a cross-platform lobby client for the Spring RTS engine"
-msgstr "%s - кроссплатформенный лобби-клиент для движка Spring RTS"
+msgstr ""
 
 #: src/gui/aboutbox.cpp:34
 msgid "The numerous contributors from launchpad.net"
@@ -1120,9 +1119,8 @@ msgid "Download &game"
 msgstr "Скачать &игру"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:139
-#, fuzzy
 msgid "Download &engine"
-msgstr "Скачать &игру"
+msgstr ""
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:142
 msgid "Notify me when game has ended"
@@ -1338,9 +1336,8 @@ msgid "# users"
 msgstr "# пользователи"
 
 #: src/gui/channel/channellistview.cpp:24
-#, fuzzy
 msgid "Topic"
-msgstr "Заголовок \""
+msgstr ""
 
 #: src/gui/channel/channellistview.cpp:56
 #, c-format
@@ -1360,18 +1357,17 @@ msgid "Send"
 msgstr "Послать"
 
 #: src/gui/chatpanel.cpp:703
-#, fuzzy
 msgid "!! Command: \""
-msgstr " !! Комманда: \""
+msgstr ""
 
 #: src/gui/chatpanel.cpp:703
 msgid "\" params: \""
 msgstr "\" параметры: \""
 
 #: src/gui/chatpanel.cpp:708
-#, fuzzy, c-format
+#, c-format
 msgid "Error: %s"
-msgstr "Ошибка: %s"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:715
 msgid "the channel"
@@ -1396,14 +1392,13 @@ msgid "%s left %s (%s)."
 msgstr "%s покинул %s (%s)."
 
 #: src/gui/chatpanel.cpp:802
-#, fuzzy
 msgid "Channel topic"
-msgstr " ** Тема канала:"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:808
-#, fuzzy, c-format
+#, c-format
 msgid "Set by %s"
-msgstr "Установлено %s"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:917
 #, c-format
@@ -1416,46 +1411,37 @@ msgid "Failed to post to %s"
 msgstr ""
 
 #: src/gui/chatpanel.cpp:951
-#, fuzzy
 msgid "You have SpringLobby v"
-msgstr " Ваш SpringLobby версии v"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:963
-#, fuzzy
 msgid "You are not in channel or channel does not exist."
-msgstr " Вы не в канале, или этот канал не существует."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:971 src/gui/chatpanel.cpp:987
 #: src/gui/chatpanel.cpp:1003 src/gui/chatpanel.cpp:1017
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Command (%s) does not exist, use /help for a list of available commands."
 msgstr ""
-" Ошибка: Команда (%s) не существует, используйте /help для отображения "
-"списка доступных команд."
 
 #: src/gui/chatpanel.cpp:979
-#, fuzzy
 msgid ""
 "You are not in battle or battle does not exist, use /help for a list of "
 "available commands."
 msgstr ""
-" Вы не в сражении, или такого сражения не существует, используите /help для "
-"отображения списока возможных комманд."
 
 #: src/gui/chatpanel.cpp:995
 msgid "User is offline."
 msgstr ""
 
 #: src/gui/chatpanel.cpp:1010
-#, fuzzy
 msgid "Not connected to server"
-msgstr "Не подключен"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1033
-#, fuzzy
 msgid "Sent: \""
-msgstr " Послано: \""
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1067
 msgid "User is now offline."
@@ -1971,9 +1957,8 @@ msgid "KB/s down"
 msgstr "KB/s пришло"
 
 #: src/gui/downloaddataviewctrl.cpp:30
-#, fuzzy
 msgid "ETA"
-msgstr "осталось (сек.)"
+msgstr ""
 
 #: src/gui/downloaddataviewctrl.cpp:32
 msgid "Filesize (MB)"
@@ -2262,18 +2247,16 @@ msgid "Manage Presets"
 msgstr "Управление настройками"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:63
-#, fuzzy
 msgid "Set name."
-msgstr "Переименовать.."
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:67
 msgid "Load..."
 msgstr "Загрузить..."
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:68
-#, fuzzy
 msgid "Load a saved set of options."
-msgstr "Сохранить группу настроек."
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:72
 msgid "Save..."
@@ -2311,22 +2294,18 @@ msgid "Map Options"
 msgstr "Настройки карты"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:146
-#, fuzzy
 msgid "no options available"
-msgstr "недоступно"
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:152
 msgid "other"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:483
-#, fuzzy
 msgid ""
 "Cannot load an options set without a name\n"
 "Please select one from the list and try again."
 msgstr ""
-"Не выбраны настроки для установки по умолчанию\n"
-"Пожалуйста, выберите настройки из списка и попробуйте снова."
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:483
 #: src/gui/hosting/battleroommmoptionstab.cpp:500
@@ -2646,9 +2625,9 @@ msgid "Activate an element to quickly change it"
 msgstr "Активировать элемент для быстрого изменения"
 
 #: src/gui/hosting/battleroomtab.cpp:443
-#, fuzzy, c-format
+#, c-format
 msgid "%d way FFA"
-msgstr "FFA на %d"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:609
 msgid "You need to be in an autohost for this to work."
@@ -2894,9 +2873,8 @@ msgid "Disconnected from server, chat closed."
 msgstr "Отключен от сервера, чат закрыт."
 
 #: src/gui/maindownloadtab.cpp:46
-#, fuzzy
 msgid "Manage downloads"
-msgstr "Отмена загрузки"
+msgstr ""
 
 #: src/gui/maindownloadtab.cpp:51
 msgid "Cancel Download"
@@ -2911,23 +2889,20 @@ msgid "Search file"
 msgstr "Поиск файла"
 
 #: src/gui/maindownloadtab.cpp:58 src/gui/options/downloadoptionspanel.cpp:48
-#, fuzzy
 msgid "Current download directory"
-msgstr "Выберите папку"
+msgstr ""
 
 #: src/gui/maindownloadtab.cpp:99
 msgid "Search for maps and games"
 msgstr "Поиск карт и модов"
 
 #: src/gui/maindownloadtab.cpp:106
-#, fuzzy
 msgid "Failed to download selected item."
-msgstr "Выбараная закачка"
+msgstr ""
 
 #: src/gui/maindownloadtab.cpp:106
-#, fuzzy
 msgid "Failed to download"
-msgstr "Отмена загрузки"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:131 src/gui/options/mainoptionstab.cpp:73
 msgid "Chat"
@@ -3078,18 +3053,16 @@ msgid "Name of user"
 msgstr "Имя пользователя"
 
 #: src/gui/mainwindow.cpp:643
-#, fuzzy
 msgid "You need to restart SpringLobby for the language change to take effect."
-msgstr "Вам нужно перезапустить %s для смены языка интерфейса."
+msgstr ""
 
 #: src/gui/mainwindow.cpp:644
 msgid "Restart required"
 msgstr "Требуется перезапуск"
 
 #: src/gui/mainwindow.cpp:677
-#, fuzzy
 msgid "Please restart SpringLobby now"
-msgstr "Пожалуйста, перезапустите %s"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:731
 msgid ""
@@ -3100,9 +3073,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/mainwindow.cpp:731
-#, fuzzy
 msgid "Download Archives"
-msgstr "&Скачать архивы"
+msgstr ""
 
 #: src/gui/mapctrl.cpp:600
 #, c-format
@@ -3322,9 +3294,8 @@ msgid "Browse"
 msgstr "Просмотреть"
 
 #: src/gui/options/downloadoptionspanel.cpp:92
-#, fuzzy
 msgid "Choose a directory for downloading"
-msgstr "Выберите папку"
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:56
 #: src/gui/options/groupoptionspanel.cpp:169
@@ -3578,9 +3549,8 @@ msgid "Show close button on all tabs? (needs restart to take effect)"
 msgstr "Показывать кнопку ЗАКРЫТЬ на всех вкладка? Требуется перезапуск."
 
 #: src/gui/options/lobbyoptionstab.cpp:175
-#, fuzzy
 msgid "Test Notification"
-msgstr "Уведомление"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:179
 msgid "Start tab"
@@ -3675,9 +3645,8 @@ msgid "Choose UnitSync library"
 msgstr "Выбрать UnitSync библиотеку"
 
 #: src/gui/options/springoptionstab.cpp:294
-#, fuzzy
 msgid "Configuration error"
-msgstr "Ошибка согласования"
+msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:352
 msgid ""
@@ -3896,9 +3865,8 @@ msgid "Downloading %s"
 msgstr "Идёт загрузка %s"
 
 #: src/gui/ui.cpp:241
-#, fuzzy
 msgid "SpringLobby commands help."
-msgstr "%s помощь по командам."
+msgstr ""
 
 #: src/gui/ui.cpp:243
 msgid "Global commands:"
@@ -3913,13 +3881,10 @@ msgid "  \"/back\" - Resets your away status."
 msgstr "  \"/back\" - Отменяет статус \"отошёл\","
 
 #: src/gui/ui.cpp:246
-#, fuzzy
 msgid ""
 "  \"/changepassword newpassword\" - Changes the current active account's "
 "password, needs the old password saved in login box"
 msgstr ""
-"  \"/changepassword oldpassword newpassword\" - Меняет текущий пароль "
-"аккаунта."
 
 #: src/gui/ui.cpp:247
 msgid ""
@@ -4059,38 +4024,31 @@ msgid "Latest Version: "
 msgstr "Новейшая версия: "
 
 #: src/gui/ui.cpp:817
-#, fuzzy
 msgid ""
 "Your SpringLobby version is up to date.\n"
 "\n"
 msgstr ""
-"Версия Вашего SpringLobby не обновлена.\n"
-"\n"
 
 #: src/gui/ui.cpp:817
 msgid "Up to Date"
 msgstr "Обновление не нужно"
 
 #: src/gui/ui.cpp:822
-#, fuzzy, c-format
+#, c-format
 msgid "Your %s version is not up to date."
-msgstr "Версия %s Вашего SpringLobby не обновлена."
+msgstr ""
 
 #: src/gui/ui.cpp:822
-#, fuzzy
 msgid "Would you like to update to the new version?"
 msgstr ""
-"Вы хотите посетить страницу с инструкциями по загрузке последней версии?"
 
 #: src/gui/ui.cpp:825
-#, fuzzy
 msgid "Update Springlobby?"
-msgstr "SpringLobby"
+msgstr ""
 
 #: src/gui/ui.cpp:832
-#, fuzzy
 msgid "Automatic update failed."
-msgstr "Автоматические обновления"
+msgstr ""
 
 #: src/gui/ui.cpp:833
 msgid ""
@@ -4099,18 +4057,16 @@ msgid ""
 msgstr ""
 
 #: src/gui/ui.cpp:835
-#, fuzzy
 msgid "Updater error."
-msgstr "Ошибка обновления."
+msgstr ""
 
 #: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
 msgstr ""
 
 #: src/gui/ui.cpp:845
-#, fuzzy
 msgid "Your SpringLobby version is not up to date."
-msgstr "Версия Вашего SpringLobby не обновлена."
+msgstr ""
 
 #: src/gui/ui.cpp:845
 msgid "Not up to Date"
@@ -4121,9 +4077,8 @@ msgid "Content is required to play. Should it be downloaded?"
 msgstr ""
 
 #: src/gui/ui.cpp:931
-#, fuzzy
 msgid "Content is missing"
-msgstr "Нет движка"
+msgstr ""
 
 #: src/gui/ui.cpp:960
 msgid ""
@@ -4183,9 +4138,8 @@ msgid "ping: %s ms"
 msgstr "Пинг: %s мс"
 
 #: src/serverevents.cpp:147
-#, fuzzy
 msgid " just connected"
-msgstr "Не подключен"
+msgstr ""
 
 #: src/serverevents.cpp:163
 msgid " is now "
@@ -4237,9 +4191,9 @@ msgid "Kicked by Host"
 msgstr "Был выгнан сервером"
 
 #: src/serverevents.cpp:930
-#, fuzzy, c-format
+#, c-format
 msgid "Begin mutelist for channel %s"
-msgstr "Начать список молчания для %s"
+msgstr ""
 
 #: src/serverevents.cpp:930
 #, c-format

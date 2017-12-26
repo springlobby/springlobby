@@ -42,9 +42,8 @@ msgid "Other Country"
 msgstr ""
 
 #: src/countrycodes.cpp:18
-#, fuzzy
 msgid "Andorra"
-msgstr " Ανδόρα"
+msgstr ""
 
 #: src/countrycodes.cpp:19
 msgid "United Arab Emirates"
@@ -99,9 +98,8 @@ msgid "Australia"
 msgstr "Αυστραλία"
 
 #: src/countrycodes.cpp:32
-#, fuzzy
 msgid "Åland Islands"
-msgstr "Νήσοι Κέυμαν"
+msgstr ""
 
 #: src/countrycodes.cpp:33
 msgid "Aruba"
@@ -940,9 +938,8 @@ msgid "Uganda"
 msgstr "Ουγκάντα"
 
 #: src/countrycodes.cpp:242
-#, fuzzy
 msgid "United Kingdom"
-msgstr "Ηνωμένο Βασίλειο (Μεγάλη Βρετανία)"
+msgstr ""
 
 #: src/countrycodes.cpp:243
 msgid "US Minor Outlying Islands"
@@ -1029,11 +1026,8 @@ msgid "(Full country name not found)"
 msgstr "(Δεν βρέθηκε ονομασία κράτους)"
 
 #: src/gui/aboutbox.cpp:18
-#, fuzzy
 msgid " is a cross-platform lobby client for the Spring RTS engine"
 msgstr ""
-"Το SpringLobby είναι ένας πελάτης lobby της μηχανής RTS Spring για πολλαπλά "
-"λειτουργικά περιβάλλοντα"
 
 #: src/gui/aboutbox.cpp:34
 msgid "The numerous contributors from launchpad.net"
@@ -1094,20 +1088,17 @@ msgid "Host"
 msgstr "Οικοδεσπότης"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:40
-#, fuzzy
 msgid "Spectators"
-msgstr "Θεατές:"
+msgstr ""
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:41
 #: src/gui/playback/playbackdataview.cpp:38
-#, fuzzy
 msgid "Players"
-msgstr "Παίκτες:"
+msgstr ""
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:42
-#, fuzzy
 msgid "Max"
-msgstr "Χάρτης"
+msgstr ""
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:43
 msgid "Running"
@@ -1125,14 +1116,12 @@ msgstr "Κατέβασμα χάρτη"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:135
 #: src/gui/playback/playbackdataview.cpp:46
-#, fuzzy
 msgid "Download &game"
-msgstr "Κατέβασμα χάρτη"
+msgstr ""
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:139
-#, fuzzy
 msgid "Download &engine"
-msgstr "Κατέβασμα χάρτη"
+msgstr ""
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:142
 msgid "Notify me when game has ended"
@@ -1157,9 +1146,8 @@ msgid "Passworded"
 msgstr "Με κωδικό"
 
 #: src/gui/battlelist/battlelistfilter.cpp:134
-#, fuzzy
 msgid "Highlighted only"
-msgstr "Επισήμανση"
+msgstr ""
 
 #: src/gui/battlelist/battlelistfilter.cpp:144
 msgid "Rank Limit:"
@@ -1214,15 +1202,13 @@ msgstr "Μεγ. Παίκτες:"
 #: src/gui/battlelist/battlelisttab.cpp:97
 #: src/gui/playback/playbackfilter.cpp:140 src/gui/playback/playbacktab.cpp:93
 #: src/gui/singleplayertab.cpp:128
-#, fuzzy
 msgid "Game:"
-msgstr "Παιχνίδι"
+msgstr ""
 
 #: src/gui/battlelist/battlelistfilter.cpp:327
 #: src/gui/playback/playbackfilter.cpp:157
-#, fuzzy
 msgid "Only games I have"
-msgstr "Μόνο χάρτες που έχω"
+msgstr ""
 
 #: src/gui/battlelist/battlelistfilter.cpp:339
 msgid "    Spectator:"
@@ -1239,21 +1225,18 @@ msgstr "Θεατές:"
 #: src/gui/battlelist/battlelisttab.cpp:137
 #: src/gui/battlelist/battlelisttab.cpp:139
 #: src/gui/playback/playbacktab.cpp:125 src/gui/playback/playbacktab.cpp:127
-#, fuzzy
 msgid " Filter "
-msgstr "Αρχείο"
+msgstr ""
 
 #: src/gui/battlelist/battlelisttab.cpp:143
 #: src/gui/playback/playbacktab.cpp:132
-#, fuzzy
 msgid "Activated"
-msgstr "Ξεκίνησε"
+msgstr ""
 
 #: src/gui/battlelist/battlelisttab.cpp:147
 #: src/gui/battlelist/battlelisttab.cpp:149
-#, fuzzy
 msgid " Battle infos "
-msgstr "Λίστα μαχών"
+msgstr ""
 
 #: src/gui/battlelist/battlelisttab.cpp:153
 msgid "0 battles displayed"
@@ -1297,9 +1280,8 @@ msgid ""
 msgstr "Είστε ήδη σε μάχη."
 
 #: src/gui/battlelist/battlelisttab.cpp:402
-#, fuzzy
 msgid "Already in another battle"
-msgstr "Ήδη σε μάχη"
+msgstr ""
 
 #: src/gui/battlelist/battlelisttab.cpp:402
 msgid "You are already in a battle."
@@ -1318,9 +1300,8 @@ msgid "Enter password (spaces will be stripped)"
 msgstr ""
 
 #: src/gui/channel/autojoinchanneldialog.cpp:29
-#, fuzzy
 msgid "Edit auto-joined channels"
-msgstr "Αυτόματη είσοδος σε κανάλια..."
+msgstr ""
 
 #: src/gui/channel/autojoinchanneldialog.cpp:38
 msgid ""
@@ -1334,29 +1315,24 @@ msgid "Double click to join"
 msgstr ""
 
 #: src/gui/channel/channelchooser.cpp:31
-#, fuzzy
 msgid "Find channel:"
-msgstr "Είσοδος σε κανάλι..."
+msgstr ""
 
 #: src/gui/channel/channelchooserdialog.cpp:16 src/gui/mainwindow.cpp:231
-#, fuzzy
 msgid "Choose channels to join"
-msgstr "Όνομα καναλιού"
+msgstr ""
 
 #: src/gui/channel/channellistview.cpp:22 src/gui/slbook.cpp:116
-#, fuzzy
 msgid "Channel"
-msgstr "κανάλι"
+msgstr ""
 
 #: src/gui/channel/channellistview.cpp:23
-#, fuzzy
 msgid "# users"
-msgstr "(%d χρήστες)"
+msgstr ""
 
 #: src/gui/channel/channellistview.cpp:24
-#, fuzzy
 msgid "Topic"
-msgstr "Το θέμα \""
+msgstr ""
 
 #: src/gui/channel/channellistview.cpp:56
 #, c-format
@@ -1364,9 +1340,8 @@ msgid "Displaying %d out of %d channels"
 msgstr ""
 
 #: src/gui/chatpanel.cpp:257
-#, fuzzy
 msgid "Hide bots"
-msgstr "Προσθήκη bot"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:295
 msgid "right click for options (like autojoin)"
@@ -1377,38 +1352,34 @@ msgid "Send"
 msgstr "Αποστολή"
 
 #: src/gui/chatpanel.cpp:703
-#, fuzzy
 msgid "!! Command: \""
-msgstr " !! Εντολή: \""
+msgstr ""
 
 #: src/gui/chatpanel.cpp:703
 msgid "\" params: \""
 msgstr "\" παράμετροι: \""
 
 #: src/gui/chatpanel.cpp:708
-#, fuzzy, c-format
+#, c-format
 msgid "Error: %s"
-msgstr "Σφάλμα %s"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:715
-#, fuzzy
 msgid "the channel"
-msgstr "κανάλι"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:717
-#, fuzzy
 msgid "the battle"
-msgstr "Έναρξη μάχης"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:719
-#, fuzzy
 msgid "the server"
-msgstr "εξυπηρετητής"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:731 src/gui/chatpanel.cpp:750
-#, fuzzy, c-format
+#, c-format
 msgid "%s joined %s."
-msgstr "%s εισήλθε στο %s"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:763
 #, c-format
@@ -1416,14 +1387,13 @@ msgid "%s left %s (%s)."
 msgstr ""
 
 #: src/gui/chatpanel.cpp:802
-#, fuzzy
 msgid "Channel topic"
-msgstr "Πληροφορίες καναλιού"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:808
-#, fuzzy, c-format
+#, c-format
 msgid "Set by %s"
-msgstr "** Ορίστηκε από %s"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:917
 #, c-format
@@ -1436,46 +1406,37 @@ msgid "Failed to post to %s"
 msgstr ""
 
 #: src/gui/chatpanel.cpp:951
-#, fuzzy
 msgid "You have SpringLobby v"
-msgstr " Χρησιμοποιείτε το SpringLobby v"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:963
-#, fuzzy
 msgid "You are not in channel or channel does not exist."
-msgstr " Δεν είστε σε κανάλι ή το κανάλι δεν υπάρχει."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:971 src/gui/chatpanel.cpp:987
 #: src/gui/chatpanel.cpp:1003 src/gui/chatpanel.cpp:1017
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Command (%s) does not exist, use /help for a list of available commands."
 msgstr ""
-" Σφάλμα: Η εντολή (%s) δεν υπάρχει. Πληκτρολογήστε /help για μια λίστα των "
-"διαθέσιμων εντολών."
 
 #: src/gui/chatpanel.cpp:979
-#, fuzzy
 msgid ""
 "You are not in battle or battle does not exist, use /help for a list of "
 "available commands."
 msgstr ""
-" Δεν είστε σε μάχη ή η μάχη δεν υπάρχει. Πληκρτολογήστε /help για μια λίστα "
-"των διαθέσιμων εντολών."
 
 #: src/gui/chatpanel.cpp:995
 msgid "User is offline."
 msgstr ""
 
 #: src/gui/chatpanel.cpp:1010
-#, fuzzy
 msgid "Not connected to server"
-msgstr "Άγνωστη απάντηση από τον εξυπηρετητή"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1033
-#, fuzzy
 msgid "Sent: \""
-msgstr " Στάλθηκε: \""
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1067
 msgid "User is now offline."
@@ -1494,14 +1455,13 @@ msgid "Joined Battle."
 msgstr ""
 
 #: src/gui/chatpanel.cpp:1286
-#, fuzzy, c-format
+#, c-format
 msgid "%d users"
-msgstr "(%d χρήστες)"
+msgstr ""
 
 #: src/gui/chatpanelmenu.cpp:36
-#, fuzzy
 msgid "Disable text appending"
-msgstr "Απενεργοποίηση προειδοποίησης λειτουργίας για προχωρημένους"
+msgstr ""
 
 #: src/gui/chatpanelmenu.cpp:40
 msgid "Copy"
@@ -1524,9 +1484,8 @@ msgid "Display Join/Leave Messages"
 msgstr "Εμφάνιση μηνυμάτων Εισόδου/Εξόδου"
 
 #: src/gui/chatpanelmenu.cpp:64
-#, fuzzy
 msgid "Show mute list"
-msgstr "Εμφάνιση συμβουλών"
+msgstr ""
 
 #: src/gui/chatpanelmenu.cpp:72
 msgid "Channel info"
@@ -1605,9 +1564,8 @@ msgid "Broadcast..."
 msgstr "Μετάδοση..."
 
 #: src/gui/chatpanelmenu.cpp:137 src/gui/slbook.cpp:112 src/gui/slbook.cpp:114
-#, fuzzy
 msgid "User"
-msgstr "Αποσιώπηση Χρήστη"
+msgstr ""
 
 #: src/gui/chatpanelmenu.cpp:141
 msgid "Open log in editor"
@@ -1828,9 +1786,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/chatpanelmenu.cpp:716
-#, fuzzy
 msgid "couldn't add user"
-msgstr "Αδυναμία εκκίνησης περιηγητή."
+msgstr ""
 
 #: src/gui/connectwindow.cpp:45
 msgid "Connect to lobby server"
@@ -1875,14 +1832,10 @@ msgstr ""
 "την επόμενη εκκίνηση του lobby"
 
 #: src/gui/connectwindow.cpp:87
-#, fuzzy
 msgid ""
 "Note: If you do not have an account, you can register one for free on the "
 "Register tab."
 msgstr ""
-"Σημείωση: Αν δεν έχετε λογαριασμό,\n"
-"μπορείτε να εγγραφείτε δωρεάν στην\n"
-"καρτέλα \"Εγγραφή\""
 
 #: src/gui/connectwindow.cpp:90 src/gui/hosting/autobalancedialog.cpp:71
 #: src/gui/hosting/mmoptionwindows.cpp:108
@@ -1907,9 +1860,8 @@ msgid "Register"
 msgstr "Εγγραφή"
 
 #: src/gui/connectwindow.cpp:173
-#, fuzzy
 msgid "Retype password"
-msgstr "Εισάγετε κωδικό"
+msgstr ""
 
 #: src/gui/connectwindow.cpp:287
 msgid ""
@@ -1918,22 +1870,18 @@ msgid ""
 msgstr ""
 
 #: src/gui/connectwindow.cpp:291
-#, fuzzy
 msgid ""
 "Registration failed, the reason was:\n"
 "Password / confirmation mismatch (or empty passwort)"
 msgstr ""
-"Η εγγραφή απέτυχε, ο λόγος ήταν:\n"
-"Ασυμφωνία κωδικού και επιβεβαίωσής του"
 
 #: src/gui/contentdownloaddialog.cpp:48
 msgid "Enter search query (wildcard * can be used)"
 msgstr ""
 
 #: src/gui/contentdownloaddialog.cpp:51
-#, fuzzy
 msgid "Search"
-msgstr "Αναζήτηση αρχείου"
+msgstr ""
 
 #: src/gui/contentdownloaddialog.cpp:55 src/gui/mapctrl.cpp:714
 #: src/gui/mapctrl.cpp:716
@@ -1946,9 +1894,8 @@ msgstr ""
 
 #: src/gui/contentsearchresultview.cpp:19 src/gui/downloaddataviewctrl.cpp:20
 #: src/gui/mapselectdialog.cpp:173 src/gui/selectusersdialog.cpp:75
-#, fuzzy
 msgid "Name"
-msgstr "Παιχνίδι"
+msgstr ""
 
 #: src/gui/contentsearchresultview.cpp:20
 msgid "Preview"
@@ -1967,9 +1914,8 @@ msgid "Size"
 msgstr "Μέγεθος"
 
 #: src/gui/contentsearchresultview.cpp:23
-#, fuzzy
 msgid "Downloaded"
-msgstr "Λήψη αρχείου"
+msgstr ""
 
 #: src/gui/customdialogs.cpp:518 src/gui/customdialogs.cpp:562
 #, c-format
@@ -1986,32 +1932,28 @@ msgstr ""
 
 #: src/gui/downloaddataviewctrl.cpp:22
 #: src/gui/hosting/battleroomdataviewctrl.cpp:41
-#, fuzzy
 msgid "Status"
-msgstr "Κατάσταση:"
+msgstr ""
 
 #: src/gui/downloaddataviewctrl.cpp:24 src/gui/downloaddataviewmodel.cpp:38
-#, fuzzy
 msgid "complete"
-msgstr "Λήψη ολοκληρώθηκε"
+msgstr ""
 
 #: src/gui/downloaddataviewctrl.cpp:27
 msgid "KB/s down"
 msgstr "KB/s λαμβάνονται"
 
 #: src/gui/downloaddataviewctrl.cpp:30
-#, fuzzy
 msgid "ETA"
-msgstr "Χρόνος (δευ.)"
+msgstr ""
 
 #: src/gui/downloaddataviewctrl.cpp:32
 msgid "Filesize (MB)"
 msgstr "μέγεθος (MB)"
 
 #: src/gui/downloaddataviewmodel.cpp:40
-#, fuzzy
 msgid "downloading"
-msgstr "Λήψη αρχείου"
+msgstr ""
 
 #: src/gui/hosting/addbotdialog.cpp:37
 msgid "Add bot"
@@ -2038,9 +1980,8 @@ msgid "property"
 msgstr ""
 
 #: src/gui/hosting/addbotdialog.cpp:85 src/gui/hosting/addbotdialog.cpp:95
-#, fuzzy
 msgid "value"
-msgstr "Τιμή"
+msgstr ""
 
 #: src/gui/hosting/addbotdialog.cpp:116
 msgid "Add Bot"
@@ -2106,19 +2047,16 @@ msgstr ""
 "αυτό την κάνει άδικη."
 
 #: src/gui/hosting/autobalancedialog.cpp:55
-#, fuzzy
 msgid "Number of allies"
-msgstr "Αριθμός παικτών"
+msgstr ""
 
 #: src/gui/hosting/autobalancedialog.cpp:58
-#, fuzzy
 msgid "Auto select"
-msgstr "Επανασύνδεση"
+msgstr ""
 
 #: src/gui/hosting/battlemaptab.cpp:71
-#, fuzzy
 msgid "Select"
-msgstr "Επιλογή..."
+msgstr ""
 
 #: src/gui/hosting/battlemaptab.cpp:88 src/gui/hosting/battleroomtab.cpp:286
 #: src/gui/mapselectdialog.cpp:102 src/gui/singleplayertab.cpp:94
@@ -2168,9 +2106,8 @@ msgid "Choose in game"
 msgstr "Επιλ. στο παιχνίδι"
 
 #: src/gui/hosting/battlemaptab.cpp:105
-#, fuzzy
 msgid "Chose before game"
-msgstr "Επιλ. στο παιχνίδι"
+msgstr ""
 
 #: src/gui/hosting/battlemaptab.cpp:108
 msgid "Startpositions"
@@ -2189,14 +2126,12 @@ msgid "Units in this list will be available in the game."
 msgstr "Οι μονάδες αυτής της λίστας θα είναι διαθέσιμες στο παιχνίδι."
 
 #: src/gui/hosting/battlerestrictionstab.cpp:79
-#, fuzzy
 msgid "Disable selected units."
-msgstr "Ενεργοποίηση όλων των μονάδων."
+msgstr ""
 
 #: src/gui/hosting/battlerestrictionstab.cpp:83
-#, fuzzy
 msgid "Re-enable selected units."
-msgstr "Ενεργοποίηση όλων των μονάδων."
+msgstr ""
 
 #: src/gui/hosting/battlerestrictionstab.cpp:86
 msgid "<<"
@@ -2219,24 +2154,20 @@ msgid "How many units of this type do you wish to allow?"
 msgstr ""
 
 #: src/gui/hosting/battlerestrictionstab.cpp:243
-#, fuzzy
 msgid "Unit restriction"
-msgstr "Περιορισμοί μονάδων"
+msgstr ""
 
 #: src/gui/hosting/battleroomdataviewctrl.cpp:42
-#, fuzzy
 msgid "Ingame"
-msgstr "Ψευδώνυμο"
+msgstr ""
 
 #: src/gui/hosting/battleroomdataviewctrl.cpp:43
-#, fuzzy
 msgid "Faction"
-msgstr "Ενέργεια"
+msgstr ""
 
 #: src/gui/hosting/battleroomdataviewctrl.cpp:44
-#, fuzzy
 msgid "Colour"
-msgstr "Χρώμα"
+msgstr ""
 
 #: src/gui/hosting/battleroomdataviewctrl.cpp:45
 msgid "Country"
@@ -2303,46 +2234,38 @@ msgid "Manage Presets"
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:63
-#, fuzzy
 msgid "Set name."
-msgstr "Αφαίρεση..."
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:67
-#, fuzzy
 msgid "Load..."
-msgstr "Φόρτωση..."
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:68
-#, fuzzy
 msgid "Load a saved set of options."
-msgstr "Φόρτωση αποθηκευμένης λίστας περιορισμών"
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:72
-#, fuzzy
 msgid "Save..."
-msgstr "Αποθήκευση..."
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:73
 #: src/gui/hosting/battleroomtab.cpp:264
-#, fuzzy
 msgid "Save a set of options."
-msgstr "Αποθήκευση λίστας περιορισμών."
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:77
-#, fuzzy
 msgid "Delete..."
-msgstr "Επιλογή..."
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:78
 #: src/gui/hosting/battleroomtab.cpp:269
-#, fuzzy
 msgid "Delete a set of options."
-msgstr "Αποθήκευση λίστας περιορισμών."
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:82
-#, fuzzy
 msgid "Set default..."
-msgstr "προεπιλογή"
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:83
 #: src/gui/hosting/battleroomtab.cpp:274
@@ -2350,18 +2273,16 @@ msgid "Use the current set of options as game's default."
 msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:91
-#, fuzzy
 msgid "Game Options"
-msgstr "Επιλογές Χάρτη"
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:96
 msgid "Map Options"
 msgstr "Επιλογές Χάρτη"
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:146
-#, fuzzy
 msgid "no options available"
-msgstr "μη διαθέσιμο"
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:152
 msgid "other"
@@ -2405,15 +2326,13 @@ msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:511
 #: src/gui/hosting/battleroomtab.cpp:1049
-#, fuzzy
 msgid "Delete preset"
-msgstr "Με ανάκλαση"
+msgstr ""
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:522
 #: src/gui/hosting/battleroomtab.cpp:1061
-#, fuzzy
 msgid "Set game default preset"
-msgstr "προεπιλογή"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:140
 msgid "Players with the same team number share control of their units."
@@ -2439,9 +2358,8 @@ msgid "Spectate (watch) the battle instead of playing"
 msgstr "Παρακολουθήστε τη μάχη αντί να συμμετάσχετε"
 
 #: src/gui/hosting/battleroomtab.cpp:150
-#, fuzzy
 msgid "Auto un-spectate"
-msgstr "Επανασύνδεση"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:151
 msgid "automatically unspec when there's a free slot"
@@ -2468,14 +2386,12 @@ msgstr ""
 "έχουν ρυθμιστεί) τις αρχικές περιοχές."
 
 #: src/gui/hosting/battleroomtab.cpp:180
-#, fuzzy
 msgid "Host new"
-msgstr "Φιλοξενία νέου..."
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:181
-#, fuzzy
 msgid "Host a new battle"
-msgstr "Φιλοξενία νέας μάχης"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:183
 msgid "Leave the battle and return to the battle list"
@@ -2538,18 +2454,16 @@ msgid ""
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:208
-#, fuzzy
 msgid "AutoPaste Description"
-msgstr "Περιγραφή"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:208
 msgid "Automatically paste battle's descriptoin when a new user joins"
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:211
-#, fuzzy
 msgid "AutoSpect"
-msgstr "Επανασύνδεση"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:211
 msgid ""
@@ -2568,18 +2482,16 @@ msgid ""
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:217
-#, fuzzy
 msgid "AutoStart"
-msgstr "Έναρξη"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:217
 msgid "Automatically start the battle when all players are ready and synced"
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:221
-#, fuzzy
 msgid "Lock Balance"
-msgstr "Εξισορρόπηση"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:221
 msgid "When activated, prevents anyone but the host to change team and ally"
@@ -2594,9 +2506,8 @@ msgid "Rings all players that don't have ready status and aren't spectators"
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:228
-#, fuzzy
 msgid "Ring unsynced"
-msgstr "Ενεργοποίηση κάθετου συγχρονισμού"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:228
 msgid "Rings all players that don't have sync status and aren't spectators"
@@ -2613,14 +2524,12 @@ msgid ""
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:232
-#, fuzzy
 msgid "Ring ..."
-msgstr "Κλήση"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:235
-#, fuzzy
 msgid "Spect unready"
-msgstr "Δεν είναι έτοιμο"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:235
 msgid "Force to spectate all players that don't have ready status"
@@ -2644,14 +2553,12 @@ msgid ""
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:241
-#, fuzzy
 msgid "Force spectate ..."
-msgstr "Αναγκαστική εκκίνηση;"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:243
-#, fuzzy
 msgid "Balance alliances"
-msgstr "Μόνο ο οικοδεσπότης μπορεί να εξισορροπήσει τις συμμαχίες."
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:243
 msgid "Automatically balance players into two or more alliances"
@@ -2666,35 +2573,30 @@ msgid "Make player colors unique"
 msgstr "Κάνει τα χρώματα των παικτών μοναδικά"
 
 #: src/gui/hosting/battleroomtab.cpp:249
-#, fuzzy
 msgid "Balance teams"
-msgstr "Εξισορρόπηση"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:249
-#, fuzzy
 msgid ""
 "Automatically balance players into control teams, by default none shares "
 "control"
-msgstr "Αυτόματη εξισορρόπηση παιχτών σε δύο ή περισσότερες συμμαχίες"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:259
 msgid "Load battle preset"
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:263
-#, fuzzy
 msgid "Save"
-msgstr "Αποθήκευση..."
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:268 src/gui/playback/playbacktab.cpp:140
-#, fuzzy
 msgid "Delete"
-msgstr "Με ανάκλαση"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:273
-#, fuzzy
 msgid "Set default"
-msgstr "προεπιλογή"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:284
 msgid "Activate an element to quickly change it"
@@ -2710,13 +2612,10 @@ msgid "You need to be in an autohost for this to work."
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:623
-#, fuzzy
 msgid ""
 "Some Players are not ready yet\n"
 "Do you want to force start?"
 msgstr ""
-"Κάποιοι παίκτες δεν είναι έτοιμοι.\n"
-"Κλήση αυτών των παιχτών;"
 
 #: src/gui/hosting/battleroomtab.cpp:623
 msgid "Not ready"
@@ -2731,18 +2630,16 @@ msgid "Enter a battle description"
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:771
-#, fuzzy
 msgid "Set description"
-msgstr "Περιγραφή"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:796
 msgid "Enter timeout before autospeccing a player in minutes"
 msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:796
-#, fuzzy
 msgid "Set Timeout"
-msgstr "Λήξη προθεσμίας Ping!"
+msgstr ""
 
 #: src/gui/hosting/battleroomtab.cpp:960
 #, c-format
@@ -2763,30 +2660,26 @@ msgid "A short description of the game, this will show up in the battle list."
 msgstr "Σύντομη περιγραφή του παιχνιδιού, θα εμφανιστεί στη λίστα μαχών."
 
 #: src/gui/hosting/hostbattledialog.cpp:90
-#, fuzzy
 msgid "Autopaste description"
-msgstr "Περιγραφή"
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:92
 msgid "Automatically write the battle description when a user joins."
 msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:104 src/gui/singleplayertab.cpp:138
-#, fuzzy
 msgid "Select the engine version to play."
-msgstr "Επιλέξτε το mod που θέλετε να παίξετε."
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:115
-#, fuzzy
 msgid "Select the game to play."
-msgstr "Επιλέξτε το mod που θέλετε να παίξετε."
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:124
-#, fuzzy
 msgid ""
 "Password\n"
 "(no spaces)"
-msgstr "Με κωδικό"
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:129
 msgid "Password needed to join game. Keep empty for no password"
@@ -2815,9 +2708,8 @@ msgid "Chose automatically"
 msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:151
-#, fuzzy
 msgid "Randomly picks an available one"
-msgstr "μη διαθέσιμο"
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:155
 msgid "Manually enter the manager name"
@@ -2844,9 +2736,8 @@ msgid "NAT traversal"
 msgstr "Διάτρηση NAT"
 
 #: src/gui/hosting/hostbattledialog.cpp:195
-#, fuzzy
 msgid "NAT traversal to use."
-msgstr "Διάτρηση NAT"
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:200
 msgid "Rank requirement"
@@ -2861,33 +2752,28 @@ msgid "No greater than"
 msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:205
-#, fuzzy
 msgid "Select the type of rank enforcement."
-msgstr "Επιλέξτε το mod που θέλετε να παίξετε."
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:278
 msgid "Start hosting the battle."
 msgstr "Έναρξη φιλοξενίας της μάχης."
 
 #: src/gui/hosting/hostbattledialog.cpp:339 src/gui/singleplayertab.cpp:323
-#, fuzzy
 msgid "You have to select a game first."
-msgstr "Πρέπει πρώτα να επιλέξετε ένα mod."
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:339
-#, fuzzy
 msgid "No game selected."
-msgstr "Δεν επιλέχθηκε mod."
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:345
-#, fuzzy
 msgid "You have to select a engine version first."
-msgstr "Πρέπει πρώτα να επιλέξετε ένα mod."
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:345
-#, fuzzy
 msgid "No engine selected."
-msgstr "Δεν επιλέχθηκε mod."
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:424
 msgid "Manually chose a manager"
@@ -2898,9 +2784,8 @@ msgid "Please type the nick of the manager you want to use ( case sensitive )"
 msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:478
-#, fuzzy
 msgid "Battle not started beacuse the game you selected could not be found. "
-msgstr "Η μάχη δεν ξεκίνησε επειδή το mod που επιλέξατε δεν βρέθηκε. "
+msgstr ""
 
 #: src/gui/hosting/hostbattledialog.cpp:478
 msgid "Error starting battle."
@@ -2930,14 +2815,12 @@ msgstr "Επιλογές"
 
 #: src/gui/hosting/mainjoinbattletab.cpp:64
 #: src/gui/hosting/mainsingleplayertab.cpp:43
-#, fuzzy
 msgid "Unit Restrictions"
-msgstr "Περιορισμοί μονάδων"
+msgstr ""
 
 #: src/gui/hosting/mmoptionwindows.cpp:44
-#, fuzzy
 msgid "Change option"
-msgstr "Επιλογές διεπαφής"
+msgstr ""
 
 #: src/gui/hosting/votepanel.cpp:47
 msgid "Vote for YES, (Ctrl-Y)"
@@ -2956,14 +2839,12 @@ msgid "Paths"
 msgstr ""
 
 #: src/gui/mainchattab.cpp:171
-#, fuzzy
 msgid "Disconnected from server, chat closed."
-msgstr "Άγνωστη απάντηση από τον εξυπηρετητή"
+msgstr ""
 
 #: src/gui/maindownloadtab.cpp:46
-#, fuzzy
 msgid "Manage downloads"
-msgstr "Ακύρωση λήψης"
+msgstr ""
 
 #: src/gui/maindownloadtab.cpp:51
 msgid "Cancel Download"
@@ -2978,46 +2859,40 @@ msgid "Search file"
 msgstr "Αναζήτηση αρχείου"
 
 #: src/gui/maindownloadtab.cpp:58 src/gui/options/downloadoptionspanel.cpp:48
-#, fuzzy
 msgid "Current download directory"
-msgstr "Επιλέξτε έναν φάκελο"
+msgstr ""
 
 #: src/gui/maindownloadtab.cpp:99
 msgid "Search for maps and games"
 msgstr ""
 
 #: src/gui/maindownloadtab.cpp:106
-#, fuzzy
 msgid "Failed to download selected item."
-msgstr "Λήψη ολοκληρώθηκε"
+msgstr ""
 
 #: src/gui/maindownloadtab.cpp:106
-#, fuzzy
 msgid "Failed to download"
-msgstr "Ακύρωση λήψης"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:131 src/gui/options/mainoptionstab.cpp:73
 msgid "Chat"
 msgstr "Συνομιλία"
 
 #: src/gui/mainwindow.cpp:132
-#, fuzzy
 msgid "Battlelist"
-msgstr "Λίστα μαχών"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:134
 msgid "Singleplayer"
 msgstr ""
 
 #: src/gui/mainwindow.cpp:136
-#, fuzzy
 msgid "Replays"
-msgstr "Πάντα"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:137 src/gui/options/mainoptionstab.cpp:70
-#, fuzzy
 msgid "Downloads"
-msgstr "Λήψη αρχείου"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:146
 msgid "&Connect..."
@@ -3032,32 +2907,28 @@ msgid "&Reopen server panel"
 msgstr ""
 
 #: src/gui/mainwindow.cpp:152
-#, fuzzy
 msgid "&Save options"
-msgstr "Επιλογές διεπαφής"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:155
 msgid "&Quit"
 msgstr "&Τερματισμός"
 
 #: src/gui/mainwindow.cpp:158
-#, fuzzy
 msgid "&Autojoin channels"
-msgstr "Αυτόματη είσοδος σε κανάλια..."
+msgstr ""
 
 #: src/gui/mainwindow.cpp:159
 msgid "&Preferences"
 msgstr ""
 
 #: src/gui/mainwindow.cpp:160
-#, fuzzy
 msgid "&Change language"
-msgstr "Πληροφορίες καναλιού"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:161
-#, fuzzy
 msgid "&Spring settings"
-msgstr "Ρυθμίσεις Spring"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:162
 msgid "&Reset layout"
@@ -3068,9 +2939,8 @@ msgid "&Join channel..."
 msgstr "Είσοδος σε κανάλι..."
 
 #: src/gui/mainwindow.cpp:169
-#, fuzzy
 msgid "Channel &list"
-msgstr "Πληροφορίες καναλιού"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:170
 msgid "Open private &chat..."
@@ -3081,14 +2951,12 @@ msgid "&Open Spring DataDir"
 msgstr ""
 
 #: src/gui/mainwindow.cpp:173
-#, fuzzy
 msgid "&Download Archives"
-msgstr "Αποτυχία λήψης"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:175
-#, fuzzy
 msgid "&Reload maps/games"
-msgstr "Ανανέωση χαρτών/mod"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:177
 msgid "Check for new Version"
@@ -3103,9 +2971,8 @@ msgid "&About"
 msgstr "&Περί"
 
 #: src/gui/mainwindow.cpp:182
-#, fuzzy
 msgid "&System Info"
-msgstr "Πληροφορίες συστήματος"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:183
 msgid "&Report a bug..."
@@ -3116,9 +2983,8 @@ msgid "&Documentation"
 msgstr "&Τεκμηρίωση"
 
 #: src/gui/mainwindow.cpp:187
-#, fuzzy
 msgid "&Server"
-msgstr "Εξυπηρετητής"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:188
 msgid "&Edit"
@@ -3137,9 +3003,8 @@ msgid "You need to be connected to a server to view the channel list"
 msgstr ""
 
 #: src/gui/mainwindow.cpp:494
-#, fuzzy
 msgid "Not connected"
-msgstr "Κατάσταση: Συνδεμένο"
+msgstr ""
 
 #: src/gui/mainwindow.cpp:509
 msgid "Join channel..."
@@ -3178,9 +3043,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/mainwindow.cpp:731
-#, fuzzy
 msgid "Download Archives"
-msgstr "Λήψη αρχείου"
+msgstr ""
 
 #: src/gui/mapctrl.cpp:600
 #, c-format
@@ -3206,9 +3070,9 @@ msgid "bonus: %d%%"
 msgstr "επίδομα: %d%%"
 
 #: src/gui/mapgridctrl.cpp:265
-#, fuzzy, c-format
+#, c-format
 msgid "Map %s doesn't exist!"
-msgstr "Δεν %s υπάρχει ο χάρτης."
+msgstr ""
 
 #: src/gui/mapgridctrl.cpp:280
 #, c-format
@@ -3228,51 +3092,44 @@ msgid "Horizontal sort key"
 msgstr ""
 
 #: src/gui/mapselectdialog.cpp:66
-#, fuzzy
 msgid "Filter"
-msgstr "Αρχείο"
+msgstr ""
 
 #: src/gui/mapselectdialog.cpp:68
 msgid "Shows only maps which contain this text in their name or description."
 msgstr ""
 
 #: src/gui/mapselectdialog.cpp:71
-#, fuzzy
 msgid "Map details"
-msgstr "Μεγ. μέταλλο"
+msgstr ""
 
 #: src/gui/mapselectdialog.cpp:111
-#, fuzzy
 msgid "Start positions"
-msgstr "Αρχικές θέσεις"
+msgstr ""
 
 #: src/gui/mapselectdialog.cpp:178
-#, fuzzy
 msgid "Minimum wind"
-msgstr "Κατώτερος βαθμός"
+msgstr ""
 
 #: src/gui/mapselectdialog.cpp:179
 msgid "Maximum wind"
 msgstr ""
 
 #: src/gui/mapselectdialog.cpp:180
-#, fuzzy
 msgid "Average wind"
-msgstr "Μέσος"
+msgstr ""
 
 #: src/gui/mapselectdialog.cpp:181
 msgid "Size (map area)"
 msgstr ""
 
 #: src/gui/mapselectdialog.cpp:182
-#, fuzzy
 msgid "Aspect ratio"
-msgstr "Θεατής"
+msgstr ""
 
 #: src/gui/mapselectdialog.cpp:183
-#, fuzzy
 msgid "Number of start positions"
-msgstr "Τυχαίες αρχικές θέσεις"
+msgstr ""
 
 #: src/gui/nickdataviewctrl.cpp:32
 msgid "s"
@@ -3333,7 +3190,6 @@ msgid "Notification"
 msgstr "Ειδοποίηση"
 
 #: src/gui/options/chatoptionstab.cpp:246
-#, fuzzy
 msgid ""
 "[19:35] ** Server ** Connected to Server.\n"
 "[22:30] <Dude> hi everyone\n"
@@ -3342,13 +3198,6 @@ msgid ""
 "[22:45] <Dude> Dude2: orl?\n"
 "[22:46] <Dude2> But could be better, should tweak them some more...\n"
 msgstr ""
-"[19:35] ** Server ** Connected to TAS Server.\n"
-"[22:30] <Dude> γεια σας\n"
-"[22:30] ** Dude2 εισήλθε στο κανάλι.\n"
-"[22:30] * Dude2 του αρέσουν τα χρώματά του\n"
-"[22:45] <Dude> Dude2: πλάκα κάνεις!\n"
-"[22:46] <Dude2> Θα μπορούσαν να είναι καλύτερα, πρέπει να τα πειράξω λίγο "
-"ακόμα...\n"
 
 #: src/gui/options/chatoptionstab.cpp:257
 msgid "Font:"
@@ -3371,9 +3220,8 @@ msgid "Play notification sounds"
 msgstr "Χρήση ήχων ειδοποίησης"
 
 #: src/gui/options/chatoptionstab.cpp:288
-#, fuzzy
 msgid "Copy server messages in current channel"
-msgstr "  \"/channels\" - Εμφανίζει μια λίστα των ενεργών καναλιών."
+msgstr ""
 
 #: src/gui/options/chatoptionstab.cpp:298
 msgid "Chat logs"
@@ -3416,25 +3264,22 @@ msgid "Browse"
 msgstr "Αναζήτηση"
 
 #: src/gui/options/downloadoptionspanel.cpp:92
-#, fuzzy
 msgid "Choose a directory for downloading"
-msgstr "Επιλέξτε έναν φάκελο"
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:56
 #: src/gui/options/groupoptionspanel.cpp:169
 #: src/gui/options/springoptionstab.cpp:78
-#, fuzzy
 msgid "Remove"
-msgstr "Αφαίρεση..."
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:58
 msgid "Remove an existing group"
 msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:62
-#, fuzzy
 msgid "Rename.."
-msgstr "Αφαίρεση..."
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:64
 msgid "Rename an existing group"
@@ -3442,18 +3287,16 @@ msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:71
 #: src/gui/options/springoptionstab.cpp:85
-#, fuzzy
 msgid "Add New.."
-msgstr "Προσθήκη Bot..."
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:72
 msgid "Add new group"
 msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:85
-#, fuzzy
 msgid "Group Actions"
-msgstr "Ενέργεια"
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:90
 msgid "Notify login/logout"
@@ -3464,18 +3307,16 @@ msgid "Notify when users of this group go online or offline"
 msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:96
-#, fuzzy
 msgid "Ignore Chat"
-msgstr "Ανοιχτή Συνομιλία"
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:98
 msgid "Ignore anything said in channel by any of the users in this group"
 msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:102
-#, fuzzy
 msgid "Notify Hosted Battles"
-msgstr "Φιλοξενία νέας μάχης"
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:104
 msgid "Notify when users of this group hosts a battle"
@@ -3511,9 +3352,8 @@ msgid "Highlight battles and the names of users in this group"
 msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:135
-#, fuzzy
 msgid "Highlight Color"
-msgstr "Επισήμανση λέξεων"
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:140
 #: src/gui/options/groupoptionspanel.cpp:142
@@ -3525,23 +3365,20 @@ msgid "Users in group"
 msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:164
-#, fuzzy
 msgid "Add.."
-msgstr "Προσθήκη Bot..."
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:165
 msgid "Add users to group"
 msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:171
-#, fuzzy
 msgid "Remove users from group"
-msgstr "Διαγραφή Λογαριασμού Χρήστη"
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:269
-#, fuzzy
 msgid "Name of new group:"
-msgstr "Όνομα χρήστη"
+msgstr ""
 
 #: src/gui/options/groupoptionspanel.cpp:269
 msgid "Add New Group"
@@ -3581,14 +3418,12 @@ msgid "Path"
 msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:89
-#, fuzzy
 msgid "Use a file dialog to find the editor binary"
-msgstr "Χρήση διαλόγου αρχείων για αναζήτηση του περιηγητή"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:100
-#, fuzzy
 msgid "Autoconnect"
-msgstr "Επανασύνδεση"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:103
 msgid ""
@@ -3596,9 +3431,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:104
-#, fuzzy
 msgid "Autoconnect on lobby start"
-msgstr "Σύνδεση στον εξυπηρετητή lobby"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:111
 msgid "Automatic updates"
@@ -3615,24 +3449,20 @@ msgid "automatically check for updates"
 msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:123
-#, fuzzy
 msgid "Tooltips"
-msgstr "&Εργαλεία"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:124
-#, fuzzy
 msgid "Show Tooltips?"
-msgstr "Εμφάνιση συμβουλών"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:127
-#, fuzzy
 msgid "Requires SpringLobby restart to take effect."
-msgstr "H έκδοση του SpringLobby είναι ενημερωμένη!"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:132
-#, fuzzy
 msgid "Battle Promotion"
-msgstr "Περιγραφή"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:133
 msgid "Show notifications when someone promotes battle?"
@@ -3650,9 +3480,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:140
-#, fuzzy
 msgid "Match exact"
-msgstr "Αρπαγή εξαιρέσεων AI (exceptions)"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:141
 msgid "Match nearest"
@@ -3667,32 +3496,28 @@ msgid "Show big icons in mainwindow tabs?"
 msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:156
-#, fuzzy
 msgid "Use notification popups?"
-msgstr "Χρήση ήχων ειδοποίησης"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:159
 msgid "Screen position for notification popups"
 msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:166
-#, fuzzy
 msgid "Display time for popup notifications in seconds"
-msgstr "Χρήση ήχων ειδοποίησης"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:172
 msgid "Show close button on all tabs? (needs restart to take effect)"
 msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:175
-#, fuzzy
 msgid "Test Notification"
-msgstr "Ειδοποίηση"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:179
-#, fuzzy
 msgid "Start tab"
-msgstr "Αρχικό Μέταλλο"
+msgstr ""
 
 #: src/gui/options/lobbyoptionstab.cpp:182
 msgid "Select which tab to show at startup"
@@ -3715,18 +3540,16 @@ msgid "Choose a web browser executable"
 msgstr "Επιλέξτε το εκτελέσιμο του περιηγητή"
 
 #: src/gui/options/lobbyoptionstab.cpp:292
-#, fuzzy
 msgid "Choose a editor browser executable"
-msgstr "Επιλέξτε το εκτελέσιμο του περιηγητή"
+msgstr ""
 
 #: src/gui/options/mainoptionstab.cpp:67
 msgid "Spring"
 msgstr "Spring"
 
 #: src/gui/options/mainoptionstab.cpp:76
-#, fuzzy
 msgid "General"
-msgstr "Σενεγάλη"
+msgstr ""
 
 #: src/gui/options/mainoptionstab.cpp:79
 msgid "Groups"
@@ -3737,18 +3560,16 @@ msgid "Apply"
 msgstr "Εφαρμογή"
 
 #: src/gui/options/mainoptionstab.cpp:169
-#, fuzzy
 msgid "SpringLobby Preferences"
-msgstr "SpringLobby"
+msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:79
 msgid "Remove an existing spring version"
 msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:86
-#, fuzzy
 msgid "Add new spring version"
-msgstr "Πρόβλημα του Spring"
+msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:90
 msgid "Auto Configure"
@@ -3773,9 +3594,8 @@ msgid "UnitSync library"
 msgstr "Μονάδα UnitSync"
 
 #: src/gui/options/springoptionstab.cpp:115
-#, fuzzy
 msgid "Restore Paths"
-msgstr "Επαναφορά"
+msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:236
 #: src/gui/options/springoptionstab.cpp:276
@@ -3788,30 +3608,27 @@ msgid "Choose UnitSync library"
 msgstr "Επιλέξτε τη μονάδα UnitSync"
 
 #: src/gui/options/springoptionstab.cpp:294
-#, fuzzy
 msgid "Configuration error"
-msgstr "Ειδοποίηση"
+msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:352
-#, fuzzy
 msgid ""
 "Do you want to change spring's datadir location? (select yes only if you "
 "know what you're doing)"
-msgstr "Καμία ενέργεια (χρησιμοποιήστε το μόνο αν είστε απόλυτα σίγουροι)"
+msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:352
-#, fuzzy
 msgid "Data dir wizard"
-msgstr "Οδηγός πρώτης φοράς"
+msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:358
 msgid "Choose a folder"
 msgstr "Επιλογή φακέλου"
 
 #: src/gui/options/springoptionstab.cpp:361
-#, fuzzy, c-format
+#, c-format
 msgid "Something went wrong when creating the directory: %s"
-msgstr "Παρακαλώ δημιουργήστε με το χέρι τους παρακάτω φάκελους: %s"
+msgstr ""
 
 #: src/gui/options/springoptionstab.cpp:387
 msgid "Reloading unitsync"
@@ -3830,24 +3647,20 @@ msgid "Use pastebin"
 msgstr ""
 
 #: src/gui/playback/playbackdataview.cpp:35
-#, fuzzy
 msgid "Date"
-msgstr "Με ανάκλαση"
+msgstr ""
 
 #: src/gui/playback/playbackdataview.cpp:39
-#, fuzzy
 msgid "Duration"
-msgstr "Διάρκεια:"
+msgstr ""
 
 #: src/gui/playback/playbackdataview.cpp:40
-#, fuzzy
 msgid "Version"
-msgstr "Πρόβλημα του Spring"
+msgstr ""
 
 #: src/gui/playback/playbackdataview.cpp:41
-#, fuzzy
 msgid "Filesize"
-msgstr "μέγεθος (MB)"
+msgstr ""
 
 #: src/gui/playback/playbackdataview.cpp:42 src/springsettings/frame.cpp:231
 msgid "File"
@@ -3858,47 +3671,40 @@ msgid "Could not delete Replay: "
 msgstr ""
 
 #: src/gui/playback/playbackfilter.cpp:66
-#, fuzzy
 msgid "Filter settings"
-msgstr "Αποθήκευση ρυθμίσεων"
+msgstr ""
 
 #: src/gui/playback/playbackfilter.cpp:124
-#, fuzzy
 msgid "Only maps I have"
-msgstr "Μόνο χάρτες που έχω"
+msgstr ""
 
 #: src/gui/playback/playbackfilter.cpp:175
-#, fuzzy
 msgid "Filesize in KB:"
-msgstr "μέγεθος (MB)"
+msgstr ""
 
 #: src/gui/playback/playbackfilter.cpp:201
-#, fuzzy
 msgid "Duration (hh:mm:ss):"
-msgstr "Διάρκεια:"
+msgstr ""
 
 #: src/gui/playback/playbacktab.cpp:137
 msgid "Watch"
 msgstr ""
 
 #: src/gui/playback/playbacktab.cpp:137
-#, fuzzy
 msgid "Load"
-msgstr "Φόρτωση..."
+msgstr ""
 
 #: src/gui/playback/playbacktab.cpp:143
 msgid "Reload list"
 msgstr ""
 
 #: src/gui/playback/playbacktab.cpp:259
-#, fuzzy
 msgid "replay"
-msgstr "Πάντα"
+msgstr ""
 
 #: src/gui/playback/playbacktab.cpp:259
-#, fuzzy
 msgid "savegame"
-msgstr "Αποθήκευση..."
+msgstr ""
 
 #: src/gui/playback/playbacktab.cpp:272
 msgid ""
@@ -3907,9 +3713,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/playback/playbacktab.cpp:272
-#, fuzzy
 msgid "Invalid replay"
-msgstr "Μη έγκυρη θύρα"
+msgstr ""
 
 #: src/gui/selectusersdialog.cpp:53
 msgid "Filter names"
@@ -3920,9 +3725,8 @@ msgid "Enter text filter to filter the online users list"
 msgstr ""
 
 #: src/gui/selectusersdialog.h:68
-#, fuzzy
 msgid "Select Users"
-msgstr "Επιλογή όλων"
+msgstr ""
 
 #: src/gui/singleplayertab.cpp:71
 msgid "No Unitsync configured."
@@ -3946,23 +3750,20 @@ msgid "Add bot..."
 msgstr "Προσθήκη bot..."
 
 #: src/gui/singleplayertab.cpp:158
-#, fuzzy
 msgid "Spectate only"
-msgstr "Θεατής"
+msgstr ""
 
 #: src/gui/singleplayertab.cpp:161
-#, fuzzy
 msgid "Random start positions"
-msgstr "Τυχαίες αρχικές θέσεις"
+msgstr ""
 
 #: src/gui/singleplayertab.cpp:199 src/gui/singleplayertab.cpp:216
 msgid "-- Select one --"
 msgstr "-- Επιλέξτε κάποιο --"
 
 #: src/gui/singleplayertab.cpp:323 src/gui/singleplayertab.cpp:329
-#, fuzzy
 msgid "Game setup error"
-msgstr "Σφάλμα ρύθμισης παιχνιδιού"
+msgstr ""
 
 #: src/gui/singleplayertab.cpp:329
 msgid "You have to select a map first."
@@ -4011,24 +3812,21 @@ msgid "Panel"
 msgstr ""
 
 #: src/gui/taskbar.cpp:85
-#, fuzzy
 msgid "Download failed"
-msgstr "Αποτυχία λήψης"
+msgstr ""
 
 #: src/gui/taskbar.cpp:102
-#, fuzzy
 msgid "Download finished"
-msgstr "Αποτυχία λήψης"
+msgstr ""
 
 #: src/gui/taskbar.cpp:136
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading %s"
-msgstr "Λήψη αρχείου %s"
+msgstr ""
 
 #: src/gui/ui.cpp:241
-#, fuzzy
 msgid "SpringLobby commands help."
-msgstr "Βοήθεια εντολών SpringLobby."
+msgstr ""
 
 #: src/gui/ui.cpp:243
 msgid "Global commands:"
@@ -4043,22 +3841,16 @@ msgid "  \"/back\" - Resets your away status."
 msgstr "  \"/back\" - Ορίζει την κατάσταση σας ως κοντά στον υπολογιστή."
 
 #: src/gui/ui.cpp:246
-#, fuzzy
 msgid ""
 "  \"/changepassword newpassword\" - Changes the current active account's "
 "password, needs the old password saved in login box"
 msgstr ""
-"  \"/changepassword παλιόςκωδικός νέοςκωδικός\" - Αλλάζει τον κωδικό του "
-"τρέχοντος λογαριασμού."
 
 #: src/gui/ui.cpp:247
-#, fuzzy
 msgid ""
 "  \"/changepassword oldpassword newpassword\" - Changes the current active "
 "account's password, password cannot contain spaces"
 msgstr ""
-"  \"/changepassword παλιόςκωδικός νέοςκωδικός\" - Αλλάζει τον κωδικό του "
-"τρέχοντος λογαριασμού."
 
 #: src/gui/ui.cpp:248
 msgid "  \"/channels\" - Lists currently active channels."
@@ -4073,58 +3865,46 @@ msgstr ""
 "μια εντολή."
 
 #: src/gui/ui.cpp:250
-#, fuzzy
 msgid "  \"/join channel [password]\" - Joins a channel."
 msgstr ""
-"  \"/join κανάλι [κωδικός] [,κανάλι2 [κωδικός2]]\" - Είσοδος σε κανάλι."
 
 #: src/gui/ui.cpp:251
 msgid "  \"/j\" - Alias to /join."
 msgstr "  \"/j\" - Συνώνυμο του /join."
 
 #: src/gui/ui.cpp:252
-#, fuzzy
 msgid "  \"/ingame\" - Shows how much time you have in game."
-msgstr "  \"/ingame\" - Εμφανίζει πόσο χρόνο έχετε περάσει μέσα σε παιχνίδια."
+msgstr ""
 
 #: src/gui/ui.cpp:253
-#, fuzzy
 msgid ""
 "  \"/msg username [text]\" - Sends a private message containing text to "
 "username."
 msgstr ""
-"  \"/msg όνομαχρήστη [κείμενο]\" - στέλνει ένα prive μήνυμα σε κάποιον "
-"χρήστη."
 
 #: src/gui/ui.cpp:254
-#, fuzzy
 msgid "  \"/part\" - Leaves current channel."
-msgstr "  \"/channels\" - Εμφανίζει μια λίστα των ενεργών καναλιών."
+msgstr ""
 
 #: src/gui/ui.cpp:255
-#, fuzzy
 msgid "  \"/p\" - Alias to /part."
-msgstr "  \"/j\" - Συνώνυμο του /join."
+msgstr ""
 
 #: src/gui/ui.cpp:256
 msgid "  \"/rename newalias\" - Changes your nickname to newalias."
 msgstr "  \"/rename νέοψευδώνυμο\" - Αλλάζει το ψευδώνυμο σας σε νέοψευδώνυμο."
 
 #: src/gui/ui.cpp:257
-#, fuzzy
 msgid "  \"/sayver\" - Says what version of SpringLobby you have in chat."
 msgstr ""
-"  \"/sayver\" - Αναφέρει την έκδοση του SpringLobby που χρησιμοποιείτε στην "
-"συνομιλία."
 
 #: src/gui/ui.cpp:258
 msgid "  \"/testmd5 text\" - Returns md5-b64 hash of given text."
 msgstr "  \"/testmd5 κείμενο\" - Επιστρέφει ένα md5-b64 hash του κειμένου."
 
 #: src/gui/ui.cpp:259
-#, fuzzy
 msgid "  \"/ver\" - Displays what version of SpringLobby you have."
-msgstr "  \"/ver\" - Εμφάνιση της έκδοσης SpringLobby που χρησιμοποιείτε."
+msgstr ""
 
 #: src/gui/ui.cpp:260
 msgid "  \"/clear\" - Clears all text from current chat panel"
@@ -4152,18 +3932,18 @@ msgid "Spring can't be found"
 msgstr ""
 
 #: src/gui/ui.cpp:328
-#, fuzzy, c-format
+#, c-format
 msgid "disconnected from server: %s"
-msgstr "Άγνωστη απάντηση από τον εξυπηρετητή: %s"
+msgstr ""
 
 #: src/gui/ui.cpp:367
 msgid "no active chat panels open."
 msgstr "καμία ενεργή συνομιλία ανοιχτή."
 
 #: src/gui/ui.cpp:370
-#, fuzzy, c-format
+#, c-format
 msgid "%s (%d users)"
-msgstr "%s (%d χρήστες)"
+msgstr ""
 
 #: src/gui/ui.cpp:511
 msgid "The current battle was closed by the host."
@@ -4196,34 +3976,27 @@ msgid "Latest Version: "
 msgstr "Τελευταία έκδοση: "
 
 #: src/gui/ui.cpp:817
-#, fuzzy
 msgid ""
 "Your SpringLobby version is up to date.\n"
 "\n"
 msgstr ""
-"Η έκδοση του SpringLobby δεν είναι ενημερωμένη.\n"
-"\n"
 
 #: src/gui/ui.cpp:817
 msgid "Up to Date"
 msgstr "Ενημερωμένο"
 
 #: src/gui/ui.cpp:822
-#, fuzzy, c-format
+#, c-format
 msgid "Your %s version is not up to date."
-msgstr "Η έκδοση του %s δεν είναι ενημερωμένη."
+msgstr ""
 
 #: src/gui/ui.cpp:822
-#, fuzzy
 msgid "Would you like to update to the new version?"
 msgstr ""
-"Θέλετε να επισκεφθείτε μια σελίδα με οδηγίες σχετικά με το πως να κατεβάσετε "
-"την τελευταία έκδοση;"
 
 #: src/gui/ui.cpp:825
-#, fuzzy
 msgid "Update Springlobby?"
-msgstr " Χρησιμοποιείτε το SpringLobby v"
+msgstr ""
 
 #: src/gui/ui.cpp:832
 msgid "Automatic update failed."
@@ -4236,18 +4009,16 @@ msgid ""
 msgstr ""
 
 #: src/gui/ui.cpp:835
-#, fuzzy
 msgid "Updater error."
-msgstr "Αριθμός παικτών"
+msgstr ""
 
 #: src/gui/ui.cpp:843
 msgid "Please update to the latest version before reporting bugs."
 msgstr ""
 
 #: src/gui/ui.cpp:845
-#, fuzzy
 msgid "Your SpringLobby version is not up to date."
-msgstr "Η έκδοση του SpringLobby δεν είναι ενημερωμένη."
+msgstr ""
 
 #: src/gui/ui.cpp:845
 msgid "Not up to Date"
@@ -4278,9 +4049,8 @@ msgid ""
 msgstr ""
 
 #: src/gui/uiutils.cpp:357
-#, fuzzy
 msgid "Choose color"
-msgstr "Επιλογή φακέλου"
+msgstr ""
 
 #: src/gui/uiutils.cpp:359
 msgid "Choose color (only first 16 will be saved)"
@@ -4307,14 +4077,12 @@ msgid "Create new group..."
 msgstr ""
 
 #: src/gui/usermenu.h:41
-#, fuzzy
 msgid "Add to group..."
-msgstr "Προσθήκη Bot..."
+msgstr ""
 
 #: src/gui/usermenu.h:42
-#, fuzzy
 msgid "Remove from group"
-msgstr "Διαγραφή Λογαριασμού Χρήστη"
+msgstr ""
 
 #: src/serverevents.cpp:125
 #, c-format
@@ -4322,9 +4090,8 @@ msgid "ping: %s ms"
 msgstr ""
 
 #: src/serverevents.cpp:147
-#, fuzzy
 msgid " just connected"
-msgstr "Κατάσταση: Συνδεμένο"
+msgstr ""
 
 #: src/serverevents.cpp:163
 msgid " is now "
@@ -4335,14 +4102,12 @@ msgid "OnUserStatus() failed ! (exception)"
 msgstr "OnUserStatus() απέτυχε ! (εξαίρεση)"
 
 #: src/serverevents.cpp:217
-#, fuzzy
 msgid " just went offline"
-msgstr " Ο χρήστης είναι εκτός σύνδεσης."
+msgstr ""
 
 #: src/serverevents.cpp:251
-#, fuzzy
 msgid " opened battle "
-msgstr " εισήλθε στο "
+msgstr ""
 
 #: src/serverevents.cpp:618
 msgid "Join channel failed"
@@ -4383,9 +4148,9 @@ msgid "Begin mutelist for channel %s"
 msgstr ""
 
 #: src/serverevents.cpp:930
-#, fuzzy, c-format
+#, c-format
 msgid "%s mutelist"
-msgstr "%s Λίστα μαχών"
+msgstr ""
 
 #: src/serverevents.cpp:940
 msgid " indefinite time remaining"
@@ -4468,23 +4233,20 @@ msgid "higher value = more terrain details"
 msgstr "μεγαλύτερες τιμές = περισσότερες λεπτομέρειες εδάφους"
 
 #: src/springsettings/ctrlconstants.h:214
-#, fuzzy
 msgid "Unit LOD distance"
-msgstr "Απόσταση εικονιδίων μονάδων"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:214
-#, fuzzy
 msgid "higher value = units will remain detailed even when zooming out"
-msgstr "μεγαλύτερες τιμές = πιο λεπτομερείς μονάδες"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:215
 msgid "Grass detail"
 msgstr "Λεπτομέρεια χορταριού"
 
 #: src/springsettings/ctrlconstants.h:215
-#, fuzzy
 msgid "higher value = more detailed grass"
-msgstr "μεγαλύτερες τιμές = πιο λεπτομερές χόρτο"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:216
 msgid "Ground decals"
@@ -4519,9 +4281,8 @@ msgid "limits how many particles are displayed at the same time"
 msgstr "περιορίζει το πόσα σωματίδια (κομματάκια) θα εμφανίζονται ταυτόχρονα"
 
 #: src/springsettings/ctrlconstants.h:220
-#, fuzzy
 msgid "Max nano simultaneous particles"
-msgstr "Μέγιστος αριθμός ταυτόχρονων σωματιδίων"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:227
 msgid "Run full-screen"
@@ -4540,9 +4301,8 @@ msgid "if you have two monitors you can use both"
 msgstr "αν έχετε δύο οθόνες μπορείτε να τις χρησιμοποιήσετε ταυτόχρονα"
 
 #: src/springsettings/ctrlconstants.h:229
-#, fuzzy
 msgid "Enable v-sync"
-msgstr "Ενεργοποίηση κάθετου συγχρονισμού"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:229
 msgid "V-Sync on/off"
@@ -4562,9 +4322,8 @@ msgid "24-bit Z-buffer"
 msgstr "Πίνακας βάθους (Z-buffer) ανάλυσης 24-bit"
 
 #: src/springsettings/ctrlconstants.h:241
-#, fuzzy
 msgid "Full-scene anti-aliasing samples"
-msgstr "Δείγματα εξομάλυνσης γωνιών πλήρους οθόνης (FSAA)"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:241
 msgid "how much anti-aliasing should be applied"
@@ -4583,53 +4342,44 @@ msgstr ""
 "Ορίστε ως 0 για να απεργοποιηθεί πλήρως ο ήχος."
 
 #: src/springsettings/ctrlconstants.h:253
-#, fuzzy
 msgid "Master sound volume"
-msgstr "Γενική ένταση ήχου"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:253
-#, fuzzy
 msgid "master sound volume"
-msgstr "Γενική ένταση ήχου"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:254
-#, fuzzy
 msgid "General sound volume"
-msgstr "Γενική ένταση ήχου"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:254
-#, fuzzy
 msgid "general volume relative to master volume"
-msgstr "Ένταση απαντήσεων μονάδων σχετική προς την Γενική ένταση ήχου"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:255
 msgid "Unit reply volume"
 msgstr "Ένταση απαντήσεων μονάδων"
 
 #: src/springsettings/ctrlconstants.h:255
-#, fuzzy
 msgid "reply volume relative to master volume"
-msgstr "Ένταση απαντήσεων μονάδων σχετική προς την Γενική ένταση ήχου"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:256
-#, fuzzy
 msgid "Battle volume"
-msgstr "Δωμάτιο μάχης"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:256
-#, fuzzy
 msgid "battle volume relative to global volume"
-msgstr "Ένταση απαντήσεων μονάδων σχετική προς την Γενική ένταση ήχου"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:257
-#, fuzzy
 msgid "User interface volume"
-msgstr "Ένταση απαντήσεων μονάδων"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:257
-#, fuzzy
 msgid "ui volume relative to global volume"
-msgstr "Ένταση απαντήσεων μονάδων σχετική προς την Γενική ένταση ήχου"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:258
 msgid "Air Absorbtion factor"
@@ -5037,9 +4787,8 @@ msgid "screen height"
 msgstr "ύψος οθόνης"
 
 #: src/springsettings/ctrlconstants.h:384
-#, fuzzy
 msgid "Blur reflection"
-msgstr "Με ανάκλαση"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:385
 msgid "Use depth texture"
@@ -5050,33 +4799,28 @@ msgid "enables smoother blending on coastlines"
 msgstr ""
 
 #: src/springsettings/ctrlconstants.h:386
-#, fuzzy
 msgid "Shore waves"
-msgstr "Ενεργοποίηση σκιών;"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:386
-#, fuzzy
 msgid "Enables shorewaves"
-msgstr "Ενεργοποίηση σκιών;"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:387
-#, fuzzy
 msgid "Reflection"
-msgstr "Με ανάκλαση"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:387
 msgid "Turn on water reflections"
 msgstr ""
 
 #: src/springsettings/ctrlconstants.h:389
-#, fuzzy
 msgid "Reflection texture size"
-msgstr "Με ανάκλαση"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:390
-#, fuzzy
 msgid "Refraction"
-msgstr "περιορισμοί"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:390
 msgid ""
@@ -5089,9 +4833,8 @@ msgid "Anisotropy"
 msgstr ""
 
 #: src/springsettings/ctrlconstants.h:396
-#, fuzzy
 msgid "off"
-msgstr "Κλειστό"
+msgstr ""
 
 #: src/springsettings/ctrlconstants.h:396
 msgid "screencopy(fast)"
@@ -5126,7 +4869,6 @@ msgid "Hotkeys"
 msgstr ""
 
 #: src/springsettings/frame.cpp:34
-#, fuzzy
 msgid ""
 "Changes made on Quality/Detail tab in expert mode\n"
 "will be lost if you change simple options again.\n"
@@ -5134,11 +4876,6 @@ msgid ""
 "selected choices on the Combined options tab.\n"
 "(this message can be disabled in the \"File\" menu)"
 msgstr ""
-"Οι αλλαγές που τυχόν κάνετε στις καρτέλες Ποιότητα/Λεπτομέρειες σε\n"
-" λειτουργία για προχωρημένους θα χαθούν αν αλλάξετε τις απλές ρυθμίσεις\n"
-"μετέπειτα. Επίσης, αυτές οι αλλαγές ΔΕΝ αντικατοπτρίζονται από τις\n"
-"επιλογές στην καρτέλα Συνδυασμένων επιλογών.\n"
-"(αυτό το μήνυμα μπορεί να απενεργοποιηθέι από το μενού \"Αρχείο\")"
 
 #: src/springsettings/frame.cpp:122 src/springsettings/frame.cpp:146
 msgid "Save Spring settings before exiting?"
@@ -5206,18 +4943,16 @@ msgid "Reset ALL settings to default values?"
 msgstr "Επαναφορά ΟΛΩΝ των ρυθμίσεων στις αρχικές τιμές;"
 
 #: src/springsettings/frame.cpp:279
-#, fuzzy
 msgid "(simple mode)"
-msgstr "Ρυθμίσεις Spring (απλή λειτουργία)"
+msgstr ""
 
 #: src/springsettings/frame.cpp:281
 msgid "Hint"
 msgstr "Υπόδειξη"
 
 #: src/springsettings/frame.cpp:328
-#, fuzzy
 msgid "(expert mode)"
-msgstr "Αλλαγή σε λειτουργία για προχωρημένους"
+msgstr ""
 
 #: src/springsettings/presets.h:31 src/springsettings/presets.h:32
 msgid "low"
@@ -5260,13 +4995,10 @@ msgid "Screen Resolution"
 msgstr "Ανάλυση Οθόνης"
 
 #: src/springsettings/tab_quality_video.cpp:149
-#, fuzzy
 msgid ""
 "If an option needs special hardware to work\n"
 "\t\t\t\t\t\t\t\t\t\t\t\tit will be mentioned in the tooltip."
 msgstr ""
-"Αν μια επιλογή χρειάζεται ειδικό hardware για να λειτουργήσει,\n"
-"θα αναφέρεται στην υπόδειξη."
 
 #: src/springsettings/tab_quality_video.cpp:172
 msgid "Water Quality"
@@ -5301,7 +5033,6 @@ msgid "Rendering detail levels"
 msgstr "Επίπεδα λεπτομερειών σχεδίασης"
 
 #: src/springsettings/tab_simple.cpp:21
-#, fuzzy
 msgid ""
 "These options let you roughly control Spring's rendering.\n"
 "\t\t\t\t\t\t\t\t\tFor more speed try lowering the settings.\n"
@@ -5314,16 +5045,6 @@ msgid ""
 "\t\t\t\t\t\t\t\t\twhen running Spring it might be necessary to disable\n"
 " \t\t\t\t\t\t\t\t\tsome options in expert mode.\n"
 msgstr ""
-"Αυτές οι επιλογές σας δίνουν τη δυνατότητα να ελέγξετε χονδρικά\n"
-"τη σχεδίαση του Spring. Δοκιμάστε να τις ελαττώσετε για μεγαλύτερη\n"
-"ταχύτητα. Πλήρης έλεγχος σε όλες τις ρυθμίσεις είναι διαθέσιμος στη\n"
-"λειτουργία \"Για προχωρημένους\", κάνετε κλικ είτε στο κουμπί στα\n"
-"δεξιά είτε χρησιμοποιήστε το μενού \"Λειτουργία\" στην μπάρα μενού.\n"
-"Μπορείτε να επιστρέψετε σε αυτή τη λειτουργία κάθε στιγμή\n"
-"επιλέγοντας \"Απλή λειτουργία\" από το μενού \"Λειτουργία\". Αν\n"
-"συναντήσετε μηνύματα λάθους σχετικά με τα γραφικά καθώς\n"
-"εκτελείται το Spring μπορεί να χρειαστεί να απενεργοποιήσετε\n"
-"κάποιες επιλογές στη λειτουργία για προχωρημένους.\n"
 
 #: src/springsettings/tab_simple.cpp:32
 msgid "Graphics quality"
@@ -5358,7 +5079,6 @@ msgstr ""
 "επιλογή σας."
 
 #: src/springsettings/tab_simple.cpp:78
-#, fuzzy
 msgid ""
 "Select the resolution fitting your monitor(s).\n"
 "\t\t\tSelecting a dual screen resolution will automatically enable dual "
@@ -5367,27 +5087,16 @@ msgid ""
 "in expert mode.\n"
 "\t\t\tPlease also contact the author so it can be added in future releases."
 msgstr ""
-"Επιλέξτε την ανάλυση που ταιριάζει στην/στις οθόνες σας.\n"
-"Η επιλογή αναλύσης διπλής οθόνης θα ενεργοποιήσει αυτόματα τη λειτουργία "
-"διπλής οθόνης.\n"
-"Αν η κατάλληλη ανάλυση δεν είναι διαθέσιμη μπορείτε να την ορίσετε με το "
-"χέρι στη\n"
-"λειτουργία για προχωρημένους. Σ'αυτή την περίπτωση παρακαλώ επικοινωνήστε με "
-"τον\n"
-"δημιουργό του προγράμματος ώστε αυτή να προστεθεί σε μελλοντικές εκδόσεις."
 
 #: src/springsettings/tab_simple.cpp:115
 msgid "Info"
 msgstr "Πληροφορίες"
 
 #: src/springsettings/tab_ui.cpp:26
-#, fuzzy
 msgid ""
 "Setting a slider to 0 will exclude that\n"
 "\t\t\t\t\t\t\t\t\t\t\tmode from being cycled through ingame."
 msgstr ""
-"Θέτοντας τη μπάρα στο 0 θα εξαιρέσει αυτή τη\n"
-"λειτουργία από τις εναλλαγές εντός του παιχνιδιού."
 
 #: src/springsettings/tab_ui.cpp:130
 msgid "Scroll Speeds (mouse + keyboard)"
@@ -5423,14 +5132,12 @@ msgid ""
 msgstr ""
 
 #: src/useractions.cpp:55
-#, fuzzy
 msgid "none"
-msgstr "Καθόλου"
+msgstr ""
 
 #: src/useractions.cpp:56
-#, fuzzy
 msgid "highlight"
-msgstr "Επισήμανση"
+msgstr ""
 
 #: src/useractions.cpp:57
 msgid "notify login/out"
@@ -5449,18 +5156,16 @@ msgid "autokick"
 msgstr ""
 
 #: src/useractions.cpp:61
-#, fuzzy
 msgid "notify hosted battle"
-msgstr "Σύνδεση στην ίδια μάχη"
+msgstr ""
 
 #: src/useractions.cpp:62
 msgid "notify status change"
 msgstr ""
 
 #: src/useractions.cpp:75
-#, fuzzy
 msgid "no action at all"
-msgstr "καμία ενεργή συνομιλία ανοιχτή."
+msgstr ""
 
 #: src/useractions.cpp:76
 msgid "highlight user in nick list and battles he participates in"
@@ -5493,25 +5198,21 @@ msgid "popup a message box when user changes away status"
 msgstr ""
 
 #: src/useractions.cpp:86
-#, fuzzy
 msgid "Default"
-msgstr "προεπιλογή"
+msgstr ""
 
 #: src/useractions.cpp:89 src/useractions.cpp:90
-#, fuzzy
 msgid "Ignore chat"
-msgstr "Ανοιχτή Συνομιλία"
+msgstr ""
 
 #: src/useractions.cpp:91 src/useractions.cpp:92
-#, fuzzy
 msgid "Battle Autokick"
-msgstr "Λίστα μαχών"
+msgstr ""
 
 #: src/useractions.cpp:93 src/useractions.cpp:94 src/useractions.cpp:95
 #: src/useractions.cpp:96 src/useractions.cpp:98
-#, fuzzy
 msgid "Friends"
-msgstr "Αναζήτηση"
+msgstr ""
 
 #: src/useractions.cpp:307
 msgid ""
@@ -5547,16 +5248,13 @@ msgid "SEARCHING FOR %s"
 msgstr ""
 
 #: src/utils/wxTranslationHelper.cpp:91
-#, fuzzy
 msgid " (Default)"
-msgstr "προεπιλογή"
+msgstr ""
 
 #: src/utils/wxTranslationHelper.cpp:119
-#, fuzzy
 msgid "Select the language"
-msgstr "Πληροφορίες καναλιού"
+msgstr ""
 
 #: src/utils/wxTranslationHelper.cpp:119
-#, fuzzy
 msgid "Language"
-msgstr "Καταγωγή"
+msgstr ""
