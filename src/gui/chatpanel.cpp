@@ -924,7 +924,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 					Say(url);
 					return true;
 				} else {
-					customMessageBoxModal(SL_MAIN_ICON, _("Failed to post to pastebin.com."));
+					customMessageBoxModal(SL_MAIN_ICON, wxString::Format(_("Failed to post to %s"), _T("paste.springfiles.com")));
 					return false;
 				}
 			}
@@ -992,7 +992,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 		} else if (m_type == CPT_User) {
 
 			if (m_user == 0) {
-				OutputError(_(" User is offline."));
+				OutputError(_("User is offline."));
 				return true;
 			}
 			if (line.StartsWith(_T( "/" ))) {
@@ -1030,7 +1030,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 			}
 
 			m_server->SendCmd(STD_STRING(line), "");
-			OutputLine(_("Sent: \"") + line + _("\""), sett().GetChatColorNormal());
+			OutputLine(_("Sent: \"") + line + _T("\""), sett().GetChatColorNormal());
 		}
 	}
 	return true;
@@ -1071,7 +1071,7 @@ void ChatPanel::OnUserConnected()
 {
 	// change the image of the tab to show new events
 	SetIconHighlight(highlight_join_leave);
-	OutputLine(_("** ") + _("User just got online."), sett().GetChatColorJoinPart());
+	OutputLine(_T("** ") + _("User just got online."), sett().GetChatColorJoinPart());
 }
 
 

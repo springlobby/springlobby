@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpringLobby 0.0.1.10128\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 02:02+0100\n"
+"POT-Creation-Date: 2017-12-26 02:14+0100\n"
 "PO-Revision-Date: 2010-01-10 00:17+0000\n"
 "Last-Translator: Alexander Minges <Unknown>\n"
 "Language-Team: German\n"
@@ -22,12 +22,12 @@ msgstr ""
 #: src/chatlog.cpp:79
 #, c-format
 msgid "Session Closed at %s"
-msgstr ""
+msgstr "Sitzung beendet am"
 
 #: src/chatlog.cpp:141
 #, c-format
 msgid "Session started at %s"
-msgstr ""
+msgstr "Sitzung gestartet am"
 
 #: src/countrycodes.cpp:15
 msgid "Anonymous Proxy"
@@ -1102,12 +1102,12 @@ msgstr "Karte"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:43
 msgid "Running"
-msgstr ""
+msgstr "Läuft"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:44
 #: src/gui/hosting/hostbattledialog.cpp:97
 msgid "Engine"
-msgstr ""
+msgstr "Engine"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:131
 #: src/gui/playback/playbackdataview.cpp:45
@@ -1125,7 +1125,7 @@ msgstr "Engine &herunterladen"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:142
 msgid "Notify me when game has ended"
-msgstr ""
+msgstr "Benachrichtige mich wenn das Spiel zuende ist"
 
 #: src/gui/battlelist/battlelistfilter.cpp:101
 msgid "Host:"
@@ -1300,7 +1300,7 @@ msgstr "Passwort der Schlacht"
 
 #: src/gui/battlelist/battlelisttab.cpp:412
 msgid "Enter password (spaces will be stripped)"
-msgstr ""
+msgstr "Passwort eingeben (leerzeichen werden entfernt)"
 
 #: src/gui/channel/autojoinchanneldialog.cpp:29
 msgid "Edit auto-joined channels"
@@ -1407,7 +1407,8 @@ msgid "Are you sure you want to paste %d lines?"
 msgstr "Bist du sicher das du %d Zeilen einfügen willst?"
 
 #: src/gui/chatpanel.cpp:927
-msgid "Failed to post to pastebin.com."
+#, c-format
+msgid "Failed to post to %s"
 msgstr ""
 
 #: src/gui/chatpanel.cpp:951
@@ -1436,8 +1437,8 @@ msgstr ""
 "help für eine Liste der verfügbaren Kommandos."
 
 #: src/gui/chatpanel.cpp:995
-msgid " User is offline."
-msgstr " Benutzer ist offline"
+msgid "User is offline."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1010
 msgid "Not connected to server"
@@ -1445,31 +1446,23 @@ msgstr "Nicht verbunden"
 
 #: src/gui/chatpanel.cpp:1033
 msgid "Sent: \""
-msgstr " Gesendet: \""
-
-#: src/gui/chatpanel.cpp:1033
-msgid "\""
-msgstr "\""
+msgstr "Gesendet: \""
 
 #: src/gui/chatpanel.cpp:1067
 msgid "User is now offline."
-msgstr ""
-
-#: src/gui/chatpanel.cpp:1074
-msgid "** "
-msgstr ""
+msgstr "Benutzer ist jetzt offline"
 
 #: src/gui/chatpanel.cpp:1074
 msgid "User just got online."
-msgstr ""
+msgstr "User ist offline gegangen."
 
 #: src/gui/chatpanel.cpp:1200
 msgid "Left Battle."
-msgstr ""
+msgstr "Schlacht verlassen"
 
 #: src/gui/chatpanel.cpp:1208
 msgid "Joined Battle."
-msgstr ""
+msgstr "Schlacht betreten."
 
 #: src/gui/chatpanel.cpp:1286
 #, c-format
@@ -1477,9 +1470,8 @@ msgid "%d users"
 msgstr "%d Benutzer"
 
 #: src/gui/chatpanelmenu.cpp:36
-#, fuzzy
 msgid "Disable text appending"
-msgstr "Deaktiviere Experten-Modus Warnung"
+msgstr "Deaktiviere das Anhängen von Text"
 
 #: src/gui/chatpanelmenu.cpp:40
 msgid "Copy"
@@ -1587,7 +1579,7 @@ msgstr "Benutzer"
 
 #: src/gui/chatpanelmenu.cpp:141
 msgid "Open log in editor"
-msgstr ""
+msgstr "Log im Editor öffnen"
 
 #: src/gui/chatpanelmenu.cpp:155
 msgid "Open Chat"
@@ -1852,7 +1844,6 @@ msgstr ""
 "automatisch."
 
 #: src/gui/connectwindow.cpp:87
-#, fuzzy
 msgid ""
 "Note: If you do not have an account, you can register one for free on the "
 "Register tab."
@@ -1884,9 +1875,8 @@ msgid "Register"
 msgstr "Registrieren"
 
 #: src/gui/connectwindow.cpp:173
-#, fuzzy
 msgid "Retype password"
-msgstr "Passwort eingeben"
+msgstr "Passwort wiederholen"
 
 #: src/gui/connectwindow.cpp:287
 msgid ""
@@ -1909,9 +1899,8 @@ msgid "Enter search query (wildcard * can be used)"
 msgstr ""
 
 #: src/gui/contentdownloaddialog.cpp:51
-#, fuzzy
 msgid "Search"
-msgstr "Suche eine Datei"
+msgstr "Suche"
 
 #: src/gui/contentdownloaddialog.cpp:55 src/gui/mapctrl.cpp:714
 #: src/gui/mapctrl.cpp:716
@@ -1920,7 +1909,7 @@ msgstr "Herunterladen"
 
 #: src/gui/contentdownloaddialog.cpp:59 src/gui/slbook.cpp:104
 msgid "Close"
-msgstr ""
+msgstr "schliessen"
 
 #: src/gui/contentsearchresultview.cpp:19 src/gui/downloaddataviewctrl.cpp:20
 #: src/gui/mapselectdialog.cpp:173 src/gui/selectusersdialog.cpp:75
@@ -1929,7 +1918,7 @@ msgstr "Name"
 
 #: src/gui/contentsearchresultview.cpp:20
 msgid "Preview"
-msgstr ""
+msgstr "Vorschau"
 
 #: src/gui/contentsearchresultview.cpp:21
 msgid "Type"
@@ -1944,24 +1933,21 @@ msgid "Size"
 msgstr "Größe"
 
 #: src/gui/contentsearchresultview.cpp:23
-#, fuzzy
 msgid "Downloaded"
-msgstr "Herunterladen"
+msgstr "Heruntergeladen"
 
 #: src/gui/customdialogs.cpp:518 src/gui/customdialogs.cpp:562
 #, c-format
 msgid "Please standby %d seconds"
-msgstr ""
+msgstr "Bitte %s Sekunden warten"
 
 #: src/gui/dataviewctrlheadermenu.cpp:47
-#, fuzzy
 msgid "Hide this column"
-msgstr " , Spalte "
+msgstr "Diese Spalte verstecken"
 
 #: src/gui/dataviewctrlheadermenu.cpp:53
-#, fuzzy
 msgid "Show all columns"
-msgstr " , Spalte "
+msgstr "Alle Spalten anzeigen "
 
 #: src/gui/downloaddataviewctrl.cpp:22
 #: src/gui/hosting/battleroomdataviewctrl.cpp:41
@@ -2192,17 +2178,14 @@ msgid "Unit restriction"
 msgstr "Einheitenbeschränkung"
 
 #: src/gui/hosting/battleroomdataviewctrl.cpp:42
-#, fuzzy
 msgid "Ingame"
 msgstr "Im Spiel"
 
 #: src/gui/hosting/battleroomdataviewctrl.cpp:43
-#, fuzzy
 msgid "Faction"
-msgstr "Aktion"
+msgstr "Seite"
 
 #: src/gui/hosting/battleroomdataviewctrl.cpp:44
-#, fuzzy
 msgid "Colour"
 msgstr "Farbe"
 
@@ -2279,7 +2262,6 @@ msgid "Set name."
 msgstr "Namen setzen."
 
 #: src/gui/hosting/battleroommmoptionstab.cpp:67
-#, fuzzy
 msgid "Load..."
 msgstr "Laden..."
 

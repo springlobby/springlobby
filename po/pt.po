@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 02:02+0100\n"
+"POT-Creation-Date: 2017-12-26 02:14+0100\n"
 "PO-Revision-Date: 2010-01-02 03:00+0000\n"
 "Last-Translator: almufadado <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
@@ -1415,7 +1415,8 @@ msgid "Are you sure you want to paste %d lines?"
 msgstr "Tem a certeza de que pretende colar %d linhas?"
 
 #: src/gui/chatpanel.cpp:927
-msgid "Failed to post to pastebin.com."
+#, c-format
+msgid "Failed to post to %s"
 msgstr ""
 
 #: src/gui/chatpanel.cpp:951
@@ -1447,8 +1448,8 @@ msgstr ""
 "lista dos comandos disponíveis."
 
 #: src/gui/chatpanel.cpp:995
-msgid " User is offline."
-msgstr " O utilizador está offline"
+msgid "User is offline."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1010
 msgid "Not connected to server"
@@ -1459,16 +1460,8 @@ msgstr ""
 msgid "Sent: \""
 msgstr " Enviado: \""
 
-#: src/gui/chatpanel.cpp:1033
-msgid "\""
-msgstr "\""
-
 #: src/gui/chatpanel.cpp:1067
 msgid "User is now offline."
-msgstr ""
-
-#: src/gui/chatpanel.cpp:1074
-msgid "** "
 msgstr ""
 
 #: src/gui/chatpanel.cpp:1074

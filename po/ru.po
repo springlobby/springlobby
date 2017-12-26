@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 02:02+0100\n"
+"POT-Creation-Date: 2017-12-26 02:14+0100\n"
 "PO-Revision-Date: 2010-01-03 22:54+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -1411,8 +1411,9 @@ msgid "Are you sure you want to paste %d lines?"
 msgstr "Вы уверены, что хотите вставить %d строк?"
 
 #: src/gui/chatpanel.cpp:927
-msgid "Failed to post to pastebin.com."
-msgstr "Не удалось выложить на pastebin.com"
+#, c-format
+msgid "Failed to post to %s"
+msgstr ""
 
 #: src/gui/chatpanel.cpp:951
 #, fuzzy
@@ -1443,8 +1444,8 @@ msgstr ""
 "отображения списока возможных комманд."
 
 #: src/gui/chatpanel.cpp:995
-msgid " User is offline."
-msgstr " Пользователь отключен."
+msgid "User is offline."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1010
 #, fuzzy
@@ -1456,16 +1457,8 @@ msgstr "Не подключен"
 msgid "Sent: \""
 msgstr " Послано: \""
 
-#: src/gui/chatpanel.cpp:1033
-msgid "\""
-msgstr "\""
-
 #: src/gui/chatpanel.cpp:1067
 msgid "User is now offline."
-msgstr ""
-
-#: src/gui/chatpanel.cpp:1074
-msgid "** "
 msgstr ""
 
 #: src/gui/chatpanel.cpp:1074
