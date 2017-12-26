@@ -1401,7 +1401,7 @@ msgstr "%s betrat %s"
 #: src/gui/chatpanel.cpp:763
 #, c-format
 msgid "%s left %s (%s)."
-msgstr "%s hat den %s verlassen (%s)."
+msgstr "%s hat %s verlassen (%s)."
 
 #: src/gui/chatpanel.cpp:802
 #, fuzzy
