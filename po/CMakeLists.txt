@@ -35,7 +35,7 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 		file(MAKE_DIRECTORY ${moDir})
 		ADD_CUSTOM_COMMAND(
 			OUTPUT ${moFile}
-			COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check --strict -v -o ${moFile} ${poFile}
+			COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -f --check --strict -v -o ${moFile} ${poFile}
 			DEPENDS ${poFile})
 		INSTALL(FILES ${moFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_lang}/LC_MESSAGES/)
 		LIST(APPEND mofiles ${moFile})

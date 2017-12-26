@@ -1423,7 +1423,7 @@ msgstr "Πληροφορίες καναλιού"
 #: src/gui/chatpanel.cpp:808
 #, fuzzy, c-format
 msgid "Set by %s"
-msgstr "** Ορίστηκε από "
+msgstr "** Ορίστηκε από %s"
 
 #: src/gui/chatpanel.cpp:917
 #, c-format
@@ -4222,16 +4222,12 @@ msgstr "Ενημερωμένο"
 #: src/gui/ui.cpp:822
 #, fuzzy, c-format
 msgid "Your %s version is not up to date."
-msgstr "Η έκδοση του SpringLobby δεν είναι ενημερωμένη."
+msgstr "Η έκδοση του %s δεν είναι ενημερωμένη."
 
 #: src/gui/ui.cpp:822
 #, fuzzy
 msgid "Would you like to update to the new version?"
-msgstr ""
-"\n"
-"\n"
-"Θέλετε να επισκεφθείτε μια σελίδα με οδηγίες σχετικά με το πως να κατεβάσετε "
-"την τελευταία έκδοση;"
+msgstr "Θέλετε να επισκεφθείτε μια σελίδα με οδηγίες σχετικά με το πως να κατεβάσετε την τελευταία έκδοση;"
 
 #: src/gui/ui.cpp:825
 #, fuzzy

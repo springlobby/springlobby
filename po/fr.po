@@ -4357,7 +4357,7 @@ msgstr "Expulsé par l'hôte"
 #: src/serverevents.cpp:930
 #, fuzzy, c-format
 msgid "Begin mutelist for channel %s"
-msgstr "Début de la liste des muets pour "
+msgstr "Début de la liste des muets pour %s"
 
 #: src/serverevents.cpp:930
 #, c-format

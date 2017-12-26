@@ -1376,7 +1376,7 @@ msgstr "\" params: \""
 #: src/gui/chatpanel.cpp:708
 #, fuzzy, c-format
 msgid "Error: %s"
-msgstr "Error"
+msgstr "Error %s"
 
 #: src/gui/chatpanel.cpp:715
 #, fuzzy
@@ -1396,7 +1396,7 @@ msgstr "servidor"
 #: src/gui/chatpanel.cpp:731 src/gui/chatpanel.cpp:750
 #, fuzzy, c-format
 msgid "%s joined %s."
-msgstr " se unió a "
+msgstr "%s se unió a %s"
 
 #: src/gui/chatpanel.cpp:763
 #, c-format
@@ -3190,7 +3190,7 @@ msgstr "bonus: %d%%"
 #: src/gui/mapgridctrl.cpp:265
 #, fuzzy, c-format
 msgid "Map %s doesn't exist!"
-msgstr "El mapa no existe."
+msgstr "El mapa %s no existe."
 
 #: src/gui/mapgridctrl.cpp:280
 #, c-format
@@ -3970,7 +3970,7 @@ msgstr "Descarga"
 #: src/gui/taskbar.cpp:136
 #, fuzzy, c-format
 msgid "Downloading %s"
-msgstr "Descarga"
+msgstr "Descarga %s"
 
 #: src/gui/ui.cpp:241
 msgid "SpringLobby commands help."
@@ -4078,7 +4078,7 @@ msgstr ""
 #: src/gui/ui.cpp:328
 #, fuzzy, c-format
 msgid "disconnected from server: %s"
-msgstr "Desconectado del servidor, chat cerrado."
+msgstr "Desconectado del servidor: %s"
 
 #: src/gui/ui.cpp:367
 msgid "no active chat panels open."
@@ -4087,7 +4087,7 @@ msgstr "no hay abiertos paneles de chat activos"
 #: src/gui/ui.cpp:370
 #, fuzzy, c-format
 msgid "%s (%d users)"
-msgstr "(%d usuarios)"
+msgstr "%s (%d usuarios)"
 
 #: src/gui/ui.cpp:511
 msgid "The current battle was closed by the host."
