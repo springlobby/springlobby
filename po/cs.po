@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 01:50+0100\n"
+"POT-Creation-Date: 2017-12-26 02:02+0100\n"
 "PO-Revision-Date: 2008-09-06 12:50+0000\n"
 "Last-Translator: vejha_cz <vejha1@gmail.com>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -1474,24 +1474,24 @@ msgid "\""
 msgstr "\""
 
 #: src/gui/chatpanel.cpp:1067
-#, fuzzy
-msgid "** User is now offline."
-msgstr " Uživatel není připojen."
+msgid "User is now offline."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1074
-#, fuzzy
-msgid "** User just got online."
-msgstr " Uživatel není připojen."
+msgid "** "
+msgstr ""
+
+#: src/gui/chatpanel.cpp:1074
+msgid "User just got online."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1200
-#, fuzzy
-msgid "** Left Battle."
-msgstr " se připojil k "
+msgid "Left Battle."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1208
-#, fuzzy
-msgid "** Joined Battle."
-msgstr " se připojil k "
+msgid "Joined Battle."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1286
 #, fuzzy, c-format

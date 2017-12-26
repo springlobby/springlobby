@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 01:50+0100\n"
+"POT-Creation-Date: 2017-12-26 02:02+0100\n"
 "PO-Revision-Date: 2010-07-08 14:24+1000\n"
 "Last-Translator: Jie <lililjlj@gmail.com>\n"
 "Language-Team: Simplified Chinese <18n-translation@lists.linux.net.cn>\n"
@@ -1466,24 +1466,24 @@ msgid "\""
 msgstr "”"
 
 #: src/gui/chatpanel.cpp:1067
-#, fuzzy
-msgid "** User is now offline."
-msgstr " 用户不在线。"
+msgid "User is now offline."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1074
-#, fuzzy
-msgid "** User just got online."
-msgstr " 用户不在线。"
+msgid "** "
+msgstr ""
+
+#: src/gui/chatpanel.cpp:1074
+msgid "User just got online."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1200
-#, fuzzy
-msgid "** Left Battle."
-msgstr " 开放的游戏"
+msgid "Left Battle."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1208
-#, fuzzy
-msgid "** Joined Battle."
-msgstr " 开放的游戏"
+msgid "Joined Battle."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1286
 #, c-format

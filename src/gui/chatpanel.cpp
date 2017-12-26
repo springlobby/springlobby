@@ -1064,14 +1064,14 @@ void ChatPanel::OnUserDisconnected()
 {
 	// change the image of the tab to show new events
 	SetIconHighlight(highlight_join_leave);
-	OutputLine(_("** User is now offline."), sett().GetChatColorJoinPart());
+	OutputLine(_T("** ") + _("User is now offline."), sett().GetChatColorJoinPart());
 }
 
 void ChatPanel::OnUserConnected()
 {
 	// change the image of the tab to show new events
 	SetIconHighlight(highlight_join_leave);
-	OutputLine(_("** User just got online."), sett().GetChatColorJoinPart());
+	OutputLine(_("** ") + _("User just got online."), sett().GetChatColorJoinPart());
 }
 
 
@@ -1197,7 +1197,7 @@ void ChatPanel::SetBattle(IBattle* battle)
 	}
 
 	if (m_battle != NULL) {
-		OutputLine(_("** Left Battle."), sett().GetChatColorNotification());
+		OutputLine(_T("** ") + _("Left Battle."), sett().GetChatColorNotification());
 	}
 
 	if (battle == NULL) {
@@ -1205,7 +1205,7 @@ void ChatPanel::SetBattle(IBattle* battle)
 		return;
 	}
 
-	OutputLine(_("** Joined Battle."), sett().GetChatColorNotification());
+	OutputLine(_T("** ") + _("Joined Battle."), sett().GetChatColorNotification());
 
 	for (unsigned int i = 0; i < battle->GetNumUsers(); ++i) {
 		const wxString nick = TowxString(battle->GetUser(i).GetNick());

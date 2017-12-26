@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpringLobby 0.0.1.10128\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 01:50+0100\n"
+"POT-Creation-Date: 2017-12-26 02:02+0100\n"
 "PO-Revision-Date: 2010-01-10 00:17+0000\n"
 "Last-Translator: Alexander Minges <Unknown>\n"
 "Language-Team: German\n"
@@ -1116,14 +1116,12 @@ msgstr "Karte &herunterladen"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:135
 #: src/gui/playback/playbackdataview.cpp:46
-#, fuzzy
 msgid "Download &game"
-msgstr "Karte &herunterladen"
+msgstr "Spiel &herunterladen"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:139
-#, fuzzy
 msgid "Download &engine"
-msgstr "Karte &herunterladen"
+msgstr "Engine &herunterladen"
 
 #: src/gui/battlelist/battledataviewcttrl.cpp:142
 msgid "Notify me when game has ended"
@@ -1204,15 +1202,13 @@ msgstr "Max. Spieler:"
 #: src/gui/battlelist/battlelisttab.cpp:97
 #: src/gui/playback/playbackfilter.cpp:140 src/gui/playback/playbacktab.cpp:93
 #: src/gui/singleplayertab.cpp:128
-#, fuzzy
 msgid "Game:"
-msgstr "Spiel"
+msgstr "Spiel:"
 
 #: src/gui/battlelist/battlelistfilter.cpp:327
 #: src/gui/playback/playbackfilter.cpp:157
-#, fuzzy
 msgid "Only games I have"
-msgstr "Nur bereits geladene Karten"
+msgstr "Nur bereits geladene Spiele"
 
 #: src/gui/battlelist/battlelistfilter.cpp:339
 msgid "    Spectator:"
@@ -1287,17 +1283,16 @@ msgstr ""
 "Möchtest du das aktuelle Spiel verlassen um ein neues zu starten?"
 
 #: src/gui/battlelist/battlelisttab.cpp:402
-#, fuzzy
 msgid "Already in another battle"
-msgstr "Spiel läuft bereits"
+msgstr "Bereits in einer anderen Schlacht"
 
 #: src/gui/battlelist/battlelisttab.cpp:402
 msgid "You are already in a battle."
-msgstr ""
+msgstr "Du bist bereits in einer Schlacht"
 
 #: src/gui/battlelist/battlelisttab.cpp:402
 msgid "Do you want to leave your current battle and join this one?"
-msgstr ""
+msgstr "Willst du die aktuelle Schlacht verlassen und diese betreten?"
 
 #: src/gui/battlelist/battlelisttab.cpp:412
 msgid "Battle password"
@@ -1342,9 +1337,8 @@ msgid "# users"
 msgstr "# users"
 
 #: src/gui/channel/channellistview.cpp:24
-#, fuzzy
 msgid "Topic"
-msgstr "Das Thema \""
+msgstr "Thema"
 
 #: src/gui/channel/channellistview.cpp:56
 #, c-format
@@ -1352,9 +1346,8 @@ msgid "Displaying %d out of %d channels"
 msgstr "Zeige %d von %d Kanälen"
 
 #: src/gui/chatpanel.cpp:257
-#, fuzzy
 msgid "Hide bots"
-msgstr "Bot hinzufügen"
+msgstr "Bot ausblenden"
 
 #: src/gui/chatpanel.cpp:295
 msgid "right click for options (like autojoin)"
@@ -1365,7 +1358,6 @@ msgid "Send"
 msgstr "Senden"
 
 #: src/gui/chatpanel.cpp:703
-#, fuzzy
 msgid "!! Command: \""
 msgstr " !! Befehl: \""
 
@@ -1374,27 +1366,24 @@ msgid "\" params: \""
 msgstr "\" Parameter: \""
 
 #: src/gui/chatpanel.cpp:708
-#, fuzzy, c-format
+#, c-format
 msgid "Error: %s"
 msgstr "Fehler: %s"
 
 #: src/gui/chatpanel.cpp:715
-#, fuzzy
 msgid "the channel"
-msgstr "den Raum"
+msgstr "den Kanal"
 
 #: src/gui/chatpanel.cpp:717
-#, fuzzy
 msgid "the battle"
 msgstr "die Schlacht"
 
 #: src/gui/chatpanel.cpp:719
-#, fuzzy
 msgid "the server"
 msgstr "den Server"
 
 #: src/gui/chatpanel.cpp:731 src/gui/chatpanel.cpp:750
-#, fuzzy, c-format
+#, c-format
 msgid "%s joined %s."
 msgstr "%s betrat %s"
 
@@ -1404,12 +1393,11 @@ msgid "%s left %s (%s)."
 msgstr "%s hat %s verlassen (%s)."
 
 #: src/gui/chatpanel.cpp:802
-#, fuzzy
 msgid "Channel topic"
-msgstr " ** Kanal-Thema:"
+msgstr "Kanal-Thema"
 
 #: src/gui/chatpanel.cpp:808
-#, fuzzy, c-format
+#, c-format
 msgid "Set by %s"
 msgstr "Eingerichtet von %s"
 
@@ -1423,31 +1411,28 @@ msgid "Failed to post to pastebin.com."
 msgstr ""
 
 #: src/gui/chatpanel.cpp:951
-#, fuzzy
 msgid "You have SpringLobby v"
-msgstr " Du hast SpringLobby v"
+msgstr "Du hast SpringLobby v"
 
 #: src/gui/chatpanel.cpp:963
-#, fuzzy
 msgid "You are not in channel or channel does not exist."
-msgstr " Du bist nicht im Kanal oder der Kanal existiert nicht"
+msgstr "Du bist nicht im Kanal oder der Kanal existiert nicht"
 
 #: src/gui/chatpanel.cpp:971 src/gui/chatpanel.cpp:987
 #: src/gui/chatpanel.cpp:1003 src/gui/chatpanel.cpp:1017
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Command (%s) does not exist, use /help for a list of available commands."
 msgstr ""
-" Fehler: Der Befehl (%s) existiert nicht, benutze '/help' um alle "
-"verfügbaren Befehle zu sehen."
+"Der Befehl (%s) existiert nicht, benutze '/help' um alle verfügbaren Befehle "
+"zu sehen."
 
 #: src/gui/chatpanel.cpp:979
-#, fuzzy
 msgid ""
 "You are not in battle or battle does not exist, use /help for a list of "
 "available commands."
 msgstr ""
-" Du bist nicht in einer Schlacht oder die Schlacht existiert nicht, benutze /"
+"Du bist nicht in einer Schlacht oder die Schlacht existiert nicht, benutze /"
 "help für eine Liste der verfügbaren Kommandos."
 
 #: src/gui/chatpanel.cpp:995
@@ -1455,12 +1440,10 @@ msgid " User is offline."
 msgstr " Benutzer ist offline"
 
 #: src/gui/chatpanel.cpp:1010
-#, fuzzy
 msgid "Not connected to server"
 msgstr "Nicht verbunden"
 
 #: src/gui/chatpanel.cpp:1033
-#, fuzzy
 msgid "Sent: \""
 msgstr " Gesendet: \""
 
@@ -1469,24 +1452,24 @@ msgid "\""
 msgstr "\""
 
 #: src/gui/chatpanel.cpp:1067
-#, fuzzy
-msgid "** User is now offline."
-msgstr " Benutzer ist offline"
+msgid "User is now offline."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1074
-#, fuzzy
-msgid "** User just got online."
-msgstr " Benutzer ist offline"
+msgid "** "
+msgstr ""
+
+#: src/gui/chatpanel.cpp:1074
+msgid "User just got online."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1200
-#, fuzzy
-msgid "** Left Battle."
-msgstr " öffnete eine Schlacht "
+msgid "Left Battle."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1208
-#, fuzzy
-msgid "** Joined Battle."
-msgstr " öffnete eine Schlacht "
+msgid "Joined Battle."
+msgstr ""
 
 #: src/gui/chatpanel.cpp:1286
 #, c-format
