@@ -184,12 +184,12 @@ private:
 public:
 	// Page indexes
 	static const unsigned int PAGE_CHAT = 0;
-	static const unsigned int PAGE_LIST = 1;
-	static const unsigned int PAGE_JOIN = 2;
-	static const unsigned int PAGE_SINGLE = 3;
-	static const unsigned int PAGE_REPLAY = 4;
+	static const unsigned int PAGE_BATTLELIST = 1;
+	static const unsigned int PAGE_BATTLEROOM = 2;
+	static const unsigned int PAGE_SINGLEPLAYER = 3;
+	static const unsigned int PAGE_REPLAYS = 4;
 	//        static const unsigned int PAGE_SAVEGAME = 4;
-	static const unsigned int PAGE_TORRENT = 5;
+	static const unsigned int PAGE_DOWNLOADS = 5;
 
 	static const unsigned int OPT_PAGE_SPRING = 0;
 	static const unsigned int OPT_PAGE_CHAT = 1;

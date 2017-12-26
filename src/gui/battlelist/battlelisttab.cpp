@@ -393,7 +393,7 @@ void BattleListTab::DoJoin(IBattle& battle)
 
 	//If trying to join battle player already joined
 	if (curbattle != 0 && curbattle->GetID() == battle.GetID()) {
-		ui().mw().ShowTab(MainWindow::PAGE_JOIN);
+		ui().mw().ShowTab(MainWindow::PAGE_BATTLEROOM);
 		return;
 	}
 
@@ -422,7 +422,7 @@ void BattleListTab::DoJoin(IBattle& battle)
 
 	battle.Join(STD_STRING(password));
 	//Change Tab to show user joining to battle is in progress
-	ui().mw().ShowTab(MainWindow::PAGE_JOIN);
+	ui().mw().ShowTab(MainWindow::PAGE_BATTLEROOM);
 }
 
 /**
