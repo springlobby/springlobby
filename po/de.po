@@ -4000,7 +4000,7 @@ msgstr "Download fehlgeschlagen"
 #: src/gui/taskbar.cpp:102
 #, fuzzy
 msgid "Download finished"
-msgstr "Download fehlgeschlagen"
+msgstr "Download beendet"
 
 #: src/gui/taskbar.cpp:136
 #, fuzzy, c-format
