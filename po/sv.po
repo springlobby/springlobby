@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpringLobby 0.0.1-svn\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 00:02+0100\n"
+"POT-Creation-Date: 2017-12-26 01:50+0100\n"
 "PO-Revision-Date: 2008-08-02 17:18+0000\n"
 "Last-Translator: nanker <Unknown>\n"
 "Language-Team: Swedish\n"
@@ -4195,25 +4195,25 @@ msgstr "Du har en äldre version av SpringLobby."
 msgid "Not up to Date"
 msgstr "Inte uppdaterad"
 
-#: src/gui/ui.cpp:938
-msgid " is required to play. Should it be downloaded?"
+#: src/gui/ui.cpp:929
+msgid "Content is required to play. Should it be downloaded?"
 msgstr ""
 
-#: src/gui/ui.cpp:940
+#: src/gui/ui.cpp:931
 msgid "Content is missing"
 msgstr ""
 
-#: src/gui/ui.cpp:969
+#: src/gui/ui.cpp:960
 msgid ""
 "The certificate by the server is unkown. Do you want to trust it? Please "
 "verify the fingerprint:\n"
 msgstr ""
 
-#: src/gui/ui.cpp:969 src/gui/ui.cpp:971
+#: src/gui/ui.cpp:960 src/gui/ui.cpp:962
 msgid "Unknown Certificate"
 msgstr ""
 
-#: src/gui/ui.cpp:971
+#: src/gui/ui.cpp:962
 msgid ""
 "The certificate by the server is invalid! Maybe there is a MITM ongoing. Do "
 "you want ignore this warning?:\n"
@@ -5421,4 +5421,3 @@ msgstr "Kanal information"
 #: src/utils/wxTranslationHelper.cpp:119
 msgid "Language"
 msgstr ""
-

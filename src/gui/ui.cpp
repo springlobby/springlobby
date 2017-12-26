@@ -906,19 +906,19 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 		return true;
 	}
 	bool needstuff = false;
-	std::vector<std::string> promptCollection;
+	std::string stodl;
 	std::list<std::pair<DownloadEnum::Category, std::string>> todl;
 
 	if (requested(cat, DownloadEnum::CAT_ENGINE) && !battle->EngineExists() && !battle->GetEngineName().empty() && !battle->GetEngineVersion().empty()) {
-		promptCollection.push_back("engine " + battle->GetEngineName() + " " + battle->GetEngineVersion());
+		stodl.append("- engine " + battle->GetEngineName() + " " + battle->GetEngineVersion() + "\n");
 		todl.push_back(std::make_pair(DownloadEnum::CAT_ENGINE, battle->GetEngineName() + " " + battle->GetEngineVersion()));
 	}
 	if (requested(cat, DownloadEnum::CAT_MAP) && !battle->MapExists(false) && !battle->GetHostMapName().empty()) {
-		promptCollection.push_back("map " + battle->GetHostMapName());
+		stodl.append("- map " + battle->GetHostMapName() + "\n");
 		todl.push_back(std::make_pair(DownloadEnum::CAT_MAP, battle->GetHostMapName()));
 	}
 	if (requested(cat, DownloadEnum::CAT_GAME) && !battle->GameExists(false) && !battle->GetHostGameName().empty()) {
-		promptCollection.push_back("game " + battle->GetHostGameName());
+		stodl.append("- game " + battle->GetHostGameName() + "\n");
 		todl.push_back(std::make_pair(DownloadEnum::CAT_GAME, battle->GetHostGameName()));
 	}
 
@@ -926,16 +926,7 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 	if (!todl.empty()) {
 		needstuff = true;
 		if (uiprompt) {
-			std::string prompt = "The " + promptCollection[0];
-			for (size_t i = 1; i < promptCollection.size(); i++) {
-				if (i == promptCollection.size() - 1) {
-					prompt += " and ";
-				} else {
-					prompt += " ,";
-				}
-				prompt += promptCollection[i];
-			}
-			prompt += _(" is required to play. Should it be downloaded?");
+			const wxString prompt = _("Content is required to play. Should it be downloaded?") + _T("\n") + stodl;
 
 			if (!Ask(_("Content is missing"), prompt))
 				return true;

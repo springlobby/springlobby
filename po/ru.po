@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: springlobby\n"
 "Report-Msgid-Bugs-To: devel@www.springlobby.info\n"
-"POT-Creation-Date: 2017-12-26 00:02+0100\n"
+"POT-Creation-Date: 2017-12-26 01:50+0100\n"
 "PO-Revision-Date: 2010-01-03 22:54+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -4127,28 +4127,26 @@ msgstr "Версия Вашего SpringLobby не обновлена."
 msgid "Not up to Date"
 msgstr "Не обновлено"
 
-#: src/gui/ui.cpp:938
-#, fuzzy
-msgid " is required to play. Should it be downloaded?"
+#: src/gui/ui.cpp:929
+msgid "Content is required to play. Should it be downloaded?"
 msgstr ""
-"Для данной игры требуется движок '%s' версии '%s'. Приступить к закачке?"
 
-#: src/gui/ui.cpp:940
+#: src/gui/ui.cpp:931
 #, fuzzy
 msgid "Content is missing"
 msgstr "Нет движка"
 
-#: src/gui/ui.cpp:969
+#: src/gui/ui.cpp:960
 msgid ""
 "The certificate by the server is unkown. Do you want to trust it? Please "
 "verify the fingerprint:\n"
 msgstr ""
 
-#: src/gui/ui.cpp:969 src/gui/ui.cpp:971
+#: src/gui/ui.cpp:960 src/gui/ui.cpp:962
 msgid "Unknown Certificate"
 msgstr ""
 
-#: src/gui/ui.cpp:971
+#: src/gui/ui.cpp:962
 msgid ""
 "The certificate by the server is invalid! Maybe there is a MITM ongoing. Do "
 "you want ignore this warning?:\n"
