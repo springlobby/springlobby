@@ -274,11 +274,10 @@ ChatPanel* Ui::GetChannelChatPanel(const wxString& channel)
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EVENTS
 ////////////////////////////////////////////////////////////////////////////////////////////
-
 //! @brief Called when connected to a server
 //!
 //! @todo Display in servertab
-void Ui::OnConnected(IServer& server, const wxString& server_name, const wxString& version, bool /*supported*/)
+void Ui::OnConnected(IServer& server, const wxString& server_name, const wxString& /*version*/, bool /*supported*/)
 {
 	slLogDebugFunc("");
 
@@ -291,14 +290,6 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 	mw().GetBattleListTab().OnConnected();
 
 	ReopenServerTab();
-
-	if (version.empty()) {
-		wxLogWarning("default version supplied from server is empty!");
-		return;
-	}
-	std::map<std::string, LSL::SpringBundle> enginebundles = SlPaths::GetSpringVersionList();
-	if (!SlPaths::GetCompatibleVersion(STD_STRING(version)).empty())
-		return;
 }
 
 void Ui::OnLoggedIn()
