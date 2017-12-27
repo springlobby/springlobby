@@ -19,11 +19,11 @@ addons:
 before_script:
 # optional dependencies
   - git submodule update --init --recursive
-  - /usr/bin/cmake -DSPRINGLOBBY_UPDATER:BOOL=ON .
+  - cmake -DSPRINGLOBBY_UPDATER:BOOL=ON -DCMAKE_INSTALL_PREFIX=PATH:/tmp .
 script:
   - make -j2 -k
   - make -k check
-#  - sudo make install
+  - make install
 notifications:
   irc:
     channels:
