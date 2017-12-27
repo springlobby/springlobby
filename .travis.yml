@@ -24,3 +24,10 @@ script:
   - make -j2 -k
   - make -k check
 #  - sudo make install
+notifications:
+  irc:
+    channels:
+      - chat.freenode.net#springlobby
+    on_success: change
+    on_failure: change
+
