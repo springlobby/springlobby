@@ -2,19 +2,25 @@ language: cpp
 compiler:
   - gcc
   - clang
-sudo: required
 dist: trusty
 cache: ccache
 
-install:
-  - sudo apt-get install -y libwxgtk3.0-dev libboost-thread1.55-dev libboost-system1.55-dev
-  - sudo apt-get install -y libboost-test1.55-dev libalure-dev cmake cmake-data libssl-dev
+addons:
+  apt:
+    packages:
+    - libwxgtk3.0-dev
+    - libboost-thread1.55-dev
+    - libboost-system1.55-dev
+    - libboost-test1.55-dev
+    - libalure-dev
+    - cmake3
+    - libssl-dev
 
 before_script:
 # optional dependencies
   - git submodule update --init --recursive
-  - cmake -DSPRINGLOBBY_UPDATER:BOOL=ON .
+  - /usr/bin/cmake -DSPRINGLOBBY_UPDATER:BOOL=ON .
 script:
   - make -j2 -k
   - make -k check
-  - sudo make install
+#  - sudo make install
