@@ -19,7 +19,7 @@ addons:
 before_script:
 # optional dependencies
   - git submodule update --init --recursive
-  - cmake -DSPRINGLOBBY_UPDATER:BOOL=ON -DCMAKE_INSTALL_PREFIX=PATH:/tmp .
+  - cmake -DSPRINGLOBBY_UPDATER:BOOL=ON -DCMAKE_INSTALL_PREFIX:PATH=/tmp .
 script:
   - make -j2 -k
   - make -k check
