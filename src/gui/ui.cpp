@@ -63,7 +63,7 @@
 
 SLCONFIG("/General/AutoUpdate", true, "Determines if springlobby should check for updates on startup");
 SLCONFIG("/General/LastUpdateCheck", 0L, "Last time springlobby checked for an update");
-SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_SINGLE, "which tab to show on startup");
+SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_BATTLELIST, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere", true, "setting to spam the server messages in all channels");
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
 SLCONFIG("/Server/TLS", false, "Use encrypted connection to the lobby server");
@@ -299,9 +299,6 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 	std::map<std::string, LSL::SpringBundle> enginebundles = SlPaths::GetSpringVersionList();
 	if (!SlPaths::GetCompatibleVersion(STD_STRING(version)).empty())
 		return;
-	if (Ask(_("Spring can't be found"), wxString::Format(_T("No engine compatible to the lobby server default version spring %s can be found, try to download it?"), version.c_str()))) {
-		prDownloader().Download(DownloadEnum::CAT_ENGINE, "spring " + STD_STRING(version));
-	}
 }
 
 void Ui::OnLoggedIn()
@@ -568,7 +565,7 @@ void Ui::OnUserLeftBattle(IBattle& battle, User& user, bool isbot)
 			OnBattleInfoUpdated(battle, wxEmptyString);
 			if (&user == &m_serv->GetMe()) {
 				mw().GetJoinTab().LeaveCurrentBattle();
-				mw().ShowTab(MainWindow::PAGE_LIST);
+				mw().ShowTab(MainWindow::PAGE_BATTLELIST);
 			}
 		}
 	} catch (...) {
@@ -598,7 +595,7 @@ void Ui::OnJoinedBattle(IBattle& battle)
 	if (m_main_win == 0)
 		return;
 	mw().GetJoinTab().JoinBattle(battle);
-	mw().ShowTab(MainWindow::PAGE_JOIN);
+	mw().ShowTab(MainWindow::PAGE_BATTLEROOM);
 	if (battle.GetNatType() != NAT_None) {
 		wxLogWarning(_T("joining game with NAT transversal"));
 	}
@@ -610,7 +607,7 @@ void Ui::OnHostedBattle(IBattle& battle)
 	if (m_main_win == 0)
 		return;
 	mw().GetJoinTab().HostBattle(battle);
-	mw().ShowTab(MainWindow::PAGE_JOIN);
+	mw().ShowTab(MainWindow::PAGE_BATTLEROOM);
 }
 
 

@@ -93,6 +93,7 @@ public:
 	virtual bool CheckBan(User& user) override;
 
 	virtual void SetImReady(bool ready) override;
+	virtual void SetAutolaunchGame(bool autolaunch) override;
 
 	virtual User& GetMe() override;
 	virtual const User& GetMe() const override;
@@ -128,6 +129,7 @@ private:
 	bool m_auto_unspec;			// unspec as soon as there's a free slot
 	unsigned int m_auto_unspec_num_players; // number of players in the battle when m_auto_unspec was set to true
 
+	bool m_autolaunch_game; // whether to automatically launch game (when spectating)
 	// Battle variables
 
 	///< quick hotfix for bans

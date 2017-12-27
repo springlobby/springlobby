@@ -209,12 +209,12 @@ MainWindow::MainWindow()
 
 	//use Insert so no Changepage events are triggered
 	m_func_tabs->InsertPage(PAGE_CHAT, m_chat_tab, m_tab_names[PAGE_CHAT], true);
-	m_func_tabs->InsertPage(PAGE_LIST, m_list_tab, m_tab_names[PAGE_LIST], false);
-	m_func_tabs->InsertPage(PAGE_JOIN, m_join_tab, m_tab_names[PAGE_JOIN], false);
-	m_func_tabs->InsertPage(PAGE_SINGLE, m_sp_tab, m_tab_names[PAGE_SINGLE], false);
+	m_func_tabs->InsertPage(PAGE_BATTLELIST, m_list_tab, m_tab_names[PAGE_BATTLELIST], false);
+	m_func_tabs->InsertPage(PAGE_BATTLEROOM, m_join_tab, m_tab_names[PAGE_BATTLEROOM], false);
+	m_func_tabs->InsertPage(PAGE_SINGLEPLAYER, m_sp_tab, m_tab_names[PAGE_SINGLEPLAYER], false);
 	//    m_func_tabs->InsertPage( PAGE_SAVEGAME, m_savegame_tab, m_tab_names[PAGE_SAVEGAME], false );
-	m_func_tabs->InsertPage(PAGE_REPLAY, m_replay_tab, m_tab_names[PAGE_REPLAY], false);
-	m_func_tabs->InsertPage(PAGE_TORRENT, m_torrent_tab, m_tab_names[PAGE_TORRENT], false);
+	m_func_tabs->InsertPage(PAGE_REPLAYS, m_replay_tab, m_tab_names[PAGE_REPLAYS], false);
+	m_func_tabs->InsertPage(PAGE_DOWNLOADS, m_torrent_tab, m_tab_names[PAGE_DOWNLOADS], false);
 
 	LoadPerspectives();
 	SetTabIcons();
@@ -257,11 +257,11 @@ wxBitmap MainWindow::GetTabIcon(const unsigned char* data, size_t size) const
 void MainWindow::SetTabIcons()
 {
 	m_func_tabs->SetPageBitmap(PAGE_CHAT, GetTabIcon(chat_icon_png, sizeof(chat_icon_png)));
-	m_func_tabs->SetPageBitmap(PAGE_LIST, GetTabIcon(join_icon_png, sizeof(join_icon_png)));
-	m_func_tabs->SetPageBitmap(PAGE_JOIN, GetTabIcon(broom_tab_icon_png, sizeof(broom_tab_icon_png)));
-	m_func_tabs->SetPageBitmap(PAGE_SINGLE, GetTabIcon(single_player_icon_png, sizeof(single_player_icon_png)));
-	m_func_tabs->SetPageBitmap(PAGE_TORRENT, GetTabIcon(downloads_icon_png, sizeof(downloads_icon_png)));
-	m_func_tabs->SetPageBitmap(PAGE_REPLAY, GetTabIcon(replay_icon_png, sizeof(replay_icon_png)));
+	m_func_tabs->SetPageBitmap(PAGE_BATTLELIST, GetTabIcon(join_icon_png, sizeof(join_icon_png)));
+	m_func_tabs->SetPageBitmap(PAGE_BATTLEROOM, GetTabIcon(broom_tab_icon_png, sizeof(broom_tab_icon_png)));
+	m_func_tabs->SetPageBitmap(PAGE_SINGLEPLAYER, GetTabIcon(single_player_icon_png, sizeof(single_player_icon_png)));
+	m_func_tabs->SetPageBitmap(PAGE_DOWNLOADS, GetTabIcon(downloads_icon_png, sizeof(downloads_icon_png)));
+	m_func_tabs->SetPageBitmap(PAGE_REPLAYS, GetTabIcon(replay_icon_png, sizeof(replay_icon_png)));
 	//m_func_tabs->SetPageBitmap( ??         , GetTabIcon( floppy_icon_png        , sizeof (floppy_icon_png) ) );
 	//m_func_tabs->SetPageBitmap( ??         , GetTabIcon( options_icon_png       , sizeof (options_icon_png) ) );
 	Refresh();
@@ -422,7 +422,7 @@ ChatPanel* MainWindow::GetActiveChatPanel()
 	unsigned int index = m_func_tabs->GetSelection();
 	if (index == PAGE_CHAT)
 		return m_chat_tab->GetActiveChatPanel();
-	if (index == PAGE_JOIN)
+	if (index == PAGE_BATTLEROOM)
 		return m_join_tab->GetActiveChatPanel();
 	return 0;
 }
@@ -461,7 +461,7 @@ void MainWindow::ShowTab(const unsigned int idx)
 	if (idx < m_tab_names.GetCount()) {
 		m_func_tabs->SetSelection(idx);
 		switch (idx) {
-			case PAGE_JOIN: {
+			case PAGE_BATTLEROOM: {
 				GetJoinTab().SetFocus();
 				ChatPanel* p = GetJoinTab().GetActiveChatPanel();
 				if (p != NULL) {

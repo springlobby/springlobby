@@ -69,6 +69,7 @@ EVT_BUTTON(BROOM_LEAVE, BattleRoomTab::OnLeave)
 EVT_BUTTON(BROOM_ADDBOT, BattleRoomTab::OnAddBot)
 EVT_BUTTON(BROOM_HOST_NEW, BattleRoomTab::OnHostNew)
 
+EVT_CHECKBOX(BROOM_AUTOLAUNCH, BattleRoomTab::OnAutolaunch)
 EVT_CHECKBOX(BROOM_IMREADY, BattleRoomTab::OnImReady)
 EVT_CHECKBOX(BROOM_SPEC, BattleRoomTab::OnImSpec)
 EVT_CHECKBOX(BROOM_UNSPEC, BattleRoomTab::OnAutounSpec)
@@ -151,6 +152,10 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_auto_unspec_chk->SetToolTip(_("automatically unspec when there's a free slot"));
 	m_ready_chk = new wxCheckBox(m_player_panel, BROOM_IMREADY, _("I'm ready"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
 	m_ready_chk->SetToolTip(_("Click this if you are content with the battle settings."));
+	m_autolaunch_chk = new wxCheckBox(m_player_panel, BROOM_AUTOLAUNCH, _("auto-launch game"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
+	m_autolaunch_chk->SetToolTip(_("Click this if you want game to be launched when it starts and you are a spectator."));
+	m_autolaunch_chk->SetValue(true);
+	OnAutolaunch();
 
 	m_team_lbl = new wxStaticText(m_player_panel, -1, _("Team"));
 	m_ally_lbl = new wxStaticText(m_player_panel, -1, _("Ally"));
@@ -308,6 +313,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_player_sett_sizer->Add(m_spec_chk, 0, wxEXPAND | wxALL, 2);
 	m_player_sett_sizer->Add(m_auto_unspec_chk, 0, wxEXPAND | wxALL, 2);
 	m_player_sett_sizer->Add(m_ready_chk, 0, wxEXPAND | wxALL, 2);
+	m_player_sett_sizer->Add(m_autolaunch_chk, 0, wxEXPAND | wxALL, 2);
 	m_player_sett_sizer->AddStretchSpacer();
 	m_player_sett_sizer->Add((new wxGenericStaticBitmap(m_player_panel, wxID_ANY, IconsCollection::Instance()->BMP_SPECTATOR)), 0, (wxALIGN_CENTER_VERTICAL) | wxALL, 2);
 	m_player_sett_sizer->Add(m_specs_setup_lbl, 0, (wxALIGN_CENTER_VERTICAL) | wxALL, 2);
@@ -569,17 +575,24 @@ void BattleRoomTab::UpdateUser(User& user, bool userJustAdded)
 		m_ally_sel->Disable();
 		m_team_sel->Disable();
 		if (m_battle->GetBattleType() != BT_Replay) {
+			m_autolaunch_chk->Enable();
 			m_auto_unspec_chk->Enable();
 			m_ready_chk->Disable();
 		} else {
 			m_ready_chk->Enable();
 			m_auto_unspec_chk->Disable();
+			m_autolaunch_chk->Disable();
+			m_autolaunch_chk->SetValue(true);
+			OnAutolaunch();
 		}
 	} else { // we are player
 		m_side_sel->Enable();
 		m_ally_sel->Enable();
 		m_team_sel->Enable();
 		m_ready_chk->Enable();
+		m_autolaunch_chk->Disable();
+		m_autolaunch_chk->SetValue(true);
+		OnAutolaunch();
 		m_auto_unspec_chk->Disable(); //disable and uncheck unspec as we are already a player
 		m_auto_unspec_chk->SetValue(false);
 		m_battle->SetAutoUnspec(false);
@@ -617,6 +630,8 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 	slLogDebugFunc("");
 	if (m_battle == nullptr)
 		return;
+	m_battle->SetAutolaunchGame(true);
+
 	if (m_battle->IsFounderMe()) {
 		m_battle->GetMe().BattleStatus().ready = true;
 		if (!m_battle->IsEveryoneReady()) {
@@ -733,6 +748,14 @@ void BattleRoomTab::OnAddBot(wxCommandEvent& /*unused*/)
 		bs.owner = m_battle->GetMe().GetNick();
 		m_battle->GetServer().AddBot(m_battle->GetBattleId(), STD_STRING(dlg.GetNick()), bs);
 	}
+}
+
+
+void BattleRoomTab::OnAutolaunch()
+{
+	if (!m_battle)
+		return;
+	m_battle->SetAutolaunchGame(m_autolaunch_chk->GetValue());
 }
 
 

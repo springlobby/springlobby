@@ -669,6 +669,9 @@ public:
 	virtual void SetImReady(bool /*ready*/)
 	{
 	}
+	virtual void SetAutolaunchGame(bool /*autolaunch*/)
+	{
+	}
 	virtual void SetLastAutolockStatus(bool /*autolock*/)
 	{
 	}

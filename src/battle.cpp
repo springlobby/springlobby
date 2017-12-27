@@ -40,6 +40,7 @@ END_EVENT_TABLE()
 Battle::Battle(IServer& serv, int id)
     : m_auto_unspec(false)
     , m_auto_unspec_num_players(0)
+    , m_autolaunch_game(true)
     , m_serv(serv)
     , m_ah(*this)
     , m_autolock_on_start(false)
@@ -135,6 +136,11 @@ void Battle::SetImReady(bool ready)
 
 	//m_serv.GetMe().SetBattleStatus( bs );
 	SendMyBattleStatus();
+}
+
+void Battle::SetAutolaunchGame(bool autolaunch)
+{
+	m_autolaunch_game = autolaunch;
 }
 
 void Battle::Say(const std::string& msg)
@@ -611,6 +617,9 @@ void Battle::StartHostedBattle()
 
 void Battle::StartSpring()
 {
+	if (!m_autolaunch_game)
+		return;
+
 	User& me = GetMe();
 	if (!UserExists(me.GetNick()))
 		return;
