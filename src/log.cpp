@@ -7,6 +7,7 @@
 #include "utils/conversion.h"
 #include "gui/ui.h"
 #include "gui/mainwindow.h"
+#include "time.h"
 
 #if wxUSE_STD_IOSTREAM
 #include <iostream>
@@ -35,6 +36,24 @@ public:
 		}
 	}
 
+	static std::string GetTimeString()
+	{
+		char buffer[512];
+		char buffer2[512];
+		struct timeval tv;
+
+		gettimeofday(&tv, NULL);
+
+		const struct tm* tm_info = localtime(&tv.tv_sec);
+		const size_t len = strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", tm_info);
+		if (len <= 0)
+			return "";
+		const int res = snprintf(buffer2, sizeof(buffer2), "%s.%03ld", buffer, tv.tv_usec / 1000);
+		if (res > 0)
+			return std::string(buffer2, res);
+		return "";
+	}
+
 	// catch and process all log messages
 	void DoLogRecord(wxLogLevel loglevel, const wxString& msg, const wxLogRecordInfo& info) override
 	{
@@ -48,7 +67,7 @@ public:
 		}
 
 
-		const std::string std_msg = stdprintf("%s %s:%d %s\n", LogLevelToString(loglevel).c_str(), info.filename, info.line, (STD_STRING(wxString(msg))).c_str());
+		const std::string std_msg = stdprintf("%s %s %s:%d %s\n", GetTimeString().c_str(), LogLevelToString(loglevel).c_str(), info.filename, info.line, (STD_STRING(wxString(msg))).c_str());
 		if (m_console) {
 			std::cout << std_msg;
 		}
@@ -70,14 +89,14 @@ public:
 		assert(level < 8); // just in case
 
 		const char* levelName[] = {
-		    "Fatal   ",
-		    "Error   ",
-		    "Warning ",
-		    "Message ",
-		    "Status  ",
-		    "Info    ",
-		    "Debug   ",
-		    "Trace   "};
+		    "Fatal",
+		    "Error",
+		    "Warning",
+		    "Message",
+		    "Status",
+		    "Info",
+		    "Debug",
+		    "Trace"};
 
 		return std::string(levelName[(int)level]);
 	}
