@@ -816,17 +816,20 @@ void ServerEvents::OnRing(const std::string& from)
 
 void ServerEvents::OnServerBroadcast(const std::string& message)
 {
+	wxLogWarning("%s", message);
 	ui().OnServerBroadcast(m_serv, TowxString(message));
 }
 
 void ServerEvents::OnServerMessage(const std::string& message)
 {
+	wxLogWarning("%s", message);
 	ui().OnServerMessage(m_serv, TowxString(message));
 }
 
 
 void ServerEvents::OnServerMessageBox(const std::string& message)
 {
+	wxLogWarning("%s", message);
 	ui().ShowMessage(_("Server Message"), TowxString(message));
 }
 
