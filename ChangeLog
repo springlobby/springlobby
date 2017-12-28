@@ -1,8 +1,16 @@
 ChangeLog of Springlobby
 
 ## 0.261
+ - add option to not launch spring when speccing a battle
+ - add timestamp to springlobby.log entries
+ - fix Gtk-CRITICAL console messages
+ - log lobbyserver messages to springlobby.log
+ - rate limit download status: lowers cpu usage when downloading
  - always use TLS / remove option to disable TLS
  - fix compile with system jsoncpp
+ - don't prompt for empty downloads
+ - read locales from compile dir
+ - remove old + broken translations / make translations work again
 
 ## 0.260
  - reimplement channel history
