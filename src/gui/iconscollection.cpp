@@ -246,7 +246,7 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& gameName, size_t fr
 	}
 
 	if (fractionId >= sides.size()) {
-		wxLogWarning("Invalid side requested: %s:%d", gameName.c_str(), fractionId);
+		wxLogWarning("Invalid side requested: %s:%d", gameName.c_str(), (int)fractionId);
 		return BMP_EMPTY;
 	}
 

@@ -185,7 +185,7 @@ extern void lsllogerror(const char* format, ...)
 	va_end(args);
 	if (len > 0) {
 		const std::string msg(buf, len);
-		wxLogWarning(_T("Error: FIXME: ") + TowxString(msg)); //FIXME: lsl throws a lot of errors
+		wxLogWarning("Error: FIXME: %s", msg.c_str()); //FIXME: lsl throws a lot of errors
 	}
 }
 
@@ -198,7 +198,7 @@ extern void lsllogdebug(const char* format, ...)
 	va_end(args);
 	if (len > 0) {
 		const std::string msg(buf, len);
-		wxLogDebug(TowxString(msg));
+		wxLogDebug("%s", msg.c_str());
 	}
 }
 
@@ -211,7 +211,7 @@ extern void lsllogwarning(const char* format, ...)
 	va_end(args);
 	if (len > 0) {
 		const std::string msg(buf, len);
-		wxLogWarning(TowxString(msg));
+		wxLogWarning("%s", msg.c_str());
 	}
 }
 
@@ -224,6 +224,6 @@ extern void lslloginfo(const char* format, ...)
 	va_end(args);
 	if (len > 0) {
 		const std::string msg(buf, len);
-		wxLogInfo(TowxString(msg));
+		wxLogInfo("%s", msg.c_str());
 	}
 }
