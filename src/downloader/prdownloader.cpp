@@ -28,6 +28,7 @@
 #include <lslutils/thread.h>
 #include "settings.h"
 #include "utils/slconfig.h"
+#include <sys/time.h>
 
 SLCONFIG("/Spring/PortableDownload", false, "true to download portable versions of spring, if false cache/settings/etc are shared (bogous!)");
 SLCONFIG("/Spring/RapidMasterUrl", "http://repos.springrts.com/repos.gz", "master url for rapid downloads");
@@ -203,6 +204,16 @@ void updatelistener(int downloaded, int filesize)
 
 	if (m_progress == nullptr)
 		m_progress = new PrDownloader::DownloadProgress();
+
+	static struct timespec lastupdate = {0, 0};
+	struct timespec now;
+	clock_gettime(CLOCK_MONOTONIC, &now);
+	if (((double)now.tv_sec + 1.0e-9*now.tv_nsec) - ((double)lastupdate.tv_sec + 1.0e-9*lastupdate.tv_nsec) < 0.2f ) {
+		//rate limit events
+		return;
+	}
+	lastupdate.tv_nsec = now.tv_nsec;
+	lastupdate.tv_sec = now.tv_sec;
 
 	m_progress->filesize = filesize;
 	m_progress->downloaded = downloaded;
