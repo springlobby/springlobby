@@ -195,7 +195,7 @@ public:
 		       int width, int height,
 		       int WXUNUSED(sizeFlags = wxSIZE_AUTO))
 	{
-		m_rect = wxRect(x, y, width, height);
+		m_rect = wxRect(x, y, std::max(1, width), std::max(1, height));
 		DoSizing();
 	}
 
@@ -238,11 +238,11 @@ public:
 			wxAuiNotebookPage& page = pages.Item(i);
 			if (m_tabs->GetFlags() & wxAUI_NB_BOTTOM) {
 				page.window->SetSize(m_rect.x, m_rect.y,
-						     m_rect.width, m_rect.height - m_tab_ctrl_height);
+						     std::max(1, m_rect.width), std::max(1, m_rect.height - m_tab_ctrl_height));
 			} else //TODO: if (GetFlags() & wxAUI_NB_TOP)
 			{
 				page.window->SetSize(m_rect.x, m_rect.y + m_tab_ctrl_height,
-						     m_rect.width, m_rect.height - m_tab_ctrl_height);
+						     std::max(1, m_rect.width), std::max(1, m_rect.height - m_tab_ctrl_height));
 			}
 			// TODO: else if (GetFlags() & wxAUI_NB_LEFT){}
 			// TODO: else if (GetFlags() & wxAUI_NB_RIGHT){}
