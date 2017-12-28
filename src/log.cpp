@@ -214,3 +214,16 @@ extern void lsllogwarning(const char* format, ...)
 		wxLogWarning(TowxString(msg));
 	}
 }
+
+extern void lslloginfo(const char* format, ...)
+{
+	char buf[1024];
+	va_list args;
+	va_start(args, format);
+	const int len = vsnprintf(buf, 1024, format, args);
+	va_end(args);
+	if (len > 0) {
+		const std::string msg(buf, len);
+		wxLogInfo(TowxString(msg));
+	}
+}
