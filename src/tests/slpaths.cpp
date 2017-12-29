@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(VersionCheck)
 	BOOST_CHECK(CheckVersion(v6, v6));
 	BOOST_CHECK(!CheckVersion(v6, v4));
 	BOOST_CHECK(!CheckVersion(v6, v1));
-	BOOST_CHECK(CheckVersion(v6, v2));
+	BOOST_CHECK(!CheckVersion(v6, v2));
 	BOOST_CHECK(!CheckVersion(v5, v4));
 	BOOST_CHECK(!CheckVersion(v2, v7));
 }

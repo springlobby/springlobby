@@ -84,8 +84,6 @@ public:
 	static bool mkDir(const std::string& dir);
 
 	static std::string SantinizeFilename(const std::string& filename);
-	static std::string VersionGetMajor(const std::string& version);
-	static bool VersionIsRelease(const std::string& version);
 	static bool VersionSyncCompatible(const std::string& ver1, const std::string& ver2);
 
 private:
