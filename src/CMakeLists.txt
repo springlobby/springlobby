@@ -375,7 +375,6 @@ target_include_directories(springlobby
                 PRIVATE ${PRD_JSONCPP_INCLUDE_DIR}
         )
 
-
 FIND_PACKAGE(OpenSSL)
 if(OPENSSL_FOUND)
 	message(STATUS "Building with OpenSSL support: ${OPENSSL_VERSION}")
@@ -398,6 +397,7 @@ IF(WIN32)
 		iphlpapi
 		nettle
 		ws2_32
+		rt
 	)
 	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
 ELSE (WIN32)
