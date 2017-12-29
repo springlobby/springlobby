@@ -3,6 +3,7 @@ ChangeLog of Springlobby
 ## 0.261
  - add option to not launch spring when speccing a battle
  - add timestamp to springlobby.log entries
+ - simplify engine compatiblity check: always do a full string compare
  - fix Gtk-CRITICAL console messages
  - log lobbyserver messages to springlobby.log
  - rate limit download status: lowers cpu usage when downloading
