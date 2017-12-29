@@ -402,11 +402,6 @@ bool VersionSyncCompatible(const std::string& ver1, const std::string& ver2)
 	    (VersionGetMajor(ver1) == VersionGetMajor(ver2))) {
 		return true;
 	}
-	const std::string ver1trimmed = LSL::Util::BeforeFirst(ver1, " ");
-	const std::string ver2trimmed = LSL::Util::BeforeFirst(ver2, " ");
-	if (!ver1trimmed.empty() && !ver2trimmed.empty() && ver1trimmed == ver2trimmed) { //hack for zk-lobby it sets incomplete version
-		return true;
-	}
 	return false;
 }
 
