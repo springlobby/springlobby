@@ -373,38 +373,6 @@ std::string SlPaths::GetDataDir(const std::string& /*FIXME: implement index */)
 	return LSL::Util::EnsureDelimiter(dir);
 }
 
-std::string VersionGetMajor(const std::string& version)
-{
-	const int pos = version.find(".");
-	if (pos > 0) {
-		return version.substr(0, pos);
-	}
-	return version;
-}
-
-bool VersionIsRelease(const std::string& version)
-{ //try to detect if a version is major
-	const std::string allowedChars = "01234567890.";
-	for (size_t i = 0; i < version.length(); i++) {
-		if (allowedChars.find(version[i]) == std::string::npos) { //found invalid char -> not stable version
-			return false;
-		}
-	}
-	return true;
-}
-
-bool VersionSyncCompatible(const std::string& ver1, const std::string& ver2)
-{
-	if (ver1 == ver2) {
-		return true;
-	}
-	if ((VersionIsRelease(ver1) && VersionIsRelease(ver2)) &&
-	    (VersionGetMajor(ver1) == VersionGetMajor(ver2))) {
-		return true;
-	}
-	return false;
-}
-
 std::string SlPaths::GetCompatibleVersion(const std::string& neededversion)
 {
 	const auto versionlist = SlPaths::GetSpringVersionList();
@@ -557,3 +525,36 @@ std::string SlPaths::SantinizeFilename(const std::string& filename)
 	}
 	return res;
 }
+
+std::string SlPaths::VersionGetMajor(const std::string& version)
+{
+	const int pos = version.find(".");
+	if (pos > 0) {
+		return version.substr(0, pos);
+	}
+	return version;
+}
+
+bool SlPaths::VersionIsRelease(const std::string& version)
+{ //try to detect if a version is major
+	const std::string allowedChars = "01234567890.";
+	for (size_t i = 0; i < version.length(); i++) {
+		if (allowedChars.find(version[i]) == std::string::npos) { //found invalid char -> not stable version
+			return false;
+		}
+	}
+	return true;
+}
+
+bool SlPaths::VersionSyncCompatible(const std::string& ver1, const std::string& ver2)
+{
+	if (ver1 == ver2) {
+		return true;
+	}
+	if ((VersionIsRelease(ver1) && VersionIsRelease(ver2)) &&
+	    (VersionGetMajor(ver1) == VersionGetMajor(ver2))) {
+		return true;
+	}
+	return false;
+}
+

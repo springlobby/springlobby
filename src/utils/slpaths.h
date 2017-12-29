@@ -84,6 +84,9 @@ public:
 	static bool mkDir(const std::string& dir);
 
 	static std::string SantinizeFilename(const std::string& filename);
+	static std::string VersionGetMajor(const std::string& version);
+	static bool VersionIsRelease(const std::string& version);
+	static bool VersionSyncCompatible(const std::string& ver1, const std::string& ver2);
 
 private:
 	static void EngineSubPaths(const std::vector<std::string>& basedirs, std::vector<std::string>& paths);
@@ -93,6 +96,8 @@ private:
 	static bool IsSpringBin(const std::string& path);
 	static std::map<std::string, LSL::SpringBundle> m_spring_versions;
 	static void PossibleEnginePaths(std::vector<std::string>& pl);
+
+
 };
 
 #endif // SPRINGLOBBY_PATHLISTFACTORY_H

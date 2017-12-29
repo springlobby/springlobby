@@ -45,3 +45,32 @@ BOOST_AUTO_TEST_CASE(slpaths)
 	BOOST_CHECK(SlPaths::RmDir(testdir));
 	BOOST_CHECK(SlPaths::SantinizeFilename(":<>test:end") == std::string("___test_end"));
 }
+
+bool CheckVersion(const std::string& v1, const std::string& v2)
+{
+	return SlPaths::VersionSyncCompatible(v1, v2) && SlPaths::VersionSyncCompatible(v2, v1);
+}
+
+BOOST_AUTO_TEST_CASE(VersionCheck)
+{
+	std::string v1 = "104.0.1-104-g2135e2e maintenance";
+	std::string v2 = "104";
+	std::string v3 = "105.0";
+	std::string v4 = "104.0.1-448-g243c5dd develop";
+	std::string v5 = "104.0.1-448-g243c5dd";
+	std::string v6 = "104.0";
+	std::string v7 = "";
+
+	BOOST_CHECK(SlPaths::VersionGetMajor(v1) == v2);
+	BOOST_CHECK(SlPaths::VersionGetMajor(v4) == v2);
+	BOOST_CHECK(SlPaths::VersionIsRelease(v3));
+	BOOST_CHECK(!SlPaths::VersionIsRelease(v4));
+	BOOST_CHECK(SlPaths::VersionIsRelease(v6));
+	BOOST_CHECK(!SlPaths::VersionIsRelease(v1));
+	BOOST_CHECK(CheckVersion(v6, v6));
+	BOOST_CHECK(!CheckVersion(v6, v4));
+	BOOST_CHECK(!CheckVersion(v6, v1));
+	BOOST_CHECK(CheckVersion(v6, v2));
+	BOOST_CHECK(!CheckVersion(v5, v4));
+	BOOST_CHECK(!CheckVersion(v2, v7));
+}
