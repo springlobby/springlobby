@@ -61,12 +61,6 @@ BOOST_AUTO_TEST_CASE(VersionCheck)
 	std::string v6 = "104.0";
 	std::string v7 = "";
 
-	BOOST_CHECK(SlPaths::VersionGetMajor(v1) == v2);
-	BOOST_CHECK(SlPaths::VersionGetMajor(v4) == v2);
-	BOOST_CHECK(SlPaths::VersionIsRelease(v3));
-	BOOST_CHECK(!SlPaths::VersionIsRelease(v4));
-	BOOST_CHECK(SlPaths::VersionIsRelease(v6));
-	BOOST_CHECK(!SlPaths::VersionIsRelease(v1));
 	BOOST_CHECK(CheckVersion(v6, v6));
 	BOOST_CHECK(!CheckVersion(v6, v4));
 	BOOST_CHECK(!CheckVersion(v6, v1));
