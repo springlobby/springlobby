@@ -55,7 +55,7 @@ public:
 	void Run()
 	{
 		slLogDebugFunc("");
-		wxLogDebug("Starting download of filename: %s, name: %s", m_filename.c_str(), m_name.c_str());
+		wxLogInfo("Starting download of filename: %s, name: %s", m_filename.c_str(), m_name.c_str());
 
 		{
 			boost::mutex::scoped_lock lock(dlProgressMutex);
@@ -93,7 +93,7 @@ public:
 		const bool hasdlinfo = DownloadGetInfo(0, info);
 		//In case if something gone wrong
 		if (!hasdlinfo) {
-			wxLogWarning("Download has no downloadinfo!");
+			wxLogWarning("Download has no downloadinfo: %s", m_name.c_str());
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 			return;
 		}
@@ -103,8 +103,10 @@ public:
 		const bool downloadFailed = DownloadStart();
 
 		if (downloadFailed) {
+			wxLogWarning("Download failed: %s", m_name.c_str());
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadFailed);
 		} else {
+			wxLogInfo("Download finished: %s", m_name.c_str());
 			DownloadFinished(m_category, info);
 			GlobalEventManager::Instance()->Send(GlobalEventManager::OnDownloadComplete);
 		}
