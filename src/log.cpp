@@ -130,6 +130,7 @@ Logger::~Logger()
 wxLogWindow* Logger::InitializeLoggingTargets(wxWindow* /*parent*/, bool console, const wxString& logfilepath, bool showgui, int verbosity)
 {
 	delete wxLog::SetActiveTarget(new myLogger(console, logfilepath, showgui));
+	wxLog::SetVerbose(verbosity > 5);
 	switch (verbosity) {
 		case 1:
 			wxLog::SetLogLevel(wxLOG_FatalError);
