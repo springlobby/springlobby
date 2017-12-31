@@ -1,6 +1,7 @@
 ChangeLog of Springlobby
 
 ## 0.261
+ - fix rare crash on login / register
  - add option to not launch spring when speccing a battle
  - add timestamp to springlobby.log entries
  - simplify engine compatiblity check: always do a full string compare
