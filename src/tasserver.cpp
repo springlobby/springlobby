@@ -965,7 +965,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 
 void TASServer::ParseJson(const std::string& jsonstr)
 {
-	wxLogMessage("JSON %s", jsonstr.c_str());
+	wxLogDebug("JSON %s", jsonstr.c_str());
 
         Json::Value js; // will contains the root value after parsing.
         Json::Reader reader;
