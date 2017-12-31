@@ -630,7 +630,6 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 	slLogDebugFunc("");
 	if (m_battle == nullptr)
 		return;
-	m_battle->SetAutolaunchGame(true);
 
 	if (m_battle->IsFounderMe()) {
 		m_battle->GetMe().BattleStatus().ready = true;
