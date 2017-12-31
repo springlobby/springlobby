@@ -397,7 +397,6 @@ IF(WIN32)
 		iphlpapi
 		nettle
 		ws2_32
-		rt
 	)
 	install(TARGETS springlobby RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
 ELSE (WIN32)
