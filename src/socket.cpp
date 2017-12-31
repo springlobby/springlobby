@@ -59,8 +59,7 @@ bool GetMacType(std::vector<unsigned char>& mac, const unsigned int mactype)
 	if (dwStatus != NO_ERROR)
 		return false; // Check status
 
-	for (size_t i = 0; i < dwBufLen; i++) {
-
+	for (size_t i = 0; i < dwBufLen / sizeof(AdapterInfo); i++) {
 		if ((mactype != 0) && (AdapterInfo[i].Type != mactype)) //skip not wanted type
 			continue;
 		if (AdapterInfo[i].AddressLength == 0) {
