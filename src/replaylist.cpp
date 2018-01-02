@@ -13,6 +13,7 @@
 #include "storedgame.h"
 #include "utils/conversion.h"
 #include <lslutils/globalsmanager.h>
+#include <lslutils/conversion.h>
 
 class PlayBackDataReader
 {
@@ -115,6 +116,15 @@ static void MarkBroken(StoredGame& ret)
 	ret.battle.SetHostGame("broken", "");
 }
 
+static void FixSpringVersion(StoredGame& ret)
+{
+	const int version = LSL::Util::FromIntString(ret.SpringVersion);
+	if (LSL::Util::ToIntString(version) != ret.SpringVersion)
+		return;
+
+	ret.SpringVersion = ret.SpringVersion + ".0";
+}
+
 bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) const
 {
 	const std::string FileName = LSL::Util::AfterLast(ReplayPath, SEP); // strips file path
@@ -124,6 +134,8 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	ret.SpringVersion = LSL::Util::BeforeLast(LSL::Util::AfterLast(FileName, "_"), ".");
 	ret.MapName = LSL::Util::BeforeLast(FileName, "_");
 	ret.size = wxFileName::GetSize(ReplayPath).GetLo(); //FIXME: use longlong
+
+	FixSpringVersion(ret);
 
 	if (!wxFileExists(TowxString(ReplayPath))) {
 		wxLogWarning(wxString::Format(_T("File %s does not exist!"), ReplayPath.c_str()));
