@@ -631,6 +631,9 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 	if (m_battle == nullptr)
 		return;
 
+	//start manually clicked, force start
+	m_battle->SetAutolaunchGame(true);
+
 	if (m_battle->IsFounderMe()) {
 		m_battle->GetMe().BattleStatus().ready = true;
 		if (!m_battle->IsEveryoneReady()) {
@@ -658,6 +661,8 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 			//customMessageBoxNoModal( SL_MAIN_ICON, _("Host is not ingame."), _("Error") );
 		}
 	}
+	//reset to value from gui
+	m_battle->SetAutolaunchGame(m_autolaunch_chk->GetValue());
 }
 
 void BattleRoomTab::OnLeave(wxCommandEvent& /*unused*/)
