@@ -17,7 +17,7 @@ wxTranslationHelper::wxTranslationHelper(const wxString& catalog, const wxString
     , catalogname(catalog)
     , m_Locale(NULL)
 {
-	wxLogWarning(_T("Using LocalePath %s"), m_SearchPath.c_str());
+	wxLogInfo(_T("Using LocalePath %s"), m_SearchPath.c_str());
 	long language = cfg().ReadLong(_T("/General/LanguageID"));
 	if (Load(language))
 		return;
@@ -58,7 +58,7 @@ bool wxTranslationHelper::Load(int language)
 			m_Locale->AddCatalogLookupPathPrefix(m_SearchPath);
 			m_Locale->AddCatalog(catalogname);
 			//m_Locale->AddCatalog(_T("wxstd"));
-			wxLogWarning(wxString::Format(_("Loaded locale %s %d %s %s"), m_Locale->GetName().c_str(), m_Locale->IsOk(), m_SearchPath.c_str(), m_Locale->GetCanonicalName().c_str()));
+			wxLogMessage(wxString::Format(_("Loaded locale %s %d %s %s"), m_Locale->GetName().c_str(), m_Locale->IsOk(), m_SearchPath.c_str(), m_Locale->GetCanonicalName().c_str()));
 			return m_Locale->IsOk();
 		}
 	}
