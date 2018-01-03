@@ -19,10 +19,14 @@ wxTranslationHelper::wxTranslationHelper(const wxString& catalog, const wxString
 {
 	wxLogWarning(_T("Using LocalePath %s"), m_SearchPath.c_str());
 	long language = cfg().ReadLong(_T("/General/LanguageID"));
-	if (!Load(language)) { //fallback when something went wrong
-		wxLogWarning("Couldn't load locale %ld, fallback to default", language);
-		int localeid = wxLocale::GetSystemLanguage();
-		Load(localeid);
+	if (Load(language))
+		return;
+	//fallback when something went wrong
+	wxLogWarning("Couldn't load locale %ld, fallback to default", language);
+	language = wxLocale::GetSystemLanguage();
+	if (Load(language)) {
+		cfg().Write(_T( "/General/LanguageID" ), language);
+		cfg().SaveFile(); //instant save to config
 	}
 }
 
