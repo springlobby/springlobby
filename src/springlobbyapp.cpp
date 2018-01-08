@@ -153,10 +153,12 @@ bool SpringLobbyApp::OnInit()
 
 	m_translationhelper = new wxTranslationHelper(GetAppName().Lower(), getLocalePath());
 
-	const wxString configdir = TowxString(SlPaths::GetConfigfileDir());
-	SlPaths::mkDir(STD_STRING((configdir)));
+	const std::string configdir = SlPaths::GetConfigfileDir();
+	wxLogMessage("Config dir: %s", configdir.c_str());
+	SlPaths::mkDir(configdir);
 
 	if (cfg().ReadBool(_T("/ResetLayout"))) {
+		wxLogMessage("Resetting Layout...");
 		//we do this early on and reset the config var a little later so we can save a def. perps once mw is created
 		sett().RemoveLayouts();
 		cfg().Write(_T( "/ResetLayout" ), false);
@@ -171,18 +173,21 @@ bool SpringLobbyApp::OnInit()
 		SlPaths::SetSpringBinary(SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetSpringBinary());
 		SlPaths::SetUnitSync(SlPaths::GetCurrentUsedSpringIndex(), SlPaths::GetUnitSync());
 	}
-
+	wxLogMessage("Configuring Unitsync...");
 	// configure unitsync paths before trying to load
 	SlPaths::ReconfigureUnitsync();
 
 	sett().Setup(m_translationhelper);
 
 	notificationManager(); //needs to be initialized too
+
+	wxLogMessage("Showing Main Window");
 	ui().ShowMainWindow();
 	SetTopWindow(&ui().mw());
 	ui().mw().SetLogWin(loggerwin);
 
 	//unitsync first load, FIXME move to a thread!
+	wxLogMessage("Refreshing Spring Version List...");
 	SlPaths::RefreshSpringVersionList();
 	if (LSL::usync().ReloadUnitSyncLib()) {
 		GlobalEventManager::Instance()->Send(GlobalEventManager::OnUnitsyncReloaded);
