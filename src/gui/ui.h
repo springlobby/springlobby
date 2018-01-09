@@ -116,7 +116,7 @@ public:
 
 	//! the welcome box, should be called in all code paths directly after MainWindow might be shown for the first time
 	void FirstRunWelcome();
-	void CheckForUpdates(bool show);
+	void CheckForUpdates(bool is_interactive);
 	void EnableDebug(bool enable);
 	void OnInvalidFingerprintReceived(const std::string& fingerprint, const std::string& expected_fingerprint);
 
