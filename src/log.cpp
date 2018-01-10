@@ -1,7 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+#include <mutex>
+#include <sys/time.h>
 #include <wx/log.h>
-#include <boost/thread/mutex.hpp>
 
 #include "log.h"
 #include "utils/conversion.h"
@@ -57,7 +58,7 @@ public:
 	// catch and process all log messages
 	void DoLogRecord(wxLogLevel loglevel, const wxString& msg, const wxLogRecordInfo& info) override
 	{
-		boost::mutex::scoped_lock lock(m_mutex);
+		std::lock_guard<std::mutex> lock(m_mutex);
 
 		if (gui && (loglevel == wxLOG_Error || loglevel == wxLOG_FatalError)) // show user only errors
 		{
@@ -112,7 +113,7 @@ private:
 	bool m_console;
 	//	bool m_gui;
 	FILE* m_logfile;
-	boost::mutex m_mutex;
+	std::mutex m_mutex;
 };
 
 
