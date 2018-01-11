@@ -46,8 +46,8 @@ private:
 	wxStaticText* m_desc_lbl;
 	wxTextCtrl* m_desc_text;
 	wxStaticText* m_mod_lbl;
-	wxChoice* m_mod_pic;
-	wxChoice* m_engine_pic;
+	wxChoice* m_engine_choice;
+	wxChoice* m_game_choice;
 	wxStaticText* m_pwd_lbl;
 	wxTextCtrl* m_pwd_text;
 	wxChoice* m_rank_direction;

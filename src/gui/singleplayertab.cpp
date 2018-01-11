@@ -128,15 +128,15 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	m_mod_lbl = new wxStaticText(this, -1, _("Game:"));
 	m_ctrl_sizer->Add(m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
-	m_mod_pick = new wxChoice(this, SP_MOD_PICK);
-	m_ctrl_sizer->Add(m_mod_pick, 1, wxALL, 5);
+	m_game_choice = new wxChoice(this, SP_MOD_PICK);
+	m_ctrl_sizer->Add(m_game_choice, 1, wxALL, 5);
 
 	m_mod_lbl = new wxStaticText(this, -1, _("Engine:"));
 	m_ctrl_sizer->Add(m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
-	m_engine_pick = new wxChoice(this, SP_ENGINE_PICK);
-	m_engine_pick->SetToolTip(_("Select the engine version to play."));
-	m_ctrl_sizer->Add(m_engine_pick, 1, wxALL, 5);
+	m_engine_choice = new wxChoice(this, SP_ENGINE_PICK);
+	m_engine_choice->SetToolTip(_("Select the engine version to play."));
+	m_ctrl_sizer->Add(m_engine_choice, 1, wxALL, 5);
 
 	//  m_ctrl_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
@@ -203,7 +203,7 @@ void SinglePlayerTab::ReloadMaplist()
 	} else {
 		m_map_pick->SetStringSelection(TowxString(m_battle.GetHostMapName()));
 		if (m_map_pick->GetStringSelection().IsEmpty()) {
-			SetMap(m_mod_pick->GetCount() - 1);
+			SetMap(m_game_choice->GetCount() - 1);
 		}
 	}
 }
@@ -211,15 +211,15 @@ void SinglePlayerTab::ReloadMaplist()
 
 void SinglePlayerTab::ReloadModlist()
 {
-	m_mod_pick->Clear();
-	m_mod_pick->Append(lslTowxArrayString(LSL::usync().GetGameList()));
-	m_mod_pick->Insert(_("-- Select one --"), m_mod_pick->GetCount());
+	m_game_choice->Clear();
+	m_game_choice->Append(lslTowxArrayString(LSL::usync().GetGameList()));
+	m_game_choice->Insert(_("-- Select one --"), m_game_choice->GetCount());
 	if (m_battle.GetHostGameName().empty()) {
-		m_mod_pick->SetSelection(m_mod_pick->GetCount() - 1);
+		m_game_choice->SetSelection(m_game_choice->GetCount() - 1);
 	} else {
-		m_mod_pick->SetStringSelection(TowxString(m_battle.GetHostGameName()));
-		if (m_mod_pick->GetStringSelection().empty()) {
-			SetMod(m_mod_pick->GetCount() - 1);
+		m_game_choice->SetStringSelection(TowxString(m_battle.GetHostGameName()));
+		if (m_game_choice->GetStringSelection().empty()) {
+			SetMod(m_game_choice->GetCount() - 1);
 		}
 	}
 }
@@ -229,22 +229,22 @@ void SinglePlayerTab::ReloadEngineList()
 {
 	SlPaths::ValidatePaths();
 
-	m_engine_pick->Clear();
+	m_engine_choice->Clear();
 
 	std::map<std::string, LSL::SpringBundle> versions = SlPaths::GetSpringVersionList();
 	const std::string last = SlPaths::GetCurrentUsedSpringIndex();
 	int i = 0;
 
 	for (auto pair : versions) {
-		m_engine_pick->Insert(TowxString(pair.first), i);
+		m_engine_choice->Insert(TowxString(pair.first), i);
 		if (last == pair.first) {
-			m_engine_pick->SetSelection(i);
+			m_engine_choice->SetSelection(i);
 		}
 		i++;
 	}
 
-	if (m_engine_pick->GetSelection() == wxNOT_FOUND) {
-		m_engine_pick->SetSelection(0);
+	if (m_engine_choice->GetSelection() == wxNOT_FOUND) {
+		m_engine_choice->SetSelection(0);
 	}
 
 	if (i == 0) {
@@ -299,7 +299,7 @@ void SinglePlayerTab::ResetUsername()
 void SinglePlayerTab::SetMod(unsigned int index)
 {
 	//ui().ReloadUnitSync();
-	if (index >= m_mod_pick->GetCount() - 1) {
+	if (index >= m_game_choice->GetCount() - 1) {
 		m_battle.SetHostGame("", "");
 	} else {
 		try {
@@ -312,13 +312,13 @@ void SinglePlayerTab::SetMod(unsigned int index)
 	m_minimap->UpdateMinimap();
 	m_battle.SendHostInfo(IBattle::HI_Restrictions); // Update restrictions in options.
 	m_battle.SendHostInfo(IBattle::HI_Game_Changed); // reload mod options
-	m_mod_pick->SetSelection(index);
+	m_game_choice->SetSelection(index);
 }
 
 
 bool SinglePlayerTab::ValidSetup() const
 {
-	if (m_mod_pick->GetSelection() == wxNOT_FOUND) {
+	if (m_game_choice->GetSelection() == wxNOT_FOUND) {
 		wxLogWarning(_T("no game selected"));
 		customMessageBox(SL_MAIN_ICON, _("You have to select a game first."), _("Game setup error"));
 		return false;
@@ -352,7 +352,7 @@ void SinglePlayerTab::OnMapSelect(wxCommandEvent& /*unused*/)
 
 void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 {
-	const int index = m_mod_pick->GetCurrentSelection();
+	const int index = m_game_choice->GetCurrentSelection();
 
 	if (index == wxNOT_FOUND) { return; }
 
@@ -364,13 +364,13 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 
 void SinglePlayerTab::OnEngineSelect(wxCommandEvent& /*event*/)
 {
-	const int index = m_engine_pick->GetSelection();
+	const int index = m_engine_choice->GetSelection();
 
 	if (index == wxNOT_FOUND) {
-		wxLogError("Invalid index selected: %d > %d", index, m_engine_pick->GetCount());
+		wxLogError("Invalid index selected: %d > %d", index, m_engine_choice->GetCount());
 		return;
 	}
-	const std::string selection = STD_STRING(m_engine_pick->GetString(index));
+	const std::string selection = STD_STRING(m_engine_choice->GetString(index));
 	wxLogMessage("Selected engine version %s", selection.c_str());
 
 	SlPaths::SetUsedSpringIndex(selection);
