@@ -98,22 +98,20 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 	m_mod_lbl->Wrap(-1);
 	topsizer->Add(m_mod_lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
-	wxArrayString m_engine_picChoices;
 	wxBoxSizer* mod_choice_button_sizer2 = new wxBoxSizer(wxHORIZONTAL);
-	m_engine_pic = new wxChoice(m_panel, CHOOSE_ENGINE, wxDefaultPosition, wxDefaultSize, m_engine_picChoices, 0);
-	m_engine_pic->SetToolTip(_("Select the engine version to play."));
-	mod_choice_button_sizer2->Add(m_engine_pic, 0, wxALL, 5);
+	m_engine_choice = new wxChoice(m_panel, CHOOSE_ENGINE);
+	m_engine_choice->SetToolTip(_("Select the engine version to play."));
+	mod_choice_button_sizer2->Add(m_engine_choice, 0, wxALL, 5);
 	topsizer->Add(mod_choice_button_sizer2, 0, wxEXPAND | wxALL, 1);
 
 	m_mod_lbl = new wxStaticText(m_panel, wxID_ANY, _("Game"), wxDefaultPosition, wxDefaultSize, 0);
 	m_mod_lbl->Wrap(-1);
 	topsizer->Add(m_mod_lbl, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
-	wxArrayString m_mod_picChoices;
 	wxBoxSizer* mod_choice_button_sizer = new wxBoxSizer(wxHORIZONTAL);
-	m_mod_pic = new wxChoice(m_panel, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_mod_picChoices, 0);
-	m_mod_pic->SetToolTip(_("Select the game to play."));
-	mod_choice_button_sizer->Add(m_mod_pic, 0, wxALL, 5);
+	m_game_choice = new wxChoice(m_panel, wxID_ANY);
+	m_game_choice->SetToolTip(_("Select the game to play."));
+	mod_choice_button_sizer->Add(m_game_choice, 0, wxALL, 5);
 
 	wxBitmap mp = charArr2wxBitmap(arrow_refresh_png, sizeof(arrow_refresh_png));
 	m_refresh_btn = new wxBitmapButton(m_panel, BTN_REFRESH, mp);
@@ -293,39 +291,39 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 
 void HostBattleDialog::ReloadModList()
 {
-	m_mod_pic->Clear();
+	m_game_choice->Clear();
 
 	wxArrayString modlist = lslTowxArrayString(LSL::usync().GetGameList());
 	wxString last = sett().GetLastHostMod();
 
 	size_t nummods = modlist.Count();
 	for (size_t i = 0; i < nummods; i++) {
-		m_mod_pic->Insert(modlist[i], i);
+		m_game_choice->Insert(modlist[i], i);
 		if (last == modlist[i])
-			m_mod_pic->SetSelection(i);
+			m_game_choice->SetSelection(i);
 	}
 
-	if (m_mod_pic->GetSelection() == wxNOT_FOUND) {
-		m_mod_pic->SetSelection(0);
+	if (m_game_choice->GetSelection() == wxNOT_FOUND) {
+		m_game_choice->SetSelection(0);
 	}
 }
 
 void HostBattleDialog::ReloadEngineList()
 {
-	m_engine_pic->Clear();
+	m_engine_choice->Clear();
 	std::map<std::string, LSL::SpringBundle> versions = SlPaths::GetSpringVersionList();
 	const std::string last = SlPaths::GetCurrentUsedSpringIndex();
 	int i = 0;
 	for (auto pair : versions) {
-		m_engine_pic->Insert(TowxString(pair.first), i);
+		m_engine_choice->Insert(TowxString(pair.first), i);
 		if (last == pair.first) {
-			m_engine_pic->SetSelection(i);
+			m_engine_choice->SetSelection(i);
 		}
 		i++;
 	}
 
-	if (m_engine_pic->GetSelection() == wxNOT_FOUND) {
-		m_engine_pic->SetSelection(0);
+	if (m_engine_choice->GetSelection() == wxNOT_FOUND) {
+		m_engine_choice->SetSelection(0);
 	}
 	//unitsync change needs a refresh of games as well
 	ReloadModList();
@@ -334,13 +332,13 @@ void HostBattleDialog::ReloadEngineList()
 
 void HostBattleDialog::OnOk(wxCommandEvent& /*unused*/)
 {
-	if (m_mod_pic->GetSelection() == wxNOT_FOUND) {
+	if (m_game_choice->GetSelection() == wxNOT_FOUND) {
 		wxLogWarning(_T( "no game selected" ));
 		customMessageBox(SL_MAIN_ICON, _("You have to select a game first."), _("No game selected."), wxOK);
 		return;
 	}
 
-	if (m_engine_pic->GetSelection() == wxNOT_FOUND) {
+	if (m_engine_choice->GetSelection() == wxNOT_FOUND) {
 		wxLogWarning(_T( "no engine selected" ));
 		customMessageBox(SL_MAIN_ICON, _("You have to select a engine version first."), _("No engine selected."), wxOK);
 		return;
@@ -349,7 +347,7 @@ void HostBattleDialog::OnOk(wxCommandEvent& /*unused*/)
 	if (m_desc_text->GetValue().IsEmpty())
 		m_desc_text->SetValue(_T( "(none)" ));
 	sett().SetLastHostDescription(m_desc_text->GetValue());
-	sett().SetLastHostMod(m_mod_pic->GetString(m_mod_pic->GetSelection()));
+	sett().SetLastHostMod(m_game_choice->GetString(m_game_choice->GetSelection()));
 	wxString password = m_pwd_text->GetValue();
 	password.Replace(_T(" "), wxEmptyString);
 	sett().SetLastHostPassword(password);
@@ -439,7 +437,7 @@ void HostBattleDialog::OnUseRelay(wxCommandEvent&)
 
 void HostBattleDialog::OnEngineSelect(wxCommandEvent& /*event*/)
 {
-	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_pic->GetString(m_engine_pic->GetSelection())));
+	SlPaths::SetUsedSpringIndex(STD_STRING(m_engine_choice->GetString(m_engine_choice->GetSelection())));
 	LSL::usync().ReloadUnitSyncLib();
 	ReloadEngineList();
 }

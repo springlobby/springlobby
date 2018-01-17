@@ -21,8 +21,8 @@
 #include "log.h"
 
 #include <list>
-#include <boost/thread/mutex.hpp>
 #include <memory>
+#include <mutex>
 #include <wx/log.h>
 #include <lslunitsync/unitsync.h>
 #include <lslutils/thread.h>
@@ -34,7 +34,7 @@ SLCONFIG("/Spring/PortableDownload", false, "true to download portable versions 
 SLCONFIG("/Spring/RapidMasterUrl", "http://repos.springrts.com/repos.gz", "master url for rapid downloads");
 
 static PrDownloader::DownloadProgress* m_progress = nullptr;
-static boost::mutex dlProgressMutex;
+static std::mutex dlProgressMutex;
 
 class DownloadItem : public LSL::WorkItem
 {
@@ -58,7 +58,7 @@ public:
 		wxLogInfo("Starting download of filename: %s, name: %s", m_filename.c_str(), m_name.c_str());
 
 		{
-			boost::mutex::scoped_lock lock(dlProgressMutex);
+			std::lock_guard<std::mutex> lock(dlProgressMutex);
 
 			if (m_progress == nullptr)
 				m_progress = new PrDownloader::DownloadProgress();
@@ -186,7 +186,7 @@ private:
 
 void PrDownloader::GetProgress(DownloadProgress& progress)
 {
-	boost::mutex::scoped_lock lock(dlProgressMutex);
+	std::lock_guard<std::mutex> lock(dlProgressMutex);
 
 	if (m_progress == nullptr) {
 		assert(false);
@@ -227,7 +227,7 @@ int clock_gettime(int dummy, struct timespec *ct)
 
 void updatelistener(int downloaded, int filesize)
 {
-	boost::mutex::scoped_lock lock(dlProgressMutex);
+	std::lock_guard<std::mutex> lock(dlProgressMutex);
 
 	if (m_progress == nullptr)
 		m_progress = new PrDownloader::DownloadProgress();
@@ -370,7 +370,7 @@ void PrDownloader::UpdateApplication(const std::string& updateurl)
 bool PrDownloader::DownloadUrl(const std::string& httpurl, std::string& res)
 {
 	{
-		boost::mutex::scoped_lock lock(dlProgressMutex);
+		std::lock_guard<std::mutex> lock(dlProgressMutex);
 		if (m_progress == nullptr)
 			m_progress = new PrDownloader::DownloadProgress();
 		m_progress->name = httpurl;

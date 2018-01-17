@@ -2,10 +2,15 @@
 
 #include "updatehelper.h"
 
+#include "httpfile.h"
 #include "utils/conversion.h"
 #include "utils/slconfig.h"
+#include "utils/version.h"
+#include <time.h>
 
+SLCONFIG("/General/LastUpdateCheck", 0L, "Last time springlobby checked for an update");
 SLCONFIG("/General/UpdateChannel", "release", "update channel to use (release or develop)");
+#define VERSION_CHECK_INTERVAL 1*60*60
 
 static bool isReleaseChannel()
 {
@@ -27,4 +32,29 @@ std::string GetLatestVersionUrl()
 		return std::string("http://version.springlobby.info/current.txt");
 	}
 	return std::string("http://springlobby.info/temp/builds/develop/current.txt");
+}
+
+static time_t GetTime()
+{
+	time_t now = time(nullptr);
+	if (static_cast<time_t>(-1) == now) {
+		std::string msg = "time() broke: ";
+		msg += strerror (errno);
+		throw std::runtime_error (msg.c_str());
+	}
+	return now;
+}
+
+std::string GetLatestVersion(bool use_cached)
+{
+	static std::string latest_version = getSpringlobbyVersion();
+	const time_t now = GetTime();
+	const time_t last_check_time = cfg().ReadLong(_T("/General/LastUpdateCheck"));
+
+	if (latest_version.empty() || !use_cached || now > (last_check_time + VERSION_CHECK_INTERVAL)) {
+		latest_version = GetHttpFile(GetLatestVersionUrl());
+		latest_version = STD_STRING(TowxString(latest_version).Trim().Trim(false));
+		cfg().Write(_T("/General/LastUpdateCheck"), (long)now);
+	}
+	return latest_version;
 }

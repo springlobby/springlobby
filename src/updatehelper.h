@@ -7,5 +7,9 @@
 
 std::string GetDownloadUrl(const std::string& version);
 std::string GetLatestVersionUrl();
+// returns current version; if use_cached and check timer has not expired
+//         empty string   ; if download failed
+//         latest version ; otherwise
+std::string GetLatestVersion(bool use_cached = true);
 
 #endif

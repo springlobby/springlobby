@@ -48,7 +48,6 @@
 #include "gui/agreementdialog.h"
 #include "updatehelper.h"
 #include "gui/customdialogs.h"
-#include "httpfile.h"
 #include "gui/textentrydialog.h"
 #include "log.h"
 #include "settings.h"
@@ -62,7 +61,6 @@
 
 
 SLCONFIG("/General/AutoUpdate", true, "Determines if springlobby should check for updates on startup");
-SLCONFIG("/General/LastUpdateCheck", 0L, "Last time springlobby checked for an update");
 SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_BATTLELIST, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere", true, "setting to spam the server messages in all channels");
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
@@ -274,11 +272,10 @@ ChatPanel* Ui::GetChannelChatPanel(const wxString& channel)
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EVENTS
 ////////////////////////////////////////////////////////////////////////////////////////////
-
 //! @brief Called when connected to a server
 //!
 //! @todo Display in servertab
-void Ui::OnConnected(IServer& server, const wxString& server_name, const wxString& version, bool /*supported*/)
+void Ui::OnConnected(IServer& server, const wxString& server_name, const wxString& /*version*/, bool /*supported*/)
 {
 	slLogDebugFunc("");
 
@@ -291,14 +288,6 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 	mw().GetBattleListTab().OnConnected();
 
 	ReopenServerTab();
-
-	if (version.empty()) {
-		wxLogWarning("default version supplied from server is empty!");
-		return;
-	}
-	std::map<std::string, LSL::SpringBundle> enginebundles = SlPaths::GetSpringVersionList();
-	if (!SlPaths::GetCompatibleVersion(STD_STRING(version)).empty())
-		return;
 }
 
 void Ui::OnLoggedIn()
@@ -747,12 +736,7 @@ void Ui::OnInit()
 		mw().ShowTab(cfg().ReadLong(_T( "/GUI/StartTab" )));
 		//don't ask for updates on first run, that's a bit much for a newbie
 		if (cfg().ReadBool(_T("/General/AutoUpdate"))) {
-			const time_t now = time(0);
-			const size_t lastcheck = cfg().ReadLong(_T("/General/LastUpdateCheck"));
-			if (now - lastcheck > 3600) {
-				CheckForUpdates(false);
-				cfg().Write(_T("/General/LastUpdateCheck"), (long)now);
-			}
+			CheckForUpdates(false);
 		}
 	}
 }
@@ -794,14 +778,17 @@ void Ui::OnLobbyDownloaded(wxCommandEvent& data)
 	mw().Close();
 }
 
-void Ui::CheckForUpdates(bool show)
+void Ui::CheckForUpdates(bool is_interactive)
 {
-	std::string latestversion = GetHttpFile(GetLatestVersionUrl());
-	latestversion = STD_STRING(TowxString(latestversion).Trim().Trim(false));
+	std::string latestversion = GetLatestVersion(is_interactive);
 
 	if (latestversion.empty()) {
-		if (show) {
-			customMessageBoxModal(SL_MAIN_ICON, _("There was an error checking for the latest version.\nPlease try again later.\nIf the problem persists, please use Help->Report Bug to report this bug."), _("Error"));
+		if (is_interactive) {
+			customMessageBoxModal(SL_MAIN_ICON, _(
+			  "There was an error checking for the latest version.\n"
+			  "Please try again later.\n"
+			  "If the problem persists, please use Help->Report Bug to report this bug."),
+			  _("Error"));
 		}
 		return;
 	}
@@ -810,7 +797,7 @@ void Ui::CheckForUpdates(bool show)
 
 	const wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestversion;
 	if (latestversion == myVersion) {
-		if (show) {
+		if (is_interactive) {
 			customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date"));
 		}
 		return;
