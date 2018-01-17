@@ -366,6 +366,7 @@ void MapGridCtrl::DrawMap(wxDC& dc, MapData& map, int x, int y)
 		case MapState_NoMinimap:
 			map.priority = 1;
 			UpdateAsyncFetches();
+			[[fallthrough]];
 		// fall through, both when starting fetch and when waiting
 		// for it to finish, we want to show temporary image
 		case MapState_GetMinimap:
