@@ -1,5 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+#include <functional>
 #include <wx/panel.h>
 #include <wx/dcclient.h>
 #include <wx/bitmap.h>
@@ -101,7 +102,7 @@ static inline int ReadInt24(const unsigned char* p)
 
 MapCtrl::MapCtrl(wxWindow* parent, int size, IBattle* battle, bool readonly, bool draw_start_types, bool singleplayer)
     : wxPanel(parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER | wxFULL_REPAINT_ON_RESIZE)
-    , m_async(boost::bind(&MapCtrl::OnGetMapImageAsyncCompleted, this, _1))
+    , m_async(std::bind(&MapCtrl::OnGetMapImageAsyncCompleted, this, std::placeholders::_1))
     , m_minimap(0)
     , m_metalmap(0)
     , m_heightmap(0)
