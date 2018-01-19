@@ -3,6 +3,9 @@ execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
 				OUTPUT_VARIABLE GCC_VERSION)
 
 # try to use compiler flag -std=c++11
+set(CXX_STD0X_FLAGS FALSE)
+include(CheckCXXCompilerFlag)
+
 MACRO(AddSTDFlag FLAG)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FLAG} ")
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${FLAG} ")
@@ -12,19 +15,19 @@ MACRO(AddSTDFlag FLAG)
 	set(CXX_STD0X_FLAGS "${FLAG}" )
 ENDMACRO(AddSTDFlag FLAG)
 
-# try to use compiler flag -std=c++11
-
-set(CXX_STD0X_FLAGS FALSE)
-set(i 0)
-foreach(f -std=gnu++11 -std=c++11 -std=c++0x)
-	MATH(EXPR i "${i}+1") #cmake has working unset :-|
-	CHECK_CXX_ACCEPTS_FLAG("${f}" ACCEPTSFLAG${i})
-	if(${ACCEPTSFLAG${i}} AND NOT CXX_STD0X_FLAGS)
-		message(STATUS "Using ${f}")
-		AddSTDFlag("${f}")
-		set(CXX_STD0X_FLAGS TRUE)
-	endif()
-endforeach()
+if ("${CMAKE_CXX_FLAGS}" MATCHES "-std=")
+	message(STATUS "-std= flag already set!")
+else()
+	foreach(f -std=c++17 -std=c++11 -std=gnu++11 -std=c++0x)
+	        MATH(EXPR i "${i}+1") #cmake has working unset :-|
+	        CHECK_CXX_ACCEPTS_FLAG("${f}" ACCEPTSFLAG${i})
+	        if(${ACCEPTSFLAG${i}} AND NOT CXX_STD0X_FLAGS)
+	                message(STATUS "Using ${f}")
+	                AddSTDFlag("${f}")
+	                set(CXX_STD0X_FLAGS TRUE)
+	        endif()
+	endforeach()
+endif()
 
 if(NOT CXX_STD0X_FLAGS)
 	message(FATAL_ERROR "you need a c++11 compatible compiler")
