@@ -301,7 +301,6 @@ set(springlobbySrc
 
 
 	downloader/lib/src/lsl/lsl/battle/tdfcontainer.cpp #FIXME
-	downloader/lib/src/lsl/lslutils/conversion.cpp #FIXME
 
 	gui/uiutils.cpp
 	gui/controls.cpp
