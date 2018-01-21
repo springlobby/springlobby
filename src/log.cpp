@@ -1,7 +1,10 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+#include <cstdio>
 #include <mutex>
 #include <sys/time.h>
+#include <vector>
+
 #include <wx/log.h>
 
 #include "log.h"
@@ -10,10 +13,6 @@
 #include "gui/mainwindow.h"
 #include "time.h"
 
-#if wxUSE_STD_IOSTREAM
-#include <iostream>
-#endif
-
 static bool gui = false;
 
 class myLogger : public wxLog
@@ -21,19 +20,23 @@ class myLogger : public wxLog
 public:
 	~myLogger()
 	{
-		if (m_logfile != NULL) {
-			fclose(m_logfile);
-		}
+		for (FILE* lf : m_log_files)
+			fclose(lf);
 	}
 	myLogger(bool console, const wxString& logfilepath, bool /*showgui*/)
 	    : wxLog()
-	    , m_console(console)
-	    ,
 	    //		m_gui(showgui),
-	    m_logfile(NULL)
 	{
+		if (console)
+			m_log_files.push_back (stdout);
 		if (!logfilepath.empty()) {
-			m_logfile = fopen(C_STRING(logfilepath), "wb+"); // even if it returns null, wxLogStderr will switch to stderr logging, so it's fine
+			// even if it returns null, wxLogStderr will switch to stderr logging, so it's fine
+			// TODO: it will?
+			FILE* log = fopen(C_STRING(logfilepath), "wb+");
+			if (nullptr == log)
+				wxLogError ("Unable to open log file %s for writing!", logfilepath);
+			else
+				m_log_files.push_back (log);
 		}
 	}
 
@@ -69,12 +72,9 @@ public:
 
 
 		const std::string std_msg = stdprintf("%s %s %s:%d %s\n", GetTimeString().c_str(), LogLevelToString(loglevel).c_str(), info.filename, info.line, (STD_STRING(wxString(msg))).c_str());
-		if (m_console) {
-			std::cout << std_msg;
-		}
-		if (m_logfile != NULL) {
-			fwrite(std_msg.c_str(), std_msg.length(), 1, m_logfile);
-			fflush(m_logfile);
+		for (FILE* lf : m_log_files) {
+			std::fwrite(std_msg.c_str(), std_msg.length(), 1, lf);
+			fflush(lf);
 		}
 		/*
 	  if (m_gui) {
@@ -104,16 +104,14 @@ public:
 
 	void Flush() override
 	{
-		if (m_logfile != NULL) {
-			fflush(m_logfile);
-		}
+		for (FILE* lf : m_log_files)
+			fflush(lf);
 	}
 
 private:
-	bool m_console;
-	//	bool m_gui;
-	FILE* m_logfile;
 	std::mutex m_mutex;
+	//	bool m_gui;
+	std::vector<FILE*> m_log_files;
 };
 
 
