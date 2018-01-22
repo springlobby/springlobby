@@ -1,6 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include <cstdio>
+#include <algorithm>
+#include <cstring>
 #include <mutex>
 #include <sys/time.h>
 #include <vector>
@@ -70,12 +72,39 @@ public:
 			ui().mw().GetEventHandler()->QueueEvent(event);
 		}
 
+		// only print the last src_fn_size chars of file name
+		const int src_fn_size = 15;
+		const size_t src_fn_offset = std::max (static_cast<size_t>(0),
+		                                       std::strlen(info.filename) - src_fn_size);
+		const char* src_fn = info.filename + src_fn_offset;
 
-		const std::string std_msg = stdprintf("%s %s %s:%d %s\n", GetTimeString().c_str(), LogLevelToString(loglevel).c_str(), info.filename, info.line, (STD_STRING(wxString(msg))).c_str());
-		for (FILE* lf : m_log_files) {
-			std::fwrite(std_msg.c_str(), std_msg.length(), 1, lf);
-			fflush(lf);
-		}
+		const std::string log_prefix = stdprintf("%s %-7s %15.15s:%-4d",
+		  GetTimeString().c_str(), LogLevelToString(loglevel).c_str(),
+		  src_fn, info.line);
+
+		size_t sol = 0, eol; // Start-Of-Line, End-Of-Line
+		// eol should be one past the end character for substring length = eol - sol to work
+		char delim = ' ';
+		do { // at least one loop.
+			eol = msg.find("\n", sol);
+			if (wxString::npos == eol) {
+				eol = msg.Len();
+				if (sol >= eol) // real end condition
+					break;
+			}
+			wxString line_msg = msg.Mid(sol, eol-sol);
+
+			for (FILE* lf : m_log_files) {
+				fwrite(log_prefix.c_str(), log_prefix.length(), 1, lf);
+				fwrite(&delim, 1, 1, lf);
+				fwrite(line_msg.c_str(), line_msg.length(), 1, lf);
+				fwrite("\n", 1, 1, lf);
+			}
+			sol = ++eol;
+			delim = '+'; // not first line any more
+		} while (eol < msg.Len());
+
+		Flush();
 		/*
 	  if (m_gui) {
 		  ChatPanel* p = ui().mw().GetChatTab().AddChatPanel();
