@@ -1,7 +1,7 @@
 PROJECT(springlobby)
 
 #set minimum cmake version
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.1)
 
 SET(CMAKE_COLOR_MAKEFILE ON)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH} )
@@ -19,21 +19,13 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	add_definitions("-D__STRICT_ANSI__")
 endif()
 
-# check for minimal gcc version
-set(MIN_GCC_VER "4.7")
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "${MIN_GCC_VER}")
-		message(FATAL_ERROR "gcc >=${MIN_GCC_VER} required")
-	else()
-		message(STATUS "gcc ${CMAKE_CXX_COMPILER_VERSION} detected")
-	endif()
-endif()
-
 
 #----------------------------------------------------------------------------------------------------
 # General Settings
 #----------------------------------------------------------------------------------------------------
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
+
+INCLUDE(compat_flags)
 
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
