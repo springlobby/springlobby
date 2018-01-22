@@ -19,16 +19,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	add_definitions("-D__STRICT_ANSI__")
 endif()
 
-# check for minimal gcc version
-set(MIN_GCC_VER "4.7")
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "${MIN_GCC_VER}")
-		message(FATAL_ERROR "gcc >=${MIN_GCC_VER} required")
-	else()
-		message(STATUS "gcc ${CMAKE_CXX_COMPILER_VERSION} detected")
-	endif()
-endif()
-
 
 #----------------------------------------------------------------------------------------------------
 # General Settings
