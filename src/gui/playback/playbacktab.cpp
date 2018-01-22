@@ -344,6 +344,12 @@ void PlaybackTab::Deselected()
 
 void PlaybackTab::ReloadList()
 {
+	if (!LSL::usync().IsLoaded()) {
+//		customMessageBoxModal(SL_MAIN_ICON, _("Add an engine first (") + _("Edit")
+//		  + _T("->") + _("Preferences") + _(" or join a multiplayer room.)"),
+//		  _("UnitSync library required"));
+		return;
+	}
 	Deselect();
 	m_replay_dataview->Clear();
 	if (m_replay_loader == nullptr) {
