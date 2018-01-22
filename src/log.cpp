@@ -82,10 +82,10 @@ public:
 		  GetTimeString().c_str(), LogLevelToString(loglevel).c_str(),
 		  src_fn, info.line);
 
-		size_t sol = 0, eol; // Start-Of-Line, End-Of-Line
+		char delim = ' '; // indicates that this is a new message, continuations use '+'
+		// sol=Start-Of-Line, eol=End-Of-Line. We have at least one execution of the below loop.
 		// eol should be one past the end character for substring length = eol - sol to work
-		char delim = ' ';
-		do { // at least one loop.
+		for (size_t sol = 0, eol = 0; eol < msg.Len(); sol = ++eol) {
 			eol = msg.find("\n", sol);
 			if (wxString::npos == eol) {
 				eol = msg.Len();
@@ -100,9 +100,8 @@ public:
 				fwrite(line_msg.c_str(), line_msg.length(), 1, lf);
 				fwrite("\n", 1, 1, lf);
 			}
-			sol = ++eol;
 			delim = '+'; // not first line any more
-		} while (eol < msg.Len());
+		}
 
 		Flush();
 		/*
