@@ -1,5 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+#include <functional>
 #include <wx/dcbuffer.h>
 #include <wx/geometry.h>
 #include <wx/settings.h>
@@ -46,8 +47,8 @@ const wxEventType MapGridCtrl::LoadingCompletedEvt = wxNewEventType();
 
 MapGridCtrl::MapGridCtrl(wxWindow* parent, wxSize size, wxWindowID id)
     : wxPanel(parent, id, wxDefaultPosition, size, wxSIMPLE_BORDER | wxFULL_REPAINT_ON_RESIZE)
-    , m_async_image(boost::bind(&MapGridCtrl::OnGetMapImageAsyncCompleted, this, _1))
-    , m_async_ex(boost::bind(&MapGridCtrl::OnGetMapExAsyncCompleted, this, _1))
+    , m_async_image(std::bind(&MapGridCtrl::OnGetMapImageAsyncCompleted, this, std::placeholders::_1))
+    , m_async_ex(std::bind(&MapGridCtrl::OnGetMapExAsyncCompleted, this, std::placeholders::_1))
     , m_async_ops_count(0)
     , m_selection_follows_mouse(sett().GetMapSelectorFollowsMouse())
     , m_size(0, 0)
