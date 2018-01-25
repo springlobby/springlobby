@@ -345,9 +345,7 @@ void PlaybackTab::Deselected()
 void PlaybackTab::ReloadList()
 {
 	if (!LSL::usync().IsLoaded()) {
-//		customMessageBoxModal(SL_MAIN_ICON, _("Add an engine first (") + _("Edit")
-//		  + _T("->") + _("Preferences") + _(" or join a multiplayer room.)"),
-//		  _("UnitSync library required"));
+		wxLogWarning(_("Unitsync library required"));
 		return;
 	}
 	Deselect();
