@@ -6,14 +6,14 @@
 #include <mutex>
 #include <sys/time.h>
 #include <vector>
+#include <time.h>
 
 #include <wx/log.h>
 
 #include "log.h"
-#include "utils/conversion.h"
 #include "gui/ui.h"
 #include "gui/mainwindow.h"
-#include "time.h"
+#include "utils/conversion.h"
 
 static bool gui = false;
 
@@ -78,7 +78,7 @@ public:
 		const char* src_fn = info.filename + src_fn_offset;
 
 		const std::string log_prefix = stdprintf("%s %-7s %15.15s:%-4d",
-		  GetTimeString().c_str(), LogLevelToString(loglevel).c_str(),
+		  GetTimeString().c_str(), LogLevelToString(loglevel),
 		  src_fn, info.line);
 
 		char delim = ' '; // indicates that this is a new message, continuations use '+'
@@ -112,11 +112,11 @@ public:
 	  }*/
 	}
 
-	std::string LogLevelToString(wxLogLevel level)
+	const char* LogLevelToString(wxLogLevel level)
 	{
 		assert(level < 8); // just in case
 
-		const char* levelName[] = {
+		static const char* levelNames[] = {
 		    "Fatal",
 		    "Error",
 		    "Warning",
@@ -126,7 +126,7 @@ public:
 		    "Debug",
 		    "Trace"};
 
-		return std::string(levelName[(int)level]);
+		return levelNames[static_cast<int>(level)];
 	}
 
 	void Flush() override
@@ -136,9 +136,9 @@ public:
 	}
 
 private:
-	std::mutex m_mutex;
 	//	bool m_gui;
 	std::vector<FILE*> m_log_files;
+	std::mutex m_mutex;
 };
 
 
@@ -205,52 +205,33 @@ void Logger::ShowDebugWindow(bool show)
 
 extern void lsllogerror(const char* format, ...)
 {
-	char buf[1024];
 	va_list args;
 	va_start(args, format);
-	const int len = vsnprintf(buf, 1024, format, args);
+	// Warning instead of Error as it is not yet known whether lsl FIXMEs have been fixed.
+	wxVLogWarning(format, args);
 	va_end(args);
-	if (len > 0) {
-		const std::string msg(buf, len);
-		wxLogWarning("Error: FIXME: %s", msg.c_str()); //FIXME: lsl throws a lot of errors
-	}
 }
 
 extern void lsllogdebug(const char* format, ...)
 {
-	char buf[1024];
 	va_list args;
 	va_start(args, format);
-	const int len = vsnprintf(buf, 1024, format, args);
+	wxVLogDebug(format, args);
 	va_end(args);
-	if (len > 0) {
-		const std::string msg(buf, len);
-		wxLogDebug("%s", msg.c_str());
-	}
 }
 
 extern void lsllogwarning(const char* format, ...)
 {
-	char buf[1024];
 	va_list args;
 	va_start(args, format);
-	const int len = vsnprintf(buf, 1024, format, args);
+	wxVLogWarning(format, args);
 	va_end(args);
-	if (len > 0) {
-		const std::string msg(buf, len);
-		wxLogWarning("%s", msg.c_str());
-	}
 }
 
 extern void lslloginfo(const char* format, ...)
 {
-	char buf[1024];
 	va_list args;
 	va_start(args, format);
-	const int len = vsnprintf(buf, 1024, format, args);
+	wxVLogInfo(format, args);
 	va_end(args);
-	if (len > 0) {
-		const std::string msg(buf, len);
-		wxLogInfo("%s", msg.c_str());
-	}
 }
