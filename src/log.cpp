@@ -74,8 +74,7 @@ public:
 
 		// only print the last src_fn_size chars of file name
 		const int src_fn_size = 15;
-		const size_t src_fn_offset = std::max (static_cast<size_t>(0),
-		                                       std::strlen(info.filename) - src_fn_size);
+		const int src_fn_offset = std::max(0, static_cast<int>(std::strlen(info.filename)) - src_fn_size);
 		const char* src_fn = info.filename + src_fn_offset;
 
 		const std::string log_prefix = stdprintf("%s %-7s %15.15s:%-4d",
