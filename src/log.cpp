@@ -235,3 +235,20 @@ extern void lslloginfo(const char* format, ...)
 	wxVLogInfo(format, args);
 	va_end(args);
 }
+
+extern void prdlograw(const char* /*format*/, va_list /*args*/)
+{
+	// used for e.g. progress bars, we do not want that (yet)
+}
+extern void prdlogerror(const char* format, va_list args)
+{
+	wxVLogError (format, args);
+}
+extern void prdloginfo(const char* format, va_list args)
+{
+	wxVLogInfo (format, args);
+}
+extern void prdlogdebug(const char* format, va_list args)
+{
+	wxVLogDebug (format, args);
+}
