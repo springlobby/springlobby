@@ -13,9 +13,10 @@ slAboutBox::slAboutBox()
 {
 	info = new wxAboutDialogInfo();
 
-	info->SetName(TowxString(getSpringlobbyName()));
-	info->SetVersion(TowxString(getSpringlobbyVersion()));
-	info->SetDescription(TowxString(getSpringlobbyName()) + _(" is a cross-platform lobby client for the Spring RTS engine"));
+	info->SetName(TowxString(GetSpringlobbyName()));
+	info->SetVersion(TowxString(GetSpringlobbyVersion()));
+	info->SetDescription(TowxString(GetSpringlobbyName())
+	  + _(" is a cross-platform lobby client for the Spring RTS engine"));
 	//info.SetCopyright(wxEmptyString;
 	info->SetWebSite(_T("http://springlobby.info"));
 	info->SetLicence(_T("GPL v2 or later"));

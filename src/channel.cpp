@@ -222,7 +222,7 @@ bool Channel::ExecuteSayCommand(const std::string& in)
 		return true;
 	} else if (param == _T("/sayver")) {
 		//!this instance is not replaced with GetAppname for sake of help/debug online
-		DoAction("is using SpringLobby v" + getSpringlobbyVersion());
+		DoAction("is using " + GetSpringlobbyAgent());
 		return true;
 	} else if (subcmd == _T("/userban")) {
 		m_banned_users.insert(params);

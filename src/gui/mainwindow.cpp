@@ -117,7 +117,7 @@ EVT_COMMAND(mySHOW_ERROR_MESSAGE, wxEVT_SHOW, MainWindow::OnShowErrorMessage)
 END_EVENT_TABLE()
 
 MainWindow::MainWindow()
-    : wxFrame(NULL, -1, TowxString(getSpringlobbyName()))
+    : wxFrame(NULL, -1, TowxString(GetSpringlobbyName()))
     , WindowAttributesPickle(_T("MAINWINDOW"), this, wxSize(720, 576))
     , m_opts_dialog(NULL)
     , m_autojoin_dialog(NULL)
@@ -639,10 +639,10 @@ void MainWindow::OnMenuAutojoinChannels(wxCommandEvent& /*unused*/)
 void MainWindow::OnMenuSelectLocale(wxCommandEvent& /*unused*/)
 {
 	if (wxGetApp().SelectLanguage()) {
-		customMessageBoxModal(SL_MAIN_ICON,
-				      _("You need to restart SpringLobby for the language change to take effect."),
-				      _("Restart required"),
-				      wxICON_EXCLAMATION | wxOK);
+		customMessageBoxModal(SL_MAIN_ICON, wxString::Format(
+		  _("You need to restart %s for the language change to take effect."),
+		  GetSpringlobbyName()),
+		  _("Restart required"), wxICON_EXCLAMATION | wxOK);
 	}
 }
 
@@ -674,7 +674,8 @@ void MainWindow::OnMenuResetLayout(wxCommandEvent& /*event*/)
 {
 	cfg().Write(_T( "/ResetLayout" ), true);
 	sett().SaveSettings();
-	customMessageBoxModal(SL_MAIN_ICON, _("Please restart SpringLobby now"), wxEmptyString);
+	customMessageBoxModal(SL_MAIN_ICON, wxString::Format(
+	  _("Please restart %s now"), GetSpringlobbyName()), wxEmptyString);
 }
 
 const wxArrayString& MainWindow::GetTabNames()

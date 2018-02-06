@@ -5,8 +5,8 @@
 
 #include <string>
 
-const std::string getSpringlobbyVersion();
-const std::string getSpringlobbyAgent();
-const std::string getSpringlobbyName(bool lowercase = false);
+const std::string GetSpringlobbyVersion();
+const std::string GetSpringlobbyAgent();
+const std::string GetSpringlobbyName(bool lowercase = false);
 
 #endif

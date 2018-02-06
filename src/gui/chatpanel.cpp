@@ -948,7 +948,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 
 		if (line == _T( "/ver" )) {
 			//!this instance is not replaced with GetAppname for sake of help/debug online
-			OutputLine(_("You have SpringLobby v") + TowxString(getSpringlobbyVersion()), sett().GetChatColorNormal());
+			OutputLine(wxString::Format(_("You have %s."), GetSpringlobbyAgent()), sett().GetChatColorNormal());
 			return true;
 		}
 

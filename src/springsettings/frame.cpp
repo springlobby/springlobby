@@ -276,7 +276,7 @@ void settings_frame::OnMenuChoice(wxCommandEvent& event)
 				detailTab = 0;
 				audioTab = 0;
 				//				hotkeyTab = 0;
-				SetTitle(TowxString(getSpringlobbyName()) + _("(simple mode)"));
+				SetTitle(TowxString(GetSpringlobbyName()) + _("(simple mode)"));
 				if (!sett().getDisableWarning()) {
 					customMessageBox(SS_MAIN_ICON, expertModeWarning, _("Hint"), wxOK);
 				}
@@ -325,7 +325,7 @@ void settings_frame::switchToExpertMode()
 
 	notebook->DeletePage(0);
 	simpleTab = 0;
-	SetTitle(TowxString(getSpringlobbyName()) + _("(expert mode)"));
+	SetTitle(TowxString(GetSpringlobbyName()) + _("(expert mode)"));
 	/*uiTab->updateControls(UPDATE_ALL);
 	detailTab->updateControls(UPDATE_ALL);
 	qualityTab->updateControls(UPDATE_ALL);

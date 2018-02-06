@@ -284,11 +284,17 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 
 			if (!bundle.IsValid() || version.IsEmpty()) {
 				failed = true;
-				failMessage = wxString::Format(_T("%s did not find engine and unitsync executables at %s\n\nPlease ensure that both exist and that you have appropriate access privileges."), getSpringlobbyName().c_str(), bundle.path.c_str());
+				failMessage = wxString::Format(_T(
+				  "%s did not find engine and unitsync executables at %s\n\n"
+				  "Please ensure that both exist and that you have appropriate access privileges."
+				  ), GetSpringlobbyName().c_str(), bundle.path.c_str());
 			}
 		} catch (const LSL::Exceptions::unitsync& e) {
 			failed = true;
-			failMessage = wxString::Format(_T("%s could not obtain the version string from the shared library file %s\n\nPlease provide a valid unitsync file."), getSpringlobbyName().c_str(), bundle.unitsync.c_str());
+			failMessage = wxString::Format(_T(
+			  "%s could not obtain the version string from the shared library file %s\n\n"
+			  "Please provide a valid unitsync file."),
+			  GetSpringlobbyName().c_str(), bundle.unitsync.c_str());
 		}
 		if (failed) {
 			customMessageBox(SL_MAIN_ICON, failMessage, _("Configuration error"), wxOK);
@@ -388,9 +394,10 @@ void SpringOptionsTab::SwitchUnitsync(const std::string& newIndex, const std::st
 	SlPaths::SetUsedSpringIndex(newIndex);
 	if (!LSL::usync().LoadUnitSyncLib(SlPaths::GetUnitSync(newIndex))) { //FIXME: make LoadUnitSyncLib() async (partly done)
 		wxLogWarning(_T( "Cannot load UnitSync" ));
-		customMessageBox(SL_MAIN_ICON,
-				 wxString::Format(_T("%s is unable to load your UnitSync library into the process.\n\nYou might want to take another look at your unitsync setting."), getSpringlobbyName().c_str()),
-				 _("Spring error"), wxOK);
+		customMessageBox(SL_MAIN_ICON, wxString::Format(_T(
+		  "%s is unable to load your UnitSync library into the process.\n\n"
+		  "You might want to take another look at your unitsync setting."),
+		  GetSpringlobbyName().c_str()), _("Spring error"), wxOK);
 		SlPaths::SetUsedSpringIndex(oldIndex);
 		DoRestore();
 	}
