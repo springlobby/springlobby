@@ -267,6 +267,7 @@ PrDownloader::~PrDownloader()
 	GlobalEventManager::Instance()->UnSubscribeAll(this);
 
 	if (!!m_dl_thread) {
+		m_dl_thread->Wait();
 		delete m_dl_thread;
 		m_dl_thread = nullptr;
 	}
