@@ -979,19 +979,23 @@ void TASServer::ParseJson(const std::string& jsonstr)
 		wxLogWarning("Invalid json, object excepted: %s", jsonstr.c_str());
 		return;
 	}
-
-	if (!js["SAID"].isObject()) {
-		wxLogWarning("Invalid json, object excepted: %s", jsonstr.c_str());
+	if (js["FAILED"].isObject()) {
+		wxLogWarning("Command failed: %s", jsonstr.c_str());
+		m_se->OnServerMessage(js["FAILED"]["msg"].asString());
 		return;
 	}
 
-	Json::Value said = js["SAID"];
-	cfg().Write(wxString::Format("/Channels/%s/lastid", said["chanName"].asString()), said["id"].asInt());
-	m_se->OnChannelSaid(said["chanName"].asString(), said["userName"].asString(), said["msg"].asString());
+	if (js["SAID"].isObject()) {
+		Json::Value said = js["SAID"];
+		cfg().Write(wxString::Format("/Channels/%s/lastid", said["chanName"].asString()), said["id"].asInt());
+		m_se->OnChannelSaid(said["chanName"].asString(), said["userName"].asString(), said["msg"].asString());
+		//TODO: store last id for channel
+		//said["time"].asInt64();
+		//said["id"].asUInt64();
+		return;
+	}
 
-	//TODO: store last id for channel
-	//said["time"].asInt64();
-	//said["id"].asUInt64();
+	wxLogWarning("Invalid json, object excepted: %s", jsonstr.c_str());
 }
 
 
