@@ -976,11 +976,10 @@ void TASServer::ParseJson(const std::string& jsonstr)
 	}
 
 	if (!js.isObject()) {
-		wxLogWarning("Invalid json, object excepted: %s", jsonstr.c_str());
+		m_se->OnServerMessage(stdprintf("Invalid json, object excepted: %s", jsonstr.c_str()));
 		return;
 	}
 	if (js["FAILED"].isObject()) {
-		wxLogWarning("Command failed: %s", jsonstr.c_str());
 		m_se->OnServerMessage(js["FAILED"]["msg"].asString());
 		return;
 	}
@@ -995,7 +994,7 @@ void TASServer::ParseJson(const std::string& jsonstr)
 		return;
 	}
 
-	wxLogWarning("Invalid json, object excepted: %s", jsonstr.c_str());
+	wxLogWarning("Unknown command received: %s", jsonstr.c_str());
 }
 
 
