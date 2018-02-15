@@ -203,38 +203,43 @@ void Logger::ShowDebugWindow(bool show)
 */
 }
 
-extern void lsllogerror(const char* format, ...)
+extern void lslLogError(const char* fileName, int line, const char* funcName,
+                        const char* format, ...)
 {
 	va_list args;
 	va_start(args, format);
 	// Warning instead of Error as it is not yet known whether lsl FIXMEs have been fixed.
-	wxVLogWarning(format, args);
+	wxLogger(wxLOG_Error, fileName, line, funcName, "lsl").LogV(format, args);
 	va_end(args);
 }
 
-extern void lsllogdebug(const char* format, ...)
+extern void lslLogWarning(const char* fileName, int line, const char* funcName,
+                          const char* format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	wxVLogDebug(format, args);
+	wxLogger(wxLOG_Warning, fileName, line, funcName, "lsl").LogV(format, args);
 	va_end(args);
 }
 
-extern void lsllogwarning(const char* format, ...)
+extern void lslLogInfo(const char* fileName, int line, const char* funcName,
+                       const char* format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	wxVLogWarning(format, args);
+	wxLogger(wxLOG_Info, fileName, line, funcName, "lsl").LogV(format, args);
 	va_end(args);
 }
 
-extern void lslloginfo(const char* format, ...)
+extern void lslLogDebug(const char* fileName, int line, const char* funcName,
+                        const char* format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	wxVLogInfo(format, args);
+	wxLogger(wxLOG_Debug, fileName, line, funcName, "lsl").LogV(format, args);
 	va_end(args);
 }
+
 
 extern void prdLogRaw(const char/*fileName*/, int /*line*/, const char* /*funcName*/,
                       const char* /*format*/, va_list /*args*/)
