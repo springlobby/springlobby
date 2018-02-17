@@ -15,20 +15,21 @@ class SpringLobbyApp : public wxApp
 public:
 	SpringLobbyApp();
 
-	virtual bool OnInit();
-	virtual int OnExit();
+	bool OnInit() override;
+	int OnExit() override;
 
-	virtual void OnFatalException();
+	void OnFatalException() override;
 
 	// System Events
 	bool SelectLanguage();
 
-	virtual void OnInitCmdLine(wxCmdLineParser& parser);
-	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+	void OnInitCmdLine(wxCmdLineParser& parser) override;
+	bool OnCmdLineParsed(wxCmdLineParser& parser) override;
 
-	void OnQuit(wxCommandEvent& data);
 
 private:
+	void OnQuit(wxCommandEvent& data);
+
 	bool quit_called;
 
 	wxTranslationHelper* m_translationhelper;
