@@ -162,7 +162,11 @@ static wxString escapeStr(const wxString& str)
 	return _T("\"") + str + _T("\"");
 }
 
+#ifdef __WXMSW__
 int RunProcess(const wxString& cmd, const wxArrayString& params, const bool async, const bool root)
+#else
+int RunProcess(const wxString& cmd, const wxArrayString& params, const bool /*async*/, const bool /*root*/)
+#endif
 {
 	wxString paramstring;
 	for (wxString param : params) {
