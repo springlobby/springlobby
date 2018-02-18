@@ -25,7 +25,7 @@ const std::string GetSpringlobbyAgent()
 	std::string agent = GetSpringlobbyName() + " ";
 	agent += GetSpringlobbyVersion();
 	agent += " (";
-#if WIN32
+#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
 	agent += "win";
 #elif __APPLE__
 	agent += "osx";
