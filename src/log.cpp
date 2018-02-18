@@ -14,6 +14,7 @@
 #include "gui/ui.h"
 #include "gui/mainwindow.h"
 #include "utils/conversion.h"
+#include "downloader/lib/src/Logger.h"
 
 static bool gui = false;
 
@@ -203,61 +204,36 @@ void Logger::ShowDebugWindow(bool show)
 */
 }
 
-extern void lslLogError(const char* fileName, int line, const char* funcName,
-                        const char* format, ...)
+extern void LOG_PROGRESS(long /*done*/, long /*total*/, bool /*forceOutput*/)
+{
+}
+
+void LOG_DISABLE(bool /*disableLogging*/)
+{
+}
+
+extern void L_LOG(const char* fileName, int line, const char* funcName,
+           L_LEVEL level, const char* format...)
 {
 	va_list args;
 	va_start(args, format);
-	// Warning instead of Error as it is not yet known whether lsl FIXMEs have been fixed.
-	wxLogger(wxLOG_Error, fileName, line, funcName, "lsl").LogV(format, args);
+	switch (level) {
+		case L_RAW:
+			wxLogger(wxLOG_Debug, fileName, line, funcName, "prd").LogV(format, args);
+			break;
+		default:
+		case L_ERROR:
+			wxLogger(wxLOG_Error, fileName, line, funcName, "prd").LogV(format, args);
+			break;
+		case L_WARN:
+			wxLogger(wxLOG_Warning, fileName, line, funcName, "prd").LogV(format, args);
+			break;
+		case L_INFO:
+			wxLogger(wxLOG_Info, fileName, line, funcName, "prd").LogV(format, args);
+			break;
+		case L_DEBUG:
+			wxLogger(wxLOG_Debug, fileName, line, funcName, "prd").LogV(format, args);
+			break;
+	}
 	va_end(args);
-}
-
-extern void lslLogWarning(const char* fileName, int line, const char* funcName,
-                          const char* format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	wxLogger(wxLOG_Warning, fileName, line, funcName, "lsl").LogV(format, args);
-	va_end(args);
-}
-
-extern void lslLogInfo(const char* fileName, int line, const char* funcName,
-                       const char* format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	wxLogger(wxLOG_Info, fileName, line, funcName, "lsl").LogV(format, args);
-	va_end(args);
-}
-
-extern void lslLogDebug(const char* fileName, int line, const char* funcName,
-                        const char* format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	wxLogger(wxLOG_Debug, fileName, line, funcName, "lsl").LogV(format, args);
-	va_end(args);
-}
-
-
-extern void prdLogRaw(const char/*fileName*/, int /*line*/, const char* /*funcName*/,
-                      const char* /*format*/, va_list /*args*/)
-{
-	// used for e.g. progress bars, we do not want that (yet)
-}
-extern void prdLogError(const char* fileName, int line, const char* funcName,
-                        const char* format, va_list args)
-{
-	wxLogger(wxLOG_Error, fileName, line, funcName, "prd").LogV(format, args);
-}
-extern void prdLogInfo(const char* fileName, int line, const char* funcName,
-                       const char* format, va_list args)
-{
-	wxLogger(wxLOG_Info, fileName, line, funcName, "prd").LogV(format, args);
-}
-extern void prdLogDebug(const char* fileName, int line, const char* funcName,
-                        const char* format, va_list args)
-{
-	wxLogger(wxLOG_Debug, fileName, line, funcName, "prd").LogV(format, args);
 }
