@@ -52,6 +52,7 @@ Set(test_src
 	"${springlobby_SOURCE_DIR}/src/utils/slconfig.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/slpaths.cpp"
 	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
+	"${springlobby_SOURCE_DIR}/src/downloader/lib/src/Logger.cpp"
 )
 
 set(test_libs
@@ -113,6 +114,7 @@ Set(test_src
 	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
 	"${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl/lslutils/misc.cpp"
 	"${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl/lslutils/conversion.cpp"
+	"${springlobby_SOURCE_DIR}/src/downloader/lib/src/Logger.cpp"
 )
 
 set(test_libs
