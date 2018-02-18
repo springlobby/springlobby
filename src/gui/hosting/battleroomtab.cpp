@@ -571,6 +571,8 @@ void BattleRoomTab::UpdateUser(User& user, bool userJustAdded)
 	m_ready_chk->SetValue(bs.ready);
 	// Enable or disable widgets' sensitivity as appropriate.
 	if (bs.spectator) {
+		m_start_btn->SetLabel(_("Spectate"));
+		m_start_btn->SetToolTip(_("Watch a running match (you are a spectator)"));
 		m_side_sel->Disable();
 		m_ally_sel->Disable();
 		m_team_sel->Disable();
@@ -586,6 +588,8 @@ void BattleRoomTab::UpdateUser(User& user, bool userJustAdded)
 			OnAutolaunch();
 		}
 	} else { // we are player
+		m_start_btn->SetLabel(_("Start"));
+		m_start_btn->SetToolTip(_("Start the battle"));
 		m_side_sel->Enable();
 		m_ally_sel->Enable();
 		m_team_sel->Enable();

@@ -7,23 +7,23 @@
 #include SPRINGLOBBY_CONFIGH
 #include "version.h"
 
-const std::string getSpringlobbyName(bool lowercase)
+const std::string GetSpringlobbyName(bool lowercase)
 {
 	if (lowercase)
 		return "springlobby";
 	return "SpringLobby";
 }
 
-const std::string getSpringlobbyVersion()
+const std::string GetSpringlobbyVersion()
 {
 	const static std::string version(VERSION);
 	return version;
 }
 
-const std::string getSpringlobbyAgent()
+const std::string GetSpringlobbyAgent()
 {
-	std::string agent = getSpringlobbyName() + " ";
-	agent += getSpringlobbyVersion();
+	std::string agent = GetSpringlobbyName() + " ";
+	agent += GetSpringlobbyVersion();
 	agent += " (";
 #if WIN32
 	agent += "win";

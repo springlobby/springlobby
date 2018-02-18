@@ -79,7 +79,7 @@ SpringLobbyApp::SpringLobbyApp()
     , m_log_console(true)
     , m_log_window_show(false)
     , m_crash_handle_disable(false)
-    , m_appname(_T("SpringLobby"))
+    , m_appname(GetSpringlobbyName())
 {
 #if wxUSE_UNIX
 	/*
@@ -143,7 +143,7 @@ bool SpringLobbyApp::OnInit()
 	//initialize all loggers, we'll use the returned pointer to set correct parent window later
 	wxLogWindow* loggerwin = Logger::InitializeLoggingTargets(0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity);
 
-	wxLogMessage(_T("SpringLobby %s started"), TowxString(getSpringlobbyVersion()).c_str());
+	wxLogMessage(_T("%s started"), TowxString(GetSpringlobbyAgent()).c_str());
 
 	//this needs to called _before_ mainwindow instance is created
 	wxInitAllImageHandlers();
@@ -301,7 +301,7 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 			return false; // not a syntax error, but program should stop if user asked for command line usage
 
 		if (parser.Found(_T("version"))) {
-			wxLogMessage(TowxString(getSpringlobbyVersion()).c_str());
+			wxLogMessage(TowxString(GetSpringlobbyVersion()).c_str());
 			return false;
 		}
 		return true;

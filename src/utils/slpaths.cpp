@@ -56,12 +56,12 @@ SLCONFIG("/Spring/DownloadDir", TowxString(LSL::Util::EnsureDelimiter(GetMyDocum
 
 std::string SlPaths::GetLocalConfigPath()
 {
-	return GetExecutableFolder() + getSpringlobbyName(true) + ".conf";
+	return GetExecutableFolder() + GetSpringlobbyName(true) + ".conf";
 }
 
 std::string SlPaths::GetDefaultConfigPath()
 {
-	return GetConfigfileDir() + getSpringlobbyName(true) + ".conf";
+	return GetConfigfileDir() + GetSpringlobbyName(true) + ".conf";
 }
 
 bool SlPaths::IsPortableMode()
@@ -405,7 +405,7 @@ std::string SlPaths::GetConfigfileDir()
 #ifndef WIN32
 	path += ".";
 #endif
-	path += getSpringlobbyName(true);
+	path += GetSpringlobbyName(true);
 	return LSL::Util::EnsureDelimiter(path);
 }
 

@@ -58,9 +58,9 @@ std::string GetSpringlobbyInfo()
 {
 	static const std::string nl = std::string("\n");
 	std::string res;
-	res = getSpringlobbyAgent() + nl;
+	res = GetSpringlobbyAgent() + nl;
 	const bool configwriteable = wxFileName::IsFileWritable(TowxString(SlPaths::GetConfigPath()));
-	res += stdprintf("SpringLobby config file: %s (%swritable)\n",
+	res += stdprintf("Configuration file: %s (%swritable)\n",
 			 SlPaths::GetConfigPath().c_str(),
 			 BtS(configwriteable, "", "not ").c_str());
 	Paths paths;

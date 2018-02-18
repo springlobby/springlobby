@@ -87,6 +87,11 @@ void SpringieHandler::Promote()
 	// TODO
 }
 
+void SpringieHandler::Ring()
+{
+	Send("!ring");
+}
+
 void SpringieHandler::Start()
 {
 	Send("!start");
@@ -137,6 +142,11 @@ void SpadsHandler::Notify()
 void SpadsHandler::Promote()
 {
 	Send("!promote");
+}
+
+void SpadsHandler::Ring()
+{
+	Send("!ring");
 }
 
 void SpadsHandler::Start()

@@ -331,13 +331,11 @@ void Battle::RingNotSyncedPlayers()
 
 void Battle::RingNotSyncedAndNotReadyPlayers()
 {
-	for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
-		User& u = GetUser(i);
-		UserBattleStatus& bs = u.BattleStatus();
-		if (bs.IsBot())
-			continue;
-		if ((!bs.sync || !bs.ready) && !bs.spectator)
-			m_serv.Ring(u.GetNick());
+	if (IsFounderMe()) {
+		RingNotReadyPlayers();
+		RingNotSyncedPlayers();
+	} else {
+		m_autohost_manager->GetAutohostHandler().Ring();
 	}
 }
 

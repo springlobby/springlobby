@@ -236,7 +236,7 @@ void Ui::ConsoleHelp()
 		wxLogError(_T("GetActiveChatPanel() failed: couldn't find current active panel."));
 		return;
 	}
-	panel->ClientMessage(_("SpringLobby commands help."));
+	panel->ClientMessage(wxString::Format(_("%s commands help:"), GetSpringlobbyName()));
 	panel->ClientMessage(wxEmptyString);
 	panel->ClientMessage(_("Global commands:"));
 	panel->ClientMessage(_("  \"/away\" - Sets your status to away."));
@@ -252,9 +252,11 @@ void Ui::ConsoleHelp()
 	panel->ClientMessage(_("  \"/part\" - Leaves current channel."));
 	panel->ClientMessage(_("  \"/p\" - Alias to /part."));
 	panel->ClientMessage(_("  \"/rename newalias\" - Changes your nickname to newalias."));
-	panel->ClientMessage(_("  \"/sayver\" - Says what version of SpringLobby you have in chat."));
+	panel->ClientMessage(wxString::Format(
+	  _("  \"/sayver\" - Says what version of %s you have in chat."), GetSpringlobbyName()));
 	panel->ClientMessage(_("  \"/testmd5 text\" - Returns md5-b64 hash of given text."));
-	panel->ClientMessage(_("  \"/ver\" - Displays what version of SpringLobby you have."));
+	panel->ClientMessage(wxString::Format(
+	  _("  \"/ver\" - Displays what version of %s you have."), GetSpringlobbyName()));
 	panel->ClientMessage(_("  \"/clear\" - Clears all text from current chat panel"));
 	panel->ClientMessage(wxEmptyString);
 	panel->ClientMessage(_("Chat commands:"));
@@ -793,20 +795,22 @@ void Ui::CheckForUpdates(bool is_interactive)
 		return;
 	}
 	//get current rev w/o AUX_VERSION added
-	const std::string myVersion = getSpringlobbyVersion();
+	const std::string myVersion = GetSpringlobbyVersion();
 
 	const wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestversion;
 	if (latestversion == myVersion) {
 		if (is_interactive) {
-			customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is up to date.\n\n") + msg, _("Up to Date"));
+			customMessageBoxModal(SL_MAIN_ICON, wxString::Format(
+			  _("Your %s version is up to date."), GetSpringlobbyName())
+			  + _T("\n\n") + msg, _("Up to Date"));
 		}
 		return;
 	}
 #ifdef __WXMSW__
 	const wxString message = wxString::Format(_("Your %s version is not up to date.") + _T("\n\n%s\n\n") + _("Would you like to update to the new version?"),
-						  TowxString(getSpringlobbyName()).c_str(),
+						  TowxString(GetSpringlobbyName()).c_str(),
 						  msg.c_str());
-	const wxString heading = _("Update Springlobby?");
+	const wxString heading = wxString::Format(_("Update %s?"), GetSpringlobbyName());
 	if (!Ask(heading, message))
 		return;
 	try {
@@ -826,7 +830,9 @@ void Ui::CheckForUpdates(bool is_interactive)
 #else
 	const wxString motivation = _("Please update to the latest version before reporting bugs.");
 	const wxString doublenl = _T("\n\n");
-	customMessageBoxModal(SL_MAIN_ICON, _("Your SpringLobby version is not up to date.") + doublenl + msg + doublenl + motivation, _("Not up to Date"));
+	customMessageBoxModal(SL_MAIN_ICON,
+	  wxString::Format(_("Your %s version is not up to date."), GetSpringlobbyName())
+	  + doublenl + msg + doublenl + motivation, _("Not up to Date"));
 #endif
 }
 

@@ -15,7 +15,7 @@ Statusbar::Statusbar(wxWindow* parent)
 {
 	int w[3] = {460, -1, 120};
 	SetFieldsCount(3, w);
-	PushStatusText(TowxString(getSpringlobbyAgent()), 1);
+	PushStatusText(TowxString(GetSpringlobbyAgent()), 1);
 	taskBar = new TaskBar(this);
 }
 

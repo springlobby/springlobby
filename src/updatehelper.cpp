@@ -47,7 +47,7 @@ static time_t GetTime()
 
 std::string GetLatestVersion(bool use_cached)
 {
-	static std::string latest_version = getSpringlobbyVersion();
+	static std::string latest_version = GetSpringlobbyVersion();
 	const time_t now = GetTime();
 	const time_t last_check_time = cfg().ReadLong(_T("/General/LastUpdateCheck"));
 

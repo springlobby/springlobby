@@ -27,6 +27,7 @@
 #include "gui/uiutils.h"
 #include "gui/controls.h"
 #include "utils/conversion.h"
+#include "utils/version.h"
 #include "log.h"
 #include "utils/globalevents.h"
 
@@ -166,7 +167,9 @@ void MainOptionsTab::SavePerspective(const wxString& perspective_name)
 }
 
 OptionsDialog::OptionsDialog(wxWindow* parent)
-    : wxDialog(parent, -1, _("SpringLobby Preferences"), wxDefaultPosition, wxSize(1055, 620), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX)
+    : wxDialog(parent, -1, wxString::Format(_("%s Preferences"), GetSpringlobbyName()),
+	    wxDefaultPosition, wxSize(1055, 620),
+	    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX)
     , WindowAttributesPickle(_T("preferences"), this, wxSize(1055, 620))
 {
 	SetMinSize(wxSize(1055, 620));

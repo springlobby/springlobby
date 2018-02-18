@@ -381,7 +381,8 @@ void TASServer::Login()
 		localaddr = "*";
 	m_id_transmission = false;
 	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u\ta m sp cl p",
-				   GetUserName().c_str(), pass.c_str(), localaddr.c_str(), getSpringlobbyAgent().c_str(), m_crc.GetCRC()));
+	  GetUserName().c_str(), pass.c_str(), localaddr.c_str(),
+	  GetSpringlobbyAgent().c_str(), m_crc.GetCRC()));
 	m_id_transmission = true;
 }
 
@@ -431,7 +432,8 @@ void TASServer::Notify()
 	if (m_last_ping > PING_TIME) { //Send a PING every 30 seconds
 		if (interval > PING_TIME) {
 			m_last_net_packet = 0; //assume local clock is broken and we received a packed within time
-			m_se->OnServerMessage(stdprintf("Springlobby hung or stale clock. Got no timer for %d msec", interval));
+			m_se->OnServerMessage(stdprintf("%s hung or stale clock. Got no timer for %d msec",
+			  GetSpringlobbyName().c_str(), interval));
 		}
 		m_last_ping = 0;
 		Ping();
