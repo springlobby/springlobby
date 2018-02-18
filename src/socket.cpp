@@ -252,7 +252,7 @@ void Socket::DoSSLHandshake()
 
 void Socket::StartTLS(const std::string& fingerprint)
 {
-	wxLogMessage("Starting TLS...");
+	wxLogMessage("Starting TLS... %s", fingerprint.c_str());
 	m_excepted_fingerprint = fingerprint;
 	assert(!m_starttls);
 	m_starttls = true;
