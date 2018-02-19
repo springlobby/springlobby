@@ -88,6 +88,9 @@ set(test_libs
 	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
 	${Boost_SYSTEM_LIBRARY}
 )
+if(WIN32)
+	set(test_libs ${test_libs} iphlpapi)
+endif()
 add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
 ################################################################################
 set(test_name lslconversion)

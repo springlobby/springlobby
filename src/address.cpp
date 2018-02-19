@@ -2,14 +2,14 @@
 
 #include "address.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <iphlpapi.h>
 #elif defined(linux)
 #include <sys/ioctl.h>
 #include <net/if.h>
 #endif
 
-#ifdef WIN32
+#if defined(WIN32) || defined(_WIN32)
 
 bool GetMacType(std::vector<unsigned char>& mac, const unsigned int mactype)
 {
@@ -18,7 +18,6 @@ bool GetMacType(std::vector<unsigned char>& mac, const unsigned int mactype)
 
 	DWORD dwStatus = GetAdaptersInfo(AdapterInfo, &dwBufLen); // Get info
 	if (dwStatus == ERROR_BUFFER_OVERFLOW) {
-		wxLogError(wxString::Format("To small buffer size: %d", dwStatus));
 		return false;
 	}
 	if (dwStatus != NO_ERROR)
@@ -28,7 +27,6 @@ bool GetMacType(std::vector<unsigned char>& mac, const unsigned int mactype)
 		if ((mactype != 0) && (AdapterInfo[i].Type != mactype)) //skip not wanted type
 			continue;
 		if (AdapterInfo[i].AddressLength == 0) {
-			wxLogWarning("Zero Address length for adapter");
 			continue;
 		}
 		mac.resize(AdapterInfo[i].AddressLength);
