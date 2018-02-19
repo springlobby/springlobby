@@ -215,25 +215,27 @@ void LOG_DISABLE(bool /*disableLogging*/)
 extern void L_LOG(const char* fileName, int line, const char* funcName,
            L_LEVEL level, const char* format...)
 {
-	va_list args;
-	va_start(args, format);
+	wxLogLevel lvl;
 	switch (level) {
 		case L_RAW:
-			wxLogger(wxLOG_Debug, fileName, line, funcName, "prd").LogV(format, args);
+			lvl = wxLOG_Debug;
 			break;
 		default:
 		case L_ERROR:
-			wxLogger(wxLOG_Error, fileName, line, funcName, "prd").LogV(format, args);
+			lvl = wxLOG_Error;
 			break;
 		case L_WARN:
-			wxLogger(wxLOG_Warning, fileName, line, funcName, "prd").LogV(format, args);
+			lvl = wxLOG_Warning;
 			break;
 		case L_INFO:
-			wxLogger(wxLOG_Info, fileName, line, funcName, "prd").LogV(format, args);
+			lvl = wxLOG_Info;
 			break;
 		case L_DEBUG:
-			wxLogger(wxLOG_Debug, fileName, line, funcName, "prd").LogV(format, args);
+			lvl = wxLOG_Debug;
 			break;
 	}
+	va_list args;
+	va_start(args, format);
+	wxLogger(lvl, fileName, line, funcName, "prd").LogV(format, args);
 	va_end(args);
 }
