@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include "utils/crc.h"
+#include "address.h"
 
 BOOST_AUTO_TEST_CASE(lobbyid)
 {
@@ -38,4 +39,12 @@ BOOST_AUTO_TEST_CASE(lobbyid)
 	m_crc.ResetCRC();
 	m_crc.UpdateData("The quick brown fox jumps over the lazy dog");
 	BOOST_CHECK(m_crc.GetCRC() == 1095738169); // == 414fa339, http://rosettacode.org/wiki/CRC-32#C.2B.2B
+}
+
+BOOST_AUTO_TEST_CASE(getmac)
+{
+	std::vector<unsigned char> mac;
+	GetMac(mac);
+	const std::string smac = MacToString(mac);
+	printf("%s\n", smac.c_str());
 }
