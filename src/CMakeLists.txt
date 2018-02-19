@@ -159,6 +159,7 @@ ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 
 
 set(springlobbySrc
+	address.cpp
 	autohost.cpp
 	autohostmanager.cpp
 	battlelist.cpp
