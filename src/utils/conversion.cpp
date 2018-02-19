@@ -25,6 +25,9 @@ std::string stdprintf(const char* format, ...)
 	va_start(args, format);
 	const int count = vsnprintf(buf, 1024, format, args);
 	va_end(args);
+	if (count <= 0) {
+		return "";
+	}
 	return std::string(buf, std::min(count, 1024));
 }
 
