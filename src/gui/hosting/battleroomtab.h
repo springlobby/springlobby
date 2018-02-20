@@ -88,6 +88,7 @@ private:
 	{
 		OnAutolaunch();
 	}
+	void OnImReady();
 	void OnImReady(wxCommandEvent& event);
 	void OnLock(wxCommandEvent& event);
 	void OnAutoHost(wxCommandEvent& event);

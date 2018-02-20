@@ -635,36 +635,47 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 	if (m_battle == nullptr)
 		return;
 
+	if (ui().IsSpringRunning()) {
+		customMessageBoxModal(SL_MAIN_ICON, _("You are already playing/spectating."), _("Error"));
+		return;
+	}
+
+	if (ui().NeedsDownload(m_battle)) {
+		customMessageBoxModal(SL_MAIN_ICON, _("You must download missing content before you"
+		  " can start or wait for the downloads to finish if they had been started already."),
+		  _("Error"));
+		return;
+	}
+
 	//start manually clicked, force start
 	m_battle->SetAutolaunchGame(true);
+	m_ready_chk->SetValue(true); OnImReady();
 
-	if (m_battle->IsFounderMe()) {
-		m_battle->GetMe().BattleStatus().ready = true;
-		if (!m_battle->IsEveryoneReady()) {
-			int answer = customMessageBox(SL_MAIN_ICON, _("Some Players are not ready yet\nDo you want to force start?"), _("Not ready"), wxYES_NO | wxCANCEL);
-			if (answer == wxNO)
-				return;
-		}
-
-		m_battle->SaveMapDefaults(); // save map presets
-
-		m_battle->StartHostedBattle();
-	} else {
-		if (ui().NeedsDownload(m_battle)) {
-			wxLogWarning("Cannot start, need to download first!");
-			return;
-		}
-
-		if (m_battle->GetFounder().Status().in_game) {
-			if (!ui().IsSpringRunning())
-				m_battle->StartSpring();
-			else
-				customMessageBoxModal(SL_MAIN_ICON, _("Spring is already running."), _("Error"));
-		} else {
-			m_battle->m_autohost_manager->GetAutohostHandler().Start();
-			//customMessageBoxNoModal( SL_MAIN_ICON, _("Host is not ingame."), _("Error") );
+	// Is remote battle running?
+	if (m_battle->GetFounder().Status().in_game) {
+		m_battle->StartSpring();
+	} else { // No, it is not running.
+		if (m_battle->GetMe().BattleStatus().spectator) {
+			customMessageBoxModal(SL_MAIN_ICON,
+			  _("No battle is running. You must be a player to start"), _("Error"));
+		} else { // I am a player
+			if (m_battle->IsEveryoneReady()) {
+				if (m_battle->IsFounderMe()) {
+					m_battle->SaveMapDefaults(); // save map presets
+					m_battle->StartHostedBattle();
+				} else {
+					m_battle->m_autohost_manager->GetAutohostHandler().Start();
+				}
+			} else {
+				int answer = customMessageBox(SL_MAIN_ICON,
+				  _("Some players are not ready, ring them?"),
+				  _("Not ready"), wxYES | wxCANCEL);
+				if (answer == wxYES)
+					m_battle->RingNotSyncedAndNotReadyPlayers();
+			}
 		}
 	}
+
 	//reset to value from gui
 	m_battle->SetAutolaunchGame(m_autolaunch_chk->GetValue());
 }
@@ -767,11 +778,16 @@ void BattleRoomTab::OnAutolaunch()
 }
 
 
-void BattleRoomTab::OnImReady(wxCommandEvent& /*unused*/)
+void BattleRoomTab::OnImReady()
 {
 	if (!m_battle)
 		return;
 	m_battle->SetImReady(m_ready_chk->GetValue());
+}
+
+void BattleRoomTab::OnImReady(wxCommandEvent& /*unused*/)
+{
+	OnImReady();
 }
 
 
