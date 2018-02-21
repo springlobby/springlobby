@@ -7,6 +7,7 @@
 #include <wx/log.h>
 #include <wx/filename.h>
 #include <wx/string.h>
+#include "log.h"
 #include "utils/conversion.h"
 #include "utils/slpaths.h"
 #include "utils/version.h"
@@ -71,7 +72,7 @@ std::string GetSpringlobbyInfo()
 		if (path.empty()) {
 			continue;
 		}
-		
+
 #if defined(__WIN32__) || defined(_MSC_VER)
 		path = Utf8ToLocalEncoding(path.c_str());
 #endif
@@ -112,6 +113,11 @@ std::string GetSpringlobbyInfo()
 	res += stdprintf("Portable mode: %s\n", BtS(SlPaths::IsPortableMode()).c_str());
 
 	res += stdprintf(("Compiled with wxWidgets %d.%d.%d.%d"), wxMAJOR_VERSION, wxMINOR_VERSION, wxRELEASE_NUMBER, wxSUBRELEASE_NUMBER) + nl;
+	res += stdprintf("Global log level: %lu (up to and including %s)\n",
+	  wxLog::GetLogLevel(), wxLogLevelToString (wxLog::GetLogLevel()));
+	res += stdprintf("PR-Downloader log level: %lu (up to and including %s)\n",
+	  wxLog::GetComponentLevel(PRD_LOG_COMPONENT),
+	  wxLogLevelToString (wxLog::GetComponentLevel(PRD_LOG_COMPONENT)));
 	res += "Started with: \n";
 	for (int i = 0; i < wxTheApp->argc; ++i)
 		res += STD_STRING(wxTheApp->argv[i]) + std::string(" ");

@@ -18,6 +18,23 @@
 
 static bool gui = false;
 
+const char* wxLogLevelToString(wxLogLevel level)
+{
+	assert(level < 8); // just in case
+
+	static const char* levelNames[] = {
+	  "Fatal",
+	  "Error",
+	  "Warning",
+	  "Message",
+	  "Status",
+	  "Info",
+	  "Debug",
+	  "Trace"};
+
+	return levelNames[static_cast<int>(level)];
+}
+
 class myLogger : public wxLog
 {
 public:
@@ -79,7 +96,7 @@ public:
 		const char* src_fn = info.filename + src_fn_offset;
 
 		const std::string log_prefix = stdprintf("%s %-7s %20.20s:%-4d",
-		  GetTimeString().c_str(), LogLevelToString(loglevel),
+		  GetTimeString().c_str(), wxLogLevelToString(loglevel),
 		  src_fn, info.line);
 
 		char delim = ' '; // indicates that this is a new message, continuations use '+'
@@ -111,23 +128,6 @@ public:
 			  p->StatusMessage(TowxString(LogName(l)) + _T(" ") +TowxString(msg));
 		  }
 	  }*/
-	}
-
-	const char* LogLevelToString(wxLogLevel level)
-	{
-		assert(level < 8); // just in case
-
-		static const char* levelNames[] = {
-		    "Fatal",
-		    "Error",
-		    "Warning",
-		    "Message",
-		    "Status",
-		    "Info",
-		    "Debug",
-		    "Trace"};
-
-		return levelNames[static_cast<int>(level)];
 	}
 
 	void Flush() override
@@ -243,6 +243,6 @@ extern void L_LOG(const char* fileName, int line, const char* funcName,
 	}
 
 	assert(res >= 0);
-	const wxLogRecordInfo info(fileName, line, funcName, "prd");
+	const wxLogRecordInfo info(fileName, line, funcName, PRD_LOG_COMPONENT);
 	wxLog::OnLog(lvl, buf, info);
 }
