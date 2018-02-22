@@ -859,9 +859,21 @@ void BattleRoomTab::OnImSpec(wxCommandEvent& /*unused*/)
 {
 	if (!m_battle)
 		return;
-	m_battle->ForceSpectator(m_battle->GetMe(), m_spec_chk->GetValue());
-}
 
+	// Prevent taking same team ID as someone else when un-speccing.
+	if (m_spec_chk->IsChecked()) {
+		m_battle->ForceSpectator(m_battle->GetMe(), true);
+	} else {
+		int team = m_battle->GetFreeTeam(/*excludeme=*/false);
+		m_team_sel->SetSelection(team);
+		UserBattleStatus& myStatus = m_battle->GetMe().BattleStatus();
+		// Due to ForceSpectator working on a local copy, one way to implement this is by:
+		int oldteam = myStatus.team;
+		myStatus.team = team;
+		m_battle->ForceSpectator(m_battle->GetMe(), false);
+		myStatus.team = oldteam;
+	}
+}
 
 void BattleRoomTab::OnTeamSel(wxCommandEvent& /*unused*/)
 {
