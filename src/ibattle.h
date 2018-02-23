@@ -245,6 +245,7 @@ public:
 	virtual void OnUserRemoved(User& user);
 
 	virtual bool IsEveryoneReady() const;
+	virtual bool DoesOpponentExist() const;
 
 	virtual void ForceSide(User& user, int side);
 	virtual void ForceAlly(User& user, int ally);

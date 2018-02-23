@@ -306,16 +306,16 @@ void IBattle::OnUserBattleStatusUpdated(User& user, UserBattleStatus status)
 		UserBattleStatus& loopstatus = loopuser.BattleStatus();
 		if (loopstatus.spectator)
 			m_opts.spectators++;
-		if (!loopstatus.IsBot()) {
-			if (!loopstatus.spectator) {
+		else  {
+			PlayerJoinedTeam(loopstatus.team);
+			PlayerJoinedAlly(loopstatus.ally);
+			if (!loopstatus.IsBot()) {
 				if (loopstatus.ready && loopstatus.spectator)
 					m_players_ready++;
 				if (loopstatus.sync)
 					m_players_sync++;
 				if (loopstatus.ready && loopstatus.sync)
 					m_players_ok++;
-				PlayerJoinedTeam(loopstatus.team);
-				PlayerJoinedAlly(loopstatus.ally);
 			}
 		}
 	}
@@ -401,6 +401,12 @@ bool IBattle::IsEveryoneReady() const
 			return false;
 	}
 	return true;
+}
+
+
+bool IBattle::DoesOpponentExist() const
+{
+	return (2 <= m_ally_sizes.size());
 }
 
 

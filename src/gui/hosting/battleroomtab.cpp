@@ -629,6 +629,17 @@ void BattleRoomTab::OnPromote(wxCommandEvent& /*unused*/)
 	}
 }
 
+/*
+ * Running? Spec? Founder? Action
+ *    0       0      0     DL -> ready -> Ring -> OpponentCheck -> !start
+ *    0       0      1     DL -> ready -> Ring -> OpponentCheck -> StartHB
+ *    0       1      0     DL -> ready -> "Unspec to play"
+ *    0       1      1     DL -> ready -> "Unspec to play"
+ *    1       0      0     DL -> ready -> start
+ *    1       0      1     DL -> ready -> start
+ *    1       1      0     DL -> ready -> start
+ *    1       1      1     DL -> ready -> start
+ */
 void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 {
 	slLogDebugFunc("");
@@ -660,11 +671,17 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 			  _("No battle is running. You must be a player to start"), _("Error"));
 		} else { // I am a player
 			if (m_battle->IsEveryoneReady()) {
-				if (m_battle->IsFounderMe()) {
-					m_battle->SaveMapDefaults(); // save map presets
-					m_battle->StartHostedBattle();
+				if (m_battle->DoesOpponentExist()) {
+					if (m_battle->IsFounderMe()) {
+						m_battle->SaveMapDefaults(); // save map presets
+						m_battle->StartHostedBattle();
+					} else {
+						m_battle->m_autohost_manager->GetAutohostHandler().Start();
+					}
 				} else {
-					m_battle->m_autohost_manager->GetAutohostHandler().Start();
+					customMessageBoxModal(SL_MAIN_ICON,
+					  _("A battle with no opponents is no battle at all" // ...
+					    " (Hint: add a bot and try again)."), _("Error"));
 				}
 			} else {
 				int answer = customMessageBox(SL_MAIN_ICON,
