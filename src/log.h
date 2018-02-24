@@ -6,6 +6,10 @@
 #include <string>
 #include <wx/log.h>
 
+#define PRD_LOG_COMPONENT "prd"
+
+const char* wxLogLevelToString(wxLogLevel level);
+
 class wxString;
 class wxLogWindow;
 class wxWindow;
