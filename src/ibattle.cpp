@@ -729,19 +729,16 @@ void IBattle::SetLocalMap(const std::string& mapname)
 
 const LSL::UnitsyncMap& IBattle::LoadMap()
 {
-	if ((!m_map_loaded) && (!m_host_map.name.empty())) {
-		if (MapExists(true)) { //Check if selected map available for engine?
-			try {
-				m_local_map = LSL::usync().GetMap(m_host_map.name);
-				assert(LSL::Util::MakeHashUnsigned(m_local_map.hash) == m_local_map.hash);
-				bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::MapOption, m_host_map.name);
-				//TODO: maybe replace this with "silent" IF operator?
-				ASSERT_EXCEPTION(options_loaded, _T("couldn't load the map options"));
-				m_map_loaded = true;
-			} catch (...) {
-			}
-		}
+	if ((m_map_loaded) || (m_host_map.name.empty()) || !MapExists(true))
+		return m_local_map;
+
+	m_local_map = LSL::usync().GetMap(m_host_map.name);
+	assert(LSL::Util::MakeHashUnsigned(m_local_map.hash) == m_local_map.hash);
+	const bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::MapOption, m_host_map.name);
+	if (!options_loaded) {
+		wxLogWarning( _T("couldn't load the map options"));
 	}
+	m_map_loaded = true;
 	return m_local_map;
 }
 
@@ -794,12 +791,14 @@ const LSL::UnitsyncGame& IBattle::LoadGame()
 		wxLogWarning("Game doesn't exist");
 		return m_local_game;
 	}
-	try {
-		SetLocalGame(LSL::usync().GetGame(m_host_game.name));
-		bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::ModOption, m_host_game.name);
-		ASSERT_EXCEPTION(options_loaded, _T("couldn't load the game options"));
-		m_game_loaded = true;
-	} catch (...) {	}
+	SetLocalGame(LSL::usync().GetGame(m_host_game.name));
+	const bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::ModOption, m_host_game.name);
+
+	if (!options_loaded) {
+		wxLogWarning("couldn't load the game options");
+	}
+
+	m_game_loaded = true;
 	return m_local_game;
 }
 
