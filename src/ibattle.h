@@ -226,10 +226,6 @@ public:
 	virtual bool IsFounderMe() const;
 	virtual bool IsFounder(const User& user) const;
 
-	virtual int GetMyPlayerNum() const;
-
-	virtual int GetPlayerNum(const User& user) const;
-
 	virtual void SetHostGame(const std::string& gamename, const std::string& hash);
 	virtual void SetLocalGame(const LSL::UnitsyncGame& game);
 	virtual const LSL::UnitsyncGame& LoadGame();

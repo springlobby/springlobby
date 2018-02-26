@@ -105,16 +105,6 @@ LSL::lslColor IBattle::GetFixColour(int i) const
 	return palette[i];
 }
 
-int IBattle::GetPlayerNum(const User& user) const
-{
-	for (user_map_t::size_type i = 0; i < GetNumUsers(); i++) {
-		if (&GetUser(i) == &user)
-			return i;
-	}
-	ASSERT_EXCEPTION(false, _T("The player is not in this game."));
-	return -1;
-}
-
 class DismissColor
 {
 private:
@@ -721,7 +711,11 @@ void IBattle::SetHostMap(const std::string& mapname, const std::string& hash)
 
 void IBattle::SetLocalMap(const std::string& mapname)
 {
-	ASSERT_LOGIC(!mapname.empty(), "Battle with empty map name!");
+	if (mapname.empty()) {
+		wxLogWarning("Battle with empty map name!");
+		return;
+	}
+
 	LSL::UnitsyncMap map = LSL::usync().GetMap(mapname);
 	if (map.name != m_local_map.name || map.hash != m_local_map.hash) {
 		m_local_map = map;
@@ -1065,12 +1059,6 @@ bool IBattle::IsFounder(const User& user) const
 	} else
 		return false;
 }
-
-int IBattle::GetMyPlayerNum() const
-{
-	return GetPlayerNum(GetMe());
-}
-
 
 void IBattle::LoadScriptMMOpts(const std::string& sectionname, const LSL::TDF::PDataList& node)
 {
