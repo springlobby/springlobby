@@ -710,12 +710,12 @@ UserPosition IBattle::GetFreePosition()
 void IBattle::SetHostMap(const std::string& mapname, const std::string& hash)
 {
 	assert(hash.empty() || LSL::Util::MakeHashUnsigned(hash) == hash);
-	ASSERT_LOGIC(!mapname.empty(), "Battle with empty map name!");
-	if (mapname != m_host_map.name || hash != m_host_map.hash) {
-		m_map_loaded = false;
-		m_host_map.name = mapname;
-		m_host_map.hash = hash;
+	if (mapname == m_host_map.name || hash == m_host_map.hash) {
+		return;
 	}
+	m_map_loaded = mapname.empty();
+	m_host_map.name = mapname;
+	m_host_map.hash = hash;
 }
 
 
@@ -770,7 +770,7 @@ void IBattle::SetHostGame(const std::string& gamename, const std::string& hash)
 	if ((m_host_game.name == gamename) && (m_host_game.hash == hash)) {
 		return;
 	}
-	m_game_loaded = false;
+	m_game_loaded = gamename.empty();
 	m_host_game.name = gamename;
 	m_host_game.hash = hash;
 }
@@ -793,8 +793,7 @@ void IBattle::SetLocalGame(const LSL::UnitsyncGame& mod)
 
 const LSL::UnitsyncGame& IBattle::LoadGame()
 {
-	ASSERT_LOGIC(!m_host_game.name.empty(), "m_host_game.name.empty() is FALSE");
-	if (m_game_loaded) {
+	if (m_game_loaded || m_host_game.name.empty()) {
 		return m_local_game;
 	}
 	if (!GameExists(true)) {
