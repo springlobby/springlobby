@@ -7,17 +7,15 @@
 
 #include "battlelisttab.h"
 #include "utils/mixins.h"
-///////////////////////////////////////////////////////////////////////////
 
 class BattleListTab;
-class wxToggleButton;
-class wxCheckBox;
-class wxStaticText;
-class wxTextCtrl;
-class wxChoice;
 class wxButton;
+class wxCheckBox;
+class wxChoice;
 class wxRegEx;
 class wxStaticText;
+class wxTextCtrl;
+class wxToggleButton;
 struct BattleListFilterValues;
 
 namespace GUI

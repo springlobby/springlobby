@@ -1,44 +1,44 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include <wx/intl.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/textdlg.h>
-#include <wx/combobox.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
-#include <wx/checkbox.h>
-#include <wx/log.h>
+#include <set>
 #include <stdexcept>
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/combobox.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/sizer.h>
+#include <wx/statline.h>
+#include <wx/stattext.h>
+#include <wx/textdlg.h>
 #if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
 #endif
-#include <set>
 
 #include "aui/auimanager.h"
+#include "battledataviewctrl.h"
+#include "battlelistfilter.h"
 #include "battlelisttab.h"
-#include "battledataviewcttrl.h"
-#include "gui/ui.h"
+#include "exception.h"
 #include "gui/chatpanel.h"
-#include "utils/conversion.h"
 #include "gui/controls.h"
-#include "gui/uiutils.h"
+#include "gui/customdialogs.h"
 #include "gui/hosting/hostbattledialog.h"
 #include "gui/hosting/mainjoinbattletab.h"
-#include "iserver.h"
-#include "serverselector.h"
+#include "gui/mainwindow.h"
 #include "gui/mapctrl.h"
 #include "gui/nickdataviewctrl.h"
-#include "gui/mainwindow.h"
-#include "battlelistfilter.h"
+#include "gui/ui.h"
+#include "gui/uiutils.h"
 #include "iconimagelist.h"
-#include "useractions.h"
-#include "gui/customdialogs.h"
-#include "utils/slconfig.h"
-#include "utils/globalevents.h"
+#include "iserver.h"
 #include "log.h"
 #include "servermanager.h"
-#include "exception.h"
+#include "serverselector.h"
+#include "useractions.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "utils/slconfig.h"
 
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 

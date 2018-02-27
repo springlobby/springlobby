@@ -1,17 +1,16 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include "battledataviewcttrl.h"
-
 #include <wx/menu.h>
 
+#include "battledataviewctrl.h"
 #include "battledataviewmodel.h"
-#include "utils/slpaths.h"
-#include "servermanager.h"
-#include "ibattle.h"
 #include "downloader/prdownloader.h"
-#include "log.h"
 #include "exception.h"
 #include "gui/ui.h"
+#include "ibattle.h"
+#include "log.h"
+#include "servermanager.h"
+#include "utils/slpaths.h"
 
 BEGIN_EVENT_TABLE(BattleDataViewCtrl, BaseDataViewCtrl)
 EVT_DATAVIEW_ITEM_CONTEXT_MENU(BATTLELIST_DATAVIEW_ID, BattleDataViewCtrl::OnContextMenu)

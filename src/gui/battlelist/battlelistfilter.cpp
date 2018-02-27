@@ -1,35 +1,27 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-//
-// Class: BattleOptionsTab
-//
-
-
-#if wxUSE_TOGGLEBTN
-#include <wx/tglbtn.h>
-#endif
-#include <wx/stattext.h>
-#include <wx/checkbox.h>
-#include <wx/sizer.h>
-#include <wx/textctrl.h>
-#include <wx/intl.h>
-#include <wx/choice.h>
 #include <wx/button.h>
-#include <wx/string.h>
-#include <wx/statbox.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
 #include <wx/event.h>
+#include <wx/intl.h>
 #include <wx/regex.h>
+#include <wx/sizer.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 
+#include "aui/auimanager.h"
 #include "battlelistfilter.h"
 #include "battlelistfiltervalues.h"
-#include "ibattle.h"
-#include "gui/uiutils.h"
-#include "utils/tasutil.h"
-#include "aui/auimanager.h"
-#include "useractions.h"
-#include "utils/slconfig.h"
-#include "utils/conversion.h"
 #include "gui/controls/bitmapcombobox.h"
+#include "gui/uiutils.h"
+#include "ibattle.h"
+#include "useractions.h"
+#include "utils/conversion.h"
+#include "utils/slconfig.h"
+#include "utils/tasutil.h"
 
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"
@@ -39,7 +31,6 @@
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
 #include "images/rank7.xpm"
-///////////////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(BattleListFilter, wxPanel)
 

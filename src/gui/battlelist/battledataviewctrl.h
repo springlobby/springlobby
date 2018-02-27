@@ -6,12 +6,12 @@
 #include "gui/basedataviewctrl.h"
 
 class IBattle;
-class wxWindow;
-class wxString;
-class wxMenu;
 class wxCommandEvent;
-class wxPoint;
 class wxDataViewEvent;
+class wxMenu;
+class wxPoint;
+class wxString;
+class wxWindow;
 
 class BattleDataViewCtrl : public BaseDataViewCtrl<IBattle>
 {
