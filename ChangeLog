@@ -5,6 +5,8 @@ ChangeLog of Springlobby
  - log everything into springlobby.log (added downloader + unitsync handling)
  - cmake 3.1 at least is required to compile springlobby
  - replace boost:: with std:: in some places
+ - fix crash when re-selecting no map / no game in singleplayer tab
+ - updated buildslave to latest mxe (wxwidgets 3.0.3, etc)
 
 ## 0.263
  - more verbose logging to track down crashes
