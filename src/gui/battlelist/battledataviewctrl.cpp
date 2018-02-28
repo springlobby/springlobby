@@ -14,10 +14,10 @@
 
 BEGIN_EVENT_TABLE(BattleDataViewCtrl, BaseDataViewCtrl)
 EVT_DATAVIEW_ITEM_CONTEXT_MENU(BATTLELIST_DATAVIEW_ID, BattleDataViewCtrl::OnContextMenu)
-EVT_MENU(BATTLELIST_DATAVIEW_DLMAP, BattleDataViewCtrl::OnDLMap)
-EVT_MENU(BATTLELIST_DATAVIEW_DLMOD, BattleDataViewCtrl::OnDLMod)
-EVT_MENU(BATTLELIST_DATAVIEW_DLENGINE, BattleDataViewCtrl::OnDLEngine)
-EVT_MENU(BATTLELIST_DATAVIEW_NOTIFYGAMEENDS, BattleDataViewCtrl::OnNotifyGameEnd)
+EVT_MENU(BATTLELIST_DATAVIEW_DL_ENGINE, BattleDataViewCtrl::OnDLEngine)
+EVT_MENU(BATTLELIST_DATAVIEW_DL_GAME, BattleDataViewCtrl::OnDLGame)
+EVT_MENU(BATTLELIST_DATAVIEW_DL_MAP, BattleDataViewCtrl::OnDLMap)
+EVT_MENU(BATTLELIST_DATAVIEW_NOTIFY_WHEN_BATTLE_ENDS, BattleDataViewCtrl::OnNotifyWhenBattleEnds)
 END_EVENT_TABLE()
 
 BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* parent)
@@ -28,19 +28,22 @@ BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* p
 	BattleDataViewModel* m_BattleDataModel = new BattleDataViewModel();
 	AssociateModel(m_BattleDataModel);
 
-	const int DEFAULT_SIZE = wxCOL_WIDTH_AUTOSIZE;
-	AppendBitmapColumn(_("S"), STATUS, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("C"), COUNTRY, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("R"), RANK, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Description"), DESCRIPTION, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendIconTextColumn(_("Map"), MAP, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendIconTextColumn(_("Game"), GAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Host"), HOST, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Spectators"), SPECTATORS, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Players"), PLAYERS, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Max"), MAXIMUM, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Running"), RUNNING, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendIconTextColumn(_("Engine"), ENGINE, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+	const wxDataViewCellMode& cm = wxDATAVIEW_CELL_INERT;
+	const int gds = wxDVC_DEFAULT_MINWIDTH; // graphical default size
+	const int asds = wxCOL_WIDTH_AUTOSIZE; // autosize default size
+	const int flags = wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE;
+	AppendBitmapColumn(_("S"),         STATUS,      cm, gds, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(_("C"),         COUNTRY,     cm, gds, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(_("R"),         RANK,        cm, gds, wxALIGN_CENTER, flags);
+	AppendTextColumn(_("Description"), DESCRIPTION, cm, asds, wxALIGN_NOT, flags);
+	AppendIconTextColumn(_("Map"),     MAP,         cm, asds, wxALIGN_NOT, flags);
+	AppendIconTextColumn(_("Game"),    GAME,        cm, asds, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Host"),        HOST,        cm, asds, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Spectators"),  SPECTATORS,  cm, asds, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Players"),     PLAYERS,     cm, asds, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Max"),         MAXIMUM,     cm, asds, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Running"),     RUNNING,     cm, asds, wxALIGN_NOT, flags);
+	AppendIconTextColumn(_("Engine"),  ENGINE,      cm, asds, wxALIGN_NOT, flags);
 
 	LoadColumnProperties();
 }
@@ -52,29 +55,20 @@ BattleDataViewCtrl::~BattleDataViewCtrl()
 
 void BattleDataViewCtrl::AddBattle(IBattle& battle)
 {
-	if (ContainsItem(battle)) {
-		return;
-	} else {
+	if (! ContainsItem(battle))
 		AddItem(battle);
-	}
 }
 
 void BattleDataViewCtrl::RemoveBattle(IBattle& battle)
 {
-	if (ContainsItem(battle)) {
+	if (ContainsItem(battle))
 		RemoveItem(battle);
-	} else {
-		return;
-	}
 }
 
 void BattleDataViewCtrl::UpdateBattle(IBattle& battle)
 {
-	if (ContainsItem(battle)) {
+	if (ContainsItem(battle))
 		RefreshItem(battle);
-	} else {
-		return;
-	}
 }
 
 void BattleDataViewCtrl::SetTipWindowText(const long /*item_hit*/,
@@ -88,7 +82,7 @@ void BattleDataViewCtrl::OnDLMap(wxCommandEvent& /*event*/)
 	ui().NeedsDownload(GetSelectedItem(), false, DownloadEnum::CAT_MAP);
 }
 
-void BattleDataViewCtrl::OnDLMod(wxCommandEvent& /*event*/)
+void BattleDataViewCtrl::OnDLGame(wxCommandEvent& /*event*/)
 {
 	ui().NeedsDownload(GetSelectedItem(), false, DownloadEnum::CAT_GAME);
 }
@@ -98,7 +92,7 @@ void BattleDataViewCtrl::OnDLEngine(wxCommandEvent& /*event*/)
 	ui().NeedsDownload(GetSelectedItem(), false, DownloadEnum::CAT_ENGINE);
 }
 
-void BattleDataViewCtrl::OnNotifyGameEnd(wxCommandEvent& /*unused*/)
+void BattleDataViewCtrl::OnNotifyWhenBattleEnds(wxCommandEvent& /*unused*/)
 {
 	const IBattle* battle = GetSelectedItem();
 
@@ -113,32 +107,31 @@ void BattleDataViewCtrl::OnNotifyGameEnd(wxCommandEvent& /*unused*/)
 
 void BattleDataViewCtrl::OnContextMenu(wxDataViewEvent& /*event*/)
 {
-
 	const IBattle* battle = GetSelectedItem();
 
 	if (battle == nullptr) {
 		return;
 	}
 
-	const bool mod_missing = !battle->GameExists(false);
+	const bool game_missing = !battle->GameExists(false);
 	const bool map_missing = !battle->MapExists(false);
 	const bool engine_missing = SlPaths::GetCompatibleVersion(battle->GetEngineVersion()).empty();
 
 	m_popup = new wxMenu(wxEmptyString);
 
 	if (map_missing) {
-		m_popup->Append(BATTLELIST_DATAVIEW_DLMAP, _("Download &map"));
+		m_popup->Append(BATTLELIST_DATAVIEW_DL_MAP, _("Download &map"));
 	}
 
-	if (mod_missing) {
-		m_popup->Append(BATTLELIST_DATAVIEW_DLMOD, _("Download &game"));
+	if (game_missing) {
+		m_popup->Append(BATTLELIST_DATAVIEW_DL_GAME, _("Download &game"));
 	}
 
 	if (engine_missing) {
-		m_popup->Append(BATTLELIST_DATAVIEW_DLENGINE, _("Download &engine"));
+		m_popup->Append(BATTLELIST_DATAVIEW_DL_ENGINE, _("Download &engine"));
 	}
 
-	m_popup->Append(BATTLELIST_DATAVIEW_NOTIFYGAMEENDS, _("Notify me when game has ended"));
+	m_popup->Append(BATTLELIST_DATAVIEW_NOTIFY_WHEN_BATTLE_ENDS, _("Notify me when the battle has ended"));
 
 	PopupMenu(m_popup);
 }

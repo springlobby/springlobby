@@ -50,9 +50,9 @@ EVT_CHECKBOX(BATTLE_FILTER_STARTED, BattleListFilter::OnChange)
 EVT_TEXT(BATTLE_FILTER_HOST_EDIT, BattleListFilter::OnChangeHost)
 EVT_TEXT(BATTLE_FILTER_DESCRIPTION_EDIT, BattleListFilter::OnChangeDescription)
 EVT_TEXT(BATTLE_FILTER_MAP_EDIT, BattleListFilter::OnChangeMap)
-EVT_TEXT(BATTLE_FILTER_MOD_EDIT, BattleListFilter::OnChangeMod)
+EVT_TEXT(BATTLE_FILTER_GAME_EDIT, BattleListFilter::OnChangeGame)
 EVT_CHECKBOX(BATTLE_FILTER_MAP_SHOW, BattleListFilter::OnChange)
-EVT_CHECKBOX(BATTLE_FILTER_MOD_SHOW, BattleListFilter::OnChange)
+EVT_CHECKBOX(BATTLE_FILTER_GAME_SHOW, BattleListFilter::OnChange)
 EVT_CHECKBOX(BATTLE_FILTER_HIGHLIGHTED, BattleListFilter::OnChange)
 
 END_EVENT_TABLE()
@@ -68,8 +68,8 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
     , m_filter_description_expression(0)
     , m_filter_map_edit(0)
     , m_filter_map_expression(0)
-    , m_filter_mod_edit(0)
-    , m_filter_mod_expression(0)
+    , m_filter_game_edit(0)
+    , m_filter_game_expression(0)
     , m_filter_highlighted(0)
 
 {
@@ -295,34 +295,34 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	wxBoxSizer* m_filter_body_row4_sizer;
 	m_filter_body_row4_sizer = new wxBoxSizer(wxHORIZONTAL);
 
-	wxBoxSizer* m_filter_mod_sizer;
-	m_filter_mod_sizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer* m_filter_game_sizer;
+	m_filter_game_sizer = new wxBoxSizer(wxHORIZONTAL);
 
-	m_filter_mod_text = new wxStaticText(this, wxID_ANY, _("Game:"), wxDefaultPosition, wxSize(-1, -1), 0);
-	m_filter_mod_text->Wrap(-1);
-	m_filter_mod_text->SetMinSize(wxSize(90, -1));
+	m_filter_game_text = new wxStaticText(this, wxID_ANY, _("Game:"), wxDefaultPosition, wxSize(-1, -1), 0);
+	m_filter_game_text->Wrap(-1);
+	m_filter_game_text->SetMinSize(wxSize(90, -1));
 
-	m_filter_mod_sizer->Add(m_filter_mod_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_game_sizer->Add(m_filter_game_text, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
-	m_filter_mod_edit = new wxTextCtrl(this, BATTLE_FILTER_MOD_EDIT, f_values.mod, wxDefaultPosition, wxSize(-1, -1), 0 | wxSIMPLE_BORDER);
-	m_filter_mod_edit->SetMinSize(wxSize(220, -1));
-	m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(), wxRE_ICASE);
+	m_filter_game_edit = new wxTextCtrl(this, BATTLE_FILTER_GAME_EDIT, f_values.game, wxDefaultPosition, wxSize(-1, -1), 0 | wxSIMPLE_BORDER);
+	m_filter_game_edit->SetMinSize(wxSize(220, -1));
+	m_filter_game_expression = new wxRegEx(m_filter_game_edit->GetValue(), wxRE_ICASE);
 
-	m_filter_mod_sizer->Add(m_filter_mod_edit, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_game_sizer->Add(m_filter_game_edit, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
-	m_filter_body_row4_sizer->Add(m_filter_mod_sizer, 1, wxEXPAND, 5);
+	m_filter_body_row4_sizer->Add(m_filter_game_sizer, 1, wxEXPAND, 5);
 
-	//wxBoxSizer* m_filter_only_mod_sizer;
-	//m_filter_only_mod_sizer = new wxBoxSizer( wxHORIZONTAL );
+	//wxBoxSizer* m_filter_only_game_sizer;
+	//m_filter_only_game_sizer = new wxBoxSizer( wxHORIZONTAL );
 
-	m_filter_mod_show = new wxCheckBox(this, BATTLE_FILTER_MOD_SHOW, _("Only games I have"), wxDefaultPosition, wxSize(-1, -1), 0);
-	m_filter_mod_show->SetValue(f_values.mod_show);
-	m_filter_mod_show->SetMinSize(wxSize(220, -1));
-	m_filter_mod_sizer->Add(m_filter_mod_show, 1, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_filter_game_show = new wxCheckBox(this, BATTLE_FILTER_GAME_SHOW, _("Only games I have"), wxDefaultPosition, wxSize(-1, -1), 0);
+	m_filter_game_show->SetValue(f_values.game_show);
+	m_filter_game_show->SetMinSize(wxSize(220, -1));
+	m_filter_game_sizer->Add(m_filter_game_show, 1, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
-	//m_filter_only_mod_sizer->Add( m_filter_mod_show, 1, wxALL | wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL | wxEXPAND, 5 );
+	//m_filter_only_game_sizer->Add( m_filter_game_show, 1, wxALL | wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL | wxEXPAND, 5 );
 
-	//m_filter_body_row4_sizer->Add( m_filter_only_mod_sizer, 1, wxEXPAND, 5 );
+	//m_filter_body_row4_sizer->Add( m_filter_only_game_sizer, 1, wxEXPAND, 5 );
 
 	wxBoxSizer* m_filter_spectator_sizer;
 	m_filter_spectator_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -381,8 +381,8 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	delete m_filter_map_expression;
 	m_filter_map_expression = new wxRegEx(m_filter_map_edit->GetValue(), wxRE_ICASE);
 
-	delete m_filter_mod_expression;
-	m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(), wxRE_ICASE);
+	delete m_filter_game_expression;
+	m_filter_game_expression = new wxRegEx(m_filter_game_edit->GetValue(), wxRE_ICASE);
 
 	delete m_filter_description_expression;
 	m_filter_description_expression = new wxRegEx(m_filter_description_edit->GetValue(), wxRE_ICASE);
@@ -397,7 +397,7 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 BattleListFilter::~BattleListFilter()
 {
 	delete m_filter_map_expression;
-	delete m_filter_mod_expression;
+	delete m_filter_game_expression;
 	delete m_filter_description_expression;
 	delete m_filter_host_expression;
 }
@@ -604,7 +604,7 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 		return false;
 
 	//Only Mods i have Check
-	if (m_filter_mod_show->GetValue() && !battle.GameExists())
+	if (m_filter_game_show->GetValue() && !battle.GameExists())
 		return false;
 
 	//Strings Plain Text & RegEx Check (Case insensitiv)
@@ -632,8 +632,8 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 
 	//Mod:
 	if (!StringMatches(TowxString(battle.GetHostGameName()),
-			   m_filter_mod_edit->GetValue(),
-			   m_filter_mod_expression))
+			   m_filter_game_edit->GetValue(),
+			   m_filter_game_expression))
 		return false;
 
 	return true;
@@ -659,15 +659,15 @@ void BattleListFilter::OnChangeMap(wxCommandEvent& event)
 	OnChange(event);
 }
 
-void BattleListFilter::OnChangeMod(wxCommandEvent& event)
+void BattleListFilter::OnChangeGame(wxCommandEvent& event)
 {
-	if (m_filter_mod_edit == NULL)
+	if (m_filter_game_edit == NULL)
 		return;
 
-	if (m_filter_mod_expression == NULL)
-		m_filter_mod_expression = new wxRegEx(m_filter_mod_edit->GetValue(), wxRE_ICASE);
+	if (m_filter_game_expression == NULL)
+		m_filter_game_expression = new wxRegEx(m_filter_game_edit->GetValue(), wxRE_ICASE);
 	else
-		m_filter_mod_expression->Compile(m_filter_mod_edit->GetValue(), wxRE_ICASE);
+		m_filter_game_expression->Compile(m_filter_game_edit->GetValue(), wxRE_ICASE);
 
 	OnChange(event);
 }
@@ -736,14 +736,14 @@ void BattleListFilter::SaveFilterValues()
 {
 	BattleListFilterValues filtervalues;
 	filtervalues.description = m_filter_description_edit->GetValue();
+	filtervalues.game = m_filter_game_edit->GetValue();
+	filtervalues.game_show = m_filter_game_show->GetValue();
 	filtervalues.host = m_filter_host_edit->GetValue();
 	filtervalues.map = m_filter_map_edit->GetValue();
 	filtervalues.map_show = m_filter_map_show->GetValue();
 	filtervalues.map = m_filter_map_edit->GetValue();
 	filtervalues.maxplayer = wxString::Format(_T("%d"), m_filter_maxplayer_choice->GetSelection());
 	filtervalues.maxplayer_mode = _GetButtonSign(m_filter_maxplayer_mode);
-	filtervalues.mod = m_filter_mod_edit->GetValue();
-	filtervalues.mod_show = m_filter_mod_show->GetValue();
 	filtervalues.player_mode = _GetButtonSign(m_filter_player_mode);
 	filtervalues.player_num = wxString::Format(_T("%d"), m_filter_player_choice->GetSelection());
 	filtervalues.rank = wxString::Format(_T("%d"), m_filter_rank_choice->GetSelection());
@@ -769,8 +769,8 @@ BattleListFilterValues BattleListFilter::GetBattleFilterValues(const wxString& p
 	cfg().Read(_T( "/BattleFilter/" ) + profile_name + _T( "/map_show" ), &filtervalues.map_show);
 	cfg().Read(_T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer" ), &filtervalues.maxplayer);
 	cfg().Read(_T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer_mode" ), &filtervalues.maxplayer_mode);
-	cfg().Read(_T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), &filtervalues.mod);
-	cfg().Read(_T( "/BattleFilter/" ) + profile_name + _T( "/mod_show" ), &filtervalues.mod_show);
+	cfg().Read(_T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), &filtervalues.game);
+	cfg().Read(_T( "/BattleFilter/" ) + profile_name + _T( "/mod_show" ), &filtervalues.game_show);
 	cfg().Read(_T( "/BattleFilter/" ) + profile_name + _T( "/player_mode" ), &filtervalues.player_mode);
 	cfg().Read(_T( "/BattleFilter/" ) + profile_name + _T( "/player_num" ), &filtervalues.player_num);
 	cfg().Read(_T( "/BattleFilter/" ) + profile_name + _T( "/rank" ), &filtervalues.rank);
@@ -794,8 +794,8 @@ void BattleListFilter::SetBattleFilterValues(const BattleListFilterValues& filte
 	cfg().Write(_T( "/BattleFilter/" ) + profile_name + _T( "/map_show" ), filtervalues.map_show);
 	cfg().Write(_T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer" ), filtervalues.maxplayer);
 	cfg().Write(_T( "/BattleFilter/" ) + profile_name + _T( "/maxplayer_mode" ), filtervalues.maxplayer_mode);
-	cfg().Write(_T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), filtervalues.mod);
-	cfg().Write(_T( "/BattleFilter/" ) + profile_name + _T( "/mod_show" ), filtervalues.mod_show);
+	cfg().Write(_T( "/BattleFilter/" ) + profile_name + _T( "/mod" ), filtervalues.game);
+	cfg().Write(_T( "/BattleFilter/" ) + profile_name + _T( "/mod_show" ), filtervalues.game_show);
 	cfg().Write(_T( "/BattleFilter/" ) + profile_name + _T( "/player_mode" ), filtervalues.player_mode);
 	cfg().Write(_T( "/BattleFilter/" ) + profile_name + _T( "/player_num" ), filtervalues.player_num);
 	cfg().Write(_T( "/BattleFilter/" ) + profile_name + _T( "/rank" ), filtervalues.rank);
