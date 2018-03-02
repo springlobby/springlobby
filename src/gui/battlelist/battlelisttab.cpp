@@ -93,7 +93,9 @@ BattleListTab::BattleListTab(wxWindow* parent)
 	m_data_sizer->Add(m_spec_text, 0, wxALL, 5);
 
 
-	m_minimap = new MapCtrl(this, 100, 0, true, false, false);
+	wxSize s = m_data_sizer->CalcMin();
+	wxLogDebug (_T("Minimum size for data sizer: %d x %d"), s.GetHeight(), s.GetWidth() );
+	m_minimap = new MapCtrl(this, s.GetHeight(), 0, true, false, false);
 	m_players = new NickDataViewCtrl(_T("NickDataViewCtrl_BattleListTab"), this, false, 0, true);
 
 	m_info_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -105,8 +107,6 @@ BattleListTab::BattleListTab(wxWindow* parent)
 	m_filter = new BattleListFilter(this, wxID_ANY, this, wxDefaultPosition, wxDefaultSize, wxEXPAND);
 	m_filter->Hide();
 
-	wxBoxSizer* m_filter_sizer = new wxBoxSizer(wxVERTICAL);
-	m_filter_sizer->Add(m_filter, 0, wxEXPAND, 5);
 
 	m_filter_activ = new wxCheckBox(this, BATTLE_LIST_FILTER_ACTIV, _("Activated"));
 #if wxUSE_TOGGLEBTN
@@ -136,7 +136,7 @@ BattleListTab::BattleListTab(wxWindow* parent)
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 	m_main_sizer->Add(m_battlelist_sizer, 1, wxEXPAND);
 	m_main_sizer->Add(m_info_sizer, 0, wxEXPAND, 5);
-	m_main_sizer->Add(m_filter_sizer, 0, wxEXPAND, 5);
+	m_main_sizer->Add(m_filter, 0, wxEXPAND, 5);
 	m_main_sizer->Add(m_buttons_sep, 0, wxALL | wxEXPAND, 5);
 	m_main_sizer->Add(m_buttons_sizer, 0, wxEXPAND, 5);
 	SetSizer(m_main_sizer);

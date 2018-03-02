@@ -76,19 +76,11 @@ private:
 	/** A function callback used to transform an input string. */
 	typedef wxString (*StringTransformFunction)(const wxString& input);
 
+	// Intentional? typo to prevent potential name clashes with wxWidgets
 	bool m_activ;
 
 	BattleListTab* m_parent_battlelisttab;
-	/*
-#if wxUSE_TOGGLEBTN
-		wxToggleButton* m_filter_show;
-#else
-		wxCheckBox* m_filter_show;
-#endif
-		wxStaticText* m_filter_text;
 
-		wxCheckBox* m_filter_activ;
-*/
 	//Host
 	wxStaticText* m_filter_host_text;
 	wxTextCtrl* m_filter_host_edit;
