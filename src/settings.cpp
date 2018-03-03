@@ -1116,7 +1116,7 @@ void Settings::SetColumnWidth(const wxString& list_name, const int column_ind, c
 	cfg().Write(_T( "GUI/ColumnWidths/" ) + list_name + _T( "/" ) + TowxString(column_ind), column_width);
 }
 
-void Settings::SetColumnVisibility(const wxString& list_name, const int column_ind, const bool columnIsHidden)
+void Settings::SetColumnHidden(const wxString& list_name, const int column_ind, const bool columnIsHidden)
 {
 	cfg().Write(_T( "GUI/ColumnVisibilities/" ) + list_name + _T( "/" ) + TowxString(column_ind), columnIsHidden);
 }
@@ -1130,12 +1130,11 @@ int Settings::GetColumnWidth(const wxString& list_name, const int column)
 	return width;
 }
 
-bool Settings::GetColumnVisibility(const wxString& list_name, const int column)
+bool Settings::IsColumnHidden(const wxString& list_name, const int column, bool defVal)
 {
 	bool isHidden;
-
-	cfg().Read(_T( "/GUI/ColumnVisibilities/" ) + list_name + _T( "/" ) + TowxString(column), &isHidden, false);
-
+	cfg().Read(wxString::Format(_T("/GUI/ColumnVisibilities/%s/%d"), list_name, column),
+	           &isHidden, defVal);
 	return isHidden;
 }
 
