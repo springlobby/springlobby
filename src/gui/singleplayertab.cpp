@@ -332,9 +332,6 @@ bool SinglePlayerTab::ValidSetup() const
 
 	if (m_battle.GetNumUsers() == 1) {
 		wxLogWarning(_T("trying to start sp game without bot"));
-		if (customMessageBox(SL_MAIN_ICON, _("Continue without adding a bot first?.\n The game will be over pretty fast.\n "),
-				     _("No Bot added"), wxYES_NO | wxCANCEL) != wxYES)
-			return false;
 	}
 	return true;
 }
