@@ -4,28 +4,28 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
 
 #include <wx/scrolwin.h>
+
 #include "utils/mixins.h"
 
-class User;
-class Ui;
-class IBattle;
 class Battle;
 class BattleDataViewCtrl;
 class BattleListFilter;
+class IBattle;
 class MapCtrl;
 class NickDataViewCtrl;
-class wxCommandEvent;
-class wxListEvent;
-class wxStaticText;
-class wxComboBox;
-class wxButton;
+class Ui;
+class User;
 class wxBoxSizer;
-class wxStaticText;
-class wxStaticLine;
+class wxButton;
 class wxCheckBox;
-class wxToggleButton;
-class wxFlexGridSizer;
+class wxComboBox;
+class wxCommandEvent;
 class wxDataViewEvent;
+class wxFlexGridSizer;
+class wxListEvent;
+class wxStaticLine;
+class wxStaticText;
+class wxToggleButton;
 
 /** \brief The panel containing a BattleListCtrl and a BattleListFilter
  * \todo DOCME */

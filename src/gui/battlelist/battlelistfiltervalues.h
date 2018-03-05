@@ -11,7 +11,7 @@ struct BattleListFilterValues
 	    , status_full(false)
 	    , status_open(false)
 	    , map_show(false)
-	    , mod_show(false)
+	    , game_show(false)
 	    , highlighted_only(false)
 	    , rank(_T("All"))
 	    , player_num(_T("All"))
@@ -30,13 +30,13 @@ struct BattleListFilterValues
 	bool status_full;
 	bool status_open;
 	bool map_show;
-	bool mod_show;
+	bool game_show;
 	bool highlighted_only;
 	//text fields
 	wxString host;
 	wxString description;
 	wxString map;
-	wxString mod;
+	wxString game;
 	//choices
 	wxString rank;
 	wxString player_num;

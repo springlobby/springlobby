@@ -198,11 +198,11 @@ set(springlobbySrc
 	updatehelper.cpp
 	stacktrace.cpp
 	exception.cpp
-	
+
 	aui/auimanager.cpp
 
 	gui/controls/bitmapcombobox.cpp
-	
+
 	gui/activitynotice.cpp
 	gui/agreementdialog.cpp
 	gui/chatpanelmenu.cpp
@@ -231,7 +231,7 @@ set(springlobbySrc
 	gui/nickdataviewctrl.cpp
 	gui/nickdataviewmodel.cpp
 	gui/dataviewctrlheadermenu.cpp
-	
+
 	gui/notifications/libnotify.cpp
 	gui/notifications/notificationmanager.cpp
 	gui/notifications/toasternotification.cpp
@@ -241,7 +241,7 @@ set(springlobbySrc
 
 	gui/battlelist/battlelistfilter.cpp
 	gui/battlelist/battlelisttab.cpp
-	gui/battlelist/battledataviewcttrl.cpp
+	gui/battlelist/battledataviewctrl.cpp
 	gui/battlelist/battledataviewmodel.cpp
 
 	gui/channel/channelchooser.cpp
@@ -249,7 +249,7 @@ set(springlobbySrc
 	gui/channel/autojoinchanneldialog.cpp
 	gui/channel/channellistview.cpp
 	gui/channel/channellistdataviewmodel.cpp
-	
+
 	gui/hosting/addbotdialog.cpp
 	gui/hosting/autobalancedialog.cpp
 	gui/hosting/battlemaptab.cpp

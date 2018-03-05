@@ -1,44 +1,44 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include <wx/intl.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/textdlg.h>
-#include <wx/combobox.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
-#include <wx/checkbox.h>
-#include <wx/log.h>
+#include <set>
 #include <stdexcept>
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/combobox.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/sizer.h>
+#include <wx/statline.h>
+#include <wx/stattext.h>
+#include <wx/textdlg.h>
 #if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
 #endif
-#include <set>
 
 #include "aui/auimanager.h"
+#include "battledataviewctrl.h"
+#include "battlelistfilter.h"
 #include "battlelisttab.h"
-#include "battledataviewcttrl.h"
-#include "gui/ui.h"
+#include "exception.h"
 #include "gui/chatpanel.h"
-#include "utils/conversion.h"
 #include "gui/controls.h"
-#include "gui/uiutils.h"
+#include "gui/customdialogs.h"
 #include "gui/hosting/hostbattledialog.h"
 #include "gui/hosting/mainjoinbattletab.h"
-#include "iserver.h"
-#include "serverselector.h"
+#include "gui/mainwindow.h"
 #include "gui/mapctrl.h"
 #include "gui/nickdataviewctrl.h"
-#include "gui/mainwindow.h"
-#include "battlelistfilter.h"
+#include "gui/ui.h"
+#include "gui/uiutils.h"
 #include "iconimagelist.h"
-#include "useractions.h"
-#include "gui/customdialogs.h"
-#include "utils/slconfig.h"
-#include "utils/globalevents.h"
+#include "iserver.h"
 #include "log.h"
 #include "servermanager.h"
-#include "exception.h"
+#include "serverselector.h"
+#include "useractions.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "utils/slconfig.h"
 
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
@@ -67,103 +67,78 @@ BattleListTab::BattleListTab(wxWindow* parent)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T( "battlelisttab" ));
 
-	m_main_sizer = new wxBoxSizer(wxVERTICAL);
-
-	wxBoxSizer* m_filter_sizer;
-	m_filter_sizer = new wxBoxSizer(wxVERTICAL);
-
-
-	m_battlelist_sizer = new wxBoxSizer(wxVERTICAL);
-
 	m_battle_list = new BattleDataViewCtrl(_T("BattleDataViewCtrl_BattleList"), this);
 //	m_battle_list->SetHighLightAction(UserActions::ActHighlight);
+	m_battlelist_sizer = new wxBoxSizer(wxVERTICAL);
 	m_battlelist_sizer->Add(m_battle_list, 1, wxEXPAND);
 
-	m_main_sizer->Add(m_battlelist_sizer, 1, wxEXPAND);
 
-	m_info_sizer = new wxBoxSizer(wxHORIZONTAL);
+	m_map_lbl      = new wxStaticText(this, wxID_ANY, _("Map:"));
+	m_map_text     = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_mod_lbl      = new wxStaticText(this, wxID_ANY, _("Game:"));
+	m_mod_text     = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_players_lbl  = new wxStaticText(this, wxID_ANY, _("Players:"));
+	m_players_text = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_spec_lbl     = new wxStaticText(this, wxID_ANY, _("Spectators:"));
+	m_spec_text    = new wxStaticText(this, wxID_ANY, wxEmptyString);
 
-	m_minimap = new MapCtrl(this, 100, 0, true, false, false);
-	m_info_sizer->Add(m_minimap, 0, wxALL, 5);
-
-	m_data_sizer = new wxFlexGridSizer(4, 2, 0, 0);
-
-	m_map_lbl = new wxStaticText(this, wxID_ANY, _("Map:"), wxDefaultPosition, wxDefaultSize, 0);
+	m_data_sizer = new wxFlexGridSizer(5, 2, 0, 0);
 	m_data_sizer->Add(m_map_lbl, 0, wxALL, 5);
-
-	m_map_text = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_map_text, 0, wxALL, 5);
-
-	m_mod_lbl = new wxStaticText(this, wxID_ANY, _("Game:"), wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_mod_lbl, 0, wxALL, 5);
-
-	m_mod_text = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_mod_text, 0, wxALL, 5);
-
-	m_players_lbl = new wxStaticText(this, wxID_ANY, _("Players:"), wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_players_lbl, 0, wxALL, 5);
-
-	m_players_text = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_players_text, 0, wxALL, 5);
-
-	m_spec_lbl = new wxStaticText(this, wxID_ANY, _("Spectators:"), wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_spec_lbl, 0, wxALL, 5);
-
-	m_spec_text = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_spec_text, 0, wxALL, 5);
 
-	m_info_sizer->Add(m_data_sizer, 1, wxEXPAND, 5);
 
+	wxSize s = m_data_sizer->CalcMin();
+	wxLogDebug (_T("Minimum size for data sizer: %d x %d"), s.GetHeight(), s.GetWidth() );
+	m_minimap = new MapCtrl(this, s.GetHeight(), 0, true, false, false);
 	m_players = new NickDataViewCtrl(_T("NickDataViewCtrl_BattleListTab"), this, false, 0, true);
+
+	m_info_sizer = new wxBoxSizer(wxHORIZONTAL);
+	m_info_sizer->Add(m_minimap, 0, wxALL, 5);
+	m_info_sizer->Add(m_data_sizer, 1, wxEXPAND, 5);
 	m_info_sizer->Add(m_players, 1, wxALL | wxEXPAND, 5);
 
-	m_main_sizer->Add(m_info_sizer, 0, wxEXPAND, 5);
 
-
-	m_filter = new BattleListFilter(this, wxID_ANY, this, wxDefaultPosition, wxSize(-1, -1), wxEXPAND);
-	m_filter_sizer->Add(m_filter, 0, wxEXPAND, 5);
-
-	m_main_sizer->Add(m_filter_sizer, 0, wxEXPAND, 5);
-
-	m_buttons_sep = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
-	m_main_sizer->Add(m_buttons_sep, 0, wxALL | wxEXPAND, 5);
-
-	wxBoxSizer* m_buttons_sizer;
-	m_buttons_sizer = new wxBoxSizer(wxHORIZONTAL);
-
-	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
-
-#if wxUSE_TOGGLEBTN
-	m_filter_show = new wxToggleButton(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, wxSize(-1, 28), 0);
-#else
-	m_filter_show = new wxCheckBox(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, wxSize(-1, 28), 0);
-#endif
-	m_buttons_sizer->Add(m_filter_show, 0, 0, 5);
-
-	m_filter_activ = new wxCheckBox(this, BATTLE_LIST_FILTER_ACTIV, _("Activated"), wxDefaultPosition, wxDefaultSize, 0);
-	m_buttons_sizer->Add(m_filter_activ, 0, wxALL, 5);
-
-#if wxUSE_TOGGLEBTN
-	m_info_show = new wxToggleButton(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, wxSize(-1, 28), 0);
-#else
-	m_info_show = new wxCheckBox(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, wxSize(-1, 28), 0);
-#endif
-	m_buttons_sizer->Add(m_info_show, 0, 0, 5);
-
-	m_battle_num = new wxStaticText(this, wxID_ANY, _("0 battles displayed"), wxDefaultPosition, wxDefaultSize, 0);
-	m_buttons_sizer->Add(m_battle_num, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4);
-	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
-
-	m_host_btn = new wxButton(this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, wxSize(-1, 28), 0);
-	m_buttons_sizer->Add(m_host_btn, 0, wxBOTTOM | wxLEFT | wxRIGHT, 5);
-
-	m_join_btn = new wxButton(this, BATTLE_JOIN, _("Join"), wxDefaultPosition, wxSize(-1, 28), 0);
-	m_buttons_sizer->Add(m_join_btn, 0, wxBOTTOM | wxRIGHT, 5);
-
-	m_main_sizer->Add(m_buttons_sizer, 0, wxEXPAND, 5);
-
+	m_filter = new BattleListFilter(this, wxID_ANY, this, wxDefaultPosition, wxDefaultSize, wxEXPAND);
 	m_filter->Hide();
 
+
+	m_filter_activ = new wxCheckBox(this, BATTLE_LIST_FILTER_ACTIV, _("Activated"));
+#if wxUSE_TOGGLEBTN
+	m_filter_show = new wxToggleButton(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, wxSize(-1, 28), 0);
+	m_info_show = new wxToggleButton(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, wxSize(-1, 28), 0);
+#else
+	m_filter_show = new wxCheckBox(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, wxSize(-1, 28), 0);
+	m_info_show = new wxCheckBox(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, wxSize(-1, 28), 0);
+#endif
+	m_battle_num = new wxStaticText(this, wxID_ANY, _("0 battles displayed"), wxDefaultPosition, wxDefaultSize, 0);
+	m_host_btn = new wxButton(this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, wxSize(-1, 28), 0);
+	m_join_btn = new wxButton(this, BATTLE_JOIN, _("Join"), wxDefaultPosition, wxSize(-1, 28), 0);
+
+	wxBoxSizer* m_buttons_sizer = new wxBoxSizer(wxHORIZONTAL);
+	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
+	m_buttons_sizer->Add(m_filter_show, 0, 0, 5);
+	m_buttons_sizer->Add(m_filter_activ, 0, wxALL, 5);
+	m_buttons_sizer->Add(m_info_show, 0, 0, 5);
+	m_buttons_sizer->Add(m_battle_num, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4);
+	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
+	m_buttons_sizer->Add(m_host_btn, 0, wxBOTTOM | wxLEFT | wxRIGHT, 5);
+	m_buttons_sizer->Add(m_join_btn, 0, wxBOTTOM | wxRIGHT, 5);
+
+
+	m_buttons_sep = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
+
+	m_main_sizer = new wxBoxSizer(wxVERTICAL);
+	m_main_sizer->Add(m_battlelist_sizer, 1, wxEXPAND);
+	m_main_sizer->Add(m_info_sizer, 0, wxEXPAND, 5);
+	m_main_sizer->Add(m_filter, 0, wxEXPAND, 5);
+	m_main_sizer->Add(m_buttons_sep, 0, wxALL | wxEXPAND, 5);
+	m_main_sizer->Add(m_buttons_sizer, 0, wxEXPAND, 5);
 	SetSizer(m_main_sizer);
 	Layout();
 

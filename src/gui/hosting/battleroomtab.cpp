@@ -671,17 +671,11 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 			  _("No battle is running. You must be a player to start"), _("Error"));
 		} else { // I am a player
 			if (m_battle->IsEveryoneReady()) {
-				if (m_battle->DoesOpponentExist()) {
-					if (m_battle->IsFounderMe()) {
-						m_battle->SaveMapDefaults(); // save map presets
-						m_battle->StartHostedBattle();
-					} else {
-						m_battle->m_autohost_manager->GetAutohostHandler().Start();
-					}
+				if (m_battle->IsFounderMe()) {
+					m_battle->SaveMapDefaults(); // save map presets
+					m_battle->StartHostedBattle();
 				} else {
-					customMessageBoxModal(SL_MAIN_ICON,
-					  _("A battle with no opponents is no battle at all" // ...
-					    " (Hint: add a bot and try again)."), _("Error"));
+					m_battle->m_autohost_manager->GetAutohostHandler().Start();
 				}
 			} else {
 				int answer = customMessageBox(SL_MAIN_ICON,

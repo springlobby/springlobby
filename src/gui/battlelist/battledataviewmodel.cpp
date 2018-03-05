@@ -1,13 +1,12 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include "battledataviewmodel.h"
-
 #include <wx/colour.h>
 
+#include "battledataviewmodel.h"
 #include "gui/iconscollection.h"
 #include "ibattle.h"
-#include "utils/slpaths.h"
 #include "useractions.h"
+#include "utils/slpaths.h"
 
 BattleDataViewModel::BattleDataViewModel()
     : BaseDataViewModel<IBattle>::BaseDataViewModel(COLUMN_COUNT)

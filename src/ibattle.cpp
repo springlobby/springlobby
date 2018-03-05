@@ -394,12 +394,6 @@ bool IBattle::IsEveryoneReady() const
 }
 
 
-bool IBattle::DoesOpponentExist() const
-{
-	return (2 <= m_ally_sizes.size());
-}
-
-
 void IBattle::AddStartRect(unsigned int allyno, unsigned int left, unsigned int top, unsigned int right, unsigned int bottom)
 {
 	assert(allyno < MAX_TEAMS);

@@ -25,26 +25,23 @@ public:
 
 	void SetTipWindowText(const long item_hit, const wxPoint& position);
 
-private:
-	void OnDLMap(wxCommandEvent& event);
-	void OnDLMod(wxCommandEvent& event);
-	void OnDLEngine(wxCommandEvent& event);
-	void OnNotifyGameEnd(wxCommandEvent& event);
-	void OnContextMenu(wxDataViewEvent& event);
-
-private:
-	wxMenu* m_popup;
-
-public:
 	enum {
 		BATTLELIST_DATAVIEW_ID = wxID_HIGHEST,
-		BATTLELIST_DATAVIEW_DLMOD,
-		BATTLELIST_DATAVIEW_DLMAP,
-		BATTLELIST_DATAVIEW_DLENGINE,
-		BATTLELIST_DATAVIEW_NOTIFYGAMEENDS
+		BATTLELIST_DATAVIEW_DL_GAME,
+		BATTLELIST_DATAVIEW_DL_MAP,
+		BATTLELIST_DATAVIEW_DL_ENGINE,
+		BATTLELIST_DATAVIEW_NOTIFY_WHEN_BATTLE_ENDS
 	};
 
 private:
+	void OnContextMenu(wxDataViewEvent& event);
+	void OnDLMap(wxCommandEvent& event);
+	void OnDLGame(wxCommandEvent& event);
+	void OnDLEngine(wxCommandEvent& event);
+	void OnNotifyWhenBattleEnds(wxCommandEvent& event);
+
+	wxMenu* m_popup;
+
 	enum ColumnIndexes {
 		STATUS = 0,
 		COUNTRY,

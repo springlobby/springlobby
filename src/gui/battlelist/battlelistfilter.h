@@ -7,17 +7,15 @@
 
 #include "battlelisttab.h"
 #include "utils/mixins.h"
-///////////////////////////////////////////////////////////////////////////
 
 class BattleListTab;
-class wxToggleButton;
-class wxCheckBox;
-class wxStaticText;
-class wxTextCtrl;
-class wxChoice;
 class wxButton;
+class wxCheckBox;
+class wxChoice;
 class wxRegEx;
 class wxStaticText;
+class wxTextCtrl;
+class wxToggleButton;
 struct BattleListFilterValues;
 
 namespace GUI
@@ -46,10 +44,10 @@ public:
 	void SetActiv(bool state);
 
 	void OnChange(wxCommandEvent& event);
-	void OnChangeMap(wxCommandEvent& event);
-	void OnChangeMod(wxCommandEvent& event);
 	void OnChangeDescription(wxCommandEvent& event);
+	void OnChangeGame(wxCommandEvent& event);
 	void OnChangeHost(wxCommandEvent& event);
+	void OnChangeMap(wxCommandEvent& event);
 
 	void OnRankChange(wxCommandEvent& event);
 	void OnPlayerChange(wxCommandEvent& event);
@@ -78,19 +76,11 @@ private:
 	/** A function callback used to transform an input string. */
 	typedef wxString (*StringTransformFunction)(const wxString& input);
 
+	// Intentional? typo to prevent potential name clashes with wxWidgets
 	bool m_activ;
 
 	BattleListTab* m_parent_battlelisttab;
-	/*
-#if wxUSE_TOGGLEBTN
-		wxToggleButton* m_filter_show;
-#else
-		wxCheckBox* m_filter_show;
-#endif
-		wxStaticText* m_filter_text;
 
-		wxCheckBox* m_filter_activ;
-*/
 	//Host
 	wxStaticText* m_filter_host_text;
 	wxTextCtrl* m_filter_host_edit;
@@ -138,11 +128,11 @@ private:
 	wxChoice* m_filter_maxplayer_choice;
 	int m_filter_maxplayer_choice_value;
 
-	//Mod
-	wxStaticText* m_filter_mod_text;
-	wxTextCtrl* m_filter_mod_edit;
-	wxCheckBox* m_filter_mod_show;
-	wxRegEx* m_filter_mod_expression;
+	//Game
+	wxStaticText* m_filter_game_text;
+	wxTextCtrl* m_filter_game_edit;
+	wxCheckBox* m_filter_game_show;
+	wxRegEx* m_filter_game_expression;
 
 	//Spectator
 	wxStaticText* m_filter_spectator_text;
@@ -186,7 +176,7 @@ enum {
 	BATTLE_FILTER_HOST_EDIT,
 	BATTLE_FILTER_DESCRIPTION_EDIT,
 	BATTLE_FILTER_MAP_EDIT,
-	BATTLE_FILTER_MOD_EDIT,
+	BATTLE_FILTER_GAME_EDIT,
 	BATTLE_FILTER_LOCKED,
 	BATTLE_FILTER_OPEN,
 	BATTLE_FILTER_PASSWORDED,
@@ -198,7 +188,7 @@ enum {
 	BATTLE_FILTER_MAXPLAYER_CHOICE,
 	BATTLE_FILTER_SPECTATOR_CHOICE,
 	BATTLE_FILTER_MAP_SHOW,
-	BATTLE_FILTER_MOD_SHOW,
+	BATTLE_FILTER_GAME_SHOW,
 	BATTLE_FILTER_PLAYER_BUTTON,
 	BATTLE_FILTER_MAXPLAYER_BUTTON,
 	BATTLE_FILTER_SPECTATOR_BUTTON,

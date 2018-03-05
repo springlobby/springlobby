@@ -168,9 +168,9 @@ inline void BaseDataViewCtrl<DataType>::LoadColumnProperties()
 	//Loop through existing columns and set their sizes and sort orders
 	for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
 		//Set up column's width
-		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
-		const bool isHidden = sett().GetColumnVisibility(m_DataViewName, columnIndex);
 		wxDataViewColumn* column = GetColumn(columnIndex);
+		const int colWidth = sett().GetColumnWidth(m_DataViewName, columnIndex);
+		const bool isHidden = sett().IsColumnHidden(m_DataViewName, columnIndex, column->IsHidden());
 
 		//WORKAROUND!
 		//This weird code prevents columns in wxDataViewCtrl under Linux to loose ability to resize
@@ -215,7 +215,7 @@ inline void BaseDataViewCtrl<DataType>::SaveColumnProperties()
 		sett().SetColumnWidth(m_DataViewName, columnIndex, colWidth);
 #endif
 		//Save other properties
-		sett().SetColumnVisibility(m_DataViewName, columnIndex, column->IsHidden());
+		sett().SetColumnHidden(m_DataViewName, columnIndex, column->IsHidden());
 		if (column->IsSortKey()) {
 			//Save sorting column
 			cfg().Write(wxString(m_DataViewName + _T("/sorting_column")), columnIndex);
