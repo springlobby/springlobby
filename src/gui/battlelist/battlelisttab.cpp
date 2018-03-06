@@ -67,7 +67,7 @@ BattleListTab::BattleListTab(wxWindow* parent)
 {
 	GetAui().manager->AddPane(this, wxLEFT, _T( "battlelisttab" ));
 
-	m_battle_list = new BattleDataViewCtrl(_T("BattleDataViewCtrl_BattleList"), this);
+	m_battle_list = new BattleDataViewCtrl(_T("BattleDataViewCtrl_BattleList2"), this);
 //	m_battle_list->SetHighLightAction(UserActions::ActHighlight);
 	m_battlelist_sizer = new wxBoxSizer(wxVERTICAL);
 	m_battlelist_sizer->Add(m_battle_list, 1, wxEXPAND);
