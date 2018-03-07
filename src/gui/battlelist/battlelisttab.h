@@ -81,6 +81,10 @@ private:
 	wxStaticText* m_players_text;
 	wxStaticText* m_spec_lbl;
 	wxStaticText* m_spec_text;
+	wxStaticText* m_host_lbl;
+	wxStaticText* m_host_text;
+	wxStaticText* m_engine_lbl;
+	wxStaticText* m_engine_text;
 	wxStaticText* m_battle_num;
 	NickDataViewCtrl* m_players;
 	wxStaticLine* m_buttons_sep;

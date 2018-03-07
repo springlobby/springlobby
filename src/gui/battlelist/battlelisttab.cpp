@@ -81,6 +81,10 @@ BattleListTab::BattleListTab(wxWindow* parent)
 	m_players_text = new wxStaticText(this, wxID_ANY, wxEmptyString);
 	m_spec_lbl     = new wxStaticText(this, wxID_ANY, _("Spectators:"));
 	m_spec_text    = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_engine_lbl   = new wxStaticText(this, wxID_ANY, _("Engine:"));
+	m_engine_text  = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_host_lbl     = new wxStaticText(this, wxID_ANY, _("Host:"));
+	m_host_text    = new wxStaticText(this, wxID_ANY, wxEmptyString);
 
 	m_data_sizer = new wxFlexGridSizer(5, 2, 0, 0);
 	m_data_sizer->Add(m_map_lbl, 0, wxALL, 5);
@@ -91,6 +95,10 @@ BattleListTab::BattleListTab(wxWindow* parent)
 	m_data_sizer->Add(m_players_text, 0, wxALL, 5);
 	m_data_sizer->Add(m_spec_lbl, 0, wxALL, 5);
 	m_data_sizer->Add(m_spec_text, 0, wxALL, 5);
+	m_data_sizer->Add(m_engine_lbl, 0, wxALL, 5);
+	m_data_sizer->Add(m_engine_text, 0, wxALL, 5);
+	m_data_sizer->Add(m_host_lbl, 0, wxALL, 5);
+	m_data_sizer->Add(m_host_text, 0, wxALL, 5);
 
 
 	wxSize s = m_data_sizer->CalcMin();
@@ -178,12 +186,16 @@ void BattleListTab::SelectBattle(IBattle* battle)
 		m_mod_text->SetLabel(TowxString(m_sel_battle->GetHostGameName()));
 		m_players_text->SetLabel(wxString::Format(_T( "%d / %d" ), int(m_sel_battle->GetNumUsers()) - int(m_sel_battle->GetSpectators()), int(m_sel_battle->GetMaxPlayers())));
 		m_spec_text->SetLabel(wxString::Format(_T( "%d" ), m_sel_battle->GetSpectators()));
+		m_host_text->SetLabel(m_sel_battle->GetFounder().GetNick());
+		m_engine_text->SetLabel(m_sel_battle->GetEngineName() + _T(" ") + m_sel_battle->GetEngineVersion());
 		m_players->SetUsers(m_sel_battle->GetUsers());
 	} else {
 		m_map_text->SetLabel(wxEmptyString);
 		m_mod_text->SetLabel(wxEmptyString);
 		m_players_text->SetLabel(_T( "0 / 0" ));
 		m_spec_text->SetLabel(_T( "0" ));
+		m_engine_text->SetLabel(wxEmptyString);
+		m_host_text->SetLabel(wxEmptyString);
 	}
 }
 
