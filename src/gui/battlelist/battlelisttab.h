@@ -79,8 +79,6 @@ private:
 	wxStaticText* m_mod_text;
 	wxStaticText* m_players_lbl;
 	wxStaticText* m_players_text;
-	wxStaticText* m_spec_lbl;
-	wxStaticText* m_spec_text;
 	wxStaticText* m_host_lbl;
 	wxStaticText* m_host_text;
 	wxStaticText* m_engine_lbl;
