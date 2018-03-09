@@ -38,14 +38,13 @@ public:
 	~BattleListTab();
 
 	void OnConnected();
+	void OnDisconnected();
 
 	void AddBattle(IBattle& battle);
 	void RemoveBattle(IBattle& battle);
 	void UpdateBattle(IBattle& battle);
 
 	void UserUpdate(User& user);
-
-	void OnDisconnected();
 
 	void UpdateList();
 
@@ -75,8 +74,8 @@ private:
 	MapCtrl* m_minimap;
 	wxStaticText* m_map_lbl;
 	wxStaticText* m_map_text;
-	wxStaticText* m_mod_lbl;
-	wxStaticText* m_mod_text;
+	wxStaticText* m_game_lbl;
+	wxStaticText* m_game_text;
 	wxStaticText* m_players_lbl;
 	wxStaticText* m_players_text;
 	wxStaticText* m_host_lbl;

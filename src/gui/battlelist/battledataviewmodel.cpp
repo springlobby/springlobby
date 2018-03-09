@@ -20,7 +20,6 @@ BattleDataViewModel::~BattleDataViewModel()
 void BattleDataViewModel::GetValue(wxVariant& variant,
 				   const wxDataViewItem& item, unsigned int col) const
 {
-
 	const IBattle* battle = static_cast<const IBattle*>(item.GetID());
 
 	wxASSERT(battle != nullptr);
@@ -122,7 +121,6 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 				 const wxDataViewItem& itemB, unsigned int column,
 				 bool ascending) const
 {
-
 	const IBattle* battleA = static_cast<const IBattle*>(itemA.GetID());
 	const IBattle* battleB = static_cast<const IBattle*>(itemB.GetID());
 
@@ -228,7 +226,6 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 bool BattleDataViewModel::GetAttr(const wxDataViewItem& item,
 				  unsigned int, wxDataViewItemAttr& attr) const
 {
-
 	const IBattle* battle = static_cast<const IBattle*>(item.GetID());
 
 	wxASSERT(battle != nullptr);
@@ -259,7 +256,6 @@ bool BattleDataViewModel::GetAttr(const wxDataViewItem& item,
 
 wxString BattleDataViewModel::GetColumnType(unsigned int column) const
 {
-
 	wxString colTypeString;
 
 	switch (column) {
