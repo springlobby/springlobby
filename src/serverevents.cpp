@@ -42,7 +42,7 @@
 
 void ServerEvents::OnConnected(const std::string& server_name, const std::string& server_ver, bool supported, const std::string& server_spring_ver, bool /*unused*/)
 {
-	slLogDebugFunc("%s %s", server_ver.c_str(), server_spring_ver.c_str());
+	wxLogInfo("Connected to %s %s %s",m_serv.m_serverinfo.hostname.c_str(),  server_ver.c_str(), server_spring_ver.c_str());
 	//Server version will include patchlevel from release 89 onwards
 	m_serv.SetRequiredSpring(LSL::Util::BeforeFirst(server_spring_ver, "."));
 	ui().OnConnected(m_serv, TowxString(server_name), TowxString(server_spring_ver), supported);
@@ -52,7 +52,7 @@ void ServerEvents::OnConnected(const std::string& server_name, const std::string
 
 void ServerEvents::OnDisconnected(bool wasonline)
 {
-	slLogDebugFunc("");
+	wxLogInfo("Disconnected from server: %s %d", m_serv.m_serverinfo.hostname.c_str(), wasonline);
 	m_serv.SetRequiredSpring("");
 	try {
 		ui().OnDisconnected(m_serv, wasonline);
