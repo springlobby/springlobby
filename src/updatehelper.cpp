@@ -21,17 +21,17 @@ static bool isReleaseChannel()
 std::string GetDownloadUrl(const std::string& version)
 {
 	if (isReleaseChannel()) {
-		return stdprintf("http://springlobby.info/windows/springlobby-%s-win32.zip", version.c_str());
+		return stdprintf("https://springlobby.info/windows/springlobby-%s-win32.zip", version.c_str());
 	}
-	return "http://springlobby.info/temp/builds/develop/sl_master.zip";
+	return "https://springlobby.info/temp/builds/develop/sl_master.zip";
 }
 
 std::string GetLatestVersionUrl()
 {
 	if (isReleaseChannel()) {
-		return std::string("http://version.springlobby.info/current.txt");
+		return std::string("https://springlobby.info/version/current.txt");
 	}
-	return std::string("http://springlobby.info/temp/builds/develop/current.txt");
+	return std::string("https://springlobby.info/temp/builds/develop/current.txt");
 }
 
 static time_t GetTime()
