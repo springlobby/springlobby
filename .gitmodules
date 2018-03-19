@@ -1,6 +1,3 @@
 [submodule "src/downloader/lib"]
 	path = src/downloader/lib
 	url = https://github.com/spring/pr-downloader.git
-[submodule "src/lsl"]
-	path = src/lsl
-	url = https://github.com/springlobby/lsl.git

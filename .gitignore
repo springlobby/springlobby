@@ -45,3 +45,5 @@ Makefile
 # installer stuff
 /installer/*.zip
 /installer/uninstall.nsh
+
+build/
