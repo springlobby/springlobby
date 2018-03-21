@@ -13,6 +13,9 @@
 #include <wx/textdlg.h>
 #if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
+#define EVT_TOGGLEORCHECK EVT_TOGGLEBUTTON
+#else
+#define EVT_TOGGLEORCHECK EVT_CHECKBOX
 #endif
 
 #include "aui/auimanager.h"
@@ -48,13 +51,8 @@ EVT_BUTTON(BattleListTab::BATTLE_HOST, BattleListTab::OnHost)
 EVT_DATAVIEW_ITEM_ACTIVATED(BattleDataViewCtrl::BATTLELIST_DATAVIEW_ID, BattleListTab::OnListJoin)
 EVT_DATAVIEW_SELECTION_CHANGED(BattleDataViewCtrl::BATTLELIST_DATAVIEW_ID, BattleListTab::OnSelect)
 EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_ACTIV, BattleListTab::OnFilterActiv)
-#if wxUSE_TOGGLEBTN
-EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
-EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnInfoShow)
-#else
-EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
-EVT_CHECKBOX(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnOnInfoShow)
-#endif
+EVT_TOGGLEORCHECK(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
+EVT_TOGGLEORCHECK(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnInfoShow)
 END_EVENT_TABLE()
 
 SLCONFIG("/BattleFilter/Active", false, "determines if battle list filter is active");
@@ -117,13 +115,8 @@ BattleListTab::BattleListTab(wxWindow* parent)
 
 	const wxSize br_size (-1, 28); // Button row size
 	m_filter_activ = new wxCheckBox(this, BATTLE_LIST_FILTER_ACTIV, _("Activated"));
-#if wxUSE_TOGGLEBTN
-	m_filter_show = new wxToggleButton(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, br_size, 0);
-	m_info_show = new wxToggleButton(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, br_size, 0);
-#else
-	m_filter_show = new wxCheckBox(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, br_size, 0);
-	m_info_show = new wxCheckBox(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, br_size, 0);
-#endif
+	m_filter_show = new wxToggleOrCheck(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, br_size, 0);
+	m_info_show = new wxToggleOrCheck(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, br_size, 0);
 	m_battle_num = new wxStaticText(this, wxID_ANY, _("0 battles displayed"));
 	m_host_btn = new wxButton(this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, br_size, 0);
 	m_join_btn = new wxButton(this, BATTLE_JOIN, _("Join"), wxDefaultPosition, br_size, 0);

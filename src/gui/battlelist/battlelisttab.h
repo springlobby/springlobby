@@ -7,6 +7,13 @@
 
 #include "utils/mixins.h"
 
+#if wxUSE_TOGGLEBTN
+class wxToggleButton;
+#define wxToggleOrCheck wxToggleButton
+#else
+#define wxToggleOrCheck wxCheckBox
+#endif
+
 class Battle;
 class BattleDataViewCtrl;
 class BattleListFilter;
@@ -94,13 +101,8 @@ private:
 
 	wxCheckBox* m_filter_activ;
 
-#if wxUSE_TOGGLEBTN
-	wxToggleButton* m_filter_show;
-	wxToggleButton* m_info_show;
-#else
-	wxCheckBox* m_filter_show;
-	wxCheckBox* m_info_show;
-#endif
+	wxToggleOrCheck* m_filter_show;
+	wxToggleOrCheck* m_info_show;
 
 	IBattle* m_sel_battle;
 
