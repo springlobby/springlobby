@@ -33,12 +33,12 @@ public:
 		BATTLELIST_DATAVIEW_NOTIFY_WHEN_BATTLE_ENDS
 	};
 
+	void OnNotifyWhenBattleEnds(wxCommandEvent& event);
 private:
 	void OnContextMenu(wxDataViewEvent& event);
 	void OnDLMap(wxCommandEvent& event);
 	void OnDLGame(wxCommandEvent& event);
 	void OnDLEngine(wxCommandEvent& event);
-	void OnNotifyWhenBattleEnds(wxCommandEvent& event);
 
 	wxMenu* m_popup;
 

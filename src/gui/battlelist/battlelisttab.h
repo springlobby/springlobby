@@ -76,6 +76,8 @@ public:
 	void SortBattleList();
 
 private:
+	void OnNotifyWhenBattleEnds(wxCommandEvent& event);
+
 	BattleListFilter* m_filter;
 	BattleDataViewCtrl* m_battle_list;
 	MapCtrl* m_minimap;
@@ -86,6 +88,7 @@ private:
 	wxStaticText* m_players_lbl;
 	wxStaticText* m_players_text;
 	wxStaticText* m_host_lbl;
+	wxToggleOrCheck* m_host_notify_button;
 	wxStaticText* m_host_text;
 	wxStaticText* m_engine_lbl;
 	wxStaticText* m_engine_text;

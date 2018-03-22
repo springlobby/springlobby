@@ -85,6 +85,18 @@ BattleListTab::BattleListTab(wxWindow* parent)
 	m_host_text    = new wxStaticText(this, wxID_ANY, wxEmptyString);
 
 	const int bib_height = 5; // Battle Info element border height
+	const wxSize bib_button_size(-1, m_host_text->GetSize().GetHeight()+2*bib_height);
+
+	m_host_notify_button = new wxToggleOrCheck(this, wxID_ANY, _("Notify"), wxDefaultPosition,
+	                                           bib_button_size, wxBU_EXACTFIT);
+	m_host_notify_button->Disable();
+	m_host_notify_button->SetToolTip(_("Notify me when the battle ends (Only supported by bots)"));
+	m_host_notify_button->Bind(wxEVT_TOGGLEBUTTON, &BattleListTab::OnNotifyWhenBattleEnds, this);
+
+	wxBoxSizer* m_host_info_sizer = new wxBoxSizer(wxHORIZONTAL);
+	m_host_info_sizer->Add(m_host_notify_button);
+	m_host_info_sizer->Add(m_host_text, 0, wxALL, bib_height);
+
 	m_data_sizer = new wxFlexGridSizer(5, 2, 0, 0);
 	AddToSizer(m_data_sizer, bib_height, m_players_lbl);
 	AddToSizer(m_data_sizer, bib_height, m_players_text);
@@ -95,7 +107,7 @@ BattleListTab::BattleListTab(wxWindow* parent)
 	AddToSizer(m_data_sizer, bib_height, m_engine_lbl);
 	AddToSizer(m_data_sizer, bib_height, m_engine_text);
 	AddToSizer(m_data_sizer, bib_height, m_host_lbl);
-	AddToSizer(m_data_sizer, bib_height, m_host_text);
+	m_data_sizer->Add(m_host_info_sizer, 0, wxALL, 0);
 
 
 	wxSize s = m_data_sizer->CalcMin();
@@ -173,8 +185,14 @@ void BattleListTab::SelectBattle(IBattle* battle)
 {
 	m_sel_battle = battle;
 	m_minimap->SetBattle(m_sel_battle);
+	m_host_notify_button->SetValue(false);
 	m_players->ClearUsers();
 	if (m_sel_battle != 0) {
+		if (m_sel_battle->GetFounder().Status().bot) {
+			m_host_notify_button->Enable();
+		} else {
+			m_host_notify_button->Disable();
+		}
 		m_engine_text->SetLabel(m_sel_battle->GetEngineName() + _T(" ") + m_sel_battle->GetEngineVersion());
 		m_game_text->SetLabel(TowxString(m_sel_battle->GetHostGameName()));
 		m_host_text->SetLabel(m_sel_battle->GetFounder().GetNick());
@@ -186,6 +204,7 @@ void BattleListTab::SelectBattle(IBattle* battle)
 		  static_cast<int>(m_sel_battle->GetMaxPlayers()) ));
 	} else {
 		m_engine_text->SetLabel(wxEmptyString);
+		m_host_notify_button->Disable();
 		m_game_text->SetLabel(wxEmptyString);
 		m_host_text->SetLabel(wxEmptyString);
 		m_map_text->SetLabel(wxEmptyString);
@@ -292,6 +311,14 @@ void BattleListTab::OnHost(wxCommandEvent& /*unused*/)
 	}
 
 	HostBattleDialog::RunHostBattleDialog(this);
+}
+
+void BattleListTab::OnNotifyWhenBattleEnds(wxCommandEvent& event)
+{
+	if (m_host_notify_button->GetValue()) {
+		m_host_notify_button->Disable();
+		m_battle_list->OnNotifyWhenBattleEnds(event);
+	}
 }
 
 /**
