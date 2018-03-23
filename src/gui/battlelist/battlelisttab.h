@@ -96,6 +96,7 @@ private:
 	NickDataViewCtrl* m_players;
 	wxStaticLine* m_buttons_sep;
 	wxButton* m_host_btn;
+	wxStaticText* m_rank_warn;
 	wxButton* m_join_btn;
 	wxBoxSizer* m_battlelist_sizer;
 	wxFlexGridSizer* m_data_sizer;

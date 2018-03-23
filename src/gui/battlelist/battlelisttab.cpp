@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <wx/button.h>
 #include <wx/checkbox.h>
+#include <wx/colour.h>
 #include <wx/combobox.h>
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -126,6 +127,9 @@ BattleListTab::BattleListTab(wxWindow* parent)
 
 
 	const wxSize br_size (-1, 28); // Button row size
+	m_rank_warn = new wxStaticText(this, wxID_ANY, _("Insufficient rank") + _T("!"));
+	m_rank_warn->SetForegroundColour(*wxRED);
+	m_rank_warn->Hide();
 	m_filter_activ = new wxCheckBox(this, BATTLE_LIST_FILTER_ACTIV, _("Activated"));
 	m_filter_show = new wxToggleOrCheck(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, br_size, 0);
 	m_info_show = new wxToggleOrCheck(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, br_size, 0);
@@ -141,6 +145,7 @@ BattleListTab::BattleListTab(wxWindow* parent)
 	m_buttons_sizer->Add(m_battle_num, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4);
 	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
 	m_buttons_sizer->Add(m_host_btn, 0, wxBOTTOM | wxLEFT | wxRIGHT, 5);
+	m_buttons_sizer->Add(m_rank_warn,  0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4);
 	m_buttons_sizer->Add(m_join_btn, 0, wxBOTTOM | wxRIGHT, 5);
 
 
@@ -193,6 +198,10 @@ void BattleListTab::SelectBattle(IBattle* battle)
 		} else {
 			m_host_notify_button->Disable();
 		}
+		if (m_sel_battle->GetRankNeeded() > m_sel_battle->GetMe().GetRank())
+			m_rank_warn->Show();
+		else
+			m_rank_warn->Hide();
 		m_engine_text->SetLabel(m_sel_battle->GetEngineName() + _T(" ") + m_sel_battle->GetEngineVersion());
 		m_game_text->SetLabel(TowxString(m_sel_battle->GetHostGameName()));
 		m_host_text->SetLabel(m_sel_battle->GetFounder().GetNick());
@@ -209,7 +218,9 @@ void BattleListTab::SelectBattle(IBattle* battle)
 		m_host_text->SetLabel(wxEmptyString);
 		m_map_text->SetLabel(wxEmptyString);
 		m_players_text->SetLabel(wxEmptyString);
+		m_rank_warn->Hide();
 	}
+	this->Layout();
 }
 
 void BattleListTab::AddBattle(IBattle& battle)
