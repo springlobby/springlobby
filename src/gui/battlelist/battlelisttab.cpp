@@ -192,7 +192,11 @@ void BattleListTab::SelectBattle(IBattle* battle)
 	m_minimap->SetBattle(m_sel_battle);
 	m_host_notify_button->SetValue(false);
 	m_players->ClearUsers();
+	m_players_text->SetForegroundColour(wxNullColour); //Resets colour
+
 	if (m_sel_battle != 0) {
+		int num_players = static_cast<int>(battle->GetNumUsers()) - battle->GetSpectators();
+
 		if (m_sel_battle->GetFounder().Status().bot) {
 			m_host_notify_button->Enable();
 		} else {
@@ -207,10 +211,10 @@ void BattleListTab::SelectBattle(IBattle* battle)
 		m_host_text->SetLabel(m_sel_battle->GetFounder().GetNick());
 		m_map_text->SetLabel(TowxString(m_sel_battle->GetHostMapName()));
 		m_players->SetUsers(m_sel_battle->GetUsers());
-		m_players_text->SetLabel(wxString::Format(_T("%d + %d (Max: %d)"),
-		  static_cast<int>(m_sel_battle->GetNumUsers()) - m_sel_battle->GetSpectators(),
-		  m_sel_battle->GetSpectators(),
-		  static_cast<int>(m_sel_battle->GetMaxPlayers()) ));
+		m_players_text->SetLabel(wxString::Format(_T("%d (Max: %d) + %d spectators"), num_players,
+		  static_cast<int>(m_sel_battle->GetMaxPlayers()), m_sel_battle->GetSpectators() ));
+		if (num_players == static_cast<int>(m_sel_battle->GetMaxPlayers()))
+			m_players_text->SetForegroundColour(*wxRED);
 	} else {
 		m_engine_text->SetLabel(wxEmptyString);
 		m_host_notify_button->Disable();

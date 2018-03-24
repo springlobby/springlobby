@@ -40,8 +40,8 @@ BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* p
 	AppendBitmapColumn(wxEmptyString,   COUNTRY,     cm, gds, wxALIGN_CENTER, flags);
 	AppendBitmapColumn(wxEmptyString,   RANK,        cm, gds, wxALIGN_CENTER, flags_hidden);
 	AppendTextColumn(ici.BMP_BROOM,     PLAYERS,     cm, gds, wxALIGN_NOT, flags);
-	AppendTextColumn(ici.BMP_SPECTATOR, SPECTATORS,  cm, gds, wxALIGN_NOT, flags);
 	AppendTextColumn(_("Max"),          MAXIMUM,     cm, asds, wxALIGN_NOT, flags);
+	AppendTextColumn(ici.BMP_SPECTATOR, SPECTATORS,  cm, gds,  wxALIGN_NOT, flags);
 	AppendTextColumn(_("Running"),      RUNNING,     cm, asds, wxALIGN_NOT, flags_hidden);
 	AppendTextColumn(_("Battle Name"),  DESCRIPTION, cm, asds, wxALIGN_NOT, flags);
 	AppendIconTextColumn(_("Game"),     GAME,        cm, asds, wxALIGN_NOT, flags);
