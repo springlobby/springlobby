@@ -127,24 +127,24 @@ BattleListTab::BattleListTab(wxWindow* parent)
 
 
 	const wxSize br_size (-1, 28); // Button row size
-	m_rank_warn = new wxStaticText(this, wxID_ANY, _("Insufficient rank") + _T("!"));
-	m_rank_warn->SetForegroundColour(*wxRED);
-	m_rank_warn->Hide();
+	m_host_btn = new wxButton(this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, br_size, 0);
 	m_filter_activ = new wxCheckBox(this, BATTLE_LIST_FILTER_ACTIV, _("Activated"));
 	m_filter_show = new wxToggleOrCheck(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, br_size, 0);
 	m_info_show = new wxToggleOrCheck(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, br_size, 0);
 	m_battle_num = new wxStaticText(this, wxID_ANY, _("0 battles displayed"));
-	m_host_btn = new wxButton(this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, br_size, 0);
+	m_rank_warn = new wxStaticText(this, wxID_ANY, _("Insufficient rank") + _T("!"));
+	m_rank_warn->SetForegroundColour(*wxRED);
+	m_rank_warn->Hide();
 	m_join_btn = new wxButton(this, BATTLE_JOIN, _("Join"), wxDefaultPosition, br_size, 0);
 
 	wxBoxSizer* m_buttons_sizer = new wxBoxSizer(wxHORIZONTAL);
+	m_buttons_sizer->Add(m_host_btn, 0, wxBOTTOM | wxLEFT | wxRIGHT, 5);
 	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
 	m_buttons_sizer->Add(m_filter_show, 0, 0, 5);
 	m_buttons_sizer->Add(m_filter_activ, 0, wxALL, 5);
 	m_buttons_sizer->Add(m_info_show, 0, 0, 5);
 	m_buttons_sizer->Add(m_battle_num, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4);
 	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
-	m_buttons_sizer->Add(m_host_btn, 0, wxBOTTOM | wxLEFT | wxRIGHT, 5);
 	m_buttons_sizer->Add(m_rank_warn,  0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4);
 	m_buttons_sizer->Add(m_join_btn, 0, wxBOTTOM | wxRIGHT, 5);
 
