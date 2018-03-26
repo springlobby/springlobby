@@ -1311,35 +1311,35 @@ void TASServer::JoinBattle(const int& battleid, const std::string& password)
 	m_finalize_join_battle_pw = password;
 	m_finalize_join_battle_id = battleid;
 
-	if (BattleExists(battleid)) {
-		IBattle* battle = &GetBattle(battleid);
-
-		if (battle) {
-			if ((battle->GetNatType() == NAT_Hole_punching) || (battle->GetNatType() == NAT_Fixed_source_ports)) {
-				m_udp_private_port = sett().GetClientPort();
-
-				m_last_udp_ping = 0;
-				// its important to set time now, to prevent Update()
-				// from calling FinalizeJoinBattle() on timeout.
-				// m_do_finalize_join_battle must be set to true after setting time, not before.
-				m_do_finalize_join_battle = true;
-				for (int n = 0; n < 5; ++n) { // do 5 udp pings with tiny interval
-					UdpPingTheServer(GetUserName());
-					// sleep(0);// sleep until end of timeslice.
-				}
-				m_last_udp_ping = 0; // set time again
-			} else {
-				// if not using nat, finalize now.
-				m_do_finalize_join_battle = true;
-				FinalizeJoinBattle();
-			}
-		} else {
-			wxLogMessage(_T("battle doesnt exist (null)"));
-		}
-	} else {
-		wxLogMessage(_T("battle doesnt exist"));
+	if (!BattleExists(battleid)) {
+		wxLogMessage(_T("battle doesn't exist"));
+		return;
 	}
-	//SendCmd( _T("JOINBATTLE"), wxString::Format( _T("%d"), battleid ) + std::string(" ") + password );
+	IBattle* battle = &GetBattle(battleid);
+
+	if (!battle) {
+		wxLogMessage(_T("battle doesnt exist (null)"));
+		return;
+	}
+
+	if ((battle->GetNatType() == NAT_Hole_punching) || (battle->GetNatType() == NAT_Fixed_source_ports)) {
+		m_udp_private_port = sett().GetClientPort();
+
+		m_last_udp_ping = 0;
+		// its important to set time now, to prevent Update()
+		// from calling FinalizeJoinBattle() on timeout.
+		// m_do_finalize_join_battle must be set to true after setting time, not before.
+		m_do_finalize_join_battle = true;
+		for (int n = 0; n < 5; ++n) { // do 5 udp pings with tiny interval
+			UdpPingTheServer(GetUserName());
+			// sleep(0);// sleep until end of timeslice.
+		}
+		m_last_udp_ping = 0; // set time again
+	} else {
+		// if not using nat, finalize now.
+		m_do_finalize_join_battle = true;
+		FinalizeJoinBattle();
+	}
 }
 
 
