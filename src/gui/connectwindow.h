@@ -1,21 +1,20 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #ifndef SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H
 #define SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H
 
 #include <wx/dialog.h>
 
-class wxPanel;
-class wxComboBox;
-class wxBoxSizer;
-class wxStdDialogButtonSizer;
-class wxButton;
-class wxTextCtrl;
-class wxStaticText;
-class wxNotebook;
-class wxCheckBox;
-class wxStaticLine;
 class Ui;
+class wxBoxSizer;
+class wxButton;
+class wxCheckBox;
+class wxComboBox;
+class wxNotebook;
+class wxPanel;
+class wxStaticLine;
+class wxStaticText;
+class wxStdDialogButtonSizer;
+class wxTextCtrl;
 
 //! @brief wxFrame with a connection dialog used to specify username, password, and server. It can also register a new acount.
 class ConnectWindow : public wxDialog
@@ -24,23 +23,18 @@ public:
 	ConnectWindow(wxWindow* parent, Ui& ui);
 	~ConnectWindow();
 
-	// ConnectWindow interface
-
+	void OnServerChange(wxCommandEvent& event);
 	void ReloadServerList();
 
-	void OnServerChange(wxCommandEvent& event);
-
+	void OnLoginDenied(const wxString& reason);
 	void OnRegistrationAccepted(const wxString& user, const wxString& pass);
 	void OnRegistrationDenied(const wxString& reason);
-	void OnLoginDenied(const wxString& reason);
-
 private:
-	void OnOk(wxCommandEvent& event);
 	void OnCancel(wxCommandEvent& event);
+	void OnOk(wxCommandEvent& event);
 	void OnQuit(wxCommandEvent& data);
 
 	void CleanHide();
-	// ConnectWindow variables
 
 	wxNotebook* m_tabs;      //!< Notebook containing the login and register tabs
 	wxPanel* m_login_tab;    //!< The login tab
@@ -90,6 +84,5 @@ private:
 
 	DECLARE_EVENT_TABLE()
 };
-
 
 #endif // SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H
