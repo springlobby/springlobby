@@ -1317,8 +1317,13 @@ void TASServer::JoinBattle(const int& battleid, const std::string& password)
 	}
 	IBattle* battle = &GetBattle(battleid);
 
-	if (!battle) {
+	if (battle == nullptr) {
 		wxLogMessage(_T("battle doesnt exist (null)"));
+		return;
+	}
+
+	if ((battle->GetEngineName() == "spring") && (battle->GetEngineVersion() == "98.0")) {
+		wxLogError("Spring 98.0 is broken, refusing to join battle");
 		return;
 	}
 
