@@ -513,7 +513,8 @@ msgid "Kuwait"
 msgstr "Kuwejt"
 
 #: src/countrycodes.cpp:136
-msgid "Wyspy Kajman"
+msgid "Cayman Islands"
+msgstr "Wyspy Kajman"
 
 #: src/countrycodes.cpp:137
 msgid "Kazakhstan"
