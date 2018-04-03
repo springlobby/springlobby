@@ -6,6 +6,7 @@
 #include "battledataviewmodel.h"
 #include "downloader/prdownloader.h"
 #include "exception.h"
+#include "gui/iconscollection.h"
 #include "gui/ui.h"
 #include "ibattle.h"
 #include "log.h"
@@ -28,22 +29,25 @@ BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* p
 	BattleDataViewModel* m_BattleDataModel = new BattleDataViewModel();
 	AssociateModel(m_BattleDataModel);
 
+	const IconsCollection& ici = *IconsCollection::Instance();
 	const wxDataViewCellMode& cm = wxDATAVIEW_CELL_INERT;
 	const int gds = wxDVC_DEFAULT_MINWIDTH; // graphical default size
 	const int asds = wxCOL_WIDTH_AUTOSIZE; // autosize default size
 	const int flags = wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE;
-	AppendBitmapColumn(_("S"),         STATUS,      cm, gds, wxALIGN_CENTER, flags);
-	AppendBitmapColumn(_("C"),         COUNTRY,     cm, gds, wxALIGN_CENTER, flags);
-	AppendBitmapColumn(_("R"),         RANK,        cm, gds, wxALIGN_CENTER, flags);
-	AppendTextColumn(_("Description"), DESCRIPTION, cm, asds, wxALIGN_NOT, flags);
-	AppendIconTextColumn(_("Map"),     MAP,         cm, asds, wxALIGN_NOT, flags);
-	AppendIconTextColumn(_("Game"),    GAME,        cm, asds, wxALIGN_NOT, flags);
-	AppendTextColumn(_("Host"),        HOST,        cm, asds, wxALIGN_NOT, flags);
-	AppendTextColumn(_("Spectators"),  SPECTATORS,  cm, asds, wxALIGN_NOT, flags);
-	AppendTextColumn(_("Players"),     PLAYERS,     cm, asds, wxALIGN_NOT, flags);
-	AppendTextColumn(_("Max"),         MAXIMUM,     cm, asds, wxALIGN_NOT, flags);
-	AppendTextColumn(_("Running"),     RUNNING,     cm, asds, wxALIGN_NOT, flags);
-	AppendIconTextColumn(_("Engine"),  ENGINE,      cm, asds, wxALIGN_NOT, flags);
+	const int flags_hidden = flags | wxDATAVIEW_COL_HIDDEN;
+
+	AppendBitmapColumn(wxEmptyString,   STATUS,      cm, gds, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(wxEmptyString,   COUNTRY,     cm, gds, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(wxEmptyString,   RANK,        cm, gds, wxALIGN_CENTER, flags_hidden);
+	AppendTextColumn(ici.BMP_BROOM,     PLAYERS,     cm, gds, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Max"),          MAXIMUM,     cm, asds, wxALIGN_NOT, flags);
+	AppendTextColumn(ici.BMP_SPECTATOR, SPECTATORS,  cm, gds,  wxALIGN_NOT, flags);
+	AppendTextColumn(_("Running"),      RUNNING,     cm, asds, wxALIGN_NOT, flags_hidden);
+	AppendTextColumn(_("Battle Name"),  DESCRIPTION, cm, asds, wxALIGN_NOT, flags);
+	AppendIconTextColumn(_("Game"),     GAME,        cm, asds, wxALIGN_NOT, flags);
+	AppendIconTextColumn(_("Map"),      MAP,         cm, asds, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Host"),         HOST,        cm, asds, wxALIGN_NOT, flags_hidden);
+	AppendIconTextColumn(_("Engine"),   ENGINE,      cm, asds, wxALIGN_NOT, flags_hidden);
 
 	LoadColumnProperties();
 }

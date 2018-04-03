@@ -7,6 +7,13 @@
 
 #include "utils/mixins.h"
 
+#if wxUSE_TOGGLEBTN
+class wxToggleButton;
+#define wxToggleOrCheck wxToggleButton
+#else
+#define wxToggleOrCheck wxCheckBox
+#endif
+
 class Battle;
 class BattleDataViewCtrl;
 class BattleListFilter;
@@ -38,14 +45,13 @@ public:
 	~BattleListTab();
 
 	void OnConnected();
+	void OnDisconnected();
 
 	void AddBattle(IBattle& battle);
 	void RemoveBattle(IBattle& battle);
 	void UpdateBattle(IBattle& battle);
 
 	void UserUpdate(User& user);
-
-	void OnDisconnected();
 
 	void UpdateList();
 
@@ -70,21 +76,27 @@ public:
 	void SortBattleList();
 
 private:
+	void OnNotifyWhenBattleEnds(wxCommandEvent& event);
+
 	BattleListFilter* m_filter;
 	BattleDataViewCtrl* m_battle_list;
 	MapCtrl* m_minimap;
 	wxStaticText* m_map_lbl;
 	wxStaticText* m_map_text;
-	wxStaticText* m_mod_lbl;
-	wxStaticText* m_mod_text;
+	wxStaticText* m_game_lbl;
+	wxStaticText* m_game_text;
 	wxStaticText* m_players_lbl;
 	wxStaticText* m_players_text;
-	wxStaticText* m_spec_lbl;
-	wxStaticText* m_spec_text;
+	wxStaticText* m_host_lbl;
+	wxToggleOrCheck* m_host_notify_button;
+	wxStaticText* m_host_text;
+	wxStaticText* m_engine_lbl;
+	wxStaticText* m_engine_text;
 	wxStaticText* m_battle_num;
 	NickDataViewCtrl* m_players;
 	wxStaticLine* m_buttons_sep;
 	wxButton* m_host_btn;
+	wxStaticText* m_rank_warn;
 	wxButton* m_join_btn;
 	wxBoxSizer* m_battlelist_sizer;
 	wxFlexGridSizer* m_data_sizer;
@@ -93,13 +105,8 @@ private:
 
 	wxCheckBox* m_filter_activ;
 
-#if wxUSE_TOGGLEBTN
-	wxToggleButton* m_filter_show;
-	wxToggleButton* m_info_show;
-#else
-	wxCheckBox* m_filter_show;
-	wxCheckBox* m_info_show;
-#endif
+	wxToggleOrCheck* m_filter_show;
+	wxToggleOrCheck* m_info_show;
 
 	IBattle* m_sel_battle;
 

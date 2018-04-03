@@ -506,11 +506,11 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 	if ((m_filter_spectator_choice_value != -1) && !_IntCompare(battle.GetSpectators(), m_filter_spectator_choice_value, m_filter_spectator_mode))
 		return false;
 
-	//Only Maps i have Check
+	//Only Maps I have Check
 	if (m_filter_map_show->GetValue() && !battle.MapExists())
 		return false;
 
-	//Only Mods i have Check
+	//Only Games I have Check
 	if (m_filter_game_show->GetValue() && !battle.GameExists())
 		return false;
 
@@ -537,7 +537,7 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 			   m_filter_map_expression))
 		return false;
 
-	//Mod:
+	//Game:
 	if (!StringMatches(TowxString(battle.GetHostGameName()),
 			   m_filter_game_edit->GetValue(),
 			   m_filter_game_expression))

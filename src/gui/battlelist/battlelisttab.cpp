@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <wx/button.h>
 #include <wx/checkbox.h>
+#include <wx/colour.h>
 #include <wx/combobox.h>
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -13,6 +14,9 @@
 #include <wx/textdlg.h>
 #if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
+#define EVT_TOGGLEORCHECK EVT_TOGGLEBUTTON
+#else
+#define EVT_TOGGLEORCHECK EVT_CHECKBOX
 #endif
 
 #include "aui/auimanager.h"
@@ -48,13 +52,8 @@ EVT_BUTTON(BattleListTab::BATTLE_HOST, BattleListTab::OnHost)
 EVT_DATAVIEW_ITEM_ACTIVATED(BattleDataViewCtrl::BATTLELIST_DATAVIEW_ID, BattleListTab::OnListJoin)
 EVT_DATAVIEW_SELECTION_CHANGED(BattleDataViewCtrl::BATTLELIST_DATAVIEW_ID, BattleListTab::OnSelect)
 EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_ACTIV, BattleListTab::OnFilterActiv)
-#if wxUSE_TOGGLEBTN
-EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
-EVT_TOGGLEBUTTON(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnInfoShow)
-#else
-EVT_CHECKBOX(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
-EVT_CHECKBOX(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnOnInfoShow)
-#endif
+EVT_TOGGLEORCHECK(BattleListTab::BATTLE_LIST_FILTER_BUTTON, BattleListTab::OnFilter)
+EVT_TOGGLEORCHECK(BattleListTab::BATTLE_LIST_INFO_BUTTON, BattleListTab::OnInfoShow)
 END_EVENT_TABLE()
 
 SLCONFIG("/BattleFilter/Active", false, "determines if battle list filter is active");
@@ -65,32 +64,51 @@ BattleListTab::BattleListTab(wxWindow* parent)
     : wxPanel(parent, -1)
     , m_sel_battle(0)
 {
+	auto AddToSizer = [&](wxSizer* sizer, int height, wxWindow* window) {
+		return sizer->Add (window, 0, wxALL, height);
+	};
+
 	GetAui().manager->AddPane(this, wxLEFT, _T( "battlelisttab" ));
 
-	m_battle_list = new BattleDataViewCtrl(_T("BattleDataViewCtrl_BattleList"), this);
+	m_battle_list = new BattleDataViewCtrl(_T("BattleDataViewCtrl_BattleList2"), this);
 //	m_battle_list->SetHighLightAction(UserActions::ActHighlight);
-	m_battlelist_sizer = new wxBoxSizer(wxVERTICAL);
-	m_battlelist_sizer->Add(m_battle_list, 1, wxEXPAND);
 
 
-	m_map_lbl      = new wxStaticText(this, wxID_ANY, _("Map:"));
-	m_map_text     = new wxStaticText(this, wxID_ANY, wxEmptyString);
-	m_mod_lbl      = new wxStaticText(this, wxID_ANY, _("Game:"));
-	m_mod_text     = new wxStaticText(this, wxID_ANY, wxEmptyString);
 	m_players_lbl  = new wxStaticText(this, wxID_ANY, _("Players:"));
 	m_players_text = new wxStaticText(this, wxID_ANY, wxEmptyString);
-	m_spec_lbl     = new wxStaticText(this, wxID_ANY, _("Spectators:"));
-	m_spec_text    = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_map_lbl      = new wxStaticText(this, wxID_ANY, _("Map:"));
+	m_map_text     = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_game_lbl     = new wxStaticText(this, wxID_ANY, _("Game:"));
+	m_game_text    = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_engine_lbl   = new wxStaticText(this, wxID_ANY, _("Engine:"));
+	m_engine_text  = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_host_lbl     = new wxStaticText(this, wxID_ANY, _("Host:"));
+	m_host_text    = new wxStaticText(this, wxID_ANY, wxEmptyString);
+
+	const int bib_height = 5; // Battle Info element border height
+	const wxSize bib_button_size(-1, m_host_text->GetSize().GetHeight()+2*bib_height);
+
+	m_host_notify_button = new wxToggleOrCheck(this, wxID_ANY, _("Notify"), wxDefaultPosition,
+	                                           bib_button_size, wxBU_EXACTFIT);
+	m_host_notify_button->Disable();
+	m_host_notify_button->SetToolTip(_("Notify me when the battle ends (Only supported by bots)"));
+	m_host_notify_button->Bind(wxEVT_TOGGLEBUTTON, &BattleListTab::OnNotifyWhenBattleEnds, this);
+
+	wxBoxSizer* m_host_info_sizer = new wxBoxSizer(wxHORIZONTAL);
+	m_host_info_sizer->Add(m_host_notify_button);
+	m_host_info_sizer->Add(m_host_text, 0, wxALL, bib_height);
 
 	m_data_sizer = new wxFlexGridSizer(5, 2, 0, 0);
-	m_data_sizer->Add(m_map_lbl, 0, wxALL, 5);
-	m_data_sizer->Add(m_map_text, 0, wxALL, 5);
-	m_data_sizer->Add(m_mod_lbl, 0, wxALL, 5);
-	m_data_sizer->Add(m_mod_text, 0, wxALL, 5);
-	m_data_sizer->Add(m_players_lbl, 0, wxALL, 5);
-	m_data_sizer->Add(m_players_text, 0, wxALL, 5);
-	m_data_sizer->Add(m_spec_lbl, 0, wxALL, 5);
-	m_data_sizer->Add(m_spec_text, 0, wxALL, 5);
+	AddToSizer(m_data_sizer, bib_height, m_players_lbl);
+	AddToSizer(m_data_sizer, bib_height, m_players_text);
+	AddToSizer(m_data_sizer, bib_height, m_map_lbl);
+	AddToSizer(m_data_sizer, bib_height, m_map_text);
+	AddToSizer(m_data_sizer, bib_height, m_game_lbl);
+	AddToSizer(m_data_sizer, bib_height, m_game_text);
+	AddToSizer(m_data_sizer, bib_height, m_engine_lbl);
+	AddToSizer(m_data_sizer, bib_height, m_engine_text);
+	AddToSizer(m_data_sizer, bib_height, m_host_lbl);
+	m_data_sizer->Add(m_host_info_sizer, 0, wxALL, 0);
 
 
 	wxSize s = m_data_sizer->CalcMin();
@@ -99,42 +117,42 @@ BattleListTab::BattleListTab(wxWindow* parent)
 	m_players = new NickDataViewCtrl(_T("NickDataViewCtrl_BattleListTab"), this, false, 0, true);
 
 	m_info_sizer = new wxBoxSizer(wxHORIZONTAL);
-	m_info_sizer->Add(m_minimap, 0, wxALL, 5);
-	m_info_sizer->Add(m_data_sizer, 1, wxEXPAND, 5);
-	m_info_sizer->Add(m_players, 1, wxALL | wxEXPAND, 5);
+	m_info_sizer->Add(m_minimap, 0, wxALL, bib_height);
+	m_info_sizer->Add(m_data_sizer, 1, wxEXPAND, bib_height);
+	m_info_sizer->Add(m_players, 1, wxALL | wxEXPAND, bib_height);
 
 
 	m_filter = new BattleListFilter(this, wxID_ANY, this, wxDefaultPosition, wxDefaultSize, wxEXPAND);
 	m_filter->Hide();
 
 
+	const wxSize br_size (-1, 28); // Button row size
+	m_host_btn = new wxButton(this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, br_size, 0);
 	m_filter_activ = new wxCheckBox(this, BATTLE_LIST_FILTER_ACTIV, _("Activated"));
-#if wxUSE_TOGGLEBTN
-	m_filter_show = new wxToggleButton(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, wxSize(-1, 28), 0);
-	m_info_show = new wxToggleButton(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, wxSize(-1, 28), 0);
-#else
-	m_filter_show = new wxCheckBox(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, wxSize(-1, 28), 0);
-	m_info_show = new wxCheckBox(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, wxSize(-1, 28), 0);
-#endif
-	m_battle_num = new wxStaticText(this, wxID_ANY, _("0 battles displayed"), wxDefaultPosition, wxDefaultSize, 0);
-	m_host_btn = new wxButton(this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, wxSize(-1, 28), 0);
-	m_join_btn = new wxButton(this, BATTLE_JOIN, _("Join"), wxDefaultPosition, wxSize(-1, 28), 0);
+	m_filter_show = new wxToggleOrCheck(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, br_size, 0);
+	m_info_show = new wxToggleOrCheck(this, BATTLE_LIST_INFO_BUTTON, _(" Battle infos "), wxDefaultPosition, br_size, 0);
+	m_battle_num = new wxStaticText(this, wxID_ANY, _("0 battles displayed"));
+	m_rank_warn = new wxStaticText(this, wxID_ANY, _("Insufficient rank") + _T("!"));
+	m_rank_warn->SetForegroundColour(*wxRED);
+	m_rank_warn->Hide();
+	m_join_btn = new wxButton(this, BATTLE_JOIN, _("Join"), wxDefaultPosition, br_size, 0);
 
 	wxBoxSizer* m_buttons_sizer = new wxBoxSizer(wxHORIZONTAL);
+	m_buttons_sizer->Add(m_host_btn, 0, wxBOTTOM | wxLEFT | wxRIGHT, 5);
 	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
 	m_buttons_sizer->Add(m_filter_show, 0, 0, 5);
 	m_buttons_sizer->Add(m_filter_activ, 0, wxALL, 5);
 	m_buttons_sizer->Add(m_info_show, 0, 0, 5);
 	m_buttons_sizer->Add(m_battle_num, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4);
 	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
-	m_buttons_sizer->Add(m_host_btn, 0, wxBOTTOM | wxLEFT | wxRIGHT, 5);
+	m_buttons_sizer->Add(m_rank_warn,  0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4);
 	m_buttons_sizer->Add(m_join_btn, 0, wxBOTTOM | wxRIGHT, 5);
 
 
 	m_buttons_sep = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
 
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
-	m_main_sizer->Add(m_battlelist_sizer, 1, wxEXPAND);
+	m_main_sizer->Add(m_battle_list, 1, wxEXPAND);
 	m_main_sizer->Add(m_info_sizer, 0, wxEXPAND, 5);
 	m_main_sizer->Add(m_filter, 0, wxEXPAND, 5);
 	m_main_sizer->Add(m_buttons_sep, 0, wxALL | wxEXPAND, 5);
@@ -172,19 +190,41 @@ void BattleListTab::SelectBattle(IBattle* battle)
 {
 	m_sel_battle = battle;
 	m_minimap->SetBattle(m_sel_battle);
+	m_host_notify_button->SetValue(false);
 	m_players->ClearUsers();
+	m_players_text->SetForegroundColour(wxNullColour); //Resets colour
+
 	if (m_sel_battle != 0) {
+		int num_players = static_cast<int>(battle->GetNumUsers()) - battle->GetSpectators();
+
+		if (m_sel_battle->GetFounder().Status().bot) {
+			m_host_notify_button->Enable();
+		} else {
+			m_host_notify_button->Disable();
+		}
+		if (m_sel_battle->GetRankNeeded() > m_sel_battle->GetMe().GetRank())
+			m_rank_warn->Show();
+		else
+			m_rank_warn->Hide();
+		m_engine_text->SetLabel(m_sel_battle->GetEngineName() + _T(" ") + m_sel_battle->GetEngineVersion());
+		m_game_text->SetLabel(TowxString(m_sel_battle->GetHostGameName()));
+		m_host_text->SetLabel(m_sel_battle->GetFounder().GetNick());
 		m_map_text->SetLabel(TowxString(m_sel_battle->GetHostMapName()));
-		m_mod_text->SetLabel(TowxString(m_sel_battle->GetHostGameName()));
-		m_players_text->SetLabel(wxString::Format(_T( "%d / %d" ), int(m_sel_battle->GetNumUsers()) - int(m_sel_battle->GetSpectators()), int(m_sel_battle->GetMaxPlayers())));
-		m_spec_text->SetLabel(wxString::Format(_T( "%d" ), m_sel_battle->GetSpectators()));
 		m_players->SetUsers(m_sel_battle->GetUsers());
+		m_players_text->SetLabel(wxString::Format(_T("%d (Max: %d) + %d spectators"), num_players,
+		  static_cast<int>(m_sel_battle->GetMaxPlayers()), m_sel_battle->GetSpectators() ));
+		if (num_players == static_cast<int>(m_sel_battle->GetMaxPlayers()))
+			m_players_text->SetForegroundColour(*wxRED);
 	} else {
+		m_engine_text->SetLabel(wxEmptyString);
+		m_host_notify_button->Disable();
+		m_game_text->SetLabel(wxEmptyString);
+		m_host_text->SetLabel(wxEmptyString);
 		m_map_text->SetLabel(wxEmptyString);
-		m_mod_text->SetLabel(wxEmptyString);
-		m_players_text->SetLabel(_T( "0 / 0" ));
-		m_spec_text->SetLabel(_T( "0" ));
+		m_players_text->SetLabel(wxEmptyString);
+		m_rank_warn->Hide();
 	}
+	this->Layout();
 }
 
 void BattleListTab::AddBattle(IBattle& battle)
@@ -288,6 +328,14 @@ void BattleListTab::OnHost(wxCommandEvent& /*unused*/)
 	HostBattleDialog::RunHostBattleDialog(this);
 }
 
+void BattleListTab::OnNotifyWhenBattleEnds(wxCommandEvent& event)
+{
+	if (m_host_notify_button->GetValue()) {
+		m_host_notify_button->Disable();
+		m_battle_list->OnNotifyWhenBattleEnds(event);
+	}
+}
+
 /**
  * Procees "Show Filtes" toggle buttton clicked. Show/hides filters options panel
  * @param
@@ -366,14 +414,14 @@ void BattleListTab::DoJoin(IBattle& battle)
 
 	IBattle* curbattle = ui().mw().GetJoinTab().GetCurrentBattle();
 
-	//If trying to join battle player already joined
-	if (curbattle != 0 && curbattle->GetID() == battle.GetID()) {
-		ui().mw().ShowTab(MainWindow::PAGE_BATTLEROOM);
-		return;
-	}
-
 	//If player already in another battle
 	if (curbattle != 0) {
+		//If trying to join same battle again
+		if (curbattle->GetID() == battle.GetID()) {
+			ui().mw().ShowTab(MainWindow::PAGE_BATTLEROOM);
+			return;
+		}
+
 		if (ui().Ask(_("Already in another battle"), _("You are already in a battle.") + _("Do you want to leave your current battle and join this one?"))) {
 			curbattle->Leave();
 			ui().mw().GetJoinTab().LeaveCurrentBattle();
