@@ -4,6 +4,8 @@ ChangeLog of Springlobby
  - remove warning message when starting a match without opponet
  - more verbose connect / disconnect messages
  - fix error message "Failed to setup download" shown for no reason
+ - download springlobby updates via https
+ - fix some rare download bugs
 
 ## 0.264
  - improved the start button in battleroom
