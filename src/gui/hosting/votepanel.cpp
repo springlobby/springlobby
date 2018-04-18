@@ -29,9 +29,9 @@ wxBEGIN_EVENT_TABLE(VotePanel, wxPanel)
 
     VotePanel::VotePanel(wxWindow* parentWindow)
     : wxPanel(parentWindow)
-    , chatPanel(0)
+    , chatPanel(nullptr)
     , parentWnd(parentWindow)
-    , player(0)
+    , player(nullptr)
 {
 	mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -114,6 +114,7 @@ void VotePanel::ResetState()
 	if (yesButton == nullptr || noButton == nullptr || dontCareButton == nullptr) {
 		return;
 	}
+	player = nullptr;
 
 	voteTextLabel->SetLabel(wxEmptyString);
 	showButtons(false);
@@ -149,6 +150,8 @@ void VotePanel::showButtons(bool showState)
 		enableButtons();
 	}
 
+	if (player == nullptr)
+		return;
 	//Force repaint parent window
 	Layout();
 	Update();
