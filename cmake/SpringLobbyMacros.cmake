@@ -44,7 +44,7 @@ macro(add_analyze)
     if(EXISTS ${ANALYZER})
         add_custom_target("analyze" ${ANALYZER} -fixit -p=${CMAKE_CURRENT_BINARY_DIR} -analyze ${ARGN})
     else()
-        message(WARNING "not adding analyze target because clang-check is missing")
+        message(STATUS "not adding analyze target because clang-check is missing")
     endif(EXISTS ${ANALYZER})
 endmacro(add_analyze)
 
