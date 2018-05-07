@@ -2,7 +2,7 @@
 
 set -e
 
-COMMIT=0dcf498f9563fd35eff0273e1b56929fdce60383
+COMMIT=83257dcd99708af363155180b40ec6ca869cc724
 
 if [ ! -d mxe ]; then
 	git clone https://github.com/mxe/mxe.git
