@@ -254,6 +254,7 @@ PrDownloader::PrDownloader()
 {
 	slLogDebugFunc("");
 
+	IDownloader::Initialize();
 	IDownloader::setProcessUpdateListener(updatelistener);
 	UpdateSettings();
 	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnSpringStarted, PrDownloader::OnSpringStarted);
