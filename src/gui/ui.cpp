@@ -782,7 +782,7 @@ void Ui::OnLobbyDownloaded(wxCommandEvent& data)
 
 void Ui::CheckForUpdates(bool is_interactive)
 {
-	std::string latestversion = GetLatestVersion(is_interactive);
+	std::string latestversion = GetLatestVersion(!is_interactive);
 
 	if (latestversion.empty()) {
 		if (is_interactive) {
