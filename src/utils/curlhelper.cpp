@@ -6,6 +6,8 @@
 
 #include <curl/curl.h>
 #include <curl/easy.h>
+#include "downloader/prdownloader.h"
+#include "downloader/lib/src/Downloader/CurlWrapper.h"
 
 extern "C" {
 size_t wxcurl_stream_write(void* ptr, size_t size, size_t nmemb, void* stream)
@@ -29,8 +31,9 @@ wxString Paste2Pastebin(const wxString& message)
 {
 	wxStringOutputStream response;
 	wxStringOutputStream rheader;
-	CURL* curl_handle;
-	curl_handle = curl_easy_init();
+	prDownloader().UpdateSettings();
+	CurlWrapper cw;
+	CURL* curl_handle = cw.GetHandle();
 	struct curl_slist* m_pHeaders = NULL;
 	struct curl_httppost* m_pPostHead = NULL;
 	struct curl_httppost* m_pPostTail = NULL;
@@ -69,7 +72,6 @@ wxString Paste2Pastebin(const wxString& message)
 	CURLcode ret = curl_easy_perform(curl_handle);
 
 	/* cleanup curl stuff */
-	curl_easy_cleanup(curl_handle);
 	curl_formfree(m_pPostHead);
 
 	if (ret == CURLE_OK) {
