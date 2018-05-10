@@ -34,7 +34,7 @@ wxString Paste2Pastebin(const wxString& message)
 	struct curl_slist* m_pHeaders = NULL;
 	struct curl_httppost* m_pPostHead = NULL;
 	struct curl_httppost* m_pPostTail = NULL;
-	static const char* url = "http://paste.springfiles.com/api/create";
+	static const char* url = "https://paste.springfiles.com/api/create";
 	// these header lines will overwrite/add to cURL defaults
 	m_pHeaders = curl_slist_append(m_pHeaders, "Expect:");
 
