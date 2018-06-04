@@ -41,6 +41,7 @@ public:
 		std::string password;
 		std::string hostname;
 		std::string description;
+		std::string fingerprint;
 		int port;
 	};
 

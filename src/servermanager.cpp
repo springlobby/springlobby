@@ -143,6 +143,7 @@ void ServerManager::DoConnectToServer(const std::string& servername, const std::
 	info.port = port;
 	info.username = username;
 	info.password = password;
+	info.fingerprint = sett().GetServerFingerprint(servername);
 	server->Connect(info);
 }
 

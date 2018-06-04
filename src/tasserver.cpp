@@ -555,7 +555,8 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 #endif
 	} else if (cmd == "OK") {
 		if (!m_sock->IsTLS()) {
-			m_sock->StartTLS(sett().GetServerFingerprint(GetServerName()));
+			wxLogInfo("%s:%d %s", m_serverinfo.hostname.c_str(), m_serverinfo.port, m_serverinfo.fingerprint.c_str());
+			m_sock->StartTLS(m_serverinfo.fingerprint);
 			Start(); //restart ping as server + client have startet TLS
 		}
 	} else if (cmd == "ACCEPTED") {
