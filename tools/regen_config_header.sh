@@ -11,7 +11,7 @@ set -u
 SOURCE="${1}"
 OUTPUT="${2}"
 
-REV="$(git describe --tags)" 2>/dev/null
+REV="$(git -C "$SOURCE" describe --tags)" 2>/dev/null
 
 if [ -z "$REV" ]; then
 	REV="unknown"
