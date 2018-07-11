@@ -36,6 +36,7 @@
 #include "utils/version.h"
 #include "utils/globalevents.h"
 #include "utils/platform.h"
+#include "utils/sortutil.h"
 #include "gui/uiutils.h"
 #include "gui/chatpanel.h"
 #include "gui/battlelist/battlelisttab.h"
@@ -782,9 +783,9 @@ void Ui::OnLobbyDownloaded(wxCommandEvent& data)
 
 void Ui::CheckForUpdates(bool is_interactive)
 {
-	std::string latestversion = GetLatestVersion(!is_interactive);
+	std::string latestVersion = GetLatestVersion(!is_interactive);
 
-	if (latestversion.empty()) {
+	if (latestVersion.empty()) {
 		if (is_interactive) {
 			customMessageBoxModal(SL_MAIN_ICON, _(
 			  "There was an error checking for the latest version.\n"
@@ -797,43 +798,53 @@ void Ui::CheckForUpdates(bool is_interactive)
 	//get current rev w/o AUX_VERSION added
 	const std::string myVersion = GetSpringlobbyVersion();
 
-	const wxString msg = _("Your Version: ") + myVersion + _T("\n") + _("Latest Version: ") + latestversion;
-	if (latestversion == myVersion) {
+	const wxString versionMessage = _("Your Version: ") + myVersion + '\n' + _("Latest Version: ") + latestVersion;
+	int isMyVersionOld = CompareVersionStrings(myVersion, latestVersion);
+
+	if (0 == isMyVersionOld) {
 		if (is_interactive) {
 			customMessageBoxModal(SL_MAIN_ICON, wxString::Format(
 			  _("Your %s version is up to date."), GetSpringlobbyName())
-			  + _T("\n\n") + msg, _("Up to Date"));
+			  + _T("\n\n") + versionMessage, _("Up to Date"));
 		}
-		return;
-	}
+	} else if (isMyVersionOld > 0) {
+		wxString message;
+		message += wxString::Format(_("Your %s version is not up to date."), GetSpringlobbyName());
+		message += wxString::Format(_T("\n\n%s\n\n"), versionMessage);
+
 #ifdef __WXMSW__
-	const wxString message = wxString::Format(_("Your %s version is not up to date.") + _T("\n\n%s\n\n") + _("Would you like to update to the new version?"),
-						  TowxString(GetSpringlobbyName()).c_str(),
-						  msg.c_str());
-	const wxString heading = wxString::Format(_("Update %s?"), GetSpringlobbyName());
-	if (!Ask(heading, message))
-		return;
-	try {
-		prDownloader().UpdateApplication(GetDownloadUrl(latestversion));
-	} catch (Exception& ex) {
-		//this will also happen if updater exe is not present so we don't really ne special check for existance of it
-		const wxString errormsg = wxString::Format(_("Automatic update failed.") +_T("\n%s\n%s\n") +
-					_("you will be redirected to a web page with instructions and the download link will be opened in your browser."),
-							   ex.Reason(), msg);
-		customMessageBox(SL_MAIN_ICON, errormsg, _("Updater error."));
-		OpenWebBrowser(_T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary"));
-		OpenWebBrowser(TowxString(GetDownloadUrl(latestversion)));
-		return;
-	} catch (...) {
-		wxLogError("Unknown exception");
-	}
+		message += _("Would you like to update to the new version?");
+
+		const wxString heading = wxString::Format(_("Update %s?"), GetSpringlobbyName());
+		if (!Ask(heading, message))
+			return;
+		try {
+			prDownloader().UpdateApplication(GetDownloadUrl(latestVersion));
+		} catch (Exception& ex) {
+			//this will also happen if updater exe is not present so we don't really ne special check for existance of it
+			wxString errorMsg = _("Automatic update failed.") + '\n';
+			errorMsg += ex.Reason() + '\n';
+			errorMsg += versionMessage + '\n';
+			errorMsg += _("The instructions for updating manually have been opened in your web browser.");
+			customMessageBox(SL_MAIN_ICON, errorMsg, _("Updater error."));
+			OpenWebBrowser(_T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary"));
+			OpenWebBrowser(TowxString(GetDownloadUrl(latestVersion)));
+		} catch (...) {
+			wxLogError("Unknown exception");
+		}
 #else
-	const wxString motivation = _("Please update to the latest version before reporting bugs.");
-	const wxString doublenl = _T("\n\n");
-	customMessageBoxModal(SL_MAIN_ICON,
-	  wxString::Format(_("Your %s version is not up to date."), GetSpringlobbyName())
-	  + doublenl + msg + doublenl + motivation, _("Not up to Date"));
+		message += _("Please update to the latest version before reporting bugs.");
+		customMessageBoxModal(SL_MAIN_ICON, message, _("Not up to Date"));
 #endif
+	} else {
+		if (is_interactive) {
+			wxString message;
+			message += wxString::Format(_("Your %s version is newer than the latest release."), GetSpringlobbyName());
+			message += wxString::Format(_T("\n\n%s\n\n"), versionMessage);
+			message += _("Thank you for helping with testing!");
+			customMessageBoxModal(SL_MAIN_ICON, message, _T("Much development, wow"));
+		}
+	}
 }
 
 
