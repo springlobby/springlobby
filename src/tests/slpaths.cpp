@@ -6,13 +6,19 @@
 #include "testingstuff/silent_logger.h"
 
 #include "utils/slpaths.h"
+#include "utils/sortutil.h"
 #include "utils/platform.h"
 #include "utils/conversion.h"
 
+#include <algorithm>
+#include <array>
+#include <iostream>
 #include <stdlib.h>
+#include <string>
+using std::string;
 
-#include <wx/string.h>
 #include <wx/filename.h>
+#include <wx/string.h>
 
 #ifdef WIN32
 #define DELIM "\\"
@@ -51,6 +57,15 @@ bool CheckVersion(const std::string& v1, const std::string& v2)
 	return SlPaths::VersionSyncCompatible(v1, v2) && SlPaths::VersionSyncCompatible(v2, v1);
 }
 
+bool CheckCompareVersionStrings(const string& lhs, const string& rhs, int expected)
+{
+	int result = CompareVersionStrings(lhs, rhs);
+	if (result != expected) {
+		std::cout << "Compare version strings: \"" << lhs << "\" ? \"" << rhs << "\": Got: "
+		          << result << " expected: " << expected << std::endl;
+	}
+	return expected == result;
+}
 BOOST_AUTO_TEST_CASE(VersionCheck)
 {
 	std::string v1 = "104.0.1-104-g2135e2e maintenance";
@@ -67,4 +82,25 @@ BOOST_AUTO_TEST_CASE(VersionCheck)
 	BOOST_CHECK(!CheckVersion(v6, v2));
 	BOOST_CHECK(!CheckVersion(v5, v4));
 	BOOST_CHECK(!CheckVersion(v2, v7));
+
+	BOOST_CHECK(CheckCompareVersionStrings("0.264", "0.264-43-gd87151a2", 1));
+	BOOST_CHECK(CheckCompareVersionStrings("0.264-43-gd87151a2", "0.264", -1));
+	BOOST_CHECK(CheckCompareVersionStrings("0.264", "0.264", 0));
+	BOOST_CHECK(CheckCompareVersionStrings("0.264-43-gd87151a2", "0.264-43-gd87151a2", 0));
+	BOOST_CHECK(CheckCompareVersionStrings("0.264-43-gd87151a2", "0.264-42-gd87151a2", -1));
+	BOOST_CHECK(CheckCompareVersionStrings("0.264-43-gd87151a2", "0.264-43-gd17151a2", -1));
+	BOOST_CHECK(CheckCompareVersionStrings("", "", 0));
+	BOOST_CHECK(CheckCompareVersionStrings("0.", "", -1));
+	BOOST_CHECK(CheckCompareVersionStrings("spring 100.0", "spring 98.0", -1));
+	BOOST_CHECK(CheckCompareVersionStrings("100", "98", -1));
+
+	std::array<string, 5> versions = {"spring 100.0", "spring 98.0", "spring 104.0", "spring 99.0", "spring 103.0"};
+	std::array<string, 5> sorted   = {"spring 98.0",  "spring 99.0", "spring 100.0", "spring 103.0", "spring 104.0"};
+
+	std::sort(versions.begin(), versions.end(), compareVersionStringsFunctor);
+	BOOST_CHECK(sorted == versions);
+	for (auto a : versions) {
+		std::cout << a << " ";
+	}
+	std::cout << '\n';
 }

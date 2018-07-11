@@ -34,4 +34,14 @@ void SLInsertionSort(ContainerType& data, const Comparator& cmp)
 	}
 }
 
+// Returns 1 if the second argument is considered greater/newer than the first,
+// 0 if they are identical and -1 otherwise.
+int CompareVersionStrings(const std::string& lhs, const std::string& rhs);
+
+struct CompareVersionStringsFunctor {
+	bool operator()(const std::string& lhs, const std::string& rhs) const
+	{ return 1 == CompareVersionStrings(lhs, rhs); }
+};
+
+extern CompareVersionStringsFunctor compareVersionStringsFunctor;
 #endif // SPRINGLOBBY_SORTUTIL_H_INCLUDED

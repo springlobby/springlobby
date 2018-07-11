@@ -114,11 +114,12 @@ add_springlobby_test(${test_name} "${test_src}" "${test_libs}" "-DTEST")
 set(test_name slpaths)
 Set(test_src
 	"${CMAKE_CURRENT_SOURCE_DIR}/slpaths.cpp"
-	"${springlobby_SOURCE_DIR}/src/utils/slpaths.cpp"
-	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
 	"${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl/lslutils/misc.cpp"
 	"${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl/lslutils/conversion.cpp"
 	"${springlobby_SOURCE_DIR}/src/downloader/lib/src/Logger.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/conversion.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/slpaths.cpp"
+	"${springlobby_SOURCE_DIR}/src/utils/sortutil.cpp"
 )
 
 set(test_libs

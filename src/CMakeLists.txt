@@ -287,6 +287,7 @@ set(springlobbySrc
 	utils/TextCompletionDatabase.cpp
 	utils/md5.c
 	utils/misc.cpp
+	utils/sortutil.cpp
 	utils/lslconversion.cpp
 	utils/tasutil.cpp
 	utils/version.cpp
