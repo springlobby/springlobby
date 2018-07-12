@@ -484,8 +484,12 @@ void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 	} else {
 		std::vector<std::string> maps = LSL::usync().GetMapList();
 		if (maps.size() <= 0) {
-			wxLogWarning(_T( "no maps found" ));
-			customMessageBoxModal(SL_MAIN_ICON, _("Couldn't find any maps in your spring installation. This could happen when you set the Spring settings incorrectly."), _("No maps found"), wxOK);
+			wxLogWarning(_T("no maps found"));
+			customMessageBoxModal(SL_MAIN_ICON, _(
+			  "Could not find any maps in engine's search path. Have you downloaded any?"
+			  " You can join any multiplayer room for automatic download or use search in the Downloads tab. "
+			  " Note that this can also happen when you set the paths in preferences incorrectly."),
+			  _("No maps found"), wxOK);
 			return;
 		}
 		map = LSL::usync().GetMap(maps[0]);

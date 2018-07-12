@@ -426,8 +426,10 @@ void SinglePlayerTab::OnStart(wxCommandEvent& /*unused*/)
 	slLogDebugFunc("SP: ");
 
 	if (ui().IsSpringRunning()) {
-		wxLogWarning(_T("trying to start spring while another instance is running"));
-		customMessageBoxModal(SL_MAIN_ICON, _("You cannot start a spring instance while another is already running"), _("Spring error"), wxICON_EXCLAMATION);
+		wxLogWarning(_T("You cannot start a game (engine) while another engine is already running"));
+		customMessageBoxModal(SL_MAIN_ICON,
+		  _("You cannot start a game (engine) while another engine is already running"),
+		  _("Spring error"), wxICON_EXCLAMATION);
 		return;
 	}
 

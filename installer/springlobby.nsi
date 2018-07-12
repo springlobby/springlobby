@@ -52,8 +52,8 @@ SetCompressor /FINAL /SOLID lzma
 !define MUI_FINISHPAGE_SHOWREADME_TEXT "Open $\"Read Me First$\" Webpage"
 !define MUI_FINISHPAGE_RUN "$INSTDIR\springlobby.exe"
 ;!define MUI_FINISHPAGE_RUN_TEXT "Configure ${PRODUCT_NAME} settings now"
-!define MUI_FINISHPAGE_TEXT "${PRODUCT_NAME} version ${PRODUCT_VERSION} has been successfully installed or updated from a previous version.  You should configure Spring settings now if this is a fresh installation.  If you did not install spring to C:\Program Files\Spring you will need to point the settings program to the install location."
-
+!define MUI_FINISHPAGE_TEXT "${PRODUCT_NAME} version ${PRODUCT_VERSION} has been successfully installed or updated from a previous version.  You should configure Spring settings now if this is a fresh installation.  If you did not install Spring to C:\Program Files\Spring you will need to point the settings program to the install location."
+; TODO is installing Spring necessary???
 !define MUI_FINISHPAGE_LINK "SpringLobby User Guide"
 !define MUI_FINISHPAGE_LINK_LOCATION "https://github.com/springlobby/springlobby/wiki/Userdoc"
 !define MUI_FINISHPAGE_NOREBOOTSUPPORT

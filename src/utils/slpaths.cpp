@@ -206,7 +206,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 			LSL::SpringBundle& bundle = pair.second;
 			const std::string version = bundle.version;
 			if (!bundle.IsValid()) {
-				wxLogWarning("Invalid spring bundle: %s", version.c_str());
+				wxLogWarning("Invalid Spring engine install/bundle: %s", version.c_str());
 				continue;
 			}
 			m_spring_versions[version] = bundle;
@@ -222,7 +222,7 @@ void SlPaths::RefreshSpringVersionList(bool autosearch, const LSL::SpringBundle*
 			SetUsedSpringIndex(lastver);
 		}
 	} catch (const std::runtime_error& e) {
-		wxLogError(wxString::Format(_T("Couldn't get list of spring versions: %s"), e.what()));
+		wxLogError(wxString::Format(_T("Could not get a list of Spring engine versions: %s"), e.what()));
 	} catch (...) {
 		wxLogError(_T("Unknown Execption caught in SlPaths::RefreshSpringVersionList"));
 	}

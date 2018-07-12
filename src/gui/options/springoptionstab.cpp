@@ -76,14 +76,14 @@ SpringOptionsTab::SpringOptionsTab(wxWindow* parent)
 	wxBoxSizer* groupListButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
 
 	m_remove_spring_button = new wxButton(this, SPRING_REMOVE, _("Remove"), wxDefaultPosition, wxSize(-1, -1), wxBU_EXACTFIT);
-	m_remove_spring_button->SetToolTip(_("Remove an existing spring version"));
+	m_remove_spring_button->SetToolTip(_("Remove an existing engine installation (does not delete files)"));
 
 	groupListButtonsSizer->Add(m_remove_spring_button, 0, wxTOP | wxRIGHT | wxLEFT, 5);
 
 	groupListButtonsSizer->Add(0, 0, 1, wxEXPAND, 5);
 
 	m_add_spring_button = new wxButton(this, SPRING_ADD, _("Add New.."), wxDefaultPosition, wxSize(-1, -1), wxBU_EXACTFIT);
-	m_add_spring_button->SetToolTip(_("Add new spring version"));
+	m_add_spring_button->SetToolTip(_("Add new engine installation"));
 
 	groupListButtonsSizer->Add(m_add_spring_button, 0, wxTOP | wxRIGHT | wxLEFT, 5);
 

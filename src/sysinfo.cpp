@@ -109,7 +109,7 @@ std::string GetSpringlobbyInfo()
 	}
 
 	res += stdprintf("Current unitsync: %s\n", SlPaths::GetUnitSync().c_str());
-	res += stdprintf("Current spring executable: %s\n", SlPaths::GetSpringBinary().c_str());
+	res += stdprintf("Current Spring engine executable: %s\n", SlPaths::GetSpringBinary().c_str());
 	res += stdprintf("Portable mode: %s\n", BtS(SlPaths::IsPortableMode()).c_str());
 
 	res += stdprintf(("Compiled with wxWidgets %d.%d.%d.%d"), wxMAJOR_VERSION, wxMINOR_VERSION, wxRELEASE_NUMBER, wxSUBRELEASE_NUMBER) + nl;
