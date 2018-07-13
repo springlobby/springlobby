@@ -116,31 +116,34 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 
 	wxBoxSizer* m_ctrl_sizer = new wxBoxSizer(wxHORIZONTAL);
 
-	m_map_lbl = new wxStaticText(this, -1, _("Map:"));
-	m_ctrl_sizer->Add(m_map_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
-
-	m_map_pick = new wxChoice(this, SP_MAP_PICK);
-	m_ctrl_sizer->Add(m_map_pick, 1, wxALL, 5);
-
-	m_select_btn = new wxButton(this, SP_BROWSE_MAP, _T("..."), wxDefaultPosition, wxSize(CONTROL_HEIGHT, CONTROL_HEIGHT), wxBU_EXACTFIT);
-	m_ctrl_sizer->Add(m_select_btn, 0, wxBOTTOM | wxRIGHT | wxTOP, 5);
-
 	m_mod_lbl = new wxStaticText(this, -1, _("Game:"));
 	m_ctrl_sizer->Add(m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
 	m_game_choice = new wxChoice(this, SP_MOD_PICK);
+	m_game_choice->SetToolTip(_("No games? Download them by joining a multiplayer game room"));
 	m_ctrl_sizer->Add(m_game_choice, 1, wxALL, 5);
+
+	m_map_lbl = new wxStaticText(this, -1, _("Map:"));
+	m_ctrl_sizer->Add(m_map_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+
+	m_map_pick = new wxChoice(this, SP_MAP_PICK);
+	m_map_pick->SetToolTip(_("No maps? Download them by joining a multiplayer game room"));
+	m_ctrl_sizer->Add(m_map_pick, 1, wxALL, 5);
+
+	m_select_btn = new wxButton(this, SP_BROWSE_MAP, _("Choose map..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+	m_ctrl_sizer->Add(m_select_btn, 0, wxBOTTOM | wxRIGHT | wxTOP, 5);
 
 	m_mod_lbl = new wxStaticText(this, -1, _("Engine:"));
 	m_ctrl_sizer->Add(m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
 	m_engine_choice = new wxChoice(this, SP_ENGINE_PICK);
-	m_engine_choice->SetToolTip(_("Select the engine version to play."));
+	m_engine_choice->SetToolTip(_("No engines? Download them by joining a multiplayer game room"));
 	m_ctrl_sizer->Add(m_engine_choice, 1, wxALL, 5);
 
 	//  m_ctrl_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
-	m_addbot_btn = new wxButton(this, SP_ADD_BOT, _("Add bot..."), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0);
+	m_addbot_btn = new wxButton(this, SP_ADD_BOT, _("Add bot..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+	m_addbot_btn->SetToolTip(_("First select game, map and engine"));
 	m_ctrl_sizer->Add(m_addbot_btn, 0, wxALL, 5);
 
 	m_main_sizer->Add(m_ctrl_sizer, 0, wxEXPAND, 5);
@@ -161,7 +164,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	m_random_check = new wxCheckBox(this, SP_RANDOM, _("Random start positions"));
 	m_buttons_sizer->Add(m_random_check, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
-	m_start_btn = new wxButton(this, SP_START, _("Start"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT), 0);
+	m_start_btn = new wxButton(this, SP_START, _("Start"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+	m_start_btn->SetToolTip(_("First select game, map and engine"));
 	m_buttons_sizer->Add(m_start_btn, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
 	m_main_sizer->Add(m_buttons_sizer, 0, wxEXPAND, 5);

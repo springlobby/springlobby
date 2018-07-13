@@ -182,7 +182,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 
 	m_command_line = new wxStaticLine(this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
 
-	m_host_new_btn = new wxButton(this, BROOM_HOST_NEW, _("Host new"), wxDefaultPosition, wxDefaultSize);
+	m_host_new_btn = new wxButton(this, BROOM_HOST_NEW, _("Host new..."), wxDefaultPosition, wxDefaultSize);
 	m_host_new_btn->SetToolTip(_("Host a new battle"));
 	m_leave_btn = new wxButton(this, BROOM_LEAVE, _("Leave"), wxDefaultPosition, wxSize(-1, CONTROL_HEIGHT));
 	m_leave_btn->SetToolTip(_("Leave the battle and return to the battle list"));
@@ -350,7 +350,6 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_buttons_sizer->Add(m_votePanel);
 	m_buttons_sizer->AddStretchSpacer();
 	m_buttons_sizer->Add(m_host_new_btn, 0, wxEXPAND | wxALL, 2);
-	m_buttons_sizer->AddStretchSpacer();
 	m_buttons_sizer->Add(m_leave_btn, 0, wxEXPAND | wxALL, 2);
 	m_buttons_sizer->Add(m_addbot_btn, 0, wxEXPAND | wxALL, 2);
 	m_buttons_sizer->Add(m_autolock_chk, 0, wxEXPAND | wxALL, 2);
