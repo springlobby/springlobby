@@ -51,6 +51,11 @@ EVT_BUTTON(SP_COLOUR, SinglePlayerTab::OnColorButton)
 END_EVENT_TABLE()
 
 
+int GetLastItemIndex(wxChoice* choice) {
+	return static_cast<int>(choice->GetCount()) - 1;
+}
+
+
 SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
     : wxPanel(parent, -1)
     , m_battle(msptab)
@@ -143,7 +148,6 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	//  m_ctrl_sizer->Add( 0, 0, 1, wxEXPAND, 0 );
 
 	m_addbot_btn = new wxButton(this, SP_ADD_BOT, _("Add bot..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
-	m_addbot_btn->SetToolTip(_("First select game, map and engine"));
 	m_ctrl_sizer->Add(m_addbot_btn, 0, wxALL, 5);
 
 	m_main_sizer->Add(m_ctrl_sizer, 0, wxEXPAND, 5);
@@ -165,7 +169,6 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	m_buttons_sizer->Add(m_random_check, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
 	m_start_btn = new wxButton(this, SP_START, _("Start"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
-	m_start_btn->SetToolTip(_("First select game, map and engine"));
 	m_buttons_sizer->Add(m_start_btn, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
 	m_main_sizer->Add(m_buttons_sizer, 0, wxEXPAND, 5);
@@ -201,14 +204,12 @@ void SinglePlayerTab::ReloadMaplist()
 	m_map_pick->Clear();
 	m_map_pick->Append(lslTowxArrayString(LSL::usync().GetMapList()));
 	m_map_pick->Insert(_("-- Select one --"), m_map_pick->GetCount());
-	if (m_battle.GetHostMapName().empty()) {
-		m_map_pick->SetSelection(m_map_pick->GetCount() - 1);
-		m_addbot_btn->Enable(false);
+
+	const wxString mapName(m_battle.GetHostMapName());
+	if (mapName.empty()) {
+		SetMap(GetLastItemIndex(m_map_pick));
 	} else {
-		m_map_pick->SetStringSelection(TowxString(m_battle.GetHostMapName()));
-		if (m_map_pick->GetStringSelection().IsEmpty()) {
-			SetMap(m_map_pick->GetCount() - 1);
-		}
+		SetMap(m_map_pick->FindString(mapName, false /*SetStringSelection was case-insensitive*/));
 	}
 }
 
@@ -218,13 +219,12 @@ void SinglePlayerTab::ReloadModlist()
 	m_game_choice->Clear();
 	m_game_choice->Append(lslTowxArrayString(LSL::usync().GetGameList()));
 	m_game_choice->Insert(_("-- Select one --"), m_game_choice->GetCount());
-	if (m_battle.GetHostGameName().empty()) {
-		m_game_choice->SetSelection(m_game_choice->GetCount() - 1);
+
+	const wxString gameName(m_battle.GetHostGameName());
+	if (gameName.empty()) {
+		SetGame(GetLastItemIndex(m_game_choice));
 	} else {
-		m_game_choice->SetStringSelection(TowxString(m_battle.GetHostGameName()));
-		if (m_game_choice->GetStringSelection().empty()) {
-			SetMod(m_game_choice->GetCount() - 1);
-		}
+		SetGame(m_game_choice->FindString(gameName, false /*SetStringSelection was case-insensitive*/));
 	}
 }
 
@@ -236,12 +236,12 @@ void SinglePlayerTab::ReloadEngineList()
 	m_engine_choice->Clear();
 
 	std::map<std::string, LSL::SpringBundle> versions = SlPaths::GetSpringVersionList();
-	const std::string last = SlPaths::GetCurrentUsedSpringIndex();
+	const std::string lastUsedEngineIndex = SlPaths::GetCurrentUsedSpringIndex();
 	int i = 0;
 
 	for (auto pair : versions) {
 		m_engine_choice->Insert(TowxString(pair.first), i);
-		if (last == pair.first) {
+		if (lastUsedEngineIndex == pair.first) {
 			m_engine_choice->SetSelection(i);
 		}
 		i++;
@@ -251,24 +251,43 @@ void SinglePlayerTab::ReloadEngineList()
 		m_engine_choice->SetSelection(0);
 	}
 
+	// i > 0 means that we have at least one engine.
 	if (i == 0) {
 		m_minimap->Hide();
 		m_nominimap->Show();
-		m_start_btn->Enable(false);
 	} else {
 		m_nominimap->Hide();
 		m_minimap->Show();
-		m_start_btn->Enable(true);
 	}
 	//unitsync change needs a refresh of games as well
-	ReloadModlist();
+	ReloadModlist(); // calls CheckForValidGameMapEngineTuple() at end anyway.
 }
 
-void SinglePlayerTab::SetMap(unsigned int index)
+
+void SinglePlayerTab::SetEngine(int index)
+{
+	if (index == wxNOT_FOUND) {
+		wxLogError("Invalid index selected: %d > %d", index, m_engine_choice->GetCount());
+		return;
+	}
+
+	const std::string selection(STD_STRING(m_engine_choice->GetString(index)));
+	wxLogMessage("Selected engine version %s", selection.c_str());
+
+	SlPaths::SetUsedSpringIndex(selection);
+	m_battle.SetEngineVersion(selection);
+	LSL::usync().ReloadUnitSyncLib();
+
+	CheckForValidGameMapEngineTuple();
+}
+
+
+void SinglePlayerTab::SetMap(int index)
 {
 	//ui().ReloadUnitSync();
-	m_addbot_btn->Enable(false);
-	if (index >= m_map_pick->GetCount() - 1) {
+	if (index == wxNOT_FOUND || index >= GetLastItemIndex(m_map_pick)) {
+		index = GetLastItemIndex(m_map_pick);
+
 		m_battle.SetHostMap("", "");
 		int count = m_map_opts_list->GetItemCount();
 		for (int i = 0; i < count; i++)
@@ -278,7 +297,6 @@ void SinglePlayerTab::SetMap(unsigned int index)
 		try {
 			LSL::UnitsyncMap map = LSL::usync().GetMap(index);
 			m_battle.SetHostMap(map.name, map.hash);
-			m_addbot_btn->Enable(true);
 			m_map_opts_list->SetItem(0, 1, wxString::Format(_T( "%dx%d" ), map.info.width / 512, map.info.height / 512));
 			m_map_opts_list->SetItem(1, 1, wxString::Format(_T( "%d-%d" ), map.info.minWind, map.info.maxWind));
 			m_map_opts_list->SetItem(2, 1, wxString::Format(_T( "%d" ), map.info.tidalStrength));
@@ -287,55 +305,105 @@ void SinglePlayerTab::SetMap(unsigned int index)
 			m_map_opts_list->SetItem(5, 1, wxString::Format(_T( "%.3f" ), map.info.maxMetal));
 			m_map_desc->SetLabel(TowxString(map.info.description));
 			m_map_desc->Wrap(160);
+			m_battle.SendHostInfo(IBattle::HI_Map_Changed); // reload map options
 		} catch (...) {
 		}
 	}
 	m_minimap->UpdateMinimap();
-	m_battle.SendHostInfo(IBattle::HI_Map_Changed); // reload map options
 	m_map_pick->SetSelection(index);
+
+	CheckForValidGameMapEngineTuple();
 }
+
 
 void SinglePlayerTab::ResetUsername()
 {
 	m_battle.GetMe().SetNick(STD_STRING(cfg().ReadString("/Spring/DefaultName")));
 }
 
-void SinglePlayerTab::SetMod(unsigned int index)
+
+void SinglePlayerTab::SetGame(int index)
 {
 	//ui().ReloadUnitSync();
-	if (index >= m_game_choice->GetCount() - 1) {
+
+	size_t oldNumBots = m_battle.GetNumBots();
+	if (index == wxNOT_FOUND || index >= GetLastItemIndex(m_game_choice)) {
+		index = GetLastItemIndex(m_game_choice);
+
 		m_battle.SetHostGame("", "");
 	} else {
 		try {
 			LSL::UnitsyncGame mod = LSL::usync().GetGame(index);
 			m_battle.SetLocalGame(mod);
 			m_battle.SetHostGame(mod.name, mod.hash);
+			m_battle.SendHostInfo(IBattle::HI_Restrictions); // Update restrictions in options.
+			m_battle.SendHostInfo(IBattle::HI_Game_Changed); // reload mod options
 		} catch (...) {
 		}
 	}
 	m_minimap->UpdateMinimap();
-	m_battle.SendHostInfo(IBattle::HI_Restrictions); // Update restrictions in options.
-	m_battle.SendHostInfo(IBattle::HI_Game_Changed); // reload mod options
 	m_game_choice->SetSelection(index);
+
+	if (oldNumBots != m_battle.GetNumBots())
+		customMessageBoxModal(SL_MAIN_ICON, _("Incompatible bots have been removed after game selection changed."), _("Bots removed"));
+
+	CheckForValidGameMapEngineTuple();
 }
 
 
+// GetSelection() returns selection after user closes the selection dropdown
+// GetCurrentSelection() returns the one being selected if the dropdown is open, otherwise the above
+bool HasValidSelection(wxChoice* picker)
+{
+	const int index = picker->GetCurrentSelection();
+	if (index == wxNOT_FOUND)
+		return false;
+	// -- Select X -- is added to the end of pickers
+	if (index >= GetLastItemIndex(picker))
+		return false;
+
+	return true;
+}
+
+
+bool SinglePlayerTab::CheckForValidGameMapEngineTuple()
+{
+	const bool isValid = HasValidSelection(m_game_choice)
+	                  && HasValidSelection(m_map_pick)
+	                  && (wxNOT_FOUND != m_engine_choice->GetCurrentSelection());
+
+	if (isValid) {
+		m_addbot_btn->Enable(true);
+		m_start_btn->Enable(true);
+		m_addbot_btn->SetToolTip(_("First select game, map and engine"));
+		m_start_btn->SetToolTip(_("First select game, map and engine"));
+	} else {
+		m_addbot_btn->Enable(false);
+		m_start_btn->Enable(false);
+		m_addbot_btn->SetToolTip(wxEmptyString);
+		m_start_btn->SetToolTip(wxEmptyString);
+	}
+	return isValid;
+}
+
+
+// 2/3 of these checks are now redundant
 bool SinglePlayerTab::ValidSetup() const
 {
-	if (m_game_choice->GetSelection() == wxNOT_FOUND) {
+	if (HasValidSelection(m_game_choice)) {
 		wxLogWarning(_T("no game selected"));
 		customMessageBox(SL_MAIN_ICON, _("You have to select a game first."), _("Game setup error"));
 		return false;
 	}
 
-	if (m_map_pick->GetSelection() == wxNOT_FOUND) {
+	if (HasValidSelection(m_map_pick)) {
 		wxLogWarning(_T("no map selected"));
 		customMessageBox(SL_MAIN_ICON, _("You have to select a map first."), _("Game setup error"));
 		return false;
 	}
 
 	if (m_battle.GetNumUsers() == 1) {
-		wxLogWarning(_T("trying to start sp game without bot"));
+		wxLogWarning(_T("Starting singleplayer game with no opponents"));
 	}
 	return true;
 }
@@ -343,51 +411,28 @@ bool SinglePlayerTab::ValidSetup() const
 
 void SinglePlayerTab::OnMapSelect(wxCommandEvent& /*unused*/)
 {
-	const int index = m_map_pick->GetCurrentSelection();
-
-	if (index == wxNOT_FOUND) { return; }
-
-	SetMap(index);
+	SetMap(m_map_pick->GetCurrentSelection());
 }
 
 
 void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 {
-	const int index = m_game_choice->GetCurrentSelection();
-
-	if (index == wxNOT_FOUND) { return; }
-
-	size_t num_bots = m_battle.GetNumBots();
-	SetMod(index);
-	if (num_bots != m_battle.GetNumBots())
-		customMessageBoxModal(SL_MAIN_ICON, _("Incompatible bots have been removed after game selection changed."), _("Bots removed"));
+	SetGame(m_game_choice->GetCurrentSelection());
 }
+
 
 void SinglePlayerTab::OnEngineSelect(wxCommandEvent& /*event*/)
 {
-	const int index = m_engine_choice->GetSelection();
-
-	if (index == wxNOT_FOUND) {
-		wxLogError("Invalid index selected: %d > %d", index, m_engine_choice->GetCount());
-		return;
-	}
-	const std::string selection = STD_STRING(m_engine_choice->GetString(index));
-	wxLogMessage("Selected engine version %s", selection.c_str());
-
-	SlPaths::SetUsedSpringIndex(selection);
-	m_battle.SetEngineVersion(selection);
-	LSL::usync().ReloadUnitSyncLib();
+	SetEngine(m_engine_choice->GetSelection());
 }
+
 
 void SinglePlayerTab::OnMapBrowse(wxCommandEvent& /*unused*/)
 {
 	slLogDebugFunc("");
 	const wxString mapname = mapSelectDialog();
 	if (!mapname.empty()) {
-		const int idx = m_map_pick->FindString(mapname, true /*case sensitive*/);
-		if (idx != wxNOT_FOUND) {
-			SetMap(idx);
-		}
+		SetMap(m_map_pick->FindString(mapname, true /*case sensitive*/));
 	}
 }
 
@@ -409,6 +454,7 @@ void SinglePlayerTab::OnAddBot(wxCommandEvent& /*unused*/)
 		m_minimap->UpdateMinimap();
 	}
 }
+
 
 void SinglePlayerTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 {
@@ -453,11 +499,13 @@ void SinglePlayerTab::OnRandomCheck(wxCommandEvent& /*unused*/)
 	m_battle.SendHostInfo(IBattle::HI_StartType);
 }
 
+
 void SinglePlayerTab::OnSpectatorCheck(wxCommandEvent& /*unused*/)
 {
 	m_battle.GetMe().BattleStatus().spectator = m_spectator_check->IsChecked();
 	UpdateMinimap();
 }
+
 
 void SinglePlayerTab::OnColorButton(wxCommandEvent& /*unused*/)
 {
@@ -471,9 +519,11 @@ void SinglePlayerTab::OnColorButton(wxCommandEvent& /*unused*/)
 	UpdateMinimap();
 }
 
+
 void SinglePlayerTab::UpdatePresetList()
 {
 }
+
 
 void SinglePlayerTab::OnReset(wxCommandEvent& /*unused*/)
 {

@@ -55,11 +55,12 @@ public:
 	void OnUnitsyncReloaded(wxCommandEvent& /*data*/);
 	void ResetUsername();
 
-	void SetMap(unsigned int index);
-	void SetMod(unsigned int index);
-	void SetEngine(unsigned int index);
-
 private:
+	bool CheckForValidGameMapEngineTuple();
+	void SetEngine(int index);
+	void SetGame(int index);
+	void SetMap(int index);
+
 	wxBoxSizer* m_main_sizer;
 	SinglePlayerBattle m_battle;
 
