@@ -305,7 +305,7 @@ void ChatPanel::CreateControls()
 
 	m_say_text = new wxTextCtrlHist(
 	    textcompletiondatabase, m_chat_panel, CHAT_TEXT,
-	    wxEmptyString, wxDefaultPosition, wxSize(100, CONTROL_HEIGHT),
+	    wxEmptyString, wxDefaultPosition, wxDefaultSize,
 	    wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB);
 	m_say_button = new wxButton(m_chat_panel, CHAT_SEND, _("Send"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT));
 
