@@ -203,7 +203,7 @@ void SinglePlayerTab::ReloadMaplist()
 	} else {
 		m_map_pick->SetStringSelection(TowxString(m_battle.GetHostMapName()));
 		if (m_map_pick->GetStringSelection().IsEmpty()) {
-			SetMap(m_game_choice->GetCount() - 1);
+			SetMap(m_map_pick->GetCount() - 1);
 		}
 	}
 }
