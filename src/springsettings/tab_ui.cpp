@@ -89,7 +89,8 @@ void tab_ui::updateControls(int /*what_to_update*/)
 		ctrl_ui_chkb[i]->SetValue(intSettings[UI_CBOX[i].key]);
 	}
 
-	switch (intSettings[MO_RBUT[0].key]) {
+	const int value = intSettings.at(MO_RBUT[0].key);
+	switch (value) {
 		case 0: {
 			ctrl_cam_radio3->SetValue(1);
 		} break; // CamMode 0: FPS
@@ -106,7 +107,7 @@ void tab_ui::updateControls(int /*what_to_update*/)
 			ctrl_cam_radio4->SetValue(1);
 		} break; // CamMode 4: FC
 		default:
-			slLogDebugFunc("unhandled case val");
+			wxLogWarning(_T("Unhandled switch case: %d"), value);
 			break;
 	}
 

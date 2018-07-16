@@ -207,7 +207,7 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event)
 	int value = slider->GetValue();
 	int id = event.GetId();
 
-	switch (event.GetId()) {
+	switch (id) {
 		case ID_RO_SLI_0: {
 			// shadow-map sizes
 			int val = slider->GetValue();
@@ -284,7 +284,7 @@ void abstract_panel::OnSliderMove(wxCommandEvent& event)
 			(intSettings)[MO_SLI_EXT[4].key] = (value > 0 ? 1 : 0);
 		} break;
 		default:
-			slLogDebugFunc("unhandled case val");
+			wxLogWarning(_T("Unhandled switch case: %d"), id);
 			break;
 	}
 }
@@ -315,7 +315,7 @@ void abstract_panel::OnTextUpdate(wxCommandEvent& event)
 			} break;
 
 			default:
-				slLogDebugFunc("unhandled case val");
+				wxLogWarning(_T("Unhandled switch case: %d"), eventID);
 				break;
 		}
 	}
@@ -400,7 +400,7 @@ void abstract_panel::OnCheckBoxTick(wxCommandEvent& event)
 		} break;
 
 		default:
-			slLogDebugFunc("unhandled case val");
+			wxLogWarning(_T("Unhandled switch case: %d"), id);
 			break;
 	}
 }
@@ -439,7 +439,7 @@ void abstract_panel::OnRadioButtonToggle(wxCommandEvent& event)
 		} break; // FC button (CamMode 4)
 
 		default:
-			slLogDebugFunc("unhandled case val");
+			wxLogWarning(_T("Unhandled switch case: %d"), event.GetId());
 			break;
 	}
 }
@@ -477,7 +477,7 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event)
 				} break; // BumpWater
 
 				default:
-					slLogDebugFunc("unhandled case val");
+					wxLogWarning(_T("Unhandled switch case: %d"), choiceIndex);
 					break;
 			}
 			break;
@@ -561,9 +561,8 @@ void abstract_panel::OnComboBoxChange(wxCommandEvent& event)
 			}
 			break;
 		}
-
 		default:
-			slLogDebugFunc("unhandled case val");
+			wxLogWarning(_T("Unhandled switch case: %d"), event.GetId());
 			break;
 	}
 }
