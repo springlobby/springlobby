@@ -52,6 +52,6 @@ void SpringProcess::OnExit()
 void* SpringProcess::Entry()
 {
 	slLogDebugFunc("");
-	RunProcess(m_cmd, m_params);
+	m_exit_code = RunProcess(m_cmd, m_params);
 	return NULL;
 }
