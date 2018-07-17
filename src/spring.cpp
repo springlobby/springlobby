@@ -157,8 +157,6 @@ bool Spring::LaunchEngine(const std::string& cmd, wxArrayString& params)
 void Spring::OnTerminated(wxCommandEvent& event)
 {
 	slLogDebugFunc("");
-	const int exitcode = event.GetExtraLong();
-	wxLogMessage("Spring exited with %d", exitcode);
 	m_running = false;
 	m_process = NULL;
 	event.SetEventType(GlobalEventManager::OnSpringTerminated);

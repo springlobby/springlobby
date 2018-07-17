@@ -633,6 +633,7 @@ void Ui::OnSaidBattle(IBattle& /*battle*/, const wxString& nick, const wxString&
 void Ui::OnSpringTerminated(wxCommandEvent& data)
 {
 	const int exit_code = data.GetInt();
+	wxLogInfo("Exiting with %d", exit_code);
 
 	if (!m_serv)
 		return;
@@ -649,7 +650,6 @@ void Ui::OnSpringTerminated(wxCommandEvent& data)
 		}
 	} catch (assert_exception) {
 	}
-	wxLogInfo("Exiting with %d", exit_code);
 }
 
 

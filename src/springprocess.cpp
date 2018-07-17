@@ -45,7 +45,7 @@ void SpringProcess::OnExit()
 {
 	slLogDebugFunc("");
 	wxCommandEvent event(wxEVT_SPRING_EXIT, PROC_SPRING);
-	event.SetExtraLong(m_exit_code);
+	event.SetInt(m_exit_code);
 	m_sp.AddPendingEvent(event);
 }
 
