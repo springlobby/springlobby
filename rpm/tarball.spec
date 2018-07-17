@@ -41,7 +41,7 @@
 Name:           SpringLobby
 Version:        1
 Release:        1
-Url:            http://springlobby.info
+Url:            https://springlobby.info
 License:        GPL
 Group:          Amusements/Games/Other
 Autoreqprov:    on

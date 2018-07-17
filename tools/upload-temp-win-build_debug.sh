@@ -19,4 +19,4 @@ fi
 
 /usr/bin/install -m 0755 ${filename} /data/www/springlobby.info/temp/builds/$DEVELOPER/${filename}
 
-echo "http://springlobby.info/temp/builds/$DEVELOPER/${filename}"
+echo "https://springlobby.info/temp/builds/$DEVELOPER/${filename}"

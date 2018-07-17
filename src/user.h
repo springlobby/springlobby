@@ -71,9 +71,9 @@ struct UserStatus
 		return taus;
 	}
 
+	// https://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYSTATUS:client
 	static UserStatus FromInt(const int tas)
 	{
-		//http://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYSTATUS:client
 		UserStatus stat;
 		stat.in_game = (tas >> 0) & 1;
 		stat.away = (tas >> 1) & 1;
@@ -149,10 +149,10 @@ struct UserBattleStatus
 		return ((team != s.team) || (colour != s.colour) || (handicap != s.handicap) || (side != s.side) || (sync != s.sync) || (spectator != s.spectator) || (ready != s.ready) || (owner != s.owner) || (aishortname != s.aishortname) || (isfromdemo != s.isfromdemo) || (aitype != s.aitype));
 	}
 
+	// https://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYBATTLESTATUS:client
 	static UserBattleStatus FromInt(const int tas)
 	{
 		UserBattleStatus stat;
-		//http://springrts.com/dl/LobbyProtocol/ProtocolDescription.html#MYBATTLESTATUS:client
 		stat.ready = (tas >> 1) & 1;
 		stat.team = (tas >> 2) & 15;
 		stat.ally = (tas >> 6) & 15;
