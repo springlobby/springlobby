@@ -15,25 +15,6 @@ struct SortOrderItem
 //! map sort priority <--> ( column, direction )
 typedef std::map<int, SortOrderItem> SortOrder;
 
-
-//! the sort algo used in almost all ListCtrls
-template <class ContainerType, class Comparator>
-void SLInsertionSort(ContainerType& data, const Comparator& cmp)
-{
-	const int n = data.size();
-	for (int i = 0; i < n; i++) {
-		typename Comparator::ObjType v = data[i];
-		int j;
-
-		for (j = i - 1; j >= 0; j--) {
-			if (cmp(data[j], v))
-				break;
-			data[j + 1] = data[j];
-		}
-		data[j + 1] = v;
-	}
-}
-
 // Returns 1 if the second argument is considered greater/newer than the first,
 // 0 if they are identical and -1 otherwise.
 int CompareVersionStrings(const std::string& lhs, const std::string& rhs);
