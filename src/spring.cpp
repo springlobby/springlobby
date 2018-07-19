@@ -134,18 +134,16 @@ bool Spring::LaunchEngine(const std::string& cmd, wxArrayString& params)
 	if (cfg().ReadBool(_T( "/Spring/Safemode" ))) {
 		params.push_back(_T("--safemode"));
 	}
-
-	const std::string dataDir = SlPaths::GetDataDir();
-	wxString message = _T("Engine call [data dir: \"");
-	message += dataDir;
-	message += _T("\"], command-line: ");
-	message += '"' + cmd + '"';
-	for (const wxString& param: params) {
-		//C++ semantics are fucked, i.e. char constants + was casted to int. Wasn't + supposed to be left-associative?
-		message += ' '; message += '"'; message += param; message += '"';
+	std::string stdparams;
+	for (const wxString param: params) {
+		if (!stdparams.empty())
+			stdparams += " ";
+		stdparams += STD_STRING(param);
 	}
-	wxLogMessage(message);
-	wxSetWorkingDirectory(TowxString(dataDir));
+
+	const std::string datadir = SlPaths::GetDataDir();
+	wxLogMessage(_T("spring call params: %s %s %s"),datadir.c_str(), TowxString(cmd).c_str(), stdparams.c_str());
+	wxSetWorkingDirectory(TowxString(datadir));
 
 	if (m_process == 0) {
 		m_process = new SpringProcess(*this);
