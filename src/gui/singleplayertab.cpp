@@ -375,13 +375,13 @@ bool SinglePlayerTab::CheckForValidGameMapEngineTuple()
 	if (isValid) {
 		m_addbot_btn->Enable(true);
 		m_start_btn->Enable(true);
-		m_addbot_btn->SetToolTip(_("First select game, map and engine"));
-		m_start_btn->SetToolTip(_("First select game, map and engine"));
+		m_addbot_btn->SetToolTip(wxEmptyString);
+		m_start_btn->SetToolTip(wxEmptyString);
 	} else {
 		m_addbot_btn->Enable(false);
 		m_start_btn->Enable(false);
-		m_addbot_btn->SetToolTip(wxEmptyString);
-		m_start_btn->SetToolTip(wxEmptyString);
+		m_addbot_btn->SetToolTip(_("First select game, map and engine"));
+		m_start_btn->SetToolTip(_("First select game, map and engine"));
 	}
 	return isValid;
 }
@@ -390,13 +390,13 @@ bool SinglePlayerTab::CheckForValidGameMapEngineTuple()
 // 2/3 of these checks are now redundant
 bool SinglePlayerTab::ValidSetup() const
 {
-	if (HasValidSelection(m_game_choice)) {
+	if (!HasValidSelection(m_game_choice)) {
 		wxLogWarning(_T("no game selected"));
 		customMessageBox(SL_MAIN_ICON, _("You have to select a game first."), _("Game setup error"));
 		return false;
 	}
 
-	if (HasValidSelection(m_map_pick)) {
+	if (!HasValidSelection(m_map_pick)) {
 		wxLogWarning(_T("no map selected"));
 		customMessageBox(SL_MAIN_ICON, _("You have to select a map first."), _("Game setup error"));
 		return false;

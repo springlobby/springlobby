@@ -18,7 +18,7 @@ SetCompressor /FINAL /SOLID lzma
 !define PRODUCT_ROOT_KEY "HKLM"
 !define PRODUCT_KEY "Software\SpringLobby"
 !define PRODUCT_VERSION "${VERSION_TAG}"
-!define PRODUCT_WEB_SITE "http://springlobby.info"
+!define PRODUCT_WEB_SITE "https://springlobby.info"
 !define PRODUCT_PUBLISHER "SpringLobby Team"
 
 ; MUI 1.67 compatible ------

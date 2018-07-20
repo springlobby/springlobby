@@ -12,7 +12,7 @@ class wxString;
 /**
  * @brief Computes Levenshtein distance (edit distance) between two strings.
  * @return the Levenshtein distance normalized by the longest string's length.
- * @note Source: http://en.wikipedia.org/wiki/Levenshtein_distance
+ * @note Source: https://en.wikipedia.org/wiki/Levenshtein_distance
  */
 double LevenshteinDistance(const wxString& _s, const wxString& _t);
 
