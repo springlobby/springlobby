@@ -214,8 +214,8 @@ public:
 	virtual void SetHostMap(const std::string& mapname, const std::string& hash);
 	virtual void SetLocalMap(const std::string& mapname);
 	virtual const LSL::UnitsyncMap& LoadMap();
-	virtual std::string GetHostMapName() const;
-	virtual std::string GetHostMapHash() const;
+	virtual const std::string& GetHostMapName() const;
+	virtual const std::string& GetHostMapHash() const;
 
 	virtual void SetProxy(const std::string& proxyhost);
 	virtual std::string GetProxy() const;
@@ -229,8 +229,8 @@ public:
 	virtual void SetHostGame(const std::string& gamename, const std::string& hash);
 	virtual void SetLocalGame(const LSL::UnitsyncGame& game);
 	virtual const LSL::UnitsyncGame& LoadGame();
-	virtual std::string GetHostGameName() const;
-	virtual std::string GetHostGameHash() const;
+	virtual const std::string& GetHostGameName() const;
+	virtual const std::string& GetHostGameHash() const;
 
 	virtual bool MapExists(bool comparehash = true) const;
 	virtual bool GameExists(bool comparehash = true) const;

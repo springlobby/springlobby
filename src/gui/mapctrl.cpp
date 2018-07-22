@@ -456,7 +456,7 @@ int MapCtrl::LoadMinimap()
 	if (!m_battle->MapExists(false))
 		return -1;
 
-	const std::string map = m_battle->GetHostMapName();
+	const std::string& map = m_battle->GetHostMapName();
 
 	try {
 		int w, h;

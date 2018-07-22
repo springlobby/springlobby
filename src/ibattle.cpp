@@ -737,13 +737,13 @@ const LSL::UnitsyncMap& IBattle::LoadMap()
 }
 
 
-std::string IBattle::GetHostMapName() const
+const std::string& IBattle::GetHostMapName() const
 {
 	return m_host_map.name;
 }
 
 
-std::string IBattle::GetHostMapHash() const
+const std::string& IBattle::GetHostMapHash() const
 {
 	return m_host_map.hash;
 }
@@ -797,13 +797,13 @@ const LSL::UnitsyncGame& IBattle::LoadGame()
 }
 
 
-std::string IBattle::GetHostGameName() const
+const std::string& IBattle::GetHostGameName() const
 {
 	return m_host_game.name;
 }
 
 
-std::string IBattle::GetHostGameHash() const
+const std::string& IBattle::GetHostGameHash() const
 {
 	return m_host_game.hash;
 }

@@ -392,7 +392,7 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 		battle.SetSpectators(spectators);
 		battle.SetIsLocked(locked);
 
-		const std::string oldmap = battle.GetHostMapName();
+		const std::string oldmap (battle.GetHostMapName()); // force copy
 
 		battle.SetHostMap(map, maphash);
 
