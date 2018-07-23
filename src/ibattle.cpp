@@ -990,7 +990,7 @@ void IBattle::SaveOptionsPreset(const std::string& name)
 }
 
 
-std::string IBattle::GetCurrentPreset()
+const std::string& IBattle::GetCurrentPreset() const
 {
 	return m_preset;
 }
@@ -1031,7 +1031,7 @@ bool IBattle::IsProxy() const
 	return !m_opts.proxyhost.empty();
 }
 
-std::string IBattle::GetProxy() const
+const std::string& IBattle::GetProxy() const
 {
 	return m_opts.proxyhost;
 }

@@ -218,7 +218,7 @@ public:
 	virtual const std::string& GetHostMapHash() const;
 
 	virtual void SetProxy(const std::string& proxyhost);
-	virtual std::string GetProxy() const;
+	virtual const std::string& GetProxy() const;
 	virtual bool IsProxy() const;
 
 	virtual bool IsSynced(); //cannot be const
@@ -300,7 +300,7 @@ public:
 
 	virtual bool LoadOptionsPreset(const std::string& name);
 	virtual void SaveOptionsPreset(const std::string& name);
-	virtual std::string GetCurrentPreset();
+	virtual const std::string& GetCurrentPreset() const;
 	virtual void DeletePreset(const std::string& name);
 	virtual LSL::StringVector GetPresetList();
 
@@ -424,7 +424,7 @@ public:
 	{
 		m_opts.ip = ip;
 	}
-	virtual std::string GetHostIp() const
+	virtual const std::string& GetHostIp() const
 	{
 		return m_opts.ip;
 	}
@@ -461,7 +461,7 @@ public:
 	{
 		m_opts.description = desc;
 	}
-	virtual std::string GetDescription() const
+	virtual const std::string& GetDescription() const
 	{
 		return m_opts.description;
 	}
@@ -535,7 +535,7 @@ public:
 	{
 		m_script.clear();
 	}
-	virtual std::string GetScript() const
+	virtual const std::string& GetScript() const
 	{
 		return m_script;
 	}
@@ -544,7 +544,7 @@ public:
 	{
 		m_playback_file_path = path;
 	}
-	virtual std::string GetPlayBackFilePath() const
+	virtual const std::string& GetPlayBackFilePath() const
 	{
 		return m_playback_file_path;
 	}
@@ -581,11 +581,11 @@ public:
 	{
 		m_opts.engineVersion = version;
 	}
-	virtual std::string GetEngineName() const
+	virtual const std::string& GetEngineName() const
 	{
 		return m_opts.engineName;
 	}
-	virtual std::string GetEngineVersion() const
+	virtual const std::string& GetEngineVersion() const
 	{
 		return m_opts.engineVersion;
 	}

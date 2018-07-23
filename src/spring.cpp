@@ -93,7 +93,7 @@ bool Spring::Run(IBattle& battle)
 
 	wxArrayString params;
 
-	const std::string demopath = battle.GetPlayBackFilePath();
+	const std::string& demopath = battle.GetPlayBackFilePath();
 	if (!demopath.empty()) {
 		params.push_back(TowxString(demopath));
 		return LaunchEngine(executable, params);
@@ -223,7 +223,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 		case BT_Played:
 			break;
 		case BT_Replay: {
-			wxString path = TowxString(battle.GetPlayBackFilePath());
+			wxString path(battle.GetPlayBackFilePath());
 			if (path.Find(_T("/")) != wxNOT_FOUND)
 				path.BeforeLast(_T('/'));
 			tdf.AppendStr("DemoFile", STD_STRING(path));
@@ -231,7 +231,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 			break;
 		}
 		case BT_Savegame: {
-			wxString path = TowxString(battle.GetPlayBackFilePath());
+			wxString path(battle.GetPlayBackFilePath());
 			if (path.Find(_T("/")) != wxNOT_FOUND)
 				path.BeforeLast(_T('/'));
 			tdf.AppendStr("Savefile", STD_STRING(path));
