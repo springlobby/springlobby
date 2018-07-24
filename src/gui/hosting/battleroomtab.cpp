@@ -428,7 +428,7 @@ void BattleRoomTab::PrintAllySetup()
 		wxString alliancesstring;
 		int previousalliancesize = 0;
 		bool ffamode = true;
-		std::map<int, int> allysizes = m_battle->GetAllySizes();
+		const std::map<int, int>& allysizes = m_battle->GetAllySizes();
 		if (allysizes.size() < 3)
 			ffamode = false;
 		for (std::map<int, int>::const_iterator itor = allysizes.begin(); itor != allysizes.end(); ++itor) {
@@ -509,7 +509,7 @@ void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
 			m_minimap->UpdateMinimap();
 
 		} else if (key == _T( "restrictions" )) {
-			m_opts_list->SetItem(index, 1, bool2yn(m_battle->RestrictedUnits().size() > 0));
+			m_opts_list->SetItem(index, 1, bool2yn(m_battle->GetRestrictedUnits().size() > 0));
 		}
 	}
 }

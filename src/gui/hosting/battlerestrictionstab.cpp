@@ -134,7 +134,7 @@ void BattleRestrictionsTab::ReloadRestrictions()
 		m_allowed_list->Append(items);
 	} catch (...) {
 	}
-	std::map<std::string, int> units = m_battle->RestrictedUnits();
+	const std::map<std::string, int>& units = m_battle->GetRestrictedUnits();
 
 	for (std::map<std::string, int>::const_iterator itor = units.begin(); itor != units.end(); ++itor)
 		Restrict(TowxString(itor->first), itor->second);

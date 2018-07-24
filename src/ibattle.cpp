@@ -849,7 +849,7 @@ void IBattle::UnrestrictAllUnits()
 }
 
 
-std::map<std::string, int> IBattle::RestrictedUnits() const
+const std::map<std::string, int>& IBattle::GetRestrictedUnits() const
 {
 	return m_restricted_units;
 }

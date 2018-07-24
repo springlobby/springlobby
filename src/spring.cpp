@@ -293,7 +293,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 	}
 	tdf.LeaveSection();
 
-	std::map<std::string, int> units = battle.RestrictedUnits();
+	const std::map<std::string, int>& units = battle.GetRestrictedUnits();
 	tdf.AppendInt("NumRestrictions", units.size());
 	tdf.EnterSection("RESTRICT");
 	int restrictcount = 0;

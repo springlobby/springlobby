@@ -287,7 +287,7 @@ public:
 	virtual void RestrictUnit(const std::string& unitname, int count = 0);
 	virtual void UnrestrictUnit(const std::string& unitname);
 	virtual void UnrestrictAllUnits();
-	virtual std::map<std::string, int> RestrictedUnits() const;
+	virtual const std::map<std::string, int>& GetRestrictedUnits() const;
 
 	virtual LSL::OptionsWrapper& CustomBattleOptions()
 	{
@@ -359,7 +359,7 @@ public:
 	{
 		m_opts.battletype = type;
 	}
-	virtual BattleType GetBattleType()
+	virtual const BattleType& GetBattleType() const
 	{
 		return m_opts.battletype;
 	}
@@ -385,7 +385,7 @@ public:
 	{
 		m_opts.nattype = nattype;
 	}
-	virtual NatType GetNatType() const
+	virtual const NatType& GetNatType() const
 	{
 		return m_opts.nattype;
 	}
@@ -557,11 +557,11 @@ public:
 
 	virtual void StartSpring() = 0;
 
-	virtual std::map<int, int> GetAllySizes()
+	virtual const std::map<int, int>& GetAllySizes() const
 	{
 		return m_ally_sizes;
 	}
-	virtual std::map<int, int> GetTeamSizes()
+	virtual const std::map<int, int>& GetTeamSizes() const
 	{
 		return m_teams_sizes;
 	}

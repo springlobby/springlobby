@@ -1111,7 +1111,7 @@ void Battle::ShouldAutoUnspec()
 {
 	if (m_auto_unspec && !IsLocked() && GetMe().BattleStatus().spectator) {
 		unsigned int numplayers = 0;
-		std::map<int, int> allysizes = GetAllySizes();
+		const std::map<int, int>& allysizes = GetAllySizes();
 		for (std::map<int, int>::const_iterator itor = allysizes.begin(); itor != allysizes.end(); ++itor) {
 			numplayers += itor->second;
 		}

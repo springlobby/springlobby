@@ -1454,7 +1454,7 @@ void TASServer::SendHostInfo(HostInfo update)
 		}
 	}
 	if ((update & IBattle::HI_Restrictions) > 0) {
-		std::map<std::string, int> units = battle.RestrictedUnits();
+		const std::map<std::string, int>& units = battle.GetRestrictedUnits();
 		SendCmd("ENABLEALLUNITS", "", battle.IsProxy());
 		if (!units.empty()) {
 			std::string msg;
