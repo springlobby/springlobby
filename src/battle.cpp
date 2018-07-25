@@ -682,7 +682,7 @@ void Battle::FixColours()
 {
 	if (!IsFounderMe())
 		return;
-	std::vector<LSL::lslColor>& palette = GetFixColoursPalette(m_teams_sizes.size() + 1);
+	const std::vector<LSL::lslColor>& palette = GetFixColoursPalette(m_teams_sizes.size() + 1);
 	std::vector<int> palette_use(palette.size(), 0);
 
 	LSL::lslColor my_col = GetMe().BattleStatus().colour; // Never changes color of founder (me) :-)

@@ -93,7 +93,7 @@ bool IBattle::IsSynced()
 	return true;
 }
 
-std::vector<LSL::lslColor>& IBattle::GetFixColoursPalette(int numteams) const
+const std::vector<LSL::lslColor>& IBattle::GetFixColoursPalette(int numteams) const
 {
 	return GetBigFixColoursPalette(numteams);
 }
@@ -101,7 +101,7 @@ std::vector<LSL::lslColor>& IBattle::GetFixColoursPalette(int numteams) const
 LSL::lslColor IBattle::GetFixColour(int i) const
 {
 	int size = m_teams_sizes.size();
-	std::vector<LSL::lslColor> palette = GetFixColoursPalette(size);
+	const std::vector<LSL::lslColor>& palette = GetFixColoursPalette(size);
 	return palette[i];
 }
 
@@ -153,7 +153,7 @@ LSL::lslColor IBattle::GetFreeColour(User*) const
 
 	int inc = 1;
 	while (true) {
-		ColorVec fixcolourspalette = GetFixColoursPalette(m_teams_sizes.size() + inc++);
+		ColorVec fixcolourspalette (GetFixColoursPalette(m_teams_sizes.size() + inc++));
 
 		ColorVec::iterator fixcolourspalette_new_end = std::unique(fixcolourspalette.begin(), fixcolourspalette.end(), AreColoursSimilarProxy(20));
 
@@ -203,7 +203,7 @@ int IBattle::GetFreeTeam(bool excludeme) const
 
 int IBattle::GetClosestFixColour(const LSL::lslColor& col, const std::vector<int>& excludes, int difference) const
 {
-	std::vector<LSL::lslColor> palette = GetFixColoursPalette(m_teams_sizes.size() + 1);
+	const std::vector<LSL::lslColor>& palette = GetFixColoursPalette(m_teams_sizes.size() + 1);
 	int result = 0;
 	int t1 = palette.size();
 	int t2 = excludes.size();
