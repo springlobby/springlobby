@@ -49,11 +49,11 @@ wxString TowxString(int arg)
 
 long FromwxString(const wxString& arg)
 {
-	std::stringstream s;
-	s << STD_STRING(arg);
-	int64_t ret = 0l;
-	s >> ret;
-	return ret;
+	long ret;
+	if (arg.ToCLong(&ret))
+		return ret;
+	else
+		return 0;
 }
 
 
