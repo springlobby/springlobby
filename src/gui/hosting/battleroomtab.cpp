@@ -172,7 +172,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_minimap = new MapCtrl(this, 162, m_battle, true, true, false);
 	m_minimap->SetToolTip(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes."));
 
-	m_browse_map_btn = new wxButton(this, BROOM_MAP_BROWSE, _("Map"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+	m_browse_map_btn = new wxButton(this, BROOM_MAP_BROWSE, _("Pick.."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	//m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
 
 	m_votePanel = new VotePanel(this);
@@ -335,9 +335,9 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	//m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
 
 	m_info_sizer->Add(m_minimap, 0, wxEXPAND);
-	m_map_select_sizer->Add(m_map_combo, 0, wxALL | wxEXPAND, 2);
-	m_map_select_sizer->Add(m_browse_map_btn, 0, wxALL, 2);
-	m_info_sizer->Add(m_map_select_sizer, 0, wxEXPAND | wxALL, 2);
+	m_map_select_sizer->Add(m_browse_map_btn, 0, 0, 2);
+	m_map_select_sizer->Add(m_map_combo, 1, wxEXPAND, 2);
+	m_info_sizer->Add(m_map_select_sizer, 0, wxEXPAND | wxTOP, 2);
 	//m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
 	//m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
 	m_info_sizer->Add(m_opts_list, 1, wxEXPAND | wxTOP, 4);
