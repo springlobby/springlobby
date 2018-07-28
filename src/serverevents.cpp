@@ -383,7 +383,7 @@ void ServerEvents::OnUserLeftBattle(int battleid, const std::string& nick)
 }
 
 
-void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked, const std::string& maphash, const std::string& map)
+void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked, const std::string& mapHash, const std::string& mapName)
 {
 	slLogDebugFunc("");
 	try {
@@ -392,13 +392,13 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 		battle.SetSpectators(spectators);
 		battle.SetIsLocked(locked);
 
-		const std::string oldmap (battle.GetHostMapName()); // force copy
-
-		battle.SetHostMap(map, maphash);
-
-		if ((oldmap != map) && (battle.UserExists(m_serv.GetMe().GetNick()))) {
-			battle.SendMyBattleStatus();
-			battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, map);
+		const std::string& oldMapName = battle.GetHostMapName();
+		if (oldMapName != mapName) {
+			battle.SetHostMap(mapName, mapHash);
+			if (battle.UserExists(m_serv.GetMe().GetNick())) {
+				battle.SendMyBattleStatus();
+				battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, mapName);
+			}
 		}
 
 		ui().OnBattleInfoUpdated(battle, wxEmptyString);

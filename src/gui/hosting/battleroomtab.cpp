@@ -405,20 +405,6 @@ void BattleRoomTab::SplitSizerHorizontally(const bool horizontal)
 		m_splitter->SplitVertically(m_player_panel, m_chat);
 }
 
-void BattleRoomTab::UpdateBattleInfo()
-{
-
-	if (!m_battle)
-		return;
-	m_lock_chk->SetValue(m_battle->IsLocked());
-	m_minimap->UpdateMinimap();
-	OptionListMap::iterator it;
-	for (it = m_opt_list_map.begin(); it != m_opt_list_map.end(); ++it) {
-		UpdateBattleInfo(it->first);
-	}
-	UpdateMapInfoSummary();
-}
-
 void BattleRoomTab::PrintAllySetup()
 {
 	wxString setupstring;
@@ -449,6 +435,19 @@ void BattleRoomTab::PrintAllySetup()
 	}
 	m_ally_setup_lbl->SetLabel(wxString::Format(_T("%s"), setupstring.c_str()));
 	Layout();
+}
+
+void BattleRoomTab::UpdateBattleInfo()
+{
+	if (!m_battle)
+		return;
+	m_lock_chk->SetValue(m_battle->IsLocked());
+	m_minimap->UpdateMinimap();
+	OptionListMap::iterator it;
+	for (it = m_opt_list_map.begin(); it != m_opt_list_map.end(); ++it) {
+		UpdateBattleInfo(it->first);
+	}
+	UpdateMapInfoSummary();
 }
 
 void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
