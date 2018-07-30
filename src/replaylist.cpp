@@ -180,7 +180,6 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 
 	GetHeaderInfo(*replay, ret, replay_version);
 	ret.battle.GetBattleFromScript(false);
-	ret.GameName = ret.battle.GetHostGameName();
 	ret.battle.SetBattleType(BT_Replay);
 	ret.battle.SetEngineName("spring");
 	ret.battle.SetEngineVersion(ret.SpringVersion);

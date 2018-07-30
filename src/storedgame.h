@@ -14,7 +14,6 @@ struct StoredGame
 	bool can_watch;
 	int duration; //in seconds
 	int size;     //in bytes
-	std::string GameName;
 	std::string SpringVersion;
 	std::string Filename;
 	time_t date;
@@ -52,7 +51,6 @@ struct StoredGame
 		can_watch = moved.can_watch;
 		duration = moved.duration;
 		size = moved.size;
-		GameName = moved.GameName;
 		SpringVersion = moved.SpringVersion;
 		Filename = moved.Filename;
 		date = moved.date;
