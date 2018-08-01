@@ -75,11 +75,14 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 			variant = wxString::Format(_T("%d"), (int)storedGame->battle.GetNumUsers() - storedGame->battle.GetSpectators());
 			break;
 
-		case DURATION:
-			//FIXME: this seems to give incorrect result
-			variant = wxString::Format(_T("%02ld:%02ld:%02ld"), (long)storedGame->duration / 3600, (long)(storedGame->duration % 3600) / 60, (long)(storedGame->duration % 60) / 60);
-			break;
-
+		case DURATION: {
+			int seconds = storedGame->duration;
+			int minutes = seconds / 60;
+			int hours = minutes / 60;
+			minutes = minutes % 60;
+			seconds = seconds % 60;
+			variant = wxString::Format(_T("%02d:%02d:%02d"), hours, minutes, seconds);
+			} break;
 		case VERSION:
 			variant = TowxString(storedGame->SpringVersion);
 			break;
