@@ -649,7 +649,7 @@ void Ui::OnSpringTerminated(wxCommandEvent& data)
 			battle->SetIsLocked(false);
 			battle->SendHostInfo(IBattle::HI_Locked);
 		}
-	} catch (assert_exception) {
+	} catch (assert_exception&) {
 	}
 }
 
