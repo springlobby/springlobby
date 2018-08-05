@@ -694,9 +694,6 @@ UserPosition IBattle::GetFreePosition()
 void IBattle::SetHostMap(const std::string& mapname, const std::string& hash)
 {
 	assert(hash.empty() || LSL::Util::MakeHashUnsigned(hash) == hash);
-	if (mapname == m_host_map.name || hash == m_host_map.hash) {
-		return;
-	}
 	m_map_loaded = mapname.empty();
 	m_host_map.name = mapname;
 	m_host_map.hash = hash;
