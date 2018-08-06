@@ -77,6 +77,16 @@ public:
 		}
 	}
 
+	template <typename T>
+	bool Get(T& target, const size_t offset)
+	{
+		if (Seek(offset) == wxInvalidOffset) {
+			return false;
+		}
+		size_t numRead = Read(&target, sizeof(T));
+		return sizeof(T) == numRead;
+	}
+
 	const std::string& GetName() const
 	{
 		return m_name;
@@ -102,11 +112,9 @@ ReplayList::ReplayList()
 
 int ReplayList::replayVersion(PlayBackDataReader& replay) const
 {
-	if (replay.Seek(16) == wxInvalidOffset) {
-		return 0;
-	}
-	int version = 0;
-	replay.Read(&version, 4);
+	int version;
+	if (!replay.Get(version, 16))
+		version = 0;
 	return version;
 }
 
@@ -191,22 +199,23 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 std::string ReplayList::GetScriptFromReplay(PlayBackDataReader& replay, const int version) const
 {
 	std::string script;
-	if (replay.Seek(20) == wxInvalidOffset) {
-		return script;
-	}
 	int headerSize = 0;
-	replay.Read(&headerSize, 4);
+	if (!replay.Get(headerSize, 20))
+		return script;
+
 	const int seek = 64 + (version < 5 ? 0 : 240);
-	if (replay.Seek(seek) == wxInvalidOffset) {
+
+	int scriptSizeInt = 0;
+	if (!replay.Get(scriptSizeInt, seek)) {
 		wxLogWarning("Couldn't seek to scriptsize from demo: %s", replay.GetName().c_str());
 		return script;
 	}
-	wxFileOffset scriptSize = 0;
-	replay.Read(&scriptSize, 4);
+	wxFileOffset scriptSize = static_cast<wxFileOffset>(scriptSizeInt);
 	if (scriptSize <= 0) {
 		wxLogWarning("Demo contains empty script: %s (%d)", replay.GetName().c_str(), (int)scriptSize);
 		return script;
 	}
+
 	if (replay.Seek(headerSize) == wxInvalidOffset) {
 		wxLogWarning("Couldn't seek to script from demo: %s (%d)", replay.GetName().c_str());
 		return script;
@@ -219,10 +228,6 @@ std::string ReplayList::GetScriptFromReplay(PlayBackDataReader& replay, const in
 // see https://github.com/spring/spring/blob/develop/rts/System/LoadSave/demofile.h
 void ReplayList::GetHeaderInfo(PlayBackDataReader& replay, StoredGame& rep, const int /*version*/) const
 {
-	if (replay.Seek(304) == wxInvalidOffset) {
-		return;
-	}
-	int gametime = 0;
-	replay.Read(&gametime, 4);
-	rep.duration = gametime;
+	if (!replay.Get(rep.duration, 312))
+		rep.duration = 0;
 }
