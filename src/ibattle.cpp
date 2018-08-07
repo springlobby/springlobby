@@ -12,8 +12,10 @@ lsl/battle/ibattle.cpp
 **/
 
 
-#include <wx/tokenzr.h>
+#include <wx/filename.h>
 #include <wx/log.h>
+#include <wx/string.h>
+#include <wx/tokenzr.h>
 
 #include <algorithm>
 
@@ -1009,6 +1011,13 @@ LSL::StringVector IBattle::GetPresetList()
 
 void IBattle::UserPositionChanged(const User& /*unused*/)
 {
+}
+
+void IBattle::SetPlayBackFilePath(const std::string& path)
+{
+	m_playback_file_path = path;
+	// I don't see any easier way of dealing with unicode.
+	m_playback_file_name = TowxString(path).AfterLast(wxFileName::GetPathSeparator());
 }
 
 void IBattle::AddUserFromDemo(User& user)

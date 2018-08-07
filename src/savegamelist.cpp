@@ -19,7 +19,6 @@ bool SavegameList::GetSavegameInfos(const std::string& SavegamePath, StoredGame&
 	//wxLOG_Info  ( STD_STRING( SavegamePath ) );
 	//TODO extract moar info
 	ret.type = StoredGame::SAVEGAME;
-	ret.Filename = SavegamePath;
 	ret.battle.SetPlayBackFilePath(SavegamePath);
 	if (SavegamePath.empty())
 		return false;

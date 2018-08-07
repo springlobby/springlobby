@@ -540,13 +540,14 @@ public:
 		return m_script;
 	}
 
-	virtual void SetPlayBackFilePath(const std::string& path)
-	{
-		m_playback_file_path = path;
-	}
+	virtual void SetPlayBackFilePath(const std::string& path);
 	virtual const std::string& GetPlayBackFilePath() const
 	{
 		return m_playback_file_path;
+	}
+	virtual const std::string& GetPlayBackFileName() const
+	{
+		return m_playback_file_name;
 	}
 
 	virtual void AddUserFromDemo(User& user);
@@ -734,6 +735,7 @@ private:
 
 	/// replay&savegame stuff
 	std::string m_script;
+	std::string m_playback_file_name;
 	std::string m_playback_file_path;
 
 	TeamVec m_parsed_teams;

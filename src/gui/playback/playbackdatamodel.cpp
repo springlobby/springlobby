@@ -92,7 +92,7 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 			break;
 
 		case FILENAME:
-			variant = TowxString(storedGame->Filename).AfterLast(wxFileName::GetPathSeparator());
+			variant = TowxString(storedGame->battle.GetPlayBackFileName());
 			break;
 
 		case DEFAULT_COLUMN:

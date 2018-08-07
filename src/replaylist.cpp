@@ -137,7 +137,6 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 {
 	const std::string FileName = LSL::Util::AfterLast(ReplayPath, SEP); // strips file path
 	ret.type = StoredGame::REPLAY;
-	ret.Filename = ReplayPath;
 	ret.battle.SetPlayBackFilePath(ReplayPath);
 	ret.SpringVersion = LSL::Util::BeforeLast(LSL::Util::AfterLast(FileName, "_"), ".");
 	ret.size = wxFileName::GetSize(ReplayPath).GetLo(); //FIXME: use longlong

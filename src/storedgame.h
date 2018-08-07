@@ -15,7 +15,6 @@ struct StoredGame
 	int duration; //in seconds
 	int size;     //in bytes
 	std::string SpringVersion;
-	std::string Filename;
 	time_t date;
 	std::string date_string;
 	OfflineBattle battle;
@@ -52,7 +51,6 @@ struct StoredGame
 		duration = moved.duration;
 		size = moved.size;
 		SpringVersion = moved.SpringVersion;
-		Filename = moved.Filename;
 		date = moved.date;
 		date_string = moved.date_string;
 		battle.operator=((OfflineBattle && )moved.battle);
@@ -61,7 +59,7 @@ struct StoredGame
 
 	bool Equals(const StoredGame& other) const
 	{
-		return Filename == other.Filename;
+		return battle.GetPlayBackFilePath() == other.battle.GetPlayBackFilePath();
 	}
 };
 
