@@ -8,6 +8,7 @@
 #include <wx/filename.h>
 #include <wx/log.h>
 #include "utils/conversion.h"
+#include "utils/sortutil.h"
 
 PlaybackDataModel::PlaybackDataModel()
     : BaseDataViewModel<StoredGame>::BaseDataViewModel(COLUMN_COUNT)
@@ -17,6 +18,51 @@ PlaybackDataModel::PlaybackDataModel()
 PlaybackDataModel::~PlaybackDataModel()
 {
 	// TODO Auto-generated destructor stub
+}
+
+int PlaybackDataModel::Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB,
+                               unsigned int column, bool ascending) const
+{
+	int sortingResult = 0;
+	const StoredGame* storedGameA = static_cast<const StoredGame*>(itemA.GetID());
+	wxASSERT (storedGameA != nullptr);
+	const StoredGame* storedGameB = static_cast<const StoredGame*>(itemB.GetID());
+	wxASSERT (storedGameB != nullptr);
+
+	switch (column) {
+		case DATE:
+			sortingResult = storedGameA->date_string.compare(storedGameB->date_string);
+			break;
+		case GAME:
+			sortingResult = storedGameA->battle.GetHostGameName().compare(storedGameB->battle.GetHostGameName());
+			break;
+		case MAP:
+			sortingResult = storedGameA->battle.GetHostMapName().compare(storedGameB->battle.GetHostMapName());
+			break;
+		case PLAYERS: {
+			unsigned numPlayersA = storedGameA->battle.GetNumUsers() - storedGameA->battle.GetSpectators();
+			unsigned numPlayersB = storedGameB->battle.GetNumUsers() - storedGameB->battle.GetSpectators();
+			sortingResult = GenericCompare(numPlayersA, numPlayersB);
+			} break;
+		case DURATION:
+			sortingResult = GenericCompare(storedGameA->duration, storedGameB->duration);
+			break;
+		case VERSION:
+			sortingResult = storedGameA->SpringVersion.compare(storedGameB->SpringVersion);
+			break;
+		case FILESIZE:
+			sortingResult = GenericCompare(storedGameA->size, storedGameB->size);
+			break;
+		case FILENAME: {
+			const std::string& fileNameA = storedGameA->battle.GetPlayBackFileName();
+			const std::string& fileNameB = storedGameB->battle.GetPlayBackFileName();
+			sortingResult = fileNameA.compare(fileNameB);
+			} break;
+		default:
+			wxASSERT(false);
+	}
+	//Return direct sort order or reversed depending on ascending flag
+	return ascending ? sortingResult : (sortingResult * (-1));
 }
 
 void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const

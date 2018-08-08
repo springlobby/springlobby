@@ -14,6 +14,7 @@ public:
 	PlaybackDataModel();
 	virtual ~PlaybackDataModel();
 
+	virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
 	virtual void GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const override;
 	virtual wxString GetColumnType(unsigned int columnt) const override;
 
