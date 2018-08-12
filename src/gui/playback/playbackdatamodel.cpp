@@ -30,6 +30,8 @@ int PlaybackDataModel::Compare(const wxDataViewItem& itemA, const wxDataViewItem
 	wxASSERT (storedGameB != nullptr);
 
 	switch (column) {
+		case DEFAULT_COLUMN:
+			ascending = false;
 		case DATE:
 			sortingResult = storedGameA->date_string.compare(storedGameB->date_string);
 			break;
