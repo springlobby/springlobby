@@ -1,10 +1,10 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "toasternotification.h"
 
-#include "toasterbox/ToasterBox.h"
-#include "settings.h"
 #include <wx/settings.h>
+
+#include "settings.h"
+#include "toasterbox/ToasterBox.h"
 
 ToasterNotification::ToasterNotification(wxWindow* parent)
     : m_toasterbox(new ToasterBox(parent))

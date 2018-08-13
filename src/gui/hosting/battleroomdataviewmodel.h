@@ -4,7 +4,6 @@
 #define SRC_GUI_HOSTING_BATTLEROOMDATAVIEWMODEL_H_
 
 #include "gui/basedataviewmodel.h"
-
 class User;
 class IBattle;
 

@@ -1,13 +1,13 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "slbook.h"
-#include "settings.h"
-#include "gui/chatpanel.h"
-#include "gui/chatpanelmenu.h"
-#include "gui/mainwindow.h"
 
 #include <wx/menu.h>
 #include <wx/scrolwin.h>
+
+#include "gui/chatpanel.h"
+#include "gui/chatpanelmenu.h"
+#include "gui/mainwindow.h"
+#include "settings.h"
 #include "utils/conversion.h"
 
 static const long ID_CLOSE_TAB = wxNewId();

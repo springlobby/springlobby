@@ -4,7 +4,6 @@
 #define LOBBYOPTIONSTAB_H
 
 #include <wx/scrolwin.h>
-
 class wxCheckBox;
 class wxBoxSizer;
 class wxStaticText;

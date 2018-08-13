@@ -5,8 +5,6 @@
 
 #include <wx/panel.h>
 #include <wx/string.h>
-
-
 class ColorButton;
 class GroupUserDialog;
 class wxCheckBox;

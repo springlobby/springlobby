@@ -3,47 +3,37 @@
 //
 // Class: HostBattleDialog
 //
-
 #include "hostbattledialog.h"
 
-#include <wx/intl.h>
-#include <wx/string.h>
-#include <wx/sizer.h>
-#include <wx/choice.h>
-#include <wx/slider.h>
-#include <wx/statline.h>
-#include <wx/button.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/statbox.h>
-#include <wx/radiobox.h>
-#include <wx/radiobut.h>
-#include <wx/textctrl.h>
-#include <wx/statbmp.h>
-#include <wx/checkbox.h>
-#include <wx/log.h>
-#include <wx/menu.h>
-#include <wx/image.h>
-#include <wx/bmpbuttn.h>
-#include <wx/scrolwin.h>
-
-
-#include "settings.h"
-#include "user.h"
-#include "gui/uiutils.h"
-#include "gui/controls.h"
-#include "gui/customdialogs.h"
-#include "utils/slpaths.h"
-#include "utils/conversion.h"
-#include "utils/lslconversion.h"
-#include "gui/ui.h"
-#include "iserver.h"
-#include "ibattle.h"
-#include "serverselector.h"
+#include <lslunitsync/optionswrapper.h>
 #include <lslunitsync/springbundle.h>
 #include <lslunitsync/unitsync.h>
-#include <lslunitsync/optionswrapper.h>
+#include <wx/bmpbuttn.h>
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
+#include <wx/image.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/menu.h>
+#include <wx/radiobox.h>
+#include <wx/radiobut.h>
+#include <wx/scrolwin.h>
+#include <wx/sizer.h>
+#include <wx/slider.h>
+#include <wx/statbmp.h>
+#include <wx/statbox.h>
+#include <wx/statline.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 
+#include "gui/controls.h"
+#include "gui/customdialogs.h"
+#include "gui/ui.h"
+#include "gui/uiutils.h"
+#include "ibattle.h"
+#include "images/arrow_refresh.png.h"
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"
 #include "images/rank2.xpm"
@@ -52,7 +42,13 @@
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
 #include "images/rank7.xpm"
-#include "images/arrow_refresh.png.h"
+#include "iserver.h"
+#include "serverselector.h"
+#include "settings.h"
+#include "user.h"
+#include "utils/conversion.h"
+#include "utils/lslconversion.h"
+#include "utils/slpaths.h"
 
 BEGIN_EVENT_TABLE(HostBattleDialog, wxDialog)
 EVT_BUTTON(HOST_CANCEL, HostBattleDialog::OnCancel)

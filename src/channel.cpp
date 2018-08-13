@@ -2,19 +2,20 @@
 //
 // Class: Channel
 //
-
 #include "channel.h"
+
+#include <lslutils/conversion.h>
+#include <wx/log.h>
+#include <wx/regex.h>
+
+#include "gui/chatpanel.h"
 #include "gui/ui.h"
 #include "iserver.h"
+#include "log.h"
 #include "user.h"
+#include "utils/conversion.h"
 #include "utils/tasutil.h"
 #include "utils/version.h"
-#include <lslutils/conversion.h>
-#include <wx/regex.h>
-#include <wx/log.h>
-#include "gui/chatpanel.h"
-#include "utils/conversion.h"
-#include "log.h"
 
 Channel::Channel(IServer& serv)
     : panel(nullptr)

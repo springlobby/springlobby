@@ -4,7 +4,6 @@
 #define SL_HEADERGUARD_COLORBUTTON_H
 
 #include <wx/bmpbuttn.h>
-
 //! a wxBitmapButton whose Bitmap is a rectangle with uni color solid fill
 class ColorButton : public wxBitmapButton
 {

@@ -3,33 +3,31 @@
 //
 // Class: MainJoinBattleTab
 //
+#include "mainjoinbattletab.h"
 
 #include <wx/icon.h>
-#include <wx/intl.h>
-#include <wx/notebook.h>
 #include <wx/imaglist.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/notebook.h>
 #include <wx/sizer.h>
 #include <wx/wupdlock.h>
-#include <wx/log.h>
+#include <stdexcept>
 
-#include "settings.h"
-#include "mainjoinbattletab.h"
-#include "battleroomtab.h"
+#include "aui/auimanager.h"
 #include "battlemaptab.h"
 #include "battlerestrictionstab.h"
-#include "utils/conversion.h"
 #include "battleroommmoptionstab.h"
-#include "aui/auimanager.h"
-#include "gui/slbook.h"
+#include "battleroomtab.h"
 #include "gui/controls.h"
-#include "log.h"
-
-#include "images/battle_list.xpm"
+#include "gui/slbook.h"
 #include "images/battle.xpm"
+#include "images/battle_list.xpm"
 #include "images/battle_map.xpm"
 #include "images/battle_settings.xpm"
-
-#include <stdexcept>
+#include "log.h"
+#include "settings.h"
+#include "utils/conversion.h"
 
 MainJoinBattleTab::MainJoinBattleTab(wxWindow* parent)
     : wxPanel(parent, -1)

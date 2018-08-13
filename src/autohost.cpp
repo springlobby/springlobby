@@ -1,7 +1,9 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
-
 #include "autohost.h"
+
+#include <lslunitsync/unitsync.h>
+#include <wx/tokenzr.h>
+
 #include "ibattle.h"
 #include "iserver.h"
 #include "settings.h"
@@ -10,10 +12,6 @@
 #include "utils/lslconversion.h"
 #include "utils/misc.h"
 #include "utils/version.h"
-#include <lslunitsync/unitsync.h>
-
-#include <wx/tokenzr.h>
-
 
 AutoHost::AutoHost(IBattle& battle)
     : m_battle(battle)

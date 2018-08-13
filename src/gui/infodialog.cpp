@@ -1,13 +1,11 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "infodialog.h"
 
+#include <lslutils/misc.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
 #include <wx/version.h>
 #include <utility>
-
-#include <lslutils/misc.h>
 
 #include "settings.h"
 #include "sysinfo.h"

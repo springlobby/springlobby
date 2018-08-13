@@ -15,33 +15,30 @@ lsl/spring/spring.cpp
 //
 // Class: Spring
 //
-
-#include <wx/filename.h>
-#include <wx/log.h>
-
-#include <stdexcept>
-#include <vector>
-#include <clocale>
-#include <fstream>
+#include "spring.h"
 
 #include <lsl/battle/tdfcontainer.h>
-#include <lslutils/globalsmanager.h>
-#include <lslutils/conversion.h>
 #include <lslunitsync/unitsync.h>
+#include <lslutils/conversion.h>
+#include <lslutils/globalsmanager.h>
+#include <wx/filename.h>
+#include <wx/log.h>
+#include <clocale>
+#include <fstream>
+#include <stdexcept>
+#include <vector>
 
-#include "spring.h"
-#include "springprocess.h"
-#include "gui/ui.h"
-#include "gui/mainwindow.h"
 #include "gui/customdialogs.h"
-#include "utils/conversion.h"
-#include "utils/slpaths.h"
-#include "utils/slconfig.h"
-#include "utils/globalevents.h"
-#include "settings.h"
+#include "gui/mainwindow.h"
+#include "gui/ui.h"
 #include "ibattle.h"
 #include "log.h"
-
+#include "settings.h"
+#include "springprocess.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "utils/slconfig.h"
+#include "utils/slpaths.h"
 
 SLCONFIG("/Spring/Safemode", false, "launch spring in safemode");
 

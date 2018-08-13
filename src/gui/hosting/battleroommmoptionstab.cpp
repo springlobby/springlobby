@@ -1,35 +1,35 @@
 
-#include <wx/sizer.h>
-#include <wx/statbox.h>
-#include <wx/checkbox.h>
-#include <wx/slider.h>
-#include <wx/combobox.h>
-#include <wx/stattext.h>
-#include <wx/choicdlg.h>
-#include <wx/defs.h>
-#include <wx/intl.h>
-#include <wx/button.h>
-#include <wx/tipwin.h>
-#include <wx/tooltip.h>
-#include <wx/textctrl.h>
-#include <wx/spinctrl.h>
-#include <map>
-
-#include "gui/controls.h"
-#include "utils/conversion.h"
-#include "battle.h"
-#include "gui/customdialogs.h"
-#include "iserver.h"
-#include "settings.h"
-#include "gui/ui.h"
-#include "aui/auimanager.h"
 #include "battleroommmoptionstab.h"
-#include "utils/lslconversion.h"
 
-#include <lslutils/misc.h>
-#include <lslutils/conversion.h>
 #include <lslunitsync/optionswrapper.h>
 #include <lslunitsync/unitsync.h>
+#include <lslutils/conversion.h>
+#include <lslutils/misc.h>
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/choicdlg.h>
+#include <wx/combobox.h>
+#include <wx/defs.h>
+#include <wx/intl.h>
+#include <wx/sizer.h>
+#include <wx/slider.h>
+#include <wx/spinctrl.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/tipwin.h>
+#include <wx/tooltip.h>
+#include <map>
+
+#include "aui/auimanager.h"
+#include "battle.h"
+#include "gui/controls.h"
+#include "gui/customdialogs.h"
+#include "gui/ui.h"
+#include "iserver.h"
+#include "settings.h"
+#include "utils/conversion.h"
+#include "utils/lslconversion.h"
 
 const char sep = '_';
 const wxString wxsep = _T("_");

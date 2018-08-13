@@ -1,28 +1,27 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "customdialogs.h"
 
-#include <wx/icon.h>
-#include <wx/string.h>
-#include <wx/frame.h>
-#include <wx/defs.h>
-#include <wx/textctrl.h>
-#include <wx/sizer.h>
-#include <wx/button.h>
-#include <wx/font.h>
-#include <wx/event.h>
-#include <wx/stattext.h>
-#include <wx/artprov.h>
-#include <wx/statbmp.h>
-#include <wx/listctrl.h>
-#include <wx/dialog.h>
 #include <wx/app.h>
+#include <wx/artprov.h>
+#include <wx/button.h>
 #include <wx/choicdlg.h>
+#include <wx/defs.h>
+#include <wx/dialog.h>
+#include <wx/event.h>
+#include <wx/font.h>
+#include <wx/frame.h>
+#include <wx/icon.h>
+#include <wx/listctrl.h>
+#include <wx/sizer.h>
+#include <wx/statbmp.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 
-#include "utils/conversion.h"
-#include "settings.h"
 #include "images/springlobby.xpm"
 #include "images/springsettings.xpm"
+#include "settings.h"
+#include "utils/conversion.h"
 #include "utils/uievents.h"
 
 const static int slButtonSizerFlags = wxOK | wxCANCEL | wxYES | wxNO | wxAPPLY | wxCLOSE | wxHELP | wxNO_DEFAULT;

@@ -1,11 +1,9 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "channellistview.h"
 
-#include "servermanager.h"
 #include "channellistdataviewmodel.h"
+#include "servermanager.h"
 #include "utils/conversion.h"
-
 
 BEGIN_EVENT_TABLE(ChannelListView, BaseDataViewCtrl<ChannelInfo>)
 EVT_DATAVIEW_ITEM_ACTIVATED(CHANNELLIST_ID, ChannelListView::OnItemActivated)

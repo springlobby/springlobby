@@ -4,8 +4,6 @@
 #define SPRINGLOBBY_SORTUTIL_H_INCLUDED
 
 #include <map>
-
-
 //! set direction to +1 for down, -1 for up
 struct SortOrderItem
 {

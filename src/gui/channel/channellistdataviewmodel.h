@@ -4,10 +4,8 @@
 #define SRC_GUI_CHANNEL_CHANNELLISTDATAVIEWMODEL_H_
 
 #include <wx/variant.h>
-
 #include "../basedataviewmodel.h"
 #include "channellistview.h"
-
 class ChannelListDataViewModel : public BaseDataViewModel<ChannelInfo>
 {
 public:

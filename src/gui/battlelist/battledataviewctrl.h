@@ -4,7 +4,6 @@
 #define SRC_GUI_BATTLELIST_BATTLEDATAVIEWCTTRL_H_
 
 #include "gui/basedataviewctrl.h"
-
 class IBattle;
 class wxWindow;
 class wxString;

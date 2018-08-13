@@ -4,9 +4,7 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTTAB_H
 
 #include <wx/scrolwin.h>
-
 #include "utils/mixins.h"
-
 #if wxUSE_TOGGLEBTN
 class wxToggleButton;
 #define wxToggleOrCheck wxToggleButton

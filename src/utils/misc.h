@@ -3,9 +3,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MISC_H
 #define SPRINGLOBBY_HEADERGUARD_MISC_H
 
-#include <vector>
 #include <string>
-
+#include <vector>
 class wxArrayString;
 class wxString;
 

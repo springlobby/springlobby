@@ -10,30 +10,27 @@ lsl/battle/ibattle.cpp
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 **/
+#include "ibattle.h"
 
-
+#include <lslunitsync/unitsync.h>
+#include <lslutils/globalsmanager.h>
 #include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/string.h>
 #include <wx/tokenzr.h>
-
 #include <algorithm>
 
-#include <lslunitsync/unitsync.h>
-#include <lslutils/globalsmanager.h>
-
-#include "utils/conversion.h"
-#include "utils/lslconversion.h"
-#include "utils/slpaths.h"
-#include "gui/uiutils.h"
 #include "gui/ui.h"
-#include "ibattle.h"
+#include "gui/uiutils.h"
 #include "iserver.h"
+#include "log.h"
+#include "serverselector.h"
 #include "settings.h"
 #include "spring.h"
 #include "springlobbyapp.h"
-#include "serverselector.h"
-#include "log.h"
+#include "utils/conversion.h"
+#include "utils/lslconversion.h"
+#include "utils/slpaths.h"
 
 #define MAX_TEAMS 255
 

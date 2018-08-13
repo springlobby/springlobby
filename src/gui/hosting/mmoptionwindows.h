@@ -4,7 +4,6 @@
 #define MMOPTIONWINDOWS_H_INCLUDED
 
 #include <wx/dialog.h>
-
 class wxCheckBox;
 class wxComboBox;
 class wxCommandEvent;

@@ -1,19 +1,19 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "ToasterBoxWindow.h"
 
-#include <wx/dialog.h>
-#include <wx/utils.h>
-#include <wx/string.h>
 #include <wx/bitmap.h>
-#include <wx/timer.h>
-#include <wx/dcclient.h>
-#include <wx/region.h>
 #include <wx/dcbuffer.h>
+#include <wx/dcclient.h>
+#include <wx/dialog.h>
 #include <wx/frame.h>
 #include <wx/log.h>
+#include <wx/region.h>
+#include <wx/string.h>
+#include <wx/timer.h>
+#include <wx/utils.h>
 
-#include "ToasterBoxWindow.h"
-#include "images/notif_bg.png.h"
 #include "gui/uiutils.h"
+#include "images/notif_bg.png.h"
 
 typedef wxClientDC DCType;
 

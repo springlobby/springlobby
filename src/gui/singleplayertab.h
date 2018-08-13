@@ -4,14 +4,13 @@
 #define SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERTAB_H
 
 #include <wx/scrolwin.h>
-
 #include "singleplayerbattle.h"
-
 class Ui;
 class MapCtrl;
 class SinglePlayerBattle;
 
 class wxWindow;
+class wxBoxSizer;
 class wxButton;
 class wxStaticLine;
 class wxChoice;

@@ -1,32 +1,32 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
-#include <wx/sizer.h>
-#include <wx/statbox.h>
-#include <wx/intl.h>
-#include <wx/stattext.h>
-#include <wx/checkbox.h>
-#include <wx/tooltip.h>
-#include <wx/radiobut.h>
-#include <wx/textctrl.h>
-#include <wx/button.h>
-#include <wx/filedlg.h>
-#include <wx/choice.h>
-#include <wx/spinctrl.h>
-
 #include "lobbyoptionstab.h"
-#include "settings.h"
-#include "utils/slconfig.h"
-#include "gui/customdialogs.h"
-#include "gui/controls.h"
-#include "utils/slpaths.h"
+
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
+#include <wx/filedlg.h>
+#include <wx/intl.h>
+#include <wx/radiobut.h>
+#include <wx/sizer.h>
+#include <wx/spinctrl.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/tooltip.h>
+
 #include "aui/auimanager.h"
-#include "gui/ui.h"
+#include "gui/controls.h"
+#include "gui/customdialogs.h"
 #include "gui/mainwindow.h"
+#include "gui/notifications/notificationmanager.h"
+#include "gui/ui.h"
+#include "settings.h"
 #include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "utils/slconfig.h"
+#include "utils/slpaths.h"
 #include "utils/uievents.h"
 #include "utils/version.h"
-#include "gui/notifications/notificationmanager.h"
-#include "utils/globalevents.h"
 
 BEGIN_EVENT_TABLE(LobbyOptionsTab, wxPanel)
 

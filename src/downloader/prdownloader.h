@@ -3,11 +3,9 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_PRDOWNLOADER_H
 #define SPRINGLOBBY_HEADERGUARD_PRDOWNLOADER_H
 
-#include <string>
 #include <wx/event.h>
-
+#include <string>
 #include "lib/src/Downloader/DownloadEnum.h"
-
 class IDownloader;
 
 namespace LSL

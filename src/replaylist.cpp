@@ -1,19 +1,19 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-#include <memory>
+#include "replaylist.h"
 
+#include <lslutils/conversion.h>
+#include <lslutils/globalsmanager.h>
+#include <wx/datetime.h>
 #include <wx/file.h>
 #include <wx/filefn.h>
-#include <wx/log.h>
-#include <wx/datetime.h>
-#include <wx/wfstream.h>
 #include <wx/filename.h>
+#include <wx/log.h>
+#include <wx/wfstream.h>
 #include <zlib.h>
+#include <memory>
 
-#include "replaylist.h"
 #include "storedgame.h"
 #include "utils/conversion.h"
-#include <lslutils/globalsmanager.h>
-#include <lslutils/conversion.h>
 
 class PlayBackDataReader
 {

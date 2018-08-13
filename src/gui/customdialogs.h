@@ -3,13 +3,12 @@
 #ifndef CUSTOM_MSG_BOX_H_
 #define CUSTOM_MSG_BOX_H_
 
-#include <wx/msgdlg.h>
 #include <wx/defs.h>
 #include <wx/dialog.h>
-#include <wx/timer.h>
+#include <wx/msgdlg.h>
 #include <wx/panel.h>
+#include <wx/timer.h>
 #include "utils/mixins.h"
-
 const unsigned SL_MAIN_ICON = 1;
 const unsigned SS_MAIN_ICON = 2;
 

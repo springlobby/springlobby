@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_CONTROLS_H
 
 #include <wx/intl.h>
-
 #ifdef __WXMSW__
 static const int CONTROL_HEIGHT = 22;
 #else

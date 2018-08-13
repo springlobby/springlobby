@@ -1,15 +1,15 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "channelchooser.h"
+
 #include <wx/button.h>
 #include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 
+#include "channel.h"
 #include "channellistview.h"
 #include "iserver.h"
-#include "channel.h"
 
 BEGIN_EVENT_TABLE(ChannelChooserPanel, wxScrolledWindow)
 EVT_TEXT(ID_SEARCH_TEXT, ChannelChooserPanel::OnSearch)

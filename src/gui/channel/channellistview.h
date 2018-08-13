@@ -5,9 +5,7 @@
 
 #include <wx/string.h>
 #include <map>
-
 #include "gui/basedataviewctrl.h"
-
 using namespace std;
 
 class wxWindow;

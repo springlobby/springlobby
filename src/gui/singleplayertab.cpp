@@ -1,39 +1,37 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
-
-#include <wx/intl.h>
-#include <wx/sizer.h>
-#include <wx/choice.h>
-#include <wx/button.h>
-#include <wx/panel.h>
-#include <wx/statline.h>
-#include <wx/stattext.h>
-#include <wx/checkbox.h>
-#include <wx/colordlg.h>
-#include <wx/listctrl.h>
-#include <wx/settings.h>
-#include <wx/log.h>
+#include "singleplayertab.h"
 
 #include <lslutils/conversion.h>
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
+#include <wx/colordlg.h>
+#include <wx/intl.h>
+#include <wx/listctrl.h>
+#include <wx/log.h>
+#include <wx/panel.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
+#include <wx/statline.h>
+#include <wx/stattext.h>
 
-#include "singleplayertab.h"
-#include "mapctrl.h"
-#include "mapselectdialog.h"
+#include "aui/auimanager.h"
+#include "gui/colorbutton.h"
 #include "gui/controls.h"
-#include "utils/conversion.h"
-#include "uiutils.h"
-#include "ui.h"
+#include "gui/customdialogs.h"
 #include "hosting/addbotdialog.h"
 #include "iserver.h"
-#include "settings.h"
-#include "gui/colorbutton.h"
-#include "aui/auimanager.h"
-#include "gui/customdialogs.h"
-#include "utils/slpaths.h"
-#include "utils/globalevents.h"
 #include "log.h"
+#include "mapctrl.h"
+#include "mapselectdialog.h"
+#include "settings.h"
+#include "ui.h"
+#include "uiutils.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
 #include "utils/lslconversion.h"
 #include "utils/slconfig.h"
+#include "utils/slpaths.h"
 
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 

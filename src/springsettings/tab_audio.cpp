@@ -1,13 +1,13 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "tab_audio.h"
-#include <wx/string.h>
-#include <wx/sizer.h>
-#include <wx/event.h>
+
 #include <wx/defs.h>
+#include <wx/event.h>
+#include <wx/sizer.h>
 #include <wx/slider.h>
-#include <wx/stattext.h>
 #include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
 #include <wx/version.h>
 
 #include "ctrlconstants.h"

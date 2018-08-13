@@ -3,12 +3,9 @@
 #ifndef SRC_GUI_NICKDATAVIEWCTRL_H_
 #define SRC_GUI_NICKDATAVIEWCTRL_H_
 
-#include "basedataviewctrl.h"
-
 #include <map>
-
+#include "basedataviewctrl.h"
 #include "userlist.h"
-
 class wxWindow;
 class ChatPanelMenu;
 class wxString;

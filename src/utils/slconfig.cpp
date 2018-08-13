@@ -1,16 +1,14 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "slconfig.h"
 
-#include <wx/wfstream.h>
-#include <wx/log.h>
 #include <wx/filename.h>
+#include <wx/log.h>
+#include <wx/wfstream.h>
 
-#include "utils/slpaths.h"
+#include "log.h"
 #include "utils/conversion.h"
 #include "utils/platform.h"
-#include "log.h"
-
+#include "utils/slpaths.h"
 
 wxString slConfig::m_chosen_path = wxEmptyString;
 

@@ -1,12 +1,10 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "conversion.h"
 
 #include <wx/arrstr.h>
 #include <wx/tokenzr.h>
-#include <sstream>
 #include <algorithm>
-
+#include <sstream>
 #if defined(__WIN32__) || defined(_MSC_VER)
 #include <windows.h>
 #endif

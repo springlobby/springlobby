@@ -1,22 +1,21 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "tab_simple.h"
 
-#include <wx/string.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/event.h>
-#include <wx/defs.h>
-#include <wx/slider.h>
-#include <wx/combobox.h>
-#include <wx/button.h>
-
-#include "ctrlconstants.h"
-#include "presets.h"
-#include "frame.h"
-#include "settings.h"
 #include <lslunitsync/unitsync.h>
 #include <utils/conversion.h>
+#include <wx/button.h>
+#include <wx/combobox.h>
+#include <wx/defs.h>
+#include <wx/event.h>
+#include <wx/sizer.h>
+#include <wx/slider.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
+
+#include "ctrlconstants.h"
+#include "frame.h"
+#include "presets.h"
+#include "settings.h"
 
 const wxString infoTextContent = _("These options let you roughly control Spring's rendering.\n\
 									For more speed try lowering the settings.\n\

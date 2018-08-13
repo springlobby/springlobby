@@ -1,11 +1,11 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "iplaybacklist.h"
+
+#include <lslutils/globalsmanager.h>
+
 #include "offlinebattle.h"
 #include "storedgame.h"
 #include "utils/conversion.h"
-
-#include <lslutils/globalsmanager.h>
 
 int IPlaybackList::FindPlayback(const std::string& filename) const //returns id when the filename already exists in m_replays
 {

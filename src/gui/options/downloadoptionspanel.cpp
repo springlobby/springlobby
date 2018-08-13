@@ -1,4 +1,5 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "downloadoptionspanel.h"
 
 #ifdef _MSC_VER
 #ifndef NOMINMAX
@@ -7,23 +8,22 @@
 #include <winsock2.h>
 #endif // _MSC_VER
 
-#include <wx/textctrl.h>
+#include <wx/button.h>
 #include <wx/checkbox.h>
-#include <wx/sizer.h>
-#include <wx/statbox.h>
-#include <wx/stattext.h>
+#include <wx/dirdlg.h>
 #include <wx/intl.h>
 #include <wx/radiobut.h>
-#include <wx/button.h>
+#include <wx/sizer.h>
 #include <wx/spinctrl.h>
-#include <wx/dirdlg.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
 
-#include "downloadoptionspanel.h"
 #include "aui/auimanager.h"
-#include "settings.h"
 #include "downloader/prdownloader.h"
-#include "utils/conversion.h"
 #include "gui/controls.h"
+#include "settings.h"
+#include "utils/conversion.h"
 #include "utils/slpaths.h"
 
 BEGIN_EVENT_TABLE(DownloadOptionsPanel, wxScrolledWindow)

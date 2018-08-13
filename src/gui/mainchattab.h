@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_MAINCHATTAB_H
 
 #include <wx/scrolwin.h>
-
 class Ui;
 class ChatPanel;
 class IServer;

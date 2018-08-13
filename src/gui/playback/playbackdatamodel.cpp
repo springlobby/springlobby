@@ -1,12 +1,11 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "playbackdatamodel.h"
-
-#include "storedgame.h"
-#include "gui/iconscollection.h"
 
 #include <wx/filename.h>
 #include <wx/log.h>
+
+#include "gui/iconscollection.h"
+#include "storedgame.h"
 #include "utils/conversion.h"
 #include "utils/sortutil.h"
 

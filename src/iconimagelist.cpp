@@ -4,39 +4,48 @@
 // Class: IconImageList
 //
 
-#include <stdexcept>
-
-#include <wx/image.h>
-#include <wx/settings.h>
-#include <wx/dc.h>
-#include <wx/icon.h>
-
-#include "iconimagelist.h"
-#include "user.h"
-#include "battle.h"
 #define HAVE_WX
+#include "iconimagelist.h"
+
 #include <lslunitsync/image.h>
 #include <lslunitsync/unitsync.h>
+#include <wx/dc.h>
+#include <wx/icon.h>
+#include <wx/image.h>
+#include <wx/settings.h>
+#include <stdexcept>
 
-#include "images/bot.xpm"
-#include "images/bot_broom.png.h"
-#include "images/bot_ingame.png.h"
-#include "images/bot_away.xpm"
-
+#include "battle.h"
+#include "flagimages.h"
+#include "gui/uiutils.h"
 #include "images/admin.png.h"
 #include "images/admin_away.png.h"
 #include "images/admin_broom.png.h"
 #include "images/admin_ingame.png.h"
-
+#include "images/away.png.h"
+#include "images/bot.xpm"
+#include "images/bot_away.xpm"
+#include "images/bot_broom.png.h"
+#include "images/bot_ingame.png.h"
+#include "images/broom.png.h"
 #include "images/chanop.xpm"
 #include "images/chanop_away.xpm"
 #include "images/chanop_broom.xpm"
 #include "images/chanop_ingame.xpm"
-
-#include "images/away.png.h"
-#include "images/broom.png.h"
+#include "images/closed_full_game.png.h"
+#include "images/closed_full_pw_game.png.h"
+#include "images/closed_game.png.h"
+#include "images/closed_pw_game.png.h"
+#include "images/empty.xpm"
 #include "images/ingame.png.h"
-
+#include "images/major.xpm"
+#include "images/minor.xpm"
+#include "images/no1_icon.png.h"
+#include "images/no2_icon.png.h"
+#include "images/open_full_game.png.h"
+#include "images/open_full_pw_game.png.h"
+#include "images/open_game.png.h"
+#include "images/open_pw_game.png.h"
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"
 #include "images/rank2.xpm"
@@ -46,27 +55,8 @@
 #include "images/rank6.xpm"
 #include "images/rank7.xpm"
 #include "images/rank_unknown.xpm"
-
-#include "images/major.xpm"
-#include "images/minor.xpm"
-
-#include "images/open_game.png.h"
-#include "images/open_pw_game.png.h"
-#include "images/open_full_pw_game.png.h"
-#include "images/open_full_game.png.h"
-#include "images/closed_game.png.h"
-#include "images/closed_pw_game.png.h"
-#include "images/closed_full_pw_game.png.h"
-#include "images/closed_full_game.png.h"
-
-#include "images/no1_icon.png.h"
-#include "images/no2_icon.png.h"
 #include "images/warning_small.png.h"
-
-#include "flagimages.h"
-
-#include "images/empty.xpm"
-#include "gui/uiutils.h"
+#include "user.h"
 #include "utils/conversion.h"
 #include "utils/lslconversion.h"
 

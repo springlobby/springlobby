@@ -6,8 +6,6 @@
 // wxWidgets
 #include <wx/hashmap.h>
 #include <wx/string.h>
-
-
 WX_DECLARE_STRING_HASH_MAP(wxString, HashMap_String_String);
 
 

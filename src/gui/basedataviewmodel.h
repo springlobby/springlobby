@@ -4,12 +4,9 @@
 #define SRC_GUI_BASEDATAVIEWMODEL_H_
 
 #include <wx/dataview.h>
-#include <set>
-
 #include <climits>
-
+#include <set>
 #include "log.h"
-
 #define DEFAULT_COLUMN UINT_MAX
 
 

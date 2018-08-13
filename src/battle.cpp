@@ -3,32 +3,30 @@
 //
 // Class: Battle
 //
-
-#include <lslutils/misc.h>
-#include <lslutils/conversion.h>
 #include "battle.h"
 
-#include <wx/timer.h>
-#include <wx/image.h>
-#include <wx/string.h>
-#include <wx/log.h>
-#include <wx/filename.h>
+#include <lslutils/conversion.h>
+#include <lslutils/misc.h>
 #include <wx/file.h>
+#include <wx/filename.h>
+#include <wx/image.h>
+#include <wx/log.h>
+#include <wx/string.h>
+#include <wx/timer.h>
 
-#include "user.h"
-#include "utils/conversion.h"
-#include "utils/uievents.h"
-#include "gui/uiutils.h"
-#include "settings.h"
-#include "useractions.h"
-#include "gui/customdialogs.h"
-#include "iconimagelist.h"
-#include "spring.h"
-#include "utils/conversion.h"
 #include "autohostmanager.h"
-#include "log.h"
+#include "gui/customdialogs.h"
+#include "gui/uiutils.h"
+#include "iconimagelist.h"
 #include "iserver.h"
+#include "log.h"
+#include "settings.h"
+#include "spring.h"
+#include "user.h"
+#include "useractions.h"
+#include "utils/conversion.h"
 #include "utils/globalevents.h"
+#include "utils/uievents.h"
 
 const unsigned int TIMER_INTERVAL = 1000;
 const unsigned int TIMER_ID = wxNewId();

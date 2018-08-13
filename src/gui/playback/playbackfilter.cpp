@@ -1,33 +1,32 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "playbackfilter.h"
 
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
+#include <wx/event.h>
+#include <wx/intl.h>
+#include <wx/regex.h>
+#include <wx/sizer.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 #if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
 #endif
-#include <wx/stattext.h>
-#include <wx/checkbox.h>
-#include <wx/sizer.h>
-#include <wx/textctrl.h>
-#include <wx/intl.h>
-#include <wx/choice.h>
-#include <wx/button.h>
-#include <wx/string.h>
-#include <wx/statbox.h>
-#include <wx/event.h>
-#include <wx/regex.h>
 
-#include "playbacktab.h"
-#include "replaylist.h"
-//#include "PlaybackListFiltervalues.h"
-#include "playbackfiltervalues.h"
 #include "battle.h"
 #include "gui/uiutils.h"
-#include "utils/tasutil.h"
-#include "utils/conversion.h"
-#include "settings.h"
 #include "offlinebattle.h"
-#include "playbackfilter.h"
+#include "playbackfiltervalues.h"
+#include "playbacktab.h"
+#include "replaylist.h"
+#include "settings.h"
 #include "storedgame.h"
-
+#include "utils/conversion.h"
+#include "utils/tasutil.h"
+//#include "PlaybackListFiltervalues.h"
 ///////////////////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE(PlaybackListFilter, wxPanel)

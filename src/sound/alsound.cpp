@@ -1,6 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #ifndef DISABLE_SOUND
+#include "alsound.h"
 
 #ifdef __APPLE__
 #include <OpenAL/al.h>
@@ -8,22 +8,20 @@
 #include <AL/al.h>
 #endif
 
-#include "alsound.h"
-
 #ifdef WIN32
 //win32 compile uses static libs
 #define ALURE_STATIC_LIBRARY
 #endif
 
 #include <alure.h>
-
-#include "ring_sound.h"
-#include "pm_sound.h"
-#include <wx/log.h>
-#include "utils/conversion.h"
-#include <lslutils/globalsmanager.h>
 #include <assert.h>
+#include <lslutils/globalsmanager.h>
+#include <wx/log.h>
 #include <wx/thread.h>
+
+#include "pm_sound.h"
+#include "ring_sound.h"
+#include "utils/conversion.h"
 
 ALsound& slsound()
 {

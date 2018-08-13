@@ -1,13 +1,12 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "battleroomdataviewmodel.h"
 
+#include <wx/dataview.h>
+
+#include "battle.h"
 #include "gui/iconscollection.h"
 #include "user.h"
-#include "battle.h"
 #include "useractions.h"
-
-#include <wx/dataview.h>
 
 BattleroomDataViewModel::BattleroomDataViewModel()
     : BaseDataViewModel<User>::BaseDataViewModel(COLUMN_COUNT)

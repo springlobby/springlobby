@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLEMAPTAB_H
 
 #include <wx/scrolwin.h>
-
 class Ui;
 class IBattle;
 class User;

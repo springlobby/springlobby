@@ -4,8 +4,6 @@
 #define __TAB_AUDIO_h__
 
 #include "tab_abstract.h"
-
-
 class wxSlider;
 class wxStaticBoxSizer;
 class wxString;

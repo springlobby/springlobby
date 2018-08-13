@@ -1,12 +1,11 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "address.h"
 
 #ifdef _WIN32
 #include <iphlpapi.h>
 #elif defined(linux)
-#include <sys/ioctl.h>
 #include <net/if.h>
+#include <sys/ioctl.h>
 #endif
 
 #if defined(WIN32) || defined(_WIN32)
@@ -60,14 +59,13 @@ bool GetMac(std::vector<unsigned char>& mac)
 
 #else
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
-#include <net/if.h>
-#include <netpacket/packet.h>
 #include <ifaddrs.h>
-
+#include <net/if.h>
+#include <netinet/in.h>
+#include <netpacket/packet.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 bool GetMac(std::vector<unsigned char>& mac)
 {
 	ifaddrs* ifap = 0;

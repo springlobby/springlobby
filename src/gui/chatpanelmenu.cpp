@@ -1,20 +1,19 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "chatpanelmenu.h"
 
 #include <wx/log.h>
 
-#include "chatpanel.h"
-#include "channel.h"
-#include "iserver.h"
-#include "serverselector.h"
-#include "user.h"
-#include "mainwindow.h"
-#include "settings.h"
 #include "battlelist/battlelisttab.h"
-#include "utils/conversion.h"
+#include "channel.h"
+#include "chatpanel.h"
 #include "gui/customdialogs.h"
+#include "iserver.h"
+#include "mainwindow.h"
+#include "serverselector.h"
+#include "settings.h"
 #include "uiutils.h"
+#include "user.h"
+#include "utils/conversion.h"
 
 ChatPanelMenu::ChatPanelMenu(ChatPanel* parent, bool addChanServ, const wxString& /*title */, long /*style*/)
     : wxEvtHandler()

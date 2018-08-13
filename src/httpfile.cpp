@@ -1,9 +1,9 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 
-#include "utils/conversion.h"
-#include "log.h"
 #include "downloader/prdownloader.h"
+#include "log.h"
+#include "utils/conversion.h"
 
 // convert a string to IRI: https://en.wikipedia.org/wiki/Internationalized_resource_identifier
 std::string ConvToIRI(const std::string& str)

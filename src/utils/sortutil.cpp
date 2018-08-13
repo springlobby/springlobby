@@ -1,8 +1,8 @@
-#include <iterator>
-#include <ctype.h>
-#include <string>
-
 #include "sortutil.h"
+
+#include <ctype.h>
+#include <iterator>
+#include <string>
 
 // Returns 1 if the second argument is considered greater/newer than the first,
 // 0 if they are identical and -1 otherwise.

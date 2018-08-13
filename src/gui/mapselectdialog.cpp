@@ -1,35 +1,32 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
-#include <wx/settings.h>
-#include <wx/listctrl.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
-#include <wx/radiobut.h>
-#include <wx/choice.h>
-#include <wx/intl.h>
-#include <wx/button.h>
-#include <wx/string.h>
+#include "mapselectdialog.h"
 
 #include <lslutils/globalsmanager.h>
 #include <lslutils/misc.h>
+#include <wx/button.h>
+#include <wx/choice.h>
+#include <wx/intl.h>
+#include <wx/listctrl.h>
+#include <wx/radiobut.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 
-#include "mapselectdialog.h"
-#include "mapgridctrl.h"
+#include "gui/controls.h"
 #include "ibattle.h"
 #include "iserver.h"
+#include "log.h"
+#include "mapgridctrl.h"
+#include "servermanager.h"
 #include "serverselector.h"
 #include "settings.h"
 #include "ui.h"
 #include "uiutils.h"
-#include "gui/controls.h"
 #include "utils/conversion.h"
-#include "utils/lslconversion.h"
 #include "utils/globalevents.h"
-#include "settings.h"
-#include "log.h"
-#include "servermanager.h"
-
+#include "utils/lslconversion.h"
 
 const long MapSelectDialog::ID_STATICTEXT2 = wxNewId();
 const long MapSelectDialog::ID_VERTICAL_CHOICE = wxNewId();

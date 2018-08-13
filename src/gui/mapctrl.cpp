@@ -1,47 +1,45 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
-#include <functional>
-#include <wx/panel.h>
-#include <wx/dcclient.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
-#include <wx/intl.h>
-#include <cmath>
-#include <stdexcept>
-#include <wx/log.h>
-#include <wx/app.h>
-#include <wx/toplevel.h>
-
 #define HAVE_WX
+#include "mapctrl.h"
+
+#include <lslunitsync/data.h>
+#include <lslunitsync/image.h>
 #include <lslutils/conversion.h>
 #include <lslutils/misc.h>
-#include <lslunitsync/image.h>
-#include <lslunitsync/data.h>
+#include <wx/app.h>
+#include <wx/bitmap.h>
+#include <wx/dcclient.h>
+#include <wx/image.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/panel.h>
+#include <wx/toplevel.h>
+#include <cmath>
+#include <functional>
+#include <stdexcept>
 
-#include "utils/conversion.h"
-#include "uiutils.h"
-#include "mapctrl.h"
-#include "user.h"
-#include "ui.h"
-#include "iserver.h"
-#include "ibattle.h"
-#include "settings.h"
-#include "iconscollection.h"
-#include "hosting/addbotdialog.h"
-#include "log.h"
 #include "exception.h"
-
+#include "hosting/addbotdialog.h"
+#include "ibattle.h"
+#include "iconscollection.h"
 #include "images/close.xpm"
 #include "images/close_hi.xpm"
+#include "images/download_map.xpm"
+#include "images/not_found_icon.xpm"
+#include "images/reload_map.xpm"
 #include "images/start_ally.xpm"
 #include "images/start_enemy.xpm"
 #include "images/start_unused.xpm"
 #include "images/up_down.xpm"
-#include "images/upsel_down.xpm"
 #include "images/up_downsel.xpm"
-#include "images/not_found_icon.xpm"
-#include "images/download_map.xpm"
-#include "images/reload_map.xpm"
+#include "images/upsel_down.xpm"
+#include "iserver.h"
+#include "log.h"
+#include "settings.h"
+#include "ui.h"
+#include "uiutils.h"
+#include "user.h"
+#include "utils/conversion.h"
 #include "utils/lslconversion.h"
 
 const int USER_BOX_EXPANDED_HEIGHT = 70;

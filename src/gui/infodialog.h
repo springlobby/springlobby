@@ -4,7 +4,6 @@
 #define INFODIALOG_H
 
 #include <wx/dialog.h>
-
 class wxBoxSizer;
 
 class InfoDialog : public wxDialog

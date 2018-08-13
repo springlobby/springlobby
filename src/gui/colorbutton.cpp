@@ -1,11 +1,10 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "colorbutton.h"
 
-#include "gui/uiutils.h"
-#include "gui/controls.h"
 #include <wx/image.h>
 
+#include "gui/controls.h"
+#include "gui/uiutils.h"
 #ifdef __WXMSW__
 #include "images/colourbox.xpm"
 #endif

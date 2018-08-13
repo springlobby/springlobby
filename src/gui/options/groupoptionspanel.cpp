@@ -1,25 +1,24 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "groupoptionspanel.h"
 
-#include <wx/textdlg.h>
+#include <wx/checkbox.h>
 #include <wx/colour.h>
-#include <wx/textctrl.h>
-#include <wx/gdicmn.h>
 #include <wx/font.h>
+#include <wx/gdicmn.h>
+#include <wx/listbox.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
-#include <wx/listbox.h>
-#include <wx/checkbox.h>
-#include <wx/stattext.h>
 #include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/textdlg.h>
 
-#include "useractions.h"
-#include "settings.h"
-#include "gui/uiutils.h"
-#include "gui/controls.h"
 #include "gui/colorbutton.h"
+#include "gui/controls.h"
 #include "gui/selectusersdialog.h"
+#include "gui/uiutils.h"
+#include "settings.h"
+#include "useractions.h"
 
 BEGIN_EVENT_TABLE(GroupOptionsPanel, wxPanel)
 EVT_BUTTON(REMOVE_GROUP, GroupOptionsPanel::OnRemoveGroup)

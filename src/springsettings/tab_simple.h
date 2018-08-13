@@ -4,7 +4,6 @@
 #define __TAB_SIMPLE_h__
 
 #include "tab_abstract.h"
-
 class wxComboBox;
 class wxSlider;
 class wxFlexGridSizer;

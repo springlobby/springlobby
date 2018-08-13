@@ -5,12 +5,11 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 #define SPRINGLOBBY_HEADERGUARD_UIUTILS_H
 
-#include <wx/intl.h>
-#include <wx/gdicmn.h>
-#include <wx/event.h>
-#include <vector>
 #include <lslutils/misc.h>
-
+#include <wx/event.h>
+#include <wx/gdicmn.h>
+#include <wx/intl.h>
+#include <vector>
 class wxColour;
 class wxImage;
 class wxIcon;

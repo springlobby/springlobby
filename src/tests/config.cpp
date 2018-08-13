@@ -1,16 +1,14 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #define BOOST_TEST_MODULE slconfig
+
 #include <boost/test/unit_test.hpp>
+#include <wx/app.h>
+#include <wx/filename.h>
+#include <wx/string.h>
 
 #include "testingstuff/silent_logger.h"
-
-#include "utils/slconfig.h"
 #include "utils/conversion.h"
-
-#include <wx/app.h>
-#include <wx/string.h>
-#include <wx/filename.h>
+#include "utils/slconfig.h"
 
 SLCONFIG("/test/string", "hello world!", "test string");
 SLCONFIG("/test/long", -12345l, "test long");

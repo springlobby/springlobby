@@ -3,49 +3,45 @@
 //
 // Class: SpringOptionsTab
 //
-
 #include "springoptionstab.h"
 
-#include <wx/filedlg.h>
-#include <wx/dirdlg.h>
-#include <wx/sizer.h>
-#include <wx/statbox.h>
-#include <wx/intl.h>
-#include <wx/textctrl.h>
-#include <wx/radiobut.h>
-#include <wx/stattext.h>
+#include <lslunitsync/springbundle.h>
+#include <lslunitsync/unitsync.h>
+#include <lslutils/debug.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
+#include <wx/choicdlg.h>
+#include <wx/dir.h>
+#include <wx/dirdlg.h>
+#include <wx/file.h>
+#include <wx/filedlg.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
-#include <wx/stdpaths.h>
-#include <wx/dir.h>
-#include <wx/file.h>
-#include <wx/choicdlg.h>
-#include <wx/stdpaths.h>
-#include <wx/scrolbar.h> // added for scroll bar powers
-#include <wx/log.h>
+#include <wx/intl.h>
 #include <wx/listbox.h>
-
+#include <wx/log.h>
+#include <wx/radiobut.h>
+#include <wx/scrolbar.h> // added for scroll bar powers
+#include <wx/sizer.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/stdpaths.h>
+#include <wx/textctrl.h>
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
 #endif
 
-#include "gui/ui.h"
 #include "gui/controls.h"
-#include "utils/platform.h"
-#include "utils/uievents.h"
-#include "utils/slpaths.h"
-#include "utils/conversion.h"
-#include "utils/version.h"
+#include "gui/customdialogs.h"
+#include "gui/mainwindow.h"
+#include "gui/ui.h"
 #include "gui/uiutils.h"
 #include "settings.h"
-#include "gui/mainwindow.h"
-#include "gui/customdialogs.h"
-#include <lslunitsync/springbundle.h>
-#include <lslunitsync/unitsync.h>
-#include <lslutils/debug.h>
-
+#include "utils/conversion.h"
+#include "utils/platform.h"
+#include "utils/slpaths.h"
+#include "utils/uievents.h"
+#include "utils/version.h"
 
 BEGIN_EVENT_TABLE(SpringOptionsTab, wxPanel)
 

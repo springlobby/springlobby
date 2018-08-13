@@ -5,7 +5,6 @@
 
 #include <wx/scrolwin.h>
 #include <vector>
-
 class Ui;
 class MapCtrl;
 class BattleroomListCtrl;

@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADER_GUARD_TORRENTOPTIONSPANEL_H_INCLUDED
 
 #include <wx/scrolwin.h>
-
 class wxCheckBox;
 class wxTextCtrl;
 class Ui;

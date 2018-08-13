@@ -1,10 +1,9 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "globalevents.h"
 
 #include <wx/app.h>
-
 #include <vector>
 
-#include "globalevents.h"
 #include "log.h"
 
 const wxEventType GlobalEventManager::OnDownloadStarted = wxNewEventType();

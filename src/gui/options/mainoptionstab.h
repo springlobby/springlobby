@@ -3,10 +3,9 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAINOPTIONSTAB_H
 #define SPRINGLOBBY_HEADERGUARD_MAINOPTIONSTAB_H
 
-#include <wx/scrolwin.h>
-#include <wx/dialog.h>
 #include <gui/windowattributespickle.h>
-
+#include <wx/dialog.h>
+#include <wx/scrolwin.h>
 class Ui;
 class wxCommandEvent;
 class wxBoxSizer;

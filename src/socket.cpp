@@ -9,11 +9,7 @@ lsl/networking/socket.cpp
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 **/
-
-#include <wx/socket.h>
-#include <wx/string.h>
-#include <wx/convauto.h>
-#include <wx/log.h>
+#include "socket.h"
 
 #ifdef WIN32
 #ifndef NOMINMAX
@@ -22,21 +18,23 @@ lsl/networking/socket.cpp
 #include <winsock2.h>
 #endif // _MSC_VER
 
-
-#include <stdexcept>
+#include <wx/convauto.h>
+#include <wx/log.h>
+#include <wx/socket.h>
+#include <wx/string.h>
 #include <algorithm>
-
-#include "socket.h"
-#include "inetclass.h"
-#include "address.h"
-#include "utils/conversion.h"
+#include <stdexcept>
 
 #ifdef SSL_SUPPORT
 #include <openssl/bio.h>
-#include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <openssl/ssl.h>
 #include <openssl/x509.h>
 #endif
+
+#include "address.h"
+#include "inetclass.h"
+#include "utils/conversion.h"
 
 std::string _GetHandle()
 {

@@ -1,4 +1,5 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "maindownloadtab.h"
 
 #ifdef _MSC_VER
 #ifndef NOMINMAX
@@ -7,24 +8,22 @@
 #include <winsock2.h>
 #endif // _MSC_VER
 
-#include "maindownloadtab.h"
-
+#include <wx/button.h>
 #include <wx/intl.h>
+#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
-#include <wx/button.h>
-#include <wx/msgdlg.h>
 
-#include "gui/downloaddataviewctrl.h"
-#include "downloader/prdownloader.h"
-#include "utils/conversion.h"
-#include "gui/controls.h"
-#include "gui/colorbutton.h"
 #include "aui/auimanager.h"
+#include "downloader/prdownloader.h"
+#include "gui/colorbutton.h"
 #include "gui/contentdownloaddialog.h"
-#include "utils/slpaths.h"
-#include "utils/globalevents.h"
+#include "gui/controls.h"
 #include "gui/customdialogs.h"
+#include "gui/downloaddataviewctrl.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "utils/slpaths.h"
 
 BEGIN_EVENT_TABLE(MainDownloadTab, wxPanel)
 //(*EventTable(MainTorrentTab)

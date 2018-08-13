@@ -4,7 +4,6 @@
 #define SRC_GUI_BATTLELIST_BATTLEDATAVIEWMODEL_H_
 
 #include "gui/basedataviewmodel.h"
-
 class IBattle;
 
 class BattleDataViewModel : public BaseDataViewModel<IBattle>

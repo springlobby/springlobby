@@ -1,24 +1,21 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #define HAVE_WX //needed for LSL::UnitsyncImage::wxbitmap!
-
 #include "iconscollection.h"
 
+#include <wx/bitmap.h>
+#include <wx/icon.h>
+#include <wx/image.h>
+#include <map>
+
+#include "flagimagedata.h"
 #include "ibattle.h"
-#include "user.h"
-#include "utils/conversion.h"
-#include "utils/lslconversion.h"
 #include "log.h"
 #include "lslunitsync/image.h"
 #include "lslunitsync/unitsync.h"
-
-#include "flagimagedata.h"
-
-#include <wx/icon.h>
-#include <wx/image.h>
-#include <wx/bitmap.h>
-
-#include <map>
+#include "user.h"
+#include "utils/conversion.h"
+#include "utils/lslconversion.h"
 
 IconsCollection::IconsCollection()
 {

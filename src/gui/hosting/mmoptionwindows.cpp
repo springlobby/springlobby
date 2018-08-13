@@ -1,31 +1,29 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "mmoptionwindows.h"
-
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/choice.h>
-#include <wx/button.h>
-#include <wx/intl.h>
-#include <wx/checkbox.h>
-#include <wx/slider.h>
-#include <wx/combobox.h>
-#include <wx/tipwin.h>
-#include <wx/tooltip.h>
-#include <wx/textctrl.h>
-#include <wx/log.h>
-#include <wx/spinctrl.h>
 
 #include <lslunitsync/optionswrapper.h>
 #include <lslunitsync/unitsync.h>
 #include <lslutils/misc.h>
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
+#include <wx/combobox.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/sizer.h>
+#include <wx/slider.h>
+#include <wx/spinctrl.h>
+#include <wx/statline.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/tipwin.h>
+#include <wx/tooltip.h>
 
-#include "gui/ui.h"
 #include "gui/controls.h"
+#include "gui/ui.h"
+#include "ibattle.h"
 #include "utils/conversion.h"
 #include "utils/lslconversion.h"
-#include "ibattle.h"
 
 SingleOptionDialog::SingleOptionDialog(IBattle& battle, const wxString& optiontag)
     : m_battle(battle)

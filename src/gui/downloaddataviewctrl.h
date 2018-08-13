@@ -3,9 +3,8 @@
 #ifndef SRC_DOWNLOADER_DOWNLOADDATAVIEWCTRL_H_
 #define SRC_DOWNLOADER_DOWNLOADDATAVIEWCTRL_H_
 
-#include "gui/basedataviewctrl.h"
 #include "downloader/prdownloader.h"
-
+#include "gui/basedataviewctrl.h"
 class wxString;
 class wxWindow;
 class wxCommandEvent;

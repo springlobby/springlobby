@@ -1,18 +1,16 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #define BOOST_TEST_MODULE lobbyid
+
 #include <boost/test/unit_test.hpp>
-
-#include "testingstuff/silent_logger.h"
-
+#include <lslutils/conversion.h>
+#include <lslutils/misc.h>
 #include <stdio.h>
 #include <wx/colour.h>
-#include <lslutils/misc.h>
-#include <lslutils/conversion.h>
 
+#include "testingstuff/silent_logger.h"
 #include "user.h"
-#include "utils/lslconversion.h"
 #include "utils/conversion.h"
+#include "utils/lslconversion.h"
 #include "utils/tasutil.h"
 
 struct TestInitializer

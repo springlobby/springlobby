@@ -1,34 +1,33 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "prdownloader.h"
 
 #include <lslutils/globalsmanager.h>
-#include "lib/src/pr-downloader.h"
+
+#include "lib/src/Downloader/Http/HttpDownloader.h" //FIXME
 #include "lib/src/Downloader/IDownloader.h"	 //FIXME: remove this include
 #include "lib/src/FileSystem/FileSystem.h"	  //FIXME
-#include "lib/src/Downloader/Http/HttpDownloader.h" //FIXME
-
+#include "lib/src/pr-downloader.h"
 // Resolves names collision: CreateDialog from WxWidgets and CreateDialog macro from WINUSER.H
 // Remove with HttpDownloader.h header inclusion
 #ifdef CreateDialog
 #undef CreateDialog
 #endif
 
-#include "utils/conversion.h"
-#include "utils/globalevents.h"
-#include "utils/slpaths.h"
-#include "gui/mainwindow.h"
-#include "log.h"
-
+#include <lslunitsync/unitsync.h>
+#include <lslutils/thread.h>
+#include <sys/time.h>
+#include <wx/log.h>
 #include <list>
 #include <memory>
 #include <mutex>
-#include <wx/log.h>
-#include <lslunitsync/unitsync.h>
-#include <lslutils/thread.h>
+
+#include "gui/mainwindow.h"
+#include "log.h"
 #include "settings.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
 #include "utils/slconfig.h"
-#include <sys/time.h>
+#include "utils/slpaths.h"
 
 SLCONFIG("/Spring/PortableDownload", false, "true to download portable versions of spring, if false cache/settings/etc are shared (bogous!)");
 SLCONFIG("/Spring/RapidMasterUrl", "http://repos.springrts.com/repos.gz", "master url for rapid downloads");

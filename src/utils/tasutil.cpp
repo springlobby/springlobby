@@ -1,9 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "tasutil.h"
+
 #include <lslutils/conversion.h>
 #include <lslutils/misc.h>
-
 #include <wx/regex.h>
 
 std::string GetWordParam(std::string& params)

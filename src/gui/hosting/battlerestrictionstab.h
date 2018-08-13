@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLEOPTIONSTAB_H
 
 #include <wx/scrolwin.h>
-
 class Ui;
 class IBattle;
 class wxCommandEvent;

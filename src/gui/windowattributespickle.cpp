@@ -1,11 +1,10 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "windowattributespickle.h"
-
-#include "utils/slconfig.h"
 
 #include <lslutils/misc.h>
 #include <wx/settings.h>
+
+#include "utils/slconfig.h"
 
 const unsigned int DEFSETT_MW_WIDTH = 880;
 const unsigned int DEFSETT_MW_HEIGHT = 600;

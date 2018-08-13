@@ -5,9 +5,8 @@
 
 #include <wx/platform.h>
 #if wxUSE_TIPWINDOW
-#include <wx/tipwin.h>
 #include <wx/eventfilter.h>
-
+#include <wx/tipwin.h>
 //! A wxTipWindow that gets canceled on mousewheel events
 class SLTipWindow : public wxTipWindow, public wxEventFilter
 {

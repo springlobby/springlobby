@@ -3,59 +3,56 @@
 //
 // Class: Ui
 //
+#include "ui.h"
 
-#include <wx/textdlg.h>
-#include <wx/intl.h>
-#include <wx/utils.h>
-#include <wx/debugrpt.h>
-#include <wx/filename.h>
-#include <wx/app.h>
-#include <wx/log.h>
-#include <wx/stdpaths.h>
-
-#include <stdexcept>
-
-#include <lslutils/globalsmanager.h>
 #include <lslunitsync/springbundle.h>
 #include <lslunitsync/unitsync.h>
+#include <lslutils/globalsmanager.h>
+#include <wx/app.h>
+#include <wx/debugrpt.h>
+#include <wx/filename.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/stdpaths.h>
+#include <wx/textdlg.h>
+#include <wx/utils.h>
+#include <stdexcept>
 
-#include "ui.h"
-#include "offlineserver.h"
-#include "tasserver.h"
-#include "utils/slconfig.h"
-#include "iserver.h"
-#include "serverselector.h"
-#include "spring.h"
 #include "channel.h"
-#include "gui/connectwindow.h"
-#include "gui/mainwindow.h"
-#include "user.h"
-#include "utils/conversion.h"
-#include "utils/uievents.h"
-#include "utils/slpaths.h"
-#include "utils/version.h"
-#include "utils/globalevents.h"
-#include "utils/platform.h"
-#include "utils/sortutil.h"
-#include "gui/uiutils.h"
-#include "gui/chatpanel.h"
+#include "downloader/prdownloader.h"
+#include "exception.h"
+#include "gui/agreementdialog.h"
 #include "gui/battlelist/battlelisttab.h"
+#include "gui/chatpanel.h"
+#include "gui/connectwindow.h"
+#include "gui/customdialogs.h"
 #include "gui/hosting/battleroomtab.h"
 #include "gui/hosting/mainjoinbattletab.h"
 #include "gui/hosting/mainsingleplayertab.h"
 #include "gui/mainchattab.h"
 #include "gui/maindownloadtab.h"
-#include "downloader/prdownloader.h"
-#include "gui/agreementdialog.h"
-#include "updatehelper.h"
-#include "gui/customdialogs.h"
+#include "gui/mainwindow.h"
 #include "gui/textentrydialog.h"
-#include "log.h"
-#include "settings.h"
-#include "servermanager.h"
-#include "exception.h"
+#include "gui/uiutils.h"
 #include "ibattle.h"
-
+#include "iserver.h"
+#include "log.h"
+#include "offlineserver.h"
+#include "servermanager.h"
+#include "serverselector.h"
+#include "settings.h"
+#include "spring.h"
+#include "tasserver.h"
+#include "updatehelper.h"
+#include "user.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "utils/platform.h"
+#include "utils/slconfig.h"
+#include "utils/slpaths.h"
+#include "utils/sortutil.h"
+#include "utils/uievents.h"
+#include "utils/version.h"
 #ifndef DISABLE_SOUND
 #include "sound/alsound.h"
 #endif

@@ -5,7 +5,6 @@
 
 #include <cstddef>
 #include "utils/uievents.h"
-
 class wxWindow;
 class wxBitmap;
 

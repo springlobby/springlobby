@@ -3,17 +3,17 @@
 //
 // Class: Server
 //
-
-#include <stdexcept>
-#include <wx/log.h>
-
 #include "iserver.h"
+
+#include <wx/log.h>
+#include <stdexcept>
+
 #include "battle.h"
 #include "channel.h"
-#include "user.h"
-#include "utils/conversion.h"
 #include "gui/chatpanel.h"
 #include "log.h"
+#include "user.h"
+#include "utils/conversion.h"
 
 IServer::IServer()
     : panel(nullptr)

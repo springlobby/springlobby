@@ -9,13 +9,11 @@ lsl/container/battlelist.cpp
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 **/
-
+#include "battlelist.h"
 
 #include <stdexcept>
 
-#include "battlelist.h"
 #include "ibattle.h"
-
 
 BattleList::BattleList()
 {

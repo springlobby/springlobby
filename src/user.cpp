@@ -13,15 +13,15 @@ lsl/user/user.cpp
 //
 // Class: User
 //
-
-#include "ibattle.h"
 #include "user.h"
-#include "iserver.h"
-#include "gui/chatpanel.h"
-#include "iconimagelist.h"
-#include "utils/conversion.h"
 
 #include <wx/intl.h>
+
+#include "gui/chatpanel.h"
+#include "ibattle.h"
+#include "iconimagelist.h"
+#include "iserver.h"
+#include "utils/conversion.h"
 
 User::User(IServer& serv)
     : CommonUser("", "", 0)

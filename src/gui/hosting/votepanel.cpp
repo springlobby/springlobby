@@ -1,14 +1,14 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "votepanel.h"
 
+#include <wx/button.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
-#include <wx/button.h>
 #include <string>
 
 #include "gui/chatpanel.h"
-#include "utils/conversion.h"
-#include "votepanel.h"
 #include "user.h"
+#include "utils/conversion.h"
 
 //FIXME: move this outside of gui/ (+ don't use any gui functions / wx widgets)
 static const std::string VOTE_HAS_BEGAN = "CALLED A VOTE FOR COMMAND";

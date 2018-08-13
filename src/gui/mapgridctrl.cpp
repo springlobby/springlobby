@@ -1,26 +1,23 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
-#include <functional>
-#include <wx/dcbuffer.h>
-#include <wx/geometry.h>
-#include <wx/settings.h>
-#include <wx/log.h>
-
 #define HAVE_WX
 #include "mapgridctrl.h"
 
+#include <lslunitsync/image.h>
+#include <lslutils/misc.h>
+#include <wx/dcbuffer.h>
+#include <wx/geometry.h>
+#include <wx/log.h>
+#include <wx/settings.h>
+#include <algorithm>
+#include <functional>
+
+#include "images/map_select_1.png.h"
+#include "images/map_select_2.png.h"
+#include "log.h"
 #include "settings.h"
 #include "uiutils.h"
 #include "utils/conversion.h"
 
-
-#include <algorithm>
-#include <lslutils/misc.h>
-#include <lslunitsync/image.h>
-#include "log.h"
-
-#include "images/map_select_1.png.h"
-#include "images/map_select_2.png.h"
 /// Size of the map previews.  This should be same as size of map previews in
 /// battle list and as prefetch size in SpringUnitSync for performance reasons.
 const int MINIMAP_SIZE = 98;

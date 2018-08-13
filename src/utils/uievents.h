@@ -3,12 +3,11 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_UIEVENTS_H
 #define SPRINGLOBBY_HEADERGUARD_UIEVENTS_H
 
-#include "events.h"
+#include <wx/arrstr.h>
+#include <wx/string.h>
 #include <map>
 #include <utility>
-#include <wx/string.h>
-#include <wx/arrstr.h>
-
+#include "events.h"
 namespace UiEvents
 {
 typedef wxString UiEventsTypes;

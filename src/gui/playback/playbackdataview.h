@@ -4,7 +4,6 @@
 #define SRC_GUI_PLAYBACK_PLAYBACKDATAVIEW_H_
 
 #include "gui/basedataviewctrl.h"
-
 class wxWindow;
 class PlaybackDataModel;
 struct StoredGame;

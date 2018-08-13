@@ -1,18 +1,16 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #ifndef SPRINGLOBBY_LIBNOTIFY_H
 #define SPRINGLOBBY_LIBNOTIFY_H
 
 #ifdef HAVE_LIBNOTIFY
-
 #include "libnotify.h"
+
+#include <libnotify/notify.h>
+#include <wx/bitmap.h>
+#include <wx/log.h>
+
 #include "settings.h"
 #include "utils/version.h"
-
-#include <wx/log.h>
-#include <wx/bitmap.h>
-#include <libnotify/notify.h>
-
 
 LibnotifyNotification::LibnotifyNotification(wxWindow*)
 {

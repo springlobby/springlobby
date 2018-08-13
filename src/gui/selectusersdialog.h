@@ -5,7 +5,6 @@
 
 
 #include <wx/dialog.h>
-
 class wxPanel;
 class wxStaticText;
 class wxTextCtrl;

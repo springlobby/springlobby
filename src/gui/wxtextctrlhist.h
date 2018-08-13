@@ -4,7 +4,6 @@
 #define SL_HEADERGUARD_TEXTHISTCONROL_H
 
 #include <wx/textctrl.h>
-
 //copied from http://wxforum.shadonet.com/viewtopic.php?t=7924 (thanks go to Lamego)
 //modified some (textcompletion,etc)
 

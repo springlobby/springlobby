@@ -1,20 +1,19 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "log.h"
 
-#include <cstdio>
+#include <sys/time.h>
+#include <time.h>
+#include <wx/log.h>
 #include <algorithm>
+#include <cstdio>
 #include <cstring>
 #include <mutex>
-#include <sys/time.h>
 #include <vector>
-#include <time.h>
 
-#include <wx/log.h>
-
-#include "log.h"
-#include "gui/ui.h"
-#include "gui/mainwindow.h"
-#include "utils/conversion.h"
 #include "downloader/lib/src/Logger.h"
+#include "gui/mainwindow.h"
+#include "gui/ui.h"
+#include "utils/conversion.h"
 
 static bool gui = false;
 

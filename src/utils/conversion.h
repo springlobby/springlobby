@@ -14,8 +14,6 @@
 
 #include <wx/string.h>
 #include <string>
-
-
 wxString TowxString(const std::string& arg);
 wxString TowxString(int);
 std::string strtolower(std::string str);

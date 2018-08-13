@@ -3,21 +3,21 @@
 //
 // Class: ChatLog
 //
-#include <wx/string.h>
+#include "chatlog.h"
+
+#include <wx/dir.h>
 #include <wx/file.h>
 #include <wx/filefn.h>
-#include <wx/dir.h>
-#include <wx/intl.h>
 #include <wx/filename.h>
+#include <wx/intl.h>
 #include <wx/log.h>
+#include <wx/string.h>
 #include <stdexcept>
 
-#include "chatlog.h"
 #include "settings.h"
-#include "utils/slconfig.h"
 #include "utils/conversion.h"
-
 #include "utils/platform.h"
+#include "utils/slconfig.h"
 #include "utils/slpaths.h"
 
 #ifndef TEST

@@ -1,24 +1,21 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "contentdownloaddialog.h"
-#include "contentsearchresultview.h"
-#include "utils/conversion.h"
-
-#include <wx/sizer.h>
-#include <wx/textctrl.h>
-#include <wx/stattext.h>
-#include <wx/button.h>
-#include <wx/msgdlg.h>
-
-#include "downloader/lib/src/Downloader/Http/HttpDownloader.h" //FIXME: remove this
-#include "downloader/prdownloader.h"
-
-#include "httpfile.h"
-#include "ui.h"
-#include "servermanager.h"
-#include "utils/slpaths.h"
 
 #include <lslunitsync/unitsync.h>
+#include <wx/button.h>
+#include <wx/msgdlg.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+
+#include "contentsearchresultview.h"
+#include "downloader/lib/src/Downloader/Http/HttpDownloader.h" //FIXME: remove this
+#include "downloader/prdownloader.h"
+#include "httpfile.h"
+#include "servermanager.h"
+#include "ui.h"
+#include "utils/conversion.h"
+#include "utils/slpaths.h"
 
 DECLARE_EVENT_TYPE(SEARCH_FINISHED, wxID_ANY);
 DEFINE_EVENT_TYPE(SEARCH_FINISHED);

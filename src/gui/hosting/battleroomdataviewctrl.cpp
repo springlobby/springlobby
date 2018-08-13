@@ -1,19 +1,17 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "battleroomdataviewctrl.h"
-#include "battleroomdataviewmodel.h"
-
-#include "user.h"
-#include "gui/ui.h"
-#include "gui/mainwindow.h"
-#include "utils/lslconversion.h"
-#include "gui/uiutils.h"
-#include "lslunitsync/unitsync.h"
-#include "iserver.h"
-#include "ibattle.h"
 
 #include <wx/generic/numdlgg.h>
 
+#include "battleroomdataviewmodel.h"
+#include "gui/mainwindow.h"
+#include "gui/ui.h"
+#include "gui/uiutils.h"
+#include "ibattle.h"
+#include "iserver.h"
+#include "lslunitsync/unitsync.h"
+#include "user.h"
+#include "utils/lslconversion.h"
 
 BEGIN_EVENT_TABLE(BattleroomDataViewCtrl, BaseDataViewCtrl)
 EVT_MENU(BATTLEROOM_VIEW_SPEC, BattleroomDataViewCtrl::OnSpecSelect)

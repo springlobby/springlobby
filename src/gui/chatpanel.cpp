@@ -3,44 +3,42 @@
 //
 // Class: ChatPanel
 //
-
-#include "utils/curlhelper.h" //has to be first include, as else it warns about winsock2.h should be included first
-#include "utils/conversion.h"
-#include "gui/customdialogs.h"
-#include "uiutils.h"
-
 #include "chatpanel.h"
 
-#include <wx/intl.h>
-#include <wx/splitter.h>
-#include <wx/tokenzr.h>
 #include <wx/app.h>
+#include <wx/bmpbuttn.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
-#include <wx/bmpbuttn.h>
+#include <wx/intl.h>
+#include <wx/splitter.h>
 #include <wx/stattext.h>
+#include <wx/tokenzr.h>
 #include <wx/wupdlock.h>
 
 #include "aui/auimanager.h"
-#include "gui/slbook.h"
 #include "channel.h"
+#include "chatpanelmenu.h"
+#include "gui/controls.h"
+#include "gui/customdialogs.h"
+#include "gui/hosting/votepanel.h"
+#include "gui/iconscollection.h"
+#include "gui/mainwindow.h"
+#include "gui/pastedialog.h"
+#include "gui/slbook.h"
+#include "gui/wxtextctrlhist.h"
+#include "ibattle.h"
+#include "iserver.h"
+#include "log.h"
+#include "mainwindow.h"
+#include "nickdataviewctrl.h"
+#include "serverselector.h"
+#include "uiutils.h"
+#include "utils/conversion.h"
+#include "utils/curlhelper.h" //has to be first include, as else it warns about winsock2.h should be included first
+#include "utils/globalevents.h"
+#include "utils/slconfig.h"
 #include "utils/uievents.h"
 #include "utils/version.h"
-#include "iserver.h"
-#include "serverselector.h"
-#include "ibattle.h"
-#include "nickdataviewctrl.h"
-#include "mainwindow.h"
-#include "chatpanelmenu.h"
-#include "gui/pastedialog.h"
-#include "gui/wxtextctrlhist.h"
-#include "log.h"
-#include "utils/slconfig.h"
-#include "gui/hosting/votepanel.h"
-#include "utils/globalevents.h"
-#include "gui/iconscollection.h"
-#include "gui/controls.h"
-#include "gui/mainwindow.h"
 
 BEGIN_EVENT_TABLE(ChatPanel, wxPanel)
 EVT_TEXT_ENTER(CHAT_TEXT, ChatPanel::OnSay)

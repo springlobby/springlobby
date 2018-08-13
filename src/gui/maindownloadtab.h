@@ -5,7 +5,6 @@
 
 #include <wx/scrolwin.h>
 #include <map>
-
 class wxStaticText;
 class wxButton;
 class DownloadDataViewCtrl;

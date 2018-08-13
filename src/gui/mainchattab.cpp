@@ -3,35 +3,33 @@
 //
 // Class: MainChatTab
 //
-
-#include <stdexcept>
-#include <wx/intl.h>
-#include <wx/imaglist.h>
-#include <wx/sizer.h>
-#include <wx/notebook.h>
-#include <wx/image.h>
-#include <wx/log.h>
+#include "mainchattab.h"
 
 #include <lslutils/misc.h>
+#include <wx/image.h>
+#include <wx/imaglist.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/notebook.h>
+#include <wx/sizer.h>
+#include <stdexcept>
 
 #include "aui/auimanager.h"
-#include "mainchattab.h"
-#include "utils/conversion.h"
-#include "gui/controls.h"
-#include "mainwindow.h"
 #include "channel.h"
-#include "user.h"
 #include "chatpanel.h"
-#include "iserver.h"
-#include "serverselector.h"
-#include "settings.h"
+#include "gui/controls.h"
 #include "gui/slbook.h"
-#include "log.h"
-
+#include "images/channel.xpm"
 #include "images/close.xpm"
 #include "images/server.xpm"
-#include "images/channel.xpm"
 #include "images/userchat.xpm"
+#include "iserver.h"
+#include "log.h"
+#include "mainwindow.h"
+#include "serverselector.h"
+#include "settings.h"
+#include "user.h"
+#include "utils/conversion.h"
 
 BEGIN_EVENT_TABLE(MainChatTab, wxPanel)
 

@@ -4,7 +4,6 @@
 #define __TAB_UI_h__
 
 #include "tab_abstract.h"
-
 class wxCheckBox;
 class wxStaticBoxSizer;
 class wxRadioButton;

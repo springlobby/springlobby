@@ -2,8 +2,8 @@
 
 #include "savegamelist.h"
 
-#include <fstream>
 #include <wx/filename.h>
+#include <fstream>
 
 #include "storedgame.h"
 #include "utils/conversion.h"

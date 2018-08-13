@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_MIXINS_HH
 
 #include <boost/noncopyable.hpp>
-
 namespace SL
 {
 typedef boost::noncopyable NonCopyable;

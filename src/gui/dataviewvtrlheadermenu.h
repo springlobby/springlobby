@@ -1,15 +1,14 @@
 /*
  * dataviewvtrlheadermenu.h
  *
- *  Created on: 22 июля 2015 г.
- *      Author: Руслан
+ *  Created on: 22 пїЅпїЅпїЅпїЅ 2015 пїЅ.
+ *      Author: пїЅпїЅпїЅпїЅпїЅпїЅ
  */
 
 #ifndef SRC_GUI_DATAVIEWVTRLHEADERMENU_H_
 #define SRC_GUI_DATAVIEWVTRLHEADERMENU_H_
 
 #include <wx/menu.h>
-
 class wxDataViewCtrl;
 
 class DataViewCtrlHeaderMenu : public wxMenu

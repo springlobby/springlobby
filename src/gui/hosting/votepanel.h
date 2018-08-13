@@ -10,7 +10,6 @@
 
 
 #include <wx/panel.h>
-
 class ChatPanel;
 class wxBoxSizer;
 class wxButton;

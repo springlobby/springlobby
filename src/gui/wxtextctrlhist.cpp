@@ -1,13 +1,14 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "wxtextctrlhist.h"
-#include "utils/TextCompletionDatabase.h"
+
 #include <wx/regex.h>
-#include "utils/misc.h"
-#include "settings.h"
-#include "gui/ui.h"
-#include "gui/mainwindow.h"
+
 #include "gui/mainchattab.h"
+#include "gui/mainwindow.h"
+#include "gui/ui.h"
+#include "settings.h"
+#include "utils/misc.h"
+#include "utils/TextCompletionDatabase.h"
 
 BEGIN_EVENT_TABLE(wxTextCtrlHist, wxTextCtrl)
 EVT_TEXT_ENTER(wxID_ANY, wxTextCtrlHist::OnSendMessage)

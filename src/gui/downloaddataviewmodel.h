@@ -3,9 +3,8 @@
 #ifndef SRC_DOWNLOADER_DOWNLOADDATAVIEWMODEL_H_
 #define SRC_DOWNLOADER_DOWNLOADDATAVIEWMODEL_H_
 
-#include "gui/basedataviewmodel.h"
 #include "downloader/prdownloader.h"
-
+#include "gui/basedataviewmodel.h"
 class DownloadDataViewModel : public BaseDataViewModel<PrDownloader::DownloadProgress>
 {
 public:

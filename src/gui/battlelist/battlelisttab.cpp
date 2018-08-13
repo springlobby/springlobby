@@ -1,7 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "battlelisttab.h"
 
-#include <set>
-#include <stdexcept>
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/colour.h>
@@ -12,6 +11,8 @@
 #include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/textdlg.h>
+#include <set>
+#include <stdexcept>
 #if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
 #define EVT_TOGGLEORCHECK EVT_TOGGLEBUTTON
@@ -22,7 +23,6 @@
 #include "aui/auimanager.h"
 #include "battledataviewctrl.h"
 #include "battlelistfilter.h"
-#include "battlelisttab.h"
 #include "exception.h"
 #include "gui/chatpanel.h"
 #include "gui/controls.h"
@@ -43,7 +43,6 @@
 #include "utils/conversion.h"
 #include "utils/globalevents.h"
 #include "utils/slconfig.h"
-
 //const unsigned int BATTLELIST_COLUMNCOUNT = 10;
 
 BEGIN_EVENT_TABLE(BattleListTab, wxPanel)

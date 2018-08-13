@@ -1,29 +1,27 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "addbotdialog.h"
 
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
+#include <lslunitsync/unitsync.h>
+#include <lslutils/conversion.h>
+#include <lslutils/misc.h>
 #include <wx/button.h>
 #include <wx/choice.h>
-#include <wx/statline.h>
-#include <wx/filename.h>
 #include <wx/dir.h>
+#include <wx/filename.h>
 #include <wx/listctrl.h>
+#include <wx/sizer.h>
+#include <wx/statline.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
 
-#include "settings.h"
 #include "gui/controls.h"
+#include "gui/customdialogs.h"
 #include "gui/uiutils.h"
 #include "ibattle.h"
-#include <lslutils/misc.h>
-#include <lslutils/conversion.h>
-#include <lslunitsync/unitsync.h>
 #include "mmoptionwindows.h"
+#include "settings.h"
 #include "utils/conversion.h"
 #include "utils/lslconversion.h"
-
-#include "gui/customdialogs.h"
 
 BEGIN_EVENT_TABLE(AddBotDialog, wxDialog)
 EVT_BUTTON(ADDBOT_CANCEL, AddBotDialog::OnClose)

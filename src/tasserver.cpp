@@ -9,33 +9,30 @@ lsl/networking/tasserver.cpp
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 **/
-
-
-#include <wx/string.h>
-#include <wx/intl.h>
-#include <wx/protocol/http.h>
-#include <wx/socket.h>
-#include <wx/log.h>
-#include <wx/timer.h>
-
-#include <stdexcept>
-#include <algorithm>
-#include <map>
-
 #include "tasserver.h"
-#include "serverevents.h"
-#include "socket.h"
-#include "log.h"
-#include "settings.h"
-#include "utils/base64.h"
-#include "utils/md5.h"
-#include "utils/tasutil.h"
-#include "utils/conversion.h"
-#include "utils/slconfig.h"
-#include "utils/version.h"
 
 #include <json/reader.h>
 #include <lslutils/misc.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/protocol/http.h>
+#include <wx/socket.h>
+#include <wx/string.h>
+#include <wx/timer.h>
+#include <algorithm>
+#include <map>
+#include <stdexcept>
+
+#include "log.h"
+#include "serverevents.h"
+#include "settings.h"
+#include "socket.h"
+#include "utils/base64.h"
+#include "utils/conversion.h"
+#include "utils/md5.h"
+#include "utils/slconfig.h"
+#include "utils/tasutil.h"
+#include "utils/version.h"
 
 SLCONFIG("/Server/ExitMessage", "Using https://springlobby.info/", "Message which is send when leaving server");
 

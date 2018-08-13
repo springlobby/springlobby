@@ -3,40 +3,38 @@
 //
 // Class: BattleMapTab
 //
-
-#include <wx/splitter.h>
-#include <wx/intl.h>
-#include <wx/combobox.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/checkbox.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
-#include <wx/radiobox.h>
-#include <wx/window.h>
-#include <wx/listctrl.h>
-#include <wx/settings.h>
-#include <wx/arrstr.h>
-#include <wx/choice.h>
-
-#include <stdexcept>
-
 #include "battlemaptab.h"
-#include "user.h"
-#include "ibattle.h"
-#include "gui/controls.h"
-#include "gui/chatpanel.h"
-#include "gui/mapselectdialog.h"
-#include "gui/uiutils.h"
-#include "iserver.h"
-#include "settings.h"
-#include "aui/auimanager.h"
-#include "utils/conversion.h"
-#include "utils/globalevents.h"
-#include "log.h"
-#include "gui/mapctrl.h"
 
 #include <lslutils/conversion.h>
+#include <wx/arrstr.h>
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
+#include <wx/combobox.h>
+#include <wx/intl.h>
+#include <wx/listctrl.h>
+#include <wx/radiobox.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
+#include <wx/splitter.h>
+#include <wx/statline.h>
+#include <wx/stattext.h>
+#include <wx/window.h>
+#include <stdexcept>
+
+#include "aui/auimanager.h"
+#include "gui/chatpanel.h"
+#include "gui/controls.h"
+#include "gui/mapctrl.h"
+#include "gui/mapselectdialog.h"
+#include "gui/uiutils.h"
+#include "ibattle.h"
+#include "iserver.h"
+#include "log.h"
+#include "settings.h"
+#include "user.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
 
 BEGIN_EVENT_TABLE(BattleMapTab, wxPanel)
 

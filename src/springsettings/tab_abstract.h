@@ -4,7 +4,6 @@
 #define __TAB_ABSTRACT_h__
 
 #include <wx/scrolwin.h>
-
 #include <map>
 class wxString;
 class wxCommandEvent;

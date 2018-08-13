@@ -1,6 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "uievents.h"
+
 #include "utils/conversion.h"
 
 namespace UiEvents

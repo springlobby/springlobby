@@ -5,7 +5,6 @@
 
 #include <wx/dataview.h>
 #include "gui/basedataviewmodel.h"
-
 struct StoredGame;
 
 class PlaybackDataModel : public BaseDataViewModel<StoredGame>
