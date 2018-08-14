@@ -23,6 +23,8 @@ lsl/spring/spring.cpp
 #include <lslutils/globalsmanager.h>
 #include <wx/filename.h>
 #include <wx/log.h>
+
+#include <algorithm>
 #include <clocale>
 #include <fstream>
 #include <stdexcept>
