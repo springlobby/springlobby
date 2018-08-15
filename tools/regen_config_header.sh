@@ -18,8 +18,8 @@ if [ -z "$REV" ]; then
 fi
 
 OLDREV=""
-if [ -s "$SOURCE/VERSION" ] && [ -s "$SOURCE/springlobby_config.h" ]; then
-	read OLDREV < "$SOURCE/VERSION"
+if [ -s "$OUTPUT/VERSION" ] && [ -s "$OUTPUT/springlobby_config.h" ]; then
+	read OLDREV < "$OUTPUT/VERSION"
 fi
 
 if [ "$OLDREV" != "$REV" ]; then # version changed, update file
