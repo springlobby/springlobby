@@ -89,11 +89,11 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 	m_map_text = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_map_text, 1, wxALL | wxEXPAND, 5);
 
-	m_mod_lbl = new wxStaticText(this, wxID_ANY, _("Game:"), wxDefaultPosition, wxDefaultSize, 0);
-	m_data_sizer->Add(m_mod_lbl, 1, wxALL | wxEXPAND, 5);
+	m_game_lbl = new wxStaticText(this, wxID_ANY, _("Game:"));
+	m_data_sizer->Add(m_game_lbl, 1, wxALL | wxEXPAND, 5);
 
-	m_mod_text = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
-	m_data_sizer->Add(m_mod_text, 1, wxALL | wxEXPAND, 5);
+	m_game_text = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_data_sizer->Add(m_game_text, 1, wxALL | wxEXPAND, 5);
 
 	m_players_lbl = new wxStaticText(this, wxID_ANY, _("Players:"), wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_players_lbl, 1, wxALL | wxEXPAND, 5);
@@ -301,7 +301,7 @@ void PlaybackTab::OnSelect(wxDataViewEvent& event)
 
 			m_players_text->SetLabel(wxEmptyString);
 			m_map_text->SetLabel(TowxString(rep.battle.GetHostMapName()));
-			m_mod_text->SetLabel(TowxString(rep.battle.GetHostGameName()));
+			m_game_text->SetLabel(TowxString(rep.battle.GetHostGameName()));
 			m_minimap->SetBattle(&(rep.battle));
 			m_minimap->UpdateMinimap();
 
@@ -333,7 +333,7 @@ void PlaybackTab::Deselected()
 	m_delete_btn->Enable(false);
 	m_players_text->SetLabel(wxEmptyString);
 	m_map_text->SetLabel(wxEmptyString);
-	m_mod_text->SetLabel(wxEmptyString);
+	m_game_text->SetLabel(wxEmptyString);
 	m_minimap->SetBattle(NULL);
 	m_minimap->UpdateMinimap();
 	m_minimap->Refresh();

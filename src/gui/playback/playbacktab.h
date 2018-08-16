@@ -77,8 +77,8 @@ private:
 	MapCtrl* m_minimap;
 	wxStaticText* m_map_lbl;
 	wxStaticText* m_map_text;
-	wxStaticText* m_mod_lbl;
-	wxStaticText* m_mod_text;
+	wxStaticText* m_game_lbl;
+	wxStaticText* m_game_text;
 	wxStaticText* m_players_lbl;
 	wxStaticText* m_players_text;
 
