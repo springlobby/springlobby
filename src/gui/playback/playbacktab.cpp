@@ -59,89 +59,59 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 	wxLogMessage(_T( "PlaybackTab::PlaybackTab()" ));
 
 
-	wxBoxSizer* m_main_sizer;
-	m_main_sizer = new wxBoxSizer(wxVERTICAL);
-
-	wxBoxSizer* m_filter_sizer;
-	m_filter_sizer = new wxBoxSizer(wxVERTICAL);
-
-	wxBoxSizer* m_replaylist_sizer;
-	m_replaylist_sizer = new wxBoxSizer(wxVERTICAL);
-
-	m_replay_dataview = new PlaybackDataView("replays_dataview", this);
-	m_replaylist_sizer->Add(m_replay_dataview, 1, wxEXPAND);
-
-	m_main_sizer->Add(m_replaylist_sizer, 1, wxEXPAND);
-	;
-
-	wxBoxSizer* m_info_sizer;
-	m_info_sizer = new wxBoxSizer(wxHORIZONTAL);
-
 	m_minimap = new MapCtrl(this, 100, 0, true, false, false);
-	m_info_sizer->Add(m_minimap, 0, wxALL, 5);
 
-	wxFlexGridSizer* m_data_sizer;
-	m_data_sizer = new wxFlexGridSizer(4, 2, 0, 0);
+	m_players_lbl  = new wxStaticText(this, wxID_ANY, _("Players:"));
+	m_players_text = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_map_lbl      = new wxStaticText(this, wxID_ANY, _("Map:"));
+	m_map_text     = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_game_lbl     = new wxStaticText(this, wxID_ANY, _("Game:"));
+	m_game_text    = new wxStaticText(this, wxID_ANY, wxEmptyString);
 
-	m_map_lbl = new wxStaticText(this, wxID_ANY, _("Map:"), wxDefaultPosition, wxDefaultSize, 0);
+	wxFlexGridSizer* m_data_sizer = new wxFlexGridSizer(4, 2, 0, 0);
 	m_data_sizer->Add(m_map_lbl, 1, wxALL | wxEXPAND, 5);
-
-	m_map_text = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_map_text, 1, wxALL | wxEXPAND, 5);
-
-	m_game_lbl = new wxStaticText(this, wxID_ANY, _("Game:"));
 	m_data_sizer->Add(m_game_lbl, 1, wxALL | wxEXPAND, 5);
-
-	m_game_text = new wxStaticText(this, wxID_ANY, wxEmptyString);
 	m_data_sizer->Add(m_game_text, 1, wxALL | wxEXPAND, 5);
-
-	m_players_lbl = new wxStaticText(this, wxID_ANY, _("Players:"), wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_players_lbl, 1, wxALL | wxEXPAND, 5);
-
-	m_players_text = new wxStaticText(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
 	m_data_sizer->Add(m_players_text, 1, wxALL | wxEXPAND, 5);
 
-	m_info_sizer->Add(m_data_sizer, 1, wxEXPAND | wxALL, 0);
-
 	m_players = new BattleroomDataViewCtrl("playback_battleroom_view", this, nullptr /*battle*/, true /*readonly*/, false /*show ingname status*/);
+
+	wxBoxSizer* m_info_sizer = new wxBoxSizer(wxHORIZONTAL);
+	m_info_sizer->Add(m_minimap, 0, wxALL, 5);
+	m_info_sizer->Add(m_data_sizer, 1, wxEXPAND | wxALL, 0);
 	m_info_sizer->Add(m_players, 2, wxALL | wxEXPAND, 0);
 
-	m_main_sizer->Add(m_info_sizer, 0, wxEXPAND, 5);
-
-
-	m_filter = new PlaybackListFilter(this, wxID_ANY, this, wxDefaultPosition, wxSize(-1, -1), wxEXPAND);
-	m_filter_sizer->Add(m_filter, 0, wxEXPAND, 5);
-
-	m_main_sizer->Add(m_filter_sizer, 0, wxEXPAND, 5);
-
-	m_buttons_sep = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
-	m_main_sizer->Add(m_buttons_sep, 0, wxALL | wxEXPAND, 5);
-
-	wxBoxSizer* m_buttons_sizer;
-	m_buttons_sizer = new wxBoxSizer(wxHORIZONTAL);
 
 #if wxUSE_TOGGLEBTN
 	m_filter_show = new wxToggleButton(this, PLAYBACK_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, wxSize(-1, 28), 0);
 #else
 	m_filter_show = new wxCheckBox(this, PLAYBACK_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, wxSize(-1, 28), 0);
 #endif
-
-	m_buttons_sizer->Add(m_filter_show, 0, 0, 5);
-
 	m_filter_activ = new wxCheckBox(this, PLAYBACK_LIST_FILTER_ACTIV, _("Activated"), wxDefaultPosition, wxDefaultSize, 0);
-	m_buttons_sizer->Add(m_filter_activ, 1, wxALL | wxEXPAND, 5);
-
-	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
-
 	m_watch_btn = new wxButton(this, PLAYBACK_WATCH, replay ? _("Watch") : _("Load"), wxDefaultPosition, wxSize(-1, 28), 0);
-	m_buttons_sizer->Add(m_watch_btn, 0, wxBOTTOM | wxLEFT | wxRIGHT, 5);
-
 	m_delete_btn = new wxButton(this, PLAYBACK_DELETE, _("Delete"), wxDefaultPosition, wxSize(-1, 28), 0);
-	m_buttons_sizer->Add(m_delete_btn, 0, wxBOTTOM | wxRIGHT, 5);
-
 	m_reload_btn = new wxButton(this, PLAYBACK_RELOAD, _("Reload list"), wxDefaultPosition, wxSize(-1, 28), 0);
+
+	wxBoxSizer* m_buttons_sizer = new wxBoxSizer(wxHORIZONTAL);
+	m_buttons_sizer->Add(m_filter_show, 0, 0, 5);
+	m_buttons_sizer->Add(m_filter_activ, 1, wxALL | wxEXPAND, 5);
+	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
+	m_buttons_sizer->Add(m_watch_btn, 0, wxBOTTOM | wxLEFT | wxRIGHT, 5);
+	m_buttons_sizer->Add(m_delete_btn, 0, wxBOTTOM | wxRIGHT, 5);
 	m_buttons_sizer->Add(m_reload_btn, 0, wxBOTTOM | wxRIGHT, 5);
 
+
+	m_replay_dataview = new PlaybackDataView("replays_dataview", this);
+	m_filter = new PlaybackListFilter(this, wxID_ANY, this, wxDefaultPosition, wxSize(-1, -1), wxEXPAND);
+	m_buttons_sep = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
+
+	wxBoxSizer* m_main_sizer = new wxBoxSizer(wxVERTICAL);
+	m_main_sizer->Add(m_replay_dataview, 1, wxEXPAND);
+	m_main_sizer->Add(m_info_sizer, 0, wxEXPAND, 5);
+	m_main_sizer->Add(m_filter, 0, wxEXPAND, 5);
+	m_main_sizer->Add(m_buttons_sep, 0, wxALL | wxEXPAND, 5);
 	m_main_sizer->Add(m_buttons_sizer, 0, wxEXPAND, 5);
 
 	m_filter->Hide();
