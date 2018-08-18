@@ -11,10 +11,11 @@
 #include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/textdlg.h>
+#include <wx/tglbtn.h>
 #include <set>
 #include <stdexcept>
+
 #if wxUSE_TOGGLEBTN
-#include <wx/tglbtn.h>
 #define EVT_TOGGLEORCHECK EVT_TOGGLEBUTTON
 #else
 #define EVT_TOGGLEORCHECK EVT_CHECKBOX
