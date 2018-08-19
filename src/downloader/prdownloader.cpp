@@ -21,7 +21,6 @@
 #include <memory>
 #include <mutex>
 
-#include "gui/mainwindow.h"
 #include "log.h"
 #include "settings.h"
 #include "utils/conversion.h"
