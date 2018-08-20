@@ -15,18 +15,11 @@
 #include <set>
 #include <stdexcept>
 
-#if wxUSE_TOGGLEBTN
-#define EVT_TOGGLEORCHECK EVT_TOGGLEBUTTON
-#else
-#define EVT_TOGGLEORCHECK EVT_CHECKBOX
-#endif
-
 #include "aui/auimanager.h"
 #include "battledataviewctrl.h"
 #include "battlelistfilter.h"
 #include "exception.h"
 #include "gui/chatpanel.h"
-#include "gui/controls.h"
 #include "gui/customdialogs.h"
 #include "gui/hosting/hostbattledialog.h"
 #include "gui/hosting/mainjoinbattletab.h"

@@ -11,9 +11,7 @@
 #include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/textdlg.h>
-#if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
-#endif
 
 #include "exception.h"
 #include "gui/chatpanel.h"
@@ -34,7 +32,6 @@
 #include "utils/slconfig.h"
 
 BEGIN_EVENT_TABLE(PlaybackTab, wxPanel)
-
 EVT_BUTTON(PLAYBACK_WATCH, PlaybackTab::OnWatch)
 EVT_BUTTON(PLAYBACK_RELOAD, PlaybackTab::OnReload)
 EVT_BUTTON(PLAYBACK_DELETE, PlaybackTab::OnDelete)
@@ -42,13 +39,7 @@ EVT_DATAVIEW_SELECTION_CHANGED(PlaybackDataView::REPLAY_DATAVIEW_ID, PlaybackTab
 EVT_CHECKBOX(PLAYBACK_LIST_FILTER_ACTIV, PlaybackTab::OnFilterActiv)
 EVT_COMMAND(wxID_ANY, PlaybackLoader::PlaybacksLoadedEvt, PlaybackTab::AddAllPlaybacks)
 EVT_KEY_DOWN(PlaybackTab::OnChar)
-
-#if wxUSE_TOGGLEBTN
-EVT_TOGGLEBUTTON(PLAYBACK_LIST_FILTER_BUTTON, PlaybackTab::OnFilter)
-#else
-EVT_CHECKBOX(PLAYBACK_LIST_FILTER_BUTTON, PlaybackTab::OnFilter)
-#endif
-
+EVT_TOGGLEORCHECK(PLAYBACK_LIST_FILTER_BUTTON, PlaybackTab::OnFilter)
 END_EVENT_TABLE()
 
 PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
@@ -84,11 +75,7 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 	m_info_sizer->Add(m_players, 2, wxALL | wxEXPAND, 0);
 
 
-#if wxUSE_TOGGLEBTN
-	m_filter_show = new wxToggleButton(this, PLAYBACK_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, wxSize(-1, 28), 0);
-#else
-	m_filter_show = new wxCheckBox(this, PLAYBACK_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, wxSize(-1, 28), 0);
-#endif
+	m_filter_show = new wxToggleOrCheck(this, PLAYBACK_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, wxSize(-1, 28), 0);
 	m_filter_activ = new wxCheckBox(this, PLAYBACK_LIST_FILTER_ACTIV, _("Activated"), wxDefaultPosition, wxDefaultSize, 0);
 	m_watch_btn = new wxButton(this, PLAYBACK_WATCH, replay ? _("Watch") : _("Load"), wxDefaultPosition, wxSize(-1, 28), 0);
 	m_delete_btn = new wxButton(this, PLAYBACK_DELETE, _("Delete"), wxDefaultPosition, wxSize(-1, 28), 0);

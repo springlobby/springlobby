@@ -5,9 +5,11 @@
 
 #include <wx/scrolwin.h>
 #include <vector>
+#include "gui/controls.h"
 class Ui;
 class MapCtrl;
 class BattleroomListCtrl;
+class wxCheckBox;
 class wxCommandEvent;
 class wxDataViewEvent;
 class wxStaticText;
@@ -16,7 +18,6 @@ class wxButton;
 class wxBoxSizer;
 class wxStaticText;
 class wxStaticLine;
-class wxCheckBox;
 class wxToggleButton;
 struct StoredGame;
 class PlaybackLoader;
@@ -91,11 +92,7 @@ private:
 
 	wxCheckBox* m_filter_activ;
 	bool m_isreplay;
-#if wxUSE_TOGGLEBTN
-	wxToggleButton* m_filter_show;
-#else
-	wxCheckBox* m_filter_show;
-#endif
+	wxToggleOrCheck* m_filter_show;
 
 	void AskForceWatch(StoredGame& rep) const;
 
