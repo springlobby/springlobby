@@ -58,6 +58,8 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 	m_map_text     = new wxStaticText(this, wxID_ANY, wxEmptyString);
 	m_game_lbl     = new wxStaticText(this, wxID_ANY, _("Game:"));
 	m_game_text    = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_engine_lbl   = new wxStaticText(this, wxID_ANY, _("Engine:"));
+	m_engine_text  = new wxStaticText(this, wxID_ANY, wxEmptyString);
 
 	wxFlexGridSizer* m_data_sizer = new wxFlexGridSizer(4, 2, 0, 0);
 	m_data_sizer->Add(m_map_lbl, 1, wxALL | wxEXPAND, 5);
@@ -66,6 +68,8 @@ PlaybackTab::PlaybackTab(wxWindow* parent, bool replay)
 	m_data_sizer->Add(m_game_text, 1, wxALL | wxEXPAND, 5);
 	m_data_sizer->Add(m_players_lbl, 1, wxALL | wxEXPAND, 5);
 	m_data_sizer->Add(m_players_text, 1, wxALL | wxEXPAND, 5);
+	m_data_sizer->Add(m_engine_lbl, 1, wxALL | wxEXPAND, 5);
+	m_data_sizer->Add(m_engine_text, 1, wxALL | wxEXPAND, 5);
 
 	m_players = new BattleroomDataViewCtrl("playback_battleroom_view", this, nullptr /*battle*/, true /*readonly*/, false /*show ingname status*/);
 
@@ -259,6 +263,7 @@ void PlaybackTab::OnSelect(wxDataViewEvent& event)
 			m_players_text->SetLabel(wxEmptyString);
 			m_map_text->SetLabel(TowxString(rep.battle.GetHostMapName()));
 			m_game_text->SetLabel(TowxString(rep.battle.GetHostGameName()));
+			m_engine_text->SetLabel(rep.battle.GetEngineName() + ' ' + rep.battle.GetEngineVersion());
 			m_minimap->SetBattle(&(rep.battle));
 			m_minimap->UpdateMinimap();
 
@@ -291,6 +296,7 @@ void PlaybackTab::Deselected()
 	m_players_text->SetLabel(wxEmptyString);
 	m_map_text->SetLabel(wxEmptyString);
 	m_game_text->SetLabel(wxEmptyString);
+	m_engine_text->SetLabel(wxEmptyString);
 	m_minimap->SetBattle(NULL);
 	m_minimap->UpdateMinimap();
 	m_minimap->Refresh();

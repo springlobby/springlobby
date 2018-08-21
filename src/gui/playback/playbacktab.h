@@ -76,6 +76,8 @@ private:
 	PlaybackDataView* m_replay_dataview;
 	PlaybackLoader* m_replay_loader;
 	MapCtrl* m_minimap;
+	wxStaticText* m_engine_lbl;
+	wxStaticText* m_engine_text;
 	wxStaticText* m_map_lbl;
 	wxStaticText* m_map_text;
 	wxStaticText* m_game_lbl;
