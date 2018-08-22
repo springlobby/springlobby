@@ -14,7 +14,6 @@ struct StoredGame
 	bool can_watch;
 	int duration; //in seconds
 	int size;     //in bytes
-	std::string SpringVersion;
 	time_t date;
 	std::string date_string;
 	OfflineBattle battle;
@@ -50,7 +49,6 @@ struct StoredGame
 		can_watch = moved.can_watch;
 		duration = moved.duration;
 		size = moved.size;
-		SpringVersion = moved.SpringVersion;
 		date = moved.date;
 		date_string = moved.date_string;
 		battle.operator=((OfflineBattle && )moved.battle);

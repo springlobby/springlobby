@@ -124,13 +124,13 @@ static void MarkBroken(StoredGame& ret)
 	ret.battle.SetHostGame("broken", "");
 }
 
-static void FixSpringVersion(StoredGame& ret)
+static void FixSpringVersion(std::string& springVersion)
 {
-	const int version = LSL::Util::FromIntString(ret.SpringVersion);
-	if (LSL::Util::ToIntString(version) != ret.SpringVersion)
+	const int version = LSL::Util::FromIntString(springVersion);
+	if (LSL::Util::ToIntString(version) != springVersion)
 		return;
 
-	ret.SpringVersion = ret.SpringVersion + ".0";
+	springVersion += ".0";
 }
 
 bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) const
@@ -138,10 +138,10 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	const std::string FileName = LSL::Util::AfterLast(ReplayPath, SEP); // strips file path
 	ret.type = StoredGame::REPLAY;
 	ret.battle.SetPlayBackFilePath(ReplayPath);
-	ret.SpringVersion = LSL::Util::BeforeLast(LSL::Util::AfterLast(FileName, "_"), ".");
+	std::string engineVersion = LSL::Util::BeforeLast(LSL::Util::AfterLast(FileName, "_"), ".");
 	ret.size = wxFileName::GetSize(ReplayPath).GetLo(); //FIXME: use longlong
 
-	FixSpringVersion(ret);
+	FixSpringVersion(engineVersion);
 
 	if (!wxFileExists(TowxString(ReplayPath))) {
 		wxLogWarning(wxString::Format(_T("File %s does not exist!"), ReplayPath.c_str()));
@@ -189,7 +189,7 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	ret.battle.GetBattleFromScript(false);
 	ret.battle.SetBattleType(BT_Replay);
 	ret.battle.SetEngineName("spring");
-	ret.battle.SetEngineVersion(ret.SpringVersion);
+	ret.battle.SetEngineVersion(engineVersion);
 	ret.battle.SetPlayBackFilePath(ReplayPath);
 	delete replay;
 	return true;
