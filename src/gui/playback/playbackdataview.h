@@ -48,7 +48,7 @@ private:
 		MAP,
 		PLAYERS,
 		DURATION,
-		VERSION,
+		ENGINE,
 		FILESIZE,
 		FILENAME
 	};
