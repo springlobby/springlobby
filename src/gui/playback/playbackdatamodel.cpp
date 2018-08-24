@@ -49,7 +49,9 @@ int PlaybackDataModel::Compare(const wxDataViewItem& itemA, const wxDataViewItem
 			sortingResult = GenericCompare(storedGameA->duration, storedGameB->duration);
 			break;
 		case ENGINE:
-			sortingResult = storedGameA->battle.GetEngineVersion().compare(storedGameB->battle.GetEngineVersion());
+			sortingResult = storedGameA->battle.GetEngineName().compare(storedGameB->battle.GetEngineName());
+			if (0 == sortingResult)
+				sortingResult = storedGameA->battle.GetEngineVersion().compare(storedGameB->battle.GetEngineVersion());
 			break;
 		case FILESIZE:
 			sortingResult = GenericCompare(storedGameA->size, storedGameB->size);
@@ -130,9 +132,13 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 			seconds = seconds % 60;
 			variant = wxString::Format(_T("%02d:%02d:%02d"), hours, minutes, seconds);
 			} break;
-		case ENGINE:
-			variant = TowxString(storedGame->battle.GetEngineVersion());
-			break;
+
+		case ENGINE: {
+			wxString engine(storedGame->battle.GetEngineName());
+			engine += ' ';
+			engine += storedGame->battle.GetEngineVersion();
+			variant = engine;
+			} break;
 
 		case FILESIZE:
 			variant = wxString::Format(_T("%d KB"), storedGame->size / 1024);
