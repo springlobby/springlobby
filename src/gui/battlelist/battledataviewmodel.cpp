@@ -103,10 +103,15 @@ void BattleDataViewModel::GetValue(wxVariant& variant,
 							battle->GetBattleRunningTime()).Format(_T("%H:%M"))));
 			break;
 
-		case ENGINE:
-			variant = wxVariant(wxDataViewIconText(wxString(battle->GetEngineVersion()),
-							       SlPaths::GetCompatibleVersion(battle->GetEngineVersion()).empty() ? iconsCollection->ICON_NEXISTS : iconsCollection->ICON_EXISTS));
-			break;
+		case ENGINE: {
+			wxString engine(battle->GetEngineName());
+			engine += ' ';
+			engine += battle->GetEngineVersion();
+			if (SlPaths::GetCompatibleVersion(battle->GetEngineVersion()).empty())
+				variant = wxVariant(wxDataViewIconText(engine, iconsCollection->ICON_NEXISTS));
+			else
+				variant = wxVariant(wxDataViewIconText(engine, iconsCollection->ICON_EXISTS));
+			} break;
 
 		case DEFAULT_COLUMN:
 			//Do nothing
@@ -193,7 +198,9 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 			break;
 
 		case ENGINE:
-			sortingResult = battleA->GetEngineVersion().compare(battleB->GetEngineVersion());
+			sortingResult = battleA->GetEngineName().compare(battleB->GetEngineName());
+			if (0 == sortingResult)
+				sortingResult = battleA->GetEngineVersion().compare(battleB->GetEngineVersion());
 			break;
 
 		case SPECTATORS:
@@ -264,7 +271,6 @@ wxString BattleDataViewModel::GetColumnType(unsigned int column) const
 		case RANK:
 			colTypeString = COL_TYPE_BITMAP;
 			break;
-
 
 		case MAP:
 		case GAME:
