@@ -1,11 +1,11 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "iplaybacklist.h"
+
+#include <lslutils/globalsmanager.h>
+
 #include "offlinebattle.h"
 #include "storedgame.h"
 #include "utils/conversion.h"
-
-#include <lslutils/globalsmanager.h>
 
 int IPlaybackList::FindPlayback(const std::string& filename) const //returns id when the filename already exists in m_replays
 {
@@ -31,7 +31,7 @@ void IPlaybackList::LoadPlaybacks(const std::set<std::string>& filenames)
 	if (m_replays.size() > filenames.size()) {
 		std::list<unsigned int> todel;
 		for (const auto& playback : m_replays) { //remove not re-added playbacks (deleted?!)
-			if (filenames.find(playback.second.Filename) == filenames.end()) {
+			if (filenames.find(playback.second.battle.GetPlayBackFilePath()) == filenames.end()) {
 				todel.push_back(playback.first);
 			}
 		}
@@ -68,7 +68,7 @@ StoredGame& IPlaybackList::AddPlayback(const std::string& filename)
 void IPlaybackList::RemovePlayback(unsigned int const id)
 {
 	const StoredGame& rep = m_replays[id];
-	m_replays_filename_index.erase(rep.Filename);
+	m_replays_filename_index.erase(rep.battle.GetPlayBackFilePath());
 	m_replays.erase(id);
 }
 
@@ -94,8 +94,8 @@ bool IPlaybackList::PlaybackExists(unsigned int const id) const
 bool IPlaybackList::DeletePlayback(unsigned int const id)
 {
 	const StoredGame& rep = m_replays[id];
-	if (wxRemoveFile(TowxString(rep.Filename))) {
-		m_replays_filename_index.erase(rep.Filename);
+	if (wxRemoveFile(TowxString(rep.battle.GetPlayBackFilePath()))) {
+		m_replays_filename_index.erase(rep.battle.GetPlayBackFilePath());
 		m_replays.erase(id);
 		return true;
 	}

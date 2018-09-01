@@ -3,9 +3,8 @@
 #ifndef CURLHELPER_H
 #define CURLHELPER_H
 
-#include <wx/string.h>
 #include <wx/sstream.h>
-
+#include <wx/string.h>
 #define wxCURL_BUF2STRING(x) wxString((const char*)(x), wxConvLibc)
 #if wxUSE_UNICODE
 #define wxCURL_STRING2BUF(x) ((x).ToAscii())

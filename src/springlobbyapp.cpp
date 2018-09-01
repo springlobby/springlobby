@@ -3,6 +3,7 @@
 //
 // Class: SpringLobbyApp
 //
+#include "springlobbyapp.h"
 
 #ifdef _MSC_VER
 #ifndef NOMINMAX
@@ -11,59 +12,54 @@
 #include <winsock2.h>
 #endif // _MSC_VER
 
+#include <lslunitsync/unitsync.h>
+#include <lslutils/config.h>
+#include <lslutils/globalsmanager.h>
+#include <wx/choicdlg.h>
+#include <wx/cmdline.h>
+#include <wx/debugrpt.h>
+#include <wx/dirdlg.h>
+#include <wx/file.h>
+#include <wx/filefn.h>
+#include <wx/filename.h>
+#include <wx/fs_zip.h> //filesystem zip handler
+#include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/msgdlg.h>
-#include <wx/stdpaths.h>
-#include <wx/filefn.h>
-#include <wx/image.h>
-#include <wx/cmdline.h>
-#include <wx/choicdlg.h>
-#include <wx/filename.h>
-#include <wx/dirdlg.h>
-#include <wx/tooltip.h>
-#include <wx/file.h>
-#include <wx/wfstream.h>
-#include <wx/fs_zip.h> //filesystem zip handler
 #include <wx/socket.h>
+#include <wx/stdpaths.h>
+#include <wx/tooltip.h>
+#include <wx/utils.h>
+#include <wx/wfstream.h>
 #ifdef __WXMSW__
 #include <wx/msw/registry.h>
 #endif
-#include <wx/utils.h>
-#include <wx/wfstream.h>
-
-#include "stacktrace.h"
-#include "springlobbyapp.h"
-#include "gui/mainwindow.h"
-#include "settings.h"
-#include "utils/slconfig.h"
-#include "gui/controls.h"
-#include "utils/platform.h"
-#include "utils/version.h"
-#include "utils/globalevents.h"
-#include "channel.h"
-#include "gui/customdialogs.h"
-#include "downloader/prdownloader.h"
-#include <lslutils/globalsmanager.h>
-#include <lslutils/config.h>
-#include <lslunitsync/unitsync.h>
-#include "gui/notifications/notificationmanager.h"
-#include "utils/wxTranslationHelper.h"
-#include "gui/playback/playbacktab.h"
-#include "utils/slpaths.h"
-#include "downloader/lib/src/FileSystem/FileSystem.h"
-#include "log.h"
-#include "utils/conversion.h"
-#include "gui/ui.h"
-#include "servermanager.h"
-#include "gui/iconscollection.h"
-#include "sysinfo.h"
-
-#include <wx/debugrpt.h>
-
 #if wxUSE_UNIX
 #include <X11/Xlib.h>
 #endif
 
+#include "channel.h"
+#include "downloader/lib/src/FileSystem/FileSystem.h"
+#include "downloader/prdownloader.h"
+#include "gui/controls.h"
+#include "gui/customdialogs.h"
+#include "gui/iconscollection.h"
+#include "gui/mainwindow.h"
+#include "gui/notifications/notificationmanager.h"
+#include "gui/playback/playbacktab.h"
+#include "gui/ui.h"
+#include "log.h"
+#include "servermanager.h"
+#include "settings.h"
+#include "stacktrace.h"
+#include "sysinfo.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "utils/platform.h"
+#include "utils/slconfig.h"
+#include "utils/slpaths.h"
+#include "utils/version.h"
+#include "utils/wxTranslationHelper.h"
 
 SLCONFIG("/ResetLayout", false, "reset layout on restart");
 

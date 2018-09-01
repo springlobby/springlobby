@@ -7,13 +7,11 @@
 #include <map>
 #include <vector>
 #include "utils/mixins.h"
-
 //static const long GROUP_ID  = wxNewId();
 static const long GROUP_ID_NEW = wxNewId();
 static const long GROUP_ID_REMOVE = wxNewId();
 #include "ui.h"
 #include "useractions.h"
-
 namespace SL_GENERIC
 {
 template <class EventHandler_>

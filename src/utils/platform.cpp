@@ -1,15 +1,13 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "platform.h"
 
-#include <wx/string.h>
+#include <lslutils/misc.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
 #include <wx/log.h>
 #include <wx/stdpaths.h>
-#include <wx/filename.h>
-#include <wx/dir.h>
+#include <wx/string.h>
 #include <iostream>
-
-#include <lslutils/misc.h>
 
 #include "conversion.h"
 #include "gui/customdialogs.h"
@@ -107,11 +105,10 @@ bool MoveDirWithFilebackupRename(wxString from, wxString to, bool backup, bool s
 }
 
 #ifdef __WXMSW__
-#include <wx/msw/registry.h>
-#include <windows.h>
-#include <wx/msw/winundef.h>
 #include <shellapi.h>
-
+#include <windows.h>
+#include <wx/msw/registry.h>
+#include <wx/msw/winundef.h>
 bool IsPreVistaWindows()
 {
 	return wxPlatformInfo().GetOSMajorVersion() < 6;

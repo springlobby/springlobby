@@ -1,17 +1,19 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include "servermanager.h"
-#include "user.h"
-#include "serverselector.h"
-#include "iserver.h"
-#include "utils/conversion.h"
-#include "settings.h"
-#include "gui/ui.h"
-#include "gui/mainwindow.h"
+
+#include <wx/log.h>
+
 #include "gui/chatpanel.h"
 #include "gui/mainchattab.h"
+#include "gui/mainwindow.h"
+#include "gui/ui.h"
+#include "iserver.h"
+#include "serverselector.h"
+#include "settings.h"
+#include "user.h"
+#include "utils/conversion.h"
 #include "utils/slconfig.h"
-#include <wx/log.h>
 
 ServerManager::ServerManager()
 {

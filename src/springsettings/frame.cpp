@@ -1,29 +1,27 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
-#include <wx/notebook.h>
-#include <wx/menu.h>
-#include <wx/icon.h>
-
 #include "frame.h"
-#include "settings.h"
+
+#include <wx/icon.h>
+#include <wx/menu.h>
+#include <wx/notebook.h>
+
+//#include "hotkeys/hotkey_panel.h"
+#include "ctrlconstants.h"
+#include "gui/aboutbox.h"
+#include "gui/controls.h"
+#include "gui/customdialogs.h"
 #include "gui/mainwindow.h"
-#include "tab_render_detail.h"
-#include "tab_quality_video.h"
+#include "settings.h"
+#include "images/springsettings.xpm"
 #include "tab_abstract.h"
 #include "tab_audio.h"
-//#include "hotkeys/hotkey_panel.h"
-#include "tab_ui.h"
+#include "tab_quality_video.h"
+#include "tab_render_detail.h"
 #include "tab_simple.h"
-#include "ctrlconstants.h"
-#include "gui/customdialogs.h"
-#include "gui/controls.h"
-#include "images/springsettings.xpm"
+#include "tab_ui.h"
+#include "utils/conversion.h"
 #include "utils/platform.h"
 #include "utils/version.h"
-#include "utils/conversion.h"
-#include "gui/aboutbox.h"
-
-#include "gui/mainwindow.h"
 
 const wxString simpleTabCap = _("Combined Options");
 const wxString qualityTabCap = _("Render quality / Video mode");

@@ -1,5 +1,4 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "nickdataviewctrl.h"
 
 #include <wx/dataview.h>
@@ -11,13 +10,13 @@
 #include <wx/translation.h>
 #include <utility>
 
+#include "gui/chatpanelmenu.h"
+#include "gui/mainwindow.h"
+#include "gui/ui.h"
+#include "gui/usermenu.h"
+#include "nickdataviewmodel.h"
 #include "user.h"
 #include "utils/conversion.h"
-#include "nickdataviewmodel.h"
-#include "gui/ui.h"
-#include "gui/mainwindow.h"
-#include "gui/usermenu.h"
-#include "gui/chatpanelmenu.h"
 
 BEGIN_EVENT_TABLE(NickDataViewCtrl, BaseDataViewCtrl)
 EVT_DATAVIEW_ITEM_ACTIVATED(NICK_DATAVIEW_CTRL_ID, NickDataViewCtrl::OnItemActivatedEvent)

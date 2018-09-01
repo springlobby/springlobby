@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_TASKBAR_H
 
 #include <wx/panel.h>
-
 class wxTimer;
 class wxStaticText;
 class wxGauge;

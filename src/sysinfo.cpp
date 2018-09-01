@@ -1,17 +1,5 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include <string>
-#include <vector>
-#include <fstream>
-#include <wx/app.h>
-#include <wx/log.h>
-#include <wx/filename.h>
-#include <wx/string.h>
-#include "log.h"
-#include "utils/conversion.h"
-#include "utils/slpaths.h"
-#include "utils/version.h"
-
 #if defined(__unix__) || defined(__APPLE__)
 #include <unistd.h>
 #define WRITABLE W_OK
@@ -21,6 +9,19 @@
 #else
 #error "os not supported"
 #endif
+
+#include <wx/app.h>
+#include <wx/filename.h>
+#include <wx/log.h>
+#include <wx/string.h>
+#include <fstream>
+#include <string>
+#include <vector>
+
+#include "log.h"
+#include "utils/conversion.h"
+#include "utils/slpaths.h"
+#include "utils/version.h"
 
 
 inline std::string BtS(bool q, const std::string& yes = "yes", const std::string& no = "no")

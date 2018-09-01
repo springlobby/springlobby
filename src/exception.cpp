@@ -1,6 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "exception.h"
+
 #include <wx/log.h>
 
 Exception::Exception()

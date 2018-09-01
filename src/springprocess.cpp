@@ -10,13 +10,13 @@ lsl/spring/springprocess.cpp
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 **/
+#include "springprocess.h"
 
 #include <wx/log.h>
 
-#include "springprocess.h"
+#include "log.h"
 #include "spring.h"
 #include "utils/platform.h"
-#include "log.h"
 
 DEFINE_LOCAL_EVENT_TYPE(wxEVT_SPRING_EXIT)
 

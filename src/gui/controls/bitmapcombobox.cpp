@@ -4,7 +4,6 @@
  *  Created on: 18 ����� 2016 �.
  *      Author: ������
  */
-
 #include "bitmapcombobox.h"
 
 #include <wx/settings.h>

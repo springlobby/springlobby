@@ -5,7 +5,6 @@
 
 #include <wx/list.h>
 #include "ToasterBoxWindow.h"
-
 WX_DECLARE_LIST(ToasterBoxWindow, ToasterBoxWindowList);
 typedef ToasterBoxWindowList::compatibility_iterator
     ToasterBoxWindowListNode;

@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_SPRINGLOBBYAPP_H
 
 #include <wx/app.h>
-
 //! @brief SpringLobby wxApp
 class UpdaterApp : public wxApp
 {

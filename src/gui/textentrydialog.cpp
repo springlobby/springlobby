@@ -1,8 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "textentrydialog.h"
-#include <wx/stattext.h>
+
 #include <wx/sizer.h>
+#include <wx/stattext.h>
 #include <wx/textctrl.h>
 
 TextEntryDialog::TextEntryDialog(wxWindow* parent, const wxString& title, const wxString& heading, const wxString& answer, bool multiline)

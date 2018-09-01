@@ -1,8 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "battledataviewmodel.h"
 
 #include <wx/colour.h>
 
-#include "battledataviewmodel.h"
 #include "gui/iconscollection.h"
 #include "ibattle.h"
 #include "useractions.h"

@@ -1,10 +1,10 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "offlinebattle.h"
+
+#include <lslunitsync/unitsync.h>
 
 #include "spring.h"
-
 #include "utils/conversion.h"
-#include "offlinebattle.h"
-#include <lslunitsync/unitsync.h>
 
 OfflineBattle::OfflineBattle(const int id)
     : m_id(id)

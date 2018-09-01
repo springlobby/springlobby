@@ -10,28 +10,27 @@ lsl/battle/ibattle.cpp
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 **/
-
-
-#include <wx/tokenzr.h>
-#include <wx/log.h>
-
-#include <algorithm>
+#include "ibattle.h"
 
 #include <lslunitsync/unitsync.h>
 #include <lslutils/globalsmanager.h>
+#include <wx/filename.h>
+#include <wx/log.h>
+#include <wx/string.h>
+#include <wx/tokenzr.h>
+#include <algorithm>
 
-#include "utils/conversion.h"
-#include "utils/lslconversion.h"
-#include "utils/slpaths.h"
-#include "gui/uiutils.h"
 #include "gui/ui.h"
-#include "ibattle.h"
+#include "gui/uiutils.h"
 #include "iserver.h"
+#include "log.h"
+#include "serverselector.h"
 #include "settings.h"
 #include "spring.h"
 #include "springlobbyapp.h"
-#include "serverselector.h"
-#include "log.h"
+#include "utils/conversion.h"
+#include "utils/lslconversion.h"
+#include "utils/slpaths.h"
 
 #define MAX_TEAMS 255
 
@@ -93,7 +92,7 @@ bool IBattle::IsSynced()
 	return true;
 }
 
-std::vector<LSL::lslColor>& IBattle::GetFixColoursPalette(int numteams) const
+const std::vector<LSL::lslColor>& IBattle::GetFixColoursPalette(int numteams) const
 {
 	return GetBigFixColoursPalette(numteams);
 }
@@ -101,7 +100,7 @@ std::vector<LSL::lslColor>& IBattle::GetFixColoursPalette(int numteams) const
 LSL::lslColor IBattle::GetFixColour(int i) const
 {
 	int size = m_teams_sizes.size();
-	std::vector<LSL::lslColor> palette = GetFixColoursPalette(size);
+	const std::vector<LSL::lslColor>& palette = GetFixColoursPalette(size);
 	return palette[i];
 }
 
@@ -153,7 +152,7 @@ LSL::lslColor IBattle::GetFreeColour(User*) const
 
 	int inc = 1;
 	while (true) {
-		ColorVec fixcolourspalette = GetFixColoursPalette(m_teams_sizes.size() + inc++);
+		ColorVec fixcolourspalette (GetFixColoursPalette(m_teams_sizes.size() + inc++));
 
 		ColorVec::iterator fixcolourspalette_new_end = std::unique(fixcolourspalette.begin(), fixcolourspalette.end(), AreColoursSimilarProxy(20));
 
@@ -203,7 +202,7 @@ int IBattle::GetFreeTeam(bool excludeme) const
 
 int IBattle::GetClosestFixColour(const LSL::lslColor& col, const std::vector<int>& excludes, int difference) const
 {
-	std::vector<LSL::lslColor> palette = GetFixColoursPalette(m_teams_sizes.size() + 1);
+	const std::vector<LSL::lslColor>& palette = GetFixColoursPalette(m_teams_sizes.size() + 1);
 	int result = 0;
 	int t1 = palette.size();
 	int t2 = excludes.size();
@@ -694,9 +693,6 @@ UserPosition IBattle::GetFreePosition()
 void IBattle::SetHostMap(const std::string& mapname, const std::string& hash)
 {
 	assert(hash.empty() || LSL::Util::MakeHashUnsigned(hash) == hash);
-	if (mapname == m_host_map.name || hash == m_host_map.hash) {
-		return;
-	}
 	m_map_loaded = mapname.empty();
 	m_host_map.name = mapname;
 	m_host_map.hash = hash;
@@ -737,13 +733,13 @@ const LSL::UnitsyncMap& IBattle::LoadMap()
 }
 
 
-std::string IBattle::GetHostMapName() const
+const std::string& IBattle::GetHostMapName() const
 {
 	return m_host_map.name;
 }
 
 
-std::string IBattle::GetHostMapHash() const
+const std::string& IBattle::GetHostMapHash() const
 {
 	return m_host_map.hash;
 }
@@ -797,13 +793,13 @@ const LSL::UnitsyncGame& IBattle::LoadGame()
 }
 
 
-std::string IBattle::GetHostGameName() const
+const std::string& IBattle::GetHostGameName() const
 {
 	return m_host_game.name;
 }
 
 
-std::string IBattle::GetHostGameHash() const
+const std::string& IBattle::GetHostGameHash() const
 {
 	return m_host_game.hash;
 }
@@ -849,7 +845,7 @@ void IBattle::UnrestrictAllUnits()
 }
 
 
-std::map<std::string, int> IBattle::RestrictedUnits() const
+const std::map<std::string, int>& IBattle::GetRestrictedUnits() const
 {
 	return m_restricted_units;
 }
@@ -990,7 +986,7 @@ void IBattle::SaveOptionsPreset(const std::string& name)
 }
 
 
-std::string IBattle::GetCurrentPreset()
+const std::string& IBattle::GetCurrentPreset() const
 {
 	return m_preset;
 }
@@ -1014,6 +1010,13 @@ void IBattle::UserPositionChanged(const User& /*unused*/)
 {
 }
 
+void IBattle::SetPlayBackFilePath(const std::string& path)
+{
+	m_playback_file_path = path;
+	// I don't see any easier way of dealing with unicode.
+	m_playback_file_name = TowxString(path).AfterLast(wxFileName::GetPathSeparator());
+}
+
 void IBattle::AddUserFromDemo(User& user)
 {
 	user.BattleStatus().isfromdemo = true;
@@ -1031,7 +1034,7 @@ bool IBattle::IsProxy() const
 	return !m_opts.proxyhost.empty();
 }
 
-std::string IBattle::GetProxy() const
+const std::string& IBattle::GetProxy() const
 {
 	return m_opts.proxyhost;
 }

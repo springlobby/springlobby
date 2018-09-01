@@ -1,35 +1,32 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
-#include <wx/settings.h>
-#include <wx/listctrl.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/textctrl.h>
-#include <wx/radiobut.h>
-#include <wx/choice.h>
-#include <wx/intl.h>
-#include <wx/button.h>
-#include <wx/string.h>
+#include "mapselectdialog.h"
 
 #include <lslutils/globalsmanager.h>
 #include <lslutils/misc.h>
+#include <wx/button.h>
+#include <wx/choice.h>
+#include <wx/intl.h>
+#include <wx/listctrl.h>
+#include <wx/radiobut.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 
-#include "mapselectdialog.h"
-#include "mapgridctrl.h"
+#include "gui/controls.h"
 #include "ibattle.h"
 #include "iserver.h"
+#include "log.h"
+#include "mapgridctrl.h"
+#include "servermanager.h"
 #include "serverselector.h"
 #include "settings.h"
 #include "ui.h"
 #include "uiutils.h"
-#include "gui/controls.h"
 #include "utils/conversion.h"
-#include "utils/lslconversion.h"
 #include "utils/globalevents.h"
-#include "settings.h"
-#include "log.h"
-#include "servermanager.h"
-
+#include "utils/lslconversion.h"
 
 const long MapSelectDialog::ID_STATICTEXT2 = wxNewId();
 const long MapSelectDialog::ID_VERTICAL_CHOICE = wxNewId();
@@ -69,8 +66,8 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
 	StaticBoxSizer2->Add(m_filter_text, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer2->Add(StaticBoxSizer2, 0, wxALL | wxEXPAND, 5);
 	m_map_details = new wxStaticBoxSizer(wxVERTICAL, this, _("Map details"));
-	m_map_name = new wxStaticText(this, ID_MAP_NAME, wxEmptyString, wxDefaultPosition, wxSize(170, 90), wxST_NO_AUTORESIZE, _T("ID_MAP_NAME"));
-	m_map_name->SetLabel(wxEmptyString);
+	m_map_name = new wxTextCtrl(this, ID_MAP_NAME, wxEmptyString, wxDefaultPosition, wxSize(170, 90), wxTE_MULTILINE|wxTE_READONLY|wxNO_BORDER);
+	m_map_name->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENU));
 	m_map_details->Add(m_map_name, 0, wxTOP | wxLEFT | wxRIGHT | wxEXPAND, 5);
 	m_map_opts_list = new wxListCtrl(this, ID_MAP_OPTS_LIST, wxDefaultPosition, wxSize(170, 120), wxLC_REPORT | wxLC_NO_HEADER | wxNO_BORDER, wxDefaultValidator, _T("ID_MAP_OPTS_LIST"));
 	m_map_details->Add(m_map_opts_list, 1, wxBOTTOM | wxLEFT | wxRIGHT | wxEXPAND, 5);
@@ -232,7 +229,7 @@ void MapSelectDialog::OnMapSelected(wxCommandEvent& /*event*/)
 		return;
 	const LSL::UnitsyncMap& map = *pMap;
 
-	m_map_name->SetLabel(TowxString(map.name + "\n\n" + map.info.description));
+	m_map_name->ChangeValue(TowxString(map.name + "\n\n" + map.info.description));
 
 	// TODO: refactor, this is copied from battlemaptab.cpp
 	m_map_opts_list->SetItem(0, 1, wxString::Format(_T("%dx%d"), map.info.width / 512, map.info.height / 512));

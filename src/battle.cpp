@@ -3,32 +3,30 @@
 //
 // Class: Battle
 //
-
-#include <lslutils/misc.h>
-#include <lslutils/conversion.h>
 #include "battle.h"
 
-#include <wx/timer.h>
-#include <wx/image.h>
-#include <wx/string.h>
-#include <wx/log.h>
-#include <wx/filename.h>
+#include <lslutils/conversion.h>
+#include <lslutils/misc.h>
 #include <wx/file.h>
+#include <wx/filename.h>
+#include <wx/image.h>
+#include <wx/log.h>
+#include <wx/string.h>
+#include <wx/timer.h>
 
-#include "user.h"
-#include "utils/conversion.h"
-#include "utils/uievents.h"
-#include "gui/uiutils.h"
-#include "settings.h"
-#include "useractions.h"
-#include "gui/customdialogs.h"
-#include "iconimagelist.h"
-#include "spring.h"
-#include "utils/conversion.h"
 #include "autohostmanager.h"
-#include "log.h"
+#include "gui/customdialogs.h"
+#include "gui/uiutils.h"
+#include "iconimagelist.h"
 #include "iserver.h"
+#include "log.h"
+#include "settings.h"
+#include "spring.h"
+#include "user.h"
+#include "useractions.h"
+#include "utils/conversion.h"
 #include "utils/globalevents.h"
+#include "utils/uievents.h"
 
 const unsigned int TIMER_INTERVAL = 1000;
 const unsigned int TIMER_ID = wxNewId();
@@ -682,7 +680,7 @@ void Battle::FixColours()
 {
 	if (!IsFounderMe())
 		return;
-	std::vector<LSL::lslColor>& palette = GetFixColoursPalette(m_teams_sizes.size() + 1);
+	const std::vector<LSL::lslColor>& palette = GetFixColoursPalette(m_teams_sizes.size() + 1);
 	std::vector<int> palette_use(palette.size(), 0);
 
 	LSL::lslColor my_col = GetMe().BattleStatus().colour; // Never changes color of founder (me) :-)
@@ -1111,7 +1109,7 @@ void Battle::ShouldAutoUnspec()
 {
 	if (m_auto_unspec && !IsLocked() && GetMe().BattleStatus().spectator) {
 		unsigned int numplayers = 0;
-		std::map<int, int> allysizes = GetAllySizes();
+		const std::map<int, int>& allysizes = GetAllySizes();
 		for (std::map<int, int>::const_iterator itor = allysizes.begin(); itor != allysizes.end(); ++itor) {
 			numplayers += itor->second;
 		}

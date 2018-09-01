@@ -1,38 +1,37 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "playbacktab.h"
 
-#include <wx/intl.h>
-#include <wx/stattext.h>
-#include <wx/statline.h>
-#include <wx/textdlg.h>
-#include <wx/combobox.h>
 #include <wx/button.h>
-#include <wx/sizer.h>
 #include <wx/checkbox.h>
+#include <wx/combobox.h>
 #include <wx/filename.h>
+#include <wx/intl.h>
 #include <wx/log.h>
+#include <wx/sizer.h>
+#include <wx/statline.h>
+#include <wx/stattext.h>
+#include <wx/textdlg.h>
 #if wxUSE_TOGGLEBTN
 #include <wx/tglbtn.h>
 #endif
 
-#include "playbacktab.h"
-#include "replaylist.h"
-#include "playbackthread.h"
-#include "gui/ui.h"
+#include "exception.h"
 #include "gui/chatpanel.h"
-#include "gui/uiutils.h"
-#include "utils/slconfig.h"
+#include "gui/customdialogs.h"
+#include "gui/hosting/battleroomdataviewctrl.h"
 #include "gui/mapctrl.h"
-#include "playbackfilter.h"
+#include "gui/ui.h"
+#include "gui/uiutils.h"
 #include "iconimagelist.h"
+#include "log.h"
+#include "playbackdataview.h"
+#include "playbackfilter.h"
+#include "playbackthread.h"
+#include "replaylist.h"
 #include "storedgame.h"
 #include "utils/conversion.h"
 #include "utils/globalevents.h"
-
-#include "gui/customdialogs.h"
-#include "gui/hosting/battleroomdataviewctrl.h"
-#include "log.h"
-#include "playbackdataview.h"
-#include "exception.h"
+#include "utils/slconfig.h"
 
 BEGIN_EVENT_TABLE(PlaybackTab, wxPanel)
 

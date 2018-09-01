@@ -1,10 +1,11 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "offlineserver.h"
-#include "serverevents.h"
-#include "utils/tasutil.h"
-#include "utils/conversion.h"
+
 #include <wx/log.h>
+
+#include "serverevents.h"
+#include "utils/conversion.h"
+#include "utils/tasutil.h"
 
 OfflineServer::OfflineServer()
     : TASServer::TASServer()

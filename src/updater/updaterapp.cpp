@@ -3,13 +3,13 @@
 //
 // Class: UpdaterApp
 //
+#include "updaterapp.h"
 
-#include <wx/intl.h>
 #include <wx/cmdline.h>
 #include <wx/filename.h>
+#include <wx/intl.h>
 #include <wx/msgdlg.h>
 
-#include "updaterapp.h"
 #include "utils/platform.h"
 
 IMPLEMENT_APP(UpdaterApp)

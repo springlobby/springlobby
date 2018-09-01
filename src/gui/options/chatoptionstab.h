@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_CHATOPTIONSTAB_H
 
 #include <wx/scrolwin.h>
-
 class wxStaticBoxSizer;
 class wxStaticBox;
 class wxStaticText;

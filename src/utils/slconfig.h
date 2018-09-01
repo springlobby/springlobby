@@ -3,10 +3,9 @@
 #ifndef SLCONFIG_H
 #define SLCONFIG_H
 
-#include "utils/mixins.h"
 #include <wx/fileconf.h>
 #include <map>
-
+#include "utils/mixins.h"
 // helper macros to expand __LINE__
 #define SLCONFIG__PASTE(a, b) a##b
 #define SLCONFIG_PASTE(a, b) SLCONFIG__PASTE(a, b)

@@ -1,21 +1,19 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "notificationmanager.h"
 
+#include <lslutils/globalsmanager.h>
 #include <wx/bitmap.h>
 
-#include <lslutils/globalsmanager.h>
-#include "gui/uiutils.h"
-#include "gui/ui.h"
-#include "utils/slconfig.h"
-#include "utils/globalevents.h"
-#include "settings.h"
-#include "spring.h"
 #include "gui/mainwindow.h"
-#include "inotification.h"
-#include "sound/alsound.h"
-
+#include "gui/ui.h"
+#include "gui/uiutils.h"
 #include "images/springlobby_64.png.h"
+#include "inotification.h"
+#include "settings.h"
+#include "sound/alsound.h"
+#include "spring.h"
+#include "utils/globalevents.h"
+#include "utils/slconfig.h"
 
 #ifdef HAVE_LIBNOTIFY
 #include "libnotify.h"

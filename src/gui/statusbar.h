@@ -5,7 +5,6 @@
 
 #include <wx/statusbr.h>
 #include "utils/uievents.h"
-
 class TaskBar;
 
 class Statusbar : public wxStatusBar

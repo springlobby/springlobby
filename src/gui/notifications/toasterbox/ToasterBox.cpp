@@ -9,15 +9,14 @@
 // Description: Creates MSN "Toaster" style popups.
 // Version 1.0rc
 //---------------------------------------------------------------------------
-
 #include "ToasterBox.h"
 
-#include <wx/dialog.h>
-#include <wx/utils.h>
-#include <wx/string.h>
 #include <wx/bitmap.h>
-#include <wx/timer.h>
+#include <wx/dialog.h>
 #include <wx/log.h>
+#include <wx/string.h>
+#include <wx/timer.h>
+#include <wx/utils.h>
 
 #include "utils/uievents.h"
 

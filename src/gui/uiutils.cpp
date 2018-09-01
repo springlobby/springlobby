@@ -1,30 +1,27 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 /// \file uiutils.cpp
+#include "uiutils.h"
 
-#include <wx/colour.h>
-#include <wx/image.h>
-#include <wx/mstream.h>
+#include <lslutils/misc.h>
 #include <wx/bitmap.h>
-#include <wx/log.h>
-#include <wx/image.h>
-#include <wx/icon.h>
 #include <wx/clipbrd.h>
 #include <wx/cmndata.h>
 #include <wx/colordlg.h>
+#include <wx/colour.h>
 #include <wx/dataobj.h>
-
-#include <cmath>
+#include <wx/icon.h>
+#include <wx/image.h>
+#include <wx/log.h>
+#include <wx/mstream.h>
 #include <clocale>
+#include <cmath>
 
-#include <lslutils/misc.h>
-
-#include "uiutils.h"
-#include "utils/conversion.h"
 #include "gui/customdialogs.h"
-#include "settings.h"
-#include "log.h"
 #include "images/colourbox.xpm"
+#include "log.h"
+#include "settings.h"
+#include "utils/conversion.h"
 
 bool AreColoursSimilar(const LSL::lslColor& col1, const LSL::lslColor& col2, int mindiff)
 {

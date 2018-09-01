@@ -1,13 +1,12 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "flagimages.h"
-#include "flagimagedata.h"
 
 #include <wx/bitmap.h>
 #include <wx/imaglist.h>
 #include <wx/log.h>
-
 #include <map>
+
+#include "flagimagedata.h"
 
 typedef std::map<std::string, int> NameToPosMap;
 static NameToPosMap m_name_to_pos;

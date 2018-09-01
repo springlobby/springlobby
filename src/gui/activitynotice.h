@@ -3,12 +3,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_ACTIVITYNOTICE_H
 #define SPRINGLOBBY_HEADERGUARD_ACTIVITYNOTICE_H
 
-#include <memory>
-
+#include <wx/dialog.h>
 #include <wx/panel.h>
 #include <wx/timer.h>
-#include <wx/dialog.h>
-
+#include <memory>
 #ifdef __WXMSW__
 #include <wx/gauge.h> //cannot forward this cause msw mixes up the types otherwise
 #else
@@ -16,7 +14,6 @@ class wxGauge;
 #endif
 
 #include "utils/mixins.h"
-
 class wxStaticText;
 
 class ActivityNoticePanel : public wxPanel, public SL::NonCopyable

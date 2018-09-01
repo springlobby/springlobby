@@ -1,31 +1,30 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "selectusersdialog.h"
 
-#include <wx/string.h>
-#include <wx/stattext.h>
-#include <wx/gdicmn.h>
-#include <wx/font.h>
+#include <wx/button.h>
 #include <wx/colour.h>
-#include <wx/settings.h>
-#include <wx/textctrl.h>
-#include <wx/sizer.h>
+#include <wx/font.h>
+#include <wx/gdicmn.h>
 #include <wx/listctrl.h>
 #include <wx/panel.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
 #include <wx/statline.h>
-#include <wx/button.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 #include <wx/tokenzr.h>
 #include <wx/wupdlock.h>
 
 #include "iconimagelist.h"
-#include "ui.h"
-#include "userlist.h"
 #include "iserver.h"
-#include "serverselector.h"
-#include "user.h"
-#include "utils/conversion.h"
-#include "useractions.h"
 #include "servermanager.h"
+#include "serverselector.h"
+#include "ui.h"
+#include "user.h"
+#include "useractions.h"
+#include "userlist.h"
+#include "utils/conversion.h"
 
 BEGIN_EVENT_TABLE(SelectUsersDialog, wxDialog)
 EVT_TEXT(FILTER_TEXT, SelectUsersDialog::OnNameFilterChange)

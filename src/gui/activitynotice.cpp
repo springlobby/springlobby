@@ -1,10 +1,9 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "activitynotice.h"
 
+#include <wx/app.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
-#include <wx/app.h>
 #ifndef __WXMSW__
 #include <wx/gauge.h> //cannot forward this cause msw mixes up the types otherwise
 #endif

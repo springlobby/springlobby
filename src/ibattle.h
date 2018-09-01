@@ -214,11 +214,11 @@ public:
 	virtual void SetHostMap(const std::string& mapname, const std::string& hash);
 	virtual void SetLocalMap(const std::string& mapname);
 	virtual const LSL::UnitsyncMap& LoadMap();
-	virtual std::string GetHostMapName() const;
-	virtual std::string GetHostMapHash() const;
+	virtual const std::string& GetHostMapName() const;
+	virtual const std::string& GetHostMapHash() const;
 
 	virtual void SetProxy(const std::string& proxyhost);
-	virtual std::string GetProxy() const;
+	virtual const std::string& GetProxy() const;
 	virtual bool IsProxy() const;
 
 	virtual bool IsSynced(); //cannot be const
@@ -229,8 +229,8 @@ public:
 	virtual void SetHostGame(const std::string& gamename, const std::string& hash);
 	virtual void SetLocalGame(const LSL::UnitsyncGame& game);
 	virtual const LSL::UnitsyncGame& LoadGame();
-	virtual std::string GetHostGameName() const;
-	virtual std::string GetHostGameHash() const;
+	virtual const std::string& GetHostGameName() const;
+	virtual const std::string& GetHostGameHash() const;
 
 	virtual bool MapExists(bool comparehash = true) const;
 	virtual bool GameExists(bool comparehash = true) const;
@@ -287,7 +287,7 @@ public:
 	virtual void RestrictUnit(const std::string& unitname, int count = 0);
 	virtual void UnrestrictUnit(const std::string& unitname);
 	virtual void UnrestrictAllUnits();
-	virtual std::map<std::string, int> RestrictedUnits() const;
+	virtual const std::map<std::string, int>& GetRestrictedUnits() const;
 
 	virtual LSL::OptionsWrapper& CustomBattleOptions()
 	{
@@ -300,11 +300,11 @@ public:
 
 	virtual bool LoadOptionsPreset(const std::string& name);
 	virtual void SaveOptionsPreset(const std::string& name);
-	virtual std::string GetCurrentPreset();
+	virtual const std::string& GetCurrentPreset() const;
 	virtual void DeletePreset(const std::string& name);
 	virtual LSL::StringVector GetPresetList();
 
-	virtual std::vector<LSL::lslColor>& GetFixColoursPalette(int numteams) const;
+	virtual const std::vector<LSL::lslColor>& GetFixColoursPalette(int numteams) const;
 	virtual int GetClosestFixColour(const LSL::lslColor& col, const std::vector<int>& excludes, int difference) const;
 	virtual LSL::lslColor GetFixColour(int i) const;
 	virtual LSL::lslColor GetFreeColour(User& for_whom) const;
@@ -359,7 +359,7 @@ public:
 	{
 		m_opts.battletype = type;
 	}
-	virtual BattleType GetBattleType()
+	virtual const BattleType& GetBattleType() const
 	{
 		return m_opts.battletype;
 	}
@@ -385,7 +385,7 @@ public:
 	{
 		m_opts.nattype = nattype;
 	}
-	virtual NatType GetNatType() const
+	virtual const NatType& GetNatType() const
 	{
 		return m_opts.nattype;
 	}
@@ -424,7 +424,7 @@ public:
 	{
 		m_opts.ip = ip;
 	}
-	virtual std::string GetHostIp() const
+	virtual const std::string& GetHostIp() const
 	{
 		return m_opts.ip;
 	}
@@ -461,7 +461,7 @@ public:
 	{
 		m_opts.description = desc;
 	}
-	virtual std::string GetDescription() const
+	virtual const std::string& GetDescription() const
 	{
 		return m_opts.description;
 	}
@@ -535,18 +535,19 @@ public:
 	{
 		m_script.clear();
 	}
-	virtual std::string GetScript() const
+	virtual const std::string& GetScript() const
 	{
 		return m_script;
 	}
 
-	virtual void SetPlayBackFilePath(const std::string& path)
-	{
-		m_playback_file_path = path;
-	}
-	virtual std::string GetPlayBackFilePath() const
+	virtual void SetPlayBackFilePath(const std::string& path);
+	virtual const std::string& GetPlayBackFilePath() const
 	{
 		return m_playback_file_path;
+	}
+	virtual const std::string& GetPlayBackFileName() const
+	{
+		return m_playback_file_name;
 	}
 
 	virtual void AddUserFromDemo(User& user);
@@ -557,11 +558,11 @@ public:
 
 	virtual void StartSpring() = 0;
 
-	virtual std::map<int, int> GetAllySizes()
+	virtual const std::map<int, int>& GetAllySizes() const
 	{
 		return m_ally_sizes;
 	}
-	virtual std::map<int, int> GetTeamSizes()
+	virtual const std::map<int, int>& GetTeamSizes() const
 	{
 		return m_teams_sizes;
 	}
@@ -581,11 +582,11 @@ public:
 	{
 		m_opts.engineVersion = version;
 	}
-	virtual std::string GetEngineName() const
+	virtual const std::string& GetEngineName() const
 	{
 		return m_opts.engineName;
 	}
-	virtual std::string GetEngineVersion() const
+	virtual const std::string& GetEngineVersion() const
 	{
 		return m_opts.engineVersion;
 	}
@@ -734,6 +735,7 @@ private:
 
 	/// replay&savegame stuff
 	std::string m_script;
+	std::string m_playback_file_name;
 	std::string m_playback_file_path;
 
 	TeamVec m_parsed_teams;

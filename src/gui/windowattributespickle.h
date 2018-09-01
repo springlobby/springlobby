@@ -6,7 +6,6 @@
 #include <wx/string.h>
 #include <wx/toplevel.h>
 #include "utils/mixins.h"
-
 class wxSize;
 //! automagically load/save window size and position in ctor/dtor
 class WindowAttributesPickle : public SL::NonCopyable

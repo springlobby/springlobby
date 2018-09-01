@@ -1,20 +1,19 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "pastedialog.h"
 
-#include <wx/icon.h>
-#include <wx/string.h>
-#include <wx/frame.h>
-#include <wx/defs.h>
-#include <wx/sizer.h>
-#include <wx/button.h>
-#include <wx/stattext.h>
 #include <wx/artprov.h>
-#include <wx/statbmp.h>
+#include <wx/button.h>
+#include <wx/defs.h>
+#include <wx/frame.h>
+#include <wx/icon.h>
 #include <wx/listctrl.h>
+#include <wx/sizer.h>
+#include <wx/statbmp.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
 
-#include "utils/conversion.h"
 #include "gui/iconscollection.h"
+#include "utils/conversion.h"
 
 //in < 29 this is defined in wxDialogBase, which seems to have disappeared
 enum { ButtonSizerFlags = wxOK | wxCANCEL | wxYES | wxNO | wxHELP | wxNO_DEFAULT };

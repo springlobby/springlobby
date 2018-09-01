@@ -1,31 +1,30 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "slpaths.h"
-#include <wx/string.h>
-#include <wx/stdpaths.h>
-#include <wx/dir.h>
-#include <wx/log.h>
+
 #ifndef TESTS
 #include <lslunitsync/unitsync.h>
 #include <lslutils/config.h>
 #include <lslutils/conversion.h>
 #endif
+
 #include <lslutils/misc.h>
-
-#include "utils/slconfig.h"
-#include "downloader/lib/src/FileSystem/FileSystem.h"
-
-#include "platform.h"
-#include "conversion.h"
-#include "utils/version.h"
-#include "log.h"
+#include <wx/dir.h>
+#include <wx/log.h>
+#include <wx/stdpaths.h>
+#include <wx/string.h>
 #include <algorithm>
 
-
 #ifdef WIN32
-#include <windows.h>
 #include <shlobj.h>
+#include <windows.h>
 #endif
+
+#include "conversion.h"
+#include "downloader/lib/src/FileSystem/FileSystem.h"
+#include "log.h"
+#include "platform.h"
+#include "utils/slconfig.h"
+#include "utils/version.h"
 
 std::string SlPaths::m_user_defined_config_path = "";
 

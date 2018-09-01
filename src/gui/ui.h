@@ -15,11 +15,10 @@ class ChatPanel;
 class HttpDownloaderThread;
 class wxEvtHandler;
 
-#include "downloader/prdownloader.h"
 #include <wx/string.h>
 #include <wx/timer.h>
+#include "downloader/prdownloader.h"
 #include "utils/mixins.h"
-
 //! @brief UI main class
 class Ui : public wxTimer, public SL::NonCopyable
 {

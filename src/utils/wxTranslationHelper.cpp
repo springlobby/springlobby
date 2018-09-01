@@ -1,14 +1,14 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "wxTranslationHelper.h"
+
 #include <wx/dir.h>
 #include <wx/filename.h>
-#include <wx/log.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 
-#include "utils/slconfig.h"
-#include "utils/conversion.h"
 #include "gui/customdialogs.h"
+#include "utils/conversion.h"
+#include "utils/slconfig.h"
 
 SLCONFIG("/General/LanguageID", (long)wxLANGUAGE_DEFAULT, "Language ID");
 

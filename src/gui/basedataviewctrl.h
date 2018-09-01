@@ -3,16 +3,12 @@
 #ifndef SRC_GUI_BASEDATAVIEWCTRL_H_
 #define SRC_GUI_BASEDATAVIEWCTRL_H_
 
-#include <vector>
-
 #include <wx/dataview.h>
-
+#include <vector>
 #include "basedataviewmodel.h"
 #include "dataviewvtrlheadermenu.h"
-
 #include "settings.h"
 #include "utils/slconfig.h"
-
 template <class DataType>
 class BaseDataViewCtrl : public wxDataViewCtrl
 {

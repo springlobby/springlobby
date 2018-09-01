@@ -1,12 +1,10 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "conversion.h"
 
 #include <wx/arrstr.h>
 #include <wx/tokenzr.h>
-#include <sstream>
 #include <algorithm>
-
+#include <sstream>
 #if defined(__WIN32__) || defined(_MSC_VER)
 #include <windows.h>
 #endif
@@ -49,11 +47,11 @@ wxString TowxString(int arg)
 
 long FromwxString(const wxString& arg)
 {
-	std::stringstream s;
-	s << STD_STRING(arg);
-	int64_t ret = 0l;
-	s >> ret;
-	return ret;
+	long ret;
+	if (arg.ToCLong(&ret))
+		return ret;
+	else
+		return 0;
 }
 
 

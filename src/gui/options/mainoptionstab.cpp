@@ -3,39 +3,34 @@
 //
 // Class: MainOptionsTab
 //
-
 #include "mainoptionstab.h"
 
-#include <wx/icon.h>
-#include <wx/intl.h>
-#include <wx/notebook.h>
-#include <wx/imaglist.h>
 #include <wx/button.h>
-#include <wx/sizer.h>
+#include <wx/icon.h>
+#include <wx/imaglist.h>
+#include <wx/intl.h>
 #include <wx/log.h>
+#include <wx/notebook.h>
+#include <wx/sizer.h>
 
 #include "aui/auimanager.h"
-#include "gui/slbook.h"
-
-#include "springoptionstab.h"
 #include "chatoptionstab.h"
-#include "groupoptionspanel.h"
 #include "downloadoptionspanel.h"
-#include "lobbyoptionstab.h"
-
-#include "settings.h"
-#include "gui/uiutils.h"
+#include "groupoptionspanel.h"
 #include "gui/controls.h"
-#include "utils/conversion.h"
-#include "utils/version.h"
-#include "log.h"
-#include "utils/globalevents.h"
-
-#include "images/torrentoptionspanel_icon.png.h"
+#include "gui/slbook.h"
+#include "gui/uiutils.h"
 #include "images/spring.xpm"
-#include "images/userchat.xpm"
 #include "images/springlobby12x12.xpm"
-
+#include "images/torrentoptionspanel_icon.png.h"
+#include "images/userchat.xpm"
+#include "lobbyoptionstab.h"
+#include "log.h"
+#include "settings.h"
+#include "springoptionstab.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "utils/version.h"
 
 BEGIN_EVENT_TABLE(MainOptionsTab, wxPanel)
 

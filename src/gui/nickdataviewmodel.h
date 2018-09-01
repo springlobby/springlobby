@@ -4,7 +4,6 @@
 #define SRC_GUI_NICKDATAVIEWMODEL_H_
 
 #include "basedataviewmodel.h"
-
 class User;
 
 class NickDataViewModel : public BaseDataViewModel<User>

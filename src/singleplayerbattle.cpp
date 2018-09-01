@@ -1,17 +1,18 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include <stdexcept>
-#include <wx/log.h>
-
 #include "singleplayerbattle.h"
+
+#include <lslutils/conversion.h>
+#include <wx/log.h>
+#include <stdexcept>
+
 #include "gui/hosting/mainsingleplayertab.h"
 #include "iserver.h"
-#include "utils/slconfig.h"
 #include "settings.h"
 #include "spring.h"
-#include <lslutils/conversion.h>
 #include "utils/conversion.h"
 #include "utils/lslconversion.h"
+#include "utils/slconfig.h"
 
 SLCONFIG("/Spring/DefaultName", "Player", "playername for singleplayer battles");
 

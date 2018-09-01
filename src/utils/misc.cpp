@@ -1,15 +1,14 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "misc.h"
 
 #include <lslutils/misc.h>
-#include "settings.h"
-#include "conversion.h"
-
-#include <wx/string.h>
 #include <wx/arrstr.h>
 #include <wx/log.h>
+#include <wx/string.h>
 #include <vector>
+
+#include "conversion.h"
+#include "settings.h"
 
 double LevenshteinDistance(const wxString& _s, const wxString& _t)
 {

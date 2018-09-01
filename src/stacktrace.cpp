@@ -2,10 +2,9 @@
 //
 // Class: StackTrace
 //
-
 #include "stacktrace.h"
-#if wxUSE_STACKWALKER
 
+#if wxUSE_STACKWALKER
 #include "utils/conversion.h"
 
 void StackTrace::OnStackFrame(const wxStackFrame& frame)

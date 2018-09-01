@@ -5,7 +5,6 @@
 
 #include <wx/aui/aui.h>
 #include "utils/mixins.h"
-
 class ChatPanelMenu;
 
 /** \brief wxAuiNotebook derived class that allows child page layouts to be saved/loaded at runtime

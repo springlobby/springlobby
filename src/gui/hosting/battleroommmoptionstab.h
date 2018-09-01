@@ -3,10 +3,9 @@
 #ifndef BATTLEROOMMMOPTIONSTAB_H_
 #define BATTLEROOMMMOPTIONSTAB_H_
 
+#include <lslunitsync/enum.h>
 #include <wx/scrolwin.h>
 #include <map>
-#include <lslunitsync/enum.h>
-
 const int BOOL_START_ID = 3000;
 const int FLOAT_START_ID = 4000;
 const int LIST_START_ID = 5000;

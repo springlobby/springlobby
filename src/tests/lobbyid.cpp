@@ -1,11 +1,11 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #define BOOST_TEST_MODULE lobbyid
-#include <boost/test/unit_test.hpp>
 
+#include <boost/test/unit_test.hpp>
 #include <stdio.h>
-#include "utils/crc.h"
+
 #include "address.h"
+#include "utils/crc.h"
 
 BOOST_AUTO_TEST_CASE(lobbyid)
 {

@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_PLAYBACKFILTER_H_INCLUDED
 
 #include <wx/panel.h>
-
 ///////////////////////////////////////////////////////////////////////////
 
 class wxToggleButton;
@@ -16,6 +15,7 @@ class wxButton;
 class wxRegEx;
 class wxStaticText;
 class PlaybackTab;
+class StoredGame;
 
 /** \brief The panel contained in BattleListTab used to filter for diff info of battles
  * \todo DOCMEMORE */

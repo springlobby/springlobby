@@ -1,4 +1,5 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "battlelistfilter.h"
 
 #include <wx/button.h>
 #include <wx/checkbox.h>
@@ -13,16 +14,10 @@
 #include <wx/textctrl.h>
 
 #include "aui/auimanager.h"
-#include "battlelistfilter.h"
 #include "battlelistfiltervalues.h"
 #include "gui/controls/bitmapcombobox.h"
 #include "gui/uiutils.h"
 #include "ibattle.h"
-#include "useractions.h"
-#include "utils/conversion.h"
-#include "utils/slconfig.h"
-#include "utils/tasutil.h"
-
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"
 #include "images/rank2.xpm"
@@ -31,6 +26,10 @@
 #include "images/rank5.xpm"
 #include "images/rank6.xpm"
 #include "images/rank7.xpm"
+#include "useractions.h"
+#include "utils/conversion.h"
+#include "utils/slconfig.h"
+#include "utils/tasutil.h"
 
 BEGIN_EVENT_TABLE(BattleListFilter, wxPanel)
 

@@ -3,13 +3,11 @@
 #ifndef SPRINGLOBBY_SLPATHS_H
 #define SPRINGLOBBY_SLPATHS_H
 
+#include <lslunitsync/springbundle.h>
+#include <wx/filename.h>
+#include <cstddef>
 #include <map>
 #include <vector>
-#include <cstddef>
-#include <wx/filename.h>
-
-#include <lslunitsync/springbundle.h>
-
 //! Interface for accessing paths for different files
 // like configuration, logs ...
 //

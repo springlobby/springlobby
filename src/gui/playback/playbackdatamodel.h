@@ -5,7 +5,6 @@
 
 #include <wx/dataview.h>
 #include "gui/basedataviewmodel.h"
-
 struct StoredGame;
 
 class PlaybackDataModel : public BaseDataViewModel<StoredGame>
@@ -14,8 +13,10 @@ public:
 	PlaybackDataModel();
 	virtual ~PlaybackDataModel();
 
+	virtual int Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB, unsigned int column, bool ascending) const override;
 	virtual void GetValue(wxVariant& variant, const wxDataViewItem& item, unsigned int col) const override;
 	virtual wxString GetColumnType(unsigned int columnt) const override;
+	virtual bool HasDefaultCompare() const override { return true; }
 
 private:
 	enum ColumnIndexes {

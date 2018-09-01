@@ -5,7 +5,6 @@
 
 #include <wx/dialog.h>
 #include "gui/windowattributespickle.h"
-
 class ChannelChooserPanel;
 class wxBoxSizer;
 

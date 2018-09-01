@@ -4,9 +4,9 @@
  *  Created on: 22 ���� 2015 �.
  *      Author: ������
  */
-#include <wx/dataview.h>
-
 #include "dataviewvtrlheadermenu.h"
+
+#include <wx/dataview.h>
 
 DataViewCtrlHeaderMenu::DataViewCtrlHeaderMenu(wxDataViewCtrl* parent, int column)
     : wxMenu()

@@ -5,7 +5,6 @@
 
 #include <assert.h>
 #include "utils/mixins.h"
-
 #ifndef my_assert
 #define my_assert(x) assert(x)
 #endif

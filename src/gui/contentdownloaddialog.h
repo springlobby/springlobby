@@ -3,11 +3,9 @@
 #ifndef CONTENTDOWNLOADDIALOG_H
 #define CONTENTDOWNLOADDIALOG_H
 
-#include "windowattributespickle.h"
-
 #include <wx/dialog.h>
 #include <wx/listbase.h>
-
+#include "windowattributespickle.h"
 class wxBoxSizer;
 class wxStaticText;
 class wxButton;

@@ -3,8 +3,6 @@
 #ifndef BATTLEROOMDOWNLOADS_H
 #define BATTLEROOMDOWNLOADS_H
 #include <wx/panel.h>
-
-
 class wxGauge;
 class wxStaticText;
 class ObserverDownloadInfo;

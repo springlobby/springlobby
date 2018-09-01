@@ -1,19 +1,19 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "taskbar.h"
-#include "utils/conversion.h"
-#include "utils/globalevents.h"
+
+#include <wx/artprov.h>
+#include <wx/colour.h>
+#include <wx/event.h>
+#include <wx/gauge.h>
+#include <wx/sizer.h>
+#include <wx/statbmp.h>
+#include <wx/stattext.h>
+#include <wx/timer.h>
+
 #include "downloader/prdownloader.h"
 #include "log.h"
-
-#include <wx/colour.h>
-#include <wx/statbmp.h>
-#include <wx/artprov.h>
-#include <wx/sizer.h>
-#include <wx/gauge.h>
-#include <wx/stattext.h>
-#include <wx/event.h>
-#include <wx/timer.h>
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
 
 const unsigned int TIMER_INTERVAL = 5000;
 const unsigned int TIMER_ID = wxNewId();

@@ -3,9 +3,8 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 #define SPRINGLOBBY_HEADERGUARD_PLATFORM_H
 
-#include <wx/string.h>
 #include <wx/arrstr.h>
-
+#include <wx/string.h>
 /**
     let origin be /path/to/some/dir and destination /some/other/path
     this will copy dir (and everything below that recursively to /some/other/path/dir

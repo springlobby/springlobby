@@ -1,17 +1,14 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #define BOOST_TEST_MODULE slconfig
 
 #include <boost/test/unit_test.hpp>
-
-#include "testingstuff/silent_logger.h"
-
-#include "chatlog.h"
-
-#include <wx/string.h>
+#include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/log.h>
-#include <wx/filefn.h>
+#include <wx/string.h>
+
+#include "chatlog.h"
+#include "testingstuff/silent_logger.h"
 
 struct TestInitializer
 {

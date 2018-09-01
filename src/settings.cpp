@@ -6,31 +6,29 @@
 
 #include "settings.h"
 
-#include "utils/wxTranslationHelper.h"
-#include "utils/slconfig.h"
-
-#include <wx/filename.h>
-#include <wx/filefn.h>
-#include <wx/intl.h>
-#include <wx/stdpaths.h>
-#include <wx/filename.h>
-#include <wx/colour.h>
-#include <wx/cmndata.h>
-#include <wx/font.h>
-#include <wx/log.h>
-#include <wx/wfstream.h>
-#include <wx/settings.h>
-#include <wx/tokenzr.h>
-#include <wx/colourdata.h>
-#include <set>
-#include <cstdlib>
 #include <lslutils/globalsmanager.h>
+#include <wx/cmndata.h>
+#include <wx/colour.h>
+#include <wx/colourdata.h>
+#include <wx/filefn.h>
+#include <wx/filename.h>
+#include <wx/font.h>
+#include <wx/intl.h>
+#include <wx/log.h>
+#include <wx/settings.h>
+#include <wx/stdpaths.h>
+#include <wx/tokenzr.h>
+#include <wx/wfstream.h>
+#include <cstdlib>
+#include <set>
 
-#include "utils/conversion.h"
-#include "utils/platform.h"
-#include "utils/slpaths.h"
 #include "playbackfiltervalues.h"
 #include "springsettings/presets.h"
+#include "utils/conversion.h"
+#include "utils/platform.h"
+#include "utils/slconfig.h"
+#include "utils/slpaths.h"
+#include "utils/wxTranslationHelper.h"
 
 const wxChar sep = wxFileName::GetPathSeparator();
 const wxString sepstring = wxString(sep);

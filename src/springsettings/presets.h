@@ -2,9 +2,9 @@
 
 #ifndef SETTINGS_PRESETS_H_
 #define SETTINGS_PRESETS_H_
+#include <wx/intl.h>
 #include <map>
 #include <string>
-#include <wx/intl.h>
 /** \brief Presets for tab_simple go here
  * presets are only used for performance relevant (render detail + AA) settings
  * and screen resolutions

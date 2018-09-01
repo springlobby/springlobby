@@ -1,12 +1,11 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "nickdataviewmodel.h"
 
 #include <wx/dataview.h>
 
 #include "ibattle.h"
-#include "user.h"
 #include "iconscollection.h"
+#include "user.h"
 #include "useractions.h"
 
 NickDataViewModel::NickDataViewModel()

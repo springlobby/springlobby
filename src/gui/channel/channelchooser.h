@@ -5,7 +5,6 @@
 
 #include <wx/scrolwin.h>
 #include "utils/mixins.h"
-
 class ChannelListView;
 class wxBoxSizer;
 class wxButton;

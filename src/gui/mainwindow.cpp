@@ -3,79 +3,73 @@
 //
 // Class: MainWindow
 //
-
-#include <wx/frame.h>
-#include <wx/textdlg.h>
-#include <wx/imaglist.h>
-#include <wx/image.h>
-#include <wx/icon.h>
-#include <wx/sizer.h>
-#include <wx/menu.h>
-#include <wx/log.h>
-#include <wx/dcmemory.h>
-#include <wx/choicdlg.h>
-#include <wx/wupdlock.h>
-#include <wx/aui/auibook.h>
-#include <wx/tooltip.h>
-
-#include <stdexcept>
-#include <iostream>
-
-#include "aboutbox.h"
-#include "aui/auimanager.h"
-#include "gui/slbook.h"
-#include "gui/statusbar.h"
-#include "springlobbyapp.h"
 #include "mainwindow.h"
-#include "settings.h"
-#include "iserver.h"
-#include "serverselector.h"
-#include "utils/platform.h"
-#include "utils/version.h"
-#include "utils/globalevents.h"
-#include "battlelist/battlelisttab.h"
-#include "mainchattab.h"
-#include "hosting/mainjoinbattletab.h"
-#include "hosting/mainsingleplayertab.h"
-#include "battlelist/battlelisttab.h"
-#include "options/mainoptionstab.h"
-#include "uiutils.h"
-#include "chatpanel.h"
-#include "playback/playbacktab.h"
-#include "infodialog.h"
-#include "maindownloadtab.h"
-#include "user.h"
-#include "mapselectdialog.h"
-#include "downloader/prdownloader.h"
-#include "utils/slconfig.h"
-#include "utils/conversion.h"
-#include "springsettings/frame.h"
-#include "gui/customdialogs.h"
-#include "utils/slpaths.h"
-#include "channel/autojoinchanneldialog.h"
-#include "channel/channelchooserdialog.h"
-#include "gui/controls.h"
-#include "gui/ui.h"
-#include "log.h"
-#include "servermanager.h"
+
 #include <lslunitsync/unitsync.h>
-
-#include "gui/iconscollection.h"
-
-#include "images/chat_icon.png.h"
-#include "images/join_icon.png.h"
-#include "images/single_player_icon.png.h"
-#include "images/options_icon.png.h"
-#include "images/downloads_icon.png.h"
-#include "images/replay_icon.png.h"
-#include "images/broom_tab_icon.png.h"
-#include "images/floppy_icon.png.h"
-
-
+#include <wx/aui/auibook.h>
+#include <wx/choicdlg.h>
+#include <wx/dcmemory.h>
+#include <wx/frame.h>
+#include <wx/icon.h>
+#include <wx/image.h>
+#include <wx/imaglist.h>
+#include <wx/log.h>
+#include <wx/menu.h>
+#include <wx/sizer.h>
+#include <wx/textdlg.h>
+#include <wx/tooltip.h>
+#include <wx/wupdlock.h>
+#include <iostream>
+#include <stdexcept>
 #if defined(__WXMSW__)
 #include <wx/msw/winundef.h>
 #include <iostream>
 #endif
+
+#include "aboutbox.h"
+#include "aui/auimanager.h"
+#include "battlelist/battlelisttab.h"
+#include "channel/autojoinchanneldialog.h"
+#include "channel/channelchooserdialog.h"
+#include "chatpanel.h"
+#include "downloader/prdownloader.h"
+#include "gui/controls.h"
+#include "gui/customdialogs.h"
+#include "gui/iconscollection.h"
+#include "gui/slbook.h"
+#include "gui/statusbar.h"
+#include "gui/ui.h"
+#include "hosting/mainjoinbattletab.h"
+#include "hosting/mainsingleplayertab.h"
+#include "images/broom_tab_icon.png.h"
+#include "images/chat_icon.png.h"
+#include "images/downloads_icon.png.h"
+#include "images/floppy_icon.png.h"
+#include "images/join_icon.png.h"
+#include "images/options_icon.png.h"
+#include "images/replay_icon.png.h"
+#include "images/single_player_icon.png.h"
+#include "infodialog.h"
+#include "iserver.h"
+#include "log.h"
+#include "mainchattab.h"
+#include "maindownloadtab.h"
+#include "mapselectdialog.h"
+#include "options/mainoptionstab.h"
+#include "playback/playbacktab.h"
+#include "servermanager.h"
+#include "serverselector.h"
+#include "settings.h"
+#include "springlobbyapp.h"
+#include "springsettings/frame.h"
+#include "uiutils.h"
+#include "user.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "utils/platform.h"
+#include "utils/slconfig.h"
+#include "utils/slpaths.h"
+#include "utils/version.h"
 
 const wxEventType MainwindowMessageEvent = wxNewEventType();
 

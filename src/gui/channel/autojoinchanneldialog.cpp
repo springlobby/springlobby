@@ -1,18 +1,17 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "autojoinchanneldialog.h"
 
-
-#include <wx/intl.h>
+#include <wx/button.h>
 #include <wx/datetime.h>
-#include <wx/textctrl.h>
+#include <wx/event.h>
+#include <wx/intl.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
-#include <wx/button.h>
-#include <wx/tokenzr.h>
-#include <wx/event.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/tokenzr.h>
+
 #include "servermanager.h"
 #include "settings.h"
 #include "utils/conversion.h"

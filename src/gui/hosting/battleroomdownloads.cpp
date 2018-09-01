@@ -1,15 +1,16 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
-#include <string>
-#include <wx/gauge.h>
 #include "battleroomdownloads.h"
-#include <wx/stattext.h>
+
+#include <wx/gauge.h>
 #include <wx/sizer.h>
+#include <wx/stattext.h>
 #include <wx/string.h>
 #include <map>
+#include <string>
+
+#include "downloader/prdownloader.h"
 #include "ibattle.h"
 #include "utils/conversion.h"
-#include "downloader/prdownloader.h"
 
 class BattleRoomDownloadProgres : public wxPanel
 {

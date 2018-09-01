@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_VERSION_H
 
 #include <string>
-
 const std::string GetSpringlobbyVersion();
 const std::string GetSpringlobbyAgent();
 const std::string GetSpringlobbyName(bool lowercase = false);

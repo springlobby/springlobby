@@ -4,7 +4,6 @@
 #define __TAB_RENDER_DETAIL_h__
 
 #include "tab_abstract.h"
-
 class wxSlider;
 class wxFlexGridSizer;
 class wxString;

@@ -3,10 +3,9 @@
 #ifndef MAPSELECTDIALOG_H
 #define MAPSELECTDIALOG_H
 
+#include <wx/dialog.h>
 #include <vector>
 #include "gui/windowattributespickle.h"
-#include <wx/dialog.h>
-
 class wxStdDialogButtonSizer;
 class wxTextCtrl;
 class MapGridCtrl;
@@ -36,7 +35,7 @@ public:
 
 private:
 	wxBoxSizer* m_main_sizer;
-	wxStaticText* m_map_name;
+	wxTextCtrl* m_map_name;
 	MapGridCtrl* m_mapgrid;
 	wxChoice* m_vertical_choice;
 	wxChoice* m_horizontal_choice;

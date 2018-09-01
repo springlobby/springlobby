@@ -1,22 +1,20 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "tab_ui.h"
 
-#include <wx/spinctrl.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/slider.h>
-#include <wx/radiobut.h>
 #include <wx/checkbox.h>
-#include <wx/statbox.h>
-#include <wx/msgdlg.h>
-#include <wx/log.h>
 #include <wx/event.h>
+#include <wx/log.h>
+#include <wx/msgdlg.h>
+#include <wx/radiobut.h>
+#include <wx/sizer.h>
+#include <wx/slider.h>
+#include <wx/spinctrl.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
 #include <wx/textctrl.h>
 
-#include "log.h"
-
 #include "ctrlconstants.h"
+#include "log.h"
 
 //TODO maybe use only one chkbox for minimap on left
 void tab_ui::initScrollSpeedSizer(wxStaticBoxSizer* sizer)

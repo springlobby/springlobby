@@ -4,8 +4,6 @@
 #define SPRINGLOBBY_SORTUTIL_H_INCLUDED
 
 #include <map>
-
-
 //! set direction to +1 for down, -1 for up
 struct SortOrderItem
 {
@@ -25,4 +23,17 @@ struct CompareVersionStringsFunctor {
 };
 
 extern CompareVersionStringsFunctor compareVersionStringsFunctor;
+
+
+template <class T>
+int GenericCompare(const T& itemA, const T& itemB)
+{
+	if (itemA < itemB)
+		return 1;
+	else if (itemA > itemB)
+		return -1;
+	else
+		return 0;
+}
+
 #endif // SPRINGLOBBY_SORTUTIL_H_INCLUDED

@@ -5,7 +5,6 @@
 
 #include <wx/scrolwin.h>
 #include "battleroommmoptionstab.h"
-
 class Ui;
 class SLNotebook;
 class wxImageList;

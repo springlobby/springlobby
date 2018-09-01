@@ -4,13 +4,12 @@
 #define NOTIFICATIONMANAGER_H
 
 
-#include "utils/uievents.h"
-#include "utils/mixins.h"
 #include <lslutils/globalsmanager.h>
-#include <wx/timer.h>
 #include <wx/event.h>
+#include <wx/timer.h>
 #include <vector>
-
+#include "utils/mixins.h"
+#include "utils/uievents.h"
 class INotification;
 
 class NotificationManager : public SL::NonCopyable, public wxEvtHandler

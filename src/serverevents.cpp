@@ -4,6 +4,8 @@
 // Class: ServerEvents
 //
 
+#include "serverevents.h"
+
 #ifdef _MSC_VER
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -11,34 +13,30 @@
 #include <winsock2.h>
 #endif // _MSC_VER
 
+#include <lslutils/globalsmanager.h>
 #include <wx/intl.h>
 #include <wx/log.h>
+#include <exception>
+#include <locale>
+#include <sstream>
 #include <stdexcept>
 
-#include "serverevents.h"
+#include "autohost.h"
+#include "autohostmanager.h"
+#include "channel.h"
+#include "gui/customdialogs.h"
 #include "gui/mainwindow.h"
 #include "gui/ui.h"
-#include "channel.h"
-#include "user.h"
 #include "gui/uiutils.h"
 #include "iserver.h"
+#include "log.h"
+#include "servermanager.h"
 #include "settings.h"
-#include "gui/customdialogs.h"
+#include "user.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
 #include "utils/tasutil.h"
 #include "utils/uievents.h"
-#include "log.h"
-#include "utils/conversion.h"
-#include "autohostmanager.h"
-#include "autohost.h"
-#include "utils/globalevents.h"
-#include "servermanager.h"
-
-#include <lslutils/globalsmanager.h>
-#include <exception>
-
-
-#include <sstream>
-#include <locale>
 
 void ServerEvents::OnConnected(const std::string& server_name, const std::string& server_ver, bool supported, const std::string& server_spring_ver, bool /*unused*/)
 {
@@ -383,7 +381,7 @@ void ServerEvents::OnUserLeftBattle(int battleid, const std::string& nick)
 }
 
 
-void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked, const std::string& maphash, const std::string& map)
+void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked, const std::string& mapHash, const std::string& mapName)
 {
 	slLogDebugFunc("");
 	try {
@@ -392,13 +390,13 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 		battle.SetSpectators(spectators);
 		battle.SetIsLocked(locked);
 
-		const std::string oldmap = battle.GetHostMapName();
-
-		battle.SetHostMap(map, maphash);
-
-		if ((oldmap != map) && (battle.UserExists(m_serv.GetMe().GetNick()))) {
-			battle.SendMyBattleStatus();
-			battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, map);
+		const std::string& oldMapName = battle.GetHostMapName();
+		if (oldMapName != mapName) {
+			battle.SetHostMap(mapName, mapHash);
+			if (battle.UserExists(m_serv.GetMe().GetNick())) {
+				battle.SendMyBattleStatus();
+				battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, mapName);
+			}
 		}
 
 		ui().OnBattleInfoUpdated(battle, wxEmptyString);

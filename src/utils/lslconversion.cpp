@@ -1,7 +1,9 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
-#include <wx/colour.h>
+
 #include <lslutils/misc.h>
+#include <wx/colour.h>
+
 #include "utils/conversion.h"
 
 wxColour lslTowxColour(const LSL::lslColor& col)

@@ -4,8 +4,10 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLEROOMTAB_H
 
 #include <lslunitsync/optionswrapper.h>
-#include "utils/uievents.h"
 #include <map>
+#include <wx/panel.h>
+
+#include "utils/uievents.h"
 
 namespace GUI
 {

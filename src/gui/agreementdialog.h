@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_AGREEMENTDIALOG_H
 
 #include <wx/dialog.h>
-
 class wxTextCtrl;
 class wxStaticText;
 class wxStaticLine;

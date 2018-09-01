@@ -3,12 +3,10 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H
 #define SPRINGLOBBY_HEADERGUARD_GLOBALEVENTS_H
 
+#include <wx/event.h>
 #include <map>
 #include <set>
-
-#include <wx/event.h>
 #include "utils/conversion.h"
-
 class GlobalEventManager
 {
 private:

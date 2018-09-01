@@ -1,4 +1,6 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "connectwindow.h"
+
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/combobox.h>
@@ -15,7 +17,6 @@
 #include <wx/tokenzr.h>
 #include <wx/tooltip.h>
 
-#include "connectwindow.h"
 #include "gui/controls.h"
 #include "images/connect.xpm"
 #include "servermanager.h"

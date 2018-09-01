@@ -1,27 +1,24 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "gui/hosting/mainsingleplayertab.h"
 
-#include <wx/intl.h>
-#include <wx/window.h>
-#include <wx/sizer.h>
-#include <wx/imaglist.h>
 #include <wx/icon.h>
+#include <wx/imaglist.h>
+#include <wx/intl.h>
 #include <wx/log.h>
-
+#include <wx/sizer.h>
+#include <wx/window.h>
 #include <stdexcept>
 
 #include "aui/auimanager.h"
-#include "gui/slbook.h"
-#include "gui/singleplayertab.h"
-#include "gui/hosting/battlerestrictionstab.h"
-#include "gui/hosting/mainsingleplayertab.h"
-#include "gui/hosting/battleroommmoptionstab.h"
-#include "utils/conversion.h"
 #include "gui/controls.h"
-#include "log.h"
-
+#include "gui/hosting/battlerestrictionstab.h"
+#include "gui/hosting/battleroommmoptionstab.h"
+#include "gui/singleplayertab.h"
+#include "gui/slbook.h"
 #include "images/battle.xpm"
 #include "images/battle_settings.xpm"
-
+#include "log.h"
+#include "utils/conversion.h"
 
 MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
     : wxPanel(parent, -1)

@@ -1,18 +1,18 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
+//(*InternalHeaders(AutoBalanceDialog)
 #include "autobalancedialog.h"
 
-#include "settings.h"
-#include "gui/controls.h"
-#include "utils/conversion.h"
-
-//(*InternalHeaders(AutoBalanceDialog)
+#include <wx/button.h>
+#include <wx/choice.h>
 #include <wx/intl.h>
 #include <wx/sizer.h>
-#include <wx/stattext.h>
 #include <wx/statline.h>
-#include <wx/choice.h>
-#include <wx/button.h>
+#include <wx/stattext.h>
+
+#include "gui/controls.h"
+#include "settings.h"
+#include "utils/conversion.h"
 //*)
 
 const long AutoBalanceDialog::ID_STATICTEXT1 = wxNewId();

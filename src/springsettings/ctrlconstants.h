@@ -11,7 +11,6 @@
 // FIXME: VSync Off=-1?
 
 #include <wx/gdicmn.h>
-
 #ifndef DEFS_HPP
 #define DEFS_HPP
 
@@ -181,7 +180,6 @@ const wxSize TAB_SIZE(700, 500);
 #include <wx/intl.h>
 //#include <string>
 #include <map>
-
 struct Control
 {
 	const wxString lbl;

@@ -1,18 +1,16 @@
 /*
  * BitmapComboBox.h
  *
- *  Created on: 18 марта 2016 г.
- *      Author: Руслан
+ *  Created on: 18 пїЅпїЅпїЅпїЅпїЅ 2016 пїЅ.
+ *      Author: пїЅпїЅпїЅпїЅпїЅпїЅ
  */
 
 #ifndef SRC_GUI_CONTROLS_BITMAPCOMBOBOX_H_
 #define SRC_GUI_CONTROLS_BITMAPCOMBOBOX_H_
 
-#include <map>
-
-#include <wx/odcombo.h>
 #include <wx/dc.h>
-
+#include <wx/odcombo.h>
+#include <map>
 namespace GUI
 {
 namespace Controls

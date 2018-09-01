@@ -3,7 +3,6 @@
 #define SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H
 
 #include <wx/dialog.h>
-
 class Ui;
 class wxBoxSizer;
 class wxButton;

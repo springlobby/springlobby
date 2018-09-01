@@ -1,24 +1,22 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #define BOOST_TEST_MODULE slconfig
+
 #include <boost/test/unit_test.hpp>
-
-#include "testingstuff/silent_logger.h"
-
-#include "utils/slpaths.h"
-#include "utils/sortutil.h"
-#include "utils/platform.h"
-#include "utils/conversion.h"
-
+#include <stdlib.h>
+#include <wx/filename.h>
+#include <wx/string.h>
 #include <algorithm>
 #include <array>
 #include <iostream>
-#include <stdlib.h>
 #include <string>
-using std::string;
 
-#include <wx/filename.h>
-#include <wx/string.h>
+#include "testingstuff/silent_logger.h"
+#include "utils/conversion.h"
+#include "utils/platform.h"
+#include "utils/slpaths.h"
+#include "utils/sortutil.h"
+
+using std::string;
 
 #ifdef WIN32
 #define DELIM "\\"

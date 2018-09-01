@@ -4,7 +4,6 @@
 #define PASTEDIALOG_H
 
 #include <wx/dialog.h>
-
 /** \brief let the user decide to pastebin a message
  */
 class PasteDialog : public wxDialog

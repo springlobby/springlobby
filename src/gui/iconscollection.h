@@ -3,34 +3,27 @@
 #ifndef SRC_GUI_ICONSCOLLECTION_H_
 #define SRC_GUI_ICONSCOLLECTION_H_
 
-#include <wx/icon.h>
 #include <wx/bitmap.h>
+#include <wx/icon.h>
 #include <wx/image.h>
-
 #include <map>
-
-#include "images/bot.xpm"
-#include "images/bot_broom.png.h"
-#include "images/bot_ingame.png.h"
-#include "images/bot_away.xpm"
-
 #include "images/admin.png.h"
 #include "images/admin_away.png.h"
 #include "images/admin_broom.png.h"
 #include "images/admin_ingame.png.h"
-
+#include "images/away.png.h"
+#include "images/bot.xpm"
+#include "images/bot_away.xpm"
+#include "images/bot_broom.png.h"
+#include "images/bot_ingame.png.h"
+#include "images/broom.png.h"
 #include "images/chanop.xpm"
 #include "images/chanop_away.xpm"
 #include "images/chanop_broom.xpm"
 #include "images/chanop_ingame.xpm"
-
-#include "images/away.png.h"
-#include "images/broom.png.h"
+#include "images/down.xpm"
 #include "images/ingame.png.h"
 #include "images/ingame_pw.png.h"
-
-#include "images/up.xpm"
-#include "images/down.xpm"
 #include "images/rank0.xpm"
 #include "images/rank1.xpm"
 #include "images/rank2.xpm"
@@ -40,46 +33,36 @@
 #include "images/rank6.xpm"
 #include "images/rank7.xpm"
 #include "images/rank_unknown.xpm"
-
+#include "images/up.xpm"
 /*
 #include "images/major.xpm"
 #include "images/minor.xpm"
 */
 
-#include "images/open_game.png.h"
-#include "images/open_pw_game.png.h"
-#include "images/open_full_pw_game.png.h"
-#include "images/open_full_game.png.h"
+#include "gui/uiutils.h"
+#include "images/channel_options.xpm"
+#include "images/closed_full_game.png.h"
+#include "images/closed_full_pw_game.png.h"
 #include "images/closed_game.png.h"
 #include "images/closed_pw_game.png.h"
-#include "images/closed_full_pw_game.png.h"
-#include "images/closed_full_game.png.h"
-
-#include "images/player.xpm"
-
-#include "images/nexists.xpm"
+#include "images/empty.xpm"
 #include "images/exists.xpm"
-
-#include "images/ready_q.xpm"
-#include "images/nready_q.xpm"
-
-#include "images/spectator.png.h"
 #include "images/host.xpm"
 #include "images/host_spectator.xpm"
-
+#include "images/nexists.xpm"
 #include "images/no1_icon.png.h"
 #include "images/no2_icon.png.h"
-#include "images/warning_small.png.h"
-
-#include "images/unknown_flag.xpm"
-
-#include "images/channel_options.xpm"
+#include "images/nready_q.xpm"
+#include "images/open_full_game.png.h"
+#include "images/open_full_pw_game.png.h"
+#include "images/open_game.png.h"
+#include "images/open_pw_game.png.h"
+#include "images/player.xpm"
+#include "images/ready_q.xpm"
+#include "images/spectator.png.h"
 #include "images/springlobby.xpm"
-
-#include "images/empty.xpm"
-
-#include "gui/uiutils.h"
-
+#include "images/unknown_flag.xpm"
+#include "images/warning_small.png.h"
 struct UserStatus;
 class wxString;
 class IBattle;

@@ -1,31 +1,26 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
-
 #include "tab_abstract.h"
-#include <wx/string.h>
-#include <wx/gbsizer.h>
-#include <wx/event.h>
-#include <wx/defs.h>
-#include <wx/slider.h>
-#include <wx/log.h>
-#include <wx/checkbox.h>
-#include <wx/radiobut.h>
-#include <wx/combobox.h>
-#include <wx/textctrl.h>
-#include <wx/display.h>
-#include <wx/spinctrl.h>
-
-
-#include "gui/customdialogs.h"
-#include "utils/conversion.h"
-#include "ctrlconstants.h"
-#include "settings.h"
-#include "presets.h"
-
-#include "log.h"
 
 #include <lslunitsync/unitsync.h>
+#include <wx/checkbox.h>
+#include <wx/combobox.h>
+#include <wx/defs.h>
+#include <wx/display.h>
+#include <wx/event.h>
+#include <wx/gbsizer.h>
+#include <wx/log.h>
+#include <wx/radiobut.h>
+#include <wx/slider.h>
+#include <wx/spinctrl.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 
+#include "ctrlconstants.h"
+#include "gui/customdialogs.h"
+#include "log.h"
+#include "presets.h"
+#include "settings.h"
+#include "utils/conversion.h"
 
 intMap abstract_panel::intSettings;
 stringMap abstract_panel::stringSettings;

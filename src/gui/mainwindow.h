@@ -3,10 +3,9 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
 #define SPRINGLOBBY_HEADERGUARD_MAINWINDOW_H
 
-#include <wx/intl.h>
 #include <wx/frame.h>
+#include <wx/intl.h>
 #include "gui/windowattributespickle.h"
-
 class Ui;
 class Channel;
 class User;

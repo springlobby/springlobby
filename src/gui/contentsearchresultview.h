@@ -4,9 +4,7 @@
 #define SRC_GUI_CONTENTSEARCHRESULTVIEW_H_
 
 #include "basedataviewctrl.h"
-
 #include "contentsearchresult.h"
-
 class ContentSearchResultView : public BaseDataViewCtrl<ContentSearchResult>
 {
 public:

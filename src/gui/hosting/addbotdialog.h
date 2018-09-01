@@ -4,9 +4,8 @@
 #define SPRINGLOBBY_HEADERGUARD_ADDBOTDIALOG_H
 
 #include <wx/dialog.h>
-#include "gui/windowattributespickle.h"
 #include <map>
-
+#include "gui/windowattributespickle.h"
 class wxTextCtrl;
 class wxStaticText;
 class wxChoice;

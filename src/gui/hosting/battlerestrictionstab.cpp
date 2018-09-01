@@ -3,32 +3,30 @@
 //
 // Class: BattleRestrictionsTab
 //
-
 #include "battlerestrictionstab.h"
 
-#include <wx/splitter.h>
-#include <wx/intl.h>
-#include <wx/stattext.h>
-#include <wx/statbox.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
-#include <wx/window.h>
-#include <wx/listbox.h>
-#include <wx/arrstr.h>
-#include <wx/choice.h>
-#include <wx/tokenzr.h>
-#include <wx/checklst.h>
-#include <wx/numdlg.h>
-
-#include "ibattle.h"
-#include "gui/controls.h"
-#include "utils/conversion.h"
-#include "utils/lslconversion.h"
-#include "iserver.h"
 #include <lslunitsync/optionswrapper.h>
 #include <lslunitsync/unitsync.h>
-#include "aui/auimanager.h"
+#include <wx/arrstr.h>
+#include <wx/button.h>
+#include <wx/checklst.h>
+#include <wx/choice.h>
+#include <wx/intl.h>
+#include <wx/listbox.h>
+#include <wx/numdlg.h>
+#include <wx/sizer.h>
+#include <wx/splitter.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/tokenzr.h>
+#include <wx/window.h>
 
+#include "aui/auimanager.h"
+#include "gui/controls.h"
+#include "ibattle.h"
+#include "iserver.h"
+#include "utils/conversion.h"
+#include "utils/lslconversion.h"
 
 BEGIN_EVENT_TABLE(BattleRestrictionsTab, wxPanel)
 
@@ -134,7 +132,7 @@ void BattleRestrictionsTab::ReloadRestrictions()
 		m_allowed_list->Append(items);
 	} catch (...) {
 	}
-	std::map<std::string, int> units = m_battle->RestrictedUnits();
+	const std::map<std::string, int>& units = m_battle->GetRestrictedUnits();
 
 	for (std::map<std::string, int>::const_iterator itor = units.begin(); itor != units.end(); ++itor)
 		Restrict(TowxString(itor->first), itor->second);

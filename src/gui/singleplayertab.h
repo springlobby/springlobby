@@ -4,14 +4,13 @@
 #define SPRINGLOBBY_HEADERGUARD_SINGLEPLAYERTAB_H
 
 #include <wx/scrolwin.h>
-
 #include "singleplayerbattle.h"
-
 class Ui;
 class MapCtrl;
 class SinglePlayerBattle;
 
 class wxWindow;
+class wxBoxSizer;
 class wxButton;
 class wxStaticLine;
 class wxChoice;
@@ -55,12 +54,11 @@ public:
 	void OnUnitsyncReloaded(wxCommandEvent& /*data*/);
 	void ResetUsername();
 
-private:
-	bool CheckForValidGameMapEngineTuple();
-	void SetEngine(int index);
-	void SetGame(int index);
-	void SetMap(int index);
+	void SetEngine(unsigned int index);
+	void SetMod(unsigned int index);
+	void SetMap(unsigned int index);
 
+private:
 	wxBoxSizer* m_main_sizer;
 	SinglePlayerBattle m_battle;
 

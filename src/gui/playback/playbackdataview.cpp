@@ -1,20 +1,19 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "playbackdataview.h"
 
 #include <wx/dataview.h>
 #include <wx/menu.h>
 
-#include "iplaybacklist.h"
-#include "replaylist.h"
-#include "servermanager.h"
-#include "storedgame.h"
+#include "exception.h"
 #include "gui/basedataviewmodel.h"
 #include "gui/customdialogs.h"
 #include "gui/ui.h"
-#include "playbackdatamodel.h"
+#include "iplaybacklist.h"
 #include "log.h"
-#include "exception.h"
+#include "playbackdatamodel.h"
+#include "replaylist.h"
+#include "servermanager.h"
+#include "storedgame.h"
 
 BEGIN_EVENT_TABLE(PlaybackDataView, BaseDataViewCtrl)
 EVT_DATAVIEW_ITEM_CONTEXT_MENU(REPLAY_DATAVIEW_ID, PlaybackDataView::OnContextMenu)
@@ -107,8 +106,8 @@ void PlaybackDataView::DeletePlayback()
 	try {
 		const int m_sel_replay_id = storedGame->id;
 		if (!replaylist().DeletePlayback(m_sel_replay_id)) {
-			wxString fn = wxString(storedGame->Filename);
-			customMessageBoxModal(SL_MAIN_ICON, _("Could not delete Replay: ") + fn, _("Error"));
+			wxString pn(storedGame->battle.GetPlayBackFilePath());
+			customMessageBoxModal(SL_MAIN_ICON, _("Could not delete Replay: ") + pn, _("Error"));
 		} else {
 			RemovePlayback(*storedGame);
 		}

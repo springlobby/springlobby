@@ -1,9 +1,8 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "TextCompletionDatabase.h"
-#include <wx/string.h>
-#include <wx/regex.h>
 
+#include <wx/regex.h>
+#include <wx/string.h>
 //--------------------------------------------------------------------------------
 ///
 /// Konstruktor

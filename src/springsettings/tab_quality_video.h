@@ -3,9 +3,8 @@
 #ifndef __TAB_QUALITY_VIDEO_h__
 #define __TAB_QUALITY_VIDEO_h__
 
-#include "tab_abstract.h"
 #include <vector>
-
+#include "tab_abstract.h"
 class wxComboBox;
 class wxCheckBox;
 class wxBoxSizer;

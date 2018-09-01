@@ -3,9 +3,8 @@
 #ifndef SRC_GUI_CONTENTSEARCHRESULTDATAMODEL_H_
 #define SRC_GUI_CONTENTSEARCHRESULTDATAMODEL_H_
 
-#include "contentsearchresult.h"
 #include "basedataviewmodel.h"
-
+#include "contentsearchresult.h"
 class ContentSearchResultDataModel : public BaseDataViewModel<ContentSearchResult>
 {
 public:

@@ -3,15 +3,12 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_MAPCTRL_H
 #define SPRINGLOBBY_HEADERGUARD_MAPCTRL_H
 
-#include <wx/image.h>
-#include <wx/string.h>
-#include <wx/panel.h>
-
-#include "ibattle.h"
 #include <lslunitsync/unitsync.h>
-
+#include <wx/image.h>
+#include <wx/panel.h>
+#include <wx/string.h>
 #include <wx/thread.h>
-
+#include "ibattle.h"
 class wxPanel;
 class wxBitmap;
 class wxDC;

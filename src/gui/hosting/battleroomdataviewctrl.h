@@ -3,12 +3,9 @@
 #ifndef SRC_GUI_HOSTING_BATTLEROOMDATAVIEWCTRL_H_
 #define SRC_GUI_HOSTING_BATTLEROOMDATAVIEWCTRL_H_
 
-#include "gui/basedataviewctrl.h"
-
-#include "gui/usermenu.h"
-
 #include <vector>
-
+#include "gui/basedataviewctrl.h"
+#include "gui/usermenu.h"
 class User;
 class IBattle;
 class wxCommandEvent;

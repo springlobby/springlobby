@@ -1,8 +1,7 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "sltipwin.h"
 
 #include <wx/eventfilter.h>
-
-#include "sltipwin.h"
 
 #if wxUSE_TIPWINDOW
 

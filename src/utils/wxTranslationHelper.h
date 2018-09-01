@@ -7,7 +7,6 @@
 //      and modified to fit SL needs
 
 #include <wx/string.h>
-
 class wxApp;
 class wxLocale;
 class wxArrayString;

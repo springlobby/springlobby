@@ -1,13 +1,13 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+#include "playbackthread.h"
 
+#include <lslunitsync/unitsync.h>
 #include <wx/app.h>
 #include <wx/log.h>
 
+#include "gui/playback/playbacktab.h"
 #include "replaylist.h"
 #include "savegamelist.h"
-#include "playbackthread.h"
-#include "gui/playback/playbacktab.h"
-#include <lslunitsync/unitsync.h>
 
 PlaybackLoader::PlaybackLoader(PlaybackTab* parent, bool IsReplayType)
     : wxEvtHandler()

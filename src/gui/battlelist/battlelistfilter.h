@@ -4,10 +4,8 @@
 #define SPRINGLOBBY_HEADERGUARD_BATTLELISTFILTER_H
 
 #include <wx/panel.h>
-
 #include "battlelisttab.h"
 #include "utils/mixins.h"
-
 class BattleListTab;
 class wxButton;
 class wxCheckBox;

@@ -1,13 +1,13 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "aboutbox.h"
-#include <wx/aboutdlg.h>
-#include "utils/version.h"
-#include "utils/conversion.h"
-#include "uiutils.h"
-#include "iconimagelist.h"
-#include <lslutils/globalsmanager.h>
 
+#include <lslutils/globalsmanager.h>
+#include <wx/aboutdlg.h>
+
+#include "iconimagelist.h"
+#include "uiutils.h"
+#include "utils/conversion.h"
+#include "utils/version.h"
 
 slAboutBox::slAboutBox()
 {

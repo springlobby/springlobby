@@ -4,7 +4,6 @@
 #define SPRINGLOBBY_HEADERGUARD_AUIMANAGER_H
 
 #include <wx/aui/aui.h>
-
 class AuiManagerContainer
 {
 public:

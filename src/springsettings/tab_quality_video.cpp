@@ -1,22 +1,20 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "tab_quality_video.h"
-#include <wx/string.h>
-#include <wx/sizer.h>
-#include <wx/event.h>
-#include <wx/defs.h>
-#include <wx/slider.h>
-#include <wx/checkbox.h>
-#include <wx/stattext.h>
-#include <wx/checkbox.h>
-#include <wx/radiobut.h>
-#include <wx/combobox.h>
-#include <wx/textctrl.h>
-#include <wx/spinctrl.h>
 
-#include "utils/conversion.h"
+#include <wx/checkbox.h>
+#include <wx/combobox.h>
+#include <wx/defs.h>
+#include <wx/event.h>
+#include <wx/radiobut.h>
+#include <wx/sizer.h>
+#include <wx/slider.h>
+#include <wx/spinctrl.h>
+#include <wx/stattext.h>
+#include <wx/string.h>
+#include <wx/textctrl.h>
 
 #include "ctrlconstants.h"
+#include "utils/conversion.h"
 
 void tab_quality_video::initVideoSizer(wxFlexGridSizer* sizer)
 {

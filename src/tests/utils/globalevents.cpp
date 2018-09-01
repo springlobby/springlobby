@@ -1,5 +1,4 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #define BOOST_TEST_MODULE globalevents
 
 #include <boost/test/unit_test.hpp>
@@ -20,7 +19,6 @@ struct TestInitializer
 BOOST_GLOBAL_FIXTURE(TestInitializer);
 
 #include "utils/globalevents.h"
-
 class FakeEvtHandler : public wxEvtHandler
 {
 public:

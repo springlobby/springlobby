@@ -1,11 +1,12 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
-
 #include "statusbar.h"
-#include "taskbar.h"
-#include "utils/platform.h"
-#include "utils/conversion.h"
-#include "utils/version.h"
+
 #include <wx/event.h>
+
+#include "taskbar.h"
+#include "utils/conversion.h"
+#include "utils/platform.h"
+#include "utils/version.h"
 
 Statusbar::Statusbar(wxWindow* parent)
     : wxStatusBar(parent, wxNewId())

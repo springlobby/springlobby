@@ -3,38 +3,37 @@
 //
 // Class: ChatOptionsTab
 //
+#include "chatoptionstab.h"
 
-#include <wx/filedlg.h>
-#include <wx/dirdlg.h>
-#include <wx/sizer.h>
-#include <wx/statbox.h>
-#include <wx/intl.h>
-#include <wx/spinctrl.h>
-#include <wx/textctrl.h>
-#include <wx/radiobut.h>
-#include <wx/stattext.h>
 #include <wx/button.h>
-#include <wx/msgdlg.h>
+#include <wx/checkbox.h>
+#include <wx/colordlg.h>
+#include <wx/dir.h>
+#include <wx/dirdlg.h>
+#include <wx/file.h>
+#include <wx/filedlg.h>
 #include <wx/filefn.h>
 #include <wx/filename.h>
-#include <wx/stdpaths.h>
-#include <wx/dir.h>
-#include <wx/file.h>
-#include <wx/stdpaths.h>
-#include <wx/settings.h>
-#include <wx/colordlg.h>
 #include <wx/fontdlg.h>
-#include <wx/checkbox.h>
+#include <wx/intl.h>
+#include <wx/msgdlg.h>
+#include <wx/radiobut.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
+#include <wx/spinctrl.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/stdpaths.h>
+#include <wx/textctrl.h>
 #include <wx/tokenzr.h>
 
-#include "chatoptionstab.h"
+#include "aui/auimanager.h"
+#include "gui/colorbutton.h"
 #include "gui/controls.h"
+#include "gui/mainwindow.h"
 #include "gui/uiutils.h"
 #include "settings.h"
 #include "spring.h"
-#include "gui/mainwindow.h"
-#include "gui/colorbutton.h"
-#include "aui/auimanager.h"
 #include "utils/slconfig.h"
 
 BEGIN_EVENT_TABLE(ChatOptionsTab, wxPanel)

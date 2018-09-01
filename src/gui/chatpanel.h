@@ -3,16 +3,14 @@
 #ifndef SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 #define SPRINGLOBBY_HEADERGUARD_CHATPANEL_H
 
+#include <wx/checkbox.h>
 #include <wx/panel.h>
 #include <wx/textctrl.h>
-#include <wx/checkbox.h>
-#include <vector>
 #include <set>
-
+#include <vector>
 #include "chatlog.h"
-#include "utils/TextCompletionDatabase.h"
 #include "utils/mixins.h"
-
+#include "utils/TextCompletionDatabase.h"
 class wxCommandEvent;
 class wxSizeEvent;
 class wxBoxSizer;

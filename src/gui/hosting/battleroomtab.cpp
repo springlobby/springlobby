@@ -3,63 +3,62 @@
 //
 // Class: BattleRoomTab
 //
+#include "battleroomtab.h"
 
-#include <wx/splitter.h>
-#include <wx/intl.h>
-#include <wx/combobox.h>
-#include <wx/stattext.h>
-#include <wx/statbox.h>
-#include <wx/statline.h>
-#include <wx/checkbox.h>
+#include <wx/bmpcbox.h>
 #include <wx/button.h>
-#include <wx/listctrl.h>
-#include <wx/sizer.h>
-#include <wx/msgdlg.h>
-#include <wx/settings.h>
+#include <wx/checkbox.h>
 #include <wx/choicdlg.h>
+#include <wx/choice.h>
 #include <wx/colordlg.h>
 #include <wx/colour.h>
-#include <wx/log.h>
-#include <wx/bmpcbox.h>
-#include <wx/textdlg.h>
-#include <wx/image.h>
-#include <wx/choice.h>
-#include <wx/numdlg.h>
+#include <wx/combobox.h>
 #include <wx/generic/statbmpg.h>
+#include <wx/image.h>
+#include <wx/intl.h>
+#include <wx/listctrl.h>
+#include <wx/log.h>
 #include <wx/menu.h>
-
+#include <wx/msgdlg.h>
+#include <wx/numdlg.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
+#include <wx/splitter.h>
+#include <wx/statbox.h>
+#include <wx/statline.h>
+#include <wx/stattext.h>
+#include <wx/textdlg.h>
 #include <stdexcept>
 
-#include "battleroomtab.h"
-#include "user.h"
-#include "ibattle.h"
-#include "utils/conversion.h"
-#include "utils/uievents.h"
+#include "addbotdialog.h"
+#include "aui/auimanager.h"
+#include "autobalancedialog.h"
+#include "autohost.h"
+#include "autohostmanager.h"
 #include "battleroomdataviewctrl.h"
 #include "gui/chatpanel.h"
-#include "gui/mapctrl.h"
-#include "gui/uiutils.h"
-#include "addbotdialog.h"
-#include "iserver.h"
-#include "gui/customdialogs.h"
-#include "autobalancedialog.h"
-#include "settings.h"
 #include "gui/colorbutton.h"
-#include "gui/mapselectdialog.h"
-#include "mmoptionwindows.h"
-#include "aui/auimanager.h"
-#include "hostbattledialog.h"
-#include "autohost.h"
-#include "log.h"
-#include "utils/lslconversion.h"
-#include "utils/globalevents.h"
-#include "autohostmanager.h"
-#include "votepanel.h"
-#include "servermanager.h"
 #include "gui/controls.h"
-#include "gui/ui.h"
-#include "gui/iconscollection.h"
 #include "gui/controls/bitmapcombobox.h"
+#include "gui/customdialogs.h"
+#include "gui/iconscollection.h"
+#include "gui/mapctrl.h"
+#include "gui/mapselectdialog.h"
+#include "gui/ui.h"
+#include "gui/uiutils.h"
+#include "hostbattledialog.h"
+#include "ibattle.h"
+#include "iserver.h"
+#include "log.h"
+#include "mmoptionwindows.h"
+#include "servermanager.h"
+#include "settings.h"
+#include "user.h"
+#include "utils/conversion.h"
+#include "utils/globalevents.h"
+#include "utils/lslconversion.h"
+#include "utils/uievents.h"
+#include "votepanel.h"
 
 BEGIN_EVENT_TABLE(BattleRoomTab, wxPanel)
 
@@ -172,7 +171,7 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_minimap = new MapCtrl(this, 162, m_battle, true, true, false);
 	m_minimap->SetToolTip(_("A preview of the selected map.  You can see the starting positions, or (if set) starting boxes."));
 
-	m_browse_map_btn = new wxButton(this, BROOM_MAP_BROWSE, _("Map"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+	m_browse_map_btn = new wxButton(this, BROOM_MAP_BROWSE, _("Pick.."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	//m_browse_map_btn->SetSize( m_browse_map_btn->GetSize().GetWidth() * 2 , m_browse_map_btn->GetSize().GetHeight() ) ; // has 0 effect
 
 	m_votePanel = new VotePanel(this);
@@ -335,9 +334,9 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	//m_info1_sizer->Add( m_size_lbl, 1, wxEXPAND );
 
 	m_info_sizer->Add(m_minimap, 0, wxEXPAND);
-	m_map_select_sizer->Add(m_map_combo, 0, wxALL | wxEXPAND, 2);
-	m_map_select_sizer->Add(m_browse_map_btn, 0, wxALL, 2);
-	m_info_sizer->Add(m_map_select_sizer, 0, wxEXPAND | wxALL, 2);
+	m_map_select_sizer->Add(m_browse_map_btn, 0, 0, 2);
+	m_map_select_sizer->Add(m_map_combo, 1, wxEXPAND, 2);
+	m_info_sizer->Add(m_map_select_sizer, 0, wxEXPAND | wxTOP, 2);
 	//m_info_sizer->Add( m_info1_sizer, 0, wxEXPAND );
 	//m_info_sizer->Add( m_tidal_lbl, 0, wxEXPAND );
 	m_info_sizer->Add(m_opts_list, 1, wxEXPAND | wxTOP, 4);
@@ -405,20 +404,6 @@ void BattleRoomTab::SplitSizerHorizontally(const bool horizontal)
 		m_splitter->SplitVertically(m_player_panel, m_chat);
 }
 
-void BattleRoomTab::UpdateBattleInfo()
-{
-
-	if (!m_battle)
-		return;
-	m_lock_chk->SetValue(m_battle->IsLocked());
-	m_minimap->UpdateMinimap();
-	OptionListMap::iterator it;
-	for (it = m_opt_list_map.begin(); it != m_opt_list_map.end(); ++it) {
-		UpdateBattleInfo(it->first);
-	}
-	UpdateMapInfoSummary();
-}
-
 void BattleRoomTab::PrintAllySetup()
 {
 	wxString setupstring;
@@ -428,7 +413,7 @@ void BattleRoomTab::PrintAllySetup()
 		wxString alliancesstring;
 		int previousalliancesize = 0;
 		bool ffamode = true;
-		std::map<int, int> allysizes = m_battle->GetAllySizes();
+		const std::map<int, int>& allysizes = m_battle->GetAllySizes();
 		if (allysizes.size() < 3)
 			ffamode = false;
 		for (std::map<int, int>::const_iterator itor = allysizes.begin(); itor != allysizes.end(); ++itor) {
@@ -449,6 +434,19 @@ void BattleRoomTab::PrintAllySetup()
 	}
 	m_ally_setup_lbl->SetLabel(wxString::Format(_T("%s"), setupstring.c_str()));
 	Layout();
+}
+
+void BattleRoomTab::UpdateBattleInfo()
+{
+	if (!m_battle)
+		return;
+	m_lock_chk->SetValue(m_battle->IsLocked());
+	m_minimap->UpdateMinimap();
+	OptionListMap::iterator it;
+	for (it = m_opt_list_map.begin(); it != m_opt_list_map.end(); ++it) {
+		UpdateBattleInfo(it->first);
+	}
+	UpdateMapInfoSummary();
 }
 
 void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
@@ -509,7 +507,7 @@ void BattleRoomTab::UpdateBattleInfo(const wxString& Tag)
 			m_minimap->UpdateMinimap();
 
 		} else if (key == _T( "restrictions" )) {
-			m_opts_list->SetItem(index, 1, bool2yn(m_battle->RestrictedUnits().size() > 0));
+			m_opts_list->SetItem(index, 1, bool2yn(m_battle->GetRestrictedUnits().size() > 0));
 		}
 	}
 }

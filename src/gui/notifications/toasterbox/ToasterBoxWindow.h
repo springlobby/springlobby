@@ -3,13 +3,15 @@
 #ifndef TOASTERBOXWINDOW_HH_INCLUDED
 #define TOASTERBOXWINDOW_HH_INCLUDED
 
-#include <wx/timer.h>
-#include "utils/mixins.h"
-#include <wx/statbmp.h>
-#include <wx/popupwin.h>
 #include <wx/dc.h>
+#include <wx/popupwin.h>
+#include <wx/statbmp.h>
+#include <wx/timer.h>
+#include <wx/event.h>
+// errors out if wx/event.h is not included
 #include <wx/custombgwin.h>
 
+#include "utils/mixins.h"
 
 class wxBackgroundBitmap;
 #if wxUSE_POPUPWIN
