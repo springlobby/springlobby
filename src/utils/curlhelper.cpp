@@ -1,13 +1,13 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
+
+#include <wx/log.h>
 #include "curlhelper.h"
+#include "settings.h"
 
 #include <curl/curl.h>
 #include <curl/easy.h>
-#include <wx/log.h>
-
-#include "downloader/lib/src/Downloader/CurlWrapper.h"
 #include "downloader/prdownloader.h"
-#include "settings.h"
+#include "downloader/lib/src/Downloader/CurlWrapper.h"
 
 extern "C" {
 size_t wxcurl_stream_write(void* ptr, size_t size, size_t nmemb, void* stream)
