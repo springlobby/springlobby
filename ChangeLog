@@ -1,13 +1,23 @@
 ChangeLog of Springlobby
 
 ## 0.265
+ - more verbose logging when starting spring / log exit code
+ - Rearange and realign buttons in singleplayer and battleroom tabs
  - remove warning message when starting a match without opponet
  - more verbose connect / disconnect messages
+ - use tls for https://api.springfiles.com / https://paste.springfiles.com
+ - use tls for springlobby updates
+ - fix by far the largest part of the replays freeze (with 1900 replays 107s -> 0.962s).
  - fix error message "Failed to setup download" shown for no reason
- - download updates of springlobby updates via https
+ - fix error message "Couldn't load GetMapInfoCount"
  - fix some rare download bugs
  - fix crash in votepanel on disconnect
- - fix error message "Couldn't load GetMapInfoCount"
+ - fix connecting to inofficial / test lobby servers
+ - fix chatpanel size with non-default dpi / font size
+ - fix out-of-tree compile
+ - fix display of seconds in the Duration column of the replay list
+ - fix display of missing map names in the replays list
+ - fix reading of gameTime from replays
 
 ## 0.264
  - improved the start button in battleroom
