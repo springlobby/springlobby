@@ -194,6 +194,7 @@ bool Socket::VerifyCertificate()
 		fingerprint += buf[1];
 	}
 	m_fingerprint = fingerprint;
+	wxLogMessage("Expecting fingerprint:   %s", m_excepted_fingerprint.c_str());
 	wxLogMessage("Certificate fingerprint: %s", m_fingerprint.c_str());
 
 	const char* version = SSL_get_version(m_ssl);

@@ -957,7 +957,9 @@ void Ui::OnInvalidFingerprintReceived(const std::string& fingerprint, const std:
 	if (expected_fingerprint.empty()) {
 		answer = customMessageBox(SL_MAIN_ICON, _("The certificate by the server is unkown. Do you want to trust it? Please verify the fingerprint:\n") + TowxString(fingerprint)  , _("Unknown Certificate"), wxYES_NO | wxCANCEL);
 	} else {
-		answer = customMessageBox(SL_MAIN_ICON, _("The certificate by the server is invalid! Maybe there is a MITM ongoing. Do you want ignore this warning?:\n") + TowxString(fingerprint)  , _("Unknown Certificate"), wxYES_NO | wxCANCEL);
+		answer = customMessageBox(SL_MAIN_ICON,
+		  wxString::Format(_("The server provided an invalid certificate! Maybe there is a MITM attack ongoing. Do you want ignore this warning?\nExpected:\n%s\nReceived:\n%s"),
+		  expected_fingerprint, fingerprint), _("Unknown Certificate"), wxYES_NO | wxCANCEL);
 	}
 	if (answer != wxYES) {
 		return;

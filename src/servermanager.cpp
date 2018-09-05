@@ -99,6 +99,7 @@ void ServerManager::RegisterNewUser(const std::string& servername, const std::st
 	}
 	IServer::ServerLoginInfo info;
 	info.description = servername;
+	info.fingerprint = sett().GetServerFingerprint(servername);
 	info.hostname = STD_STRING(sett().GetServerHost(servername));
 	info.port = sett().GetServerPort(servername);
 	info.username = username;
