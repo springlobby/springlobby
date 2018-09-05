@@ -1,5 +1,9 @@
 ChangeLog of Springlobby
 
+## 0.266
+ - Fix #886 (Unable to register due to certificate fingerprint mismatch)
+ - merge engine and version into one row
+
 ## 0.265
  - more verbose logging when starting spring / log exit code
  - Rearange and realign buttons in singleplayer and battleroom tabs
