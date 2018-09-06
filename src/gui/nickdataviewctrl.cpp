@@ -32,6 +32,7 @@ NickDataViewCtrl::NickDataViewCtrl(const wxString& dataViewName, wxWindow* paren
 	AppendBitmapColumn(_("c"), COUNTRY, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendBitmapColumn(_("r"), RANK, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_MINWIDTH, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 	AppendTextColumn(_("Nickname"), NICKNAME, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_WIDTH + 10 /*add 10 px to let some nicks to fit better*/, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+	AppendTextColumn(_("Lobby client"), LOBBYAGENT, wxDATAVIEW_CELL_INERT, wxDVC_DEFAULT_WIDTH + 10 /*add 10 px to let some nicks to fit better*/, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
 	if (!show_header) {
 		//TODO: implement "no header" style somehow

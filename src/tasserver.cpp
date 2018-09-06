@@ -573,7 +573,8 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		} else {
 			id = GetIntParam(params);
 		}
-		m_se->OnNewUser(nick, contry, cpu, id);
+		// params contains user's lobby client and version.
+		m_se->OnNewUser(nick, contry, cpu, id, params);
 		if (nick == m_relay_host_bot) {
 			RelayCmd("OPENBATTLE", m_delayed_open_command); // relay bot is deployed, send host command
 			m_delayed_open_command = "";

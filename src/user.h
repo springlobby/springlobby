@@ -212,10 +212,12 @@ public:
 		m_nick = nick;
 	}
 
+	const std::string& GetClientAgent() const { return m_client_agent; }
 	const std::string& GetCountry() const
 	{
 		return m_country;
 	}
+	void SetClientAgent(const std::string& ca) { m_client_agent = ca; }
 	virtual void SetCountry(const std::string& country)
 	{
 		m_country = country;
@@ -292,6 +294,7 @@ public:
 
 private:
 	std::string m_nick;
+	std::string m_client_agent;
 	std::string m_country;
 	int m_id;
 	int m_cpu;

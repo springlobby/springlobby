@@ -23,6 +23,7 @@ private:
 		COUNTRY,
 		RANK,
 		NICKNAME,
+		LOBBYAGENT,
 		COLUMN_COUNT
 	};
 };

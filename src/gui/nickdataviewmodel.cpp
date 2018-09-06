@@ -36,6 +36,7 @@ void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 				break;
 
 			case NICKNAME:
+			case LOBBYAGENT:
 			case DEFAULT_COLUMN:
 			default:
 				variant = wxVariant(wxEmptyString);
@@ -82,6 +83,10 @@ void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 			} else {
 				variant = wxString(user->GetNick());
 			}
+			break;
+
+		case LOBBYAGENT:
+			variant = wxString(user->GetClientAgent());
 			break;
 
 		case DEFAULT_COLUMN:
@@ -158,6 +163,10 @@ int NickDataViewModel::Compare(const wxDataViewItem& itemA,
 			sortingResult = 0;
 			break;
 
+		case LOBBYAGENT:
+			sortingResult = BaseDataViewModel::Compare(itemA, itemB, column, true);
+			break;
+
 		default:
 			wxASSERT(false);
 			sortingResult = 0;
@@ -201,6 +210,7 @@ wxString NickDataViewModel::GetColumnType(unsigned int column) const
 			break;
 
 		case NICKNAME:
+		case LOBBYAGENT:
 		case DEFAULT_COLUMN:
 			colTypeString = COL_TYPE_TEXT;
 			break;

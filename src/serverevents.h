@@ -44,7 +44,7 @@ public:
 	void OnMotd(const std::string& msg);
 	void OnPong(wxLongLong ping_time);
 
-	void OnNewUser(const std::string& nick, const std::string& conutry, int cpu, int id);
+	void OnNewUser(const std::string& nick, const std::string& conutry, int cpu, int id, const std::string& clientAgent);
 	void OnUserStatus(const std::string& nick, UserStatus status);
 	void OnUserQuit(const std::string& nick);
 
