@@ -2,12 +2,12 @@
 
 #include "updatehelper.h"
 
+#include <time.h>
+
 #include "httpfile.h"
 #include "utils/conversion.h"
 #include "utils/slconfig.h"
 #include "utils/version.h"
-#include <time.h>
-#include <cerrno>
 
 SLCONFIG("/General/LastUpdateCheck", 0L, "Last time springlobby checked for an update");
 SLCONFIG("/General/UpdateChannel", "release", "update channel to use (release or develop)");
