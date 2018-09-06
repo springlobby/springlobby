@@ -15,32 +15,36 @@ lsl/spring/spring.cpp
 //
 // Class: Spring
 //
-#include "spring.h"
 
-#include <lsl/battle/tdfcontainer.h>
-#include <lslunitsync/unitsync.h>
-#include <lslutils/conversion.h>
-#include <lslutils/globalsmanager.h>
 #include <wx/filename.h>
 #include <wx/log.h>
 
-#include <algorithm>
-#include <clocale>
-#include <fstream>
 #include <stdexcept>
 #include <vector>
+#include <clocale>
+#include <fstream>
+#include <random>
+#include <algorithm>
+#include <cerrno>
 
-#include "gui/customdialogs.h"
-#include "gui/mainwindow.h"
+#include <lsl/battle/tdfcontainer.h>
+#include <lslutils/globalsmanager.h>
+#include <lslutils/conversion.h>
+#include <lslunitsync/unitsync.h>
+
+#include "spring.h"
+#include "springprocess.h"
 #include "gui/ui.h"
+#include "gui/mainwindow.h"
+#include "gui/customdialogs.h"
+#include "utils/conversion.h"
+#include "utils/slpaths.h"
+#include "utils/slconfig.h"
+#include "utils/globalevents.h"
+#include "settings.h"
 #include "ibattle.h"
 #include "log.h"
-#include "settings.h"
-#include "springprocess.h"
-#include "utils/conversion.h"
-#include "utils/globalevents.h"
-#include "utils/slconfig.h"
-#include "utils/slpaths.h"
+
 
 SLCONFIG("/Spring/Safemode", false, "launch spring in safemode");
 
@@ -92,7 +96,7 @@ bool Spring::Run(IBattle& battle)
 
 	wxArrayString params;
 
-	const std::string& demopath = battle.GetPlayBackFilePath();
+	const std::string demopath = battle.GetPlayBackFilePath();
 	if (!demopath.empty()) {
 		params.push_back(TowxString(demopath));
 		return LaunchEngine(executable, params);
@@ -222,7 +226,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 		case BT_Played:
 			break;
 		case BT_Replay: {
-			wxString path(battle.GetPlayBackFilePath());
+			wxString path = TowxString(battle.GetPlayBackFilePath());
 			if (path.Find(_T("/")) != wxNOT_FOUND)
 				path.BeforeLast(_T('/'));
 			tdf.AppendStr("DemoFile", STD_STRING(path));
@@ -230,7 +234,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 			break;
 		}
 		case BT_Savegame: {
-			wxString path(battle.GetPlayBackFilePath());
+			wxString path = TowxString(battle.GetPlayBackFilePath());
 			if (path.Find(_T("/")) != wxNOT_FOUND)
 				path.BeforeLast(_T('/'));
 			tdf.AppendStr("Savefile", STD_STRING(path));
@@ -267,7 +271,9 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 		remap_positions = std::vector<LSL::StartPos>(infos.positions.begin(), infos.positions.begin() + copysize); // only add the first x positions
 
 		if (startpostype == IBattle::ST_Random) {
-			std::random_shuffle(remap_positions.begin(), remap_positions.end()); // shuffle the positions
+            std::random_device seed;
+            std::mt19937 rng(seed());
+			std::shuffle(remap_positions.begin(), remap_positions.end(), rng); // shuffle the positions
 		}
 	}
 	if (battle.IsProxy()) {
@@ -292,7 +298,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 	}
 	tdf.LeaveSection();
 
-	const std::map<std::string, int>& units = battle.GetRestrictedUnits();
+	std::map<std::string, int> units = battle.RestrictedUnits();
 	tdf.AppendInt("NumRestrictions", units.size());
 	tdf.EnterSection("RESTRICT");
 	int restrictcount = 0;
