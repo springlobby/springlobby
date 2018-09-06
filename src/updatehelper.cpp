@@ -3,6 +3,7 @@
 #include "updatehelper.h"
 
 #include <time.h>
+#include <cerrno>
 
 #include "httpfile.h"
 #include "utils/conversion.h"
