@@ -62,7 +62,6 @@ SLCONFIG("/General/AutoUpdate", true, "Determines if springlobby should check fo
 SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_BATTLELIST, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere", true, "setting to spam the server messages in all channels");
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
-SLCONFIG("/Server/TLS", false, "Use encrypted connection to the lobby server");
 
 
 static unsigned int s_reconnect_delay_ms = 6 * 1000; //initial reconnect delay
