@@ -290,7 +290,9 @@ void Settings::SetServer(const wxString& server_name, const wxString& url, int p
 	cfg().Write(_T( "/Server/Servers/" ) + server_name + _T( "/Host" ), url);
 	cfg().Write(_T( "/Server/Servers/" ) + server_name + _T( "/Port" ), port);
 	cfg().Write(_T( "/Server/Servers/" ) + server_name + _T( "/TLS" ), true);
-	cfg().Write(_T( "/Server/Servers/" ) + server_name + _T( "/Certificate" ), fingerprint);
+	if (!fingerprint.empty()) {
+		cfg().Write(_T( "/Server/Servers/" ) + server_name + _T( "/Certificate" ), fingerprint);
+	}
 }
 
 //! @brief Deletes a server from the list.
