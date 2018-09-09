@@ -2076,9 +2076,8 @@ bool TASServer::IsCurrentBattle(int battle_id)
 	return true;
 }
 
-void TASServer::OnInvalidFingerprintReceived(const std::string& fingerprint)
+void TASServer::OnInvalidFingerprintReceived(const std::string& fingerprint, const std::string& expected_fingerprint)
 {
-	const std::string expected_fingerprint = sett().GetServerFingerprint(GetServerName());
 	m_se->OnInvalidFingerprintReceived(fingerprint, expected_fingerprint);
 }
 

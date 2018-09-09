@@ -34,7 +34,7 @@ public:
 	{
 	}
 
-	virtual void OnInvalidFingerprintReceived(const std::string& /*fingerprint*/)
+	virtual void OnInvalidFingerprintReceived(const std::string& /*fingerprint*/, const std::string& /*expected_fingerprint*/)
 	{
 	}
 };

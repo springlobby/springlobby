@@ -143,7 +143,7 @@ private:
 	void OnDisconnected(wxSocketError err) override;
 	void OnDataReceived() override;
 	void OnError(const std::string& err) override;
-	void OnInvalidFingerprintReceived(const std::string& fingerprint) override;
+	void OnInvalidFingerprintReceived(const std::string& fingerprint, const std::string& expected_fingerprint) override;
 
 	void UDPPing(); /// used for nat travelsal
 	/// generic udp "ping" function

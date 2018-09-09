@@ -203,9 +203,8 @@ bool Socket::VerifyCertificate()
 	const char* name = SSL_get_cipher_name(m_ssl);
 	wxLogMessage("Using cipher %s", name);
 
-	//FIXME: read from config and prompt when missmatch / doesn't exist
 	if (fingerprint != m_excepted_fingerprint) {
-		m_net_class.OnInvalidFingerprintReceived(fingerprint);
+		m_net_class.OnInvalidFingerprintReceived(fingerprint, m_excepted_fingerprint);
 		return false;
 	}
 
