@@ -458,7 +458,7 @@ void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 	bo.rankneeded = sett().GetLastRankLimit();
 	bo.maxplayers = sett().GetLastHostPlayerNum();
 	bo.relayhost = STD_STRING(sett().GetLastRelayedHost());
-	bo.engineName = "spring";
+	bo.engineName = "Spring";
 	bo.engineVersion = LSL::usync().GetSpringVersion();
 
 	// Get selected mod from unitsync.

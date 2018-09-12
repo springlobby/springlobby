@@ -168,7 +168,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 
 	m_main_sizer->Add(m_buttons_sizer, 0, wxEXPAND, 5);
 
-	m_battle.SetEngineName("spring");
+	m_battle.SetEngineName("Spring");
 	m_battle.SetEngineVersion(SlPaths::GetCurrentUsedSpringIndex());
 
 	ReloadMaplist();

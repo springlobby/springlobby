@@ -188,7 +188,7 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	GetHeaderInfo(*replay, ret, replay_version);
 	ret.battle.GetBattleFromScript(false);
 	ret.battle.SetBattleType(BT_Replay);
-	ret.battle.SetEngineName("spring");
+	ret.battle.SetEngineName("Spring");
 	ret.battle.SetEngineVersion(engineVersion);
 	ret.battle.SetPlayBackFilePath(ReplayPath);
 	delete replay;
