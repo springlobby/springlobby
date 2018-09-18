@@ -270,9 +270,9 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 		remap_positions = std::vector<LSL::StartPos>(infos.positions.begin(), infos.positions.begin() + copysize); // only add the first x positions
 
 		if (startpostype == IBattle::ST_Random) {
-            std::random_device seed;
-            std::mt19937 rng(seed());
-            std::shuffle(remap_positions.begin(), remap_positions.end(), rng); // shuffle the positions
+			std::random_device seed;
+			std::mt19937 rng(seed());
+			std::shuffle(remap_positions.begin(), remap_positions.end(), rng); // shuffle the positions
 		}
 	}
 	if (battle.IsProxy()) {
