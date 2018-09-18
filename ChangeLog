@@ -1,5 +1,8 @@
 ChangeLog of Springlobby
 
+## 0.267
+ - fix connecting to unknown lobby servers (fingerprint mismatch)
+
 ## 0.266
  - Fix #886 (Unable to register due to certificate fingerprint mismatch)
  - merge engine and version into one column
