@@ -1134,7 +1134,7 @@ void IBattle::GetBattleFromScript(bool loadmapmod)
 			if (player.ok() || bot.ok()) {
 				if (bot.ok())
 					player = bot;
-				User user(player->GetString("Name"), boost::to_upper_copy(player->GetString("CountryCode")), 0);
+				User user(player->GetString("Name"), boost::to_upper_copy(player->GetString("CountryCode")));
 				UserBattleStatus& status = user.BattleStatus();
 				status.isfromdemo = true;
 				status.spectator = player->GetInt("Spectator", 0);

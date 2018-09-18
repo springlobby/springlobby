@@ -24,7 +24,7 @@ lsl/user/user.cpp
 #include "utils/conversion.h"
 
 User::User(IServer& serv)
-    : CommonUser("", "", 0)
+    : CommonUser("", "")
     , panel(nullptr)
     , m_serv(&serv)
     , m_battle(0)
@@ -36,7 +36,7 @@ User::User(IServer& serv)
 }
 
 User::User(const std::string& nick, IServer& serv)
-    : CommonUser(nick, "", 0)
+    : CommonUser(nick, "")
     , panel(nullptr)
     , m_serv(&serv)
     , m_battle(0)
@@ -47,8 +47,8 @@ User::User(const std::string& nick, IServer& serv)
 {
 }
 
-User::User(const std::string& nick, const std::string& country, const int& cpu, IServer& serv)
-    : CommonUser(nick, country, cpu)
+User::User(const std::string& nick, const std::string& country, IServer& serv)
+    : CommonUser(nick, country)
     , panel(nullptr)
     , m_serv(&serv)
     , m_battle(0)
@@ -60,7 +60,7 @@ User::User(const std::string& nick, const std::string& country, const int& cpu, 
 }
 
 User::User(const std::string& nick)
-    : CommonUser(nick, "", 0)
+    : CommonUser(nick, "")
     , panel(nullptr)
     , m_serv(0)
     , m_battle(0)
@@ -71,8 +71,8 @@ User::User(const std::string& nick)
 {
 }
 
-User::User(const std::string& nick, const std::string& country, const int& cpu)
-    : CommonUser(nick, country, cpu)
+User::User(const std::string& nick, const std::string& country)
+    : CommonUser(nick, country)
     , panel(nullptr)
     , m_serv(0)
     , m_battle(0)
@@ -84,7 +84,7 @@ User::User(const std::string& nick, const std::string& country, const int& cpu)
 }
 
 User::User()
-    : CommonUser("", "", 0)
+    : CommonUser("", "")
     , panel(nullptr)
     , m_serv(0)
     , m_battle(0)
@@ -279,7 +279,6 @@ bool User::IsBot() const
 //        m_status = other.GetStatus();
 //        m_battle = other.GetBattle();
 //        m_nick = other.GetNick();
-//        m_cpu = other.GetCpu();
 //        m_country = other.GetCountry();
 //        m_bstatus = other.GetBattleStatus();
 //        uidata = other.uidata;

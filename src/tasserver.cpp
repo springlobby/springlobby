@@ -523,7 +523,7 @@ static LSL::StringMap parseKeyValue(const std::string& str)
 void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inparams, int replyid)
 {
 	std::string params = inparams;
-	std::string nick, contry, host, map, title, channel, error, msg, owner, topic, engineName, engineVersion;
+	std::string nick, host, map, title, channel, error, msg, owner, topic, engineName, engineVersion;
 	//NatType ntype;
 	UserStatus cstatus;
 	int tasstatus;
@@ -564,8 +564,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "ADDUSER") {
 		int id;
 		nick = GetWordParam(params);
-		contry = GetWordParam(params);
-		const int cpu = GetIntParam(params);
+		const std::string country = GetWordParam(params);
 		if (params.empty()) {
 			// if server didn't send any account id to us, fill with an always increasing number
 			id = m_account_id_count;
@@ -574,7 +573,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 			id = GetIntParam(params);
 		}
 		// params contains user's lobby client and version.
-		m_se->OnNewUser(nick, contry, cpu, id, params);
+		m_se->OnNewUser(nick, country, id, params);
 		if (nick == m_relay_host_bot) {
 			RelayCmd("OPENBATTLE", m_delayed_open_command); // relay bot is deployed, send host command
 			m_delayed_open_command = "";

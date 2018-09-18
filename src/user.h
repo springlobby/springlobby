@@ -190,11 +190,10 @@ class lslColor;
 class CommonUser
 {
 public:
-	CommonUser(const std::string& nick, const std::string& country, const int& cpu)
+	CommonUser(const std::string& nick, const std::string& country)
 	    : m_nick(std::string(nick))
 	    , m_country(std::string(country))
 	    , m_id(0)
-	    , m_cpu(cpu)
 	    , m_trueSkill(0.0f)
 	{
 	}
@@ -221,15 +220,6 @@ public:
 	virtual void SetCountry(const std::string& country)
 	{
 		m_country = country;
-	}
-
-	int GetCpu() const
-	{
-		return m_cpu;
-	}
-	void SetCpu(const int& cpu)
-	{
-		m_cpu = cpu;
 	}
 
 	int GetID() const
@@ -297,7 +287,6 @@ private:
 	std::string m_client_agent;
 	std::string m_country;
 	int m_id;
-	int m_cpu;
 	double m_trueSkill; //This data is not included into UserStatus because it is not part of MYSTATUS or MYBATTLESTATUS commands
 	UserStatus m_status;
 	UserBattleStatus m_bstatus;
@@ -314,8 +303,8 @@ public:
 	explicit User(IServer& serv);
 	explicit User(const std::string& nick);
 	User(const std::string& nick, IServer& serv);
-	User(const std::string& nick, const std::string& country, const int& cpu, IServer& serv);
-	User(const std::string& nick, const std::string& country, const int& cpu);
+	User(const std::string& nick, const std::string& country, IServer& serv);
+	User(const std::string& nick, const std::string& country);
 	User();
 
 	virtual ~User();

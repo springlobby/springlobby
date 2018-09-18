@@ -125,7 +125,7 @@ void ServerEvents::OnPong(wxLongLong ping_time)
 }
 
 
-void ServerEvents::OnNewUser(const std::string& nick, const std::string& country, int cpu, int id, const std::string& clientAgent)
+void ServerEvents::OnNewUser(const std::string& nick, const std::string& country, int id, const std::string& clientAgent)
 {
 	slLogDebugFunc("");
 	if (m_serv.UserExists(nick)) {
@@ -134,7 +134,6 @@ void ServerEvents::OnNewUser(const std::string& nick, const std::string& country
 	}
 	User& user = m_serv._AddUser(nick);
 	user.SetCountry(country);
-	user.SetCpu(cpu);
 	user.SetID(id);
 	user.SetClientAgent(clientAgent);
 	if (!m_serv.IsOnline()) { //login info isn't complete yet
