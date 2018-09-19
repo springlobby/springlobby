@@ -36,6 +36,7 @@ endif()
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS true )
 
 INCLUDE(compat_flags)
+INCLUDE(GNUInstallDirs)
 
 #----------------------------------------------------------------------------------------------------
 # Load needed Modules
@@ -61,13 +62,11 @@ option( BUILD_SHARED_LIBS "Chooses whether to link dynamic or static libraries. 
 
 
 
-SET(SHARE_INSTALL_DIR "/share" CACHE PATH "Share directory name")
-
 SET(SPRINGLOBBY_REV "${SPRINGLOBBY_REV}")
 if (WIN32)
 	SET(LOCALE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/locale")
 else()
-	SET(LOCALE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/locale")
+	SET(LOCALE_INSTALL_DIR "${CMAKE_INSTALL_FULL_DATAROOTDIR}/locale")
 endif()
 
 IF( AUX_VERSION )
@@ -134,10 +133,10 @@ INCLUDE(cmake/package_config.cmake)
 IF(WIN32)
 	install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION ${CMAKE_INSTALL_PREFIX})
 ELSE (WIN32)
-	install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/doc/springlobby")
-	install(FILES src/images/springlobby.svg DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/icons/hicolor/scalable/apps")
-	install(FILES src/springlobby.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/applications")
-	install(FILES share/freedesktop.org/springlobby.appdata.xml DESTINATION "${CMAKE_INSTALL_PREFIX}${SHARE_INSTALL_DIR}/metainfo")
+	install(FILES AUTHORS COPYING README THANKS NEWS DESTINATION "${CMAKE_INSTALL_DOCDIR}")
+	install(FILES src/images/springlobby.svg DESTINATION "${CMAKE_INSTALL_FULL_DATAROOTDIR}/icons/hicolor/scalable/apps")
+	install(FILES src/springlobby.desktop DESTINATION "${CMAKE_INSTALL_FULL_DATAROOTDIR}/applications")
+	install(FILES share/freedesktop.org/springlobby.appdata.xml DESTINATION "${CMAKE_INSTALL_FULL_DATAROOTDIR}/metainfo")
 ENDIF (WIN32)
 
 add_custom_target(pack ${CMAKE_MAKE_PROGRAM} package
