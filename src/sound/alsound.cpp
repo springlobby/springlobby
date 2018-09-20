@@ -90,31 +90,24 @@ private:
 		ALuint m_sources[1];
 		ALuint m_buffers[1];
 
-		//set up 3d sound
-		ALfloat alpos[3];
-		ALfloat alvel[3];
+		AssertAlureResult(AL_FALSE != alureInitDevice(0, 0));
+
+		//set up 3D sound, coordinates are x,y,z
+		alListener3f(AL_POSITION, 0, 0, 0);
+		BailOnALError();
+		alListener3f(AL_VELOCITY, 0, 0, 0);
+		BailOnALError();
+
 		ALfloat alori[6];
-		alpos[0] = 0;
-		alpos[1] = 0;
-		alpos[2] = 0;
-		alvel[0] = 0;
-		alvel[1] = 0;
-		alvel[2] = 0;
 		alori[0] = 0;
 		alori[1] = 0;
 		alori[2] = -1;
 		alori[3] = 0;
 		alori[4] = 1;
 		alori[5] = 0;
-
-		alListenerfv(AL_POSITION, alpos);
-		BailOnALError();
-		alListenerfv(AL_VELOCITY, alvel);
-		BailOnALError();
 		alListenerfv(AL_ORIENTATION, alori);
 		BailOnALError();
 
-		AssertAlureResult(AL_FALSE != alureInitDevice(0, 0));
 
 		alGenSources(1, m_sources);
 		BailOnALError();
