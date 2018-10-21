@@ -80,7 +80,7 @@ void MainSinglePlayerTab::OnUnitSyncReloaded()
 		wxLogMessage(_T( "Reloading map list" ));
 		GetSinglePlayerTab().ReloadMaplist();
 		wxLogMessage(_T( "Reloading game list" ));
-		GetSinglePlayerTab().ReloadModlist();
+		GetSinglePlayerTab().ReloadGamelist();
 		wxLogMessage(_T( "Reloading minimap" ));
 		GetSinglePlayerTab().UpdateMinimap();
 	} catch (...) {

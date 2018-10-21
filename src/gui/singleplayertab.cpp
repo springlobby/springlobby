@@ -36,7 +36,7 @@
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
 EVT_CHOICE(SP_MAP_PICK, SinglePlayerTab::OnMapSelect)
-EVT_CHOICE(SP_MOD_PICK, SinglePlayerTab::OnModSelect)
+EVT_CHOICE(SP_GAME_PICK, SinglePlayerTab::OnGameSelect)
 EVT_CHOICE(SP_ENGINE_PICK, SinglePlayerTab::OnEngineSelect)
 EVT_BUTTON(SP_BROWSE_MAP, SinglePlayerTab::OnMapBrowse)
 EVT_BUTTON(SP_ADD_BOT, SinglePlayerTab::OnAddBot)
@@ -114,10 +114,10 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 
 	wxBoxSizer* m_ctrl_sizer = new wxBoxSizer(wxHORIZONTAL);
 
-	m_mod_lbl = new wxStaticText(this, -1, _("Game:"));
-	m_ctrl_sizer->Add(m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+	m_game_lbl = new wxStaticText(this, -1, _("Game:"));
+	m_ctrl_sizer->Add(m_game_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
-	m_game_choice = new wxChoice(this, SP_MOD_PICK);
+	m_game_choice = new wxChoice(this, SP_GAME_PICK);
 	m_game_choice->SetToolTip(_("No games? Download them by joining a multiplayer game room"));
 	m_ctrl_sizer->Add(m_game_choice, 1, wxALL, 5);
 
@@ -131,8 +131,8 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	m_select_btn = new wxButton(this, SP_BROWSE_MAP, _("Choose map..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	m_ctrl_sizer->Add(m_select_btn, 0, wxBOTTOM | wxRIGHT | wxTOP, 5);
 
-	m_mod_lbl = new wxStaticText(this, -1, _("Engine:"));
-	m_ctrl_sizer->Add(m_mod_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+	m_game_lbl = new wxStaticText(this, -1, _("Engine:"));
+	m_ctrl_sizer->Add(m_game_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
 	m_engine_choice = new wxChoice(this, SP_ENGINE_PICK);
 	m_engine_choice->SetToolTip(_("No engines? Download them by joining a multiplayer game room"));
@@ -211,7 +211,7 @@ void SinglePlayerTab::ReloadMaplist()
 }
 
 
-void SinglePlayerTab::ReloadModlist()
+void SinglePlayerTab::ReloadGamelist()
 {
 	m_game_choice->Clear();
 	m_game_choice->Append(lslTowxArrayString(LSL::usync().GetGameList()));
@@ -221,7 +221,7 @@ void SinglePlayerTab::ReloadModlist()
 	} else {
 		m_game_choice->SetStringSelection(TowxString(m_battle.GetHostGameNameAndVersion()));
 		if (m_game_choice->GetStringSelection().empty()) {
-			SetMod(m_game_choice->GetCount() - 1);
+			SetGame(m_game_choice->GetCount() - 1);
 		}
 	}
 }
@@ -260,7 +260,7 @@ void SinglePlayerTab::ReloadEngineList()
 		m_start_btn->Enable(true);
 	}
 	//unitsync change needs a refresh of games as well
-	ReloadModlist();
+	ReloadGamelist();
 }
 
 
@@ -302,22 +302,22 @@ void SinglePlayerTab::ResetUsername()
 }
 
 
-void SinglePlayerTab::SetMod(unsigned int index)
+void SinglePlayerTab::SetGame(unsigned int index)
 {
 	//ui().ReloadUnitSync();
 	if (index >= m_game_choice->GetCount() - 1) {
 		m_battle.SetHostGame("", "");
 	} else {
 		try {
-			LSL::UnitsyncGame mod = LSL::usync().GetGame(index);
-			m_battle.SetLocalGame(mod);
-			m_battle.SetHostGame(mod.name, mod.hash);
+			LSL::UnitsyncGame game = LSL::usync().GetGame(index);
+			m_battle.SetLocalGame(game);
+			m_battle.SetHostGame(game.name, game.hash);
 		} catch (...) {
 		}
 	}
 	m_minimap->UpdateMinimap();
 	m_battle.SendHostInfo(IBattle::HI_Restrictions); // Update restrictions in options.
-	m_battle.SendHostInfo(IBattle::HI_Game_Changed); // reload mod options
+	m_battle.SendHostInfo(IBattle::HI_Game_Changed); // reload game options
 	m_game_choice->SetSelection(index);
 }
 
@@ -355,7 +355,7 @@ void SinglePlayerTab::OnMapSelect(wxCommandEvent& /*unused*/)
 }
 
 
-void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
+void SinglePlayerTab::OnGameSelect(wxCommandEvent& /*unused*/)
 {
 	const int index = m_game_choice->GetCurrentSelection();
 
@@ -364,7 +364,7 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 	}
 
 	size_t num_bots = m_battle.GetNumBots();
-	SetMod(index);
+	SetGame(index);
 	if (num_bots != m_battle.GetNumBots())
 		customMessageBoxModal(SL_MAIN_ICON, _("Incompatible bots have been removed after game selection changed."), _("Bots removed"));
 }
@@ -421,7 +421,7 @@ void SinglePlayerTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 {
 	try {
 		ReloadMaplist();
-		ReloadModlist();
+		ReloadGamelist();
 		ReloadEngineList();
 		UpdateMinimap();
 	} catch (...) {
