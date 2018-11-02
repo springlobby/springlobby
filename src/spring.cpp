@@ -64,6 +64,7 @@ Spring& spring()
 
 Spring::Spring()
     : wxEvtHandler()
+    , crash_count(0)
     , m_process(NULL)
     , m_running(false)
 {
@@ -83,25 +84,37 @@ bool Spring::IsRunning() const
 
 bool Spring::Run(IBattle& battle)
 {
-	const std::string executable = SlPaths::GetSpringBinary(battle.GetEngineVersion());
-	if (!wxFile::Exists(TowxString(executable))) {
-		customMessageBoxModal(SL_MAIN_ICON, wxString::Format(_T("The Spring engine executable version '%s' was not found at the set location '%s', please re-check."), battle.GetEngineVersion().c_str(), executable.c_str()), _T("Executable not found"));
+	// Short-circuit before we "damage" internal and on-disk structures
+	if (m_running) {
+		wxLogError(_("An engine/game is already running!"));
+		return false;
+	}
+
+	// Fresh start.
+	crash_count = 0;
+	engine_path = SlPaths::GetSpringBinary(battle.GetEngineVersion());
+	engine_params.clear();
+
+	if (!wxFile::Exists(TowxString(engine_path))) {
+		customMessageBoxModal(SL_MAIN_ICON, wxString::Format(
+		  _("The engine executable version '%s' was not found at the set location '%s', please re-check."),
+		  battle.GetEngineVersion().c_str(), engine_path.c_str()), _("Executable not found"));
 		ui().mw().ShowConfigure(MainWindow::OPT_PAGE_SPRING);
 		return false;
 	}
-	wxLogMessage("Going to start version %s with %s", battle.GetEngineVersion().c_str(), executable.c_str());
-
-	wxArrayString params;
+	wxLogMessage(_T("Going to start engine %s with executable at %s"),
+	             battle.GetEngineVersion().c_str(), engine_path.c_str());
 
 	const std::string& demopath = battle.GetPlayBackFilePath();
 	if (!demopath.empty()) {
-		params.push_back(TowxString(demopath));
-		return LaunchEngine(executable, params);
+		engine_params.push_back(TowxString(demopath));
+		return LaunchEngine();
 	}
+
+//	if (cfg().ReadBool(_T( "/Spring/Safemode" ))) {
 
 	const wxString scripttxt = TowxString(SlPaths::GetLobbyWriteDir()) + _T("script.txt");
 	try {
-
 		wxFile f(scripttxt, wxFile::write);
 		battle.DisableHostStatusInProxyMode(true);
 		f.Write(WriteScriptTxt(battle));
@@ -115,52 +128,77 @@ bool Spring::Run(IBattle& battle)
 		return false;
 	}
 
-	params.push_back(scripttxt);
-	return LaunchEngine(executable, params);
+	engine_params.push_back(scripttxt);
+	return LaunchEngine();
 }
 
-bool Spring::LaunchEngine(wxArrayString& params)
+bool Spring::LaunchEngine()
 {
-	return LaunchEngine(SlPaths::GetSpringBinary(), params);
-}
-
-bool Spring::LaunchEngine(const std::string& cmd, wxArrayString& params)
-{
-	if (m_running) {
-		wxLogError(_T("Spring already running!"));
-		return false;
-	}
-
-	if (cfg().ReadBool(_T( "/Spring/Safemode" ))) {
-		params.push_back(_T("--safemode"));
-	}
+	// Print out command line
 	std::string stdparams;
-	for (const wxString param : params) {
+	for (const wxString param: engine_params) {
 		if (!stdparams.empty())
 			stdparams += " ";
 		stdparams += STD_STRING(param);
 	}
 
 	const std::string datadir = SlPaths::GetDataDir();
-	wxLogMessage(_T("spring call params: %s %s %s"), datadir.c_str(), TowxString(cmd).c_str(), stdparams.c_str());
-	wxSetWorkingDirectory(TowxString(datadir));
+	wxLogMessage(_T("Engine call arguments (datadir: %s): %s %s"),
+	             datadir.c_str(), TowxString(engine_path).c_str(), stdparams.c_str());
 
+	// Actually run
+	wxSetWorkingDirectory(TowxString(datadir));
 	if (m_process == 0) {
 		m_process = new SpringProcess(*this);
 	}
 	m_process->Create();
-	m_process->SetCommand(TowxString(cmd), params);
+	m_process->SetCommand(TowxString(engine_path), engine_params);
 	m_process->Run();
 	m_running = true;
-	GlobalEventManager::Instance()->Send(GlobalEventManager::OnSpringStarted);
+	if (0 == crash_count) // Still trying to start...
+		GlobalEventManager::Instance()->Send(GlobalEventManager::OnSpringStarted);
 	return true;
 }
 
 void Spring::OnTerminated(wxCommandEvent& event)
 {
-	slLogDebugFunc("");
+	const int exit_code = event.GetInt();
+	wxLogInfo(_T("Engine exited with code %d"), exit_code);
+
 	m_running = false;
 	m_process = NULL;
+
+	// First crash, try safe mode
+	if (0 != exit_code) {
+		++crash_count;
+		wxString heading(_("Engine crashed?"));
+		wxString message = wxString::Format(_("Engine exited with nonzero code %d\n\n"), exit_code);
+
+		if (1 == crash_count) {
+			message += _("This could be a graphics-related crash in case the engine or game\n"
+			             "requires more than what your GPU / graphics card is capable of.\n"
+			             "We can run the engine again in safe mode. This will disable all graphics\n"
+			             "features known to cause problems, but will drastically reduce the visual\n"
+			             "quality of the game and some of the effects may not be rendered at all!\n"
+			             "\n"
+			             "Run in safe mode?\n");
+			if (ui().Ask(heading, message)) {
+				engine_params.push_back(_T("--safemode"));
+				LaunchEngine();
+				return; // We have not terminated yet!
+			}
+		} else if (2 == crash_count) {
+			message += _("Ooops, the engine crashed again.\n\n"
+			             "This time I do not know what to do anymore. Please contact my developers!\n"
+			             ":(");
+
+			customMessageBoxModal(SL_MAIN_ICON, message);
+		}
+	} else if (0 != crash_count) { // there was a crash, but we are cool now
+		customMessageBoxModal(SL_MAIN_ICON, _("Please report the crash to the game's developers\n"));
+	}
+
+	// Forward notification to other listeners
 	event.SetEventType(GlobalEventManager::OnSpringTerminated);
 	GlobalEventManager::Instance()->Send(event);
 }

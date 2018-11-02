@@ -31,15 +31,17 @@ public:
 	bool IsRunning() const;
 	bool Run(IBattle& battle);
 	std::string WriteScriptTxt(IBattle& battle) const;
-	/* start engine */
-	bool LaunchEngine(wxArrayString& params);
 
 private:
 	void OnTerminated(wxCommandEvent& event);
-	bool LaunchEngine(const std::string& cmd, wxArrayString& params);
+	bool LaunchEngine();
 
+	int crash_count;
 	SpringProcess* m_process;
 	bool m_running;
+
+	std::string engine_path;
+	wxArrayString engine_params;
 
 	DECLARE_EVENT_TABLE()
 };
