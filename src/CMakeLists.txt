@@ -158,6 +158,49 @@ IF( OPTION_NOTIFY AND NOT WIN32 )
 	pkg_check_modules( GLIB glib-2.0 )
 ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 
+#-----------------------------------------------------------------------------
+# wxFormBuilder
+#-----------------------------------------------------------------------------
+find_program(wxFB_EXECUTABLE NAMES wxformbuilder ONLY_CMAKE_FIND_ROOT_PATH)
+if (wxFB_EXECUTABLE-NOTFOUND)
+	message(FATAL_ERROR "couldn't find wxformbuilder!")
+else()
+	message(STATUS "found wxformbuilder: ${wxFB_EXECUTABLE}")
+endif()
+
+set(wxfb_src ${springlobby_SOURCE_DIR}/src/gui/wxfb)
+set(wxfb_bin ${springlobby_BINARY_DIR}/src/gui/wxfb)
+# For configure_file below, all .fbp should have
+# property name="path" set to @WXFB_GENERATION_PATH@.
+set(WXFB_GENERATION_PATH ${wxfb_bin}/generated)
+file(MAKE_DIRECTORY ${WXFB_GENERATION_PATH})
+
+set(wxfb_projects
+	hostbattledialog.fbp
+)
+
+set(generated_gui_cpp
+    ${WXFB_GENERATION_PATH}/HostBattleDialogBase.cpp
+)
+
+# for gcc -I
+set(generated_gui_include ${wxfb_bin}) # generated/* in source
+
+foreach(proj_file ${wxfb_projects})
+	message(STATUS "Processing wxFormBuilder project: ${proj_file}")
+	# configure_file monitors input for timestamp changes and output for
+	# content changes (checksum?). Replaces generation path.
+	configure_file(${wxfb_src}/${proj_file} ${wxfb_bin}/${proj_file} @ONLY)
+
+	add_custom_command(COMMAND ${wxFB_EXECUTABLE} "--generate" ${wxfb_bin}/${proj_file}
+		DEPENDS ${wxfb_bin}/${proj_file}
+		OUTPUT ${WXFB_GENERATION_PATH}/HostBattleDialogBase.cpp
+		       ${WXFB_GENERATION_PATH}/HostBattleDialogBase.h
+	)
+endforeach()
+#-----------------------------------------------------------------------------
+# springlobby build
+#-----------------------------------------------------------------------------
 
 set(springlobbySrc
 	address.cpp
@@ -369,6 +412,7 @@ add_subdirectory(updater)
 ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
 		${springlobbySrc}
 		${springlobby_RC_FILE}
+		${generated_gui_cpp}
 	)
 
 target_include_directories(springlobby
@@ -419,6 +463,7 @@ target_include_directories(springlobby
 		PRIVATE ${springlobby_SOURCE_DIR}/src
 		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src
 		PRIVATE ${springlobby_SOURCE_DIR}/src/downloader/lib/src/lsl
+		PRIVATE ${generated_gui_include}
 	)
 
 IF(UNIX)
