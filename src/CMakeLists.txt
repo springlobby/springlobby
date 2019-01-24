@@ -176,27 +176,26 @@ set(WXFB_GENERATION_PATH ${wxfb_bin}/generated)
 file(MAKE_DIRECTORY ${WXFB_GENERATION_PATH})
 
 set(wxfb_projects
-	hostbattledialog.fbp
-)
-
-set(generated_gui_cpp
-    ${WXFB_GENERATION_PATH}/HostBattleDialogBase.cpp
+	HostBattleDialog
 )
 
 # for gcc -I
 set(generated_gui_include ${wxfb_bin}) # generated/* in source
 
-foreach(proj_file ${wxfb_projects})
-	message(STATUS "Processing wxFormBuilder project: ${proj_file}")
+foreach(proj ${wxfb_projects})
+	message(STATUS "Processing wxFormBuilder project: ${proj}")
 	# configure_file monitors input for timestamp changes and output for
 	# content changes (checksum?). Replaces generation path.
-	configure_file(${wxfb_src}/${proj_file} ${wxfb_bin}/${proj_file} @ONLY)
+	configure_file(${wxfb_src}/${proj}.fbp ${wxfb_bin}/${proj}.fbp @ONLY)
 
-	add_custom_command(COMMAND ${wxFB_EXECUTABLE} "--generate" ${wxfb_bin}/${proj_file}
-		DEPENDS ${wxfb_bin}/${proj_file}
-		OUTPUT ${WXFB_GENERATION_PATH}/HostBattleDialogBase.cpp
-		       ${WXFB_GENERATION_PATH}/HostBattleDialogBase.h
+	add_custom_command(COMMAND ${wxFB_EXECUTABLE} "--generate" ${wxfb_bin}/${proj}.fbp
+		DEPENDS ${wxfb_bin}/${proj}.fbp
+		OUTPUT ${WXFB_GENERATION_PATH}/${proj}Base.cpp
+		       ${WXFB_GENERATION_PATH}/${proj}Base.h
 	)
+
+	list(APPEND generated_gui_cpp ${WXFB_GENERATION_PATH}/${proj}Base.cpp)
+	list(APPEND generated_gui_cpp ${WXFB_GENERATION_PATH}/${proj}Base.h)
 endforeach()
 #-----------------------------------------------------------------------------
 # springlobby build
