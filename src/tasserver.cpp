@@ -653,13 +653,26 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
 		m_se->OnChannelSaid(channel, nick, params);
+	}  else if (cmd == "SAIDFROM") {
+		channel = GetWordParam(params);
+		nick = GetWordParam(params);
+		m_se->OnChannelSaid(channel, nick, params);
 	} else if (cmd == "JSON") {
 		ParseJson(inparams);
 	} else if (cmd == "JOINED") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
 		m_se->OnUserJoinChannel(channel, nick);
+	} else if (cmd == "JOINEDFROM") {
+		channel = GetWordParam(params);
+		nick = GetWordParam(params);
+		m_se->OnUserJoinChannel(channel, nick);
 	} else if (cmd == "LEFT") {
+		channel = GetWordParam(params);
+		nick = GetWordParam(params);
+		msg = GetSentenceParam(params);
+		m_se->OnChannelPart(channel, nick, msg);
+	}  else if (cmd == "LEFTFROM") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
 		msg = GetSentenceParam(params);
@@ -675,6 +688,11 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		nick = GetWordParam(params);
 		m_se->OnChannelAction(channel, nick, params);
 	} else if (cmd == "CLIENTS") {
+		channel = GetWordParam(params);
+		while (!(nick = GetWordParam(params)).empty()) {
+			m_se->OnChannelJoin(channel, nick);
+		}
+	} else if (cmd == "CLIENTSFROM") {
 		channel = GetWordParam(params);
 		while (!(nick = GetWordParam(params)).empty()) {
 			m_se->OnChannelJoin(channel, nick);
@@ -2080,4 +2098,3 @@ void TASServer::OnInvalidFingerprintReceived(const std::string& fingerprint, con
 {
 	m_se->OnInvalidFingerprintReceived(fingerprint, expected_fingerprint);
 }
-

@@ -63,6 +63,17 @@ void Channel::Said(User& who, const std::string& message)
 }
 
 
+void Channel::SaidFrom(User& who, const std::string& message)
+{
+	slLogDebugFunc("");
+	if (panel == nullptr) {
+		wxLogError(_T("OnChannelSaidFrom: ud->panel NULL"));
+		return;
+	}
+    panel->Said(TowxString(who.GetNick()), TowxString(message));
+}
+
+
 void Channel::Say(const std::string& message)
 {
 	slLogDebugFunc("");
@@ -100,6 +111,18 @@ void Channel::Left(User& who, const std::string& reason)
 }
 
 
+void Channel::LeftFrom(User& who, const std::string& reason)
+{
+	RemoveUser(who.GetNick());
+	//wxLogDebugFunc( wxEmptyString );
+	if (panel == nullptr) {
+		wxLogWarning(_T("OnUserLeftChannel: ud->panel NULL"));
+		return;
+	}
+	panel->Parted(who, TowxString(reason));
+}
+
+
 void Channel::Leave()
 {
 	m_serv.PartChannel(m_name);
@@ -119,6 +142,16 @@ void Channel::Joined(User& who)
 		return;
 	}
 	panel->Joined(who);
+}
+
+void Channel::JoinedFrom(User& who)
+{
+	AddUser(who);
+	if (panel == nullptr) {
+		wxLogError(_T("OnUserJoinedFromChannel: ud->panel NULL"));
+		return;
+	}
+    panel->Joined(who);
 }
 
 
@@ -288,4 +321,3 @@ void Channel::SetPassword(const std::string& pw)
 {
 	m_password = pw;
 }
-

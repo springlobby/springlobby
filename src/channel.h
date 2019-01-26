@@ -57,6 +57,10 @@ public:
 	std::string GetPassword() const;
 	void SetPassword(const std::string& pw);
 
+    void SaidFrom(User &who, const std::string &message);
+    void LeftFrom(User &who, const std::string &reason);
+    void JoinedFrom(User &who);
+
 private:
 	IServer& m_serv;
 
