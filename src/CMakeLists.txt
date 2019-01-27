@@ -168,6 +168,16 @@ else()
 	message(STATUS "found wxformbuilder: ${wxFB_EXECUTABLE}")
 endif()
 
+
+execute_process(COMMAND ${wxFB_EXECUTABLE} "--version"
+                OUTPUT_VARIABLE wxFB_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+message(STATUS "found wxformbuilder version: ${wxFB_VERSION}")
+set(wxFB_REQUIRED_VERSION "3.9.0")
+if (NOT ("${wxFB_VERSION}" MATCHES ".* ${wxFB_REQUIRED_VERSION}"))
+	message(FATAL_ERROR "wxFormBuilder is not of required version: ${wxFB_REQUIRED_VERSION}")
+endif()
+
+
 set(wxfb_src ${springlobby_SOURCE_DIR}/src/gui/wxfb)
 set(wxfb_bin ${springlobby_BINARY_DIR}/src/gui/wxfb)
 # For configure_file below, all .fbp should have
