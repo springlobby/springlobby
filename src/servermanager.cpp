@@ -90,7 +90,8 @@ void ServerManager::DisconnectFromServer()
 }
 
 //Register new Player on server
-void ServerManager::RegisterNewUser(const std::string& servername, const std::string& username, const std::string& password, const std::string& email)
+void ServerManager::RegisterNewUser(const std::string& servername, const std::string& email,
+                                    const std::string& username, const std::string& password)
 {
 	//TODO: No ui calls here!
 	if (!sett().ServerExists(servername)) {

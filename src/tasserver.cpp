@@ -546,7 +546,9 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 			m_server_lanmode = GetBoolParam(params);
 
 			if (m_do_register) {
-				SendCmd("REGISTER", m_serverinfo.username + std::string(" ") + GetPasswordHash(m_serverinfo.password) + std::string(" ") + m_serverinfo.email);
+				SendCmd("REGISTER", m_serverinfo.username
+				  + std::string(" ") + GetPasswordHash(m_serverinfo.password)
+				  + std::string(" ") + m_serverinfo.email);
 			} else {
 				m_se->OnConnected(m_serverinfo.description, "", true, m_supported_spring_version, m_server_lanmode);
 			}

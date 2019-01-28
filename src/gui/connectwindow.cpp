@@ -52,6 +52,8 @@ void ConnectWindow::EnterRegistrationMode()
 
 	Freeze();
 	m_loginreg_button->SetLabel(_("Return to login..."));
+	m_email_label->Show();
+	m_email_text->Show();
 	m_password2_label->Show();
 	m_password2_hidden_text->Show();
 	m_nickname_text->SetFocus();
@@ -66,6 +68,8 @@ void ConnectWindow::EnterLoginMode()
 
 	Freeze();
 	m_loginreg_button->SetLabel(_("Create a new account..."));
+	m_email_label->Hide();
+	m_email_text->Hide();
 	m_password2_label->Hide();
 	m_password2_hidden_text->Hide();
 	m_ok_button->SetFocus();
@@ -146,6 +150,15 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 		return;
 	}
 
+	// Shortest possible: one character for account, a.b for domain?
+	wxArrayString email_components = wxStringTokenize(m_email_text->GetValue(), _T("@"));
+	if (email_components.GetCount() < 2
+	  ||email_components[0].size() < 1 || email_components[1].size() < 3) {
+		OnRegistrationDenied(_("The entered email is ill-formed.\nPlease try again"));
+		m_email_text->SetFocus();
+		return;
+	}
+
 	sett().SetServerAccountNick(HostAddress, m_nickname_text->GetValue());
 	// Save password if the user choses so
 	if (m_remember_password_check->IsChecked()) {
@@ -163,6 +176,7 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 	}
 	CleanHide();
 	ServerManager::Instance()->RegisterNewUser(STD_STRING(HostAddress),
+	                                           STD_STRING(m_email_text->GetValue()),
 	                                           STD_STRING(m_nickname_text->GetValue()),
 	                                           STD_STRING(m_password1_hidden_text->GetValue()));
 }

@@ -162,9 +162,9 @@ ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 # wxFormBuilder
 #-----------------------------------------------------------------------------
 set(wxfb_projects
+	ConnectWindow
 	CrashReporterDialog
 	HostBattleDialog
-	ConnectWindow
 )
 
 set(wxfb_src ${springlobby_SOURCE_DIR}/src/gui/wxfb)
