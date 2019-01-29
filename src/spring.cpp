@@ -175,8 +175,15 @@ void Spring::OnTerminated(wxCommandEvent& event)
 		wxString message = wxString::Format(_("Engine exited with nonzero code %d\n\n"), exit_code);
 
 		if (1 == crash_count) {
-			message += _("This could be a graphics-related crash in case the engine or game\n"
-			             "requires more than what your GPU / graphics card is capable of.\n"
+			message += _("Possible reasons include:\n"
+			             "a) Timeout when connecting or a long connection loss during gameplay\n"
+			             "   In this case simply restart the engine.\n"
+			             "b) Choosing incompatible content for the selected game\n"
+			             "   This is most often caused by wrong AI. Simply try other AIs\n"
+			             "   one-by-one or better, consult documentation of the selected game.\n"
+			             "c) Graphics-related crash: The engine or game requires more than what\n"
+			             "   your graphics hardware is capable of.\n"
+			             "\n"
 			             "We can run the engine again in safe mode. This will disable all graphics\n"
 			             "features known to cause problems, but will drastically reduce the visual\n"
 			             "quality of the game and some of the effects may not be rendered at all!\n"
@@ -186,6 +193,8 @@ void Spring::OnTerminated(wxCommandEvent& event)
 				engine_params.push_back(_T("--safemode"));
 				LaunchEngine();
 				return; // We have not terminated yet!
+			} else {
+				crash_count = 0;
 			}
 		} else if (2 == crash_count) {
 			message += _("Ooops, the engine crashed again.\n\n"
