@@ -1265,10 +1265,8 @@ void TASServer::HostBattle(const BattleOptions& bo, const std::string& password)
 	cmd += LSL::Util::MakeHashSigned(bo.gamehash);
 	cmd += stdprintf(" %d ", bo.rankneeded);
 	cmd += LSL::Util::MakeHashSigned(bo.maphash) + std::string(" ");
-	if (!bo.userelayhost) { //FIXME: relay host hasn't multiversion support yet, see https://github.com/springlobby/springlobby/issues/98
-		cmd += bo.engineName + std::string("\t");
-		cmd += bo.engineVersion + std::string("\t");
-	}
+	cmd += bo.engineName + std::string("\t");
+	cmd += bo.engineVersion + std::string("\t");
 	cmd += bo.mapname + std::string("\t");
 	cmd += LSL::Util::Replace(bo.description, "\t", "    ") + std::string("\t");
 	cmd += bo.gamename;
