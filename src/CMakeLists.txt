@@ -161,52 +161,60 @@ ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 #-----------------------------------------------------------------------------
 # wxFormBuilder
 #-----------------------------------------------------------------------------
-find_program(wxFB_EXECUTABLE NAMES wxformbuilder ONLY_CMAKE_FIND_ROOT_PATH)
-if (wxFB_EXECUTABLE-NOTFOUND)
-	message(FATAL_ERROR "couldn't find wxformbuilder!")
-else()
-	message(STATUS "found wxformbuilder: ${wxFB_EXECUTABLE}")
-endif()
-
-
-execute_process(COMMAND ${wxFB_EXECUTABLE} "--version"
-                OUTPUT_VARIABLE wxFB_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-message(STATUS "found wxformbuilder version: ${wxFB_VERSION}")
-set(wxFB_REQUIRED_VERSION "3.9.0")
-if (NOT ("${wxFB_VERSION}" MATCHES ".* ${wxFB_REQUIRED_VERSION}"))
-	message(FATAL_ERROR "wxFormBuilder is not of required version: ${wxFB_REQUIRED_VERSION}")
-endif()
-
+set(wxfb_projects
+	HostBattleDialog
+)
 
 set(wxfb_src ${springlobby_SOURCE_DIR}/src/gui/wxfb)
 set(wxfb_bin ${springlobby_BINARY_DIR}/src/gui/wxfb)
+set(wxfb_gensrc ${wxfb_src}/generated)
 # For configure_file below, all .fbp should have
 # property name="path" set to @WXFB_GENERATION_PATH@.
 set(WXFB_GENERATION_PATH ${wxfb_bin}/generated)
 file(MAKE_DIRECTORY ${WXFB_GENERATION_PATH})
 
-set(wxfb_projects
-	HostBattleDialog
-)
+if (IS_DIRECTORY ${wxfb_gensrc})
+	message(STATUS "using pre-generated wxFormBuilder GUI in ${wxfb_gensrc}")
+	file(COPY ${wxfb_gensrc} DESTINATION ${wxfb_bin})
+else()
+	find_program(wxFB_EXECUTABLE NAMES wxformbuilder ONLY_CMAKE_FIND_ROOT_PATH)
+	if (wxFB_EXECUTABLE-NOTFOUND)
+		message(FATAL_ERROR "couldn't find wxFormBuilder!")
+	else()
+		message(STATUS "found wxFormBuilder: ${wxFB_EXECUTABLE}")
+	endif()
 
-# for gcc -I
-set(generated_gui_include ${wxfb_bin}) # generated/* in source
+
+	execute_process(COMMAND ${wxFB_EXECUTABLE} "--version"
+	                OUTPUT_VARIABLE wxFB_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+	message(STATUS "found wxFormBuilder version: ${wxFB_VERSION}")
+	set(wxFB_REQUIRED_VERSION "3.9.0")
+	if (NOT ("${wxFB_VERSION}" MATCHES ".* ${wxFB_REQUIRED_VERSION}"))
+		message(FATAL_ERROR "wxFormBuilder is not of required version: ${wxFB_REQUIRED_VERSION}")
+	endif()
+
+	foreach(proj ${wxfb_projects})
+		message(STATUS "Processing wxFormBuilder project: ${proj}")
+		# configure_file monitors input for timestamp changes and output for
+		# content changes (checksum?). Replaces generation path.
+		configure_file(${wxfb_src}/${proj}.fbp ${wxfb_bin}/${proj}.fbp @ONLY)
+
+		add_custom_command(COMMAND ${wxFB_EXECUTABLE} "--generate" ${wxfb_bin}/${proj}.fbp
+			DEPENDS ${wxfb_bin}/${proj}.fbp
+			OUTPUT ${WXFB_GENERATION_PATH}/${proj}Base.cpp
+			       ${WXFB_GENERATION_PATH}/${proj}Base.h
+		)
+	endforeach()
+endif()
 
 foreach(proj ${wxfb_projects})
-	message(STATUS "Processing wxFormBuilder project: ${proj}")
-	# configure_file monitors input for timestamp changes and output for
-	# content changes (checksum?). Replaces generation path.
-	configure_file(${wxfb_src}/${proj}.fbp ${wxfb_bin}/${proj}.fbp @ONLY)
-
-	add_custom_command(COMMAND ${wxFB_EXECUTABLE} "--generate" ${wxfb_bin}/${proj}.fbp
-		DEPENDS ${wxfb_bin}/${proj}.fbp
-		OUTPUT ${WXFB_GENERATION_PATH}/${proj}Base.cpp
-		       ${WXFB_GENERATION_PATH}/${proj}Base.h
-	)
+	message(STATUS "Adding wxFormBuilder source files for: ${proj}")
 
 	list(APPEND generated_gui_cpp ${WXFB_GENERATION_PATH}/${proj}Base.cpp)
 	list(APPEND generated_gui_cpp ${WXFB_GENERATION_PATH}/${proj}Base.h)
 endforeach()
+# for gcc -I
+set(generated_gui_include ${wxfb_bin}) # generated/* in source
 #-----------------------------------------------------------------------------
 # springlobby build
 #-----------------------------------------------------------------------------
