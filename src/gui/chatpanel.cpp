@@ -1016,17 +1016,6 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 				return true;
 			}
 
-			//we need to disable the channel tab if leaving manually
-			if (line.Upper().StartsWith(_T( "LEAVE" ))) {
-				wxString channame = line.AfterFirst(' ').BeforeFirst(' ');
-				try {
-					Channel& chan = m_server->GetChannel(STD_STRING(channame));
-					chan.Leave();
-					chan.panel = 0;
-				} catch (assert_exception) {
-				}
-			}
-
 			m_server->SendCmd(STD_STRING(line), "");
 			OutputLine(_("Sent: \"") + line + _T("\""), sett().GetChatColorNormal());
 		}

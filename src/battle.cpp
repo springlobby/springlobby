@@ -35,7 +35,7 @@ BEGIN_EVENT_TABLE(Battle, wxEvtHandler)
 EVT_TIMER(TIMER_ID, Battle::OnTimer)
 END_EVENT_TABLE()
 
-Battle::Battle(IServer& serv, int id)
+Battle::Battle(IServer& serv, int id, std::string channel_name)
     : m_auto_unspec(false)
     , m_auto_unspec_num_players(0)
     , m_autolaunch_game(true)
@@ -47,6 +47,7 @@ Battle::Battle(IServer& serv, int id)
 {
 	m_autohost_manager = nullptr;
 	m_opts.battleid = m_id;
+	m_opts.channel_name = channel_name;
 }
 
 

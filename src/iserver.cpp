@@ -45,6 +45,15 @@ bool IServer::UserExists(const std::string& nickname) const
 	return m_users.UserExists(nickname);
 }
 
+bool IServer::UserIsOnBridge(const std::string& nickname) const
+{
+	bool in_channel = m_channels.UserExists(nickname);
+	bool in_battle = false;
+	IBattle* my_battle = GetMe().GetBattle();
+	if (my_battle!=nullptr && my_battle->UserExists(nickname))
+		in_battle = true;
+	return in_channel || in_battle;
+}
 
 Channel& IServer::GetChannel(const std::string& name)
 {
@@ -133,11 +142,11 @@ void IServer::_RemoveChannel(const std::string& name)
 }
 */
 
-IBattle& IServer::_AddBattle(const int& id)
+IBattle& IServer::_AddBattle(const int& id, const std::string channelName)
 {
 	if (battles_iter->BattleExists(id))
 		return battles_iter->GetBattle(id);
-	IBattle* b = new Battle(*this, id);
+	IBattle* b = new Battle(*this, id, channelName);
 
 	m_battles.AddBattle(*b);
 	return *b;

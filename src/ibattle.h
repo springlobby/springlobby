@@ -84,7 +84,8 @@ struct BattleOptions
 {
 	BattleOptions()
 	    : battleid(-1)
-	    , islocked(false)
+	    , channel_name("")
+		, islocked(false)
 	    , battletype(BT_Played)
 	    , ispassworded(false)
 	    , rankneeded(0)
@@ -101,6 +102,7 @@ struct BattleOptions
 	}
 
 	int battleid;
+	std::string channel_name;
 	bool islocked;
 	BattleType battletype;
 	bool ispassworded;
@@ -340,6 +342,11 @@ public:
 		return m_opts.battleid;
 	}
 
+	virtual std::string GetChannelName() const
+	{
+		return m_opts.channel_name;
+	}
+	
 	virtual bool GetGUIListActiv() const
 	{
 		return m_opts.guilistactiv;

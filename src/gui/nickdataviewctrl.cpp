@@ -120,7 +120,6 @@ int NickDataViewCtrl::GetUsersCount() const
 
 void NickDataViewCtrl::DoUsersFilter()
 {
-
 	for (auto const item : m_real_users_list) {
 		if (checkFilteringConditions(item.second)) {
 			//User passed filter. Add him/her to the list.

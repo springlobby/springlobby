@@ -192,6 +192,7 @@ class CommonUser
 public:
 	CommonUser(const std::string& nick, const std::string& country)
 	    : m_nick(std::string(nick))
+		, m_is_bridged(nick.find('@')!=std::string::npos)
 	    , m_country(std::string(country))
 	    , m_id(0)
 	    , m_trueSkill(0.0f)
@@ -210,6 +211,11 @@ public:
 	{
 		m_nick = nick;
 	}
+	bool IsBridged() const
+	{
+		return m_is_bridged;
+	}
+	
 
 	const std::string& GetClientAgent() const { return m_client_agent; }
 	const std::string& GetCountry() const
@@ -284,6 +290,7 @@ public:
 
 private:
 	std::string m_nick;
+	bool m_is_bridged;
 	std::string m_client_agent;
 	std::string m_country;
 	int m_id;

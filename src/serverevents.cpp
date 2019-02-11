@@ -221,13 +221,14 @@ void ServerEvents::OnUserQuit(const std::string& nick)
 void ServerEvents::OnBattleOpened(int id, BattleType type, NatType nat, const std::string& nick,
 				  const std::string& host, int port, int maxplayers,
 				  bool haspass, int rank, const std::string& maphash, const std::string& engineName, const std::string& engineVersion, const std::string& map,
-				  const std::string& title, const std::string& mod)
+				  const std::string& title, const std::string& mod,
+				  const std::string& channelName)
 {
 	slLogDebugFunc("");
 	try {
 		ASSERT_EXCEPTION(!m_serv.BattleExists(id), _T("New battle from server, but already exists!"));
-		IBattle& battle = m_serv._AddBattle(id);
-
+		IBattle& battle = m_serv._AddBattle(id, channelName);
+		
 		User& user = m_serv.GetUser(nick);
 		battle.OnUserAdded(user);
 
@@ -244,7 +245,6 @@ void ServerEvents::OnBattleOpened(int id, BattleType type, NatType nat, const st
 		battle.SetHostGame(mod, "");
 		battle.SetEngineName(engineName);
 		battle.SetEngineVersion(engineVersion);
-
 		if (useractions().DoActionOnUser(UserActions::ActNotifBattle, TowxString(user.GetNick()))) {
 			actNotifBox(SL_MAIN_ICON, TowxString(user.GetNick()) + _(" opened battle ") + TowxString(title));
 		}
@@ -307,7 +307,7 @@ void ServerEvents::OnHostedBattle(int battleid)
 		m_serv.SendHostInfo(IBattle::HI_Send_All_opts);
 
 		ui().OnHostedBattle(battle);
-	} catch (assert_exception) {
+	} catch (assert_exception&) {
 	}
 }
 
@@ -373,9 +373,22 @@ void ServerEvents::OnUserLeftBattle(int battleid, const std::string& nick)
 		User& user = battle.GetUser(nick);
 		// this is necessary since the user will be deleted when the gui function is called
 		bool isbot = user.BattleStatus().IsBot();
+		std::map<std::string, User*> user_map = battle.GetUsers();
 		user.BattleStatus().scriptPassword.clear();
 		battle.OnUserRemoved(user);
 		ui().OnUserLeftBattle(battle, user, isbot);
+	
+		for (auto p : user_map) { // remove any bridged users that we no longer share channels with
+			User& user = *p.second;		
+			if (!user.IsBridged())
+				continue;
+			std::string nick = p.first;
+			if (!m_serv.UserIsOnBridge(nick))
+			{
+				ui().OnUserOffline(user);
+				m_serv._RemoveUser(nick);
+			}
+		}
 	} catch (std::runtime_error& except) {
 	}
 }
@@ -400,7 +413,7 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 		}
 
 		ui().OnBattleInfoUpdated(battle, wxEmptyString);
-	} catch (assert_exception) {
+	} catch (assert_exception&) {
 		wxLogWarning("Exception in OnBattleInfoUpdated");
 	}
 }
@@ -551,7 +564,7 @@ void ServerEvents::OnBattleInfoUpdated(int battleid)
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		ui().OnBattleInfoUpdated(battle, wxEmptyString);
-	} catch (assert_exception) {
+	} catch (assert_exception&) {
 		wxLogWarning("Exception in OnBattleInfoUpdated(%d)", battleid);
 	}
 }
@@ -577,7 +590,7 @@ void ServerEvents::OnBattleDisableUnit(int battleid, const std::string& unitname
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.RestrictUnit(unitname, count);
 		wxLogDebug("OnBattleDisableUnit %d %s %d", battleid, unitname.c_str(), count);
-	} catch (assert_exception) {
+	} catch (assert_exception&) {
 	}
 }
 
@@ -588,7 +601,7 @@ void ServerEvents::OnBattleEnableUnit(int battleid, const std::string& unitname)
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.UnrestrictUnit(unitname);
-	} catch (assert_exception) {
+	} catch (assert_exception&) {
 	}
 }
 
@@ -599,7 +612,7 @@ void ServerEvents::OnBattleEnableAllUnits(int battleid)
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.UnrestrictAllUnits();
-	} catch (assert_exception) {
+	} catch (assert_exception&) {
 	}
 }
 
@@ -608,6 +621,9 @@ void ServerEvents::OnJoinChannelResult(bool success, const std::string& channel,
 {
 	slLogDebugFunc("");
 	if (success) {
+		int battleid = m_serv.m_battles.BattleFromChannel(channel);
+		if (battleid!=-1) // if this channel is associated to a battle, don't show it as a standlone channel
+			return;
 		Channel& chan = m_serv._AddChannel(channel);
 		chan.SetPassword(m_serv.m_channel_pw[channel]);
 		ui().OnJoinedChannelSuccessful(chan);
@@ -622,6 +638,12 @@ void ServerEvents::OnChannelSaid(const std::string& channel, const std::string& 
 {
 	slLogDebugFunc("");
 	try {
+		int battleid = m_serv.m_battles.BattleFromChannel(channel);
+		if (battleid!=-1)   
+		{
+			OnBattleSaid(battleid, who, message);
+			return;
+		}
 		if ((m_serv.GetMe().GetNick() == who) || !useractions().DoActionOnUser(UserActions::ActIgnoreChat, TowxString(who))) {
 			if (m_serv.UserExists(who)) {
 				m_serv.GetChannel(channel).Said(m_serv.GetUser(who), message);
@@ -634,11 +656,29 @@ void ServerEvents::OnChannelSaid(const std::string& channel, const std::string& 
 	}
 }
 
+void ServerEvents::OnBattleSaid(int battleid, const std::string& nick, const std::string& msg)
+{
+	try {
+		IBattle& battle = m_serv.GetBattle(battleid);
+		if ((m_serv.GetMe().GetNick() == nick) || !useractions().DoActionOnUser(UserActions::ActIgnoreChat, TowxString(nick))) {
+			ui().OnSaidBattle(battle, TowxString(nick), TowxString(msg));
+		}
+		AutoHost* ah = battle.GetAutoHost();
+		if (ah != NULL) {
+			ah->OnSaidBattle(TowxString(nick), TowxString(msg));
+		}
+	} catch (assert_exception&) {
+	}
+}
+
 
 void ServerEvents::OnChannelJoin(const std::string& channel, const std::string& who)
 {
 	slLogDebugFunc("");
 	try {
+		int battleid = m_serv.m_battles.BattleFromChannel(channel);
+		if (battleid!=-1)
+			return;
 		m_serv.GetChannel(channel).OnChannelJoin(m_serv.GetUser(who));
 	} catch (std::runtime_error& except) {
 	}
@@ -649,7 +689,24 @@ void ServerEvents::OnChannelPart(const std::string& channel, const std::string& 
 {
 	slLogDebugFunc("");
 	try {
-		m_serv.GetChannel(channel).Left(m_serv.GetUser(who), message);
+		int battleid = m_serv.m_battles.BattleFromChannel(channel);
+		if (battleid!=-1)
+			return;
+		Channel& chan = m_serv.GetChannel(channel);
+		chan.Left(m_serv.GetUser(who), message);	
+		
+		std::map<std::string, User*> user_map = chan.GetUsers();
+		for (auto p : user_map) { // remove any bridged users that we no longer share channels with
+			User& user = *p.second;		
+			if (!user.IsBridged())
+				continue;
+			std::string nick = p.first;
+			if (!m_serv.UserIsOnBridge(nick))
+			{
+				ui().OnUserOffline(user);
+				m_serv._RemoveUser(nick);
+			}
+		}
 	} catch (std::runtime_error& except) {
 	}
 }
@@ -659,6 +716,13 @@ void ServerEvents::OnChannelTopic(const std::string& channel, const std::string&
 {
 	slLogDebugFunc("");
 	try {
+		int battleid = m_serv.m_battles.BattleFromChannel(channel);
+		if (battleid!=-1)
+		{
+			IBattle& battle = m_serv.GetBattle(battleid);
+			ui().OnBattleTopic(battle, message, who);
+			return; // FIXME: send topic to battle
+		}
 		m_serv.GetChannel(channel).SetTopic(message, who);
 	} catch (std::runtime_error& except) {
 	}
@@ -669,11 +733,27 @@ void ServerEvents::OnChannelAction(const std::string& channel, const std::string
 {
 	slLogDebugFunc("");
 	try {
+		int battleid = m_serv.m_battles.BattleFromChannel(channel);
+		if (battleid!=-1)
+		{
+			OnBattleAction(battleid, who, action);
+			return;
+		}
 		if ((m_serv.GetMe().GetNick() == who) || !useractions().DoActionOnUser(UserActions::ActIgnoreChat, TowxString(who)))
 			m_serv.GetChannel(channel).DidAction(m_serv.GetUser(who), action);
 	} catch (std::runtime_error& except) {
 	}
 }
+
+void ServerEvents::OnBattleAction(int /*battleid*/, const std::string& nick, const std::string& action)
+{
+	try {
+		UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
+		    UiEvents::OnBattleActionData(TowxString(nick), TowxString(action)));
+	} catch (assert_exception &) {
+	}
+}
+
 
 
 void ServerEvents::OnPrivateMessage(User& chan, User& who, const std::string& message)
@@ -706,6 +786,9 @@ void ServerEvents::OnUserJoinChannel(const std::string& channel, const std::stri
 {
 	slLogDebugFunc("");
 	try {
+		int battleid = m_serv.m_battles.BattleFromChannel(channel);
+		if (battleid!=-1) // don't display as a channel, if its a battle
+			return
 		m_serv.GetChannel(channel).Joined(m_serv.GetUser(who));
 	} catch (std::runtime_error& except) {
 	}
@@ -717,32 +800,7 @@ void ServerEvents::OnRequestBattleStatus(int battleid)
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.OnRequestBattleStatus();
-	} catch (assert_exception) {
-	}
-}
-
-
-void ServerEvents::OnSaidBattle(int battleid, const std::string& nick, const std::string& msg)
-{
-	try {
-		IBattle& battle = m_serv.GetBattle(battleid);
-		if ((m_serv.GetMe().GetNick() == nick) || !useractions().DoActionOnUser(UserActions::ActIgnoreChat, TowxString(nick))) {
-			ui().OnSaidBattle(battle, TowxString(nick), TowxString(msg));
-		}
-		AutoHost* ah = battle.GetAutoHost();
-		if (ah != NULL) {
-			ah->OnSaidBattle(TowxString(nick), TowxString(msg));
-		}
-	} catch (assert_exception) {
-	}
-}
-
-void ServerEvents::OnBattleAction(int /*battleid*/, const std::string& nick, const std::string& msg)
-{
-	try {
-		UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-		    UiEvents::OnBattleActionData(TowxString(nick), TowxString(msg)));
-	} catch (assert_exception) {
+	} catch (assert_exception&) {
 	}
 }
 
@@ -753,7 +811,7 @@ void ServerEvents::OnBattleStartRectAdd(int battleid, int allyno, int left, int 
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.AddStartRect(allyno, left, top, right, bottom);
 		battle.StartRectAdded(allyno);
-	} catch (assert_exception) {
+	} catch (assert_exception&) {
 	}
 }
 
@@ -764,7 +822,7 @@ void ServerEvents::OnBattleStartRectRemove(int battleid, int allyno)
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.RemoveStartRect(allyno);
 		battle.StartRectRemoved(allyno);
-	} catch (assert_exception) {
+	} catch (assert_exception&) {
 	}
 }
 
@@ -777,7 +835,7 @@ void ServerEvents::OnBattleAddBot(int battleid, const std::string& nick, UserBat
 		battle.OnBotAdded(nick, status);
 		User& bot = battle.GetUser(nick);
 		ui().OnUserJoinedBattle(battle, bot);
-	} catch (assert_exception) {
+	} catch (assert_exception&) {
 	}
 }
 
@@ -834,9 +892,84 @@ void ServerEvents::OnServerMessageBox(const std::string& message)
 
 void ServerEvents::OnChannelMessage(const std::string& channel, const std::string& msg)
 {
-	ui().OnChannelMessage(m_serv.GetChannel(channel), msg);
+	try {
+		int battleid = m_serv.m_battles.BattleFromChannel(channel);
+		if (battleid!=-1)
+		{
+			IBattle& battle = m_serv.GetBattle(battleid);
+			ui().OnBattleMessage(battle, msg);
+			return; // FIXME: send topic to battle
+		}
+		ui().OnChannelMessage(m_serv.GetChannel(channel), msg);
+	} catch (std::runtime_error& except) {
+		wxLogWarning("Channel doesn't exist: '%s' msg: %s", channel.c_str(), msg.c_str());
+	}
 }
 
+
+void ServerEvents::OnJoinedFrom(const std::string& channel, const std::string& who)
+{
+	slLogDebugFunc("");
+	try {
+		int battleid = m_serv.m_battles.BattleFromChannel(channel);
+		if (battleid!=-1) // don't display as a channel, if its a battle
+		{
+			User& user = m_serv.GetUser(who);
+			IBattle& battle = m_serv.GetBattle(battleid);
+			battle.OnUserAdded(user);
+			battle.ForceSpectator(user, true); // bridged users have no battle status
+			ui().OnUserJoinedBattle(battle, user);
+			return;
+		}
+		m_serv.GetChannel(channel).Joined(m_serv.GetUser(who));
+	} catch (std::runtime_error& except) {
+	}	
+}
+
+void ServerEvents::OnLeftFrom(const std::string& channel, const std::string& who)
+{
+	slLogDebugFunc("");
+	try {
+		int battleid = m_serv.m_battles.BattleFromChannel(channel);
+		if (battleid!=-1)
+		{
+			IBattle& battle = m_serv.GetBattle(battleid);
+			User& user = battle.GetUser(who);
+			// this is necessary since the user will be deleted when the gui function is called
+			bool isbot = user.BattleStatus().IsBot();
+			user.BattleStatus().scriptPassword.clear();
+			battle.OnUserRemoved(user);
+			ui().OnUserLeftBattle(battle, user, isbot);
+		} else {
+			m_serv.GetChannel(channel).Left(m_serv.GetUser(who), "");
+		}
+		
+		if (!m_serv.UserIsOnBridge(who))
+		{
+			User& user = m_serv.GetUser(who);		
+			ui().OnUserOffline(user);
+			m_serv._RemoveUser(who);
+		}
+	} catch (std::runtime_error& except) {
+	}
+}
+
+void ServerEvents::OnSaidFrom(const std::string& channel, const std::string& who, const std::string& message)
+{
+	slLogDebugFunc("");
+	try {
+		if (not ((m_serv.GetMe().GetNick() == who) || !useractions().DoActionOnUser(UserActions::ActIgnoreChat, TowxString(who))))
+			return;		
+		int battleid = m_serv.m_battles.BattleFromChannel(channel);
+		if (battleid!=-1)   
+		{
+			OnBattleSaid(battleid, who, message);
+			return; 
+		}
+		m_serv.GetChannel(channel).Said(m_serv.GetUser(who), message);
+	} catch (std::runtime_error& except) {
+	}
+}
 
 void ServerEvents::OnHostExternalUdpPort(const unsigned int udpport)
 {
@@ -888,7 +1021,7 @@ void ServerEvents::OnClientIPPort(const std::string& username, const std::string
 			    UiEvents::OnBattleActionData(TowxString(username), _(" does not really support nat traversal")));
 		}
 		m_serv.GetCurrentBattle()->CheckBan(user);
-	} catch (std::runtime_error) {
+	} catch (std::runtime_error&) {
 		wxLogMessage(_T("runtime_error inside OnClientIPPort()"));
 	}
 }

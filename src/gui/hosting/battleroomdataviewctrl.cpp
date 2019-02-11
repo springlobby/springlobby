@@ -214,8 +214,7 @@ void BattleroomDataViewCtrl::OnAllySelectEvent(wxCommandEvent& event)
 	int ally = event.GetId() - BATTLEROOM_VIEW_ALLY;
 
 	const User* user = GetSelectedItem();
-
-	if (user != nullptr) {
+	if (user != nullptr && !user->IsBridged()) {
 		m_Battle->ForceAlly(*const_cast<User*>(user), ally);
 	}
 }
@@ -226,7 +225,7 @@ void BattleroomDataViewCtrl::OnTeamSelectEvent(wxCommandEvent& event)
 
 	const User* user = GetSelectedItem();
 
-	if (user != nullptr) {
+	if (user != nullptr  && !user->IsBridged()) {
 		m_Battle->ForceTeam(*const_cast<User*>(user), team);
 	}
 }
@@ -286,7 +285,7 @@ void BattleroomDataViewCtrl::OnColourSelect(wxCommandEvent& /*event*/)
 {
 	const User* user = GetSelectedItem();
 
-	if (user == nullptr) {
+	if (user == nullptr || user->IsBridged()) {
 		return;
 	}
 
@@ -306,7 +305,7 @@ void BattleroomDataViewCtrl::OnSideSelect(wxCommandEvent& event)
 
 	const User* user = GetSelectedItem();
 
-	if (user != nullptr) {
+	if (user != nullptr  && !user->IsBridged()) {
 		m_Battle->ForceSide(*const_cast<User*>(user), side);
 	}
 }
@@ -315,7 +314,7 @@ void BattleroomDataViewCtrl::OnHandicapSelect(wxCommandEvent& /*event*/)
 {
 	const User* user = GetSelectedItem();
 
-	if (user == nullptr) {
+	if (user == nullptr || user->IsBridged()) {
 		return;
 	}
 
@@ -329,7 +328,7 @@ void BattleroomDataViewCtrl::OnSpecSelect(wxCommandEvent& /*event*/)
 {
 	const User* user = GetSelectedItem();
 
-	if (user != nullptr) {
+	if (user != nullptr && !user->IsBridged()) {
 		m_Battle->ForceSpectator(*const_cast<User*>(user), m_spec_item->IsChecked());
 	}
 }
@@ -338,7 +337,7 @@ void BattleroomDataViewCtrl::OnKickPlayer(wxCommandEvent& /*event*/)
 {
 	const User* user = GetSelectedItem();
 
-	if (user != nullptr) {
+	if (user != nullptr && !user->IsBridged()) {
 		m_Battle->KickPlayer(*const_cast<User*>(user));
 	}
 }
@@ -347,7 +346,7 @@ void BattleroomDataViewCtrl::OnRingPlayer(wxCommandEvent& /*event*/)
 {
 	const User* user = GetSelectedItem();
 
-	if (user != nullptr) {
+	if (user != nullptr && !user->IsBridged()) {
 		m_Battle->GetServer().Ring(user->GetNick());
 	}
 }

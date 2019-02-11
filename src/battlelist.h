@@ -20,7 +20,7 @@ lsl/container/battlelist.h
 
 class IBattle;
 
-/** \brief encapsulates a <battle_id_t, Battle*> map
+/** \brief encapsulates a write protected <battle_id_t, Battle*> map 
  */
 class BattleList
 {
@@ -29,10 +29,11 @@ class BattleList
 public:
 	BattleList();
 
-	typedef unsigned int battle_id_t;
+	typedef int battle_id_t; // a battle_id is unsigned, -1 used for 'not a battle'
 
 	void AddBattle(IBattle& battle);
 	void RemoveBattle(battle_id_t const& id);
+	battle_id_t BattleFromChannel(const std::string& channelName) const;
 
 	//! @brief mapping from battle id number to battle object
 	typedef std::map<battle_id_t, IBattle*> battle_map_t;
@@ -63,6 +64,5 @@ private:
 	BattleList::battle_iter_t m_iterator;
 	BattleList* m_battlelist;
 };
-
 
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLELIST_H

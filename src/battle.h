@@ -21,7 +21,7 @@ class wxTimer;
 class Battle : public IBattle, public wxEvtHandler
 {
 public:
-	Battle(IServer& serv, int id);
+	Battle(IServer& serv, int id, std::string channel_name);
 	~Battle();
 
 	//const BattleOptions& opts() { return m_opts; }
@@ -128,7 +128,7 @@ private:
 	void ShouldAutoUnspec();
 	bool m_auto_unspec;			// unspec as soon as there's a free slot
 	unsigned int m_auto_unspec_num_players; // number of players in the battle when m_auto_unspec was set to true
-
+	
 	bool m_autolaunch_game; // whether to automatically launch game (when spectating)
 	// Battle variables
 
@@ -141,8 +141,10 @@ private:
 	AutoHost m_ah;
 	bool m_autolock_on_start;
 
-	const int m_id;
 	wxTimer* m_timer;
+
+	const int m_id;
+	const std::string m_channel_name;
 
 	DECLARE_EVENT_TABLE()
 };
