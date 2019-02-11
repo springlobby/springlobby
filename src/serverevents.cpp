@@ -788,7 +788,7 @@ void ServerEvents::OnUserJoinChannel(const std::string& channel, const std::stri
 	try {
 		int battleid = m_serv.m_battles.BattleFromChannel(channel);
 		if (battleid!=-1) // don't display as a channel, if its a battle
-			return
+			return;
 		m_serv.GetChannel(channel).Joined(m_serv.GetUser(who));
 	} catch (std::runtime_error& except) {
 	}

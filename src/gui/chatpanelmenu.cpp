@@ -150,7 +150,9 @@ wxMenu* ChatPanelMenu::GetMenu()
 void ChatPanelMenu::CreateNickListMenu()
 {
 	User* user = m_chatpanel->GetSelectedUser();
-	const bool bridge_user = user->IsBridged();
+	bool bridge_user = false;
+	if (user!=nullptr && user->IsBridged())
+		bridge_user = true;
 	
 	m_user_menu = new ChatPanelMenu::UserMenu(this, this);
 	if (m_chatpanel->m_type != CPT_User and !bridge_user) {
