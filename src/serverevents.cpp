@@ -228,7 +228,7 @@ void ServerEvents::OnBattleOpened(int id, BattleType type, NatType nat, const st
 	try {
 		ASSERT_EXCEPTION(!m_serv.BattleExists(id), _T("New battle from server, but already exists!"));
 		IBattle& battle = m_serv._AddBattle(id, channelName);
-		
+
 		User& user = m_serv.GetUser(nick);
 		battle.OnUserAdded(user);
 
@@ -377,9 +377,9 @@ void ServerEvents::OnUserLeftBattle(int battleid, const std::string& nick)
 		user.BattleStatus().scriptPassword.clear();
 		battle.OnUserRemoved(user);
 		ui().OnUserLeftBattle(battle, user, isbot);
-	
+
 		for (auto p : user_map) { // remove any bridged users that we no longer share channels with
-			User& user = *p.second;		
+			User& user = *p.second;
 			if (!user.IsBridged())
 				continue;
 			std::string nick = p.first;
@@ -639,7 +639,7 @@ void ServerEvents::OnChannelSaid(const std::string& channel, const std::string& 
 	slLogDebugFunc("");
 	try {
 		int battleid = m_serv.m_battles.BattleFromChannel(channel);
-		if (battleid!=-1)   
+		if (battleid!=-1)
 		{
 			OnBattleSaid(battleid, who, message);
 			return;
@@ -693,11 +693,11 @@ void ServerEvents::OnChannelPart(const std::string& channel, const std::string& 
 		if (battleid!=-1)
 			return;
 		Channel& chan = m_serv.GetChannel(channel);
-		chan.Left(m_serv.GetUser(who), message);	
-		
+		chan.Left(m_serv.GetUser(who), message);
+
 		std::map<std::string, User*> user_map = chan.GetUsers();
 		for (auto p : user_map) { // remove any bridged users that we no longer share channels with
-			User& user = *p.second;		
+			User& user = *p.second;
 			if (!user.IsBridged())
 				continue;
 			std::string nick = p.first;
@@ -923,7 +923,7 @@ void ServerEvents::OnJoinedFrom(const std::string& channel, const std::string& w
 		}
 		m_serv.GetChannel(channel).Joined(m_serv.GetUser(who));
 	} catch (std::runtime_error& except) {
-	}	
+	}
 }
 
 void ServerEvents::OnLeftFrom(const std::string& channel, const std::string& who)
@@ -943,10 +943,10 @@ void ServerEvents::OnLeftFrom(const std::string& channel, const std::string& who
 		} else {
 			m_serv.GetChannel(channel).Left(m_serv.GetUser(who), "");
 		}
-		
+
 		if (!m_serv.UserIsOnBridge(who))
 		{
-			User& user = m_serv.GetUser(who);		
+			User& user = m_serv.GetUser(who);
 			ui().OnUserOffline(user);
 			m_serv._RemoveUser(who);
 		}
@@ -959,12 +959,12 @@ void ServerEvents::OnSaidFrom(const std::string& channel, const std::string& who
 	slLogDebugFunc("");
 	try {
 		if (not ((m_serv.GetMe().GetNick() == who) || !useractions().DoActionOnUser(UserActions::ActIgnoreChat, TowxString(who))))
-			return;		
+			return;
 		int battleid = m_serv.m_battles.BattleFromChannel(channel);
-		if (battleid!=-1)   
+		if (battleid!=-1)
 		{
 			OnBattleSaid(battleid, who, message);
-			return; 
+			return;
 		}
 		m_serv.GetChannel(channel).Said(m_serv.GetUser(who), message);
 	} catch (std::runtime_error& except) {

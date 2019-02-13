@@ -23,7 +23,7 @@ class ServerEvents
 {
 public:
 	ServerEvents(IServer& serv)
-	    : m_serv(serv)
+		: m_serv(serv)
 	{
 	}
 	~ServerEvents()
@@ -49,9 +49,9 @@ public:
 	void OnUserQuit(const std::string& nick);
 
 	void OnBattleOpened(int id, BattleType type, NatType nat, const std::string& nick,
-			    const std::string& host, int port, int maxplayers,
-			    bool haspass, int rank, const std::string& maphash, const std::string& engineName, const std::string& engineVersion, const std::string& map,
-			    const std::string& title, const std::string& mod, 
+				const std::string& host, int port, int maxplayers,
+				bool haspass, int rank, const std::string& maphash, const std::string& engineName, const std::string& engineVersion, const std::string& map,
+				const std::string& title, const std::string& mod,
 				const std::string& channelName);
 
 	void OnUserJoinedBattle(int battleid, const std::string& nick, const std::string& userScriptPassword);
@@ -104,11 +104,11 @@ public:
 	void OnServerBroadcast(const std::string& message);
 	void OnServerMessageBox(const std::string& message);
 	void OnChannelMessage(const std::string& channel, const std::string& msg);
-	
+
 	void OnJoinedFrom(const std::string& channel, const std::string& nick);
 	void OnLeftFrom(const std::string& channel, const std::string& nick);
 	void OnSaidFrom(const std::string& channel, const std::string& nick, const std::string& msg);
-	
+
 
 	void OnHostExternalUdpPort(const unsigned int udpport);
 
@@ -137,7 +137,7 @@ public:
 
 	/// use this function to check spam from clients and autokick from the battle
 	void AutoCheckCommandSpam(IBattle& battle, User& nick);
-	
+
 private:
 	IServer& m_serv;
 	std::map<std::string, MessageSpamCheck> m_spam_check;

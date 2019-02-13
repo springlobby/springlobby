@@ -65,4 +65,5 @@ private:
 	BattleList* m_battlelist;
 };
 
+
 #endif // SPRINGLOBBY_HEADERGUARD_BATTLELIST_H
