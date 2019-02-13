@@ -192,7 +192,7 @@ class CommonUser
 public:
 	CommonUser(const std::string& nick, const std::string& country)
 	    : m_nick(std::string(nick))
-		, m_is_bridged(nick.find('@')!=std::string::npos)
+		, m_is_bridged(nick.find(':')!=std::string::npos)
 	    , m_country(std::string(country))
 	    , m_id(0)
 	    , m_trueSkill(0.0f)
