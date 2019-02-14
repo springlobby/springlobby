@@ -21,7 +21,7 @@ class wxTimer;
 class Battle : public IBattle, public wxEvtHandler
 {
 public:
-	Battle(IServer& serv, int id);
+	Battle(IServer& serv, int id, std::string channel_name);
 	~Battle();
 
 	//const BattleOptions& opts() { return m_opts; }
@@ -141,8 +141,10 @@ private:
 	AutoHost m_ah;
 	bool m_autolock_on_start;
 
-	const int m_id;
 	wxTimer* m_timer;
+
+	const int m_id;
+	const std::string m_channel_name;
 
 	DECLARE_EVENT_TABLE()
 };

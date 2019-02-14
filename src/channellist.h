@@ -35,6 +35,7 @@ public:
 	Channel& GetChannel(const std::string& name);
 	Channel& GetChannel(channel_map_t::size_type index);
 	bool ChannelExists(const std::string& name) const;
+	bool UserExists(const std::string& nick) const;
 	channel_map_t::size_type GetNumChannels() const;
 
 private:

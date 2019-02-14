@@ -189,7 +189,8 @@ public:
 	};
 	User& GetUser(const std::string& nickname) const;
 	bool UserExists(const std::string& nickname) const;
-
+	bool UserIsOnBridge(const std::string& nickname) const; 
+	
 	Channel& GetChannel(const std::string& name);
 	int GetNumChannels() const;
 	Channel& GetChannel(const int& index);
@@ -250,7 +251,7 @@ private:
 	Channel& _AddChannel(const std::string& chan);
 	void _RemoveChannel(const std::string& name);
 
-	IBattle& _AddBattle(const int& id);
+	IBattle& _AddBattle(const int& id, const std::string channel_name);
 	void _RemoveBattle(const int& id);
 
 	virtual void RelayCmd(const std::string& /*command*/, const std::string& /*param*/){};
