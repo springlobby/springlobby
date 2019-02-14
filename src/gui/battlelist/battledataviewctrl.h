@@ -33,6 +33,7 @@ public:
 	};
 
 	void OnNotifyWhenBattleEnds(wxCommandEvent& event);
+
 private:
 	void OnContextMenu(wxDataViewEvent& event);
 	void OnDLMap(wxCommandEvent& event);

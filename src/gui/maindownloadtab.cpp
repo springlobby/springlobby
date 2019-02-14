@@ -105,7 +105,7 @@ void MainDownloadTab::OnDownloadFailed(wxCommandEvent& /*event*/)
 	customMessageBox(SL_MAIN_ICON, _("Failed to download selected item."), _("Failed to download"), wxOK);
 }
 
-void MainDownloadTab::OnUnitsyncReloaded(wxCommandEvent &/*event*/)
+void MainDownloadTab::OnUnitsyncReloaded(wxCommandEvent& /*event*/)
 {
 	UpdateDownloadDir();
 }
@@ -115,4 +115,3 @@ void MainDownloadTab::UpdateDownloadDir()
 	wxString downloadDir = TowxString(SlPaths::GetDownloadDir());
 	m_currDownloadDirText->SetLabelText(downloadDir);
 }
-

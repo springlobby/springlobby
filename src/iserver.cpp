@@ -50,7 +50,7 @@ bool IServer::UserIsOnBridge(const std::string& nickname) const
 	bool in_channel = m_channels.UserExists(nickname);
 	bool in_battle = false;
 	IBattle* my_battle = GetMe().GetBattle();
-	if (my_battle!=nullptr && my_battle->UserExists(nickname))
+	if (my_battle != nullptr && my_battle->UserExists(nickname))
 		in_battle = true;
 	return in_channel || in_battle;
 }

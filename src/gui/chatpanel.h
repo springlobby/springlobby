@@ -45,8 +45,7 @@ enum ChatPanelType {
 	CPT_Debug
 };
 
-struct ChatLine
-{
+struct ChatLine {
 	wxString chat;
 	wxString time;
 	wxTextAttr timestyle;

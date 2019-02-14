@@ -188,8 +188,7 @@ wxBitmap BlendBitmaps(const wxBitmap& background, const wxBitmap& overlay, const
 namespace
 {
 //! Helper class for BorderInvariantResizeImage
-struct Resizer
-{
+struct Resizer {
 	// Author: Tobi Vollebregt
 
 	Resizer(wxImage& result, const wxImage& image, bool alpha)
@@ -252,7 +251,7 @@ struct Resizer
 	const unsigned char* const image_data;
 	unsigned char* const result_data;
 };
-}
+} // namespace
 
 typedef std::vector<double> huevec;
 

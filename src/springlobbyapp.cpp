@@ -240,7 +240,7 @@ void SpringLobbyApp::OnFatalException()
 	stackTracer.WalkFromException();
 	auto trace = stackTracer.GetStackTrace();
 
-	wxLogError("Stack trace: " + trace);	
+	wxLogError("Stack trace: " + trace);
 }
 
 

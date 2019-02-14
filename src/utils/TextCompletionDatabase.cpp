@@ -47,8 +47,7 @@ TextCompletionDatabase::Size()
 ///		The Mapping of Abbreviation to insert into the TextCompletionDatabase.
 ///
 //--------------------------------------------------------------------------------
-void
-TextCompletionDatabase::Insert_Mapping(const wxString& abbreviation, const wxString& mapping)
+void TextCompletionDatabase::Insert_Mapping(const wxString& abbreviation, const wxString& mapping)
 {
 
 	HashMap_String_String::const_iterator iter = hm.find(abbreviation);
@@ -66,8 +65,7 @@ TextCompletionDatabase::Insert_Mapping(const wxString& abbreviation, const wxStr
 ///		The Abbreviation to insert into the TextCompletionDatabase.
 ///
 //--------------------------------------------------------------------------------
-void
-TextCompletionDatabase::Delete_Mapping(const wxString& abbreviation)
+void TextCompletionDatabase::Delete_Mapping(const wxString& abbreviation)
 {
 
 	HashMap_String_String::iterator iter = hm.find(abbreviation);

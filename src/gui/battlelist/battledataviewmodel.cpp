@@ -111,7 +111,7 @@ void BattleDataViewModel::GetValue(wxVariant& variant,
 				variant = wxVariant(wxDataViewIconText(engine, iconsCollection->ICON_NEXISTS));
 			else
 				variant = wxVariant(wxDataViewIconText(engine, iconsCollection->ICON_EXISTS));
-			} break;
+		} break;
 
 		case DEFAULT_COLUMN:
 			//Do nothing

@@ -52,7 +52,7 @@ EVT_CHECKBOX(SHOW_PLAYERS_ONLY_CHECK, ChatPanel::OnShowPlayerOnlyCheck)
 END_EVENT_TABLE()
 
 
-SLCONFIG("/Channel/bridgebot", (const wxString&) _T("TIZBOT"), "Name of the Bridgebot (which forwards traffic between #sy and irc channels)");
+SLCONFIG("/Channel/bridgebot", (const wxString&)_T("TIZBOT"), "Name of the Bridgebot (which forwards traffic between #sy and irc channels)");
 SLCONFIG("/GUI/ShowPromotions", true, "Show promotion messages as popup");
 
 /// table for irc colors

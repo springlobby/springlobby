@@ -180,8 +180,7 @@ const wxSize TAB_SIZE(700, 500);
 #include <wx/intl.h>
 //#include <string>
 #include <map>
-struct Control
-{
+struct Control {
 	const wxString lbl;
 	const wxString key;
 	int id;

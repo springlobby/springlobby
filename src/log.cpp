@@ -22,14 +22,14 @@ const char* wxLogLevelToString(wxLogLevel level)
 	assert(level < 8); // just in case
 
 	static const char* levelNames[] = {
-	  "Fatal",
-	  "Error",
-	  "Warning",
-	  "Message",
-	  "Status",
-	  "Info",
-	  "Debug",
-	  "Trace"};
+	    "Fatal",
+	    "Error",
+	    "Warning",
+	    "Message",
+	    "Status",
+	    "Info",
+	    "Debug",
+	    "Trace"};
 
 	return levelNames[static_cast<int>(level)];
 }
@@ -53,9 +53,9 @@ public:
 			// TODO: it will?
 			FILE* log = fopen(C_STRING(logfilepath), "wb+");
 			if (nullptr == log)
-				wxLogError ("Unable to open log file %s for writing!", logfilepath);
+				wxLogError("Unable to open log file %s for writing!", logfilepath);
 			else
-				m_log_files.push_back (log);
+				m_log_files.push_back(log);
 		}
 	}
 
@@ -108,7 +108,7 @@ public:
 				if (sol >= eol) // real end condition
 					break;
 			}
-			wxString line_msg = msg.Mid(sol, eol-sol);
+			wxString line_msg = msg.Mid(sol, eol - sol);
 
 			for (FILE* lf : m_log_files) {
 				fwrite(log_prefix.c_str(), log_prefix.length(), 1, lf);

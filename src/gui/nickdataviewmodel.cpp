@@ -148,7 +148,7 @@ int NickDataViewModel::Compare(const wxDataViewItem& itemA,
 
 		case COUNTRY:
 			if (userA->IsBridged() && !userB->IsBridged()) {
-				sortingResult = 1;			
+				sortingResult = 1;
 			} else if (!userA->IsBridged() && userB->IsBridged()) {
 				sortingResult = -1;
 			} else if (userA->GetCountry() < userB->GetCountry()) {
@@ -162,7 +162,7 @@ int NickDataViewModel::Compare(const wxDataViewItem& itemA,
 
 		case RANK:
 			if (userA->IsBridged() && !userB->IsBridged()) {
-				sortingResult = 1;			
+				sortingResult = 1;
 			} else if (!userA->IsBridged() && userB->IsBridged()) {
 				sortingResult = -1;
 			} else {
@@ -172,7 +172,7 @@ int NickDataViewModel::Compare(const wxDataViewItem& itemA,
 
 		case NICKNAME:
 			if (userA->IsBridged() && !userB->IsBridged()) {
-				sortingResult = 1;			
+				sortingResult = 1;
 			} else if (!userA->IsBridged() && userB->IsBridged()) {
 				sortingResult = -1;
 			} else {

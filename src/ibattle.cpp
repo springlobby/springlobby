@@ -152,7 +152,7 @@ LSL::lslColor IBattle::GetFreeColour(User*) const
 
 	int inc = 1;
 	while (true) {
-		ColorVec fixcolourspalette (GetFixColoursPalette(m_teams_sizes.size() + inc++));
+		ColorVec fixcolourspalette(GetFixColoursPalette(m_teams_sizes.size() + inc++));
 
 		ColorVec::iterator fixcolourspalette_new_end = std::unique(fixcolourspalette.begin(), fixcolourspalette.end(), AreColoursSimilarProxy(20));
 
@@ -295,7 +295,7 @@ void IBattle::OnUserBattleStatusUpdated(User& user, UserBattleStatus status)
 		UserBattleStatus& loopstatus = loopuser.BattleStatus();
 		if (loopstatus.spectator)
 			m_opts.spectators++;
-		else  {
+		else {
 			PlayerJoinedTeam(loopstatus.team);
 			PlayerJoinedAlly(loopstatus.ally);
 			if (!loopstatus.IsBot()) {
@@ -726,7 +726,7 @@ const LSL::UnitsyncMap& IBattle::LoadMap()
 	assert(LSL::Util::MakeHashUnsigned(m_local_map.hash) == m_local_map.hash);
 	const bool options_loaded = CustomBattleOptions().loadOptions(LSL::Enum::MapOption, m_host_map.name);
 	if (!options_loaded) {
-		wxLogWarning( _T("couldn't load the map options"));
+		wxLogWarning(_T("couldn't load the map options"));
 	}
 	m_map_loaded = true;
 	return m_local_map;

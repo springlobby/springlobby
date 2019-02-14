@@ -967,8 +967,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		channel = GetWordParam(params);
 		bridge = GetWordParam(params);
 		while (!(nick = GetWordParam(params)).empty()) {
-			if (!UserExists(nick))
-			{
+			if (!UserExists(nick)) {
 				const int id = m_account_id_count;
 				m_account_id_count++;
 				m_se->OnNewUser(nick, "", id, bridge + " (bridge)");
@@ -982,10 +981,10 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "SAIDFROM") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
-		msg = GetSentenceParam(params);		
+		msg = GetSentenceParam(params);
 		m_se->OnSaidFrom(channel, nick, msg);
 	} else {
-		wxLogWarning(wxString::Format("??? Cmd: %s params: %s" , cmd.c_str(), params.c_str()));
+		wxLogWarning(wxString::Format("??? Cmd: %s params: %s", cmd.c_str(), params.c_str()));
 		m_se->OnUnknownCommand(cmd, params);
 	}
 }
@@ -994,9 +993,9 @@ void TASServer::ParseJson(const std::string& jsonstr)
 {
 	wxLogDebug("JSON %s", jsonstr.c_str());
 
-        Json::Value js; // will contains the root value after parsing.
-        Json::Reader reader;
-        const bool parsingSuccessful = reader.parse(jsonstr, js);
+	Json::Value js; // will contains the root value after parsing.
+	Json::Reader reader;
+	const bool parsingSuccessful = reader.parse(jsonstr, js);
 	if (!parsingSuccessful) {
 		wxLogWarning("Invalid json: %s", jsonstr.c_str());
 		return;
@@ -1059,15 +1058,24 @@ void TASServer::SendCmd(const std::string& command, const std::string& param, bo
 		return;
 	}
 
-	if (command == "PING") return;
-	if (command == "SAY") return;
-	if (command == "SAYEX") return;
-	if (command == "SAYPRIVATE") return;
-	if (command == "SAYPRIVATEEX") return;
-	if (command == "SAYBATTLE") return;
-	if (command == "SAYBATTLEEX") return;
-	if (command == "SAYBATTLEPRIVATE") return;
-	if (command == "SAYBATTLEPRIVATEEX") return;
+	if (command == "PING")
+		return;
+	if (command == "SAY")
+		return;
+	if (command == "SAYEX")
+		return;
+	if (command == "SAYPRIVATE")
+		return;
+	if (command == "SAYPRIVATEEX")
+		return;
+	if (command == "SAYBATTLE")
+		return;
+	if (command == "SAYBATTLEEX")
+		return;
+	if (command == "SAYBATTLEPRIVATE")
+		return;
+	if (command == "SAYBATTLEPRIVATEEX")
+		return;
 
 	if (send_success)
 		wxLogMessage(wxString::Format(_T("sent: %s"), msg.c_str()));
@@ -1935,8 +1943,7 @@ void TASServer::UdpPingTheServer(const std::string& message)
 
 
 // copypasta from spring.cpp , to get users ordered same way as in tasclient.
-struct UserOrder
-{
+struct UserOrder {
 	int index; // user number for GetUser
 	int order; // user order (we'll sort by it)
 	bool operator<(UserOrder b) const
@@ -2105,4 +2112,3 @@ void TASServer::OnInvalidFingerprintReceived(const std::string& fingerprint, con
 {
 	m_se->OnInvalidFingerprintReceived(fingerprint, expected_fingerprint);
 }
-

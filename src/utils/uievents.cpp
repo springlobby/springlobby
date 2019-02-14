@@ -53,4 +53,4 @@ OnBattleActionData::OnBattleActionData(const wxString& nick, const wxString& msg
 	Add(nick);
 	Add(msg);
 }
-}
+} // namespace UiEvents

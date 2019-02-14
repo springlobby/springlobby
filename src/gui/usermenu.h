@@ -123,5 +123,5 @@ private:
 	}
 	//DECLARE_EVENT_TABLE();
 };
-}
+} // namespace SL_GENERIC
 #endif // SPRINGLOBBY_USERMENU_H

@@ -28,6 +28,7 @@ public:
 	void OnLoginDenied(const wxString& reason);
 	void OnRegistrationAccepted(const wxString& user, const wxString& pass);
 	void OnRegistrationDenied(const wxString& reason);
+
 private:
 	void OnCancel(wxCommandEvent& event);
 	void OnOk(wxCommandEvent& event);

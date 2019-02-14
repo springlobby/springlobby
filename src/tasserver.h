@@ -172,8 +172,7 @@ private:
 	void ParseJson(const std::string& jsonstr);
 
 	//! @brief Struct used internally by the TASServer class to calculate ping roundtimes.
-	struct TASPingListItem
-	{
+	struct TASPingListItem {
 		int id;
 		wxLongLong t;
 	};

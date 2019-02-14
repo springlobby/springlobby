@@ -22,7 +22,7 @@ namespace Controls
 {
 class BitmapComboBox;
 }
-}
+} // namespace GUI
 
 
 /** \brief The panel contained in BattleListTab used to filter for diff info of battles

@@ -9,7 +9,7 @@ namespace LSL
 {
 class lslColor;
 typedef std::vector<std::string> StringVector;
-}
+} // namespace LSL
 
 wxColour lslTowxColour(const LSL::lslColor& col);
 LSL::lslColor wxColourTolsl(const wxColour& col);

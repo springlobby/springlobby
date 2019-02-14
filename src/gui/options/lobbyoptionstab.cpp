@@ -99,9 +99,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_editor_box_sizer->Add(m_editor_loc_sizer, 0, wxEXPAND | wxALL, 2);
 	////////
 	wxStaticBoxSizer* m_autojoin_sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("Autoconnect"));
-	m_autoconnect_label = new wxStaticText(this, -1, wxString::Format (
-	  _("If checked, %s will automatically log on to the last used server"),
-	  GetSpringlobbyName()));
+	m_autoconnect_label = new wxStaticText(this, -1, wxString::Format(_("If checked, %s will automatically log on to the last used server"), GetSpringlobbyName()));
 	m_autojoin = new wxCheckBox(this, -1, _("Autoconnect on lobby start"), wxDefaultPosition, wxDefaultSize, 0);
 	m_autojoin->SetValue(cfg().ReadBool(_T( "/Server/Autoconnect")));
 	m_autojoin_sizer->Add(m_autoconnect_label, 1, wxEXPAND | wxALL, 5);
@@ -110,9 +108,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_main_sizer->Add(m_web_box_sizer, 0, wxEXPAND | wxALL, 5);
 	m_main_sizer->Add(m_editor_box_sizer, 0, wxEXPAND | wxALL, 5);
 	wxStaticBoxSizer* m_updater_sizer = new wxStaticBoxSizer(wxVERTICAL, this, _("Automatic updates"));
-	m_updater_label = new wxStaticText(this, -1, wxString::Format(
-	  _("%s can check at startup if a newer version is available and automatically download it for you."),
-	  GetSpringlobbyName()));
+	m_updater_label = new wxStaticText(this, -1, wxString::Format(_("%s can check at startup if a newer version is available and automatically download it for you."), GetSpringlobbyName()));
 	m_updater = new wxCheckBox(this, -1, _("automatically check for updates"), wxDefaultPosition, wxDefaultSize, 0);
 	m_updater->SetValue(cfg().ReadBool(_T("/General/AutoUpdate")));
 	m_updater_sizer->Add(m_updater_label, 1, wxEXPAND | wxALL, 5);
@@ -125,8 +121,7 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_show_tooltips = new wxCheckBox(this, -1, _("Show Tooltips?"), wxDefaultPosition, wxDefaultSize, 0);
 	m_show_tooltips->SetValue(sett().GetShowTooltips());
 #ifndef __WXMSW__ // on windows this change is immediate
-	m_show_tooltips_label = new wxStaticText(this, -1, wxString::Format(
-	  _("Requires %s restart to take effect."), GetSpringlobbyName()));
+	m_show_tooltips_label = new wxStaticText(this, -1, wxString::Format(_("Requires %s restart to take effect."), GetSpringlobbyName()));
 	m_show_tooltips_sizer->Add(m_show_tooltips_label, 1, wxEXPAND | wxALL, 5);
 #endif
 	m_show_tooltips_sizer->Add(m_show_tooltips, 0, wxEXPAND | wxALL, 5);

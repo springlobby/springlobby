@@ -20,13 +20,13 @@ PlaybackDataModel::~PlaybackDataModel()
 }
 
 int PlaybackDataModel::Compare(const wxDataViewItem& itemA, const wxDataViewItem& itemB,
-                               unsigned int column, bool ascending) const
+			       unsigned int column, bool ascending) const
 {
 	int sortingResult = 0;
 	const StoredGame* storedGameA = static_cast<const StoredGame*>(itemA.GetID());
-	wxASSERT (storedGameA != nullptr);
+	wxASSERT(storedGameA != nullptr);
 	const StoredGame* storedGameB = static_cast<const StoredGame*>(itemB.GetID());
-	wxASSERT (storedGameB != nullptr);
+	wxASSERT(storedGameB != nullptr);
 
 	switch (column) {
 		case DEFAULT_COLUMN:
@@ -44,7 +44,7 @@ int PlaybackDataModel::Compare(const wxDataViewItem& itemA, const wxDataViewItem
 			unsigned numPlayersA = storedGameA->battle.GetNumUsers() - storedGameA->battle.GetSpectators();
 			unsigned numPlayersB = storedGameB->battle.GetNumUsers() - storedGameB->battle.GetSpectators();
 			sortingResult = GenericCompare(numPlayersA, numPlayersB);
-			} break;
+		} break;
 		case DURATION:
 			sortingResult = GenericCompare(storedGameA->duration, storedGameB->duration);
 			break;
@@ -60,7 +60,7 @@ int PlaybackDataModel::Compare(const wxDataViewItem& itemA, const wxDataViewItem
 			const std::string& fileNameA = storedGameA->battle.GetPlayBackFileName();
 			const std::string& fileNameB = storedGameB->battle.GetPlayBackFileName();
 			sortingResult = fileNameA.compare(fileNameB);
-			} break;
+		} break;
 		default:
 			wxASSERT(false);
 	}
@@ -131,14 +131,14 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 			minutes = minutes % 60;
 			seconds = seconds % 60;
 			variant = wxString::Format(_T("%02d:%02d:%02d"), hours, minutes, seconds);
-			} break;
+		} break;
 
 		case ENGINE: {
 			wxString engine(storedGame->battle.GetEngineName());
 			engine += ' ';
 			engine += storedGame->battle.GetEngineVersion();
 			variant = engine;
-			} break;
+		} break;
 
 		case FILESIZE:
 			variant = wxString::Format(_T("%d KB"), storedGame->size / 1024);

@@ -12,8 +12,7 @@ class IServer;
 typedef int Sockerror;
 typedef int Protocolerror;
 
-struct MessageSpamCheck
-{
+struct MessageSpamCheck {
 	time_t lastmessage;
 	unsigned int count;
 };
@@ -23,7 +22,7 @@ class ServerEvents
 {
 public:
 	ServerEvents(IServer& serv)
-		: m_serv(serv)
+	    : m_serv(serv)
 	{
 	}
 	~ServerEvents()
@@ -49,10 +48,10 @@ public:
 	void OnUserQuit(const std::string& nick);
 
 	void OnBattleOpened(int id, BattleType type, NatType nat, const std::string& nick,
-				const std::string& host, int port, int maxplayers,
-				bool haspass, int rank, const std::string& maphash, const std::string& engineName, const std::string& engineVersion, const std::string& map,
-				const std::string& title, const std::string& mod,
-				const std::string& channelName);
+			    const std::string& host, int port, int maxplayers,
+			    bool haspass, int rank, const std::string& maphash, const std::string& engineName, const std::string& engineVersion, const std::string& map,
+			    const std::string& title, const std::string& mod,
+			    const std::string& channelName);
 
 	void OnUserJoinedBattle(int battleid, const std::string& nick, const std::string& userScriptPassword);
 	void OnUserLeftBattle(int battleid, const std::string& nick);
