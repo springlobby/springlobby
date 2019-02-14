@@ -65,6 +65,7 @@ public:
 
 	void OnJoinedChannelSuccessful(Channel& chan, bool doFocus = false);
 	void OnChannelMessage(Channel& chan, const std::string& msg);
+	void OnBattleMessage(IBattle& chan, const std::string& msg);
 
 	void OnChannelList(const wxString& channel, const int& numusers);
 	void OnUserOnline(User& user);
@@ -87,7 +88,8 @@ public:
 	void OnJoinedBattle(IBattle& battle);
 	void OnHostedBattle(IBattle& battle);
 	void OnUserBattleStatus(User& user);
-
+	
+	void OnBattleTopic(IBattle& battle, const wxString& who, const wxString& message);
 	void OnSaidBattle(IBattle& battle, const wxString& nick, const wxString& msg);
 
 	void OnSpringTerminated(wxCommandEvent& data);

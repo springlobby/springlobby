@@ -52,13 +52,16 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 		return;
 	}
 
-	bool isSpectator = user->BattleStatus().spectator;
+	bool isSpectator = user->BattleStatus().spectator || user->IsBridged();
 	bool isBot = user->BattleStatus().IsBot();
+	bool isBridged = user->IsBridged();
 
 	switch (col) {
 		case STATUS:
 			if (isBot) {
 				variant = wxVariant(iconsCollection->BMP_BOT);
+			} else if (isBridged) { 
+				variant = wxVariant(iconsCollection->BMP_EMPTY);			
 			} else {
 				if (GetBattle()->IsFounder(*user)) {
 					variant = wxVariant(iconsCollection->GetHostBmp(isSpectator));
@@ -69,7 +72,11 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 			break;
 
 		case INGAME:
-			variant = wxVariant(iconsCollection->GetUserListStateIcon(user->GetStatus(), false /*channel operator?*/, (user->GetBattle() != nullptr) /*in broom?*/));
+			if (isBridged) {
+				variant = wxVariant(iconsCollection->BMP_EMPTY);				
+			} else {
+				variant = wxVariant(iconsCollection->GetUserListStateIcon(user->GetStatus(), false /*channel operator?*/, (user->GetBattle() != nullptr) /*in broom?*/));
+			}
 			break;
 
 		case FACTION:
@@ -90,7 +97,7 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 			break;
 
 		case COUNTRY:
-			if (isBot) {
+			if (isBot || isBridged) {
 				variant = wxVariant(iconsCollection->BMP_EMPTY);
 			} else {
 				variant = wxVariant(iconsCollection->GetFlagBmp(wxString(user->GetCountry())));
@@ -98,7 +105,7 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 			break;
 
 		case RANK:
-			if (isBot) {
+			if (isBot || isBridged) {
 				variant = wxVariant(iconsCollection->BMP_EMPTY);
 			} else {
 				variant = wxVariant(iconsCollection->GetRankBmp(user->GetRank()));
@@ -121,7 +128,7 @@ void BattleroomDataViewModel::GetValue(wxVariant& variant,
 			break;
 
 		case TRUESKILL:
-			if (user->GetTrueSkill() == 0) {
+			if (user->GetTrueSkill() == 0 || isBridged) {
 				variant = wxString(_T("-"));
 			} else {
 				variant = wxString::Format(_T("%ld"), std::lround(user->GetTrueSkill()));
@@ -197,6 +204,8 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 					status1 += 7;
 				if (userA->BattleStatus().spectator)
 					status1 += 10;
+				if (userA->IsBridged())
+					status1 += 50;
 			}
 
 			int status2 = 0;
@@ -209,6 +218,8 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 					status2 += 7;
 				if (userB->BattleStatus().spectator)
 					status2 += 10;
+				if (userB->IsBridged())
+					status2 += 50;
 			}
 
 			if (status1 < status2) {
@@ -293,7 +304,11 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 		} break;
 
 		case COUNTRY:
-			if (userA->GetCountry() < userB->GetCountry()) {
+			if (userA->IsBridged() && !userB->IsBridged()) {
+				sortingResult = 1;
+			} else if (!userA->IsBridged() && userB->IsBridged()) {
+				sortingResult = -1;			
+			} else if (userA->GetCountry() < userB->GetCountry()) {
 				sortingResult = -1;
 			} else if (userA->GetCountry() > userB->GetCountry()) {
 				sortingResult = 1;
@@ -303,11 +318,23 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 			break;
 
 		case RANK:
-			sortingResult = (userA->GetRank() - userB->GetRank());
+			if (userA->IsBridged() && !userB->IsBridged()) {
+				sortingResult = 1;
+			} else if (!userA->IsBridged() && userB->IsBridged()) {
+				sortingResult = -1;			
+			} else {
+				sortingResult = (userA->GetRank() - userB->GetRank());
+			}
 			break;
 
 		case NICKNAME:
-			sortingResult = BaseDataViewModel::Compare(itemA, itemB, column, true);
+			if (userA->IsBridged() && !userB->IsBridged()) {
+				sortingResult = 1;
+			} else if (!userA->IsBridged() && userB->IsBridged()) {
+				sortingResult = -1;			
+			} else {
+				sortingResult = BaseDataViewModel::Compare(itemA, itemB, column, true);
+			}
 			break;
 
 		case TRUESKILL:
@@ -315,7 +342,11 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 			break;
 
 		case TEAM:
-			if (userA->BattleStatus().spectator && (!userB->BattleStatus().spectator)) {
+			if (userA->IsBridged() && !userB->IsBridged()) {
+				sortingResult = 1;
+			} else if (!userA->IsBridged() && userB->IsBridged()) {
+				sortingResult = -1;			
+			} else if (userA->BattleStatus().spectator && (!userB->BattleStatus().spectator)) {
 				return 1;
 			} else if (userB->BattleStatus().spectator && (!userA->BattleStatus().spectator)) {
 				return -1;
@@ -327,7 +358,11 @@ int BattleroomDataViewModel::Compare(const wxDataViewItem& itemA,
 			break;
 
 		case ALLY:
-			if (userA->BattleStatus().spectator && (!userB->BattleStatus().spectator)) {
+			if (userA->IsBridged() && !userB->IsBridged()) {
+				sortingResult = 1;
+			} else if (!userA->IsBridged() && userB->IsBridged()) {
+				sortingResult = -1;			
+			} else if (userA->BattleStatus().spectator && (!userB->BattleStatus().spectator)) {
 				return 1;
 			} else if (userB->BattleStatus().spectator && (!userA->BattleStatus().spectator)) {
 				return -1;

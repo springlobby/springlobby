@@ -46,6 +46,7 @@ void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 
 
 	bool isBot = user->BattleStatus().IsBot();
+	bool isBridged = user->IsBridged();
 
 	switch (col) {
 		case STATUS:
@@ -53,7 +54,7 @@ void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 			break;
 
 		case COUNTRY:
-			if (isBot) {
+			if (isBot || isBridged) {
 				variant = wxVariant(iconsCollection->BMP_EMPTY);
 			} else {
 				variant = wxVariant(
@@ -62,7 +63,7 @@ void NickDataViewModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 			break;
 
 		case RANK:
-			if (isBot) {
+			if (isBot || isBridged) {
 				variant = wxVariant(iconsCollection->BMP_EMPTY);
 			} else {
 				variant = wxVariant(iconsCollection->GetRankBmp(user->GetRank()));
@@ -114,6 +115,10 @@ int NickDataViewModel::Compare(const wxDataViewItem& itemA,
 		case STATUS: {
 			int u1 = 0, u2 = 0;
 
+			if (userA->IsBridged())
+				u1 += 10000;
+			if (userB->IsBridged())
+				u2 -= 10000;
 			if (userA->GetStatus().bot)
 				u1 += 1000;
 			if (userB->GetStatus().bot)
@@ -142,7 +147,11 @@ int NickDataViewModel::Compare(const wxDataViewItem& itemA,
 		} break;
 
 		case COUNTRY:
-			if (userA->GetCountry() < userB->GetCountry()) {
+			if (userA->IsBridged() && !userB->IsBridged()) {
+				sortingResult = 1;			
+			} else if (!userA->IsBridged() && userB->IsBridged()) {
+				sortingResult = -1;
+			} else if (userA->GetCountry() < userB->GetCountry()) {
 				sortingResult = -1;
 			} else if (userA->GetCountry() > userB->GetCountry()) {
 				sortingResult = 1;
@@ -152,11 +161,23 @@ int NickDataViewModel::Compare(const wxDataViewItem& itemA,
 			break;
 
 		case RANK:
-			sortingResult = (userA->GetRank() - userB->GetRank());
+			if (userA->IsBridged() && !userB->IsBridged()) {
+				sortingResult = 1;			
+			} else if (!userA->IsBridged() && userB->IsBridged()) {
+				sortingResult = -1;
+			} else {
+				sortingResult = (userA->GetRank() - userB->GetRank());
+			}
 			break;
 
 		case NICKNAME:
-			sortingResult = BaseDataViewModel::Compare(itemA, itemB, column, true);
+			if (userA->IsBridged() && !userB->IsBridged()) {
+				sortingResult = 1;			
+			} else if (!userA->IsBridged() && userB->IsBridged()) {
+				sortingResult = -1;
+			} else {
+				sortingResult = BaseDataViewModel::Compare(itemA, itemB, column, true);
+			}
 			break;
 
 		case DEFAULT_COLUMN:

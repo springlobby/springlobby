@@ -443,6 +443,8 @@ void MainWindow::OpenChannelChat(Channel& channel, bool doFocus)
 //! @param nick The user to whom the chatwindow should be opened to
 void MainWindow::OpenPrivateChat(User& user, bool doFocus)
 {
+	if (user.IsBridged())
+		return;
 	ASSERT_LOGIC(m_chat_tab != 0, "m_chat_tab");
 	m_func_tabs->SetSelection(PAGE_CHAT);
 	ChatPanel* cp = m_chat_tab->AddChatPanel(user);

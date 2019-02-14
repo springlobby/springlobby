@@ -62,6 +62,20 @@ bool ChannelList::ChannelExists(const std::string& name) const
 	return m_chans.find(name) != m_chans.end();
 }
 
+bool ChannelList::UserExists(const std::string& nick) const
+{
+	for(auto p : m_chans) 
+	{
+		Channel* channel = p.second;
+		if (channel->panel==nullptr)
+			continue;
+		if (channel->UserExists(nick))
+			return true;
+	}
+	return false;
+}
+
+
 channel_map_t::size_type ChannelList::GetNumChannels() const
 {
 	return m_chans.size();

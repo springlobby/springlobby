@@ -345,6 +345,11 @@ void Ui::OnChannelMessage(Channel& chan, const std::string& msg)
 	}
 }
 
+void Ui::OnBattleMessage(IBattle& /*battle*/, const std::string& msg)
+{
+	mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().StatusMessage(TowxString(msg));
+}
+
 void Ui::OnChannelList(const wxString& channel, const int& numusers)
 {
 	ChatPanel* panel = GetActiveChatPanel();
@@ -615,6 +620,16 @@ void Ui::OnUserBattleStatus(User& user)
 		return;
 	}
 	OnBattleInfoUpdated(*battle, wxEmptyString);
+}
+
+void Ui::OnBattleTopic(IBattle& /*battle*/, const wxString& who, const wxString& msg)
+{
+	if (m_main_win == 0)
+		return;
+	try {
+		mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().SetTopic(who, msg);
+	} catch (...) {
+	}
 }
 
 void Ui::OnSaidBattle(IBattle& /*battle*/, const wxString& nick, const wxString& msg)

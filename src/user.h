@@ -45,11 +45,11 @@ struct UserStatus
 	bool moderator;
 	bool bot;
 	UserStatus()
-	    : in_game(false)
-	    , away(false)
-	    , rank(RANK_1)
-	    , moderator(false)
-	    , bot(false)
+		: in_game(false)
+		, away(false)
+		, rank(RANK_1)
+		, moderator(false)
+		, bot(false)
 	{
 	}
 
@@ -90,8 +90,8 @@ struct UserPosition
 	int x;
 	int y;
 	UserPosition()
-	    : x(-1)
-	    , y(-1)
+		: x(-1)
+		, y(-1)
 	{
 	}
 };
@@ -126,18 +126,18 @@ struct UserBattleStatus
 		return !aishortname.empty();
 	}
 	UserBattleStatus()
-	    : team(0)
-	    , ally(0)
-	    , colour(0, 0, 0)
-	    , color_index(-1)
-	    , handicap(0)
-	    , side(0)
-	    , sync(SYNC_UNKNOWN)
-	    , spectator(false)
-	    , ready(false)
-	    , isfromdemo(false)
-	    , aitype(-1)
-	    , udpport(0)
+		: team(0)
+		, ally(0)
+		, colour(0, 0, 0)
+		, color_index(-1)
+		, handicap(0)
+		, side(0)
+		, sync(SYNC_UNKNOWN)
+		, spectator(false)
+		, ready(false)
+		, isfromdemo(false)
+		, aitype(-1)
+		, udpport(0)
 	{
 	}
 	bool operator==(const UserBattleStatus& s) const
@@ -165,14 +165,14 @@ struct UserBattleStatus
 
 	static int ToInt(UserBattleStatus bs)
 	{
-		int ret = 0;			     // b0 is reserved
-		ret += (bs.ready ? 1 : 0) << 1;      // b1
+		int ret = 0;				 // b0 is reserved
+		ret += (bs.ready ? 1 : 0) << 1;		 // b1
 		ret += (bs.team % 16) << 2;	  //b2..b5
 		ret += (bs.ally % 16) << 6;	  //b6..b9
 		ret += (bs.spectator ? 0 : 1) << 10; //b10
-		ret += (bs.handicap % 101) << 11;    //b11..b17
+		ret += (bs.handicap % 101) << 11;	 //b11..b17
 		//b18..b21 reserverd
-		ret += (bs.sync % 3) << 22;  //b22..b23
+		ret += (bs.sync % 3) << 22;	 //b22..b23
 		ret += (bs.side % 16) << 24; //b24..b27
 		//b28..31 is unused
 		return ret;
@@ -191,10 +191,11 @@ class CommonUser
 {
 public:
 	CommonUser(const std::string& nick, const std::string& country)
-	    : m_nick(std::string(nick))
-	    , m_country(std::string(country))
-	    , m_id(0)
-	    , m_trueSkill(0.0f)
+		: m_nick(std::string(nick))
+		, m_is_bridged(nick.find(':')!=std::string::npos)
+		, m_country(std::string(country))
+		, m_id(0)
+		, m_trueSkill(0.0f)
 	{
 	}
 
@@ -210,6 +211,11 @@ public:
 	{
 		m_nick = nick;
 	}
+	bool IsBridged() const
+	{
+		return m_is_bridged;
+	}
+	
 
 	const std::string& GetClientAgent() const { return m_client_agent; }
 	const std::string& GetCountry() const
@@ -263,7 +269,7 @@ public:
 	}
 
 	/** Read-only variant of BattleStatus() above.
-	     */
+		 */
 	const UserBattleStatus&
 	BattleStatus() const
 	{
@@ -273,8 +279,8 @@ public:
 	//void SetBattleStatus( const UserBattleStatus& status );/// dont use this to avoid overwriting data like ip and port, use following method.
 	void UpdateBattleStatus(const UserBattleStatus& status);
 
-	/*    void SetUserData( void* userdata ) { m_data = userdata; }
-        void* GetUserData() { return m_data; }*/
+	/*	  void SetUserData( void* userdata ) { m_data = userdata; }
+		void* GetUserData() { return m_data; }*/
 
 	bool operator == (const CommonUser& other) const
 	{
@@ -284,6 +290,7 @@ public:
 
 private:
 	std::string m_nick;
+	bool m_is_bridged;
 	std::string m_client_agent;
 	std::string m_country;
 	int m_id;

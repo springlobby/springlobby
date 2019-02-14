@@ -377,7 +377,7 @@ void TASServer::Login()
 	if (localaddr.empty())
 		localaddr = "*";
 	m_id_transmission = false;
-	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u\tsp cl p l",
+	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u\tsp cl u l",
 	GetUserName().c_str(), pass.c_str(), localaddr.c_str(),
 	GetSpringlobbyAgent().c_str(), m_crc.GetCRC()));
 	m_id_transmission = true;
@@ -523,7 +523,7 @@ static LSL::StringMap parseKeyValue(const std::string& str)
 void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inparams, int replyid)
 {
 	std::string params = inparams;
-	std::string nick, host, map, title, channel, error, msg, owner, topic, engineName, engineVersion;
+	std::string nick, host, map, title, channel, bridge, error, msg, owner, topic, engineName, engineVersion;
 	//NatType ntype;
 	UserStatus cstatus;
 	int tasstatus;
@@ -599,8 +599,9 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		map = GetSentenceParam(params);
 		title = GetSentenceParam(params);
 		const std::string mod = GetSentenceParam(params);
+		const std::string channel_name = GetSentenceParam(params);
 		m_se->OnBattleOpened(id, (BattleType)type, IntToNatType(nat), nick, host, port, maxplayers,
-				     haspass, rank, hash, engineName, engineVersion, map, title, mod);
+				     haspass, rank, hash, engineName, engineVersion, map, title, mod, channel_name);
 		if (nick == m_relay_host_bot) {
 			GetBattle(id).SetProxy(m_relay_host_bot);
 			JoinBattle(id, STD_STRING(sett().GetLastHostPassword())); // autojoin relayed host battles
@@ -795,12 +796,6 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		//Cmd: ENDOFCHANNELS params:
 	} else if (cmd == "REQUESTBATTLESTATUS") {
 		m_se->OnRequestBattleStatus(m_battle_id);
-	} else if (cmd == "SAIDBATTLE") {
-		nick = GetWordParam(params);
-		m_se->OnSaidBattle(m_battle_id, nick, params);
-	} else if (cmd == "SAIDBATTLEEX") {
-		nick = GetWordParam(params);
-		m_se->OnBattleAction(m_battle_id, nick, params);
 	} else if (cmd == "AGREEMENT") {
 		msg = GetSentenceParam(params);
 		m_agreement += msg + "\n";
@@ -957,6 +952,38 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		m_se->OnConnected(m_serverinfo.description, "", true, m_supported_spring_version, m_server_lanmode);
 	} else if (cmd == "REGISTRATIONDENIED") {
 		m_se->RegistrationDenied(params);
+	} else if (cmd == "JOINEDFROM") {
+		channel = GetWordParam(params);
+		bridge = GetWordParam(params);
+		nick = GetWordParam(params);
+		if (!UserExists(nick)) // bridged users are only known when in a channel with them
+		{
+			const int id = m_account_id_count;
+			m_account_id_count++;
+			m_se->OnNewUser(nick, "", id, bridge + " (bridge)");
+		}
+		m_se->OnJoinedFrom(channel, nick);
+	} else if (cmd == "CLIENTSFROM") {
+		channel = GetWordParam(params);
+		bridge = GetWordParam(params);
+		while (!(nick = GetWordParam(params)).empty()) {
+			if (!UserExists(nick))
+			{
+				const int id = m_account_id_count;
+				m_account_id_count++;
+				m_se->OnNewUser(nick, "", id, bridge + " (bridge)");
+			}
+			m_se->OnJoinedFrom(channel, nick);
+		}
+	} else if (cmd == "LEFTFROM") {
+		channel = GetWordParam(params);
+		nick = GetWordParam(params);
+		m_se->OnLeftFrom(channel, nick);
+	} else if (cmd == "SAIDFROM") {
+		channel = GetWordParam(params);
+		nick = GetWordParam(params);
+		msg = GetSentenceParam(params);		
+		m_se->OnSaidFrom(channel, nick, msg);
 	} else {
 		wxLogWarning(wxString::Format("??? Cmd: %s params: %s" , cmd.c_str(), params.c_str()));
 		m_se->OnUnknownCommand(cmd, params);

@@ -149,14 +149,21 @@ wxMenu* ChatPanelMenu::GetMenu()
 
 void ChatPanelMenu::CreateNickListMenu()
 {
+	User* user = m_chatpanel->GetSelectedUser();
+	bool bridge_user = false;
+	if (user!=nullptr && user->IsBridged())
+		bridge_user = true;
+	
 	m_user_menu = new ChatPanelMenu::UserMenu(this, this);
-	if (m_chatpanel->m_type != CPT_User) {
+	if (m_chatpanel->m_type != CPT_User and !bridge_user) {
 		wxMenuItem* chatitem = new wxMenuItem(m_user_menu, CHAT_MENU_US_CHAT, _("Open Chat"), wxEmptyString, wxITEM_NORMAL);
 		m_user_menu->Append(chatitem);
 	}
-	wxMenuItem* joinbattleitem = new wxMenuItem(m_user_menu, CHAT_MENU_US_JOIN, _("Join same battle"), wxEmptyString, wxITEM_NORMAL);
-	m_user_menu->Append(joinbattleitem);
-
+	if (!bridge_user) {		
+		wxMenuItem* joinbattleitem = new wxMenuItem(m_user_menu, CHAT_MENU_US_JOIN, _("Join same battle"), wxEmptyString, wxITEM_NORMAL);
+		m_user_menu->Append(joinbattleitem);
+	}
+	
 	m_user_menu->AppendSeparator();
 	bool moderator = false;
 	try {
@@ -203,10 +210,9 @@ void ChatPanelMenu::CreateNickListMenu()
 		wxMenuItem* modringitem = new wxMenuItem(m_user_menu, CHAT_MENU_US_MODERATOR_RING, _("Ring"), wxEmptyString, wxITEM_NORMAL);
 		m_user_menu->Append(modringitem);
 		//m_user_menu->Append( -1, _("Moderator"), m_user_menu );
-	} else {
-		wxMenuItem* slapitem = new wxMenuItem(m_user_menu, CHAT_MENU_US_SLAP, _("Slap!"), wxEmptyString, wxITEM_NORMAL);
-		m_user_menu->Append(slapitem);
-	}
+	} 
+	wxMenuItem* slapitem = new wxMenuItem(m_user_menu, CHAT_MENU_US_SLAP, _("Slap!"), wxEmptyString, wxITEM_NORMAL);
+	m_user_menu->Append(slapitem);
 
 	if (m_chatpanel->m_type != CPT_User) {
 		m_user_menu->AppendSeparator();
