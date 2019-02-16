@@ -754,6 +754,16 @@ void IBattle::SetHostGame(const std::string& gamename, const std::string& hash)
 	m_game_loaded = gamename.empty();
 	m_host_game.name = gamename;
 	m_host_game.hash = hash;
+	
+	gameNameWithoutVersion = gamename.substr(0,gamename.find_last_of(" "));
+	int sum = 0;
+	for (char& c : gameNameWithoutVersion) {
+		sum += c;
+	}
+	sum = 255 - (sum % 60);
+	char buff[11];
+	sprintf(buff, "#%2x%2x%2x",sum,sum,sum);
+	gameBackgroundColour = buff;
 }
 
 
@@ -798,6 +808,16 @@ const std::string& IBattle::GetHostGameName() const
 	return m_host_game.name;
 }
 
+
+const std::string& IBattle::GetHostGameNameWithoutVersion() const
+{
+	return gameNameWithoutVersion;
+}
+
+const std::string& IBattle::GetHostGameBackgroundColour() const
+{
+	return gameBackgroundColour;
+}
 
 const std::string& IBattle::GetHostGameHash() const
 {

@@ -228,6 +228,8 @@ public:
 	virtual void SetLocalGame(const LSL::UnitsyncGame& game);
 	virtual const LSL::UnitsyncGame& LoadGame();
 	virtual const std::string& GetHostGameName() const;
+	virtual const std::string& GetHostGameNameWithoutVersion() const;
+	virtual const std::string& GetHostGameBackgroundColour() const;
 	virtual const std::string& GetHostGameHash() const;
 
 	virtual bool MapExists(bool comparehash = true) const;
@@ -719,6 +721,8 @@ private:
 	LSL::UnitsyncMap m_host_map;
 	LSL::UnitsyncGame m_host_game;
 	LSL::UnitsyncGame m_local_game;
+	std::string gameNameWithoutVersion;
+	std::string gameBackgroundColour;
 
 	std::map<std::string, int> m_restricted_units;
 	std::string m_previous_local_game_name;
