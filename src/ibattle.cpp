@@ -333,7 +333,7 @@ bool IBattle::ShouldAutoStart() const
 	if (GetInGame())
 		return false;
 	if (!IsLocked() && (GetNumActivePlayers() < m_opts.maxplayers))
-		return false; // proceed checking for ready & symc players only if the battle is full or locked
+		return false; // proceed checking for ready & sync players only if the battle is full or locked
 	if (!IsEveryoneReady())
 		return false;
 	return true;
@@ -756,14 +756,17 @@ void IBattle::SetHostGame(const std::string& gamename, const std::string& hash)
 	m_host_game.hash = hash;
 	
 	gameNameWithoutVersion = gamename.substr(0,gamename.find_last_of(" "));
+	// generate game-specific colour
 	int sum = 0;
 	for (char& c : gameNameWithoutVersion) {
 		sum += c;
 	}
-	sum = 255 - (sum % 60);
+	int sumR = 255 - ((sum % 7)*10);
+	int sumG = 255 - ((sum % 7)*10);
+	int sumB = 255 - ((sum % 4)*10);
 	char buff[11];
-	sprintf(buff, "#%2x%2x%2x",sum,sum,sum);
-	gameBackgroundColour = buff;
+	sprintf(buff, "#%2x%2x%2x",sumR,sumG,sumB);
+	gameBackgroundColour = wxColour(buff);
 }
 
 
@@ -814,7 +817,7 @@ const std::string& IBattle::GetHostGameNameWithoutVersion() const
 	return gameNameWithoutVersion;
 }
 
-const std::string& IBattle::GetHostGameBackgroundColour() const
+const wxColour& IBattle::GetHostGameBackgroundColour() const
 {
 	return gameBackgroundColour;
 }

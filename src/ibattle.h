@@ -20,6 +20,7 @@ lsl/battle/ibattle.h
 #include "user.h"
 #include "userlist.h"
 #include <lslunitsync/optionswrapper.h>
+#include <wx/colour.h>
 
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
@@ -229,7 +230,7 @@ public:
 	virtual const LSL::UnitsyncGame& LoadGame();
 	virtual const std::string& GetHostGameName() const;
 	virtual const std::string& GetHostGameNameWithoutVersion() const;
-	virtual const std::string& GetHostGameBackgroundColour() const;
+	virtual const wxColour& GetHostGameBackgroundColour() const;
 	virtual const std::string& GetHostGameHash() const;
 
 	virtual bool MapExists(bool comparehash = true) const;
@@ -722,7 +723,7 @@ private:
 	LSL::UnitsyncGame m_host_game;
 	LSL::UnitsyncGame m_local_game;
 	std::string gameNameWithoutVersion;
-	std::string gameBackgroundColour;
+	wxColour gameBackgroundColour;
 
 	std::map<std::string, int> m_restricted_units;
 	std::string m_previous_local_game_name;
