@@ -55,7 +55,6 @@ Battle::~Battle()
 {
 	wxDELETE(m_timer);
 	wxDELETE(m_autohost_manager);
-	Leave();
 	if (m_is_self_in) {
 		GlobalEventManager::Instance()->UnSubscribe(this, GlobalEventManager::OnUnitsyncReloaded);
 		m_is_self_in = false;
