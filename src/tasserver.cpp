@@ -1401,7 +1401,7 @@ void TASServer::FinalizeJoinBattle()
 }
 
 
-void TASServer::LeaveBattle(const int& /*unused*/)
+void TASServer::LeaveBattle(const int& /*battle_id*/)
 {
 	//LEAVEBATTLE
 	slLogDebugFunc("");
