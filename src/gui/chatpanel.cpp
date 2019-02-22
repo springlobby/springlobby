@@ -782,22 +782,12 @@ void ChatPanel::Parted(User& who, const wxString& message)
 	textcompletiondatabase.Delete_Mapping(TowxString(who.GetNick()));
 }
 
-void ChatPanel::SetNoTopic(const wxString& /*who*/)
-{
-	m_topic_set = false;
-}
-
 void ChatPanel::SetTopic(const wxString& who, const wxString& message)
 {
-	/*
-	int pos = refined.Find( _T("\\n") ); // serch for the \n string
-	while ( pos != -1 )
-	{
-	if ( refined.Mid( pos - 1, 3 ) == _T("\\\n") ) continue; // the string \\n means escaped \n
-	refined = refined.Left ( pos -1 ) + _T("\n") + refined.Right( pos +1 ); // replace the /n string with the carriage return char
-	pos = refined.Find( _T("\\n") );
+	if (message.empty()) {
+		m_topic_set = false;
+		return;
 	}
-	*/
 	const wxColor col = sett().GetChatColorServer();
 	// change the image of the tab to show new events
 	if (m_topic_set)

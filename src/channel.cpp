@@ -133,13 +133,6 @@ void Channel::OnChannelJoin(User& who)
 	panel->OnChannelJoin(who);
 }
 
-void Channel::SetNoTopic(const std::string& who)
-{
-	m_topic = std::string();
-	m_topic_nick = who;
-	panel->SetNoTopic(TowxString(who));
-}
-
 void Channel::SetTopic(const std::string& topic, const std::string& who)
 {
 	m_topic = topic;

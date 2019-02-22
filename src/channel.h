@@ -48,7 +48,6 @@ public:
 
 	void OnChannelJoin(User& who);
 
-	void SetNoTopic(const std::string& who);
 	void SetTopic(const std::string& topic, const std::string& who);
 	std::string GetTopic();
 	std::string GetTopicSetBy();

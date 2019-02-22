@@ -720,18 +720,10 @@ void ServerEvents::OnChannelTopic(const std::string& channel, const std::string&
 		int battleid = m_serv.m_battles.BattleFromChannel(channel);
 		if (battleid != -1) {
 			IBattle& battle = m_serv.GetBattle(battleid);
-			if (message.size()==0) {
-				ui().OnNoBattleTopic(battle, who);
-			} else {
-				ui().OnBattleTopic(battle, message, who);
-			}
+			ui().OnBattleTopic(battle, message, who);
 			return;
 		}
-		if (message.size()==0) {
-			m_serv.GetChannel(channel).SetNoTopic(who);
-		} else {
-			m_serv.GetChannel(channel).SetTopic(message, who);
-		}
+		m_serv.GetChannel(channel).SetTopic(message, who);
 	} catch (std::runtime_error& except) {
 	}
 }
