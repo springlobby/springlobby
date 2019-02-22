@@ -245,8 +245,8 @@ tab_quality_video::tab_quality_video(wxWindow* parent, wxWindowID id, const wxSt
 				     const wxSize& size, long style)
     : abstract_panel(parent, id, title, pos, size, style)
 {
-	ctrl_qa_Boxes = new wxCheckBox* [ctrl_qa_Boxes_size];
-	ctrl_vo_Boxes = new wxCheckBox* [ctrl_vo_Boxes_size];
+	ctrl_qa_Boxes = new wxCheckBox*[ctrl_qa_Boxes_size];
+	ctrl_vo_Boxes = new wxCheckBox*[ctrl_vo_Boxes_size];
 	parentSizer = new wxFlexGridSizer(3, 0, 0);
 	leftSizer = new wxFlexGridSizer(1, 15, 0);
 	middleSizer = new wxFlexGridSizer(1, 15, 0);

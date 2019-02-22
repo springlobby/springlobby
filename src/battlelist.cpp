@@ -33,8 +33,7 @@ void BattleList::RemoveBattle(battle_id_t const& id)
 
 BattleList::battle_id_t BattleList::BattleFromChannel(const std::string& channelName) const
 {
-	for (auto el : m_battles)
-	{
+	for (auto el : m_battles) {
 		IBattle* battle = el.second;
 		if (battle->GetChannelName() == channelName)
 			return battle->GetBattleId();

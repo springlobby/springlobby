@@ -5,8 +5,7 @@
 
 #include <wx/string.h>
 
-struct PlaybackListFilterValues
-{
+struct PlaybackListFilterValues {
 	// checkboxes
 	bool map_show;
 	bool mod_show;

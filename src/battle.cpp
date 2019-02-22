@@ -275,8 +275,7 @@ void Battle::OnUserBattleStatusUpdated(User& user, UserBattleStatus status)
 	}
 	IBattle::OnUserBattleStatusUpdated(user, status);
 	if (status.handicap != 0) {
-		UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-		    UiEvents::OnBattleActionData(wxString(_T(" ")), (_T("Warning: user ") + TowxString(user.GetNick()) + _T(" got bonus ")) << status.handicap));
+		UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), (_T("Warning: user ") + TowxString(user.GetNick()) + _T(" got bonus ")) << status.handicap));
 	}
 	if (IsFounderMe()) {
 		if (ShouldAutoStart()) {
@@ -368,8 +367,7 @@ bool Battle::ExecuteSayCommand(const std::string& cmd)
 				m_serv.BattleKickPlayer(m_opts.battleid, user);
 			} catch (assert_exception) {
 			}
-			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-			    UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(nick + " banned")));
+			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(nick + " banned")));
 
 			//m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
 			return true;
@@ -377,22 +375,18 @@ bool Battle::ExecuteSayCommand(const std::string& cmd)
 		if (cmd_name == _T("/unban")) {
 			wxString nick = TowxString(cmd).AfterFirst(' ');
 			m_banned_users.erase(STD_STRING(nick));
-			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-			    UiEvents::OnBattleActionData(wxString(_T(" ")), nick + _T(" unbanned")));
+			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), nick + _T(" unbanned")));
 			//m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
 			return true;
 		}
 		if (cmd_name == _T("/banlist")) {
-			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-			    UiEvents::OnBattleActionData(wxString(_T(" ")), _T("banlist:")));
+			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), _T("banlist:")));
 
 			for (std::set<std::string>::const_iterator i = m_banned_users.begin(); i != m_banned_users.end(); ++i) {
-				UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-				    UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(*i)));
+				UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(*i)));
 			}
 			for (std::set<std::string>::iterator i = m_banned_ips.begin(); i != m_banned_ips.end(); ++i) {
-				UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-				    UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(*i)));
+				UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(*i)));
 			}
 			return true;
 		}
@@ -400,8 +394,7 @@ bool Battle::ExecuteSayCommand(const std::string& cmd)
 			wxString nick = TowxString(cmd).AfterFirst(' ');
 			m_banned_users.erase(STD_STRING(nick));
 			m_banned_ips.erase(STD_STRING(nick));
-			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-			    UiEvents::OnBattleActionData(wxString(_T(" ")), nick + _T(" unbanned")));
+			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), nick + _T(" unbanned")));
 
 			//m_serv.DoActionBattle( m_opts.battleid, cmd.AfterFirst(' ') );
 			return true;
@@ -409,15 +402,13 @@ bool Battle::ExecuteSayCommand(const std::string& cmd)
 		if (cmd_name == _T("/ipban")) {
 			wxString nick = TowxString(cmd).AfterFirst(' ');
 			m_banned_users.insert(STD_STRING(nick));
-			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-			    UiEvents::OnBattleActionData(wxString(_T(" ")), nick + _T(" banned")));
+			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), nick + _T(" banned")));
 
 			if (UserExists(STD_STRING(nick))) {
 				User& user = GetUser(STD_STRING(nick));
 				if (!user.BattleStatus().ip.empty()) {
 					m_banned_ips.insert(user.BattleStatus().ip);
-					UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-					    UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(user.BattleStatus().ip) + _T(" banned")));
+					UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(user.BattleStatus().ip) + _T(" banned")));
 				}
 				m_serv.BattleKickPlayer(m_opts.battleid, user);
 			}
@@ -437,12 +428,10 @@ bool Battle::CheckBan(User& user)
 	if (IsFounderMe()) {
 		if (m_banned_users.count(user.GetNick()) > 0 || useractions().DoActionOnUser(UserActions::ActAutokick, TowxString(user.GetNick()))) {
 			KickPlayer(user);
-			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-			    UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(user.GetNick()) + _T(" is banned, kicking")));
+			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(user.GetNick()) + _T(" is banned, kicking")));
 			return true;
 		} else if (m_banned_ips.count(user.BattleStatus().ip) > 0) {
-			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(
-			    UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(user.BattleStatus().ip) + _T(" is banned, kicking")));
+			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(user.BattleStatus().ip) + _T(" is banned, kicking")));
 			KickPlayer(user);
 			return true;
 		}
@@ -727,8 +716,7 @@ bool PlayerTeamCompareFunction(User* a, User* b) // should never operate on null
 	return (a->BattleStatus().team > b->BattleStatus().team);
 }
 
-struct Alliance
-{
+struct Alliance {
 	std::vector<User*> players;
 	float ranksum;
 	int allynum;
@@ -760,8 +748,7 @@ struct Alliance
 	}
 };
 
-struct ControlTeam
-{
+struct ControlTeam {
 	std::vector<User*> players;
 	float ranksum;
 	int teamnum;

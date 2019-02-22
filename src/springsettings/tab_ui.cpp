@@ -119,8 +119,8 @@ void tab_ui::updateControls(int /*what_to_update*/)
 tab_ui::tab_ui(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
     : abstract_panel(parent, id, title, pos, size, style)
 {
-	ctrl_scroll_slider = new wxSlider* [ctrl_scroll_slider_size];
-	ctrl_ui_chkb = new wxCheckBox* [ctrl_ui_chkb_size];
+	ctrl_scroll_slider = new wxSlider*[ctrl_scroll_slider_size];
+	ctrl_ui_chkb = new wxCheckBox*[ctrl_ui_chkb_size];
 	pSizer = new wxFlexGridSizer(3, 15, 15);
 	cSizerL = new wxFlexGridSizer(1, 10, 10);
 	cSizerR = new wxFlexGridSizer(1, 10, 10);

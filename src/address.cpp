@@ -104,4 +104,3 @@ std::string MacToString(std::vector<unsigned char>& mac)
 	}
 	return res;
 }
-

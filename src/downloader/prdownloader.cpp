@@ -204,7 +204,7 @@ void PrDownloader::GetProgress(DownloadProgress& progress)
 static BOOL g_first_time = 1;
 static LARGE_INTEGER g_counts_per_sec;
 
-int clock_gettime(int dummy, struct timespec *ct)
+int clock_gettime(int dummy, struct timespec* ct)
 {
 	LARGE_INTEGER count;
 	if (g_first_time) {
@@ -233,7 +233,7 @@ void updatelistener(int downloaded, int filesize)
 	static struct timespec lastupdate = {0, 0};
 	struct timespec now;
 	clock_gettime(CLOCK_MONOTONIC, &now);
-	if (((double)now.tv_sec + 1.0e-9*now.tv_nsec) - ((double)lastupdate.tv_sec + 1.0e-9*lastupdate.tv_nsec) < 0.2f ) {
+	if (((double)now.tv_sec + 1.0e-9 * now.tv_nsec) - ((double)lastupdate.tv_sec + 1.0e-9 * lastupdate.tv_nsec) < 0.2f) {
 		//rate limit events
 		return;
 	}

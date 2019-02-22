@@ -10,8 +10,7 @@ using namespace std;
 
 class wxWindow;
 
-struct ChannelInfo
-{
+struct ChannelInfo {
 	ChannelInfo()
 	    : name(wxEmptyString)
 	    , usercount(0)

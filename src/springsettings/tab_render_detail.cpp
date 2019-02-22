@@ -36,7 +36,7 @@ void tab_render_detail::initRendererSizer(wxFlexGridSizer* sizerL, wxFlexGridSiz
 tab_render_detail::tab_render_detail(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
     : abstract_panel(parent, id, title, pos, size, style)
 {
-	ctrl_detail_sliders = new wxSlider* [ctrl_detail_sliders_size];
+	ctrl_detail_sliders = new wxSlider*[ctrl_detail_sliders_size];
 	renderSizer = new wxGridSizer(2, 15, 5);
 	parentSizer = new wxGridSizer(1, 0, 0);
 	rendererSizerA = new wxFlexGridSizer(2, 35, 10);

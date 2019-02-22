@@ -115,10 +115,10 @@ std::string GetSpringlobbyInfo()
 
 	res += stdprintf(("Compiled with wxWidgets %d.%d.%d.%d"), wxMAJOR_VERSION, wxMINOR_VERSION, wxRELEASE_NUMBER, wxSUBRELEASE_NUMBER) + nl;
 	res += stdprintf("Global log level: %lu (up to and including %s)\n",
-	  wxLog::GetLogLevel(), wxLogLevelToString (wxLog::GetLogLevel()));
+			 wxLog::GetLogLevel(), wxLogLevelToString(wxLog::GetLogLevel()));
 	res += stdprintf("PR-Downloader log level: %lu (up to and including %s)\n",
-	  wxLog::GetComponentLevel(PRD_LOG_COMPONENT),
-	  wxLogLevelToString (wxLog::GetComponentLevel(PRD_LOG_COMPONENT)));
+			 wxLog::GetComponentLevel(PRD_LOG_COMPONENT),
+			 wxLogLevelToString(wxLog::GetComponentLevel(PRD_LOG_COMPONENT)));
 	res += "Started with: \n";
 	for (int i = 0; i < wxTheApp->argc; ++i)
 		res += STD_STRING(wxTheApp->argv[i]) + std::string(" ");

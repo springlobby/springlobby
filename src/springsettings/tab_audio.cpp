@@ -29,7 +29,7 @@ void audio_panel::initAudioSizer(wxStaticBoxSizer* sizer)
 audio_panel::audio_panel(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
     : abstract_panel(parent, id, title, pos, size, style)
 {
-	ctrl_audio_sliders = new wxSlider* [ctrl_audio_sliders_size];
+	ctrl_audio_sliders = new wxSlider*[ctrl_audio_sliders_size];
 	parentSizer = new wxBoxSizer(wxHORIZONTAL); // main window sizer (three columns)
 	childLSizer = new wxBoxSizer(wxVERTICAL);   // main window left column sizer
 

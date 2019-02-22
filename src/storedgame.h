@@ -6,8 +6,7 @@
 #include "offlinebattle.h"
 
 
-struct StoredGame
-{
+struct StoredGame {
 
 	int id;
 	int playernum;
@@ -38,7 +37,7 @@ struct StoredGame
 
 	StoredGame(StoredGame&& moved)
 	{
-		this->operator=((StoredGame && )moved);
+		this->operator=((StoredGame &&) moved);
 	}
 
 	StoredGame& operator=(const StoredGame& copy) = delete;
@@ -51,7 +50,7 @@ struct StoredGame
 		size = moved.size;
 		date = moved.date;
 		date_string = moved.date_string;
-		battle.operator=((OfflineBattle && )moved.battle);
+		battle.operator=((OfflineBattle &&) moved.battle);
 		return *this;
 	}
 

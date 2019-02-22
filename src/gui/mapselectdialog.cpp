@@ -66,7 +66,7 @@ MapSelectDialog::MapSelectDialog(wxWindow* parent)
 	StaticBoxSizer2->Add(m_filter_text, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer2->Add(StaticBoxSizer2, 0, wxALL | wxEXPAND, 5);
 	m_map_details = new wxStaticBoxSizer(wxVERTICAL, this, _("Map details"));
-	m_map_name = new wxTextCtrl(this, ID_MAP_NAME, wxEmptyString, wxDefaultPosition, wxSize(170, 90), wxTE_MULTILINE|wxTE_READONLY|wxNO_BORDER);
+	m_map_name = new wxTextCtrl(this, ID_MAP_NAME, wxEmptyString, wxDefaultPosition, wxSize(170, 90), wxTE_MULTILINE | wxTE_READONLY | wxNO_BORDER);
 	m_map_name->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_MENU));
 	m_map_details->Add(m_map_name, 0, wxTOP | wxLEFT | wxRIGHT | wxEXPAND, 5);
 	m_map_opts_list = new wxListCtrl(this, ID_MAP_OPTS_LIST, wxDefaultPosition, wxSize(170, 120), wxLC_REPORT | wxLC_NO_HEADER | wxNO_BORDER, wxDefaultValidator, _T("ID_MAP_OPTS_LIST"));
@@ -185,13 +185,12 @@ static MapGridCtrl::SortKey GetSelectedSortKey(wxChoice* choice)
 	const int selection = choice->GetSelection();
 	if (selection == wxNOT_FOUND) //default to first entry
 		return MapGridCtrl::SortKey_Name;
-	return (MapGridCtrl::SortKey)(int)(long) choice->GetClientData(selection);
+	return (MapGridCtrl::SortKey)(int)(long)choice->GetClientData(selection);
 }
 
 namespace
 {
-struct FilterPredicate
-{
+struct FilterPredicate {
 	FilterPredicate(const wxString& _searchText)
 	    : searchText(STD_STRING(_searchText.Lower()))
 	{
@@ -202,7 +201,7 @@ struct FilterPredicate
 	}
 	const std::string searchText;
 };
-}
+} // namespace
 
 void MapSelectDialog::UpdateSortAndFilter()
 {

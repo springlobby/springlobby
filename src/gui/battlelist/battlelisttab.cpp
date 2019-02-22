@@ -58,7 +58,7 @@ BattleListTab::BattleListTab(wxWindow* parent)
     , m_sel_battle(0)
 {
 	auto AddToSizer = [&](wxSizer* sizer, int height, wxWindow* window) {
-		return sizer->Add (window, 0, wxALL, height);
+		return sizer->Add(window, 0, wxALL, height);
 	};
 
 	GetAui().manager->AddPane(this, wxLEFT, _T( "battlelisttab" ));
@@ -67,22 +67,22 @@ BattleListTab::BattleListTab(wxWindow* parent)
 //	m_battle_list->SetHighLightAction(UserActions::ActHighlight);
 
 
-	m_players_lbl  = new wxStaticText(this, wxID_ANY, _("Players:"));
+	m_players_lbl = new wxStaticText(this, wxID_ANY, _("Players:"));
 	m_players_text = new wxStaticText(this, wxID_ANY, wxEmptyString);
-	m_map_lbl      = new wxStaticText(this, wxID_ANY, _("Map:"));
-	m_map_text     = new wxStaticText(this, wxID_ANY, wxEmptyString);
-	m_game_lbl     = new wxStaticText(this, wxID_ANY, _("Game:"));
-	m_game_text    = new wxStaticText(this, wxID_ANY, wxEmptyString);
-	m_engine_lbl   = new wxStaticText(this, wxID_ANY, _("Engine:"));
-	m_engine_text  = new wxStaticText(this, wxID_ANY, wxEmptyString);
-	m_host_lbl     = new wxStaticText(this, wxID_ANY, _("Host:"));
-	m_host_text    = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_map_lbl = new wxStaticText(this, wxID_ANY, _("Map:"));
+	m_map_text = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_game_lbl = new wxStaticText(this, wxID_ANY, _("Game:"));
+	m_game_text = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_engine_lbl = new wxStaticText(this, wxID_ANY, _("Engine:"));
+	m_engine_text = new wxStaticText(this, wxID_ANY, wxEmptyString);
+	m_host_lbl = new wxStaticText(this, wxID_ANY, _("Host:"));
+	m_host_text = new wxStaticText(this, wxID_ANY, wxEmptyString);
 
 	const int bib_height = 5; // Battle Info element border height
-	const wxSize bib_button_size(-1, m_host_text->GetSize().GetHeight()+2*bib_height);
+	const wxSize bib_button_size(-1, m_host_text->GetSize().GetHeight() + 2 * bib_height);
 
 	m_host_notify_button = new wxToggleOrCheck(this, wxID_ANY, _("Notify"), wxDefaultPosition,
-	                                           bib_button_size, wxBU_EXACTFIT);
+						   bib_button_size, wxBU_EXACTFIT);
 	m_host_notify_button->Disable();
 	m_host_notify_button->SetToolTip(_("Notify me when the battle ends (Only supported by bots)"));
 	m_host_notify_button->Bind(wxEVT_TOGGLEBUTTON, &BattleListTab::OnNotifyWhenBattleEnds, this);
@@ -105,7 +105,7 @@ BattleListTab::BattleListTab(wxWindow* parent)
 
 
 	wxSize s = m_data_sizer->CalcMin();
-	wxLogDebug (_T("Minimum size for data sizer: %d x %d"), s.GetHeight(), s.GetWidth() );
+	wxLogDebug(_T("Minimum size for data sizer: %d x %d"), s.GetHeight(), s.GetWidth());
 	m_minimap = new MapCtrl(this, s.GetHeight(), 0, true, false, false);
 	m_players = new NickDataViewCtrl(_T("NickDataViewCtrl_BattleListTab"), this, false, 0, true);
 
@@ -119,7 +119,7 @@ BattleListTab::BattleListTab(wxWindow* parent)
 	m_filter->Hide();
 
 
-	const wxSize br_size (-1, 28); // Button row size
+	const wxSize br_size(-1, 28); // Button row size
 	m_host_btn = new wxButton(this, BATTLE_HOST, _("Host new..."), wxDefaultPosition, br_size, 0);
 	m_filter_activ = new wxCheckBox(this, BATTLE_LIST_FILTER_ACTIV, _("Activated"));
 	m_filter_show = new wxToggleOrCheck(this, BATTLE_LIST_FILTER_BUTTON, _(" Filter "), wxDefaultPosition, br_size, 0);
@@ -138,7 +138,7 @@ BattleListTab::BattleListTab(wxWindow* parent)
 	m_buttons_sizer->Add(m_info_show, 0, 0, 5);
 	m_buttons_sizer->Add(m_battle_num, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4);
 	m_buttons_sizer->Add(0, 0, 1, wxEXPAND, 0);
-	m_buttons_sizer->Add(m_rank_warn,  0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4);
+	m_buttons_sizer->Add(m_rank_warn, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, 4);
 	m_buttons_sizer->Add(m_join_btn, 0, wxBOTTOM | wxRIGHT, 5);
 
 
@@ -205,7 +205,7 @@ void BattleListTab::SelectBattle(IBattle* battle)
 		m_map_text->SetLabel(TowxString(m_sel_battle->GetHostMapName()));
 		m_players->SetUsers(m_sel_battle->GetUsers());
 		m_players_text->SetLabel(wxString::Format(_T("%d (Max: %d) + %d spectators"), num_players,
-		  static_cast<int>(m_sel_battle->GetMaxPlayers()), m_sel_battle->GetSpectators() ));
+							  static_cast<int>(m_sel_battle->GetMaxPlayers()), m_sel_battle->GetSpectators()));
 		if (num_players == static_cast<int>(m_sel_battle->GetMaxPlayers()))
 			m_players_text->SetForegroundColour(*wxRED);
 	} else {

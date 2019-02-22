@@ -5,8 +5,7 @@
 
 #include "../testingstuff/silent_logger.h"
 
-struct TestInitializer
-{
+struct TestInitializer {
 	TestInitializer()
 	{
 		InitWxLogger();

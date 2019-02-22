@@ -81,8 +81,7 @@ private:
 		MapState_GotMinimap
 	};
 
-	struct MapData : LSL::UnitsyncMap
-	{
+	struct MapData : LSL::UnitsyncMap {
 		MapData()
 		    : state(MapState_NoMinimap)
 		    , priority(0)

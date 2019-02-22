@@ -148,7 +148,6 @@ BattleListFilter::BattleListFilter(wxWindow* parent, wxWindowID id, BattleListTa
 	m_filter_sizer2->Add(m_filter_status_open, 0, wxALL | wxEXPAND, 5);
 
 
-
 	m_filter_player_text = new wxStaticText(this, wxID_ANY, _("Player:"));
 	m_filter_player_text->Wrap(-1);
 	m_filter_player_button = new wxButton(this, BATTLE_FILTER_PLAYER_BUTTON, f_values.player_mode, wxDefaultPosition, wxSize(25, 25), 0);

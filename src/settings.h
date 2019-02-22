@@ -52,8 +52,7 @@ class wxTranslationHelper;
 
 typedef std::map<unsigned int, unsigned int> ColumnMap;
 
-struct ChannelJoinInfo
-{
+struct ChannelJoinInfo {
 	wxString name;
 	wxString password;
 };
@@ -430,8 +429,7 @@ public:
 	void SetBattleLastSideSel(const wxString& gamename, int sidenum);
 	int GetBattleLastSideSel(const wxString& gamename);
 
-	struct SettStartBox
-	{
+	struct SettStartBox {
 		int ally;
 		int topx;
 		int topy;

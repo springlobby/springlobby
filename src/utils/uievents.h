@@ -14,8 +14,7 @@ typedef wxString UiEventsTypes;
 
 typedef wxArrayString UiEventData;
 
-struct OnBattleActionData : public wxArrayString
-{
+struct OnBattleActionData : public wxArrayString {
 	OnBattleActionData(const wxString& nick, const wxString& msg);
 };
 
@@ -73,5 +72,5 @@ private:
 };
 
 EventSender<StatusData>& GetStatusEventSender(StatusType cmd);
-}
+} // namespace UiEvents
 #endif // SPRINGLOBBY_HEADERGUARD_UIEVENTS_H

@@ -26,7 +26,7 @@ OfflineBattle::OfflineBattle(OfflineBattle&& moved)
     : IBattle()
     , m_id(0)
 {
-	*this = (OfflineBattle && )moved;
+	*this = (OfflineBattle &&) moved;
 }
 
 OfflineBattle& OfflineBattle::operator=(OfflineBattle&& moved)

@@ -16,8 +16,7 @@ SLCONFIG("/test/double", -321.123, "test double");
 SLCONFIG("/test/bool", true, "test bool");
 SLCONFIG("/test/notbool", false, "test bool");
 
-struct TestInitializer
-{
+struct TestInitializer {
 	TestInitializer()
 	{
 		InitWxLogger();
@@ -40,7 +39,7 @@ std::string GetConfigPath()
 {
 	return STD_STRING(wxFileName::GetTempDir()) + "/sltest.config";
 }
-}
+} // namespace SlPaths
 
 BOOST_AUTO_TEST_CASE(slconfig)
 {
