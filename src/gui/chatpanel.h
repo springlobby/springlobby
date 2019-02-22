@@ -80,6 +80,7 @@ public:
 
 	void Joined(User& who);
 	void Parted(User& who, const wxString& message);
+	void SetNoTopic(const wxString& who);
 	void SetTopic(const wxString& who, const wxString& message);
 	void UserStatusUpdated(User& who);
 	void OnChannelJoin(User& who);

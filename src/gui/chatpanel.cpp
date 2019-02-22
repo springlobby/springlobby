@@ -782,6 +782,11 @@ void ChatPanel::Parted(User& who, const wxString& message)
 	textcompletiondatabase.Delete_Mapping(TowxString(who.GetNick()));
 }
 
+void ChatPanel::SetNoTopic(const wxString& /*who*/)
+{
+	m_topic_set = false;
+}
+
 void ChatPanel::SetTopic(const wxString& who, const wxString& message)
 {
 	/*

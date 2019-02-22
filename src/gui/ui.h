@@ -89,6 +89,7 @@ public:
 	void OnHostedBattle(IBattle& battle);
 	void OnUserBattleStatus(User& user);
 
+	void OnNoBattleTopic(IBattle& battle, const wxString& who);
 	void OnBattleTopic(IBattle& battle, const wxString& who, const wxString& message);
 	void OnSaidBattle(IBattle& battle, const wxString& nick, const wxString& msg);
 

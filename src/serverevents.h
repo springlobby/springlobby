@@ -83,7 +83,7 @@ public:
 	void OnChannelSaid(const std::string& channel, const std::string& who, const std::string& message);
 	void OnChannelJoin(const std::string& channel, const std::string& who);
 	void OnChannelPart(const std::string& channel, const std::string& who, const std::string& message);
-	void OnChannelTopic(const std::string& channel, const std::string& who, const std::string& message, int when);
+	void OnChannelTopic(const std::string& channel, const std::string& who, const std::string& message);
 	void OnChannelAction(const std::string& channel, const std::string& who, const std::string& action);
 	void OnChannelList(const std::string& channel, const int& numusers, const std::string& topic);
 	void OnUserJoinChannel(const std::string& channel, const std::string& who);

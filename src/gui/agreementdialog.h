@@ -14,17 +14,25 @@ class wxButton;
 class AgreementDialog : public wxDialog
 {
 public:
-	AgreementDialog(wxWindow* parent, const wxString& agreement);
+	AgreementDialog(wxWindow* parent, const wxString& agreement, std::string* verif_code);
 
 	void OnYes(wxCommandEvent& event);
 	void OnNo(wxCommandEvent& event);
 
 private:
 	wxTextCtrl* m_text;
-	wxStaticText* m_accept_lbl;
+
+	wxStaticLine* m_verif_sep;
+	wxStaticText* m_verif_lbl;
+	wxTextCtrl* m_verif_text;
+	wxStaticLine* m_verif_sep_2;
+
 	wxStaticLine* m_button_sep;
+	wxStaticText* m_accept_lbl;
 	wxButton* m_yes_btn;
 	wxButton* m_no_btn;
+
+	std::string* verif_code;
 
 	enum {
 		AGREE_YES = wxID_HIGHEST,

@@ -377,7 +377,7 @@ void TASServer::Login()
 	if (localaddr.empty())
 		localaddr = "*";
 	m_id_transmission = false;
-	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u\tsp cl u l",
+	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u\tsp cl u l t",
 	GetUserName().c_str(), pass.c_str(), localaddr.c_str(),
 	GetSpringlobbyAgent().c_str(), m_crc.GetCRC()));
 	m_id_transmission = true;
@@ -395,9 +395,9 @@ void TASServer::RequestChannels()
 }
 
 
-void TASServer::AcceptAgreement()
+void TASServer::AcceptAgreement(const std::string& verif_code)
 {
-	SendCmd("CONFIRMAGREEMENT");
+	SendCmd("CONFIRMAGREEMENT " + verif_code);
 }
 
 
@@ -543,7 +543,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 			m_server_lanmode = GetBoolParam(params);
 
 			if (m_do_register) {
-				SendCmd("REGISTER", m_serverinfo.username + std::string(" ") + GetPasswordHash(m_serverinfo.password));
+				SendCmd("REGISTER", m_serverinfo.username + std::string(" ") + GetPasswordHash(m_serverinfo.password) + std::string(" ") + m_serverinfo.email);
 			} else {
 				m_se->OnConnected(m_serverinfo.description, "", true, m_supported_spring_version, m_server_lanmode);
 			}
@@ -554,7 +554,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		if (!m_sock->IsTLS()) {
 			wxLogInfo("%s:%d %s", m_serverinfo.hostname.c_str(), m_serverinfo.port, m_serverinfo.fingerprint.c_str());
 			m_sock->StartTLS(m_serverinfo.fingerprint);
-			Start(); //restart ping as server + client have startet TLS
+			Start(); //restart ping as server + client have started TLS
 		}
 	} else if (cmd == "ACCEPTED") {
 		SetUsername(params);
@@ -668,9 +668,8 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "CHANNELTOPIC") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
-		int pos = GetIntParam(params);
 		params = LSL::Util::Replace(params, "\\n", "\n");
-		m_se->OnChannelTopic(channel, nick, params, pos / 1000);
+		m_se->OnChannelTopic(channel, nick, params);
 	} else if (cmd == "SAIDEX") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
