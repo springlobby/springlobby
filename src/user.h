@@ -26,8 +26,7 @@ const unsigned int SYNC_SYNCED = 1;
 const unsigned int SYNC_UNSYNCED = 2;
 
 //! @brief Struct used to store a client's status.
-struct UserStatus
-{
+struct UserStatus {
 	enum RankContainer {
 		RANK_1,
 		RANK_2,
@@ -45,11 +44,11 @@ struct UserStatus
 	bool moderator;
 	bool bot;
 	UserStatus()
-		: in_game(false)
-		, away(false)
-		, rank(RANK_1)
-		, moderator(false)
-		, bot(false)
+	    : in_game(false)
+	    , away(false)
+	    , rank(RANK_1)
+	    , moderator(false)
+	    , bot(false)
 	{
 	}
 
@@ -85,19 +84,17 @@ struct UserStatus
 	}
 };
 
-struct UserPosition
-{
+struct UserPosition {
 	int x;
 	int y;
 	UserPosition()
-		: x(-1)
-		, y(-1)
+	    : x(-1)
+	    , y(-1)
 	{
 	}
 };
 
-struct UserBattleStatus
-{
+struct UserBattleStatus {
 	//!!! when adding something to this struct, also modify User::UpdateBattleStatus() !!
 	// total 17 members here
 	int team;
@@ -126,18 +123,18 @@ struct UserBattleStatus
 		return !aishortname.empty();
 	}
 	UserBattleStatus()
-		: team(0)
-		, ally(0)
-		, colour(0, 0, 0)
-		, color_index(-1)
-		, handicap(0)
-		, side(0)
-		, sync(SYNC_UNKNOWN)
-		, spectator(false)
-		, ready(false)
-		, isfromdemo(false)
-		, aitype(-1)
-		, udpport(0)
+	    : team(0)
+	    , ally(0)
+	    , colour(0, 0, 0)
+	    , color_index(-1)
+	    , handicap(0)
+	    , side(0)
+	    , sync(SYNC_UNKNOWN)
+	    , spectator(false)
+	    , ready(false)
+	    , isfromdemo(false)
+	    , aitype(-1)
+	    , udpport(0)
 	{
 	}
 	bool operator==(const UserBattleStatus& s) const
@@ -165,14 +162,14 @@ struct UserBattleStatus
 
 	static int ToInt(UserBattleStatus bs)
 	{
-		int ret = 0;				 // b0 is reserved
-		ret += (bs.ready ? 1 : 0) << 1;		 // b1
+		int ret = 0;			     // b0 is reserved
+		ret += (bs.ready ? 1 : 0) << 1;      // b1
 		ret += (bs.team % 16) << 2;	  //b2..b5
 		ret += (bs.ally % 16) << 6;	  //b6..b9
 		ret += (bs.spectator ? 0 : 1) << 10; //b10
-		ret += (bs.handicap % 101) << 11;	 //b11..b17
+		ret += (bs.handicap % 101) << 11;    //b11..b17
 		//b18..b21 reserverd
-		ret += (bs.sync % 3) << 22;	 //b22..b23
+		ret += (bs.sync % 3) << 22;  //b22..b23
 		ret += (bs.side % 16) << 24; //b24..b27
 		//b28..31 is unused
 		return ret;
@@ -191,11 +188,11 @@ class CommonUser
 {
 public:
 	CommonUser(const std::string& nick, const std::string& country)
-		: m_nick(std::string(nick))
-		, m_is_bridged(nick.find(':')!=std::string::npos)
-		, m_country(std::string(country))
-		, m_id(0)
-		, m_trueSkill(0.0f)
+	    : m_nick(std::string(nick))
+	    , m_is_bridged(nick.find(':') != std::string::npos)
+	    , m_country(std::string(country))
+	    , m_id(0)
+	    , m_trueSkill(0.0f)
 	{
 	}
 
@@ -215,14 +212,20 @@ public:
 	{
 		return m_is_bridged;
 	}
-	
 
-	const std::string& GetClientAgent() const { return m_client_agent; }
+
+	const std::string& GetClientAgent() const
+	{
+		return m_client_agent;
+	}
 	const std::string& GetCountry() const
 	{
 		return m_country;
 	}
-	void SetClientAgent(const std::string& ca) { m_client_agent = ca; }
+	void SetClientAgent(const std::string& ca)
+	{
+		m_client_agent = ca;
+	}
 	virtual void SetCountry(const std::string& country)
 	{
 		m_country = country;
@@ -282,7 +285,7 @@ public:
 	/*	  void SetUserData( void* userdata ) { m_data = userdata; }
 		void* GetUserData() { return m_data; }*/
 
-	bool operator == (const CommonUser& other) const
+	bool operator==(const CommonUser& other) const
 	{
 		return (m_nick == other.GetNick());
 	}

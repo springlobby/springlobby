@@ -165,7 +165,6 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 	m_regemail_sizer->Add(m_regemail_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4);
 	m_regemail_sizer->Add(m_regemail_text, 1, wxALL, 4);
 
-
 	wxBoxSizer* m_register_sizer = new wxBoxSizer(wxVERTICAL);
 	m_register_sizer->Add(m_regnick_sizer, 0, wxEXPAND, 4);
 	m_register_sizer->Add(m_regpass_sep, 0, wxALL | wxEXPAND, 4);

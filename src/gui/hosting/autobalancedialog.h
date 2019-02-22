@@ -20,8 +20,7 @@ class wxStaticText;
 class AutoBalanceDialog : public wxDialog
 {
 public:
-	struct BalanceOptions
-	{
+	struct BalanceOptions {
 		IBattle::BalanceType type;
 		bool respectclans;
 		bool strongclans;

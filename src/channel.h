@@ -59,6 +59,7 @@ public:
 	void SetPassword(const std::string& pw);
 
 	std::set<std::string> user_list;
+
 private:
 	IServer& m_serv;
 

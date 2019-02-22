@@ -1,8 +1,7 @@
 /* This file is part of the Springlobby (GPL v2 or later), see COPYING */
 
 #include <wx/string.h>
-struct BattleListFilterValues
-{
+struct BattleListFilterValues {
 	BattleListFilterValues()
 	    : status_locked(false)
 	    , status_passworded(false)

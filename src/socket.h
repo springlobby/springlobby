@@ -82,7 +82,11 @@ public:
 
 	void SetTimeout(const int seconds);
 	void StartTLS(const std::string& fingerprint);
-	bool IsTLS() { return m_starttls; }
+	bool IsTLS()
+	{
+		return m_starttls;
+	}
+
 private:
 	void OnSocketEvent(wxSocketEvent& event);
 	void InitSocket(wxSocketClient& socket);
@@ -103,10 +107,10 @@ private:
 	void DoSSLHandshake();
 	bool VerifyCertificate();
 	bool m_verified;
-	SSL_CTX *m_sslctx;
-	SSL *m_ssl;
-	BIO *m_inbio;
-	BIO *m_outbio;
+	SSL_CTX* m_sslctx;
+	SSL* m_ssl;
+	BIO* m_inbio;
+	BIO* m_outbio;
 	std::string m_fingerprint;
 	std::string m_excepted_fingerprint;
 #endif

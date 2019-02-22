@@ -13,8 +13,7 @@
 #include "utils/lslconversion.h"
 #include "utils/tasutil.h"
 
-struct TestInitializer
-{
+struct TestInitializer {
 	TestInitializer()
 	{
 		InitWxLogger();

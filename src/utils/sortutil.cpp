@@ -10,7 +10,7 @@ int CompareVersionStrings(const std::string& lhs, const std::string& rhs)
 {
 	std::string::const_iterator lhs_it = lhs.begin(), rhs_it = rhs.begin();
 
-	while(true) {
+	while (true) {
 		if (lhs.end() == lhs_it) {
 			if (rhs.end() == rhs_it)
 				return 0;

@@ -64,10 +64,9 @@ bool ChannelList::ChannelExists(const std::string& name) const
 
 bool ChannelList::UserExists(const std::string& nick) const
 {
-	for(auto p : m_chans) 
-	{
+	for (auto p : m_chans) {
 		Channel* channel = p.second;
-		if (channel->panel==nullptr)
+		if (channel->panel == nullptr)
 			continue;
 		if (channel->UserExists(nick))
 			return true;

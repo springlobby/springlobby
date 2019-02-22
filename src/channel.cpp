@@ -294,4 +294,3 @@ void Channel::SetPassword(const std::string& pw)
 {
 	m_password = pw;
 }
-

@@ -18,8 +18,7 @@ class DownloadItem;
 class PrDownloader : public wxEvtHandler
 {
 public:
-	struct DownloadProgress
-	{
+	struct DownloadProgress {
 		DownloadProgress()
 		    : filesize(0)
 		    , downloaded(0)

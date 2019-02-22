@@ -15,7 +15,7 @@ namespace Controls
 {
 class BitmapComboBox;
 }
-}
+} // namespace GUI
 
 class IBattle;
 class BattleroomDataViewCtrl;

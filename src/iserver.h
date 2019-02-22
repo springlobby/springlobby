@@ -190,8 +190,8 @@ public:
 	};
 	User& GetUser(const std::string& nickname) const;
 	bool UserExists(const std::string& nickname) const;
-	bool UserIsOnBridge(const std::string& nickname) const; 
-	
+	bool UserIsOnBridge(const std::string& nickname) const;
+
 	Channel& GetChannel(const std::string& name);
 	int GetNumChannels() const;
 	Channel& GetChannel(const int& index);

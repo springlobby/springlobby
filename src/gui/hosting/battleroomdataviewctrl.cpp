@@ -225,7 +225,7 @@ void BattleroomDataViewCtrl::OnTeamSelectEvent(wxCommandEvent& event)
 
 	const User* user = GetSelectedItem();
 
-	if (user != nullptr  && !user->IsBridged()) {
+	if (user != nullptr && !user->IsBridged()) {
 		m_Battle->ForceTeam(*const_cast<User*>(user), team);
 	}
 }
@@ -305,7 +305,7 @@ void BattleroomDataViewCtrl::OnSideSelect(wxCommandEvent& event)
 
 	const User* user = GetSelectedItem();
 
-	if (user != nullptr  && !user->IsBridged()) {
+	if (user != nullptr && !user->IsBridged()) {
 		m_Battle->ForceSide(*const_cast<User*>(user), side);
 	}
 }

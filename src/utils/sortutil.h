@@ -5,8 +5,7 @@
 
 #include <map>
 //! set direction to +1 for down, -1 for up
-struct SortOrderItem
-{
+struct SortOrderItem {
 	int col;
 	int direction;
 };
@@ -19,7 +18,9 @@ int CompareVersionStrings(const std::string& lhs, const std::string& rhs);
 
 struct CompareVersionStringsFunctor {
 	bool operator()(const std::string& lhs, const std::string& rhs) const
-	{ return 1 == CompareVersionStrings(lhs, rhs); }
+	{
+		return 1 == CompareVersionStrings(lhs, rhs);
+	}
 };
 
 extern CompareVersionStringsFunctor compareVersionStringsFunctor;

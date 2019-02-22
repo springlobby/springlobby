@@ -86,11 +86,10 @@ Socket::Socket(iNetClass& netclass)
 {
 
 #ifdef SSL_SUPPORT
-m_verified = false;
-m_sslctx = nullptr;
-m_ssl = nullptr;
+	m_verified = false;
+	m_sslctx = nullptr;
+	m_ssl = nullptr;
 #endif
-
 }
 
 #ifdef SSL_SUPPORT
@@ -174,11 +173,11 @@ bool Socket::VerifyCertificate()
 	}
 
 	X509* cert = SSL_get_peer_certificate(m_ssl);
-	if (cert  == nullptr) {
+	if (cert == nullptr) {
 		return false;
 	}
 
-	const EVP_MD *fprint_type = EVP_sha256();
+	const EVP_MD* fprint_type = EVP_sha256();
 	unsigned char fprint[EVP_MAX_MD_SIZE];
 	unsigned int fprint_size = 0;
 
@@ -188,7 +187,7 @@ bool Socket::VerifyCertificate()
 
 	std::string fingerprint;
 	char buf[4];
-	for(size_t i=0; i<fprint_size; i++) {
+	for (size_t i = 0; i < fprint_size; i++) {
 		snprintf(buf, sizeof(buf), "%02x", fprint[i]);
 		fingerprint += buf[0];
 		fingerprint += buf[1];
@@ -303,7 +302,7 @@ bool Socket::Send(const std::string& data)
 #ifdef SSL_SUPPORT
 	if (m_starttls) {
 		int res = 0;
-		if(!SSL_is_init_finished(m_ssl)) {
+		if (!SSL_is_init_finished(m_ssl)) {
 			DoSSLHandshake();
 		} else {
 			if (!VerifyCertificate()) {
@@ -414,7 +413,7 @@ wxString Socket::Receive()
 					wxLogDebug("BIO_write(): %d", written);
 				}
 			}
-			if(!SSL_is_init_finished(m_ssl)) {
+			if (!SSL_is_init_finished(m_ssl)) {
 				DoSSLHandshake();
 			} else {
 				if (!VerifyCertificate()) {
@@ -433,7 +432,7 @@ wxString Socket::Receive()
 					} else {
 						wxLogDebug("SSL_read(): %d", ret);
 					}
-				} while(ret > 0);
+				} while (ret > 0);
 			}
 		} else {
 #endif

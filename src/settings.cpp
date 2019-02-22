@@ -107,7 +107,9 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 			//the dummy column hack was removed on win
 			cfg().DeleteGroup(_T("/GUI/ColumnWidths/"));
 		}
-		case 19: case 20: case 21: {
+		case 19:
+		case 20:
+		case 21: {
 			if (translationhelper) {
 				// add locale's language code to autojoin
 				if (translationhelper->GetLocale()) {
@@ -122,7 +124,8 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 		case 22: {
 			ConvertLists();
 		}
-		case 23: case 24: {
+		case 23:
+		case 24: {
 			SetDisableSpringVersionCheck(false);
 		}
 		case 25: { // language id before was stored by index, now its stored by the id
@@ -134,7 +137,9 @@ void Settings::ConvertSettings(wxTranslationHelper* translationhelper, long sett
 		case 27: {
 			RemoveChannelJoin(_("main"));
 		}
-		case 28: case 29: case 30: {
+		case 28:
+		case 29:
+		case 30: {
 #ifdef WIN32 // https://github.com/springlobby/springlobby/issues/385
 			cfg().Write(_T("/GUI/UseNotificationPopups"), true);
 #endif
@@ -239,7 +244,7 @@ bool Settings::ShouldAddDefaultServerSettings()
 void Settings::SetDefaultServerSettings()
 {
 	SetServer(DEFSETT_DEFAULT_SERVER_NAME, DEFSETT_DEFAULT_SERVER_HOST, DEFSETT_DEFAULT_SERVER_PORT, "0124dc0f4295b401a2d81ade3dc81b7a467eb9a70b0a4912b5e15fede735fe73");
-	SetServer("Test server",               "lobby.springrts.com", 7000,                        "bafee3142009baa105ade65b0f712ca5fcf30de8e91664a8825e0185a609277c");
+	SetServer("Test server", "lobby.springrts.com", 7000, "bafee3142009baa105ade65b0f712ca5fcf30de8e91664a8825e0185a609277c");
 	SetDefaultServer(DEFSETT_DEFAULT_SERVER_NAME);
 }
 
@@ -1133,7 +1138,7 @@ bool Settings::IsColumnHidden(const wxString& list_name, const int column, bool 
 {
 	bool isHidden;
 	cfg().Read(wxString::Format(_T("/GUI/ColumnVisibilities/%s/%d"), list_name, column),
-	           &isHidden, defVal);
+		   &isHidden, defVal);
 	return isHidden;
 }
 
@@ -1513,4 +1518,3 @@ void Settings::SetServerFingerprint(const std::string& server_name, const std::s
 {
 	cfg().Write(_T( "/Server/Servers/" ) + TowxString(server_name) + _T( "/Certificate" ), TowxString(fingerprint));
 }
-

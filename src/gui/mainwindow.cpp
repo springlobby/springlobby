@@ -670,8 +670,7 @@ void MainWindow::OnMenuResetLayout(wxCommandEvent& /*event*/)
 {
 	cfg().Write(_T( "/ResetLayout" ), true);
 	sett().SaveSettings();
-	customMessageBoxModal(SL_MAIN_ICON, wxString::Format(
-	  _("Please restart %s now"), GetSpringlobbyName()), wxEmptyString);
+	customMessageBoxModal(SL_MAIN_ICON, wxString::Format(_("Please restart %s now"), GetSpringlobbyName()), wxEmptyString);
 }
 
 const wxArrayString& MainWindow::GetTabNames()

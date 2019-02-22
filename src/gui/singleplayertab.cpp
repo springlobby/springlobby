@@ -347,7 +347,9 @@ void SinglePlayerTab::OnMapSelect(wxCommandEvent& /*unused*/)
 {
 	const int index = m_map_pick->GetCurrentSelection();
 
-	if (index == wxNOT_FOUND) { return; }
+	if (index == wxNOT_FOUND) {
+		return;
+	}
 
 	SetMap(index);
 }
@@ -357,7 +359,9 @@ void SinglePlayerTab::OnModSelect(wxCommandEvent& /*unused*/)
 {
 	const int index = m_game_choice->GetCurrentSelection();
 
-	if (index == wxNOT_FOUND) { return; }
+	if (index == wxNOT_FOUND) {
+		return;
+	}
 
 	size_t num_bots = m_battle.GetNumBots();
 	SetMod(index);

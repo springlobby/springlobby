@@ -12,7 +12,7 @@
 
 SLCONFIG("/General/LastUpdateCheck", 0L, "Last time springlobby checked for an update");
 SLCONFIG("/General/UpdateChannel", "release", "update channel to use (release or develop)");
-#define VERSION_CHECK_INTERVAL 1*60*60
+#define VERSION_CHECK_INTERVAL 1 * 60 * 60
 
 static bool isReleaseChannel()
 {
@@ -41,8 +41,8 @@ static time_t GetTime()
 	time_t now = time(nullptr);
 	if (static_cast<time_t>(-1) == now) {
 		std::string msg = "time() broke: ";
-		msg += strerror (errno);
-		throw std::runtime_error (msg.c_str());
+		msg += strerror(errno);
+		throw std::runtime_error(msg.c_str());
 	}
 	return now;
 }

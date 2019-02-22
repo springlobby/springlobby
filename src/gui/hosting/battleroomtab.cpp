@@ -657,7 +657,8 @@ void BattleRoomTab::OnStart(wxCommandEvent& /*unused*/)
 
 	//start manually clicked, force start
 	m_battle->SetAutolaunchGame(true);
-	m_ready_chk->SetValue(true); OnImReady();
+	m_ready_chk->SetValue(true);
+	OnImReady();
 
 	// Is remote battle running?
 	if (m_battle->GetFounder().Status().in_game) {

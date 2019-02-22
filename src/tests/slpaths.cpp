@@ -24,8 +24,7 @@ using std::string;
 #define DELIM "/"
 #endif
 
-struct TestInitializer
-{
+struct TestInitializer {
 	TestInitializer()
 	{
 		InitWxLogger();
@@ -60,7 +59,7 @@ bool CheckCompareVersionStrings(const string& lhs, const string& rhs, int expect
 	int result = CompareVersionStrings(lhs, rhs);
 	if (result != expected) {
 		std::cout << "Compare version strings: \"" << lhs << "\" ? \"" << rhs << "\": Got: "
-		          << result << " expected: " << expected << std::endl;
+			  << result << " expected: " << expected << std::endl;
 	}
 	return expected == result;
 }
@@ -93,7 +92,7 @@ BOOST_AUTO_TEST_CASE(VersionCheck)
 	BOOST_CHECK(CheckCompareVersionStrings("100", "98", -1));
 
 	std::array<string, 5> versions = {"spring 100.0", "spring 98.0", "spring 104.0", "spring 99.0", "spring 103.0"};
-	std::array<string, 5> sorted   = {"spring 98.0",  "spring 99.0", "spring 100.0", "spring 103.0", "spring 104.0"};
+	std::array<string, 5> sorted = {"spring 98.0", "spring 99.0", "spring 100.0", "spring 103.0", "spring 104.0"};
 
 	std::sort(versions.begin(), versions.end(), compareVersionStringsFunctor);
 	BOOST_CHECK(sorted == versions);

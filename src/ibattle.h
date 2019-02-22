@@ -33,18 +33,17 @@ namespace LSL
 class OptionsWrapper;
 };
 
-struct BattleStartRect
-{
+struct BattleStartRect {
 	BattleStartRect()
-		: toadd(false)
-		, todelete(false)
-		, toresize(false)
-		, exist(false)
-		, ally(-1)
-		, top(-1)
-		, left(-1)
-		, right(-1)
-		, bottom(-1)
+	    : toadd(false)
+	    , todelete(false)
+	    , toresize(false)
+	    , exist(false)
+	    , ally(-1)
+	    , top(-1)
+	    , left(-1)
+	    , right(-1)
+	    , bottom(-1)
 	{
 	}
 
@@ -80,24 +79,23 @@ enum BattleType {
 };
 
 
-struct BattleOptions
-{
+struct BattleOptions {
 	BattleOptions()
-		: battleid(-1)
-		, channel_name("")
-		, islocked(false)
-		, battletype(BT_Played)
-		, ispassworded(false)
-		, rankneeded(0)
-		, userelayhost(false)
-		, lockexternalbalancechanges(false)
-		, nattype(NAT_None)
-		, port(DEFAULT_SERVER_PORT)
-		, externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT)
-		, internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT)
-		, maxplayers(0)
-		, spectators(0)
-		, guilistactiv(false)
+	    : battleid(-1)
+	    , channel_name("")
+	    , islocked(false)
+	    , battletype(BT_Played)
+	    , ispassworded(false)
+	    , rankneeded(0)
+	    , userelayhost(false)
+	    , lockexternalbalancechanges(false)
+	    , nattype(NAT_None)
+	    , port(DEFAULT_SERVER_PORT)
+	    , externaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT)
+	    , internaludpsourceport(DEFAULT_EXTERNAL_UDP_SOURCE_PORT)
+	    , maxplayers(0)
+	    , spectators(0)
+	    , guilistactiv(false)
 	{
 	}
 
@@ -187,8 +185,7 @@ public:
 	};
 
 
-	struct TeamInfoContainer
-	{
+	struct TeamInfoContainer {
 		bool exist;
 		int TeamLeader;
 		int StartPosX;
@@ -200,8 +197,7 @@ public:
 		int SideNum;
 	};
 
-	struct AllyInfoContainer
-	{
+	struct AllyInfoContainer {
 		bool exist;
 		int NumAllies;
 		int StartRectLeft;
@@ -346,7 +342,7 @@ public:
 	{
 		return m_opts.channel_name;
 	}
-	
+
 	virtual bool GetGUIListActiv() const
 	{
 		return m_opts.guilistactiv;
@@ -733,7 +729,7 @@ private:
 
 	unsigned int m_players_ready;
 	unsigned int m_players_sync;
-	unsigned int m_players_ok;		 // players which are ready and in sync
+	unsigned int m_players_ok;       // players which are ready and in sync
 	std::map<int, int> m_ally_sizes; // allyteam -> number of people in
 
 	std::string m_preset;

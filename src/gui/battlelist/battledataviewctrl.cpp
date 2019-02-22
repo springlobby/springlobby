@@ -32,7 +32,7 @@ BattleDataViewCtrl::BattleDataViewCtrl(const wxString& dataViewName, wxWindow* p
 	const IconsCollection& ici = *IconsCollection::Instance();
 	const wxDataViewCellMode& cm = wxDATAVIEW_CELL_INERT;
 	const int gds = wxDVC_DEFAULT_MINWIDTH; // graphical default size
-	const int asds = wxCOL_WIDTH_AUTOSIZE; // autosize default size
+	const int asds = wxCOL_WIDTH_AUTOSIZE;  // autosize default size
 	const int flags = wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE;
 	const int flags_hidden = flags | wxDATAVIEW_COL_HIDDEN;
 
@@ -59,7 +59,7 @@ BattleDataViewCtrl::~BattleDataViewCtrl()
 
 void BattleDataViewCtrl::AddBattle(IBattle& battle)
 {
-	if (! ContainsItem(battle))
+	if (!ContainsItem(battle))
 		AddItem(battle);
 }
 

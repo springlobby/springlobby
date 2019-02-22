@@ -85,9 +85,7 @@ bool Spring::Run(IBattle& battle)
 {
 	const std::string executable = SlPaths::GetSpringBinary(battle.GetEngineVersion());
 	if (!wxFile::Exists(TowxString(executable))) {
-		customMessageBoxModal(SL_MAIN_ICON, wxString::Format(
-		  _T("The Spring engine executable version '%s' was not found at the set location '%s', please re-check."),
-		  battle.GetEngineVersion().c_str(), executable.c_str()), _T("Executable not found"));
+		customMessageBoxModal(SL_MAIN_ICON, wxString::Format(_T("The Spring engine executable version '%s' was not found at the set location '%s', please re-check."), battle.GetEngineVersion().c_str(), executable.c_str()), _T("Executable not found"));
 		ui().mw().ShowConfigure(MainWindow::OPT_PAGE_SPRING);
 		return false;
 	}
@@ -137,14 +135,14 @@ bool Spring::LaunchEngine(const std::string& cmd, wxArrayString& params)
 		params.push_back(_T("--safemode"));
 	}
 	std::string stdparams;
-	for (const wxString param: params) {
+	for (const wxString param : params) {
 		if (!stdparams.empty())
 			stdparams += " ";
 		stdparams += STD_STRING(param);
 	}
 
 	const std::string datadir = SlPaths::GetDataDir();
-	wxLogMessage(_T("spring call params: %s %s %s"),datadir.c_str(), TowxString(cmd).c_str(), stdparams.c_str());
+	wxLogMessage(_T("spring call params: %s %s %s"), datadir.c_str(), TowxString(cmd).c_str(), stdparams.c_str());
 	wxSetWorkingDirectory(TowxString(datadir));
 
 	if (m_process == 0) {
