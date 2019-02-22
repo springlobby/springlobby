@@ -73,6 +73,8 @@ private:
 	wxTextCtrl* m_regpass1_text;
 	wxStaticText* m_regpass2_lbl;
 	wxTextCtrl* m_regpass2_text;
+	wxStaticText* m_regemail_lbl;
+	wxTextCtrl* m_regemail_text;
 	wxStaticText* m_reginfo_text;
 
 	Ui& m_ui;

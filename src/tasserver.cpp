@@ -395,9 +395,9 @@ void TASServer::RequestChannels()
 }
 
 
-void TASServer::AcceptAgreement()
+void TASServer::AcceptAgreement(const std::string& verif_code)
 {
-	SendCmd("CONFIRMAGREEMENT");
+	SendCmd("CONFIRMAGREEMENT " + verif_code);
 }
 
 
@@ -543,7 +543,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 			m_server_lanmode = GetBoolParam(params);
 
 			if (m_do_register) {
-				SendCmd("REGISTER", m_serverinfo.username + std::string(" ") + GetPasswordHash(m_serverinfo.password));
+				SendCmd("REGISTER", m_serverinfo.username + std::string(" ") + GetPasswordHash(m_serverinfo.password) + std::string(" ") + m_serverinfo.email);
 			} else {
 				m_se->OnConnected(m_serverinfo.description, "", true, m_supported_spring_version, m_server_lanmode);
 			}
@@ -554,7 +554,7 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		if (!m_sock->IsTLS()) {
 			wxLogInfo("%s:%d %s", m_serverinfo.hostname.c_str(), m_serverinfo.port, m_serverinfo.fingerprint.c_str());
 			m_sock->StartTLS(m_serverinfo.fingerprint);
-			Start(); //restart ping as server + client have startet TLS
+			Start(); //restart ping as server + client have started TLS
 		}
 	} else if (cmd == "ACCEPTED") {
 		SetUsername(params);

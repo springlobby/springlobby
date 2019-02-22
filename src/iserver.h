@@ -39,6 +39,7 @@ public:
 	public:
 		std::string username;
 		std::string password;
+		std::string email;
 		std::string hostname;
 		std::string description;
 		std::string fingerprint;
@@ -62,7 +63,7 @@ public:
 	};
 
 	virtual void Register(const ServerLoginInfo&){};
-	virtual void AcceptAgreement(){};
+	virtual void AcceptAgreement(const std::string&){};
 
 	virtual void Connect(const ServerLoginInfo&){};
 	virtual void Disconnect(){};

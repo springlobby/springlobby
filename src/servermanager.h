@@ -18,7 +18,7 @@ public:
 	void ConnectToServer();
 	void ReconnectToServer();
 	void DisconnectFromServer();
-	void RegisterNewUser(const std::string&, const std::string&, const std::string&);
+	void RegisterNewUser(const std::string&, const std::string&, const std::string&, const std::string&);
 	void DoConnectToServer(const std::string&, const std::string&, const std::string&);
 	void JoinChannel(const std::string&, const std::string&);
 

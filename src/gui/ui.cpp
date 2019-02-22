@@ -677,9 +677,10 @@ void Ui::OnSpringTerminated(wxCommandEvent& data)
 
 void Ui::OnAcceptAgreement(const wxString& agreement)
 {
-	AgreementDialog dlg(m_main_win, agreement);
+	std::string verif_code;
+	AgreementDialog dlg(m_main_win, agreement, &verif_code);
 	if (dlg.ShowModal() == wxID_OK) {
-		m_serv->AcceptAgreement();
+		m_serv->AcceptAgreement(verif_code);
 	} else {
 		m_connect_retries = 0;
 		m_serv->Disconnect();

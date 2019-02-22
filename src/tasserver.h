@@ -42,7 +42,7 @@ public:
 	bool ExecuteSayCommand(const std::string& cmd) override;
 
 	void Register(const ServerLoginInfo& server) override;
-	void AcceptAgreement() override;
+	void AcceptAgreement(const std::string&) override;
 
 	void Disconnect() override;
 	bool IsConnected() override;

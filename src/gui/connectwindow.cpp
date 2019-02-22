@@ -158,6 +158,12 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 	m_regpass2_sizer->Add(m_regpass2_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4);
 	m_regpass2_sizer->Add(m_regpass2_text, 1, wxALL, 4);
 
+	m_regemail_lbl = new wxStaticText(m_register_tab, wxID_ANY, _("Email address"));
+	m_regemail_text = new wxTextCtrl(m_register_tab, wxID_ANY);
+
+	wxBoxSizer* m_regemail_sizer = new wxBoxSizer(wxHORIZONTAL);
+	m_regemail_sizer->Add(m_regemail_lbl, 1, wxALL | wxALIGN_CENTER_VERTICAL, 4);
+	m_regemail_sizer->Add(m_regemail_text, 1, wxALL, 4);
 
 
 	wxBoxSizer* m_register_sizer = new wxBoxSizer(wxVERTICAL);
@@ -165,9 +171,11 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 	m_register_sizer->Add(m_regpass_sep, 0, wxALL | wxEXPAND, 4);
 	m_register_sizer->Add(m_regpass1_sizer, 0, wxEXPAND, 4);
 	m_register_sizer->Add(m_regpass2_sizer, 0, wxEXPAND, 4);
+	m_register_sizer->Add(m_regemail_sizer, 0, wxEXPAND, 4);
 
 
 	m_reginfo_text = new wxStaticText(m_register_tab, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0);
+	m_reginfo_text->SetLabel("A verification code will be sent to your email address.");
 
 	m_register_sizer->Add(m_reginfo_text, 1, wxALL, 4);
 
@@ -275,11 +283,11 @@ void ConnectWindow::OnOk(wxCommandEvent&)
 		return;
 	}
 	if (m_regpass2_text->GetValue() != m_regpass1_text->GetValue() || m_regpass1_text->GetValue().IsEmpty()) {
-		OnRegistrationDenied(_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty passwort)"));
+		OnRegistrationDenied(_("Registration failed, the reason was:\nPassword / confirmation mismatch (or empty password)"));
 		return;
 	}
 	CleanHide();
-	ServerManager::Instance()->RegisterNewUser(STD_STRING(HostAddress), STD_STRING(m_regnick_text->GetValue()), STD_STRING(m_regpass1_text->GetValue()));
+	ServerManager::Instance()->RegisterNewUser(STD_STRING(HostAddress), STD_STRING(m_regnick_text->GetValue()), STD_STRING(m_regpass1_text->GetValue()), STD_STRING(m_regemail_text->GetValue()));
 }
 
 void ConnectWindow::OnCancel(wxCommandEvent&)
