@@ -716,7 +716,7 @@ void ServerEvents::OnChannelPart(const std::string& channel, const std::string& 
 }
 
 
-void ServerEvents::OnChannelTopic(const std::string& channel, const std::string& who, const std::string& message, int /*unused*/)
+void ServerEvents::OnChannelTopic(const std::string& channel, const std::string& who, const std::string& message)
 {
 	slLogDebugFunc("");
 	try {
@@ -724,10 +724,18 @@ void ServerEvents::OnChannelTopic(const std::string& channel, const std::string&
 		if (battleid!=-1)
 		{
 			IBattle& battle = m_serv.GetBattle(battleid);
-			ui().OnBattleTopic(battle, message, who);
-			return; // FIXME: send topic to battle
+			if (message.size()==0) {
+				ui().OnNoBattleTopic(battle, who);
+			} else {
+				ui().OnBattleTopic(battle, message, who);
+			}
+			return;
 		}
-		m_serv.GetChannel(channel).SetTopic(message, who);
+		if (message.size()==0) {
+			m_serv.GetChannel(channel).SetNoTopic(who);
+		} else {
+			m_serv.GetChannel(channel).SetTopic(message, who);
+		}
 	} catch (std::runtime_error& except) {
 	}
 }

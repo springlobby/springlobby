@@ -622,6 +622,16 @@ void Ui::OnUserBattleStatus(User& user)
 	OnBattleInfoUpdated(*battle, wxEmptyString);
 }
 
+void Ui::OnNoBattleTopic(IBattle& /*battle*/, const wxString& who)
+{
+	if (m_main_win == 0)
+		return;
+	try {
+		mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().SetNoTopic(who);
+	} catch (...) {
+	}
+}
+
 void Ui::OnBattleTopic(IBattle& /*battle*/, const wxString& who, const wxString& msg)
 {
 	if (m_main_win == 0)

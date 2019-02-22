@@ -377,7 +377,7 @@ void TASServer::Login()
 	if (localaddr.empty())
 		localaddr = "*";
 	m_id_transmission = false;
-	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u\tsp cl u l",
+	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u\tsp cl u l t",
 	GetUserName().c_str(), pass.c_str(), localaddr.c_str(),
 	GetSpringlobbyAgent().c_str(), m_crc.GetCRC()));
 	m_id_transmission = true;
@@ -668,9 +668,8 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 	} else if (cmd == "CHANNELTOPIC") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
-		int pos = GetIntParam(params);
 		params = LSL::Util::Replace(params, "\\n", "\n");
-		m_se->OnChannelTopic(channel, nick, params, pos / 1000);
+		m_se->OnChannelTopic(channel, nick, params);
 	} else if (cmd == "SAIDEX") {
 		channel = GetWordParam(params);
 		nick = GetWordParam(params);
