@@ -761,12 +761,7 @@ void IBattle::SetHostGame(const std::string& gamename, const std::string& hash)
 	for (char& c : gameNameWithoutVersion) {
 		sum += c;
 	}
-	int sumR = 255 - ((sum % 7)*10);
-	int sumG = 255 - ((sum % 7)*10);
-	int sumB = 255 - ((sum % 4)*10);
-	char buff[11];
-	sprintf(buff, "#%2x%2x%2x",sumR,sumG,sumB);
-	gameBackgroundColour = wxColour(buff);
+	gameBackgroundColour = wxColour(GAME_BL_COLOURS[sum % 11]);
 }
 
 

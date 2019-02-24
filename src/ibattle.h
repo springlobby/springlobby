@@ -25,6 +25,21 @@ lsl/battle/ibattle.h
 const unsigned int DEFAULT_SERVER_PORT = 8452;
 const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 
+const std::string GAME_BL_COLOURS[11] = {
+	"#ffffff",
+	"#ffffcc",
+	"#ccffcc",
+	"#ccccff",
+	"#ffcccc",
+	"#dddddd",
+	"#ddffff",
+	"#ccddcc",
+	"#ffeecc",
+	"#eeeeee",
+	"#ddeeff"
+};
+
+
 class IBattle;
 class IServer;
 class AutoHost;
