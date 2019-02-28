@@ -254,6 +254,11 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 			sortingResult = 0;
 	}
 
+	// tie-breaker based on unique battle host name
+	if (0 == sortingResult) {
+		sortingResult = battleA->GetFounder().GetNick().compare(battleB->GetFounder().GetNick());
+		sortingResult = ascending ? sortingResult : (sortingResult * (-1));  // always ASC
+	}
 	//Return direct sort order or reversed depending on ascending flag
 	return ascending ? sortingResult : (sortingResult * (-1));
 }
