@@ -7,6 +7,8 @@
 #include <climits>
 #include <set>
 #include "log.h"
+#include "../utils/conversion.h"
+
 #define DEFAULT_COLUMN UINT_MAX
 
 

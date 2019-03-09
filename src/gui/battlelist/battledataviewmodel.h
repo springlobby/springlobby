@@ -18,7 +18,6 @@ public:
 	virtual wxString GetColumnType(unsigned int column) const override;
 
 private:
-	wxColour INACTIVE_ROOM_COLOUR = wxColour("#888888");
 	enum ColumnIndexes {
 		STATUS = 0,
 		COUNTRY,
