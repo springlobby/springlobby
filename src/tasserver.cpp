@@ -11,6 +11,7 @@ lsl/networking/tasserver.cpp
 **/
 #include "tasserver.h"
 
+#include <lslunitsync/unitsync.h>
 #include <json/reader.h>
 #include <lslutils/misc.h>
 #include <wx/intl.h>
@@ -366,6 +367,11 @@ const User& TASServer::GetMe() const
 	return GetUser(GetUserName());
 }
 
+const std::string TASServer::GetSys()
+{
+	return LSL::usync().GetSys().substr(0,16);
+}
+
 void TASServer::Login()
 {
 	slLogDebugFunc("");
@@ -377,9 +383,9 @@ void TASServer::Login()
 	if (localaddr.empty())
 		localaddr = "*";
 	m_id_transmission = false;
-	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u\tsp cl u l t",
+	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u %s\tsp cl u l t",
 	GetUserName().c_str(), pass.c_str(), localaddr.c_str(),
-	GetSpringlobbyAgent().c_str(), m_crc.GetCRC()));
+	GetSpringlobbyAgent().c_str(), m_crc.GetCRC(), GetSys().c_str()));
 	m_id_transmission = true;
 }
 
