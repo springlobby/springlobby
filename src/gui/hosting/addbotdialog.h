@@ -5,7 +5,10 @@
 
 #include <wx/dialog.h>
 #include <map>
+#include <vector>
+
 #include "gui/windowattributespickle.h"
+
 class wxTextCtrl;
 class wxStaticText;
 class wxChoice;
@@ -72,6 +75,7 @@ private:
 
 	bool m_sp;
 
+	std::vector<int> m_valid_ai_index_map;
 	wxString RefineAIName(const wxString& name);
 
 	enum {

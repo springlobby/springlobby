@@ -9,6 +9,7 @@
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/listctrl.h>
+#include <wx/log.h>
 #include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
@@ -22,6 +23,11 @@
 #include "settings.h"
 #include "utils/conversion.h"
 #include "utils/lslconversion.h"
+
+static const char *banned_AIs[] = {
+	"AAI", "CircuitAI", "CppTestAI",
+	"E323AI", "KAIK", "NullAI", "RAI", "Shard"
+};
 
 BEGIN_EVENT_TABLE(AddBotDialog, wxDialog)
 EVT_BUTTON(ADDBOT_CANCEL, AddBotDialog::OnClose)
@@ -138,7 +144,7 @@ wxString AddBotDialog::GetNick()
 
 wxString AddBotDialog::Get(const std::string& section)
 {
-	const auto sel = m_ai->GetSelection();
+	const auto sel = GetAIType();
 	const auto infos = LSL::usync().GetAIInfos(sel);
 	const auto namepos = LSL::Util::IndexInSequence(infos, section);
 	if (namepos == LSL::lslNotFound)
@@ -158,7 +164,7 @@ wxString AddBotDialog::GetAIVersion()
 
 int AddBotDialog::GetAIType()
 {
-	return m_ai->GetSelection();
+	return m_valid_ai_index_map.at (m_ai->GetSelection());
 }
 
 wxString AddBotDialog::RefineAIName(const wxString& name)
@@ -179,19 +185,39 @@ wxString AddBotDialog::GetAiRawName()
 {
 	//    if ( m_ais.GetCount() < m_ai->GetSelection() )
 	//        return wxEmptyString;
-	return m_ais[m_ai->GetSelection()];
+	return m_ais [GetAIType()];
 }
 
 void AddBotDialog::ReloadAIList()
 {
+	LSL::StringVector ais;
 	try {
-		m_ais = lslTowxArrayString(LSL::usync().GetAIList(m_battle.GetHostGameNameAndVersion()));
-	} catch (...) {
+		ais = LSL::usync().GetAIList(m_battle.GetHostGameNameAndVersion());
+	} catch (std::exception& ex) {
+		wxLogWarning("Exception while loading AIs: " + wxString(ex.what()));
 	}
 
 	m_ai->Clear();
-	for (unsigned int i = 0; i < m_ais.GetCount(); i++)
-		m_ai->Append(RefineAIName(m_ais[i]));
+	m_ais.clear();
+	m_valid_ai_index_map.clear();
+	for (unsigned int i = 0; i < ais.size(); ++i) {
+		std::string &AINameVersion = ais.at(i);
+		bool matched = false; // either this or goto...
+
+		for (unsigned int j = 0; j < sizeof (banned_AIs) / sizeof(char *); ++j) {
+			const char *ai_str = banned_AIs[j];
+			if (std::string::npos != AINameVersion.find(ai_str)) {
+				matched = true;
+				break;
+			}
+		}
+		if (!matched) {
+			wxString wxAINV (AINameVersion);
+			m_ais.Add(wxAINV);
+			m_ai->Append(RefineAIName(wxAINV));
+			m_valid_ai_index_map.push_back(i);
+		}
+	}
 	if (m_ais.GetCount() > 0) {
 		m_ai->SetStringSelection(sett().GetLastAI());
 		if (m_ai->GetStringSelection() == wxEmptyString)
