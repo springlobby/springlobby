@@ -268,13 +268,13 @@ void ServerEvents::OnJoinedBattle(int battleid, const std::string& hash)
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 
-		battle.SetHostGame(battle.GetHostGameName(), hash);
+		battle.SetHostGame(battle.GetHostGameNameAndVersion(), hash);
 		UserBattleStatus& bs = m_serv.GetMe().BattleStatus();
 		bs.spectator = false;
 
 		if (!battle.IsFounderMe() || battle.IsProxy()) {
 			battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, battle.GetHostMapName());
-			battle.CustomBattleOptions().loadOptions(LSL::Enum::ModOption, battle.GetHostGameName());
+			battle.CustomBattleOptions().loadOptions(LSL::Enum::ModOption, battle.GetHostGameNameAndVersion());
 		}
 
 		ui().OnJoinedBattle(battle);
@@ -291,13 +291,13 @@ void ServerEvents::OnHostedBattle(int battleid)
 
 		if (battle.GetBattleType() == BT_Played) {
 			battle.CustomBattleOptions().loadOptions(LSL::Enum::MapOption, battle.GetHostMapName());
-			battle.CustomBattleOptions().loadOptions(LSL::Enum::ModOption, battle.GetHostGameName());
+			battle.CustomBattleOptions().loadOptions(LSL::Enum::ModOption, battle.GetHostGameNameAndVersion());
 		} else {
 			battle.GetBattleFromScript(true);
 		}
 
 
-		const std::string presetname = STD_STRING(sett().GetModDefaultPresetName(TowxString(battle.GetHostGameName())));
+		const std::string presetname = STD_STRING(sett().GetModDefaultPresetName(TowxString(battle.GetHostGameNameAndVersion())));
 		if (!presetname.empty()) {
 			battle.LoadOptionsPreset(presetname);
 		}

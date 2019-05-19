@@ -262,7 +262,7 @@ void PlaybackTab::OnSelect(wxDataViewEvent& event)
 
 			m_players_text->SetLabel(wxEmptyString);
 			m_map_text->SetLabel(TowxString(rep.battle.GetHostMapName()));
-			m_game_text->SetLabel(TowxString(rep.battle.GetHostGameName()));
+			m_game_text->SetLabel(TowxString(rep.battle.GetHostGameNameAndVersion()));
 			m_engine_text->SetLabel(rep.battle.GetEngineName() + ' ' + rep.battle.GetEngineVersion());
 			m_minimap->SetBattle(&(rep.battle));
 			m_minimap->UpdateMinimap();

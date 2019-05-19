@@ -346,7 +346,7 @@ bool PlaybackListFilter::FilterPlayback(const StoredGame& playback)
 		return false;
 
 	//Mod:
-	if (!TowxString(battle.GetHostGameName()).Upper().Contains(m_filter_mod_edit->GetValue().Upper()) && !TowxString(battle.GetHostGameName()).Upper().Contains(m_filter_mod_edit->GetValue().Upper()) && !m_filter_mod_expression->Matches(TowxString(battle.GetHostGameName())))
+	if (!TowxString(battle.GetHostGameNameAndVersion()).Upper().Contains(m_filter_mod_edit->GetValue().Upper()) && !TowxString(battle.GetHostGameNameAndVersion()).Upper().Contains(m_filter_mod_edit->GetValue().Upper()) && !m_filter_mod_expression->Matches(TowxString(battle.GetHostGameNameAndVersion())))
 		return false;
 
 	if ((!m_filter_filesize_edit->GetValue().IsEmpty()) && !_IntCompare(playback.size, 1024 * FromwxString(m_filter_filesize_edit->GetValue()), m_filter_filesize_mode))

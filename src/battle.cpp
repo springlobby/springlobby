@@ -110,7 +110,7 @@ void Battle::OnRequestBattleStatus()
 	const wxColor col = sett().GetBattleLastColour();
 	bs.colour = LSL::lslColor(col.Red(), col.Green(), col.Blue());
 	//FIXME ? bs.colour = GetFreeColour( GetMe() );
-	bs.side = sett().GetBattleLastSideSel(TowxString(GetHostGameName()));
+	bs.side = sett().GetBattleLastSideSel(TowxString(GetHostGameNameAndVersion()));
 	SendMyBattleStatus();
 }
 

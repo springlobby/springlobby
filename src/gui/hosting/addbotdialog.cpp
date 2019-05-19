@@ -185,7 +185,7 @@ wxString AddBotDialog::GetAiRawName()
 void AddBotDialog::ReloadAIList()
 {
 	try {
-		m_ais = lslTowxArrayString(LSL::usync().GetAIList(m_battle.GetHostGameName()));
+		m_ais = lslTowxArrayString(LSL::usync().GetAIList(m_battle.GetHostGameNameAndVersion()));
 	} catch (...) {
 	}
 
@@ -249,7 +249,7 @@ void AddBotDialog::ShowAIOptions()
 {
 	m_opts_list->DeleteAllItems();
 	m_opt_list_map.clear();
-	m_battle.CustomBattleOptions().loadAIOptions(m_battle.GetHostGameName(), GetAIType(), STD_STRING(GetNick()));
+	m_battle.CustomBattleOptions().loadAIOptions(m_battle.GetHostGameNameAndVersion(), GetAIType(), STD_STRING(GetNick()));
 	AddMMOptionsToList(0, m_battle.CustomBattleOptions().GetAIOptionIndex(STD_STRING(GetNick())));
 	m_opts_list->SetColumnWidth(0, wxLIST_AUTOSIZE);
 	m_opts_list->SetColumnWidth(1, wxLIST_AUTOSIZE);

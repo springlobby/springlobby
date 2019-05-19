@@ -369,7 +369,7 @@ void BattleroomDataViewCtrl::UpdateContextMenuSides()
 	}
 
 	try {
-		const wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(m_Battle->GetHostGameName()));
+		const wxArrayString sides = lslTowxArrayString(LSL::usync().GetSides(m_Battle->GetHostGameNameAndVersion()));
 		for (unsigned int i = 0; i < sides.GetCount(); i++) {
 			wxMenuItem* side = new wxMenuItem(m_sides, BATTLEROOM_VIEW_SIDE + i, sides[i], wxEmptyString, wxITEM_NORMAL);
 			m_sides->Append(side);

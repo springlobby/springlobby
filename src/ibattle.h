@@ -244,7 +244,7 @@ public:
 	virtual void SetLocalGame(const LSL::UnitsyncGame& game);
 	virtual const LSL::UnitsyncGame& LoadGame();
 	virtual const std::string& GetHostGameName() const;
-	virtual const std::string& GetHostGameNameWithoutVersion() const;
+	virtual const std::string& GetHostGameNameAndVersion() const;
 	virtual const wxColour& GetHostGameBackgroundColour() const;
 	virtual const std::string& GetHostGameHash() const;
 

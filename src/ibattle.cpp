@@ -801,13 +801,13 @@ const LSL::UnitsyncGame& IBattle::LoadGame()
 }
 
 
-const std::string& IBattle::GetHostGameName() const
+const std::string& IBattle::GetHostGameNameAndVersion() const
 {
 	return m_host_game.name;
 }
 
 
-const std::string& IBattle::GetHostGameNameWithoutVersion() const
+const std::string& IBattle::GetHostGameName() const
 {
 	return gameNameWithoutVersion;
 }

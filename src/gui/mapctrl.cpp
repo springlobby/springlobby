@@ -931,8 +931,8 @@ void MapCtrl::DrawUser(wxDC& dc, User& user, bool selected, bool /*unused*/)
 			DrawStartRect(dc, -1, tmp, col, false);
 		}
 
-		if (!m_battle->GetHostGameName().empty()) { //game isn't set -> no side known
-			wxBitmap bmp = IconsCollection::Instance()->GetFractionBmp(m_battle->GetHostGameName(), user.BattleStatus().side);
+		if (!m_battle->GetHostGameNameAndVersion().empty()) { //game isn't set -> no side known
+			wxBitmap bmp = IconsCollection::Instance()->GetFractionBmp(m_battle->GetHostGameNameAndVersion(), user.BattleStatus().side);
 			dc.DrawBitmap(bmp, r.x + siderect.x, r.y + siderect.y, true);
 		}
 
@@ -1398,7 +1398,7 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 
 		} else if (m_mdown_area == Side) {
 			try {
-				const auto sides = LSL::usync().GetSides(m_battle->GetHostGameName());
+				const auto sides = LSL::usync().GetSides(m_battle->GetHostGameNameAndVersion());
 				const unsigned int sidecount = sides.size();
 				if (sidecount > 0)
 					user.BattleStatus().side = (user.BattleStatus().side + 1) % sidecount;

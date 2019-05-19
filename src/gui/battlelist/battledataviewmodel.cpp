@@ -92,7 +92,7 @@ void BattleDataViewModel::GetValue(wxVariant& variant,
 			break;
 
 		case GAME:
-			variant = wxVariant(wxDataViewIconText(wxString(battle->GetHostGameName()), battle->GameExists(false) ? iconsCollection->ICON_EXISTS : iconsCollection->ICON_NEXISTS));
+			variant = wxVariant(wxDataViewIconText(wxString(battle->GetHostGameNameAndVersion()), battle->GameExists(false) ? iconsCollection->ICON_EXISTS : iconsCollection->ICON_NEXISTS));
 			break;
 
 		case HOST:
@@ -208,7 +208,7 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 
 		case GAME: { 
 			if (USE_SMART_SORTING) {  // game prefix, active players DESC, total players DESC, game
-				sortingResult = battleA->GetHostGameNameWithoutVersion().compare(battleB->GetHostGameNameWithoutVersion());
+				sortingResult = battleA->GetHostGameName().compare(battleB->GetHostGameName());
 
 				// secondary sort by players
 				if (0 == sortingResult) {
@@ -224,10 +224,10 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 					sortingResult = !ascending ? sortingResult : (sortingResult * (-1));  // always DESC			
 				}
 				if (0 == sortingResult) {
-					sortingResult = battleA->GetHostGameName().compare(battleB->GetHostGameName());
+					sortingResult = battleA->GetHostGameNameAndVersion().compare(battleB->GetHostGameNameAndVersion());
 				}
 			} else {
-				sortingResult = battleA->GetHostGameName().compare(battleB->GetHostGameName());
+				sortingResult = battleA->GetHostGameNameAndVersion().compare(battleB->GetHostGameNameAndVersion());
 			}
 		} break;
 
@@ -259,7 +259,7 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 
 				// secondary sort by game
 				if (0 == sortingResult) {
-					sortingResult = battleA->GetHostGameName().compare(battleB->GetHostGameName());
+					sortingResult = battleA->GetHostGameNameAndVersion().compare(battleB->GetHostGameNameAndVersion());
 					sortingResult = ascending ? sortingResult : (sortingResult * (-1));  // always ASC
 				}
 			}

@@ -930,9 +930,9 @@ bool Ui::NeedsDownload(const IBattle* battle, bool uiprompt, DownloadEnum::Categ
 		stodl.append("- map " + battle->GetHostMapName() + "\n");
 		todl.push_back(std::make_pair(DownloadEnum::CAT_MAP, battle->GetHostMapName()));
 	}
-	if (requested(cat, DownloadEnum::CAT_GAME) && !battle->GameExists(false) && !battle->GetHostGameName().empty()) {
-		stodl.append("- game " + battle->GetHostGameName() + "\n");
-		todl.push_back(std::make_pair(DownloadEnum::CAT_GAME, battle->GetHostGameName()));
+	if (requested(cat, DownloadEnum::CAT_GAME) && !battle->GameExists(false) && !battle->GetHostGameNameAndVersion().empty()) {
+		stodl.append("- game " + battle->GetHostGameNameAndVersion() + "\n");
+		todl.push_back(std::make_pair(DownloadEnum::CAT_GAME, battle->GetHostGameNameAndVersion()));
 	}
 
 

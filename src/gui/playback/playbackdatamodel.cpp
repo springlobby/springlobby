@@ -35,7 +35,7 @@ int PlaybackDataModel::Compare(const wxDataViewItem& itemA, const wxDataViewItem
 			sortingResult = storedGameA->date_string.compare(storedGameB->date_string);
 			break;
 		case GAME:
-			sortingResult = storedGameA->battle.GetHostGameName().compare(storedGameB->battle.GetHostGameName());
+			sortingResult = storedGameA->battle.GetHostGameNameAndVersion().compare(storedGameB->battle.GetHostGameNameAndVersion());
 			break;
 		case MAP:
 			sortingResult = storedGameA->battle.GetHostMapName().compare(storedGameB->battle.GetHostMapName());
@@ -113,7 +113,7 @@ void PlaybackDataModel::GetValue(wxVariant& variant, const wxDataViewItem& item,
 		} break;
 
 		case GAME:
-			variant = TowxString(storedGame->battle.GetHostGameName());
+			variant = TowxString(storedGame->battle.GetHostGameNameAndVersion());
 			break;
 
 		case MAP:

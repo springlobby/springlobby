@@ -522,7 +522,7 @@ void BattleroomMMOptionsTab::OnSetModDefaultPreset(wxCommandEvent& /*unused*/)
 	int result = wxGetSingleChoiceIndex(_("Pick an existing option set from the list"), _("Set game default preset"), choices);
 	if (result < 0)
 		return;
-	sett().SetModDefaultPresetName(TowxString(m_battle->GetHostGameName()), choices[result]);
+	sett().SetModDefaultPresetName(TowxString(m_battle->GetHostGameNameAndVersion()), choices[result]);
 }
 
 void BattleroomMMOptionsTab::UpdatePresetList()
@@ -596,7 +596,7 @@ void BattleroomMMOptionsTab::SetBattle(IBattle* battle)
 		itor->second->Enable(isBattleEnabled);
 
 	if (isBattleEnabled) {
-		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostGameName())));
+		m_options_preset_sel->SetStringSelection(sett().GetModDefaultPresetName(TowxString(m_battle->GetHostGameNameAndVersion())));
 		if (!m_battle->IsFounderMe()) {
 			m_options_preset_sel->Disable();
 			m_load_btn->Disable();

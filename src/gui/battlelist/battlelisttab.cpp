@@ -200,7 +200,7 @@ void BattleListTab::SelectBattle(IBattle* battle)
 		else
 			m_rank_warn->Hide();
 		m_engine_text->SetLabel(m_sel_battle->GetEngineName() + _T(" ") + m_sel_battle->GetEngineVersion());
-		m_game_text->SetLabel(TowxString(m_sel_battle->GetHostGameName()));
+		m_game_text->SetLabel(TowxString(m_sel_battle->GetHostGameNameAndVersion()));
 		m_host_text->SetLabel(m_sel_battle->GetFounder().GetNick());
 		m_map_text->SetLabel(TowxString(m_sel_battle->GetHostMapName()));
 		m_players->SetUsers(m_sel_battle->GetUsers());

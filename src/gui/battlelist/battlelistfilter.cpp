@@ -536,7 +536,7 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 		return false;
 
 	//Game:
-	if (!StringMatches(TowxString(battle.GetHostGameName()),
+	if (!StringMatches(TowxString(battle.GetHostGameNameAndVersion()),
 			   m_filter_game_edit->GetValue(),
 			   m_filter_game_expression))
 		return false;

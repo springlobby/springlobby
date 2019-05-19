@@ -124,11 +124,11 @@ void BattleRestrictionsTab::ReloadRestrictions()
 		return;
 	m_allowed_list->Clear();
 	m_restrict_list->Clear();
-	if (m_battle->GetHostGameName().empty())
+	if (m_battle->GetHostGameNameAndVersion().empty())
 		return;
 
 	try {
-		wxArrayString items = lslTowxArrayString(LSL::usync().GetUnitsList(m_battle->GetHostGameName()));
+		wxArrayString items = lslTowxArrayString(LSL::usync().GetUnitsList(m_battle->GetHostGameNameAndVersion()));
 		m_allowed_list->Append(items);
 	} catch (...) {
 	}

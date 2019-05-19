@@ -216,10 +216,10 @@ void SinglePlayerTab::ReloadModlist()
 	m_game_choice->Clear();
 	m_game_choice->Append(lslTowxArrayString(LSL::usync().GetGameList()));
 	m_game_choice->Insert(_("-- Select one --"), m_game_choice->GetCount());
-	if (m_battle.GetHostGameName().empty()) {
+	if (m_battle.GetHostGameNameAndVersion().empty()) {
 		m_game_choice->SetSelection(m_game_choice->GetCount() - 1);
 	} else {
-		m_game_choice->SetStringSelection(TowxString(m_battle.GetHostGameName()));
+		m_game_choice->SetStringSelection(TowxString(m_battle.GetHostGameNameAndVersion()));
 		if (m_game_choice->GetStringSelection().empty()) {
 			SetMod(m_game_choice->GetCount() - 1);
 		}
