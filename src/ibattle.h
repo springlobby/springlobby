@@ -27,16 +27,16 @@ const unsigned int DEFAULT_EXTERNAL_UDP_SOURCE_PORT = 16941;
 
 const std::string GAME_BL_COLOURS[11] = {
 	"#ffffff",
-	"#ffffcc",
-	"#ccffcc",
-	"#ccccff",
-	"#ffcccc",
-	"#dddddd",
-	"#ddffff",
-	"#ccddcc",
-	"#ffeecc",
+	"#ffffdd",
+	"#ddffdd",
+	"#fff2ee",
+	"#ffdddd",
 	"#eeeeee",
-	"#ddeeff"
+	"#eeffff",
+	"#ddeedd",
+	"#fff2dd",
+	"#f3f3f3",
+	"#eef2ff"
 };
 
 
