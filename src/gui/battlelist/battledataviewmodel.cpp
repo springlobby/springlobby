@@ -249,7 +249,7 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 			int playersA = battleA->GetNumPlayers() - battleA->GetSpectators();
 			int playersB = battleB->GetNumPlayers() - battleB->GetSpectators();
 			sortingResult = playersA - playersB;
-			
+
 			if (USE_SMART_SORTING) {			
 				if (0 == sortingResult) {
 					int playersA = battleA->GetNumPlayers() ;
@@ -298,7 +298,7 @@ bool BattleDataViewModel::GetAttr(const wxDataViewItem& item,
 	if (battle->GetNumPlayers() - battle->GetSpectators() == 0) {
 		attr.SetColour(INACTIVE_ROOM_COLOUR);
 	}
-	
+
 	//If founder is cause of highlight
 	wxString groupName = useractions().GetGroupOfUser(battle->GetFounder().GetNick());
 	if (groupName != wxEmptyString) {
@@ -316,7 +316,7 @@ bool BattleDataViewModel::GetAttr(const wxDataViewItem& item,
 			}
 		}
 	}
-	
+
 	if (SHOW_GAME_COLORS) {
 		// if no highlight was set, use a game-dependent shade of grey as background (windows only)
 		attr.SetBackgroundColour(battle->GetHostGameBackgroundColour());
