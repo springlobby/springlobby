@@ -172,7 +172,7 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 	wxString pref = wxString::Format(_T("%d%s"), optFlag, wxsep.c_str());
 	LSL::OptionsWrapper optWrap = m_battle->CustomBattleOptions();
 	bool enable = m_battle->IsFounderMe();
-	wxFlexGridSizer* cbxSizer = new wxFlexGridSizer(4, 2, 10, 10);
+	wxFlexGridSizer* cbxSizer = new wxFlexGridSizer(2, 10, 10);
 	wxFlexGridSizer* spinSizer = new wxFlexGridSizer(4, 10, 10);
 	wxFlexGridSizer* textSizer = new wxFlexGridSizer(4, 10, 10);
 	wxFlexGridSizer* chkSizer = new wxFlexGridSizer(4, 10, 10);
