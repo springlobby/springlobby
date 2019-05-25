@@ -124,9 +124,9 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	m_map_lbl = new wxStaticText(this, -1, _("Map:"));
 	m_ctrl_sizer->Add(m_map_lbl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
-	m_map_pick = new wxChoice(this, SP_MAP_PICK);
-	m_map_pick->SetToolTip(_("No maps? Download them by joining a multiplayer game room"));
-	m_ctrl_sizer->Add(m_map_pick, 1, wxALL, 5);
+	m_map_choice = new wxChoice(this, SP_MAP_PICK);
+	m_map_choice->SetToolTip(_("No maps? Download them by joining a multiplayer game room"));
+	m_ctrl_sizer->Add(m_map_choice, 1, wxALL, 5);
 
 	m_select_btn = new wxButton(this, SP_BROWSE_MAP, _("Choose map..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
 	m_ctrl_sizer->Add(m_select_btn, 0, wxBOTTOM | wxRIGHT | wxTOP, 5);
@@ -196,16 +196,16 @@ void SinglePlayerTab::UpdateMinimap()
 
 void SinglePlayerTab::ReloadMaplist()
 {
-	m_map_pick->Clear();
-	m_map_pick->Append(lslTowxArrayString(LSL::usync().GetMapList()));
-	m_map_pick->Insert(_("-- Select one --"), m_map_pick->GetCount());
+	m_map_choice->Clear();
+	m_map_choice->Append(lslTowxArrayString(LSL::usync().GetMapList()));
+	m_map_choice->Insert(_("-- Select one --"), m_map_choice->GetCount());
 	if (m_battle.GetHostMapName().empty()) {
-		m_map_pick->SetSelection(m_map_pick->GetCount() - 1);
+		m_map_choice->SetSelection(m_map_choice->GetCount() - 1);
 		m_addbot_btn->Enable(false);
 	} else {
-		m_map_pick->SetStringSelection(TowxString(m_battle.GetHostMapName()));
-		if (m_map_pick->GetStringSelection().IsEmpty()) {
-			SetMap(m_map_pick->GetCount() - 1);
+		m_map_choice->SetStringSelection(TowxString(m_battle.GetHostMapName()));
+		if (m_map_choice->GetStringSelection().IsEmpty()) {
+			SetMap(m_map_choice->GetCount() - 1);
 		}
 	}
 }
@@ -268,7 +268,7 @@ void SinglePlayerTab::SetMap(unsigned int index)
 {
 	//ui().ReloadUnitSync();
 	m_addbot_btn->Enable(false);
-	if (index >= m_map_pick->GetCount() - 1) {
+	if (index >= m_map_choice->GetCount() - 1) {
 		m_battle.SetHostMap("", "");
 		int count = m_map_opts_list->GetItemCount();
 		for (int i = 0; i < count; i++)
@@ -292,7 +292,7 @@ void SinglePlayerTab::SetMap(unsigned int index)
 	}
 	m_minimap->UpdateMinimap();
 	m_battle.SendHostInfo(IBattle::HI_Map_Changed); // reload map options
-	m_map_pick->SetSelection(index);
+	m_map_choice->SetSelection(index);
 }
 
 
@@ -330,7 +330,7 @@ bool SinglePlayerTab::ValidSetup() const
 		return false;
 	}
 
-	if (m_map_pick->GetSelection() == wxNOT_FOUND) {
+	if (m_map_choice->GetSelection() == wxNOT_FOUND) {
 		wxLogWarning(_T("no map selected"));
 		customMessageBox(SL_MAIN_ICON, _("You have to select a map first."), _("Game setup error"));
 		return false;
@@ -345,7 +345,7 @@ bool SinglePlayerTab::ValidSetup() const
 
 void SinglePlayerTab::OnMapSelect(wxCommandEvent& /*unused*/)
 {
-	const int index = m_map_pick->GetCurrentSelection();
+	const int index = m_map_choice->GetCurrentSelection();
 
 	if (index == wxNOT_FOUND) {
 		return;
@@ -390,7 +390,7 @@ void SinglePlayerTab::OnMapBrowse(wxCommandEvent& /*unused*/)
 	slLogDebugFunc("");
 	const wxString mapname = mapSelectDialog();
 	if (!mapname.empty()) {
-		const int idx = m_map_pick->FindString(mapname, true /*case sensitive*/);
+		const int idx = m_map_choice->FindString(mapname, true /*case sensitive*/);
 		if (idx != wxNOT_FOUND) {
 			SetMap(idx);
 		}
