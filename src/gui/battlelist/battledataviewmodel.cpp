@@ -319,7 +319,7 @@ bool BattleDataViewModel::GetAttr(const wxDataViewItem& item,
 
 	if (SHOW_GAME_COLORS) {
 		// if no highlight was set, use a game-dependent shade of grey as background (windows only)
-		attr.SetBackgroundColour(battle->GetHostGameBackgroundColour());
+		attr.SetBackgroundColour(wxColour(battle->GetHostGameBackgroundColour()));
 	}
 	return true;
 }
