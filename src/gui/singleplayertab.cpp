@@ -33,6 +33,10 @@
 #include "utils/slconfig.h"
 #include "utils/slpaths.h"
 
+SLCONFIG("/Skirmish/LastEngine", "", "Last engine used for skirmish");
+SLCONFIG("/Skirmish/LastGame", "", "Last game used for skirmish");
+SLCONFIG("/Skirmish/LastMap", "", "Last map used for skirmish");
+
 BEGIN_EVENT_TABLE(SinglePlayerTab, wxPanel)
 
 EVT_CHOICE(SP_MAP_PICK, SinglePlayerTab::OnMapSelect)
@@ -199,15 +203,29 @@ void SinglePlayerTab::ReloadMaplist()
 	m_map_choice->Clear();
 	m_map_choice->Append(lslTowxArrayString(LSL::usync().GetMapList()));
 	m_map_choice->Insert(_("-- Select one --"), m_map_choice->GetCount());
-	if (m_battle.GetHostMapName().empty()) {
-		m_map_choice->SetSelection(m_map_choice->GetCount() - 1);
-		m_addbot_btn->Enable(false);
-	} else {
+
+	// First attempt setting current battle's map (if we had just reloaded maps&games)
+	if (!m_battle.GetHostMapName().empty()) {
 		m_map_choice->SetStringSelection(TowxString(m_battle.GetHostMapName()));
-		if (m_map_choice->GetStringSelection().IsEmpty()) {
-			SetMap(m_map_choice->GetCount() - 1);
+		if (!m_map_choice->GetStringSelection().IsEmpty()) {
+			SetMap(m_map_choice->GetSelection());
+			return;
 		}
 	}
+
+	// Then attempt setting last used map, saved in config.
+	wxString lastSkirmishMap = cfg().ReadString("/Skirmish/LastMap");
+	if (!lastSkirmishMap.empty()) {
+		m_map_choice->SetStringSelection(lastSkirmishMap);
+		if (!m_map_choice->GetStringSelection().IsEmpty()) {
+			SetMap(m_map_choice->GetSelection());
+			return;
+		}
+	}
+
+	// Else set last entry, i.e. -- Select one --
+	m_map_choice->SetSelection(m_map_choice->GetCount() - 1);
+	SetMap(m_map_choice->GetSelection());
 }
 
 
@@ -216,19 +234,35 @@ void SinglePlayerTab::ReloadGamelist()
 	m_game_choice->Clear();
 	m_game_choice->Append(lslTowxArrayString(LSL::usync().GetGameList()));
 	m_game_choice->Insert(_("-- Select one --"), m_game_choice->GetCount());
-	if (m_battle.GetHostGameNameAndVersion().empty()) {
-		m_game_choice->SetSelection(m_game_choice->GetCount() - 1);
-	} else {
+
+	// First attempt setting current battle's game (if we had just reloaded maps&games)
+	if (!m_battle.GetHostGameNameAndVersion().empty()) {
 		m_game_choice->SetStringSelection(TowxString(m_battle.GetHostGameNameAndVersion()));
-		if (m_game_choice->GetStringSelection().empty()) {
-			SetGame(m_game_choice->GetCount() - 1);
+		if (!m_game_choice->GetStringSelection().empty()) {
+			SetGame(m_game_choice->GetSelection());
+			return;
 		}
 	}
+
+	// Then attempt setting last used game, saved in config.
+	wxString lastSkirmishGame = cfg().ReadString("/Skirmish/LastGame");
+	if (!lastSkirmishGame.empty()) {
+		m_game_choice->SetStringSelection(lastSkirmishGame);
+		if (!m_game_choice->GetStringSelection().IsEmpty()) {
+			SetGame(m_game_choice->GetSelection());
+			return;
+		}
+	}
+
+	// Else set last entry, i.e. -- Select one --
+	m_game_choice->SetSelection(m_game_choice->GetCount() - 1);
+	SetGame(m_game_choice->GetSelection());
 }
 
 
 void SinglePlayerTab::ReloadEngineList()
 {
+	wxString lastSkirmishEngine = cfg().ReadString("/Skirmish/LastEngine");
 	SlPaths::ValidatePaths();
 
 	m_engine_choice->Clear();
@@ -237,9 +271,15 @@ void SinglePlayerTab::ReloadEngineList()
 	const std::string last = SlPaths::GetCurrentUsedSpringIndex();
 	int i = 0;
 
+	bool lastSkirmishEngineFound = false;
+
 	for (auto pair : versions) {
 		m_engine_choice->Insert(TowxString(pair.first), i);
-		if (last == pair.first) {
+
+		if (lastSkirmishEngine == pair.first) {
+			m_engine_choice->SetSelection(i);
+			lastSkirmishEngineFound = true;
+		} else if (last == pair.first && !lastSkirmishEngineFound) {
 			m_engine_choice->SetSelection(i);
 		}
 		i++;
@@ -287,7 +327,9 @@ void SinglePlayerTab::SetMap(unsigned int index)
 			m_map_opts_list->SetItem(5, 1, wxString::Format(_T( "%.3f" ), map.info.maxMetal));
 			m_map_desc->SetLabel(TowxString(map.info.description));
 			m_map_desc->Wrap(160);
-		} catch (...) {
+		} catch (std::exception& e) {
+			wxLogError("Exception caught:\n %s\n", e.what());
+			SetMap(m_map_choice->GetCount() - 1);
 		}
 	}
 	m_minimap->UpdateMinimap();
@@ -444,8 +486,13 @@ void SinglePlayerTab::OnStart(wxCommandEvent& /*unused*/)
 		return;
 	}
 
-	if (ValidSetup())
-		m_battle.StartSpring();
+	if (!ValidSetup())
+		return;
+
+	cfg().Write("/Skirmish/LastEngine", m_engine_choice->GetStringSelection());
+	cfg().Write("/Skirmish/LastGame", m_game_choice->GetStringSelection());
+	cfg().Write("/Skirmish/LastMap", m_map_choice->GetStringSelection());
+	m_battle.StartSpring();
 }
 
 
