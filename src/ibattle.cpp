@@ -761,7 +761,7 @@ void IBattle::SetHostGame(const std::string& gamename, const std::string& hash)
 	for (char& c : gameNameWithoutVersion) {
 		sum += c;
 	}
-	gameBackgroundColour = wxColour(GAME_BL_COLOURS[sum % 11]);
+	gameBackgroundColour = GAME_BL_COLOURS[sum % 11];
 }
 
 
@@ -812,7 +812,7 @@ const std::string& IBattle::GetHostGameName() const
 	return gameNameWithoutVersion;
 }
 
-const wxColour& IBattle::GetHostGameBackgroundColour() const
+const std::string& IBattle::GetHostGameBackgroundColour() const
 {
 	return gameBackgroundColour;
 }
