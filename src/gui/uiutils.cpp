@@ -286,7 +286,6 @@ void hue(huevec& out, int amount)
 std::vector<LSL::lslColor>& GetBigFixColoursPalette(int numteams)
 {
 	static std::vector<LSL::lslColor> result;
-	slLogDebugFunc("numteams: %d", numteams);
 	huevec huevector;
 	static int satvalbifurcatepos;
 	static std::vector<double> satvalsplittings;
