@@ -178,6 +178,7 @@ private:
 	};
 
 	CRC m_crc;
+	const std::string GetSys();
 
 	ServerEvents* m_se;
 	Socket* m_sock;
