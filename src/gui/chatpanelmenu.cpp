@@ -477,18 +477,15 @@ void ChatPanelMenu::OnUserMenuJoinSame(wxCommandEvent& /*unused*/)
 void ChatPanelMenu::OnUserMenuSlap(wxCommandEvent& /*unused*/)
 {
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
-	if (m_chatpanel->m_type == CPT_Channel) {
-		if (m_chatpanel->m_channel == 0)
-			return;
-		m_chatpanel->m_channel->DoAction("Slaps " + user->GetNick() + " around with a large PeeWee!");
-	} else if (m_chatpanel->m_type == CPT_User) {
-		if (m_chatpanel->m_user == 0)
-			return;
-		m_chatpanel->m_user->DoAction("slaps " + user->GetNick() + " around with a large PeeWee!");
-	}
+	std::string message("slaps " + user->GetNick() + " around with a fully loaded Panzerkampfwagen Tiger Ausf. B!");
+
+	if (m_chatpanel->m_type == CPT_Channel && m_chatpanel->m_channel != nullptr)
+		m_chatpanel->m_channel->DoAction(message);
+	else if (m_chatpanel->m_type == CPT_User && m_chatpanel->m_user != nullptr)
+		m_chatpanel->m_user->DoAction(message);
 }
 
 
