@@ -26,7 +26,7 @@
 
 static const char *banned_AIs[] = {
 	"AAI", "CircuitAI", "CppTestAI",
-	"E323AI", "KAIK", "NullAI", "RAI", "Shard"
+	"E323AI", "KAIK", "RAI", "Shard"
 };
 
 BEGIN_EVENT_TABLE(AddBotDialog, wxDialog)
