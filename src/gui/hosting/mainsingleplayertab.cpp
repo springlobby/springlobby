@@ -21,7 +21,13 @@
 #include "utils/conversion.h"
 
 MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
-    : wxPanel(parent, -1)
+    : wxPanel(parent, -1),
+	// These three null-initialisations are because in the following code, SinglePlayerTab's
+	// constructor creates a chain of function calls that culminate in m_mm_opts_tab being
+	// accessed while the latter is not yet initialised. However, there is already a protective
+	// (!= nullptr) wrapper, so these starting calls get converted into what is right now a group
+	// of harmless startup warnings.
+	m_sp_tab(nullptr), m_mm_opts_tab(nullptr), m_opts_tab(nullptr)
 {
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 	GetAui().manager->AddPane(this, wxLEFT, _T( "mainsingleplayertab" ));
