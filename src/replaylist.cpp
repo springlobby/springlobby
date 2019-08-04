@@ -138,10 +138,7 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	const std::string FileName = LSL::Util::AfterLast(ReplayPath, SEP); // strips file path
 	ret.type = StoredGame::REPLAY;
 	ret.battle.SetPlayBackFilePath(ReplayPath);
-	std::string engineVersion = LSL::Util::BeforeLast(LSL::Util::AfterLast(FileName, "_"), ".");
 	ret.size = wxFileName::GetSize(ReplayPath).GetLo(); //FIXME: use longlong
-
-	FixSpringVersion(engineVersion);
 
 	if (!wxFileExists(TowxString(ReplayPath))) {
 		wxLogWarning(wxString::Format(_T("File %s does not exist!"), ReplayPath.c_str()));
@@ -178,6 +175,16 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	const int replay_version = replayVersion(*replay);
 	ret.battle.SetScript(GetScriptFromReplay(*replay, replay_version));
 
+
+	std::string engineVersion = GetEngineVersionFromReplay(*replay, replay_version);
+	FixSpringVersion(engineVersion);
+	if (engineVersion.empty()) {
+		wxLogWarning(_T("Failed to obtain the engine version from %s (or it was empty)!"), ReplayPath.c_str());
+		MarkBroken(ret);
+		delete replay;
+		return false;
+	}
+
 	if (ret.battle.GetScript().empty()) {
 		wxLogWarning(wxString::Format(_T("File %s have incompatible version!"), ReplayPath.c_str()));
 		MarkBroken(ret);
@@ -193,6 +200,27 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 	ret.battle.SetPlayBackFilePath(ReplayPath);
 	delete replay;
 	return true;
+}
+
+std::string ReplayList::GetEngineVersionFromReplay(PlayBackDataReader& replay, const int version) const
+{
+	// The engine version is stored as a 16 (demofile v1..v4) or 256 (demofile v5) string at
+	const int engineVersionOffset = 24;
+
+	char engineVersionString[256];
+	if (replay.Seek(engineVersionOffset) == wxInvalidOffset) {
+		wxLogWarning("Couldn't seek to engine version from demo: %s (%d)", replay.GetName().c_str());
+		std::string empty;
+		return empty;
+	}
+
+	if (version < 5)
+		replay.Read(engineVersionString, 16);
+	else
+		replay.Read(engineVersionString, 256);
+
+	std::string engineVersion(engineVersionString);
+	return engineVersion;
 }
 
 std::string ReplayList::GetScriptFromReplay(PlayBackDataReader& replay, const int version) const
