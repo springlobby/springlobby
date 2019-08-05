@@ -1344,7 +1344,8 @@ void BattleRoomTab::RegenerateOptionsList()
 			}
 			wxSize s = m_side_sel->GetEffectiveMinSize();
 			m_side_sel->SetMinSize(s);
-		} catch (...) {
+		} catch (std::exception& e) {
+			wxLogError("Exception caught while retrieving sides/factions data from unitsync: %s", e.what());
 		}
 	}
 }
