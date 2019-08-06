@@ -59,6 +59,8 @@ public:
 	void OnListJoin(wxDataViewEvent& event);
 	void ShowExtendedInfos(bool show);
 
+	void JoinBattle(IBattle& battle);
+	void LeftBattle();
 	void DoJoin(IBattle& battle);
 
 	void OnSelect(wxDataViewEvent& event);

@@ -558,6 +558,7 @@ void Ui::OnUserLeftBattle(IBattle& battle, User& user, bool isbot)
 			OnBattleInfoUpdated(battle, wxEmptyString);
 			if (&user == &m_serv->GetMe()) {
 				mw().GetJoinTab().LeaveCurrentBattle();
+				mw().GetBattleListTab().LeftBattle();
 				mw().ShowTab(MainWindow::PAGE_BATTLELIST);
 			}
 		}
@@ -588,6 +589,7 @@ void Ui::OnJoinedBattle(IBattle& battle)
 	if (m_main_win == 0)
 		return;
 	mw().GetJoinTab().JoinBattle(battle);
+	mw().GetBattleListTab().JoinBattle(battle);
 	mw().ShowTab(MainWindow::PAGE_BATTLEROOM);
 	if (battle.GetNatType() != NAT_None) {
 		wxLogWarning(_T("joining game with NAT transversal"));

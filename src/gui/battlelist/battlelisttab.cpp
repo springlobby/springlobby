@@ -51,6 +51,7 @@ END_EVENT_TABLE()
 
 SLCONFIG("/BattleFilter/Active", false, "determines if battle list filter is active");
 SLCONFIG("/BattleListTab/ShowExtendedInfos", true, "determines if panels with battle infos is shown");
+SLCONFIG("/LastJoinedBattle/HostNick", "", "which battle we were last joined to");
 
 
 BattleListTab::BattleListTab(wxWindow* parent)
@@ -222,12 +223,28 @@ void BattleListTab::SelectBattle(IBattle* battle)
 
 void BattleListTab::AddBattle(IBattle& battle)
 {
+	if (battle.GetFounder().GetNick() == cfg().ReadString("/LastJoinedBattle/HostNick")) {
+		wxLogMessage("Found last joined battle, attempting to rejoin");
+		DoJoin(battle);
+	}
+
 	if (battle.GetGUIListActiv() || (m_filter->GetActiv() && !m_filter->FilterBattle(battle))) {
 		return;
 	}
 	m_battle_list->AddBattle(battle);
 	battle.SetGUIListActiv(true);
 	SetNumDisplayed();
+}
+
+void BattleListTab::JoinBattle(IBattle& battle)
+{
+	wxString hostNick (battle.GetFounder().GetNick());
+	cfg().Write(_T("/LastJoinedBattle/HostNick"), hostNick);
+}
+
+void BattleListTab::LeftBattle()
+{
+	cfg().Write(_T("/LastJoinedBattle/HostNick"), wxEmptyString);
 }
 
 void BattleListTab::RemoveBattle(IBattle& battle)
