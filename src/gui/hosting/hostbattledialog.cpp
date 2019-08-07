@@ -94,7 +94,7 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 }
 
 
-void HostBattleDialog::ReloadModList()
+void HostBattleDialog::ReloadGameList()
 {
 	m_game_choice->Clear();
 
@@ -132,7 +132,7 @@ void HostBattleDialog::ReloadEngineList()
 		m_engine_choice->SetSelection(0);
 	}
 	//unitsync change needs a refresh of games as well
-	ReloadModList();
+	ReloadGameList();
 }
 
 
@@ -193,11 +193,6 @@ void HostBattleDialog::OnNatChange(wxCommandEvent& /*unused*/)
 	m_port_spinctrl->Enable(m_nat_traversal_radios->GetSelection() == 0);
 }
 
-
-void HostBattleDialog::OnReloadMods(wxCommandEvent&)
-{
-	ReloadModList();
-}
 
 void HostBattleDialog::OnPickRelayHost(wxCommandEvent&)
 {

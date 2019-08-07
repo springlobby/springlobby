@@ -34,14 +34,13 @@ private:
 	void OnOk(wxCommandEvent& event);
 	void OnCancel(wxCommandEvent& event);
 	void OnNatChange(wxCommandEvent& event);
-	void OnReloadMods(wxCommandEvent& event);
 	void OnRelayChoice(wxCommandEvent& event);
 	void OnUseRelay(wxCommandEvent& event);
 	void OnPickRelayHost(wxCommandEvent& event);
 	void OnEngineSelect(wxCommandEvent& event);
 
 	void ReloadEngineList();
-	void ReloadModList();
+	void ReloadGameList();
 
 	wxMenu* m_relayhost_list;
 
