@@ -175,7 +175,7 @@ SinglePlayerTab::SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab)
 	m_battle.SetEngineName("Spring");
 	m_battle.SetEngineVersion(SlPaths::GetCurrentUsedSpringIndex());
 
-	ReloadMaplist();
+	ReloadMapList();
 //	ReloadModlist(); //Called from ReloadEngineList() too
 	ReloadEngineList();
 	SUBSCRIBE_GLOBAL_EVENT(GlobalEventManager::OnUnitsyncReloaded, SinglePlayerTab::OnUnitsyncReloaded);
@@ -198,7 +198,7 @@ void SinglePlayerTab::UpdateMinimap()
 }
 
 
-void SinglePlayerTab::ReloadMaplist()
+void SinglePlayerTab::ReloadMapList()
 {
 	m_map_choice->Clear();
 	m_map_choice->Append(lslTowxArrayString(LSL::usync().GetMapList()));
@@ -229,7 +229,7 @@ void SinglePlayerTab::ReloadMaplist()
 }
 
 
-void SinglePlayerTab::ReloadGamelist()
+void SinglePlayerTab::ReloadGameList()
 {
 	m_game_choice->Clear();
 	m_game_choice->Append(lslTowxArrayString(LSL::usync().GetGameList()));
@@ -300,7 +300,7 @@ void SinglePlayerTab::ReloadEngineList()
 		m_start_btn->Enable(true);
 	}
 	//unitsync change needs a refresh of games as well
-	ReloadGamelist();
+	ReloadGameList();
 }
 
 
@@ -462,8 +462,8 @@ void SinglePlayerTab::OnAddBot(wxCommandEvent& /*unused*/)
 void SinglePlayerTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 {
 	try {
-		ReloadMaplist();
-		ReloadGamelist();
+		ReloadMapList();
+		ReloadGameList();
 		ReloadEngineList();
 		UpdateMinimap();
 	} catch (...) {

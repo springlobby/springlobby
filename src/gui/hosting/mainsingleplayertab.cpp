@@ -84,9 +84,9 @@ void MainSinglePlayerTab::OnUnitSyncReloaded()
 	try {
 		GetSinglePlayerTab().ResetUsername();
 		wxLogMessage(_T( "Reloading map list" ));
-		GetSinglePlayerTab().ReloadMaplist();
+		GetSinglePlayerTab().ReloadMapList();
 		wxLogMessage(_T( "Reloading game list" ));
-		GetSinglePlayerTab().ReloadGamelist();
+		GetSinglePlayerTab().ReloadGameList();
 		wxLogMessage(_T( "Reloading minimap" ));
 		GetSinglePlayerTab().UpdateMinimap();
 	} catch (...) {

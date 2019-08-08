@@ -189,7 +189,7 @@ void BattleMapTab::Update(const wxString& Tag)
 }
 
 
-void BattleMapTab::ReloadMaplist()
+void BattleMapTab::ReloadMapList()
 {
 	if (!m_battle)
 		return;
@@ -275,7 +275,7 @@ void BattleMapTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 {
 	if (!m_battle)
 		return;
-	ReloadMaplist();
+	ReloadMapList();
 }
 
 void BattleMapTab::SetBattle(IBattle* battle)
@@ -294,7 +294,7 @@ void BattleMapTab::SetBattle(IBattle* battle)
 	if (isBattleEnabled) {
 		m_minimap->SetReadOnly(!m_battle->IsFounderMe());
 		m_start_radios->Enable(m_battle->IsFounderMe());
-		ReloadMaplist();
+		ReloadMapList();
 		Update();
 	}
 }

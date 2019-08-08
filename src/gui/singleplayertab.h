@@ -27,10 +27,11 @@ public:
 	SinglePlayerTab(wxWindow* parent, MainSinglePlayerTab& msptab);
 	~SinglePlayerTab();
 
-	void ReloadGamelist();
-	void UpdateMinimap();
-	void ReloadMaplist();
 	void ReloadEngineList();
+	void ReloadGameList();
+	void ReloadMapList();
+
+	void UpdateMinimap();
 	void UpdatePresetList();
 
 	IBattle& GetBattle()

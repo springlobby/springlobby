@@ -1049,7 +1049,7 @@ void BattleRoomTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 	}
 	//m_minimap->UpdateMinimap();//should happen automagically now
 	RegenerateOptionsList();
-	ReloadMaplist();
+	ReloadMapList();
 	UpdateBattleInfo();
 
 	const size_t count = m_battle->GetNumUsers();
@@ -1154,7 +1154,7 @@ void BattleRoomTab::OnMapBrowse(wxCommandEvent& /*unused*/)
 	}
 }
 
-void BattleRoomTab::ReloadMaplist()
+void BattleRoomTab::ReloadMapList()
 {
 	if (!m_battle)
 		return;
@@ -1292,7 +1292,7 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 
 		m_host_new_btn->Show(false);
 
-		ReloadMaplist();
+		ReloadMapList();
 
 		UpdateBattleInfo(wxString::Format(_T( "%d_mapname" ), LSL::Enum::PrivateOptions));
 		UpdateBattleInfo();

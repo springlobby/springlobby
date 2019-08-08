@@ -58,7 +58,7 @@ public:
 	void OnUserJoined(User& user);
 	void OnUserLeft(User& user);
 
-	void ReloadMaplist();
+	void ReloadMapList();
 	void SetMap(int index);
 
 	void UpdateHighlights();
