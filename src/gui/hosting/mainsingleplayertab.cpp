@@ -27,7 +27,7 @@ MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
 	// accessed while the latter is not yet initialised. However, there is already a protective
 	// (!= nullptr) wrapper, so these starting calls get converted into what is right now a group
 	// of harmless startup warnings.
-	m_sp_tab(nullptr), m_mm_opts_tab(nullptr), m_opts_tab(nullptr)
+	m_sp_tab(nullptr), m_opts_tab(nullptr), m_mm_opts_tab(nullptr)
 {
 	m_main_sizer = new wxBoxSizer(wxVERTICAL);
 	GetAui().manager->AddPane(this, wxLEFT, _T( "mainsingleplayertab" ));
