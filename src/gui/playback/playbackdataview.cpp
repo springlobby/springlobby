@@ -81,7 +81,7 @@ void PlaybackDataView::OnDLMap(wxCommandEvent& /*event*/)
 	if (storedGame == nullptr) {
 		return;
 	}
-	ui().NeedsDownload(&storedGame->battle);
+	ui().NeedsDownload(&storedGame->battle, false, DownloadEnum::CAT_MAP);
 }
 
 void PlaybackDataView::OnDLMod(wxCommandEvent& /*event*/)
@@ -92,7 +92,7 @@ void PlaybackDataView::OnDLMod(wxCommandEvent& /*event*/)
 		return;
 	}
 
-	ui().NeedsDownload(&storedGame->battle);
+	ui().NeedsDownload(&storedGame->battle, false, DownloadEnum::CAT_GAME);
 }
 
 void PlaybackDataView::DeletePlayback()
