@@ -41,8 +41,9 @@ PlaybackDataView::PlaybackDataView(const wxString& dataViewName, wxWindow* paren
 	AppendTextColumn(_("File"), FILENAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
 
 	m_ContextMenu = new wxMenu(wxEmptyString);
-	m_ContextMenu->Append(REPLAY_DATAVIEW_DLMAP_ID, _("Download &map"));
+	m_ContextMenu->Append(REPLAY_DATAVIEW_DLENGINE_ID, _("Download &engine"));
 	m_ContextMenu->Append(REPLAY_DATAVIEW_DLMOD_ID, _("Download &game"));
+	m_ContextMenu->Append(REPLAY_DATAVIEW_DLMAP_ID, _("Download &map"));
 
 	LoadColumnProperties();
 }
@@ -73,6 +74,15 @@ void PlaybackDataView::OnContextMenu(wxDataViewEvent& /*event*/)
 		return;
 	}
 	PopupMenu(m_ContextMenu);
+}
+
+void PlaybackDataView::OnDLEngine(wxCommandEvent& /*event*/)
+{
+	const StoredGame* storedGame = GetSelectedItem();
+	if (storedGame == nullptr) {
+		return;
+	}
+	ui().NeedsDownload(&storedGame->battle, false, DownloadEnum::CAT_ENGINE);
 }
 
 void PlaybackDataView::OnDLMap(wxCommandEvent& /*event*/)

@@ -21,6 +21,7 @@ public:
 	void AddPlayback(const StoredGame& replay, bool resortIsNeeded = true);
 	void RemovePlayback(const StoredGame& replay);
 	void OnContextMenu(wxDataViewEvent& event);
+	void OnDLEngine(wxCommandEvent& /*event*/);
 	void OnDLMap(wxCommandEvent& event);
 	void OnDLMod(wxCommandEvent& event);
 	void DeletePlayback(); //deletes the current selected playback from disk & list
@@ -33,6 +34,7 @@ private:
 public:
 	enum {
 		REPLAY_DATAVIEW_ID,
+		REPLAY_DATAVIEW_DLENGINE_ID,
 		REPLAY_DATAVIEW_DLMOD_ID,
 		REPLAY_DATAVIEW_DLMAP_ID
 	};
