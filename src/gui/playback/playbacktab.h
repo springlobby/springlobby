@@ -96,8 +96,6 @@ private:
 	bool m_isreplay;
 	wxToggleOrCheck* m_filter_show;
 
-	void AskForceWatch(StoredGame& rep) const;
-
 	DECLARE_EVENT_TABLE()
 };
 
