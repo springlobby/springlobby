@@ -134,12 +134,16 @@ bool SpringLobbyApp::OnInit()
 	try {
 #endif
 
-	const wxString m_log_file_path = SlPaths::GetLobbyWriteDir() + "springlobby.log";
+	const std::string configdir = SlPaths::GetConfigfileDir();
+	SlPaths::mkDir(configdir);
 
+
+	const wxString m_log_file_path = SlPaths::GetLobbyWriteDir() + "springlobby.log";
 	//initialize all loggers, we'll use the returned pointer to set correct parent window later
 	wxLogWindow* loggerwin = Logger::InitializeLoggingTargets(0, m_log_console, m_log_file_path, m_log_window_show, m_log_verbosity);
 
 	wxLogMessage(_T("%s started"), TowxString(GetSpringlobbyAgent()).c_str());
+	wxLogMessage("Config dir: %s", configdir.c_str());
 
 	//this needs to called _before_ mainwindow instance is created
 	wxInitAllImageHandlers();
@@ -148,10 +152,6 @@ bool SpringLobbyApp::OnInit()
 
 
 	m_translationhelper = new wxTranslationHelper(GetAppName().Lower(), getLocalePath());
-
-	const std::string configdir = SlPaths::GetConfigfileDir();
-	wxLogMessage("Config dir: %s", configdir.c_str());
-	SlPaths::mkDir(configdir);
 
 	if (cfg().ReadBool(_T("/ResetLayout"))) {
 		wxLogMessage("Resetting Layout...");
