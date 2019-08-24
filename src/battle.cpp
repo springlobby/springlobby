@@ -42,8 +42,8 @@ Battle::Battle(IServer& serv, int id, std::string channel_name)
     , m_serv(serv)
     , m_ah(*this)
     , m_autolock_on_start(false)
-    , m_id(id)
     , m_timer(NULL)
+    , m_id(id)
 {
 	m_autohost_manager = nullptr;
 	m_opts.battleid = m_id;
