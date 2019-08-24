@@ -48,8 +48,6 @@ private:
 	BattleroomMMOptionsTab& GetMMOptionsTab();
 	wxBoxSizer* m_main_sizer;
 
-	wxImageList* m_imagelist;
-
 	SLNotebook* m_tabs;
 
 	BattleRoomTab* m_battle_tab;

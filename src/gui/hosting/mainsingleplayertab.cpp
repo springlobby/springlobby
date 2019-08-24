@@ -15,7 +15,6 @@
 #include "gui/hosting/battleroommmoptionstab.h"
 #include "gui/singleplayertab.h"
 #include "gui/slbook.h"
-#include "images/battle.xpm"
 #include "images/battle_settings.xpm"
 #include "log.h"
 #include "utils/conversion.h"
@@ -34,10 +33,6 @@ MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
 	m_tabs = new SLNotebook(this, _T( "mainsingleplayertab" ), -1, wxDefaultPosition, wxDefaultSize, wxAUI_NB_TAB_SPLIT | wxAUI_NB_TAB_MOVE | wxAUI_NB_SCROLL_BUTTONS | wxAUI_NB_TOP | wxAUI_NB_TAB_EXTERNAL_MOVE);
 	m_tabs->SetArtProvider(new wxAuiDefaultTabArt);
 
-	m_imagelist = new wxImageList(12, 12);
-	m_imagelist->Add(wxIcon(battle_xpm));
-	m_imagelist->Add(wxIcon(battle_settings_xpm));
-
 	m_sp_tab = new SinglePlayerTab(m_tabs, *this);
 	m_tabs->AddPage(m_sp_tab, _("Game"), true, wxNullBitmap);
 	m_mm_opts_tab = new BattleroomMMOptionsTab(&m_sp_tab->GetBattle(), m_tabs);
@@ -54,7 +49,6 @@ MainSinglePlayerTab::MainSinglePlayerTab(wxWindow* parent)
 
 MainSinglePlayerTab::~MainSinglePlayerTab()
 {
-	wxDELETE(m_imagelist);
 	//    if ( sett().GetAutosavePerspective() )
 	//        SavePerspective();
 }

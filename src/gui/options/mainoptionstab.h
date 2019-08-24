@@ -46,8 +46,6 @@ public:
 private:
 	wxBoxSizer* m_main_sizer;
 
-	//		wxImageList* m_imagelist;
-
 	SLNotebook* m_tabs;
 
 	SpringOptionsTab* m_spring_opts;
