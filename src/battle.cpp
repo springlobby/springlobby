@@ -365,7 +365,8 @@ bool Battle::ExecuteSayCommand(const std::string& cmd)
 			try {
 				User& user = GetUser(nick);
 				m_serv.BattleKickPlayer(m_opts.battleid, user);
-			} catch (assert_exception) {
+			} catch (const assert_exception& e) {
+				wxLogWarning(_T("Exception: %s"), e.what());
 			}
 			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(wxString(_T(" ")), TowxString(nick + " banned")));
 
@@ -951,7 +952,8 @@ void Battle::FixTeamIDs(BalanceType balance_type, bool support_clans, bool stron
 		try {
 			int mapposcount = LoadMap().info.positions.size();
 			numcontrolteams = std::min(numcontrolteams, mapposcount);
-		} catch (assert_exception) {
+		} catch (const assert_exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 	}
 

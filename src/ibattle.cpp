@@ -1067,7 +1067,8 @@ bool IBattle::IsFounder(const User& user) const
 	if (UserExists(m_opts.founder)) {
 		try {
 			return &GetFounder() == &user;
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 			return false;
 		}
 	} else

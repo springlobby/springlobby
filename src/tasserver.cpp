@@ -485,7 +485,8 @@ void TASServer::ExecuteCommand(const std::string& in)
 		return;
 	try {
 		ASSERT_LOGIC(params.AfterFirst('\n').IsEmpty(), "losing data");
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		return;
 	}
 	if (params[0] == '#') {
@@ -498,8 +499,10 @@ void TASServer::ExecuteCommand(const std::string& in)
 
 	try {
 		ExecuteCommand(STD_STRING(cmd), STD_STRING(params), replyid);
-	} catch (...) { // catch everything so the app doesn't crash, may makes odd beahviours but it's better than crashing randomly for normal users
-		wxLogWarning("Exception in ExecuteCommand");
+	} catch (const std::exception& e) {
+		// catch everything so the app doesn't crash, may make SL behave oddly,
+		// but it's better than crashing randomly for normal users.
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -713,7 +716,8 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 							return;
 					}
 					SetRelayIngamePassword(usr);
-				} catch (...) {
+				} catch (const std::exception& e) {
+					wxLogWarning(_T("Exception: %s"), e.what());
 				}
 				return;
 			}
@@ -752,7 +756,8 @@ void TASServer::ExecuteCommand(const std::string& cmd, const std::string& inpara
 		try {
 			if (GetBattle(id).IsProxy())
 				RelayCmd("SUPPORTSCRIPTPASSWORD"); // send flag to relayhost marking we support script passwords
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 	} else if (cmd == "CLIENTBATTLESTATUS") {
 		nick = GetWordParam(params);
@@ -1194,7 +1199,8 @@ void TASServer::Ring(const std::string& nick)
 
 		SendCmd("RING", nick, battle.IsProxy());
 
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		SendCmd("RING", nick);
 	}
 }
@@ -1420,7 +1426,8 @@ void TASServer::SendHostInfo(HostInfo update)
 	IBattle& battle = GetBattle(m_battle_id);
 	try {
 		ASSERT_LOGIC(battle.IsFounderMe(), "I'm not founder");
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		return;
 	}
 
@@ -1511,7 +1518,8 @@ void TASServer::SendHostInfo(const std::string& Tag)
 
 	try {
 		ASSERT_LOGIC(battle.IsFounderMe(), "I'm not founder");
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		return;
 	}
 
@@ -1550,7 +1558,8 @@ void TASServer::SendUserPosition(const User& user)
 		std::string msgy = stdprintf("game/Team%d/StartPosY=%d", status.team, status.pos.y);
 		std::string netmessage = msgx + "\t" + msgy;
 		SendCmd("SETSCRIPTTAGS", netmessage, battle.IsProxy());
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		return;
 	}
 }
@@ -1566,7 +1575,8 @@ IBattle* TASServer::GetCurrentBattle()
 	try {
 		ASSERT_EXCEPTION(m_battle_id != -1, _T("invalid m_battle_id value"));
 		ASSERT_LOGIC(BattleExists(m_battle_id), "battle doesn't exists");
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		return NULL;
 	}
 
@@ -2018,7 +2028,8 @@ LSL::StringVector TASServer::GetRelayHostList()
 			if (manager.Status().in_game || manager.Status().away)
 				continue; // skip the manager is not connected or reports it's ingame ( no slots available ), or it's away ( functionality disabled )
 			ret.push_back(m_relay_host_manager_list[i]);
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 	}
 	return ret;

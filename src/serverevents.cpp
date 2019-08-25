@@ -180,11 +180,12 @@ void ServerEvents::OnUserStatus(const std::string& nick, UserStatus status)
 						}
 					}
 				}
-			} catch (...) {
+			} catch (const std::exception& e) {
+				wxLogWarning(_T("Exception: %s"), e.what());
 			}
 		}
-	} catch (...) {
-		wxLogWarning(_("OnUserStatus() failed ! (exception)"));
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -206,14 +207,16 @@ void ServerEvents::OnUserQuit(const std::string& nick)
 					OnBattleClosed(battleid);
 				} else
 					OnUserLeftBattle(battleid, user.GetNick());
-			} catch (...) {
+			} catch (const std::exception& e) {
+				wxLogWarning(_T("Exception: %s"), e.what());
 			}
 		}
 		ui().OnUserOffline(user);
 		m_serv._RemoveUser(nick);
 		if (useractions().DoActionOnUser(UserActions::ActNotifLogin, TowxString(nick)))
 			actNotifBox(SL_MAIN_ICON, TowxString(nick) + _(" just went offline"));
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -257,7 +260,8 @@ void ServerEvents::OnBattleOpened(int id, BattleType type, NatType nat, const st
 			battle.SetInGame(true);
 			battle.StartSpring();
 		}
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -278,7 +282,8 @@ void ServerEvents::OnJoinedBattle(int battleid, const std::string& hash)
 		}
 
 		ui().OnJoinedBattle(battle);
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -307,7 +312,8 @@ void ServerEvents::OnHostedBattle(int battleid)
 		m_serv.SendHostInfo(IBattle::HI_Send_All_opts);
 
 		ui().OnHostedBattle(battle);
-	} catch (assert_exception&) {
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -332,7 +338,8 @@ void ServerEvents::OnClientBattleStatus(int battleid, const std::string& nick, U
 		status.color_index = user.BattleStatus().color_index;
 		battle.OnUserBattleStatusUpdated(user, status);
 		ui().OnUserBattleStatus(user);
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -358,9 +365,11 @@ void ServerEvents::OnUserJoinedBattle(int battleid, const std::string& nick, con
 					battle.StartSpring();
 				}
 			}
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -388,7 +397,8 @@ void ServerEvents::OnUserLeftBattle(int battleid, const std::string& nick)
 				m_serv._RemoveUser(nick);
 			}
 		}
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -412,8 +422,8 @@ void ServerEvents::OnBattleInfoUpdated(int battleid, int spectators, bool locked
 		}
 
 		ui().OnBattleInfoUpdated(battle, wxEmptyString);
-	} catch (assert_exception&) {
-		wxLogWarning("Exception in OnBattleInfoUpdated");
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -563,8 +573,8 @@ void ServerEvents::OnBattleInfoUpdated(int battleid)
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		ui().OnBattleInfoUpdated(battle, wxEmptyString);
-	} catch (assert_exception&) {
-		wxLogWarning("Exception in OnBattleInfoUpdated(%d)", battleid);
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception in OnBattleInfoUpdated(%d): %s"), battleid, e.what());
 	}
 }
 
@@ -580,8 +590,8 @@ void ServerEvents::OnBattleClosed(int battleid)
 		IBattle& battle = m_serv.GetBattle(battleid);
 		ui().OnBattleClosed(battle);
 		m_serv._RemoveBattle(battleid);
-	} catch (assert_exception&) {
-		wxLogWarning("Exception in OnBattleClosed(%d)", battleid);
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception in OnBattleClosed(%d): %s"), battleid, e.what());
 	}
 }
 
@@ -593,7 +603,8 @@ void ServerEvents::OnBattleDisableUnit(int battleid, const std::string& unitname
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.RestrictUnit(unitname, count);
 		wxLogDebug("OnBattleDisableUnit %d %s %d", battleid, unitname.c_str(), count);
-	} catch (assert_exception&) {
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -604,7 +615,8 @@ void ServerEvents::OnBattleEnableUnit(int battleid, const std::string& unitname)
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.UnrestrictUnit(unitname);
-	} catch (assert_exception&) {
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -615,7 +627,8 @@ void ServerEvents::OnBattleEnableAllUnits(int battleid)
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.UnrestrictAllUnits();
-	} catch (assert_exception&) {
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -654,7 +667,8 @@ void ServerEvents::OnChannelSaid(const std::string& channel, const std::string& 
 				m_serv.GetChannel(channel).Said(u, message); // offline message
 			}
 		}
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -669,7 +683,8 @@ void ServerEvents::OnBattleSaid(int battleid, const std::string& nick, const std
 		if (ah != NULL) {
 			ah->OnSaidBattle(TowxString(nick), TowxString(msg));
 		}
-	} catch (assert_exception&) {
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -682,7 +697,8 @@ void ServerEvents::OnChannelJoin(const std::string& channel, const std::string& 
 		if (battleid != -1)
 			return;
 		m_serv.GetChannel(channel).OnChannelJoin(m_serv.GetUser(who));
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -708,7 +724,8 @@ void ServerEvents::OnChannelPart(const std::string& channel, const std::string& 
 				m_serv._RemoveUser(nick);
 			}
 		}
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -724,7 +741,8 @@ void ServerEvents::OnChannelTopic(const std::string& channel, const std::string&
 			return;
 		}
 		m_serv.GetChannel(channel).SetTopic(message, who);
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -740,7 +758,8 @@ void ServerEvents::OnChannelAction(const std::string& channel, const std::string
 		}
 		if ((m_serv.GetMe().GetNick() == who) || !useractions().DoActionOnUser(UserActions::ActIgnoreChat, TowxString(who)))
 			m_serv.GetChannel(channel).DidAction(m_serv.GetUser(who), action);
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -748,7 +767,8 @@ void ServerEvents::OnBattleAction(int /*battleid*/, const std::string& nick, con
 {
 	try {
 		UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(TowxString(nick), TowxString(action)));
-	} catch (assert_exception&) {
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -759,7 +779,8 @@ void ServerEvents::OnPrivateMessage(User& chan, User& who, const std::string& me
 	try {
 		if (!useractions().DoActionOnUser(UserActions::ActIgnorePM, TowxString(who.GetNick())))
 			ui().OnUserSaid(chan, who, TowxString(message));
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -769,7 +790,8 @@ void ServerEvents::OnPrivateMessageEx(User& chan, User& who, const std::string& 
 	try {
 		if (!useractions().DoActionOnUser(UserActions::ActIgnorePM, TowxString(who.GetNick())))
 			ui().OnUserSaidEx(chan, who, TowxString(action));
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -787,7 +809,8 @@ void ServerEvents::OnUserJoinChannel(const std::string& channel, const std::stri
 		if (battleid != -1) // don't display as a channel, if its a battle
 			return;
 		m_serv.GetChannel(channel).Joined(m_serv.GetUser(who));
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -797,7 +820,8 @@ void ServerEvents::OnRequestBattleStatus(int battleid)
 	try {
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.OnRequestBattleStatus();
-	} catch (assert_exception&) {
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -808,7 +832,8 @@ void ServerEvents::OnBattleStartRectAdd(int battleid, int allyno, int left, int 
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.AddStartRect(allyno, left, top, right, bottom);
 		battle.StartRectAdded(allyno);
-	} catch (assert_exception&) {
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -819,7 +844,8 @@ void ServerEvents::OnBattleStartRectRemove(int battleid, int allyno)
 		IBattle& battle = m_serv.GetBattle(battleid);
 		battle.RemoveStartRect(allyno);
 		battle.StartRectRemoved(allyno);
-	} catch (assert_exception&) {
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -832,7 +858,8 @@ void ServerEvents::OnBattleAddBot(int battleid, const std::string& nick, UserBat
 		battle.OnBotAdded(nick, status);
 		User& bot = battle.GetUser(nick);
 		ui().OnUserJoinedBattle(battle, bot);
-	} catch (assert_exception&) {
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -851,7 +878,8 @@ void ServerEvents::OnBattleRemoveBot(int battleid, const std::string& nick)
 		bool isbot = user.BattleStatus().IsBot();
 		ui().OnUserLeftBattle(battle, user, isbot);
 		battle.OnUserRemoved(user);
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -897,8 +925,8 @@ void ServerEvents::OnChannelMessage(const std::string& channel, const std::strin
 			return; // FIXME: send topic to battle
 		}
 		ui().OnChannelMessage(m_serv.GetChannel(channel), msg);
-	} catch (std::runtime_error& except) {
-		wxLogWarning("Channel doesn't exist: '%s' msg: %s", channel.c_str(), msg.c_str());
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: (\"%s\", \"%s\"): %s"), channel.c_str(), msg.c_str(), e.what());
 	}
 }
 
@@ -918,7 +946,8 @@ void ServerEvents::OnJoinedFrom(const std::string& channel, const std::string& w
 			return;
 		}
 		m_serv.GetChannel(channel).Joined(m_serv.GetUser(who));
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -944,7 +973,8 @@ void ServerEvents::OnLeftFrom(const std::string& channel, const std::string& who
 			ui().OnUserOffline(user);
 			m_serv._RemoveUser(who);
 		}
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -960,7 +990,8 @@ void ServerEvents::OnSaidFrom(const std::string& channel, const std::string& who
 			return;
 		}
 		m_serv.GetChannel(channel).Said(m_serv.GetUser(who), message);
-	} catch (std::runtime_error& except) {
+	} catch (const std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -1012,8 +1043,8 @@ void ServerEvents::OnClientIPPort(const std::string& username, const std::string
 			UiEvents::GetUiEventSender(UiEvents::OnBattleActionEvent).SendEvent(UiEvents::OnBattleActionData(TowxString(username), _(" does not really support nat traversal")));
 		}
 		m_serv.GetCurrentBattle()->CheckBan(user);
-	} catch (std::runtime_error&) {
-		wxLogMessage(_T("runtime_error inside OnClientIPPort()"));
+	} catch (const std::runtime_error& e) {
+		wxLogMessage(_T("Exception: %s"), e.what());
 	}
 }
 
