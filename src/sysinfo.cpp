@@ -101,7 +101,8 @@ std::string GetSpringlobbyInfo()
 				of.close();
 				tried = wxRemoveFile(dummyFileString);
 			}
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 		if (paths[i].m_requireswrite && (!wx || !posix || !tried)) {
 			wxLogError("%s is not writeable!", path.c_str());

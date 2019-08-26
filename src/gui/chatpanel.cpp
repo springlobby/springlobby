@@ -811,7 +811,8 @@ void ChatPanel::UserStatusUpdated(User& who)
 		return;
 	try {
 		m_nicklist->UserUpdated(who);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		return;
 	}
 }

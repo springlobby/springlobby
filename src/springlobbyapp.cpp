@@ -196,10 +196,8 @@ bool SpringLobbyApp::OnInit()
 	ui().OnInit();
 
 #if !wxUSE_ON_FATAL_EXCEPTION
-}
-catch (std::exception& ex)
-{
-	wxLogError(_T("Error had happened: " + wxString(ex.what())));
+} catch (const std::exception& e) {
+	wxLogError(_T("Error had happened: %s"), e.what());
 }
 #endif
 

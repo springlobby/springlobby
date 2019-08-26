@@ -327,8 +327,8 @@ void SinglePlayerTab::SetMap(unsigned int index)
 			m_map_opts_list->SetItem(5, 1, wxString::Format(_T( "%.3f" ), map.info.maxMetal));
 			m_map_desc->SetLabel(TowxString(map.info.description));
 			m_map_desc->Wrap(160);
-		} catch (std::exception& e) {
-			wxLogError("Exception caught:\n %s\n", e.what());
+		} catch (const std::exception& e) {
+			wxLogError(_T("Exception: %s"), e.what());
 			SetMap(m_map_choice->GetCount() - 1);
 		}
 	}
@@ -354,7 +354,8 @@ void SinglePlayerTab::SetGame(unsigned int index)
 			LSL::UnitsyncGame game = LSL::usync().GetGame(index);
 			m_battle.SetLocalGame(game);
 			m_battle.SetHostGame(game.name, game.hash);
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 	}
 	m_minimap->UpdateMinimap();
@@ -466,9 +467,8 @@ void SinglePlayerTab::OnUnitsyncReloaded(wxCommandEvent& /*data*/)
 		ReloadGameList();
 		ReloadEngineList();
 		UpdateMinimap();
-	} catch (...) {
-		slLogDebugFunc("");
-		wxLogError(_T("unitsync reload sink failed"));
+	} catch (const std::exception& e) {
+		wxLogError(_T("Unitsync reload sink failed. Exception: %s"), e.what());
 	}
 	Layout();
 }

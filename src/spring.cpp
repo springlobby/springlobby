@@ -120,11 +120,8 @@ bool Spring::Run(IBattle& battle)
 		f.Write(WriteScriptTxt(battle));
 		battle.DisableHostStatusInProxyMode(false);
 		f.Close();
-	} catch (std::exception& e) {
-		wxLogError(wxString::Format(_T("Couldn't write %s, exception caught:\n %s"), scripttxt.c_str(), TowxString(e.what()).c_str()));
-		return false;
-	} catch (...) {
-		wxLogError(wxString::Format(_T("Couldn't write %s"), scripttxt.c_str()));
+	} catch (const std::exception& e) {
+		wxLogError(_T("Couldn't write %s, exception caught:\n %s"), scripttxt, e.what());
 		return false;
 	}
 

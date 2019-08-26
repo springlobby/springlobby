@@ -2,6 +2,7 @@
 #include "autohost.h"
 
 #include <lslunitsync/unitsync.h>
+#include <wx/log.h>
 #include <wx/tokenzr.h>
 
 #include "ibattle.h"
@@ -88,7 +89,8 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 				User& u = m_battle.GetUser(user);
 				m_battle.RingPlayer(u);
 				DoAction("is ringing " + user);
-			} catch (...) {
+			} catch (const std::exception& e) {
+				wxLogWarning(_T("Exception: %s"), e.what());
 				DoAction("cannot ring " + user);
 			}
 		} else {
@@ -143,7 +145,8 @@ void AutoHost::OnSaidBattle(const wxString& /*unused*/, const wxString& msg)
 				m_battle.SetLocalMap(mapname);
 				DoAction("is switching to map " + mapname);
 				m_battle.SendHostInfo(IBattle::HI_Map);
-			} catch (...) {
+			} catch (const std::exception& e) {
+				wxLogWarning(_T("Exception: %s"), e.what());
 				DoAction("cannot switch to map " + mapname);
 			}
 		}

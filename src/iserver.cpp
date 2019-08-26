@@ -115,7 +115,8 @@ void IServer::_RemoveUser(const std::string& nickname)
 				chan.Left(*u, "server idiocy");
 		}
 		delete u;
-	} catch (std::runtime_error) {
+	} catch (std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -170,7 +171,8 @@ void IServer::Reset()
 			User* u = &m_users.GetUser(0);
 			m_users.RemoveUser(u->GetNick());
 			delete u;
-		} catch (std::runtime_error) {
+		} catch (std::runtime_error& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 	}
 

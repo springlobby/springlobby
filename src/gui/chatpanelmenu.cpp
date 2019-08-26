@@ -168,7 +168,8 @@ void ChatPanelMenu::CreateNickListMenu()
 	bool moderator = false;
 	try {
 		moderator = serverSelector().GetServer().GetMe().GetStatus().moderator;
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 	if (moderator) {
 		wxMenuItem* modingameitem = new wxMenuItem(m_user_menu, CHAT_MENU_US_MODERATOR_INGAME, _("Ingame time"), wxEmptyString, wxITEM_NORMAL);

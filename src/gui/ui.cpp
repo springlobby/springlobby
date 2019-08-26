@@ -399,7 +399,8 @@ void Ui::OnUserStatusChanged(User& user)
 	try {
 		ChatPanel& server = mw().GetChatTab().ServerChat();
 		server.UserStatusUpdated(user);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -424,7 +425,8 @@ void Ui::OnServerBroadcast(IServer& /*server*/, const wxString& message)
 	mw().GetChatTab().BroadcastMessage(message);
 	try { // send it to battleroom too
 		mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().StatusMessage(message);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -446,7 +448,8 @@ void Ui::OnServerMessage(IServer& server, const wxString& message)
 		}
 		try { // send it to battleroom too
 			mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().StatusMessage(message);
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 	}
 }
@@ -485,7 +488,8 @@ void Ui::OnBattleOpened(IBattle& battle)
 				chan.panel->UserStatusUpdated(user);
 			}
 		}
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -503,7 +507,8 @@ void Ui::OnBattleClosed(IBattle& battle)
 			}
 			mw().GetJoinTab().LeaveCurrentBattle();
 		}
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 
 	for (auto userpair : battle.GetUsers()) {
@@ -532,7 +537,8 @@ void Ui::OnUserJoinedBattle(IBattle& battle, User& user)
 			mw().GetJoinTab().GetBattleRoomTab().OnUserJoined(user);
 			OnBattleInfoUpdated(battle, wxEmptyString);
 		}
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 
 	for (int i = 0; i < m_serv->GetNumChannels(); i++) {
@@ -562,7 +568,8 @@ void Ui::OnUserLeftBattle(IBattle& battle, User& user, bool isbot)
 				mw().ShowTab(MainWindow::PAGE_BATTLELIST);
 			}
 		}
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 	if (isbot)
 		return;
@@ -630,7 +637,8 @@ void Ui::OnBattleTopic(IBattle& /*battle*/, const wxString& who, const wxString&
 		return;
 	try {
 		mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().SetTopic(who, msg);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -640,7 +648,8 @@ void Ui::OnSaidBattle(IBattle& /*battle*/, const wxString& nick, const wxString&
 		return;
 	try {
 		mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().Said(nick, msg);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -659,7 +668,8 @@ void Ui::OnSpringTerminated(wxCommandEvent&)
 			battle->SetIsLocked(false);
 			battle->SendHostInfo(IBattle::HI_Locked);
 		}
-	} catch (assert_exception&) {
+	} catch (const assert_exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -716,11 +726,13 @@ void Ui::ReloadPresetList()
 {
 	try {
 		mw().GetSPTab().ReloadPresetList();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 	try {
 		mw().GetJoinTab().ReloadPresetList();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -840,8 +852,8 @@ void Ui::CheckForUpdates(bool is_interactive)
 			customMessageBox(SL_MAIN_ICON, errorMsg, _("Updater error."));
 			OpenWebBrowser(_T("https://github.com/springlobby/springlobby/wiki/Install#Windows_Binary"));
 			OpenWebBrowser(TowxString(GetDownloadUrl(latestVersion)));
-		} catch (...) {
-			wxLogError("Unknown exception");
+		} catch (const std::exception& e) {
+			wxLogError(_T("Exception: %s"), e.what());
 		}
 #else
 		message += _("Please update to the latest version before reporting bugs.");

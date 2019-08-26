@@ -411,7 +411,8 @@ void MapCtrl::RelocateUsers()
 			pos = m_battle->GetFreePosition();
 			if (user.BattleStatus().pos.x == -1)
 				m_battle->KickPlayer(user);
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 	}
 }
@@ -471,7 +472,8 @@ int MapCtrl::LoadMinimap()
 
 		m_mapname = map;
 		m_lastsize = wxSize(w, h);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		FreeMinimap();
 		m_mutex.Unlock();
 		return -3;
@@ -1404,7 +1406,8 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 					user.BattleStatus().side = (user.BattleStatus().side + 1) % sidecount;
 				else
 					user.BattleStatus().side = 0;
-			} catch (...) {
+			} catch (const std::exception& e) {
+				wxLogWarning(_T("Exception: %s"), e.what());
 			}
 			RefreshRect(GetUserRect(user, true), false);
 
