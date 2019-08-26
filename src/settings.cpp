@@ -244,6 +244,7 @@ bool Settings::ShouldAddDefaultServerSettings()
 void Settings::SetDefaultServerSettings()
 {
 	SetServer(DEFSETT_DEFAULT_SERVER_NAME, DEFSETT_DEFAULT_SERVER_HOST, DEFSETT_DEFAULT_SERVER_PORT, "0124dc0f4295b401a2d81ade3dc81b7a467eb9a70b0a4912b5e15fede735fe73");
+	SetServer("Alternate server (Springfightclub)", "springfightclub.com", 8200, "87baa84a2221b1310a1f702d08f86144e046439fb1d456b5096dfdc4da0f39de");
 	SetServer("Test server", "lobby.springrts.com", 7000, "bafee3142009baa105ade65b0f712ca5fcf30de8e91664a8825e0185a609277c");
 	SetDefaultServer(DEFSETT_DEFAULT_SERVER_NAME);
 }
