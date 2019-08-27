@@ -116,11 +116,13 @@ void MainJoinBattleTab::BattleUserUpdated(User& user)
 {
 	try {
 		GetBattleRoomTab().UpdateUser(user);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 	try {
 		GetBattleMapTab().UpdateUser(user);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -128,11 +130,13 @@ void MainJoinBattleTab::ReloadPresetList()
 {
 	try {
 		//GetBattleRoomTab().UpdatePresetList();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 	try {
 		GetMMOptionsTab().UpdatePresetList();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 

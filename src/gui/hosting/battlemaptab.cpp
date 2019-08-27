@@ -208,7 +208,8 @@ void BattleMapTab::UpdateUser(User& user)
 	if (&m_battle->GetMe() == &user) {
 		try {
 			m_minimap->UpdateMinimap();
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 	}
 }
@@ -221,7 +222,8 @@ void BattleMapTab::SetMap(int index)
 	try {
 		m_battle->SetLocalMap(STD_STRING(m_map_combo->GetString(index)));
 		m_battle->SendHostInfo(IBattle::HI_Map);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -233,7 +235,8 @@ void BattleMapTab::OnMapSelect(wxCommandEvent& /*unused*/)
 	if (!m_battle->IsFounderMe()) {
 		try {
 			m_battle->DoAction("suggests " + STD_STRING(m_map_combo->GetString(m_map_combo->GetCurrentSelection())));
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 		return;
 	}

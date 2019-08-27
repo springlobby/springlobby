@@ -67,7 +67,8 @@ void MainSinglePlayerTab::UpdateMinimap()
 {
 	try {
 		GetSinglePlayerTab().UpdateMinimap();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -83,7 +84,8 @@ void MainSinglePlayerTab::OnUnitSyncReloaded()
 		GetSinglePlayerTab().ReloadGameList();
 		wxLogMessage(_T( "Reloading minimap" ));
 		GetSinglePlayerTab().UpdateMinimap();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -92,7 +94,8 @@ void MainSinglePlayerTab::ReloadRestrictions()
 {
 	try {
 		GetOptionsTab().ReloadRestrictions();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -101,7 +104,8 @@ void MainSinglePlayerTab::ReloadMapOptContrls()
 {
 	try {
 		GetMMOptionsTab().OnReloadControls(LSL::Enum::MapOption);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -110,7 +114,8 @@ void MainSinglePlayerTab::ReloadModOptContrls()
 {
 	try {
 		GetMMOptionsTab().OnReloadControls(LSL::Enum::ModOption);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -138,10 +143,12 @@ void MainSinglePlayerTab::ReloadPresetList()
 {
 	try {
 		GetSinglePlayerTab().UpdatePresetList();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 	try {
 		GetMMOptionsTab().UpdatePresetList();
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }

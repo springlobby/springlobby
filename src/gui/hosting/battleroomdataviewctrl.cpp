@@ -376,6 +376,7 @@ void BattleroomDataViewCtrl::UpdateContextMenuSides()
 			side_vector.push_back(side);
 			Connect(BATTLEROOM_VIEW_SIDE + i, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(BattleroomDataViewCtrl::OnSideSelect));
 		}
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }

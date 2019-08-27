@@ -1174,7 +1174,8 @@ void BattleRoomTab::SetMap(int index)
 	try {
 		m_battle->SetLocalMap(STD_STRING(m_map_combo->GetString(index)));
 		m_battle->SendHostInfo(IBattle::HI_Map);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 }
 
@@ -1187,7 +1188,8 @@ void BattleRoomTab::OnMapSelect(wxCommandEvent& /*unused*/)
 			const std::string map = STD_STRING(m_map_combo->GetString(m_map_combo->GetCurrentSelection()));
 			m_battle->m_autohost_manager->GetAutohostHandler().SetMap(map);
 			//m_battle->DoAction( _T( "suggests " ) + TowxString(LSL::usync().GetMap( m_map_combo->GetCurrentSelection() ).name));
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 		}
 		return;
 	}

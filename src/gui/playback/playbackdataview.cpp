@@ -121,7 +121,8 @@ void PlaybackDataView::DeletePlayback()
 		} else {
 			RemovePlayback(*storedGame);
 		}
-	} catch (std::runtime_error&) {
+	} catch (std::runtime_error& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 		//Do nothing
 	}
 }

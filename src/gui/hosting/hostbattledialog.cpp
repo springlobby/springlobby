@@ -257,9 +257,12 @@ void HostBattleDialog::RunHostBattleDialog(wxWindow* parent)
 		mod = LSL::usync().GetGame(STD_STRING(sett().GetLastHostMod()));
 		bo.gamehash = mod.hash;
 		bo.gamename = mod.name;
-	} catch (...) {
-		wxLogWarning(_T( "can't host: game not found" ));
-		customMessageBoxModal(SL_MAIN_ICON, _("Battle not started beacuse the game you selected could not be found. "), _("Error starting battle."), wxOK);
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
+		wxLogWarning(_T("Can't host: game not found. Exception: %s"), e.what());
+		customMessageBoxModal(SL_MAIN_ICON, wxString::Format(
+		  _("Battle not started beacuse the game you selected could not be found. Exception: %s"),
+		  e.what()), _("Error starting battle."), wxOK);
 		return;
 	}
 

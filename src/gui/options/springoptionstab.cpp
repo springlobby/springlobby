@@ -289,8 +289,8 @@ void SpringOptionsTab::OnAddBundle(wxCommandEvent& /*event*/)
 			failed = true;
 			failMessage = wxString::Format(_T(
 			  "%s could not obtain the version string from the shared library file %s\n\n"
-			  "Please provide a valid unitsync file."),
-			  GetSpringlobbyName().c_str(), bundle.unitsync.c_str());
+			  "Please provide a valid unitsync file. Execption: %s"),
+			  GetSpringlobbyName().c_str(), bundle.unitsync.c_str(), e.what());
 		}
 		if (failed) {
 			customMessageBox(SL_MAIN_ICON, failMessage, _("Configuration error"), wxOK);

@@ -266,10 +266,12 @@ void PlaybackTab::OnSelect(wxDataViewEvent& event)
 				try {
 					User& usr = rep.battle.GetUser(i);
 					m_players->AddUser(usr);
-				} catch (...) {
+				} catch (const std::exception& e) {
+					wxLogWarning(_T("Exception: %s"), e.what());
 				}
 			}
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 			Deselect();
 		}
 		event.Skip();

@@ -193,8 +193,8 @@ void AddBotDialog::ReloadAIList()
 	LSL::StringVector ais;
 	try {
 		ais = LSL::usync().GetAIList(m_battle.GetHostGameNameAndVersion());
-	} catch (std::exception& ex) {
-		wxLogWarning("Exception while loading AIs: " + wxString(ex.what()));
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception while loading AIs: %s"), e.what());
 	}
 
 	m_ai->Clear();

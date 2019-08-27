@@ -13,6 +13,7 @@
 #include <wx/choice.h>
 #include <wx/intl.h>
 #include <wx/listbox.h>
+#include <wx/log.h>
 #include <wx/numdlg.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
@@ -130,7 +131,8 @@ void BattleRestrictionsTab::ReloadRestrictions()
 	try {
 		wxArrayString items = lslTowxArrayString(LSL::usync().GetUnitsList(m_battle->GetHostGameNameAndVersion()));
 		m_allowed_list->Append(items);
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 	const std::map<std::string, int>& units = m_battle->GetRestrictedUnits();
 

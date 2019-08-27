@@ -198,14 +198,14 @@ void MainChatTab::OnLoggedIn()
 				// TODO: This will not rejoin passworded channels.
 				wxString name = m_chat_tabs->GetPageText( i );
 				bool alreadyin = false;
-				try
-				{
+				try {
 					server.GetMe();
 					alreadyin = true;
+				} catch (const std::exception& e) {
+					wxLogWarning(_T("Exception: %s"), e.what());
 				}
-				catch ( ... ) {}
-				if ( !alreadyin )
-				{
+
+				if ( !alreadyin ) {
 					server.JoinChannel(STD_STRING(name), "");
 					tmp->SetChannel( &server.GetChannel(STD_STRING(name)));
 				}

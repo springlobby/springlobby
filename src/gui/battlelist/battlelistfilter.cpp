@@ -451,7 +451,8 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 							break;
 						}
 					}
-			} catch (...) {
+			} catch (const std::exception& e) {
+				wxLogWarning(_T("Exception: %s"), e.what());
 			}
 		}
 
@@ -526,7 +527,8 @@ bool BattleListFilter::FilterBattle(IBattle& battle)
 				   m_filter_host_edit->GetValue(),
 				   m_filter_host_expression))
 			return false;
-	} catch (...) {
+	} catch (const std::exception& e) {
+		wxLogWarning(_T("Exception: %s"), e.what());
 	}
 
 	//Map:

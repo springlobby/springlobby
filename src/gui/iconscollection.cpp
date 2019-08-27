@@ -261,7 +261,8 @@ wxBitmap& IconsCollection::GetFractionBmp(const std::string& gameName, size_t fr
 		try {
 			const LSL::UnitsyncImage img = LSL::usync().GetSidePicture(gameName, sideName);
 			m_cachedFractionBmps[cacheString] = img.wxbitmap();
-		} catch (...) {
+		} catch (const std::exception& e) {
+			wxLogWarning(_T("Exception: %s"), e.what());
 			//unitsync can fail!
 			ASSERT_LOGIC(false, "LSL::usync().GetSidePicture() failed!");
 		}
