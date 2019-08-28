@@ -44,8 +44,10 @@ public:
 private:
 	bool GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) const override;
 	int replayVersion(PlayBackDataReader& replay) const;
+
 	std::string GetEngineVersionFromReplay(PlayBackDataReader& replay, const int version) const;
 	std::string GetScriptFromReplay(PlayBackDataReader& replay, const int version) const;
+	uint64_t GetStartTimeStampFromReplay(PlayBackDataReader& replay, const int version) const;
 	//! saves relevant infos from header into replay struct
 	void GetHeaderInfo(PlayBackDataReader& replay, StoredGame& rep, const int version) const;
 };

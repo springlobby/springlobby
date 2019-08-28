@@ -135,7 +135,6 @@ static void FixSpringVersion(std::string& springVersion)
 
 bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) const
 {
-	const std::string FileName = LSL::Util::AfterLast(ReplayPath, SEP); // strips file path
 	ret.type = StoredGame::REPLAY;
 	ret.battle.SetPlayBackFilePath(ReplayPath);
 	ret.size = wxFileName::GetSize(ReplayPath).GetLo(); //FIXME: use longlong
@@ -145,17 +144,6 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 		MarkBroken(ret);
 		return false;
 	}
-
-	//try to get date from filename
-	wxDateTime rdate;
-
-	if (rdate.ParseFormat(TowxString(FileName), _T("%Y%m%d_%H%M%S")) == 0) {
-		wxLogWarning(wxString::Format(_T("Name of the file %s could not be parsed!"), ReplayPath.c_str()));
-		MarkBroken(ret);
-		return false;
-	}
-	ret.date = rdate.GetTicks(); // now it is sorted properly
-	ret.date_string = STD_STRING(rdate.FormatISODate() + _T(" ") + rdate.FormatISOTime());
 
 	if (ret.size <= 0) {
 		MarkBroken(ret);
@@ -173,7 +161,15 @@ bool ReplayList::GetReplayInfos(const std::string& ReplayPath, StoredGame& ret) 
 
 
 	const int replay_version = replayVersion(*replay);
+
+
 	ret.battle.SetScript(GetScriptFromReplay(*replay, replay_version));
+
+
+	uint64_t ts = GetStartTimeStampFromReplay(*replay, replay_version);
+	ret.date = static_cast<time_t> (ts);
+	wxDateTime rdate = ret.date;
+	ret.date_string = STD_STRING(rdate.FormatISODate() + _T(" ") + rdate.FormatISOTime());
 
 
 	std::string engineVersion = GetEngineVersionFromReplay(*replay, replay_version);
@@ -250,6 +246,17 @@ std::string ReplayList::GetScriptFromReplay(PlayBackDataReader& replay, const in
 	script.resize(scriptSize, 0);
 	replay.Read(&script[0], scriptSize);
 	return script;
+}
+
+uint64_t ReplayList::GetStartTimeStampFromReplay(PlayBackDataReader& replay, const int version) const
+{
+	uint64_t ts;
+	const int seek = 16 + 4 + 4 + (version < 5 ? 16 : 256) + 16;
+	if (!replay.Get(ts, seek)) {
+		wxLogWarning("Unable to obtain version from replay %s", replay.GetName().c_str());
+		ts = 0;
+	}
+	return ts;
 }
 
 // see https://github.com/spring/spring/blob/develop/rts/System/LoadSave/demofile.h
