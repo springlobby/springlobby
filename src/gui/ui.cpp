@@ -59,7 +59,7 @@
 
 
 SLCONFIG("/General/AutoUpdate", true, "Determines if springlobby should check for updates on startup");
-SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_BATTLELIST, "which tab to show on startup");
+SLCONFIG("/GUI/StartTab", (long)MainWindow::PAGE_MULTIPLAYER, "which tab to show on startup");
 SLCONFIG("/Chat/BroadcastEverywhere", true, "setting to spam the server messages in all channels");
 SLCONFIG("/Server/Autoconnect", false, "Connect to server on startup");
 
@@ -565,7 +565,7 @@ void Ui::OnUserLeftBattle(IBattle& battle, User& user, bool isbot)
 			if (&user == &m_serv->GetMe()) {
 				mw().GetJoinTab().LeaveCurrentBattle();
 				mw().GetBattleListTab().LeftBattle();
-				mw().ShowTab(MainWindow::PAGE_BATTLELIST);
+				mw().ShowTab(MainWindow::PAGE_MULTIPLAYER);
 			}
 		}
 	} catch (const std::exception& e) {
