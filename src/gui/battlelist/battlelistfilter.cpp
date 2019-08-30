@@ -6,6 +6,7 @@
 #include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <wx/regex.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
