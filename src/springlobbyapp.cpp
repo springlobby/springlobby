@@ -191,7 +191,7 @@ bool SpringLobbyApp::OnInit()
 		wxLogWarning("Couldn't load unitsync");
 	}
 
-	wxLogWarning("%s", TowxString(GetSpringlobbyInfo()).c_str());
+	wxLogMessage("%s", GetSpringlobbyInfo());
 
 	ui().OnInit();
 
@@ -307,6 +307,6 @@ bool SpringLobbyApp::OnCmdLineParsed(wxCmdLineParser& parser)
 
 void SpringLobbyApp::OnQuit(wxCommandEvent& /*data*/)
 {
-	wxLogWarning("MainWindow::OnClose");
+	wxLogInfo("MainWindow::OnClose");
 	GlobalEventManager::Instance()->Send(GlobalEventManager::OnQuit);
 }
