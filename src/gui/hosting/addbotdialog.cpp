@@ -197,11 +197,13 @@ void AddBotDialog::ReloadAIList()
 		wxLogWarning(_T("Exception while loading AIs: %s"), e.what());
 	}
 
+	// m_ai is the wxChoice display list
 	m_ai->Clear();
+	// m_ais is a wxArrayString of all AIs, even blocked ones.
 	m_ais.clear();
 	m_valid_ai_index_map.clear();
 	for (unsigned int i = 0; i < ais.size(); ++i) {
-		std::string &AINameVersion = ais.at(i);
+		const std::string& AINameVersion = ais.at(i);
 		bool matched = false; // either this or goto...
 
 		for (unsigned int j = 0; j < sizeof (banned_AIs) / sizeof(char *); ++j) {
@@ -211,9 +213,10 @@ void AddBotDialog::ReloadAIList()
 				break;
 			}
 		}
+
+		wxString wxAINV (AINameVersion);
+		m_ais.Add(wxAINV);
 		if (!matched) {
-			wxString wxAINV (AINameVersion);
-			m_ais.Add(wxAINV);
 			m_ai->Append(RefineAIName(wxAINV));
 			m_valid_ai_index_map.push_back(i);
 		}

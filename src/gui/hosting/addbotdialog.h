@@ -75,6 +75,7 @@ private:
 
 	bool m_sp;
 
+	// Maps display (wxChoice m_ai) indices to unitsync indices (wxArrayString m_ais)
 	std::vector<int> m_valid_ai_index_map;
 	wxString RefineAIName(const wxString& name);
 
