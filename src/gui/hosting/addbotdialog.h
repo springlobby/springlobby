@@ -32,7 +32,7 @@ public:
 	wxString GetAIShortName();
 	wxString GetAiRawName();
 	wxString GetAIVersion();
-	int GetAIType();
+	int GetSelectedAIType();
 
 	void ReloadAIList();
 

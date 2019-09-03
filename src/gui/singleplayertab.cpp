@@ -450,7 +450,7 @@ void SinglePlayerTab::OnAddBot(wxCommandEvent& /*unused*/)
 		bs.aishortname = STD_STRING(dlg.GetAIShortName());
 		bs.airawname = STD_STRING(dlg.GetAiRawName());
 		bs.aiversion = STD_STRING(dlg.GetAIVersion());
-		bs.aitype = dlg.GetAIType();
+		bs.aitype = dlg.GetSelectedAIType();
 		bs.team = m_battle.GetFreeTeam();
 		bs.ally = m_battle.GetFreeAlly();
 		bs.colour = m_battle.GetNewColour();

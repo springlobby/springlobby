@@ -144,7 +144,7 @@ wxString AddBotDialog::GetNick()
 
 wxString AddBotDialog::Get(const std::string& section)
 {
-	const auto sel = GetAIType();
+	const auto sel = GetSelectedAIType();
 	const auto infos = LSL::usync().GetAIInfos(sel);
 	const auto namepos = LSL::Util::IndexInSequence(infos, section);
 	if (namepos == LSL::lslNotFound)
@@ -162,7 +162,7 @@ wxString AddBotDialog::GetAIVersion()
 	return Get("version");
 }
 
-int AddBotDialog::GetAIType()
+int AddBotDialog::GetSelectedAIType()
 {
 	return m_valid_ai_index_map.at (m_ai->GetSelection());
 }
@@ -185,7 +185,7 @@ wxString AddBotDialog::GetAiRawName()
 {
 	//    if ( m_ais.GetCount() < m_ai->GetSelection() )
 	//        return wxEmptyString;
-	return m_ais [GetAIType()];
+	return m_ais [GetSelectedAIType()];
 }
 
 void AddBotDialog::ReloadAIList()
@@ -260,7 +260,7 @@ void AddBotDialog::ShowAIInfo()
 {
 	m_add_btn->Enable(m_ai->GetStringSelection() != wxEmptyString);
 	m_ai_infos_lst->DeleteAllItems();
-	const wxArrayString info = lslTowxArrayString(LSL::usync().GetAIInfos(GetAIType()));
+	const wxArrayString info = lslTowxArrayString(LSL::usync().GetAIInfos(GetSelectedAIType()));
 	int count = info.GetCount();
 	for (int i = 0; i < count; i = i + 3) {
 		long index = m_ai_infos_lst->InsertItem(i, info[i]);
@@ -278,7 +278,7 @@ void AddBotDialog::ShowAIOptions()
 {
 	m_opts_list->DeleteAllItems();
 	m_opt_list_map.clear();
-	m_battle.CustomBattleOptions().loadAIOptions(m_battle.GetHostGameNameAndVersion(), GetAIType(), STD_STRING(GetNick()));
+	m_battle.CustomBattleOptions().loadAIOptions(m_battle.GetHostGameNameAndVersion(), GetSelectedAIType(), STD_STRING(GetNick()));
 	AddMMOptionsToList(0, m_battle.CustomBattleOptions().GetAIOptionIndex(STD_STRING(GetNick())));
 	m_opts_list->SetColumnWidth(0, wxLIST_AUTOSIZE);
 	m_opts_list->SetColumnWidth(1, wxLIST_AUTOSIZE);
