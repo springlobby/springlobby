@@ -167,7 +167,7 @@ set(wxfb_projects
 
 set(wxfb_src ${springlobby_SOURCE_DIR}/src/gui/wxfb)
 set(wxfb_bin ${springlobby_BINARY_DIR}/src/gui/wxfb)
-set(wxfb_gensrc ${wxfb_src}/generated)
+set(wxfb_gensrc ${wxfb_src}/pregenerated)
 # For configure_file below, all .fbp should have
 # property name="path" set to @WXFB_GENERATION_PATH@.
 set(WXFB_GENERATION_PATH ${wxfb_bin}/generated)
