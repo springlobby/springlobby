@@ -278,15 +278,20 @@ void SinglePlayerTab::ReloadEngineList()
 
 		if (lastSkirmishEngine == pair.first) {
 			m_engine_choice->SetSelection(i);
+			m_battle.SetEngineVersion(pair.first);
 			lastSkirmishEngineFound = true;
 		} else if (last == pair.first && !lastSkirmishEngineFound) {
 			m_engine_choice->SetSelection(i);
+			m_battle.SetEngineVersion(pair.first);
 		}
 		i++;
 	}
 
 	if (m_engine_choice->GetSelection() == wxNOT_FOUND) {
 		m_engine_choice->SetSelection(0);
+		if (!versions.empty()) {
+			m_battle.SetEngineVersion(versions.begin()->first);
+		} // else leave it unset
 	}
 
 	// i > 0 means that we have at least one engine.
