@@ -44,7 +44,6 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
     , m_last_relayhost(sett().GetLastRelayedHost())
 {
 	m_battle_name_text->SetValue(sett().GetLastHostDescription());
-	m_paste_name_check->SetValue(sett().GetBattleLastAutoAnnounceDescription());
 	m_password_text->SetValue(sett().GetLastHostPassword());
 	m_port_spinctrl->SetValue(sett().GetLastHostPort());
 	m_relayhost_pick->SetLabel(m_last_relayhost.IsEmpty() ? _T("automatic") : m_last_relayhost);
@@ -164,7 +163,6 @@ void HostBattleDialog::OnOk(wxCommandEvent& /*unused*/)
 	sett().SetLastHostNATSetting(m_nat_traversal_radios->GetSelection());
 	sett().SetLastRankLimit(GetSelectedRank());
 	sett().SetLastHostRelayedMode(m_use_relayhost_check->GetValue());
-	sett().SetBattleLastAutoAnnounceDescription(m_paste_name_check->GetValue());
 	sett().SetLastRelayedHost(m_last_relayhost);
 	sett().SaveSettings();
 	EndModal(wxID_OK);
