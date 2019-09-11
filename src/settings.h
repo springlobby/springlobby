@@ -423,9 +423,6 @@ public:
 	int GetBattleLastAutoSpectTime();
 	void SetBattleLastAutoSpectTime(int value);
 
-	bool GetBattleLastAutoAnnounceDescription();
-	void SetBattleLastAutoAnnounceDescription(bool value);
-
 	void SetBattleLastSideSel(const wxString& gamename, int sidenum);
 	int GetBattleLastSideSel(const wxString& gamename);
 

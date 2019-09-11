@@ -120,7 +120,6 @@ private:
 	void OnRingUnsynced(wxCommandEvent& event);
 	void OnRingUnreadyUnsynced(wxCommandEvent& event);
 
-	void OnAutoPaste(wxCommandEvent& event);
 	void OnAutoControl(wxCommandEvent& event);
 	void OnAutoStart(wxCommandEvent& event);
 	void OnAutoSpec(wxCommandEvent& event);
@@ -202,7 +201,6 @@ private:
 	wxMenuItem* m_autostart_mnu;
 	wxMenuItem* m_autospec_mnu;
 	wxMenuItem* m_autocontrol_mnu;
-	wxMenuItem* m_autopaste_mnu;
 
 	wxCheckBox* m_autolaunch_chk;
 	wxCheckBox* m_ready_chk;
@@ -252,7 +250,6 @@ private:
 		BROOM_AUTOSPECT,
 		BROOM_AUTOSTART,
 		BROOM_AUTOCONTROL,
-		BROOM_AUTOPASTE,
 		BROOM_HOST_NEW
 	};
 

@@ -107,7 +107,6 @@ EVT_MENU(BROOM_LOCK_BALANCE, BattleRoomTab::OnLockBalance)
 EVT_MENU(BROOM_BALANCE, BattleRoomTab::OnBalance)
 EVT_MENU(BROOM_FIXID, BattleRoomTab::OnFixTeams)
 EVT_MENU(BROOM_FIXCOLOURS, BattleRoomTab::OnFixColours)
-EVT_MENU(BROOM_AUTOPASTE, BattleRoomTab::OnAutoPaste)
 
 EVT_LIST_ITEM_ACTIVATED(BROOM_OPTIONLIST, BattleRoomTab::OnOptionActivate)
 
@@ -209,9 +208,6 @@ BattleRoomTab::BattleRoomTab(wxWindow* parent, IBattle* battle)
 	m_autohost_mnu->Check(false);
 
 
-	m_autopaste_mnu = new wxMenuItem(m_manage_users_mnu, BROOM_AUTOPASTE, _("AutoPaste Description"), _("Automatically paste battle's descriptoin when a new user joins"), wxITEM_CHECK);
-	m_manage_users_mnu->Append(m_autopaste_mnu);
-	m_autopaste_mnu->Check(sett().GetBattleLastAutoAnnounceDescription());
 	m_autospec_mnu = new wxMenuItem(m_manage_users_mnu, BROOM_AUTOSPECT, _("AutoSpect"), _("Automatically spectate players that don't ready up or become synced within x seconds."), wxITEM_CHECK);
 	m_manage_users_mnu->Append(m_autospec_mnu);
 	m_autospec_mnu->Check(sett().GetBattleLastAutoSpectTime() > 0);
@@ -819,17 +815,6 @@ void BattleRoomTab::OnAutoHost(wxCommandEvent& /*unused*/)
 	}
 }
 
-
-void BattleRoomTab::OnAutoPaste(wxCommandEvent& /*unused*/)
-{
-	if (!m_battle)
-		return;
-	const wxString description = wxGetTextFromUser(_("Enter a battle description"), _("Set description"), TowxString(m_battle->GetDescription()), (wxWindow*)&ui().mw());
-	m_autopaste_mnu->Check(!description.IsEmpty());
-	if (!description.IsEmpty())
-		m_battle->SetDescription(STD_STRING(description));
-	sett().SetBattleLastAutoAnnounceDescription(m_autopaste_mnu->IsChecked());
-}
 
 void BattleRoomTab::OnAutoControl(wxCommandEvent& /*unused*/)
 {
