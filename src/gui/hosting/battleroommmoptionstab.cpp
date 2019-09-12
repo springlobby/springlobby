@@ -123,8 +123,15 @@ BattleroomMMOptionsTab::~BattleroomMMOptionsTab()
 void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* parent_sizer,
 					       LSL::Enum::GameOption optFlag)
 {
-	if (!m_battle)
+	if (!m_battle) {
+		wxString name = wxString::Format(_T("%d%sno_battle"), optFlag, wxsep.c_str());
+		wxStaticText* none_found = new wxStaticText(this, wxID_ANY,
+		  _("No options available, you have to join a battle first."),
+		  wxDefaultPosition, wxDefaultSize, 0, name);
+		m_statictext_map[name] = none_found;
+		parent_sizer->Add(none_found, 0, wxALL, 5);
 		return;
+	}
 	unsigned int num_options = 0;
 	for (const auto& it : m_battle->CustomBattleOptions().m_opts[optFlag].section_map) {
 		wxStaticBoxSizer* section_sizer = new wxStaticBoxSizer(
@@ -143,15 +150,15 @@ void BattleroomMMOptionsTab::setupOptionsSizer(wxBoxSizer* parent_sizer,
 	if (setupOptionsSectionSizer(dummy, section_sizer, optFlag) == 0) {
 		if (num_options == 0) {
 			wxString name = wxString::Format(_T("%d%sno_opts"), optFlag, wxsep.c_str());
-			wxStaticText* none_found = new wxStaticText(this, wxID_ANY, _("no options available"),
+			wxStaticText* none_found = new wxStaticText(this, wxID_ANY, _("No options available."),
 								    wxDefaultPosition, wxDefaultSize, 0, name);
 			m_statictext_map[name] = none_found;
-			parent_sizer->Add(none_found, 0, wxALL, 3);
+			parent_sizer->Add(none_found, 0, wxALL, 5);
 		}
 	} else {
 		wxStaticBoxSizer* other_section = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, _("other")), wxVERTICAL);
 		other_section->Add(section_sizer, 0, wxALL, section_sizer->GetChildren().size() > 0 ? 5 : 0);
-		parent_sizer->Add(other_section, 0, wxALL, 0);
+		parent_sizer->Add(other_section, 0, wxALL, 5);
 	}
 }
 
