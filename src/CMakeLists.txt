@@ -162,6 +162,7 @@ ENDIF( OPTION_NOTIFY AND NOT WIN32 )
 # wxFormBuilder
 #-----------------------------------------------------------------------------
 set(wxfb_projects
+	CrashReporterDialog
 	HostBattleDialog
 )
 
@@ -268,6 +269,7 @@ set(springlobbySrc
 	gui/agreementdialog.cpp
 	gui/chatpanelmenu.cpp
 	gui/chatpanel.cpp
+	gui/crashreporterdialog.cpp
 	gui/contentdownloaddialog.cpp
 	gui/contentsearchresultview.cpp
 	gui/contentsearchresultdatamodel.cpp

@@ -48,6 +48,7 @@ public:
 	void AddServerWindow(const wxString&);
 
 	bool Ask(const wxString& heading, const wxString& question) const;
+	bool AskCrashReporter(const wxString& heading, const wxString& question) const;
 	bool AskText(const wxString& heading, const wxString& question, wxString& answer, bool multiline = false);
 	bool AskPassword(const wxString& heading, const wxString& message, wxString& password);
 	void ShowMessage(const wxString& heading, const wxString& message) const;

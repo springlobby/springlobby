@@ -176,8 +176,8 @@ void Spring::OnTerminated(wxCommandEvent& event)
 			             "a) Timeout when connecting or a long connection loss during gameplay\n"
 			             "   In this case simply restart the engine.\n"
 			             "b) Choosing incompatible content for the selected game\n"
-			             "   This is most often caused by wrong AI. Simply try other AIs\n"
-			             "   one-by-one or better, consult documentation of the selected game.\n"
+			             "   Are you using the right engine version for the selected game?\n"
+			             "   Consult documentation of the selected game.\n"
 			             "c) Graphics-related crash: The engine or game requires more than what\n"
 			             "   your graphics hardware is capable of.\n"
 			             "\n"
@@ -186,7 +186,9 @@ void Spring::OnTerminated(wxCommandEvent& event)
 			             "quality of the game and some of the effects may not be rendered at all!\n"
 			             "\n"
 			             "Run in safe mode?\n");
-			if (ui().Ask(heading, message)) {
+
+			if (ui().AskCrashReporter(heading, message)) {
+				wxLogMessage(_T("Will re-launch engine in safe-mode"));
 				engine_params.push_back(_T("--safemode"));
 				LaunchEngine();
 				return; // We have not terminated yet!

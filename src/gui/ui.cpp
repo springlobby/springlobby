@@ -25,6 +25,7 @@
 #include "gui/battlelist/battlelisttab.h"
 #include "gui/chatpanel.h"
 #include "gui/connectwindow.h"
+#include "gui/crashreporterdialog.h"
 #include "gui/customdialogs.h"
 #include "gui/hosting/battleroomtab.h"
 #include "gui/hosting/mainjoinbattletab.h"
@@ -199,6 +200,11 @@ bool Ui::Ask(const wxString& heading, const wxString& question) const
 {
 	int answer = customMessageBox(SL_MAIN_ICON, question, heading, wxYES_NO | wxCANCEL);
 	return (answer == wxYES);
+}
+
+bool Ui::AskCrashReporter(const wxString& heading, const wxString& question) const
+{
+	return (CrashReporterDialog::RunCrashReporterDialog(m_main_win, heading, question) == wxID_OK);
 }
 
 //! cannot be const because parent window cannot be const
