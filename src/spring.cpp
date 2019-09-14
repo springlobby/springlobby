@@ -187,7 +187,8 @@ void Spring::OnTerminated(wxCommandEvent& event)
 			             "\n"
 			             "Run in safe mode?\n");
 
-			if (ui().AskCrashReporter(heading, message)) {
+			const wxString infologPath = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + "infolog.txt";
+			if (ui().AskCrashReporter(heading, message, infologPath)) {
 				wxLogMessage(_T("Will re-launch engine in safe-mode"));
 				engine_params.push_back(_T("--safemode"));
 				LaunchEngine();

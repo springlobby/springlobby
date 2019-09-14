@@ -202,9 +202,9 @@ bool Ui::Ask(const wxString& heading, const wxString& question) const
 	return (answer == wxYES);
 }
 
-bool Ui::AskCrashReporter(const wxString& heading, const wxString& question) const
+bool Ui::AskCrashReporter(const wxString& heading, const wxString& question, const wxString& filePath) const
 {
-	return (CrashReporterDialog::RunCrashReporterDialog(m_main_win, heading, question) == wxID_OK);
+	return (CrashReporterDialog::RunCrashReporterDialog(m_main_win, heading, question, filePath) == wxID_OK);
 }
 
 //! cannot be const because parent window cannot be const

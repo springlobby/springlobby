@@ -11,8 +11,8 @@
 class CrashReporterDialog : public CrashReporterDialogBase, public WindowHintsPickle
 {
 public:
-	explicit CrashReporterDialog(wxWindow* parent, const wxString& heading, const wxString& message);
-	static int RunCrashReporterDialog(wxWindow* parent, const wxString& heading, const wxString& message);
+	explicit CrashReporterDialog(wxWindow* parent, const wxString& heading, const wxString& message, const wxString& filePath);
+	static int RunCrashReporterDialog(wxWindow* parent, const wxString& heading, const wxString& message, const wxString& filePath);
 
 private:
 	void OnOk(wxCommandEvent& event);
