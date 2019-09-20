@@ -6,8 +6,10 @@
 #include "crashreporterdialog.h"
 
 #include <wx/filename.h>
+#include <wx/log.h>
 #include <wx/string.h>
 
+#include "uiutils.h"
 
 CrashReporterDialog::CrashReporterDialog(wxWindow* parent, const wxString& heading, const wxString& message, const wxString& filePath)
     : CrashReporterDialogBase(parent)
@@ -45,6 +47,16 @@ void CrashReporterDialog::OnOk(wxCommandEvent& /*unused*/)
 void CrashReporterDialog::OnCancel(wxCommandEvent& /*unused*/)
 {
 	EndModal(wxID_CANCEL);
+}
+
+
+void CrashReporterDialog::OnClickBugReport(wxCommandEvent& event)
+{
+	// The URL should be in tooltip!
+	wxButton* button = (wxButton*)event.GetEventObject();
+	const wxString& url = button->GetToolTipText();
+	wxLogMessage(_T("Open URL: %s"), url);
+	OpenWebBrowser(url);
 }
 
 

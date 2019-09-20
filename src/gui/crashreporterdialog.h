@@ -17,6 +17,7 @@ public:
 private:
 	void OnOk(wxCommandEvent& event);
 	void OnCancel(wxCommandEvent& event);
+	void OnClickBugReport(wxCommandEvent& event);
 };
 
 namespace SL
