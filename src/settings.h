@@ -273,6 +273,23 @@ public:
 	size_t GetNotificationPopupPosition();
 	void SetNotificationPopupDisplayTime(const unsigned int seconds);
 	unsigned int GetNotificationPopupDisplayTime();
+
+	enum UserLevel {
+		NewUser = -1,
+		Newbie = 0,
+		Beginner = 1,
+		Average = 2,
+		AboveAverage = 3,
+		Experienced = 4,
+		HighlyExperienced = 5,
+		Veteran = 6,
+		Furniture = 7,
+		Developer = 1000
+	};
+
+	int GetUserLevel();
+	void SetUserLevel(int value);
+
 	/*@}*/
 
 

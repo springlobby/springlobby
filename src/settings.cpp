@@ -1390,6 +1390,16 @@ void Settings::SetSplitBRoomHorizontally(const bool vertical)
 	cfg().Write(_T( "/GUI/SplitBRoomHorizontally" ), vertical);
 }
 
+int Settings::GetUserLevel()
+{
+	return cfg().Read(_T("/General/UserLevel"), NewUser);
+}
+
+void Settings::SetUserLevel(int level)
+{
+	cfg().Write(_T("/General/UserLevel" ), level);
+}
+
 bool Settings::GetShowXallTabs()
 {
 	return cfg().Read(_T( "/GUI/CloseOnAll" ), 0l);
