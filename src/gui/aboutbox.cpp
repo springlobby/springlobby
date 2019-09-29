@@ -26,6 +26,7 @@ slAboutBox::slAboutBox()
 	info->AddDeveloper(_T("Kaot"));
 	info->AddDeveloper(_T("koshi"));
 	info->AddDeveloper(_T("semi_"));
+	info->AddDeveloper(_T("specing (ThinkSome)"));
 	info->AddDeveloper(_T("tc-"));
 	info->AddTranslator(_T("chaosch (simplified chinese)"));
 	info->AddTranslator(_T("lejocelyn (french)"));
