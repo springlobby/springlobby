@@ -65,7 +65,7 @@
                     <object class="wxFlexGridSizer" expanded="1">
                         <property name="cols">2</property>
                         <property name="flexible_direction">wxVERTICAL</property>
-                        <property name="growablecols"></property>
+                        <property name="growablecols">1</property>
                         <property name="growablerows"></property>
                         <property name="hgap">0</property>
                         <property name="minimum_size"></property>
@@ -76,7 +76,7 @@
                         <property name="vgap">0</property>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
-                            <property name="flag">wxALIGN_CENTER_VERTICAL|wxALL</property>
+                            <property name="flag">wxALIGN_CENTER_VERTICAL|wxALL|wxALIGN_RIGHT</property>
                             <property name="proportion">0</property>
                             <object class="wxStaticText" expanded="0">
                                 <property name="BottomDockable">1</property>
@@ -201,7 +201,7 @@
                         </object>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
-                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
+                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT</property>
                             <property name="proportion">0</property>
                             <object class="wxStaticText" expanded="0">
                                 <property name="BottomDockable">1</property>
@@ -326,7 +326,7 @@
                         </object>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
-                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
+                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT</property>
                             <property name="proportion">0</property>
                             <object class="wxStaticText" expanded="0">
                                 <property name="BottomDockable">1</property>
@@ -452,7 +452,7 @@
                         </object>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
-                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
+                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT</property>
                             <property name="proportion">0</property>
                             <object class="wxStaticText" expanded="0">
                                 <property name="BottomDockable">1</property>
@@ -577,7 +577,7 @@
                         </object>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
-                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
+                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT</property>
                             <property name="proportion">0</property>
                             <object class="wxStaticText" expanded="0">
                                 <property name="BottomDockable">1</property>
@@ -691,7 +691,7 @@
                                 <property name="style">wxSP_ARROW_KEYS</property>
                                 <property name="subclass">; ; forward_declare</property>
                                 <property name="toolbar_pane">0</property>
-                                <property name="tooltip">UDP port to host game on. Default is 8452.</property>
+                                <property name="tooltip">UDP port to host game on. Default is 8452. Make sure to open your firewall and re-configure your router.</property>
                                 <property name="value">8452</property>
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
@@ -700,7 +700,7 @@
                         </object>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
-                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL</property>
+                            <property name="flag">wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT</property>
                             <property name="proportion">0</property>
                             <object class="wxCheckBox" expanded="0">
                                 <property name="BottomDockable">1</property>
@@ -894,7 +894,7 @@
                         <property name="style">wxRA_SPECIFY_ROWS</property>
                         <property name="subclass">; ; forward_declare</property>
                         <property name="toolbar_pane">0</property>
-                        <property name="tooltip">NAT traversal to use.</property>
+                        <property name="tooltip">NAT traversal method to use. Use none and reconfigure firewall/router if hole punching does not work.</property>
                         <property name="validator_data_type"></property>
                         <property name="validator_style">wxFILTER_NONE</property>
                         <property name="validator_type">wxDefaultValidator</property>
@@ -1114,7 +1114,7 @@
                                 <property name="style">wxSL_AUTOTICKS|wxSL_HORIZONTAL|wxSL_VALUE_LABEL</property>
                                 <property name="subclass">; ; forward_declare</property>
                                 <property name="toolbar_pane">0</property>
-                                <property name="tooltip">The maximum number of players to allow in the battle.</property>
+                                <property name="tooltip">The maximum number of players to allow in the battle. You may need special permission to host more than 8.</property>
                                 <property name="validator_data_type"></property>
                                 <property name="validator_style">wxFILTER_NONE</property>
                                 <property name="validator_type">wxDefaultValidator</property>
