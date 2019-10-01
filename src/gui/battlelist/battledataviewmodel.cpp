@@ -10,6 +10,7 @@
 #include "utils/slpaths.h"
 #include "utils/conversion.h"
 #include "utils/slconfig.h"
+#include "utils/sortutil.h"
 
 SLCONFIG("/BattleListTab/InactiveRoomColor", "#888888", "Font color for battle rows with no active players");
 SLCONFIG("/BattleListTab/UseSmartSorting", "1", "Apply secondary sorting rules when sorting by game or players");
@@ -203,12 +204,12 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 			break;
 
 		case MAP:
-			sortingResult = battleA->GetHostMapName().compare(battleB->GetHostMapName());
+			sortingResult = CompareVersionStrings(battleA->GetHostMapName(), battleB->GetHostMapName());
 			break;
 
 		case GAME: { 
 			if (USE_SMART_SORTING) {  // game prefix, active players DESC, total players DESC, game
-				sortingResult = battleA->GetHostGameName().compare(battleB->GetHostGameName());
+				sortingResult = CompareVersionStrings(battleA->GetHostGameName(), battleB->GetHostGameName());
 
 				// secondary sort by players
 				if (0 == sortingResult) {
@@ -224,17 +225,17 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 					sortingResult = !ascending ? sortingResult : (sortingResult * (-1));  // always DESC			
 				}
 				if (0 == sortingResult) {
-					sortingResult = battleA->GetHostGameNameAndVersion().compare(battleB->GetHostGameNameAndVersion());
+					sortingResult = CompareVersionStrings(battleA->GetHostGameNameAndVersion(), battleB->GetHostGameNameAndVersion());
 				}
 			} else {
-				sortingResult = battleA->GetHostGameNameAndVersion().compare(battleB->GetHostGameNameAndVersion());
+				sortingResult = CompareVersionStrings(battleA->GetHostGameNameAndVersion(), battleB->GetHostGameNameAndVersion());
 			}
 		} break;
 
 		case ENGINE:
-			sortingResult = battleA->GetEngineName().compare(battleB->GetEngineName());
+			sortingResult = CompareVersionStrings(battleA->GetEngineName(), battleB->GetEngineName());
 			if (0 == sortingResult)
-				sortingResult = battleA->GetEngineVersion().compare(battleB->GetEngineVersion());
+				sortingResult = CompareVersionStrings(battleA->GetEngineVersion(), battleB->GetEngineVersion());
 			break;
 
 		case SPECTATORS:
@@ -259,7 +260,7 @@ int BattleDataViewModel::Compare(const wxDataViewItem& itemA,
 
 				// secondary sort by game
 				if (0 == sortingResult) {
-					sortingResult = battleA->GetHostGameNameAndVersion().compare(battleB->GetHostGameNameAndVersion());
+					sortingResult = CompareVersionStrings(battleA->GetHostGameNameAndVersion(), battleB->GetHostGameNameAndVersion());
 					sortingResult = ascending ? sortingResult : (sortingResult * (-1));  // always ASC
 				}
 			}
