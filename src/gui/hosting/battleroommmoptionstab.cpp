@@ -193,14 +193,15 @@ int BattleroomMMOptionsTab::setupOptionsSectionSizer(const LSL::mmOptionSection&
 			LSL::mmOptionBool current = i.second;
 			wxCheckBox* temp = new wxCheckBox(this, BOOL_START_ID + ctrl_count, TowxString(current.name));
 			temp->SetToolTip(current.description);
-			m_name_info_map[pref + TowxString(current.key)] = TowxString(current.description);
-			temp->SetName(pref + TowxString(current.key));
-			m_chkbox_map[pref + TowxString(current.key)] = temp;
+			const wxString pref_key = pref + TowxString(current.key);
+			m_name_info_map[pref_key] = TowxString(current.description);
+			temp->SetName(pref_key);
+			m_chkbox_map[pref_key] = temp;
 			temp->SetValue(current.value);
 			temp->Enable(enable);
 			wxBoxSizer* ct_sizer = new wxBoxSizer(wxHORIZONTAL);
 			ct_sizer->Add(temp, 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, b_gap);
-			ct_sizer->Add(getButton(BOOL_START_ID + ctrl_count, pref + TowxString(current.key)), 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, col_gap);
+			ct_sizer->Add(getButton(BOOL_START_ID + ctrl_count, pref_key), 0, wxRIGHT | wxALIGN_CENTER_VERTICAL, col_gap);
 			chkSizer->Add(ct_sizer);
 			ctrl_count++;
 		}
