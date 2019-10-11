@@ -35,18 +35,21 @@ BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxW
 	BattleroomDataViewModel* model = new BattleroomDataViewModel();
 	AssociateModel(model);
 
-	const int DEFAULT_SIZE = wxCOL_WIDTH_AUTOSIZE;
-	AppendBitmapColumn(_("Status"), STATUS, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("Ingame"), INGAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("Faction"), FACTION, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("Colour"), COLOUR, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("Country"), COUNTRY, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendBitmapColumn(_("Rank"), RANK, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_CENTER, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Nickname"), NICKNAME, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("TrueSkill"), TRUESKILL, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Team"), TEAM, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Ally"), ALLY, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
-	AppendTextColumn(_("Resource Bonus"), BONUS, wxDATAVIEW_CELL_INERT, DEFAULT_SIZE, wxALIGN_NOT, wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE);
+	const int size = wxCOL_WIDTH_AUTOSIZE;
+	const wxDataViewCellMode& cm = wxDATAVIEW_CELL_INERT;
+	const int flags = wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE;
+
+	AppendBitmapColumn(_("Status"),  STATUS,    cm, size, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(_("Ingame"),  INGAME,    cm, size, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(_("Faction"), FACTION,   cm, size, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(_("Colour"),  COLOUR,    cm, size, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(_("Country"), COUNTRY,   cm, size, wxALIGN_CENTER, flags);
+	AppendBitmapColumn(_("Rank"),    RANK,      cm, size, wxALIGN_CENTER, flags);
+	AppendTextColumn(_("Nickname"),  NICKNAME,  cm, size, wxALIGN_NOT,    flags);
+	AppendTextColumn(_("TrueSkill"), TRUESKILL, cm, size, wxALIGN_NOT,    flags);
+	AppendTextColumn(_("Team"),      TEAM,      cm, size, wxALIGN_NOT,    flags);
+	AppendTextColumn(_("Ally"),      ALLY,      cm, size, wxALIGN_NOT,    flags);
+	AppendTextColumn(_("Resource Bonus"),BONUS, cm, size, wxALIGN_NOT,    flags);
 
 	//Hide "ingame" column if not needed
 	if (!showInGame) {
