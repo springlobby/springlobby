@@ -7,6 +7,7 @@
 #include "exception.h"
 #include "gui/basedataviewmodel.h"
 #include "gui/customdialogs.h"
+#include "gui/iconscollection.h"
 #include "gui/ui.h"
 #include "iplaybacklist.h"
 #include "log.h"
@@ -30,18 +31,20 @@ PlaybackDataView::PlaybackDataView(const wxString& dataViewName, wxWindow* paren
 	PlaybackDataModel* m_PlaybackDataModel = new PlaybackDataModel();
 	AssociateModel(m_PlaybackDataModel);
 
+	const IconsCollection& ici = *IconsCollection::Instance();
 	const int size = wxCOL_WIDTH_AUTOSIZE;
 	const wxDataViewCellMode& cm = wxDATAVIEW_CELL_INERT;
 	const int flags = wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE;
+	const int flags_hidden = flags | wxDATAVIEW_COL_HIDDEN;
 
 	AppendIconTextColumn(_("Date"), DATE,     cm, size, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Duration"), DURATION, cm, size, wxALIGN_NOT, flags);
+	AppendTextColumn(ici.BMP_BROOM, PLAYERS,  cm, size, wxALIGN_NOT, flags);
 	AppendTextColumn(_("Game"),     GAME,     cm, size, wxALIGN_NOT, flags);
 	AppendTextColumn(_("Map"),      MAP,      cm, size, wxALIGN_NOT, flags);
-	AppendTextColumn(_("Players"),  PLAYERS,  cm, size, wxALIGN_NOT, flags);
-	AppendTextColumn(_("Duration"), DURATION, cm, size, wxALIGN_NOT, flags);
-	AppendTextColumn(_("Engine"),   ENGINE,   cm, size, wxALIGN_NOT, flags);
+	AppendTextColumn(_("Engine"),   ENGINE,   cm, size, wxALIGN_NOT, flags_hidden);
 	AppendTextColumn(_("Filesize"), FILESIZE, cm, size, wxALIGN_NOT, flags);
-	AppendTextColumn(_("File"),     FILENAME, cm, size, wxALIGN_NOT, flags);
+	AppendTextColumn(_("File"),     FILENAME, cm, size, wxALIGN_NOT, flags_hidden);
 
 
 	m_ContextMenu = new wxMenu(wxEmptyString);
