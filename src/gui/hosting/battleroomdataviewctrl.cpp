@@ -39,17 +39,17 @@ BattleroomDataViewCtrl::BattleroomDataViewCtrl(const wxString& dataViewName, wxW
 	const wxDataViewCellMode& cm = wxDATAVIEW_CELL_INERT;
 	const int flags = wxDATAVIEW_COL_SORTABLE | wxDATAVIEW_COL_RESIZABLE;
 
+	AppendBitmapColumn(wxEmptyString,COUNTRY,   cm, size, wxALIGN_CENTER, flags);
 	AppendBitmapColumn(_("Status"),  STATUS,    cm, size, wxALIGN_CENTER, flags);
 	AppendBitmapColumn(_("Ingame"),  INGAME,    cm, size, wxALIGN_CENTER, flags);
 	AppendBitmapColumn(_("Faction"), FACTION,   cm, size, wxALIGN_CENTER, flags);
-	AppendBitmapColumn(_("Colour"),  COLOUR,    cm, size, wxALIGN_CENTER, flags);
-	AppendBitmapColumn(_("Country"), COUNTRY,   cm, size, wxALIGN_CENTER, flags);
 	AppendBitmapColumn(_("Rank"),    RANK,      cm, size, wxALIGN_CENTER, flags);
-	AppendTextColumn(_("Nickname"),  NICKNAME,  cm, size, wxALIGN_NOT,    flags);
 	AppendTextColumn(_("TrueSkill"), TRUESKILL, cm, size, wxALIGN_NOT,    flags);
-	AppendTextColumn(_("Team"),      TEAM,      cm, size, wxALIGN_NOT,    flags);
-	AppendTextColumn(_("Ally"),      ALLY,      cm, size, wxALIGN_NOT,    flags);
-	AppendTextColumn(_("Resource Bonus"),BONUS, cm, size, wxALIGN_NOT,    flags);
+	AppendBitmapColumn(wxEmptyString,COLOUR,    cm, size, wxALIGN_CENTER, flags);
+	AppendTextColumn(_("Nickname"),  NICKNAME,  cm, size, wxALIGN_NOT,    flags);
+	AppendTextColumn(_("Player ID"), TEAM,      cm, size, wxALIGN_NOT,    flags);
+	AppendTextColumn(_("Team ID"),   ALLY,      cm, size, wxALIGN_NOT,    flags);
+	AppendTextColumn(_("Bonus"),     BONUS,     cm, size, wxALIGN_NOT,    flags);
 
 	//Hide "ingame" column if not needed
 	if (!showInGame) {
