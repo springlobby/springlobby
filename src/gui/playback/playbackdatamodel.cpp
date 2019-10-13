@@ -35,10 +35,12 @@ int PlaybackDataModel::Compare(const wxDataViewItem& itemA, const wxDataViewItem
 			sortingResult = storedGameA->date_string.compare(storedGameB->date_string);
 			break;
 		case GAME:
-			sortingResult = storedGameA->battle.GetHostGameNameAndVersion().compare(storedGameB->battle.GetHostGameNameAndVersion());
+			sortingResult = CompareVersionStrings(storedGameA->battle.GetHostGameNameAndVersion(),
+			                                      storedGameB->battle.GetHostGameNameAndVersion());
 			break;
 		case MAP:
-			sortingResult = storedGameA->battle.GetHostMapName().compare(storedGameB->battle.GetHostMapName());
+			sortingResult = CompareVersionStrings(storedGameA->battle.GetHostMapName(),
+			                                      storedGameB->battle.GetHostMapName());
 			break;
 		case PLAYERS: {
 			unsigned numPlayersA = storedGameA->battle.GetNumUsers() - storedGameA->battle.GetSpectators();
@@ -49,9 +51,11 @@ int PlaybackDataModel::Compare(const wxDataViewItem& itemA, const wxDataViewItem
 			sortingResult = GenericCompare(storedGameA->duration, storedGameB->duration);
 			break;
 		case ENGINE:
-			sortingResult = storedGameA->battle.GetEngineName().compare(storedGameB->battle.GetEngineName());
+			sortingResult = CompareVersionStrings(storedGameA->battle.GetEngineName(),
+			                                      storedGameB->battle.GetEngineName());
 			if (0 == sortingResult)
-				sortingResult = storedGameA->battle.GetEngineVersion().compare(storedGameB->battle.GetEngineVersion());
+				sortingResult = CompareVersionStrings(storedGameA->battle.GetEngineVersion(),
+				                                      storedGameB->battle.GetEngineVersion());
 			break;
 		case FILESIZE:
 			sortingResult = GenericCompare(storedGameA->size, storedGameB->size);
