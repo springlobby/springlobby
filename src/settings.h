@@ -284,6 +284,7 @@ public:
 		HighlyExperienced = 5,
 		Veteran = 6,
 		Furniture = 7,
+		Professional = 10,
 		Developer = 1000
 	};
 

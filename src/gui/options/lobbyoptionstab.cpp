@@ -6,6 +6,7 @@
 #include <wx/choice.h>
 #include <wx/filedlg.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <wx/radiobut.h>
 #include <wx/sizer.h>
 #include <wx/spinctrl.h>
@@ -183,6 +184,18 @@ LobbyOptionsTab::LobbyOptionsTab(wxWindow* parent)
 	m_main_sizer->Add(m_misc_gui_sizer, 0, wxEXPAND | wxALL, 5);
 	m_main_sizer->Add(m_start_tab_sizer, 0, wxEXPAND | wxALL, 5);
 
+
+	m_user_level_sizer = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, _("GUI user level") ), wxVERTICAL);
+
+	wxString user_level_choices[] = { _("Newbie"), _("Professional") };
+	int user_level_choices_len = sizeof(user_level_choices) / sizeof(wxString);
+	m_user_level_choice = new wxChoice(m_user_level_sizer->GetStaticBox(), wxID_ANY,
+	   wxDefaultPosition, wxDefaultSize, user_level_choices_len, user_level_choices);
+	m_user_level_choice->SetSelection(0);
+	m_user_level_sizer->Add(m_user_level_choice, 0, wxALL | wxEXPAND, 5);
+
+
+	m_main_sizer->Add(m_user_level_sizer, 0, wxEXPAND | wxALL, 5);
 	//dummy event that updates controls to correct state
 	wxCommandEvent evt;
 	OnRestore(evt);
@@ -221,6 +234,12 @@ void LobbyOptionsTab::OnApply(wxCommandEvent& /*unused*/)
 	sett().SetUseNotificationPopups(m_use_notif_popups->IsChecked());
 	sett().SetNotificationPopupPosition(m_notif_popup_pos->GetSelection());
 	sett().SetNotificationPopupDisplayTime(m_notif_popup_time->GetValue());
+
+	switch(m_user_level_choice->GetSelection()) {
+	default: wxLogWarning(_T("Unknown selection: %d"), m_user_level_choice->GetSelection());
+	case 0: sett().SetUserLevel(Settings::UserLevel::NewUser); break;
+	case 1: sett().SetUserLevel(Settings::UserLevel::Professional); break;
+	}
 
 	GlobalEventManager::Instance()->Send(GlobalEventManager::ApplicationSettingsChangedEvent);
 }
