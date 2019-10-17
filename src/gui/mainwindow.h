@@ -115,7 +115,6 @@ private:
 	void OnUnitSyncReloaded(wxCommandEvent& /*unused*/);
 
 private:
-	wxMenuItem* m_settings_menu;
 	wxMenuBar* m_menubar;
 	wxMenu* m_menuTools;
 	wxMenu* m_menuEdit;

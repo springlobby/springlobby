@@ -150,11 +150,11 @@ MainWindow::MainWindow()
 
 	m_menuEdit = new wxMenu;
 	m_menuEdit->Append(MENU_AUTOJOIN_CHANNELS, _("&Autojoin channels"));
-	m_menuEdit->Append(MENU_PREFERENCES, _("&Preferences"));
 	m_menuEdit->Append(MENU_SELECT_LOCALE, _("&Change language"));
-	m_settings_menu = new wxMenuItem(m_menuEdit, MENU_SETTINGSPP, _("&Spring settings"), wxEmptyString, wxITEM_NORMAL);
 	m_menuEdit->Append(MENU_RESET_LAYOUT, _("&Reset layout"));
-	m_menuEdit->Append(m_settings_menu);
+	m_menuEdit->AppendSeparator();
+	m_menuEdit->Append(MENU_PREFERENCES, _("&Lobby preferences"));
+	m_menuEdit->Append(MENU_SETTINGSPP, _("&Engine preferences"));
 
 	m_menuEdit->Enable(MENU_SETTINGSPP, false); //unitsync isn't loaded yet, disable menu entry
 
