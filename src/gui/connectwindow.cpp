@@ -28,6 +28,11 @@ ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
 	bool savepass = sett().GetServerAccountSavePass(server);
 	bool autoconnect = cfg().ReadBool(_T( "/Server/Autoconnect" ));
 
+	if (sett().GetUserLevel() < Settings::UserLevel::Professional) {
+		m_remember_password_check->Hide();
+		m_autoconnect_check->Hide();
+	}
+
 	ReloadServerList();
 	m_nickname_text->SetValue(username);
 	m_password1_hidden_text->SetValue(password);
