@@ -173,19 +173,26 @@ void Spring::OnTerminated(wxCommandEvent& event)
 
 		if (1 == crash_count) {
 			message += _("Possible reasons include:\n"
-			             "a) Timeout when connecting or a long connection loss during gameplay\n"
-			             "   In this case simply restart the engine.\n"
-			             "b) Choosing incompatible content for the selected game\n"
-			             "   Are you using the right engine version for the selected game?\n"
-			             "   Consult documentation of the selected game.\n"
-			             "c) Graphics-related crash: The engine or game requires more than what\n"
-			             "   your graphics hardware is capable of.\n"
+			             "a) Timeout when connecting.\n"
+						   " Make sure that the host you are connecting to has their firewall(s) and router(s)"
+						   " configured correctly. The default port is 8452.\n"
+						 "b) Long connection loss during gameplay.\n"
+			               " In this case simply restart normally.\n"
+			             "c) Graphics-related crash\n"
+						   " The engine or game requires more than what your graphics hardware is capable of."
+						   " You can try restarting in safe mode."
+						   " If that worked, then adjust engine settings to match your hardware capabilities."
+						   " If the problems persist, then ask in the newbies channel for help.\n"
+			             "d) Choosing incompatible content for the selected game\n"
+						   " Sometimes, choosing incompatible content for the selected game will either crash the"
+						   " engine or the match will stop immidiately after loading finishes."
+			               " Are you using the right engine version for the selected game?"
+			               " Please consult the documentation of the selected game.\n"
 			             "\n"
-			             "We can run the engine again in safe mode. This will disable all graphics\n"
-			             "features known to cause problems, but will drastically reduce the visual\n"
-			             "quality of the game and some of the effects may not be rendered at all!\n"
-			             "\n"
-			             "Run in safe mode?\n");
+			             "We can run the engine again in safe mode. This will disable all graphics"
+			             " features known to cause problems, but will drastically reduce the visual"
+			             " quality of the game and some of the effects may not be rendered at all!"
+			  );
 
 			const wxString infologPath = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + "infolog.txt";
 			if (ui().AskCrashReporter(heading, message, infologPath)) {
