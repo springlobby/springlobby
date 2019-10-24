@@ -754,7 +754,7 @@ void IBattle::SetHostGame(const std::string& gamename, const std::string& hash)
 	m_game_loaded = gamename.empty();
 	m_host_game.name = gamename;
 	m_host_game.hash = hash;
-	
+
 	gameNameWithoutVersion = gamename.substr(0,gamename.find_last_of(" "));
 	// generate game-specific colour
 	int sum = 0;

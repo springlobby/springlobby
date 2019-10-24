@@ -33,6 +33,10 @@ private:
 		ENGINE,
 		COLUMN_COUNT
 	};
+
+	wxColour inactive_room_colour;
+	bool use_smart_sorting;
+	bool show_game_colours;
 };
 
 #endif /* SRC_GUI_BATTLELIST_BATTLEDATAVIEWMODEL_H_ */
