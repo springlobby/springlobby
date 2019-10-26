@@ -11,13 +11,18 @@
 class CrashReporterDialog : public CrashReporterDialogBase, public WindowHintsPickle
 {
 public:
+	static const int CANCEL = 0;
+	static const int RERUN_NORMAL = 1;
+	static const int RERUN_SAFE = 2;
+
 	explicit CrashReporterDialog(wxWindow* parent, const wxString& heading, const wxString& message, const wxString& filePath);
 	static int RunCrashReporterDialog(wxWindow* parent, const wxString& heading, const wxString& message, const wxString& filePath);
 
 private:
-	void OnOk(wxCommandEvent& event);
 	void OnCancel(wxCommandEvent& event);
 	void OnClickBugReport(wxCommandEvent& event);
+	void OnNorm(wxCommandEvent& event);
+	void OnSafe(wxCommandEvent& event);
 };
 
 namespace SL

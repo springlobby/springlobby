@@ -56,19 +56,14 @@ CrashReporterDialog::CrashReporterDialog(wxWindow* parent, const wxString& headi
 		m_report_file_text->SetDefaultStyle(defaultStyle);
 	}
 
-	m_ok_button->SetFocus();
-}
+	m_safe_button->SetFocus();
 
-
-void CrashReporterDialog::OnOk(wxCommandEvent& /*unused*/)
-{
-	EndModal(wxID_OK);
 }
 
 
 void CrashReporterDialog::OnCancel(wxCommandEvent& /*unused*/)
 {
-	EndModal(wxID_CANCEL);
+	EndModal(CANCEL);
 }
 
 
@@ -79,6 +74,18 @@ void CrashReporterDialog::OnClickBugReport(wxCommandEvent& event)
 	const wxString& url = button->GetToolTipText();
 	wxLogMessage(_T("Open URL: %s"), url);
 	OpenWebBrowser(url);
+}
+
+
+void CrashReporterDialog::OnNorm(wxCommandEvent& /*unused*/)
+{
+	EndModal(RERUN_NORMAL);
+}
+
+
+void CrashReporterDialog::OnSafe(wxCommandEvent& /*unused*/)
+{
+	EndModal(RERUN_SAFE);
 }
 
 

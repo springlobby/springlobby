@@ -33,6 +33,7 @@ lsl/spring/spring.cpp
 #include <algorithm>
 #include <cerrno>
 
+#include "gui/crashreporterdialog.h"
 #include "gui/customdialogs.h"
 #include "gui/mainwindow.h"
 #include "gui/ui.h"
@@ -195,13 +196,19 @@ void Spring::OnTerminated(wxCommandEvent& event)
 			  );
 
 			const wxString infologPath = SlPaths::GetDataDir() + wxFileName::GetPathSeparator() + "infolog.txt";
-			if (ui().AskCrashReporter(heading, message, infologPath)) {
-				wxLogMessage(_T("Will re-launch engine in safe-mode"));
+			int code = ui().AskCrashReporter(infologPath, message, infologPath);
+			if (code == CrashReporterDialog::CANCEL) {
+				wxLogMessage("Re-run cancelled");
+				crash_count = 0;
+			} else if (code == CrashReporterDialog::RERUN_NORMAL) {
+				wxLogMessage(_T("Will re-run engine in normal-mode"));
+				LaunchEngine();
+				return; // We have not terminated yet!
+			} else if (code == CrashReporterDialog::RERUN_SAFE) {
+				wxLogMessage(_T("Will re-run engine in safe-mode"));
 				engine_params.push_back(_T("--safemode"));
 				LaunchEngine();
 				return; // We have not terminated yet!
-			} else {
-				crash_count = 0;
 			}
 		} else if (2 == crash_count) {
 			message += _("Ooops, the engine crashed again.\n\n"
