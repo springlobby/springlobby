@@ -42,10 +42,10 @@
             <property name="hidden">0</property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
-            <property name="minimum_size"></property>
+            <property name="minimum_size">400,600</property>
             <property name="name">CrashReporterDialogBase</property>
             <property name="pos"></property>
-            <property name="size">513,605</property>
+            <property name="size">-1,-1</property>
             <property name="style">wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</property>
             <property name="subclass">; ; forward_declare</property>
             <property name="title"></property>
@@ -60,8 +60,8 @@
                 <property name="permission">protected</property>
                 <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
-                    <property name="flag">wxEXPAND</property>
-                    <property name="proportion">0</property>
+                    <property name="flag">wxEXPAND|wxALL</property>
+                    <property name="proportion">1</property>
                     <object class="wxTextCtrl" expanded="1">
                         <property name="BottomDockable">1</property>
                         <property name="LeftDockable">1</property>
@@ -108,7 +108,7 @@
                         <property name="resize">Resizable</property>
                         <property name="show">1</property>
                         <property name="size"></property>
-                        <property name="style">wxHSCROLL|wxTE_AUTO_URL|wxTE_MULTILINE|wxTE_NO_VSCROLL|wxTE_READONLY|wxTE_RICH</property>
+                        <property name="style">wxTE_AUTO_URL|wxTE_BESTWRAP|wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH</property>
                         <property name="subclass">; ; forward_declare</property>
                         <property name="toolbar_pane">0</property>
                         <property name="tooltip"></property>
@@ -185,8 +185,8 @@
                 </object>
                 <object class="sizeritem" expanded="1">
                     <property name="border">5</property>
-                    <property name="flag">wxALL|wxEXPAND</property>
-                    <property name="proportion">1</property>
+                    <property name="flag">wxEXPAND|wxALL</property>
+                    <property name="proportion">2</property>
                     <object class="wxTextCtrl" expanded="1">
                         <property name="BottomDockable">1</property>
                         <property name="LeftDockable">1</property>
