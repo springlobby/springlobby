@@ -170,22 +170,26 @@ void Spring::OnTerminated(wxCommandEvent& event)
 	if (0 != exit_code) {
 		++crash_count;
 		wxString heading(_("Engine crashed?"));
-		wxString message = wxString::Format(_("Engine exited with nonzero code %d\n\n"), exit_code);
+		wxString message = wxString::Format(_("Engine exited with nonzero code %d."), exit_code);
 
 		if (1 == crash_count) {
-			message += _("Possible reasons include:\n"
-			             "a) Timeout when connecting.\n"
-						   " Make sure that the host you are connecting to has their firewall(s) and router(s)"
+			message += _(" Possible reasons include:\n"
+			             "\n"
+			             " (a) Timeout when connecting.\n"
+						   "Make sure that the host you are connecting to has their firewall(s) and router(s)"
 						   " configured correctly. The default port is 8452.\n"
-						 "b) Long connection loss during gameplay.\n"
-			               " In this case simply restart normally.\n"
-			             "c) Graphics-related crash\n"
-						   " The engine or game requires more than what your graphics hardware is capable of."
+			             "\n"
+						 " (b) Long connection loss during gameplay.\n"
+			               "In this case simply restart normally.\n"
+			             "\n"
+			             " (c) Graphics-related crash\n"
+						   "The engine or game requires more than what your graphics hardware is capable of."
 						   " You can try restarting in safe mode."
 						   " If that worked, then adjust engine settings to match your hardware capabilities."
 						   " If the problems persist, then ask in the newbies channel for help.\n"
-			             "d) Choosing incompatible content for the selected game\n"
-						   " Sometimes, choosing incompatible content for the selected game will either crash the"
+			             "\n"
+			             " (d) Choosing incompatible content for the selected game\n"
+						   "Sometimes, choosing incompatible content for the selected game will either crash the"
 						   " engine or the match will stop immidiately after loading finishes."
 			               " Are you using the right engine version for the selected game?"
 			               " Please consult the documentation of the selected game.\n"
