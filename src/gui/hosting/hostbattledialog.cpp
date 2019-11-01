@@ -87,6 +87,10 @@ HostBattleDialog::HostBattleDialog(wxWindow* parent)
 		prevRankLimit = -(prevRankLimit + 1);
 	m_rank_combo->SetSelection(prevRankLimit);
 
+	if (sett().GetUserLevel() < Settings::UserLevel::Professional) {
+		m_rank_sizer->ShowItems(false);
+		m_max_players_box->ShowItems(false);
+	}
 
 	this->SetSizer( m_main_sizer );
 	this->Layout();
