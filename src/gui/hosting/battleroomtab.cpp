@@ -1284,12 +1284,10 @@ void BattleRoomTab::SetBattle(IBattle* battle)
 		UpdateBattleInfo(wxString::Format(_T( "%d_mapname" ), LSL::Enum::PrivateOptions));
 		UpdateBattleInfo();
 		UpdateStatsLabels();
+
+		ui().NeedsDownload(battle);
 	} else {
 		m_host_new_btn->Show(true);
-	}
-
-	if (battle != nullptr) { //prevents deadlock at start
-		ui().NeedsDownload(battle);
 	}
 }
 
