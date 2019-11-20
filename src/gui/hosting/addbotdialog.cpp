@@ -216,7 +216,7 @@ void AddBotDialog::ReloadAIList()
 
 		wxString wxAINV (AINameVersion);
 		m_ais.Add(wxAINV);
-		if (!matched) {
+		if (!matched || (sett().GetUserLevel() >= Settings::UserLevel::Professional)) {
 			m_ai->Append(RefineAIName(wxAINV));
 			m_valid_ai_index_map.push_back(i);
 		}
