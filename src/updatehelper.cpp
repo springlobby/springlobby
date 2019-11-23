@@ -31,9 +31,9 @@ std::string GetDownloadUrl(const std::string& version)
 std::string GetLatestVersionUrl()
 {
 	if (isReleaseChannel()) {
-		return std::string("https://springlobby.info/version/current.txt");
+		return std::string("https://springrts.com/dl/springlobby/version.txt");
 	}
-	return std::string("https://springlobby.info/temp/builds/develop/current.txt");
+	return std::string("https://springrts.com/dl/springlobby/version-develop.txt");
 }
 
 static time_t GetTime()
