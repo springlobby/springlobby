@@ -6,6 +6,13 @@ from subprocess import Popen, PIPE
 from sys import argv, stdout
 from fnmatch import fnmatch
 
+def string_escape(s, encoding='utf-8'):
+    return (s.encode('latin1')     # To bytes, required by 'unicode-escape'
+         .decode('unicode-escape') # Perform the actual octal-escaping decode
+         .encode('latin1')         # 1:1 mapping back to bytes
+         .decode(encoding))        # Decode original encoding
+
+
 
 class GitArchiver(object):
     """
@@ -81,8 +88,8 @@ class GitArchiver(object):
             add(name, arcname)
       
         output_archive.close()
-        
-            
+
+
     def listFiles(self, git_repositary_path, baselevel=''):
         """
         listFiles(str git_repository_path, str baselevel='') -> iterator
@@ -95,7 +102,7 @@ class GitArchiver(object):
         Recurses into submodules as well.
         """
         for filepath in self.runShell('git ls-files --cached --full-name --no-empty-directory'):
-            filepath = filepath.decode("unicode_escape").encode("latin1").strip('"')
+            filepath = string_escape(filepath).strip('"')
             fullpath = path.join(baselevel, filepath)
             filename = path.basename(filepath)
             
