@@ -182,7 +182,7 @@ if __name__ == "__main__":
     
     try:
         archiver.create(outFile)
-    except Exception, e:
+    except Exception as e:
         parser.exit(2, "%s\n" % e)
     
     sys.exit(0)
