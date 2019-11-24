@@ -102,7 +102,7 @@ class GitArchiver(object):
         Recurses into submodules as well.
         """
         for filepath in self.runShell('git ls-files --cached --full-name --no-empty-directory'):
-            filepath = string_escape(filepath).strip('"')
+            filepath = string_escape(filepath.decode()).strip('"')
             fullpath = path.join(baselevel, filepath)
             filename = path.basename(filepath)
             
