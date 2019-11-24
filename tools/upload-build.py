@@ -12,7 +12,7 @@ with open("VERSION") as f:
 	version = f.read().strip()
 assert(len(version) > 0)
 
-if "-" is in version:
+if "-" in version:
 	outdir = "develop"
 	verfile = "version-develop.txt"
 else:
@@ -31,7 +31,7 @@ subprocess.checkoutput([strip, "springlobby.exe"])
 subprocess.checkoutput([strip, "springlobby_updater.exe"])
 
 print("Rsync...")
-subprocess.check_output(["rsync", "-av", installdir, "springlobby@springrts.com:/home/springlobby/www/" ], timeout = 600)
+subprocess.check_output(["rsync", "-av", outdir, "springlobby@springrts.com:/home/springlobby/www/" ], timeout = 600)
 
 """
 zip -9 -u ${filename} springlobby.exe springlobby_updater.exe
