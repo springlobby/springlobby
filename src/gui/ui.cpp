@@ -186,9 +186,8 @@ void Ui::Quit()
 {
 	ServerManager::Instance()->DisconnectFromServer();
 	if (m_con_win != 0) {
-		m_con_win->Close();
-		delete m_con_win;
-		m_con_win = NULL;
+		m_con_win->Destroy();
+		m_con_win = nullptr;
 	}
 }
 
@@ -284,8 +283,10 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 {
 	slLogDebugFunc("");
 
-	delete m_con_win;
-	m_con_win = 0;
+	if (m_con_win != nullptr) {
+		m_con_win->Destroy();
+		m_con_win = nullptr;
+	}
 	m_connect_retries = 10;
 
 	if (server.panel != nullptr)
