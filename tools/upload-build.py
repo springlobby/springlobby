@@ -34,6 +34,11 @@ for srcfile in installer + zip:
 	shutil.move(srcfile, outdir)
 
 print("Rsync...")
-print(subprocess.check_output(["rsync", "-av", "--remove-source-files", outdir, "springlobby@springrts.com:/home/springlobby/www/" ], timeout = 600, universal_newlines=True))
+try:
+	subprocess.check_output(["rsync", "-av", "--remove-source-files", outdir, "springlobby@springrts.com:/home/springlobby/www/" ], timeout = 600)
+except subprocess.CalledProcessError as e:
+	print(e.output)
+	raise e
+
 
 
