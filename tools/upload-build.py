@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-import subprocess, os, shutil
+import subprocess, os, shutil, glob
 
 print(os.getcwd())
 
@@ -18,26 +18,22 @@ else:
 	outdir = "stable"
 	verfile = "version.txt"
 
+os.makedirs(outdir, exist_ok=True)
 verfile = os.path.join(outdir, verfile)
 
 with open(verfile, "w") as f:
 	f.write(version)
 
-shutil.move("src/springlobby.exe", outdir)
-shutil.move("src/springlobby.exe", outdir)
 
-subprocess.checkoutput([strip, "springlobby.exe"])
-subprocess.checkoutput([strip, "springlobby_updater.exe"])
+installer = glob.glob("SpringLobby-*.exe")
+zip = glob.glob("springlobby-*-win32.zip")
+
+
+for srcfile in installer + zip:
+	print(srcfile, " -> ", outdir)
+	shutil.move(srcfile, outdir)
 
 print("Rsync...")
-subprocess.check_output(["rsync", "-av", outdir, "springlobby@springrts.com:/home/springlobby/www/" ], timeout = 600)
+print(subprocess.check_output(["rsync", "-av", outdir, "springlobby@springrts.com:/home/springlobby/www/" ], timeout = 600, universal_newlines=True))
 
-"""
-zip -9 -u ${filename} springlobby.exe springlobby_updater.exe
-if [ x$3 == x ]; then
-	filename=sl_master.zip
-else
-	filename=sl_${3}.zip
-fi
-"""
 
