@@ -8,8 +8,7 @@ print(os.getcwd())
 
 strip = "/opt/mingw32/usr/bin/i686-w64-mingw32-strip"
 
-with open("VERSION") as f:
-	version = f.read().strip()
+version = subprocess.check_output(["git", "describe", "--tags"], universal_newlines=True).strip()
 assert(len(version) > 0)
 
 if "-" in version:
