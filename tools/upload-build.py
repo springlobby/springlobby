@@ -29,9 +29,10 @@ with open(verfile, "w") as f:
 
 installer = glob.glob(srcdir + "/SpringLobby-*.exe")
 zip = glob.glob(srcdir + "/springlobby-*-win32.zip")
+tgz = glob.glob(srcdir + "/*.tar.gz")
+bz2 = glob.glob(srcdir + "/*.tar.bz2")
 
-
-for srcfile in installer + zip:
+for srcfile in installer + zip + tgz + bz2:
 	print(srcfile, " -> ", outdir)
 	shutil.move(srcfile, outdir)
 
