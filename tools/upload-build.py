@@ -27,7 +27,7 @@ with open(verfile, "w") as f:
 	f.write(version)
 
 
-installer = glob.glob(srcdir + "/SpringLobby-*.exe")
+installer = glob.glob(srcdir + "/springlobby-*.exe")
 zip = glob.glob(srcdir + "/springlobby-*-win32.zip")
 tgz = glob.glob(srcdir + "/*.tar.gz")
 bz2 = glob.glob(srcdir + "/*.tar.bz2")
