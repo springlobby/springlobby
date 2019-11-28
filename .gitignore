@@ -47,3 +47,4 @@ Makefile
 /installer/uninstall.nsh
 
 build/
+develop/

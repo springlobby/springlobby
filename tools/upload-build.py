@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
 
-import subprocess, os, shutil, glob
-
-print(os.getcwd())
+import subprocess, os, shutil, glob, sys
 
 
-strip = "/opt/mingw32/usr/bin/i686-w64-mingw32-strip"
+print("cwd: ", os.getcwd())
+
+srcdir = os.path.abspath(sys.argv[1])
+
+print("src: ", srcdir)
 
 version = subprocess.check_output(["git", "describe", "--tags"], universal_newlines=True).strip()
 assert(len(version) > 0)
@@ -25,8 +27,8 @@ with open(verfile, "w") as f:
 	f.write(version)
 
 
-installer = glob.glob("SpringLobby-*.exe")
-zip = glob.glob("springlobby-*-win32.zip")
+installer = glob.glob(srcdir + "/SpringLobby-*.exe")
+zip = glob.glob(srcdir + "/springlobby-*-win32.zip")
 
 
 for srcfile in installer + zip:
