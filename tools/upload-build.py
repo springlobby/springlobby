@@ -38,7 +38,7 @@ for srcfile in installer + zip + tgz + bz2:
 
 print("Rsync...")
 try:
-	subprocess.check_output(["rsync", "-av", "--remove-source-files", outdir, "springlobby@springrts.com:/home/springlobby/www/" ], timeout = 600)
+	subprocess.check_output(["rsync", "-av", "--remove-source-files", outdir, "springlobby@springrts.com:/home/springlobby/www/dl/" ], timeout = 600)
 except subprocess.CalledProcessError as e:
 	print(e.output)
 	raise e
