@@ -13,6 +13,7 @@
 SLCONFIG("/General/LastUpdateCheck", 0L, "Last time springlobby checked for an update");
 SLCONFIG("/General/UpdateChannel", "release", "update channel to use (release or develop)");
 #define VERSION_CHECK_INTERVAL 1 * 60 * 60
+#define BASE_URL "https://springlobby.springrts.com/dl/"
 
 static bool isReleaseChannel()
 {
@@ -23,17 +24,17 @@ static bool isReleaseChannel()
 std::string GetDownloadUrl(const std::string& version)
 {
 	if (isReleaseChannel()) {
-		return stdprintf("https://springlobby.info/windows/springlobby-%s-win32.zip", version.c_str());
+		return stdprintf( BASE_URL "stable/springlobby-%s-win32.zip", version.c_str());
 	}
-	return "https://springlobby.info/temp/builds/develop/sl_master.zip";
+	return stdprintf( BASE_URL "develop/springlobby-%s-win32.zip", version.c_str());
 }
 
 std::string GetLatestVersionUrl()
 {
 	if (isReleaseChannel()) {
-		return std::string("https://springrts.com/dl/springlobby/version.txt");
+		return std::string(BASE_URL "stable/version.txt");
 	}
-	return std::string("https://springrts.com/dl/springlobby/version-develop.txt");
+	return std::string(BASE_URL "develop/version-develop.txt");
 }
 
 static time_t GetTime()
