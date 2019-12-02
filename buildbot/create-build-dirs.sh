@@ -19,7 +19,7 @@ cd ${SOURCEDIR}
 git submodule update --init
 
 shift
-REV=${1}
+REV=$(git describe --tags)
 shift
 echo -n creating ${DIR} ...
 
