@@ -9,8 +9,8 @@
 *.xpm text eol=lf
 *.po text eol=lf
 # don't add to .tar.gz / tar.bz2 source archives:
-installer/* export-ignore
-.tx/* export-ignore
-git-hooks/* export-ignore
-tools/* export-ignore
+installer/**/* export-ignore
+.tx/**/* export-ignore
+git-hooks/**/* export-ignore
+tools/**/* export-ignore
 
