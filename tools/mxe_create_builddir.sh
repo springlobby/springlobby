@@ -21,7 +21,6 @@ git reset --hard $COMMIT
 	echo 'LOCAL_PKG_LIST := openssl boost curl wxwidgets'
 	echo '.DEFAULT_GOAL  := local-pkg-list'
 	echo 'local-pkg-list: $(LOCAL_PKG_LIST)'
-	echo 'MXE_USE_CCACHE := '
 ) > settings.mk
 
 
