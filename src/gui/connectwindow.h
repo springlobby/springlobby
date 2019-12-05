@@ -3,13 +3,12 @@
 #define SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H
 
 #include "generated/ConnectWindowBase.h"
-class Ui;
 
 //! @brief wxFrame with a connection dialog used to specify username, password, and server. It can also register a new acount.
 class ConnectWindow : public ConnectWindowBase
 {
 public:
-	ConnectWindow(wxWindow* parent, Ui& ui);
+	ConnectWindow(wxWindow* parent);
 
 	void OnServerChange(wxCommandEvent& event);
 	void ReloadServerList();
@@ -29,8 +28,6 @@ private:
 	void OnChangeMode(wxCommandEvent& event);
 	void EnterRegistrationMode();
 	void EnterLoginMode();
-
-	Ui& m_ui;
 };
 
 #endif // SPRINGLOBBY_HEADERGUARD_CONNECTWINDOW_H

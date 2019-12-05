@@ -17,9 +17,8 @@
 //! @brief Constructor
 //!
 //! @param parent Parent window
-ConnectWindow::ConnectWindow(wxWindow* parent, Ui& ui)
+ConnectWindow::ConnectWindow(wxWindow* parent)
     : ConnectWindowBase(parent)
-    , m_ui(ui)
 {
 	SetIcon(wxIcon(connect_xpm));
 	wxString server = sett().GetDefaultServer();

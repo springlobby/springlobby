@@ -149,7 +149,7 @@ void Ui::ShowConnectWindow()
 	}
 	if (m_con_win == 0) {
 		ASSERT_LOGIC(m_main_win != 0, "m_main_win = 0");
-		m_con_win = new ConnectWindow(m_main_win, *this);
+		m_con_win = new ConnectWindow(m_main_win);
 	}
 	m_con_win->CenterOnParent();
 	m_con_win->Show(true);
@@ -898,7 +898,7 @@ void Ui::Notify()
 void Ui::OnRegistrationAccepted(const wxString& user, const wxString& pass)
 {
 	if (m_con_win == 0) {
-		m_con_win = new ConnectWindow(m_main_win, *this);
+		m_con_win = new ConnectWindow(m_main_win);
 	}
 	m_con_win->OnRegistrationAccepted(user, pass);
 }
@@ -906,7 +906,7 @@ void Ui::OnRegistrationAccepted(const wxString& user, const wxString& pass)
 void Ui::OnRegistrationDenied(const wxString& reason)
 {
 	if (m_con_win == 0) {
-		m_con_win = new ConnectWindow(m_main_win, *this);
+		m_con_win = new ConnectWindow(m_main_win);
 	}
 	m_con_win->OnRegistrationDenied(reason);
 	ServerManager::Instance()->DisconnectFromServer();
@@ -915,7 +915,7 @@ void Ui::OnRegistrationDenied(const wxString& reason)
 void Ui::OnLoginDenied(const std::string& reason)
 {
 	if (m_con_win == 0) {
-		m_con_win = new ConnectWindow(m_main_win, *this);
+		m_con_win = new ConnectWindow(m_main_win);
 	}
 	m_con_win->OnLoginDenied(TowxString(reason));
 	ServerManager::Instance()->DisconnectFromServer();
