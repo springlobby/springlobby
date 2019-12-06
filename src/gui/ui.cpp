@@ -78,7 +78,7 @@ Ui& ui()
 Ui::Ui()
     : m_serv(0)
     , m_main_win(0)
-    , m_con_win(0)
+    , m_con_win(nullptr)
     , m_first_update_trigger(true)
     , m_connecting(false)
     , m_connect_retries(0)
@@ -147,7 +147,7 @@ void Ui::ShowConnectWindow()
 	if (ServerManager::Instance()->IsConnected()) {
 		return;
 	}
-	if (m_con_win == 0) {
+	if (m_con_win == nullptr) {
 		ASSERT_LOGIC(m_main_win != 0, "m_main_win = 0");
 		m_con_win = new ConnectWindow(m_main_win);
 	}
@@ -185,7 +185,7 @@ bool Ui::IsSpringRunning() const
 void Ui::Quit()
 {
 	ServerManager::Instance()->DisconnectFromServer();
-	if (m_con_win != 0) {
+	if (m_con_win != nullptr) {
 		m_con_win->Destroy();
 		m_con_win = nullptr;
 	}
@@ -888,7 +888,7 @@ void Ui::OnQuit(wxCommandEvent& /*data*/)
 
 void Ui::Notify()
 {
-	if (m_serv->IsConnected() || (m_con_win != NULL && m_con_win->IsVisible())) {
+	if (m_serv->IsConnected() || (m_con_win != nullptr && m_con_win->IsVisible())) {
 		Stop();
 	} else {
 		ServerManager::Instance()->ReconnectToServer();
@@ -897,7 +897,7 @@ void Ui::Notify()
 
 void Ui::OnRegistrationAccepted(const wxString& user, const wxString& pass)
 {
-	if (m_con_win == 0) {
+	if (m_con_win == nullptr) {
 		m_con_win = new ConnectWindow(m_main_win);
 	}
 	m_con_win->OnRegistrationAccepted(user, pass);
@@ -905,7 +905,7 @@ void Ui::OnRegistrationAccepted(const wxString& user, const wxString& pass)
 
 void Ui::OnRegistrationDenied(const wxString& reason)
 {
-	if (m_con_win == 0) {
+	if (m_con_win == nullptr) {
 		m_con_win = new ConnectWindow(m_main_win);
 	}
 	m_con_win->OnRegistrationDenied(reason);
@@ -914,7 +914,7 @@ void Ui::OnRegistrationDenied(const wxString& reason)
 
 void Ui::OnLoginDenied(const std::string& reason)
 {
-	if (m_con_win == 0) {
+	if (m_con_win == nullptr) {
 		m_con_win = new ConnectWindow(m_main_win);
 	}
 	m_con_win->OnLoginDenied(TowxString(reason));
