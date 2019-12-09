@@ -77,7 +77,7 @@ Ui& ui()
 
 Ui::Ui()
     : m_serv(0)
-    , m_main_win(0)
+    , m_main_win(nullptr)
     , m_con_win(nullptr)
     , m_first_update_trigger(true)
     , m_connecting(false)
@@ -109,30 +109,27 @@ ChatPanel* Ui::GetActiveChatPanel()
 MainWindow& Ui::mw()
 {
 	assert(wxThread::IsMain());
-	ASSERT_LOGIC(m_main_win != 0, "m_main_win = 0");
+	ASSERT_LOGIC(m_main_win != nullptr, "m_main_win = 0");
 	return *m_main_win;
 }
 
 const MainWindow& Ui::mw() const
 {
-	ASSERT_LOGIC(m_main_win != 0, "m_main_win = 0");
+	ASSERT_LOGIC(m_main_win != nullptr, "m_main_win = 0");
 	return *m_main_win;
 }
 
 
 bool Ui::IsMainWindowCreated() const
 {
-	if (m_main_win == 0)
-		return false;
-	else
-		return true;
+	return m_main_win != nullptr;
 }
 
 
 //! @brief Shows the main window on screen
 void Ui::ShowMainWindow()
 {
-	ASSERT_LOGIC(m_main_win != 0, "m_main_win = 0");
+	ASSERT_LOGIC(m_main_win != nullptr, "m_main_win = 0");
 	mw().Show(true);
 
 	SlPaths::ValidatePaths();
@@ -148,7 +145,7 @@ void Ui::ShowConnectWindow()
 		return;
 	}
 	if (m_con_win == nullptr) {
-		ASSERT_LOGIC(m_main_win != 0, "m_main_win = 0");
+		ASSERT_LOGIC(m_main_win != nullptr, "m_main_win = 0");
 		m_con_win = new ConnectWindow(m_main_win);
 	}
 	m_con_win->CenterOnParent();
@@ -226,7 +223,7 @@ bool Ui::AskText(const wxString& heading, const wxString& question, wxString& an
 
 void Ui::ShowMessage(const wxString& heading, const wxString& message) const
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	serverMessageBox(SL_MAIN_ICON, message, heading, wxOK);
 }
@@ -298,7 +295,7 @@ void Ui::OnConnected(IServer& server, const wxString& server_name, const wxStrin
 
 void Ui::OnLoggedIn()
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	mw().GetChatTab().OnLoggedIn();
 	mw().GetBattleListTab().SortBattleList();
@@ -309,7 +306,7 @@ void Ui::OnDisconnected(IServer& server, bool wasonline)
 	Start(s_reconnect_delay_ms, true);
 	m_connecting = false;
 
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	slLogDebugFunc("");
 
@@ -338,9 +335,8 @@ void Ui::OnDisconnected(IServer& server, bool wasonline)
 void Ui::OnJoinedChannelSuccessful(Channel& chan, bool doFocus)
 {
 	slLogDebugFunc("");
-	if (m_main_win == NULL) {
+	if (m_main_win == nullptr)
 		return;
-	}
 	mw().OpenChannelChat(chan, doFocus);
 }
 
@@ -370,7 +366,7 @@ void Ui::OnChannelList(const wxString& channel, const int& numusers)
 
 void Ui::OnUserOnline(User& user)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	mw().GetChatTab().OnUserConnected(user);
 }
@@ -378,7 +374,7 @@ void Ui::OnUserOnline(User& user)
 
 void Ui::OnUserOffline(User& user)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	mw().GetChatTab().OnUserDisconnected(user);
 	if (user.panel != nullptr) {
@@ -390,7 +386,7 @@ void Ui::OnUserOffline(User& user)
 
 void Ui::OnUserStatusChanged(User& user)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	for (int i = 0; i < m_serv->GetNumChannels(); i++) {
 		Channel& chan = m_serv->GetChannel(i);
@@ -427,7 +423,7 @@ void Ui::OnMotd(IServer& server, const wxString& message)
 
 void Ui::OnServerBroadcast(IServer& /*server*/, const wxString& message)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	mw().GetChatTab().BroadcastMessage(message);
 	try { // send it to battleroom too
@@ -464,7 +460,7 @@ void Ui::OnServerMessage(IServer& server, const wxString& message)
 
 void Ui::OnUserSaid(User& chan, User& user, const wxString& message)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	if (chan.panel == nullptr) {
 		mw().OpenPrivateChat(chan);
@@ -474,7 +470,7 @@ void Ui::OnUserSaid(User& chan, User& user, const wxString& message)
 
 void Ui::OnUserSaidEx(User& chan, User& user, const wxString& action)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	if (chan.panel == 0) {
 		mw().OpenPrivateChat(chan);
@@ -484,7 +480,7 @@ void Ui::OnUserSaidEx(User& chan, User& user, const wxString& action)
 
 void Ui::OnBattleOpened(IBattle& battle)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	mw().GetBattleListTab().AddBattle(battle);
 	try {
@@ -503,7 +499,7 @@ void Ui::OnBattleOpened(IBattle& battle)
 
 void Ui::OnBattleClosed(IBattle& battle)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	mw().GetBattleListTab().RemoveBattle(battle);
 	try {
@@ -535,7 +531,7 @@ void Ui::OnBattleClosed(IBattle& battle)
 
 void Ui::OnUserJoinedBattle(IBattle& battle, User& user)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	mw().GetBattleListTab().UpdateBattle(battle);
 
@@ -560,7 +556,7 @@ void Ui::OnUserJoinedBattle(IBattle& battle, User& user)
 void Ui::OnUserLeftBattle(IBattle& battle, User& user, bool isbot)
 {
 	assert(wxThread::IsMain());
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	user.SetSideiconIndex(-1);    //just making sure he's not running around with some icon still set
 	user.BattleStatus().side = 0; // and reset side, so after rejoin we don't potentially stick with a num higher than avail
@@ -590,7 +586,7 @@ void Ui::OnUserLeftBattle(IBattle& battle, User& user, bool isbot)
 
 void Ui::OnBattleInfoUpdated(IBattle& battle, const wxString& Tag)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	mw().GetBattleListTab().UpdateBattle(battle);
 	if (mw().GetJoinTab().GetCurrentBattle() == &battle) {
@@ -600,7 +596,7 @@ void Ui::OnBattleInfoUpdated(IBattle& battle, const wxString& Tag)
 
 void Ui::OnJoinedBattle(IBattle& battle)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	mw().GetJoinTab().JoinBattle(battle);
 	mw().GetBattleListTab().JoinBattle(battle);
@@ -613,7 +609,7 @@ void Ui::OnJoinedBattle(IBattle& battle)
 
 void Ui::OnHostedBattle(IBattle& battle)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	mw().GetJoinTab().HostBattle(battle);
 	mw().ShowTab(MainWindow::PAGE_BATTLEROOM);
@@ -622,9 +618,8 @@ void Ui::OnHostedBattle(IBattle& battle)
 
 void Ui::OnUserBattleStatus(User& user)
 {
-	if (m_main_win == 0) {
+	if (m_main_win == nullptr)
 		return;
-	}
 	if (m_serv == 0 || !m_serv->IsOnline()) {
 		return;
 	}
@@ -640,7 +635,7 @@ void Ui::OnUserBattleStatus(User& user)
 
 void Ui::OnBattleTopic(IBattle& /*battle*/, const wxString& who, const wxString& msg)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	try {
 		mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().SetTopic(who, msg);
@@ -651,7 +646,7 @@ void Ui::OnBattleTopic(IBattle& /*battle*/, const wxString& who, const wxString&
 
 void Ui::OnSaidBattle(IBattle& /*battle*/, const wxString& nick, const wxString& msg)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	try {
 		mw().GetJoinTab().GetBattleRoomTab().GetChatPanel().Said(nick, msg);
@@ -696,7 +691,7 @@ void Ui::OnAcceptAgreement(const wxString& agreement)
 
 void Ui::OnRing(const wxString& from)
 {
-	if (m_main_win == 0)
+	if (m_main_win == nullptr)
 		return;
 	m_main_win->RequestUserAttention();
 
