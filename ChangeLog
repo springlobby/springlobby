@@ -1,9 +1,11 @@
 ChangeLog of Springlobby
+## 0.269
 
 ## 0.268
  - add support for showing client versions per user
  - remove cpu info support
  - fix #894 (unhandled exception & other errors when typing LEAVE commands into the server window)
+ - fix #920 (fix start button logic)
  - implement multi version support for relayhost
  - lobby protocol updates
  - update prdownloader: fix rapid caching check / fix rapid downloads with very small repos (<8 files)
