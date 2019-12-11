@@ -22,7 +22,7 @@ std::string ConvToIRI(const std::string& str)
 	return STD_STRING(escaped);
 }
 
-//! @brief gets latest version from version.springlobby.info via HTTP
+//! @brief download a file via http(s) to a string
 std::string GetHttpFile(const std::string& httpurl)
 {
 	std::string res;

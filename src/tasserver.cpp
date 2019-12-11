@@ -35,7 +35,7 @@ lsl/networking/tasserver.cpp
 #include "utils/tasutil.h"
 #include "utils/version.h"
 
-SLCONFIG("/Server/ExitMessage", "Using https://springlobby.info/", "Message which is send when leaving server");
+SLCONFIG("/Server/ExitMessage", "Using https://springlobby.springrts.com/", "Message which is send when leaving server");
 
 // times in milliseconds
 #define PING_TIME 30000

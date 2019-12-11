@@ -1,7 +1,7 @@
 This directory contains files that are needed for FreeDesktop.org to feature springlobby in so-called software centers
   for desktop software such as gnome, kde, or xfce.
 
-springlobby.appdata.xml is the descriptor file. It contains references to screenshot images found on the web (springlobby.info),
+springlobby.appdata.xml is the descriptor file. It contains references to screenshot images found on the web (springlobby.springrts.com),
   so these screenshots need to remain at this location or their locations need to be updated in this file if they change.
 
 Alternatively, one can write a "springlobby.appdata.xml.in" that would be processed by intltool or some internationalization 

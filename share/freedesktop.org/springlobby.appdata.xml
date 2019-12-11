@@ -29,21 +29,21 @@
    <li>XTA</li>
    <li>Lots more developed regularly!</li>
   </ul>
-  <p>The springlobby home page can be found at https://springlobby.info/ or you can visit our project page
+  <p>The springlobby home page can be found at https://springlobby.springrts.com/ or you can visit our project page
        on github at https://github.com/springlobby/springlobby/.</p>
   <p>You can find out more about the spring engine and its games at https://springrts.com/.</p>
  </description>
  <screenshots>
   <screenshot type="default">
-    <image width="892" height="751">https://springlobby.info/landing/screenshots/01.png</image>
+    <image width="892" height="751">https://springlobby.springrts.com/screenshots/01.png</image>
     <caption>The connect window</caption>
   </screenshot>
   <screenshot>
-    <image width="892" height="751">https://springlobby.info/landing/screenshots/02.png</image>
+    <image width="892" height="751">https://springlobby.springrts.com/screenshots/02.png</image>
     <caption>Singleplayer</caption>
   </screenshot>
  </screenshots>
- <url type="homepage">https://springlobby.info/</url>
+ <url type="homepage">https://springlobby.springrts.com/</url>
  <url type="bugtracker">https://github.com/springlobby/springlobby/issues</url>
  <url type="help">https://github.com/springlobby/springlobby/wiki</url>
  <provides>
