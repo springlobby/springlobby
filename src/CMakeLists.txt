@@ -330,9 +330,9 @@ else()
 	set(SPRINGLOBBY_CONFIGH_DIR ${springlobby_BINARY_DIR})
 endif()
 
-add_custom_target(version ALL ${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR})
+add_custom_target(version ALL ${springlobby_SOURCE_DIR}/cmake/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR})
 add_custom_command(OUTPUT ${SPRINGLOBBY_CONFIGH_DIR}/springlobby_config.h
-			COMMAND ${springlobby_SOURCE_DIR}/tools/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR}
+			COMMAND ${springlobby_SOURCE_DIR}/cmake/regen_config_header.sh ${springlobby_SOURCE_DIR} ${springlobby_BINARY_DIR}
 		)
 
 set_property(SOURCE utils/version.cpp APPEND PROPERTY OBJECT_DEPENDS ${SPRINGLOBBY_CONFIGH_DIR}/springlobby_config.h)
