@@ -383,7 +383,7 @@ void TASServer::Login()
 	if (localaddr.empty())
 		localaddr = "*";
 	m_id_transmission = false;
-	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u %s\tsp cl u l t",
+	SendCmd("LOGIN", stdprintf("%s %s 0 %s %s\t%u %s\tsp u",
 	GetUserName().c_str(), pass.c_str(), localaddr.c_str(),
 	GetSpringlobbyAgent().c_str(), m_crc.GetCRC(), GetSys().c_str()));
 	m_id_transmission = true;
