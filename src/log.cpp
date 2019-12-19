@@ -51,7 +51,7 @@ public:
 		if (!logfilepath.empty()) {
 			// even if it returns null, wxLogStderr will switch to stderr logging, so it's fine
 			// TODO: it will?
-			FILE* log = fopen(C_STRING(logfilepath), "wb+");
+			FILE* log = fopen(C_STRING(logfilepath), "a+b");
 			if (nullptr == log)
 				wxLogError("Unable to open log file %s for writing!", logfilepath);
 			else
