@@ -1,5 +1,8 @@
 ChangeLog of Springlobby
 ## 0.269
+ - don't send deprecated compatibility flags to lobby server
+ - fix #936: missing file in archive
+ - update a lot of links to new homepage
 
 ## 0.268
  - add support for showing client versions per user
