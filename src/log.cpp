@@ -15,6 +15,20 @@
 #include "gui/ui.h"
 #include "utils/conversion.h"
 
+std::string GetCurrentTimeString(const char* format)
+{
+	char buffer[512];
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+
+	const struct tm* tm_info = localtime(&tv.tv_sec);
+	const size_t len = strftime(buffer, sizeof(buffer), format, tm_info);
+	if (len <= 0)
+		return "";
+	return std::string(buffer);
+}
+
 static bool gui = false;
 
 const char* wxLogLevelToString(wxLogLevel level)
