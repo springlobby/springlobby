@@ -25,13 +25,17 @@ lsl/spring/spring.cpp
 #include <wx/log.h>
 
 #include <algorithm>
+#include <cerrno>
 #include <clocale>
+#include <cstdio>
+#include <ctime>
 #include <fstream>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <stdexcept>
+#include <unistd.h>
 #include <vector>
 #include <random>
-#include <algorithm>
-#include <cerrno>
 
 #include "gui/crashreporterdialog.h"
 #include "gui/customdialogs.h"
@@ -130,8 +134,50 @@ bool Spring::Run(IBattle& battle)
 	return LaunchEngine();
 }
 
+// Slightly modified from SprintRTS's FileSystemAbstraction
+unsigned int GetFileModificationTime(const std::string& file)
+{
+	struct stat info;
+
+	if (stat(file.c_str(), &info) != 0) {
+		wxLogWarning("Unable to obtain last mtime of file '%s', reason: %s", file.c_str(), strerror(errno));
+		return 0;
+	}
+
+	return info.st_mtime;
+}
+
+std::string GetFileModificationDateTime(const std::string& file)
+{
+	const std::time_t t = GetFileModificationTime(file);
+
+	if (t == 0)
+		return "";
+
+	const struct tm* clk = std::gmtime(&t);
+	const char* fmt = "%d%02d%02d_%02d%02d%02d";
+
+	char buf[68];
+	snprintf(buf, sizeof(buf), fmt, 1900 + clk->tm_year, clk->tm_mon + 1, clk->tm_mday, clk->tm_hour, clk->tm_min, clk->tm_sec);
+	return buf;
+}
+
 bool Spring::LaunchEngine()
 {
+	const std::string datadir = SlPaths::GetDataDir();
+	const std::string lobbyLogDir = SlPaths::GetLobbyLogDir();
+	SlPaths::mkDir(lobbyLogDir);
+	// Save previous log file, if any
+	std::string logPath = LSL::Util::EnsureDelimiter(datadir) + "infolog.txt";
+
+	std::string logMTime = GetFileModificationDateTime(logPath);
+	if (!logMTime.empty()) {
+		std::string logSavePath = LSL::Util::EnsureDelimiter(lobbyLogDir) + logMTime + "-infolog.txt";
+		if (0 != std::rename (logPath.c_str(), logSavePath.c_str())) {
+			wxLogError("Unable to save(move) last engine log (%s) to %s: %s", logPath, logSavePath, strerror(errno));
+		}
+	}
+
 	// Print out command line
 	std::string stdparams;
 	for (const wxString param: engine_params) {
@@ -140,7 +186,6 @@ bool Spring::LaunchEngine()
 		stdparams += STD_STRING(param);
 	}
 
-	const std::string datadir = SlPaths::GetDataDir();
 	wxLogMessage(_T("Engine call arguments (datadir: %s): %s %s"),
 	             datadir.c_str(), TowxString(engine_path).c_str(), stdparams.c_str());
 
