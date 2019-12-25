@@ -335,6 +335,10 @@ void SlPaths::SetEditorPath(const std::string& path)
 	cfg().Write(_T( "/GUI/Editor" ), TowxString(path));
 }
 
+std::string SlPaths::GetLobbyLogDir()
+{
+	return LSL::Util::EnsureDelimiter(GetLobbyWriteDir() + "logs");
+}
 
 std::string SlPaths::GetLobbyWriteDir()
 {
@@ -527,4 +531,3 @@ bool SlPaths::VersionSyncCompatible(const std::string& ver1, const std::string& 
 {
 	return !ver1.empty() && !ver2.empty() && ver1 == ver2;
 }
-

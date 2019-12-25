@@ -70,6 +70,7 @@ public:
 	static std::string GetEditorPath();
 	static void SetEditorPath(const std::string& path);
 
+	static std::string GetLobbyLogDir();
 	static std::string GetLobbyWriteDir();
 
 	static bool CreateSpringDataDir(const std::string& dir);

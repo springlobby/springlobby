@@ -138,7 +138,7 @@ bool SpringLobbyApp::OnInit()
 	SlPaths::mkDir(configdir);
 
 
-	const std::string logDir = LSL::Util::EnsureDelimiter(SlPaths::GetLobbyWriteDir()) + LSL::Util::EnsureDelimiter("logs");
+	const std::string logDir = SlPaths::GetLobbyLogDir();
 	SlPaths::mkDir(logDir);
 	const wxString m_log_file_path = logDir + GetCurrentTimeString("%Y%m%d_%H%M%S-springlobby.log");
 	//initialize all loggers, we'll use the returned pointer to set correct parent window later
