@@ -233,10 +233,15 @@ void updatelistener(int downloaded, int filesize)
 	static struct timespec lastupdate = {0, 0};
 	struct timespec now;
 	clock_gettime(CLOCK_MONOTONIC, &now);
+
+	// rate limit
 	if (((double)now.tv_sec + 1.0e-9 * now.tv_nsec) - ((double)lastupdate.tv_sec + 1.0e-9 * lastupdate.tv_nsec) < 0.2f) {
-		//rate limit events
-		return;
+		// always log 100%
+		if (downloaded != filesize) {
+			return;
+		}
 	}
+
 	lastupdate.tv_nsec = now.tv_nsec;
 	lastupdate.tv_sec = now.tv_sec;
 
