@@ -101,9 +101,9 @@ static inline int ReadInt24(const unsigned char* p)
 MapCtrl::MapCtrl(wxWindow* parent, int size, IBattle* battle, bool readonly, bool draw_start_types, bool singleplayer)
     : wxPanel(parent, -1, wxDefaultPosition, wxSize(size, size), wxSIMPLE_BORDER | wxFULL_REPAINT_ON_RESIZE)
     , m_async(std::bind(&MapCtrl::OnGetMapImageAsyncCompleted, this, std::placeholders::_1))
-    , m_minimap(0)
-    , m_metalmap(0)
-    , m_heightmap(0)
+    , m_minimap(nullptr)
+    , m_metalmap(nullptr)
+    , m_heightmap(nullptr)
     , m_battle(battle)
     , m_mapname("")
     , m_draw_start_types(draw_start_types)
@@ -176,7 +176,7 @@ MapCtrl::GetDrawableRect() const
 
 wxRect MapCtrl::GetMinimapRect() const
 {
-	if (m_minimap == 0)
+	if (m_minimap == nullptr)
 		return wxRect();
 
 	int cwidth, cheight, top = 0, left = 0;
@@ -350,7 +350,7 @@ void MapCtrl::SetMouseOverRect(int index)
 
 void MapCtrl::_SetCursor()
 {
-	if (!m_minimap) {
+	if (m_minimap == nullptr) {
 		if (m_rect_area != Main)
 			SetCursor(wxCursor(wxCURSOR_HAND));
 		else
@@ -450,7 +450,7 @@ int MapCtrl::LoadMinimap()
 	slLogDebugFunc("");
 	if (m_battle == 0)
 		return -1;
-	if (m_minimap)
+	if (m_minimap != nullptr)
 		return -1;
 	if (!m_battle->MapExists(false))
 		return -1;
@@ -485,11 +485,11 @@ int MapCtrl::LoadMinimap()
 void MapCtrl::FreeMinimap()
 {
 	delete m_minimap;
-	m_minimap = 0;
+	m_minimap = nullptr;
 	delete m_metalmap;
-	m_metalmap = 0;
+	m_metalmap = nullptr;
 	delete m_heightmap;
-	m_heightmap = 0;
+	m_heightmap = nullptr;
 	m_mapname = "";
 }
 
@@ -1056,7 +1056,7 @@ void MapCtrl::OnPaint(wxPaintEvent& WXUNUSED(event))
 	if (m_battle == 0)
 		return;
 
-	if (!m_minimap)
+	if (m_minimap == nullptr)
 		return;
 	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 							  .getSingleValue("startpostype", LSL::Enum::EngineOption));
@@ -1160,7 +1160,7 @@ void MapCtrl::OnMouseMove(wxMouseEvent& event)
 		return;
 	}
 
-	if (!m_minimap) {
+	if (m_minimap == nullptr) {
 		wxRect r = GetRefreshRect();
 		wxRect d = GetDownloadRect();
 		RectangleArea old = m_rect_area;
@@ -1310,7 +1310,7 @@ void MapCtrl::OnLeftDown(wxMouseEvent& event)
 		}
 	}
 
-	if (!m_minimap) {
+	if (m_minimap == nullptr) {
 		if (m_rect_area != Main) {
 			m_mdown_area = m_rect_area;
 			Refresh();
@@ -1422,7 +1422,7 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 		return;
 	}
 
-	if (!m_minimap) {
+	if (m_minimap == nullptr) {
 		if (m_mdown_area == m_rect_area) {
 			if (m_mdown_area == Refreshing) {
 				//				LSL::usync().AddReloadEvent();
@@ -1522,7 +1522,7 @@ void MapCtrl::OnRightUp(wxMouseEvent& event)
 
 void MapCtrl::OnMouseWheel(wxMouseEvent& event)
 {
-	if (m_metalmap) {
+	if (m_metalmap != nullptr) {
 		int idx = (int)m_current_infomap;
 		if (event.m_wheelRotation > 0) {
 			++idx;
@@ -1556,19 +1556,19 @@ void MapCtrl::OnGetMapImageAsyncCompleted(const std::string& mapname)
 	const int w = m_lastsize.GetWidth();
 	const int h = m_lastsize.GetHeight();
 
-	if (m_minimap == NULL) {
+	if (m_minimap == nullptr) {
 		m_minimap = new wxBitmap(LSL::usync().GetScaledMapImage(mapname, LSL::IMAGE_MAP, w, h).wxbitmap());
 		// this ensures metalmap and heightmap aren't loaded in battlelist
 		if (m_draw_start_types) {
 			m_async.GetMapImageAsync(mapname, LSL::IMAGE_MAP, w, h);
 		}
-	} else if (m_metalmap == NULL) {
+	} else if (m_metalmap == nullptr) {
 		m_metalmap = new wxBitmap(LSL::usync().GetScaledMapImage(mapname, LSL::IMAGE_METALMAP, w, h).wxbitmap());
 		// singleplayer mode doesn't allow startboxes anyway
 		m_metalmap_cumulative = LSL::usync().GetScaledMapImage(mapname, LSL::IMAGE_METALMAP, w, h).wximage();
 		Accumulate(m_metalmap_cumulative);
 		m_async.GetMapImageAsync(mapname, LSL::IMAGE_HEIGHTMAP, w, h);
-	} else if (m_heightmap == NULL) {
+	} else if (m_heightmap == nullptr) {
 		m_heightmap = new wxBitmap(LSL::usync().GetScaledMapImage(mapname, LSL::IMAGE_HEIGHTMAP, w, h).wxbitmap());
 	}
 
