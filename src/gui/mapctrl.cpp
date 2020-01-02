@@ -358,7 +358,7 @@ void MapCtrl::_SetCursor()
 		return;
 	}
 
-	if (m_battle != 0) {
+	if (m_battle != nullptr) {
 		const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
 								  .getSingleValue("startpostype", LSL::Enum::EngineOption));
 		if (longval != IBattle::ST_Choose) {
@@ -401,7 +401,7 @@ void MapCtrl::_SetCursor()
 
 void MapCtrl::RelocateUsers()
 {
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 
 	for (unsigned int i = 0; i < m_battle->GetNumUsers(); i++) {
@@ -420,7 +420,7 @@ void MapCtrl::RelocateUsers()
 
 void MapCtrl::GetClosestStartPos(int fromx, int fromy, int& index, int& x, int& y, int& range)
 {
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 	LSL::UnitsyncMap map = m_battle->LoadMap();
 
@@ -448,7 +448,7 @@ void MapCtrl::GetClosestStartPos(int fromx, int fromy, int& index, int& x, int& 
 int MapCtrl::LoadMinimap()
 {
 	slLogDebugFunc("");
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return -1;
 	if (m_minimap != nullptr)
 		return -1;
@@ -659,7 +659,7 @@ void MapCtrl::DrawBackground(wxDC& dc)
 	dc.SetPen(wxPen(*wxLIGHT_GREY));
 	dc.SetBrush(wxBrush(*wxLIGHT_GREY, wxSOLID));
 
-	if (m_battle == 0) {
+	if (m_battle == nullptr) {
 		dc.DrawRectangle(0, 0, width, height);
 		return;
 	}
@@ -842,7 +842,7 @@ FitInside(const wxRect& what, const wxRect& container)
 
 wxRect MapCtrl::GetUserRect(const User& user, bool selected)
 {
-	ASSERT_LOGIC(m_battle != 0, "Bot == 0");
+	ASSERT_LOGIC(m_battle != nullptr, "Bot == 0");
 	m_map = m_battle->LoadMap();
 
 	wxPoint absolute_position(GetTranslatedScaledUserMapPosition(user));
@@ -997,7 +997,7 @@ void MapCtrl::DrawUser(wxDC& dc, User& user, bool selected, bool /*unused*/)
 void MapCtrl::DrawUserPositions(wxDC& dc)
 {
 	slLogDebugFunc("");
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 	if (!m_battle->MapExists(false))
 		return;
@@ -1053,7 +1053,7 @@ void MapCtrl::OnPaint(wxPaintEvent& WXUNUSED(event))
 
 	DrawBackground(dc);
 
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 
 	if (m_minimap == nullptr)
@@ -1095,7 +1095,7 @@ void MapCtrl::OnMouseEnter(wxMouseEvent& /*event*/)
 void MapCtrl::OnMouseMove(wxMouseEvent& event)
 {
 	wxPoint p = event.GetPosition();
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 	if (p == wxDefaultPosition)
 		return;
@@ -1286,7 +1286,7 @@ void MapCtrl::OnMouseMove(wxMouseEvent& event)
 
 void MapCtrl::OnLeftDown(wxMouseEvent& event)
 {
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 
 	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
@@ -1366,7 +1366,7 @@ void MapCtrl::OnLeftDown(wxMouseEvent& event)
 
 void MapCtrl::OnLeftUp(wxMouseEvent& event)
 {
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 
 	const long longval = LSL::Util::FromIntString(m_battle->CustomBattleOptions()
@@ -1472,7 +1472,7 @@ void MapCtrl::OnLeftUp(wxMouseEvent& event)
 void MapCtrl::OnRightUp(wxMouseEvent& event)
 {
 	wxPoint p = event.GetPosition();
-	if (m_battle == 0)
+	if (m_battle == nullptr)
 		return;
 	if (p == wxDefaultPosition)
 		return;
