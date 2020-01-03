@@ -465,7 +465,7 @@ void ChatPanelMenu::OnUserMenuOpenChat(wxCommandEvent& /*unused*/)
 void ChatPanelMenu::OnUserMenuJoinSame(wxCommandEvent& /*unused*/)
 {
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 	IBattle* battle = user->GetBattle();
 	if (battle == 0)
@@ -496,7 +496,7 @@ void ChatPanelMenu::OnUserMenuMute(wxCommandEvent& /*unused*/)
 		return;
 
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
 	wxString mutetime = _T( "5" );
@@ -514,7 +514,7 @@ void ChatPanelMenu::OnUserMenuUnmute(wxCommandEvent& /*unused*/)
 		return;
 
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
 	SayChanserv("!UNMUTE #" + m_chatpanel->m_channel->GetName() + " " + user->GetNick());
@@ -528,7 +528,7 @@ void ChatPanelMenu::OnUserMenuKick(wxCommandEvent& /*unused*/)
 		return;
 
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
 	wxString msg;
@@ -548,7 +548,7 @@ void ChatPanelMenu::OnUserMenuOp(wxCommandEvent& /*unused*/)
 		return;
 
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
 	SayChanserv("!OP #" + m_chatpanel->m_channel->GetName() + " " + user->GetNick());
@@ -562,7 +562,7 @@ void ChatPanelMenu::OnUserMenuDeop(wxCommandEvent& /*unused*/)
 		return;
 
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user == 0)
+	if (user == nullptr)
 		return;
 
 	SayChanserv("!DEOP #" + m_chatpanel->m_channel->GetName() + " " + user->GetNick());
@@ -693,7 +693,7 @@ void ChatPanelMenu::OnUserMenuAddToGroup(wxCommandEvent& event)
 	if (m_user_menu) {
 		wxString groupname = m_user_menu->GetGroupByEvtID(id);
 		const User* user = m_chatpanel->GetSelectedUser();
-		if (user)
+		if (user != nullptr)
 			useractions().AddUserToGroup(groupname, TowxString(user->GetNick()));
 	}
 }
@@ -701,7 +701,7 @@ void ChatPanelMenu::OnUserMenuAddToGroup(wxCommandEvent& event)
 void ChatPanelMenu::OnUserMenuDeleteFromGroup(wxCommandEvent& /*unused*/)
 {
 	const User* user = m_chatpanel->GetSelectedUser();
-	if (user)
+	if (user != nullptr)
 		useractions().RemoveUser(TowxString(user->GetNick()));
 }
 
@@ -711,7 +711,7 @@ void ChatPanelMenu::OnUserMenuCreateGroup(wxCommandEvent& /*unused*/)
 	if (ui().AskText(_("Enter name"),
 			 _("Please enter the name for the new group.\nAfter clicking ok you will be taken to adjust its settings."), name)) {
 		const User* user = m_chatpanel->GetSelectedUser();
-		if (user) {
+		if (user != nullptr) {
 			useractions().AddGroup(name);
 			useractions().AddUserToGroup(name, TowxString(user->GetNick()));
 			ui().mw().ShowConfigure(MainWindow::OPT_PAGE_GROUPS);
