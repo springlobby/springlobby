@@ -98,7 +98,7 @@ ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(true)
     , m_votePanel(0)
-    , m_nicklist(0)
+    , m_nicklist(nullptr)
     , m_chat_tabs((SLNotebook*)parent)
     , m_channel(&chan)
     , m_server(0)
@@ -122,7 +122,7 @@ ChatPanel::ChatPanel(wxWindow* parent, User& user, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
     , m_votePanel(0)
-    , m_nicklist(0)
+    , m_nicklist(nullptr)
     , m_chat_tabs((SLNotebook*)parent)
     , m_channel(0)
     , m_server(0)
@@ -146,7 +146,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(true)
     , m_votePanel(0)
-    , m_nicklist(0)
+    , m_nicklist(nullptr)
     , m_chat_tabs((SLNotebook*)parent)
     , m_channel(0)
     , m_server(&serv)
@@ -170,7 +170,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IBattle* battle)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
     , m_votePanel(0)
-    , m_nicklist(0)
+    , m_nicklist(nullptr)
     , m_chat_tabs(0)
     , m_channel(0)
     , m_server(0)
@@ -191,7 +191,7 @@ ChatPanel::ChatPanel(wxWindow* parent)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
     , m_votePanel(0)
-    , m_nicklist(0)
+    , m_nicklist(nullptr)
     , m_chat_tabs(0)
     , m_channel(0)
     , m_server(0)
@@ -279,7 +279,7 @@ void ChatPanel::CreateControls()
 
 		m_chat_panel = this;
 		m_nick_sizer = 0;
-		m_nicklist = 0;
+		m_nicklist = nullptr;
 		m_splitter = 0;
 		m_nick_filter = 0;
 	}
@@ -359,7 +359,7 @@ User* ChatPanel::GetSelectedUser() const
 	if (m_type == CPT_User) {
 		return m_user;
 	}
-	if (!m_show_nick_list || (m_nicklist == 0))
+	if (!m_show_nick_list || (m_nicklist == nullptr))
 		return 0;
 
 	return m_nicklist->GetSelectedItem();
@@ -1119,7 +1119,7 @@ void ChatPanel::UpdateNicklistHighlights()
 
 void ChatPanel::SortNickList()
 {
-	if (m_show_nick_list && (m_nicklist != 0))
+	if (m_show_nick_list && (m_nicklist != nullptr))
 		m_nicklist->Resort();
 }
 
