@@ -97,7 +97,7 @@ void ChatPanel::Init(const wxString& panelname)
 ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(true)
-    , m_votePanel(0)
+    , m_votePanel(nullptr)
     , m_nicklist(nullptr)
     , m_chat_tabs((SLNotebook*)parent)
     , m_channel(&chan)
@@ -105,7 +105,7 @@ ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
     , m_user(0)
     , m_battle(0)
     , m_type(CPT_Channel)
-    , m_popup_menu(NULL)
+    , m_popup_menu(nullptr)
     , m_icon_index(2)
     , m_imagelist(imaglist)
     , m_disable_append(false)
@@ -121,7 +121,7 @@ ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
 ChatPanel::ChatPanel(wxWindow* parent, User& user, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
-    , m_votePanel(0)
+    , m_votePanel(nullptr)
     , m_nicklist(nullptr)
     , m_chat_tabs((SLNotebook*)parent)
     , m_channel(0)
@@ -129,7 +129,7 @@ ChatPanel::ChatPanel(wxWindow* parent, User& user, wxImageList* imaglist)
     , m_user(&user)
     , m_battle(0)
     , m_type(CPT_User)
-    , m_popup_menu(NULL)
+    , m_popup_menu(nullptr)
     , m_icon_index(3)
     , m_imagelist(imaglist)
     , m_disable_append(false)
@@ -145,7 +145,7 @@ ChatPanel::ChatPanel(wxWindow* parent, User& user, wxImageList* imaglist)
 ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
     : wxPanel(parent, -1)
     , m_show_nick_list(true)
-    , m_votePanel(0)
+    , m_votePanel(nullptr)
     , m_nicklist(nullptr)
     , m_chat_tabs((SLNotebook*)parent)
     , m_channel(0)
@@ -153,7 +153,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
     , m_user(0)
     , m_battle(0)
     , m_type(CPT_Server)
-    , m_popup_menu(NULL)
+    , m_popup_menu(nullptr)
     , m_icon_index(1)
     , m_imagelist(imaglist)
     , m_disable_append(false)
@@ -169,7 +169,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
 ChatPanel::ChatPanel(wxWindow* parent, IBattle* battle)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
-    , m_votePanel(0)
+    , m_votePanel(nullptr)
     , m_nicklist(nullptr)
     , m_chat_tabs(0)
     , m_channel(0)
@@ -177,7 +177,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IBattle* battle)
     , m_user(0)
     , m_battle(battle)
     , m_type(CPT_Battle)
-    , m_popup_menu(NULL)
+    , m_popup_menu(nullptr)
     , m_disable_append(false)
     , m_display_joinitem(true)
     , m_topic_set(false)
@@ -190,7 +190,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IBattle* battle)
 ChatPanel::ChatPanel(wxWindow* parent)
     : wxPanel(parent, -1)
     , m_show_nick_list(false)
-    , m_votePanel(0)
+    , m_votePanel(nullptr)
     , m_nicklist(nullptr)
     , m_chat_tabs(0)
     , m_channel(0)
@@ -198,7 +198,7 @@ ChatPanel::ChatPanel(wxWindow* parent)
     , m_user(0)
     , m_battle(0)
     , m_type(CPT_Debug)
-    , m_popup_menu(NULL)
+    , m_popup_menu(nullptr)
     , m_disable_append(false)
     , m_display_joinitem(true)
     , m_topic_set(false)
@@ -348,7 +348,7 @@ void ChatPanel::CreateControls()
 
 void ChatPanel::CreatePopup()
 {
-	if (m_popup_menu != NULL)
+	if (m_popup_menu != nullptr)
 		return;
 	slLogDebugFunc("");
 	m_popup_menu = new ChatPanelMenu(this);
@@ -520,7 +520,7 @@ void ChatPanel::OnLinkEvent(wxTextUrlEvent& event)
 void ChatPanel::OnChanOpts(wxCommandEvent& /*unused*/)
 {
 	CreatePopup();
-	if ((m_chan_opts_button == NULL) || (m_popup_menu == 0))
+	if ((m_chan_opts_button == NULL) || (m_popup_menu == nullptr))
 		return;
 	m_chan_opts_button->PopupMenu(m_popup_menu->GetMenu());
 }
@@ -651,7 +651,7 @@ void ChatPanel::CheckForPromotion(const wxString& /*who*/, const wxString& actio
 void ChatPanel::DidAction(const wxString& who, const wxString& action)
 {
 	//Handle vote events in chat by VotePanel
-	if (m_votePanel != NULL) {
+	if (m_votePanel != nullptr) {
 		m_votePanel->OnChatAction(who, action);
 	}
 
@@ -1103,7 +1103,7 @@ void ChatPanel::OnMouseDown(wxMouseEvent& event)
 		m_url_at_pos = FindUrl(pos);
 	}
 	CreatePopup();
-	if (m_popup_menu != NULL) {
+	if (m_popup_menu != nullptr) {
 		PopupMenu(m_popup_menu->GetMenu());
 	} else {
 		event.Skip();
