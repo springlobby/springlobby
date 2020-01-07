@@ -103,7 +103,7 @@ ChatPanel::ChatPanel(wxWindow* parent, Channel& chan, wxImageList* imaglist)
     , m_channel(&chan)
     , m_server(nullptr)
     , m_user(nullptr)
-    , m_battle(0)
+    , m_battle(nullptr)
     , m_type(CPT_Channel)
     , m_popup_menu(nullptr)
     , m_icon_index(2)
@@ -127,7 +127,7 @@ ChatPanel::ChatPanel(wxWindow* parent, User& user, wxImageList* imaglist)
     , m_channel(0)
     , m_server(nullptr)
     , m_user(&user)
-    , m_battle(0)
+    , m_battle(nullptr)
     , m_type(CPT_User)
     , m_popup_menu(nullptr)
     , m_icon_index(3)
@@ -151,7 +151,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
     , m_channel(0)
     , m_server(&serv)
     , m_user(nullptr)
-    , m_battle(0)
+    , m_battle(nullptr)
     , m_type(CPT_Server)
     , m_popup_menu(nullptr)
     , m_icon_index(1)
@@ -196,7 +196,7 @@ ChatPanel::ChatPanel(wxWindow* parent)
     , m_channel(0)
     , m_server(nullptr)
     , m_user(nullptr)
-    , m_battle(0)
+    , m_battle(nullptr)
     , m_type(CPT_Debug)
     , m_popup_menu(nullptr)
     , m_disable_append(false)
@@ -288,7 +288,6 @@ void ChatPanel::CreateControls()
 
 	m_chatlog_text = new wxTextCtrl(m_chat_panel, CHAT_LOG, wxEmptyString, wxDefaultPosition, wxDefaultSize,
 					wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_AUTO_URL);
-	m_chan_opts_button = NULL;
 	if (m_type == CPT_Channel) {
 		m_chatlog_text->SetToolTip(_("right click for options (like autojoin)"));
 	}
@@ -308,7 +307,7 @@ void ChatPanel::CreateControls()
 	m_say_button = new wxButton(m_chat_panel, CHAT_SEND, _("Send"), wxDefaultPosition, wxSize(80, CONTROL_HEIGHT));
 
 	// Adding elements to sizers
-	if (m_chan_opts_button != NULL)
+	if (m_chan_opts_button != nullptr)
 		m_say_sizer->Add(m_chan_opts_button);
 	m_say_sizer->Add(m_say_text, 1, wxEXPAND);
 	m_say_sizer->Add(m_say_button);
@@ -520,7 +519,7 @@ void ChatPanel::OnLinkEvent(wxTextUrlEvent& event)
 void ChatPanel::OnChanOpts(wxCommandEvent& /*unused*/)
 {
 	CreatePopup();
-	if ((m_chan_opts_button == NULL) || (m_popup_menu == nullptr))
+	if ((m_chan_opts_button == nullptr) || (m_popup_menu == nullptr))
 		return;
 	m_chan_opts_button->PopupMenu(m_popup_menu->GetMenu());
 }
@@ -804,7 +803,7 @@ void ChatPanel::SetTopic(const wxString& who, const wxString& message)
 
 void ChatPanel::UserStatusUpdated(User& who)
 {
-	if ((m_type == CPT_User) && (m_user == &who) && (m_chan_opts_button != NULL)) {
+	if ((m_type == CPT_User) && (m_user == &who) && (m_chan_opts_button != nullptr)) {
 		m_chan_opts_button->SetBitmapLabel(IconsCollection::Instance()->GetUserListStateBmp(who.GetStatus(), false, who.GetBattle() != 0));
 	}
 	if (!m_show_nick_list || (m_nicklist == nullptr))
@@ -882,13 +881,13 @@ void ChatPanel::SetUser(User* usr)
 	if (usr == NULL) {
 		if (m_user != nullptr) {
 			m_user->panel = nullptr;
-			if (m_chan_opts_button != NULL) {
+			if (m_chan_opts_button != nullptr) {
 				m_chan_opts_button->SetBitmapLabel(IconsCollection::Instance()->BMP_EMPTY);
 			}
 		}
 	} else {
 		usr->panel = this;
-		if (m_chan_opts_button != NULL) {
+		if (m_chan_opts_button != nullptr) {
 			const wxBitmap icon = IconsCollection::Instance()->GetUserListStateIcon(usr->GetStatus(), false, usr->GetBattle() != 0);
 			m_chan_opts_button->SetBitmapLabel(icon);
 		}
@@ -969,7 +968,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 
 		} else if (m_type == CPT_Battle) {
 
-			if (m_battle == 0) {
+			if (m_battle == nullptr) {
 				OutputError(_("You are not in battle or battle does not exist, use /help for a list of available commands."));
 				return true;
 			}
@@ -1039,7 +1038,7 @@ bool ChatPanel::IsOk() const
 	if (m_type == CPT_User)
 		return (m_user != nullptr);
 	if (m_type == CPT_Battle)
-		return (m_battle != 0);
+		return (m_battle != nullptr);
 	return false;
 }
 
@@ -1179,7 +1178,7 @@ void ChatPanel::SetBattle(IBattle* battle)
 		return;
 	}
 
-	if (m_battle != NULL) {
+	if (m_battle != nullptr) {
 		OutputLine(_T("** ") + _("Left Battle."), sett().GetChatColorNotification());
 	}
 
