@@ -124,7 +124,7 @@ ChatPanel::ChatPanel(wxWindow* parent, User& user, wxImageList* imaglist)
     , m_votePanel(nullptr)
     , m_nicklist(nullptr)
     , m_chat_tabs((SLNotebook*)parent)
-    , m_channel(0)
+    , m_channel(nullptr)
     , m_server(nullptr)
     , m_user(&user)
     , m_battle(nullptr)
@@ -148,7 +148,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IServer& serv, wxImageList* imaglist)
     , m_votePanel(nullptr)
     , m_nicklist(nullptr)
     , m_chat_tabs((SLNotebook*)parent)
-    , m_channel(0)
+    , m_channel(nullptr)
     , m_server(&serv)
     , m_user(nullptr)
     , m_battle(nullptr)
@@ -172,7 +172,7 @@ ChatPanel::ChatPanel(wxWindow* parent, IBattle* battle)
     , m_votePanel(nullptr)
     , m_nicklist(nullptr)
     , m_chat_tabs(0)
-    , m_channel(0)
+    , m_channel(nullptr)
     , m_server(nullptr)
     , m_user(nullptr)
     , m_battle(battle)
@@ -193,7 +193,7 @@ ChatPanel::ChatPanel(wxWindow* parent)
     , m_votePanel(nullptr)
     , m_nicklist(nullptr)
     , m_chat_tabs(0)
-    , m_channel(0)
+    , m_channel(nullptr)
     , m_server(nullptr)
     , m_user(nullptr)
     , m_battle(nullptr)
@@ -220,7 +220,7 @@ ChatPanel::~ChatPanel()
 		if (m_user->panel == this)
 			m_user->panel = nullptr;
 	}
-	if (m_channel != 0) {
+	if (m_channel != nullptr) {
 		if (m_channel->panel == this)
 			m_channel->panel = nullptr;
 	}
@@ -679,7 +679,7 @@ void ChatPanel::Motd(const wxString& message)
 
 void ChatPanel::StatusMessage(const wxString& message)
 {
-	if (m_chatlog_text == 0) {
+	if (m_chatlog_text == nullptr) {
 		wxLogMessage(_T( "m_chatlog_text is NULL" ));
 	} else {
 		if (CPT_Server == m_type)
@@ -760,7 +760,7 @@ void ChatPanel::Parted(User& who, const wxString& message)
 		OutputLine(_T( "** " ) + wxString::Format(_("%s left %s (%s)."), nick.c_str(), GetChatTypeStr().c_str(), message.c_str()), sett().GetChatColorJoinPart());
 	}
 	if (m_type == CPT_Channel) {
-		if (m_channel == 0)
+		if (m_channel == nullptr)
 			return;
 		if (me_parted) {
 			m_channel->panel = nullptr;
@@ -825,7 +825,7 @@ void ChatPanel::SetChannel(Channel* chan)
 {
 	ASSERT_LOGIC(m_type == CPT_Channel, "Not of type channel");
 
-	if ((chan == 0) && (m_channel != 0)) {
+	if ((chan == nullptr) && (m_channel != nullptr)) {
 		m_channel->panel = nullptr;
 	}
 	if (m_nicklist != nullptr) {
@@ -833,7 +833,7 @@ void ChatPanel::SetChannel(Channel* chan)
 		UpdateUserCountLabel();
 	}
 
-	if (chan != 0) {
+	if (chan != nullptr) {
 		chan->panel = this;
 		if (chan != m_channel) {
 			SetLogFile(TowxString(chan->GetName()));
@@ -842,7 +842,7 @@ void ChatPanel::SetChannel(Channel* chan)
 	m_channel = chan;
 
 	//set back to false so when we rejoin this channel SetTopic doesn;t update the chan icon
-	if (!m_channel)
+	if (m_channel == nullptr)
 		m_topic_set = false;
 }
 
@@ -878,7 +878,7 @@ void ChatPanel::SetUser(User* usr)
 {
 	ASSERT_LOGIC(m_type == CPT_User, "Not of type user");
 
-	if (usr == NULL) {
+	if (usr == nullptr) {
 		if (m_user != nullptr) {
 			m_user->panel = nullptr;
 			if (m_chan_opts_button != nullptr) {
@@ -952,7 +952,7 @@ bool ChatPanel::Say(const wxString& message) //FIXME: remove all parsing / token
 
 		if (m_type == CPT_Channel) {
 
-			if (m_channel == 0) {
+			if (m_channel == nullptr) {
 				OutputError(_("You are not in channel or channel does not exist."));
 				return true;
 			}
@@ -1022,7 +1022,7 @@ void ChatPanel::Part()
 {
 	slLogDebugFunc("");
 	if (m_type == CPT_Channel) {
-		if (m_channel == 0)
+		if (m_channel == nullptr)
 			return;
 		m_channel->Leave();
 		m_channel->panel = 0;
@@ -1032,7 +1032,7 @@ void ChatPanel::Part()
 bool ChatPanel::IsOk() const
 {
 	if (m_type == CPT_Channel)
-		return (m_channel != 0);
+		return m_channel != nullptr;
 	if (m_type == CPT_Server)
 		return (m_server != nullptr);
 	if (m_type == CPT_User)
@@ -1182,7 +1182,7 @@ void ChatPanel::SetBattle(IBattle* battle)
 		OutputLine(_T("** ") + _("Left Battle."), sett().GetChatColorNotification());
 	}
 
-	if (battle == NULL) {
+	if (battle == nullptr) {
 		SetLogFile(wxEmptyString);
 		return;
 	}
@@ -1202,9 +1202,8 @@ void ChatPanel::OnLogin(wxCommandEvent& /*data*/)
 {
 	switch (m_type) {
 		case CPT_Channel:
-			if (m_channel) {
+			if (m_channel != nullptr)
 				m_channel->Rejoin();
-			}
 			break;
 		case CPT_Server:
 			assert(m_server != nullptr);
@@ -1244,7 +1243,7 @@ void ChatPanel::SetVotePanel(VotePanel* votePanel)
  */
 void ChatPanel::UpdateUserCountLabel()
 {
-	if (m_usercount_label == NULL)
+	if (m_usercount_label == nullptr)
 		return;
 
 	unsigned int numusers = 0;
