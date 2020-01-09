@@ -316,9 +316,9 @@ bool Socket::Send(const std::string& data)
 			if (ret > 0) {
 				res += ret;
 			} else if (ret == 0) {
-				wxLogDebug("SSL_read(); %d", ret);
+				wxLogDebug("SSL_write(); %d", ret);
 			} else {
-				wxLogWarning("SSL_read(); %d", ret);
+				wxLogWarning("SSL_write(); %d", ret);
 			}
 		}
 		if (BIO_ctrl_pending(m_outbio) > 0) {
