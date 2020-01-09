@@ -70,7 +70,7 @@ Spring& spring()
 Spring::Spring()
     : wxEvtHandler()
     , crash_count(0)
-    , m_process(NULL)
+    , m_process(nullptr)
     , m_running(false)
 {
 }
@@ -78,7 +78,7 @@ Spring::Spring()
 
 Spring::~Spring()
 {
-	m_process = NULL;
+	m_process = nullptr;
 }
 
 
@@ -191,7 +191,7 @@ bool Spring::LaunchEngine()
 
 	// Actually run
 	wxSetWorkingDirectory(TowxString(datadir));
-	if (m_process == 0) {
+	if (m_process == nullptr) {
 		m_process = new SpringProcess(*this);
 	}
 	m_process->Create();
@@ -209,7 +209,7 @@ void Spring::OnTerminated(wxCommandEvent& event)
 	wxLogInfo(_T("Engine exited with code %d"), exit_code);
 
 	m_running = false;
-	m_process = NULL;
+	m_process = nullptr;
 
 	// First crash, try safe mode
 	if (0 != exit_code) {
@@ -436,7 +436,7 @@ std::string Spring::WriteScriptTxt(IBattle& battle) const
 	ProgressiveTeamsVec teams_to_sorted_teams; // original team -> progressive team
 	int free_team = 0;
 	std::map<User*, int> player_to_number; // player -> ordernumber
-	srand(time(NULL));
+	srand(time(nullptr));
 	for (unsigned int i = 0; i < NumUsers; i++) {
 		User& user = battle.GetUser(i);
 		UserBattleStatus& status = user.BattleStatus();
