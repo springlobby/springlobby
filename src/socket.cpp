@@ -116,7 +116,7 @@ void Socket::DoSSLHandshake()
 	wxLogDebug("SSL_do_handshake(): ret %d", ret);
 	if (ret < 0) { // fatal error
 		const int r = SSL_get_error(m_ssl, ret);
-		if (SSL_ERROR_WANT_READ == r) {
+		if (r == SSL_ERROR_WANT_READ) {
 			wxLogDebug("SSL_ERROR_WANT_READ");
 			int pending = BIO_ctrl_pending(m_outbio);
 			if (pending > 0) {
@@ -415,6 +415,8 @@ wxString Socket::Receive()
 			}
 			if (!SSL_is_init_finished(m_ssl)) {
 				DoSSLHandshake();
+				//FIXME: workarround for #940 (tls1.3 hangs on connect after handshake)
+				Send("");
 			} else {
 				if (!VerifyCertificate()) {
 					wxLogWarning("Couldn't verify certificate, closing connection");
