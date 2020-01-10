@@ -12,10 +12,10 @@
 PlaybackLoader::PlaybackLoader(PlaybackTab* parent, bool IsReplayType)
     : wxEvtHandler()
     , m_parent(parent)
-    , m_thread_loader(NULL)
+    , m_thread_loader(nullptr)
     , m_isreplaytype(IsReplayType)
 {
-	assert(m_parent != NULL);
+	assert(m_parent != nullptr);
 }
 
 const wxEventType PlaybackLoader::PlaybacksLoadedEvt = wxNewEventType();
@@ -29,7 +29,7 @@ void PlaybackLoader::Run()
 {
 	assert(LSL::usync().IsLoaded());
 
-	if (m_thread_loader)
+	if (m_thread_loader != nullptr)
 		return; // a thread is already running
 
 	m_thread_loader = new PlaybackLoaderThread(this, m_parent, m_isreplaytype);
@@ -39,11 +39,11 @@ void PlaybackLoader::Run()
 
 void PlaybackLoader::OnComplete()
 {
-	if (m_parent == NULL)
+	if (m_parent == nullptr)
 		return;
 	wxCommandEvent notice(PlaybacksLoadedEvt, 1);
 	wxPostEvent(m_parent, notice);
-	m_thread_loader = NULL; // the thread object deleted itself
+	m_thread_loader = nullptr; // the thread object deleted itself
 }
 
 PlaybackLoader::PlaybackLoaderThread::PlaybackLoaderThread(PlaybackLoader* loader, PlaybackTab* parent, bool isreplaytype)
@@ -51,12 +51,12 @@ PlaybackLoader::PlaybackLoaderThread::PlaybackLoaderThread(PlaybackLoader* loade
     , m_loader(loader)
     , m_isreplaytype(isreplaytype)
 {
-	assert(m_parent != NULL);
+	assert(m_parent != nullptr);
 }
 
 void* PlaybackLoader::PlaybackLoaderThread::Entry()
 {
-	if (m_parent) {
+	if (m_parent != nullptr) {
 		std::set<std::string> filenames;
 		if (!LSL::usync().GetPlaybackList(filenames, m_isreplaytype)) {
 			wxLogWarning("Couldn't load list of playbacks.");
