@@ -9,9 +9,9 @@ addons:
   apt:
     packages:
     - libwxgtk3.0-dev
-    - libboost-thread1.55-dev
-    - libboost-system1.55-dev
-    - libboost-test1.55-dev
+    - libboost-thread1.65-dev
+    - libboost-system1.65-dev
+    - libboost-test1.65-dev
     - libalure-dev
     - cmake
     - libssl-dev
