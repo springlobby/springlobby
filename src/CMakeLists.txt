@@ -457,6 +457,14 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	endif()
 endif()
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "6.0")
+		target_link_libraries(springlobby c++fs)
+	endif()
+endif()
+
+
+
 
 #the updater needs to be build for windows only
 IF(WIN32)
