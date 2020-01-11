@@ -2,7 +2,7 @@ language: cpp
 compiler:
   - gcc
   - clang
-dist: trusty
+dist: bionic
 cache: ccache
 
 addons:
