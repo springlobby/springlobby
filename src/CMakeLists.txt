@@ -174,31 +174,23 @@ set(wxfb_projects
 
 set(wxfb_src ${springlobby_SOURCE_DIR}/src/gui/wxfb)
 set(wxfb_bin ${springlobby_BINARY_DIR}/src/gui/wxfb)
-set(wxfb_gensrc ${wxfb_src}/pregenerated)
 # For configure_file below, all .fbp should have
 # property name="path" set to @WXFB_GENERATION_PATH@.
 set(WXFB_GENERATION_PATH ${wxfb_bin}/generated)
 file(MAKE_DIRECTORY ${WXFB_GENERATION_PATH})
 set(wxFB_REQUIRED_VERSION "3.9.0")
 
-if (IS_DIRECTORY ${wxfb_gensrc})
-	message(STATUS "using pre-generated wxFormBuilder GUI in ${wxfb_gensrc}")
-	file(COPY ${wxfb_gensrc} DESTINATION ${wxfb_bin})
+find_program(wxFB_EXECUTABLE NAMES wxformbuilder wxFormBuilder)
+if ("${wxFB_EXECUTABLE}" MATCHES "wxFB_EXECUTABLE-NOTFOUND")
+	message(WARNING "Couldn't find wxFormBuilder! Please install wxFB (${wxFB_REQUIRED_VERSION})")
 else()
-	find_program(wxFB_EXECUTABLE NAMES wxformbuilder ONLY_CMAKE_FIND_ROOT_PATH)
-	if ("${wxFB_EXECUTABLE}" MATCHES "wxFB_EXECUTABLE-NOTFOUND")
-		message(FATAL_ERROR "couldn't find wxFormBuilder! Either install wxFB (${wxFB_REQUIRED_VERSION}) or provide pre-generated files in ${xfb_gensrc}.")
-	else()
-		message(STATUS "found wxFormBuilder: ${wxFB_EXECUTABLE}")
-	endif()
-
-
+	message(STATUS "found wxFormBuilder: ${wxFB_EXECUTABLE}")
 	execute_process(COMMAND ${wxFB_EXECUTABLE} "--version"
-	                OUTPUT_VARIABLE wxFB_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
-	message(STATUS "found wxFormBuilder version: ${wxFB_VERSION}")
+		OUTPUT_VARIABLE wxFB_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
 	if (NOT ("${wxFB_VERSION}" MATCHES ".* ${wxFB_REQUIRED_VERSION}"))
 		message(FATAL_ERROR "wxFormBuilder is not of required version: ${wxFB_REQUIRED_VERSION}")
 	endif()
+
 
 	foreach(proj ${wxfb_projects})
 		message(STATUS "Processing wxFormBuilder project: ${proj}")
