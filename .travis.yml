@@ -13,7 +13,7 @@ addons:
     - libboost-system1.55-dev
     - libboost-test1.55-dev
     - libalure-dev
-    - cmake3
+    - cmake
     - libssl-dev
 
 before_script:
