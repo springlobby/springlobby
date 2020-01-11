@@ -431,6 +431,9 @@ ADD_EXECUTABLE(springlobby WIN32 MACOSX_BUNDLE
 		${generated_gui_cpp}
 	)
 
+set(CXX_STANDARD_REQUIRED ON)
+set_property(TARGET springlobby PROPERTY CXX_STANDARD 17)
+
 target_include_directories(springlobby
                 PRIVATE ${PRD_JSONCPP_INCLUDE_DIR}
         )
