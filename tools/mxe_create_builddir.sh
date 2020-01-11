@@ -2,15 +2,18 @@
 
 set -e
 
-COMMIT=e0f92537d09508102fa934b6df295d344af15603
+COMMIT=228c26086d675f9e279e292c6484abe022e24703
+REPO=https://github.com/abma/mxe.git
 
 if [ ! -d mxe ]; then
-	git clone https://github.com/mxe/mxe.git
+	git clone $REPO
 	cd mxe
 else
 	cd mxe
+	git remote set-url origin $REPO
 	git fetch origin
 	git clean -f -d -x
+	git reset --hard origin/master
 fi
 
 git reset --hard $COMMIT
