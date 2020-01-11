@@ -29,6 +29,7 @@ lsl/spring/spring.cpp
 #include <clocale>
 #include <cstdio>
 #include <ctime>
+#include <filesystem>
 #include <fstream>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -173,8 +174,13 @@ bool Spring::LaunchEngine()
 	std::string logMTime = GetFileModificationDateTime(logPath);
 	if (!logMTime.empty()) {
 		std::string logSavePath = LSL::Util::EnsureDelimiter(lobbyLogDir) + logMTime + "-infolog.txt";
-		if (0 != std::rename (logPath.c_str(), logSavePath.c_str())) {
-			wxLogError("Unable to save(move) last engine log (%s) to %s: %s", logPath, logSavePath, strerror(errno));
+		if (0 != std::rename(logPath.c_str(), logSavePath.c_str())) {
+			try {
+				std::filesystem::copy(logPath.c_str(), logSavePath.c_str());
+				std::remove(logPath.c_str());
+			} catch (std::filesystem::filesystem_error&) {
+				wxLogError("Unable to save(move) last engine log (%s) to %s: %s", logPath, logSavePath, strerror(errno));
+			}
 		}
 	}
 

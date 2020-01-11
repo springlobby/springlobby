@@ -452,6 +452,13 @@ IF( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
 	target_compile_definitions(springlobby PRIVATE -DHAVE_LIBNOTIFY)
 ENDIF( LIBNOTIFY_FOUND AND OPTION_NOTIFY )
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+		target_link_libraries(springlobby stdc++fs)
+	endif()
+endif()
+
+
 #the updater needs to be build for windows only
 IF(WIN32)
 	TARGET_LINK_LIBRARIES( springlobby
